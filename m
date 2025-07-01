@@ -1,234 +1,145 @@
-Return-Path: <linux-hyperv+bounces-6062-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6063-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C123CAEF584
-	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Jul 2025 12:49:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 472D1AEF66C
+	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Jul 2025 13:21:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E7DB21895AF2
-	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Jul 2025 10:49:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6055E1BC6187
+	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Jul 2025 11:22:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3E27271447;
-	Tue,  1 Jul 2025 10:48:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6A6926B96E;
+	Tue,  1 Jul 2025 11:21:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DVzJ/88P"
+	dkim=pass (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="IsOURGwR";
+	dkim=permerror (0-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="1ROTpqMA"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43A66270EC3;
-	Tue,  1 Jul 2025 10:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751366931; cv=none; b=jhzDlMX1M7NQL9fLElgDZMRT8TJhehD1pPmSZkeZYVYzT0rBFB95RAzKZvtIXby7qRqTwHTvy7gFyoP+Qa1inR4g3FEolYvLz8IrAYIzPfOVox3ZxXsWMVw5ovg0XcoOwbActeC2cjiWRGt6oQnH+1Drsie4lR6VdoN7nLcnbrY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751366931; c=relaxed/simple;
-	bh=xMRqV198FRBCLCeJk89yMS6Zfr6mkLw4sENEFReDij8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AO1zr6iWnM6uWgK+4Bb8RsZZV3zriBCRYYAz9lADgUbj/Kkb0NnhEVLH57ef6tkY6TBUxlrz2XTvx8cnQPo/ijB3yBoMFJ6BY/FkVR+8ImD0Hqx0I04d15Zq8yJ2gsz5d0QLhsmrFFQSP1wZUENsyGrPXtKSIp3N8pTLdPpLV8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=DVzJ/88P; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from namjain-Virtual-Machine.mshome.net (unknown [4.213.232.43])
-	by linux.microsoft.com (Postfix) with ESMTPSA id F1E2D206787D;
-	Tue,  1 Jul 2025 03:48:46 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F1E2D206787D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1751366929;
-	bh=1mZwCYjK5KwlkUcBLP6Sb3wXHC217d46BhcC97NsTXs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=DVzJ/88P/VW6hE+NTmuM8z2kHscNZ+/l9LHR4gkTzHa+E5A+QITUHII1wy/ZIayoV
-	 ZNquvoN+t/0RedP53J0EBxHnxy1IaDsqqVZCu+t234pxAn+aKOTiGQcI2YK8+Z6RLZ
-	 p+Iskj/7d1Z574Ql4Ei/vtmaNBdgjA8K92sEY6d8=
-From: Naman Jain <namjain@linux.microsoft.com>
-To: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>
-Cc: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Olaf Hering <olaf@aepfle.de>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Naman Jain <namjain@linux.microsoft.com>
-Subject: [PATCH v2] tools/hv: fcopy: Fix irregularities with size of ring buffer
-Date: Tue,  1 Jul 2025 16:18:37 +0530
-Message-Id: <20250701104837.3006-1-namjain@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C1826A1DE
+	for <linux-hyperv@vger.kernel.org>; Tue,  1 Jul 2025 11:21:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751368912; cv=pass; b=eBt9LRmTNwbmsLV50nInJ6fr5kRX/8Lo7CrPIe04QDN7kJMX6mFxjohe3uR5zDBpUgQooqZswVimQaVNVMlN8qIzmqtnhuFlS1NWNy7/XgGYLhxibh/7NnTVYEAaR86u8L/ruGcQwE1yu2ERwlEjBm9Z2sD1mN0r87Akf72NqK8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751368912; c=relaxed/simple;
+	bh=gUQyv41Gn9LR0/WCRhrgn8wWqLPyv9FHtr12u4lbRFo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Eu41BUxnvGASXx8zBHIraPLbvF+bNEhQcMJN2AKg814m3RjibZcrGLTFlgGpaWkIzW9q0Wob7Wy6jtfDpQIm0LaKq/+lVTBMhQBm5EvPWlB5p6HKSRQ6hz2ryoYWvMy0KIdcHk7TnDO9sXEthYXvte87McDxIH9sKSss9eFxAr4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aepfle.de; spf=pass smtp.mailfrom=aepfle.de; dkim=pass (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b=IsOURGwR; dkim=permerror (0-bit key) header.d=aepfle.de header.i=@aepfle.de header.b=1ROTpqMA; arc=pass smtp.client-ip=85.215.255.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aepfle.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aepfle.de
+ARC-Seal: i=1; a=rsa-sha256; t=1751368543; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=m8tSjQYH/rjSNye0oX9WF+e3b8LHnJskUaGVd+5+9eRHykFd5QAJe9LW3Tb5uoF2Ah
+    LpLbol8lhZLTx5Ji27B3P8PT8+cQvrVclrbkCSaGeRWJw6Tf+npK1eKShqn4e8gLeSNa
+    Ph8cYdunoplBBvpKgSf26SdRdXyuQq4AlKRQP0UoVTm4RFIdRAY5zgXxufxtuKwf8UCD
+    qxvPrMfKgHnomPeDQaubOJsOH6wyDhNGRDpO2PY4ScTlziYaSagN0PG+uMM4nMpZAG6m
+    OVKgnP4txev+nwpRV2G06Cxjg6kokaSg/G6KWWmedUm7nJEd29IsHLXVV+R/j/aFBRRy
+    cxFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1751368543;
+    s=strato-dkim-0002; d=strato.com;
+    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=wEOBlKUXvrWzRxDgnR1dClAq6TTdBBzY3YMfXYkvyt0=;
+    b=dYfOfhc+BusUuGSrmksmT3R5xnDsSGcORgA0I4GKjk8m7Ufq6q8ciB2E5FmElELMul
+    ehTU2gB+MXdVraKM8W7MtyrXmmY70HF15BBq3/YieKopo4FfFM7tnxWuxcq/BzzbYlp2
+    d31x2Za4GVeB4vG6c+U9m/a22gV+uoqVW6nGzvggskrPFUm0vLASHl+ozXvKuy3HZikh
+    R71nRJH4ccussVBzSqHlcB8OcehlCFdP++FyBQTYJejEjyg33wuAiVdfVivQGlJ2w6Q/
+    tJF2gpbZbwx8PyNx1e8Hgb8iYDhy/slOE4Yvzsr0q9pDp0rxzHnuytd45qcGqhRlP6yi
+    utZA==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1751368543;
+    s=strato-dkim-0002; d=aepfle.de;
+    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=wEOBlKUXvrWzRxDgnR1dClAq6TTdBBzY3YMfXYkvyt0=;
+    b=IsOURGwRC8+3uIPKXhZGvoxBL2brFiAUsbiit3m0BbIGT3dKhBP0z4x9Esaf13rSlF
+    L4rt7CVCdnO6G5GFaoHgAiaMHluZUU8JwapOMNzGN1EKbWSNEEPvOHa9PcLqVcccI577
+    QqbMdj4ZvAN9lt+DvKF9WJLBLah7/hxsHRi6hSRagXX5ZtMg0uowNd3Qei/9mKeZS2bC
+    lO/Hs6m+WLpozWhBuWVeQlvRUzzpkT0dhnPQcXDKteRZRxA46XqMScR8NcTs5c0wC9Ev
+    KKowHcSUp0nb7OLPZ5Ry0nHSI3m7Px5+1OSY91I6/7kTaMPgoaYIeIz34esADabiTR/G
+    K9KQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1751368543;
+    s=strato-dkim-0003; d=aepfle.de;
+    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=wEOBlKUXvrWzRxDgnR1dClAq6TTdBBzY3YMfXYkvyt0=;
+    b=1ROTpqMAvBriu2SBB3gxDBTvZIV5XNnl/bMg6gNgBtm8najhEUaU29qPTdhhy1wyjq
+    JMChnDldgd7zuXJjWzAQ==
+X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QLpd5ylWvMDX3y/OmD4uXd0fmzGoJ8rBK6cWAVfDMmnI2IZ8kj8s0jE6n+P5L1"
+Received: from sender
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id D2e95d161BFgJKQ
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Tue, 1 Jul 2025 13:15:42 +0200 (CEST)
+Date: Tue, 1 Jul 2025 13:15:32 +0200
+From: Olaf Hering <olaf@aepfle.de>
+To: Naman Jain <namjain@linux.microsoft.com>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>, Haiyang Zhang
+ <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, Long Li <longli@microsoft.com>, Michael Kelley
+ <mhklinux@outlook.com>, linux-hyperv@vger.kernel.org, Saurabh Sengar
+ <ssengar@linux.microsoft.com>
+Subject: Re: [PATCH v2] tools/hv: fcopy: Fix irregularities with size of
+ ring buffer
+Message-ID: <20250701131532.125b960c.olaf@aepfle.de>
+In-Reply-To: <20250701104837.3006-1-namjain@linux.microsoft.com>
+References: <20250701104837.3006-1-namjain@linux.microsoft.com>
+X-Mailer: Claws Mail (olh) 20250514T101025.84a10d9e hat ein Softwareproblem, kann man nichts machen.
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/64GBwXXANp4OImnPC0816Nn";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 7bit
 
-Size of ring buffer, as defined in uio_hv_generic driver, is no longer
-fixed to 16 KB. This creates a problem in fcopy, since this size was
-hardcoded. With the change in place to make ring sysfs node actually
-reflect the size of underlying ring buffer, it is safe to get the size
-of ring sysfs file and use it for ring buffer size in fcopy daemon.
-Fix the issue of disparity in ring buffer size, by making it dynamic
-in fcopy uio daemon.
+--Sig_/64GBwXXANp4OImnPC0816Nn
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Cc: stable@vger.kernel.org
-Fixes: 0315fef2aff9 ("uio_hv_generic: Align ring size to system page")
-Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
----
-Changes since v1:
-https://lore.kernel.org/all/20250620070618.3097-1-namjain@linux.microsoft.com/
+Tue,  1 Jul 2025 16:18:37 +0530 Naman Jain <namjain@linux.microsoft.com>:
 
-* Removed unnecessary type casting in malloc for desc variable (Olaf)
-* Added retry mechanisms to avoid potential race conditions (Michael)
-* Moved the logic to fetch ring size to a later part in main (Michael)
+> +		syslog(LOG_ERR, "Could not determine ring size, using default: %u byte=
+s",
+> +		       HV_RING_SIZE_DEFAULT);
 
-So Michael, you suggested me to move the above logic after the
-/dev/uio<N> entry is successfully opened. But there is some issue
-with uio_hv_generic changing interrupt mask, resulting in fcopy daemon
-to get stuck in pread forever. Since fcopy is broken as of now, I
-thought it is better to take it separately, and let this change go.
-Please let me know if you are fine with that.
----
- tools/hv/hv_fcopy_uio_daemon.c | 82 +++++++++++++++++++++++++++++++---
- 1 file changed, 75 insertions(+), 7 deletions(-)
+I think this is not an actionable error.
+Maybe use the default just silently?
 
-diff --git a/tools/hv/hv_fcopy_uio_daemon.c b/tools/hv/hv_fcopy_uio_daemon.c
-index 0198321d14a2..f2e4976ebf28 100644
---- a/tools/hv/hv_fcopy_uio_daemon.c
-+++ b/tools/hv/hv_fcopy_uio_daemon.c
-@@ -36,6 +36,7 @@
- #define WIN8_SRV_VERSION	(WIN8_SRV_MAJOR << 16 | WIN8_SRV_MINOR)
- 
- #define FCOPY_UIO		"/sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/uio"
-+#define FCOPY_CHANNELS_PATH	"/sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/channels"
- 
- #define FCOPY_VER_COUNT		1
- static const int fcopy_versions[] = {
-@@ -47,9 +48,67 @@ static const int fw_versions[] = {
- 	UTIL_FW_VERSION
- };
- 
--#define HV_RING_SIZE		0x4000 /* 16KB ring buffer size */
-+#define HV_RING_SIZE_DEFAULT	0x4000 /* 16KB ring buffer size default */
- 
--static unsigned char desc[HV_RING_SIZE];
-+static uint32_t get_ring_buffer_size(void)
-+{
-+	char ring_path[PATH_MAX];
-+	DIR *dir;
-+	struct dirent *entry;
-+	struct stat st;
-+	uint32_t ring_size = 0;
-+	int retry_count = 0;
-+
-+	/* Find the channel directory */
-+	dir = opendir(FCOPY_CHANNELS_PATH);
-+	if (!dir) {
-+		usleep(100 * 1000); /* Avoid race with kernel, wait 100ms and retry once */
-+		dir = opendir(FCOPY_CHANNELS_PATH);
-+		if (!dir) {
-+			syslog(LOG_ERR, "Failed to open channels directory: %s", strerror(errno));
-+			return HV_RING_SIZE_DEFAULT;
-+		}
-+	}
-+
-+retry_once:
-+	while ((entry = readdir(dir)) != NULL) {
-+		if (entry->d_type == DT_DIR && strcmp(entry->d_name, ".") != 0 &&
-+		    strcmp(entry->d_name, "..") != 0) {
-+			snprintf(ring_path, sizeof(ring_path), "%s/%s/ring",
-+				 FCOPY_CHANNELS_PATH, entry->d_name);
-+
-+			if (stat(ring_path, &st) == 0) {
-+				/*
-+				 * stat returns size of Tx, Rx rings combined,
-+				 * so take half of it for individual ring size.
-+				 */
-+				ring_size = (uint32_t)st.st_size / 2;
-+				syslog(LOG_INFO, "Ring buffer size from %s: %u bytes",
-+				       ring_path, ring_size);
-+				break;
-+			}
-+		}
-+	}
-+
-+	if (!ring_size && retry_count == 0) {
-+		retry_count = 1;
-+		rewinddir(dir);
-+		usleep(100 * 1000); /* Wait 100ms and retry once */
-+		goto retry_once;
-+	}
-+
-+	closedir(dir);
-+
-+	if (!ring_size) {
-+		ring_size = HV_RING_SIZE_DEFAULT;
-+		syslog(LOG_ERR, "Could not determine ring size, using default: %u bytes",
-+		       HV_RING_SIZE_DEFAULT);
-+	}
-+
-+	return ring_size;
-+}
-+
-+static unsigned char *desc;
- 
- static int target_fd;
- static char target_fname[PATH_MAX];
-@@ -406,7 +465,7 @@ int main(int argc, char *argv[])
- 	int daemonize = 1, long_index = 0, opt, ret = -EINVAL;
- 	struct vmbus_br txbr, rxbr;
- 	void *ring;
--	uint32_t len = HV_RING_SIZE;
-+	uint32_t ring_size, len;
- 	char uio_name[NAME_MAX] = {0};
- 	char uio_dev_path[PATH_MAX] = {0};
- 
-@@ -437,6 +496,15 @@ int main(int argc, char *argv[])
- 	openlog("HV_UIO_FCOPY", 0, LOG_USER);
- 	syslog(LOG_INFO, "starting; pid is:%d", getpid());
- 
-+	ring_size = get_ring_buffer_size();
-+	len = ring_size;
-+	desc = malloc(ring_size * sizeof(unsigned char));
-+	if (!desc) {
-+		syslog(LOG_ERR, "malloc failed for desc buffer");
-+		ret = -ENOMEM;
-+		goto exit;
-+	}
-+
- 	fcopy_get_first_folder(FCOPY_UIO, uio_name);
- 	snprintf(uio_dev_path, sizeof(uio_dev_path), "/dev/%s", uio_name);
- 	fcopy_fd = open(uio_dev_path, O_RDWR);
-@@ -448,14 +516,14 @@ int main(int argc, char *argv[])
- 		goto exit;
- 	}
- 
--	ring = vmbus_uio_map(&fcopy_fd, HV_RING_SIZE);
-+	ring = vmbus_uio_map(&fcopy_fd, ring_size);
- 	if (!ring) {
- 		ret = errno;
- 		syslog(LOG_ERR, "mmap ringbuffer failed; error: %d %s", ret, strerror(ret));
- 		goto close;
- 	}
--	vmbus_br_setup(&txbr, ring, HV_RING_SIZE);
--	vmbus_br_setup(&rxbr, (char *)ring + HV_RING_SIZE, HV_RING_SIZE);
-+	vmbus_br_setup(&txbr, ring, ring_size);
-+	vmbus_br_setup(&rxbr, (char *)ring + ring_size, ring_size);
- 
- 	rxbr.vbr->imask = 0;
- 
-@@ -472,7 +540,7 @@ int main(int argc, char *argv[])
- 			goto close;
- 		}
- 
--		len = HV_RING_SIZE;
-+		len = ring_size;
- 		ret = rte_vmbus_chan_recv_raw(&rxbr, desc, &len);
- 		if (unlikely(ret <= 0)) {
- 			/* This indicates a failure to communicate (or worse) */
 
-base-commit: 1343433ed38923a21425c602e92120a1f1db5f7a
--- 
-2.34.1
+Olaf
 
+--Sig_/64GBwXXANp4OImnPC0816Nn
+Content-Type: application/pgp-signature
+Content-Description: Digitale Signatur von OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAmhjw1QACgkQ86SN7mm1
+DoBixQ/+K8zbmVa+J9bZMhBJj3QtmssG4V4Q7YSkABrg4T0rJnTBWn2P6JA91LFi
+3yw1LgT8V7ZiC6FWDk/0GODs3N2qlf01+aZbracP6RcYUa7rISfRkDmc5a3xlPuu
+Hj0FgQ49o4Hg2523KBqWLnGiS6cMcrOGExTsEdaTiu7pmUW1SPCJfCn9tWm8LxeI
+OMrh9TobF5LTrQXNB15eCbQjrBngoceKv2fIJ37RTRRWChHCUo0obLKmNbpOK/cC
+Ytr23xe0zKW/WhqAnoYpAyqoBXEOTTsBXm5qT9fxd40szusdOnMj7pONtsIdEMrg
+YJYxLu/X3eSFOyLzaXQSrLvFxTjpC287X7QEYEQb9KzjmYc3z3HA4sa0VHTzcsQD
+7TYtwN2LGiX0TKc8ofPaTTdSc9w2bt/xbx6z2gEjgTO48MSPk939O268BtXSlzf5
+lWBZKW6GweTh8yrwcHUhESJt7k5cEzPixhNLwBflEKGxwTku9plANisbLD1xOvBS
+8HGZyS+BmLNaiu52GnOzFa8BqlbAkFsaYeW58MovMz49rJZtBbUhPvOZ64yZxIlC
+JLqHHF1kBPB0mK5Ox9p0pdc1fNExLimOfIqVkvehEJj2r47cypMUtBc1m/qygfhX
+jZa2ptE23oIxMZQHdaxEuMqUXn66TYB0NpRv3DyEzAhv+47Reb8=
+=E6cr
+-----END PGP SIGNATURE-----
+
+--Sig_/64GBwXXANp4OImnPC0816Nn--
 
