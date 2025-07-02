@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-6069-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6070-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A4A1AF0C0F
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Jul 2025 08:56:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3540CAF5E22
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Jul 2025 18:11:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3B5123AF233
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Jul 2025 06:56:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5B3C5176853
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Jul 2025 16:11:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1884F219A8D;
-	Wed,  2 Jul 2025 06:56:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71D522D46BE;
+	Wed,  2 Jul 2025 16:11:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZYpCyKkt"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gZNSODaO"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B58631FE46D
-	for <linux-hyperv@vger.kernel.org>; Wed,  2 Jul 2025 06:56:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC7CF1E0DD8;
+	Wed,  2 Jul 2025 16:11:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751439397; cv=none; b=AVagoebAHJuEuJPFtoG872MTNM/FtjvtvSKHfflhvGoPIFu9Ikpchc/4Hq8tCNt4uN9WQ14npX7gj4wjvYW5RS4xrVgpxMq5WRp4XzsFJFS35eAoxTO88wUYHur+/zGr7VAZOK1OWNLMUlNHG/mFDqeD1/oxiBmHHnYQTyWihmo=
+	t=1751472709; cv=none; b=RRHeoznXm30KstXDmm5jc+amBg9GZohyVa34x5uozFZwX8AoML1vAsm3+JtCp0nVEOFqsbnijtrKRKDGZWO6uPfIbrDzmCI8vNMKNngY0sjRKRY5u2Dhf5o9LLUxKw8Vo+LnC34qGcJCuBdo24UmMw0amtY4Wv2CK6N2K8jV9+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751439397; c=relaxed/simple;
-	bh=6cPAVd7hczo2QIix51p1gZOYXf4Yy2FRr3/QJ1Ncsdg=;
+	s=arc-20240116; t=1751472709; c=relaxed/simple;
+	bh=yS/Dw9mwlzCfupsNGgq6I0EPxICqWfjGtM2H6uUtaGY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MgOQvWazEtwl3ihSlmqhtThcDLri9KIpK37rWCGrn+WFFtFMksgDUpDVH02BEQ3nCyXjz5Dme+CnRdKvrktK8LbV3zBiQUzWC+ZxOaQppAMBBt1Vn/uHUgRzUmQxy58/7TvC34zUweuq8K1azqZust9acE3Tn5yTUv7DaMJK2e4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ZYpCyKkt; arc=none smtp.client-ip=13.77.154.182
+	 In-Reply-To:Content-Type; b=TUnQsO4ZcYj7pTeojna3KYdZpftg5e5zAMaOzIk3/oCD8xvLC0o72BnncQ/sfadrKeN16tQ15xu7tHazvGxYyKqKjOtSHkTD7vdLJC7n3XOTEI8MKuYEfhN9o2pMPzHPDXEmBTGaEeP/03xU/iJ1kVUGinFBbWuptLO5dxHazWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gZNSODaO; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.79.65.159] (unknown [4.194.122.144])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 26BE3201657A;
-	Tue,  1 Jul 2025 23:56:32 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 26BE3201657A
+Received: from [100.66.201.102] (unknown [40.68.200.63])
+	by linux.microsoft.com (Postfix) with ESMTPSA id EA292201A4D4;
+	Wed,  2 Jul 2025 09:11:44 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EA292201A4D4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1751439395;
-	bh=jYjoFygznun8IiEWEdmOJt7XY2ZRBhTnuRyPsUcS1mQ=;
+	s=default; t=1751472707;
+	bh=g9AKuBvLaq/WBbfdsgGRcIJWQPeX4lLdRaRJp8x1I0s=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZYpCyKktQsmD+fNyyavhaeGGpNG0pa9rlNcRLHUUtraogbLj/C824g9NJ/PktwGRB
-	 GQ/TDZeZ99afUDkz/dssRIPsR+RWLEEEE6Xim4CnCpm3wooUVsNgB4ldWwitkhDzCn
-	 hu6MV4ylKabiuSWwHOjnKfdjpYGHyI7i92fP+lfc=
-Message-ID: <3a6ca6ab-cbd9-4e0d-b047-fbea405033b3@linux.microsoft.com>
-Date: Wed, 2 Jul 2025 12:26:31 +0530
+	b=gZNSODaO7kwE0UbD/eZnrrO8CNnaIStHeRpiXeUoWuTm32wGkNosO/Q/m36jWsf4r
+	 s89HlQZMl2Vn07oGhTh9ghiRIVFv5ZIxoz6MojX+knBBI2GGmi2ApkzjZpbP32mhvk
+	 SPbGGBrhS+4UicxwTkulUP/Hjw05OEeTJ1fAAU1Y=
+Message-ID: <ca26fba1-c2bb-40a1-bb5e-92811c4a6fc6@linux.microsoft.com>
+Date: Wed, 2 Jul 2025 18:11:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -49,53 +49,152 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [EXTERNAL] Re: [PATCH v2] tools/hv: fcopy: Fix irregularities
- with size of ring buffer
-To: Long Li <longli@microsoft.com>, Olaf Hering <olaf@aepfle.de>
-Cc: KY Srinivasan <kys@microsoft.com>, Haiyang Zhang
- <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Michael Kelley <mhklinux@outlook.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- Saurabh Sengar <ssengar@linux.microsoft.com>
-References: <20250701104837.3006-1-namjain@linux.microsoft.com>
- <20250701131532.125b960c.olaf@aepfle.de>
- <DS2PR21MB51813681D55C8833729D6954CE40A@DS2PR21MB5181.namprd21.prod.outlook.com>
+Subject: Re: [RFC PATCH 1/1] KVM: VMX: Use Hyper-V EPT flush for local TLB
+ flushes
+To: Vitaly Kuznetsov <vkuznets@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org,
+ alanjiang@microsoft.com, chinang.ma@microsoft.com,
+ andrea.pellegrini@microsoft.com, Kevin Tian <kevin.tian@intel.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org
+References: <cover.1750432368.git.jpiotrowski@linux.microsoft.com>
+ <4266fc8f76c152a3ffcbb2d2ebafd608aa0fb949.1750432368.git.jpiotrowski@linux.microsoft.com>
+ <875xghoaac.fsf@redhat.com>
 Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <DS2PR21MB51813681D55C8833729D6954CE40A@DS2PR21MB5181.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+In-Reply-To: <875xghoaac.fsf@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-
-On 7/2/2025 12:02 PM, Long Li wrote:
->> Subject: [EXTERNAL] Re: [PATCH v2] tools/hv: fcopy: Fix irregularities with size of
->> ring buffer
->>
->> Tue,  1 Jul 2025 16:18:37 +0530 Naman Jain <namjain@linux.microsoft.com>:
->>
->>> +		syslog(LOG_ERR, "Could not determine ring size, using
->> default: %u bytes",
->>> +		       HV_RING_SIZE_DEFAULT);
->>
->> I think this is not an actionable error.
->> Maybe use the default just silently?
->>
+On 27/06/2025 10:31, Vitaly Kuznetsov wrote:
+> Jeremi Piotrowski <jpiotrowski@linux.microsoft.com> writes:
 > 
-> How about just fail fcopy?
+>> Use Hyper-V's HvCallFlushGuestPhysicalAddressSpace for local TLB flushes.
+>> This makes any KVM_REQ_TLB_FLUSH_CURRENT (such as on root alloc) visible to
+>> all CPUs which means we no longer need to do a KVM_REQ_TLB_FLUSH on CPU
+>> migration.
+>>
+>> The goal is to avoid invept-global in KVM_REQ_TLB_FLUSH. Hyper-V uses a
+>> shadow page table for the nested hypervisor (KVM) and has to invalidate all
+>> EPT roots when invept-global is issued. This has a performance impact on
+>> all nested VMs.  KVM issues KVM_REQ_TLB_FLUSH on CPU migration, and under
+>> load the performance hit causes vCPUs to use up more of their slice of CPU
+>> time, leading to more CPU migrations. This has a snowball effect and causes
+>> CPU usage spikes.
+>>
+>> By issuing the hypercall we are now guaranteed that any root modification
+>> that requires a local TLB flush becomes visible to all CPUs. The same
+>> hypercall is already used in kvm_arch_flush_remote_tlbs and
+>> kvm_arch_flush_remote_tlbs_range.  The KVM expectation is that roots are
+>> flushed locally on alloc and we achieve consistency on migration by
+>> flushing all roots - the new behavior of achieving consistency on alloc on
+>> Hyper-V is a superset of the expected guarantees. This makes the
+>> KVM_REQ_TLB_FLUSH on CPU migration no longer necessary on Hyper-V.
 > 
-> This will have a consistent behavior.
+> Sounds reasonable overall, my only concern (not sure if valid or not) is
+> that using the hypercall for local flushes is going to be more expensive
+> than invept-context we do today and thus while the performance is
+> improved for the scenario when vCPUs are migrating a lot, we will take a
+> hit in other cases.
 > 
-> Long
 
-I am OK with that as well. I provided an explanation regarding best
-effort fallback mechanism in my other reply in this thread.
+Discussion below, I think the impact should be limited and will try to quantify it.
 
- From silently ignoring it (1) to failing fcopy (2), or simply logging 
-as info (3), I would personally prefer either (2) or (3) or keep it in
-current form. I'll wait for this discussion to conclude though since we
-have varied opinions on this.
+>>
+>> Coincidentally - we now match the behavior of SVM on Hyper-V.
+>>
+>> Signed-off-by: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+>> ---
+>>  arch/x86/include/asm/kvm_host.h |  1 +
+>>  arch/x86/kvm/vmx/vmx.c          | 20 +++++++++++++++++---
+>>  arch/x86/kvm/vmx/vmx_onhyperv.h |  6 ++++++
+>>  arch/x86/kvm/x86.c              |  3 +++
+>>  4 files changed, 27 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+>> index b4a391929cdb..d3acab19f425 100644
+>> --- a/arch/x86/include/asm/kvm_host.h
+>> +++ b/arch/x86/include/asm/kvm_host.h
+>> @@ -1077,6 +1077,7 @@ struct kvm_vcpu_arch {
+>>  
+>>  #if IS_ENABLED(CONFIG_HYPERV)
+>>  	hpa_t hv_root_tdp;
+>> +	bool hv_vmx_use_flush_guest_mapping;
+>>  #endif
+>>  };
+>>  
+>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>> index 4953846cb30d..f537e0df56fc 100644
+>> --- a/arch/x86/kvm/vmx/vmx.c
+>> +++ b/arch/x86/kvm/vmx/vmx.c
+>> @@ -1485,8 +1485,12 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu)
+>>  		/*
+>>  		 * Flush all EPTP/VPID contexts, the new pCPU may have stale
+>>  		 * TLB entries from its previous association with the vCPU.
+>> +		 * Unless we are running on Hyper-V where we promotes local TLB
+> 
+> s,promotes,promote, or, as Sean doesn't like pronouns, 
+> 
+> "... where local TLB flushes are promoted ..."
+> 
 
-Regards,
-Naman
+Will do.
+
+>> +		 * flushes to be visible across all CPUs so no need to do again
+>> +		 * on migration.
+>>  		 */
+>> -		kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
+>> +		if (!vmx_hv_use_flush_guest_mapping(vcpu))
+>> +			kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
+>>  
+>>  		/*
+>>  		 * Linux uses per-cpu TSS and GDT, so set these when switching
+>> @@ -3243,11 +3247,21 @@ void vmx_flush_tlb_current(struct kvm_vcpu *vcpu)
+>>  	if (!VALID_PAGE(root_hpa))
+>>  		return;
+>>  
+>> -	if (enable_ept)
+>> +	if (enable_ept) {
+>> +		/*
+>> +		 * hyperv_flush_guest_mapping() has the semantics of
+>> +		 * invept-single across all pCPUs. This makes root
+>> +		 * modifications consistent across pCPUs, so an invept-global
+>> +		 * on migration is no longer required.
+>> +		 */
+>> +		if (vmx_hv_use_flush_guest_mapping(vcpu))
+>> +			return (void)WARN_ON_ONCE(hyperv_flush_guest_mapping(root_hpa));
+>> +
+> 
+> HvCallFlushGuestPhysicalAddressSpace sounds like a heavy operation as it
+> affects all processors. Is there any visible perfomance impact of this
+> change when there are no migrations (e.g. with vCPU pinning)? Or do we
+> believe that Hyper-V actually handles invept-context the exact same way?
+> 
+I'm going to have to do some more investigation to answer that - do you have an
+idea of a workload that would be sensitive to tlb flushes that I could compare
+this on?
+
+In terms of cost, Hyper-V needs to invalidate the VMs shadow page table for a root
+and do the tlb flush. The first part is CPU intensive but is the same in both cases
+(hypercall and invept-single). The tlb flush part will require a bit more work for
+the hypercall as it needs to happen on all cores, and the tlb will now be empty
+for that root.
+
+My assumption is that these local tlb flushes are rather rare as they will
+only happen when:
+- new root is allocated
+- we need to switch to a special root
+
+So not very frequent post vm boot (with or without pinning). And the effect of the
+tlb being empty for that root on other CPUs should be a neutral, as users of the
+root would have performed the same local flush at a later point in time (when using it).
+
+All the other mmu updates use kvm_flush_remote_tlbs* which already go through the
+hypercall.
+
+Jeremi
+
 
