@@ -1,99 +1,94 @@
-Return-Path: <linux-hyperv+bounces-6066-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6067-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E08EAF0896
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Jul 2025 04:40:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08AE7AF0ABC
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Jul 2025 07:32:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CCE07443C4E
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Jul 2025 02:39:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 01C604A38BB
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Jul 2025 05:32:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D555D1D6DA9;
-	Wed,  2 Jul 2025 02:40:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 711D21DD88F;
+	Wed,  2 Jul 2025 05:32:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C6rFgR/U"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="LEX2ppwX"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5621D5ADC;
-	Wed,  2 Jul 2025 02:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16D5660B8A
+	for <linux-hyperv@vger.kernel.org>; Wed,  2 Jul 2025 05:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751424002; cv=none; b=MH/Ge+uXwj5LPiI6cp/dSbmPgHtzNXh/6pf9Rrdz4BidD/KrnJT65Fz2uqvVkhsWHFHMOoapBl+OWj+kJi1nTGeB0jhZ2QODETfGceXCTCff0JNETRcTf+kzPPZp6yGT2kP5J4Y4gLpinRnFTd1uwJVQcG3LEPQZLhMLBsl7d64=
+	t=1751434322; cv=none; b=baBeC6gO8WIwKL9dYdSBc0PcLzV+4jUQnAXEs8yPQgyCnLgEUwZSUHtw+h4Y2R15NgUvrbZpwipxNx7R4YOwYhIKuWnqFmbuXd3DuDU2RblCn3OupA+7pK2ZcoskK4wF426KHvQzNYFZLY9V+YFKLSG86uNzF79AGDvdZ0yIIl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751424002; c=relaxed/simple;
-	bh=BgqoyH7BZAdjNzSV8UuKTMppKfENt1BfB4wMrIRE850=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=E0yZcHceAWOht2nfePb1ERffEPqkaLZVC/JOUtWXAyj1z5WU8DAB6PoiCLtYbVT40akQPsHMyHnFTCP0suaLq3B0tpEaDulIVNe86QS2ml+UhGcv/hbKwRcuT77WLN2JyoOkSuSGLBXSmhY4JOOOVaIXru8j4GfrpD7EWebN+iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C6rFgR/U; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76D83C4CEEF;
-	Wed,  2 Jul 2025 02:40:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751424002;
-	bh=BgqoyH7BZAdjNzSV8UuKTMppKfENt1BfB4wMrIRE850=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=C6rFgR/UGjtdTidwgGKyZXamMpf13xxwc4hqQbUeb59RuKSpw3puMxppVDXyqEpTN
-	 zPI6QNtetzxZMFZ6EOGceVp6GwXgk0jAmnqbhQiX+PsvVENK+zj1q68R5pRdiyquKT
-	 KAzefG9sSn07mXu6WThKWjM1lStf2UEWsR4uRuJCPvL42b6duw5S7uJSZe0b5kUjTm
-	 XYKMzGx7DxqB8FQZuO9XsuY7DUDEgRpiMGovsATR8HlxkczWxy1HbNrEjESsFNOEZH
-	 yp00P7Pn8+k6mw+02UfNMVGx32WXZGIGHbfGRwzGyMwiigJ/EmiTPFXF/nk5fbzkBa
-	 ZyeDBn4ThsFDA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70FC6383BA06;
-	Wed,  2 Jul 2025 02:40:28 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1751434322; c=relaxed/simple;
+	bh=yKula5frFRirzLC/pJHfQMo3IDC84vG2JEna7K2c5aw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XAHRrElw4K9TaEpQLnZFsO+IV/8qb23uNL6GnTSOkFbvtTlpY7mvnb4qQUhZd2HmV5nu1PaTDBlEQwqoce9Qrr75EVftKk4KVV7SSjLnI3aLmUBn8h8G1CiiMsWbRhHlAthYnbUut4IrQFW1imLA8LiMvEncDxLaUvpFOrwmj8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=LEX2ppwX; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.79.65.159] (unknown [4.194.122.136])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D2032211222C;
+	Tue,  1 Jul 2025 22:31:50 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D2032211222C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1751434313;
+	bh=qJUuZirSyjcs1LcZephvU7DqVn3x0j3TY4ooy4ZZHb0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LEX2ppwX7cVxezEgiG3E7p/839Sim3QhC5KeJJEL6Ufs9s4nhog5utAlvNMXwLVsB
+	 5ykfFEyuBpN/l1da+ItXAaEeMZXajAX8g/WXPeX8I/V0DWJcjdFaCvT80/k/8iWlMB
+	 1yLZ+sCA8mdeMDbxmeAWzNxzdVnD6eRHdcnbr0mA=
+Message-ID: <630a37bf-7ed5-42fb-ae64-6f6a29161d2e@linux.microsoft.com>
+Date: Wed, 2 Jul 2025 11:01:48 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] net: mana: Handle Reset Request from MANA NIC
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175142402700.183540.8619749523804992864.git-patchwork-notify@kernel.org>
-Date: Wed, 02 Jul 2025 02:40:27 +0000
-References: <1751055983-29760-1-git-send-email-haiyangz@linux.microsoft.com>
-In-Reply-To: <1751055983-29760-1-git-send-email-haiyangz@linux.microsoft.com>
-To: Haiyang Zhang <haiyangz@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- haiyangz@microsoft.com, decui@microsoft.com, stephen@networkplumber.org,
- kys@microsoft.com, paulros@microsoft.com, olaf@aepfle.de,
- vkuznets@redhat.com, davem@davemloft.net, wei.liu@kernel.org,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
- longli@microsoft.com, ssengar@linux.microsoft.com,
- linux-rdma@vger.kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
- bpf@vger.kernel.org, ast@kernel.org, hawk@kernel.org, tglx@linutronix.de,
- shradhagupta@linux.microsoft.com, andrew+netdev@lunn.ch,
- kotaranov@microsoft.com, horms@kernel.org, linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] tools/hv: fcopy: Fix irregularities with size of ring
+ buffer
+To: Olaf Hering <olaf@aepfle.de>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+ Michael Kelley <mhklinux@outlook.com>, linux-hyperv@vger.kernel.org,
+ Saurabh Sengar <ssengar@linux.microsoft.com>
+References: <20250701104837.3006-1-namjain@linux.microsoft.com>
+ <20250701131532.125b960c.olaf@aepfle.de>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <20250701131532.125b960c.olaf@aepfle.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello:
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
 
-On Fri, 27 Jun 2025 13:26:23 -0700 you wrote:
-> From: Haiyang Zhang <haiyangz@microsoft.com>
+On 7/1/2025 4:45 PM, Olaf Hering wrote:
+> Tue,  1 Jul 2025 16:18:37 +0530 Naman Jain <namjain@linux.microsoft.com>:
 > 
-> Upon receiving the Reset Request, pause the connection and clean up
-> queues, wait for the specified period, then resume the NIC.
-> In the cleanup phase, the HWC is no longer responding, so set hwc_timeout
-> to zero to skip waiting on the response.
+>> +		syslog(LOG_ERR, "Could not determine ring size, using default: %u bytes",
+>> +		       HV_RING_SIZE_DEFAULT);
 > 
-> [...]
+> I think this is not an actionable error.
+> Maybe use the default just silently?
+> 
+> 
+> Olaf
 
-Here is the summary with links:
-  - [net-next] net: mana: Handle Reset Request from MANA NIC
-    https://git.kernel.org/netdev/net-next/c/fbe346ce9d62
+So let's suppose a case, where the actual ring buffer size was different
+than the default value, and for some reason, we were not able to
+determine the ring size from the sysfs entry. This results in wrong size
+configured in FCopy daemon. FCopy does not work in that scenario and
+silently fails. We would definitely like to inform that to the user.
+Default size case is just to provide a best effort way of making it
+work.
+I am fine to change it to LOG_INFO or keep it the same. Please let me
+know your thoughts.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Regards,
+Naman
 
