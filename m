@@ -1,115 +1,129 @@
-Return-Path: <linux-hyperv+bounces-6094-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6095-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CF3EAF82DB
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Jul 2025 23:52:53 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90830AF83B7
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Jul 2025 00:44:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2DE2D1C81B7A
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Jul 2025 21:53:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5110C7A6363
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Jul 2025 22:43:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A7DC238C34;
-	Thu,  3 Jul 2025 21:52:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E77F2BF3D7;
+	Thu,  3 Jul 2025 22:44:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="l+1wDbtm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dWJYNReI"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OZ2KEzIw"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52BA42DE701;
-	Thu,  3 Jul 2025 21:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B50AE7263F;
+	Thu,  3 Jul 2025 22:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751579568; cv=none; b=K82lnVBhfCnINRUoOM9/qbKcoWhITuy0OQaFKb8U25TsaCVFJjItYPeDjuQ/46XlOFGxZy3G88kg6VAZaIC/zHuLy/IDJYnjSRNJdV7PJ0Hj6HVx3JFs6exseTinbhKD/Blz841Yho7l1fNu4bx+8v9akjXGoeJ22/rwFvvUFHQ=
+	t=1751582687; cv=none; b=a5mCusqiGdqCgyr/kk6hx7XLv7otjzQm6ThLJPKTGYfG4+9a93kQ1o8I608vROh9Hv/sYGmSD+HZZUKhYCRcxvCj6o+8nGICx0p/evo52kJqmw709sXKncqWYfxTw15awo1X3BwEdWS8+SpPnNcmRfAjvw2jfiztvqDtFG1PYxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751579568; c=relaxed/simple;
-	bh=ZfBlx6Su5IrNrWTwuvKm1AACwg1ryPnRlXyNWRIQY6o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=PxKkfEStBw3oxJ5xGc2/g4LI5JmDj7L8NLQaifUA9CcKdiqIAmWEpzSMT4AJdq+hdYGS5nIrrGeY4EDY6phFYaTRD2CqPpOz+2TXQTFWT3rJWeVIuujomlBLpy76FGSRS+z7Su0O7S4ltvrwMeli+n//75HoZOTmx0rMk8S5v/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=l+1wDbtm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dWJYNReI; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751579565;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZfBlx6Su5IrNrWTwuvKm1AACwg1ryPnRlXyNWRIQY6o=;
-	b=l+1wDbtmX5AiOOWEeigcXFhl+t2sTg0fHkUt5qJoqkmSBNRCXEXQXzn4U5Tm2LI/yu7c+U
-	XexkvkxZYhwEUaXRifilsiQeAjeM2ZcyBFPslBQh/AV+WCSzGorg9LkFwMExhRslqoeJp8
-	O3dT3G9x99c0XqaiDsAIS5SCBB3zcBoQ4ZtaDMeBh+GO2sdqsONGleQB7K5wJUK2ix2SdA
-	pRNnB0TQhRJN1mxyeb26CSM92iZW/xIh8UNMII619fFwRx60DDGvjqTEba9PaRXgLHtKm+
-	n4fqWlSrHoXXxoPVXsBoDFJrYc0cdF1A8M9zD2YEUQhO1GtDiAu1hYXdx1ojSg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751579565;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZfBlx6Su5IrNrWTwuvKm1AACwg1ryPnRlXyNWRIQY6o=;
-	b=dWJYNReIOQ2eB8r/KfLfgDmz4t7V9E3h7DMRPjyZluvj3HLgsHSM3z8I7W5OY/BD31GY2L
-	+Lnnu56yF4QvHoDA==
-To: Nam Cao <namcao@linutronix.de>, Michael Kelley <mhklinux@outlook.com>
-Cc: Marc Zyngier <maz@kernel.org>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org"
- <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, Karthikeyan Mitran
- <m.karthikeyan@mobiveil.co.in>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Pali =?utf-8?Q?Roh=C3=A1?=
- =?utf-8?Q?r?=
- <pali@kernel.org>, "K . Y . Srinivasan" <kys@microsoft.com>, Haiyang Zhang
- <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
- <decui@microsoft.com>, Joyce Ooi <joyce.ooi@intel.com>, Jim Quinlan
- <jim2101024@gmail.com>, Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Broadcom internal kernel
- review list <bcm-kernel-feedback-list@broadcom.com>, Ray Jui
- <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Ryder Lee
- <ryder.lee@mediatek.com>, Jianjun Wang <jianjun.wang@mediatek.com>, Marek
- Vasut <marek.vasut+renesas@gmail.com>, Yoshihiro Shimoda
- <yoshihiro.shimoda.uh@renesas.com>, Michal Simek <michal.simek@amd.com>,
- Daire McNamara <daire.mcnamara@microchip.com>, Nirmal Patel
- <nirmal.patel@linux.intel.com>, Jonathan Derrick
- <jonathan.derrick@linux.dev>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "linux-hyperv@vger.kernel.org"
- <linux-hyperv@vger.kernel.org>, "linux-rpi-kernel@lists.infradead.org"
- <linux-rpi-kernel@lists.infradead.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 14/16] PCI: hv: Switch to msi_create_parent_irq_domain()
-In-Reply-To: <20250703210056.sDzAytHT@linutronix.de>
-References: <cover.1750858083.git.namcao@linutronix.de>
- <024f0122314198fe0a42fef01af53e8953a687ec.1750858083.git.namcao@linutronix.de>
- <SN6PR02MB4157A6F9B2ABD3C69CE5B521D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <87cyaht595.ffs@tglx>
- <SN6PR02MB41576745C28D8F49081B8E77D443A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20250703210056.sDzAytHT@linutronix.de>
-Date: Thu, 03 Jul 2025 23:52:44 +0200
-Message-ID: <87qzyxrlg3.ffs@tglx>
+	s=arc-20240116; t=1751582687; c=relaxed/simple;
+	bh=YacSKt/1SlHP9Qmsgsh0NWz9Ib5ImhEU1/rIlRZCjB0=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=bnLq5kC3RO/4SVzKa0XeH9gWDfnnEiPMJQGoybQgnlYf8cL1YZBUJpmIgbonFWpyBFzRrZIeSzexRjaPct0OhGdZXgdQ2VGf8gRgXyqyhzLE6/cOt/gtG8cWR2Ans5Cj6W6Qu/PPhRrZnSmqxJjS4aNOVUWqkR4whOxS+Y+GopA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OZ2KEzIw; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1032)
+	id 2605421130BA; Thu,  3 Jul 2025 15:44:45 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2605421130BA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1751582685;
+	bh=DzpE8JONufIJxMYXOPlFuCadyw8GU1Ze2+OKvDY2+Hk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OZ2KEzIwiPXPth+ZilGaG7YjgUWFVDS7JR/mbgNQvzF1eTw9fvdr2fZS9nMytKAEP
+	 mnC8YBp15QaTnasgmSxyOOtQhfIlC8H8Tg93gaxCCiziujKSkIn/JDVBrFNC3Rh4na
+	 AfGsYvPBevrGOE7H5a0sJ809zlFkU3V2jgRwwUr8=
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	mhklinux@outlook.com,
+	tglx@linutronix.de,
+	bhelgaas@google.com,
+	romank@linux.microsoft.com
+Cc: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	hpa@zytor.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	jinankjain@linux.microsoft.com,
+	skinsburskii@linux.microsoft.com,
+	mrathor@linux.microsoft.com,
+	x86@kernel.org,
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Subject: [PATCH v2 0/6] Nested virtualization fixes for root partition
+Date: Thu,  3 Jul 2025 15:44:31 -0700
+Message-Id: <1751582677-30930-1-git-send-email-nunodasneves@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
 
-On Thu, Jul 03 2025 at 23:00, Nam Cao wrote:
-> On Thu, Jul 03, 2025 at 08:15:07PM +0000, Michael Kelley wrote:
->> which is in netdev/net-next.
->
-> I need some guidance here. If I make it apply cleanly to linux-next, it
-> won't apply to pci tree.
->
-> I saw this type of conflict being resolved during merging to Linus's tree.
-> Shouldn't we do the same for this case?
+Fixes for running as nested root partition on the Microsoft Hypervisor.
 
-There are many ways to skin a cat. See my other reply.
+Address issues with vmbus. The first patch prevents the Hyper-V PCI driver
+being registered on baremetal, since there's no vmbus.
+
+The second patch changes vmbus to make hypercalls to the L0 hypervisor
+instead of the L1. This is needed because L0 hypervisor, not the L1, is
+the one hosting the Windows root partition with the VMM that provides
+vmbus.
+
+The 3rd patch fixes a bug where cpu_online_mask is used unnecessarily
+in an interrupt chip callback.
+
+The 4th patch fixes up error return values in hv_map/unmap_interrupt() and
+their callers, and cleans up style issues.
+
+The 5th and 6th patches fix interrupt unmasking on nested. In this
+scenario, the L1 (nested) hypervisor does the interrupt mapping to root
+partition cores. The vectors just need to be mapped with
+MAP_DEVICE_INTERRUPT instead of affinitized with RETARGET_INTERRUPT.
+
+Changes in v2:
+- Reword commit messages for clarity (Michael Kelley, Bjorn Helgaas)
+- Open-code nested hypercalls to reduce unnecessary code (Michael Kelley)
+- Add patch (#3) to fix cpu_online_mask issue (Thomas Gleixner)
+- Add patch (#4) to fix error return values (Michael Kelley)
+- Remove several redundant error messages and checks (Michael Kelley)
+
+Mukesh Rathor (1):
+  PCI: hv: Don't load the driver for baremetal root partition
+
+Nuno Das Neves (3):
+  Drivers: hv: Use nested hypercall for post message and signal event
+  x86/hyperv: Fix usage of cpu_online_mask to get valid cpu
+  x86/hyperv: Clean up hv_map/unmap_interrupt() return values
+
+Stanislav Kinsburskii (2):
+  x86: hyperv: Expose hv_map_msi_interrupt function
+  PCI: hv: Use the correct hypercall for unmasking interrupts on nested
+
+ arch/x86/hyperv/irqdomain.c         | 66 +++++++++++++++++------------
+ arch/x86/include/asm/mshyperv.h     | 22 +---------
+ drivers/hv/connection.c             |  7 ++-
+ drivers/hv/hv.c                     |  6 ++-
+ drivers/iommu/hyperv-iommu.c        | 33 ++++++---------
+ drivers/pci/controller/pci-hyperv.c | 21 ++++++++-
+ 6 files changed, 80 insertions(+), 75 deletions(-)
+
+-- 
+2.34.1
+
 
