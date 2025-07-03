@@ -1,57 +1,57 @@
-Return-Path: <linux-hyperv+bounces-6080-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6081-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47444AF7589
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Jul 2025 15:27:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 375A5AF7598
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Jul 2025 15:28:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7ADA91895407
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Jul 2025 13:27:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BCDE21C40464
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Jul 2025 13:29:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A47013B284;
-	Thu,  3 Jul 2025 13:27:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FB3014D70E;
+	Thu,  3 Jul 2025 13:28:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uMJoD7xy";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UMsmDlmo"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k6BnCmhr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ROnQ+kLc"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9261381E;
-	Thu,  3 Jul 2025 13:27:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7BEB1DDD1;
+	Thu,  3 Jul 2025 13:28:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751549228; cv=none; b=lkk//vA4QIjmdeqgj3EMgGXDeep20gcIKMnB0XfWVTdiDeym/TbZJ0NuswPlip+vkWIMcVXFy8XCvRcBHEhugolKLxiFJja2hlS4X0fvB3S9Zrx2P2BnqHM4TbKFRFlLoR2weuY2hF9ijIYkLu5LgAQKx2pKIqlXTH9sx4icsyw=
+	t=1751549324; cv=none; b=G0j+eFv0Ua5SdPxmByNYQoEdF5JrWBN/W9JqgHyEmFQydRFwpccYQ4HK+Y14bIBBn1OkKaVjdBuTX3bbvTHX3jqgukrfv6ai0PCp1fyJ5IHS3rwJcg8GJs0Mx+Ju1gFfMVoppuJKozYp6Z70/FUtSPGeO3aZ7Ldf+RKw27rOzRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751549228; c=relaxed/simple;
+	s=arc-20240116; t=1751549324; c=relaxed/simple;
 	bh=81HmvwHeiUSGmL4dZb3PXIm6QmppJrUMFGfEmXnv22o=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=cGTir5AJN26tUQA/xJGLCHN8QI4b736jJ/BAEhWZd69Kkk2kCaqSqHz40Xo2ExLZxw82lPbgcSUw0xIjKoapFnOIsfF7+DeTzF4c714wAOt8zRUXb+zi7SqqHOy94BBjhulqjatV57LynvZR45zW5lMvaV/VMrx13vi3HXovpa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uMJoD7xy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UMsmDlmo; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Content-Type; b=HZdvUswjzOFabwfKCOXPDeoFdqRA8ulop1TkMblchGw/Lw2A4sHhVfmEGMcvp7lYMxD3SkC+RccrfTfzkn+Ur+fdyJNzxAPnhUSIgaUCMC3LoEeJMW92Acu0gmSiHSZwpeBHQ2BtoTsQdegW1UVuEkkr2Com3n/qE1VwG0ZBXrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k6BnCmhr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ROnQ+kLc; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751549225;
+	s=2020; t=1751549321;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
 	bh=81HmvwHeiUSGmL4dZb3PXIm6QmppJrUMFGfEmXnv22o=;
-	b=uMJoD7xyJM4mpWpwx8uMkF61D3OSN7oknYYGpiM0XpxjAGlSQvf0htdfvIiG4r3WneeMP7
-	Iwx1xMt5aW5GeNFBIL0350ThYSJ5LQM/YLRnBt48879KJ2A37O82tISh6pIK8BLjtnamr/
-	rD94AjqQGVuFCVR2tJkO8l7Q/B0kt2v0fYdEV+lEx7VkqnVpIycWHJu6bE0M/ZHrjWOQIn
-	m/sf/quPagJMSw0dZVkdD47v/DqaTXVg71kmM2kQbiOw13Zmgc6UvLAOJFCVPGASfpyoX+
-	3Fohow0L/hJmKlIo/c5A9GOoaqoJAWjEHx8tO55Nkv/4O9hFvtb943kFp3zjkg==
+	b=k6BnCmhrUKnjyhGZR/aiCAsL14gYTfxPkP6AI8tNGVPzQb9xE2NLcgezU9aziYkNSCR7lX
+	nLKwosaEebR5GKTcC5jnaB0E/L9QSds/2dKXB0nvjxhftNJ9To6iW1YDZAtLnqlWiKeWC/
+	dCpTjL+384DvvxIN2NIh3uPDzwYewUEN/QckGkOFqGMnLOZZKkfODH2j0FxzxWOKDQkbEf
+	4SNtz6dBXeXH8o+50+zTeC18oWAm709Aoo8/TX34UvMIsxYFCAbsDTG56pcr8MtfCrHN24
+	S6Cp9LqqbYgwFVfm59VsbUaLI53TfnYBct+BWbUOMHczlRCxiPtPs+TxKjortg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751549225;
+	s=2020e; t=1751549321;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
 	bh=81HmvwHeiUSGmL4dZb3PXIm6QmppJrUMFGfEmXnv22o=;
-	b=UMsmDlmo/89Km8xvhCIeKLe46rLrXMtkmUwJpQ03b0vjvL81Vo7JWNr+Fqtj9RRiktPFYy
-	vOYoRbBu4vYfvyAQ==
+	b=ROnQ+kLcAQGVWiVEwPRgZEiqBhGTKQ40YBCkpXyv+5uCrFk0aKeSlCKKNLCtKKKmfZPuvV
+	Gza6PZ2ifwfXQ1Aw==
 To: Nam Cao <namcao@linutronix.de>, Marc Zyngier <maz@kernel.org>, Lorenzo
  Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
  <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Rob
@@ -79,13 +79,13 @@ To: Nam Cao <namcao@linutronix.de>, Marc Zyngier <maz@kernel.org>, Lorenzo
  linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
  linux-renesas-soc@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>
-Subject: Re: [PATCH 10/16] PCI: xilinx-xdma: Switch to
+Subject: Re: [PATCH 11/16] PCI: xilinx-nwl: Switch to
  msi_create_parent_irq_domain()
-In-Reply-To: <b4620dc1808f217a69d0ae50700ffa12ffd657eb.1750858083.git.namcao@linutronix.de>
+In-Reply-To: <5ac6e216bf2eaa438c8854baf2ff3e5cf0b2284f.1750858083.git.namcao@linutronix.de>
 References: <cover.1750858083.git.namcao@linutronix.de>
- <b4620dc1808f217a69d0ae50700ffa12ffd657eb.1750858083.git.namcao@linutronix.de>
-Date: Thu, 03 Jul 2025 15:27:04 +0200
-Message-ID: <87ldp5v1zr.ffs@tglx>
+ <5ac6e216bf2eaa438c8854baf2ff3e5cf0b2284f.1750858083.git.namcao@linutronix.de>
+Date: Thu, 03 Jul 2025 15:28:40 +0200
+Message-ID: <87ikk9v1x3.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
