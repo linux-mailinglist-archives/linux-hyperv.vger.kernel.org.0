@@ -1,227 +1,83 @@
-Return-Path: <linux-hyperv+bounces-6114-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6115-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7100FAFA32E
-	for <lists+linux-hyperv@lfdr.de>; Sun,  6 Jul 2025 06:39:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A148AFA440
+	for <lists+linux-hyperv@lfdr.de>; Sun,  6 Jul 2025 12:01:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9AAE2179F5C
-	for <lists+linux-hyperv@lfdr.de>; Sun,  6 Jul 2025 04:38:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 712307A9245
+	for <lists+linux-hyperv@lfdr.de>; Sun,  6 Jul 2025 10:00:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DAD81D88AC;
-	Sun,  6 Jul 2025 04:37:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FB382E36EF;
+	Sun,  6 Jul 2025 10:01:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9wQ/Ath"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XbhMyGGT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LX6+KQuA"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5831D5CFE;
-	Sun,  6 Jul 2025 04:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0875019CC27
+	for <linux-hyperv@vger.kernel.org>; Sun,  6 Jul 2025 10:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751776645; cv=none; b=r7aHQKmVyu+aYmGIRXx31cxTwHjlZAoktvzjUdILzYkLBfL+AGNylw08r+8ZYXS3pZ2C5zANVLAnE6fgnjQo1JtsFnYeXrV6Jj5OkuFuLJVPsHpd+VsiJs5PVWuxcxZm+mByOA9IIgm5jGasyZD3eai6SqDGVc+Cr3ly3N37TOw=
+	t=1751796101; cv=none; b=sP2N1fMpEe0iLHBQHV+j4xOf+RnTiHn6HrpEk0bwLCvxGOOyprAaIgFQY5Irh+s5IRvHRtlPw/A0yb9Ka9yL8j/7ZBkKUqhwsmqoej4x8XZ1KV1w5Q4njN6nY+Lihn13LuyVjMk0oetk6EmcxFxT/tvTSCoQczEgfsWcXVEWmvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751776645; c=relaxed/simple;
-	bh=Doct89OeyNO072Y2Ys7bCVOd+ekwZZ2v2r0ziNK3ALY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cSOt3BHB03+Kx+IY4l/XAWDYn4Vkfz96lnq6MeJf9Bnsvts2hPaZIt/r2siM4gSBnSKyGX5i0Coc+kRzAGyLfaLeg8Zt37VK7Qa28OXRbDEy+R51RlmZd+AyyeCK/bLPfXhGpAuy+KUBfKjNZIF6ECAPz377AEbFzT2fSFcT2rQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A9wQ/Ath; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-747fba9f962so1573496b3a.0;
-        Sat, 05 Jul 2025 21:37:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751776643; x=1752381443; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=78u4kXViM2gstT6OJkwZc50WiKMJcTjBxWIBBOazpAI=;
-        b=A9wQ/AthfS8Z1qGdi8uzDvwBn1LKRdGAGjp978NjVTCp95NYJruZe6tcdPoLvZlcfv
-         S0mqjYqU3STrpOnyW9q6z7PDbcivMBkt8QDkJ+zK5802wgnrO1rIPzcfazt5zB/xIGky
-         T9cm5BkR1zb5KcfcDePduKp8HozfqzuOOUv3BqGrTUg9J67rZTcC6j3AjhzCeuuQH1Yb
-         DcJYUegejC+FMc1vNgbkUQhqNhKJQkss/r0jC0sl+/DaTrHDm4PuBZ9NyZohmN1ykpTK
-         a57Gc0QbjBw2MsvGfd9gXRJgaFI+siNAe8gy2KttjlaMb+3Z2qts0rsmMjBJq8Nb9nsm
-         nLWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751776643; x=1752381443;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=78u4kXViM2gstT6OJkwZc50WiKMJcTjBxWIBBOazpAI=;
-        b=ATjAtbFpSRvhAnoDYvQm+XLCjFbm4R4v+iXAxd66Uo/9i9sJPUOfks/AimFtcGu1Mk
-         3NA1MyRLQfmqypYE/AghQwSsEbKRsl2UoUqwZPTIfeaZ51z7qQw9nQRg87Q0hE7BbSyx
-         XnMbWXrbXAqF6V8IuHkxYJ3SSFlJX8cr2ffkhCFMRhWF+yf+Fr+QJ1D/F1bW+aLqHMPx
-         q+KGaLdS+cyXzGrMp/+2z+yINLdpRZdwmiQtu36yD5yvrwZsUWGLFYynfe9q94qECKzN
-         arUVm2Gq6dwEpLxTnoHf3tTg/TwoCYr8iYDbEWAUCZicfFApKTxgseTJLnfR7tjLP/ZV
-         t+jA==
-X-Forwarded-Encrypted: i=1; AJvYcCXVxJbwLglFcnonJnEGXuIYG8ZrVo8DK1QyUsIq2kLaFQGqIxsUufO0G8CfioqyGrc5ORt7drEzgWKDoWY=@vger.kernel.org, AJvYcCXjZi59LXPE52BdMmUpJEc5EElNBCEXjnDLcAeIVZQW4oEcyZbRy8UTsZqbjecTacMUSakKUdXc@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYajtRpX41cly5zRMd2SaEa8nN7l71DuNCZ37FhDg1++3m9Wwz
-	oyOIY3NYF7CVYoVr/M446FZgX04Eia5btBm6uqAOj5FpVzSSfNYd3F1e
-X-Gm-Gg: ASbGncuW4x1UQndueoezD9GDvcCk2VRkfqKWz9tdOOduXOEnd7rN/2+YbFABQsN5xb2
-	VPGqok6I9Poi4Q/hiexPQZr0K4Fi2UVyFZcGV+6uUFyhvBKaO/hMDI3I9dsNH1EKZUdRvL0bSFe
-	GnjsdYhZ3dcDFXqMcFnIw7xCpsLldgtzcqAWBihX9mQpkm0jVuMEVlSEqrOmUs2Q+cZjsq9B2dr
-	ACmQ4nzmSOWzAOy7lx2PMnkHyOsNzKVhETxDTEHtEypbpHlyNHig0QagvcMy79npKGAqOfLWB6o
-	w0+iH+5k8Jc1nlenKmoVJrga+QBtBYGFMrKqwgahNz9as52if0+7dReOpyTxAL1FAg==
-X-Google-Smtp-Source: AGHT+IH2y2QqKJnnc+SmoDKhK3pmoL1e3dI0WHkyQabKVkG03aZHUFCwpTWKs/9Ba4zbMfwP3glYUw==
-X-Received: by 2002:a05:6a00:1a93:b0:744:a240:fb1b with SMTP id d2e1a72fcca58-74ce5f5f908mr12036995b3a.5.1751776642904;
-        Sat, 05 Jul 2025 21:37:22 -0700 (PDT)
-Received: from [127.0.0.1] ([47.89.83.0])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce35cc2cesm6105137b3a.59.2025.07.05.21.37.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 21:37:22 -0700 (PDT)
-From: Xuewei Niu <niuxuewei97@gmail.com>
-X-Google-Original-From: Xuewei Niu <niuxuewei.nxw@antgroup.com>
-Date: Sun, 06 Jul 2025 12:36:32 +0800
-Subject: [PATCH net-next v5 4/4] test/vsock: Add ioctl SIOCINQ tests
+	s=arc-20240116; t=1751796101; c=relaxed/simple;
+	bh=+/KV6sbAKNR6BW+bIeCj6/52jsDMeiaB/Zj6+XTGzbk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Ej/WEwLICVL6HxWfvd9990Vh/4r5RQ+gIB/Uqxev9OxVbE6x1a/EEwOJr3ulRjHotBPSkSlMUqg7rvMYNDYCS28GE3tH5t8kv+KMGwdICTz67SJxQLbFgrIUIH9dujvG6uMM949ngY8pPi7AdU7BJcVx28+2Xi1gdr3DP6+HHGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XbhMyGGT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LX6+KQuA; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751796097;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+/KV6sbAKNR6BW+bIeCj6/52jsDMeiaB/Zj6+XTGzbk=;
+	b=XbhMyGGTSJqhFNCHyV1O7PrsQI63AG64/wW7+Naax6oyaBoMoTTP8Y0cIOLv0G0T+7Lgag
+	IfN1EBstYSJ9mZgCpLCWK4Zxj8f7Kn/WqD1XIxXnl+kiFoEhCmX0N93dCsRxpfOsulQj3J
+	Vh1EUOyBdPqFnogZsxX+RrlDA2gkrz41juJruOciZVYeB0oe7vxTNVDUQptE+Qg6pcbKGg
+	nk9TRDhAa9zynVbgSjlvOAMG/UKrNDj9Taz9xa3ootNL5HM6Qz8xrq0OF+FNomnIHFxOxx
+	teF/8aaYT6H/LeQIbFVqM2ev6nkbRXZgl3j+0G7h1ZK9xIjslTH9GWkhlX50iA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751796097;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+/KV6sbAKNR6BW+bIeCj6/52jsDMeiaB/Zj6+XTGzbk=;
+	b=LX6+KQuAH144xbQvkyRKbKQk9aUL/lB2WUbhPtw7p8078n+cdPwRsoYM24YjUi9d1Qj9BJ
+	Stg7lGcQ7XjY3YDA==
+To: Nam Cao <namcao@linutronix.de>, "K . Y . Srinivasan"
+ <kys@microsoft.com>, Michael Kelley <mhklinux@outlook.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
+ <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+ linux-hyperv@vger.kernel.org
+Cc: Nam Cao <namcao@linutronix.de>
+Subject: Re: [PATCH] irqdomain: Export irq_domain_free_irqs_top()
+In-Reply-To: <20250703212054.2561551-1-namcao@linutronix.de>
+References: <20250703212054.2561551-1-namcao@linutronix.de>
+Date: Sun, 06 Jul 2025 12:01:35 +0200
+Message-ID: <87ikk5skn4.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250706-siocinq-v5-4-8d0b96a87465@antgroup.com>
-References: <20250706-siocinq-v5-0-8d0b96a87465@antgroup.com>
-In-Reply-To: <20250706-siocinq-v5-0-8d0b96a87465@antgroup.com>
-To: "K. Y. Srinivasan" <kys@microsoft.com>, 
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
- Dexuan Cui <decui@microsoft.com>, Stefano Garzarella <sgarzare@redhat.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>
-Cc: linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev, 
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Xuewei Niu <niuxuewei.nxw@antgroup.com>, fupan.lfp@antgroup.com
-X-Mailer: b4 0.14.2
+Content-Type: text/plain
 
-Add SIOCINQ ioctl tests for both SOCK_STREAM and SOCK_SEQPACKET.
+On Thu, Jul 03 2025 at 23:20, Nam Cao wrote:
+> Export irq_domain_free_irqs_top(), making it usable for drivers compiled as
+> modules.
+>
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
 
-The client waits for the server to send data, and checks if the SIOCINQ
-ioctl value matches the data size. After consuming the data, the client
-checks if the SIOCINQ value is 0.
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 
-Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
----
- tools/testing/vsock/vsock_test.c | 79 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
-
-diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
-index be6ce764f69480c0f9c3e2288fc19cd2e74be148..a66d2360133dd0e36940a5907679aeacc8af7714 100644
---- a/tools/testing/vsock/vsock_test.c
-+++ b/tools/testing/vsock/vsock_test.c
-@@ -24,6 +24,7 @@
- #include <linux/time64.h>
- #include <pthread.h>
- #include <fcntl.h>
-+#include <linux/sockios.h>
- 
- #include "vsock_test_zerocopy.h"
- #include "timeout.h"
-@@ -1307,6 +1308,54 @@ static void test_unsent_bytes_client(const struct test_opts *opts, int type)
- 	close(fd);
- }
- 
-+static void test_unread_bytes_server(const struct test_opts *opts, int type)
-+{
-+	unsigned char buf[MSG_BUF_IOCTL_LEN];
-+	int client_fd;
-+
-+	client_fd = vsock_accept(VMADDR_CID_ANY, opts->peer_port, NULL, type);
-+	if (client_fd < 0) {
-+		perror("accept");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	for (int i = 0; i < sizeof(buf); i++)
-+		buf[i] = rand() & 0xFF;
-+
-+	send_buf(client_fd, buf, sizeof(buf), 0, sizeof(buf));
-+	control_writeln("SENT");
-+
-+	close(client_fd);
-+}
-+
-+static void test_unread_bytes_client(const struct test_opts *opts, int type)
-+{
-+	unsigned char buf[MSG_BUF_IOCTL_LEN];
-+	int fd;
-+
-+	fd = vsock_connect(opts->peer_cid, opts->peer_port, type);
-+	if (fd < 0) {
-+		perror("connect");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	control_expectln("SENT");
-+	/* The data has arrived but has not been read. The expected is
-+	 * MSG_BUF_IOCTL_LEN.
-+	 */
-+	if (!vsock_ioctl_int(fd, SIOCINQ, MSG_BUF_IOCTL_LEN)) {
-+		fprintf(stderr, "Test skipped, SIOCINQ not supported.\n");
-+		goto out;
-+	}
-+
-+	recv_buf(fd, buf, sizeof(buf), 0, sizeof(buf));
-+	/* All data has been consumed, so the expected is 0. */
-+	vsock_ioctl_int(fd, SIOCINQ, 0);
-+
-+out:
-+	close(fd);
-+}
-+
- static void test_stream_unsent_bytes_client(const struct test_opts *opts)
- {
- 	test_unsent_bytes_client(opts, SOCK_STREAM);
-@@ -1327,6 +1376,26 @@ static void test_seqpacket_unsent_bytes_server(const struct test_opts *opts)
- 	test_unsent_bytes_server(opts, SOCK_SEQPACKET);
- }
- 
-+static void test_stream_unread_bytes_client(const struct test_opts *opts)
-+{
-+	test_unread_bytes_client(opts, SOCK_STREAM);
-+}
-+
-+static void test_stream_unread_bytes_server(const struct test_opts *opts)
-+{
-+	test_unread_bytes_server(opts, SOCK_STREAM);
-+}
-+
-+static void test_seqpacket_unread_bytes_client(const struct test_opts *opts)
-+{
-+	test_unread_bytes_client(opts, SOCK_SEQPACKET);
-+}
-+
-+static void test_seqpacket_unread_bytes_server(const struct test_opts *opts)
-+{
-+	test_unread_bytes_server(opts, SOCK_SEQPACKET);
-+}
-+
- #define RCVLOWAT_CREDIT_UPD_BUF_SIZE	(1024 * 128)
- /* This define is the same as in 'include/linux/virtio_vsock.h':
-  * it is used to decide when to send credit update message during
-@@ -2276,6 +2345,16 @@ static struct test_case test_cases[] = {
- 		.run_client = test_stream_transport_change_client,
- 		.run_server = test_stream_transport_change_server,
- 	},
-+	{
-+		.name = "SOCK_STREAM ioctl(SIOCINQ) functionality",
-+		.run_client = test_stream_unread_bytes_client,
-+		.run_server = test_stream_unread_bytes_server,
-+	},
-+	{
-+		.name = "SOCK_SEQPACKET ioctl(SIOCINQ) functionality",
-+		.run_client = test_seqpacket_unread_bytes_client,
-+		.run_server = test_seqpacket_unread_bytes_server,
-+	},
- 	{},
- };
- 
-
--- 
-2.34.1
-
+This should go with the fixed-up HV driver.
 
