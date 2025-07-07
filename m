@@ -1,59 +1,59 @@
-Return-Path: <linux-hyperv+bounces-6117-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6118-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF774AFAA04
-	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Jul 2025 05:13:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E444AFAA07
+	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Jul 2025 05:14:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7AE351897D02
-	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Jul 2025 03:14:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8803116FCD9
+	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Jul 2025 03:14:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AD4B2264CA;
-	Mon,  7 Jul 2025 03:13:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E1712264CD;
+	Mon,  7 Jul 2025 03:13:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="YRY9VLr1"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="c7V4YnAC"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12olkn2098.outbound.protection.outlook.com [40.92.22.98])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12olkn2062.outbound.protection.outlook.com [40.92.22.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A55136672;
-	Mon,  7 Jul 2025 03:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.22.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657941C6FEC;
+	Mon,  7 Jul 2025 03:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.22.62
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751858028; cv=fail; b=f6tK/1O6fGe761ymzcaAGEzEklUDhpuM5RnO2XSZJSYRvQcrnVRzCIhpDdm5Ze3qYbJ/IA1itHphUBCmtXxlNAo6nmOYf0P1s+cMn4zLg9z/s8PwxH9dzkrWKjIXWgb3m+Ow9D80YJ/IghBmlkUOqJ3iud10LLO9l3wtkS9VIhY=
+	t=1751858039; cv=fail; b=fzrzZaEeYqGpFEL/eG2oq4m5Pz89p6qFq8+wT0de1caPXLgfSDGEbSNRlGyaZX5FbVHbfDrw5TMOLAi9AWHtrdqW8gIB/xAuT5vkHpdsd+ORIzq8KfmVoYQBjN24/cGAr2MgMrnVvjckeTflvkeqyI2b4jHh1r+uhO8SvudShtc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751858028; c=relaxed/simple;
-	bh=+DelOqIPsmwEHKkkwypsa1OlPnO4hdcQdQT8shDgYG0=;
+	s=arc-20240116; t=1751858039; c=relaxed/simple;
+	bh=1PHEd/UzNbSA+2yCYKFgrBaxNK1iInSLOfsUhGTN3n4=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=vD/5z8o1RVKRCvkalYscXHjel849XkIqjy0alEwMLNwf4PljjO44Gnta/T2ZuFH2uWx8dRDAMhhf4cH+hRna4TVev+rPJa/caVqJXLg+oU+e46XWWYegtwxkdFM/gAMQHU6no/e/wq7YWd/GUt/Z6YozABsEkrULVF1DFBIb04M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=YRY9VLr1; arc=fail smtp.client-ip=40.92.22.98
+	 Content-Type:MIME-Version; b=LTKwQRh5nQXvOforbfx24C49vOPEqHONX20F3FybxWZLMvhkmwGMnRA7lWQR19Dea+zBjZB7aWdrZtLrthu92A/gr4JAeY3Zs0clLvtwjcNleoEJSkOE0OBrGhr6TROX5uv2vGl/17mtJAlKnQzR3ajt/56t99L8v+5PZXtmObg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=c7V4YnAC; arc=fail smtp.client-ip=40.92.22.62
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wXfw/Dkgfvv58ihVEvMN5C3xhJTb1ZqbMuMMkNebXaRh4fwmcHEaxwdHmzvMTyo6kxZglb41Kdu9dE40Son98TvRlqCuv8OexjYr0N+VB0HzdIkBfc6YUHyTRDsqutxxmlg12/2f3GF9DX2yOVNa7wRdN7mUEfBwO5AjoaqoVforNWA4AR3T8QUOn4gu14cks8ql+o7aLdBTTtfv7eFO5yY/kGSlEM5dpQzSf3vetqn2S+wMQXUcnajK0sDKq30pOx5+8F0iNuzsJ9dLa0dhwd2nfH6NzWdhk2Aendn1XgpNQ+DRsHnRglRxyRgZcdDo/+thKIlHYxIJk+bHFZSo9Q==
+ b=Rc4ZZ7EdXqcErRl/8K5W83SM5XDWPCJhMuJvXEtaaoI2SjSs2qePLhEkbVQ8oa/Td2wG5LCYiIyDqWl5i/znLotouBnvBZQncTvZfi8b8Kzp9YchsaoN5O1lEoLHZB3CnfTBaAPZg7TxrzeN9HPZJy1CY6XvpEJPILvR0bookcOkq0XKGaZSvnEK9Kc45IcG6RMWavrsR14jixZjil1Y3YbT9gSPUVLPEXzQQLP5uRmkoC+Gy/6DKE04jFB41j/AhpDyikbgBR1bDT/k8fWyiOnRuBWyTEmqVLHKVVhxU/flPhqzLIJN9UjkyOJpMbvxPvWvPCycWgmGEDSzza2Acg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9nxiL1GJFxvG1YU1BWspqrVLPXq54g1gQk+3zF0AsmY=;
- b=ZquUqTdh34QMAJG0EC4G8GR+oZi/G7jvJajkCBbyAtUnCa4Sk+SbiauvWF5C4NUFpYwb4/XyiN+Prxdt8kII97mBQcwQpuZQP7Pm3P99bO7uF+H+zRFO4u3nM7E8EbVDztz3ujIRyJU4EGvaL8fymn5+geOVb3S3aS5CNUbLGxmnAkHgQpw+QVZ+ZVDwram0wBTkvtNFAH0v2rgJqtjIDQNMJB03tiMR56cs/z9gtDow0n5TXmeaizZu/qz2MMB8uYhOQCrMGg92E/6SHa6VFtt0rjyE5mknM1Dd3jFWnX+VeGNNm8doUBMWEijwY2odUDLcE32f8OMdCYdTRaub8Q==
+ bh=PsBMMkHfpoYBt58FOXrHcE5SzRFgqCMQWkfXvuwBKVI=;
+ b=jjkEGiSX0mbbUAbBSifos2vpWWLsGWXgidE2TbnJSPEfvvY2HaZ9c1C+oeZhCBGT6YqJKQpQtiEoyvBo6KmUjLL4DvfKotX34uHe9m50a7mZLtj13BUTiYZHZ29OutfIsbwi9JLGKMZEbopODT4+e7CKY/w5cENipKQfAlGgOLN9ZnIOxrAtVdrBvsv/wia3IAjo6V6xb2l4ss/ZWFUNKu4RhV+B9U/hF6CQ3GFRo078XOnf+hHT5/PMvn5sf1Hs5viwqayym2ys/NjgD0hI8JQ/nBGKWr8Kt0T/MWqOhpudNqphuTHeMLiZVJMAqnOJH9yViRt/iWYN7QD82MQt2w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9nxiL1GJFxvG1YU1BWspqrVLPXq54g1gQk+3zF0AsmY=;
- b=YRY9VLr1KMRGC202E7givOsUP1tG1olrtiY+VCg6J23JejlrFcHRXSuX6sg+zrFZwFID3hZfhWHXcHgmiGjMZ4KLAN1i4skRw+sTpyHjBxu5yaPEjCBv/0k9fwd7ivU0sZsVTVYFwJK9/5r2Zn0d922rHXfv8C/G99Sbc4cBF+LhZ+11YX0P8TOU7+s9usd7JJpj/BN3U1o/EnE33T9Dt2h1M1K4sA4aplPcz7JZnGO0yKfUgI7/ldfw0AYSL5XxwxlTkcvMJM2uboWw3+yHSWwiV8wCtjrXyA8zEIj6WykWIa1vI4+xqfWj/e/WVcSaK1VHtpXKHRdu5tOFjCyk/g==
+ bh=PsBMMkHfpoYBt58FOXrHcE5SzRFgqCMQWkfXvuwBKVI=;
+ b=c7V4YnACAkdOlfsf1odMzFFgnD5r3R4L1z6RH6Lz7c2fafZxf3q0nloYx88UzvuZqX+wOf/4TeweX8N5AregYY3o1FL6blGAbhyBVh6C+wf7swr+WvuASQUvvnxLwTP1cvtBsemlzObFMCie7mIGrfDPL9S73hsst36hS0C8CvGYEgnbGQ+H/4DZinyQKLwn/FovxjEJic3KW5/1VtkGxKU+dRMGLzHP1cn3IruJcSB+SfU9UCOKLS9iF29Guuvsgb37lDTIcaZyZSZ03bTZvlJ9UaBth7Wnfx9SYaVbEYswRiJiESp0i5DGF4YR3WLyBZ48u1fntowXGtvMZ5enmA==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
  by SA1PR02MB8543.namprd02.prod.outlook.com (2603:10b6:806:1fa::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.22; Mon, 7 Jul
- 2025 03:13:44 +0000
+ 2025 03:13:54 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8901.018; Mon, 7 Jul 2025
- 03:13:44 +0000
+ 03:13:54 +0000
 From: Michael Kelley <mhklinux@outlook.com>
 To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
 	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
@@ -75,72 +75,74 @@ CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
 	"skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
 	"mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>, "x86@kernel.org"
 	<x86@kernel.org>
-Subject: RE: [PATCH v2 2/6] Drivers: hv: Use nested hypercall for post message
- and signal event
-Thread-Topic: [PATCH v2 2/6] Drivers: hv: Use nested hypercall for post
- message and signal event
-Thread-Index: AQHb7GwYlh5esMaOEkKWizhFY+4XUbQjmWLA
-Date: Mon, 7 Jul 2025 03:13:43 +0000
+Subject: RE: [PATCH v2 3/6] x86/hyperv: Fix usage of cpu_online_mask to get
+ valid cpu
+Thread-Topic: [PATCH v2 3/6] x86/hyperv: Fix usage of cpu_online_mask to get
+ valid cpu
+Thread-Index: AQHb7GwXQlKj7RTs9EGg4YQ8BysuBrQjmtTw
+Date: Mon, 7 Jul 2025 03:13:54 +0000
 Message-ID:
- <SN6PR02MB41576CBCA98ECA4C77BCC2D7D44FA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB415749B9B10571B01E0ABD0CD44FA@SN6PR02MB4157.namprd02.prod.outlook.com>
 References:
  <1751582677-30930-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1751582677-30930-3-git-send-email-nunodasneves@linux.microsoft.com>
+ <1751582677-30930-4-git-send-email-nunodasneves@linux.microsoft.com>
 In-Reply-To:
- <1751582677-30930-3-git-send-email-nunodasneves@linux.microsoft.com>
+ <1751582677-30930-4-git-send-email-nunodasneves@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA1PR02MB8543:EE_
-x-ms-office365-filtering-correlation-id: 6fc47c1e-3282-45d3-438e-08ddbd0447e6
+x-ms-office365-filtering-correlation-id: 1a26c300-8313-49a4-7cca-08ddbd044e47
 x-microsoft-antispam:
- BCL:0;ARA:14566002|8062599006|8060799009|41001999006|19110799006|15080799009|461199028|40105399003|3412199025|440099028|102099032;
+ BCL:0;ARA:14566002|8062599006|8060799009|41001999006|19110799006|15080799009|461199028|4302099013|40105399003|3412199025|440099028|10035399007|102099032|1602099012;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?CZ79aImf6gkfJrKY18EtS/xc6pNLf4t5R5HnBs+JDs9b7FYyBFwkcJGt90MM?=
- =?us-ascii?Q?z1QZNJmqfaeh4byMaW1skrYNp7hA6kgR5tCk7qM6A0D/RYEa6fpSQEpGC80V?=
- =?us-ascii?Q?I2SEiCRZeVA2NZ6FtBxluQxmYhvcp+E4g2QUv2J8VWL/zfFVo8zb+vhZfiR7?=
- =?us-ascii?Q?z5FQRegYFg4L0YRQRbzxP6AxQ+yV3ZT4PP1mH4NhR9SeFykx1MtzNE5jQBzD?=
- =?us-ascii?Q?Lk3wDaMPs0j5zENQswQwoq3kZhYCyDiwU+W0aUAkH/KGYpsP1Q0AoRI58Eid?=
- =?us-ascii?Q?SgNHa8gmERXH0axEESv/reY9ZIzy6cG/cLtNqVvK1Ue7u/8w4gxQazOfOhdq?=
- =?us-ascii?Q?mB+/LJTLuTaBqIpSEvpMGmhPZasmSSYOkm9HSYGRN4dO9d6358SVxpSyCmR2?=
- =?us-ascii?Q?r5VznFCLrMLJ/FUzvpUevx+c2//fglANzoWN00LzIJpYwLK5RCIf46RV00pt?=
- =?us-ascii?Q?QDS5NDcMVHbtfKmw2D5EG962YtmxKNSb5PCJJ6qFS2efy8vH9ESpzVB/ji90?=
- =?us-ascii?Q?1Ch0ED8C3gWytApdjHcYObbaLylMPKcG6ri/L+IkBYM8TC4GnWWtRms5hquk?=
- =?us-ascii?Q?PLpUz4REvnPn/+FcA+El/0EiAVh8XTGF1l6kiVluwsvPPdL/hwJDfsEFM0C0?=
- =?us-ascii?Q?+vPtZ/E2bqUn6hiZbQPcr43sXBFqmlAFg4jexP7IyiG2WB+VyqVWNxVWUrtO?=
- =?us-ascii?Q?IpBXGWyB8ryJTvtQPQKtKIxT6w5LTvGUXgEC9wXX+igSvxY5SHjlnZYIDucQ?=
- =?us-ascii?Q?uZP5lHZukicApnfZ5etcvtFpB57EYToISUYXjNQ/aVqjfvq3PvnmET5+0RGS?=
- =?us-ascii?Q?kaWQ1M4enpWCnxW5ezl2h+1mGAddFQCsCAQg+mfl7kiXk1/K1NcE0NsNq8a6?=
- =?us-ascii?Q?APb5+3NFqlJR48Muj0CMvM9t0T5y3YXtNT13RrAsTl0QWQcycSUgzo0v5wbp?=
- =?us-ascii?Q?EaChaKIZyDhHDfQbSWSqQA2B/V3iMz2tqMziHn9mwuuZ6qog+OgCHhbQzeym?=
- =?us-ascii?Q?+OKywwCRkICmZo0NkGmM3wjOVOpiJiSSKVifwmwc5NSldtkVfBDLh7lnT1H6?=
- =?us-ascii?Q?Pe9EKl7DB3MuJr3CVw1o8tsm+Xt+4e60asCkV6AzZ3THOaDP03SHYxMV6Plb?=
- =?us-ascii?Q?ucawAetCTwuIeQhL+8yW0QngA5iJuiRGJw=3D=3D?=
+ =?us-ascii?Q?nZeTKnw2HJaNFtwisnUhR987f9fwt9Gnl35FKcbnbcl5bJFqc8yuNsqf50/2?=
+ =?us-ascii?Q?adMjITQOb8UP91VSW1KZDwq3m3ASeg9ROvB7at0lDaj48jBvXlC2ewEysdxk?=
+ =?us-ascii?Q?aw+kew4r3jy4ZgiQg+tQ/8hrk6SmZkK6NM7tCZtubkokTq4A1dbHMREf2SgS?=
+ =?us-ascii?Q?NkSkJry+YbN5oG4+zU/74CnKpqNZ7XC9WMeTk482453Cbbdu3giyGp2ytYBx?=
+ =?us-ascii?Q?13vS821sW2h7b5z0yDaj0OC+psMK9jVe7nzNLjYr5JL4OCgzFtio6BGhXdeT?=
+ =?us-ascii?Q?KWlVoRjh2DQ7PtBqpZpvtTzMsMnyesHYTVZDxsA+lUcIreho9Ia9gPWi8mRf?=
+ =?us-ascii?Q?Xb1zj2pDsGkIZDdy00kiJqWZLY+UoYJavPL9HAUVz4DUxJhJoCx27r+TkzPj?=
+ =?us-ascii?Q?xf67AWrJcNiknUvUWVNXVfj6thG/Z2ORH2xVoC22vevHmXic5EaukZ3tVeJt?=
+ =?us-ascii?Q?fBkhMf9i86lxJasoHMtTN6ybtqud3ZpDUYqDWH35sZdQw1Fe5g5culWRa98g?=
+ =?us-ascii?Q?yCBvhUaUYm2Y+jhKBfDbUOvUkL5Lm6H1+6rwnsTIvNdTgp1x2CcizGjYaZ8q?=
+ =?us-ascii?Q?N2h4Lmm8aONWSVrsR9d73WGWmYpr9iZSUmgqiiGPu2ZZIGCyUslXT1mfQehT?=
+ =?us-ascii?Q?K+P3oHO4riKD62fZgdUfyjQ4Q5xoOaTW+xvJ44eq+yzcRpQjaGdXfuxE1IIm?=
+ =?us-ascii?Q?1InVmQUT0Y4hV3Sl6j70cMmwrSutLlKQsp3TARsfQB/eDXa9WPSVEGFCfewz?=
+ =?us-ascii?Q?7/vDIKj5t/CsbgqPoVfSMVhF247oLc4kA7yUpIAUGDSbqLbMdaIC6tBXpJ3W?=
+ =?us-ascii?Q?6HJmB32r3eJlyjdnsMzLAN9U+H/Onk8veXwOMI1K1zdbMrLmsYY20oyQxz9y?=
+ =?us-ascii?Q?04l13wW7LbDUR3O1ZuPQxrE1aCSpUCnQZS/gf3b/PAJBNIPDD4ilksB1xUtB?=
+ =?us-ascii?Q?HsAD5jQO1Yb6QQYU8w2QnQQ4rV4C1CWbnbf7khFKMOkErTFh6PfXfGPGNzjr?=
+ =?us-ascii?Q?Cwi8jkacEDN76dvB4SIGnolN93ySGGfH//0RwQ8Urfll2igSSfkbzizDP2z3?=
+ =?us-ascii?Q?3qgSqbRm5QrJK9+j45a7YlM4z6zBzQ+s9JDqn/kxrXX1GaDSO2mKLlU6VBXX?=
+ =?us-ascii?Q?eHU3x52gwyGtMQfyJaZiLjkjEFCg9DxR6tLxXQM61rI581zvHTaNNDSo2meD?=
+ =?us-ascii?Q?vFObDaezcgMjTcI3FQWFxSSgMCKBHOmAcw3STO6pqu/qM+ffj6wDzP7DjFry?=
+ =?us-ascii?Q?w4fulBraDcliJE5ljjo6B3d4xgrXfNV+hS4e7znzbw=3D=3D?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?x0B8xJC5cOGkEdUFxdkDU7BZgNFX71+a58Um+MXbWvQ8O5U59PoejjzzwtkO?=
- =?us-ascii?Q?v2lUwfQALioCEqY0OROzoEQnqy579oy0WeJRkItxHN5i68qocJK1FMSUL6s9?=
- =?us-ascii?Q?/piKyJFSQn3pIxek5PxLntRk6+CYRtWZV5QL1j2gXtKBjcpHzeoOjuZ+AQp/?=
- =?us-ascii?Q?RkXevDnlQ4fDPX5THL6dpNdyav11y1iO+ys4z2tm7tvN1c0pp+7yyi7W8Q4T?=
- =?us-ascii?Q?EB9RApkV+FcztbMQQx3Ot+2t+jrUiz9kABOsLeNn0qb/DsbXf0zjyX86P007?=
- =?us-ascii?Q?VaLjWNL5fGHZoN/bYmI1Jy8L56Qk2yAh+7KACTnynBo1LgC8OQ5T/CN3B3bb?=
- =?us-ascii?Q?HY/J8Ca3NCPRAfy2t+GbF3udJPUXarCzLGsCiGBSmv1yIKm5b1F4AG7arX9j?=
- =?us-ascii?Q?hZcgwUTAScjskeftMkZClX006bN4KYiD9QlxmqWuOhxkawB5k+yemuBD2b39?=
- =?us-ascii?Q?+nbXOxY+ToKMTbJdATmL9zetmIjqWKxxGixsnc9ktJ7COj+v/gobLd3k+g5I?=
- =?us-ascii?Q?Hf8IXtc9z2uxjeg0B4bntrnGxG77CCPdc3k+5IJT7IQyLg/4O2bgZoVGExrd?=
- =?us-ascii?Q?3p5lAmo7X4kNgw34BAVCvx70CN7J+5tzdeXgmE6Ay8FYb22qbfchBqIPXHRk?=
- =?us-ascii?Q?VPN0bFWNevgWhSa4hgSdMKLJl52HMkTWub+QLMkdxNqIQ/4zXMbFKid0KwXF?=
- =?us-ascii?Q?fBz0aMpQU1hzbQ2awiHiBDJZvp2u+1k95kMRpob3sE0n6CN5cXTJBWf44BIS?=
- =?us-ascii?Q?BGVJvWO10LwGIkii953DRZqoHSlKRlBCb+Ge9mvcOdPjAv3MJSoS8uMHBkuX?=
- =?us-ascii?Q?WaDmHtRsEhKQvgAzBDJAWK1ie5HFCLE/W/HJXUeg72MHeQ3mnqUWoRJZGCZ9?=
- =?us-ascii?Q?KjINUWXXvsKCUzBU+rlo3gdLkSS1bXPmU6Jx/6Aw1sLyVU8Iyefua18zO7yw?=
- =?us-ascii?Q?GZ6yuDTN5m60zCHThQI3q6FUM4badpJj1GtCWgielzbjB0/bLLlQwPHKjnbT?=
- =?us-ascii?Q?sSx2mfhHYo4lKdVKjp49JHx+duD7TUUpqRUbjAoVt2tFoCbTzgduW4s0ftkP?=
- =?us-ascii?Q?nDI/eMvuqqRvK/p4OKVNT/XjanY9MB4W3azcDQizbs/DPbJmS9Xbwd0I5v5i?=
- =?us-ascii?Q?I5FnKDCBF/cSy0/DLAIKDFEe5B+EyFnTg4WrKinOhHJss2zCTvNMwn9Ju62m?=
- =?us-ascii?Q?GJtmDJWlrrRkuq/b8MyG8+GspwH4DbxFMz1OvHvqt9nUwHI6DuhMj2Yebzw?=
+ =?us-ascii?Q?RZFHkQ58JpRGyb3d7lKLYLzddjpZxvARSnNvSEP3Zn2JYdvGKI8/tw6HMRvc?=
+ =?us-ascii?Q?HRhccDlyOXp5TtEEpB/mCynnVSrIA9N7c2+nxZKvgm30C3PBGBlJrQoAyX9Q?=
+ =?us-ascii?Q?RVbKTh+Zf6SzhEbxpn5N0LLyPu7uGI5FGBHFxk7Shzoh7WwwQiamq7giglOk?=
+ =?us-ascii?Q?652ME+Aa2tEj//TPbfNxquQbzcG9AEfUHP2KFxzD5NeVmPHjqDXKQwYPVKC1?=
+ =?us-ascii?Q?CIKDcIr+ebrQttx5tizsjxpI9Bii+Eejk9mbzZ/ubuYm/oYMBMQGm5u4zGHr?=
+ =?us-ascii?Q?QXb7xo2R2SfoapyER4rx6S4XLSpQ/+pUt3lbGHhFZzpRffKcf0HifkPaDHgE?=
+ =?us-ascii?Q?hlohaZnJXkRyNwG895FULSIc3ZbJihFMCzZjrwv56nw7KS+pfrLwfZ1+oCuL?=
+ =?us-ascii?Q?aXFzk7zZbcCS87ElsQahi2NAuq/30DVhDKKmP79NL7dbUi7UuD0qxlYZALQi?=
+ =?us-ascii?Q?iqjzx10CdWUu+nxEKCztdwMBcGA/2chWDvesy4Q+TccgV7OyIvCRBnlwd5yD?=
+ =?us-ascii?Q?u61emWMO4WoQwARxFKeCsYYKg9cSA4SuOS55vpSzEIeHcD3GVRN9nffCam7M?=
+ =?us-ascii?Q?wcACbsAyTBooif5pPcsO6H9emu44Kog933qoG0X31dKokcqFLSIU7gxkYw9q?=
+ =?us-ascii?Q?8k1p73Xu8eiNL6Cifco5SM1g9e93hYzsDmKR7nY7ccUSodPvHNqivbTGa0c2?=
+ =?us-ascii?Q?TwOIcsKUxhECepxA8lSt69I3dkv5fKrzR5fAWENv4mTTWB7wbSBdT9JNho4X?=
+ =?us-ascii?Q?LNdSyrxbBXJ3sJ5tWVkwW3GbDZdSD8rb9P+XW8lSVgHsRCuyGEZeJleeCh25?=
+ =?us-ascii?Q?wwZqq02pYRA4rFIJ6R4ZxV1s2A25bMwOgckk6urhULmn5ZJQTRfpC6WaS/Oj?=
+ =?us-ascii?Q?lnff8/NBEF2Fh2V647/GTQ4h4wwTNZbFKdVaY5p636PhRa3Vd/uw+vuPziGp?=
+ =?us-ascii?Q?4UVsRIpmlBUKmPDt6tBer1BwgZ9zjQxi3NReCgVWgQ6DKoIjlvxVYn2n9hTC?=
+ =?us-ascii?Q?Ec/rXXacn+Ub3ZHiHzx6jyl8RUu0YQCNIVkvrYMXR51LKtAStdgQ4W554o2b?=
+ =?us-ascii?Q?QeL+ydSaOvHGghDliXdJslQ7Rsnj23fBKXl3kuZVhfIYyVzWRgXH0JdQ2gzX?=
+ =?us-ascii?Q?zajHN72TAsnAt0z0mbj8KHyqJ2yGbRwvWRkTn03kI3FBWjOuOUUzamCWwos1?=
+ =?us-ascii?Q?WE6kZE/UfZi0+rntgMgxs13xZkYUAf1+1CW9ZYhShhusYX24Aec91I1bfyE?=
  =?us-ascii?Q?=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -154,8 +156,8 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6fc47c1e-3282-45d3-438e-08ddbd0447e6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2025 03:13:43.9816
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a26c300-8313-49a4-7cca-08ddbd044e47
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2025 03:13:54.6738
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -165,120 +167,52 @@ X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR02MB8543
 From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Thursday, Jul=
 y 3, 2025 3:45 PM
 >=20
-> When running nested, these hypercalls must be sent to the L0 hypervisor
-> or VMBus will fail.
+> Accessing cpu_online_mask here is problematic because the cpus read lock
+> is not held in this context.
 >=20
-> Remove hv_do_nested_hypercall() and hv_do_fast_nested_hypercall8()
-> altogether and open-code these cases, since there are only 2 and all
-> they do is add the nested bit.
+> However, cpu_online_mask isn't needed here since the effective affinity
+> mask is guaranteed to be valid in this callback. So, just use
+> cpumask_first() to get the cpu instead of ANDing it with cpus_online_mask
+> unnecessarily.
 >=20
+> Fixes: e39397d1fd68 ("x86/hyperv: implement an MSI domain for root partit=
+ion")
+> Reported-by: Michael Kelley <mhklinux@outlook.com>
+> Closes: https://lore.kernel.org/linux-hyperv/SN6PR02MB4157639630F8AD2D8FD=
+8F52FD475A@SN6PR02MB4157.namprd02.prod.outlook.com/
+> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 > Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
 > ---
->  arch/x86/include/asm/mshyperv.h | 20 --------------------
->  drivers/hv/connection.c         |  7 +++++--
->  drivers/hv/hv.c                 |  6 ++++--
->  3 files changed, 9 insertions(+), 24 deletions(-)
+>  arch/x86/hyperv/irqdomain.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 >=20
-> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyp=
-erv.h
-> index 5ec92e3e2e37..e00a8431ef8e 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -111,12 +111,6 @@ static inline u64 hv_do_hypercall(u64 control, void =
-*input,
-> void *output)
->  	return hv_status;
->  }
+> diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
+> index 31f0d29cbc5e..e28c317ac9e8 100644
+> --- a/arch/x86/hyperv/irqdomain.c
+> +++ b/arch/x86/hyperv/irqdomain.c
+> @@ -192,7 +192,6 @@ static void hv_irq_compose_msi_msg(struct irq_data *d=
+ata, struct msi_msg *msg)
+>  	struct pci_dev *dev;
+>  	struct hv_interrupt_entry out_entry, *stored_entry;
+>  	struct irq_cfg *cfg =3D irqd_cfg(data);
+> -	const cpumask_t *affinity;
+>  	int cpu;
+>  	u64 status;
 >=20
-> -/* Hypercall to the L0 hypervisor */
-> -static inline u64 hv_do_nested_hypercall(u64 control, void *input, void =
-*output)
-> -{
-> -	return hv_do_hypercall(control | HV_HYPERCALL_NESTED, input, output);
-> -}
-> -
->  /* Fast hypercall with 8 bytes of input and no output */
->  static inline u64 _hv_do_fast_hypercall8(u64 control, u64 input1)
->  {
-> @@ -164,13 +158,6 @@ static inline u64 hv_do_fast_hypercall8(u16 code, u6=
-4 input1)
->  	return _hv_do_fast_hypercall8(control, input1);
->  }
->=20
-> -static inline u64 hv_do_fast_nested_hypercall8(u16 code, u64 input1)
-> -{
-> -	u64 control =3D (u64)code | HV_HYPERCALL_FAST_BIT | HV_HYPERCALL_NESTED=
-;
-> -
-> -	return _hv_do_fast_hypercall8(control, input1);
-> -}
-> -
->  /* Fast hypercall with 16 bytes of input */
->  static inline u64 _hv_do_fast_hypercall16(u64 control, u64 input1, u64 i=
-nput2)
->  {
-> @@ -222,13 +209,6 @@ static inline u64 hv_do_fast_hypercall16(u16 code, u=
-64 input1, u64 input2)
->  	return _hv_do_fast_hypercall16(control, input1, input2);
->  }
->=20
-> -static inline u64 hv_do_fast_nested_hypercall16(u16 code, u64 input1, u6=
-4 input2)
-> -{
-> -	u64 control =3D (u64)code | HV_HYPERCALL_FAST_BIT | HV_HYPERCALL_NESTED=
-;
-> -
-> -	return _hv_do_fast_hypercall16(control, input1, input2);
-> -}
-> -
->  extern struct hv_vp_assist_page **hv_vp_assist_page;
->=20
->  static inline struct hv_vp_assist_page *hv_get_vp_assist_page(unsigned i=
-nt cpu)
-> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> index be490c598785..47c93cee1ef6 100644
-> --- a/drivers/hv/connection.c
-> +++ b/drivers/hv/connection.c
-> @@ -518,8 +518,11 @@ void vmbus_set_event(struct vmbus_channel *channel)
->  					 channel->sig_event, 0);
->  		else
->  			WARN_ON_ONCE(1);
-> -	} else {
-> -		hv_do_fast_hypercall8(HVCALL_SIGNAL_EVENT, channel->sig_event);
-> +	} else if (hv_nested) {
-
-As coded, this won't make any hypercall for the non-nested case.
-The "else if (hv_nested)" should be just "else".
-
-Michael
-
-> +		u64 control =3D HVCALL_SIGNAL_EVENT;
-> +
-> +		control |=3D hv_nested ? HV_HYPERCALL_NESTED : 0;
-> +		hv_do_fast_hypercall8(control, channel->sig_event);
->  	}
->  }
->  EXPORT_SYMBOL_GPL(vmbus_set_event);
-> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-> index 308c8f279df8..b14c5f9e0ef2 100644
-> --- a/drivers/hv/hv.c
-> +++ b/drivers/hv/hv.c
-> @@ -85,8 +85,10 @@ int hv_post_message(union hv_connection_id connection_=
-id,
->  		else
->  			status =3D HV_STATUS_INVALID_PARAMETER;
->  	} else {
-> -		status =3D hv_do_hypercall(HVCALL_POST_MESSAGE,
-> -					 aligned_msg, NULL);
-> +		u64 control =3D HVCALL_POST_MESSAGE;
-> +
-> +		control |=3D hv_nested ? HV_HYPERCALL_NESTED : 0;
-> +		status =3D hv_do_hypercall(control, aligned_msg, NULL);
+> @@ -204,8 +203,7 @@ static void hv_irq_compose_msi_msg(struct irq_data *d=
+ata, struct msi_msg *msg)
+>  		return;
 >  	}
 >=20
->  	local_irq_restore(flags);
+> -	affinity =3D irq_data_get_effective_affinity_mask(data);
+> -	cpu =3D cpumask_first_and(affinity, cpu_online_mask);
+> +	cpu =3D cpumask_first(irq_data_get_effective_affinity_mask(data));
+>=20
+>  	if (data->chip_data) {
+>  		/*
 > --
 > 2.34.1
+
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 
 
