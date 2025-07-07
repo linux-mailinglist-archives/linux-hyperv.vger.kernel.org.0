@@ -1,139 +1,158 @@
-Return-Path: <linux-hyperv+bounces-6134-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6135-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3F3BAFBB1D
-	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Jul 2025 20:49:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CE52AFBB52
+	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Jul 2025 21:04:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 155A217BFDF
-	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Jul 2025 18:49:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9EF243B5EC1
+	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Jul 2025 19:03:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 110A9233133;
-	Mon,  7 Jul 2025 18:49:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4016C12C544;
+	Mon,  7 Jul 2025 19:04:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="a2sLvREU"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="oJs4fRJe"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10olkn2059.outbound.protection.outlook.com [40.92.42.59])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10olkn2075.outbound.protection.outlook.com [40.92.41.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FEF5199E89;
-	Mon,  7 Jul 2025 18:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.42.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F1D263C91;
+	Mon,  7 Jul 2025 19:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.41.75
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751914147; cv=fail; b=Qr0KIkxdLVJqA6y2vG8WCVSIfxZP8qbGEz0kjb9DKiSWNR1QWDOZ66HZwI9cf9eqWgJHuSlF0s+teR1e+iE0Jm1jGEVpKORFgxyto1xsXTYmKNBDcGLfZol4GBZZz0hke7xB9n/BhJT0mFz+a0TmoC5fIBxsFJOFzjRRtWWiSX4=
+	t=1751915062; cv=fail; b=AsWgGy63AOx5jCOtZ5DO9XI0qoZYGTVThO10MLRIut3v347tohXb1jOnHrx3uHn9NSq4sqbFrI3/Oo7vvuJ9dcHrQ/sfyfB8+ZpOCGVveARejPb7W5lLZ4UZb+Kh0A0ImkNklp3v1jv+osF7/ZP1zLkqxmvHB1AW2kyzfGPBBbA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751914147; c=relaxed/simple;
-	bh=yHeZUTuTqfVjqNmhUCEMwu+JE8Wx3ywe3DXepEDIXLA=;
+	s=arc-20240116; t=1751915062; c=relaxed/simple;
+	bh=SJwK6YgqsM4stkQe7Tu92yomLR5YFC9vOoAX5n5n9vY=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=HuODuqVBP/SUR75O9BHlvUzZWEJv+CKVxXcoOoDf5+3IM9+WRP0EdJomXAbXtmQSBXCslBcMOhnQlyEi4lSbAHv4HZcgDMQWIYVU8VLSJbFrUMU1Xgg21Y6xUbQ3wHvwtow5KoFPRo0pdrCNocbTfPlh8yWAjz3gnddScaqMMUk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=a2sLvREU; arc=fail smtp.client-ip=40.92.42.59
+	 Content-Type:MIME-Version; b=Gs3HErioN98Tpu9TvtuHQytKOsKEuK8rybxMDSLs20qN1WvqC9pLegQGIDR/XT89h5cVsdpWZlKFn7Wz4Eng84LIxmoENxbJPIHiVaP2dM1RHP4VmXlyg7H5OngFMhb6SZFsoKJTvKluMTkab+R4Io5LdbwQCDbgBEevqb6eYwg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=oJs4fRJe; arc=fail smtp.client-ip=40.92.41.75
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tg3TgCNZfX+71EEVGltswvFnAN4IYt6DJaNP5xbEHvwORQyIdTwZ5INotxpbh9el3/KKwUU0A3gjhyq2rxeiWx+ceL1Eghy08DLAtAzDAB/129ZWTwHMnbtqQRpIDBPI967bccwUzzO5aTPDnCrtOtx4zFDsuxbw9PLuU9arJ+LKS3HSOIMZ0CIkSr3NUaeqzjMRKYonbo1eB9disQ3sWcnHHVJJSPJZxQq36qvv5GSxqWSuaFRFYU9JH15nuZjDVLFBmIPG3IX65zevBRqXeqtkGxjK7o05JM3433P5uNARtKs7gg8mY6sfvVReQwknJo+IW4LI3cCTi64EdP0N7Q==
+ b=hKHexP14x7QFhLukBf5GeXxOkTx/zhTjaK1XuOUhhE7o9OPNQz5zbyqhZfy0iTbeLlBrrxBccmi8F0/POCGCKvVqmYw9m+VU4cQeqItO+vDeQS8iCx88tqA139P91NbDsClnP+UOEKqA2mjuqaVya21GWyKY1MowgVERljPwCADO952Gk8NZWc36Zmm8WdR3hspOJ2AG/wHAKMOvTOr+rYCc+RtjgQlq1pxKutfCPKff4pdHpX0G70EoD/kxRwgCDqOWReBJtcJNU1TkRMlaoeEznpQlaIBJbWF5fTLzNqo3aCxdbv/0vf5O0OQp2IcrSmqZH38HFebu/NZMJCPUGw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6kSvKRL+6sADdx44ORttc/0mwM2YZk9r04HLkqfUj48=;
- b=u+N2C0Fw2PgjCG6YKZeA4SiM61DKtUKJoGNhnH1whw4eeDavWhtQ09SiEDPYfliFgAvYHtmSxIhr3iXhnZQSqu/O2Ag/YG7YUMz4okpWVFy8YZxMOKyOqE7oJRzjmM3rYp0SsYdhcfXub618ZvLWBonHy7XpZvgRoaaGFvQrD4Ol7QajY7oSDo8VLlqvZKnvAkUk8XZf3X6p3ReM+DWR5PZDeEOyLiRCIDgFfWDnM0CsFJX9EO2n2Mv64quE2dRYBv5+JzKAcXRuBcgQilUdraGlqb/7R4bapUBDjRgaWovjBlJm3NM3WEmvtPTWw5rVx4Ig7q5FSzJ84Np6CPmWPQ==
+ bh=SJwK6YgqsM4stkQe7Tu92yomLR5YFC9vOoAX5n5n9vY=;
+ b=T9pS0zKmTK4fx5LOiE8PzeuGeuZRIYMhU51eEGumr2mtc2FFfTw7CP2pbJnd7/BzUvrLuvQTtBB4vRIKswNb6IPSWjreMhn/LWjiJFKCmT1H+32pztOSyFPf1fwPOm2KodYXmIxdyUhInI7zgguLqZtDyWw7mMPc/SArpAKoPU3bfGsTUDvULsSTxgPYjL78zbVuHJKv+rAbdS3G+/Sgfhv3HZpqiJMwKx2zGaS/+u/MZFUnDY9UiwFeGeKBN0dXuzmb53bloUtxI7WgfsGFZzY1Wj6FbPrc5DoNkN193r1pUzHLy6wdFKKogy2Z7ov1A876NK3Ee4Jue8TIGP0Tpw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6kSvKRL+6sADdx44ORttc/0mwM2YZk9r04HLkqfUj48=;
- b=a2sLvREUKgjDdN7Te/pDJfrovJqKfLY3CHl88yb327aw1cXKr5L1+5NjLneFcT7uniCgVYKZyrGeb22VypG3GDh46Mye5xr0vqCayF79EH4YutbzUocJ32vOhmxmvm3itw72utw4hYnA1RBGUOvJ8EJUKe6F0mj4vsUXyK2ZaKlz1TjXfSBiJsqQGvrWn8hGlMWxVTPnJa6nKoeCWAibMqx8C2KYWPoyhHubjSFUtOeJDqok206Sak2XKAljd0EzgRz8VeipoXGKkYooqj0cEYB97Ytyu9GUK/+0aGYjByWmN3XWqTu29lfPuuJ2vmcaVfZ8sCW0C3+Sa7OgaTgm/Q==
+ bh=SJwK6YgqsM4stkQe7Tu92yomLR5YFC9vOoAX5n5n9vY=;
+ b=oJs4fRJer36qz4JZYE02rz7Gr1HYHUoFW4564dwK3HDILAqOP0ma6mR16oEs8ZKL5Crtr/fWiX66sbAFLjHFWUQg5gkki+MjTW+ALv7YETLf4b/X69sH1mcskVpnY8DKrv07LXWVJN/G9I0LaCg84yUcUezXK8+k6owAVifZNKXikwFf7U869jNhtAIbPDtm8UE+ushyvhNogAX9yqq8D+FhKMfUOj8MUD0pc0O09hizrJqThl29o/Mwu+vKNWDtMxt+yHR/QGYsddGg4olWEUlf3tfsnPA6E1jSiY+tDn7zytgvY8yB9qd+Eo0nhjHM8j7pcR9GIcSOUacSTPBOXw==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by MW4PR02MB7281.namprd02.prod.outlook.com (2603:10b6:303:66::24) with
+ by CH3PR02MB9564.namprd02.prod.outlook.com (2603:10b6:610:120::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.24; Mon, 7 Jul
- 2025 18:49:02 +0000
+ 2025 19:04:17 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8901.018; Mon, 7 Jul 2025
- 18:49:02 +0000
+ 19:04:17 +0000
 From: Michael Kelley <mhklinux@outlook.com>
-To: Nam Cao <namcao@linutronix.de>, Marc Zyngier <maz@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, "David S . Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open
- list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>
-CC: Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>
-Subject: RE: [PATCH for-netdev v2 2/2] PCI: hv: Switch to
- msi_create_parent_irq_domain()
-Thread-Topic: [PATCH for-netdev v2 2/2] PCI: hv: Switch to
- msi_create_parent_irq_domain()
-Thread-Index: AQHb7xf/A8zJRWFEyk2mZWYCCrZaYbQm/Dxw
-Date: Mon, 7 Jul 2025 18:49:02 +0000
+To: Nam Cao <namcao@linutronix.de>
+CC: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>, Manivannan
+ Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Karthikeyan Mitran
+	<m.karthikeyan@mobiveil.co.in>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>, =?iso-8859-2?Q?Pali_Roh=E1r?=
+	<pali@kernel.org>, "K . Y . Srinivasan" <kys@microsoft.com>, Haiyang Zhang
+	<haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+	<decui@microsoft.com>, Joyce Ooi <joyce.ooi@intel.com>, Jim Quinlan
+	<jim2101024@gmail.com>, Nicolas Saenz Julienne <nsaenz@kernel.org>, Florian
+ Fainelli <florian.fainelli@broadcom.com>, Broadcom internal kernel review
+ list <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>, Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>, Marek Vasut
+	<marek.vasut+renesas@gmail.com>, Yoshihiro Shimoda
+	<yoshihiro.shimoda.uh@renesas.com>, Michal Simek <michal.simek@amd.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>, Nirmal Patel
+	<nirmal.patel@linux.intel.com>, Jonathan Derrick
+	<jonathan.derrick@linux.dev>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-rpi-kernel@lists.infradead.org"
+	<linux-rpi-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org"
+	<linux-mediatek@lists.infradead.org>, "linux-renesas-soc@vger.kernel.org"
+	<linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH 14/16] PCI: hv: Switch to msi_create_parent_irq_domain()
+Thread-Topic: [PATCH 14/16] PCI: hv: Switch to msi_create_parent_irq_domain()
+Thread-Index: AQHb5qqGWI9T0Ene10yNxUr1s0p/CbQi5NWggABxUYCAAAREgIADuHVQ
+Date: Mon, 7 Jul 2025 19:04:17 +0000
 Message-ID:
- <SN6PR02MB41577987DB4DA08E86403738D44FA@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <cover.1751875853.git.namcao@linutronix.de>
- <7b99cca47b41dacc9a82b96093935eab07cac43a.1751875853.git.namcao@linutronix.de>
-In-Reply-To:
- <7b99cca47b41dacc9a82b96093935eab07cac43a.1751875853.git.namcao@linutronix.de>
+ <SN6PR02MB4157200C58AF0AB4A809ECD9D44FA@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <cover.1750858083.git.namcao@linutronix.de>
+ <024f0122314198fe0a42fef01af53e8953a687ec.1750858083.git.namcao@linutronix.de>
+ <SN6PR02MB41571145B5ECA505CDA6BD90D44DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20250705094655.sEu3KWbJ@linutronix.de>
+ <20250705100211.8Lcszko3@linutronix.de>
+In-Reply-To: <20250705100211.8Lcszko3@linutronix.de>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|MW4PR02MB7281:EE_
-x-ms-office365-filtering-correlation-id: 6ff331ba-7351-4b1a-249b-08ddbd86f12a
-x-ms-exchange-slblob-mailprops:
- dx7TrgQSB6eQGC/G7Dawllljy95FzHWbT6yKBgT772Qf4EbSIkMHVgZofVfovKAhCHDZdJTGdkTPxGHPw2KhmPOxgYuf/Kri8QzaqRVzrPAHXF2gAas6rQbRNJVAS1b53DHY3uY7252gSXlu8F5+/LxErT9+AEOo/lpw9xkvZsjjdiRxLTVURClwAVWzMUmPRUCWjRM89wxtQBZz2Pscvh+RreN1ETeXPc/XfmEOQv2PfrxrZdwlueiJ45M2PRDQzVRyN/taY88KgmXEC7v5tiKJVmfUhqMsztCcdypVRHTVUf1EkmZduuKMrC3ydb7+jxS1WjTyzswSv4JkdBkNPrHUFeckU/a+SwnavW6+WVVoOcwO6q29AFS/osfDwv2Lx2isnRxwi1gIlm6YigCHBRRwRAV8IWmCJQmKMvW1Y/dXplU2k/aFqQ990UsUNRIsKdfSZDDGZ5fUjs+BfuS4Bw1r994yJ0REdkIVl0KMJS3q5s25Kl2uBToN2w5ojsG5sxn0qiorQznYVaD1yq1N1AFEQwRIsI5hqJjLGsvC1ow1ID2+ME0kneUXdcqA5HVMv4v6px5w3vaB6aQ57Hk7+cnKOOYzpp2Xt3PP0y2pocFT2hMWSbP8k8LONixKFrFZtEhRjHWMG1JvTW/vVwJ70Eb0KRl4+y6EFOv8+hwrLjRwqVQc+G4WyewDjRTz+Rm0cghtWp6mwY9x62KWQq4kNye5EGF8JbfVAV+ILHsJOgAIyC7zRa6lVO8sEm/hvjrg+p45JqFbm5A=
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CH3PR02MB9564:EE_
+x-ms-office365-filtering-correlation-id: b8b302f7-98b1-4102-4027-08ddbd89129d
 x-microsoft-antispam:
- BCL:0;ARA:14566002|8060799012|41001999006|461199028|8062599008|13031999003|40105399003|52005399003|3412199025|440099028|19111999003|12091999003|102099032;
+ BCL:0;ARA:14566002|8062599009|461199028|8060799012|102099032|1602099012|40105399003|440099028|3412199025|4302099013|10035399007;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?klzeea0quABvrQ6R/F2qHHntAGDj5ui1xgzYeZI12J/8BdewfhpkWdPfn7ba?=
- =?us-ascii?Q?LNiHvtJGgRApxPLz/lHwhkfg7V3+fvIWh4sYXSZDVkXSgiNmlRPMGdnkBc+R?=
- =?us-ascii?Q?3LwNsVlyCmAlGW7CUbKcbulbIcHhqBmJPBJdjbsi/CNMNEnjau1Wye80gvxK?=
- =?us-ascii?Q?rak9iGU4tb1p+GR3ldN/Hdu7UnfJaOEeTnVe0wsGoBNUuMGn/DHbGfbLjccB?=
- =?us-ascii?Q?xy+pn8PIiic/qkVo5fOaJtyWmSgonAbId+xiUnI6AT/CApHH89tnFcen+WVp?=
- =?us-ascii?Q?vlornUPGqeg0VkHkXdGrPz7eahJUEW1BP9JmofdWtuqvUeejZV74hpE8114t?=
- =?us-ascii?Q?3HvwoXd5Y3XEi2AFx0N/N6OdkMmanWP8mdUmOJDAsyusoQtd0gbSchgbAvAL?=
- =?us-ascii?Q?G9k33ACPIGCLy5tS4/WMUmCOkFGo3qie1XR1hybwISkk+ExycbjacUw44vdo?=
- =?us-ascii?Q?1y6kYYlxe8hFsMNqe+H9OwDlaeTkdUpFXlnqdtJcFy2p//Qy20j7GvLjcY4w?=
- =?us-ascii?Q?iuavLMz62Cj/t6fIUiB9aP78QzS/QzviJgqBsb+5Z1phZ1oPO3kOlaD34YA3?=
- =?us-ascii?Q?JU9VVDN9etLDrfMHhmq/b4X39NVhpmSHrDdSN8hnxJvUaUU+BRMwWpcaBtsk?=
- =?us-ascii?Q?Q+XDM1ci2qmbgL9UF7UIn1vVlGUQ10UY+WpQdET3v9vrXo0cAveBjm641wPS?=
- =?us-ascii?Q?75UT0ogNhBhbl+j6QOrhpANUfTaXeubOD2d3rdFH8c7QNY+HLxBFgeiw9v09?=
- =?us-ascii?Q?n2R/9fU5bIoGfGyn9rYLAbUv3UbwsMUgiUVsucpqgZI0/NJeqV6AdnrlP/aX?=
- =?us-ascii?Q?mKIYnTf7Z6O+cli7FpNzWZafXjKn0iqCTMpQAHi5uqGv+PqNzucaLLPpksdR?=
- =?us-ascii?Q?1OJUO54Sef0heciN7tBNWLAcWMhKPgVPKL86uao65Xdu4g+t8yeqCramL/QA?=
- =?us-ascii?Q?+ssh4xuXn9pROuC6cwbethS927ZgZRdtRl9IKd/JmCE9SRM5MeFa3leFyBKo?=
- =?us-ascii?Q?5McoggqFImMa1xHu2s1NGBBuQu4nv341DLH9iwCKc0XmM2zGCPDV1Ghgrshu?=
- =?us-ascii?Q?cJ75VEh9H6qhaAQgS5ltxULRvhnmB4GUyoYshhupnGxEO2WpZ+m6UKGO0sDC?=
- =?us-ascii?Q?fEcfNYKCIpb3MsjwSSdkT+DOhjfZvIQERAxp+3WY1kPcfNFVAf1PQiIPznu7?=
- =?us-ascii?Q?5yg6oY8XD8hx++WajrC5sQ3N1gQ1vjTy1UZQLg=3D=3D?=
+ =?iso-8859-2?Q?6/moQj09QuneH/gLa1VE1zawmIerm85paVT6Bhsl+wHJsUU32688eExyxY?=
+ =?iso-8859-2?Q?6D3aBXJGcHqdZzqL6oTHEDPKewW6MdKwzzEGsHTXicv5uE4oBcBKfZa73H?=
+ =?iso-8859-2?Q?z3IgWnDgt3P3fycGSL90vDwfsizN+5qO2SU9GpbMU78pNmCloHxAhjAL5q?=
+ =?iso-8859-2?Q?pkNM/JHoETdMCyMM1WUR18jrCjXeKBKb70qcdS9Yvs4rvHR4QAmKdBCDAv?=
+ =?iso-8859-2?Q?1Ecw8ws18AByY9H1kdwYk5mMcjVX/T0VAvUq+IljbGPGBIvbaBY7K4+v27?=
+ =?iso-8859-2?Q?F5fJgFiKn4bco+c1gWv+TP4401UUg1q6vygnwg4wRoEUynHAsC0/y10h0M?=
+ =?iso-8859-2?Q?lbsSl2xbsH9htvq2rzBRmunUTlHMiYP48uIGi+nwXZ5xRcRfLEDfa5nwTI?=
+ =?iso-8859-2?Q?iclszbufLWTNEA+g0uHm4+2+5TT4qnqOA0P+Nboo2WECfpx9guX8RcWFMh?=
+ =?iso-8859-2?Q?Ju6jwMb2TpwSEFmxomjWyN6do1uNKCjAt/JyhK1BelIaJGw6bzSyYXBZv+?=
+ =?iso-8859-2?Q?lQaMHeixvs9koDmfChjj0w7RlNlaOQMXDs3VMDPX71/y+KiFS1u0tMSq8W?=
+ =?iso-8859-2?Q?kBaQnulsYL9uCkB9fph0q0vxm7GZNWox8AG+X+GmjGSDnKLMbfoco6bCSu?=
+ =?iso-8859-2?Q?0vDKHgBXe6288AsnU1lwsVDn/cnFgSi4lDfPSHrhxWUOoAA34UvVRrp+fe?=
+ =?iso-8859-2?Q?PA9Pbz7Bv9nU2B157iUiITr9o4Ed4k82uUdOf0ZEM6JRU44xxWHuT3ACU3?=
+ =?iso-8859-2?Q?EyOYtWCGov9MqnZ67XcK6nH3uFOc6F2KbmzQQM5m46j7Bj3DjSygX7mxV0?=
+ =?iso-8859-2?Q?0FdA2/hLOJ9v5VYSQ5j1roKPcrUDsGpy4S9xKL17m78WsndiGb3Mhj616b?=
+ =?iso-8859-2?Q?v7YLUXr+l6/Fhtl6gRqDS3TmC8qng36fCUy4Z/CEBSUbVTO4rpAuCmZLAh?=
+ =?iso-8859-2?Q?2IvZjJjrCOQaOkOfMHAYBBjvwQndDXmI2Q70d+A1BksIMkJrj+eDR3EP39?=
+ =?iso-8859-2?Q?fBXFzLes4hRqo6Clnh8SG4PUjHTttPCGCL4N54TiYzxwprsuZfnaPfxoR6?=
+ =?iso-8859-2?Q?NbgcdCcTX0ddR7Grpe0Wmgija+iffA4gHykDgF4ho/3U5ciXTrClCKCxYB?=
+ =?iso-8859-2?Q?PhDmujqXjW7YRafCg5LjE7QEROW6JGmHCC8CipCWnI8If51xM1HlVeGXCt?=
+ =?iso-8859-2?Q?G5GfMm/i/OQISNBTn3PGXd6aFvaM3ivB+UyzGE22QCBFxKVDGZQk2KYg?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?roMo70hx0Y8KSwteE3eclIuDUNGLY01GBCUoRvQDlYvifVGW9mSWW7870u+q?=
- =?us-ascii?Q?7wLnrSz/lUkMcNxbxjIqsOVBI8o2WjbeBLZYS01Ns3NOpo9W1qX+mVIF7qVE?=
- =?us-ascii?Q?aJ8r0DIilsXMfAe7l5CGDcRpUhFPfejOqJZZk+pWKaMlM1TC8u7mWaUVM/QN?=
- =?us-ascii?Q?BELWUR3uBlZ0mzZOLciil4JK7TDsQt04Y8a/1fE97M+l62HmgpJNvdWkC2K4?=
- =?us-ascii?Q?yC36X511lpDu6a/XBK8LXB4PkHq/TVlhcYrd879Thh76JW/BtD+E069pr8BI?=
- =?us-ascii?Q?mdlTqPD1O930nVE/NszWNepHdjZrCWoP8gOt+VqtgKu4Vd4w1BwEJO30eBDS?=
- =?us-ascii?Q?oQAuDXy1mE8fAoo4D6WUzTBMQDKVdR8lW2eR9/uTUVBSgKwnPoYoaYxH6AOj?=
- =?us-ascii?Q?RvR95h/Ie2JxNa5fBZNectWDaB9HsydgFwXhhiK/5ZwgBuMU5GsJHqr1O0gQ?=
- =?us-ascii?Q?D8IhTgiF9N9DL+q2bjbXhMQXsKcg5MGouHtByLa0nQL/xHJZBehjR5gWd7nQ?=
- =?us-ascii?Q?GY953Qvsgn7UEHk+qr2upPbgHhM1zH7dWrzU9yL6AWAk6x9MnFplfK7jARH1?=
- =?us-ascii?Q?wtkX7PFFPr8a8sJrTCGuehBhnDGB419CsoK0gaZOmjZSFJfnczm8DcDEU0Rh?=
- =?us-ascii?Q?h3ZAmMk5jziabhUnP8d484Bp0/27FvZxJfo8svptXIxg8b7mAAdWzX4tsoi4?=
- =?us-ascii?Q?aZakDf/ros9WqPUnEK58dUvD8wuqdgIfRfcwyKS4KJoltcEiG1yVk4HJV7iE?=
- =?us-ascii?Q?q4fsuIV+SnKDHI91TrMoDcCtXvQVbeBiQZDTM8rEpoNHYYRL0+UtrVDvuEyi?=
- =?us-ascii?Q?M7DCydOwfajSTOYINevATeeBcULE2LZ/a4xDSIJ3Aw2qxqhzN4I/MrlEESxo?=
- =?us-ascii?Q?Hg3RVZkZ2OGQr41X0g4CDcgLbVkYAg9px4elC+eIDKr9LfKVSy5Jlvyo0dBd?=
- =?us-ascii?Q?LJHkqQ3blfqggTPXB9AxwBtDA7GBzVmHr/vQSqzfzZLoe2prtH5cHRpSGInc?=
- =?us-ascii?Q?xGwnXnVXFsMjg6fPOPh4MmeL4Hk3yr7ZXHD/zLvm8T6rgMpV61DzpsbyyBaK?=
- =?us-ascii?Q?JmBRXAAkYf0mk2lZfTeUIF3dKOB49+5xUhXRO7QAZWLHu/FAoFK8hXi/7Hwz?=
- =?us-ascii?Q?LJh5h4CpJ+EZUeZaa04q4uyapUakIvyRbnCWFhrkjnvRyMAcciUZihpVL9Iq?=
- =?us-ascii?Q?Su2K2hRhlXMmwoEcacBBu/S1Kf6mllDnwjZWSL+QDeQ8RT95X4Eb38zkCm0?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
+ =?iso-8859-2?Q?B06H8nIeYCea0Q5P9dPinGipdB0PvtV7GisfUQz5k82ZQTuSndLFm99tBb?=
+ =?iso-8859-2?Q?lVyOxevYWutwWvwTyTDXDX+Z30WbcBpu58ymcSt7HEcy436eej521UCg/u?=
+ =?iso-8859-2?Q?tjCqAxzxZ0EE9W/94Y6ZhoP+xLrc0j26OFJeH/S+B40pZBUFXz8Y9aS4VA?=
+ =?iso-8859-2?Q?kchFBqAyyUE8GfeJOKwSrXW6QKnCZ6yX/Tn8fe4fRktTeOruuwZLnPowtc?=
+ =?iso-8859-2?Q?mfWuRDluj6d33xgwIHbg9OpihdBupG/tEMuupaXQQ4VVHg6/JOdy2wv79r?=
+ =?iso-8859-2?Q?tRgW6XqA0DkDGKIUjQHSfhGpf7mfYASJ9nTxdJ3A0CmGfb/v4KbYXHK7IZ?=
+ =?iso-8859-2?Q?UeuyTGHLUM8Pckx+0JhbdHWTqfFzKR1QnZoHskLyzK/zyG/nnc9bKfkHZG?=
+ =?iso-8859-2?Q?TVJ06ZJeImoHuraEsRiqOzyRiCRxErPfieE//gee4dIGPvnF8aZzeXxnGL?=
+ =?iso-8859-2?Q?LSykhxBUBJlW3D8GUccpjMpS6mpq2+vz3uYuti0Uf1cGgjHDAYGgCbkMLZ?=
+ =?iso-8859-2?Q?nBZn17KeoIn9gT+7gjmY31zM4atyrrfKUpV1zkKCWJs4ALKJHq7rVXzfJT?=
+ =?iso-8859-2?Q?Sfrlrq1gR4De3tzh9ptcqtKuR6A3KCn1CTCYlzsvcsgL1b8s9cLFCjU15U?=
+ =?iso-8859-2?Q?mJVLYzNf0bIGSHU8pJB6HIRMfMDlCmbMEJxbv45HQogkmvuIFxP2mHRrkK?=
+ =?iso-8859-2?Q?mF4Anc4H7fheMKOqiu+L4ersMDOXNGlOthnrkGVtu0mH2KOCrHXTRPFYc3?=
+ =?iso-8859-2?Q?+a9cytTZBTHDmCcrIIPdi1l85w9BETDjt82Z0U5G4t5Z5R7e6YyzSXjqrN?=
+ =?iso-8859-2?Q?OpFnRa5F88jsyfOAjv3F3AuRcz6SPamtuOSuI3EZDv8mS0eYs8dC5N2g0T?=
+ =?iso-8859-2?Q?f0QHgV4AE5D+5ekljDXpgf9Z8+WMKYmpdWQ3su+COiqQORtM78oZIthhPi?=
+ =?iso-8859-2?Q?fvrXybWoAIqO6SsrSKFakaQ8DrWhknkjM9QRFUn9DW+AnPaTKU46v83WgY?=
+ =?iso-8859-2?Q?QCBkqwOjLULvAgw1HzZWgGtvjdBq8YOGRKbGjS6r22tpwj6o34coiUnkXB?=
+ =?iso-8859-2?Q?3nO9HhCu3XznxIj/54sQRIpBxj7NR1kEFTiCQoEWhjUfG7Dn4mOnkT059S?=
+ =?iso-8859-2?Q?IT4hOgdBwb/i1sjh5jbtfFuCapbNKhCe4TwhwgsGX3Xrk/9qL0eZqhj8TS?=
+ =?iso-8859-2?Q?bLz6g/o96/AmHmEqm7+whgAlwOoQFaxyJqjF8o9OPbIUrxVGqwgsb3q/nJ?=
+ =?iso-8859-2?Q?FRycf8PEVmZNpsAhdl3qf6pg2N6vX7tWHa0ZeWxt4=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -145,277 +164,48 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ff331ba-7351-4b1a-249b-08ddbd86f12a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2025 18:49:02.5189
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8b302f7-98b1-4102-4027-08ddbd89129d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2025 19:04:17.6686
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR02MB7281
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR02MB9564
 
-From: Nam Cao <namcao@linutronix.de> Sent: Monday, July 7, 2025 1:20 AM
+From: Nam Cao <namcao@linutronix.de> Sent: Saturday, July 5, 2025 3:02 AM
 >=20
-> Move away from the legacy MSI domain setup, switch to use
-> msi_create_parent_irq_domain().
+> On Sat, Jul 05, 2025 at 11:46:59AM +0200, Nam Cao wrote:
+> > On Sat, Jul 05, 2025 at 03:51:48AM +0000, Michael Kelley wrote:
+> > > From: Nam Cao <namcao@linutronix.de> Sent: Thursday, June 26, 2025 7:=
+48 AM
+> > > >
+> > > > Move away from the legacy MSI domain setup, switch to use
+> > > > msi_create_parent_irq_domain().
+> > >
+> > > With the additional tweak to this patch that you supplied separately,
+> > > everything in my testing on both x86 and arm64 seems to work OK. So
+> > > that's all good.
+> >
+> > Thanks so much for examining the patch,
 >=20
-> While doing the conversion, I noticed that hv_compose_msi_msg() is doing
-> more than it is supposed to (composing message). This function also
-> allocates and populates struct tran_int_desc, which should be done in
-> hv_pcie_domain_alloc() instead. It works, but it is not the correct desig=
-n.
-> However, I have no hardware to test such change, therefore I leave a TODO
-> note.
+> Btw, you probably would also be interested in
+> https://lore.kernel.org/lkml/cover.1751277765.git.namcao@linutronix.de/
 >=20
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> which does a similar conversion for the other hyperv driver.
+>=20
 
-[Adding linux-hyperv@vger.kernel.org so that the Linux on Hyper-V folks
-have visibility.]
+Thanks. I had seen this other small series for the driver used by Linux
+when running as the root partition (i.e., "dom0") on the Hyper-V
+hypervisor. Unfortunately, I have less familiarity with that configuration,
+and I lack access to hardware needed to run and test it. Someone at
+Microsoft would need to look at the patches and give them a basic smoke
+test with Linux-as-root.
 
-This all looks good to me now. Thanks for the additional explanation of
-the TODO. I understand what you are suggesting. Moving the interaction
-with the Hyper-V host into hv_pcie_domain_alloc() has additional appeal
-because it should eliminate the need for the ugly polling for a VMBus
-response. However, I'm unlikely to be the person implementing the
-TODO. hv_compose_msi_msg() is a real beast of a function, and I lack
-access to hardware to fully test the move, particularly a device that
-does multi MSI. I don't think such a device is available in a VM in the
-Azure public cloud.
+FWIW, I was a Microsoft employee for many years, working on Linux
+guests on Hyper-V. But I retired about 2 years ago. Though I've kept my
+hands in Linux kernel work, my access to hardware configs is more
+limited than when I was an employee -- now it's guest VMs on my
+personal laptop and Azure VMs.
 
-I've tested this patch in an Azure VM that has a MANA NIC. The MANA
-driver has updates in linux-next to use MSIX dynamic allocation, and
-that dynamic allocation appears to work correctly with this patch. My
-testing included unbind and rebind the driver several times so that
-the full round-trip is tested.
-
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-Tested-by: Michael Kelley <mhklinux@outlook.com>
-
-> ---
-> v2:
->   - rebase onto netdev/next
->   - clarify the TODO note
->   - fixup arm64
->   - Add HV_MSI_CHIP_FLAGS macro and reduce the amount of #ifdef
-> ---
->  drivers/pci/Kconfig                 |   1 +
->  drivers/pci/controller/pci-hyperv.c | 111 +++++++++++++++++++++-------
->  2 files changed, 84 insertions(+), 28 deletions(-)
->=20
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 9c0e4aaf4e8c..9a249c65aedc 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -223,6 +223,7 @@ config PCI_HYPERV
->  	tristate "Hyper-V PCI Frontend"
->  	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI && SYSFS
->  	select PCI_HYPERV_INTERFACE
-> +	select IRQ_MSI_LIB
->  	help
->  	  The PCI device frontend driver allows the kernel to import arbitrary
->  	  PCI devices from a PCI backend to support PCI driver domains.
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
-/pci-hyperv.c
-> index 86ca041bf74a..ebe39218479a 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -44,6 +44,7 @@
->  #include <linux/delay.h>
->  #include <linux/semaphore.h>
->  #include <linux/irq.h>
-> +#include <linux/irqchip/irq-msi-lib.h>
->  #include <linux/msi.h>
->  #include <linux/hyperv.h>
->  #include <linux/refcount.h>
-> @@ -508,7 +509,6 @@ struct hv_pcibus_device {
->  	struct list_head children;
->  	struct list_head dr_list;
->=20
-> -	struct msi_domain_info msi_info;
->  	struct irq_domain *irq_domain;
->=20
->  	struct workqueue_struct *wq;
-> @@ -576,9 +576,8 @@ struct hv_pci_compl {
->  static void hv_pci_onchannelcallback(void *context);
->=20
->  #ifdef CONFIG_X86
-> -#define DELIVERY_MODE	APIC_DELIVERY_MODE_FIXED
-> -#define FLOW_HANDLER	handle_edge_irq
-> -#define FLOW_NAME	"edge"
-> +#define DELIVERY_MODE		APIC_DELIVERY_MODE_FIXED
-> +#define HV_MSI_CHIP_FLAGS	MSI_CHIP_FLAG_SET_ACK
->=20
->  static int hv_pci_irqchip_init(void)
->  {
-> @@ -723,8 +722,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
->  #define HV_PCI_MSI_SPI_START	64
->  #define HV_PCI_MSI_SPI_NR	(1020 - HV_PCI_MSI_SPI_START)
->  #define DELIVERY_MODE		0
-> -#define FLOW_HANDLER		NULL
-> -#define FLOW_NAME		NULL
-> +#define HV_MSI_CHIP_FLAGS	MSI_CHIP_FLAG_SET_EOI
->  #define hv_msi_prepare		NULL
->=20
->  struct hv_pci_chip_data {
-> @@ -1687,7 +1685,7 @@ static void hv_msi_free(struct irq_domain *domain, =
-struct
-> msi_domain_info *info,
->  	struct msi_desc *msi =3D irq_data_get_msi_desc(irq_data);
->=20
->  	pdev =3D msi_desc_to_pci_dev(msi);
-> -	hbus =3D info->data;
-> +	hbus =3D domain->host_data;
->  	int_desc =3D irq_data_get_irq_chip_data(irq_data);
->  	if (!int_desc)
->  		return;
-> @@ -1705,7 +1703,6 @@ static void hv_msi_free(struct irq_domain *domain, =
-struct
-> msi_domain_info *info,
->=20
->  static void hv_irq_mask(struct irq_data *data)
->  {
-> -	pci_msi_mask_irq(data);
->  	if (data->parent_data->chip->irq_mask)
->  		irq_chip_mask_parent(data);
->  }
-> @@ -1716,7 +1713,6 @@ static void hv_irq_unmask(struct irq_data *data)
->=20
->  	if (data->parent_data->chip->irq_unmask)
->  		irq_chip_unmask_parent(data);
-> -	pci_msi_unmask_irq(data);
->  }
->=20
->  struct compose_comp_ctxt {
-> @@ -2101,25 +2097,87 @@ static void hv_compose_msi_msg(struct irq_data *d=
-ata, struct msi_msg *msg)
->  	msg->data =3D 0;
->  }
->=20
-> +static bool hv_pcie_init_dev_msi_info(struct device *dev, struct irq_dom=
-ain *domain,
-> +				      struct irq_domain *real_parent, struct msi_domain_info *info)
-> +{
-> +	struct irq_chip *chip =3D info->chip;
-> +
-> +	if (!msi_lib_init_dev_msi_info(dev, domain, real_parent, info))
-> +		return false;
-> +
-> +	info->ops->msi_prepare =3D hv_msi_prepare;
-> +
-> +	chip->irq_set_affinity =3D irq_chip_set_affinity_parent;
-> +
-> +	if (IS_ENABLED(CONFIG_X86))
-> +		chip->flags |=3D IRQCHIP_MOVE_DEFERRED;
-> +
-> +	return true;
-> +}
-> +
-> +#define HV_PCIE_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS	| \
-> +				    MSI_FLAG_USE_DEF_CHIP_OPS		| \
-> +				    MSI_FLAG_PCI_MSI_MASK_PARENT)
-> +#define HV_PCIE_MSI_FLAGS_SUPPORTED (MSI_FLAG_MULTI_PCI_MSI	| \
-> +				     MSI_FLAG_PCI_MSIX			| \
-> +				     MSI_FLAG_PCI_MSIX_ALLOC_DYN	| \
-> +				     MSI_GENERIC_FLAGS_MASK)
-> +
-> +static const struct msi_parent_ops hv_pcie_msi_parent_ops =3D {
-> +	.required_flags		=3D HV_PCIE_MSI_FLAGS_REQUIRED,
-> +	.supported_flags	=3D HV_PCIE_MSI_FLAGS_SUPPORTED,
-> +	.bus_select_token	=3D DOMAIN_BUS_PCI_MSI,
-> +	.chip_flags		=3D HV_MSI_CHIP_FLAGS,
-> +	.prefix			=3D "HV-",
-> +	.init_dev_msi_info	=3D hv_pcie_init_dev_msi_info,
-> +};
-> +
->  /* HW Interrupt Chip Descriptor */
->  static struct irq_chip hv_msi_irq_chip =3D {
->  	.name			=3D "Hyper-V PCIe MSI",
->  	.irq_compose_msi_msg	=3D hv_compose_msi_msg,
->  	.irq_set_affinity	=3D irq_chip_set_affinity_parent,
-> -#ifdef CONFIG_X86
->  	.irq_ack		=3D irq_chip_ack_parent,
-> -	.flags			=3D IRQCHIP_MOVE_DEFERRED,
-> -#elif defined(CONFIG_ARM64)
->  	.irq_eoi		=3D irq_chip_eoi_parent,
-> -#endif
->  	.irq_mask		=3D hv_irq_mask,
->  	.irq_unmask		=3D hv_irq_unmask,
->  };
->=20
-> -static struct msi_domain_ops hv_msi_ops =3D {
-> -	.msi_prepare	=3D hv_msi_prepare,
-> -	.msi_free	=3D hv_msi_free,
-> -	.prepare_desc	=3D pci_msix_prepare_desc,
-> +static int hv_pcie_domain_alloc(struct irq_domain *d, unsigned int virq,=
- unsigned int nr_irqs,
-> +			       void *arg)
-> +{
-> +	/*
-> +	 * TODO: Allocating and populating struct tran_int_desc in hv_compose_m=
-si_msg()
-> +	 * should be moved here.
-> +	 */
-> +	int ret;
-> +
-> +	ret =3D irq_domain_alloc_irqs_parent(d, virq, nr_irqs, arg);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	for (int i =3D 0; i < nr_irqs; i++) {
-> +		irq_domain_set_hwirq_and_chip(d, virq + i, 0, &hv_msi_irq_chip, NULL);
-> +		if (IS_ENABLED(CONFIG_X86))
-> +			__irq_set_handler(virq + i, handle_edge_irq, 0, "edge");
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void hv_pcie_domain_free(struct irq_domain *d, unsigned int virq,=
- unsigned int nr_irqs)
-> +{
-> +	struct msi_domain_info *info =3D d->host_data;
-> +
-> +	for (int i =3D 0; i < nr_irqs; i++)
-> +		hv_msi_free(d, info, virq + i);
-> +
-> +	irq_domain_free_irqs_top(d, virq, nr_irqs);
-> +}
-> +
-> +static const struct irq_domain_ops hv_pcie_domain_ops =3D {
-> +	.alloc	=3D hv_pcie_domain_alloc,
-> +	.free	=3D hv_pcie_domain_free,
->  };
->=20
->  /**
-> @@ -2137,17 +2195,14 @@ static struct msi_domain_ops hv_msi_ops =3D {
->   */
->  static int hv_pcie_init_irq_domain(struct hv_pcibus_device *hbus)
->  {
-> -	hbus->msi_info.chip =3D &hv_msi_irq_chip;
-> -	hbus->msi_info.ops =3D &hv_msi_ops;
-> -	hbus->msi_info.flags =3D (MSI_FLAG_USE_DEF_DOM_OPS |
-> -		MSI_FLAG_USE_DEF_CHIP_OPS | MSI_FLAG_MULTI_PCI_MSI |
-> -		MSI_FLAG_PCI_MSIX | MSI_FLAG_PCI_MSIX_ALLOC_DYN);
-> -	hbus->msi_info.handler =3D FLOW_HANDLER;
-> -	hbus->msi_info.handler_name =3D FLOW_NAME;
-> -	hbus->msi_info.data =3D hbus;
-> -	hbus->irq_domain =3D pci_msi_create_irq_domain(hbus->fwnode,
-> -						     &hbus->msi_info,
-> -						     hv_pci_get_root_domain());
-> +	struct irq_domain_info info =3D {
-> +		.fwnode		=3D hbus->fwnode,
-> +		.ops		=3D &hv_pcie_domain_ops,
-> +		.host_data	=3D hbus,
-> +		.parent		=3D hv_pci_get_root_domain(),
-> +	};
-> +
-> +	hbus->irq_domain =3D msi_create_parent_irq_domain(&info, &hv_pcie_msi_p=
-arent_ops);
->  	if (!hbus->irq_domain) {
->  		dev_err(&hbus->hdev->device,
->  			"Failed to build an MSI IRQ domain\n");
-> --
-> 2.39.5
-
+Michael
 
