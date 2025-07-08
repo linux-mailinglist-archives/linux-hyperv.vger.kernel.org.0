@@ -1,46 +1,46 @@
-Return-Path: <linux-hyperv+bounces-6139-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6136-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E60FFAFC26C
-	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Jul 2025 08:07:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1509AFC1EF
+	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Jul 2025 07:17:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 90A774A4471
-	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Jul 2025 06:06:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 315984A5023
+	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Jul 2025 05:17:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAB5121D5B6;
-	Tue,  8 Jul 2025 06:06:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60A701C5D77;
+	Tue,  8 Jul 2025 05:17:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="M6lAkofx"
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="fQ1NQV0g"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from out28-124.mail.aliyun.com (out28-124.mail.aliyun.com [115.124.28.124])
+Received: from out28-145.mail.aliyun.com (out28-145.mail.aliyun.com [115.124.28.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617FC35962;
-	Tue,  8 Jul 2025 06:06:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867821401B;
+	Tue,  8 Jul 2025 05:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751954814; cv=none; b=ijiPlY31IXbzcJ1Imgk/6ZLjKc3X86O4tKAYRv+rabqlNACbLmNb8fZOp01X+86kBTmfI9QyRDwEWsuNNz+rZ78rSFL1gqLHlfMq2alpnqZFAmBYF9i+QZapDwbxgCIAOQcY6+UBWe/wMiGwMKXH757A92Wqgi+0R6CRYY1n/64=
+	t=1751951866; cv=none; b=cHoPnBmQv4ev3KqYCTzHDT0va59aBxoqurdMIQ9WtYPL9xpjjYbKvoZ+ZkAzsKej7VCLfL6os5Vm3H/jZX6EAoNQO0QuCF7LRwVqbfqkVF6ikt12NtEx2eX4jA9veAPWBaEf2HGbiyC4wSKMz+wak3ESeRxvEjcjKR40PthqG84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751954814; c=relaxed/simple;
-	bh=mIOs9ZQv+Dge62egFi7/FYpUbNceMjDUj5FMhCzPzvQ=;
+	s=arc-20240116; t=1751951866; c=relaxed/simple;
+	bh=59y7qEw4GpHqR9V5yVAvN9k1VJ4Mks0dolgkvU2v08Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rr+C8zL4WcXLk7Qws22RlWoXt5OEYDNz252AZx4M5mEkWPY0xbUho9dG1gw8kb6M8I9lg3VLew0z4yaTnqsxbf1YdCKuyrIqr3FWEzYSnTh3Erir0iZ8az5PjmvmUypuBVqceada2d8laOd7/icr+dkpMJ6yC77J8NzSqV9oBzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=M6lAkofx; arc=none smtp.client-ip=115.124.28.124
+	 In-Reply-To:Content-Type; b=rCRm/Rkgg5wrFE9ZxItkp2FJmz0nL2940YocabN84cBJ7P8a3CuByNyPShm2gTZFYRwcoaPtX76E4UUvPjHHKbRBS8GLVdGZ4vG7f6YpE682VhzI8MaSLfur+P6MYy8nDuN36toTKbSiPXO0ZZKgkO1gIJX6OJFBD8LiqwQExvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=fQ1NQV0g; arc=none smtp.client-ip=115.124.28.145
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=antgroup.com; s=default;
-	t=1751954799; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=5JEqIO5uBY95Voa4tTrXdXEV+OOCe7hAnim8ZON5228=;
-	b=M6lAkofxCxoUdow3haGpU5j92GzWIdnZOogE2sEe7d24vi3UFMnJkN60DHVhPprGYUdTDEZE6yllLquZBsduar4YCuqqkb0n+gU6sYAKitfsEjQhZjEPv9G2V9ZYr4kcNsOFA+lwOMOsAuJ0h7z2bA8pTjKvNMYvPxIfODwWdOo=
-Received: from 30.172.244.77(mailfrom:niuxuewei.nxw@antgroup.com fp:SMTPD_---.dhEfNgk_1751951111 cluster:ay29)
+	t=1751951858; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=ll42IxvjGlWNCvhre5iXoxCnMkwXG5zTYn4NRTnJbTc=;
+	b=fQ1NQV0gOfvv4zK1Fip/DQ6VhcY4HG/Ffc7BrIqkhhSwsKjLJYY6fZcYqlreNmaHfXJkDFcgX9ObKGKTvUEavXPWhAwCmG584LtKL3TKw1RjNujiKSfha9uCLN3xzxnqthJ3cFIa2mPhTMdJ/IOuzTpAoKzy3ROm/ukwZKgEzbw=
+Received: from 30.172.244.77(mailfrom:niuxuewei.nxw@antgroup.com fp:SMTPD_---.dhG9apK_1751951856 cluster:ay29)
           by smtp.aliyun-inc.com;
-          Tue, 08 Jul 2025 13:05:12 +0800
-Message-ID: <0a969517-ba41-4aa9-8f1b-471422cc2593@antgroup.com>
-Date: Tue, 8 Jul 2025 13:05:10 +0800
+          Tue, 08 Jul 2025 13:17:37 +0800
+Message-ID: <aaac1fda-7365-4643-b8df-df6412a42891@antgroup.com>
+Date: Tue, 8 Jul 2025 13:17:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -61,30 +61,17 @@ Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
  netdev@vger.kernel.org, linux-kernel@vger.kernel.org, fupan.lfp@antgroup.com
 References: <20250706-siocinq-v5-0-8d0b96a87465@antgroup.com>
  <20250706-siocinq-v5-1-8d0b96a87465@antgroup.com>
- <xhzslzuxrhdoixffmzwprn254ctolimj7giuxj4nfrfg23eesy@ycpe6kma5vih>
+ <xphwpqqi42w5b3jug3vfooybrlft3z5ewravl7jvzci7ogs3nh@5i7yi66dg7fa>
 Content-Language: en-US
 From: Xuewei Niu <niuxuewei.nxw@antgroup.com>
-In-Reply-To: <xhzslzuxrhdoixffmzwprn254ctolimj7giuxj4nfrfg23eesy@ycpe6kma5vih>
+In-Reply-To: <xphwpqqi42w5b3jug3vfooybrlft3z5ewravl7jvzci7ogs3nh@5i7yi66dg7fa>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
 
-On 2025/7/7 21:40, Stefano Garzarella wrote:
+On 2025/7/7 21:42, Stefano Garzarella wrote:
 > On Sun, Jul 06, 2025 at 12:36:29PM +0800, Xuewei Niu wrote:
-> 
-> Again, this patch should have `From: Dexuan Cui <decui@microsoft.com>` on first line, and this is done automatically by `git format-patch` (or others tools) if the author is the right one in your branch.
-> I'm not sure what is going on on your side, but you should avoid to reset the original author.
-> Applying this patch we will have:
-> 
->     commit ed36075e04ecbb1dd02a3d8eba5bfac6469d73e4
->     Author: Xuewei Niu <niuxuewei97@gmail.com>
->     Date:   Sun Jul 6 12:36:29 2025 +0800
-> 
->         hv_sock: Return the readable bytes in hvs_stream_has_data()
-> 
-> This is not what we want, right?
-> 
 >> When hv_sock was originally added, __vsock_stream_recvmsg() and
 >> vsock_stream_has_data() actually only needed to know whether there
 >> is any readable data or not, so hvs_stream_has_data() was written to
@@ -101,6 +88,14 @@ On 2025/7/7 21:40, Stefano Garzarella wrote:
 >> the next host-to-guest VMBus hv_sock packet.
 >>
 >> Note: there may be multpile incoming hv_sock packets pending in the
+> 
+> s/multpile/multiple
+
+Will do.
+
+Thanks,
+Xuewei
+
 >> VMBus channel's ringbuffer, but so far there is not a VMBus API that
 >> allows us to know all the readable bytes in total without reading and
 >> caching the payload of the multiple packets, so let's just return the
@@ -110,18 +105,6 @@ On 2025/7/7 21:40, Stefano Garzarella wrote:
 >> understand the VMBus packet format and parse the packets directly.
 >>
 >> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> 
-> Your S-o-b was fine here, I was talking about the author.
-
-I misunderstood the meaning of author. Sorry about that.
-
-Will update this in v6.
-
-Thanks,
-Xuewei 
-> Thanks,
-> Stefano
-> 
 >> ---
 >> net/vmw_vsock/hyperv_transport.c | 17 ++++++++++++++---
 >> 1 file changed, 14 insertions(+), 3 deletions(-)
@@ -164,8 +147,5 @@ Xuewei
 >> -- 
 >> 2.34.1
 >>
-
-
-
 
 
