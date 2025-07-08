@@ -1,48 +1,47 @@
-Return-Path: <linux-hyperv+bounces-6142-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6141-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42EADAFC2D5
-	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Jul 2025 08:37:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 984C5AFC2CF
+	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Jul 2025 08:37:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9AAC24A4B19
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 33F821AA77CA
 	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Jul 2025 06:37:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A19CE224B05;
-	Tue,  8 Jul 2025 06:36:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D200222576;
+	Tue,  8 Jul 2025 06:36:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="Bygch159"
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="cmeibjdk"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from out28-173.mail.aliyun.com (out28-173.mail.aliyun.com [115.124.28.173])
+Received: from out28-122.mail.aliyun.com (out28-122.mail.aliyun.com [115.124.28.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3831E1E48A;
-	Tue,  8 Jul 2025 06:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CEC221FC4;
+	Tue,  8 Jul 2025 06:36:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751956617; cv=none; b=Bk4G/DIlhBFkvQGPvnQnEFqFSs4q3oxZi3oElxXbye46xpjT04+xJr6zvYoSHEIxZu0bcVzhfwz9HVfcH+8DGzQrX8sk3O7PXDSo3AMIp21lgJ9yDNc5aUv86yar8YVsA91ljf4KCTEEXriyInGZd6SzQ261T53BlcAvvJIMS7U=
+	t=1751956615; cv=none; b=Btm4/TBITxCqXFgG1yqv78drpbuyYPenyL85Dh8ll8uiMgIR1fxGhHmP5xOXBnwRUGQZfY8+2sQUTb9pZix2uuXO+u8VGVw655oxbnUAE8ezJxM8bIw0t8BQXKG/XycESpfdOcy0INgSRXcUxdZFooG1V5o64FHHs+XbB2TNGdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751956617; c=relaxed/simple;
-	bh=e6+A6V/GIHjY2NtS85toohY3fDmWeS+De+ENSmkaW48=;
+	s=arc-20240116; t=1751956615; c=relaxed/simple;
+	bh=Doct89OeyNO072Y2Ys7bCVOd+ekwZZ2v2r0ziNK3ALY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iIAJDGlP2fFLOwiP1JjGOp0ykKSsA89EWYfxIIUEYISkXjhFF1J7JXv7nhYLfKf7hUPXLJcJo+wnhvMAhxsQ+x21oiQYxPJD22P3X0h8t9fg8mtSa5Mw0dRnh5WBjgYD0P4YHj9vXhYgnVBfhnbpBcXyonVrtrszKNne+UzAC1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=Bygch159; arc=none smtp.client-ip=115.124.28.173
+	 In-Reply-To:To:Cc; b=R91C0W3kCHVHeB9UzuYUhWsemb+/B6CgqI3thHnvwB/d83JXJ6wkrK6uhbORfbxFXii+FNHQCO2CRhwDAzLdfF70l8E+HmAlGAIWHpE+0u8wXZdERZmEXRfRYJugHhK1FmJ5zKfv6IJmEIbMf3OhuWYDA5UfrdDXMRrf1VjK16M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=cmeibjdk; arc=none smtp.client-ip=115.124.28.122
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=antgroup.com; s=default;
-	t=1751956607; h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To;
-	bh=+Adkwaehj8WQlyxe1tcyATntmfd0OiZXAi1oQdyK2Hg=;
-	b=Bygch159+jT2UvdH3IEyBuVtOG/tTZ+scNwiJRNh5pGfgQu/ZnvJsz692D2JBB8nv/svJ6482ufRaLWEbIs+09tVTNXQniGphK1tcJOQ4rjDDiSC7o3CpEHnmjVTs101O0LpMbUYloI5iWkoK7ZNVOsCUkIVOus1ZqPckw+1OW0=
-Received: from 127.0.0.1(mailfrom:niuxuewei.nxw@antgroup.com fp:SMTPD_---.dhGPAgC_1751956605 cluster:ay29)
+	t=1751956608; h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To;
+	bh=78u4kXViM2gstT6OJkwZc50WiKMJcTjBxWIBBOazpAI=;
+	b=cmeibjdkP9EQ1RwR+kof7rvFNA+zQFsricBfe2XGnwbeX4wVicBks/7CbjltCABC7X33Oi1NY3XNGodHrZf22TEX6uwGq2wocHxCPfncFxB3YKH9VcUmteuQ59j/DC1EVqsuaFukEoP2WR5TEQFicLwzRlaolclsKaOkO7pdnpQ=
+Received: from 127.0.0.1(mailfrom:niuxuewei.nxw@antgroup.com fp:SMTPD_---.dhGPAi9_1751956606 cluster:ay29)
           by smtp.aliyun-inc.com;
-          Tue, 08 Jul 2025 14:36:46 +0800
+          Tue, 08 Jul 2025 14:36:48 +0800
 From: Xuewei Niu <niuxuewei.nxw@antgroup.com>
-Date: Tue, 08 Jul 2025 14:36:13 +0800
-Subject: [PATCH net-next v6 3/4] test/vsock: Add retry mechanism to ioctl
- wrapper
+Date: Tue, 08 Jul 2025 14:36:14 +0800
+Subject: [PATCH net-next v6 4/4] test/vsock: Add ioctl SIOCINQ tests
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -51,7 +50,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250708-siocinq-v6-3-3775f9a9e359@antgroup.com>
+Message-Id: <20250708-siocinq-v6-4-3775f9a9e359@antgroup.com>
 References: <20250708-siocinq-v6-0-3775f9a9e359@antgroup.com>
 In-Reply-To: <20250708-siocinq-v6-0-3775f9a9e359@antgroup.com>
 To: "K. Y. Srinivasan" <kys@microsoft.com>, 
@@ -65,90 +64,128 @@ Cc: linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
  Xuewei Niu <niuxuewei.nxw@antgroup.com>, niuxuewei97@gmail.com
 X-Mailer: b4 0.14.2
 
-Wrap the ioctl in `ioctl_int()`, which takes a pointer to the actual
-int value and an expected int value. The function will not return until
-either the ioctl returns the expected value or a timeout occurs, thus
-avoiding immediate failure.
+Add SIOCINQ ioctl tests for both SOCK_STREAM and SOCK_SEQPACKET.
+
+The client waits for the server to send data, and checks if the SIOCINQ
+ioctl value matches the data size. After consuming the data, the client
+checks if the SIOCINQ value is 0.
 
 Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
 ---
- tools/testing/vsock/util.c | 30 +++++++++++++++++++++---------
- tools/testing/vsock/util.h |  1 +
- 2 files changed, 22 insertions(+), 9 deletions(-)
+ tools/testing/vsock/vsock_test.c | 79 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 79 insertions(+)
 
-diff --git a/tools/testing/vsock/util.c b/tools/testing/vsock/util.c
-index 803f1e075b62228c25f9dffa1eff131b8072a06a..1e65c5abd85b8bcf5886272de15437d7be13eb89 100644
---- a/tools/testing/vsock/util.c
-+++ b/tools/testing/vsock/util.c
-@@ -17,6 +17,7 @@
- #include <unistd.h>
- #include <assert.h>
- #include <sys/epoll.h>
-+#include <sys/ioctl.h>
- #include <sys/mman.h>
- #include <linux/sockios.h>
+diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
+index be6ce764f69480c0f9c3e2288fc19cd2e74be148..a66d2360133dd0e36940a5907679aeacc8af7714 100644
+--- a/tools/testing/vsock/vsock_test.c
++++ b/tools/testing/vsock/vsock_test.c
+@@ -24,6 +24,7 @@
+ #include <linux/time64.h>
+ #include <pthread.h>
+ #include <fcntl.h>
++#include <linux/sockios.h>
  
-@@ -101,28 +102,39 @@ void vsock_wait_remote_close(int fd)
- 	close(epollfd);
+ #include "vsock_test_zerocopy.h"
+ #include "timeout.h"
+@@ -1307,6 +1308,54 @@ static void test_unsent_bytes_client(const struct test_opts *opts, int type)
+ 	close(fd);
  }
  
--/* Wait until transport reports no data left to be sent.
-- * Return false if transport does not implement the unsent_bytes() callback.
-+/* Wait until ioctl gives an expected int value.
-+ * Return false if the op is not supported.
-  */
--bool vsock_wait_sent(int fd)
-+bool vsock_ioctl_int(int fd, unsigned long op, int expected)
- {
--	int ret, sock_bytes_unsent;
-+	int actual, ret;
-+	char name[32];
++static void test_unread_bytes_server(const struct test_opts *opts, int type)
++{
++	unsigned char buf[MSG_BUF_IOCTL_LEN];
++	int client_fd;
 +
-+	snprintf(name, sizeof(name), "ioctl(%lu)", op);
- 
- 	timeout_begin(TIMEOUT);
- 	do {
--		ret = ioctl(fd, SIOCOUTQ, &sock_bytes_unsent);
-+		ret = ioctl(fd, op, &actual);
- 		if (ret < 0) {
- 			if (errno == EOPNOTSUPP)
- 				break;
- 
--			perror("ioctl(SIOCOUTQ)");
-+			perror(name);
- 			exit(EXIT_FAILURE);
- 		}
--		timeout_check("SIOCOUTQ");
--	} while (sock_bytes_unsent != 0);
-+		timeout_check(name);
-+	} while (actual != expected);
- 	timeout_end();
- 
--	return !ret;
-+	return ret >= 0;
++	client_fd = vsock_accept(VMADDR_CID_ANY, opts->peer_port, NULL, type);
++	if (client_fd < 0) {
++		perror("accept");
++		exit(EXIT_FAILURE);
++	}
++
++	for (int i = 0; i < sizeof(buf); i++)
++		buf[i] = rand() & 0xFF;
++
++	send_buf(client_fd, buf, sizeof(buf), 0, sizeof(buf));
++	control_writeln("SENT");
++
++	close(client_fd);
 +}
 +
-+/* Wait until transport reports no data left to be sent.
-+ * Return false if transport does not implement the unsent_bytes() callback.
-+ */
-+bool vsock_wait_sent(int fd)
++static void test_unread_bytes_client(const struct test_opts *opts, int type)
 +{
-+	return vsock_ioctl_int(fd, SIOCOUTQ, 0);
++	unsigned char buf[MSG_BUF_IOCTL_LEN];
++	int fd;
++
++	fd = vsock_connect(opts->peer_cid, opts->peer_port, type);
++	if (fd < 0) {
++		perror("connect");
++		exit(EXIT_FAILURE);
++	}
++
++	control_expectln("SENT");
++	/* The data has arrived but has not been read. The expected is
++	 * MSG_BUF_IOCTL_LEN.
++	 */
++	if (!vsock_ioctl_int(fd, SIOCINQ, MSG_BUF_IOCTL_LEN)) {
++		fprintf(stderr, "Test skipped, SIOCINQ not supported.\n");
++		goto out;
++	}
++
++	recv_buf(fd, buf, sizeof(buf), 0, sizeof(buf));
++	/* All data has been consumed, so the expected is 0. */
++	vsock_ioctl_int(fd, SIOCINQ, 0);
++
++out:
++	close(fd);
++}
++
+ static void test_stream_unsent_bytes_client(const struct test_opts *opts)
+ {
+ 	test_unsent_bytes_client(opts, SOCK_STREAM);
+@@ -1327,6 +1376,26 @@ static void test_seqpacket_unsent_bytes_server(const struct test_opts *opts)
+ 	test_unsent_bytes_server(opts, SOCK_SEQPACKET);
  }
  
- /* Create socket <type>, bind to <cid, port>.
-diff --git a/tools/testing/vsock/util.h b/tools/testing/vsock/util.h
-index fdd4649fe2d49f57c93c4aa5dfbb37b710c65918..142c02a6834acb7117aca485b661332b73754b63 100644
---- a/tools/testing/vsock/util.h
-+++ b/tools/testing/vsock/util.h
-@@ -87,6 +87,7 @@ int vsock_stream_listen(unsigned int cid, unsigned int port);
- int vsock_seqpacket_accept(unsigned int cid, unsigned int port,
- 			   struct sockaddr_vm *clientaddrp);
- void vsock_wait_remote_close(int fd);
-+bool vsock_ioctl_int(int fd, unsigned long op, int expected);
- bool vsock_wait_sent(int fd);
- void send_buf(int fd, const void *buf, size_t len, int flags,
- 	      ssize_t expected_ret);
++static void test_stream_unread_bytes_client(const struct test_opts *opts)
++{
++	test_unread_bytes_client(opts, SOCK_STREAM);
++}
++
++static void test_stream_unread_bytes_server(const struct test_opts *opts)
++{
++	test_unread_bytes_server(opts, SOCK_STREAM);
++}
++
++static void test_seqpacket_unread_bytes_client(const struct test_opts *opts)
++{
++	test_unread_bytes_client(opts, SOCK_SEQPACKET);
++}
++
++static void test_seqpacket_unread_bytes_server(const struct test_opts *opts)
++{
++	test_unread_bytes_server(opts, SOCK_SEQPACKET);
++}
++
+ #define RCVLOWAT_CREDIT_UPD_BUF_SIZE	(1024 * 128)
+ /* This define is the same as in 'include/linux/virtio_vsock.h':
+  * it is used to decide when to send credit update message during
+@@ -2276,6 +2345,16 @@ static struct test_case test_cases[] = {
+ 		.run_client = test_stream_transport_change_client,
+ 		.run_server = test_stream_transport_change_server,
+ 	},
++	{
++		.name = "SOCK_STREAM ioctl(SIOCINQ) functionality",
++		.run_client = test_stream_unread_bytes_client,
++		.run_server = test_stream_unread_bytes_server,
++	},
++	{
++		.name = "SOCK_SEQPACKET ioctl(SIOCINQ) functionality",
++		.run_client = test_seqpacket_unread_bytes_client,
++		.run_server = test_seqpacket_unread_bytes_server,
++	},
+ 	{},
+ };
+ 
 
 -- 
 2.34.1
