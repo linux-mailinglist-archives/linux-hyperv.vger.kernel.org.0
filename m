@@ -1,64 +1,59 @@
-Return-Path: <linux-hyperv+bounces-6168-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6169-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80089AFF553
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Jul 2025 01:23:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C400DAFF556
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Jul 2025 01:25:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D825D565E4E
-	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Jul 2025 23:23:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B21EE3A7D46
+	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Jul 2025 23:24:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F82D238C1B;
-	Wed,  9 Jul 2025 23:23:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDAF0246BD7;
+	Wed,  9 Jul 2025 23:24:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c+zxMFKp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jrQfy/0j"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7F1E55B;
-	Wed,  9 Jul 2025 23:23:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96882E55B;
+	Wed,  9 Jul 2025 23:24:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752103400; cv=none; b=g+6hvgPkdjQ5v4ZvUOIps1/sYBf4kQTdvmnitWQbXIDaeqIZ4jckFIGBs1/WhoSalU1FkKiULLTPAN85ERbjzwcF9EDc3acKaq9meuhmWZfahS4CODNAxEUSFIynxwqngyqad6nl3SQELl4554+jwuuDF1gwj6I6lgTJnKSL4Qs=
+	t=1752103496; cv=none; b=Os0GanJ2POmNbxWYjmdVDE5Lu9ldilAlAj9IUS0BTsRTtbO4jKlR0KuBZWX+LZ9sgURAB2eIQ1zBhNey+4cbLtR31L1M57h6ffDf9F9wuOrJfAc6ablqhwXdAs/OJ84msQh1Wu3o77xHgmZ7X6QLt2FJ+j3IMVPkGUAhUL6zsEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752103400; c=relaxed/simple;
-	bh=bCV+LA15f6mlZ/QEVHI8ShEaF8U5+pTpFavarhgTyII=;
+	s=arc-20240116; t=1752103496; c=relaxed/simple;
+	bh=66rawdc3Mz7H+A7CTXyf5/QM2sFvP2bbZjXqhGgjzCs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aJzT4m/finUse/JgGh2pcTdHnkliwgrX0SDRb8HNLZL0dIDgDPuTi/lPtj+ReKjKVlwOZi8wzQGPO3P8uLaqPOCoFNojk22tZYHrR41yBzR15HRT2WcqrSZUnF+dsadqAtoD3siRboa4DVcvF0//cfy5gYDzXm9SKVlLkEkKhvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c+zxMFKp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9122CC4CEEF;
-	Wed,  9 Jul 2025 23:23:18 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=LqaDiVBLlb3MrUeJP8Q2yKS94Oh+y+ugr7DnVsqTK8k4+q3Aa4DuFPEhYetdAtJf2cpFowUnWcHoH/aA2MBfXd50pQAYmGkecIci4IQ6qWu36vbVeHrGMxOpY/yKUo45qoK+A8jB+XOW3+gPlH2eq5xmqTKP8OUpqhbGB06MQng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jrQfy/0j; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAC87C4CEEF;
+	Wed,  9 Jul 2025 23:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752103398;
-	bh=bCV+LA15f6mlZ/QEVHI8ShEaF8U5+pTpFavarhgTyII=;
+	s=k20201202; t=1752103495;
+	bh=66rawdc3Mz7H+A7CTXyf5/QM2sFvP2bbZjXqhGgjzCs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c+zxMFKpkli/jgyFaThavQyBVDB/5UvbL7D242K2RWsPNEhL+oriRrD5Oo+PvWpdI
-	 ERuh4BY6lw+zGM8xtx8wpoLxcgPZudq5njNzWtryJQtgegUUnDf05RJ3JmYwhkWguW
-	 JHKZrbQ+tpAleOND4ozNXDBpQRbMdrgJDx0U4Ds9lgX/hUc228hnU9K1JEMFPBWWHo
-	 XunAc+qZloL292ny0zgbrMjOWNFZ0vHSFooyM+nyXy3juF7yT1qHQ9Vnqxqkx+/mHd
-	 PoL3zzXuFrSVJePfVeWGXvo03t7L/uMjtTuvQAre0zWGxsskVGE6rKHgUfo12BDyzR
-	 /dXAI84cHqO9w==
-Date: Wed, 9 Jul 2025 23:23:17 +0000
+	b=jrQfy/0j1vDof7KV445cxDl9o0bXazLoAERKFPpUV3jOhOfx1yw6VyebseKopMcTN
+	 ZYyrK40JxgzhnbPSV6Cfm4OUCI2fUm6FaI8+J9bjDSHktWgcJhyYUGkTynSbOoSqS7
+	 tt7z0zdDxistEw3BdRQwHQx84RxRabnwZp6GTNbh+sx1YRykrFQ3tGn1VYFtnupBkR
+	 RZTwScnVJlc5PcASxVCG8w2ObrzH1t+2YjTKC6ZzyUVwtG5A6vmkPu2Z1RwvQhNTrb
+	 u9fSm+yiCxA5lPwJ2L/rNgW54Mto4PPQyH61dsJyFYwbKLt8UdvGlADMDz4xhIJp7C
+	 OCT1fVxfh0YJQ==
+Date: Wed, 9 Jul 2025 23:24:53 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Xuewei Niu <niuxuewei.nxw@antgroup.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: Naman Jain <namjain@linux.microsoft.com>, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@kernel.org,
+	namjain@microsoft.com, "K . Y . Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
 	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, linux-hyperv@vger.kernel.org,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, niuxuewei97@gmail.com
-Subject: Re: [PATCH net-next v6 1/4] hv_sock: Return the readable bytes in
- hvs_stream_has_data()
-Message-ID: <aG755Yx-FVKIkHzH@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-References: <20250708-siocinq-v6-0-3775f9a9e359@antgroup.com>
- <20250708-siocinq-v6-1-3775f9a9e359@antgroup.com>
+	Michael Kelley <mhklinux@outlook.com>
+Subject: Re: [PATCH] Drivers: hv: Fix the check for HYPERVISOR_CALLBACK_VECTOR
+Message-ID: <aG76RTo4aleKdqbi@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+References: <20250707084322.1763-1-namjain@linux.microsoft.com>
+ <5f3ca2ac-cf06-4c81-89bd-e8685b222aa9@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -67,37 +62,34 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250708-siocinq-v6-1-3775f9a9e359@antgroup.com>
+In-Reply-To: <5f3ca2ac-cf06-4c81-89bd-e8685b222aa9@linux.microsoft.com>
 
-On Tue, Jul 08, 2025 at 02:36:11PM +0800, Xuewei Niu wrote:
-> From: Dexuan Cui <decui@microsoft.com>
+On Mon, Jul 07, 2025 at 10:58:03AM -0700, Roman Kisel wrote:
 > 
-> When hv_sock was originally added, __vsock_stream_recvmsg() and
-> vsock_stream_has_data() actually only needed to know whether there
-> is any readable data or not, so hvs_stream_has_data() was written to
-> return 1 or 0 for simplicity.
 > 
-> However, now hvs_stream_has_data() should return the readable bytes
-> because vsock_data_ready() -> vsock_stream_has_data() needs to know the
-> actual bytes rather than a boolean value of 1 or 0.
+> On 7/7/2025 1:43 AM, Naman Jain wrote:
+> > __is_defined(HYPERVISOR_CALLBACK_VECTOR) would return 1, only if
+> > HYPERVISOR_CALLBACK_VECTOR macro is defined as 1. However its value is
+> > 0xf3 and this leads to __is_defined() returning 0. The expectation
+> > was to just check whether this MACRO is defined or not and get 1 if
+> > it's defined. Replace __is_defined with #ifdef blocks instead to
+> > fix it.
+> > 
+> > Fixes: 1dc5df133b98 ("Drivers: hv: vmbus: Get the IRQ number from DeviceTree")
+> > Cc: stable@kernel.org
+> > Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+> > ---
 > 
-> The SIOCINQ ioctl support also needs hvs_stream_has_data() to return
-> the readable bytes.
+> [...]
 > 
-> Let hvs_stream_has_data() return the readable bytes of the payload in
-> the next host-to-guest VMBus hv_sock packet.
+> Appreciate fixing that! From what I learned from you, x86 was broken.
+> Very likely I did a smoke test there only while focusing on arm64. Sorry
+> about that, thanks again!!
 > 
-> Note: there may be multiple incoming hv_sock packets pending in the
-> VMBus channel's ringbuffer, but so far there is not a VMBus API that
-> allows us to know all the readable bytes in total without reading and
-> caching the payload of the multiple packets, so let's just return the
-> readable bytes of the next single packet. In the future, we'll either
-> add a VMBus API that allows us to know the total readable bytes without
-> touching the data in the ringbuffer, or the hv_sock driver needs to
-> understand the VMBus packet format and parse the packets directly.
+> LGTM.
+> Reviewed-by: Roman Kisel <romank@linux.microsoft.com
 > 
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
 
-Acked-by: Wei Liu <wei.liu@kernel.org>
+Applied to hyperv-fixes. Thanks!
+
 
