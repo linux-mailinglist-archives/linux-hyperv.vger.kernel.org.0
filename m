@@ -1,43 +1,43 @@
-Return-Path: <linux-hyperv+bounces-6193-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6194-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23BBAB02468
-	for <lists+linux-hyperv@lfdr.de>; Fri, 11 Jul 2025 21:19:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13EE5B02469
+	for <lists+linux-hyperv@lfdr.de>; Fri, 11 Jul 2025 21:19:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6FCA917B033
-	for <lists+linux-hyperv@lfdr.de>; Fri, 11 Jul 2025 19:19:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 601E017A1B1
+	for <lists+linux-hyperv@lfdr.de>; Fri, 11 Jul 2025 19:19:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF7441DF751;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02E5B280A3B;
 	Fri, 11 Jul 2025 19:19:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BcKyRt95"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IfUwr2/B"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60D6C1D63E8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60DBE1DE4E0;
 	Fri, 11 Jul 2025 19:19:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752261542; cv=none; b=AVz43Qi5hM/lYhtMUvqswttfy7pZZJJMr0szclVhzlOkWNl9hJ7IJIBG3lFgoTwLO5ZeqRVMFvipr2pyI5ZUD/jrPoxLAUqR/Hj9lxNgFpvwumIeequ7lVXRTKLLbM0ZIvGIDVrUUC3913HnJ7fEfm1lQ9JUdGz9nA2thIbWbyc=
+	t=1752261542; cv=none; b=LnWdzdmaSZ39SfDXe6KIwvImCDEHfAQsTHds0KZYCXQwuo/jOvzF2SkXSacPqPjgODP8xEfj+kXDwjS4a3MG8DBBGaJIJFAzOXCxc7C3Eci8vHEvZO68L9e0tYOhkMbyNd6ilm8zUv9GOqUyvTw1o4I8N7kXPbLqacuzsAFWdjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1752261542; c=relaxed/simple;
-	bh=J5kuogw9IQfPgbT4RfUmgOjGf7U9ruaXcd4WAnF06BA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=NAx5YfQwSvHqPiOa71yYSuaO8AdNfQVJV5ALUQZZuXp5l6y3HyNESvYwAjcxgkfW/1m5FXfHJm6Qc8Dcd/erdlM2fWrQfnpmjLZsCyD2Xv6JvV202K0JtJpUgSyCr7pBT/ClC+HoWw4rjUUzm/RrSFq/2YJj9x4V9yt2T2ZnKAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BcKyRt95; arc=none smtp.client-ip=13.77.154.182
+	bh=1tQI5GBVNvc/GU3PlrZZV3y33641kuBLyR9oIhCjq3E=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=eF14Ib5oB51EFxLxiSaY2tbHDn4nXuiZWBlEj9Uc0EUec9F1dMVJww/0cTOBo/CAq3T8Zc84XlPXdJvMB8RGe/yg64Aj466j8DT9qS/tmJ2ohAgk6/SXmqAbVAelBTZQQaBmRDBwfEDHf36qgFvZityqT7Rwt7CG3BRKWX0iVMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IfUwr2/B; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1032)
-	id 955732115802; Fri, 11 Jul 2025 12:18:55 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 955732115802
+	id A457E2115803; Fri, 11 Jul 2025 12:18:55 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A457E2115803
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1752261535;
-	bh=UMFPZ8IrMjqiIE9bHcG8tr3UGU/I4RiiuVq8nzCqZJ4=;
+	bh=sFZ1PcBMw9jT/La9cSdzjaxoBiffb+KtiJHzK65ieQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BcKyRt95LY91swi1TdKcoT+mfHyF8tYy50XkcwH3KV167LODNbEpbYPioy6kFWxCO
-	 dF+ZYckPR0PiLgpf/y5W1z7ynyZJ3RLJDs1ZQ32UnXd3dI/ndJe/RFCCgk2J9ThxGg
-	 69MVy8hY5lgivpclVpsy5xpMjZp+LNQPaEVhusq8=
+	b=IfUwr2/BEJV/P4zK1EjlNTEelPgd1NC6Ma6c441y229FZuK4SpVs/JIOZubMCVfIn
+	 X9TfP/crS1nj2rMG21JWMTRSBs71bAZy6OzatcO0AFosl9oi0+zThIbtvrLQ8OZDKR
+	 LfOAzdrs3Wo5lwcITYz1E96de0zkpiUX7FHk4YeM=
 From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
@@ -65,9 +65,9 @@ Cc: kys@microsoft.com,
 	mrathor@linux.microsoft.com,
 	x86@kernel.org,
 	Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Subject: [PATCH v3 1/3] Drivers: hv: Use nested hypercall for post message and signal event
-Date: Fri, 11 Jul 2025 12:18:50 -0700
-Message-Id: <1752261532-7225-2-git-send-email-nunodasneves@linux.microsoft.com>
+Subject: [PATCH v3 2/3] x86/hyperv: Expose hv_map_msi_interrupt()
+Date: Fri, 11 Jul 2025 12:18:51 -0700
+Message-Id: <1752261532-7225-3-git-send-email-nunodasneves@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1752261532-7225-1-git-send-email-nunodasneves@linux.microsoft.com>
 References: <1752261532-7225-1-git-send-email-nunodasneves@linux.microsoft.com>
@@ -77,99 +77,118 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 
-When running nested, these hypercalls must be sent to the L0 hypervisor
-or VMBus will fail.
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 
-Remove hv_do_nested_hypercall() and hv_do_fast_nested_hypercall8()
-altogether and open-code these cases, since there are only 2 and all
-they do is add the nested bit.
+Move some of the logic of hv_irq_compose_irq_message() into
+hv_map_msi_interrupt(). Make hv_map_msi_interrupt() a globally-available
+helper function, which will be used to map PCI interrupts when running
+in the root partition.
 
+Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
 ---
- arch/x86/include/asm/mshyperv.h | 20 --------------------
- drivers/hv/connection.c         |  5 ++++-
- drivers/hv/hv.c                 |  6 ++++--
- 3 files changed, 8 insertions(+), 23 deletions(-)
+ arch/x86/hyperv/irqdomain.c     | 40 ++++++++++++++++++++++++---------
+ arch/x86/include/asm/mshyperv.h |  2 ++
+ 2 files changed, 31 insertions(+), 11 deletions(-)
 
+diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
+index ad4dff48cf14..090f5ac9f492 100644
+--- a/arch/x86/hyperv/irqdomain.c
++++ b/arch/x86/hyperv/irqdomain.c
+@@ -173,13 +173,34 @@ static union hv_device_id hv_build_pci_dev_id(struct pci_dev *dev)
+ 	return dev_id;
+ }
+ 
+-static int hv_map_msi_interrupt(struct pci_dev *dev, int cpu, int vector,
+-				struct hv_interrupt_entry *entry)
++/**
++ * hv_map_msi_interrupt() - "Map" the MSI IRQ in the hypervisor.
++ * @data:      Describes the IRQ
++ * @out_entry: Hypervisor (MSI) interrupt entry (can be NULL)
++ *
++ * Map the IRQ in the hypervisor by issuing a MAP_DEVICE_INTERRUPT hypercall.
++ *
++ * Return: 0 on success, -errno on failure
++ */
++int hv_map_msi_interrupt(struct irq_data *data,
++			 struct hv_interrupt_entry *out_entry)
+ {
+-	union hv_device_id device_id = hv_build_pci_dev_id(dev);
++	struct irq_cfg *cfg = irqd_cfg(data);
++	struct hv_interrupt_entry dummy;
++	union hv_device_id device_id;
++	struct msi_desc *msidesc;
++	struct pci_dev *dev;
++	int cpu;
+ 
+-	return hv_map_interrupt(device_id, false, cpu, vector, entry);
++	msidesc = irq_data_get_msi_desc(data);
++	dev = msi_desc_to_pci_dev(msidesc);
++	device_id = hv_build_pci_dev_id(dev);
++	cpu = cpumask_first(irq_data_get_effective_affinity_mask(data));
++
++	return hv_map_interrupt(device_id, false, cpu, cfg->vector,
++				out_entry ? out_entry : &dummy);
+ }
++EXPORT_SYMBOL_GPL(hv_map_msi_interrupt);
+ 
+ static inline void entry_to_msi_msg(struct hv_interrupt_entry *entry, struct msi_msg *msg)
+ {
+@@ -192,11 +213,11 @@ static inline void entry_to_msi_msg(struct hv_interrupt_entry *entry, struct msi
+ static int hv_unmap_msi_interrupt(struct pci_dev *dev, struct hv_interrupt_entry *old_entry);
+ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ {
+-	struct hv_interrupt_entry out_entry, *stored_entry;
++	struct hv_interrupt_entry *stored_entry;
+ 	struct irq_cfg *cfg = irqd_cfg(data);
+ 	struct msi_desc *msidesc;
+ 	struct pci_dev *dev;
+-	int cpu, ret;
++	int ret;
+ 
+ 	msidesc = irq_data_get_msi_desc(data);
+ 	dev = msi_desc_to_pci_dev(msidesc);
+@@ -206,8 +227,6 @@ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 		return;
+ 	}
+ 
+-	cpu = cpumask_first(irq_data_get_effective_affinity_mask(data));
+-
+ 	if (data->chip_data) {
+ 		/*
+ 		 * This interrupt is already mapped. Let's unmap first.
+@@ -234,15 +253,14 @@ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 		return;
+ 	}
+ 
+-	ret = hv_map_msi_interrupt(dev, cpu, cfg->vector, &out_entry);
++	ret = hv_map_msi_interrupt(data, stored_entry);
+ 	if (ret) {
+ 		kfree(stored_entry);
+ 		return;
+ 	}
+ 
+-	*stored_entry = out_entry;
+ 	data->chip_data = stored_entry;
+-	entry_to_msi_msg(&out_entry, msg);
++	entry_to_msi_msg(data->chip_data, msg);
+ 
+ 	return;
+ }
 diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index e1752ba47e67..ab097a3a8b75 100644
+index ab097a3a8b75..abc4659f5809 100644
 --- a/arch/x86/include/asm/mshyperv.h
 +++ b/arch/x86/include/asm/mshyperv.h
-@@ -112,12 +112,6 @@ static inline u64 hv_do_hypercall(u64 control, void *input, void *output)
- 	return hv_status;
- }
+@@ -242,6 +242,8 @@ static inline void hv_apic_init(void) {}
  
--/* Hypercall to the L0 hypervisor */
--static inline u64 hv_do_nested_hypercall(u64 control, void *input, void *output)
--{
--	return hv_do_hypercall(control | HV_HYPERCALL_NESTED, input, output);
--}
--
- /* Fast hypercall with 8 bytes of input and no output */
- static inline u64 _hv_do_fast_hypercall8(u64 control, u64 input1)
- {
-@@ -165,13 +159,6 @@ static inline u64 hv_do_fast_hypercall8(u16 code, u64 input1)
- 	return _hv_do_fast_hypercall8(control, input1);
- }
+ struct irq_domain *hv_create_pci_msi_domain(void);
  
--static inline u64 hv_do_fast_nested_hypercall8(u16 code, u64 input1)
--{
--	u64 control = (u64)code | HV_HYPERCALL_FAST_BIT | HV_HYPERCALL_NESTED;
--
--	return _hv_do_fast_hypercall8(control, input1);
--}
--
- /* Fast hypercall with 16 bytes of input */
- static inline u64 _hv_do_fast_hypercall16(u64 control, u64 input1, u64 input2)
- {
-@@ -223,13 +210,6 @@ static inline u64 hv_do_fast_hypercall16(u16 code, u64 input1, u64 input2)
- 	return _hv_do_fast_hypercall16(control, input1, input2);
- }
- 
--static inline u64 hv_do_fast_nested_hypercall16(u16 code, u64 input1, u64 input2)
--{
--	u64 control = (u64)code | HV_HYPERCALL_FAST_BIT | HV_HYPERCALL_NESTED;
--
--	return _hv_do_fast_hypercall16(control, input1, input2);
--}
--
- extern struct hv_vp_assist_page **hv_vp_assist_page;
- 
- static inline struct hv_vp_assist_page *hv_get_vp_assist_page(unsigned int cpu)
-diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-index be490c598785..1fe3573ae52a 100644
---- a/drivers/hv/connection.c
-+++ b/drivers/hv/connection.c
-@@ -519,7 +519,10 @@ void vmbus_set_event(struct vmbus_channel *channel)
- 		else
- 			WARN_ON_ONCE(1);
- 	} else {
--		hv_do_fast_hypercall8(HVCALL_SIGNAL_EVENT, channel->sig_event);
-+		u64 control = HVCALL_SIGNAL_EVENT;
-+
-+		control |= hv_nested ? HV_HYPERCALL_NESTED : 0;
-+		hv_do_fast_hypercall8(control, channel->sig_event);
- 	}
- }
- EXPORT_SYMBOL_GPL(vmbus_set_event);
-diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index 308c8f279df8..b14c5f9e0ef2 100644
---- a/drivers/hv/hv.c
-+++ b/drivers/hv/hv.c
-@@ -85,8 +85,10 @@ int hv_post_message(union hv_connection_id connection_id,
- 		else
- 			status = HV_STATUS_INVALID_PARAMETER;
- 	} else {
--		status = hv_do_hypercall(HVCALL_POST_MESSAGE,
--					 aligned_msg, NULL);
-+		u64 control = HVCALL_POST_MESSAGE;
-+
-+		control |= hv_nested ? HV_HYPERCALL_NESTED : 0;
-+		status = hv_do_hypercall(control, aligned_msg, NULL);
- 	}
- 
- 	local_irq_restore(flags);
++int hv_map_msi_interrupt(struct irq_data *data,
++			 struct hv_interrupt_entry *out_entry);
+ int hv_map_ioapic_interrupt(int ioapic_id, bool level, int vcpu, int vector,
+ 		struct hv_interrupt_entry *entry);
+ int hv_unmap_ioapic_interrupt(int ioapic_id, struct hv_interrupt_entry *entry);
 -- 
 2.34.1
 
