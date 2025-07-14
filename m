@@ -1,132 +1,118 @@
-Return-Path: <linux-hyperv+bounces-6223-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6224-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 089E9B03D3F
-	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Jul 2025 13:21:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1EFCB04574
+	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Jul 2025 18:30:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 569C91749D8
-	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Jul 2025 11:21:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E48123BC6BC
+	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Jul 2025 16:30:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17D98246774;
-	Mon, 14 Jul 2025 11:21:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 825DB25EF97;
+	Mon, 14 Jul 2025 16:30:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QfBzDSmt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kg+7iDZV"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A3F17C77;
-	Mon, 14 Jul 2025 11:21:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD0E13AA53;
+	Mon, 14 Jul 2025 16:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752492093; cv=none; b=BZi8lfNrd8QaW6tQxOcjbZBslPp1OhVmRBIHhsX1yxtLyl0OBdhekucQ3WvoNgQiCkbc2ymq7oEGGYRtcESx0LWvuTkdrZlFfmNZ7nbBKiQetvxtRFXP3SwjifH+6kuL8Bbx+A69WhGjttJzeYsL4rIAmqhJwSli9cL59ZHS5Z8=
+	t=1752510626; cv=none; b=skYDedrviffapcuRy7Hm7j3OGs7SjjUBjku/bNatGZ+1FGz5l+PnfMkteWj/d3USzzPyke/MlLcPNq7gRRJm2SfX8QDBX1z5TFhAFf40WquDIdwOGLBYGhfzRDFMl4GuaV0lS4zZ/Ya5ZaqlcNRcjN4uJKIKBBeSTkG5I4hXBSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752492093; c=relaxed/simple;
-	bh=TOW+gFPlve+Nr1eDLYifYIvuCr4WJ+KivxoNQXF1ybY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nb6opkOi0pbRqU47WvYjZZRSIs42ELKfHEMTmXkLEy7n03NMgg9BPpjrlyp4ALTckplql1E4X2Z993cs9AcBo1NQmEWGQxoJZ8QLupVHKBup+BIqzysFPcqjHCxTkgtqxElFYKAowlFl74AW/0bRxVjNhKjjoDpfAbdqwVxHDPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QfBzDSmt; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=nAOSIUD6SRjN7WsA6hV7/sOUii32nWcRc+thJO3sYPU=; b=QfBzDSmtSSKgEDhJsRUiAc7HM6
-	jTBPLeZmo7ov+rC8/ptBWMOTHvn5ktkGmNwW6iDXbqaSGCymcRByOOAlJxBOCcq9Y8tKehUCn5TFF
-	MMnAufJdSgvhvp2apLi9XXeozlDK4m9obwLrlHuklH7j7BrvlDqEx8sUETJmfLnX9hN0lZw2OsklW
-	JkvQYGQfDoaNux70S5G+iS+SCMe8+5UjA3Mp7yKYZydnqEGGlxI5sdmCtm7rBN5Lmmb6Fm6ryX+YO
-	rr/Od4f3j42In1nXlTMEZ8jB6A2fBZ1VsCUBPH56yM59QCiKk524Wv47AW8N1vYbimsgBANhT32Ei
-	mfSrIx9Q==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ubHFL-00000009kzW-0g3P;
-	Mon, 14 Jul 2025 11:21:23 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 3D121300186; Mon, 14 Jul 2025 13:21:22 +0200 (CEST)
-Date: Mon, 14 Jul 2025 13:21:22 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: x86@kernel.org
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-	seanjc@google.com, pbonzini@redhat.com, ardb@kernel.org,
-	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	gregkh@linuxfoundation.org, jpoimboe@kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, linux-efi@vger.kernel.org,
-	samitolvanen@google.com, ojeda@kernel.org
-Subject: Re: [PATCH v3 16/16] objtool: Validate kCFI calls
-Message-ID: <20250714112122.GL1613633@noisy.programming.kicks-ass.net>
-References: <20250714102011.758008629@infradead.org>
- <20250714103441.496787279@infradead.org>
- <20250714104919.GR905792@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1752510626; c=relaxed/simple;
+	bh=lLEsaBZOlrQnGfQntry0h0Gc0xbjURUDnEKTrwol9tY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=shgthJNrENVuj7o5QDlzyzVn23ryHZ/MGu85PileCOm8/Wp3dR8Uad/XBa7QhM6S1wdISiRlyS5tttrDeb3kxz2Ywdo96qLpa5Al1hfXU6IG0jNjig/QwdtMnYtYhr/h6ok9LpB5gX280eiB7KYAUwqHIxv653zqoGjyaqBlUnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kg+7iDZV; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b350c85cf4eso466460a12.1;
+        Mon, 14 Jul 2025 09:30:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752510624; x=1753115424; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D+8sgm4KGNU/qNdB+13y9KyGhaX2MKC48G1yc7u2rJ0=;
+        b=Kg+7iDZVWt6qdMbnyIH1q7E/y7QAXLgirxa8fTYyzVhj2O5PWxB5eWEawOxw+Ksb20
+         xiHfpgeR7U/VVmohhU6Uff85njd0oT8ayYo3/8OfZDqOqsxwSr8moJVYUByHQPuG6roF
+         PuT54D1JhuH8dA8X3Ncw08bDqctDBNpXizZ55reVVk4EPLPTClmRDaGBA63Z8JuhRPzC
+         FYXGjkdav3MajYi4+LRuauqXt8BHthXD2qtYOVcRa2XRZ+IPal+cSgFNPx4C9JQiUItA
+         DwWLTeTQ2c/aRbzjH0fJDSaVfr5i5bJG+4Vkj5deAaIxfGYpzxX862nFB+ODm+q1OtVO
+         yLuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752510624; x=1753115424;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=D+8sgm4KGNU/qNdB+13y9KyGhaX2MKC48G1yc7u2rJ0=;
+        b=D6Nvf+CCsPtiDjStnzHMYC5uKtjVEgakprXGBfOFsxjUQe8Lbpsj1KtD3W8xctPixv
+         6kGIr8YJfbD8qp5BIrLuSDGdA2bCHotlHfJJVG1ksDyFQWjHda4AMJzHPqHSlkdgREbj
+         t5QfVqQIdW5IXjF6dIw0rpdUl2C92g+5pdC7gRDrZuIOn8qtz3QOn4EiaT9kfbzq+0v/
+         YsDMv7ay0cQbfvDTdfsOQ16H/jnWgTXQY+dTkE3rsB/LTO8MNk4lMrSxC9a0/knKMd5M
+         MCLsv9J21RV/+hCs+w4BcEsU69COvdTw0a54Tdhp+Fd6PgWF5yWc29CYZpbeNIPxKCUo
+         BsJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUsb3RUA5NZ9kBCdvPQgu6VxA0xbpaq4YpaJX2Nwb1Bneo8I3IdayIo3n2XvEwyW95gifPYA5NJDwC5DjGe@vger.kernel.org, AJvYcCVZ29RSZoC2hIiAUN2bp8DqfjEM2wL37qwlfyMnQXxJbbcum8TbAJKiyl08FJOcvRU8k7bn0uZjWv0C@vger.kernel.org, AJvYcCVvvydYOaWdHEzrjU4lXJj3EJEn3sEBBWI7PFWsxdXluxSsi4qNGfpLLofgd73zoSMSDJ/Oc9gNYZY1H6Ir@vger.kernel.org, AJvYcCVxWje6TEdc7+I3vB9Z4YnU8w/27MQPygKxsZpHwbOAyZtnIr9wtOBl1Jyg9sK/q926JfY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxN5rR4wXaQbtmEOJO6DhVP1ID2cV4vy6k80nLI5Ht2pp7Hfat3
+	LJ2LpXHtQrLcDG814syUWypeQQ+cspvipZZs9lM8MTt1WFkN2VGWOyk6AwnMS59t9S4ZKx5kgrJ
+	cc0gHdx6zY68nZzb5yHiGcshJmogofVQ=
+X-Gm-Gg: ASbGncuFSNrKhlePhEN+liQq+CqbMPU9Z/+LbAVJFnBPcBEGN4UmsbSBw+Hvc2B6pHR
+	3XUOkjocotfWLjwQi5fMyZU/OnSY5SMAKdm77hh5r/yi4UXzFEUl5KldTKC2BCUiUncrrb1dL6e
+	VQgR0QJ9rtkgjT208PXcX6YFyHPG8aU1fzryMQYbI3wFQ1c8kcPicg/PL9Va+6obpNpO15xoGAs
+	54ycQ05
+X-Google-Smtp-Source: AGHT+IHyYvv5+3JWpqsKuSY+wK3z8BqR9a/T94bPsj6wT6Sjx0azXqcCyCWcvR/Ia/9kNSO+F2zypZBSntO4e7l+ce0=
+X-Received: by 2002:a05:6a21:6d97:b0:233:38b4:7983 with SMTP id
+ adf61e73a8af0-23338b47df1mr5041293637.3.1752510624098; Mon, 14 Jul 2025
+ 09:30:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250714104919.GR905792@noisy.programming.kicks-ass.net>
+References: <20250714102011.758008629@infradead.org> <20250714103441.496787279@infradead.org>
+In-Reply-To: <20250714103441.496787279@infradead.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 14 Jul 2025 18:30:09 +0200
+X-Gm-Features: Ac12FXyg-TiF3LiiNdjUgzoE4zwXcE3ylmR03od-QeLGVHK8BYgEqxSLcgHYRQ4
+Message-ID: <CANiq72kP7_24ChdQ+vDg+HWJB-4mKWvB9P33C9O=0W_kLt0+eA@mail.gmail.com>
+Subject: Re: [PATCH v3 16/16] objtool: Validate kCFI calls
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, 
+	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, seanjc@google.com, 
+	pbonzini@redhat.com, ardb@kernel.org, kees@kernel.org, 
+	Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org, jpoimboe@kernel.org, 
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-efi@vger.kernel.org, samitolvanen@google.com, 
+	ojeda@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 14, 2025 at 12:49:19PM +0200, Peter Zijlstra wrote:
-> On Mon, Jul 14, 2025 at 12:20:27PM +0200, Peter Zijlstra wrote:
-> 
-> > --- a/arch/x86/platform/efi/efi_stub_64.S
-> > +++ b/arch/x86/platform/efi/efi_stub_64.S
-> > @@ -11,6 +11,10 @@
-> >  #include <asm/nospec-branch.h>
-> >  
-> >  SYM_FUNC_START(__efi_call)
-> > +	/*
-> > +	 * The EFI code doesn't have any CFI, annotate away the CFI violation.
-> > +	 */
-> > +	ANNOTATE_NOCFI_SYM
-> >  	pushq %rbp
-> >  	movq %rsp, %rbp
-> >  	and $~0xf, %rsp
-> 
-> FWIW, we should probably do something like this as well.
-> 
-> ---
-> 
-> --- a/arch/x86/kernel/cpu/common.c
-> +++ b/arch/x86/kernel/cpu/common.c
-> @@ -562,6 +562,13 @@ __noendbr u64 ibt_save(bool disable)
->  {
->  	u64 msr = 0;
->  
-> +	/*
-> +	 * Firmware code will not provide the same level of
-> +	 * control-flow-integriry. Taint the kernel to let the user know.
-> +	 */
-> +	if (disable || (IS_ENABLED(CONFIG_CFI_CLANG) && cfi_mode != CFI_OFF))
-> +		add_taint(TAINT_CFI, LOCKDEP_STILL_OK);
+On Mon, Jul 14, 2025 at 12:45=E2=80=AFPM Peter Zijlstra <peterz@infradead.o=
+rg> wrote:
+>
+> Apparently some Rust 'core' code violates this and explodes when ran
+> with FineIBT.
 
-Or perhaps:
+I think this was fixed in Rust 1.88 (latest version), right? Or is
+there an issue still?
 
-	WARN_TAINT_ONCE(disable || IS_ENABLED(CONFIG_CFI_CLANG) && cfi_mode != CFI_OFF),
-			TAINT_CFI, "Firmware has weaker CFI");
+    5595c31c3709 ("x86/Kconfig: make CFI_AUTO_DEFAULT depend on !RUST
+or Rust >=3D 1.88")
 
-> +
->  	if (cpu_feature_enabled(X86_FEATURE_IBT)) {
->  		rdmsrq(MSR_IA32_S_CET, msr);
->  		if (disable)
-> --- a/include/linux/panic.h
-> +++ b/include/linux/panic.h
-> @@ -73,7 +73,8 @@ static inline void set_arch_panic_timeou
->  #define TAINT_RANDSTRUCT		17
->  #define TAINT_TEST			18
->  #define TAINT_FWCTL			19
-> -#define TAINT_FLAGS_COUNT		20
-> +#define TAINT_CFI			20
-> +#define TAINT_FLAGS_COUNT		21
->  #define TAINT_FLAGS_MAX			((1UL << TAINT_FLAGS_COUNT) - 1)
->  
->  struct taint_flag {
+>  - runtime EFI is especially henous because it also needs to disable
+>    IBT. Basically calling unknown code without CFI protection at
+>    runtime is a massice security issue.
+
+heinous
+massive
+
+Cheers,
+Miguel
 
