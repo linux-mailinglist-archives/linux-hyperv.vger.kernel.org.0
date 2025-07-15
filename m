@@ -1,54 +1,63 @@
-Return-Path: <linux-hyperv+bounces-6246-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6247-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FFAAB04D96
-	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Jul 2025 03:51:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 89EF5B0508B
+	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Jul 2025 06:54:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E077A4A8131
-	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Jul 2025 01:51:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DABF716BB47
+	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Jul 2025 04:54:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C66B51B4F1F;
-	Tue, 15 Jul 2025 01:51:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D47102D0C61;
+	Tue, 15 Jul 2025 04:54:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KPQXRc8t"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aGmWjtrW"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C4292A1AA;
-	Tue, 15 Jul 2025 01:51:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A054E244691;
+	Tue, 15 Jul 2025 04:54:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752544300; cv=none; b=G91oZL+aDPHCfsBf6fvndgbl1eSLAL0RT+NIctmNYenKrQtT/RNZ3gZT/ISeYX+gFf5neNDkqx8SD0C3uV/SJ4pYJow2ITPPW/IUFsEBBPXN7cZCIH/JZMbB4JNHF+1iXi1HiGDxiTf1v0YroJfIq67FluAVHfu4Qex2v0jOcIc=
+	t=1752555264; cv=none; b=pwCWbcY23ZvLhHoIhDZJWzG1hMYthfNZPjgNHgW+FgnuUMHS3XRzdKnuFH02IUyvnGbCC6d6X+qsw4ISeH/ePJ2gjdUcO5qfDiJDy6S1ouj0WkRIwEMOXxow0eA0Hz3PIz5TRYj6NCr2WWvGdopxCvafgN7R05wEdBMb8ffMlUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752544300; c=relaxed/simple;
-	bh=TvkPdYPwe28TWT3Cql9wBIGSRg3jZiqx/OKwt4OJ1E0=;
+	s=arc-20240116; t=1752555264; c=relaxed/simple;
+	bh=OdTKlFbhuPsqLk0J2VIvO1elRV5TGVMWts/aaqiMVrQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uVUlaTxuTuA9Q+wjU7EfOHkS6RUcrcvr0Ae9Fe7Dbfq04EO2uvHhO8pfc2GzUJ140xFK5tLskCmeJUsAcgb6SUN4qQnSL/pnCGeEy/1Ef2TvfMkepLeHeko7MM9N+QkFU1bHlpqoBnFgh0GrYvkJE0CvyTdyuGNVEq/xXlCzm6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KPQXRc8t; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0A0EC4CEED;
-	Tue, 15 Jul 2025 01:51:39 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=msSzw4o+/xB0LSfUR5uTXzTALAXyxsauC4WiIpbaQYQHlpgujhyLNT82Nb/S4Mr8nLS59dsl2fTwkpu12lu1S+GzDa3yrBKC4mpxFP+46d+m3BN9KoxiThwPdbU9Ly4MQ9m3O7oNa8nZ+3pWepFyv3su3COBtTzlLKKVWmCqXv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aGmWjtrW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3451C4CEE3;
+	Tue, 15 Jul 2025 04:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752544300;
-	bh=TvkPdYPwe28TWT3Cql9wBIGSRg3jZiqx/OKwt4OJ1E0=;
+	s=k20201202; t=1752555264;
+	bh=OdTKlFbhuPsqLk0J2VIvO1elRV5TGVMWts/aaqiMVrQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KPQXRc8t10IJynDtzrPNbu0DPGjP5rDdiOcH8v5YM1lhTCkk8twdKbS0kfGdrd7vV
-	 i9l2dzHZrNHNHo+PZh2Y4H5Wwx/jYxdkTtqknOjtpuoR1F+ZOVXE0jL6Mb6KU1JsW4
-	 5sRJQ71DeYzib3xgZcRbRObsE7n32hLPaMm4DyX/WgPHpkouOOFYUM0VL56eK9THiB
-	 EWKxmlwPWTBbqUjGcVSmUBMja/uU54i41TFgbApWI/Acpdp+dKWQrS3383mW6ygGCX
-	 U8DpHzL71Kqu5wS3wKRSzYMfBu1/CTgAVnTYgWyaVGrEOl8MEP2D6/LS4Oy+Wu8Uzi
-	 Roa4kqJkf9miQ==
-Date: Tue, 15 Jul 2025 01:51:38 +0000
+	b=aGmWjtrWIhqp6DYLvch04LJtTQhhflBAyJXC7MhEnC7dsAAe9Mi7FumdUqh1cC22M
+	 v9VaXsAz+NruuZHxL02x023MgE6obPt2IT1tAv84zGJa5JyI8wq0p6OU7MXeMrKsq2
+	 VijNBsxw9drn1Y4Xdz/KDV7irgfEWxqIldh7/NRWrEHVV/gAk/kh5yRVI5WiPzAG83
+	 8Xr1JBNfAUIEWVIsEaONdc5jRTlg4Ka+dGAS6BVR3ThycSI3dXB12j/Fkmepp3aTZA
+	 eACkxaIzsQcCTmxs+aktDxtyFqJacg6whzt1eonApyqvcQUkOvYQj9LoWTP2twmQYB
+	 pVXGICDWT1r4w==
+Date: Tue, 15 Jul 2025 04:54:22 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: linux-fsdevel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH] mshv_eventfd: convert to CLASS(fd)
-Message-ID: <aHW0KrQSZ4TGHs2l@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-References: <20250712165244.GA1880847@ZenIV>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, seanjc@google.com, pbonzini@redhat.com,
+	ardb@kernel.org, kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	gregkh@linuxfoundation.org, jpoimboe@kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, linux-efi@vger.kernel.org,
+	samitolvanen@google.com, ojeda@kernel.org,
+	Michael Kelley <mhklinux@outlook.com>
+Subject: Re: [PATCH v3 11/16] x86,hyperv: Clean up hv_do_hypercall()
+Message-ID: <aHXe_n8QNqxxgOBE@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+References: <20250714102011.758008629@infradead.org>
+ <20250714103440.897136093@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -57,17 +66,27 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250712165244.GA1880847@ZenIV>
+In-Reply-To: <20250714103440.897136093@infradead.org>
 
-On Sat, Jul 12, 2025 at 05:52:44PM +0100, Al Viro wrote:
-> [in viro/vfs.git #work.fd; if nobody objects, into #for-next it goes...]
+On Mon, Jul 14, 2025 at 12:20:22PM +0200, Peter Zijlstra wrote:
+> What used to be a simple few instructions has turned into a giant mess
+> (for x86_64). Not only does it use static_branch wrong, it mixes it
+> with dynamic branches for no apparent reason.
 > 
-> similar to 66635b077624 ("assorted variants of irqfd setup: convert
-> to CLASS(fd)") a year ago...
->     
-> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-
-Thanks for the patch, Al.
+> Notably it uses static_branch through an out-of-line function call,
+> which completely defeats the purpose, since instead of a simple
+> JMP/NOP site, you get a CALL+RET+TEST+Jcc sequence in return, which is
+> absolutely idiotic.
+> 
+> Add to that a dynamic test of hyperv_paravisor_present, something
+> which is set once and never changed.
+> 
+> Replace all this idiocy with a single direct function call to the
+> right hypercall variant.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Tested-by: Michael Kelley <mhklinux@outlook.com>
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 
 Acked-by: Wei Liu <wei.liu@kernel.org>
 
