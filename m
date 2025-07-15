@@ -1,63 +1,66 @@
-Return-Path: <linux-hyperv+bounces-6248-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6249-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46345B0508F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Jul 2025 06:58:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CEBCB050A6
+	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Jul 2025 07:14:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9FE111AA7404
-	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Jul 2025 04:58:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 739F73B4617
+	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Jul 2025 05:14:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 353C32D0283;
-	Tue, 15 Jul 2025 04:58:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E2E62D29CA;
+	Tue, 15 Jul 2025 05:14:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LECdqNPS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vIEvPi/U"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CE51A2398;
-	Tue, 15 Jul 2025 04:58:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3100A264F8A;
+	Tue, 15 Jul 2025 05:14:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752555512; cv=none; b=rfSbyZxXVUY9LiAeOu3jUOOQdGSAtJPvFkL+ULsSPNFGlXjgWZiBhOAuIQBPsWTgMgzPadn3TroBeIXvgREIFg0EniRfj1OZs4Cm5G3B2KfQ8C7rLwMc4xBboHN3s6KoJy30YAYcErr1xYKbSNZWlZ7h7aiNHjp9K4DGVees9F4=
+	t=1752556464; cv=none; b=JzHNpZ464LPgWHRxh96+NVkcY5xMTxSjC3Kw12eYO5ShddTB9iSjP1oYXzdZ5Ggx4F0d0wpTCsAQHJTBQRXW0oIJ3JKSQgZqwdfI73bCUUQ+KQoqWxzS6RKCrpWGNgu6+s15MUCcbhyGLxCcb9zpdKeGv/Mbai30zaMwbQTQQxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752555512; c=relaxed/simple;
-	bh=FHKGOBJTjZ8cy/P8/7A1PUYTFL1hiYO7R7bupkTGdOs=;
+	s=arc-20240116; t=1752556464; c=relaxed/simple;
+	bh=bJWUBkfd0+ssYKNHmKTp4EUZF9DwET4v/SSPJR0/iiw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u/zzoo2VYBAUcDE5y9OBQU6lkL00YX9idiRP8NBC7RipF7iftWhHHg2cZ/P5RqH4QhcceLRcvuIP8e/nFPWF/LGVE0L12rqkxluOkLrf+GsbM8XgjLoAVq1U1hHjwy+sxCyj5uutfiD+hNyPpymjoR48Ed0Wgfmz9XZlbQdQ39Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LECdqNPS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FC7AC4CEE3;
-	Tue, 15 Jul 2025 04:58:31 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=qjJj7RFoGTFl0y0639EIAparHZR16Z4wfdNYnR76C2qF9OYnRqTschduVjZZ6WfskerReJeGTtDisKxInV8GHuqFB8gn7qVdNQs16StXN3EJLEPSzUftScHHyc8kEcn8DmrcvuJkYvtZ/NfDnlw4yq/7JoDDuz7anA4C6yUdUWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vIEvPi/U; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F29EC4CEE3;
+	Tue, 15 Jul 2025 05:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752555511;
-	bh=FHKGOBJTjZ8cy/P8/7A1PUYTFL1hiYO7R7bupkTGdOs=;
+	s=k20201202; t=1752556463;
+	bh=bJWUBkfd0+ssYKNHmKTp4EUZF9DwET4v/SSPJR0/iiw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LECdqNPSRntZJBjAZem78ERpFtfSabtt0cVMPu18sV47S4IL/qkGuPGqb6jtATN1i
-	 lYUnFE3KHK4O+RbXwu4VyAwxhmK0jn2QdeToYn9c8yBGR6yhe5LiWXa5bl9+JQRFZV
-	 +srZkJCiCxFvASJQ/zvwjAEqloW3Edf0yL17fioggFc3iMmCrRiSms1yjwe7Cy0Dwu
-	 3CAammIPpUVOJ0Ad3Y0JhxEfA1eR6rudsZUUU+Klqu8gG22xuDz3kfaZRGdmuUF/Ff
-	 90ltU747m90qW+L6OfNIUdOo6xpgAd77StzD48tAPsndB7Ti1Fp9WH85oumMXY3oNl
-	 VasnPmUHNEbrA==
-Date: Tue, 15 Jul 2025 04:58:29 +0000
+	b=vIEvPi/UEgrlc5X0YYHdooFNkDHa7MFRa5kv4c4kbY8KnrnBl2bsJdr57IcwzadRx
+	 2SBK2/DrVCrfWhiLHdeMXtO7FpN7xyJDNOe2AzKSOdnybkeTI1cRXgSX02tZ06RWv+
+	 Kv/M1Ly/ogoybEzfClPb1D/SEYfE2fE1DuoPJo8FzMWywlUcNbw7JiGMmnIjy7/cY3
+	 7DQSXHp07+te7p8CIgn0x9BpZMZUTrg260uwyFgp4ENIlVtZvM850c/LL7myuog6Dt
+	 9HVdteZDasgzKqxgEis/ejctkaZEz2IEw+SrX52ccX3COMOgR4q6xNwGnU+P6mRf7Z
+	 nQfm7tbZBRw/Q==
+Date: Tue, 15 Jul 2025 05:14:22 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, seanjc@google.com, pbonzini@redhat.com,
-	ardb@kernel.org, kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	gregkh@linuxfoundation.org, jpoimboe@kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, linux-efi@vger.kernel.org,
-	samitolvanen@google.com, ojeda@kernel.org,
-	Michael Kelley <mhklinux@outlook.com>
-Subject: Re: [PATCH v3 12/16] x86_64,hyperv: Use direct call to hypercall-page
-Message-ID: <aHXf9TZIAS2u5AP8@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-References: <20250714102011.758008629@infradead.org>
- <20250714103441.011387946@infradead.org>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Nam Cao <namcao@linutronix.de>, Marc Zyngier <maz@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"open list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH for-netdev v2 2/2] PCI: hv: Switch to
+ msi_create_parent_irq_domain()
+Message-ID: <aHXjrmccYWWfFEEl@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+References: <cover.1751875853.git.namcao@linutronix.de>
+ <7b99cca47b41dacc9a82b96093935eab07cac43a.1751875853.git.namcao@linutronix.de>
+ <SN6PR02MB41577987DB4DA08E86403738D44FA@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -66,15 +69,46 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250714103441.011387946@infradead.org>
+In-Reply-To: <SN6PR02MB41577987DB4DA08E86403738D44FA@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-On Mon, Jul 14, 2025 at 12:20:23PM +0200, Peter Zijlstra wrote:
-> Instead of using an indirect call to the hypercall page, use a direct
-> call instead. This avoids all CFI problems, including the one where
-> the hypercall page doesn't have IBT on.
+On Mon, Jul 07, 2025 at 06:49:02PM +0000, Michael Kelley wrote:
+> From: Nam Cao <namcao@linutronix.de> Sent: Monday, July 7, 2025 1:20 AM
+> > 
+> > Move away from the legacy MSI domain setup, switch to use
+> > msi_create_parent_irq_domain().
+> > 
+> > While doing the conversion, I noticed that hv_compose_msi_msg() is doing
+> > more than it is supposed to (composing message). This function also
+> > allocates and populates struct tran_int_desc, which should be done in
+> > hv_pcie_domain_alloc() instead. It works, but it is not the correct design.
+> > However, I have no hardware to test such change, therefore I leave a TODO
+> > note.
+> > 
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> > Signed-off-by: Nam Cao <namcao@linutronix.de>
 > 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> [Adding linux-hyperv@vger.kernel.org so that the Linux on Hyper-V folks
+> have visibility.]
+> 
+> This all looks good to me now. Thanks for the additional explanation of
+> the TODO. I understand what you are suggesting. Moving the interaction
+> with the Hyper-V host into hv_pcie_domain_alloc() has additional appeal
+> because it should eliminate the need for the ugly polling for a VMBus
+> response. However, I'm unlikely to be the person implementing the
+> TODO. hv_compose_msi_msg() is a real beast of a function, and I lack
+> access to hardware to fully test the move, particularly a device that
+> does multi MSI. I don't think such a device is available in a VM in the
+> Azure public cloud.
+> 
+> I've tested this patch in an Azure VM that has a MANA NIC. The MANA
+> driver has updates in linux-next to use MSIX dynamic allocation, and
+> that dynamic allocation appears to work correctly with this patch. My
+> testing included unbind and rebind the driver several times so that
+> the full round-trip is tested.
+> 
 > Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+> Tested-by: Michael Kelley <mhklinux@outlook.com>
 
 Acked-by: Wei Liu <wei.liu@kernel.org>
 
