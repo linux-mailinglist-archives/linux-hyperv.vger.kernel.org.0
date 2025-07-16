@@ -1,146 +1,173 @@
-Return-Path: <linux-hyperv+bounces-6267-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6268-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3200FB07836
-	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Jul 2025 16:35:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A17AB07970
+	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Jul 2025 17:20:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3920EA40676
-	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Jul 2025 14:34:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B97FD189F770
+	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Jul 2025 15:15:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05460253359;
-	Wed, 16 Jul 2025 14:35:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEBB626E16E;
+	Wed, 16 Jul 2025 15:14:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JROwG4N7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KcN9ivjo"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3AC2376F8;
-	Wed, 16 Jul 2025 14:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D161D5CFB;
+	Wed, 16 Jul 2025 15:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752676506; cv=none; b=WQVsKkJ4ksKwZA80aAdf8gXM3uRW1pb5awWb77baSp0RkZN/if6pj5OH2l4KrhI/f1RElG1eTWKllRMruCHV9y1tgrFLqnaoPSIs2huJcKhj4/UKFQok3VLUl+hSx8JMo0at2pos4UWRuOMqRaNGj4ELOm4pK1jjAK1B4VY+pkY=
+	t=1752678881; cv=none; b=hn6vNXNn5hC28krTNsN7nt+O5emykDKe2xQv0SSB5aWb/CicFZ+F/VU0kLtBzLdAGJUY/GLwoly9U3gsBlAYTsnRkRZyz+d5Ai/vW8OyrNHo1YYP4l6h61vkEnnotmbt3+9WCn+AwZbIipmd6jERqu93UFeibvqZGyYPKR47tEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752676506; c=relaxed/simple;
-	bh=5exzXLTbRoSeq8C0JTPFMk+YLy7hDs7cD8deUGJtgpU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MwKIiVs2zcEa8Q1CfBuAUnXDwa9eAQrR/l6BGU1XUz7l3mpNxZuLyapc6iVMmPaGaFlf9JDrGuuCAy2iE3XS7nGocKNh5NCXsE+l68qO7194IwZqRwbQgf1SgPzW+SleTBo1W6sc/3z9rbBVFaGT6mlVLAFFB4BVj9x/VY+5KXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JROwG4N7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BF62C4CEE7;
-	Wed, 16 Jul 2025 14:35:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752676506;
-	bh=5exzXLTbRoSeq8C0JTPFMk+YLy7hDs7cD8deUGJtgpU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JROwG4N7zkJxMF3HNctlwbugYQblWBcR70aqH51/GALJKSFEMm/xaX0JHe++UYG65
-	 vRagXUK+UFViCIscunGFRgNPxNryRxCZxmgBexAYpWzHTSwFnWPKo/AhvA4FtoJIVY
-	 MCnB1MWH0pPFDanfTid5lRK6V9HQfjVp6Kh7HNmH/DFpwcaeGbnpDntjVoW1cBQaLx
-	 54lI8EbOOkTzFXWqpGZMKO7F1WdkqlghAWWcz8f/hCL1mE6KEvGRLq9elwdYPJhhIP
-	 yOw/+RqAiM5Wp5DNyhcftofiNlwretRN7/6KxaVQDVXFhZwKrHP/Ay0Hril82OnopP
-	 AAHICQG0dA0BQ==
-Message-ID: <095a1455-c6ac-4a7d-a219-ddfd0a93d8d6@kernel.org>
-Date: Wed, 16 Jul 2025 16:35:01 +0200
+	s=arc-20240116; t=1752678881; c=relaxed/simple;
+	bh=JGfjaozL+xMWdV0XXsCKfSFov9DvkeQMxV6cXeLB/VI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UZdUzi9Z/3drJO+YKPnEMoxPsFYbIxZeHZbMASTIjHwdCJET2F9boMPoe+zmsTFIQ1Yl4rW8E0roNywHZhSCBRZn0l778JBFN55mWdXOsVtG1XIPETuAdbphU4PruEDK7wEeJHs9Ybi9NcfOgQzutp6oQL3qVtOuK/Sc4Q0r9nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KcN9ivjo; arc=none smtp.client-ip=209.85.166.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3de1875bf9dso50056515ab.2;
+        Wed, 16 Jul 2025 08:14:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752678879; x=1753283679; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tlzgsqxl7m0sFdq0NXyFVdMSE8vaPjAL8cIJQh6kUxs=;
+        b=KcN9ivjo06XnFKxdnTlMlV7L/B/Hnf4f4JM2JPNKWn2XbOolL1DvmjPK0GEdYaYivp
+         O/KXXUeULWj1sL9H5gg1kTI/8+CNonoxY7OPrOOhlipUR7nY+G8CavR0keEmWH2aGa1U
+         EsP2dClqlcOYGo/W+U9HFDCwZsH8OkOaHBkx+zhiFkWSIZSYfOPIMCd+uCE+moBiskYK
+         agc75xbS9b0OrmugpdNVXha+NGOte/smStoewKFWR/CZgPSTofiP87mQxERk3BW4WFLg
+         AwMMf4+KK2SABgfe2Aoly4clLD2VBNnAx4M3qb9sBh1Wqjv3hCiUq39dwghVfMyxxQe/
+         n23w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752678879; x=1753283679;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Tlzgsqxl7m0sFdq0NXyFVdMSE8vaPjAL8cIJQh6kUxs=;
+        b=cgUWL/xUAXlnCguwpJSqbXCTSfL/M+miL8aEcW759Xj8IZmhDpalHgP9u66c24gWte
+         UEzfpCF0HR2wIM3pld4s5K1DNxD6Ul5ja1ZPm8JMiVXVQWAyhwSGCjQc0lFGkHu51cav
+         XKXbHjkmJbDqhGc7pKOiKbNlykKwys/720D6GKKaadqdpxJgkcKAyNezrPfeIZbTYozl
+         0FlCvwReN5mneGQY50K0q/yctwxF+ygsrRX5JF+pVaYcaYRm3ayy3VzxCCU/9o4wbgdY
+         0w+fUXA4bBNXd5JuxZrTBm0Hc7ZdYgvIYkNKNbH1guP7n6zm3wWltt5lGEIgh4egCXZy
+         n6WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUB/y1z9P5j21b32jGw8AppR5h5LJ52PS2YaU20+HNDp2cvWx6uded2E5enC+k789CAjwYj6k3c@vger.kernel.org, AJvYcCVLECXRg5jQJiA8jJTX2Vgb/Ijr2gAs1vyvD/UCOfcErLGe0Yxxgmgqk43ovks4osxPQ5RGetk88+SyBKo=@vger.kernel.org, AJvYcCVsavhaKxi2hIx1QcJNFJhkuK8kGPiCpoS9UMfwgkCrr4LVR8W846ahIURkQTWYPas6Bs+WoEw2ClEzboj1@vger.kernel.org
+X-Gm-Message-State: AOJu0YynYEa8F3RrZzSpu98TiBl7LRlyNNRuYGcMU3iZq+IymJMwyP1v
+	DpSL+3cT9MuTixRiZ9qY3HHpWUG7vLQm21PI71ipxolZ4u6sdj3Ef2/PZR6TRsTr35H9YFYoCWG
+	r9M6fPRfnj5oC14c9Y4UG9Rm38q6n55k=
+X-Gm-Gg: ASbGncsB8FH0913suH1qGWCmPbFnFqHVzU/8tvRftoQN2daDzI/GdfX/WUC12Qj+iMX
+	HrRpoeCnzKjQprDnl+xGv5EYeDREpIxGH1i1aspre2aFCtgDVXAoS7Qj2TASN7nKdb/ckd77v6C
+	whVzr0XsAtL86St2Qc7pNlIc6pU2LVX6HXET0BwgI4ydEt9tg/pxQxLJnpZUtCyx0MRbuKqw8Bn
+	vRFKfUnxOWhfe0iwVcfZWnVBT6O9eKbPp0LNcYJSbXZJ5LOeA==
+X-Google-Smtp-Source: AGHT+IGp/w3OhbRlKaM7WBwVtAScqPY2hyXHH8Wk9zGmZCUUR4ZjE70sSQQPOYoyxVo6u3eMkVfJe9O/iwLboHF517E=
+X-Received: by 2002:a05:6e02:1c07:b0:3df:29c5:2972 with SMTP id
+ e9e14a558f8ab-3e282da9cd2mr33620365ab.9.1752678878693; Wed, 16 Jul 2025
+ 08:14:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] dt-bindings: microsoft: Add vmbus
- message-connection-id property
-To: Hardik Garg <hargar@linux.microsoft.com>
-Cc: apais@microsoft.com, conor+dt@kernel.org, decui@microsoft.com,
- devicetree@vger.kernel.org, haiyangz@microsoft.com, hargar@microsoft.com,
- krzk+dt@kernel.org, kys@microsoft.com, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, robh@kernel.org, ssengar@linux.microsoft.com,
- wei.liu@kernel.org
-References: <63ca8d08-2fd3-440e-858a-f8d79890016f@kernel.org>
- <1752640932-23038-1-git-send-email-hargar@linux.microsoft.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <1752640932-23038-1-git-send-email-hargar@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250716002607.4927-1-litian@redhat.com> <20250716092927.GO721198@horms.kernel.org>
+In-Reply-To: <20250716092927.GO721198@horms.kernel.org>
+From: Xin Long <lucien.xin@gmail.com>
+Date: Wed, 16 Jul 2025 11:14:27 -0400
+X-Gm-Features: Ac12FXzRov1GHK8odSuvmX5RhEKm0LzXVxiEG0Fsrz9TLbCQQXwLzdiuH9ZNDo4
+Message-ID: <CADvbK_cdOTO_UVg6ovx-Si7-ja=ErYw-MnSnR-CL4HwmtKJ8YQ@mail.gmail.com>
+Subject: Re: [PATCH v3] hv_netvsc: Set VF priv_flags to IFF_NO_ADDRCONF before
+ open to prevent IPv6 addrconf
+To: Simon Horman <horms@kernel.org>
+Cc: Li Tian <litian@redhat.com>, netdev@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>, 
+	Dexuan Cui <decui@microsoft.com>, Stephen Hemminger <stephen@networkplumber.org>, 
+	Long Li <longli@microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 16/07/2025 06:42, Hardik Garg wrote:
->>>>> What is a connection ID and why it cannot be inferred from existing
->>>>> system API?
->  
->>> The connection-id determines which hypervisor communication channel the
->>> guest should use to talk to the VMBus host. Reading from DeviceTree allows
->>> platforms to specify their preferred communication channel, making it more
->>> flexible (I will add this detail in the commit message). Presently, this
->  
->>> We don't add properties to make things flexible.
->  
-> You're right. I should have explained better. The connection ID is a hardware 
-> configuration detail that defines which specific VMBus channel is used for 
-> host-guest communication. This value is configured by the host and passed to 
-> the guest through the host's device tree. Different hypervisor versions and 
-> configurations may require different channels, and this needs to be specified 
-> by the platform.
+On Wed, Jul 16, 2025 at 5:29=E2=80=AFAM Simon Horman <horms@kernel.org> wro=
+te:
+>
+> + Xin Long
+>
+Thanks for Ccing me.
 
+> On Wed, Jul 16, 2025 at 08:26:05AM +0800, Li Tian wrote:
+> > Set an additional flag IFF_NO_ADDRCONF to prevent ipv6 addrconf.
+> >
+> > Commit under Fixes added a new flag change that was not made
+> > to hv_netvsc resulting in the VF being assinged an IPv6.
+> >
+> > Fixes: 8a321cf7becc ("net: add IFF_NO_ADDRCONF and use it in bonding to=
+ prevent ipv6 addrconf")
+> > Suggested-by: Cathy Avery <cavery@redhat.com>
+> > Signed-off-by: Li Tian <litian@redhat.com>
+> > ---
+> > v3:
+> >   - only fixes commit message.
+> > v2: https://lore.kernel.org/netdev/20250710024603.10162-1-litian@redhat=
+.com/
+> >   - instead of replacing flag, add it.
+> > v1: https://lore.kernel.org/netdev/20250710024603.10162-1-litian@redhat=
+.com/
+> > ---
+> >  drivers/net/hyperv/netvsc_drv.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> Hi Li Tian,
+>
+> Thanks for addressing earlier feedback.
+>
+> I don't think you need to repost because of this, but for future referenc=
+e:
+>
+> 1. Because this is a fix for a commit that is present in net
+>    it should be targeted at that tree.
+>
+>    Subject: [PATCH net vX] ...
+>
+> 2. Please use get_maintainers.pl this.patch to generate the CC list. In
+>    this case Xin Long (now CCed) should be included as he is the author o=
+f the
+>    patch cited in the Fixes tag.
+>
+>    b4 can help you with this and other aspects of patch management.
+>
+> >
+> > diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvs=
+c_drv.c
+> > index c41a025c66f0..8be9bce66a4e 100644
+> > --- a/drivers/net/hyperv/netvsc_drv.c
+> > +++ b/drivers/net/hyperv/netvsc_drv.c
+> > @@ -2317,8 +2317,11 @@ static int netvsc_prepare_bonding(struct net_dev=
+ice *vf_netdev)
+> >       if (!ndev)
+> >               return NOTIFY_DONE;
+> >
+> > -     /* set slave flag before open to prevent IPv6 addrconf */
+> > +     /* Set slave flag and no addrconf flag before open
+> > +      * to prevent IPv6 addrconf.
+> > +      */
+> >       vf_netdev->flags |=3D IFF_SLAVE;
+> > +     vf_netdev->priv_flags |=3D IFF_NO_ADDRCONF;
+If it is only to prevent IPv6 addrconf, I think you can replace IFF_SLAVE
+with IFF_NO_ADDRCONF.
 
-Host is supposed to have multiple guests, so this feels like you are
-going to prepare for each guest different DTS with different connection
-ID. This feels like poor design. DTS is supposed to be relatively static
-configuration, not runtime choice vmguestid+1.
+IFF_SLAVE normally comes with IFF_MASTER, like bonding and eql.
+I don't see IFF_MASTER used in netvsc_drv.c, so IFF_SLAVE probably
+should be dropped, including the one in __netvsc_vf_setup()?
 
-The guest cannot access other configuration channels, can it? If it can,
-it would mean it can eavesdrop on other guests? So obviously it cannot.
-Therefore from guest point of view this is completely redundant. Guest
-cannot use any other value, thus guest should not configure it. The
-guest has only one channel and uses only this one which gets to right
-place to the host.
-
-
-Best regards,
-Krzysztof
+> >       return NOTIFY_DONE;
+> >  }
+> >
+> > --
+> > 2.50.0
+> >
+> >
 
