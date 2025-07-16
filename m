@@ -1,116 +1,113 @@
-Return-Path: <linux-hyperv+bounces-6264-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6265-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34364B06A65
-	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Jul 2025 02:26:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01A5DB06CBF
+	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Jul 2025 06:42:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9D4B57B05D7
-	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Jul 2025 00:25:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D7C71AA306D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Jul 2025 04:42:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFB8D7B3E1;
-	Wed, 16 Jul 2025 00:26:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9C852528F7;
+	Wed, 16 Jul 2025 04:42:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hNrljmOs"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="E6KHW3ND"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2187814A82
-	for <linux-hyperv@vger.kernel.org>; Wed, 16 Jul 2025 00:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76BD52E3715;
+	Wed, 16 Jul 2025 04:42:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752625583; cv=none; b=c9ca19aZmihWri+WcritoR5GJbU9ZNRV+81Q0y4WJ8dBRk9FCzrvyLP2YaiKpyvX8n/U7E30Q3AMxbhYTpyJ/HM4F7d2HA5h+IHso26GqZ/YVMObBrm4IU8FR4QQs5JcggiVRd9nt6N3502eTHFaNkNzAfzzMwwONXNg18z/lLM=
+	t=1752640933; cv=none; b=VZx8wFS3G3lRdisgrKTp+0mYC87ncOKVK0g1DV3BOYsGJw7RDB0sxarVSQNJW7vV7ubNf60ZEvoSW+C3AIDmACDsp9U6tgrToSWFXcvy3m6FjMsKlOU79k5D6bYHzHA2xdetXDA2+ZmV5qc8x8U0/756Els2ABJLRKQg4aDDTVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752625583; c=relaxed/simple;
-	bh=PNMSNhGTqYtxYIU/awGFqnGG3CMyqS2mKddMzgIHmc8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hQRZ66vLYoXTlcKrgcUZ25s5Y2QDAqqCdh1jW0HPB+T5v9zAfTq+8nTGQ7p9DXNMV/EXCD0cJzrQ06SARJ5Ugc5aCahBX0+on6WClFK4ntnndLJPY1vStiyw0e/n1raMUPgGt6BbKS1buS4ZvIbbg/0WzLKOnOPyWZ/Lo2maLhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hNrljmOs; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752625580;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=bJN0js1mXFtPosWS7Mr0CZxy87n73HJjlADNnzxbL/Y=;
-	b=hNrljmOsfkr8688o1gyRG7hX5LqrhBNwdV0WJMdso70pFWx9HlV+g5R7bnVdwLNLfjdLNz
-	JhWzOsE+tjsoVKIEKCcUfKqOhQx4EO4oFQwU0ao7SQdXY3F6ne2AgavVfzF38Ht3MtbVmh
-	swzTtMQtDg8IOwTQkdgYbhobfXQG1hg=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-508-MnMiEhQwMyOfLCSitGfOUw-1; Tue,
- 15 Jul 2025 20:26:16 -0400
-X-MC-Unique: MnMiEhQwMyOfLCSitGfOUw-1
-X-Mimecast-MFC-AGG-ID: MnMiEhQwMyOfLCSitGfOUw_1752625575
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 387C11800366;
-	Wed, 16 Jul 2025 00:26:15 +0000 (UTC)
-Received: from laptop.redhat.com (unknown [10.72.112.44])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 380F8180035E;
-	Wed, 16 Jul 2025 00:26:09 +0000 (UTC)
-From: Li Tian <litian@redhat.com>
-To: netdev@vger.kernel.org,
-	linux-hyperv@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>,
-	Stephen Hemminger <stephen@networkplumber.org>,
-	Long Li <longli@microsoft.com>
-Subject: [PATCH v3] hv_netvsc: Set VF priv_flags to IFF_NO_ADDRCONF before open to prevent IPv6 addrconf
-Date: Wed, 16 Jul 2025 08:26:05 +0800
-Message-ID: <20250716002607.4927-1-litian@redhat.com>
+	s=arc-20240116; t=1752640933; c=relaxed/simple;
+	bh=k7xs9Um3WsTVzWrqkDSGhj9tol3AITVQEo38acvwWfU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=mqnFvWm9Sq1GTbZrouWbRs5VfEh0K9JiqoNojtVgx5E6YY8yMKlbyAi593SHpzeKbXE/9ZITgrJBKvPy1s+ZuBEoJKdu+Mns5rFmxcgBRxPr9JBGv0DYhdjXbc40jlZAIaDB3SHdl3s4ILuwo0CR9n6Frxa2oxNHARL1sJHQeTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=E6KHW3ND; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1158)
+	id 12003201BA2F; Tue, 15 Jul 2025 21:42:12 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 12003201BA2F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1752640932;
+	bh=CJStzbQ9VHhLyMURv3oxT/RMbHXq0YRsR3c4GhGdSyI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=E6KHW3NDiaZlgiigzMwg6PVjsFpZ1ubbZ37Cxj1MuwN15yJF4R20qFUu1RDJoakdc
+	 vrbSvo8kMNf8J0fpSWcdsgn9y0Lg3OHluj1Qqt63f86s/uGUfyUEw0ZrVaZZ4WJkob
+	 Exf9ZWnsVkzbb7Yp0ch/F1FJomsygfdhFXni9uV8=
+From: Hardik Garg <hargar@linux.microsoft.com>
+To: krzk@kernel.org
+Cc: apais@microsoft.com,
+	conor+dt@kernel.org,
+	decui@microsoft.com,
+	devicetree@vger.kernel.org,
+	haiyangz@microsoft.com,
+	hargar@linux.microsoft.com,
+	hargar@microsoft.com,
+	krzk+dt@kernel.org,
+	kys@microsoft.com,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	robh@kernel.org,
+	ssengar@linux.microsoft.com,
+	wei.liu@kernel.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: microsoft: Add vmbus message-connection-id property
+Date: Tue, 15 Jul 2025 21:42:12 -0700
+Message-Id: <1752640932-23038-1-git-send-email-hargar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <63ca8d08-2fd3-440e-858a-f8d79890016f@kernel.org>
+References: <63ca8d08-2fd3-440e-858a-f8d79890016f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Set an additional flag IFF_NO_ADDRCONF to prevent ipv6 addrconf.
-
-Commit under Fixes added a new flag change that was not made
-to hv_netvsc resulting in the VF being assinged an IPv6.
-
-Fixes: 8a321cf7becc ("net: add IFF_NO_ADDRCONF and use it in bonding to prevent ipv6 addrconf")
-Suggested-by: Cathy Avery <cavery@redhat.com>
-Signed-off-by: Li Tian <litian@redhat.com>
----
-v3:
-  - only fixes commit message.
-v2: https://lore.kernel.org/netdev/20250710024603.10162-1-litian@redhat.com/
-  - instead of replacing flag, add it.
-v1: https://lore.kernel.org/netdev/20250710024603.10162-1-litian@redhat.com/
----
- drivers/net/hyperv/netvsc_drv.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index c41a025c66f0..8be9bce66a4e 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -2317,8 +2317,11 @@ static int netvsc_prepare_bonding(struct net_device *vf_netdev)
- 	if (!ndev)
- 		return NOTIFY_DONE;
+>>>> What is a connection ID and why it cannot be inferred from existing
+>>>> system API?
  
--	/* set slave flag before open to prevent IPv6 addrconf */
-+	/* Set slave flag and no addrconf flag before open
-+	 * to prevent IPv6 addrconf.
-+	 */
- 	vf_netdev->flags |= IFF_SLAVE;
-+	vf_netdev->priv_flags |= IFF_NO_ADDRCONF;
- 	return NOTIFY_DONE;
- }
+>> The connection-id determines which hypervisor communication channel the
+>> guest should use to talk to the VMBus host. Reading from DeviceTree allows
+>> platforms to specify their preferred communication channel, making it more
+>> flexible (I will add this detail in the commit message). Presently, this
  
--- 
-2.50.0
+>> We don't add properties to make things flexible.
+ 
+You're right. I should have explained better. The connection ID is a hardware 
+configuration detail that defines which specific VMBus channel is used for 
+host-guest communication. This value is configured by the host and passed to 
+the guest through the host's device tree. Different hypervisor versions and 
+configurations may require different channels, and this needs to be specified 
+by the platform.
+ 
+>>>> There's a reason why you have here generic property - this is generic
+>>>> and/or discoverable and/or whatever software interface. Adding now more
+>>>> properties, just because you made it generic, is not the way.
+ 
+>> Presently the value is hardcoded and we want to provide a functionality to
+>> the user to specify their prefered communication channel. This is a
+>> virtualized hardware property for us.
+ 
+>> That's not really acceptable reason. With such approach I would add 100
+>> properties to make various things "flexible".
+ 
+I understand your concern. Let me clarify: this isn't about making things 
+flexible for flexibility's sake. The connection ID is a fundamental hardware 
+configuration parameter that is set by the host and must be matched in the 
+guest. The host configures this value in its device tree and shares it with 
+the guest. Without the correct channel ID, the VMBus communication fails. 
+Different hypervisor configurations require different channels, and this 
+cannot be automatically discovered.
+ 
+Would you prefer if we handled this configuration through a different 
+mechanism? I'm open to suggestions.
 
+
+
+
+Thanks,
+Hardik
 
