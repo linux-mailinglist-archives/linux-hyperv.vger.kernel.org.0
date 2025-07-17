@@ -1,95 +1,141 @@
-Return-Path: <linux-hyperv+bounces-6277-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6278-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C877FB08FE4
-	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Jul 2025 16:51:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53890B09199
+	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Jul 2025 18:22:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 18559A45ED6
-	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Jul 2025 14:50:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6E0EB3B44E0
+	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Jul 2025 16:21:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A7CB2F9499;
-	Thu, 17 Jul 2025 14:50:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61CF52FC3D9;
+	Thu, 17 Jul 2025 16:21:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f09aUh1G"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="SzA3lFda"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F39D2F9497;
-	Thu, 17 Jul 2025 14:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DED562FC3AE;
+	Thu, 17 Jul 2025 16:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752763810; cv=none; b=tQSk8fqKuhRUWTGrJ6RcitK7YPDa8qGCiR2/qsK5s5T9+VkytOsLmLth5Ui1gdkBu+iX2nOOFXFZN1oP4OBf7tCbK4ZXyPu6Q2U8yeIVbGKWDq+dlDx8mEelqfT0D9p8Fgo+94S3VvqYNzJ9/fGk7yXu5WpYFPOzZwflmuWJoGE=
+	t=1752769314; cv=none; b=p0TBJDclnsUnQ/ABYANXmGGt/JqTzaauFy5JLPYgDZyxsrcGQk1Ead30UiXfsOJGRrulh9RdR2Kz5LBJn8RECeBolgnOBWBRGS5/CzCkeYmFE4OccVniJkMMTURUvtyV47oX25SIC6MRzcCrGnZdOO2JmOQRIjrq1F/TsPpriHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752763810; c=relaxed/simple;
-	bh=vWyQJHUOzV1MpPMbxli/i1xxas1uvgGB5zwciL1fqKc=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=iepRsCX6lx5XemfJaMRv3NXpGnLWXRwIqFvYTiHz0ho+Uryap2IC9ooexPTbOgdTV36i2dslRLNXOLButPGlgaZRb20n5uo6RHN+CfXcCb3e0E3QhlGOn4u1O8XExs59BTlBWLNuv4qHLvVFSzwEjv0qPf7qum/uHsbpnYbYLXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f09aUh1G; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A264BC4CEE3;
-	Thu, 17 Jul 2025 14:50:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752763809;
-	bh=vWyQJHUOzV1MpPMbxli/i1xxas1uvgGB5zwciL1fqKc=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=f09aUh1GUvjPCxEcm3r2HPbLVOca9XOGyG7lmrIWwXPUKbQZLqJhHikG5HNDA4p+2
-	 GlIPvjsI3xaIN+titFTw8k6bKXLOXBBTKSbcW+xppaoEpLr1I61VXTW8tpW9T9eWBT
-	 7zEMfJU2yUaAvzfs1VXhwv7PNFJksosDzpdwRLCz+erLNtVGpf8ES97OtcSAnp3Wwn
-	 9oU1clHaPo9+hIdYk+JOYSWps77ABS8grbPhkhdISleT58ThC+P6NBYmReR8efLreu
-	 2QjYBoB6qVPXGU7NAczlX3Cqk9V7eJUMBZITPZdpHfkWHrHZ/FlmNeM75CiuFpwLaI
-	 NoCGnGz88UbDg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAD7A383BF47;
-	Thu, 17 Jul 2025 14:50:30 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1752769314; c=relaxed/simple;
+	bh=2pmx4VHDOfW7yUHLn0E6vYG5Rq+jiNJpfmJJNIOrGEs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uyPNEDlqBiZmYV/BrWyXWNH0NUP0DWvP5DImJBUVQNOF1b537kQi5OJ2kVhocwRHgZL6hMQARvvcFuVoxp3zhiJ0NyO7oOTR/lb8mS7qugtJOCJwHoTE459xE1qoVXlhxK/JNa1foKvirWeUAl4lxYyKc9uyXTO7txs45E0f01o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=SzA3lFda; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.65.225.6] (unknown [20.236.10.129])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 398AE211426B;
+	Thu, 17 Jul 2025 09:21:52 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 398AE211426B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1752769312;
+	bh=7K0UPEjUxHWApQG9NiExsOn4DGOruZ9qlwBae9uaRRI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SzA3lFda7i8ZDz++gtdU8oCWjkeUmebzAW85NcfPXgGg9V1tobU3mmv7GSG/GltBg
+	 YKA0d8Y/633t0rndP/lnnadLSVU17ShO3OgTr/ZkHE6XUWV6TCHmVXguLvl4u6o9it
+	 OABs4Lg/d8kUzRrUioRJexoggIA/3gEF8k2C4qRA=
+Message-ID: <68143eb0-e6a7-4579-bedb-4c2ec5aaef6b@linux.microsoft.com>
+Date: Thu, 17 Jul 2025 09:21:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3] hv_netvsc: Set VF priv_flags to IFF_NO_ADDRCONF before
- open to prevent IPv6 addrconf
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175276382950.1959085.7504024045631289038.git-patchwork-notify@kernel.org>
-Date: Thu, 17 Jul 2025 14:50:29 +0000
-References: <20250716002607.4927-1-litian@redhat.com>
-In-Reply-To: <20250716002607.4927-1-litian@redhat.com>
-To: Li Tian <litian@redhat.com>
-Cc: netdev@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, haiyangz@microsoft.com, decui@microsoft.com,
- stephen@networkplumber.org, longli@microsoft.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/2] Drivers: hv: Introduce mshv_vtl driver
+To: Michael Kelley <mhklinux@outlook.com>,
+ Naman Jain <namjain@linux.microsoft.com>,
+ "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>
+Cc: Roman Kisel <romank@linux.microsoft.com>,
+ Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+ ALOK TIWARI <alok.a.tiwari@oracle.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+References: <20250611072704.83199-1-namjain@linux.microsoft.com>
+ <20250611072704.83199-3-namjain@linux.microsoft.com>
+ <SN6PR02MB4157F9F1F8493C74C9FCC6E4D449A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB4157F9F1F8493C74C9FCC6E4D449A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello:
-
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Wed, 16 Jul 2025 08:26:05 +0800 you wrote:
-> Set an additional flag IFF_NO_ADDRCONF to prevent ipv6 addrconf.
+On 7/9/2025 10:19 AM, Michael Kelley wrote:
+> From: Naman Jain <namjain@linux.microsoft.com> Sent: Wednesday, June 11, 2025 12:27 AM
+>> +
+>> +union mshv_synic_overlay_page_msr {
+>> +	u64 as_uint64;
+>> +	struct {
+>> +		u64 enabled: 1;
+>> +		u64 reserved: 11;
+>> +		u64 pfn: 52;
+>> +	};
 > 
-> Commit under Fixes added a new flag change that was not made
-> to hv_netvsc resulting in the VF being assinged an IPv6.
+> Since this appear to be a Hyper-V synthetic MSR, add __packed?
 > 
-> Fixes: 8a321cf7becc ("net: add IFF_NO_ADDRCONF and use it in bonding to prevent ipv6 addrconf")
-> Suggested-by: Cathy Avery <cavery@redhat.com>
-> Signed-off-by: Li Tian <litian@redhat.com>
+>> +};
+>> +
+>> +union hv_register_vsm_capabilities {
+>> +	u64 as_uint64;
+>> +	struct {
+>> +		u64 dr6_shared: 1;
+>> +		u64 mbec_vtl_mask: 16;
+>> +		u64 deny_lower_vtl_startup: 1;
+>> +		u64 supervisor_shadow_stack: 1;
+>> +		u64 hardware_hvpt_available: 1;
+>> +		u64 software_hvpt_available: 1;
+>> +		u64 hardware_hvpt_range_bits: 6;
+>> +		u64 intercept_page_available: 1;
+>> +		u64 return_action_available: 1;
+>> +		u64 reserved: 35;
+>> +	} __packed;
+>> +};
+>> +
+>> +union hv_register_vsm_page_offsets {
+>> +	struct {
+>> +		u64 vtl_call_offset : 12;
+>> +		u64 vtl_return_offset : 12;
+>> +		u64 reserved_mbz : 40;
+>> +	};
+>> +	u64 as_uint64;
+>> +} __packed;
 > 
-> [...]
+> We've usually put the __packed on the struct definition.  Consistency .... :-)
+> 
+> Don't these three register definitions belong somewhere in the
+> hvhdk or hvgdk include files?
+> 
 
-Here is the summary with links:
-  - [v3] hv_netvsc: Set VF priv_flags to IFF_NO_ADDRCONF before open to prevent IPv6 addrconf
-    https://git.kernel.org/netdev/net/c/d7501e076d85
+I agree, hv_register_vsm_capabilities and hv_register_vsm_page_offsets
+can be moved to the appropriate include/hyperv/ header/s.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Regarding mshv_synic_overlay_page_msr, it is a generic structure that
+appears to be used for several overlay page MSRs (SIMP, SIEF, etc).
 
+But, the type doesn't appear in the hv*dk headers explicitly; it's just
+used internally by the hypervisor.
 
+I think it should be renamed with a hv_ prefix to indicate it's part of
+the hypervisor ABI, and a brief comment with the provenance:
+
+/* SYNIC_OVERLAY_PAGE_MSR - internal, identical to hv_synic_simp */
+union hv_synic_overlay_page_msr {
+	/* <snip> */
+};
+
+And I'm fine with it staying in this file since it's only used here right
+now, and doesn't really come from the one of the hyperv headers.
+
+Nuno
 
