@@ -1,108 +1,88 @@
-Return-Path: <linux-hyperv+bounces-6292-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6293-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51247B09AC5
-	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Jul 2025 06:57:52 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34138B09B3D
+	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Jul 2025 08:19:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55F503BEE07
-	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Jul 2025 04:57:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F307A7A433E
+	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Jul 2025 06:17:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1131217F26;
-	Fri, 18 Jul 2025 04:56:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D6611E9B19;
+	Fri, 18 Jul 2025 06:19:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MAD+mSg2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Br2qcM+L"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92F220B7FE;
-	Fri, 18 Jul 2025 04:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9DBE1552FD
+	for <linux-hyperv@vger.kernel.org>; Fri, 18 Jul 2025 06:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752814568; cv=none; b=lLDi36uChCUbsvoZA0us8ymCkdrtnoKJg3O3KMmLZh4juJAY4zpIZOjiWqFXNrsAj8qGFy7srMRBS6SKKJN7UQQ+hAJ6RRTnrrFvRQ6rqYqn/aaRmsdAd0HhZSKkIF3sj5X0DoKn6z2YfpQ1HqyS3IajILPrphFl4PH34QsIRCA=
+	t=1752819543; cv=none; b=RohZQMQPBJsOWyqqnJqo41a0PoJ0yMHXWg9Icl8OwKoskYTdtEN2Ag1LHytYow+vuZXm+RN40Y0+hO7tq5O+1//h68BymyED4j5/JR8YHH4Bd9hQYudSijUU64tn/iCNZhxA8q5owBtcZeEnoTHCMmgGdIUS12PF+jmzFtZ3bPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752814568; c=relaxed/simple;
-	bh=qWNTk3s5NMApXRRxOjCX+WO/fKr3OFV7Wg0UAiRzQiU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TijvBLiyoaGSeqhXJnX4ks7MxSIV2KygQ9mbqsUOoNQoiPEPBaxrbY7FTLsMtkAJp9EQebaypr+WS4zHqfRTqsh1jhtpnKHJrEXYzU66ftalbyTqE5oatlNRUfg3FsxfZuR8jrP5H22mQuEWLxQy0YzYRqYdryudrWvF7eVqHzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MAD+mSg2; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b3be5c0eb99so1326313a12.1;
-        Thu, 17 Jul 2025 21:56:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752814566; x=1753419366; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=aiqelOOvokSP2vkZ7DaRUC0h4xNTtXyC0hk2XiiiVRw=;
-        b=MAD+mSg2VvMCII/xudgNR6JWR843jI3mrEswkr4fKeKlCzTBO2oqaF5Zonti+y3kiY
-         j1Xv/drxuxV3Ro0xhgd8CXwzQgWApJWRkaRNkll7iXl6Kvl70eY+6PdXzazGKFOs3Ey0
-         9Tu5cxamq4KHD8SDKnGh7dUME50St60fKRjRQbfiRggv5WXZmFtp1DAglh9N3UjTkiYM
-         /VqAZJQdkHYHakllpFB5GCg5Eb+ciAuIyhgHixMdSg8YN440zNLa72cEvIKSxEJ5u68e
-         C1/bW6YL15a6V8Bi89CYIGyyBYGl/QWCGEb6uegIDAMZKr1r1NUiwizWFr2x8aPP8DsG
-         YsyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752814566; x=1753419366;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aiqelOOvokSP2vkZ7DaRUC0h4xNTtXyC0hk2XiiiVRw=;
-        b=R93ZyAbwI7ApNDSiouC9hIhnDgH039V5ojHCfWyfJFRWMmXouLxFmPldx4JwWHoQCA
-         KyFl6gTAb/ZeEKCo5hhyTFIxr81YViHsrI9kYLGNgJGsJsxDTmkNrPyudU6rp1ZGlcbE
-         dlpRYBFPaXf9Ce1zoBfrlas/soZiVqNA3J/kI73AfqVRurdIXoeBCTq5HQ6b0Vs2JqO2
-         Bc0VpNp50U7vvTxE5ni9aDuwh+cGXkSZe4WJLkeJwrQUga9bqWtey8LIt3w0QCcpE1xZ
-         S2ijgZtcVIcEmC1LBVoZQRrCgQlM7iVsjkQ+gZdqHKU/hrc+BpHjlO2Klvxblgcjkc46
-         xauQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5s91JZou9XBQZZWNb/RBOZnP34/qnqkmJjXdHs01b/lmRdPxBWeVOpcdLqTjpk91PVGByTmq+RcDfhngU@vger.kernel.org, AJvYcCUkpNH5zlLk8BoLE+F1k5fjAa3PAADBzEt0+N9NOgTTQy8tGhlK5W96YCe4khp/q2BT6CmHT8NMtXBG@vger.kernel.org, AJvYcCWPYyGkgxOfNaWGz2STsV6fq/++BZhrdXEov3qFs73lgDsph5sgBz4M2VxGRWXkq9K2FmHqHJOGAftQ@vger.kernel.org, AJvYcCXwPxzvD6m4AanXXsDtsCnPr5MzrMfHabiiiwktDsHYKn76rAZRP9gZ24JBlP0KYbyBym84H76SFhcle0hE@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnQZfiGZ/SszFY2aab+2XKNzAmz1uegYFEtde8enHbcGAYtQQR
-	37W9h5s0IljjafJ/lg8cVCvNa3+Erh5vad/UKLxCLsWgvw8lmBho3eQU
-X-Gm-Gg: ASbGncuLAggrKN/Wr4I67IX0CURDOpVgZ23nLVst3znuxfsp4bj7ECOPbfKdvnVgVyi
-	6LCVjG1Cw52dXYPpYLu2CAM715CCauFy045kLtJ1L+59IIoi1msdrwa5axJLcLy0epMnJSmZsGV
-	Vr8plqYqnBmkcwrojdcHcyRmV+2U4LJ30p5nM3iKbm9HNAXbRT41tQrVB1Z8L82Wsb3whWpbQP7
-	TkfPdOxL4hlgQ3v9sP4JFcc06AO47cL0cAMwUfmC/8u3DGCr3+hjsQbXoiREKbgGX8LgnWP7X9u
-	eilirqMimr+7iq6GGYJ42G0u0NnoiUVLGV8DlZa8MT0cVc5NWCKHAOi95e3ikU0kDzMn91pclXa
-	UER2U+ykLKtRRehraICAV/nMwD6ZwnBHoKdWk/Qq7DguZkU7BLikNZATXfW21I47fhTGdAuGjrN
-	CSUQ==
-X-Google-Smtp-Source: AGHT+IGDjq2DhqSuXgN/POALmXPVtNVWI+Et+6g2VTK4Goj/AQzWa3UeW+fqHh7e9/h5vhGmctCDVQ==
-X-Received: by 2002:a17:90b:1c04:b0:312:e9bd:5d37 with SMTP id 98e67ed59e1d1-31cc2515a29mr2420920a91.6.1752814565898;
-        Thu, 17 Jul 2025 21:56:05 -0700 (PDT)
-Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31cc33715b2sm476907a91.24.2025.07.17.21.56.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Jul 2025 21:56:05 -0700 (PDT)
-From: mhkelley58@gmail.com
-X-Google-Original-From: mhklinux@outlook.com
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	hpa@zytor.com,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	mani@kernel.org,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	arnd@arndb.de
-Cc: x86@kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org
-Subject: [PATCH v4 7/7] Drivers: hv: Replace hyperv_pcpu_input/output_arg with hyperv_pcpu_arg
-Date: Thu, 17 Jul 2025 21:55:45 -0700
-Message-Id: <20250718045545.517620-8-mhklinux@outlook.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250718045545.517620-1-mhklinux@outlook.com>
-References: <20250718045545.517620-1-mhklinux@outlook.com>
-Reply-To: mhklinux@outlook.com
+	s=arc-20240116; t=1752819543; c=relaxed/simple;
+	bh=AoH2pIUWrD5MbUepOmIQK6BEXrzdiV0jm/OvN5qurII=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=hKOU8un6DOUF0TQ2i3VNnaIVUnCJHrrfKuTc0qBMMkKhaazg9F750wQXwENG2YqZGYBDSy+Ib13Hd82ZTZrzE7tHS83hHLpAHpOf9/iXOdShGgR1rloRLJL7/JB+TQ0FOC4RwujKPLlBBySsgadjB+bzl+KxZjJzOb5XTdi/3Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Br2qcM+L; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1752819540;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=2I8jDNCG0L+52nyGGUbEIAwL2BkN8wDU3xL1GQ5jtVg=;
+	b=Br2qcM+LSbKEc86tDosPsvX5sAi5a+vUXFqwmC/HruPHuT46nv1nq3GWBv+3WVKEM9mwhz
+	RrF2dEhR2Gg3b5N0B9saEjELvg33U1SLwRBs1DtyvZBGg7ESyDC7bbrfaCVfjtZaPnXgF6
+	N9wjXz0kgLkuPoE2ceqAP01YgWQcSn0=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-556-o_vCKiBCOTOiBsc--Rz8LA-1; Fri,
+ 18 Jul 2025 02:18:57 -0400
+X-MC-Unique: o_vCKiBCOTOiBsc--Rz8LA-1
+X-Mimecast-MFC-AGG-ID: o_vCKiBCOTOiBsc--Rz8LA_1752819534
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3FD49195FD2B;
+	Fri, 18 Jul 2025 06:18:53 +0000 (UTC)
+Received: from server.redhat.com (unknown [10.72.112.34])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 637F318002AF;
+	Fri, 18 Jul 2025 06:18:42 +0000 (UTC)
+From: Cindy Lu <lulu@redhat.com>
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Kees Cook <kees@kernel.org>,
+	Jason Wang <jasowang@redhat.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Guillaume Nault <gnault@redhat.com>,
+	Joe Damato <jdamato@fastly.com>,
+	Ahmed Zaki <ahmed.zaki@intel.com>,
+	linux-hyperv@vger.kernel.org (open list:Hyper-V/Azure CORE AND DRIVERS),
+	netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+	linux-kernel@vger.kernel.org (open list),
+	lulu@redhat.com
+Subject: [PATCH RESEND] netvsc: transfer lower device max tso size
+Date: Fri, 18 Jul 2025 14:17:55 +0800
+Message-ID: <20250718061812.238412-1-lulu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -110,228 +90,92 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-From: Michael Kelley <mhklinux@outlook.com>
+From: Jason Wang <jasowang@redhat.com>
 
-All open coded uses of hyperv_pcpu_input_arg and hyperv_pcpu_ouput_arg
-have been replaced by hv_setup_*() functions. So combine
-hyperv_pcpu_input_arg and hyperv_pcpu_output_arg in a single
-hyperv_pcpu_arg. Remove logic for managing a separate output arg. Fixup
-comment references to the old variable names.
+When netvsc is accelerated by the lower device, we can advertise the
+lower device max tso size in order to get better performance.
 
-Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+One example is that when 802.3ad encap is enabled by netvsc, it has a
+lower max tso size than 64K. This will lead to software segmentation
+of forwarding GSO packet (e.g the one from VM/tap).
+
+This patch help to recover the performance.
+
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+Tested-by: Cindy Lu <lulu@redhat.com>
 ---
- arch/x86/hyperv/hv_init.c      |  6 ++--
- drivers/hv/hv.c                |  2 +-
- drivers/hv/hv_common.c         | 55 ++++++++++------------------------
- drivers/hv/hyperv_vmbus.h      |  2 +-
- include/asm-generic/mshyperv.h |  6 +---
- 5 files changed, 22 insertions(+), 49 deletions(-)
+ drivers/net/hyperv/netvsc_drv.c |  2 +-
+ include/linux/netdevice.h       |  4 ++++
+ net/core/dev.c                  | 18 ++++++++++++++++++
+ 3 files changed, 23 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index b7a2877c2a92..2979d15223cf 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -453,16 +453,16 @@ void __init hyperv_init(void)
- 	 * A TDX VM with no paravisor only uses TDX GHCI rather than hv_hypercall_pg:
- 	 * when the hypercall input is a page, such a VM must pass a decrypted
- 	 * page to Hyper-V, e.g. hv_post_message() uses the per-CPU page
--	 * hyperv_pcpu_input_arg, which is decrypted if no paravisor is present.
-+	 * hyperv_pcpu_arg, which is decrypted if no paravisor is present.
- 	 *
- 	 * A TDX VM with the paravisor uses hv_hypercall_pg for most hypercalls,
- 	 * which are handled by the paravisor and the VM must use an encrypted
--	 * input page: in such a VM, the hyperv_pcpu_input_arg is encrypted and
-+	 * input page: in such a VM, the hyperv_pcpu_arg is encrypted and
- 	 * used in the hypercalls, e.g. see hv_mark_gpa_visibility() and
- 	 * hv_arch_irq_unmask(). Such a VM uses TDX GHCI for two hypercalls:
- 	 * 1. HVCALL_SIGNAL_EVENT: see vmbus_set_event() and _hv_do_fast_hypercall8().
- 	 * 2. HVCALL_POST_MESSAGE: the input page must be a decrypted page, i.e.
--	 * hv_post_message() in such a VM can't use the encrypted hyperv_pcpu_input_arg;
-+	 * hv_post_message() in such a VM can't use the encrypted hyperv_pcpu_arg;
- 	 * instead, hv_post_message() uses the post_msg_page, which is decrypted
- 	 * in such a VM and is only used in such a VM.
- 	 */
-diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index ad063f535f95..3b5dfdecdfe7 100644
---- a/drivers/hv/hv.c
-+++ b/drivers/hv/hv.c
-@@ -60,7 +60,7 @@ int hv_post_message(union hv_connection_id connection_id,
- 	/*
- 	 * A TDX VM with the paravisor must use the decrypted post_msg_page: see
- 	 * the comment in struct hv_per_cpu_context. A SNP VM with the paravisor
--	 * can use the encrypted hyperv_pcpu_input_arg because it copies the
-+	 * can use the encrypted hyperv_pcpu_arg because it copies the
- 	 * input into the GHCB page, which has been decrypted by the paravisor.
- 	 */
- 	if (hv_isolation_type_tdx() && ms_hyperv.paravisor_present)
-diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-index ae56397af1ed..cbe4a954ad46 100644
---- a/drivers/hv/hv_common.c
-+++ b/drivers/hv/hv_common.c
-@@ -58,11 +58,8 @@ EXPORT_SYMBOL_GPL(hv_vp_index);
- u32 hv_max_vp_index;
- EXPORT_SYMBOL_GPL(hv_max_vp_index);
- 
--void * __percpu *hyperv_pcpu_input_arg;
--EXPORT_SYMBOL_GPL(hyperv_pcpu_input_arg);
--
--void * __percpu *hyperv_pcpu_output_arg;
--EXPORT_SYMBOL_GPL(hyperv_pcpu_output_arg);
-+void * __percpu *hyperv_pcpu_arg;
-+EXPORT_SYMBOL_GPL(hyperv_pcpu_arg);
- 
- static void hv_kmsg_dump_unregister(void);
- 
-@@ -95,11 +92,8 @@ void __init hv_common_free(void)
- 	kfree(hv_vp_index);
- 	hv_vp_index = NULL;
- 
--	free_percpu(hyperv_pcpu_output_arg);
--	hyperv_pcpu_output_arg = NULL;
--
--	free_percpu(hyperv_pcpu_input_arg);
--	hyperv_pcpu_input_arg = NULL;
-+	free_percpu(hyperv_pcpu_arg);
-+	hyperv_pcpu_arg = NULL;
- 
- 	free_percpu(hv_synic_eventring_tail);
- 	hv_synic_eventring_tail = NULL;
-@@ -255,11 +249,6 @@ static void hv_kmsg_dump_register(void)
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index c41a025c66f0..7af4aa4f4abe 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -2440,7 +2440,7 @@ static int netvsc_vf_changed(struct net_device *vf_netdev, unsigned long event)
+ 		 * switched over to the VF
+ 		 */
+ 		if (vf_is_up)
+-			netif_set_tso_max_size(ndev, vf_netdev->tso_max_size);
++			netif_stacked_transfer_tso_max_size(vf_netdev, ndev);
+ 		else
+ 			netif_set_tso_max_size(ndev, netvsc_dev->netvsc_gso_max_size);
  	}
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index adb14db25798..c695a3ffecd8 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -5275,6 +5275,9 @@ void netdev_change_features(struct net_device *dev);
+ void netif_stacked_transfer_operstate(const struct net_device *rootdev,
+ 					struct net_device *dev);
+ 
++void netif_stacked_transfer_tso_max_size(const struct net_device *rootdev,
++					 struct net_device *dev);
++
+ netdev_features_t passthru_features_check(struct sk_buff *skb,
+ 					  struct net_device *dev,
+ 					  netdev_features_t features);
+@@ -5326,6 +5329,7 @@ static inline bool netif_needs_gso(struct sk_buff *skb,
  }
  
--static inline bool hv_output_page_exists(void)
--{
--	return hv_root_partition() || IS_ENABLED(CONFIG_HYPERV_VTL_MODE);
--}
--
- void __init hv_get_partition_id(void)
- {
- 	struct hv_output_get_partition_id *output;
-@@ -365,14 +354,8 @@ int __init hv_common_init(void)
- 	 * (per-CPU) hypercall input page and thus this failure is
- 	 * fatal on Hyper-V.
- 	 */
--	hyperv_pcpu_input_arg = alloc_percpu(void  *);
--	BUG_ON(!hyperv_pcpu_input_arg);
--
--	/* Allocate the per-CPU state for output arg for root */
--	if (hv_output_page_exists()) {
--		hyperv_pcpu_output_arg = alloc_percpu(void *);
--		BUG_ON(!hyperv_pcpu_output_arg);
--	}
-+	hyperv_pcpu_arg = alloc_percpu(void  *);
-+	BUG_ON(!hyperv_pcpu_arg);
+ void netif_set_tso_max_size(struct net_device *dev, unsigned int size);
++
+ void netif_set_tso_max_segs(struct net_device *dev, unsigned int segs);
+ void netif_inherit_tso_max(struct net_device *to,
+ 			   const struct net_device *from);
+diff --git a/net/core/dev.c b/net/core/dev.c
+index be97c440ecd5..3bec4284adff 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -3306,6 +3306,24 @@ void netif_set_tso_max_size(struct net_device *dev, unsigned int size)
+ }
+ EXPORT_SYMBOL(netif_set_tso_max_size);
  
- 	if (hv_root_partition()) {
- 		hv_synic_eventring_tail = alloc_percpu(u8 *);
-@@ -466,33 +449,28 @@ void __init ms_hyperv_late_init(void)
- 
- int hv_common_cpu_init(unsigned int cpu)
- {
--	void **inputarg, **outputarg;
-+	void **inputarg;
- 	u8 **synic_eventring_tail;
- 	u64 msr_vp_index;
- 	gfp_t flags;
--	const int pgcount = hv_output_page_exists() ? 2 : 1;
-+	const int pgcount = HV_HVCALL_ARG_PAGES;
- 	void *mem;
- 	int ret = 0;
- 
- 	/* hv_cpu_init() can be called with IRQs disabled from hv_resume() */
- 	flags = irqs_disabled() ? GFP_ATOMIC : GFP_KERNEL;
- 
--	inputarg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
-+	inputarg = (void **)this_cpu_ptr(hyperv_pcpu_arg);
- 
- 	/*
--	 * The per-cpu memory is already allocated if this CPU was previously
--	 * online and then taken offline
-+	 * hyperv_pcpu_arg memory is already allocated if this CPU was
-+	 * previously online and then taken offline
- 	 */
- 	if (!*inputarg) {
- 		mem = kmalloc(pgcount * HV_HYP_PAGE_SIZE, flags);
- 		if (!mem)
- 			return -ENOMEM;
- 
--		if (hv_output_page_exists()) {
--			outputarg = (void **)this_cpu_ptr(hyperv_pcpu_output_arg);
--			*outputarg = (char *)mem + HV_HYP_PAGE_SIZE;
--		}
--
- 		if (!ms_hyperv.paravisor_present &&
- 		    (hv_isolation_type_snp() || hv_isolation_type_tdx())) {
- 			ret = set_memory_decrypted((unsigned long)mem, pgcount);
-@@ -506,13 +484,13 @@ int hv_common_cpu_init(unsigned int cpu)
- 
- 		/*
- 		 * In a fully enlightened TDX/SNP VM with more than 64 VPs, if
--		 * hyperv_pcpu_input_arg is not NULL, set_memory_decrypted() ->
-+		 * hyperv_pcpu_arg is not NULL, set_memory_decrypted() ->
- 		 * ... -> cpa_flush()-> ... -> __send_ipi_mask_ex() tries to
--		 * use hyperv_pcpu_input_arg as the hypercall input page, which
-+		 * use hyperv_pcpu_arg as the hypercall input page, which
- 		 * must be a decrypted page in such a VM, but the page is still
- 		 * encrypted before set_memory_decrypted() returns. Fix this by
- 		 * setting *inputarg after the above set_memory_decrypted(): if
--		 * hyperv_pcpu_input_arg is NULL, __send_ipi_mask_ex() returns
-+		 * hyperv_pcpu_arg is NULL, __send_ipi_mask_ex() returns
- 		 * HV_STATUS_INVALID_PARAMETER immediately, and the function
- 		 * hv_send_ipi_mask() falls back to orig_apic.send_IPI_mask(),
- 		 * which may be slightly slower than the hypercall, but still
-@@ -544,9 +522,8 @@ int hv_common_cpu_die(unsigned int cpu)
- {
- 	u8 **synic_eventring_tail;
- 	/*
--	 * The hyperv_pcpu_input_arg and hyperv_pcpu_output_arg memory
--	 * is not freed when the CPU goes offline as the hyperv_pcpu_input_arg
--	 * may be used by the Hyper-V vPCI driver in reassigning interrupts
-+	 * The hyperv_pcpu_arg memory is not freed when the CPU goes offline as
-+	 * it may be used by the Hyper-V vPCI driver in reassigning interrupts
- 	 * as part of the offlining process.  The interrupt reassignment
- 	 * happens *after* the CPUHP_AP_HYPERV_ONLINE state has run and
- 	 * called this function.
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index 0b450e53161e..bef8a57100ec 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -126,7 +126,7 @@ struct hv_per_cpu_context {
- 	/*
- 	 * The page is only used in hv_post_message() for a TDX VM (with the
- 	 * paravisor) to post a messages to Hyper-V: when such a VM calls
--	 * HVCALL_POST_MESSAGE, it can't use the hyperv_pcpu_input_arg (which
-+	 * HVCALL_POST_MESSAGE, it can't use the hyperv_pcpu_arg (which
- 	 * is encrypted in such a VM) as the hypercall input page, because
- 	 * the input page for HVCALL_POST_MESSAGE must be decrypted in such a
- 	 * VM, so post_msg_page (which is decrypted in hv_synic_alloc()) is
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index 040c4650f411..3ce5b94ad41e 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -67,8 +67,7 @@ extern bool hv_nested;
- extern u64 hv_current_partition_id;
- extern enum hv_partition_type hv_curr_partition_type;
- 
--extern void * __percpu *hyperv_pcpu_input_arg;
--extern void * __percpu *hyperv_pcpu_output_arg;
-+extern void * __percpu *hyperv_pcpu_arg;
- 
- u64 hv_do_hypercall(u64 control, void *inputaddr, void *outputaddr);
- u64 hv_do_fast_hypercall8(u16 control, u64 input8);
-@@ -155,9 +154,6 @@ static inline u64 hv_do_rep_hypercall(u16 code, u16 rep_count, u16 varhead_size,
-  * Hypercall input and output argument setup
-  */
- 
--/* Temporary mapping to be removed at the end of the patch series */
--#define hyperv_pcpu_arg hyperv_pcpu_input_arg
--
- /*
-  * Allocate one page that is shared between input and output args, which is
-  * sufficient for all current hypercalls. If a future hypercall requires
++/**
++ *	netif_stacked_transfer_tso_max_size - transfer tso max size
++ *	@rootdev: the root or lower level device to transfer tso max size from
++ *	@dev: the device to transfer operstate to
++ *
++ *	Transfer tso max size from root to device. This is normally
++ *	called when a stacking relationship exists between the root
++ *	device and the device(a leaf device).
++ */
++void netif_stacked_transfer_tso_max_size(const struct net_device *rootdev,
++					 struct net_device *dev)
++{
++	dev->tso_max_size = rootdev->tso_max_size;
++	netif_set_gso_max_size(dev, READ_ONCE(rootdev->gso_max_size));
++	netif_set_gso_ipv4_max_size(dev, READ_ONCE(rootdev->gso_ipv4_max_size));
++}
++EXPORT_SYMBOL(netif_stacked_transfer_tso_max_size);
++
+ /**
+  * netif_set_tso_max_segs() - set the max number of segs supported for TSO
+  * @dev:	netdev to update
 -- 
-2.25.1
+2.45.0
 
 
