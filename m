@@ -1,363 +1,215 @@
-Return-Path: <linux-hyperv+bounces-6295-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6296-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B89FB0A6D4
-	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Jul 2025 17:07:22 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 177E3B0A87A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Jul 2025 18:33:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 234C23AB717
-	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Jul 2025 15:06:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8CAA27B1802
+	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Jul 2025 16:31:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16E7121CC55;
-	Fri, 18 Jul 2025 15:07:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E1A82E62B9;
+	Fri, 18 Jul 2025 16:33:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="g/ezC0Ep"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NN66k+ty"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11olkn2087.outbound.protection.outlook.com [40.92.20.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159DD18024;
-	Fri, 18 Jul 2025 15:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.20.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752851239; cv=fail; b=D+NtKZbxfSYtNpvahldPtHLl/NROC0GFHXfbl0+4hqO1EFvMduB7kFqDuBTtcdrOBEJvQQlqcK6KlzHto6cBVfXQHFltTSCLTagp/8s2xVyBbTRxXiUfIHtP1RU2/VwHhrM/ta5VJIWoZvkVyNRYdRhp72WlaFRIsM1yL5GNIrU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752851239; c=relaxed/simple;
-	bh=uJaiBQz4+RFaC3iRAVVtN1aK9otCbVANr6mkpnKildc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=UuqW+yQeYEvH2mdaOay2hmmBJAd+ZaLbpL8V76Mak1zNKXATORdwACC1IidsPpkrC5yeCbJVvo6i14/OEnT0oJOKqtEW6GhE5yaQOjr3CMeL7GeAsvQrT/oOuFdwE6YYZP6M1Ra72Wl/FLQ9wIc7sLGNNDkVO9UUxMq4mGjjXl8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=g/ezC0Ep; arc=fail smtp.client-ip=40.92.20.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dt7RR4sTJ855wQxUQKdNp0xkSNmGTTs3d33OllATDwGwxG8OzULii2xGx0qRPx4J9Hasf7C5Mvu1pFLBywSlUGwnfaFhHLl7LgYiVeQvTb9cfF/IFKXkGDoDIboqQFH/l5d0n69ypFW77nokk7RSMvThTU6f0FehifujBOwDSfCiGNWei1Biag4etZPDk2E8zEodI8MX1iwaLT7Qn3yYnJhSFR8utzav0Tdb+eYe6Vi3ya7XzAULX/gzSIweisJ2gvo/yPWo+Hc5ENu0q22Z3Rr2MPGkxEGBk9BSZlrQzowyBRpdPvr4Fg5mjC4cvU0eM34yqYVt5s7E8Jh7UYrSqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iTZqbPLp9OUr9p4JqpjJj/z+L54e0sDylhuO1lgdok0=;
- b=fyh4iEpgWYB8BeMfgWSom1Vw8pXVZFtkHLIeLcmoKkSkPEzN3Yp4NpOlf0LheLTw35SA80ZlLfSStPd1mYs8q2uTxCUIP89xVyGRxZXGWREfTwTgFHThTnROpj2Exw+rd1NEBFhNeu9qx8Qgu0xDVS7lhgC/vyvKRvEQZkSidHO4qrt9QAIXkmSbUb08sQwl4x1qKBIJIQN1PJJhnA5AeSI5F9KbRJar+CD6mD74YK4imOgbZFBxRdXxDlCRwsIKyMWU/cIdAVJ/K/1ucYWhWwR/BdhZh4gwuKdZK8cLMuxpeummDAB8uVUPb8+DVmGdmw/pKrHiv2aXX1UjhvPfgQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iTZqbPLp9OUr9p4JqpjJj/z+L54e0sDylhuO1lgdok0=;
- b=g/ezC0Ep34gGIiddOC6vmSOBIxupQ2QkQLMPrWqhFVXBovqhqIyNEHhLY9q8ozE+pzfsHJI1yxgNapdCxHqoG3wRZ91fXwIPW0TBwStgcFaZYDRjzLOI/W9xVBN3CKO2naC9Xof/1RjhVtf1vmgvl2aKSUZsGK6+B9lH8vlDhYD9PLlyJkve3rKi/cjm5/wI191w4XqQlbrtDoPmSEMw1yeYuXJm9ooxDZhKFSPGfTz5Qmk+PaKzecw1hkMLpPK06f9QgxLm7RuR9sQIdQwsunX4UA7YUiEpX/l/Ikorb94+UH1ZD0O1f4TZxJLL3CgMHiqqtuxg4Ass54yko6CEww==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SA6PR02MB10696.namprd02.prod.outlook.com (2603:10b6:806:440::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8922.39; Fri, 18 Jul
- 2025 15:07:14 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8901.018; Fri, 18 Jul 2025
- 15:07:14 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Naman Jain <namjain@linux.microsoft.com>, "K . Y . Srinivasan"
-	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
-	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
-CC: Roman Kisel <romank@linux.microsoft.com>, Anirudh Rayabharam
-	<anrayabh@linux.microsoft.com>, Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, Nuno Das Neves
-	<nunodasneves@linux.microsoft.com>, ALOK TIWARI <alok.a.tiwari@oracle.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH v5 2/2] Drivers: hv: Introduce mshv_vtl driver
-Thread-Topic: [PATCH v5 2/2] Drivers: hv: Introduce mshv_vtl driver
-Thread-Index: AQHb2qJWl9MJjouTb0Sl2AaDU/QSG7QN8ajQgCmUHYCAAJ0FQA==
-Date: Fri, 18 Jul 2025 15:07:14 +0000
-Message-ID:
- <SN6PR02MB415781ABC3D523B719BDE280D450A@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250611072704.83199-1-namjain@linux.microsoft.com>
- <20250611072704.83199-3-namjain@linux.microsoft.com>
- <SN6PR02MB4157F9F1F8493C74C9FCC6E4D449A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <42bc5294-219f-4c26-ad05-740f6190aff3@linux.microsoft.com>
-In-Reply-To: <42bc5294-219f-4c26-ad05-740f6190aff3@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA6PR02MB10696:EE_
-x-ms-office365-filtering-correlation-id: 13252607-43b5-4089-5335-08ddc60cc76b
-x-microsoft-antispam:
- BCL:0;ARA:14566002|41001999006|461199028|15080799012|40105399003|3412199025|440099028|51005399003|102099032;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?81uEz8ceRsiRrR36g8dwl0m0CDNLJrrg8/ueyqcE3GTeBXkKzwwGk5LczIeN?=
- =?us-ascii?Q?Rm4nz2FqnkU8v8gul5v1crN99cOLB0WvHBJ49gudJH2C6NgdaxwpkoAK+avX?=
- =?us-ascii?Q?sG02/oJtz+t2vgh258aBkjr02xc7g6IyVV2Xpw0A/SiyuuzKxzuMuv/x0w4m?=
- =?us-ascii?Q?N8JV5IR41tK73FylX4VF5ZX89fqt39JNEhON0Q5LaLEzj3T1MCgr/xpvs3S3?=
- =?us-ascii?Q?hB6U7NT9ckxomtIn2QEsJpDvD6gaEw0eV2x0JVowbP+TMhMxndgFtNUdkt/b?=
- =?us-ascii?Q?x6K1fj+QJUdSUG+AWXUalPA0a3vvXYMG6jq2FI5EeRq351YSoBQjfgeC76Ie?=
- =?us-ascii?Q?BFySjNWSlfkGJkwuIR+CSap8hcxM3UwuNrguaUk/zIgTt1ZWj1gnQqnvhN8l?=
- =?us-ascii?Q?EYsLQBaS05Zltol7NBqjYD2OCHORCaS9xa0JENxINFbpW5l29zUxiQwDXE0l?=
- =?us-ascii?Q?3tJT1+JLJQX87YMiu8IbJKiJeby0QDAjxiG66yDFqKXoXVml1nwm1RVKTtBC?=
- =?us-ascii?Q?kRrjvGgCFFtOXBSBsusYYXoOv3PIu/VdfjmtkAkTrwUjNIc4XrKQdRd57D5Y?=
- =?us-ascii?Q?4XLnKzWTP35fn/GaxsQY87V8q0EgGPeN5A+kKjM3ycm+AV+pFdLOb10chmMC?=
- =?us-ascii?Q?P1O6QuCbfKcdMmNAz+jnZWjNRt/FisAGtEMZZW3PiyQoCmojKus5DTFkicXI?=
- =?us-ascii?Q?ulIEww+1vo0NSlRD8g8DKj3BcknEnPYmvOOi3XHNWgjEmDPbq228hnvNmiAO?=
- =?us-ascii?Q?v1XKessKENJcq8X6OT6fgtYE163Pzc1g+FNdQ2PFjGTjC2/Meacq3mrpWk1d?=
- =?us-ascii?Q?HqYXfU5fdYJkww086gS6ai0gYRW55mvyZhwkssmzqP76plkJuDwjNeNayYO2?=
- =?us-ascii?Q?PjH3N54rPjkX+ijgXdymCFnx/Grjt6NEnjGzcoACnyykCGlFdDBDvRvdAn32?=
- =?us-ascii?Q?P2TUEYOm/SS2p8iFTi7X9vleFNBt1i3V1XSjvotAhgHAeeFJoom+J2TRlwaY?=
- =?us-ascii?Q?YSG7r/ddGUt73Ket2VuO4jvZJYTpPfDPQInEpJFCdvePrO7RoLcS09DMPZ0l?=
- =?us-ascii?Q?06lhf0W3lsW0tf9L8+jcNyxl5pArRw=3D=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?wltv6i1oVkTFQYTeSrd7TCGwkg3L4mfRyyDC9pUT269NkJoLiUT2u0RsCq84?=
- =?us-ascii?Q?ZtsIsRPiv6wGCtFJd01i/VgEzwr1YATdDmwBt6GGMKxU46LmIB3BINBBgzQA?=
- =?us-ascii?Q?GuQz4pliOs1JzZ6X67bbBIxDNHWCqMn+UbYg1dDKMnwq0dzTlG4u1/mQgMwN?=
- =?us-ascii?Q?yf4qVtCruT0itGbW/sOEShVB/bTvELhAkbaY8sMtW09ECcP6ceBjsdivSQUn?=
- =?us-ascii?Q?C7qjcJNClY5aTdA2g8hXVu8Kd8y5c6wBov2ZIo4GH7anidSoKUCq1RYJwTuI?=
- =?us-ascii?Q?l5YdVvTkSe+gfNnCoJ2oCs9pVcIzZ+Oa3PBnhj/sQyBcv8AkWPc+RnzCCFUR?=
- =?us-ascii?Q?XEUlQqLFmg/GjGnqZt+923FwGQgO6f2muTtL8UQ/DdugIDONgNYIJ4PghVmV?=
- =?us-ascii?Q?fvi20W5peO3UoOn/DCX85evUGKOsxD8kvWC2TDI9rocH/ZK22Q6x8kd2mtel?=
- =?us-ascii?Q?ObeGlsRSEhwVyHqSgQDIH8KPiIGFKnc6t4A+aw41P9gFU/e+X4K7hLPlNHxI?=
- =?us-ascii?Q?ST7fNGkwtu2UkFG/pbnQdUaSbQxpvEmSVEJ9Xtr1dCv7BEGzrcmvUYAF/OAL?=
- =?us-ascii?Q?Jjb04pmQ3/exkYvzOPDoCkbliamHjxF4smRJZnHP8kb7kYG6g+jkmi/plo5n?=
- =?us-ascii?Q?rIqJ6qTTCfNSCP/DROZJVhJaj8Z6ZmtWplpA8WSTYhmZO/LjGrcTXn+yOaVZ?=
- =?us-ascii?Q?Idc0r39QkbcrV8YsGPN4o9KSxUcLJa24lCgxboGaXkDyNzmCE41y/BZzHTsS?=
- =?us-ascii?Q?c56xflp/HIpJsAtikzNYq7zVy8TXHxWZxAWbpg03iHeLXbIH0rhBsQRXC5at?=
- =?us-ascii?Q?gVeTFZSiSXU1XnByqO+P5yAomI8z+MBirIMV7TTBgikcxsgZtqTTfW7yWXyX?=
- =?us-ascii?Q?PzePN5OjRUyYTDh3FNRHsbtwG1av+Ah00UjoTLxhtzhLyUlFSqaZCswueZOj?=
- =?us-ascii?Q?PFOcYp8093S5imNtmyL2l/QPHH1CrrAzv7pOqFIZmDrD5OcndPRXIZgHQlfM?=
- =?us-ascii?Q?s4iFpm+ZUfZbMTbI1D08MVO1MZH+ih6AhIX+oo8g1mp5n/6ulpyxWh3qsD0Q?=
- =?us-ascii?Q?ffhZk8XTvWnEKpX1nl/VnT+qkG+t/tv1I0Ff0sDHk130SWXmoTD+v5EsnQlB?=
- =?us-ascii?Q?sVhBzyA6BY1ViU2x0YI5dydUIbpsYtVPzGhXp92tNDVXdrj55R8IrzpYZ3Zz?=
- =?us-ascii?Q?l7xpXwb7V1moj/LfGktQBnfoAZsnaZy+O2GJqRTa0nkHFkrFMk+gp9rWV4s?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 978481B394F;
+	Fri, 18 Jul 2025 16:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752856397; cv=none; b=HvtZZ5kSDGELKbT3r9Rnj3i2DqjburF5j1JtLyOAUHZkUZh9wLgB88gyfq5kh585iHDXP/+AStwlQyEM0/7hQ/9X+SDTw0mu3InJcqXK20O6U0zXvabRresPGdfmxpdPlSIz7wC50dd8al6siRQ8Sqt9Q7rz6nyZsz7MMSTd7mU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752856397; c=relaxed/simple;
+	bh=ZyiRT+V1xGV01F5avzlPphqc5scHqC2mrWtuVzXIVlo=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=VdVkQp/13n3AUQwmrCWj5i/qeDbOqUGH1iNWvc2IzwiQ9uqX9Dn/ka57QMG942v1LPzUwB+fTxgpYUs6UrnXac6CZrxXd3DRYaazzLUyYnnHQaXe27Q1Hb2H2Tci0mK8OVD3QBTjmY9ldvgK2XCpgHbPV4AWAYeCYF1iDsec3fE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=NN66k+ty; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.64.208.217] (unknown [52.148.140.42])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 86249211FEBB;
+	Fri, 18 Jul 2025 09:33:13 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 86249211FEBB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1752856394;
+	bh=TiEF0LaKowK7uu0xI1NxJySmU208WrTIU/Xx6Uf3/cg=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=NN66k+tyqDjV/QBasSawR7rgDngqoNm2LIjbxw0Wx1pKhXMPpkhYp7Y9+vmdDy5IV
+	 77MfxQr558cfCG/GCoxaWHDNIcDqVgc19R2PvBddxfl/Y0KIPPQe5LE5BGI+7xlKnh
+	 DLp9qgiYr1TZHGPhKM8wf3rzdlWQX0linlkffHwA=
+Message-ID: <c5d4d351-a7ff-4762-8bb3-61554d4f9731@linux.microsoft.com>
+Date: Fri, 18 Jul 2025 09:33:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 13252607-43b5-4089-5335-08ddc60cc76b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2025 15:07:14.3823
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR02MB10696
+User-Agent: Mozilla Thunderbird
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, lpieralisi@kernel.org,
+ kw@linux.com, mani@kernel.org, robh@kernel.org, bhelgaas@google.com,
+ arnd@arndb.de, eahariha@linux.microsoft.com, x86@kernel.org,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH v4 0/7] hyperv: Introduce new way to manage hypercall args
+To: mhklinux@outlook.com
+References: <20250718045545.517620-1-mhklinux@outlook.com>
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <20250718045545.517620-1-mhklinux@outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Naman Jain <namjain@linux.microsoft.com> Sent: Thursday, July 17, 202=
-5 9:36 PM
->=20
-> On 7/9/2025 10:49 PM, Michael Kelley wrote:
-> > From: Naman Jain <namjain@linux.microsoft.com> Sent: Wednesday, June 11=
-, 2025 12:27 AM
+On 7/17/2025 9:55 PM, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
+> 
+> This patch set introduces a new way to manage the use of the per-vCPU
+> memory that is usually the input and output arguments to Hyper-V
+> hypercalls. Current code allocates the "hyperv_pcpu_input_arg", and in
+> some configurations, the "hyperv_pcpu_output_arg". Each is a 4 KiB
+> page of memory allocated per-vCPU. A hypercall call site disables
+> interrupts, then uses this memory to set up the input parameters for
+> the hypercall, read the output results after hypercall execution, and
+> re-enable interrupts. The open coding of these steps has led to
+> inconsistencies, and in some cases, violation of the generic
+> requirements for the hypercall input and output as described in the
+> Hyper-V Top Level Functional Spec (TLFS)[1]. This patch set introduces
+> a new family of inline functions to replace the open coding. The new
+> functions encapsulate key aspects of the use of per-vCPU memory for
+> hypercall input and output, and ensure that the TLFS requirements are
+> met (max size of 1 page each for input and output, no overlap of input
+> and output, aligned to 8 bytes, etc.).
+> 
+> With this change, hypercall call sites no longer directly access
+> "hyperv_pcpu_input_arg" and "hyperv_pcpu_output_arg". Instead, one of
+> a family of new functions provides the per-vCPU memory that a hypercall
+> call site uses to set up hypercall input and output areas.
+> Conceptually, there is no longer a difference between the "per-vCPU
+> input page" and "per-vCPU output page". Only a single per-vCPU page is
+> allocated, and it is used to provide both hypercall input and output.
+> All current hypercalls can fit their input and output within that single
+> page, though the new code allows easy changing to two pages should a
+> future hypercall require a full page for each of the input and output.
+> 
+> The new functions always zero the fixed-size portion of the hypercall
+> input area (but not any array portion -- see below) so that
+> uninitialized memory isn't inadvertently passed to the hypercall.
+> Current open-coded hypercall call sites are inconsistent on this point,
+> and use of the new functions addresses that inconsistency. The output
+> area is not zero'ed by the new code as it is Hyper-V's responsibility
+> to provide legal output.
+> 
+> When the input or output (or both) contain an array, the new code
+> calculates and returns how many array entries fit within the per-vCPU
+> memory page, which is effectively the "batch size" for the hypercall
+> processing multiple entries. This batch size can then be used in the
+> hypercall control word to specify the repetition count. This
+> calculation of the batch size replaces current open coding of the
+> batch size, which is prone to errors. Note that the array portion of
+> the input area is *not* zero'ed. The arrays are almost always 64-bit
+> GPAs or something similar, and zero'ing that much memory seems
+> wasteful at runtime when it will all be overwritten. The hypercall
+> call site is responsible for ensuring that no part of the array is
+> left uninitialized (just as with current code).
+> 
+> The new family of functions is realized as a single inline function
+> that handles the most complex case, which is a hypercall with input
+> and output, both of which contain arrays. Simpler cases are mapped to
+> this most complex case with #define wrappers that provide zero or NULL
+> for some arguments. Several of the arguments to this new function
+> must be compile-time constants generated by "sizeof()" expressions.
+> As such, most of the code in the new function is evaluated by the
+> compiler, with the result that the runtime code paths are no longer
+> than with the current open coding. An exception is the new code
+> generated to zero the fixed-size portion of the input area in cases
+> where it was not previously done.
+> 
+> Use of the new function typically (but not always) saves a few lines
+> of code at each hypercall call site. This is traded off against the
+> lines of code added for the new functions. With code currently
+> upstream, the net is an add of about 20 lines of code and comments.
+> 
+> A couple hypercall call sites have requirements that are not 100%
+> handled by the new function. These still require some manual open-
+> coded adjustment or open-coded batch size calculations -- see the
+> individual patches in this series. Suggestions on how to do better
+> are welcome.
+> 
+> The patches in the series do the following:
+> 
+> Patch 1: Introduce the new family of functions for assigning hypercall
+>          input and output arguments.
+> 
+> Patch 2 to 6: Change existing hypercall call sites to use one of the new
+>          functions. In some cases, tweaks to the hypercall argument data
+>          structures are necessary, but these tweaks are making the data
+>          structures more consistent with the overall pattern. These
+>          5 patches are independent of each other, and can go in any
+>          order. The breakup into 5 patches is for ease of review.
+> 
+> Patch 7: Update the name of the variable used to hold the per-vCPU memory
+>          used for hypercall arguments. Remove code for managing the
+>          per-vCPU output page.
+> 
+> The new code compiles and runs successfully on x86 and arm64. However,
+> basic smoke tests cover only a limited number of hypercall call sites
+> that have been modified. I don't have the hardware or Hyper-V
+> configurations needed to test running in the Hyper-V root partition
+> or running in a VTL other than VTL 0. The related hypercall call sites
+> still need to be tested to make sure I didn't break anything. Hopefully
+> someone with the necessary configurations and Hyper-V versions can
+> help with that testing.
+> 
+> For gcc 9.4.0, I've looked at the generated code for a couple of
+> hypercall call sites on both x86 and arm64 to ensure that it boils
+> down to the equivalent of the current open coding. I have not looked
+> at the generated code for later gcc versions or for Clang/LLVM, but
+> there's no reason to expect something worse as the code isn't doing
+> anything tricky.
+> 
+> This patch set is built against linux-next20250716.
+> 
+> [1] https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/tlfs
+> 
+> Michael Kelley (7):
+>   Drivers: hv: Introduce hv_setup_*() functions for hypercall arguments
+>   x86/hyperv: Use hv_setup_*() to set up hypercall arguments -- part 1
+>   x86/hyperv: Use hv_setup_*() to set up hypercall arguments -- part 2
+>   Drivers: hv: Use hv_setup_*() to set up hypercall arguments
+>   PCI: hv: Use hv_setup_*() to set up hypercall arguments
+>   Drivers: hv: Use hv_setup_*() to set up hypercall arguments for mshv
+>     code
+>   Drivers: hv: Replace hyperv_pcpu_input/output_arg with hyperv_pcpu_arg
+> 
+>  arch/x86/hyperv/hv_apic.c           |  10 +--
+>  arch/x86/hyperv/hv_init.c           |  12 ++-
+>  arch/x86/hyperv/hv_vtl.c            |   3 +-
+>  arch/x86/hyperv/irqdomain.c         |  17 ++--
+>  arch/x86/hyperv/ivm.c               |  18 ++---
+>  arch/x86/hyperv/mmu.c               |  19 ++---
+>  arch/x86/hyperv/nested.c            |  14 ++--
+>  drivers/hv/hv.c                     |   6 +-
+>  drivers/hv/hv_balloon.c             |   8 +-
+>  drivers/hv/hv_common.c              |  64 +++++----------
+>  drivers/hv/hv_proc.c                |  23 +++---
+>  drivers/hv/hyperv_vmbus.h           |   2 +-
+>  drivers/hv/mshv_common.c            |  31 +++----
+>  drivers/hv/mshv_root_hv_call.c      | 121 +++++++++++-----------------
+>  drivers/hv/mshv_root_main.c         |   5 +-
+>  drivers/pci/controller/pci-hyperv.c |  18 ++---
+>  include/asm-generic/mshyperv.h      | 106 +++++++++++++++++++++++-
+>  include/hyperv/hvgdk_mini.h         |   4 +-
+>  18 files changed, 251 insertions(+), 230 deletions(-)
+> 
 
-[snip]
+Thank you for spinning this version!
 
->=20
-> > Separately, "allow_bitmap" size is 64K bytes, or 512K bits. Is that the
-> > correct size?  From looking at mshv_vtl_hvcall_is_allowed(), I think th=
-is
-> > bitmap is indexed by the HV call code, which is a 16 bit value. So you
-> > only need 64K bits, and the size is too big by a factor of 8. In any ca=
-se,
-> > it seems like the size should not be expressed in terms of PAGE_SIZE.
->=20
-> There are HVcall codes which are of type u16. So max(HVcall code) =3D
-> 0xffff.
->=20
-> For every HVcall that needs to be allowed, we are saving HVcall code
-> info in a bitmap in below fashion:
-> if x =3D HVCall code and bitmap is an array of u64, of size
-> ((0xffff/64=3D1023) + 1)
->=20
-> bitmap[x / 64] =3D (u64)1 << (x%64);
->=20
-> Later on in mshv_vtl_hvcall_is_allowed(), we calculate the array index
-> by dividing it by 64, and then see if call_code/64 bit is set.
+For the series,
 
-I didn't add comments in mshv_vtl_hvcall_is_allowed(), but that code
-can be simplified by recognizing that the Linux kernel bitmap utilities
-can operate on bitmaps that are much larger than just 64 bits. Let's
-assume that the allow_bitmap field in struct mshv_vtl_hvcall_fds has
-64K bits, regardless of whether it is declared as an array of u64,=20
-an array of u16, or an array of u8. Then mshv_vtl_hvcall_is_allowed()
-can be implemented as a single line:
-
-	return test_bit(call_code, fd->allow_bitmap);
-
-There's no need to figure out which array element contains the bit,
-or to construct a mask to select that particular bit in the array element.
-And since call_code is a u16, test_bit won't access outside the allocated
-64K bits.
-
->=20
-> Coming to size of allow_bitmap[], it is independent of PAGE_SIZE, and
-> can be safely initialized to 1024 (reducing by a factor of 8).
-> bitmap_size's maximum value is going to be 1024 in current
-> implementation, picking u64 was not mandatory, u16 will also work. Also,
-> item_index is also u16, so I should make bitmap_size as u16.
-
-The key question for me is whether bitmap_size describes the number
-of bits in allow_bitmap, or whether it describes the number of array
-elements in the declared allow_bitmap array. It's more typical to
-describe a bitmap size as the number of bits. Then the value is
-independent of the array element size, as the array element size
-usually doesn't really matter anyway if using the Linux kernel's
-bitmap utilities. The array element size only matters in allocating
-the correct amount of space is for whatever number of bits are
-needed in the bitmap.
-
-[snip]
-
-> >> +
-> >> +	event_flags =3D (union hv_synic_event_flags *)per_cpu->synic_event_p=
-age +
-> >> +			VTL2_VMBUS_SINT_INDEX;
-> >> +	for (i =3D 0; i < HV_EVENT_FLAGS_LONG_COUNT; i++) {
-> >> +		if (READ_ONCE(event_flags->flags[i])) {
-> >> +			word =3D xchg(&event_flags->flags[i], 0);
-> >> +			for_each_set_bit(j, &word, BITS_PER_LONG) {
-> >
-> > Is there a reason for the complexity in finding and resetting bits that=
- are
-> > set in the sync_event_page?  See the code in vmbus_chan_sched() that I
-> > think is doing the same thing, but with simpler code.
->=20
-> I am sorry, but I am not sure how this can be written similar to
-> vmbus_chan_sched(). We don't have eventfd signaling mechanism there.
-> Can you please share some more info/code snippet of what you were
-> suggesting?
-
-See below.
-
->=20
->=20
-> >
-> >> +				rcu_read_lock();
-> >> +				eventfd =3D READ_ONCE(flag_eventfds[i * BITS_PER_LONG + j]);
-> >> +				if (eventfd)
-> >> +					eventfd_signal(eventfd);
-> >> +				rcu_read_unlock();
-> >> +			}
-> >> +		}
-> >> +	}
-
-Here's what I would suggest. As with the hvcall allow_bitmap, this uses
-the Linux kernel bitmap utilities' ability to operate on large bitmaps, ins=
-tead
-of going through each ulong in the array, and then going through each bit
-in the ulong.
-
-event_flags =3D (union hv_synic_event_flags *)per_cpu->synic_event_page + V=
-TL2_VMBUS_SINT_INDEX;
-
-for_each_set_bit(i, event_flags->flags, HV_EVENT_FLAGS_COUNT) {
-	if (!sync_test_and_clear_bit(i, event_flags->flags))
-		continue;
-	rcu_read_lock();
-	eventfd =3D READ_ONCE(flag_eventfds[i]);
-	if (eventfd)
-		eventfd_signal(eventfd);
-	rcu_read_unlock();
-}
-
-I haven't even compile tested the above, but hopefully you get the
-idea and can fix any stupid mistakes. Note that HV_EVENT_FLAGS_COUNT
-is a bit count, not a count of ulong's. And with the above code, you don't
-need to add a definition of HV_EVENT_FLAGS_LONG_COUNT.
-
-[snip]
-
-> >> +	pgmap =3D kzalloc(sizeof(*pgmap), GFP_KERNEL);
-> >> +	if (!pgmap)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	pgmap->ranges[0].start =3D PFN_PHYS(vtl0_mem.start_pfn);
-> >> +	pgmap->ranges[0].end =3D PFN_PHYS(vtl0_mem.last_pfn) - 1;
-> >
-> > Perhaps this should be
-> >
-> > 	pgmap->ranges[0].end =3D PFN_PHYS(vtl0_mem.last_pfn + 1) - 1
-> >
-> > otherwise the last page won't be included in the range. Or is excluding=
- the
-> > last page intentional?
->=20
-> Excluding the last page is intentional. Hence there is a check for this
-> as well:
-> if (vtl0_mem.last_pfn <=3D vtl0_mem.start_pfn) {
->=20
-
-OK, this test requires that at least 2 PFNs be provided, because the
-last one will be excluded.
-
-I'd suggest adding a comment that the last page is intentionally
-excluded, and why it is excluded. Somebody in future looking at this
-code will appreciate the explanation. :-)
-
-[snip]
-
-> >
-> >> +
-> >> +	if (!cpu_online(input.cpu))
-> >> +		return -EINVAL;
-> >
-> > Having tested that the target CPU is online, does anything ensure that =
-the
-> > CPU stays online during the completion of this function? Usually the
-> > cpus_read_lock() needs to be held to ensure that an online CPU stays
-> > online for the duration of an operation.
->=20
-> Added cpus_read_lock() block around per_cpu_ptr operation. In general,
-> CPUs are never hotplugged in kernel from our Usecase POV. I have omitted
-> adding these locks at other places for now. Please let me know your
-> thoughts on this, in case you feel we need to have it.
->=20
-
-My understanding of VTL2 behavior is limited, so let me ask some clarifying
-questions. If a vCPU is running in VTL0, then presumably that vCPU is also
-running in VTL2. If that vCPU is then taken offline in VTL0, does it stay
-online in VTL2? And then if the vCPU is brought back online in VTL0,
-nothing changes in VTL2, correct?
-
-If that is the correct understanding, and vCPUs never go offline in VTL2,
-it would be more robust to enforce that. For example, in hv_vtl_setup_synic=
-()
-where cpuhp_setup_state() is called, the teardown argument is currently
-NULL. You could provide a teardown function that just returns an error.
-Then any attempts to take a vCPU offline in VTL2 would fail, and the vCPU
-would stay online. However, some additional logic might be needed to
-ensure that normal shutdown and the panic case work correctly -- I'm not
-sure what VTL2 needs to do for these scenarios.
-
-All that said, if you can be sure that vCPUs don't go offline in VTL2,
-I would be OK with not adding the cpus_read_lock(). Perhaps a comment
-would be helpful in the places where you are not using cpus_read_lock()
-for this reason, assuming there is a reasonable number of such places.
-
-[snip]
-
-> >> +
-> >> +struct mshv_vtl_hvcall_setup {
-> >> +	__u64 bitmap_size;
-> >
-> > What are the units of "bitmap_size"?  Bits? Bytes? u64?
->=20
-> It would be length of bitmap array.
-
-To me "length of bitmap array" is still ambiguous. Is it the
-number of elements in the declared array field? Per my
-earlier comments, I think the number of bits in the bitmap
-would be more typical.
-
->=20
-> >
-> >> +	__u64 allow_bitmap_ptr; /* pointer to __u64 */
-> >> +};
-
-Michael
+Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
 
