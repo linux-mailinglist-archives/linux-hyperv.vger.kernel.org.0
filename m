@@ -1,651 +1,283 @@
-Return-Path: <linux-hyperv+bounces-6354-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6355-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EED30B0EC15
-	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Jul 2025 09:38:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 863E6B0EEF6
+	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Jul 2025 11:58:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F321A16A508
-	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Jul 2025 07:38:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A88441658BC
+	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Jul 2025 09:58:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27A09276052;
-	Wed, 23 Jul 2025 07:38:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE57F285067;
+	Wed, 23 Jul 2025 09:58:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ozbBUC6k"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="du77Rz7C"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04AD0276036;
-	Wed, 23 Jul 2025 07:38:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DC15280325;
+	Wed, 23 Jul 2025 09:58:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753256287; cv=none; b=YfOY59bXackLAN2rRLflOwpcnmrno9HznOy8ZI1u9uP6frgcPEvQtFYZhADbJ7miX4BUdA81CtcPmGNS2+YO2nz1cfUSHdsbrNdzcv5JvEBP2E1gWZ0SLlSM7320H/5VsgTzXWJoeZe/4SkVtmYcbImYYHse5DxF+EuLuv0BLOg=
+	t=1753264721; cv=none; b=oss6Br+30YhBH7qBhCFRQcDEAl/UOVKEW41GJXARu6ZqddzRbA4QNY75o7XTQCoyq8ZjAkKFwpgmtbJCL84VEIZSAZqMQAlkITyDWXIg9JdhGWghkOT878OCHHJfbEM7SH3V537SXV/ilWAB+hhmN0O7Dd1soy+nMC7/wNsfL7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753256287; c=relaxed/simple;
-	bh=lgtzLdsELYxHpDJSCpeKTGRByZgDERgCYxyfrFRWod0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dz6pVggWNCZeJYuCINIBuA4GKR52kmqNH6RFTlSu/efB85USCUc6Uq3RS2KI/VUHapAfbxQaKSCgTBnBWYPEOcKPzF2YnbjN1OjwGOAr0ATKhh8h2OkZQjcicFcirHLf0V3D5FZtg3/9K5tWUun8agRh3//hv0jkh0IJ4e69YCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ozbBUC6k; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1753264721; c=relaxed/simple;
+	bh=dN0QGtRq00X4czGYlekLehlE7UXrAkuJharj9Zc9JIc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J8ZQvZ+ihVbg1cFxU1kK5LW9WbWiXx98KnFgT5VzIwlv74LMMCy55+PxC+co4GfzqcMWh5xwDX7FoQDKBfhlg1M2LAcoC9M3zDqxNvRpsc/tsms9vDaEp9kmKgSO361tUkxlIep6iIS/U55NOFL4LJto9VMZH3gzzYMMeMwtfkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=du77Rz7C; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id 7AEFD2014DE6; Wed, 23 Jul 2025 00:38:04 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7AEFD2014DE6
+Received: from [100.79.232.149] (unknown [4.194.122.162])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 77B492126893;
+	Wed, 23 Jul 2025 02:58:36 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 77B492126893
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1753256284;
-	bh=zKqu/dMcpWF3pvz0Gd5eBAkg3sJxGoSVm2z6sye1RC0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ozbBUC6kbQIRfNgyWGHLYo6ZSn2bEUG/pfDaA04Z58wIpJvxeEtgxnN4jbdaRteel
-	 uLf3oqvam2C+79V1gtGC/KsWNMCoJAj8hyGDZTu/9gZWYGVZx2pNljlsZcHX2vOy7s
-	 ulnGmos5gMDcnqFn4IW8pbm2CyYw1NkoIPiAIuxE=
-Date: Wed, 23 Jul 2025 00:38:04 -0700
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-Cc: kuba@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-	wei.liu@kernel.org, decui@microsoft.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
-	longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
-	ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
-	john.fastabend@gmail.com, sdf@fomichev.me, lorenzo@kernel.org,
-	michal.kubiak@intel.com, ernis@linux.microsoft.com,
-	shradhagupta@linux.microsoft.com, shirazsaleem@microsoft.com,
-	rosenp@gmail.com, netdev@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH] net: mana: Use page pool fragments for RX buffers
- instead of full pages to improve memory efficiency and throughput.
-Message-ID: <20250723073804.GA19640@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20250721101417.GA18873@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+	s=default; t=1753264719;
+	bh=FVw2bOb/oYlcoOsK7minTN/cKz/3JJZ05ZWyPir+H6w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=du77Rz7C0ECRJJ8ICpO4W75zy7egSP47mg8MsH9e8QQr/ytTM26ecues8nc5vPKxn
+	 DOdvNldo/E+yVr0TCwEhyPOWvIsPF/m0rwvSO7gUrtHtoL2ssQxlnYmQNmWyrYfUEM
+	 r7k+OK6R96hhFs71T8SsOEoqz1MR/f/GE6iKafdw=
+Message-ID: <829f0716-d2f2-449f-8f49-397a46046c69@linux.microsoft.com>
+Date: Wed, 23 Jul 2025 15:28:33 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250721101417.GA18873@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/2] Drivers: hv: Introduce mshv_vtl driver
+To: Michael Kelley <mhklinux@outlook.com>,
+ "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>
+Cc: Roman Kisel <romank@linux.microsoft.com>,
+ Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+ Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ ALOK TIWARI <alok.a.tiwari@oracle.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+References: <20250611072704.83199-1-namjain@linux.microsoft.com>
+ <20250611072704.83199-3-namjain@linux.microsoft.com>
+ <SN6PR02MB4157F9F1F8493C74C9FCC6E4D449A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <42bc5294-219f-4c26-ad05-740f6190aff3@linux.microsoft.com>
+ <SN6PR02MB415781ABC3D523B719BDE280D450A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <5bf4e550-34e1-4b6b-8ee2-137681a72d42@linux.microsoft.com>
+ <SN6PR02MB41578D18024EC5339690046CD45CA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB41578D18024EC5339690046CD45CA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 21, 2025 at 03:14:17AM -0700, Dipayaan Roy wrote:
-> This patch enhances RX buffer handling in the mana driver by allocating
-> pages from a page pool and slicing them into MTU-sized fragments, rather
-> than dedicating a full page per packet. This approach is especially
-> beneficial on systems with 64KB page sizes.
+
+
+On 7/22/2025 10:39 PM, Michael Kelley wrote:
+> From: Naman Jain <namjain@linux.microsoft.com> Sent: Tuesday, July 22, 2025 4:09 AM
+>>
+>> On 7/18/2025 8:37 PM, Michael Kelley wrote:
+>>> From: Naman Jain <namjain@linux.microsoft.com> Sent: Thursday, July 17, 2025 9:36 PM
+>>>>
+>>>> On 7/9/2025 10:49 PM, Michael Kelley wrote:
+>>>>> From: Naman Jain <namjain@linux.microsoft.com> Sent: Wednesday, June 11, 2025 12:27 AM
+>>>
+>>> [snip]
+>>>
+>>>>
+>>>>> Separately, "allow_bitmap" size is 64K bytes, or 512K bits. Is that the
+>>>>> correct size?  From looking at mshv_vtl_hvcall_is_allowed(), I think this
+>>>>> bitmap is indexed by the HV call code, which is a 16 bit value. So you
+>>>>> only need 64K bits, and the size is too big by a factor of 8. In any case,
+>>>>> it seems like the size should not be expressed in terms of PAGE_SIZE.
+>>>>
+>>>> There are HVcall codes which are of type u16. So max(HVcall code) =
+>>>> 0xffff.
+>>>>
+>>>> For every HVcall that needs to be allowed, we are saving HVcall code
+>>>> info in a bitmap in below fashion:
+>>>> if x = HVCall code and bitmap is an array of u64, of size
+>>>> ((0xffff/64=1023) + 1)
+>>>>
+>>>> bitmap[x / 64] = (u64)1 << (x%64);
+>>>>
+>>>> Later on in mshv_vtl_hvcall_is_allowed(), we calculate the array index
+>>>> by dividing it by 64, and then see if call_code/64 bit is set.
+>>>
+>>> I didn't add comments in mshv_vtl_hvcall_is_allowed(), but that code
+>>> can be simplified by recognizing that the Linux kernel bitmap utilities
+>>> can operate on bitmaps that are much larger than just 64 bits. Let's
+>>> assume that the allow_bitmap field in struct mshv_vtl_hvcall_fds has
+>>> 64K bits, regardless of whether it is declared as an array of u64,
+>>> an array of u16, or an array of u8. Then mshv_vtl_hvcall_is_allowed()
+>>> can be implemented as a single line:
+>>>
+>>> 	return test_bit(call_code, fd->allow_bitmap);
+>>>
+>>> There's no need to figure out which array element contains the bit,
+>>> or to construct a mask to select that particular bit in the array element.
+>>> And since call_code is a u16, test_bit won't access outside the allocated
+>>> 64K bits.
+>>>
+>>
+>> I understood it now. This works and is much better. Will incorporate it
+>> in next patch.
+>>
+>>>>
+>>>> Coming to size of allow_bitmap[], it is independent of PAGE_SIZE, and
+>>>> can be safely initialized to 1024 (reducing by a factor of 8).
+>>>> bitmap_size's maximum value is going to be 1024 in current
+>>>> implementation, picking u64 was not mandatory, u16 will also work. Also,
+>>>> item_index is also u16, so I should make bitmap_size as u16.
+>>>
+>>> The key question for me is whether bitmap_size describes the number
+>>> of bits in allow_bitmap, or whether it describes the number of array
+>>> elements in the declared allow_bitmap array. It's more typical to
+>>> describe a bitmap size as the number of bits. Then the value is
+>>> independent of the array element size, as the array element size
+>>> usually doesn't really matter anyway if using the Linux kernel's
+>>> bitmap utilities. The array element size only matters in allocating
+>>> the correct amount of space is for whatever number of bits are
+>>> needed in the bitmap.
+>>>
+>>
+>> I tried to put your suggestions in code. Please let me know if below
+>> works. I tested this and it works. Just that, I am a little hesitant in
+>> changing things on Userspace side of it, which passes these parameters
+>> in IOCTL. This way, userspace remains the same, the confusion of names
+>> may go away, and the code becomes simpler.
 > 
-> Key improvements:
+> Yes, I suspected there might be constraints due to not wanting
+> to disturb existing user space code.
 > 
-> - Proper integration of page pool for RX buffer allocations.
-> - MTU-sized buffer slicing to improve memory utilization.
-> - Reduce overall per Rx queue memory footprint.
-> - Automatic fallback to full-page buffers when:
->    * Jumbo frames are enabled (MTU > PAGE_SIZE / 2).
->    * The XDP path is active, to avoid complexities with fragment reuse.
-> - Removal of redundant pre-allocated RX buffers used in scenarios like MTU
->   changes, ensuring consistency in RX buffer allocation.
+>>
+>> --- a/include/uapi/linux/mshv.h
+>> +++ b/include/uapi/linux/mshv.h
+>> @@ -332,7 +332,7 @@ struct mshv_vtl_set_poll_file {
+>>    };
+>>
+>>    struct mshv_vtl_hvcall_setup {
+>> -       __u64 bitmap_size;
+>> +       __u64 bitmap_array_size;
+>>           __u64 allow_bitmap_ptr; /* pointer to __u64 */
+>>    };
+>>
+>>
+>> --- a/drivers/hv/mshv_vtl_main.c
+>> +++ b/drivers/hv/mshv_vtl_main.c
+>> @@ -52,10 +52,12 @@ static bool has_message;
+>>    static struct eventfd_ctx *flag_eventfds[HV_EVENT_FLAGS_COUNT];
+>>    static DEFINE_MUTEX(flag_lock);
+>>    static bool __read_mostly mshv_has_reg_page;
+>> -#define MAX_BITMAP_SIZE 1024
+>> +
+>> +/* hvcall code is of type u16, allocate a bitmap of size (1 << 16) to accomodate it */
 > 
-> Testing on VMs with 64KB pages shows around 200% throughput improvement.
-> Memory efficiency is significantly improved due to reduced wastage in page
-> allocations. Example: We are now able to fit 35 Rx buffers in a single 64KB
-> page for MTU size of 1500, instead of 1 Rx buffer per page previously.
+> s/accomodate/accommodate/	
+
+Acked.
+
 > 
-> Tested:
+>> +#define MAX_BITMAP_SIZE (1 << 16)
+>>
+>>    struct mshv_vtl_hvcall_fd {
+>> -       u64 allow_bitmap[MAX_BITMAP_SIZE];
+>> +       u64 allow_bitmap[MAX_BITMAP_SIZE / 64];
 > 
-> - iperf3, iperf2, and nttcp benchmarks.
-> - Jumbo frames with MTU 9000.
-> - Native XDP programs (XDP_PASS, XDP_DROP, XDP_TX, XDP_REDIRECT) for
->   testing the driver’s XDP path.
-> - Page leak detection (kmemleak).
-> - Driver load/unload, reboot, and stress scenarios.
+> OK, this seems like a reasonable approach to get the correct
+> number of bits.
 > 
-> Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-> ---
->  .../net/ethernet/microsoft/mana/mana_bpf.c    |  22 +-
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 284 ++++++------------
->  .../ethernet/microsoft/mana/mana_ethtool.c    |  13 -
->  include/net/mana/mana.h                       |  13 +-
->  4 files changed, 115 insertions(+), 217 deletions(-)
+>>           bool allow_map_initialized;
+>>           /*
+>>            * Used to protect hvcall setup in IOCTLs
+>>
+>> @@ -1204,12 +1207,12 @@ static int mshv_vtl_hvcall_do_setup(struct mshv_vtl_hvcall_fd *fd,
+>>                              sizeof(struct mshv_vtl_hvcall_setup))) {
+>>                   return -EFAULT;
+>>           }
+>> -       if (hvcall_setup.bitmap_size > ARRAY_SIZE(fd->allow_bitmap)) {
+>> +       if (hvcall_setup.bitmap_array_size > ARRAY_SIZE(fd->allow_bitmap)) {
+>>                   return -EINVAL;
+>>           }
+>>           if (copy_from_user(&fd->allow_bitmap,
+>>                              (void __user *)hvcall_setup.allow_bitmap_ptr,
+>> -                          hvcall_setup.bitmap_size)) {
+>> +                          hvcall_setup.bitmap_array_size)) {
 > 
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_bpf.c b/drivers/net/ethernet/microsoft/mana/mana_bpf.c
-> index d30721d4516f..96813b6c184f 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_bpf.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_bpf.c
-> @@ -174,6 +174,7 @@ static int mana_xdp_set(struct net_device *ndev, struct bpf_prog *prog,
->  	struct mana_port_context *apc = netdev_priv(ndev);
->  	struct bpf_prog *old_prog;
->  	struct gdma_context *gc;
-> +	int err;
->  
->  	gc = apc->ac->gdma_dev->gdma_context;
->  
-> @@ -198,14 +199,33 @@ static int mana_xdp_set(struct net_device *ndev, struct bpf_prog *prog,
->  	if (old_prog)
->  		bpf_prog_put(old_prog);
->  
-> -	if (apc->port_is_up)
-> +	if (apc->port_is_up) {
-> +		/* Re-create rxq's after xdp prog was loaded or unloaded.
-> +		 * Ex: re create rxq's to switch from full pages to smaller
-> +		 * size page fragments when xdp prog is unloaded and vice-versa.
-> +		 */
-> +
-> +		err = mana_detach(ndev, false);
-> +		if (err) {
-> +			netdev_err(ndev, "mana_detach failed at xdp set: %d\n", err);
-> +			goto out;
-
-You should return err. At out we are always returning 0 which is wrong.
-
-> +		}
-> +
-> +		err = mana_attach(ndev);
-> +		if (err) {
-> +			netdev_err(ndev, "mana_attach failed at xdp set: %d\n", err);
-> +			goto out;
-
-same here.
-
-> +		}
-> +
->  		mana_chn_setxdp(apc, prog);
-> +	}
->  
->  	if (prog)
->  		ndev->max_mtu = MANA_XDP_MTU_MAX;
->  	else
->  		ndev->max_mtu = gc->adapter_mtu - ETH_HLEN;
->  
-> +out:
->  	return 0;
->  }
->  
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index a7973651ae51..a474c59c907c 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> @@ -548,171 +548,45 @@ static u16 mana_select_queue(struct net_device *ndev, struct sk_buff *skb,
->  	return txq;
->  }
->  
-> -/* Release pre-allocated RX buffers */
-> -void mana_pre_dealloc_rxbufs(struct mana_port_context *mpc)
-> -{
-> -	struct device *dev;
-> -	int i;
-> -
-> -	dev = mpc->ac->gdma_dev->gdma_context->dev;
-> -
-> -	if (!mpc->rxbufs_pre)
-> -		goto out1;
-> -
-> -	if (!mpc->das_pre)
-> -		goto out2;
-> -
-> -	while (mpc->rxbpre_total) {
-> -		i = --mpc->rxbpre_total;
-> -		dma_unmap_single(dev, mpc->das_pre[i], mpc->rxbpre_datasize,
-> -				 DMA_FROM_DEVICE);
-> -		put_page(virt_to_head_page(mpc->rxbufs_pre[i]));
-> -	}
-> -
-> -	kfree(mpc->das_pre);
-> -	mpc->das_pre = NULL;
-> -
-> -out2:
-> -	kfree(mpc->rxbufs_pre);
-> -	mpc->rxbufs_pre = NULL;
-> -
-> -out1:
-> -	mpc->rxbpre_datasize = 0;
-> -	mpc->rxbpre_alloc_size = 0;
-> -	mpc->rxbpre_headroom = 0;
-> -}
-> -
-> -/* Get a buffer from the pre-allocated RX buffers */
-> -static void *mana_get_rxbuf_pre(struct mana_rxq *rxq, dma_addr_t *da)
-> -{
-> -	struct net_device *ndev = rxq->ndev;
-> -	struct mana_port_context *mpc;
-> -	void *va;
-> -
-> -	mpc = netdev_priv(ndev);
-> -
-> -	if (!mpc->rxbufs_pre || !mpc->das_pre || !mpc->rxbpre_total) {
-> -		netdev_err(ndev, "No RX pre-allocated bufs\n");
-> -		return NULL;
-> -	}
-> -
-> -	/* Check sizes to catch unexpected coding error */
-> -	if (mpc->rxbpre_datasize != rxq->datasize) {
-> -		netdev_err(ndev, "rxbpre_datasize mismatch: %u: %u\n",
-> -			   mpc->rxbpre_datasize, rxq->datasize);
-> -		return NULL;
-> -	}
-> -
-> -	if (mpc->rxbpre_alloc_size != rxq->alloc_size) {
-> -		netdev_err(ndev, "rxbpre_alloc_size mismatch: %u: %u\n",
-> -			   mpc->rxbpre_alloc_size, rxq->alloc_size);
-> -		return NULL;
-> -	}
-> -
-> -	if (mpc->rxbpre_headroom != rxq->headroom) {
-> -		netdev_err(ndev, "rxbpre_headroom mismatch: %u: %u\n",
-> -			   mpc->rxbpre_headroom, rxq->headroom);
-> -		return NULL;
-> -	}
-> -
-> -	mpc->rxbpre_total--;
-> -
-> -	*da = mpc->das_pre[mpc->rxbpre_total];
-> -	va = mpc->rxbufs_pre[mpc->rxbpre_total];
-> -	mpc->rxbufs_pre[mpc->rxbpre_total] = NULL;
-> -
-> -	/* Deallocate the array after all buffers are gone */
-> -	if (!mpc->rxbpre_total)
-> -		mana_pre_dealloc_rxbufs(mpc);
-> -
-> -	return va;
-> -}
-> -
->  /* Get RX buffer's data size, alloc size, XDP headroom based on MTU */
-> -static void mana_get_rxbuf_cfg(int mtu, u32 *datasize, u32 *alloc_size,
-> -			       u32 *headroom)
-> +static void mana_get_rxbuf_cfg(struct mana_port_context *apc,
-> +			       int mtu, u32 *datasize, u32 *alloc_size,
-> +			       u32 *headroom, u32 *frag_count)
->  {
-> -	if (mtu > MANA_XDP_MTU_MAX)
-> -		*headroom = 0; /* no support for XDP */
-> -	else
-> -		*headroom = XDP_PACKET_HEADROOM;
-> -
-> -	*alloc_size = SKB_DATA_ALIGN(mtu + MANA_RXBUF_PAD + *headroom);
-> -
-> -	/* Using page pool in this case, so alloc_size is PAGE_SIZE */
-> -	if (*alloc_size < PAGE_SIZE)
-> -		*alloc_size = PAGE_SIZE;
-> -
-> +	/* Calculate datasize first (consistent across all cases) */
->  	*datasize = mtu + ETH_HLEN;
-> -}
-> -
-> -int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu, int num_queues)
-> -{
-> -	struct device *dev;
-> -	struct page *page;
-> -	dma_addr_t da;
-> -	int num_rxb;
-> -	void *va;
-> -	int i;
-> -
-> -	mana_get_rxbuf_cfg(new_mtu, &mpc->rxbpre_datasize,
-> -			   &mpc->rxbpre_alloc_size, &mpc->rxbpre_headroom);
-> -
-> -	dev = mpc->ac->gdma_dev->gdma_context->dev;
-> -
-> -	num_rxb = num_queues * mpc->rx_queue_size;
-> -
-> -	WARN(mpc->rxbufs_pre, "mana rxbufs_pre exists\n");
-> -	mpc->rxbufs_pre = kmalloc_array(num_rxb, sizeof(void *), GFP_KERNEL);
-> -	if (!mpc->rxbufs_pre)
-> -		goto error;
->  
-> -	mpc->das_pre = kmalloc_array(num_rxb, sizeof(dma_addr_t), GFP_KERNEL);
-> -	if (!mpc->das_pre)
-> -		goto error;
-> -
-> -	mpc->rxbpre_total = 0;
-> -
-> -	for (i = 0; i < num_rxb; i++) {
-> -		page = dev_alloc_pages(get_order(mpc->rxbpre_alloc_size));
-> -		if (!page)
-> -			goto error;
-> -
-> -		va = page_to_virt(page);
-> -
-> -		da = dma_map_single(dev, va + mpc->rxbpre_headroom,
-> -				    mpc->rxbpre_datasize, DMA_FROM_DEVICE);
-> -		if (dma_mapping_error(dev, da)) {
-> -			put_page(page);
-> -			goto error;
-> +	/* For xdp and jumbo frames make sure only one packet fits per page */
-> +	if (((mtu + MANA_RXBUF_PAD) > PAGE_SIZE / 2) || rcu_access_pointer(apc->bpf_prog)) {
-> +		if (rcu_access_pointer(apc->bpf_prog)) {
-> +			*headroom = XDP_PACKET_HEADROOM;
-> +			*alloc_size = PAGE_SIZE;
-> +		} else {
-> +			*headroom = 0; /* no support for XDP */
-> +			*alloc_size = SKB_DATA_ALIGN(mtu + MANA_RXBUF_PAD + *headroom);
->  		}
->  
-> -		mpc->rxbufs_pre[i] = va;
-> -		mpc->das_pre[i] = da;
-> -		mpc->rxbpre_total = i + 1;
-> +		*frag_count = 1;
-> +		return;
->  	}
->  
-> -	return 0;
-> +	/* Standard MTU case - optimize for multiple packets per page */
-> +	*headroom = 0;
->  
-> -error:
-> -	netdev_err(mpc->ndev, "Failed to pre-allocate RX buffers for %d queues\n", num_queues);
-> -	mana_pre_dealloc_rxbufs(mpc);
-> -	return -ENOMEM;
-> +	/* Calculate base buffer size needed */
-> +	u32 len = SKB_DATA_ALIGN(mtu + MANA_RXBUF_PAD + *headroom);
-> +	u32 buf_size = ALIGN(len, MANA_RX_FRAG_ALIGNMENT);
-
-its good to have all the declaration at start of function.
-
-> +
-> +	/* Calculate how many packets can fit in a page */
-> +	*frag_count = PAGE_SIZE / buf_size;
-> +	*alloc_size = buf_size;
->  }
->  
->  static int mana_change_mtu(struct net_device *ndev, int new_mtu)
->  {
-> -	struct mana_port_context *mpc = netdev_priv(ndev);
->  	unsigned int old_mtu = ndev->mtu;
->  	int err;
->  
-> -	/* Pre-allocate buffers to prevent failure in mana_attach later */
-> -	err = mana_pre_alloc_rxbufs(mpc, new_mtu, mpc->num_queues);
-> -	if (err) {
-> -		netdev_err(ndev, "Insufficient memory for new MTU\n");
-> -		return err;
-> -	}
-> -
->  	err = mana_detach(ndev, false);
->  	if (err) {
->  		netdev_err(ndev, "mana_detach failed: %d\n", err);
-> @@ -728,7 +602,6 @@ static int mana_change_mtu(struct net_device *ndev, int new_mtu)
->  	}
->  
->  out:
-> -	mana_pre_dealloc_rxbufs(mpc);
->  	return err;
->  }
->  
-> @@ -1841,8 +1714,11 @@ static void mana_rx_skb(void *buf_va, bool from_pool,
->  
->  drop:
->  	if (from_pool) {
-> -		page_pool_recycle_direct(rxq->page_pool,
-> -					 virt_to_head_page(buf_va));
-> +		if (rxq->frag_count == 1)
-> +			page_pool_recycle_direct(rxq->page_pool,
-> +						 virt_to_head_page(buf_va));
-> +		else
-> +			page_pool_free_va(rxq->page_pool, buf_va, true);
->  	} else {
->  		WARN_ON_ONCE(rxq->xdp_save_va);
->  		/* Save for reuse */
-> @@ -1854,37 +1730,50 @@ static void mana_rx_skb(void *buf_va, bool from_pool,
->  	return;
->  }
->  
-> -static void *mana_get_rxfrag(struct mana_rxq *rxq, struct device *dev,
-> -			     dma_addr_t *da, bool *from_pool)
-> +static void *mana_get_rxfrag(struct mana_rxq *rxq,
-> +			     struct device *dev, dma_addr_t *da, bool *from_pool)
->  {
->  	struct page *page;
-> +	u32 offset;
->  	void *va;
-> -
->  	*from_pool = false;
->  
-> -	/* Reuse XDP dropped page if available */
-> -	if (rxq->xdp_save_va) {
-> -		va = rxq->xdp_save_va;
-> -		rxq->xdp_save_va = NULL;
-> -	} else {
-> -		page = page_pool_dev_alloc_pages(rxq->page_pool);
-> -		if (!page)
-> +	/* Don't use fragments for jumbo frames or XDP (i.e when fragment = 1 per page) */
-> +	if (rxq->frag_count == 1) {
-> +		/* Reuse XDP dropped page if available */
-> +		if (rxq->xdp_save_va) {
-> +			va = rxq->xdp_save_va;
-> +			rxq->xdp_save_va = NULL;
-> +		} else {
-> +			page = page_pool_dev_alloc_pages(rxq->page_pool);
-> +			if (!page)
-> +				return NULL;
-> +
-> +			*from_pool = true;
-> +			va = page_to_virt(page);
-> +		}
-> +
-> +		*da = dma_map_single(dev, va + rxq->headroom, rxq->datasize,
-> +				     DMA_FROM_DEVICE);
-> +		if (dma_mapping_error(dev, *da)) {
-> +			if (*from_pool)
-> +				page_pool_put_full_page(rxq->page_pool, page, false);
-> +			else
-> +				put_page(virt_to_head_page(va));
-> +
->  			return NULL;
-> +		}
->  
-> -		*from_pool = true;
-> -		va = page_to_virt(page);
-> +		return va;
->  	}
->  
-> -	*da = dma_map_single(dev, va + rxq->headroom, rxq->datasize,
-> -			     DMA_FROM_DEVICE);
-> -	if (dma_mapping_error(dev, *da)) {
-> -		if (*from_pool)
-> -			page_pool_put_full_page(rxq->page_pool, page, false);
-> -		else
-> -			put_page(virt_to_head_page(va));
-> -
-> +	page =  page_pool_dev_alloc_frag(rxq->page_pool, &offset, rxq->alloc_size);
-> +	if (!page)
->  		return NULL;
-> -	}
-> +
-> +	va  = page_to_virt(page) + offset;
-> +	*da = page_pool_get_dma_addr(page) + offset + rxq->headroom;
-> +	*from_pool = true;
->  
->  	return va;
->  }
-> @@ -1901,9 +1790,9 @@ static void mana_refill_rx_oob(struct device *dev, struct mana_rxq *rxq,
->  	va = mana_get_rxfrag(rxq, dev, &da, &from_pool);
->  	if (!va)
->  		return;
-> -
-> -	dma_unmap_single(dev, rxoob->sgl[0].address, rxq->datasize,
-> -			 DMA_FROM_DEVICE);
-> +	if (!rxoob->from_pool || rxq->frag_count == 1)
-> +		dma_unmap_single(dev, rxoob->sgl[0].address, rxq->datasize,
-> +				 DMA_FROM_DEVICE);
->  	*old_buf = rxoob->buf_va;
->  	*old_fp = rxoob->from_pool;
->  
-> @@ -2314,15 +2203,19 @@ static void mana_destroy_rxq(struct mana_port_context *apc,
->  		if (!rx_oob->buf_va)
->  			continue;
->  
-> -		dma_unmap_single(dev, rx_oob->sgl[0].address,
-> -				 rx_oob->sgl[0].size, DMA_FROM_DEVICE);
-> -
->  		page = virt_to_head_page(rx_oob->buf_va);
->  
-> -		if (rx_oob->from_pool)
-> -			page_pool_put_full_page(rxq->page_pool, page, false);
-> -		else
-> -			put_page(page);
-> +		if (rxq->frag_count == 1) {
-> +			dma_unmap_single(dev, rx_oob->sgl[0].address, rx_oob->sgl[0].size,
-> +					 DMA_FROM_DEVICE);
-> +
-> +			if (rx_oob->from_pool)
-> +				page_pool_put_full_page(rxq->page_pool, page, false);
-> +			else
-> +				put_page(page);
-> +		} else {
-> +			page_pool_free_va(rxq->page_pool, rx_oob->buf_va, true);
-> +		}
->  
->  		rx_oob->buf_va = NULL;
->  	}
-> @@ -2338,16 +2231,11 @@ static void mana_destroy_rxq(struct mana_port_context *apc,
->  static int mana_fill_rx_oob(struct mana_recv_buf_oob *rx_oob, u32 mem_key,
->  			    struct mana_rxq *rxq, struct device *dev)
->  {
-> -	struct mana_port_context *mpc = netdev_priv(rxq->ndev);
->  	bool from_pool = false;
->  	dma_addr_t da;
->  	void *va;
->  
-> -	if (mpc->rxbufs_pre)
-> -		va = mana_get_rxbuf_pre(rxq, &da);
-> -	else
-> -		va = mana_get_rxfrag(rxq, dev, &da, &from_pool);
-> -
-> +	va = mana_get_rxfrag(rxq, dev, &da, &from_pool);
->  	if (!va)
->  		return -ENOMEM;
->  
-> @@ -2428,11 +2316,22 @@ static int mana_create_page_pool(struct mana_rxq *rxq, struct gdma_context *gc)
->  	struct page_pool_params pprm = {};
->  	int ret;
->  
-> -	pprm.pool_size = mpc->rx_queue_size;
-> +	pprm.pool_size = mpc->rx_queue_size / rxq->frag_count + 1;
->  	pprm.nid = gc->numa_node;
->  	pprm.napi = &rxq->rx_cq.napi;
->  	pprm.netdev = rxq->ndev;
->  	pprm.order = get_order(rxq->alloc_size);
-> +	pprm.queue_idx = rxq->rxq_idx;
-> +	pprm.dev = gc->dev;
-> +
-> +	/* Let the page pool do the dma map when page sharing with multiple fragments
-> +	 * enabled for rx buffers.
-> +	 */
-> +	if (rxq->frag_count > 1) {
-> +		pprm.flags =  PP_FLAG_DMA_MAP | PP_FLAG_DMA_SYNC_DEV;
-> +		pprm.max_len = PAGE_SIZE;
-> +		pprm.dma_dir = DMA_FROM_DEVICE;
-> +	}
->  
->  	rxq->page_pool = page_pool_create(&pprm);
->  
-> @@ -2471,9 +2370,8 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
->  	rxq->rxq_idx = rxq_idx;
->  	rxq->rxobj = INVALID_MANA_HANDLE;
->  
-> -	mana_get_rxbuf_cfg(ndev->mtu, &rxq->datasize, &rxq->alloc_size,
-> -			   &rxq->headroom);
-> -
-> +	mana_get_rxbuf_cfg(apc, ndev->mtu, &rxq->datasize, &rxq->alloc_size,
-> +			   &rxq->headroom, &rxq->frag_count);
->  	/* Create page pool for RX queue */
->  	err = mana_create_page_pool(rxq, gc);
->  	if (err) {
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> index a1afa75a9463..7ede03c74fb9 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> @@ -396,12 +396,6 @@ static int mana_set_channels(struct net_device *ndev,
->  	unsigned int old_count = apc->num_queues;
->  	int err;
->  
-> -	err = mana_pre_alloc_rxbufs(apc, ndev->mtu, new_count);
-> -	if (err) {
-> -		netdev_err(ndev, "Insufficient memory for new allocations");
-> -		return err;
-> -	}
-> -
->  	err = mana_detach(ndev, false);
->  	if (err) {
->  		netdev_err(ndev, "mana_detach failed: %d\n", err);
-> @@ -416,7 +410,6 @@ static int mana_set_channels(struct net_device *ndev,
->  	}
->  
->  out:
-> -	mana_pre_dealloc_rxbufs(apc);
->  	return err;
->  }
->  
-> @@ -465,12 +458,7 @@ static int mana_set_ringparam(struct net_device *ndev,
->  
->  	/* pre-allocating new buffers to prevent failures in mana_attach() later */
->  	apc->rx_queue_size = new_rx;
-> -	err = mana_pre_alloc_rxbufs(apc, ndev->mtu, apc->num_queues);
->  	apc->rx_queue_size = old_rx;
-> -	if (err) {
-> -		netdev_err(ndev, "Insufficient memory for new allocations\n");
-> -		return err;
-> -	}
->  
->  	err = mana_detach(ndev, false);
->  	if (err) {
-> @@ -488,7 +476,6 @@ static int mana_set_ringparam(struct net_device *ndev,
->  		apc->rx_queue_size = old_rx;
->  	}
->  out:
-> -	mana_pre_dealloc_rxbufs(apc);
->  	return err;
->  }
->  
-> diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-> index e1030a7d2daa..99a3847b0f9d 100644
-> --- a/include/net/mana/mana.h
-> +++ b/include/net/mana/mana.h
-> @@ -65,6 +65,8 @@ enum TRI_STATE {
->  #define MANA_STATS_RX_COUNT 5
->  #define MANA_STATS_TX_COUNT 11
->  
-> +#define MANA_RX_FRAG_ALIGNMENT 64
-> +
->  struct mana_stats_rx {
->  	u64 packets;
->  	u64 bytes;
-> @@ -328,6 +330,7 @@ struct mana_rxq {
->  	u32 datasize;
->  	u32 alloc_size;
->  	u32 headroom;
-> +	u32 frag_count;
->  
->  	mana_handle_t rxobj;
->  
-> @@ -503,14 +506,6 @@ struct mana_port_context {
->  	/* This points to an array of num_queues of RQ pointers. */
->  	struct mana_rxq **rxqs;
->  
-> -	/* pre-allocated rx buffer array */
-> -	void **rxbufs_pre;
-> -	dma_addr_t *das_pre;
-> -	int rxbpre_total;
-> -	u32 rxbpre_datasize;
-> -	u32 rxbpre_alloc_size;
-> -	u32 rxbpre_headroom;
-> -
->  	struct bpf_prog *bpf_prog;
->  
->  	/* Create num_queues EQs, SQs, SQ-CQs, RQs and RQ-CQs, respectively. */
-> @@ -574,8 +569,6 @@ int mana_query_link_cfg(struct mana_port_context *apc);
->  int mana_set_bw_clamp(struct mana_port_context *apc, u32 speed,
->  		      int enable_clamping);
->  void mana_query_phy_stats(struct mana_port_context *apc);
-> -int mana_pre_alloc_rxbufs(struct mana_port_context *apc, int mtu, int num_queues);
-> -void mana_pre_dealloc_rxbufs(struct mana_port_context *apc);
->  
->  extern const struct ethtool_ops mana_ethtool_ops;
->  extern struct dentry *mana_debugfs_root;
-> -- 
-> 2.43.0
+> This still doesn't work. copy_from_user() expects a byte count as its
+> 3rd argument. If we have 64K bits in the bitmap, that means 8K bytes,
+> and 1K for bitmap_array_size. So the value of the 3rd argument
+> here is 1K, and you'll be copying 1K bytes when you want to be
+> copying 8K bytes. The 3rd argument needs to be:
+> 
+> 		hv_call_setup.bitmap_array_size * sizeof(u64)
+> 
+> It's a bit messy to have to add this multiply, and in the bigger
+> picture it might be cleaner to have the bitmap_array be
+> declared in units of u8 instead of u64, but that would affect
+> user space in a way that you probably want to avoid.
+> 
+> Have you checked that user space is passing in the correct values
+> to the ioctl? If the kernel side code is wrong, user space might be
+> wrong as well. And if user space is wrong, then you might have
+> the flexibility to change everything to use u8 instead of u64.
+> 
 
 
-Rest looks good. After fixing above,
-Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+This is correct in Userspace:
+https://github.com/microsoft/openvmm/blob/main/openhcl/hcl/src/ioctl.rs#L905
+
+This was wrong in kernel code internally from the beginning. This did 
+not get caught because we took a large array size (2 * PAGE_SIZE) which 
+never failed the check
+(hvcall_setup.bitmap_array_size > ARRAY_SIZE(fd->allow_bitmap))
+and hvcall_setup.bitmap_size always had number of bytes to copy.
+
+We can make allow_bitmap as an array of u8 here, irrespective of how 
+userspace is setting the bits in the bitmap because it is finally doing 
+the same thing. I'll make the change.
+
+
+>>                   return -EFAULT;
+>>           }
+>>
+>> @@ -1221,11 +1224,7 @@ static int mshv_vtl_hvcall_do_setup(struct mshv_vtl_hvcall_fd *fd,
+>>
+>>    static bool mshv_vtl_hvcall_is_allowed(struct mshv_vtl_hvcall_fd *fd, u16 call_code)
+>>    {
+>> -       u8 bits_per_item = 8 * sizeof(fd->allow_bitmap[0]);
+>> -       u16 item_index = call_code / bits_per_item;
+>> -       u64 mask = 1ULL << (call_code % bits_per_item);
+>> -
+>> -       return fd->allow_bitmap[item_index] & mask;
+>> +       return test_bit(call_code, (unsigned long *)fd->allow_bitmap);
+>>    }
+> 
+> Yes, the rest of this looks good.
+> 
+> Michael
+
+For CPU hotplug, I checked internally and we do not support hotplug in
+VTL2 for OpenHCL. Hotplugging vCPUs in VTL0 is transparent to VTL2 and
+these CPUs remain online in VTL2. VTL2 also won't be hotplugging CPUs
+when VTL0 is running.
+
+I am planning to put a comment mentioning this in the two places where 
+we check for cpu_online() in the driver. Preventing hotplug from 
+happening through hotplug notifiers is a bit overkill for me, as of now, 
+but if you feel that should be done, I will work on it.
+
+Since good enough changes are done in this version, I will send the next 
+version soon, unless there are follow-up comments here which needs 
+something to change. We can then have a fresh look at it and work 
+together to enhance it.
+
+Thanks for your time and guidance Michael.
+
+Thanks,
+Naman
 
