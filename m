@@ -1,102 +1,110 @@
-Return-Path: <linux-hyperv+bounces-6379-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6380-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C15BB10EFE
-	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Jul 2025 17:45:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0276EB10FE1
+	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Jul 2025 18:47:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E337E7A5EBD
-	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Jul 2025 15:43:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DC6B93A4079
+	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Jul 2025 16:47:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91982271462;
-	Thu, 24 Jul 2025 15:45:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAA331DF24F;
+	Thu, 24 Jul 2025 16:47:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WpcGsrgq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c/ljlTmV"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 363731CEACB;
-	Thu, 24 Jul 2025 15:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13AB72615;
+	Thu, 24 Jul 2025 16:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753371907; cv=none; b=kWEo2YgMf/fh2KI+ImEneMsiPJhFOD7xPdkwKUFEuHezUQajDzbAlzDmjlM6PUmniXNOJu7CM3n6JfI61C68MVG49Fxw+pw0XUHe7eGs2YgsK2JMiUxcz0mxLIC0OTvibHmBYO3Z/TmN22PKh6dQnhcg8RXrxPvOWHJG9HOIRXw=
+	t=1753375663; cv=none; b=EJG+r2z6pDEpy5oh533yyj5fwNIscXTyQVgV2zF6C8V/nyt/wmG7rH0FOcC4sSZGC6ZRtRMWUaFEOdlSXvqmranx9WfFa4AYTXBcplg/P0N5FdYsCB4qbt63rUgnL2VyHwfGyNJctyhlVRnrhmFlSUHCvD2GDhmkZs4ZH2eZe7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753371907; c=relaxed/simple;
-	bh=Sut9AK6eBSBo5Xf359xq0POPeBFo3x/4OxeinLlZrF8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ACTfvfYVodBY0yzIM+BWB/mwDQ7ZdRu+uWVRFRWxLkvEfc8pnCoieaKHMpRdiqF9lvsGGnAz9dKM5b9raynEr4dD+X3xz5GCzGYH9ou1puZclDORlR1Xc5pgsGZUe6U/ZTOK9dqWzu3tDjr/KR+y7/gPYTQrrvS18+hRpfytqLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=WpcGsrgq; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.79.160.255] (unknown [4.194.122.162])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 394F92021893;
-	Thu, 24 Jul 2025 08:45:01 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 394F92021893
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1753371905;
-	bh=6GmVVQeJlIU2XQdswsleagO9eH3yur/FrYwVVfEmvsw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WpcGsrgqBsvogPoY75H9g+7p2Mnicn4prnXfHM77HUX912RmqSUex/r8XgA992vNm
-	 /xxWVMBdoLbmP8r2/NIfu0eAZ1FIPiCplvekzFFzyGbXUQS7BzuOMyfHxuJNx8y4HD
-	 1FRmWydbpOVY1UD+wTnJs/9uu88avu9qy8t+VbeA=
-Message-ID: <5160e0ab-f588-481c-9585-98b6f2944407@linux.microsoft.com>
-Date: Thu, 24 Jul 2025 21:14:59 +0530
+	s=arc-20240116; t=1753375663; c=relaxed/simple;
+	bh=v1AREpNatejwJKD6V5Iz6AdvLkLubzChLaD07Isk2a8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mu4rp2UdtlFEnwG0iOwpAN/95zhnt13qRfTOEkAVct7KZpIkFUggDUkAP3N8iri7/6ixKSJAuHSiCoH1IMKl2WqkCOav9XXXwWfTsSRgGgfpzINikBh5FHKz0X5by6ftlECmUXb223cmKVtHoQtSZKhvwabJfNvVW5lxx9SAvTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c/ljlTmV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09BE9C4CEED;
+	Thu, 24 Jul 2025 16:47:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753375663;
+	bh=v1AREpNatejwJKD6V5Iz6AdvLkLubzChLaD07Isk2a8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c/ljlTmVo+P03V4/cu9sc/Qn8WNO7T1X9sYVfMe/dRm/JUpa8YAxvBt58e5OB9J7p
+	 Et0p9KV56dzxRGMOrOOzMuoQ5LVWwmqGyHXphuvOHmCYXYvQYER+yy+UwmxOcTNq3P
+	 5YTSxamVn149kW8vg3DzE2LGpey/cd+oKszNYgTmTRa8PGcPfZxaFZQS70ALI2pEWR
+	 r4ArvAyuiO68PXhc9+aLLM8zgTidxoBXjqo4tmsETwNPHyfvWNCbQ4o+udFvP5iVdO
+	 1MUu0KuLBk2oRJAMxSA/DYcKJbaN0CCrwK+kPlWyyAXsnpBSkWmct63/kl13YOS1Wt
+	 tQIW9Q6N8ptAA==
+Date: Thu, 24 Jul 2025 16:47:41 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/1] x86/hyperv: MSI parent domain conversion
+Message-ID: <aIJjrYne1VvGjBux@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+References: <cover.1752868165.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/2] Drivers: hv: Introduce new driver - mshv_vtl
-To: Markus Elfring <Markus.Elfring@web.de>,
- "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Michael Kelley <mhklinux@outlook.com>,
- linux-hyperv@vger.kernel.org
-Cc: Roman Kisel <romank@linux.microsoft.com>,
- Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
- Saurabh Sengar <ssengar@linux.microsoft.com>,
- Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
- Nuno Das Neves <nunodasneves@linux.microsoft.com>,
- Alok Tiwari <alok.a.tiwari@oracle.com>, "Paul E. McKenney"
- <paulmck@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20250724082547.195235-1-namjain@linux.microsoft.com>
- <fe2487c2-1af1-49e2-985e-a5b724b00e88@web.de>
- <558412b1-d90a-486a-8af4-f5c906c04cca@linux.microsoft.com>
- <8cfe5678-b8c0-471c-8ad2-2c232c4bbc24@web.de>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <8cfe5678-b8c0-471c-8ad2-2c232c4bbc24@web.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1752868165.git.namcao@linutronix.de>
 
+Nuno, can you please take a look at this patch?
 
-
-On 7/24/2025 4:56 PM, Markus Elfring wrote:
-> …
+On Fri, Jul 18, 2025 at 09:57:49PM +0200, Nam Cao wrote:
+> The initial implementation of PCI/MSI interrupt domains in the hierarchical
+> interrupt domain model used a shortcut by providing a global PCI/MSI
+> domain.
 > 
->>> Do you see opportunities to extend guard applications for further data structures?
-> …
+> This works because the PCI/MSI[X] hardware is standardized and uniform, but
+> it violates the basic design principle of hierarchical interrupt domains:
+> Each hardware block involved in the interrupt delivery chain should have a
+> separate interrupt domain.
 > 
->> So I actually extended using guard to all the other places where I was
->> using manual mutex lock/unlock. I had to reorganize the code a bit,
->> which made the overall flow simpler and more robust. If I am missing
->> something, please let me know.
+> For PCI/MSI[X], the interrupt controller is per PCI device and not a global
+> made-up entity.
 > 
-> Can you imagine that similar adjustments will become helpful at further
-> source code places also according to other pairs of function/macro calls?
-> https://elixir.bootlin.com/linux/v6.16-rc7/source/include/linux/rcupdate.h#L1155-L1167
+> Unsurprisingly, the shortcut turned out to have downsides as it does not
+> allow dynamic allocation of interrupt vectors after initialization and it
+> prevents supporting IMS on PCI. For further details, see:
 > 
-> How do you think about to fiddle any more with “constructors” and “destructors”?
+> https://lore.kernel.org/lkml/20221111120501.026511281@linutronix.de/
 > 
-> Regards,
-> Markus
-
-I have one other usage of rcu_read_lock/unlock in the code, which I feel 
-is fine in its current form.
-
-Thanks,
-Naman Jain
+> The solution is implementing per device MSI domains, this means the
+> entities which provide global PCI/MSI domain so far have to implement MSI
+> parent domain functionality instead.
+> 
+> This series converts the x86 hyperv driver to implement MSI parent domain.
+> 
+> Changes in v3:
+> 
+>   - Drop the merged patch
+> 
+>   - Rebase onto hyperv-fixes
+> 
+>  arch/x86/hyperv/irqdomain.c | 111 ++++++++++++++++++++++++------------
+>  drivers/hv/Kconfig          |   1 +
+>  2 files changed, 77 insertions(+), 35 deletions(-)
+> 
+> -- 
+> 2.49.0
+> 
 
