@@ -1,135 +1,119 @@
-Return-Path: <linux-hyperv+bounces-6392-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6393-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7F76B1193A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Jul 2025 09:33:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1C1BB1197F
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Jul 2025 10:05:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8CB40AA1480
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Jul 2025 07:32:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E17D67B496D
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Jul 2025 08:04:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7E6725485F;
-	Fri, 25 Jul 2025 07:33:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74E552BD5BC;
+	Fri, 25 Jul 2025 08:05:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qLcBh6xs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SxBPOFeK"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85F414A82;
-	Fri, 25 Jul 2025 07:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3B314A4DB;
+	Fri, 25 Jul 2025 08:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753428782; cv=none; b=cuYV71f2w9XGh5+vb1mbD2EckDLsYGLWNYpTfy5e9zPun4NQam7QDnTGRpCOqcj14jR18K5lZnpWhgmfu8EbT/T68syBUjt44iRZ6F9xKoW0AoLwvP63WOAo2o8GnCuoNE5uYOhqIJGmKJhr9YdYm/mJXnFFRbMExsTyPbubVws=
+	t=1753430735; cv=none; b=D7TwhBGP8DjtVz0DOVS4SXq7k16Fs8l6PCBYk3RQIDJTc2xfNUVwgDIqmo8LVdrwujdFrpGveiETRWbemQggyE4g/h31DeKZImM0pY6WPv6JKD8sWAAP17emU45Vyw8q4ZX5Wwshgl6zWeuOdIpoOnokiM2EkOSPYIKuDOzbYz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753428782; c=relaxed/simple;
-	bh=RT/fwDnGe1qjIsPKvMaRgsEa02/AzXXBqKEFbagKISs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e8aZMczqGllDp0JgmxygW2YLqqBRGfKphqb83Mjit2M/TvJfuB6CtU8fkzONLWbZIS6hHrKU2Z2v2bgICh+zRbOYR91uWxesfLc47BzIygyY/3tBt7pONHbaPbxBgoSc6uvc/JDAzza9fxSdUczpBYYfr4RhhzvtgYQLa31g43Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qLcBh6xs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C14F7C4CEE7;
-	Fri, 25 Jul 2025 07:32:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753428782;
-	bh=RT/fwDnGe1qjIsPKvMaRgsEa02/AzXXBqKEFbagKISs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qLcBh6xs2UtKYMDfxxSK6kMKJ1BTvTh2QE26LJYBoRpqxwF5geb++QKfO66u1oI/a
-	 vUaMQHLV8gveKfVtJMTQ2CBWRO8ji/UM9ZnnAp+X5/8M+LQB46ajDlpFn13sFryV0o
-	 wYqknp8UlWoZFVJrcEv4jVJ4DvPwI5SkpJf5zLn/57zOtnljR1BRRhuEijsK/5BX9Y
-	 QYaqy55F6yjidELOX7xRmyCd5qvS94Mc4CIhMGomVLW7Zd5JsTBlBV6Isc4Rf/FRD2
-	 Vs/vPPZMsnHc9WH2CZ+5zLNQhvjZIvFwXN9KOkp5pH99BM5iBIBF8Kyndg2tnejTBy
-	 P1ji3zrLC3r/A==
-Message-ID: <94d3e709-8c8b-40cb-a829-92c2012b4e0a@kernel.org>
-Date: Fri, 25 Jul 2025 09:32:56 +0200
+	s=arc-20240116; t=1753430735; c=relaxed/simple;
+	bh=ajTcppa1gSdeqNwkcD1rjRYogNHde5NOslHrwv9fGRY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sXkWqV//DWgr2nortyqrqK88P82nkJmd+lKMucVpJxeiGQXGy/ahDLfbZPrcTCFyROMG0luM0MgZP20gdEN77tfNtzb8zaguf+2A5swb5IbEGDhlUmce0FQyA9xE7NokjwMNxhK4oNCA+BnBQHplNIoFQkRAEdkSPcc6UU0IOI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SxBPOFeK; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-31c38e75dafso1511117a91.2;
+        Fri, 25 Jul 2025 01:05:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753430733; x=1754035533; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ajTcppa1gSdeqNwkcD1rjRYogNHde5NOslHrwv9fGRY=;
+        b=SxBPOFeKxBijipwtaKgpueVbuzBpnQJanJ7BCF2HtbOErvEM5LdgIWEPSfIDE9UE9O
+         4D8YebHw7lkVmqbJHuGMRTKtQMmS9WPUuqy16U6rpKdoJA4rS7P6M2xTnFgHI4Rskyc5
+         fSDgKfysQwnyrzPIIDQbw9pdX9afQcCd8DRF6EiyftFynwfVflbLrX2nCQwhiB8utTki
+         FjrVEiFaiW62Kn0EuIe/H220KrhMitBg8gJbzPI0gE1n6GDRM1bIBGsBuKAZPqahHahA
+         jRCUD/eJhWCN4JSENXc58/UGZpiayX4oHC4rml8fYtTvO9YjHECAqZZ6j/ZP9Yxk/WyK
+         uc9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753430733; x=1754035533;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ajTcppa1gSdeqNwkcD1rjRYogNHde5NOslHrwv9fGRY=;
+        b=XDtWY2x8RHX+CFPe/SHU5wHjLym4wcgR26NvGq1OoFjaKLNXY53JdxbkAnKoTHjFb6
+         C0GcRC9sgN94bzHWwOCKFDqxiO6q64i4frf1LjBFG98/+IsLypOV0VvGg0uvK24a4Zm/
+         hP5IOqliUqVn+Uc41688Xk7LmF1m1hk6tSncMqc1UEXI3p+3+8lHuoCWaciUoECWupso
+         G/WDKMmVvVO/EsqTICvWh9r+79dCjaRXNFTHNn3uHxTJPtog8kxKeizRnqdy7ud9wJCq
+         CI28u12+aQGf1ghSUloUVAkkD6iEvZD9UtTyQBLmH03lErhYb1EBKoDLvMnNvvTKhLI+
+         iKpw==
+X-Forwarded-Encrypted: i=1; AJvYcCU1oSFm6K2mPPSNxEXwflbM2mbyhX5NjKPh6TLhGjt57wxOuyBb+EdX6sGQxddXPxsPs3sfIi3x3Aee@vger.kernel.org, AJvYcCUCxsIcTKEqydQoUXDVKkSrTc5/utwxPAmJ3QddvbS4xTt5ygtpTcV9wrfjXrJZE58bhRZAQTfYEOstRffy@vger.kernel.org, AJvYcCUNZmbyNDYs4sA+jJdhFJ2L4xxvbG/zc0YyWp9vjkS9dtBT+4cUaaab3NEzOvCw7oD7V3LPioctrVKxcT1m@vger.kernel.org, AJvYcCUk/z0hBKM3YAhxJmLYJXGqmqriD2P+1KuhyX/wxLTG4c4mJdXLDfxdca548Sa8V0P5kmhWsA0HPLRP@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKNsPjEzwD598XoZSKSkqom/GQMzGx0Ar5bzU3U/ZnHn7vFHbJ
+	U8rpp9KyhgowG46rYk+++A1zqe2jd/YQfr1H+Gc6Gdyp5Vt37tWiLk78oVE1T0edI2yDpyYzgLm
+	m2r21U4I5N5Ox++x+XUn0YSUM5TQl1FY=
+X-Gm-Gg: ASbGncvaHBBH9q7ibqBLl8eev1F9bnUrR9FMiru85r6qa7gt/1xDka2n3d+iqjXJjl1
+	fOYjxbFm83VMzAWONx45eGdGxMFzkqSmYaVt+OCyahfh6HrC1+BE/YhQZrdPrEVvk/mg8D/YNLf
+	f5EXcshOSF6oCzoSCR2EewE/Lva3YkW086WR4iNfT+JwiTuwgLV5Pu9LtmCejF5YFa7rKPNmc5s
+	TWs
+X-Google-Smtp-Source: AGHT+IH0N7juE1ML00NeiySrFmenoxzcFgUIXMma1ZSmVk4GmnlWp8/mq5UTyMmh53UW0+vZkWi5ZEkkBePcY/NEHCk=
+X-Received: by 2002:a17:90b:2809:b0:311:fde5:c4be with SMTP id
+ 98e67ed59e1d1-31e77a1a3b7mr1399394a91.35.1753430733203; Fri, 25 Jul 2025
+ 01:05:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] dt-bindings: microsoft: Add vmbus
- message-connection-id property
-To: Hardik Garg <hargar@linux.microsoft.com>
-Cc: apais@microsoft.com, cho@microsoft.com, conor+dt@kernel.org,
- decui@microsoft.com, devicetree@vger.kernel.org, haiyangz@microsoft.com,
- hargar@microsoft.com, krzk+dt@kernel.org, kys@microsoft.com,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org,
- ssengar@linux.microsoft.com, wei.liu@kernel.org
-References: <6d3b5d1e-de1b-4d3b-ba14-7029c51b8e05@kernel.org>
- <1753395133-26061-1-git-send-email-hargar@linux.microsoft.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <1753395133-26061-1-git-send-email-hargar@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250714221545.5615-1-romank@linux.microsoft.com> <20250714221545.5615-5-romank@linux.microsoft.com>
+In-Reply-To: <20250714221545.5615-5-romank@linux.microsoft.com>
+From: Tianyu Lan <ltykernel@gmail.com>
+Date: Fri, 25 Jul 2025 16:04:57 +0800
+X-Gm-Features: Ac12FXyG2VF4VdQLGnMHOU54EmL0I-F5ODIYDs9CDmGbYwFuca8sVz3NIDMA2oI
+Message-ID: <CAMvTesCjbsG_Uw_Bttw7vL6C6QDCzx-pxAi1FBGAAS_54LcqFw@mail.gmail.com>
+Subject: Re: [PATCH hyperv-next v4 04/16] arch/x86: mshyperv: Trap on access
+ for some synthetic MSRs
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: alok.a.tiwari@oracle.com, arnd@arndb.de, bp@alien8.de, corbet@lwn.net, 
+	dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com, 
+	hpa@zytor.com, kys@microsoft.com, mhklinux@outlook.com, mingo@redhat.com, 
+	rdunlap@infradead.org, tglx@linutronix.de, Tianyu.Lan@microsoft.com, 
+	wei.liu@kernel.org, linux-arch@vger.kernel.org, linux-coco@lists.linux.dev, 
+	linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, apais@microsoft.com, 
+	benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 25/07/2025 00:12, Hardik Garg wrote:
->> Then all guests can use the same value, 0, making this property redundant.
-> 
-> No, they cannot use the same value. The protocol requires different connection IDs for different communication paths.
-> For example, a guest communicating with a VTL0 control plane uses a different connection ID than one communicating with
-> a VTL2 control plane. The host specifies this value based on the guest's configuration, and there is no other discovery
-> method available to determine the correct connection ID.
+On Tue, Jul 15, 2025 at 6:16=E2=80=AFAM Roman Kisel <romank@linux.microsoft=
+.com> wrote:
+>
+> hv_set_non_nested_msr() has special handling for SINT MSRs
+> when a paravisor is present. In addition to updating the MSR on the
+> host, the mirror MSR in the paravisor is updated, including with the
+> proxy bit. But with Confidential VMBus, the proxy bit must not be
+> used, so add a special case to skip it.
+>
+> Update the hv_set_non_nested_msr() function as well as
+> vmbus_signal_eom() to trap on access for some synthetic MSRs.
+>
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> Reviewed-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+> ---
 
-You completely removed entire thread and discussion making it difficult
-to connect to one of 100 or more discussions I am doing.
+Reviewed-by: Tianyu Lan <tiala@microsoft.com>
 
-Plus wrap your emails according to netiquette rules.
-
-The guest should not care about the value. Otherwise what if guests
-decides to ignore your DT property and start using other value? Sniffing
-other guests traffic? Causing conflicts or denial of service?
-
-If different values are important for the host, then all guests should
-use whatever 0 which will map to different values on host by other means
-of your protocol.
-
-Best regards,
-Krzysztof
+--=20
+Thanks
+Tianyu Lan
 
