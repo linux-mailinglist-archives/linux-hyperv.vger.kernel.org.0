@@ -1,270 +1,150 @@
-Return-Path: <linux-hyperv+bounces-6401-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6402-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB3F9B12042
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Jul 2025 16:41:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0EFFEB12360
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Jul 2025 19:58:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 20DD156683B
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Jul 2025 14:41:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CAC4E3BD92A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Jul 2025 17:57:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 805722C3756;
-	Fri, 25 Jul 2025 14:41:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FCC42EFDAC;
+	Fri, 25 Jul 2025 17:58:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdPKwstE"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="scTke37e"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83BD2459F9;
-	Fri, 25 Jul 2025 14:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0811134BD;
+	Fri, 25 Jul 2025 17:58:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753454467; cv=none; b=gAGiZ09O5sZkjmSZiKw2uahXfXjfMIqC1H1yF/Xj4HBzoxfAm445AjIQJE7aapxUhzp31Yxii8tH7+esb8X+q9aXXU5isj0XfltK5Io8sGLIr69o1QeY4XfWlYpaKvPpU6L9O78r7g58xJ6OYC+5Gt+TefrflFpvbq0byQvku0A=
+	t=1753466289; cv=none; b=W6AwlN7dtygGPa5gFHLgl18JavA8xtbjgegSvlmuhMX0T/viWLUoSDYM1kr/3dSUk83q0oFo94Oh9qMEtKhsxzrdfoc0ZrVddHJy49o3AaJj6e010mkpiylfm8QPsAKEKS+MoHtexsQMmt3Gt2IsRkcOKUCVVg5kugUV7Ml/gpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753454467; c=relaxed/simple;
-	bh=sGTl1eo91jSnILZM8TuIOEpIUOHHIl79Ky9Pwbzq9nY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rObG0m9abPzgrzteDEAGsbwUOBrHP/py1UJhvqTBy0DXf/CIGyw1YK6rsmOKIwMCBtslt3yw0CPwwXLKBmzJ6wwaUQhf/EQsWB/kAUkuk3WPUqMtN5sEhZKzzno17Vg2V5ctebEe/Se0jDFmHem6p6vlGlhoD0Y+juO7f85XWIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gdPKwstE; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-23f8bcce78dso25893455ad.3;
-        Fri, 25 Jul 2025 07:41:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753454465; x=1754059265; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nKgsPP4zPK7SJVV2IQKnHzdNSGAtC3gfZtrlCNS6aF4=;
-        b=gdPKwstEgeM9pyTh/0lxmg0T2DJI9Zvhzvh87LuMm44ao2R8B4cU6MTnk1jPTxaulZ
-         5mVbCeY/kRfY6dx6kcVuIG2s+kD2TfKDmhHPPBGi7tP5f0PRWlUhlkczW9auh9UOfr6i
-         Vmej1/Irck9tHecjrx8lTe3XE/vH+zedwlFQ255cXywbuXsI9tJiCSCzutkfKqpfQy8v
-         fqvwYfo2e/m0BoiX9asJE/iTJ6GZKSm/cH7z3CJDYPkowl6G/hFu6CfQdQ+bHTGxwFQ0
-         OW2yPOMGS24mlIC9tx7XRb186aMoe7x6i281Y4IMoWa/l+4tFXhCKBnKAs68ZzHXrFD1
-         OtDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753454465; x=1754059265;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nKgsPP4zPK7SJVV2IQKnHzdNSGAtC3gfZtrlCNS6aF4=;
-        b=nuMEUi6nlwCBoiHp17oNSSnM61D2SNaHhqSxArpUOaBjb5ZyUtTW3bNXHdsFK+U3+V
-         gzfeCNJ8sVWm6X4SymHq2USsKs+j7vAS+IPk4aD6k3qb+DJwH5REnzwegdoc+hL771tW
-         qVEAiYUfdWQ1P3OGP4iry0/BsBCRHkJhLId67LKb+EyyWN1O5oMDMnbkPX2Ru3RDARj5
-         890D41vWqHGyZOYn6HINmoGZGXPC5vOpMs4YNs4dJ7Zf7WnGenR8vkHEVKTqnmXitKjz
-         H6WqjNzlfNe8qT4//63sSQ9FC/Qr3DCD1tdpAzPyCVAx3rxJqowe0YE4TOwiCQP2fZss
-         Ov7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUAaw8ZZIv/WK47HLgGMzzD8uySthhoZhpGx4yaFEQwUQjSiIoXKg8yNMh7x1TyC+EyDykKxAfPrn+PW1FO@vger.kernel.org, AJvYcCVm5a9++GO1l5jpom5IWR4faQd1qO58/eaON4W/F9JvnleRpmVq1XGGBbNFLKeTI1x8UTaBBt7nSjskmtAI@vger.kernel.org, AJvYcCWC0UClaNSD4AaHebXCQ+d8rSuVUa+Aa40l9sIH7ecmM7/hRUDj9ymMkLAFmW7SveYPb/2015oHaX55@vger.kernel.org, AJvYcCWFKHSOlZiBG/9MgH1M79BceBCQGOT6vp6NbZmornVkX31K7ML1WRGEU4+OR3hMcOV2vb4vPjDb6mK9@vger.kernel.org
-X-Gm-Message-State: AOJu0YyesOr8msMF4habjoyOMdRXf1zZCTgRgp9ZXYboP2B4YSU4pNM8
-	CCcYOFxOGfPrduip+eTc9rhrdU2hHp9SWYYL1ZqJ36LzP/FbkyP9Kf+5/MBA1uuZu5H80l1q87I
-	N/9Qb3UrHq6VTXHc9hymoov5yzZ68jY3M9Qim
-X-Gm-Gg: ASbGncua5ZftMoUxfhrCa0SCSNpEoLRp3bKTj53l0Tv5Rbm0moKsKUFZyftJzS8is+V
-	XEGZiThEAm5a0GkPwq3dCikN+h+R+UThI0//YGYpMlcUzB4zLci+7PodarjNHu3gANf7/OzFK/M
-	wwJXAHeNtw8KGqtWlTJ9vMrYaSYJsq1ZLRjy0lchU+di2TpqbUD1AN35a2k8bsMffpoptpHKePX
-	qTbSxv0CfrBLks=
-X-Google-Smtp-Source: AGHT+IFePPdNf5mTv+w/Kxg+8bWSXr5Vh2E5/lMd3Me7vurN8JkxVvIEE7J6nQMlYnnWtLKMSDKRAdRJQJFR2RNXDDE=
-X-Received: by 2002:a17:902:c751:b0:234:ed31:fc99 with SMTP id
- d9443c01a7336-23fb309b836mr26836565ad.21.1753454465068; Fri, 25 Jul 2025
- 07:41:05 -0700 (PDT)
+	s=arc-20240116; t=1753466289; c=relaxed/simple;
+	bh=eVtb6MJ3Sj3SJ1kLyP1ByuhVZUTp9cXrMV59WYm2iog=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Caiz9ROd4KJSxrEh+J7sSHa5wGaAz/9pzYD04SMQECffWTxDt07Mq+jF55Tun6302d6yGgI1YocFut2VCg0FR6e5If35OvZsZh88CFQ8bXcVo+Zd6Ruhp/QWtHU+xjv3gyuIxhScIEgfDz6P0Kd9uEkcorN3vXwUfXVNJWHDwYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=scTke37e; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 56PHvREK2630400
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Fri, 25 Jul 2025 10:57:27 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 56PHvREK2630400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025072201; t=1753466249;
+	bh=DST4Ds/rbgndE3+yykqR2X7LIyUlLcUfe9t/MvWH1QI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=scTke37eODu/bP5GVIlzmTFelT2cB6LOzoQnbw6bOLo1xv4LNvk2BmTOvZTgzTEep
+	 hd2M+8/nmsu4aES7a7tMxtaAEQSBD3WZ6vY1VzDgNkLx7nzKd65mMKCb/eg0egAKGc
+	 zEbuJy7PgmG2D2ddRDh2dmOJ2zlXJnJTO0Qj72X7hytMjxUYMaFBLR0Oa/wbaYIviD
+	 +PBStieCyMKlhzdV0ioF2QN826es8ak2k8AOPzR2X0JrK0sTUis2pyWqcnM+cxI5iB
+	 9qZqMlzUvareeRMwynm2ucsj2M6BC6QdWA1/c0xyuaUndaiqyn3ETpqrruoU2VDPx1
+	 Za1EGyA6k7lWQ==
+Message-ID: <1584052d-4d8c-4b4e-b65b-318296d47636@zytor.com>
+Date: Fri, 25 Jul 2025 10:57:26 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250714221545.5615-1-romank@linux.microsoft.com> <20250714221545.5615-13-romank@linux.microsoft.com>
-In-Reply-To: <20250714221545.5615-13-romank@linux.microsoft.com>
-From: Tianyu Lan <ltykernel@gmail.com>
-Date: Fri, 25 Jul 2025 22:40:29 +0800
-X-Gm-Features: Ac12FXxEB_FL3_rT6cHSVkdJsOhCBETxNq543NIYn_bXKIfHCNGG5wd0r0RZbmw
-Message-ID: <CAMvTesBiSOsxywS+JxAB+oAh9i1UEbngAXeZJdi7SWqm9pAd9A@mail.gmail.com>
-Subject: Re: [PATCH hyperv-next v4 12/16] Drivers: hv: Allocate encrypted
- buffers when requested
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: alok.a.tiwari@oracle.com, arnd@arndb.de, bp@alien8.de, corbet@lwn.net, 
-	dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com, 
-	hpa@zytor.com, kys@microsoft.com, mhklinux@outlook.com, mingo@redhat.com, 
-	rdunlap@infradead.org, tglx@linutronix.de, Tianyu.Lan@microsoft.com, 
-	wei.liu@kernel.org, linux-arch@vger.kernel.org, linux-coco@lists.linux.dev, 
-	linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, apais@microsoft.com, 
-	benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 16/16] objtool: Validate kCFI calls
+To: Sean Christopherson <seanjc@google.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, pbonzini@redhat.com, ardb@kernel.org, kees@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org,
+        jpoimboe@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, samitolvanen@google.com, ojeda@kernel.org
+References: <20250714102011.758008629@infradead.org>
+ <20250714103441.496787279@infradead.org> <aIKZnSuTXn9thrf7@google.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <aIKZnSuTXn9thrf7@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 15, 2025 at 6:28=E2=80=AFAM Roman Kisel <romank@linux.microsoft=
-.com> wrote:
->
-> Confidential VMBus is built around using buffers not shared with
-> the host.
->
-> Support allocating encrypted buffers when requested.
->
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> ---
+On 7/24/2025 1:37 PM, Sean Christopherson wrote:
+> On Mon, Jul 14, 2025, Peter Zijlstra wrote:
+>> --- a/arch/x86/kvm/vmx/vmenter.S
+>> +++ b/arch/x86/kvm/vmx/vmenter.S
+>> @@ -361,6 +361,10 @@ SYM_FUNC_END(vmread_error_trampoline)
+>>   
+>>   .section .text, "ax"
+>>   
+>> +#ifndef CONFIG_X86_FRED
+>> +
+>>   SYM_FUNC_START(vmx_do_interrupt_irqoff)
+>>   	VMX_DO_EVENT_IRQOFF CALL_NOSPEC _ASM_ARG1
+>>   SYM_FUNC_END(vmx_do_interrupt_irqoff)
+>> +
+>> +#endif
+> 
+> This can go in the previous patch, "x86/fred: KVM: VMX: Always use FRED for IRQs
+> when CONFIG_X86_FRED=y".
+> 
 
-Reviewed-by: Tianyu Lan <tiala@microsoft.com>
+I'm going to test patch 13~15, plus this change in patch 16.
 
->  drivers/hv/channel.c      | 49 +++++++++++++++++++++++----------------
->  drivers/hv/hyperv_vmbus.h |  3 ++-
->  drivers/hv/ring_buffer.c  |  5 ++--
->  3 files changed, 34 insertions(+), 23 deletions(-)
->
-> diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-> index 35f26fa1ffe7..051eeba800f2 100644
-> --- a/drivers/hv/channel.c
-> +++ b/drivers/hv/channel.c
-> @@ -443,20 +443,23 @@ static int __vmbus_establish_gpadl(struct vmbus_cha=
-nnel *channel,
->                 return ret;
->         }
->
-> -       /*
-> -        * Set the "decrypted" flag to true for the set_memory_decrypted(=
-)
-> -        * success case. In the failure case, the encryption state of the
-> -        * memory is unknown. Leave "decrypted" as true to ensure the
-> -        * memory will be leaked instead of going back on the free list.
-> -        */
-> -       gpadl->decrypted =3D true;
-> -       ret =3D set_memory_decrypted((unsigned long)kbuffer,
-> -                                  PFN_UP(size));
-> -       if (ret) {
-> -               dev_warn(&channel->device_obj->device,
-> -                        "Failed to set host visibility for new GPADL %d.=
-\n",
-> -                        ret);
-> -               return ret;
-> +       gpadl->decrypted =3D !((channel->co_external_memory && type =3D=
-=3D HV_GPADL_BUFFER) ||
-> +               (channel->co_ring_buffer && type =3D=3D HV_GPADL_RING));
-> +       if (gpadl->decrypted) {
-> +               /*
-> +                * The "decrypted" flag being true assumes that set_memor=
-y_decrypted() succeeds.
-> +                * But if it fails, the encryption state of the memory is=
- unknown. In that case,
-> +                * leave "decrypted" as true to ensure the memory is leak=
-ed instead of going back
-> +                * on the free list.
-> +                */
-> +               ret =3D set_memory_decrypted((unsigned long)kbuffer,
-> +                                       PFN_UP(size));
-> +               if (ret) {
-> +                       dev_warn(&channel->device_obj->device,
-> +                               "Failed to set host visibility for new GP=
-ADL %d.\n",
-> +                               ret);
-> +                       return ret;
-> +               }
->         }
->
->         init_completion(&msginfo->waitevent);
-> @@ -544,8 +547,10 @@ static int __vmbus_establish_gpadl(struct vmbus_chan=
-nel *channel,
->                  * left as true so the memory is leaked instead of being
->                  * put back on the free list.
->                  */
-> -               if (!set_memory_encrypted((unsigned long)kbuffer, PFN_UP(=
-size)))
-> -                       gpadl->decrypted =3D false;
-> +               if (gpadl->decrypted) {
-> +                       if (!set_memory_encrypted((unsigned long)kbuffer,=
- PFN_UP(size)))
-> +                               gpadl->decrypted =3D false;
-> +               }
->         }
->
->         return ret;
-> @@ -676,12 +681,13 @@ static int __vmbus_open(struct vmbus_channel *newch=
-annel,
->                 goto error_clean_ring;
->
->         err =3D hv_ringbuffer_init(&newchannel->outbound,
-> -                                page, send_pages, 0);
-> +                                page, send_pages, 0, newchannel->co_ring=
-_buffer);
->         if (err)
->                 goto error_free_gpadl;
->
->         err =3D hv_ringbuffer_init(&newchannel->inbound, &page[send_pages=
-],
-> -                                recv_pages, newchannel->max_pkt_size);
-> +                                recv_pages, newchannel->max_pkt_size,
-> +                                newchannel->co_ring_buffer);
->         if (err)
->                 goto error_free_gpadl;
->
-> @@ -862,8 +868,11 @@ int vmbus_teardown_gpadl(struct vmbus_channel *chann=
-el, struct vmbus_gpadl *gpad
->
->         kfree(info);
->
-> -       ret =3D set_memory_encrypted((unsigned long)gpadl->buffer,
-> -                                  PFN_UP(gpadl->size));
-> +       if (gpadl->decrypted)
-> +               ret =3D set_memory_encrypted((unsigned long)gpadl->buffer=
-,
-> +                                       PFN_UP(gpadl->size));
-> +       else
-> +               ret =3D 0;
->         if (ret)
->                 pr_warn("Fail to set mem host visibility in GPADL teardow=
-n %d.\n", ret);
->
-> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-> index 2873703d08a9..beae68a70939 100644
-> --- a/drivers/hv/hyperv_vmbus.h
-> +++ b/drivers/hv/hyperv_vmbus.h
-> @@ -200,7 +200,8 @@ extern int hv_synic_cleanup(unsigned int cpu);
->  void hv_ringbuffer_pre_init(struct vmbus_channel *channel);
->
->  int hv_ringbuffer_init(struct hv_ring_buffer_info *ring_info,
-> -                      struct page *pages, u32 pagecnt, u32 max_pkt_size)=
-;
-> +                      struct page *pages, u32 pagecnt, u32 max_pkt_size,
-> +                          bool confidential);
->
->  void hv_ringbuffer_cleanup(struct hv_ring_buffer_info *ring_info);
->
-> diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
-> index 3c9b02471760..05c2cd42fc75 100644
-> --- a/drivers/hv/ring_buffer.c
-> +++ b/drivers/hv/ring_buffer.c
-> @@ -183,7 +183,8 @@ void hv_ringbuffer_pre_init(struct vmbus_channel *cha=
-nnel)
->
->  /* Initialize the ring buffer. */
->  int hv_ringbuffer_init(struct hv_ring_buffer_info *ring_info,
-> -                      struct page *pages, u32 page_cnt, u32 max_pkt_size=
-)
-> +                      struct page *pages, u32 page_cnt, u32 max_pkt_size=
-,
-> +                          bool confidential)
->  {
->         struct page **pages_wraparound;
->         int i;
-> @@ -207,7 +208,7 @@ int hv_ringbuffer_init(struct hv_ring_buffer_info *ri=
-ng_info,
->
->         ring_info->ring_buffer =3D (struct hv_ring_buffer *)
->                 vmap(pages_wraparound, page_cnt * 2 - 1, VM_MAP,
-> -                       pgprot_decrypted(PAGE_KERNEL));
-> +                       confidential ? PAGE_KERNEL : pgprot_decrypted(PAG=
-E_KERNEL));
->
->         kfree(pages_wraparound);
->         if (!ring_info->ring_buffer)
-> --
-> 2.43.0
->
->
+BTW, there is a declaration for vmx_do_interrupt_irqoff() in
+arch/x86/kvm/vmx/vmx.c, so we'd better also do:
 
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6945,7 +6945,9 @@ void vmx_load_eoi_exitmap(struct kvm_vcpu *vcpu, 
+u64 *eoi_exit_bitmap)
+         vmcs_write64(EOI_EXIT_BITMAP3, eoi_exit_bitmap[3]);
+  }
 
---=20
-Thanks
-Tianyu Lan
++#ifndef CONFIG_X86_FRED
+  void vmx_do_interrupt_irqoff(unsigned long entry);
++#endif
+  void vmx_do_nmi_irqoff(void);
+
+  static void handle_nm_fault_irqoff(struct kvm_vcpu *vcpu)
 
