@@ -1,295 +1,163 @@
-Return-Path: <linux-hyperv+bounces-6410-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6411-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82288B12914
-	for <lists+linux-hyperv@lfdr.de>; Sat, 26 Jul 2025 07:53:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F6C5B12ABE
+	for <lists+linux-hyperv@lfdr.de>; Sat, 26 Jul 2025 15:42:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 79B825436BC
-	for <lists+linux-hyperv@lfdr.de>; Sat, 26 Jul 2025 05:53:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8D30D1C26588
+	for <lists+linux-hyperv@lfdr.de>; Sat, 26 Jul 2025 13:43:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 846D91F4CBC;
-	Sat, 26 Jul 2025 05:53:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C1FA2857D1;
+	Sat, 26 Jul 2025 13:42:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fdIf8veI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N/AVEycz"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97B92A1AA;
-	Sat, 26 Jul 2025 05:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF0F481DD;
+	Sat, 26 Jul 2025 13:42:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753509230; cv=none; b=HSCnv0pisXgwQKUxoH7dUY3seYhmvB5DrDH+Qrr8copoP1ld6AjdpT7B04Cjh2/Ev2dIgAoubalsuDBeN3t7LfXBWPLaf9yI/4YbSoDOpZB2gHaecfzySA/VXFFezDafzTa/ZHq7gjol8nL5g8zRi1Q4tWIt5hdALlZVg0MKs9A=
+	t=1753537375; cv=none; b=DhyByLCXU2zaUluieJAdKCxPCe+7BUapZUWH1EIe7QCBxFp4WWY6nhctFbA3DQYhg1UCThpzxVQGe8NLFd0TIMC+uVHoK8XrUhxrgtoRjEnS0vuohciYlDFKnkA6/nPvIqtQpQqc6Smzaj7G+iF8aCtvks90fNnor0gpNs5/IPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753509230; c=relaxed/simple;
-	bh=qjAtuM6bjE5YOicSXvKnHeXz95Ueb3CFX9BTvqHz/ec=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hDaCAldpJLJmc6nBiLF0dM/gTF2CPLLPACHkC0vmtrt/2YmBjfbWuB6nyKFmhgfkQ9cBEAf2xmnZst1MTie8TQxBSbHai8aeVT2OUUIc2FeFjpczJMY0gFHSLKdgYZKjxSzhTK6b/mrt6i1Pa8OrtEUHJLA76EgW0P1L254VEVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fdIf8veI; arc=none smtp.client-ip=209.85.128.171
+	s=arc-20240116; t=1753537375; c=relaxed/simple;
+	bh=1hUmX5hI3J/W4Ut02JLPRXx77DgARnMFeF3OQCb0Juk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gm4dmKQj/mUvG7n5nvGHJWhQRmIhJEkJmU8kF/8IoqC9DrRrHgrhlicWyW7ij1nmQyMRgxeRBxWZacQ8sa/5D8cg51f32jG0ep6TJ9FMmf1fOAHylA6odl95otzuqYjGpBq5ieVYSn8krCSIbTAeeRQcpzEMQ7YzirCBoaLs5Bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N/AVEycz; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-7183fd8c4c7so30037857b3.3;
-        Fri, 25 Jul 2025 22:53:48 -0700 (PDT)
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-23c8a505177so24988605ad.2;
+        Sat, 26 Jul 2025 06:42:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753509227; x=1754114027; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fWn+ulxpcv7HdNLVJ+yLthV3Vv9Iaz7WMBgkwYUe3vQ=;
-        b=fdIf8veIBifnc1fNbXFYmsB0WHMGyApvRQd6YZV+A7cQPISmKY4w+gZhBeCW3tJHz3
-         tm3dpb63YglWtF3Qm+ZlzHN7E3OcsIZnwmNhJyRFyGuhvCJVgPPP3dWXnG6GlAw2cuuY
-         7xZ/tdN49sCJ2i1j9Kr4zruaS2U1VAywtIFB2YOJX0QT28t37TPbhHioN4uhcQwW0XYP
-         cdBmRkg95ouqiRS+IVtoTfej2LHKCy+sBUEyabneH/8BCGZUC8n0GIvYxft3TFcZeaZM
-         oqUAGOgquf0Ii7WHkvsfkSgiB/+3DMci5Nw1bF53OfLQDgyzd29SdapSXw+5eLhCD7x6
-         j9TA==
+        d=gmail.com; s=20230601; t=1753537373; x=1754142173; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OPclnn9w29nvfQf0KYDGXYWPWgDFpSvkfdWvl0o/Yqc=;
+        b=N/AVEyczP8HpjY3oWtc4v2A4qSuDMLuBhOiO9odxG/16o/fhn0ciZJj6jTe286/wXR
+         TXYCjbPt2P7Bd+oxRpRZrJceVqgImnRSfLh99dIcYp7k159amw1LVo8iW7GDOutb3tqb
+         j1bYjW5mvY4VYC5p3dfJaQXEVQUTkjmQ1CD6Ya0VhiCwGrpFOivZB9ndgrSMMK5VcjKU
+         EvtyVekdLasmSZHpzHlYfdDmpwmljH1r/oIfrqozF5XFDmNVmZBIg2mUOLWKdVwxcrgU
+         PIeNWBOguKSnnWISLWaJlxfAXEligm0tf9ylQ4pji9slANLcUMGDl3ktGuEGt4Xd9m2A
+         Briw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753509227; x=1754114027;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fWn+ulxpcv7HdNLVJ+yLthV3Vv9Iaz7WMBgkwYUe3vQ=;
-        b=BvaF4WJWngGkIVA35dvKN3FjmzdS2jXPl0oHnP4/1KwCNaIU+6r9aDkWPVzGwo/gxK
-         TtQrXnggA4RwRvfeBN+W4hb3YKzEnBvXYbupKu6bf6KixMrAa4R6WWXN8Q9pWRTjLxox
-         ZsWJb53QHtQ0QlQD+EfVQGMANYs1cFUUCYfwd3HUT/jJW6jA987qV54DGMOI8f6EQcq6
-         HF1Rn/NrVXD8goNnxYjr9B3kYpAUkTY7UYHvyZakm7yRLRcTxNApOaHX6C75VoeluPwY
-         1DVsHZbn4Qp8qi9kssYvlHitJn37SV9+zQgzSKbgGCiqLZQwZDaQowBUzXmaNQ9cnP01
-         aW6w==
-X-Forwarded-Encrypted: i=1; AJvYcCV0pW6f3O3M6C5Jg8WXMaN6g5YhcOzrVRMMKCmzWdPAUM2aGcVKHvII8lIoDKg6vCnHetK7wB9L@vger.kernel.org, AJvYcCVD9a6Ea2Du/2FmE7UKl/u8HRfR3phFQVXh0GsuyMUbByPyVX1NHn7xYC77hnBVh1EZO7jG@vger.kernel.org, AJvYcCWqSjn+iJP+LQNHKoiNJO4QlXqQ6C6kYSPncgHT6XZu+bTNVlSVUWgIVe8wYhkGBjDlyv0=@vger.kernel.org, AJvYcCWvixmdIhq57KzekA3F3xBegqpZq5HuyQ42dXiZhlljCMbTv9Uwvhi9zo1r4fP0mPzVZF/L/KnSPDaIGtg9@vger.kernel.org, AJvYcCXDsTyQc3a/8bIi1F2zSQbG5GaxU0tcKYvY1uS4asK/xV0ZPjt6UKzBl4J6djJH7BU7eF9GLHO2V8KU1NCB@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyf8kmhuUGZYR7NNO5ygqcYKbw/oOC7F5v6uK199B/N9WYJUg+N
-	wpjspcXUPCubOg2946YUaaUhmKw4dFMV5o+2x4mtVtTT2oOYbEzMwQ7aDTEHllTzEwT/GY0ohml
-	sjaAlZgH/K876d+NBskoaLOlAnNJZhVA=
-X-Gm-Gg: ASbGncvtuOr56OEsB8RbL0p3rNAOfFdcyMAoCmIszuqVbeObXv9kOcRORsRiSnae6vz
-	0H4RjuG79dqmhA8yptGW/9Ey+Uds/4mPVBLegu6zicv96pcz9oMarFGG5dtk0jgIEMGKkzw0JKB
-	d/NRebPah/BF2X7ZEYK1war0gv90jdAo02Nz9aKJhGYQRE/ZuHxtd4GF5rFaiDkwlaRQ2ECdxtI
-	NAKdeGcEiN1cQDL+Q==
-X-Google-Smtp-Source: AGHT+IE0Lg8OC1qQflbm42pTUDEXQn5wEtvjZAGDRpEYT9WPYGJBWJxfXrPWc1WTljH0ya6XcqQMq2gpMQ7Ymg2lRdk=
-X-Received: by 2002:a05:690c:e0a:b0:6ef:6d61:c254 with SMTP id
- 00721157ae682-719e348e675mr51700067b3.38.1753509227288; Fri, 25 Jul 2025
- 22:53:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1753537373; x=1754142173;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OPclnn9w29nvfQf0KYDGXYWPWgDFpSvkfdWvl0o/Yqc=;
+        b=ZiQ15VtUip4o+slep/64s/tiWE/Ptru1pSfXgBu/hsw50ncbFTHXte7ynBnNWADi/H
+         E5SBbesOYUmasLTSvOiSX+QiVb0GXn1Hjsc4tuQVkEu5D13qolDRqqPXvlvizPtZytqb
+         I9k/btqBPFF4eOb+dUvL8pgOnuM9ICFPTB0i7REnsReoxa5zDpVs2+2Z2Jk31x/9rI2D
+         BcAjndcQIbNBAMVL/yvU7ulyogJ8/VmuoGMTH4NbjcgFRXyG5pBOEwSc0PNjsD4RbOq9
+         lnGxZ2at5N+23fF8QTb/MTmiocz+/83V/lNruRwh10clqH0rS/2HwOTkjPNWl3Ire6DP
+         aUpw==
+X-Forwarded-Encrypted: i=1; AJvYcCUp/6RgJ/csrtdUM6R+QwGcV4GjVu2bWo6cNjeXu86A/OwxbCo78bh+h9x4tcjpKXaPBBNItSjVdJiNdAgN@vger.kernel.org, AJvYcCX5ia9wxw8hBjQAf2Wkj+T+8MYUEROv7sYgepANisKPrl/6sFHb/oZiZ+wlw2Bzi5E19WSSurmKb4vjPs0F@vger.kernel.org, AJvYcCXYEcAosTxnRzuLKR4kBqiM+LExZ0VeZ9hd8K+fsDMXzcMB1KFynGDcHyPWxUxTsf1bKK9PA2JUQBWj@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDdNhfKyxfP+1urNiiQfubbRriWiynwNUtvoVIBX2W/Mg9AZ0j
+	z+hLv6pI2M2gpb86anw8JM4x6Uy4V+1CTW5fNPhrVWoTDDWL43oBrnYH
+X-Gm-Gg: ASbGnctmItEbqq8Xg2r1392aYi8Mmf99LtuhEtCQIC5C05M984IXFnCQ80ptAOktgqH
+	sODguNTxuS6FCQ1Qv7EkQB7JPJmKylessu2RkQaX2OAOHt9oBhv2HcjoFpEt/jvC8HoYXugB/oa
+	49kR4n6UkkvzMNb+iHoWienIx47QU7SQ+hR6QB7+txyWwGPSbgAHClU4Da57ahfO4YPLAn9Cehr
+	qnHnrAGeN+gWqsFnoNooTiMlpzQmyMMg7u/oWmCB3oUm1RmV6zYoD0ROxj+gvKiKnAiWr2WOCMa
+	F4CMD+FT6nfQYqymY7wm/5eKs8pfPVi7qnMnJkvt7FN48VDN4aICXz4JkLM0LY6Y90TFEEDxHx+
+	BQlVKDxAwwKokgqfWg6/NJgNLjWOBKh/KjlqNWMBfhj5mXGBtH+4suy/kWGblJQ==
+X-Google-Smtp-Source: AGHT+IFl4YktStVqSJzIgw4nrH9zK2DTy2v4RE7W0FzzvKqWNmbztzhlW1/vpTeYPzZHAjMZ16gRRw==
+X-Received: by 2002:a17:903:1aef:b0:23e:3c33:6be8 with SMTP id d9443c01a7336-23fb2fe127emr72410635ad.8.1753537372804;
+        Sat, 26 Jul 2025 06:42:52 -0700 (PDT)
+Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:77:9619:11b0:a73:e5a6])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31e83508500sm1869190a91.22.2025.07.26.06.42.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Jul 2025 06:42:52 -0700 (PDT)
+From: Tianyu Lan <ltykernel@gmail.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	arnd@arndb.de,
+	Neeraj.Upadhyay@amd.com,
+	kvijayab@amd.com
+Cc: Tianyu Lan <tiala@microsoft.com>,
+	linux-arch@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH V4 0/4] x86/Hyper-V: Add AMD Secure AVIC for Hyper-V platform
+Date: Sat, 26 Jul 2025 09:42:46 -0400
+Message-Id: <20250726134250.4414-1-ltykernel@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240710212555.1617795-1-amery.hung@bytedance.com> <dsamf7k2byoflztkwya3smj7jyczyq7aludvd36lufdrboxdqk@u73iwrcyb5am>
-In-Reply-To: <dsamf7k2byoflztkwya3smj7jyczyq7aludvd36lufdrboxdqk@u73iwrcyb5am>
-From: Amery Hung <ameryhung@gmail.com>
-Date: Fri, 25 Jul 2025 22:53:35 -0700
-X-Gm-Features: Ac12FXyMvpkfh1BVRP1lxRseahm_ttdL_F4ac_DTON4U9vvl5wd6WOkrVb-fPTk
-Message-ID: <CAMB2axNKxW4gnd6qiSNYdm2zPxJkbbLgZz9P-Kh7SS0Sb1Yw=Q@mail.gmail.com>
-Subject: Re: [RFC PATCH net-next v6 00/14] virtio/vsock: support datagrams
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: stefanha@redhat.com, mst@redhat.com, jasowang@redhat.com, 
-	xuanzhuo@linux.alibaba.com, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, kys@microsoft.com, haiyangz@microsoft.com, 
-	wei.liu@kernel.org, decui@microsoft.com, bryantan@vmware.com, 
-	vdasa@vmware.com, pv-drivers@vmware.com, dan.carpenter@linaro.org, 
-	simon.horman@corigine.com, oxffffaa@gmail.com, kvm@vger.kernel.org, 
-	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	bpf@vger.kernel.org, bobby.eshleman@bytedance.com, jiang.wang@bytedance.com, 
-	amery.hung@bytedance.com, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 22, 2025 at 7:35=E2=80=AFAM Stefano Garzarella <sgarzare@redhat=
-.com> wrote:
->
-> Hi Amery,
->
-> On Wed, Jul 10, 2024 at 09:25:41PM +0000, Amery Hung wrote:
-> >Hey all!
-> >
-> >This series introduces support for datagrams to virtio/vsock.
->
-> any update on v7 of this series?
->
+From: Tianyu Lan <tiala@microsoft.com>
 
-Hi Stefano,
+Secure AVIC is a new hardware feature in the AMD64
+architecture to allow SEV-SNP guests to prevent the
+hypervisor from generating unexpected interrupts to
+a vCPU or otherwise violate architectural assumptions
+around APIC behavior.
 
-Sorry that I don't have personal time to work on v7. Since I don't
-think people involved in this set are still working on it, I am
-posting my v7 WIP here to see if anyone is interested in finishing it.
-Would greatly appreciate any help.
+Each vCPU has a guest-allocated APIC backing page of
+size 4K, which maintains APIC state for that vCPU.
+APIC backing page's ALLOWED_IRR field indicates the
+interrupt vectors which the guest allows the hypervisor
+to send.
 
-Link: https://github.com/ameryhung/linux/tree/vsock-dgram-v7
+This patchset is to enable the feature for Hyper-V
+platform. Patch "Drivers: hv: Allow vmbus message
+synic interrupt injected from Hyper-V" is to expose
+new fucntion hv_enable_coco_interrupt() and device
+driver and arch code may update AVIC backing page
+ALLOWED_IRR field to allow Hyper-V inject associated
+vector.
 
-Here are the things that I haven't address in the WIP:
+This patchset is based on the AMD patchset "AMD: Add
+Secure AVIC Guest Support"
+https://lkml.org/lkml/2025/6/10/1579
 
-01/14
-- Arseniy suggested doing skb_put(dg->payload_size) and memcpy(dg->payload_=
-size)
+Chnage since v3:
+	- Disable VMBus Message interrupt via hv_enable_
+       	  coco_interrupt() in the hv_synic_disable_regs().
+	- Fix coding style issue and update change log.
 
-07/14
-- Remove the double transport lookup in the send path by passing
-transport to dgram_enqueue
-- Address Arseniy's comment about updating vsock_virtio_transport_common.h
+Change since v2:
+       - Add hv_enable_coco_interrupt() as wrapper
+        of apic_update_vector()
+       - Re-work change logs
 
-14/14
-- Split test/vsock into smaller patches
+Change since v1:
+       - Remove the check of Secure AVIC when set APIC backing page
+       - Use apic_update_vector() instead of exposing new interface
+       from Secure AVIC driver to update APIC backing page and allow
+       associated interrupt to be injected by hypervisor.
 
-Finally the spec change discussion also needs to happen.
+Tianyu Lan (4):
+  x86/hyperv: Don't use hv apic driver when Secure AVIC is available
+  drivers/hv: Allow vmbus message synic interrupt injected from Hyper-V
+  x86/hyperv: Don't use auto-eoi when Secure AVIC is available
+  x86/hyperv: Allow Hyper-V to inject STIMER0 interrupts
 
+ arch/x86/hyperv/hv_apic.c      | 8 ++++++++
+ arch/x86/hyperv/hv_init.c      | 7 +++++++
+ arch/x86/kernel/cpu/mshyperv.c | 2 ++
+ drivers/hv/hv.c                | 2 ++
+ drivers/hv/hv_common.c         | 5 +++++
+ include/asm-generic/mshyperv.h | 1 +
+ 6 files changed, 25 insertions(+)
 
+-- 
+2.25.1
 
-> Thanks,
-> Stefano
->
-> >
-> >It is a spin-off (and smaller version) of this series from the summer:
-> >  https://lore.kernel.org/all/cover.1660362668.git.bobby.eshleman@byteda=
-nce.com/
-> >
-> >Please note that this is an RFC and should not be merged until
-> >associated changes are made to the virtio specification, which will
-> >follow after discussion from this series.
-> >
-> >Another aside, the v4 of the series has only been mildly tested with a
-> >run of tools/testing/vsock/vsock_test. Some code likely needs cleaning
-> >up, but I'm hoping to get some of the design choices agreed upon before
-> >spending too much time making it pretty.
-> >
-> >This series first supports datagrams in a basic form for virtio, and
-> >then optimizes the sendpath for all datagram transports.
-> >
-> >The result is a very fast datagram communication protocol that
-> >outperforms even UDP on multi-queue virtio-net w/ vhost on a variety
-> >of multi-threaded workload samples.
-> >
-> >For those that are curious, some summary data comparing UDP and VSOCK
-> >DGRAM (N=3D5):
-> >
-> >       vCPUS: 16
-> >       virtio-net queues: 16
-> >       payload size: 4KB
-> >       Setup: bare metal + vm (non-nested)
-> >
-> >       UDP: 287.59 MB/s
-> >       VSOCK DGRAM: 509.2 MB/s
-> >
-> >Some notes about the implementation...
-> >
-> >This datagram implementation forces datagrams to self-throttle according
-> >to the threshold set by sk_sndbuf. It behaves similar to the credits
-> >used by streams in its effect on throughput and memory consumption, but
-> >it is not influenced by the receiving socket as credits are.
-> >
-> >The device drops packets silently.
-> >
-> >As discussed previously, this series introduces datagrams and defers
-> >fairness to future work. See discussion in v2 for more context around
-> >datagrams, fairness, and this implementation.
-> >
-> >Signed-off-by: Bobby Eshleman <bobby.eshleman@bytedance.com>
-> >Signed-off-by: Amery Hung <amery.hung@bytedance.com>
-> >---
-> >Changes in v6:
-> >- allow empty transport in datagram vsock
-> >- add empty transport checks in various paths
-> >- transport layer now saves source cid and port to control buffer of skb
-> >  to remove the dependency of transport in recvmsg()
-> >- fix virtio dgram_enqueue() by looking up the transport to be used when
-> >  using sendto(2)
-> >- fix skb memory leaks in two places
-> >- add dgram auto-bind test
-> >- Link to v5: https://lore.kernel.org/r/20230413-b4-vsock-dgram-v5-0-581=
-bd37fdb26@bytedance.com
-> >
-> >Changes in v5:
-> >- teach vhost to drop dgram when a datagram exceeds the receive buffer
-> >  - now uses MSG_ERRQUEUE and depends on Arseniy's zerocopy patch:
-> >       "vsock: read from socket's error queue"
-> >- replace multiple ->dgram_* callbacks with single ->dgram_addr_init()
-> >  callback
-> >- refactor virtio dgram skb allocator to reduce conflicts w/ zerocopy se=
-ries
-> >- add _fallback/_FALLBACK suffix to dgram transport variables/macros
-> >- add WARN_ONCE() for table_size / VSOCK_HASH issue
-> >- add static to vsock_find_bound_socket_common
-> >- dedupe code in vsock_dgram_sendmsg() using module_got var
-> >- drop concurrent sendmsg() for dgram and defer to future series
-> >- Add more tests
-> >  - test EHOSTUNREACH in errqueue
-> >  - test stream + dgram address collision
-> >- improve clarity of dgram msg bounds test code
-> >- Link to v4: https://lore.kernel.org/r/20230413-b4-vsock-dgram-v4-0-0ce=
-bbb2ae899@bytedance.com
-> >
-> >Changes in v4:
-> >- style changes
-> >  - vsock: use sk_vsock(vsk) in vsock_dgram_recvmsg instead of
-> >    &sk->vsk
-> >  - vsock: fix xmas tree declaration
-> >  - vsock: fix spacing issues
-> >  - virtio/vsock: virtio_transport_recv_dgram returns void because err
-> >    unused
-> >- sparse analysis warnings/errors
-> >  - virtio/vsock: fix unitialized skerr on destroy
-> >  - virtio/vsock: fix uninitialized err var on goto out
-> >  - vsock: fix declarations that need static
-> >  - vsock: fix __rcu annotation order
-> >- bugs
-> >  - vsock: fix null ptr in remote_info code
-> >  - vsock/dgram: make transport_dgram a fallback instead of first
-> >    priority
-> >  - vsock: remove redundant rcu read lock acquire in getname()
-> >- tests
-> >  - add more tests (message bounds and more)
-> >  - add vsock_dgram_bind() helper
-> >  - add vsock_dgram_connect() helper
-> >
-> >Changes in v3:
-> >- Support multi-transport dgram, changing logic in connect/bind
-> >  to support VMCI case
-> >- Support per-pkt transport lookup for sendto() case
-> >- Fix dgram_allow() implementation
-> >- Fix dgram feature bit number (now it is 3)
-> >- Fix binding so dgram and connectible (cid,port) spaces are
-> >  non-overlapping
-> >- RCU protect transport ptr so connect() calls never leave
-> >  a lockless read of the transport and remote_addr are always
-> >  in sync
-> >- Link to v2: https://lore.kernel.org/r/20230413-b4-vsock-dgram-v2-0-079=
-cc7cee62e@bytedance.com
-> >
-> >
-> >Bobby Eshleman (14):
-> >  af_vsock: generalize vsock_dgram_recvmsg() to all transports
-> >  af_vsock: refactor transport lookup code
-> >  af_vsock: support multi-transport datagrams
-> >  af_vsock: generalize bind table functions
-> >  af_vsock: use a separate dgram bind table
-> >  virtio/vsock: add VIRTIO_VSOCK_TYPE_DGRAM
-> >  virtio/vsock: add common datagram send path
-> >  af_vsock: add vsock_find_bound_dgram_socket()
-> >  virtio/vsock: add common datagram recv path
-> >  virtio/vsock: add VIRTIO_VSOCK_F_DGRAM feature bit
-> >  vhost/vsock: implement datagram support
-> >  vsock/loopback: implement datagram support
-> >  virtio/vsock: implement datagram support
-> >  test/vsock: add vsock dgram tests
-> >
-> > drivers/vhost/vsock.c                   |   62 +-
-> > include/linux/virtio_vsock.h            |    9 +-
-> > include/net/af_vsock.h                  |   24 +-
-> > include/uapi/linux/virtio_vsock.h       |    2 +
-> > net/vmw_vsock/af_vsock.c                |  343 ++++++--
-> > net/vmw_vsock/hyperv_transport.c        |   13 -
-> > net/vmw_vsock/virtio_transport.c        |   24 +-
-> > net/vmw_vsock/virtio_transport_common.c |  188 ++++-
-> > net/vmw_vsock/vmci_transport.c          |   61 +-
-> > net/vmw_vsock/vsock_loopback.c          |    9 +-
-> > tools/testing/vsock/util.c              |  177 +++-
-> > tools/testing/vsock/util.h              |   10 +
-> > tools/testing/vsock/vsock_test.c        | 1032 ++++++++++++++++++++---
-> > 13 files changed, 1638 insertions(+), 316 deletions(-)
-> >
-> >--
-> >2.20.1
-> >
->
 
