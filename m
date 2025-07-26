@@ -1,222 +1,142 @@
-Return-Path: <linux-hyperv+bounces-6406-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6407-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2800CB12529
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Jul 2025 22:07:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E2C70B1280B
+	for <lists+linux-hyperv@lfdr.de>; Sat, 26 Jul 2025 02:34:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 13FD61CE3568
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Jul 2025 20:07:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9F6B91CC1FE1
+	for <lists+linux-hyperv@lfdr.de>; Sat, 26 Jul 2025 00:35:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 491B2255E40;
-	Fri, 25 Jul 2025 20:07:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B35D129E6E;
+	Sat, 26 Jul 2025 00:34:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkBUg851"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="HNLURvaf"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5190253F1B;
-	Fri, 25 Jul 2025 20:07:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A088E1EEE0;
+	Sat, 26 Jul 2025 00:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753474047; cv=none; b=Mv816WpeZHcke80LoJMQw9SdxKbShHyTuh2u5kXIyZCIJD5Pip0/e+YAyhBBRDnsrkWxQN6YSvOsSodGp9/PvfnaJdksiZ/vmNv9f0ilO9Jxl6mNmZpVAWy17pqhT0r8kCIZUGAdnpcGBRtk2E69VPg4Mt0k9yUIIaWHvwT9Lic=
+	t=1753490080; cv=none; b=iDBJpVKmjNiABDZFYmanzmdHyeug58+94xerZFP5e8grJfxOqNwVM4r3jSAH+z2q9KjnoMaJWGJ8gzguwwC73IbDzARmWldTX7Pn0tRRGbCLaeHFjmnfLNB44dHlJBecOjBaxh+cbWr1tJfeKxriS171ka9jbClJT/3uhxZO51U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753474047; c=relaxed/simple;
-	bh=zpFp4S9yw4pSClM+sDal9V6MFgWIVSFIiEPZ1rxMoRA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J5pqqkpk0IojGEJGEkACEvRUjGMkbzXFuhADkjWqhONE9PVVu3AAhanh+X6NmpDzban9VKkyBbw7ZyB7g9jOekSWSiP7IpbrUvilpTe1Tk/4RHdcD0hUjeEHmaqoaTB7ijIE4r5MszNKP5gP3m/PWU1N6q6S/VsU41buXxDvntQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nkBUg851; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b390136ed88so1990673a12.2;
-        Fri, 25 Jul 2025 13:07:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753474045; x=1754078845; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cT5QUQKg2ALk3uV+xK+HLSPEzHUJpBc0QQCSTd1kT/c=;
-        b=nkBUg851MZqaqymHCCBoqshrTDtloL7pygbByNy3jLZ8hymS/Ps8ky0LAvv++HaKHe
-         rTuBAqrNHn6yJflTAt9fhiRPZnZIn0mLlDMjDCM/7/8pm9PbjCHj/Y4D79qDPNZLGIcS
-         ISt/I6EZEsVZcaB8lhZ0Dp8Wr8FCusRPK0LmI0UEQQyqAECTTRAwzGLTHY9dhXJWZIQY
-         5QwrJHrTArwx3opy7aAZWgkd78/4ZXu5/RU1w4mkrTGGDFMSdIumpTtcWkXGalRUzC0c
-         VjXIch2sppBZA5e4R8qpwJx6xoW4nq2/PNcJmD+38GbSdIF0GE4l1hF3VFc35ULsNxaV
-         aVWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753474045; x=1754078845;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cT5QUQKg2ALk3uV+xK+HLSPEzHUJpBc0QQCSTd1kT/c=;
-        b=CHh6hmhbR26Gzlc33OgJGLX6fkcCuKtKMgAQDL+fHcEG2H6/T0ZbfrW3XNLQKH5/PP
-         kr84itw0RT6kcYNDoGH9ch5fhT6yUpAZt6BKE2DHbxhqDZ1zILqMi4HmmKYu0hIZM/h+
-         7vU6pZ6yU5Ip5EqVU+vdaPR3Z0A7RT7RJUQ2b0zqGIaGtD1UKZTDm0Lvp01oQp5vHCZH
-         1RKgyT8VoRfLv/vLGBJ6lA2uiLr6OEz9Sk4xXw+T2ZSP4+b5GUOIvUEUVEcFbPAjRqIB
-         Bs8AwIsm1tqE6U18u6+uO/KEQtS3utM43bSNx9O65hhJczRxjBgUZiCmGSyonWKx/jVA
-         6XZw==
-X-Forwarded-Encrypted: i=1; AJvYcCUT6MNqB0IVLhFUQl4eNtoJdV0PMYuRqTymtraIfAKSmXMdnYdIk+OlqA/+fW3N54iXC530eSbS/c9S@vger.kernel.org, AJvYcCXOIMp1JmWT5pBPj5VVWQ5JJQohOKg1fxUfUSLJ8nNu6cNd1e6C3cpTIKSrUgORoly1lQYIiAvVM+attPNn@vger.kernel.org, AJvYcCXciG8BtvYpZ37H/0d3NwcaehcFGauYQgEeOQRuA6x9/ReDHImvmel7VQnfDx1c7sYjBhf50NxDEaQ6cZjR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyry10+MSc1orOzEEFTFq2bTWYTudSqVZzaPwf7BTKsSzYK+Icj
-	qCc44UzhcRx3Wcw7MEEhr/ZQ5n0XWQ/mqReUoyEvrogqMq1L0gLFs1sGZ0kAwMv67Vo8WtWrF6p
-	QU8z63oOAsbo6F2SUfRQemqacXyEY45w=
-X-Gm-Gg: ASbGncuv0/V+D0MomQ0dRQRDTRfUbuiwSQagXu38EL+LRzXHAFIZN2YkHhFSLFQXfCe
-	y/+FUh+a+gSvupns2tf1uMTp6DIsyZBum5eugzjv93rbBj5bBC/z588DgjBGP9UZaotUA9MJ0gQ
-	Y0RUW9YPYs5Lw1iQicEIYpTaaDw5lNxenBXPg4L3RR999/ot9VePlTZlX0QdlrELmOq8ZyZSYWP
-	gxG
-X-Google-Smtp-Source: AGHT+IETM9/0Sv5Fk5fdgFWKRZcjhkp47Vf+75TqKRn9xbf2G9bgjMKWkNQnSBtgG7va6qXj5j26EaUgZb80ycP16kA=
-X-Received: by 2002:a17:90b:2d8c:b0:313:b78:dc14 with SMTP id
- 98e67ed59e1d1-31e77635171mr5170286a91.0.1753474044826; Fri, 25 Jul 2025
- 13:07:24 -0700 (PDT)
+	s=arc-20240116; t=1753490080; c=relaxed/simple;
+	bh=jBB8Mer4rs/R5LM+lVQkd217eo5XRp0Fx9tlsyoG1Zk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aobxuVhfEvjIGueBawtNiaNUTfir7LRporx4L1EOtg/V2SSCo25B8QW3Wn9q7SlqvgQE6K8uJUW9mEGJ7q2+EydnmqlplAwnLdR7QF3GlkMrtqHwqqCs/8uiBgv738DLJkvwvB2CNuvdRcW9pNM+16WyO2A4IIpLz7PiQTpovjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=HNLURvaf; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 56Q0XORn2821986
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Fri, 25 Jul 2025 17:33:24 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 56Q0XORn2821986
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025072201; t=1753490007;
+	bh=xXL896XBRThII5BHL6V3zxTFqjgG8gkLETQmChOG7u8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HNLURvaf0H7tnVvV3Uk9y0BnauJ/l5LGzrqJzUY8NjbJUQQAX7QfyvKnBtcchsmUj
+	 BV1ZtPkt5HpxsAM23FEH83l/Fz/9KFEYgbkFrEy7Zz3cmxdkfd0yToJP13UbermWw9
+	 MSHuUAWAHHrAw/GT4z/NJupWVBb7Sc35+EilOwJtQzRADckpUEdzx8NxmaU3GTryIf
+	 gthlWOfY50mlFeVEy4AIRkZOcyW+9DXHTj9KtrM0t6GvDaeh1r7D6y/g6NPyEgYavN
+	 IioCww88uP/JPR35snXQmPB9zLWgbxmexnA1kaYx6C6/SF3x3TIySRv+kVQaGLxkxd
+	 2rICd33OrNNCw==
+Message-ID: <93595fc9-4d18-4739-8e40-bd4d70b1c1ba@zytor.com>
+Date: Fri, 25 Jul 2025 17:33:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250723190308.5945-1-ltykernel@gmail.com> <20250723190308.5945-3-ltykernel@gmail.com>
- <SN6PR02MB4157A59A59B24DB51EAA1ECFD45EA@SN6PR02MB4157.namprd02.prod.outlook.com>
-In-Reply-To: <SN6PR02MB4157A59A59B24DB51EAA1ECFD45EA@SN6PR02MB4157.namprd02.prod.outlook.com>
-From: Tianyu Lan <ltykernel@gmail.com>
-Date: Sat, 26 Jul 2025 04:06:48 +0800
-X-Gm-Features: Ac12FXzEnmcVaXrtMHRewNmk4ooVAIcqkXz64mQoW6zjhddkX2qzRuvRGQ8JQ8U
-Message-ID: <CAMvTesCYNs+rEaktH_vjrxDXWgcZnfa8YF3jVcOkPN8YoSyQdw@mail.gmail.com>
-Subject: Re: [RFC PATCH V3 2/4] Drivers: hv: Allow vmbus message synic
- interrupt injected from Hyper-V
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>, 
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>, 
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"hpa@zytor.com" <hpa@zytor.com>, "arnd@arndb.de" <arnd@arndb.de>, 
-	"Neeraj.Upadhyay@amd.com" <Neeraj.Upadhyay@amd.com>, Tianyu Lan <tiala@microsoft.com>, 
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, 
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 16/16] objtool: Validate kCFI calls
+To: Sean Christopherson <seanjc@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, kys@microsoft.com,
+        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, pbonzini@redhat.com,
+        ardb@kernel.org, kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        gregkh@linuxfoundation.org, jpoimboe@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-efi@vger.kernel.org,
+        samitolvanen@google.com, ojeda@kernel.org
+References: <20250714102011.758008629@infradead.org>
+ <20250714103441.496787279@infradead.org> <aIKZnSuTXn9thrf7@google.com>
+ <1584052d-4d8c-4b4e-b65b-318296d47636@zytor.com>
+ <aIPhfNxjTL4LiG6Z@google.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <aIPhfNxjTL4LiG6Z@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 25, 2025 at 7:34=E2=80=AFAM Michael Kelley <mhklinux@outlook.co=
-m> wrote:
->
-> From: Tianyu Lan <ltykernel@gmail.com> Sent: Wednesday, July 23, 2025 12:=
-03 PM
-> >
-> > When Secure AVIC is enabled, VMBus driver should
-> > call x2apic Secure AVIC interface to allow Hyper-V
-> > to inject VMBus message interrupt.
-> >
-> > Signed-off-by: Tianyu Lan <tiala@microsoft.com>
-> > ---
-> > Change since v3
-> >        - Add hv_enable_coco_interrupt() as wrapper
-> >        of apic_update_vector()
-> >
-> >  arch/x86/hyperv/hv_apic.c      | 5 +++++
-> >  drivers/hv/hv.c                | 2 ++
-> >  drivers/hv/hv_common.c         | 5 +++++
-> >  include/asm-generic/mshyperv.h | 1 +
-> >  4 files changed, 13 insertions(+)
-> >
-> > diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-> > index 1c48396e5389..dd6829440ea2 100644
-> > --- a/arch/x86/hyperv/hv_apic.c
-> > +++ b/arch/x86/hyperv/hv_apic.c
-> > @@ -53,6 +53,11 @@ static void hv_apic_icr_write(u32 low, u32 id)
-> >       wrmsrq(HV_X64_MSR_ICR, reg_val);
-> >  }
-> >
-> > +void hv_enable_coco_interrupt(unsigned int cpu, unsigned int vector, b=
-ool set)
-> > +{
-> > +     apic_update_vector(cpu, vector, set);
-> > +}
-> > +
-> >  static u32 hv_apic_read(u32 reg)
-> >  {
-> >       u32 reg_val, hi;
-> > diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-> > index 308c8f279df8..2aafe8946e5b 100644
-> > --- a/drivers/hv/hv.c
-> > +++ b/drivers/hv/hv.c
-> > @@ -20,6 +20,7 @@
-> >  #include <linux/interrupt.h>
-> >  #include <clocksource/hyperv_timer.h>
-> >  #include <asm/mshyperv.h>
-> > +#include <asm/apic.h>
->
-> This #include is no longer needed since apic_update_vector()
-> isn't being called directly. And the file doesn't exist on arm64,
-> so it would create a compile error on arm64.
->
-> Before submitting, I always do a test compile on arm64 with
-> my patches so that errors like this are caught beforehand! :-)
+On 7/25/2025 12:56 PM, Sean Christopherson wrote:
+>>
+>> BTW, there is a declaration for vmx_do_interrupt_irqoff() in
+>> arch/x86/kvm/vmx/vmx.c, so we'd better also do:
+>>
+>> --- a/arch/x86/kvm/vmx/vmx.c
+>> +++ b/arch/x86/kvm/vmx/vmx.c
+>> @@ -6945,7 +6945,9 @@ void vmx_load_eoi_exitmap(struct kvm_vcpu *vcpu, u64
+>> *eoi_exit_bitmap)
+>>          vmcs_write64(EOI_EXIT_BITMAP3, eoi_exit_bitmap[3]);
+>>   }
+>>
+>> +#ifndef CONFIG_X86_FRED
+>>   void vmx_do_interrupt_irqoff(unsigned long entry);
+>> +#endif
+> No, we want to keep the declaration.  Unconditionally decaring the symbol allows
+> KVM to use IS_ENABLED():
+> 
+> 	if (IS_ENABLED(CONFIG_X86_FRED))
+>   		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector);
+> 
+> Hiding the declaration would require that to be a "proper" #ifdef, which would
+> be a net negative for readability.  The extra declaration won't hurt anything for
+> CONFIG_X86_FRED=n, as "bad" usage will still fail at link time.
 
-Yes, good suggestion and will add compilation test on ARM64.
-before sending out. Thanks.
->
-> >  #include <linux/set_memory.h>
-> >  #include "hyperv_vmbus.h"
-> >
-> > @@ -310,6 +311,7 @@ void hv_synic_enable_regs(unsigned int cpu)
-> >       if (vmbus_irq !=3D -1)
-> >               enable_percpu_irq(vmbus_irq, 0);
-> >       shared_sint.as_uint64 =3D hv_get_msr(HV_MSR_SINT0 + VMBUS_MESSAGE=
-_SINT);
-> > +     hv_enable_coco_interrupt(cpu, vmbus_interrupt, true);
->
-> In the "RFC Patch v2" version of this patch, I had asked about whether
-> the interrupt should be disabled in hv_synic_disable_regs(), so there is
-> symmetry. [1] I see that in Patch 4 of this series, you are disabling the
-> STIMER0 interrupt when a CPU goes offline. If disabling vmbus_interrupt
-> causes a problem, I'm curious about the details.
->
-Yes, that makes sense and will add it.
->
-> >
-> >       shared_sint.vector =3D vmbus_interrupt;
-> >       shared_sint.masked =3D false;
-> > diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> > index 49898d10faff..0f024ab3d360 100644
-> > --- a/drivers/hv/hv_common.c
-> > +++ b/drivers/hv/hv_common.c
-> > @@ -716,6 +716,11 @@ u64 __weak hv_tdx_hypercall(u64 control, u64 param=
-1, u64 param2)
-> >  }
-> >  EXPORT_SYMBOL_GPL(hv_tdx_hypercall);
-> >
-> > +void __weak hv_enable_coco_interrupt(unsigned int cpu, unsigned int ve=
-ctor, bool set)
-> > +{
-> > +}
-> > +EXPORT_SYMBOL_GPL(hv_enable_coco_interrupt);
-> > +
-> >  void hv_identify_partition_type(void)
-> >  {
-> >       /* Assume guest role */
-> > diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyp=
-erv.h
-> > index a729b77983fa..7907c9878369 100644
-> > --- a/include/asm-generic/mshyperv.h
-> > +++ b/include/asm-generic/mshyperv.h
-> > @@ -333,6 +333,7 @@ bool hv_is_isolation_supported(void);
-> >  bool hv_isolation_type_snp(void);
-> >  u64 hv_ghcb_hypercall(u64 control, void *input, void *output, u32 inpu=
-t_size);
-> >  u64 hv_tdx_hypercall(u64 control, u64 param1, u64 param2);
-> > +void hv_enable_coco_interrupt(unsigned int cpu, unsigned int vector, b=
-ool set);
-> >  void hyperv_cleanup(void);
-> >  bool hv_query_ext_cap(u64 cap_query);
-> >  void hv_setup_dma_ops(struct device *dev, bool coherent);
-> > --
-> > 2.25.1
-> >
->
+I did hit a compilation error, so yes, we have to keep it.
 
 
---=20
-Thanks
-Tianyu Lan
 
