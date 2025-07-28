@@ -1,164 +1,145 @@
-Return-Path: <linux-hyperv+bounces-6423-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6424-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98E8FB14106
-	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Jul 2025 19:12:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41673B14127
+	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Jul 2025 19:24:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D673618C20DE
-	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Jul 2025 17:12:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 46A591883CF5
+	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Jul 2025 17:24:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1DBE273D65;
-	Mon, 28 Jul 2025 17:12:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE83F274FD9;
+	Mon, 28 Jul 2025 17:24:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ISRKPyRX"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="oFfqiisZ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33114EED8;
-	Mon, 28 Jul 2025 17:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3CF26E175
+	for <linux-hyperv@vger.kernel.org>; Mon, 28 Jul 2025 17:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753722732; cv=none; b=ncZA+H1ARpAit4m5x6Kcrbk0ISqNVcQY5puLAb5k191Gumw6ls7teLLg8iOjzS9TykcCwvy6yOhx3yoEteAy+1BP6NSaV9uV0JrLBwVmrZBNkgl62CAtYJXgrArQ6IOuRcZ9qtQPT2P/QVcTb7Ftv8Ga8901xldpDWt3dGtM+nU=
+	t=1753723450; cv=none; b=RSOPDB9+Y1yElVNt+6bTl02xmwEbbYxi5DWtjKKSYF9wqFiYawUIW31OqM+T0HwC95brXygpkj/XvrShdeKNtMFwMpJ4lfyNg7o+Mcb6Up9CFOSC2ZSfjGkqSfB++qFwMwjYkQHbporWaPocol31EAsrDlYXGmcI4MbjAqcJubg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753722732; c=relaxed/simple;
-	bh=jm8GHfoU8DWdKYSCTigI98dUJfuD9vlNqLzgT9PHHwI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J8T0rTYsPNg+l0MO9ekPBzn2jGfz3KtwYOo1wFg4f1+l5SCLCOFrPXqjg+8N5qk6tYPNTW0GV/BKp45TMkKlVuGTeqly4STylEHGyNc4K+xKFETEexgTFYCLb5TDFAiAJFokjJd8sUxhqYQbd5Wz0+yWaEcBoUiiUjVmSK88M1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ISRKPyRX; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.64.232.206] (unknown [52.148.140.42])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5E84F2114274;
-	Mon, 28 Jul 2025 10:12:10 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5E84F2114274
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1753722730;
-	bh=/O3Zq1iAdcSb7vXbke8ttLkPel/qXHUJTuDYYr+EkFQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ISRKPyRXDJnUgLM62BqlHo8k+3QddOaPibWcTOkOmmzvIbImRFP++2q4iZ9S+OOml
-	 L0BTHhKHh7JOMPygtGqeduCRxsHOVi5Sd582dIJ0FDFggrTbUJaWPEKghqqw50aN8i
-	 QMBVEvIe6NbRiXNVrVmdP+sr7kUpFZJRiKfXllCI=
-Message-ID: <e823efbd-892b-45c6-a747-9a7dc1caf48c@linux.microsoft.com>
-Date: Mon, 28 Jul 2025 10:12:09 -0700
+	s=arc-20240116; t=1753723450; c=relaxed/simple;
+	bh=2ZdwF4PQYW8147pzn4fPe5HUYoQfVvkk9RKNY+W2sFE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZGHafNH82bLD6eeskwjaDqx/seWPctfkwyShfiGwQrlHCQZz2MOwRuWhdNjg15IB39iECxImL+SIq5HKEllbddkGkMd+3RcNIvto3CV5I8NUt0ZWGnGvRXM33Qn0/IZLp1sMb8pzqNuOQpxW8qdo7E/OeZOqDSDXRYOYm18HSRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=oFfqiisZ; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-7074710a90bso9974416d6.0
+        for <linux-hyperv@vger.kernel.org>; Mon, 28 Jul 2025 10:24:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1753723448; x=1754328248; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6XdqDqbJDwpBMe3m0FOfH7VD8pnof2gn6I7X5rLReRs=;
+        b=oFfqiisZYO5wCla3SH4BvnBhGCqgeALrVtPIFnG5G5tgZr1Qtj8SKODdsEattfQtIy
+         oAS60hUo8gWsAVZffO4SWt0Vr8NPKV5hQg+uGZ3Qfr+6VH2GA1ZkRDHwFfPFNyWOTNCb
+         QRBZH8uPb4geRq6lZwY7NjWV62eyojt5amb7KoxqLS2LyMR1kChJNta9lIBPYj37Ku/K
+         DNf/u7SlbqYy+Z41nBF32zrOUgtUIuuuOI1guBqApAswaeo/mMZu9Ld5kHY65wtXsfZO
+         UgDB+/szoQ387mzVXm9eTBwGZK9wH89SQPGOYcCbdqlIS/hn0mpAm84uq+xJ/HORWMQr
+         auGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753723448; x=1754328248;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6XdqDqbJDwpBMe3m0FOfH7VD8pnof2gn6I7X5rLReRs=;
+        b=EYGe59NZp1b7t7RqhDoLKa5McqSwJ5AwOx1BsU6CSTwhowYZOZITPVnpArlI85ZyaD
+         DWzeGkcacFGqT61ASC3TTVZPKLYf56E+qlmCxy/ZGG5+S0B6fJMcxw1gWd+qSOwdTCqO
+         LUsNpyU01jf+IVCOPG+AfwZ4qm4kV1J/7HYPTeU+1/6aNltj8amqhvVXyXr0UopJbjq/
+         m2ZL2yKj+CbkAntr/Ix5ddi99lUSWPoN5EnJfT610TusefGo728nt3nY255VdyMFtDeK
+         6HastlQOSyGFvTYFUygiIAz1cwmnWGm738l1IU7ty7JYAb8MKXCvYicRGbn1hKi+I2xn
+         NDew==
+X-Forwarded-Encrypted: i=1; AJvYcCW16R032ersvixBEgi9c+Qxr9lVo5mg2vL8gt6YFS0MmhH7wvl2RHTbgMGD4yQRtYjn9vQU5cN9Nt1gy1Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrdOybNJXiJlJwknAzZP78q89mnW1G2S+hr+p/6LQiCskaN7lo
+	3q7mQ8UO9DSxFvX0/hpXmaDaOdFvCUzrBM1bf+EacqRb/dXPUmDQdZV9CDQA4PMwLOE=
+X-Gm-Gg: ASbGncvhUtr9hKUNlIbrDAn4kgjaIlpvcgCjpj/JWW9De2lZIlfGVZpGukOwzR+V6j/
+	x8L8yjojSdwBT19nBVX6PlfYs+qYj/dCacXj6pkLj8+vB2yZf/KlpB/EywNX62G5nxuUp7wL+TD
+	ebf8xGnk3tpVmRwtyikmOGQg3psErgTcQauWi/gmilNQN65V6vaVPJaI5jcdAhsW2e2OR+Gn7d3
+	WqpdBMv1BYtF89IqLDnRPYvG+jjvbbLGc/l5nucp1HQoYRZ8MuKcoucV05ct1tGUsRhCAlMqkdj
+	Zi9wkYnZet+iQs8Vet1vrqVWSt8tdpcc6dYguGU+W62q3ANlYOY2kz24WOGD+WfD8wGORgKstav
+	fB9K70zJfSedTP5WutodREnXXNfBDKMJ/Uz2aOafUh9CAi5M97pvDL3AtXTclXaG6GjURtOeSn6
+	w=
+X-Google-Smtp-Source: AGHT+IHY0LkystMqkqxAK7PK7GfR60GTUEUQKdwp2aWknAFkvv9APqEaMLJSHGrUrYhnngwMHSEy0w==
+X-Received: by 2002:ad4:5ccf:0:b0:707:38e8:d10b with SMTP id 6a1803df08f44-70738e8d36amr98246666d6.24.1753723447718;
+        Mon, 28 Jul 2025 10:24:07 -0700 (PDT)
+Received: from hermes.local (204-195-96-226.wavecable.com. [204.195.96.226])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-70729c4db6bsm33605116d6.70.2025.07.28.10.24.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Jul 2025 10:24:07 -0700 (PDT)
+Date: Mon, 28 Jul 2025 10:24:03 -0700
+From: Stephen Hemminger <stephen@networkplumber.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>, Jason Wang
+ <jasowang@redhat.com>, Cindy Lu <lulu@redhat.com>, KY Srinivasan
+ <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
+ Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Michael Kelley
+ <mhklinux@outlook.com>, Shradha Gupta <shradhagupta@linux.microsoft.com>,
+ Kees Cook <kees@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Kuniyuki
+ Iwashima <kuniyu@google.com>, Alexander Lobakin
+ <aleksander.lobakin@intel.com>, Guillaume Nault <gnault@redhat.com>, Joe
+ Damato <jdamato@fastly.com>, Ahmed Zaki <ahmed.zaki@intel.com>, "open
+ list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>, "open
+ list:NETWORKING DRIVERS" <netdev@vger.kernel.org>, open list
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RESEND] netvsc: transfer lower device max tso size
+Message-ID: <20250728102403.14269ea7@hermes.local>
+In-Reply-To: <20250728081907.3de03b67@kernel.org>
+References: <20250718061812.238412-1-lulu@redhat.com>
+	<20250721162834.484d352a@kernel.org>
+	<CACGkMEtqhjTjdxPc=eqMxPNKFsKKA+5YP+uqWtonm=onm0gCrg@mail.gmail.com>
+	<20250721181807.752af6a4@kernel.org>
+	<CACGkMEtEvkSaYP1s+jq-3RPrX_GAr1gQ+b=b4oytw9_dGnSc_w@mail.gmail.com>
+	<20250723080532.53ecc4f1@kernel.org>
+	<SJ2PR21MB40138F71138A809C3A2D903BCA5FA@SJ2PR21MB4013.namprd21.prod.outlook.com>
+	<20250723151622.0606cc99@kernel.org>
+	<20250727200126.2682aa39@hermes.local>
+	<20250728081907.3de03b67@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/7] PCI: hv: Use hv_setup_*() to set up hypercall
- arguments
-To: mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- lpieralisi@kernel.org, kw@linux.com, mani@kernel.org, robh@kernel.org,
- bhelgaas@google.com, arnd@arndb.de
-Cc: x86@kernel.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-arch@vger.kernel.org
-References: <20250718045545.517620-1-mhklinux@outlook.com>
- <20250718045545.517620-6-mhklinux@outlook.com>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <20250718045545.517620-6-mhklinux@outlook.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 7/17/2025 9:55 PM, mhkelley58@gmail.com wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
-> 
-> Update hypercall call sites to use the new hv_setup_*() functions
-> to set up hypercall arguments. Since these functions zero the
-> fixed portion of input memory, remove now redundant calls to memset().
-> 
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
-> 
-> Notes:
->     Changes in v4:
->     * Rename hv_hvcall_*() functions to hv_setup_*() [Easwar Hariharan]
->     * Rename hv_hvcall_in_batch_size() to hv_get_input_batch_size()
->       [Easwar Hariharan]
->     
->     Changes in v3:
->     * Removed change to definition of struct hv_mmio_write_input so it remains
->       consistent with original Hyper-V definitions. Adjusted argument to
->       hv_hvcall_in_array() accordingly so that the 64 byte 'data' array is
->       not zero'ed. [Nuno Das Neves]
->     
->     Changes in v2:
->     * In hv_arch_irq_unmask(), added check of the number of computed banks
->       in the hv_vpset against the batch_size. Since an hv_vpset currently
->       represents a maximum of 4096 CPUs, the hv_vpset size does not exceed
->       512 bytes and there should always be sufficent space. But do the
->       check just in case something changes. [Nuno Das Neves]
-> 
->  drivers/pci/controller/pci-hyperv.c | 18 ++++++++----------
->  1 file changed, 8 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index d2b7e8ea710b..79de85d1d68b 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -620,7 +620,7 @@ static void hv_irq_retarget_interrupt(struct irq_data *data)
->  	struct pci_dev *pdev;
->  	unsigned long flags;
->  	u32 var_size = 0;
-> -	int cpu, nr_bank;
-> +	int cpu, nr_bank, batch_size;
->  	u64 res;
->  
->  	dest = irq_data_get_effective_affinity_mask(data);
-> @@ -636,8 +636,8 @@ static void hv_irq_retarget_interrupt(struct irq_data *data)
->  
->  	local_irq_save(flags);
->  
-> -	params = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> -	memset(params, 0, sizeof(*params));
-> +	batch_size = hv_setup_in_array(&params, sizeof(*params),
-> +					sizeof(params->int_target.vp_set.bank_contents[0]));
->  	params->partition_id = HV_PARTITION_ID_SELF;
->  	params->int_entry.source = HV_INTERRUPT_SOURCE_MSI;
->  	params->int_entry.msi_entry.address.as_uint32 = int_desc->address & 0xffffffff;
-> @@ -669,7 +669,7 @@ static void hv_irq_retarget_interrupt(struct irq_data *data)
->  		nr_bank = cpumask_to_vpset(&params->int_target.vp_set, tmp);
->  		free_cpumask_var(tmp);
->  
-> -		if (nr_bank <= 0) {
-> +		if (nr_bank <= 0 || nr_bank > batch_size) {
->  			res = 1;
->  			goto out;
->  		}
-> @@ -1102,11 +1102,9 @@ static void hv_pci_read_mmio(struct device *dev, phys_addr_t gpa, int size, u32
->  
->  	/*
->  	 * Must be called with interrupts disabled so it is safe
-> -	 * to use the per-cpu input argument page.  Use it for
-> -	 * both input and output.
-> +	 * to use the per-cpu argument page.
->  	 */
-> -	in = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> -	out = *this_cpu_ptr(hyperv_pcpu_input_arg) + sizeof(*in);
-> +	hv_setup_inout(&in, sizeof(*in), &out, sizeof(*out));
->  	in->gpa = gpa;
->  	in->size = size;
->  
-> @@ -1135,9 +1133,9 @@ static void hv_pci_write_mmio(struct device *dev, phys_addr_t gpa, int size, u32
->  
->  	/*
->  	 * Must be called with interrupts disabled so it is safe
-> -	 * to use the per-cpu input argument memory.
-> +	 * to use the per-cpu argument page.
->  	 */
-> -	in = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> +	hv_setup_in_array(&in, offsetof(typeof(*in), data), sizeof(in->data[0]));
->  	in->gpa = gpa;
->  	in->size = size;
->  	switch (size) {
+On Mon, 28 Jul 2025 08:19:07 -0700
+Jakub Kicinski <kuba@kernel.org> wrote:
 
-Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> On Sun, 27 Jul 2025 20:01:26 -0700 Stephen Hemminger wrote:
+> > On Wed, 23 Jul 2025 15:16:22 -0700
+> > Jakub Kicinski <kuba@kernel.org> wrote:  
+> > >  
+> > > > Actually, we had used the common bonding driver 9 years ago. But it's
+> > > > replaced by this kernel/netvsc based "transparent" bonding mode. See
+> > > > the patches listed below.
+> > > > 
+> > > > The user mode bonding scripts were unstable, and difficult to deliver
+> > > > & update for various distros. So Stephen developed the new "transparent"
+> > > > bonding mode, which greatly improves the situation.      
+> > > 
+> > > I specifically highlighted systemd-networkd as the change in the user
+> > > space landscape.    
+> > 
+> > Haiyang tried valiantly but getting every distro to do the right thing
+> > with VF's bonding and hot plug was impossible to support.  
+> 
+> I understand, but I also don't want it to be an upstream Linux problem.
+> 
+> Again, no other cloud provider seems to have this issue, AFAIU.
+
+The problem is that other cloud providers don't expose the VF, the hide it in HW firmware.
+The userspace world is a mess, with systemd, netplan, cloud init, and the SuSe stuff.
+And custom appliances that assume that there is a default eth0 device on boot.
+Yes, there were users that expect to see eth0 all the time.
 
