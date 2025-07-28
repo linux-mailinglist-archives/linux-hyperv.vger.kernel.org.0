@@ -1,103 +1,112 @@
-Return-Path: <linux-hyperv+bounces-6421-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6422-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53CFCB13E14
-	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Jul 2025 17:19:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48A04B140D7
+	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Jul 2025 19:02:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE2BE3B5867
-	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Jul 2025 15:18:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6880D541A93
+	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Jul 2025 17:02:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ADDF26FA76;
-	Mon, 28 Jul 2025 15:19:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B98121018A;
+	Mon, 28 Jul 2025 17:02:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aod8NwN3"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="am+xvDzv"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44261D5145;
-	Mon, 28 Jul 2025 15:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFB306FB9;
+	Mon, 28 Jul 2025 17:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753715949; cv=none; b=R5QD2ekF7d/OlnNRndtvazOikQ0ttkNWOo+83Tmy2GHwW1u/mQW924nLniRX0S0/Q7+pUxkXq99jHCSYe/Qn4/wDjMPaRCIBlEske5nuK8R7tCKjtc9Tin3GI2wVqyV8mKJMJyksqWhK1gE3PhqA4bUI4/ViBUXopA0CAq937Wo=
+	t=1753722155; cv=none; b=P/Ve9G2yZQ1cEthvPvUoa7/LMMQ/1WR0wBmrgg1huKjhSIuFRX7Vk+bVv/MPyO3vU6kSSHI7rJnvpzUa/38lJWDpRFDz6S4L23aaFEGfhzV4MPrZYD76MUk2mWhB0JXEI3SS2joVZduL+fyhGSSYC+efN7fAwng6XdyAl7qFW+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753715949; c=relaxed/simple;
-	bh=jtQPl9fdZvZtEb/y/9SCQaBctzLJmmM7srwq7qNJiRM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jbts4n2dsA9Q0LzgFVQBBmHQyvwwoL29hC1hY98no5gp3jNh6ERu/4s/R8nMMgtxOQCQn9rpJd0ReC5pPil9OiinqQJVynCs8ice6CiX3cTnHwqPrh61j2I66NfgNyApexvlgLEdORjPdcq4fGzC/tc/GGIP1nsgcvOeseA2cLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aod8NwN3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2AA5C4CEE7;
-	Mon, 28 Jul 2025 15:19:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753715948;
-	bh=jtQPl9fdZvZtEb/y/9SCQaBctzLJmmM7srwq7qNJiRM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Aod8NwN3/JOlahigpX8mZ9sELREBI4cu7rK1H5sM1/q+xT5ZHCVKqfjGNj6GgoJxL
-	 0aPINQS5wd453yRNHlVQBR4AFlgZP8g0O64eaqAqFhB0RK3lUz0/rTB2Zy232Hm+fu
-	 QY063sbsaWf9gh/4DkQcGVaFH6Hx0O4UoWYTCzhjfdxY6HD7zTv7FXQsqYCbKHWdit
-	 Agd6gVeG0xg1uDYFeqXjArZTucP+rbprdsv+oUOodlg5psJ2/FiuHuMCKEmvwypreK
-	 0FPiURxyPmd0niG04uFJs+OQhUvfTdH02fgTPQnc5NmbNMUAaYwbN8KpBdiY57XgPx
-	 rIk9mOR3HyeNA==
-Date: Mon, 28 Jul 2025 08:19:07 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Stephen Hemminger <stephen@networkplumber.org>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>, Jason Wang
- <jasowang@redhat.com>, Cindy Lu <lulu@redhat.com>, KY Srinivasan
- <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
- <decui@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
- Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Michael Kelley
- <mhklinux@outlook.com>, Shradha Gupta <shradhagupta@linux.microsoft.com>,
- Kees Cook <kees@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Kuniyuki
- Iwashima <kuniyu@google.com>, Alexander Lobakin
- <aleksander.lobakin@intel.com>, Guillaume Nault <gnault@redhat.com>, Joe
- Damato <jdamato@fastly.com>, Ahmed Zaki <ahmed.zaki@intel.com>, "open
- list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>, "open
- list:NETWORKING DRIVERS" <netdev@vger.kernel.org>, open list
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RESEND] netvsc: transfer lower device max tso size
-Message-ID: <20250728081907.3de03b67@kernel.org>
-In-Reply-To: <20250727200126.2682aa39@hermes.local>
-References: <20250718061812.238412-1-lulu@redhat.com>
-	<20250721162834.484d352a@kernel.org>
-	<CACGkMEtqhjTjdxPc=eqMxPNKFsKKA+5YP+uqWtonm=onm0gCrg@mail.gmail.com>
-	<20250721181807.752af6a4@kernel.org>
-	<CACGkMEtEvkSaYP1s+jq-3RPrX_GAr1gQ+b=b4oytw9_dGnSc_w@mail.gmail.com>
-	<20250723080532.53ecc4f1@kernel.org>
-	<SJ2PR21MB40138F71138A809C3A2D903BCA5FA@SJ2PR21MB4013.namprd21.prod.outlook.com>
-	<20250723151622.0606cc99@kernel.org>
-	<20250727200126.2682aa39@hermes.local>
+	s=arc-20240116; t=1753722155; c=relaxed/simple;
+	bh=7c3SNVtj1tYyffbU7QShuuFAcnhvIKUQvO7+rwQHIuc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UudDu3oP6R9pBNSUrDjri/CbC0YyRhP24MntKNiU06xqst7Ks8s90fOz9EgVWJnDPTPLLizIJ/lGn2CIqrkRjMiKsJwsMbBnTaXANydsM8LGPmqOgK1QAUSz7Y5xAHL8Xzgj362vZoeLzEGYcv7uw6VsLkPKPWkvPKJ14NpS04w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=am+xvDzv; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.64.232.206] (unknown [52.148.171.5])
+	by linux.microsoft.com (Postfix) with ESMTPSA id C4268201B1CC;
+	Mon, 28 Jul 2025 10:02:32 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C4268201B1CC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1753722153;
+	bh=2DNBQnXA8dcGCQuVJocQEOXmGajpYBtPA9D+7X3s7Dg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=am+xvDzvI/wG0H0dAQ9VK+E7DV/5bXtrwFwEzEOvzSPW+oXzxUjgsJ5WMHS+jDiC6
+	 KHTli7jCk3B4cFGSKCwhak+CKF1zdHKtuaTY+cy7EQ9EO+T1N6+jrPCxq/wjXzsbDq
+	 Zmr21H8fPXSTNH88EkmmFTTnyUOkVfNP2STvLjMI=
+Message-ID: <1303b11c-0d84-4f42-995e-6dd2c5a528c7@linux.microsoft.com>
+Date: Mon, 28 Jul 2025 10:02:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/7] Drivers: hv: Use hv_setup_*() to set up hypercall
+ arguments
+To: mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ lpieralisi@kernel.org, kw@linux.com, mani@kernel.org, robh@kernel.org,
+ bhelgaas@google.com, arnd@arndb.de
+Cc: x86@kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arch@vger.kernel.org
+References: <20250718045545.517620-1-mhklinux@outlook.com>
+ <20250718045545.517620-5-mhklinux@outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <20250718045545.517620-5-mhklinux@outlook.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Sun, 27 Jul 2025 20:01:26 -0700 Stephen Hemminger wrote:
-> On Wed, 23 Jul 2025 15:16:22 -0700
-> Jakub Kicinski <kuba@kernel.org> wrote:
-> >
-> > > Actually, we had used the common bonding driver 9 years ago. But it's
-> > > replaced by this kernel/netvsc based "transparent" bonding mode. See
-> > > the patches listed below.
-> > > 
-> > > The user mode bonding scripts were unstable, and difficult to deliver
-> > > & update for various distros. So Stephen developed the new "transparent"
-> > > bonding mode, which greatly improves the situation.    
-> > 
-> > I specifically highlighted systemd-networkd as the change in the user
-> > space landscape.  
-> 
-> Haiyang tried valiantly but getting every distro to do the right thing
-> with VF's bonding and hot plug was impossible to support.
+On 7/17/2025 9:55 PM, mhkelley58@gmail.com wrote:
+<snip>
+> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> index 2b4080e51f97..d9b569b204d2 100644
+> --- a/drivers/hv/hv_balloon.c
+> +++ b/drivers/hv/hv_balloon.c
+> @@ -1577,21 +1577,21 @@ static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
+>  {
+>  	unsigned long flags;
+>  	struct hv_memory_hint *hint;
+> -	int i, order;
+> +	int i, order, batch_size;
+>  	u64 status;
+>  	struct scatterlist *sg;
+>  
+> -	WARN_ON_ONCE(nents > HV_MEMORY_HINT_MAX_GPA_PAGE_RANGES);
+>  	WARN_ON_ONCE(sgl->length < (HV_HYP_PAGE_SIZE << page_reporting_order));
+>  	local_irq_save(flags);
+> -	hint = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> +
+> +	batch_size = hv_setup_in_array(&hint, sizeof(*hint), sizeof(hint->ranges[0]));
+>  	if (!hint) {
+>  		local_irq_restore(flags);
+>  		return -ENOSPC;
+>  	}
+> +	WARN_ON_ONCE(nents > batch_size);
+>  
 
-I understand, but I also don't want it to be an upstream Linux problem.
+I don't think WARN_ON_ONCE is sufficient here... this looks like a bug in the current code.
+The loop below will go out of bounds of the input page if nents is too large.
 
-Again, no other cloud provider seems to have this issue, AFAIU.
+Ideally this function would be refactored to batch the operation so that this isn't a
+problem.
+
+Nuno
+>  	hint->heat_type = HV_EXTMEM_HEAT_HINT_COLD_DISCARD;
+> -	hint->reserved = 0;
+>  	for_each_sg(sgl, sg, nents, i) {
+>  		union hv_gpa_page_range *range;
+>  
+<snip>
+
 
