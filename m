@@ -1,297 +1,141 @@
-Return-Path: <linux-hyperv+bounces-6416-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6417-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D897B12D1F
-	for <lists+linux-hyperv@lfdr.de>; Sun, 27 Jul 2025 01:50:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78C92B13347
+	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Jul 2025 05:01:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 357694E245A
-	for <lists+linux-hyperv@lfdr.de>; Sat, 26 Jul 2025 23:50:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A2698175498
+	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Jul 2025 03:01:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE09B21C16B;
-	Sat, 26 Jul 2025 23:50:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 112CF1B4223;
+	Mon, 28 Jul 2025 03:01:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="i4QEtnlE"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="i1TEqPCP"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazolkn19013073.outbound.protection.outlook.com [52.103.20.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D810421B8E7;
-	Sat, 26 Jul 2025 23:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753573844; cv=fail; b=edlLGbEfwNlmIWXUrCgkRzhAucohX3cU9SbtDLpkptCn6uiTU3xnrdv2t44fUAnoJvrKcVYzMOv8gAq/WDUe7Bp+1UaJ9wKTn7aCHWdMJYqIk3xX+Bc0uDgwDCBoWEG18InPMnBo8K4tywDjAfwUcWQh41aWpB9HNng1pCDz47Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753573844; c=relaxed/simple;
-	bh=OpQkpolKU0NKKsM3S3uvLJJ0KDTiPzIMlo7RZDriMAk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZCy5wXcJepbKH1LA2LwxEhTSwp3VZKdlo+0CJjvDFLT6DyTzQwvwVqIjr2PFO4r4FLxGA0GXeJyKvRXPUs/9TxtqjbGPJw/N+gHk0Gf+EpWMMwssh3KALjbDtyXvCk7yCC4kPvczWtepUiFmr82veU/UscaGr548tjmEnrss73A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=i4QEtnlE; arc=fail smtp.client-ip=52.103.20.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gX/HrdIVdrzs0aBCpuQ4kduw7VXKVTyGbY52/3AQ0jk7JTpMFV3JQsg7hY+JTKa/NxZOE1kswq5hewZ1pTrRy0Uwe3HpUg08/++ZQELPX7Mz3p8nNOpCFQkrUqAV1OggALDwMYk0GZJcTsV51KjzxrueG5za9MCXhpag3c7+R4tSNmgGJSEFjiS9uUNL6tl2I4av5jlYBDAheUamM/KiHOUp1CpiQ8K2m7UWHl7Wn1+u2xUZHm4PkPBX4AZlPBuSSjVDfMBMz4ixzjxefYb/eIyyF3ZByUfbdB7OrfnKPRS5nPnhKehHux+EzwbJSQPUMEGJWD2bbM+D4kfXg5VAzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RvsGjZ55AatX/zvt2uz3z83S8fDx2dtEjd4nM5NhBYo=;
- b=Xkj2hTZqzMSMngQhyWrt3SVL0Y8KKY9vakSqhsm6cALa/guXSjZXucrTq4M2KGpGrrdM4VfZKGd8eFFn0fZpREdhIpitrJl/SOJP0ugTNB5btiscHv9ASX0cpK0w1DDRAkWD62jx5wjh5UuKkz7tDUlgrV7QLtFK5TnNm3GMdIFmh8mZWNf2RjEbvLMWvO7TptI3+DlWjGcovNGqb8okuZhlFPR4ic9CZD9UqzP+muyrSHIk4CNGFNklEJfUxt57hGaIuSg975rqnQMk/Xo9jq5nqZhv4g2R08DrvuKeKMbB5sc3Y+n2YRFpSSKI2BQ/pB3kwn9176zvXBaPDzYzlg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RvsGjZ55AatX/zvt2uz3z83S8fDx2dtEjd4nM5NhBYo=;
- b=i4QEtnlEyv56qiXl6wHWWhCqHpVX/gaYJUuyjgOpPBAeVpzGGOxdmNhG0b6uJqfnx6IKqeVRz4eMsI3UMCL8LInj15tQogrim95AqTcZoZUK5d+o8U7yjF1DMjLt5BI8wiMZVkgtOTjuhFMFL0pOe6FszrYfYGcczvellP9kdHu0aqQJfhhvRCgTyjfsgaZfXZw+1vQkCzTFlwhq7AOFqJhha8u1f5E+/bdOaCv/EuXEejT+JuvwfSSB3vR84KNB4BXkk301e46Lfk9XLa9HGuXTKuj0c+sXqyRqdSrdaE3ughLOQuZBjoG1CqLAeYly+nWVidQe5d56HS2eZl3KQA==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SA3PR02MB10163.namprd02.prod.outlook.com (2603:10b6:806:398::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.25; Sat, 26 Jul
- 2025 23:50:40 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8964.023; Sat, 26 Jul 2025
- 23:50:40 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Naman Jain <namjain@linux.microsoft.com>, "K . Y . Srinivasan"
-	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
-	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
-CC: Roman Kisel <romank@linux.microsoft.com>, Anirudh Rayabharam
-	<anrayabh@linux.microsoft.com>, Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, Nuno Das Neves
-	<nunodasneves@linux.microsoft.com>, ALOK TIWARI <alok.a.tiwari@oracle.com>,
-	Markus Elfring <Markus.Elfring@web.de>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH v6 2/2] Drivers: hv: Introduce mshv_vtl driver
-Thread-Topic: [PATCH v6 2/2] Drivers: hv: Introduce mshv_vtl driver
-Thread-Index: AQHb/HScy3plG5a+z0miuAOMHd2V/bRFEyOQ
-Date: Sat, 26 Jul 2025 23:50:40 +0000
-Message-ID:
- <SN6PR02MB4157495A60189FB3D9A7C5CAD458A@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250724082547.195235-1-namjain@linux.microsoft.com>
- <20250724082547.195235-3-namjain@linux.microsoft.com>
-In-Reply-To: <20250724082547.195235-3-namjain@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA3PR02MB10163:EE_
-x-ms-office365-filtering-correlation-id: cff83ebb-6b21-4a33-0497-08ddcc9f3a27
-x-microsoft-antispam:
- BCL:0;ARA:14566002|15080799012|461199028|19110799012|8060799015|8062599012|41001999006|102099032|40105399003|440099028|3412199025;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?bSnhui8fM2HX0enfsn76bQKIz9UQhTjMYl5UooJ8JiDDJ4V5YermsBaPDM2O?=
- =?us-ascii?Q?8yMTZgvRpNBxO5/HJfeywCuA/59jG1Vs1ISCnkmai7x9Ez+xa5CLKP8Fcg0n?=
- =?us-ascii?Q?sKuxqOS3KX+Gnsr/z8dgk507wTs7M+jLKN9SNv06whQZ4dp8hF2l2RC2Z2qE?=
- =?us-ascii?Q?n7OVq4fqAgy8R1LgdcmGrqeAGsZ2MeLfHfhg5bDct9UHiNjs5QHDtynKl4BI?=
- =?us-ascii?Q?+eSf4lZPPibjBTBbM7iJatfE+Cqs0HKgnDFXNTjhR9CUb4pwTf4L7++qL4QL?=
- =?us-ascii?Q?09LfweAgOz89BXPI7oKmmQYlsEh53nR/eKkuM33xXRtYOZhNYcS7X71Eynwe?=
- =?us-ascii?Q?K95++DLpEN93Ovn3TwQmJzeDYNAn9U4w2G24nEmzOWVJBUgvrP1DImSLvykD?=
- =?us-ascii?Q?dLXPALPZ0jlzhc6wSJg1fwxtHAElZAwGdHU6w1yFiQv3hl6/hm7XfrJfdd9y?=
- =?us-ascii?Q?jw6mjJ83rb7DzqMQLozhQNcj2EXw3XcCwerrZrZkTp7+MexoBA9yr0kodfvo?=
- =?us-ascii?Q?IL3QpaIIaJVAi9SlVkwAvun0AdUrdTZ9r08qiVdhMhlIhbtJ4/6XpAyHYN9V?=
- =?us-ascii?Q?/xSkMc7tUPiRYWSS3uit1eNR3N2OQ9eA804cSVfTdvEbw14+0x4mS8gNztek?=
- =?us-ascii?Q?K+dSZ345HQyd/AP5XfyyDweNCLxV8DnnCyOtVAFnCOjbKYTuMmB/UYanAJLc?=
- =?us-ascii?Q?03ZR1gzwTEKqIXRI553AZWCkdXdNcHFwOTJOOcD+DdEQioA3rSnQE53Ws83a?=
- =?us-ascii?Q?TjlfN6IJlEGWsWH4Tv0oLGHeNn2dMJrvCd7SFJ7oAl5UuD95uCiR+CIcHwbz?=
- =?us-ascii?Q?eFtbA6ktaU17UhEVKOJHjlQs9re3QGes66jmvyDVpxwMw60ibDJdMkrQLoAR?=
- =?us-ascii?Q?YBynv+s7j+zDGObH8kWhszhmDgMKEPuhdnGTbcFoggcvB9xsHPT7K3wav++3?=
- =?us-ascii?Q?elX5Dfu0RA9v/c1CvEsRuxbz7QkLTGYgFAsBOXwPEANfKrU2HnCQs56nmwGs?=
- =?us-ascii?Q?6DU7p4iOC2YTpvOHWGAe8G3ZCmfiaZ+/EawA02UwR+B7579b3Pe/04AuslC8?=
- =?us-ascii?Q?EUxw/ZHwnOmGLqkXWHI/aWFdf+26552lJ3NIJ8alwoZ1fMDY6PFvKBxPX0rY?=
- =?us-ascii?Q?02OHY6O0bicPnOMlRC79qWdBApqEKyIAzg=3D=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?3cT9aDfZxDa00tMTErjBWmLD/0kfcbfIfhFG0EaguezGGeJh/I+5NGgb0DKv?=
- =?us-ascii?Q?IcTugdcglxkKys2LIGkJVGN613bK+suQEjsRhlwXw/1WgABPPaPW0jPcn+5K?=
- =?us-ascii?Q?AdUVy4cZUsCV2B871kr3Ct1KheY4bH5WeIZZlb8RUe//Up5XKhLcmRdUWXF5?=
- =?us-ascii?Q?IMhTWpb36u18IhQbvpDWXvNvQdD9PXihieFfmK1uvKU7ODLaANpkuRqCezeL?=
- =?us-ascii?Q?0t66BuhS0FCGh4qfBguQTrod28mX49QAHmPxS17srOlpR18CVABxlqWTDVFm?=
- =?us-ascii?Q?/XcbhfgG/HyIIpumvqvs1hnhem2MCKkDhtgtz4xjp4qv0pTlz5MHu+i1/kDx?=
- =?us-ascii?Q?m/q096NjmIezHVEbrCKgCeAbmbgUiyzzrYvGUEa4MAtWa2aeL92VVsF69ci7?=
- =?us-ascii?Q?pWE5PHZB9Ph/BrxN65EP+c2dg9ROOopR5iHM7smWjkEjWzaJ8z3+jZL9VT/K?=
- =?us-ascii?Q?Y2KtPI/Ef19BkSPvIH5w/5h7JmcL4KXI4xCSIJH0dTAD94sM+YXC5o83/r7Y?=
- =?us-ascii?Q?Re3JQIVkyxN8ziNYfXAUFTSObxZB1wch8RBnbBcQOm73l/xsuiD2OxnpE9NH?=
- =?us-ascii?Q?cfHTFCayV+Hw3xIOgerXvF3dcoFZApzoxxcfhBKy++Ccm1OUr+RoBGravrdu?=
- =?us-ascii?Q?XdlYRjTutigz/beVM1jH5hQ/eHSfTpToj0gnmjN3r0fUq6NXUtUa11mgIRBA?=
- =?us-ascii?Q?bh9GjTHy5U97qGkOkUrDY5EXnlyBpwuP2D/jOeRhbKzUkdvLcR/t0dk6bkyP?=
- =?us-ascii?Q?e4CWP9ub3mfJtQatghlRsTcbzXmB8pAsm419yVG4888LTwQZqEnHhNkYOm74?=
- =?us-ascii?Q?l7LMz3DgXL/pFrxw7Rf39kVp+MbkxMrE0tgX+E6BRgYHpYtfW6vP/JIAoq2z?=
- =?us-ascii?Q?NlOQBM9qdVfzeWcu3yp6zwOKyo/TAeGlq5ibIuX2P29PXm0JSVPF3sEWEBx4?=
- =?us-ascii?Q?tjnS9nXGiV8jwq23tOPNqndqsvXJ2QfSykJGfwLgVr40xbOhOoSGyYYGS8tI?=
- =?us-ascii?Q?rPbAvyP4VfoYqrVXEDMTXBZgJUp5WdV8UBOclHF/03mzChYI4F3ErT04qp4Q?=
- =?us-ascii?Q?wLtMyY2EI4sKBESXF5fj89ojj89KeqjCfMdX9Y+wPVrGe+GN+FiGQuXESygK?=
- =?us-ascii?Q?hlJLHLLNnWTtPWRBrciLShQ+jmlDKWWtiauu0mWBWgmPSq/zQjEVZvUy+ZvC?=
- =?us-ascii?Q?AwEbcQbgpG3t0J1QAlwT+umDgtueAB+NOz/d3JNJ2w258gDwuCjz8pJjEkM?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F81CDDAD
+	for <linux-hyperv@vger.kernel.org>; Mon, 28 Jul 2025 03:01:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753671698; cv=none; b=T8obbLojC7RQFHWRN2l9jpF0numqf3AeBRqGu++wa+kVRpoIDlBuVdc6mILnSDtv/AwZqiiWhKkqO6hQaSIwuIqFWaJusw9J6kzSGYZGRBsuLfRNuBVns5yAAner3Tovhkt27TpTmWI7jd6nKV/aaTh966EN+OHQI7hZcLyR9bQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753671698; c=relaxed/simple;
+	bh=0vKfwUHfNQR2JxpeH1mjLInwJuziDSzoCPLeGXD166w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=STe6gIRVn9y8LYEN1D77Ke1bepM9MYtmHKY4rOsIzxWY74xdCkwzuFgcV9Q1pNFvULmiSYWg4IktroZWtjoe+D9Qv3Rc1bgJ1CDcCIjPefn578av3pYoI3XQemSzH/9Omo0xEvtif4stGkX39Gc84JdYOKU2xYeYufv1CthP7ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=i1TEqPCP; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-451d7b50815so25891635e9.2
+        for <linux-hyperv@vger.kernel.org>; Sun, 27 Jul 2025 20:01:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1753671694; x=1754276494; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oEoci9qMGq3mZsbtJsvexp6JhXmJXNusPRjzxxOh55E=;
+        b=i1TEqPCP7dFx6y1M+V4DDDgQIGYukkyZyCUilAIy7nI8XAniubEi918sU3QqNb/X+J
+         URwHFw9YKVwbWAeCEoibkfjc1a75NNOn4yiWUfUYhLpoJBMQg6JW28lMCQ0VB99HFJ/O
+         LDwjNiK9tuofO4qaCAEuxN/BOWLaEhcUpwcEJrJJ9Uw26C5dkjaN7lCreUcg7aIIsw02
+         0v5RjDf7uAUi8MAlv8vLMmxMIMysC8sEMWy1tQwFRL6a6WxLnusauBHumPjsQ4ad95/3
+         XmIo/0Ls8nVrt9fh656YX1+ChIxh14fQQn1Ps05X4J7sf/GGyi2zyS4CW5oXQaWcOv9H
+         KGJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753671694; x=1754276494;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oEoci9qMGq3mZsbtJsvexp6JhXmJXNusPRjzxxOh55E=;
+        b=QEjMgDz+UAUX6QL5GblSG52fT6AriT3yZtB3J3XT7qhesXIr/QadhSXL0E264WZ73U
+         TD2WCceayOLDsDR21zYnAnhgp3JX66wUVo9a1EuWtJJ6OiHtvS4BZU22C0Godz75ToSn
+         RdvRiP0eJbcPD+u7Ce+cau6d/xLnKMUOwczN34+nVT0DvxJ1ojh0EizlO5fen6NkgnOI
+         18yJjM6BpVXER76or++KAXIF5CpTsC3byRhoXfOiqgp3B56uS3MzliNn44xdlDbwOmKp
+         BEA14X4bE8LI9NP6CVPtzpe5yTxfsLw1e75y9eMLCVz39aZACenmgXRAVqVxDa8atM/Z
+         tTrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUOpV5j4JLWDpI9dxZTMPH3aN0sRQN9QKU6aZBj4gSBY2GgZlFLQtwUeZKglN9x1f+5y0JCuQViHVhLCUI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypRt+Pu+5OPqcoz0WmElbW4/jP27XI9E5a5WUFyH1gvp7uJq8E
+	zkD0mzPM4aUyGIlLwFrEiqm9fL29W62vNx/TZePhwt/brVmlIjYMCgG6tSB6TAPPSqw=
+X-Gm-Gg: ASbGncsppJ5ReMqU8IK3XGB4oosTP+XEM9xJR8/dzi1F4ZEpMiuZkBBB/+rUiLzhgAL
+	rzKXxwrWJ2vLbgBtMPr+P+j9UeVicPcRUa63K5keu0Dy2U1bRCHKS0WLgCMfVj+6aE5z6xHw992
+	9X77Kfa2CKdUltDhl1e28mVK48dAHrz7WVBcFzD9neRtHNAPFYICJMztrn8qn2UFgKoBks8Fu4W
+	DbQ8QElnFFQb9jtSItCntGBG+4piW9z7QliNO19fJDV9+c2Rpb8T6yh1900Ke8Y4rhJEkMk+Xwm
+	Im1qVdx/aEyglKp01DD+EpbypKxtObHC8McEpeCcG2EGh2a8riihU/21IvPZcqfFTo4hN8a1ygk
+	4mBO1ibVeQDYFaWzvPks1ltl35njxHWh4nwzkQfXCHUBwwAWm/Pht7OuYlJDa4SQUG7qSTdvlbL
+	U=
+X-Google-Smtp-Source: AGHT+IGQxNb0uTRmgaXFIWNAxJsx2ABBH3vJc/u5BlArY34ZoKzsrRmq3jNV4kVoBvHvbjNr05ibwQ==
+X-Received: by 2002:a05:600c:6812:b0:456:207e:fd83 with SMTP id 5b1f17b1804b1-458762fcfe9mr81396495e9.4.1753671694214;
+        Sun, 27 Jul 2025 20:01:34 -0700 (PDT)
+Received: from hermes.local (204-195-96-226.wavecable.com. [204.195.96.226])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4587054f2e6sm137373995e9.12.2025.07.27.20.01.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Jul 2025 20:01:33 -0700 (PDT)
+Date: Sun, 27 Jul 2025 20:01:26 -0700
+From: Stephen Hemminger <stephen@networkplumber.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>, Jason Wang
+ <jasowang@redhat.com>, Cindy Lu <lulu@redhat.com>, KY Srinivasan
+ <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
+ Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Michael Kelley
+ <mhklinux@outlook.com>, Shradha Gupta <shradhagupta@linux.microsoft.com>,
+ Kees Cook <kees@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Kuniyuki
+ Iwashima <kuniyu@google.com>, Alexander Lobakin
+ <aleksander.lobakin@intel.com>, Guillaume Nault <gnault@redhat.com>, Joe
+ Damato <jdamato@fastly.com>, Ahmed Zaki <ahmed.zaki@intel.com>, "open
+ list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>, "open
+ list:NETWORKING DRIVERS" <netdev@vger.kernel.org>, open list
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RESEND] netvsc: transfer lower device max tso size
+Message-ID: <20250727200126.2682aa39@hermes.local>
+In-Reply-To: <20250723151622.0606cc99@kernel.org>
+References: <20250718061812.238412-1-lulu@redhat.com>
+	<20250721162834.484d352a@kernel.org>
+	<CACGkMEtqhjTjdxPc=eqMxPNKFsKKA+5YP+uqWtonm=onm0gCrg@mail.gmail.com>
+	<20250721181807.752af6a4@kernel.org>
+	<CACGkMEtEvkSaYP1s+jq-3RPrX_GAr1gQ+b=b4oytw9_dGnSc_w@mail.gmail.com>
+	<20250723080532.53ecc4f1@kernel.org>
+	<SJ2PR21MB40138F71138A809C3A2D903BCA5FA@SJ2PR21MB4013.namprd21.prod.outlook.com>
+	<20250723151622.0606cc99@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: cff83ebb-6b21-4a33-0497-08ddcc9f3a27
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jul 2025 23:50:40.3949
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR02MB10163
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Naman Jain <namjain@linux.microsoft.com> Sent: Thursday, July 24, 202=
-5 1:26 AM
->=20
-> Provide an interface for Virtual Machine Monitor like OpenVMM and its
-> use as OpenHCL paravisor to control VTL0 (Virtual trust Level).
-> Expose devices and support IOCTLs for features like VTL creation,
-> VTL0 memory management, context switch, making hypercalls,
-> mapping VTL0 address space to VTL2 userspace, getting new VMBus
-> messages and channel events in VTL2 etc.
->=20
-> Co-developed-by: Roman Kisel <romank@linux.microsoft.com>
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
-> Reviewed-by: Alok Tiwari <alok.a.tiwari@oracle.com>
-> Message-ID: <20250512140432.2387503-3-namjain@linux.microsoft.com>
-> Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
-> ---
->  drivers/hv/Kconfig          |   22 +
->  drivers/hv/Makefile         |    7 +-
->  drivers/hv/mshv_vtl.h       |   52 ++
->  drivers/hv/mshv_vtl_main.c  | 1508 +++++++++++++++++++++++++++++++++++
->  include/hyperv/hvgdk_mini.h |  106 +++
->  include/uapi/linux/mshv.h   |   80 ++
->  6 files changed, 1774 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/hv/mshv_vtl.h
->  create mode 100644 drivers/hv/mshv_vtl_main.c
->
+On Wed, 23 Jul 2025 15:16:22 -0700
+Jakub Kicinski <kuba@kernel.org> wrote:
 
-[snip]
+> On Wed, 23 Jul 2025 20:18:03 +0000 Haiyang Zhang wrote:
+> > > > Btw, if I understand this correctly. This is for future development so
+> > > > it's not a blocker for this patch?    
+> > >
+> > > Not a blocker, I'm just giving an example of the netvsc auto-weirdness
+> > > being a source of tech debt and bugs. Commit d7501e076d859d is another
+> > > recent one off the top of my head. IIUC systemd-networkd is broadly
+> > > deployed now. It'd be great if there was some migration plan for moving
+> > > this sort of VM auto-bonding to user space (with the use of the common
+> > > bonding driver, not each hypervisor rolling its own).    
+> > 
+> > Actually, we had used the common bonding driver 9 years ago. But it's
+> > replaced by this kernel/netvsc based "transparent" bonding mode. See
+> > the patches listed below.
+> > 
+> > The user mode bonding scripts were unstable, and difficult to deliver
+> > & update for various distros. So Stephen developed the new "transparent"
+> > bonding mode, which greatly improves the situation.  
+> 
+> I specifically highlighted systemd-networkd as the change in the user
+> space landscape.
 
-> +
-> +static int mshv_vtl_set_reg(struct hv_register_assoc *regs)
-> +{
-> +	u64 reg64;
-> +	enum hv_register_name gpr_name;
-> +	int i;
-> +
-> +	gpr_name =3D regs->name;
-> +	reg64 =3D regs->value.reg64;
-> +
-> +	/* Search for the register in the table */
-> +	for (i =3D 0; i < ARRAY_SIZE(reg_table); i++) {
-> +		if (reg_table[i].reg_name =3D=3D gpr_name) {
-> +			if (reg_table[i].debug_reg_num !=3D -1) {
-> +				/* Handle debug registers */
-> +				if (gpr_name =3D=3D HV_X64_REGISTER_DR6 &&
-> +				    !mshv_vsm_capabilities.dr6_shared)
-> +					goto hypercall;
-> +				native_set_debugreg(reg_table[i].debug_reg_num, reg64);
-> +			} else {
-> +				/* Handle MSRs */
-> +				wrmsrl(reg_table[i].msr_addr, reg64);
-> +			}
-> +			return 0;
-> +		}
-> +	}
-> +
-> +hypercall:
-> +	return 1;
-> +}
-> +
-> +static int mshv_vtl_get_reg(struct hv_register_assoc *regs)
-> +{
-> +	u64 *reg64;
-> +	enum hv_register_name gpr_name;
-> +	int i;
-> +
-> +	gpr_name =3D regs->name;
-> +	reg64 =3D (u64 *)&regs->value.reg64;
-> +
-> +	/* Search for the register in the table */
-> +	for (i =3D 0; i < ARRAY_SIZE(reg_table); i++) {
-> +		if (reg_table[i].reg_name =3D=3D gpr_name) {
-> +			if (reg_table[i].debug_reg_num !=3D -1) {
-> +				/* Handle debug registers */
-> +				if (gpr_name =3D=3D HV_X64_REGISTER_DR6 &&
-> +				    !mshv_vsm_capabilities.dr6_shared)
-> +					goto hypercall;
-> +				*reg64 =3D native_get_debugreg(reg_table[i].debug_reg_num);
-> +			} else {
-> +				/* Handle MSRs */
-> +				rdmsrl(reg_table[i].msr_addr, *reg64);
-> +			}
-> +			return 0;
-> +		}
-> +	}
-> +
-> +hypercall:
-> +	return 1;
-> +}
-> +
-
-One more comment on this patch. What do you think about
-combining mshv_vtl_set_reg() and mshv_vtl_get_reg() into a single
-function? The two functions have a lot code duplication that could be
-avoided. Here's my untested version (not even compile tested):
-
-+static int mshv_vtl_get_set_reg(struct hv_register_assoc *regs, bool set)
-+{
-+	u64 *reg64;
-+	enum hv_register_name gpr_name;
-+	int i;
-+
-+	gpr_name =3D regs->name;
-+	reg64 =3D &regs->value.reg64;
-+
-+	/* Search for the register in the table */
-+	for (i =3D 0; i < ARRAY_SIZE(reg_table); i++) {
-+		if (reg_table[i].reg_name !=3D gpr_name)
-+			continue;
-+		if (reg_table[i].debug_reg_num !=3D -1) {
-+			/* Handle debug registers */
-+			if (gpr_name =3D=3D HV_X64_REGISTER_DR6 &&
-+			    !mshv_vsm_capabilities.dr6_shared)
-+				goto hypercall;
-+			if (set)
-+				native_set_debugreg(reg_table[i].debug_reg_num, *reg64);
-+			else
-+				*reg64 =3D native_get_debugreg(reg_table[i].debug_reg_num);
-+		} else {
-+			/* Handle MSRs */
-+			if (set)
-+				wrmsrl(reg_table[i].msr_addr, *reg64);
-+			else
-+				rdmsrl(reg_table[i].msr_addr, *reg64);
-+		}
-+		return 0;
-+	}
-+
-+hypercall:
-+	return 1;
-+}
-+
-
-Two call sites would need to be updated to pass "true" and "false",
-respectively, for the "set" parameter.
-
-I changed the gpr_name matching to do "continue" on a mismatch
-just to avoid a level of indentation. It's functionally the same as your
-code.
-
-Michael
+Haiyang tried valiantly but getting every distro to do the right thing
+with VF's bonding and hot plug was impossible to support.
 
