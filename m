@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-6428-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6429-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39CDAB14770
-	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Jul 2025 07:09:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3870B14773
+	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Jul 2025 07:09:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7FFD03BAF77
-	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Jul 2025 05:08:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D1ADD188AFCA
+	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Jul 2025 05:10:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78107224AF2;
-	Tue, 29 Jul 2025 05:09:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C10A91F0E50;
+	Tue, 29 Jul 2025 05:09:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="n0PwQJiN"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CXVfl0BH"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED24472634;
-	Tue, 29 Jul 2025 05:09:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 334DB231C91;
+	Tue, 29 Jul 2025 05:09:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753765743; cv=none; b=oqXbEtCAaORs/ooCwWO1cR58HqjiBLpXjKeragwCeI73jo0i0oOSayOD0TmZMmROWsPX7aDkec8R0KcB9BxxNt5ucsO5XxNI9dcaVYAFj3Ii1at6M7FfDB1+kdP0KeaxIrl+UTxtPrNQGI1H/BtNGeGM8A7uqkG5dDv7lYkjKZ4=
+	t=1753765795; cv=none; b=PeUL4ktp2eO3JaiOV+ni74f7ExA5TmnR4E+ZHPivdZsW44mIz5nZ+0KIEbD19OXFqWhETZDvwUDfSSWmQW8KI1yKmUrvVvHy/8Kyuys6NhdkA8cT429KhF0XyTmXUl4BEZGlztqJBpRzKaLYo4/cXK7/9LGiXWItRpfdBt2+Okc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753765743; c=relaxed/simple;
-	bh=XWxFCn699OEVDNLgs8wLGR4eS0m1rSlLO9FCPacfvkg=;
+	s=arc-20240116; t=1753765795; c=relaxed/simple;
+	bh=/Uf+Pxz21IzDt0yntLmrEa/esebmzlSCFWhcb6GbOUA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oUw2JP1sqadHoj6SEVXSoOdg2P3zYMlGarqznziV6K0hTovDsh3QCifpaUZa0mcqBxy349IpbSMoM5SKMqwKyDcYIg4XWPzFvUY8TB1CL0gpbLflAxWR5Bia/xvuiFqz2hKlm2R4KpfzN3xQFIQ06+MsiRXMN19O5sD5BLSsEfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=n0PwQJiN; arc=none smtp.client-ip=13.77.154.182
+	 In-Reply-To:Content-Type; b=Afa4bIvBtCxdFR6XGD7TOmtWWW3YjIKay2ItA1DTw4R0hsZLCEf1m66ppkkYqmgMr5f0n41WLtsSukcDf+ff6Gnzra8XawA+jMMpYieP36DOTwNha+c5ULdz4UN2esHWAFkZwgvo03KEKIAvD7PLX/ZMYWJ96ZVRX7I6XWaMNjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=CXVfl0BH; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.79.161.187] (unknown [4.194.122.170])
-	by linux.microsoft.com (Postfix) with ESMTPSA id DDE912021866;
-	Mon, 28 Jul 2025 22:08:56 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DDE912021866
+Received: from [100.79.161.187] (unknown [4.194.122.136])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 39B9F2116DD5;
+	Mon, 28 Jul 2025 22:09:49 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 39B9F2116DD5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1753765741;
-	bh=GkNCKUMZl6WNjOw5VJi2LlNf14Ca9uH/SfWTITXfLYA=;
+	s=default; t=1753765793;
+	bh=SBrdiyjvaPw73d4co86gOHCd9t5BOIS2mb3SAsHzhxY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=n0PwQJiNfB9DOEIOy0lUKaMiVMBwkkBM+6BeIgnpZQifzkAx2LxAejwp/bXLX9ISt
-	 TIftWdWLROq7bO95zPIsK+HzkfO2g+vU8TpqrU8vchvWMbwJFMGKZqv2zonYpCNzQC
-	 Qs3KrywEPD1mAnSF+KhwwcKg1Xl2WDBiRpF3ntXA=
-Message-ID: <9965dc77-eab9-4252-8c93-01c27e417bdc@linux.microsoft.com>
-Date: Tue, 29 Jul 2025 10:38:51 +0530
+	b=CXVfl0BHjY25Cq7SrhAQXqtzKtixCOYK+4nX9U0Pb0ep5u8ajOO0pWkoyKfWUZvRN
+	 1Zxrd6z7BieT14IVlLQW0L8zM3onQ7nZ2CKOMIjI5QyLeFwN+/DNMrWMtA0M2GngZu
+	 wVDPczOzfmc92INYGUyceQ9BC4kcBDvSPJqYWT7Q=
+Message-ID: <6a6e50da-43e8-4fb1-a010-13f43b062adc@linux.microsoft.com>
+Date: Tue, 29 Jul 2025 10:39:46 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -65,81 +65,164 @@ Cc: Roman Kisel <romank@linux.microsoft.com>,
  "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
 References: <20250724082547.195235-1-namjain@linux.microsoft.com>
  <20250724082547.195235-3-namjain@linux.microsoft.com>
- <SN6PR02MB41571331AF61BE197F76B970D459A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <03c90b7d-e9b8-4f8f-9267-c273791077c2@linux.microsoft.com>
- <SN6PR02MB41579F474B6FC43D4E5754CDD459A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB4157495A60189FB3D9A7C5CAD458A@SN6PR02MB4157.namprd02.prod.outlook.com>
 Content-Language: en-US
 From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB41579F474B6FC43D4E5754CDD459A@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <SN6PR02MB4157495A60189FB3D9A7C5CAD458A@SN6PR02MB4157.namprd02.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 7/25/2025 8:05 PM, Michael Kelley wrote:
-> From: Naman Jain <namjain@linux.microsoft.com> Sent: Thursday, July 24, 2025 10:54 PM
+On 7/27/2025 5:20 AM, Michael Kelley wrote:
+> From: Naman Jain <namjain@linux.microsoft.com> Sent: Thursday, July 24, 2025 1:26 AM
 >>
->> On 7/25/2025 8:52 AM, Michael Kelley wrote:
->>> From: Naman Jain <namjain@linux.microsoft.com> Sent: Thursday, July 24, 2025 1:26 AM
->>>>
+>> Provide an interface for Virtual Machine Monitor like OpenVMM and its
+>> use as OpenHCL paravisor to control VTL0 (Virtual trust Level).
+>> Expose devices and support IOCTLs for features like VTL creation,
+>> VTL0 memory management, context switch, making hypercalls,
+>> mapping VTL0 address space to VTL2 userspace, getting new VMBus
+>> messages and channel events in VTL2 etc.
+>>
+>> Co-developed-by: Roman Kisel <romank@linux.microsoft.com>
+>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+>> Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+>> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+>> Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
+>> Reviewed-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+>> Message-ID: <20250512140432.2387503-3-namjain@linux.microsoft.com>
+>> Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+>> Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+>> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+>> ---
+>>   drivers/hv/Kconfig          |   22 +
+>>   drivers/hv/Makefile         |    7 +-
+>>   drivers/hv/mshv_vtl.h       |   52 ++
+>>   drivers/hv/mshv_vtl_main.c  | 1508 +++++++++++++++++++++++++++++++++++
+>>   include/hyperv/hvgdk_mini.h |  106 +++
+>>   include/uapi/linux/mshv.h   |   80 ++
+>>   6 files changed, 1774 insertions(+), 1 deletion(-)
+>>   create mode 100644 drivers/hv/mshv_vtl.h
+>>   create mode 100644 drivers/hv/mshv_vtl_main.c
+>>
 > 
 > [snip]
 > 
->>>> +
->>>> +static int mshv_vtl_sint_ioctl_set_eventfd(struct mshv_vtl_set_eventfd __user *arg)
->>>> +{
->>>> +	struct mshv_vtl_set_eventfd set_eventfd;
->>>> +	struct eventfd_ctx *eventfd, *old_eventfd;
->>>> +
->>>> +	if (copy_from_user(&set_eventfd, arg, sizeof(set_eventfd)))
->>>> +		return -EFAULT;
->>>> +	if (set_eventfd.flag >= HV_EVENT_FLAGS_COUNT)
->>>> +		return -EINVAL;
->>>> +
->>>> +	eventfd = NULL;
->>>> +	if (set_eventfd.fd >= 0) {
->>>> +		eventfd = eventfd_ctx_fdget(set_eventfd.fd);
->>>> +		if (IS_ERR(eventfd))
->>>> +			return PTR_ERR(eventfd);
->>>> +	}
->>>> +
->>>> +	guard(mutex)(&flag_lock);
->>>> +	old_eventfd = READ_ONCE(flag_eventfds[set_eventfd.flag]);
->>>> +	WRITE_ONCE(flag_eventfds[set_eventfd.flag], eventfd);
->>>> +
->>>> +	if (old_eventfd) {
->>>> +		synchronize_rcu();
->>>> +		eventfd_ctx_put(old_eventfd);
->>>
->>> Again, I wonder if is OK to do eventfd_ctx_put() while holding
->>> flag_lock, since the use of guard() changes the scope of the lock
->>> compared with the previous version of this patch.
->>>
->>
->> I didn't find eventfd_ctx_put() to be a blocking operation, so I thought
->> of keeping guard() here. Although, synchronize_rcu() is a blocking
->> operation. Please advise, I am Ok with removing the guard, as the lock
->> is just being used here, and automatic cleanup should not be an issue
->> here.
+>> +
+>> +static int mshv_vtl_set_reg(struct hv_register_assoc *regs)
+>> +{
+>> +	u64 reg64;
+>> +	enum hv_register_name gpr_name;
+>> +	int i;
+>> +
+>> +	gpr_name = regs->name;
+>> +	reg64 = regs->value.reg64;
+>> +
+>> +	/* Search for the register in the table */
+>> +	for (i = 0; i < ARRAY_SIZE(reg_table); i++) {
+>> +		if (reg_table[i].reg_name == gpr_name) {
+>> +			if (reg_table[i].debug_reg_num != -1) {
+>> +				/* Handle debug registers */
+>> +				if (gpr_name == HV_X64_REGISTER_DR6 &&
+>> +				    !mshv_vsm_capabilities.dr6_shared)
+>> +					goto hypercall;
+>> +				native_set_debugreg(reg_table[i].debug_reg_num, reg64);
+>> +			} else {
+>> +				/* Handle MSRs */
+>> +				wrmsrl(reg_table[i].msr_addr, reg64);
+>> +			}
+>> +			return 0;
+>> +		}
+>> +	}
+>> +
+>> +hypercall:
+>> +	return 1;
+>> +}
+>> +
+>> +static int mshv_vtl_get_reg(struct hv_register_assoc *regs)
+>> +{
+>> +	u64 *reg64;
+>> +	enum hv_register_name gpr_name;
+>> +	int i;
+>> +
+>> +	gpr_name = regs->name;
+>> +	reg64 = (u64 *)&regs->value.reg64;
+>> +
+>> +	/* Search for the register in the table */
+>> +	for (i = 0; i < ARRAY_SIZE(reg_table); i++) {
+>> +		if (reg_table[i].reg_name == gpr_name) {
+>> +			if (reg_table[i].debug_reg_num != -1) {
+>> +				/* Handle debug registers */
+>> +				if (gpr_name == HV_X64_REGISTER_DR6 &&
+>> +				    !mshv_vsm_capabilities.dr6_shared)
+>> +					goto hypercall;
+>> +				*reg64 = native_get_debugreg(reg_table[i].debug_reg_num);
+>> +			} else {
+>> +				/* Handle MSRs */
+>> +				rdmsrl(reg_table[i].msr_addr, *reg64);
+>> +			}
+>> +			return 0;
+>> +		}
+>> +	}
+>> +
+>> +hypercall:
+>> +	return 1;
+>> +}
+>> +
 > 
-> Yes, I think you are right. I saw the kref_put() and was unsure what
-> would be called if the object was freed. But the "free" function is
-> right there staring at me. :-) All it does is ida_free() and kfree(),
-> both of which would be safe.
+> One more comment on this patch. What do you think about
+> combining mshv_vtl_set_reg() and mshv_vtl_get_reg() into a single
+> function? The two functions have a lot code duplication that could be
+> avoided. Here's my untested version (not even compile tested):
 > 
-> You should be good keeping the guard().
+> +static int mshv_vtl_get_set_reg(struct hv_register_assoc *regs, bool set)
+> +{
+> +	u64 *reg64;
+> +	enum hv_register_name gpr_name;
+> +	int i;
+> +
+> +	gpr_name = regs->name;
+> +	reg64 = &regs->value.reg64;
+> +
+> +	/* Search for the register in the table */
+> +	for (i = 0; i < ARRAY_SIZE(reg_table); i++) {
+> +		if (reg_table[i].reg_name != gpr_name)
+> +			continue;
+> +		if (reg_table[i].debug_reg_num != -1) {
+> +			/* Handle debug registers */
+> +			if (gpr_name == HV_X64_REGISTER_DR6 &&
+> +			    !mshv_vsm_capabilities.dr6_shared)
+> +				goto hypercall;
+> +			if (set)
+> +				native_set_debugreg(reg_table[i].debug_reg_num, *reg64);
+> +			else
+> +				*reg64 = native_get_debugreg(reg_table[i].debug_reg_num);
+> +		} else {
+> +			/* Handle MSRs */
+> +			if (set)
+> +				wrmsrl(reg_table[i].msr_addr, *reg64);
+> +			else
+> +				rdmsrl(reg_table[i].msr_addr, *reg64);
+> +		}
+> +		return 0;
+> +	}
+> +
+> +hypercall:
+> +	return 1;
+> +}
+> +
+> 
+> Two call sites would need to be updated to pass "true" and "false",
+> respectively, for the "set" parameter.
+> 
+> I changed the gpr_name matching to do "continue" on a mismatch
+> just to avoid a level of indentation. It's functionally the same as your
+> code.
 > 
 > Michael
 
-Acked.
+Acked, looks good. Thanks for sharing the improvements. Sending v7 now.
 
-> 
->>
->>
->>>> +	}
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
-
+Regards,
+Naman
 
