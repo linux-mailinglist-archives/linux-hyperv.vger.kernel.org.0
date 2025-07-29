@@ -1,133 +1,131 @@
-Return-Path: <linux-hyperv+bounces-6436-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6437-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD553B150F1
-	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Jul 2025 18:10:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27B9BB152F4
+	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Jul 2025 20:41:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C9B573A644F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Jul 2025 16:09:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0927E1889A4C
+	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Jul 2025 18:40:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5DD9289830;
-	Tue, 29 Jul 2025 16:09:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 715DB29993A;
+	Tue, 29 Jul 2025 18:39:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="fNJ3hYsH"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="YEqUA7Ox"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11olkn2081.outbound.protection.outlook.com [40.92.20.81])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazolkn19010011.outbound.protection.outlook.com [52.103.20.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1E722127B;
-	Tue, 29 Jul 2025 16:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.20.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929042989A2;
+	Tue, 29 Jul 2025 18:39:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.11
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753805365; cv=fail; b=TJtGqNMik8yzbNjRGCCLB/N5gBdmokbGmQBxrHtCUUrpZBVtAQ7m4zfbhM7NoXtqQXFIb/uGRN89MGBgyO+CiXVcmIeOgC/+jbFVrYUtkzVDNK2FE2i2cu2cdebyrMROtMKX1OsEIA0GRVgdtUPTDuBIjcs9uNrBOesYsopx+Go=
+	t=1753814391; cv=fail; b=hoeMKdbYE8t1yu/ODJqL41Y9XGSxrt/2L0jSOEgeoWGS2HchTcjEUGPRx5y1UCUUsOlrTRRP+Ki6oyYbE6RQpTjGWvRNeypsapXwqtryS6ETytFcYL5lrKE/j9dyj9Vp5GjLAhM1+KS97qXGNw6bP3BdAUYCjUm+cEtidTWanwA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753805365; c=relaxed/simple;
-	bh=0YWcgyRYUUksclKv9ZeltfOrycobD0ccS3j07ACYKX4=;
+	s=arc-20240116; t=1753814391; c=relaxed/simple;
+	bh=spfbBdYgBZnzjJN+IelIhr/Jfs5MKJwv8C62KcMZn0I=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=D0gbJL1B4uVqxD4mFo0k2EJdplNvp7qfQRa9NbFwlIo9YXH/o+ynjN9+j6wa/i5Hkg8z0SQlWkrUYDqjv9rHDn775ItWRqhy5Qb8WHz5jYUtCuhTO1MBtd1KJ+roRVzG6RIPsr7QhbLHJ897kCN496j85cWYYGW6F9Ln8cM2jCw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=fNJ3hYsH; arc=fail smtp.client-ip=40.92.20.81
+	 Content-Type:MIME-Version; b=inpWB/DFGobbq8DPivXB3w5caB50lQY0HWTe8SUJSXXlbuT95a17KS8jRDKXnp2ecyz+l38hmogiUQLk8F2EHwEnesjYsrE44QHdCdOcAk3L4/KknCXphauPUivRoffKIlNbnZyL5k6Ol/jUIuJlLnoPAGJBt0+Llr46vE0dO/M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=YEqUA7Ox; arc=fail smtp.client-ip=52.103.20.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NWXadiEBesZflEBYz8fbporH4OMXlYdASl8fz4IXNyd4qcAFWaYrOQBcWWojnjwhKNTEKRQQIfTV8E8Y3BPlht2+LXTnjQ6Ze/bsIPjG6zA/qKjULgZsfuwxUyOvPIbtrbhCp8vgxTZODX1g9tp4zz0DQp4MP1TrrWWhwPH/hm1ejNUyt42zyOVusLqOkR9DTIYIj9UPREjuni/+KTMbcYOO0WMQFIjRViZdCH+qLIWqQ+yVCxaS3t/XDY+1XMoQpg9WKXdIgGzE7p0qf+Q53tOmsfAS176qTqxmr/1K94a7vComcGp2zCoU/bpCg4/e+jAkIS4TAsENZe4ibvPptA==
+ b=m9BP4OyEzWn8lpKNf1l5RqHxPEEADWNCiEp87Mq9BbP61NZsdOf/A4++z9ayNqgHolkTyCW53+LG5ztzG9HT6PEUYM/jgv2IfXoygiWJFwD3ceQd48yNLqNspJRjVBjOLrMlxPVU4q8lIyS0laycEX3WQpp9NXXH0PAsOBoBzEq8VNYFTPhPQT4w5ra5n9vx56TNZtSBwAP9CKuM2Zs9+LDgL6/7vvetxZiN+R0NpuEz7sDt+mTue0uWLtxgaKU9y3ucOEutTc5E6hOwAoK0wDARIPnNYDC6owQLihQc3C0z5l2CZFCsNuAqBgUTbrHB+d4qAStLqVQUQTMPZC7Zhg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6jGyH5c6VjnaHiZPDTYCc3tuKhwoNWSu7qc7AbHeqGA=;
- b=rmD8c6mavOv53K4bIUkYtUaOWMLUQkrBXxutc+ycQtJWdPzAVtwoLFWZ/C1EhTICSgwBEPV5JtpTSyseROJ9ObwY8lzBVJXNg3bzNiDXMy0QaUOM7VlLuM/4sSFJTCeysxnR3rCJhQV8z/4h8iFYUYbcvr3nxXvm4v1skAUwYDkGZs1jKSqg75In+O2Myp+VUlgMhPtLOHTnFcmi4CuwG3yfZMXRN1wexNzv7MD3fKXZLkSGRK18fbQ8x3DbfeC5I7oo6uVH/mWjp54dOEdnQFKI1TvBl+Hr/lJU9Bq+Y7b72K5Py4I8Tysvjeofnw+kStOsFjR7Pr2P8Sh9LAMnQg==
+ bh=dt6NSzD7YxxcqqNSTVUBAH9MIiA4uM/jn+VTjwOpMHg=;
+ b=VpnIZBckBcziDxDsllEB7iWKqrFCOL8ktcPI0KsbvG1UhmL1W/OGur+Hrpq0HwyIwestIWHPkyBggR8wzZLiXkCly6WB1xhqgin/Kx5Q3RvWpMbR6YvM/MBISHAz6R4FdfrDMI5dULhyzuP0oO7R/taU1Yylxl5ox6orhp4cbtGJckOTxO822SlbQeocWgjcz1ccssGgDPIe2gS5XECGj85k4Ge+XPl3ab372WBWxdBD1Vb4UrolXzIfFwlsToGXqlqZVcxckAicjF/9Vv/ewMtGmotEY5nAuhMAMVdXRKsk6d5xRZ791WPIaknq5WnjclFAvNOXoxt9Qv5fG5lXIQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6jGyH5c6VjnaHiZPDTYCc3tuKhwoNWSu7qc7AbHeqGA=;
- b=fNJ3hYsHGjCy7To3YZRJOCVhmTtDExpJ18SqpiPnpVEQ5Fd/UYkR3s9FPc6qO0kuOle4qDJhc+KGbWdnt09X1q8/DivjQ5uLCQLJba53+W7kHH5GBu7eCFZWowGAUNv9kkNzj4OLzFqKUrUt3hkD+7FJOMIDv8LlUa9QeZXM8cpw8ngMv0KTa9nCA/ZkS1RQ5uqMw/LUkaqgzSRbaalJ89a+94vm/mj+Bn/bUrXRpJpgvmhvCsTe67/9TewcdUoOIfprtgqmNqrtb4pylVOBhwyeRu44HhJ1URANolyPPQChGVZQSOU+wfKfMBgnohAFM67ze3yUc+7yrbmU4lbEsA==
+ bh=dt6NSzD7YxxcqqNSTVUBAH9MIiA4uM/jn+VTjwOpMHg=;
+ b=YEqUA7OxKcrREyk4YgyaYhsICjHKgoNDii/4FcL2fqKcm/b2kk9EdMQTf5P50DuyhfoI0fxpyEb8vuBZ3WQX+rKTh3WBES3exMIw4lPKAxS7wfkJqTMdlgmzOTVftO7ySpog4o+BkuIOR7oBgAkg+oCwr032KPAYVWTdw1wbRFKAk4sO2QoTHK12qCmJs6kyllb86BsDuvnVRJhLId8OFHo9y6O0Z8MLeQpBIa7NXOpqmdo15gA39bcRM3sx0KOiDToAINlVwiUAU0HsPlerkBb55fWKEYsuEPddJlNMu54LktDCJZURWEpLXVI1Uuv04xtopAW9HWQZxRr+odSlOw==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by PH0PR02MB7606.namprd02.prod.outlook.com (2603:10b6:510:5c::5) with
+ by SJ0PR02MB8626.namprd02.prod.outlook.com (2603:10b6:a03:3fb::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8989.11; Tue, 29 Jul
- 2025 16:09:21 +0000
+ 2025 18:39:45 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8989.010; Tue, 29 Jul 2025
- 16:09:21 +0000
+ 18:39:45 +0000
 From: Michael Kelley <mhklinux@outlook.com>
-To: Naman Jain <namjain@linux.microsoft.com>, "K . Y . Srinivasan"
-	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
-	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
-CC: Roman Kisel <romank@linux.microsoft.com>, Anirudh Rayabharam
-	<anrayabh@linux.microsoft.com>, Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, Nuno Das Neves
-	<nunodasneves@linux.microsoft.com>, ALOK TIWARI <alok.a.tiwari@oracle.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH v7 1/2] Drivers: hv: Export some symbols for mshv_vtl
-Thread-Topic: [PATCH v7 1/2] Drivers: hv: Export some symbols for mshv_vtl
-Thread-Index: AQHcAEe3+OKx7ga0hkKUwbQOt2WbmrRJRWAg
-Date: Tue, 29 Jul 2025 16:09:20 +0000
+To: Naman Jain <namjain@linux.microsoft.com>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+	<decui@microsoft.com>
+CC: "K . Y . Srinivasan" <kys@microsoft.com>, Haiyang Zhang
+	<haiyangz@microsoft.com>, Long Li <longli@microsoft.com>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, "linux@weissschuh.net" <linux@weissschuh.net>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 6.12] Drivers: hv: Make the sysfs node size for the ring
+ buffer dynamic
+Thread-Topic: [PATCH 6.12] Drivers: hv: Make the sysfs node size for the ring
+ buffer dynamic
+Thread-Index: AQHb+5+3htBXBucy0kuMwXQVrrilg7RJdcBA
+Date: Tue, 29 Jul 2025 18:39:45 +0000
 Message-ID:
- <SN6PR02MB4157ABF89421EF7C7BDA6023D425A@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250729051436.190703-1-namjain@linux.microsoft.com>
- <20250729051436.190703-2-namjain@linux.microsoft.com>
-In-Reply-To: <20250729051436.190703-2-namjain@linux.microsoft.com>
+ <SN6PR02MB41579080792040E166B5EB69D425A@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250723070200.2775-1-namjain@linux.microsoft.com>
+In-Reply-To: <20250723070200.2775-1-namjain@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH0PR02MB7606:EE_
-x-ms-office365-filtering-correlation-id: 8a05093b-ca94-4cca-7e7b-08ddceba4729
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SJ0PR02MB8626:EE_
+x-ms-office365-filtering-correlation-id: 066d4ca4-0072-4efd-b8d9-08ddcecf4a16
 x-microsoft-antispam:
- BCL:0;ARA:14566002|19110799012|8060799015|8062599012|461199028|15080799012|440099028|40105399003|3412199025|4302099013|10035399007|102099032|1602099012;
+ BCL:0;ARA:14566002|8060799015|8062599012|19110799012|15080799012|41001999006|461199028|3412199025|40105399003|51005399003|440099028|102099032;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?SC287n4+KRTc9di56E99j/TjKsWLqvNOidYiMCyBONhZ23/BwT0+q7iawuHm?=
- =?us-ascii?Q?q7QrkxW+WaH5jrnS4hu/zazHlsS123geb9gzmtqFTvk5KE8/72KBlHbJS0QV?=
- =?us-ascii?Q?pVy4ra1R8ELC3VizazzxbdfFgthSDkD+hrM5SQiRXntkt+cf3vLwi7fltI0T?=
- =?us-ascii?Q?VfV99xnF0HaEwJ/Mk7PxggUS2JFLSrv8MvdfdrgD3ZcBqd4IdWb6tmsazayb?=
- =?us-ascii?Q?s5GrIDci3dVj6ygjacD5JGCDxof/9f1T0Iv0UBMmaN6I0U+3JktosX4auW3J?=
- =?us-ascii?Q?C0FRs2e5Pb3LDBIiGC7SlXL6m3M4ocg7j8h1dTuLv9ehWiXPK6XUGqfPdzfV?=
- =?us-ascii?Q?TAb72TeGP/HkugVYEYIjveNj6auisdnr2cQ43VIIUdGGl4LbMde9fBrQ4AS9?=
- =?us-ascii?Q?Y80hMoFcEx/tLPv4ue5LhdbRpfMm6grZB4ZtGTjGbELFYUQ3L6MFD2jOJ07Y?=
- =?us-ascii?Q?HB1QEu815s92cUlPGq/xiREsQkja4mWuFr4kCE/At/Zm7uYlORvnqDpKZPCR?=
- =?us-ascii?Q?bNm6401aL0iNZEd+XKCp5g+pITGIc/ejs8xVcObrU8yArc0in67xI4H0OlLF?=
- =?us-ascii?Q?aRD5Z3Wznx6Ea2+nh3mspQDkPu3xJfTZiuG9Q25s9P/OkbL9bEZ/nrqI+BaW?=
- =?us-ascii?Q?W+9GXd9Vv+IRPddNUp+9qvW6Qx/Gct3V4AILM8MKm7evT/tPK5lsacDV0E8j?=
- =?us-ascii?Q?DDRSqZkgYRCfAxYNXjfD5Je85oVIeq0jigWOyNzrUDKJMF16gYzmNVFyJN0p?=
- =?us-ascii?Q?1S7/dniUlKKVMtCdqjE4xvopGW859irxMIjr2rz9+ITAEs3wf52QRNWPKeJq?=
- =?us-ascii?Q?yahP5mpVgswVey1DovBvVWpk//5nbQ1zPgv51q8wHMPTLgBy9HB/x+iPkxcp?=
- =?us-ascii?Q?p8TYlB/La0Xahxvt5XMqHXviuZJMj2Z+H0fNjVm7rrMpym2LeV3iqze1IIgz?=
- =?us-ascii?Q?0Jss5I0sf/D7uhwJ5lpmKJyHRAMH79XSpnGQo9GBcXrsyFeYsuwGXjWT2lpH?=
- =?us-ascii?Q?VNNgMLWJpwIpEpNSDcTKOoo5e3mzOJ46L8h0PCZPjlwj8FQBiYhdUNmUHIb2?=
- =?us-ascii?Q?GZULRcW1mfyz2iywXIlIrue250Oeg7UOiya4mu7uDsdDiR5wLkXeUnojouC9?=
- =?us-ascii?Q?Ls7eha3S8y3EsLWDGhwbQuytO9erI25mwfplIYnYR8rcZdayaVm/j+VaqBGR?=
- =?us-ascii?Q?dAnTvycdPJYICJeKbBylTaig1fvuwyvIZKfVWxg5eUymAqc3yBRAubHeTtse?=
- =?us-ascii?Q?3gyPbF26lUNYqyhLvk/0?=
+ =?us-ascii?Q?3qOr6HcsQVFSzTA4ETloP/Dfnep/BjO1LaiZSDbCVfKDlp/uUrTLSgUTQpL5?=
+ =?us-ascii?Q?UDfC6UKorB/19tc7VYp7kO3Kcg5zzbb4tf/D9UZrv4xLg/J9lGr6pFe8xhuK?=
+ =?us-ascii?Q?n6Oa98sbd+XsHz3Gye9nxxQBAyRXD1sOZLpAnL/YDfrkaZ0lAURaoCXib5UH?=
+ =?us-ascii?Q?WiOGQJBfQHmijuIW2WCpqJWKq5X1/6994ZY1BhhemcRCb5bcXMEemW3X1SXe?=
+ =?us-ascii?Q?v+bi73F6WHwnwPep8F972PNtJcKnkDffZO0Vf8EeaWhJNMKlUv+sPcKblOt7?=
+ =?us-ascii?Q?Z+fKFBXoULO2uVhjCiqnX8DCjhwChLpiWpJEsv3eXhx5B24Zy/NwVaz1sh49?=
+ =?us-ascii?Q?PI79z33MQOgxfJZuZdv3Tpm+06/9IJDQiyY2GgIEu00d7LhTUnNzTOeTYXS+?=
+ =?us-ascii?Q?5lLTPirxLET/nskN4PGCJf8xOS/eDe/jDxBh+SNtBtJJq/ZwBFaC9wiijI/9?=
+ =?us-ascii?Q?WiimpZ6jyHyUxuTBm9j2mBFjd+OFG1gTHj+dDxgEAo4VRLd6uuhgq5qH06ya?=
+ =?us-ascii?Q?XaoyLxbnYlwSREsv4HMJ0GqaiEFH9NwJDPmEMMYbkOxsZVUMwFRxesrstaYO?=
+ =?us-ascii?Q?PlgppVWYtGF2X1gR8lsK7Lor/81CveM+/Va8Uiefvm+o93DJMYn6wxD9KiNj?=
+ =?us-ascii?Q?dqwkg2eG6dwfpCGSYGN6669pg+RjMUf7tknilVZTdyXOGmN56cNhn9o0vwVJ?=
+ =?us-ascii?Q?LQMAWhcMyuG5FR+9uQuCf/Y5wJhVa0tkvLpeRtj/M3iano+WEO+LKikbL2pT?=
+ =?us-ascii?Q?vOQ0JcTY6ETqqVzOOdTDbzVvnXbHLZX6FvvwDCZwJiAdMoWBrxRrdrDrmsJi?=
+ =?us-ascii?Q?11vCSfzqOJ+ifTnY6F55aB8lh/wJiGeV9/kUXSsJP/hnRRzqnwE+LthlHrVc?=
+ =?us-ascii?Q?ovEnloP0OAN4m4td/GqUr9+4JSZbL79/TFIh87NONwYtyjHOOxxzEfVlVWiN?=
+ =?us-ascii?Q?j30ANR1KEVYTSo9fN4/I1YXp/p6WID+RUQu+uIYKQ97UTAfIg4jC8BkOiPpL?=
+ =?us-ascii?Q?6NAcqU3i+KgMrcN0YnHAQWwa2uJ3qJuB3VyEkf8Pj6WxvvWczG6hys0ioxh+?=
+ =?us-ascii?Q?ETe1I3fT6HsxBY9BEpHKAsKxT9es31g8DG0BoWITlw12Ky0iAc+OryV5zS1S?=
+ =?us-ascii?Q?7I9RHBXtR2TGcEUTf6uMZJFxW8ulTCzFoeljK0VfbDec63wYP34YQi8=3D?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?EoiYRaKrv3I2rT+A0mEDFDsiAkldPZZ0Dn8KhSIz7ELOTwsCP2PXGztxoHDi?=
- =?us-ascii?Q?iuthLk+evhmoIgnsOUxx96DFP/xf4P84Q4ASs5IMMOggvtA1QUkl8X0+q0j7?=
- =?us-ascii?Q?mLQXuc5bMTgrTgYijPhp36Nl07l5y8kqrtGdWgiBkb3LmbX8cpfUVgIhdk3/?=
- =?us-ascii?Q?5aKNL7s6EWa2JfhjZs4lB2i2xXBB8+1H0bI+4gtcxQx+AAoeOGvI6fRRWgLF?=
- =?us-ascii?Q?QrVWP14WTQr6Z3KlUsQxMeyNRRcKAGRa/vPf8m86wJkWwJ0xYI0mm/A1JqDq?=
- =?us-ascii?Q?I45o3OYYueNLY7HjhMS8valSqUjlNR2fAdu2AMXvvwfO6SWOgu70TEropuFA?=
- =?us-ascii?Q?UQVP4OiBuZemxQM2tPVUeNZ1KcZAbvZE42QsKMfaZ8AL1XGePHvqpTEzASq7?=
- =?us-ascii?Q?Y1bU33BFBoRGsFnwqXGF1k9LVC6snJiXGBIipTAMyEofd0ysGkbCQIa5bHr3?=
- =?us-ascii?Q?pkDagy48IR9QMCvKearATxJ3DzxJbqPwkCZcHrn+IQ9N8tT9vvgW9rarFLFp?=
- =?us-ascii?Q?JdloExTlgoxZMvT4nxQN2FxxHqQAEJFzSXNZgw39p9skEuQ24+EWsmzK98ZM?=
- =?us-ascii?Q?HLp5ATWYJxG+JXeqPoJjGo85cUGd6xeVgQWUN48QkS9BLZ0ygC5zU8rWXu6U?=
- =?us-ascii?Q?8knoZycVKTtPzFeKaQAcecZVh2s3vvg9f0BNnL+bNt1nZZcYp7PnktCcYn9w?=
- =?us-ascii?Q?dVhmyHhFHcYdQ6LhOjismEAFaIGlnXUioqVig1kj/Ibu6RBmMi2bfj94fQv9?=
- =?us-ascii?Q?0alZZHev1MXLgodNWHvV3Iq5cDPCZlqVQ5kEvcgKw0a54qbRzTg5AAmEHsVn?=
- =?us-ascii?Q?p7+qpfRRFJ+qLf6AT7JY48A+J8didfw/1l/Qxrd+Ni/e0TRoA1jv5UA8Om39?=
- =?us-ascii?Q?edpRLEvScKZ0hRJGwVMqX3xGfmEKpnSUboot4BBFVOHhyvMHURQ1PU7lbhjI?=
- =?us-ascii?Q?NcW+rBZA8Wke94eFQ60l65TfPVS9p5CEwHP9gMNZ36v0AecF/oLJb+Zp36Hb?=
- =?us-ascii?Q?Rqc6elaJwCCyWvWPzCvwU3Zbuw2i/l+rDjTiJjuUs2TPCyBSDi7P82G+RRl7?=
- =?us-ascii?Q?tWjkzsqprQEDBY6ZsljzNDlgYlPEw1kWuYFbmrdcimHPaBae/45G/+h1zDYp?=
- =?us-ascii?Q?1d2wC0E8Z3QghkcDz8Ydm63gHRVMkWQn0PTRrWTWCnrO6wMwv/6uebbucybN?=
- =?us-ascii?Q?3qjnFNP3JFlx/WkTik7bVO/JLtbyDn9RMAbpzd8J0Z40KnMT9ObNsd1SxNw?=
+ =?us-ascii?Q?Uq+aCwt2RonoSVUZQ/HaTdZfHHxvu8qQspAOgiZlVyL9DgeVol3vyOreqhtE?=
+ =?us-ascii?Q?81zdkkR54OcqYaCtOnV2+uFG3Ih2WW/fDVxX3tZ/85V23068/VStHXzujLBC?=
+ =?us-ascii?Q?zXgWbfeohfSkLekGljWTovfeaW6l/Q3ARiX0+BvVJP3hWgJjV/tBwTdYMxcv?=
+ =?us-ascii?Q?dbiUPUadNFEaGw4epHx4mK0Pi2yFqjWQB/h0qksLPx4ONkDsAw16ik4aszMs?=
+ =?us-ascii?Q?krrKjBU9rlcoXIUzl4OxI3jOy7jww0t2C8129MYQWJ2HN80JLOmwP7BEZWgV?=
+ =?us-ascii?Q?gGp0WmJDmgmkw1ACysBidSN29aG3Q62Rt1BEoVYCS+ebFUby4vEjHOl3Z6IU?=
+ =?us-ascii?Q?pOGDsJ/KVaSTuKomxfrttBTs0zAIrRWnm8uR3zYqbP0nvoGsj5PLibtirgYv?=
+ =?us-ascii?Q?jIn9ZIIpntcHJ2CWByce1kmtu8yeeM/Cu6kjzfdMJqS5f1sz03ZThTw+TdAI?=
+ =?us-ascii?Q?l20d+42H+UmWtx4zPQZeUSTuGWITUPYldalDGwkcs8R37Z0iSO4V10nFZYPV?=
+ =?us-ascii?Q?tguCrM/LLXgIGz0U5yzWtUGqPQy7VUpGkm8olCBqCnfNZGlwtBAhD3ste/lf?=
+ =?us-ascii?Q?gnPDCPib0W06qmvpjcXnkwXRqhUbp5sNujEIRTCTCtY32NmLUT9WJ545dAiD?=
+ =?us-ascii?Q?07zRUuXcYfqkExQ9jS9UrX9eMDmurnXIrlHfrx7U/w/PySDWjQe6SlVMiJ27?=
+ =?us-ascii?Q?EGp7B5uaS4IHCjwTqnNjGUriwJJZZYrHwxz+kRgM6ADsdoehJnVIA03mIF7l?=
+ =?us-ascii?Q?HZmVT4vhW8tQPS5KSuB1I2xR4d+xERJSgSlPks+wFZ132gc+TGqEqHEU7uvB?=
+ =?us-ascii?Q?NcpnwfQANamX3Wsg9+e2K9RZio7Z/+c/pPf1VqXVLegAmNEf4jdZ9HB2TMrs?=
+ =?us-ascii?Q?V9QsICNGfqA2ulc73cL5zPC4DLUpEhPwQ/orXlG/2HhkTFY+qnWxIPksYZqX?=
+ =?us-ascii?Q?p3MrfCSStEn6BeGCfoyIsx9Ig6EGigC4dneutVNat+gDIIPEmnLs47+6pGZd?=
+ =?us-ascii?Q?Vi5VhF563cU2RrfUXinorqtaDjcoKe4unLzV84dmp6Z3dKXYFbgn6OPOD6oB?=
+ =?us-ascii?Q?6ww5BJ59GlPFC1by9PCAeZZL1xO0Cx2yy2v0CMZ8rSciGj0lr5WfuOr4nDUF?=
+ =?us-ascii?Q?qCFNEZrS0KG5jWYe9nAbOrhduyoWEyeE6cPu8hAz7Dn2VeR0gaE/dNQxpiPG?=
+ =?us-ascii?Q?sSmzFpOIVwKTUZ+p+573zSnaxDP8Pw04Z8WjA008dJ3Pdb+9QEstfNAqSBI?=
  =?us-ascii?Q?=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -141,38 +139,99 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a05093b-ca94-4cca-7e7b-08ddceba4729
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2025 16:09:20.9545
+X-MS-Exchange-CrossTenant-Network-Message-Id: 066d4ca4-0072-4efd-b8d9-08ddcecf4a16
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2025 18:39:45.2934
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB7606
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR02MB8626
 
-From: Naman Jain <namjain@linux.microsoft.com> Sent: Monday, July 28, 2025 =
-10:15 PM
+From: Naman Jain <namjain@linux.microsoft.com> Sent: Wednesday, July 23, 20=
+25 12:02 AM
 >=20
-> MSHV_VTL driver is going to be introduced, which is supposed to
-> provide interface for Virtual Machine Monitors (VMMs) to control
-> Virtual Trust Level (VTL). Export the symbols needed
-> to make it work (vmbus_isr, hv_context and hv_post_message).
+> The ring buffer size varies across VMBus channels. The size of sysfs
+> node for the ring buffer is currently hardcoded to 4 MB. Userspace
+> clients either use fstat() or hardcode this size for doing mmap().
+> To address this, make the sysfs node size dynamic to reflect the
+> actual ring buffer size for each channel. This will ensure that
+> fstat() on ring sysfs node always returns the correct size of
+> ring buffer.
 >=20
-> Co-developed-by: Roman Kisel <romank@linux.microsoft.com>
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
-> Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202506110544.q0NDMQVc-lkp@i=
-ntel.com/
+> This is a backport of the upstream commit
+> 65995e97a1ca ("Drivers: hv: Make the sysfs node size for the ring buffer =
+dynamic")
+> with modifications, as the original patch has missing dependencies on
+> kernel v6.12.x. The structure "struct attribute_group" does not have
+> bin_size field in v6.12.x kernel so the logic of configuring size of
+> sysfs node for ring buffer has been moved to
+> vmbus_chan_bin_attr_is_visible().
+>=20
+> Original change was not a fix, but it needs to be backported to fix size
+> related discrepancy caused by the commit mentioned in Fixes tag.
+>=20
+> Fixes: bf1299797c3c ("uio_hv_generic: Align ring size to system page")
+> Cc: <stable@vger.kernel.org> # 6.12.x
 > Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
 > ---
->  drivers/hv/hv.c           | 3 +++
->  drivers/hv/hyperv_vmbus.h | 1 +
->  drivers/hv/vmbus_drv.c    | 4 +++-
->  3 files changed, 7 insertions(+), 1 deletion(-)
 >=20
+> This change won't apply on older kernels currently due to missing
+> dependencies. I will take care of them after this goes in.
+>=20
+> I did not retain any Reviewed-by or Tested-by tags, since the code has
+> changed completely, while the functionality remains same.
+> Requesting Michael, Dexuan, Wei to please review again.
+>=20
+> ---
+>  drivers/hv/vmbus_drv.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 1f519e925f06..616e63fb2f15 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -1810,7 +1810,6 @@ static struct bin_attribute chan_attr_ring_buffer =
+=3D {
+>  		.name =3D "ring",
+>  		.mode =3D 0600,
+>  	},
+> -	.size =3D 2 * SZ_2M,
+>  	.mmap =3D hv_mmap_ring_buffer_wrapper,
+>  };
+>  static struct attribute *vmbus_chan_attrs[] =3D {
+> @@ -1866,6 +1865,7 @@ static umode_t vmbus_chan_bin_attr_is_visible(struc=
+t kobject *kobj,
+>  	/* Hide ring attribute if channel's ring_sysfs_visible is set to false =
+*/
+>  	if (attr =3D=3D  &chan_attr_ring_buffer && !channel->ring_sysfs_visible=
+)
+>  		return 0;
+> +	attr->size =3D channel->ringbuffer_pagecount << PAGE_SHIFT;
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+Suppose a VM has two devices using UIO, such as DPDK network device with
+a 2MiB ring buffer, and an fcopy device with a 16KiB ring buffer. Both devi=
+ces
+will be referencing the same static instance of chan_attr_ring_buffer, and =
+the
+.size field it contains. The above statement will change that .size field
+between 2MiB and 16KiB as the /sys entries are initially populated, and as
+the visibility is changed if the devices are removed and re-instantiated (w=
+hich
+is much more likely for fcopy than for netvsc). That changing of the .size
+value will probably work most of the time, but it's racy if two devices wit=
+h
+different ring buffer sizes get instantiated or re-instantiated at the same=
+ time.
+
+Unfortunately, I don't see a fix, short of backporting support for the
+.bin_size function, as this is exactly the problem that function solves.
+
+Michael
+
+>=20
+>  	return attr->attr.mode;
+>  }
+> --
+> 2.34.1
+
 
