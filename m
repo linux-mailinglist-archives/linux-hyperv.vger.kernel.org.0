@@ -1,145 +1,145 @@
-Return-Path: <linux-hyperv+bounces-6427-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6428-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6650EB14664
-	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Jul 2025 04:42:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39CDAB14770
+	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Jul 2025 07:09:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9CF2B5425AF
-	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Jul 2025 02:42:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7FFD03BAF77
+	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Jul 2025 05:08:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03C10214801;
-	Tue, 29 Jul 2025 02:42:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78107224AF2;
+	Tue, 29 Jul 2025 05:09:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AT3A3M0t"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="n0PwQJiN"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666B82144C7
-	for <linux-hyperv@vger.kernel.org>; Tue, 29 Jul 2025 02:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED24472634;
+	Tue, 29 Jul 2025 05:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753756940; cv=none; b=jXYi2jSE5aybSUK0Fm6rZKw0miMrRZa2xPO06oivwKaGOqVmZSebXymQV0ea3zjXEkKJ7RfQbL3hc6sV8ZKBPF/j/GxbZIsfWzpWC86MTdCwKErMGw1W7lThXkSpTAHjqvGVA6EO2m9461+SmdsJa11PKQDgR7q9kiZu5+LXouc=
+	t=1753765743; cv=none; b=oqXbEtCAaORs/ooCwWO1cR58HqjiBLpXjKeragwCeI73jo0i0oOSayOD0TmZMmROWsPX7aDkec8R0KcB9BxxNt5ucsO5XxNI9dcaVYAFj3Ii1at6M7FfDB1+kdP0KeaxIrl+UTxtPrNQGI1H/BtNGeGM8A7uqkG5dDv7lYkjKZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753756940; c=relaxed/simple;
-	bh=Ww2f2ZpyJcTFXUKhLHEBwckLTS8uuClVa/W/yWcnBdQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JB/WTl4/q3UDZQ/an/b0NRXAdGcr35Mhmn5kJ0XaIhiTXiP4elmVwSNrkb6XCZVR/wxqOB5g6vXxKT5gIrkR4/DCIh72/CErAb1LsCRiMBpQ39t/VRSa/AyKCGsLIfRimsK+9fKphRm7sTKk82CgQzOrnimgOBHGcLbS+WIk6SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AT3A3M0t; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753756938;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ww2f2ZpyJcTFXUKhLHEBwckLTS8uuClVa/W/yWcnBdQ=;
-	b=AT3A3M0tNgzOgLC1SIqduDhekisS0X4PeU/9ioY4GxLlPNk5YbrQmv/MHLOXCGD89XtNuA
-	2NJb+iGAPvq4euF8OeMKCk6+ErIz0Js0tDZz4g0Mluex1AW9o3ATAJleTSJkfSrEfvPRg7
-	xYtNDghBVlR6Jlz6ETJ/XgPWrUwlgA8=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-658-EuxtoXstP8u5ejwfsqbnWg-1; Mon, 28 Jul 2025 22:42:16 -0400
-X-MC-Unique: EuxtoXstP8u5ejwfsqbnWg-1
-X-Mimecast-MFC-AGG-ID: EuxtoXstP8u5ejwfsqbnWg_1753756936
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-31332dc2b59so4947848a91.0
-        for <linux-hyperv@vger.kernel.org>; Mon, 28 Jul 2025 19:42:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753756935; x=1754361735;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ww2f2ZpyJcTFXUKhLHEBwckLTS8uuClVa/W/yWcnBdQ=;
-        b=VR27MKveAUhhMRjDHAWT5kYUjHJl0dVHXbxxMGHg+0s9e693fjsCMCRfnQbGdZy5XU
-         cekzvSZ/jpAqjiNqsPhkDkOVSOiRcI01mE2DldpHCw9h9oYEfKGvJxz5AMITfzI7Y6vs
-         Sr4V6/uK6uO1FvWzboJ8hU4+0qv8fQyAgAkfXa7t/KsLwwlClBkpWPT//AAbPu2A6n5F
-         f+jMFRZ+E/+0O/HWvxxdaCvoW5NjiEex/UYb6NwWz3HvYNvkAcIlJJNe6hrBJT8sxbXy
-         ak/Nkrr6BdXaiBlLcCD77b2ryUamGbnPoHcIV6HjcCdOjHe8Pk1+Kr0LY5iABLc7PQzb
-         od8g==
-X-Forwarded-Encrypted: i=1; AJvYcCWmdZ3iejXgGb5QhRsXIheqOL3s7yGO4JumbfIXnjltuLgu9ONtSFie0qSNoKxJ6pufDjIq5AwTbOyXJ8k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxs/9Tr+BrFblSLC9auJqt2wi2saoy5iLrnGTGJdXwI6jfXJRj3
-	OhCaShBHGX5yUIC149odXT7yikqyaknzla2sT3Cn00JI4LjqB1PX5P+LWC5ANpiSwobj2bJeWyl
-	xXEIsH8Zqvb3mm80s+vNz3WrzjyNeiF2jGczIu7aqYwxzpzORxcl2x+Ld7bh9H/3H2hQGWg3VTf
-	jpAIouHdLXhn1+0jWqrPrwlMBBigvfUewvMCtSYC96
-X-Gm-Gg: ASbGncuqPZ9ochgf5ymOMorJkEJfuUg3nj9X9vqDjd4zEH5ZbsVnESSixAEDtDb99D6
-	0Xi0sXKZVl37W8c0NL7T0qneq0Ibk8WjMkd8uuqtf7/B1WitFsuzXx4+hp8kD8HLUPv21NUkEz/
-	9IuO/3WjIzVMMkSHfzcws=
-X-Received: by 2002:a17:90b:280d:b0:311:c5d9:2c70 with SMTP id 98e67ed59e1d1-31e7789934emr19500208a91.15.1753756935531;
-        Mon, 28 Jul 2025 19:42:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHiTrGIt7eoxqCmwJKJyFiSjpEt/y/C2GLW4uxNz1WclVI1OSQpVtk4/Uh3bkfM8enIwqKkmmo/XskQneWdc8g=
-X-Received: by 2002:a17:90b:280d:b0:311:c5d9:2c70 with SMTP id
- 98e67ed59e1d1-31e7789934emr19500181a91.15.1753756935041; Mon, 28 Jul 2025
- 19:42:15 -0700 (PDT)
+	s=arc-20240116; t=1753765743; c=relaxed/simple;
+	bh=XWxFCn699OEVDNLgs8wLGR4eS0m1rSlLO9FCPacfvkg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oUw2JP1sqadHoj6SEVXSoOdg2P3zYMlGarqznziV6K0hTovDsh3QCifpaUZa0mcqBxy349IpbSMoM5SKMqwKyDcYIg4XWPzFvUY8TB1CL0gpbLflAxWR5Bia/xvuiFqz2hKlm2R4KpfzN3xQFIQ06+MsiRXMN19O5sD5BLSsEfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=n0PwQJiN; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.79.161.187] (unknown [4.194.122.170])
+	by linux.microsoft.com (Postfix) with ESMTPSA id DDE912021866;
+	Mon, 28 Jul 2025 22:08:56 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DDE912021866
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1753765741;
+	bh=GkNCKUMZl6WNjOw5VJi2LlNf14Ca9uH/SfWTITXfLYA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=n0PwQJiNfB9DOEIOy0lUKaMiVMBwkkBM+6BeIgnpZQifzkAx2LxAejwp/bXLX9ISt
+	 TIftWdWLROq7bO95zPIsK+HzkfO2g+vU8TpqrU8vchvWMbwJFMGKZqv2zonYpCNzQC
+	 Qs3KrywEPD1mAnSF+KhwwcKg1Xl2WDBiRpF3ntXA=
+Message-ID: <9965dc77-eab9-4252-8c93-01c27e417bdc@linux.microsoft.com>
+Date: Tue, 29 Jul 2025 10:38:51 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250718061812.238412-1-lulu@redhat.com> <20250721162834.484d352a@kernel.org>
- <CACGkMEtqhjTjdxPc=eqMxPNKFsKKA+5YP+uqWtonm=onm0gCrg@mail.gmail.com>
- <20250721181807.752af6a4@kernel.org> <CACGkMEtEvkSaYP1s+jq-3RPrX_GAr1gQ+b=b4oytw9_dGnSc_w@mail.gmail.com>
- <20250723080532.53ecc4f1@kernel.org> <SJ2PR21MB40138F71138A809C3A2D903BCA5FA@SJ2PR21MB4013.namprd21.prod.outlook.com>
- <20250723151622.0606cc99@kernel.org> <20250727200126.2682aa39@hermes.local> <20250728081907.3de03b67@kernel.org>
-In-Reply-To: <20250728081907.3de03b67@kernel.org>
-From: Jason Wang <jasowang@redhat.com>
-Date: Tue, 29 Jul 2025 10:42:02 +0800
-X-Gm-Features: Ac12FXzBxdqLecuJGApu98LjzbNbf9v9AdNqmCM9700YIpdOZpTnf4cOXXGt-No
-Message-ID: <CACGkMEvwAqY2dRYLnUnVvprjoH8uoyeHN9CB9=-xRUE80m6JSg@mail.gmail.com>
-Subject: Re: [PATCH RESEND] netvsc: transfer lower device max tso size
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Stephen Hemminger <stephen@networkplumber.org>, Haiyang Zhang <haiyangz@microsoft.com>, 
-	Cindy Lu <lulu@redhat.com>, KY Srinivasan <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Michael Kelley <mhklinux@outlook.com>, Shradha Gupta <shradhagupta@linux.microsoft.com>, 
-	Kees Cook <kees@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Kuniyuki Iwashima <kuniyu@google.com>, 
-	Alexander Lobakin <aleksander.lobakin@intel.com>, Guillaume Nault <gnault@redhat.com>, 
-	Joe Damato <jdamato@fastly.com>, Ahmed Zaki <ahmed.zaki@intel.com>, 
-	"open list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>, 
-	"open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/2] Drivers: hv: Introduce mshv_vtl driver
+To: Michael Kelley <mhklinux@outlook.com>,
+ "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>
+Cc: Roman Kisel <romank@linux.microsoft.com>,
+ Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+ Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ ALOK TIWARI <alok.a.tiwari@oracle.com>,
+ Markus Elfring <Markus.Elfring@web.de>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+References: <20250724082547.195235-1-namjain@linux.microsoft.com>
+ <20250724082547.195235-3-namjain@linux.microsoft.com>
+ <SN6PR02MB41571331AF61BE197F76B970D459A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <03c90b7d-e9b8-4f8f-9267-c273791077c2@linux.microsoft.com>
+ <SN6PR02MB41579F474B6FC43D4E5754CDD459A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB41579F474B6FC43D4E5754CDD459A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 28, 2025 at 11:19=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> w=
-rote:
->
-> On Sun, 27 Jul 2025 20:01:26 -0700 Stephen Hemminger wrote:
-> > On Wed, 23 Jul 2025 15:16:22 -0700
-> > Jakub Kicinski <kuba@kernel.org> wrote:
-> > >
-> > > > Actually, we had used the common bonding driver 9 years ago. But it=
-'s
-> > > > replaced by this kernel/netvsc based "transparent" bonding mode. Se=
-e
-> > > > the patches listed below.
-> > > >
-> > > > The user mode bonding scripts were unstable, and difficult to deliv=
-er
-> > > > & update for various distros. So Stephen developed the new "transpa=
-rent"
-> > > > bonding mode, which greatly improves the situation.
-> > >
-> > > I specifically highlighted systemd-networkd as the change in the user
-> > > space landscape.
-> >
-> > Haiyang tried valiantly but getting every distro to do the right thing
-> > with VF's bonding and hot plug was impossible to support.
->
-> I understand, but I also don't want it to be an upstream Linux problem.
->
-> Again, no other cloud provider seems to have this issue, AFAIU.
->
 
-There's a failover module which is used by virtio-net now. Maybe
-that's a good way for netvsc as well?
 
-Thanks
+On 7/25/2025 8:05 PM, Michael Kelley wrote:
+> From: Naman Jain <namjain@linux.microsoft.com> Sent: Thursday, July 24, 2025 10:54 PM
+>>
+>> On 7/25/2025 8:52 AM, Michael Kelley wrote:
+>>> From: Naman Jain <namjain@linux.microsoft.com> Sent: Thursday, July 24, 2025 1:26 AM
+>>>>
+> 
+> [snip]
+> 
+>>>> +
+>>>> +static int mshv_vtl_sint_ioctl_set_eventfd(struct mshv_vtl_set_eventfd __user *arg)
+>>>> +{
+>>>> +	struct mshv_vtl_set_eventfd set_eventfd;
+>>>> +	struct eventfd_ctx *eventfd, *old_eventfd;
+>>>> +
+>>>> +	if (copy_from_user(&set_eventfd, arg, sizeof(set_eventfd)))
+>>>> +		return -EFAULT;
+>>>> +	if (set_eventfd.flag >= HV_EVENT_FLAGS_COUNT)
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	eventfd = NULL;
+>>>> +	if (set_eventfd.fd >= 0) {
+>>>> +		eventfd = eventfd_ctx_fdget(set_eventfd.fd);
+>>>> +		if (IS_ERR(eventfd))
+>>>> +			return PTR_ERR(eventfd);
+>>>> +	}
+>>>> +
+>>>> +	guard(mutex)(&flag_lock);
+>>>> +	old_eventfd = READ_ONCE(flag_eventfds[set_eventfd.flag]);
+>>>> +	WRITE_ONCE(flag_eventfds[set_eventfd.flag], eventfd);
+>>>> +
+>>>> +	if (old_eventfd) {
+>>>> +		synchronize_rcu();
+>>>> +		eventfd_ctx_put(old_eventfd);
+>>>
+>>> Again, I wonder if is OK to do eventfd_ctx_put() while holding
+>>> flag_lock, since the use of guard() changes the scope of the lock
+>>> compared with the previous version of this patch.
+>>>
+>>
+>> I didn't find eventfd_ctx_put() to be a blocking operation, so I thought
+>> of keeping guard() here. Although, synchronize_rcu() is a blocking
+>> operation. Please advise, I am Ok with removing the guard, as the lock
+>> is just being used here, and automatic cleanup should not be an issue
+>> here.
+> 
+> Yes, I think you are right. I saw the kref_put() and was unsure what
+> would be called if the object was freed. But the "free" function is
+> right there staring at me. :-) All it does is ida_free() and kfree(),
+> both of which would be safe.
+> 
+> You should be good keeping the guard().
+> 
+> Michael
+
+Acked.
+
+> 
+>>
+>>
+>>>> +	}
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
 
 
