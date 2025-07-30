@@ -1,200 +1,235 @@
-Return-Path: <linux-hyperv+bounces-6442-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6443-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9391B15869
-	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Jul 2025 07:16:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD5F6B1599B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Jul 2025 09:32:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 05FB27A9B3A
-	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Jul 2025 05:14:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 11C15547D47
+	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Jul 2025 07:32:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 253901E571B;
-	Wed, 30 Jul 2025 05:16:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C0E428DF0B;
+	Wed, 30 Jul 2025 07:32:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vg2RwPmn"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="RMA7g9WG"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2078.outbound.protection.outlook.com [40.107.94.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E481E570D;
-	Wed, 30 Jul 2025 05:16:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753852569; cv=none; b=oGd8Wo0xYUTt9fdy0DKeFrJGm9+kn3yip2mJUlOgl3Ejm7Xodf86h7pVy48L/erkTwsDnTS7GSKVtg877GH8YDwD1iv7eR/TehS39pWmkD/LYN92H37ou+iCYNIDGUbLWw3YU5eOj0VBBQDDIlvSunavgZurxDVsAsEUrtRdUCc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753852569; c=relaxed/simple;
-	bh=v38Oh17/JGHcivGVKy2sckjh/J/d77DhoOF+ja2ZXG0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iTx4v/l9KIMo6lqpkOjicf9kvmb9BppPkoQQKQyYmKut8wr7eq8mfuMMNfRGPCekn1mhueoqJ6ao0NhCOXlaGEP+VUgdrTTAOnnSla2KIc9PxjnZHXWIgilxNi0nSCfhtZ7e1caTbitbFQTCvYkp+4Gj2Mt3HuOc4x4qGexmTVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vg2RwPmn; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-24003ed822cso20796435ad.1;
-        Tue, 29 Jul 2025 22:16:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753852566; x=1754457366; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G9Fh26bF3MqXUV2HfzEAs7u0sxYZEa/PtdeN7DPnQSI=;
-        b=Vg2RwPmnONaz2MTVjRahVX27UH4l94kv/eFMcIVKmSFF4X1laW6xSWFw6iippxANbk
-         +CNRHakUMjWB7YBDJvL2C7PK2e1xMlhs2SVyfOtEQBBxaOL5DLsVvypjdJr4KYDC05hG
-         ZOn+O6jtLe1Uc6mgtnDgCtdISGgj2iu4cMy5uB0fAzAuBplPPGnAHHPRHVnyjqZUgyW8
-         UnqEpG+rNrZYbD+Gz9woRh6KJW4Y01nwLP28Np9cBEYelVODgOuOK+Dex+8lZhxLuAWO
-         +9rhD5UrsY5oJN30MKLCr7XNORNUxRoJGYjqU50/cUexmiDJD4CWfDtj2cTEaQluAprh
-         IVhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753852566; x=1754457366;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G9Fh26bF3MqXUV2HfzEAs7u0sxYZEa/PtdeN7DPnQSI=;
-        b=WfPuM05fw9Ig6mKN+j9WvcRtfohT5gRUlF246sMF6eI6FzlatN1OvSnpSiSUyeUh5t
-         8soL/hYWuJSjk9OG3gEJU2UGnyAEF71OfM9r54piqhmwxcCpGihOED61wuQzo5d/8KYe
-         PBgjrM7O8D+MT5eR72MUc2rTLO3zYtbN/1TOcThh940SZwJC95kxXusa9BqctJFI7BJy
-         rsJIUJQle92c7f/YhFxpbM7ll5X9nbEOFLU1nd6Rl+leroxODA/CecePD+we/pWFg5I3
-         3D/bvKsyTgYk2S4Qu9VbsvbMLCkzojv/5th0FIuyPaFVPoxX2pN7edYjgmOCFr51xyPm
-         pmgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxWblbPe4TOvnQqzFbp8h701xUMz9HOi1vUJr7/jKzRpRLmbaA6UcZ0qx1xl26qtc4CrX//vUgKq5DfqjR@vger.kernel.org, AJvYcCWxY9W+qVn9frJMTmXutWFcQiQgtv2u5QJCepInYn0R/Ijv8cFWvzaIIxd1OwWc8zrMLG6HCKCQ22bWf10=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOwIJjGU89QiYw9eGlrQPd23JxpFEzi1pZV+OmxWS4iM+vWQQG
-	AjZp5Jp/AOr0AlgsNu9XR0nWqE6yOOHZ3U2qeSCu34TxOjWLyKXZ3YWLCmKLeAesZzEcvhN7/h6
-	CiaRGn9wFusDRbuiRJebk114fmJe0d9Q=
-X-Gm-Gg: ASbGncttzh6lu22KGLZrF9rRMC7YH3AtVmTWTzBkvUwpoiln/1TfeE6hs/uxybS2VgK
-	BExahhTrRfDnpYMw9Mi29U3bX3JARPO0X1834vErN2Zc3PjOnJ6BPc64UgPSt5wMUwDFbVVG+oR
-	p8BDzGisezUlWYKiQU4INwXDaDKdsAfIUZP/sTOb/xJNs8x5xKN7Iu6evi6EJrukC2vjvDR+zcj
-	deCKAntv8f9+ns=
-X-Google-Smtp-Source: AGHT+IGKtD4/8mznHqLoyCqAkND0AGIztHq7zkuhlt3Y85XcG+oqruiwYehE/DG8LdT/Ctb2AUwL5+agKkCc0A2Aab4=
-X-Received: by 2002:a17:902:ce05:b0:240:763d:e999 with SMTP id
- d9443c01a7336-24096b17733mr35400965ad.29.1753852565757; Tue, 29 Jul 2025
- 22:16:05 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29063C0C;
+	Wed, 30 Jul 2025 07:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753860729; cv=fail; b=WvQW2pqspI7h64jQ6Y0XDqE7jbff3osTWChQaZmH3K8Y0l/a8pkYIzm3tJM9fEvX9OE4wuH0heF0qC4b2uWlo7S+uQAmXsXGjaTto/RHbSxw2XcvMlyUA/S3ilmKjmiV4Bzy9sWmlOFAsRQLGN1D+0yX2LTbed7H81A/Z16O3wI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753860729; c=relaxed/simple;
+	bh=aDTBfp/WxP4wiwYQRSXztTQtuVe72Ix2YHJKwcAMcZw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=mOI/OKseL6bPfrhzXEzvz0tRkSbrhQXoZEnuG/JCJPs9VltUsmTqKM7qxCFD+bZYD6yFJx46+XncV4/0g9/w+eurKUu870wCj1Vx+hp8HFUc0b7YoksLJEDer4W9+vgXEX43EulopaIEl1MXTPngS+egt/LvmK8TdWU9MT6ifzc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=RMA7g9WG; arc=fail smtp.client-ip=40.107.94.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DWI3LiBOuMvOrH9jBvbfXqb8/o4LSw+8/VFFoZLp9nmpSmBCdCcCssJzUXxp0ZqBUBLYVFRFwpr9Ywoc8r/sKQquFmL77SR58i0AVzaN0FNtNCArYZ9siE4bVr8wsvXyNTbKGMuqW1N8zTRhtTlhthsLGcAQngQb2HoapAvNJJ9t9WbyG6GSzxJM3S5av+Fp6lGIukYTmWZqF9GKnHAt8B8Cfy2XJE2GMfMwsqJSRWOOrdaLg+6Blirqc0MoCpbhKKAhv7nD0yBtzscwz89uTnLotEQ+a4hNZqSvrpn8i10+/sdEogw9KMRlLIsqaKpNPsclV7ImWgz4Fm5WuJlAuA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=v5EuRjGBwMLTxFvzYLAIYjJEMMGR9wUddyvU2ZqwheQ=;
+ b=RCFGzBpcfIfsbJ7H77wMwUyLyCuzOA+9uSbpgoJWipEIMwZwvBpl4EYsB1TNqUA1wnFVyyID/ZUdBJwoQTkF7XVN7dK3tqPMzPyLGmAGqAG6JgGYjgBKotD7X+Iz1qzKPanuFPBTKW8mT6PZFGyntZ6QC1PTAA/1tw83trGuYroCoae/TIQ3nebhAgmzG4StvXxZmNyeWzVyutJdLvvb/7Xehftg3r8Cd5uFxrbK0SsLVzk7++4uBEeJdWE9EgAi6PrexXjDREmDADQncmw+4PTz94N11+Ix5mgkhC5iqE7Ol0K9zBtaQE7QSVwM7qDjVsCg3yZQSBkjaQyS4cw6Rg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v5EuRjGBwMLTxFvzYLAIYjJEMMGR9wUddyvU2ZqwheQ=;
+ b=RMA7g9WGYAl4vMVdyjxp0ZP+Y7k3i97XrPrO3g8YSbbiLu58PRCz1F0dad5hPUWNafXgzjnvk4S/jLupKMZe4LT9O6x+JB0Vm4QSVw0uTFnHSqr0QEVv1EBgyuWBn/9JX+/T2tWAyh8oe+NvDwj/YXzoHhISaJCEfnWVFU1bHzhJXLHJQKZCSoEkEEq3Dyxpsd8OoRBPXN/iddTvzuLrBMRBWcPyKdSBXCksHyaieIgl4yNtGNhYnz1bp1vd3shpLqIXgj+dYJHkXCSzNu33usmKup2KP8CMHx9pAtwi9ngARVxq6xcqTuHmN7zfgFGoa2rSGevnt2i9qoN3VpFRbQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA1PR12MB9031.namprd12.prod.outlook.com (2603:10b6:208:3f9::19)
+ by MW4PR12MB7483.namprd12.prod.outlook.com (2603:10b6:303:212::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8989.11; Wed, 30 Jul
+ 2025 07:32:05 +0000
+Received: from IA1PR12MB9031.namprd12.prod.outlook.com
+ ([fe80::1fb7:5076:77b5:559c]) by IA1PR12MB9031.namprd12.prod.outlook.com
+ ([fe80::1fb7:5076:77b5:559c%6]) with mapi id 15.20.8964.025; Wed, 30 Jul 2025
+ 07:32:04 +0000
+Date: Wed, 30 Jul 2025 07:31:50 +0000
+From: Dragos Tatulea <dtatulea@nvidia.com>
+To: Dipayaan Roy <dipayanroy@linux.microsoft.com>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: horms@kernel.org, kuba@kernel.org, kys@microsoft.com, 
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com, longli@microsoft.com, 
+	kotaranov@microsoft.com, ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com, 
+	sdf@fomichev.me, lorenzo@kernel.org, michal.kubiak@intel.com, 
+	ernis@linux.microsoft.com, shradhagupta@linux.microsoft.com, shirazsaleem@microsoft.com, 
+	rosenp@gmail.com, netdev@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ssengar@linux.microsoft.com, dipayanroy@microsoft.com, Chris Arges <carges@cloudflare.com>, 
+	kernel-team <kernel-team@cloudflare.com>, Tariq Toukan <tariqt@nvidia.com>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Yunsheng Lin <linyunsheng@huawei.com>
+Subject: Re: [PATCH v2] net: mana: Use page pool fragments for RX buffers
+ instead of full pages to improve memory efficiency.
+Message-ID: <i5o2nzwpd5ommosp4ci5edrozci34v6lfljteldyilsfe463xd@6qts2hifezz3>
+References: <20250723190706.GA5291@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <73add9b2-2155-4c4f-92bb-8166138b226b@kernel.org>
+ <20250729202007.GA6615@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250729202007.GA6615@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+X-ClientProxiedBy: TL2P290CA0009.ISRP290.PROD.OUTLOOK.COM
+ (2603:1096:950:2::10) To IA1PR12MB9031.namprd12.prod.outlook.com
+ (2603:10b6:208:3f9::19)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250729051436.190703-1-namjain@linux.microsoft.com> <20250729051436.190703-2-namjain@linux.microsoft.com>
-In-Reply-To: <20250729051436.190703-2-namjain@linux.microsoft.com>
-From: Tianyu Lan <ltykernel@gmail.com>
-Date: Wed, 30 Jul 2025 13:15:29 +0800
-X-Gm-Features: Ac12FXwqcCF3k3YCTl4GjTuOuP9fWlNaWG8AoRu9t-mwzHkXNhX6Ifft0VxzL_Q
-Message-ID: <CAMvTesAzY+x_2_40xji6_g6Uquf4j1HmREb1vH9kT4fNzuLY1Q@mail.gmail.com>
-Subject: Re: [PATCH v7 1/2] Drivers: hv: Export some symbols for mshv_vtl
-To: Naman Jain <namjain@linux.microsoft.com>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
-	Michael Kelley <mhklinux@outlook.com>, Roman Kisel <romank@linux.microsoft.com>, 
-	Anirudh Rayabharam <anrayabh@linux.microsoft.com>, Saurabh Sengar <ssengar@linux.microsoft.com>, 
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, 
-	Nuno Das Neves <nunodasneves@linux.microsoft.com>, ALOK TIWARI <alok.a.tiwari@oracle.com>, 
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR12MB9031:EE_|MW4PR12MB7483:EE_
+X-MS-Office365-Filtering-Correlation-Id: a91eb746-42d8-40ed-5d87-08ddcf3b2e7b
+X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?oIF2OswLY2DwBnK4xh2bwjk9/GlpxJ1q9FWKDcNeI1hAdHycoMIvL4VJGXgN?=
+ =?us-ascii?Q?VZb1dGKrUocyClhLodDp/tcSQ91gL6xyjigeW0rxdvYWOzhwvmnvGIksBBzU?=
+ =?us-ascii?Q?kOjowORohBAkzPXxCHQCwOVCKvLq8a7NEmw9KRd9IKmlCliQ6FWtiPMGsgin?=
+ =?us-ascii?Q?BG9J5oNWb9PtBSR4h9z0RBu9q8p9P9IKSteyl1DDVNq9k8cQpqH1JQLd4hj/?=
+ =?us-ascii?Q?oJo9PM/3jNbX9Q9A5jo7czQkn7lVKQLZkHgWYt6imsNfv0tpiyC9MXPEA9L0?=
+ =?us-ascii?Q?wBbNZ3ys4Pdh4Z9yN8rw7GyYtgUSQ9Z5SgRpLA3FyXrg08c4uUAOJZt6WzfT?=
+ =?us-ascii?Q?fd78m8S9hX0A95aIbkqgkpYiyGZRtuMNdTtHnCHRkFfMlAvDN5SN94cTPr4p?=
+ =?us-ascii?Q?6H9onfiquCfcYJNKT/b+MBJzaVikgnK6cKPmhOoCP0e6gsO0p4CSCxDWD5xC?=
+ =?us-ascii?Q?I4NPbDNVo6ZmSD22VIZpRYhv57AUjTmPzHWwMp54ZSxgQKE0QcvWjJkdkoAI?=
+ =?us-ascii?Q?4sHJ8Cba1e6jfD9tJs/jNvrmjBYx6T/+HSI1jpGycy7H+GekGPW2VCv9Nhno?=
+ =?us-ascii?Q?S+H3OiM9tO7F/XkXEGF7zZX67pfuoJo2MZc+8vawxC9FMIeU4Bije1pJnfug?=
+ =?us-ascii?Q?LgN1n892y/1jQKQSIfqHS3uH33XJsDitrB7CxC3Caj3m3zYYKejUzKo2/30T?=
+ =?us-ascii?Q?OOCTlUpDsQaTuf9RxaTGKxA7fr+gaiLGdWRQBHUkrTcJlZrgE6tW+tjmxm9B?=
+ =?us-ascii?Q?MFauENcNFDx6zqiXMWijzlaByTXQcUQ6lRYENxqgne4YHWpV5liA501IjZVp?=
+ =?us-ascii?Q?eMFqbbt/++t596ENgd7viHvO6dRRGLtx6W5ZNMUAlL/QhkDMRUOpy5DFmibP?=
+ =?us-ascii?Q?SBC0/fKi2PvMEOfKZ1SSPDZuVsOrmC4SdhpoVU7DkGNe4I8LMe73/Uq+7qWd?=
+ =?us-ascii?Q?r+eA6SDkW2ixgswVx/Sj+KCYl9VFo2hTll8KZQifPpAtTaRIg6/gJJ8sE2Lh?=
+ =?us-ascii?Q?8ZB7+5IqZrTfkbUg80WqR/zD61KnCL7X15gClDXNDBxPbFRhTh4wA7jm9aW4?=
+ =?us-ascii?Q?3ohH2i7WE5vBmRKrqePehwDaS3VJpuL7bem3CrHY/WJ6HUFquVoxWzJEV0O3?=
+ =?us-ascii?Q?dn/fSE9V0dR89rZdcCvT3EO3BV4ZnXXtOP1axvcuO1RrcLUay5Xspi3eUEhT?=
+ =?us-ascii?Q?fZ/CMKxuanwdMJpetcpdFUY3HzEkVGX4sRglLPlpiVobZPTVTURS9wYFDjq6?=
+ =?us-ascii?Q?/FHaT13d4c0Oc/6RmSDYPymWjZa2VbQI5qGMSUIje3x7w92ue2TgoWkrld1f?=
+ =?us-ascii?Q?6mgu9D0d7Cj76C22KKcg9FIuXtZ2dXO5Q2OK95RXhvwHAhVE5jql1dketi+R?=
+ =?us-ascii?Q?dOwTRFAcwyQQoyHxNO0VCSqSU/fdD0VLyzTJ0nhYJwO7GNcgwJUoxiHkyHDh?=
+ =?us-ascii?Q?rEZ2qD5XMQY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9031.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ULEtg4WAg7nv1gUMOe5ULJSHLSXKa/6y1euWhuDVyMlPodtL/N/yuA0AbfW4?=
+ =?us-ascii?Q?nNqBmRCaLZO1CfdKjHUrvOYQgRQho3XdnG9v3Wr/UCnNAviWOQBJvVP0lqyu?=
+ =?us-ascii?Q?7qjGd6/G72TwNlYIp1LXtPnr3VWlDz01aPf2ZeL1PapcQtiL86nWzQX+trq/?=
+ =?us-ascii?Q?26ZgjC8Id1ntv6OngFhf0Ynr6aSXfg7lVMSsBjzv2vuYEdtl2NxwN1i9j4/O?=
+ =?us-ascii?Q?o1KrLnds0wp+BIew7dK+ZVo3uA0pCdsO38+4XFTnsgmOL8pcRh7BO1pM7AAW?=
+ =?us-ascii?Q?vwjNcu0BK1NFZaGcFoS8UHOUeQ+QRsCmwFO9h52qWYGDdD0YtA4Wq4Ua+BFU?=
+ =?us-ascii?Q?3qxG0eyi240txgrB57d0sc5Hf6QCmbvkL6OCGvYc1rP/vkaxnnKYvq/eRKvz?=
+ =?us-ascii?Q?G1EZ2Lbl3cbf+dbU4f+ABex+douzRyDLmKXdgEQ0DqFK2SuFTtslMcfHrlub?=
+ =?us-ascii?Q?a1jzYelt5YWziHVAYm2Ll8KqV01jMSgbdBAqFJ8/edXiO+vCkjouR05u0+1c?=
+ =?us-ascii?Q?YDtNuOV6bgohoxnCuWf/z3zSkraDzmnSc119p9B4kjtO3jmkv7zKoAqUzY5o?=
+ =?us-ascii?Q?hCwOXkC+M9kKOGnmr4EEKbG1NZX6fD8NVbicoKdPbxEIJknrBeO7VgHn7hKA?=
+ =?us-ascii?Q?RRSzkeCou1Rzn48+4CTqaNW9CCqffBAvsV+RD6GBxVGmYOPNsQcmsVXP7pYP?=
+ =?us-ascii?Q?WeyLRsg3B/purBO963sGU07SijMax1+zEsU6TrW3lcpD2ReTr8S+FAibomXI?=
+ =?us-ascii?Q?2chk7uFCB93h7I3uCR/T8STf/Yeo/YQLov3rEQ7sj/utaRUKkJfCOoTHfSAt?=
+ =?us-ascii?Q?G5yNQU0pUb28lovt+US0EKnaniMK6GHXMjUZzyzgufbQVG7w/5dvPqyVR4RG?=
+ =?us-ascii?Q?MfEEcPfCqktKLZP+vhgO8+AjEa31LaROo9TByMXNmbCC8aPU84D+/rRFEcpq?=
+ =?us-ascii?Q?drZ4dApFIIW8QpyMB3VRmx3NxwRYqvIHa4ObXSz1Fx5mcRIZR9AzW9V2dDsw?=
+ =?us-ascii?Q?4ywQm7JUr3LvZqhbU2iMnA+lCO407ciktE9QuqpXJut8Mvkxv4OZTycbGuOP?=
+ =?us-ascii?Q?RheD45GQO0QHdc1hz8cRJ45Q0QICCh76eYVPckBBG/RsX0RkCHvbsO+lP7oe?=
+ =?us-ascii?Q?CsegYz6dCYtJKFBqusBp87WjYxWUvpMz8lfo+j/4dNRcwM7IGW1ExwPOFlzM?=
+ =?us-ascii?Q?XUODebvjui4iSP8uwW5oXLwxoGELVZMrS52y3NVOCy0z+zN7ktSL9PsL2ANx?=
+ =?us-ascii?Q?2w1c9fi0VDKu+jQYmz7ikj3+uJFf6j+HYui9dV2KCAt4tBkiYoBgTU4OTXPR?=
+ =?us-ascii?Q?1G5zydMfLgUDMhjtF5Ydu0v6zf0l8gwIVPlFkiODvKVLyfgDmqNo/63f1z9e?=
+ =?us-ascii?Q?hsCLxCpnfdqzrd5eUsXi2clbvV0TU7xwyo5ajm7IpHHFdxFjnc+vRF890ZyC?=
+ =?us-ascii?Q?LKhOGy9EQR6mHGhpMCXi77eBUx2i7AdKT4vz/tTpT2shpHygEwyDhqooidgw?=
+ =?us-ascii?Q?AeJUVWAu7GZLTK4P5VrahOcTjRIVqmWknUxyYXp+Q0Qqa8GyJjNhUS36r8ep?=
+ =?us-ascii?Q?IHeYs/fdRP6QkuwjO0klGPgSMbCgkOIb2A26ML7Y?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a91eb746-42d8-40ed-5d87-08ddcf3b2e7b
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB9031.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2025 07:32:04.9103
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /NImzu78KoERBq+cL4dwMvEFoo1icPpYrIRDtZkjiF0FWyik9mP/cnXpPpO9KDdrSFnUcxb4DQoVXyKPxPxoKg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7483
 
-On Tue, Jul 29, 2025 at 1:15=E2=80=AFPM Naman Jain <namjain@linux.microsoft=
-.com> wrote:
+On Tue, Jul 29, 2025 at 01:20:07PM -0700, Dipayaan Roy wrote:
+> On Tue, Jul 29, 2025 at 12:15:23PM +0200, Jesper Dangaard Brouer wrote:
+> > 
+> > 
+> > On 23/07/2025 21.07, Dipayaan Roy wrote:
+> > >This patch enhances RX buffer handling in the mana driver by allocating
+> > >pages from a page pool and slicing them into MTU-sized fragments, rather
+> > >than dedicating a full page per packet. This approach is especially
+> > >beneficial on systems with large page sizes like 64KB.
+> > >
+> > >Key improvements:
+> > >
+> > >- Proper integration of page pool for RX buffer allocations.
+> > >- MTU-sized buffer slicing to improve memory utilization.
+> > >- Reduce overall per Rx queue memory footprint.
+> > >- Automatic fallback to full-page buffers when:
+> > >    * Jumbo frames are enabled (MTU > PAGE_SIZE / 2).
+> > >    * The XDP path is active, to avoid complexities with fragment reuse.
+> > >- Removal of redundant pre-allocated RX buffers used in scenarios like MTU
+> > >   changes, ensuring consistency in RX buffer allocation.
+> > >
+> > >Testing on VMs with 64KB pages shows around 200% throughput improvement.
+> > >Memory efficiency is significantly improved due to reduced wastage in page
+> > >allocations. Example: We are now able to fit 35 rx buffers in a single 64kb
+> > >page for MTU size of 1500, instead of 1 rx buffer per page previously.
+> > >
+> > >Tested:
+> > >
+> > >- iperf3, iperf2, and nttcp benchmarks.
+> > >- Jumbo frames with MTU 9000.
+> > >- Native XDP programs (XDP_PASS, XDP_DROP, XDP_TX, XDP_REDIRECT) for
+> > >   testing the XDP path in driver.
+> > >- Page leak detection (kmemleak).
+> > >- Driver load/unload, reboot, and stress scenarios.
+> > 
+> > Chris (Cc) discovered a crash/bug[1] with page pool fragments used
+> > from the mlx5 driver.
+> > He put together a BPF program that reproduces the issue here:
+> > - [2] https://github.com/arges/xdp-redirector
+> > 
+> > Can I ask you to test that your driver against this reproducer?
+> > 
+> > 
+> > [1] https://lore.kernel.org/all/aIEuZy6fUj_4wtQ6@861G6M3/
+> > 
+> > --Jesper
+> >
+> 
+> Hi Jesper,
+> 
+> I was unable to reproduce this issue on mana driver.
 >
-> MSHV_VTL driver is going to be introduced, which is supposed to
-> provide interface for Virtual Machine Monitors (VMMs) to control
-> Virtual Trust Level (VTL). Export the symbols needed
-> to make it work (vmbus_isr, hv_context and hv_post_message).
->
-> Co-developed-by: Roman Kisel <romank@linux.microsoft.com>
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
-> Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202506110544.q0NDMQVc-lkp@i=
-ntel.com/
-> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
-> ---
->  drivers/hv/hv.c           | 3 +++
->  drivers/hv/hyperv_vmbus.h | 1 +
->  drivers/hv/vmbus_drv.c    | 4 +++-
->  3 files changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-> index b14c5f9e0ef2..b16e94daa270 100644
-> --- a/drivers/hv/hv.c
-> +++ b/drivers/hv/hv.c
-> @@ -18,6 +18,7 @@
->  #include <linux/clockchips.h>
->  #include <linux/delay.h>
->  #include <linux/interrupt.h>
-> +#include <linux/export.h>
->  #include <clocksource/hyperv_timer.h>
->  #include <asm/mshyperv.h>
->  #include <linux/set_memory.h>
-> @@ -25,6 +26,7 @@
->
->  /* The one and only */
->  struct hv_context hv_context;
-> +EXPORT_SYMBOL_GPL(hv_context);
->
->  /*
->   * hv_init - Main initialization routine.
-> @@ -95,6 +97,7 @@ int hv_post_message(union hv_connection_id connection_i=
-d,
->
->         return hv_result(status);
->  }
-> +EXPORT_SYMBOL_GPL(hv_post_message);
->
->  int hv_synic_alloc(void)
->  {
-> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-> index 0b450e53161e..b61f01fc1960 100644
-> --- a/drivers/hv/hyperv_vmbus.h
-> +++ b/drivers/hv/hyperv_vmbus.h
-> @@ -32,6 +32,7 @@
->   */
->  #define HV_UTIL_NEGO_TIMEOUT 55
->
-> +void vmbus_isr(void);
->
->  /* Definitions for the monitored notification facility */
->  union hv_monitor_trigger_group {
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 2ed5a1e89d69..a366365f2c49 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -36,6 +36,7 @@
->  #include <linux/syscore_ops.h>
->  #include <linux/dma-map-ops.h>
->  #include <linux/pci.h>
-> +#include <linux/export.h>
->  #include <clocksource/hyperv_timer.h>
->  #include <asm/mshyperv.h>
->  #include "hyperv_vmbus.h"
-> @@ -1306,7 +1307,7 @@ static void vmbus_chan_sched(struct hv_per_cpu_cont=
-ext *hv_cpu)
->         }
->  }
->
-> -static void vmbus_isr(void)
-> +void vmbus_isr(void)
->  {
->         struct hv_per_cpu_context *hv_cpu
->                 =3D this_cpu_ptr(hv_context.cpu_context);
-> @@ -1329,6 +1330,7 @@ static void vmbus_isr(void)
->
->         add_interrupt_randomness(vmbus_interrupt);
->  }
-> +EXPORT_SYMBOL_GPL(vmbus_isr);
->
->  static irqreturn_t vmbus_percpu_isr(int irq, void *dev_id)
->  {
-> --
-> 2.34.1
->
->
+Please note that I had to make a few adjustments to get reprodduction on
+mlx5:
 
-Reviewed-by: Tianyu Lan <tiala@microsoft.com>
---=20
-Thanks
-Tianyu Lan
+- Make sure that the veth MACs are recognized by the device. Otherwise
+  traffic might be dropped by the device.
+
+- Enable GRO on the veth device. Otherwise packets get dropped before
+  they reach the devmap BPF program.
+
+Try starting the test program with one thread and see if you see packets
+coming through veth1-ns1 end of the veth pair.
+
+Thanks,
+Dragos
 
