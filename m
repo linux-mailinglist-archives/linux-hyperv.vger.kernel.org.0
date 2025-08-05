@@ -1,163 +1,167 @@
-Return-Path: <linux-hyperv+bounces-6467-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6468-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15B48B1B751
-	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Aug 2025 17:19:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0FA0B1B9C9
+	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Aug 2025 20:04:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5EFCD7A257B
-	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Aug 2025 15:17:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B781C162338
+	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Aug 2025 18:04:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ED92279DB6;
-	Tue,  5 Aug 2025 15:19:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDBD1293B75;
+	Tue,  5 Aug 2025 18:04:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XatkETdD"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NcWK4Ajs"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6772797A1;
-	Tue,  5 Aug 2025 15:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B4E811712;
+	Tue,  5 Aug 2025 18:04:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754407159; cv=none; b=Y2Acz84kFrFvGZiks+zWvNFhOKmL3FEsBX19BTK6kdGpA+2uD6F6mHF2uF4QpHaU21x4gUAGM1JwWKZovBI0DdMPXv7Zk7wNr+0zBDcrmvsUKQsVU05eaqcs8n7K8H2Q10lyUHH9WO8yeaWaJ6bsStpu8HscuweeZ7DmP3TSzK4=
+	t=1754417060; cv=none; b=hT0k1Kdm4sEdFjqT8dQ24JsCrSsT7ozB+oPoJWwMQJZK3rS212Dy3SM0ufzF6r43pgbznLuQ5Pf/8y6LGgek8iKu6ff04kR3xiUODnsuTiRXFB1P/n8cA1+F8it+RZMuqywwhHOoP4x9iLEaQr7LY2l7VDrlW5hPTZqI1mMn78I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754407159; c=relaxed/simple;
-	bh=wHMHMlFPSLCN1Jyi3xsWh4m9GZ6TUcbpqIAvd989gPA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mwUCLMG0T6+UpRYsMpZjlRQVbYg1/jt91hYvzVXIR0Dz0CqnVVmdSMr7R+ik6A/vLfUY6pUDmFxzM/h3XKHwaKSylGenEe0ZT/Y65/JUOLbiHHRaY5OIrr74hhM0i/BejBOGvWQOk3gspI9gFDVc9XwAyETNbGYlQJfQyuXZvRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XatkETdD; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-76bc61152d8so4745640b3a.2;
-        Tue, 05 Aug 2025 08:19:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754407157; x=1755011957; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EouBBaRl2Yz06MrDo9MABB0gPIhy3Or6WbSg/Pp0LIY=;
-        b=XatkETdDTujLlf3d0lrYpykbm677xLWdNdMgFfec5fhYMT65C400/a8rPEPok0IWL7
-         x3+vfvIOCABIgE5VUlT/+OsLlKAeEQSFOeAZHLdfVUKJnFl8XT730ik0YAipNk62GHWJ
-         hkcsAqbgHUUzo/e7Pi5jpCLV1UxIWeheLvhwbxnp+7OOoz0PRWsm4Y7Vf2trqPsA2Jqn
-         WeAJah/E8UJsM/IoU2tauLrly4Y2GbE3jSu+EHWQlRJwP4tECA1i7tKRZl54e2x/ey1z
-         nw725ev+z4AIFzeRva6E6MCVBLei27BC50+y+Y4B1iCbItoP52yqnWrsmw2qubo3eDEN
-         uPKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754407157; x=1755011957;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EouBBaRl2Yz06MrDo9MABB0gPIhy3Or6WbSg/Pp0LIY=;
-        b=k91MR06e2LakGPoO2GLIYeH1lDz9qHDdxsYwYjl1F0adllQHEBbXDW+FbRyt1MrVca
-         QYFUotc6/NT3ea1DGBKgm1bejAKyHoFHVuIqTxtxh1onEYBGY9Ej+jVW+KGVP0m9rYul
-         4k9TOuaOuDW/L+lFo+gBEPeq3nOT7coUWluBWki+Jf8h4NKboxpjfrgj35uyYPOUGs71
-         cHG8CAfwHaE8WQjcTGPBVc0uGEO48LFEIzaYVWyZm+b/EPof9qazU2m5kAWkDfeeN6lA
-         zYfqCoBWU1jMA4XWYbzblL8GCtd1jKrcr7yK1WbhygCpyvjAktKhUQLpCF92iuzKFlOr
-         dIug==
-X-Forwarded-Encrypted: i=1; AJvYcCWCjcsAQHDj9rZ+4dj7B2vxRoqo6ESnGR7DS8CMSpycg9YFSY8KSsDdhmuzzfd8JvCFnlI7S6c9N8Ja6D+u@vger.kernel.org, AJvYcCWzbdXDUtdjAatPxa81hx3gKd5jKZxZt9AIGkbAnf1z3WyfkdNTO124sDqZarR5CLMqqqQ8YAX6+wMI@vger.kernel.org, AJvYcCXBsSW8gqrGhTrljnSiqsHFlTV5TCCl1RN/RNhNYRJymy22tqfuuzjafqfZ5axIyo7ZgLqL4R2/lcDWnZ+6@vger.kernel.org
-X-Gm-Message-State: AOJu0YyS6aZb9Oeikm4JWqJfvocYQAvek9XJDIQDacfSd09Ra3EW5gpK
-	q7vQpOyp34QLrSYIReHYERAotcfMDvoIuGFg7qniC/MpZEkXgGAFQFw1PS8wOrUGJq9RUDShVJ4
-	2UcMxJ8xdfF/GzBlzuCioujpaM2uvqIg=
-X-Gm-Gg: ASbGnctvV6Web6fs9tCRc+R5+d9r6fC5boiWEWasvOEqpCPvtPgS/TSDGjDo1SbZUBm
-	ms1Us8PMQXSTnL/d8iWzJsfEUh0YC4qUCHkT8je9LxOkjlolDLdrUR60ynk7GnK8DmLNwXTxDzT
-	WSTzjVx+JFvG71Vj7o0AvBWhcopzLcIcEQZfrCu/OVKfuzgTH8GmoRoeFqxEGuPlQ991D130zfX
-	Ueq
-X-Google-Smtp-Source: AGHT+IECB/DYjD3rcFUbi36bniwAYNzKE1+rxQqfR7kzJGIsbEQRm+ubSm4xHqTVPMzPbqx/BeIPce0p4r5uvnZHli8=
-X-Received: by 2002:a17:902:e291:b0:23f:f39b:eaf6 with SMTP id
- d9443c01a7336-24247027a37mr144006805ad.46.1754407156944; Tue, 05 Aug 2025
- 08:19:16 -0700 (PDT)
+	s=arc-20240116; t=1754417060; c=relaxed/simple;
+	bh=MJtN4k1Nruf/ZmY148j2YWicg+9zvj2TWex6ubyTDM0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t3mD5JQquoIXjqA1rg0L1xvsfB7ktZdDsouy0tOEO9PSayU1YOzmLm9twt3v9BOWm6Rfd2fHehlDt0jWXxxsLniwcS6ECqXTsFFIR9NRpoGsYcDsKyMiFUyBa5NzWehPouNvB6wvl7MCPlRfK+zvCWDM4KuRUoM0AqVyLv/Aei0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=NcWK4Ajs; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.80.129.135] (unknown [20.107.5.167])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 006A5202189A;
+	Tue,  5 Aug 2025 11:04:10 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 006A5202189A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1754417053;
+	bh=+X8vGedp4v4FTKCazxcmKil7EM3tRuf78vox+z+LWEc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NcWK4Ajs8ip8f/wd6l4Riw4CVUwJZsnAhsTtFWBycqrPAezptPWFhwfwaH0muabNQ
+	 C7xp7XdoP7L+MFTs8j78NwlAjXoXuVfjgSOocE1R++moz30hw+R0JiwZyFhuteIdbC
+	 XANK8YLtqqZXHq50O7ys9HYoNFHek0pw3x5+C3fg=
+Message-ID: <ce7ef1f0-c098-4669-85f3-b6ebb437a568@linux.microsoft.com>
+Date: Tue, 5 Aug 2025 20:04:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250804180525.32658-1-ltykernel@gmail.com> <20250804180525.32658-3-ltykernel@gmail.com>
- <912536fc-15d4-4a57-91b5-ec902a93e2f4@amd.com>
-In-Reply-To: <912536fc-15d4-4a57-91b5-ec902a93e2f4@amd.com>
-From: Tianyu Lan <ltykernel@gmail.com>
-Date: Tue, 5 Aug 2025 23:18:41 +0800
-X-Gm-Features: Ac12FXzhqn_xrfp-IxnNZn9DJb9prewdUwzeYK7uqklDB9WalMlkz_3S0dZ4mI4
-Message-ID: <CAMvTesBzQtURO1xSoUuortdEp5kPo7ds9BX+Au-8donogWZg-g@mail.gmail.com>
-Subject: Re: [RFC PATCH V5 2/4] Drivers: hv: Allow vmbus message synic
- interrupt injected from Hyper-V
-To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, 
-	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, arnd@arndb.de, 
-	kvijayab@amd.com, Tianyu Lan <tiala@microsoft.com>, linux-arch@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Michael Kelley <mhklinux@outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/1] KVM: VMX: Use Hyper-V EPT flush for local TLB
+ flushes
+To: Sean Christopherson <seanjc@google.com>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org,
+ alanjiang@microsoft.com, chinang.ma@microsoft.com,
+ andrea.pellegrini@microsoft.com, Kevin Tian <kevin.tian@intel.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org,
+ Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+References: <cover.1750432368.git.jpiotrowski@linux.microsoft.com>
+ <4266fc8f76c152a3ffcbb2d2ebafd608aa0fb949.1750432368.git.jpiotrowski@linux.microsoft.com>
+ <875xghoaac.fsf@redhat.com>
+ <ca26fba1-c2bb-40a1-bb5e-92811c4a6fc6@linux.microsoft.com>
+ <87o6tttliq.fsf@redhat.com> <aHWjPSIdp5B-2UBl@google.com>
+ <87tt2nm6ie.fsf@redhat.com> <aJE9x_pjBVIdiEJN@google.com>
+Content-Language: en-US
+From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+In-Reply-To: <aJE9x_pjBVIdiEJN@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Aug 5, 2025 at 9:59=E2=80=AFPM Neeraj Upadhyay <Neeraj.Upadhyay@amd=
-.com> wrote:
->
->
->
-> On 8/4/2025 11:35 PM, Tianyu Lan wrote:
-> > From: Tianyu Lan <tiala@microsoft.com>
-> >
-> > diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-> > index 308c8f279df8..2ff433cb5cc2 100644
-> > --- a/drivers/hv/hv.c
-> > +++ b/drivers/hv/hv.c
-> > @@ -314,8 +314,11 @@ void hv_synic_enable_regs(unsigned int cpu)
-> >       shared_sint.vector =3D vmbus_interrupt;
-> >       shared_sint.masked =3D false;
-> >       shared_sint.auto_eoi =3D hv_recommend_using_aeoi();
-> > +
->
-> Nit: extra newline.
+On 05/08/2025 01:09, Sean Christopherson wrote:
+> On Mon, Aug 04, 2025, Vitaly Kuznetsov wrote:
+>> Sean Christopherson <seanjc@google.com> writes:
+>>> It'll take more work than the below, e.g. to have VMX's construct_eptp() pull the
+>>> level and A/D bits from kvm_mmu_page (vendor code can get at the kvm_mmu_page with
+>>> root_to_sp()), but for the core concept/skeleton, I think this is it?
+>>>
+>>> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+>>> index 6e838cb6c9e1..298130445182 100644
+>>> --- a/arch/x86/kvm/mmu/mmu.c
+>>> +++ b/arch/x86/kvm/mmu/mmu.c
+>>> @@ -3839,6 +3839,37 @@ void kvm_mmu_free_guest_mode_roots(struct kvm *kvm, struct kvm_mmu *mmu)
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(kvm_mmu_free_guest_mode_roots);
+>>>  
+>>> +struct kvm_tlb_flush_root {
+>>> +       struct kvm *kvm;
+>>> +       hpa_t root;
+>>> +};
+>>> +
+>>> +static void kvm_flush_tlb_root(void *__data)
+>>> +{
+>>> +       struct kvm_tlb_flush_root *data = __data;
+>>> +
+>>> +       kvm_x86_call(flush_tlb_root)(data->kvm, data->root);
+>>> +}
+>>> +
+>>> +void kvm_mmu_flush_all_tlbs_root(struct kvm *kvm, struct kvm_mmu_page *root)
+>>> +{
+>>> +       struct kvm_tlb_flush_root data = {
+>>> +               .kvm = kvm,
+>>> +               .root = __pa(root->spt),
+>>> +       };
+>>> +
+>>> +       /*
+>>> +        * Flush any TLB entries for the new root, the provenance of the root
+>>> +        * is unknown.  Even if KVM ensures there are no stale TLB entries
+>>> +        * for a freed root, in theory another hypervisor could have left
+>>> +        * stale entries.  Flushing on alloc also allows KVM to skip the TLB
+>>> +        * flush when freeing a root (see kvm_tdp_mmu_put_root()), and flushing
+>>> +        * TLBs on all CPUs allows KVM to elide TLB flushes when a vCPU is
+>>> +        * migrated to a different pCPU.
+>>> +        */
+>>> +       on_each_cpu(kvm_flush_tlb_root, &data, 1);
+>>
+>> Would it make sense to complement this with e.g. a CPU mask tracking all
+>> the pCPUs where the VM has ever been seen running (+ a flush when a new
+>> one is added to it)?
+>>
+>> I'm worried about the potential performance impact for a case when a
+>> huge host is running a lot of small VMs in 'partitioning' mode
+>> (i.e. when all vCPUs are pinned). Additionally, this may have a negative
+>> impact on RT use-cases where each unnecessary interruption can be seen
+>> problematic. 
+> 
+> Oof, right.  And it's not even a VM-to-VM noisy neighbor problem, e.g. a few
+> vCPUs using nested TDP could generate a lot of noist IRQs through a VM.  Hrm.
+> 
+> So I think the basic idea is so flawed/garbage that even enhancing it with per-VM
+> pCPU tracking wouldn't work.  I do think you've got the right idea with a pCPU mask
+> though, but instead of using a mask to scope IPIs, use it to elide TLB flushes.
 
-Thanks for your review. Will remove it..
+Sorry for the delay in replying, I've been sidetracked a bit.
 
->
-> >       hv_set_msr(HV_MSR_SINT0 + VMBUS_MESSAGE_SINT, shared_sint.as_uint=
-64);
-> >
-> > +     hv_enable_coco_interrupt(cpu, vmbus_interrupt, true);
-> > +
-> >       /* Enable the global synic bit */
-> >       sctrl.as_uint64 =3D hv_get_msr(HV_MSR_SCONTROL);
-> >       sctrl.enable =3D 1;
-> > @@ -342,7 +345,6 @@ void hv_synic_disable_regs(unsigned int cpu)
-> >       union hv_synic_scontrol sctrl;
-> >
-> >       shared_sint.as_uint64 =3D hv_get_msr(HV_MSR_SINT0 + VMBUS_MESSAGE=
-_SINT);
-> > -
->
-> Nit: extra newline.
->
+I like this idea more, not special casing the TLB flushing approach per hypervisor is
+preferable.
 
-Will remove it..
+> 
+> With the TDP MMU, KVM can have at most 6 non-nested roots active at any given time:
+> SMM vs. non-SMM, 4-level vs. 5-level, L1 vs. L2.  Allocating a cpumask for each
+> TDP MMU root seems reasonable.  Then on task migration, instead of doing a global
+> INVEPT, only INVEPT the current and prev_roots (because getting a new root will
+> trigger a flush in kvm_mmu_load()), and skip INVEPT on TDP MMU roots if the pCPU
+> has already done a flush for the root.
 
+Just to make sure I follow: current+prev_roots do you mean literally those (i.e. cached prev roots)
+or all roots on kvm->arch.tdp_mmu_roots?
 
->
-> >       shared_sint.masked =3D 1;
-> >
-> >       /* Need to correctly cleanup in the case of SMP!!! */
-> > @@ -350,6 +352,9 @@ void hv_synic_disable_regs(unsigned int cpu)
-> >       hv_set_msr(HV_MSR_SINT0 + VMBUS_MESSAGE_SINT, shared_sint.as_uint=
-64);
-> >
-> >       simp.as_uint64 =3D hv_get_msr(HV_MSR_SIMP);
-> > +
-> > +     hv_enable_coco_interrupt(cpu, vmbus_interrupt, false);
-> > +
->
-> Nit: Maybe this should be above "simp.as_uint64 =3D hv_get_msr(HV_MSR_SIM=
-P)" ?
->
+So this would mean: on pCPU migration, check if current mmu has is_tdp_mmu_active()
+and then perform the INVEPT-single over roots instead of INVEPT-global. Otherwise stick
+to the KVM_REQ_TLB_FLUSH.
 
+Would there need to be a check for is_guest_mode(), or that the switch is coming from
+the vmx/nested.c? I suppose not because nested doesn't seem to use TDP MMU.
+> 
+> Or we could do the optimized tracking for all roots.  x86 supports at most 8192
+> CPUs, which means 1KiB per root.  That doesn't seem at all painful given that
+> each shadow pages consumes 4KiB...
 
+Similar question here: which all roots would need to be tracked+flushed for shadow
+paging? pae_roots?
 
---
-Thanks
-Tianyu Lan
 
