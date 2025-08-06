@@ -1,213 +1,183 @@
-Return-Path: <linux-hyperv+bounces-6501-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6502-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C6A0B1CD69
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Aug 2025 22:24:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5333B1CE71
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Aug 2025 23:31:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 10B9D18C2647
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Aug 2025 20:24:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 54C7718C5C62
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Aug 2025 21:31:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E8A321A447;
-	Wed,  6 Aug 2025 20:24:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A890122D7B1;
+	Wed,  6 Aug 2025 21:31:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bZ52YILX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h8GGiY0d"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B03145038;
-	Wed,  6 Aug 2025 20:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132DD22D793;
+	Wed,  6 Aug 2025 21:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754511859; cv=none; b=HtzVY++nJPxb9iN/D5+kYJamUl/YZDnhzwHYevncLD1KfWdl90F4I96WvDUEWTGKct8SEZZdB0/LA+rGPWM/S6eFreatXPCqeI9AY1Oh+fq6XyewTqhO8WCyKh1GfaT5GdkLFN6QPMlaZ5pVcaTQpEmYfq55/+BXtW+cSkmoWIg=
+	t=1754515877; cv=none; b=inLfciEcJOTKEqlefkBAffrwKLHaSDNWdZ63FcPHnuc8UnKkfTsLMdTa3/hqm1rXpe5X/Q8LpD02DU/h/UMZrvRBunKSXhWnbPajUoL7rjR9/tLtG8Acsn+0bmDgW3AmQOwvAzAZ1tkH0bXnZxHz4O4VX6PEfYNr275Gy+D4G+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754511859; c=relaxed/simple;
-	bh=JVXedN0YzwVxacnO2vsgzYamqB/szo5YHrWDAURYETQ=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=srwJSsTCyTqwy2pLUQf8ZK9VQ+YpS6c46q80bUbrGR0YDoE78noz1VmB1xNCu0UQuEP5b7GVWJB8yHJmJCNZXD/T6yROjF3HSIxB1TKsq3ZD484vIXRFBzDWcnCvnsh8V0jT7xASTaF81H9mH1tZ+zq+K2e+55j5uKlwR7KVsPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bZ52YILX; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1006)
-	id A4AD12030EAC; Wed,  6 Aug 2025 13:22:04 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A4AD12030EAC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1754511857;
-	bh=KdToqvqVO3gNQw38sRKKvDdonhSef0op7Pd8H8o1HD0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bZ52YILXizZM8YzEFXgWo9spB8DOvnZGPzIKm0J50/h6Hz0Pifg55+PqH1JMoyms2
-	 38ExPG74fEOB2dW6ADW8RZlisKZn2s36nmiXqzbceHVNAAqhAWKRlCO0hZpk0A7H8w
-	 yQDqCl3mNg+U7HhmQ+S3AefJMDRSVrGvN2oJgDDc=
-From: Haiyang Zhang <haiyangz@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: haiyangz@microsoft.com,
-	kys@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	andrew+netdev@lunn.ch,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	davem@davemloft.net,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH net,v2] hv_netvsc: Fix panic during namespace deletion with VF
-Date: Wed,  6 Aug 2025 13:21:51 -0700
-Message-Id: <1754511711-11188-1-git-send-email-haiyangz@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	s=arc-20240116; t=1754515877; c=relaxed/simple;
+	bh=SL3DNkvGy6rcQuP9q4xv+WVd9ByB3rzfEVd4866Pia0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M3PORVkflIoI2G5BcwfRua3PI5BvBLem1W3ip1N4FmtGzMHuO73EdTju1ORPyZyGP4kze8gtS+69KH5xS1WMqsrPnu76mgcqye9ya5E6krTJpro7hgaHk3f/FCwJfKoLQDpm5Px3fb6ZhTUSdoPXefmzYZB/yUp+s85ciJyyz5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h8GGiY0d; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-76bd041c431so397755b3a.2;
+        Wed, 06 Aug 2025 14:31:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754515875; x=1755120675; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CTYKRqC2i2Nuv0ETOsJWl2NT52kw5MEfkUb+WVewcSg=;
+        b=h8GGiY0d4e4LovbhhgLckD+TfdQ5w8VEHwuwrfw8B6nAGouliflFkBmdtj0333KUI1
+         GI7cOIBAQUwHWvcgqHvpfyecRGmGRzKYQqLfdVl35Ki7vIWSEvvOZ2jHlJhCpMLPjNKP
+         hcGJVkK0yCdXZBU1glSz9xl2DnnOlrcKboXWPVM1XK5Xy4hDRgHhKILMhibvTy8ADw/Q
+         EA2kkdGAzLLtMxJC2XavhxEZf/aEQSCDuP49NblaIlyRqdQxssh9KPuocv6RM6wbWKMS
+         SUiF4/fV8TXeQPA9lROdud4K9Q39BY+vS+g4zM6DlVWXIYX5YHoXlUjlHnx+P1EtyEzp
+         IbFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754515875; x=1755120675;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CTYKRqC2i2Nuv0ETOsJWl2NT52kw5MEfkUb+WVewcSg=;
+        b=F5073IbOmVGkre2YY9js0/DOlBzM+MAyYbRKAj3CArdJxR6xOIlhd+9LpdDnB8Yr9g
+         NxGZHrbBmhuonRPkBa+VZ0U4uLVCGvNNu7c1943UVN6VfAe4xodsAzdR3xa9gn3+V+Qo
+         ZFs681xCrENeBg7G5/FkeZCBGiDkMLZTnm8Glu7/G7+5nPeFG+GR+LLWHoNw0vzWpTxK
+         K+06vnlQShxe2qD9YfcGxAriiRkGkwFLpILjeilt3beVYH2W5GcSYVkpwq+2WM3eM6rY
+         mdDMm5KbeOik7IIzyH973vl3IjDTvistTDZfHQjTHPzCdXU4rFe35JVb+XemYw0+bcGS
+         pvRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUeNpZDO/bpI2P4EN3/s1EBYaU+EXfx5TTozoXqaXYOJbWsW8oyQ55cEccNjgM/l4JeQ30/HtpMAqc1+EGh@vger.kernel.org, AJvYcCV/slk8Ys5kMxzMpjc0u5vkc6p1iNPARHP7oxIZNzUGq1au9TOuplXYRMIlILmdf5ApXCk=@vger.kernel.org, AJvYcCWgu0yEzf+VYMUBHB50QZdGoUvCQDVFUV+DSeeEhHUhj8sDqSIrycF3Ipf7rbXz5mHJmEw2tXHrjpumphd6@vger.kernel.org, AJvYcCX7RrR4QbnbAHWych9I16qvwYm/0Vbsf3E+3/OVJLotc8L0kswTr8+mSGhZH4juO0LsndWuKc9SvdX2MjADNt0U@vger.kernel.org, AJvYcCXMX9ZmJqSJCDQEJuw5e7d20tf274YsicDG8791itvCneJUfzURUxu5k8gDzJHDYmia6CXko6e7@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKmtU+hmkjHb6wS1glkzHjs7uyeJcO32hehkU8z452Wjwg9pl+
+	nMBo0SuPBdnKErK2WdOeSdKhEK40nb+Iv0xZQ5LXIsodonx7PRGoHdJk
+X-Gm-Gg: ASbGncuhQrM8xNN3/WaTriGYcObbrEQMKeydd1TC+HPHhr4NCJ8uceoh6ATZkeGsmGh
+	E4QVju9MU8FZ798R+NnfMxiF3sdh12r5Sou5fhzJ8CuOlGa9S8MC/MrKy0BmZILVfZRH+p4GfS4
+	G58iGptYyLP/X2XnOOzBWZCHkSwKqA9S7wZQQQ4nYmFQRSAu8bqawyspVQxGVl+7RVjzqnbhvsx
+	aFfJo5d4S9CEo6Rn3BBGhMXmZVpHp4B3hmweW/q9tE2H2uBlni90/CyAC+bi8KY3eE2MgFJVU52
+	JjWLVTB8vHgsqNKzADHib+KBinxrrom5sbX1fcxnzU8DOG9V8aW0C0RQa+VRB4fDizcTEZAuKng
+	3XW6Dxu/VFxbMwkaUKCqABeWGQnMZ3Ege5nzNEnM+yf//
+X-Google-Smtp-Source: AGHT+IFZpVrG9s5vc20jurJQK7sMSyb7Prr6yRfhujcvSVJBKuiNDMVhVBLsWkgkXXUuyjwA2eVNOg==
+X-Received: by 2002:a17:902:e88c:b0:240:3c51:1063 with SMTP id d9443c01a7336-242b19c7519mr7983495ad.23.1754515875138;
+        Wed, 06 Aug 2025 14:31:15 -0700 (PDT)
+Received: from devvm6216.cco0.facebook.com ([2a03:2880:2ff:43::])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2423783a84bsm134870185ad.51.2025.08.06.14.31.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Aug 2025 14:31:14 -0700 (PDT)
+Date: Wed, 6 Aug 2025 14:31:12 -0700
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Simon Horman <horms@kernel.org>
+Cc: Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	berrange@redhat.com, Bobby Eshleman <bobbyeshleman@meta.com>
+Subject: Re: [PATCH RFC net-next v4 09/12] vsock/loopback: add netns support
+Message-ID: <aJPJoDo/0MS+thcl@devvm6216.cco0.facebook.com>
+References: <20250805-vsock-vmtest-v4-0-059ec51ab111@meta.com>
+ <20250805-vsock-vmtest-v4-9-059ec51ab111@meta.com>
+ <20250806191239.GF61519@horms.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250806191239.GF61519@horms.kernel.org>
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+On Wed, Aug 06, 2025 at 08:12:39PM +0100, Simon Horman wrote:
+> On Tue, Aug 05, 2025 at 02:49:17PM -0700, Bobby Eshleman wrote:
+> > From: Bobby Eshleman <bobbyeshleman@meta.com>
+> > 
 
-The existing code move the VF NIC to new namespace when NETDEV_REGISTER is
-received on netvsc NIC. During deletion of the namespace,
-default_device_exit_batch() >> default_device_exit_net() is called. When
-netvsc NIC is moved back and registered to the default namespace, it
-automatically brings VF NIC back to the default namespace. This will cause
-the default_device_exit_net() >> for_each_netdev_safe loop unable to detect
-the list end, and hit NULL ptr:
+...
 
-[  231.449420] mana 7870:00:00.0 enP30832s1: Moved VF to namespace with: eth0
-[  231.449656] BUG: kernel NULL pointer dereference, address: 0000000000000010
-[  231.450246] #PF: supervisor read access in kernel mode
-[  231.450579] #PF: error_code(0x0000) - not-present page
-[  231.450916] PGD 17b8a8067 P4D 0
-[  231.451163] Oops: Oops: 0000 [#1] SMP NOPTI
-[  231.451450] CPU: 82 UID: 0 PID: 1394 Comm: kworker/u768:1 Not tainted 6.16.0-rc4+ #3 VOLUNTARY
-[  231.452042] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.1 11/21/2024
-[  231.452692] Workqueue: netns cleanup_net
-[  231.452947] RIP: 0010:default_device_exit_batch+0x16c/0x3f0
-[  231.453326] Code: c0 0c f5 b3 e8 d5 db fe ff 48 85 c0 74 15 48 c7 c2 f8 fd ca b2 be 10 00 00 00 48 8d 7d c0 e8 7b 77 25 00 49 8b 86 28 01 00 00 <48> 8b 50 10 4c 8b 2a 4c 8d 62 f0 49 83 ed 10 4c 39 e0 0f 84 d6 00
-[  231.454294] RSP: 0018:ff75fc7c9bf9fd00 EFLAGS: 00010246
-[  231.454610] RAX: 0000000000000000 RBX: 0000000000000002 RCX: 61c8864680b583eb
-[  231.455094] RDX: ff1fa9f71462d800 RSI: ff75fc7c9bf9fd38 RDI: 0000000030766564
-[  231.455686] RBP: ff75fc7c9bf9fd78 R08: 0000000000000000 R09: 0000000000000000
-[  231.456126] R10: 0000000000000001 R11: 0000000000000004 R12: ff1fa9f70088e340
-[  231.456621] R13: ff1fa9f70088e340 R14: ffffffffb3f50c20 R15: ff1fa9f7103e6340
-[  231.457161] FS:  0000000000000000(0000) GS:ff1faa6783a08000(0000) knlGS:0000000000000000
-[  231.457707] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  231.458031] CR2: 0000000000000010 CR3: 0000000179ab2006 CR4: 0000000000b73ef0
-[  231.458434] Call Trace:
-[  231.458600]  <TASK>
-[  231.458777]  ops_undo_list+0x100/0x220
-[  231.459015]  cleanup_net+0x1b8/0x300
-[  231.459285]  process_one_work+0x184/0x340
+> 
+> This change needs to be squashed into
+> PATCH 3/12 vsock: add netns to af_vsock core
+> 
+> To avoid build breakage.
+> 
+> Likewise with the other change to vsock_loopback_seqpacket_allow below.
+> And I think also for a number of other changes made by PATCH 3/12.
+> 
+> Please make sure that patches don't introduce transient build failures.
+> It breaks bisection.
 
-To fix it, move the ns change to a workqueue, and take rtnl_lock to avoid
-changing the netdev list when default_device_exit_net() is using it.
+Will do, thanks!
 
-Cc: stable@vger.kernel.org
-Fixes: 4c262801ea60 ("hv_netvsc: Fix VF namespace also in synthetic NIC NETDEV_REGISTER event")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> 
+> 
+> On the topic of vsock_loopback_seqpacket_allow, also:
+> 
+> * Please line wrap this so that the code is 80 columns wide or less,
+>   as is still preferred for Networking code.
+> 
+>   Flagged by checkpatch.pl --max-line-length=80
+> 
+> * Can we move the definition of vsock_loopback_seqpacket_allow() here?
+>   The function itself is is trivial. And doing so would avoid a forward
+>   declaration.
+> 
+> >  static bool vsock_loopback_msgzerocopy_allow(void)
+> >  {
+> >  	return true;
+> 
+> ...
+> 
+> > +int vsock_loopback_init_net(struct net *net)
+> > +{
+> > +	net->vsock.loopback = kmalloc(GFP_KERNEL, sizeof(struct vsock_loopback));
+> > +	if (!net->vsock.loopback)
+> > +		return -ENOMEM;
+> > +
+> > +	return vsock_loopback_init_vsock(net->vsock.loopback);
+> > +}
+> > +
+> > +void vsock_loopback_exit_net(struct net *net)
+> > +{
+> > +	vsock_loopback_deinit_vsock(net->vsock.loopback);
+> > +	kfree(net->vsock.loopback);
+> > +}
+> 
+> I think EXPORT_SYMBOL_GPL is needed for both vsock_loopback_exit_net and
+> vsock_loopback_init_net for the case where CONFIG_VSOCKETS=m
+> 
+> Also, in Kconfig VSOCKETS_LOOPBACK depends on VSOCKETS. But this code adds
+> a reverse dependency. As it stands it's possible to configure VSOCKETS
+> without VSOCKETS_LOOPBACK, which will not compile.
+> 
+> Perhaps stub implementations of vsock_loopback_init_net and
+> vsock_loopback_exit_net should be implemented in af_vsock.h if
+> VSOCKETS_LOOPBACK is not enabled?
+> 
 
----
-v2:
-  Moved the ns change to a workqueue as suggested by Jakub Kicinski.
+Roger that, makes sense. Thanks for the review!
 
----
- drivers/net/hyperv/hyperv_net.h |  3 +++
- drivers/net/hyperv/netvsc_drv.c | 29 ++++++++++++++++++++++++++++-
- 2 files changed, 31 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index cb6f5482d203..7397c693f984 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -1061,6 +1061,7 @@ struct net_device_context {
- 	struct net_device __rcu *vf_netdev;
- 	struct netvsc_vf_pcpu_stats __percpu *vf_stats;
- 	struct delayed_work vf_takeover;
-+	struct delayed_work vfns_work;
- 
- 	/* 1: allocated, serial number is valid. 0: not allocated */
- 	u32 vf_alloc;
-@@ -1075,6 +1076,8 @@ struct net_device_context {
- 	struct netvsc_device_info *saved_netvsc_dev_info;
- };
- 
-+void netvsc_vfns_work(struct work_struct *w);
-+
- /* Azure hosts don't support non-TCP port numbers in hashing for fragmented
-  * packets. We can use ethtool to change UDP hash level when necessary.
-  */
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index f44753756358..39c892e46cb0 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -2522,6 +2522,7 @@ static int netvsc_probe(struct hv_device *dev,
- 	spin_lock_init(&net_device_ctx->lock);
- 	INIT_LIST_HEAD(&net_device_ctx->reconfig_events);
- 	INIT_DELAYED_WORK(&net_device_ctx->vf_takeover, netvsc_vf_setup);
-+	INIT_DELAYED_WORK(&net_device_ctx->vfns_work, netvsc_vfns_work);
- 
- 	net_device_ctx->vf_stats
- 		= netdev_alloc_pcpu_stats(struct netvsc_vf_pcpu_stats);
-@@ -2666,6 +2667,8 @@ static void netvsc_remove(struct hv_device *dev)
- 	cancel_delayed_work_sync(&ndev_ctx->dwork);
- 
- 	rtnl_lock();
-+	cancel_delayed_work_sync(&ndev_ctx->vfns_work);
-+
- 	nvdev = rtnl_dereference(ndev_ctx->nvdev);
- 	if (nvdev) {
- 		cancel_work_sync(&nvdev->subchan_work);
-@@ -2707,6 +2710,7 @@ static int netvsc_suspend(struct hv_device *dev)
- 	cancel_delayed_work_sync(&ndev_ctx->dwork);
- 
- 	rtnl_lock();
-+	cancel_delayed_work_sync(&ndev_ctx->vfns_work);
- 
- 	nvdev = rtnl_dereference(ndev_ctx->nvdev);
- 	if (nvdev == NULL) {
-@@ -2800,6 +2804,27 @@ static void netvsc_event_set_vf_ns(struct net_device *ndev)
- 	}
- }
- 
-+void netvsc_vfns_work(struct work_struct *w)
-+{
-+	struct net_device_context *ndev_ctx =
-+		container_of(w, struct net_device_context, vfns_work.work);
-+	struct net_device *ndev;
-+
-+	if (!rtnl_trylock()) {
-+		schedule_delayed_work(&ndev_ctx->vfns_work, 1);
-+		return;
-+	}
-+
-+	ndev = hv_get_drvdata(ndev_ctx->device_ctx);
-+	if (!ndev)
-+		goto out;
-+
-+	netvsc_event_set_vf_ns(ndev);
-+
-+out:
-+	rtnl_unlock();
-+}
-+
- /*
-  * On Hyper-V, every VF interface is matched with a corresponding
-  * synthetic interface. The synthetic interface is presented first
-@@ -2810,10 +2835,12 @@ static int netvsc_netdev_event(struct notifier_block *this,
- 			       unsigned long event, void *ptr)
- {
- 	struct net_device *event_dev = netdev_notifier_info_to_dev(ptr);
-+	struct net_device_context *ndev_ctx;
- 	int ret = 0;
- 
- 	if (event_dev->netdev_ops == &device_ops && event == NETDEV_REGISTER) {
--		netvsc_event_set_vf_ns(event_dev);
-+		ndev_ctx = netdev_priv(event_dev);
-+		schedule_delayed_work(&ndev_ctx->vfns_work, 0);
- 		return NOTIFY_DONE;
- 	}
- 
--- 
-2.34.1
-
+Best,
+Bobby
 
