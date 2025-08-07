@@ -1,265 +1,252 @@
-Return-Path: <linux-hyperv+bounces-6504-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6505-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA557B1D16C
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Aug 2025 06:14:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A08B6B1D400
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Aug 2025 10:07:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 902387A03B8
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Aug 2025 04:12:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CA594167260
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Aug 2025 08:07:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DE031D86DC;
-	Thu,  7 Aug 2025 04:14:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58EB5242D8C;
+	Thu,  7 Aug 2025 08:06:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="hyb0hgpU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OFEya+Oz"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10olkn2021.outbound.protection.outlook.com [40.92.42.21])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1578F1CAA65;
-	Thu,  7 Aug 2025 04:14:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.42.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754540043; cv=fail; b=S6r3WqGyzyfpBBGxLOmLn1RwcG9gT8AfuhZ00eOP9OqYPbvjnjFxPP3gKx4ygm1Rdpp5xU9o1UcWNwGatcL8ejMX2xrMmlWyBLuIJB8F7fsV42iyMOtUithS80VA+RvZbzfqKCI/KL9w0kOv+MYSKRgoYIcm1DOI+5DeHNO2p4Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754540043; c=relaxed/simple;
-	bh=cEncL1OR7D2LZfB2mob1ZpyNSVsoohRnLnKYdOdVFfE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=eLHwCnXFysLs1ahMN0spK1jYxkEGQokIz32xrCGT+3cYkLj5x6cAE4Xs9YTx625MlOdC9HOCVAQdvdZiwZyp6o8XQeK3sZx3Yio4H5YbxmBo5z2qMRMzrv8OJkW/EIi9n4RfmZNiy/fab9XLwuNNamKYFPN3vGnx+I7+lzhtr4I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=hyb0hgpU; arc=fail smtp.client-ip=40.92.42.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HUc5/dX/IyAAMCPRusyFk8P4Na65iexcxfMtQ6Srw4bwAusRfUJiMzIZ/in/pA2syFfzppIn03gOg32XpkgRfeL9rnfg8bIdxW2B0HoA4/F4OqlDC+iS0chwZ0QiWTwEKPg4Vp65I+Ciz06T6uJDXxt8tJXRR1EqveyWyx40Cs5I1su87JmNt9YMKFjFpL+mQlXHA9g5WhnhKiGHO49pM3jVAjRNOJR2mjRTup6vRBdyYNExmq+nPU64kIDr6RHUqdCpMW9Q2BMtk2TsZOQn4F5S4BCwVQWeO6yzsd4JfAk2Y1oL00TfITuVpAGN28f141OtsUikX+cK9BBb0EAw4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Qkxf/ni73XVI5Y5tySjOA0AuHJDpKymUDq673ptPYfA=;
- b=hM8s4to7OsIUv5JW6uvyvlZxVwGncvcWr8/zAnFk4OSV1uvcXJqf3nFdMiPR9xtK2RzYXsAOCM3bcJ7EJzWfcWVCg76yH0s4IBJDtSRicWlXxifjO16VdsizIjYdPAr/K7dOq9t57JqDSPDn5tVikikqirA3Shjv6FWm4iHbFDTVUTD/5PPIJmPH1Y+6J+ytXJSvdkDaRBfFQoAm5RD5FE50uLR3XoZPNo74pHeETo3AK3YyB69+uJasNc19WnnP3weUGaLInI5NZZr4cQ2sGx7XEbLt9yhfu5eXSq8uWavRFzg1a15aFuOgrsFVvTX20qPisaAxrayv2cp4hctGRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qkxf/ni73XVI5Y5tySjOA0AuHJDpKymUDq673ptPYfA=;
- b=hyb0hgpUYv+H7Fnbm1H4VvA1jBzYTobJdcxx3cpNy3PDzYm3OX2I5gsfps6IiK9XAoylyagARQ3gNWwuCkqcHaMDcPe9/YfOXuwyfaEffIFoM8CTmOXqJVPJOL/ZAQCdU5p4A7X6gC2H/Y8QzgnDIxGIMro6yIAHj1KCF/Mi+Pgxg7kr7bI5IWCjT644DiXQneqUQjYCUUnEWF+ctt+pbnFPNraEfFofu6GUXciWB7ps0yKjNxZwedJx43/ACM+MtEi81OTDidlvNwWRRaN4UY3hIHOVAIdV/5+fVD0SQ9xHF0a+IwxunHG/2oC7FR4Ly3m/0QLpLXieKHuwEefmaA==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by CH2PR02MB6521.namprd02.prod.outlook.com (2603:10b6:610:63::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8989.20; Thu, 7 Aug
- 2025 04:14:00 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.9009.013; Thu, 7 Aug 2025
- 04:14:00 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Tianyu Lan <ltykernel@gmail.com>, "kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org"
-	<wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
-	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
-	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "arnd@arndb.de"
-	<arnd@arndb.de>, "Neeraj.Upadhyay@amd.com" <Neeraj.Upadhyay@amd.com>,
-	"kvijayab@amd.com" <kvijayab@amd.com>
-CC: Tianyu Lan <tiala@microsoft.com>, "linux-arch@vger.kernel.org"
-	<linux-arch@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [Update RFC PATCH V6 2/4] Drivers: hv: Allow vmbus message synic
- interrupt injected from Hyper-V
-Thread-Topic: [Update RFC PATCH V6 2/4] Drivers: hv: Allow vmbus message synic
- interrupt injected from Hyper-V
-Thread-Index: AQHcButZj8f2DvV74k6ye1PHVMuFErRWlUXw
-Date: Thu, 7 Aug 2025 04:13:59 +0000
-Message-ID:
- <SN6PR02MB415752821BCEAFDCC0722CE4D42CA@SN6PR02MB4157.namprd02.prod.outlook.com>
-References:
- <SN6PR02MB41577D7BFC7FA078880979A5D42DA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20250806160059.6244-1-ltykernel@gmail.com>
-In-Reply-To: <20250806160059.6244-1-ltykernel@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CH2PR02MB6521:EE_
-x-ms-office365-filtering-correlation-id: 343b4cb3-e45e-4ac4-5b5a-08ddd568d5f9
-x-ms-exchange-slblob-mailprops:
- qdrM8TqeFBtg1x3yx1r6QKZAk6LGeuzaqwLw3C0egdbhkmYMtwInnCQBEzz6BUVPUz2slPUy2or9I7ysi/SOklxwEj3wzPLxsk4wGGTbX24sjeqQgJp2dGwImc58s/Tn4MKhjrzearFPwSsNiBMQ2bfq2TReG3K3E7ijkdROHt52tF7QpdEy5EmTZPGfW3Z4hsMxCviwE161tO25LHdKdanYcWI7uZvA7N7yETlyf+hPN8wkeKbTGc85CRXB+QGoqKApX7HfvxYPyIMd/WC8naEFd60Gq3Y7rexYUqLFLADf/IjXQ4dkxVyvNR0vde5tPUVTDDgmHqKTwnkFm3Ys86V/qNmgbsILxURYHP3iPVYkyN/1xaJlP8bjccWIVDK2adCPbYpweSNMvdxH8NRbADFqEdNMwR1bd/LzLsaJDz8w+o/CK4iQ3h1j/3QHdAonOrf21KzolVtIVv5CyXkC57UjUx7vulX2MFOmiNbQk4iMORzQs5OjTFENvclHclYyyp+wt8LBq7Xzy1ERxuCqJDvpQi6s0d+Jd33A48H/NZCKJPdRAPMqYsp9tklMOe4nuMaNQVdkd1kpocqcB0nxR48dJKJA8G+cTygho2bTy9gD1BArXPdUl2ol+4K+ybYqBN+1VUWJSnX7XZInzrKmd0cKT+thQhYVYLKosDjSETl5OgeYmHR5UkRWA+rgAiaC0i84KNGwV9Irmlq17G4Dxb+MRK/tfr2+3zXNPxKQA94hHwQC1T9DcHCD09tpEqA5vngwMqcSL3pd/F2j6LIwy/QuwuADKlKX
-x-microsoft-antispam:
- BCL:0;ARA:14566002|31061999003|8060799015|21061999006|19110799012|8062599012|461199028|15080799012|440099028|3412199025|40105399003|102099032;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?GqFS8C6Z4sAoHd7LQNT2gsVAsVVY9kexV9yRi3DzvQbyCLiUnXHXdwxosmnC?=
- =?us-ascii?Q?284gtJpPhLdoNE2hIpjmXB3YaXugr7/H55qq2H5fQLQ4CM4NLAc+a7TFIaR5?=
- =?us-ascii?Q?lzggfapgmW5gE5N5+XJZvP6ZydbXux16s0GliDSZqUgzi0UAj9kJ3u4DP+Bq?=
- =?us-ascii?Q?u082ee0Oarri3f6/7Zq+7sBoRFAkFoE9+hL9RHXXkrQ654cefRPYzCdda/yF?=
- =?us-ascii?Q?1josrFRi4PEBj3KDtQJtwq/bJ07RUpUf2cHiRQLWsoe7+vLq4WEWQwDmd8/p?=
- =?us-ascii?Q?mAzbOyqNyPh+vLLtxZGqWNWm8ZN+IoZlgKMVIUkjFgxhAEZK8Kq2qXVqK94Y?=
- =?us-ascii?Q?vhKTpmDqXmUu0n6vRfsjwMTWqweuQR0bluEzRhhGuOYb/lORJgE7JMn/u3vP?=
- =?us-ascii?Q?BufYhozNw2IPxKcOJVz6hWLI2VMmt9dK2KftUhdgjigMElTWBPUN6dyTSjwU?=
- =?us-ascii?Q?NMH6pyifYYH+dhrfMUBOIJdoz2pZCEyv7eglB0FmFVxs52800QT47lcIYylQ?=
- =?us-ascii?Q?AC/41ei7cTC+c+2VJ41G69cv5gA6lhop1heFNAKwTvsq/MJynttW7ASkegE8?=
- =?us-ascii?Q?SK6jcMgaMt4rw9+GTaX3AEzXS0GWvhrK8X0ZzE1z1zUNgbj7G14eUdYoeUw2?=
- =?us-ascii?Q?xbD6w92q3zaO5KQDDtBS4MJI+HpoXC35fKmz6FsJPmtku90fupo4Uwv/iuX9?=
- =?us-ascii?Q?AHDQ5egsuDmfRRE0qfqbXT5JP69VSrXcTeFYGmIuGwgRapU+S3BALROelJFs?=
- =?us-ascii?Q?cBQAvaNynO0gJJO+M40jqD4Hu+9MVmVDa4vEZ9AO4HC0AWiDbsxvT/QQqbdu?=
- =?us-ascii?Q?VsLsfia0iVE6z83HMzGggB/5W6NuUYUwCLjwlklJRdIYls9rKyJSC2Bnd7Jg?=
- =?us-ascii?Q?u4sjQAwLx/u8uBwy1EvbWK6S8d1FlBHZ64iuZ1af3cd05IbFOUTtt03DVoER?=
- =?us-ascii?Q?/+cHvX2EhRtMLdSbfUTjrmxxOYYs4hw2TscpgRPtjstxDVeqUkJdXPU2ndgK?=
- =?us-ascii?Q?AedDYnmJJMCOAOZB+Gb79tswDfDSMqIhExCiFZQPiwxmlomYHDQeNz+mVIFk?=
- =?us-ascii?Q?5/MukGPWKrioPIn9bLBBRsPLxlfiI4wAYu1z25LT0rx9gJppkz2NeFMYzJdz?=
- =?us-ascii?Q?Iv5E0+vgSd0nZ2QTOiqCEF4TF+e1U1ZvTbjQnjDgRyqXn62swTkIGZI=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?7i0Cdz6cy2Q0uge+JhopBs3JrDEHCfkdJ91j0qJGRcnRELAZJu2P75zHHNZ3?=
- =?us-ascii?Q?cB9wqFPHv7+IIJQD/Ye7VTM2rBjIm+gzf6gHjddzguQTFAHd5Gxv9wvujy7Z?=
- =?us-ascii?Q?KQriyVhlnCBHM+GvS4s8YLrFtkLTSJk5sFPFEDRaaLR+SK+sriACDn91jSLB?=
- =?us-ascii?Q?9bBxSUA/TYHWVOGyy1rnemLu/d8LYUWobwb1F+VW3ernkggaiOokRYsRla8P?=
- =?us-ascii?Q?H+EYYgTj/athB6oQ6cq0Pdmiy50P7KgO8xUyKYCZB28WKPuhfRdzzlo8kFvB?=
- =?us-ascii?Q?FboPPKp+WdcEe8bhNzTO0s026J1802+2utUvMVVXqkEZa2JQRVrmLGLKrVAp?=
- =?us-ascii?Q?K1FFe9PAHHvTw11/t/b4J3Kr5iaGzVbqjZ7oADQsgWZYLOwm64i3AdqRuCBH?=
- =?us-ascii?Q?XCW+drTrc2f0f7fBJZQvz27FU+kjg1zRyympnMlg45aAT3jUtmqrQOlCuv1s?=
- =?us-ascii?Q?GGNzzg2WRQGMP6WiZ7HnqLIBo8abtI7uUrcpSDGg8BSlmqWscctIYM16BL0f?=
- =?us-ascii?Q?bXF50f+n5H1iYmv2q14lkoj3pZsE0MIQCbURLbBGb/ySkUyZIjJ/eZ0ZUj3L?=
- =?us-ascii?Q?NQSWVJ8p6lKfb9LMpjooCGr4jmeqEhRzWoZN0P4Q8uaWM/NU7vcBEWfr9JoK?=
- =?us-ascii?Q?2+CLDE7htLCf5ZEPfja9Wm5rOuTwi7NN0niovdkyyfLlQLPm3pyq1T+o7dCI?=
- =?us-ascii?Q?y5R9MpZaQiihmcA3r0wg7U8YYhX7BoxdLWa8jeFCUG3vvSIyVYeplOrfPrgJ?=
- =?us-ascii?Q?aD2CCW+YDWt6Ljo5MyijEEVZ4aWPPj7utgJjQ8Fe3IIXlLO9ZKHyaLdZS6J8?=
- =?us-ascii?Q?/rV4EkV/KCBe6oVTtrgvZPps1c8/9DYUdL2oBOYsXq14KFRmK6/GGaFRQB6l?=
- =?us-ascii?Q?9uk5p5rmdY9/YknfnUz+DyDC9+iACz17P7luNHkX3WaAfpfemq0CsXhqZsqx?=
- =?us-ascii?Q?nxDm6yjuNF3+ybOaBbqBKd81Yh6jEMFPfAQARdFRCCInX+V5BNDa+g3V6FwF?=
- =?us-ascii?Q?7QjeaG6+UhuEhBXkXEwMUFEWuxa74tb7MbhpuhJfee89Z3Pr0q2wwijVBTdp?=
- =?us-ascii?Q?hIcyaxJiolGaEpThyRtu8Gb+i2MkKFz8E8QT3l0cNGFvVnp55HTwVegweEjF?=
- =?us-ascii?Q?27yjmECDV1Eq05sd7hi+9vNf/YdAWXquogUakPpoX9GcvxNTvpji84/m2X1e?=
- =?us-ascii?Q?SOPjzE4KSrbYN6A67wO1UffNCo4Cz03Lb21k3HeBD2TEkAiD5mkTvo0Yels?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922E2250C06
+	for <linux-hyperv@vger.kernel.org>; Thu,  7 Aug 2025 08:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754554019; cv=none; b=ii2/xuX0+s3kfe5SsdAA1iBBHRPvoketg/3HgDXrwJVHOanSAtK6QFlExmf2bA9vHJKvNXwWSFl2Fevhm3gig9eVAEfPmAsEkB/mOkmODjWa5uNvAvvZYtSX0pXI2UnLWts5sOSGZhRFjh3WVsrCNu+w3/dbV2MKDpQ+0Tl2t20=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754554019; c=relaxed/simple;
+	bh=u2Il4zcXlbBWcOa6mv3Dqk2LkCaGUlZ1IGfaEMSMzMQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WUolAJVZPX972n7D1yKbtrRTzMW+do9iuecdfVce5HuwDhvMpVo757SpKYs5M1z/B0Pv8N9iFICi0+O6CpMRt3GkQSKtzoQHzPxpcdPQmqSrdN6+ksp2fveYDzydo+MAy5OdvcUrENQK0O3aNXf4eAFCgxdNIqsrdmo1uHG3vQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OFEya+Oz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1754554016;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7F/nfJfc6zfGggUKAtMQtDXDSwk2D4R5Dz6fv6UQzEk=;
+	b=OFEya+OzfRF7ifIb1yJuVzNn0ErzCKrGVrB/boMdx+q46meCuhyEI6yRB00XMghQtGITsy
+	EHZQi5ZFnks6rNhZVsGjWrf1cdDubmtOAZjVadbLfl5eEbh9rHx//yi6I4tw/oN+yHY04e
+	suKFbGHjR8bHQduAFhIrC/W/SR6LYAo=
+Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
+ [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-433-Sl8-t1FKNrGA9G_HU5M0Bg-1; Thu, 07 Aug 2025 04:06:55 -0400
+X-MC-Unique: Sl8-t1FKNrGA9G_HU5M0Bg-1
+X-Mimecast-MFC-AGG-ID: Sl8-t1FKNrGA9G_HU5M0Bg_1754554015
+Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-70e73d3c474so11143247b3.3
+        for <linux-hyperv@vger.kernel.org>; Thu, 07 Aug 2025 01:06:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754554010; x=1755158810;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7F/nfJfc6zfGggUKAtMQtDXDSwk2D4R5Dz6fv6UQzEk=;
+        b=awqPKQRY2OsJHbQKJ3QI1T9PJ7QNA5/7cHnS+e5W+iplWE13neCua6esIjV8HIxx+4
+         /G3pyxYLJiPFy5MazsP1C0pwoFh2sPlvqv29zg1Cb+yvJQVa83AXXP4QxYpNbdZWEHk+
+         2bp01Lr1N4jWe9UDXr3ip6DH5zBtI+fHaRBxmKppid//zmf1pz0iJMCfIrnAGd/wbruS
+         NcoYy1MGnyBRGd0r1S7tOh40HwmOI2zC98Nskc64va87CW4BpFtcEKiahi6mThP1+EJ9
+         vxb2YLNabqvoRy1Bt9eabzrv74CGf0dbwBC+mucAgoG8ROyMD1VWecfgEQj6ae/LnITq
+         Pbaw==
+X-Forwarded-Encrypted: i=1; AJvYcCXC1UbxcG5jrudZ58uwjEZ8qtjNYCZDXbpMeu8tZOqcrAxnFrl9j6seBkXuJ4mrGNfBM6L+YyPXNYExiGI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpkiGKKwQeQ2s0ePpHCGMHDiU38iuhXdQJpb4vskytxGkL6mDp
+	KgpV/p1+PXUCcFLTs9nk5j1Z3A1HDuYzvIUgDRotsw1eWNc+zmdMAbcNb2iBc6H2wi4LZ45M0fd
+	HjGPG/nUmEC4KJHKNlsIqbrIiC6tSTNILwFT0J6UV+H/EojKeKlMW6tVm93Jejl/p3Q==
+X-Gm-Gg: ASbGncujd23+QiRX6PVbb8VDYuKg9mnH47SgwH9mo/JzqYjU9tqqx3SAXc+YGaPRtiM
+	HndxSlxY6vL+8AukqPh/GeS2tEAWgEQz5xE+zc3ZeCrF0k0mY/3scpGDH5BM439NoW/RnRvlOPW
+	YJLLyOcVQcVORQxOvFGnDQ5yGtB5ojTX9eS4OeA/EFL2bauHIhnzluFgeTptwqIIZSpq83gFWAt
+	yIkWb0hjDGmcbXAEiqlVYVPYdlFXcGJkmMtKf1xwWOHHynkwbBf1b3WuNPPzXOBvbGxjAG5xldk
+	WTIHCFFG9sUbNTWGVn2QE3Y50e2Dv/PvkLDbjpI5FaeH5MuTWoxbIUSQS9L+yXgAxGRzVkyRQIR
+	qfP3diRxDn54MyZQ=
+X-Received: by 2002:a05:690c:6203:b0:71a:a9c:30dd with SMTP id 00721157ae682-71bcc6d6851mr85320877b3.2.1754554009637;
+        Thu, 07 Aug 2025 01:06:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHkk4jVdfxkNS66lXJnELQ1c8i2y7wkD6dlYIhb6ZnK84/IDwj2JHOFZ/v+UaqBfCV8rwA6qA==
+X-Received: by 2002:a05:690c:6203:b0:71a:a9c:30dd with SMTP id 00721157ae682-71bcc6d6851mr85319947b3.2.1754554008050;
+        Thu, 07 Aug 2025 01:06:48 -0700 (PDT)
+Received: from sgarzare-redhat (host-79-45-205-118.retail.telecomitalia.it. [79.45.205.118])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-71b5a3a9110sm44916537b3.4.2025.08.07.01.06.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Aug 2025 01:06:47 -0700 (PDT)
+Date: Thu, 7 Aug 2025 10:06:35 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Bobby Eshleman <bobbyeshleman@gmail.com>
+Cc: Shuah Khan <shuah@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Bryan Tan <bryan-bt.tan@broadcom.com>, Vishnu Dasa <vishnu.dasa@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, berrange@redhat.com, Bobby Eshleman <bobbyeshleman@meta.com>
+Subject: Re: [PATCH RFC net-next v4 00/12] vsock: add namespace support to
+ vhost-vsock
+Message-ID: <27a6zuc6wwuixgozhkxxd2bmpiegiat4bkwghvjz6y3wugtjqm@az7j7et7hzpq>
+References: <20250805-vsock-vmtest-v4-0-059ec51ab111@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 343b4cb3-e45e-4ac4-5b5a-08ddd568d5f9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2025 04:13:59.9228
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6521
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250805-vsock-vmtest-v4-0-059ec51ab111@meta.com>
 
-From: Tianyu Lan <ltykernel@gmail.com> Sent: Wednesday, August 6, 2025 9:01=
- AM
->=20
-> When Secure AVIC is enabled, VMBus driver should
-> call x2apic Secure AVIC interface to allow Hyper-V
-> to inject VMBus message interrupt.
->=20
-> Reviewed-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-> Signed-off-by: Tianyu Lan <tiala@microsoft.com>
-> ---
-> Change since RFC V5:
->        - Rmove extra line and move hv_enable_coco_interrupt()
->          just after hv_set_msr() in the hv_synic_disable_regs().
->=20
-> Change since RFC V4:
->         - Change the order to call hv_enable_coco_interrupt()
-> 	  in the hv_synic_enable/disable_regs().
-> 	- Update commit title "Drivers/hv:" to "Drivers: hv:"
->=20
-> Change since RFC V3:
->        - Disable VMBus Message interrupt via hv_enable_
->        	 coco_interrupt() in the hv_synic_disable_regs().
-> ---
->  arch/x86/hyperv/hv_apic.c      | 5 +++++
->  drivers/hv/hv.c                | 4 ++++
->  drivers/hv/hv_common.c         | 5 +++++
->  include/asm-generic/mshyperv.h | 1 +
->  4 files changed, 15 insertions(+)
->=20
-> diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-> index 01bc02cc0590..c9808a51fa37 100644
-> --- a/arch/x86/hyperv/hv_apic.c
-> +++ b/arch/x86/hyperv/hv_apic.c
-> @@ -54,6 +54,11 @@ static void hv_apic_icr_write(u32 low, u32 id)
->  	wrmsrq(HV_X64_MSR_ICR, reg_val);
->  }
->=20
-> +void hv_enable_coco_interrupt(unsigned int cpu, unsigned int vector, boo=
-l set)
-> +{
-> +	apic_update_vector(cpu, vector, set);
-> +}
-> +
->  static u32 hv_apic_read(u32 reg)
->  {
->  	u32 reg_val, hi;
-> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-> index 308c8f279df8..355663a6e3b8 100644
-> --- a/drivers/hv/hv.c
-> +++ b/drivers/hv/hv.c
-> @@ -316,6 +316,8 @@ void hv_synic_enable_regs(unsigned int cpu)
->  	shared_sint.auto_eoi =3D hv_recommend_using_aeoi();
->  	hv_set_msr(HV_MSR_SINT0 + VMBUS_MESSAGE_SINT, shared_sint.as_uint64);
->=20
-> +	hv_enable_coco_interrupt(cpu, vmbus_interrupt, true);
-> +
->  	/* Enable the global synic bit */
->  	sctrl.as_uint64 =3D hv_get_msr(HV_MSR_SCONTROL);
->  	sctrl.enable =3D 1;
-> @@ -349,6 +351,8 @@ void hv_synic_disable_regs(unsigned int cpu)
->  	/* Disable the interrupt */
->  	hv_set_msr(HV_MSR_SINT0 + VMBUS_MESSAGE_SINT, shared_sint.as_uint64);
->=20
-> +	hv_enable_coco_interrupt(cpu, vmbus_interrupt, false);
-> +
->  	simp.as_uint64 =3D hv_get_msr(HV_MSR_SIMP);
->  	/*
->  	 * In Isolation VM, sim and sief pages are allocated by
-> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> index 49898d10faff..0f024ab3d360 100644
-> --- a/drivers/hv/hv_common.c
-> +++ b/drivers/hv/hv_common.c
-> @@ -716,6 +716,11 @@ u64 __weak hv_tdx_hypercall(u64 control, u64 param1,=
- u64 param2)
->  }
->  EXPORT_SYMBOL_GPL(hv_tdx_hypercall);
->=20
-> +void __weak hv_enable_coco_interrupt(unsigned int cpu, unsigned int vect=
-or, bool set)
-> +{
-> +}
-> +EXPORT_SYMBOL_GPL(hv_enable_coco_interrupt);
-> +
->  void hv_identify_partition_type(void)
->  {
->  	/* Assume guest role */
-> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyper=
-v.h
-> index a729b77983fa..7907c9878369 100644
-> --- a/include/asm-generic/mshyperv.h
-> +++ b/include/asm-generic/mshyperv.h
-> @@ -333,6 +333,7 @@ bool hv_is_isolation_supported(void);
->  bool hv_isolation_type_snp(void);
->  u64 hv_ghcb_hypercall(u64 control, void *input, void *output, u32 input_=
-size);
->  u64 hv_tdx_hypercall(u64 control, u64 param1, u64 param2);
-> +void hv_enable_coco_interrupt(unsigned int cpu, unsigned int vector, boo=
-l set);
->  void hyperv_cleanup(void);
->  bool hv_query_ext_cap(u64 cap_query);
->  void hv_setup_dma_ops(struct device *dev, bool coherent);
-> --
-> 2.25.1
->=20
+Hi Bobby,
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+On Tue, Aug 05, 2025 at 02:49:08PM -0700, Bobby Eshleman wrote:
+>This series adds namespace support to vhost-vsock. It does not add
+>namespaces to any of the guest transports (virtio-vsock, hyperv, or
+>vmci).
+>
+>The current revision only supports two modes: local or global. Local
+>mode is complete isolation of namespaces, while global mode is complete
+>sharing between namespaces of CIDs (the original behavior).
+>
+>Future may include supporting a mixed mode, which I expect to be more
+>complicated because socket lookups will have to include new logic and
+>API changes to behave differently based on if the lookup is part of a
+>mixed mode CID allocation, a global CID allocation, a mixed-to-global
+>connection (allowed), or a global-to-mixed connection (not allowed).
+>
+>Modes are per-netns and write-once. This allows a system to configure
+>namespaces independently (some may share CIDs, others are completely
+>isolated). This also supports future mixed use cases, where there may 
+>be
+>namespaces in global mode spinning up VMs while there are
+>mixed mode namespaces that provide services to the VMs, but are not
+>allowed to allocate from the global CID pool.
+>
+>Thanks again for everyone's help and reviews!
+
+Thanks for your work!
+
+As I mentioned to you, I'll be off for the next 2 weeks, so I'll take a 
+look when I'm back, but feel free to send new versions if you receive 
+enough comments on this.
+
+Thanks,
+Stefano
+
+>
+>Signed-off-by: Bobby Eshleman <bobbyeshleman@gmail.com>
+>To: Stefano Garzarella <sgarzare@redhat.com>
+>To: Shuah Khan <shuah@kernel.org>
+>To: David S. Miller <davem@davemloft.net>
+>To: Eric Dumazet <edumazet@google.com>
+>To: Jakub Kicinski <kuba@kernel.org>
+>To: Paolo Abeni <pabeni@redhat.com>
+>To: Simon Horman <horms@kernel.org>
+>To: Stefan Hajnoczi <stefanha@redhat.com>
+>To: Michael S. Tsirkin <mst@redhat.com>
+>To: Jason Wang <jasowang@redhat.com>
+>To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+>To: Eugenio Pérez <eperezma@redhat.com>
+>To: K. Y. Srinivasan <kys@microsoft.com>
+>To: Haiyang Zhang <haiyangz@microsoft.com>
+>To: Wei Liu <wei.liu@kernel.org>
+>To: Dexuan Cui <decui@microsoft.com>
+>To: Bryan Tan <bryan-bt.tan@broadcom.com>
+>To: Vishnu Dasa <vishnu.dasa@broadcom.com>
+>To: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+>Cc: virtualization@lists.linux.dev
+>Cc: netdev@vger.kernel.org
+>Cc: linux-kselftest@vger.kernel.org
+>Cc: linux-kernel@vger.kernel.org
+>Cc: kvm@vger.kernel.org
+>Cc: linux-hyperv@vger.kernel.org
+>Cc: berrange@redhat.com
+>
+>Changes in v4:
+>- removed RFC tag
+>- implemented loopback support
+>- renamed new tests to better reflect behavior
+>- completed suite of tests with permutations of ns modes and vsock_test
+>  as guest/host
+>- simplified socat bridging with unix socket instead of tcp + veth
+>- only use vsock_test for success case, socat for failure case (context
+>  in commit message)
+>- lots of cleanup
+>
+>Changes in v3:
+>- add notion of "modes"
+>- add procfs /proc/net/vsock_ns_mode
+>- local and global modes only
+>- no /dev/vhost-vsock-netns
+>- vmtest.sh already merged, so new patch just adds new tests for NS
+>- Link to v2:
+>  https://lore.kernel.org/kvm/20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com
+>
+>Changes in v2:
+>- only support vhost-vsock namespaces
+>- all g2h namespaces retain old behavior, only common API changes
+>  impacted by vhost-vsock changes
+>- add /dev/vhost-vsock-netns for "opt-in"
+>- leave /dev/vhost-vsock to old behavior
+>- removed netns module param
+>- Link to v1:
+>  https://lore.kernel.org/r/20200116172428.311437-1-sgarzare@redhat.com
+>
+>Changes in v1:
+>- added 'netns' module param to vsock.ko to enable the
+>  network namespace support (disabled by default)
+>- added 'vsock_net_eq()' to check the "net" assigned to a socket
+>  only when 'netns' support is enabled
+>- Link to RFC: https://patchwork.ozlabs.org/cover/1202235/
+>
+>---
+>Bobby Eshleman (12):
+>      vsock: a per-net vsock NS mode state
+>      vsock: add net to vsock skb cb
+>      vsock: add netns to af_vsock core
+>      vsock/virtio: add netns to virtio transport common
+>      vhost/vsock: add netns support
+>      vsock/virtio: use the global netns
+>      hv_sock: add netns hooks
+>      vsock/vmci: add netns hooks
+>      vsock/loopback: add netns support
+>      selftests/vsock: improve logging in vmtest.sh
+>      selftests/vsock: invoke vsock_test through helpers
+>      selftests/vsock: add namespace tests
+>
+> MAINTAINERS                             |    1 +
+> drivers/vhost/vsock.c                   |   48 +-
+> include/linux/virtio_vsock.h            |   12 +
+> include/net/af_vsock.h                  |   59 +-
+> include/net/net_namespace.h             |    4 +
+> include/net/netns/vsock.h               |   21 +
+> net/vmw_vsock/af_vsock.c                |  204 +++++-
+> net/vmw_vsock/hyperv_transport.c        |    2 +-
+> net/vmw_vsock/virtio_transport.c        |    5 +-
+> net/vmw_vsock/virtio_transport_common.c |   14 +-
+> net/vmw_vsock/vmci_transport.c          |    4 +-
+> net/vmw_vsock/vsock_loopback.c          |   59 +-
+> tools/testing/selftests/vsock/vmtest.sh | 1088 ++++++++++++++++++++++++++-----
+> 13 files changed, 1330 insertions(+), 191 deletions(-)
+>---
+>base-commit: dd500e4aecf25e48e874ca7628697969df679493
+>change-id: 20250325-vsock-vmtest-b3a21d2102c2
+>
+>Best regards,
+>-- 
+>Bobby Eshleman <bobbyeshleman@meta.com>
+>
+
 
