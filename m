@@ -1,141 +1,133 @@
-Return-Path: <linux-hyperv+bounces-6506-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6507-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4AFB3B1DC08
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Aug 2025 18:58:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D3E1B1DE3E
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Aug 2025 22:26:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 04D883A9237
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Aug 2025 16:58:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0724D7B562B
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Aug 2025 20:24:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54E0926B777;
-	Thu,  7 Aug 2025 16:58:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F08722741C9;
+	Thu,  7 Aug 2025 20:24:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cfOqAIBm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WF42lLdF"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5BA1E5207;
-	Thu,  7 Aug 2025 16:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0BA273D8F;
+	Thu,  7 Aug 2025 20:24:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754585930; cv=none; b=Un2CVLVo/RM+MQVvgoaWGd6GQ2F528aCeV5k/n1k9MIulT9hCSptaHcgJ/a+dOkX4oEgHUAf5nOpPuuWNk+BcE5Zdh/858yB5i4ixIq41RwOP3FBLAq+nWwKFNhNKRQiwd0t+V7wzkLXWsdozDDEGksxgIRHJCCLNnNZkbGiQOM=
+	t=1754598280; cv=none; b=k1GRMSurH2vEx5N0qesjA88iT5RzmEHK4IN82Iodf0a5bG7rMCb40qSFUcN/U9BP9wm2GfMVl49IlxDm8LPRELJysxlotQgXtL9a740THT1DMYuQ39vxJzus2MBOE/fLh7zqUkglSdpDdmHB8mqkHJIFFt6s2zDAKv3VkDZqxiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754585930; c=relaxed/simple;
-	bh=L9kJeILxhivms4kbpTOCUGDER7CKIe19iSx5Rex2KxY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CVT7dOr3zXSGCc1LtB2cEX1izINmpP+oN2+GtcO95DroDQTdfUzThPR+50vh+ji1o8XS/xtDAxvFu+Uqt8ae7W0+cKZKntuABKhvLXxLtYBqF1ocgokiFroFRjd6cGp3pmGg+n/H1XLfUyNrkSaoC7x3NrSHlTA5DBh5V08Ul8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cfOqAIBm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AEAEC4CEEB;
-	Thu,  7 Aug 2025 16:58:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754585929;
-	bh=L9kJeILxhivms4kbpTOCUGDER7CKIe19iSx5Rex2KxY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=cfOqAIBmxn6DPFAcC8Y/YfW/5sxGu40s+t3EH0hKSBosWdf6TB9knDw7hvmG93uHh
-	 q1ZJqRJGPWmrzyZ3q9wUVlQr0tEechca2LdTJqq5WARYRcFZ7E0liwDoELjlDX6jVx
-	 zYQgF6JUpgjJ0TJ/42UnUh4RKJ3oKgP2kMq2hL6HMeI2TxCXT7RL60hPar0v9h0MP6
-	 tBVJhd6DH6TAFKNh2NcMsiWlEZ1aiBjsHdyNkSD8DUM/xfMcwnKNxLn5oiyrHndORy
-	 +62vlvE7hFYEih5uMo/r8XXw4G1h0MGL0uOTkaMtLZNT6DnbFMg76Wuu3AtdPRzmBy
-	 TFEwCGwo0X4hQ==
-From: wei.liu@kernel.org
-To: Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
-Cc: Wei Liu <wei.liu@kernel.org>,
-	Michael Kelley <mhklinux@outlook.com>,
+	s=arc-20240116; t=1754598280; c=relaxed/simple;
+	bh=B5dHpd9/2CVBm2hMcIJ9Lj/mYxIYk3/xJor8Q45KyBw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n/Jtbjpw3htle9yY4Us2A91efKrLa9uMtj8KZrUhDDb+Pbo+MctI3puYQgqmZsObZsJblLo8GXW9o8gIQMB1TWR7xgnYLEmb+rBc6WG5BiNpvn2Ceg411rMp+CGg89Te5H3pw0lrGlfej1nAhIT0a9z419fYXW0Z/PyIUJ7JLH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WF42lLdF; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b42254ea4d5so942765a12.1;
+        Thu, 07 Aug 2025 13:24:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754598277; x=1755203077; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=x3RlVskhZ/9tPsfsfYQZQqqA9goXX/0nRbKP1avcqUY=;
+        b=WF42lLdFFXBnMOmrIx83598mH1dTuKqr1JVcrbP/gzUIXcmcPClFeaA5SFVUfY8fXq
+         Qloiw4wadDKlk74kqI9+YLmQIua/7Qfeg8EORNSVElRrp4I4uwUhdp6JMlm4XYTJWn8a
+         zx+vRXpO0hpMGfVZ/+ZTC6AUOzdMOxn80uzA1j1P6fyeRKCVwJzID/Jyyc5Dbj6+6Q1C
+         LMUm4zzPgOD5fhOizynvu6Aj9jeMPeXyGvgzsMJhOG1o1/UDvGg1NlPnsnDmWS1P+em2
+         SFofl9rflhPUCNb5K4wSyV8qfg36qJ3ZJ6l/vkctT3YJSUtiqMiCt6rfwsdUgteRQmam
+         a1Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754598277; x=1755203077;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x3RlVskhZ/9tPsfsfYQZQqqA9goXX/0nRbKP1avcqUY=;
+        b=A5MLMpKea300OZFQrRO8JuBdLEyGrOJIfNCgTX7aU4YJb0Wl0SoplwoYzUyOg+j6IT
+         I7vDR9Z4tK8+AzyyTU4DbCD4A7hj4JabSJqW4uOkYJlPIfJ3bOfzTaQEayvDj0mroYsY
+         jDcpaB1zlsa//u04hZwwfk7tJn3rGo8deGlP1DWtF7ORZdIAEkuHCVXGGBmk0qZJ/eGz
+         HZKzdF0DwXCAAzU3Wi7PJVZdREzPsjXtcshwVVhDKkASERNm0EB+hnHJWwlxqoEN25qi
+         DmpfA0znArE8wagOnNlgG/hp0mKrcmQpgoS5ozLajLyIFNkPlbQbNk/Aw0idsBJHvPqC
+         8Ddg==
+X-Forwarded-Encrypted: i=1; AJvYcCUxZM2CmgsYqWpdwLSSqnAJ2LSHKdVUVnG5PJjTo/W7fly+xmIGNjH8qrXKN55kHYDVcTw=@vger.kernel.org, AJvYcCVSL9+0/mht/fNRPeKhHDP2Q3+4mntIgV2rrjuKGLzFfIj23dAaVhfHLmdwrEN5eIclvaZO/ngmP+kb2Vvb@vger.kernel.org, AJvYcCVeolL8Fl4bLfWt1KbZKNS93r6LjVDi55hr7cy3iYurOuYJGFsCf9YvDM5pExF2ljp+rFszuAgn/ioIayAG@vger.kernel.org, AJvYcCXSyVUc1/qSWQhRzHGENifxnrrR+Q3+sHFw3/PcJTdLktjXwDHQm+3sH7uZPxolL0XH1uE1knWBy4yJgVd26VHF@vger.kernel.org, AJvYcCXnhr6tvpKDM9ZYTWcerptT7eHKZY9l0pnigy1a8TjgZAD5d0Qwmolm2OlGzz7fg0vk4EEYEmOz@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMNC+2N7qi9S3x6oYj0Hjw0CbKLllpTzTFhR79ztTEASfyXcW8
+	wgqe71f+CqUu6ktD/cXI13BD1JAd/HIrH9+4AS7oOUxU3ym8uIxwO4b9
+X-Gm-Gg: ASbGncupTcu4ezwob0fPi5VB20lamIjrZC92LTqS8V1gTyDkl8gTWzjfsHk6Bu0gE3s
+	B+hKiecugP5LypGQBW0hg9s+Ag5h4scxthnfNuRrsjQt8twg9K4y9IWT2XXSA3yEmmynLEK7yEU
+	ZCEWNHV/Iay6daR1FDRgzmDx80ndzevNqvXAr1ixXLxp/9VV5WXOQH8MEdzREH5+BQq3B1yN76D
+	gNdt6+dvKQ0TVMg63ltvr+Z2kBjTBUsGmHsKors3r/onN4Wqm1/oAxcVXMWA5VR7yrXX5tjnBje
+	iEVR05YuDzK8bJ6o9iZIgnN8yy6vapNm7cz3BjWotRqhB5WBJG8LfRWq3O5sMqyGwbEyhAyq1qS
+	l8RbSADFD0b8yGvb00due9rQyDSiEgarTWHoe8Lv2+HU=
+X-Google-Smtp-Source: AGHT+IF/VWh5TM2qquaqzYZqHo8a91a/584HOmbew0G6ouHaU7Evm8NtOh9ULhmHs70qMUCw7xImDg==
+X-Received: by 2002:a17:903:2310:b0:234:d431:ec6e with SMTP id d9443c01a7336-242c1ffcf60mr4675265ad.3.1754598276994;
+        Thu, 07 Aug 2025 13:24:36 -0700 (PDT)
+Received: from devvm6216.cco0.facebook.com ([2a03:2880:2ff:3::])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241e8aaadadsm193768745ad.156.2025.08.07.13.24.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Aug 2025 13:24:36 -0700 (PDT)
+Date: Thu, 7 Aug 2025 13:24:34 -0700
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Shuah Khan <shuah@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
 	"K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-Subject: [PATCH] clocksource: hyper-v: Prefer architecture counter when running as root partition
-Date: Thu,  7 Aug 2025 16:58:46 +0000
-Message-ID: <20250807165846.1804541-1-wei.liu@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	berrange@redhat.com, Bobby Eshleman <bobbyeshleman@meta.com>
+Subject: Re: [PATCH RFC net-next v4 00/12] vsock: add namespace support to
+ vhost-vsock
+Message-ID: <aJULgjM8r+d+bKpM@devvm6216.cco0.facebook.com>
+References: <20250805-vsock-vmtest-v4-0-059ec51ab111@meta.com>
+ <27a6zuc6wwuixgozhkxxd2bmpiegiat4bkwghvjz6y3wugtjqm@az7j7et7hzpq>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <27a6zuc6wwuixgozhkxxd2bmpiegiat4bkwghvjz6y3wugtjqm@az7j7et7hzpq>
 
-From: Wei Liu <wei.liu@kernel.org>
+On Thu, Aug 07, 2025 at 10:06:35AM +0200, Stefano Garzarella wrote:
+> Hi Bobby,
+> 
 
-There is no HV_ACCESS_TSC_INVARIANT bit when Linux runs as the root
-partition. The old logic caused the native TSC clock source to be
-incorrectly marked as unstable on x86.
+...
 
-The clock source driver runs on both x86 and ARM64. Change it to prefer
-architectural counter when it runs on Linux root.
+> 
+> Thanks for your work!
+> 
+> As I mentioned to you, I'll be off for the next 2 weeks, so I'll take a look
+> when I'm back, but feel free to send new versions if you receive enough
+> comments on this.
+> 
+> Thanks,
+> Stefano
+> 
 
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
----
-Cc: Michael Kelley <mhklinux@outlook.com>
+Thanks Stefano, enjoy your time off!
 
-Pending further testing.
-
-The preference of architectural counter over Hyper-V Reference TSC for
-Linux root is confirmed by the hypervisor team.
----
- arch/x86/kernel/cpu/mshyperv.c     |  6 +++++-
- drivers/clocksource/hyperv_timer.c | 10 +++++++++-
- 2 files changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index fd708180d2d9..1713545dcf4a 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -966,8 +966,12 @@ static void __init ms_hyperv_init_platform(void)
- 	 * TSC should be marked as unstable only after Hyper-V
- 	 * clocksource has been initialized. This ensures that the
- 	 * stability of the sched_clock is not altered.
-+	 *
-+	 * The root partition doesn't see HV_ACCESS_TSC_INVARIANT.
-+	 * No need to check for it.
- 	 */
--	if (!(ms_hyperv.features & HV_ACCESS_TSC_INVARIANT))
-+	if (!hv_root_partition() &&
-+	    !(ms_hyperv.features & HV_ACCESS_TSC_INVARIANT))
- 		mark_tsc_unstable("running on Hyper-V");
- 
- 	hardlockup_detector_disable();
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index f6415e726e96..59c3e09f1961 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -534,14 +534,22 @@ static void __init hv_init_tsc_clocksource(void)
- 	union hv_reference_tsc_msr tsc_msr;
- 
- 	/*
-+	 * When running as a guest partition:
-+	 *
- 	 * If Hyper-V offers TSC_INVARIANT, then the virtualized TSC correctly
- 	 * handles frequency and offset changes due to live migration,
- 	 * pause/resume, and other VM management operations.  So lower the
- 	 * Hyper-V Reference TSC rating, causing the generic TSC to be used.
- 	 * TSC_INVARIANT is not offered on ARM64, so the Hyper-V Reference
- 	 * TSC will be preferred over the virtualized ARM64 arch counter.
-+	 *
-+	 * When running as the root partition:
-+	 *
-+	 * There is no HV_ACCESS_TSC_INVARIANT feature. Always prefer the
-+	 * architectural defined counter over the Hyper-V Reference TSC.
- 	 */
--	if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) {
-+	if ((ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) ||
-+	    hv_root_partition()) {
- 		hyperv_cs_tsc.rating = 250;
- 		hyperv_cs_msr.rating = 245;
- 	}
--- 
-2.43.0
-
+Best,
+Bobby
 
