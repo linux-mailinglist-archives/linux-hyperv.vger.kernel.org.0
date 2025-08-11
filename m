@@ -1,91 +1,91 @@
-Return-Path: <linux-hyperv+bounces-6511-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6512-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19726B1FEC6
-	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Aug 2025 07:50:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F272B1FED0
+	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Aug 2025 07:51:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 472A57AA8DE
-	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Aug 2025 05:49:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 99FC1189A6B2
+	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Aug 2025 05:52:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50DE326B2AD;
-	Mon, 11 Aug 2025 05:50:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F994270545;
+	Mon, 11 Aug 2025 05:51:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Hu/xsv1l"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="HagoNJBb"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-il1-f225.google.com (mail-il1-f225.google.com [209.85.166.225])
+Received: from mail-pg1-f227.google.com (mail-pg1-f227.google.com [209.85.215.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33FF26B098
-	for <linux-hyperv@vger.kernel.org>; Mon, 11 Aug 2025 05:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C574726E179
+	for <linux-hyperv@vger.kernel.org>; Mon, 11 Aug 2025 05:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754891434; cv=none; b=JyBqBWf8nF6elBHz7LXPP12SYALpnwwl+qTrSzvS69gPDGaKqNp1MYVJtnOMOibS6gmibAhKaz9Ym1AAG7Rt51FOhptxZocVplvGldcj+pu5Oc9zFZzCXCMiXkmRazDYe/h1o2VdZguHbyQBZhppl22tfg7anSjCSHLhkAqKJ/s=
+	t=1754891495; cv=none; b=NijeawoZANvaBbXQHRu90GQqCQLZeA/uY8q5KWzAhMYKxqhI6buwUR7+EXfXsJvBqm8MQWg4//GN4mWzAM8SN91e/xcEbUrjTIqOBScQeGBOKJu+umLmbtqXEgam2ri7TIdSa32EXITvF/h1MElnI03Yejb7CP9c5iOs1sGVoco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754891434; c=relaxed/simple;
+	s=arc-20240116; t=1754891495; c=relaxed/simple;
 	bh=0yp2V2VVk7SzKuFUi/ZVfl/o+NZ050J3YB1CuCwPaGM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WzRUj1ZI0cUVjObqYTsRV0oAu3w9T6j9mEu7WW+PQKCPrGB7VBMBQFjWmtiPmTziZeWbXmZTBRmGa/rjmaXuJi/DnCBrXNNU710vrKTnb+gzDPAxRGI4fix3Ea5q69HyRmQta26RZdCY54fZEFwTxmd3QFXFB0+8CWwXIspatlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Hu/xsv1l; arc=none smtp.client-ip=209.85.166.225
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EUU/FnABQAHlW61cZ26swXT7QMSvq/lJ1dpKZQCWdOwZEb71TP3pG1K4j3zxDBqfKNpWDn02ICTEDtmJPyjpMb3JydL0NvViWkhumd3FCpCheq/goOgFR7VA8zErqGyUel3A6pfdZQpE7h21U+UDV4v4o2eyqFbUowoG5moO0p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=HagoNJBb; arc=none smtp.client-ip=209.85.215.227
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-il1-f225.google.com with SMTP id e9e14a558f8ab-3e3ea9e8154so16273395ab.2
-        for <linux-hyperv@vger.kernel.org>; Sun, 10 Aug 2025 22:50:32 -0700 (PDT)
+Received: by mail-pg1-f227.google.com with SMTP id 41be03b00d2f7-b34a8f69862so2799402a12.2
+        for <linux-hyperv@vger.kernel.org>; Sun, 10 Aug 2025 22:51:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754891432; x=1755496232;
+        d=1e100.net; s=20230601; t=1754891493; x=1755496293;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:dkim-signature:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
         bh=9FGXD3kaHwd6Vj5dcpPpaYy6WT0iTxp+nQotnuFSJvo=;
-        b=tN2Mkh+RG7/zRfQylguKXE9rets53YpjtFhZ1jE5wWWhxavxPtASpAuHXwH7KHvPds
-         yturIqcjziW9hqDw6PiYdrmRdMnN3KNIQ5MPz8zSX+OJqIuVfR5maXzmZtdxvzdYI3gK
-         dNr+L7m2WgI1YSGwC1CsBhrxAL8M7LuYg49Zf3CgX97tIRpuUu0lSTpH7AEuOpKDSraz
-         p/9SbrgErzorqjbf/7evR65sb5tSZnUsj0Vj4mMRVlONnBigU+ICjzlS0W2c12/yRYy5
-         FQnBfFVzgxnX9eE3EbWUfI7iwVj0jKrtayS7z38nv+n8kF151j4g9WNJwi3ZtPWjsUkD
-         aB4g==
-X-Forwarded-Encrypted: i=1; AJvYcCUFmhCmWK6akwkcIYJiIRsTRI8gnJgSp5dZQmwg8xij/rsSx0Q+JTcWXTB/oxAcR+N3Oo4z2cSIWktlNUQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBfNUR/fjJa0Kdp8Gt3r6mpcJF0Fln1Z6fG2Qfn8CfD5H/r4wu
-	nGG2r4YXRYjcfp1CDsRheVnomD+zblfILZgt9dR9v7/qTtrHMzBbfTkh+bitbn2zD57NFmKAbXm
-	Q3w0nhNOErpK2LE2LiNK6LAXgwIDhUc9r4QdQrZwkwED+IrAULPSiZBVxRY8Ud7Htg21P4ZLG3u
-	4n87Ow+2DgPf4dT31+dTUKk5IJwKCL0ryACYfIkjXvUJhZK6IFW/A5OG7O3ORi+cE6r3NUXrKAp
-	HFtC1tdinXz32rdU7q7eIbkjw==
-X-Gm-Gg: ASbGncvuLx5E09xZB6VZp7ebMSd1+n8WtDGjo3Ywi/Y7Hvu1IhwMmGxiPOt15NuGIlY
-	ErOyJYUcR7RSi5b3FysYV8j8wLq6kfVakOl2vnxRDRk8YnFgXdRVFPJEJ0M0VIAXEFUZ2eRZfjl
-	x4H8QcKT2rlj57jnuXVL81E8TnTVG716bdPdfjx9VrMYfbaj8ruWDxzNFU0GSDTfE/8Ban31NNK
-	FNqZqbyX0HifzimD3y2cue1FozBJZ0UqxVc8B2w5HORxVCLIE8OlYQsslbi9zB3anOKhc9FRJPJ
-	eGq2XnM+KxsTfiMLKCx5iC8s3iadqx7YRUxgdHypC+H5MUKyEM5+o3AqT5QGVDrXGchg9oknclF
-	B+y+DEkPJoILBv4/7ekDY0zvfZcF2CEFGSi4ZLIsz3ltOiUPiMXoIFo5FTPd5y4GtbjVScuvyWW
-	nVcgI=
-X-Google-Smtp-Source: AGHT+IFA4gqb+xFYmeodL2Od4pwFmGG1yQPElwYDZ0b89vKRvh+46eQue11Byhw3K7yzDQynUvOCKczy/hsk
-X-Received: by 2002:a05:6e02:1a23:b0:3e3:ec24:f616 with SMTP id e9e14a558f8ab-3e533196f83mr217095185ab.15.1754891431996;
-        Sun, 10 Aug 2025 22:50:31 -0700 (PDT)
-Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-25.dlp.protect.broadcom.com. [144.49.247.25])
-        by smtp-relay.gmail.com with ESMTPS id e9e14a558f8ab-3e533bd31bdsm6648205ab.5.2025.08.10.22.50.31
+        b=cRVMVwsysWAcdt+fdJDyn11IM0xOSfqy9lBY7/bSvZYVSOoCzdbOAXZyOqJJ01IdnV
+         kumwn0LgrPWV331Ft8ajvDfobF0A9XalTipVW0rh+VBYUzblDhoScPsxwrWuTA8CgLwV
+         EgiOTYsXi66pxo8QNvnNCpk6uAMZP2WoT9irjvDCAoP37bEujnc2Ms5Gyg2shcstgGjD
+         gAyJPfatrT+FxwtN81merJSXeu8TaWU1PTb9xtOdnGTYRnAAuwI5PTaJlE8l2ZvTh5+t
+         ZiQKkJkfF1QuZXKOsrCz7fSMOyEauBWrHWcngvqO2jCx34y27Cqc6vi18zJGSBqCqK/E
+         r0tA==
+X-Forwarded-Encrypted: i=1; AJvYcCVLN286IfZNUw0gvVBHWI8ALamcp2L/GWuDworgBIvD44QKj1kcxCVxvbi+Zwxg74yMhQIeLY+RSDO3ZT0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTKYQ0evCfO2ZauuW1Wb9nelC5ySG3TxacwYL8twEyw9VDANvC
+	o1PtsW8v/z/ubR2M9M7B+ABynqpXOnIPjKJ+IJg2Q4disNQRgfK3nwINOw8o577ocwLzE32cFYC
+	MvhVqH0MF2IVCr7QvvV8PQLszrrjKNFonat/aQQQ5Ur9rPhepzbLKqefvlEOsVnVIQcqgg84hmQ
+	0qatwikH50ad2wRQaYOGLD/S8GGzyZ+aRJuu0oNZuyySFBrihaaWSjAh03kTnLl3BXaG6OacR0m
+	aSrGhr05WTsGSYvwnpppa83QA==
+X-Gm-Gg: ASbGncvXPb6EmecxD5k6e4MkecnHK+gxp6UzCeDjwkXMy/i0TJbnDIRpV7kq2v7wSG8
+	w3Rw53zGmICZqQ+fHjC7buMN1kqm5gl/dhYmZRW9i0YQ9DNkLZuKzOEiJvhsEr1Wf98NSaWas3E
+	ZDD8tD1qXNH1kFkf990So+wvfsT1Rsj9cDMBvvHrBxuwS97yVhR1XzABER8CGRiTSWRNK37rLL7
+	Fy/sc/gjYrzA29fGHCA2LN5vbz6IJxiVrca2ccNaGD+XZuRo0mUb5mm4kq5sEXivTPBhd8zRg6M
+	RklZ4Ft9CWVxu4PuS/daJnbfkdWHwkhaqBHHgbf4PzaESleJTQccE/2uKjSa1Yp2MvXJyl9oyZi
+	r4P9jNKo577/I2Nu6dJPR9Ri+4+NQDBDLuIb3SxSF4wmVgZbZwc1C1/ndzvx85CCaDhJVposqlF
+	TQX+e2Ew==
+X-Google-Smtp-Source: AGHT+IG9oKZJxxQkCakLC+6cx68VQ6gy9K4ZgAZ2XEJOdtrCQZEkLaOv0JfOApvhL+dAps68S4AvCFBmxhF1
+X-Received: by 2002:a17:902:e5cd:b0:242:9bbc:3646 with SMTP id d9443c01a7336-242c225abdamr178662405ad.56.1754891492235;
+        Sun, 10 Aug 2025 22:51:32 -0700 (PDT)
+Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-119.dlp.protect.broadcom.com. [144.49.247.119])
+        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-241e899b59csm18172485ad.73.2025.08.10.22.51.31
         for <linux-hyperv@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 Aug 2025 22:50:31 -0700 (PDT)
+        Sun, 10 Aug 2025 22:51:32 -0700 (PDT)
 X-Relaying-Domain: broadcom.com
 X-CFilter-Loop: Reflected
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7e7ffe84278so851737685a.2
-        for <linux-hyperv@vger.kernel.org>; Sun, 10 Aug 2025 22:50:31 -0700 (PDT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-70732006280so80728516d6.3
+        for <linux-hyperv@vger.kernel.org>; Sun, 10 Aug 2025 22:51:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1754891431; x=1755496231; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1754891491; x=1755496291; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
         bh=9FGXD3kaHwd6Vj5dcpPpaYy6WT0iTxp+nQotnuFSJvo=;
-        b=Hu/xsv1lHeaKP0Y/TICX/h21gFB3AHPyTXa/2a552THojLnYaoyz5O+I5zAsAv2t2o
-         zVi3EyAIpAUlbDL5vKFhi+TTJUMn69EfwKawAA1UCdSbK8BMrbF0ZN/YgTPQ6UW+DjOW
-         6lB2nS1uOufa45S2URM/BECqZRg3ARWqIG9WQ=
-X-Forwarded-Encrypted: i=1; AJvYcCXxwt2s7i03dFGt5W4BRoyaplmKfdWpzHfc07M2PyYOHBX9IAMydrN5/nZzVlYQkhPbOTIBR3/WQzJ68OI=@vger.kernel.org
-X-Received: by 2002:a05:620a:5783:b0:7e8:1718:daf6 with SMTP id af79cd13be357-7e82c6840b7mr1332717185a.15.1754891430876;
-        Sun, 10 Aug 2025 22:50:30 -0700 (PDT)
-X-Received: by 2002:a05:620a:5783:b0:7e8:1718:daf6 with SMTP id af79cd13be357-7e82c6840b7mr1332714785a.15.1754891430374;
-        Sun, 10 Aug 2025 22:50:30 -0700 (PDT)
+        b=HagoNJBbvs8WLIpLTExqvMa5PlAM3qXlrJWy6cq0p7jdveH0Jmk+/H+B7XHZ+y7nx8
+         /Fp0ti8epILIQgjZGX4WGgJ+pwRksrsuUpJbCJmNc0LYsRPP6jGhpgGwoTOJzzoH5aOY
+         IGKoE/Cs/J7G5FGHJKsXelDTXPeVcP9hWWlXc=
+X-Forwarded-Encrypted: i=1; AJvYcCX2HyUEEt90ZKQgfh5k2SmeQe4Oju8gQLHqcmne6kEBDmV7cofJgQwWIBnvFNC3Oy0f8zRZZ62iBXBwDCc=@vger.kernel.org
+X-Received: by 2002:a05:6214:c83:b0:707:bba:40d4 with SMTP id 6a1803df08f44-7099a1b9ccfmr151427586d6.11.1754891490827;
+        Sun, 10 Aug 2025 22:51:30 -0700 (PDT)
+X-Received: by 2002:a05:6214:c83:b0:707:bba:40d4 with SMTP id 6a1803df08f44-7099a1b9ccfmr151427376d6.11.1754891490332;
+        Sun, 10 Aug 2025 22:51:30 -0700 (PDT)
 Received: from shivania.lvn.broadcom.net ([192.19.161.250])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e8050b6101sm1021477285a.26.2025.08.10.22.50.28
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-7077c9d6d6csm150672406d6.4.2025.08.10.22.51.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Aug 2025 22:50:29 -0700 (PDT)
+        Sun, 10 Aug 2025 22:51:29 -0700 (PDT)
 From: Shivani Agarwal <shivani.agarwal@broadcom.com>
 To: stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
@@ -102,9 +102,9 @@ Cc: bcm-kernel-feedback-list@broadcom.com,
 	linux-hyperv@vger.kernel.org,
 	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
 	Shivani Agarwal <shivani.agarwal@broadcom.com>
-Subject: [PATCH] uio_hv_generic: Fix another memory leak in error handling  paths
-Date: Sun, 10 Aug 2025 22:37:08 -0700
-Message-Id: <20250811053708.145381-1-shivani.agarwal@broadcom.com>
+Subject: [PATCH v5.10] uio_hv_generic: Fix another memory leak in error handling  paths
+Date: Sun, 10 Aug 2025 22:38:08 -0700
+Message-Id: <20250811053808.145482-1-shivani.agarwal@broadcom.com>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
