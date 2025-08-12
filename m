@@ -1,151 +1,80 @@
-Return-Path: <linux-hyperv+bounces-6516-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6517-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0D55B239F3
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Aug 2025 22:30:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 171F4B23C68
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Aug 2025 01:47:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E0D212A7BEF
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Aug 2025 20:30:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 59BC81A25F8F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Aug 2025 23:47:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 275F93594F;
-	Tue, 12 Aug 2025 20:30:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F84A27BF95;
+	Tue, 12 Aug 2025 23:47:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PKBYSynD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h7+b0Qzm"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 950C52F0693;
-	Tue, 12 Aug 2025 20:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57BA4C92;
+	Tue, 12 Aug 2025 23:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755030617; cv=none; b=rFTL6Oqq7HUaMnJKxOJ/gZofcyZpaPrS5cbMOG+zYvgwXMF89AJake5PHE7WdwnhrO+xfE+XW95ss4P93gYKQOBf40va4oOjqut/4Wm8mmjCTnSfzLSEkaa1MiCrDh7Pho0dSG5cr2szi68lnRBkwY61RNOuAQS9WWWr3W4pc0Y=
+	t=1755042432; cv=none; b=oX3puKIb4w3QMHq8oFXiW670X+naQ/OrbWIeseLF7gc8aeWNRRXcHq54uBlmVbMF+JaaXsw7zi3UyLuS+/P4gG+Dvq20n6IDjL1U8dz14m3qe0uHwCCCgeD2jJY5vkJsr2yWp4sVviUe/aqbm46E+PEWY9RRfHnuubZwRPDndno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755030617; c=relaxed/simple;
-	bh=lIpmLMAiZ52nvcInx8bvEbyXOzEr2wlgUxL4u7rKJSE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kXpzusDJZbCv8u8SzMZwbiOJIkFQaBch6VYGDn9/vMOlDw15WVkg9ku7yaxo7SHrl27p63Xl5ejfwPXA+uYQZpeD1Jfw2FVAP8qb14RRqgHQ3BivIHZ+4dP15bHeiNs4j/JitVAn9d/iEbonTsV+E6WkLQUAaNf//oyUeVrOIDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PKBYSynD; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.65.217.112] (unknown [20.236.11.69])
-	by linux.microsoft.com (Postfix) with ESMTPSA id B2CF12119397;
-	Tue, 12 Aug 2025 13:30:09 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B2CF12119397
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1755030610;
-	bh=+dHVx0X/rHhwboPhpxe6uj0DRnhjEIQ93tWrA66yv4Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PKBYSynDYXtU/TJg3NA96rNjFkJZ+BiZm3j0+wonLvW9BUELLe1TbHZF02STc9V9F
-	 XHHVR+ZKShNMz9eiockA85kJQLyUGBf7abLJCelacEzn7JkaTxi80R+aCZuLNzgMCh
-	 KuDhH3p6pHlLfarL2AJSbGHfYUWDEPrK94voDwsA=
-Message-ID: <2c1fcdbb-5b50-4a41-9adf-f3b815624f81@linux.microsoft.com>
-Date: Tue, 12 Aug 2025 13:30:03 -0700
+	s=arc-20240116; t=1755042432; c=relaxed/simple;
+	bh=6/+orTgGYBQfHXPoerjO8V9IKyQHK1j/VpihArC4tGQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j7RZux2Lx29gB/uECp1UHi0bMwxVqYJNOAVYnhrQrPre/yyTxnXEna7hoqTx2FZ77MI/vG3wh7+3e2QLElgNYb5AslI61apm8OU0esWaAo4Bxasy8//6R9bEmRHZEVHKyfcyy1S4ZAI7YVKAaISRyyTDhqgjJmJZqWfWHqL/Jpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h7+b0Qzm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4825FC4CEF0;
+	Tue, 12 Aug 2025 23:47:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755042431;
+	bh=6/+orTgGYBQfHXPoerjO8V9IKyQHK1j/VpihArC4tGQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h7+b0Qzm64vGjtcIXKsO7ef+X3Cj0DsR/4Nq/RPnvkMLFHcmJBxhHkrnTTxAjDTDV
+	 dvVMxJO95zCT/bfXQQarkH4bvygThDl4uVqROsi5qMKA06UislR6SVRssodHiZotfn
+	 ohk1jjxyHAP02diqTrAUkPQfFuG1ovB1mnM1+rPlkZJzko0wiZ9Byu0w8mPUSAlBI/
+	 zW9ymEWAybMq6DrgZRGyrwJQhSeLZj9X8pPSqXfUXU5nK48cvhbz7VOW1dIP08lCBw
+	 Ow+jiKV4pTqa2B2YQ9p7lfrsl8iugrKdBZPyPQvKH2CIf9DEG0JQaGzm3SSPwY/3U2
+	 e/n/s7l+MAagA==
+Date: Tue, 12 Aug 2025 23:47:10 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Tianyu Lan <ltykernel@gmail.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, arnd@arndb.de, Neeraj.Upadhyay@amd.com,
+	kvijayab@amd.com, Tianyu Lan <tiala@microsoft.com>,
+	linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH V6 0/4 Resend] x86/Hyper-V: Add AMD Secure AVIC for
+ Hyper-V platform
+Message-ID: <aJvSfmmArKeEsD01@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+References: <20250806121855.442103-1-ltykernel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] clocksource: hyper-v: Skip unnecessary checks for the
- root partition
-To: Wei Liu <wei.liu@kernel.org>,
- Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
-Cc: mhklinux@outlook.com, "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Dexuan Cui <decui@microsoft.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Daniel Lezcano
- <daniel.lezcano@linaro.org>,
- "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
- <linux-kernel@vger.kernel.org>
-References: <20250812194846.2647201-1-wei.liu@kernel.org>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <20250812194846.2647201-1-wei.liu@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250806121855.442103-1-ltykernel@gmail.com>
 
-On 8/12/2025 2:48 PM, Wei Liu wrote:
-> The HV_ACCESS_TSC_INVARIANT bit is always zero when Linux runs as the
-> root partition. The root partition will see directly what the hardware
-> provides.
-> 
-> The old logic in ms_hyperv_init_platform caused the native TSC clock
-> source to be incorrectly marked as unstable on x86. Fix it.
-> 
-> Skip the unnecessary checks in code for the root partition. Add one
-> extra comment in code to clarify the behavior.
-> 
-> Signed-off-by: Wei Liu <wei.liu@kernel.org>
-> ---
-> v2: update the commit message and comments
-> ---
->  arch/x86/kernel/cpu/mshyperv.c     | 11 ++++++++++-
->  drivers/clocksource/hyperv_timer.c | 10 +++++++++-
->  2 files changed, 19 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-> index c78f860419d6..25773af116bc 100644
-> --- a/arch/x86/kernel/cpu/mshyperv.c
-> +++ b/arch/x86/kernel/cpu/mshyperv.c
-> @@ -565,6 +565,11 @@ static void __init ms_hyperv_init_platform(void)
->  	machine_ops.crash_shutdown = hv_machine_crash_shutdown;
->  #endif
->  #endif
-> +	/*
-> +	 * HV_ACCESS_TSC_INVARIANT is always zero for the root partition. Root
-> +	 * partition doesn't need to write to synthetic MSR to enable invariant
-> +	 * TSC feature. It sees what the hardware provides.
-> +	 */
->  	if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) {
->  		/*
->  		 * Writing to synthetic MSR 0x40000118 updates/changes the
-> @@ -636,8 +641,12 @@ static void __init ms_hyperv_init_platform(void)
->  	 * TSC should be marked as unstable only after Hyper-V
->  	 * clocksource has been initialized. This ensures that the
->  	 * stability of the sched_clock is not altered.
-> +	 *
-> +	 * HV_ACCESS_TSC_INVARIANT is always zero for the root partition. No
-> +	 * need to check for it.
->  	 */
-> -	if (!(ms_hyperv.features & HV_ACCESS_TSC_INVARIANT))
-> +	if (!hv_root_partition() &&
-> +	    !(ms_hyperv.features & HV_ACCESS_TSC_INVARIANT))
->  		mark_tsc_unstable("running on Hyper-V");
->  
->  	hardlockup_detector_disable();
-> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-> index 2edc13ca184e..ca39044a4a60 100644
-> --- a/drivers/clocksource/hyperv_timer.c
-> +++ b/drivers/clocksource/hyperv_timer.c
-> @@ -549,14 +549,22 @@ static void __init hv_init_tsc_clocksource(void)
->  	union hv_reference_tsc_msr tsc_msr;
->  
->  	/*
-> +	 * When running as a guest partition:
-> +	 *
->  	 * If Hyper-V offers TSC_INVARIANT, then the virtualized TSC correctly
->  	 * handles frequency and offset changes due to live migration,
->  	 * pause/resume, and other VM management operations.  So lower the
->  	 * Hyper-V Reference TSC rating, causing the generic TSC to be used.
->  	 * TSC_INVARIANT is not offered on ARM64, so the Hyper-V Reference
->  	 * TSC will be preferred over the virtualized ARM64 arch counter.
-> +	 *
-> +	 * When running as the root partition:
-> +	 *
-> +	 * There is no HV_ACCESS_TSC_INVARIANT feature. Skip the unnecessary
-> +	 * check.
->  	 */
-> -	if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) {
-> +	if ((ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) ||
-> +	    hv_root_partition()) {
->  		hyperv_cs_tsc.rating = 250;
->  		hyperv_cs_msr.rating = 245;
->  	}
+On Wed, Aug 06, 2025 at 08:18:51PM +0800, Tianyu Lan wrote:
+> From: Tianyu Lan <tiala@microsoft.com>
+[...]
+> Tianyu Lan (4):
+>   x86/hyperv: Don't use hv apic driver when Secure AVIC is available
+>   Drivers: hv: Allow vmbus message synic interrupt injected from Hyper-V
+>   x86/hyperv: Don't use auto-eoi when Secure AVIC is available
+>   x86/hyperv: Allow Hyper-V to inject STIMER0 interrupts
 
-Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Are they still RFC? They look like ready to be merged.
+
+Wei
 
