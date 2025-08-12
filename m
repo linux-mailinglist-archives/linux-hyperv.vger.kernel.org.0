@@ -1,75 +1,75 @@
-Return-Path: <linux-hyperv+bounces-6515-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6516-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A912B23988
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Aug 2025 22:02:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0D55B239F3
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Aug 2025 22:30:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0E7DE7ADE98
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Aug 2025 20:01:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E0D212A7BEF
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Aug 2025 20:30:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D32962D061C;
-	Tue, 12 Aug 2025 20:02:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 275F93594F;
+	Tue, 12 Aug 2025 20:30:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YE/ROOdy"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PKBYSynD"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5312D0606;
-	Tue, 12 Aug 2025 20:02:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 950C52F0693;
+	Tue, 12 Aug 2025 20:30:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755028960; cv=none; b=j4BztiyTqKmdxsMduRZK3bwLJ+UcR3ZoT9r7xTanPNK667rHpy2czqo87jfjeU+QVkQovFyJpIqAKQReWv4giuhHD/u4Mk26kjd22y78KYEJEe3I42KkggsP/GpPrirjJ+hch0FnKuYzi8UPNRBTp7g4g/pfl6j0J+3t3hmhg/Y=
+	t=1755030617; cv=none; b=rFTL6Oqq7HUaMnJKxOJ/gZofcyZpaPrS5cbMOG+zYvgwXMF89AJake5PHE7WdwnhrO+xfE+XW95ss4P93gYKQOBf40va4oOjqut/4Wm8mmjCTnSfzLSEkaa1MiCrDh7Pho0dSG5cr2szi68lnRBkwY61RNOuAQS9WWWr3W4pc0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755028960; c=relaxed/simple;
-	bh=0RsBwmg31EpE24cEA4dj2/p45i8WLilyQ0OfnZkcq3A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I/Wlad9azPwSDrev2dEG28x6L32h20kuJzOV6ruX+AuTXSaWBw/lQp7WQ0inLoguMMeiz299IuV6rqjB1HWGKoFPKbtxgOFkO3YVrVpYszrqwaNXWAx4/zzi58JzNT5HU8uPe9HiFKzi5yU/woUeFYvYgxmpSMfjjmOx8LuAcdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YE/ROOdy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45C41C4CEF0;
-	Tue, 12 Aug 2025 20:02:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755028960;
-	bh=0RsBwmg31EpE24cEA4dj2/p45i8WLilyQ0OfnZkcq3A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YE/ROOdydf6CzYft0e3Ph0rVzrzexhYZIEGIz9dCydKDct+KwkAHX8GP8PsO1Y/oY
-	 vriYgbXKdKnMc0Px3ukKCRrchfks9P1QVVYfkIJIeYSGcfOc2PN2i7hTEFSV56AlQP
-	 fT+iSqijSoJEEtH+h/zMFAi4sT9ivMTQ63WJcD58V2BzWxOYdccIuyZMjrz+Vlivfa
-	 q8zjVUbi2oah6H2cvKfzCY/hu6p5n5/bQu8OegH08JOMZkK6IcZ6rARLjwpNjDLqS+
-	 vfJLO0qK/jj6peXTivNp0PbsATDZl/AQ+EMmwWfChRTvrUABAng6myV0fmKaUDrUy1
-	 Lf6eQ9WZ2HN0A==
-Date: Tue, 12 Aug 2025 20:02:38 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
-Cc: mhklinux@outlook.com, Wei Liu <wei.liu@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] clocksource: hyper-v: Skip unnecessary checks for the
- root partition
-Message-ID: <aJud3lUtbtNo9R2K@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <20250812194846.2647201-1-wei.liu@kernel.org>
+	s=arc-20240116; t=1755030617; c=relaxed/simple;
+	bh=lIpmLMAiZ52nvcInx8bvEbyXOzEr2wlgUxL4u7rKJSE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kXpzusDJZbCv8u8SzMZwbiOJIkFQaBch6VYGDn9/vMOlDw15WVkg9ku7yaxo7SHrl27p63Xl5ejfwPXA+uYQZpeD1Jfw2FVAP8qb14RRqgHQ3BivIHZ+4dP15bHeiNs4j/JitVAn9d/iEbonTsV+E6WkLQUAaNf//oyUeVrOIDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PKBYSynD; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.65.217.112] (unknown [20.236.11.69])
+	by linux.microsoft.com (Postfix) with ESMTPSA id B2CF12119397;
+	Tue, 12 Aug 2025 13:30:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B2CF12119397
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1755030610;
+	bh=+dHVx0X/rHhwboPhpxe6uj0DRnhjEIQ93tWrA66yv4Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PKBYSynDYXtU/TJg3NA96rNjFkJZ+BiZm3j0+wonLvW9BUELLe1TbHZF02STc9V9F
+	 XHHVR+ZKShNMz9eiockA85kJQLyUGBf7abLJCelacEzn7JkaTxi80R+aCZuLNzgMCh
+	 KuDhH3p6pHlLfarL2AJSbGHfYUWDEPrK94voDwsA=
+Message-ID: <2c1fcdbb-5b50-4a41-9adf-f3b815624f81@linux.microsoft.com>
+Date: Tue, 12 Aug 2025 13:30:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] clocksource: hyper-v: Skip unnecessary checks for the
+ root partition
+To: Wei Liu <wei.liu@kernel.org>,
+ Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
+Cc: mhklinux@outlook.com, "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Dexuan Cui <decui@microsoft.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Daniel Lezcano
+ <daniel.lezcano@linaro.org>,
+ "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
+ <linux-kernel@vger.kernel.org>
+References: <20250812194846.2647201-1-wei.liu@kernel.org>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 In-Reply-To: <20250812194846.2647201-1-wei.liu@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Aug 12, 2025 at 07:48:45PM +0000, Wei Liu wrote:
+On 8/12/2025 2:48 PM, Wei Liu wrote:
 > The HV_ACCESS_TSC_INVARIANT bit is always zero when Linux runs as the
 > root partition. The root partition will see directly what the hardware
 > provides.
@@ -139,12 +139,6 @@ On Tue, Aug 12, 2025 at 07:48:45PM +0000, Wei Liu wrote:
 > +	 *
 > +	 * There is no HV_ACCESS_TSC_INVARIANT feature. Skip the unnecessary
 > +	 * check.
-
-This comment needs to be changed.
-
-	 * There is no HV_ACCESS_TSC_INVARIANT feature. Always lower the
-	 * rating of the Hyper-V Reference TSC.
-
 >  	 */
 > -	if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) {
 > +	if ((ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) ||
@@ -152,7 +146,6 @@ This comment needs to be changed.
 >  		hyperv_cs_tsc.rating = 250;
 >  		hyperv_cs_msr.rating = 245;
 >  	}
-> -- 
-> 2.43.0
-> 
+
+Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 
