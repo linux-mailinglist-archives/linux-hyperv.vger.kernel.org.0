@@ -1,59 +1,63 @@
-Return-Path: <linux-hyperv+bounces-6518-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6519-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19262B23CD9
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Aug 2025 01:59:49 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E007B23CDF
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Aug 2025 02:00:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF44C6E6BBD
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Aug 2025 23:58:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BA4EF7B4607
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Aug 2025 23:59:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4A672E9EC1;
-	Tue, 12 Aug 2025 23:58:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFCBE2C0F7A;
+	Wed, 13 Aug 2025 00:00:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PjYQXFJn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BUDh9sR5"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56C12E92C0;
-	Tue, 12 Aug 2025 23:58:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870F62C0F8F;
+	Wed, 13 Aug 2025 00:00:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755043134; cv=none; b=LJVRfPH7+7SdBQ9XpXeYcdQiN6oWuFcr2aHqKEsbKsJgEF4feo7sye9RtdsvbMTNZOC/zHYy6IpIpE6F5mkI43yclGkD32r9jodB/evNCu5z67V673hGCB9xRqzjg7yMdbNFah418epdSU3RZ2RfP4cL1lRwBwMse7VXRpHTECc=
+	t=1755043249; cv=none; b=GBXGomT49Scl/zjCskTzc8BIGybS6AbYF3ihlbxfa8squ6UjJnVdxWwkvPsDfrLW2+d9w5cq755nLh3aKA7k4SWPJilxbrqTkUeCYBVgW+SBFbCaNNxHKnh2FLRe9psfzLbYKmXaIZOBmsceEecxgHuUeLtz1v9WWWNMA/U8o/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755043134; c=relaxed/simple;
-	bh=6RTpC3D8LV0nbW7I0DLWD1vO3AMzBQzn+vJfUMCi94o=;
+	s=arc-20240116; t=1755043249; c=relaxed/simple;
+	bh=QrOiOF47ri4aPRUpZUrkbIHzpQeRsM917B4y71IYzXE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cHw7/Chtc5p/IV67XofhT6JTNR0NNnAKT6CAJQfMLhppbWcHnbWR+PK0YKgHzE99OpWOSU3lZ0BA+agW+NW6hAJVcoLa2ml+VieIduG8z6rjIB7w1KgJFjwi2lZSquSoxa6TwfCO8SCH1lAuL2uquXgIQlGjCOE83tj8dYs0SpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PjYQXFJn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDE5FC4CEF0;
-	Tue, 12 Aug 2025 23:58:52 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=kuazfJ4JxSbDg3maaHPsTUuIeiOjydjb9kL6iwG9DZqZdho0JRIE2PjNcYwLPGbDCHpUsnPZtJfWQ3XwU3rARxJlInmGZ31mOb5A5U2EitUMMtWe4IhlvkowVNIvhd8l6oxpPJPtRgJIvZ9ixMd5QXHI3qJ8NieZuot5qEYch3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BUDh9sR5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0E55C4CEF0;
+	Wed, 13 Aug 2025 00:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755043133;
-	bh=6RTpC3D8LV0nbW7I0DLWD1vO3AMzBQzn+vJfUMCi94o=;
+	s=k20201202; t=1755043249;
+	bh=QrOiOF47ri4aPRUpZUrkbIHzpQeRsM917B4y71IYzXE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PjYQXFJn9iKvqzwdnILDMBZyIZTff9TliAadgE1bYFKAEExQ3FeU3YpM/INxxjmCU
-	 05p8dwY2uSWRGCNqHUMK92ufC/MBPD7sBw5MHZmGaD8Vm9uMO6guqfP6f9XU7UIEfW
-	 wkbMKG235glKvSIMMn6QA7SgeJRmxUQsDJ/qWDE1nQuRtWnGA6A/iPxmzU/YmVax4w
-	 Xw7waM9D6y3HIH9csD+/hIiD1wGxK2mViZF5K6znwuuCaWzjA3JuSS/M+8tZJIrDei
-	 gafFgMny6fH9f6gmO4QfLdEBeKOs4UZs2jc1DShkGIGW+R5mzE5bQBmRwFXPZgOZ69
-	 HBhRLx2n2sqBQ==
-Date: Tue, 12 Aug 2025 23:58:51 +0000
+	b=BUDh9sR5VGg/zIwOmCXtZBsu9zcfsEY9G0I64WdW8b945JoAfJdf32v5aZUUV1wBj
+	 6uE9+2ZukZXMFttKS8So1eR9X9vPtr0WsyTnwx7vqgw38RM1ilWqSodHtEanXhPV6G
+	 g/B897LmYaWWy4Me9+SN+aj7N/mA0r6MK/cPNZ8Sp+q+A/+ONAzf0zpFITVGow+HGI
+	 PwF5oSH9kBWT37W/YMwQqpm6vZBB8uYiHwURJJScLPWsKjBCPC0+asO1/AuqxOuuDU
+	 v5zD9c9gxOBaMwdiQu90SaTzJsB5BLRE2UPGmTeYXyD1kfSkqb/GUsiIkTGZkYuZuq
+	 BqkaWtht/aa/g==
+Date: Wed, 13 Aug 2025 00:00:47 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: mhklinux@outlook.com
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-	lpieralisi@kernel.org, kw@linux.com, mani@kernel.org,
-	robh@kernel.org, bhelgaas@google.com, arnd@arndb.de, x86@kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH v4 0/7] hyperv: Introduce new way to manage hypercall args
-Message-ID: <aJvVO8d1JdK9mchO@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <20250718045545.517620-1-mhklinux@outlook.com>
+To: Naman Jain <namjain@linux.microsoft.com>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Roman Kisel <romank@linux.microsoft.com>,
+	Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	ALOK TIWARI <alok.a.tiwari@oracle.com>,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v7 0/2] Drivers: hv: Introduce new driver - mshv_vtl
+Message-ID: <aJvVr0R1JZEnYBLj@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+References: <20250729051436.190703-1-namjain@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -62,22 +66,14 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250718045545.517620-1-mhklinux@outlook.com>
+In-Reply-To: <20250729051436.190703-1-namjain@linux.microsoft.com>
 
-On Thu, Jul 17, 2025 at 09:55:38PM -0700, mhkelley58@gmail.com wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
-> 
+On Tue, Jul 29, 2025 at 10:44:34AM +0530, Naman Jain wrote:
 [...]
 > 
-> Michael Kelley (7):
->   Drivers: hv: Introduce hv_setup_*() functions for hypercall arguments
->   x86/hyperv: Use hv_setup_*() to set up hypercall arguments -- part 1
->   x86/hyperv: Use hv_setup_*() to set up hypercall arguments -- part 2
->   Drivers: hv: Use hv_setup_*() to set up hypercall arguments
->   PCI: hv: Use hv_setup_*() to set up hypercall arguments
->   Drivers: hv: Use hv_setup_*() to set up hypercall arguments for mshv
->     code
->   Drivers: hv: Replace hyperv_pcpu_input/output_arg with hyperv_pcpu_arg
+> Naman Jain (2):
+>   Drivers: hv: Export some symbols for mshv_vtl
+>   Drivers: hv: Introduce mshv_vtl driver
 
-Queued for inclusion into hyperv-next. Thanks!
+Queued for hyperv-next, thanks!
 
