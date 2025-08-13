@@ -1,90 +1,100 @@
-Return-Path: <linux-hyperv+bounces-6531-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6532-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74CB5B25688
-	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Aug 2025 00:20:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id ABA09B257BD
+	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Aug 2025 01:49:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CBFF21B68257
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Aug 2025 22:21:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B1831C82D70
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Aug 2025 23:49:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C574302758;
-	Wed, 13 Aug 2025 22:20:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5595930146A;
+	Wed, 13 Aug 2025 23:48:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fL0LUDuk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oa6iEQeo"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F139E302754;
-	Wed, 13 Aug 2025 22:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A2D2BD5B0;
+	Wed, 13 Aug 2025 23:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755123646; cv=none; b=NUfb+wfsdLriDM0B3JDnXFwxWxgrN+s9aBQ8r1vrzNDnxLpedTJfeKwmn7zHQ1tXqTDofiZkInFnI+rZ1EN5QPMu6MJIITrugcsPe6QxHvlumPURjCaIdT63dwX71NfGbB2pKx5zTFTpisFniS76tnMnpDGibYyiaO7zvTwE3nw=
+	t=1755128929; cv=none; b=Xj3yfabvwUuD9cLLLEtyurNdMapuUtpR7msqQH+/c7wGcx9/RFHcriSuiwpahRw2OE9i8An4N25IROpipcSGMgMcHrwrlANPF/74puSf+9dx5A20EfGqS3Ay8Lfc67c1CN0wbW3O6X74rGQCqOnK09ifAuboqWuPmnjR27GIC98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755123646; c=relaxed/simple;
-	bh=qlGnq/rCepwhQr34eD2F7PHOad/LDS/SRna+9hjGm5Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N3uNuf95fiWatQfoJTxRi7TDXhIqj8m6rdP3rRRU6i0ZGubWYU1JOLozDVoGhZNWT1WJzDrQBzwIeFphaCZ7ldrIXZF4ZpV0ZoCD2JyHj98gKeppom5eGhLLcM7k3094Hl92D+cl8Cgn0fzw4KKjhQ8BFBz9gPuQqo8Hx8QI9kA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=fL0LUDuk; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.65.233.210] (unknown [20.236.10.206])
-	by linux.microsoft.com (Postfix) with ESMTPSA id E05442015E5B;
-	Wed, 13 Aug 2025 15:20:43 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E05442015E5B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1755123644;
-	bh=G//HTfFerFTsStS2M8GQ6ImUYqRelSJupH7lhv28YZg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fL0LUDuk5y7E6+SAFMtAG+clu339wJHE1fZIla2IHvc6yvzkfuo1Z9kLUcXwJY5dS
-	 t9hmf5s7JdWM7lPI/hWjFNazqwEOxoCnLYZ8GNE3jGDv3LID0PgZzUVXtnDTjyuPKH
-	 UDCjPhxJuwESgb9fZI560y7O7yXoc1Bj08exlVtM=
-Message-ID: <367fa213-8b92-49fa-bde9-380deb7fdde0@linux.microsoft.com>
-Date: Wed, 13 Aug 2025 15:20:43 -0700
+	s=arc-20240116; t=1755128929; c=relaxed/simple;
+	bh=eS3xL90Y3tS+K19RMUEzHgxObEqUmzm3La4nnxzcm8c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OIyuJ3jcQs206ynbi6IVnoFjwLHpvnYJNvMPfvhvgLLI1EPeSsO3BeuqglTA4sT+JoToesl8dV3Il5qg1O5GmMrYu2qhE1txbC9wOYAHllPZjRFmw3sS79Rq39YYWc/LleZTpy7qxvvChCXB3xN+BfYW706aS5zb9yfteoUMJdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oa6iEQeo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7433C4CEEB;
+	Wed, 13 Aug 2025 23:48:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755128928;
+	bh=eS3xL90Y3tS+K19RMUEzHgxObEqUmzm3La4nnxzcm8c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Oa6iEQeodc92Y6V40cf92rpkiCb2j717T4lLJaGT2jz8XDaqm2ME3dHvfP6QIuNvJ
+	 B5tFZHSsodpWrEWiY4V9OHSN2xSOARFMyTIzfarrknVwGE18ff47LlzzXGFAFFwWnD
+	 B1FabfTrq/XcCIgcLPjvlQ3CEOowucksU53BrknlwV3od3SX1KtN7Y8+U1EduRRUW9
+	 mbNquYKrcIhHQDHjs7zq58bz+CkR0mDPdmiDXar7KJG+M7VO4xZYasq1MHRC05Et0c
+	 h2fyNvCtmu1O4sX3c5nhQKSxW9jUpc7xyfs2WPj8LVuYhTz1uHzDC1t9ijMDVY0CTs
+	 qjfl/sKe6ZTKw==
+Date: Wed, 13 Aug 2025 16:48:47 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+Cc: horms@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ longli@microsoft.com, kotaranov@microsoft.com, ast@kernel.org,
+ daniel@iogearbox.net, hawk@kernel.org, john.fastabend@gmail.com,
+ sdf@fomichev.me, lorenzo@kernel.org, michal.kubiak@intel.com,
+ ernis@linux.microsoft.com, shradhagupta@linux.microsoft.com,
+ shirazsaleem@microsoft.com, rosenp@gmail.com, netdev@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org, dipayanroy@microsoft.com
+Subject: Re: [PATCH net-next v4] net: mana: Use page pool fragments for RX
+ buffers instead of full pages to improve memory efficiency.
+Message-ID: <20250813164847.62ade421@kernel.org>
+In-Reply-To: <20250811222919.GA25951@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20250811222919.GA25951@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 7/7] Drivers: hv: Replace hyperv_pcpu_input/output_arg
- with hyperv_pcpu_arg
-To: mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- lpieralisi@kernel.org, kw@linux.com, mani@kernel.org, robh@kernel.org,
- bhelgaas@google.com, arnd@arndb.de
-Cc: x86@kernel.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-arch@vger.kernel.org
-References: <20250718045545.517620-1-mhklinux@outlook.com>
- <20250718045545.517620-8-mhklinux@outlook.com>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <20250718045545.517620-8-mhklinux@outlook.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 7/17/2025 11:55 PM, mhkelley58@gmail.com wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
-> 
-> All open coded uses of hyperv_pcpu_input_arg and hyperv_pcpu_ouput_arg
-> have been replaced by hv_setup_*() functions. So combine
-> hyperv_pcpu_input_arg and hyperv_pcpu_output_arg in a single
-> hyperv_pcpu_arg. Remove logic for managing a separate output arg. Fixup
-> comment references to the old variable names.
-> 
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-> ---
->  arch/x86/hyperv/hv_init.c      |  6 ++--
->  drivers/hv/hv.c                |  2 +-
->  drivers/hv/hv_common.c         | 55 ++++++++++------------------------
->  drivers/hv/hyperv_vmbus.h      |  2 +-
->  include/asm-generic/mshyperv.h |  6 +---
->  5 files changed, 22 insertions(+), 49 deletions(-)
-> 
+On Mon, 11 Aug 2025 15:29:19 -0700 Dipayaan Roy wrote:
+> -	if (apc->port_is_up)
+> +	if (apc->port_is_up) {
+> +		/* Re-create rxq's after xdp prog was loaded or unloaded.
+> +		 * Ex: re create rxq's to switch from full pages to smaller
+> +		 * size page fragments when xdp prog is unloaded and
+> +		 * vice-versa.
+> +		 */
+> +
+> +		/* Pre-allocate buffers to prevent failure in mana_attach */
+> +		err = mana_pre_alloc_rxbufs(apc, ndev->mtu, apc->num_queues);
+> +		if (err) {
+> +			NL_SET_ERR_MSG_MOD
+> +			    (extack,
+> +			    "XDP: Insufficient memory for tx/rx re-config");
 
-Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+This weird line breaking is not necessary, checkpatch understands that
+string can go over line limit:
+
+			NL_SET_ERR_MSG_MOD(extack,
+					   "XDP: Insufficient memory for tx/rx re-config");
+
+> +			return err;
+
+I think you already replaced the bpf program at this point? 
+So the allocation should happen earlier. On failure changes
+to the driver state should be undone.
+-- 
+pw-bot: cr
 
