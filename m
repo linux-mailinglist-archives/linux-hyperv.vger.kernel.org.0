@@ -1,84 +1,208 @@
-Return-Path: <linux-hyperv+bounces-6528-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6529-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D1BEB252EB
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Aug 2025 20:21:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 44126B252F6
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Aug 2025 20:22:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 29E63625B95
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Aug 2025 18:21:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C939682A58
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Aug 2025 18:22:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86AE62D542A;
-	Wed, 13 Aug 2025 18:21:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F8102E1C79;
+	Wed, 13 Aug 2025 18:22:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mWrUALt3"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qKhTYfjX"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 451ED19F424;
-	Wed, 13 Aug 2025 18:21:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FCEF29B8E0;
+	Wed, 13 Aug 2025 18:22:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755109269; cv=none; b=SieB24VbTJI6lwNQ5gDfcTKTo1Qj/xLAd7jwWe3XBsfeJPsH6EII1IMlJNC5ZkTUMTtGW2cwTyfBzhORxTb5z9m5XupZL8EeKm/Zry0zUGX03pYI7tA3h4R3Gtv6G/VfGLgJBZT6Ovi5DEcLLDQ1cU35Fs5ohV7GxUQXcvmWR6A=
+	t=1755109331; cv=none; b=i0oco+aUghxcTcvL3XogY0iR+H6sCBHkMwjgD8YxG89R31GSMyAFk5Ffg1JCNVgox/ZRgy8PYdKXpE0f5+tfC2sAYSFuLhqdQhRaB0XaRX4FdECsBU3Qib2lKuJNjc1aeq8/CysLKnvtGudCZdQf/2gY1VKbJiMTjRcYTaTWGSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755109269; c=relaxed/simple;
-	bh=846L2+wRwbpVBV8ISFT9I6Sl5n4RsK9xhcfXRllaVNY=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=Gpx/3m8U7Bye7Bbp+twN/bV2MPIiD9nU9/EALK8kVRWMGoj1RV04joK7R0vdw1sIQQ9caYqO64PDzJnV4m8FEciZDA6mv8aQyTKAMW7ln3RCwMyPvec1KBnbef3AvO367DU4I+pJDpaYqOgF0UQaXAk0rwEJG1+322d9Ko+c7vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=mWrUALt3; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1755109331; c=relaxed/simple;
+	bh=AqU2IMFeqOxQWj657QC74iFAE/hXe6S6OPaLerga4nY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZYNvKwzmD/beHYB5x7JDe2CmEh7JbJyntTl8MKI8ZFogRhoYnlyHsKTes4L2Is9q8U3dSqdApMgKlIcKukr6Vt38A9/JTykBkiAVTwmalWWAeT/t3pphlt8cTGTOHGEpj/K8nKnDLyaMpo15adXCGei3b5Lt/jiFUov80sUNbKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qKhTYfjX; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1032)
-	id 7E0DD2015E4F; Wed, 13 Aug 2025 11:21:01 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7E0DD2015E4F
+Received: from [100.64.193.61] (unknown [52.148.140.42])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5E1282015E4F;
+	Wed, 13 Aug 2025 11:22:08 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5E1282015E4F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1755109261;
-	bh=u8/iK/QY+uPxZyfY30n8vKflh0t0ibTXJMyJRTsEY+I=;
-	h=From:To:Cc:Subject:Date:From;
-	b=mWrUALt3bNiCdaUmulEIgz/MtsswXsiv8UCW+JPEAnR8T8y1ag93z4H6HgQhApyKw
-	 VqGiwT782SEiZSMYDBFcmjMLER4w18vDXW8/hPof1nkul0yyvKUL37xXja4zY2gZRs
-	 eJktdYEcIAG5y3Zrs3zGzDuNzSI7zHnE8jI4D/4c=
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	mhklinux@outlook.com,
-	decui@microsoft.com,
-	Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Subject: [PATCH] hyperv: Add missing field to hv_output_map_device_interrupt
-Date: Wed, 13 Aug 2025 11:20:57 -0700
-Message-Id: <1755109257-6893-1-git-send-email-nunodasneves@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	s=default; t=1755109328;
+	bh=t2ywwPFabVnOG15AO5jidTUL84ffRSYWWqYPwdh+S1A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qKhTYfjX03HueRY03FRqUnqtfItWTFNq5PNyXPaPRDPDOD7BctBhTPCWXkTXTxgpD
+	 oQKB3+gb8LLKa9MBXN4XS+aRUAtLEzHnE59nbprYmhgjbXYXFJTUQLS++TS28N1wck
+	 v3kABbnnVVpwQpS2VY1xSgsW1JHcK6kBYBvMCjAU=
+Message-ID: <09481080-314f-4664-96ea-e34bc35dde08@linux.microsoft.com>
+Date: Wed, 13 Aug 2025 11:22:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/7] x86/hyperv: Use hv_setup_*() to set up hypercall
+ arguments -- part 1
+To: Wei Liu <wei.liu@kernel.org>
+Cc: mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
+ decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, lpieralisi@kernel.org,
+ kw@linux.com, mani@kernel.org, robh@kernel.org, bhelgaas@google.com,
+ arnd@arndb.de, x86@kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arch@vger.kernel.org
+References: <20250718045545.517620-1-mhklinux@outlook.com>
+ <20250718045545.517620-3-mhklinux@outlook.com>
+ <252e58be-4377-49b7-a572-0d40f54993d1@linux.microsoft.com>
+ <aJvfMN5BhyO5Ap5m@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <aJvfMN5BhyO5Ap5m@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This field is unused, but the correct structure size is needed
-when computing the amount of space for the output argument to
-reside, so that it does not cross a page boundary.
+On 8/12/2025 7:41 PM, Wei Liu wrote:
+> On Tue, Aug 12, 2025 at 05:22:29PM -0700, Nuno Das Neves wrote:
+>> On 7/17/2025 11:55 PM, mhkelley58@gmail.com wrote:
+>>> From: Michael Kelley <mhklinux@outlook.com>
+>>>
+>>> Update hypercall call sites to use the new hv_setup_*() functions
+>>> to set up hypercall arguments. Since these functions zero the
+>>> fixed portion of input memory, remove now redundant calls to memset()
+>>> and explicit zero'ing of input fields.
+>>>
+>>> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+>>> Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+>>> ---
+>>>
+>>> Notes:
+>>>     Changes in v4:
+>>>     * Rename hv_hvcall_*() functions to hv_setup_*() [Easwar Hariharan]
+>>>     * Rename hv_hvcall_in_batch_size() to hv_get_input_batch_size()
+>>>       [Easwar Hariharan]
+>>>     
+>>>     Changes in v2:
+>>>     * Fixed get_vtl() and hv_vtl_apicid_to_vp_id() to properly treat the input
+>>>       and output arguments as arrays [Nuno Das Neves]
+>>>     * Enhanced __send_ipi_mask_ex() and hv_map_interrupt() to check the number
+>>>       of computed banks in the hv_vpset against the batch_size. Since an
+>>>       hv_vpset currently represents a maximum of 4096 CPUs, the hv_vpset size
+>>>       does not exceed 512 bytes and there should always be sufficent space. But
+>>>       do the check just in case something changes. [Nuno Das Neves]
+>>>
+>>
+>> <snip>
+>>
+>>> diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
+>>> index 090f5ac9f492..87ebe43f58cf 100644
+>>> --- a/arch/x86/hyperv/irqdomain.c
+>>> +++ b/arch/x86/hyperv/irqdomain.c
+>>> @@ -21,15 +21,15 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
+>>>  	struct hv_device_interrupt_descriptor *intr_desc;
+>>>  	unsigned long flags;
+>>>  	u64 status;
+>>> -	int nr_bank, var_size;
+>>> +	int batch_size, nr_bank, var_size;
+>>>  
+>>>  	local_irq_save(flags);
+>>>  
+>>> -	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+>>> -	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
+>>> +	batch_size = hv_setup_inout_array(&input, sizeof(*input),
+>>> +			sizeof(input->interrupt_descriptor.target.vp_set.bank_contents[0]),
+>>> +			&output, sizeof(*output), 0);
+>>>  
+>>
+>> Hi Michael, I finally managed to test this series on (nested) root
+>> partition and encountered an issue when I applied this patch.
+>>
+>> With the above change, I saw HV_STATUS_INVALID_ALIGNMENT from this
+>> hypercall. I printed out the addresses and sizes and everything looked
+>> correct. The output seemed to be correctly placed at the end of the
+>> percpu page. E.g. if input was allocated at an address ending in 0x3000,
+>> output would be at 0x3ff0, because hv_output_map_device_interrupt is
+>> 0x10 bytes in size.
+>>
+>> But it turns out, the definition for hv_output_map_device_interrupt
+>> is out of date (or was never correct)! It should be:
+>>
+>> struct hv_output_map_device_interrupt {
+>> 	struct hv_interrupt_entry interrupt_entry;
+>> 	u64 extended_status_deprecated[5];
+>> } __packed;
+>>
+>> (The "extended_status_deprecated" field is missing in the current code.)
+>>
+>> Due to this, when the hypervisor validates the hypercall input/output,
+>> it sees that output is going across a page boundary, because it knows
+>> sizeof(hv_output_map_device_interrupt) is actually 0x58.
+>>
+>> I confirmed that adding the "extended_status_deprecated" field fixes the
+>> issue. That should be fixed either as part of this patch or an additional
+>> one.
+> 
+> Thanks for testing this, Nuno. In that case, can you please submit a
+> patch for hv_output_map_device_interrupt? That can go in via the fixes
+> tree.
+> 
+> Thanks,
+> Wei
+> 
 
-Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
----
- include/hyperv/hvhdk_mini.h | 1 +
- 1 file changed, 1 insertion(+)
+Sent the fix:
+https://lore.kernel.org/linux-hyperv/1755109257-6893-1-git-send-email-nunodasneves@linux.microsoft.com/T/#u
 
-diff --git a/include/hyperv/hvhdk_mini.h b/include/hyperv/hvhdk_mini.h
-index 42e7876455b5..858f6a3925b3 100644
---- a/include/hyperv/hvhdk_mini.h
-+++ b/include/hyperv/hvhdk_mini.h
-@@ -301,6 +301,7 @@ struct hv_input_map_device_interrupt {
- /* HV_OUTPUT_MAP_DEVICE_INTERRUPT */
- struct hv_output_map_device_interrupt {
- 	struct hv_interrupt_entry interrupt_entry;
-+	u64 ext_status_deprecated[5];
- } __packed;
- 
- /* HV_INPUT_UNMAP_DEVICE_INTERRUPT */
--- 
-2.34.1
+>>
+>> Nuno
+>>
+>> PS. I have yet to test the mshv driver changes in patch 6, I'll try to
+>> do so this week.
+>>
+>>>  	intr_desc = &input->interrupt_descriptor;
+>>> -	memset(input, 0, sizeof(*input));
+>>>  	input->partition_id = hv_current_partition_id;
+>>>  	input->device_id = device_id.as_uint64;
+>>>  	intr_desc->interrupt_type = HV_X64_INTERRUPT_TYPE_FIXED;
+>>> @@ -41,7 +41,6 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
+>>>  	else
+>>>  		intr_desc->trigger_mode = HV_INTERRUPT_TRIGGER_MODE_EDGE;
+>>>  
+>>> -	intr_desc->target.vp_set.valid_bank_mask = 0;
+>>>  	intr_desc->target.vp_set.format = HV_GENERIC_SET_SPARSE_4K;
+>>>  	nr_bank = cpumask_to_vpset(&(intr_desc->target.vp_set), cpumask_of(cpu));
+>>>  	if (nr_bank < 0) {
+>>> @@ -49,6 +48,11 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
+>>>  		pr_err("%s: unable to generate VP set\n", __func__);
+>>>  		return -EINVAL;
+>>>  	}
+>>> +	if (nr_bank > batch_size) {
+>>> +		local_irq_restore(flags);
+>>> +		pr_err("%s: nr_bank too large\n", __func__);
+>>> +		return -EINVAL;
+>>> +	}
+>>>  	intr_desc->target.flags = HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET;
+>>>  
+>>>  	/*
+>>> @@ -78,9 +82,8 @@ static int hv_unmap_interrupt(u64 id, struct hv_interrupt_entry *old_entry)
+>>>  	u64 status;
+>>>  
+>>>  	local_irq_save(flags);
+>>> -	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+>>>  
+>>> -	memset(input, 0, sizeof(*input));
+>>> +	hv_setup_in(&input, sizeof(*input));
+>>>  	intr_entry = &input->interrupt_entry;
+>>>  	input->partition_id = hv_current_partition_id;
+>>>  	input->device_id = id;
+>>
+>>
 
 
