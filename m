@@ -1,351 +1,131 @@
-Return-Path: <linux-hyperv+bounces-6554-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6555-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1101B29E7A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 18 Aug 2025 11:54:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31824B29F35
+	for <lists+linux-hyperv@lfdr.de>; Mon, 18 Aug 2025 12:37:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0A2D416D96C
-	for <lists+linux-hyperv@lfdr.de>; Mon, 18 Aug 2025 09:54:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C0B1F18A2689
+	for <lists+linux-hyperv@lfdr.de>; Mon, 18 Aug 2025 10:37:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB0AC30FF2D;
-	Mon, 18 Aug 2025 09:54:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FE9C258EFE;
+	Mon, 18 Aug 2025 10:37:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h62xO5i6"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WGzYcKZj"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45DD30FF08
-	for <linux-hyperv@vger.kernel.org>; Mon, 18 Aug 2025 09:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85DA2C2346;
+	Mon, 18 Aug 2025 10:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755510854; cv=none; b=AD6PXyxsleQI9dwnxS4JR7JT4nKGBrhSJ7EgnS5dP2bpRq1H38yXYUAm/YqWgwREraDfspCSvbEdzPqdTZ81G8l1bF67cbi/8faedCmy1r1cOnzSB+AgWWbZHaC1M5nWHbYC+Q+oMxnACTCQej9J2OjEQaa3s8A5FupfHCR/P4A=
+	t=1755513444; cv=none; b=huMyitN2R/NnUTtuL9tX9Wypb0UH2qoz7wXwTtcUkCq5adDFYrDJ+nYcYhxKI0E2ycuULN2r/cxV3pJ4zEOCgk7/HNLtR8XNXK9E0puL7yU35pRgy5w/gKfz1jLyiq60nYbDySXbI9hhkXR2htvpNNw2O2rq+R1Ohjnyp8e+i2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755510854; c=relaxed/simple;
-	bh=KamMMg3EPLxz9RNtKPmbItFIk1+dod4t8rzqhV+MQOQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jgCuOat0KN7QiLPiQVsZpMYQhDIIB/FICY8KOVl5rlUsd4S4GFx0EXANoExrw7h85GG2kHsyIuDL3klO/IMCwaoe5hQ23ONVqVDEXCfjJAccQspBfQCGfMX+RpgllDPvSMVWbjRCkq0HOJU+1HYMk6eSfKLRIKw7feZ84qT0mYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h62xO5i6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755510851;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=HA01auwQvB/7QYUCmwkzOYCmVjJiDGJJtQy2+vOWF9k=;
-	b=h62xO5i6eqejOxhmentyynVOJdxaqif6N5CR/NDmyB/QMz5LlkMAkwd5UlnVzAZ24UNSCO
-	YyTavaJa0VkfxZyQIBVkwMd+lLlIQ2O6UGZXJADiMgEUqnyUyQerXIEpOPa+0GabLkpycb
-	3wlx5AM9M204RA7zpi7bxhQg4RSPp0o=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-607-dviG2_HNPhqoFEcFhbL_ng-1; Mon,
- 18 Aug 2025 05:54:07 -0400
-X-MC-Unique: dviG2_HNPhqoFEcFhbL_ng-1
-X-Mimecast-MFC-AGG-ID: dviG2_HNPhqoFEcFhbL_ng_1755510846
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C363118002E8;
-	Mon, 18 Aug 2025 09:54:05 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.225.124])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E991319560AD;
-	Mon, 18 Aug 2025 09:54:01 +0000 (UTC)
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-To: linux-hyperv@vger.kernel.org
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	Tianyu Lan <tiala@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Li Tian <litian@redhat.com>,
-	Philipp Rudo <prudo@redhat.com>
-Subject: [PATCH v2] x86/hyperv: Fix kdump on Azure CVMs
-Date: Mon, 18 Aug 2025 11:54:00 +0200
-Message-ID: <20250818095400.1610209-1-vkuznets@redhat.com>
+	s=arc-20240116; t=1755513444; c=relaxed/simple;
+	bh=obRvKFjFF9Ph4yb683ydZkubdyABhWe8E+Nb4yeus5s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JJw7+G/Lx6kaTN1ArcDLWNebSrV6dABTAL9civ6Mva8nKSPsMIYaYH0+YfLqLWFLLtKV/7M2h2rxrUFP0UCUyLJpFD3lFSUlh/R5TKxWF6Pw9Ja4fyWLrp6AoRPcN/B/9w9KI5bN9IuXaL2R6gi5wI/JbK4lL2O5tA0PdvwlZL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WGzYcKZj; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=KxEF2mWH99v4+b1UrI9IK7DaLZgRBo7s4tDuR3rNvE0=; b=WGzYcKZjsItpYvqVp29yV+vgRp
+	y4Ct18bPaIkE+HS/bVCm2xb50P20W6c92pPHVUv8fAxu4m+m69fZgTHQ4GWekfIducpBwQFFlUmGz
+	bfMwYmSZ+7H4xRsfd4uxfbWyBRH3ZcY1OBCzjZoh8aQQ/Pov4YUVyhINrjH1mZpJ4lX+kmgzzMXig
+	4bRvwMNibvAXVosRpFLjtsvsAVJaJ0/Bgx1rz6n0EsRd0YOl/SBas2gF5X5eoY/nk8PJ2POafcD3Z
+	ItEjON1qKKCUOBtW5+oYjqXLQzoqmOQ7yDza71uEpgc7A6vfawFANH/yuP1IBQ+z86KTcHmVfJEBe
+	bg01KTiQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1unxEk-0000000HLsT-1dC2;
+	Mon, 18 Aug 2025 10:37:10 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E405530029B; Mon, 18 Aug 2025 12:37:09 +0200 (CEST)
+Date: Mon, 18 Aug 2025 12:37:09 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, pbonzini@redhat.com, ardb@kernel.org,
+	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	gregkh@linuxfoundation.org, jpoimboe@kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, linux-efi@vger.kernel.org,
+	samitolvanen@google.com, ojeda@kernel.org
+Subject: Re: [PATCH v3 07/16] x86/kvm/emulate: Introduce EM_ASM_1SRC2
+Message-ID: <20250818103709.GE3289052@noisy.programming.kicks-ass.net>
+References: <20250714102011.758008629@infradead.org>
+ <20250714103440.394654786@infradead.org>
+ <aIF7ZhWZxlkcpm4y@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aIF7ZhWZxlkcpm4y@google.com>
 
-Azure CVM instance types featuring a paravisor hang upon kdump. The
-investigation shows that makedumpfile causes a hang when it steps on a page
-which was previously share with the host
-(HVCALL_MODIFY_SPARSE_GPA_PAGE_HOST_VISIBILITY). The new kernel has no
-knowledge of these 'special' regions (which are Vmbus connection pages,
-GPADL buffers, ...). There are several ways to approach the issue:
-- Convey the knowledge about these regions to the new kernel somehow.
-- Unshare these regions before accessing in the new kernel (it is unclear
-if there's a way to query the status for a given GPA range).
-- Unshare these regions before jumping to the new kernel (which this patch
-implements).
+On Wed, Jul 23, 2025 at 05:16:38PM -0700, Sean Christopherson wrote:
+> For all of the KVM patches, please use
+> 
+>   KVM: x86:
+> 
+> "x86/kvm" is used for guest-side code, and while I hope no one will conflate this
+> with guest code, the consistency is helpful.
 
-To make the procedure as robust as possible, store PFN ranges of shared
-regions in a linked list instead of storing GVAs and re-using
-hv_vtom_set_host_visibility(). This also allows to avoid memory allocation
-on the kdump/kexec path.
+Sure.
 
-The patch skips implementing weird corner case in hv_list_enc_remove()
-when a PFN in the middle of a region is unshared. First, it is unlikely
-that such requests happen. Second, it is not a big problem if
-hv_list_enc_remove() doesn't actually remove some regions as this will
-only result in an extra hypercall doing nothing upon kexec/kdump; there's
-no need to be perfect.
+> On Mon, Jul 14, 2025, Peter Zijlstra wrote:
+> > Replace the FASTOP1SRC2*() instructions.
+> > 
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > ---
+> >  arch/x86/kvm/emulate.c |   34 ++++++++++++++++++++++++++--------
+> >  1 file changed, 26 insertions(+), 8 deletions(-)
+> > 
+> > --- a/arch/x86/kvm/emulate.c
+> > +++ b/arch/x86/kvm/emulate.c
+> > @@ -317,6 +317,24 @@ static int em_##op(struct x86_emulate_ct
+> >  	ON64(case 8: __EM_ASM_1(op##q, rax); break;) \
+> >  	EM_ASM_END
+> >  
+> > +/* 1-operand, using "c" (src2) */
+> > +#define EM_ASM_1SRC2(op, name) \
+> > +	EM_ASM_START(name) \
+> > +	case 1: __EM_ASM_1(op##b, cl); break; \
+> > +	case 2: __EM_ASM_1(op##w, cx); break; \
+> > +	case 4: __EM_ASM_1(op##l, ecx); break; \
+> > +	ON64(case 8: __EM_ASM_1(op##q, rcx); break;) \
+> > +	EM_ASM_END
+> > +
+> > +/* 1-operand, using "c" (src2) with exception */
+> > +#define EM_ASM_1SRC2EX(op, name) \
+> > +	EM_ASM_START(name) \
+> > +	case 1: __EM_ASM_1_EX(op##b, cl); break; \
+> > +	case 2: __EM_ASM_1_EX(op##w, cx); break; \
+> > +	case 4: __EM_ASM_1_EX(op##l, ecx); break; \
+> > +	ON64(case 8: __EM_ASM_1(op##q, rcx); break;) \
+> 
+> This needs to be __EM_ASM_1_EX().  Luckily, KVM-Unit-Tests actually has testcase
+> for divq (somewhere in the morass of testcases).  I also now have an extension to
+> the fastops selftest to explicitly test all four flavors of div-by-zero; I'll get
+> it posted tomorrow.
+> 
+> (also, don't also me how long it took me to spot the copy+paste typo; I was full
+>  on debugging the exception fixup code before I realized my local diff looked
+>  "odd", *sigh*)
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
-Changes since v1:
- - fix build on ARM [kernel test robot]
----
- arch/arm64/include/asm/mshyperv.h |   3 +
- arch/x86/hyperv/ivm.c             | 153 ++++++++++++++++++++++++++++++
- arch/x86/include/asm/mshyperv.h   |   2 +
- drivers/hv/vmbus_drv.c            |   2 +
- 4 files changed, 160 insertions(+)
+Urgh, sorry about that. Typically I use regex for these things, clearly
+I messed up here.
 
-diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/mshyperv.h
-index b721d3134ab6..af11abf403b4 100644
---- a/arch/arm64/include/asm/mshyperv.h
-+++ b/arch/arm64/include/asm/mshyperv.h
-@@ -53,6 +53,9 @@ static inline u64 hv_get_non_nested_msr(unsigned int reg)
- 	return hv_get_msr(reg);
- }
- 
-+/* Isolated VMs are unsupported on ARM, no cleanup needed */
-+static inline void hv_ivm_clear_host_access(void) {}
-+
- /* SMCCC hypercall parameters */
- #define HV_SMCCC_FUNC_NUMBER	1
- #define HV_FUNC_ID	ARM_SMCCC_CALL_VAL(			\
-diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-index ade6c665c97e..a6e614672836 100644
---- a/arch/x86/hyperv/ivm.c
-+++ b/arch/x86/hyperv/ivm.c
-@@ -462,6 +462,150 @@ void hv_ivm_msr_read(u64 msr, u64 *value)
- 		hv_ghcb_msr_read(msr, value);
- }
- 
-+/*
-+ * Keep track of the PFN regions which were shared with the host. The access
-+ * must be revoked upon kexec/kdump (see hv_ivm_clear_host_access()).
-+ */
-+struct hv_enc_pfn_region {
-+	struct list_head list;
-+	u64 pfn;
-+	int count;
-+};
-+
-+static LIST_HEAD(hv_list_enc);
-+static DEFINE_RAW_SPINLOCK(hv_list_enc_lock);
-+
-+static int hv_list_enc_add(const u64 *pfn_list, int count)
-+{
-+	struct hv_enc_pfn_region *ent;
-+	unsigned long flags;
-+	bool found = false;
-+	u64 pfn;
-+	int i;
-+
-+	for (i = 0; i < count; i++) {
-+		pfn = pfn_list[i];
-+
-+		found = false;
-+		raw_spin_lock_irqsave(&hv_list_enc_lock, flags);
-+		list_for_each_entry(ent, &hv_list_enc, list) {
-+			if ((ent->pfn <= pfn) && (ent->pfn + ent->count - 1 >= pfn)) {
-+				/* Nothin to do - pfn is already in the list */
-+				found = true;
-+			} else if (ent->pfn + ent->count == pfn) {
-+				/* Grow existing region up */
-+				found = true;
-+				ent->count++;
-+			} else if (pfn + 1 == ent->pfn) {
-+				/* Grow existing region down */
-+				found = true;
-+				ent->pfn--;
-+				ent->count++;
-+			}
-+		};
-+		raw_spin_unlock_irqrestore(&hv_list_enc_lock, flags);
-+
-+		if (found)
-+			continue;
-+
-+		/* No adajacent region found -- creating a new one */
-+		ent = kzalloc(sizeof(struct hv_enc_pfn_region), GFP_KERNEL);
-+		if (!ent)
-+			return -ENOMEM;
-+
-+		ent->pfn = pfn;
-+		ent->count = 1;
-+
-+		raw_spin_lock_irqsave(&hv_list_enc_lock, flags);
-+		list_add(&ent->list, &hv_list_enc);
-+		raw_spin_unlock_irqrestore(&hv_list_enc_lock, flags);
-+	}
-+
-+	return 0;
-+}
-+
-+static void hv_list_enc_remove(const u64 *pfn_list, int count)
-+{
-+	struct hv_enc_pfn_region *ent, *t;
-+	unsigned long flags;
-+	u64 pfn;
-+	int i;
-+
-+	for (i = 0; i < count; i++) {
-+		pfn = pfn_list[i];
-+
-+		raw_spin_lock_irqsave(&hv_list_enc_lock, flags);
-+		list_for_each_entry_safe(ent, t, &hv_list_enc, list) {
-+			if (pfn == ent->pfn + count - 1) {
-+				/* Removing tail pfn */
-+				ent->count--;
-+				if (!ent->count) {
-+					list_del(&ent->list);
-+					kfree(ent);
-+				}
-+			} else if (pfn == ent->pfn) {
-+				/* Removing head pfn */
-+				ent->count--;
-+				ent->pfn++;
-+				if (!ent->count) {
-+					list_del(&ent->list);
-+					kfree(ent);
-+				}
-+			}
-+
-+			/*
-+			 * Removing PFNs in the middle of a region is not implemented; the
-+			 * list is currently only used for cleanup upon kexec and there's
-+			 * no harm done if we issue an extra unneeded hypercall making some
-+			 * region encrypted when it already is.
-+			 */
-+		};
-+		raw_spin_unlock_irqrestore(&hv_list_enc_lock, flags);
-+	}
-+}
-+
-+void hv_ivm_clear_host_access(void)
-+{
-+	struct hv_gpa_range_for_visibility *input;
-+	struct hv_enc_pfn_region *ent;
-+	unsigned long flags;
-+	u64 hv_status;
-+	int cur, i;
-+
-+	if (!hv_is_isolation_supported())
-+		return;
-+
-+	raw_spin_lock_irqsave(&hv_list_enc_lock, flags);
-+
-+	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-+	if (!input)
-+		goto unlock;
-+
-+	list_for_each_entry(ent, &hv_list_enc, list) {
-+		for (i = 0, cur = 0; i < ent->count; i++) {
-+			input->gpa_page_list[cur] = ent->pfn + i;
-+			cur++;
-+
-+			if (cur == HV_MAX_MODIFY_GPA_REP_COUNT || i == ent->count - 1) {
-+				input->partition_id = HV_PARTITION_ID_SELF;
-+				input->host_visibility = VMBUS_PAGE_NOT_VISIBLE;
-+				input->reserved0 = 0;
-+				input->reserved1 = 0;
-+				hv_status = hv_do_rep_hypercall(
-+					HVCALL_MODIFY_SPARSE_GPA_PAGE_HOST_VISIBILITY,
-+					cur, 0, input, NULL);
-+				WARN_ON_ONCE(!hv_result_success(hv_status));
-+				cur = 0;
-+			}
-+		}
-+
-+	};
-+
-+unlock:
-+	raw_spin_unlock_irqrestore(&hv_list_enc_lock, flags);
-+}
-+EXPORT_SYMBOL_GPL(hv_ivm_clear_host_access);
-+
- /*
-  * hv_mark_gpa_visibility - Set pages visible to host via hvcall.
-  *
-@@ -475,6 +619,7 @@ static int hv_mark_gpa_visibility(u16 count, const u64 pfn[],
- 	struct hv_gpa_range_for_visibility *input;
- 	u64 hv_status;
- 	unsigned long flags;
-+	int ret;
- 
- 	/* no-op if partition isolation is not enabled */
- 	if (!hv_is_isolation_supported())
-@@ -486,6 +631,14 @@ static int hv_mark_gpa_visibility(u16 count, const u64 pfn[],
- 		return -EINVAL;
- 	}
- 
-+	if (visibility == VMBUS_PAGE_NOT_VISIBLE) {
-+		hv_list_enc_remove(pfn, count);
-+	} else {
-+		ret = hv_list_enc_add(pfn, count);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	local_irq_save(flags);
- 	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
- 
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index abc4659f5809..6a988001e46f 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -263,10 +263,12 @@ static inline int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip,
- void hv_vtom_init(void);
- void hv_ivm_msr_write(u64 msr, u64 value);
- void hv_ivm_msr_read(u64 msr, u64 *value);
-+void hv_ivm_clear_host_access(void);
- #else
- static inline void hv_vtom_init(void) {}
- static inline void hv_ivm_msr_write(u64 msr, u64 value) {}
- static inline void hv_ivm_msr_read(u64 msr, u64 *value) {}
-+static inline void hv_ivm_clear_host_access(void) {}
- #endif
- 
- static inline bool hv_is_synic_msr(unsigned int reg)
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 2ed5a1e89d69..2e891e108218 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -2784,6 +2784,7 @@ static void hv_kexec_handler(void)
- 	/* Make sure conn_state is set as hv_synic_cleanup checks for it */
- 	mb();
- 	cpuhp_remove_state(hyperv_cpuhp_online);
-+	hv_ivm_clear_host_access();
- };
- 
- static void hv_crash_handler(struct pt_regs *regs)
-@@ -2799,6 +2800,7 @@ static void hv_crash_handler(struct pt_regs *regs)
- 	cpu = smp_processor_id();
- 	hv_stimer_cleanup(cpu);
- 	hv_synic_disable_regs(cpu);
-+	hv_ivm_clear_host_access();
- };
- 
- static int hv_synic_suspend(void)
--- 
-2.50.0
-
+Thanks and fixed!
 
