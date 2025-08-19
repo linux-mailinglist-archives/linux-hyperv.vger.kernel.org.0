@@ -1,134 +1,225 @@
-Return-Path: <linux-hyperv+bounces-6557-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6558-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2CB1B2A156
-	for <lists+linux-hyperv@lfdr.de>; Mon, 18 Aug 2025 14:19:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63230B2BAB7
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Aug 2025 09:29:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5E19F561090
-	for <lists+linux-hyperv@lfdr.de>; Mon, 18 Aug 2025 12:09:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E94B63B15F4
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Aug 2025 07:29:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5A343101CF;
-	Mon, 18 Aug 2025 12:09:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83020284899;
+	Tue, 19 Aug 2025 07:29:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hw7yqwRt"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NQ3JndSi"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D567227B327;
-	Mon, 18 Aug 2025 12:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D746122D9F7;
+	Tue, 19 Aug 2025 07:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755518972; cv=none; b=IagEqSG2B27InQCyuTcHfpPfFHedt0tYr3WibxUzZd/q/6Ra4V6ojwPJ6W7UYi3Xy3o8HtXwyEvMPlqy20+rHnnydyYwRogQ+yrCKQUsRjbEDQnPKNlp7UzmRcaIB44z23iuclezSAmkjR1ePoBm6klq8DX1hSRaqyiiMFEvwVc=
+	t=1755588564; cv=none; b=IR48N+XVBwG/2UykBV3k3Rwz0uoY83rxydDXhlC2i4w2ndOmUhsk4p3v2ZPrGRj0sI/J5Aueut+5NOlrg6CIzxTxNYGKXNiw4VnAHkTjqvNwBxqPaQJN/FHOoKOj7wOp/Kw9DRFqNZs5OJ/CbUG/BeMwE9O1IIrZbpFKnW1dGJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755518972; c=relaxed/simple;
-	bh=OpLQdy0G/Okp0F0LQiqP1NL9Gk/7mF8nmHn0cni2z3A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tPnYwa3e1jRZ9dubszOzFhliWS9PZSP4QkUwA6Ch2zPoR+lIVXcoyO+gVWKhEk0qp4FHUtW/8S+5+yZ/L4NemREsdnUUUdw+IdedgHdQMvjQ3y2/5cpng0PGQtKsnqiTuwY1OL4NPYZA77Ht5vc7QU5vljzRHVQcos43l98LjEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hw7yqwRt; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=JIDCDEr/1d5V29Dqy9cjcsDweAzjIcSrXoBz7OAnOQc=; b=hw7yqwRtgfcqq+EjufE2Jc2iV3
-	3fgmJNFglB7kHDM+xLP3/4A2d2aAUgICLohp9OUwk/5+Y/8O6mojpbZ/Vq3JiWKbY0Wl2+niLNbY0
-	DhwP3Vcaus9WsenOgucD+O81dU4PMH+52JXxpr7aFfyvnuCI0WTUl4yNo+04j1BF4clFLWLmRqNFy
-	CIpHLDI9+fwQter0IIL4OFu37dXbdgBv//lIeXXrjE8qeUpux8tfIjv5+fsewXmbti1fYSNIsW39u
-	qp17HHNclKL1lnQFsuZMrxEOtvOgQMMDRrv8qV3qaV3VYNdqTAzawH6DW38ZuV3hnjOJLKTgHXJeA
-	jdeY576Q==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1unyfv-0000000HMQW-2uzq;
-	Mon, 18 Aug 2025 12:09:20 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 453B830029B; Mon, 18 Aug 2025 14:09:19 +0200 (CEST)
-Date: Mon, 18 Aug 2025 14:09:19 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Xin Li <xin@zytor.com>
-Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, seanjc@google.com, pbonzini@redhat.com,
-	ardb@kernel.org, kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	gregkh@linuxfoundation.org, jpoimboe@kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, linux-efi@vger.kernel.org,
-	samitolvanen@google.com, ojeda@kernel.org
-Subject: Re: [PATCH v3 14/16] x86/fred: Play nice with invoking
- asm_fred_entry_from_kvm() on non-FRED hardware
-Message-ID: <20250818120919.GG3289052@noisy.programming.kicks-ass.net>
-References: <20250714102011.758008629@infradead.org>
- <20250714103441.245417052@infradead.org>
- <f6925ee5-bbd7-42e3-9e3b-59d2e8ec2681@zytor.com>
+	s=arc-20240116; t=1755588564; c=relaxed/simple;
+	bh=zmJ4oEkg/wsHorsGWyyTdx9Ow5bGQ0WGNug4IrVA5ZA=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=cDp7SU3LLScyObBLay3DyqbvyGlckEy5YEdZ4rdQOE6An6gX2bonUl6j8VMmVLVWoqy5Ll4Bkg8T2fPpnzcbNMVJ36vASBEUsDYv2WhNKpwJSzxHEpV5L/cGfqlSateNjsVz47gA/3C/CXIuqL9X8OzF0bMIMyFxEOx7yVySMoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=NQ3JndSi; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1032)
+	id 597D92113369; Tue, 19 Aug 2025 00:29:22 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 597D92113369
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1755588562;
+	bh=tUxdMWnI67dhYQwXGjOBEKVZI8EfEtyZKrA8xyUFX7M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=NQ3JndSidFl3XzfsFMOggAl8X/S92o6u9CxcAmGbifX1dWrdNU1HiBTxqByV6Xf7Y
+	 d/uU+96PAChnhvcY1DNVPgq8W3ekFPcn/NwaCY9g7dgStVDRDkj/1G+q5P/Iysfe6R
+	 lN4Fre8WrXbU9m7Fcx0yOlZvvxx3L5pUENRVGlk4=
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org
+Cc: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	mhklinux@outlook.com,
+	decui@microsoft.com,
+	arnd@arndb.de,
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Subject: [PATCH] mshv: Add support for a new parent partition configuration
+Date: Tue, 19 Aug 2025 00:29:19 -0700
+Message-Id: <1755588559-29629-1-git-send-email-nunodasneves@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f6925ee5-bbd7-42e3-9e3b-59d2e8ec2681@zytor.com>
 
-On Fri, Jul 25, 2025 at 09:54:32PM -0700, Xin Li wrote:
-> On 7/14/2025 3:20 AM, Peter Zijlstra wrote:
-> >   	call __fred_entry_from_kvm		/* Call the C entry point */
-> > -	POP_REGS
-> > -	ERETS
-> > -1:
-> > +
-> > +1:	/*
-> 
-> The symbol "1" is misplaced; it needs to be put after the ERETS
-> instruction.
+Detect booting as an "L1VH" partition. This is a new scenario very
+similar to root partition where the mshv_root driver can be used to
+create and manage guest partitions.
 
-Doh, fixed.
+It mostly works the same as root partition, but there are some
+differences in how various features are handled. hv_l1vh_partition()
+is introduced to handle these cases. Add hv_parent_partition()
+which returns true for either case, replacing some hv_root_partition()
+checks.
 
-> > +	 * When FRED, use ERETS to potentially clear NMIs, otherwise simply
-> > +	 * restore the stack pointer.
-> > +	 */
-> > +	ALTERNATIVE "nop; nop; mov %rbp, %rsp", \
-> 
-> Why explicitly add two nops here?
+Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+---
+ drivers/hv/hv_common.c         | 20 ++++++++++++--------
+ drivers/hv/mshv_root_main.c    | 22 ++++++++++++++--------
+ include/asm-generic/mshyperv.h | 11 +++++++++++
+ 3 files changed, 37 insertions(+), 16 deletions(-)
 
-Because the CFI information for all alternative code flows must be the
-same. So by playing games with instruction offsets you can have
-conflicting CFI inside the alternative.
+diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+index cbe4a954ad46..a6839593ca31 100644
+--- a/drivers/hv/hv_common.c
++++ b/drivers/hv/hv_common.c
+@@ -357,7 +357,7 @@ int __init hv_common_init(void)
+ 	hyperv_pcpu_arg = alloc_percpu(void  *);
+ 	BUG_ON(!hyperv_pcpu_arg);
+ 
+-	if (hv_root_partition()) {
++	if (hv_parent_partition()) {
+ 		hv_synic_eventring_tail = alloc_percpu(u8 *);
+ 		BUG_ON(!hv_synic_eventring_tail);
+ 	}
+@@ -506,7 +506,7 @@ int hv_common_cpu_init(unsigned int cpu)
+ 	if (msr_vp_index > hv_max_vp_index)
+ 		hv_max_vp_index = msr_vp_index;
+ 
+-	if (hv_root_partition()) {
++	if (hv_parent_partition()) {
+ 		synic_eventring_tail = (u8 **)this_cpu_ptr(hv_synic_eventring_tail);
+ 		*synic_eventring_tail = kcalloc(HV_SYNIC_SINT_COUNT,
+ 						sizeof(u8), flags);
+@@ -532,7 +532,7 @@ int hv_common_cpu_die(unsigned int cpu)
+ 	 * originally allocated memory is reused in hv_common_cpu_init().
+ 	 */
+ 
+-	if (hv_root_partition()) {
++	if (hv_parent_partition()) {
+ 		synic_eventring_tail = this_cpu_ptr(hv_synic_eventring_tail);
+ 		kfree(*synic_eventring_tail);
+ 		*synic_eventring_tail = NULL;
+@@ -703,13 +703,17 @@ void hv_identify_partition_type(void)
+ 	 * the root partition setting if also a Confidential VM.
+ 	 */
+ 	if ((ms_hyperv.priv_high & HV_CREATE_PARTITIONS) &&
+-	    (ms_hyperv.priv_high & HV_CPU_MANAGEMENT) &&
+ 	    !(ms_hyperv.priv_high & HV_ISOLATION)) {
+-		pr_info("Hyper-V: running as root partition\n");
+-		if (IS_ENABLED(CONFIG_MSHV_ROOT))
+-			hv_curr_partition_type = HV_PARTITION_TYPE_ROOT;
+-		else
++
++		if (!IS_ENABLED(CONFIG_MSHV_ROOT)) {
+ 			pr_crit("Hyper-V: CONFIG_MSHV_ROOT not enabled!\n");
++		} else if (ms_hyperv.priv_high & HV_CPU_MANAGEMENT) {
++			pr_info("Hyper-V: running as root partition\n");
++			hv_curr_partition_type = HV_PARTITION_TYPE_ROOT;
++		} else {
++			pr_info("Hyper-V: running as L1VH partition\n");
++			hv_curr_partition_type = HV_PARTITION_TYPE_L1VH;
++		}
+ 	}
+ }
+ 
+diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+index aca3331ad516..7c710703cd96 100644
+--- a/drivers/hv/mshv_root_main.c
++++ b/drivers/hv/mshv_root_main.c
+@@ -37,12 +37,6 @@ MODULE_AUTHOR("Microsoft");
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("Microsoft Hyper-V root partition VMM interface /dev/mshv");
+ 
+-/* TODO move this to mshyperv.h when needed outside driver */
+-static inline bool hv_parent_partition(void)
+-{
+-	return hv_root_partition();
+-}
+-
+ /* TODO move this to another file when debugfs code is added */
+ enum hv_stats_vp_counters {			/* HV_THREAD_COUNTER */
+ #if defined(CONFIG_X86)
+@@ -2190,6 +2184,15 @@ struct notifier_block mshv_reboot_nb = {
+ 	.notifier_call = mshv_reboot_notify,
+ };
+ 
++static int __init mshv_l1vh_partition_init(struct device *dev)
++{
++	hv_scheduler_type = HV_SCHEDULER_TYPE_CORE_SMT;
++	dev_info(dev, "Hypervisor using %s\n",
++		 scheduler_type_to_string(hv_scheduler_type));
++
++	return 0;
++}
++
+ static void mshv_root_partition_exit(void)
+ {
+ 	unregister_reboot_notifier(&mshv_reboot_nb);
+@@ -2224,7 +2227,7 @@ static int __init mshv_parent_partition_init(void)
+ 	struct device *dev;
+ 	union hv_hypervisor_version_info version_info;
+ 
+-	if (!hv_root_partition() || is_kdump_kernel())
++	if (!hv_parent_partition() || is_kdump_kernel())
+ 		return -ENODEV;
+ 
+ 	if (hv_get_hypervisor_version(&version_info))
+@@ -2261,7 +2264,10 @@ static int __init mshv_parent_partition_init(void)
+ 
+ 	mshv_cpuhp_online = ret;
+ 
+-	ret = mshv_root_partition_init(dev);
++	if (hv_root_partition())
++		ret = mshv_root_partition_init(dev);
++	else
++		ret = mshv_l1vh_partition_init(dev);
+ 	if (ret)
+ 		goto remove_cpu_state;
+ 
+diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+index dbbacd47ca35..f0f0eacb2eef 100644
+--- a/include/asm-generic/mshyperv.h
++++ b/include/asm-generic/mshyperv.h
+@@ -31,6 +31,7 @@
+ enum hv_partition_type {
+ 	HV_PARTITION_TYPE_GUEST,
+ 	HV_PARTITION_TYPE_ROOT,
++	HV_PARTITION_TYPE_L1VH,
+ };
+ 
+ struct ms_hyperv_info {
+@@ -457,12 +458,22 @@ static inline bool hv_root_partition(void)
+ {
+ 	return hv_curr_partition_type == HV_PARTITION_TYPE_ROOT;
+ }
++static inline bool hv_l1vh_partition(void)
++{
++	return hv_curr_partition_type == HV_PARTITION_TYPE_L1VH;
++}
++static inline bool hv_parent_partition(void)
++{
++	return hv_root_partition() || hv_l1vh_partition();
++}
+ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages);
+ int hv_call_add_logical_proc(int node, u32 lp_index, u32 acpi_id);
+ int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags);
+ 
+ #else /* CONFIG_MSHV_ROOT */
+ static inline bool hv_root_partition(void) { return false; }
++static inline bool hv_l1vh_partition(void) { return false; }
++static inline bool hv_parent_partition(void) { return false; }
+ static inline int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+ {
+ 	return -EOPNOTSUPP;
+-- 
+2.34.1
 
-Specifically, we have:
-
-0:	90        nop
-1:	90        nop
-2:	48 89 ec  mov %rbp, %rsp
-
-
-0:	48 83 c4 0c  add $12, %rsp
-4:      f2 0f 01 ca  erets
-
-This gets us CFI updates on 0, 2 and 4, without conflicts.
-
-
-> ALTERNATIVE will still pad three-byte nop after the MOV instruction.
-> 
-> > +	            __stringify(add $C_PTREGS_SIZE, %rsp; ERETS), \
-> > +		    X86_FEATURE_FRED
-> > +
-> >   	/*
-> > -	 * Objtool doesn't understand what ERETS does, this hint tells it that
-> > -	 * yes, we'll reach here and with what stack state. A save/restore pair
-> > -	 * isn't strictly needed, but it's the simplest form.
-> > +	 * Objtool doesn't understand ERETS, and the cfi register state is
-> > +	 * different from initial_func_cfi due to PUSH_REGS. Tell it the state
-> > +	 * is similar to where UNWIND_HINT_SAVE is.
-> >   	 */
-> >   	UNWIND_HINT_RESTORE
-> > +
-> >   	pop %rbp
-> >   	RET
-> 
 
