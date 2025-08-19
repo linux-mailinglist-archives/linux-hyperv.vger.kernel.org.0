@@ -1,104 +1,91 @@
-Return-Path: <linux-hyperv+bounces-6559-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6560-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5651B2C433
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Aug 2025 14:53:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12D5AB2C952
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Aug 2025 18:17:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C4ED03AAFD2
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Aug 2025 12:50:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E9A6B5C10DA
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Aug 2025 16:17:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0A2032C310;
-	Tue, 19 Aug 2025 12:49:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39893214A6A;
+	Tue, 19 Aug 2025 16:17:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MkU4T5V1"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="N1L+7JjX"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5951F8733;
-	Tue, 19 Aug 2025 12:49:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C88101448E0;
+	Tue, 19 Aug 2025 16:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755607797; cv=none; b=u5KXRZFF/pcgi1FZbAir5tJIY6jmu8VsBPL9mnIuSb1z0a5lJ0gTPOpvyTXaSgjTD+b/BwLB1accFYr3OPDu3p0ijcmEhefhJxqpysrdBVb7xUDyWa2dig1mcANviDBvOCSAAYg3ylXY7maJELzT2KLizLcntZZJMMa/4t2cwO4=
+	t=1755620252; cv=none; b=qLWYSi8rtA5Dj4yF5r1mp18bqx06xW7yL+Rn6VECHRVXWokIvuOfuh7m8xqfKtcMv4jY7pJ5zIWDU09puIQge+eMtvjoYHzHleGhemoMQZonK+AMFRzBilrmgM1Fcyn8kkE0lSGvaDbJ/ijM9ZxLdWQ+mOPfcwTl9c0BOEwfWx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755607797; c=relaxed/simple;
-	bh=vUXGP2NL/Y3G2YwX7QJc8uDJtcmNgRO6rb0t3gzNG+c=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=e1pNNeVAuTP4SLCrEvFQNZ2FDESkoKzv5OxI4CWFgo0DO/hKG6t6WjfkU4RCg//dt5psDtFOv40qh2yGlzcZmSBzVXtBOia/Ff0OClrSeMubbLsJMNfyn4Szj/Rz2+gwREpSs5tB+wVaJceFKDStc5UKpOD9OlCELHPg4sTK6eQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MkU4T5V1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 281EEC4CEF1;
-	Tue, 19 Aug 2025 12:49:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755607797;
-	bh=vUXGP2NL/Y3G2YwX7QJc8uDJtcmNgRO6rb0t3gzNG+c=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=MkU4T5V19318Tbg74Q6IbMuQ3SUH0D4VSVNpyLIntjNvCvABHOTUXccQ4NaP7AhDw
-	 sIdACZGKjbI5+HeqCmn/OKzMC/f/aF8+5I+Lq8r3FbaVepanQQlWGBV2OE2NOCFekX
-	 yOyy/QYBAxT5+VH2Mx9bql4glrw5RTPc405yOI0kpmo+L0mHebvS3ZrZR5k4xgstdO
-	 HT2ajiLKwTQbyMqxPm6DEpTpGVlqqq9DcQ6TgBkobOuWBU847inSeP2avbmBBZzSCe
-	 ez/GrNtB0rFgy2/ndpgsdMKVtpBegslvUhBIVVXAIsfS3KdtXX3qWKgKtDXB7SO4d2
-	 BC1u1LPxFczFA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33E5D383BF58;
-	Tue, 19 Aug 2025 12:50:08 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1755620252; c=relaxed/simple;
+	bh=cBAf66/ecC3KCAWVPNJ0mEfLod6jzDCzAlx19ze5M0E=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=rTsNNgDd8d2wWWkZvFY+S1HZKPY8EtsD4IDdTQlW09WGRDuMTWL++DlOzroE6hDpOk/wBDaXVkrbu/BL43F6Ahi98lnTxZuiMIXRsgdSorsUqp/loZ3E6mvfGCjXt1lFpPaiduIG0NAVMhBG/ro6lsCAsSOAqifgQ3dD6/Ox108=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=N1L+7JjX; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.65.160.36] (unknown [20.236.10.206])
+	by linux.microsoft.com (Postfix) with ESMTPSA id BDEC22015BAB;
+	Tue, 19 Aug 2025 09:17:29 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BDEC22015BAB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1755620250;
+	bh=UK2us52F74pzoMRfapfu4Rp2ypnjpe2h7wtZmQTFVCg=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=N1L+7JjX6y8w/ZP7VUshCcip8y+O09W05cXUKI09ngHqlwUZXPAmrbNAJx3tQnrzq
+	 +a0Hb5cGkkQwMy3figAfhIb01yZEYgYFujwovjw2PJXcHUCQ/ScKgDjaFBWEooQVIE
+	 yJ+TGHkr1Lxe1oI+CNvCGdg57x+0EP1uikxYxeVo=
+Message-ID: <0a0c8921-9236-45fb-b047-742a34379e63@linux.microsoft.com>
+Date: Tue, 19 Aug 2025 09:17:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v5] net: mana: Use page pool fragments for RX
- buffers instead of full pages to improve memory efficiency.
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175560780700.3536307.412662512500742256.git-patchwork-notify@kernel.org>
-Date: Tue, 19 Aug 2025 12:50:07 +0000
-References: 
- <20250814140410.GA22089@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-In-Reply-To: 
- <20250814140410.GA22089@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-To: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-Cc: horms@kernel.org, kuba@kernel.org, kys@microsoft.com,
- haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- pabeni@redhat.com, longli@microsoft.com, kotaranov@microsoft.com,
- ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
- john.fastabend@gmail.com, sdf@fomichev.me, lorenzo@kernel.org,
- michal.kubiak@intel.com, ernis@linux.microsoft.com,
- shradhagupta@linux.microsoft.com, shirazsaleem@microsoft.com,
- rosenp@gmail.com, netdev@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, ssengar@linux.microsoft.com,
- dipayanroy@microsoft.com
+User-Agent: Mozilla Thunderbird
+From: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+Subject: Re: [PATCH] mshv: Add support for a new parent partition
+ configuration
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: easwar.hariharan@linux.microsoft.com, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, kys@microsoft.com,
+ haiyangz@microsoft.com, wei.liu@kernel.org, mhklinux@outlook.com,
+ decui@microsoft.com, arnd@arndb.de
+References: <1755588559-29629-1-git-send-email-nunodasneves@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <1755588559-29629-1-git-send-email-nunodasneves@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
-
-On Thu, 14 Aug 2025 07:04:10 -0700 you wrote:
-> This patch enhances RX buffer handling in the mana driver by allocating
-> pages from a page pool and slicing them into MTU-sized fragments, rather
-> than dedicating a full page per packet. This approach is especially
-> beneficial on systems with large base page sizes like 64KB.
+On 8/19/2025 12:29 AM, Nuno Das Neves wrote:
+> Detect booting as an "L1VH" partition. This is a new scenario very
+> similar to root partition where the mshv_root driver can be used to
+> create and manage guest partitions.
 > 
-> Key improvements:
+> It mostly works the same as root partition, but there are some
+> differences in how various features are handled. hv_l1vh_partition()
+> is introduced to handle these cases. Add hv_parent_partition()
+> which returns true for either case, replacing some hv_root_partition()
+> checks.
 > 
-> [...]
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 
-Here is the summary with links:
-  - [net-next,v5] net: mana: Use page pool fragments for RX buffers instead of full pages to improve memory efficiency.
-    https://git.kernel.org/netdev/net-next/c/730ff06d3f5c
+Seems the plurality of subject prefixes for drivers/hv files has been "Drivers: hv"
+so far, including the 2 commits for drivers/hv/mshv*. Are you planning to change
+the standard for mshv driver going forward?
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+It'd be good to have a small blurb about what an L1VH partition is in the commit
+message, as well as what guides which hv_root_partition() call gets replaced with
+hv_parent_partition().
 
+<snip>
 
+Thanks,
+Easwar (he/him)
 
