@@ -1,120 +1,124 @@
-Return-Path: <linux-hyperv+bounces-6568-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6569-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 666B8B2E86D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Aug 2025 01:05:28 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60EA0B2E974
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Aug 2025 02:32:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 12CFA4E23A5
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Aug 2025 23:05:27 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8A9097B64E5
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Aug 2025 00:30:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF4E52BE64E;
-	Wed, 20 Aug 2025 23:05:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8B4D18991E;
+	Thu, 21 Aug 2025 00:31:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C4dCd2Um"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fgRkRCib"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A363C36CE0E;
-	Wed, 20 Aug 2025 23:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BC355464E;
+	Thu, 21 Aug 2025 00:31:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755731121; cv=none; b=XuhoBn2GF1938/rTP+q7Qh9vFeS6Cz74T352gX7IfXnGNlxWvGzkrtxYWNM+eJv2xLwYBm/mmnyRj9qJxsT1B7+F4D4xB6MAy+qMbq3TI7SgS6H+ns7a5GlAujkv1QCBE08oxp642Rz1UlXBgFRtusEIz/gioJHxAjV13nkUzQI=
+	t=1755736319; cv=none; b=SmtAOFYDui0gWChB+VvIBYkxrYtpIxJOnvtWHyONl6ZmpcZqR/PXevXRjS4Ky5m3o+ZmYu7+pr8ExFL+tgyYxYuTlylJLB0ogkbILqgddHBuHYmORwuSzeRFRRKY22j/rQoQrNyawmFbVy8+wdLFAdiHbixxz0hjgrtcr5CBhc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755731121; c=relaxed/simple;
-	bh=nr1/ZpykDzY/GfAUTO5xatJNE5SpOD44gVut+/do0Kk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mQ20umf9qI5kGr0u9doN/ic0W1hNg7+JVWz/0BszMzHh/USkUTcaPVekw9861m7K9i42gESMJDkYRGcb4tPAjI7Ujygo3xS8is1QpAVjLP6LXisBpr5GSstmDdp744OZmC2M6EbqONv2LFGF/trAasZSLgj5SSY5gJ0gGLFH0ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C4dCd2Um; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755731120; x=1787267120;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nr1/ZpykDzY/GfAUTO5xatJNE5SpOD44gVut+/do0Kk=;
-  b=C4dCd2UmGtXN46RBBUSBVDEY8Z5B2iM72k6mkDEMCRSDUg97eqhUcanL
-   mviEzwdLiW9w01FJkT//Pewebf6ziyIkmzcGMNYdht0penIZvhe2WpFGU
-   3UPaY/I95+lz5mrbXjIYYkFAOtc9sqZVYsPHVWyMFkxgfr4oKVQbgou8p
-   h4mPnoEmmiLvHKd6ESCIOmKDzL/ItV61U/vqRRottMZG27CRmHsWR7Msn
-   YXqFntiVkyYUo+XCW6uHE8t0lD76hEh8LpOybV8mYuQUz2CT7px8dEnML
-   ID0ciV40alN9Hl0TKR28yDjkEDmXBCBaM72TyQ74pky+Mbz/tw7zvMbA+
-   Q==;
-X-CSE-ConnectionGUID: xsPSMkO4RdGgeJ90vBOHng==
-X-CSE-MsgGUID: qayqUP8GT3mcse3M6xmQKQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="58080239"
-X-IronPort-AV: E=Sophos;i="6.17,306,1747724400"; 
-   d="scan'208";a="58080239"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2025 16:05:19 -0700
-X-CSE-ConnectionGUID: 5wTcD2vyQQmnoR1aFrmA/A==
-X-CSE-MsgGUID: D3ukZWbfTly7d+vDz1QS3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,306,1747724400"; 
-   d="scan'208";a="199234003"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2025 16:05:18 -0700
-Date: Wed, 20 Aug 2025 16:11:35 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-hyperv@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ricardo Neri <ricardo.neri@intel.com>,
-	Yunhong Jiang <yunhong.jiang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 00/10] x86/hyperv/hv_vtl: Use a wakeup mailbox to boot
- secondary CPUs
-Message-ID: <20250820231135.GA24797@ranerica-svr.sc.intel.com>
-References: <20250627-rneri-wakeup-mailbox-v5-0-df547b1d196e@linux.intel.com>
+	s=arc-20240116; t=1755736319; c=relaxed/simple;
+	bh=dU8whZC5nQFnLKTOvPqBGari4dX5MZhx1uUJG2HCUm0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FQoqE+PEwaprjRvY/re/Z1CUKLjLVlEQ//ZXTeDP80xb8CzYKYLJyf+wS0M07REN/ibH69fTQ9/rVincHWvP7EU7pRZvfoOmGzV4xATZsZ6dzGgB9IhHiViv5gf33Jxi02b84orYKck5wYXeFc//TtmOCwXrtdIuNK5rxcMRwo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=fgRkRCib; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.75.64.99] (unknown [40.78.13.173])
+	by linux.microsoft.com (Postfix) with ESMTPSA id CCC642115A23;
+	Wed, 20 Aug 2025 17:31:56 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CCC642115A23
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1755736317;
+	bh=6tWe+ykgzm/q5D9sU/3IncC099spEIMtixvUbdzAH0g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fgRkRCibLmm15Pgj0Dh8/jXOwqg24NZtEsHFxPDCYCWFNKvdjQOPsd9qotCOSoosQ
+	 cu/PsJA282fh2UGhoSI1UmRJsqDcyGAExSxBjohPwbnUeuDqiGzNeMNU4ark2z/Bif
+	 tzJS095bYDDRM8uaEoba7Lr+LE005zUfQHCqXVKA=
+Message-ID: <f711d4ad-87a8-9cb3-aabc-a493ff18986a@linux.microsoft.com>
+Date: Wed, 20 Aug 2025 17:31:56 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627-rneri-wakeup-mailbox-v5-0-df547b1d196e@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v3 1/7] Drivers: hv: Introduce hv_hvcall_*() functions for
+ hypercall arguments
+Content-Language: en-US
+To: mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, bhelgaas@google.com, arnd@arndb.de
+Cc: x86@kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arch@vger.kernel.org
+References: <20250415180728.1789-1-mhklinux@outlook.com>
+ <20250415180728.1789-2-mhklinux@outlook.com>
+From: Mukesh R <mrathor@linux.microsoft.com>
+In-Reply-To: <20250415180728.1789-2-mhklinux@outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 27, 2025 at 08:35:06PM -0700, Ricardo Neri wrote:
-> Hi,
+On 4/15/25 11:07, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
 > 
-> Here is a new version of this series. Thanks to Rafael for his feedback!
-> I incorporated his feedback in this updated version. Please see the
-> changelog for details.
+> Current code allocates the "hyperv_pcpu_input_arg", and in
+> some configurations, the "hyperv_pcpu_output_arg". Each is a 4 KiB
+> page of memory allocated per-vCPU. A hypercall call site disables
+> interrupts, then uses this memory to set up the input parameters for
+> the hypercall, read the output results after hypercall execution, and
+> re-enable interrupts. The open coding of these steps leads to
+> inconsistencies, and in some cases, violation of the generic
+> requirements for the hypercall input and output as described in the
+> Hyper-V Top Level Functional Spec (TLFS)[1].
 > 
-> If the DeviceTree bindings look good, then the patches should be ready for
-> review by the x86, ACPI, and Hyper-V maintainers.
-> 
-> I did not change the cover letter but I included it here for completeness.
-> 
-> Thanks in advance for your feedback!
+<snip>
 
-Hello,
+> The new functions are realized as a single inline function that
+> handles the most complex case, which is a hypercall with input
+> and output, both of which contain arrays. Simpler cases are mapped to
+> this most complex case with #define wrappers that provide zero or NULL
+> for some arguments. Several of the arguments to this new function
+> must be compile-time constants generated by "sizeof()"
+> expressions. As such, most of the code in the new function can be
+> evaluated by the compiler, with the result that the code paths are
+> no longer than with the current open coding. The one exception is
+> new code generated to zero the fixed-size portion of the input area
+> in cases where it is not currently done.
 
-I would like to know what else is needed to move this patchset forward.
-Rafael and Rob have reviewed the DeviceTree bindings. Rafael has reviewed
-the relocation of the code that makes use of the mailbox.
+IMHO, this is unnecessary change that just obfuscates code. With status quo
+one has the advantage of seeing what exactly is going on, one can use the
+args any which way, change batch size any which way, and is thus flexible.
+With time these functions only get more complicated and error prone. The
+saving of ram is very minimal, this makes analyzing crash dumps harder,
+and in some cases like in your patch 3/7 disables unnecessarily in error case:
 
-Would it be possible for the Hyper-V maintainers to take a look (Michael
-Kelley has reviewed the patches already)? Perhaps this could increase the
-confidence of the x86 maintainers.
+- if (count > HV_MAX_MODIFY_GPA_REP_COUNT) {
+-  pr_err("Hyper-V: GPA count:%d exceeds supported:%lu\n", count,
+-   HV_MAX_MODIFY_GPA_REP_COUNT);
++ local_irq_save(flags);      <<<<<<<
+...
 
-Thanks!
+So, this is a nak from me. sorry.
 
-Ricardo
+<snip>
+
+> +/*
+> + * Allocate one page that is shared between input and output args, which is
+> + * sufficient for all current hypercalls. If a future hypercall requires
+
+That is incorrect. We've iommu map hypercalls that will use up entire page
+for input. More coming as we implement ram withdrawl from the hypervisor.
+
+Thanks,
+-Mukesh
 
