@@ -1,142 +1,171 @@
-Return-Path: <linux-hyperv+bounces-6584-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6585-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBEB2B33D84
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Aug 2025 13:03:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B2776B33E83
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Aug 2025 13:56:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AC29E1A81B7E
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Aug 2025 11:03:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C3A6E1A82569
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Aug 2025 11:56:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B3682D94B2;
-	Mon, 25 Aug 2025 11:03:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 362A52E1C64;
+	Mon, 25 Aug 2025 11:56:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NSgUljRS"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RQ1TbUqC"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C08EB2D0623;
-	Mon, 25 Aug 2025 11:03:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98AC72C15B6;
+	Mon, 25 Aug 2025 11:56:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756119798; cv=none; b=ie2l2keK5g+H/kthzFka24JQYA9yF1Mxo/j4eEY5bIjwN8jS6Er0ynCYHnHX8ZVEnYGYBb5ZaAQK+J4PeJDt2WzKnWHk5226vcrtgLJjYcidX1+IfxflfyBdoG9gdGlyVQ24a+57UPMv1PN5f9DVkDu7A2AOngi3cRvgD72ukys=
+	t=1756122989; cv=none; b=LfzVfKdXfYR6tKvUkkhIEU9TpnHNkhNkt4T4NNYPccWPPRChXF/8PTbK3tprLetzKANKJUBelGZz32d/IGG7P/li62lRv4XVvFfJYht98dKFoMMAnLRXfL6RJ2Ur5S+h96pQ8w1Z7qtrKFBFUUHR5BINZpeYr6SpDfU3kICNrWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756119798; c=relaxed/simple;
-	bh=i7Bh1lmrcNhrpuE5kAEpZHyG48GyUCraJrr1KmwINdE=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=kpqme/JcS8IqIO88nfwGBOScucInKG9d92rHtFxE7FiDPT8j3RR4FbDqcMI1SpWJPWM18+4zQ/oc1oovxOejqyis1FtihptGPvgZ+GoNF4xIuSw7vURZvnYFxTl6G++etfrxrAWlYPkwfnnYf4CKrEyjuVHG595oKt1fVpWA1xQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=NSgUljRS; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1756122989; c=relaxed/simple;
+	bh=+UyVJcftW8wy1kqNJFR4cziUxI4qiB8Q+yu4CtBFzas=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=fDaxa6iVWLAVh2x9SKF5f8QJ7B4AVgz3aaK3w3tsibGqafEZV0a4oo4mCqwXpElm+9cvMgKt9Z/rpeXk6FKvM0AiUcPf7Rs0A0ICuPiIxhqksQIxosJ0t1fu5fkEvGZ5Kuzob0e0OCL6vrBzCRDSLY2ncGnl49Duna+80cXffWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RQ1TbUqC; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id 41746211828C; Mon, 25 Aug 2025 04:03:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 41746211828C
+Received: by linux.microsoft.com (Postfix, from userid 1204)
+	id 3B63021175A9; Mon, 25 Aug 2025 04:56:27 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3B63021175A9
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1756119796;
-	bh=QN/7ZaTct3LU/anujYLQq8OzF8EQzpibQw8k4S15RNg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=NSgUljRSt6JU7MeyF6jX3RTLdwdrpx12Fnt802jxi7LXi3Pwvh3ozejSAPvaYRwyC
-	 nn5JIjm3EbeiMF9j1vn44jrnaseEf7lbxYFlZl6g/KJinmTlm3KfyIn7sphcFrUVah
-	 G7N8CijyWKlszwcZo0Q5NAqnAcwOk4+DPKG/tTJM=
-From: Saurabh Sengar <ssengar@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	shradhagupta@linux.microsoft.com,
-	ernis@linux.microsoft.com,
-	dipayanroy@linux.microsoft.com,
-	shirazsaleem@microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: ssengar@microsoft.com,
-	stable@vger.kernel.org,
-	Saurabh Sengar <ssengar@linux.microsoft.com>
-Subject: [PATCH net] net: mana: Remove redundant netdev_lock_ops_to_full() calls
-Date: Mon, 25 Aug 2025 04:03:14 -0700
-Message-Id: <1756119794-20110-1-git-send-email-ssengar@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	s=default; t=1756122987;
+	bh=r2QJ4yqs6HxKoAH1VttKGbQwT/tvDfkSW+pvLpawz9E=;
+	h=Date:From:To:Subject:From;
+	b=RQ1TbUqCbRrJ7NV40HuiCbFKF24VOu3KRKqxR1bQ6UL2hipLYvx4HAL6io/E+j/dc
+	 2TxennbuuLx5XX4TmTc1zk60iIkOjHKTyYo1PEnSBM+bhzqXahxHqfScxJylK+zlve
+	 1siXccBAUP3TlOX7irEWiCE2tCG9T/Xq3WB3GwII=
+Date: Mon, 25 Aug 2025 04:56:27 -0700
+From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dipayanroy@micorsoft.com,
+	ssengar@linux.microsoft.com
+Subject: [PATCH net] net: hv_netvsc: fix loss of early receive events from
+ host during channel open.
+Message-ID: <20250825115627.GA32189@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-NET_SHAPER is always selected for MANA driver. When NET_SHAPER is enabled,
-netdev_lock_ops_to_full() reduces effectively to only an assert for lock,
-which is always held in the path when NET_SHAPER is enabled.
+The hv_netvsc driver currently enables NAPI after opening the primary and
+subchannels. This ordering creates a race: if the Hyper-V host places data
+in the host -> guest ring buffer and signals the channel before
+napi_enable() has been called, the channel callback will run but
+napi_schedule_prep() will return false. As a result, the NAPI poller never
+gets scheduled, the data in the ring buffer is not consumed, and the
+receive queue may remain permanently stuck until another interrupt happens
+to arrive.
 
-Remove the redundant netdev_lock_ops_to_full() call.
+Fix this by enabling NAPI and registering it with the RX/TX queues before
+vmbus channel is opened. This guarantees that any early host signal after
+open will correctly trigger NAPI scheduling and the ring buffer will be
+drained.
 
-Fixes: d5c8f0e4e0cb ("net: mana: Fix potential deadlocks in mana napi ops")
-Cc: stable@vger.kernel.org
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Fixes: 76bb5db5c749d ("netvsc: fix use after free on module removal")
+Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
 ---
- drivers/net/ethernet/microsoft/mana/mana_en.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ drivers/net/hyperv/netvsc.c       | 17 ++++++++---------
+ drivers/net/hyperv/rndis_filter.c | 23 ++++++++++++++++-------
+ 2 files changed, 24 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 550843e2164b..f0dbf4e82e0b 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -2100,10 +2100,8 @@ static void mana_destroy_txq(struct mana_port_context *apc)
- 		napi = &apc->tx_qp[i].tx_cq.napi;
- 		if (apc->tx_qp[i].txq.napi_initialized) {
- 			napi_synchronize(napi);
--			netdev_lock_ops_to_full(napi->dev);
- 			napi_disable_locked(napi);
- 			netif_napi_del_locked(napi);
--			netdev_unlock_full_to_ops(napi->dev);
- 			apc->tx_qp[i].txq.napi_initialized = false;
- 		}
- 		mana_destroy_wq_obj(apc, GDMA_SQ, apc->tx_qp[i].tx_object);
-@@ -2256,10 +2254,8 @@ static int mana_create_txq(struct mana_port_context *apc,
- 		mana_create_txq_debugfs(apc, i);
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index 720104661d7f..60a4629fe6ba 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -1812,6 +1812,11 @@ struct netvsc_device *netvsc_device_add(struct hv_device *device,
  
- 		set_bit(NAPI_STATE_NO_BUSY_POLL, &cq->napi.state);
--		netdev_lock_ops_to_full(net);
- 		netif_napi_add_locked(net, &cq->napi, mana_poll);
- 		napi_enable_locked(&cq->napi);
--		netdev_unlock_full_to_ops(net);
- 		txq->napi_initialized = true;
+ 	/* Enable NAPI handler before init callbacks */
+ 	netif_napi_add(ndev, &net_device->chan_table[0].napi, netvsc_poll);
++	napi_enable(&net_device->chan_table[0].napi);
++	netif_queue_set_napi(ndev, 0, NETDEV_QUEUE_TYPE_RX,
++			     &net_device->chan_table[0].napi);
++	netif_queue_set_napi(ndev, 0, NETDEV_QUEUE_TYPE_TX,
++			     &net_device->chan_table[0].napi);
  
- 		mana_gd_ring_cq(cq->gdma_cq, SET_ARM_BIT);
-@@ -2295,10 +2291,8 @@ static void mana_destroy_rxq(struct mana_port_context *apc,
- 	if (napi_initialized) {
- 		napi_synchronize(napi);
+ 	/* Open the channel */
+ 	device->channel->next_request_id_callback = vmbus_next_request_id;
+@@ -1831,12 +1836,6 @@ struct netvsc_device *netvsc_device_add(struct hv_device *device,
+ 	/* Channel is opened */
+ 	netdev_dbg(ndev, "hv_netvsc channel opened successfully\n");
  
--		netdev_lock_ops_to_full(napi->dev);
- 		napi_disable_locked(napi);
- 		netif_napi_del_locked(napi);
--		netdev_unlock_full_to_ops(napi->dev);
+-	napi_enable(&net_device->chan_table[0].napi);
+-	netif_queue_set_napi(ndev, 0, NETDEV_QUEUE_TYPE_RX,
+-			     &net_device->chan_table[0].napi);
+-	netif_queue_set_napi(ndev, 0, NETDEV_QUEUE_TYPE_TX,
+-			     &net_device->chan_table[0].napi);
+-
+ 	/* Connect with the NetVsp */
+ 	ret = netvsc_connect_vsp(device, net_device, device_info);
+ 	if (ret != 0) {
+@@ -1854,14 +1853,14 @@ struct netvsc_device *netvsc_device_add(struct hv_device *device,
+ 
+ close:
+ 	RCU_INIT_POINTER(net_device_ctx->nvdev, NULL);
+-	netif_queue_set_napi(ndev, 0, NETDEV_QUEUE_TYPE_TX, NULL);
+-	netif_queue_set_napi(ndev, 0, NETDEV_QUEUE_TYPE_RX, NULL);
+-	napi_disable(&net_device->chan_table[0].napi);
+ 
+ 	/* Now, we can close the channel safely */
+ 	vmbus_close(device->channel);
+ 
+ cleanup:
++	netif_queue_set_napi(ndev, 0, NETDEV_QUEUE_TYPE_TX, NULL);
++	netif_queue_set_napi(ndev, 0, NETDEV_QUEUE_TYPE_RX, NULL);
++	napi_disable(&net_device->chan_table[0].napi);
+ 	netif_napi_del(&net_device->chan_table[0].napi);
+ 
+ cleanup2:
+diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
+index 9e73959e61ee..ed67b1e1293a 100644
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -1252,17 +1252,26 @@ static void netvsc_sc_open(struct vmbus_channel *new_sc)
+ 	new_sc->rqstor_size = netvsc_rqstor_size(netvsc_ring_bytes);
+ 	new_sc->max_pkt_size = NETVSC_MAX_PKT_SIZE;
+ 
++	/* Enable napi before opening the vmbus channel to avoid races
++	 * as the host placing data on the host->guest ring may be left
++	 * out if napi was not enabled.
++	 */
++	napi_enable(&nvchan->napi);
++	netif_queue_set_napi(ndev, chn_index, NETDEV_QUEUE_TYPE_RX,
++			     &nvchan->napi);
++	netif_queue_set_napi(ndev, chn_index, NETDEV_QUEUE_TYPE_TX,
++			     &nvchan->napi);
++
+ 	ret = vmbus_open(new_sc, netvsc_ring_bytes,
+ 			 netvsc_ring_bytes, NULL, 0,
+ 			 netvsc_channel_cb, nvchan);
+-	if (ret == 0) {
+-		napi_enable(&nvchan->napi);
+-		netif_queue_set_napi(ndev, chn_index, NETDEV_QUEUE_TYPE_RX,
+-				     &nvchan->napi);
+-		netif_queue_set_napi(ndev, chn_index, NETDEV_QUEUE_TYPE_TX,
+-				     &nvchan->napi);
+-	} else {
++	if (ret != 0) {
+ 		netdev_notice(ndev, "sub channel open failed: %d\n", ret);
++		netif_queue_set_napi(ndev, chn_index, NETDEV_QUEUE_TYPE_TX,
++				     NULL);
++		netif_queue_set_napi(ndev, chn_index, NETDEV_QUEUE_TYPE_RX,
++				     NULL);
++		napi_disable(&nvchan->napi);
  	}
- 	xdp_rxq_info_unreg(&rxq->xdp_rxq);
  
-@@ -2549,18 +2543,14 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
- 
- 	gc->cq_table[cq->gdma_id] = cq->gdma_cq;
- 
--	netdev_lock_ops_to_full(ndev);
- 	netif_napi_add_weight_locked(ndev, &cq->napi, mana_poll, 1);
--	netdev_unlock_full_to_ops(ndev);
- 
- 	WARN_ON(xdp_rxq_info_reg(&rxq->xdp_rxq, ndev, rxq_idx,
- 				 cq->napi.napi_id));
- 	WARN_ON(xdp_rxq_info_reg_mem_model(&rxq->xdp_rxq, MEM_TYPE_PAGE_POOL,
- 					   rxq->page_pool));
- 
--	netdev_lock_ops_to_full(ndev);
- 	napi_enable_locked(&cq->napi);
--	netdev_unlock_full_to_ops(ndev);
- 
- 	mana_gd_ring_cq(cq->gdma_cq, SET_ARM_BIT);
- out:
+ 	if (atomic_inc_return(&nvscdev->open_chn) == nvscdev->num_chn)
 -- 
 2.43.0
 
