@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-6598-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6599-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AB31B34F87
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Aug 2025 01:09:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C249B3500E
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Aug 2025 02:13:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 901FF1B26916
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Aug 2025 23:09:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E65175E3611
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Aug 2025 00:13:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2156829D282;
-	Mon, 25 Aug 2025 23:09:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77CCC13957E;
+	Tue, 26 Aug 2025 00:13:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GTT5fOzU"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="aB5hVZzv"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95EA723D7C3;
-	Mon, 25 Aug 2025 23:09:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C71C654739;
+	Tue, 26 Aug 2025 00:13:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756163342; cv=none; b=kn5irwqVbgONcPwayA2oknlYpS0427wJMCJg1pF/wg5VZ1oATBGz3YNCg9ybFJGsncGGQkwViKO6Zd+oxbbUtzj8OikyCYvQ/m+ursH2PWSMYlhnO7dRB32e8vftUEO6oVg/RnHFmITyB1Mb/AdXCPterrC0xCEInUAiKmbc+AY=
+	t=1756167197; cv=none; b=RWcpgxqZghhFCr3WffojoSgeySK/w8FJDNUF8kNxuF9lKrnA1rjLT0nO8BwQVonrFGzbgt//9ma5ju70f4K6demQHpAA+qmw+1FGNl1y++2mMEFCEzR9xPwCKfav18K2SqJhlziC0Zzd4brVNYnQTLp/0Rm8K7KsWY6qz/+pLCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756163342; c=relaxed/simple;
-	bh=Fz172bfnT2fDc0B5BW9KQC8VQwSCH+A00nsF+R3Nznk=;
+	s=arc-20240116; t=1756167197; c=relaxed/simple;
+	bh=jHv/1F9GOa7La/IRS5S4XDkOIibIk6bnXzeA2fLhnRQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hz+aKgpJdS3JUod7kXUBD2/nkVJSpiysPW4oa4ySdYm3lpsEga2G1EqOQKu94HiY+ebSQtbFESFb6CiU8vrPHVEbe8eJSQWcuk4JbRcb1SlJ3du8gHgWHCDemEaKkRsqSQJDHZH2uLBS++ih/zQWEhX1jmSwA7teJ9QtS01DZSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GTT5fOzU; arc=none smtp.client-ip=13.77.154.182
+	 In-Reply-To:Content-Type; b=F4kQ8mY4eNzHt0QPmTiNsY0u4FY1bRlsC0rVnpQxnDrHDRjpMlJMcfipS47Lv/NTylimWYmCIhtnjDyNTHVYzyB44c2+8LfSDSsKa/JGvJOPJhloMt+ym77OxvV4eb1EYMg1Y2DJiD8B6tsZuLjhQEWESZtR1+MsGoG3dEzySvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=aB5hVZzv; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from [100.64.0.200] (unknown [20.29.225.195])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1E032211829D;
-	Mon, 25 Aug 2025 16:08:59 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1E032211829D
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5F85C2118298;
+	Mon, 25 Aug 2025 17:13:14 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5F85C2118298
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1756163339;
-	bh=yjj+T4F6X5Rb2NiUbWNootXcw5MYUgeaYi89zI0rqQM=;
+	s=default; t=1756167194;
+	bh=CVIMP+POTkQt/GP3p59xPy3sLUuvk75n+THXeV8y3pw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GTT5fOzUX6bjgmJRyTtl5Nlh5JACcr0YCsgajA504/VguHTsD2kG9KDvDG5alk+gF
-	 AlqgkFhhFVQMT3abN68Y5Bm44usX4MzHqG7q2W8uP1gfSybPvK8eBGyTYKXvPevQWI
-	 Yg63eHOsilGGsMx/M0Y6URyOnRsPjGUV5RxxijdQ=
-Message-ID: <3188ca61-2591-4576-9777-1671689b7235@linux.microsoft.com>
-Date: Mon, 25 Aug 2025 16:08:45 -0700
+	b=aB5hVZzvUlnIrojTr3bFiFOjUX1zYvch/lRCdxmVVIKu8MQQC4RQ2ImCh3PHLYWGh
+	 2eMVZwhBPyaiPbx4jjDOaopv2W2Rjl/As6wAa6oCwGLyv1Dk3Nc5nKf3ue2bREQ6dZ
+	 ieJGCbeRKYrvF7cZj8xUW1MlGrA7CmYA3vxrAQgs=
+Message-ID: <209e7fe9-cb5c-4e7c-8b5c-544387cf0927@linux.microsoft.com>
+Date: Mon, 25 Aug 2025 17:13:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -49,96 +49,125 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] Drivers: hv: Fix NEED_RESCHED_LAZY and use common
- APIs
-To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Peter Zijlstra <peterz@infradead.org>,
- Andy Lutomirski <luto@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
- Frederic Weisbecker <frederic@kernel.org>,
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
- Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett
- <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-hyperv@vger.kernel.org, rcu@vger.kernel.org
-References: <20250825200622.3759571-1-seanjc@google.com>
+Subject: Re: [PATCH v3 1/7] Drivers: hv: Introduce hv_hvcall_*() functions for
+ hypercall arguments
+To: Michael Kelley <mhklinux@outlook.com>,
+ Mukesh R <mrathor@linux.microsoft.com>, "kys@microsoft.com"
+ <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "hpa@zytor.com" <hpa@zytor.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+ <kw@linux.com>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "robh@kernel.org" <robh@kernel.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>
+Cc: "x86@kernel.org" <x86@kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+References: <20250415180728.1789-1-mhklinux@outlook.com>
+ <20250415180728.1789-2-mhklinux@outlook.com>
+ <f711d4ad-87a8-9cb3-aabc-a493ff18986a@linux.microsoft.com>
+ <33b59cc4-2834-b6c7-5ffd-7b9d620a4ce5@linux.microsoft.com>
+ <SN6PR02MB4157376DD06C1DC2E28A76B7D432A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <833a0c96-470f-acff-72e7-cc82995fbc2f@linux.microsoft.com>
+ <133c9897-12a8-619a-6cf4-334bc2036755@linux.microsoft.com>
+ <SN6PR02MB41576739C778676C009D5A86D43DA@SN6PR02MB4157.namprd02.prod.outlook.com>
 Content-Language: en-US
 From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <20250825200622.3759571-1-seanjc@google.com>
+In-Reply-To: <SN6PR02MB41576739C778676C009D5A86D43DA@SN6PR02MB4157.namprd02.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 8/25/2025 1:06 PM, Sean Christopherson wrote:
-> Fix a bug where MSHV root partitions don't honor NEED_RESCHED_LAZY, and then
-> deduplicate the TIF related MSHV code by turning the "kvm" entry APIs into
-> more generic "virt" APIs (which ideally would have been done when MSHV root
-> support was added).
+On 8/21/2025 7:16 PM, Michael Kelley wrote:
+> From: Mukesh R <mrathor@linux.microsoft.com> Sent: Thursday, August 21, 2025 2:16 PM
+>>
+>> On 8/21/25 13:49, Mukesh R wrote:
+>>> On 8/21/25 12:24, Michael Kelley wrote:
+>>>> From: Mukesh R <mrathor@linux.microsoft.com> Sent: Wednesday, August 20, 2025 7:58 PM
+>>>>>
+>>>>> On 8/20/25 17:31, Mukesh R wrote:
+>>>>>> On 4/15/25 11:07, mhkelley58@gmail.com wrote:
+>>>>>>> From: Michael Kelley <mhklinux@outlook.com>
+>>>>>>>
+>>>>>>>
+>>> <snip>
+>>>>>>
+>>>>>>
+>>>>>> IMHO, this is unnecessary change that just obfuscates code. With status quo
+>>>>>> one has the advantage of seeing what exactly is going on, one can use the
+>>>>>> args any which way, change batch size any which way, and is thus flexible.
+>>>>
+>>>> I started this patch set in response to some errors in open coding the
+>>>> use of hyperv_pcpu_input/output_arg, to see if helper functions could
+>>>> regularize the usage and reduce the likelihood of future errors. Balancing
+>>>> the pluses and minuses of the result, in my view the helper functions are
+>>>> an improvement, though not overwhelmingly so. Others may see the
+>>>> tradeoffs differently, and as such I would not go to the mat in arguing the
+>>>> patches must be taken. But if we don't take them, we need to go back and
+>>>> clean up minor errors and inconsistencies in the open coding at some
+>>>> existing hypercall call sites.
+>>>
+>>> Yes, definitely. Assuming Nuno knows what issues you are referring to,
+>>> I'll work with him to get them addressed asap. Thanks for noticing them.
+>>> If Nuno is not aware, I'll ping you for more info.
+>>
+>> Talked to Nuno, he's not aware of anything pending or details. So if you
+>> can kindly list them out here, I will make sure it gets addressed right
+>> away.
+>>
 > 
-> Assuming all is well, maybe this could go through the tip tree?
+> I didn't catalog the issues as I came across them when doing this patch
+> set. :-(   I don't think any are bugs that could break things now. They were
+> things like not ensuring that all hypercall input fields are initialized to zero,
+> duplicate initialization to zero, and unnecessary initialization of hypercall
+> output memory. In general, how the hypercall args are set up is inconsistent
+> across different hypercall call sites, and that inconsistency can lead to errors,
+> which is what I was trying to address.
 > 
-> The Hyper-V stuff and non-x86 architectures are compile-tested only.
-> 
+> But I can go back and come up with a list if that's where we're headed.
 
-Thanks Sean, I can test the root partition changes.
+Hi Michael and Mukesh,
 
-A similar change will be needed in mshv_vtl_main.c since it also calls
-mshv_do_pre_guest_mode_work() (hence the "common" in mshv_common.c).
+Just a suggestion, how about a simpler set of macros that doesn't really change
+the existing paradigm, but can be used to improve the consistency across the
+various hypercall sites.
 
-Also, is it possible to make all the mshv driver changes in a single patch?
-It seems like it would be cleaner than refactoring it in patches 1 & 2 and
-then deleting all the refactored code in patch 5.
+e.g. for getting and zeroing the input page:
 
-Thanks
+#define hv_get_input_ptr(in_ptr) \
+({ \
+        static_assert(sizeof(*in_ptr) <= HV_HYP_PAGE_SIZE); \
+        void *__arg = *this_cpu_ptr(hyperv_pcpu_input_arg); \
+        memset(__arg, 0, sizeof(*in_ptr)); \
+        __arg; \
+})
+
+(And something similar for the output arg which doesn't need memset())
+
+And for batch size, it can be very simple, although there's both the case
+of argument + array elements, and just array elements:
+
+#define hv_arg_get_batch_size(arg_ptr, element_ptr) \
+        ((HV_HYP_PAGE_SIZE - sizeof(*arg_ptr)) / sizeof(*element_ptr))
+
+#define hv_get_batch_size(element_ptr) (HV_HYP_PAGE_SIZE / sizeof(*element_ptr))
+
+Usage:
+
+struct hv_input_map_gpa_pages *input_page = hv_get_input_ptr(input_page);
+int batch_size = hv_arg_get_batch_size(input_page, &input_page->source_gpa_page_list[0]);
+
+
+
 Nuno
 
-> Sean Christopherson (5):
->   Drivers: hv: Move TIF pre-guest work handling fully into mshv_common.c
->   Drivers: hv: Handle NEED_RESCHED_LAZY before transferring to guest
->   entry/kvm: KVM: Move KVM details related to signal/-EINTR into KVM
->     proper
->   entry: Rename "kvm" entry code assets to "virt" to genericize APIs
->   Drivers: hv: Use common "entry virt" APIs to do work before running
->     guest
 > 
->  MAINTAINERS                                 |  2 +-
->  arch/arm64/kvm/Kconfig                      |  2 +-
->  arch/arm64/kvm/arm.c                        |  3 +-
->  arch/loongarch/kvm/Kconfig                  |  2 +-
->  arch/loongarch/kvm/vcpu.c                   |  3 +-
->  arch/riscv/kvm/Kconfig                      |  2 +-
->  arch/riscv/kvm/vcpu.c                       |  3 +-
->  arch/x86/kvm/Kconfig                        |  2 +-
->  arch/x86/kvm/vmx/vmx.c                      |  1 -
->  arch/x86/kvm/x86.c                          |  3 +-
->  drivers/hv/Kconfig                          |  1 +
->  drivers/hv/mshv.h                           |  2 --
->  drivers/hv/mshv_common.c                    | 22 ---------------
->  drivers/hv/mshv_root_main.c                 | 31 ++++-----------------
->  include/linux/{entry-kvm.h => entry-virt.h} | 19 +++++--------
->  include/linux/kvm_host.h                    | 17 +++++++++--
->  include/linux/rcupdate.h                    |  2 +-
->  kernel/entry/Makefile                       |  2 +-
->  kernel/entry/{kvm.c => virt.c}              | 15 ++++------
->  kernel/rcu/tree.c                           |  6 ++--
->  virt/kvm/Kconfig                            |  2 +-
->  21 files changed, 49 insertions(+), 93 deletions(-)
->  rename include/linux/{entry-kvm.h => entry-virt.h} (83%)
->  rename kernel/entry/{kvm.c => virt.c} (66%)
-> 
-> 
-> base-commit: 1b237f190eb3d36f52dffe07a40b5eb210280e00
+> Michael
 
 
