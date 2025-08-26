@@ -1,188 +1,88 @@
-Return-Path: <linux-hyperv+bounces-6602-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6603-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8D9FB35125
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Aug 2025 03:46:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 117C3B352E9
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Aug 2025 06:57:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B2BB71B263D0
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Aug 2025 01:47:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1AA4D1A87DD1
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Aug 2025 04:57:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52C7817D346;
-	Tue, 26 Aug 2025 01:46:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53FFB2E2DC1;
+	Tue, 26 Aug 2025 04:57:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Jk0YCFhV"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="R5PlInEp"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3985DA92E;
-	Tue, 26 Aug 2025 01:46:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC6D72DECB2;
+	Tue, 26 Aug 2025 04:57:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756172812; cv=none; b=DZKdZqHVKWqvy+JNQ2NfkVU2ciBSVCs6brQaHuc70J6ZHUYIxlSEuco/lRvRbKJVcyHRdMXsRO3o64i3q8FfvrlWCF6N1pAAan4yW6S6dSpZCkvpfOhyyQ3T9nZW69MaO61RXaHMSqUn8Mr1f7U6M7itlb7QDZB+YpYpyhPCLBE=
+	t=1756184231; cv=none; b=trRSqdWZwgqIL51zZ+ZIS25eB1OtEeBXHN4qFm4NCpodgGEN8aJjdygCcZ8KdCG3rt+Dy5WPecAY3ndKdp9xJznEo/kMNH4NUYNs/emnsWSowFTZ0D2V4RFaNqSmS7FAe9okcFZvBEAYJiuCBhlYdFRNBiebYGcB8OLY7OG+kpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756172812; c=relaxed/simple;
-	bh=mGjO8VbzjQKk3tmTMiMwWQ+YpoAiiRMbdEKDEB96Qpk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tKUEbWiQoxw6GF+xPcmWtHuPSZmAZwr+JbweOmpJNmwFFAECV5xT15pWhArYn5o3b56CpIfX5qOIJBz3hCsecWkZ11CWsuF9ms2iCgw1qo0FUh9c06htOZspGpagd3mwpqkjM+6RTTqLpAXyUrmda6QOecNEwk0uVBpAnmqDubI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Jk0YCFhV; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1756184231; c=relaxed/simple;
+	bh=xwMIaGQKz8p0Si+xGqmhBmPMRxKtcpPXxfbp1aDgx/U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UIXdpeTjDgBipRuu1OIe1HducQQ7Ok0yaQcP/qjhX7h6LyShhDSt6f9CIsQfF6T/GjMTx/gtcJw+hSbXAG3pO+oFVbxtlflxVPa2D1whcI5jsaaoa8Ue4If7FUA2qKwwaBDt4jqIigyDTzFfZ/AOzqkO4btKl0tY8ox5NDxbD3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=R5PlInEp; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.75.64.119] (unknown [40.78.13.173])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 06F1C2118680;
-	Mon, 25 Aug 2025 18:46:43 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 06F1C2118680
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 5ACCC211829D; Mon, 25 Aug 2025 21:57:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5ACCC211829D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1756172804;
-	bh=f3G5PQrmahImTfknDKpw5Li9J512eE7Xoy/fw99YK+Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Jk0YCFhV6hcpMuye2t4lKcoek6dM6xhLcquZ7b9DbK/9E5QGzf4j355zl//v2edEG
-	 KEZ5yVmVwC+XuAqycKJ+dT8MQayDwakIeRCYyWLMn0wpYarlj00pCTO16JSNGgghaZ
-	 4JLwk2J+uKOtBi8CKtqJXtrtvbveUu86551SCazI=
-Message-ID: <33062e8a-27dc-a623-6b12-c92713298369@linux.microsoft.com>
-Date: Mon, 25 Aug 2025 18:46:43 -0700
+	s=default; t=1756184229;
+	bh=1SFbtV4WkD6PXoKrfW4+V58ZRmMRw6Cp+HTFsBe/b9U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R5PlInEp8xIb3pHwGaQkKup92Sl6gUT5NR5COZvZXaLTfEnfE76mfeaHpy14ch4la
+	 nRCWzZDBENIerpuXmpjyriFlrvVGfGSIkxJjKL+iguGAFph78S5tQkQ7eRvYzkB+ea
+	 RH0Ogy98u8JsYR/tjb/+GEePlov1eMyfw6ZSSGGs=
+Date: Mon, 25 Aug 2025 21:57:09 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, pabeni@redhat.com,
+	shradhagupta@linux.microsoft.com, ernis@linux.microsoft.com,
+	dipayanroy@linux.microsoft.com, shirazsaleem@microsoft.com,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ssengar@microsoft.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH net] net: mana: Remove redundant
+ netdev_lock_ops_to_full() calls
+Message-ID: <20250826045709.GA2238@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1756119794-20110-1-git-send-email-ssengar@linux.microsoft.com>
+ <20250825174133.30e58c60@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v3 1/7] Drivers: hv: Introduce hv_hvcall_*() functions for
- hypercall arguments
-Content-Language: en-US
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
- Michael Kelley <mhklinux@outlook.com>, "kys@microsoft.com"
- <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "hpa@zytor.com" <hpa@zytor.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
- <kw@linux.com>,
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "robh@kernel.org" <robh@kernel.org>,
- "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>
-Cc: "x86@kernel.org" <x86@kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-References: <20250415180728.1789-1-mhklinux@outlook.com>
- <20250415180728.1789-2-mhklinux@outlook.com>
- <f711d4ad-87a8-9cb3-aabc-a493ff18986a@linux.microsoft.com>
- <33b59cc4-2834-b6c7-5ffd-7b9d620a4ce5@linux.microsoft.com>
- <SN6PR02MB4157376DD06C1DC2E28A76B7D432A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <833a0c96-470f-acff-72e7-cc82995fbc2f@linux.microsoft.com>
- <133c9897-12a8-619a-6cf4-334bc2036755@linux.microsoft.com>
- <SN6PR02MB41576739C778676C009D5A86D43DA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <209e7fe9-cb5c-4e7c-8b5c-544387cf0927@linux.microsoft.com>
-From: Mukesh R <mrathor@linux.microsoft.com>
-In-Reply-To: <209e7fe9-cb5c-4e7c-8b5c-544387cf0927@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250825174133.30e58c60@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On 8/25/25 17:13, Nuno Das Neves wrote:
-> On 8/21/2025 7:16 PM, Michael Kelley wrote:
->> From: Mukesh R <mrathor@linux.microsoft.com> Sent: Thursday, August 21, 2025 2:16 PM
->>>
->>> On 8/21/25 13:49, Mukesh R wrote:
->>>> On 8/21/25 12:24, Michael Kelley wrote:
->>>>> From: Mukesh R <mrathor@linux.microsoft.com> Sent: Wednesday, August 20, 2025 7:58 PM
->>>>>>
->>>>>> On 8/20/25 17:31, Mukesh R wrote:
->>>>>>> On 4/15/25 11:07, mhkelley58@gmail.com wrote:
->>>>>>>> From: Michael Kelley <mhklinux@outlook.com>
->>>>>>>>
->>>>>>>>
->>>> <snip>
->>>>>>>
->>>>>>>
->>>>>>> IMHO, this is unnecessary change that just obfuscates code. With status quo
->>>>>>> one has the advantage of seeing what exactly is going on, one can use the
->>>>>>> args any which way, change batch size any which way, and is thus flexible.
->>>>>
->>>>> I started this patch set in response to some errors in open coding the
->>>>> use of hyperv_pcpu_input/output_arg, to see if helper functions could
->>>>> regularize the usage and reduce the likelihood of future errors. Balancing
->>>>> the pluses and minuses of the result, in my view the helper functions are
->>>>> an improvement, though not overwhelmingly so. Others may see the
->>>>> tradeoffs differently, and as such I would not go to the mat in arguing the
->>>>> patches must be taken. But if we don't take them, we need to go back and
->>>>> clean up minor errors and inconsistencies in the open coding at some
->>>>> existing hypercall call sites.
->>>>
->>>> Yes, definitely. Assuming Nuno knows what issues you are referring to,
->>>> I'll work with him to get them addressed asap. Thanks for noticing them.
->>>> If Nuno is not aware, I'll ping you for more info.
->>>
->>> Talked to Nuno, he's not aware of anything pending or details. So if you
->>> can kindly list them out here, I will make sure it gets addressed right
->>> away.
->>>
->>
->> I didn't catalog the issues as I came across them when doing this patch
->> set. :-(   I don't think any are bugs that could break things now. They were
->> things like not ensuring that all hypercall input fields are initialized to zero,
->> duplicate initialization to zero, and unnecessary initialization of hypercall
->> output memory. In general, how the hypercall args are set up is inconsistent
->> across different hypercall call sites, and that inconsistency can lead to errors,
->> which is what I was trying to address.
->>
->> But I can go back and come up with a list if that's where we're headed.
+On Mon, Aug 25, 2025 at 05:41:33PM -0700, Jakub Kicinski wrote:
+> On Mon, 25 Aug 2025 04:03:14 -0700 Saurabh Sengar wrote:
+> > NET_SHAPER is always selected for MANA driver. When NET_SHAPER is enabled,
+> > netdev_lock_ops_to_full() reduces effectively to only an assert for lock,
+> > which is always held in the path when NET_SHAPER is enabled.
+> > 
+> > Remove the redundant netdev_lock_ops_to_full() call.
+> > 
+> > Fixes: d5c8f0e4e0cb ("net: mana: Fix potential deadlocks in mana napi ops")
+> > Cc: stable@vger.kernel.org
 > 
-> Hi Michael and Mukesh,
-> 
-> Just a suggestion, how about a simpler set of macros that doesn't really change
-> the existing paradigm, but can be used to improve the consistency across the
-> various hypercall sites.
-> 
-> e.g. for getting and zeroing the input page:
-> 
-> #define hv_get_input_ptr(in_ptr) \
-> ({ \
->          static_assert(sizeof(*in_ptr) <= HV_HYP_PAGE_SIZE); \
->          void *__arg = *this_cpu_ptr(hyperv_pcpu_input_arg); \
->          memset(__arg, 0, sizeof(*in_ptr)); \
->          __arg; \
-> })
+> If the call is a nop why is this a stable-worthy fix?
 
-Ugh! What is the problem that we are trying to solve? The code is
-simple and clear today, tells the reader exactly what is being used and
-for how many bytes etc. What if the input to hyp is a list of pfns, maybe
-a void *? And if we want to do any complex stuff, we'll just keep adding
-parameters to the macro. IMO, complex macros just obfuscate code! I think
-this is just not worth it right now. We'll look ways to enhance hcall params
-in future, perhaps we can address it then if there are any real issues.
-
-Thanks,
--Mukesh
+I am fine removing CC and fixes tag.
+I can send a V2 for it.
 
 
-> (And something similar for the output arg which doesn't need memset())
-> 
-> And for batch size, it can be very simple, although there's both the case
-> of argument + array elements, and just array elements:
-> 
-> #define hv_arg_get_batch_size(arg_ptr, element_ptr) \
->          ((HV_HYP_PAGE_SIZE - sizeof(*arg_ptr)) / sizeof(*element_ptr))
-> 
-> #define hv_get_batch_size(element_ptr) (HV_HYP_PAGE_SIZE / sizeof(*element_ptr))
-> 
-> Usage:
-> 
-> struct hv_input_map_gpa_pages *input_page = hv_get_input_ptr(input_page);
-> int batch_size = hv_arg_get_batch_size(input_page, &input_page->source_gpa_page_list[0]);
-> 
-> 
-> 
-> Nuno
-> 
->>
->> Michael
+- Saurabh
 
 
