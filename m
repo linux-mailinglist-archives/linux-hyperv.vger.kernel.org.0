@@ -1,155 +1,206 @@
-Return-Path: <linux-hyperv+bounces-6606-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6607-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2006BB370C9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Aug 2025 18:58:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E3072B37525
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Aug 2025 01:04:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0FFC07AC27F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Aug 2025 16:56:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0B1877A6462
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Aug 2025 23:02:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11CD02D8766;
-	Tue, 26 Aug 2025 16:58:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC0B51F5825;
+	Tue, 26 Aug 2025 23:04:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fuvpJ+uR"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="JJ0FqdLL"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB8A2D837C;
-	Tue, 26 Aug 2025 16:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5331C36D;
+	Tue, 26 Aug 2025 23:04:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756227483; cv=none; b=XXhQxg+Z2zJ7Ls0Vfm5yhmEdAzyN7lyg7Rupp/xJ+CY/Qx7MtmI/+Iu7LJ6mJm5ZjpwOMx96WOEevVEQbTbbD63uChgix+YzdBTA201exvr4Z+D2QxGvwQ3oOxUnDtNL7jt8uNGyXA164c1FZ3zKYKVupuYV0ttdg3pYxdFmQJ0=
+	t=1756249459; cv=none; b=f588+kziYTuAncOUANqCIOCpbBu7ZzIvW3z97U++FhHok8Cf8RkoXW7cgeaXOyTDXJId0NMI4f57+Wf4XWuLEvui0qJ3uqcZx4KYAdYuf3ZvPDOSSZmZmnG68gty2FEoYEom+TCJNMloWVosCZvgsWqmtMBuHWQod3QyfXEGAIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756227483; c=relaxed/simple;
-	bh=fnUtXDAxJfdbxKoWIvjZ0YEMsdquajfs3Wt0vqohrgU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ubMmnoo2oZu9s6x/EePqUAL6yDQNyPSEn9QLVcp1fDTzFKhnPHdwNItf1KrVl76vYqHNUSo0T4xLsZrxMtzfPtxsYoeWBgZVL2BFKsLWS+Gn86AlRsHZVg5MsrA92wClIOcSii+yml4tMhTKqDDFw9xeLeS1jATQ2bfM51G8L/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fuvpJ+uR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C82A7C4CEF1;
-	Tue, 26 Aug 2025 16:58:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756227482;
-	bh=fnUtXDAxJfdbxKoWIvjZ0YEMsdquajfs3Wt0vqohrgU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fuvpJ+uRtRM9fzHvRv14jD9ZQo0Z+Ik1UILyoPgPF2jz8dNyPROaEFVvlvQAaXz4X
-	 ttXYaAtJGkub4HtTxq/BEINhmPDYT0kc4MO9Pt7hSTntGG0uTTAcFEzDYKdGxtFeT2
-	 qkjkQ9Njb/UFnPIIvb1+17UQA9vp2juzNUYGm3uywq3v8NTkaS1OlNFYQ09AI39lpx
-	 YQaZvSP4SUfRf4YlPPa54Y1tNy/wsF7ZVJVKqynCB7t8JfsAtW1Xvl7gh2NjEvVbqY
-	 byeS9jwZXrmVRhx6StAaC2vlVi6HX3Ox4JExT2RQEj9zwDNL3tioAysr1mHqOoXhAg
-	 8DUjtPx04KNjg==
-Date: Tue, 26 Aug 2025 16:58:00 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Anup Patel <anup@brainfault.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	kvm@vger.kernel.org, loongarch@lists.linux.dev,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, rcu@vger.kernel.org
-Subject: Re: [PATCH 0/5] Drivers: hv: Fix NEED_RESCHED_LAZY and use common
- APIs
-Message-ID: <aK3nmOgVl4INJpjG@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <20250825200622.3759571-1-seanjc@google.com>
- <3188ca61-2591-4576-9777-1671689b7235@linux.microsoft.com>
- <aKz_ZMvvF0e9nwSn@google.com>
+	s=arc-20240116; t=1756249459; c=relaxed/simple;
+	bh=f4DFVYcAxdLhkeEGQ/Cw6H7Yt15mnu0+l2YL2kh2N5w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sKRdiaaDcXi1fHxydkgDTWlviFS8J4ULpyvZTYmBW6aBlypTrKcZZdvmxFmnCqGKN30TiD0VgaUCk+VQpmDGu0Ny0Yjm2HbpwnBcRrdkOLIn5GRW49Nd6Ko6hVXp9q3aAjluX9I6mPCvjfhfB+PZpgpS4ZVxXEbUNf856LmDB6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=JJ0FqdLL; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id DEB562019D43;
+	Tue, 26 Aug 2025 16:04:11 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DEB562019D43
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1756249452;
+	bh=8V4Mv65CO8o3WeyNJbdkS5oLwcOoRxGW9k+qEYHM5ug=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JJ0FqdLLZluk24TS2lHjn/uAl8gcDgBFfANRVBzqfRYP76f37SJeWNunkMDWRcM0I
+	 KhFdAGGSm3EACSO7TVs43jkSomeGM3KbIpbmRHfzqHSeR20jARDHNi0kGFndPqCPY3
+	 VdXjqfMJmEKBTrWftorscEr2r/f0V8a7nDk2bF6A=
+Message-ID: <efc06827-e938-42b5-bb45-705b880d11d9@linux.microsoft.com>
+Date: Tue, 26 Aug 2025 16:04:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aKz_ZMvvF0e9nwSn@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/hyperv: Export hv_hypercall_pg unconditionally
+To: Peter Zijlstra <peterz@infradead.org>,
+ Naman Jain <namjain@linux.microsoft.com>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H . Peter Anvin" <hpa@zytor.com>, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, mhklinux@outlook.com
+References: <20250825055208.238729-1-namjain@linux.microsoft.com>
+ <20250825094247.GU3245006@noisy.programming.kicks-ass.net>
+ <f154d997-f7a6-4379-b7e8-ac4ba990425c@linux.microsoft.com>
+ <20250826120752.GW4067720@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <20250826120752.GW4067720@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Aug 25, 2025 at 05:27:16PM -0700, Sean Christopherson wrote:
-> On Mon, Aug 25, 2025, Nuno Das Neves wrote:
-> > On 8/25/2025 1:06 PM, Sean Christopherson wrote:
-> > > Fix a bug where MSHV root partitions don't honor NEED_RESCHED_LAZY, and then
-> > > deduplicate the TIF related MSHV code by turning the "kvm" entry APIs into
-> > > more generic "virt" APIs (which ideally would have been done when MSHV root
-> > > support was added).
-> > > 
-> > > Assuming all is well, maybe this could go through the tip tree?
-> > > 
-> > > The Hyper-V stuff and non-x86 architectures are compile-tested only.
-> > > 
-> > 
-> > Thanks Sean, I can test the root partition changes.
-> > 
-> > A similar change will be needed in mshv_vtl_main.c since it also calls
-> > mshv_do_pre_guest_mode_work() (hence the "common" in mshv_common.c).
-> 
-> Oof, more dependencies.  I suppose the easiest thing would be to send a series
-> against
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git queue
-> 
-> and then route everything through there?
 
-Our fixes branch is on 6.17-rc1. You can use it as a base if you want
-to.
 
-> 
-> Alternatively, frontload the MSHV fixes (which I'll do regardless) and take those
-> through hyperv and the rest through the tip tree?  That seems like an absurd
-> amount of juggling though, especially if we want to get the cleanups into 6.18.
-> And if none of these lands, it's MSHV that'll suffer the most, so betting it all
-> on the hyperv tree doesn't seem terrible.
-> 
+On 8/26/2025 5:07 AM, Peter Zijlstra wrote:
+> On Tue, Aug 26, 2025 at 05:00:31PM +0530, Naman Jain wrote:
 
-I'm happy to do it however the community sees fit.
+Peter,
 
-> > Also, is it possible to make all the mshv driver changes in a single patch?
-> 
-> It's certainly possible, but I'd prefer not do to that.
-> 
-> > It seems like it would be cleaner than refactoring it in patches 1 & 2 and
-> > then deleting all the refactored code in patch 5.
-> 
-> Only if you don't care about backporting fixes, bisection, or maintaining code.
-> 
-> E.g. if checking NEED_RESCHED_LAZY somehow causes issues, it would be really nice
-> for that to bisect to exactly that patch, not a patch that also switches to a
-> completely different set of APIs.
-> 
-> And if someone is wants the fixes in a pre-6.18 kernel, they don't need to
-> backport all of the KVM and entry code changes just to get the fix.
+Naman is OOF; genuinely hoping it's not presumptuous of me to reply
+to the thread - seems time sensitive.
 
-+1 on this.
-
-Thanks,
-Wei
+[...]
 
 > 
-> As for the maintenance headache, see above.
+> I do not know what OpenHCL is. Nor is it clear from the code what NMIs
+> can't happen. Anyway, same can be achieved with breakpoints / kprobes.
+> You can get a trap after setting CR2 and scribble it.
+> 
+> You simply cannot use CR2 this way.
+> 
+
+The code in question runs with interrupts disabled, and the kernel runs
+without the memory swapping when using that module - the kernel is
+a firmware to host a vTPM for virtual machines. Somewhat similar to SMM.
+That should've been reflected somewhere in the comments and in Kconfig,
+we could do better. All in all, the page fault cannot happen in that
+path thus CR2 won't be trashed.
+
+Nor this kind of code can be stepped through in a self-hosted
+kernel debugger like kgdb. There are other examples of such code iiuc:
+the asm glue code in the interrupt exception entries where the trap
+frames are handled, likely return from the kernel to the user land.
+The thread context-swap code hardly can be stepped through with
+convenience if at all in the self-hosted debugger, too.
+
+>>> And an rax:rcx return, I though the canonical pair was AX,DX !?!?
+>>
+>> Here, the code uses rax and rcx not as a means to return one 128 bit
+>> value. The code uses them in that way as an ABI.
+> 
+> Still daft. Creating an ABI that goes against pre-existing conventions
+> is weird.
+> 
+
+It is weird. It really sucks to have to conform to ABIs introduced a
+decade+ ago when Hyper-V just appeared in the kernel and just for x86.
+As weird as the pair ax:cx looks for anyone who takes joy and pride in
+writing x86 asm code, it still works for the customers, we have to care
+about the backward compat.
+
+ From the discussion, it doesn't appear we can ask for much as you're
+right: the asm chunk looks abominable due to being essentially a
+context-swap with an entity foreign to the Linux/System-V ABI. Same
+must be true for the calls into the UEFI runtime services to a certain
+extent due to different calling conventions.
+
+We have a much cleaner story on ARM64 due to no legacy and using
+their calling conventions aka AAPCS64 and other standards everywhere
+(not only in Linux Hyper-V code) to the best of my knowledge.
+
+If nothing of that saves the patches from the death row, maybe it'd be 
+possible to give the patches the experimental status or get some time
+extension to learn what can be improved? I am asking to save the
+time spent by folks reviewing the parts that you don't see as being
+prohibitively bad.
+
+>>> Also, that STACK_FRAME_NON_STANDARD() annotation is broken, this must
+>>> not be used for anything that can end up in vmlinux.o -- that is, the
+>>> moment you built-in this driver (=y) this comes unstuck.
+>>>
+>>> The reason you're getting warnings is because you're violating the
+>>> normal calling convention and scribbling BP, we yelled at the TDX guys
+>>> for doing this, now you're getting yelled at. WTF !?!
+>>>
+>>> Please explain how just shutting up objtool makes the unwind work when
+>>> the NMI hits your BP scribble?
+>>
+>> Returning to a lower VTL treats the base pointer register as a general
+>> purpose one and this VTL transition function makes sure to preserve the
+>> bp register due to which the objtool trips over on the assembly touching
+>> the bp register. We considered this warning harmless and thus we are
+>> using this macro. Moreover NMIs are not an issue here as they won't be
+>> coming as mentioned other. If there are alternate approaches that I should
+>> be using, please suggest.
+> 
+> Using BP in an ABI like that is ridiculous and broken. We told the same
+> to the TDX folks when they tried, IIRC TDX was fixed.
+> 
+> It is simply not acceptable to break the regular calling convention with
+> a new ABI.
+> 
+> Again, I can put a breakpoint or kprobe in the region where BP is
+> scribbled.
+> 
+> Basically the argument is really simple: you run in Linux, you play by
+> the Linux rules. Using BP as argument is simply not possible. If your
+> ABI requires that, your ABI is broken and will not be supported. Rev the
+> ABI and try again. Same for CR2, that is not an available register in
+> any way.
+> 
+>> I now understand that as part of your effort to enable IBT config on
+>> x64, you changed the indirect calls to direct calls in Hyper-V.
+> 
+> Yeah, I was cleaning up indirect calls, and this really didn't need to
+> be one.
+> 
+>> As of today, there is no requirement to enable IBT in OpenHCL kernel
+>> as this runs as a paravisor in VTL2 and it does not effect the guest
+>> VMs running
+>> in VTL0.
+> 
+> I do not know what OpenHCL or VTLn means and as such pretty much the
+> whole of your statement makes no sense.
+> 
+> Anyway, AFAICT the whole idea of a hypercall page is to 'abtract' out
+> the VMCALL vs VMMCALL nonsense Intel/AMD inflicted on us. Surely you
+> don't actually need that. HyperV already knows about all the gazillion
+> of ways to do hypercalls.
+> 
+>> I can disable CONFIG_X86_KERNEL_IBT when CONFIG_MSHV_VTL is enabled in
+>> Kconfig in next version.
+> 
+> Or you can just straight up say: "We at microsoft don't care about
+> security." :-/
+> 
+> Doing that will ensure no distro will build your module, most build bots
+> will not build your module, nobody cares about your module.
+> 
+> And no, the problems with BP and CR2 are not related to IBT, that is
+> separate and no less broken. They violate the basic rules of x86_64.
+
+-- 
+Thank you,
+Roman
+
 
