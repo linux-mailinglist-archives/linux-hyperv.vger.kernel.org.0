@@ -1,211 +1,270 @@
-Return-Path: <linux-hyperv+bounces-6619-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6620-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADCEBB38F8E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Aug 2025 02:04:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DEB60B38FD5
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Aug 2025 02:31:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 63F88981AAD
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Aug 2025 00:04:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 36D0C9800BF
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Aug 2025 00:31:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E879258EE0;
-	Thu, 28 Aug 2025 00:02:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E28F12FF6F;
+	Thu, 28 Aug 2025 00:31:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P3ILK07k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VxRLwQRe"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBEE244664
-	for <linux-hyperv@vger.kernel.org>; Thu, 28 Aug 2025 00:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CE517996;
+	Thu, 28 Aug 2025 00:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756339337; cv=none; b=Eu5DqjaqRt0KekIJw7DxFtSd+Emxdc6AdLpAX8lg5fpLvOIHJhxKo+7KTy4PCC9g8AzvQ+W+DpghNQNWud5i3nOn4S4jUcJXKqlrI9a8WLAHV/yK+LR/nw8OOPTPdxKiKJdoc5ll5usGD3l9faO23wdKrctvBAJxP+o5VrIqYhE=
+	t=1756341093; cv=none; b=YvB/UQbel3Sy6WMSbzD7CmVa5q5CqqKPx3cdJMM6P3SQwYtj2zhM37zgphppfyKxklbzTkCYZWBsEGCYXsqUz16gE4WChCjKFI6IFz7nVf8RprxYFAHTx6ZJloROgiqJpIVutsWs9zVuvH0CJxgNfJEFMSWc3HhWMQiQZGtUG2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756339337; c=relaxed/simple;
-	bh=5KZra7rrb6EshYnRt06iajnZTBGSSVrTrCSYe32dt9s=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=e9hu+Vcy9GFKXKXK/4UevXBk068oHE5IEQD4REE4ipTPFIkkBRtN5mVdFd/zmjm75z9aUFShj5AWDwo48+h0yYUJb+nSKcOcgRqbNsulM77+rS6eLQ30WkjXgkBnYUIYhwub5yW/cSGIcQ7NEZxEHimucgfFwqZqyWZWmTq2BjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P3ILK07k; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-324e4c3af5fso368379a91.3
-        for <linux-hyperv@vger.kernel.org>; Wed, 27 Aug 2025 17:02:15 -0700 (PDT)
+	s=arc-20240116; t=1756341093; c=relaxed/simple;
+	bh=WLcp8w+zaBXmA/HAY9pMoek7MmD7nKXW93a4Y8P399A=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QrtrwCF6Ua9fZf3VTPKIJSzTmmWzR0tkzFn2/DPHEfcEryQpqq/gzEmvxnyMlTDyKkOVbIRcwey9GJcWCR4Fux7QP76ZJLBJyrjG0T3V+U8LFRLdwl0WevxHpAOg5EdC9AaZH9CwUoqg2eaGJTsjgNGTENpddkFji/F61nEl/Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VxRLwQRe; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-771e987b4e6so353173b3a.2;
+        Wed, 27 Aug 2025 17:31:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756339335; x=1756944135; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=qS5zxATrMXESBFPKwTqytXa2jxoDaW3HrytCSPyurss=;
-        b=P3ILK07kHqpUGuivkSLsoI+MFv54KeHD0qtH79NPU/KqIIn8aXu3po2ImTA6Zbi1rb
-         E5fBA7B2UekDDNvUsAKexzToVzRJc7Mw5dg7uHLZwb62LaaH+ax04wKyjta2qvvu3S+h
-         kTOk1iAlOQBWuwZhpmkRB+iXKBRmnXgrckSG/m3GzzzExftf50JP43JiZxW6f235Lo7V
-         fFCHf9fbjIGrlALSh3sn42twHZWzxgWNcnuQqOMarurbLQfJXVDcqoaiP3Wyv10FIbtY
-         4WAE16o5571YGlB8Lz65SnxkmdGx0ApLw47O36szCXI96jYaIvBsgiiEaF4hhKpQRkP3
-         /LPQ==
+        d=gmail.com; s=20230601; t=1756341091; x=1756945891; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=i9HctsThcJxuYSi/BLGQnP1aOyG8A/8iQK9Wsazcq+c=;
+        b=VxRLwQRePhvAIgqfxHDtPK+Pxls3IKAIGh1rkIqjosp27XckXE5GjWBIuhqzawI/m2
+         Qr8+yITgN56Vn3zC3H4ADlo7BZjbMhAGzQLVU4X6gQZQN5Kxxyh1Qz1rGa5I83WRDLxa
+         eww/g3d1k85qY7mrgNs91rQpwAsOhQUpZVCJ+TOf49B8yEBmv/5+ZD56BSQnTl7FEoaf
+         Bnr0B4JSEdBDIMGJbMIMlF+U6DV6fBXaqnHixH/ptEqkgsXrUqFQsn5b1omGnt4kOcd6
+         YbMfmBSXpwMRlD6fD4gs6ws9uTckvZiHDxVXfSb9nKMrlN8kBZAl6V5kKISaRkgKbUSm
+         h3gQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756339335; x=1756944135;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1756341091; x=1756945891;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=qS5zxATrMXESBFPKwTqytXa2jxoDaW3HrytCSPyurss=;
-        b=e7uBOGqje+WB9DtBe+a44jj9xxGhnkgu4BXqXCrwrmQ61Si9YWEZy9Hqv54VIR9nS+
-         Tp3yx9MTEdfTP9GWYlnMs0FZeES/8Cf3h+epMEIS9EW8BMy2UDwiERAy/t0aT3vkei7p
-         RCqElFxGthjksEt0Yn0oJEvYSSAjGydYeV0f1L5mJUpuzMYeUD8NbM4o2j9zz1YLUhbM
-         izqocd/0h7Xlx1ZP0QXXoyJjxOTppSUv5ACJKXmlJXyz6tMSRqsHDil4RPNeY9ux04sU
-         +7afvCoNUXsbgpaha72N/gLOjr5oHilWAeRDPcGiZL8gu2lhz/wcUh+CpHgWn7ScgeS5
-         8IIg==
-X-Forwarded-Encrypted: i=1; AJvYcCXVwW5MPY9zBP8fP3D4QzALpXslI0xAz1wBrB4TMVPQVN6ksEcxUjG01+Z6ng3CwtgFFHy4ZIIoTSyqldw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfqJ0OHcSQPKr642rQ2EWrBVTzK2/bM+kaQxnK+BPHCzxB7T0m
-	hhsmn0sFeJFX11MECqcpccjyT5dcQl7ZZQHyhH/XhnDEe2dB3VA3X0/T7PvnL7gxJgzluuelgnb
-	jZ8oXTw==
-X-Google-Smtp-Source: AGHT+IHTwHRJ1LtJUNLrZJovplfjTJdtHnbpa9Rw0OlaHYLIVyGS/gJ8LisaniBrYJHJcn/KzpZqw55zABU=
-X-Received: from pjbsc11.prod.google.com ([2002:a17:90b:510b:b0:321:c36d:1b8a])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3941:b0:327:b01c:4fd4
- with SMTP id 98e67ed59e1d1-327b01c52bcmr306189a91.2.1756339334767; Wed, 27
- Aug 2025 17:02:14 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 27 Aug 2025 17:01:56 -0700
-In-Reply-To: <20250828000156.23389-1-seanjc@google.com>
+        bh=i9HctsThcJxuYSi/BLGQnP1aOyG8A/8iQK9Wsazcq+c=;
+        b=bH9xOJu98IsOTsMviG+YS/TQfngbL5df+oeCAVVhGBGEQsg8GRO62o2BHywNq+68qO
+         iqc1SI+yaP6j3YdYBFtbWIjg5F9XdoG01YoEHjTv7x6iq4/Z3EqNoXoXSF/HYPy9uajt
+         3hQd1ZnXtB7KWQNyNjPldSiTqn4K9FTLw9vvtM+NJxe0jpYqEgam3T9E74q+5F8gAJPx
+         oSNL3+LQeb0AKVxJC7Qz1XT/XXihkM3EE7hnK1IjHkSbPaO9UBATVf09MdtgCk5sotto
+         csGPvcQmBq2i+BoL/jB/zG9l3Qd1Nil5dNFIecLvaU5FNNxreGPj0Ld//KrVhgCJf695
+         2dPw==
+X-Forwarded-Encrypted: i=1; AJvYcCVDk7dRAcaEZiK+CEVcDypgkCCmmIoYIPFW1Hxo5BfcMor6k5kLgWbZPIeGHrdu4lzLrOkhjKGiXXIiQxnCsNxI@vger.kernel.org, AJvYcCVMOxLFwLVasXMAj+zz0+OKkyfubwlN8S5fROHDuN67O36ahXS9bJ6EiiGYkkCVy/kSaBWqqz4eIFsrQfK8@vger.kernel.org, AJvYcCVPNe2zQHuQm9cs1cTsoiKcUUGhtJrzqgV8FyqB9bk8pspFbGrVabFIKxSCBxk09jSgyrmJnh/R@vger.kernel.org, AJvYcCXw0es2iBAex5hHfBESFI0gtc34kfZPor48OyUbIdE/jwNsjX204x8gyEzHJEChJkVomMpGRzTconN34mER@vger.kernel.org, AJvYcCXwY6Sgz3nEhkLnzcYOKf2tCYQAtKwfPmBVtLAWI1vPxqaudg/K7O85XVgw8YIIY+heeFc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMen2Z6efwB6miDss9w4kDzW0vGzCsXZDE6RyWKSD7Ln0JgViT
+	ya7mYBUkXuh8MBrSAVFpi0oDFrjmPoR+y9fyIo/s1Hs74fFYJ2oYLdfw
+X-Gm-Gg: ASbGncsQFLiXX8gEuIo/LqwAXZ/fFO3e33DoioMs5Xn5Y3+riZaXtFV1ZitNn5tVNXv
+	LMXSlWJpwPD8FRj5QB+mSU8JAh4L3b1Hk6Y2cT2TFgNMBYdd/ekyE08Q+yILtXO1qBP5EShBwIA
+	80vmIa9N0WVv0CIVZuUhVYGPugJeDetL28dCHXJ8TmQKEwQGb8zu7kcqT0hUjUI4eyHtO4Mr+ve
+	t7TbpYDgEORYycMA0GVXEt+Ah0hyexBJzfNaTnUejeChwro/Pu7QMiDy1vTWxkvzdEuuMw+DcGp
+	U8AYe1R5XU0Btan85XhO+SW60ApLVQmKuEhmXWjtet29MNv0uSugcWxlDcFgjoYRhZW2+/LHPI5
+	joDCvHAGjw0IJY6Ue8fBHoxfTD/P+jQ==
+X-Google-Smtp-Source: AGHT+IEuHK0KgR/sXohe6p4eF0GWxTovRCPiFteOV7ib1rSXIIfYKHGd7bgV4BCeVh0RQYmXt9voLA==
+X-Received: by 2002:a05:6a20:6a25:b0:243:a96a:2c83 with SMTP id adf61e73a8af0-243a96a30d3mr2437153637.53.1756341091441;
+        Wed, 27 Aug 2025 17:31:31 -0700 (PDT)
+Received: from localhost ([2a03:2880:2ff:3::])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3276f5a0bf9sm3243919a91.13.2025.08.27.17.31.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Aug 2025 17:31:30 -0700 (PDT)
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+Subject: [PATCH net-next v5 0/9] vsock: add namespace support to
+ vhost-vsock
+Date: Wed, 27 Aug 2025 17:31:28 -0700
+Message-Id: <20250827-vsock-vmtest-v5-0-0ba580bede5b@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250828000156.23389-1-seanjc@google.com>
-X-Mailer: git-send-email 2.51.0.268.g9569e192d0-goog
-Message-ID: <20250828000156.23389-8-seanjc@google.com>
-Subject: [PATCH v2 7/7] Drivers: hv: Use "entry virt" APIs to do work before
- returning to lower VTL
-From: Sean Christopherson <seanjc@google.com>
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Sean Christopherson <seanjc@google.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andy Lutomirski <luto@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Frederic Weisbecker <frederic@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
-	Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett <josh@joshtriplett.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-hyperv@vger.kernel.org, rcu@vger.kernel.org, 
-	Nuno Das Neves <nunodasneves@linux.microsoft.com>, Mukesh R <mrathor@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAGCjr2gC/2XQTWrDMBAF4KsEraOiGf1Y7ir3KF3I8jgRre1iC
+ ZESfPcKU4iqLofhe2+YB4u0BYrs9fRgG+UQw7qUQZ9PzN/cciUexjIzFKiFRM1zXP0Hz3OimPg
+ gHcKIINAjK+Rroyncj7g3tlDiC90Tey+bW4hp3b6PngzH/ohUIP5GZuDAJ6mdhdENvfWX6+zC5
+ 4tf5yMoY427BmPBshfgsJMSyLZYVhhtg2XBYMFNBoycJLVYPbEWbbMq2BC6vkODfjQVPv++zwr
+ 9DwkudE9egxsA4DJTcs9CXRWCbKwuhYo67ZVT2tPQXmtq3Babgns3gfcCy79Ejfd9/wHftRy1F
+ wIAAA==
+To: Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Stefan Hajnoczi <stefanha@redhat.com>, 
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+ "K. Y. Srinivasan" <kys@microsoft.com>, 
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+ Dexuan Cui <decui@microsoft.com>, Bryan Tan <bryan-bt.tan@broadcom.com>, 
+ Vishnu Dasa <vishnu.dasa@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kvm@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+ Bobby Eshleman <bobbyeshleman@gmail.com>, berrange@redhat.com, 
+ Bobby Eshleman <bobbyeshleman@meta.com>
+X-Mailer: b4 0.13.0
 
-Use the kernel's common "entry virt" APIs to handle pending work prior to
-returning to a lower VTL.  Drop the now-defunct common MSHV helper for
-doing work as the VTL driver was the last user.
+This series adds namespace support to vhost-vsock and loopback. It does
+not add namespaces to any of the other guest transports (virtio-vsock,
+hyperv, or vmci).
 
-No functional change intended.
+The current revision only supports two modes: local or global. Local
+mode is complete isolation of namespaces, while global mode is complete
+sharing between namespaces of CIDs (the original behavior).
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
+The mode is set using /proc/sys/net/vsock/ns_mode.
+
+Modes are per-netns and write-once. This allows a system to configure
+namespaces independently (some may share CIDs, others are completely
+isolated). This also supports future possible  mixed use cases, where
+there may be namespaces in global mode spinning up VMs while there are
+mixed mode namespaces that provide services to the VMs, but are not
+allowed to allocate from the global CID pool.
+
+Additionally, added tests for the new semantics:
+
+tools/testing/selftests/vsock/vmtest.sh
+1..22
+ok 1 vm_server_host_client
+ok 2 vm_client_host_server
+ok 3 vm_loopback
+ok 4 host_vsock_ns_mode_ok
+ok 5 host_vsock_ns_mode_write_once_ok
+ok 6 global_same_cid_fails
+ok 7 local_same_cid_ok
+ok 8 global_local_same_cid_ok
+ok 9 local_global_same_cid_ok
+ok 10 diff_ns_global_host_connect_to_global_vm_ok
+ok 11 diff_ns_global_host_connect_to_local_vm_fails
+ok 12 diff_ns_global_vm_connect_to_global_host_ok
+ok 13 diff_ns_global_vm_connect_to_local_host_fails
+ok 14 diff_ns_local_host_connect_to_local_vm_fails
+ok 15 diff_ns_local_vm_connect_to_local_host_fails
+ok 16 diff_ns_global_to_local_loopback_local_fails
+ok 17 diff_ns_local_to_global_loopback_fails
+ok 18 diff_ns_local_to_local_loopback_fails
+ok 19 diff_ns_global_to_global_loopback_ok
+ok 20 same_ns_local_loopback_ok
+ok 21 same_ns_local_host_connect_to_local_vm_ok
+ok 22 same_ns_local_vm_connect_to_local_host_ok
+SUMMARY: PASS=22 SKIP=0 FAIL=0
+Log: /tmp/vsock_vmtest_OQC4.log
+
+Thanks again for everyone's help and reviews!
+
+Signed-off-by: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+To: Shuah Khan <shuah@kernel.org>
+To: David S. Miller <davem@davemloft.net>
+To: Eric Dumazet <edumazet@google.com>
+To: Jakub Kicinski <kuba@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+To: Simon Horman <horms@kernel.org>
+To: Stefan Hajnoczi <stefanha@redhat.com>
+To: Michael S. Tsirkin <mst@redhat.com>
+To: Jason Wang <jasowang@redhat.com>
+To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: Eugenio Pérez <eperezma@redhat.com>
+To: K. Y. Srinivasan <kys@microsoft.com>
+To: Haiyang Zhang <haiyangz@microsoft.com>
+To: Wei Liu <wei.liu@kernel.org>
+To: Dexuan Cui <decui@microsoft.com>
+To: Bryan Tan <bryan-bt.tan@broadcom.com>
+To: Vishnu Dasa <vishnu.dasa@broadcom.com>
+To: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: virtualization@lists.linux.dev
+Cc: netdev@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kvm@vger.kernel.org
+Cc: linux-hyperv@vger.kernel.org
+Cc: berrange@redhat.com
+
+Changes in v5:
+- /proc/net/vsock_ns_mode -> /proc/sys/net/vsock/ns_mode
+- vsock_global_net -> vsock_global_dummy_net
+- fix netns lookup in vhost_vsock to respect pid namespaces
+- add callbacks for vsock_loopback to avoid circular dependency
+- vmtest.sh loads vsock_loopback module
+- remove vsock_net_mode_can_set()
+- change vsock_net_write_mode() to return true/false based on success
+- make vsock_net_mode enum instead of u8
+- Link to v4: https://lore.kernel.org/r/20250805-vsock-vmtest-v4-0-059ec51ab111@meta.com
+
+Changes in v4:
+- removed RFC tag
+- implemented loopback support
+- renamed new tests to better reflect behavior
+- completed suite of tests with permutations of ns modes and vsock_test
+  as guest/host
+- simplified socat bridging with unix socket instead of tcp + veth
+- only use vsock_test for success case, socat for failure case (context
+  in commit message)
+- lots of cleanup
+
+Changes in v3:
+- add notion of "modes"
+- add procfs /proc/net/vsock_ns_mode
+- local and global modes only
+- no /dev/vhost-vsock-netns
+- vmtest.sh already merged, so new patch just adds new tests for NS
+- Link to v2:
+  https://lore.kernel.org/kvm/20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com
+
+Changes in v2:
+- only support vhost-vsock namespaces
+- all g2h namespaces retain old behavior, only common API changes
+  impacted by vhost-vsock changes
+- add /dev/vhost-vsock-netns for "opt-in"
+- leave /dev/vhost-vsock to old behavior
+- removed netns module param
+- Link to v1:
+  https://lore.kernel.org/r/20200116172428.311437-1-sgarzare@redhat.com
+
+Changes in v1:
+- added 'netns' module param to vsock.ko to enable the
+  network namespace support (disabled by default)
+- added 'vsock_net_eq()' to check the "net" assigned to a socket
+  only when 'netns' support is enabled
+- Link to RFC: https://patchwork.ozlabs.org/cover/1202235/
+
 ---
- drivers/hv/Kconfig         |  1 +
- drivers/hv/mshv.h          |  2 --
- drivers/hv/mshv_common.c   | 22 ----------------------
- drivers/hv/mshv_vtl_main.c | 11 +++--------
- 4 files changed, 4 insertions(+), 32 deletions(-)
+Bobby Eshleman (9):
+      vsock: a per-net vsock NS mode state
+      vsock: add net to vsock skb cb
+      vsock: add netns to vsock core
+      vsock/loopback: add netns support
+      vsock/virtio: add netns to virtio transport common
+      vhost/vsock: add netns support
+      selftests/vsock: improve logging in vmtest.sh
+      selftests/vsock: invoke vsock_test through helpers
+      selftests/vsock: add namespace tests
 
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index 894037afcbf9..b00b2b3fe3db 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -85,6 +85,7 @@ config MSHV_VTL
- 	# Therefore, do not attempt to access or modify MTRRs here.
- 	depends on !MTRR
- 	select CPUMASK_OFFSTACK
-+	select VIRT_XFER_TO_GUEST_WORK
- 	default n
- 	help
- 	  Select this option to enable Hyper-V VTL driver support.
-diff --git a/drivers/hv/mshv.h b/drivers/hv/mshv.h
-index 0340a67acd0a..d4813df92b9c 100644
---- a/drivers/hv/mshv.h
-+++ b/drivers/hv/mshv.h
-@@ -25,6 +25,4 @@ int hv_call_set_vp_registers(u32 vp_index, u64 partition_id, u16 count,
- int hv_call_get_partition_property(u64 partition_id, u64 property_code,
- 				   u64 *property_value);
- 
--int mshv_do_pre_guest_mode_work(ulong th_flags);
--
- #endif /* _MSHV_H */
-diff --git a/drivers/hv/mshv_common.c b/drivers/hv/mshv_common.c
-index eb3df3e296bb..aa2be51979fd 100644
---- a/drivers/hv/mshv_common.c
-+++ b/drivers/hv/mshv_common.c
-@@ -138,25 +138,3 @@ int hv_call_get_partition_property(u64 partition_id,
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(hv_call_get_partition_property);
--
--/*
-- * Handle any pre-processing before going into the guest mode on this cpu, most
-- * notably call schedule(). Must be invoked with both preemption and
-- * interrupts enabled.
-- *
-- * Returns: 0 on success, -errno on error.
-- */
--int mshv_do_pre_guest_mode_work(ulong th_flags)
--{
--	if (th_flags & (_TIF_SIGPENDING | _TIF_NOTIFY_SIGNAL))
--		return -EINTR;
--
--	if (th_flags & (_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY))
--		schedule();
--
--	if (th_flags & _TIF_NOTIFY_RESUME)
--		resume_user_mode_work(NULL);
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(mshv_do_pre_guest_mode_work);
-diff --git a/drivers/hv/mshv_vtl_main.c b/drivers/hv/mshv_vtl_main.c
-index 4ca13c54c0a0..1eabed16aab9 100644
---- a/drivers/hv/mshv_vtl_main.c
-+++ b/drivers/hv/mshv_vtl_main.c
-@@ -8,6 +8,7 @@
-  *   Naman Jain <namjain@linux.microsoft.com>
-  */
- 
-+#include <linux/entry-virt.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/miscdevice.h>
-@@ -727,22 +728,16 @@ static int mshv_vtl_ioctl_return_to_lower_vtl(void)
- {
- 	preempt_disable();
- 	for (;;) {
--		const unsigned long VTL0_WORK = _TIF_SIGPENDING | _TIF_NEED_RESCHED |
--						_TIF_NOTIFY_RESUME | _TIF_NOTIFY_SIGNAL |
--						_TIF_NEED_RESCHED_LAZY;
--		unsigned long ti_work;
- 		unsigned long irq_flags;
- 		struct hv_vp_assist_page *hvp;
- 		int ret;
- 
--		ti_work = READ_ONCE(current_thread_info()->flags);
--		if (unlikely(ti_work & VTL0_WORK)) {
-+		if (__xfer_to_guest_mode_work_pending()) {
- 			preempt_enable();
--			ret = mshv_do_pre_guest_mode_work(ti_work);
-+			ret = xfer_to_guest_mode_handle_work();
- 			if (ret)
- 				return ret;
- 			preempt_disable();
--			continue;
- 		}
- 
- 		local_irq_save(irq_flags);
+ MAINTAINERS                             |    1 +
+ drivers/vhost/vsock.c                   |   30 +-
+ include/linux/virtio_vsock.h            |   12 +
+ include/net/af_vsock.h                  |   89 ++-
+ include/net/net_namespace.h             |    4 +
+ include/net/netns/vsock.h               |   25 +
+ net/vmw_vsock/af_vsock.c                |  312 ++++++++-
+ net/vmw_vsock/hyperv_transport.c        |    2 +-
+ net/vmw_vsock/virtio_transport.c        |    5 +-
+ net/vmw_vsock/virtio_transport_common.c |   14 +-
+ net/vmw_vsock/vmci_transport.c          |    4 +-
+ net/vmw_vsock/vsock_loopback.c          |   76 ++-
+ tools/testing/selftests/vsock/vmtest.sh | 1092 ++++++++++++++++++++++++++-----
+ 13 files changed, 1475 insertions(+), 191 deletions(-)
+---
+base-commit: 242041164339594ca019481d54b4f68a7aaff64e
+change-id: 20250325-vsock-vmtest-b3a21d2102c2
+
+Best regards,
 -- 
-2.51.0.268.g9569e192d0-goog
+Bobby Eshleman <bobbyeshleman@meta.com>
 
 
