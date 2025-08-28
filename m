@@ -1,79 +1,84 @@
-Return-Path: <linux-hyperv+bounces-6612-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6613-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 579E0B38F7B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Aug 2025 02:02:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7625B38F7C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Aug 2025 02:02:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 134C020539A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Aug 2025 00:02:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 05C0F1C23DF3
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Aug 2025 00:02:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8721F3A1D2;
-	Thu, 28 Aug 2025 00:02:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D2F71465A1;
+	Thu, 28 Aug 2025 00:02:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ULDox51p"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LYm0wZ+2"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62832CA6B
-	for <linux-hyperv@vger.kernel.org>; Thu, 28 Aug 2025 00:02:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B085125761
+	for <linux-hyperv@vger.kernel.org>; Thu, 28 Aug 2025 00:02:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756339325; cv=none; b=bejfhaswRyKhNoaozGuFdhNsVFelvNcULXCS//CAvtTaU/pA53saQEgC25amJUEzci8EZflwLZe/8MrRbcGURcwMniwdt74kzuDiUHR8rYpBeRxWzK91luxqOalQ8E1q8JOSqbl9XWzS074rDRzMRCKRSyWa9oTgIlSJOqNq1nk=
+	t=1756339326; cv=none; b=dix/wOX7T4/SobyYSoxjYV3ps9atCNYnHSS7iitW7a1RBADPH9BdPDf2IhVZk+sDYOx200Gs2hGMgFGUCIEK/uIU+lPkupcnRXfTBYGcEDdnyi1jFSwi0OUtif4y2reyvVIbyiosJzfKYmC3wgLmbxDJc9dv7pPknrShTNYSgbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756339325; c=relaxed/simple;
-	bh=zswYe5h9Zux3BU3V6n/2Y7ArjSVkrrMm1xmCzQlsrI0=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=UA/5iyAwlKeC/M00lH3V6BPUErt2ehjfMIRH292o03poFzMBlvDuIu9//2908NA9aJE6ZCPpXXEKfN/pPb5qv1ey4xci3ghXNNzUHLET5aeZXYLB9M+6Xsf/1fcRbTJQz2Kqqkdd3Wt6rlNglgmy3UHUtcGkOuOLb6QmxlBalvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ULDox51p; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1756339326; c=relaxed/simple;
+	bh=yezIQljWRff+Ph2Kkfldm8tP8XBUOynmTR8J0FoBino=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=vBoN9vYV8MXjSJq2bjPj6nTv+3mlCRJWqOZzLIyK+oVLHWWZOmP1xrUXCzCHm9zfPUCOAK/esasEtWa7hEhqFQT2EIlMIJWl9o/0Lrz6M9pxTY7ivjEemiK+TilUtTpw1UzfSNbIWZbtpyjv3p1/ecVJqqgkmg+pkXqfKENmyD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LYm0wZ+2; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3259ff53c2eso545111a91.1
-        for <linux-hyperv@vger.kernel.org>; Wed, 27 Aug 2025 17:02:02 -0700 (PDT)
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-771ff6f1020so741728b3a.3
+        for <linux-hyperv@vger.kernel.org>; Wed, 27 Aug 2025 17:02:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756339322; x=1756944122; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a1KBCmOkm9jj1CVFgQDrkKT5Cri9uMCD3k1Mkup3E5M=;
-        b=ULDox51p5hSGZ6/VeJDLPyY1PcgS6WXqWEy9y79/gBw4SL9Q9We70cyEVuQj3eNBcK
-         mGNdEMACiek4OMWOPaHAyICUohH77ZyC7OiiQ9X3qlBKZTRJ8L6cMGgVnTa22zUowuUR
-         kSvb/4ogA+VrfYcKHzAPtQv2Pw15Co1QPuJIyzPnxmnigvDCkX9dwNjutDLLJCmh0Isq
-         +4Zjqf8Gey4ZU7PqUoyJdYH3qwxzvQdtVCfNfOJlGDQmUQWSbJaq+aE6tWJpWfwGIE+N
-         oyZPN5emAH4oq6Or/2vNcS1NXdgeLHNW1+LgH6gY0SO1zjXfGQItthkH5IxHexaOiuoi
-         gaDQ==
+        d=google.com; s=20230601; t=1756339324; x=1756944124; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=kCYLCx+qR2vxxpcmuDTRXW8z6xS3j6g2rCWoMpSsv0A=;
+        b=LYm0wZ+2LAQFXy2+f47kTv5INk+IEhM5tDGrt1mLK2eKgQYHHae8l8OHKHYLJ62k4N
+         QTQGcUJt/xbjtaz4uXq0Aul5xaiXiBwJqrfYfwBt18C8CjGJpMb/s5siJnOJ7llSugcd
+         waOnNEmm2+jKt4pRj+8B1xLrkwJaHqiKo0GLmcMXEDLKnmPVlcSGvLeAqFzeYg9jfy3L
+         HC9XwOMNq0m0Ntv4qCgs1sVzNGXuAA/XWvaim7bIBcQGN49CV0ihpCEINl5h1HZ5a7xn
+         bJ8H8rXeqCAScAp3pNUsmbDqMi+am5k3m5EbIAtjxmrdHbESkEAp69N/mHEzTDos76k4
+         jHxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756339322; x=1756944122;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a1KBCmOkm9jj1CVFgQDrkKT5Cri9uMCD3k1Mkup3E5M=;
-        b=O/1+Sm4YhJ/6k+Q28DHAYsUOKFp8aTkM/fclDnxLuObR6MXHRKlEA3/Gk53OF9HIao
-         zwFQQD+M25UjlGHN5gEx8Mf3+jswplvRui6VjJdW9WaNUgtruQ+MVMIxLQLhgJ5E9zKJ
-         OqHcRMU6+DTziHHoBiN8xRTdWj5s8H0wBfgN3ZhPtoYJ/YUVm9P1nLN1EI7pzQp7rmqV
-         RA74+rRM26JL71qjX+SXxxJbuPsJibtmBFgyRqcojokaqJSuByxtQWRKrpdFOleOpica
-         hYEg7x0taBKAgjRJZUNClHBfaNjTY4V7AIeP1ieK9GbZYW99jGa/MYMSO5KmTh8AYPAI
-         hO7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXAOQ/LQP2VzjD/iWxRC1Biq4DjRvOZe9/qwx8jcHWwMCK1z+Mu3HupRAnMFeRsiCZCmIlstykTHq2qtag=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0GAJwuM7mIywys3ixQr/4QLpTYYtIq4lRytsEv//f+mIEDnjf
-	eYRQQa3tg38hHBSVz8k8u5MRNb2APLZ0zNeZA978HwuH8MXLlz+3FuUef0XW0AWqlFDVWNXmPeN
-	fWLY2Rg==
-X-Google-Smtp-Source: AGHT+IF6kzCkrmSsnzkeC4ntTYmLEyMfD8fyiYTiSQm4IQpQL6BrLCB4IIHTXj0uI8vGzJiOm/SE6wuxA5g=
-X-Received: from pjbsv16.prod.google.com ([2002:a17:90b:5390:b0:325:4747:a99b])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5627:b0:31e:ec58:62e2
- with SMTP id 98e67ed59e1d1-32515eaafdcmr30552688a91.19.1756339321553; Wed, 27
- Aug 2025 17:02:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1756339324; x=1756944124;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kCYLCx+qR2vxxpcmuDTRXW8z6xS3j6g2rCWoMpSsv0A=;
+        b=VNgzUGddHCgqdryuKT4T/GaS9FZamNsMtbmK59MnONM0QOHHk25L8+FNby0DTi9qF3
+         N4+MWB25yJrZzCVVDvAD72BzjTK7qfCUMLwX6x8wlIry9KA0JqeDajlLq3WJV9bpGD66
+         R5HstesLcWFIJAv0soP+ZO+vMgK56JiiFfGRmDH/mQBKRshFiz13UuUTK4rmXwCnhX2P
+         GvM9rAdqQuOKZuVbfAPfLqRV2N044OKZzMwrw5xAWMn+W+jpQ1fRCv1lVbYW5lF+pN65
+         7QkKL7r+SefCwx1ZYVytnjHMGjmLbItd4lz0jznpBcjklMGz7Evssu+G2vh0Dy0yn4UQ
+         cmKg==
+X-Forwarded-Encrypted: i=1; AJvYcCWJvBRoCwRsua+BcvYQHs2wQLVH9Rio/0jhbWacdaPBNFqH8AjDTiCLiZ49a848esYqcAnS3w5snRDKQzc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyL8U/Ugkn/Sbbnt0gCK7updzDicZ5HQMu6ydkwUHTP4G12TGuR
+	V2Hy36etyeEAbP7eM+ZJ0WQmoA/etMdWrHMcFzxeqMPJjqWa3lOFlTyqibxOs00/iou0FCZOXkY
+	q78zUTQ==
+X-Google-Smtp-Source: AGHT+IHDUlpPfgfETOO31fD//wXWMymV5Mnw/Y+lifpogBKPY1IBHbcv76HZ+xFt3eQXYgFR8TyJX2ZK1/M=
+X-Received: from pfgs8.prod.google.com ([2002:a05:6a00:1788:b0:771:f315:17c4])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:a85:b0:76b:d8f7:d30b
+ with SMTP id d2e1a72fcca58-7702f9f4896mr22345026b3a.10.1756339323354; Wed, 27
+ Aug 2025 17:02:03 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 27 Aug 2025 17:01:49 -0700
+Date: Wed, 27 Aug 2025 17:01:50 -0700
+In-Reply-To: <20250828000156.23389-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250828000156.23389-1-seanjc@google.com>
 X-Mailer: git-send-email 2.51.0.268.g9569e192d0-goog
-Message-ID: <20250828000156.23389-1-seanjc@google.com>
-Subject: [PATCH v2 0/7] Drivers: hv: Fix NEED_RESCHED_LAZY and use common APIs
+Message-ID: <20250828000156.23389-2-seanjc@google.com>
+Subject: [PATCH v2 1/7] Drivers: hv: Handle NEED_RESCHED_LAZY before
+ transferring to guest
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
@@ -96,79 +101,67 @@ Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	Nuno Das Neves <nunodasneves@linux.microsoft.com>, Mukesh R <mrathor@linux.microsoft.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Fix a bug where MSHV root partitions (and upper-level VTL code) don't honor
-NEED_RESCHED_LAZY, and then deduplicate the TIF related MSHV code by turning
-the "kvm" entry APIs into more generic "virt" APIs.
+Check for NEED_RESCHED_LAZY, not just NEED_RESCHED, prior to transferring
+control to a guest.  Failure to check for lazy resched can unnecessarily
+delay rescheduling until the next tick when using a lazy preemption model.
 
-This version is based on
+Note, ideally both the checking and processing of TIF bits would be handled
+in common code, to avoid having to keep three separate paths synchronized,
+but defer such cleanups to the future to keep the fix as standalone as
+possible.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git hyperv-next
+Cc: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: Mukesh R <mrathor@linux.microsoft.com>
+Fixes: 621191d709b1 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
+Fixes: 64503b4f4468 ("Drivers: hv: Introduce mshv_vtl driver")
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ drivers/hv/mshv_common.c    | 2 +-
+ drivers/hv/mshv_root_main.c | 3 ++-
+ drivers/hv/mshv_vtl_main.c  | 3 ++-
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
-in order to pickup the VTL changes that are queued for 6.18.  I also
-squashed the NEED_RESCHED_LAZY fixes for root and VTL modes into a single
-patch, as it should be easy/straightforward to drop the VTL change as needed
-if we want this in 6.17 or earlier.
-
-That effectively means the full series is dependent on the VTL changes being
-fully merged for 6.18.  But I think that's ok as it's really only the MSHV
-changes that have any urgency whatsoever, and I assume that Microsoft is
-the only user that truly cares about the MSHV root fix.  I.e. if the whole
-thing gets delayed, I think it's only the Hyper-V folks that are impacted.
-
-I have no preference what tree this goes through, or when, and can respin
-and/or split as needed.
-
-As with v1, the Hyper-V stuff and non-x86 architectures are compile-tested
-only.
-
-v2:
- - Rebase on hyperv-next.
- - Fix and converge the VTL code as well. [Peter, Nuno]
-
-v1: https://lore.kernel.org/all/20250825200622.3759571-1-seanjc@google.com
-
-
-Sean Christopherson (7):
-  Drivers: hv: Handle NEED_RESCHED_LAZY before transferring to guest
-  Drivers: hv: Disentangle VTL return cancellation from SIGPENDING
-  Drivers: hv: Disable IRQs only after handling pending work before VTL
-    return
-  entry/kvm: KVM: Move KVM details related to signal/-EINTR into KVM
-    proper
-  entry: Rename "kvm" entry code assets to "virt" to genericize APIs
-  Drivers: hv: Use common "entry virt" APIs to do work in root before
-    running guest
-  Drivers: hv: Use "entry virt" APIs to do work before returning to
-    lower VTL
-
- MAINTAINERS                                 |  2 +-
- arch/arm64/kvm/Kconfig                      |  2 +-
- arch/arm64/kvm/arm.c                        |  3 +-
- arch/loongarch/kvm/Kconfig                  |  2 +-
- arch/loongarch/kvm/vcpu.c                   |  3 +-
- arch/riscv/kvm/Kconfig                      |  2 +-
- arch/riscv/kvm/vcpu.c                       |  3 +-
- arch/x86/kvm/Kconfig                        |  2 +-
- arch/x86/kvm/vmx/vmx.c                      |  1 -
- arch/x86/kvm/x86.c                          |  3 +-
- drivers/hv/Kconfig                          |  2 ++
- drivers/hv/mshv.h                           |  2 --
- drivers/hv/mshv_common.c                    | 22 ---------------
- drivers/hv/mshv_root_main.c                 | 31 ++++-----------------
- drivers/hv/mshv_vtl_main.c                  | 23 +++++++--------
- include/linux/{entry-kvm.h => entry-virt.h} | 19 +++++--------
- include/linux/kvm_host.h                    | 17 +++++++++--
- include/linux/rcupdate.h                    |  2 +-
- kernel/entry/Makefile                       |  2 +-
- kernel/entry/{kvm.c => virt.c}              | 15 ++++------
- kernel/rcu/tree.c                           |  6 ++--
- virt/kvm/Kconfig                            |  2 +-
- 22 files changed, 60 insertions(+), 106 deletions(-)
- rename include/linux/{entry-kvm.h => entry-virt.h} (83%)
- rename kernel/entry/{kvm.c => virt.c} (66%)
-
-
-base-commit: 03ac62a578566730ab3c320f289f7320798ee2e1
+diff --git a/drivers/hv/mshv_common.c b/drivers/hv/mshv_common.c
+index 6f227a8a5af7..eb3df3e296bb 100644
+--- a/drivers/hv/mshv_common.c
++++ b/drivers/hv/mshv_common.c
+@@ -151,7 +151,7 @@ int mshv_do_pre_guest_mode_work(ulong th_flags)
+ 	if (th_flags & (_TIF_SIGPENDING | _TIF_NOTIFY_SIGNAL))
+ 		return -EINTR;
+ 
+-	if (th_flags & _TIF_NEED_RESCHED)
++	if (th_flags & (_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY))
+ 		schedule();
+ 
+ 	if (th_flags & _TIF_NOTIFY_RESUME)
+diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+index 932932cb91ea..0d849f09160a 100644
+--- a/drivers/hv/mshv_root_main.c
++++ b/drivers/hv/mshv_root_main.c
+@@ -484,7 +484,8 @@ mshv_vp_wait_for_hv_kick(struct mshv_vp *vp)
+ static int mshv_pre_guest_mode_work(struct mshv_vp *vp)
+ {
+ 	const ulong work_flags = _TIF_NOTIFY_SIGNAL | _TIF_SIGPENDING |
+-				 _TIF_NEED_RESCHED  | _TIF_NOTIFY_RESUME;
++				 _TIF_NEED_RESCHED  | _TIF_NEED_RESCHED_LAZY |
++				 _TIF_NOTIFY_RESUME;
+ 	ulong th_flags;
+ 
+ 	th_flags = read_thread_flags();
+diff --git a/drivers/hv/mshv_vtl_main.c b/drivers/hv/mshv_vtl_main.c
+index dc6594ae03ad..12f5e77b7095 100644
+--- a/drivers/hv/mshv_vtl_main.c
++++ b/drivers/hv/mshv_vtl_main.c
+@@ -728,7 +728,8 @@ static int mshv_vtl_ioctl_return_to_lower_vtl(void)
+ 	preempt_disable();
+ 	for (;;) {
+ 		const unsigned long VTL0_WORK = _TIF_SIGPENDING | _TIF_NEED_RESCHED |
+-						_TIF_NOTIFY_RESUME | _TIF_NOTIFY_SIGNAL;
++						_TIF_NOTIFY_RESUME | _TIF_NOTIFY_SIGNAL |
++						_TIF_NEED_RESCHED_LAZY;
+ 		unsigned long ti_work;
+ 		u32 cancel;
+ 		unsigned long irq_flags;
 -- 
 2.51.0.268.g9569e192d0-goog
 
