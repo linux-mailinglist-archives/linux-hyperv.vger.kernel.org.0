@@ -1,356 +1,155 @@
-Return-Path: <linux-hyperv+bounces-6649-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6650-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39568B390CA
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Aug 2025 03:09:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CD87B392A7
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Aug 2025 06:42:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3352A1C24996
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Aug 2025 01:09:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 478387C41A4
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Aug 2025 04:42:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09BAB2594B4;
-	Thu, 28 Aug 2025 01:06:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92E6E264A97;
+	Thu, 28 Aug 2025 04:42:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ha5iZhEC"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="afYExwtn"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A19424BBF0;
-	Thu, 28 Aug 2025 01:06:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 027D320C00B;
+	Thu, 28 Aug 2025 04:42:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756343187; cv=none; b=F0fxwq5GFv14bi4XPq/YUQmAayibHBXXZLTreaN+hYZFw2VQDLNTNyhnJl7AnYTqhy3OoXzK3fHYL0Be7GrcttAXa0+jljKIRWii0b4R+9VaAGVoNOYXlWO7tOq2XRDM64wLPr6T/tVPa9Pa2ueRuh1qnUokFN2vIzv2/17+pro=
+	t=1756356133; cv=none; b=s/axeG8P/zA+L86zR+MLbOsYZK4VLbUzP8tWboA8JRyLyGEnhB4FiQd9Ne3/qearVTAmGdTqIxUbSxzvsubb30kHuDzyW7eLBlbg3NqOK7nE5uKFCXVtBApSYF+Z68iK1kzV4w60UrAd7wP8UnLblPbY66OyPmwyrREPLr+ORlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756343187; c=relaxed/simple;
-	bh=32YrWvWyLeYRWG8d8naP7LAMzKHsmu0xOULh8pYDGpI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RJxMHLNFLsjo/UgUMcOxyQphhhgTdAzNbokRg+g3cdTTN7BRztzAZX826G3hsXgbQBOVNolAgjS2haLvuvA5dpsx2Zg2sRaFGwB7zRU4rhcyynxL2N4yne6yQqZRy4eOeM5g9hKFbOdV6gy/iX5SCfvPXuH6X44kgNXObw5d1qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ha5iZhEC; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1756356133; c=relaxed/simple;
+	bh=vK5gxf0YYvwb2yP2XOICuQK5XevoMhfonn1mg0+pBc0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=nOW6nKPS+/Hlt7POOYizlVM8cbPN2UJmPkDLsPVE7AWnk+gKrmOfFBAxt9iPPpGx2PI2hYsg0sqgLdjNQjpkvI7L16fFAJxU+bOreBIi4y2PHEJhfN01Yo+KZgyLmVegT1DaOMui9P0p1z0747a7xNeK1VCDFNF3Nz+ACdKSSBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=afYExwtn; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from romank-3650.corp.microsoft.com (unknown [131.107.174.60])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 53A7F2110807;
-	Wed, 27 Aug 2025 18:06:25 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 53A7F2110807
+Received: from namjain-Virtual-Machine.mshome.net (unknown [4.213.232.45])
+	by linux.microsoft.com (Postfix) with ESMTPSA id AC69E201656A;
+	Wed, 27 Aug 2025 21:42:07 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AC69E201656A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1756343185;
-	bh=qSjSegGY9QX2z06QsGMSUcJPV3Wn+5tB52XD9UQkq7o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ha5iZhECvt6LMVfM7/Z3ECWoYut+ldH4j9IF872A38gphc1MFpLy+O2oluLlSVWnb
-	 7Fb8EmEmWoi45XfDC4l56qxP8i3/SLSrhI2Sii91k0fW3BXQ9i3sAiLTrWd434NZqD
-	 IlbYBk2l3LUMA3HexQQ+TEuyaP3IY3z7OQxSkeLU=
-From: Roman Kisel <romank@linux.microsoft.com>
-To: arnd@arndb.de,
-	bp@alien8.de,
-	corbet@lwn.net,
-	dave.hansen@linux.intel.com,
-	decui@microsoft.com,
-	haiyangz@microsoft.com,
-	hpa@zytor.com,
-	kys@microsoft.com,
-	mikelley@microsoft.com,
-	mingo@redhat.com,
-	tglx@linutronix.de,
-	Tianyu.Lan@microsoft.com,
-	wei.liu@kernel.org,
-	x86@kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-doc@vger.kernel.org,
+	s=default; t=1756356130;
+	bh=pam2zqzqdVPunbK9HD9NJ5WtVBcnGTuHjVPIY36s2RU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=afYExwtn6YKhVW//9a3zmFW7IzD3dHXgWCl03WIS7YbSuOw7mXHVVASUS5eNS3Cky
+	 AcRzh8c4zabEXyvWH4F7rmjanKev9PJIeUXy/C9HW+oN36Dd51fxO87PPz6HGUa2aP
+	 i1NaRLXQrplR36htQ6RZhbhKRgOcNtn8IaA/Iobk=
+From: Naman Jain <namjain@linux.microsoft.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Stephen Hemminger <stephen@networkplumber.org>
+Cc: linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org
-Cc: benhill@microsoft.com,
-	bperkins@microsoft.com,
-	sunilmut@microsoft.com,
-	romank@linux.microsoft.com
-Subject: [PATCH hyperv-next v5 16/16] Drivers: hv: Support establishing the confidential VMBus connection
-Date: Wed, 27 Aug 2025 18:05:57 -0700
-Message-ID: <20250828010557.123869-17-romank@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250828010557.123869-1-romank@linux.microsoft.com>
-References: <20250828010557.123869-1-romank@linux.microsoft.com>
+	Michael Kelley <mhklinux@outlook.com>,
+	Long Li <longli@microsoft.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] uio_hv_generic: Let userspace take care of interrupt mask
+Date: Thu, 28 Aug 2025 10:12:00 +0530
+Message-Id: <20250828044200.492030-1-namjain@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-To establish the confidential VMBus connection the CoCo VM, the guest
-first checks on the confidential VMBus availability, and then proceeds
-to initializing the communication stack.
+Remove the logic to set interrupt mask by default in uio_hv_generic
+driver as the interrupt mask value is supposed to be controlled
+completely by the user space. If the mask bit gets changed
+by the driver, concurrently with user mode operating on the ring,
+the mask bit may be set when it is supposed to be clear, and the
+user-mode driver will miss an interrupt which will cause a hang.
 
-Implement that in the VMBus driver initialization.
+For eg- when the driver sets inbound ring buffer interrupt mask to 1,
+the host does not interrupt the guest on the UIO VMBus channel.
+However, setting the mask does not prevent the host from putting a
+message in the inbound ring buffer. So let’s assume that happens,
+the host puts a message into the ring buffer but does not interrupt.
 
-Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+Subsequently, the user space code in the guest sets the inbound ring
+buffer interrupt mask to 0, saying “Hey, I’m ready for interrupts”.
+User space code then calls pread() to wait for an interrupt.
+Then one of two things happens:
+
+* The host never sends another message. So the pread() waits forever.
+* The host does send another message. But because there’s already a
+  message in the ring buffer, it doesn’t generate an interrupt.
+  This is the correct behavior, because the host should only send an
+  interrupt when the inbound ring buffer transitions from empty to
+  not-empty. Adding an additional message to a ring buffer that is not
+  empty is not supposed to generate an interrupt on the guest.
+  Since the guest is waiting in pread() and not removing messages from
+  the ring buffer, the pread() waits forever.
+
+This could be easily reproduced in hv_fcopy_uio_daemon if we delay
+setting interrupt mask to 0.
+
+Similarly if hv_uio_channel_cb() sets the interrupt_mask to 1,
+there’s a race condition. Once user space empties the inbound ring
+buffer, but before user space sets interrupt_mask to 0, the host could
+put another message in the ring buffer but it wouldn’t interrupt.
+Then the next pread() would hang.
+
+Fix these by removing all instances where interrupt_mask is changed,
+while keeping the one in set_event() unchanged to enable userspace
+control the interrupt mask by writing 0/1 to /dev/uioX.
+
+Fixes: 95096f2fbd10 ("uio-hv-generic: new userspace i/o driver for VMBus")
+Suggested-by: John Starks <jostarks@microsoft.com>
+Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+Cc: <stable@vger.kernel.org>
 ---
- drivers/hv/vmbus_drv.c | 168 ++++++++++++++++++++++++++---------------
- 1 file changed, 106 insertions(+), 62 deletions(-)
+Changes since v1:
+https://lore.kernel.org/all/20250818064846.271294-1-namjain@linux.microsoft.com/
+* Added Fixes and Cc stable tags.
+---
+ drivers/uio/uio_hv_generic.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index aa0cde8b8a71..c2b083f6f7b2 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1058,12 +1058,9 @@ static void vmbus_onmessage_work(struct work_struct *work)
- 	kfree(ctx);
- }
+diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
+index f19efad4d6f8..3f8e2e27697f 100644
+--- a/drivers/uio/uio_hv_generic.c
++++ b/drivers/uio/uio_hv_generic.c
+@@ -111,7 +111,6 @@ static void hv_uio_channel_cb(void *context)
+ 	struct hv_device *hv_dev;
+ 	struct hv_uio_private_data *pdata;
  
--void vmbus_on_msg_dpc(unsigned long data)
-+static void __vmbus_on_msg_dpc(void *message_page_addr)
- {
--	struct hv_per_cpu_context *hv_cpu = (void *)data;
--	void *page_addr = hv_cpu->hyp_synic_message_page;
--	struct hv_message msg_copy, *msg = (struct hv_message *)page_addr +
--				  VMBUS_MESSAGE_SINT;
-+	struct hv_message msg_copy, *msg;
- 	struct vmbus_channel_message_header *hdr;
- 	enum vmbus_channel_message_type msgtype;
- 	const struct vmbus_channel_message_table_entry *entry;
-@@ -1071,6 +1068,10 @@ void vmbus_on_msg_dpc(unsigned long data)
- 	__u8 payload_size;
- 	u32 message_type;
+-	chan->inbound.ring_buffer->interrupt_mask = 1;
+ 	virt_mb();
  
-+	if (!message_page_addr)
-+		return;
-+	msg = (struct hv_message *)message_page_addr + VMBUS_MESSAGE_SINT;
-+
  	/*
- 	 * 'enum vmbus_channel_message_type' is supposed to always be 'u32' as
- 	 * it is being used in 'struct vmbus_channel_message_header' definition
-@@ -1196,6 +1197,14 @@ void vmbus_on_msg_dpc(unsigned long data)
- 	vmbus_signal_eom(msg, message_type);
- }
- 
-+void vmbus_on_msg_dpc(unsigned long data)
-+{
-+	struct hv_per_cpu_context *hv_cpu = (void *)data;
-+
-+	__vmbus_on_msg_dpc(hv_cpu->hyp_synic_message_page);
-+	__vmbus_on_msg_dpc(hv_cpu->para_synic_message_page);
-+}
-+
- #ifdef CONFIG_PM_SLEEP
- /*
-  * Fake RESCIND_CHANNEL messages to clean up hv_sock channels by force for
-@@ -1234,21 +1243,19 @@ static void vmbus_force_channel_rescinded(struct vmbus_channel *channel)
- #endif /* CONFIG_PM_SLEEP */
- 
- /*
-- * Schedule all channels with events pending
-+ * Schedule all channels with events pending.
-+ * The event page can be directly checked to get the id of
-+ * the channel that has the interrupt pending.
-  */
--static void vmbus_chan_sched(struct hv_per_cpu_context *hv_cpu)
-+static void vmbus_chan_sched(void *event_page_addr)
- {
- 	unsigned long *recv_int_page;
- 	u32 maxbits, relid;
-+	union hv_synic_event_flags *event;
- 
--	/*
--	 * The event page can be directly checked to get the id of
--	 * the channel that has the interrupt pending.
--	 */
--	void *page_addr = hv_cpu->hyp_synic_event_page;
--	union hv_synic_event_flags *event
--		= (union hv_synic_event_flags *)page_addr +
--					 VMBUS_MESSAGE_SINT;
-+	if (!event_page_addr)
-+		return;
-+	event = (union hv_synic_event_flags *)event_page_addr + VMBUS_MESSAGE_SINT;
- 
- 	maxbits = HV_EVENT_FLAGS_COUNT;
- 	recv_int_page = event->flags;
-@@ -1256,6 +1263,11 @@ static void vmbus_chan_sched(struct hv_per_cpu_context *hv_cpu)
- 	if (unlikely(!recv_int_page))
+@@ -183,8 +182,6 @@ hv_uio_new_channel(struct vmbus_channel *new_sc)
  		return;
- 
-+	/*
-+	 * Suggested-by: Michael Kelley <mhklinux@outlook.com>
-+	 * One possible optimization would be to keep track of the largest relID that's in use,
-+	 * and only scan up to that relID.
-+	 */
- 	for_each_set_bit(relid, recv_int_page, maxbits) {
- 		void (*callback_fn)(void *context);
- 		struct vmbus_channel *channel;
-@@ -1319,26 +1331,35 @@ static void vmbus_chan_sched(struct hv_per_cpu_context *hv_cpu)
  	}
- }
  
--void vmbus_isr(void)
-+static void vmbus_message_sched(struct hv_per_cpu_context *hv_cpu, void *message_page_addr)
- {
--	struct hv_per_cpu_context *hv_cpu
--		= this_cpu_ptr(hv_context.cpu_context);
--	void *page_addr;
- 	struct hv_message *msg;
+-	/* Disable interrupts on sub channel */
+-	new_sc->inbound.ring_buffer->interrupt_mask = 1;
+ 	set_channel_read_mode(new_sc, HV_CALL_ISR);
+ 	ret = hv_create_ring_sysfs(new_sc, hv_uio_ring_mmap);
+ 	if (ret) {
+@@ -227,9 +224,7 @@ hv_uio_open(struct uio_info *info, struct inode *inode)
  
--	vmbus_chan_sched(hv_cpu);
--
--	page_addr = hv_cpu->hyp_synic_message_page;
--	msg = (struct hv_message *)page_addr + VMBUS_MESSAGE_SINT;
-+	if (!message_page_addr)
-+		return;
-+	msg = (struct hv_message *)message_page_addr + VMBUS_MESSAGE_SINT;
- 
- 	/* Check if there are actual msgs to be processed */
- 	if (msg->header.message_type != HVMSG_NONE) {
- 		if (msg->header.message_type == HVMSG_TIMER_EXPIRED) {
- 			hv_stimer0_isr();
- 			vmbus_signal_eom(msg, HVMSG_TIMER_EXPIRED);
--		} else
-+		} else {
- 			tasklet_schedule(&hv_cpu->msg_dpc);
-+		}
- 	}
-+}
-+
-+void vmbus_isr(void)
-+{
-+	struct hv_per_cpu_context *hv_cpu
-+		= this_cpu_ptr(hv_context.cpu_context);
-+
-+	vmbus_chan_sched(hv_cpu->hyp_synic_event_page);
-+	vmbus_chan_sched(hv_cpu->para_synic_event_page);
-+
-+	vmbus_message_sched(hv_cpu, hv_cpu->hyp_synic_message_page);
-+	vmbus_message_sched(hv_cpu, hv_cpu->para_synic_message_page);
- 
- 	add_interrupt_randomness(vmbus_interrupt);
- }
-@@ -1357,6 +1378,59 @@ static void vmbus_percpu_work(struct work_struct *work)
- 	hv_synic_init(cpu);
- }
- 
-+static int vmbus_alloc_synic_and_connect(void)
-+{
-+	int ret, cpu;
-+	struct work_struct __percpu *works;
-+	int hyperv_cpuhp_online;
-+
-+	ret = hv_synic_alloc();
-+	if (ret < 0)
-+		goto err_alloc;
-+
-+	works = alloc_percpu(struct work_struct);
-+	if (!works) {
-+		ret = -ENOMEM;
-+		goto err_alloc;
-+	}
-+
-+	/*
-+	 * Initialize the per-cpu interrupt state and stimer state.
-+	 * Then connect to the host.
-+	 */
-+	cpus_read_lock();
-+	for_each_online_cpu(cpu) {
-+		struct work_struct *work = per_cpu_ptr(works, cpu);
-+
-+		INIT_WORK(work, vmbus_percpu_work);
-+		schedule_work_on(cpu, work);
-+	}
-+
-+	for_each_online_cpu(cpu)
-+		flush_work(per_cpu_ptr(works, cpu));
-+
-+	/* Register the callbacks for possible CPU online/offline'ing */
-+	ret = cpuhp_setup_state_nocalls_cpuslocked(CPUHP_AP_ONLINE_DYN, "hyperv/vmbus:online",
-+						   hv_synic_init, hv_synic_cleanup);
-+	cpus_read_unlock();
-+	free_percpu(works);
-+	if (ret < 0)
-+		goto err_alloc;
-+	hyperv_cpuhp_online = ret;
-+
-+	ret = vmbus_connect();
+ 	ret = vmbus_connect_ring(dev->channel,
+ 				 hv_uio_channel_cb, dev->channel);
+-	if (ret == 0)
+-		dev->channel->inbound.ring_buffer->interrupt_mask = 1;
+-	else
 +	if (ret)
-+		goto err_connect;
-+	return 0;
-+
-+err_connect:
-+	cpuhp_remove_state(hyperv_cpuhp_online);
-+	return -ENODEV;
-+err_alloc:
-+	hv_synic_free();
-+	return -ENOMEM;
-+}
-+
- /*
-  * vmbus_bus_init -Main vmbus driver initialization routine.
-  *
-@@ -1367,8 +1441,7 @@ static void vmbus_percpu_work(struct work_struct *work)
-  */
- static int vmbus_bus_init(void)
- {
--	int ret, cpu;
--	struct work_struct __percpu *works;
-+	int ret;
+ 		atomic_dec(&pdata->refcnt);
  
- 	ret = hv_init();
- 	if (ret != 0) {
-@@ -1403,41 +1476,15 @@ static int vmbus_bus_init(void)
- 		}
- 	}
- 
--	ret = hv_synic_alloc();
--	if (ret)
--		goto err_alloc;
--
--	works = alloc_percpu(struct work_struct);
--	if (!works) {
--		ret = -ENOMEM;
--		goto err_alloc;
--	}
--
- 	/*
--	 * Initialize the per-cpu interrupt state and stimer state.
--	 * Then connect to the host.
-+	 * Cache the value as getting it involves a VM exit on x86(_64), and
-+	 * doing that on each VP while initializing SynIC's wastes time.
- 	 */
--	cpus_read_lock();
--	for_each_online_cpu(cpu) {
--		struct work_struct *work = per_cpu_ptr(works, cpu);
--
--		INIT_WORK(work, vmbus_percpu_work);
--		schedule_work_on(cpu, work);
--	}
--
--	for_each_online_cpu(cpu)
--		flush_work(per_cpu_ptr(works, cpu));
--
--	/* Register the callbacks for possible CPU online/offline'ing */
--	ret = cpuhp_setup_state_nocalls_cpuslocked(CPUHP_AP_ONLINE_DYN, "hyperv/vmbus:online",
--						   hv_synic_init, hv_synic_cleanup);
--	cpus_read_unlock();
--	free_percpu(works);
--	if (ret < 0)
--		goto err_alloc;
--	hyperv_cpuhp_online = ret;
--
--	ret = vmbus_connect();
-+	is_confidential = hv_confidential_vmbus_available();
-+	if (is_confidential)
-+		pr_info("Establishing connection to the confidential VMBus\n");
-+	hv_para_set_sint_proxy(!is_confidential);
-+	ret = vmbus_alloc_synic_and_connect();
- 	if (ret)
- 		goto err_connect;
- 
-@@ -1453,9 +1500,6 @@ static int vmbus_bus_init(void)
- 	return 0;
- 
- err_connect:
--	cpuhp_remove_state(hyperv_cpuhp_online);
--err_alloc:
--	hv_synic_free();
- 	if (vmbus_irq == -1) {
- 		hv_remove_vmbus_handler();
- 	} else {
+ 	return ret;
 -- 
-2.43.0
+2.34.1
 
 
