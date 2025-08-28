@@ -1,367 +1,139 @@
-Return-Path: <linux-hyperv+bounces-6651-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6652-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C742B397F4
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Aug 2025 11:16:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCC27B39A66
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Aug 2025 12:40:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B22B1BA83DA
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Aug 2025 09:16:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 139FAA00528
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Aug 2025 10:38:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63F7C20E715;
-	Thu, 28 Aug 2025 09:16:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6DF530DD16;
+	Thu, 28 Aug 2025 10:36:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CJ5FY01k"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EI7KTp8P"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3EA1EE033
-	for <linux-hyperv@vger.kernel.org>; Thu, 28 Aug 2025 09:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC4830C624;
+	Thu, 28 Aug 2025 10:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756372593; cv=none; b=JTdESBCeMUXbX/7dx/+IUM1AbHfGEgUPM2/DTUgPcESGsnMQuNJk1KsWysmbF+laDTW4REnT/0CIbLkjg2nzy8rvUr98QZh7cDyDded2P47bLE/yh9Ihj/DPY1iRfqjD+yhYAWWcNCBCh0MCrt/4TKPBaqI62gk0tj6CZ5ItVo8=
+	t=1756377376; cv=none; b=GYthD3XFuJQmHG7EBQ1zGTpB2M5osfNprwX1EsE16wwlemr6pkZpir74O+MpHIanTiPVgk4kYpdo+A8bGST7wGFVTZZkYJamp+32esO8KP2F9S6qFwERI5cSJ3Kfd58CK1pFjBw98ftdk9o8CR6YvYH3bnGlLx9TALCLWnak8lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756372593; c=relaxed/simple;
-	bh=83MPi7t3c6et/19BGf6NIja0Y+tkJ3A67wMIYcCaTiE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Df/uPBAtGccpM9gTaOwzXq6QNp+9e0ZhVV5P4LZ+MXkUrN76Nrcg5tld4QcQdoR707ygOAM80Waam40i4mugWnF2nT9iD/Cc6pY5X5oZdV1FEc0YYBqnluYroigmXQHNY+2iJYjqi6YDuX5DQiPK4omFi0fltjQLgPa/fuaCosY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CJ5FY01k; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756372590;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=lMHoyR4t+VD2Hv4M+jrjEVqyNy3Cvds3HYHQtEfzQbo=;
-	b=CJ5FY01kCbaF9/mD1mkZ8YCiKJQ8dW8SFzrIklzlw3H2PsDQVB3Gx9GMkx2NOo2LUOOppX
-	T11k+VQPEoYXrjBYbtB6s2/Td+qbV1Fy9ilKHM8uvHJ53l3xZvNClWETEMCHngotRjdqz7
-	SZRBlgskZ2YyoHO58m8ysVjSOD2bElE=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-82-q5zZCpZ-Obilh92PJH4tFg-1; Thu,
- 28 Aug 2025 05:16:26 -0400
-X-MC-Unique: q5zZCpZ-Obilh92PJH4tFg-1
-X-Mimecast-MFC-AGG-ID: q5zZCpZ-Obilh92PJH4tFg_1756372585
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 096051800286;
-	Thu, 28 Aug 2025 09:16:25 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.226.68])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 799271800291;
-	Thu, 28 Aug 2025 09:16:20 +0000 (UTC)
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-To: linux-hyperv@vger.kernel.org,
-	Michael Kelley <mhklinux@outlook.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
+	s=arc-20240116; t=1756377376; c=relaxed/simple;
+	bh=Q++vDmJGmmqheRrUrP0W8dSS7fcanjr4UJG7gMXFg6o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E7DDjoJPCp8LD1C60kAwgxpCgiay8rN3pnCh2v47+bHZ+M129APzGpuKgIoUrei4PQLe+fYhYxjdjZAuuQ9MNNasBCUTMoX7HMRtSy7JLRc4UZNBrEehT3jmT+sSDBm5hLm2VMEcyGht5odhEWAD+BfmCJx4383Vl6PZoodAGCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EI7KTp8P; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756377375; x=1787913375;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Q++vDmJGmmqheRrUrP0W8dSS7fcanjr4UJG7gMXFg6o=;
+  b=EI7KTp8Pkv/KuGNq6iMaeNGcX7oZqe/zW0XobJEVyWN6WEk4vnqBfXxZ
+   iR20JrwF36o2mPO7G/MpIAHjbxliRSqsbdufmH34IGVbtRN7ZNnmQnMrH
+   Bmc1hq9BtGcCgdqArDgwKAfiUyPDLb0ZTKSiCLbeDRcTk7G4QYTpOK4cB
+   5PhY8Y2wsjCNyzZ3FO0PHyELe5DM2RFeVNLhA3pwoxKpsAnwAgxiByMF0
+   6Lm1GGW2hF502wVVSTkez5qADgmkrdekkt+yKjbcZb6+gTdCnJlIXWVwZ
+   TtAKFU5P4QyV3V68l4Su9p5PYjQh9DfLDyQd0/eI3Xv0qMiUivx0vYr5i
+   g==;
+X-CSE-ConnectionGUID: J+9phYcOT5ihtlS0WasbOg==
+X-CSE-MsgGUID: 8TSymqXeTmC3pFCMFRhIJg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11535"; a="62465683"
+X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
+   d="scan'208";a="62465683"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 03:36:14 -0700
+X-CSE-ConnectionGUID: 0KXzwk6SSTqEhED/Xo7AIg==
+X-CSE-MsgGUID: uo1IoHNKR1Gi41sgQk9IWg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
+   d="scan'208";a="200992693"
+Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
+  by fmviesa001.fm.intel.com with ESMTP; 28 Aug 2025 03:36:08 -0700
+Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1urZzC-000TeJ-18;
+	Thu, 28 Aug 2025 10:36:06 +0000
+Date: Thu, 28 Aug 2025 18:35:21 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bobby Eshleman <bobbyeshleman@gmail.com>,
+	Stefano Garzarella <sgarzare@redhat.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	Tianyu Lan <tiala@microsoft.com>,
-	Li Tian <litian@redhat.com>,
-	Philipp Rudo <prudo@redhat.com>
-Subject: [PATCH v4] x86/hyperv: Fix kdump on Azure CVMs
-Date: Thu, 28 Aug 2025 12:16:18 +0300
-Message-ID: <20250828091618.884950-1-vkuznets@redhat.com>
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	Bobby Eshleman <bobbyeshleman@gmail.com>, berrange@redhat.com
+Subject: Re: [PATCH net-next v5 4/9] vsock/loopback: add netns support
+Message-ID: <202508281824.3XZiIgxs-lkp@intel.com>
+References: <20250827-vsock-vmtest-v5-4-0ba580bede5b@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250827-vsock-vmtest-v5-4-0ba580bede5b@meta.com>
 
-Azure CVM instance types featuring a paravisor hang upon kdump. The
-investigation shows that makedumpfile causes a hang when it steps on a page
-which was previously share with the host
-(HVCALL_MODIFY_SPARSE_GPA_PAGE_HOST_VISIBILITY). The new kernel has no
-knowledge of these 'special' regions (which are Vmbus connection pages,
-GPADL buffers, ...). There are several ways to approach the issue:
-- Convey the knowledge about these regions to the new kernel somehow.
-- Unshare these regions before accessing in the new kernel (it is unclear
-if there's a way to query the status for a given GPA range).
-- Unshare these regions before jumping to the new kernel (which this patch
-implements).
+Hi Bobby,
 
-To make the procedure as robust as possible, store PFN ranges of shared
-regions in a linked list instead of storing GVAs and re-using
-hv_vtom_set_host_visibility(). This also allows to avoid memory allocation
-on the kdump/kexec path.
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
-Changes since v3 [Michael Kelley]:
- - Employ x86_platform.guest.enc_kexec_{begin,finish} hooks.
- - Don't use spinlock in what's now hv_vtom_kexec_finish().
- - Handle possible hypercall failures in hv_mark_gpa_visibility()
-   symmetrically; change hv_list_enc_remove() to return -ENOMEM as well.
- - Rebase to the latest hyperv/next.
----
- arch/x86/hyperv/ivm.c | 211 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 210 insertions(+), 1 deletion(-)
+[auto build test WARNING on 242041164339594ca019481d54b4f68a7aaff64e]
 
-diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-index ade6c665c97e..a4615b889f3e 100644
---- a/arch/x86/hyperv/ivm.c
-+++ b/arch/x86/hyperv/ivm.c
-@@ -462,6 +462,195 @@ void hv_ivm_msr_read(u64 msr, u64 *value)
- 		hv_ghcb_msr_read(msr, value);
- }
- 
-+/*
-+ * Keep track of the PFN regions which were shared with the host. The access
-+ * must be revoked upon kexec/kdump (see hv_ivm_clear_host_access()).
-+ */
-+struct hv_enc_pfn_region {
-+	struct list_head list;
-+	u64 pfn;
-+	int count;
-+};
-+
-+static LIST_HEAD(hv_list_enc);
-+static DEFINE_RAW_SPINLOCK(hv_list_enc_lock);
-+
-+static int hv_list_enc_add(const u64 *pfn_list, int count)
-+{
-+	struct hv_enc_pfn_region *ent;
-+	unsigned long flags;
-+	u64 pfn;
-+	int i;
-+
-+	for (i = 0; i < count; i++) {
-+		pfn = pfn_list[i];
-+
-+		raw_spin_lock_irqsave(&hv_list_enc_lock, flags);
-+		/* Check if the PFN already exists in some region first */
-+		list_for_each_entry(ent, &hv_list_enc, list) {
-+			if ((ent->pfn <= pfn) && (ent->pfn + ent->count - 1 >= pfn))
-+				/* Nothing to do - pfn is already in the list */
-+				goto unlock_done;
-+		}
-+
-+		/*
-+		 * Check if the PFN is adjacent to an existing region. Growing
-+		 * a region can make it adjacent to another one but merging is
-+		 * not (yet) implemented for simplicity. A PFN cannot be added
-+		 * to two regions to keep the logic in hv_list_enc_remove()
-+		 * correct.
-+		 */
-+		list_for_each_entry(ent, &hv_list_enc, list) {
-+			if (ent->pfn + ent->count == pfn) {
-+				/* Grow existing region up */
-+				ent->count++;
-+				goto unlock_done;
-+			} else if (pfn + 1 == ent->pfn) {
-+				/* Grow existing region down */
-+				ent->pfn--;
-+				ent->count++;
-+				goto unlock_done;
-+			}
-+		}
-+		raw_spin_unlock_irqrestore(&hv_list_enc_lock, flags);
-+
-+		/* No adjacent region found -- create a new one */
-+		ent = kzalloc(sizeof(struct hv_enc_pfn_region), GFP_KERNEL);
-+		if (!ent)
-+			return -ENOMEM;
-+
-+		ent->pfn = pfn;
-+		ent->count = 1;
-+
-+		raw_spin_lock_irqsave(&hv_list_enc_lock, flags);
-+		list_add(&ent->list, &hv_list_enc);
-+
-+unlock_done:
-+		raw_spin_unlock_irqrestore(&hv_list_enc_lock, flags);
-+	}
-+
-+	return 0;
-+}
-+
-+static int hv_list_enc_remove(const u64 *pfn_list, int count)
-+{
-+	struct hv_enc_pfn_region *ent, *t;
-+	struct hv_enc_pfn_region new_region;
-+	unsigned long flags;
-+	u64 pfn;
-+	int i;
-+
-+	for (i = 0; i < count; i++) {
-+		pfn = pfn_list[i];
-+
-+		raw_spin_lock_irqsave(&hv_list_enc_lock, flags);
-+		list_for_each_entry_safe(ent, t, &hv_list_enc, list) {
-+			if (pfn == ent->pfn + ent->count - 1) {
-+				/* Removing tail pfn */
-+				ent->count--;
-+				if (!ent->count) {
-+					list_del(&ent->list);
-+					kfree(ent);
-+				}
-+				goto unlock_done;
-+			} else if (pfn == ent->pfn) {
-+				/* Removing head pfn */
-+				ent->count--;
-+				ent->pfn++;
-+				if (!ent->count) {
-+					list_del(&ent->list);
-+					kfree(ent);
-+				}
-+				goto unlock_done;
-+			} else if (pfn > ent->pfn && pfn < ent->pfn + ent->count - 1) {
-+				/*
-+				 * Removing a pfn in the middle. Cut off the tail
-+				 * of the existing region and create a template for
-+				 * the new one.
-+				 */
-+				new_region.pfn = pfn + 1;
-+				new_region.count = ent->count - (pfn - ent->pfn + 1);
-+				ent->count = pfn - ent->pfn;
-+				goto unlock_split;
-+			}
-+
-+		}
-+unlock_done:
-+		raw_spin_unlock_irqrestore(&hv_list_enc_lock, flags);
-+		continue;
-+
-+unlock_split:
-+		raw_spin_unlock_irqrestore(&hv_list_enc_lock, flags);
-+
-+		ent = kzalloc(sizeof(struct hv_enc_pfn_region), GFP_KERNEL);
-+		if (!ent)
-+			return -ENOMEM;
-+
-+		ent->pfn = new_region.pfn;
-+		ent->count = new_region.count;
-+
-+		raw_spin_lock_irqsave(&hv_list_enc_lock, flags);
-+		list_add(&ent->list, &hv_list_enc);
-+		raw_spin_unlock_irqrestore(&hv_list_enc_lock, flags);
-+	}
-+
-+	return 0;
-+}
-+
-+/* Stop new private<->shared conversions */
-+static void hv_vtom_kexec_begin(void)
-+{
-+	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
-+		return;
-+
-+	/*
-+	 * Crash kernel reaches here with interrupts disabled: can't wait for
-+	 * conversions to finish.
-+	 *
-+	 * If race happened, just report and proceed.
-+	 */
-+	if (!set_memory_enc_stop_conversion())
-+		pr_warn("Failed to stop shared<->private conversions\n");
-+}
-+
-+static void hv_vtom_kexec_finish(void)
-+{
-+	struct hv_gpa_range_for_visibility *input;
-+	struct hv_enc_pfn_region *ent;
-+	unsigned long flags;
-+	u64 hv_status;
-+	int cur, i;
-+
-+	local_irq_save(flags);
-+	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-+
-+	if (unlikely(!input))
-+		goto out;
-+
-+	list_for_each_entry(ent, &hv_list_enc, list) {
-+		for (i = 0, cur = 0; i < ent->count; i++) {
-+			input->gpa_page_list[cur] = ent->pfn + i;
-+			cur++;
-+
-+			if (cur == HV_MAX_MODIFY_GPA_REP_COUNT || i == ent->count - 1) {
-+				input->partition_id = HV_PARTITION_ID_SELF;
-+				input->host_visibility = VMBUS_PAGE_NOT_VISIBLE;
-+				input->reserved0 = 0;
-+				input->reserved1 = 0;
-+				hv_status = hv_do_rep_hypercall(
-+					HVCALL_MODIFY_SPARSE_GPA_PAGE_HOST_VISIBILITY,
-+					cur, 0, input, NULL);
-+				WARN_ON_ONCE(!hv_result_success(hv_status));
-+				cur = 0;
-+			}
-+		}
-+
-+	}
-+
-+out:
-+	local_irq_restore(flags);
-+}
-+
- /*
-  * hv_mark_gpa_visibility - Set pages visible to host via hvcall.
-  *
-@@ -475,6 +664,7 @@ static int hv_mark_gpa_visibility(u16 count, const u64 pfn[],
- 	struct hv_gpa_range_for_visibility *input;
- 	u64 hv_status;
- 	unsigned long flags;
-+	int ret;
- 
- 	/* no-op if partition isolation is not enabled */
- 	if (!hv_is_isolation_supported())
-@@ -486,6 +676,13 @@ static int hv_mark_gpa_visibility(u16 count, const u64 pfn[],
- 		return -EINVAL;
- 	}
- 
-+	if (visibility == VMBUS_PAGE_NOT_VISIBLE)
-+		ret = hv_list_enc_remove(pfn, count);
-+	else
-+		ret = hv_list_enc_add(pfn, count);
-+	if (ret)
-+		return ret;
-+
- 	local_irq_save(flags);
- 	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
- 
-@@ -506,8 +703,18 @@ static int hv_mark_gpa_visibility(u16 count, const u64 pfn[],
- 
- 	if (hv_result_success(hv_status))
- 		return 0;
-+
-+	if (visibility == VMBUS_PAGE_NOT_VISIBLE)
-+		ret = hv_list_enc_add(pfn, count);
- 	else
--		return -EFAULT;
-+		ret = hv_list_enc_remove(pfn, count);
-+	/*
-+	 * There's no good way to recover from -ENOMEM here, the accounting is
-+	 * wrong either way.
-+	 */
-+	WARN_ON_ONCE(ret);
-+
-+	return -EFAULT;
- }
- 
- /*
-@@ -669,6 +876,8 @@ void __init hv_vtom_init(void)
- 	x86_platform.guest.enc_tlb_flush_required = hv_vtom_tlb_flush_required;
- 	x86_platform.guest.enc_status_change_prepare = hv_vtom_clear_present;
- 	x86_platform.guest.enc_status_change_finish = hv_vtom_set_host_visibility;
-+	x86_platform.guest.enc_kexec_begin = hv_vtom_kexec_begin;
-+	x86_platform.guest.enc_kexec_finish = hv_vtom_kexec_finish;
- 
- 	/* Set WB as the default cache mode. */
- 	guest_force_mtrr_state(NULL, 0, MTRR_TYPE_WRBACK);
+url:    https://github.com/intel-lab-lkp/linux/commits/Bobby-Eshleman/vsock-a-per-net-vsock-NS-mode-state/20250828-083629
+base:   242041164339594ca019481d54b4f68a7aaff64e
+patch link:    https://lore.kernel.org/r/20250827-vsock-vmtest-v5-4-0ba580bede5b%40meta.com
+patch subject: [PATCH net-next v5 4/9] vsock/loopback: add netns support
+config: nios2-randconfig-001-20250828 (https://download.01.org/0day-ci/archive/20250828/202508281824.3XZiIgxs-lkp@intel.com/config)
+compiler: nios2-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250828/202508281824.3XZiIgxs-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202508281824.3XZiIgxs-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> net/vmw_vsock/af_vsock.c:137:35: warning: 'vsock_net_callbacks' defined but not used [-Wunused-variable]
+    static struct vsock_net_callbacks vsock_net_callbacks;
+                                      ^~~~~~~~~~~~~~~~~~~
+
+
+vim +/vsock_net_callbacks +137 net/vmw_vsock/af_vsock.c
+
+   136	
+ > 137	static struct vsock_net_callbacks vsock_net_callbacks;
+   138	static DEFINE_MUTEX(vsock_net_callbacks_lock);
+   139	
+
 -- 
-2.50.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
