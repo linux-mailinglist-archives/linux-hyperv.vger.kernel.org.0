@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-6665-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6666-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2301DB3BA0F
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Aug 2025 13:42:19 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C2F3B3BA16
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Aug 2025 13:44:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 780CF1896675
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Aug 2025 11:42:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 847147AE2A2
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Aug 2025 11:42:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C17C2D23B6;
-	Fri, 29 Aug 2025 11:42:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 351872D2497;
+	Fri, 29 Aug 2025 11:44:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XBfX1eDl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uvkHMjga"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41A0257AEC;
-	Fri, 29 Aug 2025 11:42:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07181238C0A;
+	Fri, 29 Aug 2025 11:44:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756467732; cv=none; b=ba1DdkZfZEXbBDuS/4c/SLdXa6uXdg9CzIujt/C4dTzYlok8rFB5TWv+24XWDaSFTuPi9RO5yS2qzyOm5xUlA+obw3GMv1Xpy9eaiKxfCNGvkuSflJB6zSSq43XIwyGUuMPSGevsKVq2EqJo3zrFi7jnQGqwbfDIdwveTZDTNWc=
+	t=1756467868; cv=none; b=oNkSlUZziQPiWrRsa7kB05Z0WMWudVpekk0a5PHpxHWJoNP2uUZyyuw2641PUYHkrt1iax0YzTx3/9bTQKJzkPLCCK5A3NN1yurGnzgK9LFq4iatNymS6iAvRRCLuZRmuyOXe+XR2rj/4ZY2vOvRMGQorxcXtmEEPzWGZzJUusM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756467732; c=relaxed/simple;
-	bh=mGCJapa3IJ0+IehasQuuYXSnKezNpFS2eVXdXMDPA7g=;
+	s=arc-20240116; t=1756467868; c=relaxed/simple;
+	bh=Bw5aq1MAC51vcC+p3rrqm2KEnbn3uHb0txX6ChldSMg=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=sBPMcvPGqovCBgBSPcKmqZ4qAHf9i1o3k7UVovVthlaQx8d4TAaeAjfnxbEHExtGg+tSLe2Nglgm2m7TN99qDxraLBSafrHfB8xuEvjMeqa6KOAUdrgB8iGl7f0yh1QMCa4iJPQAtYWujFyGf/lo8qAgisEa0cKal1E8adnKSXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XBfX1eDl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36E82C4CEF0;
-	Fri, 29 Aug 2025 11:42:09 +0000 (UTC)
+	 Content-Disposition; b=fw6p1NjXkopporq+CgZqyROfnUBdHij2iF1K3xs1VIkYQR8z0XBD5uGO+JEh11jHwpJFRwgVGkluU4aF67jYRn5I27g3GiaWwjw+bE6bZrGr+Ec9kZgi1QC87WtKZ3phtByabbpkt9MviqN2X4L46ZPLix2ImJmvrDU8Fdpni5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uvkHMjga; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3959AC4CEF0;
+	Fri, 29 Aug 2025 11:44:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756467732;
-	bh=mGCJapa3IJ0+IehasQuuYXSnKezNpFS2eVXdXMDPA7g=;
+	s=k20201202; t=1756467867;
+	bh=Bw5aq1MAC51vcC+p3rrqm2KEnbn3uHb0txX6ChldSMg=;
 	h=Date:From:To:Cc:Subject:From;
-	b=XBfX1eDlFphW7kw45SYhUUbftjExKsu1A0WI3T+9sqJSt/eTy2fBFbCG17kdAskXm
-	 Uvr0KGP3iiiCQqzMsOcRvJ2oPaoUV/hBeuPV2Nq2a2FIoMZzNZ36emag8EcjWFuIyT
-	 8xZbCbBA7L0fqp+ZH+AidKHFlhxruyls15wJqu9J4Ec82icw2HEAZSJD4e4nopSQI8
-	 P4ytcpuSfRNWdNij/B9zayemNmPOcY4fW5NrK1/D+gUvChCNoPxGcUQxEOU7CwY9Z/
-	 mgOAvP1l+MKjQsG+9sJ2GkSdWwi5/0uNIZWOvJGXbAxSy4pxrqCPv71baYKt/Pv9b5
-	 X7a8sAo4mjmxA==
-Date: Fri, 29 Aug 2025 13:42:06 +0200
+	b=uvkHMjgaPQX4mLJAH6CkmgPjBhJAjffcE7/hhiQjzjOPbEHoTu2vAf6Jwh0UKhIqN
+	 I/L5DVwnQ0RUe6jbEtwBgE2ToQ3IEi/uuMmxPTZDCY9EWG0LIy4CV71zAvprKjvmLD
+	 FEinkVqSLzyaSsOu3DVc7QvFS5mi5lNCtDN/3oW6YtvBX6qygW6Ky3C+cXzscMCmT3
+	 c3KKPrmgTMeKWXndI4gQGou2ffTR5Y+Ce5mUQHNJLLhTR0sy9hx2+LoHnPCHUTXEwH
+	 pjybc2juz2vd5EWE4QfTm2Rv61WueWeXFaPymHfQDbQYYHBoHnk8+9rC7v4esY3J1N
+	 JJLolw3G2MNNg==
+Date: Fri, 29 Aug 2025 13:44:21 +0200
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To: "K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
@@ -49,9 +49,9 @@ To: "K. Y. Srinivasan" <kys@microsoft.com>,
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] hyperv: Avoid a hundred -Wflex-array-member-at-end
- warnings
-Message-ID: <aLGSDpi4xDjUUYVm@kspp>
+Subject: [PATCH v2][next] hyperv: Avoid a hundred
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <aLGSlaa6Llqz7jkJ@kspp>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -79,7 +79,13 @@ Also, move `struct vmbus_close_msg close_msg;` at the end of
 in a flexible array member.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
+--
+Changes in v2:
+ - Fix subject line.
+
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/aLGSDpi4xDjUUYVm@kspp/
+
  include/linux/hyperv.h | 10 ++++++----
  1 file changed, 6 insertions(+), 4 deletions(-)
 
