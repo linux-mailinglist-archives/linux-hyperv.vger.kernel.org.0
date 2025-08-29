@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-6655-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6656-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 786ECB3AEC4
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Aug 2025 02:03:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F1ED5B3AF47
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Aug 2025 02:29:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 394BC3B00B2
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Aug 2025 00:03:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B93AD5E55AD
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Aug 2025 00:29:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A36F453A7;
-	Fri, 29 Aug 2025 00:03:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA23617A318;
+	Fri, 29 Aug 2025 00:29:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="b/Cp3YVn"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="poRzDjXW"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6BBE179A3;
-	Fri, 29 Aug 2025 00:03:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F256533F3;
+	Fri, 29 Aug 2025 00:29:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756425814; cv=none; b=YTBj0yqhbVA+ubrrf6ULi7Iugfb/zc07Vb5ecJcpQSMwmfeQFVVzD2SV+JgFp7y0rfqk5I1zyuwh0JuAHSppaYFOwhtXo2VG5DjflXvelxaKcSrx3jOh+eIJy+stKA1jWO6KUh2rrKhNz2Dz4nEaEDFG/cYJyA5tQgR2AIT2UPU=
+	t=1756427360; cv=none; b=JK2QLEBALbR4oiRy5Oa8g35NpP0qGmseE5DgBB7wH/rVh12K3lsYIpLsaXmakgYExzH224IkS+23tcs7ySHm5v60XFdQg56L+NK6N9qvvKJwajTrYh47qKwEIOybFVXJmkGQvSgoBm32lqSFBZ8q73KybVib7XYC7AHbQy3Es1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756425814; c=relaxed/simple;
-	bh=h9ECKGOoE8l6lXBXfI/nqr/yvcdfmjjurJiByFbfZ+g=;
+	s=arc-20240116; t=1756427360; c=relaxed/simple;
+	bh=ot+2HrtyJInU0ZA8JMHPx+dOY9PU6YtQ3mFvDFCoH7s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hxBnOUAOqJVRqK8WUpAb6X83ZGXxxFdmPoPs0eB30AwCuJFlcFClPLyuZyw3zJhLxmu3UTklnxyINB5mFN2x27+BIsgOoQbfjgGLHJD1mzHoj3Dg6k/ydyisxQ0CNngI4TpaFBeDciR9zG9dKWLcPcOZXtG9EYKLn+mMraICO2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=b/Cp3YVn; arc=none smtp.client-ip=13.77.154.182
+	 In-Reply-To:Content-Type; b=RIxvUR3DbNQIhA70+AkWz2otQX4i07araYZK2eBBVHHd4jZPigqe9rcShhXvZCEl3Q1mHs5ZKsTRe3a+ZMeZTReSzUu67NOOeNKTfN2AF8Fu3n8T4fDgt/zpbnGTNi9FXUCsbniiFduCfgvdPd2LkM4Qyf6cCiUI6dKvtwjeHCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=poRzDjXW; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.65.128.219] (unknown [20.236.11.69])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 29236211080D;
-	Thu, 28 Aug 2025 17:03:30 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 29236211080D
+Received: from [100.65.128.219] (unknown [20.236.10.129])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 3777F2110812;
+	Thu, 28 Aug 2025 17:29:17 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3777F2110812
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1756425810;
-	bh=NHYELJgOgtoYXMJjyiZ6Y/1BY77k4JUs4dbKzcllNgc=;
+	s=default; t=1756427357;
+	bh=lN42qcmFwBXn/PPaiN936XEpQO05ChrgbLHgB+gVPCM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=b/Cp3YVnPly7ZmtMQDa2AEMRoQa4CxzO0/V6ejotdr50lR5itAta36gVWEjEJkADW
-	 rU7s8pjJhzWn/fR2q78z1pzSDm8R5EbcWLUxToRvAEbLWCrmz4XX39aTX/yCwcbIg0
-	 s7ITLAqpkbVOXbI9g+AL0NaazVp0H0AaluYJk0kI=
-Message-ID: <c1a5ab1d-1601-46db-83da-b26422a2aabd@linux.microsoft.com>
-Date: Thu, 28 Aug 2025 17:03:28 -0700
+	b=poRzDjXWcBGz/dgzPSyW1ppmtP825pJeqPejDqwKNVGb33ej7TTJ+3Ach1tMOgmXf
+	 UfstC1uq7Eb3h0PplNHv8x1bjse//kq4B740aQWslp8GjShWZNxIaZLDOPMvR3Jfdk
+	 hMvBIf3bJYfTGBVb0bkjZCmb6awBBsX0yDMrYaQ0=
+Message-ID: <5003d5e8-a025-4827-b8a0-6fe11877421b@linux.microsoft.com>
+Date: Thu, 28 Aug 2025 17:29:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -49,127 +49,273 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/7] Drivers: hv: Use common "entry virt" APIs to do
- work in root before running guest
-To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Peter Zijlstra <peterz@infradead.org>,
- Andy Lutomirski <luto@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
- Frederic Weisbecker <frederic@kernel.org>,
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
- Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett
- <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-hyperv@vger.kernel.org, rcu@vger.kernel.org,
- Mukesh R <mrathor@linux.microsoft.com>
-References: <20250828000156.23389-1-seanjc@google.com>
- <20250828000156.23389-7-seanjc@google.com>
+Subject: Re: [PATCH V0 1/2] hyper-v: Add CONFIG_HYPERV_VMBUS option
+To: Mukesh Rathor <mrathor@linux.microsoft.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ linux-arch@vger.kernel.org, virtualization@lists.linux.dev
+Cc: maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+ tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, jikos@kernel.org,
+ bentiss@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, dmitry.torokhov@gmail.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, bhelgaas@google.com,
+ James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
+ gregkh@linuxfoundation.org, deller@gmx.de, arnd@arndb.de,
+ sgarzare@redhat.com, horms@kernel.org
+References: <20250828005952.884343-1-mrathor@linux.microsoft.com>
+ <20250828005952.884343-2-mrathor@linux.microsoft.com>
 Content-Language: en-US
 From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <20250828000156.23389-7-seanjc@google.com>
+In-Reply-To: <20250828005952.884343-2-mrathor@linux.microsoft.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 8/27/2025 5:01 PM, Sean Christopherson wrote:
-> Use the kernel's common "entry virt" APIs to handle pending work prior to
-> (re)entering guest mode, now that the virt APIs don't have a superfluous
-> dependency on KVM.
+On 8/27/2025 5:59 PM, Mukesh Rathor wrote:
+> Somehow vmbus driver is hinged on CONFIG_HYPERV. It appears this is initial
+> code that did not get addressed when the scope of CONFIG_HYPERV went beyond
+> vmbus. This commit creates a fine grained HYPERV_VMBUS option and updates
+> drivers that depend on VMBUS.
 > 
-> No functional change intended.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+
+The commit message can be improved. The docs are helpful here:
+https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
+
+In particular, some clearer reasons for the change.
+e.g.
+- CONFIG_HYPERV encompasses too much right now. It's not always clear what
+  depends on builtin hyperv code and what depends on vmbus.
+
+- Since there is so much builtin hyperv code, building CONFIG_HYPERV as a
+  module doesn't make intuitive sense. Building vmbus support as a module does.
+
+- There are actually some real scenarios someone may want to compile with
+  CONFIG_HYPERV but without vmbus, like baremetal root partition.
+
+FWIW I think it's a good idea, interested to hear what others think.
+
+Nuno
+
+> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
 > ---
->  drivers/hv/Kconfig          |  1 +
->  drivers/hv/mshv_root_main.c | 32 ++++++--------------------------
->  2 files changed, 7 insertions(+), 26 deletions(-)
+>  drivers/gpu/drm/Kconfig        |  2 +-
+>  drivers/hid/Kconfig            |  2 +-
+>  drivers/hv/Kconfig             | 12 +++++++++---
+>  drivers/hv/Makefile            |  2 +-
+>  drivers/input/serio/Kconfig    |  4 ++--
+>  drivers/net/hyperv/Kconfig     |  2 +-
+>  drivers/pci/Kconfig            |  2 +-
+>  drivers/scsi/Kconfig           |  2 +-
+>  drivers/uio/Kconfig            |  2 +-
+>  drivers/video/fbdev/Kconfig    |  2 +-
+>  include/asm-generic/mshyperv.h |  8 +++++---
+>  net/vmw_vsock/Kconfig          |  2 +-
+>  12 files changed, 25 insertions(+), 17 deletions(-)
 > 
+> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+> index f7ea8e895c0c..58f34da061c6 100644
+> --- a/drivers/gpu/drm/Kconfig
+> +++ b/drivers/gpu/drm/Kconfig
+> @@ -398,7 +398,7 @@ source "drivers/gpu/drm/imagination/Kconfig"
+>  
+>  config DRM_HYPERV
+>  	tristate "DRM Support for Hyper-V synthetic video device"
+> -	depends on DRM && PCI && HYPERV
+> +	depends on DRM && PCI && HYPERV_VMBUS
+>  	select DRM_CLIENT_SELECTION
+>  	select DRM_KMS_HELPER
+>  	select DRM_GEM_SHMEM_HELPER
+> diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+> index a57901203aeb..fe3dc8c0db99 100644
+> --- a/drivers/hid/Kconfig
+> +++ b/drivers/hid/Kconfig
+> @@ -1162,7 +1162,7 @@ config GREENASIA_FF
+>  
+>  config HID_HYPERV_MOUSE
+>  	tristate "Microsoft Hyper-V mouse driver"
+> -	depends on HYPERV
+> +	depends on HYPERV_VMBUS
+>  	help
+>  	Select this option to enable the Hyper-V mouse driver.
+>  
 > diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-> index 2e8df09db599..894037afcbf9 100644
+> index 2e8df09db599..08c4ed005137 100644
 > --- a/drivers/hv/Kconfig
 > +++ b/drivers/hv/Kconfig
-> @@ -66,6 +66,7 @@ config MSHV_ROOT
->  	# no particular order, making it impossible to reassemble larger pages
->  	depends on PAGE_SIZE_4KB
->  	select EVENTFD
-> +	select VIRT_XFER_TO_GUEST_WORK
->  	default n
->  	help
->  	  Select this option to enable support for booting and running as root
-> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-> index 0d849f09160a..7c83f656e071 100644
-> --- a/drivers/hv/mshv_root_main.c
-> +++ b/drivers/hv/mshv_root_main.c
-> @@ -8,6 +8,7 @@
->   * Authors: Microsoft Linux virtualization team
->   */
+> @@ -44,18 +44,24 @@ config HYPERV_TIMER
 >  
-> +#include <linux/entry-virt.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/fs.h>
-> @@ -481,29 +482,6 @@ mshv_vp_wait_for_hv_kick(struct mshv_vp *vp)
->  	return 0;
+>  config HYPERV_UTILS
+>  	tristate "Microsoft Hyper-V Utilities driver"
+> -	depends on HYPERV && CONNECTOR && NLS
+> +	depends on HYPERV_VMBUS && CONNECTOR && NLS
+>  	depends on PTP_1588_CLOCK_OPTIONAL
+>  	help
+>  	  Select this option to enable the Hyper-V Utilities.
+>  
+>  config HYPERV_BALLOON
+>  	tristate "Microsoft Hyper-V Balloon driver"
+> -	depends on HYPERV
+> +	depends on HYPERV_VMBUS
+>  	select PAGE_REPORTING
+>  	help
+>  	  Select this option to enable Hyper-V Balloon driver.
+>  
+> +config HYPERV_VMBUS
+> +	tristate "Microsoft Hyper-V Vmbus driver"
+> +	depends on HYPERV
+> +	help
+> +	  Select this option to enable Hyper-V Vmbus driver.
+> +
+>  config MSHV_ROOT
+>  	tristate "Microsoft Hyper-V root partition support"
+>  	depends on HYPERV && (X86_64 || ARM64)
+> @@ -75,7 +81,7 @@ config MSHV_ROOT
+>  
+>  config MSHV_VTL
+>  	tristate "Microsoft Hyper-V VTL driver"
+> -	depends on X86_64 && HYPERV_VTL_MODE
+> +	depends on X86_64 && HYPERV_VTL_MODE && HYPERV_VMBUS
+>  	# Mapping VTL0 memory to a userspace process in VTL2 is supported in OpenHCL.
+>  	# VTL2 for OpenHCL makes use of Huge Pages to improve performance on VMs,
+>  	# specially with large memory requirements.
+> diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
+> index c53a0df746b7..050517756a82 100644
+> --- a/drivers/hv/Makefile
+> +++ b/drivers/hv/Makefile
+> @@ -1,5 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -obj-$(CONFIG_HYPERV)		+= hv_vmbus.o
+> +obj-$(CONFIG_HYPERV_VMBUS)	+= hv_vmbus.o
+>  obj-$(CONFIG_HYPERV_UTILS)	+= hv_utils.o
+>  obj-$(CONFIG_HYPERV_BALLOON)	+= hv_balloon.o
+>  obj-$(CONFIG_MSHV_ROOT)		+= mshv_root.o
+> diff --git a/drivers/input/serio/Kconfig b/drivers/input/serio/Kconfig
+> index 17edc1597446..c7ef347a4dff 100644
+> --- a/drivers/input/serio/Kconfig
+> +++ b/drivers/input/serio/Kconfig
+> @@ -276,8 +276,8 @@ config SERIO_OLPC_APSP
+>  
+>  config HYPERV_KEYBOARD
+>  	tristate "Microsoft Synthetic Keyboard driver"
+> -	depends on HYPERV
+> -	default HYPERV
+> +	depends on HYPERV_VMBUS
+> +	default HYPERV_VMBUS
+>  	help
+>  	  Select this option to enable the Hyper-V Keyboard driver.
+>  
+> diff --git a/drivers/net/hyperv/Kconfig b/drivers/net/hyperv/Kconfig
+> index c8cbd85adcf9..982964c1a9fb 100644
+> --- a/drivers/net/hyperv/Kconfig
+> +++ b/drivers/net/hyperv/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config HYPERV_NET
+>  	tristate "Microsoft Hyper-V virtual network driver"
+> -	depends on HYPERV
+> +	depends on HYPERV_VMBUS
+>  	select UCS2_STRING
+>  	select NLS
+>  	help
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 9a249c65aedc..7065a8e5f9b1 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -221,7 +221,7 @@ config PCI_LABEL
+>  
+>  config PCI_HYPERV
+>  	tristate "Hyper-V PCI Frontend"
+> -	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI && SYSFS
+> +	depends on ((X86 && X86_64) || ARM64) && HYPERV_VMBUS && PCI_MSI && SYSFS
+>  	select PCI_HYPERV_INTERFACE
+>  	select IRQ_MSI_LIB
+>  	help
+> diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+> index 5522310bab8d..19d0884479a2 100644
+> --- a/drivers/scsi/Kconfig
+> +++ b/drivers/scsi/Kconfig
+> @@ -589,7 +589,7 @@ config XEN_SCSI_FRONTEND
+>  
+>  config HYPERV_STORAGE
+>  	tristate "Microsoft Hyper-V virtual storage driver"
+> -	depends on SCSI && HYPERV
+> +	depends on SCSI && HYPERV_VMBUS
+>  	depends on m || SCSI_FC_ATTRS != m
+>  	default HYPERV
+>  	help
+> diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
+> index b060dcd7c635..6f86a61231e6 100644
+> --- a/drivers/uio/Kconfig
+> +++ b/drivers/uio/Kconfig
+> @@ -140,7 +140,7 @@ config UIO_MF624
+>  
+>  config UIO_HV_GENERIC
+>  	tristate "Generic driver for Hyper-V VMBus"
+> -	depends on HYPERV
+> +	depends on HYPERV_VMBUS
+>  	help
+>  	  Generic driver that you can bind, dynamically, to any
+>  	  Hyper-V VMBus device. It is useful to provide direct access
+> diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
+> index c21484d15f0c..72c63eaeb983 100644
+> --- a/drivers/video/fbdev/Kconfig
+> +++ b/drivers/video/fbdev/Kconfig
+> @@ -1774,7 +1774,7 @@ config FB_BROADSHEET
+>  
+>  config FB_HYPERV
+>  	tristate "Microsoft Hyper-V Synthetic Video support"
+> -	depends on FB && HYPERV
+> +	depends on FB && HYPERV_VMBUS
+>  	select DMA_CMA if HAVE_DMA_CONTIGUOUS && CMA
+>  	select FB_IOMEM_HELPERS_DEFERRED
+>  	help
+> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+> index 1d2ad1304ad4..66c58c91b530 100644
+> --- a/include/asm-generic/mshyperv.h
+> +++ b/include/asm-generic/mshyperv.h
+> @@ -165,6 +165,7 @@ static inline u64 hv_generate_guest_id(u64 kernel_version)
+>  
+>  void __init hv_mark_resources(void);
+>  
+> +#if IS_ENABLED(CONFIG_HYPERV_VMBUS)
+>  /* Free the message slot and signal end-of-message if required */
+>  static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
+>  {
+> @@ -200,6 +201,10 @@ static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
+>  	}
 >  }
 >  
-> -static int mshv_pre_guest_mode_work(struct mshv_vp *vp)
-> -{
-> -	const ulong work_flags = _TIF_NOTIFY_SIGNAL | _TIF_SIGPENDING |
-> -				 _TIF_NEED_RESCHED  | _TIF_NEED_RESCHED_LAZY |
-> -				 _TIF_NOTIFY_RESUME;
-> -	ulong th_flags;
-> -
-> -	th_flags = read_thread_flags();
-> -	while (th_flags & work_flags) {
-> -		int ret;
-> -
-> -		/* nb: following will call schedule */
-> -		ret = mshv_do_pre_guest_mode_work(th_flags);
-> -
-> -		if (ret)
-> -			return ret;
-> -
-> -		th_flags = read_thread_flags();
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->  /* Must be called with interrupts enabled */
->  static long mshv_run_vp_with_root_scheduler(struct mshv_vp *vp)
->  {
-> @@ -524,9 +502,11 @@ static long mshv_run_vp_with_root_scheduler(struct mshv_vp *vp)
->  		u32 flags = 0;
->  		struct hv_output_dispatch_vp output;
+> +extern int vmbus_interrupt;
+> +extern int vmbus_irq;
+> +#endif /* CONFIG_HYPERV_VMBUS */
+> +
+>  int hv_get_hypervisor_version(union hv_hypervisor_version_info *info);
 >  
-> -		ret = mshv_pre_guest_mode_work(vp);
-> -		if (ret)
-> -			break;
-> +		if (__xfer_to_guest_mode_work_pending()) {
-> +			ret = xfer_to_guest_mode_handle_work();
-> +			if (ret)
-> +				break;
-> +		}
+>  void hv_setup_vmbus_handler(void (*handler)(void));
+> @@ -213,9 +218,6 @@ void hv_setup_crash_handler(void (*handler)(struct pt_regs *regs));
+>  void hv_remove_crash_handler(void);
+>  void hv_setup_mshv_handler(void (*handler)(void));
 >  
->  		if (vp->run.flags.intercept_suspend)
->  			flags |= HV_DISPATCH_VP_FLAG_CLEAR_INTERCEPT_SUSPEND;
+> -extern int vmbus_interrupt;
+> -extern int vmbus_irq;
+> -
+>  #if IS_ENABLED(CONFIG_HYPERV)
+>  /*
+>   * Hypervisor's notion of virtual processor ID is different from
+> diff --git a/net/vmw_vsock/Kconfig b/net/vmw_vsock/Kconfig
+> index 56356d2980c8..8e803c4828c4 100644
+> --- a/net/vmw_vsock/Kconfig
+> +++ b/net/vmw_vsock/Kconfig
+> @@ -72,7 +72,7 @@ config VIRTIO_VSOCKETS_COMMON
+>  
+>  config HYPERV_VSOCKETS
+>  	tristate "Hyper-V transport for Virtual Sockets"
+> -	depends on VSOCKETS && HYPERV
+> +	depends on VSOCKETS && HYPERV_VMBUS
+>  	help
+>  	  This module implements a Hyper-V transport for Virtual Sockets.
+>  
 
-Also tested mshv_root with 1-6 applied, looks good to me. Possibly Naman,
-Saurabh, or Roman can test the mshv_vtl patches, I can't do it
-unfortunately.
-
-Tested-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 
