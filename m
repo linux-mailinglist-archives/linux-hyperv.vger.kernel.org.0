@@ -1,332 +1,346 @@
-Return-Path: <linux-hyperv+bounces-6673-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6674-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFC32B3C3FF
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Aug 2025 22:59:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5B7EB3D412
+	for <lists+linux-hyperv@lfdr.de>; Sun, 31 Aug 2025 17:13:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8DDD218840D4
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Aug 2025 21:00:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6272D170E6D
+	for <lists+linux-hyperv@lfdr.de>; Sun, 31 Aug 2025 15:13:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F370D346A0A;
-	Fri, 29 Aug 2025 20:59:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2202326CE26;
+	Sun, 31 Aug 2025 15:13:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dESvnRAv"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="I+NpHRxY"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0950122B594;
-	Fri, 29 Aug 2025 20:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756501180; cv=none; b=isIZRD5OoIYWWQzC5Fyqlx/SqXLuQZjUF6VYg4w0jhRkyk/d/ohBTbkyO+NPyLYnn8/z60l8LZBZzSE0kR/s9Dbb0KsoZj0V2ohVYlcAa3r5u66dx71xL2IhtWCj44PRe6fQTB+OKkU89HvhzIsuDmss687fxkFdgH22RQSv7m8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756501180; c=relaxed/simple;
-	bh=+2BW0UEG49SU/o/955BEv69wInYx4DfrQgnHNrBDmdc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tt7rTCT6H0/q5rEPXyru7MC5eFsIjG/bz7YGFum1277tNWrf3tT0fTYLKc3XvF/VJbk5EXCp/PF/PIOPCg259Sjl/albHlHrqn/RGTQkk8OgjXArJ5x6GeBdQGCCCSKBYDAqgRegSOASZYQhsQ7irnHf8T0kSPBZq4XT+zsK5WI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=dESvnRAv; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 4CA79211627B;
-	Fri, 29 Aug 2025 13:59:36 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4CA79211627B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1756501177;
-	bh=JFWDwi8WW+5cmq8k1iafkjchsEZ4XvNd8Q16Wo9KAu8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dESvnRAvmpVLr0VYBZnRRYhqqZR3B639/FohGqaKD2D5bP/9Yrve21Irvr3nS9rb6
-	 oV0XKAIHOKvPIy3mqCdHpdb+o4CglUZTuulng4cFfFX5xmNa+/8oCUYPlxUGlvaNbr
-	 67e3J3ZlD0dwqiTzzvQCWTMikVloz4heqlFWTFCA=
-Message-ID: <0b9ea4e8-3751-0286-4bd9-fe09035dd22d@linux.microsoft.com>
-Date: Fri, 29 Aug 2025 13:59:35 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10olkn2023.outbound.protection.outlook.com [40.92.42.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308112475E3;
+	Sun, 31 Aug 2025 15:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.42.23
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756653182; cv=fail; b=uY4+IX7ZOfD4DW16ilgX2v3xWRkfCWmpVb/avuJh8waO8Hd9aKz55rpgE8LHMhTY6pJalzOs6D9h17tPNMcpxJFmB3ixsbr//m9zSb2XWkSxckf7x+UzJvdPesVS0FbUHtMt/yjGJ1Ssauj0Gb8ke2kIzkc+1eHgTpvZ9g1txs0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756653182; c=relaxed/simple;
+	bh=2B3BQJ3+CyErRY6eemQpabeYf4NU/qXovNVX6lWis7o=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=MMfu64uHftdODFwdIQw1/mQIXcNq/irKSsc+OqeWrO2BQzgdE0Po1aHteXxevyf1qe5HQ3MhbbyfnSL5M/UuwRAeLWTeiK7dJXME47CnCKBMcnAB6gY2LxRUHNWrU5pF4ymWJzulPfpNw3hDO+cqooe5RSyzXJapuuurX9N5lkA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=I+NpHRxY; arc=fail smtp.client-ip=40.92.42.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=S281X6P+3KFWQVQsB9EgvrQxgoNy51M3XzWXKASapCsnLySjOysjdI2Qs069KbRtEsWPSXP5TodbLQ4FHhIzw/n7FCQZlOZmUSh1qt7GMmMvHBJSKIuuQNb2z2/Vqf0iAe8SPFfOsO/L2lo8+yx1MErATkIkwDYKArUtp9CT8Lzhtm5HawDWUgi4Z925WEGh2JXhnMT8mJIhlSn19OrWDFdbxRK9TFWQl8N+HKY8T46jAS3uD0NJxe/RrDxHTL/sMChX+zLWq79sjDTskm5tkoAQdtW7wtkMbpGx68r/gAlVT4vVVY9hoPoUWNZIEadYnojIIrWfFeNuUQCJJ77R5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HcdzxLJ0DMpSocShLc2GYOKFHLxUPaWCKkbw198clNY=;
+ b=nVe1Fl46OHvSMgL+11J8oreTao6Y3WM0lK2Jawp6wuYjxhF9HHpXJshKaz9EUB8U4UJjrMepOI/DfMlloAs1zcZ2NxI5a/51mrAGSuXaMdIdo1hoLO90rH4rsBRQgkupW9AS3f/qcrGUjSTt5DOdmqiCfqApQEsBfCE/GK4vzqtD1mqln4BaApa+bBG7qCD5uqOSe6vJp7bzVaq2g24F4U5AITypbJdgDH76jMQ63rQAI3TsiN1QzZiva7M3GloWtYwYbnjfgzgID0y+pH5BmFiaXGDc+x8vBMsBjr2R6bi8r262njJlthrAaQ7ZPv6dEWA3a881pDRXQczC9W5lOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HcdzxLJ0DMpSocShLc2GYOKFHLxUPaWCKkbw198clNY=;
+ b=I+NpHRxYnL6uQ1BLWuZ245mqAPk8kp9QE5jiXXIqffnCOezUfwR6/MrBfOi+ph0932dWpKpVgeaKVqqkSoJB6L5MRiiHOMoEvq3UOUP29RVAWH2I4rDi40O/CvhXJdK6BnttbYGf2Z1O8su1myUZYDTcugjv/ZRgTXypKgPUl0xepyOCR2gQvz1VaoFJkKBYmWZID88xUDTgmQAIStDBF6xMzG8YVkhOkr9rBsx76hSKTxFZr69u3MzbrekYNalQyFlDNgMo0kr/4O2CUv+A9WiO3LBl1kdGhDe3KyKxfU69RnnHdA9V8fWcKjDoOl3wq7rdJ+KvhiS4TJTw0vyc+Q==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by DM3PR02MB10273.namprd02.prod.outlook.com (2603:10b6:0:46::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.27; Sun, 31 Aug
+ 2025 15:12:58 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.9052.019; Sun, 31 Aug 2025
+ 15:12:58 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>, "arnd@arndb.de" <arnd@arndb.de>
+Subject: RE: [PATCH] mshv: Add support for a new parent partition
+ configuration
+Thread-Topic: [PATCH] mshv: Add support for a new parent partition
+ configuration
+Thread-Index: AQHcENr8Fd5MLCIhVEC8kLUNqDb1wrR86h4A
+Date: Sun, 31 Aug 2025 15:12:57 +0000
+Message-ID:
+ <SN6PR02MB4157FE1A347214085549E72CD404A@SN6PR02MB4157.namprd02.prod.outlook.com>
+References:
+ <1755588559-29629-1-git-send-email-nunodasneves@linux.microsoft.com>
+In-Reply-To:
+ <1755588559-29629-1-git-send-email-nunodasneves@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|DM3PR02MB10273:EE_
+x-ms-office365-filtering-correlation-id: e61f575a-9572-452c-1f2f-08dde8a0de92
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|8062599012|8060799015|19110799012|13091999003|461199028|31061999003|41001999006|15080799012|3412199025|40105399003|440099028|102099032;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?VeTpRqt/urczy4D0BjHHP+9Z5IryW/SgQA1xwPw+JRtVlpJuS6Nj9SaIpewa?=
+ =?us-ascii?Q?YEiNWtVzXkN1g20tRJCrVKwhgJUW3WOa/nkd8JgwmIPJzHWwjqKJgUno02Xf?=
+ =?us-ascii?Q?tObSFs3xZtAKvTogQVV4TByqDlljzzC4MjEQJoJQKGk/UR6iRi5RxxgTSW9o?=
+ =?us-ascii?Q?q5N9o1rCzn/oPgAJcKg7AW/XCm6IXSn8/x7lsFVCITSTc3vnntazz5AMdhEI?=
+ =?us-ascii?Q?J+mE6vQhzBMLLlfEIZeZf9Sv0tIns1rCDgW845DdMR/K8rSWCFXK+oLmPeUg?=
+ =?us-ascii?Q?tf400Ssj438S8r4i/7cF00BYaQIns3MBkkqAzpy+5S6VgoDTkjgUnUAhPF9A?=
+ =?us-ascii?Q?S+Eb77obScHf5fezfPL7q1s8C3AuyJd0RzhLnpjWgS4bA3jm+F7isXSfafpY?=
+ =?us-ascii?Q?C4r6rFYWuazxc5g1qc9NuUxiAxrDWS8I62I2zPR99rCh58z8/adUlGTLTfd3?=
+ =?us-ascii?Q?JwvUugKKULA8utghTYSfOhVXQiRY4vZrbv2Mv7hqxblhfeHpinZaTr79AZ03?=
+ =?us-ascii?Q?UMM/wgw3v6hMPip6CATTEatrw5YTzRd3RCoQMSSDRG821S8A4OGJrafqfypf?=
+ =?us-ascii?Q?ycH5nS4YX82htolDIJfx1hixm/11zK12N0zV9j+5DXvuuwEW7WOQZYpssLlq?=
+ =?us-ascii?Q?D4aeVBctvUyYY+83DLo5SFQotUMOLk8XGoBUAl5Hl3Qat8jTSTeAjTiP/szd?=
+ =?us-ascii?Q?bUGT6B9ZjlQ/YXDY60Z8R6fKwLMFpSC8bAvwzAVBI9embqgidOPWqre1E2Qw?=
+ =?us-ascii?Q?2SdzUNFChQLqVWMUfh5I2Z908tucvjMpQyXGnPl/pvNUm8ghUswyuTVEYiZo?=
+ =?us-ascii?Q?KCg+sOmbfW0Kom/eK4Ig2e+O6VSchOOzxTNPLjwf8n9SKEJeP/oxd33EWpNo?=
+ =?us-ascii?Q?qFYTvLaHqGcR3gMaq3vfnt3d0R8R0q8PrF0F3Fl05Ps52v7TDsEWfhJ+FCho?=
+ =?us-ascii?Q?U2XsJXGipnQwHmkqP09qnJ7he3DH2ILur6fwh/Cmvzlh91cZA+AoLYfpZeaV?=
+ =?us-ascii?Q?BkVBVABCO4bkoiwCvA+Y5wUUNV4zGQHrAc+0fF+4uCKA5TaWEQz6bcxmCFBo?=
+ =?us-ascii?Q?ARvzbCslKJb/JH97BnAypjIjdTuycKnKGEW+A0xlfMXXteyp5EzBb+pZsFo6?=
+ =?us-ascii?Q?F18KITK9kn2VY1GTsR/HrsRUINkSQNWcw8DaXVNvVdzWTM1gcNjvzn71Jru1?=
+ =?us-ascii?Q?/ahOIT/NUC5CJbCnKokaBWWTajhOw/mB/3rdnQ=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?YD5hBoumqmobIlRtb/9gXQej21UMcby4D5wx5j/ATdBLUkipT9Y8xQssuQsW?=
+ =?us-ascii?Q?RSFaGwpVdZC5zyf4Zo4h0H0rINv/pLGLXaEMk9jARWOCXZPMUakpEO8Ww1lw?=
+ =?us-ascii?Q?yN08FU2B/SAUqk+3hmTdQrsrmRjOYQT6rDnS2HQSovCSPQlUpb7tLQgQdhdV?=
+ =?us-ascii?Q?zwPqZZIMUxpj6zSvCCWmlL+slJn30uFalh0NzHnvTp7dOeaJ/Jvjn/z1bfMp?=
+ =?us-ascii?Q?HLcZh7wdmIN7t9GflhMoYtkfXAZRuRwPjb22NH+ahZpb0C+6DTnqZxszlLXJ?=
+ =?us-ascii?Q?dPCmmOCK+R2gIO2xLi7Aerc7xMVk2CXp1hixEsu50IfTFLsA3x1b2vyBPPYj?=
+ =?us-ascii?Q?Y0wawPOKQwcFbPFcvgkDVy6VLcZ72oHRJfCkm7iLXbeDJyPeZ8DD0T4hUJbD?=
+ =?us-ascii?Q?0G/b1axZVE540+sjsMb74L7oPRDR2xwgI0Xc/TYoxdvhCfQvmMBRBQYEXg3H?=
+ =?us-ascii?Q?lTHTcYQwNgs7iP3D+NNMQe5f5xK75ddaU4vUIUSTjoZqOcX1VNKFl9KvqDPO?=
+ =?us-ascii?Q?jUxki9C7t4WSNv9Xazzq96KF6/GSYLZOGVh6qRreoL5nBhcwICJwfbN4si02?=
+ =?us-ascii?Q?2hSkY84E/R0n7LKhEXn3ymtWLxs1TB491IWQfCp3XyngsUH6Loov0dpijAO6?=
+ =?us-ascii?Q?338U9IkdigowxgRENPfHnREreUYLwhsLp7C59o2nSiVR+YLxjIOX/i915aQm?=
+ =?us-ascii?Q?w8VI1J1ohM3k93KJXNZWql1bXWxJEtXQMHaN8ZDZmAYt5vTyGW1GjuGvaB/4?=
+ =?us-ascii?Q?IpDSVeqgBP1Esny3/eIxSIsFqhMz/EOAiAqAYasSiuOP03eVl2+pOa6dQjd2?=
+ =?us-ascii?Q?34UvNEuIZf4VG0gw7vKbwRd86fkih0ANwBLwUfL/FZ5DKXZchv6ofaO/RzID?=
+ =?us-ascii?Q?/v3jbQRh+wuqPhoV7mvGIMfEpgyPxWOPw/JB8tsC1xWSGfPqcdEKv0iKqyky?=
+ =?us-ascii?Q?Je4Z0iC7aVEdZb5YBk9cfz80kv28+AyUwuLtJ9crVI2W49AV2vwseuersuje?=
+ =?us-ascii?Q?yeXD82EcLqPfKlyXdc5R3McagbGDvr5CaNU/ZH7Oi+GICAmNs055CZeG9t1a?=
+ =?us-ascii?Q?ZKr4PmVng29tNqjeylXV9QLrLaziX9m829344AsHJS2+nFkfw5D9MjDeFJu+?=
+ =?us-ascii?Q?z0peBq9BOPSGVKAYoby+15S7F98wQ0u7NtXg0BBfUsNK9YR0ytwgV0UHOifv?=
+ =?us-ascii?Q?lKLSye4hKPU8psXhC7hBXnN8VDE6jt5c60xgf3oeQsgc5nhMi7echjbLPnw?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH V0 1/2] hyper-v: Add CONFIG_HYPERV_VMBUS option
-Content-Language: en-US
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
- netdev@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
- linux-arch@vger.kernel.org, virtualization@lists.linux.dev
-Cc: maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, jikos@kernel.org,
- bentiss@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org, decui@microsoft.com, dmitry.torokhov@gmail.com,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, bhelgaas@google.com,
- James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
- gregkh@linuxfoundation.org, deller@gmx.de, arnd@arndb.de,
- sgarzare@redhat.com, horms@kernel.org
-References: <20250828005952.884343-1-mrathor@linux.microsoft.com>
- <20250828005952.884343-2-mrathor@linux.microsoft.com>
- <5003d5e8-a025-4827-b8a0-6fe11877421b@linux.microsoft.com>
-From: Mukesh R <mrathor@linux.microsoft.com>
-In-Reply-To: <5003d5e8-a025-4827-b8a0-6fe11877421b@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: e61f575a-9572-452c-1f2f-08dde8a0de92
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Aug 2025 15:12:58.2779
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR02MB10273
 
-On 8/28/25 17:29, Nuno Das Neves wrote:
-> On 8/27/2025 5:59 PM, Mukesh Rathor wrote:
->> Somehow vmbus driver is hinged on CONFIG_HYPERV. It appears this is initial
->> code that did not get addressed when the scope of CONFIG_HYPERV went beyond
->> vmbus. This commit creates a fine grained HYPERV_VMBUS option and updates
->> drivers that depend on VMBUS.
->>
-> 
-> The commit message can be improved. The docs are helpful here:
-> https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
-> 
-> In particular, some clearer reasons for the change.
-> e.g.
-> - CONFIG_HYPERV encompasses too much right now. It's not always clear what
->   depends on builtin hyperv code and what depends on vmbus.
-> 
-> - Since there is so much builtin hyperv code, building CONFIG_HYPERV as a
->   module doesn't make intuitive sense. Building vmbus support as a module does.
-> 
-> - There are actually some real scenarios someone may want to compile with
->   CONFIG_HYPERV but without vmbus, like baremetal root partition.
-> 
-> FWIW I think it's a good idea, interested to hear what others think.
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, Augu=
+st 19, 2025 12:29 AM
+>=20
+> Detect booting as an "L1VH" partition. This is a new scenario very
+> similar to root partition where the mshv_root driver can be used to
+> create and manage guest partitions.
+>=20
+> It mostly works the same as root partition, but there are some
+> differences in how various features are handled. hv_l1vh_partition()
+> is introduced to handle these cases. Add hv_parent_partition()
+> which returns true for either case, replacing some hv_root_partition()
+> checks.
+>=20
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> ---
+>  drivers/hv/hv_common.c         | 20 ++++++++++++--------
+>  drivers/hv/mshv_root_main.c    | 22 ++++++++++++++--------
+>  include/asm-generic/mshyperv.h | 11 +++++++++++
+>  3 files changed, 37 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+> index cbe4a954ad46..a6839593ca31 100644
+> --- a/drivers/hv/hv_common.c
+> +++ b/drivers/hv/hv_common.c
+> @@ -357,7 +357,7 @@ int __init hv_common_init(void)
+>  	hyperv_pcpu_arg =3D alloc_percpu(void  *);
+>  	BUG_ON(!hyperv_pcpu_arg);
+>=20
+> -	if (hv_root_partition()) {
+> +	if (hv_parent_partition()) {
+>  		hv_synic_eventring_tail =3D alloc_percpu(u8 *);
+>  		BUG_ON(!hv_synic_eventring_tail);
+>  	}
+> @@ -506,7 +506,7 @@ int hv_common_cpu_init(unsigned int cpu)
+>  	if (msr_vp_index > hv_max_vp_index)
+>  		hv_max_vp_index =3D msr_vp_index;
+>=20
+> -	if (hv_root_partition()) {
+> +	if (hv_parent_partition()) {
+>  		synic_eventring_tail =3D (u8 **)this_cpu_ptr(hv_synic_eventring_tail);
+>  		*synic_eventring_tail =3D kcalloc(HV_SYNIC_SINT_COUNT,
+>  						sizeof(u8), flags);
+> @@ -532,7 +532,7 @@ int hv_common_cpu_die(unsigned int cpu)
+>  	 * originally allocated memory is reused in hv_common_cpu_init().
+>  	 */
+>=20
+> -	if (hv_root_partition()) {
+> +	if (hv_parent_partition()) {
+>  		synic_eventring_tail =3D this_cpu_ptr(hv_synic_eventring_tail);
+>  		kfree(*synic_eventring_tail);
+>  		*synic_eventring_tail =3D NULL;
+> @@ -703,13 +703,17 @@ void hv_identify_partition_type(void)
+>  	 * the root partition setting if also a Confidential VM.
+>  	 */
+>  	if ((ms_hyperv.priv_high & HV_CREATE_PARTITIONS) &&
+> -	    (ms_hyperv.priv_high & HV_CPU_MANAGEMENT) &&
+>  	    !(ms_hyperv.priv_high & HV_ISOLATION)) {
+> -		pr_info("Hyper-V: running as root partition\n");
+> -		if (IS_ENABLED(CONFIG_MSHV_ROOT))
+> -			hv_curr_partition_type =3D HV_PARTITION_TYPE_ROOT;
+> -		else
+> +
+> +		if (!IS_ENABLED(CONFIG_MSHV_ROOT)) {
+>  			pr_crit("Hyper-V: CONFIG_MSHV_ROOT not enabled!\n");
+> +		} else if (ms_hyperv.priv_high & HV_CPU_MANAGEMENT) {
+> +			pr_info("Hyper-V: running as root partition\n");
+> +			hv_curr_partition_type =3D HV_PARTITION_TYPE_ROOT;
+> +		} else {
+> +			pr_info("Hyper-V: running as L1VH partition\n");
+> +			hv_curr_partition_type =3D HV_PARTITION_TYPE_L1VH;
+> +		}
+>  	}
+>  }
+>=20
+> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> index aca3331ad516..7c710703cd96 100644
+> --- a/drivers/hv/mshv_root_main.c
+> +++ b/drivers/hv/mshv_root_main.c
+> @@ -37,12 +37,6 @@ MODULE_AUTHOR("Microsoft");
+>  MODULE_LICENSE("GPL");
+>  MODULE_DESCRIPTION("Microsoft Hyper-V root partition VMM interface /dev/=
+mshv");
+>=20
+> -/* TODO move this to mshyperv.h when needed outside driver */
+> -static inline bool hv_parent_partition(void)
+> -{
+> -	return hv_root_partition();
+> -}
+> -
+>  /* TODO move this to another file when debugfs code is added */
+>  enum hv_stats_vp_counters {			/* HV_THREAD_COUNTER */
+>  #if defined(CONFIG_X86)
+> @@ -2190,6 +2184,15 @@ struct notifier_block mshv_reboot_nb =3D {
+>  	.notifier_call =3D mshv_reboot_notify,
+>  };
+>=20
+> +static int __init mshv_l1vh_partition_init(struct device *dev)
+> +{
+> +	hv_scheduler_type =3D HV_SCHEDULER_TYPE_CORE_SMT;
+> +	dev_info(dev, "Hypervisor using %s\n",
+> +		 scheduler_type_to_string(hv_scheduler_type));
+> +
+> +	return 0;
+> +}
 
-Sorry, you had mentioned it and I expanded the cover letter and forgot the
-commit message here. You said it better than I could above, so I can just use
-that in V1 next week if no other comments.
+I'm a bit late reviewing this patch, but I have a suggestion. With this
+function added, setting hv_scheduler_type and outputting the message
+is now in two places:  here and in mshv_retrieve_scheduler_type().
 
-Thanks,
--Mukesh
+Instead, check for root vs. L1VH in mshv_retrieve_scheduler_type(),
+and either call hv_retrieve_scheduler_type(), or force to
+HV_SCHEDULER_TYPE_CORE_SMT.  Then the rest of the code in
+mshv_retrieve_scheduler_type(), including outputting the message,
+just works. That puts all the logic about the scheduler type in one
+place.
 
+Then move the call to mshv_retrieve_scheduler_type() directly
+into mshv_parent_partition_init() just before
 
-> Nuno
-> 
->> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
->> ---
->>  drivers/gpu/drm/Kconfig        |  2 +-
->>  drivers/hid/Kconfig            |  2 +-
->>  drivers/hv/Kconfig             | 12 +++++++++---
->>  drivers/hv/Makefile            |  2 +-
->>  drivers/input/serio/Kconfig    |  4 ++--
->>  drivers/net/hyperv/Kconfig     |  2 +-
->>  drivers/pci/Kconfig            |  2 +-
->>  drivers/scsi/Kconfig           |  2 +-
->>  drivers/uio/Kconfig            |  2 +-
->>  drivers/video/fbdev/Kconfig    |  2 +-
->>  include/asm-generic/mshyperv.h |  8 +++++---
->>  net/vmw_vsock/Kconfig          |  2 +-
->>  12 files changed, 25 insertions(+), 17 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
->> index f7ea8e895c0c..58f34da061c6 100644
->> --- a/drivers/gpu/drm/Kconfig
->> +++ b/drivers/gpu/drm/Kconfig
->> @@ -398,7 +398,7 @@ source "drivers/gpu/drm/imagination/Kconfig"
->>  
->>  config DRM_HYPERV
->>  	tristate "DRM Support for Hyper-V synthetic video device"
->> -	depends on DRM && PCI && HYPERV
->> +	depends on DRM && PCI && HYPERV_VMBUS
->>  	select DRM_CLIENT_SELECTION
->>  	select DRM_KMS_HELPER
->>  	select DRM_GEM_SHMEM_HELPER
->> diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
->> index a57901203aeb..fe3dc8c0db99 100644
->> --- a/drivers/hid/Kconfig
->> +++ b/drivers/hid/Kconfig
->> @@ -1162,7 +1162,7 @@ config GREENASIA_FF
->>  
->>  config HID_HYPERV_MOUSE
->>  	tristate "Microsoft Hyper-V mouse driver"
->> -	depends on HYPERV
->> +	depends on HYPERV_VMBUS
->>  	help
->>  	Select this option to enable the Hyper-V mouse driver.
->>  
->> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
->> index 2e8df09db599..08c4ed005137 100644
->> --- a/drivers/hv/Kconfig
->> +++ b/drivers/hv/Kconfig
->> @@ -44,18 +44,24 @@ config HYPERV_TIMER
->>  
->>  config HYPERV_UTILS
->>  	tristate "Microsoft Hyper-V Utilities driver"
->> -	depends on HYPERV && CONNECTOR && NLS
->> +	depends on HYPERV_VMBUS && CONNECTOR && NLS
->>  	depends on PTP_1588_CLOCK_OPTIONAL
->>  	help
->>  	  Select this option to enable the Hyper-V Utilities.
->>  
->>  config HYPERV_BALLOON
->>  	tristate "Microsoft Hyper-V Balloon driver"
->> -	depends on HYPERV
->> +	depends on HYPERV_VMBUS
->>  	select PAGE_REPORTING
->>  	help
->>  	  Select this option to enable Hyper-V Balloon driver.
->>  
->> +config HYPERV_VMBUS
->> +	tristate "Microsoft Hyper-V Vmbus driver"
->> +	depends on HYPERV
->> +	help
->> +	  Select this option to enable Hyper-V Vmbus driver.
->> +
->>  config MSHV_ROOT
->>  	tristate "Microsoft Hyper-V root partition support"
->>  	depends on HYPERV && (X86_64 || ARM64)
->> @@ -75,7 +81,7 @@ config MSHV_ROOT
->>  
->>  config MSHV_VTL
->>  	tristate "Microsoft Hyper-V VTL driver"
->> -	depends on X86_64 && HYPERV_VTL_MODE
->> +	depends on X86_64 && HYPERV_VTL_MODE && HYPERV_VMBUS
->>  	# Mapping VTL0 memory to a userspace process in VTL2 is supported in OpenHCL.
->>  	# VTL2 for OpenHCL makes use of Huge Pages to improve performance on VMs,
->>  	# specially with large memory requirements.
->> diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
->> index c53a0df746b7..050517756a82 100644
->> --- a/drivers/hv/Makefile
->> +++ b/drivers/hv/Makefile
->> @@ -1,5 +1,5 @@
->>  # SPDX-License-Identifier: GPL-2.0
->> -obj-$(CONFIG_HYPERV)		+= hv_vmbus.o
->> +obj-$(CONFIG_HYPERV_VMBUS)	+= hv_vmbus.o
->>  obj-$(CONFIG_HYPERV_UTILS)	+= hv_utils.o
->>  obj-$(CONFIG_HYPERV_BALLOON)	+= hv_balloon.o
->>  obj-$(CONFIG_MSHV_ROOT)		+= mshv_root.o
->> diff --git a/drivers/input/serio/Kconfig b/drivers/input/serio/Kconfig
->> index 17edc1597446..c7ef347a4dff 100644
->> --- a/drivers/input/serio/Kconfig
->> +++ b/drivers/input/serio/Kconfig
->> @@ -276,8 +276,8 @@ config SERIO_OLPC_APSP
->>  
->>  config HYPERV_KEYBOARD
->>  	tristate "Microsoft Synthetic Keyboard driver"
->> -	depends on HYPERV
->> -	default HYPERV
->> +	depends on HYPERV_VMBUS
->> +	default HYPERV_VMBUS
->>  	help
->>  	  Select this option to enable the Hyper-V Keyboard driver.
->>  
->> diff --git a/drivers/net/hyperv/Kconfig b/drivers/net/hyperv/Kconfig
->> index c8cbd85adcf9..982964c1a9fb 100644
->> --- a/drivers/net/hyperv/Kconfig
->> +++ b/drivers/net/hyperv/Kconfig
->> @@ -1,7 +1,7 @@
->>  # SPDX-License-Identifier: GPL-2.0-only
->>  config HYPERV_NET
->>  	tristate "Microsoft Hyper-V virtual network driver"
->> -	depends on HYPERV
->> +	depends on HYPERV_VMBUS
->>  	select UCS2_STRING
->>  	select NLS
->>  	help
->> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
->> index 9a249c65aedc..7065a8e5f9b1 100644
->> --- a/drivers/pci/Kconfig
->> +++ b/drivers/pci/Kconfig
->> @@ -221,7 +221,7 @@ config PCI_LABEL
->>  
->>  config PCI_HYPERV
->>  	tristate "Hyper-V PCI Frontend"
->> -	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI && SYSFS
->> +	depends on ((X86 && X86_64) || ARM64) && HYPERV_VMBUS && PCI_MSI && SYSFS
->>  	select PCI_HYPERV_INTERFACE
->>  	select IRQ_MSI_LIB
->>  	help
->> diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
->> index 5522310bab8d..19d0884479a2 100644
->> --- a/drivers/scsi/Kconfig
->> +++ b/drivers/scsi/Kconfig
->> @@ -589,7 +589,7 @@ config XEN_SCSI_FRONTEND
->>  
->>  config HYPERV_STORAGE
->>  	tristate "Microsoft Hyper-V virtual storage driver"
->> -	depends on SCSI && HYPERV
->> +	depends on SCSI && HYPERV_VMBUS
->>  	depends on m || SCSI_FC_ATTRS != m
->>  	default HYPERV
->>  	help
->> diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
->> index b060dcd7c635..6f86a61231e6 100644
->> --- a/drivers/uio/Kconfig
->> +++ b/drivers/uio/Kconfig
->> @@ -140,7 +140,7 @@ config UIO_MF624
->>  
->>  config UIO_HV_GENERIC
->>  	tristate "Generic driver for Hyper-V VMBus"
->> -	depends on HYPERV
->> +	depends on HYPERV_VMBUS
->>  	help
->>  	  Generic driver that you can bind, dynamically, to any
->>  	  Hyper-V VMBus device. It is useful to provide direct access
->> diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
->> index c21484d15f0c..72c63eaeb983 100644
->> --- a/drivers/video/fbdev/Kconfig
->> +++ b/drivers/video/fbdev/Kconfig
->> @@ -1774,7 +1774,7 @@ config FB_BROADSHEET
->>  
->>  config FB_HYPERV
->>  	tristate "Microsoft Hyper-V Synthetic Video support"
->> -	depends on FB && HYPERV
->> +	depends on FB && HYPERV_VMBUS
->>  	select DMA_CMA if HAVE_DMA_CONTIGUOUS && CMA
->>  	select FB_IOMEM_HELPERS_DEFERRED
->>  	help
->> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
->> index 1d2ad1304ad4..66c58c91b530 100644
->> --- a/include/asm-generic/mshyperv.h
->> +++ b/include/asm-generic/mshyperv.h
->> @@ -165,6 +165,7 @@ static inline u64 hv_generate_guest_id(u64 kernel_version)
->>  
->>  void __init hv_mark_resources(void);
->>  
->> +#if IS_ENABLED(CONFIG_HYPERV_VMBUS)
->>  /* Free the message slot and signal end-of-message if required */
->>  static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
->>  {
->> @@ -200,6 +201,10 @@ static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
->>  	}
->>  }
->>  
->> +extern int vmbus_interrupt;
->> +extern int vmbus_irq;
->> +#endif /* CONFIG_HYPERV_VMBUS */
->> +
->>  int hv_get_hypervisor_version(union hv_hypervisor_version_info *info);
->>  
->>  void hv_setup_vmbus_handler(void (*handler)(void));
->> @@ -213,9 +218,6 @@ void hv_setup_crash_handler(void (*handler)(struct pt_regs *regs));
->>  void hv_remove_crash_handler(void);
->>  void hv_setup_mshv_handler(void (*handler)(void));
->>  
->> -extern int vmbus_interrupt;
->> -extern int vmbus_irq;
->> -
->>  #if IS_ENABLED(CONFIG_HYPERV)
->>  /*
->>   * Hypervisor's notion of virtual processor ID is different from
->> diff --git a/net/vmw_vsock/Kconfig b/net/vmw_vsock/Kconfig
->> index 56356d2980c8..8e803c4828c4 100644
->> --- a/net/vmw_vsock/Kconfig
->> +++ b/net/vmw_vsock/Kconfig
->> @@ -72,7 +72,7 @@ config VIRTIO_VSOCKETS_COMMON
->>  
->>  config HYPERV_VSOCKETS
->>  	tristate "Hyper-V transport for Virtual Sockets"
->> -	depends on VSOCKETS && HYPERV
->> +	depends on VSOCKETS && HYPERV_VMBUS
->>  	help
->>  	  This module implements a Hyper-V transport for Virtual Sockets.
->>  
+	if (hv_root_partition())
+		ret =3D mshv_root_partition_init(dev);
+
+mshv_l1vh_partition_init() is no longer needed.
+
+Independent of the suggestion, everything else looks good.
+
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+
+> +
+>  static void mshv_root_partition_exit(void)
+>  {
+>  	unregister_reboot_notifier(&mshv_reboot_nb);
+> @@ -2224,7 +2227,7 @@ static int __init mshv_parent_partition_init(void)
+>  	struct device *dev;
+>  	union hv_hypervisor_version_info version_info;
+>=20
+> -	if (!hv_root_partition() || is_kdump_kernel())
+> +	if (!hv_parent_partition() || is_kdump_kernel())
+>  		return -ENODEV;
+>=20
+>  	if (hv_get_hypervisor_version(&version_info))
+> @@ -2261,7 +2264,10 @@ static int __init mshv_parent_partition_init(void)
+>=20
+>  	mshv_cpuhp_online =3D ret;
+>=20
+> -	ret =3D mshv_root_partition_init(dev);
+> +	if (hv_root_partition())
+> +		ret =3D mshv_root_partition_init(dev);
+> +	else
+> +		ret =3D mshv_l1vh_partition_init(dev);
+>  	if (ret)
+>  		goto remove_cpu_state;
+>=20
+> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyper=
+v.h
+> index dbbacd47ca35..f0f0eacb2eef 100644
+> --- a/include/asm-generic/mshyperv.h
+> +++ b/include/asm-generic/mshyperv.h
+> @@ -31,6 +31,7 @@
+>  enum hv_partition_type {
+>  	HV_PARTITION_TYPE_GUEST,
+>  	HV_PARTITION_TYPE_ROOT,
+> +	HV_PARTITION_TYPE_L1VH,
+>  };
+>=20
+>  struct ms_hyperv_info {
+> @@ -457,12 +458,22 @@ static inline bool hv_root_partition(void)
+>  {
+>  	return hv_curr_partition_type =3D=3D HV_PARTITION_TYPE_ROOT;
+>  }
+> +static inline bool hv_l1vh_partition(void)
+> +{
+> +	return hv_curr_partition_type =3D=3D HV_PARTITION_TYPE_L1VH;
+> +}
+> +static inline bool hv_parent_partition(void)
+> +{
+> +	return hv_root_partition() || hv_l1vh_partition();
+> +}
+>  int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages);
+>  int hv_call_add_logical_proc(int node, u32 lp_index, u32 acpi_id);
+>  int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flag=
+s);
+>=20
+>  #else /* CONFIG_MSHV_ROOT */
+>  static inline bool hv_root_partition(void) { return false; }
+> +static inline bool hv_l1vh_partition(void) { return false; }
+> +static inline bool hv_parent_partition(void) { return false; }
+>  static inline int hv_call_deposit_pages(int node, u64 partition_id, u32 =
+num_pages)
+>  {
+>  	return -EOPNOTSUPP;
+> --
+> 2.34.1
 
 
