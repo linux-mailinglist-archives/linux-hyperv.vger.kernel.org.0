@@ -1,96 +1,86 @@
-Return-Path: <linux-hyperv+bounces-6702-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6703-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1018B40952
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 17:43:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6917B4095E
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 17:44:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4BD9D200D4C
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 15:42:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 40EC7541663
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 15:42:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0082302CAA;
-	Tue,  2 Sep 2025 15:41:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0653632A810;
+	Tue,  2 Sep 2025 15:41:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fkht+A8h"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2zZ8Oasy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CbELGlnz"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D135324B07
-	for <linux-hyperv@vger.kernel.org>; Tue,  2 Sep 2025 15:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632F2324B1A;
+	Tue,  2 Sep 2025 15:41:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756827680; cv=none; b=YsgeQzPPQvrWW/CfZIoNiHkaITCtOWIcqyUNvAsqyrv825hu10j4cZGOGkAQ49PInFTD8zm04psGC9IFeMRcf2THTX3O/0uqHahkOJeCCbTRavCHE731FsMMw5c7KU5zIa/u4XwOEJttfXKt/cXoTZr7TprR/1vyg6JZBIr9g6k=
+	t=1756827702; cv=none; b=ngdEmKhoBoXNC/EYzkszhEPsQyytkoeQ03r7t8b7swheMGTVFu3RqooVIChgPiLTQg9Y1O/Mb9WTQYbuFiabSb203vBOGBZHF/TtrLUk/DJEheBRkgL0QD8W7+hA0A2b8ic8eMnsRsg6CQ5muPy1DPR9SVZ9aMSpZvtaNcuJvZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756827680; c=relaxed/simple;
-	bh=u9/WJ8H8wK+rX59VtPKSIOii2LjopysuH7XoQJLy2gU=;
+	s=arc-20240116; t=1756827702; c=relaxed/simple;
+	bh=x33XkRQZmTF0t4JK6plAC/PahprcBBIFiMnsKSn2e9A=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=tl6D0VLJ71bCi3iy1ATgHdI+xbTlxLjcqZ3Ion4LpDbUIZ+PaLxKhsfwztPlOJQMCbCo0IN6l6xRCjNWbuIajE+bSZRt4Bcf2s7H17UA1OZRNoanxUCLSKVmjRTN+4cybiB2/NfLxf2AIsc15LAixyHDJEL5CvRHIndBTeFtTqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fkht+A8h; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756827678;
+	 MIME-Version:Content-Type; b=eKaRptLwEsTGACD/QsqgUSiNJuIIogVHDe/iZRnO6E/cNU9uiUtlaTJG42O5doYUhuWTZ2hoQZVcyPIskbN4pWdUnHgc/Qopgd25OWco2eoIYzpPKz7LsXdq6AoJ0ZfcX5at+OKoP6ZhW4djqDYc9qe5lATpWrBhFEmXS1Y5AqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2zZ8Oasy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CbELGlnz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1756827699;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=echO+HV+RoGgUzEJvYwbm1BGQwTumJtaUPpghadBhaY=;
-	b=Fkht+A8hNaAKUgd9JcVjoH5grIWwJ/ov6eFqlpDerpl8jXxswQp4qXAWPKpGW5IdgO+cc0
-	Z1tNWSrdprCLEsiwOMR9VeQtMKeWoxgWRSppkwX1oMq8uIeBSN9AZn68kp8j8bRhbU6aCv
-	Uv1tDubBpEt8gf+gDyNXgEEmXAzsaQ4=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-372-oZfa3qIPOceaFqRAi_8LoA-1; Tue, 02 Sep 2025 11:41:16 -0400
-X-MC-Unique: oZfa3qIPOceaFqRAi_8LoA-1
-X-Mimecast-MFC-AGG-ID: oZfa3qIPOceaFqRAi_8LoA_1756827675
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3dbc72f8d32so157413f8f.3
-        for <linux-hyperv@vger.kernel.org>; Tue, 02 Sep 2025 08:41:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756827675; x=1757432475;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=echO+HV+RoGgUzEJvYwbm1BGQwTumJtaUPpghadBhaY=;
-        b=EsILZ3rn3hTeo2X2fnWKpgEnkZb/ROrHScON3hDKm6ZMzfjkMqvEEXF20TARbcz6o+
-         Es/dIqnfmYYqcUZEl/KTQ00NMLbnD4ZGenH7At0JOWKNS5ujQfNy5LQBXL5+bWSnaUP1
-         6S2/WyyrZ6IioKa64BMUYidC9/UCNt4gm/RXd8pDK0nWrBu7te37oqgP1Ya5587KufPE
-         hJr7NIKFpxUJXv0tsXJi/T5Een4QfozfFCEcJ/FYFR7MAYgI5zMbL9ntY40i+pSmSyQ3
-         ix9KDHBVz+ZxNBtVy/SSl4BD9yLrVlBhxVqKk7rluuHSUAEk+OzXt9EE9AK6DCs3pqdH
-         BXmw==
-X-Forwarded-Encrypted: i=1; AJvYcCV6w0bxL7MtboMkbmqQ+RJslvGFahvFtdWuPGkT0Q9laoosq8NL/YRGiBty24vsaI67+a7FFK/cIaColwA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+yqaFLUoJU86cC4XVwoA7nsMtUV6HTVe4YRn35BC6R2ey3qhE
-	LgeiUpknKaAkj+IvixuXKqZSs6zXuY/pbtav1LoB817OIKaKAVfZ+D8mEy+MelBLXMNG3tFbbGJ
-	6PMrTcAQFKXegZB18llqjhQBVbV/e1BY5Z6gy0K8aWriAIqzzS1ZCNjFdap/lGrvvKQ==
-X-Gm-Gg: ASbGncv9FC8fR1rSrW2dozCUOzdu2IxaMYZ/krpm1G4Oae2fBbavMSD3ikNvQ2VnBtg
-	xRL3f5TISpxqciyfpTgJq3nDyAfmhgXNE1Vnng1pxaxZ28CHlIHXwQ7aI4EFbMQ/zQDwENqvuSd
-	G2oaimElU2hgsVObd5I9pb0lZPqgz/1R0ji48Yv/QXUTTXaHFCZSVPmhdtwn491Ghc0Q6lIoqGj
-	Ev3nz+7yyD7x1ZIw61qxSzLwD9j8QoMyZ/PFSdy87vWqytrd1nEcsGOftt3DYvmwkFUKK+77GnM
-	hYrRKWmQuCjeHy8gIe2INGJPmiWN8cwMB9AUXvvQJu7wnL+d++CiMgjzELZqdTKqyA==
-X-Received: by 2002:a05:6000:4282:b0:3cf:cb1a:c698 with SMTP id ffacd0b85a97d-3d1dfb11359mr8428997f8f.30.1756827675375;
-        Tue, 02 Sep 2025 08:41:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHgJhPGDWOK1avxYgWFCOEVvVTXVILBzYi6KjL76UC34Zomae+j073wyFWpMlXlr7dmrpap6Q==
-X-Received: by 2002:a05:6000:4282:b0:3cf:cb1a:c698 with SMTP id ffacd0b85a97d-3d1dfb11359mr8428977f8f.30.1756827674944;
-        Tue, 02 Sep 2025 08:41:14 -0700 (PDT)
-Received: from localhost ([89.128.88.54])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3d60cf93cb2sm11223450f8f.12.2025.09.02.08.41.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Sep 2025 08:41:14 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, louis.chauvet@bootlin.com,
- drawat.floss@gmail.com, hamohammed.sa@gmail.com, melissa.srw@gmail.com,
- mhklinux@outlook.com, simona@ffwll.ch, airlied@gmail.com,
- maarten.lankhorst@linux.intel.com
-Cc: dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] drm/hypervdrm: Use vblank timer
-In-Reply-To: <5cd7f22d-e39a-4d37-8286-0194d6c9a818@suse.de>
-References: <20250901111241.233875-1-tzimmermann@suse.de>
- <20250901111241.233875-5-tzimmermann@suse.de>
- <87a53dfe87.fsf@minerva.mail-host-address-is-not-set>
- <5cd7f22d-e39a-4d37-8286-0194d6c9a818@suse.de>
-Date: Tue, 02 Sep 2025 17:41:12 +0200
-Message-ID: <877bygg8vb.fsf@minerva.mail-host-address-is-not-set>
+	bh=pGwYTKhGfWnlBOKIJz2ymmNYWDHnVcRdnTi9w0My2J4=;
+	b=2zZ8Oasydxmvlshi+0hPu1sllPKmuKAIhq/xyqKhr/ICLKxEbNE0Y8arXmULIhFseyznbC
+	NlsSLx1j+NShWRw4gbfZYL8ad5Y7lWn8tb1mtzBcqKCgFv1WeUGKNq+n7XQhESEv6T34k/
+	n78/Em8081lAQ+c0FZDT1a52G86GycH2kX6jzJhFFVWxLjuPwg8RTepS8e7qQA3UHoxMNI
+	+IpQnlz/nMshQLJtN/61G6QO6p2VGZrRfWPs6kIiw2HVPD/gE0RaT4ds+sXRt+9jlzH+BL
+	fwA1t27rhnwV3uIP1p5Z+Vmh74rHjoSwepM5Lm9+8N4mVvRUU07myiLH1ff+xg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1756827699;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pGwYTKhGfWnlBOKIJz2ymmNYWDHnVcRdnTi9w0My2J4=;
+	b=CbELGlnz4Ygw+ApxTHhD0Wzrjj/QAZbjUecQqluEnw1bvfySdSmzQUCOWm89MgF184XaOn
+	VBamn8Ys02TYr6Bw==
+To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Tianrui Zhao
+ <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Sean Christopherson <seanjc@google.com>, Paolo
+ Bonzini <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang
+ <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, Peter Zijlstra <peterz@infradead.org>, Andy
+ Lutomirski <luto@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Frederic Weisbecker <frederic@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, Josh
+ Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-hyperv@vger.kernel.org, rcu@vger.kernel.org, Nuno Das Neves
+ <nunodasneves@linux.microsoft.com>, Mukesh R <mrathor@linux.microsoft.com>
+Subject: Re: [PATCH v2 4/7] entry/kvm: KVM: Move KVM details related to
+ signal/-EINTR into KVM proper
+In-Reply-To: <20250828000156.23389-5-seanjc@google.com>
+References: <20250828000156.23389-1-seanjc@google.com>
+ <20250828000156.23389-5-seanjc@google.com>
+Date: Tue, 02 Sep 2025 17:41:37 +0200
+Message-ID: <87wm6gzwsu.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -99,60 +89,25 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-Thomas Zimmermann <tzimmermann@suse.de> writes:
-
-[...]
-
->>
->> I'm not familiar with hyperv to know whether is a problem or not for the
->> host to not be notified that the guest display is disabled. But I thought
->> that should raise this question for the folks familiar with it.
+On Wed, Aug 27 2025 at 17:01, Sean Christopherson wrote:
+> Move KVM's morphing of pending signals into userspace exits into KVM
+> proper, and drop the @vcpu param from xfer_to_guest_mode_handle_work().
+> How KVM responds to -EINTR is a detail that really belongs in KVM itself,
+> and invoking kvm_handle_signal_exit() from kernel code creates an inverted
+> module dependency.  E.g. attempting to move kvm_handle_signal_exit() into
+> kvm_main.c would generate an linker error when building kvm.ko as a module.
 >
-> The feedback I got at 
-> https://lore.kernel.org/dri-devel/SN6PR02MB4157F630284939E084486AFED46FA@SN6PR02MB4157.namprd02.prod.outlook.com/ 
-> is that the vblank timer solves the problem of excessive CPU consumption 
-> on hypervdrm. Ans that's also the observation I had with other drivers. 
-> I guess, telling the host about the disabled display would still make sense.
+> Dropping KVM details will also converting the KVM "entry" code into a more
+> generic virtualization framework so that it can be used when running as a
+> Hyper-V root partition.
 >
+> Lastly, eliminating usage of "struct kvm_vcpu" outside of KVM is also nice
+> to have for KVM x86 developers, as keeping the details of kvm_vcpu purely
+> within KVM allows changing the layout of the structure without having to
+> boot into a new kernel, e.g. allows rebuilding and reloading kvm.ko with a
+> modified kvm_vcpu structure as part of debug/development.
+>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 
-Yes, I read the other thread you referenced and that's why I said that
-your patch is correct to solve the issue.
-
-I just wanted to point out, since it could be that as a follow-up the
-driver could need its own .atomic_disable instead of using the default
-drm_crtc_vblank_atomic_disable(). Something like the following maybe:
-
-+static void hyperv_crtc_helper_atomic_disable(struct drm_crtc *crtc,
-+                                             struct drm_atomic_state *state)
-+{
-+       struct hyperv_drm_device *hv = to_hv(crtc->dev);
-+       struct drm_plane *plane = &hv->plane;
-+       struct drm_plane_state *plane_state = plane->state;
-+       struct drm_crtc_state *crtc_state = crtc->state;
-+
-+       hyperv_hide_hw_ptr(hv->hdev);
-+       /* Notify the host that the guest display is disabled */
-+       hyperv_update_situation(hv->hdev, 0,  hv->screen_depth,
-+                               crtc_state->mode.hdisplay,
-+                               crtc_state->mode.vdisplay,
-+                               plane_state->fb->pitches[0]);
-+
-+       drm_crtc_vblank_off(crtc);
-+}
-+
- static const struct drm_crtc_helper_funcs hyperv_crtc_helper_funcs = {
-        .atomic_check = drm_crtc_helper_atomic_check,
-        .atomic_flush = drm_crtc_vblank_atomic_flush,
-        .atomic_enable = hyperv_crtc_helper_atomic_enable,
--       .atomic_disable = drm_crtc_vblank_atomic_disable,
-+       .atomic_disable = hyperv_crtc_helper_atomic_disable,
- };
-
--- 
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
-
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 
