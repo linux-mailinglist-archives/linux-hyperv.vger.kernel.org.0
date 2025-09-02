@@ -1,651 +1,256 @@
-Return-Path: <linux-hyperv+bounces-6695-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6696-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCA54B4066C
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 16:17:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20D65B4076F
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 16:47:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB4CA3AC106
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 14:16:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5B2E256376A
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 14:43:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B615C1EA7DB;
-	Tue,  2 Sep 2025 14:16:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA221314A88;
+	Tue,  2 Sep 2025 14:42:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="e0OJxaOc";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="QeEflPOH";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="e0OJxaOc";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="QeEflPOH"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="jwSJ1UwT"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04olkn2025.outbound.protection.outlook.com [40.92.47.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCBB2AE77
-	for <linux-hyperv@vger.kernel.org>; Tue,  2 Sep 2025 14:16:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756822610; cv=none; b=esWyH8pUBaObU3zwJ4JDl/NGju9THbKhmLD+1OEvPa8T9AjCIjBX7oSj6Bs1AAUadNCZzrbVwwhomvMCPWNb8/5wp6DCLMNPCUPs209qh3AyFchnhfwXdJpi63c3FQU/cuN9mj0Fk4r9750dx5h1VsSWl8pmZLCDwBReVMr0hw8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756822610; c=relaxed/simple;
-	bh=chTFN7imWZrUyGcrtbUZ+e7qMqirNjj7vFF30aB18XQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UDKwCkEjx2AE0IIgq8ufmfqE+rU/Jc4a9CZuHHQrHCIoRBFH/823TGQ1Qyfny3Oqqrp3l1+yWP1Jxt0Yer9GztFuHQ9+56Y9gzsW6avp4fM2tcxyfAdM/EUf0kN9AF98NjFrPzPTCtDD9B3mUpP7fq+qVi98YUObsn1iDNUX0Ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=e0OJxaOc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=QeEflPOH; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=e0OJxaOc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=QeEflPOH; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 64D982119C;
-	Tue,  2 Sep 2025 14:16:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1756822605; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=LxxhJSlxfk2Yi7yEfx3r5n9Qqgy1EwGy5VL9+QeWKGY=;
-	b=e0OJxaOcOButVV5dR+IzG+kJ6Kk7kBTofLTMr6jF79g1u19SQPxkvPHo+iY1aKdr/1FkxY
-	1XCU6iURf1ajpTN4WMvePHipFEnpS+mbeOqwcFAxcdHCTS2Sjx8T8o5tHbohNziBMg9IC6
-	/PQ/SwCHj34Dzk5HoWGR6VI9jda9smU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1756822605;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=LxxhJSlxfk2Yi7yEfx3r5n9Qqgy1EwGy5VL9+QeWKGY=;
-	b=QeEflPOHz5hLB8BXv/fHC7DYgbek0pOu0ZzbA224MiLo7U8ETLept7aZAuhmc/QwZbK0gx
-	STO1ZI4+XELaISBQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=e0OJxaOc;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=QeEflPOH
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1756822605; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=LxxhJSlxfk2Yi7yEfx3r5n9Qqgy1EwGy5VL9+QeWKGY=;
-	b=e0OJxaOcOButVV5dR+IzG+kJ6Kk7kBTofLTMr6jF79g1u19SQPxkvPHo+iY1aKdr/1FkxY
-	1XCU6iURf1ajpTN4WMvePHipFEnpS+mbeOqwcFAxcdHCTS2Sjx8T8o5tHbohNziBMg9IC6
-	/PQ/SwCHj34Dzk5HoWGR6VI9jda9smU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1756822605;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=LxxhJSlxfk2Yi7yEfx3r5n9Qqgy1EwGy5VL9+QeWKGY=;
-	b=QeEflPOHz5hLB8BXv/fHC7DYgbek0pOu0ZzbA224MiLo7U8ETLept7aZAuhmc/QwZbK0gx
-	STO1ZI4+XELaISBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1470D13882;
-	Tue,  2 Sep 2025 14:16:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id uhVJA038tmjSbQAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Tue, 02 Sep 2025 14:16:45 +0000
-Message-ID: <acd4006a-9d8e-4747-8146-7d8d5a3dc670@suse.de>
-Date: Tue, 2 Sep 2025 16:16:44 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8BC31280F;
+	Tue,  2 Sep 2025 14:42:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.47.25
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756824150; cv=fail; b=pTCS8Bjj770UsHtliXnQeUzRloskFWz6S182s9+o6Cb5EyxqD3zPk8Rgz24k1jjRJTj9IdZ89+Qpbaf/yE6rNu95BcvCclXer8tkyY0UcOaIDtoizcUFmFp/Dh8YSi1CF0YLFdy2/jLr2ieke4OrM2TK68PRIgmUkhMt+JjMtUI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756824150; c=relaxed/simple;
+	bh=bc6meLVigi9jK80hx0nfKMwMQ/gvl7U0LFpgsOpOYvI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=edFYY2MixzInr8KI9P4i0oFc4h79S3Wssm2qBTHqww8QLZ6dXRmlIzsSmjWcqPyPOjjPEL12NFHX41D07CLL8PxEnv9JhDx9Pr9ByqGXwtpW4cNIJAEYJF6OpHYN7fk+I+z9IrTUvOkimIRwNjoSqeGYRluTN05/LU2VzgvAFLQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=jwSJ1UwT; arc=fail smtp.client-ip=40.92.47.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aakwmMClCu8oCI4EoudNUs3yF152c8Yz/lIZMCtjqxOkbeDGPTwTbLXhIZ4+U/BPaDTOC5jqB62gKo+9tutk27NMK9D2KpoRsy4d9aP0yFPdh0ziTeLWwlOTNmMD4c56xHqG5I62qRM+sOKJwFPkXUWBAbF3fr7/wq58Jyo9Bg7nIyhikIeoIjr0q9Ey4Y9TJXEDK1IBeAq0X6DevMso1Z8AVWsIk4HuAureeQbW2quoNMBZyKUHlEmcIGcDBxfj5ZoE9A699rWUaaMsJwyPaJWOWH4DZVHlQFKFRtLwGUr8PlLtXU4qheSL0O3OGfJHYVRkKB6V110gga6ryHH6zA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=se48TOdd2F1d+ktohq1z2zeXEu8JTZdq5AVMM0zhXMg=;
+ b=QO7Gpb1n2/f/GaoNmCqjj+Ji5g6qESxEvGmd7A+vQTiZKO9H76Zx9S8j0VFrwlUaB7Djg+OM01e+v+cxABUmo2RTxQ2qsbLS5TKelkubzUu8649b/5sJrn/JXpbwsGMT6/EBZYJ6+fu/hcWL9eoVkLrESiMVNknMDBxycQQmNY8PLH7Xj8nE1AQyki5zAhOKKO0j0FRJ3roN4bNMDMIMWznD4lz0z9En+ljK576xBaVAxDCbmJHvIRq3iDUuavk37VMaRUXupwT0yqssjY20Vl+IEwJJKTK/T6mFlrUGor/4g3eqow4L7OcAdVp1upL+98bld0EIc0CoTV0bBQaPyQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=se48TOdd2F1d+ktohq1z2zeXEu8JTZdq5AVMM0zhXMg=;
+ b=jwSJ1UwTUR7FROfYEAkIS7w9pDUwf3rntpgIiVolslCBe7lO5SV8seVs2VL8nrRoKC6pg1EC9pWRx8gDJyv8QJr07hdk2vJJDh7bh4HR/F5IHEimH8bj9zRwrs/xTtPIN5gHo5a57W/MG+68CjvMNGNMZ/YqOxAGMMx5u+jQ+WERJ8UsIjtbq1AvtN1RVcuKDGo/aiEFHGc/Qk8bXWu9gNCFVmCodl+yOISwVF7jViX0xY4uQzlVTOdxx6jNu0ELPpc8octKLzfAwqO/sLZHd8vcfPg6ggXer8HkyBspw/kUK2hRWPwv35DOqjQLl7q+DKX4l8dGfpwMnZaDxSzJUg==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by LV3PR02MB10030.namprd02.prod.outlook.com (2603:10b6:408:19c::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.29; Tue, 2 Sep
+ 2025 14:42:23 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.9052.027; Tue, 2 Sep 2025
+ 14:42:23 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Mukesh Rathor <mrathor@linux.microsoft.com>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>
+CC: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+	"mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
+	<tzimmermann@suse.de>, "airlied@gmail.com" <airlied@gmail.com>,
+	"simona@ffwll.ch" <simona@ffwll.ch>, "jikos@kernel.org" <jikos@kernel.org>,
+	"bentiss@kernel.org" <bentiss@kernel.org>, "kys@microsoft.com"
+	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+	<decui@microsoft.com>, "dmitry.torokhov@gmail.com"
+	<dmitry.torokhov@gmail.com>, "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
+	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "James.Bottomley@HansenPartnership.com"
+	<James.Bottomley@HansenPartnership.com>, "martin.petersen@oracle.com"
+	<martin.petersen@oracle.com>, "gregkh@linuxfoundation.org"
+	<gregkh@linuxfoundation.org>, "deller@gmx.de" <deller@gmx.de>,
+	"arnd@arndb.de" <arnd@arndb.de>, "sgarzare@redhat.com" <sgarzare@redhat.com>,
+	"horms@kernel.org" <horms@kernel.org>
+Subject: RE: [PATCH V0 0/2] Fix CONFIG_HYPERV and vmbus related anamoly
+Thread-Topic: [PATCH V0 0/2] Fix CONFIG_HYPERV and vmbus related anamoly
+Thread-Index: AQHcF7c4ZH9DwegJF0iLCVnaUNUDXbR7UfGg
+Date: Tue, 2 Sep 2025 14:42:23 +0000
+Message-ID:
+ <SN6PR02MB4157917D84D00DBDAF54BD69D406A@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250828005952.884343-1-mrathor@linux.microsoft.com>
+In-Reply-To: <20250828005952.884343-1-mrathor@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|LV3PR02MB10030:EE_
+x-ms-office365-filtering-correlation-id: a40a4d39-6566-4539-a02c-08ddea2eed9e
+x-ms-exchange-slblob-mailprops:
+ YfhX3sd/0TVWrg+fxRScxfg9v9HXnUFl2bb0N5PwJ9age037L4Klz87A6NyjFdfQ8zYEvCPDD2Z9dLgS+qpBFyEHZS2T1G+CFZEgm+otSlW4Nu0RhuXIKAu0H1UhoRCwQASdRc4cGepmATgSb6B2epRKeVqTeXYHfl6108YYmB7N7wUwun8wMQKTjdrQdaBBW09pShWMy6EWb8JkjoYu08Eh9snF/14iUrTKGhJ8k/v5H8vGBbY5djvgqkc0MPupD1QcwqQJS9v/wHFcO7lGzq3sFWDchzBC1XwEG1/dtjJahWz81gqAgmgi54mBn3G07pKtjZip2C+iJ3ec47VvBI33oXcoOSq1JryUrrvV3wW+w0/S/KqJl5Yb4vAK5xx4Ce4IBk5XyegLrP7RMDF6ceNuyZEoB4MBoftKwedS+VHgef9sVbtWZTruMc3b5CJ913sSHinCpWY2hfpvDoADbDz1+WGxBU+ugPhESyFk4wkXH9NI91Lurhpew/sm5TWWXjyfREHFJlLLPLXVvweHEBU0GthnadUA0YgcrsLopyok2R5gn9WYjoA33feypqNNzl4cH1gSc4rkoRfmlMhxLYfzeM15NT2ShoJhD1Y7B+K1p+3wjI81qY3XG3QkLxgITxn2plnZvbZtrV5nJgLyyD+t1e/eMcW9mgo2GrQ8mN4CJwU5/pUqdDBQnatH5afrQLP2SSGSX0AfGbdxIA19BYpYXmIRmOpq8nENXwnSmvS4kYxE2eGUXyIV4nW1+bLC0BBTxz/T9sFskJSn4B+gtJglK197aqwlcJAaXSm5rUM=
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|19110799012|8060799015|8062599012|13091999003|461199028|31061999003|15080799012|3412199025|40105399003|41105399003|440099028|53005399003|102099032;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?MsjLxTZUp2l4MG7FKz/9FJAkVd/1+5Eun0kfhThgV2qEyvQJO+CV+tmo4iy1?=
+ =?us-ascii?Q?lR3ACW81kjxrouPyC7IHE66uupNO6CMKqsP536wbPSVEQpIM2JRhUBkzHzcM?=
+ =?us-ascii?Q?EzbI0xmg1I8+IeGXOHyqUPK5hND+98TPkmYS3lzY4jmxipxF7H0pKZ2ED30S?=
+ =?us-ascii?Q?QzdCk/9G+ngIHBpXza1zvFAPLAYVDV7003oFNBbPddEYJn7CrBRI1vtjy5eK?=
+ =?us-ascii?Q?6CMnSfaJnw+pUbqxS+wUYnll9a7SUhfEmUhT8Mg1ck/lpYhHTHMUq14RSWXo?=
+ =?us-ascii?Q?j+RdoSlQSL8gZXl2fL6AKtdVDlvNKqP9Tgk6eriZ/ErIE+3VlFL3wTcfMpfa?=
+ =?us-ascii?Q?MRB0ajnoZeX5S2gujlG/H3rwyaXoTgmTc7fw75F+RKYwtNm+Sp/GsuaMVzZP?=
+ =?us-ascii?Q?t3dm1uME6RY3qdT0J/cggjx8rE3Av21QD0gxEehXEDMV9zMb97DUwGUwjHqy?=
+ =?us-ascii?Q?Fl1V+xGIyT/Ewb4bqr2COnHP0zEmAfxkydRUi0d6sDPPzhRx2yUmaoiHO9dZ?=
+ =?us-ascii?Q?Kon+Z23INKDN7dxO+ek4iSImOrazEP1SgSCxvQsNDOhZnp9mVjYahvueTQ3l?=
+ =?us-ascii?Q?dqy94Mw9pKJ/zNd87pdZU22Gg4aZV5RT+2NrWW1DngEucAGqBuxIoZk7+5BT?=
+ =?us-ascii?Q?qov5wrbCDV3NyIYRbpnEwlIBT7YwfBJJy4Lxy6JQGV3RJy5qG6KVGPVhFr6s?=
+ =?us-ascii?Q?OWSbWGAdcPNt/TSgoAXj0QWndW7TIZ7JHmdEbG6Zm3BKq4JC9oFcV+RkmEGB?=
+ =?us-ascii?Q?W0Azxgppmxso1Oyi2tSbu+pXjw7/n4C0xzcJ1DKyOzuA52tpjTintfgOC6f7?=
+ =?us-ascii?Q?NYGJYPl7q+liLpxeXehXJPVzHdBcyYdyMWB7znvDzf2/NBqcgt7UV1gKSkoL?=
+ =?us-ascii?Q?jmarwzk1x7Z3Rz1/I/bCaM7H6vUSEx8W8wgQi+5N1XYZ3AMlRFJmoTuoHAcR?=
+ =?us-ascii?Q?MjEc0ABQhHvWmoc5I0R+Ve6bHxcOssatURNQgkYkaF5pMnwA58rCG7sd2FAL?=
+ =?us-ascii?Q?pWnS256pWzV92Oq269+BitW5GVvOEfF7Nyz1/oKGApqlK9CbFQ/dilaPcwEw?=
+ =?us-ascii?Q?/uB2ZKmvzInR+7kH3k1VlYNJs6Mq82le/IbUpmP9lWh4Bgz0ckguEQ86gjy/?=
+ =?us-ascii?Q?IVUcIXGy9QFqpPh2CLCCo5dZ79WYW1G9d3SaEr+LEGu7bOmA7F5vrF+IYP/R?=
+ =?us-ascii?Q?wXh5CGCxQOr+dwFWwGCtnXjeNDg4UEt6tSjj5CPET2xeoqOedGfg8fe8NYg?=
+ =?us-ascii?Q?=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?4ioLFhR5M7csGXZ4ltKT8xjjCUJDyLM5t7kKKEL6ltC9DniUyp1BkwuRGHV+?=
+ =?us-ascii?Q?1YgfGQx0IrOzJRPimNqCEuePUNLPjV9zBliPeOIQC2/S41/9qAlh/FUATZ9Y?=
+ =?us-ascii?Q?gUU9T/Ghu5nO+MGq4z92Pw57kgRgXPM0UIgMiNcnkLEXpImxEbrh+KfZ0YZx?=
+ =?us-ascii?Q?aT/Xv0frboHUwt6LS3pKlxjxn/Na2DFfPLQOCAAvCqtLRcWXUyZmBtq4/4T/?=
+ =?us-ascii?Q?8HC5lshDIBs3f6CgcONu51Zv0/oG+eD7kO+vjcuzd71WuyLV069/tJes1LND?=
+ =?us-ascii?Q?o4BwqShs9hBge2t71qySBj7KIC38VPSKKApmw4RWDlTXqqO/vm/2XUUG77sK?=
+ =?us-ascii?Q?rtuyuhRPPqaE6gSct+THgNuDM8NscsAoj/+q28vVNsDdpXlEg1G0ZL/mAqbP?=
+ =?us-ascii?Q?zHoFYxNjTAIvsxu4ze3yVbrWbYVs1pIhKn2qfHF+yRLYXP04T3MOEXOIsS4W?=
+ =?us-ascii?Q?RHZaT34ZWU9e+DsK1Nx/bBRS6Z4qEgqhIOiHXmBl8XxEqXRx0PWWXOz4sIsl?=
+ =?us-ascii?Q?LgFpWSkUBe5l0pq1K86IsGGJC+opaQ2607UGoJJgB0xHHvnayNlBEUV6XHQy?=
+ =?us-ascii?Q?1sfLZ1SwUEu53tXrp9aVORYshTGLj7M6gcBIAiKkW/3niJOGDmS+4JHSRjis?=
+ =?us-ascii?Q?koJ80zD24Y/yDbVPa0ZQvaBdh4KIUQ2OAhhBA64y6wn2aoW5uhbI9QNKXryd?=
+ =?us-ascii?Q?6rrVM5tF8ghHHex3FEwEg0AxlXAAObMuA4zF1xLN161XTq9mSMztbnZU1xJj?=
+ =?us-ascii?Q?s8C11XZgeO0ohkcATRFS2Gj/JAiE238MgcBPNk8Flrf9HxYukrbFPnwgtDXV?=
+ =?us-ascii?Q?G82kG4ma5cjENkIzCqyRzlZbuCq9QpeGv3Y3zMcpR8vJRxtMGxV4XQVGTFju?=
+ =?us-ascii?Q?BNS6MEFc+VUcqpojdL3em8tR4EX1IJZo5eX+XHJ1zqnAdeRlofmt92rzCbDx?=
+ =?us-ascii?Q?RtdL/WR4+P6csfBrYv0MbAn3U8i4oGp+bcATwYULVLrElqMYsnfxVvaTHvXK?=
+ =?us-ascii?Q?00K9/WxiTeyxp7jto6ST0StV87M2gSSUu2e1OB6/RhVUnbOlpHXx6eYRmSfM?=
+ =?us-ascii?Q?tkZVa7yw9onzj+Ohlg0l7Y9jvAMNQ3TCi3Gj4kHrmk0qFDP50KR9lDBQsXML?=
+ =?us-ascii?Q?BTVh8UfkQVdYJHwylV548FswQz4T9WlNGLzrLG1uOQLRh8anicL0hSbWigb1?=
+ =?us-ascii?Q?/kes0dO4FsQ7FZqMwru2++j6NiHHKjWy90ybMezCKVtxPCGgVPseBDb6x28?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] drm/vblank: Add vblank timer
-To: =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc: louis.chauvet@bootlin.com, drawat.floss@gmail.com,
- hamohammed.sa@gmail.com, melissa.srw@gmail.com, mhklinux@outlook.com,
- simona@ffwll.ch, airlied@gmail.com, maarten.lankhorst@linux.intel.com,
- dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org
-References: <20250901111241.233875-1-tzimmermann@suse.de>
- <20250901111241.233875-2-tzimmermann@suse.de> <aLbww2PiyM8FLGft@intel.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <aLbww2PiyM8FLGft@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,outlook.com];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_CC(0.00)[bootlin.com,gmail.com,outlook.com,ffwll.ch,linux.intel.com,lists.freedesktop.org,vger.kernel.org];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,bootlin.com:email,suse.de:mid,suse.de:dkim,suse.de:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Rspamd-Queue-Id: 64D982119C
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: a40a4d39-6566-4539-a02c-08ddea2eed9e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2025 14:42:23.2331
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR02MB10030
 
-Hi
+From: Mukesh Rathor <mrathor@linux.microsoft.com> Sent: Wednesday, August 2=
+7, 2025 6:00 PM
+>=20
+> At present, drivers/Makefile will subst =3Dm to =3Dy for CONFIG_HYPERV fo=
+r hv
+> subdir. Also, drivers/hv/Makefile replaces =3Dm to =3Dy to build in
+> hv_common.c that is needed for the drivers. Moreover, vmbus driver is
+> built if CONFIG_HYPER is set, either loadable or builtin.
+>=20
+> This is not a good approach. CONFIG_HYPERV is really an umbrella config t=
+hat
+> encompasses builtin code and various other things and not a dedicated con=
+fig
+> option for VMBUS. Vmbus should really have a config option just like
+> CONFIG_HYPERV_BALLOON etc. This small series introduces CONFIG_HYPERV_VMB=
+US
+> to build VMBUS driver and make that distinction explicit. With that
+> CONFIG_HYPERV could be changed to bool.
 
-Am 02.09.25 um 15:27 schrieb Ville Syrjälä:
-> On Mon, Sep 01, 2025 at 01:06:58PM +0200, Thomas Zimmermann wrote:
->> The vblank timer simulates a vblank interrupt for hardware without
->> support. Rate-limits the display update frequency.
->>
->> DRM drivers for hardware without vblank support apply display updates
->> ASAP. A vblank event informs DRM clients of the completed update.
->>
->> Userspace compositors immediately schedule the next update, which
->> creates significant load on virtualization outputs. Display updates
->> are usually fast on virtualization outputs, as their framebuffers are
->> in regular system memory and there's no hardware vblank interrupt to
->> throttle the update rate.
->>
->> The vblank timer is a HR timer that signals the vblank in software.
->> It limits the update frequency of a DRM driver similar to a hardware
->> vblank interrupt. The timer is not synchronized to the actual vblank
->> interval of the display.
->>
->> The code has been adopted from vkms, which added the funtionality
->> in commit 3a0709928b17 ("drm/vkms: Add vblank events simulated by
->> hrtimers").
-> Does this suffer from the same deadlocks as well?
-> https://lore.kernel.org/all/20250510094757.4174662-1-zengheng4@huawei.com/
+Separating the core hypervisor support (CONFIG_HYPERV) from the VMBus
+support (CONFIG_HYPERV_VMBUS) makes sense to me. Overall the code
+is already mostly in separate source files code, though there's some
+entanglement in the handling of VMBus interrupts, which could be
+improved later.
 
-Thanks for this pointer. It has not been fixed yet, right? If vkms is 
-affected, this series probably is as well.
+However, I have a compatibility concern. Consider this scenario:
 
-Best regards
-Thomas
+1) Assume running in a Hyper-V VM with a current Linux kernel version
+    built with CONFIG_HYPERV=3Dm.
+2) Grab a new version of kernel source code that contains this patch set.
+3) Run 'make olddefconfig' to create the .config file for the new kernel.
+4) Build the new kernel. This succeeds.
+5) Install and run the new kernel in the Hyper-V VM. This fails.
 
->
->> The new implementation is part of the existing vblank support,
->> which sets up the timer automatically. Drivers only have to start
->> and cancel the vblank timer as part of enabling and disabling the
->> CRTC. The new vblank helper library provides callbacks for struct
->> drm_crtc_funcs.
->>
->> The standard way for handling vblank is to call drm_crtc_handle_vblank().
->> Drivers that require additional processing, such as vkms, can init
->> handle_vblank_timeout in struct drm_crtc_helper_funcs to refer to
->> their timeout handler.
->>
->> v2:
->> - implement vblank timer entirely in vblank helpers
->> - downgrade overrun warning to debug
->> - fix docs
->>
->> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
->> Tested-by: Louis Chauvet <louis.chauvet@bootlin.com>
->> Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
->> ---
->>   Documentation/gpu/drm-kms-helpers.rst    |  12 +++
->>   drivers/gpu/drm/Makefile                 |   3 +-
->>   drivers/gpu/drm/drm_vblank.c             | 122 ++++++++++++++++++++++-
->>   drivers/gpu/drm/drm_vblank_helper.c      |  96 ++++++++++++++++++
->>   include/drm/drm_modeset_helper_vtables.h |  12 +++
->>   include/drm/drm_vblank.h                 |  28 ++++++
->>   include/drm/drm_vblank_helper.h          |  33 ++++++
->>   7 files changed, 303 insertions(+), 3 deletions(-)
->>   create mode 100644 drivers/gpu/drm/drm_vblank_helper.c
->>   create mode 100644 include/drm/drm_vblank_helper.h
->>
->> diff --git a/Documentation/gpu/drm-kms-helpers.rst b/Documentation/gpu/drm-kms-helpers.rst
->> index 5139705089f2..781129f78b06 100644
->> --- a/Documentation/gpu/drm-kms-helpers.rst
->> +++ b/Documentation/gpu/drm-kms-helpers.rst
->> @@ -92,6 +92,18 @@ GEM Atomic Helper Reference
->>   .. kernel-doc:: drivers/gpu/drm/drm_gem_atomic_helper.c
->>      :export:
->>   
->> +VBLANK Helper Reference
->> +-----------------------
->> +
->> +.. kernel-doc:: drivers/gpu/drm/drm_vblank_helper.c
->> +   :doc: overview
->> +
->> +.. kernel-doc:: include/drm/drm_vblank_helper.h
->> +   :internal:
->> +
->> +.. kernel-doc:: drivers/gpu/drm/drm_vblank_helper.c
->> +   :export:
->> +
->>   Simple KMS Helper Reference
->>   ===========================
->>   
->> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
->> index 4dafbdc8f86a..5ba4ffdb8055 100644
->> --- a/drivers/gpu/drm/Makefile
->> +++ b/drivers/gpu/drm/Makefile
->> @@ -150,7 +150,8 @@ drm_kms_helper-y := \
->>   	drm_plane_helper.o \
->>   	drm_probe_helper.o \
->>   	drm_self_refresh_helper.o \
->> -	drm_simple_kms_helper.o
->> +	drm_simple_kms_helper.o \
->> +	drm_vblank_helper.o
->>   drm_kms_helper-$(CONFIG_DRM_PANEL_BRIDGE) += bridge/panel.o
->>   drm_kms_helper-$(CONFIG_DRM_FBDEV_EMULATION) += drm_fb_helper.o
->>   obj-$(CONFIG_DRM_KMS_HELPER) += drm_kms_helper.o
->> diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
->> index 46f59883183d..2a4ee41e2fcf 100644
->> --- a/drivers/gpu/drm/drm_vblank.c
->> +++ b/drivers/gpu/drm/drm_vblank.c
->> @@ -136,8 +136,17 @@
->>    * vblanks after a timer has expired, which can be configured through the
->>    * ``vblankoffdelay`` module parameter.
->>    *
->> - * Drivers for hardware without support for vertical-blanking interrupts
->> - * must not call drm_vblank_init(). For such drivers, atomic helpers will
->> + * Drivers for hardware without support for vertical-blanking interrupts can
->> + * use DRM vblank timers to send vblank events at the rate of the current
->> + * display mode's refresh. While not synchronized to the hardware's
->> + * vertical-blanking regions, the timer helps DRM clients and compositors to
->> + * adapt their update cycle to the display output. Drivers should set up
->> + * vblanking as usual, but call drm_crtc_vblank_start_timer() and
->> + * drm_crtc_vblank_cancel_timer() as part of their atomic mode setting.
->> + * See also DRM vblank helpers for more information.
->> + *
->> + * Drivers without support for vertical-blanking interrupts nor timers must
->> + * not call drm_vblank_init(). For these drivers, atomic helpers will
->>    * automatically generate fake vblank events as part of the display update.
->>    * This functionality also can be controlled by the driver by enabling and
->>    * disabling struct drm_crtc_state.no_vblank.
->> @@ -2162,3 +2171,112 @@ int drm_crtc_queue_sequence_ioctl(struct drm_device *dev, void *data,
->>   	return ret;
->>   }
->>   
->> +/*
->> + * VBLANK timer
->> + */
->> +
->> +static enum hrtimer_restart drm_vblank_timer_function(struct hrtimer *timer)
->> +{
->> +	struct drm_vblank_crtc_timer *vtimer =
->> +		container_of(timer, struct drm_vblank_crtc_timer, timer);
->> +	struct drm_crtc *crtc = vtimer->crtc;
->> +	const struct drm_crtc_helper_funcs *crtc_funcs = crtc->helper_private;
->> +	struct drm_device *dev = crtc->dev;
->> +	u64 ret_overrun;
->> +	bool succ;
->> +
->> +	ret_overrun = hrtimer_forward_now(&vtimer->timer, vtimer->interval);
->> +	if (ret_overrun != 1)
->> +		drm_dbg_vbl(dev, "vblank timer overrun\n");
->> +
->> +	if (crtc_funcs->handle_vblank_timeout)
->> +		succ = crtc_funcs->handle_vblank_timeout(crtc);
->> +	else
->> +		succ = drm_crtc_handle_vblank(crtc);
->> +	if (!succ)
->> +		return HRTIMER_NORESTART;
->> +
->> +	return HRTIMER_RESTART;
->> +}
->> +
->> +/**
->> + * drm_crtc_vblank_start_timer - Starts the vblank timer on the given CRTC
->> + * @crtc: the CRTC
->> + *
->> + * Drivers should call this function from their CRTC's enable_vblank
->> + * function to start a vblank timer. The timer will fire after the duration
->> + * of a full frame. drm_crtc_vblank_cancel_timer() disables a running timer.
->> + *
->> + * Returns:
->> + * 0 on success, or a negative errno code otherwise.
->> + */
->> +int drm_crtc_vblank_start_timer(struct drm_crtc *crtc)
->> +{
->> +	struct drm_vblank_crtc *vblank = drm_crtc_vblank_crtc(crtc);
->> +	struct drm_vblank_crtc_timer *vtimer = &vblank->vblank_timer;
->> +
->> +	if (!vtimer->crtc) {
->> +		vtimer->crtc = crtc;
->> +		hrtimer_setup(&vtimer->timer, drm_vblank_timer_function,
->> +			      CLOCK_MONOTONIC, HRTIMER_MODE_REL);
->> +	}
->> +
->> +	drm_calc_timestamping_constants(crtc, &crtc->mode);
->> +
->> +	vtimer->interval = ktime_set(0, vblank->framedur_ns);
->> +	hrtimer_start(&vtimer->timer, vtimer->interval, HRTIMER_MODE_REL);
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL(drm_crtc_vblank_start_timer);
->> +
->> +/**
->> + * drm_crtc_vblank_start_timer - Cancels the given CRTC's vblank timer
->> + * @crtc: the CRTC
->> + *
->> + * Drivers should call this function from their CRTC's disable_vblank
->> + * function to stop a vblank timer.
->> + */
->> +void drm_crtc_vblank_cancel_timer(struct drm_crtc *crtc)
->> +{
->> +	struct drm_vblank_crtc *vblank = drm_crtc_vblank_crtc(crtc);
->> +	struct drm_vblank_crtc_timer *vtimer = &vblank->vblank_timer;
->> +
->> +	hrtimer_cancel(&vtimer->timer);
->> +}
->> +EXPORT_SYMBOL(drm_crtc_vblank_cancel_timer);
->> +
->> +/**
->> + * drm_crtc_vblank_get_vblank_timeout - Returns the vblank timeout
->> + * @crtc: The CRTC
->> + * @vblank_time: Returns the next vblank timestamp
->> + *
->> + * The helper drm_crtc_vblank_get_vblank_timeout() returns the next vblank
->> + * timestamp of the CRTC's vblank timer according to the timer's expiry
->> + * time.
->> + */
->> +void drm_crtc_vblank_get_vblank_timeout(struct drm_crtc *crtc, ktime_t *vblank_time)
->> +{
->> +	struct drm_vblank_crtc *vblank = drm_crtc_vblank_crtc(crtc);
->> +	struct drm_vblank_crtc_timer *vtimer = &vblank->vblank_timer;
->> +
->> +	if (!READ_ONCE(vblank->enabled)) {
->> +		*vblank_time = ktime_get();
->> +		return;
->> +	}
->> +
->> +	*vblank_time = READ_ONCE(vtimer->timer.node.expires);
->> +
->> +	if (drm_WARN_ON(crtc->dev, !ktime_compare(*vblank_time, vblank->time)))
->> +		return; /* Already expired */
->> +
->> +	/*
->> +	 * To prevent races we roll the hrtimer forward before we do any
->> +	 * interrupt processing - this is how real hw works (the interrupt
->> +	 * is only generated after all the vblank registers are updated)
->> +	 * and what the vblank core expects. Therefore we need to always
->> +	 * correct the timestamp by one frame.
->> +	 */
->> +	*vblank_time = ktime_sub(*vblank_time, vtimer->interval);
->> +}
->> +EXPORT_SYMBOL(drm_crtc_vblank_get_vblank_timeout);
->> diff --git a/drivers/gpu/drm/drm_vblank_helper.c b/drivers/gpu/drm/drm_vblank_helper.c
->> new file mode 100644
->> index 000000000000..f94d1e706191
->> --- /dev/null
->> +++ b/drivers/gpu/drm/drm_vblank_helper.c
->> @@ -0,0 +1,96 @@
->> +// SPDX-License-Identifier: MIT
->> +
->> +#include <drm/drm_crtc.h>
->> +#include <drm/drm_managed.h>
->> +#include <drm/drm_modeset_helper_vtables.h>
->> +#include <drm/drm_print.h>
->> +#include <drm/drm_vblank.h>
->> +#include <drm/drm_vblank_helper.h>
->> +
->> +/**
->> + * DOC: overview
->> + *
->> + * The vblank helper library provides functions for supporting vertical
->> + * blanking in DRM drivers.
->> + *
->> + * For vblank timers, several callback implementations are available.
->> + * Drivers enable support for vblank timers by setting the vblank callbacks
->> + * in struct &drm_crtc_funcs to the helpers provided by this library. The
->> + * initializer macro DRM_CRTC_VBLANK_TIMER_FUNCS does this conveniently.
->> + *
->> + * Once the driver enables vblank support with drm_vblank_init(), each
->> + * CRTC's vblank timer fires according to the programmed display mode. By
->> + * default, the vblank timer invokes drm_crtc_handle_vblank(). Drivers with
->> + * more specific requirements can set their own handler function in
->> + * struct &drm_crtc_helper_funcs.handle_vblank_timeout.
->> + */
->> +
->> +/*
->> + * VBLANK timer
->> + */
->> +
->> +/**
->> + * drm_crtc_vblank_helper_enable_vblank_timer - Implements struct &drm_crtc_funcs.enable_vblank
->> + * @crtc: The CRTC
->> + *
->> + * The helper drm_crtc_vblank_helper_enable_vblank_timer() implements
->> + * enable_vblank of struct drm_crtc_helper_funcs for CRTCs that require
->> + * a VBLANK timer. It sets up the timer on the first invocation. The
->> + * started timer expires after the current frame duration. See struct
->> + * &drm_vblank_crtc.framedur_ns.
->> + *
->> + * See also struct &drm_crtc_helper_funcs.enable_vblank.
->> + *
->> + * Returns:
->> + * 0 on success, or a negative errno code otherwise.
->> + */
->> +int drm_crtc_vblank_helper_enable_vblank_timer(struct drm_crtc *crtc)
->> +{
->> +	return drm_crtc_vblank_start_timer(crtc);
->> +}
->> +EXPORT_SYMBOL(drm_crtc_vblank_helper_enable_vblank_timer);
->> +
->> +/**
->> + * drm_crtc_vblank_helper_disable_vblank_timer - Implements struct &drm_crtc_funcs.disable_vblank
->> + * @crtc: The CRTC
->> + *
->> + * The helper drm_crtc_vblank_helper_disable_vblank_timer() implements
->> + * disable_vblank of struct drm_crtc_funcs for CRTCs that require a
->> + * VBLANK timer.
->> + *
->> + * See also struct &drm_crtc_helper_funcs.disable_vblank.
->> + */
->> +void drm_crtc_vblank_helper_disable_vblank_timer(struct drm_crtc *crtc)
->> +{
->> +	drm_crtc_vblank_cancel_timer(crtc);
->> +}
->> +EXPORT_SYMBOL(drm_crtc_vblank_helper_disable_vblank_timer);
->> +
->> +/**
->> + * drm_crtc_vblank_helper_get_vblank_timestamp_from_timer -
->> + *	Implements struct &drm_crtc_funcs.get_vblank_timestamp
->> + * @crtc: The CRTC
->> + * @max_error: Maximum acceptable error
->> + * @vblank_time: Returns the next vblank timestamp
->> + * @in_vblank_irq: True is called from drm_crtc_handle_vblank()
->> + *
->> + * The helper drm_crtc_helper_get_vblank_timestamp_from_timer() implements
->> + * get_vblank_timestamp of struct drm_crtc_funcs for CRTCs that require a
->> + * VBLANK timer. It returns the timestamp according to the timer's expiry
->> + * time.
->> + *
->> + * See also struct &drm_crtc_funcs.get_vblank_timestamp.
->> + *
->> + * Returns:
->> + * True on success, or false otherwise.
->> + */
->> +bool drm_crtc_vblank_helper_get_vblank_timestamp_from_timer(struct drm_crtc *crtc,
->> +							    int *max_error,
->> +							    ktime_t *vblank_time,
->> +							    bool in_vblank_irq)
->> +{
->> +	drm_crtc_vblank_get_vblank_timeout(crtc, vblank_time);
->> +
->> +	return true;
->> +}
->> +EXPORT_SYMBOL(drm_crtc_vblank_helper_get_vblank_timestamp_from_timer);
->> diff --git a/include/drm/drm_modeset_helper_vtables.h b/include/drm/drm_modeset_helper_vtables.h
->> index ce7c7aeac887..fe32854b7ffe 100644
->> --- a/include/drm/drm_modeset_helper_vtables.h
->> +++ b/include/drm/drm_modeset_helper_vtables.h
->> @@ -490,6 +490,18 @@ struct drm_crtc_helper_funcs {
->>   				     bool in_vblank_irq, int *vpos, int *hpos,
->>   				     ktime_t *stime, ktime_t *etime,
->>   				     const struct drm_display_mode *mode);
->> +
->> +	/**
->> +	 * @handle_vblank_timeout: Handles timeouts of the vblank timer.
->> +	 *
->> +	 * Called by CRTC's the vblank timer on each timeout. Semantics is
->> +	 * equivalient to drm_crtc_handle_vblank(). Implementations should
->> +	 * invoke drm_crtc_handle_vblank() as part of processing the timeout.
->> +	 *
->> +	 * This callback is optional. If unset, the vblank timer invokes
->> +	 * drm_crtc_handle_vblank() directly.
->> +	 */
->> +	bool (*handle_vblank_timeout)(struct drm_crtc *crtc);
->>   };
->>   
->>   /**
->> diff --git a/include/drm/drm_vblank.h b/include/drm/drm_vblank.h
->> index 151ab1e85b1b..f020415abd20 100644
->> --- a/include/drm/drm_vblank.h
->> +++ b/include/drm/drm_vblank.h
->> @@ -25,6 +25,7 @@
->>   #define _DRM_VBLANK_H_
->>   
->>   #include <linux/seqlock.h>
->> +#include <linux/hrtimer.h>
->>   #include <linux/idr.h>
->>   #include <linux/poll.h>
->>   #include <linux/kthread.h>
->> @@ -103,6 +104,24 @@ struct drm_vblank_crtc_config {
->>   	bool disable_immediate;
->>   };
->>   
->> +/**
->> + * struct drm_vblank_crtc_timer - vblank timer for a CRTC
->> + */
->> +struct drm_vblank_crtc_timer {
->> +	/**
->> +	 * @timer: The vblank's high-resolution timer
->> +	 */
->> +	struct hrtimer timer;
->> +	/**
->> +	 * @interval: Duration between two vblanks
->> +	 */
->> +	ktime_t interval;
->> +	/**
->> +	 * @crtc: The timer's CRTC
->> +	 */
->> +	struct drm_crtc *crtc;
->> +};
->> +
->>   /**
->>    * struct drm_vblank_crtc - vblank tracking for a CRTC
->>    *
->> @@ -254,6 +273,11 @@ struct drm_vblank_crtc {
->>   	 * cancelled.
->>   	 */
->>   	wait_queue_head_t work_wait_queue;
->> +
->> +	/**
->> +	 * @vblank_timer: Holds the state of the vblank timer
->> +	 */
->> +	struct drm_vblank_crtc_timer vblank_timer;
->>   };
->>   
->>   struct drm_vblank_crtc *drm_crtc_vblank_crtc(struct drm_crtc *crtc);
->> @@ -290,6 +314,10 @@ wait_queue_head_t *drm_crtc_vblank_waitqueue(struct drm_crtc *crtc);
->>   void drm_crtc_set_max_vblank_count(struct drm_crtc *crtc,
->>   				   u32 max_vblank_count);
->>   
->> +int drm_crtc_vblank_start_timer(struct drm_crtc *crtc);
->> +void drm_crtc_vblank_cancel_timer(struct drm_crtc *crtc);
->> +void drm_crtc_vblank_get_vblank_timeout(struct drm_crtc *crtc, ktime_t *vblank_time);
->> +
->>   /*
->>    * Helpers for struct drm_crtc_funcs
->>    */
->> diff --git a/include/drm/drm_vblank_helper.h b/include/drm/drm_vblank_helper.h
->> new file mode 100644
->> index 000000000000..74a971d0cfba
->> --- /dev/null
->> +++ b/include/drm/drm_vblank_helper.h
->> @@ -0,0 +1,33 @@
->> +/* SPDX-License-Identifier: GPL-2.0+ */
->> +
->> +#ifndef _DRM_VBLANK_HELPER_H_
->> +#define _DRM_VBLANK_HELPER_H_
->> +
->> +#include <linux/hrtimer_types.h>
->> +#include <linux/types.h>
->> +
->> +struct drm_crtc;
->> +
->> +/*
->> + * VBLANK timer
->> + */
->> +
->> +int drm_crtc_vblank_helper_enable_vblank_timer(struct drm_crtc *crtc);
->> +void drm_crtc_vblank_helper_disable_vblank_timer(struct drm_crtc *crtc);
->> +bool drm_crtc_vblank_helper_get_vblank_timestamp_from_timer(struct drm_crtc *crtc,
->> +							    int *max_error,
->> +							    ktime_t *vblank_time,
->> +							    bool in_vblank_irq);
->> +
->> +/**
->> + * DRM_CRTC_VBLANK_TIMER_FUNCS - Default implementation for VBLANK timers
->> + *
->> + * This macro initializes struct &drm_crtc_funcs to default helpers for
->> + * VBLANK timers.
->> + */
->> +#define DRM_CRTC_VBLANK_TIMER_FUNCS \
->> +	.enable_vblank = drm_crtc_vblank_helper_enable_vblank_timer, \
->> +	.disable_vblank = drm_crtc_vblank_helper_disable_vblank_timer, \
->> +	.get_vblank_timestamp = drm_crtc_vblank_helper_get_vblank_timestamp_from_timer
->> +
->> +#endif
->> -- 
->> 2.50.1
+The failure occurs because CONFIG_HYPERV=3Dm is no longer legal,
+so the .config file created in Step 3 has CONFIG_HYPERV=3Dn. The
+newly built kernel has no Hyper-V support and won't run in a
+Hyper-V VM.
 
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+As a second issue, if in Step 1 the current kernel was built with
+CONFIG_HYPERV=3Dy, then the .config file for the new kernel will have
+CONFIG_HYPERV=3Dy, which is better. But CONFIG_HYPERV_VMBUS
+defaults to 'n', so the new kernel doesn't have any VMBus drivers
+and won't run in a typical Hyper-V VM.
 
+The second issue could be fixed by assigning CONFIG_HYPERV_VMBUS
+a default value, such as whatever CONFIG_HYPERV is set to. But
+I'm not sure how to fix the first issue, except by continuing to
+allow CONFIG_HYPERV=3Dm.=20
+
+See additional minor comments in Patches 1 and 2.
+
+Michael
+
+>=20
+> For now, hv_common.c is left as is to reduce conflicts for upcoming patch=
+es,
+> but once merges are mostly done, that and some others should be moved to
+> virt/hyperv directory.
+>=20
+> Mukesh Rathor (2):
+>   hyper-v: Add CONFIG_HYPERV_VMBUS option
+>   hyper-v: Make CONFIG_HYPERV bool
+>=20
+>  drivers/Makefile               |  2 +-
+>  drivers/gpu/drm/Kconfig        |  2 +-
+>  drivers/hid/Kconfig            |  2 +-
+>  drivers/hv/Kconfig             | 14 ++++++++++----
+>  drivers/hv/Makefile            |  4 ++--
+>  drivers/input/serio/Kconfig    |  4 ++--
+>  drivers/net/hyperv/Kconfig     |  2 +-
+>  drivers/pci/Kconfig            |  2 +-
+>  drivers/scsi/Kconfig           |  2 +-
+>  drivers/uio/Kconfig            |  2 +-
+>  drivers/video/fbdev/Kconfig    |  2 +-
+>  include/asm-generic/mshyperv.h |  8 +++++---
+>  net/vmw_vsock/Kconfig          |  2 +-
+>  13 files changed, 28 insertions(+), 20 deletions(-)
+>=20
+> --
+> 2.36.1.vfs.0.0
+>=20
 
 
