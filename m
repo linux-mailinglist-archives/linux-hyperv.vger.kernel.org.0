@@ -1,254 +1,202 @@
-Return-Path: <linux-hyperv+bounces-6691-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6692-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4A1BB401D4
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 15:03:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A901B4031B
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 15:28:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C888F3A70B3
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 13:00:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 68EB8544465
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 13:27:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA3E02FF66A;
-	Tue,  2 Sep 2025 12:58:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A2B2311C19;
+	Tue,  2 Sep 2025 13:24:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xn9DO4es";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1yNU2dBs";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YDEJbZcp";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7bZhpkgN"
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="ML35Zhaj"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11013014.outbound.protection.outlook.com [40.107.44.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24002FF673
-	for <linux-hyperv@vger.kernel.org>; Tue,  2 Sep 2025 12:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756817888; cv=none; b=Ur5QRgya2tIFOHB+n6NNQsnnVtNz7+G1uZ50mt7UPyTJRyDXlN3DWzP8klJUhxsbur8NVeA3qL3YnkjdrNDsVfcZLLbOCLWUCBJ3to0J6cBXTG97dv1Swz8OYm8g43+OFzd2J1DZnHFQn2bCj0Uz1irFrI8b7gZXlf4axto10Kg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756817888; c=relaxed/simple;
-	bh=+lYQafkhHhH+V0WorZbFS9XcGrd+knfZejKZtzWgPM8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h4F0T4KGMC8/N+nL//suA7mb8QJbarZGpzt07PDl0mXkr5Mde/YI6D02Q/AcIrECbsksEiXLXqR3MlosI7d1EcvlZQoz4R5c1MtwXy+FPeD9tj5RxOVyg4ShidbymOHGfEd83ZatKg4y0mq7N6JRtL3WN8qsbihDJcDnUvo0X7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xn9DO4es; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1yNU2dBs; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YDEJbZcp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7bZhpkgN; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D0DB31F38A;
-	Tue,  2 Sep 2025 12:58:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1756817885; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=27gbnPp/6osghY/uJgUFibUP56mTYE1hActgxKY+rew=;
-	b=xn9DO4esSXnTBejL21D2HiS0XbKwlfwls6rn75RRblRR3uL09VeSl8lEvYuEmvnM8iLzFQ
-	LjBp0I/uvSNVpVTXx+vEEyr2ztDex3r70LamLLajC8plovfLKXU5zEElo+/Fk0zrPXaFkq
-	e9xMeOFPkXqCqOPJDUGYNF4jG4mZ+2w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1756817885;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=27gbnPp/6osghY/uJgUFibUP56mTYE1hActgxKY+rew=;
-	b=1yNU2dBsUjENvd9rDV8ljkWiytSJXKfy/jig9udgbBkDD9Y7UKvC+A9A3b0VOPpP7LnBjB
-	dbWel2yDCq/ECkCQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1756817884; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=27gbnPp/6osghY/uJgUFibUP56mTYE1hActgxKY+rew=;
-	b=YDEJbZcp364Psa5M2RaJsAvUQilmRFOboi3O0bxShuf0hSG9Uc0xmaBaPLYjGoLB4YCHDn
-	T+12AsYSFh1igLm/3x7LWv9UJbYpKfx9n3fC640UbdlJRDj/hMixv4tqpFkFRP7WicojaL
-	UCamPcInX5QtiNC9iFYy39NdMmqXU5Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1756817884;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=27gbnPp/6osghY/uJgUFibUP56mTYE1hActgxKY+rew=;
-	b=7bZhpkgN084ig1UkHSjFwkGyZLD3z53pvK6fRaMqYjU5AscMdXJ8o671iEsPEL4W9qD7bf
-	sw/TjDS1IcY3wbDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BD37413888;
-	Tue,  2 Sep 2025 12:58:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id q23ILNvptmjRUQAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Tue, 02 Sep 2025 12:58:03 +0000
-Message-ID: <5cd7f22d-e39a-4d37-8286-0194d6c9a818@suse.de>
-Date: Tue, 2 Sep 2025 14:58:03 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 548303093CE;
+	Tue,  2 Sep 2025 13:24:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756819467; cv=fail; b=NcFEnqSJwC3WyLaI/ENM/OEjUYcE57fhZ9OW4N+CJjKrYs20DLfhLzngWRi9xqdSsrJyHrhBszJjMb1MVne2gsUaNAwG8YMIU34B6SYpZi2+5b/O7Ts1oUbjSO6AlQ5f251lAiskq1GdXOjg2azQWorJ4BtFV/ijXv2jlwjMVi0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756819467; c=relaxed/simple;
+	bh=88aeNzDVOF+9jTTcxD6yoGqNPBt9Kv/Jd4ggnpb0X1g=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=HhJvao+YfU98R1dq7U4+MCtaaDG3bSSbOB+0u7ccuSZ5kfsIfOALDeGPhkyNFIx57Z81G28eukT395jact+ch72W7QFYpNd4ww/bj5EEk8jN5oCT8GIGBF1s5D2nOAVFx48kJXsq57MJxXxrEo1tRivwqM/+gVkiRJhCUOfqC0U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=ML35Zhaj; arc=fail smtp.client-ip=40.107.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jbw2HvqIup0hbvdXj71ZhydYNDP9irOyr59DjGRuQ3+d8GCKXocG7lezevX8wAkzeKaP1zpw2Mz5eZMP5/KLMeVsU7x4c2/iOithaiakLwMX9nZhgab4grCsyke9m8ivbQr8ncZF2wn3KbbQBbpQ3Lcum1/L5RDOvCp/VXpwjiOdWh3IrJ2Wv/STl/a0JdStgmB3HJhkRZMJbHGTBdT+veg9uIsGrxRDd47SudnjFerh2yGtOpRn/wsx50yvu/Sey0KpsBZXyF3RQWGLqGMeWqwg9UARb6K627nRkPXbf1ONkpBnnCzmr0Laelz371YCHXubpLo0cf55ZpQK02QMBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xdbLKqm6IM87vayXJOLvLC0T7GZfSPe1OuYyJVqNCFc=;
+ b=aKCwYo5mBQOZ3XVQQrpm3CjpanQfuF9p5+gzF8ZyNn9bch6dWGLWE0IjomW3WHcpyDyVfKD8moDZ0UspKwxJoQYfzmE9CGQuZtmA/eXuB2HUyF/6EWHa62mBe9Bva2Y3NbqRhnNm7Gup/kFYGbtDYQq7w/fQwUYT72VOMDIm24Uw5H5Pal1JYQhGC5xUQlHa03C9STvr9VGONzRWFWJ3z26r5CsijzVW7LZRTrhFLfV6BSj5gz2S9mkxdoH93SOHhMRaTEPZd+mRf1mpuPoKZ8xeVoQP8xIY7jIakrNPg0MR43i/3vIOscLOVRtupON5VHTvpa/q1XRHuGcScEwClw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xdbLKqm6IM87vayXJOLvLC0T7GZfSPe1OuYyJVqNCFc=;
+ b=ML35ZhajA2CfSfmeHGAP9rSqtrLgWKNLILI2PGSZBNPpE4uGPfw7Hc+5Fr3nzgHlmBXIJc/VdzXkmMYJrao5dQdmip5j2SU6V+272Fa+88wiFyqRVyggYzK4PDXm2MxxMx7Lk6e+c8bg4Tm9I+nuCGGtInASCLsF8Gt3xQRnlHoDNwpT922JoH09+B+kBIKVaEXHbtXIQxCx3emhkKcYgsK0vohOxalCgTC74pZHeKx5bDKIz6O4NYoVef6FtX740aKwJFZby3Kyw1FK4gowur1Y3FeNShGA5VcxJaU9M6M7b+xQAiKRpoKREVM576lMrUoamOjtLFLm9vAAGRlDTg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SEZPR06MB5576.apcprd06.prod.outlook.com (2603:1096:101:c9::14)
+ by TY0PR06MB5078.apcprd06.prod.outlook.com (2603:1096:400:1ba::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.27; Tue, 2 Sep
+ 2025 13:24:21 +0000
+Received: from SEZPR06MB5576.apcprd06.prod.outlook.com
+ ([fe80::5c0a:2748:6a72:99b6]) by SEZPR06MB5576.apcprd06.prod.outlook.com
+ ([fe80::5c0a:2748:6a72:99b6%7]) with mapi id 15.20.9073.026; Tue, 2 Sep 2025
+ 13:24:21 +0000
+From: Liao Yuanhong <liaoyuanhong@vivo.com>
+To: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Kashyap Desai <kashyap.desai@broadcom.com>,
+	Sumit Saxena <sumit.saxena@broadcom.com>,
+	Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+	Chandrakanth patil <chandrakanth.patil@broadcom.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Khalid Aziz <khalid@gonehiking.org>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Easwar Hariharan <easwar.hariharan@linux.microsoft.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Prateek Singh Rathore <prateek.singh.rathore@gmail.com>,
+	Geoff Levand <geoff@infradead.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Thomas Fourier <fourier.thomas@gmail.com>,
+	linux-scsi@vger.kernel.org (open list:SCSI SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list),
+	megaraidlinux.pdl@broadcom.com (open list:MEGARAID SCSI/SAS DRIVERS),
+	linux-hyperv@vger.kernel.org (open list:Hyper-V/Azure CORE AND DRIVERS)
+Cc: Liao Yuanhong <liaoyuanhong@vivo.com>
+Subject: [PATCH 0/6] scsi: Remove redundant ternary operators
+Date: Tue,  2 Sep 2025 21:23:40 +0800
+Message-Id: <20250902132359.83059-1-liaoyuanhong@vivo.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYCP286CA0238.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3c7::11) To SEZPR06MB5576.apcprd06.prod.outlook.com
+ (2603:1096:101:c9::14)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] drm/hypervdrm: Use vblank timer
-To: Javier Martinez Canillas <javierm@redhat.com>, louis.chauvet@bootlin.com,
- drawat.floss@gmail.com, hamohammed.sa@gmail.com, melissa.srw@gmail.com,
- mhklinux@outlook.com, simona@ffwll.ch, airlied@gmail.com,
- maarten.lankhorst@linux.intel.com
-Cc: dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org
-References: <20250901111241.233875-1-tzimmermann@suse.de>
- <20250901111241.233875-5-tzimmermann@suse.de>
- <87a53dfe87.fsf@minerva.mail-host-address-is-not-set>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <87a53dfe87.fsf@minerva.mail-host-address-is-not-set>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FREEMAIL_TO(0.00)[redhat.com,bootlin.com,gmail.com,outlook.com,ffwll.ch,linux.intel.com];
-	TAGGED_RCPT(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,outlook.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	URIBL_BLOCKED(0.00)[suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Spam-Score: -2.80
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB5576:EE_|TY0PR06MB5078:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1a30c12c-b1fe-4491-8ffc-08ddea2406f7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|52116014|7416014|376014|1800799024|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?bXG4K7mcZLx2/ugDvFh8fgUiTLQiQ8gx1hOoQKQPA/9PrtWLhzHTZ0MEJvLj?=
+ =?us-ascii?Q?ptyIGjAIMY9x1454i4ZNIByr0VC7+FGiwZpXjJ3snsWYP0jLB5H323vTv+ps?=
+ =?us-ascii?Q?n8M8Sbwti96BMw/2ygtigJTzb+fxD0IkkAZEAK7BWNRt66CF4gbHTXuPOLFR?=
+ =?us-ascii?Q?v4WqDCw5qymwH8rybEqoJ0SODiZyz3h2Ttl4eBynwMczgsn4wQCuAp5chbyx?=
+ =?us-ascii?Q?ZHBJFksnlEwnAJJ14b8AEE13klNDHGK15ryTi23D0c+6TVrDbC96n9OoVSxI?=
+ =?us-ascii?Q?yMaW1LgtTpjjoSUf+ZXEz2/2lZm6zUdQsRz3ipLICGwUOIXtDU4vE1cKKWto?=
+ =?us-ascii?Q?NuU/dRmHX3L4w03N+qi9PDNzDUKGBOov0BZ+scv1Wx2mGPQdkudhT9xI7e40?=
+ =?us-ascii?Q?sWwhCmFIg1XCatkgMElMOGTJlPDOGZBnJZIk1T6KEyZoc3IzYV3KpPZweXMR?=
+ =?us-ascii?Q?KIixG9HcrAZf3fb5WbklpBEAtCKNVumXCjBoaFuFeN+A2frz5NV5HU6HiuS6?=
+ =?us-ascii?Q?+hY1TxV+wSR7pWtXrgt5r960Ppd8pdasYSooe65QFctfCsEzXyWWIaWEeMu+?=
+ =?us-ascii?Q?9p90kCEFFWr8XA3Qkk50iHWfHn6XPNBtiojtGQtkXso87+m13ICRmKmUCfjZ?=
+ =?us-ascii?Q?BIG/3+9U/al3GDlZxcLR7Gy48+W0Q1yiZXRiFL4I76QeQJuSL3uSf8hTnEXQ?=
+ =?us-ascii?Q?jfGsKat4TKRLt1NH1gCjUg0N/vm5a0dCY190oKoLdz+ddXDyOKewGN0iP9Jn?=
+ =?us-ascii?Q?shHP6WSmGBP45T0TN4MME+LMGfWLuVseHLAJgqVrUMzzv644e+AIc4hs4o1b?=
+ =?us-ascii?Q?Kb4H9UKykSMEE/yDlWDv+1PEO7GFbc2u5ErdsDfEz6wKJZRVRSxnDioUSdlf?=
+ =?us-ascii?Q?g/3s1IQDyRonhqjKwT3OPSr6es8w00XzZE9hZ5hEI3Q7tC1pUyQhRyb+dnMV?=
+ =?us-ascii?Q?2TTHAwR5DnHkhA4tiQs9AgNbbKtGt/YE6Dz58ntQf05cJgaosa32rIkM+BiP?=
+ =?us-ascii?Q?qnRf9c7/qpRi63l+QRzAEtRaV59xa/CkyGtVVQnweXBVmdQVacnmunrwYb1+?=
+ =?us-ascii?Q?aOTGkmgHT037ncdYbCMENjK0mPFUa0aFAGAyBgRKQM2TnojAPUZpa/0KQYM1?=
+ =?us-ascii?Q?4xxBtnzwjfrLknVu4T5fgu2mYhqpuA1zp5Qr+AHoPvi3kKg20dstE9Fut1Pw?=
+ =?us-ascii?Q?ej3wfscM5ycsfNMQPjkli3kV0eCqXXtPnhbrdJj6+nDcTyiOPml+0zPxp0S3?=
+ =?us-ascii?Q?RM50ineDuA8OY8E9iLy/cQ6UV7rW/zCsq1HEs8GPc7w+7+XZgcqy1rGOHRuT?=
+ =?us-ascii?Q?xVWoATsjxe2HLHAJyyQBvfu9DGiXpB/XdoiUO3Rv45tcT7UYEvuExcBR5Dyb?=
+ =?us-ascii?Q?2BeTbKJ0Ib4y2x7ep9fqE/1UsoXq1W/9EhGiQf9STACoVeRhcIAy15C0Ng5r?=
+ =?us-ascii?Q?JxARNDVauiLFscIG0REiNeiokJRpYbqHS0Y7EIYaMOPCNSsX5tuAlnaHGXy7?=
+ =?us-ascii?Q?eGofI5q+oIbZjpw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5576.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(7416014)(376014)(1800799024)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ryAmhMw7WM6EWkunz4+WJAXOQp4/OhwmYt0F4zELWtpY8hWU87bFCyf3TuJi?=
+ =?us-ascii?Q?AtWFjceWQt62Am7ep67C7vHj16cys/9WAH5NYhjm09nrdNi3luqM6+0SFGbR?=
+ =?us-ascii?Q?NGfBqufzSgWZkJj3/NxfeA5X1Ce/40Tgku7XF4mSfyYDFTf5Uil+SolYCNmE?=
+ =?us-ascii?Q?SYWQCRaVEpDt/goWMqaqesRGYo5Zj7/AutFYpK4H7fFrt8Pz3Ex/m/sJCumt?=
+ =?us-ascii?Q?AUPTa1DvreybtN1UxY2Rpy7giHnA22Dv7mdQ1sj752IKxnn0Stom921AMhi8?=
+ =?us-ascii?Q?cx5WMtLxZfyp5EOPWLiE9v3scqTX0cKaxKvnTRdZXcsq02UYmpSzUtb6BdnI?=
+ =?us-ascii?Q?uoNQ/qnLqsDWnu3V6j9+63OXLYxYzuI1wnPRJsz/kh6bzxr9GFgYrMwih/9l?=
+ =?us-ascii?Q?hv6qRBd6I1wTEVIMOXZkwBgHLfAB1pYZXKB84PIsAA7qUZeI/DKK6XXJUVW3?=
+ =?us-ascii?Q?/jN3H2AOGlLd1nGbF8/20wUCv5+c0AszFAKUQTEHVbW6hncsshFNUPu9hFha?=
+ =?us-ascii?Q?96TVI8hA03vm0aJH0Y7zhGbv949NCQRpokqWGPB+RiN2zTBGmJ0BR7+Bau0z?=
+ =?us-ascii?Q?hg/0Smday1qay9ymzb55DtHNWGM3kAtByyvnc8hT7+AyNNZNx1/pxMQs6JZ+?=
+ =?us-ascii?Q?J4WjCcpi1TJeNlNXKfAALgF031XMtpx/QoApIslEs3TBCOa9ScnYMC2rO/gY?=
+ =?us-ascii?Q?QWbIhkF/yqDDZ4NvQOIalhZjQX+7FMobX5a4+73KMkTu8fAA7H4k6sEqrdtS?=
+ =?us-ascii?Q?KGjPd3SsDW+un8vVQhOGyOSr9PbI3lKgRCUqP1Qq5G9N6wNm2mYGfQgTZudy?=
+ =?us-ascii?Q?lL6gd82jU47xBhoyY3YOtEAPcWJT8A7iF1KHC25NS7BnUXW80ZcPJWSLoNzU?=
+ =?us-ascii?Q?y/fFeKMSRX6uScs7PyqMsFXf1+iGg2UjAzMM2xwovtTaRXemLuDh38eiAoOM?=
+ =?us-ascii?Q?CLt29iJ+CZym8w3nlBqnkEhDmQehCn+L8DMKEaMONbNv/6qDP7S0CDrks92V?=
+ =?us-ascii?Q?kv+okprljYMllIw5FU/NR8pBOqn71qbVanp9u2R5FajMSGgPaoP9Zfyrk8E+?=
+ =?us-ascii?Q?qE4fjMOsdRkyfuwMc8bT/gG2dZOOn7NNuzpQKjrOR2NqeJrfU9XdANgUjFqv?=
+ =?us-ascii?Q?8IxXzdlDFJ1mXJ34vRB3vD00IdDBN+OPAMGvPSSfRBqz4Y0HfthOfiUaXU1q?=
+ =?us-ascii?Q?y/uyIkXNuDHta1Yk2xHGS2oN7HvQN3ITWeVNckrxXSufGIYD5c/k8WUPvDZY?=
+ =?us-ascii?Q?vC8IeLPr4C0bkTeI3vWmKEIIlrtGSLO/h05+Z+fjDhO7MDv9i9G+Fyp1yeOy?=
+ =?us-ascii?Q?Qm+pGY2fGQYjs7SrHm/4QNYVwODwpmCP4AW29TqxzbCoUMOf1/VRPehlW4Iz?=
+ =?us-ascii?Q?lDlY5iyVuh12B1lheMWpGhJb5AscSHzFETa5V89io4INEzK2ZJP/rsR259uX?=
+ =?us-ascii?Q?QeXkpLIxwWYo0encL4esPrLF+NW0wu+dSld2bdjVc5uXATCjGIR1MixTmpxB?=
+ =?us-ascii?Q?9s058QhN6AmYfxOPk7MJgmXldCqIs+eO+lx+umSahBzt0Q9S1lq2DfXwm78C?=
+ =?us-ascii?Q?isEKREfUNNDw+dl5Y3R43GWP7vrQEKJUT6bgun0l?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a30c12c-b1fe-4491-8ffc-08ddea2406f7
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5576.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2025 13:24:21.4827
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ELkxoFmlkspkmS0mdSxR2RIdOqlIq1gsZ27GiqHp8N+wCEEblzx4HtvEsYAYBAnsmfqXKN2JREerxqjns3ib9Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY0PR06MB5078
 
-Hi
+For ternary operators in the form of "a ? true : false" or
+"a ? false : true", if 'a' itself returns a boolean result, the ternary
+operator can be omitted. Remove redundant ternary operators to clean up the
+code.
 
-Am 02.09.25 um 10:30 schrieb Javier Martinez Canillas:
-> Thomas Zimmermann <tzimmermann@suse.de> writes:
->
->> HyperV's virtual hardware does not provide vblank interrupts. Use a
->> vblank timer to simulate the interrupt. Rate-limits the display's
->> update frequency to the display-mode settings. Avoids excessive CPU
->> overhead with compositors that do not rate-limit their output.
->>
->> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
->> ---
-> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
->
-> [...]
->
->>   
->> @@ -111,11 +113,15 @@ static void hyperv_crtc_helper_atomic_enable(struct drm_crtc *crtc,
->>   				crtc_state->mode.hdisplay,
->>   				crtc_state->mode.vdisplay,
->>   				plane_state->fb->pitches[0]);
->> +
->> +	drm_crtc_vblank_on(crtc);
->>   }
->>   
->>   static const struct drm_crtc_helper_funcs hyperv_crtc_helper_funcs = {
->>   	.atomic_check = drm_crtc_helper_atomic_check,
->> +	.atomic_flush = drm_crtc_vblank_atomic_flush,
->>   	.atomic_enable = hyperv_crtc_helper_atomic_enable,
->> +	.atomic_disable = drm_crtc_vblank_atomic_disable,
->>   };
->>   
-> I think your patch is correct due the driver not having an .atomic_disable
-> callback. But looking at the driver, I see that its .atomic_enable does:
->
-> static void hyperv_crtc_helper_atomic_enable(struct drm_crtc *crtc,
->                                               struct drm_atomic_state *state)
-> {
-> ...
->          hyperv_update_situation(hv->hdev, 1,  hv->screen_depth,
->                                  crtc_state->mode.hdisplay,
->                                  crtc_state->mode.vdisplay,
->                                  plane_state->fb->pitches[0]);
-> }
->
-> and this function in turn does:
->
-> int hyperv_update_situation(struct hv_device *hdev, u8 active, u32 bpp,
->                              u32 w, u32 h, u32 pitch)
-> {
-> ...
->          msg.situ.video_output[0].active = active;
-> ...
-> }
->
-> So I wonder if it should instead have a custom .atomic_disable that calls:
->
->          hyperv_update_situation(hv->hdev, 0,  hv->screen_depth,
->                                  crtc_state->mode.hdisplay,
->                                  crtc_state->mode.vdisplay,
->                                  plane_state->fb->pitches[0]);
->
-> I'm not familiar with hyperv to know whether is a problem or not for the
-> host to not be notified that the guest display is disabled. But I thought
-> that should raise this question for the folks familiar with it.
+Liao Yuanhong (6):
+  scsi: arcmsr: Remove redundant ternary operators
+  scsi: csiostor: Remove redundant ternary operators
+  scsi: isci: Remove redundant ternary operators
+  scsi: megaraid_sas: Remove redundant ternary operators
+  scsi: scsi_transport_fc: Remove redundant ternary operators
+  scsi: storvsc: Remove redundant ternary operators
 
-The feedback I got at 
-https://lore.kernel.org/dri-devel/SN6PR02MB4157F630284939E084486AFED46FA@SN6PR02MB4157.namprd02.prod.outlook.com/ 
-is that the vblank timer solves the problem of excessive CPU consumption 
-on hypervdrm. Ans that's also the observation I had with other drivers. 
-I guess, telling the host about the disabled display would still make sense.
-
-Best regards
-Thomas
-
-
->
+ drivers/scsi/arcmsr/arcmsr_hba.c            | 11 +++++------
+ drivers/scsi/csiostor/csio_scsi.c           |  2 +-
+ drivers/scsi/isci/request.c                 |  2 +-
+ drivers/scsi/megaraid/megaraid_sas_base.c   |  4 ++--
+ drivers/scsi/megaraid/megaraid_sas_fusion.c |  4 ++--
+ drivers/scsi/scsi_transport_fc.c            |  2 +-
+ drivers/scsi/storvsc_drv.c                  |  4 ++--
+ 7 files changed, 14 insertions(+), 15 deletions(-)
 
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
-
+2.34.1
 
 
