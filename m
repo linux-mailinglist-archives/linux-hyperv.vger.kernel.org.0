@@ -1,124 +1,252 @@
-Return-Path: <linux-hyperv+bounces-6708-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6709-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E932BB40CE8
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 20:10:44 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C96E0B410F1
+	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Sep 2025 01:49:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A8081B62694
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 18:11:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9E7347A57ED
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 23:47:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD17B34A302;
-	Tue,  2 Sep 2025 18:10:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07F622EA727;
+	Tue,  2 Sep 2025 23:48:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E7RTEvT9"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fbnsFpk8"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2071034A316;
-	Tue,  2 Sep 2025 18:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A46A2EA475;
+	Tue,  2 Sep 2025 23:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756836636; cv=none; b=k0Krorl6ZKpiLkoOC2GfqUZNu8OubNC7N28gnYghQ685U4nbOpeFP1/SErVLGkAFCHVuIFv1uzV+lTgZrKpjSSLjYuE2bSlr4xfOPfL1qJSDkscvhlcqi6nceE2RYyJANvSXwse/50hRQjQ0iUaQPXq2RuEcJAnPh2vDFEHMMFk=
+	t=1756856922; cv=none; b=M6kwPx8+tnNo7hE+Xo9CZ5n384cQhPt+8V2gHZ2n89oFFXNoGc6noCOvPHCSPcBotFnyS/tvbiQHL0RdnDqqTpSTwBcku4BiObOP/gU+YHF3vofKgKa2KkMfW8BGR2RTC86T9krxhsLrb2nlMRD0Go7Ay3JOE8CSbtYPqLutqFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756836636; c=relaxed/simple;
-	bh=mnD4JRGbk9W/QM5EuH31k1b1ffUiZwbDvhrc0zl10ow=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Si6vr48T8p3IxDtRxqrIbBCFsF3XCBcrKqC6WROeGdFcu5gMW2ogpgLxpVauyJ3jzOIWzaWvZ1pitQPPar4ohNnbqw0B8rUyKA9JocflrEdAgF6E5nEOh0jpk9C5kinHE/L1ifLXGy5CcJinCjj7aBSWhY94IWjJ6d4pY1JPDks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E7RTEvT9; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b4c72885c8bso4029346a12.0;
-        Tue, 02 Sep 2025 11:10:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756836634; x=1757441434; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=11SI7K2HrD1Xkcfg4YipKbfNlLrbJJRsWjUQWdPP85o=;
-        b=E7RTEvT9DCLUalX5qqgIb1adpP1w3XtBkcNyhbLh6SN3LziI2J4vyJb0VhsXZ+yKRx
-         0EMr8LjAgOnFi+qzuWyCstf5o8sMxGJ/oU7UEDcKKBtvmq9ZwxfPXEy91LInzf1WaY4I
-         Zpaa+MnVRNHhnhUeCMi1xjWJBHLcYrjmzsm282OYz4Q+gqwd3d+T5ukATcHkx5GVjc6t
-         Bw/uvgjGk4WrhXXyTADJNnDtUjxOptt8bRAPCsRcbgx5+6m08FeM1B83BQ7/HuYhwBOR
-         LEofsCau59yd43oXQyij2XiZ5Rw+AFLLWIwI3WqXogi/Kg0c/b1fqwDsJsV4YDQkKk1h
-         NChg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756836634; x=1757441434;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=11SI7K2HrD1Xkcfg4YipKbfNlLrbJJRsWjUQWdPP85o=;
-        b=Dm4bqIu9BfmHnOxSdkRU/pnsC11+8tIUo62Wl7wA+IBRevTygWMwjbv2nZ8hdRZRL6
-         9ejONlL1lKTDoVnlc67Adh2F3NIxFwTRZGlbyaz8vYx77ImrWFUNCXkNbHsTLBLGnVft
-         ruHUVThaAt/yOxNZiIDc7YgHJxo2kixHDOg83XrerknYBjfi9p6uAb80hZJLIY5p5Ai0
-         cibQEwgkHmrxrc7CMCVHwdjoQsm5b4J3JsRRMPw6GCZjYHyRXHHOpgjRb+ImZnLayDZC
-         tnbfZqaQ5bZklzpbT7ojPHWMGeHVZup8okdwDzw77uysHG1uUk1sghEmNJabeU8aZhaK
-         EPuA==
-X-Forwarded-Encrypted: i=1; AJvYcCUs99MItuhhO60ZfvrSouqJYGPwjr6BsABL13mS+QJRwanYwWGF2vVvr8O31cNpZHAE3LCw6oNgAl3/gIh5@vger.kernel.org, AJvYcCVQOwTTBdY32dJqRUJzzwnJi+ZR23g77j+bt4dLEsvvIfTimUtUuc4kZqltIWTLcwt/KLoVQiBo@vger.kernel.org, AJvYcCW0ofg42+KYXIFIObANRBEeG37bp+nubPLSq4ks1thP8JR2Gmj+Q7T02mEtZSaKqOOb6Adqo9Eg/iPMKdON@vger.kernel.org, AJvYcCWd4gKBavgtUHItqphzoY3IHiADOdPVtD8z3JRXp7yK7e0lcbqG7QNIVvDIlm9ILvyWULDkX2cFdtkGDjokPZzH@vger.kernel.org, AJvYcCXtMDMbqWRJ8B7SFd7Cz/WgTfaYIdT+IXhQwx4BQeOnksPwkVpgm5Ke+akH8JTkkOvHFYU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCJ5JpVEXRQn7WNaAtX2Nj5LA4duV1pQz2qv4vrV/y+MvUBk8f
-	B6vnXtcFFJIaXf+/8GQ1ObsOWmtAVyhSvBGnVFPZkl0AlmL+rhmpclFO
-X-Gm-Gg: ASbGnctLLNc4ev9f1SYAh1bb6J5JTLVm+4p+QXBJNT/8aGx1G0ERIvTlspLTN7Vr/qC
-	N3oq60PeH2YEPfaKI/T7grAdaqKua3SbGRdJJIyeTiibEp1fLrZ3sI1vCYehXmW2/ACoYr3a3AX
-	2T8Sd+D9mLRpP7qhSTKCHklfpIgIHsCxjM32mb2dttwaOlltnupXLGIaQha8t8v+BWDnW2AwyGt
-	5tfqXY/K19yP90RIqLH7ITRWvbYw3+Ho3zIYE6bRXQ4zMg3xwX7zkqaMtfNpCh0MruP4JpJwO4p
-	Chn2PZsbcKmv7lYWbkuGZf0T2G30nhO3Lb0wRY9P4KKS18sQS+BRUuOqCLuJT0ZDzEe3xNxE13m
-	+HpZtav/YZ24eEotcr3byY9F0aJLvTYTAM8prLUNWDQw=
-X-Google-Smtp-Source: AGHT+IFi/A5kl+CSm9Pre9tgHAXuj4Y9/s3vbKAIdfdu32Djhb4qcTMLMePJS7ddZUuOGxsxTT3zRQ==
-X-Received: by 2002:a17:903:230c:b0:248:ea98:3d12 with SMTP id d9443c01a7336-24944acc7d6mr170727225ad.40.1756836634401;
-        Tue, 02 Sep 2025 11:10:34 -0700 (PDT)
-Received: from devvm6216.cco0.facebook.com ([2a03:2880:2ff:1::])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-24b2570cfb0sm18256955ad.139.2025.09.02.11.10.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Sep 2025 11:10:33 -0700 (PDT)
-Date: Tue, 2 Sep 2025 11:10:31 -0700
-From: Bobby Eshleman <bobbyeshleman@gmail.com>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Shuah Khan <shuah@kernel.org>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	berrange@redhat.com, Bobby Eshleman <bobbyeshleman@meta.com>
-Subject: Re: [PATCH net-next v5 9/9] selftests/vsock: add namespace tests
-Message-ID: <aLczFwjAClnFvANG@devvm6216.cco0.facebook.com>
-References: <20250827-vsock-vmtest-v5-0-0ba580bede5b@meta.com>
- <20250827-vsock-vmtest-v5-9-0ba580bede5b@meta.com>
- <phckm6qx2drazblg4fsheqe4meg7likmvhbyquffwct4xj35ub@ddz2iikovcq5>
+	s=arc-20240116; t=1756856922; c=relaxed/simple;
+	bh=ZfQO4dndmQC7J+3gLYrtp2NrcKGsCSxOnOBPtTLx9cY=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=o3A+fqV9SyWRoSKUtCCTtUVhO36NS1nfVR+6e+yt1oJcn3lx+pxKJzNUjOp6sV6th6KdCPZ5Jnv2pxPTafupTrYhQKyVIikX37oZKQeh9HlP3W+3MKCQfnio62KP5f4RtmZGZS03tIh4fsPi5jgVuiJc8m8PoLeXQoFfndH2JrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=fbnsFpk8; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1032)
+	id 3A41E211828B; Tue,  2 Sep 2025 16:48:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3A41E211828B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1756856915;
+	bh=3pPUL78pUcMAEVARbGI0M3+yKDS8s2jb8IBBidLtC5w=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fbnsFpk8YRomQ8Atikj6J8dzkovoorUlQ9X/Sfo5eTlj6mCI8hFbU7mjWUfE6UvJ0
+	 S0EB0eeTNUhB0RMj5LxPJBy5fCqDUcoBDW3MT/fNIWOlOtwDJjs/KsoxoDkpOMi1H5
+	 vvW+hL4yyEUMAhMobJ2/HA4nNPND+7TP2VDB+V0o=
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	wei.liu@kernel.org,
+	mhklinux@outlook.com
+Cc: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	decui@microsoft.com,
+	arnd@arndb.de,
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Subject: [PATCH v2] mshv: Add support for a new parent partition configuration
+Date: Tue,  2 Sep 2025 16:48:33 -0700
+Message-Id: <1756856913-27197-1-git-send-email-nunodasneves@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <phckm6qx2drazblg4fsheqe4meg7likmvhbyquffwct4xj35ub@ddz2iikovcq5>
 
-On Tue, Sep 02, 2025 at 05:40:38PM +0200, Stefano Garzarella wrote:
-> On Wed, Aug 27, 2025 at 05:31:37PM -0700, Bobby Eshleman wrote:
-> > From: Bobby Eshleman <bobbyeshleman@meta.com>
-> > 
-> > Add tests for namespace support in vsock. Use socat for basic connection
-> 
-> Are netns tests skipped if the kernel doesn't support it?
+Detect booting as an "L1VH" partition. This is a new scenario very
+similar to root partition where the mshv_root driver can be used to
+create and manage guest partitions.
 
-No, will fix in next rev.
+It mostly works the same as root partition, but there are some
+differences in how various features are handled. hv_l1vh_partition()
+is introduced to handle these cases. Add hv_parent_partition()
+which returns true for either case, replacing some hv_root_partition()
+checks.
 
-Thanks,
-Bobby
+Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Acked-by: Wei Liu <wei.liu@kernel.org>
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+---
+Changes since v1:
+- Fix hypercall output page not being allocated for L1VH
+- Clean up scheduler detection code to reduce repetition [Michael Kelley]
+---
+ drivers/hv/hv_common.c         | 22 +++++++++++++---------
+ drivers/hv/mshv_root_main.c    | 26 +++++++++++++-------------
+ include/asm-generic/mshyperv.h | 11 +++++++++++
+ 3 files changed, 37 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+index 49898d10faff..e109a620c83f 100644
+--- a/drivers/hv/hv_common.c
++++ b/drivers/hv/hv_common.c
+@@ -257,7 +257,7 @@ static void hv_kmsg_dump_register(void)
+ 
+ static inline bool hv_output_page_exists(void)
+ {
+-	return hv_root_partition() || IS_ENABLED(CONFIG_HYPERV_VTL_MODE);
++	return hv_parent_partition() || IS_ENABLED(CONFIG_HYPERV_VTL_MODE);
+ }
+ 
+ void __init hv_get_partition_id(void)
+@@ -377,7 +377,7 @@ int __init hv_common_init(void)
+ 		BUG_ON(!hyperv_pcpu_output_arg);
+ 	}
+ 
+-	if (hv_root_partition()) {
++	if (hv_parent_partition()) {
+ 		hv_synic_eventring_tail = alloc_percpu(u8 *);
+ 		BUG_ON(!hv_synic_eventring_tail);
+ 	}
+@@ -531,7 +531,7 @@ int hv_common_cpu_init(unsigned int cpu)
+ 	if (msr_vp_index > hv_max_vp_index)
+ 		hv_max_vp_index = msr_vp_index;
+ 
+-	if (hv_root_partition()) {
++	if (hv_parent_partition()) {
+ 		synic_eventring_tail = (u8 **)this_cpu_ptr(hv_synic_eventring_tail);
+ 		*synic_eventring_tail = kcalloc(HV_SYNIC_SINT_COUNT,
+ 						sizeof(u8), flags);
+@@ -558,7 +558,7 @@ int hv_common_cpu_die(unsigned int cpu)
+ 	 * originally allocated memory is reused in hv_common_cpu_init().
+ 	 */
+ 
+-	if (hv_root_partition()) {
++	if (hv_parent_partition()) {
+ 		synic_eventring_tail = this_cpu_ptr(hv_synic_eventring_tail);
+ 		kfree(*synic_eventring_tail);
+ 		*synic_eventring_tail = NULL;
+@@ -729,13 +729,17 @@ void hv_identify_partition_type(void)
+ 	 * the root partition setting if also a Confidential VM.
+ 	 */
+ 	if ((ms_hyperv.priv_high & HV_CREATE_PARTITIONS) &&
+-	    (ms_hyperv.priv_high & HV_CPU_MANAGEMENT) &&
+ 	    !(ms_hyperv.priv_high & HV_ISOLATION)) {
+-		pr_info("Hyper-V: running as root partition\n");
+-		if (IS_ENABLED(CONFIG_MSHV_ROOT))
+-			hv_curr_partition_type = HV_PARTITION_TYPE_ROOT;
+-		else
++
++		if (!IS_ENABLED(CONFIG_MSHV_ROOT)) {
+ 			pr_crit("Hyper-V: CONFIG_MSHV_ROOT not enabled!\n");
++		} else if (ms_hyperv.priv_high & HV_CPU_MANAGEMENT) {
++			pr_info("Hyper-V: running as root partition\n");
++			hv_curr_partition_type = HV_PARTITION_TYPE_ROOT;
++		} else {
++			pr_info("Hyper-V: running as L1VH partition\n");
++			hv_curr_partition_type = HV_PARTITION_TYPE_L1VH;
++		}
+ 	}
+ }
+ 
+diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+index 72df774e410a..aa20a5c96afa 100644
+--- a/drivers/hv/mshv_root_main.c
++++ b/drivers/hv/mshv_root_main.c
+@@ -37,12 +37,6 @@ MODULE_AUTHOR("Microsoft");
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("Microsoft Hyper-V root partition VMM interface /dev/mshv");
+ 
+-/* TODO move this to mshyperv.h when needed outside driver */
+-static inline bool hv_parent_partition(void)
+-{
+-	return hv_root_partition();
+-}
+-
+ /* TODO move this to another file when debugfs code is added */
+ enum hv_stats_vp_counters {			/* HV_THREAD_COUNTER */
+ #if defined(CONFIG_X86)
+@@ -2074,9 +2068,13 @@ static int __init hv_retrieve_scheduler_type(enum hv_scheduler_type *out)
+ /* Retrieve and stash the supported scheduler type */
+ static int __init mshv_retrieve_scheduler_type(struct device *dev)
+ {
+-	int ret;
++	int ret = 0;
++
++	if (hv_l1vh_partition())
++		hv_scheduler_type = HV_SCHEDULER_TYPE_CORE_SMT;
++	else
++		ret = hv_retrieve_scheduler_type(&hv_scheduler_type);
+ 
+-	ret = hv_retrieve_scheduler_type(&hv_scheduler_type);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -2203,9 +2201,6 @@ static int __init mshv_root_partition_init(struct device *dev)
+ {
+ 	int err;
+ 
+-	if (mshv_retrieve_scheduler_type(dev))
+-		return -ENODEV;
+-
+ 	err = root_scheduler_init(dev);
+ 	if (err)
+ 		return err;
+@@ -2227,7 +2222,7 @@ static int __init mshv_parent_partition_init(void)
+ 	struct device *dev;
+ 	union hv_hypervisor_version_info version_info;
+ 
+-	if (!hv_root_partition() || is_kdump_kernel())
++	if (!hv_parent_partition() || is_kdump_kernel())
+ 		return -ENODEV;
+ 
+ 	if (hv_get_hypervisor_version(&version_info))
+@@ -2264,7 +2259,12 @@ static int __init mshv_parent_partition_init(void)
+ 
+ 	mshv_cpuhp_online = ret;
+ 
+-	ret = mshv_root_partition_init(dev);
++	ret = mshv_retrieve_scheduler_type(dev);
++	if (ret)
++		goto remove_cpu_state;
++
++	if (hv_root_partition())
++		ret = mshv_root_partition_init(dev);
+ 	if (ret)
+ 		goto remove_cpu_state;
+ 
+diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+index a729b77983fa..dbd4c2f3aee3 100644
+--- a/include/asm-generic/mshyperv.h
++++ b/include/asm-generic/mshyperv.h
+@@ -31,6 +31,7 @@
+ enum hv_partition_type {
+ 	HV_PARTITION_TYPE_GUEST,
+ 	HV_PARTITION_TYPE_ROOT,
++	HV_PARTITION_TYPE_L1VH,
+ };
+ 
+ struct ms_hyperv_info {
+@@ -354,12 +355,22 @@ static inline bool hv_root_partition(void)
+ {
+ 	return hv_curr_partition_type == HV_PARTITION_TYPE_ROOT;
+ }
++static inline bool hv_l1vh_partition(void)
++{
++	return hv_curr_partition_type == HV_PARTITION_TYPE_L1VH;
++}
++static inline bool hv_parent_partition(void)
++{
++	return hv_root_partition() || hv_l1vh_partition();
++}
+ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages);
+ int hv_call_add_logical_proc(int node, u32 lp_index, u32 acpi_id);
+ int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags);
+ 
+ #else /* CONFIG_MSHV_ROOT */
+ static inline bool hv_root_partition(void) { return false; }
++static inline bool hv_l1vh_partition(void) { return false; }
++static inline bool hv_parent_partition(void) { return false; }
+ static inline int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+ {
+ 	return -EOPNOTSUPP;
+-- 
+2.34.1
+
 
