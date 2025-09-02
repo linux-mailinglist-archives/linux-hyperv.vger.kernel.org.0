@@ -1,252 +1,681 @@
-Return-Path: <linux-hyperv+bounces-6698-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6699-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81269B40763
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 16:46:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D17A0B40927
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 17:39:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 730943A64BF
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 14:44:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DCE863AC26F
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 15:39:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9AB5322A34;
-	Tue,  2 Sep 2025 14:42:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0D8B2FD1CA;
+	Tue,  2 Sep 2025 15:39:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="qV0Q6Oe0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d/dYheyT"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11olkn2061.outbound.protection.outlook.com [40.92.18.61])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143DF3176EE;
-	Tue,  2 Sep 2025 14:42:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.18.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756824172; cv=fail; b=aosVVNJPlbiYr6cgQNilBpeMfjX2+njbdiCRTBT7GRaQmEMyfT2rbb7UYYkV3LZjPAB1E1gbkPbOKR50K/15KoGpAst7Ufdfmx4867D3/PeIAr6zkn1lyzz7s7uGiZHVMa7ATuUPeeA10YU/v9BdRkTIOyF5UrnnIpv3hO+9hu4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756824172; c=relaxed/simple;
-	bh=D6FZAVAARRR/WBnjmv552n93wtoorGbmHPkrNGRihRk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Qq4C50x9F4ZMTwHSUgdhy4zjoDUh0N1s9xZa1uq3g4mfOF/X43zJo01rRrRIJEWVwSDiCi5tO5ZBVVfwJ8yR4P+veHVCaTPr6UPID4rR15UKPaY7xN59NHT5665J8d/PRA+Y8XDm+iG+6EjxhG46cnt31fStGuWsrI/EakAJ3pY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=qV0Q6Oe0; arc=fail smtp.client-ip=40.92.18.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ttIU5zedVGHgS/uutqu3HmXhvMMO9hubucRX6HZ3avjR3b1uTk4X7e7VCW+rDe/ZUo8MQjC278z3PzkPYs7TYgOjYYYfeRjDTsld/4hVCPLorHLoL+aB4d8hymLkiXfDYdc1j1ZYXKxpP7JgaiD+wbfzCJTcyN2NN2ofHl3pn8v8zZnZbnMQ3zSb6wOthUuVLMDVwszFl76zkfJKBIFB1C+yIZKNb1Tqu7T+3dD3jSxXB9D/FfmOvi5SbGGBWwa2MvfwmTGpRiCqJIdP4cP3sdQsLqCf1tZstc8TH26/tOaKMEGxDWoeRx1Y/yArvfbiXdnlUqmp+MOj5UNP51e7rA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jQsDNJPlXThQEz26jPN0ULPX1o7Qi3jewlKvuNTDevc=;
- b=Gev7l6WMNNxbJJLfMaIx9BsTts/eTlFd9YdNUHUEigILquWKbh6U6WYhAdjaKTINOUCY4MoJGSW/aklVMQkta3d3mq8WCVf8ZrB+jfKK+sI3+ZP5rt4huHiKEYA7YFq/GGqo6UQ2We/RSyAee1yJe/8QQIfGmZ/avUQJT3F/AjJMic1VaglOqZ94JtYyH0l+y2QS2WJS2Cx96uD9Q66DKFtJ2NpqKtv4cmilcw5fsmQoP5/eCchLZb0wi5jav3IBR1h1z9cdpvTwfr03rtRNpiaqO7o2j9D+TiKCTXdw6xZKfeJCKu1D9J4nqGKmHEF2izlOWcHWnWWH9Q4tR2zRNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jQsDNJPlXThQEz26jPN0ULPX1o7Qi3jewlKvuNTDevc=;
- b=qV0Q6Oe0OoW7N+u9Bu2YqxqMTbp2YXCDLYXrmqinPNvh3JAzAe2aYiwZxJeMHEywQQqbW6mVxVfQp6gjKEeDFW42vR8aZRbShoNidPCiBRAtVzY/1tHyzEkG086d/dwZE8jbwgG8LmtOsm43jZcVM+LhAnEBNsxvvY0CTL6CHE+H4B4LznEkgUN5GRN5tssXzQw8WyO+hjLrz0Tx/hQxTyULkr/3uc6tWKm1vDLlgj/2Zf7xjgNiF5aqq1coMX/0HNKqEvwg5yHmgilwygbMsXdcxnHFLMpzCIrHp9fIqNwu40afFEVEne9QNnsinzconnWtam9BwNQ9ns2EizvBGQ==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by LV3PR02MB10054.namprd02.prod.outlook.com (2603:10b6:408:19c::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.29; Tue, 2 Sep
- 2025 14:42:47 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.9052.027; Tue, 2 Sep 2025
- 14:42:47 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Mukesh Rathor <mrathor@linux.microsoft.com>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>
-CC: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-	"mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
-	<tzimmermann@suse.de>, "airlied@gmail.com" <airlied@gmail.com>,
-	"simona@ffwll.ch" <simona@ffwll.ch>, "jikos@kernel.org" <jikos@kernel.org>,
-	"bentiss@kernel.org" <bentiss@kernel.org>, "kys@microsoft.com"
-	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
-	<decui@microsoft.com>, "dmitry.torokhov@gmail.com"
-	<dmitry.torokhov@gmail.com>, "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
-	"davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
-	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>, "bhelgaas@google.com"
-	<bhelgaas@google.com>, "James.Bottomley@HansenPartnership.com"
-	<James.Bottomley@HansenPartnership.com>, "martin.petersen@oracle.com"
-	<martin.petersen@oracle.com>, "gregkh@linuxfoundation.org"
-	<gregkh@linuxfoundation.org>, "deller@gmx.de" <deller@gmx.de>,
-	"arnd@arndb.de" <arnd@arndb.de>, "sgarzare@redhat.com" <sgarzare@redhat.com>,
-	"horms@kernel.org" <horms@kernel.org>
-Subject: RE: [PATCH V0 2/2] hyper-v: Make CONFIG_HYPERV bool
-Thread-Topic: [PATCH V0 2/2] hyper-v: Make CONFIG_HYPERV bool
-Thread-Index: AQHcF7dMSD3n9gCD/UmZR8RHFTAe5LR7WjWQ
-Date: Tue, 2 Sep 2025 14:42:47 +0000
-Message-ID:
- <SN6PR02MB4157381DA21132544B3A41B7D406A@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250828005952.884343-1-mrathor@linux.microsoft.com>
- <20250828005952.884343-3-mrathor@linux.microsoft.com>
-In-Reply-To: <20250828005952.884343-3-mrathor@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|LV3PR02MB10054:EE_
-x-ms-office365-filtering-correlation-id: 8e4dccd8-fe9f-408e-d454-08ddea2efbff
-x-ms-exchange-slblob-mailprops:
- WaIXnCbdHrNsJbj7NxvUrpSYkT7K1zyUQnJlg6q1yvcbChD15tsTbyDrPS6VOsBqO1CmsdcERwTEzRc6CPoyVlt8x55KKzqSHPQe4XhFVaiYhKL634D0IFHI6Ax9bVYmUPvNgSb2cbTMEdgwPO1Q3oiYiKZhUC/KSo+g+UShRq+FR9U3MeZ+shPVgeL/M0JqiW5CLtjy3ejkrd1fN7loxt+34/vPQsl/OO5KsEoKVgA+5pXnvPYRWBn4l/B81k4WlqXMNqdcq3bfZeX86otyW8OAUPWWxMstg9erOCvcTTuWbpiinK8USAE/xfGGubkVp8yG8NiVT+2m+GY3kRDuqgIubtZqpjZ3yH5ykKFVj0yhYvKOkmAwWCYq9NsykWJdhzG8EKQBE6X1B8t1dNn/bnl9gAKnwh6KN6r0ct+IzuiOCpdRho3Scg6fbuahF1nkACOBvT55wUAohY9je+xgHzN4GR7ZFqxgfpPLdJMf6W5b+svX30jyE1VGxNIaUQ+Yh5+YYKPHMZ8pbB1C+r1Dw9e9H5DgI+qTJh/1YiZCnOBuWFbqCsczrsn7DbgGFdw+ODB0bXSQUxLfLz7I8U7C2DNyWHtPzOJNDScp8EI3YY0pMMhZtl7EFQ/rJYXBXhGsI5YvysdbTstwqs5WXODOG+XrcPeA2hBOifG467SEtXWlodaR2q9d3YrBsKmBsIBDuM0atjmVGAZC8E+dwuEx90M3O02fcAe6Lz30lO4htYAIB7Do2ekEbJ1d3Ug71ba29u5FGgOspAc=
-x-microsoft-antispam:
- BCL:0;ARA:14566002|8062599012|8060799015|19110799012|15080799012|13091999003|461199028|31061999003|440099028|40105399003|3412199025|12091999003|102099032|56899033;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?QqDq+5QWys6v77z5xt9gcxqiYzqnORJsGL3v5WWufcxN5mqk5lpwB+/UNXiD?=
- =?us-ascii?Q?CGqptBzqPR/j8rSbdsOdNUJ6g3yjiI7Qc19Jx9ESAclUgCZ5YeBjxJzN1tbZ?=
- =?us-ascii?Q?unaQMfWagbL49VlKyzAl+EQ3Ng95qyEHCWOgWNQ18mSCXOADmb+EPMdw+e2U?=
- =?us-ascii?Q?yuePmTqKhVMmSWgBz5mUz8XGkvEPvx51mfgd6qVXGL7nQtXgcbAiWH7NXWO6?=
- =?us-ascii?Q?wnNtwC1cJHRBfNV/YLPPiw8qhriaX9XuP5+PmsOxc4ub6fvtK+lg8SF8dUUs?=
- =?us-ascii?Q?aZp/vL8kMTew8t5lsQn7EoIjOBcBR1lLz6KeKIQEEfP4aC+CjHnJDmrIR53E?=
- =?us-ascii?Q?fV8M+tDI0elNdjR0Z5YETXocoXI8JLGuAuB3PXhf8M41cQxVK0dMNWMKpT5Z?=
- =?us-ascii?Q?SSp4X8r6iizp2fe1VMWaoin5DTPX3NjnfS/rO6MXrDwBSoVKzwKT/GupW8XV?=
- =?us-ascii?Q?MVKADsAXDGpT86CneadvK/tdC5+IjY1N6UipAilvIvWBhsY4yYldrjtgNm2X?=
- =?us-ascii?Q?epDBDrO2wx1aARvgqYPOCYM3Udx8+cS/LOi75uewTRuzlmruZgkcltyXpbzj?=
- =?us-ascii?Q?pKWa/Cl0s13ytiriA9Y3aB8vwBJRL5VIdMgNrsjwAeBfhKFJ/pPP/BrDjGgU?=
- =?us-ascii?Q?G4uYzlkcp2Wvf/M36sHzGgyFdotWdQAjiO1DKU7N700mZAuwGCYRGQ2VqD/9?=
- =?us-ascii?Q?z2VoBI/OeTAXAuVsTMQj4plzThAK8Vi6+XdlyoOxJDh9SDhS3i135N+Dh3Ec?=
- =?us-ascii?Q?DDTUxJylhAvfqkJyAVIs0KNJ155xaNtyQsWlK2mdQTDdc9ta0hRn2jfqvFtP?=
- =?us-ascii?Q?MbYxuJZEMmeKe5SvAzFwWQZxlGy4KoA9H4dJ7++3stYJXDzgI481goMGoR8L?=
- =?us-ascii?Q?2H2yxodPXDFAaU5ti0z0uctYrLgHVrvXXByHQrr8Ajfwtp1/DJwqAgoy7/Wv?=
- =?us-ascii?Q?Qz1+T+0izNqgckDYnuZqYq7yN/zuKBtfAZ9UbwF5aTH9RArrtk04s4X6wKpO?=
- =?us-ascii?Q?mpvZP30sANWIgUQZf5MD8wEb3PqO3iRzxvvNIvw/SNOBJN+v+PpGAyekPTqT?=
- =?us-ascii?Q?E+cbWjYtC9uqgKE+nNDRgzz11CkQdhaxjVWuS6glSJbXPGqcGlz65+HUklyu?=
- =?us-ascii?Q?9+H1XlwewwoIAkhRslC8atw+1v0Cl6/QTWPHSrHVNFo369qGnaCD3euwHHDq?=
- =?us-ascii?Q?B/1UkflBNgc9Wx8XBdtxOAqmJuhjRy/dCEdeAQ=3D=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?S0ZCeqyBDyViJxRMGW2XfbKiNni+bUmGiz9ADcAkR1g5MwuqVMp7BgF3StLp?=
- =?us-ascii?Q?sJw+XV12shSWCFHYUN4d9kLemq0588Moh5wqK5jR0//84Uvp4QQRw7Tca2NQ?=
- =?us-ascii?Q?JwqnRqIlDNRB13vIfFdvdZTaAFbjSC33BbqJn+VHM3dCoGPMYagcZL2ZuFlR?=
- =?us-ascii?Q?+oV0vinbuvYDx0DXUdzjMJIq65+quq+kijMXQ/KGdH4U09q1zo4d8K64wheC?=
- =?us-ascii?Q?o0c15SGG6u24FiodwcG5sThg02eKTMIckXAAg8n53JlivTbAYKscp/kSaE/R?=
- =?us-ascii?Q?MBpefXa4Ce1a36O5tcvHiqokM58rU3yUYkDtnpcF0jKtzJf5wdqHlOHKarFR?=
- =?us-ascii?Q?r+vaEL5dzS68Xp2ggMTwURl/t7LrEZ5Q0pKwNiHBKQwVSqpNQET69gULZVh+?=
- =?us-ascii?Q?bp57cCfQ1V2LMIF2++/mVMmUZte6GUQZclgsDuCEfOWThh3pj1JImmUSHY1v?=
- =?us-ascii?Q?YdWv9TXpSr+s6vMXisrdlwTX9PpJGXKhS4Ybt+qkNu4G0ZSBHPygSc5JIyPB?=
- =?us-ascii?Q?tBsVrkpN9jNWXQ69nl6hCf6SjxnENZ+sKjn2yFhC9BXAOqRE1Vkg5zBgcXgD?=
- =?us-ascii?Q?0BRaQCg0hRKbdLtdh7tM4k+ks1cvBG/PP1/mnCYE8Ey7VglekhQIjEbIwNGc?=
- =?us-ascii?Q?ZIpYUuC9b8DBrLTT8TJjSc2+1zmCf3cR9j2XiJ00NVZAQjaxXh2NRlpUKoeP?=
- =?us-ascii?Q?AXySzo0OTabNZsly7I383u9+oQLWdxMcCPIvVuA9XfjNS06z23cBjo+NvEwm?=
- =?us-ascii?Q?WDVF8ac7CrHePse5q02T9AefUHUb3wbOZ7HULWiP0RYU3PwLiFZxeJ85Ui+s?=
- =?us-ascii?Q?iyy7OCwnPrDOIcOSEBBYjMdMuCAITEy0Eg3HZibL1P0Iy5rsWEjsYwUQUhnv?=
- =?us-ascii?Q?wxSAt2WneNMkayDlnVAbvh63WTHgbev79iFA5dLAqxiPmnPUi/lA2YEr8ql/?=
- =?us-ascii?Q?OI4RuHgtUx36Au72ZGiZUgOx07gkI4SozyJHYV84xPDZ3jypap2AfN6TpjVH?=
- =?us-ascii?Q?/Mc/jtC67x+woauIV8PjjbDP1RXSlTFOBYZT9+5MjKWdh1Tpcwa0gQcZ7TQ8?=
- =?us-ascii?Q?lDQlUScgaac+YDq/7Zt95U1NyMNVV4sumFpQzk8cAdvw3Eroe6bfQNze6Qnd?=
- =?us-ascii?Q?DcIMbz91ihB0aQqwxGIjAo+6esVrPtn5jWLXmsvJlq7kYfZN92nd5gulusXu?=
- =?us-ascii?Q?dSFGf6neOb7X2EQNbJodc5Z+0G1wNqewoS1v99o7ztTz4wJgOMcpgtAkoYg?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6595028C01E
+	for <linux-hyperv@vger.kernel.org>; Tue,  2 Sep 2025 15:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756827567; cv=none; b=HxFfjnx0izc5Z1kSUPtNJ9fpMBEe0HzFxCctDdiTdO18p5UhKL5IVpNmS20pd68oXpLbmeA+4kPKXsKXxuFGB+OcNf5NeVF0gx1zZNzwUEmXiaeHDvEKXTyLSrS4ym7ObjWp06SAwJMVIisD1u5u60AWj+HGCPebEH9seuQZTtg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756827567; c=relaxed/simple;
+	bh=zXwrtmAX87LSm+i8ChpBHpSU7gTWZISp461mWc0I9Ng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z1ekLEA+usbSQFs/FzOd8FzSDOdXsaaJO7Rx3eAtS2xw0IPijpnTl8dB7L+WAhz9feDN89SqsbchmYaRxQogKpOlyrk2ILBiHudUOcJ1ykA7Bj4bOPY9jkWLDhuDj3l6MAV7HNwYmjYB9raqbkShv1BSoO4C+vCoy1M/GSOInC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d/dYheyT; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1756827564;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UMvTm0hcd/yzzzGO2cHnnLOUYCpJcneduElaAP0F4oI=;
+	b=d/dYheyTcq59s5QXA8m7HPsjCFN5TQM58iaLw8yzW0niUi5Inv5qWCXbQU9UgMINwFwXbY
+	z8lVd1LjETijclEayEa7C6+f1s7CtMWz9ZUlpMv0PHtv61GSttZI5FMFX/a0v6CSG8Y0Q4
+	/1Jy0JKVykKfJcEaBnJxKoVVC5F9eW8=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-621-VzzRNbRINAqL7X8w3ilVHw-1; Tue, 02 Sep 2025 11:39:23 -0400
+X-MC-Unique: VzzRNbRINAqL7X8w3ilVHw-1
+X-Mimecast-MFC-AGG-ID: VzzRNbRINAqL7X8w3ilVHw_1756827563
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4b31ba1392fso83049321cf.2
+        for <linux-hyperv@vger.kernel.org>; Tue, 02 Sep 2025 08:39:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756827563; x=1757432363;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UMvTm0hcd/yzzzGO2cHnnLOUYCpJcneduElaAP0F4oI=;
+        b=UYZ7c/sxvUYlKlxbk4YidROxbp1OgGmLmatrHN+gLQOiEVgdQs4zfCcZWTNf9/6K6g
+         YtN1GuKnQjXHfp2xb3/CNFAARxoDd28oxi9Xi17vI8EsmNe28RKxFgs9HdcegxKi2ZR8
+         OYAFfwr4+IuwNrKTG2ahpijfAyyS/OO8hqB/6RqESKNM85ebMvqq4n33DhpDZKFf0xfd
+         4V/fmhr8gDca20zYVcm96dRf9G+MeKYQPrDuPn+/6XY3/k1bVwNH+YtL3XGCxvmeOTgm
+         YHOifcuf8pyqx7GP4hOtgzZJWkzgmImEr7rn3YstKGo4puJtt2CRKfeQVM1+HtUNx9p7
+         zX9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUxVSseEvgoUkb3i8xAsBeyeM+JLucD7oKXqJIjgdDQR4SDRYzcOPg7Da+sx18y0ApFGiDZNjjC6Pa6Zi8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwC0KIodfe01KeVqhveVdeihf5AJuOe8vRNN3smoMMnXB9FP3DQ
+	D1BgiXu7wZrbL/FI53THk/TJtLP/wiEWBwBATWi3WAAsmrrBDV2AWpZdlC/3ijGRmwvoFdSe7oS
+	V9luTFfxJDsvla/vfDaxEtDA/HzxUn4fQHOHYu50dS6afV7CPXs/EtNYH7Yxm0N4uEA==
+X-Gm-Gg: ASbGncsluiaJy8um25DJekWH0r3dHCOyqM/mTWz43WF+sod5NvtUvzzsyQ3MYkj07Vx
+	ywDd9nfLdceCmQqZwHX2RQT+nQOFxg1GJXJDoRwTssouZ8+fso0901gu/K8ijq76wvUTXspiG0i
+	r18KTRdLIXaY5uThchBK4HoWIeMZLVaaf+PXZKU+aHmxEoLCfY3T+Li9kZY+1JTy1lY6HFaWlfu
+	ZGJrt/eVTD5jNQkSkHkQp1OVcdj2Fv/2pO7xdsIpaJibpTrAoB/jFKIbHDj5kPvOajwMM/lGaSK
+	crz7IoDjhwsepmsHtVZzH+IvoweK0LioBwq6ojYXHcsp9tNKj9tXJm31hvRblla145nG/DJxAwK
+	AORtEJvTtsAcEpdr8
+X-Received: by 2002:a05:622a:4207:b0:4b3:6e2:ecd with SMTP id d75a77b69052e-4b31d89e5e1mr130880591cf.2.1756827562413;
+        Tue, 02 Sep 2025 08:39:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHRmG/UbhG8IDruKlGlPvPBO+NRjUNwrBQTk1fryJ0CINjxXSxLmcBF5M/TYvm+v5fg/d/y4A==
+X-Received: by 2002:a05:622a:4207:b0:4b3:6e2:ecd with SMTP id d75a77b69052e-4b31d89e5e1mr130879941cf.2.1756827561736;
+        Tue, 02 Sep 2025 08:39:21 -0700 (PDT)
+Received: from sgarzare-redhat (host-87-12-185-93.business.telecomitalia.it. [87.12.185.93])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b34618d3b5sm13731531cf.2.2025.09.02.08.39.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Sep 2025 08:39:21 -0700 (PDT)
+Date: Tue, 2 Sep 2025 17:39:10 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Bobby Eshleman <bobbyeshleman@gmail.com>
+Cc: Shuah Khan <shuah@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Bryan Tan <bryan-bt.tan@broadcom.com>, Vishnu Dasa <vishnu.dasa@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, berrange@redhat.com, Bobby Eshleman <bobbyeshleman@meta.com>
+Subject: Re: [PATCH net-next v5 3/9] vsock: add netns to vsock core
+Message-ID: <gncp3ynz3inufzex64sla2ia3stjsen2n3hwhfuykdhmpuuegu@7hk5q2hjfxkv>
+References: <20250827-vsock-vmtest-v5-0-0ba580bede5b@meta.com>
+ <20250827-vsock-vmtest-v5-3-0ba580bede5b@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e4dccd8-fe9f-408e-d454-08ddea2efbff
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2025 14:42:47.3438
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR02MB10054
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250827-vsock-vmtest-v5-3-0ba580bede5b@meta.com>
 
-From: Mukesh Rathor <mrathor@linux.microsoft.com> Sent: Wednesday, August 2=
-7, 2025 6:00 PM
+On Wed, Aug 27, 2025 at 05:31:31PM -0700, Bobby Eshleman wrote:
+>From: Bobby Eshleman <bobbyeshleman@meta.com>
+>
+>Add netns to logic to vsock core. Additionally, modify transport hook
+>prototypes to be used by later transport-specific patches (e.g.,
+>*_seqpacket_allow()).
+>
+>Namespaces are supported primarily by changing socket lookup functions
+>(e.g., vsock_find_connected_socket()) to take into account the socket
+>namespace and the namespace mode before considering a candidate socket a
+>"match".
+>
+>Introduce a dummy namespace struct, __vsock_global_dummy_net, to be
+>used by transports that do not support namespacing. This dummy always
+>has mode "global" to preserve previous CID behavior.
+>
+>This patch also introduces the sysctl /proc/sys/net/vsock/ns_mode that
+>accepts the "global" or "local" mode strings.
+>
+>The transports (besides vhost) are modified to use the global dummy.
+>
+>Add netns functionality (initialization, passing to transports, procfs,
+>etc...) to the af_vsock socket layer. Later patches that add netns
+>support to transports depend on this patch.
+>
+>Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
+>
+>---
+>Changes in v5:
+>- vsock_global_net() -> vsock_global_dummy_net()
+>- update comments for new uAPI
+>- use /proc/sys/net/vsock/ns_mode instead of /proc/net/vsock_ns_mode
+>- add prototype changes so patch remains compilable
+>---
+> drivers/vhost/vsock.c                   |   4 +-
+> include/net/af_vsock.h                  |  13 +-
+> net/vmw_vsock/af_vsock.c                | 202 +++++++++++++++++++++++++++++---
+> net/vmw_vsock/hyperv_transport.c        |   2 +-
+> net/vmw_vsock/virtio_transport.c        |   5 +-
+> net/vmw_vsock/virtio_transport_common.c |   4 +-
+> net/vmw_vsock/vmci_transport.c          |   4 +-
+> net/vmw_vsock/vsock_loopback.c          |   4 +-
+> 8 files changed, 210 insertions(+), 28 deletions(-)
+>
+>diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+>index ae01457ea2cd..34adf0cf9124 100644
+>--- a/drivers/vhost/vsock.c
+>+++ b/drivers/vhost/vsock.c
+>@@ -404,7 +404,7 @@ static bool vhost_transport_msgzerocopy_allow(void)
+> 	return true;
+> }
+>
+>-static bool vhost_transport_seqpacket_allow(u32 remote_cid);
+>+static bool vhost_transport_seqpacket_allow(struct vsock_sock *vsk, u32 remote_cid);
+>
+> static struct virtio_transport vhost_transport = {
+> 	.transport = {
+>@@ -460,7 +460,7 @@ static struct virtio_transport vhost_transport = {
+> 	.send_pkt = vhost_transport_send_pkt,
+> };
+>
+>-static bool vhost_transport_seqpacket_allow(u32 remote_cid)
+>+static bool vhost_transport_seqpacket_allow(struct vsock_sock *vsk, u32 remote_cid)
+> {
+> 	struct vhost_vsock *vsock;
+> 	bool seqpacket_allow = false;
+>diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+>index 5707514c30b6..83f873174ba3 100644
+>--- a/include/net/af_vsock.h
+>+++ b/include/net/af_vsock.h
+>@@ -144,7 +144,7 @@ struct vsock_transport {
+> 				     int flags);
+> 	int (*seqpacket_enqueue)(struct vsock_sock *vsk, struct msghdr *msg,
+> 				 size_t len);
+>-	bool (*seqpacket_allow)(u32 remote_cid);
+>+	bool (*seqpacket_allow)(struct vsock_sock *vsk, u32 remote_cid);
+> 	u32 (*seqpacket_has_data)(struct vsock_sock *vsk);
+>
+> 	/* Notification. */
+>@@ -214,9 +214,10 @@ void vsock_enqueue_accept(struct sock *listener, struct sock *connected);
+> void vsock_insert_connected(struct vsock_sock *vsk);
+> void vsock_remove_bound(struct vsock_sock *vsk);
+> void vsock_remove_connected(struct vsock_sock *vsk);
+>-struct sock *vsock_find_bound_socket(struct sockaddr_vm *addr);
+>+struct sock *vsock_find_bound_socket(struct sockaddr_vm *addr, struct net *net);
+> struct sock *vsock_find_connected_socket(struct sockaddr_vm *src,
+>-					 struct sockaddr_vm *dst);
+>+					 struct sockaddr_vm *dst,
+>+					 struct net *net);
+> void vsock_remove_sock(struct vsock_sock *vsk);
+> void vsock_for_each_connected_socket(struct vsock_transport 
+> *transport,
+> 				     void (*fn)(struct sock *sk));
+>@@ -258,6 +259,12 @@ static inline bool vsock_msgzerocopy_allow(const struct vsock_transport *t)
+> 	return t->msgzerocopy_allow && t->msgzerocopy_allow();
+> }
+>
+>+extern struct net __vsock_global_dummy_net;
+>+static inline struct net *vsock_global_dummy_net(void)
+>+{
+>+	return &__vsock_global_dummy_net;
+>+}
+>+
+> static inline u8 vsock_net_mode(struct net *net)
+> {
+> 	enum vsock_net_mode ret;
+>diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>index 0538948d5fd9..68a8875c8106 100644
+>--- a/net/vmw_vsock/af_vsock.c
+>+++ b/net/vmw_vsock/af_vsock.c
+>@@ -83,6 +83,24 @@
+>  *   TCP_ESTABLISHED - connected
+>  *   TCP_CLOSING - disconnecting
+>  *   TCP_LISTEN - listening
+>+ *
+>+ * - Namespaces in vsock support two different modes configured
+>+ *   through /proc/sys/net/vsock/ns_mode. The modes are "local" and "global".
+>+ *   Each mode defines how the namespace interacts with CIDs.
+>+ *   /proc/sys/net/vsock/ns_mode is write-once, so that it may be configured
+>+ *   and locked down by a namespace manager. The default is "global". The mode
+>+ *   is set per-namespace.
+>+ *
+>+ *   The modes affect the allocation and accessibility of CIDs as follows:
+>+ *   - global - aka fully public
+>+ *      - CID allocation draws from the public pool
+>+ *      - AF_VSOCK sockets may reach any CID allocated from the public pool
+>+ *      - AF_VSOCK sockets may not reach CIDs allocated from private 
+>pools
 
-Same comment about patch "Subject:" prefix.
+Should we define what public and private pools are?
 
-> CONFIG_HYPERV is an umbrella config option involved in enabling hyperv
+What I found difficult to understand was the allocation of CIDs, meaning 
+I had to reread it two or three times to perhaps understand it.
 
-s/hyperv/Hyper-V/
+IIUC, netns with mode=global can only allocate public CIDs, while netns 
+with mode=local can only allocate private CIDs, right?
 
-> support and build of modules like hyperv-balloon, hyperv-vmbus, etc..
+Perhaps we should first better define how CIDs are allocated and then 
+explain the interaction between them.
 
-With CONFIG_HYPERV and CONFIG_HYPERV_VMBUS separated, I think
-of CONFIG_HYPERV as the core Hyper-V hypervisor support, such as
-hypercalls, clocks/timers, Confidential Computing setup, etc. that
-doesn't involve VMBus or VMBus devices.
+>+ *
+>+ *   - local - aka fully private
+>+ *     - CID allocation draws only from the private pool, does not affect public pool
+>+ *     - AF_VSOCK sockets may only reach CIDs from the private pool
+>+ *     - AF_VSOCK sockets may not reach CIDs allocated from outside the pool
 
-> As such it should be bool and the hack in Makefile be removed.
->=20
-> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
-> ---
->  drivers/Makefile    | 2 +-
->  drivers/hv/Kconfig  | 2 +-
->  drivers/hv/Makefile | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/Makefile b/drivers/Makefile
-> index b5749cf67044..7ad5744db0b6 100644
-> --- a/drivers/Makefile
-> +++ b/drivers/Makefile
-> @@ -161,7 +161,7 @@ obj-$(CONFIG_SOUNDWIRE)		+=3D soundwire/
->=20
->  # Virtualization drivers
->  obj-$(CONFIG_VIRT_DRIVERS)	+=3D virt/
-> -obj-$(subst m,y,$(CONFIG_HYPERV))	+=3D hv/
-> +obj-$(CONFIG_HYPERV)		+=3D hv/
->=20
->  obj-$(CONFIG_PM_DEVFREQ)	+=3D devfreq/
->  obj-$(CONFIG_EXTCON)		+=3D extcon/
-> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-> index 08c4ed005137..b860bc1026b7 100644
-> --- a/drivers/hv/Kconfig
-> +++ b/drivers/hv/Kconfig
-> @@ -3,7 +3,7 @@
->  menu "Microsoft Hyper-V guest support"
->=20
->  config HYPERV
-> -	tristate "Microsoft Hyper-V client drivers"
-> +	bool "Microsoft Hyper-V client drivers"
+Why using "may" ? I mean, can be cases when this is not true?
 
-I would want to change the prompt here to be more specific, such as:
+>  */
+>
+> #include <linux/compat.h>
+>@@ -100,6 +118,7 @@
+> #include <linux/module.h>
+> #include <linux/mutex.h>
+> #include <linux/net.h>
+>+#include <linux/proc_fs.h>
+> #include <linux/poll.h>
+> #include <linux/random.h>
+> #include <linux/skbuff.h>
+>@@ -111,6 +130,7 @@
+> #include <linux/workqueue.h>
+> #include <net/sock.h>
+> #include <net/af_vsock.h>
+>+#include <net/netns/vsock.h>
+> #include <uapi/linux/vm_sockets.h>
+> #include <uapi/asm-generic/ioctls.h>
+>
+>@@ -149,6 +169,9 @@ static const struct vsock_transport *transport_dgram;
+> static const struct vsock_transport *transport_local;
+> static DEFINE_MUTEX(vsock_register_mutex);
+>
+>+struct net __vsock_global_dummy_net;
+>+EXPORT_SYMBOL_GPL(__vsock_global_dummy_net);
+>+
+> /**** UTILS ****/
+>
+> /* Each bound VSocket is stored in the bind hash table and each connected
+>@@ -235,33 +258,42 @@ static void __vsock_remove_connected(struct vsock_sock *vsk)
+> 	sock_put(&vsk->sk);
+> }
+>
+>-static struct sock *__vsock_find_bound_socket(struct sockaddr_vm *addr)
+>+static struct sock *__vsock_find_bound_socket(struct sockaddr_vm *addr,
+>+					      struct net *net)
+> {
+> 	struct vsock_sock *vsk;
+>
+> 	list_for_each_entry(vsk, vsock_bound_sockets(addr), bound_table) {
+>+		struct sock *sk = sk_vsock(vsk);
+>+
+> 		if (vsock_addr_equals_addr(addr, &vsk->local_addr))
+>-			return sk_vsock(vsk);
+>+			if (vsock_net_check_mode(net, sock_net(sk)))
+>+				return sk;
+>
+> 		if (addr->svm_port == vsk->local_addr.svm_port &&
+> 		    (vsk->local_addr.svm_cid == VMADDR_CID_ANY ||
+>-		     addr->svm_cid == VMADDR_CID_ANY))
+>-			return sk_vsock(vsk);
+>+		     addr->svm_cid == VMADDR_CID_ANY) &&
+>+		     vsock_net_check_mode(net, sock_net(sk)))
+>+				return sk;
+> 	}
+>
+> 	return NULL;
+> }
+>
+> static struct sock *__vsock_find_connected_socket(struct sockaddr_vm *src,
+>-						  struct sockaddr_vm *dst)
+>+						  struct sockaddr_vm *dst,
+>+						  struct net *net)
+> {
+> 	struct vsock_sock *vsk;
+>
+> 	list_for_each_entry(vsk, vsock_connected_sockets(src, dst),
+> 			    connected_table) {
+>+		struct sock *sk = sk_vsock(vsk);
+>+
+> 		if (vsock_addr_equals_addr(src, &vsk->remote_addr) &&
+>-		    dst->svm_port == vsk->local_addr.svm_port) {
+>-			return sk_vsock(vsk);
+>+		    dst->svm_port == vsk->local_addr.svm_port &&
+>+		    vsock_net_check_mode(net, sock_net(sk))) {
+>+			return sk;
+> 		}
+> 	}
+>
+>@@ -304,12 +336,12 @@ void vsock_remove_connected(struct vsock_sock *vsk)
+> }
+> EXPORT_SYMBOL_GPL(vsock_remove_connected);
+>
+>-struct sock *vsock_find_bound_socket(struct sockaddr_vm *addr)
+>+struct sock *vsock_find_bound_socket(struct sockaddr_vm *addr, struct net *net)
+> {
+> 	struct sock *sk;
+>
+> 	spin_lock_bh(&vsock_table_lock);
+>-	sk = __vsock_find_bound_socket(addr);
+>+	sk = __vsock_find_bound_socket(addr, net);
+> 	if (sk)
+> 		sock_hold(sk);
+>
+>@@ -320,12 +352,13 @@ struct sock *vsock_find_bound_socket(struct sockaddr_vm *addr)
+> EXPORT_SYMBOL_GPL(vsock_find_bound_socket);
+>
+> struct sock *vsock_find_connected_socket(struct sockaddr_vm *src,
+>-					 struct sockaddr_vm *dst)
+>+					 struct sockaddr_vm *dst,
+>+					 struct net *net)
+> {
+> 	struct sock *sk;
+>
+> 	spin_lock_bh(&vsock_table_lock);
+>-	sk = __vsock_find_connected_socket(src, dst);
+>+	sk = __vsock_find_connected_socket(src, dst, net);
+> 	if (sk)
+> 		sock_hold(sk);
+>
+>@@ -528,7 +561,7 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
+>
+> 	if (sk->sk_type == SOCK_SEQPACKET) {
+> 		if (!new_transport->seqpacket_allow ||
+>-		    !new_transport->seqpacket_allow(remote_cid)) {
+>+		    !new_transport->seqpacket_allow(vsk, remote_cid)) {
+> 			module_put(new_transport->module);
+> 			return -ESOCKTNOSUPPORT;
+> 		}
+>@@ -678,6 +711,7 @@ static int __vsock_bind_connectible(struct vsock_sock *vsk,
+> {
+> 	static u32 port;
+> 	struct sockaddr_vm new_addr;
+>+	struct net *net = sock_net(sk_vsock(vsk));
+>
+> 	if (!port)
+> 		port = get_random_u32_above(LAST_RESERVED_PORT);
+>@@ -695,7 +729,7 @@ static int __vsock_bind_connectible(struct vsock_sock *vsk,
+>
+> 			new_addr.svm_port = port++;
+>
+>-			if (!__vsock_find_bound_socket(&new_addr)) {
+>+			if (!__vsock_find_bound_socket(&new_addr, net)) {
+> 				found = true;
+> 				break;
+> 			}
+>@@ -712,7 +746,7 @@ static int __vsock_bind_connectible(struct vsock_sock *vsk,
+> 			return -EACCES;
+> 		}
+>
+>-		if (__vsock_find_bound_socket(&new_addr))
+>+		if (__vsock_find_bound_socket(&new_addr, net))
+> 			return -EADDRINUSE;
+> 	}
+>
+>@@ -2636,6 +2670,137 @@ static struct miscdevice vsock_device = {
+> 	.fops		= &vsock_device_ops,
+> };
+>
+>+#define VSOCK_NET_MODE_STRING_MAX 7
+>+
+>+static int vsock_net_mode_string(const struct ctl_table *table, int write,
+>+				 void *buffer, size_t *lenp, loff_t *ppos)
+>+{
+>+	char buf[VSOCK_NET_MODE_STRING_MAX] = {0};
 
-	bool "Microsoft Hyper-V core hypervisor support"
+Can we change `buf` name?
 
-As noted in my comments on the cover letter, this change causes
-.config file compatibility problems. I can't immediately think of
-a way to deal with the compatibility problem and still change this
-from tristate to bool.
+I find it confusing to have both a `buffer` variable and a `buf` 
+variable in the same function.
 
->  	depends on (X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
->  		|| (ARM64 && !CPU_BIG_ENDIAN)
->  	select PARAVIRT
-> diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
-> index 050517756a82..8b04a33e4dd8 100644
-> --- a/drivers/hv/Makefile
-> +++ b/drivers/hv/Makefile
-> @@ -18,7 +18,7 @@ mshv_root-y :=3D mshv_root_main.o mshv_synic.o
-> mshv_eventfd.o mshv_irq.o \
->  mshv_vtl-y :=3D mshv_vtl_main.o
->=20
->  # Code that must be built-in
-> -obj-$(subst m,y,$(CONFIG_HYPERV)) +=3D hv_common.o
-> +obj-$(CONFIG_HYPERV) +=3D hv_common.o
->  obj-$(subst m,y,$(CONFIG_MSHV_ROOT)) +=3D hv_proc.o
->  ifneq ($(CONFIG_MSHV_ROOT) $(CONFIG_MSHV_VTL),)
->      obj-y +=3D mshv_common.o
-> --
-> 2.36.1.vfs.0.0
->=20
+>+	enum vsock_net_mode mode;
+>+	struct ctl_table tmp;
+>+	struct net *net;
+>+	const char *p;
+
+Can we move `p` declaration in the `if (!write) {` block?
+
+>+	int ret;
+>+
+>+	if (!table->data || !table->maxlen || !*lenp) {
+>+		*lenp = 0;
+>+		return 0;
+>+	}
+>+
+>+	net = current->nsproxy->net_ns;
+>+	tmp = *table;
+>+	tmp.data = buf;
+>+
+>+	if (!write) {
+>+		mode = vsock_net_mode(net);
+>+
+>+		if (mode == VSOCK_NET_MODE_GLOBAL) {
+>+			p = "global";
+>+		} else if (mode == VSOCK_NET_MODE_LOCAL) {
+>+			p = "local";
+>+		} else {
+>+			WARN_ONCE(true, "netns has invalid vsock mode");
+>+			*lenp = 0;
+>+			return 0;
+>+		}
+>+
+>+		strscpy(buf, p, sizeof(buf));
+>+		tmp.maxlen = strlen(p);
+>+	}
+>+
+>+	ret = proc_dostring(&tmp, write, buffer, lenp, ppos);
+>+	if (ret)
+>+		return ret;
+>+
+>+	if (write) {
+>+		if (!strncmp(buffer, "global", 6))
+
+Are we sure that the `buffer` is at least 6 bytes long and 
+NULL-terminated?
+
+Maybe we can just check that `lenp <= sizeof(buf)`...
+
+Should we add macros for "global" and "local" ?
+
+
+>+			mode = VSOCK_NET_MODE_GLOBAL;
+>+		else if (!strncmp(buffer, "local", 5))
+>+			mode = VSOCK_NET_MODE_LOCAL;
+>+		else
+>+			return -EINVAL;
+>+
+>+		if (!vsock_net_write_mode(net, mode))
+>+			return -EPERM;
+>+	}
+>+
+>+	return 0;
+>+}
+>+
+>+static struct ctl_table vsock_table[] = {
+>+	{
+>+		.procname	= "ns_mode",
+>+		.data		= &init_net.vsock.mode,
+>+		.maxlen		= sizeof(u8),
+>+		.mode		= 0644,
+>+		.proc_handler	= vsock_net_mode_string
+>+	},
+>+};
+>+
+>+static int __net_init vsock_sysctl_register(struct net *net)
+>+{
+>+	struct ctl_table *table;
+>+
+>+	if (net_eq(net, &init_net)) {
+>+		table = vsock_table;
+>+	} else {
+>+		table = kmemdup(vsock_table, sizeof(vsock_table), GFP_KERNEL);
+>+		if (!table)
+>+			goto err_alloc;
+>+
+>+		table[0].data = &net->vsock.mode;
+>+	}
+>+
+>+	net->vsock.vsock_hdr = register_net_sysctl_sz(net, "net/vsock", table,
+>+						      ARRAY_SIZE(vsock_table));
+>+	if (!net->vsock.vsock_hdr)
+>+		goto err_reg;
+>+
+>+	return 0;
+>+
+>+err_reg:
+>+	if (!net_eq(net, &init_net))
+>+		kfree(table);
+>+err_alloc:
+>+	return -ENOMEM;
+>+}
+>+
+>+static void vsock_sysctl_unregister(struct net *net)
+>+{
+>+	const struct ctl_table *table;
+>+
+>+	table = net->vsock.vsock_hdr->ctl_table_arg;
+>+	unregister_net_sysctl_table(net->vsock.vsock_hdr);
+>+	if (!net_eq(net, &init_net))
+>+		kfree(table);
+>+}
+>+
+>+static void vsock_net_init(struct net *net)
+>+{
+>+	spin_lock_init(&net->vsock.lock);
+>+	net->vsock.mode = VSOCK_NET_MODE_GLOBAL;
+>+}
+>+
+>+static __net_init int vsock_sysctl_init_net(struct net *net)
+>+{
+>+	vsock_net_init(net);
+>+
+>+	if (vsock_sysctl_register(net))
+>+		return -ENOMEM;
+>+
+>+	return 0;
+>+}
+>+
+>+static __net_exit void vsock_sysctl_exit_net(struct net *net)
+>+{
+>+	vsock_sysctl_unregister(net);
+>+}
+>+
+>+static struct pernet_operations vsock_sysctl_ops __net_initdata = {
+>+	.init = vsock_sysctl_init_net,
+>+	.exit = vsock_sysctl_exit_net,
+>+};
+>+
+> static int __init vsock_init(void)
+> {
+> 	int err = 0;
+>@@ -2663,10 +2828,19 @@ static int __init vsock_init(void)
+> 		goto err_unregister_proto;
+> 	}
+>
+>+	if (register_pernet_subsys(&vsock_sysctl_ops)) {
+>+		err = -ENOMEM;
+>+		goto err_unregister_sock;
+>+	}
+>+
+>+	vsock_net_init(&init_net);
+>+	vsock_net_init(vsock_global_dummy_net());
+> 	vsock_bpf_build_proto();
+>
+> 	return 0;
+>
+>+err_unregister_sock:
+>+	sock_unregister(AF_VSOCK);
+> err_unregister_proto:
+> 	proto_unregister(&vsock_proto);
+> err_deregister_misc:
+>diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
+>index 432fcbbd14d4..79bc55eeecb3 100644
+>--- a/net/vmw_vsock/hyperv_transport.c
+>+++ b/net/vmw_vsock/hyperv_transport.c
+>@@ -313,7 +313,7 @@ static void hvs_open_connection(struct vmbus_channel *chan)
+> 		return;
+>
+> 	hvs_addr_init(&addr, conn_from_host ? if_type : if_instance);
+>-	sk = vsock_find_bound_socket(&addr);
+>+	sk = vsock_find_bound_socket(&addr, vsock_global_dummy_net());
+> 	if (!sk)
+> 		return;
+>
+>diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+>index b6569b0ca2bb..af3e924fcc31 100644
+>--- a/net/vmw_vsock/virtio_transport.c
+>+++ b/net/vmw_vsock/virtio_transport.c
+>@@ -536,7 +536,7 @@ static bool virtio_transport_msgzerocopy_allow(void)
+> 	return true;
+> }
+>
+>-static bool virtio_transport_seqpacket_allow(u32 remote_cid);
+>+static bool virtio_transport_seqpacket_allow(struct vsock_sock *vsk, u32 remote_cid);
+>
+> static struct virtio_transport virtio_transport = {
+> 	.transport = {
+>@@ -593,7 +593,7 @@ static struct virtio_transport virtio_transport = {
+> 	.can_msgzerocopy = virtio_transport_can_msgzerocopy,
+> };
+>
+>-static bool virtio_transport_seqpacket_allow(u32 remote_cid)
+>+static bool virtio_transport_seqpacket_allow(struct vsock_sock *vsk, u32 remote_cid)
+> {
+> 	struct virtio_vsock *vsock;
+> 	bool seqpacket_allow;
+>@@ -659,6 +659,7 @@ static void virtio_transport_rx_work(struct work_struct *work)
+> 			if (payload_len)
+> 				virtio_vsock_skb_put(skb, payload_len);
+>
+>+			virtio_vsock_skb_set_net(skb, vsock_global_dummy_net());
+> 			virtio_transport_deliver_tap_pkt(skb);
+> 			virtio_transport_recv_pkt(&virtio_transport, skb);
+> 		}
+>diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+>index fe92e5fa95b4..9b3aa4f0395d 100644
+>--- a/net/vmw_vsock/virtio_transport_common.c
+>+++ b/net/vmw_vsock/virtio_transport_common.c
+>@@ -1604,9 +1604,9 @@ void virtio_transport_recv_pkt(struct virtio_transport *t,
+> 	/* The socket must be in connected or bound table
+> 	 * otherwise send reset back
+> 	 */
+>-	sk = vsock_find_connected_socket(&src, &dst);
+>+	sk = vsock_find_connected_socket(&src, &dst, vsock_global_dummy_net());
+> 	if (!sk) {
+>-		sk = vsock_find_bound_socket(&dst);
+>+		sk = vsock_find_bound_socket(&dst, vsock_global_dummy_net());
+> 		if (!sk) {
+> 			(void)virtio_transport_reset_no_sock(t, skb);
+> 			goto free_pkt;
+>diff --git a/net/vmw_vsock/vmci_transport.c b/net/vmw_vsock/vmci_transport.c
+>index 7eccd6708d66..fd600ad77d73 100644
+>--- a/net/vmw_vsock/vmci_transport.c
+>+++ b/net/vmw_vsock/vmci_transport.c
+>@@ -703,9 +703,9 @@ static int vmci_transport_recv_stream_cb(void *data, struct vmci_datagram *dg)
+> 	vsock_addr_init(&src, pkt->dg.src.context, pkt->src_port);
+> 	vsock_addr_init(&dst, pkt->dg.dst.context, pkt->dst_port);
+>
+>-	sk = vsock_find_connected_socket(&src, &dst);
+>+	sk = vsock_find_connected_socket(&src, &dst, vsock_global_dummy_net());
+> 	if (!sk) {
+>-		sk = vsock_find_bound_socket(&dst);
+>+		sk = vsock_find_bound_socket(&dst, vsock_global_dummy_net());
+> 		if (!sk) {
+> 			/* We could not find a socket for this specified
+> 			 * address.  If this packet is a RST, we just drop it.
+>diff --git a/net/vmw_vsock/vsock_loopback.c b/net/vmw_vsock/vsock_loopback.c
+>index 6e78927a598e..1b2fab73e0d0 100644
+>--- a/net/vmw_vsock/vsock_loopback.c
+>+++ b/net/vmw_vsock/vsock_loopback.c
+>@@ -46,7 +46,7 @@ static int vsock_loopback_cancel_pkt(struct vsock_sock *vsk)
+> 	return 0;
+> }
+>
+>-static bool vsock_loopback_seqpacket_allow(u32 remote_cid);
+>+static bool vsock_loopback_seqpacket_allow(struct vsock_sock *vsk, u32 remote_cid);
+> static bool vsock_loopback_msgzerocopy_allow(void)
+> {
+> 	return true;
+>@@ -106,7 +106,7 @@ static struct virtio_transport loopback_transport = {
+> 	.send_pkt = vsock_loopback_send_pkt,
+> };
+>
+>-static bool vsock_loopback_seqpacket_allow(u32 remote_cid)
+>+static bool vsock_loopback_seqpacket_allow(struct vsock_sock *vsk, u32 remote_cid)
+> {
+> 	return true;
+> }
+>
+>-- 
+>2.47.3
+>
 
 
