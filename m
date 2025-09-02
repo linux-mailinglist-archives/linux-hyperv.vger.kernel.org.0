@@ -1,173 +1,254 @@
-Return-Path: <linux-hyperv+bounces-6690-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6691-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F0F4B3F866
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 10:31:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4A1BB401D4
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 15:03:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 93F337A71D5
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 08:29:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C888F3A70B3
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Sep 2025 13:00:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A405549659;
-	Tue,  2 Sep 2025 08:30:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA3E02FF66A;
+	Tue,  2 Sep 2025 12:58:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VyuYdJf3"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xn9DO4es";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1yNU2dBs";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YDEJbZcp";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7bZhpkgN"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080A732F74D
-	for <linux-hyperv@vger.kernel.org>; Tue,  2 Sep 2025 08:30:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24002FF673
+	for <linux-hyperv@vger.kernel.org>; Tue,  2 Sep 2025 12:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756801855; cv=none; b=Tsf18IqRhU0OlStzxVXJ2p7PNs5BSox61nxR4Ld0Bb0T9s/6LrSKJQn00QG2HTeD9uBDdQruUQ59/AC9PWNRiwUM1LwWU2+IKYnlw2FTyKIsgVr3cU0lS5pZd4rp5luSTz2Bn5JGMoVcZwDoLQTsc8UAJcNlngYiBSOW2fWmtjE=
+	t=1756817888; cv=none; b=Ur5QRgya2tIFOHB+n6NNQsnnVtNz7+G1uZ50mt7UPyTJRyDXlN3DWzP8klJUhxsbur8NVeA3qL3YnkjdrNDsVfcZLLbOCLWUCBJ3to0J6cBXTG97dv1Swz8OYm8g43+OFzd2J1DZnHFQn2bCj0Uz1irFrI8b7gZXlf4axto10Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756801855; c=relaxed/simple;
-	bh=J0FOKw18bQqiZndUX3/kl4FB3MnJG3tsw14gKEkqYrM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Ys5R8uM9az7JwkszMnYH+NOBI8+FAQp6P3rmgxw29GwAlfBwBzzh9mImz8JfoiNsYAjI1DGt+LLmxnYSBGtp+eXkAuMXR6Fzbbo3VZqmi/MMufa5Ifnn+OYGj3Q2eO2pWTiolJEmJyn2yBNV6R5Zddyq9A/DUoroA6iZ7Tz3Ig0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VyuYdJf3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756801852;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wBDSSqe7FlRUs9+SC96WEURGCZ4RIAlgXMeG6XQaDTc=;
-	b=VyuYdJf3zuSpTCdlfAlfJmuosNHlfjAklAO4KzhwFDML8bhjESsD+fHyG0NvL4XYj8MIAA
-	iZzwYi/i+FTDwf8a19HbpzExQQqbjze3MKCRSkBYvzpuZI7QcMPFH9/xN0e0YFAcAWd2Qj
-	De4hAo5KTvw26geL+iPtxXXX9JhlSyk=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-320-IqQxkQpmNkSCf-6btZm7YA-1; Tue, 02 Sep 2025 04:30:51 -0400
-X-MC-Unique: IqQxkQpmNkSCf-6btZm7YA-1
-X-Mimecast-MFC-AGG-ID: IqQxkQpmNkSCf-6btZm7YA_1756801850
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-45b986a7b8aso3281405e9.0
-        for <linux-hyperv@vger.kernel.org>; Tue, 02 Sep 2025 01:30:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756801850; x=1757406650;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wBDSSqe7FlRUs9+SC96WEURGCZ4RIAlgXMeG6XQaDTc=;
-        b=OrWEgHNNTLruMlfIHq+67C7YqHWALmow2gllksRlI1FCjvP7s305p/hcYiFz3n9sS/
-         bXRhkrtEkquGz+gTvBKdGhFLWGDfTs9k+SXn0T1NhtLWJwc8hQPOIyzTGmtZZ8PvwQXn
-         c/G3N/9C/Z2PdRjungg7xfm6vVGcKlPdGVIXUVrgfvR6FRXqYO3vP5lNq0tWBXrq/rPk
-         Y7Kp9falID7C4RU3g7q7junbik7C5ERIa+F4SFvxQ0gebtb1oybT37TmRJpBO6w4LF1f
-         NzY2rRRNZsqSw/kAaO9Rz3jbqmIVmGsvDcK6NYgJw1NG3gD+60WQ/dXWznCF37LZrB8a
-         Uo5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWTmCsFbzwZm8nDS9vZ9mfzinGPbjHs0/PY6PEQnyHmbrufsI51RSgEozuLvr2fBOSQJKH5c6DwBQVKujE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5/vNGZdm+ItaVEcxuQSMHBG/jxeWXXiUfZGcaZ32oNJzmFt54
-	112Uk0jwjeQ2duLL6OKcdSumAwcDD3q3AQq6LEsrqbwYimkQlr+duCSidHqwWVTzopHi5F9rbQe
-	gey1huIM9tQJtINDLnWiNZF4F5lYfyhw5WQmtDwqyqiRLP/PLn5aQxYdzj4X0BC2U+Q==
-X-Gm-Gg: ASbGnct7rl8tw7LbEmVciTTuDS7UQICx24+bhceYMgyViLsYIV94vYX5tMpjHXdzaxx
-	n2TpQRNigi8jJcYSJ7pwapb9by/HLWJYkI8DC9oTJiGnNWY4tECUlIlwiWZobPrHxBrag0+KVZW
-	w+tVrojP1ZxhOgx5n5Og0lWLsRBgbblan1TyC17w6hZK2POjdv21OvEy6No4S2xbBDGdAy5lnth
-	DRtULcDca1f35Z9TIb+4P6iZRvsQf1xSzz7VuLIsrmFRk+wNGqUN3AAP26HxeK0SlP60ej82k5a
-	GHHxXrbx+AVDotr2AeWXEA1IfIV49LMY06BLnMDuzaZw8AZdXgJoGGYNlfoGTd3krQ==
-X-Received: by 2002:a05:600c:3546:b0:459:dc99:51bf with SMTP id 5b1f17b1804b1-45b8557b680mr79201925e9.25.1756801850432;
-        Tue, 02 Sep 2025 01:30:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGWmHoeM9KLNr4xLRGpC+I67NSwblsrUmvfFZ3jbasJi4/F9OPw9jkHBjQ2+LXy77Bbp1fslA==
-X-Received: by 2002:a05:600c:3546:b0:459:dc99:51bf with SMTP id 5b1f17b1804b1-45b8557b680mr79201735e9.25.1756801850013;
-        Tue, 02 Sep 2025 01:30:50 -0700 (PDT)
-Received: from localhost ([89.128.88.54])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b7e68c83asm200349405e9.20.2025.09.02.01.30.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Sep 2025 01:30:49 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, louis.chauvet@bootlin.com,
- drawat.floss@gmail.com, hamohammed.sa@gmail.com, melissa.srw@gmail.com,
- mhklinux@outlook.com, simona@ffwll.ch, airlied@gmail.com,
- maarten.lankhorst@linux.intel.com
-Cc: dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org, Thomas
- Zimmermann <tzimmermann@suse.de>
-Subject: Re: [PATCH v2 4/4] drm/hypervdrm: Use vblank timer
-In-Reply-To: <20250901111241.233875-5-tzimmermann@suse.de>
-References: <20250901111241.233875-1-tzimmermann@suse.de>
- <20250901111241.233875-5-tzimmermann@suse.de>
-Date: Tue, 02 Sep 2025 10:30:48 +0200
-Message-ID: <87a53dfe87.fsf@minerva.mail-host-address-is-not-set>
+	s=arc-20240116; t=1756817888; c=relaxed/simple;
+	bh=+lYQafkhHhH+V0WorZbFS9XcGrd+knfZejKZtzWgPM8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h4F0T4KGMC8/N+nL//suA7mb8QJbarZGpzt07PDl0mXkr5Mde/YI6D02Q/AcIrECbsksEiXLXqR3MlosI7d1EcvlZQoz4R5c1MtwXy+FPeD9tj5RxOVyg4ShidbymOHGfEd83ZatKg4y0mq7N6JRtL3WN8qsbihDJcDnUvo0X7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xn9DO4es; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1yNU2dBs; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YDEJbZcp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7bZhpkgN; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D0DB31F38A;
+	Tue,  2 Sep 2025 12:58:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1756817885; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=27gbnPp/6osghY/uJgUFibUP56mTYE1hActgxKY+rew=;
+	b=xn9DO4esSXnTBejL21D2HiS0XbKwlfwls6rn75RRblRR3uL09VeSl8lEvYuEmvnM8iLzFQ
+	LjBp0I/uvSNVpVTXx+vEEyr2ztDex3r70LamLLajC8plovfLKXU5zEElo+/Fk0zrPXaFkq
+	e9xMeOFPkXqCqOPJDUGYNF4jG4mZ+2w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1756817885;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=27gbnPp/6osghY/uJgUFibUP56mTYE1hActgxKY+rew=;
+	b=1yNU2dBsUjENvd9rDV8ljkWiytSJXKfy/jig9udgbBkDD9Y7UKvC+A9A3b0VOPpP7LnBjB
+	dbWel2yDCq/ECkCQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1756817884; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=27gbnPp/6osghY/uJgUFibUP56mTYE1hActgxKY+rew=;
+	b=YDEJbZcp364Psa5M2RaJsAvUQilmRFOboi3O0bxShuf0hSG9Uc0xmaBaPLYjGoLB4YCHDn
+	T+12AsYSFh1igLm/3x7LWv9UJbYpKfx9n3fC640UbdlJRDj/hMixv4tqpFkFRP7WicojaL
+	UCamPcInX5QtiNC9iFYy39NdMmqXU5Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1756817884;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=27gbnPp/6osghY/uJgUFibUP56mTYE1hActgxKY+rew=;
+	b=7bZhpkgN084ig1UkHSjFwkGyZLD3z53pvK6fRaMqYjU5AscMdXJ8o671iEsPEL4W9qD7bf
+	sw/TjDS1IcY3wbDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BD37413888;
+	Tue,  2 Sep 2025 12:58:03 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id q23ILNvptmjRUQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 02 Sep 2025 12:58:03 +0000
+Message-ID: <5cd7f22d-e39a-4d37-8286-0194d6c9a818@suse.de>
+Date: Tue, 2 Sep 2025 14:58:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/4] drm/hypervdrm: Use vblank timer
+To: Javier Martinez Canillas <javierm@redhat.com>, louis.chauvet@bootlin.com,
+ drawat.floss@gmail.com, hamohammed.sa@gmail.com, melissa.srw@gmail.com,
+ mhklinux@outlook.com, simona@ffwll.ch, airlied@gmail.com,
+ maarten.lankhorst@linux.intel.com
+Cc: dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org
+References: <20250901111241.233875-1-tzimmermann@suse.de>
+ <20250901111241.233875-5-tzimmermann@suse.de>
+ <87a53dfe87.fsf@minerva.mail-host-address-is-not-set>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <87a53dfe87.fsf@minerva.mail-host-address-is-not-set>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[redhat.com,bootlin.com,gmail.com,outlook.com,ffwll.ch,linux.intel.com];
+	TAGGED_RCPT(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,outlook.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	URIBL_BLOCKED(0.00)[suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Spam-Score: -2.80
 
-Thomas Zimmermann <tzimmermann@suse.de> writes:
+Hi
 
-> HyperV's virtual hardware does not provide vblank interrupts. Use a
-> vblank timer to simulate the interrupt. Rate-limits the display's
-> update frequency to the display-mode settings. Avoids excessive CPU
-> overhead with compositors that do not rate-limit their output.
+Am 02.09.25 um 10:30 schrieb Javier Martinez Canillas:
+> Thomas Zimmermann <tzimmermann@suse.de> writes:
 >
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> ---
+>> HyperV's virtual hardware does not provide vblank interrupts. Use a
+>> vblank timer to simulate the interrupt. Rate-limits the display's
+>> update frequency to the display-mode settings. Avoids excessive CPU
+>> overhead with compositors that do not rate-limit their output.
+>>
+>> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+>> ---
+> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+>
+> [...]
+>
+>>   
+>> @@ -111,11 +113,15 @@ static void hyperv_crtc_helper_atomic_enable(struct drm_crtc *crtc,
+>>   				crtc_state->mode.hdisplay,
+>>   				crtc_state->mode.vdisplay,
+>>   				plane_state->fb->pitches[0]);
+>> +
+>> +	drm_crtc_vblank_on(crtc);
+>>   }
+>>   
+>>   static const struct drm_crtc_helper_funcs hyperv_crtc_helper_funcs = {
+>>   	.atomic_check = drm_crtc_helper_atomic_check,
+>> +	.atomic_flush = drm_crtc_vblank_atomic_flush,
+>>   	.atomic_enable = hyperv_crtc_helper_atomic_enable,
+>> +	.atomic_disable = drm_crtc_vblank_atomic_disable,
+>>   };
+>>   
+> I think your patch is correct due the driver not having an .atomic_disable
+> callback. But looking at the driver, I see that its .atomic_enable does:
+>
+> static void hyperv_crtc_helper_atomic_enable(struct drm_crtc *crtc,
+>                                               struct drm_atomic_state *state)
+> {
+> ...
+>          hyperv_update_situation(hv->hdev, 1,  hv->screen_depth,
+>                                  crtc_state->mode.hdisplay,
+>                                  crtc_state->mode.vdisplay,
+>                                  plane_state->fb->pitches[0]);
+> }
+>
+> and this function in turn does:
+>
+> int hyperv_update_situation(struct hv_device *hdev, u8 active, u32 bpp,
+>                              u32 w, u32 h, u32 pitch)
+> {
+> ...
+>          msg.situ.video_output[0].active = active;
+> ...
+> }
+>
+> So I wonder if it should instead have a custom .atomic_disable that calls:
+>
+>          hyperv_update_situation(hv->hdev, 0,  hv->screen_depth,
+>                                  crtc_state->mode.hdisplay,
+>                                  crtc_state->mode.vdisplay,
+>                                  plane_state->fb->pitches[0]);
+>
+> I'm not familiar with hyperv to know whether is a problem or not for the
+> host to not be notified that the guest display is disabled. But I thought
+> that should raise this question for the folks familiar with it.
 
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+The feedback I got at 
+https://lore.kernel.org/dri-devel/SN6PR02MB4157F630284939E084486AFED46FA@SN6PR02MB4157.namprd02.prod.outlook.com/ 
+is that the vblank timer solves the problem of excessive CPU consumption 
+on hypervdrm. Ans that's also the observation I had with other drivers. 
+I guess, telling the host about the disabled display would still make sense.
 
-[...]
+Best regards
+Thomas
 
->  
-> @@ -111,11 +113,15 @@ static void hyperv_crtc_helper_atomic_enable(struct drm_crtc *crtc,
->  				crtc_state->mode.hdisplay,
->  				crtc_state->mode.vdisplay,
->  				plane_state->fb->pitches[0]);
-> +
-> +	drm_crtc_vblank_on(crtc);
->  }
->  
->  static const struct drm_crtc_helper_funcs hyperv_crtc_helper_funcs = {
->  	.atomic_check = drm_crtc_helper_atomic_check,
-> +	.atomic_flush = drm_crtc_vblank_atomic_flush,
->  	.atomic_enable = hyperv_crtc_helper_atomic_enable,
-> +	.atomic_disable = drm_crtc_vblank_atomic_disable,
->  };
->  
 
-I think your patch is correct due the driver not having an .atomic_disable
-callback. But looking at the driver, I see that its .atomic_enable does:
-
-static void hyperv_crtc_helper_atomic_enable(struct drm_crtc *crtc,
-                                             struct drm_atomic_state *state)
-{
-...
-        hyperv_update_situation(hv->hdev, 1,  hv->screen_depth,
-                                crtc_state->mode.hdisplay,
-                                crtc_state->mode.vdisplay,
-                                plane_state->fb->pitches[0]);
-}
-
-and this function in turn does:
-
-int hyperv_update_situation(struct hv_device *hdev, u8 active, u32 bpp,
-                            u32 w, u32 h, u32 pitch)
-{
-...
-        msg.situ.video_output[0].active = active;
-...
-}
-
-So I wonder if it should instead have a custom .atomic_disable that calls:
-
-        hyperv_update_situation(hv->hdev, 0,  hv->screen_depth,
-                                crtc_state->mode.hdisplay,
-                                crtc_state->mode.vdisplay,
-                                plane_state->fb->pitches[0]);
-
-I'm not familiar with hyperv to know whether is a problem or not for the
-host to not be notified that the guest display is disabled. But I thought
-that should raise this question for the folks familiar with it.
+>
 
 -- 
-Best regards,
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
-Javier Martinez Canillas
-Core Platforms
-Red Hat
 
 
