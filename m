@@ -1,91 +1,105 @@
-Return-Path: <linux-hyperv+bounces-6712-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6713-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA2EFB42A13
-	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Sep 2025 21:40:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24D86B42F62
+	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Sep 2025 04:10:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A80E6189AE0A
-	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Sep 2025 19:40:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CFCA76816F8
+	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Sep 2025 02:10:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BA7B350D76;
-	Wed,  3 Sep 2025 19:40:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A89B91F4165;
+	Thu,  4 Sep 2025 02:10:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sWBpejXA"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="duW23UpP"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C82C32C18A;
-	Wed,  3 Sep 2025 19:40:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B1D41F1518;
+	Thu,  4 Sep 2025 02:10:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756928431; cv=none; b=Jg5ubISKPyigEuq16HdvpUh0MQoZpmiUkc5nWvW01qeYHpPk6aJbpblv+BbY27OisoePRNi/+iErxpLoExLlP9V2+1hth2EdisD+wnVMsmNnscrZA8CW2/dgGzurSwP1huAnCqGBP1JfR7nWxYxnTjnsZtezOl6aG5dbxJrGdMY=
+	t=1756951831; cv=none; b=Gh4JpBsozQtTO3s+Iaa7WKbt6KUU2uKEEhZu0QXPcnZlOCtXi8cUCai7h3BvjfvoFsT4jgYZhAq0nMN4M/9Gy0Z0oNBdp6zJ0bUsDcwjBJyN1hHm4/YpgdcBb2Cp9WgPmioXpGCx/sHejIu/GHt8P9Fa50EIYG+SdkRRLbNUTGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756928431; c=relaxed/simple;
-	bh=JI8xjUkMGnccCXbWE68z49u8YEKBr4YpkrEV/CM4qEQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ncseaXLPdmyUucvfC3Kf6DSxptRQBJ0+uBzpSDiTd8VWOe3Ts5yM7xRimTjQ8wvPilcfm8LXGXWkqrKaTzCxs8Zf9iXAV1MxAWt+cj+K2K3m0W7tlEjz2wr3s/LnBF4OrpGX0YNgYxjtp2VpxQyZXxc/lAbM+2FBvCyH4yxXCeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sWBpejXA; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1756951831; c=relaxed/simple;
+	bh=A1mI0PqBDIPsJ1EVPTvicJP1aRklXS/m32f+z00pF8c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=duQ8vkp7lV6pJPOvzPVS0Kyed7YDNzkbkn2Zg4FIca6/GidDjL9ZaILcuxg49RzJtpLf7fLev3bx01jGM+PQVCMB24FOpMAi09YR/z0mYWoh8zYPdJZUdXeuvsvVVyQf5Ed7976Fw2LJ9ORLWOctjw1VNO2SPbxg/yPpCh6FuzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=duW23UpP; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.65.128.180] (unknown [20.236.11.102])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 191FF21199D0;
-	Wed,  3 Sep 2025 12:40:28 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 191FF21199D0
+Received: from mrdev.corp.microsoft.com (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D1A062119CAA;
+	Wed,  3 Sep 2025 19:10:23 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D1A062119CAA
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1756928428;
-	bh=wTcgDjQ5eMFf/i1ar6oTU5YNVSoLPTIxypfGHzB4Sfw=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=sWBpejXAdfGKvgRmnUTzAZBTUm1dUVwlWUqJxZrJ1tgRUcnjOTl46TD8kUEhGpdtv
-	 Gw+hc1vdpNNdeGJUj9og7ibIOeyFmBDWZQ/fklMrlehyn6NFHt+xgumaL1HlJowAOg
-	 SAOztUw4YS0rKLTP+jy3A9ndUywaKpiQqkVmkrcc=
-Message-ID: <0105fb29-1d42-49cb-8146-d2dfcb600843@linux.microsoft.com>
-Date: Wed, 3 Sep 2025 12:40:27 -0700
+	s=default; t=1756951824;
+	bh=yxzYgFdF3NlcyOieH00YVZTotbWxn7dVvsILo5XM2kk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=duW23UpPu13lfqXeurMt3CHj4NXcLzNELE+llwswEuNI0NwgEzRE2u2KPg6ljdT6v
+	 ESW8tBkN/LOjG9Wm4aD+4NZPxtR9eIHYM+O3lKoSKS/n/+P9Sa3BDZJ3v1djM87Fbu
+	 fHj0vcqKSZITwvzHg+vGbmPAU2Ub+PbjBq9Fu1pg=
+From: Mukesh Rathor <mrathor@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org
+Cc: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	arnd@arndb.de
+Subject: [PATCH v0 0/6] Hyper-V: Implement hypervisor core collection
+Date: Wed,  3 Sep 2025 19:10:11 -0700
+Message-Id: <20250904021017.1628993-1-mrathor@linux.microsoft.com>
+X-Mailer: git-send-email 2.36.1.vfs.0.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] x86/hyperv: Switch to
- msi_create_parent_irq_domain()
-To: Nam Cao <namcao@linutronix.de>, "K . Y . Srinivasan" <kys@microsoft.com>,
- Marc Zyngier <maz@kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>,
- Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1752868165.git.namcao@linutronix.de>
- <45df1cc0088057cbf60cb84d8e9f9ff09f12f670.1752868165.git.namcao@linutronix.de>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <45df1cc0088057cbf60cb84d8e9f9ff09f12f670.1752868165.git.namcao@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 7/18/2025 12:57 PM, Nam Cao wrote:
-> Move away from the legacy MSI domain setup, switch to use
-> msi_create_parent_irq_domain().
-> 
-> While doing the conversion, I noticed that hv_irq_compose_msi_msg() is
-> doing more than it is supposed to (composing message content). The
-> interrupt allocation bits should be moved into hv_msi_domain_alloc().
-> However, I have no hardware to test this change, therefore I leave a TODO
-> note.
-> 
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> ---
->  arch/x86/hyperv/irqdomain.c | 111 ++++++++++++++++++++++++------------
->  drivers/hv/Kconfig          |   1 +
->  2 files changed, 77 insertions(+), 35 deletions(-)
+This patch series implements hypervisor core collection when running
+under linux as root (aka dom0). By default initial hypervisor ram is
+already mapped into linux as reserved. Further any ram deposited comes
+from linux direct map. The hypervisor locks all that ram to protect
+it from dom0 or any other domains. At a high level, the methodology
+involes devirtualizing the system on the fly upon either linux crash
+or the hypervisor crash, then collecting ram as usual. This means 
+hypervisor ram is automatically collected into the vmcore. 
 
-Tested on nested root partition.
+Hypervisor pages are then accessible via crash command (using raw mem 
+dump) or windbg which has the ability to read hypervisor symbol pdb
+file.
 
-Looks good, thanks.
+Mukesh Rathor (6):
+  x86/hyperv: Rename guest shutdown functions
+  Hyper-V: Add two new hypercall numbers to guest ABI public header
+  Hyper-V: Add definitions for hypervisor crash dump support
+  x86/hyperv: Add trampoline asm code to transition from hypervisor
+  x86/hyperv: Implement hypervisor ram collection into vmcore
+  Hyper-V: Enable build of hypervisor crash collection files
 
-Tested-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+ arch/x86/hyperv/Makefile        |   6 +
+ arch/x86/hyperv/hv_crash.c      | 618 ++++++++++++++++++++++++++++++++
+ arch/x86/hyperv/hv_init.c       |   2 +
+ arch/x86/hyperv/hv_trampoline.S |  99 +++++
+ arch/x86/kernel/cpu/mshyperv.c  |   5 +-
+ include/asm-generic/mshyperv.h  |   9 +
+ include/hyperv/hvgdk_mini.h     |   2 +
+ include/hyperv/hvhdk_mini.h     |  55 +++
+ 8 files changed, 794 insertions(+), 2 deletions(-)
+ create mode 100644 arch/x86/hyperv/hv_crash.c
+ create mode 100644 arch/x86/hyperv/hv_trampoline.S
+
+-- 
+2.36.1.vfs.0.0
+
 
