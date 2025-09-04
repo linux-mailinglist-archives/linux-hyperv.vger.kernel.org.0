@@ -1,106 +1,68 @@
-Return-Path: <linux-hyperv+bounces-6731-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6732-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DE35B443B8
-	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Sep 2025 18:58:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A86DB443CE
+	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Sep 2025 19:01:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F1FC1166594
-	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Sep 2025 16:58:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 36197487300
+	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Sep 2025 17:01:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED7EE2F5301;
-	Thu,  4 Sep 2025 16:57:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D43B81F91C7;
+	Thu,  4 Sep 2025 17:01:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZmGmDhYC"
+	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="BnuzWZfL"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BAC022B5A5;
-	Thu,  4 Sep 2025 16:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757005078; cv=none; b=CPGXoEViShmoPOVV3cfGdcIYSvaqExizehlpEupxzrrtYFgbN+WFP55LPW6+s3XkGD7yxKrGF4jsNCBs+V9u+sa8SFYTbqQn0h+K88GrwT0HmwKCKGCJK1oPaCNL9yNYnKsoi/PQcfhxZC95eaSrnR8/MMs1DxM36YUW/Rx4PKs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757005078; c=relaxed/simple;
-	bh=ouXa+buHgPojnDxUmIhZfwT7/tCXbaUJ9leCQVUxMrI=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8096322DFA7;
+	Thu,  4 Sep 2025 17:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757005266; cv=pass; b=D9kN7NDwPTF0ieCHettnin0QDtqrJNJDw9LddpHh/lZTwOsCvpoZx5WFH+/PubSVub24QT8qbJdvgKONsYWABsBU78gKSdBmF0zhc1Bwu0vdABQpBG04Ioc6cYlgD3ThHBHSQjSepvZRErJNHHFjEZFaw4pUcOS1sS0GChK5Wfo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757005266; c=relaxed/simple;
+	bh=V9n/QHN0W9ztS+8N+XUBp9EilvBCpifv7wr7DWe71TM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c88DuJf+218spyX5SfHnWv0VZbldPCkmQMioTmV4xN6Mi774Uo3CYZu3hLVEefMtypFjyuIrQGPGAmJgSRjYY1/qh2nKm3Epyu35snIOS2qu5+/+tM1wP19fuBg64wAzZGswYI9/vrBbJWa92W4nUIBbccO6oEZOCgSDzs4A+M8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZmGmDhYC; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e970e624b7cso2084853276.0;
-        Thu, 04 Sep 2025 09:57:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757005076; x=1757609876; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=irrrx3eJCz7Erx4j7m6TJA4T3jMD95DmIwByWZVQujs=;
-        b=ZmGmDhYC4FKKr34aUZ3gxlg8KV9ki8YenSQeulzGVo31iX1JmFidpHNHKOCRVJ0RRi
-         yT3Y/a/swAECjztVN9lFVO2Mw/gguic1widcd02YKwftXE10zxg61a7SKAHk53fKxSmh
-         r5Wj3aIzaqdImT+0KDnCbS9LYwQ8j7OxWrBLWTEc2TkOOaWyhyz3XK++MbKcfOukKWQ+
-         hEJ6p5O4ir49lc3mzLhelgUl6QAqjerAzCFdKR8CF0DZM8OufhVN7syFFKrmJgm4SfLw
-         rYdzHdf8+x2sMThBEMSocycJSXkWs6iTkE0ORmm50HtxGdsCIDZSPcK62Qa4bCzG//bN
-         sBYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757005076; x=1757609876;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=irrrx3eJCz7Erx4j7m6TJA4T3jMD95DmIwByWZVQujs=;
-        b=nOKY4q2kC5LO74KNVqUhfz8WRIOqqBjl1Q/xSlkxUsPyTBo+yQzKiCiRMoKx7Zrz5y
-         QWKkyiPiItJSKhGlsOrr6CM0Tqbu8Fgk+sEDb8191L90uanYoOp17ZeGNQP5qCTLmoCV
-         xoiFmSr6hDFFx7jdYmeif+DNR1u49nPzt5awKtBYHe3Vbfpe1gV7y+Suset7gXA+ezvj
-         iKx+9SHlatV5FE8an6i9brFdzqcsZrOsOy5dEbwdGgaouYY5HuHsLEu3zT/hGG1JZMeN
-         XurPzDNv4pjJtkEkQKsOS0/P/z2YQQlH5ywRGeApIQnQ/mseeX3Go5g+NLRDOr7CDM4M
-         jNfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU6TXwY2g+LIr/aAlSKALyPPV6jz//4maa6/j4RMIV/EoAVLcvgAhBCIfpCGzn0+F6Lh1AgD3yBQ2E0CYK/@vger.kernel.org, AJvYcCUXRtkdnip4BBkMrmakC9IFTHd1sVMOTWCSrMg6GQg9WuwV+c+3azYd9pNgOiOWA3drCe17Sumt@vger.kernel.org, AJvYcCUrZn9iG2PkHDEzKp+ncaXmHFqkzPg1vue7Io/NnGt4vpIJ9Wfo4k2lE/4gZbrQhg8GfBu6k34A38dCPN2oxEZZ@vger.kernel.org, AJvYcCVmMhOrSHuRGgorNbHjWGbW9MyddwxPw/swNmumewZzyetFKishP/Lpm+tksyyfkp1hAcE=@vger.kernel.org, AJvYcCWCG9hbqiQkfYIUmLRsNVrWKqag20xciHU/E4qtPeI3BPNhYEKfbEeAaY7VzbYlJ77Cr0mgJZ2LVHP2IC/+@vger.kernel.org
-X-Gm-Message-State: AOJu0YyADlrqTt/VlwTIwSAM+w3s0kM4IegRMbfvlfprzPJSX465KKWq
-	Gdtv32q64U5NBzRtZ5tpRXRqSwIzroQIBK43AF6dI9wulpQb1NyzMVDM
-X-Gm-Gg: ASbGncuCKWGrKoiAWBLZVCBHfG8s6u/e7CpfkcgWArVOg7lE2cBdbEKpvG9JFVz8mAZ
-	5Djieciur6eG/5jAy3DVSmWi9q2RBO6DpRIyZn52Ml1a9/JJ639XUu2TBOhcxQzNuLjKQ2Iftm7
-	TIHqkBtgV8AiG7VtQDd7P0y0yY6XzUvhp2MPQ5zOOHe8I+BhdQJD0ak6MK3/P/mAeZDMt/ykoSU
-	pMJwNUEZ4Xw5qnkd5PKw8SKHzIgG5rG46h64Bqvnevkm5lUQaQVTYaY0gRZIK0pxS/531hU3FxF
-	UEOqtdNgQtf6rIN9aRPotLWRH8EwLYV6ySeLuhJzMOtzCi+CdFc+6jOlssKoE2PEH2txQMo/STU
-	XuLFOvjga5MKsbOpty7pe5XnmwI7U52x/2kiFW2xwI857ruE=
-X-Google-Smtp-Source: AGHT+IH84tU1qbIF/86A4dwkWsNLS9E7ptPPrXXDoSkNZ0JGyACTTGW1vQFLOTahp7MDXGWvzB7z0w==
-X-Received: by 2002:a53:bac6:0:b0:5f3:317e:40c9 with SMTP id 956f58d0204a3-60b699833femr293555d50.17.1757005075778;
-        Thu, 04 Sep 2025 09:57:55 -0700 (PDT)
-Received: from devvm11784.nha0.facebook.com ([2a03:2880:25ff:73::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-723a8503294sm22857357b3.42.2025.09.04.09.57.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Sep 2025 09:57:54 -0700 (PDT)
-Date: Thu, 4 Sep 2025 09:57:53 -0700
-From: Bobby Eshleman <bobbyeshleman@gmail.com>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Shuah Khan <shuah@kernel.org>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	berrange@redhat.com, Bobby Eshleman <bobbyeshleman@meta.com>
-Subject: Re: [PATCH net-next v5 4/9] vsock/loopback: add netns support
-Message-ID: <aLnFESZSETzh/jMh@devvm11784.nha0.facebook.com>
-References: <20250827-vsock-vmtest-v5-0-0ba580bede5b@meta.com>
- <20250827-vsock-vmtest-v5-4-0ba580bede5b@meta.com>
- <mhjgn7fdztfqi6ku3gesgd42jj5atn4sqnvpyncw2jds23dpc3@iiupljayjxs4>
- <aLcy4Kk0joVPbxkd@devvm6216.cco0.facebook.com>
- <yuumxtgizcrkn4uspczro76p6u2dqvra5otqkrb57bi2se2lpx@zg4f4rtix7hb>
+	 Content-Type:Content-Disposition:In-Reply-To; b=V1ME/CbB8Eq1jFxKJQdxo15M0p2OLuVrycIFlvPrd6An9bnU/qcj2dO7j00c1Tqrfs+TN7XnMZCZ8T9EcKIbXzoMrUtKIrc+9lWIXf31WSXNLlYURvGkOiRzKatScD4yO8Ao+4K+62XidERXrVFJ3d0/iKQTvqlqim+r/AZ+798=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=BnuzWZfL; arc=pass smtp.client-ip=136.143.188.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
+ARC-Seal: i=1; a=rsa-sha256; t=1757005249; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=DWGLQq7eZb3SiSz0Qj3nvUj1c11o8rCtSLJYQpjgRuo0zvVfNsCzqzb04A+QxHR9wvOw+LmJwZXetPg/2kpHPthiH7PMr8I6RCdI6+r/Xjx7NZaGMza38Afs9LaiCKKrfSp4tf+UUlbCqhtJ3ZLplSjwuMSe0R/oOHT+iToARF0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1757005249; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Extfhguhi+MezMzEvb+E7LMw0/GYh3iGoM/RRDv0Pqw=; 
+	b=DizWFRBstfRTqun/4F+8Nnfq6ijLRUuJTWuG+XZqJJ+HMWbSL0Bm7brEw+7LSGYWhj+75aFUsJ3kRMrmUe4UEAOSiwovpIG9EL4FSxFjh/Xi86Mly2IVnSDvfS+pvz+unDX0yb8RKK5ueBBHDOXhRUQx9Kkr20H8uhFxBawPCwY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=anirudhrb.com;
+	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
+	dmarc=pass header.from=<anirudh@anirudhrb.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1757005249;
+	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=Extfhguhi+MezMzEvb+E7LMw0/GYh3iGoM/RRDv0Pqw=;
+	b=BnuzWZfLmhem7+dZkUcUocRHRlUGx1gevuAWRIii+GKT6xlSETBvwi0hFaIt46qV
+	vFCY9lRGxt+kEcGQWg4VW9LQV/nC+nz/Mx3NF72A52Dc/oMkoSI4xn6dqXlRCwpBNOo
+	D/SR4n9U1f5CeRW+qQWs1Co4SZUHgkIB4rbVLXNc=
+Received: by mx.zohomail.com with SMTPS id 1757005245827562.2744728676952;
+	Thu, 4 Sep 2025 10:00:45 -0700 (PDT)
+Date: Thu, 4 Sep 2025 17:00:39 +0000
+From: Anirudh Rayabharam <anirudh@anirudhrb.com>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	mhklinux@outlook.com, decui@microsoft.com,
+	paekkaladevi@linux.microsoft.com
+Subject: Re: [PATCH 1/6] mshv: Only map vp->vp_stats_pages if on root
+ scheduler
+Message-ID: <aLnFt6snPe-9uU4I@anirudh-surface.localdomain>
+References: <1756428230-3599-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1756428230-3599-2-git-send-email-nunodasneves@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -109,37 +71,68 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <yuumxtgizcrkn4uspczro76p6u2dqvra5otqkrb57bi2se2lpx@zg4f4rtix7hb>
+In-Reply-To: <1756428230-3599-2-git-send-email-nunodasneves@linux.microsoft.com>
+X-ZohoMailClient: External
 
-On Wed, Sep 03, 2025 at 05:10:31PM +0200, Stefano Garzarella wrote:
-> On Tue, Sep 02, 2025 at 11:09:36AM -0700, Bobby Eshleman wrote:
-> > On Tue, Sep 02, 2025 at 05:39:33PM +0200, Stefano Garzarella wrote:
-> > > On Wed, Aug 27, 2025 at 05:31:32PM -0700, Bobby Eshleman wrote:
-> > > > From: Bobby Eshleman <bobbyeshleman@meta.com>
-> > > >
-> > > 
-
-[...]
-
-> > 
-> > I could be wrong here, but I think net->vsock.loopback being set before
-> > vsock_core_register() prevents racing with net->vsock.loopback reads. We
-> > could add a lock to make sure and to make the protection explicit
-> > though.
+On Thu, Aug 28, 2025 at 05:43:45PM -0700, Nuno Das Neves wrote:
+> This mapping is only used for checking if the dispatch thread is
+> blocked. This is only relevant for the root scheduler, so check the
+> scheduler type to determine whether to map/unmap these pages, instead of
+> the current check, which is incorrect.
 > 
-> I see, talkink about vsock_core_register(), I was thinking about,
-> extending it, maybe passing a struct with all parameters (e.g. transport
-> type, net callbacks, etc.). In this way we can easily check if the type
-> of transport is allowed to register net callbacks or not.
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> ---
+>  drivers/hv/mshv_root_main.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
 > 
-> Also because currently we don't do any check in
-> __vsock_register_net_callbacks() about transport type or even about
-> overriding calls.
+> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> index e4ee9beddaf5..bbdefe8a2e9c 100644
+> --- a/drivers/hv/mshv_root_main.c
+> +++ b/drivers/hv/mshv_root_main.c
+> @@ -987,7 +987,11 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
+>  			goto unmap_register_page;
+>  	}
+>  
+> -	if (hv_parent_partition()) {
+> +	/*
+> +	 * This mapping of the stats page is for detecting if dispatch thread
+> +	 * is blocked - only relevant for root scheduler
+> +	 */
+> +	if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT) {
+>  		ret = mshv_vp_stats_map(partition->pt_id, args.vp_index,
+>  					stats_pages);
+>  		if (ret)
+> @@ -1016,7 +1020,7 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
+>  	if (mshv_partition_encrypted(partition) && is_ghcb_mapping_available())
+>  		vp->vp_ghcb_page = page_to_virt(ghcb_page);
+>  
+> -	if (hv_parent_partition())
+> +	if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
+>  		memcpy(vp->vp_stats_pages, stats_pages, sizeof(stats_pages));
+>  
+>  	/*
+> @@ -1039,7 +1043,7 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
+>  free_vp:
+>  	kfree(vp);
+>  unmap_stats_pages:
+> -	if (hv_parent_partition())
+> +	if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
+>  		mshv_vp_stats_unmap(partition->pt_id, args.vp_index);
+>  unmap_ghcb_page:
+>  	if (mshv_partition_encrypted(partition) && is_ghcb_mapping_available()) {
+> @@ -1793,7 +1797,7 @@ static void destroy_partition(struct mshv_partition *partition)
+>  			if (!vp)
+>  				continue;
+>  
+> -			if (hv_parent_partition())
+> +			if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
+>  				mshv_vp_stats_unmap(partition->pt_id, vp->vp_index);
+>  
+>  			if (vp->vp_register_page) {
+> -- 
+> 2.34.1
 > 
 
-That makes a lot of sense. I'll make that change if pernet_operations
-doesn't solve the probelem.
+Reviewed-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
 
-Best,
-Bobby
 
