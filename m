@@ -1,106 +1,305 @@
-Return-Path: <linux-hyperv+bounces-6742-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6743-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D9CEB44A99
-	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Sep 2025 01:57:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92FC8B44BA9
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Sep 2025 04:39:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 268E41C8545A
-	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Sep 2025 23:58:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 286915882B8
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Sep 2025 02:39:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A0FF2ED166;
-	Thu,  4 Sep 2025 23:57:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 535211F4177;
+	Fri,  5 Sep 2025 02:39:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oon6Ebtf"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VnwYnD3l"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469572ECD14;
-	Thu,  4 Sep 2025 23:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 893A83BB44;
+	Fri,  5 Sep 2025 02:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757030270; cv=none; b=KJuRNntI3kb+VkbI7AvLJICd5kL0dFePPd4pCeFyjo4ZxB9XFdCUTp5kQIywR9Zm7ja0LsW5KJHCL7aRNh0cfp9uZirKr/nQuRT6yuQftt86RJsAyBnfXW3WP4mKJDwCiun5xgYarrQfr7h7wkAA+rGCOPiIrcsMl6lwS1jUoC0=
+	t=1757039943; cv=none; b=KT6xRmeIR8KwC9vXLiOUtMYlpSVjIE5PrvnbGoHDAKXHOPeqQBkzUTQcnLGGffF6KaQiCrbb6V+ZMV91Ir18e0qauUQ978Ma5gJ6M8FunDhwxIhhNT64W5uGXzKE5Ih37yjcTMkCYITvvT6sKpWJXbiX0XOJ7Q7gWouRJihvsso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757030270; c=relaxed/simple;
-	bh=P+DXnz/Q91LWFyoKcdy3SDCmvxkhSnhDsa8wj5qsVZY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HQkeyhuFSXnduXQ0DhuoRqKLBMcgf6swwFsfd9NAA750PQErWRJtS/dAGkJH6J8MlvH3gGq/vhZxJrCAkKHoJm7LsKN8znx0w3IV9cpWE7TYfLal59T6b30jfDIsSQQWdWRw/1Z+O6hcle5YulFU3EO5R/Onow/koEjf0mZa+Qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oon6Ebtf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C758AC4CEF0;
-	Thu,  4 Sep 2025 23:57:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757030270;
-	bh=P+DXnz/Q91LWFyoKcdy3SDCmvxkhSnhDsa8wj5qsVZY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Oon6EbtfSg5qSY14zgUxJd5zQzs174FUC7b/dnL/uHkj41ZpYOn3CYn0eLrmZ0+JS
-	 ac4RN2j7in8rdy5CB8SbU35MFZXvyiG98yf8SD8G1jZ2MKYDdgfvz1/FFIzE7CqOUP
-	 5ow+QW+Bkw9mZ6vkDV+kuZ1toMsDE1puCuEV0b+WCbMyIqqOtLjZ7l6Va1YV5eCSBy
-	 PNaJsPdShMsVI6IPIkYq5MR4xdSx0I4Y/qL3uB8azZi1dTKTA6+TNywtv9EWzaodbv
-	 C7OmdbX0Jibr34cgm7N6ZCeKsnCJBnT6y3XNDMzcMSW55PULoJu96VBY/VXFkDXZzZ
-	 us5nt/mB6syQQ==
-Date: Thu, 4 Sep 2025 23:57:48 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	Nam Cao <namcao@linutronix.de>,
-	"K . Y . Srinivasan" <kys@microsoft.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] x86/hyperv: Switch to
- msi_create_parent_irq_domain()
-Message-ID: <aLonfMzpIF6FZVM5@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-References: <cover.1752868165.git.namcao@linutronix.de>
- <45df1cc0088057cbf60cb84d8e9f9ff09f12f670.1752868165.git.namcao@linutronix.de>
- <0105fb29-1d42-49cb-8146-d2dfcb600843@linux.microsoft.com>
- <87o6rqy1yk.ffs@tglx>
+	s=arc-20240116; t=1757039943; c=relaxed/simple;
+	bh=uQqoBfYMX69NyUQtyME2YZR7qU58/nGSW3VPx7GPavk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qhTKMTnoXxh3QEDlraCX4oQK9u/NTCRouu9m/o8G7SIVYkmxjOxGFXB8s6ZNFnKUcSnpm0biL8ZOo6z30Xjv8WMbAywKgBEYlW+OXZUcYJtgIF5qldeHeB6C3d9kxOYnJNv6ARk454E0n7fvffmlRHTUeGIBUrDtSiT4sYuXU10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=VnwYnD3l; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id E8F1520171A2;
+	Thu,  4 Sep 2025 19:38:53 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E8F1520171A2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1757039934;
+	bh=F1zc6ijrbobXlcolUQdMDXicytniKJ23aitTlQlBf/w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VnwYnD3lS0QetFODdjRSz2zmKUI3t+JXWrKBROIkFeRdjJIZLukEO/1+r7TsdVMXE
+	 DF09Ka6/s5mgsTwN0pgeJrgwncM4tUHrdeL0nQbAPDA2NN9SZ4n01gnqcbV3+NQgJ7
+	 cbLh0ajz1wTho3IJlyNdelKs297OC5ci8dFImB1M=
+Message-ID: <69639330-7fa0-0dce-2504-8c5e3c6e9a64@linux.microsoft.com>
+Date: Thu, 4 Sep 2025 19:38:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o6rqy1yk.ffs@tglx>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v0 5/6] x86/hyperv: Implement hypervisor ram collection
+ into vmcore
+Content-Language: en-US
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+ hpa@zytor.com, arnd@arndb.de
+References: <20250904021017.1628993-1-mrathor@linux.microsoft.com>
+ <20250904021017.1628993-6-mrathor@linux.microsoft.com>
+ <aLoUsvfcAqGdV9Qr@skinsburskii.localdomain>
+From: Mukesh R <mrathor@linux.microsoft.com>
+In-Reply-To: <aLoUsvfcAqGdV9Qr@skinsburskii.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Sep 04, 2025 at 11:57:39AM +0200, Thomas Gleixner wrote:
-> On Wed, Sep 03 2025 at 12:40, Nuno Das Neves wrote:
-> > On 7/18/2025 12:57 PM, Nam Cao wrote:
-> >> Move away from the legacy MSI domain setup, switch to use
-> >> msi_create_parent_irq_domain().
-> >> 
-> >> While doing the conversion, I noticed that hv_irq_compose_msi_msg() is
-> >> doing more than it is supposed to (composing message content). The
-> >> interrupt allocation bits should be moved into hv_msi_domain_alloc().
-> >> However, I have no hardware to test this change, therefore I leave a TODO
-> >> note.
-> >> 
-> >> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> >> ---
-> >>  arch/x86/hyperv/irqdomain.c | 111 ++++++++++++++++++++++++------------
-> >>  drivers/hv/Kconfig          |   1 +
-> >>  2 files changed, 77 insertions(+), 35 deletions(-)
-> >
-> > Tested on nested root partition.
-> >
-> > Looks good, thanks.
-> >
-> > Tested-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> > Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+On 9/4/25 15:37, Stanislav Kinsburskii wrote:
+> On Wed, Sep 03, 2025 at 07:10:16PM -0700, Mukesh Rathor wrote:
+>> This commit introduces a new file to enable collection of hypervisor ram
+>> into the vmcore collected by linux. By default, the hypervisor ram is locked,
+>> ie, protected via hw page table. Hyper-V implements a disable hypercall which
+>> essentially devirtualizes the system on the fly. This mechanism makes the
+>> hypervisor ram accessible to linux without any extra work because it is
+>> already mapped into linux address space. Details of the implementation
+>> are available in the file prologue.
+>>
+>> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+>> ---
+>>  arch/x86/hyperv/hv_crash.c | 618 +++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 618 insertions(+)
+>>  create mode 100644 arch/x86/hyperv/hv_crash.c
+>>
 > 
-> I assume this goes through the hyper-V tree.
+> <snip>
 > 
-> Acked-by: Thomas Gleixner <tglx@linutronix.de>
+>> +
+>> +/*
+>> + * Common function for all cpus before devirtualization.
+>> + *
+>> + * Hypervisor crash: all cpus get here in nmi context.
+>> + * Linux crash: the panicing cpu gets here at base level, all others in nmi
+>> + *		context. Note, panicing cpu may not be the bsp.
+>> + *
+>> + * The function is not inlined so it will show on the stack. It is named so
+>> + * because the crash cmd looks for certain well known function names on the
+>> + * stack before looking into the cpu saved note in the elf section, and
+>> + * that work is currently incomplete.
+>> + *
+>> + * Notes:
+>> + *  Hypervisor crash:
+>> + *    - the hypervisor is in a very restrictive mode at this point and any
+>> + *	vmexit it cannot handle would result in reboot. For example, console
+>> + *	output from here would result in synic ipi hcall, which would result
+>> + *	in reboot. So, no mumbo jumbo, just get to kexec as quickly as possible.
+>> + *
+>> + *  Devirtualization is supported from the bsp only.
+>> + */
+>> +static noinline __noclone void crash_nmi_callback(struct pt_regs *regs)
+>> +{
+>> +	struct hv_input_disable_hyp_ex *input;
+>> +	u64 status;
+>> +	int msecs = 1000, ccpu = smp_processor_id();
+>> +
+>> +	if (ccpu == 0) {
+>> +		/* crash_save_cpu() will be done in the kexec path */
+>> +		cpu_emergency_stop_pt();	/* disable performance trace */
+>> +		atomic_inc(&crash_cpus_wait);
+>> +	} else {
+>> +		crash_save_cpu(regs, ccpu);
+>> +		cpu_emergency_stop_pt();	/* disable performance trace */
+>> +		atomic_inc(&crash_cpus_wait);
+>> +		for (;;);			/* cause no vmexits */
+>> +	}
+>> +
+>> +	while (atomic_read(&crash_cpus_wait) < num_online_cpus() && msecs--)
+>> +		mdelay(1);
+>> +
+>> +	stop_nmi();
+>> +	if (!hv_has_crashed)
+>> +		hv_notify_prepare_hyp();
+>> +
+>> +	if (crashing_cpu == -1)
+>> +		crashing_cpu = ccpu;		/* crash cmd uses this */
+>> +
+>> +	hv_hvcrash_ctxt_save();
+>> +	hv_mark_tss_not_busy();
+>> +	hv_crash_fixup_kernpt();
+>> +
+>> +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+>> +	memset(input, 0, sizeof(*input));
+>> +	input->rip = trampoline_pa;	/* PA of hv_crash_asm32 */
+>> +	input->arg = devirt_cr3arg;	/* PA of trampoline page table L4 */
+>> +
+>> +	status = hv_do_hypercall(HVCALL_DISABLE_HYP_EX, input, NULL);
+>> +	if (!hv_result_success(status)) {
+>> +		pr_emerg("%s: %s\n", __func__, hv_result_to_string(status));
+>> +		pr_emerg("Hyper-V: disable hyp failed. kexec not possible\n");
+> 
+> These prints won't ever be printed to any console as prints in NMI
+> handler are deffered.
 
-No problem -- applied to hyperv-next.
+It's mostly for debug. There are different config options allowing one
+to build kernel easily dumping to either uart, led, speaker etc... There
+are no easy ways to debug. kernel debuggers could trap EMERGENCY printks 
+also...  
 
-Thank you Nam and Thomas.
+Are you 100% sure printk is async even if KERN_EMERG? If yes, I'd like to 
+propose someday to make it bypass all that for pr_emerg.
+
+
+> Also, how are they aligned with the notice in the comment on top of
+> the function stating that console output would lead to synic ipi call?
+
+Comment says "Hypervisor Crash". Please reread the whole block.
+
+
+>> +	}
+>> +
+>> +	native_wrmsrq(HV_X64_MSR_RESET, 1);    /* get hv to reboot */
+> 
+> Resetting the machine from an NMI handler is sloppy.
+> There could be another NMI, which triggers the panic, leading to this handler.
+> NMI handlers servicing is batched meanining that not only this handler
+> won't output anything, but also any other prints from any other handlers
+> executed before the same lock won't be written out to consoles.
+> 
+> This introduces silent machine resets for the root partition. Can the
+> intrusive logic me moved to a tasklet?
+
+I really don't think you understand what is going on here. I've tried
+telling you at least once in the past year, there is no return from the nmi 
+handler in case of hyp crash, and that this is panic mode, something 
+really bad has happened! It could be memory corruption, it could be 
+hw failure...  The hyp goes in emergency mode that just mostly loops, 
+handling tiny number of hypercalls and msrs for support of dom0/root 
+like windows that implements custom core collection in raw mode.
+
+Lastly, if disable hyp fails, things are in dire straits and we do last 
+ditch effort to print in case there is special debug printk or kernel 
+debugger over serial attached intercepting pr_emerg, or print to LED 
+for EMERGENCY etc ...  before rebooting without hanging.
+
+
+>> +}
+>> +
+>> +/*
+>> + * generic nmi callback handler: could be called without any crash also.
+>> + *  hv crash: hypervisor injects nmi's into all cpus
+>> + *  lx crash: panicing cpu sends nmi to all but self via crash_stop_other_cpus
+>> + */
+>> +static int hv_crash_nmi_local(unsigned int cmd, struct pt_regs *regs)
+>> +{
+>> +	int ccpu = smp_processor_id();
+>> +
+>> +	if (!hv_has_crashed && hv_cda && hv_cda->cda_valid)
+>> +		hv_has_crashed = 1;
+>> +
+>> +	if (!hv_has_crashed && !lx_has_crashed)
+>> +		return NMI_DONE;	/* ignore the nmi */
+>> +
+>> +	if (hv_has_crashed && !hv_crash_enabled) {
+>> +		if (ccpu == 0) {
+>> +			pr_emerg("Hyper-V: core collect not setup. Reboot\n");
+> 
+> Same here: this print won't reach console.
+> 
+>> +			native_wrmsrq(HV_X64_MSR_RESET, 1);	/* reboot */
+>> +		} else
+>> +			for (;;)
+>> +				cpu_relax();
+>> +	}
+>> +
+>> +	crash_nmi_callback(regs);
+>> +	return NMI_DONE;
+>> +}
+>> +
+> 
+> <snip>
+> 
+>> +/* Setup for kdump kexec to collect hypervisor ram when running as mshv root */
+>> +void hv_root_crash_init(void)
+>> +{
+>> +	int rc;
+>> +	struct hv_input_get_system_property *input;
+>> +	struct hv_output_get_system_property *output;
+>> +	unsigned long flags;
+>> +	u64 status;
+>> +	union hv_pfn_range cda_info;
+>> +
+>> +	if (pgtable_l5_enabled()) {
+>> +		pr_err("Hyper-V: crash dump not yet supported on 5level PTs\n");
+>> +		goto err_out;
+>> +	}
+>> +
+>> +	local_irq_save(flags);
+>> +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+>> +	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
+>> +
+>> +	memset(input, 0, sizeof(*input));
+>> +	memset(output, 0, sizeof(*output));
+>> +	input->property_id = HV_SYSTEM_PROPERTY_CRASHDUMPAREA;
+>> +
+>> +	status = hv_do_hypercall(HVCALL_GET_SYSTEM_PROPERTY, input, output);
+>> +	local_irq_restore(flags);
+>> +	if (!hv_result_success(status))
+>> +		goto prop_err_out;
+>> +
+>> +	cda_info.as_uint64 = output->hv_cda_info.as_uint64;
+>> +
+>> +	if (cda_info.base_pfn == 0) {
+>> +		pr_err("Hyper-V: hypervisor crash dump area pfn is 0\n");
+>> +		goto err_out;
+>> +	}
+>> +
+>> +	hv_cda = phys_to_virt(cda_info.base_pfn << PAGE_SHIFT);
+>> +
+>> +	rc = hv_crash_trampoline_setup();
+>> +	if (rc)
+>> +		goto err_out;
+>> +
+>> +	register_nmi_handler(NMI_LOCAL, hv_crash_nmi_local, NMI_FLAG_FIRST,
+>> +			     "hv_crash_nmi");
+>> +
+> 
+> Rgistering NMI handler can fail and this should be handled.
+
+Not sure if it "should be". There are other instances where this is 
+not done because the call is guaranteed to be not recursive. 
+
+
+> Stas
+> 
+>> +	smp_ops.crash_stop_other_cpus = hv_crash_stop_other_cpus;
+>> +
+>> +	crash_kexec_post_notifiers = true;
+>> +	hv_crash_enabled = 1;
+>> +	pr_info("Hyper-V: linux and hv kdump support enabled\n");
+>> +
+>> +	return;
+>> +
+>> +prop_err_out:
+>> +	pr_err("Hyper-V: %s: property:%d %s\n", __func__, input->property_id,
+>> +	       hv_result_to_string(status));
+>> +err_out:
+>> +	pr_err("Hyper-V: only linux (but not hv) kdump support enabled\n");
+>> +}
+>> +
+>> -- 
+>> 2.36.1.vfs.0.0
+>>
+
 
