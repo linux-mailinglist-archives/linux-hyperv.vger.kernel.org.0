@@ -1,143 +1,158 @@
-Return-Path: <linux-hyperv+bounces-6746-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6747-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE16FB45039
-	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Sep 2025 09:48:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CFA2B45C5F
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Sep 2025 17:22:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9B34A3B0BF3
-	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Sep 2025 07:48:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 89E553AC3C8
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Sep 2025 15:20:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AA59244668;
-	Fri,  5 Sep 2025 07:48:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2154B1EFF80;
+	Fri,  5 Sep 2025 15:20:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jLnpFjke"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q5BQrRHI"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789FB2868B5
-	for <linux-hyperv@vger.kernel.org>; Fri,  5 Sep 2025 07:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850EF31B835;
+	Fri,  5 Sep 2025 15:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757058510; cv=none; b=dgLNNZ0mXxEaRDJAaygEqlfKm6YVpk/4rM4PLUGHpIX5q8jk+Ee4klnwDUXGDLg4sVIc3L2lTyW6+dVunKczaSoF2k9WXxaI2SvlqduRne6P4tNay3bt0pXmce2nZMfoCYMpj/cqQxabYBFoElHBTwAEL6XFwq7LvYQSUFIJngY=
+	t=1757085645; cv=none; b=qUnBnlAirKI/u8GCrJ+Cg+sn/re9oaEEpFQ02Q517ReVvQzvBlXRnM8oz580Sj10JKwe8aSvcRO7AlutP7M/nakjtNoUrv+bXCYmqdDWn8ti7h44MFHt1x1v8AvC46kuh81ckgy5w5u5Fw30w8pt1QrDPF6DSYTh5p7sMyH5wZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757058510; c=relaxed/simple;
-	bh=pRZFdrs2UcLTvgvOHPFt3/W4sfrP7U04u15YM/i8XBc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KqEAHaeW+vV9nbodNR3DGTkwUx89oWkdoZ/AFMGCiZhHnjFUIMUlu2whsUAa3bYajNr2K8OghqVgegZniTEHYDeP2RBUTWavMsLuQ00hV61YVFbGKsDFe8UfZehHEh2SWbg/wWUkDZvs/pYx0owewueZVF6g4ShsDhWnCPIE2nE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jLnpFjke; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757058507;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j/PWFJ7qab8HxUpW2TCnC87CZz26SMWjp6Ugp45ZmsE=;
-	b=jLnpFjkeJkABjCG4T62DGTF1aeGhg+o6DupeGNr1wteeiF6G/IloV4fcbMQMhobqzESnm+
-	dub+tmlb506R1e70NgE53xSPYsBUxs8GLeQ5P52rbO6d0Q3t7uEaCv2Jz/9gg6VqLUFnuT
-	1b6UTcXfegDS+hiorbcNn2M3+uaCAHY=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-209-ScdRKpB2PXGeR9lSzGQl_g-1; Fri, 05 Sep 2025 03:48:25 -0400
-X-MC-Unique: ScdRKpB2PXGeR9lSzGQl_g-1
-X-Mimecast-MFC-AGG-ID: ScdRKpB2PXGeR9lSzGQl_g_1757058504
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3dc0f2fd4acso1084175f8f.2
-        for <linux-hyperv@vger.kernel.org>; Fri, 05 Sep 2025 00:48:25 -0700 (PDT)
+	s=arc-20240116; t=1757085645; c=relaxed/simple;
+	bh=LEQ/FRPs34gvlTGlxwo2s0S1CaURq1iIbGbEBKv+JWM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DUKcvXIaCm5olgZ5c6xFUD4ZeC8oOE6O/AFevS3NM5kV3q/m++qsUXiuEwdJVfP0lZNWglUZM03MZzzE3XGin2CBj0ZoeUJecAG/Er6MUvn3t0y5gX3ngV3EPvbvmq112B1EwxGwFebdXI8CosPxnr2JT6o7wBJ0zrvySPUiScM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q5BQrRHI; arc=none smtp.client-ip=209.85.160.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-30ccebab736so1898987fac.3;
+        Fri, 05 Sep 2025 08:20:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757085642; x=1757690442; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JHc9VdpqeetzzHFVCkUDEKJRsjgBr66oVPzgKsPNA4E=;
+        b=Q5BQrRHIAnu0saUoGy5vhGH9aspV5PiQoI+ngGdFvUQpVS05LyYJa7mbHSw8m5/8Vi
+         39WPWADCOofHOlhxGzoeRpJZ8xcg52GChjQIlEo8NGGFoUj+3LLTvYBIHf2f031ZRpIT
+         zqMfGBx9IfV1nqtl7Z7nagDpfueJjupivDECVA16o705Xptsb6yh9oAtnMO4Mu/7asVY
+         t7OkP/KR5h5hBH9IE4rwI/rlWWKDuvhXG7IlsJ1yKjF7wpDlw1zFW0IE7gtSD8nv8vze
+         0vAGgcLrprl2ZCfTG3879dUrPqufSpu45pNcfSELSyww41V0PjPZLqpaGQHPCOU+JG3j
+         WyUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757058504; x=1757663304;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j/PWFJ7qab8HxUpW2TCnC87CZz26SMWjp6Ugp45ZmsE=;
-        b=IlxaJ4Z+N1v7ZlK6eSuJRl7kN1ShkNgjFzWOQbtkWHJbqHxawPIO96xHYevjIuDfWZ
-         7O2bTJ0Dq4ykYqJOPVIxBDQQSfr/uxf7/aFQ9W46rJTeZjKG4daOZohnaTo/VAcJNBMp
-         QmQDuTA5mOWeS8yoa1UIX9kkOnZPhjedqTxdY/AG9D0YWMrmEYdcRm3Yb+H8wAphN7Mt
-         HWYKjdDodWJDk7UGQaJ+aznYLcPG3q7tiQ3+/ddxxjc8FTqmLSVDlaOfNqVzgR/dVqa6
-         g7J+wcJ1JGz/JVv36PjLT+3incXPP8mjgZZIArjU0dcAJLIKCk23tnIUksHRCkIFuCdn
-         biwA==
-X-Gm-Message-State: AOJu0Yx8Ln54bnTdrkDlSNlESP0+lKbJ1WTRp1xjlbzqQA7UZBVwyG++
-	XYDHXqgkE03tC7AIYNSaMXTdUSX7GTu4fejSYQYxXjdKkKfeoW/zzPzFiwT4HydhFUASUSe2MDj
-	PEQRFkb1FMAT/M39nyktDINOdn+1lki1+kjk++RBaoRUvkFh3PM7HAaOkNONzHzTu+w==
-X-Gm-Gg: ASbGncvz23SQwPXAZS9cGrPWsIAb7LWTgD7iPHDGWPINm4W9x6dOX8p0ZxUxXgjJX2u
-	YG12JDjWg+T7WWBd4XjIa2bi0FMshlxQHc4gepQHigTwCbeL76WTNkrQjMSgNCDus7yT+wMywEg
-	YmQ4fVmrVCLlTJfffpDn0PHjlr90DWQo+eeIbJxi9hiecg0Bu51kMU8MUzyQexsvtVQ9aevOV3F
-	WsThKb+0KmJEo1KWSEAXu/JHJHJaXjEYMyA7syGEnYRue/WBJQInVmLGrHrJV6MgVWWx77zwQE0
-	IzTGil3EvramAihm+tdqHUPI9Womk9I=
-X-Received: by 2002:a05:6000:2082:b0:3da:84e2:c042 with SMTP id ffacd0b85a97d-3da85016a9fmr10240833f8f.34.1757058504010;
-        Fri, 05 Sep 2025 00:48:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGFKLZMD+IX6BaRx83/n6nAOleq9TkNgVYkYPlstcdFOUwHOXFdZH6HjKItpcbwZPJrzMxTpg==
-X-Received: by 2002:a05:6000:2082:b0:3da:84e2:c042 with SMTP id ffacd0b85a97d-3da85016a9fmr10240819f8f.34.1757058503605;
-        Fri, 05 Sep 2025 00:48:23 -0700 (PDT)
-Received: from fedora ([131.175.126.3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3d729a96912sm18282800f8f.8.2025.09.05.00.48.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Sep 2025 00:48:23 -0700 (PDT)
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-To: Wei Liu <wei.liu@kernel.org>
-Cc: linux-hyperv@vger.kernel.org, Michael Kelley <mhklinux@outlook.com>, "K.
- Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang
- <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
- <decui@microsoft.com>, x86@kernel.org, linux-kernel@vger.kernel.org, Nuno
- Das Neves <nunodasneves@linux.microsoft.com>, Tianyu Lan
- <tiala@microsoft.com>, Li Tian <litian@redhat.com>, Philipp Rudo
- <prudo@redhat.com>
-Subject: Re: [PATCH v4] x86/hyperv: Fix kdump on Azure CVMs
-In-Reply-To: <aLoeQXAo5PMDA5hn@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-References: <20250828091618.884950-1-vkuznets@redhat.com>
- <aLoeQXAo5PMDA5hn@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-Date: Fri, 05 Sep 2025 10:48:22 +0300
-Message-ID: <87frd1figp.fsf@redhat.com>
+        d=1e100.net; s=20230601; t=1757085642; x=1757690442;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JHc9VdpqeetzzHFVCkUDEKJRsjgBr66oVPzgKsPNA4E=;
+        b=AhljImYt7y6+NOfkeb5A0Dqdnkr5ikvPUQPFcArUPpWxxgrbb9TQ20I3RokTzi7roO
+         P826x+xefvpcie8ewTUW7+eYDQblYUGirrRPZ27kOBIEmCMX8Y4cOJkbU1M0CCC++t/E
+         CdTccg/9noFGlQInSA2EnTye1yRj1qdHQDkrWFL6ckQhMNwew7i9sMj+4LYA0rzyG8H+
+         eHSYowIWS3SKtmYd9nMosE/Mg7u+x2WryVVtsJBMGmQEcZkc/DcXSp3cbwEwKg8RqjzG
+         AU+vuvTlx2m+T7DTi43YRXusFA7d9dBA30J/zyrrP/Ct85w7mqXXWa+h0ioFb04e+5bS
+         hpVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVzBDKSfVKqi9LMx5rHrhPLMtu0BCypvASogoDJHOLTcLq0RLSV281rib8EQeWxugzvQr648Uc3fPs8k49P@vger.kernel.org, AJvYcCXXsVq/dgdvHA6d+VCv9bq/O+GL+nuzX5HwdJKVsb43/4OMyO0jByJIqu15hPQChiznBbPliRmdbHldOww=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbOcVY5xeNcZqPp0OvGNYzg42xrc6BR6fzc1ogYspvWAxKwwFL
+	NlpNHGucCa8HZkKZnZVQAqr+5cN4GZd52VF6V6igaysmlVYIALhZyY01
+X-Gm-Gg: ASbGncvq1fpRAbQ5efiLUrcx9TIkRSonBQC3liJe2lVXGj6YqilbWqypfWe5pdr1y+X
+	giifxhQlCU/Jyjy0XLD7km+TBcvn/Iww83lcyJQmDp0UjhoUe4E7PFFEYsCqnTUnxdjWstXmueu
+	2h+SPVQpJiNZkA6kasbIIROMaDdW9awhipmZ3dxOlM4H9wI8I3UeSl+iCwTc14+XRJXqpkmjc+4
+	rBDopz3idxfsKO3OcNDjLKCyYb/MSOhSqm3oYzO0/fh/TnPLeQsrgMjqjZM32/klIhGlr7k48b6
+	V+pQGeei8Id95f/bGIieDZlcAGM4YMxsp2QY/5NjhIBy40blICDF90s7GNM44yuDwfaFgGJobtD
+	35JmC+BuYS1ssr3XvbKIckLjP/ZBMF7Wn4eVX7hYbKvNg2hPb+wI7
+X-Google-Smtp-Source: AGHT+IGHYtZc/6qY+cWiPVA7MRmwvRaqgY1NzSqQLshmwrXkpAKZD2YIlKKpFVNPrsHU8o8gLhnEaA==
+X-Received: by 2002:a05:687c:4d:10b0:31a:70c2:9a21 with SMTP id 586e51a60fabf-31a70c34130mr5178032fac.38.1757085642439;
+        Fri, 05 Sep 2025 08:20:42 -0700 (PDT)
+Received: from ?IPV6:2603:8081:c640:1::1007? ([2603:8081:c640:1::1007])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-745743cdea4sm4304446a34.39.2025.09.05.08.20.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Sep 2025 08:20:41 -0700 (PDT)
+Message-ID: <e18af534-cf48-4e0b-8a14-37268dfc2c80@gmail.com>
+Date: Fri, 5 Sep 2025 10:20:39 -0500
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] mshv: Only map vp->vp_stats_pages if on root
+ scheduler
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ mhklinux@outlook.com, decui@microsoft.com, paekkaladevi@linux.microsoft.com
+References: <1756428230-3599-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1756428230-3599-2-git-send-email-nunodasneves@linux.microsoft.com>
+Content-Language: en-US
+From: Praveen K Paladugu <praveenkpaladugu@gmail.com>
+In-Reply-To: <1756428230-3599-2-git-send-email-nunodasneves@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Wei Liu <wei.liu@kernel.org> writes:
 
-> On Thu, Aug 28, 2025 at 12:16:18PM +0300, Vitaly Kuznetsov wrote:
->> Azure CVM instance types featuring a paravisor hang upon kdump. The
->> investigation shows that makedumpfile causes a hang when it steps on a page
->> which was previously share with the host
->> (HVCALL_MODIFY_SPARSE_GPA_PAGE_HOST_VISIBILITY). The new kernel has no
->> knowledge of these 'special' regions (which are Vmbus connection pages,
->> GPADL buffers, ...). There are several ways to approach the issue:
->> - Convey the knowledge about these regions to the new kernel somehow.
->> - Unshare these regions before accessing in the new kernel (it is unclear
->> if there's a way to query the status for a given GPA range).
->> - Unshare these regions before jumping to the new kernel (which this patch
->> implements).
->> 
->> To make the procedure as robust as possible, store PFN ranges of shared
->> regions in a linked list instead of storing GVAs and re-using
->> hv_vtom_set_host_visibility(). This also allows to avoid memory allocation
->> on the kdump/kexec path.
->> 
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->
-> No fixes tag for this one?
->
 
-Personally, I don't see this as a 'bug', it's rather a missing
-feature. In theory, we can add something like
+On 8/28/2025 7:43 PM, Nuno Das Neves wrote:
+> This mapping is only used for checking if the dispatch thread is
+> blocked. This is only relevant for the root scheduler, so check the
+> scheduler type to determine whether to map/unmap these pages, instead of
+> the current check, which is incorrect.
+> 
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> ---
+>   drivers/hv/mshv_root_main.c | 12 ++++++++----
+>   1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> index e4ee9beddaf5..bbdefe8a2e9c 100644
+> --- a/drivers/hv/mshv_root_main.c
+> +++ b/drivers/hv/mshv_root_main.c
+> @@ -987,7 +987,11 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
+>   			goto unmap_register_page;
+>   	}
+>   
+> -	if (hv_parent_partition()) {
+> +	/*
+> +	 * This mapping of the stats page is for detecting if dispatch thread
+> +	 * is blocked - only relevant for root scheduler
+> +	 */
+> +	if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT) {
+>   		ret = mshv_vp_stats_map(partition->pt_id, args.vp_index,
+>   					stats_pages);
+>   		if (ret)
+> @@ -1016,7 +1020,7 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
+>   	if (mshv_partition_encrypted(partition) && is_ghcb_mapping_available())
+>   		vp->vp_ghcb_page = page_to_virt(ghcb_page);
+>   
+> -	if (hv_parent_partition())
+> +	if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
+>   		memcpy(vp->vp_stats_pages, stats_pages, sizeof(stats_pages));
+>   
+>   	/*
+> @@ -1039,7 +1043,7 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
+>   free_vp:
+>   	kfree(vp);
+>   unmap_stats_pages:
+> -	if (hv_parent_partition())
+> +	if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
+>   		mshv_vp_stats_unmap(partition->pt_id, args.vp_index);
+>   unmap_ghcb_page:
+>   	if (mshv_partition_encrypted(partition) && is_ghcb_mapping_available()) {
+> @@ -1793,7 +1797,7 @@ static void destroy_partition(struct mshv_partition *partition)
+>   			if (!vp)
+>   				continue;
+>   
+> -			if (hv_parent_partition())
+> +			if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
+>   				mshv_vp_stats_unmap(partition->pt_id, vp->vp_index);
+>   
+>   			if (vp->vp_register_page) {
 
-Fixes: 810a52126502 ("x86/hyperv: Add new hvcall guest address host visibility support")
-
-but I'm on the fence whether this is accurate or not.
-
-> Should it be marked as a stable backport?
-
-I think it may make sense even without an explicit 'Fixes:': kdump is the
-user's last resort when it comes to kernel crashes and doubly so on
-CVMs. Pure kexec may also come handy.
-
--- 
-Vitaly
-
+Reviewed-by: Praveen K Paladugu <prapal@linux.microsoft.com>
 
