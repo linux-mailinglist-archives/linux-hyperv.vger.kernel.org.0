@@ -1,148 +1,170 @@
-Return-Path: <linux-hyperv+bounces-6770-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6771-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14C0FB467D4
-	for <lists+linux-hyperv@lfdr.de>; Sat,  6 Sep 2025 03:11:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC5D6B469D2
+	for <lists+linux-hyperv@lfdr.de>; Sat,  6 Sep 2025 09:11:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 823DF1CC1D55
-	for <lists+linux-hyperv@lfdr.de>; Sat,  6 Sep 2025 01:11:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3D4871BC3AA0
+	for <lists+linux-hyperv@lfdr.de>; Sat,  6 Sep 2025 07:11:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4800516A956;
-	Sat,  6 Sep 2025 01:10:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EEBE2C0290;
+	Sat,  6 Sep 2025 07:11:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BX9NEf/X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fm+kgE0Y"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9286B145B16;
-	Sat,  6 Sep 2025 01:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074D31E51EF;
+	Sat,  6 Sep 2025 07:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757121008; cv=none; b=es+VMxo9rCetYxd+Pc2rs7SKCS2p0zwvjPG+KmOf9lT+A3vOmdoJ/u82U8vztLC/+gckNTP2Y35cC7Sedkyu/wIqesAcY9ko/aczLfceQdXSi1ug8aFojWb8twg8z6Sd3/rRTxRKzIZ/jFyKg2S/myoZqZQ/97Fl6V1xkHkBW+U=
+	t=1757142679; cv=none; b=S97qyg99q5aT1yX28m5GYDgjRRsK6j0w/cIxWUJfUcwYZPNF8+dUrKZcvdgNBRsW7a2fOT6cYK+60znMq6bafiHLpzcjnayMJRqNUAZeyf521rUORhTC8mUhVeGWE2H/xqNzmG+N19RpfodoMk5HNCwsqCCt7Wkr5nj4ws7ZfTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757121008; c=relaxed/simple;
-	bh=D3d4EEm9KfZVZrOZRrxKFOPjUiMwSN5Ik0Y3pM8gFgg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hTu2qd7RthnHw2dMcQaTHwGa9iEbxCp2wtHY1mFbiOCYocZmqJB/X8lzAfIjCFQXILdBkvw2bs9ivj8WyHVj+14Krff5yyZOe4q8b18E2iOu+hyUfRDf4e0uA+EQgG3ncE2IPE4OtUitG4cOgYeFptZ+umL2Wr1PVMxCgTD4otw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BX9NEf/X; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from mrdev.corp.microsoft.com (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
-	by linux.microsoft.com (Postfix) with ESMTPSA id CA22720171A1;
-	Fri,  5 Sep 2025 18:10:04 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CA22720171A1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1757121005;
-	bh=+CCS9We1Ij6uOlVmGq9+uq+1zOrHP0OdRaRPzrFp1GA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BX9NEf/X1VneNtjEYWoIbC4svFLWsPr6TE+eGFC7ATnibEAF5CZhHO4BkQA3huB1H
-	 G+vqfIWfbg5hEOs2bwIui5RjjStP2xdsiq/mMkkajOrdNM34AIT7Bqid50NJZSBjcZ
-	 DoYg+VV6O+/ka1HcE7xVbEhJmP4lFjkaKOTv7a2k=
-From: Mukesh Rathor <mrathor@linux.microsoft.com>
-To: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	linux-fbdev@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	virtualization@lists.linux.dev
-Cc: maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	jikos@kernel.org,
-	bentiss@kernel.org,
-	kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	dmitry.torokhov@gmail.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	bhelgaas@google.com,
-	James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com,
-	gregkh@linuxfoundation.org,
-	deller@gmx.de,
-	arnd@arndb.de,
-	sgarzare@redhat.com,
-	horms@kernel.org
-Subject: [PATCH v1 2/2] Drivers: hv: Make CONFIG_HYPERV bool
-Date: Fri,  5 Sep 2025 18:09:52 -0700
-Message-Id: <20250906010952.2145389-3-mrathor@linux.microsoft.com>
-X-Mailer: git-send-email 2.36.1.vfs.0.0
-In-Reply-To: <20250906010952.2145389-1-mrathor@linux.microsoft.com>
-References: <20250906010952.2145389-1-mrathor@linux.microsoft.com>
+	s=arc-20240116; t=1757142679; c=relaxed/simple;
+	bh=DxQq3Z93Q+7De7ifNN0KUyxuB461dT4DWf1PMEQXf7E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V8KfUqiSkZP8c92bsOGvR8x1LiDDo66KGIpPBJFdSE0Tr+v1eAB9Jjxws+YLpPE7LgnyKgiPM7abknxlBYppJTXXSmNl7+23pBZKPk11j/h4NtSUEeZk6+5Ra85Q4Ns7IBHKBquz4PVR5QFCEvoNJYmPchlGekea32iflpP2wcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fm+kgE0Y; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b49c1c130c9so1953801a12.0;
+        Sat, 06 Sep 2025 00:11:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757142677; x=1757747477; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ncm/Q1A/CjNR58docxc/YFmW4YuUqQkf2NQGD87zbNQ=;
+        b=fm+kgE0YGGhf4nmi87AQB6V1u4FtmlYxB+/7TeCATCgEFUAKHo0S3MBqCI5iK23rWX
+         Hn1KnamnLz2K6bR7cYiYGV6wTztEYFjWcU3YYZto2RzJiiyJiqPbJOZpxp8W296DuXI7
+         /zyHCzj1U/+CrPyCxjzJeUtnOmd4Ru3CxeMG9f0T+LyCjOJ3lpMm1/ihl/7LtqOJqBV1
+         Ujv5jfEeYh7ON1dJqPdwOyZSfb2GzuEB2+VjrwlgbZ3TUnNxgc9r0fR3mXQFliiHx3Do
+         LF5Lei6WtsiU3QY+Ey6jV5W6Miqmbzf4kxBxCZRh4CZ2+2W/TtTVV7tldbWZ9NXhjpXy
+         VQQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757142677; x=1757747477;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ncm/Q1A/CjNR58docxc/YFmW4YuUqQkf2NQGD87zbNQ=;
+        b=LGJDsgpS6UaB3KoeQITuN1rCPIH3cQMoiltYMl4BFCztuqUY8Idz9eyIFd32i2O+Cc
+         iXSy+Sz+5S0WUXkH96wcawtryVi4UH4JNaav5faCwmzeI14daLlj92Hz6LPZNFQ0zbvU
+         uUiJ9kct0c9tsQsWgsDwJ3qnQ6l6c9/jSGj3dUB0Lfj86S8Evlmnbarmi28a25M65x88
+         5FsX/59VSqBS4PkFNltLE9QmjMAL4UHG2yqXH/lc7dKBS7YgjFwmNbEePkm+xGKfBgJm
+         88a/vdeoBoUxndWUNysc1suN8ojJWgaSYGW+ijt1GdeZ5fdCrU2LrKSIxJEkKVTXZcpX
+         vd2A==
+X-Forwarded-Encrypted: i=1; AJvYcCV98av/aqGxeMyH/keXQcQy4JTk/rourmVjs1ebE38AGbqn7Jzc3n0WfqlrlkXj7QwDZ4DrDdQvScjBSes=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+aXDGZ3+/e5Uo4aIcOPllsIArYENkTovCoL2AW5l+xK1FmC2W
+	wo2jZ1DyZ4cWiIpr0/mnwUwxYmYN3BXkOP7yW+Y2vAsnBEVffMvTgCjli0CvcMY25kpxnNJAkac
+	VQSSjadKuC0T/FlamqyCXHpuF4T4AEfmf1P3CDsQ=
+X-Gm-Gg: ASbGncvJSvG78Krk1h48a8hT7ESguKD5MMTeNfh0pT041TCPTq7+mhEsDji/yuVKFqB
+	YpS+Bkty4JBuL98OgKK+HNGBVVyUC2zU4wCnN16dd205vSewNG6rsQ+p8Fa3P1heUt/82amzXez
+	CEdUVMZRmzwOEnG1gt28h35whAU+nXp38Ij26NXqtU/f5EeVvmP//RVnwzvVggVwcUsDU9Y5KVq
+	roRwiH98AH2A60=
+X-Google-Smtp-Source: AGHT+IF6h8LirdBZDzlOUBgOOQU3T/pZSFCm+s92MpYYmwzQxjA5E2keREsvzBT5hJxIcXja56geFix/1CUw2QVxJy4=
+X-Received: by 2002:a17:903:2447:b0:24c:8984:5f87 with SMTP id
+ d9443c01a7336-25170c4177bmr15337365ad.28.1757142677152; Sat, 06 Sep 2025
+ 00:11:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1756428230-3599-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1756428230-3599-2-git-send-email-nunodasneves@linux.microsoft.com>
+In-Reply-To: <1756428230-3599-2-git-send-email-nunodasneves@linux.microsoft.com>
+From: Tianyu Lan <ltykernel@gmail.com>
+Date: Sat, 6 Sep 2025 15:11:01 +0800
+X-Gm-Features: Ac12FXwO5surBSTTznfYx_JVv_fHi6RDPRdgxzMVq0-0FpyfgGc584Gb4lX8rtg
+Message-ID: <CAMvTesDBRxL5E6hctfOO0fJOHDykvZ7p=AL6Cm71tg--7Y6XaQ@mail.gmail.com>
+Subject: Re: [PATCH 1/6] mshv: Only map vp->vp_stats_pages if on root scheduler
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, 
+	mhklinux@outlook.com, decui@microsoft.com, paekkaladevi@linux.microsoft.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-With CONFIG_HYPERV and CONFIG_HYPERV_VMBUS separated, change CONFIG_HYPERV
-to bool from tristate. CONFIG_HYPERV now becomes the core Hyper-V
-hypervisor support, such as hypercalls, clocks/timers, Confidential
-Computing setup, PCI passthru, etc. that doesn't involve VMBus or VMBus
-devices.
+On Fri, Aug 29, 2025 at 9:08=E2=80=AFAM Nuno Das Neves
+<nunodasneves@linux.microsoft.com> wrote:
+>
+> This mapping is only used for checking if the dispatch thread is
+> blocked. This is only relevant for the root scheduler, so check the
+> scheduler type to determine whether to map/unmap these pages, instead of
+> the current check, which is incorrect.
+>
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> ---
+>  drivers/hv/mshv_root_main.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> index e4ee9beddaf5..bbdefe8a2e9c 100644
+> --- a/drivers/hv/mshv_root_main.c
+> +++ b/drivers/hv/mshv_root_main.c
+> @@ -987,7 +987,11 @@ mshv_partition_ioctl_create_vp(struct mshv_partition=
+ *partition,
+>                         goto unmap_register_page;
+>         }
+>
+> -       if (hv_parent_partition()) {
+> +       /*
+> +        * This mapping of the stats page is for detecting if dispatch th=
+read
+> +        * is blocked - only relevant for root scheduler
+> +        */
+> +       if (hv_scheduler_type =3D=3D HV_SCHEDULER_TYPE_ROOT) {
+>                 ret =3D mshv_vp_stats_map(partition->pt_id, args.vp_index=
+,
+>                                         stats_pages);
+>                 if (ret)
+> @@ -1016,7 +1020,7 @@ mshv_partition_ioctl_create_vp(struct mshv_partitio=
+n *partition,
+>         if (mshv_partition_encrypted(partition) && is_ghcb_mapping_availa=
+ble())
+>                 vp->vp_ghcb_page =3D page_to_virt(ghcb_page);
+>
+> -       if (hv_parent_partition())
+> +       if (hv_scheduler_type =3D=3D HV_SCHEDULER_TYPE_ROOT)
+>                 memcpy(vp->vp_stats_pages, stats_pages, sizeof(stats_page=
+s));
+>
+>         /*
+> @@ -1039,7 +1043,7 @@ mshv_partition_ioctl_create_vp(struct mshv_partitio=
+n *partition,
+>  free_vp:
+>         kfree(vp);
+>  unmap_stats_pages:
+> -       if (hv_parent_partition())
+> +       if (hv_scheduler_type =3D=3D HV_SCHEDULER_TYPE_ROOT)
+>                 mshv_vp_stats_unmap(partition->pt_id, args.vp_index);
+>  unmap_ghcb_page:
+>         if (mshv_partition_encrypted(partition) && is_ghcb_mapping_availa=
+ble()) {
+> @@ -1793,7 +1797,7 @@ static void destroy_partition(struct mshv_partition=
+ *partition)
+>                         if (!vp)
+>                                 continue;
+>
+> -                       if (hv_parent_partition())
+> +                       if (hv_scheduler_type =3D=3D HV_SCHEDULER_TYPE_RO=
+OT)
+>                                 mshv_vp_stats_unmap(partition->pt_id, vp-=
+>vp_index);
+>
+>                         if (vp->vp_register_page) {
+> --
+> 2.34.1
+>
+>
+Reviewed-by: Tianyu Lan <tiala@microsoft.com>
 
-Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
----
- drivers/Makefile    | 2 +-
- drivers/hv/Kconfig  | 2 +-
- drivers/hv/Makefile | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/Makefile b/drivers/Makefile
-index b5749cf67044..7ad5744db0b6 100644
---- a/drivers/Makefile
-+++ b/drivers/Makefile
-@@ -161,7 +161,7 @@ obj-$(CONFIG_SOUNDWIRE)		+= soundwire/
- 
- # Virtualization drivers
- obj-$(CONFIG_VIRT_DRIVERS)	+= virt/
--obj-$(subst m,y,$(CONFIG_HYPERV))	+= hv/
-+obj-$(CONFIG_HYPERV)		+= hv/
- 
- obj-$(CONFIG_PM_DEVFREQ)	+= devfreq/
- obj-$(CONFIG_EXTCON)		+= extcon/
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index fe29f8dca2b5..7e56c51c5080 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -3,7 +3,7 @@
- menu "Microsoft Hyper-V guest support"
- 
- config HYPERV
--	tristate "Microsoft Hyper-V client drivers"
-+	bool "Microsoft Hyper-V core hypervisor support"
- 	depends on (X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
- 		|| (ARM64 && !CPU_BIG_ENDIAN)
- 	select PARAVIRT
-diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
-index 050517756a82..8b04a33e4dd8 100644
---- a/drivers/hv/Makefile
-+++ b/drivers/hv/Makefile
-@@ -18,7 +18,7 @@ mshv_root-y := mshv_root_main.o mshv_synic.o mshv_eventfd.o mshv_irq.o \
- mshv_vtl-y := mshv_vtl_main.o
- 
- # Code that must be built-in
--obj-$(subst m,y,$(CONFIG_HYPERV)) += hv_common.o
-+obj-$(CONFIG_HYPERV) += hv_common.o
- obj-$(subst m,y,$(CONFIG_MSHV_ROOT)) += hv_proc.o
- ifneq ($(CONFIG_MSHV_ROOT) $(CONFIG_MSHV_VTL),)
-     obj-y += mshv_common.o
--- 
-2.36.1.vfs.0.0
-
+--=20
+Thanks
+Tianyu Lan
 
