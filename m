@@ -1,155 +1,127 @@
-Return-Path: <linux-hyperv+bounces-6778-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6779-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44A1FB48DD5
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Sep 2025 14:43:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03ECAB4951B
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Sep 2025 18:23:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 055783A198A
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Sep 2025 12:43:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B257F3A47ED
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Sep 2025 16:23:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F4F62EC566;
-	Mon,  8 Sep 2025 12:43:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBB4630FF33;
+	Mon,  8 Sep 2025 16:21:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mnyZZKH7"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PwXasI5W"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926B9147C9B;
-	Mon,  8 Sep 2025 12:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EEA8310655;
+	Mon,  8 Sep 2025 16:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757335411; cv=none; b=Y26pITfIUqQvYo+2tGDSW5+J1xgEOkmzy7jY3D8FLkcyjkimaZs32nT43FtMt6RGEKoU9469+A9RyIjWzWehjm1OW0xLxD5WwL56OqamLN5EeL9qLVlKCScqowdtdHGnLCAqnebUIfcubq78u8FgjuHUOD4aiWT+mB21l8sdM9s=
+	t=1757348494; cv=none; b=m2ApNbeuDvPMV3DiTDkVt5qgrj18vl96vhiTX3oKl+WGQ9IGTEjlqAmxTqO40TZbdYe2d/N9xEehxnJbd69wzW45ynTnUEUjgOAL14kTxFsL/L3QBHJCJztQrZGxyTNFCC+1xpJNRN/O4TRHqAzwev81Rdez1p8sRXs31Pku4FQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757335411; c=relaxed/simple;
-	bh=hCZzQzXTqDQPsdfkFKi7HNFa74pKEkCdhxSkeUYipyQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sLBY++u2uKz4l6U+1S2g49Iv1R05bXYiX+gr8Uu96DCwyOkPdYEAV4LGBUp6NpQjD1NuC3Sj+BFghrZzGsTD1Usya3ncLG7Q50kZUwhE9jKQx0d8g9vEoLASOO5xgdLsEiZHTQp2ibEjDStxUK6IOdMITpDOOKY67tzII805xtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mnyZZKH7; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-45dd5e24d16so28996785e9.3;
-        Mon, 08 Sep 2025 05:43:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757335408; x=1757940208; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+Vg0GNEeuU43g45pQCnqO0Jnldu9YfZ3lQZTRTHWzUE=;
-        b=mnyZZKH7+Yv7vl3R80JstR07HNE/Ssuc8VXWTwnrVZjvjjfObjc0/sWmQVAxZBS5RZ
-         ZZi/0FDjijpbYJVsG+RGQLZXWGSZAVNhd7ioz1WiTrwwxRm2G3tkrGRiT2EQXiE1fSMc
-         gOI3pkyko0a/bUZCr56YWFLIrkn+/02GAJ/M+szxx/Dl6V2wMjAJDtoE21OCUObjiUtU
-         A1DpaGTHTeOvNA6nX4gupOZ8iLzLUGZha0yeeUOp9sJBBem9XpkAdi/h+SHJSek6iQE5
-         KPbveRTSRTTxaX2tDhOTa8KW3vEliiKty8J/jiQvOdKpde+n/4QxmBU24z79Jjb+HXWK
-         uObg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757335408; x=1757940208;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Vg0GNEeuU43g45pQCnqO0Jnldu9YfZ3lQZTRTHWzUE=;
-        b=M1ygHDXDA6twQExkTB2hW10GG3ia4q2v06zmNtX3lUpGtBWUbg0jZZGTnogGBPI55e
-         3cBIg0B8xaug9rnhMhdgyKitnQrIxmA41sp3VTYyS5UrZfKzFKyR78puc5OJABL4vC+E
-         waL0GzCqyhDx7Lecdw68E59lYGLwGPy9lqAtwy5jnR6TCSnGu8dKRoEst+ioEmDmnCro
-         XBmP3UU0bRL7JG6JhN0CUTGQnIxekfjNI7mFK9NYud6Y2MhTrEw7OC7/MAD/yiSH3eRi
-         BI59R62g5OQkIndlZ46kXCXcfK/oQ9W/G2zv1MaqSbpWJnpJLMGjm6hzqkekusftSvXP
-         7tWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVh7NBhFXWtgf1iZMYTFFw2N8n++JjXns8iDqyNx5VK+up0j6tgaD5kfTvEEzqoMTeKrTaQj0g5@vger.kernel.org, AJvYcCVoR8s7JmahdJy+UPDpSauawDhfDvh2YmS+7zjA39YmPMb8O/w/3p5W8OugMnUIfWao+Ye1F0Y6iqPM//w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyja2Hq/G4v1oSozAavFlI2VBYFMo7AoE7ctIx0SR7i1foKuhO8
-	fi6v+ehWWwwbkd7ieb4+PW4tJlam9MJGAH4/CcmHpDLJd0pva6kyUCR0
-X-Gm-Gg: ASbGnctsnGh8lm+XCN9JfnSor0ZsM+b0Pp9jQBo46KyfGPqpkzhvukrFe0M6hAd2Pxp
-	uOH4L1jhRPCHI3SRVJbw8nvc2ThMOb50r9HNePnDA8/1Xd6oV2yY+VTFyHX1VeVPrdeJ7wxo5mq
-	FD2+T5gIV46PR5oRg9chDw1F3z/77y5SPxGP1/NXMdDLsOdlCIAQDlCARrfoa8W9bxB2hYXM7+n
-	l5WAMqLI12/oP18m+2JcVz1s8695eU9VJmcc7ttMYsqze3ebOKlPET1kzDVZTjH5DVjJPs2rcsd
-	x6+kIrmjx0k9qIJ2xx4BM/4byEGeojc1RMfOxbbAGnk08F7hBtZlp50isEK/lGXykWSK1Q2ehKt
-	YvS4Ff0V9KUZRi/QcuQSBhwOK1gqcZxkKUDe0WeWl/v+vZu6KQnNptw==
-X-Google-Smtp-Source: AGHT+IEt6VZ1UvFJW697LTeVzoEhMryjNa7nQmEERcDQ9zZ1SOxfk7VPPhBwquSNBfmWIdnecVE8RQ==
-X-Received: by 2002:a05:600c:3596:b0:45d:d6fc:2509 with SMTP id 5b1f17b1804b1-45dddeb00bfmr81306645e9.6.1757335407547;
-        Mon, 08 Sep 2025 05:43:27 -0700 (PDT)
-Received: from [10.158.36.109] ([72.25.96.17])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b8f2d3c88sm309254095e9.19.2025.09.08.05.43.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Sep 2025 05:43:26 -0700 (PDT)
-Message-ID: <25e5b405-09bf-40ac-8f45-5f3a0bbed8f5@gmail.com>
-Date: Mon, 8 Sep 2025 15:43:25 +0300
+	s=arc-20240116; t=1757348494; c=relaxed/simple;
+	bh=34GpOzLXR0bFyAQy1FTwKhInP6+RG92gscjcwlECu4k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kqMp4rr4m7k8On2mqtCBpn2NqgmZapUafBLJdMmsyIPA1FSCE69EEknJ2CXd2t3/Lzzp47llIP2gBr2u8HS1CMCa1aQvxvUAdHxCy7Kpc7lxic0hw9q/NGVTFmL/quipxrjq47XDjQeFCK6IXdYeTFVfFsCWJbcbw24nZXEYIoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PwXasI5W; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from skinsburskii.localdomain (unknown [20.236.10.120])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 84E312114259;
+	Mon,  8 Sep 2025 09:21:22 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 84E312114259
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1757348482;
+	bh=RwbrwhKhFyk94/grv3i9OeNqfC4w6utxpOAblVOvnD4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PwXasI5WFEeFUwo4+f9MgPn/P/sHAEf7MMusi9Y/95/ZdSJi8ojLuSnRfjBC0TST1
+	 Beezep5afWxBt5tMHKmvMBSogI7og7/kaDO72C65seuugaTJVVNEFeAJiltTwys13H
+	 gVWr0qXEt5PdbO3Tb8OElnPqgPXEuO+i1+eoU92I=
+Date: Mon, 8 Sep 2025 09:21:18 -0700
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Mukesh Rathor <mrathor@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	arnd@arndb.de
+Subject: Re: [PATCH v0 5/6] x86/hyperv: Implement hypervisor ram collection
+ into vmcore
+Message-ID: <aL8Cfsl3Vaeuw-QI@skinsburskii.localdomain>
+References: <20250904021017.1628993-1-mrathor@linux.microsoft.com>
+ <20250904021017.1628993-6-mrathor@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] net/mlx5: Not returning mlx5_link_info table when
- speed is unknown
-To: Vitaly Kuznetsov <vkuznets@redhat.com>, Li Tian <litian@redhat.com>,
- netdev@vger.kernel.org, linux-hyperv@vger.kernel.org
-Cc: Saeed Mahameed <saeedm@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
- Mark Bloch <mbloch@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
- Haiyang Zhang <haiyangz@microsoft.com>,
- Benjamin Poirier <bpoirier@redhat.com>, Carolina Jubran
- <cjubran@nvidia.com>, Shahar Shitrit <shshitrit@nvidia.com>
-References: <20250908085313.18768-1-litian@redhat.com>
- <877by9fep2.fsf@redhat.com>
-Content-Language: en-US
-From: Tariq Toukan <ttoukan.linux@gmail.com>
-In-Reply-To: <877by9fep2.fsf@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250904021017.1628993-6-mrathor@linux.microsoft.com>
 
-
-
-On 08/09/2025 12:58, Vitaly Kuznetsov wrote:
-> Li Tian <litian@redhat.com> writes:
+On Wed, Sep 03, 2025 at 07:10:16PM -0700, Mukesh Rathor wrote:
+> This commit introduces a new file to enable collection of hypervisor ram
+> into the vmcore collected by linux. By default, the hypervisor ram is locked,
+> ie, protected via hw page table. Hyper-V implements a disable hypercall which
+> essentially devirtualizes the system on the fly. This mechanism makes the
+> hypervisor ram accessible to linux without any extra work because it is
+> already mapped into linux address space. Details of the implementation
+> are available in the file prologue.
 > 
->> Because mlx5e_link_mode is sparse e.g. Azure mlx5 reports PTYS 19.
->> Do not return it when speed unless retrieved successfully.
->>
->> Fixes: 65a5d35571849 ("net/mlx5: Refactor link speed handling with mlx5_link_info struct")
-
-++
-
-Adding author and reviewer of offending patch.
-
->> Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> Signed-off-by: Li Tian <litian@redhat.com>
->> ---
->>   drivers/net/ethernet/mellanox/mlx5/core/port.c | 6 +++++-
->>   1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/port.c b/drivers/net/ethernet/mellanox/mlx5/core/port.c
->> index 2d7adf7444ba..a69c83da2542 100644
->> --- a/drivers/net/ethernet/mellanox/mlx5/core/port.c
->> +++ b/drivers/net/ethernet/mellanox/mlx5/core/port.c
->> @@ -1170,7 +1170,11 @@ const struct mlx5_link_info *mlx5_port_ptys2info(struct mlx5_core_dev *mdev,
->>   	mlx5e_port_get_link_mode_info_arr(mdev, &table, &max_size,
->>   					  force_legacy);
->>   	i = find_first_bit(&temp, max_size);
->> -	if (i < max_size)
-
-Keep an empty line before comment.
-
->> +	/*
-
-Can have the comment text starting from the first line.
->> +	 * mlx5e_link_mode is sparse. Check speed
+> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+> ---
+>  arch/x86/hyperv/hv_crash.c | 618 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 618 insertions(+)
+>  create mode 100644 arch/x86/hyperv/hv_crash.c
 > 
-> The array is either 'mlx5e_link_mode' or 'mlx5e_ext_link_info' but both
-> have holes in them.
-> 
+> diff --git a/arch/x86/hyperv/hv_crash.c b/arch/x86/hyperv/hv_crash.c
+> new file mode 100644
+> index 000000000000..50c54d39f0e2
+> --- /dev/null
+> +++ b/arch/x86/hyperv/hv_crash.c
+> +
 
-You mean 'mlx5e_link_info' and 'mlx5e_ext_link_info'.
-I wouldn't say they are sparse. They have holes indeed.
+<snip>
 
+> +/*
+> + * generic nmi callback handler: could be called without any crash also.
+> + *  hv crash: hypervisor injects nmi's into all cpus
+> + *  lx crash: panicing cpu sends nmi to all but self via crash_stop_other_cpus
+> + */
+> +static int hv_crash_nmi_local(unsigned int cmd, struct pt_regs *regs)
+> +{
+> +	int ccpu = smp_processor_id();
+> +
+> +	if (!hv_has_crashed && hv_cda && hv_cda->cda_valid)
+> +		hv_has_crashed = 1;
+> +
+> +	if (!hv_has_crashed && !lx_has_crashed)
+> +		return NMI_DONE;	/* ignore the nmi */
+> +
+> +	if (hv_has_crashed && !hv_crash_enabled) {
+> +		if (ccpu == 0) {
+> +			pr_emerg("Hyper-V: core collect not setup. Reboot\n");
+> +			native_wrmsrq(HV_X64_MSR_RESET, 1);	/* reboot */
+> +		} else
+> +			for (;;)
+> +				cpu_relax();
+> +	}
+> +
+> +	crash_nmi_callback(regs);
+> +	return NMI_DONE;
+> +}
 
->> +	 * is non-zero as indication of a hole.
->> +	 */
->> +	if (i < max_size && table[i].speed)
->>   		return &table[i];
->>   
->>   	return NULL;
-> 
+One more thing.
+It looks like the function above goes through the new logic even when
+hypervisor is intact and there is no crash kernel loaded.
+This is redundant and it should rather return back to the existent
+generic kernel panic logic.
+
+Stanislav
 
 
