@@ -1,66 +1,75 @@
-Return-Path: <linux-hyperv+bounces-6811-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6813-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DE04B509A8
-	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Sep 2025 02:11:38 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49EBDB509EE
+	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Sep 2025 02:37:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 32A6C441617
-	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Sep 2025 00:11:27 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AB31B7AAA26
+	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Sep 2025 00:36:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6987C176AC8;
-	Wed, 10 Sep 2025 00:10:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A68919D093;
+	Wed, 10 Sep 2025 00:37:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HDz4T4KV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bndbfUHz"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF59F1519AC;
-	Wed, 10 Sep 2025 00:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A598D78F54
+	for <linux-hyperv@vger.kernel.org>; Wed, 10 Sep 2025 00:37:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757463037; cv=none; b=mREGylZprMJbMFXSLm+S92r/qrUx/pt/SWK1WVvOQOGyG4fxWKiEJE0GpCUbY3aDfUbLitFFwYvUhfhvpkHmOl0WTZNMud2f06maAGnIRNtvVBDmtjN5tAILO2zuMwuh7JzmCybp3KCYhEP7VNIL3wEeXK4nAzeJVWBn8HVJ/Qc=
+	t=1757464668; cv=none; b=GObG5WbQRbmzsoM0kMapeDnqSUnkhJE2hcyFWsvACxwVVU+3quDXnhxI6I2lm0aqeV9DcUscZ612NK3e2M7rmFzWrTBA9qrWJydQkY3ATrpQfxWHQXHKTuW3QI2kFU84pA86kz9MvNvVXHFSnLpmJ7dLZGCCdJ9NaPrVMWFsk9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757463037; c=relaxed/simple;
-	bh=q/ziq/sUT7Of0/H7JokzIW0lhhgE97n2M8dhiEw2UDg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G0tmgB961YyBdVbcagZqbgyoWf9f3XXuIh0lMxoiwE8uOzwTqgiyXDvXKUjADBXLR7mTyNP8bbhfQdLaso60Ch9QhYVnkYWHBYPELEuOXKR+RVbhs9X7I6UFNYRTHVuRdzmO98dku8fCcz+JsqbAkp6NhR4PZrC/TOlAxHH7+ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HDz4T4KV; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from mrdev.corp.microsoft.com (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 341D62018E57;
-	Tue,  9 Sep 2025 17:10:35 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 341D62018E57
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1757463035;
-	bh=nI3PflUd3wNj5pOM2O9InP9JfvCuyftn+sp1Rq9+iXg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HDz4T4KVd8o7wBOmDi4hrYWzQsTff0ZEvOLs7UBXGXCBgoQgiPrKqHo159t1laeH1
-	 JgRxFOVs42SnciTJPQr8AEeT/IDiuqqbDBPVj3fDgNpqFFv0DxO0LuI8I0CX8V8RfP
-	 qg/RgJFKkIwJ0JtoSUgoQp3zoCQqxehV6s8gX848=
-From: Mukesh Rathor <mrathor@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org
-Cc: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	arnd@arndb.de
-Subject: [PATCH v1 6/6] x86/hyperv: Enable build of hypervisor crashdump collection files
-Date: Tue,  9 Sep 2025 17:10:09 -0700
-Message-Id: <20250910001009.2651481-7-mrathor@linux.microsoft.com>
-X-Mailer: git-send-email 2.36.1.vfs.0.0
-In-Reply-To: <20250910001009.2651481-1-mrathor@linux.microsoft.com>
-References: <20250910001009.2651481-1-mrathor@linux.microsoft.com>
+	s=arc-20240116; t=1757464668; c=relaxed/simple;
+	bh=kvsxtl4eteYff9YEkkuUEDpv+2mnjQVnVcZI8Rc1GrY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UCNGjavH4vbvU9TSR8q6T73OrkaDxKJgVXE1oeUHKTJnQJWoXt2PWC/AhRqpRAD/7nXKONeu9QJjH+/dOYHldXHa6xxj0G7WiTkSoxvZBdBNhulJeX59I3p+lVZl0J98SKMmOfTiQV4vGxh/EGHRq1dYFgSENOrJQMmPMkvDkTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bndbfUHz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1757464665;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mzYOGafRS64y0cq1Xm2ekzKR94eCodioB25haeoJkRo=;
+	b=bndbfUHz0uQ+Vw8sqvXPh3tAtVHxWwmpZAB/IRcg1uoeEZLtWRe2R7MqnVUzHZsgU8AZ+d
+	64Q05WFYvM7gM2W3kqqShmcykL01SxOGljsyWyroI3BfeSKwut5JALBwOC3RP7owGb9Wh9
+	toynW87duplWYfioP+MxZnC012vsZxU=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-561-SQ1u5hJEMZyb_nWtX2AqRg-1; Tue,
+ 09 Sep 2025 20:37:42 -0400
+X-MC-Unique: SQ1u5hJEMZyb_nWtX2AqRg-1
+X-Mimecast-MFC-AGG-ID: SQ1u5hJEMZyb_nWtX2AqRg_1757464661
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 17F60180057A;
+	Wed, 10 Sep 2025 00:37:41 +0000 (UTC)
+Received: from laptop.redhat.com (unknown [10.72.112.29])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E2D7F3002D2A;
+	Wed, 10 Sep 2025 00:37:34 +0000 (UTC)
+From: Li Tian <litian@redhat.com>
+To: netdev@vger.kernel.org,
+	linux-hyperv@vger.kernel.org
+Cc: Saeed Mahameed <saeedm@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Mark Bloch <mbloch@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Benjamin Poirier <bpoirier@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Carolina Jubran <cjubran@nvidia.com>,
+	Shahar Shitrit <shshitrit@nvidia.com>
+Subject: [PATCH net v2] net/mlx5: Not returning mlx5_link_info table when speed is unknown
+Date: Wed, 10 Sep 2025 08:37:32 +0800
+Message-ID: <20250910003732.5973-1-litian@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -68,65 +77,41 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Enable build of the new files introduced in the earlier commits and add
-call to do the setup during boot.
+Because mlx5e_link_info and mlx5e_ext_link_info have holes
+e.g. Azure mlx5 reports PTYS 19. Do not return it unless speed
+is retrieved successfully.
 
-Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+Fixes: 65a5d35571849 ("net/mlx5: Refactor link speed handling with mlx5_link_info struct")
+Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Li Tian <litian@redhat.com>
 ---
- arch/x86/hyperv/Makefile       | 6 ++++++
- arch/x86/hyperv/hv_init.c      | 1 +
- include/asm-generic/mshyperv.h | 9 +++++++++
- 3 files changed, 16 insertions(+)
+v2:
+ - Fix indentation and spacing only.
+v1: https://lore.kernel.org/netdev/20250908085313.18768-1-litian@redhat.com
+---
+ drivers/net/ethernet/mellanox/mlx5/core/port.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/hyperv/Makefile b/arch/x86/hyperv/Makefile
-index d55f494f471d..6f5d97cddd80 100644
---- a/arch/x86/hyperv/Makefile
-+++ b/arch/x86/hyperv/Makefile
-@@ -5,4 +5,10 @@ obj-$(CONFIG_HYPERV_VTL_MODE)	+= hv_vtl.o
- 
- ifdef CONFIG_X86_64
- obj-$(CONFIG_PARAVIRT_SPINLOCKS)	+= hv_spinlock.o
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/port.c b/drivers/net/ethernet/mellanox/mlx5/core/port.c
+index 2d7adf7444ba..aa9f2b0a77d3 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/port.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/port.c
+@@ -1170,7 +1170,11 @@ const struct mlx5_link_info *mlx5_port_ptys2info(struct mlx5_core_dev *mdev,
+ 	mlx5e_port_get_link_mode_info_arr(mdev, &table, &max_size,
+ 					  force_legacy);
+ 	i = find_first_bit(&temp, max_size);
+-	if (i < max_size)
 +
-+ ifdef CONFIG_MSHV_ROOT
-+  CFLAGS_REMOVE_hv_trampoline.o += -pg
-+  CFLAGS_hv_trampoline.o        += -fno-stack-protector
-+  obj-$(CONFIG_CRASH_DUMP)      += hv_crash.o hv_trampoline.o
-+ endif
- endif
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index afdbda2dd7b7..577bbd143527 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -510,6 +510,7 @@ void __init hyperv_init(void)
- 		memunmap(src);
++	/* mlx5e_link_info has holes. Check speed
++	 * is not zero as indication of one.
++	 */
++	if (i < max_size && table[i].speed)
+ 		return &table[i];
  
- 		hv_remap_tsc_clocksource();
-+		hv_root_crash_init();
- 	} else {
- 		hypercall_msr.guest_physical_address = vmalloc_to_pfn(hv_hypercall_pg);
- 		wrmsrq(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index dbd4c2f3aee3..952c221765f5 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -367,6 +367,15 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages);
- int hv_call_add_logical_proc(int node, u32 lp_index, u32 acpi_id);
- int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags);
- 
-+#if CONFIG_CRASH_DUMP
-+void hv_root_crash_init(void);
-+void hv_crash_asm32(void);
-+void hv_crash_asm64_lbl(void);
-+void hv_crash_asm_end(void);
-+#else   /* CONFIG_CRASH_DUMP */
-+static inline void hv_root_crash_init(void) {}
-+#endif  /* CONFIG_CRASH_DUMP */
-+
- #else /* CONFIG_MSHV_ROOT */
- static inline bool hv_root_partition(void) { return false; }
- static inline bool hv_l1vh_partition(void) { return false; }
+ 	return NULL;
 -- 
-2.36.1.vfs.0.0
+2.50.0
 
 
