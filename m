@@ -1,100 +1,100 @@
-Return-Path: <linux-hyperv+bounces-6825-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6826-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C7A2B528D8
-	for <lists+linux-hyperv@lfdr.de>; Thu, 11 Sep 2025 08:35:08 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66270B5290B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 11 Sep 2025 08:39:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2D0EF565476
-	for <lists+linux-hyperv@lfdr.de>; Thu, 11 Sep 2025 06:35:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9C5C67BC82D
+	for <lists+linux-hyperv@lfdr.de>; Thu, 11 Sep 2025 06:36:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B35502676E6;
-	Thu, 11 Sep 2025 06:34:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C418B27A10F;
+	Thu, 11 Sep 2025 06:35:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="bjluMrfu";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="bjluMrfu"
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="IUpvF7kl";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="IUpvF7kl"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FBD6266B6B
-	for <linux-hyperv@vger.kernel.org>; Thu, 11 Sep 2025 06:34:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AD526E17D
+	for <linux-hyperv@vger.kernel.org>; Thu, 11 Sep 2025 06:35:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757572489; cv=none; b=G+NX1KjdfGMX4CZNbpZEi2ps5aGa2eBIokKIEQrmBPZ3t3czT0GX9/LqWY+zDvhT175fF6rrIioQ5XEJFTlPMMBt1SZEcyVoSXCpmlJk9jnsvgSceoXBtWCdsXbmJb7d0+XQDYfY/v5y7lqB7jIuVDQ6zGxQJs3qfnOtdHa31nw=
+	t=1757572555; cv=none; b=IYSON4m2V0Rxro42POqejJoSZdfdsWkqQ0eZlbAmRKdPZV/6VtvACpOktQFbSF4o/Ed6rOgkRdyVrm3nMJFETIpgprbjg9eZIeQ+K5q+uhBSAnipX/rH5ilnQOob2BxbtdIyoFBoW0pmticQwF7EP63JB3pWlS+qWFg+83Znk1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757572489; c=relaxed/simple;
-	bh=dBTqvTHtvmKeabXaWpzzpgSHLae0pEWSblZdFu4oBHM=;
+	s=arc-20240116; t=1757572555; c=relaxed/simple;
+	bh=tTmpi3AAhvEJYrc7fOHWzp45QB4QC8pB0rLexQ8to3k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DhUlireWqdXasoe2zEvsSIk1YNgrWxsHHsVo5kF4C8K2bVI0iERrN+CSkmfZebCsu6zdQMJNKbCe7uz1D3RVK1qP8OZnRUlQFjLYq/arHRdMYUt9Uw7YmFHcjmIv6QcCE+mSgq7HKPYckWkU0mScEWF+s5pBD8f00k5NXxkrRQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=bjluMrfu; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=bjluMrfu; arc=none smtp.client-ip=195.135.223.130
+	 MIME-Version; b=OzKMi0sY2xjraMV5J+xTsKQWcREbsD+0h2SOzLEDiX8W1GuJ4ns9Apsk9nB0fG/nz+8Yrs3Vf/mgIV3slVZZepk9/3c/yXpHdelN1tYqFoLnVKQ9UQ5ithcJVG//71Xr8F6MlmIgZ59sCnob5ObFPR3yzgOWZ5dgxdmEnH1U7ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=IUpvF7kl; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=IUpvF7kl; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 930803FA7E;
-	Thu, 11 Sep 2025 06:34:45 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 13D253FA82;
+	Thu, 11 Sep 2025 06:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1757572485; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1757572551; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZcukGV7gQuiuA9hOLB6SltsCYfjx1J8SnmqFPL24sjI=;
-	b=bjluMrfubjAkD8E7K6kYZWt+KlEp3VYRjX2q9RDPiEcTN60YcpbA/Z4krsVy2uiDXAm7rD
-	UhZ3rk5S376wtZbvaqTW8NflOn+DQ7GqNxRVUVWHa1stcqCBoU0ycDm/UOUvUI2D/CAjb/
-	XX36UuZRloBTewGVomuZJPDiZS1hGQU=
+	bh=OLXeav6R3goFmnwqSyQXuQdUCPELjQMRny6JTPFJ3Z4=;
+	b=IUpvF7kl5ZffJaksZuVY58/fynKPlGy1YDMgLOhKCWtjWc2rf1JgNgT+dENyA95kcJtlcA
+	GgcRSwq8j2i33uJ30B7sVVyAxCZqi2lXAROPHSDR7pTQKbqUnxbpfbPmIS6WQMF9cREk2g
+	FOe7ZaMXuRM4AUBuNbw/35c7TJ13g+M=
 Authentication-Results: smtp-out1.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1757572485; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1757572551; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZcukGV7gQuiuA9hOLB6SltsCYfjx1J8SnmqFPL24sjI=;
-	b=bjluMrfubjAkD8E7K6kYZWt+KlEp3VYRjX2q9RDPiEcTN60YcpbA/Z4krsVy2uiDXAm7rD
-	UhZ3rk5S376wtZbvaqTW8NflOn+DQ7GqNxRVUVWHa1stcqCBoU0ycDm/UOUvUI2D/CAjb/
-	XX36UuZRloBTewGVomuZJPDiZS1hGQU=
+	bh=OLXeav6R3goFmnwqSyQXuQdUCPELjQMRny6JTPFJ3Z4=;
+	b=IUpvF7kl5ZffJaksZuVY58/fynKPlGy1YDMgLOhKCWtjWc2rf1JgNgT+dENyA95kcJtlcA
+	GgcRSwq8j2i33uJ30B7sVVyAxCZqi2lXAROPHSDR7pTQKbqUnxbpfbPmIS6WQMF9cREk2g
+	FOe7ZaMXuRM4AUBuNbw/35c7TJ13g+M=
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CC32A1372E;
-	Thu, 11 Sep 2025 06:34:44 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4C9F21372E;
+	Thu, 11 Sep 2025 06:35:50 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 2pIrMIRtwmj3TAAAD6G6ig
-	(envelope-from <jgross@suse.com>); Thu, 11 Sep 2025 06:34:44 +0000
+	id 5g/+EMZtwmhSTQAAD6G6ig
+	(envelope-from <jgross@suse.com>); Thu, 11 Sep 2025 06:35:50 +0000
 From: Juergen Gross <jgross@suse.com>
 To: linux-kernel@vger.kernel.org,
 	x86@kernel.org,
+	virtualization@lists.linux.dev,
+	kvm@vger.kernel.org,
 	linux-hyperv@vger.kernel.org
 Cc: Juergen Gross <jgross@suse.com>,
-	Andy Lutomirski <luto@kernel.org>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
 	"H. Peter Anvin" <hpa@zytor.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
 	"K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
 	Wei Liu <wei.liu@kernel.org>,
 	Dexuan Cui <decui@microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Waiman Long <longman@redhat.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
 	xen-devel@lists.xenproject.org
-Subject: [PATCH 01/14] x86/paravirt: remove not needed includes of paravirt.h
-Date: Thu, 11 Sep 2025 08:34:20 +0200
-Message-ID: <20250911063433.13783-2-jgross@suse.com>
+Subject: [PATCH 12/14] x86/paravirt: move paravirt_sched_clock() related code into tsc.c
+Date: Thu, 11 Sep 2025 08:34:31 +0200
+Message-ID: <20250911063433.13783-13-jgross@suse.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250911063433.13783-1-jgross@suse.com>
 References: <20250911063433.13783-1-jgross@suse.com>
@@ -105,282 +105,171 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-5.30 / 50.00];
+X-Spam-Level: 
+X-Spamd-Result: default: False [-6.80 / 50.00];
 	REPLY(-4.00)[];
 	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
 	MID_CONTAINS_FROM(1.00)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
 	MIME_GOOD(-0.10)[text/plain];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.com:mid];
 	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[23];
 	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:email];
-	RCVD_COUNT_TWO(0.00)[2];
-	FREEMAIL_CC(0.00)[suse.com,kernel.org,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,microsoft.com,infradead.org,gmail.com,oracle.com,lists.xenproject.org];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	R_RATELIMIT(0.00)[to_ip_from(RLfdszjqhz8kzzb9uwpzdm8png)];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com]
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	R_RATELIMIT(0.00)[to_ip_from(RLfdszjqhz8kzzb9uwpzdm8png)];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	RCVD_TLS_ALL(0.00)[]
 X-Spam-Flag: NO
-X-Spam-Level: 
-X-Spam-Score: -5.30
+X-Spam-Score: -6.80
 
-In some places asm/paravirt.h is included without really being needed.
-
-Remove the related #include statements.
+The only user of paravirt_sched_clock() is in tsc.c, so move the code
+from paravirt.c and paravirt.h to tsc.c.
 
 Signed-off-by: Juergen Gross <jgross@suse.com>
 ---
- arch/x86/entry/entry_64.S             | 1 -
- arch/x86/entry/vsyscall/vsyscall_64.c | 1 -
- arch/x86/hyperv/hv_spinlock.c         | 1 -
- arch/x86/include/asm/apic.h           | 4 ----
- arch/x86/include/asm/highmem.h        | 1 -
- arch/x86/include/asm/mmu_context.h    | 1 -
- arch/x86/include/asm/mshyperv.h       | 1 -
- arch/x86/include/asm/pgtable_32.h     | 1 -
- arch/x86/include/asm/spinlock.h       | 1 -
- arch/x86/include/asm/tlbflush.h       | 4 ----
- arch/x86/kernel/apm_32.c              | 1 -
- arch/x86/kernel/callthunks.c          | 1 -
- arch/x86/kernel/cpu/bugs.c            | 1 -
- arch/x86/kernel/vsmp_64.c             | 1 -
- arch/x86/kernel/x86_init.c            | 1 -
- arch/x86/lib/cache-smp.c              | 1 -
- arch/x86/mm/init.c                    | 1 -
- arch/x86/xen/spinlock.c               | 1 -
- 18 files changed, 24 deletions(-)
+ arch/x86/include/asm/paravirt.h    | 12 ------------
+ arch/x86/include/asm/timer.h       |  1 +
+ arch/x86/kernel/kvmclock.c         |  1 +
+ arch/x86/kernel/paravirt.c         |  7 -------
+ arch/x86/kernel/tsc.c              | 10 +++++++++-
+ arch/x86/xen/time.c                |  1 +
+ drivers/clocksource/hyperv_timer.c |  2 ++
+ 7 files changed, 14 insertions(+), 20 deletions(-)
 
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index ed04a968cc7d..7a82305405af 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -30,7 +30,6 @@
- #include <asm/hw_irq.h>
- #include <asm/page_types.h>
- #include <asm/irqflags.h>
--#include <asm/paravirt.h>
- #include <asm/percpu.h>
- #include <asm/asm.h>
- #include <asm/smap.h>
-diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
-index c9103a6fa06e..53e50b506471 100644
---- a/arch/x86/entry/vsyscall/vsyscall_64.c
-+++ b/arch/x86/entry/vsyscall/vsyscall_64.c
-@@ -37,7 +37,6 @@
- #include <asm/unistd.h>
- #include <asm/fixmap.h>
- #include <asm/traps.h>
--#include <asm/paravirt.h>
- 
- #define CREATE_TRACE_POINTS
- #include "vsyscall_trace.h"
-diff --git a/arch/x86/hyperv/hv_spinlock.c b/arch/x86/hyperv/hv_spinlock.c
-index 81b006601370..2a3c2afb0154 100644
---- a/arch/x86/hyperv/hv_spinlock.c
-+++ b/arch/x86/hyperv/hv_spinlock.c
-@@ -13,7 +13,6 @@
- #include <linux/spinlock.h>
- 
- #include <asm/mshyperv.h>
--#include <asm/paravirt.h>
- #include <asm/apic.h>
- #include <asm/msr.h>
- 
-diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-index 07ba4935e873..e1de090e51dd 100644
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -90,10 +90,6 @@ static inline bool apic_from_smp_config(void)
- /*
-  * Basic functions accessing APICs.
-  */
--#ifdef CONFIG_PARAVIRT
--#include <asm/paravirt.h>
--#endif
--
- static inline void native_apic_mem_write(u32 reg, u32 v)
- {
- 	volatile u32 *addr = (volatile u32 *)(APIC_BASE + reg);
-diff --git a/arch/x86/include/asm/highmem.h b/arch/x86/include/asm/highmem.h
-index 585bdadba47d..decfaaf52326 100644
---- a/arch/x86/include/asm/highmem.h
-+++ b/arch/x86/include/asm/highmem.h
-@@ -24,7 +24,6 @@
- #include <linux/interrupt.h>
- #include <linux/threads.h>
- #include <asm/tlbflush.h>
--#include <asm/paravirt.h>
- #include <asm/fixmap.h>
- #include <asm/pgtable_areas.h>
- 
-diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
-index 73bf3b1b44e8..ee15657d25b3 100644
---- a/arch/x86/include/asm/mmu_context.h
-+++ b/arch/x86/include/asm/mmu_context.h
-@@ -9,7 +9,6 @@
- #include <trace/events/tlb.h>
- 
- #include <asm/tlbflush.h>
--#include <asm/paravirt.h>
- #include <asm/debugreg.h>
- #include <asm/gsseg.h>
- #include <asm/desc.h>
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index abc4659f5809..a9ab46fcb6a1 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -7,7 +7,6 @@
- #include <linux/msi.h>
- #include <linux/io.h>
- #include <asm/nospec-branch.h>
--#include <asm/paravirt.h>
- #include <asm/msr.h>
- #include <hyperv/hvhdk.h>
- 
-diff --git a/arch/x86/include/asm/pgtable_32.h b/arch/x86/include/asm/pgtable_32.h
-index b612cc57a4d3..acea0cfa2460 100644
---- a/arch/x86/include/asm/pgtable_32.h
-+++ b/arch/x86/include/asm/pgtable_32.h
-@@ -16,7 +16,6 @@
+diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
+index 37d7494ce146..bd050ceaae00 100644
+--- a/arch/x86/include/asm/paravirt.h
++++ b/arch/x86/include/asm/paravirt.h
+@@ -18,20 +18,8 @@ struct mm_struct;
  #ifndef __ASSEMBLER__
- #include <asm/processor.h>
- #include <linux/threads.h>
--#include <asm/paravirt.h>
+ #include <linux/types.h>
+ #include <linux/cpumask.h>
+-#include <linux/static_call_types.h>
+ #include <asm/frame.h>
  
- #include <linux/bitops.h>
- #include <linux/list.h>
-diff --git a/arch/x86/include/asm/spinlock.h b/arch/x86/include/asm/spinlock.h
-index 5b6bc7016c22..934632b78d09 100644
---- a/arch/x86/include/asm/spinlock.h
-+++ b/arch/x86/include/asm/spinlock.h
-@@ -7,7 +7,6 @@
- #include <asm/page.h>
- #include <asm/processor.h>
- #include <linux/compiler.h>
--#include <asm/paravirt.h>
- #include <asm/bitops.h>
- 
- /*
-diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index 00daedfefc1b..238a6b807da5 100644
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -300,10 +300,6 @@ static inline void mm_clear_asid_transition(struct mm_struct *mm) { }
- static inline bool mm_in_asid_transition(struct mm_struct *mm) { return false; }
- #endif /* CONFIG_BROADCAST_TLB_FLUSH */
- 
--#ifdef CONFIG_PARAVIRT
--#include <asm/paravirt.h>
--#endif
+-u64 dummy_sched_clock(void);
 -
- #define flush_tlb_mm(mm)						\
- 		flush_tlb_mm_range(mm, 0UL, TLB_FLUSH_ALL, 0UL, true)
+-DECLARE_STATIC_CALL(pv_sched_clock, dummy_sched_clock);
+-
+-void paravirt_set_sched_clock(u64 (*func)(void));
+-
+-static __always_inline u64 paravirt_sched_clock(void)
+-{
+-	return static_call(pv_sched_clock)();
+-}
+-
+ __visible void __native_queued_spin_unlock(struct qspinlock *lock);
+ bool pv_is_native_spin_unlock(void);
+ __visible bool __native_vcpu_is_preempted(long cpu);
+diff --git a/arch/x86/include/asm/timer.h b/arch/x86/include/asm/timer.h
+index 23baf8c9b34c..fda18bcb19b4 100644
+--- a/arch/x86/include/asm/timer.h
++++ b/arch/x86/include/asm/timer.h
+@@ -12,6 +12,7 @@ extern void recalibrate_cpu_khz(void);
+ extern int no_timer_check;
  
-diff --git a/arch/x86/kernel/apm_32.c b/arch/x86/kernel/apm_32.c
-index b37ab1095707..3175d7c134e9 100644
---- a/arch/x86/kernel/apm_32.c
-+++ b/arch/x86/kernel/apm_32.c
-@@ -229,7 +229,6 @@
- #include <linux/uaccess.h>
- #include <asm/desc.h>
- #include <asm/olpc.h>
--#include <asm/paravirt.h>
- #include <asm/reboot.h>
- #include <asm/nospec-branch.h>
- #include <asm/ibt.h>
-diff --git a/arch/x86/kernel/callthunks.c b/arch/x86/kernel/callthunks.c
-index a951333c5995..e37728f70322 100644
---- a/arch/x86/kernel/callthunks.c
-+++ b/arch/x86/kernel/callthunks.c
-@@ -15,7 +15,6 @@
- #include <asm/insn.h>
- #include <asm/kexec.h>
- #include <asm/nospec-branch.h>
--#include <asm/paravirt.h>
- #include <asm/sections.h>
- #include <asm/switch_to.h>
- #include <asm/sync_core.h>
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index af838b8d845c..00ac4a58542a 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -25,7 +25,6 @@
- #include <asm/fpu/api.h>
- #include <asm/msr.h>
- #include <asm/vmx.h>
--#include <asm/paravirt.h>
- #include <asm/cpu_device_id.h>
- #include <asm/e820/api.h>
- #include <asm/hypervisor.h>
-diff --git a/arch/x86/kernel/vsmp_64.c b/arch/x86/kernel/vsmp_64.c
-index 73511332bb67..25625e3fc183 100644
---- a/arch/x86/kernel/vsmp_64.c
-+++ b/arch/x86/kernel/vsmp_64.c
-@@ -18,7 +18,6 @@
- #include <asm/apic.h>
- #include <asm/pci-direct.h>
- #include <asm/io.h>
--#include <asm/paravirt.h>
- #include <asm/setup.h>
- 
- #define TOPOLOGY_REGISTER_OFFSET 0x10
-diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
-index 0a2bbd674a6d..02ca90378bf9 100644
---- a/arch/x86/kernel/x86_init.c
-+++ b/arch/x86/kernel/x86_init.c
-@@ -12,7 +12,6 @@
- 
- #include <asm/acpi.h>
- #include <asm/bios_ebda.h>
--#include <asm/paravirt.h>
- #include <asm/pci_x86.h>
- #include <asm/mpspec.h>
- #include <asm/setup.h>
-diff --git a/arch/x86/lib/cache-smp.c b/arch/x86/lib/cache-smp.c
-index c5c60d07308c..ae5a5dfd33c7 100644
---- a/arch/x86/lib/cache-smp.c
-+++ b/arch/x86/lib/cache-smp.c
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#include <asm/paravirt.h>
- #include <linux/smp.h>
- #include <linux/export.h>
- 
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index bb57e93b4caf..f52ebcac50d9 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -27,7 +27,6 @@
- #include <asm/pti.h>
- #include <asm/text-patching.h>
- #include <asm/memtype.h>
--#include <asm/paravirt.h>
- #include <asm/mmu_context.h>
+ extern bool using_native_sched_clock(void);
++void paravirt_set_sched_clock(u64 (*func)(void));
  
  /*
-diff --git a/arch/x86/xen/spinlock.c b/arch/x86/xen/spinlock.c
-index 8e4efe0fb6f9..fe56646d6919 100644
---- a/arch/x86/xen/spinlock.c
-+++ b/arch/x86/xen/spinlock.c
-@@ -8,7 +8,6 @@
- #include <linux/slab.h>
- #include <linux/atomic.h>
+  * We use the full linear equation: f(x) = a + b*x, in order to allow
+diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
+index ca0a49eeac4a..b5991d53fc0e 100644
+--- a/arch/x86/kernel/kvmclock.c
++++ b/arch/x86/kernel/kvmclock.c
+@@ -19,6 +19,7 @@
+ #include <linux/cc_platform.h>
  
--#include <asm/paravirt.h>
- #include <asm/qspinlock.h>
+ #include <asm/hypervisor.h>
++#include <asm/timer.h>
+ #include <asm/x86_init.h>
+ #include <asm/kvmclock.h>
  
- #include <xen/events.h>
+diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
+index 42991d471bf3..4e37db8073f9 100644
+--- a/arch/x86/kernel/paravirt.c
++++ b/arch/x86/kernel/paravirt.c
+@@ -60,13 +60,6 @@ void __init native_pv_lock_init(void)
+ 		static_branch_enable(&virt_spin_lock_key);
+ }
+ 
+-DEFINE_STATIC_CALL(pv_sched_clock, native_sched_clock);
+-
+-void paravirt_set_sched_clock(u64 (*func)(void))
+-{
+-	static_call_update(pv_sched_clock, func);
+-}
+-
+ static noinstr void pv_native_safe_halt(void)
+ {
+ 	native_safe_halt();
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index 87e749106dda..554b54783a04 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -266,19 +266,27 @@ u64 native_sched_clock_from_tsc(u64 tsc)
+ /* We need to define a real function for sched_clock, to override the
+    weak default version */
+ #ifdef CONFIG_PARAVIRT
++DEFINE_STATIC_CALL(pv_sched_clock, native_sched_clock);
++
+ noinstr u64 sched_clock_noinstr(void)
+ {
+-	return paravirt_sched_clock();
++	return static_call(pv_sched_clock)();
+ }
+ 
+ bool using_native_sched_clock(void)
+ {
+ 	return static_call_query(pv_sched_clock) == native_sched_clock;
+ }
++
++void paravirt_set_sched_clock(u64 (*func)(void))
++{
++	static_call_update(pv_sched_clock, func);
++}
+ #else
+ u64 sched_clock_noinstr(void) __attribute__((alias("native_sched_clock")));
+ 
+ bool using_native_sched_clock(void) { return true; }
++void paravirt_set_sched_clock(u64 (*func)(void)) { }
+ #endif
+ 
+ notrace u64 sched_clock(void)
+diff --git a/arch/x86/xen/time.c b/arch/x86/xen/time.c
+index e4754b2fa900..6f9f665bb7ae 100644
+--- a/arch/x86/xen/time.c
++++ b/arch/x86/xen/time.c
+@@ -19,6 +19,7 @@
+ #include <linux/sched/cputime.h>
+ 
+ #include <asm/pvclock.h>
++#include <asm/timer.h>
+ #include <asm/xen/hypervisor.h>
+ #include <asm/xen/hypercall.h>
+ #include <asm/xen/cpuid.h>
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index 2edc13ca184e..6397a7ba4a98 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -535,6 +535,8 @@ static __always_inline void hv_setup_sched_clock(void *sched_clock)
+ 	sched_clock_register(sched_clock, 64, NSEC_PER_SEC);
+ }
+ #elif defined CONFIG_PARAVIRT
++#include <asm/timer.h>
++
+ static __always_inline void hv_setup_sched_clock(void *sched_clock)
+ {
+ 	/* We're on x86/x64 *and* using PV ops */
 -- 
 2.51.0
 
