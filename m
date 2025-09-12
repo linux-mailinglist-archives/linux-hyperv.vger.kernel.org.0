@@ -1,66 +1,61 @@
-Return-Path: <linux-hyperv+bounces-6835-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6836-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CDF4B54B45
-	for <lists+linux-hyperv@lfdr.de>; Fri, 12 Sep 2025 13:43:31 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAC5DB54DC9
+	for <lists+linux-hyperv@lfdr.de>; Fri, 12 Sep 2025 14:32:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0E3A3BB715
-	for <lists+linux-hyperv@lfdr.de>; Fri, 12 Sep 2025 11:43:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 67FF1B634B0
+	for <lists+linux-hyperv@lfdr.de>; Fri, 12 Sep 2025 12:29:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE50D301003;
-	Fri, 12 Sep 2025 11:43:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEB553093CF;
+	Fri, 12 Sep 2025 12:28:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0TCwjyZx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GrwhzFll"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6877641C62;
-	Fri, 12 Sep 2025 11:43:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9715D3009F1;
+	Fri, 12 Sep 2025 12:28:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757677406; cv=none; b=LqxhO0/hEm2CBiuRf2QSIZfrs1QADxDxXNs9KqooStFKWzUl2txum2r9uL7PH641ezl3Esgj3pwuJJxDmhf76yaZtrZ7qhFpmGAiJcCSdYL/1vH8W6OpWOjkfwr0zG6W3yCq3Lhh689Iuq9HvGW84gxLsOqDSmcQ6bxHUIFsLpo=
+	t=1757680135; cv=none; b=J9a7mkPTIvlO8lxPS4jofJMxIMYEDmawNP+nTnAi3ijwqdQnaLiDGwtL9yMfN2FcFr2sw1HoBGJhUVp8IktdqF1S0KnzVR67Xj4+v78032mpvj9SwfNm0JOBpbLRr2pl+kVeKStyTfjBWkJtR56LIBcfsAsNRefKbOGYaAqURpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757677406; c=relaxed/simple;
-	bh=vQZw18LyMNiHBfayqqKazzYbl6hyR7y4CM3GzrQTcKo=;
+	s=arc-20240116; t=1757680135; c=relaxed/simple;
+	bh=p830gX6KrZsA/EMfLPYi3m+Z9YLsy7fuGVZR/1xn9+A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RyT9RI2j6qOlTnaYw0KIyVEqiCQewLMLd/nvCUsYpul/nevb3VCawDMMznzTt3QXW27xUIh4k04hjXrPzAaaw8HDSnnQ6fKvlkpQgzxNMzYIEVkbBae5QY+dpEWx5Gx7uILyul80jYkayGann837FbrbbgrtfJUJam7XhYXjr6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0TCwjyZx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2916DC4CEF1;
-	Fri, 12 Sep 2025 11:43:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1757677405;
-	bh=vQZw18LyMNiHBfayqqKazzYbl6hyR7y4CM3GzrQTcKo=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=VW4JDWwoLvm8pLwnGWopNHfGaDVsT+qRwin7+KTiFNTsrVrNrpc/Izy+GjFzZ94uGxN7WlNbq7hAE9OEXhOTEQ84vxvWHU8lLs2mhagSm79ZufplWk3Vz9A+5YONuM9SJSSkRsDj5VYgUE9n5aWv8fZHW0mwTQWDrqHEsw6Ywx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GrwhzFll; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B37AEC4CEFC;
+	Fri, 12 Sep 2025 12:28:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757680135;
+	bh=p830gX6KrZsA/EMfLPYi3m+Z9YLsy7fuGVZR/1xn9+A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=0TCwjyZxwiSPrLtFZN+IyniMywN3vL/LlOWbuAxsnEsOVAbzmqup0WIsjoDHMFsp4
-	 CZHsmzwRAvDxfPp9R9I5o3dTd0LaONRXa7YSjy5cAsJmZrkkOk9zpdlsnFkevQaLH4
-	 NT9opWe3xXbfYZRU1UCBvRT6dZZUiedrQxIwCvto=
-Date: Fri, 12 Sep 2025 13:43:22 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Mukesh R <mrathor@linux.microsoft.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
-	linux-arch@vger.kernel.org, virtualization@lists.linux.dev,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-	jikos@kernel.org, bentiss@kernel.org, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	dmitry.torokhov@gmail.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, bhelgaas@google.com,
-	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
-	deller@gmx.de, arnd@arndb.de, sgarzare@redhat.com, horms@kernel.org
-Subject: Re: [PATCH v1 2/2] Drivers: hv: Make CONFIG_HYPERV bool
-Message-ID: <2025091253-overwrite-carol-b197@gregkh>
-References: <20250906010952.2145389-1-mrathor@linux.microsoft.com>
- <20250906010952.2145389-3-mrathor@linux.microsoft.com>
- <2025090621-rumble-cost-2c0d@gregkh>
- <d7d7b23f-eaea-2dbc-9c9d-4bee082f6fe7@linux.microsoft.com>
+	b=GrwhzFllMgE7HXfxOzRoap2O3zAjm2C6UWg8j5eEeGhNzmmoqua5Q63o6PQLL17Bs
+	 j8qpa8aQ8fRv/RRuE0lq2Dr90b3mo/s89vhlw9A2p6shCadDxHbbuzfeOE2gScV0BZ
+	 IYm6IXo9HnWwnBkQE15gFxKUzmunVj2GXx4CAxcXqkar6d8eK2cYiiQ8UAW3GhRPs3
+	 KvgDoGPK+6EuFFNZu4h84Qbj+s+SSafvil7KQyUVLqE0nUrMoMMAW78+CcEn+pQoxH
+	 /Il8wgj+JWCpO/ywvIVO3XCpOHS0gsXvhn/xOmtH8+Eclh89bdtJqqVGmRqL8bQ4HG
+	 YDBApuXS1/2GA==
+Date: Fri, 12 Sep 2025 13:28:49 +0100
+From: Simon Horman <horms@kernel.org>
+To: Haiyang Zhang <haiyangz@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	haiyangz@microsoft.com, decui@microsoft.com, kys@microsoft.com,
+	wei.liu@kernel.org, edumazet@google.com, davem@davemloft.net,
+	kuba@kernel.org, pabeni@redhat.com, longli@microsoft.com,
+	ssengar@linux.microsoft.com, ernis@linux.microsoft.com,
+	dipayanroy@linux.microsoft.com, kotaranov@microsoft.com,
+	shirazsaleem@microsoft.com, andrew+netdev@lunn.ch,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: mana: Reduce waiting time if HWC not
+ responding
+Message-ID: <20250912122849.GA30363@horms.kernel.org>
+References: <1757537841-5063-1-git-send-email-haiyangz@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -69,67 +64,47 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d7d7b23f-eaea-2dbc-9c9d-4bee082f6fe7@linux.microsoft.com>
+In-Reply-To: <1757537841-5063-1-git-send-email-haiyangz@linux.microsoft.com>
 
-On Mon, Sep 08, 2025 at 02:01:34PM -0700, Mukesh R wrote:
-> On 9/6/25 04:36, Greg KH wrote:
-> > On Fri, Sep 05, 2025 at 06:09:52PM -0700, Mukesh Rathor wrote:
-> >> With CONFIG_HYPERV and CONFIG_HYPERV_VMBUS separated, change CONFIG_HYPERV
-> >> to bool from tristate. CONFIG_HYPERV now becomes the core Hyper-V
-> >> hypervisor support, such as hypercalls, clocks/timers, Confidential
-> >> Computing setup, PCI passthru, etc. that doesn't involve VMBus or VMBus
-> >> devices.
-> > 
-> > But why are you making it so that this can not be a module anymore?  You
-> > are now forcing ALL Linux distro users to always have this code in their
-> > system, despite not ever using the feature.  That feels like a waste to
-> > me.
-> > 
-> > What is preventing this from staying as a module?  Why must you always
-> > have this code loaded at all times for everyone?
+On Wed, Sep 10, 2025 at 01:57:21PM -0700, Haiyang Zhang wrote:
+> From: Haiyang Zhang <haiyangz@microsoft.com>
 > 
-> This is currently not a module. I assume it was at the beginning. In
-> drivers/Makefile today:
+> If HW Channel (HWC) is not responding, reduce the waiting time, so further
+> steps will fail quickly.
+> This will prevent getting stuck for a long time (30 minutes or more), for
+> example, during unloading while HWC is not responding.
 > 
-> obj-$(subst m,y,$(CONFIG_HYPERV))       += hv/
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> ---
+>  drivers/net/ethernet/microsoft/mana/hw_channel.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 > 
-> 
-> More context: CONFIG_HYPERV doesn't really reflect one module. It is
-> both for kernel built in code and building of stuff in drivers/hv.
-> 
-> drivers/hv then builds 4 modules:
-> 
-> obj-$(CONFIG_HYPERV)            += hv_vmbus.o
-> obj-$(CONFIG_HYPERV_UTILS)      += hv_utils.o
-> obj-$(CONFIG_HYPERV_BALLOON)    += hv_balloon.o
-> obj-$(CONFIG_MSHV_ROOT)         += mshv_root.o
-> 
-> Notice vmbus is using CONFIG_HYPERV because there is no 
-> CONFIG_HYPERV_VMBUS. We are trying to fix that here.
+> diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+> index ef072e24c46d..ada6c78a2bef 100644
+> --- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
+> +++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+> @@ -881,7 +881,12 @@ int mana_hwc_send_request(struct hw_channel_context *hwc, u32 req_len,
+>  	if (!wait_for_completion_timeout(&ctx->comp_event,
+>  					 (msecs_to_jiffies(hwc->hwc_timeout)))) {
+>  		if (hwc->hwc_timeout != 0)
+> -			dev_err(hwc->dev, "HWC: Request timed out!\n");
+> +			dev_err(hwc->dev, "HWC: Request timed out: %u ms\n",
+> +				hwc->hwc_timeout);
+> +
+> +		/* Reduce further waiting if HWC no response */
+> +		if (hwc->hwc_timeout > 1)
+> +			hwc->hwc_timeout = 1;
 
-This series does not apply to my tree:
+Hi,
 
-checking file drivers/gpu/drm/Kconfig
-checking file drivers/hid/Kconfig
-checking file drivers/hv/Kconfig
-Hunk #2 FAILED at 82.
-1 out of 2 hunks FAILED
-checking file drivers/hv/Makefile
-checking file drivers/input/serio/Kconfig
-checking file drivers/net/hyperv/Kconfig
-checking file drivers/pci/Kconfig
-checking file drivers/scsi/Kconfig
-checking file drivers/uio/Kconfig
-checking file drivers/video/fbdev/Kconfig
-checking file include/asm-generic/mshyperv.h
-Hunk #1 succeeded at 162 with fuzz 2 (offset -3 lines).
-Hunk #2 succeeded at 198 (offset -3 lines).
-Hunk #3 succeeded at 215 (offset -3 lines).
-checking file net/vmw_vsock/Kconfig
+Perhaps it is already the case, but I'm wondering if the configured
+value of hwc_timeout should be restored at some point.
 
-What was it made against?
-
-thanks,
-
-greg k-h
+>  
+>  		err = -ETIMEDOUT;
+>  		goto out;
+> -- 
+> 2.34.1
+> 
+> 
 
