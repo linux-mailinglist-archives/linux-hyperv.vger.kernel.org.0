@@ -1,111 +1,85 @@
-Return-Path: <linux-hyperv+bounces-6854-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6855-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32C27B55EF1
-	for <lists+linux-hyperv@lfdr.de>; Sat, 13 Sep 2025 08:28:30 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B71FCB5613F
+	for <lists+linux-hyperv@lfdr.de>; Sat, 13 Sep 2025 15:47:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5F29583BFC
-	for <lists+linux-hyperv@lfdr.de>; Sat, 13 Sep 2025 06:28:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 72F4C7A4EE6
+	for <lists+linux-hyperv@lfdr.de>; Sat, 13 Sep 2025 13:46:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D78C2E7650;
-	Sat, 13 Sep 2025 06:28:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 357A22ECEB9;
+	Sat, 13 Sep 2025 13:47:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jUzKSGav"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="zx6w/wak"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023AA2BCFB
-	for <linux-hyperv@vger.kernel.org>; Sat, 13 Sep 2025 06:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A623283FC4;
+	Sat, 13 Sep 2025 13:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757744907; cv=none; b=KMga/qKi60uYWWG+2mRYwGJOtnWepA9VpY4/h/t3LnztvLN+1sFG7ytLWD7ql3QGbnv5zXEViPrVVjZpsuydG3c6X/t1yqVFFOn3/9BlYp2Afqv8fAap3t8AO1R23LFCbQ12Zl6FI7iKUkeVcX5x4MAGf6RqdxwHFyKJx6NIQx8=
+	t=1757771272; cv=none; b=k8cyMumVW4I1nRuOTm3xXjUM/0mCmpVDr7q1iYXvTar8QXk3CQEVGCd+pqYaDOjrEWyXC+1IoSANURknzEbV/S6O1Dp+vRIVJZRzWL98Wxb0Lep5MbrwELdo+jiOrR26fzB/yIqlgIBRKXVKBIOaC1OWEE6JMncFrYbfWe7SN1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757744907; c=relaxed/simple;
-	bh=/i/Vpx5Mot8737yhSFoj0KRVF1Oqi+ZajfOBBYnzlY4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SIEwiPPhp6EZyYwebEj2yn04+5QS5tqpwnQM8umol+mG96X1AWP2gtqwrhDdfDl0zgSYH9KkgcCPH5+0la3SE8EoaH0f7jOa0a3nxLgJaCo7ipMK7N+/PPBXcnfx0H8tmlUbXzR4zaZkTsxamYOsJkEclPmGeMl1ln7P5ASrZgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jUzKSGav; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757744904;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=mY0zwfbcY1iYfa3XybLBXvWgZp6sPQxxx4em9LXqmGk=;
-	b=jUzKSGav/quFvFIA5zTCUkHwOefHM9CMVRcgv6FA30kjuQtV107DSQ8Fd5JP/6ugf5vrQb
-	/T/c9WCXqJLdqGWUV5Q2sh6lxrH0aeY0bQw88YxQv0cgl+Z9eaEttQE7KC8zJfzeX3vOVA
-	jqYHORkZWGyx2RJ4GXtI6L4LFMT8BfQ=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-88-RKEeC9LyO6O3JcQ8hwjPSg-1; Sat,
- 13 Sep 2025 02:28:20 -0400
-X-MC-Unique: RKEeC9LyO6O3JcQ8hwjPSg-1
-X-Mimecast-MFC-AGG-ID: RKEeC9LyO6O3JcQ8hwjPSg_1757744899
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E3FF51800365;
-	Sat, 13 Sep 2025 06:28:18 +0000 (UTC)
-Received: from laptop.redhat.com (unknown [10.72.112.52])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 17A2B300021A;
-	Sat, 13 Sep 2025 06:28:12 +0000 (UTC)
-From: Li Tian <litian@redhat.com>
-To: netdev@vger.kernel.org,
-	linux-hyperv@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Mark Bloch <mbloch@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	linux-rdma@vger.kernel.org,
+	s=arc-20240116; t=1757771272; c=relaxed/simple;
+	bh=UZ1FFYDAeyzL3fNFGkn2S5wdPo1eKK0Z4qYLy68oj7E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=awz+XzaGRgVV98oUR0O8VqHm//Z5A4k8SMBOWscMais2+kRr1eOfCSwyAM1XDnZGBy4MjiqKooXJwp7Z8fVwlyx5GZ3k5Bjfv8WxDoTBAGd+/nY+wPP5IV/Plt16rdHUSszLHYcWFrBrM8QpGDvIwdIQpMcQMBpy2jggLDLreE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=zx6w/wak; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=OgE8sh8Nl8Fom30U4y6FEEnUsfW7+fGifiRiLj1bT5M=; b=zx6w/wakWP9gzD8miF9IP8dv88
+	n41j/awfWO4z/uL74iYw5DEO3KMvn78vzYYlS3is3/mqW7UAohpTHqRTkEy91A/wfRXbGV1ReeDr5
+	zQ8torMtWqq7p/kl+xqcQjq6P5iJm4xl17IZLcY7+YGXIjaVii9ssFfgeJTcHE1G41fU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uxQbL-008Ij6-37; Sat, 13 Sep 2025 15:47:39 +0200
+Date: Sat, 13 Sep 2025 15:47:39 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Li Tian <litian@redhat.com>
+Cc: netdev@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>, Mark Bloch <mbloch@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
 	Haiyang Zhang <haiyangz@microsoft.com>
-Subject: [PATCH net] net/mlx5: report duplex full when speed is known
-Date: Sat, 13 Sep 2025 14:28:10 +0800
-Message-ID: <20250913062810.11141-1-litian@redhat.com>
+Subject: Re: [PATCH net] net/mlx5: report duplex full when speed is known
+Message-ID: <bacbeaf2-104f-4da5-a66b-b8aee2b2de12@lunn.ch>
+References: <20250913062810.11141-1-litian@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250913062810.11141-1-litian@redhat.com>
 
-Prior commit in Fixes, duplex is always reported full as long
-as the speed is known. Restore this behavior. Besides, modern
-Mellanox doesn't seem to care about half duplex. This change
-mitigates duplex unknown issue on Azure Mellanox 5.
+On Sat, Sep 13, 2025 at 02:28:10PM +0800, Li Tian wrote:
+> Prior commit in Fixes, duplex is always reported full as long
+> as the speed is known. Restore this behavior. Besides, modern
+> Mellanox doesn't seem to care about half duplex. This change
+> mitigates duplex unknown issue on Azure Mellanox 5.
+> 
+> Fixes: c268ca6087f55 ("net/mlx5: Expose port speed when possible")
 
-Fixes: c268ca6087f55 ("net/mlx5: Expose port speed when possible")
-Signed-off-by: Li Tian <litian@redhat.com>
----
- drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I'm confused with your commit message. You say DUPLEX used to be
+reported as Full if the speed is known. How does c268ca6087f55 change
+this? You don't say in the commit message. Why is Half duplex
+important to this fix? I don't see Half anywhere in the code.
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-index d507366d773e..9f35d3b491e0 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-@@ -1118,9 +1118,11 @@ static void get_link_properties(struct net_device *netdev,
- 	if (info) {
- 		speed = info->speed;
- 		lanes = info->lanes;
--		duplex = DUPLEX_FULL;
- 	} else if (data_rate_oper)
- 		speed = 100 * data_rate_oper;
-+	if (!speed)
-+		goto out;
-+	duplex = DUPLEX_FULL;
- 
- out:
- 	link_ksettings->base.duplex = duplex;
--- 
-2.50.0
+Also, what sort of problems do you see with duplex unknown? When
+somebody has a problem and is looking to find a patch which might fix
+it, seeing a description of the problem fixed in the commit message is
+useful.
 
+	Andrew
 
