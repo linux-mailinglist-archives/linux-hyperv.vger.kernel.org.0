@@ -1,302 +1,297 @@
-Return-Path: <linux-hyperv+bounces-6887-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6888-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4711DB5A3FE
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Sep 2025 23:31:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0AB89B7E4B3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Sep 2025 14:46:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E2DF07AF9FC
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Sep 2025 21:29:27 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C09937B4B3F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Sep 2025 23:42:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 745AF29B77C;
-	Tue, 16 Sep 2025 21:30:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D45D2D73AD;
+	Tue, 16 Sep 2025 23:43:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="UCJ7K+1f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ia9AFCKj"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 991B129A30E;
-	Tue, 16 Sep 2025 21:30:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B572D0C69
+	for <linux-hyperv@vger.kernel.org>; Tue, 16 Sep 2025 23:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758058256; cv=none; b=uHaKz85fo9eBNHC/vBozAxO8pX2l2zfQbBfkWZTZ3wugU5TwcjGPY4gk98wqCvRcSRz/dAYXjnKyirolrMpiaTIcPCtSbNrkP4ZLa1YRfu5s9xDfDxlkzJV1BMYnfEImN0a7OY/KdaTTmpmaIGmEkYF6drMxbiUYc1+IrI528TE=
+	t=1758066234; cv=none; b=qO3VHJmv5/T0057ryJm4aTbmhhAbzd3IiA/pyt3Hjef1kZVEHucLiXlDBzVnCiU41cASODAFVive3N3slslcjladaYZpO1L+1ycno/OspD+OLDfx58JuPswSvbHc6xo/0SUUCnlLr/PwtSlQtnNU3PsDwDIBlE1IFD9/VfZvawQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758058256; c=relaxed/simple;
-	bh=gJ9wZRVbw3udYzRjVbZa++IA+J+QJ8U5tc09EX/KI5c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SrlPJpeSjYsbFLYu6XqjGZMOobFOZTQdi9+ar8dSAdieGwvSpslm6EVDjGCeZsZiG4xpAWOsLF1NMVXu8h0bJ8yDikFO1wGf2oKD8kj8D+60C8aKkwZav6CrYQm+I/CCsUw/8nCN8szLSgF67nwNWaWzz+1BXYJ+VRcKB6Qx250=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=UCJ7K+1f; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
-	by linux.microsoft.com (Postfix) with ESMTPSA id E3BAB20171A9;
-	Tue, 16 Sep 2025 14:30:51 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E3BAB20171A9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1758058252;
-	bh=QMrQd7BUWalzmb/hq+iMlexb31ti2rSYy0sE6qUO1AI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UCJ7K+1fN8x4tc0jV34ovb7Z+/a+h3a6Zsc0CRzpo+BXxyMu2F4o/sM/Tx310uwuh
-	 kgXPHMY3ohT1L/SnCR/ocVTEE7FgfuprXm6Ub98s2JwftWAmJIdf9nGsWabAsVa6hp
-	 JXi0TgH9tmR3OYopjspICMT6fkJYTnttLjxJe4/k=
-Message-ID: <79f5d0ac-0b3e-70fc-2cbe-8a2352642746@linux.microsoft.com>
-Date: Tue, 16 Sep 2025 14:30:51 -0700
+	s=arc-20240116; t=1758066234; c=relaxed/simple;
+	bh=tDbd/upvHR/xtlA/nTwN/G43iDlA1JrzjfApfEaGGJU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MClU4Ux75Gr8piLA3zWYpM6MXRsVbgArHX5bLb72lc3BEe4yYVv3x6srAzRDrsKQd5mSzU3Yj+qGUMlEynzNdoxQa3qpkLCQoZ0QFt8ATqTBkgEdImg5VsIzjl7St76rJkZdcY8jkx0+Mu+0X9JD9srQs0ViD8B3JD3I3+oq3C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ia9AFCKj; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-24b13313b1bso41917485ad.2
+        for <linux-hyperv@vger.kernel.org>; Tue, 16 Sep 2025 16:43:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758066231; x=1758671031; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CHl5WqeMYUkPQ1EC4mALAYkWrMfI/glTDyOoveTOmK8=;
+        b=ia9AFCKjbl7D/YuKv9NIOwWfq205YgLlZ8U3tdvwUpEWQ/ue1DAfScrTHDqswdgAna
+         122p44VCZxYphtrAJ7mtpzzvZBiQAYj/hoEwDzCtTO5MqtwujIAeIxecv6wd5ZlNDpU0
+         lOYLT0VyM7xNIyO4/CGv0PeZ2zmKCoAgGTZ0IO5hxXdKsyTmdiifUP3p6vquCoHXzB0M
+         fKQv6OvL1CmR37cWpUHVcdzWrciNxznnN/HYdDk3c138rSgPmTrYJL4KEM+J/acOOpLa
+         1TN9hyIzc/bR3po7lJr3obPjRMuPs44mRLpQHyURW8Irn44PUNyfd36ncahTx512bwIp
+         PJJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758066231; x=1758671031;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CHl5WqeMYUkPQ1EC4mALAYkWrMfI/glTDyOoveTOmK8=;
+        b=hZ1AVQmEVYmp3p7B+DzPF6l24+QE871b7eKAL1BNmNrvKUHwSI9iJj7XQQOUNN2env
+         tiM2EhU8vvZPkzE5p8PypliU+POU2At99RMZzU5e+2TItL2AVRNq6oRc7kOodEgymox/
+         0tIoQWFTHtn0ESXxbaGHv5SmgcRr3HCapyxq/FziPX1aan6m434vekyUVVPbsYnd3MrA
+         kPLUChBAzOA7En1rYpBcwQiG+kt2vPWBkcq0uHZVtr/6KC+1zrHSAFX/ly0gmKDSK0Ts
+         zXQOxWiuA5+tsjxmPofx2VCaY0MyPYzV/5zpmItSJrCBRAGGR03eyBQZUecJ0mrjifML
+         Zybw==
+X-Forwarded-Encrypted: i=1; AJvYcCWl5cIP+a7QrMKLofTxNfk+KIidEVIbbAj/B8fAI0Dq6jW23reN0k+fhRfk50uebrHuDrKjpT4nNl0IWe4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJUbprrfU47RhDTLEC00T7V9R9e5Gf3nkrxkPJciW0HXqty8WB
+	05r0zjRCsT201nYTh8Ld1tHvKMpf05KvlMdnFF3Iqdl4E2l9utrpa8/Y
+X-Gm-Gg: ASbGncvv82LdOJ5EVec65xD3YkbR2zZV/xCKeTAPojnRob8o/AfkDrZz6HckxIUKKNT
+	1amPZjdNCLYARG3kY0BkfGWGe4I+mJ2ES0/KzEufWGU2/UuoOCqxw/mOtpquZ+bL7wtdLf8+OPk
+	3lhywsYZPek/5bwvJSKiZ7DHsPXlXCVV9PdX7KIk1oVgzbujlv0ZlWTTDFwz6XeRUauNYuQtnS1
+	FXJX98tt3wfkREJtbajcotZsXgemOEmBMPskHVDYLIQTL0K6utVclk8WPJ+hcK/rWg559ffwKG5
+	4mKAuXAc/NV1eYqDp/Yxwzq5C83c6AJSi2OuYTC+p9RNdfb6RBslCvfkKYEFM8co/1JZcILE+BO
+	+PsdyZyFkR1zFsfHNeT3A
+X-Google-Smtp-Source: AGHT+IGZVED2rSAsJWXkVcB5IVcGYR1SeW/vsl8TxNbaoSEzfPQ4U64w5sr+Q2Xqz4mlv9BaVkDfPw==
+X-Received: by 2002:a17:902:da8c:b0:240:3b9e:dd65 with SMTP id d9443c01a7336-26813902fc2mr821225ad.38.1758066230710;
+        Tue, 16 Sep 2025 16:43:50 -0700 (PDT)
+Received: from localhost ([2a03:2880:2ff:45::])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2680971b4fbsm2750045ad.104.2025.09.16.16.43.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Sep 2025 16:43:49 -0700 (PDT)
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+Subject: [PATCH net-next v6 0/9] vsock: add namespace support to
+ vhost-vsock
+Date: Tue, 16 Sep 2025 16:43:44 -0700
+Message-Id: <20250916-vsock-vmtest-v6-0-064d2eb0c89d@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v1 4/6] x86/hyperv: Add trampoline asm code to transition
- from hypervisor
-Content-Language: en-US
-To: Michael Kelley <mhklinux@outlook.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
- "arnd@arndb.de" <arnd@arndb.de>
-References: <20250910001009.2651481-1-mrathor@linux.microsoft.com>
- <20250910001009.2651481-5-mrathor@linux.microsoft.com>
- <SN6PR02MB41570D14679ED23C930878CCD415A@SN6PR02MB4157.namprd02.prod.outlook.com>
-From: Mukesh R <mrathor@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB41570D14679ED23C930878CCD415A@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIADH2yWgC/23QwWrDMAyA4VcpPtfDkiPH2anvMXaQHaU1W5KRh
+ NBR+u4zYdDM3dGIT7/RTc0yJZnV6+GmJlnTnMYhP9zxoOKFh7Po1Oa3QoNkLJJe5zF+6LVfZF5
+ 0sIzQIhiMqDL5mqRL123dmxpk0YNcF/WeJ5c0L+P0vXVW2ObbygrM35UraNCdJfbQcmh8PJ17T
+ p8vcey3RSvucV1gzNg2Bhhra0F8ie0Ooy+wzRg8cOfA2c5KiasHJlOWq4ydIDc1Ooyt2+Hj7/m
+ 8oSdktKFGIgEHADj1svAjSLsg2MJSDlZSU6y4oijhvyDWTygHA5M3QVqhUATdPlh+1uVgwx3Ea
+ DDf2OzPc7/ffwDXULXLSwIAAA==
+To: Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Stefan Hajnoczi <stefanha@redhat.com>, 
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+ "K. Y. Srinivasan" <kys@microsoft.com>, 
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+ Dexuan Cui <decui@microsoft.com>, Bryan Tan <bryan-bt.tan@broadcom.com>, 
+ Vishnu Dasa <vishnu.dasa@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kvm@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+ Bobby Eshleman <bobbyeshleman@gmail.com>, berrange@redhat.com, 
+ Bobby Eshleman <bobbyeshleman@meta.com>
+X-Mailer: b4 0.13.0
 
-On 9/15/25 10:55, Michael Kelley wrote:
-> From: Mukesh Rathor <mrathor@linux.microsoft.com> Sent: Tuesday, September 9, 2025 5:10 PM
->>
->> Introduce a small asm stub to transition from the hypervisor to linux
-> 
-> I'd argue for capitalizing "Linux" here and in other places in commit
-> text and code comments throughout this patch set.
+This series adds namespace support to vhost-vsock and loopback. It does
+not add namespaces to any of the other guest transports (virtio-vsock,
+hyperv, or vmci).
 
-I'd argue against it. A quick grep indicates it is a common practice,
-and in the code world goes easy on the eyes :).
+The current revision supports two modes: local and global. Local
+mode is complete isolation of namespaces, while global mode is complete
+sharing between namespaces of CIDs (the original behavior).
 
->> upon devirtualization.
-> 
-> In this patch and subsequent patches, you've used the phrase "upon
-> devirtualization", which seems a little vague to me. Does this mean
-> "when devirtualization is complete" or perhaps "when the hypervisor
-> completes devirtualization"? Since there's no spec on any of this,
-> being as precise as possible will help future readers.
+The mode is set using /proc/sys/net/vsock/ns_mode.
 
-since control comes back to linux at the callback here, i fail to 
-understand what is vague about it. when hyp completes devirt, 
-devirt is complete.
+Modes are per-netns and write-once. This allows a system to configure
+namespaces independently (some may share CIDs, others are completely
+isolated). This also supports future possible mixed use cases, where
+there may be namespaces in global mode spinning up VMs while there are
+mixed mode namespaces that provide services to the VMs, but are not
+allowed to allocate from the global CID pool (this mode not implemented
+in this series).
 
->>
->> At a high level, during panic of either the hypervisor or the dom0 (aka
->> root), the nmi handler asks hypervisor to devirtualize.
-> 
-> Suggest:
-> 
-> At a high level, during panic of either the hypervisor or Linux running
-> in dom0 (a.k.a. the root partition), the Linux NMI handler asks the
-> hypervisor to devirtualize.
-> 
->> As part of that,
->> the arguments include an entry point to return back to linux. This asm
->> stub implements that entry point.
->>
->> The stub is entered in protected mode, uses temporary gdt and page table
->> to enable long mode and get to kernel entry point which then restores full
->> kernel context to resume execution to kexec.
->>
->> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
->> ---
->>  arch/x86/hyperv/hv_trampoline.S | 105 ++++++++++++++++++++++++++++++++
->>  1 file changed, 105 insertions(+)
->>  create mode 100644 arch/x86/hyperv/hv_trampoline.S
->>
->> diff --git a/arch/x86/hyperv/hv_trampoline.S b/arch/x86/hyperv/hv_trampoline.S
->> new file mode 100644
->> index 000000000000..27a755401a42
->> --- /dev/null
->> +++ b/arch/x86/hyperv/hv_trampoline.S
->> @@ -0,0 +1,105 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/*
->> + * X86 specific Hyper-V kdump/crash related code.
-> 
-> Add a qualification that this is for root partition only, and not for
-> general guests?
+If a socket or VM is created when a namespace is global but the
+namespace changes to local, the socket or VM will continue working
+normally. That is, the socket or VM assumes the mode behavior of the
+namespace at the time the socket/VM was created. The original mode is
+captured in vsock_create() and so occurs at the time of socket(2) and
+accept(2) for sockets and open(2) on /dev/vhost-vsock for VMs. This
+prevents a socket/VM connection from suddenly breaking due to a
+namespace mode change. Any new sockets/VMs created after the mode change
+will adopt the new mode's behavior.
 
-i don't think it is needed, it would be odd for guests to collect hyp
-core. besides makefile/kconfig shows this is root vm only
+Additionally, added tests for the new namespace features:
 
->> + *
->> + * Copyright (C) 2025, Microsoft, Inc.
->> + *
->> + */
->> +#include <linux/linkage.h>
->> +#include <asm/alternative.h>
->> +#include <asm/msr.h>
->> +#include <asm/processor-flags.h>
->> +#include <asm/nospec-branch.h>
->> +
->> +/*
->> + * void noreturn hv_crash_asm32(arg1)
->> + *    arg1 == edi == 32bit PA of struct hv_crash_trdata
-> 
-> I think this is "struct hv_crash_tramp_data".
+tools/testing/selftests/vsock/vmtest.sh
+1..22
+ok 1 vm_server_host_client
+ok 2 vm_client_host_server
+ok 3 vm_loopback
+ok 4 host_vsock_ns_mode_ok
+ok 5 host_vsock_ns_mode_write_once_ok
+ok 6 global_same_cid_fails
+ok 7 local_same_cid_ok
+ok 8 global_local_same_cid_ok
+ok 9 local_global_same_cid_ok
+ok 10 diff_ns_global_host_connect_to_global_vm_ok
+ok 11 diff_ns_global_host_connect_to_local_vm_fails
+ok 12 diff_ns_global_vm_connect_to_global_host_ok
+ok 13 diff_ns_global_vm_connect_to_local_host_fails
+ok 14 diff_ns_local_host_connect_to_local_vm_fails
+ok 15 diff_ns_local_vm_connect_to_local_host_fails
+ok 16 diff_ns_global_to_local_loopback_local_fails
+ok 17 diff_ns_local_to_global_loopback_fails
+ok 18 diff_ns_local_to_local_loopback_fails
+ok 19 diff_ns_global_to_global_loopback_ok
+ok 20 same_ns_local_loopback_ok
+ok 21 same_ns_local_host_connect_to_local_vm_ok
+ok 22 same_ns_local_vm_connect_to_local_host_ok
+SUMMARY: PASS=22 SKIP=0 FAIL=0
+Log: /tmp/vsock_vmtest_OQC4.log
 
-correct
+Thanks again for everyone's help and reviews!
 
->> + *
->> + * The hypervisor jumps here upon devirtualization in protected mode. This
->> + * code gets copied to a page in the low 4G ie, 32bit space so it can run
->> + * in the protected mode. Hence we cannot use any compile/link time offsets or
->> + * addresses. It restores long mode via temporary gdt and page tables and
->> + * eventually jumps to kernel code entry at HV_CRASHDATA_OFFS_C_entry.
->> + *
->> + * PreCondition (ie, Hypervisor call back ABI):
->> + *  o CR0 is set to 0x0021: PE(prot mode) and NE are set, paging is disabled
->> + *  o CR4 is set to 0x0
->> + *  o IA32_EFER is set to 0x901 (SCE and NXE are set)
->> + *  o EDI is set to the Arg passed to HVCALL_DISABLE_HYP_EX.
->> + *  o CS, DS, ES, FS, GS are all initialized with a base of 0 and limit 0xFFFF
->> + *  o IDTR, TR and GDTR are initialized with a base of 0 and limit of 0xFFFF
->> + *  o LDTR is initialized as invalid (limit of 0)
->> + *  o MSR PAT is power on default.
->> + *  o Other state/registers are cleared. All TLBs flushed.
-> 
-> Clarification about "Other state/registers are cleared":  What about
-> processor features that Linux may have enabled or disabled during its
-> initial boot? Are those still in the states Linux set? Or are they reset to
-> power-on defaults? For example, if Linux enabled x2apic, is x2apic
-> still enabled when the stub is entered?
+Signed-off-by: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+To: Shuah Khan <shuah@kernel.org>
+To: David S. Miller <davem@davemloft.net>
+To: Eric Dumazet <edumazet@google.com>
+To: Jakub Kicinski <kuba@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+To: Simon Horman <horms@kernel.org>
+To: Stefan Hajnoczi <stefanha@redhat.com>
+To: Michael S. Tsirkin <mst@redhat.com>
+To: Jason Wang <jasowang@redhat.com>
+To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: Eugenio Pérez <eperezma@redhat.com>
+To: K. Y. Srinivasan <kys@microsoft.com>
+To: Haiyang Zhang <haiyangz@microsoft.com>
+To: Wei Liu <wei.liu@kernel.org>
+To: Dexuan Cui <decui@microsoft.com>
+To: Bryan Tan <bryan-bt.tan@broadcom.com>
+To: Vishnu Dasa <vishnu.dasa@broadcom.com>
+To: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: virtualization@lists.linux.dev
+Cc: netdev@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kvm@vger.kernel.org
+Cc: linux-hyperv@vger.kernel.org
+Cc: berrange@redhat.com
 
-correct, if linux set x2apic, x2apic would still be enabled.
+Changes in v6:
+- define behavior when mode changes to local while socket/VM is alive
+- af_vsock: clarify description of CID behavior
+- af_vsock: use stronger langauge around CID rules (dont use "may")
+- af_vsock: improve naming of buf/buffer
+- af_vsock: improve string length checking on proc writes
+- vsock_loopback: add space in struct to clarify lock protection
+- vsock_loopback: do proper cleanup/unregister on vsock_loopback_exit()
+- vsock_loopback: use virtio_vsock_skb_net() instead of sock_net()
+- vsock_loopback: set loopback to NULL after kfree()
+- vsock_loopback: use pernet_operations and remove callback mechanism
+- vsock_loopback: add macros for "global" and "local"
+- vsock_loopback: fix length checking
+- vmtest.sh: check for namespace support in vmtest.sh
+- Link to v5: https://lore.kernel.org/r/20250827-vsock-vmtest-v5-0-0ba580bede5b@meta.com
 
->> + *
->> + * See Intel SDM 10.8.5
-> 
-> Hmmm. I downloaded the latest combined SDM, and section 10.8.5
-> in Volume 3A is about Microcode Update Resources, which doesn't
-> seem applicable here. Other volumes don't have a section 10.8.5.
+Changes in v5:
+- /proc/net/vsock_ns_mode -> /proc/sys/net/vsock/ns_mode
+- vsock_global_net -> vsock_global_dummy_net
+- fix netns lookup in vhost_vsock to respect pid namespaces
+- add callbacks for vsock_loopback to avoid circular dependency
+- vmtest.sh loads vsock_loopback module
+- remove vsock_net_mode_can_set()
+- change vsock_net_write_mode() to return true/false based on success
+- make vsock_net_mode enum instead of u8
+- Link to v4: https://lore.kernel.org/r/20250805-vsock-vmtest-v4-0-059ec51ab111@meta.com
 
-google ai found it right away upon searching: intel sdm 10.8.5 ia-32e
+Changes in v4:
+- removed RFC tag
+- implemented loopback support
+- renamed new tests to better reflect behavior
+- completed suite of tests with permutations of ns modes and vsock_test
+  as guest/host
+- simplified socat bridging with unix socket instead of tcp + veth
+- only use vsock_test for success case, socat for failure case (context
+  in commit message)
+- lots of cleanup
 
->> + */
->> +
->> +#define HV_CRASHDATA_OFFS_TRAMPCR3    0x0    /*	 0 */
->> +#define HV_CRASHDATA_OFFS_KERNCR3     0x8    /*	 8 */
->> +#define HV_CRASHDATA_OFFS_GDTRLIMIT  0x12    /* 18 */
->> +#define HV_CRASHDATA_OFFS_CS_JMPTGT  0x28    /* 40 */
->> +#define HV_CRASHDATA_OFFS_C_entry    0x30    /* 48 */
-> 
-> It seems like these offsets should go in a #include file along
-> with the definition of struct hv_crash_tramp_data. Then the
-> BUILD_BUG_ON() calls in hv_crash_setup_trampdata() could
-> check against these symbolic names instead of hardcoding
-> numbers that must match these.
+Changes in v3:
+- add notion of "modes"
+- add procfs /proc/net/vsock_ns_mode
+- local and global modes only
+- no /dev/vhost-vsock-netns
+- vmtest.sh already merged, so new patch just adds new tests for NS
+- Link to v2:
+  https://lore.kernel.org/kvm/20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com
 
-yeah, that works too and was the first cut. but given the small
-number of these, and that they are not used/needed anywhere else,
-and that they will almost never change, creating another tiny header
-in a non-driver directory didn't seem worth it.. but i could go
-either way.
+Changes in v2:
+- only support vhost-vsock namespaces
+- all g2h namespaces retain old behavior, only common API changes
+  impacted by vhost-vsock changes
+- add /dev/vhost-vsock-netns for "opt-in"
+- leave /dev/vhost-vsock to old behavior
+- removed netns module param
+- Link to v1:
+  https://lore.kernel.org/r/20200116172428.311437-1-sgarzare@redhat.com
 
->> +#define HV_CRASHDATA_TRAMPOLINE_CS    0x8
-> 
-> This #define isn't used anywhere.
+Changes in v1:
+- added 'netns' module param to vsock.ko to enable the
+  network namespace support (disabled by default)
+- added 'vsock_net_eq()' to check the "net" assigned to a socket
+  only when 'netns' support is enabled
+- Link to RFC: https://patchwork.ozlabs.org/cover/1202235/
 
-removed
+---
+Bobby Eshleman (9):
+      vsock: a per-net vsock NS mode state
+      vsock: add net to vsock skb cb
+      vsock: add netns to vsock core
+      vsock/loopback: add netns support
+      vsock/virtio: add netns to virtio transport common
+      vhost/vsock: add netns support
+      selftests/vsock: improve logging in vmtest.sh
+      selftests/vsock: invoke vsock_test through helpers
+      selftests/vsock: add namespace tests
 
->> +
->> +	.text
->> +	.code32
->> +
->> +SYM_CODE_START(hv_crash_asm32)
->> +	UNWIND_HINT_UNDEFINED
->> +	ANNOTATE_NOENDBR
-> 
-> No ENDBR here, presumably because this function is entered via other
-> than an indirect CALL or JMP instruction. Right?
-> 
->> +	movl	$X86_CR4_PAE, %ecx
->> +	movl	%ecx, %cr4
->> +
->> +	movl %edi, %ebx
->> +	add $HV_CRASHDATA_OFFS_TRAMPCR3, %ebx
->> +	movl %cs:(%ebx), %eax
->> +	movl %eax, %cr3
->> +
->> +	# Setup EFER for long mode now.
->> +	movl	$MSR_EFER, %ecx
->> +	rdmsr
->> +	btsl	$_EFER_LME, %eax
->> +	wrmsr
->> +
->> +	# Turn paging on using the temp 32bit trampoline page table.
->> +	movl %cr0, %eax
->> +	orl $(X86_CR0_PG), %eax
->> +	movl %eax, %cr0
->> +
->> +	/* since kernel cr3 could be above 4G, we need to be in the long mode
->> +	 * before we can load 64bits of the kernel cr3. We use a temp gdt for
->> +	 * that with CS.L=1 and CS.D=0 */
->> +	mov %edi, %eax
->> +	add $HV_CRASHDATA_OFFS_GDTRLIMIT, %eax
->> +	lgdtl %cs:(%eax)
->> +
->> +	/* not done yet, restore CS now to switch to CS.L=1 */
->> +	mov %edi, %eax
->> +	add $HV_CRASHDATA_OFFS_CS_JMPTGT, %eax
->> +	ljmp %cs:*(%eax)
->> +SYM_CODE_END(hv_crash_asm32)
->> +
->> +	/* we now run in full 64bit IA32-e long mode, CS.L=1 and CS.D=0 */
->> +	.code64
->> +	.balign 8
->> +SYM_CODE_START(hv_crash_asm64)
->> +	UNWIND_HINT_UNDEFINED
->> +	ANNOTATE_NOENDBR
-> 
-> But this *is* entered via an indirect JMP, right? So back to my
-> earlier question about the state of processor feature enablement.
-> If Linux enabled IBT, is it still enabled after devirtualization and
-> the hypervisor invokes this entry point? Linux guests on Hyper-V
-> have historically not enabled IBT, but patches that enable it are
-> now in linux-next, and will go into the 6.18 kernel. So maybe
-> this needs an ENDBR64.
+ MAINTAINERS                             |    1 +
+ drivers/vhost/vsock.c                   |   78 ++-
+ include/linux/virtio_vsock.h            |   24 +
+ include/net/af_vsock.h                  |   71 +-
+ include/net/net_namespace.h             |    4 +
+ include/net/netns/vsock.h               |   26 +
+ net/vmw_vsock/af_vsock.c                |  219 +++++-
+ net/vmw_vsock/hyperv_transport.c        |    2 +-
+ net/vmw_vsock/virtio_transport.c        |    6 +-
+ net/vmw_vsock/virtio_transport_common.c |   18 +-
+ net/vmw_vsock/vmci_transport.c          |    6 +-
+ net/vmw_vsock/vsock_loopback.c          |  102 ++-
+ tools/testing/selftests/vsock/vmtest.sh | 1133 +++++++++++++++++++++++++++----
+ 13 files changed, 1501 insertions(+), 189 deletions(-)
+---
+base-commit: 949ddfb774fe527cebfa3f769804344940f7ed2e
+change-id: 20250325-vsock-vmtest-b3a21d2102c2
 
-IBT would be disabled in the transition here.... so doesn't really
-matter. ENDBR ok too..
-
->> +SYM_INNER_LABEL(hv_crash_asm64_lbl, SYM_L_GLOBAL)
->> +	/* restore kernel page tables so we can jump to kernel code */
->> +	mov %edi, %eax
->> +	add $HV_CRASHDATA_OFFS_KERNCR3, %eax
->> +	movq %cs:(%eax), %rbx
->> +	movq %rbx, %cr3
->> +
->> +	mov %edi, %eax
->> +	add $HV_CRASHDATA_OFFS_C_entry, %eax
->> +	movq %cs:(%eax), %rbx
->> +	ANNOTATE_RETPOLINE_SAFE
->> +	jmp *%rbx
->> +
->> +	int $3
->> +
->> +SYM_INNER_LABEL(hv_crash_asm_end, SYM_L_GLOBAL)
->> +SYM_CODE_END(hv_crash_asm64)
->> --
->> 2.36.1.vfs.0.0
->>
-> 
+Best regards,
+-- 
+Bobby Eshleman <bobbyeshleman@meta.com>
 
 
