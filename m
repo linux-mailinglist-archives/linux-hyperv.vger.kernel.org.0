@@ -1,227 +1,312 @@
-Return-Path: <linux-hyperv+bounces-6913-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6914-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01800B8026C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Sep 2025 16:43:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D30FB80424
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Sep 2025 16:52:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6522D3A64AF
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Sep 2025 14:42:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 418303B33F4
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Sep 2025 14:52:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4891303A3D;
-	Wed, 17 Sep 2025 14:42:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C4B732BBE7;
+	Wed, 17 Sep 2025 14:52:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hd3g/6Dj";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GFNU9JD8";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hd3g/6Dj";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GFNU9JD8"
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="RPFv+dnZ";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="RPFv+dnZ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178902F5320
-	for <linux-hyperv@vger.kernel.org>; Wed, 17 Sep 2025 14:42:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405C83161A4
+	for <linux-hyperv@vger.kernel.org>; Wed, 17 Sep 2025 14:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758120143; cv=none; b=PjWIiJseO4HtXetArRBkx7e1akGpsGENSAObmU+9qwRw0vCVhYyZePWLtXCNvu5SzpDnIF1v8EpCwTWEeIaULkytzoVMKaEnxDlF4RpWyfCaHTTcUJltizC0hSZlPMf0zWqt+JtN/3jHdnC5zCGSinLIjNaFb04Tdd8YA7PYokk=
+	t=1758120748; cv=none; b=g6dq9m16RtTEE4Ca45myoXlDfRFl8q55e5vN376QSFnVW3qyzl/DTgfvK0o44YPFgnjiiRUW2U9nDpNUQzY1jpSK9RP1ngpzXXydFrpinkyDzPitnUWHxQhqd8mSnjWDKAhNsFfpc6GIcPNfd6kd8E/nuTJuWzQOHy4a9QwPgyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758120143; c=relaxed/simple;
-	bh=Gwbj8cAXfdJkYJEQ7+XlomdhEFT9f1jRaaT+7CjNaAY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=XjaMDAFOz/FqTzOQcebq3keHy36bBYFBvHvwmDJWkkqgtpI05i/0os7Akrv+EG30qgyknItYRgV5WV6RU025qxothQwaQFhrUPgwNuYIRABVprJ4Gn9Pp6NiX+s58UZq6Ll2JLLMOgAon7gA2iYRLbhW4gv9C+i2yBA5QZGtKrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hd3g/6Dj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GFNU9JD8; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hd3g/6Dj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GFNU9JD8; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1758120748; c=relaxed/simple;
+	bh=9LbMMVrXlCbpwUcHACIHk3MLsVp4FHZBeLlyH4P3DxY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oItlFR0GJqA60C6OfmjxvzzHc3rv2gnPUPceCuofHsHrdCWouJIoxhamDmNOI1lXvwlL2WatSlNetrAzj3csx1W3XiTh9zL8W6EJq8pFs7kJHuGuscKtTLoCSiCZ5D8dHwhvS2JvdbhX+DCFvBOitzxaXB8EPSYFV7HOK4uy1+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=RPFv+dnZ; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=RPFv+dnZ; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2224C21F40;
-	Wed, 17 Sep 2025 14:42:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1758120140; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=jK638bioaxkZxLlVgxZJprmO1A7vlWiaLe3zNBFT2SM=;
-	b=hd3g/6DjXub6Lxbn3m7k4bfdc8nkLazrKvSYSZWhkh7JGZRrT9z5HA1/UgxhWUd5fWd6UF
-	IrrizBB6hgPU55exY75Vz5CorDkpAFDOqZ20/Bt7mujFahST5NmmHT3Mt4vfWg4Y3cm4pG
-	ppOMlQNSZ39FcsMF/5Mj13qpohngbMo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1758120140;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=jK638bioaxkZxLlVgxZJprmO1A7vlWiaLe3zNBFT2SM=;
-	b=GFNU9JD8R1OQJppcwO60HWqqnuYbb4VHXiI0mYXwNK525sfBhOIQkxgjc4AHs+Kd8i78a7
-	cRtIkwsPr6Fs5yCQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="hd3g/6Dj";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=GFNU9JD8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1758120140; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=jK638bioaxkZxLlVgxZJprmO1A7vlWiaLe3zNBFT2SM=;
-	b=hd3g/6DjXub6Lxbn3m7k4bfdc8nkLazrKvSYSZWhkh7JGZRrT9z5HA1/UgxhWUd5fWd6UF
-	IrrizBB6hgPU55exY75Vz5CorDkpAFDOqZ20/Bt7mujFahST5NmmHT3Mt4vfWg4Y3cm4pG
-	ppOMlQNSZ39FcsMF/5Mj13qpohngbMo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1758120140;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=jK638bioaxkZxLlVgxZJprmO1A7vlWiaLe3zNBFT2SM=;
-	b=GFNU9JD8R1OQJppcwO60HWqqnuYbb4VHXiI0mYXwNK525sfBhOIQkxgjc4AHs+Kd8i78a7
-	cRtIkwsPr6Fs5yCQ==
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 59F60206D2;
+	Wed, 17 Sep 2025 14:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1758120744; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=L6BoEVB67MQVk+5t0IisdIC5veavG4aoIDsIXi8t0tU=;
+	b=RPFv+dnZnlgFjOhg/ujMRqSYaNo/zqANG7tI0s/Iw6Ip6ZBA/XIabW52qG0IdUi7rRi96h
+	eDh4aOQVlKU8OtBoS71gT9KEc1Evkqdq4Qw7PtF3neBDkjsLUxCwbDNE08dJl9Tltx9S+j
+	q6avLnl0p/xCt0paRdDmxUh7jQqKo9c=
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=RPFv+dnZ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1758120744; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=L6BoEVB67MQVk+5t0IisdIC5veavG4aoIDsIXi8t0tU=;
+	b=RPFv+dnZnlgFjOhg/ujMRqSYaNo/zqANG7tI0s/Iw6Ip6ZBA/XIabW52qG0IdUi7rRi96h
+	eDh4aOQVlKU8OtBoS71gT9KEc1Evkqdq4Qw7PtF3neBDkjsLUxCwbDNE08dJl9Tltx9S+j
+	q6avLnl0p/xCt0paRdDmxUh7jQqKo9c=
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B0E1A1368D;
-	Wed, 17 Sep 2025 14:42:19 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D37E71368D;
+	Wed, 17 Sep 2025 14:52:22 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id noS4KcvIymg3DwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 17 Sep 2025 14:42:19 +0000
-Message-ID: <4472af4a-c538-4129-97a7-aa1736c9c777@suse.de>
-Date: Wed, 17 Sep 2025 16:42:19 +0200
+	id KeoIMibLymiwEgAAD6G6ig
+	(envelope-from <jgross@suse.com>); Wed, 17 Sep 2025 14:52:22 +0000
+From: Juergen Gross <jgross@suse.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	linux-hyperv@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	kvm@vger.kernel.org
+Cc: Juergen Gross <jgross@suse.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Waiman Long <longman@redhat.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	xen-devel@lists.xenproject.org,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Oleg Nesterov <oleg@redhat.com>
+Subject: [PATCH v2 00/21] paravirt: cleanup and reorg
+Date: Wed, 17 Sep 2025 16:51:59 +0200
+Message-ID: <20250917145220.31064-1-jgross@suse.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] MAINTAINERS: Mark hyperv_fb driver Obsolete
-To: Prasanna Kumar T S M <ptsm@linux.microsoft.com>,
- dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
- linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- ssengar@linux.microsoft.com, mhklinux@outlook.com, rdunlap@infradead.org,
- bartosz.golaszewski@linaro.org, gonzalo.silvalde@gmail.com, arnd@arndb.de,
- decui@microsoft.com, wei.liu@kernel.org, deller@gmx.de, kys@microsoft.com,
- haiyangz@microsoft.com
-References: <E5C2A201B1BD>
- <1758117804-20798-1-git-send-email-ptsm@linux.microsoft.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <1758117804-20798-1-git-send-email-ptsm@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-3.01 / 50.00];
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 59F60206D2
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-1.51 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	SUSPICIOUS_RECIPS(1.50)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
 	MX_GOOD(-0.01)[];
-	TAGGED_RCPT(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de,outlook.com];
 	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[linux.microsoft.com,lists.freedesktop.org,vger.kernel.org,outlook.com,infradead.org,linaro.org,gmail.com,arndb.de,microsoft.com,kernel.org,gmx.de];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FREEMAIL_CC(0.00)[suse.com,kernel.org,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,microsoft.com,infradead.org,gmail.com,oracle.com,lists.xenproject.org,broadcom.com,armlinux.org.uk,arm.com,xen0n.name,linux.ibm.com,ellerman.id.au,csgroup.eu,sifive.com,dabbelt.com,eecs.berkeley.edu,ghiti.fr,linaro.org,goodmis.org,google.com,suse.de,lists.infradead.org,epam.com];
+	DKIM_TRACE(0.00)[suse.com:+];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
 	FROM_EQ_ENVFROM(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
 	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ti.com:email,suse.de:mid,suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,linaro.org:email];
-	RCVD_COUNT_TWO(0.00)[2];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Rspamd-Queue-Id: 2224C21F40
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_GT_50(0.00)[57];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -1.51
 
+Some cleanups and reorg of paravirt code and headers:
 
+- The first 2 patches should be not controversial at all, as they
+  remove just some no longer needed #include and struct forward
+  declarations.
 
-Am 17.09.25 um 16:03 schrieb Prasanna Kumar T S M:
-> The hyperv_fb driver is deprecated in favor of Hyper-V DRM driver. Split
-> the hyperv_fb entry from the hyperv drivers list, mark it obsolete.
->
-> Signed-off-by: Prasanna Kumar T S M <ptsm@linux.microsoft.com>
+- The 3rd patch is removing CONFIG_PARAVIRT_DEBUG, which IMO has
+  no real value, as it just changes a crash to a BUG() (the stack
+  trace will basically be the same). As the maintainer of the main
+  paravirt user (Xen) I have never seen this crash/BUG() to happen.
 
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+- The 4th patch is just a movement of code.
 
-> ---
->   MAINTAINERS | 11 ++++++++++-
->   1 file changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f6206963efbf..aa9d0fa6020b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11424,7 +11424,6 @@ F:	drivers/pci/controller/pci-hyperv-intf.c
->   F:	drivers/pci/controller/pci-hyperv.c
->   F:	drivers/scsi/storvsc_drv.c
->   F:	drivers/uio/uio_hv_generic.c
-> -F:	drivers/video/fbdev/hyperv_fb.c
->   F:	include/asm-generic/mshyperv.h
->   F:	include/clocksource/hyperv_timer.h
->   F:	include/hyperv/hvgdk.h
-> @@ -11438,6 +11437,16 @@ F:	include/uapi/linux/hyperv.h
->   F:	net/vmw_vsock/hyperv_transport.c
->   F:	tools/hv/
->   
-> +HYPER-V FRAMEBUFFER DRIVER
-> +M:	"K. Y. Srinivasan" <kys@microsoft.com>
-> +M:	Haiyang Zhang <haiyangz@microsoft.com>
-> +M:	Wei Liu <wei.liu@kernel.org>
-> +M:	Dexuan Cui <decui@microsoft.com>
-> +L:	linux-hyperv@vger.kernel.org
-> +S:	Obsolete
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
-> +F:	drivers/video/fbdev/hyperv_fb.c
-> +
->   HYPERBUS SUPPORT
->   M:	Vignesh Raghavendra <vigneshr@ti.com>
->   R:	Tudor Ambarus <tudor.ambarus@linaro.org>
+- I don't know for what reason asm/paravirt_api_clock.h was added,
+  as all archs supporting it do it exactly in the same way. Patch
+  5 is removing it.
+
+- Patches 6-14 are streamlining the paravirt clock interfaces by
+  using a common implementation across architectures where possible
+  and by moving the related code into common sched code, as this is
+  where it should live.
+
+- Patches 15-20 are more like RFC material preparing the paravirt
+  infrastructure to support multiple pv_ops function arrays.
+  As a prerequisite for that it makes life in objtool much easier
+  with dropping the Xen static initializers of the pv_ops sub-
+  structures, which is done in patches 15-17.
+  Patches 18-20 are doing the real preparations for multiple pv_ops
+  arrays and using those arrays in multiple headers.
+
+- Patch 21 is an example how the new scheme can look like using the
+  PV-spinlocks.
+
+Changes in V2:
+- new patches 13-18 and 20
+- complete rework of patch 21
+
+Juergen Gross (21):
+  x86/paravirt: Remove not needed includes of paravirt.h
+  x86/paravirt: Remove some unneeded struct declarations
+  x86/paravirt: Remove PARAVIRT_DEBUG config option
+  x86/paravirt: Move thunk macros to paravirt_types.h
+  paravirt: Remove asm/paravirt_api_clock.h
+  sched: Move clock related paravirt code to kernel/sched
+  arm/paravirt: Use common code for paravirt_steal_clock()
+  arm64/paravirt: Use common code for paravirt_steal_clock()
+  loongarch/paravirt: Use common code for paravirt_steal_clock()
+  riscv/paravirt: Use common code for paravirt_steal_clock()
+  x86/paravirt: Use common code for paravirt_steal_clock()
+  x86/paravirt: Move paravirt_sched_clock() related code into tsc.c
+  x86/paravirt: Introduce new paravirt-base.h header
+  x86/paravirt: Move pv_native_*() prototypes to paravirt.c
+  x86/xen: Drop xen_irq_ops
+  x86/xen: Drop xen_cpu_ops
+  x86/xen: Drop xen_mmu_ops
+  objtool: Allow multiple pv_ops arrays
+  x86/paravirt: Allow pv-calls outside paravirt.h
+  x86/paravirt: Specify pv_ops array in paravirt macros
+  x86/pvlocks: Move paravirt spinlock functions into own header
+
+ arch/Kconfig                                  |   3 +
+ arch/arm/Kconfig                              |   1 +
+ arch/arm/include/asm/paravirt.h               |  22 --
+ arch/arm/include/asm/paravirt_api_clock.h     |   1 -
+ arch/arm/kernel/Makefile                      |   1 -
+ arch/arm/kernel/paravirt.c                    |  23 --
+ arch/arm64/Kconfig                            |   1 +
+ arch/arm64/include/asm/paravirt.h             |  14 -
+ arch/arm64/include/asm/paravirt_api_clock.h   |   1 -
+ arch/arm64/kernel/paravirt.c                  |  11 +-
+ arch/loongarch/Kconfig                        |   1 +
+ arch/loongarch/include/asm/paravirt.h         |  13 -
+ .../include/asm/paravirt_api_clock.h          |   1 -
+ arch/loongarch/kernel/paravirt.c              |  10 +-
+ arch/powerpc/include/asm/paravirt.h           |   3 -
+ arch/powerpc/include/asm/paravirt_api_clock.h |   2 -
+ arch/powerpc/platforms/pseries/setup.c        |   4 +-
+ arch/riscv/Kconfig                            |   1 +
+ arch/riscv/include/asm/paravirt.h             |  14 -
+ arch/riscv/include/asm/paravirt_api_clock.h   |   1 -
+ arch/riscv/kernel/paravirt.c                  |  11 +-
+ arch/x86/Kconfig                              |   8 +-
+ arch/x86/entry/entry_64.S                     |   1 -
+ arch/x86/entry/vsyscall/vsyscall_64.c         |   1 -
+ arch/x86/hyperv/hv_spinlock.c                 |  11 +-
+ arch/x86/include/asm/apic.h                   |   4 -
+ arch/x86/include/asm/highmem.h                |   1 -
+ arch/x86/include/asm/mmu_context.h            |   1 -
+ arch/x86/include/asm/mshyperv.h               |   1 -
+ arch/x86/include/asm/paravirt-base.h          |  29 ++
+ arch/x86/include/asm/paravirt-spinlock.h      | 146 ++++++++
+ arch/x86/include/asm/paravirt.h               | 331 +++++-------------
+ arch/x86/include/asm/paravirt_api_clock.h     |   1 -
+ arch/x86/include/asm/paravirt_types.h         | 269 +++++++-------
+ arch/x86/include/asm/pgtable_32.h             |   1 -
+ arch/x86/include/asm/ptrace.h                 |   2 +-
+ arch/x86/include/asm/qspinlock.h              |  89 +----
+ arch/x86/include/asm/spinlock.h               |   1 -
+ arch/x86/include/asm/timer.h                  |   1 +
+ arch/x86/include/asm/tlbflush.h               |   4 -
+ arch/x86/kernel/Makefile                      |   2 +-
+ arch/x86/kernel/apm_32.c                      |   1 -
+ arch/x86/kernel/callthunks.c                  |   1 -
+ arch/x86/kernel/cpu/bugs.c                    |   1 -
+ arch/x86/kernel/cpu/vmware.c                  |   1 +
+ arch/x86/kernel/kvm.c                         |  11 +-
+ arch/x86/kernel/kvmclock.c                    |   1 +
+ arch/x86/kernel/paravirt-spinlocks.c          |  24 +-
+ arch/x86/kernel/paravirt.c                    |  42 +--
+ arch/x86/kernel/tsc.c                         |  10 +-
+ arch/x86/kernel/vsmp_64.c                     |   1 -
+ arch/x86/kernel/x86_init.c                    |   1 -
+ arch/x86/lib/cache-smp.c                      |   1 -
+ arch/x86/mm/init.c                            |   1 -
+ arch/x86/xen/enlighten_pv.c                   |  82 ++---
+ arch/x86/xen/irq.c                            |  20 +-
+ arch/x86/xen/mmu_pv.c                         | 100 ++----
+ arch/x86/xen/spinlock.c                       |  11 +-
+ arch/x86/xen/time.c                           |   2 +
+ drivers/clocksource/hyperv_timer.c            |   2 +
+ drivers/xen/time.c                            |   2 +-
+ include/linux/sched/cputime.h                 |  18 +
+ kernel/sched/core.c                           |   5 +
+ kernel/sched/cputime.c                        |  13 +
+ kernel/sched/sched.h                          |   3 +-
+ tools/objtool/arch/x86/decode.c               |   8 +-
+ tools/objtool/check.c                         |  78 ++++-
+ tools/objtool/include/objtool/check.h         |   2 +
+ 68 files changed, 657 insertions(+), 828 deletions(-)
+ delete mode 100644 arch/arm/include/asm/paravirt.h
+ delete mode 100644 arch/arm/include/asm/paravirt_api_clock.h
+ delete mode 100644 arch/arm/kernel/paravirt.c
+ delete mode 100644 arch/arm64/include/asm/paravirt_api_clock.h
+ delete mode 100644 arch/loongarch/include/asm/paravirt_api_clock.h
+ delete mode 100644 arch/powerpc/include/asm/paravirt_api_clock.h
+ delete mode 100644 arch/riscv/include/asm/paravirt_api_clock.h
+ create mode 100644 arch/x86/include/asm/paravirt-base.h
+ create mode 100644 arch/x86/include/asm/paravirt-spinlock.h
+ delete mode 100644 arch/x86/include/asm/paravirt_api_clock.h
 
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
-
+2.51.0
 
 
