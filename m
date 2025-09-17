@@ -1,151 +1,152 @@
-Return-Path: <linux-hyperv+bounces-6905-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6906-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B7E4B8031A
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Sep 2025 16:46:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A81F6B7D1AE
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Sep 2025 14:18:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A24931C04E2D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Sep 2025 01:16:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6C9EE7B5A3C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Sep 2025 05:11:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52E3012CD96;
-	Wed, 17 Sep 2025 01:15:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC65A264634;
+	Wed, 17 Sep 2025 05:12:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PV+ZIDLE"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fMvtmaDl"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE0FAA927;
-	Wed, 17 Sep 2025 01:15:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7226A266B40
+	for <linux-hyperv@vger.kernel.org>; Wed, 17 Sep 2025 05:12:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758071757; cv=none; b=nDpsKM+DSZjy1ZuX0IcF/umoXGcQYehuuxGBJZj6Ok0WBlSCQmZASivXbN/BfkoLQGcwFKNN5A/eTXjLzZ7KogmHwoSMKEwwRUInUj25qzWnJvndHFwRfYE9yG+KLkQik/uFlXz2NbXtZBngq6qY1nrjA2Em/Rainn3ZAYwBqSU=
+	t=1758085959; cv=none; b=KKyyfEEe2MW2y8ACK9qdIWSRbxnJaLLwUyKOAeqVlkWP5YIS7U/gHZnPzkjZu+x9Lc27HY7bmPmVzLF3sFRGkB4/Wybk21Nfk8rotS3SqHyJLYubfv1zayOX3z9x9Q0fPVQgtR8o7Hqvzpv6qxx5PVGAaOEzXIbjttIhX5WHD9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758071757; c=relaxed/simple;
-	bh=hLNR4qSs+UZrdhX2W8OhIZq5QWL0kQ2yWTx1GTmNdGA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JTiH1IakDFDuqckyLzNsFafMOKfgBOCK5nJOZP0Zf1QdrDxCGBrAXMoPK0wqHlwazSsCnnBvvXZylhj8fDpOrahNDw2JgtmM5Q3UPtzZ6eKvmAPCoCWe8sHnJBDa9FirQXPZs9CADq9LLCpP8KZeMvyVgoXmDcFi5WozZtVGDGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PV+ZIDLE; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1758085959; c=relaxed/simple;
+	bh=JMTuHGAssw1H2gpwFvikHoGuF/lx0EvCPbMkfpmQ+SM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ma/CNCUnLCRsdv1i39EB1R+aQ40hrciXgCXgs7YezYOoNyIwqZyTInZrdoYvb3OgKX/QbzT9Ca/+ruWVDMliUMAR6Ez5O0iM4miGVIBMGPSAJL9S3VP+8aN1P8mIkD8eNU4UTC9fT4QL9jYgvB7HgdLLhyohF3x7ZLhQkurwPw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=fMvtmaDl; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 95D1A201551B;
-	Tue, 16 Sep 2025 18:15:54 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 95D1A201551B
+Received: by linux.microsoft.com (Postfix, from userid 1188)
+	id BC64A2018E60; Tue, 16 Sep 2025 22:12:32 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BC64A2018E60
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1758071755;
-	bh=AnTAbgWQ7bR2imyjU3rdx8HeKLIeOoLAOyiSKAE/CQ0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PV+ZIDLERhEKpBWY0bfAD3iqcg1D48QP0SHIaSzElhidM1lp7iCvQzmp9ElhhuxBM
-	 5208fBxSVuCBvpzFT6Kof1jQYr1Ve4ZO1Cfn13nhJJvhvhh+xTWBdN8uw65FruA4bE
-	 Eb5WOrg3lizbZMKuPwM9oEe9LX3eL1THaU8tQ7/A=
-Message-ID: <daa1e607-26ca-887c-b32c-d39addd6fa44@linux.microsoft.com>
-Date: Tue, 16 Sep 2025 18:15:53 -0700
+	s=default; t=1758085952;
+	bh=zKn800h16nl+4qy2pNwXvBFYZq+ddwqd978lKR97Has=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fMvtmaDlemyFwBAEDZbOBkpv6N9WKQcpaGtkBRMJwuy+ZeD8Lh0U9u6fccdC8B26V
+	 UoGSjxKiPADHKqKv/VM4+huKn1CRRpcOTPnWXrGpZVZ6OwlbP8IQt9Za1f7WAFrg7b
+	 2fJ2X2ltXQAdnxuYAJSnWe17WUaAZZ8HOQnMMl4g=
+Date: Tue, 16 Sep 2025 22:12:32 -0700
+From: Prasanna Kumar T S M <ptsm@linux.microsoft.com>
+To: Thomas Zimmermann <tzimmermann@suse.de>, louis.chauvet@bootlin.com,
+	drawat.floss@gmail.com, hamohammed.sa@gmail.com,
+	melissa.srw@gmail.com, mhklinux@outlook.com,
+	ptsm@linux.microsoft.com, simona@ffwll.ch, airlied@gmail.com,
+	maarten.lankhorst@linux.intel.com, ville.syrjala@linux.intel.com,
+	lyude@redhat.com, javierm@redhat.com
+Cc: dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v4 4/4] drm/hypervdrm: Use vblank timer
+Message-ID: <20250917051232.GA20950@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20250916083816.30275-1-tzimmermann@suse.de>
+ <20250916083816.30275-5-tzimmermann@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v1 6/6] x86/hyperv: Enable build of hypervisor crashdump
- collection files
-Content-Language: en-US
-To: Michael Kelley <mhklinux@outlook.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
- "arnd@arndb.de" <arnd@arndb.de>
-References: <20250910001009.2651481-1-mrathor@linux.microsoft.com>
- <20250910001009.2651481-7-mrathor@linux.microsoft.com>
- <SN6PR02MB415730C50D722D289E33296ED415A@SN6PR02MB4157.namprd02.prod.outlook.com>
-From: Mukesh R <mrathor@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB415730C50D722D289E33296ED415A@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250916083816.30275-5-tzimmermann@suse.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On 9/15/25 10:56, Michael Kelley wrote:
-> From: Mukesh Rathor <mrathor@linux.microsoft.com> Sent: Tuesday, September 9, 2025 5:10 PM
->>
->> Enable build of the new files introduced in the earlier commits and add
->> call to do the setup during boot.
->>
->> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
->> ---
->>  arch/x86/hyperv/Makefile       | 6 ++++++
->>  arch/x86/hyperv/hv_init.c      | 1 +
->>  include/asm-generic/mshyperv.h | 9 +++++++++
->>  3 files changed, 16 insertions(+)
->>
->> diff --git a/arch/x86/hyperv/Makefile b/arch/x86/hyperv/Makefile
->> index d55f494f471d..6f5d97cddd80 100644
->> --- a/arch/x86/hyperv/Makefile
->> +++ b/arch/x86/hyperv/Makefile
->> @@ -5,4 +5,10 @@ obj-$(CONFIG_HYPERV_VTL_MODE)	+= hv_vtl.o
->>
->>  ifdef CONFIG_X86_64
->>  obj-$(CONFIG_PARAVIRT_SPINLOCKS)	+= hv_spinlock.o
->> +
->> + ifdef CONFIG_MSHV_ROOT
->> +  CFLAGS_REMOVE_hv_trampoline.o += -pg
->> +  CFLAGS_hv_trampoline.o        += -fno-stack-protector
->> +  obj-$(CONFIG_CRASH_DUMP)      += hv_crash.o hv_trampoline.o
->> + endif
->>  endif
->> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
->> index afdbda2dd7b7..577bbd143527 100644
->> --- a/arch/x86/hyperv/hv_init.c
->> +++ b/arch/x86/hyperv/hv_init.c
->> @@ -510,6 +510,7 @@ void __init hyperv_init(void)
->>  		memunmap(src);
->>
->>  		hv_remap_tsc_clocksource();
->> +		hv_root_crash_init();
->>  	} else {
->>  		hypercall_msr.guest_physical_address = vmalloc_to_pfn(hv_hypercall_pg);
->>  		wrmsrq(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
->> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
->> index dbd4c2f3aee3..952c221765f5 100644
->> --- a/include/asm-generic/mshyperv.h
->> +++ b/include/asm-generic/mshyperv.h
->> @@ -367,6 +367,15 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32
->> num_pages);
->>  int hv_call_add_logical_proc(int node, u32 lp_index, u32 acpi_id);
->>  int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags);
->>
->> +#if CONFIG_CRASH_DUMP
->> +void hv_root_crash_init(void);
->> +void hv_crash_asm32(void);
->> +void hv_crash_asm64_lbl(void);
->> +void hv_crash_asm_end(void);
->> +#else   /* CONFIG_CRASH_DUMP */
->> +static inline void hv_root_crash_init(void) {}
->> +#endif  /* CONFIG_CRASH_DUMP */
->> +
+On Tue, Sep 16, 2025 at 10:36:22AM +0200, Thomas Zimmermann wrote:
+> HyperV's virtual hardware does not provide vblank interrupts. Use a
+> vblank timer to simulate the interrupt. Rate-limits the display's
+> update frequency to the display-mode settings. Avoids excessive CPU
+> overhead with compositors that do not rate-limit their output.
 > 
-> The hv_crash_asm* functions are x86 specific. Seems like their
-> declarations should go in arch/x86/include/asm/mshyperv.h, not in
-> the architecture-neutral include/asm-generic/mshyperv.h.
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+> Tested-by: Michael Kelley <mhklinux@outlook.com>
+> ---
+>  drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+> index 945b9482bcb3..6e6eb1c12a68 100644
+> --- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+> @@ -19,6 +19,8 @@
+>  #include <drm/drm_probe_helper.h>
+>  #include <drm/drm_panic.h>
+>  #include <drm/drm_plane.h>
+> +#include <drm/drm_vblank.h>
+> +#include <drm/drm_vblank_helper.h>
+>  
+>  #include "hyperv_drm.h"
+>  
+> @@ -111,11 +113,15 @@ static void hyperv_crtc_helper_atomic_enable(struct drm_crtc *crtc,
+>  				crtc_state->mode.hdisplay,
+>  				crtc_state->mode.vdisplay,
+>  				plane_state->fb->pitches[0]);
+> +
+> +	drm_crtc_vblank_on(crtc);
+>  }
+>  
+>  static const struct drm_crtc_helper_funcs hyperv_crtc_helper_funcs = {
+>  	.atomic_check = drm_crtc_helper_atomic_check,
+> +	.atomic_flush = drm_crtc_vblank_atomic_flush,
+>  	.atomic_enable = hyperv_crtc_helper_atomic_enable,
+> +	.atomic_disable = drm_crtc_vblank_atomic_disable,
+>  };
+>  
+>  static const struct drm_crtc_funcs hyperv_crtc_funcs = {
+> @@ -125,6 +131,7 @@ static const struct drm_crtc_funcs hyperv_crtc_funcs = {
+>  	.page_flip = drm_atomic_helper_page_flip,
+>  	.atomic_duplicate_state = drm_atomic_helper_crtc_duplicate_state,
+>  	.atomic_destroy_state = drm_atomic_helper_crtc_destroy_state,
+> +	DRM_CRTC_VBLANK_TIMER_FUNCS,
+>  };
+>  
+>  static int hyperv_plane_atomic_check(struct drm_plane *plane,
+> @@ -321,6 +328,10 @@ int hyperv_mode_config_init(struct hyperv_drm_device *hv)
+>  		return ret;
+>  	}
+>  
+> +	ret = drm_vblank_init(dev, 1);
+> +	if (ret)
+> +		return ret;
+> +
+>  	drm_mode_config_reset(dev);
+>  
+>  	return 0;
+> 
+> -- 
+> 2.51.0
+> 
 
-well, arm port is going on. i suppose i could move it to x86 and
-they can move it back  here in their patch submissions. hopefully
-they will remember or someone will catch it.
+Tested this series.
 
->>  #else /* CONFIG_MSHV_ROOT */
->>  static inline bool hv_root_partition(void) { return false; }
->>  static inline bool hv_l1vh_partition(void) { return false; }
->> --
->> 2.36.1.vfs.0.0
->>
+On a Hyper-V VM running Ubuntu,
 
+with this patch
+
+$ time find /
+real	0m13.911s
+user	0m0.965s
+sys	0m3.815s
+
+
+without this patch
+
+$ time find /
+real	0m14.254s
+user	0m0.954s
+sys	0m3.863s
+
+Tested-by: Prasanna Kumar T S M <ptsm@linux.microsoft.com>
 
