@@ -1,44 +1,44 @@
-Return-Path: <linux-hyperv+bounces-6909-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6910-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD637B7FE7E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Sep 2025 16:21:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D462B7FE2B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Sep 2025 16:19:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 727C717D8ED
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Sep 2025 14:11:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3ED011C85126
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Sep 2025 14:12:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8546A32E72E;
-	Wed, 17 Sep 2025 14:02:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADC212D3758;
+	Wed, 17 Sep 2025 14:03:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iXYQYtMU"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="aurBuFcB"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE5AD28488D;
-	Wed, 17 Sep 2025 14:02:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 460E623D7F4;
+	Wed, 17 Sep 2025 14:03:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758117758; cv=none; b=MmbV9K+O3G8DKd5b9Lan59oj97PUQ1PIlrBGwoY4Inmu4346EYCWEMO5izeDQeVgJ3rxe6K3OB3l9j+Pl471Kmu7Lbfx2h/UNu6B9dyN1BAFxn5/ZJ5tZGy9OYpuULc4ouZ3ubQ5AoXegC4mFJ+RMj2xgV6awLRAlcm05WILjGA=
+	t=1758117792; cv=none; b=u8A+dUHOP3McmpncqPmTSum9F+WGq4Z1pd6msENavGh2w+wUZrnMHBck3ENkPLo/2/j9BCbLwSKlWFYlRLwaoWDM/LUbwa0/0FlL06v6aUrV6KQemXsOSrhhJC8bLnQ3O3NozZgb4CNxcH+L6//wfzD3X++J1SHF7zcrH2IPRAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758117758; c=relaxed/simple;
-	bh=bK3ooNUz4HJZuE8jBm4WUs2zTGETA6UazVdFU89XZ4g=;
-	h=From:To:Subject:Date:Message-Id; b=D32VlVNZwqnONnqNbqoGA8EM8OFI88CqdDTZndnB2FbskUhd8dXOToZ7f+9UnirTrQ4wyi7ywY5i+L/lw8BRGleygf3gtwndHhzj6Jz8h7nlSjicVG3Vo85GAPBAbYZcs0AI7hH6XrYEd6aDLbTjWC8oPlq9qyxl5EKY14BbDfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=iXYQYtMU; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1758117792; c=relaxed/simple;
+	bh=9Z4lilKpTTrW31r8mRXcW6FoQHOiRapMsHIU5lpj1ZE=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=SEC5a7uP6wDqVV4Zi793Z4gdTosCi0ZzbJ4gQNgCyI4PkGlMnMi4tTopKAcgcJqls/bj1mgPFU936xl0bDe+dcVT3LX5/NY8iDW7T5LGI3UrfzPYwpoeFKRsqRoDjN5s/BbrRIvkAkOYlB9p1hKHv81CY8NNNNDwjROJ1XpdyjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=aurBuFcB; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id E5C2A201B1BD;
-	Wed, 17 Sep 2025 07:02:35 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E5C2A201B1BD
+	by linux.microsoft.com (Postfix) with ESMTPSA id 90A592018E7D;
+	Wed, 17 Sep 2025 07:03:10 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 90A592018E7D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1758117756;
-	bh=VLC2Tckh3tcwZAMr/z4UuSQpR3++Fdb4yhz3jPFTmj8=;
-	h=From:To:Subject:Date:From;
-	b=iXYQYtMUZn8+3BzAe9ItI/R5lcluv4XNWcbOtGuryzS6E1acx3vCywPpp+rOiXItp
-	 tIrjL2c9keEvk66+cQNkQKlzZnFO0o45Ik20MDBHCp8fMK0C6DsbGBUWf22m/A/uMo
-	 4jwqk4zrRK/2DG0HgIg6xTywhD3JaYVC/fR/xK5U=
+	s=default; t=1758117790;
+	bh=R0iXWeZ0yvccNH0jWPajLtukW7dSkCEEiXwfJnLS9oY=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=aurBuFcBsGMr5E6fG2nGZOE2PDW0RcbGIO2P3NWxMpIt+zbX4eJjDYrS6KJTs/6+C
+	 7qQExQF2rRIHmUFAoNKdNrCeRefhkh/iKBs3NZ150UThI5IZMRtykly/cwYeNJMd+G
+	 8BDRNrU/sy85br8YEYArd+d+jglp8JB53iieG7IQ=
 From: Prasanna Kumar T S M <ptsm@linux.microsoft.com>
 To: dri-devel@lists.freedesktop.org,
 	linux-hyperv@vger.kernel.org,
@@ -57,10 +57,12 @@ To: dri-devel@lists.freedesktop.org,
 	deller@gmx.de,
 	kys@microsoft.com,
 	haiyangz@microsoft.com
-Subject: [PATCH 0/2] deprecate Hyper-V fb driver in favor of Hyper-V DRM driver
-Date: Wed, 17 Sep 2025 07:02:28 -0700
-Message-Id: <1758117748-20457-1-git-send-email-ptsm@linux.microsoft.com>
+Subject: [PATCH 1/2] fbdev/hyperv_fb: deprecate this in favor of Hyper-V DRM driver
+Date: Wed, 17 Sep 2025 07:03:05 -0700
+Message-Id: <1758117785-20653-1-git-send-email-ptsm@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <E5C2A201B1BD>
+References: <E5C2A201B1BD>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -71,15 +73,47 @@ The Hyper-V DRM driver is available since kernel version 5.14 and it
 provides full KMS support and fbdev emulation via the DRM fbdev helpers.
 Deprecate this driver in favor of Hyper-V DRM driver.
 
-Prasanna Kumar T S M (2):
-  fbdev/hyperv_fb: deprecate this in favor of Hyper-V DRM driver
-  MAINTAINERS: Mark hyperv_fb driver Obsolete
+Signed-off-by: Prasanna Kumar T S M <ptsm@linux.microsoft.com>
+---
+ drivers/video/fbdev/Kconfig     | 5 ++++-
+ drivers/video/fbdev/hyperv_fb.c | 2 ++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
- MAINTAINERS                     | 11 ++++++++++-
- drivers/video/fbdev/Kconfig     |  5 ++++-
- drivers/video/fbdev/hyperv_fb.c |  2 ++
- 3 files changed, 16 insertions(+), 2 deletions(-)
-
+diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
+index c21484d15f0c..48c1c7417f6d 100644
+--- a/drivers/video/fbdev/Kconfig
++++ b/drivers/video/fbdev/Kconfig
+@@ -1773,13 +1773,16 @@ config FB_BROADSHEET
+ 	  a bridge adapter.
+ 
+ config FB_HYPERV
+-	tristate "Microsoft Hyper-V Synthetic Video support"
++	tristate "Microsoft Hyper-V Synthetic Video support (DEPRECATED)"
+ 	depends on FB && HYPERV
+ 	select DMA_CMA if HAVE_DMA_CONTIGUOUS && CMA
+ 	select FB_IOMEM_HELPERS_DEFERRED
+ 	help
+ 	  This framebuffer driver supports Microsoft Hyper-V Synthetic Video.
+ 
++	  This driver is deprecated, please use the Hyper-V DRM driver at
++	  drivers/gpu/drm/hyperv (CONFIG_DRM_HYPERV) instead.
++
+ config FB_SIMPLE
+ 	tristate "Simple framebuffer support"
+ 	depends on FB
+diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
+index 75338ffc703f..c99e2ea4b3de 100644
+--- a/drivers/video/fbdev/hyperv_fb.c
++++ b/drivers/video/fbdev/hyperv_fb.c
+@@ -1357,6 +1357,8 @@ static int __init hvfb_drv_init(void)
+ {
+ 	int ret;
+ 
++	pr_warn("Deprecated: use Hyper-V DRM driver instead\n");
++
+ 	if (fb_modesetting_disabled("hyper_fb"))
+ 		return -ENODEV;
+ 
 -- 
 2.49.0
 
