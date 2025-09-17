@@ -1,112 +1,229 @@
-Return-Path: <linux-hyperv+bounces-6911-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6912-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B11ADB7FE0D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Sep 2025 16:18:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FA86B80236
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Sep 2025 16:42:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 682CF6281C8
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Sep 2025 14:12:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4AE343ACC1F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Sep 2025 14:41:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 602512D73B6;
-	Wed, 17 Sep 2025 14:03:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97C872F28EE;
+	Wed, 17 Sep 2025 14:41:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PEB67Qwu"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mLnLCTT1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SjMSNiJA";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mLnLCTT1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SjMSNiJA"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7CC22D6418;
-	Wed, 17 Sep 2025 14:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8D72F49FE
+	for <linux-hyperv@vger.kernel.org>; Wed, 17 Sep 2025 14:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758117815; cv=none; b=IHDZP9qsMBgoNIrhGuDNATYktxHP5JiwE47P3oQopjjR754ENUbXpLfeaer7udn7xVBsczsEBOoq9bfdZk5h0flkbOr+rdz4BaB4QtXIdQ4hjYN4bsU53qXFYUXi980m78XhCziVPy34w7Brl2kDR8ZotKxQQubZgslW2ikKn5g=
+	t=1758120080; cv=none; b=hNtuLLwG2Iy/jeKTMXyNMGECKfKubwzmBgEpwV63RuiMFU0t2VkxghXck4RyJ5HsNq6W02DKVVHNC1i1y0abLFJhrE9DLvZmkDPuGOlRJV02PWvRiOzg/zUKYq+LWPo9OilOLf1P1q50gDDrAMfLD/hea4jzTpm2OViMQJ6cXb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758117815; c=relaxed/simple;
-	bh=u0wbcF6OGthgQeSflKBB4VyNlmLDy7R8VPtmoSJtoPE=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=SuUm76NOPGbdgJeS3LCxGERvsPpx0++ffDMoGB0EOXjolRdKFcreswrfdxUL99FMvV3tNLL7H5m+bj2ukhJWNW0s6SjKAKRpPX89QAKHht8TXG2vjjRqhnXUjnc0GYidVZ/7K9ItOsUGcK3G5VOEmw/+9hVmz3WEGMnV+0ybr6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PEB67Qwu; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5C86B2018E7D;
-	Wed, 17 Sep 2025 07:03:28 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5C86B2018E7D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1758117808;
-	bh=+S/7jRUtEY2oOKEMYyruSC0TCMCRVkdm3aSdtS0WsSs=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=PEB67Qwuwpz0mYUXQ58kC1t65Lb10hInkPI2Q4FQplvf/KGN6Uafghd+vLV8gonCY
-	 gbekvyiCdKwfA9EDO4b0dTssrf4iIG5zjsobXdf9fxappCTJjld0gKlTbnz3nK6PdJ
-	 W+VzhmmAdfB+Lqv917oNQnr0pst2I2jjhHy1Bdjo=
-From: Prasanna Kumar T S M <ptsm@linux.microsoft.com>
-To: dri-devel@lists.freedesktop.org,
-	linux-hyperv@vger.kernel.org,
-	linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ssengar@linux.microsoft.com,
-	mhklinux@outlook.com,
-	ptsm@linux.microsoft.com,
-	rdunlap@infradead.org,
-	bartosz.golaszewski@linaro.org,
-	gonzalo.silvalde@gmail.com,
-	arnd@arndb.de,
-	tzimmermann@suse.de,
-	decui@microsoft.com,
-	wei.liu@kernel.org,
-	deller@gmx.de,
-	kys@microsoft.com,
-	haiyangz@microsoft.com
-Subject: [PATCH 2/2] MAINTAINERS: Mark hyperv_fb driver Obsolete
-Date: Wed, 17 Sep 2025 07:03:24 -0700
-Message-Id: <1758117804-20798-1-git-send-email-ptsm@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <E5C2A201B1BD>
-References: <E5C2A201B1BD>
+	s=arc-20240116; t=1758120080; c=relaxed/simple;
+	bh=O72y1P85oEfVTM3gM8aQbN/7l0SPT52uB4xyEoYhNZ0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=YwPS6a9uSTPwWY2QhymaWbM0cmVOPmTVK1Oqlsczgpg0hGSUllI22fSJ3quHVaKJNxbrZDclqBAkx9vHvGzXmDKzGbGxzYRPZWj0H5Rq0JqEeMub/PceCr8vyHPki073+o6bI90YyD6P70U0MOacJ37cv2GkIh9CmbijzAIn4Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mLnLCTT1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SjMSNiJA; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mLnLCTT1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SjMSNiJA; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BB4712064D;
+	Wed, 17 Sep 2025 14:41:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1758120076; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wA7r1WZYbZub30NyQBFugxQeEYMaV29B73/0Mg7EIVQ=;
+	b=mLnLCTT1SLKjduRUYUdcyO/R0VneI7W64pTlhR8d5W/ON99hgYbx2S1rhA4s6eOIRArFFx
+	xUZiiBiyd8ricbrBJePLyLaTsGfHlfd8CLlFA8/sAzHZrmTw3RSB6lcqF+2e4ENPIy4Y5Z
+	A3d9Sjvjo1hqZxEk0d1q4z7Jz9fubTk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1758120076;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wA7r1WZYbZub30NyQBFugxQeEYMaV29B73/0Mg7EIVQ=;
+	b=SjMSNiJA8J8jGrabu9XStHvkQ/SKk5O25RCCzAwCxhZDOqnXr5FlySijSfEnkThcwXuLMv
+	1j/rrPJ+YO7yWGDg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1758120076; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wA7r1WZYbZub30NyQBFugxQeEYMaV29B73/0Mg7EIVQ=;
+	b=mLnLCTT1SLKjduRUYUdcyO/R0VneI7W64pTlhR8d5W/ON99hgYbx2S1rhA4s6eOIRArFFx
+	xUZiiBiyd8ricbrBJePLyLaTsGfHlfd8CLlFA8/sAzHZrmTw3RSB6lcqF+2e4ENPIy4Y5Z
+	A3d9Sjvjo1hqZxEk0d1q4z7Jz9fubTk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1758120076;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wA7r1WZYbZub30NyQBFugxQeEYMaV29B73/0Mg7EIVQ=;
+	b=SjMSNiJA8J8jGrabu9XStHvkQ/SKk5O25RCCzAwCxhZDOqnXr5FlySijSfEnkThcwXuLMv
+	1j/rrPJ+YO7yWGDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2D7F01368D;
+	Wed, 17 Sep 2025 14:41:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id g/HcBozIymjkDgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 17 Sep 2025 14:41:16 +0000
+Message-ID: <f2783a49-c60c-42ac-9b37-b71c253fb1cf@suse.de>
+Date: Wed, 17 Sep 2025 16:41:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] fbdev/hyperv_fb: deprecate this in favor of Hyper-V
+ DRM driver
+To: Prasanna Kumar T S M <ptsm@linux.microsoft.com>,
+ dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ssengar@linux.microsoft.com, mhklinux@outlook.com, rdunlap@infradead.org,
+ bartosz.golaszewski@linaro.org, gonzalo.silvalde@gmail.com, arnd@arndb.de,
+ decui@microsoft.com, wei.liu@kernel.org, deller@gmx.de, kys@microsoft.com,
+ haiyangz@microsoft.com
+References: <E5C2A201B1BD>
+ <1758117785-20653-1-git-send-email-ptsm@linux.microsoft.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <1758117785-20653-1-git-send-email-ptsm@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_TO(0.00)[linux.microsoft.com,lists.freedesktop.org,vger.kernel.org,outlook.com,infradead.org,linaro.org,gmail.com,arndb.de,microsoft.com,kernel.org,gmx.de];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de,outlook.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Spam-Score: -2.80
 
-The hyperv_fb driver is deprecated in favor of Hyper-V DRM driver. Split
-the hyperv_fb entry from the hyperv drivers list, mark it obsolete.
 
-Signed-off-by: Prasanna Kumar T S M <ptsm@linux.microsoft.com>
----
- MAINTAINERS | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f6206963efbf..aa9d0fa6020b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11424,7 +11424,6 @@ F:	drivers/pci/controller/pci-hyperv-intf.c
- F:	drivers/pci/controller/pci-hyperv.c
- F:	drivers/scsi/storvsc_drv.c
- F:	drivers/uio/uio_hv_generic.c
--F:	drivers/video/fbdev/hyperv_fb.c
- F:	include/asm-generic/mshyperv.h
- F:	include/clocksource/hyperv_timer.h
- F:	include/hyperv/hvgdk.h
-@@ -11438,6 +11437,16 @@ F:	include/uapi/linux/hyperv.h
- F:	net/vmw_vsock/hyperv_transport.c
- F:	tools/hv/
- 
-+HYPER-V FRAMEBUFFER DRIVER
-+M:	"K. Y. Srinivasan" <kys@microsoft.com>
-+M:	Haiyang Zhang <haiyangz@microsoft.com>
-+M:	Wei Liu <wei.liu@kernel.org>
-+M:	Dexuan Cui <decui@microsoft.com>
-+L:	linux-hyperv@vger.kernel.org
-+S:	Obsolete
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
-+F:	drivers/video/fbdev/hyperv_fb.c
-+
- HYPERBUS SUPPORT
- M:	Vignesh Raghavendra <vigneshr@ti.com>
- R:	Tudor Ambarus <tudor.ambarus@linaro.org>
+Am 17.09.25 um 16:03 schrieb Prasanna Kumar T S M:
+> The Hyper-V DRM driver is available since kernel version 5.14 and it
+> provides full KMS support and fbdev emulation via the DRM fbdev helpers.
+> Deprecate this driver in favor of Hyper-V DRM driver.
+>
+> Signed-off-by: Prasanna Kumar T S M <ptsm@linux.microsoft.com>
+
+Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+
+> ---
+>   drivers/video/fbdev/Kconfig     | 5 ++++-
+>   drivers/video/fbdev/hyperv_fb.c | 2 ++
+>   2 files changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
+> index c21484d15f0c..48c1c7417f6d 100644
+> --- a/drivers/video/fbdev/Kconfig
+> +++ b/drivers/video/fbdev/Kconfig
+> @@ -1773,13 +1773,16 @@ config FB_BROADSHEET
+>   	  a bridge adapter.
+>   
+>   config FB_HYPERV
+> -	tristate "Microsoft Hyper-V Synthetic Video support"
+> +	tristate "Microsoft Hyper-V Synthetic Video support (DEPRECATED)"
+>   	depends on FB && HYPERV
+>   	select DMA_CMA if HAVE_DMA_CONTIGUOUS && CMA
+>   	select FB_IOMEM_HELPERS_DEFERRED
+>   	help
+>   	  This framebuffer driver supports Microsoft Hyper-V Synthetic Video.
+>   
+> +	  This driver is deprecated, please use the Hyper-V DRM driver at
+> +	  drivers/gpu/drm/hyperv (CONFIG_DRM_HYPERV) instead.
+> +
+>   config FB_SIMPLE
+>   	tristate "Simple framebuffer support"
+>   	depends on FB
+> diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
+> index 75338ffc703f..c99e2ea4b3de 100644
+> --- a/drivers/video/fbdev/hyperv_fb.c
+> +++ b/drivers/video/fbdev/hyperv_fb.c
+> @@ -1357,6 +1357,8 @@ static int __init hvfb_drv_init(void)
+>   {
+>   	int ret;
+>   
+> +	pr_warn("Deprecated: use Hyper-V DRM driver instead\n");
+> +
+>   	if (fb_modesetting_disabled("hyper_fb"))
+>   		return -ENODEV;
+>   
+
 -- 
-2.49.0
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
 
 
