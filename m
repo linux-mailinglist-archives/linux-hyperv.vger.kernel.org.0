@@ -1,59 +1,59 @@
-Return-Path: <linux-hyperv+bounces-6928-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6929-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8692B82D7F
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Sep 2025 06:01:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 963DBB82D88
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Sep 2025 06:04:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 731E46205D2
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Sep 2025 04:01:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 38D651C07A51
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Sep 2025 04:04:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D3E834BA42;
-	Thu, 18 Sep 2025 04:01:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3046323D2B4;
+	Thu, 18 Sep 2025 04:04:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="m7x2ofdX"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="o7fS0tNi"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazolkn19012057.outbound.protection.outlook.com [52.103.2.57])
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazolkn19011024.outbound.protection.outlook.com [52.103.14.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49781E32D6;
-	Thu, 18 Sep 2025 04:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.2.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63CC3188734;
+	Thu, 18 Sep 2025 04:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.14.24
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758168083; cv=fail; b=luj653OAkDMZ/D4YaqrvXOcem0zEcx+XTqmCUT/38KRJhQZ0qZsVCIoewasdboEJ5s4vcShqAcJWotKZRVUOyv9Sb9N09jePBoaIQ9RjUBmnsS3OtkyU7kzF08fQCR7djQjyWHg7CzIcher17Nx8JoVPatghVb2o7SHcWA6PSgo=
+	t=1758168242; cv=fail; b=HpuHi456m9OAP0dmU3VsfuMbGoDG6GdJJJ42k+hvtTQ+Q1Kf1GAAHhR8IEPsJ/BuzJkRs2DrY9JAWYLBMQ1g6XhO+ya9jSQy6U8f+7RfhDgmAiz8Fq3uL4q7ZGorV/qIjN9HRC4ZfxISWLR7P74HuHYUPV3iESXi1DOR28F6rcQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758168083; c=relaxed/simple;
-	bh=vTHC21dswwyAgCyYPZhGGmbxOVFw8V1Mjm780ZkXdms=;
+	s=arc-20240116; t=1758168242; c=relaxed/simple;
+	bh=mdUYeUQoHvGXo5z2nXl8imTV8F/G4ymmLdmLF8WP9S4=;
 	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=aK1jgqgyCQ319/Z4N+LMCioOYyFtKzmouHSfUqYuhswFo8dGYyacfgedUjFXQgq3k6spohAditx057XXI+GmpJfP2J3A32qeXK+Np3o4IWs0i9NS3QBIJ8x0juJAt7dD1NihYW2b3Iz/YhtQC6LNstR9fWmn9YYRRp2ftIRS+LQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=m7x2ofdX; arc=fail smtp.client-ip=52.103.2.57
+	 Content-Type:MIME-Version; b=cJmJBRfnIEbrLqjvB65XQNH1eVWYqPpVhxH0vaGrcOybbSkHXp66WIHGqoTsX8YVhG84DZy+sR8LkCbvfdpuCMVXZSrTvtLafuSnmC2V2FtyYAU9Gub54tfjmQCx0nn5YnsDxMuVSTSSnz9DMHpJvXtHg363PVwlGITc+nFIO6A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=o7fS0tNi; arc=fail smtp.client-ip=52.103.14.24
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rAv7REFzEumf41QIgR2dIWoASoE6hDdBN0plt/KENroPGw9NNMPRBW9wjj4DnFJJbhON+GJJVfT0VrnHm/+UCHlPvVK6dq7gXKgBg4yIddgoXaFGh+6xSFmbGzw2auD9XyDXJW+t9yxPI40HMCVBCpFDJ6h0pAKFiNFLIrkT+TJvsG5v0tM5a6HnWzbNG4ewnzRO8XKqSCE0qAsr1GkOu+dD5Ec9IhdvpqoUu6ImXx9En2qT9RuBgPqVq/fR4pCSYIfVwk5xbgwYt1+nDn15R75UFpfI7JkN7Q7+5vTQWIAB0mn4smTL+oOw6JrdyC/3CQF7u0nigW4cMzlpwbYOSw==
+ b=VVk52exmEPZE1FUtwa9fboJwtx6mVTrNHlhERFDP6UvuVRhv3yL8r9EBXlTE8rpEc9Nc24I/PIsM0ZL3CRppXeEVY3ul3aUGmrdVfHw/eno2+n4h0EPHsKd5S3HaHOzq3rQduu3Vdd9l4gfRskdBJ8QOWv/HrmdBWPF+ixPC2PegctIW3LdzIspgpJAndhA8abu/R7NNTgWTAUYaFKn9jLscbDihiRLJLMbakn55oT/bqKIc06gVQ+hqhtdS1uesVpYEtw+i89VQX28PousfVQjoSZ8mZOAbmlsBya9vH8MlCNJkaSf9wuHacbvuR1F+dnmvxkpzGBMhMj23eRCovw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GNN5GHSDwlL8apWvClKarVD1Hh3r9Y/eaw0hPn1SWYM=;
- b=jmODkiJxwVQhs/ivZNZ/ledgkrAzSKAEV27+1nlMeqFDB39n96vgWnU6xnWhNBI3DE2tQNbkrKcVtqZig5Of+vp9w7QzaeEEDEJ8Pite2JF+fiQ5oUxhz0Uzc/qNUtMZdorGSKcLpAM+YKswXJtvgthGpu2svL4KpLGw5IK0JOYL3gSV7fXEbwcbrK5e37jFuod88SiEh42rTCgGxwyWYde21JJQEkvx4KPyxbFva09NppnkNVYjDyHZINVsftoQFCHfGBFeAESqXaNdYcspA9m75Pxoh8MdjB1cXKI+8grjq9SNS1zCQvblJQvIQRTN3Gd3OhH8Ryvj2kgJWE9i8g==
+ bh=4Jb/Kv2yq0IeXO3nfVstZgRVmmHoidvgO/QKfjO2+Zs=;
+ b=QmneixkMme2/4g8f38Pt3hXsuLCNgAOwCRl+YPEMX3CuP6TueJCYx1NErZ01Cet7SeF853RD06aD1m7gdkzQowXPUtZ3D2/79akK2IqXI6rE5+aRb6W9gB4O8dYKn8R5Wtpi06qzBDposKBZkBBc03I7dYTfWTa/9ePWPhOxBEC+WhgPHzQfbsW+FvsodgA9ax62ZPSaa/0o5NquENEJYOnqgkDMAleCp2+x8eu+wygaL3OAhse9gBWSBcPAgMjAds7CdhRCHHRjXTQPUmZuiK+FPo0EEoo1JWkt5afN0BJBoly2vQHVCPw2MzU6Q5cqoMPqSRoDmClfHVQjohPu5g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GNN5GHSDwlL8apWvClKarVD1Hh3r9Y/eaw0hPn1SWYM=;
- b=m7x2ofdXZ4B/v83IPbMlmAXj8oJbUQFWm7nr/vBHYaDU+ssfEz45bP9HjYdrhjy3mH+e28yAafuSmhDtYBE+WF8e2bxp8MM79RTFxtYe02VShABKBLPAh2DgDaztr2riavW4nICZslznGUGDszwnqffa34sltPhvfhuxDEBL5qgD+NwVwmRBwmG/1QmS4FdDZWxAGUeF6r9TRtMytudV8xvVJxkDLm27C+k3vd702PAeTeBIj4TCadSSZIoxcOfvqe5lthCL6553U9G1frNJPUc8+0k4Ra7UCYJnCdCyMF3GSRw6Cr6VOF08ZLGW2V9u3FQptaJzHx6zmvAUUIhcBw==
+ bh=4Jb/Kv2yq0IeXO3nfVstZgRVmmHoidvgO/QKfjO2+Zs=;
+ b=o7fS0tNiJJbueDvzSFAl5RbVJFYg/yZUOq6TZseiWPoUtlNUSRW/tLAjZjGbzVtSK/d9Np+kObnyKMMHAOjkOZaK0vnTIrlzIr8TryOdWAi52XNIeI4ibyljXjJFEeTSzlSBYVo1M8DHl6uvN7/qB/rHY6DvX39oanfxUedzbpFKYcOgACtlnHWq6s/kWXi0qW+rP/XJDsDdozZbFGhRvXCM/byM0giCLDgMau3EtI42f9UW0wtr0DSYayAytPrHGxNUIy9vgO0zXCMN3Gf+FdmXbxHy9kMIL5qPloTlAOnoWFy9faVu2wEJfj2WOaobJ5nReSFDk8gt2AUMZbtWoQ==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by CH2PR02MB6694.namprd02.prod.outlook.com (2603:10b6:610:ae::16) with
+ by PH7PR02MB9409.namprd02.prod.outlook.com (2603:10b6:510:277::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.14; Thu, 18 Sep
- 2025 04:01:17 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.13; Thu, 18 Sep
+ 2025 04:03:57 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.9137.012; Thu, 18 Sep 2025
- 04:01:17 +0000
+ 04:03:56 +0000
 From: Michael Kelley <mhklinux@outlook.com>
 To: Prasanna Kumar T S M <ptsm@linux.microsoft.com>,
 	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
@@ -68,72 +68,68 @@ To: Prasanna Kumar T S M <ptsm@linux.microsoft.com>,
 	"decui@microsoft.com" <decui@microsoft.com>, "wei.liu@kernel.org"
 	<wei.liu@kernel.org>, "deller@gmx.de" <deller@gmx.de>, "kys@microsoft.com"
 	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>
-Subject: RE: [PATCH 1/2] fbdev/hyperv_fb: deprecate this in favor of Hyper-V
- DRM driver
-Thread-Topic: [PATCH 1/2] fbdev/hyperv_fb: deprecate this in favor of Hyper-V
- DRM driver
-Thread-Index: AQHcJ9vT0RegmSIBJEaPQCJrgxuISLSYUdcA
-Date: Thu, 18 Sep 2025 04:01:17 +0000
+Subject: RE: [PATCH 2/2] MAINTAINERS: Mark hyperv_fb driver Obsolete
+Thread-Topic: [PATCH 2/2] MAINTAINERS: Mark hyperv_fb driver Obsolete
+Thread-Index: AQHcJ9vcHu9UfVHK+U+yRNCQQHHQvrSYUhCA
+Date: Thu, 18 Sep 2025 04:03:56 +0000
 Message-ID:
- <SN6PR02MB4157B55FBE271DB1B75F8FBCD416A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB41578029C68F14D6EE010840D416A@SN6PR02MB4157.namprd02.prod.outlook.com>
 References: <E5C2A201B1BD>
- <1758117785-20653-1-git-send-email-ptsm@linux.microsoft.com>
-In-Reply-To: <1758117785-20653-1-git-send-email-ptsm@linux.microsoft.com>
+ <1758117804-20798-1-git-send-email-ptsm@linux.microsoft.com>
+In-Reply-To: <1758117804-20798-1-git-send-email-ptsm@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CH2PR02MB6694:EE_
-x-ms-office365-filtering-correlation-id: 240c243f-1bb8-4e8d-adc4-08ddf66804e3
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH7PR02MB9409:EE_
+x-ms-office365-filtering-correlation-id: 5147d576-d09b-486a-d597-08ddf6686387
 x-microsoft-antispam:
- BCL:0;ARA:14566002|8062599012|8060799015|13091999003|19110799012|31061999003|461199028|41001999006|15080799012|51005399003|40105399003|3412199025|440099028|102099032;
+ BCL:0;ARA:14566002|461199028|31061999003|8062599012|19110799012|8060799015|13091999003|15080799012|440099028|40105399003|3412199025|102099032;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?+bt/nTgk/vLwsly1A/R98TFq285vOLU9mZKLYlXRfix3Y6naIDPT64ygCn82?=
- =?us-ascii?Q?C0YAQ0RpUxq57S03SMbzQV+V2CwTlHBSjSgD/5Lz4SYqeVZRAOwzj4h9/Gde?=
- =?us-ascii?Q?s1mZ3m+Q6T/8mzipCtvKyiQoFodg9FubVql+cPh2m1SNB92elflRyvwN1Kix?=
- =?us-ascii?Q?O3eX1nXffaFiCoqdJTEmlhweEGi+gDqnpJdeM4MzcG14RGPplB5cY8M6qXeY?=
- =?us-ascii?Q?H6BS4P9AdIlRSMWoBu9k5cNi/WBV96hVPYVXXkaYvM2dohOp+k8T27ygCtk9?=
- =?us-ascii?Q?PnIFKQimOXzQZcvt4oOaD3gGIYHuh0upv+atd6JcvKx3Bf2MsOFAowh4UE6r?=
- =?us-ascii?Q?X6uwRw16stXRhoNbnnLnnHd5s43Rxz1xlH8PUq3oKsD0MGSTYaQrfXtk0xvw?=
- =?us-ascii?Q?wk3HvuuGF3BRblKfQuhPSAhqYg6lXQJclKBEhmtKtCt7fqEEbLWHof7n83PO?=
- =?us-ascii?Q?gWVxfII6hfbmH0Y00fiz/UeYV5KH5lagDBfkdBTjiSKea5j8sML+zPfDPOIB?=
- =?us-ascii?Q?boVhs/XlYKe6XrqMeleCvwVIJBfhiOJXfOeJBquk8vkA81TJ49tYPGU8L6YR?=
- =?us-ascii?Q?NBlXYMXFlrYamgjili6cVbdpckAjijwO5FQrH3ZQM0vSkq8cnZwTy+hL6Gg7?=
- =?us-ascii?Q?0NTrOgQ+M7DHLBX1oe9JHFgqMa00MEjjQlSDiM6VHfDWdheGM+2sBMpDCjjS?=
- =?us-ascii?Q?jSQOz2T+G6GACDH0tbXZljXv+6BNF9AAmQC/fCmWDd9PU70AyWbWHpXD/Ng7?=
- =?us-ascii?Q?0ooKRQ7NAcY3jxFidB0IEYxYtkXf8PMnxsCg9nPeoqX0NHfGQ0gyAW4+LgFQ?=
- =?us-ascii?Q?nMKfxkVuK/8KigjO+o6uHcHXkgK0Wmds9sexNNmeeya+zv5/TMBaKz9LGdA/?=
- =?us-ascii?Q?BoqGZfv5KdAP/f7ZVe5lI+f0F/6McIcXDWmKxvR/MoywY64ZF/8LSsAOlPQu?=
- =?us-ascii?Q?IejjupirQBoXgYRm0/8z2RPDhVdY3IgSuFynJ5gIVemdtXvknQALBCWizFAY?=
- =?us-ascii?Q?epVj8QsAl4mOyDTXCrHrNmfKQ22odE8JgG9PA1tGi2hTa9fxzUpkp2crBH4I?=
- =?us-ascii?Q?9mwxWuChqq88zrqgQ5IPvGcM8ee43U3e7ai3qDNr0jyy7+LqzkQXgK/lcu/w?=
- =?us-ascii?Q?5RPMYZ2CydaLCv2rbdzrToWZii1qxPafenrq9aio+eSyi1cRly6cMtJNoZw2?=
- =?us-ascii?Q?EOvebRVqEPUua3CAhpugkMq1rmoRLly04NoRrU13j5J1iIM1RKdcZ5vT4r1d?=
- =?us-ascii?Q?57t6oaxrrMisJFrrSIO7?=
+ =?us-ascii?Q?sn6DBwQAqlRrArF5qPwd3ebkC4L/MRJ9UHfYdok611tXIVk4r9QcHrRsJvRP?=
+ =?us-ascii?Q?aLabxJuym20d//Wtj0An4Ybv9+spL0kYqdVcWkBzsP4XMTRLRL8A/JajUjet?=
+ =?us-ascii?Q?6brhT0SvPiejGaL8DUGOhQsuZMvtNpPa/5N371OLhlHskzfWAI4eQAua90aW?=
+ =?us-ascii?Q?PwS46lUkKSm1QaICssmrAGxIBVxuhvFkt1Wb/mB9eONLbmqllQRysOaQ7YI8?=
+ =?us-ascii?Q?bs9aIGx5+xSJgKLYy895sGqLBmE8bCgEpVcozMAgS0cpiU1SV8Jz8nelS1j5?=
+ =?us-ascii?Q?TZgeNmFgBjoIB5LbeEOBRwNlEQVw2MpUhmSjasgxA9VAVqbpi6L4PTJssAOv?=
+ =?us-ascii?Q?QGvnt2gnWzYJ9Mmh7ClnaAOTtHgPa+lZa1TQ1Hn8zr991U9Upr0qTgplcD+A?=
+ =?us-ascii?Q?bSIL6Q5apXNli8jtnkj2G3SQS2Sy5dVjfhbui0M+fMm/4OM6PasimO5jHD9I?=
+ =?us-ascii?Q?lkUCroxD5+fBtDz1VLTtKbqEpSVouFchCn8Ef2T3mAhrmMb30+SThJgXwz3W?=
+ =?us-ascii?Q?WJHbbRADO+3LugvKtSyCn42vo9h7r6F3hnHOmRGGJr7AUjlq9HpbbumedKkY?=
+ =?us-ascii?Q?KEKVHSFT+0WcXH+DK5leLAIONQ32sfU2eoGdPXFm1DTdilfUG5ng2FrhL34Y?=
+ =?us-ascii?Q?xk1XAQA/DuDpE/9tYTcn/ufmgGo+MyQVv4EhZ8Jfr2M2rzdB9jkH2WK4JrOD?=
+ =?us-ascii?Q?v7Ou8SlJcIfv6iEU+k9eoqgf37/vjQNde70O8FTJu6m6xPl1XSTReLkfsxVm?=
+ =?us-ascii?Q?2GYeCljRugQISW6o+FNQXADyTPlUOS7SuffGFZXepaoowOl0kxbxLLUmZ0dH?=
+ =?us-ascii?Q?eP25/vRx8oBMSR+zHdL7IdrmqXCz0PLBLQ4iCseETVN7QKOKrn87UHiIdbpP?=
+ =?us-ascii?Q?1prB7qWZ/u/fZVUb6ExY2iWE0BAETJTyhCz66gvfbTxUAu13H3+kThRSrgkk?=
+ =?us-ascii?Q?R8WAooKv1XidXYsrf/Jpp0uPp6QO/lY5PEG8TZGpW3oncZyvjelWKNOTxLxp?=
+ =?us-ascii?Q?NUyi4N7DUEF4c9btxIXXayTPWwASgU5b/hsPXQuVP9SQ40t6C2scXOAsLK+u?=
+ =?us-ascii?Q?x8dqhs39BcFMVjjYj5c9h2oTxGXvKrNM6dhFh56H3hkCrF3vARSSadfyT21V?=
+ =?us-ascii?Q?jVbDSaSJl9QChi4mn85ScHTmKP4VdeyvOkbeOZWfyFDfcyq3xnbGZu0=3D?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?883Av1pWrKxXRwuuiUaVufvuJkHuYUGZxKYOUJHW7XFb5uCTejyYC16012n7?=
- =?us-ascii?Q?iQGjd7iocsRp+AKbjc791kJwtUFuxyvxv51P11Z3lvWL55vm8XrDbLIbwYta?=
- =?us-ascii?Q?9ppC3qLgPxQo4yWzqnXqSO4xj4uVgotwCojyHxQCGfUlZWT2pXGOcnPClHTt?=
- =?us-ascii?Q?Zn6sxNTkM4jYLxiQJZRB9ZxFLx/SChMHlsfOoGfWUKP1hKG/x1fGPFt2ayzY?=
- =?us-ascii?Q?XwwjVqPEBcbD96dB7UhXDgn5xxEjqQrOg8s0fMC5HSuMrPo7XupSl97DzLnM?=
- =?us-ascii?Q?O3EG6vRb6VVtCCeMfRXDf8yFwawwswNum9YaP6elHkoT1nccnpeprtR0Zwde?=
- =?us-ascii?Q?xBpRQHmlk4+rul6H3TfgGnkRQzlrEXdYXBW15A4hmyB32Dcl/tyXOftABRez?=
- =?us-ascii?Q?Euab1XP1oHOnE4n7UzFgPHJ5XYR/As7PTWHGtd4TKQU/bNxKgufuppAKxZG1?=
- =?us-ascii?Q?KeSdmdC+vuo9gY/ENR3hGxePBU11grxVe9oD6OcnumTFBHr9OO24flSfYjEr?=
- =?us-ascii?Q?/+yQvdonOYf8GwRXSQDZcLqsENwf4bMUGFhwVzi2pceH7cZnC5r1qyaQ8Y5D?=
- =?us-ascii?Q?Uyi8iJXMTpEatZIPBieTFTRC9yHeVBMswreJOQvjNELvpnJS/uw/dmAtYnGq?=
- =?us-ascii?Q?gYxtKRwMgfIzT+4mBRlOnh4OlMe0OIFnqK4Ik8CZZ6RiQTK0Wx8KsD9Tbw91?=
- =?us-ascii?Q?9RoTueGnDpVRLAO+p7AvsJmxkg+MFvZS5UQN8uYc4iCzDVuagtj0UhDtNQwd?=
- =?us-ascii?Q?tioaMpdVNDLtN3nelDQHRkBidvxZcyt3KyyjA7LFy9q6zVy2Ip5VSXHxI3XR?=
- =?us-ascii?Q?QjtboSjSxCcvWAcy4oTB/xyDtPmFfV3/6ybPYxodUkkeNmhpMJ11IFgtVvvn?=
- =?us-ascii?Q?o4Ssphf1a9w3e2/1bwIwxhQUxHBeQq9Rz0GJD4MNzTe04QJ6pUnRuL2xZUw4?=
- =?us-ascii?Q?3yWaChuT9ofqNVSei1EEdU9AU+Eit5Vfgl/oofeDXRqO3J6UwoPxl3/zOa5y?=
- =?us-ascii?Q?Jwy//1XfKBEVFuaP21tpubHXyIl9ssZqesZAx8oFGkz23yrLlhYtvvrI5Ag4?=
- =?us-ascii?Q?s/AdjXXFJTXKMPTE2hb/4Hxg3xOlazQa5udWatUEiPxKTSI9YWi6lDbJyQmp?=
- =?us-ascii?Q?nIlvnT7Xhni/9TmcXAmljrsn4Dp6vSmNhQQV3j3PyzbXQGfM/5CdWfKskriM?=
- =?us-ascii?Q?pd1pRLSBGLjPLuvNL9JJfj6C4tWRxm/7j3uW/eQa1lsRRhdeG0/ZNITxsCU?=
+ =?us-ascii?Q?AThIfgCZSyJl5fyUyqYjyTTart51DkVQV+CA1MggMIVGOcEwF2LBIRYOnRuM?=
+ =?us-ascii?Q?5lHP1iGnQR3wgMqYIhgFGeJ54eYFrGoQSHIH6zIdWPtewgvGkd6ziMeVsthE?=
+ =?us-ascii?Q?oWtUyhH7n9MtVXWxQv5gJUdFf+LBgUGn3N7MFgmxWT+wXpeBm9M5g/d07hk0?=
+ =?us-ascii?Q?/d/2Qbq6H5vkpTDTREheqx3JPgDEhhxgGpJIgoCN28SLKho+VuFMMklQc6ck?=
+ =?us-ascii?Q?ZtjH8/gT8kjJGyTLdVpCQICgeD28lF5V4LDhkpjbKwXDNQmis06TEN5GSXsK?=
+ =?us-ascii?Q?OnPeG3C9dhvH9EQ+dFJw3i8g1LxHdaEygf/uusSMvncjTaWj2XFyfz0e+A06?=
+ =?us-ascii?Q?LYEcBauFTMYsW48HrCYHZpEKfDa2/icmGThwegNNKVzHbTV3W5plcwfVJ8Ec?=
+ =?us-ascii?Q?e7x4h61Bp5sQTuI2LaIKNm7R+JELJm04beuiY4E9xjB2ClF3ZOeHMX8IDBZb?=
+ =?us-ascii?Q?cB7m+i58x/C7OpsyopQ0geNgKqLzAfARB8OA6r2UeYrufty0aH4d+edO3sqG?=
+ =?us-ascii?Q?7tzplhIo3hnByoUnRlhRhe/TjIsnmgpab+QYA4y4Ri5xsk2mM9citGGaVDBa?=
+ =?us-ascii?Q?6mOMd8oZyW7LTuUTH7LfkW5rWLvZslKy3xrHjEMIJ1QwBCAzcgEVWgZEAY5F?=
+ =?us-ascii?Q?xQvIakbunJATw6rVhC2IBm3Gc4pk9Dv1gvecBdMjUdfwJk0NnaFd+Aqnpdxn?=
+ =?us-ascii?Q?/p4efZCw3d19eES4U8rSKi8xA5pKnm0lBOOl2pH9GYtGSOY3IvuMCLGkWLi+?=
+ =?us-ascii?Q?9vIhVyplLK38KpVGWe+4DRIaYKMAh2da+BTQ43U7v2fW17cgHvp2sROTdFM+?=
+ =?us-ascii?Q?zZWwME0V9cDdyraxfzPPblG/Ape/7hQNTp+oPa5RN5aED4ByTUx2Ey0TIne7?=
+ =?us-ascii?Q?kN8yKu3HetIUTB2YLBarDWZH73Dn53n090ANNoMse3nddLdkjonI4A936Qib?=
+ =?us-ascii?Q?79oPAPA6lpzI+4klec2I1Wc2tqkfRpBr6SgcsvDnpZhnTNR1iMsn++5K3tls?=
+ =?us-ascii?Q?5FdZirTToysElxY1Wk6GalYWVSi11i/DtNYiAFnSGsQK7hOc8eNxYTXjKll9?=
+ =?us-ascii?Q?Ah94lfnOtuLEkGatC+35VvxgkCsth77jLDsRyAS0xlm3JWj/4Hi7ilmYE19b?=
+ =?us-ascii?Q?LM7Ncg7sqwSRA1cKItboSIl1gVo+1L/9Ck8eNhEQ9x3UlXAMk2HmeU+QLwIe?=
+ =?us-ascii?Q?J6A2K40WeFck9wateYyACDa15/DLL5pvSIMtKqHWoUAEywxEmDt+jsvdfU8?=
  =?us-ascii?Q?=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -147,63 +143,54 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 240c243f-1bb8-4e8d-adc4-08ddf66804e3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Sep 2025 04:01:17.5175
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5147d576-d09b-486a-d597-08ddf6686387
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Sep 2025 04:03:56.2892
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6694
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR02MB9409
 
 From: Prasanna Kumar T S M <ptsm@linux.microsoft.com> Sent: Wednesday, Sept=
 ember 17, 2025 7:03 AM
 >=20
-> The Hyper-V DRM driver is available since kernel version 5.14 and it
-> provides full KMS support and fbdev emulation via the DRM fbdev helpers.
-> Deprecate this driver in favor of Hyper-V DRM driver.
+> The hyperv_fb driver is deprecated in favor of Hyper-V DRM driver. Split
+> the hyperv_fb entry from the hyperv drivers list, mark it obsolete.
 >=20
 > Signed-off-by: Prasanna Kumar T S M <ptsm@linux.microsoft.com>
 > ---
->  drivers/video/fbdev/Kconfig     | 5 ++++-
->  drivers/video/fbdev/hyperv_fb.c | 2 ++
->  2 files changed, 6 insertions(+), 1 deletion(-)
+>  MAINTAINERS | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
-> index c21484d15f0c..48c1c7417f6d 100644
-> --- a/drivers/video/fbdev/Kconfig
-> +++ b/drivers/video/fbdev/Kconfig
-> @@ -1773,13 +1773,16 @@ config FB_BROADSHEET
->  	  a bridge adapter.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f6206963efbf..aa9d0fa6020b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11424,7 +11424,6 @@ F:	drivers/pci/controller/pci-hyperv-intf.c
+>  F:	drivers/pci/controller/pci-hyperv.c
+>  F:	drivers/scsi/storvsc_drv.c
+>  F:	drivers/uio/uio_hv_generic.c
+> -F:	drivers/video/fbdev/hyperv_fb.c
+>  F:	include/asm-generic/mshyperv.h
+>  F:	include/clocksource/hyperv_timer.h
+>  F:	include/hyperv/hvgdk.h
+> @@ -11438,6 +11437,16 @@ F:	include/uapi/linux/hyperv.h
+>  F:	net/vmw_vsock/hyperv_transport.c
+>  F:	tools/hv/
 >=20
->  config FB_HYPERV
-> -	tristate "Microsoft Hyper-V Synthetic Video support"
-> +	tristate "Microsoft Hyper-V Synthetic Video support (DEPRECATED)"
->  	depends on FB && HYPERV
->  	select DMA_CMA if HAVE_DMA_CONTIGUOUS && CMA
->  	select FB_IOMEM_HELPERS_DEFERRED
->  	help
->  	  This framebuffer driver supports Microsoft Hyper-V Synthetic Video.
->=20
-> +	  This driver is deprecated, please use the Hyper-V DRM driver at
-> +	  drivers/gpu/drm/hyperv (CONFIG_DRM_HYPERV) instead.
+> +HYPER-V FRAMEBUFFER DRIVER
+> +M:	"K. Y. Srinivasan" <kys@microsoft.com>
+> +M:	Haiyang Zhang <haiyangz@microsoft.com>
+> +M:	Wei Liu <wei.liu@kernel.org>
+> +M:	Dexuan Cui <decui@microsoft.com>
+> +L:	linux-hyperv@vger.kernel.org
+> +S:	Obsolete
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
+> +F:	drivers/video/fbdev/hyperv_fb.c
 > +
->  config FB_SIMPLE
->  	tristate "Simple framebuffer support"
->  	depends on FB
-> diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv=
-_fb.c
-> index 75338ffc703f..c99e2ea4b3de 100644
-> --- a/drivers/video/fbdev/hyperv_fb.c
-> +++ b/drivers/video/fbdev/hyperv_fb.c
-> @@ -1357,6 +1357,8 @@ static int __init hvfb_drv_init(void)
->  {
->  	int ret;
->=20
-> +	pr_warn("Deprecated: use Hyper-V DRM driver instead\n");
-> +
->  	if (fb_modesetting_disabled("hyper_fb"))
->  		return -ENODEV;
->=20
+>  HYPERBUS SUPPORT
+>  M:	Vignesh Raghavendra <vigneshr@ti.com>
+>  R:	Tudor Ambarus <tudor.ambarus@linaro.org>
 > --
 > 2.49.0
 
