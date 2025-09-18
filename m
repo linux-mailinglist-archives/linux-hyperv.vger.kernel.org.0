@@ -1,135 +1,150 @@
-Return-Path: <linux-hyperv+bounces-6937-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6938-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DD2AB853BC
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Sep 2025 16:29:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65D20B856C2
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Sep 2025 17:03:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E97703AC551
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Sep 2025 14:25:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B43181C83841
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Sep 2025 15:02:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F632A31;
-	Thu, 18 Sep 2025 14:21:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5F3E22E004;
+	Thu, 18 Sep 2025 15:01:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="FnRuFfO4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JnbL51My"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBC81F4174;
-	Thu, 18 Sep 2025 14:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FADF1A76BB
+	for <linux-hyperv@vger.kernel.org>; Thu, 18 Sep 2025 15:01:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758205277; cv=none; b=K/GrXaV9e4w8mUiE6SLt/HC5dSsd5JjTYblPUjFGPWhRkH7ATksaQO+6AyxP6HX03Crz5CnzxsihVthYIQqe+dXDMIvJ2hzzX9NE77GgvTWoLvMPmhec77B5Sw/iBLG5cUkw4kyCMJqhKB3NnEM6GOKYFpp31y0jK6Fg+DWClGs=
+	t=1758207667; cv=none; b=SiU5u7lPzBqMiM5IRkR8WJ+Ml6H4ypPyvrm+MYwoMo6/NEdXc38el6GtIjHKOLgLTd+DH2TRZmCHYo/z3JRmaWRB/FTMkMTTkg/HC7g6bUq6mT4JjyT6YW/w9/JXtFemxekIsJw2RqP/OGg38tzytonMCtBNysSkK9Eg+GCFnLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758205277; c=relaxed/simple;
-	bh=nbAYGKB4zh6x3pLeaIoao3ueCD0GXfV/pvrs1oid3ac=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=o6vjhQ38oVJiwh/p1g0BEXQfTIQx1VpoRH+/4xPBYNzGqDRta+Qu0m0LVPDMo0tKCT+sE9t7N19k0JQHudQhf+9vFhtJISMl0XOsDBrBFGYhHvNMDm9zVguMrcgNDm2I1Q7g5RER+OK0HzqHielu8KcyeUTPCbUPSheO1jdC7Nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=FnRuFfO4; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1758205274;
-	bh=nbAYGKB4zh6x3pLeaIoao3ueCD0GXfV/pvrs1oid3ac=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=FnRuFfO4Z0VXJVExe43WegW9o20+hlDRS2ktCfig5dgbd9+VBS9SOFRw8hGiOZEbw
-	 JrZ9c4Ew764svBE7NErxYuli/+SROpj/73z4fHkXVUkxvtftYJMa1fBJSkJ6J3BMdu
-	 YOHaoxr7RTWTh7XUAnkw1Hlu4K5/6aW7bSPF0e+c=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 82E181C02FD;
-	Thu, 18 Sep 2025 10:21:13 -0400 (EDT)
-Message-ID: <ae2bdc6655d2b7ccb264546e5f36a20a65002a7b.camel@HansenPartnership.com>
-Subject: Re: [PATCH] x86/hyperv: Export hv_hypercall_pg unconditionally
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Peter Zijlstra <peterz@infradead.org>, Naman Jain
-	 <namjain@linux.microsoft.com>
-Cc: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>,  Roman Kisel <romank@linux.microsoft.com>, "K . Y .
- Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
- Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, 
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- mhklinux@outlook.com
-Date: Thu, 18 Sep 2025 10:21:12 -0400
-In-Reply-To: <20250918064713.GW3419281@noisy.programming.kicks-ass.net>
-References: <20250825055208.238729-1-namjain@linux.microsoft.com>
-	 <20250825094247.GU3245006@noisy.programming.kicks-ass.net>
-	 <f154d997-f7a6-4379-b7e8-ac4ba990425c@linux.microsoft.com>
-	 <20250826120752.GW4067720@noisy.programming.kicks-ass.net>
-	 <efc06827-e938-42b5-bb45-705b880d11d9@linux.microsoft.com>
-	 <27e50bb7-7f0e-48fb-bdbc-6c6d606e7113@redhat.com>
-	 <aMl5ulY1K7cKcMfo@google.com>
-	 <56521d85-1da5-4d25-b100-7dbe62e34d1d@linux.microsoft.com>
-	 <20250918064713.GW3419281@noisy.programming.kicks-ass.net>
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	s=arc-20240116; t=1758207667; c=relaxed/simple;
+	bh=AHhSMOoeWjfl0vFPCrm0Cux2fhk1nlNWkzKPRjm+gHs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rKqVrS/LZwzGhJkeTkHxo9V+FxEo40T6iXj/c8tHHnqW5NhS8zC1yMFA1mqzSK25YuQsXbmQtcywzoDhk0sgWAC7ypdgVCq+UqqOv5oolRz7B3gjd7rIsh1R8QyhMbDsvpIk8Od7FDoT5WMfeK3YrGMDQ/EqS9h82cyoEAQh9mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JnbL51My; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b54ff31192aso758388a12.0
+        for <linux-hyperv@vger.kernel.org>; Thu, 18 Sep 2025 08:01:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758207665; x=1758812465; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=71og1L1moGnEtlU3hPRTvSfcrOKYYypZv/voq78BbaA=;
+        b=JnbL51Myep+r2FeN86BTbSqthH2ADfhbuRbB2eY0raq3hVyfIuglZPLWoE32xwOjGA
+         KsSgSITKcBajErxgHC/daZJJMEf+eXA4UF/+SyWq5f44S4tIOFTz97tEfd/Ig+FjeCAv
+         cnaMMfwXEIsw2+JX9mtCvLEksP82y98n5Xr+o8cMzT5pckYTWtw7SYr8bdwwF3Vfhxk1
+         VZV0N45ZBGfNQumG7zfm/G6fBFaeNzDd8YVIT5qPTHAiuzDBlR/XK+k5CAIpRAZaJj/z
+         0Xj2KCH3Q1Dww4odh5RAgTLmQfp0faSGqmSMNF9Kjjedu6w0HclhDuKqvrtCjxBZ0vFj
+         jokQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758207665; x=1758812465;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=71og1L1moGnEtlU3hPRTvSfcrOKYYypZv/voq78BbaA=;
+        b=OfUqRNFFpMkJgXY0SVf1BzCjC8hH4B3WjvSYFvnnmgIDfEL85BHo+spoBTcIaBxk5h
+         /BXZJldc3u951JrwisB7SkYMrRPOPhDVLLfqg+FXxaoRrywG43bAdWoAD+91czt+EBtw
+         fZdBK34Jvurw9ZDICPLPUBSzFfS7hpnescXEhq1sRXc/imistg8tNb+avj//rorONfUH
+         kl33NCaq2d26fkI/7vxKyRd09H2Ha1km5rFm1EBQjJ66lE9vRI3XDzVZQ4TfOjGNSqyW
+         +DzJ5oFTukKCTgru/hDFJ+Sopn2OjV67YZ5tjsUJk2QGZJQEJ+MsZAbVejzORWvSMMUK
+         NR5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUpLKvxZWyhcwzHkfljETL5pU1NehvJT3JRmDM/ihsXwdsC34zX1O7cHvFd+B/JvOaT9NBgD9/dzOy5eWA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKrKcT5g5R3nvpamfNr5sVsUoz1FGpshqgd8jzTdR1GSojPBkB
+	tIc1rFYqI56HgyhacVZulFXiQLfVlmaARuIB//YH0d9AIJC6nuc+rUJz6RyxJo5C
+X-Gm-Gg: ASbGncseOjWUWXAyromnxzE431Xv9TrsHRIGhkd1h6K+pCursJSmaLXnrXpAIq0TnyC
+	B/2xaO7gm+Cp4LXDtVn2lans+pknGT7Ji3RpO8EfvJa9QKWiM78r5W77LdIngKBTGyQwfstEui5
+	8moinI83hlvYoa5l6QViq1vy6JQC7jMjXXJs8zWIUJCLDY1kW5vHAjg3KBWLy3jaGA4tDIbtELe
+	qRb0YQ3WsRihnRGTpaMCaDSrGCiejHmAev8lmAUYUMvARriGArqxYZaOAHHqFZhobzJx0/MmQUx
+	7UfFbyhPB9AKM+lJ9WjhHvkLeM9ZH1x5LcsyPXJ8vikDVeS0Hpnmwx+z+cVFnTSk4Hc6e2/jXN9
+	1vCbxU15jlHBnRE3vU6ZY/rPFoUD7wdd52WzCkuHNYaJ3983KDjWQBSY7UhVAkkz3Pg==
+X-Google-Smtp-Source: AGHT+IFF4QX2AbWB9fcEg1ekWHfAYk3ZX29fzrI+wOrqeGz5H2M50u4oTVO4eAHdSnCMCh9Ij/n/0w==
+X-Received: by 2002:a17:903:2c7:b0:267:4b13:c855 with SMTP id d9443c01a7336-2681217a94fmr72904825ad.14.1758207664287;
+        Thu, 18 Sep 2025 08:01:04 -0700 (PDT)
+Received: from ubuntu-Virtual-Machine.mshome.net ([70.37.26.59])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-26980302b20sm28425005ad.101.2025.09.18.08.01.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Sep 2025 08:01:03 -0700 (PDT)
+From: Tianyu Lan <ltykernel@gmail.com>
+X-Google-Original-From: Tianyu Lan <tiala@microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	arnd@arndb.de,
+	Neeraj.Upadhyay@amd.com,
+	tiala@microsoft.com,
+	kvijayab@amd.com,
+	romank@linux.microsoft.com
+Cc: linux-arch@vger.kernel.org,
+	linux-hyperv@vger.kernel.org
+Subject: [PATCH 0/5] x86/Hyper-V: Add AMD Secure AVIC for Hyper-V platform
+Date: Thu, 18 Sep 2025 11:00:18 -0400
+Message-Id: <20250918150023.474021-1-tiala@microsoft.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2025-09-18 at 08:47 +0200, Peter Zijlstra wrote:
-> On Thu, Sep 18, 2025 at 11:33:18AM +0530, Naman Jain wrote:
->=20
-> > Thank you so much Sean and Paolo for your valuable inputs. I will
-> > try out these things. Summarizing the suggestions here:
-> > * Use noinstr (no instrumentation)
-> > * Have separate .S file
-> > * Don't use "register asm".
-> > * Use static calls for solving IBT problems
-> > * RAX:RCX is probably ok to be used, considering ABI. Whether we
-> > would still need to use STACK_FRAME_NON_STANDARD, I am not sure,
-> > but I will see based on how it goes.
-> >=20
-> > I hope this addresses the concerns Peter raised. If there's
-> > anything I might have missed, I'm happy to make further adjustments
-> > if needed.
->=20
-> It would be a definite improvement. I'm just *really* sad people
-> still create interfaces like this, even though we've known for years
-> how bad they are.
+Secure AVIC is a new hardware feature in the AMD64
+architecture to allow SEV-SNP guests to prevent the
+hypervisor from generating unexpected interrupts to
+a vCPU or otherwise violate architectural assumptions
+around APIC behavior.
 
-Thanks for that.  Our only defence at Microsoft is that the hypervisor
-ABI for this is 10 years old and counting.
+Each vCPU has a guest-allocated APIC backing page of
+size 4K, which maintains APIC state for that vCPU.
+APIC backing page's ALLOWED_IRR field indicates the
+interrupt vectors which the guest allows the hypervisor
+to send.
 
-> At some point we've really have to push back and say enough is
-> enough.
+This patchset is to enable the feature for Hyper-V
+platform. Patch "Drivers: hv: Allow vmbus message
+synic interrupt injected from Hyper-V" is to expose
+new fucntion hv_enable_coco_interrupt() and device
+driver and arch code may update AVIC backing page
+ALLOWED_IRR field to allow Hyper-V inject associated
+vector.
 
-Although we can't really do anything about the old ABI since we have
-tons of things that use it, there is interest in Microsoft for co-
-designing a new ABI that we could add to hyper-v for Linux use and
-which would also be a part of bringing up and using virtual secure mode
-(VSM) in KVM via the planes API.  I was thinking the best way of
-discussing it as a community would be the PUCK call, but if there are
-alternative forums, we could use that as well.  This is going to be
-pretty long term: besides designing and testing a new ABI, we were
-counting on Amazon upstreaming their VSM implementation for KVM and
-we're a bit under resourced here if it turns out we have to do
-everything.
+The patchset is based on the tip tree commit 27a17e02418e
+(x86/sev: Indicate the SEV-SNP guest supports Secure AVIC)
 
-Regards,
+Tianyu Lan (5):
+  x86/hyperv: Don't use hv apic driver when Secure AVIC is available
+  drivers: hv: Allow vmbus message synic interrupt injected from Hyper-V
+  x86/hyperv: Don't use auto-eoi when Secure AVIC is available
+  x86/hyperv: Allow Hyper-V to inject STIMER0 interrupts
+  x86/Hyper-V: Add Hyper-V specific hvcall to set backing page
 
-James
+ arch/x86/hyperv/hv_apic.c           |  8 ++++++
+ arch/x86/hyperv/hv_init.c           | 31 ++++++++++++++++++++++-
+ arch/x86/hyperv/ivm.c               | 38 ++++++++++++++++++++++++++++
+ arch/x86/include/asm/mshyperv.h     |  2 ++
+ arch/x86/kernel/apic/x2apic_savic.c |  9 ++++++-
+ arch/x86/kernel/cpu/mshyperv.c      |  3 +++
+ drivers/hv/hv.c                     |  2 ++
+ drivers/hv/hv_common.c              |  5 ++++
+ include/asm-generic/mshyperv.h      |  1 +
+ include/hyperv/hvgdk_mini.h         | 39 +++++++++++++++++++++++++++++
+ 10 files changed, 136 insertions(+), 2 deletions(-)
+
+-- 
+2.25.1
 
 
