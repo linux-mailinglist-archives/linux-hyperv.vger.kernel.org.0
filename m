@@ -1,1048 +1,714 @@
-Return-Path: <linux-hyperv+bounces-6967-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6968-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8E6FB8BCC7
-	for <lists+linux-hyperv@lfdr.de>; Sat, 20 Sep 2025 03:42:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 72239B8DF46
+	for <lists+linux-hyperv@lfdr.de>; Sun, 21 Sep 2025 18:16:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5CC585A09D3
-	for <lists+linux-hyperv@lfdr.de>; Sat, 20 Sep 2025 01:42:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2577216712F
+	for <lists+linux-hyperv@lfdr.de>; Sun, 21 Sep 2025 16:16:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A279C18DB0D;
-	Sat, 20 Sep 2025 01:42:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8795A213E7A;
+	Sun, 21 Sep 2025 16:16:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HtoOOYq7"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Y+fkZzDM"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE93D262A6;
-	Sat, 20 Sep 2025 01:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E601F1B7F4;
+	Sun, 21 Sep 2025 16:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758332559; cv=none; b=oELHOABzMutngcMF3XkYonH4Uba3u6FUcDZPuNFbBB2y0M8AY2RY2zAG2OKjpTExUmxrx9VGzlQugRaWyonCQbiOuaOiLXJg+41zNoGKhSd2KlWU4n3I/SpaklVxz5fNAg28w4eaExb0uDF7Od/pC1L45l9XnJ+NFE4rvgzsUlc=
+	t=1758471365; cv=none; b=AsmNqJCBeICijMLeRHesipbIL28RH7CeyOzSGSpdGMs95cDWKt+KFJ6OCADjvnUheEp08t8IZzIT0lgISGUOW5nmT7XQfMas1xxwOIhELLYgZ1sGypoziTJIdD/1xc2kSgbi+JcjwGjen8kUtKDyMtwRg1VJtNcGcVTBpKHqu3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758332559; c=relaxed/simple;
-	bh=YqJUo1uJhup7SB/w6z/0/vmgUnc11nXFoXHzIlDI4CM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=bcc0gZaxoaQHcBjqoSV6jKnjMyop5m9UYdzjq+A/NT2kJ+tjaT6lLhxtsO5R5xo39NJ6NffF+LASSymTWa/u4Y0thPq0Efbkrgti0x072htYLML7nIZydWyW9JUIUYPLsaGMp2rWVbGk1c6ZEyNwfHLLeFR6z0EiwZQeFwvxk18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HtoOOYq7; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 906A72114240;
-	Fri, 19 Sep 2025 18:42:33 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 906A72114240
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1758332554;
-	bh=mEPnASWOsEI7Z481b2oWAaZiOh6uMb0iDO3qffEe5FA=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=HtoOOYq7bNMSxRXhHlbu8Z3ep4i5tfr3XR3ZbSNI+nImme8u7EELRIn3YoDgNm0kt
-	 cuBgxsZF7V2Ao6TZyHPmA84G0X8lC/TZHuZC/nd1B0NWyE5l7DNjED8fZZy+AMxVbK
-	 ksWH4iHWR+SjvZeB4hof2THSJ4hfDj2zgxQIULTQ=
-Message-ID: <eb755e6d-3adf-ee3b-2942-666bc1bedef5@linux.microsoft.com>
-Date: Fri, 19 Sep 2025 18:42:33 -0700
+	s=arc-20240116; t=1758471365; c=relaxed/simple;
+	bh=BXNTdIu/HuKliIIZrJb95YqqbOr5ZDBQFxKEGrAWlXA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eH1Yu16Q4pYv7leKhm+D7VTIzLT1L8jnn3cqcixHTwJjgwDDewqg64iSuJtjaW6fb/0hzAjbZf3IGb/hj7wpWKV4dB79/kaUVeMDgvQVijeSila/6QfY/RWWfc8jndvuKtTMtlPsgqRiA2bcy4NxBoJRVR4ZoYp+7m0YXVDPU04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Y+fkZzDM; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58LFmQqb016374;
+	Sun, 21 Sep 2025 16:14:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=X6MABP9tiU0aFptJdMUuo2CJNl4k0
+	E947uMCZ27uwQs=; b=Y+fkZzDM25py2WOpoDa1x9Lv/6+9mqDK/eAZX3rTvqiZJ
+	NXkw0/wkOeJpQAJmJxYTz9mrsIY05hy1m7GRwN1EOIhjWUzui0vdezMDgLCUh9jJ
+	YkINAmjHCECDl+sTNERoh/47uJMqpiqEGE9VaxDPJUfEx/MSmKArTiALXbevUFTL
+	zcoZJP+NH1wM3zQmpCFyUAa7Ow3Kn3SFCK+giXBwlLyhoWqHGeYpYAEvinfiZrf7
+	kGb706xFLJQpzvpmDuLbqImwNZlqVnZR+EmuXt7MZykSpFBxI2yA5Wi4Gh6H/22s
+	smAWZFYIK4q6wd0yFcOPHzPGV9dNFOiGGGFFX+Ysg==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 499kvts4bj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 21 Sep 2025 16:14:41 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 58LEYP5r002154;
+	Sun, 21 Sep 2025 16:14:40 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 499jq5y2fw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 21 Sep 2025 16:14:40 +0000
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 58LGEdIX003470;
+	Sun, 21 Sep 2025 16:14:39 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 499jq5y2fc-1;
+	Sun, 21 Sep 2025 16:14:39 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: thomas.petazzoni@bootlin.com, pali@kernel.org, lpieralisi@kernel.org,
+        kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
+        bhelgaas@google.com, joyce.ooi@intel.com, alyssa@rosenzweig.io,
+        maz@kernel.org, jim2101024@gmail.com, florian.fainelli@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, rjui@broadcom.com,
+        sbranden@broadcom.com, ryder.lee@mediatek.com,
+        jianjun.wang@mediatek.com, sergio.paracuellos@gmail.com,
+        matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
+        marek.vasut+renesas@gmail.com, yoshihiro.shimoda.uh@renesas.com,
+        geert+renesas@glider.be, magnus.damm@gmail.com,
+        shawn.lin@rock-chips.com, heiko@sntech.de, michal.simek@amd.com,
+        bharat.kumar.gogada@amd.com, will@kernel.org, kys@microsoft.com,
+        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        linus.walleij@linaro.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, rric@kernel.org, nirmal.patel@linux.intel.com,
+        toan@os.amperecomputing.com, jonathan.derrick@linux.dev,
+        linux-pci@vger.kernel.org
+Cc: alok.a.tiwari@oracle.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH RFC] PCI: Convert devm_pci_alloc_host_bridge() users to error-pointer returns
+Date: Sun, 21 Sep 2025 09:14:07 -0700
+Message-ID: <20250921161434.1561770-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v1 5/6] x86/hyperv: Implement hypervisor ram collection
- into vmcore
-Content-Language: en-US
-From: Mukesh R <mrathor@linux.microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
- "arnd@arndb.de" <arnd@arndb.de>
-References: <20250910001009.2651481-1-mrathor@linux.microsoft.com>
- <20250910001009.2651481-6-mrathor@linux.microsoft.com>
- <SN6PR02MB4157CD8153650CC9D379A03DD415A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <87cab5ec-ab76-b1cf-4891-30314e5dace6@linux.microsoft.com>
- <SN6PR02MB4157AFD23F088FC243A24C17D416A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <58e4f6b3-6ae3-4bf4-3e1f-0981d6af91ea@linux.microsoft.com>
-In-Reply-To: <58e4f6b3-6ae3-4bf4-3e1f-0981d6af91ea@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-21_04,2025-09-19_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 bulkscore=0
+ spamscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2508110000
+ definitions=main-2509210167
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTIwMDAyNSBTYWx0ZWRfXzlPYwnoKCGVY
+ wXTxp4g9DKp1B6/Qn/FmIu692T4MTNh8Q/XcBP0jS6VkmnypNDCobfp1wRAzlEH0MNHHMy+FkkJ
+ ippEn4viHCC/n4yo80jYs/l/3WJIbxgoX1HvUBgsCIua/R71016woVSCjPoazuec+49tJd9QOjf
+ Gek4xSfdkgBD+8r/xE06K5gvDIPtYHrHoVBgD8ciQ1xtdE4xZpOrn8/Pm0ng0b41k1IW0Qi2B05
+ G2O9abfXgLTNSgqSpg9wfhr8wu+fCeFFmo8qHZA8XvWGLn2In4s00FNm2lB+C3UabL+QVcRK/z8
+ zV9w4LnkSDz9RlqzIEh8FO+DdwjMD5cF3SxVEtA9cB4tTtZq7EqZ5VvyOJnVO2y66W7UtPjOtJO
+ Hm7izmtB
+X-Authority-Analysis: v=2.4 cv=UPPdHDfy c=1 sm=1 tr=0 ts=68d02471 cx=c_pps
+ a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17
+ a=yJojWOMRYYMA:10 a=yPCof4ZbAAAA:8 a=zziB279VngeVmd15e9YA:9
+X-Proofpoint-GUID: uKjH41pSl18bL479v-94jj5_JFtLEnSg
+X-Proofpoint-ORIG-GUID: uKjH41pSl18bL479v-94jj5_JFtLEnSg
 
-On 9/18/25 19:32, Mukesh R wrote:
-> On 9/18/25 16:53, Michael Kelley wrote:
->> From: Mukesh R <mrathor@linux.microsoft.com> Sent: Tuesday, September 16, 2025 6:13 PM
->>>
->>> On 9/15/25 10:55, Michael Kelley wrote:
->>>> From: Mukesh Rathor <mrathor@linux.microsoft.com> Sent: Tuesday, September 9, 2025 5:10 PM
->>>>>
->>>>> Introduce a new file to implement collection of hypervisor ram into the
->>>>
->>>> s/ram/RAM/ (multiple places)
->>>
->>> a quick grep indicates using saying ram is common, i like ram over RAM
->>>
->>>>> vmcore collected by linux. By default, the hypervisor ram is locked, ie,
->>>>> protected via hw page table. Hyper-V implements a disable hypercall which
->>>>
->>>> The terminology here is a bit confusing since you have two names for
->>>> the same thing: "disable" hypervisor, and "devirtualize". Is it possible to
->>>> just use "devirtualize" everywhere, and drop the "disable" terminology?
->>>
->>> The concept is devirtualize and the actual hypercall was originally named
->>> disable. so intermixing is natural imo.
->>>
->>>>> essentially devirtualizes the system on the fly. This mechanism makes the
->>>>> hypervisor ram accessible to linux. Because the hypervisor ram is already
->>>>> mapped into linux address space (as reserved ram),
->>>>
->>>> Is the hypervisor RAM mapped into the VMM process user address space,
->>>> or somewhere in the kernel address space? If the latter, where in the kernel
->>>> code, or what mechanism, does that? Just curious, as I wasn't aware that
->>>> this is happening ....
->>>
->>> mapped in kernel as normal ram and we reserve it very early in boot. i
->>> see that patch has not made it here yet, should be coming very soon.
->>
->> OK, that's fine. The answer to my question is coming soon ....
->>
->>>
->>>>> it is automatically
->>>>> collected into the vmcore without extra work. More details of the
->>>>> implementation are available in the file prologue.
->>>>>
->>>>> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
->>>>> ---
->>>>>  arch/x86/hyperv/hv_crash.c | 622 +++++++++++++++++++++++++++++++++++++
->>>>>  1 file changed, 622 insertions(+)
->>>>>  create mode 100644 arch/x86/hyperv/hv_crash.c
->>>>>
->>>>> diff --git a/arch/x86/hyperv/hv_crash.c b/arch/x86/hyperv/hv_crash.c
->>>>> new file mode 100644
->>>>> index 000000000000..531bac79d598
->>>>> --- /dev/null
->>>>> +++ b/arch/x86/hyperv/hv_crash.c
->>>>> @@ -0,0 +1,622 @@
->>>>> +// SPDX-License-Identifier: GPL-2.0-only
->>>>> +/*
->>>>> + * X86 specific Hyper-V kdump/crash support module
->>>>> + *
->>>>> + * Copyright (C) 2025, Microsoft, Inc.
->>>>> + *
->>>>> + * This module implements hypervisor ram collection into vmcore for both
->>>>> + * cases of the hypervisor crash and linux dom0/root crash.
->>>>
->>>> For a hypervisor crash, does any of this apply to general guest VMs? I'm
->>>> thinking it does not. Hypervisor RAM is collected only into the vmcore
->>>> for the root partition, right? Maybe some additional clarification could be
->>>> added so there's no confusion in this regard.
->>>
->>> it would be odd for guests to collect hyp core, and target audience is
->>> assumed to be those who are somewhat familiar with basic concepts before
->>> getting here.
->>
->> I was unsure because I had not seen any code that adds the hypervisor memory
->> to the Linux memory map. Thought maybe something was going on I hadn?t
->> heard about, so I didn't know the scope of it.
->>
->> Of course, I'm one of those people who was *not* familiar with the basic concepts
->> before getting here. And given that there's no spec available from Hyper-V,
->> the comments in this patch set are all there is for anyone outside of Microsoft.
->> In that vein, I think it's reasonable to provide some description of how this
->> all works in the code comments. And you've done that, which is very
->> helpful. But I encountered a few places where I was confused or unclear, and
->> my suggestions here and in Patch 4 are just about making things as precise as
->> possible without adding a huge amount of additional verbiage. For someone
->> new, English text descriptions that the code can be checked against are
->> helpful, and drawing hard boundaries ("this is only applicable to the root
->> partition") is helpful.
->>
->> If you don't want to deal with it now, I could provide a follow-on patch later
->> that tweaks or augments the wording a bit to clarify some of these places. 
->> You can review, like with any patch. I've done wording work over the years
->> to many places in the VMBus code, and more broadly in providing most of
->> the documentation in Documentation/virt/hyperv.
-> 
-> with time, things will start making sense... i find comment pretty clear
-> that it collects core for both cases of hv crash and dom0 crash, and no
-> mention of guest implies has nothing to do with guests. 
-> 
->>>
->>>> And what *does* happen to guest VMs after a hypervisor crash?
->>>
->>> they are gone... what else could we do?
->>>
->>>>> + * Hyper-V implements
->>>>> + * a devirtualization hypercall with a 32bit protected mode ABI callback. This
->>>>> + * mechanism must be used to unlock hypervisor ram. Since the hypervisor ram
->>>>> + * is already mapped in linux, it is automatically collected into linux vmcore,
->>>>> + * and can be examined by the crash command (raw ram dump) or windbg.
->>>>> + *
->>>>> + * At a high level:
->>>>> + *
->>>>> + *  Hypervisor Crash:
->>>>> + *    Upon crash, hypervisor goes into an emergency minimal dispatch loop, a
->>>>> + *    restrictive mode with very limited hypercall and msr support.
->>>>
->>>> s/msr/MSR/
->>>
->>> msr is used all over, seems acceptable.
->>>
->>>>> + *    Each cpu then injects NMIs into dom0/root vcpus.
->>>>
->>>> The "Each cpu" part of this sentence is confusing to me -- which CPUs does
->>>> this refer to? Maybe it would be better to say "It then injects an NMI into
->>>> each dom0/root partition vCPU." without being specific as to which CPUs do
->>>> the injecting since that seems more like a hypervisor implementation detail
->>>> that's not relevant here.
->>>
->>> all cpus in the system. there is a dedicated/pinned dom0 vcpu for each cpu.
->>
->> OK, that makes sense now that I think about it. Each physical CPU in the host
->> has a corresponding vCPU in the dom0/root partition. And each of the vCPUs
->> gets an NMI that sends it to the Linux-in-dom0 NMI handler, even if it was off
->> running a vCPU in some guest VM.
->>
->>>
->>>>> + *    A shared page is used to check
->>>>> + *    by linux in the nmi handler if the hypervisor has crashed. This shared
->>>>
->>>> s/nmi/NMI/  (multiple places)
->>>
->>>>> + *    page is setup in hv_root_crash_init during boot.
->>>>> + *
->>>>> + *  Linux Crash:
->>>>> + *    In case of linux crash, the callback hv_crash_stop_other_cpus will send
->>>>> + *    NMIs to all cpus, then proceed to the crash_nmi_callback where it waits
->>>>> + *    for all cpus to be in NMI.
->>>>> + *
->>>>> + *  NMI Handler (upon quorum):
->>>>> + *    Eventually, in both cases, all cpus wil end up in the nmi hanlder.
->>>>
->>>> s/hanlder/handler/
->>>>
->>>> And maybe just drop the word "wil" (which is misspelled).
->>>>
->>>>> + *    Hyper-V requires the disable hypervisor must be done from the bsp. So
->>>>
->>>> s/bsp/BSP  (multiple places)
->>>>
->>>>> + *    the bsp nmi handler saves current context, does some fixups and makes
->>>>> + *    the hypercall to disable the hypervisor, ie, devirtualize. Hypervisor
->>>>> + *    at that point will suspend all vcpus (except the bsp), unlock all its
->>>>> + *    ram, and return to linux at the 32bit mode entry RIP.
->>>>> + *
->>>>> + *  Linux 32bit entry trampoline will then restore long mode and call C
->>>>> + *  function here to restore context and continue execution to crash kexec.
->>>>> + */
->>>>> +
->>>>> +#include <linux/delay.h>
->>>>> +#include <linux/kexec.h>
->>>>> +#include <linux/crash_dump.h>
->>>>> +#include <linux/panic.h>
->>>>> +#include <asm/apic.h>
->>>>> +#include <asm/desc.h>
->>>>> +#include <asm/page.h>
->>>>> +#include <asm/pgalloc.h>
->>>>> +#include <asm/mshyperv.h>
->>>>> +#include <asm/nmi.h>
->>>>> +#include <asm/idtentry.h>
->>>>> +#include <asm/reboot.h>
->>>>> +#include <asm/intel_pt.h>
->>>>> +
->>>>> +int hv_crash_enabled;
->>>>
->>>> Seems like this is conceptually a "bool", not an "int".
->>>
->>> yeah, can change it to bool if i do another iteration.
->>>
->>>>> +EXPORT_SYMBOL_GPL(hv_crash_enabled);
->>>>> +
->>>>> +struct hv_crash_ctxt {
->>>>> +	ulong rsp;
->>>>> +	ulong cr0;
->>>>> +	ulong cr2;
->>>>> +	ulong cr4;
->>>>> +	ulong cr8;
->>>>> +
->>>>> +	u16 cs;
->>>>> +	u16 ss;
->>>>> +	u16 ds;
->>>>> +	u16 es;
->>>>> +	u16 fs;
->>>>> +	u16 gs;
->>>>> +
->>>>> +	u16 gdt_fill;
->>>>> +	struct desc_ptr gdtr;
->>>>> +	char idt_fill[6];
->>>>> +	struct desc_ptr idtr;
->>>>> +
->>>>> +	u64 gsbase;
->>>>> +	u64 efer;
->>>>> +	u64 pat;
->>>>> +};
->>>>> +static struct hv_crash_ctxt hv_crash_ctxt;
->>>>> +
->>>>> +/* Shared hypervisor page that contains crash dump area we peek into.
->>>>> + * NB: windbg looks for "hv_cda" symbol so don't change it.
->>>>> + */
->>>>> +static struct hv_crashdump_area *hv_cda;
->>>>> +
->>>>> +static u32 trampoline_pa, devirt_cr3arg;
->>>>> +static atomic_t crash_cpus_wait;
->>>>> +static void *hv_crash_ptpgs[4];
->>>>> +static int hv_has_crashed, lx_has_crashed;
->>>>
->>>> These are conceptually "bool" as well.
->>>>
->>>>> +
->>>>> +/* This cannot be inlined as it needs stack */
->>>>> +static noinline __noclone void hv_crash_restore_tss(void)
->>>>> +{
->>>>> +	load_TR_desc();
->>>>> +}
->>>>> +
->>>>> +/* This cannot be inlined as it needs stack */
->>>>> +static noinline void hv_crash_clear_kernpt(void)
->>>>> +{
->>>>> +	pgd_t *pgd;
->>>>> +	p4d_t *p4d;
->>>>> +
->>>>> +	/* Clear entry so it's not confusing to someone looking at the core */
->>>>> +	pgd = pgd_offset_k(trampoline_pa);
->>>>> +	p4d = p4d_offset(pgd, trampoline_pa);
->>>>> +	native_p4d_clear(p4d);
->>>>> +}
->>>>> +
->>>>> +/*
->>>>> + * This is the C entry point from the asm glue code after the devirt hypercall.
->>>>> + * We enter here in IA32-e long mode, ie, full 64bit mode running on kernel
->>>>> + * page tables with our below 4G page identity mapped, but using a temporary
->>>>> + * GDT. ds/fs/gs/es are null. ss is not usable. bp is null. stack is not
->>>>> + * available. We restore kernel GDT, and rest of the context, and continue
->>>>> + * to kexec.
->>>>> + */
->>>>> +static asmlinkage void __noreturn hv_crash_c_entry(void)
->>>>> +{
->>>>> +	struct hv_crash_ctxt *ctxt = &hv_crash_ctxt;
->>>>> +
->>>>> +	/* first thing, restore kernel gdt */
->>>>> +	native_load_gdt(&ctxt->gdtr);
->>>>> +
->>>>> +	asm volatile("movw %%ax, %%ss" : : "a"(ctxt->ss));
->>>>> +	asm volatile("movq %0, %%rsp" : : "m"(ctxt->rsp));
->>>>> +
->>>>> +	asm volatile("movw %%ax, %%ds" : : "a"(ctxt->ds));
->>>>> +	asm volatile("movw %%ax, %%es" : : "a"(ctxt->es));
->>>>> +	asm volatile("movw %%ax, %%fs" : : "a"(ctxt->fs));
->>>>> +	asm volatile("movw %%ax, %%gs" : : "a"(ctxt->gs));
->>>>> +
->>>>> +	native_wrmsrq(MSR_IA32_CR_PAT, ctxt->pat);
->>>>> +	asm volatile("movq %0, %%cr0" : : "r"(ctxt->cr0));
->>>>> +
->>>>> +	asm volatile("movq %0, %%cr8" : : "r"(ctxt->cr8));
->>>>> +	asm volatile("movq %0, %%cr4" : : "r"(ctxt->cr4));
->>>>> +	asm volatile("movq %0, %%cr2" : : "r"(ctxt->cr4));
->>>>> +
->>>>> +	native_load_idt(&ctxt->idtr);
->>>>> +	native_wrmsrq(MSR_GS_BASE, ctxt->gsbase);
->>>>> +	native_wrmsrq(MSR_EFER, ctxt->efer);
->>>>> +
->>>>> +	/* restore the original kernel CS now via far return */
->>>>> +	asm volatile("movzwq %0, %%rax\n\t"
->>>>> +		     "pushq %%rax\n\t"
->>>>> +		     "pushq $1f\n\t"
->>>>> +		     "lretq\n\t"
->>>>> +		     "1:nop\n\t" : : "m"(ctxt->cs) : "rax");
->>>>> +
->>>>> +	/* We are in asmlinkage without stack frame, hence make a C function
->>>>> +	 * call which will buy stack frame to restore the tss or clear PT entry.
->>>>> +	 */
->>>>> +	hv_crash_restore_tss();
->>>>> +	hv_crash_clear_kernpt();
->>>>> +
->>>>> +	/* we are now fully in devirtualized normal kernel mode */
->>>>> +	__crash_kexec(NULL);
->>>>
->>>> The comments for __crash_kexec() say that "panic_cpu" should be set to
->>>> the current CPU. I don't see that such is the case here.
->>>
->>> if linux panic, it would be set by vpanic, if hyp crash, that is
->>> irrelevant.
->>>
->>>>> +
->>>>> +	for (;;)
->>>>> +		cpu_relax();
->>>>
->>>> Is the intent that __crash_kexec() should never return, on any of the vCPUs,
->>>> because devirtualization isn't done unless there's a valid kdump image loaded?
->>>> I wonder if
->>>>
->>>> 	native_wrmsrq(HV_X64_MSR_RESET, 1);
->>>>
->>>> would be better than looping forever in case __crash_kexec() fails
->>>> somewhere along the way even if there's a kdump image loaded.
->>>
->>> yeah, i've gone thru all 3 possibilities here:
->>>   o loop forever
->>>   o reset
->>>   o BUG() : this was in V0
->>>
->>> reset is just bad because system would just reboot without any indication
->>> if hyp crashes. with loop at least there is a hang, and one could make
->>> note of it, and if internal, attach debugger.
->>>
->>> BUG is best imo because with hyp gone linux will try to redo panic
->>> and we would print something extra to help. I think i'll just go
->>> back to my V0: BUG()
->>>
->>>>> +}
->>>>> +/* Tell gcc we are using lretq long jump in the above function intentionally */
->>>>> +STACK_FRAME_NON_STANDARD(hv_crash_c_entry);
->>>>> +
->>>>> +static void hv_mark_tss_not_busy(void)
->>>>> +{
->>>>> +	struct desc_struct *desc = get_current_gdt_rw();
->>>>> +	tss_desc tss;
->>>>> +
->>>>> +	memcpy(&tss, &desc[GDT_ENTRY_TSS], sizeof(tss_desc));
->>>>> +	tss.type = 0x9;        /* available 64-bit TSS. 0xB is busy TSS */
->>>>> +	write_gdt_entry(desc, GDT_ENTRY_TSS, &tss, DESC_TSS);
->>>>> +}
->>>>> +
->>>>> +/* Save essential context */
->>>>> +static void hv_hvcrash_ctxt_save(void)
->>>>> +{
->>>>> +	struct hv_crash_ctxt *ctxt = &hv_crash_ctxt;
->>>>> +
->>>>> +	asm volatile("movq %%rsp,%0" : "=m"(ctxt->rsp));
->>>>> +
->>>>> +	ctxt->cr0 = native_read_cr0();
->>>>> +	ctxt->cr4 = native_read_cr4();
->>>>> +
->>>>> +	asm volatile("movq %%cr2, %0" : "=a"(ctxt->cr2));
->>>>> +	asm volatile("movq %%cr8, %0" : "=a"(ctxt->cr8));
->>>>> +
->>>>> +	asm volatile("movl %%cs, %%eax" : "=a"(ctxt->cs));
->>>>> +	asm volatile("movl %%ss, %%eax" : "=a"(ctxt->ss));
->>>>> +	asm volatile("movl %%ds, %%eax" : "=a"(ctxt->ds));
->>>>> +	asm volatile("movl %%es, %%eax" : "=a"(ctxt->es));
->>>>> +	asm volatile("movl %%fs, %%eax" : "=a"(ctxt->fs));
->>>>> +	asm volatile("movl %%gs, %%eax" : "=a"(ctxt->gs));
->>>>> +
->>>>> +	native_store_gdt(&ctxt->gdtr);
->>>>> +	store_idt(&ctxt->idtr);
->>>>> +
->>>>> +	ctxt->gsbase = __rdmsr(MSR_GS_BASE);
->>>>> +	ctxt->efer = __rdmsr(MSR_EFER);
->>>>> +	ctxt->pat = __rdmsr(MSR_IA32_CR_PAT);
->>>>> +}
->>>>> +
->>>>> +/* Add trampoline page to the kernel pagetable for transition to kernel PT */
->>>>> +static void hv_crash_fixup_kernpt(void)
->>>>> +{
->>>>> +	pgd_t *pgd;
->>>>> +	p4d_t *p4d;
->>>>> +
->>>>> +	pgd = pgd_offset_k(trampoline_pa);
->>>>> +	p4d = p4d_offset(pgd, trampoline_pa);
->>>>> +
->>>>> +	/* trampoline_pa is below 4G, so no pre-existing entry to clobber */
->>>>> +	p4d_populate(&init_mm, p4d, (pud_t *)hv_crash_ptpgs[1]);
->>>>> +	p4d->p4d = p4d->p4d & ~(_PAGE_NX);    /* enable execute */
->>>>> +}
->>>>> +
->>>>> +/*
->>>>> + * Now that all cpus are in nmi and spinning, we notify the hyp that linux has
->>>>> + * crashed and will collect core. This will cause the hyp to quiesce and
->>>>> + * suspend all VPs except the bsp. Called if linux crashed and not the hyp.
->>>>> + */
->>>>> +static void hv_notify_prepare_hyp(void)
->>>>> +{
->>>>> +	u64 status;
->>>>> +	struct hv_input_notify_partition_event *input;
->>>>> +	struct hv_partition_event_root_crashdump_input *cda;
->>>>> +
->>>>> +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
->>>>> +	cda = &input->input.crashdump_input;
->>>>
->>>> The code ordering here is a bit weird. I'd expect this line to be grouped
->>>> with cda->crashdump_action being set.
->>>
->>> we are setting two pointers, and using them later. setting pointers
->>> up front is pretty normal.
->>>
->>>>> +	memset(input, 0, sizeof(*input));
->>>>> +	input->event = HV_PARTITION_EVENT_ROOT_CRASHDUMP;
->>>>> +
->>>>> +	cda->crashdump_action = HV_CRASHDUMP_ENTRY;
->>>>> +	status = hv_do_hypercall(HVCALL_NOTIFY_PARTITION_EVENT, input, NULL);
->>>>> +	if (!hv_result_success(status))
->>>>> +		return;
->>>>> +
->>>>> +	cda->crashdump_action = HV_CRASHDUMP_SUSPEND_ALL_VPS;
->>>>> +	hv_do_hypercall(HVCALL_NOTIFY_PARTITION_EVENT, input, NULL);
->>>>> +}
->>>>> +
->>>>> +/*
->>>>> + * Common function for all cpus before devirtualization.
->>>>> + *
->>>>> + * Hypervisor crash: all cpus get here in nmi context.
->>>>> + * Linux crash: the panicing cpu gets here at base level, all others in nmi
->>>>> + *		context. Note, panicing cpu may not be the bsp.
->>>>> + *
->>>>> + * The function is not inlined so it will show on the stack. It is named so
->>>>> + * because the crash cmd looks for certain well known function names on the
->>>>> + * stack before looking into the cpu saved note in the elf section, and
->>>>> + * that work is currently incomplete.
->>>>> + *
->>>>> + * Notes:
->>>>> + *  Hypervisor crash:
->>>>> + *    - the hypervisor is in a very restrictive mode at this point and any
->>>>> + *	vmexit it cannot handle would result in reboot. For example, console
->>>>> + *	output from here would result in synic ipi hcall, which would result
->>>>> + *	in reboot. So, no mumbo jumbo, just get to kexec as quickly as possible.
->>>>> + *
->>>>> + *  Devirtualization is supported from the bsp only.
->>>>> + */
->>>>> +static noinline __noclone void crash_nmi_callback(struct pt_regs *regs)
->>>>> +{
->>>>> +	struct hv_input_disable_hyp_ex *input;
->>>>> +	u64 status;
->>>>> +	int msecs = 1000, ccpu = smp_processor_id();
->>>>> +
->>>>> +	if (ccpu == 0) {
->>>>> +		/* crash_save_cpu() will be done in the kexec path */
->>>>> +		cpu_emergency_stop_pt();	/* disable performance trace */
->>>>> +		atomic_inc(&crash_cpus_wait);
->>>>> +	} else {
->>>>> +		crash_save_cpu(regs, ccpu);
->>>>> +		cpu_emergency_stop_pt();	/* disable performance trace */
->>>>> +		atomic_inc(&crash_cpus_wait);
->>>>> +		for (;;);			/* cause no vmexits */
->>>>> +	}
->>>>> +
->>>>> +	while (atomic_read(&crash_cpus_wait) < num_online_cpus() && msecs--)
->>>>> +		mdelay(1);
->>>>> +
->>>>> +	stop_nmi();
->>>>> +	if (!hv_has_crashed)
->>>>> +		hv_notify_prepare_hyp();
->>>>> +
->>>>> +	if (crashing_cpu == -1)
->>>>> +		crashing_cpu = ccpu;		/* crash cmd uses this */
->>>>
->>>> Could just be "crashing_cpu = 0" since only the BSP gets here.
->>>
->>> a code change request has been open for while to remove the requirement
->>> of bsp..
->>>
->>>>> +
->>>>> +	hv_hvcrash_ctxt_save();
->>>>> +	hv_mark_tss_not_busy();
->>>>> +	hv_crash_fixup_kernpt();
->>>>> +
->>>>> +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
->>>>> +	memset(input, 0, sizeof(*input));
->>>>> +	input->rip = trampoline_pa;	/* PA of hv_crash_asm32 */
->>>>> +	input->arg = devirt_cr3arg;	/* PA of trampoline page table L4 */
->>>>
->>>> Is this comment correct? Isn't it the PA of struct hv_crash_tramp_data?
->>>> And just for clarification, Hyper-V treats this "arg" value as opaque and does
->>>> not access it. It only provides it in EDI when it invokes the trampoline
->>>> function, right?
->>>
->>> comment is correct. cr3 always points to l4 (or l5 if 5 level page tables).
->>
->> Yes, the comment matches the name of the "devirt_cr3arg" variable.
->> Unfortunately my previous comment was incomplete because the value
->> stored in the static variable "devirt_cr3arg" isn?t the address of an L4 page
->> table. It's not a CR3 value. The value stored in devirt_cr3arg is actually the
->> PA of struct hv_crash_tramp_data. The CR3 value is stored in the
->> tramp32_cr3 field (at offset 0) of that structure, so there's an additional level
->> of indirection. The (corrected) comment in the header to hv_crash_asm32()
->> describes EDI as containing "PA of struct hv_crash_tramp_data", which
->> ought to match what is described here. I'd say that "devirt_cr3arg" ought
->> to be renamed to "tramp_data_pa" or something else parallel to
->> "trampoline_pa".
-> 
-> hyp needs trampoline cr3 for transition, we pass it as an arg. we piggy 
-> back extra information for ourselves needed in trampoline.S. so it's 
-> all good.
+devm_pci_alloc_host_bridge() and pci_alloc_host_bridge() previously
+returned NULL on failure, forcing callers to special-case NULL handling
+and often hardcode -ENOMEM as the error.
 
-actually, what i said earlier was true, not above. that the arg is
-opaque and hyp does not use it (we are transitioning paging off after
-all!). i did this all almost two years ago, so had vague recollections
-but finally had time today to go back to square one and old notes,
-and remember things now. so final answer:
+This series updates devm_pci_alloc_host_bridge() to consistently return
+error pointers (ERR_PTR) with the actual error code, instead of NULL.
+All callers across PCI host controller drivers are updated to use
+IS_ERR_OR_NULL()/PTR_ERR() instead of NULL checks and hardcoded -ENOMEM.
 
-the hypercall calls it TrampolineCr3, i guess this is how windows uses it
-(they have customized kernel code for core collection). doing that was
-becoming too intrusive on linux, so i decided to use the arg to pass the
-info i needed in the trampoline code. Since the hypercall calls the arg
-TrampolineCr3, i must have just used that name for the arg to match it,
-probably falsely assuming hypervisor somehow looked at it. (actually,
-the windows hypercall wrapper does look at it to make sure it is a
-ram address).
+Benefits:
+  - Standardizes error handling with Linux kernel ERR_PTR()/PTR_ERR()
+    conventions.
+  - Ensures that the actual error code from lower-level helpers is
+    propagated back to the caller.
+  - Removes ambiguity between NULL and error pointer returns.
 
-since the hypercall doesn't use the arg, it could just call it
-devirtArg, but maybe in the past they used it somehow. in my latest
-version, i just call it devirt_arg.
+Touched drivers include:
+ cadence (J721E, cadence-plat)
+ dwc (designware, qcom)
+ mobiveil (layerscape-gen4, mobiveil-plat)
+ aardvark, ftpci100, ixp4xx, loongson, mvebu, rcar, tegra, v3-semi,
+ versatile, xgene, altera, brcmstb, iproc, mediatek, mt7621, xilinx,
+ plda, and others
 
+This patch updates error handling across these host controller drivers
+ so that callers consistently receive ERR_PTR() instead of NULL.
 
->>> right, comes in edi, i don't know what EDI is (just kidding!)...
->>>
->>>>> +
->>>>> +	status = hv_do_hypercall(HVCALL_DISABLE_HYP_EX, input, NULL);
->>>>> +
->>>>> +	/* Devirt failed, just reboot as things are in very bad state now */
->>>>> +	native_wrmsrq(HV_X64_MSR_RESET, 1);    /* get hv to reboot */
->>>>> +}
->>>>> +
->>>>> +/*
->>>>> + * Generic nmi callback handler: could be called without any crash also.
->>>>> + *   hv crash: hypervisor injects nmi's into all cpus
->>>>> + *   lx crash: panicing cpu sends nmi to all but self via crash_stop_other_cpus
->>>>> + */
->>>>> +static int hv_crash_nmi_local(unsigned int cmd, struct pt_regs *regs)
->>>>> +{
->>>>> +	int ccpu = smp_processor_id();
->>>>> +
->>>>> +	if (!hv_has_crashed && hv_cda && hv_cda->cda_valid)
->>>>> +		hv_has_crashed = 1;
->>>>> +
->>>>> +	if (!hv_has_crashed && !lx_has_crashed)
->>>>> +		return NMI_DONE;	/* ignore the nmi */
->>>>> +
->>>>> +	if (hv_has_crashed) {
->>>>> +		if (!kexec_crash_loaded() || !hv_crash_enabled) {
->>>>> +			if (ccpu == 0) {
->>>>> +				native_wrmsrq(HV_X64_MSR_RESET, 1); /* reboot */
->>>>> +			} else
->>>>> +				for (;;);	/* cause no vmexits */
->>>>> +		}
->>>>> +	}
->>>>> +
->>>>> +	crash_nmi_callback(regs);
->>>>> +
->>>>> +	return NMI_DONE;
->>>>
->>>> crash_nmi_callback() should never return, right? Normally one would
->>>> expect to return NMI_HANDLED here, but I guess it doesn't matter
->>>> if the return is never executed.
->>>
->>> correct.
->>>
->>>>> +}
->>>>> +
->>>>> +/*
->>>>> + * hv_crash_stop_other_cpus() == smp_ops.crash_stop_other_cpus
->>>>> + *
->>>>> + * On normal linux panic, this is called twice: first from panic and then again
->>>>> + * from native_machine_crash_shutdown.
->>>>> + *
->>>>> + * In case of mshv, 3 ways to get here:
->>>>> + *  1. hv crash (only bsp will get here):
->>>>> + *	BSP : nmi callback -> DisableHv -> hv_crash_asm32 -> hv_crash_c_entry
->>>>> + *		  -> __crash_kexec -> native_machine_crash_shutdown
->>>>> + *		  -> crash_smp_send_stop -> smp_ops.crash_stop_other_cpus
->>>>> + *  linux panic:
->>>>> + *	2. panic cpu x: panic() -> crash_smp_send_stop
->>>>> + *				     -> smp_ops.crash_stop_other_cpus
->>>>> + *	3. bsp: native_machine_crash_shutdown -> crash_smp_send_stop
->>>>> + *
->>>>> + * NB: noclone and non standard stack because of call to crash_setup_regs().
->>>>> + */
->>>>> +static void __noclone hv_crash_stop_other_cpus(void)
->>>>> +{
->>>>> +	static int crash_stop_done;
->>>>> +	struct pt_regs lregs;
->>>>> +	int ccpu = smp_processor_id();
->>>>> +
->>>>> +	if (hv_has_crashed)
->>>>> +		return;		/* all cpus already in nmi handler path */
->>>>> +
->>>>> +	if (!kexec_crash_loaded())
->>>>> +		return;
->>>>
->>>> If we're in a normal panic path (your Case #2 above) with no kdump kernel
->>>> loaded, why leave the other vCPUs running? Seems like that could violate
->>>> expectations in vpanic(), where it calls panic_other_cpus_shutdown() and
->>>> thereafter assumes other vCPUs are not running.
->>>
->>> no, there is lots of complexity here!
->>>
->>> if we hang vcpus here, hyp will note and may trigger its own watchdog.
->>> also, machine_crash_shutdown() does another ipi.
->>>
->>> I think the best thing to do here is go back to my V0 which did not
->>> have check for kexec_crash_loaded(), but had this in hv_crash_c_entry:
->>>
->>> +       /* we are now fully in devirtualized normal kernel mode */
->>> +       __crash_kexec(NULL);
->>> +
->>> +       BUG();
->>>
->>>
->>> this way hyp would be disabled, ie, system devirtualized, and
->>> __crash_kernel() will return, resulting in BUG() that will cause
->>> it to go thru panic and honor panic= parameter with either hang
->>> or reset. instead of bug, i could just call panic() also.
->>>
->>>>> +
->>>>> +	if (crash_stop_done)
->>>>> +		return;
->>>>> +	crash_stop_done = 1;
->>>>
->>>> Is crash_stop_done necessary?  hv_crash_stop_other_cpus() is called
->>>> from crash_smp_send_stop(), which has its own static variable
->>>> "cpus_stopped" that does the same thing.
->>>
->>> yes. for error paths.
->>>
->>>>> +
->>>>> +	/* linux has crashed: hv is healthy, we can ipi safely */
->>>>> +	lx_has_crashed = 1;
->>>>> +	wmb();			/* nmi handlers look at lx_has_crashed */
->>>>> +
->>>>> +	apic->send_IPI_allbutself(NMI_VECTOR);
->>>>
->>>> The default .crash_stop_other_cpus function is kdump_nmi_shootdown_cpus().
->>>> In addition to sending the NMI IPI, it does disable_local_APIC(). I don't know, but
->>>> should disable_local_APIC() be done somewhere here as well?
->>>
->>> no, hyp does that.
->>
->> As part of the devirt operation initiated by the HVCALL_DISABLE_HYP_EX
->> hypercall in crash_nmi_callback()? This gets back to an earlier question/comment
->> where I was trying to figure out if the APIC is still enabled, and in what mode,
->> when hv_crash_asm32() is invoked.
-> 
->>>
->>>>> +
->>>>> +	if (crashing_cpu == -1)
->>>>> +		crashing_cpu = ccpu;		/* crash cmd uses this */
->>>>> +
->>>>> +	/* crash_setup_regs() happens in kexec also, but for the kexec cpu which
->>>>> +	 * is the bsp. We could be here on non-bsp cpu, collect regs if so.
->>>>> +	 */
->>>>> +	if (ccpu)
->>>>> +		crash_setup_regs(&lregs, NULL);
->>>>> +
->>>>> +	crash_nmi_callback(&lregs);
->>>>> +}
->>>>> +STACK_FRAME_NON_STANDARD(hv_crash_stop_other_cpus);
->>>>> +
->>>>> +/* This GDT is accessed in IA32-e compat mode which uses 32bits addresses */
->>>>> +struct hv_gdtreg_32 {
->>>>> +	u16 fill;
->>>>> +	u16 limit;
->>>>> +	u32 address;
->>>>> +} __packed;
->>>>> +
->>>>> +/* We need a CS with L bit to goto IA32-e long mode from 32bit compat mode */
->>>>> +struct hv_crash_tramp_gdt {
->>>>> +	u64 null;	/* index 0, selector 0, null selector */
->>>>> +	u64 cs64;	/* index 1, selector 8, cs64 selector */
->>>>> +} __packed;
->>>>> +
->>>>> +/* No stack, so jump via far ptr in memory to load the 64bit CS */
->>>>> +struct hv_cs_jmptgt {
->>>>> +	u32 address;
->>>>> +	u16 csval;
->>>>> +	u16 fill;
->>>>> +} __packed;
->>>>> +
->>>>> +/* This trampoline data is copied onto the trampoline page after the asm code */
->>>>> +struct hv_crash_tramp_data {
->>>>> +	u64 tramp32_cr3;
->>>>> +	u64 kernel_cr3;
->>>>> +	struct hv_gdtreg_32 gdtr32;
->>>>> +	struct hv_crash_tramp_gdt tramp_gdt;
->>>>> +	struct hv_cs_jmptgt cs_jmptgt;
->>>>> +	u64 c_entry_addr;
->>>>> +} __packed;
->>>>> +
->>>>> +/*
->>>>> + * Setup a temporary gdt to allow the asm code to switch to the long mode.
->>>>> + * Since the asm code is relocated/copied to a below 4G page, it cannot use rip
->>>>> + * relative addressing, hence we must use trampoline_pa here. Also, save other
->>>>> + * info like jmp and C entry targets for same reasons.
->>>>> + *
->>>>> + * Returns: 0 on success, -1 on error
->>>>> + */
->>>>> +static int hv_crash_setup_trampdata(u64 trampoline_va)
->>>>> +{
->>>>> +	int size, offs;
->>>>> +	void *dest;
->>>>> +	struct hv_crash_tramp_data *tramp;
->>>>> +
->>>>> +	/* These must match exactly the ones in the corresponding asm file */
->>>>> +	BUILD_BUG_ON(offsetof(struct hv_crash_tramp_data, tramp32_cr3) != 0);
->>>>> +	BUILD_BUG_ON(offsetof(struct hv_crash_tramp_data, kernel_cr3) != 8);
->>>>> +	BUILD_BUG_ON(offsetof(struct hv_crash_tramp_data, gdtr32.limit) != 18);
->>>>> +	BUILD_BUG_ON(offsetof(struct hv_crash_tramp_data,
->>>>> +						     cs_jmptgt.address) != 40);
->>>>
->>>> It would be nice to pick up the constants from a #include file that is
->>>> shared with the asm code in Patch 4 of the series.
->>>
->>> yeah, could go either way, some don't like tiny headers...  if there are
->>> no objections to new header for this, i could go that way too.
->>
->> Saw your follow-on comments about this as well. The tiny header
->> is ugly. It's a judgment call that can go either way, so go with your
->> preference.
->>
->>>
->>>>> +
->>>>> +	/* hv_crash_asm_end is beyond last byte by 1 */
->>>>> +	size = &hv_crash_asm_end - &hv_crash_asm32;
->>>>> +	if (size + sizeof(struct hv_crash_tramp_data) > PAGE_SIZE) {
->>>>> +		pr_err("%s: trampoline page overflow\n", __func__);
->>>>> +		return -1;
->>>>> +	}
->>>>> +
->>>>> +	dest = (void *)trampoline_va;
->>>>> +	memcpy(dest, &hv_crash_asm32, size);
->>>>> +
->>>>> +	dest += size;
->>>>> +	dest = (void *)round_up((ulong)dest, 16);
->>>>> +	tramp = (struct hv_crash_tramp_data *)dest;
->>>>> +
->>>>> +	/* see MAX_ASID_AVAILABLE in tlb.c: "PCID 0 is reserved for use by
->>>>> +	 * non-PCID-aware users". Build cr3 with pcid 0
->>>>> +	 */
->>>>> +	tramp->tramp32_cr3 = __sme_pa(hv_crash_ptpgs[0]);
->>>>> +
->>>>> +	/* Note, when restoring X86_CR4_PCIDE, cr3[11:0] must be zero */
->>>>> +	tramp->kernel_cr3 = __sme_pa(init_mm.pgd);
->>>>> +
->>>>> +	tramp->gdtr32.limit = sizeof(struct hv_crash_tramp_gdt);
->>>>> +	tramp->gdtr32.address = trampoline_pa +
->>>>> +				   (ulong)&tramp->tramp_gdt - trampoline_va;
->>>>> +
->>>>> +	 /* base:0 limit:0xfffff type:b dpl:0 P:1 L:1 D:0 avl:0 G:1 */
->>>>> +	tramp->tramp_gdt.cs64 = 0x00af9a000000ffff;
->>>>> +
->>>>> +	tramp->cs_jmptgt.csval = 0x8;
->>>>> +	offs = (ulong)&hv_crash_asm64_lbl - (ulong)&hv_crash_asm32;
->>>>> +	tramp->cs_jmptgt.address = trampoline_pa + offs;
->>>>> +
->>>>> +	tramp->c_entry_addr = (u64)&hv_crash_c_entry;
->>>>> +
->>>>> +	devirt_cr3arg = trampoline_pa + (ulong)dest - trampoline_va;
->>>>> +
->>>>> +	return 0;
->>>>> +}
->>>>> +
->>>>> +/*
->>>>> + * Build 32bit trampoline page table for transition from protected mode
->>>>> + * non-paging to long-mode paging. This transition needs pagetables below 4G.
->>>>> + */
->>>>> +static void hv_crash_build_tramp_pt(void)
->>>>> +{
->>>>> +	p4d_t *p4d;
->>>>> +	pud_t *pud;
->>>>> +	pmd_t *pmd;
->>>>> +	pte_t *pte;
->>>>> +	u64 pa, addr = trampoline_pa;
->>>>> +
->>>>> +	p4d = hv_crash_ptpgs[0] + pgd_index(addr) * sizeof(p4d);
->>>>> +	pa = virt_to_phys(hv_crash_ptpgs[1]);
->>>>> +	set_p4d(p4d, __p4d(_PAGE_TABLE | pa));
->>>>> +	p4d->p4d &= ~(_PAGE_NX);	/* disable no execute */
->>>>> +
->>>>> +	pud = hv_crash_ptpgs[1] + pud_index(addr) * sizeof(pud);
->>>>> +	pa = virt_to_phys(hv_crash_ptpgs[2]);
->>>>> +	set_pud(pud, __pud(_PAGE_TABLE | pa));
->>>>> +
->>>>> +	pmd = hv_crash_ptpgs[2] + pmd_index(addr) * sizeof(pmd);
->>>>> +	pa = virt_to_phys(hv_crash_ptpgs[3]);
->>>>> +	set_pmd(pmd, __pmd(_PAGE_TABLE | pa));
->>>>> +
->>>>> +	pte = hv_crash_ptpgs[3] + pte_index(addr) * sizeof(pte);
->>>>> +	set_pte(pte, pfn_pte(addr >> PAGE_SHIFT, PAGE_KERNEL_EXEC));
->>>>> +}
->>>>> +
->>>>> +/*
->>>>> + * Setup trampoline for devirtualization:
->>>>> + *  - a page below 4G, ie 32bit addr containing asm glue code that mshv jmps to
->>>>> + *    in protected mode.
->>>>> + *  - 4 pages for a temporary page table that asm code uses to turn paging on
->>>>> + *  - a temporary gdt to use in the compat mode.
->>>>> + *
->>>>> + *  Returns: 0 on success
->>>>> + */
->>>>> +static int hv_crash_trampoline_setup(void)
->>>>> +{
->>>>> +	int i, rc, order;
->>>>> +	struct page *page;
->>>>> +	u64 trampoline_va;
->>>>> +	gfp_t flags32 = GFP_KERNEL | GFP_DMA32 | __GFP_ZERO;
->>>>> +
->>>>> +	/* page for 32bit trampoline assembly code + hv_crash_tramp_data */
->>>>> +	page = alloc_page(flags32);
->>>>> +	if (page == NULL) {
->>>>> +		pr_err("%s: failed to alloc asm stub page\n", __func__);
->>>>> +		return -1;
->>>>> +	}
->>>>> +
->>>>> +	trampoline_va = (u64)page_to_virt(page);
->>>>> +	trampoline_pa = (u32)page_to_phys(page);
->>>>> +
->>>>> +	order = 2;	   /* alloc 2^2 pages */
->>>>> +	page = alloc_pages(flags32, order);
->>>>> +	if (page == NULL) {
->>>>> +		pr_err("%s: failed to alloc pt pages\n", __func__);
->>>>> +		free_page(trampoline_va);
->>>>> +		return -1;
->>>>> +	}
->>>>> +
->>>>> +	for (i = 0; i < 4; i++, page++)
->>>>> +		hv_crash_ptpgs[i] = page_to_virt(page);
->>>>> +
->>>>> +	hv_crash_build_tramp_pt();
->>>>> +
->>>>> +	rc = hv_crash_setup_trampdata(trampoline_va);
->>>>> +	if (rc)
->>>>> +		goto errout;
->>>>> +
->>>>> +	return 0;
->>>>> +
->>>>> +errout:
->>>>> +	free_page(trampoline_va);
->>>>> +	free_pages((ulong)hv_crash_ptpgs[0], order);
->>>>> +
->>>>> +	return rc;
->>>>> +}
->>>>> +
->>>>> +/* Setup for kdump kexec to collect hypervisor ram when running as mshv root */
->>>>> +void hv_root_crash_init(void)
->>>>> +{
->>>>> +	int rc;
->>>>> +	struct hv_input_get_system_property *input;
->>>>> +	struct hv_output_get_system_property *output;
->>>>> +	unsigned long flags;
->>>>> +	u64 status;
->>>>> +	union hv_pfn_range cda_info;
->>>>> +
->>>>> +	if (pgtable_l5_enabled()) {
->>>>> +		pr_err("Hyper-V: crash dump not yet supported on 5level PTs\n");
->>>>> +		return;
->>>>> +	}
->>>>> +
->>>>> +	rc = register_nmi_handler(NMI_LOCAL, hv_crash_nmi_local, NMI_FLAG_FIRST,
->>>>> +				  "hv_crash_nmi");
->>>>> +	if (rc) {
->>>>> +		pr_err("Hyper-V: failed to register crash nmi handler\n");
->>>>> +		return;
->>>>> +	}
->>>>> +
->>>>> +	local_irq_save(flags);
->>>>> +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
->>>>> +	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
->>>>> +
->>>>> +	memset(input, 0, sizeof(*input));
->>>>> +	memset(output, 0, sizeof(*output));
->>>>
->>>> Why zero the output area? This is one of those hypercall things that we're
->>>> inconsistent about. A few hypercall call sites zero the output area, and it's
->>>> not clear why they do. Hyper-V should be responsible for properly filling in
->>>> the output area. Linux should not need to do this zero'ing, unless there's some
->>>> known bug in Hyper-V for certain hypercalls, in which case there should be
->>>> a code comment stating "why".
->>>
->>> for the same reason sometimes you see char *p = NULL, either leftover
->>> code or someone was debugging or just copy and paste. this is just copy
->>> paste. i agree in general that we don't need to clear it at all, in fact,
->>> i'd like to remove them all! but i also understand people with different
->>> skills and junior members find it easier to debug, and also we were in
->>> early product development. for that reason, it doesn't have to be
->>> consistent either, if some complex hypercalls are failing repeatedly,
->>> just for ease of debug, one might leave it there temporarily.  but
->>> now that things are stable, i think we should just remove them all and
->>> get used to a bit more inconvenient debugging...
->>
->> I see your point about debugging, but on balance I agree that they
->> should all be removed. If there's some debug case, add it back
->> temporarily to debug, but leave upstream without it. The zero'ing is
->> also unnecessary code in the interrupt disabled window, which you
->> have expressed concern about in a different thread.
-> 
-> yeah, i've been extremely busy so not able to pay much attention to
-> upstreaming, but imo they should have been removed before upstreaming.
-> a simple patch that just removes memset of output would be welcome.
-> 
->>>
->>>>> +	input->property_id = HV_SYSTEM_PROPERTY_CRASHDUMPAREA;
->>>>> +
->>>>> +	status = hv_do_hypercall(HVCALL_GET_SYSTEM_PROPERTY, input, output);
->>>>> +	cda_info.as_uint64 = output->hv_cda_info.as_uint64;
->>>>> +	local_irq_restore(flags);
->>>>> +
->>>>> +	if (!hv_result_success(status)) {
->>>>> +		pr_err("Hyper-V: %s: property:%d %s\n", __func__,
->>>>> +		       input->property_id, hv_result_to_string(status));
->>>>> +		goto err_out;
->>>>> +	}
->>>>> +
->>>>> +	if (cda_info.base_pfn == 0) {
->>>>> +		pr_err("Hyper-V: hypervisor crash dump area pfn is 0\n");
->>>>> +		goto err_out;
->>>>> +	}
->>>>> +
->>>>> +	hv_cda = phys_to_virt(cda_info.base_pfn << PAGE_SHIFT);
->>>>
->>>> Use HV_HYP_PAGE_SHIFT, since PFNs provided by Hyper-V are always in
->>>> terms of the Hyper-V page size, which isn't necessarily the guest page size.
->>>> Yes, on x86 there's no difference, but for future robustness ....
->>>
->>> i don't know about guests, but we won't even boot if dom0 pg size
->>> didn't match.. but easier to change than to make the case..
->>
->> FWIW, a normal Linux guest on ARM64 works just fine with a page
->> size of 16K or 64K, even though the underlying Hyper-V page size
->> is only 4K. That's why we have HV_HYP_PAGE_SHIFT and related in
->> the first place. Using it properly really matters for normal guests.
->> (Having the guest page size smaller than the Hyper-V page size
->> does *not* work, but there are no such use cases.)
->>
->> Even on ARM64, I know the root partition page size is required to
->> match the Hyper-V page size. But using HV_HYP_PAGE_SIZE is
->> still appropriate just to not leave code that will go wrong if the
->> match requirement should ever change.
->>
->>>
->>>>> +
->>>>> +	rc = hv_crash_trampoline_setup();
->>>>> +	if (rc)
->>>>> +		goto err_out;
->>>>> +
->>>>> +	smp_ops.crash_stop_other_cpus = hv_crash_stop_other_cpus;
->>>>> +
->>>>> +	crash_kexec_post_notifiers = true;
->>>>> +	hv_crash_enabled = 1;
->>>>> +	pr_info("Hyper-V: linux and hv kdump support enabled\n");
->>>>
->>>> This message and the message below aren't consistent. One refers
->>>> to "hv kdump" and the other to "hyp kdump".
->>>
->>>>> +
->>>>> +	return;
->>>>> +
->>>>> +err_out:
->>>>> +	unregister_nmi_handler(NMI_LOCAL, "hv_crash_nmi");
->>>>> +	pr_err("Hyper-V: only linux (but not hyp) kdump support enabled\n");
->>>>> +}
->>>>> --
->>>>> 2.36.1.vfs.0.0
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+---
+ arch/mips/pci/pci-xtalk-bridge.c                       | 4 ++--
+ drivers/pci/controller/cadence/pci-j721e.c             | 4 ++--
+ drivers/pci/controller/cadence/pcie-cadence-plat.c     | 4 ++--
+ drivers/pci/controller/dwc/pcie-designware-host.c      | 4 ++--
+ drivers/pci/controller/dwc/pcie-qcom.c                 | 4 ++--
+ drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c | 4 ++--
+ drivers/pci/controller/mobiveil/pcie-mobiveil-plat.c   | 4 ++--
+ drivers/pci/controller/pci-aardvark.c                  | 4 ++--
+ drivers/pci/controller/pci-ftpci100.c                  | 4 ++--
+ drivers/pci/controller/pci-host-common.c               | 4 ++--
+ drivers/pci/controller/pci-hyperv.c                    | 4 ++--
+ drivers/pci/controller/pci-ixp4xx.c                    | 4 ++--
+ drivers/pci/controller/pci-loongson.c                  | 4 ++--
+ drivers/pci/controller/pci-mvebu.c                     | 4 ++--
+ drivers/pci/controller/pci-rcar-gen2.c                 | 4 ++--
+ drivers/pci/controller/pci-tegra.c                     | 4 ++--
+ drivers/pci/controller/pci-v3-semi.c                   | 4 ++--
+ drivers/pci/controller/pci-versatile.c                 | 4 ++--
+ drivers/pci/controller/pci-xgene.c                     | 4 ++--
+ drivers/pci/controller/pcie-altera.c                   | 4 ++--
+ drivers/pci/controller/pcie-brcmstb.c                  | 4 ++--
+ drivers/pci/controller/pcie-iproc-bcma.c               | 4 ++--
+ drivers/pci/controller/pcie-iproc-platform.c           | 4 ++--
+ drivers/pci/controller/pcie-mediatek-gen3.c            | 4 ++--
+ drivers/pci/controller/pcie-mediatek.c                 | 4 ++--
+ drivers/pci/controller/pcie-mt7621.c                   | 4 ++--
+ drivers/pci/controller/pcie-rcar-host.c                | 4 ++--
+ drivers/pci/controller/pcie-rockchip-host.c            | 4 ++--
+ drivers/pci/controller/pcie-xilinx-cpm.c               | 4 ++--
+ drivers/pci/controller/pcie-xilinx-dma-pl.c            | 4 ++--
+ drivers/pci/controller/pcie-xilinx-nwl.c               | 4 ++--
+ drivers/pci/controller/pcie-xilinx.c                   | 4 ++--
+ drivers/pci/controller/plda/pcie-plda-host.c           | 4 ++--
+ drivers/pci/probe.c                                    | 8 ++++----
+ 34 files changed, 70 insertions(+), 70 deletions(-)
+
+diff --git a/arch/mips/pci/pci-xtalk-bridge.c b/arch/mips/pci/pci-xtalk-bridge.c
+index e00c38620d14..c2c8ed8ecac1 100644
+--- a/arch/mips/pci/pci-xtalk-bridge.c
++++ b/arch/mips/pci/pci-xtalk-bridge.c
+@@ -636,8 +636,8 @@ static int bridge_probe(struct platform_device *pdev)
+ 	pci_set_flags(PCI_PROBE_ONLY);
+ 
+ 	host = devm_pci_alloc_host_bridge(dev, sizeof(*bc));
+-	if (!host) {
+-		err = -ENOMEM;
++	if (IS_ERR_OR_NULL(host)) {
++		err = PTR_ERR(host);
+ 		goto err_remove_domain;
+ 	}
+ 
+diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+index 6c93f39d0288..3b8afaef21a6 100644
+--- a/drivers/pci/controller/cadence/pci-j721e.c
++++ b/drivers/pci/controller/cadence/pci-j721e.c
+@@ -475,8 +475,8 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+ 			return -ENODEV;
+ 
+ 		bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
+-		if (!bridge)
+-			return -ENOMEM;
++		if (IS_ERR_OR_NULL(bridge))
++			return PTR_ERR(bridge);
+ 
+ 		if (!data->byte_access_allowed)
+ 			bridge->ops = &cdns_ti_pcie_host_ops;
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-plat.c b/drivers/pci/controller/cadence/pcie-cadence-plat.c
+index 0456845dabb9..7570cb5998f6 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-plat.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-plat.c
+@@ -66,8 +66,8 @@ static int cdns_plat_pcie_probe(struct platform_device *pdev)
+ 			return -ENODEV;
+ 
+ 		bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
+-		if (!bridge)
+-			return -ENOMEM;
++		if (IS_ERR_OR_NULL(bridge))
++			return PTR_ERR(bridge);
+ 
+ 		rc = pci_host_bridge_priv(bridge);
+ 		rc->pcie.dev = dev;
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 952f8594b501..b2b99f275c19 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -467,8 +467,8 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+ 	raw_spin_lock_init(&pp->lock);
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, 0);
+-	if (!bridge)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	pp->bridge = bridge;
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 294babe1816e..34d35c925c62 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1809,8 +1809,8 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+ 		struct pci_config_window *cfg;
+ 
+ 		bridge = devm_pci_alloc_host_bridge(dev, 0);
+-		if (!bridge) {
+-			ret = -ENOMEM;
++		if (IS_ERR_OR_NULL(bridge)) {
++			ret = PTR_ERR(bridge);
+ 			goto err_pm_runtime_put;
+ 		}
+ 
+diff --git a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
+index 4919b27eaf44..f9ebefc71be3 100644
+--- a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
++++ b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
+@@ -207,8 +207,8 @@ static int __init ls_g4_pcie_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+-	if (!bridge)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	pcie = pci_host_bridge_priv(bridge);
+ 	mv_pci = &pcie->pci;
+diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil-plat.c b/drivers/pci/controller/mobiveil/pcie-mobiveil-plat.c
+index c5bb87ff6d9a..9d2e3b0bc866 100644
+--- a/drivers/pci/controller/mobiveil/pcie-mobiveil-plat.c
++++ b/drivers/pci/controller/mobiveil/pcie-mobiveil-plat.c
+@@ -27,8 +27,8 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+ 
+ 	/* allocate the PCIe port */
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+-	if (!bridge)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	pcie = pci_host_bridge_priv(bridge);
+ 	pcie->rp.bridge = bridge;
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index e34bea1ff0ac..4b75a451efe4 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -1740,8 +1740,8 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 	int ret, irq;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(struct advk_pcie));
+-	if (!bridge)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	pcie = pci_host_bridge_priv(bridge);
+ 	pcie->pdev = pdev;
+diff --git a/drivers/pci/controller/pci-ftpci100.c b/drivers/pci/controller/pci-ftpci100.c
+index 28e43831c0f1..0618d70fbdda 100644
+--- a/drivers/pci/controller/pci-ftpci100.c
++++ b/drivers/pci/controller/pci-ftpci100.c
+@@ -419,8 +419,8 @@ static int faraday_pci_probe(struct platform_device *pdev)
+ 	u32 val;
+ 
+ 	host = devm_pci_alloc_host_bridge(dev, sizeof(*p));
+-	if (!host)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	host->ops = &faraday_pci_ops;
+ 	p = pci_host_bridge_priv(host);
+diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
+index 810d1c8de24e..28c5d55062ed 100644
+--- a/drivers/pci/controller/pci-host-common.c
++++ b/drivers/pci/controller/pci-host-common.c
+@@ -60,8 +60,8 @@ int pci_host_common_init(struct platform_device *pdev,
+ 	struct pci_config_window *cfg;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, 0);
+-	if (!bridge)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	of_pci_check_probe_only();
+ 
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index d2b7e8ea710b..0b88e396c323 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -3759,8 +3759,8 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	int ret;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(&hdev->device, 0);
+-	if (!bridge)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	hbus = kzalloc(sizeof(*hbus), GFP_KERNEL);
+ 	if (!hbus)
+diff --git a/drivers/pci/controller/pci-ixp4xx.c b/drivers/pci/controller/pci-ixp4xx.c
+index acb85e0d5675..422ec30757ee 100644
+--- a/drivers/pci/controller/pci-ixp4xx.c
++++ b/drivers/pci/controller/pci-ixp4xx.c
+@@ -528,8 +528,8 @@ static int __init ixp4xx_pci_probe(struct platform_device *pdev)
+ 	int i;
+ 
+ 	host = devm_pci_alloc_host_bridge(dev, sizeof(*p));
+-	if (!host)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	host->ops = &ixp4xx_pci_ops;
+ 	p = pci_host_bridge_priv(host);
+diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+index bc630ab8a283..b832d79faf52 100644
+--- a/drivers/pci/controller/pci-loongson.c
++++ b/drivers/pci/controller/pci-loongson.c
+@@ -326,8 +326,8 @@ static int loongson_pci_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*priv));
+-	if (!bridge)
+-		return -ENODEV;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	priv = pci_host_bridge_priv(bridge);
+ 	priv->pdev = pdev;
+diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+index a72aa57591c0..c0fd8efaf540 100644
+--- a/drivers/pci/controller/pci-mvebu.c
++++ b/drivers/pci/controller/pci-mvebu.c
+@@ -1456,8 +1456,8 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
+ 	int num, i, ret;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(struct mvebu_pcie));
+-	if (!bridge)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	pcie = pci_host_bridge_priv(bridge);
+ 	pcie->pdev = pdev;
+diff --git a/drivers/pci/controller/pci-rcar-gen2.c b/drivers/pci/controller/pci-rcar-gen2.c
+index d29866485361..845347e0317e 100644
+--- a/drivers/pci/controller/pci-rcar-gen2.c
++++ b/drivers/pci/controller/pci-rcar-gen2.c
+@@ -284,8 +284,8 @@ static int rcar_pci_probe(struct platform_device *pdev)
+ 	void __iomem *reg;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*priv));
+-	if (!bridge)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	priv = pci_host_bridge_priv(bridge);
+ 	bridge->sysdata = priv;
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 467ddc701adc..dc45692e9906 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -2568,8 +2568,8 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+ 	int err;
+ 
+ 	host = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+-	if (!host)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	pcie = pci_host_bridge_priv(host);
+ 	host->sysdata = pcie;
+diff --git a/drivers/pci/controller/pci-v3-semi.c b/drivers/pci/controller/pci-v3-semi.c
+index 460a825325dd..6f1f82e4228d 100644
+--- a/drivers/pci/controller/pci-v3-semi.c
++++ b/drivers/pci/controller/pci-v3-semi.c
+@@ -715,8 +715,8 @@ static int v3_pci_probe(struct platform_device *pdev)
+ 	int ret;
+ 
+ 	host = devm_pci_alloc_host_bridge(dev, sizeof(*v3));
+-	if (!host)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	host->ops = &v3_pci_ops;
+ 	v3 = pci_host_bridge_priv(host);
+diff --git a/drivers/pci/controller/pci-versatile.c b/drivers/pci/controller/pci-versatile.c
+index e9a6758fe2c1..b367c17db667 100644
+--- a/drivers/pci/controller/pci-versatile.c
++++ b/drivers/pci/controller/pci-versatile.c
+@@ -72,8 +72,8 @@ static int versatile_pci_probe(struct platform_device *pdev)
+ 	struct pci_host_bridge *bridge;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, 0);
+-	if (!bridge)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	versatile_pci_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(versatile_pci_base))
+diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
+index b95afa35201d..3b3a6e08d17b 100644
+--- a/drivers/pci/controller/pci-xgene.c
++++ b/drivers/pci/controller/pci-xgene.c
+@@ -622,8 +622,8 @@ static int xgene_pcie_probe(struct platform_device *pdev)
+ 				     "MSI driver not ready\n");
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*port));
+-	if (!bridge)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	port = pci_host_bridge_priv(bridge);
+ 
+diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+index 3dbb7adc421c..92f976bea8ef 100644
+--- a/drivers/pci/controller/pcie-altera.c
++++ b/drivers/pci/controller/pcie-altera.c
+@@ -995,8 +995,8 @@ static int altera_pcie_probe(struct platform_device *pdev)
+ 	const struct altera_pcie_data *data;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+-	if (!bridge)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	pcie = pci_host_bridge_priv(bridge);
+ 	pcie->pdev = pdev;
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 9afbd02ded35..c683418c176c 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -1874,8 +1874,8 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ 	int ret;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(&pdev->dev, sizeof(*pcie));
+-	if (!bridge)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	data = of_device_get_match_data(&pdev->dev);
+ 	if (!data) {
+diff --git a/drivers/pci/controller/pcie-iproc-bcma.c b/drivers/pci/controller/pcie-iproc-bcma.c
+index 99a99900444d..d2adc4162a6c 100644
+--- a/drivers/pci/controller/pcie-iproc-bcma.c
++++ b/drivers/pci/controller/pcie-iproc-bcma.c
+@@ -39,8 +39,8 @@ static int iproc_bcma_pcie_probe(struct bcma_device *bdev)
+ 	int ret;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+-	if (!bridge)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	pcie = pci_host_bridge_priv(bridge);
+ 
+diff --git a/drivers/pci/controller/pcie-iproc-platform.c b/drivers/pci/controller/pcie-iproc-platform.c
+index 0cb78c583c7e..8f6843ce573e 100644
+--- a/drivers/pci/controller/pcie-iproc-platform.c
++++ b/drivers/pci/controller/pcie-iproc-platform.c
+@@ -46,8 +46,8 @@ static int iproc_pltfm_pcie_probe(struct platform_device *pdev)
+ 	int ret;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+-	if (!bridge)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	pcie = pci_host_bridge_priv(bridge);
+ 
+diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+index 97147f43e41c..e3e908236238 100644
+--- a/drivers/pci/controller/pcie-mediatek-gen3.c
++++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+@@ -1175,8 +1175,8 @@ static int mtk_pcie_probe(struct platform_device *pdev)
+ 	int err;
+ 
+ 	host = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+-	if (!host)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	pcie = pci_host_bridge_priv(host);
+ 
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index 24cc30a2ab6c..7a2c74996ace 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -1083,8 +1083,8 @@ static int mtk_pcie_probe(struct platform_device *pdev)
+ 	int err;
+ 
+ 	host = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+-	if (!host)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	pcie = pci_host_bridge_priv(host);
+ 
+diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/controller/pcie-mt7621.c
+index 01ead2f92e87..9dfa5075b980 100644
+--- a/drivers/pci/controller/pcie-mt7621.c
++++ b/drivers/pci/controller/pcie-mt7621.c
+@@ -480,8 +480,8 @@ static int mt7621_pcie_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+-	if (!bridge)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	pcie = pci_host_bridge_priv(bridge);
+ 	pcie->dev = dev;
+diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
+index fe288fd770c4..47500ed59608 100644
+--- a/drivers/pci/controller/pcie-rcar-host.c
++++ b/drivers/pci/controller/pcie-rcar-host.c
+@@ -952,8 +952,8 @@ static int rcar_pcie_probe(struct platform_device *pdev)
+ 	int err;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*host));
+-	if (!bridge)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	host = pci_host_bridge_priv(bridge);
+ 	pcie = &host->pcie;
+diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+index ee1822ca01db..225a5200f7a6 100644
+--- a/drivers/pci/controller/pcie-rockchip-host.c
++++ b/drivers/pci/controller/pcie-rockchip-host.c
+@@ -934,8 +934,8 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rockchip));
+-	if (!bridge)
+-		return -ENOMEM;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	rockchip = pci_host_bridge_priv(bridge);
+ 
+diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
+index d38f27e20761..1c14c5328ae0 100644
+--- a/drivers/pci/controller/pcie-xilinx-cpm.c
++++ b/drivers/pci/controller/pcie-xilinx-cpm.c
+@@ -574,8 +574,8 @@ static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
+ 	int err;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*port));
+-	if (!bridge)
+-		return -ENODEV;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	port = pci_host_bridge_priv(bridge);
+ 
+diff --git a/drivers/pci/controller/pcie-xilinx-dma-pl.c b/drivers/pci/controller/pcie-xilinx-dma-pl.c
+index b037c8f315e4..0e68026671b8 100644
+--- a/drivers/pci/controller/pcie-xilinx-dma-pl.c
++++ b/drivers/pci/controller/pcie-xilinx-dma-pl.c
+@@ -771,8 +771,8 @@ static int xilinx_pl_dma_pcie_probe(struct platform_device *pdev)
+ 	int err;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*port));
+-	if (!bridge)
+-		return -ENODEV;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	port = pci_host_bridge_priv(bridge);
+ 
+diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
+index 05b8c205493c..a23f5e677c17 100644
+--- a/drivers/pci/controller/pcie-xilinx-nwl.c
++++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+@@ -834,8 +834,8 @@ static int nwl_pcie_probe(struct platform_device *pdev)
+ 	int err;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+-	if (!bridge)
+-		return -ENODEV;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	pcie = pci_host_bridge_priv(bridge);
+ 	platform_set_drvdata(pdev, pcie);
+diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/pcie-xilinx.c
+index 937ea6ae1ac4..7631af1ef6af 100644
+--- a/drivers/pci/controller/pcie-xilinx.c
++++ b/drivers/pci/controller/pcie-xilinx.c
+@@ -574,8 +574,8 @@ static int xilinx_pcie_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+-	if (!bridge)
+-		return -ENODEV;
++	if (IS_ERR_OR_NULL(bridge))
++		return PTR_ERR(bridge);
+ 
+ 	pcie = pci_host_bridge_priv(bridge);
+ 	mutex_init(&pcie->map_lock);
+diff --git a/drivers/pci/controller/plda/pcie-plda-host.c b/drivers/pci/controller/plda/pcie-plda-host.c
+index 8e2db2e5b64b..28d638067adc 100644
+--- a/drivers/pci/controller/plda/pcie-plda-host.c
++++ b/drivers/pci/controller/plda/pcie-plda-host.c
+@@ -598,8 +598,8 @@ int plda_pcie_host_init(struct plda_pcie_rp *port, struct pci_ops *ops,
+ 				     "failed to map config memory\n");
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, 0);
+-	if (!bridge)
+-		return dev_err_probe(dev, -ENOMEM,
++	if (IS_ERR_OR_NULL(bridge))
++		return dev_err_probe(dev, PTR_ERR(bridge),
+ 				     "failed to alloc bridge\n");
+ 
+ 	if (port->host_ops && port->host_ops->host_init) {
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index f41128f91ca7..e627f36b7683 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -686,18 +686,18 @@ struct pci_host_bridge *devm_pci_alloc_host_bridge(struct device *dev,
+ 
+ 	bridge = pci_alloc_host_bridge(priv);
+ 	if (!bridge)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	bridge->dev.parent = dev;
+ 
+ 	ret = devm_add_action_or_reset(dev, devm_pci_alloc_host_bridge_release,
+ 				       bridge);
+ 	if (ret)
+-		return NULL;
++		return ERR_PTR(ret);
+ 
+ 	ret = devm_of_pci_bridge_init(dev, bridge);
+ 	if (ret)
+-		return NULL;
++		return ERR_PTR(ret);
+ 
+ 	return bridge;
+ }
+@@ -3198,7 +3198,7 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
+ 
+ 	bridge = pci_alloc_host_bridge(0);
+ 	if (!bridge)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	bridge->dev.parent = parent;
+ 
+-- 
+2.50.1
+
 
