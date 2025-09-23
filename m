@@ -1,101 +1,122 @@
-Return-Path: <linux-hyperv+bounces-6972-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6973-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CDDAB94F11
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Sep 2025 10:13:46 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AC58B9798B
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Sep 2025 23:46:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E162E3A55B4
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Sep 2025 08:13:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AA7A67AE06F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Sep 2025 21:44:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A38F23101C2;
-	Tue, 23 Sep 2025 08:13:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1C55274FEB;
+	Tue, 23 Sep 2025 21:46:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="ZK+rYXV9"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="s9zgRHtF"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5EB26D4DA;
-	Tue, 23 Sep 2025 08:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758615221; cv=pass; b=P7vZsjiabTndCdD8U9g1Y7m3yAli0RmaENjJtCC1g1nm24Ilc4lRhtiFSeU6hQYGNmr77TFnyJyw9OA75pZmCYtbYOmSiiPC5BhPnqnkH4seAQ4rnWnhamBHLzh88KfmMRHpVipZuQN/drZZrxNEFC4b10gVltE0W1+r4j7Gims=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758615221; c=relaxed/simple;
-	bh=v1z8I7LHTd1S54Kk6OtZb6YZesD83PEak2QvUknS/5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HrnGEoCYhhtRvikn9jVu1yQSvV//u7GcOKhzDZRMs5qnerS/raKFtoRw2vkKEuW8CM7W+ICEhWzUdMNN90nuR6h1dmKSHNT2gmBhfcqPPqrV9eztZVWnbUeb077U76VI5Yx0nClsE0qbJOiqDstQ/TwNU7Ub5bp8I/6x+2+VY5Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=ZK+rYXV9; arc=pass smtp.client-ip=136.143.188.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1758615209; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=EL3aqBndY/x6L3pCRV1JTt+N+nm6SAoT8mHdK5bYNmGcX0fbu8FeqEpwGBx57WYN0Plczd+jN/Ep5WI6oYuXWWQteVtsoSH2aJO3hogLCdQVTtUdneLx3WoUEMFF1/wvSB8d0CVaAMcuIUV0FHLRDnb8LWf9gCjbGpTvdIVHR8M=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1758615209; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=C9DTAoEOjasD6g9mOY3kW7X/PBdvh2Nm82DUSoq0Gvw=; 
-	b=HkA3R6FfoeeLgtL4dj/iChjaiVNEYGn+xSsAyWoJVQPwL4Yza5h30msSnKeLxe0kD0/is+b+GKiDzPbvksoTT283HJ3FajjYLK3/73BGnNaI+Rk5/29cZz8/XT5fij25IKxB0JWpNirvGi6Z/XdrovxUz0incU9/HtdIl/NJbGc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=anirudhrb.com;
-	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
-	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1758615209;
-	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=C9DTAoEOjasD6g9mOY3kW7X/PBdvh2Nm82DUSoq0Gvw=;
-	b=ZK+rYXV9a+WgPL/BonwKZ5F1y3tS3SS7JF7wNrY1Y2YvkVa7k1V61JKVJM6Viv1y
-	6/TUjc1ElK3ELtcdZ4mWoaOXRb5nVGqmuQA6zo0pW2/Pz9iftW7xlFujFVnHB704f/O
-	fk+zK9K5Xk+AOQs8dfLgQiv1u+GjQByhhDo241rg=
-Received: by mx.zohomail.com with SMTPS id 1758615207097808.8085793888619;
-	Tue, 23 Sep 2025 01:13:27 -0700 (PDT)
-Date: Tue, 23 Sep 2025 08:13:21 +0000
-From: Anirudh Rayabharam <anirudh@anirudhrb.com>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	prapal@linux.microsoft.com, easwar.hariharan@linux.microsoft.com,
-	tiala@microsoft.com, paekkaladevi@linux.microsoft.com,
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, Jinank Jain <jinankjain@linux.microsoft.com>
-Subject: Re: [PATCH v3 4/5] mshv: Allocate vp state page for
- HVCALL_MAP_VP_STATE_PAGE on L1VH
-Message-ID: <aNJWoV0H-7U85GMX@anirudh-surface.localdomain>
-References: <1758066262-15477-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1758066262-15477-5-git-send-email-nunodasneves@linux.microsoft.com>
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 324DB21348;
+	Tue, 23 Sep 2025 21:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758663981; cv=none; b=OOCjZ2qysNNHzgx53MTQJFZ9IFHMOWkm/Wv48ahVGq6TUuHLrvXX+qfJfzIDhWD0KHWj+Fnpbm/kKk7JlFp9G6HsF/+vb012gPycWmfpeARqTmP4crzDrrZFXLp5V2h4CcMexpKNzwLFD8QgYb917Oih448vYwWO98OxJ4McSJw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758663981; c=relaxed/simple;
+	bh=+fzUxG4uJBGIobzZMn6pHnBeU7pVdq1x4ZUKJZUCh/M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HXRtdAjUG508R9cPQCH96lbBeb75eJoGR1Tdn/R8OFU2llv2RGhp+7DAufBRVx9l/p12cmwUkYOBnP+mTRQDunr7eeyHfZsaJOC3zjxwLint3ymdRPtIJwsl9MCcgd6qASas8ZP5SliLRxCVEMysWNr+8AUxoJFccJtQil3DYPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=s9zgRHtF; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from mrdev.corp.microsoft.com (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 187EB20154E0;
+	Tue, 23 Sep 2025 14:46:14 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 187EB20154E0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1758663974;
+	bh=zZjvijBXtw8zxOJAkrAm76lPjMrrZLDQmYMRv/Zsmo8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=s9zgRHtFPOddCD0xjjx/pyEuxwFepu9xQ7vK40QYVzn6a1qzsouZcgD5l2wkm81IX
+	 1X9vZ5UiTy+rNsWkGfHZ+ZEqBa9urynpZjOZIPY7ROj3UEN2TLHyGE+dK4BM2JRB19
+	 tijrXkwAGLNzvEBDbqcP8Rkgr3MG4JILr3MXqOsk=
+From: Mukesh Rathor <mrathor@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org
+Cc: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	arnd@arndb.de
+Subject: [PATCH v2 0/6] Hyper-V: Implement hypervisor core collection
+Date: Tue, 23 Sep 2025 14:46:03 -0700
+Message-Id: <20250923214609.4101554-1-mrathor@linux.microsoft.com>
+X-Mailer: git-send-email 2.36.1.vfs.0.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1758066262-15477-5-git-send-email-nunodasneves@linux.microsoft.com>
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-On Tue, Sep 16, 2025 at 04:44:21PM -0700, Nuno Das Neves wrote:
-> From: Jinank Jain <jinankjain@linux.microsoft.com>
-> 
-> Introduce mshv_use_overlay_gpfn() to check if a page needs to be
-> allocated and passed to the hypervisor to map VP state pages. This is
-> only needed on L1VH, and only on some (newer) versions of the
-> hypervisor, hence the need to check vmm_capabilities.
-> 
-> Introduce functions hv_map/unmap_vp_state_page() to handle the
-> allocation and freeing.
-> 
-> Signed-off-by: Jinank Jain <jinankjain@linux.microsoft.com>
-> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> Reviewed-by: Praveen K Paladugu <prapal@linux.microsoft.com>
-> Reviewed-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
-> ---
->  drivers/hv/mshv_root.h         | 11 ++---
->  drivers/hv/mshv_root_hv_call.c | 61 ++++++++++++++++++++++++---
->  drivers/hv/mshv_root_main.c    | 76 +++++++++++++++++-----------------
->  3 files changed, 98 insertions(+), 50 deletions(-)
+This patch series implements hypervisor core collection when running
+under Linux as root (aka dom0). By default initial hypervisor RAM is
+already mapped into Linux as reserved. Further any RAM deposited comes
+from Linux memory heap. The hypervisor locks all that RAM to protect
+it from dom0 or any other domains. At a high level, the methodology
+involes devirtualizing the system on the fly upon either Linux crash
+or the hypervisor crash, then collecting core as usual. This means
+hypervisor RAM is automatically collected into the vmcore.
+Devirtualization is the process of disabling the hypervisor and 
+taking control of the system.
 
-Reviewed-by: Anirudh Rayabharam <anirudh@anirudhrb.com>
+Hypervisor pages are then accessible via crash command (using raw mem
+dump) or windbg which has the ability to read hypervisor pdb symbol
+file.
+
+V2:
+ o change few comments and commit-messages
+ o add support for panic_timeout for better support if kdump kernel
+   is not loaded.
+ o some other minor changes, like change devirt_cr3arg to devirt_arg,
+   int to bool. 
+
+V1:
+ o Describe changes in imperative mood. Remove "This commit"
+ o Remove pr_emerg: causing unnecessary review noise
+ o Add missing kexec_crash_loaded()
+ o Remove leftover unnecessary memcpy in hv_crash_setup_trampdata
+ o Address objtool warnings via annotations
+
+Mukesh Rathor (6):
+  x86/hyperv: Rename guest crash shutdown function
+  hyperv: Add two new hypercall numbers to guest ABI public header
+  hyperv: Add definitions for hypervisor crash dump support
+  x86/hyperv: Add trampoline asm code to transition from hypervisor
+  x86/hyperv: Implement hypervisor RAM collection into vmcore
+  x86/hyperv: Enable build of hypervisor crashdump collection files
+
+ arch/x86/hyperv/Makefile        |   6 +
+ arch/x86/hyperv/hv_crash.c      | 647 ++++++++++++++++++++++++++++++++
+ arch/x86/hyperv/hv_init.c       |   1 +
+ arch/x86/hyperv/hv_trampoline.S | 101 +++++
+ arch/x86/include/asm/mshyperv.h |  13 +
+ arch/x86/kernel/cpu/mshyperv.c  |   5 +-
+ include/asm-generic/mshyperv.h  |   1 -
+ include/hyperv/hvgdk_mini.h     |   2 +
+ include/hyperv/hvhdk_mini.h     |  55 +++
+ 9 files changed, 828 insertions(+), 3 deletions(-)
+ create mode 100644 arch/x86/hyperv/hv_crash.c
+ create mode 100644 arch/x86/hyperv/hv_trampoline.S
+
+-- 
+2.36.1.vfs.0.0
 
 
