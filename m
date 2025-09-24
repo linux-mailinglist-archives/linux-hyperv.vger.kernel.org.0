@@ -1,136 +1,186 @@
-Return-Path: <linux-hyperv+bounces-6979-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6980-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA166B979BF
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Sep 2025 23:47:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 259AEB9AFAD
+	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Sep 2025 19:09:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 65EEA4A4D3F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Sep 2025 21:47:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 21AD91B28465
+	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Sep 2025 17:09:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEF2A31158D;
-	Tue, 23 Sep 2025 21:46:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F6D4314A8F;
+	Wed, 24 Sep 2025 17:08:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VnmFB5IC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YLmB0RBH"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75CB2302CBD;
-	Tue, 23 Sep 2025 21:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47725302CB2;
+	Wed, 24 Sep 2025 17:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758663990; cv=none; b=GQaQ8SYi9aF1NyOOfAkR14p4sVDT0i0BrnfP977YOckLh/B1F/3y/cGrwFC6W18C0jL46Vo//TYoseiNWYgutng/NRJqtpBheLGOfEpvJBnwqn68atAMxVZV3KVFIaXH9Gil85P9rmbKsppW/ypVFLSO6B+txoAJUmGWALQXxMY=
+	t=1758733738; cv=none; b=ZW4wbkauzeZK/yWss5Rvb7FuynAVJ/IvkHn50guOnAsaBLh8xscZdxCqrZtmk1BxG4tNSqk9OKT0SvbHsu3gHml79eOcWjWcNlpk2v37UUom5JIOr5DzD3h8Haej7z93yTbW2RF2TlpE18yQdNdazQPaSActiNpzmdhlwAqPXYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758663990; c=relaxed/simple;
-	bh=c0talsjJ+Z2WNoUByEezA9K8avqHThlX+xsZdpzpl04=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HK5NjcfRC2dRO279VM4/8qcB1yqIdk6hO5o307KKGnqhRAlkbA2zc3icE3ViXwloAxLrxAx6Kj4G9vrw2LtnidqV/T21LHoJYnwRVaYKATknybf6xVFxeWO4lfBfIlPjHE0To0XJjHZ5Ksxlfi//i+QWdCRLcLgBmn9ZqZECsiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=VnmFB5IC; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from mrdev.corp.microsoft.com (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5F8FA201C94C;
-	Tue, 23 Sep 2025 14:46:28 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5F8FA201C94C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1758663988;
-	bh=AqiQrPrnDYRH34965IVGlS/fEWTJe0jV5/CD4sbHfgA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VnmFB5ICwa0Dl4P3A8HtK2Taf9r54hiULNV7tBuAbqMjzEHZjSSgIuT7tMKLJ99R5
-	 5bDLy72MERUaMsvl3iZFZbaXw4pOaVy1yY3tccyKjk+DNX7+6Iz1djIpHl7r8G7cgV
-	 ajTUkcYQzoODL8RgfaWWf9NM6/9LfgWhiWd/l2PU=
-From: Mukesh Rathor <mrathor@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1758733738; c=relaxed/simple;
+	bh=/FSO6/ipB0cJtJTFavrv+ZfHe+XpgrP21tHroZy25rk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bKn1sksX8xL3ImCqMZXotEK3kNBgy9Tp/OV4nAkST1YSKEB67g+blWg4uw35mDh27md/H6qKXeXXF3d3i+wVeAjQnytzqt81MSyostDUcJrlTCEXXPvJn2z1N/GMZkVvD6h0dunxMMjG7Ng0yT97Y5d0J8ebGydYdKR0SIH7Lv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YLmB0RBH; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758733736; x=1790269736;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/FSO6/ipB0cJtJTFavrv+ZfHe+XpgrP21tHroZy25rk=;
+  b=YLmB0RBH2eBGHs0TqIZyxhgKieQHiz2HKSrwaVAM0F4sM6+TggrUkaQO
+   r5Ii2+vEx2cg5w5ifSK6ggkPHKLg8T3/y8chXPYuTeCpu3xBwHXeUipMr
+   Gctbq1U7Z9JzuoYLzDJO5qskkQ1NGZ6jT9FxgqAmfNOLLcIrnW7POeH+L
+   hdcuzc+GoUmRQSVcAfLqNEqTRe9groqabOIYIftX7cB0e+Ga4cQktuIYX
+   T+H9rdw3LPjLqL7cen327JMbE8GPfMrI7VbUVjYdmilCdSJtRGMjaKLSY
+   Uo3f2DenfxvqN3H+I9z2yO2xJ8ZzCWem0n19x+pXnnGpSMIjUtL0/f5t8
+   g==;
+X-CSE-ConnectionGUID: ehoeje9/T/uUt265+7vAzQ==
+X-CSE-MsgGUID: Q71WBlKFRBisDhH2glDK7Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11563"; a="83643399"
+X-IronPort-AV: E=Sophos;i="6.18,291,1751266800"; 
+   d="scan'208";a="83643399"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 10:08:45 -0700
+X-CSE-ConnectionGUID: FqUjPxVWQ3myxASj/onOeA==
+X-CSE-MsgGUID: wBuOCrR5R/y2hpXIKC5Y4Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,291,1751266800"; 
+   d="scan'208";a="181473382"
+Received: from lkp-server02.sh.intel.com (HELO 84c55410ccf6) ([10.239.97.151])
+  by fmviesa005.fm.intel.com with ESMTP; 24 Sep 2025 10:08:40 -0700
+Received: from kbuild by 84c55410ccf6 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1v1Sys-0004ND-0b;
+	Wed, 24 Sep 2025 17:08:38 +0000
+Date: Thu, 25 Sep 2025 01:07:46 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mukesh Rathor <mrathor@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-arch@vger.kernel.org
-Cc: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
 	arnd@arndb.de
-Subject: [PATCH v2 6/6] x86/hyperv: Enable build of hypervisor crashdump collection files
-Date: Tue, 23 Sep 2025 14:46:09 -0700
-Message-Id: <20250923214609.4101554-7-mrathor@linux.microsoft.com>
-X-Mailer: git-send-email 2.36.1.vfs.0.0
-In-Reply-To: <20250923214609.4101554-1-mrathor@linux.microsoft.com>
-References: <20250923214609.4101554-1-mrathor@linux.microsoft.com>
+Subject: Re: [PATCH v2 6/6] x86/hyperv: Enable build of hypervisor crashdump
+ collection files
+Message-ID: <202509250034.2hNDVmj0-lkp@intel.com>
+References: <20250923214609.4101554-7-mrathor@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250923214609.4101554-7-mrathor@linux.microsoft.com>
 
-Enable build of the new files introduced in the earlier commits and add
-call to do the setup during boot.
+Hi Mukesh,
 
-Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
----
- arch/x86/hyperv/Makefile        |  6 ++++++
- arch/x86/hyperv/hv_init.c       |  1 +
- arch/x86/include/asm/mshyperv.h | 13 +++++++++++++
- 3 files changed, 20 insertions(+)
+kernel test robot noticed the following build errors:
 
-diff --git a/arch/x86/hyperv/Makefile b/arch/x86/hyperv/Makefile
-index d55f494f471d..6f5d97cddd80 100644
---- a/arch/x86/hyperv/Makefile
-+++ b/arch/x86/hyperv/Makefile
-@@ -5,4 +5,10 @@ obj-$(CONFIG_HYPERV_VTL_MODE)	+= hv_vtl.o
- 
- ifdef CONFIG_X86_64
- obj-$(CONFIG_PARAVIRT_SPINLOCKS)	+= hv_spinlock.o
-+
-+ ifdef CONFIG_MSHV_ROOT
-+  CFLAGS_REMOVE_hv_trampoline.o += -pg
-+  CFLAGS_hv_trampoline.o        += -fno-stack-protector
-+  obj-$(CONFIG_CRASH_DUMP)      += hv_crash.o hv_trampoline.o
-+ endif
- endif
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index afdbda2dd7b7..577bbd143527 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -510,6 +510,7 @@ void __init hyperv_init(void)
- 		memunmap(src);
- 
- 		hv_remap_tsc_clocksource();
-+		hv_root_crash_init();
- 	} else {
- 		hypercall_msr.guest_physical_address = vmalloc_to_pfn(hv_hypercall_pg);
- 		wrmsrq(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index abc4659f5809..207d953d7b90 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -292,6 +292,19 @@ static __always_inline u64 hv_raw_get_msr(unsigned int reg)
- }
- int hv_apicid_to_vp_index(u32 apic_id);
- 
-+#if IS_ENABLED(CONFIG_MSHV_ROOT)
-+
-+#ifdef CONFIG_CRASH_DUMP
-+void hv_root_crash_init(void);
-+void hv_crash_asm32(void);
-+void hv_crash_asm64(void);
-+void hv_crash_asm_end(void);
-+#else   /* CONFIG_CRASH_DUMP */
-+static inline void hv_root_crash_init(void) {}
-+#endif  /* CONFIG_CRASH_DUMP */
-+
-+#endif  /* CONFIG_MSHV_ROOT */
-+
- #else /* CONFIG_HYPERV */
- static inline void hyperv_init(void) {}
- static inline void hyperv_setup_mmu_ops(void) {}
+[auto build test ERROR on next-20250923]
+[also build test ERROR on v6.17-rc7]
+[cannot apply to tip/x86/core linus/master v6.17-rc7 v6.17-rc6 v6.17-rc5]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Mukesh-Rathor/x86-hyperv-Rename-guest-crash-shutdown-function/20250924-054910
+base:   next-20250923
+patch link:    https://lore.kernel.org/r/20250923214609.4101554-7-mrathor%40linux.microsoft.com
+patch subject: [PATCH v2 6/6] x86/hyperv: Enable build of hypervisor crashdump collection files
+config: x86_64-randconfig-004-20250924 (https://download.01.org/0day-ci/archive/20250925/202509250034.2hNDVmj0-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250925/202509250034.2hNDVmj0-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202509250034.2hNDVmj0-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   arch/x86/hyperv/hv_crash.c:282:6: warning: variable 'status' set but not used [-Wunused-but-set-variable]
+     282 |         u64 status;
+         |             ^
+>> arch/x86/hyperv/hv_crash.c:631:2: error: must use 'struct' tag to refer to type 'smp_ops'
+     631 |         smp_ops.crash_stop_other_cpus = hv_crash_stop_other_cpus;
+         |         ^
+         |         struct 
+>> arch/x86/hyperv/hv_crash.c:631:9: error: expected identifier or '('
+     631 |         smp_ops.crash_stop_other_cpus = hv_crash_stop_other_cpus;
+         |                ^
+   1 warning and 2 errors generated.
+
+
+vim +631 arch/x86/hyperv/hv_crash.c
+
+c619422e77519d Mukesh Rathor 2025-09-23  580  
+c619422e77519d Mukesh Rathor 2025-09-23  581  /* Setup for kdump kexec to collect hypervisor RAM when running as root/dom0 */
+c619422e77519d Mukesh Rathor 2025-09-23  582  void hv_root_crash_init(void)
+c619422e77519d Mukesh Rathor 2025-09-23  583  {
+c619422e77519d Mukesh Rathor 2025-09-23  584  	int rc;
+c619422e77519d Mukesh Rathor 2025-09-23  585  	struct hv_input_get_system_property *input;
+c619422e77519d Mukesh Rathor 2025-09-23  586  	struct hv_output_get_system_property *output;
+c619422e77519d Mukesh Rathor 2025-09-23  587  	unsigned long flags;
+c619422e77519d Mukesh Rathor 2025-09-23  588  	u64 status;
+c619422e77519d Mukesh Rathor 2025-09-23  589  	union hv_pfn_range cda_info;
+c619422e77519d Mukesh Rathor 2025-09-23  590  
+c619422e77519d Mukesh Rathor 2025-09-23  591  	if (pgtable_l5_enabled()) {
+c619422e77519d Mukesh Rathor 2025-09-23  592  		pr_err("Hyper-V: crash dump not yet supported on 5level PTs\n");
+c619422e77519d Mukesh Rathor 2025-09-23  593  		return;
+c619422e77519d Mukesh Rathor 2025-09-23  594  	}
+c619422e77519d Mukesh Rathor 2025-09-23  595  
+c619422e77519d Mukesh Rathor 2025-09-23  596  	rc = register_nmi_handler(NMI_LOCAL, hv_crash_nmi_local, NMI_FLAG_FIRST,
+c619422e77519d Mukesh Rathor 2025-09-23  597  				  "hv_crash_nmi");
+c619422e77519d Mukesh Rathor 2025-09-23  598  	if (rc) {
+c619422e77519d Mukesh Rathor 2025-09-23  599  		pr_err("Hyper-V: failed to register crash nmi handler\n");
+c619422e77519d Mukesh Rathor 2025-09-23  600  		return;
+c619422e77519d Mukesh Rathor 2025-09-23  601  	}
+c619422e77519d Mukesh Rathor 2025-09-23  602  
+c619422e77519d Mukesh Rathor 2025-09-23  603  	local_irq_save(flags);
+c619422e77519d Mukesh Rathor 2025-09-23  604  	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+c619422e77519d Mukesh Rathor 2025-09-23  605  	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
+c619422e77519d Mukesh Rathor 2025-09-23  606  
+c619422e77519d Mukesh Rathor 2025-09-23  607  	memset(input, 0, sizeof(*input));
+c619422e77519d Mukesh Rathor 2025-09-23  608  	input->property_id = HV_SYSTEM_PROPERTY_CRASHDUMPAREA;
+c619422e77519d Mukesh Rathor 2025-09-23  609  
+c619422e77519d Mukesh Rathor 2025-09-23  610  	status = hv_do_hypercall(HVCALL_GET_SYSTEM_PROPERTY, input, output);
+c619422e77519d Mukesh Rathor 2025-09-23  611  	cda_info.as_uint64 = output->hv_cda_info.as_uint64;
+c619422e77519d Mukesh Rathor 2025-09-23  612  	local_irq_restore(flags);
+c619422e77519d Mukesh Rathor 2025-09-23  613  
+c619422e77519d Mukesh Rathor 2025-09-23  614  	if (!hv_result_success(status)) {
+c619422e77519d Mukesh Rathor 2025-09-23  615  		pr_err("Hyper-V: %s: property:%d %s\n", __func__,
+c619422e77519d Mukesh Rathor 2025-09-23  616  		       input->property_id, hv_result_to_string(status));
+c619422e77519d Mukesh Rathor 2025-09-23  617  		goto err_out;
+c619422e77519d Mukesh Rathor 2025-09-23  618  	}
+c619422e77519d Mukesh Rathor 2025-09-23  619  
+c619422e77519d Mukesh Rathor 2025-09-23  620  	if (cda_info.base_pfn == 0) {
+c619422e77519d Mukesh Rathor 2025-09-23  621  		pr_err("Hyper-V: hypervisor crash dump area pfn is 0\n");
+c619422e77519d Mukesh Rathor 2025-09-23  622  		goto err_out;
+c619422e77519d Mukesh Rathor 2025-09-23  623  	}
+c619422e77519d Mukesh Rathor 2025-09-23  624  
+c619422e77519d Mukesh Rathor 2025-09-23  625  	hv_cda = phys_to_virt(cda_info.base_pfn << HV_HYP_PAGE_SHIFT);
+c619422e77519d Mukesh Rathor 2025-09-23  626  
+c619422e77519d Mukesh Rathor 2025-09-23  627  	rc = hv_crash_trampoline_setup();
+c619422e77519d Mukesh Rathor 2025-09-23  628  	if (rc)
+c619422e77519d Mukesh Rathor 2025-09-23  629  		goto err_out;
+c619422e77519d Mukesh Rathor 2025-09-23  630  
+c619422e77519d Mukesh Rathor 2025-09-23 @631  	smp_ops.crash_stop_other_cpus = hv_crash_stop_other_cpus;
+
 -- 
-2.36.1.vfs.0.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
