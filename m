@@ -1,43 +1,43 @@
-Return-Path: <linux-hyperv+bounces-6992-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6995-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E972CBA499F
-	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Sep 2025 18:23:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90F77BA49B1
+	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Sep 2025 18:23:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8FB9F3B90DE
-	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Sep 2025 16:23:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF78A1BC5891
+	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Sep 2025 16:24:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13E31261B7F;
-	Fri, 26 Sep 2025 16:23:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28C87274B46;
+	Fri, 26 Sep 2025 16:23:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rKuv+xwQ"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="enmWmRvU"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90261258EE0;
-	Fri, 26 Sep 2025 16:23:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D0D525D21A;
+	Fri, 26 Sep 2025 16:23:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758903806; cv=none; b=n0iDIuEZ1HesfKg6DAgjlyh7D2LXa+tY+5JM28yuuKkkoGCbC7xu+WmIAbhRbcsB1gDZC4WN3z2DNihJ3ThcODtK0R4LF1NeDs6EbC//Srq8LU/meAa9yo27aB3uuuprZnKAzecXD6E/4w34Z7Sxp5coYcEBkMfMamF6SNISQaM=
+	t=1758903807; cv=none; b=pCs1xjikMlYhzMhF+TXmQ8uXsz5f0fyDvIiEnTMxe//xBmipaPMlp+Ta5w7XvwMnrGuH4qJ6CBmcwux/zqFoaox+ljUVFallCKsO6BD7HEaQzYfqySeU9QSD4tuNvd4x0IEFQQiG2OOqPZMh30OJbsXF3fIpSJ7vOfNSoHu1TVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758903806; c=relaxed/simple;
-	bh=FsDdKwCMqTABgOU+0KZfVkac48eymIJV4GoA81z0p+0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=K8Bb8FgxxQViNZfAXA6ZBJ+MTvAL3amOvp6pFOuPjIye7Vi4VOBlZ5I8poVo5qMSPQ1Q2ufEsjHjWk4j3/RzPqnTd4ZDq/2BllsxiziH8QyXo0Cvp/TwQ8/JLtbgnG3Vc/JOY6uy+NMuEN2nSfNFxGNVxKoGkNt4OYyaCDQXvkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rKuv+xwQ; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1758903807; c=relaxed/simple;
+	bh=GJZ2JW9vjNiUEByClQvYH7fRGYVEFy/uqtwmjNeBfhs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=GQ6cBZ6v7D60NHv98rRBislKUDtGQ7j8uXqCjULekQr7KBVfiADdyglgdwFqbQDhinSZdWhRiFpXJHO0zSOma5oDPiBBA9j5+J5kdN003ATlCbYBMr3Bf/nOYwh6j1IJPKVjkaYOz1R+3O8jELEq3P+dViLqZYz8Bwhs5nUnqrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=enmWmRvU; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1032)
-	id CA5C12124F6F; Fri, 26 Sep 2025 09:23:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CA5C12124F6F
+	id 411FA2124F70; Fri, 26 Sep 2025 09:23:19 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 411FA2124F70
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1758903798;
-	bh=tWfyl8/jJ38C1AnsDNtGxPJggw4ujw1MyZ8mJDXpanU=;
+	s=default; t=1758903799;
+	bh=4mZxMvm4XMs78+Peobwx9UIkR0H+LEK4KnrqhsSYaPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rKuv+xwQSdDDosAcXNYnh0v2B6Nvhl1MiIC8Odl/F+JKzb95pbqDmqSs72K9fAt3+
-	 AILQHo1xcfHXxdWKw5aX3enDpqk05M9mtk0J9r5/mhA6sCaDkYbmrRyOXKBpFkggGZ
-	 3MZksK+YIJrE8N6qO1YG8vkPZcWbwzN2WnnCxms4=
+	b=enmWmRvUGAJmlphuathVVsTtlfwbHL/OIIajltPY7mXKQ3sJGhOWRkWj8UI82m3oq
+	 vlKaJH+aP3OrXVwCg58tApicxdOYBJaXZjvereLoaUZ+csN4OAh55jRwu6mGFPKUOL
+	 BTGD0oVHaWsMvAIrqRvykY8mrnx3pb6u5B6UMlag=
 From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -51,10 +51,11 @@ Cc: kys@microsoft.com,
 	haiyangz@microsoft.com,
 	wei.liu@kernel.org,
 	decui@microsoft.com,
+	Jinank Jain <jinankjain@linux.microsoft.com>,
 	Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Subject: [PATCH v4 3/5] mshv: Get the vmm capabilities offered by the hypervisor
-Date: Fri, 26 Sep 2025 09:23:13 -0700
-Message-Id: <1758903795-18636-4-git-send-email-nunodasneves@linux.microsoft.com>
+Subject: [PATCH v4 4/5] mshv: Allocate vp state page for HVCALL_MAP_VP_STATE_PAGE on L1VH
+Date: Fri, 26 Sep 2025 09:23:14 -0700
+Message-Id: <1758903795-18636-5-git-send-email-nunodasneves@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1758903795-18636-1-git-send-email-nunodasneves@linux.microsoft.com>
 References: <1758903795-18636-1-git-send-email-nunodasneves@linux.microsoft.com>
@@ -64,72 +65,276 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 
-From: Purna Pavan Chandra Aekkaladevi <paekkaladevi@linux.microsoft.com>
+From: Jinank Jain <jinankjain@linux.microsoft.com>
 
-Some hypervisor APIs are gated by feature bits in the
-"vmm capabilities" partition property. Store the capabilities on
-mshv_root module init, using HVCALL_GET_PARTITION_PROPERTY_EX.
+Introduce mshv_use_overlay_gpfn() to check if a page needs to be
+allocated and passed to the hypervisor to map VP state pages. This is
+only needed on L1VH, and only on some (newer) versions of the
+hypervisor, hence the need to check vmm_capabilities.
 
-This is not supported on all hypervisors. In that case, just set the
-capabilities to 0 and proceed as normal.
+Introduce functions hv_map/unmap_vp_state_page() to handle the
+allocation and freeing.
 
-Signed-off-by: Purna Pavan Chandra Aekkaladevi <paekkaladevi@linux.microsoft.com>
+Signed-off-by: Jinank Jain <jinankjain@linux.microsoft.com>
 Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 Reviewed-by: Praveen K Paladugu <prapal@linux.microsoft.com>
 Reviewed-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
-Reviewed-by: Tianyu Lan <tiala@microsoft.com>
+Reviewed-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Reviewed-by: Anirudh Rayabharam <anirudh@anirudhrb.com>
 ---
- drivers/hv/mshv_root.h      |  1 +
- drivers/hv/mshv_root_main.c | 17 +++++++++++++++++
- 2 files changed, 18 insertions(+)
+ drivers/hv/mshv_root.h         | 11 ++---
+ drivers/hv/mshv_root_hv_call.c | 61 ++++++++++++++++++++++++---
+ drivers/hv/mshv_root_main.c    | 76 +++++++++++++++++-----------------
+ 3 files changed, 98 insertions(+), 50 deletions(-)
 
 diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
-index 4aeb03bea6b6..0cb1e2589fe1 100644
+index 0cb1e2589fe1..dbe2d1d0b22f 100644
 --- a/drivers/hv/mshv_root.h
 +++ b/drivers/hv/mshv_root.h
-@@ -178,6 +178,7 @@ struct mshv_root {
- 	struct hv_synic_pages __percpu *synic_pages;
- 	spinlock_t pt_ht_lock;
- 	DECLARE_HASHTABLE(pt_htable, MSHV_PARTITIONS_HASH_BITS);
-+	struct hv_partition_property_vmm_capabilities vmm_caps;
- };
- 
- /*
-diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index 24df47726363..e199770ecdfa 100644
---- a/drivers/hv/mshv_root_main.c
-+++ b/drivers/hv/mshv_root_main.c
-@@ -2201,6 +2201,21 @@ static int __init mshv_root_partition_init(struct device *dev)
- 	return err;
+@@ -279,11 +279,12 @@ int hv_call_set_vp_state(u32 vp_index, u64 partition_id,
+ 			 /* Choose between pages and bytes */
+ 			 struct hv_vp_state_data state_data, u64 page_count,
+ 			 struct page **pages, u32 num_bytes, u8 *bytes);
+-int hv_call_map_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
+-			      union hv_input_vtl input_vtl,
+-			      struct page **state_page);
+-int hv_call_unmap_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
+-				union hv_input_vtl input_vtl);
++int hv_map_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
++			 union hv_input_vtl input_vtl,
++			 struct page **state_page);
++int hv_unmap_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
++			   struct page *state_page,
++			   union hv_input_vtl input_vtl);
+ int hv_call_create_port(u64 port_partition_id, union hv_port_id port_id,
+ 			u64 connection_partition_id, struct hv_port_info *port_info,
+ 			u8 port_vtl, u8 min_connection_vtl, int node);
+diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
+index 3fd3cce23f69..98c6278ff151 100644
+--- a/drivers/hv/mshv_root_hv_call.c
++++ b/drivers/hv/mshv_root_hv_call.c
+@@ -526,9 +526,9 @@ int hv_call_set_vp_state(u32 vp_index, u64 partition_id,
+ 	return ret;
  }
  
-+static void mshv_init_vmm_caps(struct device *dev)
-+{
-+	/*
-+	 * HVCALL_GET_PARTITION_PROPERTY_EX or HV_PARTITION_PROPERTY_VMM_CAPABILITIES
-+	 * may not be supported. Leave them as 0 in that case.
-+	 */
-+	if (hv_call_get_partition_property_ex(HV_PARTITION_ID_SELF,
-+					      HV_PARTITION_PROPERTY_VMM_CAPABILITIES,
-+					      0, &mshv_root.vmm_caps,
-+					      sizeof(mshv_root.vmm_caps)))
-+		dev_warn(dev, "Unable to get VMM capabilities\n");
+-int hv_call_map_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
+-			      union hv_input_vtl input_vtl,
+-			      struct page **state_page)
++static int hv_call_map_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
++				     union hv_input_vtl input_vtl,
++				     struct page **state_page)
+ {
+ 	struct hv_input_map_vp_state_page *input;
+ 	struct hv_output_map_vp_state_page *output;
+@@ -547,7 +547,14 @@ int hv_call_map_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
+ 		input->type = type;
+ 		input->input_vtl = input_vtl;
+ 
+-		status = hv_do_hypercall(HVCALL_MAP_VP_STATE_PAGE, input, output);
++		if (*state_page) {
++			input->flags.map_location_provided = 1;
++			input->requested_map_location =
++				page_to_pfn(*state_page);
++		}
 +
-+	dev_dbg(dev, "vmm_caps=0x%llx\n", mshv_root.vmm_caps.as_uint64[0]);
++		status = hv_do_hypercall(HVCALL_MAP_VP_STATE_PAGE, input,
++					 output);
+ 
+ 		if (hv_result(status) != HV_STATUS_INSUFFICIENT_MEMORY) {
+ 			if (hv_result_success(status))
+@@ -565,8 +572,39 @@ int hv_call_map_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
+ 	return ret;
+ }
+ 
+-int hv_call_unmap_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
+-				union hv_input_vtl input_vtl)
++static bool mshv_use_overlay_gpfn(void)
++{
++	return hv_l1vh_partition() &&
++	       mshv_root.vmm_caps.vmm_can_provide_overlay_gpfn;
 +}
 +
- static int __init mshv_parent_partition_init(void)
- {
- 	int ret;
-@@ -2253,6 +2268,8 @@ static int __init mshv_parent_partition_init(void)
- 	if (ret)
- 		goto remove_cpu_state;
- 
-+	mshv_init_vmm_caps(dev);
++int hv_map_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
++			 union hv_input_vtl input_vtl,
++			 struct page **state_page)
++{
++	int ret = 0;
++	struct page *allocated_page = NULL;
 +
- 	ret = mshv_irqfd_wq_init();
++	if (mshv_use_overlay_gpfn()) {
++		allocated_page = alloc_page(GFP_KERNEL);
++		if (!allocated_page)
++			return -ENOMEM;
++		*state_page = allocated_page;
++	} else {
++		*state_page = NULL;
++	}
++
++	ret = hv_call_map_vp_state_page(partition_id, vp_index, type, input_vtl,
++					state_page);
++
++	if (ret && allocated_page)
++		__free_page(allocated_page);
++
++	return ret;
++}
++
++static int hv_call_unmap_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
++				       union hv_input_vtl input_vtl)
+ {
+ 	unsigned long flags;
+ 	u64 status;
+@@ -590,6 +628,17 @@ int hv_call_unmap_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
+ 	return hv_result_to_errno(status);
+ }
+ 
++int hv_unmap_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
++			   struct page *state_page, union hv_input_vtl input_vtl)
++{
++	int ret = hv_call_unmap_vp_state_page(partition_id, vp_index, type, input_vtl);
++
++	if (mshv_use_overlay_gpfn() && state_page)
++		__free_page(state_page);
++
++	return ret;
++}
++
+ int hv_call_get_partition_property_ex(u64 partition_id, u64 property_code,
+ 				      u64 arg, void *property_value,
+ 				      size_t property_value_sz)
+diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+index e199770ecdfa..2d0ad17acde6 100644
+--- a/drivers/hv/mshv_root_main.c
++++ b/drivers/hv/mshv_root_main.c
+@@ -890,7 +890,7 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
+ {
+ 	struct mshv_create_vp args;
+ 	struct mshv_vp *vp;
+-	struct page *intercept_message_page, *register_page, *ghcb_page;
++	struct page *intercept_msg_page, *register_page, *ghcb_page;
+ 	void *stats_pages[2];
+ 	long ret;
+ 
+@@ -908,28 +908,25 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
  	if (ret)
- 		goto exit_partition;
+ 		return ret;
+ 
+-	ret = hv_call_map_vp_state_page(partition->pt_id, args.vp_index,
+-					HV_VP_STATE_PAGE_INTERCEPT_MESSAGE,
+-					input_vtl_zero,
+-					&intercept_message_page);
++	ret = hv_map_vp_state_page(partition->pt_id, args.vp_index,
++				   HV_VP_STATE_PAGE_INTERCEPT_MESSAGE,
++				   input_vtl_zero, &intercept_msg_page);
+ 	if (ret)
+ 		goto destroy_vp;
+ 
+ 	if (!mshv_partition_encrypted(partition)) {
+-		ret = hv_call_map_vp_state_page(partition->pt_id, args.vp_index,
+-						HV_VP_STATE_PAGE_REGISTERS,
+-						input_vtl_zero,
+-						&register_page);
++		ret = hv_map_vp_state_page(partition->pt_id, args.vp_index,
++					   HV_VP_STATE_PAGE_REGISTERS,
++					   input_vtl_zero, &register_page);
+ 		if (ret)
+ 			goto unmap_intercept_message_page;
+ 	}
+ 
+ 	if (mshv_partition_encrypted(partition) &&
+ 	    is_ghcb_mapping_available()) {
+-		ret = hv_call_map_vp_state_page(partition->pt_id, args.vp_index,
+-						HV_VP_STATE_PAGE_GHCB,
+-						input_vtl_normal,
+-						&ghcb_page);
++		ret = hv_map_vp_state_page(partition->pt_id, args.vp_index,
++					   HV_VP_STATE_PAGE_GHCB,
++					   input_vtl_normal, &ghcb_page);
+ 		if (ret)
+ 			goto unmap_register_page;
+ 	}
+@@ -960,7 +957,7 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
+ 	atomic64_set(&vp->run.vp_signaled_count, 0);
+ 
+ 	vp->vp_index = args.vp_index;
+-	vp->vp_intercept_msg_page = page_to_virt(intercept_message_page);
++	vp->vp_intercept_msg_page = page_to_virt(intercept_msg_page);
+ 	if (!mshv_partition_encrypted(partition))
+ 		vp->vp_register_page = page_to_virt(register_page);
+ 
+@@ -993,21 +990,19 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
+ 	if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
+ 		mshv_vp_stats_unmap(partition->pt_id, args.vp_index);
+ unmap_ghcb_page:
+-	if (mshv_partition_encrypted(partition) && is_ghcb_mapping_available()) {
+-		hv_call_unmap_vp_state_page(partition->pt_id, args.vp_index,
+-					    HV_VP_STATE_PAGE_GHCB,
+-					    input_vtl_normal);
+-	}
++	if (mshv_partition_encrypted(partition) && is_ghcb_mapping_available())
++		hv_unmap_vp_state_page(partition->pt_id, args.vp_index,
++				       HV_VP_STATE_PAGE_GHCB, ghcb_page,
++				       input_vtl_normal);
+ unmap_register_page:
+-	if (!mshv_partition_encrypted(partition)) {
+-		hv_call_unmap_vp_state_page(partition->pt_id, args.vp_index,
+-					    HV_VP_STATE_PAGE_REGISTERS,
+-					    input_vtl_zero);
+-	}
++	if (!mshv_partition_encrypted(partition))
++		hv_unmap_vp_state_page(partition->pt_id, args.vp_index,
++				       HV_VP_STATE_PAGE_REGISTERS,
++				       register_page, input_vtl_zero);
+ unmap_intercept_message_page:
+-	hv_call_unmap_vp_state_page(partition->pt_id, args.vp_index,
+-				    HV_VP_STATE_PAGE_INTERCEPT_MESSAGE,
+-				    input_vtl_zero);
++	hv_unmap_vp_state_page(partition->pt_id, args.vp_index,
++			       HV_VP_STATE_PAGE_INTERCEPT_MESSAGE,
++			       intercept_msg_page, input_vtl_zero);
+ destroy_vp:
+ 	hv_call_delete_vp(partition->pt_id, args.vp_index);
+ 	return ret;
+@@ -1748,24 +1743,27 @@ static void destroy_partition(struct mshv_partition *partition)
+ 				mshv_vp_stats_unmap(partition->pt_id, vp->vp_index);
+ 
+ 			if (vp->vp_register_page) {
+-				(void)hv_call_unmap_vp_state_page(partition->pt_id,
+-								  vp->vp_index,
+-								  HV_VP_STATE_PAGE_REGISTERS,
+-								  input_vtl_zero);
++				(void)hv_unmap_vp_state_page(partition->pt_id,
++							     vp->vp_index,
++							     HV_VP_STATE_PAGE_REGISTERS,
++							     virt_to_page(vp->vp_register_page),
++							     input_vtl_zero);
+ 				vp->vp_register_page = NULL;
+ 			}
+ 
+-			(void)hv_call_unmap_vp_state_page(partition->pt_id,
+-							  vp->vp_index,
+-							  HV_VP_STATE_PAGE_INTERCEPT_MESSAGE,
+-							  input_vtl_zero);
++			(void)hv_unmap_vp_state_page(partition->pt_id,
++						     vp->vp_index,
++						     HV_VP_STATE_PAGE_INTERCEPT_MESSAGE,
++						     virt_to_page(vp->vp_intercept_msg_page),
++						     input_vtl_zero);
+ 			vp->vp_intercept_msg_page = NULL;
+ 
+ 			if (vp->vp_ghcb_page) {
+-				(void)hv_call_unmap_vp_state_page(partition->pt_id,
+-								  vp->vp_index,
+-								  HV_VP_STATE_PAGE_GHCB,
+-								  input_vtl_normal);
++				(void)hv_unmap_vp_state_page(partition->pt_id,
++							     vp->vp_index,
++							     HV_VP_STATE_PAGE_GHCB,
++							     virt_to_page(vp->vp_ghcb_page),
++							     input_vtl_normal);
+ 				vp->vp_ghcb_page = NULL;
+ 			}
+ 
 -- 
 2.34.1
 
