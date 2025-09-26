@@ -1,85 +1,84 @@
-Return-Path: <linux-hyperv+bounces-6986-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6987-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38EFDBA3F98
-	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Sep 2025 15:55:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7A3FBA454A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Sep 2025 17:02:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E2077626060
-	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Sep 2025 13:55:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 74B3D177765
+	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Sep 2025 15:02:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB2012FC88E;
-	Fri, 26 Sep 2025 13:53:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 873FD1FBE87;
+	Fri, 26 Sep 2025 15:02:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JSpBpw3R"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VpiC8pYb"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11B72F90D6
-	for <linux-hyperv@vger.kernel.org>; Fri, 26 Sep 2025 13:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A86213957E
+	for <linux-hyperv@vger.kernel.org>; Fri, 26 Sep 2025 15:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758894790; cv=none; b=Hg0vym09GCn9DeXvSFWFLpGYRY+tgS7TYlFchsW8auhj2GPXk05UwMDf341tJxnMVZ8ANO7xEyyGtJ+QgcRB4DpIFiVXT3JoXyaLFpvx3QhYhchCeuR2geET0xcDH2mhloZfItO5aa4XgzosYbEi17hrUxl8o87tUdbFzcDEJsI=
+	t=1758898944; cv=none; b=i3CGqVhnqcHm2Gd1CqtR6Q/Zf0yB7HESKf5A+ECMpzNttkckjF61JpnIMjqnnk2ve8Y0iGReeAmG/VulumLMQ1t7bJtC0itY85Wvd5P1E5mqH27AB1hjAI/2vnvZvHtW76izmJL6LxbOQRaKoFfgqaJR87VtpZAWyEB3r8ecj0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758894790; c=relaxed/simple;
-	bh=v9/YoAeo4j+XSzP7jJkloGUF9XXb6rhzguQFkxVhgBU=;
+	s=arc-20240116; t=1758898944; c=relaxed/simple;
+	bh=Cs/84XxAXxX6tTTqn+kLkflAcjIdDxlMGi6PGFWdU8w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NyJt08kV32XvNYD0+SiftveMPuxFVPuORwu4zm995O9U/6bN62/CgpvIc04HVk/zbfz1YoRH6xdssgo3CRW1BsTG58ZIIGHNugaNti0s13wnkFgJ/olM4nRYw6cutZoba9lGXPhbo2pePW9rjr+VLIqGqBMB9nLuXfMG/Lmduss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JSpBpw3R; arc=none smtp.client-ip=170.10.129.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=g0CxfROBq68bs9n4gCvdjC+9mTjFkbCjwMCMQ4aWEStIeRJLZoOYFfmS+vzHIc01uKNqYwjdZf0c0MnR/ewmnWiNdkIhmsskyV8I+rOAny5bVF0NAj5O12iSdkjlO9JJV9/O0q34hlDmBI8tEaL+Z3eRH3Z0IQU2IiwdUDn8kK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VpiC8pYb; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758894787;
+	s=mimecast20190719; t=1758898940;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JCLhKRo57nwP7lOT098V870p1QhItLboAprKUmrpy6E=;
-	b=JSpBpw3RfJljPqH023Ua+UfZXAloQJkgoRC8HHw9+BR7HKSeJXMdukM/j0Qa9sY7vWIZ7u
-	oDAg7ZLgucLwCWcI0Li6V5KoIgIGBpW9eNm0T/+bN+3EkjxC8uX3U5ng8qF00R+YHrEL8z
-	R6XVmbdjTsW6wpq17+RFJFJZuiqMEDo=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=noZOuOVCvuhaRciLh0umvqzDccdwZKtJ1ZnIqPU5vcI=;
+	b=VpiC8pYbV8ftzCgCVUUFANMM/1vs77V0EDcP3ij7FAkZcTgECddcLo/6A7fsjXyxh2UvLu
+	7ASdKUhVUWXPYjrnS+T2U46elwAkf3YjbKRhmvTXEGStZ+DerV0eV84d+wUpLqo/xMpQxC
+	I43DhARBn5iLtPoh22wRaZgJlM+m2SQ=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-205-DGpb27qvMSunSSECONG15w-1; Fri, 26 Sep 2025 09:53:05 -0400
-X-MC-Unique: DGpb27qvMSunSSECONG15w-1
-X-Mimecast-MFC-AGG-ID: DGpb27qvMSunSSECONG15w_1758894784
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3f384f10762so1229165f8f.3
-        for <linux-hyperv@vger.kernel.org>; Fri, 26 Sep 2025 06:53:04 -0700 (PDT)
+ us-mta-580-f72w8V30OiSZwEjb-fYxqA-1; Fri, 26 Sep 2025 11:02:17 -0400
+X-MC-Unique: f72w8V30OiSZwEjb-fYxqA-1
+X-Mimecast-MFC-AGG-ID: f72w8V30OiSZwEjb-fYxqA_1758898936
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3f93db57449so1117720f8f.2
+        for <linux-hyperv@vger.kernel.org>; Fri, 26 Sep 2025 08:02:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758894784; x=1759499584;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JCLhKRo57nwP7lOT098V870p1QhItLboAprKUmrpy6E=;
-        b=TJcDq9oBJ2/mWj1TXiSGMdaEOsYOyLePlGM2q157iynNWjOTlLvVlsRtocVzwala3a
-         ggJeDcpEAjvQ58cheqKoJrNCvn5I8qEPTGk3eNLwSQ37CviDCTk948z2CcoZ4C6aoGUN
-         AQLQ4di5UqoARCBFBoM9FiDDUpblE9reRui90d3AxTfUonO6Mju9KAgXOXiqY2gffBN6
-         lknTFI2ZH4fkx2x+KSLdqxb/qe+FaY8ncyzM61i5gxaF+gY6m35ZA2kmDnDuP6WoI0Je
-         armiledompq4ULwH1qAATt3H55p1kKF0PIxcMY4Ns7AB6k8bwEF9tqTEIUtptM9WIAgQ
-         zfbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXWYMxlmQO6x3HSZkIOL2A0HWan37jZkeF+MFFDcMbRuOF4IuyY/3RX0vFJp1LcwdaSWHrYsaCr9+ayjuA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/mnefbL5umx0tT9HISZgZZVsZTY8NfvnQfgrqCnuU8Rk3y7Ig
-	FrGNMCo6abSxQHfImotiEnfG8tWT0dz4KwD7hggH0DYhMfb66hkMIE7kYsKFUkx5jbBdxjBnP+2
-	YWXJTAPyaOmi7A3ttqUz05utnk9xjT4Gxwew1RvfQ++nvEo/yT8CdOWTmrcvynpZkzw==
-X-Gm-Gg: ASbGncsHg5LYHWvVqN5mhvZhFsMaxRcsLCarluH6AWoGlrhB+kAzo92Lwj3xvn6obaP
-	ANK7DeQkSI/YjwKK9rwa8QoY+O0jI0DCO0IhXD0m/zRJW14RTvkZYT0g/jBcXVqYrEaE+oQVxoN
-	3gQtzif13lLnbJd6bVh+Hjcq9/AB8yrq5nvHaFrbVekMEenQYIJQkvQ5vKShTXCah9L5SXzR06E
-	wufoDqHYJ2NkU7yrzORV/iHKYiG9+uQI4hTB799MrC73OA3MUISGWkl454iY65/exXwgWo/D/FN
-	k14mj2pal10c1lkPAjfzloBsc8ol4+BSe9hWn0Hf
-X-Received: by 2002:a05:6000:26c1:b0:3e4:b44d:c586 with SMTP id ffacd0b85a97d-40e4adceb7cmr6693669f8f.34.1758894783787;
-        Fri, 26 Sep 2025 06:53:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF0wfQWykC77fe0tKnWjipZaiXo2+AfUKGhVzx7dZmaVWWD2JCCx4wkHBEAM4eWx7GEC2r7Ag==
-X-Received: by 2002:a05:6000:26c1:b0:3e4:b44d:c586 with SMTP id ffacd0b85a97d-40e4adceb7cmr6693638f8f.34.1758894783185;
-        Fri, 26 Sep 2025 06:53:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1758898936; x=1759503736;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=noZOuOVCvuhaRciLh0umvqzDccdwZKtJ1ZnIqPU5vcI=;
+        b=QDrK5EneQFzy6vmTQeBQtrYTHqxTWAkDayaOENu7jJCC1HuuxBSOGyQot2bmADD3NP
+         27CrF7FsG++OOYpxd8/dC5SEWUFilXYi1uVw4EZBJylqAi38PeJ8HA1e0bklL4bseNRl
+         bPSO82sCsUa+QhUE7TVAeojFQNG3MDRxzqGPkIGo994fYRNGRR/9m5xL+Y90BLuI+f3R
+         OW5wAbqLm6d1UpM8i9H4LvKMtz4n9mE8YxJJyylQBqFm4phX3DdszwW+4s6Y7z4y/3FF
+         1K7oudZiBLELZ56EzYkSpq/FLPofN9w3zdWbsV0RHuH9KCMCehJfSoIp6UnPhKZpPs8X
+         1aGg==
+X-Forwarded-Encrypted: i=1; AJvYcCVp+DkmmYXBkdj2oijsK9VykzrqoxCHlyJt5j7+//5GqShzIDpmv8BcDAHr1cCaYGrSN9mg0XEyrP1Np3s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxf3KCsg8GoRPRrPDagDlSQI6XOw82MNZblArSQRGsipKDYtrcD
+	qwX8pAIsS5lLSVK0GPSIF4s/AGOb8p+Vbv1NQdKwEGzFmRt8qTKYVsyF4497HW3v6kLhoVzf/PN
+	ZFq5ONTzMpe8sX2v9CeEH3jhazwKtzUk3VjJqXwH76zHWzGGjjO4/uNUrafs6/5Opww==
+X-Gm-Gg: ASbGncss+N5Qp82orZ/BxaSfW9YK+YDTpvk+rHVPG3ARWpo0pBjtPCvOVuVkCilT+6J
+	mmfW1H4PQtvL0P9x+HxFY72NO5N4eoNdMEQUbOHdWihUHWeLXKJUUKhK7bJr+moG40W4zmAfei/
+	rAdqYVbSXGv+eLD1S20b6erhaozcne2886FdWKDrcCd3jVBr1S1TuL6VK1odE2LljGO6Nd2S50A
+	AF1mNG/JDX13sVRI8XI3/uP6t46ttygkE/XVjYqhs2hbPguB6PZovI/VT0BRPUGKuUPr6IsiLbV
+	YN0940vA74JNV0CAAs2CmYxrEokuY7T2WaOKDKSW
+X-Received: by 2002:a05:6000:2907:b0:401:41a9:524f with SMTP id ffacd0b85a97d-40e4adce99dmr6567965f8f.29.1758898935198;
+        Fri, 26 Sep 2025 08:02:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFp9n5wQpwde1tH3nQF00RbxIpJ1olb46GcoU3IRR/xtuLALGNwhpPij5ohfy6r8k5VTCZivQ==
+X-Received: by 2002:a05:6000:2907:b0:401:41a9:524f with SMTP id ffacd0b85a97d-40e4adce99dmr6567911f8f.29.1758898934453;
+        Fri, 26 Sep 2025 08:02:14 -0700 (PDT)
 Received: from sgarzare-redhat ([5.77.94.69])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-40fc88b0779sm7003586f8f.58.2025.09.26.06.52.51
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-40fc7d3780asm7290179f8f.52.2025.09.26.08.02.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Sep 2025 06:53:02 -0700 (PDT)
-Date: Fri, 26 Sep 2025 15:52:43 +0200
+        Fri, 26 Sep 2025 08:02:12 -0700 (PDT)
+Date: Fri, 26 Sep 2025 17:01:56 +0200
 From: Stefano Garzarella <sgarzare@redhat.com>
 To: Bobby Eshleman <bobbyeshleman@gmail.com>
 Cc: Shuah Khan <shuah@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
@@ -93,217 +92,345 @@ Cc: Shuah Khan <shuah@kernel.org>, "David S. Miller" <davem@davemloft.net>,
 	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
 	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
 	linux-hyperv@vger.kernel.org, berrange@redhat.com, Bobby Eshleman <bobbyeshleman@meta.com>
-Subject: Re: [PATCH net-next v6 0/9] vsock: add namespace support to
- vhost-vsock
-Message-ID: <wcts7brlugr337mcdfbrz5vkhvjikcaql3pdzgke5ahuuut37v@mgcqyo2umu7w>
+Subject: Re: [PATCH net-next v6 4/9] vsock/loopback: add netns support
+Message-ID: <evrzjpefb2e7m5idtr4sk3s4zdsnp6iecycpq4qglxode3kbor@vszhzmngupy2>
 References: <20250916-vsock-vmtest-v6-0-064d2eb0c89d@meta.com>
+ <20250916-vsock-vmtest-v6-4-064d2eb0c89d@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250916-vsock-vmtest-v6-0-064d2eb0c89d@meta.com>
+In-Reply-To: <20250916-vsock-vmtest-v6-4-064d2eb0c89d@meta.com>
 
-Hi Bobby,
+On Tue, Sep 16, 2025 at 04:43:48PM -0700, Bobby Eshleman wrote:
+>From: Bobby Eshleman <bobbyeshleman@meta.com>
+>
+>Add NS support to vsock loopback. Sockets in a global mode netns
+>communicate with each other, regardless of namespace. Sockets in a local
+>mode netns may only communicate with other sockets within the same
+>namespace.
+>
+>Use pernet_ops to install a vsock_loopback for every namespace that is
+>created (to be used if local mode is enabled).
+>
+>Retroactively call init/exit on every namespace when the vsock_loopback
+>module is loaded in order to initialize the per-ns device.
+>
+>Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
+>
+>---
+>Changes in v6:
+>- init pernet ops for vsock_loopback module
+>- vsock_loopback: add space in struct to clarify lock protection
+>- do proper cleanup/unregister on vsock_loopback_exit()
+>- vsock_loopback: use virtio_vsock_skb_net()
+>
+>Changes in v5:
+>- add callbacks code to avoid reverse dependency
+>- add logic for handling vsock_loopback setup for already existing
+>  namespaces
+>---
+> include/net/af_vsock.h         |  1 +
+> include/net/netns/vsock.h      |  6 +++
+> net/vmw_vsock/vsock_loopback.c | 98 ++++++++++++++++++++++++++++++++++++++----
+> 3 files changed, 97 insertions(+), 8 deletions(-)
 
-On Tue, Sep 16, 2025 at 04:43:44PM -0700, Bobby Eshleman wrote:
->This series adds namespace support to vhost-vsock and loopback. It does
->not add namespaces to any of the other guest transports (virtio-vsock,
->hyperv, or vmci).
+Just tried to boot a Fedora 42 VM with these patches applied on top of
+master, commit 4ff71af020ae ("Merge tag 'net-6.17-rc8' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net")
 
-Thanks for this new series and the patience!
-I've been a bit messed up after KVM Forum between personal stuff and 
-other things. I'm starting to review and test today, so between this 
-afternoon and Monday I hope to send you all my comments.
+And during the boot I have this:
+
+[    5.117627] systemd[1]: Detected virtualization kvm.
+[    5.117650] systemd[1]: Detected architecture x86-64.
+[    5.141282] systemd[1]: bpf-restrict-fs: BPF LSM hook not enabled in the kernel, BPF LSM not supported.
+[    5.317525] NET: Registered PF_VSOCK protocol family
+[    5.320496] Guest personality initialized and is inactive
+[    5.320960] VMCI host device registered (name=vmci, major=10, minor=259)
+[    5.320965] Initialized host personality
+[    5.465051] ------------[ cut here ]------------
+[    5.465068] WARNING: CPU: 1 PID: 297 at net/vmw_vsock/vsock_loopback.c:164 vsock_loopback_init_net+0x4a/0x60 [vsock_loopback]
+[    5.465081] Modules linked in: vsock_loopback(+) vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vmw_vmci vsock virtio_rng rng_core
+[    5.465115] CPU: 1 UID: 0 PID: 297 Comm: modprobe Not tainted 6.17.0-rc7-ste-00128-gcb48f49ce0ac #40 PREEMPT(none)
+[    5.465123] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-5.fc42 04/01/2014
+[    5.465127] RIP: 0010:vsock_loopback_init_net+0x4a/0x60 [vsock_loopback]
+[    5.465134] Code: 48 8b 3d b9 43 22 c2 e8 e4 e9 53 c1 48 89 83 e8 0e 
+00 00 48 85 c0 74 1b 48 89 c7 e8 f0 fe ff ff 48 8b 5d f8 c9 c3 cc cc cc 
+cc <0f> 0b 31 c0 c3 cc cc cc cc b8 f4 ff ff ff eb e6 66 0f 1f 44 00 00
+[    5.465140] RSP: 0018:ffffc900002afb48 EFLAGS: 00010286
+[    5.465147] RAX: ffffffff836c8798 RBX: 0000000000000000 RCX: ffffffffc0015056
+[    5.465151] RDX: 0000000000000000 RSI: 0000000000000100 RDI: ffffffff836c8700
+[    5.465155] RBP: ffffc900002afb60 R08: ffff88800c0bd378 R09: 00000000f4197968
+[    5.465159] R10: 0000000000000200 R11: 0000000003ad91eb R12: ffffffff836c8700
+[    5.465163] R13: ffffffffc023f240 R14: ffffffffc0015010 R15: 0000000000000000
+[    5.465172] FS:  00007f2f6c3e1b80(0000) GS:ffff8880fb4d2000(0000) 
+knlGS:0000000000000000
+[    5.465192] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    5.465196] CR2: 00007f27ae2e7000 CR3: 000000000b436001 CR4: 0000000000770ef0
+[    5.465200] PKRU: 55555554
+[    5.465203] Call Trace:
+[    5.465206]  <TASK>
+[    5.465210]  ? vsock_loopback_init+0x6c/0xff0 [vsock_loopback]
+[    5.465217]  do_one_initcall+0x73/0x2d0
+[    5.465233]  do_init_module+0x65/0x210
+[    5.465243]  load_module+0x1a6e/0x1cf0
+[    5.465256]  init_module_from_file+0x92/0xd0
+[    5.465260]  ? init_module_from_file+0x92/0xd0
+[    5.465269]  idempotent_init_module+0x12d/0x340
+[    5.465278]  __x64_sys_finit_module+0x60/0xb0
+[    5.465284]  x64_sys_call+0x18a0/0x1d80
+[    5.465291]  do_syscall_64+0x73/0x320
+[    5.465302]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[    5.465307] RIP: 0033:0x7f2f6c4d60cd
+[    5.465312] Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 03 4d 0f 00 f7 d8 64 89 01 48
+[    5.465317] RSP: 002b:00007ffe7166e7a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+[    5.465323] RAX: ffffffffffffffda RBX: 000055d75bab9e40 RCX: 00007f2f6c4d60cd
+[    5.465326] RDX: 0000000000000000 RSI: 000055d75bab15ee RDI: 0000000000000005
+[    5.465330] RBP: 00007ffe7166e860 R08: 0000000000000000 R09: 000055d75baba520
+[    5.465333] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000040000
+[    5.465336] R13: 000055d75baba940 R14: 000055d75bab15ee R15: 0000000000000000
+[    5.465391]  </TASK>
+[    5.465395] irq event stamp: 15179
+[    5.465399] hardirqs last  enabled at (15185): [<ffffffff81350e9e>] __up_console_sem+0x5e/0x80
+[    5.465407] hardirqs last disabled at (15190): [<ffffffff81350e83>] __up_console_sem+0x43/0x80
+[    5.465411] softirqs last  enabled at (15172): [<ffffffff812d2e21>] 
+irq_exit_rcu+0x61/0xb0
+[    5.465419] softirqs last disabled at (15165): [<ffffffff812d2e21>] irq_exit_rcu+0x61/0xb0
+[    5.465425] ---[ end trace 0000000000000000 ]---
+
+And could be related to a potential issue I see in vsock_loopback_init() 
+(see comment later).
+
+>
+>diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+>index 628e35ae9d00..5180b7dbb6d6 100644
+>--- a/include/net/af_vsock.h
+>+++ b/include/net/af_vsock.h
+>@@ -320,4 +320,5 @@ static inline bool vsock_net_check_mode(struct vsock_sock *vsk, struct net *net,
+>
+> 	return orig_net_mode == VSOCK_NET_MODE_GLOBAL && vsk->orig_net_mode == VSOCK_NET_MODE_GLOBAL;
+> }
+>+
+> #endif /* __AF_VSOCK_H__ */
+>diff --git a/include/net/netns/vsock.h b/include/net/netns/vsock.h
+>index d4593c0b8dc4..a32d546793a2 100644
+>--- a/include/net/netns/vsock.h
+>+++ b/include/net/netns/vsock.h
+>@@ -9,6 +9,8 @@ enum vsock_net_mode {
+> 	VSOCK_NET_MODE_LOCAL,
+> };
+>
+>+struct vsock_loopback;
+>+
+> struct netns_vsock {
+> 	struct ctl_table_header *vsock_hdr;
+> 	spinlock_t lock;
+>@@ -16,5 +18,9 @@ struct netns_vsock {
+> 	/* protected by lock */
+> 	enum vsock_net_mode mode;
+> 	bool written;
+>+
+>+#if IS_ENABLED(CONFIG_VSOCKETS_LOOPBACK)
+>+	struct vsock_loopback *loopback;
+>+#endif
+
+Honestly, I don't really like having something specific to a transport 
+here. Could we have something more generic to allow a generic transport 
+to register private data?
+
+(It's not a strong opinion; we can resolve it in the future when we will 
+have support for more transports if it's complicated)
+
+> };
+> #endif /* __NET_NET_NAMESPACE_VSOCK_H */
+>diff --git a/net/vmw_vsock/vsock_loopback.c b/net/vmw_vsock/vsock_loopback.c
+>index 1b2fab73e0d0..134e0619de07 100644
+>--- a/net/vmw_vsock/vsock_loopback.c
+>+++ b/net/vmw_vsock/vsock_loopback.c
+>@@ -28,8 +28,16 @@ static u32 vsock_loopback_get_local_cid(void)
+>
+> static int vsock_loopback_send_pkt(struct sk_buff *skb)
+> {
+>-	struct vsock_loopback *vsock = &the_vsock_loopback;
+>+	struct vsock_loopback *vsock;
+> 	int len = skb->len;
+>+	struct net *net;
+>+
+>+	net = virtio_vsock_skb_net(skb);
+>+
+>+	if (net && net->vsock.mode == VSOCK_NET_MODE_LOCAL)
+
+Can `net` be NULL ?
+If not, I'd print a warning or return an error.
+
+>+		vsock = net->vsock.loopback;
+>+	else
+>+		vsock = &the_vsock_loopback;
+>
+> 	virtio_vsock_skb_queue_tail(&vsock->pkt_queue, skb);
+> 	queue_work(vsock->workqueue, &vsock->pkt_work);
+>@@ -134,27 +142,99 @@ static void vsock_loopback_work(struct work_struct *work)
+> 	}
+> }
+>
+>-static int __init vsock_loopback_init(void)
+>+static int vsock_loopback_init_vsock(struct vsock_loopback *vsock)
+> {
+>-	struct vsock_loopback *vsock = &the_vsock_loopback;
+>-	int ret;
+>-
+> 	vsock->workqueue = alloc_workqueue("vsock-loopback", 0, 0);
+> 	if (!vsock->workqueue)
+> 		return -ENOMEM;
+>
+> 	skb_queue_head_init(&vsock->pkt_queue);
+> 	INIT_WORK(&vsock->pkt_work, vsock_loopback_work);
+
+nit: leave a blank line here.
+
+>+	return 0;
+>+}
+>+
+>+static void vsock_loopback_deinit_vsock(struct vsock_loopback *vsock)
+>+{
+>+	if (vsock->workqueue)
+>+		destroy_workqueue(vsock->workqueue);
+>+}
+>+
+>+static int vsock_loopback_init_net(struct net *net)
+>+{
+>+	if (WARN_ON_ONCE(net->vsock.loopback))
+>+		return 0;
+>+
+>+	net->vsock.loopback = kmalloc(sizeof(*net->vsock.loopback), GFP_KERNEL);
+>+	if (!net->vsock.loopback)
+>+		return -ENOMEM;
+>+
+>+	return vsock_loopback_init_vsock(net->vsock.loopback);
+>+}
+>+
+>+static void vsock_loopback_exit_net(struct net *net)
+>+{
+>+	if (net->vsock.loopback) {
+>+		vsock_loopback_deinit_vsock(net->vsock.loopback);
+>+		kfree(net->vsock.loopback);
+>+		net->vsock.loopback = NULL;
+>+	}
+>+}
+>+
+>+static void vsock_loopback_deinit_all(void)
+>+{
+>+	struct net *net;
+>+
+>+	down_read(&net_rwsem);
+>+	for_each_net(net)
+>+		vsock_loopback_exit_net(net);
+>+	up_read(&net_rwsem);
+>+}
+>+
+>+static struct pernet_operations vsock_loopback_net_ops = {
+>+	.init = vsock_loopback_init_net,
+>+	.exit = vsock_loopback_exit_net,
+>+};
+>+
+>+static int __init vsock_loopback_init(void)
+>+{
+>+	struct vsock_loopback *vsock = &the_vsock_loopback;
+>+	struct net *net;
+>+	int ret;
+>+
+>+	ret = vsock_loopback_init_vsock(vsock);
+>+	if (ret < 0)
+>+		return ret;
+>+
+>+	ret = register_pernet_subsys(&vsock_loopback_net_ops);
+>+	if (ret < 0)
+>+		goto out_deinit_vsock;
+>+
+>+	/* call callbacks on any net previously created */
+>+	down_read(&net_rwsem);
+
+This could be related to the trace I posted on top.
+
+Should we move the register_pernet_subsys() in the section protected by 
+`net_rwsem`?
+
+Because if a net is created just after this code returns from 
+`register_pernet_subsys()`, we are going to call 
+vsock_loopback_init_net() again here in this loop, no?
+
+
+>+	for_each_net(net) {
+>+		ret = vsock_loopback_init_net(net);
+>+		if (ret < 0)
+>+			break;
+>+	}
+>+	up_read(&net_rwsem);
+>+
+>+	/* undo any initializations that succeeded */
+
+useless comment.
+
+>+	if (ret < 0)
+>+		goto out_deinit_pernet_vsock;
+
+I'd move in the for block calling `up_read` before the goto, but not a 
+strong opinion.
+
+>
+> 	ret = vsock_core_register(&loopback_transport.transport,
+> 				  VSOCK_TRANSPORT_F_LOCAL);
+> 	if (ret)
+>-		goto out_wq;
+>+		goto out_deinit_pernet_vsock;
+>+
+>
+> 	return 0;
+>
+>-out_wq:
+>-	destroy_workqueue(vsock->workqueue);
+>+out_deinit_pernet_vsock:
+>+	vsock_loopback_deinit_all();
+>+	unregister_pernet_subsys(&vsock_loopback_net_ops);
+
+What happen if a net is created after vsock_loopback_deinit_all()?
+Should we do the opposite?
+Or the unregister_pernet_subsys() should be called in the `net_rwsem` 
+section?
+
+>+out_deinit_vsock:
+>+	vsock_loopback_deinit_vsock(vsock);
+> 	return ret;
+> }
+>
+>@@ -164,6 +244,8 @@ static void __exit vsock_loopback_exit(void)
+>
+> 	vsock_core_unregister(&loopback_transport.transport);
+>
+>+	vsock_loopback_deinit_all();
+>+
+
+Should we call also `unregister_pernet_subsys()` ?
+Or in some way is automatically called since we are exiting?
 
 Thanks,
 Stefano
 
+> 	flush_work(&vsock->pkt_work);
 >
->The current revision supports two modes: local and global. Local
->mode is complete isolation of namespaces, while global mode is complete
->sharing between namespaces of CIDs (the original behavior).
+> 	virtio_vsock_skb_queue_purge(&vsock->pkt_queue);
 >
->The mode is set using /proc/sys/net/vsock/ns_mode.
->
->Modes are per-netns and write-once. This allows a system to configure
->namespaces independently (some may share CIDs, others are completely
->isolated). This also supports future possible mixed use cases, where
->there may be namespaces in global mode spinning up VMs while there are
->mixed mode namespaces that provide services to the VMs, but are not
->allowed to allocate from the global CID pool (this mode not implemented
->in this series).
->
->If a socket or VM is created when a namespace is global but the
->namespace changes to local, the socket or VM will continue working
->normally. That is, the socket or VM assumes the mode behavior of the
->namespace at the time the socket/VM was created. The original mode is
->captured in vsock_create() and so occurs at the time of socket(2) and
->accept(2) for sockets and open(2) on /dev/vhost-vsock for VMs. This
->prevents a socket/VM connection from suddenly breaking due to a
->namespace mode change. Any new sockets/VMs created after the mode change
->will adopt the new mode's behavior.
->
->Additionally, added tests for the new namespace features:
->
->tools/testing/selftests/vsock/vmtest.sh
->1..22
->ok 1 vm_server_host_client
->ok 2 vm_client_host_server
->ok 3 vm_loopback
->ok 4 host_vsock_ns_mode_ok
->ok 5 host_vsock_ns_mode_write_once_ok
->ok 6 global_same_cid_fails
->ok 7 local_same_cid_ok
->ok 8 global_local_same_cid_ok
->ok 9 local_global_same_cid_ok
->ok 10 diff_ns_global_host_connect_to_global_vm_ok
->ok 11 diff_ns_global_host_connect_to_local_vm_fails
->ok 12 diff_ns_global_vm_connect_to_global_host_ok
->ok 13 diff_ns_global_vm_connect_to_local_host_fails
->ok 14 diff_ns_local_host_connect_to_local_vm_fails
->ok 15 diff_ns_local_vm_connect_to_local_host_fails
->ok 16 diff_ns_global_to_local_loopback_local_fails
->ok 17 diff_ns_local_to_global_loopback_fails
->ok 18 diff_ns_local_to_local_loopback_fails
->ok 19 diff_ns_global_to_global_loopback_ok
->ok 20 same_ns_local_loopback_ok
->ok 21 same_ns_local_host_connect_to_local_vm_ok
->ok 22 same_ns_local_vm_connect_to_local_host_ok
->SUMMARY: PASS=22 SKIP=0 FAIL=0
->Log: /tmp/vsock_vmtest_OQC4.log
->
->Thanks again for everyone's help and reviews!
->
->Signed-off-by: Bobby Eshleman <bobbyeshleman@gmail.com>
->To: Stefano Garzarella <sgarzare@redhat.com>
->To: Shuah Khan <shuah@kernel.org>
->To: David S. Miller <davem@davemloft.net>
->To: Eric Dumazet <edumazet@google.com>
->To: Jakub Kicinski <kuba@kernel.org>
->To: Paolo Abeni <pabeni@redhat.com>
->To: Simon Horman <horms@kernel.org>
->To: Stefan Hajnoczi <stefanha@redhat.com>
->To: Michael S. Tsirkin <mst@redhat.com>
->To: Jason Wang <jasowang@redhat.com>
->To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
->To: Eugenio Pérez <eperezma@redhat.com>
->To: K. Y. Srinivasan <kys@microsoft.com>
->To: Haiyang Zhang <haiyangz@microsoft.com>
->To: Wei Liu <wei.liu@kernel.org>
->To: Dexuan Cui <decui@microsoft.com>
->To: Bryan Tan <bryan-bt.tan@broadcom.com>
->To: Vishnu Dasa <vishnu.dasa@broadcom.com>
->To: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
->Cc: virtualization@lists.linux.dev
->Cc: netdev@vger.kernel.org
->Cc: linux-kselftest@vger.kernel.org
->Cc: linux-kernel@vger.kernel.org
->Cc: kvm@vger.kernel.org
->Cc: linux-hyperv@vger.kernel.org
->Cc: berrange@redhat.com
->
->Changes in v6:
->- define behavior when mode changes to local while socket/VM is alive
->- af_vsock: clarify description of CID behavior
->- af_vsock: use stronger langauge around CID rules (dont use "may")
->- af_vsock: improve naming of buf/buffer
->- af_vsock: improve string length checking on proc writes
->- vsock_loopback: add space in struct to clarify lock protection
->- vsock_loopback: do proper cleanup/unregister on vsock_loopback_exit()
->- vsock_loopback: use virtio_vsock_skb_net() instead of sock_net()
->- vsock_loopback: set loopback to NULL after kfree()
->- vsock_loopback: use pernet_operations and remove callback mechanism
->- vsock_loopback: add macros for "global" and "local"
->- vsock_loopback: fix length checking
->- vmtest.sh: check for namespace support in vmtest.sh
->- Link to v5: https://lore.kernel.org/r/20250827-vsock-vmtest-v5-0-0ba580bede5b@meta.com
->
->Changes in v5:
->- /proc/net/vsock_ns_mode -> /proc/sys/net/vsock/ns_mode
->- vsock_global_net -> vsock_global_dummy_net
->- fix netns lookup in vhost_vsock to respect pid namespaces
->- add callbacks for vsock_loopback to avoid circular dependency
->- vmtest.sh loads vsock_loopback module
->- remove vsock_net_mode_can_set()
->- change vsock_net_write_mode() to return true/false based on success
->- make vsock_net_mode enum instead of u8
->- Link to v4: https://lore.kernel.org/r/20250805-vsock-vmtest-v4-0-059ec51ab111@meta.com
->
->Changes in v4:
->- removed RFC tag
->- implemented loopback support
->- renamed new tests to better reflect behavior
->- completed suite of tests with permutations of ns modes and vsock_test
->  as guest/host
->- simplified socat bridging with unix socket instead of tcp + veth
->- only use vsock_test for success case, socat for failure case (context
->  in commit message)
->- lots of cleanup
->
->Changes in v3:
->- add notion of "modes"
->- add procfs /proc/net/vsock_ns_mode
->- local and global modes only
->- no /dev/vhost-vsock-netns
->- vmtest.sh already merged, so new patch just adds new tests for NS
->- Link to v2:
->  https://lore.kernel.org/kvm/20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com
->
->Changes in v2:
->- only support vhost-vsock namespaces
->- all g2h namespaces retain old behavior, only common API changes
->  impacted by vhost-vsock changes
->- add /dev/vhost-vsock-netns for "opt-in"
->- leave /dev/vhost-vsock to old behavior
->- removed netns module param
->- Link to v1:
->  https://lore.kernel.org/r/20200116172428.311437-1-sgarzare@redhat.com
->
->Changes in v1:
->- added 'netns' module param to vsock.ko to enable the
->  network namespace support (disabled by default)
->- added 'vsock_net_eq()' to check the "net" assigned to a socket
->  only when 'netns' support is enabled
->- Link to RFC: https://patchwork.ozlabs.org/cover/1202235/
->
->---
->Bobby Eshleman (9):
->      vsock: a per-net vsock NS mode state
->      vsock: add net to vsock skb cb
->      vsock: add netns to vsock core
->      vsock/loopback: add netns support
->      vsock/virtio: add netns to virtio transport common
->      vhost/vsock: add netns support
->      selftests/vsock: improve logging in vmtest.sh
->      selftests/vsock: invoke vsock_test through helpers
->      selftests/vsock: add namespace tests
->
-> MAINTAINERS                             |    1 +
-> drivers/vhost/vsock.c                   |   78 ++-
-> include/linux/virtio_vsock.h            |   24 +
-> include/net/af_vsock.h                  |   71 +-
-> include/net/net_namespace.h             |    4 +
-> include/net/netns/vsock.h               |   26 +
-> net/vmw_vsock/af_vsock.c                |  219 +++++-
-> net/vmw_vsock/hyperv_transport.c        |    2 +-
-> net/vmw_vsock/virtio_transport.c        |    6 +-
-> net/vmw_vsock/virtio_transport_common.c |   18 +-
-> net/vmw_vsock/vmci_transport.c          |    6 +-
-> net/vmw_vsock/vsock_loopback.c          |  102 ++-
-> tools/testing/selftests/vsock/vmtest.sh | 1133 +++++++++++++++++++++++++++----
-> 13 files changed, 1501 insertions(+), 189 deletions(-)
->---
->base-commit: 949ddfb774fe527cebfa3f769804344940f7ed2e
->change-id: 20250325-vsock-vmtest-b3a21d2102c2
->
->Best regards,
->-- 
->Bobby Eshleman <bobbyeshleman@meta.com>
->
+	destroy_workqueue(vsock->workqueue);
+
+What about replacing this with `vsock_loopback_deinit_vsock()` ?
+
+Just to follow what we do in `vsock_loopback_init`.
+
+Thanks,
+Stefano
 
 
