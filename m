@@ -1,43 +1,43 @@
-Return-Path: <linux-hyperv+bounces-6993-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-6992-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1FEDBA49A5
-	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Sep 2025 18:23:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E972CBA499F
+	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Sep 2025 18:23:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 13DC97BB096
-	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Sep 2025 16:21:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8FB9F3B90DE
+	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Sep 2025 16:23:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3378F262FC0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13E31261B7F;
 	Fri, 26 Sep 2025 16:23:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ofONJa5l"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rKuv+xwQ"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 901F1242D9A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90261258EE0;
 	Fri, 26 Sep 2025 16:23:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758903806; cv=none; b=WCTqSD3+w3hCjSuQOtLFPtkLlYsxRGOrTAjjwkjQMrQdBis4+CI/CpDs10YwjaZ/1wC8eXxOC5a1q0JkGHRvOGPIsZPz2kgXkRlWjs6skn5Tp6J32hi8TH3tt9pfd/mh7dTC4kmUiWWY6aA9NkO1svU5/4ChIJZH7aoi/Bd2tR4=
+	t=1758903806; cv=none; b=n0iDIuEZ1HesfKg6DAgjlyh7D2LXa+tY+5JM28yuuKkkoGCbC7xu+WmIAbhRbcsB1gDZC4WN3z2DNihJ3ThcODtK0R4LF1NeDs6EbC//Srq8LU/meAa9yo27aB3uuuprZnKAzecXD6E/4w34Z7Sxp5coYcEBkMfMamF6SNISQaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1758903806; c=relaxed/simple;
-	bh=or5HMkx4q0+qqf1D8OJk+Tcq74so2REwqX3cpc+EdQ0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=D6ct6lRYETK9d4BfT1UIz/rpuLGTAwADDuzg0PNR2tKCS7+goxnYu+8hK90wnCNNVH+2qDl5VkuAE/AKDElzwy85PdIVipB/6t3nUP49wgJ/ujRFrEWtllX89Lx00JaBQ4SVvWoQutLwuuM6Qwq8UsY3yx7t0UbByVojwjFvLoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ofONJa5l; arc=none smtp.client-ip=13.77.154.182
+	bh=FsDdKwCMqTABgOU+0KZfVkac48eymIJV4GoA81z0p+0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=K8Bb8FgxxQViNZfAXA6ZBJ+MTvAL3amOvp6pFOuPjIye7Vi4VOBlZ5I8poVo5qMSPQ1Q2ufEsjHjWk4j3/RzPqnTd4ZDq/2BllsxiziH8QyXo0Cvp/TwQ8/JLtbgnG3Vc/JOY6uy+NMuEN2nSfNFxGNVxKoGkNt4OYyaCDQXvkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rKuv+xwQ; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1032)
-	id 5B79C2124F6E; Fri, 26 Sep 2025 09:23:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5B79C2124F6E
+	id CA5C12124F6F; Fri, 26 Sep 2025 09:23:18 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CA5C12124F6F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1758903798;
-	bh=INxFKw2g84IfSr0fVT/YacqWKKnwrFP/fuSuADIQ4sA=;
+	bh=tWfyl8/jJ38C1AnsDNtGxPJggw4ujw1MyZ8mJDXpanU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ofONJa5lIwcDAWhw6Yaxe0lZMnbif49uj6hGwCU6kvpF/yJAWokJJJxSdCaWgJEuH
-	 swMf6RSA0WuUCG6laKIiuFOWaEC4IolmbRTuxpduUQ8mthPM8IJ0NMYCtBb/S1joVg
-	 Ht7nwrimFP2XTfFRCrCiRJpKbN7q+tMcE+3NuYyw=
+	b=rKuv+xwQSdDDosAcXNYnh0v2B6Nvhl1MiIC8Odl/F+JKzb95pbqDmqSs72K9fAt3+
+	 AILQHo1xcfHXxdWKw5aX3enDpqk05M9mtk0J9r5/mhA6sCaDkYbmrRyOXKBpFkggGZ
+	 3MZksK+YIJrE8N6qO1YG8vkPZcWbwzN2WnnCxms4=
 From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -52,9 +52,9 @@ Cc: kys@microsoft.com,
 	wei.liu@kernel.org,
 	decui@microsoft.com,
 	Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Subject: [PATCH v4 2/5] mshv: Add the HVCALL_GET_PARTITION_PROPERTY_EX hypercall
-Date: Fri, 26 Sep 2025 09:23:12 -0700
-Message-Id: <1758903795-18636-3-git-send-email-nunodasneves@linux.microsoft.com>
+Subject: [PATCH v4 3/5] mshv: Get the vmm capabilities offered by the hypervisor
+Date: Fri, 26 Sep 2025 09:23:13 -0700
+Message-Id: <1758903795-18636-4-git-send-email-nunodasneves@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1758903795-18636-1-git-send-email-nunodasneves@linux.microsoft.com>
 References: <1758903795-18636-1-git-send-email-nunodasneves@linux.microsoft.com>
@@ -66,182 +66,70 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 
 From: Purna Pavan Chandra Aekkaladevi <paekkaladevi@linux.microsoft.com>
 
-This hypercall can be used to fetch extended properties of a
-partition. Extended properties are properties with values larger than
-a u64. Some of these also need additional input arguments.
+Some hypervisor APIs are gated by feature bits in the
+"vmm capabilities" partition property. Store the capabilities on
+mshv_root module init, using HVCALL_GET_PARTITION_PROPERTY_EX.
 
-Add helper function for using the hypercall in the mshv_root driver.
+This is not supported on all hypervisors. In that case, just set the
+capabilities to 0 and proceed as normal.
 
 Signed-off-by: Purna Pavan Chandra Aekkaladevi <paekkaladevi@linux.microsoft.com>
 Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Reviewed-by: Anirudh Rayabharam <anirudh@anirudhrb.com>
 Reviewed-by: Praveen K Paladugu <prapal@linux.microsoft.com>
 Reviewed-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+Reviewed-by: Tianyu Lan <tiala@microsoft.com>
 ---
- drivers/hv/mshv_root.h         |  2 ++
- drivers/hv/mshv_root_hv_call.c | 31 ++++++++++++++++++++++++++
- include/hyperv/hvgdk_mini.h    |  1 +
- include/hyperv/hvhdk.h         | 40 ++++++++++++++++++++++++++++++++++
- include/hyperv/hvhdk_mini.h    | 26 ++++++++++++++++++++++
- 5 files changed, 100 insertions(+)
+ drivers/hv/mshv_root.h      |  1 +
+ drivers/hv/mshv_root_main.c | 17 +++++++++++++++++
+ 2 files changed, 18 insertions(+)
 
 diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
-index e3931b0f1269..4aeb03bea6b6 100644
+index 4aeb03bea6b6..0cb1e2589fe1 100644
 --- a/drivers/hv/mshv_root.h
 +++ b/drivers/hv/mshv_root.h
-@@ -303,6 +303,8 @@ int hv_call_unmap_stat_page(enum hv_stats_object_type type,
- int hv_call_modify_spa_host_access(u64 partition_id, struct page **pages,
- 				   u64 page_struct_count, u32 host_access,
- 				   u32 flags, u8 acquire);
-+int hv_call_get_partition_property_ex(u64 partition_id, u64 property_code, u64 arg,
-+				      void *property_value, size_t property_value_sz);
- 
- extern struct mshv_root mshv_root;
- extern enum hv_scheduler_type hv_scheduler_type;
-diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
-index c9c274f29c3c..3fd3cce23f69 100644
---- a/drivers/hv/mshv_root_hv_call.c
-+++ b/drivers/hv/mshv_root_hv_call.c
-@@ -590,6 +590,37 @@ int hv_call_unmap_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
- 	return hv_result_to_errno(status);
- }
- 
-+int hv_call_get_partition_property_ex(u64 partition_id, u64 property_code,
-+				      u64 arg, void *property_value,
-+				      size_t property_value_sz)
-+{
-+	u64 status;
-+	unsigned long flags;
-+	struct hv_input_get_partition_property_ex *input;
-+	struct hv_output_get_partition_property_ex *output;
-+
-+	local_irq_save(flags);
-+	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-+	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
-+
-+	memset(input, 0, sizeof(*input));
-+	input->partition_id = partition_id;
-+	input->property_code = property_code;
-+	input->arg = arg;
-+	status = hv_do_hypercall(HVCALL_GET_PARTITION_PROPERTY_EX, input, output);
-+
-+	if (!hv_result_success(status)) {
-+		hv_status_debug(status, "\n");
-+		local_irq_restore(flags);
-+		return hv_result_to_errno(status);
-+	}
-+	memcpy(property_value, &output->property_value, property_value_sz);
-+
-+	local_irq_restore(flags);
-+
-+	return 0;
-+}
-+
- int
- hv_call_clear_virtual_interrupt(u64 partition_id)
- {
-diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
-index 1be7f6a02304..ff4325fb623a 100644
---- a/include/hyperv/hvgdk_mini.h
-+++ b/include/hyperv/hvgdk_mini.h
-@@ -490,6 +490,7 @@ union hv_vp_assist_msr_contents {	 /* HV_REGISTER_VP_ASSIST_PAGE */
- #define HVCALL_GET_VP_STATE				0x00e3
- #define HVCALL_SET_VP_STATE				0x00e4
- #define HVCALL_GET_VP_CPUID_VALUES			0x00f4
-+#define HVCALL_GET_PARTITION_PROPERTY_EX		0x0101
- #define HVCALL_MMIO_READ				0x0106
- #define HVCALL_MMIO_WRITE				0x0107
- 
-diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
-index b4067ada02cf..416c0d45b793 100644
---- a/include/hyperv/hvhdk.h
-+++ b/include/hyperv/hvhdk.h
-@@ -376,6 +376,46 @@ struct hv_input_set_partition_property {
- 	u64 property_value;
- } __packed;
- 
-+union hv_partition_property_arg {
-+	u64 as_uint64;
-+	struct {
-+		union {
-+			u32 arg;
-+			u32 vp_index;
-+		};
-+		u16 reserved0;
-+		u8 reserved1;
-+		u8 object_type;
-+	} __packed;
-+};
-+
-+struct hv_input_get_partition_property_ex {
-+	u64 partition_id;
-+	u32 property_code; /* enum hv_partition_property_code */
-+	u32 padding;
-+	union {
-+		union hv_partition_property_arg arg_data;
-+		u64 arg;
-+	};
-+} __packed;
-+
-+/*
-+ * NOTE: Should use hv_input_set_partition_property_ex_header to compute this
-+ * size, but hv_input_get_partition_property_ex is identical so it suffices
-+ */
-+#define HV_PARTITION_PROPERTY_EX_MAX_VAR_SIZE \
-+	(HV_HYP_PAGE_SIZE - sizeof(struct hv_input_get_partition_property_ex))
-+
-+union hv_partition_property_ex {
-+	u8 buffer[HV_PARTITION_PROPERTY_EX_MAX_VAR_SIZE];
-+	struct hv_partition_property_vmm_capabilities vmm_capabilities;
-+	/* More fields to be filled in when needed */
-+};
-+
-+struct hv_output_get_partition_property_ex {
-+	union hv_partition_property_ex property_value;
-+} __packed;
-+
- enum hv_vp_state_page_type {
- 	HV_VP_STATE_PAGE_REGISTERS = 0,
- 	HV_VP_STATE_PAGE_INTERCEPT_MESSAGE = 1,
-diff --git a/include/hyperv/hvhdk_mini.h b/include/hyperv/hvhdk_mini.h
-index 858f6a3925b3..bf2ce27dfcc5 100644
---- a/include/hyperv/hvhdk_mini.h
-+++ b/include/hyperv/hvhdk_mini.h
-@@ -96,8 +96,34 @@ enum hv_partition_property_code {
- 	HV_PARTITION_PROPERTY_XSAVE_STATES                      = 0x00060007,
- 	HV_PARTITION_PROPERTY_MAX_XSAVE_DATA_SIZE		= 0x00060008,
- 	HV_PARTITION_PROPERTY_PROCESSOR_CLOCK_FREQUENCY		= 0x00060009,
-+
-+	/* Extended properties with larger property values */
-+	HV_PARTITION_PROPERTY_VMM_CAPABILITIES			= 0x00090007,
+@@ -178,6 +178,7 @@ struct mshv_root {
+ 	struct hv_synic_pages __percpu *synic_pages;
+ 	spinlock_t pt_ht_lock;
+ 	DECLARE_HASHTABLE(pt_htable, MSHV_PARTITIONS_HASH_BITS);
++	struct hv_partition_property_vmm_capabilities vmm_caps;
  };
  
-+#define HV_PARTITION_VMM_CAPABILITIES_BANK_COUNT		1
-+#define HV_PARTITION_VMM_CAPABILITIES_RESERVED_BITFIELD_COUNT	59
+ /*
+diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+index 24df47726363..e199770ecdfa 100644
+--- a/drivers/hv/mshv_root_main.c
++++ b/drivers/hv/mshv_root_main.c
+@@ -2201,6 +2201,21 @@ static int __init mshv_root_partition_init(struct device *dev)
+ 	return err;
+ }
+ 
++static void mshv_init_vmm_caps(struct device *dev)
++{
++	/*
++	 * HVCALL_GET_PARTITION_PROPERTY_EX or HV_PARTITION_PROPERTY_VMM_CAPABILITIES
++	 * may not be supported. Leave them as 0 in that case.
++	 */
++	if (hv_call_get_partition_property_ex(HV_PARTITION_ID_SELF,
++					      HV_PARTITION_PROPERTY_VMM_CAPABILITIES,
++					      0, &mshv_root.vmm_caps,
++					      sizeof(mshv_root.vmm_caps)))
++		dev_warn(dev, "Unable to get VMM capabilities\n");
 +
-+struct hv_partition_property_vmm_capabilities {
-+	u16 bank_count;
-+	u16 reserved[3];
-+	union {
-+		u64 as_uint64[HV_PARTITION_VMM_CAPABILITIES_BANK_COUNT];
-+		struct {
-+			u64 map_gpa_preserve_adjustable: 1;
-+			u64 vmm_can_provide_overlay_gpfn: 1;
-+			u64 vp_affinity_property: 1;
-+#if IS_ENABLED(CONFIG_ARM64)
-+			u64 vmm_can_provide_gic_overlay_locations: 1;
-+#else
-+			u64 reservedbit3: 1;
-+#endif
-+			u64 assignable_synthetic_proc_features: 1;
-+			u64 reserved0: HV_PARTITION_VMM_CAPABILITIES_RESERVED_BITFIELD_COUNT;
-+		} __packed;
-+	};
-+} __packed;
++	dev_dbg(dev, "vmm_caps=0x%llx\n", mshv_root.vmm_caps.as_uint64[0]);
++}
 +
- enum hv_snp_status {
- 	HV_SNP_STATUS_NONE = 0,
- 	HV_SNP_STATUS_AVAILABLE = 1,
+ static int __init mshv_parent_partition_init(void)
+ {
+ 	int ret;
+@@ -2253,6 +2268,8 @@ static int __init mshv_parent_partition_init(void)
+ 	if (ret)
+ 		goto remove_cpu_state;
+ 
++	mshv_init_vmm_caps(dev);
++
+ 	ret = mshv_irqfd_wq_init();
+ 	if (ret)
+ 		goto exit_partition;
 -- 
 2.34.1
 
