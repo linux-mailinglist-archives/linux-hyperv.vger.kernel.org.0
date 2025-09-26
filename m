@@ -1,57 +1,56 @@
-Return-Path: <linux-hyperv+bounces-7003-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7004-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0E6CBA54DE
-	for <lists+linux-hyperv@lfdr.de>; Sat, 27 Sep 2025 00:10:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD6DEBA5608
+	for <lists+linux-hyperv@lfdr.de>; Sat, 27 Sep 2025 01:12:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5F3491734BB
-	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Sep 2025 22:10:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7999B7403FD
+	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Sep 2025 23:12:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9866929AB05;
-	Fri, 26 Sep 2025 22:10:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CA7529D28F;
+	Fri, 26 Sep 2025 23:12:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="N1GdRCW4"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="a1AXYKEf"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F58026C3B6;
-	Fri, 26 Sep 2025 22:10:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E81A71C7013;
+	Fri, 26 Sep 2025 23:12:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758924645; cv=none; b=r4RF09sBbVBWp8K1zC8cO4VNO3gBleJDGTi3HofY5NYxJoKjABA3WzO+ooMS7Y3ZGkIYF7cAonBp6AwcrrXhQWO/GV6TQPEQL4bgJZPdEYtR/CqfFVCNEMDE9lrHZmpB5mlOzjiY4zpU+iseFt8v6QSyYQ7ERfvvgNn6nn7Ha74=
+	t=1758928368; cv=none; b=VRYIIfAN72r/eZK+p1i0+uMhJnwqDWLE3jKAyXrYvSU4U3L94HMWmJDjyvTqkYWBaUrzgQ2lMPv2u7rcx/XFixSoOzQ88uZrgN5HRgLrvsqxxFn/OSjQAFkecF1gVHuaN+VpO7fkYSgpvCpQdrpX8efYaQ+hXIFNLNacqtzSd24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758924645; c=relaxed/simple;
-	bh=3UVQ5H/bgILzhC94Y9eHH4EpZ9MZ2hY2Jtvlz5kPdjc=;
+	s=arc-20240116; t=1758928368; c=relaxed/simple;
+	bh=ExNeg5QFHgdickeS+V3ndkholgHo5Jo3HJErvHCx8jQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ow2JeQ+t767fGtxDU6xO7EQTwgkYgFPBpZyCi5tacUoMBRzJK2MGYURnGbz3hNjg8g3GkHPY7LLiu0DOAXxCeJoSYkj1QrbZaYQjlXRH2xKqKLH6zow7hRq2VOy/3yMHjToahSTvqI+yipXCr/3Vp1lDnlP10xmrEuOjUDOO+e4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=N1GdRCW4; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=KGHuDrUH3NCVsVNRqI8o8gO4iDdSu1iWO0VoDplRez9x+kdhS0ehkI45fsNEKEUNJ+mlW4ZtCY0sO0mhxY7HoR9qPn6nUJYycURaSp1/pkg3dyYRVBevsM6r2JJ6KpDxb09HP9yLArY/3bU5ug17Yl0omNK4Vo465ONq0eKpgI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=a1AXYKEf; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii.localdomain (unknown [20.236.11.102])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1FB6A2012C14;
-	Fri, 26 Sep 2025 15:10:42 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1FB6A2012C14
+	by linux.microsoft.com (Postfix) with ESMTPSA id 875D82012C15;
+	Fri, 26 Sep 2025 16:12:45 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 875D82012C15
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1758924642;
-	bh=p6xwXuS5jxknhCEzUXgLwDn3UogvPABGxyn+YRcWwrw=;
+	s=default; t=1758928365;
+	bh=vOluij9pxCgidrm60CpObZ4YYLDnXIHXbDQtIMufU7A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N1GdRCW4hSSn5yXTXeSPPBXmBWaNUyLx+Ka1sH99ybWBJv8sTQNRmfIECmFLe0Cof
-	 0wFH5X69D9LNuIbrc+EtU5eeFZ09SHl2V6OGBcDJbQlabbG7LMpMEvnCbcsUvQ3TxC
-	 OuLTr8FhOARD+rcAaUtekbRO4BPsyWXD0HAciHS0=
-Date: Fri, 26 Sep 2025 15:10:40 -0700
+	b=a1AXYKEf5Lhu7j3RFUxqxf+s0aF88Mtk+vT+DRNHSpRs91/lUsGbnvDmi17bK5ZNK
+	 PxNmnI9dbaT5x9eswGE4Vd4tEwBFpvIYnPoQtzroHmy6RBNZikJlv32AG0erazATKV
+	 rW24yzJkJm4Dp6v9KfbiIkXP8gQQszt2P0NiicS0=
+Date: Fri, 26 Sep 2025 16:12:43 -0700
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] Drivers: hv: Centralize guest memory region
- destruction in helper
-Message-ID: <aNcPYJzETLZHCNpW@skinsburskii.localdomain>
-References: <175874669044.157998.15064894246017794777.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <175874947750.157998.7004962396456082421.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <66893d19-654e-4ef7-9a9c-c33a5549dbea@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	prapal@linux.microsoft.com, easwar.hariharan@linux.microsoft.com,
+	tiala@microsoft.com, anirudh@anirudhrb.com,
+	paekkaladevi@linux.microsoft.com, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com
+Subject: Re: [PATCH v4 0/5] mshv: Fixes for stats and vp state page mappings
+Message-ID: <aNcd60fpoI1b6LUT@skinsburskii.localdomain>
+References: <1758903795-18636-1-git-send-email-nunodasneves@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -60,130 +59,83 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <66893d19-654e-4ef7-9a9c-c33a5549dbea@linux.microsoft.com>
+In-Reply-To: <1758903795-18636-1-git-send-email-nunodasneves@linux.microsoft.com>
 
-On Fri, Sep 26, 2025 at 11:15:54AM -0700, Nuno Das Neves wrote:
-> On 9/24/2025 2:31 PM, Stanislav Kinsburskii wrote:
-
-<snip>
-
-> > +	/*
-> > +	 * Unmap only the mapped pages to optimize performance,
-> > +	 * especially for large memory regions.
-> > +	 */
-> > +	for (page_offset = 0; page_offset < region->nr_pages; page_offset += page_count) {
-> > +		page_count = 1;
-> > +		if (!region->pages[page_offset])
-> > +			continue;
-> I mentioned it above, but can this even happen in the current code (i.e. without
-> moveable pages)?
+On Fri, Sep 26, 2025 at 09:23:10AM -0700, Nuno Das Neves wrote:
+> There are some differences in how L1VH partitions must map stats and vp
+> state pages, some of which are due to differences across hypervisor
+> versions. Detect and handle these cases.
 > 
 
-No.
+I'm not sure that support for older and actully broken versions on
+hypervisor need to be usptreamed, as these versions will go away sooner
+or later and this support will become dead weight.
 
-> Also, has the impact of this change been measured? I understand the logic behind
-> the change - there could be large unmapped sequences within the region so we might
-> be able to skip a lot of reps of the unmap hypercall, but the region could also be
-> very fragmented and this method might cause *more* reps in that case, right?
-> 
-
-I see your point. Indeed, we should optimize the number of pages to
-unmap by the maximum number allowed for the hypercall.
-I'll make this change, thanks.
-
-> Either way, this change belongs in a separate patch.
-
-Fair enough.
+I think we should upstrem only the changes needed for the new versiong
+of hypervisors instead and carry legacy support out of tree until it
+becomes obsoleted.
 
 Thanks,
 Stanislav
 
-> > +
-> > +		for (; page_count < region->nr_pages - page_offset; page_count++) {
-> > +			if (!region->pages[page_offset + page_count])
-> > +				break;
-> > +		}
-> > +
-> > +		/* ignore unmap failures and continue as process may be exiting */
-> > +		hv_call_unmap_gpa_pages(partition->pt_id,
-> > +					region->start_gfn + page_offset,
-> > +					page_count, unmap_flags);
-> > +	}
-> > +
-> > +	mshv_region_evict(region);
-> > +
-> > +	vfree(region);
-> > +}
-> > +
-> >  /* Called for unmapping both the guest ram and the mmio space */
-> >  static long
-> >  mshv_unmap_user_memory(struct mshv_partition *partition,
-> >  		       struct mshv_user_mem_region mem)
-> >  {
-> >  	struct mshv_mem_region *region;
-> > -	u32 unmap_flags = 0;
-> >  
-> >  	if (!(mem.flags & BIT(MSHV_SET_MEM_BIT_UNMAP)))
-> >  		return -EINVAL;
-> > @@ -1407,18 +1453,7 @@ mshv_unmap_user_memory(struct mshv_partition *partition,
-> >  	    region->nr_pages != HVPFN_DOWN(mem.size))
-> >  		return -EINVAL;
-> >  
-> > -	hlist_del(&region->hnode);
-> > -
-> > -	if (region->flags.large_pages)
-> > -		unmap_flags |= HV_UNMAP_GPA_LARGE_PAGE;
-> > -
-> > -	/* ignore unmap failures and continue as process may be exiting */
-> > -	hv_call_unmap_gpa_pages(partition->pt_id, region->start_gfn,
-> > -				region->nr_pages, unmap_flags);
-> > -
-> > -	mshv_region_evict(region);
-> > -
-> > -	vfree(region);
-> > +	mshv_partition_destroy_region(region);
-> >  	return 0;
-> >  }
-> >  
-> > @@ -1754,8 +1789,8 @@ static void destroy_partition(struct mshv_partition *partition)
-> >  {
-> >  	struct mshv_vp *vp;
-> >  	struct mshv_mem_region *region;
-> > -	int i, ret;
-> >  	struct hlist_node *n;
-> > +	int i;
-> >  
-> >  	if (refcount_read(&partition->pt_ref_count)) {
-> >  		pt_err(partition,
-> > @@ -1815,25 +1850,9 @@ static void destroy_partition(struct mshv_partition *partition)
-> >  
-> >  	remove_partition(partition);
-> >  
-> > -	/* Remove regions, regain access to the memory and unpin the pages */
-> >  	hlist_for_each_entry_safe(region, n, &partition->pt_mem_regions,
-> > -				  hnode) {
-> > -		hlist_del(&region->hnode);
-> > -
-> > -		if (mshv_partition_encrypted(partition)) {
-> > -			ret = mshv_partition_region_share(region);
-> > -			if (ret) {
-> > -				pt_err(partition,
-> > -				       "Failed to regain access to memory, unpinning user pages will fail and crash the host error: %d\n",
-> > -				      ret);
-> > -				return;
-> > -			}
-> > -		}
-> > -
-> > -		mshv_region_evict(region);
-> > -
-> > -		vfree(region);
-> > -	}
-> > +				  hnode)
-> > +		mshv_partition_destroy_region(region);
-> >  
-> >  	/* Withdraw and free all pages we deposited */
-> >  	hv_call_withdraw_memory(U64_MAX, NUMA_NO_NODE, partition->pt_id);
-> > 
-> > 
+
+> Patch 1:
+> Fix for the logic of when to map the vp stats page for the root scheduler.
 > 
+> Patch 2-3:
+> Add HVCALL_GET_PARTITION_PROPERTY_EX and use it to query "vmm capabilities" on
+> module init.
+> 
+> Patches 4-5:
+> Check a feature bit in vmm capabilities, to take a new code path for mapping
+> stats and vp state pages. In this case, the stats and vp state pages must be
+> allocated by Linux, and a new hypercall HVCALL_MAP_VP_STATS_PAGE2 must be used
+> to map the stats page.
+> 
+> ---
+> v4:
+> - Fixed some __packed attributes on unions [Stanislav]
+> - Cleaned up mshv_init_vmm_caps() [Stanislav]
+> - Cleaned up loop in hv_call_map_stats_page2() [Stanislav]
+> 
+> v3:
+> https://lore.kernel.org/linux-hyperv/1758066262-15477-1-git-send-email-nunodasneves@linux.microsoft.com/T/#t
+> - Fix bug in patch 4, in mshv_partition_ioctl_create_vp() cleanup path
+>   [kernel test robot]
+> - Make hv_unmap_vp_state_page() use struct page to match hv_map_vp_state_page()
+> - Remove SELF == PARENT check which doesn't belong in patch 5 [Easwar]
+> 
+> v2:
+> https://lore.kernel.org/linux-hyperv/1757546089-2002-1-git-send-email-nunodasneves@linux.microsoft.com/T/#t
+> - Remove patch falling back to SELF page if PARENT mapping fails [Easwar]
+>   (To be included in a future series)
+> - Fix formatting of function definitions [Easwar]
+>   - Fix some wording in commit messages [Praveen]
+>     - Proceed with driver init even if getting vmm capabilities fails [Anirudh]
+> 
+> v1:
+> https://lore.kernel.org/linux-hyperv/1756428230-3599-1-git-send-email-nunodasneves@linux.microsoft.com/T/#t
+> 
+> ---
+> Jinank Jain (2):
+>   mshv: Allocate vp state page for HVCALL_MAP_VP_STATE_PAGE on L1VH
+>   mshv: Introduce new hypercall to map stats page for L1VH partitions
+> 
+> Nuno Das Neves (1):
+>   mshv: Only map vp->vp_stats_pages if on root scheduler
+> 
+> Purna Pavan Chandra Aekkaladevi (2):
+>   mshv: Add the HVCALL_GET_PARTITION_PROPERTY_EX hypercall
+>   mshv: Get the vmm capabilities offered by the hypervisor
+> 
+>  drivers/hv/mshv_root.h         |  24 +++--
+>  drivers/hv/mshv_root_hv_call.c | 185 +++++++++++++++++++++++++++++++--
+>  drivers/hv/mshv_root_main.c    | 127 ++++++++++++----------
+>  include/hyperv/hvgdk_mini.h    |   2 +
+>  include/hyperv/hvhdk.h         |  40 +++++++
+>  include/hyperv/hvhdk_mini.h    |  33 ++++++
+>  6 files changed, 337 insertions(+), 74 deletions(-)
+> 
+> -- 
+> 2.34.1
 
