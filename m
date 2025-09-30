@@ -1,164 +1,144 @@
-Return-Path: <linux-hyperv+bounces-7016-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7017-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4271BAA45F
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Sep 2025 20:20:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2BD3BAB07E
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Sep 2025 04:37:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A681E1C35BC
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Sep 2025 18:20:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9D1661C6276
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Sep 2025 02:37:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69E1222A7E9;
-	Mon, 29 Sep 2025 18:19:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EEDF204F99;
+	Tue, 30 Sep 2025 02:37:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FwGnsfQs"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="blA5Hi0I"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D721915855E;
-	Mon, 29 Sep 2025 18:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14431922FD;
+	Tue, 30 Sep 2025 02:37:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759169996; cv=none; b=EXamF5oam1utpvkvV+T5Jt8hORnqL8yAySTxNgu/lAl6ZwvK0OVMYUjC3TWg3mRfKN4qmV20rlWXSaSrEqs/12k+PB+R0ViK61Gtne72yG0rpRzB/mwHb1HOJ9ok79Kr2tCQqqKcyjtECk/bJBTyuKvyU9ZHSICn+c/wxN2qKgg=
+	t=1759199860; cv=none; b=Fx7lxvJw+KSXMhlQK4V6fk8dII1azfS3gOJbdCAsJA/pXE9QxZNf0T7Sat7NmA6kJTYjk4ZSndX9Xk5c+iDkh9K/hZ+kfh5vDW8B8gxUDVRDZk3zo2+mT2cGjRMmm+NHNygBJWuXKoQL+dVFEw1ibsFOnNNzaJLT3Tg9hqswoMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759169996; c=relaxed/simple;
-	bh=ttpDsbGS5ksIxZymbfUiVHuHK55OkNnafxAHPDpRKDk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=klMP3qS8RzQWeqOGkSDLckrEMsTAgsrL9kmGb5Y71Jb0cRTAsBTQ1rXR5WrbphLLXBwni53VVccK5O8eENLlnKS+JNsPqBm62s6eOO2Ri8rozH9WCVQQswYDP7Yqsx6GAbzOMldLB7S+PqMtJpJkFib2GYB7sMMdNRVfoRpGxoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=FwGnsfQs; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [IPV6:2607:fb91:1ec7:cd1:303d:40a1:4bbf:f2ba] (unknown [172.56.203.16])
-	by linux.microsoft.com (Postfix) with ESMTPSA id B365F2127311;
-	Mon, 29 Sep 2025 11:19:52 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B365F2127311
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1759169993;
-	bh=RC48fRHVCDacHh0fR1OhbOmQc9zmlSZh/DErJhB+dzg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FwGnsfQsvVzzvopwRSvDdZC22h8L3688myXxLGCx107VPulGLJlsfqq/XQaNTeClA
-	 UROotnX08FAzr6XffSkHfBs0YkU0vbzYxQvdOQPD4Gus9pwVcGu55MuL/UOxsBIT6t
-	 prNWl4krzgrIIegntxfngPKJH0Hd0wi1+HTqriEw=
-Message-ID: <96009fb8-0ad6-4e5b-8656-af78874a5605@linux.microsoft.com>
-Date: Mon, 29 Sep 2025 11:19:51 -0700
+	s=arc-20240116; t=1759199860; c=relaxed/simple;
+	bh=PF7/ahiKlaPtO5VmXKx0j9xBl4IKiUdw2yWy84MCxuI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nB3NHbOXDa5OUEmwlYrArpIyqsPJ4lm/7gyG+dya+ZCyDytEyYfsyq/FUcGHnElPZOWXzavANarPi+gfpZeFAM5ecJJrymqPrr+EDSqKyVbWh3mB/HKKV9ltqvxh000Xd0x0ptY/dnzhAzq5/74IVM6FjrWmsej56iAoFH3ZPlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=blA5Hi0I; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58U2PF88003362;
+	Tue, 30 Sep 2025 02:37:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=8WJEenrLjrpgIxp3I+vSM3MZEzLNxxBKZJoSGfcW0Qc=; b=
+	blA5Hi0ItOw9oL7er/WIKT4MGuSw3IYkYy2QmOtf+KFJvJt3FoZAgzj3wJTLkfvd
+	wayyBuMB+QdGHt1s7BHdmJGsQoQ4aru3U3pZ9Ao1wxz45n23WEl9iDeFIWuNB223
+	+bOtMvpCfz3cQ+lM0w9U0MIgkwVKdSWrlv9W1T9QTeaIZ1NWmYURbA1Rsa9qEYUa
+	Sd2Mbt8W5aFmiwNLONk5KJ9fuFL1XMeHi4lU76QdCODHbCBJbSAIH3ZDdoeRCXvp
+	zHTaRW6pWh+ft8ClFI6ueKIur1eLaQfYIIV6Y5fx0vaIvIFdJAcKhbWcNWmXIWSo
+	giEd1pk+zahWl4v/h7UXnQ==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 49g6d1g0ht-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 30 Sep 2025 02:37:03 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 58U0Nxed007709;
+	Tue, 30 Sep 2025 02:37:02 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 49e6c86ew2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 30 Sep 2025 02:37:02 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 58U2awVD004400;
+	Tue, 30 Sep 2025 02:37:01 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 49e6c86eur-3;
+	Tue, 30 Sep 2025 02:37:01 +0000
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+To: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        Chandrakanth patil <chandrakanth.patil@broadcom.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Khalid Aziz <khalid@gonehiking.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Easwar Hariharan <easwar.hariharan@linux.microsoft.com>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Prateek Singh Rathore <prateek.singh.rathore@gmail.com>,
+        Geoff Levand <geoff@infradead.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Fourier <fourier.thomas@gmail.com>, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, megaraidlinux.pdl@broadcom.com,
+        linux-hyperv@vger.kernel.org, Liao Yuanhong <liaoyuanhong@vivo.com>
+Cc: "Martin K . Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH 0/6] scsi: Remove redundant ternary operators
+Date: Mon, 29 Sep 2025 22:36:49 -0400
+Message-ID: <175917739968.3755404.663662648964334597.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20250902132359.83059-1-liaoyuanhong@vivo.com>
+References: <20250902132359.83059-1-liaoyuanhong@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/5] mshv: Fixes for stats and vp state page mappings
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- prapal@linux.microsoft.com, easwar.hariharan@linux.microsoft.com,
- tiala@microsoft.com, anirudh@anirudhrb.com,
- paekkaladevi@linux.microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org, decui@microsoft.com
-References: <1758903795-18636-1-git-send-email-nunodasneves@linux.microsoft.com>
- <aNcd60fpoI1b6LUT@skinsburskii.localdomain>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <aNcd60fpoI1b6LUT@skinsburskii.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-29_08,2025-09-29_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0
+ mlxlogscore=945 mlxscore=0 phishscore=0 bulkscore=0 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2509150000 definitions=main-2509300021
+X-Proofpoint-GUID: sSjL5A1MzCFdAC5aqC5Re2Xc406P5tVF
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTMwMDAxOSBTYWx0ZWRfX+k3Pm42FEVT1
+ xtrIt/5fFfjsw26kwENeeXUk3vBfhabbNWEti0TrzjC87tNbRiI0fGCZE3XjOJYZ6VhQoH5vYLJ
+ /1wtmhzqypdk4YT+yB+P0gJRZw2m1hZ1C9cz1MBtDEfw6YJasxVQlHp9YJjHwNg+ydGYvfocd9h
+ w7q9mVmmXD7DnnntIMXbM9qy2PQfIWO/9u8EL09qWJ9tIkedXYlD66HY/twsZDWyJqUjA9l+ajw
+ V7oVeUG8b4z2NMV/ZsqjrAXAc4DLyFj/jtmkHb7yyhgpGAJ89k03FZ/GtEZH3FnE6CmMJ3EBoZK
+ UlKmfdvMHvduqeM3V1K+fOWUcZSLB08nnDtTtQkaQowd746WvA8pe3W+qwIUjPDg5+Vtt0EJ3eF
+ oCyITCD5pgNnWyj/WbDBYBQ0zbsbQA==
+X-Proofpoint-ORIG-GUID: sSjL5A1MzCFdAC5aqC5Re2Xc406P5tVF
+X-Authority-Analysis: v=2.4 cv=ZOnaWH7b c=1 sm=1 tr=0 ts=68db424f b=1 cx=c_pps
+ a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VwQbUJbxAAAA:8 a=TLlWb1-QvcHgbv-9-S0A:9
+ a=QEXdDO2ut3YA:10
 
-On 9/26/2025 4:12 PM, Stanislav Kinsburskii wrote:
-> On Fri, Sep 26, 2025 at 09:23:10AM -0700, Nuno Das Neves wrote:
->> There are some differences in how L1VH partitions must map stats and vp
->> state pages, some of which are due to differences across hypervisor
->> versions. Detect and handle these cases.
->>
+On Tue, 02 Sep 2025 21:23:40 +0800, Liao Yuanhong wrote:
+
+> For ternary operators in the form of "a ? true : false" or
+> "a ? false : true", if 'a' itself returns a boolean result, the ternary
+> operator can be omitted. Remove redundant ternary operators to clean up the
+> code.
 > 
-> I'm not sure that support for older and actully broken versions on
-> hypervisor need to be usptreamed, as these versions will go away sooner
-> or later and this support will become dead weight.
+> Liao Yuanhong (6):
+>   scsi: arcmsr: Remove redundant ternary operators
+>   scsi: csiostor: Remove redundant ternary operators
+>   scsi: isci: Remove redundant ternary operators
+>   scsi: megaraid_sas: Remove redundant ternary operators
+>   scsi: scsi_transport_fc: Remove redundant ternary operators
+>   scsi: storvsc: Remove redundant ternary operators
 > 
-As far as I know, these changes are relevant for shipped versions of the
-hypervisor - they are not 'broken' except in some very specific cases
-(live migration on L1VH, I think?)
+> [...]
 
-The hypervisor team added a feature bit for these changes so that both old
-and new versions of these APIs can be supported.
+Applied to 6.18/scsi-queue, thanks!
 
-> I think we should upstrem only the changes needed for the new versiong
-> of hypervisors instead and carry legacy support out of tree until it
-> becomes obsoleted.
-> 
-Which version do you suggest to be the cutoff?
+[6/6] scsi: storvsc: Remove redundant ternary operators
+      https://git.kernel.org/mkp/scsi/c/15968590f07c
 
-I'd prefer to support as many versions of the hypervisor as we can, as
-long as they are at all relevant. We can remove the support later.
-Removing prematurely just creates friction. Inevitably some users will
-find themselves running on an older hypervisor and then it just fails
-with a cryptic error. This includes myself, since I test L1VH on Azure
-which typically has older hypervisor versions.
-
-Nuno
-
-> Thanks,
-> Stanislav
-> 
-> 
->> Patch 1:
->> Fix for the logic of when to map the vp stats page for the root scheduler.
->>
->> Patch 2-3:
->> Add HVCALL_GET_PARTITION_PROPERTY_EX and use it to query "vmm capabilities" on
->> module init.
->>
->> Patches 4-5:
->> Check a feature bit in vmm capabilities, to take a new code path for mapping
->> stats and vp state pages. In this case, the stats and vp state pages must be
->> allocated by Linux, and a new hypercall HVCALL_MAP_VP_STATS_PAGE2 must be used
->> to map the stats page.
->>
->> ---
->> v4:
->> - Fixed some __packed attributes on unions [Stanislav]
->> - Cleaned up mshv_init_vmm_caps() [Stanislav]
->> - Cleaned up loop in hv_call_map_stats_page2() [Stanislav]
->>
->> v3:
->> https://lore.kernel.org/linux-hyperv/1758066262-15477-1-git-send-email-nunodasneves@linux.microsoft.com/T/#t
->> - Fix bug in patch 4, in mshv_partition_ioctl_create_vp() cleanup path
->>   [kernel test robot]
->> - Make hv_unmap_vp_state_page() use struct page to match hv_map_vp_state_page()
->> - Remove SELF == PARENT check which doesn't belong in patch 5 [Easwar]
->>
->> v2:
->> https://lore.kernel.org/linux-hyperv/1757546089-2002-1-git-send-email-nunodasneves@linux.microsoft.com/T/#t
->> - Remove patch falling back to SELF page if PARENT mapping fails [Easwar]
->>   (To be included in a future series)
->> - Fix formatting of function definitions [Easwar]
->>   - Fix some wording in commit messages [Praveen]
->>     - Proceed with driver init even if getting vmm capabilities fails [Anirudh]
->>
->> v1:
->> https://lore.kernel.org/linux-hyperv/1756428230-3599-1-git-send-email-nunodasneves@linux.microsoft.com/T/#t
->>
->> ---
->> Jinank Jain (2):
->>   mshv: Allocate vp state page for HVCALL_MAP_VP_STATE_PAGE on L1VH
->>   mshv: Introduce new hypercall to map stats page for L1VH partitions
->>
->> Nuno Das Neves (1):
->>   mshv: Only map vp->vp_stats_pages if on root scheduler
->>
->> Purna Pavan Chandra Aekkaladevi (2):
->>   mshv: Add the HVCALL_GET_PARTITION_PROPERTY_EX hypercall
->>   mshv: Get the vmm capabilities offered by the hypervisor
->>
->>  drivers/hv/mshv_root.h         |  24 +++--
->>  drivers/hv/mshv_root_hv_call.c | 185 +++++++++++++++++++++++++++++++--
->>  drivers/hv/mshv_root_main.c    | 127 ++++++++++++----------
->>  include/hyperv/hvgdk_mini.h    |   2 +
->>  include/hyperv/hvhdk.h         |  40 +++++++
->>  include/hyperv/hvhdk_mini.h    |  33 ++++++
->>  6 files changed, 337 insertions(+), 74 deletions(-)
->>
->> -- 
->> 2.34.1
-
+-- 
+Martin K. Petersen
 
