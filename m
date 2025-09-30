@@ -1,58 +1,60 @@
-Return-Path: <linux-hyperv+bounces-7031-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7032-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B4C8BAEBA0
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Oct 2025 01:05:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E657BAEBD0
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Oct 2025 01:14:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 616CC7A61DD
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Sep 2025 23:03:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A87381941BA9
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Sep 2025 23:15:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DFC5243968;
-	Tue, 30 Sep 2025 23:05:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FED32BDC34;
+	Tue, 30 Sep 2025 23:14:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDWkJifP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jue5ZoOT"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F50433B3;
-	Tue, 30 Sep 2025 23:05:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E2B1BDCF;
+	Tue, 30 Sep 2025 23:14:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759273536; cv=none; b=LqP6Zu1Vh2wSGAoMmh+vgrFxxxRV8Tq7ZITjUATDsJD7A8+brwdqzYNz5hnM/TvxGdlnYN3EKbKc3FBtAtZ6lCNJZqGBJIia8yGrcHT307UA3A0LYIkm57dcFZzIVOQo61pdfUbCErU8ysESRNd+D6KROHk2Ga51EbnGSPM5xUw=
+	t=1759274089; cv=none; b=HDsE+kPuJRDhwuDWqIvDF4kbMZHocAanKXI+Ax1iy7cOMecqEMGjRTdB9aquhEmKr5EKW9r5BchQhtNLLcVWAFN1ayUCv33p868luRmWx/xALLj5fzeUqiC2Ugdi/btZsuJm0mo9Tq+H/bazqNYVGPdY+/jUPgxTn7CB2F58atM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759273536; c=relaxed/simple;
-	bh=9F3UlcQn2tMNvTLRxebq+6nMCQOvDBR6s/sw3oxC5KQ=;
+	s=arc-20240116; t=1759274089; c=relaxed/simple;
+	bh=x/5Suh6ta4XqztcOCKv8Meis7VdCs7lMsTyyNIl940E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k1r2SSzpi4IZsDHKjaTDriOKIoN0Kn926A8h5kGsNc3VICBCd6yV+/EdyZKvINCrVT1dF1P3Kst2k0WKMy+U+qJr7He1I1y+Kw00QK+1vsv8Tz9Tgo+OQ3DoMd1vPLTKrxYYxD/xSNTLZsfD+RmH5ggRkATJ1Ej80N8NEksWKhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDWkJifP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C7C8C4CEF0;
-	Tue, 30 Sep 2025 23:05:35 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=X6UtHltNMUMHN+YTxEhrTeY4s/Chs7ePjUhlK+VhV0YO6FCPhXU6CBg2nZXYL+yXQBE5j+FrJJn0c/PGOGbzs7lpa6UsXDuTEg/EOO/BLcXZu8h93aepQ9waDNrwKmDFdU/cRNr4f2idfxaScwEPI/rQJEdjMHv3c9O55zh7M9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jue5ZoOT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C83AC4CEF0;
+	Tue, 30 Sep 2025 23:14:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759273535;
-	bh=9F3UlcQn2tMNvTLRxebq+6nMCQOvDBR6s/sw3oxC5KQ=;
+	s=k20201202; t=1759274088;
+	bh=x/5Suh6ta4XqztcOCKv8Meis7VdCs7lMsTyyNIl940E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qDWkJifPt/hsw6VFR1GqDPfycT+Ye1fO99DAj+oUKV1HsZoQjQWiTFj+NbwEImQbq
-	 7Eek2BvA7ASDlNDSgedJ8uxAJcaxlA/g1pHBBtrZPb87GfSOHu7keR/ODapAbLgK5H
-	 Nx09vkBkCoBPtSFJ5OreYdSR9LFQViYQMl3VCqmgERHIevzcxR0DZtyekNuZFhGhO9
-	 7ZEGcKtZsUwtxuLpSqERrT4Xm+rL7x//sjD9/s80BLhKn3QaCWhBbt414e14NEaWnm
-	 bEMPWTBxIqYYB3cUw/7qXxDTkb78a+bH4bGYGMxVae1zzBt03wP0p4yVabCyOObRu5
-	 rr4zxQLzYwrfA==
-Date: Tue, 30 Sep 2025 23:05:34 +0000
+	b=Jue5ZoOTk9fFauOFMTDhisM87Tz+wpahGA1iuAgwFkpKfKwg4ETac49FmdTp/zV18
+	 WoFpDXpTh+AhzXGLPenhaM/KvUY0rQfgbbAwI29m7QKBsVxcsCxUMEVSCIiWaxq0aw
+	 x+kS59Ha4B4tPodOLMayGU76pEOmlYa1t+xGUg0ufLEx8Op7IUkrPIpeFrTQeijHmm
+	 f4a7eDuLiGe5AzzBSyeMh0pUDsC23qNsHgWmFlrMl+p7Xy4ORF9ps1/yWk8BkdLLSf
+	 J+OyYpA++4DviXt7TKOlJF6wDOcV9EFlvwbB6yUK44Zp8h2seDBGO2FSRtbRwGfgDF
+	 qib+JyUc+Yk1Q==
+Date: Tue, 30 Sep 2025 23:14:46 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Tianyu Lan <ltykernel@gmail.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, arnd@arndb.de, Neeraj.Upadhyay@amd.com,
-	tiala@microsoft.com, kvijayab@amd.com, romank@linux.microsoft.com,
-	linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH 0/5] x86/Hyper-V: Add AMD Secure AVIC for Hyper-V platform
-Message-ID: <aNxiPhrbquYg3PGq@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-References: <20250918150023.474021-1-tiala@microsoft.com>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	prapal@linux.microsoft.com, easwar.hariharan@linux.microsoft.com,
+	tiala@microsoft.com, anirudh@anirudhrb.com,
+	paekkaladevi@linux.microsoft.com, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com
+Subject: Re: [PATCH v4 0/5] mshv: Fixes for stats and vp state page mappings
+Message-ID: <aNxkZtyxuYQ0Gjw7@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+References: <1758903795-18636-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <aNcd60fpoI1b6LUT@skinsburskii.localdomain>
+ <96009fb8-0ad6-4e5b-8656-af78874a5605@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -61,62 +63,53 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250918150023.474021-1-tiala@microsoft.com>
+In-Reply-To: <96009fb8-0ad6-4e5b-8656-af78874a5605@linux.microsoft.com>
 
-On Thu, Sep 18, 2025 at 11:00:18AM -0400, Tianyu Lan wrote:
-> Secure AVIC is a new hardware feature in the AMD64
-> architecture to allow SEV-SNP guests to prevent the
-> hypervisor from generating unexpected interrupts to
-> a vCPU or otherwise violate architectural assumptions
-> around APIC behavior.
+On Mon, Sep 29, 2025 at 11:19:51AM -0700, Nuno Das Neves wrote:
+> On 9/26/2025 4:12 PM, Stanislav Kinsburskii wrote:
+> > On Fri, Sep 26, 2025 at 09:23:10AM -0700, Nuno Das Neves wrote:
+> >> There are some differences in how L1VH partitions must map stats and vp
+> >> state pages, some of which are due to differences across hypervisor
+> >> versions. Detect and handle these cases.
+> >>
+> > 
+> > I'm not sure that support for older and actully broken versions on
+> > hypervisor need to be usptreamed, as these versions will go away sooner
+> > or later and this support will become dead weight.
+> > 
+> As far as I know, these changes are relevant for shipped versions of the
+> hypervisor - they are not 'broken' except in some very specific cases
+> (live migration on L1VH, I think?)
 > 
-> Each vCPU has a guest-allocated APIC backing page of
-> size 4K, which maintains APIC state for that vCPU.
-> APIC backing page's ALLOWED_IRR field indicates the
-> interrupt vectors which the guest allows the hypervisor
-> to send.
+
+Right, they are not broken, just have more limitations.
+
+> The hypervisor team added a feature bit for these changes so that both old
+> and new versions of these APIs can be supported.
 > 
-> This patchset is to enable the feature for Hyper-V
-> platform. Patch "Drivers: hv: Allow vmbus message
-> synic interrupt injected from Hyper-V" is to expose
-> new fucntion hv_enable_coco_interrupt() and device
-> driver and arch code may update AVIC backing page
-> ALLOWED_IRR field to allow Hyper-V inject associated
-> vector.
+> > I think we should upstrem only the changes needed for the new versiong
+> > of hypervisors instead and carry legacy support out of tree until it
+> > becomes obsoleted.
+> > 
+> Which version do you suggest to be the cutoff?
 > 
-> The patchset is based on the tip tree commit 27a17e02418e
-> (x86/sev: Indicate the SEV-SNP guest supports Secure AVIC)
-> 
-> Tianyu Lan (5):
->   x86/hyperv: Don't use hv apic driver when Secure AVIC is available
->   drivers: hv: Allow vmbus message synic interrupt injected from Hyper-V
->   x86/hyperv: Don't use auto-eoi when Secure AVIC is available
->   x86/hyperv: Allow Hyper-V to inject STIMER0 interrupts
+> I'd prefer to support as many versions of the hypervisor as we can, as
+> long as they are at all relevant. We can remove the support later.
+> Removing prematurely just creates friction. Inevitably some users will
+> find themselves running on an older hypervisor and then it just fails
+> with a cryptic error. This includes myself, since I test L1VH on Azure
+> which typically has older hypervisor versions.
 
-These look good to me.
+This. It takes a long time to saturate the fleet with a new hypervisor.
+Realistically I am looking at 2+ years before we can drop the
+compatibility code, if ever.
 
->   x86/Hyper-V: Add Hyper-V specific hvcall to set backing page
+Another reason to upstream the compatibility code is because partners
+will want to pick up our code, so hiding this code from them makes both
+our and their life harder.
 
-Please address Borislav's comment on this patch.
-
-Thanks,
 Wei
 
 > 
->  arch/x86/hyperv/hv_apic.c           |  8 ++++++
->  arch/x86/hyperv/hv_init.c           | 31 ++++++++++++++++++++++-
->  arch/x86/hyperv/ivm.c               | 38 ++++++++++++++++++++++++++++
->  arch/x86/include/asm/mshyperv.h     |  2 ++
->  arch/x86/kernel/apic/x2apic_savic.c |  9 ++++++-
->  arch/x86/kernel/cpu/mshyperv.c      |  3 +++
->  drivers/hv/hv.c                     |  2 ++
->  drivers/hv/hv_common.c              |  5 ++++
->  include/asm-generic/mshyperv.h      |  1 +
->  include/hyperv/hvgdk_mini.h         | 39 +++++++++++++++++++++++++++++
->  10 files changed, 136 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 2.25.1
-> 
-> 
+> Nuno
 
