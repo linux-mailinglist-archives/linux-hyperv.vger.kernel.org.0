@@ -1,69 +1,76 @@
-Return-Path: <linux-hyperv+bounces-7027-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7028-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1AC2BAE98A
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Sep 2025 23:08:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C6874BAEA31
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Sep 2025 23:59:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55DA13AE2B8
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Sep 2025 21:08:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 72BF84A4389
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Sep 2025 21:59:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9867528B407;
-	Tue, 30 Sep 2025 21:08:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 223D1287516;
+	Tue, 30 Sep 2025 21:59:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kWb6Ppzu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M9zRW5f1"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0CD1F03F3;
-	Tue, 30 Sep 2025 21:08:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56E9283FCB;
+	Tue, 30 Sep 2025 21:59:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759266511; cv=none; b=aksCZ5j90rtFPrWzEig+p4ecCOKotixmOhB4mYOM358RQjt3BVkpoPUOR5jnSI7cglXWzIwcoS12ai9NxMSQ9sOqq00HD7h4piEEw4E14K6XcYsaScDI6YgApMB2MwBhBEdZJ/SbQPX6HMFL2k/mW0DLd1r7GK0bceCdM4SjVnA=
+	t=1759269570; cv=none; b=bkx1nCXdxyZ9Qnoo30mlLfYHh9wfvUm+BBK/Uth/suZUDkrk/iRwmffuGSl95H+0OGr7gRA1cj4RoOXM8ye2eODCvKeWMzDmCFh4g9fCphA+ld5M2dskJXFgUcOud/8xGTTl8qQ/z4SCGlOicoKYz9yeWc4Tag8QFMFDdCblaMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759266511; c=relaxed/simple;
-	bh=ZAL0HOzeNQKMFeOr3SOV5m0bdPDZddnTRwkZby2vpGQ=;
+	s=arc-20240116; t=1759269570; c=relaxed/simple;
+	bh=BVnmmKLHLEcnQVn984iBuQrv+XBJSYDym/oSwUyQgx4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lUYvPH+4JBTGmVY8kMYOzIJ4cJ4vduLHLlgi/WlNa6i7ro+CI5zVr8YYtKBsDLvyqRY5YMzdeqHMqK6ANAShWVD2e2THGl/lhBF04DAzS0ioeiST3tvLaBurXTWa3+FFAEvQRmJp57J5kv8SnoCFmqfcc5/9cuXWhAJYuz23FRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kWb6Ppzu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED5F9C4CEF0;
-	Tue, 30 Sep 2025 21:08:30 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=oU3NQU1Mw0L3HTRgXEstXl88ep5REeoZMQpabUZDnFXjRlQK63JFCJUARINFSZkaB60kHa6QYzcbIShRfJOSC0EnbS7QVXaCv6CEIzmOAo3/otu1ALXa6AhEt82WcrwatVxfg+He1SlwK7G5wjoz1us7HuIaOooKcfQo6cm1N5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M9zRW5f1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65C22C4CEF0;
+	Tue, 30 Sep 2025 21:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759266511;
-	bh=ZAL0HOzeNQKMFeOr3SOV5m0bdPDZddnTRwkZby2vpGQ=;
+	s=k20201202; t=1759269569;
+	bh=BVnmmKLHLEcnQVn984iBuQrv+XBJSYDym/oSwUyQgx4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kWb6Ppzu/o7rRrFRnH7qkJCRdOxle7mlQ79B74bB7L2F7zdyq4RYMk+npBtRASDSF
-	 GYJRvDm2an67MQ7vreDFwMoIX7F2TUcyzu/MeLQ/EIP7leyea6Q+V4IPFARLCRBFZ9
-	 OYl3hPRX2OHvGwaWjHUKO3hc7yZQTW3H7eH5rsUMib9mNhla5Nqx2zp+f5vXroSlN0
-	 32upOUpx0sOJtfc6lUaqIWYoUqX+orbS9DnCE3IpGH9Hnb8Z037mM0nO/Z8l0NfLEw
-	 58WNGIa5ycIRxhUoZrWNFG7rTYE3HmKkjetrJ7poubDfJJwAU3FprsGZ+N4wXbRFDD
-	 u3vN0+d+GY1mQ==
-Date: Tue, 30 Sep 2025 21:08:29 +0000
+	b=M9zRW5f1iSgD/0wmJZ/sYnhqEw5BkzmmMOMo3UvjOaQcbvvr8jWIgVVKU6+NOAX/p
+	 sPkV+DgUzKNqX9tGNyktOm3KiGA89ghYhU7Gp8aVDt0ICm2Koqb07NId9ESHjquhkq
+	 pOO4+WZLDbx/JYgcsUJzq3WjfOyafPJ35eDZedXB4nK14k3RetOZjFlu3iWiz9HLUk
+	 IMXXKk6ZGpARVIVFCKoJKwbO2JwNDx64Vv6CTT0JNbO2zNMfaJNUFqNn63pWre1O/B
+	 iWqDu+wXuUgDLjuh8IQ7bTnunYGd1nWu55gI1fY+BAqxX1v414ogVAg1YlF5HAGLF9
+	 iiUJgvMEvaB1A==
+Date: Tue, 30 Sep 2025 21:59:28 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-hyperv@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ricardo Neri <ricardo.neri@intel.com>,
-	Yunhong Jiang <yunhong.jiang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 06/10] x86/realmode: Make the location of the
- trampoline configurable
-Message-ID: <aNxGzWMoM_oQ6n1N@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-References: <20250627-rneri-wakeup-mailbox-v5-0-df547b1d196e@linux.intel.com>
- <20250627-rneri-wakeup-mailbox-v5-6-df547b1d196e@linux.intel.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Roman Kisel <romank@linux.microsoft.com>,
+	"arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
+	"corbet@lwn.net" <corbet@lwn.net>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"hpa@zytor.com" <hpa@zytor.com>,
+	"kys@microsoft.com" <kys@microsoft.com>,
+	"mikelley@microsoft.com" <mikelley@microsoft.com>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"Tianyu.Lan@microsoft.com" <Tianyu.Lan@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+	"benhill@microsoft.com" <benhill@microsoft.com>,
+	"bperkins@microsoft.com" <bperkins@microsoft.com>,
+	"sunilmut@microsoft.com" <sunilmut@microsoft.com>
+Subject: Re: [PATCH hyperv-next v5 04/16] arch/x86: mshyperv: Trap on access
+ for some synthetic MSRs
+Message-ID: <aNxSwL_Wga9XP-0z@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+References: <20250828010557.123869-1-romank@linux.microsoft.com>
+ <20250828010557.123869-5-romank@linux.microsoft.com>
+ <BN7PR02MB414878837D34F40D23DB9506D40FA@BN7PR02MB4148.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -72,131 +79,51 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250627-rneri-wakeup-mailbox-v5-6-df547b1d196e@linux.intel.com>
+In-Reply-To: <BN7PR02MB414878837D34F40D23DB9506D40FA@BN7PR02MB4148.namprd02.prod.outlook.com>
 
-On Fri, Jun 27, 2025 at 08:35:12PM -0700, Ricardo Neri wrote:
-> From: Yunhong Jiang <yunhong.jiang@linux.intel.com>
+On Tue, Sep 09, 2025 at 03:11:47AM +0000, Michael Kelley wrote:
+> From: Roman Kisel <romank@linux.microsoft.com> Sent: Wednesday, August 27, 2025 6:06 PM
+> > 
+> > hv_set_non_nested_msr() has special handling for SINT MSRs
+> > when a paravisor is present. In addition to updating the MSR on the
+> > host, the mirror MSR in the paravisor is updated, including with the
+> > proxy bit. But with Confidential VMBus, the proxy bit must not be
+> > used, so add a special case to skip it.
+> > 
+> > Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> > Reviewed-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+> > Reviewed-by: Tianyu Lan <tiala@microsoft.com>
+> > ---
+[...]
+> > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> > index a619b661275b..5e2c6fd637d2 100644
+> > --- a/arch/x86/kernel/cpu/mshyperv.c
+> > +++ b/arch/x86/kernel/cpu/mshyperv.c
+> > @@ -28,6 +28,7 @@
+> >  #include <asm/apic.h>
+> >  #include <asm/timer.h>
+> >  #include <asm/reboot.h>
+> > +#include <asm/msr.h>
+> >  #include <asm/nmi.h>
+> >  #include <clocksource/hyperv_timer.h>
+> >  #include <asm/msr.h>
+> > @@ -38,6 +39,16 @@
+> >  bool hv_nested;
+> >  struct ms_hyperv_info ms_hyperv;
+> > 
+> > +#define HYPERV_SINT_PROXY_ENABLE	BIT(20)
+> > +#define HYPERV_SINT_PROXY_DISABLE	0
 > 
-> x86 CPUs boot in real mode. This mode uses 20-bit memory addresses (16-bit
-> registers plus 4-bit segment selectors). This implies that the trampoline
-> must reside under the 1MB memory boundary.
+> Seems like these definitions belong in hvgdk_mini.h together with
+> the definition of "union hv_synic_sint". Since that union already
+> defines the "proxy" field, the definitions really should be in terms
+> of that field (though I'd have to fiddle with the code to figure out
+> if there's a reasonable way to do that).
 > 
-> There are platforms in which the firmware boots the secondary CPUs,
-> switches them to long mode and transfers control to the kernel. An example
-> of such mechanism is the ACPI Multiprocessor Wakeup Structure.
-> 
-> In this scenario there is no restriction to locate the trampoline under 1MB
-> memory. Moreover, certain platforms (for example, Hyper-V VTL guests) may
-> not have memory available for allocation under 1MB.
-> 
-> Add a new member to struct x86_init_resources to specify the upper bound
-> for the location of the trampoline memory. Keep the default upper bound of
-> 1MB to conserve the current behavior.
-> 
-> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-> Originally-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
-> Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 
-Thomas, this is originally your idea. I take it you will be fine this
-patch. I can pick this up in the Hyper-V tree.
+If we use sint.proxy (or sint->proxy) then we don't even need this
+definition. I think this is only needed because the code writes u64
+directly to the MSR without reinterpreting it as hv_synic_sint.
 
-Let me know otherwise.
-
-Thanks,
 Wei
-
-> ---
-> Changes since v4:
->  - None
-> 
-> Changes since v3:
->  - Added Reviewed-by tag from Michael. Thanks!
-> 
-> Changes since v2:
->  - Edited the commit message for clarity.
->  - Minor tweaks to comments.
->  - Removed the option to not reserve the first 1MB of memory as it is
->    not needed.
-> 
-> Changes since v1:
->  - Added this patch using code that Thomas suggested:
->    https://lore.kernel.org/lkml/87a5ho2q6x.ffs@tglx/
-> ---
->  arch/x86/include/asm/x86_init.h | 3 +++
->  arch/x86/kernel/x86_init.c      | 3 +++
->  arch/x86/realmode/init.c        | 7 +++----
->  3 files changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
-> index 36698cc9fb44..e770ce507a87 100644
-> --- a/arch/x86/include/asm/x86_init.h
-> +++ b/arch/x86/include/asm/x86_init.h
-> @@ -31,12 +31,15 @@ struct x86_init_mpparse {
->   *				platform
->   * @memory_setup:		platform specific memory setup
->   * @dmi_setup:			platform specific DMI setup
-> + * @realmode_limit:		platform specific address limit for the real mode trampoline
-> + *				(default 1M)
->   */
->  struct x86_init_resources {
->  	void (*probe_roms)(void);
->  	void (*reserve_resources)(void);
->  	char *(*memory_setup)(void);
->  	void (*dmi_setup)(void);
-> +	unsigned long realmode_limit;
->  };
->  
->  /**
-> diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
-> index 0a2bbd674a6d..a25fd7282811 100644
-> --- a/arch/x86/kernel/x86_init.c
-> +++ b/arch/x86/kernel/x86_init.c
-> @@ -9,6 +9,7 @@
->  #include <linux/export.h>
->  #include <linux/pci.h>
->  #include <linux/acpi.h>
-> +#include <linux/sizes.h>
->  
->  #include <asm/acpi.h>
->  #include <asm/bios_ebda.h>
-> @@ -69,6 +70,8 @@ struct x86_init_ops x86_init __initdata = {
->  		.reserve_resources	= reserve_standard_io_resources,
->  		.memory_setup		= e820__memory_setup_default,
->  		.dmi_setup		= dmi_setup,
-> +		/* Has to be under 1M so we can execute real-mode AP code. */
-> +		.realmode_limit		= SZ_1M,
->  	},
->  
->  	.mpparse = {
-> diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
-> index 88be32026768..694d80a5c68e 100644
-> --- a/arch/x86/realmode/init.c
-> +++ b/arch/x86/realmode/init.c
-> @@ -46,7 +46,7 @@ void load_trampoline_pgtable(void)
->  
->  void __init reserve_real_mode(void)
->  {
-> -	phys_addr_t mem;
-> +	phys_addr_t mem, limit = x86_init.resources.realmode_limit;
->  	size_t size = real_mode_size_needed();
->  
->  	if (!size)
-> @@ -54,10 +54,9 @@ void __init reserve_real_mode(void)
->  
->  	WARN_ON(slab_is_available());
->  
-> -	/* Has to be under 1M so we can execute real-mode AP code. */
-> -	mem = memblock_phys_alloc_range(size, PAGE_SIZE, 0, 1<<20);
-> +	mem = memblock_phys_alloc_range(size, PAGE_SIZE, 0, limit);
->  	if (!mem)
-> -		pr_info("No sub-1M memory is available for the trampoline\n");
-> +		pr_info("No memory below %pa for the real-mode trampoline\n", &limit);
->  	else
->  		set_real_mode_mem(mem);
->  
-> 
-> -- 
-> 2.43.0
-> 
 
