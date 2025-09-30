@@ -1,144 +1,222 @@
-Return-Path: <linux-hyperv+bounces-7017-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7018-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2BD3BAB07E
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Sep 2025 04:37:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5264CBABBB1
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Sep 2025 09:04:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9D1661C6276
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Sep 2025 02:37:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC2C83C64AD
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Sep 2025 07:04:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EEDF204F99;
-	Tue, 30 Sep 2025 02:37:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B06362BE7B4;
+	Tue, 30 Sep 2025 07:04:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="blA5Hi0I"
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="lI//7GrW";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="lI//7GrW"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14431922FD;
-	Tue, 30 Sep 2025 02:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FDB2BDC2F
+	for <linux-hyperv@vger.kernel.org>; Tue, 30 Sep 2025 07:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759199860; cv=none; b=Fx7lxvJw+KSXMhlQK4V6fk8dII1azfS3gOJbdCAsJA/pXE9QxZNf0T7Sat7NmA6kJTYjk4ZSndX9Xk5c+iDkh9K/hZ+kfh5vDW8B8gxUDVRDZk3zo2+mT2cGjRMmm+NHNygBJWuXKoQL+dVFEw1ibsFOnNNzaJLT3Tg9hqswoMY=
+	t=1759215848; cv=none; b=jBYkCRScU00NLY1wJGAPTN3hpkHRqjfkOJJyLS/XILpEhWnA3Wx9hTULXh9wVx9caa/abFBOm6DKfSTwWO/OQGRI652FKR1axwCjGZXXRZX6+QmrqpOVcgAm5apNXjOxPn4pZO4lG0jlS5mu/X4ZIPxD/ycodSW+tL5SrRbnkYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759199860; c=relaxed/simple;
-	bh=PF7/ahiKlaPtO5VmXKx0j9xBl4IKiUdw2yWy84MCxuI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nB3NHbOXDa5OUEmwlYrArpIyqsPJ4lm/7gyG+dya+ZCyDytEyYfsyq/FUcGHnElPZOWXzavANarPi+gfpZeFAM5ecJJrymqPrr+EDSqKyVbWh3mB/HKKV9ltqvxh000Xd0x0ptY/dnzhAzq5/74IVM6FjrWmsej56iAoFH3ZPlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=blA5Hi0I; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58U2PF88003362;
-	Tue, 30 Sep 2025 02:37:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=8WJEenrLjrpgIxp3I+vSM3MZEzLNxxBKZJoSGfcW0Qc=; b=
-	blA5Hi0ItOw9oL7er/WIKT4MGuSw3IYkYy2QmOtf+KFJvJt3FoZAgzj3wJTLkfvd
-	wayyBuMB+QdGHt1s7BHdmJGsQoQ4aru3U3pZ9Ao1wxz45n23WEl9iDeFIWuNB223
-	+bOtMvpCfz3cQ+lM0w9U0MIgkwVKdSWrlv9W1T9QTeaIZ1NWmYURbA1Rsa9qEYUa
-	Sd2Mbt8W5aFmiwNLONk5KJ9fuFL1XMeHi4lU76QdCODHbCBJbSAIH3ZDdoeRCXvp
-	zHTaRW6pWh+ft8ClFI6ueKIur1eLaQfYIIV6Y5fx0vaIvIFdJAcKhbWcNWmXIWSo
-	giEd1pk+zahWl4v/h7UXnQ==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 49g6d1g0ht-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 30 Sep 2025 02:37:03 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 58U0Nxed007709;
-	Tue, 30 Sep 2025 02:37:02 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 49e6c86ew2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 30 Sep 2025 02:37:02 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 58U2awVD004400;
-	Tue, 30 Sep 2025 02:37:01 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 49e6c86eur-3;
-	Tue, 30 Sep 2025 02:37:01 +0000
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-To: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        Chandrakanth patil <chandrakanth.patil@broadcom.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Khalid Aziz <khalid@gonehiking.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Easwar Hariharan <easwar.hariharan@linux.microsoft.com>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Prateek Singh Rathore <prateek.singh.rathore@gmail.com>,
-        Geoff Levand <geoff@infradead.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Fourier <fourier.thomas@gmail.com>, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, megaraidlinux.pdl@broadcom.com,
-        linux-hyperv@vger.kernel.org, Liao Yuanhong <liaoyuanhong@vivo.com>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH 0/6] scsi: Remove redundant ternary operators
-Date: Mon, 29 Sep 2025 22:36:49 -0400
-Message-ID: <175917739968.3755404.663662648964334597.b4-ty@oracle.com>
+	s=arc-20240116; t=1759215848; c=relaxed/simple;
+	bh=JsAReLmvMZhvekg+cfPzBJaUGCBNaVOJa23lA/aZuFU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DDHFAR8Lv9fDOkIVzglbs/UX/vF4LDGSz02XoloTGJk//4RgX5XlUqOSZvk9RmYRX1gdegwjkuLv7byxlTDklZMfG8B9QpY8eNsZEVTR7UrjDUCt5H6uMb2gkhU5T4s6Nh4z4tVMF01uIJnRfnoJ+kBfR54X480BkScVmOYL1xI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=lI//7GrW; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=lI//7GrW; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9380133739;
+	Tue, 30 Sep 2025 07:04:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1759215840; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=si4gFV/3dYwzZCgZLBa+slIGVpI7ADvTkoM2AqYWyic=;
+	b=lI//7GrWbrtZpvnC/P8xTiWG1bJbDcWhKotPPRdZuKz3ngnIcX30ietrtLWvmP1jskQdao
+	4gLwLF/Cd8MQo3TpAPNLdCbc/gpChj8LWOhneF7676sm6d/4WczGF/pjpomj3dkTdfHv3r
+	z05U8sTyMyF8jumPIDaPESgjn69G6tU=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b="lI//7GrW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1759215840; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=si4gFV/3dYwzZCgZLBa+slIGVpI7ADvTkoM2AqYWyic=;
+	b=lI//7GrWbrtZpvnC/P8xTiWG1bJbDcWhKotPPRdZuKz3ngnIcX30ietrtLWvmP1jskQdao
+	4gLwLF/Cd8MQo3TpAPNLdCbc/gpChj8LWOhneF7676sm6d/4WczGF/pjpomj3dkTdfHv3r
+	z05U8sTyMyF8jumPIDaPESgjn69G6tU=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A628E13A3F;
+	Tue, 30 Sep 2025 07:03:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id hWSkJt+A22hxRwAAD6G6ig
+	(envelope-from <jgross@suse.com>); Tue, 30 Sep 2025 07:03:59 +0000
+From: Juergen Gross <jgross@suse.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	linux-coco@lists.linux.dev,
+	kvm@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	llvm@lists.linux.dev
+Cc: xin@zytor.com,
+	Juergen Gross <jgross@suse.com>,
+	"Kirill A. Shutemov" <kas@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	xen-devel@lists.xenproject.org,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Subject: [PATCH v2 00/12] x86/msr: Inline rdmsr/wrmsr instructions
+Date: Tue, 30 Sep 2025 09:03:44 +0200
+Message-ID: <20250930070356.30695-1-jgross@suse.com>
 X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20250902132359.83059-1-liaoyuanhong@vivo.com>
-References: <20250902132359.83059-1-liaoyuanhong@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-29_08,2025-09-29_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0
- mlxlogscore=945 mlxscore=0 phishscore=0 bulkscore=0 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2509150000 definitions=main-2509300021
-X-Proofpoint-GUID: sSjL5A1MzCFdAC5aqC5Re2Xc406P5tVF
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTMwMDAxOSBTYWx0ZWRfX+k3Pm42FEVT1
- xtrIt/5fFfjsw26kwENeeXUk3vBfhabbNWEti0TrzjC87tNbRiI0fGCZE3XjOJYZ6VhQoH5vYLJ
- /1wtmhzqypdk4YT+yB+P0gJRZw2m1hZ1C9cz1MBtDEfw6YJasxVQlHp9YJjHwNg+ydGYvfocd9h
- w7q9mVmmXD7DnnntIMXbM9qy2PQfIWO/9u8EL09qWJ9tIkedXYlD66HY/twsZDWyJqUjA9l+ajw
- V7oVeUG8b4z2NMV/ZsqjrAXAc4DLyFj/jtmkHb7yyhgpGAJ89k03FZ/GtEZH3FnE6CmMJ3EBoZK
- UlKmfdvMHvduqeM3V1K+fOWUcZSLB08nnDtTtQkaQowd746WvA8pe3W+qwIUjPDg5+Vtt0EJ3eF
- oCyITCD5pgNnWyj/WbDBYBQ0zbsbQA==
-X-Proofpoint-ORIG-GUID: sSjL5A1MzCFdAC5aqC5Re2Xc406P5tVF
-X-Authority-Analysis: v=2.4 cv=ZOnaWH7b c=1 sm=1 tr=0 ts=68db424f b=1 cx=c_pps
- a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VwQbUJbxAAAA:8 a=TLlWb1-QvcHgbv-9-S0A:9
- a=QEXdDO2ut3YA:10
+X-Spamd-Result: default: False [-1.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[33];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FREEMAIL_CC(0.00)[zytor.com,suse.com,kernel.org,linux.intel.com,linutronix.de,redhat.com,alien8.de,google.com,microsoft.com,oracle.com,lists.xenproject.org,broadcom.com,infradead.org,gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:mid,suse.com:dkim];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[lkml];
+	DKIM_TRACE(0.00)[suse.com:+];
+	R_RATELIMIT(0.00)[to_ip_from(RLkdkdrsxe9hqhhs5ask8616i6)];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Rspamd-Queue-Id: 9380133739
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -1.51
 
-On Tue, 02 Sep 2025 21:23:40 +0800, Liao Yuanhong wrote:
+When building a kernel with CONFIG_PARAVIRT_XXL the paravirt
+infrastructure will always use functions for reading or writing MSRs,
+even when running on bare metal.
 
-> For ternary operators in the form of "a ? true : false" or
-> "a ? false : true", if 'a' itself returns a boolean result, the ternary
-> operator can be omitted. Remove redundant ternary operators to clean up the
-> code.
-> 
-> Liao Yuanhong (6):
->   scsi: arcmsr: Remove redundant ternary operators
->   scsi: csiostor: Remove redundant ternary operators
->   scsi: isci: Remove redundant ternary operators
->   scsi: megaraid_sas: Remove redundant ternary operators
->   scsi: scsi_transport_fc: Remove redundant ternary operators
->   scsi: storvsc: Remove redundant ternary operators
-> 
-> [...]
+Switch to inline RDMSR/WRMSR instructions in this case, reducing the
+paravirt overhead.
 
-Applied to 6.18/scsi-queue, thanks!
+In order to make this less intrusive, some further reorganization of
+the MSR access helpers is done in the first 5 patches.
 
-[6/6] scsi: storvsc: Remove redundant ternary operators
-      https://git.kernel.org/mkp/scsi/c/15968590f07c
+The next 5 patches are converting the non-paravirt case to use direct
+inlining of the MSR access instructions, including the WRMSRNS
+instruction and the immediate variants of RDMSR and WRMSR if possible.
+
+Patch 11 removes the PV hooks for MSR accesses and implements the
+Xen PV cases via calls depending on X86_FEATURE_XENPV, which results
+in runtime patching those calls away for the non-XenPV case.
+
+Patch 12 is a final little cleanup patch.
+
+This series has been tested to work with Xen PV and on bare metal.
+
+This series is inspired by Xin Li, who used a similar approach, but
+(in my opinion) with some flaws. Originally I thought it should be
+possible to use the paravirt infrastructure, but this turned out to be
+rather complicated, especially for the Xen PV case in the *_safe()
+variants of the MSR access functions.
+
+Changes since V1:
+- Use Xin Li's approach for inlining
+- Several new patches
+
+Juergen Gross (9):
+  coco/tdx: Rename MSR access helpers
+  x86/sev: replace call of native_wrmsr() with native_wrmsrq()
+  x86/kvm: Remove the KVM private read_msr() function
+  x86/msr: minimize usage of native_*() msr access functions
+  x86/msr: Move MSR trace calls one function level up
+  x86/msr: Use the alternatives mechanism for WRMSR
+  x86/msr: Use the alternatives mechanism for RDMSR
+  x86/paravirt: Don't use pv_ops vector for MSR access functions
+  x86/msr: Reduce number of low level MSR access helpers
+
+Xin Li (Intel) (3):
+  x86/cpufeatures: Add a CPU feature bit for MSR immediate form
+    instructions
+  x86/opcode: Add immediate form MSR instructions
+  x86/extable: Add support for immediate form MSR instructions
+
+ arch/x86/coco/tdx/tdx.c               |   8 +-
+ arch/x86/hyperv/ivm.c                 |   2 +-
+ arch/x86/include/asm/cpufeatures.h    |   1 +
+ arch/x86/include/asm/fred.h           |   2 +-
+ arch/x86/include/asm/kvm_host.h       |  10 -
+ arch/x86/include/asm/msr.h            | 409 +++++++++++++++++++-------
+ arch/x86/include/asm/paravirt.h       |  67 -----
+ arch/x86/include/asm/paravirt_types.h |  13 -
+ arch/x86/include/asm/sev-internal.h   |   7 +-
+ arch/x86/kernel/cpu/scattered.c       |   1 +
+ arch/x86/kernel/kvmclock.c            |   2 +-
+ arch/x86/kernel/paravirt.c            |   5 -
+ arch/x86/kvm/svm/svm.c                |  16 +-
+ arch/x86/kvm/vmx/vmx.c                |   4 +-
+ arch/x86/lib/x86-opcode-map.txt       |   5 +-
+ arch/x86/mm/extable.c                 |  39 ++-
+ arch/x86/xen/enlighten_pv.c           |  24 +-
+ arch/x86/xen/pmu.c                    |   5 +-
+ tools/arch/x86/lib/x86-opcode-map.txt |   5 +-
+ 19 files changed, 383 insertions(+), 242 deletions(-)
 
 -- 
-Martin K. Petersen
+2.51.0
+
 
