@@ -1,60 +1,61 @@
-Return-Path: <linux-hyperv+bounces-7032-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7033-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E657BAEBD0
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Oct 2025 01:14:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34239BAEC58
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Oct 2025 01:29:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A87381941BA9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Sep 2025 23:15:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E39FB3C78BD
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Sep 2025 23:28:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FED32BDC34;
-	Tue, 30 Sep 2025 23:14:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6935424C068;
+	Tue, 30 Sep 2025 23:28:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jue5ZoOT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OLWpZ2LS"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E2B1BDCF;
-	Tue, 30 Sep 2025 23:14:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F99D2E40E;
+	Tue, 30 Sep 2025 23:28:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759274089; cv=none; b=HDsE+kPuJRDhwuDWqIvDF4kbMZHocAanKXI+Ax1iy7cOMecqEMGjRTdB9aquhEmKr5EKW9r5BchQhtNLLcVWAFN1ayUCv33p868luRmWx/xALLj5fzeUqiC2Ugdi/btZsuJm0mo9Tq+H/bazqNYVGPdY+/jUPgxTn7CB2F58atM=
+	t=1759274936; cv=none; b=ZKEv57Bom8rvAPFkJ1P6SfyQJGNBAAygO7IVcOW8A563E4I3UyDWEERZdC8hzlqUQlsrsVLXfCa3JmAxDA5Z7hk3GNOHGThuW2w5rpx0vujaE1hd2A9tmdn6fg7X+aEU67lf8xMKJrAkmHSt0Rvb/2VI9qtuAiYRVAf+xhP2Nts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759274089; c=relaxed/simple;
-	bh=x/5Suh6ta4XqztcOCKv8Meis7VdCs7lMsTyyNIl940E=;
+	s=arc-20240116; t=1759274936; c=relaxed/simple;
+	bh=zYOVhnM7v92JtWcSwj+YPO/nMTZXcJPR3E0KM4g8638=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X6UtHltNMUMHN+YTxEhrTeY4s/Chs7ePjUhlK+VhV0YO6FCPhXU6CBg2nZXYL+yXQBE5j+FrJJn0c/PGOGbzs7lpa6UsXDuTEg/EOO/BLcXZu8h93aepQ9waDNrwKmDFdU/cRNr4f2idfxaScwEPI/rQJEdjMHv3c9O55zh7M9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jue5ZoOT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C83AC4CEF0;
-	Tue, 30 Sep 2025 23:14:48 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=UfigYon6DEQnKNaEdvRr/EEAMJb70hVo4XUZ8SwSbTub5zfolstPpLpgGiWeE+LbIVp62mb5Ltv8jXXr6tul8J7EpLU50symiXcrk/A+Qt4P61qXlYeYkGbDlb/EKZxogPKrJPsMCzGkq8CxZpUDDRfzib8mhq3sUSrqxU7KSTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OLWpZ2LS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92F3AC4CEF0;
+	Tue, 30 Sep 2025 23:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759274088;
-	bh=x/5Suh6ta4XqztcOCKv8Meis7VdCs7lMsTyyNIl940E=;
+	s=k20201202; t=1759274935;
+	bh=zYOVhnM7v92JtWcSwj+YPO/nMTZXcJPR3E0KM4g8638=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Jue5ZoOTk9fFauOFMTDhisM87Tz+wpahGA1iuAgwFkpKfKwg4ETac49FmdTp/zV18
-	 WoFpDXpTh+AhzXGLPenhaM/KvUY0rQfgbbAwI29m7QKBsVxcsCxUMEVSCIiWaxq0aw
-	 x+kS59Ha4B4tPodOLMayGU76pEOmlYa1t+xGUg0ufLEx8Op7IUkrPIpeFrTQeijHmm
-	 f4a7eDuLiGe5AzzBSyeMh0pUDsC23qNsHgWmFlrMl+p7Xy4ORF9ps1/yWk8BkdLLSf
-	 J+OyYpA++4DviXt7TKOlJF6wDOcV9EFlvwbB6yUK44Zp8h2seDBGO2FSRtbRwGfgDF
-	 qib+JyUc+Yk1Q==
-Date: Tue, 30 Sep 2025 23:14:46 +0000
+	b=OLWpZ2LSgww9bezxm9fXzF7UT2PdKQrhM+Ok0QKcjaSbmiwJr1bUirJ83QKSaEqOH
+	 4dGU5gWJxcyLAbynbW9rPWTh13FVIlJLOOEKYqe+SeCwqUmNEHDg/r8eK5Dh0gQ3yl
+	 EeahXgOoIV+KDZoaRnMRHm/FiMMMutClbECZF7E3g48+cXJhAnnPYai3MQIwb/iRx0
+	 c7WF1VtsmgIQWAFCRLqnsrckdsOXyzxMwyoNwSj2RroRg+E+fPO1hlkk/N/zYPC0kJ
+	 DxUdfGf28zyyzJSf3gv0WabDSLVNlXVduKNgBefwFrf+SWAASbrQfzyOHtkcbrAXJa
+	 mpOxLqGAB87UA==
+Date: Tue, 30 Sep 2025 23:28:54 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	prapal@linux.microsoft.com, easwar.hariharan@linux.microsoft.com,
-	tiala@microsoft.com, anirudh@anirudhrb.com,
-	paekkaladevi@linux.microsoft.com, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com
-Subject: Re: [PATCH v4 0/5] mshv: Fixes for stats and vp state page mappings
-Message-ID: <aNxkZtyxuYQ0Gjw7@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-References: <1758903795-18636-1-git-send-email-nunodasneves@linux.microsoft.com>
- <aNcd60fpoI1b6LUT@skinsburskii.localdomain>
- <96009fb8-0ad6-4e5b-8656-af78874a5605@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Alok Tiwari <alok.a.tiwari@oracle.com>,
+	"kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] drivers: hv: vmbus: Clean up sscanf format specifier
+ in target_cpu_store()
+Message-ID: <aNxntvKl4QigqMzY@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+References: <20250917085933.129306-1-alok.a.tiwari@oracle.com>
+ <SN6PR02MB4157E58381C62CCC2681A20BD416A@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -63,53 +64,44 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <96009fb8-0ad6-4e5b-8656-af78874a5605@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB4157E58381C62CCC2681A20BD416A@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-On Mon, Sep 29, 2025 at 11:19:51AM -0700, Nuno Das Neves wrote:
-> On 9/26/2025 4:12 PM, Stanislav Kinsburskii wrote:
-> > On Fri, Sep 26, 2025 at 09:23:10AM -0700, Nuno Das Neves wrote:
-> >> There are some differences in how L1VH partitions must map stats and vp
-> >> state pages, some of which are due to differences across hypervisor
-> >> versions. Detect and handle these cases.
-> >>
+On Thu, Sep 18, 2025 at 03:51:00AM +0000, Michael Kelley wrote:
+> From: Alok Tiwari <alok.a.tiwari@oracle.com> Sent: Wednesday, September 17, 2025 2:00 AM
 > > 
-> > I'm not sure that support for older and actully broken versions on
-> > hypervisor need to be usptreamed, as these versions will go away sooner
-> > or later and this support will become dead weight.
+> > The target_cpu_store() function parses the target CPU from the sysfs
+> > buffer using sscanf(). The format string currently uses "%uu", which
+> > is redundant. The compiler ignores the extra "u", so there is no
+> > incorrect parsing at runtime.
 > > 
-> As far as I know, these changes are relevant for shipped versions of the
-> hypervisor - they are not 'broken' except in some very specific cases
-> (live migration on L1VH, I think?)
-> 
-
-Right, they are not broken, just have more limitations.
-
-> The hypervisor team added a feature bit for these changes so that both old
-> and new versions of these APIs can be supported.
-> 
-> > I think we should upstrem only the changes needed for the new versiong
-> > of hypervisors instead and carry legacy support out of tree until it
-> > becomes obsoleted.
+> > Update the format string to use "%u" for clarity and consistency.
 > > 
-> Which version do you suggest to be the cutoff?
+> > Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+> > ---
+> > v1 -> v2
+> > Rephrase commit message and subject to clarify
+> > that there is no incorrect parsing at runtime.
+> > ---
+> >  drivers/hv/vmbus_drv.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> > index 5b4f8d009ca5..69591dc7bad2 100644
+> > --- a/drivers/hv/vmbus_drv.c
+> > +++ b/drivers/hv/vmbus_drv.c
+> > @@ -1742,7 +1742,7 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
+> >  	u32 target_cpu;
+> >  	ssize_t ret;
+> > 
+> > -	if (sscanf(buf, "%uu", &target_cpu) != 1)
+> > +	if (sscanf(buf, "%u", &target_cpu) != 1)
+> >  		return -EIO;
+> > 
+> >  	cpus_read_lock();
+> > --
+> > 2.50.1
 > 
-> I'd prefer to support as many versions of the hypervisor as we can, as
-> long as they are at all relevant. We can remove the support later.
-> Removing prematurely just creates friction. Inevitably some users will
-> find themselves running on an older hypervisor and then it just fails
-> with a cryptic error. This includes myself, since I test L1VH on Azure
-> which typically has older hypervisor versions.
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 
-This. It takes a long time to saturate the fleet with a new hypervisor.
-Realistically I am looking at 2+ years before we can drop the
-compatibility code, if ever.
-
-Another reason to upstream the compatibility code is because partners
-will want to pick up our code, so hiding this code from them makes both
-our and their life harder.
-
-Wei
-
-> 
-> Nuno
+Applied. Thanks.
 
