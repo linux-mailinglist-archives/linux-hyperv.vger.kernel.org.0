@@ -1,64 +1,58 @@
-Return-Path: <linux-hyperv+bounces-7030-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7031-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 758D5BAEB64
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Oct 2025 00:48:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B4C8BAEBA0
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Oct 2025 01:05:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1FBB519272BC
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Sep 2025 22:48:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 616CC7A61DD
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Sep 2025 23:03:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58ACF1EC018;
-	Tue, 30 Sep 2025 22:48:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DFC5243968;
+	Tue, 30 Sep 2025 23:05:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6knKIma"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDWkJifP"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3092110E;
-	Tue, 30 Sep 2025 22:48:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F50433B3;
+	Tue, 30 Sep 2025 23:05:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759272509; cv=none; b=OO3Hl7LKsdU7PT+Vr4PzJmDdIfHhrCWb5imVCry/Pji4+N//1TN24Yuroj1smVti4i35wv1c5QvJmngtboRTMCakjvaBwtZv7sm5t5swwo0oYr/gJyVl5gUyN+hUR0sFnEGmF+sJabyrIeemhEnrj3TYq7tN/EK+H4UkALUwbZI=
+	t=1759273536; cv=none; b=LqP6Zu1Vh2wSGAoMmh+vgrFxxxRV8Tq7ZITjUATDsJD7A8+brwdqzYNz5hnM/TvxGdlnYN3EKbKc3FBtAtZ6lCNJZqGBJIia8yGrcHT307UA3A0LYIkm57dcFZzIVOQo61pdfUbCErU8ysESRNd+D6KROHk2Ga51EbnGSPM5xUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759272509; c=relaxed/simple;
-	bh=MUg9eJm8Qj5U08RO8QZ4V77rjK9viGHDBOarlVK4FSQ=;
+	s=arc-20240116; t=1759273536; c=relaxed/simple;
+	bh=9F3UlcQn2tMNvTLRxebq+6nMCQOvDBR6s/sw3oxC5KQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cd02UazK3T9On6Kb7cVWJ8K/+2XGFCMPu/DYHA6GKp1o9CzAzbw4n0jQHNHyTylavXZSjpl0CpbqsY+ZsLLmScGWa4YJsmEceSoYiZIrE4McePXJQ1c22LH503m/uXpXdLkFhAeJEBRGMiFCoWihzekju1xe6UdZqS6PmXQADHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6knKIma; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 822E2C4CEF0;
-	Tue, 30 Sep 2025 22:48:28 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=k1r2SSzpi4IZsDHKjaTDriOKIoN0Kn926A8h5kGsNc3VICBCd6yV+/EdyZKvINCrVT1dF1P3Kst2k0WKMy+U+qJr7He1I1y+Kw00QK+1vsv8Tz9Tgo+OQ3DoMd1vPLTKrxYYxD/xSNTLZsfD+RmH5ggRkATJ1Ej80N8NEksWKhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDWkJifP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C7C8C4CEF0;
+	Tue, 30 Sep 2025 23:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759272508;
-	bh=MUg9eJm8Qj5U08RO8QZ4V77rjK9viGHDBOarlVK4FSQ=;
+	s=k20201202; t=1759273535;
+	bh=9F3UlcQn2tMNvTLRxebq+6nMCQOvDBR6s/sw3oxC5KQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S6knKIma0L0DFc71cojfuzNX93QWHzgPey9HbXrOm+Ck4MwX/yVO4hs36grs6H8+R
-	 BDK1FFlR9bGklz3V48nFbwdsQIpWVrmSVA3rrtwDFjK+Sl0M5O62tnpKgnZP2BQ5z2
-	 vljAgbRH0NdjHasgTSw9rd4gRXFbpZOYEb3B7lp03cM5cKdtM+kaErY3v2IvM8hZji
-	 x2WpoRU5HkqpW54Zx4vF44v0kUZqbpSzRpJxebGp0XSrj1rze0UKfnPmK/TOlTxlUg
-	 b8qfBZZ11rzmARVEERLPrk93hbQl87iOilbsx/GA/EPRTLWZZMPf3sRVA+sGo6QJbl
-	 13g2uhXhNw4vQ==
-Date: Tue, 30 Sep 2025 22:48:27 +0000
+	b=qDWkJifPt/hsw6VFR1GqDPfycT+Ye1fO99DAj+oUKV1HsZoQjQWiTFj+NbwEImQbq
+	 7Eek2BvA7ASDlNDSgedJ8uxAJcaxlA/g1pHBBtrZPb87GfSOHu7keR/ODapAbLgK5H
+	 Nx09vkBkCoBPtSFJ5OreYdSR9LFQViYQMl3VCqmgERHIevzcxR0DZtyekNuZFhGhO9
+	 7ZEGcKtZsUwtxuLpSqERrT4Xm+rL7x//sjD9/s80BLhKn3QaCWhBbt414e14NEaWnm
+	 bEMPWTBxIqYYB3cUw/7qXxDTkb78a+bH4bGYGMxVae1zzBt03wP0p4yVabCyOObRu5
+	 rr4zxQLzYwrfA==
+Date: Tue, 30 Sep 2025 23:05:34 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>, Wei Liu <wei.liu@kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>, "x86@kernel.org" <x86@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	Tianyu Lan <tiala@microsoft.com>, Li Tian <litian@redhat.com>,
-	Philipp Rudo <prudo@redhat.com>
-Subject: Re: [PATCH v4] x86/hyperv: Fix kdump on Azure CVMs
-Message-ID: <aNxeO8wfvY6MvOos@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-References: <20250828091618.884950-1-vkuznets@redhat.com>
- <aLoeQXAo5PMDA5hn@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
- <87frd1figp.fsf@redhat.com>
- <SN6PR02MB4157B42CCDC571AA07A34E82D403A@SN6PR02MB4157.namprd02.prod.outlook.com>
+To: Tianyu Lan <ltykernel@gmail.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, arnd@arndb.de, Neeraj.Upadhyay@amd.com,
+	tiala@microsoft.com, kvijayab@amd.com, romank@linux.microsoft.com,
+	linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 0/5] x86/Hyper-V: Add AMD Secure AVIC for Hyper-V platform
+Message-ID: <aNxiPhrbquYg3PGq@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+References: <20250918150023.474021-1-tiala@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -67,62 +61,62 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SN6PR02MB4157B42CCDC571AA07A34E82D403A@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <20250918150023.474021-1-tiala@microsoft.com>
 
-On Fri, Sep 05, 2025 at 03:57:03PM +0000, Michael Kelley wrote:
-> From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Friday, September 5, 2025 12:48 AM
-> > 
-> > Wei Liu <wei.liu@kernel.org> writes:
-> > 
-> > > On Thu, Aug 28, 2025 at 12:16:18PM +0300, Vitaly Kuznetsov wrote:
-> > >> Azure CVM instance types featuring a paravisor hang upon kdump. The
-> > >> investigation shows that makedumpfile causes a hang when it steps on a page
-> > >> which was previously share with the host
-> > >> (HVCALL_MODIFY_SPARSE_GPA_PAGE_HOST_VISIBILITY). The new kernel has no
-> > >> knowledge of these 'special' regions (which are Vmbus connection pages,
-> > >> GPADL buffers, ...). There are several ways to approach the issue:
-> > >> - Convey the knowledge about these regions to the new kernel somehow.
-> > >> - Unshare these regions before accessing in the new kernel (it is unclear
-> > >> if there's a way to query the status for a given GPA range).
-> > >> - Unshare these regions before jumping to the new kernel (which this patch
-> > >> implements).
-> > >>
-> > >> To make the procedure as robust as possible, store PFN ranges of shared
-> > >> regions in a linked list instead of storing GVAs and re-using
-> > >> hv_vtom_set_host_visibility(). This also allows to avoid memory allocation
-> > >> on the kdump/kexec path.
-> > >>
-> > >> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> > >
-> > > No fixes tag for this one?
-> > >
-> > 
-> > Personally, I don't see this as a 'bug', it's rather a missing
-> > feature. In theory, we can add something like
-> > 
-> > Fixes: 810a52126502 ("x86/hyperv: Add new hvcall guest address host visibility
-> > support")
-> > 
-> > but I'm on the fence whether this is accurate or not.
-> > 
-> > > Should it be marked as a stable backport?
-> > 
-> > I think it may make sense even without an explicit 'Fixes:': kdump is the
-> > user's last resort when it comes to kernel crashes and doubly so on
-> > CVMs. Pure kexec may also come handy.
-> > 
+On Thu, Sep 18, 2025 at 11:00:18AM -0400, Tianyu Lan wrote:
+> Secure AVIC is a new hardware feature in the AMD64
+> architecture to allow SEV-SNP guests to prevent the
+> hypervisor from generating unexpected interrupts to
+> a vCPU or otherwise violate architectural assumptions
+> around APIC behavior.
 > 
-> I agree -- think of this as adding a feature instead of fixing a bug. Prior
-> to now, there hasn't been any attempt to make kexec/kdump work
-> for Azure CVMs.
+> Each vCPU has a guest-allocated APIC backing page of
+> size 4K, which maintains APIC state for that vCPU.
+> APIC backing page's ALLOWED_IRR field indicates the
+> interrupt vectors which the guest allows the hypervisor
+> to send.
 > 
-> Instead of using the word "Fix", maybe the patch "Subject:" should be
-> changed to "x86/hyperv: Add kexec/kdump support on Azure CVMs".
+> This patchset is to enable the feature for Hyper-V
+> platform. Patch "Drivers: hv: Allow vmbus message
+> synic interrupt injected from Hyper-V" is to expose
+> new fucntion hv_enable_coco_interrupt() and device
+> driver and arch code may update AVIC backing page
+> ALLOWED_IRR field to allow Hyper-V inject associated
+> vector.
+> 
+> The patchset is based on the tip tree commit 27a17e02418e
+> (x86/sev: Indicate the SEV-SNP guest supports Secure AVIC)
+> 
+> Tianyu Lan (5):
+>   x86/hyperv: Don't use hv apic driver when Secure AVIC is available
+>   drivers: hv: Allow vmbus message synic interrupt injected from Hyper-V
+>   x86/hyperv: Don't use auto-eoi when Secure AVIC is available
+>   x86/hyperv: Allow Hyper-V to inject STIMER0 interrupts
 
-I have fixed that in the hyperv-next tree. Thanks for the discussion.
+These look good to me.
 
+>   x86/Hyper-V: Add Hyper-V specific hvcall to set backing page
+
+Please address Borislav's comment on this patch.
+
+Thanks,
 Wei
 
 > 
-> Michael
+>  arch/x86/hyperv/hv_apic.c           |  8 ++++++
+>  arch/x86/hyperv/hv_init.c           | 31 ++++++++++++++++++++++-
+>  arch/x86/hyperv/ivm.c               | 38 ++++++++++++++++++++++++++++
+>  arch/x86/include/asm/mshyperv.h     |  2 ++
+>  arch/x86/kernel/apic/x2apic_savic.c |  9 ++++++-
+>  arch/x86/kernel/cpu/mshyperv.c      |  3 +++
+>  drivers/hv/hv.c                     |  2 ++
+>  drivers/hv/hv_common.c              |  5 ++++
+>  include/asm-generic/mshyperv.h      |  1 +
+>  include/hyperv/hvgdk_mini.h         | 39 +++++++++++++++++++++++++++++
+>  10 files changed, 136 insertions(+), 2 deletions(-)
+> 
+> -- 
+> 2.25.1
+> 
+> 
 
