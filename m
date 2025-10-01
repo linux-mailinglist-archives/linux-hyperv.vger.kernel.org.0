@@ -1,107 +1,118 @@
-Return-Path: <linux-hyperv+bounces-7037-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7038-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88400BAED6D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Oct 2025 02:02:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEF6FBAF12D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Oct 2025 06:04:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DDD2C1C5FE2
-	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Oct 2025 00:02:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 93C9C194137B
+	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Oct 2025 04:04:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E9F12868B;
-	Wed,  1 Oct 2025 00:01:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C32FA2D0C76;
+	Wed,  1 Oct 2025 04:03:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ksftohVl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wel6HjMr"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE013FFD;
-	Wed,  1 Oct 2025 00:01:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827E0267AF2;
+	Wed,  1 Oct 2025 04:03:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759276919; cv=none; b=Sbx/1SU7bfbYt+FsrWdigQVFB4FbSc/bAsKFos7vIvPG+htAGRzuoMZ6FWbBuetVjrmY6stW8NB24oegcL6LVCrT80fpejKi5YvcPlfXa8XYHaMbL65gUYUFNGlzGqVQoSIZj4tS4zIvdJNQyXzyJQEgwfHXglaLHX+4vbaACOE=
+	t=1759291437; cv=none; b=iMQ7bGT3sef25jnzaQMeLKZCccuPyZn5CqSOGKn9UECjj1tmP5iCl7BKZ2ejV5x4DOU8P/xcXkbDC2TIJG6UMA98otmwbls1/C7ORQcsTd8Ccv9binw50uZc+zS98druHOTqZkph9jvhcCEVhfqRZgKsNWlO6PFXjY4wT6XK2II=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759276919; c=relaxed/simple;
-	bh=3y68Tqy6cDtlcmDOr/T5Y/n7dmVkzFZcMAywC6/1zAo=;
+	s=arc-20240116; t=1759291437; c=relaxed/simple;
+	bh=ESlTFPkgB0EPTMgq9Aq54wNBh5oiQSb+LzLFed1dL0Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EaBGHTp7aQTCowQILQrKUthgKsb+dZq0RdRYGHcEXJ75xsenpVtp82yFcM3Hi6abzCwdLxoqCciIThj6v6zRFn4fRVQsKQjX6Hjd2V7IeuND7jvlAa6x7JSXShrmCyTveslUX0mehI9ISF6IVg2VXoARRc8xdBD3aUsEj9O4B1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ksftohVl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD063C113D0;
-	Wed,  1 Oct 2025 00:01:58 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=KLjUJZhE+sp/zW43kfYwI5IdVDSO0YthN3T/kPPBtsyHkAZNBIxhi3hoPdTzCTP574xEE3EwsgWYBfC/OtfwmxBu7GlF7EqyawUrMQm5M+7XPXxs+bMaIAVJWkQ2SJBQ8yhdj7Z4fx+0+CP8shMcIk7rMiDOeMfoqYFslLLjmvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wel6HjMr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05F63C4CEF4;
+	Wed,  1 Oct 2025 04:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759276919;
-	bh=3y68Tqy6cDtlcmDOr/T5Y/n7dmVkzFZcMAywC6/1zAo=;
+	s=k20201202; t=1759291437;
+	bh=ESlTFPkgB0EPTMgq9Aq54wNBh5oiQSb+LzLFed1dL0Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ksftohVl2Qo0dLrp1wRNv9/74o1Fs7lEIRefjQh7LKdfvCLUMg9xMh1ELfqzluFRi
-	 qsENQ2370Fzn0agVtBXxyPDE3Zb0sknD/K0DnzraIyszsT6PwomnKkQVAFjZB4RAbG
-	 f0WWr3hw8EZlihgHXFMr0EcrJSfUQrxCKSLiFBM50iwiryha4eDBX7cC0c0u4Smb+M
-	 g2mg5N2i+VED0wcsKCG+/wkoMwOSkZQjyWXNVov94eNZKaWnpLYE8vrXVaoWH1SYZW
-	 HqweboEtW61q7LNtIDeEt4mfkkga0AiDYtNv35UcHtsD6HOfCp7xR5t4D4klBB4W7W
-	 2DaB5l93yFmFw==
-Date: Wed, 1 Oct 2025 00:01:57 +0000
+	b=Wel6HjMrAbZVoTb1+N/gwvGgV7SKI/vCw6vSgyY7O5MwR5bhprTS+Jb5K7TIacsGN
+	 +L+E1Usf2SHL+LtVp9Numa7Hzcy3APUh1Kd5uJoCtcPkDdzNWx4dtjdnQmoNd3KB1c
+	 20kvB4KrCTtzisB6WnBceMkJ0YJwZxYuDwQISswLnw7OtcKP6pDKa/7+MXaQ21q6rJ
+	 ODSaz7tBDB+z/broViFXGa2kxIc82GYzRqPhMnI52nJh4TerjV/F2/o3GkPih5VRv9
+	 M5PjYFostUCEywcrpfZIvW3WvJyXONWx+FEr6If9QbYjboos53faFCYGPjh7TKDPBK
+	 FGuwb3AVBYR0A==
+Date: Wed, 1 Oct 2025 04:03:55 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Mukesh Rathor <mrathor@linux.microsoft.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
-	linux-arch@vger.kernel.org, virtualization@lists.linux.dev,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-	jikos@kernel.org, bentiss@kernel.org, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	dmitry.torokhov@gmail.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, bhelgaas@google.com,
-	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
-	gregkh@linuxfoundation.org, deller@gmx.de, arnd@arndb.de,
-	sgarzare@redhat.com, horms@kernel.org
-Subject: Re: [PATCH v2 0/2] Fix CONFIG_HYPERV and vmbus related anamoly
-Message-ID: <aNxvde1KTtLeZEKy@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-References: <20250915234604.3256611-1-mrathor@linux.microsoft.com>
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] Introduce movable pages for Hyper-V guests
+Message-ID: <aNyoK8xfgy2zpKCf@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+References: <175916156212.55038.16727147489322393965.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250915234604.3256611-1-mrathor@linux.microsoft.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <175916156212.55038.16727147489322393965.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 
-On Mon, Sep 15, 2025 at 04:46:02PM -0700, Mukesh Rathor wrote:
-> At present, drivers/Makefile will subst =m to =y for CONFIG_HYPERV
-> for hv subdir. Also, drivers/hv/Makefile replaces =m to =y to build in
-> hv_common.c that is needed for the drivers. Moreover, vmbus driver is
-> built if CONFIG_HYPER is set, either loadable or builtin.
+On Mon, Sep 29, 2025 at 04:02:59PM +0000, Stanislav Kinsburskii wrote:
+> From the start, the root-partition driver allocates, pins, and maps all
+> guest memory into the hypervisor at guest creation. This is simple: Linux
+> cannot move the pages, so the guest’s view in Linux and in Microsoft
+> Hypervisor never diverges.
 > 
-> This is not a good approach. CONFIG_HYPERV is really an umbrella
-> config that encompasses builtin code and various other things and not
-> a dedicated config option for VMBus. VMBus should really have a config
-> option just like CONFIG_HYPERV_BALLOON etc. This small series introduces
-> CONFIG_HYPERV_VMBUS to build VMBus driver and make that distinction
-> explicit. With that CONFIG_HYPERV could be changed to bool.
+> However, this approach has major drawbacks:
+> - NUMA: affinity can’t be changed at runtime, so you can’t migrate guest memory closer to the CPUs running it → performance hit.
+> - Memory management: unused guest memory can’t be swapped out, compacted, or merged.
+> - Provisioning time: upfront allocation/pinning slows guest create/destroy.
+> - Overcommit: no memory overcommit on hosts with pinned-guest memory.
 > 
-> For now, hv_common.c is left as is to reduce conflicts for upcoming
-> patches, but once merges are mostly done, that and some others should
-> be moved to virt/hyperv directory.
+> This series adds movable memory pages for Hyper-V child partitions. Guest
+> pages are no longer allocated upfront; they’re allocated and mapped into
+> the hypervisor on demand (i.e., when the guest touches a GFN that isn’t yet
+> backed by a host PFN).
+> When a page is moved, Linux no longer holds it and it is unmapped from the hypervisor.
+> As a result, Hyper-V guests behave like regular Linux processes, enabling standard Linux memory features to apply to guests.
 > 
-> V2:
->  o rebased on hyper-next: commit 553d825fb2f0 
->         ("x86/hyperv: Switch to msi_create_parent_irq_domain()")
+> Exceptions (still pinned):
+>   1. Encrypted guests (explicit).
+>   2 Guests with passthrough devices (implicitly pinned by the VFIO framework).
 > 
-> V1:
->  o Change subject from hyper-v to "Drivers: hv:"
->  o Rewrite commit messages paying attention to VMBus and not vmbus
->  o Change some wordings in Kconfig
->  o Make new VMBUS config option default to HYPERV option for a smoother
->    transition
+> v2:
+> - Split unmap batching into a separate patch.
+> - Fixed commit messages from v1 review.
+> - Renamed a few functions for clarity.
 > 
-> Mukesh Rathor (2):
->   Driver: hv: Add CONFIG_HYPERV_VMBUS option
+> ---
+> 
+> Stanislav Kinsburskii (4):
+>       Drivers: hv: Refactor and rename memory region handling functions
+>       Drivers: hv: Centralize guest memory region destruction
+>       Drivers: hv: Batch GPA unmap operations to improve large region performance
+>       Drivers: hv: Add support for movable memory regions
+> 
 
-I changed Driver to Drivers and applied both patches. Thanks.
+Our internal test discovered an issue which caused a kernel panic. Has
+that been fixed in this series?
+
+Without fixing that bug or ruling out problems in the code I don't think
+I can merge this. Once this feature goes into other people's systems it
+will be extremely difficult to debug.
+
+Wei
+
+
+> 
+>  drivers/hv/Kconfig             |    1 
+>  drivers/hv/mshv_root.h         |   10 +
+>  drivers/hv/mshv_root_hv_call.c |    2 
+>  drivers/hv/mshv_root_main.c    |  472 +++++++++++++++++++++++++++++++++-------
+>  4 files changed, 403 insertions(+), 82 deletions(-)
+> 
 
