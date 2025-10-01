@@ -1,220 +1,249 @@
-Return-Path: <linux-hyperv+bounces-7040-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7041-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6749DBAF29A
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Oct 2025 08:00:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0E21BAF5AA
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Oct 2025 09:06:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 053842A12CE
-	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Oct 2025 06:00:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2AD2A18968F5
+	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Oct 2025 07:06:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAF492D73AD;
-	Wed,  1 Oct 2025 06:00:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBAC521B9E2;
+	Wed,  1 Oct 2025 07:06:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nJoNubzx"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nu7oe/ke";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="J5qgauTu";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nu7oe/ke";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="J5qgauTu"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B8827F74B;
-	Wed,  1 Oct 2025 06:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131E57261E
+	for <linux-hyperv@vger.kernel.org>; Wed,  1 Oct 2025 07:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759298404; cv=none; b=XdB6R+01Gdx1XYmkdFPbzAnHfRV8SIcXpJ4+I5iR5HXb3fju/x9986J/fuL79dZ8w/HWBfzWmA+rHSXycZhXXMEo85t8KkZIff8tcCFBf8N2g8d6wtM0URKdZB2a18GLtQzvhwnkyWzCxFCADAYEkCVYdWzYdHnGc6kZttU2HHI=
+	t=1759302390; cv=none; b=FVE4kw/EBitWi8zIKmmlQHOZ20sYw13ATVDjAIonU81hWxFX0YxzPD8Dd8rTlvvB3XB7lR/pWRtf/xOBSagdiS6atOV5zJs23rIgYgp0jKRTBGeAWOpd7OAzUrs2GjDXLACTmx8OrvCKDBaulug5sbEC5nKjJKrfwgS+h7DzyBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759298404; c=relaxed/simple;
-	bh=BL+aFBzA9dlLWjXJCXVuikVhV/kBThl2YlDnC4VRyxo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PUiY9C3qrGu/IC8NMLp5SxteNLp4+hE/Vf3lqjQmF5XMCAi6n+RSlVET/8BkNmvKXG61C6ebGEdrkcC0U4JrNTo/i6gp/4PcCvPSviA3v7IEK3XaFDU0EGOOlnM6ABS4nkVZwj18pCB6kC0B/wotYYk2vJXVB3kqp7vQjfNOw9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nJoNubzx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC7E2C4CEF5;
-	Wed,  1 Oct 2025 06:00:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759298404;
-	bh=BL+aFBzA9dlLWjXJCXVuikVhV/kBThl2YlDnC4VRyxo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nJoNubzxfsFRjlfmaL9Hnx11xwd97uKJuurs+fRG1FTDKyEaac+39+u/vd73SpdmL
-	 wVlmUCwqd4LB4tpS4ic173g1xVisffNBLtRfUbsO23h5hAE4txXOOxD1+I3TtmOVEq
-	 OgKe8sgYqk1XyFuKqIETnxQ9TAul3I/9bZw3/R2ywFva6K06ndhpGjBfRh8vGuaYZX
-	 QoLx++WPUTAMvQ/7k9U1rmXGCHt5tEmhcav7CcuVZA6Y9OQD4E49H/FQJJHZfBCf4v
-	 WlgnVJrBMA4rBDDTQ8M2ILo0yZ03YUkCjIIBJEbNXTUNPlajhNgmuz0bWn3bWrqgfk
-	 0umhPVtI+0nVA==
-Date: Wed, 1 Oct 2025 06:00:02 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Mukesh Rathor <mrathor@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	arnd@arndb.de
-Subject: Re: [PATCH v2 4/6] x86/hyperv: Add trampoline asm code to transition
- from hypervisor
-Message-ID: <20251001060002.GA603271@liuwe-devbox-debian-v2.local>
-References: <20250923214609.4101554-1-mrathor@linux.microsoft.com>
- <20250923214609.4101554-5-mrathor@linux.microsoft.com>
+	s=arc-20240116; t=1759302390; c=relaxed/simple;
+	bh=1wQ01rw+ci93T1E+w5+JOZT16AfZ968Sqtz4AFj/8o8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RalGUjzr3X/8t+eS/zVxoALnl2yrEXl7cjXHBlDQPJm3OVOr1cNx4SIV51oLuat9/GWIoVtH2+KvciXF4j7gkLT7IvdNvpiBxkHmXHki6IkhQxRoQQDmshS3kn1+gfzw6vCYlrYnx3uWWCLSWvoNCOeVIQJQv1aFXzL89gQXOd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nu7oe/ke; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=J5qgauTu; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nu7oe/ke; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=J5qgauTu; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D8FF51F7C1;
+	Wed,  1 Oct 2025 07:06:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1759302386; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=v/Sq/hMRs9lW5pGrE1UTXj9Tcba3cKS5UpaXIA2CGaw=;
+	b=nu7oe/ke/UQW7tzomiRIBDpJVSSIS3zpUt0I9JJ4WbX8eDnDTC2Juxr2BNk6Ura9ComsdK
+	UUEueLdUsA5hcfmFd35geL9bu6h7XKHPyLpuVJxOAxbYvUwcXygVEEYgk2OASZULCrZVla
+	Kll0GUPv1s/hEjyRjtQUgw3VPWKKeXk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1759302386;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=v/Sq/hMRs9lW5pGrE1UTXj9Tcba3cKS5UpaXIA2CGaw=;
+	b=J5qgauTuXkQAjUzu7wE+ZMCWbynCtBYnLWdKTww0zHLyfHZJUlMB3vs6pxYThkcm6o07Jz
+	2Q0lB2eJ4nO4wEBg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1759302386; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=v/Sq/hMRs9lW5pGrE1UTXj9Tcba3cKS5UpaXIA2CGaw=;
+	b=nu7oe/ke/UQW7tzomiRIBDpJVSSIS3zpUt0I9JJ4WbX8eDnDTC2Juxr2BNk6Ura9ComsdK
+	UUEueLdUsA5hcfmFd35geL9bu6h7XKHPyLpuVJxOAxbYvUwcXygVEEYgk2OASZULCrZVla
+	Kll0GUPv1s/hEjyRjtQUgw3VPWKKeXk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1759302386;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=v/Sq/hMRs9lW5pGrE1UTXj9Tcba3cKS5UpaXIA2CGaw=;
+	b=J5qgauTuXkQAjUzu7wE+ZMCWbynCtBYnLWdKTww0zHLyfHZJUlMB3vs6pxYThkcm6o07Jz
+	2Q0lB2eJ4nO4wEBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 877C813ADE;
+	Wed,  1 Oct 2025 07:06:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id E/ncH/LS3GghFwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 01 Oct 2025 07:06:26 +0000
+Message-ID: <c53b49cd-8e92-4a7e-90fa-b02770baf708@suse.de>
+Date: Wed, 1 Oct 2025 09:06:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250923214609.4101554-5-mrathor@linux.microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/4] drm: Add vblank timers for devices without
+ interrupts
+To: Michael Kelley <mhklinux@outlook.com>,
+ "louis.chauvet@bootlin.com" <louis.chauvet@bootlin.com>,
+ "drawat.floss@gmail.com" <drawat.floss@gmail.com>,
+ "hamohammed.sa@gmail.com" <hamohammed.sa@gmail.com>,
+ "melissa.srw@gmail.com" <melissa.srw@gmail.com>,
+ "simona@ffwll.ch" <simona@ffwll.ch>, "airlied@gmail.com"
+ <airlied@gmail.com>,
+ "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "ville.syrjala@linux.intel.com" <ville.syrjala@linux.intel.com>,
+ "lyude@redhat.com" <lyude@redhat.com>,
+ "javierm@redhat.com" <javierm@redhat.com>
+Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+References: <20250904145806.430568-1-tzimmermann@suse.de>
+ <SN6PR02MB4157E793515BE2B63615AD92D403A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <BN7PR02MB4148E80C13605F6EAD2B0A03D40FA@BN7PR02MB4148.namprd02.prod.outlook.com>
+ <c6ef1912-84b8-4f01-85cc-2fb18f1ad1ed@suse.de>
+ <SN6PR02MB41575149CA466B89283B920DD414A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <b2a15b41-7f20-46ac-9f62-d5e48c597760@suse.de>
+ <SN6PR02MB415712C780B051175BCD8B32D41AA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <SN6PR02MB415712C780B051175BCD8B32D41AA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_TO(0.00)[outlook.com,bootlin.com,gmail.com,ffwll.ch,linux.intel.com,redhat.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,outlook.com];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_DN_SOME(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
 
-On Tue, Sep 23, 2025 at 02:46:07PM -0700, Mukesh Rathor wrote:
-> Introduce a small asm stub to transition from the hypervisor to Linux
-> after devirtualization. Devirtualization means disabling hypervisor on
-> the fly, so after it is done, the code is running on physical processor
-> instead of virtual, and hypervisor is gone. This can be done by a
-> root/dom0 vm only.
+Hi
 
-I want to scrub "dom0" from comments and commit messages. We drew
-parallels to Xen when we first wrote this code, but it's not a useful
-term externally. "root" or "root partition" should be sufficient.
+Am 30.09.25 um 17:18 schrieb Michael Kelley:
+> From: Thomas Zimmermann <tzimmermann@suse.de> Sent: Tuesday, September 30, 2025 8:04 AM
+>> Hi
+>>
+>> Am 16.09.25 um 17:00 schrieb Michael Kelley:
+>>> From: Thomas Zimmermann <tzimmermann@suse.de> Sent: Tuesday, September 16, 2025 1:31 AM
+>>>> Hi
+>>>>
+>>>> Am 09.09.25 um 05:29 schrieb Michael Kelley:
+>>>>> From: Michael Kelley Sent: Thursday, September 4, 2025 10:36 PM
+>>>>>> From: Thomas Zimmermann <tzimmermann@suse.de> Sent: Thursday, September 4, 2025 7:56 AM
+>>>>>>> Compositors often depend on vblanks to limit their display-update
+>>>>>>> rate. Without, they see vblank events ASAP, which breaks the rate-
+>>>>>>> limit feature. This creates high CPU overhead. It is especially a
+>>>>>>> problem with virtual devices with fast framebuffer access.
+>>>>>>>
+>>>>>>> The series moves vkms' vblank timer to DRM and converts the hyperv
+>>>>>>> DRM driver. An earlier version of this series contains examples of
+>>>>>>> other updated drivers. In principle, any DRM driver without vblank
+>>>>>>> hardware can use the timer.
+>>>>>> I've tested this patch set in a Hyper-V guest against the linux-next20250829
+>>>>>> kernel. All looks good. Results and perf are the same as reported here [4].
+>>>>>> So far I haven't seen the "vblank timer overrun" error, which is consistent
+>>>>>> with the changes you made since my earlier testing. I'll keep running this
+>>>>>> test kernel for a while to see if anything anomalous occurs.
+>>>>> As I continued to run with this patch set, I got a single occurrence of this
+>>>>> WARN_ON. I can't associate it with any particular action as I didn't notice
+>>>>> it until well after it occurred.
+>>>> I've investigated. The stack trace comes from the kernel console's
+>>>> display update. It runs concurrently to the vblank timeout. What likely
+>>>> happens here is that the update code reads two values and in between,
+>>>> the vblank timeout updates them. So the update then compares an old and
+>>>> a new value; leading to an incorrect result with triggers the warning.
+>>>>
+>>>> I'll include a fix in the series' next iteration. But I also think that
+>>>> it's not critical. DRM's vblank helpers can usually deal with such problems.
+>>> Thanks! I'm giving your v4 series a try now. Good that the underlying
+>>> problem is not critical. But I was seeing the WARN_ON() output in
+>>> dmesg every few days (a total of 4 times now), and that's not really
+>>> acceptable even if everything continues to work correctly.
+>> So it's probably a good sign that I haven't heard from you recently. :)
+>> If you haven't seen any warnings with v4, I'd like to merge the series soon.
+>>
+>> Best regards
+>> Thomas
+>>
+> Yes, all is good. I was delayed a bit due to some travel, but the test
+> system has been running for a week now with no warnings or other
+> issues. From my standpoint, the patch series is good to merge.
 
-> 
-> At a high level, during panic of either the hypervisor or the dom0 (aka
-> root), the NMI handler asks hypervisor to devirtualize. As part of that,
-> the arguments include an entry point to return back to Linux. This asm
-> stub implements that entry point.
-> 
-> The stub is entered in protected mode, uses temporary gdt and page table
-> to enable long mode and get to kernel entry point which then restores full
-> kernel context to resume execution to kexec.
-> 
-> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
-> ---
->  arch/x86/hyperv/hv_trampoline.S | 101 ++++++++++++++++++++++++++++++++
->  1 file changed, 101 insertions(+)
->  create mode 100644 arch/x86/hyperv/hv_trampoline.S
-> 
-> diff --git a/arch/x86/hyperv/hv_trampoline.S b/arch/x86/hyperv/hv_trampoline.S
-> new file mode 100644
-> index 000000000000..25f02ff12286
-> --- /dev/null
-> +++ b/arch/x86/hyperv/hv_trampoline.S
-> @@ -0,0 +1,101 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * X86 specific Hyper-V kdump/crash related code.
-> + *
-> + * Copyright (C) 2025, Microsoft, Inc.
-> + *
-> + */
-> +#include <linux/linkage.h>
-> +#include <asm/alternative.h>
-> +#include <asm/msr.h>
-> +#include <asm/processor-flags.h>
-> +#include <asm/nospec-branch.h>
-> +
-> +/*
-> + * void noreturn hv_crash_asm32(arg1)
-> + *    arg1 == edi == 32bit PA of struct hv_crash_tramp_data
-> + *
-> + * The hypervisor jumps here upon devirtualization in protected mode. This
-> + * code gets copied to a page in the low 4G ie, 32bit space so it can run
-> + * in the protected mode. Hence we cannot use any compile/link time offsets or
-> + * addresses. It restores long mode via temporary gdt and page tables and
-> + * eventually jumps to kernel code entry at HV_CRASHDATA_OFFS_C_entry.
-> + *
-> + * PreCondition (ie, Hypervisor call back ABI):
-> + *  o CR0 is set to 0x0021: PE(prot mode) and NE are set, paging is disabled
-> + *  o CR4 is set to 0x0
-> + *  o IA32_EFER is set to 0x901 (SCE and NXE are set)
-> + *  o EDI is set to the Arg passed to HVCALL_DISABLE_HYP_EX.
-> + *  o CS, DS, ES, FS, GS are all initialized with a base of 0 and limit 0xFFFF
-> + *  o IDTR, TR and GDTR are initialized with a base of 0 and limit of 0xFFFF
-> + *  o LDTR is initialized as invalid (limit of 0)
-> + *  o MSR PAT is power on default.
-> + *  o Other state/registers are cleared. All TLBs flushed.
-> + */
-> +
-> +#define HV_CRASHDATA_OFFS_TRAMPCR3    0x0    /*  0 */
-> +#define HV_CRASHDATA_OFFS_KERNCR3     0x8    /*  8 */
-> +#define HV_CRASHDATA_OFFS_GDTRLIMIT  0x12    /* 18 */
-> +#define HV_CRASHDATA_OFFS_CS_JMPTGT  0x28    /* 40 */
-> +#define HV_CRASHDATA_OFFS_C_entry    0x30    /* 48 */
-> +
-> +	.text
-> +	.code32
-> +
+That's great news. I've now added the series to our drm-misc-next branch 
+and it should reach upstream in v6.19.
 
-I recently learned that instrumentation may be problematic for context
-switching code. I have not studied this code and noinstr usage in tree
-extensively so cannot make a judgement here.
+Best regards
+Thomas
 
-It is worth checking out the recent discussion on the VTL transition
-code.
+>
+> Michael
 
-https://lore.kernel.org/linux-hyperv/27e50bb7-7f0e-48fb-bdbc-6c6d606e7113@redhat.com/
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
-And check out the in-tree document Documentation/core-api/entry.rst.
 
-Wei
-
-> +SYM_CODE_START(hv_crash_asm32)
-> +	UNWIND_HINT_UNDEFINED
-> +	ENDBR
-> +	movl	$X86_CR4_PAE, %ecx
-> +	movl	%ecx, %cr4
-> +
-> +	movl %edi, %ebx
-> +	add $HV_CRASHDATA_OFFS_TRAMPCR3, %ebx
-> +	movl %cs:(%ebx), %eax
-> +	movl %eax, %cr3
-> +
-> +	/* Setup EFER for long mode now */
-> +	movl	$MSR_EFER, %ecx
-> +	rdmsr
-> +	btsl	$_EFER_LME, %eax
-> +	wrmsr
-> +
-> +	/* Turn paging on using the temp 32bit trampoline page table */
-> +	movl %cr0, %eax
-> +	orl $(X86_CR0_PG), %eax
-> +	movl %eax, %cr0
-> +
-> +	/* since kernel cr3 could be above 4G, we need to be in the long mode
-> +	 * before we can load 64bits of the kernel cr3. We use a temp gdt for
-> +	 * that with CS.L=1 and CS.D=0 */
-> +	mov %edi, %eax
-> +	add $HV_CRASHDATA_OFFS_GDTRLIMIT, %eax
-> +	lgdtl %cs:(%eax)
-> +
-> +	/* not done yet, restore CS now to switch to CS.L=1 */
-> +	mov %edi, %eax
-> +	add $HV_CRASHDATA_OFFS_CS_JMPTGT, %eax
-> +	ljmp %cs:*(%eax)
-> +SYM_CODE_END(hv_crash_asm32)
-> +
-> +	/* we now run in full 64bit IA32-e long mode, CS.L=1 and CS.D=0 */
-> +	.code64
-> +	.balign 8
-> +SYM_CODE_START(hv_crash_asm64)
-> +	UNWIND_HINT_UNDEFINED
-> +	ENDBR
-> +	/* restore kernel page tables so we can jump to kernel code */
-> +	mov %edi, %eax
-> +	add $HV_CRASHDATA_OFFS_KERNCR3, %eax
-> +	movq %cs:(%eax), %rbx
-> +	movq %rbx, %cr3
-> +
-> +	mov %edi, %eax
-> +	add $HV_CRASHDATA_OFFS_C_entry, %eax
-> +	movq %cs:(%eax), %rbx
-> +	ANNOTATE_RETPOLINE_SAFE
-> +	jmp *%rbx
-> +
-> +	int $3
-> +
-> +SYM_INNER_LABEL(hv_crash_asm_end, SYM_L_GLOBAL)
-> +SYM_CODE_END(hv_crash_asm64)
-> -- 
-> 2.36.1.vfs.0.0
-> 
-> 
 
