@@ -1,249 +1,129 @@
-Return-Path: <linux-hyperv+bounces-7041-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7042-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0E21BAF5AA
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Oct 2025 09:06:36 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B9EFBB143B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Oct 2025 18:39:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2AD2A18968F5
-	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Oct 2025 07:06:59 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1B2624E00CD
+	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Oct 2025 16:39:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBAC521B9E2;
-	Wed,  1 Oct 2025 07:06:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20DBB2773F3;
+	Wed,  1 Oct 2025 16:39:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nu7oe/ke";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="J5qgauTu";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nu7oe/ke";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="J5qgauTu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lz31NxiM"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131E57261E
-	for <linux-hyperv@vger.kernel.org>; Wed,  1 Oct 2025 07:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0791459FA;
+	Wed,  1 Oct 2025 16:39:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759302390; cv=none; b=FVE4kw/EBitWi8zIKmmlQHOZ20sYw13ATVDjAIonU81hWxFX0YxzPD8Dd8rTlvvB3XB7lR/pWRtf/xOBSagdiS6atOV5zJs23rIgYgp0jKRTBGeAWOpd7OAzUrs2GjDXLACTmx8OrvCKDBaulug5sbEC5nKjJKrfwgS+h7DzyBc=
+	t=1759336763; cv=none; b=OqFRgNwfA8xg/PazB0P6ObZfeizWhGji9t9PCK3UIvI7vzk4Wcdw3OnsAsuFEJ7dJV5nH3qXWIi95qDLVmIwYj7P6IVrsQEmtBWwKwLalrJXlNtiNGDq6S52syG7eTXRzggmafKdgvNWNAqT5Y3uhYmJB06wnDb2oTgNOWgnhGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759302390; c=relaxed/simple;
-	bh=1wQ01rw+ci93T1E+w5+JOZT16AfZ968Sqtz4AFj/8o8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RalGUjzr3X/8t+eS/zVxoALnl2yrEXl7cjXHBlDQPJm3OVOr1cNx4SIV51oLuat9/GWIoVtH2+KvciXF4j7gkLT7IvdNvpiBxkHmXHki6IkhQxRoQQDmshS3kn1+gfzw6vCYlrYnx3uWWCLSWvoNCOeVIQJQv1aFXzL89gQXOd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nu7oe/ke; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=J5qgauTu; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nu7oe/ke; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=J5qgauTu; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D8FF51F7C1;
-	Wed,  1 Oct 2025 07:06:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1759302386; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=v/Sq/hMRs9lW5pGrE1UTXj9Tcba3cKS5UpaXIA2CGaw=;
-	b=nu7oe/ke/UQW7tzomiRIBDpJVSSIS3zpUt0I9JJ4WbX8eDnDTC2Juxr2BNk6Ura9ComsdK
-	UUEueLdUsA5hcfmFd35geL9bu6h7XKHPyLpuVJxOAxbYvUwcXygVEEYgk2OASZULCrZVla
-	Kll0GUPv1s/hEjyRjtQUgw3VPWKKeXk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1759302386;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=v/Sq/hMRs9lW5pGrE1UTXj9Tcba3cKS5UpaXIA2CGaw=;
-	b=J5qgauTuXkQAjUzu7wE+ZMCWbynCtBYnLWdKTww0zHLyfHZJUlMB3vs6pxYThkcm6o07Jz
-	2Q0lB2eJ4nO4wEBg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1759302386; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=v/Sq/hMRs9lW5pGrE1UTXj9Tcba3cKS5UpaXIA2CGaw=;
-	b=nu7oe/ke/UQW7tzomiRIBDpJVSSIS3zpUt0I9JJ4WbX8eDnDTC2Juxr2BNk6Ura9ComsdK
-	UUEueLdUsA5hcfmFd35geL9bu6h7XKHPyLpuVJxOAxbYvUwcXygVEEYgk2OASZULCrZVla
-	Kll0GUPv1s/hEjyRjtQUgw3VPWKKeXk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1759302386;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=v/Sq/hMRs9lW5pGrE1UTXj9Tcba3cKS5UpaXIA2CGaw=;
-	b=J5qgauTuXkQAjUzu7wE+ZMCWbynCtBYnLWdKTww0zHLyfHZJUlMB3vs6pxYThkcm6o07Jz
-	2Q0lB2eJ4nO4wEBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 877C813ADE;
-	Wed,  1 Oct 2025 07:06:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id E/ncH/LS3GghFwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 01 Oct 2025 07:06:26 +0000
-Message-ID: <c53b49cd-8e92-4a7e-90fa-b02770baf708@suse.de>
-Date: Wed, 1 Oct 2025 09:06:26 +0200
+	s=arc-20240116; t=1759336763; c=relaxed/simple;
+	bh=fz4j4Nbyj1yHIo+rIFDNGxwIEr2ZuXwyHfkNKuiTq2U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kSlD40J2OVuYIjuLklD1GU270ZTf7VftEZ3ivDntXI0lJdCBQiG0H3jY8h6Jrr+8Wi/YYtXmHNPy6doay/Ajmfb2uXj+vns100G7zOdLy7nt1ZSsGIKJrwKzymg8yFtbinotqDDkAGQaKRrLcwEpSbenlUoWnshhlxixWQe9A4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lz31NxiM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E8AFC4CEF1;
+	Wed,  1 Oct 2025 16:39:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759336762;
+	bh=fz4j4Nbyj1yHIo+rIFDNGxwIEr2ZuXwyHfkNKuiTq2U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lz31NxiM8p6KCikaLC6ioXkj7c8yHu+95XqGkQv5s/J+UWV0mAQs1eSZ++tYG+BLM
+	 Forv7BI1KDSmZrf8n7U0QXosIUCmnjqaGREf7G9o1NfhdxV94yEM7rBj3adOwwrgOv
+	 tXtqpMaahxqwBfKcFBJuF/jPRKdwTLghJTvTALeUzvR6LlexrVt5Mrl2/6b9slp3d8
+	 4FmFn/wiB7eSEtKPs2Ht0OGrVGtuUOYWzJtuiYkFmmdfOn0ElE3FgGWBONjaZpMZ6L
+	 ikD2B60EFLQpWXxC03dTL/JviRcsPLvIrkwmc5ne1uo6zWD+N5HnGY2C4gVpzK/jK9
+	 d5Vz60OWdOLRA==
+Date: Wed, 1 Oct 2025 18:39:16 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Wei Liu <wei.liu@kernel.org>
+Cc: Mukesh R <mrathor@linux.microsoft.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] Introduce movable pages for Hyper-V guests
+Message-ID: <aN1ZNNe66f0SA-Cs@kernel.org>
+References: <175874669044.157998.15064894246017794777.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <0ef4d844-a0af-9fa6-2163-b83f80bc74b1@linux.microsoft.com>
+ <aNyrlijDzaosdWxa@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/4] drm: Add vblank timers for devices without
- interrupts
-To: Michael Kelley <mhklinux@outlook.com>,
- "louis.chauvet@bootlin.com" <louis.chauvet@bootlin.com>,
- "drawat.floss@gmail.com" <drawat.floss@gmail.com>,
- "hamohammed.sa@gmail.com" <hamohammed.sa@gmail.com>,
- "melissa.srw@gmail.com" <melissa.srw@gmail.com>,
- "simona@ffwll.ch" <simona@ffwll.ch>, "airlied@gmail.com"
- <airlied@gmail.com>,
- "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
- "ville.syrjala@linux.intel.com" <ville.syrjala@linux.intel.com>,
- "lyude@redhat.com" <lyude@redhat.com>,
- "javierm@redhat.com" <javierm@redhat.com>
-Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-References: <20250904145806.430568-1-tzimmermann@suse.de>
- <SN6PR02MB4157E793515BE2B63615AD92D403A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <BN7PR02MB4148E80C13605F6EAD2B0A03D40FA@BN7PR02MB4148.namprd02.prod.outlook.com>
- <c6ef1912-84b8-4f01-85cc-2fb18f1ad1ed@suse.de>
- <SN6PR02MB41575149CA466B89283B920DD414A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <b2a15b41-7f20-46ac-9f62-d5e48c597760@suse.de>
- <SN6PR02MB415712C780B051175BCD8B32D41AA@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <SN6PR02MB415712C780B051175BCD8B32D41AA@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_TO(0.00)[outlook.com,bootlin.com,gmail.com,ffwll.ch,linux.intel.com,redhat.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,outlook.com];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_DN_SOME(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aNyrlijDzaosdWxa@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
 
-Hi
-
-Am 30.09.25 um 17:18 schrieb Michael Kelley:
-> From: Thomas Zimmermann <tzimmermann@suse.de> Sent: Tuesday, September 30, 2025 8:04 AM
->> Hi
->>
->> Am 16.09.25 um 17:00 schrieb Michael Kelley:
->>> From: Thomas Zimmermann <tzimmermann@suse.de> Sent: Tuesday, September 16, 2025 1:31 AM
->>>> Hi
->>>>
->>>> Am 09.09.25 um 05:29 schrieb Michael Kelley:
->>>>> From: Michael Kelley Sent: Thursday, September 4, 2025 10:36 PM
->>>>>> From: Thomas Zimmermann <tzimmermann@suse.de> Sent: Thursday, September 4, 2025 7:56 AM
->>>>>>> Compositors often depend on vblanks to limit their display-update
->>>>>>> rate. Without, they see vblank events ASAP, which breaks the rate-
->>>>>>> limit feature. This creates high CPU overhead. It is especially a
->>>>>>> problem with virtual devices with fast framebuffer access.
->>>>>>>
->>>>>>> The series moves vkms' vblank timer to DRM and converts the hyperv
->>>>>>> DRM driver. An earlier version of this series contains examples of
->>>>>>> other updated drivers. In principle, any DRM driver without vblank
->>>>>>> hardware can use the timer.
->>>>>> I've tested this patch set in a Hyper-V guest against the linux-next20250829
->>>>>> kernel. All looks good. Results and perf are the same as reported here [4].
->>>>>> So far I haven't seen the "vblank timer overrun" error, which is consistent
->>>>>> with the changes you made since my earlier testing. I'll keep running this
->>>>>> test kernel for a while to see if anything anomalous occurs.
->>>>> As I continued to run with this patch set, I got a single occurrence of this
->>>>> WARN_ON. I can't associate it with any particular action as I didn't notice
->>>>> it until well after it occurred.
->>>> I've investigated. The stack trace comes from the kernel console's
->>>> display update. It runs concurrently to the vblank timeout. What likely
->>>> happens here is that the update code reads two values and in between,
->>>> the vblank timeout updates them. So the update then compares an old and
->>>> a new value; leading to an incorrect result with triggers the warning.
->>>>
->>>> I'll include a fix in the series' next iteration. But I also think that
->>>> it's not critical. DRM's vblank helpers can usually deal with such problems.
->>> Thanks! I'm giving your v4 series a try now. Good that the underlying
->>> problem is not critical. But I was seeing the WARN_ON() output in
->>> dmesg every few days (a total of 4 times now), and that's not really
->>> acceptable even if everything continues to work correctly.
->> So it's probably a good sign that I haven't heard from you recently. :)
->> If you haven't seen any warnings with v4, I'd like to merge the series soon.
->>
->> Best regards
->> Thomas
->>
-> Yes, all is good. I was delayed a bit due to some travel, but the test
-> system has been running for a week now with no warnings or other
-> issues. From my standpoint, the patch series is good to merge.
-
-That's great news. I've now added the series to our drm-misc-next branch 
-and it should reach upstream in v6.19.
-
-Best regards
-Thomas
-
+On Wed, Oct 01, 2025 at 04:18:30AM +0000, Wei Liu wrote:
+> +Mike Rapoport, our resident memory management expert.
+> 
+> On Fri, Sep 26, 2025 at 07:02:02PM -0700, Mukesh R wrote:
+> > On 9/24/25 14:30, Stanislav Kinsburskii wrote:
+> > >>From the start, the root-partition driver allocates, pins, and maps all
+> > > guest memory into the hypervisor at guest creation. This is simple: Linux
+> > > cannot move the pages, so the guest?s view in Linux and in Microsoft
+> > > Hypervisor never diverges.
+> > > 
+> > > However, this approach has major drawbacks:
+> > > - NUMA: affinity can?t be changed at runtime, so you can?t migrate guest memory closer to the CPUs running it ? performance hit.
+> > > - Memory management: unused guest memory can?t be swapped out, compacted, or merged.
+> > > - Provisioning time: upfront allocation/pinning slows guest create/destroy.
+> > > - Overcommit: no memory overcommit on hosts with pinned-guest memory.
+> > > 
+> > > This series adds movable memory pages for Hyper-V child partitions. Guest
+> > > pages are no longer allocated upfront; they?re allocated and mapped into
+> > > the hypervisor on demand (i.e., when the guest touches a GFN that isn?t yet
+> > > backed by a host PFN).
+> > > When a page is moved, Linux no longer holds it and it is unmapped from the hypervisor.
+> > > As a result, Hyper-V guests behave like regular Linux processes, enabling standard Linux memory features to apply to guests.
+> > > 
+> > > Exceptions (still pinned):
+> > >   1. Encrypted guests (explicit).
+> > >   2 Guests with passthrough devices (implicitly pinned by the VFIO framework).
+> > 
+> > 
+> > As I had commented internally, I am not fully comfortable about the
+> > approach here, specially around use of HMM, and the correctness of
+> > locking for shared memory regions, but my knowledge is from 4.15 and
+> > maybe outdated, and don't have time right now. So I won't object to it
+> > if other hard core mmu developers think there are no issues.
+> > 
+> 
+> Mike, I seem to remember you had a discussion with Stanislav about this?
+> Can you confirm that this is a reasonable approach?
 >
-> Michael
+> Better yet, if you have time to review the code, that would be great.
+> Note that there is a v2 on linux-hyperv.  But I would like to close
+> Mukesh's question first.
+
+I only had time to skip through the patches and yes, this is a reasonable
+approach. I also confirmed privately with HMM maintainer a while ago that
+the use of HMM and MMU notifiers is correct.
+
+I don't know enough about mshv to see if there are corner cases that these
+patches don't cover, but conceptually they make memory model follow KVM
+best practices.
+ 
+> > However, we won't be using this for minkernel, so would like a driver
+> > boot option to disable it upon boot that we can just set in minkernel
+> > init path. This option can also be used to disable it if problems are
+> > observed on the field. Minkernel design is still being worked on, so I
+> > cannot provide much details on it yet.
+
+The usual way we do things in the kernel is to add functionality when it
+has users, so a boot option can be added later when minkernel design will
+be more mature and ready for upstream.
 
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
-
-
+Sincerely yours,
+Mike.
 
