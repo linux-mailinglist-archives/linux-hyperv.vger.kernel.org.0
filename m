@@ -1,59 +1,59 @@
-Return-Path: <linux-hyperv+bounces-7049-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7050-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BBBBBB218C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Oct 2025 02:03:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1460ABB21DD
+	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Oct 2025 02:16:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1214D19C11A1
-	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Oct 2025 00:03:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BCA0F17753C
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Oct 2025 00:16:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60306A55;
-	Thu,  2 Oct 2025 00:02:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 018E7156CA;
+	Thu,  2 Oct 2025 00:16:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="IeDqkWtf"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="KYwVr4IO"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazolkn19013064.outbound.protection.outlook.com [52.103.20.64])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazolkn19012071.outbound.protection.outlook.com [52.103.14.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DAFB45038;
-	Thu,  2 Oct 2025 00:02:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2021134BD;
+	Thu,  2 Oct 2025 00:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.14.71
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759363379; cv=fail; b=EPVEJos0pa8Im0Akl29udu9ALYF1QPHWIFhY4khBT4hC11OdpB/mF+izpttIC+mnotp3poj4Q1UWIRC+lKfyDIF608tCt0mwy/JRS04FIjjBqfjuWrIVlMgjIoBUNj0BsEOvW0Opatl09pGMqbnDYHY3K/NAXib5xNVW5s7VLOA=
+	t=1759364185; cv=fail; b=tt681O0QA3YUhzda8jfh7FAgx4FX5AuIDn3w1Zno3cww2alvvXUCOz9/mWXnfg8AtDR0jBClPrjYPzbcV6K24lgSOqm0S+I6X9By2J8DKCzOdjvvrpLtbgiB5McCI9lnDAhxiBrzbXn/M/lA17/v+JtU4kzSLV9mOYfB9zj/EjM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759363379; c=relaxed/simple;
-	bh=2Sz3lmH3BDaX/BGswfIuOpG3WWCogIAezEZprc02ZLI=;
+	s=arc-20240116; t=1759364185; c=relaxed/simple;
+	bh=7ewdQFd0QYmRK9xBYkMm7NGcjCKUxvLdt8SH2dIxoJQ=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Dnz5fyZ9ngmSbGyAxF+ZwlZKaDMTvOl/sQuYs/KHeKdGSuxi4itCrB+MnH4UFCOuhMTOY2PgUtjhl+BGPvsOMdqWtcEOb+J6Q/5SxAEKqXRG1QXPqSHx81mlce0jBvTmmQO6Ovu84fJLq0eQBi83GznP/SC9XTqR7VBJ+SdtZDs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=IeDqkWtf; arc=fail smtp.client-ip=52.103.20.64
+	 Content-Type:MIME-Version; b=N5BTl3F6NcdqpCFOPgk7P7aM8UxJ5fJrBJ0b5DR4IaUhX47iEBkI+fi/05kAqK8Bl9lVIhkDHS56GteB4GAM0a2lxbuKmbck1M5ifCs7md2fDunqu/qOtjwe19CB15fjChh3tU5jg1+w9u0kxzktB/R+Gn68yWKw3OELkC82UH4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=KYwVr4IO; arc=fail smtp.client-ip=52.103.14.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=F+6zSv0LzGoL8ynboZEBFq2O/mApoJKN7Zhf/b9CwiIcNJOXQFhTLIOarFj2cI5OGKEzX42ADyWk91fMZ++tPI9z1C2CPLTOF2kL1z3gAhv5ooQQe5wuNB2g+OVnxAK/cJJ1eFO6r4t1RxqklOe1GI3msK0TEUAvzM/p6ljy9duJCdTV2G5ztISr2qAC7ANVkAxF1vp3ezCrl+faix+aXruWmvg8v/5E7/ukQizniWLxFI7BDBSLIdiHDgqiu2RmgS3exdLGUb59c997RSbWzwIAUQP7HX4sNCmg11RV9PVKZqfa5DT44P8yp1BHDmW3ENtWdjY0tY8yBko/G4jxzA==
+ b=ES0dEfSVqiY45Ziv/58sufDfEbRQDe/QgPK6GkSVOtYUkZHYElvyEnZ+rsucPE5xLNUbbjHh1RGIz7E/O8NTYa+5b0bzzawm0zOy0hwX8wzjaPFZFyIGR+PGL+lKxoOfZeq/r61yBR5U5w2B6DHBMQfVzD9NHbuG7hnmRTXqxliGsLIiemGXxKhUfQUmhKMQx6nIo15/jrzbgMdgDYA1hrpeocC4NP8sg8G+QJEFp+XSlPo1GUxcNV+0RkVusUXXiOp9jl9/1lR3ovN0mGqFKhDiZhmmxhXGdQAMWjb55IM6sYK0zKOpBlvL17xzlCBWDEKzgnP6cspdyCSiZ+giOA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yXQ9E03Ve0ICxqan8uchEhKqcE8aYqa8HWG0KGxXioA=;
- b=M86Iq7OZG2dUocKSvMbV6rQcXUGkLXrGoPceISpEKqAe6Nyy7IssNQMiLjMyCTvd0axj4haFSWxVy8YrBzpH7Q8Xdt2YzoqZKVLJ4Z3oWrJ6br34oWIuChiilixQrwKaW+9lhtq7fe+l2TQY1YBiJW3p2RDkyWIOQkoPvISLKsltNRKHPHeM4Gf0+U1msZf+H07xvgdsRdPeANDKYf7Fta5RIC2CXyhASSq9qpiiZNuSbaa7n4RtAtYfMNBQMNQsyH6KjQjV71TJbs5rwfa56F0je5adffGHAjVEOmv/DL7XU5Bh9mhJFtQkNElahAcn6KzF3QtfC6U+C8mkCOs7Qw==
+ bh=7ewdQFd0QYmRK9xBYkMm7NGcjCKUxvLdt8SH2dIxoJQ=;
+ b=mCGkJXDh4kwGbB3ZShMhL7ZY0o10Rw7up0BVbsWxWJP05GzY589RWwlq6W+WTYbXECHKQ/M+PcqJEkHpYVUhofMUZ62lwbLwhRLR7EXcLRTttbzlmVPPsWdf/Fz+LFUCHsqDAN6VyE5dEqCZN47NSFV8yyN2BVVplt3txs5hQTMbxlLxltxVapxyZG+ecOT4wza2mgx8CV0im88iM/yg4FRdNblH+SnNSorptykqIw21wm/wXTgjLmDjvov9EYKbCnmgm0RAZXkwTOqQpb57z+6s1RtcazyBWAP1N0wCallpDaZPiQL1L/IShmlr10UK5u8+CUFplP/Gnp21pb2yCw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yXQ9E03Ve0ICxqan8uchEhKqcE8aYqa8HWG0KGxXioA=;
- b=IeDqkWtfLwanZoaAlHlMVWByAEdbomdzkohW34w7O8VGiPB9pyB6TC+vZKuonTv0l+K9EWeXn1LR5ydrHGhU7yNZDoVliwJJOWrxtNeu1KpdQX8/o7lCZ4bCxDiuk9TG7LJWWfNPpy3PV16/D1Ogv0w8LQC5TI1H0KvH702m+GAmGGClYbz9XHbkKDZ/2dN5gSWIkq7O4P47SwT2ACpzthKlWOGXgzTpc+Rwt+u0ok/NArMl7H3h2f9WQf5XrETa1eedi1M+odZa9AAGassU8cJw3EmnzIBeLeiMxFDuvZPYmJtfuugm7YiJf15wTaVlWVQvpOegD8zsnEqIVNEgOQ==
+ bh=7ewdQFd0QYmRK9xBYkMm7NGcjCKUxvLdt8SH2dIxoJQ=;
+ b=KYwVr4IOBTHlqnXGyZXQipiIh7DIVnlqRTYv6zbgcgUkqpUq8YQlK0MotU1ZdNtN9PjCfVATxG/Flz1POaE4HlddRestcNsESZvv3rPnbjaJYd/YsdnFQCS11QmRqTyxqHOaUs0wxCxZ83/4yiFbbZpdhwtF/XFlJ8E5UqLzViKdMOA+NFEPOlRTB6nrU5Gy1juQP4KS0CHIzBcylyYtJYEdmxQvVqqmzbhbtgojLp7qs5RqZEUE2izmHPnqMspmBYfch52HgZTs3u/IU+7wEi0czO0s1sSTRa5uacgtsWN7oTpygIFYA/NZW1tekALzWwToYtu19kr9qQrrISJYjQ==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by MW6PR02MB9820.namprd02.prod.outlook.com (2603:10b6:303:23c::8) with
+ by SN7PR02MB10180.namprd02.prod.outlook.com (2603:10b6:806:2aa::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.17; Thu, 2 Oct
- 2025 00:02:53 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.18; Thu, 2 Oct
+ 2025 00:16:21 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.9160.017; Thu, 2 Oct 2025
- 00:02:53 +0000
+ 00:16:21 +0000
 From: Michael Kelley <mhklinux@outlook.com>
 To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
 	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
@@ -68,78 +68,91 @@ CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
 	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
 	"decui@microsoft.com" <decui@microsoft.com>, Jinank Jain
 	<jinankjain@linux.microsoft.com>
-Subject: RE: [PATCH v4 4/5] mshv: Allocate vp state page for
- HVCALL_MAP_VP_STATE_PAGE on L1VH
-Thread-Topic: [PATCH v4 4/5] mshv: Allocate vp state page for
- HVCALL_MAP_VP_STATE_PAGE on L1VH
-Thread-Index: AQHcLwIJ67Rvwcf9OU+03OvTNyRllLSqZUqQgAOJ8ICAAAQZoA==
-Date: Thu, 2 Oct 2025 00:02:53 +0000
+Subject: RE: [PATCH v4 5/5] mshv: Introduce new hypercall to map stats page
+ for L1VH partitions
+Thread-Topic: [PATCH v4 5/5] mshv: Introduce new hypercall to map stats page
+ for L1VH partitions
+Thread-Index: AQHcLwIHG1YIGU2MWk2ynUAG26qFG7SqbO+wgAOENICAABCnYA==
+Date: Thu, 2 Oct 2025 00:16:21 +0000
 Message-ID:
- <SN6PR02MB4157BB0D3B4B8A616C8B2E29D4E7A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB415718474E9A7DEA70D27E00D4E7A@SN6PR02MB4157.namprd02.prod.outlook.com>
 References:
  <1758903795-18636-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1758903795-18636-5-git-send-email-nunodasneves@linux.microsoft.com>
- <SN6PR02MB4157E95BDC70A1F91228DAF7D41BA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <8bacde85-6406-4b47-b11d-ed5054b270f2@linux.microsoft.com>
-In-Reply-To: <8bacde85-6406-4b47-b11d-ed5054b270f2@linux.microsoft.com>
+ <1758903795-18636-6-git-send-email-nunodasneves@linux.microsoft.com>
+ <SN6PR02MB41571CB74AAAB29181443EE9D41BA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <33868cb1-4cb1-40bb-a773-8f15ec75f679@linux.microsoft.com>
+In-Reply-To: <33868cb1-4cb1-40bb-a773-8f15ec75f679@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|MW6PR02MB9820:EE_
-x-ms-office365-filtering-correlation-id: 9f115ef6-9788-40f8-b3d3-08de0147089a
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SN7PR02MB10180:EE_
+x-ms-office365-filtering-correlation-id: 1ec2415f-8405-4a39-8848-08de0148ea5c
 x-microsoft-antispam:
- BCL:0;ARA:14566002|12121999013|31061999003|461199028|15080799012|41001999006|13091999003|8062599012|19110799012|8060799015|40105399003|440099028|3412199025|102099032|12091999003;
+ BCL:0;ARA:14566002|8060799015|15080799012|12121999013|8062599012|19110799012|31061999003|13091999003|41001999006|461199028|40105399003|3412199025|440099028|102099032|12091999003;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?iwxuEy0iqdCoPHgABEpQ40UGoNJfJnOiOZIWndGvM1EmwLLGi7ymtOMbCcmn?=
- =?us-ascii?Q?G72ZHtIg4w5Gz+MXXVQR4NgnocsSoJFKKdzluDz7ec2NKN2fBzlYTCSlx7xe?=
- =?us-ascii?Q?EdySQRtRtc8BzVTUSQFI/BccX7Hg/yLL3Ifh7dT65b7yvgHWBYQloqEL5+nS?=
- =?us-ascii?Q?CruZZpfWWNtYEv6e0I+caetbchaFsnmWXZ6hwl5uHjoXiJrqwxToqLo+QhxV?=
- =?us-ascii?Q?FLkWMaZo9sXuHCfBcDYtww4mohBA3fYUVWQ8cueNIDCcpuRSuca5JpNCjdO4?=
- =?us-ascii?Q?A5CEigwAmpCVOz82IoXp+m5M1gNpgQZgtUSYjH2+s+GfFkMfUin8O+8dd3eQ?=
- =?us-ascii?Q?82KLM/AkQ8/iUPkL4L9pkgExeyPwIT+uj+SjyqVEh0WdPB9QNIerhZ3dK+QQ?=
- =?us-ascii?Q?1mWAR1JmGkUl9CrqtjBEFsHu+6mfk5juyApLAt1lazBThT7X1GL2goK0/jSu?=
- =?us-ascii?Q?CASKqcmLgea+tn1ebjuZ/0Cnudr+XJba0bUsiVke7Ks8FUYx97CMA5rRJDQ/?=
- =?us-ascii?Q?4pB91s0QOClN9VIXPcfD2V0G/JSbjNqxcebaMgYLmodvsMEtmHq3INX51qmO?=
- =?us-ascii?Q?8P9FBbypWvPJ85eoeclmJ86opa2/GBewj06vlqNIroEj0mH3lbkDXCcQW8x/?=
- =?us-ascii?Q?wRPMVq6RzEmpRsq4vJARAY6eUCaay0yJhWtVftM01CXXA3Mbe+9d0UyAc6fN?=
- =?us-ascii?Q?RYzd6y/uRvOUGi6I/rx2C8zoghxLVgkE8XEH5HLXGxdo/7qDaGO1Wz+AJ7Bf?=
- =?us-ascii?Q?3eaZ7RSp2VYzrmPSi5S1hLvi+BJLq/0NEdGLFMF2JKFcKAKdGmOJXpyO8LC7?=
- =?us-ascii?Q?uQ+FxwpT6/hJSvtH2hyjwYjpswhUJSgzzVXaWlhyIz1M2xwZMNxbAjB2g5qx?=
- =?us-ascii?Q?BiOsNDb2Su5g0mEyHbeFAZugLb8bBek9lTaaibwrgE0uRxn/Hb+N1RCKnUg1?=
- =?us-ascii?Q?I0ontwA6meoyyQhbw2aQU1O1chFF978iV0TEp9PYd1Z0/z3+ONyJusx4Az1e?=
- =?us-ascii?Q?z8PnvWvx1pC7zrTwluCroYE5ie2Tdc4FYxxaMZSZnZenFfPrxrjSzoT8VxgL?=
- =?us-ascii?Q?rpZ1HnMQHvwWWnlJSbG87JqdYIpG8XAxcbCkQfzJ6keetHoEPK+90Rxxn9oe?=
- =?us-ascii?Q?IUXS0ONgP7k2dSGKXhGWPYJi9GFQXAB+gHzaV7mIIQxBOAVdYtBsGMfNCQcI?=
- =?us-ascii?Q?jwzdaP2YLFg8TbaKQE8GKAywvCwSHBRJgLr1noEpt6RMkCB7hE9n84B4z1Mc?=
- =?us-ascii?Q?0odPbJzjErWBcTSMNjzZEQT74mQCINfaTfGXkV7ZeA=3D=3D?=
+ =?utf-8?B?eTlDeWNXSU5HZ0EzRlJudmhIUlgzdFR4a2Q0U2ZOY2xnRjM0dE5XZzhOWmFL?=
+ =?utf-8?B?Qm90MDNnc1N6aWE2UGRES1Axc3R0TW90VU9jWGVwK09XSllwSVZ0VENubUNJ?=
+ =?utf-8?B?SUJteWNyN0dQYkpYaGtsemloRWdJTzl3aXB4R05QREdnaWxCa3J5OFVZRStE?=
+ =?utf-8?B?aFZrbDU3bjJPclRMSUxiNXpTUURYVkZGMyt6dzQ2UVg2dmxETldTb1JEYU5X?=
+ =?utf-8?B?SXQrRDhBdTE3K2ZnRHBOZ2F4NE01UElyMUd4MHJqWjlKRnlSMW1YNzBYOHVH?=
+ =?utf-8?B?aXZGK0xrNDBraFVmTFlhM2JEK0N3c0IvcWh5MDI1eFZGSzNHQmRvWVNHbXNP?=
+ =?utf-8?B?UllnYkdSTnAxQll1RGp2SDFZWHdpSWVaK1pEaDA4OUl4ZTdUVVlEclM0aU5J?=
+ =?utf-8?B?V0NJNlVHWG51RG5xNmE2ZDBEbk00UkJPY3kycEZqUGdjVFFCMEQvYmZZT2ZO?=
+ =?utf-8?B?b3d6azdoNVNYY1ZvZmdnWXJNM1dROWJ6ZytFdStaUktMdXRCWlczQkg1MkRX?=
+ =?utf-8?B?MUJwSjNNWkU4cUh4eWxkYm1pdFVIbkxsTDVJZ3B0NjRnRkFBS0Z1RlVabGFr?=
+ =?utf-8?B?aWhTTVhyT0dZd2YwVUdNNjRPMEVlUXhSVlNrN3FUMjlEM3U0Y21hcFpLWHg3?=
+ =?utf-8?B?UHB4bEZjOU1qNUZvRGRZd1NFOS8vUmxjMDFZNE5YQVhoVkQ2YUZGbUlwaDZ3?=
+ =?utf-8?B?N2NBcVc2Tk9ETUVWL2lXdnMxbzArTjJjSFpIMXN2SUlvc0RsUU5XS2YzdVpS?=
+ =?utf-8?B?c054aUtRcmx3bW82NEJYUGZ4THFKdDdKaHhVWFF3VEpjaFIyNDBXdlNuazUy?=
+ =?utf-8?B?c1VXT1gwTTBxV2RidDIzT2o3SEF0ZG9Sb0tsNVErSkdoVjNWMXlCc2NuZ3Bx?=
+ =?utf-8?B?Nk11SnN4Uk9sTzlVenZEd1Y2Q1VySGhQMFU0NG00OVM1MzgyMmk3R3ZBTG85?=
+ =?utf-8?B?NE96SDZoV3ovcmpBV2JDZjQ0c3NMemJ2dWpjQVZ0S1BzTFh2cXFQNUNweUlw?=
+ =?utf-8?B?T0dIbzU1czJ6Z2dhamNZczFlRjEwMU5ITm9SQkhMLzZ3T0xFd2pPOFNxNzhu?=
+ =?utf-8?B?TnZ2UUNnYVpGa1l1RUFSOU9HZFZxaHdhMU96Wm45TFIvK3dnR1FnVnBCNmhV?=
+ =?utf-8?B?Nkh0WGdxOEhZdXB5OFhKSXE5eGQ2YUZ6YVZROW54TFNBWERDZXpPcFJsc1ov?=
+ =?utf-8?B?emJudlNlRTJOQWpQRUM1SXAxbG9wbC82Yy9oY3o4ZUljNVgvaVdCLzN5em9o?=
+ =?utf-8?B?M3RLZDJ3UmpBVUswVXpnd0Nna0YvQ1hNZ29PQTFzakI1eCtydTJCT204b09o?=
+ =?utf-8?B?aTdpVlR3YmVIVTdCeVlKWEVQMDRXcmJPaWdrQmdwaGNDSDhoSzNUQmhOZWZK?=
+ =?utf-8?B?QWlWTi95eE42Q3c4L045bXpSeGNVRm53VWZXTzVkYStDdWd4UXFyN2NoZ2s5?=
+ =?utf-8?B?c0o0NTNnRldrNzhBTmpkU0U3U2FtR0h6NUlROU52dXIyck50cjk4MG1ISnhY?=
+ =?utf-8?B?SVFSRmNrTk5VZlhhcFhVcytCa043ZnVTZ09MNjdjVnRyTjhLSU9rVXhtUGd4?=
+ =?utf-8?B?UDFISUxYMVdFV3N6T2xwMG40MjBFWm84clBRVnNIa2t5L01sWkxGcUo0Wnc2?=
+ =?utf-8?B?SEhWa2E4UkhyQ3AyRjA3ZVgrdXZONHdzMHVGWmZZbzFhaHV4OW9lZmI2UWRo?=
+ =?utf-8?B?Smdzdm8vRDc0M21RU2ZFZElaNWNYbWJUUGdUY1lRWFhGajR1RWdqY1dRPT0=?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?uRMjF2ou8VnCzg5Lc45aNA0aEZaRbLW3oCo/4SVnNu3QUj6mqaBqH0SFNVdv?=
- =?us-ascii?Q?KdpA/o69tcSxXFl8CyJJmKbnWTH9VL9UO5xpdvcDunPV695znZyPMeeuNx93?=
- =?us-ascii?Q?o+0nS33Pz+mHDe1cxcqZpgnnUJ+AJjZyaMuERRpzEmZ4WMTkFB4Ofkr2rySJ?=
- =?us-ascii?Q?6e1v6FbW/o+IEYzQo/CRYXCo5XLMQoSMHKugCFPRcFojQ4mPAR+ZKE7KB2kA?=
- =?us-ascii?Q?bzv8yCu2YIJ0Wel/8drlUJoCN4Ra77peYCmmLj+reToQiH17KeW88A+3LLTR?=
- =?us-ascii?Q?c8uwfCfYq42ahsHvaVNGskCDWlKu3JFzo/xtMtRNdq8s28Mkeuko7ycG8QkB?=
- =?us-ascii?Q?xtJ/oOp4o9xdOvfrGiYVO4plaT5v7/fSe8ep8QdAZz62kkXLnU4ZlJhgjoC2?=
- =?us-ascii?Q?jpyunDC6Cgkq9JAg1/deujR3AuijbeCD4CUhK27uOxLDixHX3DHFHC9MEznW?=
- =?us-ascii?Q?ZEiBtkhEdOPcFYVz5BkA3ROm8aBnCbVxaazm9L2BAKIAvuj4MMb6WaScxiWF?=
- =?us-ascii?Q?n4uJaGthrPm9IAVB9riWi28nwNSdAxZf7xy//Xr33iuIM9FKSz45hlCdkp2I?=
- =?us-ascii?Q?at3/aj0j1bDpNIcNJV91vLOhBqZ8NByghIvMDyKB776wkmW1dmkH0y13+xlT?=
- =?us-ascii?Q?vXQp+A3cmX6myuY40Yu9CzLuP05DjyOFAVNQ4RDniteqwW2hxU1ZrJQqEB6j?=
- =?us-ascii?Q?y++yCPaJDHYpAVBwxjkQm3VQe42zwfn0oQq7+DPhPEKpOYn9dbkmQy457XZJ?=
- =?us-ascii?Q?Lyn8cd1noXLkmkXbG4m1glpqVMK6iiR/IxMgM+g9xGLqEHozY0+QcEjOlYzS?=
- =?us-ascii?Q?rgrAtD/qmXMcf2Zdg5+psh9+nMu8h6VA+VH1YkaxT7eNAC7ZZo8qrnK34fym?=
- =?us-ascii?Q?h8bPH03+akxlKT2iEdd+2XZMq7TmNMEHwDb7OjDcV1sHMf+YdQZZm/7pN5N6?=
- =?us-ascii?Q?hG9RdtbXPmbKp1MeUWEPuOWV36v+5qqIjIQhXjFnxlEW0leuUc/3DDbjO1vF?=
- =?us-ascii?Q?/LkhWbHNrVhZ/cyGcPeQRRuEm9pHQOdWtQRwrL/K82R9o2DV9GDVqmq3M2ve?=
- =?us-ascii?Q?u1fi3PhGnQBLytHDLXihB6BoP9fP0JAL2F5ARtlR9lQXvDi/385ktEB5Jb0b?=
- =?us-ascii?Q?n8O2/St+XcgEHeKwpYukax+mJL0ZOVYcV6Oworc4vr1E7TEMtNWSNgUQZ2OU?=
- =?us-ascii?Q?QF33UP6//ryHdOvb9HjAaw++dAxYkiNhhHYXc47Y0F0JVS/6I5CDdKbGgmc?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ =?utf-8?B?MmVCaHFHWGV6dk81bnpBQkVSWm0vd1Z5ZjhQZWNQdnFTMzFNb3RuKzZyZWV5?=
+ =?utf-8?B?SFJjU2RMWXJubXcxajZOOXdXU3E0OWVkOWoxa0JaeWJISVQvbWRSUkd3dHBa?=
+ =?utf-8?B?aXViVllBYSs3OFpJajdORGdBSUhud0hoS3ExMXJyU1RVSE81THFUMFFwN0dC?=
+ =?utf-8?B?ejhBQkZ5bkNaQjVhVEdUdmdjd0ZRQStTNVkzSzVuNkNIQ3VJdVFCajdNaWxk?=
+ =?utf-8?B?RDE3SW9sUC9HQjNTY2VYaWZQVU9Wb0FtOVJaQ1pibzVEYTRKcjNXL2lHMHBn?=
+ =?utf-8?B?ejdGa3dSZ1FPazhkWjBRR1piUlU1cFFodGlmdjQ3WEFFanc5dUhHeHdzQWhP?=
+ =?utf-8?B?OFdlMzZ5VS9ZdEgyVmFCMjNoNStGRm52REFvV1FGbUlpdzI2VVdsV1c1dzFn?=
+ =?utf-8?B?bmZLSW1kU1RXNGVDSk5wWG1MRHoyOVNHcU0zcnBjSm9lMTcycUNHODhESXI3?=
+ =?utf-8?B?ZVdnM3IrdWhGd0RqRWpZemlteTBPMnM3WmdZSitCaDNKZEUzbFBSNVVhdjJN?=
+ =?utf-8?B?by9LQzRURTRXcDJ1dE5wVXlHVzlmQkVUaEtYNUVCTkVuMGdCU0xKa1JoR3NI?=
+ =?utf-8?B?VmtDbXlqY2dOS0NkSC9tUVdrOG5WaTdZTjU4bDlsdVRTRjF4Z0g0RHVLaVdr?=
+ =?utf-8?B?UGFCM3Fnc0tCU2gyeW9oN1h0aG1mWTFTQk1YN2drRGZmVWllMXZrUERQdGtV?=
+ =?utf-8?B?aHhHWFhaelVycEFwdjZaQ1ZPTXJEeFFmYS9weC9mSlAwOXhxU0NteFdsMEZm?=
+ =?utf-8?B?SkRaUFo2d1ZMMzBtWUc1bldraVN0WUpZR0NtRVJtbzg0WnQzc0tQaG4rV3lU?=
+ =?utf-8?B?M051L21wTXNzYUd0MmgrNEdIellqR3Z5aEtobnVoUWxQWnc1dkJSSGhQSE1N?=
+ =?utf-8?B?WjVjYWtjT3dUTzN2OC9JT0xVK0NKb1dOeXA2MnNJZ3Mxd24vTkZGVTBIUUUr?=
+ =?utf-8?B?cHZwcS9RREMrbmFBbCtYaGdWQ3hsaFErd0NFcm5IN2hCeHUydmJTVEZ3dFZX?=
+ =?utf-8?B?aXBhU0NNa29JR0JVdnF0TEpnTnNSd3hqUFplVlRUV0wvb3dDOGV3ZS9kUHNw?=
+ =?utf-8?B?UHdKMzA0S25pMHJwZXpONmpWTkVGejc0enNOaytWaTZWSlV3c0t1YWs5Zk5K?=
+ =?utf-8?B?Q2VNMWQwQzB6Y25wN2FxVUxWbStGc2hhdHVBZHVkTXh5aHE2YVQ1dzc0K2pw?=
+ =?utf-8?B?QVpsV1ZSVmpMOHcwcHRXT2M5dEhXeG1pZGpQZUZFVDdaR05KY1J6c2tSNU9L?=
+ =?utf-8?B?Q1dtSlN5V1NCZktXM2dVQU9zSmYxNUtqUzliRmhkbW9hWDFpcisrc3hBSUhX?=
+ =?utf-8?B?Y3dzdDlvRkJSTGRheXpMWHpSa1MvVURjcGVmd25TQW5GcTZaaEhyVUNBeFBB?=
+ =?utf-8?B?R3Y0OXlwRWtVSVJqTUZYRmcxc05qWUNSMlZ3YXZ5RTh6ZTlidjZtWDBmd1Fs?=
+ =?utf-8?B?cGdwZnFmdTliSXRkbC9Wc2pqcm1vVDdBY3hna0Y0eXp2RXl0eFl1dWJoMEdi?=
+ =?utf-8?B?cmtJVkFNZjR0TnNUSXVSZ21GUGhZbldKSEZYTUpYeUhFMzl4a3NOdEcyUTZx?=
+ =?utf-8?B?ZERkWDZLTm9KRUtZc2p4KzRMNjNKTmtQWFN3TGI3ampmUmlVSUNDM3dMOUZ1?=
+ =?utf-8?Q?Dh7BE+/9qGoFeJ8T4GGIdzAuN6ts9JNQpICBu7IrlEzQ=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -150,406 +163,188 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f115ef6-9788-40f8-b3d3-08de0147089a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2025 00:02:53.1699
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ec2415f-8405-4a39-8848-08de0148ea5c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2025 00:16:21.3988
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR02MB9820
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR02MB10180
 
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Wednesday, Oc=
-tober 1, 2025 3:56 PM
->=20
-> On 9/29/2025 10:56 AM, Michael Kelley wrote:
-> > From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Friday, S=
-eptember 26, 2025 9:23 AM
-> >>
-> >> From: Jinank Jain <jinankjain@linux.microsoft.com>
-> >>
-> >> Introduce mshv_use_overlay_gpfn() to check if a page needs to be
-> >> allocated and passed to the hypervisor to map VP state pages. This is
-> >> only needed on L1VH, and only on some (newer) versions of the
-> >> hypervisor, hence the need to check vmm_capabilities.
-> >>
-> >> Introduce functions hv_map/unmap_vp_state_page() to handle the
-> >> allocation and freeing.
-> >>
-> >> Signed-off-by: Jinank Jain <jinankjain@linux.microsoft.com>
-> >> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> >> Reviewed-by: Praveen K Paladugu <prapal@linux.microsoft.com>
-> >> Reviewed-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
-> >> Reviewed-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> >> Reviewed-by: Anirudh Rayabharam <anirudh@anirudhrb.com>
-> >> ---
-> >>  drivers/hv/mshv_root.h         | 11 ++---
-> >>  drivers/hv/mshv_root_hv_call.c | 61 ++++++++++++++++++++++++---
-> >>  drivers/hv/mshv_root_main.c    | 76 +++++++++++++++++----------------=
--
-> >>  3 files changed, 98 insertions(+), 50 deletions(-)
-> >>
-> >> diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
-> >> index 0cb1e2589fe1..dbe2d1d0b22f 100644
-> >> --- a/drivers/hv/mshv_root.h
-> >> +++ b/drivers/hv/mshv_root.h
-> >> @@ -279,11 +279,12 @@ int hv_call_set_vp_state(u32 vp_index, u64 parti=
-tion_id,
-> >>  			 /* Choose between pages and bytes */
-> >>  			 struct hv_vp_state_data state_data, u64 page_count,
-> >>  			 struct page **pages, u32 num_bytes, u8 *bytes);
-> >> -int hv_call_map_vp_state_page(u64 partition_id, u32 vp_index, u32 typ=
-e,
-> >> -			      union hv_input_vtl input_vtl,
-> >> -			      struct page **state_page);
-> >> -int hv_call_unmap_vp_state_page(u64 partition_id, u32 vp_index, u32 t=
-ype,
-> >> -				union hv_input_vtl input_vtl);
-> >> +int hv_map_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
-> >> +			 union hv_input_vtl input_vtl,
-> >> +			 struct page **state_page);
-> >> +int hv_unmap_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
-> >> +			   struct page *state_page,
-> >> +			   union hv_input_vtl input_vtl);
-> >>  int hv_call_create_port(u64 port_partition_id, union hv_port_id port_=
-id,
-> >>  			u64 connection_partition_id, struct hv_port_info *port_info,
-> >>  			u8 port_vtl, u8 min_connection_vtl, int node);
-> >> diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_=
-call.c
-> >> index 3fd3cce23f69..98c6278ff151 100644
-> >> --- a/drivers/hv/mshv_root_hv_call.c
-> >> +++ b/drivers/hv/mshv_root_hv_call.c
-> >> @@ -526,9 +526,9 @@ int hv_call_set_vp_state(u32 vp_index, u64 partiti=
-on_id,
-> >>  	return ret;
-> >>  }
-> >>
-> >> -int hv_call_map_vp_state_page(u64 partition_id, u32 vp_index, u32 typ=
-e,
-> >> -			      union hv_input_vtl input_vtl,
-> >> -			      struct page **state_page)
-> >> +static int hv_call_map_vp_state_page(u64 partition_id, u32 vp_index, =
-u32 type,
-> >> +				     union hv_input_vtl input_vtl,
-> >> +				     struct page **state_page)
-> >>  {
-> >>  	struct hv_input_map_vp_state_page *input;
-> >>  	struct hv_output_map_vp_state_page *output;
-> >> @@ -547,7 +547,14 @@ int hv_call_map_vp_state_page(u64 partition_id, u=
-32
-> vp_index, u32 type,
-> >>  		input->type =3D type;
-> >>  		input->input_vtl =3D input_vtl;
-> >>
-> >> -		status =3D hv_do_hypercall(HVCALL_MAP_VP_STATE_PAGE, input, output)=
-;
-> >
-> > This function must zero the input area before using it. Otherwise,
-> > flags.map_location_provided is uninitialized when *state_page is NULL. =
-It will
-> > have whatever value was left by the previous user of hyperv_pcpu_input_=
-arg,
-> > potentially producing bizarre results. And there's a reserved field tha=
-t won't be
-> > set to zero.
-> >
-> Good catch, will add a memset().
->=20
-> >> +		if (*state_page) {
-> >> +			input->flags.map_location_provided =3D 1;
-> >> +			input->requested_map_location =3D
-> >> +				page_to_pfn(*state_page);
-> >
-> > Technically, this should be page_to_hvpfn() since the PFN value is bein=
-g sent to
-> > Hyper-V. I know root (and L1VH?) partitions must run with the same page=
- size
-> > as the Hyper-V host, but it's better to not leave code buried here that=
- will blow
-> > up if the "same page size requirement" should ever change.
-> >
-> Good point...I could change these calls, but the other way doesn't work, =
-see below.
->=20
-> > And after making the hypercall, there's an invocation of pfn_to_page(),=
- which
-> > should account for the same. Unfortunately, there's not an existing hvp=
-fn_to_page()
-> > function.
-> >
-> This seems like a tricky scenario to get right. In the root partition cas=
-e, the
-> hypervisor allocates the page. That pfn could be some page within a large=
-r Linux page.
-> Converting that to a Linux pfn (naively) means losing the original hvpfn =
-since it gets
-> truncated, which is no good if we want to unmap it later. Also page_addre=
-ss() would
-> give the wrong virtual address.
->=20
-> In other words, we'd have to completely change how we track these pages i=
-n order to
-> support this scenario, and the same goes for various other hypervisor API=
-s where the
-> hypervisor does the allocating. I think it's out of scope to try and addr=
-ess that
-> here, even in part, especially since we will be making assumptions about =
-something
-> that may never happen.
-
-OK, yes the hypervisor allocating the page is a problem when Linux tracks i=
-t
-as a struct page. I'll agree it's out of current scope to change this.
-
-It makes me think about hv_synic_enable_regs() where the paravisor or hyper=
-visor
-allocates the synic_message_page and synic_event_page. But that case should=
- work
-OK with a regular guest with page size greater than 4K because the pages ar=
-e tracked
-based on the guest kernel virtual address, not the PFN. So hv_synic_enable_=
-regs()
-should work on ARM64 Linux guests with 64K page size and a paravisor, as we=
-ll as
-for my postulated root partition with page size greater than 4K.
-
-When it matters, cases where the hypervisor or paravisor allocate pages to =
-give
-to the guest will require careful handling to ensure they work for guest pa=
-ge sizes
-greater than 4K. That's useful information for future consideration. Thanks=
- for the
-discussion.
-
-Michael
-
->=20
-> >> +		}
-> >> +
-> >> +		status =3D hv_do_hypercall(HVCALL_MAP_VP_STATE_PAGE, input,
-> >> +					 output);
-> >>
-> >>  		if (hv_result(status) !=3D HV_STATUS_INSUFFICIENT_MEMORY) {
-> >>  			if (hv_result_success(status))
-> >> @@ -565,8 +572,39 @@ int hv_call_map_vp_state_page(u64 partition_id, u=
-32 vp_index, u32 type,
-> >>  	return ret;
-> >>  }
-> >>
-> >> -int hv_call_unmap_vp_state_page(u64 partition_id, u32 vp_index, u32 t=
-ype,
-> >> -				union hv_input_vtl input_vtl)
-> >> +static bool mshv_use_overlay_gpfn(void)
-> >> +{
-> >> +	return hv_l1vh_partition() &&
-> >> +	       mshv_root.vmm_caps.vmm_can_provide_overlay_gpfn;
-> >> +}
-> >> +
-> >> +int hv_map_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
-> >> +			 union hv_input_vtl input_vtl,
-> >> +			 struct page **state_page)
-> >> +{
-> >> +	int ret =3D 0;
-> >> +	struct page *allocated_page =3D NULL;
-> >> +
-> >> +	if (mshv_use_overlay_gpfn()) {
-> >> +		allocated_page =3D alloc_page(GFP_KERNEL);
-> >> +		if (!allocated_page)
-> >> +			return -ENOMEM;
-> >> +		*state_page =3D allocated_page;
-> >> +	} else {
-> >> +		*state_page =3D NULL;
-> >> +	}
-> >> +
-> >> +	ret =3D hv_call_map_vp_state_page(partition_id, vp_index, type, inpu=
-t_vtl,
-> >> +					state_page);
-> >> +
-> >> +	if (ret && allocated_page)
-> >> +		__free_page(allocated_page);
-> >
-> > For robustness, you might want to set *state_page =3D NULL here so the
-> > caller doesn't have a reference to the page that has been freed. I didn=
-'t
-> > see any cases where the caller incorrectly checks the returned
-> > *state_page value after an error, so the current code isn't broken.
-> >
-> Sure, I can add it.
->=20
-> >> +
-> >> +	return ret;
-> >> +}
-> >> +
-> >> +static int hv_call_unmap_vp_state_page(u64 partition_id, u32 vp_index=
-, u32 type,
-> >> +				       union hv_input_vtl input_vtl)
-> >>  {
-> >>  	unsigned long flags;
-> >>  	u64 status;
-> >> @@ -590,6 +628,17 @@ int hv_call_unmap_vp_state_page(u64 partition_id,=
- u32 vp_index, u32 type,
-> >>  	return hv_result_to_errno(status);
-> >>  }
-> >>
-> >> +int hv_unmap_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
-> >> +			   struct page *state_page, union hv_input_vtl input_vtl)
-> >> +{
-> >> +	int ret =3D hv_call_unmap_vp_state_page(partition_id, vp_index, type=
-, input_vtl);
-> >> +
-> >> +	if (mshv_use_overlay_gpfn() && state_page)
-> >> +		__free_page(state_page);
-> >> +
-> >> +	return ret;
-> >> +}
-> >> +
-> >>  int hv_call_get_partition_property_ex(u64 partition_id, u64 property_=
-code,
-> >>  				      u64 arg, void *property_value,
-> >>  				      size_t property_value_sz)
-> >> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-> >> index e199770ecdfa..2d0ad17acde6 100644
-> >> --- a/drivers/hv/mshv_root_main.c
-> >> +++ b/drivers/hv/mshv_root_main.c
-> >> @@ -890,7 +890,7 @@ mshv_partition_ioctl_create_vp(struct mshv_partiti=
-on
-> >> *partition,
-> >>  {
-> >>  	struct mshv_create_vp args;
-> >>  	struct mshv_vp *vp;
-> >> -	struct page *intercept_message_page, *register_page, *ghcb_page;
-> >> +	struct page *intercept_msg_page, *register_page, *ghcb_page;
-> >>  	void *stats_pages[2];
-> >>  	long ret;
-> >>
-> >> @@ -908,28 +908,25 @@ mshv_partition_ioctl_create_vp(struct mshv_parti=
-tion *partition,
-> >>  	if (ret)
-> >>  		return ret;
-> >>
-> >> -	ret =3D hv_call_map_vp_state_page(partition->pt_id, args.vp_index,
-> >> -					HV_VP_STATE_PAGE_INTERCEPT_MESSAGE,
-> >> -					input_vtl_zero,
-> >> -					&intercept_message_page);
-> >> +	ret =3D hv_map_vp_state_page(partition->pt_id, args.vp_index,
-> >> +				   HV_VP_STATE_PAGE_INTERCEPT_MESSAGE,
-> >> +				   input_vtl_zero, &intercept_msg_page);
-> >>  	if (ret)
-> >>  		goto destroy_vp;
-> >>
-> >>  	if (!mshv_partition_encrypted(partition)) {
-> >> -		ret =3D hv_call_map_vp_state_page(partition->pt_id, args.vp_index,
-> >> -						HV_VP_STATE_PAGE_REGISTERS,
-> >> -						input_vtl_zero,
-> >> -						&register_page);
-> >> +		ret =3D hv_map_vp_state_page(partition->pt_id, args.vp_index,
-> >> +					   HV_VP_STATE_PAGE_REGISTERS,
-> >> +					   input_vtl_zero, &register_page);
-> >>  		if (ret)
-> >>  			goto unmap_intercept_message_page;
-> >>  	}
-> >>
-> >>  	if (mshv_partition_encrypted(partition) &&
-> >>  	    is_ghcb_mapping_available()) {
-> >> -		ret =3D hv_call_map_vp_state_page(partition->pt_id, args.vp_index,
-> >> -						HV_VP_STATE_PAGE_GHCB,
-> >> -						input_vtl_normal,
-> >> -						&ghcb_page);
-> >> +		ret =3D hv_map_vp_state_page(partition->pt_id, args.vp_index,
-> >> +					   HV_VP_STATE_PAGE_GHCB,
-> >> +					   input_vtl_normal, &ghcb_page);
-> >>  		if (ret)
-> >>  			goto unmap_register_page;
-> >>  	}
-> >> @@ -960,7 +957,7 @@ mshv_partition_ioctl_create_vp(struct mshv_partiti=
-on *partition,
-> >>  	atomic64_set(&vp->run.vp_signaled_count, 0);
-> >>
-> >>  	vp->vp_index =3D args.vp_index;
-> >> -	vp->vp_intercept_msg_page =3D page_to_virt(intercept_message_page);
-> >> +	vp->vp_intercept_msg_page =3D page_to_virt(intercept_msg_page);
-> >>  	if (!mshv_partition_encrypted(partition))
-> >>  		vp->vp_register_page =3D page_to_virt(register_page);
-> >>
-> >> @@ -993,21 +990,19 @@ mshv_partition_ioctl_create_vp(struct mshv_parti=
-tion *partition,
-> >>  	if (hv_scheduler_type =3D=3D HV_SCHEDULER_TYPE_ROOT)
-> >>  		mshv_vp_stats_unmap(partition->pt_id, args.vp_index);
-> >>  unmap_ghcb_page:
-> >> -	if (mshv_partition_encrypted(partition) && is_ghcb_mapping_available=
-()) {
-> >> -		hv_call_unmap_vp_state_page(partition->pt_id, args.vp_index,
-> >> -					    HV_VP_STATE_PAGE_GHCB,
-> >> -					    input_vtl_normal);
-> >> -	}
-> >> +	if (mshv_partition_encrypted(partition) && is_ghcb_mapping_available=
-())
-> >> +		hv_unmap_vp_state_page(partition->pt_id, args.vp_index,
-> >> +				       HV_VP_STATE_PAGE_GHCB, ghcb_page,
-> >> +				       input_vtl_normal);
-> >>  unmap_register_page:
-> >> -	if (!mshv_partition_encrypted(partition)) {
-> >> -		hv_call_unmap_vp_state_page(partition->pt_id, args.vp_index,
-> >> -					    HV_VP_STATE_PAGE_REGISTERS,
-> >> -					    input_vtl_zero);
-> >> -	}
-> >> +	if (!mshv_partition_encrypted(partition))
-> >> +		hv_unmap_vp_state_page(partition->pt_id, args.vp_index,
-> >> +				       HV_VP_STATE_PAGE_REGISTERS,
-> >> +				       register_page, input_vtl_zero);
-> >>  unmap_intercept_message_page:
-> >> -	hv_call_unmap_vp_state_page(partition->pt_id, args.vp_index,
-> >> -				    HV_VP_STATE_PAGE_INTERCEPT_MESSAGE,
-> >> -				    input_vtl_zero);
-> >> +	hv_unmap_vp_state_page(partition->pt_id, args.vp_index,
-> >> +			       HV_VP_STATE_PAGE_INTERCEPT_MESSAGE,
-> >> +			       intercept_msg_page, input_vtl_zero);
-> >>  destroy_vp:
-> >>  	hv_call_delete_vp(partition->pt_id, args.vp_index);
-> >>  	return ret;
-> >> @@ -1748,24 +1743,27 @@ static void destroy_partition(struct mshv_part=
-ition *partition)
-> >>  				mshv_vp_stats_unmap(partition->pt_id, vp->vp_index);
-> >>
-> >>  			if (vp->vp_register_page) {
-> >> -				(void)hv_call_unmap_vp_state_page(partition->pt_id,
-> >> -								  vp->vp_index,
-> >> -								  HV_VP_STATE_PAGE_REGISTERS,
-> >> -								  input_vtl_zero);
-> >> +				(void)hv_unmap_vp_state_page(partition->pt_id,
-> >> +							     vp->vp_index,
-> >> +							     HV_VP_STATE_PAGE_REGISTERS,
-> >> +							     virt_to_page(vp->vp_register_page),
-> >> +							     input_vtl_zero);
-> >>  				vp->vp_register_page =3D NULL;
-> >>  			}
-> >>
-> >> -			(void)hv_call_unmap_vp_state_page(partition->pt_id,
-> >> -							  vp->vp_index,
-> >> -							  HV_VP_STATE_PAGE_INTERCEPT_MESSAGE,
-> >> -							  input_vtl_zero);
-> >> +			(void)hv_unmap_vp_state_page(partition->pt_id,
-> >> +						     vp->vp_index,
-> >> +						     HV_VP_STATE_PAGE_INTERCEPT_MESSAGE,
-> >> +						     virt_to_page(vp->vp_intercept_msg_page),
-> >> +						     input_vtl_zero);
-> >>  			vp->vp_intercept_msg_page =3D NULL;
-> >>
-> >>  			if (vp->vp_ghcb_page) {
-> >> -				(void)hv_call_unmap_vp_state_page(partition->pt_id,
-> >> -								  vp->vp_index,
-> >> -								  HV_VP_STATE_PAGE_GHCB,
-> >> -								  input_vtl_normal);
-> >> +				(void)hv_unmap_vp_state_page(partition->pt_id,
-> >> +							     vp->vp_index,
-> >> +							     HV_VP_STATE_PAGE_GHCB,
-> >> +							     virt_to_page(vp->vp_ghcb_page),
-> >> +							     input_vtl_normal);
-> >>  				vp->vp_ghcb_page =3D NULL;
-> >>  			}
-> >>
-> >> --
-> >> 2.34.1
-> >>
-
+RnJvbTogTnVubyBEYXMgTmV2ZXMgPG51bm9kYXNuZXZlc0BsaW51eC5taWNyb3NvZnQuY29tPiBT
+ZW50OiBXZWRuZXNkYXksIE9jdG9iZXIgMSwgMjAyNSA0OjAzIFBNDQo+IA0KPiBPbiA5LzI5LzIw
+MjUgMTA6NTcgQU0sIE1pY2hhZWwgS2VsbGV5IHdyb3RlOg0KPiA+IEZyb206IE51bm8gRGFzIE5l
+dmVzIDxudW5vZGFzbmV2ZXNAbGludXgubWljcm9zb2Z0LmNvbT4gU2VudDogRnJpZGF5LCBTZXB0
+ZW1iZXIgMjYsIDIwMjUgOToyMyBBTQ0KPiA+Pg0KPiA+PiBGcm9tOiBKaW5hbmsgSmFpbiA8amlu
+YW5ramFpbkBsaW51eC5taWNyb3NvZnQuY29tPg0KPiA+Pg0KDQpbc25pcF0NCg0KPiA+PiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9odi9tc2h2X3Jvb3RfaHZfY2FsbC5jIGIvZHJpdmVycy9odi9tc2h2
+X3Jvb3RfaHZfY2FsbC5jDQo+ID4+IGluZGV4IDk4YzYyNzhmZjE1MS4uNWE4MDViM2RlYzBiIDEw
+MDY0NA0KPiA+PiAtLS0gYS9kcml2ZXJzL2h2L21zaHZfcm9vdF9odl9jYWxsLmMNCj4gPj4gKysr
+IGIvZHJpdmVycy9odi9tc2h2X3Jvb3RfaHZfY2FsbC5jDQo+ID4+IEBAIC04MDQsOSArODA0LDUx
+IEBAIGh2X2NhbGxfbm90aWZ5X3BvcnRfcmluZ19lbXB0eSh1MzIgc2ludF9pbmRleCkNCj4gPj4g
+IAlyZXR1cm4gaHZfcmVzdWx0X3RvX2Vycm5vKHN0YXR1cyk7DQo+ID4+ICB9DQo+ID4+DQo+ID4+
+IC1pbnQgaHZfY2FsbF9tYXBfc3RhdF9wYWdlKGVudW0gaHZfc3RhdHNfb2JqZWN0X3R5cGUgdHlw
+ZSwNCj4gPj4gLQkJCSAgY29uc3QgdW5pb24gaHZfc3RhdHNfb2JqZWN0X2lkZW50aXR5ICppZGVu
+dGl0eSwNCj4gPj4gLQkJCSAgdm9pZCAqKmFkZHIpDQo+ID4+ICtzdGF0aWMgaW50IGh2X2NhbGxf
+bWFwX3N0YXRzX3BhZ2UyKGVudW0gaHZfc3RhdHNfb2JqZWN0X3R5cGUgdHlwZSwNCj4gPj4gKwkJ
+CQkgICBjb25zdCB1bmlvbiBodl9zdGF0c19vYmplY3RfaWRlbnRpdHkgKmlkZW50aXR5LA0KPiA+
+PiArCQkJCSAgIHU2NCBtYXBfbG9jYXRpb24pDQo+ID4+ICt7DQo+ID4+ICsJdW5zaWduZWQgbG9u
+ZyBmbGFnczsNCj4gPj4gKwlzdHJ1Y3QgaHZfaW5wdXRfbWFwX3N0YXRzX3BhZ2UyICppbnB1dDsN
+Cj4gPj4gKwl1NjQgc3RhdHVzOw0KPiA+PiArCWludCByZXQ7DQo+ID4+ICsNCj4gPj4gKwlpZiAo
+IW1hcF9sb2NhdGlvbiB8fCAhbXNodl91c2Vfb3ZlcmxheV9ncGZuKCkpDQo+ID4+ICsJCXJldHVy
+biAtRUlOVkFMOw0KPiA+PiArDQo+ID4+ICsJZG8gew0KPiA+PiArCQlsb2NhbF9pcnFfc2F2ZShm
+bGFncyk7DQo+ID4+ICsJCWlucHV0ID0gKnRoaXNfY3B1X3B0cihoeXBlcnZfcGNwdV9pbnB1dF9h
+cmcpOw0KPiA+PiArDQo+ID4+ICsJCW1lbXNldChpbnB1dCwgMCwgc2l6ZW9mKCppbnB1dCkpOw0K
+PiA+PiArCQlpbnB1dC0+dHlwZSA9IHR5cGU7DQo+ID4+ICsJCWlucHV0LT5pZGVudGl0eSA9ICpp
+ZGVudGl0eTsNCj4gPj4gKwkJaW5wdXQtPm1hcF9sb2NhdGlvbiA9IG1hcF9sb2NhdGlvbjsNCj4g
+Pj4gKw0KPiA+PiArCQlzdGF0dXMgPSBodl9kb19oeXBlcmNhbGwoSFZDQUxMX01BUF9TVEFUU19Q
+QUdFMiwgaW5wdXQsIE5VTEwpOw0KPiA+PiArDQo+ID4+ICsJCWxvY2FsX2lycV9yZXN0b3JlKGZs
+YWdzKTsNCj4gPj4gKw0KPiA+PiArCQlyZXQgPSBodl9yZXN1bHRfdG9fZXJybm8oc3RhdHVzKTsN
+Cj4gPj4gKw0KPiA+PiArCQlpZiAoIXJldCkNCj4gPj4gKwkJCWJyZWFrOw0KPiA+DQo+ID4gVGhp
+cyBsb2dpYyBpcyBpbmNvcnJlY3QuIElmIHRoZSBoeXBlcmNhbGwgcmV0dXJucw0KPiA+IEhWX1NU
+QVRVU19JTlNVRkZJQ0lFTlRfTUVNT1JZLCB0aGVuIGVycm5vIC1FTk9NRU0gaXMgaW1tZWRpYXRl
+bHkNCj4gPiByZXR1cm5lZCB0byB0aGUgY2FsbGVyIHdpdGhvdXQgYW55IG9wcG9ydHVuaXR5IHRv
+IGRvIGh2X2NhbGxfZGVwb3NpdF9wYWdlcygpLg0KPiA+DQo+IFRoZSBsb29wIGJyZWFrcyBpZiAo
+IXJldCksIGkuZS4gb24gc3VjY2Vzcy4gTWF5YmUgeW91IG1pc3JlYWQgaXQgYXMgYGlmIChyZXQp
+YD8NCg0KUGZmdCEgIEluZGVlZCBJIGhhZCBpdCB3cm9uZy4NCg0KSSdsbCBub3RlIHRoYXQgaHZf
+Y2FsbF9tYXBfc3RhdHNfcGFnZTIoKSBhbmQgdGhlIGV4aXN0aW5nIGh2X2NhbGxfbWFwX3N0YXRz
+X3BhZ2UoKQ0KaGF2ZSBkaWZmZXJlbnQgY29kZSBmb3Igc29ydGluZyBvdXQgc3VjY2VzcyB2cy4g
+aW5zdWZmaWNpZW50IG1lbW9yeSB2cy4gb3RoZXIgZXJyb3JzLg0KQW5kIHRoZXJlIGFyZSBhZGRp
+dGlvbmFsIGNvZGUgdmFyaWF0aW9ucyBpbiBvdGhlciBNU0hWIHBsYWNlcyB0aGF0IG11c3QgY2hl
+Y2sgZm9yDQppbnN1ZmZpY2llbnQgbWVtb3J5LiBTb21lIGNvbnNpc3RlbmN5IG1pZ2h0IGJlIG5p
+Y2UsIGJ1dCB0aGF0J3Mgb3V0IG9mIHNjb3BlDQpmb3IgdGhpcyBwYXRjaCBzZXQuDQoNCj4gPj4g
+Kw0KPiA+PiArCQlpZiAoaHZfcmVzdWx0KHN0YXR1cykgIT0gSFZfU1RBVFVTX0lOU1VGRklDSUVO
+VF9NRU1PUlkpIHsNCj4gPj4gKwkJCWh2X3N0YXR1c19kZWJ1ZyhzdGF0dXMsICJcbiIpOw0KPiA+
+PiArCQkJYnJlYWs7DQo+ID4+ICsJCX0NCj4gPj4gKw0KPiA+PiArCQlyZXQgPSBodl9jYWxsX2Rl
+cG9zaXRfcGFnZXMoTlVNQV9OT19OT0RFLA0KPiA+PiArCQkJCQkgICAgaHZfY3VycmVudF9wYXJ0
+aXRpb25faWQsIDEpOw0KPiA+PiArCX0gd2hpbGUgKCFyZXQpOw0KPiA+PiArDQo+ID4+ICsJcmV0
+dXJuIHJldDsNCj4gPj4gK30NCj4gPj4gKw0KPiA+PiArc3RhdGljIGludCBodl9jYWxsX21hcF9z
+dGF0c19wYWdlKGVudW0gaHZfc3RhdHNfb2JqZWN0X3R5cGUgdHlwZSwNCj4gPj4gKwkJCQkgIGNv
+bnN0IHVuaW9uIGh2X3N0YXRzX29iamVjdF9pZGVudGl0eSAqaWRlbnRpdHksDQo+ID4+ICsJCQkJ
+ICB2b2lkICoqYWRkcikNCj4gPj4gIHsNCj4gPj4gIAl1bnNpZ25lZCBsb25nIGZsYWdzOw0KPiA+
+PiAgCXN0cnVjdCBodl9pbnB1dF9tYXBfc3RhdHNfcGFnZSAqaW5wdXQ7DQo+ID4+IEBAIC04NDUs
+OCArODg3LDM2IEBAIGludCBodl9jYWxsX21hcF9zdGF0X3BhZ2UoZW51bSBodl9zdGF0c19vYmpl
+Y3RfdHlwZSB0eXBlLA0KPiA+PiAgCXJldHVybiByZXQ7DQo+ID4+ICB9DQo+ID4+DQo+ID4+IC1p
+bnQgaHZfY2FsbF91bm1hcF9zdGF0X3BhZ2UoZW51bSBodl9zdGF0c19vYmplY3RfdHlwZSB0eXBl
+LA0KPiA+PiAtCQkJICAgIGNvbnN0IHVuaW9uIGh2X3N0YXRzX29iamVjdF9pZGVudGl0eSAqaWRl
+bnRpdHkpDQo+ID4+ICtpbnQgaHZfbWFwX3N0YXRzX3BhZ2UoZW51bSBodl9zdGF0c19vYmplY3Rf
+dHlwZSB0eXBlLA0KPiA+PiArCQkgICAgICBjb25zdCB1bmlvbiBodl9zdGF0c19vYmplY3RfaWRl
+bnRpdHkgKmlkZW50aXR5LA0KPiA+PiArCQkgICAgICB2b2lkICoqYWRkcikNCj4gPj4gK3sNCj4g
+Pj4gKwlpbnQgcmV0Ow0KPiA+PiArCXN0cnVjdCBwYWdlICphbGxvY2F0ZWRfcGFnZSA9IE5VTEw7
+DQo+ID4+ICsNCj4gPj4gKwlpZiAoIWFkZHIpDQo+ID4+ICsJCXJldHVybiAtRUlOVkFMOw0KPiA+
+PiArDQo+ID4+ICsJaWYgKG1zaHZfdXNlX292ZXJsYXlfZ3BmbigpKSB7DQo+ID4+ICsJCWFsbG9j
+YXRlZF9wYWdlID0gYWxsb2NfcGFnZShHRlBfS0VSTkVMKTsNCj4gPj4gKwkJaWYgKCFhbGxvY2F0
+ZWRfcGFnZSkNCj4gPj4gKwkJCXJldHVybiAtRU5PTUVNOw0KPiA+PiArDQo+ID4+ICsJCXJldCA9
+IGh2X2NhbGxfbWFwX3N0YXRzX3BhZ2UyKHR5cGUsIGlkZW50aXR5LA0KPiA+PiArCQkJCQkgICAg
+ICBwYWdlX3RvX3BmbihhbGxvY2F0ZWRfcGFnZSkpOw0KPiA+DQo+ID4gVGhpcyBzaG91bGQgdXNl
+IHBhZ2VfdG9faHZwZm4oKSBwZXIgbXkgY29tbWVudHMgaW4gUGF0Y2ggNCBvZiB0aGlzIHNlcmll
+cy4NCj4gPg0KPiBJIGNvdWxkIGNoYW5nZSBpdCwgYnV0IGFzIG1lbnRpb25lZCBpbiBteSByZXBs
+eSB0byBQYXRjaCA0IEknbSBub3Qgc3VyZSBpdCdzDQo+IHdvcnRoIGRvaW5nIHdpdGhvdXQgYWRk
+cmVzc2luZyB0aGUgd2hvbGUgaXNzdWUgd2hpY2ggaXMgYSBtdWNoIGJpZ2dlciBhc2suDQoNCkFn
+cmVlZC4NCg0KTWljaGFlbA0KDQo+IA0KPiA+PiArCQkqYWRkciA9IHBhZ2VfYWRkcmVzcyhhbGxv
+Y2F0ZWRfcGFnZSk7DQo+ID4+ICsJfSBlbHNlIHsNCj4gPj4gKwkJcmV0ID0gaHZfY2FsbF9tYXBf
+c3RhdHNfcGFnZSh0eXBlLCBpZGVudGl0eSwgYWRkcik7DQo+ID4+ICsJfQ0KPiA+PiArDQo+ID4+
+ICsJaWYgKHJldCAmJiBhbGxvY2F0ZWRfcGFnZSkNCj4gPj4gKwkJX19mcmVlX3BhZ2UoYWxsb2Nh
+dGVkX3BhZ2UpOw0KPiA+DQo+ID4gTWlnaHQgd2FudCB0byBkbyAqYWRkciA9IE5VTEwgYWZ0ZXIg
+ZnJlZWluZyB0aGUgcGFnZSBzbyB0aGF0IHRoZSBjYWxsZXINCj4gPiBjYW4ndCBlcnJvbmVvdXNs
+eSByZWZlcmVuY2UgdGhlIGZyZWUgcGFnZS4gQWdhaW4sIHRoZSBjdXJyZW50IGNhbGxlciBkb2Vz
+bid0DQo+ID4gZG8gdGhhdCwgc28gY3VycmVudCBjb2RlIGlzbid0IGJyb2tlbi4NCj4gPg0KPiBZ
+ZXAsIEkgY2FuIGFkZCBpdCB0byBwcm92aWRlIGEgbGl0dGxlIG1vcmUgcm9idXN0bmVzcyBhZ2Fp
+bnN0IGJ1Z3MgaW4gY2FsbGVycy4NCj4gDQo+ID4+ICsNCj4gPj4gKwlyZXR1cm4gcmV0Ow0KPiA+
+PiArfQ0KPiA+PiArDQo+ID4+ICtzdGF0aWMgaW50IGh2X2NhbGxfdW5tYXBfc3RhdHNfcGFnZShl
+bnVtIGh2X3N0YXRzX29iamVjdF90eXBlIHR5cGUsDQo+ID4+ICsJCQkJICAgIGNvbnN0IHVuaW9u
+IGh2X3N0YXRzX29iamVjdF9pZGVudGl0eSAqaWRlbnRpdHkpDQo+ID4+ICB7DQo+ID4+ICAJdW5z
+aWduZWQgbG9uZyBmbGFnczsNCj4gPj4gIAlzdHJ1Y3QgaHZfaW5wdXRfdW5tYXBfc3RhdHNfcGFn
+ZSAqaW5wdXQ7DQo+ID4+IEBAIC04NjUsNiArOTM1LDE5IEBAIGludCBodl9jYWxsX3VubWFwX3N0
+YXRfcGFnZShlbnVtIGh2X3N0YXRzX29iamVjdF90eXBlDQo+IHR5cGUsDQo+ID4+ICAJcmV0dXJu
+IGh2X3Jlc3VsdF90b19lcnJubyhzdGF0dXMpOw0KPiA+PiAgfQ0KPiA+Pg0KPiA+PiAraW50IGh2
+X3VubWFwX3N0YXRzX3BhZ2UoZW51bSBodl9zdGF0c19vYmplY3RfdHlwZSB0eXBlLCB2b2lkICpw
+YWdlX2FkZHIsDQo+ID4+ICsJCQljb25zdCB1bmlvbiBodl9zdGF0c19vYmplY3RfaWRlbnRpdHkg
+KmlkZW50aXR5KQ0KPiA+PiArew0KPiA+PiArCWludCByZXQ7DQo+ID4+ICsNCj4gPj4gKwlyZXQg
+PSBodl9jYWxsX3VubWFwX3N0YXRzX3BhZ2UodHlwZSwgaWRlbnRpdHkpOw0KPiA+PiArDQo+ID4+
+ICsJaWYgKG1zaHZfdXNlX292ZXJsYXlfZ3BmbigpICYmIHBhZ2VfYWRkcikNCj4gPj4gKwkJX19m
+cmVlX3BhZ2UodmlydF90b19wYWdlKHBhZ2VfYWRkcikpOw0KPiA+PiArDQo+ID4+ICsJcmV0dXJu
+IHJldDsNCj4gPj4gK30NCj4gPj4gKw0KPiA+PiAgaW50IGh2X2NhbGxfbW9kaWZ5X3NwYV9ob3N0
+X2FjY2Vzcyh1NjQgcGFydGl0aW9uX2lkLCBzdHJ1Y3QgcGFnZSAqKnBhZ2VzLA0KPiA+PiAgCQkJ
+CSAgIHU2NCBwYWdlX3N0cnVjdF9jb3VudCwgdTMyIGhvc3RfYWNjZXNzLA0KPiA+PiAgCQkJCSAg
+IHUzMiBmbGFncywgdTggYWNxdWlyZSkNCj4gPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaHYvbXNo
+dl9yb290X21haW4uYyBiL2RyaXZlcnMvaHYvbXNodl9yb290X21haW4uYw0KPiA+PiBpbmRleCAy
+ZDBhZDE3YWNkZTYuLjcxYThhYjVkYjNiOCAxMDA2NDQNCj4gPj4gLS0tIGEvZHJpdmVycy9odi9t
+c2h2X3Jvb3RfbWFpbi5jDQo+ID4+ICsrKyBiL2RyaXZlcnMvaHYvbXNodl9yb290X21haW4uYw0K
+PiA+PiBAQCAtODQxLDcgKzg0MSw4IEBAIG1zaHZfdnBfcmVsZWFzZShzdHJ1Y3QgaW5vZGUgKmlu
+b2RlLCBzdHJ1Y3QgZmlsZSAqZmlscCkNCj4gPj4gIAlyZXR1cm4gMDsNCj4gPj4gIH0NCj4gPj4N
+Cj4gPj4gLXN0YXRpYyB2b2lkIG1zaHZfdnBfc3RhdHNfdW5tYXAodTY0IHBhcnRpdGlvbl9pZCwg
+dTMyIHZwX2luZGV4KQ0KPiA+PiArc3RhdGljIHZvaWQgbXNodl92cF9zdGF0c191bm1hcCh1NjQg
+cGFydGl0aW9uX2lkLCB1MzIgdnBfaW5kZXgsDQo+ID4+ICsJCQkJdm9pZCAqc3RhdHNfcGFnZXNb
+XSkNCj4gPj4gIHsNCj4gPj4gIAl1bmlvbiBodl9zdGF0c19vYmplY3RfaWRlbnRpdHkgaWRlbnRp
+dHkgPSB7DQo+ID4+ICAJCS52cC5wYXJ0aXRpb25faWQgPSBwYXJ0aXRpb25faWQsDQo+ID4+IEBA
+IC04NDksMTAgKzg1MCwxMCBAQCBzdGF0aWMgdm9pZCBtc2h2X3ZwX3N0YXRzX3VubWFwKHU2NCBw
+YXJ0aXRpb25faWQsIHUzMg0KPiB2cF9pbmRleCkNCj4gPj4gIAl9Ow0KPiA+Pg0KPiA+PiAgCWlk
+ZW50aXR5LnZwLnN0YXRzX2FyZWFfdHlwZSA9IEhWX1NUQVRTX0FSRUFfU0VMRjsNCj4gPj4gLQlo
+dl9jYWxsX3VubWFwX3N0YXRfcGFnZShIVl9TVEFUU19PQkpFQ1RfVlAsICZpZGVudGl0eSk7DQo+
+ID4+ICsJaHZfdW5tYXBfc3RhdHNfcGFnZShIVl9TVEFUU19PQkpFQ1RfVlAsIE5VTEwsICZpZGVu
+dGl0eSk7DQo+ID4+DQo+ID4+ICAJaWRlbnRpdHkudnAuc3RhdHNfYXJlYV90eXBlID0gSFZfU1RB
+VFNfQVJFQV9QQVJFTlQ7DQo+ID4+IC0JaHZfY2FsbF91bm1hcF9zdGF0X3BhZ2UoSFZfU1RBVFNf
+T0JKRUNUX1ZQLCAmaWRlbnRpdHkpOw0KPiA+PiArCWh2X3VubWFwX3N0YXRzX3BhZ2UoSFZfU1RB
+VFNfT0JKRUNUX1ZQLCBOVUxMLCAmaWRlbnRpdHkpOw0KPiA+PiAgfQ0KPiA+Pg0KPiA+PiAgc3Rh
+dGljIGludCBtc2h2X3ZwX3N0YXRzX21hcCh1NjQgcGFydGl0aW9uX2lkLCB1MzIgdnBfaW5kZXgs
+DQo+ID4+IEBAIC04NjUsMTQgKzg2NiwxNCBAQCBzdGF0aWMgaW50IG1zaHZfdnBfc3RhdHNfbWFw
+KHU2NCBwYXJ0aXRpb25faWQsIHUzMg0KPiB2cF9pbmRleCwNCj4gPj4gIAlpbnQgZXJyOw0KPiA+
+Pg0KPiA+PiAgCWlkZW50aXR5LnZwLnN0YXRzX2FyZWFfdHlwZSA9IEhWX1NUQVRTX0FSRUFfU0VM
+RjsNCj4gPj4gLQllcnIgPSBodl9jYWxsX21hcF9zdGF0X3BhZ2UoSFZfU1RBVFNfT0JKRUNUX1ZQ
+LCAmaWRlbnRpdHksDQo+ID4+IC0JCQkJICAgICZzdGF0c19wYWdlc1tIVl9TVEFUU19BUkVBX1NF
+TEZdKTsNCj4gPj4gKwllcnIgPSBodl9tYXBfc3RhdHNfcGFnZShIVl9TVEFUU19PQkpFQ1RfVlAs
+ICZpZGVudGl0eSwNCj4gPj4gKwkJCQkmc3RhdHNfcGFnZXNbSFZfU1RBVFNfQVJFQV9TRUxGXSk7
+DQo+ID4+ICAJaWYgKGVycikNCj4gPj4gIAkJcmV0dXJuIGVycjsNCj4gPj4NCj4gPj4gIAlpZGVu
+dGl0eS52cC5zdGF0c19hcmVhX3R5cGUgPSBIVl9TVEFUU19BUkVBX1BBUkVOVDsNCj4gPj4gLQll
+cnIgPSBodl9jYWxsX21hcF9zdGF0X3BhZ2UoSFZfU1RBVFNfT0JKRUNUX1ZQLCAmaWRlbnRpdHks
+DQo+ID4+IC0JCQkJICAgICZzdGF0c19wYWdlc1tIVl9TVEFUU19BUkVBX1BBUkVOVF0pOw0KPiA+
+PiArCWVyciA9IGh2X21hcF9zdGF0c19wYWdlKEhWX1NUQVRTX09CSkVDVF9WUCwgJmlkZW50aXR5
+LA0KPiA+PiArCQkJCSZzdGF0c19wYWdlc1tIVl9TVEFUU19BUkVBX1BBUkVOVF0pOw0KPiA+PiAg
+CWlmIChlcnIpDQo+ID4+ICAJCWdvdG8gdW5tYXBfc2VsZjsNCj4gPj4NCj4gPj4gQEAgLTg4MCw3
+ICs4ODEsNyBAQCBzdGF0aWMgaW50IG1zaHZfdnBfc3RhdHNfbWFwKHU2NCBwYXJ0aXRpb25faWQs
+IHUzMg0KPiB2cF9pbmRleCwNCj4gPj4NCj4gPj4gIHVubWFwX3NlbGY6DQo+ID4+ICAJaWRlbnRp
+dHkudnAuc3RhdHNfYXJlYV90eXBlID0gSFZfU1RBVFNfQVJFQV9TRUxGOw0KPiA+PiAtCWh2X2Nh
+bGxfdW5tYXBfc3RhdF9wYWdlKEhWX1NUQVRTX09CSkVDVF9WUCwgJmlkZW50aXR5KTsNCj4gPj4g
+Kwlodl91bm1hcF9zdGF0c19wYWdlKEhWX1NUQVRTX09CSkVDVF9WUCwgTlVMTCwgJmlkZW50aXR5
+KTsNCj4gPj4gIAlyZXR1cm4gZXJyOw0KPiA+PiAgfQ0KPiA+Pg0KPiA+PiBAQCAtOTg4LDcgKzk4
+OSw3IEBAIG1zaHZfcGFydGl0aW9uX2lvY3RsX2NyZWF0ZV92cChzdHJ1Y3QgbXNodl9wYXJ0aXRp
+b24NCj4gKnBhcnRpdGlvbiwNCj4gPj4gIAlrZnJlZSh2cCk7DQo+ID4+ICB1bm1hcF9zdGF0c19w
+YWdlczoNCj4gPj4gIAlpZiAoaHZfc2NoZWR1bGVyX3R5cGUgPT0gSFZfU0NIRURVTEVSX1RZUEVf
+Uk9PVCkNCj4gPj4gLQkJbXNodl92cF9zdGF0c191bm1hcChwYXJ0aXRpb24tPnB0X2lkLCBhcmdz
+LnZwX2luZGV4KTsNCj4gPj4gKwkJbXNodl92cF9zdGF0c191bm1hcChwYXJ0aXRpb24tPnB0X2lk
+LCBhcmdzLnZwX2luZGV4LCBzdGF0c19wYWdlcyk7DQo+ID4+ICB1bm1hcF9naGNiX3BhZ2U6DQo+
+ID4+ICAJaWYgKG1zaHZfcGFydGl0aW9uX2VuY3J5cHRlZChwYXJ0aXRpb24pICYmIGlzX2doY2Jf
+bWFwcGluZ19hdmFpbGFibGUoKSkNCj4gPj4gIAkJaHZfdW5tYXBfdnBfc3RhdGVfcGFnZShwYXJ0
+aXRpb24tPnB0X2lkLCBhcmdzLnZwX2luZGV4LA0KPiA+PiBAQCAtMTc0MCw3ICsxNzQxLDggQEAg
+c3RhdGljIHZvaWQgZGVzdHJveV9wYXJ0aXRpb24oc3RydWN0IG1zaHZfcGFydGl0aW9uDQo+ICpw
+YXJ0aXRpb24pDQo+ID4+ICAJCQkJY29udGludWU7DQo+ID4+DQo+ID4+ICAJCQlpZiAoaHZfc2No
+ZWR1bGVyX3R5cGUgPT0gSFZfU0NIRURVTEVSX1RZUEVfUk9PVCkNCj4gPj4gLQkJCQltc2h2X3Zw
+X3N0YXRzX3VubWFwKHBhcnRpdGlvbi0+cHRfaWQsIHZwLQ0KPiA+dnBfaW5kZXgpOw0KPiA+PiAr
+CQkJCW1zaHZfdnBfc3RhdHNfdW5tYXAocGFydGl0aW9uLT5wdF9pZCwgdnAtPnZwX2luZGV4LA0K
+PiA+PiArCQkJCQkJICAgICh2b2lkICoqKXZwLT52cF9zdGF0c19wYWdlcyk7DQo+ID4+DQo+ID4+
+ICAJCQlpZiAodnAtPnZwX3JlZ2lzdGVyX3BhZ2UpIHsNCj4gPj4gIAkJCQkodm9pZClodl91bm1h
+cF92cF9zdGF0ZV9wYWdlKHBhcnRpdGlvbi0+cHRfaWQsDQo+ID4+IGRpZmYgLS1naXQgYS9pbmNs
+dWRlL2h5cGVydi9odmdka19taW5pLmggYi9pbmNsdWRlL2h5cGVydi9odmdka19taW5pLmgNCj4g
+Pj4gaW5kZXggZmY0MzI1ZmI2MjNhLi5mNjY1NjUxMDZkMjEgMTAwNjQ0DQo+ID4+IC0tLSBhL2lu
+Y2x1ZGUvaHlwZXJ2L2h2Z2RrX21pbmkuaA0KPiA+PiArKysgYi9pbmNsdWRlL2h5cGVydi9odmdk
+a19taW5pLmgNCj4gPj4gQEAgLTQ5Myw2ICs0OTMsNyBAQCB1bmlvbiBodl92cF9hc3Npc3RfbXNy
+X2NvbnRlbnRzIHsJIC8qDQo+ID4+IEhWX1JFR0lTVEVSX1ZQX0FTU0lTVF9QQUdFICovDQo+ID4+
+ICAjZGVmaW5lIEhWQ0FMTF9HRVRfUEFSVElUSU9OX1BST1BFUlRZX0VYCQkweDAxMDENCj4gPj4g
+ICNkZWZpbmUgSFZDQUxMX01NSU9fUkVBRAkJCQkweDAxMDYNCj4gPj4gICNkZWZpbmUgSFZDQUxM
+X01NSU9fV1JJVEUJCQkJMHgwMTA3DQo+ID4+ICsjZGVmaW5lIEhWQ0FMTF9NQVBfU1RBVFNfUEFH
+RTIJCQkJMHgwMTMxDQo+ID4+DQo+ID4+ICAvKiBIVl9IWVBFUkNBTExfSU5QVVQgKi8NCj4gPj4g
+ICNkZWZpbmUgSFZfSFlQRVJDQUxMX1JFU1VMVF9NQVNLCUdFTk1BU0tfVUxMKDE1LCAwKQ0KPiA+
+PiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9oeXBlcnYvaHZoZGtfbWluaS5oIGIvaW5jbHVkZS9oeXBl
+cnYvaHZoZGtfbWluaS5oDQo+ID4+IGluZGV4IGJmMmNlMjdkZmNjNS4uMDY0YmY3MzVjYWI2IDEw
+MDY0NA0KPiA+PiAtLS0gYS9pbmNsdWRlL2h5cGVydi9odmhka19taW5pLmgNCj4gPj4gKysrIGIv
+aW5jbHVkZS9oeXBlcnYvaHZoZGtfbWluaS5oDQo+ID4+IEBAIC0xNzcsNiArMTc3LDEzIEBAIHN0
+cnVjdCBodl9pbnB1dF9tYXBfc3RhdHNfcGFnZSB7DQo+ID4+ICAJdW5pb24gaHZfc3RhdHNfb2Jq
+ZWN0X2lkZW50aXR5IGlkZW50aXR5Ow0KPiA+PiAgfSBfX3BhY2tlZDsNCj4gPj4NCj4gPj4gK3N0
+cnVjdCBodl9pbnB1dF9tYXBfc3RhdHNfcGFnZTIgew0KPiA+PiArCXUzMiB0eXBlOyAvKiBlbnVt
+IGh2X3N0YXRzX29iamVjdF90eXBlICovDQo+ID4+ICsJdTMyIHBhZGRpbmc7DQo+ID4+ICsJdW5p
+b24gaHZfc3RhdHNfb2JqZWN0X2lkZW50aXR5IGlkZW50aXR5Ow0KPiA+PiArCXU2NCBtYXBfbG9j
+YXRpb247DQo+ID4+ICt9IF9fcGFja2VkOw0KPiA+PiArDQo+ID4+ICBzdHJ1Y3QgaHZfb3V0cHV0
+X21hcF9zdGF0c19wYWdlIHsNCj4gPj4gIAl1NjQgbWFwX2xvY2F0aW9uOw0KPiA+PiAgfSBfX3Bh
+Y2tlZDsNCj4gPj4gLS0NCj4gPj4gMi4zNC4xDQo+ID4+DQoNCg==
 
