@@ -1,184 +1,182 @@
-Return-Path: <linux-hyperv+bounces-7070-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7071-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3D32BB78D5
-	for <lists+linux-hyperv@lfdr.de>; Fri, 03 Oct 2025 18:31:50 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84692BB79C2
+	for <lists+linux-hyperv@lfdr.de>; Fri, 03 Oct 2025 18:52:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 58A161B210CC
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Oct 2025 16:32:13 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 61A604ED514
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Oct 2025 16:52:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E3321DF25C;
-	Fri,  3 Oct 2025 16:31:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20F8B2D3EEA;
+	Fri,  3 Oct 2025 16:52:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="H/rxAzr0"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sUW4RWmm"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 635C14A0A;
-	Fri,  3 Oct 2025 16:31:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C5962D2485;
+	Fri,  3 Oct 2025 16:52:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759509105; cv=none; b=bQCro1NC/8a0Wec/Z50E8hE6LIBJWQpPp7HYsUHNJkL/IiwYpB4MoR0HQ71CtacyodIxQIlU4TVP3owPhznYtULt6pYT2n9X0FYZf9XS0jl9xsfIiuVNQzpzrXUZj1z8XKN/hAwmR9YbFuSdVZkoL+AYw8DluAQ8cCXo1pVlj9M=
+	t=1759510342; cv=none; b=aVrIVBh2TrAgmns8xduFsMnP2l9nDp2ZVz/r77q6Mk2qCfD0/m6npikskEJg4/UZibhThDzgrwrKB5405xB/3JlGkwJRkEdkqkAH4ut70S52z4xt0yqTyK5Y0h2dFGrV5DyiL2vybw7R8+nopqMOAab+1cNYqm6rg65sfEgYlXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759509105; c=relaxed/simple;
-	bh=JCYGpZCyS8mYFl8K1M31LDrVDEgLpmQQRqXQ4pf8zVg=;
+	s=arc-20240116; t=1759510342; c=relaxed/simple;
+	bh=XopMqeBEhXWvFMPQFEtogrEfzYADeZLpFbReGstZ9vM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jJskU+rf56laCo3iZ2sl52VUglvtuwv9Gv1tBZxQchBqh+t0YKl2Aea/xEvUZ8Ub0QGL4mAloKiU6kgIO/Y3hqBwWTsUmtmyFQRkLrKtmaf55wOsHnXwHS85iJ5eqA3GmG8Y5c/Qr/LCzMmQjW9OnTQmu1GfyH/4RNCsmg/c2NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=H/rxAzr0; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZG83ExxNzudPYpvbjQu9jexSZJ1cXgDfQnJNCEyzP8ezCVK14tB+3zriYws7kV9ujH0UdxteV5c1aZYA//I+w3pQhu2OLXlnTT7ZFoaJ1KqIqUuHQj9FGIlEOHenPZfqIyLckccUqYWLFVpfAYzGIn5AfDAzhAuOmU2nVWU+W/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sUW4RWmm; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii.localdomain (unknown [52.148.171.5])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 3E84D2119CC3;
-	Fri,  3 Oct 2025 09:31:43 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3E84D2119CC3
+	by linux.microsoft.com (Postfix) with ESMTPSA id 73B94211D8C8;
+	Fri,  3 Oct 2025 09:52:19 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 73B94211D8C8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1759509103;
-	bh=zU9eR3m3sITGJLo1sDvusAbURVWAeLArFfvIBqdWDOA=;
+	s=default; t=1759510339;
+	bh=FD7HWPe0C/v7A3S/nQyeRDNE2l3vn3CGHv8EhytZTng=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H/rxAzr0yC8njzWvQCrWDtehZDzCit7dvtrsBTZ1Tkt0b2BQcZg5thIYCSkncdbdN
-	 4jOcmllsg6951FtCFs4z3WnGIwE16W18o9w+dp33s3ho1fHz/UYkNanZT7LbAz3c90
-	 HSJUQq6KkqeoCW1QCas8+jt6GspS9764Gj0QneSI=
-Date: Fri, 3 Oct 2025 09:31:41 -0700
+	b=sUW4RWmmBm7LEZN5/klHAbY/rFTlyD4az9XqYLPRhydkxVvYz2ALNt0G+nCfciyzN
+	 7j7YdZt+Dj0Ejf5cgj2daCxzyhiOjQZojzopWH8Wie6bMAbfDFICgjKjZJsK/Ayxbv
+	 8EBQtpUeh6lDPZemKG66Ex1/Zkfk/PIW/m4CEnB4=
+Date: Fri, 3 Oct 2025 09:52:17 -0700
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	prapal@linux.microsoft.com, easwar.hariharan@linux.microsoft.com,
-	tiala@microsoft.com, anirudh@anirudhrb.com,
-	paekkaladevi@linux.microsoft.com, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com
-Subject: Re: [PATCH v4 0/5] mshv: Fixes for stats and vp state page mappings
-Message-ID: <aN_6bST3WmeTG3lv@skinsburskii.localdomain>
-References: <1758903795-18636-1-git-send-email-nunodasneves@linux.microsoft.com>
- <aNcd60fpoI1b6LUT@skinsburskii.localdomain>
- <96009fb8-0ad6-4e5b-8656-af78874a5605@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/5] Drivers: hv: Batch GPA unmap operations to
+ improve large region performance
+Message-ID: <aN__QWQZkXN8k1-V@skinsburskii.localdomain>
+References: <175942263069.128138.16103948906881178993.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <175942296162.128138.15731950243504649929.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <SN6PR02MB415777407333F3EC40CC05B7D4E4A@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <96009fb8-0ad6-4e5b-8656-af78874a5605@linux.microsoft.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <SN6PR02MB415777407333F3EC40CC05B7D4E4A@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-On Mon, Sep 29, 2025 at 11:19:51AM -0700, Nuno Das Neves wrote:
-> On 9/26/2025 4:12 PM, Stanislav Kinsburskii wrote:
-> > On Fri, Sep 26, 2025 at 09:23:10AM -0700, Nuno Das Neves wrote:
-> >> There are some differences in how L1VH partitions must map stats and vp
-> >> state pages, some of which are due to differences across hypervisor
-> >> versions. Detect and handle these cases.
-> >>
+On Fri, Oct 03, 2025 at 12:27:13AM +0000, Michael Kelley wrote:
+> From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Thursday, October 2, 2025 9:36 AM
 > > 
-> > I'm not sure that support for older and actully broken versions on
-> > hypervisor need to be usptreamed, as these versions will go away sooner
-> > or later and this support will become dead weight.
+> > Reduce overhead when unmapping large memory regions by batching GPA unmap
+> > operations in 2MB-aligned chunks.
 > > 
-> As far as I know, these changes are relevant for shipped versions of the
-> hypervisor - they are not 'broken' except in some very specific cases
-> (live migration on L1VH, I think?)
-> 
-
-I'm not sure I understand what "shipped version" of hypervisor actually
-is.
-As of today, the hypervisor is close source and the only product where
-it's used is Azure. In Azure, the older versions of hypervisor are
-replaced with newer on regular basis.
-
-> The hypervisor team added a feature bit for these changes so that both old
-> and new versions of these APIs can be supported.
-> 
-> > I think we should upstrem only the changes needed for the new versiong
-> > of hypervisors instead and carry legacy support out of tree until it
-> > becomes obsoleted.
+> > Use a dedicated constant for batch size to improve code clarity and
+> > maintainability.
 > > 
-> Which version do you suggest to be the cutoff?
+> > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+> > ---
+> >  drivers/hv/mshv_root.h         |    2 ++
+> >  drivers/hv/mshv_root_hv_call.c |    2 +-
+> >  drivers/hv/mshv_root_main.c    |   15 ++++++++++++---
+> >  3 files changed, 15 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
+> > index e3931b0f12693..97e64d5341b6e 100644
+> > --- a/drivers/hv/mshv_root.h
+> > +++ b/drivers/hv/mshv_root.h
+> > @@ -32,6 +32,8 @@ static_assert(HV_HYP_PAGE_SIZE == MSHV_HV_PAGE_SIZE);
+> > 
+> >  #define MSHV_PIN_PAGES_BATCH_SIZE	(0x10000000ULL / HV_HYP_PAGE_SIZE)
+> > 
+> > +#define MSHV_MAX_UNMAP_GPA_PAGES	512
+> > +
+> >  struct mshv_vp {
+> >  	u32 vp_index;
+> >  	struct mshv_partition *vp_partition;
+> > diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
+> > index c9c274f29c3c6..0696024ccfe31 100644
+> > --- a/drivers/hv/mshv_root_hv_call.c
+> > +++ b/drivers/hv/mshv_root_hv_call.c
+> > @@ -17,7 +17,7 @@
+> >  /* Determined empirically */
+> >  #define HV_INIT_PARTITION_DEPOSIT_PAGES 208
+> >  #define HV_MAP_GPA_DEPOSIT_PAGES	256
+> > -#define HV_UMAP_GPA_PAGES		512
+> > +#define HV_UMAP_GPA_PAGES		MSHV_MAX_UNMAP_GPA_PAGES
+> > 
+> >  #define HV_PAGE_COUNT_2M_ALIGNED(pg_count) (!((pg_count) & (0x200 - 1)))
+> > 
+> > diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> > index 7ef66c43e1515..8bf0b5af25802 100644
+> > --- a/drivers/hv/mshv_root_main.c
+> > +++ b/drivers/hv/mshv_root_main.c
+> > @@ -1378,6 +1378,7 @@ mshv_map_user_memory(struct mshv_partition *partition,
+> >  static void mshv_partition_destroy_region(struct mshv_mem_region *region)
+> >  {
+> >  	struct mshv_partition *partition = region->partition;
+> > +	u64 page_offset;
+> >  	u32 unmap_flags = 0;
+> >  	int ret;
+> > 
+> > @@ -1396,9 +1397,17 @@ static void mshv_partition_destroy_region(struct mshv_mem_region *region)
+> >  	if (region->flags.large_pages)
+> >  		unmap_flags |= HV_UNMAP_GPA_LARGE_PAGE;
+> > 
+> > -	/* ignore unmap failures and continue as process may be exiting */
+> > -	hv_call_unmap_gpa_pages(partition->pt_id, region->start_gfn,
+> > -				region->nr_pages, unmap_flags);
+> > +	for (page_offset = 0; page_offset < region->nr_pages; page_offset++) {
+> > +		if (!region->pages[page_offset])
+> > +			continue;
+> > +
+> > +		hv_call_unmap_gpa_pages(partition->pt_id,
+> > +					ALIGN(region->start_gfn + page_offset,
+> > +					      MSHV_MAX_UNMAP_GPA_PAGES),
 > 
-> I'd prefer to support as many versions of the hypervisor as we can, as
-> long as they are at all relevant. We can remove the support later.
-> Removing prematurely just creates friction. Inevitably some users will
-> find themselves running on an older hypervisor and then it just fails
-> with a cryptic error. This includes myself, since I test L1VH on Azure
-> which typically has older hypervisor versions.
+> Seems like this should be ALIGN_DOWN() instead of ALIGN().  ALIGN() rounds
+> up to get the requested alignment, which could skip over some non-zero
+> entries in region->pages[].
 > 
 
-Given that these changes are expected to land to a newly released
-kernel, it will take time until this kernel gets to production. At that
-moment it's highly likley that the older versions of hypervisor you are
-trying to support here will be gone for good.
-Even if they won't be gone, they will be obsoleted and intended to be
-replaced which effecitively makes this support of older versions a
-dead weight, which - if needed to be caried - is cleaner to keep in house
-and drop when apporiate than keeping in the upstream code base.
+Indeed, the goal is to unmap in 2MB chunks as it's the max payload that
+can be passed to hypervisor.
+I'll replace it with ALIGN_DOWN in the next revision.
+
+> And I'm assuming the unmap hypercall is idempotent in that if the specified
+> partition PFN range includes some pages that aren't mapped, the hypercall
+> just skips them and keeps going without returning an error.
+> 
+
+It might be the case, but it's not reliable.
+If the region size isn’t aligned to MSHV_MAX_UNMAP_GPA_PAGES (i.e., not
+aligned to 2M), the hypervisor can return an error for the trailing
+invalid (non-zero) PFNs.
+I’ll fix this in the next revision.
+
+> > +					MSHV_MAX_UNMAP_GPA_PAGES, unmap_flags);
+> > +
+> > +		page_offset += MSHV_MAX_UNMAP_GPA_PAGES - 1;
+> 
+> This update to the page_offset doesn't take into account the effect of the
+> ALIGN (or ALIGN_DOWN) call.  With a change to ALIGN_DOWN(), it may
+> increment too far and perhaps cause the "for" loop to be exited prematurely,
+> which would fail to unmap some of the pages.
+> 
+
+I’m not sure I see the problem here.  If we align the offset by
+MSHV_MAX_UNMAP_GPA_PAGES and unmap the same number of pages, then we
+should increment the offset by that very same number, shouldn’t we?
 
 Thanks,
-Stas
+Stanislav
 
-> Nuno
-> 
-> > Thanks,
-> > Stanislav
+> > +	}
+> > 
+> >  	mshv_region_invalidate(region);
 > > 
 > > 
-> >> Patch 1:
-> >> Fix for the logic of when to map the vp stats page for the root scheduler.
-> >>
-> >> Patch 2-3:
-> >> Add HVCALL_GET_PARTITION_PROPERTY_EX and use it to query "vmm capabilities" on
-> >> module init.
-> >>
-> >> Patches 4-5:
-> >> Check a feature bit in vmm capabilities, to take a new code path for mapping
-> >> stats and vp state pages. In this case, the stats and vp state pages must be
-> >> allocated by Linux, and a new hypercall HVCALL_MAP_VP_STATS_PAGE2 must be used
-> >> to map the stats page.
-> >>
-> >> ---
-> >> v4:
-> >> - Fixed some __packed attributes on unions [Stanislav]
-> >> - Cleaned up mshv_init_vmm_caps() [Stanislav]
-> >> - Cleaned up loop in hv_call_map_stats_page2() [Stanislav]
-> >>
-> >> v3:
-> >> https://lore.kernel.org/linux-hyperv/1758066262-15477-1-git-send-email-nunodasneves@linux.microsoft.com/T/#t
-> >> - Fix bug in patch 4, in mshv_partition_ioctl_create_vp() cleanup path
-> >>   [kernel test robot]
-> >> - Make hv_unmap_vp_state_page() use struct page to match hv_map_vp_state_page()
-> >> - Remove SELF == PARENT check which doesn't belong in patch 5 [Easwar]
-> >>
-> >> v2:
-> >> https://lore.kernel.org/linux-hyperv/1757546089-2002-1-git-send-email-nunodasneves@linux.microsoft.com/T/#t
-> >> - Remove patch falling back to SELF page if PARENT mapping fails [Easwar]
-> >>   (To be included in a future series)
-> >> - Fix formatting of function definitions [Easwar]
-> >>   - Fix some wording in commit messages [Praveen]
-> >>     - Proceed with driver init even if getting vmm capabilities fails [Anirudh]
-> >>
-> >> v1:
-> >> https://lore.kernel.org/linux-hyperv/1756428230-3599-1-git-send-email-nunodasneves@linux.microsoft.com/T/#t
-> >>
-> >> ---
-> >> Jinank Jain (2):
-> >>   mshv: Allocate vp state page for HVCALL_MAP_VP_STATE_PAGE on L1VH
-> >>   mshv: Introduce new hypercall to map stats page for L1VH partitions
-> >>
-> >> Nuno Das Neves (1):
-> >>   mshv: Only map vp->vp_stats_pages if on root scheduler
-> >>
-> >> Purna Pavan Chandra Aekkaladevi (2):
-> >>   mshv: Add the HVCALL_GET_PARTITION_PROPERTY_EX hypercall
-> >>   mshv: Get the vmm capabilities offered by the hypervisor
-> >>
-> >>  drivers/hv/mshv_root.h         |  24 +++--
-> >>  drivers/hv/mshv_root_hv_call.c | 185 +++++++++++++++++++++++++++++++--
-> >>  drivers/hv/mshv_root_main.c    | 127 ++++++++++++----------
-> >>  include/hyperv/hvgdk_mini.h    |   2 +
-> >>  include/hyperv/hvhdk.h         |  40 +++++++
-> >>  include/hyperv/hvhdk_mini.h    |  33 ++++++
-> >>  6 files changed, 337 insertions(+), 74 deletions(-)
-> >>
-> >> -- 
-> >> 2.34.1
+> > 
 > 
 
