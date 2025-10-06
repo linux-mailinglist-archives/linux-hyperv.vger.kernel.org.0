@@ -1,147 +1,149 @@
-Return-Path: <linux-hyperv+bounces-7094-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7095-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id A68D4BB8F59
-	for <lists+linux-hyperv@lfdr.de>; Sat, 04 Oct 2025 17:25:18 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA511BBCFF5
+	for <lists+linux-hyperv@lfdr.de>; Mon, 06 Oct 2025 05:08:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1B1AD4E05DC
-	for <lists+linux-hyperv@lfdr.de>; Sat,  4 Oct 2025 15:25:17 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 52F34347612
+	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Oct 2025 03:08:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 237DB26CE2D;
-	Sat,  4 Oct 2025 15:25:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4ED919E83C;
+	Mon,  6 Oct 2025 03:08:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="nPbrLm5T"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="u8w3IVaL"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazolkn19012067.outbound.protection.outlook.com [52.103.14.67])
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazolkn19012017.outbound.protection.outlook.com [52.103.11.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F6F1BCA07;
-	Sat,  4 Oct 2025 15:25:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.14.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECECFDDA9;
+	Mon,  6 Oct 2025 03:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.11.17
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759591515; cv=fail; b=lLoj92wCrXh3d8Gejs+oj7GFh0gICBRcfBmbksJwQqIPRkP48kgWul27PDPDzIBI+ehl2jMOqAkna7ve+wuAcvR4QouzyOEGqaI1LqxqplBG9o+10ASd/V6ihXLqSxscg1+LcnzCHScn6BRXG/ankeC5Xk+BLbusQ6eIRK+DxPc=
+	t=1759720091; cv=fail; b=PCZzRXV71//Bv1OSaBoUpTRbPF85glqaNHWRuIt54ayYQOXy47QufDbSOHuCvUp24M33adU9sBKP99T8wuO5fFPc5VOrCcNYQX5RbflYqI7TPRBcXWFr+idUTXdJCmzE7sxKyr8FAyYYSAnSstB5KOPiykRXGVHpfhd1aKM7MoU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759591515; c=relaxed/simple;
-	bh=wIOIyXPEUPN5IyDGrq0lIigmWT7RsLdxaEQJKDo+QCI=;
+	s=arc-20240116; t=1759720091; c=relaxed/simple;
+	bh=zslJw4hl5idwCYdzxhCAwobphJ5fFuZOeNOn0Cno/eQ=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=YGA6KnAO9DnCLvberTjW038k1UsgVDfFU9S81IJSYlOIs6XCdpyFCNlL83PjN4lbQMyMtd0XwcVh2rqTBnWpIcV/Gqyq7xeG0mHTeVdvqQwgJ72krNCs4OanPWXqP4z6EPXGLKrJwDX36k3rkC56h4fTBVS+X4sbz0UU3JG/A1M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=nPbrLm5T; arc=fail smtp.client-ip=52.103.14.67
+	 Content-Type:MIME-Version; b=LQKSynZNhImx7u79DQ5j646sEvcvOp1mEUFWNoE2azji9tPr+RyGCIgKDVYcop3clU78p93DwFxJKoMjGV3jvwtHwJJD7tXQN+NhMyeqnsrpxs5IiH0GTCEx1V+Akyw0hRZRpuxFbc+fPQDY2B7GWAt0Fy5XZUmGWLr22O8kxLU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=u8w3IVaL; arc=fail smtp.client-ip=52.103.11.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IlYm+N2qXUjbN6I7AMO9/pmkuljuUHHYs622KgCrnAVPsCGoIItTcA6hmsRnQ+5e75YLZwfvyDZQlJ4khnWuSBsorsJiJp1nc7CQaOumVQ6uGYUvgKqen5z+hGt+0510s0CrT/YCBpMTZqrOAXHAMc+gmUfurIT79gT1e9YpCXNgWzjvFiz/OceqQdeG/a1EjoIDS7dDCJ5BgqnVLuv9JT23ubnl2JIdjPZVSVcY/QIbaBhT6/C2L7YuXgSGmqrqN0coGqkiI37mWgy5WTVRkunrqT3uZjvO+3J1utS0839tUItabCCFwnUPgGDo3uR6V3M+scp95nmQyRYYpmexKw==
+ b=UfwROFeDH8sf9HfVti6k6QYhnYjHBNei7cORfxKdfiWsVwjnlWm9yEfxp5Ay9XAecTGOv24E2sv1PAbC+raT5V+irk9/H42mGLwE0k+kULqUJJNFeW7YrhAcx2rKeayrnkAWoOxnGD/Yzx0KH+8Xt7sd4+wpVM885IVu2L1wpyKD9CyOKuwPsowxDNFg43PFANHRjCA0l4Q2tdEGGJZMdlYgLqan33nub3rgoGfNk10vZ+8Yjt6PLwiktRSq1V8APBGJqtxFY4WGdPcbwI9WPK7XCb+QxCMbG5rOZHjxupeSWoRlqm+uV38/DCwTAFNXPFnYO6tLqkq8MofMrre7kQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HjBNvH6bcTajzNHSxYd8sWeSbTCb48p92DmOaozq2IA=;
- b=FK4+f5+NwGkDc98mA1TGFCBxk/N3UlYgPclUewjBe0h3u4qbOq0rj/dyWL0ZDFsJdiLDuFEEyzML40S4ZFmlQev5low+51nGXrC9BJ+HV36/NLfwyzRzRPXEaBG1emcy1hr1Hx9+4aRc+nYwJ4CgQrX/W8F/RYu3nC9l+llDJhGwycqIQ9umd3KwlOLOE0E0B78Laj4brzq9ppCp3n+1ZutkFGTC7RsTtmQyZ5au2TQdGQB5KRhNxtTxiM11jjuuwpc0fIxArPtHNdLFHTcc81sH1iLbSNbdzqoFwX7G/BbhOWjV8cTiLdGH5SbKJGnofsnBIQLhehOF6CWykP6h+w==
+ bh=zslJw4hl5idwCYdzxhCAwobphJ5fFuZOeNOn0Cno/eQ=;
+ b=FyjxxiZ/yeZYzDVK+7dy6vvj6v42a9ErhQFt54xn6adT4DtH/M/gjgSUunLO9ElsU/R3z3B4OdN1/++XTtavtX+m80+Xwu/eAdrflOcLiKivVeRUgudv9tmM5sfq43k3z+hpKJZpxXm7nu/a3Ttp+2hd16huMnkOyDEBxbdpnope+5ElRIZ/0eA4+ZFqqfioUVZQY10NN7aA0Tqx66wWqOEwuXQq9DpB7g5YqBCBCI9zfN4dCZ5qqHmf6W4gXhwwO67zVzgghiSqJcjzvQ9E2WLzr9cxv6VCCx3BXdIj5W7vGkynud2WdxPN77OFHvoRJF9NEgGSbalZFyRwR4/jDA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HjBNvH6bcTajzNHSxYd8sWeSbTCb48p92DmOaozq2IA=;
- b=nPbrLm5T/4KTSxKojcwmw53jKU3cFmezDGJ7WEdO10OlgqXvmJ1XFzfXn76HqMwc2l++MSsRwOwaH2GoGtlfVIXPFA7ZzObnVJnFjcNvUaJBMt6HXcSwWAy8L6uofSNbbaHHr1eJarwx5xm586zcGQiTwWcs4lW4XCrg5/9h5m/28cyykBFBPCil/vroTzhy6/1vEMLqb9AsSGMLxZyBNSW7xJPpihRT9NXvMcSUNQSdlwxl6v6cX9yJQFHB62uli7I4W8wef8qpG5LBSmeIruuc1uCiAJZaD2eDs1zj4jF6mPyvHu7yM3nQ1v9csXq0STJVl9ueduTuq4IG4edSvA==
+ bh=zslJw4hl5idwCYdzxhCAwobphJ5fFuZOeNOn0Cno/eQ=;
+ b=u8w3IVaL8Q2LG6VUCobXmYLvXjr2+VzNMRgeWRjEVd2QmJzPQs4MZ4wtQGZMNwQ/6HHTjOD5cVnKKdV6a6a6wkBVoa+BJLC7PZrxnb7d4mxMlfUlT8qQUY8dVYEhNruUE7K2Od+WVIQVHD4PKe09YCFNKblOD2HT60uN2Cjvbmplju7CsJDlLojV5YNr0OaG6i1/SfOUD01vh10yKtEqpv0/NqacUNTxe6TBhLDwk0169DFwJwXGwMor7H9PZ4x4af8LDNzIrKMoM3lc7Csppwm6y2Xoz+4oOuhy3dSo70MMwTz9m9O60Dn6KnaCG7ne+IoXaFKTLzyHt8LGr6Li3g==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by MN2PR02MB6655.namprd02.prod.outlook.com (2603:10b6:208:19a::11) with
+ by CY8PR02MB9250.namprd02.prod.outlook.com (2603:10b6:930:9d::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9182.19; Sat, 4 Oct
- 2025 15:25:10 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9182.20; Mon, 6 Oct
+ 2025 03:08:05 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.9182.017; Sat, 4 Oct 2025
- 15:25:10 +0000
+ ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.9182.017; Mon, 6 Oct 2025
+ 03:08:04 +0000
 From: Michael Kelley <mhklinux@outlook.com>
-To: Michael Kelley <mhklinux@outlook.com>, Nuno Das Neves
-	<nunodasneves@linux.microsoft.com>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "prapal@linux.microsoft.com"
-	<prapal@linux.microsoft.com>, "easwar.hariharan@linux.microsoft.com"
-	<easwar.hariharan@linux.microsoft.com>, "tiala@microsoft.com"
-	<tiala@microsoft.com>, "anirudh@anirudhrb.com" <anirudh@anirudhrb.com>,
-	"paekkaladevi@linux.microsoft.com" <paekkaladevi@linux.microsoft.com>,
-	"skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>
-CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	"kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
 	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>, Jinank Jain
-	<jinankjain@linux.microsoft.com>
-Subject: RE: [PATCH v4 4/5] mshv: Allocate vp state page for
- HVCALL_MAP_VP_STATE_PAGE on L1VH
-Thread-Topic: [PATCH v4 4/5] mshv: Allocate vp state page for
- HVCALL_MAP_VP_STATE_PAGE on L1VH
-Thread-Index: AQHcLwIJ67Rvwcf9OU+03OvTNyRllLSqZUqQgAOJ8ICAAAQZoIAEKLow
-Date: Sat, 4 Oct 2025 15:25:09 +0000
+	"decui@microsoft.com" <decui@microsoft.com>
+CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 1/5] Drivers: hv: Refactor and rename memory region
+ handling functions
+Thread-Topic: [PATCH v3 1/5] Drivers: hv: Refactor and rename memory region
+ handling functions
+Thread-Index: AQHcM7qrn1eh6YSTl0+3a/JQ9MSRPrS0dHVw
+Date: Mon, 6 Oct 2025 03:08:02 +0000
 Message-ID:
- <SN6PR02MB4157F9804CC7F22A22E01682D4E5A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB4157D88089F3221A853B1C67D4E3A@SN6PR02MB4157.namprd02.prod.outlook.com>
 References:
- <1758903795-18636-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1758903795-18636-5-git-send-email-nunodasneves@linux.microsoft.com>
- <SN6PR02MB4157E95BDC70A1F91228DAF7D41BA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <8bacde85-6406-4b47-b11d-ed5054b270f2@linux.microsoft.com>
- <SN6PR02MB4157BB0D3B4B8A616C8B2E29D4E7A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <175942263069.128138.16103948906881178993.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <175942295032.128138.5037691911773684559.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 In-Reply-To:
- <SN6PR02MB4157BB0D3B4B8A616C8B2E29D4E7A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <175942295032.128138.5037691911773684559.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|MN2PR02MB6655:EE_
-x-ms-office365-filtering-correlation-id: e63437ee-cef5-4bae-92e2-08de035a34a7
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CY8PR02MB9250:EE_
+x-ms-office365-filtering-correlation-id: 119a01b2-f3d8-48b5-603e-08de0485900e
 x-microsoft-antispam:
- BCL:0;ARA:14566002|8060799015|13091999003|8062599012|19110799012|31061999003|461199028|8022599003|15080799012|41001999006|12121999013|440099028|3412199025|102099032|1710799026;
+ BCL:0;ARA:14566002|13091999003|461199028|31061999003|15080799012|8060799015|8062599012|41001999006|19110799012|3412199025|440099028|40105399003|102099032;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?Z42NGmFttJEBkC39w1phVidLm/G9r11vY2Y75KVqo9YkNRwTtsSdF3c/Uyry?=
- =?us-ascii?Q?OYCtQOPMZwCOZ8ieatayyqDku6eTGPz2bSacvGyS422UT1ZmpmmCgsLi/RH7?=
- =?us-ascii?Q?nsx0moJJFJegqIRvAd2xoMbE+gSbkgirdGJ3xy/LaWMR7dfa2EQ5E47RmAL1?=
- =?us-ascii?Q?MV7Vq0w8isoiiOckiWkkn17YgMhNA7Z6dvT5vYGmTcLYqkMH9qfjSpjvzJBV?=
- =?us-ascii?Q?8TVdKgMWHFzwFc18OFndiWaigDoT+0qOWSGKHvgeIRMqTrjaMqrwCsG1cZPI?=
- =?us-ascii?Q?4223DRgf9+RDgWQBXRW3b7RMNPPQWRZzTCNrNRKHaB4bZl5SJHqmGqeeVi4G?=
- =?us-ascii?Q?LEQxFabM1meQDLbRf7iKZ3XKOgvE3Ud5/yZ6O6hbpQuPF73hFDoPGdMmvyzy?=
- =?us-ascii?Q?az2o14QdoQN0+dKYobQOQAiPMlBSOMcrNISXIsbxyL98d3zKtCG7Sy1nWi82?=
- =?us-ascii?Q?1GV3YgfsqhyN/aJugEwSKmvT4H18H93D+7cXEinbqgcI4/wuV2wUyDaSBlDO?=
- =?us-ascii?Q?pgKp/p2l2MCanxUMRH1nLurzIpLh9yEPRNYeew2MUpyR0XqkHd8gqYTLv7CS?=
- =?us-ascii?Q?pZSZpX5Z2VMuK7a4UWpmx9kMktLFvCL/2a8+jmklvmg2Htk6jlN7ljaIOU6D?=
- =?us-ascii?Q?77ERBJz0dAA7/WawFeGvlNXYHJC2sAGX+moaRMFcJNbosmu5yqdxAzpCju7x?=
- =?us-ascii?Q?7SjF+BB+gJbkUIQdkBYi4NnQArix6NZrL0ToXBh1t/KDZ9ylCgE1NvhLHVfQ?=
- =?us-ascii?Q?r/F2rMBoVwL3XWLXrzdxgYGqc5b8wwzSes5RNpMIz43TmaI8t8v+K7PRPfap?=
- =?us-ascii?Q?wXA5jkt0101TeOahbIXkLVuE79bIoNPQti/+gtUIMUofLq2T2gSdA6EDJIuf?=
- =?us-ascii?Q?Iggfd3SIzSY3/vBJghvP3mef9ustVIIP9G8liKRmDtBODPigFcyQfbD2vqSp?=
- =?us-ascii?Q?FwFKmLzu/J6jjJgCq0O1kKmZnoxj0NIelz+G3MxuLnfZjZED5o7PHyjtoemT?=
- =?us-ascii?Q?3UMR8YA/tQ8/KteltcWeyEl2J/w4pbRJHawlB9UJ1tPKc6FsyXFPqjGpK/MX?=
- =?us-ascii?Q?0BNWkQcThw74wlZpG7R5S8RogXNjAiKOt72DES+7Qva4kjeyBS6/YmDFRwge?=
- =?us-ascii?Q?EIiOYVs+xS6SK85p8A+9IoQf4JlZ4FWXLKQdIeUw1hN5vAUO67I+/xuk3e26?=
- =?us-ascii?Q?1fDbisjD+K6rhLuLLEX+8aHOWdT5R0oaIckX9J2vsmAi8FlX+TR5PTp3Che7?=
- =?us-ascii?Q?+oEGSuBy3WzCsJzoZvRicvqoHx1ZMEH7TCSBT2wtdg=3D=3D?=
+ =?utf-8?B?WFFqUExrdER0WEVJRHVqMVE1TWRTVjk3cGQ5c3llaUZHV3FkazQxQ2tGSTli?=
+ =?utf-8?B?dFJpQjlCZFhxWWR2emdFY2NMOWNSY01iODZDSHd4cEdCL3NBMWFRK1VURkhV?=
+ =?utf-8?B?eFVSdHo0YTFCbWdWYUh2akVmbmh3MDNzWkt4MFIrOTRpeGFvUktpTzFBYkhT?=
+ =?utf-8?B?NnJVR3hqdG5seXRneUdzUk92Rzl3Zk1mcjRyYVJRamVNSkZWZUJUQkxWazBX?=
+ =?utf-8?B?WGJuVE1VYThFeFVseStVbVJhZzFMTjg0UTRkTzlELzBNWEZIK1hkaHVJNmE1?=
+ =?utf-8?B?OVNRMG93VS9sOW9TelVnMkVpaFJ1YjlPWU1QYmxEVk5aUGNITUMvNVF4YmtH?=
+ =?utf-8?B?cTAwa3RCZ1RKYTNyRWVFVExRSG9VaksyTFNRVkVMZkQrM3VxRkowbWdNcGVr?=
+ =?utf-8?B?dGdEMzFiZVc5YWg2cmRFWTd5QmUrb1ZxM3EzQkpsaHlCaHNCTjBpWmZmKzVr?=
+ =?utf-8?B?R3EvQUlHbzZJZGE3NmU0b3ZGcHBoZE43TkNWN01MVVNVT0REZkFqSmxYdk5R?=
+ =?utf-8?B?Qk84WHhJQUtJL2hpQmRBMXp6TWMrdUFrQ000VTFlR3NYL21jYyszRUptVGJv?=
+ =?utf-8?B?UkhnWjNjUlJtZVR0ZHpXT0F0cG1rNHVjemJMQUxZcGxFZC9vcVVyL2xhNW1O?=
+ =?utf-8?B?RWFFWUxuRk5zN3VldmZvOGVQd3pRSWtSRFhDWm54NDRtNGRnbFJiWVlSN1Vs?=
+ =?utf-8?B?d0ZuQUtyUTQ0dmFhUEkySGdJNURPTEFQUHIyeFBMZXBDOWwwQnNGVUw0ZDN1?=
+ =?utf-8?B?VFgrVVBSWkJVWExib1drQW1GbCtjeUtEVEJBUklGQSt5WU51TDVyb2F4NHRT?=
+ =?utf-8?B?NHFVaGFkWHV6YlNFQVhDV2ZIUGs5L3hwTnl1d2VLcnI2VUc5anB5Q3JEc2Vv?=
+ =?utf-8?B?VWFoVnY4MU9BUWFObWtyR3U5OEdLaWg5aDF3d3QxVlVla0pqWGtPMnVnRWF3?=
+ =?utf-8?B?Qkh0cm5YTFowR1dHQTFUY1lGTkFwL1cweEpTK2pwQkVoMkhaL2JBTHhabTQw?=
+ =?utf-8?B?QWRkajgrMTRQZHBHZWJ0YW1wSnBiVGtmdDY1QkJ5QWpVYVllTjR6dlFiMmxi?=
+ =?utf-8?B?bS9SOEtYMDd4cDBMUXBOSm9GSTArV0N5cGd2WnRBYjdiSVpmWFl0RXdueUZT?=
+ =?utf-8?B?Tm93V0lxVnMyQzlHUUliZ1kzTE10S1UyUDRrbjVmckV2M1F6Q3NNWnhVN0hV?=
+ =?utf-8?B?eThqRm8vUXNVR1NSZWxqcEN5eUVOZGMwODVuYVNVZUdPM1plVGJwcHEzZGFB?=
+ =?utf-8?B?QkVyNzZsUHBvWGpQYVU4WGFWbi9hN0VUdjhxMlJUVEp1YS9WdVU1bzc5YkhT?=
+ =?utf-8?B?N3RQYUM0Qi9FS1gwUysvSjNxS0haWFhiV25hVURtNHRKZVErOUFxVkVzbC9i?=
+ =?utf-8?B?TmlicFgwRTFjK3E5Q3MySzhKR25vc2JSc29sUVFnYW9tUkxIYzBlTnRFUStm?=
+ =?utf-8?B?WThhazUrTDZnc0pVd0FnVFUxeHpuQW5UbXhSZWRIV2w3dnVQc2txempuL2JM?=
+ =?utf-8?B?NEtWTS93L3R2bURtQ3hlYXhpRUI0QmN3N3dwQnlUblBHd1A2dXFUcHA3dk5W?=
+ =?utf-8?B?d2hPTmJ4VzBiZDQrNFVSdUxjOEIxSEs3WDR4cDl5cWY3UU92RnBxdGF6dEtF?=
+ =?utf-8?B?aEliS0w3NVYwN3JMNUZZejNxa20wL3c9PQ==?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?GIhuZ9WmSvTRc+spXX+y6Km0Op38vMGif+2FFjJq6GxtBWHVjetpR16AO4b0?=
- =?us-ascii?Q?JaegzSHpKIFGH2NwM/fDG6cD6pggZcyeLknoxN5kx0m4WN/SIalR67CxSeNS?=
- =?us-ascii?Q?VBCgzaREn+YYdCOuQAJjU1Q9dLGSeTVEirEmstMnxpStHsKLCb8vL+DYk6pz?=
- =?us-ascii?Q?N7gq2uTDvCRhNMbNWgcPkMnkJA7o4M0GAjgLsGUp/S71nml1HuMenpZAkmGs?=
- =?us-ascii?Q?LfO54jwr9O0zy7SaInkaolRzdPkNCSAa9t41zxuu13PI7KiIn45ICAqDbhrs?=
- =?us-ascii?Q?p97FMHbdyinEVhiGv1ivB1ptwD7jgkMADwFx1gHyrXpNM67QCFBcsMLiUANh?=
- =?us-ascii?Q?dE0kKwbP80UQb/uEFjj4WSyPc/8GDnGuGo2sdR12oV+Nq9xX3ryiIhU4u7X9?=
- =?us-ascii?Q?1jhoasIMJ+i/U4gapDUJ0xkh99f+13vYXc0l+fGF60AH0Cqaw65XVexN5/Uh?=
- =?us-ascii?Q?AM0f+E15e2n7BpW3VU8LLNn0ck1Rn4jeRqtfXF2IjZWe/5bdOzTrMZyKuRrG?=
- =?us-ascii?Q?zrNiqG1YDN2uMkzVcicNy/i/kw2NuJL+Wu/OuIK245D/nseS2OiL20JCExbx?=
- =?us-ascii?Q?by/1fjbsOCll1baiYjpU26Wyqg5d3O0oMMsl+ETjnM7WfoIXffHzAXB/SXiz?=
- =?us-ascii?Q?+US7fIU9GMxfLUUdBz0zsf/yykYVXbK5joq2LxZrPIGplQMPeGFhgdCi3+WX?=
- =?us-ascii?Q?4TIwmqpmM8xiAMyauBADTt/wywxDaVdIwKoqoSV18q/Nvg7Ho0eJMpricYuS?=
- =?us-ascii?Q?02VLvzE5zVoVQjjOACRu5qErYCQJr6vdzied3eobaFO8r7Xr/r7C/yqwIus2?=
- =?us-ascii?Q?9HaT1vti75RYzPXl9PKMQzpAqqNNxrS1cbnRbr7rIM3CHLSJk13lxMDHmV6b?=
- =?us-ascii?Q?tNVZrQcncKgrHq0YbhnpZ7P0/8OybjMPOGP9L/6+I9BM1C1kx4EPHy/+fVlD?=
- =?us-ascii?Q?/ngh/O6nLMja+rDpILct4Mv+sbRQ2UCgwGlpUSD08dPCA2zowZPHr0d3v28c?=
- =?us-ascii?Q?z+aDQ7UOt9FQ5sxv160SLr0YyYmz914EPqcJ9ZTqO/tVUwdOg1C/VxdtrnXe?=
- =?us-ascii?Q?u0oYbmgqb9rNrn9pfvtnv305F5zHb5ss9YXO3Eqf0ucqf9OfhkjYAxSAO2gT?=
- =?us-ascii?Q?UMN+xBCDVXRBXLcaGLtw4WVlj5AzAt/pZcW7pazA2PU3DUxS0/hqpN+gTTiO?=
- =?us-ascii?Q?7ABq7G4gEZuGA0OMMAQgdDKtchC2qvt5WuivyP7v767lLSN0G2KWPpiQZLw?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ =?utf-8?B?dHRsM3pyTzI3VVlBU0lzdTJ3ZmVKbDZqUGVUWU5KOG1kNVA0a3IxNWFhWXM1?=
+ =?utf-8?B?ekE2aHh0MFlEaXhHWjBSbHNGN2JIZG56aTJKMExrcGcwUEVKcGdpNWlVQnJW?=
+ =?utf-8?B?elJlRlRKR0lmTkJBcS9lbE9xcW56ZmlqRXIzeHBBUHN5d2lxRnJ6ckMyNEFx?=
+ =?utf-8?B?K0o2ZER6ZFNBZUM3RXQwL01MNVkvdDlXbVRUK3dRMVNQM0Fzd2hCL2NMbkE2?=
+ =?utf-8?B?TDdJTTRDNEw1dXh6UGU1U1BlNnpzNm1EYjRJWThMMXpvbjloMW1QN2NQYmtB?=
+ =?utf-8?B?V3hwMkx5cDZkNDdqb2ZFSVpWb1FHL24yT0xvbTFtQWx4TmVXK3hHS2U2c3FB?=
+ =?utf-8?B?S2NMVUx6WlVQUEJGVFdXWHQ4Sm9RVEFPcGxQYnkzSFVmVVRmTTFkei9JSVU1?=
+ =?utf-8?B?bURHQ2lOVFhhMGk1QnQ1ZGdwVUFQNVhTeEtOM2xEUWFIWG9yN09zUzlPWVlG?=
+ =?utf-8?B?MHROb1VReFFtUFBxMHhISHRpcG1rTUFlT0lOMU9rUGp2b2lKM2RadDM4TGts?=
+ =?utf-8?B?Q0ZUend4MUltNVdOTm5ab1phZlEySlpPeTdjZS9adEU0VWlacXN5ZkRpZGNV?=
+ =?utf-8?B?QmJPeTBDZUswWlozQXBzekJhbWJQMmdHNnFKOGUzeVIrSzMwZmxEUXBidk83?=
+ =?utf-8?B?S2p1ZWZHTlIrdURvK2NlMnBFM1hrTzFqaEduMjA3OWJyb0pxSmlTVDJicEZD?=
+ =?utf-8?B?bEdic2ZqTWRPZmRBWnZkdzd5NWlCc3BrSGcvZHZpNXVkQjcrTnpvdkNkQUtB?=
+ =?utf-8?B?YUIyWXI1Z1RBejkzR3ZPSWFKOThqTHF2L0JWVDB6cVN1TklIZkkrenJMSHQw?=
+ =?utf-8?B?TkhFYWNNTEI2TjQ2RE9KTENMT3hIU2FlQllOREtzZ2hRVy9rWTNEdlFIRDQ4?=
+ =?utf-8?B?QmZ4YVRmdHNSdnJpSkpHSmJCTmx4Q2pOVWpxc3RaUnliUTdaRGc0bGJsemFp?=
+ =?utf-8?B?WmF5NnVFOTdteFdUajNvWTl2RmVWLzNYbjJNcjNhT29icFcxRTJZem5aSCtv?=
+ =?utf-8?B?cm00S1ZucDhZUDc2VkR2cmYwaS9QbEdZRVNUTERYV3J5a3Vhejc4UTJrYXBQ?=
+ =?utf-8?B?V3BPRTJHRVFFSXVsb3JrU0l6MDNXTzhlR01HMnpER0VKZTVqMzRycE1seHFt?=
+ =?utf-8?B?azlSSVJqaE4vSTRvdGhSV1puSXBjYTNvRHUwUkhVQVNxazZEc3c3RzNONnUr?=
+ =?utf-8?B?aXd5WWpxd1dCbE1hR21ENDhuYmNHeEhXZjlhQWJEVndENmVUZW1DZWQwR2FS?=
+ =?utf-8?B?ZDBGQVoydmk3RDNrTzVyYlBEdU1uUGdIVnlCZGU1TlZOeHFYeUl1ZjNIdnN4?=
+ =?utf-8?B?cStMeGkvVVJTZllvdlkwNVFKWlpITXprNytJajR5WVR0Ri9US2dkSWJJdGNL?=
+ =?utf-8?B?eTl5ZmswYlJKdm5rTFFPOXVldlVHRitMcDdvUlV6YVZFYVVYQnV1Y3AzQi9Z?=
+ =?utf-8?B?MlROYWl6eTFydWRPeEZPemgwYnFaU3E2WWlqZXBlaDlNZisvOG5nbGxTYmxQ?=
+ =?utf-8?B?c0hHMVBmRWtUZzZpUS9yMDJubEJncWhGTWVQaUhOR2xEaGp6N0RIUCt4Rjlp?=
+ =?utf-8?B?UWNUZDB0eE1YTEJoL2FTM1NieVNzWkR2LzZSZ2Q4dEV4aUdtVWQwVkFXejR2?=
+ =?utf-8?Q?HJtmSEexLpqaO9JlgkQ54WScdkIHBw7rHC6z+jEdskmw=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -152,239 +154,52 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: e63437ee-cef5-4bae-92e2-08de035a34a7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Oct 2025 15:25:09.8078
+X-MS-Exchange-CrossTenant-Network-Message-Id: 119a01b2-f3d8-48b5-603e-08de0485900e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Oct 2025 03:08:02.6997
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6655
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR02MB9250
 
-From: Michael Kelley <mhklinux@outlook.com> Sent: Wednesday, October 1, 202=
-5 5:03 PM
->=20
-> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Wednesday, =
-October 1, 2025 3:56 PM
-> >
-> > On 9/29/2025 10:56 AM, Michael Kelley wrote:
-> > > From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Friday,=
- September 26, 2025 9:23 AM
-> > >>
-> > >> From: Jinank Jain <jinankjain@linux.microsoft.com>
-> > >>
-> > >> Introduce mshv_use_overlay_gpfn() to check if a page needs to be
-> > >> allocated and passed to the hypervisor to map VP state pages. This i=
-s
-> > >> only needed on L1VH, and only on some (newer) versions of the
-> > >> hypervisor, hence the need to check vmm_capabilities.
-> > >>
-> > >> Introduce functions hv_map/unmap_vp_state_page() to handle the
-> > >> allocation and freeing.
-> > >>
-> > >> Signed-off-by: Jinank Jain <jinankjain@linux.microsoft.com>
-> > >> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> > >> Reviewed-by: Praveen K Paladugu <prapal@linux.microsoft.com>
-> > >> Reviewed-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
-> > >> Reviewed-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com=
->
-> > >> Reviewed-by: Anirudh Rayabharam <anirudh@anirudhrb.com>
-> > >> ---
-> > >>  drivers/hv/mshv_root.h         | 11 ++---
-> > >>  drivers/hv/mshv_root_hv_call.c | 61 ++++++++++++++++++++++++---
-> > >>  drivers/hv/mshv_root_main.c    | 76 +++++++++++++++++--------------=
----
-> > >>  3 files changed, 98 insertions(+), 50 deletions(-)
-> > >>
-> > >> diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
-> > >> index 0cb1e2589fe1..dbe2d1d0b22f 100644
-> > >> --- a/drivers/hv/mshv_root.h
-> > >> +++ b/drivers/hv/mshv_root.h
-> > >> @@ -279,11 +279,12 @@ int hv_call_set_vp_state(u32 vp_index, u64 par=
-tition_id,
-> > >>  			 /* Choose between pages and bytes */
-> > >>  			 struct hv_vp_state_data state_data, u64 page_count,
-> > >>  			 struct page **pages, u32 num_bytes, u8 *bytes);
-> > >> -int hv_call_map_vp_state_page(u64 partition_id, u32 vp_index, u32 t=
-ype,
-> > >> -			      union hv_input_vtl input_vtl,
-> > >> -			      struct page **state_page);
-> > >> -int hv_call_unmap_vp_state_page(u64 partition_id, u32 vp_index, u32=
- type,
-> > >> -				union hv_input_vtl input_vtl);
-> > >> +int hv_map_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
-> > >> +			 union hv_input_vtl input_vtl,
-> > >> +			 struct page **state_page);
-> > >> +int hv_unmap_vp_state_page(u64 partition_id, u32 vp_index, u32 type=
-,
-> > >> +			   struct page *state_page,
-> > >> +			   union hv_input_vtl input_vtl);
-> > >>  int hv_call_create_port(u64 port_partition_id, union hv_port_id por=
-t_id,
-> > >>  			u64 connection_partition_id, struct hv_port_info *port_info,
-> > >>  			u8 port_vtl, u8 min_connection_vtl, int node);
-> > >> diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_h=
-v_call.c
-> > >> index 3fd3cce23f69..98c6278ff151 100644
-> > >> --- a/drivers/hv/mshv_root_hv_call.c
-> > >> +++ b/drivers/hv/mshv_root_hv_call.c
-> > >> @@ -526,9 +526,9 @@ int hv_call_set_vp_state(u32 vp_index, u64 parti=
-tion_id,
-> > >>  	return ret;
-> > >>  }
-> > >>
-> > >> -int hv_call_map_vp_state_page(u64 partition_id, u32 vp_index, u32 t=
-ype,
-> > >> -			      union hv_input_vtl input_vtl,
-> > >> -			      struct page **state_page)
-> > >> +static int hv_call_map_vp_state_page(u64 partition_id, u32 vp_index=
-, u32 type,
-> > >> +				     union hv_input_vtl input_vtl,
-> > >> +				     struct page **state_page)
-> > >>  {
-> > >>  	struct hv_input_map_vp_state_page *input;
-> > >>  	struct hv_output_map_vp_state_page *output;
-> > >> @@ -547,7 +547,14 @@ int hv_call_map_vp_state_page(u64 partition_id,=
- u32 vp_index, u32 type,
-> > >>  		input->type =3D type;
-> > >>  		input->input_vtl =3D input_vtl;
-> > >>
-> > >> -		status =3D hv_do_hypercall(HVCALL_MAP_VP_STATE_PAGE, input, outpu=
-t);
-> > >
-> > > This function must zero the input area before using it. Otherwise,
-> > > flags.map_location_provided is uninitialized when *state_page is NULL=
-. It will
-> > > have whatever value was left by the previous user of hyperv_pcpu_inpu=
-t_arg,
-> > > potentially producing bizarre results. And there's a reserved field t=
-hat won't be
-> > > set to zero.
-> > >
-> > Good catch, will add a memset().
-> >
-> > >> +		if (*state_page) {
-> > >> +			input->flags.map_location_provided =3D 1;
-> > >> +			input->requested_map_location =3D
-> > >> +				page_to_pfn(*state_page);
-> > >
-> > > Technically, this should be page_to_hvpfn() since the PFN value is be=
-ing sent to
-> > > Hyper-V. I know root (and L1VH?) partitions must run with the same pa=
-ge size
-> > > as the Hyper-V host, but it's better to not leave code buried here th=
-at will blow
-> > > up if the "same page size requirement" should ever change.
-> > >
-> > Good point...I could change these calls, but the other way doesn't work=
-, see below.
-> >
-> > > And after making the hypercall, there's an invocation of pfn_to_page(=
-), which
-> > > should account for the same. Unfortunately, there's not an existing h=
-vpfn_to_page()
-> > > function.
-> > >
-> > This seems like a tricky scenario to get right. In the root partition c=
-ase, the
-> > hypervisor allocates the page. That pfn could be some page within a lar=
-ger Linux page.
-> > Converting that to a Linux pfn (naively) means losing the original hvpf=
-n since it gets
-> > truncated, which is no good if we want to unmap it later. Also page_add=
-ress() would
-> > give the wrong virtual address.
-> >
-> > In other words, we'd have to completely change how we track these pages=
- in order to
-> > support this scenario, and the same goes for various other hypervisor A=
-PIs where the
-> > hypervisor does the allocating. I think it's out of scope to try and ad=
-dress that
-> > here, even in part, especially since we will be making assumptions abou=
-t something
-> > that may never happen.
->=20
-> OK, yes the hypervisor allocating the page is a problem when Linux tracks=
- it
-> as a struct page. I'll agree it's out of current scope to change this.
->=20
-> It makes me think about hv_synic_enable_regs() where the paravisor or hyp=
-ervisor
-> allocates the synic_message_page and synic_event_page. But that case shou=
-ld work
-> OK with a regular guest with page size greater than 4K because the pages =
-are tracked
-> based on the guest kernel virtual address, not the PFN. So hv_synic_enabl=
-e_regs()
-> should work on ARM64 Linux guests with 64K page size and a paravisor, as =
-well as
-> for my postulated root partition with page size greater than 4K.
->=20
-> When it matters, cases where the hypervisor or paravisor allocate pages t=
-o give
-> to the guest will require careful handling to ensure they work for guest =
-page sizes
-> greater than 4K. That's useful information for future consideration. Than=
-ks for the
-> discussion.
->=20
-
-Upon further reflection, I think there's a subtle bug in the case where the
-hypervisor supplies the state page. This bug is present in the existing cod=
-e, and
-persists after these patches.
-
-I'm assuming that the hypervisor supplied page is *not* part of the memory
-assigned to the root partition when it was created. I.e., the supplied page=
- is part
-of the hypervisor's private memory.  Or does the root partition Linux "give=
-"
-the hypervisor some memory for it to later return as one of these state pag=
-es?
-
-Assuming the page did *not* originate in Linux, then the page provided by t=
-he
-hypervisor doesn't actually have a "struct page" entry in the root partitio=
-n Linux
-instance. Doing pfn_to_page() works because it just does some address
-arithmetic, but the resulting "struct page *" value points somewhere off th=
-e
-end of the root partition's "struct page" array.
-
-Then page_to_virt() is done on this somewhat bogus "struct page *" value.
-page_to_virt() also just does some address arithmetic, so it "works". But i=
-t
-assumes that the "struct page *" input value is good, and that Linux has a =
-valid
-virtual-to-physical direct mapping for the physical memory represented by
-that input value. Unfortunately, that assumption might not always be true. =
-I
-think it works most of the time because Linux uses huge page mappings for
-the direct map, and they may extend far enough beyond the root partition's
-actual memory to cover this hypervisor page. Or maybe there's something
-else going on that I'm not aware of and that allows the current code to wor=
-k.
-So please check my thinking.
-
-The robust fix is to do like hv_synic_enable_regs(), where a page returned
-by the hypervisor/paravisor is explicitly mapped in order to have a valid
-virtual address in the root partition Linux.
-
-Note that on ARM64, when CONFIG_DEBUG_VIRTUAL is set to catch errors
-like this, page_to_virt() does additional checks on its input value, and wo=
-uld
-generate a WARN_ON() in this case. x86/x64 does not do the additional check=
-s.
-
-Michael
-
->=20
-> >
-> > >> +		}
-> > >> +
-> > >> +		status =3D hv_do_hypercall(HVCALL_MAP_VP_STATE_PAGE, input,
-> > >> +					 output);
-> > >>
-> > >>  		if (hv_result(status) !=3D HV_STATUS_INSUFFICIENT_MEMORY) {
-> > >>  			if (hv_result_success(status))
+RnJvbTogU3RhbmlzbGF2IEtpbnNidXJza2lpIDxza2luc2J1cnNraWlAbGludXgubWljcm9zb2Z0
+LmNvbT4gU2VudDogVGh1cnNkYXksIE9jdG9iZXIgMiwgMjAyNSA5OjM2IEFNDQo+IA0KPiBTaW1w
+bGlmeSBhbmQgdW5pZnkgbWVtb3J5IHJlZ2lvbiBtYW5hZ2VtZW50IHRvIGltcHJvdmUgY29kZSBj
+bGFyaXR5IGFuZA0KPiByZWxpYWJpbGl0eS4gQ29uc29saWRhdGUgcGlubmluZyBhbmQgaW52YWxp
+ZGF0aW9uIGxvZ2ljLCBhZG9wdCBjb25zaXN0ZW50DQo+IG5hbWluZywgYW5kIHJlbW92ZSByZWR1
+bmRhbnQgY2hlY2tzIHRvIHJlZHVjZSBjb21wbGV4aXR5Lg0KPiANCj4gRW5oYW5jZSBkb2N1bWVu
+dGF0aW9uIGFuZCB1cGRhdGUgY2FsbCBzaXRlcyBmb3IgbWFpbnRhaW5hYmlsaXR5Lg0KPiANCj4g
+U2lnbmVkLW9mZi1ieTogU3RhbmlzbGF2IEtpbnNidXJza2lpIDxza2luc2J1cnNraWlAbGludXgu
+bWljcm9zb2Z0LmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2h2L21zaHZfcm9vdF9tYWluLmMgfCAg
+IDc4ICsrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gIDEgZmls
+ZSBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspLCA0MyBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL2h2L21zaHZfcm9vdF9tYWluLmMgYi9kcml2ZXJzL2h2L21zaHZfcm9v
+dF9tYWluLmMNCj4gaW5kZXggZmE0MmM0MGUxZTAyZi4uMjlkMGMyYzlhZTRjOCAxMDA2NDQNCj4g
+LS0tIGEvZHJpdmVycy9odi9tc2h2X3Jvb3RfbWFpbi5jDQo+ICsrKyBiL2RyaXZlcnMvaHYvbXNo
+dl9yb290X21haW4uYw0KDQpbc25pcF0NCg0KPiBAQCAtMTI2NCwxNyArMTI0OCwyNSBAQCBzdGF0
+aWMgaW50IG1zaHZfcGFydGl0aW9uX2NyZWF0ZV9yZWdpb24oc3RydWN0IG1zaHZfcGFydGl0aW9u
+ICpwYXJ0aXRpb24sDQo+ICAJcmV0dXJuIDA7DQo+ICB9DQo+IA0KPiAtLyoNCj4gLSAqIE1hcCBn
+dWVzdCByYW0uIGlmIHNucCwgbWFrZSBzdXJlIHRvIHJlbGVhc2UgdGhhdCBmcm9tIHRoZSBob3N0
+IGZpcnN0DQo+IC0gKiBTaWRlIEVmZmVjdHM6IEluIGNhc2Ugb2YgZmFpbHVyZSwgcGFnZXMgYXJl
+IHVucGlubmVkIHdoZW4gZmVhc2libGUuDQo+ICsvKioNCj4gKyAqIG1zaHZfcHJlcGFyZV9waW5u
+ZWRfcmVnaW9uIC0gUGluIGFuZCBtYXAgbWVtb3J5IHJlZ2lvbnMNCj4gKyAqIEByZWdpb246IFBv
+aW50ZXIgdG8gdGhlIG1lbW9yeSByZWdpb24gc3RydWN0dXJlDQo+ICsgKg0KPiArICogVGhpcyBm
+dW5jdGlvbiBwcm9jZXNzZXMgbWVtb3J5IHJlZ2lvbnMgdGhhdCBhcmUgZXhwbGljaXRseSBtYXJr
+ZWQgYXMgcGlubmVkLg0KPiArICogUGlubmVkIHJlZ2lvbnMgYXJlIHByZWFsbG9jYXRlZCwgbWFw
+cGVkIHVwZnJvbnQsIGFuZCBkbyBub3QgcmVseSBvbiBmYXVsdC1iYXNlZA0KPiArICogcG9wdWxh
+dGlvbi4gVGhlIGZ1bmN0aW9uIGVuc3VyZXMgdGhlIHJlZ2lvbiBpcyBwcm9wZXJseSBwb3B1bGF0
+ZWQsIGhhbmRsZXMNCj4gKyAqIGVuY3J5cHRpb24gcmVxdWlyZW1lbnRzIGZvciBTTlAgcGFydGl0
+aW9ucyBpZiBhcHBsaWNhYmxlLCBtYXBzIHRoZSByZWdpb24sDQo+ICsgKiBhbmQgcGVyZm9ybXMg
+bmVjZXNzYXJ5IHNoYXJpbmcgb3IgZXZpY3Rpb24gb3BlcmF0aW9ucyBiYXNlZCBvbiB0aGUgbWFw
+cGluZw0KPiArICogcmVzdWx0Lg0KPiArICoNCj4gKyAqIFJldHVybjogMCBvbiBzdWNjZXNzLCBu
+ZWdhdGl2ZSBlcnJvciBjb2RlIG9uIGZhaWx1cmUuDQo+ICAgKi8NCj4gLXN0YXRpYyBpbnQNCj4g
+LW1zaHZfcGFydGl0aW9uX21lbV9yZWdpb25fbWFwKHN0cnVjdCBtc2h2X21lbV9yZWdpb24gKnJl
+Z2lvbikNCj4gK3N0YXRpYyBpbnQgbXNodl9wcmVwYXJlX3Bpbm5lZF9yZWdpb24oc3RydWN0IG1z
+aHZfbWVtX3JlZ2lvbiAqcmVnaW9uKQ0KPiAgew0KPiAgCXN0cnVjdCBtc2h2X3BhcnRpdGlvbiAq
+cGFydGl0aW9uID0gcmVnaW9uLT5wYXJ0aXRpb247DQo+ICAJaW50IHJldDsNCj4gDQo+IC0JcmV0
+ID0gbXNodl9yZWdpb25fcG9wdWxhdGUocmVnaW9uKTsNCj4gKwlyZXQgPSBtc2h2X3JlZ2lvbl9w
+aW4ocmVnaW9uKTsNCj4gIAlpZiAocmV0KSB7DQo+ICAJCXB0X2VycihwYXJ0aXRpb24sICJGYWls
+ZWQgdG8gcG9wdWxhdGUgbWVtb3J5IHJlZ2lvbjogJWRcbiIsDQoNCk5pdDogVGhpcyBlcnJvciBt
+ZXNzYWdlIHNob3VsZCBwcm9iYWJseSB1c2UgdGhlIG5ldyAicGluIiB0ZXJtaW5vbG9neQ0KaW5z
+dGVhZCBvZiAicG9wdWxhdGUiLg0KDQpNaWNoYWVsDQo=
 
