@@ -1,146 +1,131 @@
-Return-Path: <linux-hyperv+bounces-7103-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7104-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD918BBE54D
-	for <lists+linux-hyperv@lfdr.de>; Mon, 06 Oct 2025 16:27:27 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4435BBE6A9
+	for <lists+linux-hyperv@lfdr.de>; Mon, 06 Oct 2025 16:57:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 985EE3B3E44
-	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Oct 2025 14:27:25 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5895B4EF2C5
+	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Oct 2025 14:57:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 969062D5437;
-	Mon,  6 Oct 2025 14:27:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1465A2D5C74;
+	Mon,  6 Oct 2025 14:57:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FJIyrLP0"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="oEStiC6v"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09B2D6ADD;
-	Mon,  6 Oct 2025 14:27:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DA962874FC;
+	Mon,  6 Oct 2025 14:57:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759760838; cv=none; b=ff/L9VdcS1sn8eYrZVCUTOG/yV4K4sevAKxnD1dUnvbjPWqwa/02m9IILEFClhzSJZHRFStotzTVCI2pVJ1yz83Tyj+txE1iy3ShaAl7RAeXK0C3KqOZaKARM/MD5CBVS9ewTIF/aw7bdxcaCtbwB7bBqGlDip+/2ve0uzcDdoE=
+	t=1759762658; cv=none; b=c5fuvABmDkMUu4tKa7cz41UZp1HvZ8fTBJTlTNriDiRsPfnlingqRfiq/1/bJ4EucdWHv7MVOejZq7F/FQklqdhVWbd6mV7UhoLAFevOmUJO/DaW2Ln29zztH9bAhdlC85W4oh5Fs8dmkoDekWHfneO2TFomcrOgQ+szkgRdLKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759760838; c=relaxed/simple;
-	bh=kCtH3vMewNuSBSsH4NokNQDU9pUiJEtjUtOUpV4rizQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JNZFe1GAy9D9nkRD4AHdw8xTVfDBdN727GbGKdr21oihe2tFoIGNiGyjahOp9c8vDZ/tY/V22FxFArzGcGnUqUfMQ5RFCxHX0Jy1cOJ8oefS0AGcgEiwAReREKMM3HUhzoM6J+tUnXFcR5k+JuoA5jI2aCP70pts3Pw5hFYmyBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=FJIyrLP0; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1759762658; c=relaxed/simple;
+	bh=ytf4ipQXatOJxMwXD9g2DwKjh0LUdQtU5IEm8uwoCio=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qSmHV2lR8u/e/N9X4u2lcPFNc05LoklUCDafdD9HhqBSxL8yQrm9s+kSW8LgFBcDesM2Q8Hj/5+X6ng0F0WxyF+PG+1fOL1qHYDhrA/VvarJi6bXkYj3ycwd+hJtoRHMVwIEBhtSytQWg546bMv7HqcvV0KNFBHXDswPD8NKHqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=oEStiC6v; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.79.224.63] (unknown [4.194.122.170])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 935B3201C966;
-	Mon,  6 Oct 2025 07:27:10 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 935B3201C966
+Received: from skinsburskii.localdomain (unknown [20.236.11.29])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 85458211AF2F;
+	Mon,  6 Oct 2025 07:57:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 85458211AF2F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1759760835;
-	bh=oZvNqVt/UnW4mUa+6djNmV+pqFnh7Du6W3gyJM8T90I=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FJIyrLP0tYLiRaYJoaKiJ2nbI5q+GJvF8eCb/uB8hU/FIvqv/78NmJdPsOPC7ooSn
-	 lCuPHDkSutVDmFVN8AAkbyDA5koviiJBiycGvVIrXZz9WBJ+ppirQ9yVgEckVeEEeY
-	 qaP3Yj75CnRzhIY6YXvEBzlEYfZHuoZjqex0knUY=
-Message-ID: <9a816666-9d5b-46a4-b35f-2f18c4587ab5@linux.microsoft.com>
-Date: Mon, 6 Oct 2025 19:57:09 +0530
+	s=default; t=1759762655;
+	bh=LHomZsLEZ2pFtx8kCHjpo3QuoYe8gJzHT3CKF8ivZbY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oEStiC6vW1ya8MyD8tb3oH8I2uDE5CKzC8hZTQtqPhnJraGpswKrfVr0JUwRyKvrY
+	 5BGV3XOLFJJpdEvQ+OI0Dzup6UYQnSo1dv30UGmw8NiZmgrHZFLyJnH/i9UtcoOPUG
+	 LXXKDHgrOoRmjMYPZPV43Reo/7h+o/ENsbKpVgv8=
+Date: Mon, 6 Oct 2025 07:57:32 -0700
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/5] Drivers: hv: Refactor and rename memory region
+ handling functions
+Message-ID: <aOPY3J-opH2k6YZ-@skinsburskii.localdomain>
+References: <175942263069.128138.16103948906881178993.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <175942295032.128138.5037691911773684559.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <SN6PR02MB4157D88089F3221A853B1C67D4E3A@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/hyperv: Export hv_hypercall_pg unconditionally
-To: Paolo Bonzini <pbonzini@redhat.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Sean Christopherson <seanjc@google.com>,
- Roman Kisel <romank@linux.microsoft.com>,
- "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H . Peter Anvin" <hpa@zytor.com>, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, mhklinux@outlook.com
-References: <20250825055208.238729-1-namjain@linux.microsoft.com>
- <20250825094247.GU3245006@noisy.programming.kicks-ass.net>
- <f154d997-f7a6-4379-b7e8-ac4ba990425c@linux.microsoft.com>
- <20250826120752.GW4067720@noisy.programming.kicks-ass.net>
- <efc06827-e938-42b5-bb45-705b880d11d9@linux.microsoft.com>
- <27e50bb7-7f0e-48fb-bdbc-6c6d606e7113@redhat.com>
- <aMl5ulY1K7cKcMfo@google.com>
- <56521d85-1da5-4d25-b100-7dbe62e34d1d@linux.microsoft.com>
- <20250918064713.GW3419281@noisy.programming.kicks-ass.net>
- <9f8007a3-f810-4b60-8942-e721cd6a32c4@linux.microsoft.com>
- <20251006111030.GU3245006@noisy.programming.kicks-ass.net>
- <CABgObfZFgHY_ybfSnyzEF1dFr5c1s=_r+tAnHa6Q7rzFUUdt3g@mail.gmail.com>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <CABgObfZFgHY_ybfSnyzEF1dFr5c1s=_r+tAnHa6Q7rzFUUdt3g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB4157D88089F3221A853B1C67D4E3A@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-
-
-On 10/6/2025 4:49 PM, Paolo Bonzini wrote:
-> On Mon, Oct 6, 2025 at 1:10 PM Peter Zijlstra <peterz@infradead.org> wrote:
->>
->> On Mon, Oct 06, 2025 at 04:20:03PM +0530, Naman Jain wrote:
->>
->>> I am facing issues in this approach, after moving the assembly code to a
->>> separate file, using static calls, and making it noinstr.
->>>
->>> We need to make a call to STATIC_CALL_TRAMP_STR(hv_hypercall_pg + offset) in
->>> the assembly code. This offset is populated at run time in the driver, so I
->>> have to pass this offset to the assembly function via function parameters or
->>> a shared variable. This leaves noinstr section and results in below warning:
->>>
->>> [1]: vmlinux.o: warning: objtool: __mshv_vtl_return_call+0x4f: call to
->>> mshv_vtl_call_addr() leaves .noinstr.text section
->>>
->>>
->>> To fix this, one of the ways was to avoid making indirect calls. So I used
->>> EXPORT_STATIC_CALL to export the static call *trampoline and key* for the
->>> static call we created in C driver. Then I figured, we could simply call
->>> __SCT__<static_callname> in assembly code and it should work fine. But then
->>> it leads to this error in objtool.
->>
->> Easiest solution is to create a second static_call and have
->> hv_set_hypercall_pg() set that to +offset.
+On Mon, Oct 06, 2025 at 03:08:02AM +0000, Michael Kelley wrote:
+> From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Thursday, October 2, 2025 9:36 AM
+> > 
+> > Simplify and unify memory region management to improve code clarity and
+> > reliability. Consolidate pinning and invalidation logic, adopt consistent
+> > naming, and remove redundant checks to reduce complexity.
+> > 
+> > Enhance documentation and update call sites for maintainability.
+> > 
+> > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+> > ---
+> >  drivers/hv/mshv_root_main.c |   78 +++++++++++++++++++------------------------
+> >  1 file changed, 35 insertions(+), 43 deletions(-)
+> > 
+> > diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> > index fa42c40e1e02f..29d0c2c9ae4c8 100644
+> > --- a/drivers/hv/mshv_root_main.c
+> > +++ b/drivers/hv/mshv_root_main.c
 > 
-> Yes, my idea was to add +offset directly in the static_call_update, as
-> you sketched below. Sorry if that wasn't too clear. I didn't think of
-> using a static call also for the base of the page, since that's not
-> what the assembly code needs.
+> [snip]
 > 
-> And I think we agree that you absolutely don't want indirect calls, as
-> that makes register usage much simpler. This way static calls end up
-> killing multiple birds with a stone.
+> > @@ -1264,17 +1248,25 @@ static int mshv_partition_create_region(struct mshv_partition *partition,
+> >  	return 0;
+> >  }
+> > 
+> > -/*
+> > - * Map guest ram. if snp, make sure to release that from the host first
+> > - * Side Effects: In case of failure, pages are unpinned when feasible.
+> > +/**
+> > + * mshv_prepare_pinned_region - Pin and map memory regions
+> > + * @region: Pointer to the memory region structure
+> > + *
+> > + * This function processes memory regions that are explicitly marked as pinned.
+> > + * Pinned regions are preallocated, mapped upfront, and do not rely on fault-based
+> > + * population. The function ensures the region is properly populated, handles
+> > + * encryption requirements for SNP partitions if applicable, maps the region,
+> > + * and performs necessary sharing or eviction operations based on the mapping
+> > + * result.
+> > + *
+> > + * Return: 0 on success, negative error code on failure.
+> >   */
+> > -static int
+> > -mshv_partition_mem_region_map(struct mshv_mem_region *region)
+> > +static int mshv_prepare_pinned_region(struct mshv_mem_region *region)
+> >  {
+> >  	struct mshv_partition *partition = region->partition;
+> >  	int ret;
+> > 
+> > -	ret = mshv_region_populate(region);
+> > +	ret = mshv_region_pin(region);
+> >  	if (ret) {
+> >  		pt_err(partition, "Failed to populate memory region: %d\n",
+> 
+> Nit: This error message should probably use the new "pin" terminology
+> instead of "populate".
 > 
 
-Actually I was implementing it in the same way by introducing a new 
-static call using hypercall_pg+offset. The problem was using it in asm 
-file. When I tried introducing a wrapper static call earlier, I did not 
-use ASM_CALL_CONSTRAINT, so objtool was asking me to save/restore 
-registers again. Since this was not possible, I thought it may not work.
+Yes, it should.
 
-With something similar to how its done in 
-arch/x86/include/asm/preempt.h, I was able to make it work, and remove 
-dependency on IBT config.
+Thanks,
+Stanislav
 
-Thanks a lot Peter and Paolo for helping on this.
-
-Regards,
-Naman
-
->> Also, what's actually in that hypercall page that is so magical and
->> can't just be an ALTERNATIVE() ?
-> 
-> Do you mean an alternative for VMCALL vs. VMMCALL? If so, that's just
-> not guaranteed to work: "An attempt to invoke a hypercall by any other
-> means (for example, copying the code from the hypercall code page to
-> an alternate location and executing it from there) might result in an
-> undefined operation (#UD) exception" (or it might not).
-> 
-> Paolo
-> 
-
+> Michael
 
