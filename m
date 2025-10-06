@@ -1,524 +1,477 @@
-Return-Path: <linux-hyperv+bounces-7111-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7112-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B258CBBE709
-	for <lists+linux-hyperv@lfdr.de>; Mon, 06 Oct 2025 17:07:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B89C9BBEBF5
+	for <lists+linux-hyperv@lfdr.de>; Mon, 06 Oct 2025 18:55:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 88CF21892D55
-	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Oct 2025 15:07:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 732A73BE73D
+	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Oct 2025 16:55:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADD4D2D739F;
-	Mon,  6 Oct 2025 15:06:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A6102367AE;
+	Mon,  6 Oct 2025 16:55:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="N7gqZxnh"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="VI7BDUEk"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0C9B2D73A2;
-	Mon,  6 Oct 2025 15:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759763201; cv=none; b=iOqBX7yT2A8iTce3QX59ctl0+rZK0H0faSZF8lVPY1087YEHtx9wjhXxhfZbH0llfBkGnIk033IUiv9rLKNJLHY8P4SruFSWbmSWsUBpf3YnG71ww1yqPbIAcUUb1iNDeFYqoSSfPNKPwLGOrV3W3RMYKCPRe1l5wubz526ITOI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759763201; c=relaxed/simple;
-	bh=k49hXNYVpJ8Eb+H4TBhBZo1qOsU+kR154oL8nigLta8=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cnwKLaOL4UWDXHY5pdcNQ5bpFti9rbAw0suzQuaBw8Z8i92KFZBf6uie5HDJAgaM8fsvl33HDfIBnEIyFR/jWGh/IepTtBAd10CYMs9be8z2UemaYYhXg0XouYj6TbBlx0Jm2poMmF6eZseXojrEWjqKUmrh8r2AgDlplB8ragk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=N7gqZxnh; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 8C0732012C1C;
-	Mon,  6 Oct 2025 08:06:38 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8C0732012C1C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1759763198;
-	bh=PSbBCBycj5BApoVwBaSeTZnAZkvEhhq2Ugsua8JsRoo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=N7gqZxnh4t+H3r33xFTcHzfhsO/HjrvZal/LihkmBCw6EPgXNkrQMiK5/nyYerz2D
-	 UTiPQEZ7WuC0OkmGy3XY9uFJRHskza60p1K40yQwpYo+Esoyzb9o+NWG1PBgDIRjBN
-	 Uj1PfhSyytJ93fSoITJ2BhbR60I/sZ+X/bSWExoc=
-Subject: [PATCH v4 5/5] Drivers: hv: Add support for movable memory regions
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 06 Oct 2025 15:06:38 +0000
-Message-ID: 
- <175976319844.16834.4747024333732752980.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-In-Reply-To: 
- <175976284493.16834.4572937416426518745.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-References: 
- <175976284493.16834.4572937416426518745.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-User-Agent: StGit/0.19
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazolkn19012053.outbound.protection.outlook.com [52.103.2.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA591D7E42;
+	Mon,  6 Oct 2025 16:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.2.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759769707; cv=fail; b=mskLLs6JR8iMhta2tdPThRDKqT1wf0+RtYhmuD1dvbhMFuaK6Oe6Z5ZuPXlJr415NkdPD5hETSWDrUCMW9nxRo2SIEpdiOWohSQ5Y53Yof8A5pQQ0ubPVEcYNzNELUamKCX1pTKWOeZWcVI1cm0BttL+uCZ5v5v1ZJOqRiVSQfk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759769707; c=relaxed/simple;
+	bh=m+MJc3ba6F+JEYz68ToAf/53mKC+HnT+MF01iUDv2gM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=oE1ipCqxuhHCYc/4qLvbQQMCw3rQi1C0tV+QDGs4IEdCxwp5w9hHY/WaZDj1y/qfIR70JeFeBN0HiZ9nkiZU+a+85fVSyB1eaosfk+PqwQlsWUZW3WyOyojobiFM7PCZA0K/Sw96wWAFIdnhCAEamj60N+pN7it4/ULtI77cmCg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=VI7BDUEk; arc=fail smtp.client-ip=52.103.2.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QavEIBMennHP3Ga2EQw58d7cbku0kU7j+2vWukXyxTpMLeEzXNwk9OUuA0y0M67isCmaKrTZHdmBDnqNMDzlGXuQkk9eQqJQ0R1q2i4KEjgr0OPR2TYJZhihKmM5FgtFWA7oYLttPyP7hvH/JStDfuvAUE9uwBsiZisy7LeSyc+FRLRkH1uKLbBPpngMKPPtfF/uGz4jBx2F25eLyHzwmNgT69QWCi3BB6P52gBEOVBpmN1NVM6k7HZXh4BwugWn5OC2BvNsH17VpEi3cJ0y3M/LnD1Z+a43g/sOoUGGbaoLIhQe0okXgiD4VdxzuNTa27KSWul+EfdOYPpmiUxuXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SI4FFrCnPil08O3cbkoUzwCCvSGrMjMOzA6hIvSGSPo=;
+ b=Vr3oHPNfSLIXlvQDzi+HsVUQoXAPt9+AMszzJaHpigEMHyzJmD9yVyH27k1deZdbH4l5oORyZj5geLZ32Kn6iOnQQuTj+wm0EK8E8iqIYk6ihuaud3KUlhnvaKsBF3TQUcR7S/pIx+7gBOFPKFH8JT480I+ucnKi7yQDQA2kprOEMCGwccQuSdEHbsZkuqmzzZpj0mBNe8IOD+HY+rMV4eDrL0ctFqvaTUkYqzFZmmYKXMkPsuPMgWOz0AOMH/nd5YbQzd4yAZVpo56eBQ5xiGGhezqRQzBOo1diJUFf1dKVH8YwxoniCF9ZjMCmiMH08OldkftNohfxrguMTj+b1w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SI4FFrCnPil08O3cbkoUzwCCvSGrMjMOzA6hIvSGSPo=;
+ b=VI7BDUEkJvYp9/KL8qoNl0r0JjHA8qJwVOeme3ceSmM0G1PiXjvYBrDeZTKYLY0PsZ8H7OasmgBV5xRIEAKI1Xwk6WA7EP4E1e/IqgFgwq+72oDazzxBBAkuZWnju6eJ7junAm27QwSL4xn5vsanNm63rAJPDIOYwc39BKq2SdmQFYgPS59eaC4zlGIrRl7YLW62GGVadaeE2HLmlHpgCGvlZsmKSDvN+tKwEzPXNeCXLIdJA2/n9uPLdMiA7TrYPxaNWwireW1+vI2RDP4i9EIDbuW14xm0CARnR1w3WpRCCE4vgiUKzdDJGdPUB/g42diE8aznZgojZJm6wjEkLA==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by BY5PR02MB6675.namprd02.prod.outlook.com (2603:10b6:a03:203::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9182.17; Mon, 6 Oct
+ 2025 16:55:01 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.9182.017; Mon, 6 Oct 2025
+ 16:55:01 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Roman Kisel <romank@linux.microsoft.com>, "arnd@arndb.de" <arnd@arndb.de>,
+	"bp@alien8.de" <bp@alien8.de>, "corbet@lwn.net" <corbet@lwn.net>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"decui@microsoft.com" <decui@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "hpa@zytor.com" <hpa@zytor.com>,
+	"kys@microsoft.com" <kys@microsoft.com>, "mikelley@microsoft.com"
+	<mikelley@microsoft.com>, "mingo@redhat.com" <mingo@redhat.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, "Tianyu.Lan@microsoft.com"
+	<Tianyu.Lan@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org"
+	<linux-arch@vger.kernel.org>
+CC: "benhill@microsoft.com" <benhill@microsoft.com>, "bperkins@microsoft.com"
+	<bperkins@microsoft.com>, "sunilmut@microsoft.com" <sunilmut@microsoft.com>
+Subject: RE: [PATCH hyperv-next v6 00/17] Confidential VMBus
+Thread-Topic: [PATCH hyperv-next v6 00/17] Confidential VMBus
+Thread-Index: AQHcNLT9CbsIQg/BzECFUV8Pqz4C2LS0dVDA
+Date: Mon, 6 Oct 2025 16:55:00 +0000
+Message-ID:
+ <SN6PR02MB415707D796045E8BD30396D8D4E3A@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20251003222710.6257-1-romank@linux.microsoft.com>
+In-Reply-To: <20251003222710.6257-1-romank@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|BY5PR02MB6675:EE_
+x-ms-office365-filtering-correlation-id: 51e32cee-1936-4bf4-be0d-08de04f916cd
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|8060799015|8062599012|15080799012|19110799012|12121999013|461199028|31061999003|13091999003|56899033|1602099012|40105399003|3412199025|440099028|4302099013|51005399003|10035399007|102099032|12091999003;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?6PvTbzvbATApkH73Kqv1+7AjynKh8z7LZ2KiDvFuCbsv2E0HiN3gHS/U4Pzi?=
+ =?us-ascii?Q?WlKa6LiWZ2ehmziIIu6sq/7M7Ffbj1QThe2dlUuJO5f6Ns/5cacDt+g5bFlr?=
+ =?us-ascii?Q?vDwriCqyHi5EZwwX1L2iWk6i1sfDGdIvLRAUHPg3hNCmP3nrauMRWaYBpmKC?=
+ =?us-ascii?Q?tP6MWYGe6CkjPUCCtCMKNnfAxVoM89ZDnwMV0gXAf0LI846EGuYg/YY8gwQg?=
+ =?us-ascii?Q?bNlk1Fq+yQIPUcOiIFhr6xKqq0nJ85X257t0jJrzJCom0wzKIodI6gdRzyTy?=
+ =?us-ascii?Q?DCqYTObF1J4Arm9hAgFpL7Bum/xII1lEYv/oMV98EC7BzxH5VbWsAuQnVWFH?=
+ =?us-ascii?Q?Fsop5hdj61xxZUIn17Zno/FHZGNZBm9zMBwG92TTWTKrvrEeJnAEi8EJiHKR?=
+ =?us-ascii?Q?ftBJHIa8pXASkBk2kFIV2RV218opRb+5l+LtXxY9mZDlJIouVxHKEwZE1Gjq?=
+ =?us-ascii?Q?Z0c69X56Iz92ezipjwqG+uDSNoVv8Qw9FEkmn39CD9b8/lm2RRugH27UTlY5?=
+ =?us-ascii?Q?2CyXqes86Cz32So7g4H3Ang9je7VImDm/hvNBeg4d1+YIIfHT5WyZyYOI8b0?=
+ =?us-ascii?Q?LfdPUgfkSlTR712Obl6qEkWcgLi6SaWqpira1bbGNrvO76l4s2v6JhXh6Jzq?=
+ =?us-ascii?Q?2p8eWUG7q1GJA/DzRG/I6ZGegTlJScVrespxmoos5tHMbGcPzlbduaPDR1SX?=
+ =?us-ascii?Q?69YcD4PkIpMN9rpkLmWrrxyHPM7mgom2dLf0gHkyyydm0SOKdCjPX1Ro9s52?=
+ =?us-ascii?Q?vxplKYxPvGLGGS0yGjutozCnlZrmfIK3GdWlsBeJyKDx8LTywPAlf3FPpPZ2?=
+ =?us-ascii?Q?rwWNA7mbqmvnC3qo3sJ3nq9Ux8PotLdO5JVy4pFaCFjOTxvy0Up+71La/+A3?=
+ =?us-ascii?Q?SB6tgaSF4RPxKZ0TYX0R+gwUNp7OnDpiVtURl7QkbD2SUwsYQh0+Qet2Rb7M?=
+ =?us-ascii?Q?nlYfWMrgFOhwLfoiNw5hO9ljMGKseHWMaOxr1HuU0vj7knXNN+F4Obct/VOY?=
+ =?us-ascii?Q?ZqAzFDwdoA8Ub6F2ryHFrB5OlTQwLZRFNuJ7BGD2FNQtWJpCi3Hh+fDRrpCw?=
+ =?us-ascii?Q?EvhNoD+bO9YCe7JCijknWsOphx5Ak4Gi1yTXsvOOycFtTw0kfQJWXSKLwRws?=
+ =?us-ascii?Q?+yEQu8QSyZJh5K9pugBvLcsWKc6fhu5lsAJvDzGjSeC7lcLhukbYXGdwd7bL?=
+ =?us-ascii?Q?7RMXV9SWnOzoUnistoD48MNWKtBAyvnE4k2kTT6oQd2JRe+YYGbHGjQkgHwL?=
+ =?us-ascii?Q?b42uu8Gx7hjyDjpHfE5o2Aun0O79WMLKw20L1VTo4FGLtCqAoCNIOX7403LE?=
+ =?us-ascii?Q?hKep29sz5f2EMncBlcM+yQcb49tX/Pz+DFnJNG6k5ZObA6foWfAeQqE5Vcug?=
+ =?us-ascii?Q?LS5czec=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?AU4WQ7B3KJxoU69YvtsyeFjts8ETuXRjH1TH3bAD59X/4S4K7IxWFD52zT+Q?=
+ =?us-ascii?Q?dRD328gqfgAfmkoUSKZZi4efEuj98XfTga7iIgITnn2V1D4FvyIQc6r7M1HX?=
+ =?us-ascii?Q?7ChibjFCaX999LVKGNk+Jyr/f5RX0tkazzy1dlxlrSwq70Nt+BOG/7duDVVo?=
+ =?us-ascii?Q?L68elPxV3Ed2B06/EvfUTyxwi22dtzB7fDupLy0szlyHJMucY6j/z9hqnvL6?=
+ =?us-ascii?Q?c5DVBi48H4QsXRlqztIP0+GyOujn4SIkqKjjKYEfLV0mv2z3txw1/seYvSVj?=
+ =?us-ascii?Q?C+qBlYfmjutbLwlPg950vOdS2eduT8LrSmVFFuaDXbhneFfTFjNK0tDKOSEm?=
+ =?us-ascii?Q?v/SQWTmCMMfXaqjHKDUAU5/U57WCiY5JS9n07QviXBU56mte2XEK2HiOF95T?=
+ =?us-ascii?Q?XaImfeRM58TQNttFEsCOnzznJrqtbiqDPzQFK2+4nboSMcl4hAyU4bQG4p44?=
+ =?us-ascii?Q?ZfCyXU/2K2aV1VL9YZaP6CHfCXHAEU1AU5RXeAjl4bT1+ssbDfHLTpkz+qUh?=
+ =?us-ascii?Q?iWAriveD7B00u/6xcaq6gCVATw7uWMQorutbEuQbsLY0T+vvbaR9VNjMVRsY?=
+ =?us-ascii?Q?kghUpcaXuW7Q+A2O1VgmIEgHQAHNeOL04epDAnV2j1P2gLKfTU97U+1bOAlz?=
+ =?us-ascii?Q?zrinkaj41t2yhgiXbPfmD9kdGLyDY0OD4N2rvveoFaoBywSBeCDPr4wjwaqj?=
+ =?us-ascii?Q?OMyT3otplVQaULp2geL3L1Tq30gd2BdqMmhZGmvqcCjyKxH275/6/AVJR75x?=
+ =?us-ascii?Q?2kcmdStr5xjnVY7O3KYT5KcVd/TIu9CKQALCDnk3id0AcBG2vnKE9oAqepu7?=
+ =?us-ascii?Q?2rKxSl236ZAXhbaMhP/2F0D2ZMLFaT5T8TDJZ+3/i8nma+FZb/ZCD8XCTu6X?=
+ =?us-ascii?Q?iCtbhX3Y2lUyaBpvotwVU4b9lKwvZD4RyALrD9YKaxgSffdbmt5QE9CSR66M?=
+ =?us-ascii?Q?qBqt0VcOA4LiiHWjtPaLl7Gges/ta7ed6itq+O0iU0cmRUrmmpieSyFC574O?=
+ =?us-ascii?Q?nwiNfH3E5/SuILf7visJSdqxtaUYX14BpJyA87kcatauRMydO+vax+6fhplN?=
+ =?us-ascii?Q?tZT7Nc4NkiTWpZ1tftKuUdP7VA2Qdar3C6JSRXqdN46Wa4SjkryO3hUgG31X?=
+ =?us-ascii?Q?znuxpxolsrH8YMSl2MpZPhEtljJmtW/Ne3jPp2l/HjERQTnfN0mANsb2+HRY?=
+ =?us-ascii?Q?dXw9dFuepDT9rvxk+HXIh63yn99MPrE+n6lSJxXtJx0oYLhCo4jF7QAjJVA?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51e32cee-1936-4bf4-be0d-08de04f916cd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Oct 2025 16:55:00.8900
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6675
 
-Introduce support for movable memory regions in the Hyper-V root partition
-driver, thus improving memory management flexibility and preparing the
-driver for advanced use cases such as dynamic memory remapping.
+From: Roman Kisel <romank@linux.microsoft.com> Sent: Friday, October 3, 202=
+5 3:27 PM
+>=20
+> Greetings everyone,
+>=20
+> We've got to the 6th version of the patch series, and the full changelog
+> is at the end of the cover letter. I addressed feedback from
+> Michael and Wei on the previous version of the patch series.
+>=20
+> Since v5, the fallback mechanism for establishing the VMBus connection
+> is no longer used as the availability of the Confidential VMBus is
+> now indicated by a bit in the Virtualization Stack (VS) CPUID leaf.
+> The v6 patch series breaks that out into a separate patch seizing
+> the opportunity to refactor the code that uses the same leaf.
+>=20
+> That is obviously an x86_64 specific technique. On ARM64, the
+> Confidential VMBus is expected to be required once support for ARM CCA is
+> implemented. Despite that change, the functions for getting and setting
+> registers via paravisor remain fallible.=20
 
-Integrate mmu_interval_notifier for movable regions, implement functions to
-handle HMM faults and memory invalidation, and update memory region mapping
-logic to support movable regions.
+This statement seems to contradict your description of the v6
+changes further down in this cover letter:
 
-While MMU notifiers are commonly used in virtualization drivers, this
-implementation leverages HMM (Heterogeneous Memory Management) for its
-tailored functionality. HMM provides a ready-made framework for mirroring,
-invalidation, and fault handling, avoiding the need to reimplement these
-mechanisms for a single callback. Although MMU notifiers are more generic,
-using HMM reduces boilerplate and ensures maintainability by utilizing a
-mechanism specifically designed for such use cases.
+     - Gave another thought to the fallible routines for getting and settin=
+g
+       SynIC registers via paravisor introduced in the patch series, and af=
+ter
+       Michael's feedback decided to make them infallible
 
-Signed-off-by: Anirudh Rayabharam <anrayabh@linux.microsoft.com>
-Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
----
- drivers/hv/Kconfig          |    1 
- drivers/hv/mshv_root.h      |    8 +
- drivers/hv/mshv_root_main.c |  328 ++++++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 327 insertions(+), 10 deletions(-)
+Patches 4 and 12 of this series also implement "infallible".
 
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index e24f6299c3760..9d24a8c8c52e3 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -68,6 +68,7 @@ config MSHV_ROOT
- 	depends on PAGE_SIZE_4KB
- 	select EVENTFD
- 	select VIRT_XFER_TO_GUEST_WORK
-+	select HMM_MIRROR
- 	default n
- 	help
- 	  Select this option to enable support for booting and running as root
-diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
-index 97e64d5341b6e..13367c84497c0 100644
---- a/drivers/hv/mshv_root.h
-+++ b/drivers/hv/mshv_root.h
-@@ -15,6 +15,7 @@
- #include <linux/hashtable.h>
- #include <linux/dev_printk.h>
- #include <linux/build_bug.h>
-+#include <linux/mmu_notifier.h>
- #include <uapi/linux/mshv.h>
- 
- /*
-@@ -81,9 +82,14 @@ struct mshv_mem_region {
- 	struct {
- 		u64 large_pages:  1; /* 2MiB */
- 		u64 range_pinned: 1;
--		u64 reserved:	 62;
-+		u64 is_ram	: 1; /* mem region can be ram or mmio */
-+		u64 reserved:	 61;
- 	} flags;
- 	struct mshv_partition *partition;
-+#if defined(CONFIG_MMU_NOTIFIER)
-+	struct mmu_interval_notifier mni;
-+	struct mutex mutex;	/* protects region pages remapping */
-+#endif
- 	struct page *pages[];
- };
- 
-diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index cb462495f34b5..bc0ea39bcd255 100644
---- a/drivers/hv/mshv_root_main.c
-+++ b/drivers/hv/mshv_root_main.c
-@@ -29,6 +29,7 @@
- #include <linux/crash_dump.h>
- #include <linux/panic_notifier.h>
- #include <linux/vmalloc.h>
-+#include <linux/hmm.h>
- 
- #include "mshv_eventfd.h"
- #include "mshv.h"
-@@ -36,6 +37,8 @@
- 
- #define VALUE_PMD_ALIGNED(c)			(!((c) & (PTRS_PER_PMD - 1)))
- 
-+#define MSHV_MAP_FAULT_IN_PAGES			HPAGE_PMD_NR
-+
- MODULE_AUTHOR("Microsoft");
- MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("Microsoft Hyper-V root partition VMM interface /dev/mshv");
-@@ -76,6 +79,11 @@ static int mshv_vp_mmap(struct file *file, struct vm_area_struct *vma);
- static vm_fault_t mshv_vp_fault(struct vm_fault *vmf);
- static int mshv_init_async_handler(struct mshv_partition *partition);
- static void mshv_async_hvcall_handler(void *data, u64 *status);
-+static struct mshv_mem_region
-+	*mshv_partition_region_by_gfn(struct mshv_partition *pt, u64 gfn);
-+static int mshv_region_remap_pages(struct mshv_mem_region *region,
-+				   u32 map_flags, u64 page_offset,
-+				   u64 page_count);
- 
- static const union hv_input_vtl input_vtl_zero;
- static const union hv_input_vtl input_vtl_normal = {
-@@ -602,14 +610,197 @@ static long mshv_run_vp_with_root_scheduler(struct mshv_vp *vp)
- static_assert(sizeof(struct hv_message) <= MSHV_RUN_VP_BUF_SZ,
- 	      "sizeof(struct hv_message) must not exceed MSHV_RUN_VP_BUF_SZ");
- 
-+#ifdef CONFIG_X86_64
-+
-+#if defined(CONFIG_MMU_NOTIFIER)
-+/**
-+ * mshv_region_hmm_fault_and_lock - Handle HMM faults and lock the memory region
-+ * @region: Pointer to the memory region structure
-+ * @range: Pointer to the HMM range structure
-+ *
-+ * This function performs the following steps:
-+ * 1. Reads the notifier sequence for the HMM range.
-+ * 2. Acquires a read lock on the memory map.
-+ * 3. Handles HMM faults for the specified range.
-+ * 4. Releases the read lock on the memory map.
-+ * 5. If successful, locks the memory region mutex.
-+ * 6. Verifies if the notifier sequence has changed during the operation.
-+ *    If it has, releases the mutex and returns -EBUSY to match with
-+ *    hmm_range_fault() return code for repeating.
-+ *
-+ * Return: 0 on success, a negative error code otherwise.
-+ */
-+static int mshv_region_hmm_fault_and_lock(struct mshv_mem_region *region,
-+					  struct hmm_range *range)
-+{
-+	int ret;
-+
-+	range->notifier_seq = mmu_interval_read_begin(range->notifier);
-+	mmap_read_lock(region->mni.mm);
-+	ret = hmm_range_fault(range);
-+	mmap_read_unlock(region->mni.mm);
-+	if (ret)
-+		return ret;
-+
-+	mutex_lock(&region->mutex);
-+
-+	if (mmu_interval_read_retry(range->notifier, range->notifier_seq)) {
-+		mutex_unlock(&region->mutex);
-+		cond_resched();
-+		return -EBUSY;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * mshv_region_range_fault - Handle memory range faults for a given region.
-+ * @region: Pointer to the memory region structure.
-+ * @page_offset: Offset of the page within the region.
-+ * @page_count: Number of pages to handle.
-+ *
-+ * This function resolves memory faults for a specified range of pages
-+ * within a memory region. It uses HMM (Heterogeneous Memory Management)
-+ * to fault in the required pages and updates the region's page array.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+static int mshv_region_range_fault(struct mshv_mem_region *region,
-+				   u64 page_offset, u64 page_count)
-+{
-+	struct hmm_range range = {
-+		.notifier = &region->mni,
-+		.default_flags = HMM_PFN_REQ_FAULT | HMM_PFN_REQ_WRITE,
-+	};
-+	unsigned long *pfns;
-+	int ret;
-+	u64 i;
-+
-+	pfns = kmalloc_array(page_count, sizeof(unsigned long), GFP_KERNEL);
-+	if (!pfns)
-+		return -ENOMEM;
-+
-+	range.hmm_pfns = pfns;
-+	range.start = region->start_uaddr + page_offset * HV_HYP_PAGE_SIZE;
-+	range.end = range.start + page_count * HV_HYP_PAGE_SIZE;
-+
-+	do {
-+		ret = mshv_region_hmm_fault_and_lock(region, &range);
-+	} while (ret == -EBUSY);
-+
-+	if (ret)
-+		goto out;
-+
-+	for (i = 0; i < page_count; i++)
-+		region->pages[page_offset + i] = hmm_pfn_to_page(pfns[i]);
-+
-+	if (PageHuge(region->pages[page_offset]))
-+		region->flags.large_pages = true;
-+
-+	ret = mshv_region_remap_pages(region, region->hv_map_flags,
-+				      page_offset, page_count);
-+
-+	mutex_unlock(&region->mutex);
-+out:
-+	kfree(pfns);
-+	return ret;
-+}
-+#else /* CONFIG_MMU_NOTIFIER */
-+static int mshv_region_range_fault(struct mshv_mem_region *region,
-+				   u64 page_offset, u64 page_count)
-+{
-+	return -ENODEV;
-+}
-+#endif /* CONFIG_MMU_NOTIFIER */
-+
-+static bool mshv_region_handle_gfn_fault(struct mshv_mem_region *region, u64 gfn)
-+{
-+	u64 page_offset, page_count;
-+	int ret;
-+
-+	if (WARN_ON_ONCE(region->flags.range_pinned))
-+		return false;
-+
-+	/* Align the page offset to the nearest MSHV_MAP_FAULT_IN_PAGES. */
-+	page_offset = ALIGN_DOWN(gfn - region->start_gfn,
-+				 MSHV_MAP_FAULT_IN_PAGES);
-+
-+	/* Map more pages than requested to reduce the number of faults. */
-+	page_count = min(region->nr_pages - page_offset,
-+			 MSHV_MAP_FAULT_IN_PAGES);
-+
-+	ret = mshv_region_range_fault(region, page_offset, page_count);
-+
-+	WARN_ONCE(ret,
-+		  "p%llu: GPA intercept failed: region %#llx-%#llx, gfn %#llx, page_offset %llu, page_count %llu\n",
-+		  region->partition->pt_id, region->start_uaddr,
-+		  region->start_uaddr + (region->nr_pages << HV_HYP_PAGE_SHIFT),
-+		  gfn, page_offset, page_count);
-+
-+	return !ret;
-+}
-+
-+/**
-+ * mshv_handle_gpa_intercept - Handle GPA (Guest Physical Address) intercepts.
-+ * @vp: Pointer to the virtual processor structure.
-+ *
-+ * This function processes GPA intercepts by identifying the memory region
-+ * corresponding to the intercepted GPA, aligning the page offset, and
-+ * mapping the required pages. It ensures that the region is valid and
-+ * handles faults efficiently by mapping multiple pages at once.
-+ *
-+ * Return: true if the intercept was handled successfully, false otherwise.
-+ */
-+static bool mshv_handle_gpa_intercept(struct mshv_vp *vp)
-+{
-+	struct mshv_partition *p = vp->vp_partition;
-+	struct mshv_mem_region *region;
-+	struct hv_x64_memory_intercept_message *msg;
-+	u64 gfn;
-+
-+	msg = (struct hv_x64_memory_intercept_message *)
-+		vp->vp_intercept_msg_page->u.payload;
-+
-+	gfn = HVPFN_DOWN(msg->guest_physical_address);
-+
-+	region = mshv_partition_region_by_gfn(p, gfn);
-+	if (!region)
-+		return false;
-+
-+	if (WARN_ON_ONCE(!region->flags.is_ram))
-+		return false;
-+
-+	if (WARN_ON_ONCE(region->flags.range_pinned))
-+		return false;
-+
-+	return mshv_region_handle_gfn_fault(region, gfn);
-+}
-+
-+#else	/* CONFIG_X86_64 */
-+
-+static bool mshv_handle_gpa_intercept(struct mshv_vp *vp) { return false; }
-+
-+#endif	/* CONFIG_X86_64 */
-+
-+static bool mshv_vp_handle_intercept(struct mshv_vp *vp)
-+{
-+	switch (vp->vp_intercept_msg_page->header.message_type) {
-+	case HVMSG_GPA_INTERCEPT:
-+		return mshv_handle_gpa_intercept(vp);
-+	}
-+	return false;
-+}
-+
- static long mshv_vp_ioctl_run_vp(struct mshv_vp *vp, void __user *ret_msg)
- {
- 	long rc;
- 
--	if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
--		rc = mshv_run_vp_with_root_scheduler(vp);
--	else
--		rc = mshv_run_vp_with_hyp_scheduler(vp);
-+	do {
-+		if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
-+			rc = mshv_run_vp_with_root_scheduler(vp);
-+		else
-+			rc = mshv_run_vp_with_hyp_scheduler(vp);
-+	} while (rc == 0 && mshv_vp_handle_intercept(vp));
- 
- 	if (rc)
- 		return rc;
-@@ -1209,6 +1400,110 @@ mshv_partition_region_by_uaddr(struct mshv_partition *partition, u64 uaddr)
- 	return NULL;
- }
- 
-+#if defined(CONFIG_MMU_NOTIFIER)
-+static void mshv_region_movable_fini(struct mshv_mem_region *region)
-+{
-+	if (region->flags.range_pinned)
-+		return;
-+
-+	mmu_interval_notifier_remove(&region->mni);
-+}
-+
-+/**
-+ * mshv_region_interval_invalidate - Invalidate a range of memory region
-+ * @mni: Pointer to the mmu_interval_notifier structure
-+ * @range: Pointer to the mmu_notifier_range structure
-+ * @cur_seq: Current sequence number for the interval notifier
-+ *
-+ * This function invalidates a memory region by remapping its pages with
-+ * no access permissions. It locks the region's mutex to ensure thread safety
-+ * and updates the sequence number for the interval notifier. If the range
-+ * is blockable, it uses a blocking lock; otherwise, it attempts a non-blocking
-+ * lock and returns false if unsuccessful.
-+ *
-+ * NOTE: Failure to invalidate a region is a serious error, as the pages will
-+ * be considered freed while they are still mapped by the hypervisor.
-+ * Any attempt to access such pages will likely crash the system.
-+ *
-+ * Return: true if the region was successfully invalidated, false otherwise.
-+ */
-+static bool
-+mshv_region_interval_invalidate(struct mmu_interval_notifier *mni,
-+				const struct mmu_notifier_range *range,
-+				unsigned long cur_seq)
-+{
-+	struct mshv_mem_region *region = container_of(mni,
-+						struct mshv_mem_region,
-+						mni);
-+	u64 page_offset, page_count;
-+	unsigned long mstart, mend;
-+	int ret;
-+
-+	if (mmu_notifier_range_blockable(range))
-+		mutex_lock(&region->mutex);
-+	else if (!mutex_trylock(&region->mutex))
-+		goto out_fail;
-+
-+	mmu_interval_set_seq(mni, cur_seq);
-+
-+	mstart = max(range->start, region->start_uaddr);
-+	mend = min(range->end, region->start_uaddr +
-+		   (region->nr_pages << HV_HYP_PAGE_SHIFT));
-+
-+	page_offset = HVPFN_DOWN(mstart - region->start_uaddr);
-+	page_count = HVPFN_DOWN(mend - mstart);
-+
-+	ret = mshv_region_remap_pages(region, HV_MAP_GPA_NO_ACCESS,
-+				      page_offset, page_count);
-+	if (ret)
-+		goto out_fail;
-+
-+	mshv_region_invalidate_pages(region, page_offset, page_count);
-+
-+	mutex_unlock(&region->mutex);
-+
-+	return true;
-+
-+out_fail:
-+	WARN_ONCE(ret,
-+		  "Failed to invalidate region %#llx-%#llx (range %#lx-%#lx, event: %u, pages %#llx-%#llx, mm: %#llx): %d\n",
-+		  region->start_uaddr,
-+		  region->start_uaddr + (region->nr_pages << HV_HYP_PAGE_SHIFT),
-+		  range->start, range->end, range->event,
-+		  page_offset, page_offset + page_count - 1, (u64)range->mm, ret);
-+	return false;
-+}
-+
-+static const struct mmu_interval_notifier_ops mshv_region_mni_ops = {
-+	.invalidate = mshv_region_interval_invalidate,
-+};
-+
-+static bool mshv_region_movable_init(struct mshv_mem_region *region)
-+{
-+	int ret;
-+
-+	ret = mmu_interval_notifier_insert(&region->mni, current->mm,
-+					   region->start_uaddr,
-+					   region->nr_pages << HV_HYP_PAGE_SHIFT,
-+					   &mshv_region_mni_ops);
-+	if (ret)
-+		return false;
-+
-+	mutex_init(&region->mutex);
-+
-+	return true;
-+}
-+#else
-+static inline void mshv_region_movable_fini(struct mshv_mem_region *region)
-+{
-+}
-+
-+static inline bool mshv_region_movable_init(struct mshv_mem_region *region)
-+{
-+	return false;
-+}
-+#endif
-+
- /*
-  * NB: caller checks and makes sure mem->size is page aligned
-  * Returns: 0 with regionpp updated on success, or -errno
-@@ -1241,9 +1536,14 @@ static int mshv_partition_create_region(struct mshv_partition *partition,
- 	if (mem->flags & BIT(MSHV_SET_MEM_BIT_EXECUTABLE))
- 		region->hv_map_flags |= HV_MAP_GPA_EXECUTABLE;
- 
--	/* Note: large_pages flag populated when we pin the pages */
--	if (!is_mmio)
--		region->flags.range_pinned = true;
-+	/* Note: large_pages flag populated when pages are allocated. */
-+	if (!is_mmio) {
-+		region->flags.is_ram = true;
-+
-+		if (mshv_partition_encrypted(partition) ||
-+		    !mshv_region_movable_init(region))
-+			region->flags.range_pinned = true;
-+	}
- 
- 	region->partition = partition;
- 
-@@ -1363,9 +1663,16 @@ mshv_map_user_memory(struct mshv_partition *partition,
- 	if (is_mmio)
- 		ret = hv_call_map_mmio_pages(partition->pt_id, mem.guest_pfn,
- 					     mmio_pfn, HVPFN_DOWN(mem.size));
--	else
-+	else if (region->flags.range_pinned)
- 		ret = mshv_prepare_pinned_region(region);
--
-+	else
-+		/*
-+		 * For non-pinned regions, remap with no access to let the
-+		 * hypervisor track dirty pages, enabling pre-copy live
-+		 * migration.
-+		 */
-+		ret = mshv_region_remap_pages(region, HV_MAP_GPA_NO_ACCESS,
-+					      0, region->nr_pages);
- 	if (ret)
- 		goto errout;
- 
-@@ -1388,6 +1695,9 @@ static void mshv_partition_destroy_region(struct mshv_mem_region *region)
- 
- 	hlist_del(&region->hnode);
- 
-+	if (region->flags.is_ram)
-+		mshv_region_movable_fini(region);
-+
- 	if (mshv_partition_encrypted(partition)) {
- 		ret = mshv_partition_region_share(region);
- 		if (ret) {
+> That provides a clearer root cause
+> for failures instead of printing messages about unchecked MSR accesses.
+> That might seem as not needed with the paravisors run in Azure (OpenHCL
+> and the TrustedLauch aka HCL paravisor). However, if someone decides to
+> implement their own or tweak the exisiting one, this will help with debug=
+ging.
+>=20
+> TLDR; is that these patches are for the Hyper-V guests, and the patches
+> allow to keep data flowing from physical devices into the guests encrypte=
+d
+> at the CPU level so that neither the root/host partition nor the hypervis=
+or
+> can access the data being processed (they only "see" the encrypted/garble=
+d
+> data) unless the guest decides to share it. The changes are backward comp=
+atible
+> with older systems, and their full potential is realized on hardware that
+> supports memory encryption.
+>=20
+> These features also require running a paravisor, such as
+> OpenHCL (https://github.com/microsoft/openvmm) used in Azure. Another
+> implementation of the functionality available in this patch set is
+> available in the Hyper-V UEFI: https://github.com/microsoft/mu_msvm.
+>=20
+> A more detailed description of the patches follows.
+>=20
+> The guests running on Hyper-V can be confidential where the memory and th=
+e
+> register content are encrypted, provided that the hardware supports that
+> (currently support for AMD SEV-SNP and Intel TDX is implemented) and the =
+guest
+> is capable of using these features. The confidential guests cannot be
+> introspected by the host nor the hypervisor without the guest sharing the
+> memory contents upon doing which the memory is decrypted.
+>=20
+> In the confidential guests, neither the host nor the hypervisor need to b=
+e
+> trusted, and the guests processing sensitive data can take advantage of t=
+hat.
+>=20
+> Not trusting the host and the hypervisor (removing them from the Trusted
+> Computing Base aka TCB) necessitates that the method of communication
+> between the host and the guest be changed. Here is the data flow for a
+> conventional and the confidential VMBus connections (`C` stands for the
+> client or VSC, `S` for the server or VSP, the `DEVICE` is a physical one,
+> might be with multiple virtual functions):
+>=20
+> 1. Without the paravisor the devices are connected to the host, and the
+> host provides the device emulation or translation to the guest:
+>=20
+>   +---- GUEST ----+       +----- DEVICE ----+        +----- HOST -----+
+>   |               |       |                 |        |                |
+>   |               |       |                 |        |                |
+>   |               |       |                 =3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D                |
+>   |               |       |                 |        |                |
+>   |               |       |                 |        |                |
+>   |               |       |                 |        |                |
+>   +----- C -------+       +-----------------+        +------- S ------+
+>          ||                                                   ||
+>          ||                                                   ||
+>   +------||------------------ VMBus --------------------------||------+
+>   |                     Interrupts, MMIO                              |
+>   +-------------------------------------------------------------------+
+>=20
+> 2. With the paravisor, the devices are connected to the paravisor, and
+> the paravisor provides the device emulation or translation to the guest.
+> The guest doesn't communicate with the host directly, and the guest
+> communicates with the paravisor via the VMBus. The host is not trusted
+> in this model, and the paravisor is trusted:
+>=20
+>   +---- GUEST --------------- VTL0 ------+               +-- DEVICE --+
+>   |                                      |               |            |
+>   | +- PARAVISOR --------- VTL2 -----+   |               |            |
+>   | |     +-- VMBus Relay ------+    =3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D            |
+>   | |     |   Interrupts, MMIO  |    |   |               |            |
+>   | |     +-------- S ----------+    |   |               +------------+
+>   | |               ||               |   |
+>   | +---------+     ||               |   |
+>   | |  Linux  |     ||    OpenHCL    |   |
+>   | |  kernel |     ||               |   |
+>   | +---- C --+-----||---------------+   |
+>   |       ||        ||                   |
+>   +-------++------- C -------------------+               +------------+
+>           ||                                             |    HOST    |
+>           ||                                             +---- S -----+
+>   +-------||----------------- VMBus ---------------------------||-----+
+>   |                     Interrupts, MMIO                              |
+>   +-------------------------------------------------------------------+
+>=20
+> Note that in the second case the guest doesn't need to share the memory
+> with the host as it communicates only with the paravisor within their
+> partition boundary. That is precisely the raison d'etre and the value
+> proposition of this patch series: equip the confidential guest to use
+> private (encrypted) memory and rely on the paravisor when this is
+> available to be more secure.
+>=20
+> An implementation of the VMBus relay that offers the Confidential VMBus
+> channels is available in the OpenVMM project as a part of the OpenHCL
+> paravisor. Please refer to
+>=20
+>   * https://openvmm.dev/guide/, and
+>   * https://github.com/microsoft/openvmm=20
+>=20
+> for more information about the OpenHCL paravisor. A VMBus client
+> that can work with the Confidential VMBus is available in the
+> open-source Hyper-V UEFI: https://github.com/microsoft/mu_msvm.
+>=20
+> I'd like to thank the following people for their help with this
+> patch series:
+>=20
+> * Dexuan for help with validation and the fruitful discussions,
+> * Easwar for reviewing the refactoring of the page allocating and
+>   freeing in `hv.c`,
+> * John and Sven for the design,
+> * Mike for helping to avoid pitfalls when dealing with the GFP flags,
+> * Sven for blazing the trail and implementing the design in few
+>   codebases.
+>=20
+> I made sure to validate the patch series on
+>=20
+>     {TrustedLaunch(x86_64), OpenHCL} x
+>     {SNP(x86_64), TDX(x86_64), No hardware isolation, No paravisor} x
+>     {VMBus 5.0, VMBus 6.0} x
+>     {arm64, x86_64}.
+>=20
+> [V6]
+>     - Rebased onto the latest hyperv-next tree.
+>=20
+>     - Gave another thought to the fallible routines for getting and setti=
+ng
+>       SynIC registers via paravisor introduced in the patch series, and a=
+fter
+>       Michael's feedback decided to make them infallible as now we have t=
+he
+>       CPUID bit to indicate the availability of the Confidential VMBus. T=
+hat
+>       simplifies the code and makes it clearer and more robust - a reflec=
+tion
+>       of the improvements in the design throught the patch series iterati=
+ons.
+>     - Removed the sentence discussing the fallback mechanism in the Docum=
+entation
+>       as it is no longer relevant.
+>       **Thank you, Michael!**
+>=20
+>     - Avoided using the macro'es for (un)masking the proxy bit thanks to
+>       `union hv_synic_sint`.
+>       **Thank you, Wei!**
+>=20
+> [V5] https://lore.kernel.org/linux-hyperv/20250828010557.123869-1-romank@=
+linux.microsoft.com/=20
+>     - Rebased onto the latest hyperv-next tree.
+>=20
+>     - Fixed build issues with the configs provided by the kernel robot.
+>       **Thank you, kernel robot!**
+>=20
+>     - Fixed the potential NULL deref in a failure path.
+>       **Thank you, Michael!**
+>=20
+>     - Removed the added blurb from the vmbus_drv.c with taxonomy of Hyper=
+-V VMs
+>       that was providing reasons for the trade-offs in the fallback code.=
+ That
+>       code is no longer needed.
+>=20
+> [V4] https://lore.kernel.org/linux-hyperv/20250714221545.5615-1-romank@li=
+nux.microsoft.com/=20
+>     - Rebased the patch series on top of the latest hyperv-next branch,
+>       applying changes as needed.
+>=20
+>     - Fixed typos and clarifications all around the patch series.
+>     - Added clarifications in the patch 7 for `ms_hyperv.paravisor_presen=
+t && !vmbus_is_confidential()`
+>       and using hypercalls vs SNP or TDX specific protocols.
+>       **Thank you, Alok!**
+>=20
+>     - Trim the Documentation changes to 80 columns.
+>       **Thank you, Randy!**
+>=20
+>     - Make sure adhere to the RST format, actually built the PDF docs
+>       and made sure the layout was correct.
+>     **Thank you, Jon!**
+>=20
+>     - Better section order in Documentation.
+>     - Fixed the commit descriptions where suggested.
+>     - Moved EOI/EOM signaling for the confidential VMBus to the specializ=
+ed function.
+>     - Removed the unused `cpu` parameters.
+>     - Clarified comments in the `hv_per_cpu_context` struct
+>     - Explicitly test for NULL and only call `iounmap()` if non-NULL inst=
+ead of
+>       using `munmap()`.
+>     - Don't deallocate SynIC pages in the CPU online and offline paths.
+>     - Made sure the post page needs to be allocated for the future.
+>     - Added comments to describe trade-offs.
+>     **Thank you, Michael!**
+>=20
+> [V3] https://lore.kernel.org/linux-hyperv/20250604004341.7194-1-romank@li=
+nux.microsoft.com/=20
+>     - The patch series is rebased on top of the latest hyperv-next branch=
+.
+>     - Reworked the "wiring" diagram in the cover letter, added links to t=
+he
+>       OpenVMM project and the OpenHCL paravisor.
+>=20
+>     - More precise wording in the comments and clearer code.
+>     **Thank you, Alok!**
+>=20
+>     - Reworked the documentation patch.
+>     - Split the patchset into much more granular patches.
+>     - Various fixes and improvements throughout the patch series.
+>     **Thank you, Michael!**
+>=20
+> [V2] https://lore.kernel.org/linux-hyperv/20250511230758.160674-1-romank@=
+linux.microsoft.com/=20
+>     - The patch series is rebased on top of the latest hyperv-next branch=
+.
+>=20
+>     - Better wording in the commit messages and the Documentation.
+>     **Thank you, Alok and Wei!**
+>=20
+>     - Removed the patches 5 and 6 concerning turning bounce buffering off=
+ from
+>       the previous version of the patch series as they were found to be
+>       architecturally unsound. The value proposition of the patch series =
+is not
+>       diminished by this removal: these patches were an optimization and =
+only for
+>       the storage (for the simplicity sake) but not for the network. Thes=
+e changes
+>       might be proposed in the future again after revolving the issues.
+>     ** Thanks you, Christoph, Dexuan, Dan, Michael, James, Robin! **
+>=20
+> [V1] https://lore.kernel.org/linux-hyperv/20250409000835.285105-1-romank@=
+linux.microsoft.com/=20
+>=20
+> Roman Kisel (17):
+>   Documentation: hyperv: Confidential VMBus
+>   Drivers: hv: VMBus protocol version 6.0
+>   arch/x86: mshyperv: Discover Confidential VMBus availability
+>   arch: hyperv: Get/set SynIC synth.registers via paravisor
+>   arch/x86: mshyperv: Trap on access for some synthetic MSRs
+>   Drivers: hv: Rename fields for SynIC message and event pages
+>   Drivers: hv: Allocate the paravisor SynIC pages when required
+>   Drivers: hv: Post messages through the confidential VMBus if available
+>   Drivers: hv: remove stale comment
+>   Drivers: hv: Check message and event pages for non-NULL before
+>     iounmap()
+>   Drivers: hv: Rename the SynIC enable and disable routines
+>   Drivers: hv: Functions for setting up and tearing down the paravisor
+>     SynIC
+>   Drivers: hv: Allocate encrypted buffers when requested
+>   Drivers: hv: Free msginfo when the buffer fails to decrypt
+>   Drivers: hv: Support confidential VMBus channels
+>   Drivers: hv: Set the default VMBus version to 6.0
+>   Drivers: hv: Support establishing the confidential VMBus connection
+>=20
+>  Documentation/virt/hyperv/coco.rst | 139 ++++++++++-
+>  arch/x86/kernel/cpu/mshyperv.c     |  77 ++++--
+>  drivers/hv/channel.c               |  73 ++++--
+>  drivers/hv/channel_mgmt.c          |  27 ++-
+>  drivers/hv/connection.c            |   6 +-
+>  drivers/hv/hv.c                    | 372 +++++++++++++++++++----------
+>  drivers/hv/hv_common.c             |  16 ++
+>  drivers/hv/hyperv_vmbus.h          |  75 +++++-
+>  drivers/hv/mshv_root.h             |   2 +-
+>  drivers/hv/mshv_synic.c            |   6 +-
+>  drivers/hv/ring_buffer.c           |   5 +-
+>  drivers/hv/vmbus_drv.c             | 186 ++++++++++-----
+>  include/asm-generic/mshyperv.h     |  45 +---
+>  include/hyperv/hvgdk_mini.h        |   1 +
+>  include/linux/hyperv.h             |  69 ++++--
+>  15 files changed, 793 insertions(+), 306 deletions(-)
+>=20
 
+Nice! The net lines of code added is now 487, vs. 591
+lines added in v5 of this series.
 
+Modulo the contradiction above in this cover letter, the two typos in
+the documentation in Patch 1, and the simple fix for the error reported
+by the kernel test robot for Patch 5, I'm happy with this entire series.
+For the series,
+
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 
