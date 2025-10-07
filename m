@@ -1,79 +1,114 @@
-Return-Path: <linux-hyperv+bounces-7133-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7134-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67EA6BC2134
-	for <lists+linux-hyperv@lfdr.de>; Tue, 07 Oct 2025 18:15:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EE04BC2A87
+	for <lists+linux-hyperv@lfdr.de>; Tue, 07 Oct 2025 22:38:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5273A3E34AE
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Oct 2025 16:14:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 82CF819A1F62
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Oct 2025 20:38:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5661E2E718E;
-	Tue,  7 Oct 2025 16:14:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEBB02253EF;
+	Tue,  7 Oct 2025 20:38:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNrp2alW"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XjbWIs7y"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF292DE6F7;
-	Tue,  7 Oct 2025 16:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 298551D90AD;
+	Tue,  7 Oct 2025 20:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759853664; cv=none; b=G4vcCUs87CJAbV2viXlPXcQLuABUS/hPJVdQyH+3ipuPh28NWlq8RIdLsWlWHecHN7bWNIyFn8Gzl6udIX3puPDyw4Cg/7HqSeUOYv7t8H2AT7S5psyL4YmsFz01rYjAYjeydkW2GPkpNM1FCxJrDb5qqmcVg4ZGiU66H3dNxMM=
+	t=1759869488; cv=none; b=SHRYh3Hmsug4jBNkTL/Mz41ubwJHE0TZ45AZb5ZFiFA4j2MNVicxvC+j2rk9S3zpRKwmIt9uOThqqFdWlAtqFldzZKoB3eDYfxOpM9VYPA36oaCIkdWdw4wAEYpCtGWre4JMiAKNsa/1TPETcRwYwwThsf+LVFCzyfMkUOwV0FY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759853664; c=relaxed/simple;
-	bh=T/VjQgJ3pJtErZWaNfx9l24QStUaeCW92SmBEERxbrk=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=jackrHEXDguA4TfBHsZJLNaSf9QJiiGATQgK4SP3b/02O1M4urfdCuAZ9adnglyVcXmHmG1B633bRaX9McagWb9Apy3YUSmn/z/0EhQCjUhIpclhARKVz0FeYkcszHQiFhR88Jfs3k/3qNLEjgDQv6K+dE9DYj3C9tXKhk/uR9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNrp2alW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E95DC4CEF1;
-	Tue,  7 Oct 2025 16:14:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759853664;
-	bh=T/VjQgJ3pJtErZWaNfx9l24QStUaeCW92SmBEERxbrk=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=mNrp2alWqhMorayE5LFoGDbq1azkwKssVwF5AhW1kLEOPiaLbgH+Z5MJBKtAHVFkV
-	 YIcfTZSNZ8LBQ8TPi6L8lwyKOR4Y/HflgG3JSfPU/TZdaX3fElf6IIu9AyVpIs8W80
-	 AWuwgDc4/KqpzlsPvOPMAjWAeh15G18H7WazGZeUq/o/huRGD2SN3sMOvXATf45HxC
-	 5HS95N/REwgkOay3MzTAvZ27DVovlVTiw2Fmk0p3jPY5vHUgWd+ApV0y6qz/2wT8Yy
-	 sqE4ZRfPFtIgu/QDBanC6m5d9Mb7BF3I4xRlBjpKOXW25BUq1nuQoY9DAxEY0uBvnZ
-	 UtGx9KjEqSxzA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 712D739EFA6D;
-	Tue,  7 Oct 2025 16:14:14 +0000 (UTC)
-Subject: Re: [GIT PULL] Hyper-V patches for 6.18
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20251007055546.GF2051323@liuwe-devbox-debian-v2.local>
-References: <20251007055546.GF2051323@liuwe-devbox-debian-v2.local>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20251007055546.GF2051323@liuwe-devbox-debian-v2.local>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20251006
-X-PR-Tracked-Commit-Id: b595edcb24727e7f93e7962c3f6f971cc16dd29e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 221533629550e920580ab428f13ffebf54063b95
-Message-Id: <175985365302.2684232.9980517307975036416.pr-tracker-bot@kernel.org>
-Date: Tue, 07 Oct 2025 16:14:13 +0000
-To: Wei Liu <wei.liu@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Wei Liu <wei.liu@kernel.org>, Linux Kernel List <linux-kernel@vger.kernel.org>, Linux on Hyper-V List <linux-hyperv@vger.kernel.org>, kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
+	s=arc-20240116; t=1759869488; c=relaxed/simple;
+	bh=4cYMjdMGETzW2Kdd5CvNRjREqsKnjK0Px2bK6XAAJAs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KgraX+wwdM01fpGV95B89eSr5ji/U1juvdRsTAxO4butePWs5S2rjW13IeVD4PivXP/RjXkYSNO9s6f6d4ZX+jg0YdVFcdWv9PawZruDiW6dQIo95dck4NKolHsq/EUJTVkdZXHoXIXtGDalB4B7MznjxeNc56j9mjeb2v9T4no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XjbWIs7y; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.1.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 1FC8C2038B49;
+	Tue,  7 Oct 2025 13:38:03 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1FC8C2038B49
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1759869483;
+	bh=eBHded0+/fHmMsw247Acr2N9kOnPFP0ghuWlMwLlh9I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XjbWIs7yqUEUuk89rwVEKYjtz9w0OI1x9QOtMrCeGlfGKr59FGiRhYLgmjCxx/jJs
+	 i4X2hq7kfA5zIB7zlDvJSQ8lJ936wNhLNdg8UZa52fJI3DBEfRK8bdY/CxIBK2LT/b
+	 LFXyr2rJEXq2Y/UeKkg+ldfcNLDKCTKYH4eRyBEE=
+Message-ID: <273e0882-24f5-465a-be18-d67b4249ce12@linux.microsoft.com>
+Date: Tue, 7 Oct 2025 13:38:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v6 01/17] Documentation: hyperv: Confidential
+ VMBus
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com,
+ arnd@arndb.de, bp@alien8.de, corbet@lwn.net, dave.hansen@linux.intel.com,
+ decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
+ kys@microsoft.com, mikelley@microsoft.com, mingo@redhat.com,
+ tglx@linutronix.de, Tianyu.Lan@microsoft.com, wei.liu@kernel.org,
+ x86@kernel.org, linux-hyperv@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+References: <20251003222710.6257-1-romank@linux.microsoft.com>
+ <20251003222710.6257-2-romank@linux.microsoft.com>
+ <aOR5juzHnsK2E40z@archie.me>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <aOR5juzHnsK2E40z@archie.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The pull request you sent on Tue, 7 Oct 2025 05:55:46 +0000:
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20251006
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/221533629550e920580ab428f13ffebf54063b95
+On 10/6/2025 7:23 PM, Bagas Sanjaya wrote:
+> On Fri, Oct 03, 2025 at 03:26:54PM -0700, Roman Kisel wrote:
+>> +The data is transferred directly between the VM and a vPCI device (a.k.a.
+>> +a PCI pass-thru device, see :doc:`vpci`) that is directly assigned to VTL2
+>> +and that supports encrypted memory. In such a case, neither the host partition
+> 
+> Nit: You can also write the cross-reference simply as vpci.rst.
+> 
 
-Thank you!
+Thanks for helping out! I could not find that way of cross-referencing
+in the Sphinx documentation though:
+https://www.sphinx-doc.org/en/master/usage/referencing.html#cross-referencing-documents
+
+I tried it out anyway. The suggestion worked out only for the HTML
+documentation, and would not work for the PDF one. Options attempted:
+
+1. vpci
+2. vpci.rst
+3. Documentation/virt/hyperv/vpci
+4. Documentation/virt/hyperv/vpci.rst
+
+and neither would produce a hyperlink inside virt.pdf. Options 2 & 4
+generated a hyperlink in HTML.
+
+The
+
+| :doc:`vpci`
+
+directive I've used produces a hyperlink both for HTML & PDF and is
+mentioned in the Sphinx documentation linked above.
+
+Please let me know if I misunderstood your suggestion and/or tested
+it in a wrong way. So far, it appears that it works only for HTML.
+
+> Thanks.
+> 
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Thank you,
+Roman
+
 
