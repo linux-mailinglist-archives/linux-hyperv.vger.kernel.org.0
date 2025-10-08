@@ -1,62 +1,61 @@
-Return-Path: <linux-hyperv+bounces-7142-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7143-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF75ABC623A
-	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Oct 2025 19:20:52 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A06CBC6468
+	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Oct 2025 20:24:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1AD103C7B8C
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Oct 2025 17:20:36 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E6E694E1468
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Oct 2025 18:24:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9856F2BE7A3;
-	Wed,  8 Oct 2025 17:20:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BC4A2BE7A3;
+	Wed,  8 Oct 2025 18:24:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="R+W8JFHL"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="kEJQE/dK"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11022080.outbound.protection.outlook.com [52.101.48.80])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazolkn19013046.outbound.protection.outlook.com [52.103.14.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E6C29BDA3;
-	Wed,  8 Oct 2025 17:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E43B283C9E;
+	Wed,  8 Oct 2025 18:24:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.14.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759944035; cv=fail; b=LAoMYpSp9Q0S4FortJ3vuIrjiBFfBf7nNcJDfiC5JyExeR/qIgd0hv0QVbHUGAYJGf+7BWnyhXDU5oJTy5/hbrDhNCuTl+PGN/BapQHsLO81aL4gTHYD3/5cB831Ic/BLXNJA2LMWyiw/ZoNoWsPZlkRysczWLinX4oBUG16Uqs=
+	t=1759947879; cv=fail; b=On9yeVCa3XB1vez+rTeZJPucSlBftFzeWtenMqTQiERfV7Z17z9xyPQ3d2eijKcHlPxEz+fC/dPkkn9kTkuphGzINEAc7e5uJ8203WJwqlTAFBT8jIdIRzeltaEhONC84JxjMgAatoMO1bnt8+4yQytPD0jqQZ0S93O4Wnmo8jo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759944035; c=relaxed/simple;
-	bh=6pSUCKJitXI5RWp/RUX/USx+no+JQTAFRy0IYmpCSPs=;
+	s=arc-20240116; t=1759947879; c=relaxed/simple;
+	bh=nLVKss+IBrVL3vIJREmeCsoMhAWC3qVWD9Sk9kuKBOY=;
 	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=WFkaGuFsNfUr0yYojtxNm/UPnLQeiRyXGp3R2h7D2jNQefI/ZXl5MEruntogVjvhO87PWaOrg/fuoo3arUYt8dotSXNZ51KfT7vTOHxNjUtKf7svCZVfa1H/l6n+Qvnqu5IxiO3BMyWkEAvGXDBRmhC1PkxL8nyF8XpHAlob7sw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=R+W8JFHL; arc=fail smtp.client-ip=52.101.48.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	 Content-Type:MIME-Version; b=hBAwCxNxFVkvokVkRhW0Q6FcGwbBZoTB5eTnhvsq3oiwbLwVNJ09YXFzceuxMBdgRykIdO39CQmBfkr8TWL61ahBijjiMvN99ASVTrmn69tduJ0SJZkT77RkA1UXDnTuec98YkGgsvqA8AWWT3D6igB/J7dVIO4wMrKq6pVFYdk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=kEJQE/dK; arc=fail smtp.client-ip=52.103.14.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=S1N5fGK4QZ/uE5E9xy07TyM+gUySKXc3/bLxWuyOM0DEuppcBQSEyauqKjo8rFj5qc0gQIdNRVvKodK3Mgt7sQ182An1tPYZdi86X6NllWF5bLeyd43/VkTos8ICLFgNDj++UCeBwo09fsmWwa0b4GSL/g+yjeynHUcM4RHSsLhxVNY0yAkUIQtvlIH7+hv9mZYtr+U9f1XEl2WmTZzIzS+1u3TBxbj4JNIGbkZkrVURfyHSvZVW0LlcGf7h+5uM843miLEwGKYHrlkW3nkV2uF1kuXN2EN271G68LV5Ot0IEGN5saGpfUwuZu/HuqhicX2V+cBD44xZvRM/MvAjTw==
+ b=cnNRgn0D+S6Ie5zdSBQGzfwbyBnH8QdHK6ypStmnB0TNc1cGsz43tN9vH7Nfvwu1t4ks67Gaz0EXqaXBZgyPhnrLOvsGhjndjBSzFoOx5HjhkLw6mX5mCBynp0NSCfResqvKf7uYIguOY8gcf9oAann3yR5bvQsYuMXvtFi1t0v7PMfPx4Inqf/WRZX5guZnt+fMrSgr351CDvKOTE/KqzIMmPpC+8uYVEaOpysbjw6nmClRBv373Nj1JxavwVbaovhFDbfKXGh9LIqxea35SjwGRQjqosttLoIBsx90r9Ud/qJ4fXGSPxsi3+XkeB9+7gkyxAtIVAq6yY0OGOWY7g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AKggIdbm/alAbDUOnkOU/Z5nMsNKjdXwqdSZEr3vuc8=;
- b=jeC4eH7Tr5vZ6IlcwSPrnyEr+/XyF2fP3qeQ1cW9y1eOWNB5Yzkgzcq1GveoxVBrWXCY8VvpI6QVRM252Lu8ydEnvKhUSzej1EzMEOlC3Pq4vmq+VVE9Bi16XkIrJibpIrDrwB4WhyfNhrStlhc/e/FT2/ewFfPva2BCpM1rl6hIUjVozAStj6bm/BxgRmfcExMFIev9vv++wjmJsI7b2ZGj6GJWZNzY6ScA956gNFnU1EQ31N85hyvqp8deXAI8+ZtvgBNasZMPV4riOIH/N6m9xvdYvst19x3PILS7LQdMdL1nVPWAk/FMJsVxeQ3Hxqbinz3vKF5LaVw/hWmgeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ bh=mwcUbCFtdNGx072Ki42JyHBjeQJLf7HyrnASSpqTa0o=;
+ b=MbHz7PVUyY+pC4VcRrDU7U3RHZVPO/41l2Xfgc1nESBa4x14dcNEMpQS2jmJJQA/o3BHzJrOF4Bs55Cuvg2dVyGelv5TJnRpNQ7UXmLDn4WRHfg2Hm8eeSXtUVnD3wOsZQXOEHLB82mlmGcjySXXySZbCLXKMrLechjuoZRMircNsieFosI8AGK8ETKUPFZztAFkKLopmCFLzTpLIqNRfJ0qrmqdbnR3W0cTztIfYT/Nrk9HyAV98nUXNK3AWSHY/RGC75aVImyChuNBPa1D7HEUVSdAODqrpYnT4tAtzSthGytIHWRFKepY7pxec32lKFi9bwHUzd5Xutj8n+bwYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AKggIdbm/alAbDUOnkOU/Z5nMsNKjdXwqdSZEr3vuc8=;
- b=R+W8JFHLgq3lwh4kv+Lli7ShiegSFUMe4m47bkBOsuOguMjpUNRSg84YljDxJSa60RbxRbznS0pxFr3AOztdG+psCrvTsr7ZcNus1Q/tiYadOnT5ky8vGXjvFYpYWBafTPRvSSxVVTxQkjvmL0qwmuN5lb4FneYmv+t93Bn249w=
-Received: from DS3PR21MB5735.namprd21.prod.outlook.com (2603:10b6:8:2e0::20)
- by DS7PR21MB3316.namprd21.prod.outlook.com (2603:10b6:8:7c::10) with
+ bh=mwcUbCFtdNGx072Ki42JyHBjeQJLf7HyrnASSpqTa0o=;
+ b=kEJQE/dKxMiyJHKGPORQdjwRe3clms4lIWw7UdypYQVZ0jxUQP/o3DmhUN8uf8gHXRkB/75hf3zxT5KPs7JzlCJW3pi3AJOjPpIH5lV96201Fuj6rWDTHGCl6rAKHmKxs7eVYALaN9V1cv0C7Uhd2bHJ9bm0LDHSH46hARORjj8XZSLfPuGdPW18AuTgm+c2K6hyTEYOyEXw2uWnA/x2XjSZNhIVi5gBauNym0HVuoDGWUzVCeLNZ1PNz4g4Fq1tT6c23TDT8jpQVCHp1i3OPQPtbdabZhan4Ou0UQ2SgY/cPync96IJizKbDqrY5AxLW9zgU+9fG5bKOTwaLdqqKQ==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by SA6PR02MB10479.namprd02.prod.outlook.com (2603:10b6:806:40a::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.3; Wed, 8 Oct
- 2025 17:20:28 +0000
-Received: from DS3PR21MB5735.namprd21.prod.outlook.com
- ([fe80::ac75:c167:d3dd:5983]) by DS3PR21MB5735.namprd21.prod.outlook.com
- ([fe80::ac75:c167:d3dd:5983%7]) with mapi id 15.20.9203.007; Wed, 8 Oct 2025
- 17:20:28 +0000
-From: Long Li <longli@microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>, "longli@linux.microsoft.com"
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.9; Wed, 8 Oct
+ 2025 18:24:35 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.9182.017; Wed, 8 Oct 2025
+ 18:24:34 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Long Li <longli@microsoft.com>, "longli@linux.microsoft.com"
 	<longli@linux.microsoft.com>, KY Srinivasan <kys@microsoft.com>, Haiyang
  Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
 	<decui@microsoft.com>, "James E.J. Bottomley"
@@ -69,16 +68,17 @@ Subject: RE: [PATCH] scsi: storvsc: Prefer returning channel with the same CPU
  as on the I/O issuing CPU
 Thread-Topic: [PATCH] scsi: storvsc: Prefer returning channel with the same
  CPU as on the I/O issuing CPU
-Thread-Index: AQHcM1o09s0JbTr1WEyxyj44s5hnfrS22w6AgACK7gCAAQRdgIAAG7JA
-Date: Wed, 8 Oct 2025 17:20:28 +0000
+Thread-Index: AQHcM1o80XmWhpePUEiNmnbV/dytobS20liAgACjkICAAO2BEIAAJZEAgAAQ7FA=
+Date: Wed, 8 Oct 2025 18:24:34 +0000
 Message-ID:
- <DS3PR21MB573597BFA650534306FCA5CACEE1A@DS3PR21MB5735.namprd21.prod.outlook.com>
+ <SN6PR02MB41579818278E2548450A37DAD4E1A@SN6PR02MB4157.namprd02.prod.outlook.com>
 References: <1759381530-7414-1-git-send-email-longli@linux.microsoft.com>
  <SN6PR02MB4157B7FC3362C4C6838BAD3DD4E0A@SN6PR02MB4157.namprd02.prod.outlook.com>
  <DS3PR21MB573566DF7A81D555552DE8A7CEE1A@DS3PR21MB5735.namprd21.prod.outlook.com>
  <SN6PR02MB4157F816858A01D480FB203ED4E1A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <DS3PR21MB573597BFA650534306FCA5CACEE1A@DS3PR21MB5735.namprd21.prod.outlook.com>
 In-Reply-To:
- <SN6PR02MB4157F816858A01D480FB203ED4E1A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <DS3PR21MB573597BFA650534306FCA5CACEE1A@DS3PR21MB5735.namprd21.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
@@ -86,74 +86,58 @@ X-MS-TNEF-Correlator:
 msip_labels:
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1cf71a9b-5da0-4d36-8afb-a428d2ab4a7e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-10-07T23:58:57Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
  3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DS3PR21MB5735:EE_|DS7PR21MB3316:EE_
-x-ms-office365-filtering-correlation-id: 8064f2db-1be4-492a-b6a7-08de068efa58
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA6PR02MB10479:EE_
+x-ms-office365-filtering-correlation-id: c4d64d5a-f2ab-465c-731b-08de0697ee5a
 x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|1800799024|366016|38070700021|921020;
+ BCL:0;ARA:14566002|8060799015|19110799012|8062599012|13091999003|31061999003|461199028|12121999013|41001999006|15080799012|40105399003|440099028|3412199025|13041999003|102099032;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?bayDmmfz3BvFZOAzmXvamIJnI90gZbVDDU5fp9Py+7r5w6zTpkEzpKfiWr4X?=
- =?us-ascii?Q?fgXeN3DIliIu9fn/GUCEPNO/gdKysC+g8GldYnNzLSQg55XEzv2VpyVGxTlO?=
- =?us-ascii?Q?xGgq/ys8cbir8tzd8s9nEw4MvrhuE9MmXXbp0Y8DZ4St+i6QxFBwi8AJ+Bdj?=
- =?us-ascii?Q?E7RLuVly4P/M4eaw+FYNA8XU6YZH4LPdt8Ck+19xkuJz7776940DR7WAIijM?=
- =?us-ascii?Q?TFy4Q+0hqapqBY03DsJEqtEgakt32YS+ywoTH5tcRUZ1/MtjmzDFF3Nob2rn?=
- =?us-ascii?Q?nasn/i3GE2HtxdYVXqEIdaZbiIqYYUwE6PIk9O5H4gA4oIYCQrSOoRkiHQUW?=
- =?us-ascii?Q?DRqbp7hidqZOdp6taMg9Sq6F/uXm5IdpyK109R6REFMyyoPoBc9B4Afuu3Nr?=
- =?us-ascii?Q?AIZjqMIG3RpvRlNKqxxMH7u/X6JDiNpVl0LNqeKMo1i/hMy3JRLyunfUnDZf?=
- =?us-ascii?Q?LZAq/jHIqag3g8GoqNQ9oBeG7xZagxvDTPazKN/9DzsDRiGOF1fYRtfJA/Al?=
- =?us-ascii?Q?q4DxGw1u3Vzd2wv8pKk/mlNNgWIderICHESpiGnd5rVEjnEcP8UuijOWriTP?=
- =?us-ascii?Q?8vr0W8TPUr7ltQemfACYpuix6hgIy9zI+vCNKblnkHFjE+uLEHK8hh4x5V1w?=
- =?us-ascii?Q?J7ZcQ1GUpj1XtLKKxDGpoCKWCnAimbuxE5JYLXgPFWAObDenNcXVBUlYWv3A?=
- =?us-ascii?Q?6YoEO2BQW1WJncDcF264T1XUzebY5EMtSr4rfqNv1pKCZCOhEWgzLGzcDHKv?=
- =?us-ascii?Q?yV+QBejNw7TiId4MTEbBawfsImdoeIArV6SKcaSzXhXi4rfeEig+SGj7tYyw?=
- =?us-ascii?Q?EsV4E4c+DmRNYO1PusHfimRyM9kRPDDXp1IU2GB54vitvuELRtCJP3lSymFs?=
- =?us-ascii?Q?dxkE6aVwaK8WfgzdnUDt1iILJUA7fZ3UzaH6TjDEv6bL9yVH8Yok9vGrw3Vo?=
- =?us-ascii?Q?JwI0LO1CVeCG+mOCSaGb42vrG9Z7pMr6YSv33o9Jm0kskapKVRphfdAa0CTJ?=
- =?us-ascii?Q?I9EFZ+dqeE4im/8qWDDk1vKRvC8U0rITXfNUXny4HsFSFOhi6+f4bPCxKNCo?=
- =?us-ascii?Q?HCooVfd5i2WNhSPyXpdCLgJxcKIpgMNGSVNx511u5u/HLVX6V8T8mwKWPPTx?=
- =?us-ascii?Q?UI2bDx1yfPcxu2QgqOZJg0IR5eqlgmZyUmt0EUbNAeMX09gj9ZLyXpUaQaVe?=
- =?us-ascii?Q?E8gH42x+k/9LqiaNiBh5CjWTbraM+aKdeyn2ghNfL8duSSGdWXAKjPrCFNDk?=
- =?us-ascii?Q?tgV6fKtEWehg+kp/3uii4xksIDKWn0W4dtkPZHDT5KqQVUl+bHDGAADmCp9X?=
- =?us-ascii?Q?cqUTOAABV9m02kG6PRa2MKGBCKDqM7B6yJZeHRcgPLaTaGszL+vZz8CqWJUQ?=
- =?us-ascii?Q?2ik8Jm5gfqkpLM7Yr1OsYm/p1QfFbuOXOIVxPVpvY/HqPZSVgZoTvEYbJWaw?=
- =?us-ascii?Q?LC7lXWxuH/8VT9pBuYbbkmdTsP1ZV+IBDCL9C+wMF3+47pVRByY+oaPJlA5z?=
- =?us-ascii?Q?Xv5ruAnKfLVhwMupJ/c1RfSnA0mzjAasmn3UExHqzVcvcxQ4N+uhAFf+9A?=
- =?us-ascii?Q?=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS3PR21MB5735.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700021)(921020);DIR:OUT;SFP:1102;
+ =?us-ascii?Q?YrpHR+p/CBt807+E5tJgdfE5XNNX80ZsDS8dzeI7mOyEHSVy7RNug33gyERw?=
+ =?us-ascii?Q?tRexTqOEFRBFj93UoAYBpht9qbhw9bXPRFJiaYtjHtaI0N3I7iqQ7IskA5pj?=
+ =?us-ascii?Q?DGk7wKouOshKglE7xfME73k+nVkLfbPhIVjKZzEEzp75bhsm08oakSAM0ikx?=
+ =?us-ascii?Q?cBarV3iLwMxIjaQPraPAUjaHFSS3eQheLan5xd3u81uY02VNkTiPgj7ZB+yY?=
+ =?us-ascii?Q?QLabhKbD+hqT12Ud4sx4wrVWMpvYXNUI9HU00xRIULrZixIbR/9/j76GAYJk?=
+ =?us-ascii?Q?bbgpFpZrRj9+K1/zeIJjvcjYB6L5mh5fOUYkDE+pQujHrXZbWL4vGX5ZDIKw?=
+ =?us-ascii?Q?Lv64l6tfja8fVkwT75A8Rs8FqzAKDaEr8uCf2a8Llw+vNEre8yixRWfVvGkX?=
+ =?us-ascii?Q?E9CpFWdDzI3xlVhzOmGueEZNTK8N1nbXcU6oxkB2SqAGnud32lKHN8/TKXmZ?=
+ =?us-ascii?Q?yvBCle3y3hd199iljMFHxVlxY5VoVdg4SAwCiA7AI38lpNzQxgoo4KeOZKZr?=
+ =?us-ascii?Q?HrZp9mHzv57Z58S2l2apafVLb7ftbJsejMNB4oMLbpwRdzlHNw+kSxf3Bihv?=
+ =?us-ascii?Q?9gjbjAhWkyAHvkLTg6fFdZsMe2sbbEFB90roAnBNVcZWCYot6+lpYGhVr7k9?=
+ =?us-ascii?Q?JV1zz1RGzitXhqFeP85SfHMY0Hr7ICGniuJJRj5QnWK+xpgQykW1paxFt2zP?=
+ =?us-ascii?Q?gjMvgh4oD5dm0mWkIdFxpXJTXY0gzC9uliAeG+yQt3xR23Gngu9/Rcgb0KUK?=
+ =?us-ascii?Q?6U2/i6IUONpnXg6z83oB4y2hUrUhB+Jm2LreFcC/pTpPx6VVW92WcWFJ7D7i?=
+ =?us-ascii?Q?U7p6rHdVOUyampHzWm3uT/FhXdJU+nEKvuDivrJdr+Fy4TzhNh/JlwuS4cKN?=
+ =?us-ascii?Q?fxhpk/C7hnsmP0Vj7zvCpyCwccznE/IAqjEgD3AySi3PpoXN43bXZVwv5iWn?=
+ =?us-ascii?Q?gZCzt55ZWDhDSpyJWC2jB7ibvEewwWJ6d2HzwmDKciCz3BWYyQ2CzRG2zfrl?=
+ =?us-ascii?Q?4CW/JPew+i3mvCqlmOI7LJhVsBlPU8ZQSfuem3eyf+Pkviog6KpniKN0e3Jr?=
+ =?us-ascii?Q?TQEY9kdF35FD6n7AocoR4ZhM404QGYoHim3TtEpRH1Ol8yArHu0/LOUPOawu?=
+ =?us-ascii?Q?TFLgUQ7Nq4tO6206rIm8+VdVi+neyGFhh1JOCCyQSLxc1dJYu6u4PXpYIRRt?=
+ =?us-ascii?Q?uc+GKnrn311gj2+7IMtipd0Mx4w74TSqzp5/CmG67vXeGJUvJl0vQDfZViBQ?=
+ =?us-ascii?Q?nF+AfOWSmZfiPG0qYKMHhv+VLO6hroHIeB5eLuxmNg=3D=3D?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?vrNW3x7dBCKJwiBdEYDWlNtMqMxmstE56WJUVCZ/aJJ7bYghaI97R6aVocKI?=
- =?us-ascii?Q?2wIWPlord/8s4y8Q54lpL/ja/WquA48l92VBfK0b7XLPduJ0xylkHsnJdU5Z?=
- =?us-ascii?Q?T40sbFnmw8zMYOrh3y1ptoKejTUrHVLYgl1XV2cKP89kFBnzpqP15prT9ar+?=
- =?us-ascii?Q?D+zlp9I+pPqr4G2hMMA8zwfWvJdKDF0OSQsb1qC+NqZHDEVLkc2aOxmWil+e?=
- =?us-ascii?Q?88Gfd26gkTefHZaUFe45hmy2ZJDKdnAyr+VEX76ixg3Iw/s0ffTKQDJBS34G?=
- =?us-ascii?Q?Rpf3SQcFNOZrFFeGlnhNT+Xe6Dit7kF6vhzYW5wqot/aNEjYMq//OrPZeKHz?=
- =?us-ascii?Q?Z0FAXgtLZeru54cRbRVfempw3pkbEwYx5xBJh+w6W9h0CIqyA2MDCXqApurw?=
- =?us-ascii?Q?Yv54rBd7fQTeJ7VD514I3cAaoTs/nIvl/cZIyfN4q5I70E0qOzr0HzY9qM5h?=
- =?us-ascii?Q?4WlofX9ODqNCOtygYz2YLq9rgf6LT/fgIkC4303hLZQdETugmm8FRbRwu6xg?=
- =?us-ascii?Q?gnFqYC/hZ8jACzvw+QfAIg1D+9/k6HlUSFAHShSKPIxIKol5XPMN8+/L9KPu?=
- =?us-ascii?Q?oDYG1Jq0pKxkhVDJlTi/fkR/EDbzOYUV3xcDLIeU6WXFaeMjp3Kj2rlH0RT/?=
- =?us-ascii?Q?reqiP+RDVieKuK1IktplDCoDe9Ge2Hq15Ar0muapTUzXRZczw7DieHBKS6UO?=
- =?us-ascii?Q?pUuieX4bFu/4/hF9luUhxRB3M0eo5BC9Js0/7mZ6pPZihfsVtYYW1fCoC/Xs?=
- =?us-ascii?Q?4ILNoyAD4JOOAYijpBRegCWbJRv856aIDk6kpEmJEI3oVVS0FVJBB8VSURii?=
- =?us-ascii?Q?S445uPuDCqiTTlCK+1ocRPMXdayCixgL0cE/la1jW1Ee/uyS4injhiVlrHEE?=
- =?us-ascii?Q?XO5OBCQT/CSfgzThnmxwutQfSR9oKj2pnTy5W2pZgXVU+iUpD4zY1TMQHcJ+?=
- =?us-ascii?Q?hFAlQoIYktTsg3IqlnkmWU3SbDl764MshRZIX13bGdQXuROdDdOzrMZLOndI?=
- =?us-ascii?Q?VNnylteISqX3+Lu6JF2BFBx4BW5DLT6a0HTNYAv6XHXtEXBCLw3IRcK7iJcO?=
- =?us-ascii?Q?HojX4B7xVGKUlEeiC7vu/MwMmeyXw0bv3e9rNvZ1kqdQRFQf3FfA8mc3mTEE?=
- =?us-ascii?Q?S47GoR+Vh+/gN/f44Ap2ZJUvWt2JVVD+lykTEGhLtyfFrZyamG8pSMPy2cul?=
- =?us-ascii?Q?8jgzrOMoEBQXrzgBOAUPCxN/Y6wQziRkyBxYABN7MkBv0X8uTAHhIzSwb0bX?=
- =?us-ascii?Q?S84txPi++KdJrs15PtGjY/iupY66w34Nw3SyZze9siTEr3PmKgYz3FjpXgIa?=
- =?us-ascii?Q?vkTeczx2cJJag2lY4HwXKEjBtyhCNhDy2pzRgYnE1/Lgao3mxZC984EhHoUK?=
- =?us-ascii?Q?cxdO84eL+hk1MB4mz9bDwPaXUjzKI6Ts/X9wjUJQ4AH7TUUjSUTdVdVh6VKH?=
- =?us-ascii?Q?A3S17RkrDHesQjXMGJQl6pf6LvVyCse2kDr9kR6Xt4PKc6ER0a32ml/WmWKQ?=
- =?us-ascii?Q?s5wguL57R02t/PdSbrE5ZzuUrY9A6CTOzxfeQ30zhsF9l9iBg8JIPtxS8BWU?=
- =?us-ascii?Q?ZF6wpc7SKMtE0tJIkIY=3D?=
+ =?us-ascii?Q?g+aa5JMC3jkad5CC7HVB7z6nS7RktqTKt9Ddu9j9utlkRqUzuCjnS1CweIyN?=
+ =?us-ascii?Q?CVwzMDRPziO2hFvjwvNgraNzcM/IU4Zfe6gcIaC6KzmjLoKTWQIbZmT30l75?=
+ =?us-ascii?Q?xflqeE/M+Qo3izmyAt70cuhtsF1HdMAmQ9qNXozXQD3N27P3j4H9xk3AE3EK?=
+ =?us-ascii?Q?aXGgqYjHX7xCg9/v09a/HqCdIbfXq5tydkHeMyJHDMoDGvqLvht/aRJn2/a1?=
+ =?us-ascii?Q?ZqTPxe48NmXcOMq1rc8xuf4m9qDGGrf8bxMFipqu2+8FkGY7A5RLXQm+bMOO?=
+ =?us-ascii?Q?YR6/hm6i+kxNYF/6oWB1Ds3sxyKiVdmTB+RF3WU87PVU2pzSOth9wuwsj74v?=
+ =?us-ascii?Q?Opt159M+D4B7VclWvoumV2/C7Q4Lye49fu5Tx1wfHTRSIEuyI9pwuPQOp3Jj?=
+ =?us-ascii?Q?4al+ZKaeqsGFihyO/VN2pPe6N/hY5l/AoXjNg4AaMJVVRW8/KZwGzMjN2Olm?=
+ =?us-ascii?Q?gkOJj+ScdMqoXzKwP+VMVoSY1ff+OE+IwLvyaBry/bMEUP7+RhhxFAVbn2D/?=
+ =?us-ascii?Q?uabn5d32JG468Ty/islmyM0eF2+ocL38T75btiCpyV6dW27lDsWZcH7aHmEG?=
+ =?us-ascii?Q?1Kue07HFM2+seVDApwAqWu/WS8plVEHmNXjxrmSeWVk5ZS2pOegbLwYuomC1?=
+ =?us-ascii?Q?BH3KFue2bT3z6TDaj97ykkIp0WN6llSdYQbCNWQrdQvHRJQLGeXGUfE38nsz?=
+ =?us-ascii?Q?bZXSL3BuvhwA/4OquWpK3EXknvyt9ch3ttKUUDoF39u7BvE2I89bImrgf5HT?=
+ =?us-ascii?Q?9Qc0XONX8cJXuSG1Kw1TvsufPnecbo7S4NXarbxqtHPyXDce0aGAQRWFmng6?=
+ =?us-ascii?Q?dTCy3MW5m14++M10M0hhR5NwmBzyaxvSwZJoR6ipD/E2xhc+2aEtMK56e1/B?=
+ =?us-ascii?Q?LN22A1Un2HVKAjJPPtKjJPFpq9kbvpukGrRGl/u4byPg9eH3p2aETQEGtNvC?=
+ =?us-ascii?Q?kWQAgO+b3kbDPnZmNk4VS7NcdvNknVJKPxbf5uZ4wan/SFpxULmKnqsQdGB1?=
+ =?us-ascii?Q?RuRcfeF7NFiDlz0U10P8crNd2CUFW3PcNqqIdTp3a6Go6G6MqolT11AY66hu?=
+ =?us-ascii?Q?/41N5BJZv6oAFICu2OitIWS5njAu9PuLxUJoUtF0IhTUZI65jdpVF2QXhy/0?=
+ =?us-ascii?Q?HmOZTQIOsVf0eNoxSi6R2CsU35lQmq8+PH2hTrmOZTQcAjKbupbXDH9IrXXe?=
+ =?us-ascii?Q?IWZW2PwtsJUX4cbaTxy8tFjgU8sp7OYJhnPcb6BsFFC2uhZ7sj693SsPfZU?=
+ =?us-ascii?Q?=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -162,199 +146,207 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
+X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DS3PR21MB5735.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8064f2db-1be4-492a-b6a7-08de068efa58
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2025 17:20:28.7967
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: c4d64d5a-f2ab-465c-731b-08de0697ee5a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2025 18:24:34.1294
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tMhtmQ07WhYFt+SUVhUGZA5KtCLXtjVvpiavKk9HZhhrwQ0QTD5d0va74XBUne/wSg9x/0vzv3ZPmON9nQ6HlQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR21MB3316
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR02MB10479
 
-> Subject: [EXTERNAL] RE: [PATCH] scsi: storvsc: Prefer returning channel w=
-ith the
-> same CPU as on the I/O issuing CPU
+From: Long Li <longli@microsoft.com> Sent: Wednesday, October 8, 2025 10:20=
+ AM
 >=20
-> From: Long Li <longli@microsoft.com> Sent: Tuesday, October 7, 2025 5:56 =
-PM
+> > Subject: [EXTERNAL] RE: [PATCH] scsi: storvsc: Prefer returning channel=
+ with the
+> > same CPU as on the I/O issuing CPU
 > >
-> > > -----Original Message-----
-> > > From: Michael Kelley <mhklinux@outlook.com>
-> > > Sent: Tuesday, October 7, 2025 8:42 AM
-> > > To: longli@linux.microsoft.com; KY Srinivasan <kys@microsoft.com>;
-> > > Haiyang Zhang <haiyangz@microsoft.com>; Wei Liu
-> > > <wei.liu@kernel.org>; Dexuan Cui <decui@microsoft.com>; James E.J.
-> > > Bottomley <James.Bottomley@HansenPartnership.com>; Martin K.
-> > > Petersen <martin.petersen@oracle.com>; James Bottomley
-> > > <JBottomley@Odin.com>; linux-hyperv@vger.kernel.org;
-> > > linux-scsi@vger.kernel.org; linux- kernel@vger.kernel.org
-> > > Cc: Long Li <longli@microsoft.com>
-> > > Subject: [EXTERNAL] RE: [PATCH] scsi: storvsc: Prefer returning
-> > > channel with the same CPU as on the I/O issuing CPU
+> > From: Long Li <longli@microsoft.com> Sent: Tuesday, October 7, 2025 5:5=
+6 PM
 > > >
-> > > From: longli@linux.microsoft.com <longli@linux.microsoft.com> Sent:
-> > > Wednesday, October 1, 2025 10:06 PM
+> > > > -----Original Message-----
+> > > > From: Michael Kelley <mhklinux@outlook.com>
+> > > > Sent: Tuesday, October 7, 2025 8:42 AM
+> > > > To: longli@linux.microsoft.com; KY Srinivasan <kys@microsoft.com>;
+> > > > Haiyang Zhang <haiyangz@microsoft.com>; Wei Liu
+> > > > <wei.liu@kernel.org>; Dexuan Cui <decui@microsoft.com>; James E.J.
+> > > > Bottomley <James.Bottomley@HansenPartnership.com>; Martin K.
+> > > > Petersen <martin.petersen@oracle.com>; James Bottomley
+> > > > <JBottomley@Odin.com>; linux-hyperv@vger.kernel.org;
+> > > > linux-scsi@vger.kernel.org; linux- kernel@vger.kernel.org
+> > > > Cc: Long Li <longli@microsoft.com>
+> > > > Subject: [EXTERNAL] RE: [PATCH] scsi: storvsc: Prefer returning
+> > > > channel with the same CPU as on the I/O issuing CPU
 > > > >
-> > > > When selecting an outgoing channel for I/O, storvsc tries to
-> > > > select a channel with a returning CPU that is not the same as
-> > > > issuing CPU. This worked well in the past, however it doesn't work
-> > > > well when the Hyper-V exposes a large number of channels (up to
-> > > > the number of all CPUs). Use a different CPU for returning channel =
-is not
-> efficient on Hyper-V.
+> > > > From: longli@linux.microsoft.com <longli@linux.microsoft.com> Sent:
+> > > > Wednesday, October 1, 2025 10:06 PM
+> > > > >
+> > > > > When selecting an outgoing channel for I/O, storvsc tries to
+> > > > > select a channel with a returning CPU that is not the same as
+> > > > > issuing CPU. This worked well in the past, however it doesn't wor=
+k
+> > > > > well when the Hyper-V exposes a large number of channels (up to
+> > > > > the number of all CPUs). Use a different CPU for returning channe=
+l is not efficient on Hyper-V.
+> > > > >
+> > > > > Change this behavior by preferring to the channel with the same
+> > > > > CPU as the current I/O issuing CPU whenever possible.
+> > > > >
+> > > > > Tests have shown improvements in newer Hyper-V/Azure environment,
+> > > > > and no regression with older Hyper-V/Azure environments.
+> > > > >
+> > > > > Tested-by: Raheel Abdul Faizy <rabdulfaizy@microsoft.com>
+> > > > > Signed-off-by: Long Li <longli@microsoft.com>
+> > > > > ---
+> > > > >  drivers/scsi/storvsc_drv.c | 96
+> > > > > ++++++++++++++++++--------------------
+> > > > >  1 file changed, 45 insertions(+), 51 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/scsi/storvsc_drv.c
+> > > > > b/drivers/scsi/storvsc_drv.c index d9e59204a9c3..092939791ea0
+> > > > > 100644
+> > > > > --- a/drivers/scsi/storvsc_drv.c
+> > > > > +++ b/drivers/scsi/storvsc_drv.c
+> > > > > @@ -1406,14 +1406,19 @@ static struct vmbus_channel *get_og_chn(s=
+truct storvsc_device *stor_device,
+> > > > >  	}
+> > > > >
+> > > > >  	/*
+> > > > > -	 * Our channel array is sparsley populated and we
+> > > > > +	 * Our channel array could be sparsley populated and we
+> > > > >  	 * initiated I/O on a processor/hw-q that does not
+> > > > >  	 * currently have a designated channel. Fix this.
+> > > > >  	 * The strategy is simple:
+> > > > > -	 * I. Ensure NUMA locality
+> > > > > -	 * II. Distribute evenly (best effort)
+> > > > > +	 * I. Prefer the channel associated with the current CPU
+> > > > > +	 * II. Ensure NUMA locality
+> > > > > +	 * III. Distribute evenly (best effort)
+> > > > >  	 */
+> > > > >
+> > > > > +	/* Prefer the channel on the I/O issuing processor/hw-q */
+> > > > > +	if (cpumask_test_cpu(q_num, &stor_device->alloced_cpus))
+> > > > > +		return stor_device->stor_chns[q_num];
+> > > > > +
 > > > >
-> > > > Change this behavior by preferring to the channel with the same
-> > > > CPU as the current I/O issuing CPU whenever possible.
+> > > > Hmmm. When get_og_chn() is called, we know that stor_device-
+> > > > >stor_chns[q_num] is NULL since storvsc_do_io() has already handled
+> > > > >the non-
+> > > > NULL case. And the checks are all done with stor_device->lock held,
+> > > > so the stor_chns array can't change.
+> > > > Hence the above code will return NULL, which will cause a NULL
+> > > > reference when
+> > > > storvsc_do_io() sends out the VMBus packet.
 > > > >
-> > > > Tests have shown improvements in newer Hyper-V/Azure environment,
-> > > > and no regression with older Hyper-V/Azure environments.
-> > > >
-> > > > Tested-by: Raheel Abdul Faizy <rabdulfaizy@microsoft.com>
-> > > > Signed-off-by: Long Li <longli@microsoft.com>
-> > > > ---
-> > > >  drivers/scsi/storvsc_drv.c | 96
-> > > > ++++++++++++++++++--------------------
-> > > >  1 file changed, 45 insertions(+), 51 deletions(-)
-> > > >
-> > > > diff --git a/drivers/scsi/storvsc_drv.c
-> > > > b/drivers/scsi/storvsc_drv.c index d9e59204a9c3..092939791ea0
-> > > > 100644
-> > > > --- a/drivers/scsi/storvsc_drv.c
-> > > > +++ b/drivers/scsi/storvsc_drv.c
-> > > > @@ -1406,14 +1406,19 @@ static struct vmbus_channel
-> *get_og_chn(struct storvsc_device *stor_device,
-> > > >  	}
-> > > >
-> > > >  	/*
-> > > > -	 * Our channel array is sparsley populated and we
-> > > > +	 * Our channel array could be sparsley populated and we
-> > > >  	 * initiated I/O on a processor/hw-q that does not
-> > > >  	 * currently have a designated channel. Fix this.
-> > > >  	 * The strategy is simple:
-> > > > -	 * I. Ensure NUMA locality
-> > > > -	 * II. Distribute evenly (best effort)
-> > > > +	 * I. Prefer the channel associated with the current CPU
-> > > > +	 * II. Ensure NUMA locality
-> > > > +	 * III. Distribute evenly (best effort)
-> > > >  	 */
-> > > >
-> > > > +	/* Prefer the channel on the I/O issuing processor/hw-q */
-> > > > +	if (cpumask_test_cpu(q_num, &stor_device->alloced_cpus))
-> > > > +		return stor_device->stor_chns[q_num];
-> > > > +
+> > > > My recollection is that get_og_chan() is called when there is no
+> > > > channel that interrupts the current CPU (that's what it means for
+> > > > stor_device-
+> > > > >stor_chns[<current CPU>] to be NULL). So the algorithm must pick a
+> > > > >channel
+> > > > that interrupts some other CPU, preferably a CPU in the current NUM=
+A node.
+> > > > Adding code to prefer the channel associated with the current CPU
+> > > > doesn't make sense in get_og_chn(), as get_og_chn() is only called
+> > > > when it is already known that there is no such channel.
 > > >
-> > > Hmmm. When get_og_chn() is called, we know that stor_device-
-> > > >stor_chns[q_num] is NULL since storvsc_do_io() has already handled
-> > > >the non-
-> > > NULL case. And the checks are all done with stor_device->lock held,
-> > > so the stor_chns array can't change.
-> > > Hence the above code will return NULL, which will cause a NULL
-> > > reference when
-> > > storvsc_do_io() sends out the VMBus packet.
+> > > The initial values for stor_chns[] and alloced_cpus are set in
+> > > storvsc_channel_init() (for primary channel) and handle_sc_creation()=
+ (for
+> > subchannels).
+> >
+> > OK, I agree that if the CPU bit in alloced_cpus is set, then the corres=
+ponding entry
+> > in stor_chns[] will not be NULL.  And if the entry in stor_chns[] is NU=
+LL, the CPU
+> > bit in alloced_cpus is *not* set. All the places that manipulate these =
+fields update
+> > both so they are in sync with each other.  Hence I'll agree the code yo=
+u've added
+> > in get_og_chn() will never return a NULL value.
+> >
+> > (However, FWIW the reverse is not true:  If the entry in stor_chns[] is=
+ not NULL,
+> > the corresponding CPU bit in alloced_cpus may or may not be set.)
+> >
 > > >
-> > > My recollection is that get_og_chan() is called when there is no
-> > > channel that interrupts the current CPU (that's what it means for
-> > > stor_device-
-> > > >stor_chns[<current CPU>] to be NULL). So the algorithm must pick a
-> > > >channel
-> > > that interrupts some other CPU, preferably a CPU in the current NUMA =
-node.
-> > > Adding code to prefer the channel associated with the current CPU
-> > > doesn't make sense in get_og_chn(), as get_og_chn() is only called
-> > > when it is already known that there is no such channel.
+> > > As a result, the check for cpumask_test_cpu(q_num,
+> > > &stor_device->alloced_cpus) will guarantee we are getting a channel.
+> > > If the check fails, the code follows the old behavior to find a chann=
+el.
+> > >
+> > > This check is needed because storvsc supports
+> > > change_target_cpu_callback() callback via vmbus.
 > >
-> > The initial values for stor_chns[] and alloced_cpus are set in
-> > storvsc_channel_init() (for primary channel) and handle_sc_creation() (=
-for
-> subchannels).
+> > But look at the code in storvsc_do_io() where get_og_chn() is called. I=
+'ve copied
+> > the code here for discussion purposes. This is the only place that get_=
+og_chn() is
+> > called:
+> >
+> >                 spin_lock_irqsave(&stor_device->lock, flags);
+> >                 outgoing_channel =3D stor_device->stor_chns[q_num];
+> >                 if (outgoing_channel !=3D NULL) {
+> >                         spin_unlock_irqrestore(&stor_device->lock, flag=
+s);
+> >                         goto found_channel;
+> >                 }
+> >                 outgoing_channel =3D get_og_chn(stor_device, q_num);
+> >                 spin_unlock_irqrestore(&stor_device->lock, flags);
+> >
+> > The code gets the spin lock, then reads the stor_chns[] entry. If the e=
+ntry is non-
+> > NULL, then we've found a suitable channel and get_og_chn() is *not* cal=
+led. The
+> > only time get_og_chan() is called is when the stor_chn[] entry
+> > *is* NULL, which also means that the CPU bit in alloced_cpus is *not* s=
+et.
+> > So the check you've added in get_og_chn() can never be true and the che=
+ck is not
+> > needed. You said the check is needed because of change_target_cpu_callb=
+ack(),
+> > which will invoke storvsc_change_target_cpu(). But I don't see how that=
+ matters
+> > given the checks done before get_og_chn() is called. The spin lock sync=
+hronizes
+> > with any changes made by storvsc_change_target_cpu().
 >=20
-> OK, I agree that if the CPU bit in alloced_cpus is set, then the correspo=
-nding entry
-> in stor_chns[] will not be NULL.  And if the entry in stor_chns[] is NULL=
-, the CPU
-> bit in alloced_cpus is *not* set. All the places that manipulate these fi=
-elds update
-> both so they are in sync with each other.  Hence I'll agree the code you'=
-ve added
-> in get_og_chn() will never return a NULL value.
->=20
-> (However, FWIW the reverse is not true:  If the entry in stor_chns[] is n=
-ot NULL,
-> the corresponding CPU bit in alloced_cpus may or may not be set.)
+> I agree this check may not be necessary. Given the current patch is corre=
+ct, how about I
+> submit another patch to remove this check after more testing are done?
+
+That's OK with me.
+
 >=20
 > >
-> > As a result, the check for cpumask_test_cpu(q_num,
-> > &stor_device->alloced_cpus) will guarantee we are getting a channel.
-> > If the check fails, the code follows the old behavior to find a channel=
-.
+> > Related, there are a couple of occurrences of code like this:
 > >
-> > This check is needed because storvsc supports
-> > change_target_cpu_callback() callback via vmbus.
+> >                 for_each_cpu_wrap(tgt_cpu, &stor_device->alloced_cpus,
+> >                                   q_num + 1) {
+> >                         channel =3D READ_ONCE(stor_device->stor_chns[tg=
+t_cpu]);
+> >                         if (!channel)
+> >                                 continue;
+> >
+> > Given your point that the alloced_cpus and stor_chns[] entries are alwa=
+ys in sync
+> > with each other, the check for channel being NULL is not necessary.
 >=20
-> But look at the code in storvsc_do_io() where get_og_chn() is called. I'v=
-e copied
-> the code here for discussion purposes. This is the only place that get_og=
-_chn() is
-> called:
->=20
->                 spin_lock_irqsave(&stor_device->lock, flags);
->                 outgoing_channel =3D stor_device->stor_chns[q_num];
->                 if (outgoing_channel !=3D NULL) {
->                         spin_unlock_irqrestore(&stor_device->lock, flags)=
-;
->                         goto found_channel;
->                 }
->                 outgoing_channel =3D get_og_chn(stor_device, q_num);
->                 spin_unlock_irqrestore(&stor_device->lock, flags);
->=20
-> The code gets the spin lock, then reads the stor_chns[] entry. If the ent=
-ry is non-
-> NULL, then we've found a suitable channel and get_og_chn() is *not* calle=
-d. The
-> only time get_og_chan() is called is when the stor_chn[] entry
-> *is* NULL, which also means that the CPU bit in alloced_cpus is *not* set=
-.
-> So the check you've added in get_og_chn() can never be true and the check=
- is not
-> needed. You said the check is needed because of change_target_cpu_callbac=
-k(),
-> which will invoke storvsc_change_target_cpu(). But I don't see how that m=
-atters
-> given the checks done before get_og_chn() is called. The spin lock synchr=
-onizes
-> with any changes made by storvsc_change_target_cpu().
+> I don't' agree with removing the check for NULL. This code follows the ex=
+isting storvsc behavior
+> on checking allocated CPUs. Looking at storvsc_change_target_cpu(), it ch=
+anges stor_chns
+> before changing alloced_cpus. It can run at the same time as this code. I=
+ think we may need
+> to add some memory barriers in storvsc_change_target_cpu(), but that is f=
+or another topic.
 
-I agree this check may not be necessary. Given the current patch is correct=
-, how about I
-submit another patch to remove this check after more testing are done?
+Yes, you are right. The spin lock isn't held in these cases, so the checks =
+for NULL
+should stay.
 
->=20
-> Related, there are a couple of occurrences of code like this:
->=20
->                 for_each_cpu_wrap(tgt_cpu, &stor_device->alloced_cpus,
->                                   q_num + 1) {
->                         channel =3D READ_ONCE(stor_device->stor_chns[tgt_=
-cpu]);
->                         if (!channel)
->                                 continue;
->=20
-> Given your point that the alloced_cpus and stor_chns[] entries are always=
- in sync
-> with each other, the check for channel being NULL is not necessary.
-
-I don't' agree with removing the check for NULL. This code follows the exis=
-ting storvsc behavior
-on checking allocated CPUs. Looking at storvsc_change_target_cpu(), it chan=
-ges stor_chns
-before changing alloced_cpus. It can run at the same time as this code. I t=
-hink we may need
-to add some memory barriers in storvsc_change_target_cpu(), but that is for=
- another topic.
-=20
-Thanks,
-
-Long
+Michael
 
