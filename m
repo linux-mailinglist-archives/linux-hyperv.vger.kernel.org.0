@@ -1,609 +1,258 @@
-Return-Path: <linux-hyperv+bounces-7170-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7171-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECB41BCA485
-	for <lists+linux-hyperv@lfdr.de>; Thu, 09 Oct 2025 18:59:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32564BCA600
+	for <lists+linux-hyperv@lfdr.de>; Thu, 09 Oct 2025 19:30:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 260B03A6A5B
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Oct 2025 16:59:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1C0D01A6449C
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Oct 2025 17:30:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02BF42376FD;
-	Thu,  9 Oct 2025 16:59:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BD1124166C;
+	Thu,  9 Oct 2025 17:30:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JF5iyd18"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="LVPWXWPP"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yx1-f50.google.com (mail-yx1-f50.google.com [74.125.224.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6D521B918
-	for <linux-hyperv@vger.kernel.org>; Thu,  9 Oct 2025 16:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.50
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF371225A38;
+	Thu,  9 Oct 2025 17:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760029185; cv=none; b=C4rmuI2JYQgJRcjbAui7k8o4Ui5hC08Ju1Keb2/QbN1KZuxI8tmvsnwgLNgamxKg0sggL5TnCPVihZdatEeJgVEefRovgYn8ViFejIVBRnl1OClZG+yKYswjm9dQEOLB6FPI/bZKdWMBsH8NvaRDrXkYMuM2QymIIQyZlf3nKaU=
+	t=1760031017; cv=none; b=b4Se4ksjSJR+ywjurD5URGPGTgm1XSZ6WMeZGwBGl2VTVxbcnOD8fgSUTESIuH9qS3zzPWcNC8jfI7tYzud+RQjX9FvunFbxnopFrvGN9VBiaSodoRY5cI4Yslf6kqhkK3ZkgbJWVMeu4cQa5h8u3gsbwidyXCzs03HlKJNOteU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760029185; c=relaxed/simple;
-	bh=s0pAKrHhCYacWUYIlOcIBdgkTDvnvcKnUuozGJ7CNIg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cZAYg4p/9ZHgR6X5shFXc6sAi14cFCWwgxG+0zXqa2MLZEy/EE2XuU77TiOCJi8amKAnyUt6cOkCYv8ySzOC0C9hROQNNt24fl4IHLnfywYyV1RK9WJ89+TkU6+bIZ583Bpa3M3GXESn7d/UblEJsgSWSTBJ6dnrggHO4VheGOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JF5iyd18; arc=none smtp.client-ip=74.125.224.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yx1-f50.google.com with SMTP id 956f58d0204a3-635380a4a67so1505196d50.0
-        for <linux-hyperv@vger.kernel.org>; Thu, 09 Oct 2025 09:59:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760029182; x=1760633982; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=L0nlv6lKy0ilQxl/LVyHSc5E6/NGf/YFQBH9SH9ZDRs=;
-        b=JF5iyd18D1AnLdNx6u+VmoiaWgTVohYNpBIH+pFaE4SMjHxC51oorCd7R9tklolW37
-         u/QT6nWgUb2dxSHm+yhlR31KF+kLSDvEPmjQ1ciol8iXM7ZzR3aBFebrjcW+omteMGjO
-         +XLt85QAROa+McPab385eMDIN5jTplxdMPPm2zl8uNbH85PW2lNeqapHZEq+Ov+uSPOp
-         NIFK21K6ITdu8eNYp/kZVUgWccYyPLx693vyjlyyDe12lErGqmGeE6sQbav8Jx/MjcpE
-         LNuGjkI0evM1CPJw3GJ3XUO1H4Hqd93GQcr71PRNAJzhWS2k5JbkDftJfjguWPrYaGfF
-         VtwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760029182; x=1760633982;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L0nlv6lKy0ilQxl/LVyHSc5E6/NGf/YFQBH9SH9ZDRs=;
-        b=f1HiIAO3ezP2cRo6770/HO7Qr469lD6++ofpqMbSUBOhMI5bC079yIDJ1IR66Ikn97
-         bsL49LY8mQ9ixGEdoXA5uMr5JF5hlhfTTndxEXl9P6vQtTjdGxnFBKA4W3nwgtWg4cKd
-         MRSST/abOaWfdgAKvkarCKFXsNdOcVSkmTCso0Zc07d59W7xCyVQec/WDbPCuvXXXlt0
-         +ZNcEgHRFVUQaSHc+I+OjbzizApdKyYpJ3yUlNZWGUvvGcGdR6xVHCCEaJnp1vmiF3xX
-         O1vOTQd/S5Ea+HwMfVUNC/rDTXryNvQkQ4LLF6SgQTHCoGyhSidk7DhL6+uH+3zSfMyC
-         RGsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWPCKJ0fV03OBLtYBQ1+34KW0tYlNzrIcPcFZekv9Om1TR7NsL/34xVW1mwRSlovigFfxrgyB8oyOWFfWk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfYBBdmbil5NHnq8pW5617Cnf99NPq6MBrYJToAhN8s3kDu2mc
-	xseERQtRKuJEb0H36X+VL3XS+uaajMJqY/BbWp2dVzI6NEBlNsg7ib4B
-X-Gm-Gg: ASbGncsshbDIS36dNSvBj0Gjpg5AOKAUISlPDBMQrtW7ZsMYbTNTDV9S1dmk4Q/mnbk
-	b9raoILGoFXVi82haooWbEsAr4pyKO+yD1KeX0fbwPPhD5x/U9L6OywcJJU+OSvd8/wJt0xQS/Y
-	BWpQZxzsUtzLNv1slj4dryNAHv6vTy0a2hpkYzjVf3AtMTxmGeOjEC84lt9DwJOF4vs1KIhzLlv
-	3WVuIy2avYHhuDZKmyYtxYmYt4V4HcdDZuj3PzZ12L/7nza66tZnJX9/NwS45yAq3dbpVy23s5A
-	d7H9HqpkWs+gEoIPSb/A28dl5OYTjsfIjUTRBoolmzrYzPi1UQFVHQ07t/2k2ucWmwKBeKKBhAq
-	vmpZtR8yh7kRTWUUfkZxnAoIZydFM6lkQlXNHr5cKI8BOJ+WTkIVrRt2tKcUoFMWdMju9neVdt5
-	MAESgX/zi1WRfl10K4MVlXu4mtnTs=
-X-Google-Smtp-Source: AGHT+IGik4OXAJHYgBGqcMq+TOf8a7oRCVhJzxkOjsbQSsa+jY2kjFAt8lCRxoN3u6YKk4uQrYpn3w==
-X-Received: by 2002:a05:690e:69c:b0:635:4ed0:5711 with SMTP id 956f58d0204a3-63ccb91b33bmr6113298d50.43.1760029181236;
-        Thu, 09 Oct 2025 09:59:41 -0700 (PDT)
-Received: from devvm11784.nha0.facebook.com ([2a03:2880:25ff:e::])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-63cd9516074sm1014156d50.4.2025.10.09.09.59.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Oct 2025 09:59:40 -0700 (PDT)
-Date: Thu, 9 Oct 2025 09:59:34 -0700
-From: Bobby Eshleman <bobbyeshleman@gmail.com>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Shuah Khan <shuah@kernel.org>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	berrange@redhat.com, Bobby Eshleman <bobbyeshleman@meta.com>
-Subject: Re: [PATCH net-next v6 9/9] selftests/vsock: add namespace tests
-Message-ID: <aOfp6Ieds0n57POf@devvm11784.nha0.facebook.com>
-References: <20250916-vsock-vmtest-v6-0-064d2eb0c89d@meta.com>
- <20250916-vsock-vmtest-v6-9-064d2eb0c89d@meta.com>
- <5kgnein4cq2ymeq3cozevld3ppbzbv62usavfigpi33krqjqde@k3sn3giizzvr>
+	s=arc-20240116; t=1760031017; c=relaxed/simple;
+	bh=UeCEAoZUKZNISgi1fDLrCUy6jEa3nxaVUxrsMz+pgQs=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ceKT8Fi4vxLl6xGQjK28z1id3VYSo/u32M0/9c7krsIe2SA3jwvgtIMuANkutBQ+I/7kxuoUQMLRsEZ2pj4QzTk6TSAcvloDwecLepD7izGolWCSNBmnoPkqNGlxy1C876WOJmsas6VjhX3NpRzKrQFJuyWDzIn6mNQE3hzTF1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=LVPWXWPP; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.35.166] (unknown [4.194.122.144])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 991DD211CF9E;
+	Thu,  9 Oct 2025 10:30:06 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 991DD211CF9E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1760031012;
+	bh=xGjEmb79X+GUKMuVaO3SQjRtwJPxeKRZUZ74MIAh4iQ=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=LVPWXWPPpTpkYRi+bgjk6gcfH5AH7FyWlG5JPvAQLnZ5Dil5jQgKa++oasPUKVIZJ
+	 SS6z1c8JWFkjzI3NYELcfcauTRqOpzY+JtXFYt8sh3ktTLzjqfc6b2qWgonoirEKG2
+	 0jnPd0j7o+MvM9LOS0gMMSJI/y0AuVjf7XkTnzqQ=
+Message-ID: <f0291b64-693c-49f4-bc71-d260a670e636@linux.microsoft.com>
+Date: Thu, 9 Oct 2025 10:30:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5kgnein4cq2ymeq3cozevld3ppbzbv62usavfigpi33krqjqde@k3sn3giizzvr>
+User-Agent: Mozilla Thunderbird
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, arnd@arndb.de,
+ easwar.hariharan@linux.microsoft.com, anbelski@linux.microsoft.com
+Subject: Re: [PATCH 2/2] hyperv: Enable clean shutdown for root partition with
+ MSHV
+To: Praveen K Paladugu <prapal@linux.microsoft.com>
+References: <20251009160501.6356-1-prapal@linux.microsoft.com>
+ <20251009160501.6356-3-prapal@linux.microsoft.com>
+From: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <20251009160501.6356-3-prapal@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Sep 30, 2025 at 10:58:46AM +0200, Stefano Garzarella wrote:
-> On Tue, Sep 16, 2025 at 04:43:53PM -0700, Bobby Eshleman wrote:
-> > From: Bobby Eshleman <bobbyeshleman@meta.com>
-> > 
-> > Add tests for namespace support in vsock. Use socat for basic connection
-> > failure tests and vsock_test for full functionality tests when
-> > communication is expected to succeed. vsock_test is not used for failure
-> > cases because in theory vsock_test could allow connection and some
-> > traffic flow but fail on some other case (e.g., fail on MSG_ZEROCOPY).
-> > 
-> > Tests cover all cases of clients and servers being in all variants of
-> > local ns, global ns, host process, and VM process.
-> > 
-> > Legacy tests are retained and executed in the init ns.
-> > 
-> > Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
-> > 
-> > ---
-> > Changes in v6:
-> > - check for namespace support in vmtest.sh
-> > 
-> > Changes in v5:
-> > - use /proc/sys/net/vsock/ns_mode
-> > - clarify logic of tests that reuse the same VM and tests that require
-> >  netns setup
-> > - fix unassigned BUILD bug
-> > ---
-> > tools/testing/selftests/vsock/vmtest.sh | 954 ++++++++++++++++++++++++++++----
-> > 1 file changed, 849 insertions(+), 105 deletions(-)
-> > 
-> > diff --git a/tools/testing/selftests/vsock/vmtest.sh b/tools/testing/selftests/vsock/vmtest.sh
-> > index 5e36d1068f6f..59621b32cf1a 100755
-> > --- a/tools/testing/selftests/vsock/vmtest.sh
-> > +++ b/tools/testing/selftests/vsock/vmtest.sh
-> > @@ -7,6 +7,7 @@
-> > #		* virtme-ng
-> > #		* busybox-static (used by virtme-ng)
-> > #		* qemu	(used by virtme-ng)
-> > +#		* socat
-> > 
-> > readonly SCRIPT_DIR="$(cd -P -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
-> > readonly KERNEL_CHECKOUT=$(realpath "${SCRIPT_DIR}"/../../../../)
-> > @@ -23,7 +24,7 @@ readonly VSOCK_CID=1234
-> > readonly WAIT_PERIOD=3
-> > readonly WAIT_PERIOD_MAX=60
-> > readonly WAIT_TOTAL=$(( WAIT_PERIOD * WAIT_PERIOD_MAX ))
-> > -readonly QEMU_PIDFILE=$(mktemp /tmp/qemu_vsock_vmtest_XXXX.pid)
-> > +readonly WAIT_QEMU=5
-> > 
-> > # virtme-ng offers a netdev for ssh when using "--ssh", but we also need a
-> > # control port forwarded for vsock_test.  Because virtme-ng doesn't support
-> > @@ -33,23 +34,146 @@ readonly QEMU_PIDFILE=$(mktemp /tmp/qemu_vsock_vmtest_XXXX.pid)
-> > # add the kernel cmdline options that virtme-init uses to setup the interface.
-> > readonly QEMU_TEST_PORT_FWD="hostfwd=tcp::${TEST_HOST_PORT}-:${TEST_GUEST_PORT}"
-> > readonly QEMU_SSH_PORT_FWD="hostfwd=tcp::${SSH_HOST_PORT}-:${SSH_GUEST_PORT}"
-> > -readonly QEMU_OPTS="\
-> > -	 -netdev user,id=n0,${QEMU_TEST_PORT_FWD},${QEMU_SSH_PORT_FWD} \
-> > -	 -device virtio-net-pci,netdev=n0 \
-> > -	 -device vhost-vsock-pci,guest-cid=${VSOCK_CID} \
-> > -	 --pidfile ${QEMU_PIDFILE} \
-> > -"
-> 
-> I expected this patch to only add new tests, but we are changing a few things.
-> Are they related, or can they be moved to another preparation patch?
-> 
+On 10/9/2025 8:58 AM, Praveen K Paladugu wrote:
+> This commit enables the root partition to perform a clean shutdown when
+> running with MSHV hypervisor.
 
-Unfortunately they are related. For example, this pidfile change is
-because this patch introduces testing two VMs up at once (to test if
-their CIDs collide), so they each need unique pidfiles.
-
-Definitely can be moved to a preparation patch, will do next rev.
-
-> > readonly KERNEL_CMDLINE="\
-> > 	virtme.dhcp net.ifnames=0 biosdevname=0 \
-> > 	virtme.ssh virtme_ssh_channel=tcp virtme_ssh_user=$USER \
-> > "
-> > readonly LOG=$(mktemp /tmp/vsock_vmtest_XXXX.log)
-> > -readonly TEST_NAMES=(vm_server_host_client vm_client_host_server vm_loopback)
-> > +readonly TEST_NAMES=(
-> > +	vm_server_host_client
-> > +	vm_client_host_server
-> > +	vm_loopback
-> > +	host_vsock_ns_mode_ok
-> 
-> can we use a `ns_` prefix for all ns related tests?
-> 
-
-Yep, np.
-
-> > +	host_vsock_ns_mode_write_once_ok
-> > +	global_same_cid_fails
-> > +	local_same_cid_ok
-> > +	global_local_same_cid_ok
-> > +	local_global_same_cid_ok
-> > +	diff_ns_global_host_connect_to_global_vm_ok
-> > +	diff_ns_global_host_connect_to_local_vm_fails
-> > +	diff_ns_global_vm_connect_to_global_host_ok
-> > +	diff_ns_global_vm_connect_to_local_host_fails
-> > +	diff_ns_local_host_connect_to_local_vm_fails
-> > +	diff_ns_local_vm_connect_to_local_host_fails
-> > +	diff_ns_global_to_local_loopback_local_fails
-> > +	diff_ns_local_to_global_loopback_fails
-> > +	diff_ns_local_to_local_loopback_fails
-> > +	diff_ns_global_to_global_loopback_ok
-> > +	same_ns_local_loopback_ok
-> > +	same_ns_local_host_connect_to_local_vm_ok
-> > +	same_ns_local_vm_connect_to_local_host_ok
-> > +)
-> > +
-> > readonly TEST_DESCS=(
-> > +	# vm_server_host_client
-> > 	"Run vsock_test in server mode on the VM and in client mode on the host."
-> > +
-> > +	# vm_client_host_server
-> > 	"Run vsock_test in client mode on the VM and in server mode on the host."
-> > +
-> > +	# vm_loopback
-> > 	"Run vsock_test using the loopback transport in the VM."
-> > +
-> > +	# host_vsock_ns_mode_ok
-> > +	"Check /proc/sys/net/vsock/ns_mode strings on the host."
-> > +
-> > +	# host_vsock_ns_mode_write_once_ok
-> > +	"Check /proc/sys/net/vsock/ns_mode is write-once on the host."
-> > +
-> > +	# global_same_cid_fails
-> > +	"Check QEMU fails to start two VMs with same CID in two different global namespaces."
-> > +
-> > +	# local_same_cid_ok
-> > +	"Check QEMU successfully starts two VMs with same CID in two different local namespaces."
-> > +
-> > +	# global_local_same_cid_ok
-> > +	"Check QEMU successfully starts one VM in a global ns and then another VM in a local ns with the same CID."
-> > +
-> > +	# local_global_same_cid_ok
-> > +	"Check QEMU successfully starts one VM in a local ns and then another VM in a global ns with the same CID."
-> > +
-> > +	# diff_ns_global_host_connect_to_global_vm_ok
-> > +	"Run vsock_test client in global ns with server in VM in another global ns."
-> > +
-> > +	# diff_ns_global_host_connect_to_local_vm_fails
-> > +	"Run socat to test a process in a global ns fails to connect to a VM in a local ns."
-> > +
-> > +	# diff_ns_global_vm_connect_to_global_host_ok
-> > +	"Run vsock_test client in VM in a global ns with server in another global ns."
-> > +
-> > +	# diff_ns_global_vm_connect_to_local_host_fails
-> > +	"Run socat to test a VM in a global ns fails to connect to a host process in a local ns."
-> > +
-> > +	# diff_ns_local_host_connect_to_local_vm_fails
-> > +	"Run socat to test a host process in a local ns fails to connect to a VM in another local ns."
-> > +
-> > +	# diff_ns_local_vm_connect_to_local_host_fails
-> > +	"Run socat to test a VM in a local ns fails to connect to a host process in another local ns."
-> > +
-> > +	# diff_ns_global_to_local_loopback_local_fails
-> > +	"Run socat to test a loopback vsock in a global ns fails to connect to a vsock in a local ns."
-> > +
-> > +	# diff_ns_local_to_global_loopback_fails
-> > +	"Run socat to test a loopback vsock in a local ns fails to connect to a vsock in a global ns."
-> > +
-> > +	# diff_ns_local_to_local_loopback_fails
-> > +	"Run socat to test a loopback vsock in a local ns fails to connect to a vsock in another local ns."
-> > +
-> > +	# diff_ns_global_to_global_loopback_ok
-> > +	"Run socat to test a loopback vsock in a global ns successfully connects to a vsock in another global ns."
-> > +
-> > +	# same_ns_local_loopback_ok
-> > +	"Run socat to test a loopback vsock in a local ns successfully connects to a vsock in the same ns."
-> > +
-> > +	# same_ns_local_host_connect_to_local_vm_ok
-> > +	"Run vsock_test client in a local ns with server in VM in same ns."
-> > +
-> > +	# same_ns_local_vm_connect_to_local_host_ok
-> > +	"Run vsock_test client in VM in a local ns with server in same ns."
-> 
-> Should we run some test to check edge cases like namespace deletion
-> during active connections or changing ns mode from global to local while
-> running.
-> 
-
-Sgtm!
-
-> > +)
-> > +
-> > +readonly USE_SHARED_VM=(vm_server_host_client vm_client_host_server vm_loopback)
-> > +readonly USE_INIT_NETNS=(
-> > +	global_same_cid_fails
-> > +	local_same_cid_ok
-> > +	global_local_same_cid_ok
-> > +	local_global_same_cid_ok
-> > +	diff_ns_global_host_connect_to_global_vm_ok
-> > +	diff_ns_global_host_connect_to_local_vm_fails
-> > +	diff_ns_global_vm_connect_to_global_host_ok
-> > +	diff_ns_global_vm_connect_to_local_host_fails
-> > +	diff_ns_local_host_connect_to_local_vm_fails
-> > +	diff_ns_local_vm_connect_to_local_host_fails
-> > +	diff_ns_global_to_local_loopback_local_fails
-> > +	diff_ns_local_to_global_loopback_fails
-> > +	diff_ns_local_to_local_loopback_fails
-> > +	diff_ns_global_to_global_loopback_ok
-> > +	same_ns_local_loopback_ok
-> > +	same_ns_local_host_connect_to_local_vm_ok
-> > +	same_ns_local_vm_connect_to_local_host_ok
-> > +)
-> > +readonly REQUIRES_NETNS=(
-> > +	host_vsock_ns_mode_ok
-> > +	host_vsock_ns_mode_write_once_ok
-> > +	global_same_cid_fails
-> > +	local_same_cid_ok
-> > +	global_local_same_cid_ok
-> > +	local_global_same_cid_ok
-> > +	diff_ns_global_host_connect_to_global_vm_ok
-> > +	diff_ns_global_host_connect_to_local_vm_fails
-> > +	diff_ns_global_vm_connect_to_global_host_ok
-> > +	diff_ns_global_vm_connect_to_local_host_fails
-> > +	diff_ns_local_host_connect_to_local_vm_fails
-> > +	diff_ns_local_vm_connect_to_local_host_fails
-> > +	diff_ns_global_to_local_loopback_local_fails
-> > +	diff_ns_local_to_global_loopback_fails
-> > +	diff_ns_local_to_local_loopback_fails
-> > +	diff_ns_global_to_global_loopback_ok
-> > +	same_ns_local_loopback_ok
-> > +	same_ns_local_host_connect_to_local_vm_ok
-> > +	same_ns_local_vm_connect_to_local_host_ok
-> > )
-> > +readonly MODES=("local" "global")
-> 
-> What about NS_MODES ?
-> 
-
-Roger that.
-
-> > 
-> > readonly LOG_LEVEL_DEBUG=0
-> > readonly LOG_LEVEL_INFO=1
-> > @@ -58,6 +182,12 @@ readonly LOG_LEVEL_ERROR=3
-> > 
-> > VERBOSE="${LOG_LEVEL_WARN}"
-> > 
-> > +# Test pass/fail counters
-> > +cnt_pass=0
-> > +cnt_fail=0
-> > +cnt_skip=0
-> > +cnt_total=0
-> > +
-> > usage() {
-> > 	local name
-> > 	local desc
-> > @@ -77,7 +207,7 @@ usage() {
-> > 	for ((i = 0; i < ${#TEST_NAMES[@]}; i++)); do
-> > 		name=${TEST_NAMES[${i}]}
-> > 		desc=${TEST_DESCS[${i}]}
-> > -		printf "\t%-35s%-35s\n" "${name}" "${desc}"
-> > +		printf "\t%-55s%-35s\n" "${name}" "${desc}"
-> > 	done
-> > 	echo
-> > 
-> > @@ -89,21 +219,87 @@ die() {
-> > 	exit "${KSFT_FAIL}"
-> > }
-> > 
-> > +add_namespaces() {
-> > +	# add namespaces local0, local1, global0, and global1
-> > +	for mode in "${MODES[@]}"; do
-> > +		ip netns add "${mode}0" 2>/dev/null
-> > +		ip netns add "${mode}1" 2>/dev/null
-> > +	done
-> > +}
-> > +
-> > +init_namespaces() {
-> > +	for mode in "${MODES[@]}"; do
-> > +		ns_set_mode "${mode}0" "${mode}"
-> > +		ns_set_mode "${mode}1" "${mode}"
-> > +
-> > +		log_host "set ns ${mode}0 to mode ${mode}"
-> > +		log_host "set ns ${mode}1 to mode ${mode}"
-> > +
-> > +		# we need lo for qemu port forwarding
-> > +		ip netns exec "${mode}0" ip link set dev lo up
-> > +		ip netns exec "${mode}1" ip link set dev lo up
-> > +	done
-> > +}
-> > +
-> > +del_namespaces() {
-> > +	for mode in "${MODES[@]}"; do
-> > +		ip netns del "${mode}0"
-> > +		ip netns del "${mode}1"
-> > +		log_host "removed ns ${mode}0"
-> > +		log_host "removed ns ${mode}1"
-> > +	done &>/dev/null
-> > +}
-> > +
-> > +ns_set_mode() {
-> > +	local ns=$1
-> > +	local mode=$2
-> > +
-> > +	echo "${mode}" | ip netns exec "${ns}" \
-> > +		tee /proc/sys/net/vsock/ns_mode &>/dev/null
-> > +}
-> > +
-> > vm_ssh() {
-> > -	ssh -q -o UserKnownHostsFile=/dev/null -p ${SSH_HOST_PORT} localhost "$@"
-> > +	local ns_exec
-> > +
-> > +	if [[ "${1}" == none ]]; then
-> > +		local ns_exec=""
-> > +	else
-> > +		local ns_exec="ip netns exec ${1}"
-> > +	fi
-> > +
-> > +	shift
-> > +
-> > +	${ns_exec} ssh -q -o UserKnownHostsFile=/dev/null -p ${SSH_HOST_PORT} localhost $*
-> > +
-> > 	return $?
-> > }
-> > 
-> > cleanup() {
-> > -	if [[ -s "${QEMU_PIDFILE}" ]]; then
-> > -		pkill -SIGTERM -F "${QEMU_PIDFILE}" > /dev/null 2>&1
-> > -	fi
-> > +	del_namespaces
-> > +}
-> > 
-> > -	# If failure occurred during or before qemu start up, then we need
-> > -	# to clean this up ourselves.
-> > -	if [[ -e "${QEMU_PIDFILE}" ]]; then
-> > -		rm "${QEMU_PIDFILE}"
-> > -	fi
-> > +terminate_pidfiles() {
-> > +	local pidfile
-> > +
-> > +	for pidfile in "$@"; do
-> > +		if [[ -s "${pidfile}" ]]; then
-> > +			pkill -SIGTERM -F "${pidfile}" 2>&1 > /dev/null
-> > +		fi
-> > +
-> > +		# If failure occurred during or before qemu start up, then we need
-> > +		# to clean this up ourselves.
-> > +		if [[ -e "${pidfile}" ]]; then
-> > +			rm -f "${pidfile}"
-> > +		fi
-> > +	done
-> > +}
-> > +
-> > +terminate_pids() {
-> > +	local pid
-> > +
-> > +	for pid in "$@"; do
-> > +		kill -SIGTERM "${pid}" &>/dev/null || :
-> > +	done
-> > }
-> > 
-> > check_args() {
-> > @@ -133,7 +329,7 @@ check_args() {
-> > }
-> > 
-> > check_deps() {
-> > -	for dep in vng ${QEMU} busybox pkill ssh; do
-> > +	for dep in vng ${QEMU} busybox pkill ssh socat; do
-> > 		if [[ ! -x $(command -v "${dep}") ]]; then
-> > 			echo -e "skip:    dependency ${dep} not found!\n"
-> > 			exit "${KSFT_SKIP}"
-> > @@ -147,6 +343,20 @@ check_deps() {
-> > 	fi
-> > }
-> > 
-> > +check_test_deps() {
-> > +	local tname=$1
-> > +
-> > +	# If the test requires NS support, check if NS support exists
-> > +	# using /proc/self/ns
-> > +	if [[ "${tname}" =~ "${REQUIRES_NETNS[@]}" ]] &&
-> > +	   [[ ! -e /proc/self/ns ]]; then
-> > +		log_host "No NS support detected for test ${tname}"
-> > +		return 1
-> > +	fi
-> > +
-> > +	return 0
-> > +}
-> > +
-> > check_vng() {
-> > 	local tested_versions
-> > 	local version
-> > @@ -170,6 +380,20 @@ check_vng() {
-> > 	fi
-> > }
-> > 
-> > +check_socat() {
-> > +	local support_string
-> > +
-> > +	support_string="$(socat -V)"
-> > +
-> > +	if [[ "${support_string}" != *"WITH_VSOCK 1"* ]]; then
-> > +		die "err: socat is missing vsock support"
-> > +	fi
-> > +
-> > +	if [[ "${support_string}" != *"WITH_UNIX 1"* ]]; then
-> > +		die "err: socat is missing unix support"
-> > +	fi
-> > +}
-> > +
-> > handle_build() {
-> > 	if [[ ! "${BUILD}" -eq 1 ]]; then
-> > 		return
-> > @@ -194,9 +418,14 @@ handle_build() {
-> > }
-> > 
-> > vm_start() {
-> > +	local cid=$1
-> > +	local ns=$2
-> > +	local pidfile=$3
-> > 	local logfile=/dev/null
-> > 	local verbose_opt=""
-> > +	local qemu_opts=""
-> > 	local kernel_opt=""
-> > +	local ns_exec=""
-> > 	local qemu
-> > 
-> > 	qemu=$(command -v "${QEMU}")
-> > @@ -206,27 +435,37 @@ vm_start() {
-> > 		logfile=/dev/stdout
-> > 	fi
-> > 
-> > +	qemu_opts="\
-> > +		 -netdev user,id=n0,${QEMU_TEST_PORT_FWD},${QEMU_SSH_PORT_FWD} \
-> > +		 -device virtio-net-pci,netdev=n0 \
-> > +		${QEMU_OPTS} -device vhost-vsock-pci,guest-cid=${cid} \
-> 
-> Have we removed QEMU_OPTS, right?
-> 
-> (I still prefer to have it defined on top, but maybe there is a reason
-> to remove it)
-> 
-> > +		--pidfile ${pidfile}
-> > +	"
-> > +
-> > 	if [[ "${BUILD}" -eq 1 ]]; then
-> > 		kernel_opt="${KERNEL_CHECKOUT}"
-> > 	fi
-> > 
-> > -	vng \
-> > +	if [[ "${ns}" != "none" ]]; then
-> > +		ns_exec="ip netns exec ${ns}"
-> > +	fi
-> > +
-> > +	${ns_exec} vng \
-> > 		--run \
-> > 		${kernel_opt} \
-> > 		${verbose_opt} \
-> > -		--qemu-opts="${QEMU_OPTS}" \
-> > +		--qemu-opts="${qemu_opts}" \
-> > 		--qemu="${qemu}" \
-> > 		--user root \
-> > 		--append "${KERNEL_CMDLINE}" \
-> > 		--rw  &> ${logfile} &
-> > 
-> > -	if ! timeout ${WAIT_TOTAL} \
-> 
-> So WAIT_TOTAL is now unused, right?
-> 
-
-Yes, its definition can be dropped.
-
-> Can you explain better this change?
-> 
-
-It turned out that WAIT_TOTAL (three minutes) was very long wait time to
-just see if qemu places the pidfile or not. It's a suitable wait time
-for VM boot up, but qemu creates the pidfile far before that. Waiting
-three minutes made the cases where we expect the VM to fail bootup to
-take a a very long time. Waiting only 5 seconds to check the pidfile
-offers a lot of savings.
-
-Sounds like this should also be a different patch.
-
-[..]
+No "This commit..." please
 
 > 
-> Sorry, there are too many changes and reviewing it is complicated. Can you
-> at least divide it into patches to fix pre-existing bugs, patches to support
-> namespaces (and use init_ns for the ones we already have), and patches to
-> add tests?
+> Signed-off-by: Praveen K Paladugu <prapal@linux.microsoft.com>
+> Co-developed-by: Anatol Belski <anbelski@linux.microsoft.com>
+> Signed-off-by: Anatol Belski <anbelski@linux.microsoft.com>
+> ---
+>  arch/x86/hyperv/hv_init.c      |   7 ++
+>  drivers/hv/hv_common.c         | 118 +++++++++++++++++++++++++++++++++
+>  include/asm-generic/mshyperv.h |   1 +
+>  3 files changed, 126 insertions(+)
 > 
-> Thanks,
-> Stefano
-> 
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index afdbda2dd7b7..57bd96671ead 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -510,6 +510,13 @@ void __init hyperv_init(void)
+>  		memunmap(src);
+>  
+>  		hv_remap_tsc_clocksource();
+> +		/*
+> +		 * The notifier registration might fail at various hops.
+> +		 * Corresponding error messages will land in dmesg. There is
+> +		 * otherwise nothing that can be specifically done to handle
+> +		 * failures here.
+> +		 */
+> +		(void)hv_sleep_notifiers_register();
+>  	} else {
+>  		hypercall_msr.guest_physical_address = vmalloc_to_pfn(hv_hypercall_pg);
+>  		wrmsrq(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
+> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+> index e109a620c83f..c5165deb5278 100644
+> --- a/drivers/hv/hv_common.c
+> +++ b/drivers/hv/hv_common.c
+> @@ -837,3 +837,121 @@ const char *hv_result_to_string(u64 status)
+>  	return "Unknown";
+>  }
+>  EXPORT_SYMBOL_GPL(hv_result_to_string);
+> +
+> +/*
+> + * Corresponding sleep states have to be initialized, in order for a subsequent
+> + * HVCALL_ENTER_SLEEP_STATE call to succeed. Currently only S5 state as per
+> + * ACPI 6.4 chapter 7.4.2 is relevant, while S1, S2 and S3 can be supported.
+> + *
+> + * ACPI should be initialized and should support S5 sleep state when this method
+> + * is called, so that, it can extract correct PM values and pass them to hv.
 
-No problem, totally understandable looking at it in hindsight. I'll
-break it up and send that out after the window opens.
+Nit: No need for this   ^ comma, i.e. "...when this method is called, so that it can..."
 
-Thanks again for your patient review!
+> + */
+> +static int hv_initialize_sleep_states(void)
+> +{
+> +	u64 status;
+> +	unsigned long flags;
+> +	struct hv_input_set_system_property *in;
+> +	acpi_status acpi_status;
+> +	u8 sleep_type_a, sleep_type_b;
+> +
+> +	if (!acpi_sleep_state_supported(ACPI_STATE_S5)) {
+> +		pr_err("%s: S5 sleep state not supported.\n", __func__);
+> +		return -ENODEV;
+> +	}
+> +
+> +	acpi_status = acpi_get_sleep_type_data(ACPI_STATE_S5,
+> +						&sleep_type_a, &sleep_type_b);
+> +	if (ACPI_FAILURE(acpi_status))
+> +		return -ENODEV;
+> +
+> +	local_irq_save(flags);
+> +	in = (struct hv_input_set_system_property *)(*this_cpu_ptr(
+> +		hyperv_pcpu_input_arg));
 
-Best,
-Bobby
+Other users don't have these casts, why is it necessary here?
+
+> +
+> +	in->property_id = HV_SYSTEM_PROPERTY_SLEEP_STATE;
+> +	in->set_sleep_state_info.sleep_state = HV_SLEEP_STATE_S5;
+> +	in->set_sleep_state_info.pm1a_slp_typ = sleep_type_a;
+> +	in->set_sleep_state_info.pm1b_slp_typ = sleep_type_b;
+> +
+> +	status = hv_do_hypercall(HVCALL_SET_SYSTEM_PROPERTY, in, NULL);
+> +	local_irq_restore(flags);
+> +
+> +	if (!hv_result_success(status)) {
+> +		pr_err("%s: %s\n", __func__, hv_result_to_string(status));
+> +		return hv_result_to_errno(status);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int hv_call_enter_sleep_state(u32 sleep_state)
+> +{
+> +	u64 status;
+> +	int ret;
+> +	unsigned long flags;
+> +	struct hv_input_enter_sleep_state *in;
+> +
+> +	ret = hv_initialize_sleep_states();
+> +	if (ret)
+> +		return ret;
+> +
+> +	local_irq_save(flags);
+> +	in = (struct hv_input_enter_sleep_state *)
+> +			(*this_cpu_ptr(hyperv_pcpu_input_arg));
+> +	in->sleep_state = (enum hv_sleep_state)sleep_state;
+> +
+
+More casts...
+
+> +	status = hv_do_hypercall(HVCALL_ENTER_SLEEP_STATE, in, NULL);
+> +	local_irq_restore(flags);
+> +
+> +	if (!hv_result_success(status)) {
+> +		pr_err("%s: %s\n", __func__, hv_result_to_string(status));
+> +		return hv_result_to_errno(status);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int hv_reboot_notifier_handler(struct notifier_block *this,
+> +				      unsigned long code, void *another)
+> +{
+> +	int ret = 0;
+> +
+> +	if (SYS_HALT == code || SYS_POWER_OFF == code)
+
+Usually the variable is on the left of the comparison with the constant
+
+> +		ret = hv_call_enter_sleep_state(HV_SLEEP_STATE_S5);
+> +
+> +	return ret ? NOTIFY_DONE : NOTIFY_OK;
+> +}
+> +
+> +static struct notifier_block hv_reboot_notifier = {
+> +	.notifier_call  = hv_reboot_notifier_handler,
+> +};
+> +
+> +static int hv_acpi_sleep_handler(u8 sleep_state, u32 pm1a_cnt, u32 pm1b_cnt)
+> +{
+> +	int ret = 0;
+> +
+> +	if (sleep_state == ACPI_STATE_S5)
+> +		ret = hv_call_enter_sleep_state(HV_SLEEP_STATE_S5);
+> +
+> +	return ret == 0 ? 1 : -1;
+> +}
+> +
+> +static int hv_acpi_extended_sleep_handler(u8 sleep_state, u32 val_a, u32 val_b)
+> +{
+> +	return hv_acpi_sleep_handler(sleep_state, val_a, val_b);
+> +}
+> +
+> +int hv_sleep_notifiers_register(void)
+> +{
+> +	int ret;
+> +
+> +	acpi_os_set_prepare_sleep(&hv_acpi_sleep_handler);
+> +	acpi_os_set_prepare_extended_sleep(&hv_acpi_extended_sleep_handler);
+> +
+> +	ret = register_reboot_notifier(&hv_reboot_notifier);
+> +	if (ret)
+> +		pr_err("%s: cannot register reboot notifier %d\n",
+> +			__func__, ret);
+> +
+> +	return ret;
+> +}
+> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+> index 64ba6bc807d9..903d089aba82 100644
+> --- a/include/asm-generic/mshyperv.h
+> +++ b/include/asm-generic/mshyperv.h
+> @@ -339,6 +339,7 @@ u64 hv_tdx_hypercall(u64 control, u64 param1, u64 param2);
+>  void hyperv_cleanup(void);
+>  bool hv_query_ext_cap(u64 cap_query);
+>  void hv_setup_dma_ops(struct device *dev, bool coherent);
+> +int hv_sleep_notifiers_register(void);
+
+Does this still work when CONFIG_HYPERV = n, i.e. do we need a stub below? Also, this looks
+like it's only implemented for x86, so perhaps this declaration should be in arch/x86/include/asm/mshyperv.h
+instead of asm-generic?
+
+>  #else /* CONFIG_HYPERV */
+>  static inline void hv_identify_partition_type(void) {}
+>  static inline bool hv_is_hyperv_initialized(void) { return false; }
+
 
