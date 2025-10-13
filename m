@@ -1,58 +1,61 @@
-Return-Path: <linux-hyperv+bounces-7201-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7202-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4999BD5D24
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Oct 2025 21:00:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB603BD5D45
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Oct 2025 21:01:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4B6124F3072
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Oct 2025 19:00:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 959F13E6596
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Oct 2025 19:01:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 533E129E0ED;
-	Mon, 13 Oct 2025 19:00:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A45D627B359;
+	Mon, 13 Oct 2025 19:01:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EwV63GUE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NZWkdTCD"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9C51DC997;
-	Mon, 13 Oct 2025 19:00:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DD11EDA02;
+	Mon, 13 Oct 2025 19:01:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760382016; cv=none; b=PXKdlfDntp8XhlId6rsQi3txKaCEHoKzloxyXQ7Cwiv4+ZI4wG9bQE57hgkfLxn/SJsAX6iKXl4713SdbkRHy4vp+ikpgwswdqJQ7rXEUhpdSJG/Pa0H4ldiVhithWDij8xvJv3SxY17oDWH3srAqBq06iALlN+68/7SoA+mSrE=
+	t=1760382104; cv=none; b=p8PHyHmXZbEAym0gIzfSjdpFj9ywNOlZCmo5W6AO+Xq59ArY0IGP/43DTWNdEQ2vX3KONmHzHy6jOJ5i0kIgywhGm87YManFReB+6ZdTlU2SWyIK75ZPcg/+AnYdEkr42Slh08TiPbNRPW24ICjOb3gyM63Xv1hRE8AIHawvF3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760382016; c=relaxed/simple;
-	bh=5EIIo7xIsDMDbg95u7VVmjUkhvw9f+hecMwLewZqkD8=;
+	s=arc-20240116; t=1760382104; c=relaxed/simple;
+	bh=+CxRU6U03dEdDulYL+z4R714ymbWoLNPP82BVX+Tfvo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I1aNIOmfY/JMm4Ji1X5AveRbys7n4AaWIyRNI5B92BMzSyvGt9hzVhTpO3tSQp4vsTiBle1apm2CVuAkeV6OMII5Qzp75LUNtgDsRdcvMamhgtvyxzaQHkD62frv4zYsEpkUGS8pYBGiuvCajien/LgD+vbhUk1aA8x81F0mVdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EwV63GUE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EF04C4CEE7;
-	Mon, 13 Oct 2025 19:00:15 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=oVljfhHVld9FjrT/zoAoRaAUbJy6MhwMHEI/AzMZOjac9ZCm6CbBg3almNBGlUkV1pG61vLmsrwuaxxqqR13oa59Kk9du+s19KFvtloS1YdKe2qON907oHhlEwz6Xq/Ld5b+4UOQ94AvFhPVte8QEK5Ntu/dwvkSqSlDcHHAhEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NZWkdTCD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3060C4CEE7;
+	Mon, 13 Oct 2025 19:01:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760382015;
-	bh=5EIIo7xIsDMDbg95u7VVmjUkhvw9f+hecMwLewZqkD8=;
+	s=k20201202; t=1760382104;
+	bh=+CxRU6U03dEdDulYL+z4R714ymbWoLNPP82BVX+Tfvo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EwV63GUEFW1HEtsvKGIOzNK4qzj/TyB/NWMKYKvpqiPLyVkDlN9ogl4t1xknVvBhy
-	 o3tzDmBPCoWfefJi4m+3sgWU6LGILX+Vc1QaB4LXZygEOxbxj68463xZaYo2aDAkfu
-	 uB1DvEt7DFwMXRV8jlfnUccWg7xpRNjC6gVkYH1hvFvHvmMDvK6GpqBZXBZbhVYhWx
-	 eJ3nXHaaB/zv4Wr5eB5eWAYM83WuTfMCLLUoDmTr6eoyQEMPdLm+cyUjM/W18cZUm5
-	 CVNdHHMJsAp4L5w9Y1RvprAhrW4Ao1z+4L1cA7ooAd2GBwIbs/1/Ti/bfOK3N5NfX8
-	 4/EK/jjL7hBQg==
-Date: Mon, 13 Oct 2025 19:00:14 +0000
+	b=NZWkdTCDgyWKBgOE6e03He+XHuLVo1ncetCCzvD0rGiz6ZBTre9WlVoAz0sEERqR0
+	 mP4CGIzzFTIDAn0Dg4fZiSrloNqgbqV6NYuuh/3HjhQzDQ16Pt8Xg7j2lbLYCHj4WG
+	 UrTODAuJiLpMOXkMHg7d+bjbfhtKvvgYz0MJ4c6FRb6LqgPkSN7lgN1UwtYCjbSY64
+	 sOSv97a/NY8LnQ2y0fQO5XA4R/mWTgr6ufYEVOlBe3lwO3acyd2fOBFNjjmCYLDLMf
+	 QUGeW/qffpOGsVb9x8VkSDai/4dSXPi/SK4/xfHJAQy0FQbLAciL0Fo/zdxCMAWwFC
+	 RZCd0uj5oLnVg==
+Date: Mon, 13 Oct 2025 19:01:42 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	prapal@linux.microsoft.com, easwar.hariharan@linux.microsoft.com,
-	tiala@microsoft.com, anirudh@anirudhrb.com,
-	paekkaladevi@linux.microsoft.com, skinsburskii@linux.microsoft.com,
-	mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
-	wei.liu@kernel.org, decui@microsoft.com
-Subject: Re: [PATCH v5 0/5] mshv: Fixes for stats and vp state page mappings
-Message-ID: <20251013190014.GA3862989@liuwe-devbox-debian-v2.local>
-References: <1760133351-6643-1-git-send-email-nunodasneves@linux.microsoft.com>
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: arnd@arndb.de, bp@alien8.de, bagasdotme@gmail.com, corbet@lwn.net,
+	dave.hansen@linux.intel.com, decui@microsoft.com,
+	haiyangz@microsoft.com, hpa@zytor.com, kys@microsoft.com,
+	mikelley@microsoft.com, mingo@redhat.com, tglx@linutronix.de,
+	Tianyu.Lan@microsoft.com, wei.liu@kernel.org, x86@kernel.org,
+	linux-hyperv@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	benhill@microsoft.com, bperkins@microsoft.com,
+	sunilmut@microsoft.com
+Subject: Re: [PATCH hyperv-next v7 00/17] Confidential VMBus
+Message-ID: <20251013190142.GB3862989@liuwe-devbox-debian-v2.local>
+References: <20251008233419.20372-1-romank@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -61,25 +64,36 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1760133351-6643-1-git-send-email-nunodasneves@linux.microsoft.com>
+In-Reply-To: <20251008233419.20372-1-romank@linux.microsoft.com>
 
-On Fri, Oct 10, 2025 at 02:55:46PM -0700, Nuno Das Neves wrote:
-> There are some differences in how L1VH partitions must map stats and vp
-> state pages, some of which are due to differences across hypervisor
-> versions. Detect and handle these cases.
+On Wed, Oct 08, 2025 at 04:34:02PM -0700, Roman Kisel wrote:
+[...]
 > 
-> Patch 1:
-> Fix for the logic of when to map the vp stats page for the root scheduler.
-> 
-> Patch 2-3:
-> Add HVCALL_GET_PARTITION_PROPERTY_EX and use it to query "vmm capabilities" on
-> module init.
-> 
-> Patches 4-5:
-> Check a feature bit in vmm capabilities, to take a new code path for mapping
-> stats and vp state pages. In this case, the stats and vp state pages must be
-> allocated by Linux, and a new hypercall HVCALL_MAP_VP_STATS_PAGE2 must be used
-> to map the stats page.
+> Roman Kisel (17):
+>   Documentation: hyperv: Confidential VMBus
+>   Drivers: hv: VMBus protocol version 6.0
+>   arch/x86: mshyperv: Discover Confidential VMBus availability
+>   arch: hyperv: Get/set SynIC synth.registers via paravisor
+>   arch/x86: mshyperv: Trap on access for some synthetic MSRs
+>   Drivers: hv: Rename fields for SynIC message and event pages
+>   Drivers: hv: Allocate the paravisor SynIC pages when required
+>   Drivers: hv: Post messages through the confidential VMBus if available
+>   Drivers: hv: remove stale comment
+>   Drivers: hv: Check message and event pages for non-NULL before
+>     iounmap()
+>   Drivers: hv: Rename the SynIC enable and disable routines
+>   Drivers: hv: Functions for setting up and tearing down the paravisor
+>     SynIC
+>   Drivers: hv: Allocate encrypted buffers when requested
+>   Drivers: hv: Free msginfo when the buffer fails to decrypt
+>   Drivers: hv: Support confidential VMBus channels
+>   Drivers: hv: Set the default VMBus version to 6.0
+>   Drivers: hv: Support establishing the confidential VMBus connection
 
 Applied to hyperv-next. Thanks.
+
+I needed to fix up a few minor things due to changes made by Tianyu's
+patches. Dexuan, please verify that everything is still OK.
+
+Wei
 
