@@ -1,105 +1,135 @@
-Return-Path: <linux-hyperv+bounces-7205-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7206-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 364DCBD6041
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Oct 2025 21:57:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1ED2BD6556
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Oct 2025 23:13:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D6C964E2985
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Oct 2025 19:57:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1B1E819A0127
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Oct 2025 21:14:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 942192DAFAE;
-	Mon, 13 Oct 2025 19:57:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D23926561D;
+	Mon, 13 Oct 2025 21:13:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kKbwpmBq"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="DUxTdpLb"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3414D1CA84;
-	Mon, 13 Oct 2025 19:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E11219E8;
+	Mon, 13 Oct 2025 21:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760385451; cv=none; b=FFD55rFTL81GcTGLnboyahhKCtVjPsTCIjLNcoauxN4fUUlRNlRoCBx1nXSXv7ipkIlzabsZFDG5JMAfxPcNihQGDmj7WU8U5Cc1G5EmGtsNd2QqAZGJ726ImlfC3OJ0ISEDZPX8zYOvoiyoXUWP67lysS8GMX68+enyIrgUCpA=
+	t=1760390013; cv=none; b=Ab0uzHOffP9/RjOg61aO7h3P0ehOs4VaGZQfOx/y/NZetLeFge4BgjbXku8WOFLLMRujHBQPIDB6EujsRMj7sbRv8B4WP05ZIsM2dA+F8BVxGLMTW35VhH8kUz3BYOCIMQLmLaRhVmQsn+lcW7nqQQZZ/tbVG7VRR3bZPZGdw20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760385451; c=relaxed/simple;
-	bh=8WDz4ZbNB96LLcu6hjmzQIgU5ZCEzepUzwjbj0t2K7o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NGlBrgPNBWbQg+p2bpsszU7otdakRf9jTZNXohuX0lWOwWqHVDmB0VqPC/FUY0z4YL3IX1pYSscEyg2w9kG/hmHbo+7ZGZMij28jl2QBPecsbF9TDwgkU9YOxBbqv2IvQ6A/NJ67ChmN+dcCL3mJEJzzQkBn0zEJ1VPKF2Ggo2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=kKbwpmBq; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.76.64.58] (unknown [20.97.9.18])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 29EB72065942;
-	Mon, 13 Oct 2025 12:57:27 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 29EB72065942
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1760385449;
-	bh=ek2yDpktb2CguXy5Z7Ut0IRgqjH213ECc7iX3AVyaoE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kKbwpmBq8ediwHVma1Xlkr/fZOhaPU7S69kpbE8VgJ7TrIUX5/SwuH1zjytR4qBPi
-	 EpA9dAG3e00dQzSK2uLs0+UeiYE+zzsMoPhJUu8meRk0FrIomSSg0frM42lnnzadHk
-	 1COJ1qcGHCfvZiNhDcWQjgUj9WL/c/dSEqyP48Ng=
-Message-ID: <6270ca1e-b77a-4133-bd7a-6e01e65fd921@linux.microsoft.com>
-Date: Mon, 13 Oct 2025 14:57:25 -0500
+	s=arc-20240116; t=1760390013; c=relaxed/simple;
+	bh=4RZ1W/0OtJO42EVel9j3/ON3Ful8VIZ1NXg+yp0Riug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AiV13WsX1apnd2/vpg8lpkaGFqjc0CGOUyuxyepOZ5RaEw3H1dHaWbHzi4LpZ2vE73IAHIKbkq7rZx5t+CKG9e0Fw8EnLpTtoTa70VyoilvTc91BrVYVgvRH5T346oqBXngFD6MyDD19WA1QJCNJKNrUcAkWH9uH6iKptNzjYyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=DUxTdpLb; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=lILPrmAnEJYFOg9nKICbbMK/wh/wWM1Gf/ZklRUMM3I=; b=DUxTdpLbIDoIluCHOCvrB+0FqV
+	mqoyAUuQ3hL2gr991kawpdf16Ct5d3qyamLT3uD2R91pK8PpqtDx2FYS34fbunxAYr/Fyim9PLUFk
+	RZtVr2+BYJ7hS2sIZ5CbyfLtBtywiZtS3aVcCZUDWMnTTEyRG97zp6MTcYGocgpkc4as=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1v8Pr6-00Aq7D-5J; Mon, 13 Oct 2025 23:13:20 +0200
+Date: Mon, 13 Oct 2025 23:13:20 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Haiyang Zhang <haiyangz@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	haiyangz@microsoft.com, paulros@microsoft.com, decui@microsoft.com,
+	kys@microsoft.com, wei.liu@kernel.org, edumazet@google.com,
+	davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+	longli@microsoft.com, ssengar@linux.microsoft.com,
+	ernis@linux.microsoft.com, dipayanroy@linux.microsoft.com,
+	kotaranov@microsoft.com, horms@kernel.org,
+	shradhagupta@linux.microsoft.com, leon@kernel.org,
+	mlevitsk@redhat.com, yury.norov@gmail.com,
+	shirazsaleem@microsoft.com, andrew+netdev@lunn.ch,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: mana: Support HW link state events
+Message-ID: <74490632-68da-401d-89a7-3d937d63cbe3@lunn.ch>
+References: <1760384001-30805-1-git-send-email-haiyangz@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Add support for clean shutdown with MSHV
-To: Wei Liu <wei.liu@kernel.org>,
- Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
- tglx@linutronix.de, mingo@redhat.com, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
- x86@kernel.org, hpa@zytor.com, arnd@arndb.de, anbelski@linux.microsoft.com
-References: <20251009160501.6356-1-prapal@linux.microsoft.com>
- <aOg2hiWM4PZ8D1S5@skinsburskii.localdomain>
- <20251013190546.GC3862989@liuwe-devbox-debian-v2.local>
-Content-Language: en-US
-From: Praveen K Paladugu <prapal@linux.microsoft.com>
-In-Reply-To: <20251013190546.GC3862989@liuwe-devbox-debian-v2.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1760384001-30805-1-git-send-email-haiyangz@linux.microsoft.com>
 
+> +static void mana_link_state_handle(struct work_struct *w)
+> +{
+> +	struct mana_context *ac =
+> +		container_of(w, struct mana_context, link_change_work.work);
+> +	struct mana_port_context *apc;
+> +	struct net_device *ndev;
+> +	bool link_up;
+> +	int i;
 
+Since you don't need ac here, i would postpone the assignment into the
+body of the function, so keeping with reverse christmass tree.
 
-On 10/13/2025 2:05 PM, Wei Liu wrote:
-> On Thu, Oct 09, 2025 at 03:26:14PM -0700, Stanislav Kinsburskii wrote:
->> On Thu, Oct 09, 2025 at 10:58:49AM -0500, Praveen K Paladugu wrote:
->>> Add support for clean shutdown of the root partition when running on MSHV
->>> hypervisor.
->>>
->>> Praveen K Paladugu (2):
->>>    hyperv: Add definitions for MSHV sleep state configuration
->>>    hyperv: Enable clean shutdown for root partition with MSHV
->>>
->>
->> There is no need to split this logic to two patches: the first one
->> doesn't make sense without the second one, so it would be better to
->> squash them.
->>
-> 
-> I would rather keep them separate. It is a bit easier to pick out only
-> the header changes that way.
-> 
-Ack.
-> Wei
-> 
->> Thanks,
->> Stanislav
->>
->>>   arch/x86/hyperv/hv_init.c      |   7 ++
->>>   drivers/hv/hv_common.c         | 118 +++++++++++++++++++++++++++++++++
->>>   include/asm-generic/mshyperv.h |   1 +
->>>   include/hyperv/hvgdk_mini.h    |   4 +-
->>>   include/hyperv/hvhdk_mini.h    |  33 +++++++++
->>>   5 files changed, 162 insertions(+), 1 deletion(-)
->>>
->>> -- 
->>> 2.51.0
->>>
+> +
+> +	if (!rtnl_trylock()) {
+> +		schedule_delayed_work(&ac->link_change_work, 1);
+> +		return;
+> +	}
+
+Is there a deadlock you are trying to avoid here? Why not wait for the
+lock?
+
+> +
+> +	if (ac->link_event == HWC_DATA_HW_LINK_CONNECT)
+> +		link_up = true;
+> +	else if (ac->link_event == HWC_DATA_HW_LINK_DISCONNECT)
+> +		link_up = false;
+> +	else
+> +		goto out;
+> +
+> +	/* Process all ports */
+> +	for (i = 0; i < ac->num_ports; i++) {
+> +		ndev = ac->ports[i];
+> +		if (!ndev)
+> +			continue;
+> +
+> +		apc = netdev_priv(ndev);
+> +
+> +		if (link_up) {
+> +			netif_carrier_on(ndev);
+> +
+> +			if (apc->port_is_up)
+> +				netif_tx_wake_all_queues(ndev);
+> +
+> +			__netdev_notify_peers(ndev);
+> +		} else {
+> +			if (netif_carrier_ok(ndev)) {
+> +				netif_tx_disable(ndev);
+> +				netif_carrier_off(ndev);
+> +			}
+> +		}
+
+It is odd this is asymmetric. Up and down should really be opposites.
+
+> @@ -3500,6 +3548,8 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+>  	int err;
+>  	int i;
+>  
+> +	cancel_delayed_work_sync(&ac->link_change_work);
+
+I don't know delayed work too well. Is this sufficient when the work
+requeues itself because it cannot get RTNL?
+
+	Andrew
 
