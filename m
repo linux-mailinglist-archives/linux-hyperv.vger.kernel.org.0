@@ -1,149 +1,229 @@
-Return-Path: <linux-hyperv+bounces-7194-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7195-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7DA2BCF4EA
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Oct 2025 14:09:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7216BD193A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Oct 2025 08:04:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9DEC534BBC3
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Oct 2025 12:09:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 59BB03AF3F2
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Oct 2025 06:04:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CEA426B942;
-	Sat, 11 Oct 2025 12:08:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F12E20B21E;
+	Mon, 13 Oct 2025 06:04:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a+AI6rwX"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cX9NLU9a"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF71F25F96B;
-	Sat, 11 Oct 2025 12:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57DE919D071;
+	Mon, 13 Oct 2025 06:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760184539; cv=none; b=kbc13T026IFSqX96CF0Mwmbbgu/lm+qPAG0PDkCY5+Vmt6gOeRquAyOIO8eDLq3VQWzMSCnaG7pgqHrFUyMK4Wf7inscMdzYhsYoBdIhvSoB01m8j1auyp6Id8xwtF28C2BT5hZzcto9D5cYrsz3oHVF3uFG6dR/Om0O9N4XQik=
+	t=1760335453; cv=none; b=Pbkm8AlvS/CPrFR8kwwaJTWhLGT0tOz/7XUaDcyPBPlYx2BC1aWHJZ9KBbav1QFtbbyRp5ZXuRV1kDoMFf8+ku8PNXpsM3hAstk4RMSD9pqAhtdQpf/DIGuqMlMfzp2ZiLpn73+BNL6dzNzchnSQiTijkxZNfCD5a/G+ygXcbgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760184539; c=relaxed/simple;
-	bh=HzDha1bDCleO+Hcw70n/+eAgjNrBHJmlLvT0DS03OIc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TzC2v6qOtUlV3fDjHrtFWBjnGiKtFVNx1WrGPJoaKo/VMUOm8+A+qXyeg92R6REr7c1DWhu06ON35avdDZVWp4+GCQOj1cjOk31Hjqk8nM4eyWElWZcLj8Pyc5bRXQ5IM56x2DNNXdgd2seCtYHqk/+O1TDb2nyN279U2dr06xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a+AI6rwX; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760184533; x=1791720533;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HzDha1bDCleO+Hcw70n/+eAgjNrBHJmlLvT0DS03OIc=;
-  b=a+AI6rwX/bkqHjVFX8cFhJmq08/M6IrtjXIqwljSnaqnaX/Ui4gNwGY4
-   SutOzQEVHtyu0wgPL+Y9kw+xTgZc/vcCK6wPXQxV24Ev31k7pE4ea16x3
-   JGxhNip8wU81z9OO0XEWimAZ3dMfiay2qJROa+MivbdWHpEblWLk49KAL
-   N5uty3Fg/3dZCTw/PNyChn1SfDeFMPL4YPlDei2eXI/RE7/QnTSjltZP7
-   DPy79/9caq44qLnboVV9p5+cDMJOLeVgn/QlmixUzMwc+bKcF/KXxXZks
-   lfNKQSdsxMMT5wMrjodBFEfPhH+LR3fF8+G1mNqV6sdvTvoRObuN+yNiF
-   g==;
-X-CSE-ConnectionGUID: PJto0Se6SUGTBGZuANiQFQ==
-X-CSE-MsgGUID: UcolVEvrSw2RzXdkiJULow==
-X-IronPort-AV: E=McAfee;i="6800,10657,11578"; a="72997284"
-X-IronPort-AV: E=Sophos;i="6.19,221,1754982000"; 
-   d="scan'208";a="72997284"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2025 05:08:53 -0700
-X-CSE-ConnectionGUID: yKzoTVSTShW3UGSNe+sIzw==
-X-CSE-MsgGUID: 5+ipT8PjTQuR6BkH3h88kg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,221,1754982000"; 
-   d="scan'208";a="186472719"
-Received: from lkp-server01.sh.intel.com (HELO 6a630e8620ab) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 11 Oct 2025 05:08:49 -0700
-Received: from kbuild by 6a630e8620ab with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v7YP1-0003kd-1K;
-	Sat, 11 Oct 2025 12:08:47 +0000
-Date: Sat, 11 Oct 2025 20:07:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Praveen K Paladugu <prapal@linux.microsoft.com>, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	tglx@linutronix.de, mingo@redhat.com, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	arnd@arndb.de
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	anbelski@linux.microsoft.com, prapal@linux.microsoft.com
-Subject: Re: [PATCH 2/2] hyperv: Enable clean shutdown for root partition
- with MSHV
-Message-ID: <202510111934.lcAG5ZAN-lkp@intel.com>
-References: <20251009160501.6356-3-prapal@linux.microsoft.com>
+	s=arc-20240116; t=1760335453; c=relaxed/simple;
+	bh=tDcULMpxhYQbDG5gnNtmj+CJbmWI9rpGWoOJsUiN9ZY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qFdYflESN0pb4rz+bU+rZB7JVgIA89lGs51j9M/7Dv/jUj3WiCZfE+8WPAmlN5CC1XtI5ZKATVTLsVS39MuWl29H0/nV8JDXVD50NTHCMyytkeHImBslXOxeKGLoIACh7DegAabBA01kRPveg2Hr/UiGxvIMAgnHHgTudXEuyDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=cX9NLU9a; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from CPC-namja-1AYIP.redmond.corp.microsoft.com (unknown [4.213.232.47])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 921532038B45;
+	Sun, 12 Oct 2025 23:04:00 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 921532038B45
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1760335446;
+	bh=7htq9xq4sllkaoh38UKcDS2DNUCFlyATSuqLLml1Bos=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cX9NLU9ai20Uk9LxyxvBOElrM4/J2fAgw/k+9vX4RKXzQsRdjTmXpuVwp4R2dxl+c
+	 G8db+NY4bS1R0DKVzpu10WhrRq9cyVSwWzTeiiEoL6E3GjOjaUQbZzrJuaTMHSM+RH
+	 d2bMhfntsIv+T3LhoDdmttj3f7Yfh8sqxVTypQeU=
+From: Naman Jain <namjain@linux.microsoft.com>
+To: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>
+Cc: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Mukesh Rathor <mrathor@linux.microsoft.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	Naman Jain <namjain@linux.microsoft.com>,
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	ALOK TIWARI <alok.a.tiwari@oracle.com>
+Subject: [PATCH v8 0/2] Drivers: hv: Introduce new driver - mshv_vtl
+Date: Mon, 13 Oct 2025 06:03:51 +0000
+Message-ID: <20251013060353.67326-1-namjain@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251009160501.6356-3-prapal@linux.microsoft.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Praveen,
+Introduce a new mshv_vtl driver to provide an interface for Virtual
+Machine Monitor like OpenVMM and its use as OpenHCL paravisor to
+control VTL0 (Virtual trust Level).
+Expose devices and support IOCTLs for features like VTL creation,
+VTL0 memory management, context switch, making hypercalls,
+mapping VTL0 address space to VTL2 userspace, getting new VMBus
+messages and channel events in VTL2 etc.
 
-kernel test robot noticed the following build warnings:
+OpenVMM : https://openvmm.dev/guide/
 
-[auto build test WARNING on tip/x86/core]
-[also build test WARNING on arnd-asm-generic/master soc/for-next linus/master v6.17 next-20251010]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Changes since v7:
+https://lore.kernel.org/all/20250729051436.190703-1-namjain@linux.microsoft.com/
+Addressed Peter's concerns. Thanks Peter, Paolo, Sean for valuable inputs.
+Discussion- https://lore.kernel.org/all/20250825055208.238729-1-namjain@linux.microsoft.com/
+* moved assembly code to arch/x86/
+  * This prevents the need to export hv_hypercall_pg
+  * Will make it easier to add support for other architectures in the future
+* moved assembly code to a separate .S file (arch/x86/hyperv/mshv_vtl_asm.S)
+* Used noinstr for this new function in .S file
+* Fixed save/restore logic of callee registers, rbp to fix previous objtool warning
+* used static call instead of indirect call
+* used asm offsets similar to KVM code in assembly file (arch/x86/hyperv/mshv-asm-offsets.c)
+* Removed the usage of STACK_FRAME_NON_STANDARD.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Praveen-K-Paladugu/hyperv-Add-definitions-for-MSHV-sleep-state-configuration/20251010-122914
-base:   tip/x86/core
-patch link:    https://lore.kernel.org/r/20251009160501.6356-3-prapal%40linux.microsoft.com
-patch subject: [PATCH 2/2] hyperv: Enable clean shutdown for root partition with MSHV
-config: arm64-randconfig-003-20251011 (https://download.01.org/0day-ci/archive/20251011/202510111934.lcAG5ZAN-lkp@intel.com/config)
-compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 39f292ffa13d7ca0d1edff27ac8fd55024bb4d19)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251011/202510111934.lcAG5ZAN-lkp@intel.com/reproduce)
+Other changes-
+* Changed logic to use xfer_to_guest_mode_handle_work and VIRT_XFER_TO_GUEST_WORK
+  after recently merged changes.
+* Removed Reviewed-by Tags after recent changes.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202510111934.lcAG5ZAN-lkp@intel.com/
+Changes since v6:
+https://lore.kernel.org/all/20250724082547.195235-1-namjain@linux.microsoft.com/
+Addressed Michael's comments:
+* Corrected MAX_BITMAP_SIZE size - finally
+* Added missing __packed to hv_synic_overlay_page_msr
+* Fixed typo in comment, added CPU hotplug info in comments
+* Reverted to mutex_lock/unlock in mshv_vtl_ioctl_set_poll_file
+* Unified mshv_vtl_set_reg and mshv_vtl_get_reg
+* Dynamic to static allocation of reg in mshv_vtl_ioctl_(get|set)_regs
+* Fixed error handling in mshv_vtl_sint_ioctl_signal_event()
 
-All warnings (new ones prefixed by >>):
+Changes since v5:
+https://lore.kernel.org/all/20250611072704.83199-1-namjain@linux.microsoft.com/
+Addressed Michael Kelley's suggestions:
+* Added "depends on HYPERV_VTL_MODE", removed "depends on HYPERV" in Kconfig
+* Removed unused macro MAX_GUEST_MEM_SIZE
+* Made macro dependency explicit: MSHV_PG_OFF_CPU_MASK and MSHV_REAL_OFF_SHIFT
+* Refactored and corrected how allow_bitmap is used and defined. Removed PAGE_SIZE dependency.
+* Added __packed for structure definitions wherever it was missing.
+* Moved hv_register_vsm_* union definitions to hvgdk_mini.h, kept mshv_synic_overlay_page_msr
+  in the driver, renamed it and added a comment. (Nuno)
+* Introduced global variables input_vtl_zero and input_vtl_normal and used them everywhere these
+  were defined locally
+* s/"page_to_phys(reg_page) >> HV_HYP_PAGE_SHIFT"/"page_to_hvpfn(reg_page)" in
+  mshv_vtl_configure_reg_page
+* Refactored mshv_vtl_vmbus_isr() to reduce complexity in finding and resetting bits similar to
+  how vmbus_chan_sched is implemented.
+* Used __get_free_page() instead in mshv_vtl_alloc_context()
+* Added fallback hv_setup_vmbus_handler(vmbus_isr) in hv_vtl_setup_synic() and in
+  hv_vtl_remove_synic().
+* Maintained symmetry of functions in hv_vtl_remove_synic
+* Added a note for explanation of excluding last PFN in the range provided in
+  mshv_vtl_ioctl_add_vtl0_mem()
+* Added comments for hotplug being not supported, wherever cpu_online() was used to check if CPU
+  is online or not.
+* Added a check for input.cpu to make sure it's less than nr_cpu_ids in
+  mshv_vtl_ioctl_set_poll_file()
+* Removed switch-case and implemented static tables in mshv_vtl_(get|set)_reg for reducing LOC
+* Simplified mshv_vtl_ioctl_(get|set)_regs to process one register at a time, and fixed earlier
+  bug with array of registers processing.
+* Used hv_result_to_errno() in mshv_vtl_sint_ioctl_signal_event()
+* Added a READ_ONCE() while reading old_eventfd in mshv_vtl_sint_ioctl_set_eventfd()
+* Renamed mshv_vtl_hvcall and mshv_vtl_hvcall_setup to remove ambiguity
+* Took care of latest mm patches regarding PFN_DEV, pfn_t deprecation
+* Few other minor changes while reorganizing code.
 
-   drivers/hv/hv_common.c:944:50: error: too few arguments provided to function-like macro invocation
-     944 |         acpi_os_set_prepare_sleep(&hv_acpi_sleep_handler);
-         |                                                         ^
-   include/linux/acpi.h:1165:9: note: macro 'acpi_os_set_prepare_sleep' defined here
-    1165 | #define acpi_os_set_prepare_sleep(func, pm1a_ctrl, pm1b_ctrl) do { } while (0)
-         |         ^
-   drivers/hv/hv_common.c:944:2: error: use of undeclared identifier 'acpi_os_set_prepare_sleep'; did you mean 'acpi_os_enter_sleep'?
-     944 |         acpi_os_set_prepare_sleep(&hv_acpi_sleep_handler);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
-         |         acpi_os_enter_sleep
-   include/acpi/acpiosxf.h:326:13: note: 'acpi_os_enter_sleep' declared here
-     326 | acpi_status acpi_os_enter_sleep(u8 sleep_state, u32 rega_value, u32 regb_value);
-         |             ^
-   drivers/hv/hv_common.c:945:2: error: call to undeclared function 'acpi_os_set_prepare_extended_sleep'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     945 |         acpi_os_set_prepare_extended_sleep(&hv_acpi_extended_sleep_handler);
-         |         ^
->> drivers/hv/hv_common.c:944:2: warning: expression result unused [-Wunused-value]
-     944 |         acpi_os_set_prepare_sleep(&hv_acpi_sleep_handler);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
-   1 warning and 3 errors generated.
+Addressed Markus Elfring's suggestions:
+* Used guard(mutex) for better mutex handling.
 
 
-vim +944 drivers/hv/hv_common.c
+Changes since v4:
+https://lore.kernel.org/all/20250610052435.1660967-1-namjain@linux.microsoft.com/
+* Fixed warnings from kernel test robot for missing export.h when the
+  kernel is compiled with W=1 option.
+  Some recent changes in kernel flags these warnings and that's why it
+  was not seen in previous runs. Warnings in other Hyper-V drivers
+  will be fixed separately.
+* No functional changes
 
-   939	
-   940	int hv_sleep_notifiers_register(void)
-   941	{
-   942		int ret;
-   943	
- > 944		acpi_os_set_prepare_sleep(&hv_acpi_sleep_handler);
- > 945		acpi_os_set_prepare_extended_sleep(&hv_acpi_extended_sleep_handler);
+Changes since v3:
+https://lore.kernel.org/all/20250519045642.50609-1-namjain@linux.microsoft.com/
+Addressed Stanislav's, Nuno's comments.
+* Change data types for different variables, excluding the ones in uapi headers
+* Added comment for the need of HUGEPAGES config in Kconfig.
+* generalized new IOCTL names by removing VTL in their name.
 
+* Rebased and added Saurabh's Reviewed-by tag
+
+Changes since v2:
+https://lore.kernel.org/all/20250512140432.2387503-1-namjain@linux.microsoft.com/
+* Removed CONFIG_OF dependency (addressed Saurabh's comments)
+* Fixed typo in "allow_map_intialized" variable name
+
+Changes since v1:
+https://lore.kernel.org/all/20250506084937.624680-1-namjain@linux.microsoft.com/
+Addressed Saurabh's comments:
+* Split the patch in 2 to keep export symbols separate
+* Make MSHV_VTL module tristate and fixed compilation warning that would come when HYPERV is
+  compiled as a module.
+* Remove the use of ref_count
+* Split functionality of mshv_vtl_ioctl_get_set_regs to different functions
+  mshv_vtl_ioctl_(get|set)_regs as it actually make things simpler
+* Fixed use of copy_from_user in atomic context in mshv_vtl_hvcall_call.
+  Added ToDo comment for info.
+* Added extra code to free memory for vtl in error scenarios in mshv_ioctl_create_vtl()
+
+Addressed Alok's comments regarding:
+* Additional conditional checks
+* corrected typo in HV_X64_REGISTER_MSR_MTRR_PHYS_MASKB case
+* empty lines before return statement
+* Added/edited comments, variable names, structure field names as suggested to improve
+  documentation - no functional change here.
+
+Naman Jain (2):
+  Drivers: hv: Export some symbols for mshv_vtl
+  Drivers: hv: Introduce mshv_vtl driver
+
+ arch/x86/hyperv/Makefile           |   10 +-
+ arch/x86/hyperv/hv_vtl.c           |   37 +
+ arch/x86/hyperv/mshv-asm-offsets.c |   32 +
+ arch/x86/hyperv/mshv_vtl_asm.S     |   87 ++
+ arch/x86/include/asm/mshyperv.h    |   32 +
+ drivers/hv/Kconfig                 |   24 +
+ drivers/hv/Makefile                |    7 +-
+ drivers/hv/hv.c                    |    3 +
+ drivers/hv/hyperv_vmbus.h          |    1 +
+ drivers/hv/mshv_vtl.h              |   25 +
+ drivers/hv/mshv_vtl_main.c         | 1393 ++++++++++++++++++++++++++++
+ drivers/hv/vmbus_drv.c             |    4 +-
+ include/hyperv/hvgdk_mini.h        |  106 +++
+ include/uapi/linux/mshv.h          |   80 ++
+ 14 files changed, 1838 insertions(+), 3 deletions(-)
+ create mode 100644 arch/x86/hyperv/mshv-asm-offsets.c
+ create mode 100644 arch/x86/hyperv/mshv_vtl_asm.S
+ create mode 100644 drivers/hv/mshv_vtl.h
+ create mode 100644 drivers/hv/mshv_vtl_main.c
+
+
+base-commit: 68842969e138d9ad3e3aa2bbd65d514df1581b5c
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
 
