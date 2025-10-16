@@ -1,135 +1,119 @@
-Return-Path: <linux-hyperv+bounces-7221-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7222-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B00B4BDD8C2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Oct 2025 10:54:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE209BE119E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Oct 2025 02:27:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3415418843FA
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Oct 2025 08:54:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9C7D43E28B3
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Oct 2025 00:27:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98A133195E6;
-	Wed, 15 Oct 2025 08:54:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 338F4126C05;
+	Thu, 16 Oct 2025 00:26:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WPcsC4v/"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="R4Lvc2Yr"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F143191DA;
-	Wed, 15 Oct 2025 08:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A07BA1114;
+	Thu, 16 Oct 2025 00:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760518458; cv=none; b=fpgQivo+krzAj74tNQoH4HNZxv46rRCcQUMSCcbzaSJPFtrFV/BkOkmgiyDwMsfm4cYqXqTNKJWsWkx81fToJUER4x+xui5+ta3hpXM3rydAP7ZSOD/kie/sVtgRuNjSww8Wyq+NJ4z0NrpcU5u9aGzdJbzZBxRlmtLYveZO6EI=
+	t=1760574411; cv=none; b=KKPjS4uiIgr7psDF060ONqsH3Pf4tLEKtd92HkAke5CKs5ELE0I3VSyRraa5jKOyXtofQITWHPOi6dTbNX562nMC+bJ127x0wEoaWoklP75OwObWiZVt3n0mGedwpIi77SgoegmKyvXINPPPMARC/nGTvDJlK7hTOKpvuEsRS70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760518458; c=relaxed/simple;
-	bh=+BB5rvJB9mUeya+4DU9TUHtTCg+zs/03Q0ZHCN0cD80=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b0Xcu8wBTTKEGBsGohAYYIQMc7gnJcT9a+5QNImKAcwYkXQFtHqSorurHGjKcqjJ5LFiytLWYasDN9HUIN//e1wQCHoPmnP6K4hOjzCgFnGt494ndgucxb4tj3zGZzf49B+48Z0oLhk1jBCXqMVYlyshGmULq9g0ZNuzJLs0gp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WPcsC4v/; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760518456; x=1792054456;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+BB5rvJB9mUeya+4DU9TUHtTCg+zs/03Q0ZHCN0cD80=;
-  b=WPcsC4v/wegg97rWI6CL8SZMCnh4RAqTBNddGaGQUxsB3vmYcW08EbzD
-   DO2T/eKgePq9Yj+qRz6ZVFPqPPLq+r0Ms6qSU3C+NN2A+uK4hYMVAziW9
-   AX1oR3xASbcaYpisGg0bVlXAi6F5ywEnYHl9cSW238a+t9lOohjmzmR62
-   +QqXOI2GnnjJ56FzhLk8CFshpAL976ukZneFAzVEnAm3hX6xNoB77MPvJ
-   x9qDPJ9qq4WJQ2AdtxT/PlNZ1qC9Opz1l+bP21v/EJrVbuAksYpvqPQPn
-   XPuT8pDLxl302xY9Qm7Di5O04UOLJI0MeVNtVdza4mGll0Xb8xKIcDZwg
-   A==;
-X-CSE-ConnectionGUID: +j5ceC0LSViK4YVnblzb5Q==
-X-CSE-MsgGUID: n1Q1Aq/bQcOeEQcpOqj0eA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="50253063"
-X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
-   d="scan'208";a="50253063"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 01:54:15 -0700
-X-CSE-ConnectionGUID: 9G14ytpfQl2dHZh/4Qmtzg==
-X-CSE-MsgGUID: zzuIIelBSnefzwE8pAWIJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
-   d="scan'208";a="213062822"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by fmviesa001.fm.intel.com with ESMTP; 15 Oct 2025 01:54:10 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v8xGq-0003eZ-0P;
-	Wed, 15 Oct 2025 08:54:08 +0000
-Date: Wed, 15 Oct 2025 16:53:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, linux-hyperv@vger.kernel.org,
-	virtualization@lists.linux.dev, kvm@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Juergen Gross <jgross@suse.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v3 21/21] x86/pvlocks: Move paravirt spinlock functions
- into own header
-Message-ID: <202510151611.uYXVunzo-lkp@intel.com>
-References: <20251006074606.1266-22-jgross@suse.com>
+	s=arc-20240116; t=1760574411; c=relaxed/simple;
+	bh=4V8avRwlwLJiSB+fJIrVl9Yj5bJDeiCEtQgchHHrH58=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=RV64NjlaCGIGKR6Z00p7bRGaszeHRh+Tr3FxNYKJCkHztT4fSa12+dobeshr1RVIT3Z1CReu7t4AD5p/x9NgEH68wgCi1QXKvuleKVY08BMu9ruMKvcEzOL9340i5sPNySyj4Hf/0JD+vzxArM1utyFL2JCacCqvKModScDruuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=R4Lvc2Yr; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
+	by linux.microsoft.com (Postfix) with ESMTPSA id DFD5421244D5;
+	Wed, 15 Oct 2025 17:26:48 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DFD5421244D5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1760574408;
+	bh=nzrPLreH69hMKpah0sqAVPRj1qFALXIV7zsFZ13rJ0E=;
+	h=Subject:From:To:Cc:Date:From;
+	b=R4Lvc2YrDlJC7z25nVjPK3BOFKd7JtWEp13AC/E6hLM4KIJMgGky1eNF0k9bZlz2X
+	 nLRjHkHQQUYH20ygwxzUOv6zHN0iwpmC+VanoaGx7sdlMNV3KhRv0gxWdNfb1ommF4
+	 soxKsyOjcWHeLVEbWsqgyx2E4X6m3+3MvzcVLfCM=
+Subject: [PATCH v5 0/5] Introduce movable pages for Hyper-V guests
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 16 Oct 2025 00:26:48 +0000
+Message-ID: 
+ <176057396465.74314.10055784909009416453.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251006074606.1266-22-jgross@suse.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Juergen,
+From the start, the root-partition driver allocates, pins, and maps all
+guest memory into the hypervisor at guest creation. This is simple: Linux
+cannot move the pages, so the guest’s view in Linux and in Microsoft
+Hypervisor never diverges.
 
-kernel test robot noticed the following build errors:
+However, this approach has major drawbacks:
+ - NUMA: affinity can’t be changed at runtime, so you can’t migrate guest memory closer to the CPUs running it → performance hit.
+ - Memory management: unused guest memory can’t be swapped out, compacted, or merged.
+ - Provisioning time: upfront allocation/pinning slows guest create/destroy.
+ - Overcommit: no memory overcommit on hosts with pinned-guest memory.
 
-[auto build test ERROR on tip/sched/core]
-[also build test ERROR on kvm/queue kvm/next linus/master v6.18-rc1 next-20251014]
-[cannot apply to tip/x86/core kvm/linux-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+This series adds movable memory pages for Hyper-V child partitions. Guest
+pages are no longer allocated upfront; they’re allocated and mapped into
+the hypervisor on demand (i.e., when the guest touches a GFN that isn’t yet
+backed by a host PFN).
+When a page is moved, Linux no longer holds it and it is unmapped from the hypervisor.
+As a result, Hyper-V guests behave like regular Linux processes, enabling standard Linux memory features to apply to guests.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Juergen-Gross/x86-paravirt-Remove-not-needed-includes-of-paravirt-h/20251010-094850
-base:   tip/sched/core
-patch link:    https://lore.kernel.org/r/20251006074606.1266-22-jgross%40suse.com
-patch subject: [PATCH v3 21/21] x86/pvlocks: Move paravirt spinlock functions into own header
-config: x86_64-randconfig-001-20251015 (https://download.01.org/0day-ci/archive/20251015/202510151611.uYXVunzo-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251015/202510151611.uYXVunzo-lkp@intel.com/reproduce)
+Exceptions (still pinned):
+ 1. Encrypted guests (explicit).
+ 2. Guests with passthrough devices (implicitly pinned by the VFIO framework).
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202510151611.uYXVunzo-lkp@intel.com/
+v5:
+ - Fix a bug in MMU notifier handling where an uninitialized 'ret' variable
+   could cause the warning about failed page invalidation to be skipped.
+ - Improve comment grammar regarding skipping the unmapping of non-mapped pages.
 
-All errors (new ones prefixed by >>):
+v4:
+ - Fix a bug in batch unmapping can skip mapped pages when selecting a new
+   batch due to wrong offset calculation.
+ - Fix an error message in case of failed memory region pinning.
 
-   ld: vmlinux.o: in function `kvm_guest_init':
-   arch/x86/kernel/kvm.c:828:(.init.text+0x440f4): undefined reference to `pv_ops_lock'
->> ld: arch/x86/kernel/kvm.c:828:(.init.text+0x4410e): undefined reference to `pv_ops_lock'
-   ld: arch/x86/kernel/kvm.c:828:(.init.text+0x4411a): undefined reference to `pv_ops_lock'
+v3:
+ - Region is invalidated even if the mm has no users.
+ - Page remapping logic is updated to support 2M-unaligned remappings for
+   regions that are PMD-aligned, which can occur during both faults and
+   invalidations.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+v2:
+ - Split unmap batching into a separate patch.
+ - Fixed commit messages from v1 review.
+ - Renamed a few functions for clarity.
+
+---
+
+Stanislav Kinsburskii (5):
+      Drivers: hv: Refactor and rename memory region handling functions
+      Drivers: hv: Centralize guest memory region destruction
+      Drivers: hv: Batch GPA unmap operations to improve large region performance
+      Drivers: hv: Ensure large page GPA mapping is PMD-aligned
+      Drivers: hv: Add support for movable memory regions
+
+
+ drivers/hv/Kconfig             |    1 
+ drivers/hv/mshv_root.h         |   10 +
+ drivers/hv/mshv_root_hv_call.c |    2 
+ drivers/hv/mshv_root_main.c    |  495 +++++++++++++++++++++++++++++++++-------
+ 4 files changed, 424 insertions(+), 84 deletions(-)
+
 
