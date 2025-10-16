@@ -1,54 +1,54 @@
-Return-Path: <linux-hyperv+bounces-7224-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7225-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE176BE11B0
-	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Oct 2025 02:27:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 09D22BE11B3
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Oct 2025 02:27:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D0233E4625
-	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Oct 2025 00:27:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC9B93E1C49
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Oct 2025 00:27:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47BF0191F72;
-	Thu, 16 Oct 2025 00:27:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0665113B58B;
+	Thu, 16 Oct 2025 00:27:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="c9HO+Jsx"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Us8J8LKH"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1E15129A78;
-	Thu, 16 Oct 2025 00:27:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A09774420;
+	Thu, 16 Oct 2025 00:27:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760574422; cv=none; b=eZiSaQBAiejT1PXhJxPf2uR8v7DhvmqazPYWZ87VyHz7hfWIoksG/LVg24ovak6g+D5xieOJU/iLOyGCGbPJdbkG3t5CozjnoAgQydVeSvV4Md6O57kB7VDRjXhtPNFr+PpHb+BUemXFAYb9Eqph0KrWFxvQL4Q9TuBd1fO0lPQ=
+	t=1760574427; cv=none; b=BbOZk8U3i6OPcWWKgmaCCns4Fk3rvLsMPTeHbsKBUqOOZlvyqPVFzx72/fr3BZYy7pEYWU5fPew0zw9WDmYigfyVJeZz5RgbA7q0d3usnw4Rp5J3AxHwmD3f4GMsFKICo7EHacQEk6+MgWYQ8D2IhsSpI+cwGfRdVOiKan/xx2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760574422; c=relaxed/simple;
-	bh=C9GNVs3366Et2uRPCL0lTUvnAHeVk3EGtR8a+eFOn7U=;
+	s=arc-20240116; t=1760574427; c=relaxed/simple;
+	bh=tAgztI3ZC55OuDbeWlbdm8sO42BlH6+b9WsRYK4VSLI=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JwwGig13XP6FR+uWMTwWK79bfXy43uWH3tjDydsiYnNzHH5d0cduQkI6TJMd07fk31kMe3WYvcmqOp9cJD3m3th9h539Xp9hXhbSpL9TR7oWb6OzL96DoUq9ksyeZHzf90NLdxNlelpLbM831VemNx7l7Hb2Js1TdKeY9GO+K0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=c9HO+Jsx; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version:Content-Type; b=aTqglhBJhkrmwRmzjDMQ9m4sFNTSwbRNDGQAAsC495mGjS8AtfzR2knQIpmwKD8Mkf4p+Q3GtuCWaDdHqRDeRKyw3eOXkKljQqx74mSZ3i3Ves4LLBl8vHeTYOpIltrINGxDSnQCsxiT3NC3SSkbiEGCTUXj7+5rqxyD8nZqtvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Us8J8LKH; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 3986721244D5;
-	Wed, 15 Oct 2025 17:27:00 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3986721244D5
+	by linux.microsoft.com (Postfix) with ESMTPSA id C517621244D5;
+	Wed, 15 Oct 2025 17:27:05 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C517621244D5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1760574420;
-	bh=DkeO8jaMWw9BSIov9ej5heBN2aP1ii5apMOi2N6n4iE=;
+	s=default; t=1760574425;
+	bh=uO1ZmYi377mscmHHm5VsooZC9EYZmciyw+FS3OnLyYM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=c9HO+JsxldO/Ju8vPcYEuEnYeAKG6NEAtTassUHaRHpM+eWsXmkwBl+bweJVcXzbx
-	 mV/tgrbs+ZSqCdsE7SbFBWsWe5o6lV+TfPn33J+sjlw/SXlN1LVUgSU1+24vXOu8Wv
-	 B8hy11ktoaHZdtnaYlprQEMq90yd5vpeFkNzxGHQ=
-Subject: [PATCH v5 2/5] Drivers: hv: Centralize guest memory region
- destruction
+	b=Us8J8LKHoMYeWugdRFhRuWZk2otG7EJ4Ih6ZQTpgLEJ9sWoOpK6KCYI700fPrt7D/
+	 qbBWr3NYYRqaHYEazSBd0ZesG2AdCquYlzfwk67Kv79f6wU9pJCTi11MeDdav3l5WY
+	 MK8VLPVJHmyuOCdfSBGteyJAt31B19qttVXFDw7A=
+Subject: [PATCH v5 3/5] Drivers: hv: Batch GPA unmap operations to improve
+ large region performance
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 16 Oct 2025 00:27:00 +0000
+Date: Thu, 16 Oct 2025 00:27:05 +0000
 Message-ID: 
- <176057442010.74314.10287910099603764210.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <176057442569.74314.9145830725647822380.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 In-Reply-To: 
  <176057396465.74314.10055784909009416453.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 References: 
@@ -63,125 +63,91 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-Centralize guest memory region destruction to prevent resource leaks and
-inconsistent cleanup across unmap and partition destruction paths.
+Reduce overhead when unmapping large memory regions by batching GPA unmap
+operations in 2MB-aligned chunks.
 
-Unify region removal, encrypted partition access recovery, and region
-invalidation to improve maintainability and reliability. Reduce code
-duplication and make future updates less error-prone by encapsulating
-cleanup logic in a single helper.
+Use a dedicated constant for batch size to improve code clarity and
+maintainability.
 
 Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 ---
- drivers/hv/mshv_root_main.c |   65 ++++++++++++++++++++++---------------------
- 1 file changed, 34 insertions(+), 31 deletions(-)
+ drivers/hv/mshv_root.h         |    2 ++
+ drivers/hv/mshv_root_hv_call.c |    2 +-
+ drivers/hv/mshv_root_main.c    |   28 +++++++++++++++++++++++++---
+ 3 files changed, 28 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
+index e3931b0f1269..97e64d5341b6 100644
+--- a/drivers/hv/mshv_root.h
++++ b/drivers/hv/mshv_root.h
+@@ -32,6 +32,8 @@ static_assert(HV_HYP_PAGE_SIZE == MSHV_HV_PAGE_SIZE);
+ 
+ #define MSHV_PIN_PAGES_BATCH_SIZE	(0x10000000ULL / HV_HYP_PAGE_SIZE)
+ 
++#define MSHV_MAX_UNMAP_GPA_PAGES	512
++
+ struct mshv_vp {
+ 	u32 vp_index;
+ 	struct mshv_partition *vp_partition;
+diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
+index c9c274f29c3c..0696024ccfe3 100644
+--- a/drivers/hv/mshv_root_hv_call.c
++++ b/drivers/hv/mshv_root_hv_call.c
+@@ -17,7 +17,7 @@
+ /* Determined empirically */
+ #define HV_INIT_PARTITION_DEPOSIT_PAGES 208
+ #define HV_MAP_GPA_DEPOSIT_PAGES	256
+-#define HV_UMAP_GPA_PAGES		512
++#define HV_UMAP_GPA_PAGES		MSHV_MAX_UNMAP_GPA_PAGES
+ 
+ #define HV_PAGE_COUNT_2M_ALIGNED(pg_count) (!((pg_count) & (0x200 - 1)))
+ 
 diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index e923947d3c54..97e322f3c6b5 100644
+index 97e322f3c6b5..a3e5b41f3a7f 100644
 --- a/drivers/hv/mshv_root_main.c
 +++ b/drivers/hv/mshv_root_main.c
-@@ -1375,13 +1375,42 @@ mshv_map_user_memory(struct mshv_partition *partition,
- 	return ret;
- }
- 
-+static void mshv_partition_destroy_region(struct mshv_mem_region *region)
-+{
-+	struct mshv_partition *partition = region->partition;
-+	u32 unmap_flags = 0;
-+	int ret;
-+
-+	hlist_del(&region->hnode);
-+
-+	if (mshv_partition_encrypted(partition)) {
-+		ret = mshv_partition_region_share(region);
-+		if (ret) {
-+			pt_err(partition,
-+			       "Failed to regain access to memory, unpinning user pages will fail and crash the host error: %d\n",
-+			       ret);
-+			return;
-+		}
-+	}
-+
-+	if (region->flags.large_pages)
-+		unmap_flags |= HV_UNMAP_GPA_LARGE_PAGE;
-+
-+	/* ignore unmap failures and continue as process may be exiting */
-+	hv_call_unmap_gpa_pages(partition->pt_id, region->start_gfn,
-+				region->nr_pages, unmap_flags);
-+
-+	mshv_region_invalidate(region);
-+
-+	vfree(region);
-+}
-+
- /* Called for unmapping both the guest ram and the mmio space */
- static long
- mshv_unmap_user_memory(struct mshv_partition *partition,
- 		       struct mshv_user_mem_region mem)
+@@ -1378,6 +1378,7 @@ mshv_map_user_memory(struct mshv_partition *partition,
+ static void mshv_partition_destroy_region(struct mshv_mem_region *region)
  {
- 	struct mshv_mem_region *region;
--	u32 unmap_flags = 0;
+ 	struct mshv_partition *partition = region->partition;
++	u64 gfn, gfn_count, start_gfn, end_gfn;
+ 	u32 unmap_flags = 0;
+ 	int ret;
  
- 	if (!(mem.flags & BIT(MSHV_SET_MEM_BIT_UNMAP)))
- 		return -EINVAL;
-@@ -1396,18 +1425,8 @@ mshv_unmap_user_memory(struct mshv_partition *partition,
- 	    region->nr_pages != HVPFN_DOWN(mem.size))
- 		return -EINVAL;
+@@ -1396,9 +1397,30 @@ static void mshv_partition_destroy_region(struct mshv_mem_region *region)
+ 	if (region->flags.large_pages)
+ 		unmap_flags |= HV_UNMAP_GPA_LARGE_PAGE;
  
--	hlist_del(&region->hnode);
-+	mshv_partition_destroy_region(region);
- 
--	if (region->flags.large_pages)
--		unmap_flags |= HV_UNMAP_GPA_LARGE_PAGE;
--
 -	/* ignore unmap failures and continue as process may be exiting */
 -	hv_call_unmap_gpa_pages(partition->pt_id, region->start_gfn,
 -				region->nr_pages, unmap_flags);
--
--	mshv_region_invalidate(region);
--
--	vfree(region);
- 	return 0;
- }
++	start_gfn = region->start_gfn;
++	end_gfn = region->start_gfn + region->nr_pages;
++
++	for (gfn = start_gfn; gfn < end_gfn; gfn += gfn_count) {
++		if (gfn % MSHV_MAX_UNMAP_GPA_PAGES)
++			gfn_count = ALIGN(gfn, MSHV_MAX_UNMAP_GPA_PAGES) - gfn;
++		else
++			gfn_count = MSHV_MAX_UNMAP_GPA_PAGES;
++
++		if (gfn + gfn_count > end_gfn)
++			gfn_count = end_gfn - gfn;
++
++		/* Skip all pages in this range if none are mapped */
++		if (!memchr_inv(region->pages + (gfn - start_gfn), 0,
++				gfn_count * sizeof(struct page *)))
++			continue;
++
++		ret = hv_call_unmap_gpa_pages(partition->pt_id, gfn,
++					      gfn_count, unmap_flags);
++		if (ret)
++			pt_err(partition,
++			       "Failed to unmap GPA pages %#llx-%#llx: %d\n",
++			       gfn, gfn + gfn_count - 1, ret);
++	}
  
-@@ -1743,8 +1762,8 @@ static void destroy_partition(struct mshv_partition *partition)
- {
- 	struct mshv_vp *vp;
- 	struct mshv_mem_region *region;
--	int i, ret;
- 	struct hlist_node *n;
-+	int i;
+ 	mshv_region_invalidate(region);
  
- 	if (refcount_read(&partition->pt_ref_count)) {
- 		pt_err(partition,
-@@ -1804,25 +1823,9 @@ static void destroy_partition(struct mshv_partition *partition)
- 
- 	remove_partition(partition);
- 
--	/* Remove regions, regain access to the memory and unpin the pages */
- 	hlist_for_each_entry_safe(region, n, &partition->pt_mem_regions,
--				  hnode) {
--		hlist_del(&region->hnode);
--
--		if (mshv_partition_encrypted(partition)) {
--			ret = mshv_partition_region_share(region);
--			if (ret) {
--				pt_err(partition,
--				       "Failed to regain access to memory, unpinning user pages will fail and crash the host error: %d\n",
--				      ret);
--				return;
--			}
--		}
--
--		mshv_region_invalidate(region);
--
--		vfree(region);
--	}
-+				  hnode)
-+		mshv_partition_destroy_region(region);
- 
- 	/* Withdraw and free all pages we deposited */
- 	hv_call_withdraw_memory(U64_MAX, NUMA_NO_NODE, partition->pt_id);
 
 
 
