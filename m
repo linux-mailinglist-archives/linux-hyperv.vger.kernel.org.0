@@ -1,125 +1,107 @@
-Return-Path: <linux-hyperv+bounces-7264-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7265-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id F29F5BEBF63
-	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Oct 2025 00:57:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99A4EBEBF93
+	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Oct 2025 01:05:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id F31044ECF91
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Oct 2025 22:57:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3F6EF3BEE74
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Oct 2025 23:05:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEFED2D4B57;
-	Fri, 17 Oct 2025 22:57:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5F862FD1AD;
+	Fri, 17 Oct 2025 23:05:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QEZLflOS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GBOVIDui"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45CD215043;
-	Fri, 17 Oct 2025 22:57:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA73261595;
+	Fri, 17 Oct 2025 23:05:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760741854; cv=none; b=UG68j2kAdYx0vK2H0bTLS86OLQqxbk/uCewr1PGwkgabNipT86X0RAnTaqiTaF6c17o236FcYhG3NZj1CdT+7HJJDH8zEv3UdE6hMKS7OMDoBWtWo2Lh2ydFBqqqqKbmFjgem/GMBOHgB9I+T4Zu5Qny7uzdN38EUOe2pVJlJF4=
+	t=1760742345; cv=none; b=VzYKjYojZNlHAklOeaO0lWz8Mm+EYEsrKx501Kf722I6cFf0XX26qVHIVO3GpOpDBh0dv4hmzWUytyelL73WzT6vv2a4sRMOpvg9XLxCgzroIXjKwXrcfnp8SnoY+4edwd2fZ01CDdAxlAc236N/t6aB3WpP77NkzOo0hVH9HfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760741854; c=relaxed/simple;
-	bh=svjWuiZmHBkfKvpc+w6Z947Rrjkp/USyCf/FaWKrfgk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s2fP6piJ7+aV2EaoQolJpm4VITiMgfpqJGoa/tchF8iPu+sF2j51qXZSXVqCaqc5bsvYOyt4AJTU/OPA1zLLeUalPnvk0v4RfbDZjr9gMlvBufoT1qfnHIp5PEiJULu2c7Yp6mZzzm49JiBxWAjWmZM0TWT/V38HZVIVwI+T7Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QEZLflOS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1BF2C4CEE7;
-	Fri, 17 Oct 2025 22:57:33 +0000 (UTC)
+	s=arc-20240116; t=1760742345; c=relaxed/simple;
+	bh=0T6PCrIx5PIrUnv+CWLbaIONL9/XwpaNQYrJ1zpHK3g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OpaTu3M7c5T81c3BfPvdKFyHr9Ew7A7OvImgD7Knb4zw7h5sTFK5tJb0YcxsT7SUCRQWxnvJPkmqEZqKJfb9kdnhxfGiDgNKeQQPorB/YGgH/bn67iphfxBTq24fTKHan8EmXb3rutqMbk4uw9Hy1oPonME1uvLXtB0jwhvkbx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GBOVIDui; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B356C4CEE7;
+	Fri, 17 Oct 2025 23:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760741854;
-	bh=svjWuiZmHBkfKvpc+w6Z947Rrjkp/USyCf/FaWKrfgk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QEZLflOSs1zo/q+mt+9o9TpDYslgVwcu+w5YXUB5biXPts/NjEkeUC/NK1162hdXV
-	 xqsfGOUht9rp93spTqqJpSH6uoG86EoYSA24OQjr56LBQ4OsAd84WuXxQ/I9xH0A2e
-	 RiIrukaPdBqSjCyzM5yNnfXREsElWpv354e1ERzh+bdo0+BLhDHbPCfZgfKzlo/SFH
-	 ff/m0en0KPFqmqTOhULg2HC75ya0lp+iY2nfw8RmhI02zHEhmmda1k3utYRW3Wbtdx
-	 7amreqZKt7jueW4aEU6kGE9Het351jL8JLdbHksR6dH0sJ+9C0D79Y3wIXWZHakiKf
-	 kCVQfXY+pVSFg==
-Date: Fri, 17 Oct 2025 22:57:32 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Mukesh Rathor <mrathor@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	arnd@arndb.de
-Subject: Re: [PATCH v3 0/6] Hyper-V: Implement hypervisor core collection
-Message-ID: <20251017225732.GC632885@liuwe-devbox-debian-v2.local>
-References: <20251006224208.1060990-1-mrathor@linux.microsoft.com>
- <20251017223300.GB632885@liuwe-devbox-debian-v2.local>
+	s=k20201202; t=1760742342;
+	bh=0T6PCrIx5PIrUnv+CWLbaIONL9/XwpaNQYrJ1zpHK3g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GBOVIDui/5oz0HR2hPGD7sWPRgH9MBWBhKkCAbokw/BJJfde7PeG1x7F+hEIJrJqc
+	 YJVrAZ9Y8vQDusCxDEVCWR9Gz2KySre0yP3XMFhmhEKVquAOhb5GBuK20GCQksLYxe
+	 jmANiM2yU7LT48mCY99N+duEnayPGB52GKOPNeDclow0pfVG7cNuBZzbI6auBSdk7W
+	 IZucgr/M4DLBhUOT8ShN+jf83gGQ7Ggt7XUJ3f1cXSKkbtVPtgQOWter15UcIo3rwk
+	 m9X1I9PXNuuZy1IX6I7oys0wPCFiXv60bP5BSCWwaZLj9wEkNe9iEHTIBqrH4T8p0+
+	 0ZVT2ni2SMrKA==
+Date: Fri, 17 Oct 2025 16:05:41 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Haiyang Zhang <haiyangz@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ haiyangz@microsoft.com, paulros@microsoft.com, decui@microsoft.com,
+ kys@microsoft.com, wei.liu@kernel.org, edumazet@google.com,
+ davem@davemloft.net, pabeni@redhat.com, longli@microsoft.com,
+ ssengar@linux.microsoft.com, ernis@linux.microsoft.com,
+ dipayanroy@linux.microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
+ shradhagupta@linux.microsoft.com, leon@kernel.org, mlevitsk@redhat.com,
+ yury.norov@gmail.com, shirazsaleem@microsoft.com, andrew+netdev@lunn.ch,
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next,v2] net: mana: Support HW link state events
+Message-ID: <20251017160541.4ce65ede@kernel.org>
+In-Reply-To: <1760477209-9026-1-git-send-email-haiyangz@linux.microsoft.com>
+References: <1760477209-9026-1-git-send-email-haiyangz@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251017223300.GB632885@liuwe-devbox-debian-v2.local>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Oct 17, 2025 at 10:33:00PM +0000, Wei Liu wrote:
-> On Mon, Oct 06, 2025 at 03:42:02PM -0700, Mukesh Rathor wrote:
-> [...]
-> > Mukesh Rathor (6):
-> >   x86/hyperv: Rename guest crash shutdown function
-> >   hyperv: Add two new hypercall numbers to guest ABI public header
-> >   hyperv: Add definitions for hypervisor crash dump support
-> >   x86/hyperv: Add trampoline asm code to transition from hypervisor
-> >   x86/hyperv: Implement hypervisor RAM collection into vmcore
-> >   x86/hyperv: Enable build of hypervisor crashdump collection files
-> > 
+On Tue, 14 Oct 2025 14:26:49 -0700 Haiyang Zhang wrote:
+> From: Haiyang Zhang <haiyangz@microsoft.com>
 > 
-> Applied to hyperv-next. Thanks.
+> Handle the HW link state events received from HW channel, and
+> set the proper link state, also stop/wake queues accordingly.
 
-This breaks i386 build.
+Why do you have to stop / start the queues? I think it's unusual.
+Let the packets get dropped, sending out potentially old packets
+when link comes back is not going to make anyone happier.
 
-/work/linux-on-hyperv/linux.git/arch/x86/hyperv/hv_init.c: In function ‘hyperv_init’:
-/work/linux-on-hyperv/linux.git/arch/x86/hyperv/hv_init.c:557:17: error: implicit declaration of function ‘hv_root_crash_init’ [-Werror=implicit-function-declaration]
-  557 |                 hv_root_crash_init();
-      |                 ^~~~~~~~~~~~~~~~~~
+> +static void mana_link_state_handle(struct work_struct *w)
+> +{
+> +	struct mana_port_context *apc;
+> +	struct mana_context *ac;
+> +	struct net_device *ndev;
+> +	bool link_up;
+> +	int i;
+> +
+> +	ac = container_of(w, struct mana_context, link_change_work);
+> +
+> +	if (ac->mana_removing)
+> +		return;
+> +
+> +	rtnl_lock();
+> +
 
-That's because CONFIG_MSHV_ROOT is only available on x86_64. And the
-crash feature is guarded by CONFIG_MSHV_ROOT.
+> @@ -3500,6 +3556,10 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+>  	int err;
+>  	int i;
+>  
+> +	ac->mana_removing = true;
+> +
+> +	cancel_work_sync(&ac->link_change_work);
 
-Applying the following diff fixes the build.
-
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index e28737ec7054..c1300339d2eb 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -554,7 +554,9 @@ void __init hyperv_init(void)
-                memunmap(src);
-
-                hv_remap_tsc_clocksource();
-+#ifdef CONFIG_X86_64
-                hv_root_crash_init();
-+#endif
-        } else {
-                hypercall_msr.guest_physical_address = vmalloc_to_pfn(hv_hypercall_pg);
-                wrmsrq(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-
-> 
-> >  arch/x86/hyperv/Makefile        |   6 +
-> >  arch/x86/hyperv/hv_crash.c      | 642 ++++++++++++++++++++++++++++++++
-> >  arch/x86/hyperv/hv_init.c       |   1 +
-> >  arch/x86/hyperv/hv_trampoline.S | 101 +++++
-> >  arch/x86/include/asm/mshyperv.h |  13 +
-> >  arch/x86/kernel/cpu/mshyperv.c  |   5 +-
-> >  include/hyperv/hvgdk_mini.h     |   2 +
-> >  include/hyperv/hvhdk_mini.h     |  55 +++
-> >  8 files changed, 823 insertions(+), 2 deletions(-)
-> >  create mode 100644 arch/x86/hyperv/hv_crash.c
-> >  create mode 100644 arch/x86/hyperv/hv_trampoline.S
-> > 
-> > -- 
-> > 2.36.1.vfs.0.0
-> > 
+Looks racy, the work needs @ac to check the ->mana_removing but
+mana_remove() frees @ac. Just use disable_work_sync() please.
+-- 
+pw-bot: cr
 
