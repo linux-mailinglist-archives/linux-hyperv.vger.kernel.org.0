@@ -1,226 +1,255 @@
-Return-Path: <linux-hyperv+bounces-7246-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7247-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79F7CBE7E11
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Oct 2025 11:47:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 815D6BEB100
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Oct 2025 19:25:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1F08D420CC2
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Oct 2025 09:47:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 87A3F3A5B65
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Oct 2025 17:25:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53F9A2D94A4;
-	Fri, 17 Oct 2025 09:47:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0B8D30498F;
+	Fri, 17 Oct 2025 17:25:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HdMMJD97"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="JDs6UBPa"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3E02D239B
-	for <linux-hyperv@vger.kernel.org>; Fri, 17 Oct 2025 09:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C6312874F6;
+	Fri, 17 Oct 2025 17:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760694433; cv=none; b=dd4iSg6yxWpteUeGK9PwGm8b7/p2zq/3DHTR2zh53R5862HYPhdy2p3Q6O5aNCsU14ExVbpExifMVntY/jkLdKxqrxjahjhOZyXKg29YMH00EgvdqAtu0m04dDXBmqOxkPLC/BCLsLJv85uxupTekw4RgSSFADG89usQHitzTQc=
+	t=1760721942; cv=none; b=DBIUx4VyN2m2vNs/g4dIkH0K28QbTQC6Pd4d1lZuL1JdTFD/uY/wSf3eIP7VzWdEpBa6/DrpOvhVTnY3OK24Wvucah8pLv7sBq+1SMrLqRD3CclugC7fTbUxV3HqqH/qqHlhjR/mwIN+jOCWPagubO83UwG81w+Ucazr255YEGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760694433; c=relaxed/simple;
-	bh=HDU1FACluX6LCqIfLVToKdMVxXgddwHgsUQEywEtEwU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bttkETjpBHZVx7jNPRHtNFNqoUrH4RH9i4mYUYb6vXkBdDVLS7MDiJXnhpLwCERqcqXYIOKoVedScPp2MhPMBViT2xbyjIP7GQFiWXFwEEvSI3liraEuYcQdaCmMT5GOJv7wHMDe9KMkqQSeSL/CdSkstxYkpu2nMuaciHQwoXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HdMMJD97; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7D2BC4CEFE
-	for <linux-hyperv@vger.kernel.org>; Fri, 17 Oct 2025 09:47:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760694432;
-	bh=HDU1FACluX6LCqIfLVToKdMVxXgddwHgsUQEywEtEwU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HdMMJD97cDtRto4/3Mqp8A2yH0kXg+5O2LNBRHNYXRmv1HC0hf0fYXHfddi7IvYEJ
-	 h7r0j5nV2evBXGB0OsrwVK9mOaJAIT/z+iPQe+qxrqOhSWWV3yHO5GNGlORAXdUPoV
-	 ZEsYNIZxLz0MPnhNiPPfPRlSH5RuMTJCtwgNvqsa/8TxcL85FiG+SDILptCYHMYMBn
-	 uCGAG8dTvTg20Qff1lNXlOAZuquXgauTWFSYR4OE20+dOBmTFDQf08buNmXvfOrjdj
-	 /NLdrAYtKr9S6W109qBvrvJ91JiUbe+8EEaQbvdQLhEsxPMwsbjKwCcwfAAKr5/lON
-	 sb8A2R9dE6Big==
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-651ca0146deso286751eaf.2
-        for <linux-hyperv@vger.kernel.org>; Fri, 17 Oct 2025 02:47:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU3n+mNYuHcxCI2R0kpWigc/WRvJZ5rEnZk72mGCwIdKVxKItSOSfuHS3iqSsxsr/9c90oQ77oKD0+es9s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCdL1d7WCbWDALmA+4w3fwJXWlSFu9qp46GPs5POF7OEVzldnQ
-	EWjcTQzOgYbZ3F1WYuk5lLroKBL1RuovtLVSQeLXuc4N3q1Zf9Wjs8KvUD2F+QiIhU6AB5TdmM7
-	w32SXmyEt8vu5j5djvmEV98pE/OzSC18=
-X-Google-Smtp-Source: AGHT+IF6Zim4KFjK/5YwE9BLg4NQGMqj3sOP2xD9ENA7fnIjMq+2fpDogmWr3naNZ7Jjzb62XZWXqD1zoRl37XI46rs=
-X-Received: by 2002:a05:6808:1383:b0:439:b9b3:af48 with SMTP id
- 5614622812f47-443a3144e71mr1265508b6e.51.1760694432040; Fri, 17 Oct 2025
- 02:47:12 -0700 (PDT)
+	s=arc-20240116; t=1760721942; c=relaxed/simple;
+	bh=gz67lVUU0hjFYaasZgCQWH4O/hT/4DosqAavCeCKTUY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W3BBm9ofQ70jQQ/imRgB/n3aT3RIFRrg7f6+VlvkVPdwyCmdukddshuWhPC5bjIiu1Hhdcgjlnz3JMeKEHc71T2IcsqiUCOngaEYdM7/CtigHLhSjzEgh/eu5txWwcxFg+7xvDGTw+SvQuM2diYCm8qXvHQhj9JIrEEOWsfUtKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=JDs6UBPa; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.64.65.40] (unknown [20.191.74.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 17F422017268;
+	Fri, 17 Oct 2025 10:25:40 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 17F422017268
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1760721940;
+	bh=PMb5Y7BfOY+/Qx//pfh9da9WjevbUCU/iRoalCjzV1s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JDs6UBPaDZZtO7ZLltKF5QSsdaX4iBPeaWECyIvnAkDjUII+u6bdbVartw3V+kMeQ
+	 UMFl6PXSSZfIPl4gTWyONOaww3JHJ+3qneEqZgBge23hq7OS61zVSPOcC34HNeLKHw
+	 WyyPH2vXcSjbFsA4sbb3zAI8HF/mWqlfsTwzzJ3s=
+Message-ID: <a0090bbf-08b4-4b36-8cf2-18687a83ee8f@linux.microsoft.com>
+Date: Fri, 17 Oct 2025 10:25:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251016-rneri-wakeup-mailbox-v6-0-40435fb9305e@linux.intel.com> <20251016-rneri-wakeup-mailbox-v6-1-40435fb9305e@linux.intel.com>
-In-Reply-To: <20251016-rneri-wakeup-mailbox-v6-1-40435fb9305e@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 17 Oct 2025 11:46:59 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iB4iZFs8C6EZayLVPbLz50MJ9GEniSHfbP31-yHRg1Bw@mail.gmail.com>
-X-Gm-Features: AS18NWCpLzOnPH0RKu6aTn1sl9Pr7sXnawYuZXgmcYTVDY3oZ6tv4PUbka5tAd4
-Message-ID: <CAJZ5v0iB4iZFs8C6EZayLVPbLz50MJ9GEniSHfbP31-yHRg1Bw@mail.gmail.com>
-Subject: Re: [PATCH v6 01/10] x86/acpi: Add helper functions to setup and
- access the wakeup mailbox
-To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Rob Herring <robh@kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Michael Kelley <mhklinux@outlook.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Saurabh Sengar <ssengar@linux.microsoft.com>, 
-	Chris Oo <cho@microsoft.com>, "Kirill A. Shutemov" <kas@kernel.org>, linux-hyperv@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Ricardo Neri <ricardo.neri@intel.com>, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mshv: Fix deposit memory in MSHV_ROOT_HVCALL
+To: Michael Kelley <mhklinux@outlook.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>, "arnd@arndb.de"
+ <arnd@arndb.de>, "mrathor@linux.microsoft.com"
+ <mrathor@linux.microsoft.com>,
+ "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>
+References: <1760644436-19937-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <SN6PR02MB4157E6D02773A9D7A4B9E85BD4F6A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB4157E6D02773A9D7A4B9E85BD4F6A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Oct 17, 2025 at 4:48=E2=80=AFAM Ricardo Neri
-<ricardo.neri-calderon@linux.intel.com> wrote:
->
-> In preparation to move the functionality to wake secondary CPUs up from t=
-he
-> ACPI code, add two helper functions.
->
-> The function acpi_setup_mp_wakeup_mailbox() stores the physical address o=
-f
-> the mailbox and updates the wakeup_secondary_cpu_64() APIC callback.
->
-> There is a slight change in behavior: now the APIC callback is updated
-> before configuring CPU hotplug offline behavior. This is fine as the APIC
-> callback continues to be updated unconditionally, regardless of the
-> restriction on CPU offlining.
->
-> The function acpi_madt_multiproc_wakeup_mailbox() returns a pointer to th=
-e
-> mailbox. Use this helper function only in the portions of the code for
-> which the variable acpi_mp_wake_mailbox will be out of scope once it is
-> relocated out of the ACPI directory.
->
-> The wakeup mailbox is only supported for CONFIG_X86_64 and needed only wi=
-th
-> CONFIG_SMP=3Dy.
->
-> Reviewed-by: Dexuan Cui <decui@microsoft.com>
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 10/16/2025 6:12 PM, Michael Kelley wrote:
+> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Thursday, October 16, 2025 12:54 PM
+>>
+>> When the MSHV_ROOT_HVCALL ioctl is executing a hypercall, and gets
+>> HV_STATUS_INSUFFICIENT_MEMORY, it deposits memory and then returns
+>> -EAGAIN to userspace.
+>>
+>> However, it's much easier and efficient if the driver simply deposits
+>> memory on demand and immediately retries the hypercall as is done with
+>> all the other hypercall helper functions.
+>>
+>> But unlike those, in MSHV_ROOT_HVCALL the input is opaque to the
+>> kernel. This is problematic for rep hypercalls, because the next part
+>> of the input list can't be copied on each loop after depositing pages
+>> (this was the original reason for returning -EAGAIN in this case).
+>>
+>> Introduce hv_do_rep_hypercall_ex(), which adds a 'rep_start'
+>> parameter. This solves the issue, allowing the deposit loop in
+>> MSHV_ROOT_HVCALL to restart a rep hypercall after depositing pages
+>> partway through.
+> 
+>>From reading the above, I'm pretty sure this code change is an
+> optimization that lets user space avoid having to deal with the
+> -EAGAIN result by resubmitting the ioctl with a different
+> starting point for a rep hypercall. As such, I'd suggest the patch
+> title should be "Improve deposit memory ...." (or something similar).
+> The word "Fix" makes it sound like a bug fix.
+> 
+> Or is user space code currently faulty in its handling of -EAGAIN, and
+> this really is an indirect bug fix to make things work? If so, do you
+> want a Fixes: tag so the change is backported?
+> 
 
-This should have been
+It's the latter case, userspace doesn't handle it correctly, so I
+consider it a fix more than just an improvement.
 
-Acked-by: Rafael J. Wysocki (Intel) <rafael.j.wysocki@intel.com>
+I'll add a Fixes: tag pointing back to the original /dev/mshv patch.
 
-The "(Intel)" part is missing and I omitted it when I sent the tag.
-Sorry for the confusion.
+>>
+>> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+>> ---
+>>  drivers/hv/mshv_root_main.c    | 52 ++++++++++++++++++++--------------
+>>  include/asm-generic/mshyperv.h | 14 +++++++--
+>>  2 files changed, 42 insertions(+), 24 deletions(-)
+>>
+>> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+>> index 9ae67c6e9f60..731ec8cbbd63 100644
+>> --- a/drivers/hv/mshv_root_main.c
+>> +++ b/drivers/hv/mshv_root_main.c
+>> @@ -159,6 +159,7 @@ static int mshv_ioctl_passthru_hvcall(struct mshv_partition *partition,
+>>  	unsigned int pages_order;
+>>  	void *input_pg = NULL;
+>>  	void *output_pg = NULL;
+>> +	u16 reps_completed;
+>>
+>>  	if (copy_from_user(&args, user_args, sizeof(args)))
+>>  		return -EFAULT;
+>> @@ -210,28 +211,35 @@ static int mshv_ioctl_passthru_hvcall(struct mshv_partition *partition,
+>>  	 */
+>>  	*(u64 *)input_pg = partition->pt_id;
+>>
+>> -	if (args.reps)
+>> -		status = hv_do_rep_hypercall(args.code, args.reps, 0,
+>> -					     input_pg, output_pg);
+>> -	else
+>> -		status = hv_do_hypercall(args.code, input_pg, output_pg);
+>> -
+>> -	if (hv_result(status) == HV_STATUS_CALL_PENDING) {
+>> -		if (is_async) {
+>> -			mshv_async_hvcall_handler(partition, &status);
+>> -		} else { /* Paranoia check. This shouldn't happen! */
+>> -			ret = -EBADFD;
+>> -			goto free_pages_out;
+>> +	reps_completed = 0;
+>> +	do {
+>> +		if (args.reps) {
+>> +			status = hv_do_rep_hypercall_ex(args.code, args.reps,
+>> +							0, reps_completed,
+>> +							input_pg, output_pg);
+>> +			reps_completed = hv_repcomp(status);
+>> +		} else {
+>> +			status = hv_do_hypercall(args.code, input_pg, output_pg);
+>>  		}
+>> -	}
+>>
+>> -	if (hv_result(status) == HV_STATUS_INSUFFICIENT_MEMORY) {
+>> -		ret = hv_call_deposit_pages(NUMA_NO_NODE, partition->pt_id, 1);
+>> -		if (!ret)
+>> -			ret = -EAGAIN;
+>> -	} else if (!hv_result_success(status)) {
+>> -		ret = hv_result_to_errno(status);
+>> -	}
+>> +		if (hv_result(status) == HV_STATUS_CALL_PENDING) {
+>> +			if (is_async) {
+>> +				mshv_async_hvcall_handler(partition, &status);
+>> +			} else { /* Paranoia check. This shouldn't happen! */
+>> +				ret = -EBADFD;
+>> +				goto free_pages_out;
+>> +			}
+>> +		}
+>> +
+>> +		if (hv_result_success(status))
+>> +			break;
+>> +
+>> +		if (hv_result(status) != HV_STATUS_INSUFFICIENT_MEMORY)
+>> +			ret = hv_result_to_errno(status);
+>> +		else
+>> +			ret = hv_call_deposit_pages(NUMA_NO_NODE,
+>> +						    partition->pt_id, 1);
+>> +	} while (!ret);
+>>
+>>  	/*
+>>  	 * Always return the status and output data regardless of result.
+> 
+> This comment about always returning the output data is now incorrect.
+> 
 
-> Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> ---
-> Changes since v5:
->  - Fixed grammar error in the subject of the patch. (Rafael)
->  - Added Acked-by tag from Rafael. Thanks!
->  - Added Reviewed-by tag from Dexuan. Thanks!
->
-> Changes since v4:
->  - None
->
-> Changes since v3:
->  - Squashed the two first patches of the series into one, both introduce
->    helper functions. (Rafael)
->  - Renamed setup_mp_wakeup_mailbox() as acpi_setup_mp_wakeup_mailbox().
->    (Rafael)
->  - Dropped the function prototype for !CONFIG_X86_64. (Rafael)
->
-> Changes since v2:
->  - Introduced this patch.
->
-> Changes since v1:
->  - N/A
-> ---
->  arch/x86/include/asm/smp.h         |  3 +++
->  arch/x86/kernel/acpi/madt_wakeup.c | 20 +++++++++++++++-----
->  2 files changed, 18 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
-> index 22bfebe6776d..47ac4381a805 100644
-> --- a/arch/x86/include/asm/smp.h
-> +++ b/arch/x86/include/asm/smp.h
-> @@ -149,6 +149,9 @@ static inline struct cpumask *cpu_l2c_shared_mask(int=
- cpu)
->         return per_cpu(cpu_l2c_shared_map, cpu);
->  }
->
-> +void acpi_setup_mp_wakeup_mailbox(u64 addr);
-> +struct acpi_madt_multiproc_wakeup_mailbox *acpi_get_mp_wakeup_mailbox(vo=
-id);
-> +
->  #else /* !CONFIG_SMP */
->  #define wbinvd_on_cpu(cpu)     wbinvd()
->  static inline void wbinvd_on_all_cpus(void)
-> diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/ma=
-dt_wakeup.c
-> index 6d7603511f52..c3ac5ecf3e7d 100644
-> --- a/arch/x86/kernel/acpi/madt_wakeup.c
-> +++ b/arch/x86/kernel/acpi/madt_wakeup.c
-> @@ -37,6 +37,7 @@ static void acpi_mp_play_dead(void)
->
->  static void acpi_mp_cpu_die(unsigned int cpu)
->  {
-> +       struct acpi_madt_multiproc_wakeup_mailbox *mailbox =3D acpi_get_m=
-p_wakeup_mailbox();
->         u32 apicid =3D per_cpu(x86_cpu_to_apicid, cpu);
->         unsigned long timeout;
->
-> @@ -46,13 +47,13 @@ static void acpi_mp_cpu_die(unsigned int cpu)
->          *
->          * BIOS has to clear 'command' field of the mailbox.
->          */
-> -       acpi_mp_wake_mailbox->apic_id =3D apicid;
-> -       smp_store_release(&acpi_mp_wake_mailbox->command,
-> +       mailbox->apic_id =3D apicid;
-> +       smp_store_release(&mailbox->command,
->                           ACPI_MP_WAKE_COMMAND_TEST);
->
->         /* Don't wait longer than a second. */
->         timeout =3D USEC_PER_SEC;
-> -       while (READ_ONCE(acpi_mp_wake_mailbox->command) && --timeout)
-> +       while (READ_ONCE(mailbox->command) && --timeout)
->                 udelay(1);
->
->         if (!timeout)
-> @@ -227,7 +228,7 @@ int __init acpi_parse_mp_wake(union acpi_subtable_hea=
-ders *header,
->
->         acpi_table_print_madt_entry(&header->common);
->
-> -       acpi_mp_wake_mailbox_paddr =3D mp_wake->mailbox_address;
-> +       acpi_setup_mp_wakeup_mailbox(mp_wake->mailbox_address);
->
->         if (mp_wake->version >=3D ACPI_MADT_MP_WAKEUP_VERSION_V1 &&
->             mp_wake->header.length >=3D ACPI_MADT_MP_WAKEUP_SIZE_V1) {
-> @@ -243,7 +244,16 @@ int __init acpi_parse_mp_wake(union acpi_subtable_he=
-aders *header,
->                 acpi_mp_disable_offlining(mp_wake);
->         }
->
-> +       return 0;
-> +}
-> +
-> +void __init acpi_setup_mp_wakeup_mailbox(u64 mailbox_paddr)
-> +{
-> +       acpi_mp_wake_mailbox_paddr =3D mailbox_paddr;
->         apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
-> +}
->
-> -       return 0;
-> +struct acpi_madt_multiproc_wakeup_mailbox *acpi_get_mp_wakeup_mailbox(vo=
-id)
-> +{
-> +       return acpi_mp_wake_mailbox;
->  }
->
-> --
-> 2.43.0
->
+Thanks, I'll fix it
+
+>> @@ -240,11 +248,11 @@ static int mshv_ioctl_passthru_hvcall(struct mshv_partition *partition,
+>>  	 * succeeded.
+>>  	 */
+>>  	args.status = hv_result(status);
+>> -	args.reps = args.reps ? hv_repcomp(status) : 0;
+>> +	args.reps = reps_completed;
+>>  	if (copy_to_user(user_args, &args, sizeof(args)))
+>>  		ret = -EFAULT;
+>>
+>> -	if (output_pg &&
+>> +	if (!ret && output_pg &&
+>>  	    copy_to_user((void __user *)args.out_ptr, output_pg, args.out_sz))
+>>  		ret = -EFAULT;
+>>
+>> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+>> index ebf458dbcf84..31a209f0e18f 100644
+>> --- a/include/asm-generic/mshyperv.h
+>> +++ b/include/asm-generic/mshyperv.h
+>> @@ -128,8 +128,9 @@ static inline unsigned int hv_repcomp(u64 status)
+>>   * Rep hypercalls. Callers of this functions are supposed to ensure that
+>>   * rep_count and varhead_size comply with Hyper-V hypercall definition.
+> 
+> Nit: This comment could be updated to include the new "rep_start"
+> parameter.
+> 
+
+Thanks, will add
+
+>>   */
+>> -static inline u64 hv_do_rep_hypercall(u16 code, u16 rep_count, u16 varhead_size,
+>> -				      void *input, void *output)
+>> +static inline u64 hv_do_rep_hypercall_ex(u16 code, u16 rep_count,
+>> +					 u16 varhead_size, u16 rep_start,
+>> +					 void *input, void *output)
+>>  {
+>>  	u64 control = code;
+>>  	u64 status;
+>> @@ -137,6 +138,7 @@ static inline u64 hv_do_rep_hypercall(u16 code, u16 rep_count, u16 varhead_size,
+>>
+>>  	control |= (u64)varhead_size << HV_HYPERCALL_VARHEAD_OFFSET;
+>>  	control |= (u64)rep_count << HV_HYPERCALL_REP_COMP_OFFSET;
+>> +	control |= (u64)rep_start << HV_HYPERCALL_REP_START_OFFSET;
+>>
+>>  	do {
+>>  		status = hv_do_hypercall(control, input, output);
+>> @@ -154,6 +156,14 @@ static inline u64 hv_do_rep_hypercall(u16 code, u16 rep_count, u16 varhead_size,
+>>  	return status;
+>>  }
+>>
+>> +/* For the typical case where rep_start is 0 */
+>> +static inline u64 hv_do_rep_hypercall(u16 code, u16 rep_count, u16 varhead_size,
+>> +				      void *input, void *output)
+>> +{
+>> +	return hv_do_rep_hypercall_ex(code, rep_count, varhead_size, 0,
+>> +				      input, output);
+>> +}
+>> +
+>>  /* Generate the guest OS identifier as described in the Hyper-V TLFS */
+>>  static inline u64 hv_generate_guest_id(u64 kernel_version)
+>>  {
+> 
+> Overall, this looks good to me. I don't see any issues with the code.
+> 
+> Michael
+
 
