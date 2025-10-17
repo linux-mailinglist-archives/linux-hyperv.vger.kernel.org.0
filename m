@@ -1,107 +1,537 @@
-Return-Path: <linux-hyperv+bounces-7265-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7266-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99A4EBEBF93
-	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Oct 2025 01:05:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85298BEC0C9
+	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Oct 2025 01:55:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3F6EF3BEE74
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Oct 2025 23:05:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 319E63B14C7
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Oct 2025 23:55:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5F862FD1AD;
-	Fri, 17 Oct 2025 23:05:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 806292D8DA9;
+	Fri, 17 Oct 2025 23:55:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GBOVIDui"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DHFSawNl"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA73261595;
-	Fri, 17 Oct 2025 23:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8700028B415;
+	Fri, 17 Oct 2025 23:55:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760742345; cv=none; b=VzYKjYojZNlHAklOeaO0lWz8Mm+EYEsrKx501Kf722I6cFf0XX26qVHIVO3GpOpDBh0dv4hmzWUytyelL73WzT6vv2a4sRMOpvg9XLxCgzroIXjKwXrcfnp8SnoY+4edwd2fZ01CDdAxlAc236N/t6aB3WpP77NkzOo0hVH9HfQ=
+	t=1760745329; cv=none; b=HyoS6fz8+0RqWRuoeVvslU8RCVbO+gkyN1FfL2UpF18Dgc9KOkiRxkrGGUMTxQ3PbwUO/gUP5JAe9bbv0QGdQjyX7RBB3i+jFJyA3jrplFhBpMt6AlPxm4QN82gjzfTkCIMsCbsnIspkYZsCtGrGu+pfGIKGudAvVw2ibTwAYLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760742345; c=relaxed/simple;
-	bh=0T6PCrIx5PIrUnv+CWLbaIONL9/XwpaNQYrJ1zpHK3g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OpaTu3M7c5T81c3BfPvdKFyHr9Ew7A7OvImgD7Knb4zw7h5sTFK5tJb0YcxsT7SUCRQWxnvJPkmqEZqKJfb9kdnhxfGiDgNKeQQPorB/YGgH/bn67iphfxBTq24fTKHan8EmXb3rutqMbk4uw9Hy1oPonME1uvLXtB0jwhvkbx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GBOVIDui; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B356C4CEE7;
-	Fri, 17 Oct 2025 23:05:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760742342;
-	bh=0T6PCrIx5PIrUnv+CWLbaIONL9/XwpaNQYrJ1zpHK3g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GBOVIDui/5oz0HR2hPGD7sWPRgH9MBWBhKkCAbokw/BJJfde7PeG1x7F+hEIJrJqc
-	 YJVrAZ9Y8vQDusCxDEVCWR9Gz2KySre0yP3XMFhmhEKVquAOhb5GBuK20GCQksLYxe
-	 jmANiM2yU7LT48mCY99N+duEnayPGB52GKOPNeDclow0pfVG7cNuBZzbI6auBSdk7W
-	 IZucgr/M4DLBhUOT8ShN+jf83gGQ7Ggt7XUJ3f1cXSKkbtVPtgQOWter15UcIo3rwk
-	 m9X1I9PXNuuZy1IX6I7oys0wPCFiXv60bP5BSCWwaZLj9wEkNe9iEHTIBqrH4T8p0+
-	 0ZVT2ni2SMrKA==
-Date: Fri, 17 Oct 2025 16:05:41 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Haiyang Zhang <haiyangz@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- haiyangz@microsoft.com, paulros@microsoft.com, decui@microsoft.com,
- kys@microsoft.com, wei.liu@kernel.org, edumazet@google.com,
- davem@davemloft.net, pabeni@redhat.com, longli@microsoft.com,
- ssengar@linux.microsoft.com, ernis@linux.microsoft.com,
- dipayanroy@linux.microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
- shradhagupta@linux.microsoft.com, leon@kernel.org, mlevitsk@redhat.com,
- yury.norov@gmail.com, shirazsaleem@microsoft.com, andrew+netdev@lunn.ch,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next,v2] net: mana: Support HW link state events
-Message-ID: <20251017160541.4ce65ede@kernel.org>
-In-Reply-To: <1760477209-9026-1-git-send-email-haiyangz@linux.microsoft.com>
-References: <1760477209-9026-1-git-send-email-haiyangz@linux.microsoft.com>
+	s=arc-20240116; t=1760745329; c=relaxed/simple;
+	bh=bMisvaFs5OLSC2A5w/a4TrWMIMnGhK5d5PiEglWtrZk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UVSVGFqWzhvv3ozltXzkxI4WQit+HT4CD1aeWWy+8NXEJYXwC+RZZi1XTgAhSe0BsCE+jBVQ6EFeZbBLO6UgsRxZZ6yObLeHN+kEmfVtvyf1+tbvbl+u98oaE8OVyL+Wx4/GpJN5NJj0scWsPJ4+UtB/gKMXCZ29/D4EMPUmclY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=DHFSawNl; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.75.0.68] (unknown [40.78.13.173])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 6B6692017270;
+	Fri, 17 Oct 2025 16:55:25 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6B6692017270
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1760745325;
+	bh=69XA6NT+DA3RKBhDsoEM5uBbcrPC+Jzo2Stuv7qKURI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DHFSawNl8cTt+UXXlvx/Ddfjg19Ti6VjfonrIz9a2s1iCDklI9JgYDpSp+fNdUZuI
+	 V0ZwnuMRasy0CCdH+CYZL6UznhKG1ODVun3HEAcWGvU5M/2UCJzp0TX93Jkubk5G95
+	 qC0gMBPUF8cvsaaC9R4qeCk+s+jJz8ehcr1yaoxw=
+Message-ID: <2d5d540c-6ed5-455f-a895-9a3dd12bae2c@linux.microsoft.com>
+Date: Fri, 17 Oct 2025 16:55:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v5 5/5] Drivers: hv: Add support for movable memory
+ regions
+Content-Language: en-US
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+ kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <176057396465.74314.10055784909009416453.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <176057443695.74314.10584965103467299030.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+From: Mukesh R <mrathor@linux.microsoft.com>
+In-Reply-To: <176057443695.74314.10584965103467299030.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Tue, 14 Oct 2025 14:26:49 -0700 Haiyang Zhang wrote:
-> From: Haiyang Zhang <haiyangz@microsoft.com>
+On 10/15/25 17:27, Stanislav Kinsburskii wrote:
+> Introduce support for movable memory regions in the Hyper-V root partition
+> driver, thus improving memory management flexibility and preparing the
+> driver for advanced use cases such as dynamic memory remapping.
 > 
-> Handle the HW link state events received from HW channel, and
-> set the proper link state, also stop/wake queues accordingly.
+> Integrate mmu_interval_notifier for movable regions, implement functions to
+> handle HMM faults and memory invalidation, and update memory region mapping
+> logic to support movable regions.
+> 
+> While MMU notifiers are commonly used in virtualization drivers, this
+> implementation leverages HMM (Heterogeneous Memory Management) for its
+> tailored functionality. HMM provides a ready-made framework for mirroring,
+> invalidation, and fault handling, avoiding the need to reimplement these
+> mechanisms for a single callback. Although MMU notifiers are more generic,
+> using HMM reduces boilerplate and ensures maintainability by utilizing a
+> mechanism specifically designed for such use cases.
+> 
+> Signed-off-by: Anirudh Rayabharam <anrayabh@linux.microsoft.com>
+> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+> ---
+>  drivers/hv/Kconfig          |    1 
+>  drivers/hv/mshv_root.h      |    8 +
+>  drivers/hv/mshv_root_main.c |  328 ++++++++++++++++++++++++++++++++++++++++++-
+>  3 files changed, 327 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> index 0b8c391a0342..5f1637cbb6e3 100644
+> --- a/drivers/hv/Kconfig
+> +++ b/drivers/hv/Kconfig
+> @@ -75,6 +75,7 @@ config MSHV_ROOT
+>  	depends on PAGE_SIZE_4KB
+>  	select EVENTFD
+>  	select VIRT_XFER_TO_GUEST_WORK
+> +	select HMM_MIRROR
+>  	default n
+>  	help
+>  	  Select this option to enable support for booting and running as root
+> diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
+> index 97e64d5341b6..13367c84497c 100644
+> --- a/drivers/hv/mshv_root.h
+> +++ b/drivers/hv/mshv_root.h
+> @@ -15,6 +15,7 @@
+>  #include <linux/hashtable.h>
+>  #include <linux/dev_printk.h>
+>  #include <linux/build_bug.h>
+> +#include <linux/mmu_notifier.h>
+>  #include <uapi/linux/mshv.h>
+>  
+>  /*
+> @@ -81,9 +82,14 @@ struct mshv_mem_region {
+>  	struct {
+>  		u64 large_pages:  1; /* 2MiB */
+>  		u64 range_pinned: 1;
+> -		u64 reserved:	 62;
+> +		u64 is_ram	: 1; /* mem region can be ram or mmio */
 
-Why do you have to stop / start the queues? I think it's unusual.
-Let the packets get dropped, sending out potentially old packets
-when link comes back is not going to make anyone happier.
+In case this gets accepted/merged, this is named 
++               u64 memreg_isram: 1; /* mem region can be ram or mmio */
 
-> +static void mana_link_state_handle(struct work_struct *w)
+Keeping the name same will avoid unnecessary diffs when we try to compare
+files to see what is missing internally or externally.
+
+Thanks,
+-Mukesh
+
+>  	} flags;
+>  	struct mshv_partition *partition;
+> +#if defined(CONFIG_MMU_NOTIFIER)
+> +	struct mmu_interval_notifier mni;
+> +	struct mutex mutex;	/* protects region pages remapping */
+> +#endif
+>  	struct page *pages[];
+>  };
+>  
+> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> index c4f114376435..b2738443ac5d 100644
+> --- a/drivers/hv/mshv_root_main.c
+> +++ b/drivers/hv/mshv_root_main.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/crash_dump.h>
+>  #include <linux/panic_notifier.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/hmm.h>
+>  
+>  #include "mshv_eventfd.h"
+>  #include "mshv.h"
+> @@ -36,6 +37,8 @@
+>  
+>  #define VALUE_PMD_ALIGNED(c)			(!((c) & (PTRS_PER_PMD - 1)))
+>  
+> +#define MSHV_MAP_FAULT_IN_PAGES			HPAGE_PMD_NR
+> +
+>  MODULE_AUTHOR("Microsoft");
+>  MODULE_LICENSE("GPL");
+>  MODULE_DESCRIPTION("Microsoft Hyper-V root partition VMM interface /dev/mshv");
+> @@ -76,6 +79,11 @@ static int mshv_vp_mmap(struct file *file, struct vm_area_struct *vma);
+>  static vm_fault_t mshv_vp_fault(struct vm_fault *vmf);
+>  static int mshv_init_async_handler(struct mshv_partition *partition);
+>  static void mshv_async_hvcall_handler(void *data, u64 *status);
+> +static struct mshv_mem_region
+> +	*mshv_partition_region_by_gfn(struct mshv_partition *pt, u64 gfn);
+> +static int mshv_region_remap_pages(struct mshv_mem_region *region,
+> +				   u32 map_flags, u64 page_offset,
+> +				   u64 page_count);
+>  
+>  static const union hv_input_vtl input_vtl_zero;
+>  static const union hv_input_vtl input_vtl_normal = {
+> @@ -602,14 +610,197 @@ static long mshv_run_vp_with_root_scheduler(struct mshv_vp *vp)
+>  static_assert(sizeof(struct hv_message) <= MSHV_RUN_VP_BUF_SZ,
+>  	      "sizeof(struct hv_message) must not exceed MSHV_RUN_VP_BUF_SZ");
+>  
+> +#ifdef CONFIG_X86_64
+> +
+> +#if defined(CONFIG_MMU_NOTIFIER)
+> +/**
+> + * mshv_region_hmm_fault_and_lock - Handle HMM faults and lock the memory region
+> + * @region: Pointer to the memory region structure
+> + * @range: Pointer to the HMM range structure
+> + *
+> + * This function performs the following steps:
+> + * 1. Reads the notifier sequence for the HMM range.
+> + * 2. Acquires a read lock on the memory map.
+> + * 3. Handles HMM faults for the specified range.
+> + * 4. Releases the read lock on the memory map.
+> + * 5. If successful, locks the memory region mutex.
+> + * 6. Verifies if the notifier sequence has changed during the operation.
+> + *    If it has, releases the mutex and returns -EBUSY to match with
+> + *    hmm_range_fault() return code for repeating.
+> + *
+> + * Return: 0 on success, a negative error code otherwise.
+> + */
+> +static int mshv_region_hmm_fault_and_lock(struct mshv_mem_region *region,
+> +					  struct hmm_range *range)
 > +{
-> +	struct mana_port_context *apc;
-> +	struct mana_context *ac;
-> +	struct net_device *ndev;
-> +	bool link_up;
-> +	int i;
+> +	int ret;
 > +
-> +	ac = container_of(w, struct mana_context, link_change_work);
+> +	range->notifier_seq = mmu_interval_read_begin(range->notifier);
+> +	mmap_read_lock(region->mni.mm);
+> +	ret = hmm_range_fault(range);
+> +	mmap_read_unlock(region->mni.mm);
+> +	if (ret)
+> +		return ret;
 > +
-> +	if (ac->mana_removing)
+> +	mutex_lock(&region->mutex);
+> +
+> +	if (mmu_interval_read_retry(range->notifier, range->notifier_seq)) {
+> +		mutex_unlock(&region->mutex);
+> +		cond_resched();
+> +		return -EBUSY;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * mshv_region_range_fault - Handle memory range faults for a given region.
+> + * @region: Pointer to the memory region structure.
+> + * @page_offset: Offset of the page within the region.
+> + * @page_count: Number of pages to handle.
+> + *
+> + * This function resolves memory faults for a specified range of pages
+> + * within a memory region. It uses HMM (Heterogeneous Memory Management)
+> + * to fault in the required pages and updates the region's page array.
+> + *
+> + * Return: 0 on success, negative error code on failure.
+> + */
+> +static int mshv_region_range_fault(struct mshv_mem_region *region,
+> +				   u64 page_offset, u64 page_count)
+> +{
+> +	struct hmm_range range = {
+> +		.notifier = &region->mni,
+> +		.default_flags = HMM_PFN_REQ_FAULT | HMM_PFN_REQ_WRITE,
+> +	};
+> +	unsigned long *pfns;
+> +	int ret;
+> +	u64 i;
+> +
+> +	pfns = kmalloc_array(page_count, sizeof(unsigned long), GFP_KERNEL);
+> +	if (!pfns)
+> +		return -ENOMEM;
+> +
+> +	range.hmm_pfns = pfns;
+> +	range.start = region->start_uaddr + page_offset * HV_HYP_PAGE_SIZE;
+> +	range.end = range.start + page_count * HV_HYP_PAGE_SIZE;
+> +
+> +	do {
+> +		ret = mshv_region_hmm_fault_and_lock(region, &range);
+> +	} while (ret == -EBUSY);
+> +
+> +	if (ret)
+> +		goto out;
+> +
+> +	for (i = 0; i < page_count; i++)
+> +		region->pages[page_offset + i] = hmm_pfn_to_page(pfns[i]);
+> +
+> +	if (PageHuge(region->pages[page_offset]))
+> +		region->flags.large_pages = true;
+> +
+> +	ret = mshv_region_remap_pages(region, region->hv_map_flags,
+> +				      page_offset, page_count);
+> +
+> +	mutex_unlock(&region->mutex);
+> +out:
+> +	kfree(pfns);
+> +	return ret;
+> +}
+> +#else /* CONFIG_MMU_NOTIFIER */
+> +static int mshv_region_range_fault(struct mshv_mem_region *region,
+> +				   u64 page_offset, u64 page_count)
+> +{
+> +	return -ENODEV;
+> +}
+> +#endif /* CONFIG_MMU_NOTIFIER */
+> +
+> +static bool mshv_region_handle_gfn_fault(struct mshv_mem_region *region, u64 gfn)
+> +{
+> +	u64 page_offset, page_count;
+> +	int ret;
+> +
+> +	if (WARN_ON_ONCE(region->flags.range_pinned))
+> +		return false;
+> +
+> +	/* Align the page offset to the nearest MSHV_MAP_FAULT_IN_PAGES. */
+> +	page_offset = ALIGN_DOWN(gfn - region->start_gfn,
+> +				 MSHV_MAP_FAULT_IN_PAGES);
+> +
+> +	/* Map more pages than requested to reduce the number of faults. */
+> +	page_count = min(region->nr_pages - page_offset,
+> +			 MSHV_MAP_FAULT_IN_PAGES);
+> +
+> +	ret = mshv_region_range_fault(region, page_offset, page_count);
+> +
+> +	WARN_ONCE(ret,
+> +		  "p%llu: GPA intercept failed: region %#llx-%#llx, gfn %#llx, page_offset %llu, page_count %llu\n",
+> +		  region->partition->pt_id, region->start_uaddr,
+> +		  region->start_uaddr + (region->nr_pages << HV_HYP_PAGE_SHIFT),
+> +		  gfn, page_offset, page_count);
+> +
+> +	return !ret;
+> +}
+> +
+> +/**
+> + * mshv_handle_gpa_intercept - Handle GPA (Guest Physical Address) intercepts.
+> + * @vp: Pointer to the virtual processor structure.
+> + *
+> + * This function processes GPA intercepts by identifying the memory region
+> + * corresponding to the intercepted GPA, aligning the page offset, and
+> + * mapping the required pages. It ensures that the region is valid and
+> + * handles faults efficiently by mapping multiple pages at once.
+> + *
+> + * Return: true if the intercept was handled successfully, false otherwise.
+> + */
+> +static bool mshv_handle_gpa_intercept(struct mshv_vp *vp)
+> +{
+> +	struct mshv_partition *p = vp->vp_partition;
+> +	struct mshv_mem_region *region;
+> +	struct hv_x64_memory_intercept_message *msg;
+> +	u64 gfn;
+> +
+> +	msg = (struct hv_x64_memory_intercept_message *)
+> +		vp->vp_intercept_msg_page->u.payload;
+> +
+> +	gfn = HVPFN_DOWN(msg->guest_physical_address);
+> +
+> +	region = mshv_partition_region_by_gfn(p, gfn);
+> +	if (!region)
+> +		return false;
+> +
+> +	if (WARN_ON_ONCE(!region->flags.is_ram))
+> +		return false;
+> +
+> +	if (WARN_ON_ONCE(region->flags.range_pinned))
+> +		return false;
+> +
+> +	return mshv_region_handle_gfn_fault(region, gfn);
+> +}
+> +
+> +#else	/* CONFIG_X86_64 */
+> +
+> +static bool mshv_handle_gpa_intercept(struct mshv_vp *vp) { return false; }
+> +
+> +#endif	/* CONFIG_X86_64 */
+> +
+> +static bool mshv_vp_handle_intercept(struct mshv_vp *vp)
+> +{
+> +	switch (vp->vp_intercept_msg_page->header.message_type) {
+> +	case HVMSG_GPA_INTERCEPT:
+> +		return mshv_handle_gpa_intercept(vp);
+> +	}
+> +	return false;
+> +}
+> +
+>  static long mshv_vp_ioctl_run_vp(struct mshv_vp *vp, void __user *ret_msg)
+>  {
+>  	long rc;
+>  
+> -	if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
+> -		rc = mshv_run_vp_with_root_scheduler(vp);
+> -	else
+> -		rc = mshv_run_vp_with_hyp_scheduler(vp);
+> +	do {
+> +		if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
+> +			rc = mshv_run_vp_with_root_scheduler(vp);
+> +		else
+> +			rc = mshv_run_vp_with_hyp_scheduler(vp);
+> +	} while (rc == 0 && mshv_vp_handle_intercept(vp));
+>  
+>  	if (rc)
+>  		return rc;
+> @@ -1209,6 +1400,110 @@ mshv_partition_region_by_uaddr(struct mshv_partition *partition, u64 uaddr)
+>  	return NULL;
+>  }
+>  
+> +#if defined(CONFIG_MMU_NOTIFIER)
+> +static void mshv_region_movable_fini(struct mshv_mem_region *region)
+> +{
+> +	if (region->flags.range_pinned)
 > +		return;
 > +
-> +	rtnl_lock();
+> +	mmu_interval_notifier_remove(&region->mni);
+> +}
 > +
-
-> @@ -3500,6 +3556,10 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
->  	int err;
->  	int i;
+> +/**
+> + * mshv_region_interval_invalidate - Invalidate a range of memory region
+> + * @mni: Pointer to the mmu_interval_notifier structure
+> + * @range: Pointer to the mmu_notifier_range structure
+> + * @cur_seq: Current sequence number for the interval notifier
+> + *
+> + * This function invalidates a memory region by remapping its pages with
+> + * no access permissions. It locks the region's mutex to ensure thread safety
+> + * and updates the sequence number for the interval notifier. If the range
+> + * is blockable, it uses a blocking lock; otherwise, it attempts a non-blocking
+> + * lock and returns false if unsuccessful.
+> + *
+> + * NOTE: Failure to invalidate a region is a serious error, as the pages will
+> + * be considered freed while they are still mapped by the hypervisor.
+> + * Any attempt to access such pages will likely crash the system.
+> + *
+> + * Return: true if the region was successfully invalidated, false otherwise.
+> + */
+> +static bool
+> +mshv_region_interval_invalidate(struct mmu_interval_notifier *mni,
+> +				const struct mmu_notifier_range *range,
+> +				unsigned long cur_seq)
+> +{
+> +	struct mshv_mem_region *region = container_of(mni,
+> +						struct mshv_mem_region,
+> +						mni);
+> +	u64 page_offset, page_count;
+> +	unsigned long mstart, mend;
+> +	int ret = -EPERM;
+> +
+> +	if (mmu_notifier_range_blockable(range))
+> +		mutex_lock(&region->mutex);
+> +	else if (!mutex_trylock(&region->mutex))
+> +		goto out_fail;
+> +
+> +	mmu_interval_set_seq(mni, cur_seq);
+> +
+> +	mstart = max(range->start, region->start_uaddr);
+> +	mend = min(range->end, region->start_uaddr +
+> +		   (region->nr_pages << HV_HYP_PAGE_SHIFT));
+> +
+> +	page_offset = HVPFN_DOWN(mstart - region->start_uaddr);
+> +	page_count = HVPFN_DOWN(mend - mstart);
+> +
+> +	ret = mshv_region_remap_pages(region, HV_MAP_GPA_NO_ACCESS,
+> +				      page_offset, page_count);
+> +	if (ret)
+> +		goto out_fail;
+> +
+> +	mshv_region_invalidate_pages(region, page_offset, page_count);
+> +
+> +	mutex_unlock(&region->mutex);
+> +
+> +	return true;
+> +
+> +out_fail:
+> +	WARN_ONCE(ret,
+> +		  "Failed to invalidate region %#llx-%#llx (range %#lx-%#lx, event: %u, pages %#llx-%#llx, mm: %#llx): %d\n",
+> +		  region->start_uaddr,
+> +		  region->start_uaddr + (region->nr_pages << HV_HYP_PAGE_SHIFT),
+> +		  range->start, range->end, range->event,
+> +		  page_offset, page_offset + page_count - 1, (u64)range->mm, ret);
+> +	return false;
+> +}
+> +
+> +static const struct mmu_interval_notifier_ops mshv_region_mni_ops = {
+> +	.invalidate = mshv_region_interval_invalidate,
+> +};
+> +
+> +static bool mshv_region_movable_init(struct mshv_mem_region *region)
+> +{
+> +	int ret;
+> +
+> +	ret = mmu_interval_notifier_insert(&region->mni, current->mm,
+> +					   region->start_uaddr,
+> +					   region->nr_pages << HV_HYP_PAGE_SHIFT,
+> +					   &mshv_region_mni_ops);
+> +	if (ret)
+> +		return false;
+> +
+> +	mutex_init(&region->mutex);
+> +
+> +	return true;
+> +}
+> +#else
+> +static inline void mshv_region_movable_fini(struct mshv_mem_region *region)
+> +{
+> +}
+> +
+> +static inline bool mshv_region_movable_init(struct mshv_mem_region *region)
+> +{
+> +	return false;
+> +}
+> +#endif
+> +
+>  /*
+>   * NB: caller checks and makes sure mem->size is page aligned
+>   * Returns: 0 with regionpp updated on success, or -errno
+> @@ -1241,9 +1536,14 @@ static int mshv_partition_create_region(struct mshv_partition *partition,
+>  	if (mem->flags & BIT(MSHV_SET_MEM_BIT_EXECUTABLE))
+>  		region->hv_map_flags |= HV_MAP_GPA_EXECUTABLE;
 >  
-> +	ac->mana_removing = true;
+> -	/* Note: large_pages flag populated when we pin the pages */
+> -	if (!is_mmio)
+> -		region->flags.range_pinned = true;
+> +	/* Note: large_pages flag populated when pages are allocated. */
+> +	if (!is_mmio) {
+> +		region->flags.is_ram = true;
 > +
-> +	cancel_work_sync(&ac->link_change_work);
+> +		if (mshv_partition_encrypted(partition) ||
+> +		    !mshv_region_movable_init(region))
+> +			region->flags.range_pinned = true;
+> +	}
+>  
+>  	region->partition = partition;
+>  
+> @@ -1363,9 +1663,16 @@ mshv_map_user_memory(struct mshv_partition *partition,
+>  	if (is_mmio)
+>  		ret = hv_call_map_mmio_pages(partition->pt_id, mem.guest_pfn,
+>  					     mmio_pfn, HVPFN_DOWN(mem.size));
+> -	else
+> +	else if (region->flags.range_pinned)
+>  		ret = mshv_prepare_pinned_region(region);
+> -
+> +	else
+> +		/*
+> +		 * For non-pinned regions, remap with no access to let the
+> +		 * hypervisor track dirty pages, enabling pre-copy live
+> +		 * migration.
+> +		 */
+> +		ret = mshv_region_remap_pages(region, HV_MAP_GPA_NO_ACCESS,
+> +					      0, region->nr_pages);
+>  	if (ret)
+>  		goto errout;
+>  
+> @@ -1388,6 +1695,9 @@ static void mshv_partition_destroy_region(struct mshv_mem_region *region)
+>  
+>  	hlist_del(&region->hnode);
+>  
+> +	if (region->flags.is_ram)
+> +		mshv_region_movable_fini(region);
+> +
+>  	if (mshv_partition_encrypted(partition)) {
+>  		ret = mshv_partition_region_share(region);
+>  		if (ret) {
+> 
+> 
 
-Looks racy, the work needs @ac to check the ->mana_removing but
-mana_remove() frees @ac. Just use disable_work_sync() please.
--- 
-pw-bot: cr
 
