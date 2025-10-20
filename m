@@ -1,327 +1,107 @@
-Return-Path: <linux-hyperv+bounces-7273-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7274-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43F48BF244A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Oct 2025 17:59:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB3E5BF24CD
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Oct 2025 18:05:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C5B66189F412
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Oct 2025 16:00:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 85FFB4220BE
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Oct 2025 16:03:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 214DE27A12C;
-	Mon, 20 Oct 2025 15:59:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E15527B336;
+	Mon, 20 Oct 2025 16:03:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="UgN3bR73"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Le4Rme1q"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5543D24BD1A;
-	Mon, 20 Oct 2025 15:59:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9560926F296;
+	Mon, 20 Oct 2025 16:03:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760975987; cv=none; b=hPgIsHSQFpwoeRrbvFrkQs148RajDBEC1L3YsWaaeuXwUqO0IrlBAR2oD6mA3MdiZ0z8byJLwwY0OGn68sNDrNXvgH1Uow3MZVHxWrNUj+tQ9vMg5JToUTIxHfl5/YxkHkiNA5cykn1CrNJx2v69dRPGZAO+DWe5ESGe89BuLDc=
+	t=1760976187; cv=none; b=VHhK4/25ciq1HFTD8M/gJJ4eMsYrCzI1AuE/5aVd5VmuURE1BlqeU9rW/bvGMCTBo4cTn3UGw/fXTZ0ncf8pgnvGfu/l7svWxkiDqM4z37ewm1qdx5wbbGtOl0b/CGPUqJVWx22YcvE+Xv0YZA31yO4CbGc9lWlj9z2lXQ0PmP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760975987; c=relaxed/simple;
-	bh=MbAwS0dUmHYIgBfk0CMgeryU+UcEXGpLkf27dibS5JM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rtBkJZVX/Ivf6vS2DQEcAFj9VuNApgYJXZ+ED+U5ybMAafkImwV6m/JKm57gXfEQBcIm6s+2Q4jdfWPp4E0EmL4Imlmy0O/Ns6ntXLeDBwMkDgOQkAm3w3fswdAYIMgy/LtGsEEGA7Pw7TL1MFRwyFfGCXBn71j02HAEDzar7ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=UgN3bR73; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1760976187; c=relaxed/simple;
+	bh=JvOCR57DWSFecee/oWHPQq1FBVtq9nwuQUxNx7n/1Hc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QV7eMiyw1ZLaMlfu7lX4ARcFcmkSro4qVH92+CLhO7wFmr7JKN5SJlXEi3dB6PChCHeYKPxl7rkv98XaPgXKoSPait+ZI/aueyf5pwTHoeQdKWvaMwJSmR/SgZiVHnGHoqitQ8zVeAmaq03UZCCjApz5mEh2fb6B9MX8p8/cC+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Le4Rme1q; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1044)
-	id 42988201DAC2; Mon, 20 Oct 2025 08:59:39 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 42988201DAC2
+Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
+	by linux.microsoft.com (Postfix) with ESMTPSA id ADD68201DAC4;
+	Mon, 20 Oct 2025 09:03:05 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com ADD68201DAC4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1760975979;
-	bh=ubZvVoSGl/HCTU2/w/rpJcDAr4nGo7SIDhdJ8b//wG0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UgN3bR731qec6npeyWKB008Et78dtpOMhFR/5D4qhs3Dy9lXCelIFlXJwnMIN/nyL
-	 tKxQYJtrSO8jyYVGUc6Wr2y8qKDcRdxn/g/1zT0C0vYT5gyGcCV1jK10p87cvxFN+0
-	 Pg2U19n/FraL7fXIYkXgbEOIM7wZz6BgHWHf3b/I=
-Date: Mon, 20 Oct 2025 08:59:39 -0700
-From: Praveen Paladugu <prapal@linux.microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-	"arnd@arndb.de" <arnd@arndb.de>,
-	"anbelski@linux.microsoft.com" <anbelski@linux.microsoft.com>,
-	"easwar.hariharan@linux.microsoft.com" <easwar.hariharan@linux.microsoft.com>,
-	"nunodasneves@linux.microsoft.com" <nunodasneves@linux.microsoft.com>,
-	"skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>
-Subject: Re: [PATCH v2 2/2] hyperv: Enable clean shutdown for root partition
- with MSHV
-Message-ID: <20251020155939.GA17482@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20251014164150.6935-1-prapal@linux.microsoft.com>
- <20251014164150.6935-3-prapal@linux.microsoft.com>
- <SN6PR02MB4157FBBE5B77C65B024D3589D4E9A@SN6PR02MB4157.namprd02.prod.outlook.com>
+	s=default; t=1760976185;
+	bh=scyb7wZ7MdJMCaaNB+EvmDsakq25Zch1vo2shBY/s6Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Le4Rme1qvxnweUnpgb85Vv2YhukqWFRffwZc6f0b8/nUIThLnILtPvi/4Z+f8Z19s
+	 IZN+TkJ9H4AWwcNNYLs+zyB4bzLU9DjUtQfXcjHpRsvA8v10vnf6/yvgWuKu/Xq1YD
+	 PbVvr4e/1z8G4g2NMx6RXEgQocq7bTSJvHLr8KOE=
+Message-ID: <c673e8da-d770-414a-bd8d-715688238dd1@linux.microsoft.com>
+Date: Mon, 20 Oct 2025 09:02:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR02MB4157FBBE5B77C65B024D3589D4E9A@SN6PR02MB4157.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mshv: Fix deposit memory in MSHV_ROOT_HVCALL
+To: Wei Liu <wei.liu@kernel.org>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
+ decui@microsoft.com, arnd@arndb.de, mrathor@linux.microsoft.com,
+ skinsburskii@linux.microsoft.com
+References: <1760727497-21158-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <20251017220655.GA614927@liuwe-devbox-debian-v2.local>
+ <20251017222633.GA632885@liuwe-devbox-debian-v2.local>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <20251017222633.GA632885@liuwe-devbox-debian-v2.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 16, 2025 at 07:29:06PM +0000, Michael Kelley wrote:
-> From: Praveen K Paladugu <prapal@linux.microsoft.com> Sent: Tuesday, October 14, 2025 9:41 AM
-> > 
-> > When a shutdown is initiated in the root partition without configuring
-> > sleep states, the call to `hv_call_enter_sleep_state` fails. In such cases
-> > the root falls back to using legacy ACPI mechanisms to poweroff. This call
-> > is intercepted by MSHV and will result in a Machine Check Exception (MCE).
-> > 
-> > Root panics with a trace similar to:
-> > 
-> > [   81.306348] reboot: Power down
-> > [   81.314709] mce: [Hardware Error]: CPU 0: Machine Check Exception: 4 Bank 0: b2000000c0060001
-> > [   81.314711] mce: [Hardware Error]: TSC 3b8cb60a66 PPIN 11d98332458e4ea9
-> > [   81.314713] mce: [Hardware Error]: PROCESSOR 0:606a6 TIME 1759339405 SOCKET 0 APIC 0 microcode ffffffff
-> > [   81.314715] mce: [Hardware Error]: Run the above through 'mcelog --ascii'
-> > [   81.314716] mce: [Hardware Error]: Machine check: Processor context corrupt
-> > [   81.314717] Kernel panic - not syncing: Fatal machine check
-> > 
-> > To prevent this, properly configure sleep states within MSHV, allowing
-> > the root partition to shut down cleanly without triggering a panic.
-> > 
-> > Signed-off-by: Praveen K Paladugu <prapal@linux.microsoft.com>
-> > Co-developed-by: Anatol Belski <anbelski@linux.microsoft.com>
-> > Signed-off-by: Anatol Belski <anbelski@linux.microsoft.com>
-> > ---
-> >  arch/x86/hyperv/hv_init.c       |   7 ++
-> >  arch/x86/include/asm/mshyperv.h |   1 +
-> >  drivers/hv/hv_common.c          | 119 ++++++++++++++++++++++++++++++++
-> >  3 files changed, 127 insertions(+)
-> > 
-> > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> > index afdbda2dd7b7..57bd96671ead 100644
-> > --- a/arch/x86/hyperv/hv_init.c
-> > +++ b/arch/x86/hyperv/hv_init.c
-> > @@ -510,6 +510,13 @@ void __init hyperv_init(void)
-> >  		memunmap(src);
-> > 
-> >  		hv_remap_tsc_clocksource();
-> > +		/*
-> > +		 * The notifier registration might fail at various hops.
-> > +		 * Corresponding error messages will land in dmesg. There is
-> > +		 * otherwise nothing that can be specifically done to handle
-> > +		 * failures here.
-> > +		 */
-> > +		(void)hv_sleep_notifiers_register();
-> >  	} else {
-> >  		hypercall_msr.guest_physical_address = vmalloc_to_pfn(hv_hypercall_pg);
-> >  		wrmsrq(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-> > diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> > index abc4659f5809..fb8d691193df 100644
-> > --- a/arch/x86/include/asm/mshyperv.h
-> > +++ b/arch/x86/include/asm/mshyperv.h
-> > @@ -236,6 +236,7 @@ int hyperv_fill_flush_guest_mapping_list(
-> >  void hv_apic_init(void);
-> >  void __init hv_init_spinlocks(void);
-> >  bool hv_vcpu_is_preempted(int vcpu);
-> > +int hv_sleep_notifiers_register(void);
-> >  #else
-> >  static inline void hv_apic_init(void) {}
-> >  #endif
-> > diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> > index e109a620c83f..cfba9ded7bcb 100644
-> > --- a/drivers/hv/hv_common.c
-> > +++ b/drivers/hv/hv_common.c
-> > @@ -837,3 +837,122 @@ const char *hv_result_to_string(u64 status)
-> >  	return "Unknown";
-> >  }
-> >  EXPORT_SYMBOL_GPL(hv_result_to_string);
-> > +
-> > +#if IS_ENABLED(CONFIG_ACPI)
-> > +/*
-> > + * Corresponding sleep states have to be initialized in order for a subsequent
-> > + * HVCALL_ENTER_SLEEP_STATE call to succeed. Currently only S5 state as per
-> > + * ACPI 6.4 chapter 7.4.2 is relevant, while S1, S2 and S3 can be supported.
-> > + *
-> > + * ACPI should be initialized and should support S5 sleep state when this method
-> > + * is called, so that it can extract correct PM values and pass them to hv.
-> > + */
-> > +static int hv_initialize_sleep_states(void)
-> > +{
-> > +	u64 status;
-> > +	unsigned long flags;
-> > +	struct hv_input_set_system_property *in;
-> > +	acpi_status acpi_status;
-> > +	u8 sleep_type_a, sleep_type_b;
-> > +
-> > +	if (!acpi_sleep_state_supported(ACPI_STATE_S5)) {
-> > +		pr_err("%s: S5 sleep state not supported.\n", __func__);
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	acpi_status = acpi_get_sleep_type_data(ACPI_STATE_S5,
-> > +						&sleep_type_a, &sleep_type_b);
-> > +	if (ACPI_FAILURE(acpi_status))
-> > +		return -ENODEV;
-> > +
-> > +	local_irq_save(flags);
-> > +	in = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> > +	memset(in, 0, sizeof(*in));
-> > +
-> > +	in->property_id = HV_SYSTEM_PROPERTY_SLEEP_STATE;
-> > +	in->set_sleep_state_info.sleep_state = HV_SLEEP_STATE_S5;
-> > +	in->set_sleep_state_info.pm1a_slp_typ = sleep_type_a;
-> > +	in->set_sleep_state_info.pm1b_slp_typ = sleep_type_b;
-> > +
-> > +	status = hv_do_hypercall(HVCALL_SET_SYSTEM_PROPERTY, in, NULL);
-> > +	local_irq_restore(flags);
-> > +
-> > +	if (!hv_result_success(status)) {
-> > +		hv_status_err(status, "\n");
-> > +		return hv_result_to_errno(status);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int hv_call_enter_sleep_state(u32 sleep_state)
-> > +{
-> > +	u64 status;
-> > +	int ret;
-> > +	unsigned long flags;
-> > +	struct hv_input_enter_sleep_state *in;
-> > +
-> > +	ret = hv_initialize_sleep_states();
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	local_irq_save(flags);
-> > +	in = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> > +	in->sleep_state = sleep_state;
-> > +
-> > +	status = hv_do_hypercall(HVCALL_ENTER_SLEEP_STATE, in, NULL);
+On 10/17/2025 3:26 PM, Wei Liu wrote:
+> On Fri, Oct 17, 2025 at 10:06:55PM +0000, Wei Liu wrote:
+>> On Fri, Oct 17, 2025 at 11:58:17AM -0700, Nuno Das Neves wrote:
+>>> When the MSHV_ROOT_HVCALL ioctl is executing a hypercall, and gets
+>>> HV_STATUS_INSUFFICIENT_MEMORY, it deposits memory and then returns
+>>> -EAGAIN to userspace. The expectation is that the VMM will retry.
+>>>
+>>> However, some VMM code in the wild doesn't do this and simply fails.
+>>> Rather than force the VMM to retry, change the ioctl to deposit
+>>> memory on demand and immediately retry the hypercall as is done with
+>>> all the other hypercall helper functions.
+>>>
+>>> In addition to making the ioctl easier to use, removing the need for
+>>> multiple syscalls improves performance.
+>>>
+>>> There is a complication: unlike the other hypercall helper functions,
+>>> in MSHV_ROOT_HVCALL the input is opaque to the kernel. This is
+>>> problematic for rep hypercalls, because the next part of the input
+>>> list can't be copied on each loop after depositing pages (this was
+>>> the original reason for returning -EAGAIN in this case).
+>>>
+>>> Introduce hv_do_rep_hypercall_ex(), which adds a 'rep_start'
+>>> parameter. This solves the issue, allowing the deposit loop in
+>>> MSHV_ROOT_HVCALL to restart a rep hypercall after depositing pages
+>>> partway through.
+>>>
+>>> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+>>
+>> In v1 you said you will add a "Fixes" tag. Where is it?
 > 
-> If this hypercall succeeds, does the root partition (which is the caller) go
-> to sleep in S5, such that the hypercall never returns? If that's not the case,
-> what is the behavior of this hypercall?
->
-This hypercall returns to the kernel when the CPU wakes up the next
-time.
-
-> > +	local_irq_restore(flags);
-> > +
-> > +	if (!hv_result_success(status)) {
-> > +		hv_status_err(status, "\n");
-> > +		return hv_result_to_errno(status);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int hv_reboot_notifier_handler(struct notifier_block *this,
-> > +				      unsigned long code, void *another)
-> > +{
-> > +	int ret = 0;
-> > +
-> > +	if (code == SYS_HALT || code == SYS_POWER_OFF)
-> > +		ret = hv_call_enter_sleep_state(HV_SLEEP_STATE_S5);
+> I added this:
 > 
-> If hv_call_enter_sleep_state() never returns, here's an issue. There may be
-> multiple entries on the reboot notifier chain. For example,
-> mshv_root_partition_init() puts an entry on the reboot notifier chain. At
-> reboot time, the entries are executed in some order, with the expectation
-> that all entries will be executed prior to the reboot actually happening. But
-> if this hypercall never returns, some entries may never be executed.
+> Fixes: 621191d709b1 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
 > 
-> Notifier chains support a notion of priority to control the order in
-> which they are executed, but that priority isn't set in hv_reboot_notifier
-> below, or in mshv_reboot_nb. And most other reboot notifiers throughout
-> Linux appear to not set it. So the ordering is unspecified, and having
-> this notifier never return may be problematic.
+> Let me know if that's not correct.
 > 
-Thanks for the detailed explanation Michael!
+Oops! That's correct, thanks.
 
-As I mentioned above, this hypercall returns to the kernel, so the rest
-of the entries in the notifier chain should continue to execute.
+> Wei
 
-> > +
-> > +	return ret ? NOTIFY_DONE : NOTIFY_OK;
-> > +}
-> > +
-> > +static struct notifier_block hv_reboot_notifier = {
-> > +	.notifier_call  = hv_reboot_notifier_handler,
-> > +};
-> > +
-> > +static int hv_acpi_sleep_handler(u8 sleep_state, u32 pm1a_cnt, u32 pm1b_cnt)
-> > +{
-> > +	int ret = 0;
-> > +
-> > +	if (sleep_state == ACPI_STATE_S5)
-> > +		ret = hv_call_enter_sleep_state(HV_SLEEP_STATE_S5);
-> > +
-> > +	return ret == 0 ? 1 : -1;
-> > +}
-> > +
-> > +static int hv_acpi_extended_sleep_handler(u8 sleep_state, u32 val_a, u32 val_b)
-> > +{
-> > +	return hv_acpi_sleep_handler(sleep_state, val_a, val_b);
-> > +}
-> 
-> Is this function needed? The function signature is identical to hv_acpi_sleep_handler().
-> So it seems like acpi_os_set_prepare_extended_sleep() could just use
-> hv_acpi_sleep_handler() directly.
-> 
-Upon further investigation, I discovered that extended sleep is only
-supported on platforms with ACPI_REDUCED_HARDWARE.
-
-As these patches are targetted at X86, above does not really apply. I
-will drop this handler in next version.
-
-> > +
-> > +int hv_sleep_notifiers_register(void)
-> > +{
-> > +	int ret;
-> > +
-> > +	acpi_os_set_prepare_sleep(&hv_acpi_sleep_handler);
-> > +	acpi_os_set_prepare_extended_sleep(&hv_acpi_extended_sleep_handler);
-> 
-> I'm not clear on why these handlers are set. If the hv_reboot_notifier is
-> called, are these ACPI handlers ever called? Or are these to catch any cases
-> where the hv_reboot_notifier is somehow bypassed? Or maybe I'm just
-> not understanding something .... :-)
->
-
-I am trying to trace these calls. I will keep you posted with my
-findings.
-
-> > +
-> > +	ret = register_reboot_notifier(&hv_reboot_notifier);
-> > +	if (ret)
-> > +		pr_err("%s: cannot register reboot notifier %d\n",
-> > +			__func__, ret);
-> > +
-> > +	return ret;
-> > +}
-> > +#endif
-> 
-> I'm wondering if all this code belongs in hv_common.c, since it is only needed
-> for Linux in the root partition. Couldn't it go in mshv_common.c? It would still
-> be built-in code (i.e., not in a loadable module), but only if CONFIG_MSHV_ROOT
-> is set.
->
-
-This sounds reasonable. I will discuss this internally and get back you.
-
-> Michael
-> 
-> > --
-> > 2.51.0
-> > 
 
