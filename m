@@ -1,249 +1,327 @@
-Return-Path: <linux-hyperv+bounces-7272-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7273-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CA35BF1F48
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Oct 2025 16:58:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43F48BF244A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Oct 2025 17:59:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0CA604EF859
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Oct 2025 14:58:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C5B66189F412
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Oct 2025 16:00:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F340422A80D;
-	Mon, 20 Oct 2025 14:58:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 214DE27A12C;
+	Mon, 20 Oct 2025 15:59:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="cnJgu+R8"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="UgN3bR73"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11020121.outbound.protection.outlook.com [52.101.193.121])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6041DE4C2;
-	Mon, 20 Oct 2025 14:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.121
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760972311; cv=fail; b=nuKe6NOaoJlIFv6QNJjpncJWSNbAlcAV5A04fLGnRKYDACzjhMlYG7h2lIs01747/L2h1jbMvCWOHIyBqcfO7sX2p87ihxGeEeD5SA0SAtdSkOXcVac9YYWYymSQGWNg1nHVzysBalDPndftTQfqqQXRJGeKr+s2SUJPd25RX/c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760972311; c=relaxed/simple;
-	bh=plKSlmJ9Upk2TtQeCR9NxfjxCRz7Co9qh5TbKUov64k=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=IC7etTAyEbNvg2EolZnAzCMHnpB6PIV88BDR8cl6chVUAc0az1WtLXjyZ6Zu9l/3a3aHz0gN03svphzdmvMY4geGbQau9SFtinYrtkrmGEcb75puMMs1IFs7v1HeP657Zp3apIP15//REJJgR+Dp8xDRojaQO2gsIdQyWm2OJ1c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=cnJgu+R8; arc=fail smtp.client-ip=52.101.193.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MHMa0pKnBswXaIfu9VpRCGu4NH0GocnbgkhA8OvgU2dKSrsv92Kab58j1ODlOMzwAQOaazx2k+W4k8ome9tX4zgZPoYSPvb8UZZ+ZvhwLl0rSmt+2yC+XfFUTdrXnOtQOer7aenbH16WVyIY9NwtuvidapaJpnRPHILnTEaLBBXlls1mtxMtfikufDU2sgJMjqlwR02C/93f1FjYHBjDBqwYEUQM7gCF2ZeLalMHAvzNT49G83VanzME3w1+ClQ39k0Oelbs9iPU8F7Czvy1sQtd6c/crAKdYY4MuMl+09opgp3e7M0D+xMOJrSytRG70GEtywBkuh8mu6HOCgfgNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pCi4EZRMmAoK5qLqQpIJYHfJhTEnXeDCwutNvAaQ6iA=;
- b=L0vAFgkQHebv3Jxit26GAKsKBtuurQgzvEUajye484CVC0f+sYTBIo/5+zF8KFF1HWPbcOiktSbPcLkLRICJIUPmOygq0CHJTaVCRsGFab8YgSfbxXpuHDgc3kaeX55dDDGo7YkYecOVewg6jDqq4QFO//PUSva7nq3R7SDDSU0r1PaN9naHyP2H1u7WUxJYOceIXDXhVvUo7dhSSfulZxzpffAlYWwGd0Dl39MhJ5RkdpsWuzoi4HgdVdzKD+h1ITJeqEqMILGEuA+x6xjjYTjrtHm3O4Bj9VtIx23xyZ+dRUKr5ISkx7u00a4t23i8CYYdNNWm90Ggpy5FlKa1dw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pCi4EZRMmAoK5qLqQpIJYHfJhTEnXeDCwutNvAaQ6iA=;
- b=cnJgu+R8ytfWsEmz25f6p8R0pa7WtDfLbEixLpGsD4sG2pP4KdctNJKQ2TpbeTGzcfyQXZ2ysF02/TCc7nQVwmsKl/0l7f7PpXoyiAqgZVs0ucZWQjJFUqMRw80fTwvovvefZeLeWD53H13650AvDQyxA5HGbtg60xfmVvRaC7A=
-Received: from SA3PR21MB3867.namprd21.prod.outlook.com (2603:10b6:806:2fc::15)
- by DM4PR21MB3320.namprd21.prod.outlook.com (2603:10b6:8:69::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.4; Mon, 20 Oct
- 2025 14:58:26 +0000
-Received: from SA3PR21MB3867.namprd21.prod.outlook.com
- ([fe80::70ff:4d3:2cb6:92a3]) by SA3PR21MB3867.namprd21.prod.outlook.com
- ([fe80::70ff:4d3:2cb6:92a3%4]) with mapi id 15.20.9275.002; Mon, 20 Oct 2025
- 14:58:26 +0000
-From: Haiyang Zhang <haiyangz@microsoft.com>
-To: Jakub Kicinski <kuba@kernel.org>, Haiyang Zhang
-	<haiyangz@linux.microsoft.com>
-CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, Paul Rosswurm
-	<paulros@microsoft.com>, Dexuan Cui <DECUI@microsoft.com>, KY Srinivasan
-	<kys@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"edumazet@google.com" <edumazet@google.com>, "davem@davemloft.net"
-	<davem@davemloft.net>, "pabeni@redhat.com" <pabeni@redhat.com>, Long Li
-	<longli@microsoft.com>, "ssengar@linux.microsoft.com"
-	<ssengar@linux.microsoft.com>, "ernis@linux.microsoft.com"
-	<ernis@linux.microsoft.com>, "dipayanroy@linux.microsoft.com"
-	<dipayanroy@linux.microsoft.com>, Konstantin Taranov
-	<kotaranov@microsoft.com>, "horms@kernel.org" <horms@kernel.org>,
-	"shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>,
-	"leon@kernel.org" <leon@kernel.org>, "mlevitsk@redhat.com"
-	<mlevitsk@redhat.com>, "yury.norov@gmail.com" <yury.norov@gmail.com>, Shiraz
- Saleem <shirazsaleem@microsoft.com>, "andrew+netdev@lunn.ch"
-	<andrew+netdev@lunn.ch>, "linux-rdma@vger.kernel.org"
-	<linux-rdma@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [EXTERNAL] Re: [PATCH net-next,v2] net: mana: Support HW link
- state events
-Thread-Topic: [EXTERNAL] Re: [PATCH net-next,v2] net: mana: Support HW link
- state events
-Thread-Index: AQHcPVFWD9nsmGKsp0STD2ymhxH2HbTG+nuAgAQumFA=
-Date: Mon, 20 Oct 2025 14:58:26 +0000
-Message-ID:
- <SA3PR21MB38676E685565E2B144C1E1F3CAF5A@SA3PR21MB3867.namprd21.prod.outlook.com>
-References: <1760477209-9026-1-git-send-email-haiyangz@linux.microsoft.com>
- <20251017160541.4ce65ede@kernel.org>
-In-Reply-To: <20251017160541.4ce65ede@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7ddb914f-1a61-4541-bab8-c1cf3be7cc9f;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-10-20T14:57:29Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA3PR21MB3867:EE_|DM4PR21MB3320:EE_
-x-ms-office365-filtering-correlation-id: 5385a5a4-4214-4b9d-1b8e-08de0fe91f7c
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|366016|1800799024|38070700021;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?+V2T9ummH+ki6asOnudrf8gUDfCGiWmwRgEW5EI+YK0pm9Ic8hXCHFGumXl2?=
- =?us-ascii?Q?MDOsU5pTJPXMbuo2QnAB8pNYnNL1whBwHvKIljL/Stuq7qHYDerJqr5gKxX/?=
- =?us-ascii?Q?6eR6yBWAXllzUFOK3CMYrW/uepiHKveH9rxPdgQUwGRF/RtZod7dKty7dVfa?=
- =?us-ascii?Q?6Vuxza3wvZJkziEUIstHM8YbvQIINo59pgiYeyC4Lz1SF2FseIjrtEeliaH3?=
- =?us-ascii?Q?7KyXLAQhl9vMShosECiLjUTZCbOksyZFy8FmmwLiFwMFnrb1PLRAzaWz2mB2?=
- =?us-ascii?Q?dRSypzhu2x+nDEMR/e5e19fjrrs/DG8NRsLYy8n/6giVSMNRBTHG3HFm04PF?=
- =?us-ascii?Q?u8kveKJB73kuz6AcP7985hr2nLwXlkEMHGgX0Ku3KmELDx8ql30GnZAhE4Cn?=
- =?us-ascii?Q?W0Vil3eQB6S9UQFuHFYBaPIQczEc6Sm/FYNlEiWAbmeyK2B+5ym+ELancvvM?=
- =?us-ascii?Q?bGHTjDEQdj1bX543/uqKCIVR+Kzmf5wtkagfPXTs22R+OGODyEwdI9QYTUut?=
- =?us-ascii?Q?AVYyjvwCGd8azGhFBKlD/GwMGgi3jDR4Yvi+NStahU4/N45rqNvQln2TWB6u?=
- =?us-ascii?Q?vm/x1yDXljx4H306Kse8Ghzijwg+ziD76HOAtnFbr1rOaD/PI3Z307OwSY8W?=
- =?us-ascii?Q?RNgnIE7QFeqI+olShwC3EkcqeW8ti+Oyfm145k7C9FyS6eZZagt6UV1e4kCS?=
- =?us-ascii?Q?/WFVg+Zo9FTFRb2PfXFA1sV8LPXMpQz/blBIqWLtN/UOZ9+hqw6fLH3tP+Ex?=
- =?us-ascii?Q?UCnTjEULtQNcqciT7g3Z9RVCf1nIS2jK+E6qctEN13yxLbf3jI6wlXp0qg7e?=
- =?us-ascii?Q?JWAjkSeEWpFlUalL28MbVflzZ56x6WGYu2gsAhp/ETWfDbJFMi8WebN9fq1S?=
- =?us-ascii?Q?n1Cj3y5viOmMaGZcsaZs4A0ARj74Vv+DDBKIp1UNdR+e6yhybGDU96HmoaSF?=
- =?us-ascii?Q?qIdoqI9nIMYY/hRUhVi8oSzbNbjh20LGa65sAg41HyjWV3YZbdBqijbaN1Jl?=
- =?us-ascii?Q?j4Q8Ytj5PpFTfEVxk91lu6A2KPsnKToD/OTdpHirB6ickUVKrS9b/gJex6x4?=
- =?us-ascii?Q?AQLLGW4e014xnRbdOR8iLDie+MwWhdPQBtK57NbAUfciMjOlG+KNtIhfQ2hk?=
- =?us-ascii?Q?8VD+MbgyomsN63kMzRGjBmeY2VVusuRVhrnvFa5oHmnSdOqfQ5xvo1bQ/qIt?=
- =?us-ascii?Q?tOLvefkToQxbVw2ZL0bsycC9h9GYN9X/nnOZ+HGXnXCNPYLRYJjDeTi05viC?=
- =?us-ascii?Q?M82sKNRIMAA8dnWWqSiMp+e3WWpOYEhoV0j189TVVZatREvKVHiz/SJEO3g3?=
- =?us-ascii?Q?75anDx8+uQvsaW4/toBgXhxFRWXnBo6lnvB/eKwWMFJfPUc8aX7DEe6ArG1H?=
- =?us-ascii?Q?UZjHDYhvv5nb6VvNbwqFS4h29/6L5cwuUfxNG9hZrLHpN9Atk+6jf8KuMkNG?=
- =?us-ascii?Q?L2PDFh0yswIdeXmFx0SAsmjgp4zzB+MxvK23CiQXNnf2cIfxETWW54zdk/l4?=
- =?us-ascii?Q?2ABZ8NFHB2RPH5CMbRHwfbFPwPLS6BXTBbuc?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR21MB3867.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(38070700021);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?sKffxg4mHLipDg7yytJCb+MIGdnyhx+Hn4994n5Vyu+mCBg+tahele34a4WB?=
- =?us-ascii?Q?SQC/8+Lhpv8sJzH1x1lRPkP+stP6zOJ9sZJCpDuuDUcnQnpulMGzpCZS4NTV?=
- =?us-ascii?Q?L6jbTkbWiQX2mOAv3qlKTbamHJbuuDAbTeZ8MZ3OL5qe4RWv3ANWXREZMJun?=
- =?us-ascii?Q?KGE91wn2f2An/GBVwvnaOB/ShV7PW8RPToIq3zN3uT3jP0sMZA9oKZ0njHoM?=
- =?us-ascii?Q?XBnGmMECJP5iXwGzuqVB7RyZTXOngGjfb4rsfgsLL1B45W7XVj5BUBJx9LdA?=
- =?us-ascii?Q?QgyGvviKqpNoD89Aq79EJ5N3WHzZhukfMBUs3lwQeGeDlzWgqgPkxLDn03y5?=
- =?us-ascii?Q?egyYSxQjPQI+hxo7XM9XbMC+zYD5yMlHBK17AI7YqH0i0s02YIpj6ppLj/c9?=
- =?us-ascii?Q?fDHloFe30frvs+8xSlXeCwEiwjB0zu6PVrspmXneuFSVSSPURz/Ia134GoL3?=
- =?us-ascii?Q?e13eptD7AG2Wqm9c3Fxm0uF6TZZ73Qu7bh3U5zdldI1jsRt5oN8a65sYF0QT?=
- =?us-ascii?Q?79VNxrI9krRMUqQcKAWGzhSN/iHR/Cg4rCJkPJ7wUaa4yvm7J0CfxNPDTQCb?=
- =?us-ascii?Q?weagSAqkMP7abmoU+m6dGeLLbgM7CNvJVDUJzHPH4+97zUU2gYo6r14JB4Cg?=
- =?us-ascii?Q?XaOcurBgcPYHvg0AA87U1nOULkWy8feB9kaVTBgz5kgQ/6na4Meb7fYTE3JG?=
- =?us-ascii?Q?tYDgaIk5FEC+OWebBEoOCuX3IuEYPm1Qg4Z+RJ2m9H5k6zuzx3dFrlTfD7S3?=
- =?us-ascii?Q?snj4dLTuoOwsciG6OC8+O3x2oXrwOLYXHPRUuLg/40KMyNLj5Knz62X+RkXY?=
- =?us-ascii?Q?OD20rSmgrqEX3kwvO0yHCo3+0gkKkP0PCzys7Zxz/9QuNQwURyxmgUnqWPZA?=
- =?us-ascii?Q?BZd/j7efNUxTfJhcfFLJriZGDa02IMY/7uaVB/xFPxjz0X+pXRTNImvv72fG?=
- =?us-ascii?Q?qGQnIo1OQtKs9n6lkyx2fS8MkeHrlry7OmQHusXiJ1y2Sqi1rO4dJVI/rQ7R?=
- =?us-ascii?Q?foeAeX/Vq7+DNhnKEnlAgEXSoIMnPB1LsBOKEjvl14Q7Tog8gdkNK+9baGTl?=
- =?us-ascii?Q?6CtbdZfLRAzCW4AT5i8wulEeHauTsmpdZsvCWmJ68GJi1kkSISUOrsw3BRpI?=
- =?us-ascii?Q?N/nI4pOCC37vrIzPI4W4lroqj1iJjdAWuG+2NnaQ3sL55xq0iMrfcdOTi8b1?=
- =?us-ascii?Q?EEc1A7HnLjrandfJK2BZT6c9iU2FIl9VBKxj/bbokacQBW3dFkKi3EDxuC23?=
- =?us-ascii?Q?a/2bBOEc2NeV+DIYshCTlllbOPku+Uu+AnwMfYchxrpA8pYXo2bhseCaqevL?=
- =?us-ascii?Q?KIaBp57eGWoA0I/IKl/y3/4N3kOTtHJm2wi5SAn7UGSwYmpHgZI9aDYGDcwR?=
- =?us-ascii?Q?r+Ql+7KECZr8mar6ZCFoUPyb4BZAzjnwBXcgLAoeqIyODP9seInbzmgcieYa?=
- =?us-ascii?Q?nrWkSlS+NRN5mC/ZmWlU1WVUSeSWU8+nasMmWx+nRhN7JQkUe0ixTy3R3de0?=
- =?us-ascii?Q?76wOnnzIxLK2n+ifp2BY9IucukgLZFS3+RyN4nRKXZaw12/3/kWBNvnAkfzE?=
- =?us-ascii?Q?SY/po9AlDTQoGRE9JvIaia3WxGWsCHSF9afqhH6q?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5543D24BD1A;
+	Mon, 20 Oct 2025 15:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760975987; cv=none; b=hPgIsHSQFpwoeRrbvFrkQs148RajDBEC1L3YsWaaeuXwUqO0IrlBAR2oD6mA3MdiZ0z8byJLwwY0OGn68sNDrNXvgH1Uow3MZVHxWrNUj+tQ9vMg5JToUTIxHfl5/YxkHkiNA5cykn1CrNJx2v69dRPGZAO+DWe5ESGe89BuLDc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760975987; c=relaxed/simple;
+	bh=MbAwS0dUmHYIgBfk0CMgeryU+UcEXGpLkf27dibS5JM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rtBkJZVX/Ivf6vS2DQEcAFj9VuNApgYJXZ+ED+U5ybMAafkImwV6m/JKm57gXfEQBcIm6s+2Q4jdfWPp4E0EmL4Imlmy0O/Ns6ntXLeDBwMkDgOQkAm3w3fswdAYIMgy/LtGsEEGA7Pw7TL1MFRwyFfGCXBn71j02HAEDzar7ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=UgN3bR73; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1044)
+	id 42988201DAC2; Mon, 20 Oct 2025 08:59:39 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 42988201DAC2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1760975979;
+	bh=ubZvVoSGl/HCTU2/w/rpJcDAr4nGo7SIDhdJ8b//wG0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UgN3bR731qec6npeyWKB008Et78dtpOMhFR/5D4qhs3Dy9lXCelIFlXJwnMIN/nyL
+	 tKxQYJtrSO8jyYVGUc6Wr2y8qKDcRdxn/g/1zT0C0vYT5gyGcCV1jK10p87cvxFN+0
+	 Pg2U19n/FraL7fXIYkXgbEOIM7wZz6BgHWHf3b/I=
+Date: Mon, 20 Oct 2025 08:59:39 -0700
+From: Praveen Paladugu <prapal@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+	"arnd@arndb.de" <arnd@arndb.de>,
+	"anbelski@linux.microsoft.com" <anbelski@linux.microsoft.com>,
+	"easwar.hariharan@linux.microsoft.com" <easwar.hariharan@linux.microsoft.com>,
+	"nunodasneves@linux.microsoft.com" <nunodasneves@linux.microsoft.com>,
+	"skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>
+Subject: Re: [PATCH v2 2/2] hyperv: Enable clean shutdown for root partition
+ with MSHV
+Message-ID: <20251020155939.GA17482@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20251014164150.6935-1-prapal@linux.microsoft.com>
+ <20251014164150.6935-3-prapal@linux.microsoft.com>
+ <SN6PR02MB4157FBBE5B77C65B024D3589D4E9A@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR21MB3867.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5385a5a4-4214-4b9d-1b8e-08de0fe91f7c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Oct 2025 14:58:26.2946
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: E3/DYmZGimNWY0ivg2Mjhep8ZKKVv5eTGc6atVxdHt864i36o7N7Nwhvtf+Mow3D+Is+gGdaubd66WaWOQU3dQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR21MB3320
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB4157FBBE5B77C65B024D3589D4E9A@SN6PR02MB4157.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-
-
-> -----Original Message-----
-> From: Jakub Kicinski <kuba@kernel.org>
-> Sent: Friday, October 17, 2025 7:06 PM
-> To: Haiyang Zhang <haiyangz@linux.microsoft.com>
-> Cc: linux-hyperv@vger.kernel.org; netdev@vger.kernel.org; Haiyang Zhang
-> <haiyangz@microsoft.com>; Paul Rosswurm <paulros@microsoft.com>; Dexuan
-> Cui <DECUI@microsoft.com>; KY Srinivasan <kys@microsoft.com>;
-> wei.liu@kernel.org; edumazet@google.com; davem@davemloft.net;
-> pabeni@redhat.com; Long Li <longli@microsoft.com>;
-> ssengar@linux.microsoft.com; ernis@linux.microsoft.com;
-> dipayanroy@linux.microsoft.com; Konstantin Taranov
-> <kotaranov@microsoft.com>; horms@kernel.org;
-> shradhagupta@linux.microsoft.com; leon@kernel.org; mlevitsk@redhat.com;
-> yury.norov@gmail.com; Shiraz Saleem <shirazsaleem@microsoft.com>;
-> andrew+netdev@lunn.ch; linux-rdma@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Subject: [EXTERNAL] Re: [PATCH net-next,v2] net: mana: Support HW link
-> state events
->=20
-> On Tue, 14 Oct 2025 14:26:49 -0700 Haiyang Zhang wrote:
-> > From: Haiyang Zhang <haiyangz@microsoft.com>
-> >
-> > Handle the HW link state events received from HW channel, and
-> > set the proper link state, also stop/wake queues accordingly.
->=20
-> Why do you have to stop / start the queues? I think it's unusual.
-> Let the packets get dropped, sending out potentially old packets
-> when link comes back is not going to make anyone happier.
-Will do.
-
->=20
-> > +static void mana_link_state_handle(struct work_struct *w)
+On Thu, Oct 16, 2025 at 07:29:06PM +0000, Michael Kelley wrote:
+> From: Praveen K Paladugu <prapal@linux.microsoft.com> Sent: Tuesday, October 14, 2025 9:41 AM
+> > 
+> > When a shutdown is initiated in the root partition without configuring
+> > sleep states, the call to `hv_call_enter_sleep_state` fails. In such cases
+> > the root falls back to using legacy ACPI mechanisms to poweroff. This call
+> > is intercepted by MSHV and will result in a Machine Check Exception (MCE).
+> > 
+> > Root panics with a trace similar to:
+> > 
+> > [   81.306348] reboot: Power down
+> > [   81.314709] mce: [Hardware Error]: CPU 0: Machine Check Exception: 4 Bank 0: b2000000c0060001
+> > [   81.314711] mce: [Hardware Error]: TSC 3b8cb60a66 PPIN 11d98332458e4ea9
+> > [   81.314713] mce: [Hardware Error]: PROCESSOR 0:606a6 TIME 1759339405 SOCKET 0 APIC 0 microcode ffffffff
+> > [   81.314715] mce: [Hardware Error]: Run the above through 'mcelog --ascii'
+> > [   81.314716] mce: [Hardware Error]: Machine check: Processor context corrupt
+> > [   81.314717] Kernel panic - not syncing: Fatal machine check
+> > 
+> > To prevent this, properly configure sleep states within MSHV, allowing
+> > the root partition to shut down cleanly without triggering a panic.
+> > 
+> > Signed-off-by: Praveen K Paladugu <prapal@linux.microsoft.com>
+> > Co-developed-by: Anatol Belski <anbelski@linux.microsoft.com>
+> > Signed-off-by: Anatol Belski <anbelski@linux.microsoft.com>
+> > ---
+> >  arch/x86/hyperv/hv_init.c       |   7 ++
+> >  arch/x86/include/asm/mshyperv.h |   1 +
+> >  drivers/hv/hv_common.c          | 119 ++++++++++++++++++++++++++++++++
+> >  3 files changed, 127 insertions(+)
+> > 
+> > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> > index afdbda2dd7b7..57bd96671ead 100644
+> > --- a/arch/x86/hyperv/hv_init.c
+> > +++ b/arch/x86/hyperv/hv_init.c
+> > @@ -510,6 +510,13 @@ void __init hyperv_init(void)
+> >  		memunmap(src);
+> > 
+> >  		hv_remap_tsc_clocksource();
+> > +		/*
+> > +		 * The notifier registration might fail at various hops.
+> > +		 * Corresponding error messages will land in dmesg. There is
+> > +		 * otherwise nothing that can be specifically done to handle
+> > +		 * failures here.
+> > +		 */
+> > +		(void)hv_sleep_notifiers_register();
+> >  	} else {
+> >  		hypercall_msr.guest_physical_address = vmalloc_to_pfn(hv_hypercall_pg);
+> >  		wrmsrq(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
+> > diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> > index abc4659f5809..fb8d691193df 100644
+> > --- a/arch/x86/include/asm/mshyperv.h
+> > +++ b/arch/x86/include/asm/mshyperv.h
+> > @@ -236,6 +236,7 @@ int hyperv_fill_flush_guest_mapping_list(
+> >  void hv_apic_init(void);
+> >  void __init hv_init_spinlocks(void);
+> >  bool hv_vcpu_is_preempted(int vcpu);
+> > +int hv_sleep_notifiers_register(void);
+> >  #else
+> >  static inline void hv_apic_init(void) {}
+> >  #endif
+> > diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+> > index e109a620c83f..cfba9ded7bcb 100644
+> > --- a/drivers/hv/hv_common.c
+> > +++ b/drivers/hv/hv_common.c
+> > @@ -837,3 +837,122 @@ const char *hv_result_to_string(u64 status)
+> >  	return "Unknown";
+> >  }
+> >  EXPORT_SYMBOL_GPL(hv_result_to_string);
+> > +
+> > +#if IS_ENABLED(CONFIG_ACPI)
+> > +/*
+> > + * Corresponding sleep states have to be initialized in order for a subsequent
+> > + * HVCALL_ENTER_SLEEP_STATE call to succeed. Currently only S5 state as per
+> > + * ACPI 6.4 chapter 7.4.2 is relevant, while S1, S2 and S3 can be supported.
+> > + *
+> > + * ACPI should be initialized and should support S5 sleep state when this method
+> > + * is called, so that it can extract correct PM values and pass them to hv.
+> > + */
+> > +static int hv_initialize_sleep_states(void)
 > > +{
-> > +	struct mana_port_context *apc;
-> > +	struct mana_context *ac;
-> > +	struct net_device *ndev;
-> > +	bool link_up;
-> > +	int i;
+> > +	u64 status;
+> > +	unsigned long flags;
+> > +	struct hv_input_set_system_property *in;
+> > +	acpi_status acpi_status;
+> > +	u8 sleep_type_a, sleep_type_b;
 > > +
-> > +	ac =3D container_of(w, struct mana_context, link_change_work);
+> > +	if (!acpi_sleep_state_supported(ACPI_STATE_S5)) {
+> > +		pr_err("%s: S5 sleep state not supported.\n", __func__);
+> > +		return -ENODEV;
+> > +	}
 > > +
-> > +	if (ac->mana_removing)
-> > +		return;
+> > +	acpi_status = acpi_get_sleep_type_data(ACPI_STATE_S5,
+> > +						&sleep_type_a, &sleep_type_b);
+> > +	if (ACPI_FAILURE(acpi_status))
+> > +		return -ENODEV;
 > > +
-> > +	rtnl_lock();
+> > +	local_irq_save(flags);
+> > +	in = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> > +	memset(in, 0, sizeof(*in));
 > > +
->=20
-> > @@ -3500,6 +3556,10 @@ void mana_remove(struct gdma_dev *gd, bool
-> suspending)
-> >  	int err;
-> >  	int i;
-> >
-> > +	ac->mana_removing =3D true;
+> > +	in->property_id = HV_SYSTEM_PROPERTY_SLEEP_STATE;
+> > +	in->set_sleep_state_info.sleep_state = HV_SLEEP_STATE_S5;
+> > +	in->set_sleep_state_info.pm1a_slp_typ = sleep_type_a;
+> > +	in->set_sleep_state_info.pm1b_slp_typ = sleep_type_b;
 > > +
-> > +	cancel_work_sync(&ac->link_change_work);
->=20
-> Looks racy, the work needs @ac to check the ->mana_removing but
-> mana_remove() frees @ac. Just use disable_work_sync() please.
+> > +	status = hv_do_hypercall(HVCALL_SET_SYSTEM_PROPERTY, in, NULL);
+> > +	local_irq_restore(flags);
+> > +
+> > +	if (!hv_result_success(status)) {
+> > +		hv_status_err(status, "\n");
+> > +		return hv_result_to_errno(status);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int hv_call_enter_sleep_state(u32 sleep_state)
+> > +{
+> > +	u64 status;
+> > +	int ret;
+> > +	unsigned long flags;
+> > +	struct hv_input_enter_sleep_state *in;
+> > +
+> > +	ret = hv_initialize_sleep_states();
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	local_irq_save(flags);
+> > +	in = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> > +	in->sleep_state = sleep_state;
+> > +
+> > +	status = hv_do_hypercall(HVCALL_ENTER_SLEEP_STATE, in, NULL);
+> 
+> If this hypercall succeeds, does the root partition (which is the caller) go
+> to sleep in S5, such that the hypercall never returns? If that's not the case,
+> what is the behavior of this hypercall?
+>
+This hypercall returns to the kernel when the CPU wakes up the next
+time.
 
-Good idea. Will update the patch.
+> > +	local_irq_restore(flags);
+> > +
+> > +	if (!hv_result_success(status)) {
+> > +		hv_status_err(status, "\n");
+> > +		return hv_result_to_errno(status);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int hv_reboot_notifier_handler(struct notifier_block *this,
+> > +				      unsigned long code, void *another)
+> > +{
+> > +	int ret = 0;
+> > +
+> > +	if (code == SYS_HALT || code == SYS_POWER_OFF)
+> > +		ret = hv_call_enter_sleep_state(HV_SLEEP_STATE_S5);
+> 
+> If hv_call_enter_sleep_state() never returns, here's an issue. There may be
+> multiple entries on the reboot notifier chain. For example,
+> mshv_root_partition_init() puts an entry on the reboot notifier chain. At
+> reboot time, the entries are executed in some order, with the expectation
+> that all entries will be executed prior to the reboot actually happening. But
+> if this hypercall never returns, some entries may never be executed.
+> 
+> Notifier chains support a notion of priority to control the order in
+> which they are executed, but that priority isn't set in hv_reboot_notifier
+> below, or in mshv_reboot_nb. And most other reboot notifiers throughout
+> Linux appear to not set it. So the ordering is unspecified, and having
+> this notifier never return may be problematic.
+> 
+Thanks for the detailed explanation Michael!
 
-Thanks,
-- Haiyang
+As I mentioned above, this hypercall returns to the kernel, so the rest
+of the entries in the notifier chain should continue to execute.
+
+> > +
+> > +	return ret ? NOTIFY_DONE : NOTIFY_OK;
+> > +}
+> > +
+> > +static struct notifier_block hv_reboot_notifier = {
+> > +	.notifier_call  = hv_reboot_notifier_handler,
+> > +};
+> > +
+> > +static int hv_acpi_sleep_handler(u8 sleep_state, u32 pm1a_cnt, u32 pm1b_cnt)
+> > +{
+> > +	int ret = 0;
+> > +
+> > +	if (sleep_state == ACPI_STATE_S5)
+> > +		ret = hv_call_enter_sleep_state(HV_SLEEP_STATE_S5);
+> > +
+> > +	return ret == 0 ? 1 : -1;
+> > +}
+> > +
+> > +static int hv_acpi_extended_sleep_handler(u8 sleep_state, u32 val_a, u32 val_b)
+> > +{
+> > +	return hv_acpi_sleep_handler(sleep_state, val_a, val_b);
+> > +}
+> 
+> Is this function needed? The function signature is identical to hv_acpi_sleep_handler().
+> So it seems like acpi_os_set_prepare_extended_sleep() could just use
+> hv_acpi_sleep_handler() directly.
+> 
+Upon further investigation, I discovered that extended sleep is only
+supported on platforms with ACPI_REDUCED_HARDWARE.
+
+As these patches are targetted at X86, above does not really apply. I
+will drop this handler in next version.
+
+> > +
+> > +int hv_sleep_notifiers_register(void)
+> > +{
+> > +	int ret;
+> > +
+> > +	acpi_os_set_prepare_sleep(&hv_acpi_sleep_handler);
+> > +	acpi_os_set_prepare_extended_sleep(&hv_acpi_extended_sleep_handler);
+> 
+> I'm not clear on why these handlers are set. If the hv_reboot_notifier is
+> called, are these ACPI handlers ever called? Or are these to catch any cases
+> where the hv_reboot_notifier is somehow bypassed? Or maybe I'm just
+> not understanding something .... :-)
+>
+
+I am trying to trace these calls. I will keep you posted with my
+findings.
+
+> > +
+> > +	ret = register_reboot_notifier(&hv_reboot_notifier);
+> > +	if (ret)
+> > +		pr_err("%s: cannot register reboot notifier %d\n",
+> > +			__func__, ret);
+> > +
+> > +	return ret;
+> > +}
+> > +#endif
+> 
+> I'm wondering if all this code belongs in hv_common.c, since it is only needed
+> for Linux in the root partition. Couldn't it go in mshv_common.c? It would still
+> be built-in code (i.e., not in a loadable module), but only if CONFIG_MSHV_ROOT
+> is set.
+>
+
+This sounds reasonable. I will discuss this internally and get back you.
+
+> Michael
+> 
+> > --
+> > 2.51.0
+> > 
 
