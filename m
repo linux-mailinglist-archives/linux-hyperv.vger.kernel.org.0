@@ -1,83 +1,82 @@
-Return-Path: <linux-hyperv+bounces-7287-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7289-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1E69BF9508
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Oct 2025 01:49:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B15BBF9519
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Oct 2025 01:49:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7AFEE3A9180
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Oct 2025 23:49:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B31F318C830A
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Oct 2025 23:50:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F15F125228D;
-	Tue, 21 Oct 2025 23:47:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7A052ED17C;
+	Tue, 21 Oct 2025 23:47:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="isRGfygX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WWc1v91H"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FD042DAFC0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1003D2D0C62
 	for <linux-hyperv@vger.kernel.org>; Tue, 21 Oct 2025 23:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761090431; cv=none; b=CTMG65163KMWqtuJgF4YcQgFOZVKKhtrjggaSCrurtmfon762APR2f0H01QR+nBNC+NI2zZ2RUbgmqHyiigC7Oez5XOG5Qp8uEM9H1UQdEZXofTr6fAwKNo0foUfVf6GsU4PRMXPrLjI/zedMvz2hs23VYi7XgHAbUyrkRd+Kgw=
+	t=1761090434; cv=none; b=g0xfD+SGNszYQCEAt+2YnGNK0CJjTT6SqvC4zmACSA/duQTNxswn00aqvUeA72xpExwtQd/khmu91Ptj2BLBXaDsvM/6dc9MyQR/8OWOiOmKMXp8Zo8NKDfLHKKsORjnU/g/lfnSgE48LsZ6U8XlE9QW5CgnpycpyqQb2JsU+yQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761090431; c=relaxed/simple;
-	bh=WLRIEtshDzL84rzcliCGLW0ha/QAvCdjX7baGObipwo=;
+	s=arc-20240116; t=1761090434; c=relaxed/simple;
+	bh=bLgJRj0B3l4I9LRxTwg4ipTz6i5xRpftUXJZZBIn7VI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bFgeRlsYBHX5MiW9Omm1/d63razT2rCt+aY8/9By2D6Al7Ii0a/lpcnh43IBSwkj/DcT/2qglO7+h5pdgH5B8nLbiHnsCf0ruUf0mlwaNaTUN73C1pQlkwFwrKjDCAdrWLGYavtM/1xDG5qbLGQt9Ie7ZJSQlOfjBef1OQrUvnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=isRGfygX; arc=none smtp.client-ip=209.85.214.180
+	 In-Reply-To:To:Cc; b=oKtMMjZGK/D7iy5SZ4Bpw4PTltnoK3d4VXA90OxhwOCG1MxuT+NteqxVh/jwhhpvI7Kb8xsW+bTRewvuquMLmXYtEX6asJnkYtvG9sphki/jvs83AwrSDMZUxBDKcUGHQ4Wv6j9WhzjYyDlUEW423wyYsOfwggUYJJMEMrSF4yA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WWc1v91H; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-29226bc4bafso43659885ad.0
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-782023ca359so6187449b3a.2
         for <linux-hyperv@vger.kernel.org>; Tue, 21 Oct 2025 16:47:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761090428; x=1761695228; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1761090429; x=1761695229; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=qRr57c0ypvpAqUCBQClyFAT6EHQRTScPRNGmNmK0UxI=;
-        b=isRGfygX3j3kiY9X/b4OtfvTwWRvJM/VJ6cfmc/v7sH/L+5YBWxqGOIarwcO8xCJyk
-         QXIiM/pCYVIbiAujF9qK//A3Sj006l9IYbDfDgPXINjzmRdchl5LCHumRxFKPLbkiGG3
-         OGYMruJUyIqmbFHhlMtARC0wST+P1gYQCcIC/KCU9iOxMiLpPr7+I5dUd0aawRVWFqNL
-         nM43YRXl/+Rv9Jf3iChLrMf91XTatMhHShIJOHp/Outx5iIbPeS1EGt1O0RRKYHZH5kI
-         IGSs2qXy0N3M2sd1aOEaWzv9bLkQcUwy3Ksu/VePPRkbhDJrncH1Cx9rk899OC9MP+Hr
-         431g==
+        bh=ysnAf5Q6/F37oVxnktahtq8MWGwMsYn3elO8YpXbx58=;
+        b=WWc1v91HrI0aX0IVlRuS9CMwS78uNFi5IhWxvqoBKtmul+3fGRFloPkHbfh/QwQnqE
+         Q7JFpeMIHePBAcMlQMy0lN88yIXcm2r7p4J6Xtv8PVqfgsB7o5ZsgCxjU+HwiTYsAdry
+         S/WT2cxKpMj57Ta/9D7Z5+jt/0Wa/3MbWkKDDFGoSy1z/rlcH0D3dTOgFeN8ER67qf2S
+         Pb26dukHqsR/6lZ/tDbLmJ6f6TlbCA2vnRIGJa4Cvc4iuKZOnAOU3F2IyKxLy4rYaV/C
+         JOv6BDAFJbZnyWoPrKoOzqkaAFluha74bd3zhwCTbcicdLM232cKgi3PjhORkIbIvn3J
+         844g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761090428; x=1761695228;
+        d=1e100.net; s=20230601; t=1761090429; x=1761695229;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qRr57c0ypvpAqUCBQClyFAT6EHQRTScPRNGmNmK0UxI=;
-        b=j8Wz+xOWbArq337AYIdKEuMvRA4qqp5M7JmGbNTcsImeQpc27zQUUBKhpKlXk5OtRz
-         Hd1yzMBAPIrWH4rTpViHhUaDCeDbYFNbXWUccq0bqgN/ZjGQLynU+wxc+lMXhkn7V0nf
-         3C/YTBiaWs8vWZpXFxAq5kb+kWZgm0nxmNwi+kL6wEzLhHWfeAcw8j91u7aWSN8swGbQ
-         mAAeFfCxOVe5bg+kyR/a2uQwL4rM+E1HHI/fFySHsKB4lKPt8TnaQRFZR5ZRW2wrPKnq
-         JBaLtY2/HlhnQbYFPPOovwUMk/5xcfITB++7SOOzcYh6Mhsty2fav37LwSyCYm3rGaEN
-         t8gg==
-X-Forwarded-Encrypted: i=1; AJvYcCVtfBaleUmg14tO7ksC50+BcG6QJZdGc2TK83bB9BPoM8Ml5wSq7mt//O26II5vGS8Edk5gAurnQ1G29bs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywk6MAxY+8HI5L01N9fuZpP2tabkCeNg4nApGPdWz+0BNhzstqw
-	H6m7EuWTH4dqK4GXjAOx9IVqk4rf/RnQYSLmJuRMnmWM4iMwbdiBO3qu
-X-Gm-Gg: ASbGncubQptkrSCXTPv5sIH8V3BfZ2MDUvqIBFDEiWH4qZa6hZ+BbNEuJT/tgAW3MuY
-	Xe2CatkJMduwYgwkvbdqz5CaAQfTXk32UGU9aZ8DzdwiL44CBUnTrEvuJSBiE67iRm7sIDVienj
-	So5SCmOSfkvUOO2lGf7YuQwJAW9KKhnsXT375Ke6c0lYU9Y42W+ydNN8OBP48PEICMc2pnr3z8A
-	wPnWTu1GmOHXgY0ssQwdN/C7hUSEz2OdhRtPfmEgUSd6EQDoUVk+yCXxzd8KWGADpJk8uHx/cw0
-	eyDsdmQbJHEBs/fvH5TBOPWyg8SYtSIg9no2jy8y7xYMgkk2abw2ingVm3uuRXySiPW6RjnPFOo
-	JNzd+boK77dcvgWGFbr8unW8rC8rvnl9pLpG8u8xvAEX+zmFJKi6OXoOziXLUi47MLjXLPd2gIA
-	==
-X-Google-Smtp-Source: AGHT+IGw80QlQNTM0vsCWt4Xrwj7+OMB8f2A+GUNehs8ToYoF6rhSNtapD7Jyv42u/TS1+BhlWruNw==
-X-Received: by 2002:a17:902:ea03:b0:28e:7567:3c45 with SMTP id d9443c01a7336-290c9c897damr245660295ad.9.1761090427698;
-        Tue, 21 Oct 2025 16:47:07 -0700 (PDT)
-Received: from localhost ([2a03:2880:2ff:71::])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-292472197desm120683495ad.115.2025.10.21.16.47.07
+        bh=ysnAf5Q6/F37oVxnktahtq8MWGwMsYn3elO8YpXbx58=;
+        b=HTyewOlN4S8WAw9yydwcPRgoHRzNB6GvVou45U8TvFMSBOukUH3SNfFCFW6EcAk9dE
+         nuLR9PioXNWe8CQ2zANCOTTLju6I5MOTjd77qcJKP0TSj7lITagNW7bmxBwyCRAZiS6x
+         KQQuR3neJWe3+OpHhqR2LKDth9veFNRDsynccEipOl7s4aIC1OQt7fntq6qy/Qqf0rvl
+         mf01Ma9bflHXdAWUq1bicWy535YgVo7MpVsiPGbAytDJF7tL4AqDK1vuNTnLA+JYAN9I
+         Q2hqbI2SScQ+OdQLK08MvnhIJjuKtpVtD9tsY4isPL9l4f825KxiMyL00mfRUrX+xQi8
+         SjvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUF5Y/HoAj9EdlJg26mIH0EdoqfaPuyqUuy3bDaWGDYozKWoZYhhmmVYxxmKgo4OTBUmSOgKPDT20P3Gf4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZWSyaIPE3Zkg2njTquswc/wGag1KZUxg6Wa7EhD1gyMFljh7L
+	Mm/6qHtNAZ3IqOCuwa8EIa84/SGes47ak/hxOYmujrx+HWV6k8mdiELJ
+X-Gm-Gg: ASbGnct2EfqRJhNLPurWqFubHb+8QurYNl/G+qW3aJ4/DZ9nQsLJx2SAC6O6fr2wsL/
+	Vk4zmQsIj+HbuXaP9VuslyXU2cY+EpwOXB62dxsxL1XukBkb3mqMA4sGjv77oiQSdunXNJ5N2yD
+	nDLQS2KX2XaJfzW6VDwPU1WPjEeOrRmZfXongcpTaRqARPKpi+ZS40cOzX533sMRUxcg24CxWHp
+	hkHbnIdA953XszhD0V44ystaes2Z/EPCUcdtE891eWxrZdu1hpILWlepRKnoAUBw9qJ2C19bjrW
+	IGJSSQ+QcFdQUOGCz2rvdrTRe5n3AZT0XEQUsAJNk1aL1oxoC6p/zIiFuD4rpYvwkuwhSF/SCO+
+	4UO4GBbCX2aGzByavbOLrfdxO8XCRouCklsfCN/GStdvkVdNlGsdphfLL0AW2fQhWmrxlOrl5
+X-Google-Smtp-Source: AGHT+IESeY2Sh9LyXvlNWSBcoIwZ1r/2aMHLIXNnNKYEULemMRlMzJHh0W4ok0D91ZgsuVhYMMaokA==
+X-Received: by 2002:a05:6a20:1611:b0:2ae:dee:4ba with SMTP id adf61e73a8af0-334a85bb208mr23055148637.50.1761090428628;
+        Tue, 21 Oct 2025 16:47:08 -0700 (PDT)
+Received: from localhost ([2a03:2880:2ff:2::])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7a22ff5d76bsm12490315b3a.33.2025.10.21.16.47.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Oct 2025 16:47:07 -0700 (PDT)
+        Tue, 21 Oct 2025 16:47:08 -0700 (PDT)
 From: Bobby Eshleman <bobbyeshleman@gmail.com>
-Date: Tue, 21 Oct 2025 16:46:52 -0700
-Subject: [PATCH net-next v7 09/26] selftests/vsock: make
- wait_for_listener() work even if pipefail is on
+Date: Tue, 21 Oct 2025 16:46:53 -0700
+Subject: [PATCH net-next v7 10/26] selftests/vsock: reuse logic for
+ vsock_test through wrapper functions
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -86,7 +85,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251021-vsock-vmtest-v7-9-0661b7b6f081@meta.com>
+Message-Id: <20251021-vsock-vmtest-v7-10-0661b7b6f081@meta.com>
 References: <20251021-vsock-vmtest-v7-0-0661b7b6f081@meta.com>
 In-Reply-To: <20251021-vsock-vmtest-v7-0-0661b7b6f081@meta.com>
 To: Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>, 
@@ -110,57 +109,181 @@ X-Mailer: b4 0.13.0
 
 From: Bobby Eshleman <bobbyeshleman@meta.com>
 
-Save/restore pipefail to not mistakenly trip the if-condition
-in wait_for_listener().
+Add wrapper functions vm_vsock_test() and host_vsock_test() to invoke
+the vsock_test binary. This encapsulates several items of repeat logic,
+such as waiting for the server to reach listening state and
+enabling/disabling the bash option pipefail to avoid pipe-style logging
+from hiding failures.
 
-awk doesn't gracefully handle SIGPIPE with a non-zero exit code, so grep
-exiting upon finding a match causes false-positives when the pipefail
-option is used. This will enable pipefail usage, so that we can losing
-failures when piping test output into log() functions.
-
-Fixes: a4a65c6fe08b ("selftests/vsock: add initial vmtest.sh for vsock")
 Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
 ---
- tools/testing/selftests/vsock/vmtest.sh | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ tools/testing/selftests/vsock/vmtest.sh | 131 ++++++++++++++++++++++----------
+ 1 file changed, 92 insertions(+), 39 deletions(-)
 
 diff --git a/tools/testing/selftests/vsock/vmtest.sh b/tools/testing/selftests/vsock/vmtest.sh
-index 561600814bef..ec3ff443f49a 100755
+index ec3ff443f49a..29b36b4d301d 100755
 --- a/tools/testing/selftests/vsock/vmtest.sh
 +++ b/tools/testing/selftests/vsock/vmtest.sh
-@@ -243,6 +243,7 @@ wait_for_listener()
- 	local port=$1
- 	local interval=$2
- 	local max_intervals=$3
-+	local old_pipefail
- 	local protocol=tcp
- 	local pattern
- 	local i
-@@ -251,6 +252,13 @@ wait_for_listener()
+@@ -283,7 +283,78 @@ EOF
  
- 	# for tcp protocol additionally check the socket state
- 	[ "${protocol}" = "tcp" ] && pattern="${pattern}0A"
+ host_wait_for_listener() {
+ 	wait_for_listener "${TEST_HOST_PORT_LISTENER}" "${WAIT_PERIOD}" "${WAIT_PERIOD_MAX}"
++}
 +
-+	# 'grep -q' exits on match, sending SIGPIPE to 'awk', which exits with
-+	# an error, causing the if-condition to fail when pipefail is set.
-+	# Instead, temporarily disable pipefail and restore it later.
-+	old_pipefail=$(set -o | awk '/^pipefail[[:space:]]+(on|off)$/{print $2}')
++vm_vsock_test() {
++	local host=$1
++	local cid=$2
++	local port=$3
++	local rc
++
++	set -o pipefail
++	if [[ "${host}" != server ]]; then
++		# log output and use pipefail to respect vsock_test errors
++		vm_ssh -- "${VSOCK_TEST}" \
++			--mode=client \
++			--control-host="${host}" \
++			--peer-cid="${cid}" \
++			--control-port="${port}" \
++			2>&1 | log_guest
++		rc=$?
++	else
++		# log output and use pipefail to respect vsock_test errors
++		vm_ssh -- "${VSOCK_TEST}" \
++			--mode=server \
++			--peer-cid="${cid}" \
++			--control-port="${port}" \
++			2>&1 | log_guest &
++		rc=$?
++
++		if [[ $rc -ne 0 ]]; then
++			set +o pipefail
++			return $rc
++		fi
++
++		vm_wait_for_listener "${port}"
++		rc=$?
++	fi
++	set +o pipefail
+ 
++	return $rc
++}
++
++host_vsock_test() {
++	local host=$1
++	local cid=$2
++	local port=$3
++	local rc
++
++	# log output and use pipefail to respect vsock_test errors
++	set -o pipefail
++	if [[ "${host}" != server ]]; then
++		${VSOCK_TEST} \
++			--mode=client \
++			--peer-cid="${cid}" \
++			--control-host="${host}" \
++			--control-port="${port}" 2>&1 | log_host
++		rc=$?
++	else
++		${VSOCK_TEST} \
++			--mode=server \
++			--peer-cid="${cid}" \
++			--control-port="${port}" 2>&1 | log_host &
++		rc=$?
++
++		if [[ $rc -ne 0 ]]; then
++			return $rc
++		fi
++
++		host_wait_for_listener "${port}" "${WAIT_PERIOD}" "${WAIT_PERIOD_MAX}"
++		rc=$?
++	fi
 +	set +o pipefail
 +
- 	for i in $(seq "${max_intervals}"); do
- 		if awk '{print $2" "$4}' /proc/net/"${protocol}"* | \
- 		   grep -q "${pattern}"; then
-@@ -258,6 +266,10 @@ wait_for_listener()
- 		fi
- 		sleep "${interval}"
- 	done
-+
-+	if [[ "${old_pipefail}" == on ]]; then
-+		set -o pipefail
-+	fi
++	return $rc
  }
  
- vm_wait_for_listener() {
+ log() {
+@@ -322,59 +393,41 @@ log_guest() {
+ }
+ 
+ test_vm_server_host_client() {
++	if ! vm_vsock_test "server" 2 "${TEST_GUEST_PORT}"; then
++		return "${KSFT_FAIL}"
++	fi
+ 
+-	vm_ssh -- "${VSOCK_TEST}" \
+-		--mode=server \
+-		--control-port="${TEST_GUEST_PORT}" \
+-		--peer-cid=2 \
+-		2>&1 | log_guest &
+-
+-	vm_wait_for_listener "${TEST_GUEST_PORT}"
+-
+-	${VSOCK_TEST} \
+-		--mode=client \
+-		--control-host=127.0.0.1 \
+-		--peer-cid="${VSOCK_CID}" \
+-		--control-port="${TEST_HOST_PORT}" 2>&1 | log_host
++	if ! host_vsock_test "127.0.0.1" "${VSOCK_CID}" "${TEST_HOST_PORT}"; then
++		return "${KSFT_FAIL}"
++	fi
+ 
+-	return $?
++	return "${KSFT_PASS}"
+ }
+ 
+ test_vm_client_host_server() {
++	if ! host_vsock_test "server" "${VSOCK_CID}" "${TEST_HOST_PORT_LISTENER}"; then
++		return "${KSFT_FAIL}"
++	fi
+ 
+-	${VSOCK_TEST} \
+-		--mode "server" \
+-		--control-port "${TEST_HOST_PORT_LISTENER}" \
+-		--peer-cid "${VSOCK_CID}" 2>&1 | log_host &
+-
+-	host_wait_for_listener
+-
+-	vm_ssh -- "${VSOCK_TEST}" \
+-		--mode=client \
+-		--control-host=10.0.2.2 \
+-		--peer-cid=2 \
+-		--control-port="${TEST_HOST_PORT_LISTENER}" 2>&1 | log_guest
++	if ! vm_vsock_test "10.0.2.2" 2 "${TEST_HOST_PORT_LISTENER}"; then
++		return "${KSFT_FAIL}"
++	fi
+ 
+-	return $?
++	return "${KSFT_PASS}"
+ }
+ 
+ test_vm_loopback() {
+ 	local port=60000 # non-forwarded local port
+ 
+-	vm_ssh -- "${VSOCK_TEST}" \
+-		--mode=server \
+-		--control-port="${port}" \
+-		--peer-cid=1 2>&1 | log_guest &
+-
+-	vm_wait_for_listener "${port}"
++	if ! vm_vsock_test "server" 1 "${port}"; then
++		return "${KSFT_FAIL}"
++	fi
+ 
+-	vm_ssh -- "${VSOCK_TEST}" \
+-		--mode=client \
+-		--control-host="127.0.0.1" \
+-		--control-port="${port}" \
+-		--peer-cid=1 2>&1 | log_guest
++	if ! vm_vsock_test "127.0.0.1" 1 "${port}"; then
++		return "${KSFT_FAIL}"
++	fi
+ 
+-	return $?
++	return "${KSFT_PASS}"
+ }
+ 
+ run_test() {
 
 -- 
 2.47.3
