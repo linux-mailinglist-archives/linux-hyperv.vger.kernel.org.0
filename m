@@ -1,236 +1,229 @@
-Return-Path: <linux-hyperv+bounces-7308-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7309-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id D08CBBFD6FE
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Oct 2025 19:02:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EB46BFE33A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Oct 2025 22:43:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 13FF6584B23
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Oct 2025 16:48:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2E81E3A763B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Oct 2025 20:43:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E29835B139;
-	Wed, 22 Oct 2025 16:44:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 099452FD672;
+	Wed, 22 Oct 2025 20:43:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IAmJ8k7K"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rRRVIdrH"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D38EA35B129;
-	Wed, 22 Oct 2025 16:44:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4316B2F1FD2;
+	Wed, 22 Oct 2025 20:43:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761151455; cv=none; b=EFAFwpQ49Blkn3UB3nl8ZD6gpnydgPcfiYuYGWCD6DthBfMNJRfzaydoXS7vOKwQ06GtGu+D1nwy8J4JDI210SAnXp17egiWCMZqu520qBLNVXNyH8tovTKZCYEGmyNKrE+EMK4hlMHhCuXfUEIXbaokFPxB2RF/c+aD9KY5ymU=
+	t=1761165813; cv=none; b=t9UkIyMBaz8wUOoHjc2Yydx5Z3QjUXoXDmkoBSNufPLSVtLnRgLCbSKqbWyvrU2mgF/Ubnp0bTJBlyRx+iuFwlY+D1Zz5uihDDNDefCzHwF3LshGo2vrmn1EE2zYHp5ZW6tFt6EH5Oyzc2haUl/o8AsZ9RmqHB+RzcwOk0y2a08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761151455; c=relaxed/simple;
-	bh=CClu27EVIMb0L+/utii1f+p0OGlvQYvUTKRT8So2Tq8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QRdaxhPvelrV8dGJqBvJ9aDmeJAd/gyKJXT417tNze4tfLQRUd4qaWYUrb6qBHzECcCTPdHx5D2vER5S3+37BuM1GdNO6t+z2GWqhsIl/qk6cK4x/BIHC05o3WjR/eeKtKAlAdTn5Rs7WvFlR/ZKPHuRQHaPcJLwAfLwpu4G1jI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IAmJ8k7K; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1761165813; c=relaxed/simple;
+	bh=NZnxmMqbIa1Kmb0E+X5BFGO6vgR3vsWhSnudC95Pqb4=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=tSvv6LrbGwXgHn18RF6iNRfZh56hwBZojFJ3o13UHqv73ikMyYf40JMm2iH6QPn4zDY0V+JyXJJuNdqB1xTb6sNQY/b9pXFdoa9FAirj+Ix4YnewrkuOfQwHw/FvERHJ9Pga7PHZ7kK2Re4jT/7A0lFhhy9hi2o7/2OKAajR1Ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rRRVIdrH; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [192.168.1.19] (unknown [103.212.145.76])
-	by linux.microsoft.com (Postfix) with ESMTPSA id B7C7D206595A;
-	Wed, 22 Oct 2025 09:44:06 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B7C7D206595A
+Received: by linux.microsoft.com (Postfix, from userid 1231)
+	id 035CD201DAEC; Wed, 22 Oct 2025 13:43:26 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 035CD201DAEC
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1761151452;
-	bh=QD4gN2DR0xkuQGbWjt1Moftwz75l5x53sM6fqnFk+q4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IAmJ8k7KCZJwvov2ZtpqG5Dn0YM29BJq+o5gcgkdK4M9QRKnuElFrhpLHxm4njEeP
-	 7Wszxn/cro5H0MhVCV0WK8lY8Ckx26xr44bwFEqx0WImBYjaMoj8v1lEbhvaQIA7/T
-	 ADal63Odxasth2mBWNSX1UvCrJZJP1waF3/kMMLM=
-Message-ID: <cd716f3f-cb08-4ff9-8de4-25363180d7a4@linux.microsoft.com>
-Date: Wed, 22 Oct 2025 22:14:03 +0530
+	s=default; t=1761165806;
+	bh=QfL47pSMKqk9Dp08NIWhqmhWhQAAEHc/RjIGyqCslhE=;
+	h=Date:From:To:Subject:From;
+	b=rRRVIdrHQttYYbEwmrPUxo9COejrR1ccDUVzrxDfoxnWXXOjDmm4Sg9wBxFDr343j
+	 M5pPxxUIwgM4eRkYHQsZgsMQE43yYsT/E7Zkfr4K1GJoNLZ4J1fgg8edG+zbaNAN//
+	 22bmtkStbX1ixRddrKHy1nLvDs9+bg08acRzK48Q=
+Date: Wed, 22 Oct 2025 13:43:25 -0700
+From: Aditya Garg <gargaditya@linux.microsoft.com>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
+	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
+	ernis@linux.microsoft.com, dipayanroy@linux.microsoft.com,
+	shirazsaleem@microsoft.com, gargaditya@linux.microsoft.com,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	gargaditya@microsoft.com
+Subject: [RFC PATCH net-next v2] net: mana: Handle SKB if TX SGEs exceed
+ hardware limit
+Message-ID: <20251022204325.GA18380@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] net: mana: Linearize SKB if TX SGEs exceeds
- hardware limit
-To: Eric Dumazet <edumazet@google.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- kuba@kernel.org, pabeni@redhat.com, longli@microsoft.com,
- kotaranov@microsoft.com, horms@kernel.org, shradhagupta@linux.microsoft.com,
- ernis@linux.microsoft.com, dipayanroy@linux.microsoft.com,
- shirazsaleem@microsoft.com, linux-hyperv@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rdma@vger.kernel.org, gargaditya@microsoft.com,
- ssengar@linux.microsoft.com
-References: <20251003154724.GA15670@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <CANn89iJwkbxC5HvSKmk807K-3HY+YR1kt-LhcYwnoFLAaeVVow@mail.gmail.com>
- <9d886861-2e1f-4ea8-9f2c-604243bd751b@linux.microsoft.com>
- <CANn89iKwHWdUaeAsdSuZUXG-W8XwyM2oppQL9spKkex0p9-Azw@mail.gmail.com>
- <7bc327ba-0050-4d9e-86b6-1b7427a96f53@linux.microsoft.com>
- <1d3ac973-7bc7-4abe-9fe2-6b17dbba223b@linux.microsoft.com>
- <CANn89iKFsuUnwMb-upqwswrCYaTL-MXVwsQdxFhduZeZRAJZ2A@mail.gmail.com>
-Content-Language: en-US
-From: Aditya Garg <gargaditya@linux.microsoft.com>
-In-Reply-To: <CANn89iKFsuUnwMb-upqwswrCYaTL-MXVwsQdxFhduZeZRAJZ2A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On 17-10-2025 23:36, Eric Dumazet wrote:
-> On Fri, Oct 17, 2025 at 10:41 AM Aditya Garg
-> <gargaditya@linux.microsoft.com> wrote:
->>
->> On 08-10-2025 20:58, Aditya Garg wrote:
->>> On 08-10-2025 20:51, Eric Dumazet wrote:
->>>> On Wed, Oct 8, 2025 at 8:16 AM Aditya Garg
->>>> <gargaditya@linux.microsoft.com> wrote:
->>>>>
->>>>> On 03-10-2025 21:45, Eric Dumazet wrote:
->>>>>> On Fri, Oct 3, 2025 at 8:47 AM Aditya Garg
->>>>>> <gargaditya@linux.microsoft.com> wrote:
->>>>>>>
->>>>>>> The MANA hardware supports a maximum of 30 scatter-gather entries
->>>>>>> (SGEs)
->>>>>>> per TX WQE. In rare configurations where MAX_SKB_FRAGS + 2 exceeds
->>>>>>> this
->>>>>>> limit, the driver drops the skb. Add a check in mana_start_xmit() to
->>>>>>> detect such cases and linearize the SKB before transmission.
->>>>>>>
->>>>>>> Return NETDEV_TX_BUSY only for -ENOSPC from
->>>>>>> mana_gd_post_work_request(),
->>>>>>> send other errors to free_sgl_ptr to free resources and record the tx
->>>>>>> drop.
->>>>>>>
->>>>>>> Signed-off-by: Aditya Garg <gargaditya@linux.microsoft.com>
->>>>>>> Reviewed-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
->>>>>>> ---
->>>>>>>     drivers/net/ethernet/microsoft/mana/mana_en.c | 26 +++++++++++++
->>>>>>> ++----
->>>>>>>     include/net/mana/gdma.h                       |  8 +++++-
->>>>>>>     include/net/mana/mana.h                       |  1 +
->>>>>>>     3 files changed, 29 insertions(+), 6 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/
->>>>>>> drivers/net/ethernet/microsoft/mana/mana_en.c
->>>>>>> index f4fc86f20213..22605753ca84 100644
->>>>>>> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
->>>>>>> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
->>>>>>> @@ -20,6 +20,7 @@
->>>>>>>
->>>>>>>     #include <net/mana/mana.h>
->>>>>>>     #include <net/mana/mana_auxiliary.h>
->>>>>>> +#include <linux/skbuff.h>
->>>>>>>
->>>>>>>     static DEFINE_IDA(mana_adev_ida);
->>>>>>>
->>>>>>> @@ -289,6 +290,19 @@ netdev_tx_t mana_start_xmit(struct sk_buff
->>>>>>> *skb, struct net_device *ndev)
->>>>>>>            cq = &apc->tx_qp[txq_idx].tx_cq;
->>>>>>>            tx_stats = &txq->stats;
->>>>>>>
->>>>>>> +       BUILD_BUG_ON(MAX_TX_WQE_SGL_ENTRIES !=
->>>>>>> MANA_MAX_TX_WQE_SGL_ENTRIES);
->>>>>>> +       #if (MAX_SKB_FRAGS + 2 > MANA_MAX_TX_WQE_SGL_ENTRIES)
->>>>>>> +               if (skb_shinfo(skb)->nr_frags + 2 >
->>>>>>> MANA_MAX_TX_WQE_SGL_ENTRIES) {
->>>>>>> +                       netdev_info_once(ndev,
->>>>>>> +                                        "nr_frags %d exceeds max
->>>>>>> supported sge limit. Attempting skb_linearize\n",
->>>>>>> +                                        skb_shinfo(skb)->nr_frags);
->>>>>>> +                       if (skb_linearize(skb)) {
->>>>>>
->>>>>> This will fail in many cases.
->>>>>>
->>>>>> This sort of check is better done in ndo_features_check()
->>>>>>
->>>>>> Most probably this would occur for GSO packets, so can ask a software
->>>>>> segmentation
->>>>>> to avoid this big and risky kmalloc() by all means.
->>>>>>
->>>>>> Look at idpf_features_check()  which has something similar.
->>>>>
->>>>> Hi Eric,
->>>>> Thank you for your review. I understand your concerns regarding the use
->>>>> of skb_linearize() in the xmit path, as it can fail under memory
->>>>> pressure and introduces additional overhead in the transmit path. Based
->>>>> on your input, I will work on a v2 that will move the SGE limit check to
->>>>> the ndo_features_check() path and for GSO skbs exceding the hw limit
->>>>> will disable the NETIF_F_GSO_MASK to enforce software segmentation in
->>>>> kernel before the call to xmit.
->>>>> Also for non GSO skb exceeding the SGE hw limit should we go for using
->>>>> skb_linearize only then or would you suggest some other approach here?
->>>>
->>>> I think that for non GSO, the linearization attempt is fine.
->>>>
->>>> Note that this is extremely unlikely for non malicious users,
->>>> and MTU being usually small (9K or less),
->>>> the allocation will be much smaller than a GSO packet.
->>>
->>> Okay. Will send a v2
->> Hi Eric,
->> I tested the code by disabling GSO in ndo_features_check when the number
->> of SGEs exceeds the hardware limit, using iperf for a single TCP
->> connection with zerocopy enabled. I noticed a significant difference in
->> throughput compared to when we linearize the skbs.
->> For reference, the throughput is 35.6 Gbits/sec when using
->> skb_linearize, but drops to 6.75 Gbits/sec when disabling GSO per skb.
-> 
-> You must be doing something very wrong.
-> 
-> Difference between TSO and non TSO should not be that high.
-> 
-> ethtool -K eth0 tso on
-> netperf -H tjbp27
-> MIGRATED TCP STREAM TEST from ::0 (::) port 0 AF_INET6 to
-> tjbp27.prod.google.com () port 0 AF_INET6
-> Recv   Send    Send
-> Socket Socket  Message  Elapsed
-> Size   Size    Size     Time     Throughput
-> bytes  bytes   bytes    secs.    10^6bits/sec
-> 
-> 540000 262144 262144    10.00    92766.69
-> 
-> 
-> ethtool -K eth0 tso off
-> netperf -H tjbp27
-> MIGRATED TCP STREAM TEST from ::0 (::) port 0 AF_INET6 to
-> tjbp27.prod.google.com () port 0 AF_INET6
-> Recv   Send    Send
-> Socket Socket  Message  Elapsed
-> Size   Size    Size     Time     Throughput
-> bytes  bytes   bytes    secs.    10^6bits/sec
-> 
-> 540000 262144 262144    10.00    52218.97
-> 
-> Now if I force linearization, you can definitely see the very high
-> cost of the copies !
-> 
-> ethtool -K eth1 sg off
-> tjbp26:/home/edumazet# ./netperf -H tjbp27
-> MIGRATED TCP STREAM TEST from ::0 (::) port 0 AF_INET6 to
-> tjbp27.prod.google.com () port 0 AF_INET6
-> Recv   Send    Send
-> Socket Socket  Message  Elapsed
-> Size   Size    Size     Time     Throughput
-> bytes  bytes   bytes    secs.    10^6bits/sec
-> 
-> 540000 262144 262144    10.00    16951.32
-> 
->>
->> Hence, We propose to  linearizing skbs until the first failure occurs.
-> 
-> Hmm... basically hiding a bug then ?
-> 
->> After that, we switch to a fail-safe mode by disabling GSO for SKBs with
->>    sge > hw limit using the ndo_feature_check implementation, while
->> continuing to apply  skb_linearize() for non-GSO packets that exceed the
->> hardware limit. This ensures we remain on the optimal performance path
->> initially, and only transition to the fail-safe path after encountering
->> a failure.
-> 
-> Please post your patch (adding the check in ndo_features_check()),
-> perhaps one of us is able to help.
+The MANA hardware supports a maximum of 30 scatter-gather entries (SGEs)
+per TX WQE. Exceeding this limit can cause TX failures.
+Add ndo_features_check() callback to validate SKB layout before
+transmission. For GSO SKBs that would exceed the hardware SGE limit, clear
+NETIF_F_GSO_MASK to enforce software segmentation in the stack.
+Add a fallback in mana_start_xmit() to linearize non-GSO SKBs that still
+exceed the SGE limit.
 
-Okay Eric, I'll Post a v2 with RFC. Please let me know.
+Return NETDEV_TX_BUSY only for -ENOSPC from mana_gd_post_work_request(),
+send other errors to free_sgl_ptr to free resources and record the tx
+drop.
 
-Regards,
-Aditya
+Co-developed-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+Signed-off-by: Aditya Garg <gargaditya@linux.microsoft.com>
+---
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 48 +++++++++++++++++--
+ include/net/mana/gdma.h                       |  6 ++-
+ include/net/mana/mana.h                       |  1 +
+ 3 files changed, 49 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 0142fd98392c..8e23a87a779d 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -11,6 +11,7 @@
+ #include <linux/mm.h>
+ #include <linux/pci.h>
+ #include <linux/export.h>
++#include <linux/skbuff.h>
+ 
+ #include <net/checksum.h>
+ #include <net/ip6_checksum.h>
+@@ -289,6 +290,21 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	cq = &apc->tx_qp[txq_idx].tx_cq;
+ 	tx_stats = &txq->stats;
+ 
++	if (MAX_SKB_FRAGS + 2 > MAX_TX_WQE_SGL_ENTRIES &&
++	    skb_shinfo(skb)->nr_frags + 2 > MAX_TX_WQE_SGL_ENTRIES) {
++		/* GSO skb with Hardware SGE limit exceeded is not expected here 
++		 * as they are handled in mana_features_check() callback 
++		 */
++		if (skb_is_gso(skb))
++			netdev_warn_once(ndev, "GSO enabled skb exceeds max SGE limit\n");
++		if (skb_linearize(skb)) {
++			netdev_warn_once(ndev, "Failed to linearize skb with nr_frags=%d and is_gso=%d\n",
++					 skb_shinfo(skb)->nr_frags,
++					 skb_is_gso(skb));
++			goto tx_drop_count;
++		}
++	}
++
+ 	pkg.tx_oob.s_oob.vcq_num = cq->gdma_id;
+ 	pkg.tx_oob.s_oob.vsq_frame = txq->vsq_frame;
+ 
+@@ -402,8 +418,6 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 		}
+ 	}
+ 
+-	WARN_ON_ONCE(pkg.wqe_req.num_sge > MAX_TX_WQE_SGL_ENTRIES);
+-
+ 	if (pkg.wqe_req.num_sge <= ARRAY_SIZE(pkg.sgl_array)) {
+ 		pkg.wqe_req.sgl = pkg.sgl_array;
+ 	} else {
+@@ -438,9 +452,13 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 
+ 	if (err) {
+ 		(void)skb_dequeue_tail(&txq->pending_skbs);
++		mana_unmap_skb(skb, apc);
+ 		netdev_warn(ndev, "Failed to post TX OOB: %d\n", err);
+-		err = NETDEV_TX_BUSY;
+-		goto tx_busy;
++		if (err == -ENOSPC) {
++			err = NETDEV_TX_BUSY;
++			goto tx_busy;
++		}
++		goto free_sgl_ptr;
+ 	}
+ 
+ 	err = NETDEV_TX_OK;
+@@ -478,6 +496,25 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	return NETDEV_TX_OK;
+ }
+ 
++static netdev_features_t mana_features_check(struct sk_buff *skb,
++					     struct net_device *ndev,
++					     netdev_features_t features)
++{
++	if (MAX_SKB_FRAGS + 2 > MAX_TX_WQE_SGL_ENTRIES &&
++	    skb_shinfo(skb)->nr_frags + 2 > MAX_TX_WQE_SGL_ENTRIES) {
++		/* Exceeds HW SGE limit.
++		 * GSO case:
++		 *   Disable GSO so the stack will software-segment the skb
++		 *   into smaller skbs that fit the SGE budget.
++		 * Non-GSO case:
++		 *   The xmit path will attempt skb_linearize() as a fallback.
++		 */
++		if (skb_is_gso(skb))
++			features &= ~NETIF_F_GSO_MASK;
++	}
++	return features;
++}
++
+ static void mana_get_stats64(struct net_device *ndev,
+ 			     struct rtnl_link_stats64 *st)
+ {
+@@ -838,6 +875,7 @@ static const struct net_device_ops mana_devops = {
+ 	.ndo_open		= mana_open,
+ 	.ndo_stop		= mana_close,
+ 	.ndo_select_queue	= mana_select_queue,
++	.ndo_features_check	= mana_features_check,
+ 	.ndo_start_xmit		= mana_start_xmit,
+ 	.ndo_validate_addr	= eth_validate_addr,
+ 	.ndo_get_stats64	= mana_get_stats64,
+@@ -1606,7 +1644,7 @@ static int mana_move_wq_tail(struct gdma_queue *wq, u32 num_units)
+ 	return 0;
+ }
+ 
+-static void mana_unmap_skb(struct sk_buff *skb, struct mana_port_context *apc)
++void mana_unmap_skb(struct sk_buff *skb, struct mana_port_context *apc)
+ {
+ 	struct mana_skb_head *ash = (struct mana_skb_head *)skb->head;
+ 	struct gdma_context *gc = apc->ac->gdma_dev->gdma_context;
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index 57df78cfbf82..b35ecc58fbab 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -591,6 +591,9 @@ enum {
+ /* Driver can self reset on FPGA Reconfig EQE notification */
+ #define GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE BIT(17)
+ 
++/* Driver supports linearizing the skb when num_sge exceeds hardware limit */
++#define GDMA_DRV_CAP_FLAG_1_SKB_LINEARIZE BIT(20)
++
+ #define GDMA_DRV_CAP_FLAGS1 \
+ 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
+ 	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
+@@ -599,7 +602,8 @@ enum {
+ 	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP | \
+ 	 GDMA_DRV_CAP_FLAG_1_DYNAMIC_IRQ_ALLOC_SUPPORT | \
+ 	 GDMA_DRV_CAP_FLAG_1_SELF_RESET_ON_EQE | \
+-	 GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE)
++	 GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE | \
++	 GDMA_DRV_CAP_FLAG_1_SKB_LINEARIZE)
+ 
+ #define GDMA_DRV_CAP_FLAGS2 0
+ 
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 0921485565c0..330e1bb088bb 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -580,6 +580,7 @@ int mana_set_bw_clamp(struct mana_port_context *apc, u32 speed,
+ void mana_query_phy_stats(struct mana_port_context *apc);
+ int mana_pre_alloc_rxbufs(struct mana_port_context *apc, int mtu, int num_queues);
+ void mana_pre_dealloc_rxbufs(struct mana_port_context *apc);
++void mana_unmap_skb(struct sk_buff *skb, struct mana_port_context *apc);
+ 
+ extern const struct ethtool_ops mana_ethtool_ops;
+ extern struct dentry *mana_debugfs_root;
+-- 
+2.43.0
+
 
