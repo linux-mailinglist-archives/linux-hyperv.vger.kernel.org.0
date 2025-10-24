@@ -1,299 +1,317 @@
-Return-Path: <linux-hyperv+bounces-7327-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7329-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82F07C02FE7
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Oct 2025 20:32:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B77AC0407D
+	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Oct 2025 03:42:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CEF0C4F411D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Oct 2025 18:30:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0863119A4EC8
+	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Oct 2025 01:42:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49FE4350D68;
-	Thu, 23 Oct 2025 18:28:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E90E1C3F36;
+	Fri, 24 Oct 2025 01:41:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U7n5lEqD"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MFOJezJY"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94DF34DCC7
-	for <linux-hyperv@vger.kernel.org>; Thu, 23 Oct 2025 18:28:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94C271A23A5;
+	Fri, 24 Oct 2025 01:41:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761244109; cv=none; b=GzOFGNUgZ1OgDej/OaV4DqpTtFdgg9Tl9nPPxMBCDHovgDyLThpVKkdKBe5oRS0lPts23nbGPUryg6+Y78OACsnC05lzSM0LZYaNRO+Sbw3oMpNW5kCpnWMBOjPV13OrP9cr8BoZR3QQuRi7xSSCeUAu17cb2p1cHWGBzDJB+Jg=
+	t=1761270119; cv=none; b=Pkcw4ac5abbfi1zSS54NExWkSAo1yB/NlYr3ruTATgbWYCCruJL1OgIT0qJ8EaWDhgBSEuhqjij2WKV/F8K184NEbg0Rb2q1fUIVq3z5pNvBKy3CgCnmn+mWFDcWdUUW5gqIeYQCNQzXdqWRDFQxHo+ztKcuIC3Z3A1hluExizg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761244109; c=relaxed/simple;
-	bh=bXxBLfs7zprOHTZHXU6v9cfS97dNF6O/NmtSmg9Dcg4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qMOhDacU68EXmnT5I9A4olmHK0PhLNSyOz4lVS1p8+cliDVG+qcwSFpO0ZYechzzQC40F/c+tws/h3jLN9Pp5+c0Z9Tra616Ye1bkVfulqKM3OE9Ix0BF14oUgOrNTRERGkYpt7JDFcIUKJJDPiW8dJm++LB3+rG0XXcAM1ji9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U7n5lEqD; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-33255011eafso1267492a91.1
-        for <linux-hyperv@vger.kernel.org>; Thu, 23 Oct 2025 11:28:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761244098; x=1761848898; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NCwbZALKzMmSW9iQhg2QB2KqAXC2Lr1Db59OQ7PdTpE=;
-        b=U7n5lEqDryM8SnXGwk8JtHrXP3CBhsmyffy0N0WIusMDCTAucg6hWgx5uDediDsY/L
-         E3WilLZk8Xo9rDl6uJ3Ysv80XEuDISXoWtcwJFmyZQKwSAroSaEWkGUYw6fnw0+YCYfh
-         EFk1x9osyk4LHHF7Ca1qChJ825VKfbccv7+qwUfad+6LAuU2UMJwsXuFGNCUzVRRe847
-         Wh1OqZpdF+2/uNr3q0y6R4kKgvJcK2BGFuv6uGUh2vLvMrMDNv6/mQ7RKZyv4D2eI9A8
-         h6iTldbIrjjXUgKpETA1jUnyU+oi9PCFx0REBwHBHjR6B9o2GsFlKudVG6kJBdqcaq5B
-         iw4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761244098; x=1761848898;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NCwbZALKzMmSW9iQhg2QB2KqAXC2Lr1Db59OQ7PdTpE=;
-        b=phU8soogZh0zb1AEgV4eHdYcFfRou9X2I4aD4a2XPO7+b0UCcNpoq+0s+VlE8Xb0nk
-         w0e1ApXMNOTM1tNJG2Lt2QJA9s3J1q4Ijtp6+SEmocfeUlvfrHusrH/W7qH3M1oX7SWs
-         yPCh6x6Ffo0lrz5n1W9xW8rql71ViXsM2+GcbdfMuKw4vsKynd/uC9fgdCHB51WVb5Ub
-         b7cB6P+HF23BBfLelwhP5TVNqsarVID2sGNgeEe9QGzEdnQIoAd9Hf41Rz+JeEsWvwpN
-         sBSXwYP9+jsBi0rm2hDQ01xfVUC+oOHFp5JyYWOCak1YcGoZ1wDaBZ3q5VxzQRKKLjFY
-         DLEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVRlkWtX7Ez+gS8EFphRmttEsmbyIffCuDZNt42ujCCIn6NgyIHk/UzlkxPt+FKRW9yCM1n1XyL8iwHbGc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7tH+ptGg4mku7IQYRAoy+lphIWIlyJ2QKGxsHfzOR33jaGoHq
-	Zw5HREAWnqMMf2njOvyOIIXIld2ibGeRxMTDS8eMyIUPVJtwaeYftvRx
-X-Gm-Gg: ASbGncsnknuPjUL6bylFnDIDQw8CG2SG+0TUKTOIVo/YnmUKhZ/GDXNgAOy+8sEunhn
-	xl4iStCp/AlFbb3BafvUCtAZyEQ2sBuOjdynFmW2gj0M64M+q3yTl9QNux0Vsl58PSJEuYVPxPO
-	XZki4uN/DMdTdpizCs7Pt75Lpsn3tM1YUz7MKTGVrinw4XJSG+PRMTvqJnSbfGlf79ioTLDuGzB
-	KTZv7+n/7/60A17DOTt8UHbUz3FUPZho8jVjzJJZIVWWmBmrEHBX8b8HzOceLnhJIEv5pew/j5H
-	eVguHm0DNy9vJBs7qqcWqo7c5P1NdUlLlL3bWwLrA8uYXyi3GFuaDNDs1A1nys8w7FHmCkBMIDI
-	XChSwbVPHdvzZGFc5GKQEIbASLKNDJwfOYOnwWIGU5N6CTas/xj+ibqlWpbg5sN+kVyV39WB2/3
-	6pJlIbAcM=
-X-Google-Smtp-Source: AGHT+IFx7yBJ75xjpC43+vM6BKxxk2sJHe/HPmtClbhgVqFNPtURD2tOiskQk/SLCG92Yy1QMi/lvA==
-X-Received: by 2002:a17:90b:3f8d:b0:32e:6fae:ba52 with SMTP id 98e67ed59e1d1-33bcf861b1amr32391331a91.6.1761244097816;
-        Thu, 23 Oct 2025 11:28:17 -0700 (PDT)
-Received: from localhost ([2a03:2880:2ff:8::])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-33e224a2c3bsm6530615a91.20.2025.10.23.11.28.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Oct 2025 11:28:17 -0700 (PDT)
-From: Bobby Eshleman <bobbyeshleman@gmail.com>
-Date: Thu, 23 Oct 2025 11:27:53 -0700
-Subject: [PATCH net-next v8 14/14] selftests/vsock: add tests for module
- loading order
+	s=arc-20240116; t=1761270119; c=relaxed/simple;
+	bh=j+tLOqZxOfVSyc+ba/m0n9E6upA7m+p/jycHLMQi85k=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=vBP69smENG5WAA+0+kkV3X6nDPujNFDNcVm4EOvI2DlqVATJwhMs5dQSoltqGzk7Lr99FklEHdy1c4IN9+N9T6eJyPKl+p5elSnbgQD2WDr+8My1LTLuUl4y9mdPqzMURHeN2kOn0ZxviA0qUs79a3hmTLBixVwkKaMltxrWlG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MFOJezJY; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1006)
+	id 2A40A211AF3E; Thu, 23 Oct 2025 18:41:57 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2A40A211AF3E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1761270117;
+	bh=6TzER48JPcpGKeFwhlFaQlS9mIdtWw6DFXG+mWlhVh4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MFOJezJYmEeDxiI12MeWLUf7FZJnG527r27+NJYV97aNxeXrJjDNA6L2wR6HIGHGS
+	 YvjO8twfPYXA0am0NWx4mbMhNyVYePjbh9K1Ul2BYoMaH8IrMPpiQ+0BiextM4c+gC
+	 52CGHrOqAn/BKZGxPM2LztE3vdNmW/xtdO2SvLQk=
+From: Haiyang Zhang <haiyangz@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: haiyangz@microsoft.com,
+	paulros@microsoft.com,
+	decui@microsoft.com,
+	kys@microsoft.com,
+	wei.liu@kernel.org,
+	edumazet@google.com,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	longli@microsoft.com,
+	ssengar@linux.microsoft.com,
+	ernis@linux.microsoft.com,
+	dipayanroy@linux.microsoft.com,
+	kotaranov@microsoft.com,
+	horms@kernel.org,
+	shradhagupta@linux.microsoft.com,
+	leon@kernel.org,
+	mlevitsk@redhat.com,
+	yury.norov@gmail.com,
+	shirazsaleem@microsoft.com,
+	andrew+netdev@lunn.ch,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [net-next, v3] net: mana: Support HW link state events
+Date: Thu, 23 Oct 2025 18:41:45 -0700
+Message-Id: <1761270105-27215-1-git-send-email-haiyangz@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251023-vsock-vmtest-v8-14-dea984d02bb0@meta.com>
-References: <20251023-vsock-vmtest-v8-0-dea984d02bb0@meta.com>
-In-Reply-To: <20251023-vsock-vmtest-v8-0-dea984d02bb0@meta.com>
-To: Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Stefan Hajnoczi <stefanha@redhat.com>, 
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
- "K. Y. Srinivasan" <kys@microsoft.com>, 
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
- Dexuan Cui <decui@microsoft.com>, Bryan Tan <bryan-bt.tan@broadcom.com>, 
- Vishnu Dasa <vishnu.dasa@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Bobby Eshleman <bobbyeshleman@gmail.com>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kvm@vger.kernel.org, linux-hyperv@vger.kernel.org, berrange@redhat.com, 
- Bobby Eshleman <bobbyeshleman@meta.com>
-X-Mailer: b4 0.14.3
 
-From: Bobby Eshleman <bobbyeshleman@meta.com>
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-Add tests to check that module loading order does not break
-vsock_loopback. Because vsock_loopback has some per-namespace data
-structure initialization that affects vsock namespace modes, lets make
-sure that namespace modes are respected and loopback sockets are
-functional even when the namespaces and modes are set prior to loading
-the vsock_loopback module.
+Handle the HW link state events received from HW channel, and
+set the proper link state accordingly.
 
-Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+
 ---
- tools/testing/selftests/vsock/vmtest.sh | 138 ++++++++++++++++++++++++++++++++
- 1 file changed, 138 insertions(+)
+v3:
+  Don't stop / start the queues, and use disable_work_sync() as
+  suggested by Jakub Kicinski.
 
-diff --git a/tools/testing/selftests/vsock/vmtest.sh b/tools/testing/selftests/vsock/vmtest.sh
-index 014cecd93858..9aa3200b160f 100755
---- a/tools/testing/selftests/vsock/vmtest.sh
-+++ b/tools/testing/selftests/vsock/vmtest.sh
-@@ -68,6 +68,8 @@ readonly TEST_NAMES=(
- 	ns_delete_vm_ok
- 	ns_delete_host_ok
- 	ns_delete_both_ok
-+	ns_loopback_global_global_late_module_load_ok
-+	ns_loopback_local_local_late_module_load_fails
- )
- readonly TEST_DESCS=(
- 	# vm_server_host_client
-@@ -153,6 +155,12 @@ readonly TEST_DESCS=(
+v2:
+  Updated link up/down to be symmetric, and other minor changes based
+  on comments from Andrew Lunn.
+
+---
+ .../net/ethernet/microsoft/mana/gdma_main.c   |  1 +
+ .../net/ethernet/microsoft/mana/hw_channel.c  | 12 +++++
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 53 +++++++++++++++++--
+ include/net/mana/gdma.h                       |  4 +-
+ include/net/mana/hw_channel.h                 |  2 +
+ include/net/mana/mana.h                       |  4 ++
+ 6 files changed, 70 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index 43f034e180c4..effe0a2f207a 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -528,6 +528,7 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
+ 	case GDMA_EQE_HWC_INIT_DONE:
+ 	case GDMA_EQE_HWC_SOC_SERVICE:
+ 	case GDMA_EQE_RNIC_QP_FATAL:
++	case GDMA_EQE_HWC_SOC_RECONFIG_DATA:
+ 		if (!eq->eq.callback)
+ 			break;
  
- 	# ns_delete_both_ok
- 	"Check that deleting the VM and host's namespaces does not break the socket connection"
-+
-+	# ns_loopback_global_global_late_module_load_ok
-+	"Test that loopback still works in global namespaces initialized prior to loading the vsock_loopback kmod"
-+
-+	# ns_loopback_local_local_late_module_load_fails
-+	"Test that loopback connections still fail between local namespaces initialized prior to loading the vsock_loopback kmod"
- )
+diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+index ada6c78a2bef..367e18d71413 100644
+--- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
++++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+@@ -118,6 +118,7 @@ static void mana_hwc_init_event_handler(void *ctx, struct gdma_queue *q_self,
+ 	struct gdma_dev *gd = hwc->gdma_dev;
+ 	union hwc_init_type_data type_data;
+ 	union hwc_init_eq_id_db eq_db;
++	struct mana_context *ac;
+ 	u32 type, val;
+ 	int ret;
  
- readonly USE_SHARED_VM=(vm_server_host_client vm_client_host_server vm_loopback)
-@@ -914,6 +922,30 @@ test_ns_diff_local_vm_connect_to_local_host_fails() {
- 	return "${KSFT_FAIL}"
+@@ -196,6 +197,17 @@ static void mana_hwc_init_event_handler(void *ctx, struct gdma_queue *q_self,
+ 			hwc->hwc_timeout = val;
+ 			break;
+ 
++		case HWC_DATA_HW_LINK_CONNECT:
++		case HWC_DATA_HW_LINK_DISCONNECT:
++			ac = gd->gdma_context->mana.driver_data;
++			if (!ac)
++				break;
++
++			ac->link_event = type;
++			schedule_work(&ac->link_change_work);
++
++			break;
++
+ 		default:
+ 			dev_warn(hwc->dev, "Received unknown reconfig type %u\n", type);
+ 			break;
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 0142fd98392c..949aedebc8c3 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -20,6 +20,7 @@
+ 
+ #include <net/mana/mana.h>
+ #include <net/mana/mana_auxiliary.h>
++#include <net/mana/hw_channel.h>
+ 
+ static DEFINE_IDA(mana_adev_ida);
+ 
+@@ -84,7 +85,6 @@ static int mana_open(struct net_device *ndev)
+ 	/* Ensure port state updated before txq state */
+ 	smp_wmb();
+ 
+-	netif_carrier_on(ndev);
+ 	netif_tx_wake_all_queues(ndev);
+ 	netdev_dbg(ndev, "%s successful\n", __func__);
+ 	return 0;
+@@ -100,6 +100,45 @@ static int mana_close(struct net_device *ndev)
+ 	return mana_detach(ndev, true);
  }
  
-+unload_module() {
-+	local module=$1
-+	local retries=5
-+	readonly retries
-+	local delay=1
-+	local i
++static void mana_link_state_handle(struct work_struct *w)
++{
++	struct mana_context *ac;
++	struct net_device *ndev;
++	bool link_up;
++	int i;
 +
-+	# Sometimes previously executed tests may result in a delayed release
-+	# of the reference to the vsock_loopback module and result in the
-+	# module being unremovable. For that reason, we use retries to allow
-+	# some time for those references to be dropped.
-+	for ((i = 0; i < ${retries}; i++)); do
-+		modprobe -r "${module}" 2>/dev/null || :
++	ac = container_of(w, struct mana_context, link_change_work);
 +
-+		if [[ "$(lsmod | grep -c ${module})" -eq 0 ]]; then
-+			return 0
-+		fi
++	rtnl_lock();
 +
-+		sleep ${delay}
-+	done
-+
-+	return 1
-+}
-+
- __test_loopback_two_netns() {
- 	local ns0=$1
- 	local ns1=$2
-@@ -1266,6 +1298,112 @@ test_ns_delete_both_ok() {
- 	check_ns_changes_dont_break_connection "both" "delete"
- }
- 
-+test_ns_loopback_global_global_late_module_load_ok() {
-+	declare -a pids
-+	local unixfile
-+	local ns0 ns1
-+	local pids
-+	local port
-+
-+	if ! unload_module vsock_loopback; then
-+		log_host "Unable to unload vsock_loopback, skipping..."
-+		return "${KSFT_SKIP}"
-+	fi
-+
-+	ns0=loopback_ns0
-+	ns1=loopback_ns1
-+
-+	ip netns del "${ns0}" &>/dev/null || :
-+	ip netns del "${ns1}" &>/dev/null || :
-+	ip netns add "${ns0}"
-+	ip netns add "${ns1}"
-+	ns_set_mode "${ns0}" global
-+	ns_set_mode "${ns1}" global
-+	ip netns exec "${ns0}" ip link set dev lo up
-+	ip netns exec "${ns1}" ip link set dev lo up
-+
-+	modprobe vsock_loopback &> /dev/null || :
-+
-+	unixfile=$(mktemp -u /tmp/XXXX.sock)
-+	port=321
-+	ip netns exec "${ns1}" \
-+		socat TCP-LISTEN:"${port}",fork \
-+			UNIX-CONNECT:"${unixfile}" &
-+	pids+=($!)
-+
-+	host_wait_for_listener "${ns1}" "${port}"
-+	ip netns exec "${ns0}" socat UNIX-LISTEN:"${unixfile}",fork \
-+		TCP-CONNECT:localhost:"${port}" &
-+	pids+=($!)
-+
-+	if ! host_vsock_test "${ns0}" "server" 1 "${port}"; then
-+		ip netns del "${ns0}" &>/dev/null || :
-+		ip netns del "${ns1}" &>/dev/null || :
-+		terminate_pids "${pids[@]}"
-+		return "${KSFT_FAIL}"
-+	fi
-+
-+	if ! host_vsock_test "${ns1}" "127.0.0.1" 1 "${port}"; then
-+		ip netns del "${ns0}" &>/dev/null || :
-+		ip netns del "${ns1}" &>/dev/null || :
-+		terminate_pids "${pids[@]}"
-+		return "${KSFT_FAIL}"
-+	fi
-+
-+	ip netns del "${ns0}" &>/dev/null || :
-+	ip netns del "${ns1}" &>/dev/null || :
-+	terminate_pids "${pids[@]}"
-+
-+	return "${KSFT_PASS}"
-+}
-+
-+test_ns_loopback_local_local_late_module_load_fails() {
-+	declare -a pids
-+	local ns0 ns1
-+	local outfile
-+	local pids
-+	local rc
-+
-+	if ! unload_module vsock_loopback; then
-+		log_host "Unable to unload vsock_loopback, skipping..."
-+		return "${KSFT_SKIP}"
-+	fi
-+
-+	ns0=loopback_ns0
-+	ns1=loopback_ns1
-+
-+	ip netns del "${ns0}" &>/dev/null || :
-+	ip netns del "${ns1}" &>/dev/null || :
-+	ip netns add "${ns0}"
-+	ip netns add "${ns1}"
-+	ns_set_mode "${ns0}" local
-+	ns_set_mode "${ns1}" local
-+
-+	modprobe vsock_loopback &> /dev/null || :
-+
-+	outfile=$(mktemp /tmp/XXXX.vmtest.out)
-+	ip netns exec "${ns0}" socat VSOCK-LISTEN:${port} STDOUT \
-+		> "${outfile}" 2>/dev/null &
-+	pids+=($!)
-+
-+	echo TEST | \
-+		ip netns exec "${ns1}" socat STDIN VSOCK-CONNECT:1:${port} \
-+			2>/dev/null
-+
-+	if grep -q "TEST" "${outfile}" 2>/dev/null; then
-+		rc="${KSFT_FAIL}"
++	if (ac->link_event == HWC_DATA_HW_LINK_CONNECT)
++		link_up = true;
++	else if (ac->link_event == HWC_DATA_HW_LINK_DISCONNECT)
++		link_up = false;
 +	else
-+		rc="${KSFT_PASS}"
-+	fi
++		goto out;
 +
-+	ip netns del "${ns0}" &>/dev/null || :
-+	ip netns del "${ns1}" &>/dev/null || :
-+	terminate_pids "${pids[@]}"
-+	rm -f "${outfile}"
++	/* Process all ports */
++	for (i = 0; i < ac->num_ports; i++) {
++		ndev = ac->ports[i];
++		if (!ndev)
++			continue;
 +
-+	return "${rc}"
++		if (link_up) {
++			if (!netif_carrier_ok(ndev))
++				netif_carrier_on(ndev);
++
++			__netdev_notify_peers(ndev);
++		} else {
++			if (netif_carrier_ok(ndev))
++				netif_carrier_off(ndev);
++		}
++	}
++
++out:
++	rtnl_unlock();
 +}
 +
- shared_vm_test() {
- 	local tname
+ static bool mana_can_tx(struct gdma_queue *wq)
+ {
+ 	return mana_gd_wq_avail_space(wq) >= MAX_TX_WQE_SIZE;
+@@ -3059,9 +3098,6 @@ int mana_attach(struct net_device *ndev)
+ 	/* Ensure port state updated before txq state */
+ 	smp_wmb();
  
-
+-	if (apc->port_is_up)
+-		netif_carrier_on(ndev);
+-
+ 	netif_device_attach(ndev);
+ 
+ 	return 0;
+@@ -3154,7 +3190,6 @@ int mana_detach(struct net_device *ndev, bool from_close)
+ 	smp_wmb();
+ 
+ 	netif_tx_disable(ndev);
+-	netif_carrier_off(ndev);
+ 
+ 	if (apc->port_st_save) {
+ 		err = mana_dealloc_queues(ndev);
+@@ -3243,6 +3278,8 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
+ 		goto free_indir;
+ 	}
+ 
++	netif_carrier_on(ndev);
++
+ 	debugfs_create_u32("current_speed", 0400, apc->mana_port_debugfs, &apc->speed);
+ 
+ 	return 0;
+@@ -3431,6 +3468,8 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
+ 
+ 	if (!resuming) {
+ 		ac->num_ports = num_ports;
++
++		INIT_WORK(&ac->link_change_work, mana_link_state_handle);
+ 	} else {
+ 		if (ac->num_ports != num_ports) {
+ 			dev_err(dev, "The number of vPorts changed: %d->%d\n",
+@@ -3438,6 +3477,8 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
+ 			err = -EPROTO;
+ 			goto out;
+ 		}
++
++		enable_work(&ac->link_change_work);
+ 	}
+ 
+ 	if (ac->num_ports == 0)
+@@ -3500,6 +3541,8 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+ 	int err;
+ 	int i;
+ 
++	disable_work_sync(&ac->link_change_work);
++
+ 	/* adev currently doesn't support suspending, always remove it */
+ 	if (gd->adev)
+ 		remove_adev(gd);
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index 57df78cfbf82..637f42485dba 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -590,6 +590,7 @@ enum {
+ 
+ /* Driver can self reset on FPGA Reconfig EQE notification */
+ #define GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE BIT(17)
++#define GDMA_DRV_CAP_FLAG_1_HW_VPORT_LINK_AWARE BIT(6)
+ 
+ #define GDMA_DRV_CAP_FLAGS1 \
+ 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
+@@ -599,7 +600,8 @@ enum {
+ 	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP | \
+ 	 GDMA_DRV_CAP_FLAG_1_DYNAMIC_IRQ_ALLOC_SUPPORT | \
+ 	 GDMA_DRV_CAP_FLAG_1_SELF_RESET_ON_EQE | \
+-	 GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE)
++	 GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE | \
++	 GDMA_DRV_CAP_FLAG_1_HW_VPORT_LINK_AWARE)
+ 
+ #define GDMA_DRV_CAP_FLAGS2 0
+ 
+diff --git a/include/net/mana/hw_channel.h b/include/net/mana/hw_channel.h
+index 83cf93338eb3..16feb39616c1 100644
+--- a/include/net/mana/hw_channel.h
++++ b/include/net/mana/hw_channel.h
+@@ -24,6 +24,8 @@
+ #define HWC_INIT_DATA_PF_DEST_CQ_ID	11
+ 
+ #define HWC_DATA_CFG_HWC_TIMEOUT 1
++#define HWC_DATA_HW_LINK_CONNECT 2
++#define HWC_DATA_HW_LINK_DISCONNECT 3
+ 
+ #define HW_CHANNEL_WAIT_RESOURCE_TIMEOUT_MS 30000
+ 
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 0921485565c0..8906901535f5 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -477,6 +477,10 @@ struct mana_context {
+ 	struct dentry *mana_eqs_debugfs;
+ 
+ 	struct net_device *ports[MAX_PORTS_IN_MANA_DEV];
++
++	/* Link state change work */
++	struct work_struct link_change_work;
++	u32 link_event;
+ };
+ 
+ struct mana_port_context {
 -- 
-2.47.3
+2.34.1
 
 
