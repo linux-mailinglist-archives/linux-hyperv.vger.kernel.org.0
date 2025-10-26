@@ -1,60 +1,62 @@
-Return-Path: <linux-hyperv+bounces-7331-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7332-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6568EC0AB09
-	for <lists+linux-hyperv@lfdr.de>; Sun, 26 Oct 2025 15:50:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84536C0AB51
+	for <lists+linux-hyperv@lfdr.de>; Sun, 26 Oct 2025 15:51:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2924C4E9EEE
-	for <lists+linux-hyperv@lfdr.de>; Sun, 26 Oct 2025 14:50:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6E003B2EEA
+	for <lists+linux-hyperv@lfdr.de>; Sun, 26 Oct 2025 14:50:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F35E2EA14D;
-	Sun, 26 Oct 2025 14:50:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C864F2DF15E;
+	Sun, 26 Oct 2025 14:50:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IisAOiVo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LCqrYxQx"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B722E9EDF;
-	Sun, 26 Oct 2025 14:50:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD841527B4;
+	Sun, 26 Oct 2025 14:50:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761490213; cv=none; b=Q+ExCnFmkyi9IQw5a92cfMAbrDJRoT55N3OGE6Xv9Ja+z4kjGGcqc/8nUfN/5Gnf7k3rEwN8/IR2SOspv/W+orTObOl462OazeszApzt7BwuQoqvk1ziZezKbq5EHfwEQ2Esh40aUwSGg/STx9Jhbw3P/HHeTMNMOy74iTIH4NY=
+	t=1761490254; cv=none; b=frktvhB4pS4eqrajmU1EdBDWRWHTpDPgXe+wUy6ePikrFSM5fMiMuimlnjOz8yOTftGfoCVnlc1K7r7svRSm4Kaa0ZkGecpt+2J2m/i8d5uf+NGX1HGyocb7QscKsJUiQIlj7BDEpj5F7UZCVqyL+u8HJUCkNgrX1BryP2hDEKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761490213; c=relaxed/simple;
-	bh=ojPfbBo/Lc6hYZIEwbwJYWRM8SKQMjVIno53UELYJ4U=;
+	s=arc-20240116; t=1761490254; c=relaxed/simple;
+	bh=tZ1b/j/xd1u/qe2VCxt/mPYUg7poWAV2HiZHY/okZbA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G6wvCrwYixQKo9g3H6Y2uA27kfxxn/SW8QDZGkkQgTfPSLLEZolswacVIr6lTPoP3Ye0n4wpoZLXOD0XivoEycs5cWoxX9eRREO2sRGwdmT0Vz45kmCkAtPPAYnB3wA0gt0oPGnGWCip8XuC9V0vKgdprovIGdqKXepbfbygUtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IisAOiVo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E1CEC4CEF1;
-	Sun, 26 Oct 2025 14:50:11 +0000 (UTC)
+	 MIME-Version:Content-Type; b=s5f9EYof9X7PZ04p6dTfZL1oVr/LubQT0G16x9lQkusYtMxG3shcpbnLadrJpVmlVYt+OvsZB7fpP0ILLTWmBOrVBO9c9jxYe7RjqcosGVm0/1SkrNAQQyLE6xKQrEvKto5TLztIcLYdlFd142IXMSBVIRXPF5BH1k0RCxm7qyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LCqrYxQx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2482EC4CEE7;
+	Sun, 26 Oct 2025 14:50:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761490212;
-	bh=ojPfbBo/Lc6hYZIEwbwJYWRM8SKQMjVIno53UELYJ4U=;
+	s=k20201202; t=1761490254;
+	bh=tZ1b/j/xd1u/qe2VCxt/mPYUg7poWAV2HiZHY/okZbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IisAOiVo65sa09KFdempEd/g529KhcQW8Hl2iXQg6INAgLoHE8t2e65an6JL/MHgk
-	 wdy/3nfPphKA55FQETF9I8Iokr9gHooQD7XIZ5Z+dMvMay3EGFO9XA4TqohwMJ+MOX
-	 Hqg5/1f4ayD382YfTQM1ZFnIUERadb+JppQuKq3DMzWK0KbJWAeX8+gD3+8pwz9z5f
-	 hCyq42ozcbJNNYac8uanP753GDK2+I5RDuLhgH+CSw1TLVAnJqc4XrHp9312BXIFFK
-	 FLy6tmRjrv02NpThyHG4F+N5O67tOa9WeQWqdvde8/IUXEywZnjAl17HBzFn6JHBNy
-	 jmhqtgGiw1BBQ==
+	b=LCqrYxQxmUvs67PQ1gnztDLpP6E7DtwEX/RUh+inS+saHLxYfIlXmlIz4FyeMLbsG
+	 7GDW0oxxljkLSzxM/fXJjnKD7RUhVk+HvVrI8Ljk528OMnjCpbQFa6w6T8GC4nW3Fx
+	 5EI6FSoPIr/BOls5HnRVI3owOGdmOSMCFFtX8sSMLdDYTg7e+eYiGQ2mk8q9Z7KUF5
+	 ygXnIRymU3ZIcKRg9FVILQe/kRcPYzhSCB215bQ9pZ2CvGBhRsW0y8FhF6V2wM8FA7
+	 5mIysJlWkpZym+sVxzKlPWqPpwvmYuDbY6LxD5n3iAKZQJwd2zzFzWPykeY98rGBfz
+	 vGkTSE2aSSjwg==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Wei Liu <wei.liu@kernel.org>,
+Cc: Wei Liu <wei.liu@kernel.org>,
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
 	Sasha Levin <sashal@kernel.org>,
 	kys@microsoft.com,
 	haiyangz@microsoft.com,
 	decui@microsoft.com,
-	linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.17] hyperv: Add missing field to hv_output_map_device_interrupt
-Date: Sun, 26 Oct 2025 10:48:46 -0400
-Message-ID: <20251026144958.26750-8-sashal@kernel.org>
+	daniel.lezcano@linaro.org,
+	tglx@linutronix.de,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.17] clocksource: hyper-v: Skip unnecessary checks for the root partition
+Date: Sun, 26 Oct 2025 10:49:03 -0400
+Message-ID: <20251026144958.26750-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251026144958.26750-1-sashal@kernel.org>
 References: <20251026144958.26750-1-sashal@kernel.org>
@@ -70,71 +72,111 @@ X-stable-base: Linux 6.17.5
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+From: Wei Liu <wei.liu@kernel.org>
 
-[ Upstream commit 4cd661c248b6671914ad59e16760bb6d908dfc61 ]
+[ Upstream commit 47691ced158ab3a7ce2189b857b19c0c99a9aa80 ]
 
-This field is unused, but the correct structure size is needed
-when computing the amount of space for the output argument to
-reside, so that it does not cross a page boundary.
+The HV_ACCESS_TSC_INVARIANT bit is always zero when Linux runs as the
+root partition. The root partition will see directly what the hardware
+provides.
 
-Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+The old logic in ms_hyperv_init_platform caused the native TSC clock
+source to be incorrectly marked as unstable on x86. Fix it.
+
+Skip the unnecessary checks in code for the root partition. Add one
+extra comment in code to clarify the behavior.
+
+Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 Signed-off-by: Wei Liu <wei.liu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
 LLM Generated explanations, may be completely bogus:
 
-YES — The change is a low-risk ABI fix that prevents a real functional
-hazard for the new Hyper-V root-partition path.
+YES – this fix prevents Linux Hyper-V root partitions from unnecessarily
+downgrading their primary time source.
 
-- `include/hyperv/hvhdk_mini.h:302-305` now models `struct
-  hv_output_map_device_interrupt` with the host-defined
-  `ext_status_deprecated[5]` trailer. Without those 40 bytes we under-
-  represent what the hypervisor actually writes back for
-  `HVCALL_MAP_DEVICE_INTERRUPT`, so callers reserve too little space for
-  the result.
-- `arch/x86/hyperv/irqdomain.c:21-64` takes the shared per-CPU hypercall
-  output page (`*this_cpu_ptr(hyperv_pcpu_output_arg)`) and hands it
-  straight to the hypervisor expecting exactly `sizeof(struct
-  hv_output_map_device_interrupt)` bytes of room. With the old, shorter
-  definition the host still stores the extra status words, which can
-  spill past the area the kernel thinks is free and into whatever other
-  data has been staged in that page, triggering hypercall failures or
-  corrupting later outputs.
-- The shared-page allocation in `drivers/hv/hv_common.c:470-498` makes
-  this especially risky: every root-partition hypercall in the kernel
-  reuses the very same page, and several (`hv_call_get_vp_registers()`,
-  `hv_call_get_partition_property()`, etc.) rely on the struct
-  definitions to know how much of that page is safe to use. On big
-  systems where the IPI/vpset variable header already consumes most of
-  the page, the missing 40 bytes are enough to push the returned
-  interrupt descriptor over a page boundary, at which point Hyper-V
-  rejects the call with `HV_STATUS_INVALID_PARAMETER` and MSI setup in
-  the nested root partition fails outright.
+- `mark_tsc_unstable()` is now gated by `!hv_root_partition()`
+  (`arch/x86/kernel/cpu/mshyperv.c:655`), so the native TSC is no longer
+  flagged as unreliable when the kernel is the Hyper-V root partition.
+  Without this, hosts always fell back to the slower Hyper-V reference
+  clock, hurting timekeeping and scheduler precision.
+- The Hyper-V clocksource ratings are lowered for either
+  `HV_ACCESS_TSC_INVARIANT` guests or root partitions
+  (`drivers/clocksource/hyperv_timer.c:566-569`). That ensures the
+  hardware TSC regains priority on hosts, matching what the platform
+  actually guarantees.
+- All new behaviour is tightly scoped to the root-partition path; guests
+  still see the old logic, so regression risk for common deployments is
+  negligible.
+- The change aligns the code with the documented hardware behaviour
+  (root partitions always see hardware invariant TSC) without
+  introducing new features, making it an appropriate stable fix. (On
+  older trees that still expose `hv_root_partition` as a global, this
+  needs the usual trivial adaptation.)
 
-Given that the regression was introduced with the new root-partition
-headers (commit 0bd921a4b4d9c) and the fix is confined to restoring the
-correct ABI layout, this should go to stable kernels that carry the
-root-partition support. After backporting, run the Hyper-V root-
-partition interrupt mapping or nested MSI smoke tests if available.
+ arch/x86/kernel/cpu/mshyperv.c     | 11 ++++++++++-
+ drivers/clocksource/hyperv_timer.c | 10 +++++++++-
+ 2 files changed, 19 insertions(+), 2 deletions(-)
 
- include/hyperv/hvhdk_mini.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/include/hyperv/hvhdk_mini.h b/include/hyperv/hvhdk_mini.h
-index 42e7876455b5b..858f6a3925b30 100644
---- a/include/hyperv/hvhdk_mini.h
-+++ b/include/hyperv/hvhdk_mini.h
-@@ -301,6 +301,7 @@ struct hv_input_map_device_interrupt {
- /* HV_OUTPUT_MAP_DEVICE_INTERRUPT */
- struct hv_output_map_device_interrupt {
- 	struct hv_interrupt_entry interrupt_entry;
-+	u64 ext_status_deprecated[5];
- } __packed;
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index c78f860419d69..25773af116bc4 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -565,6 +565,11 @@ static void __init ms_hyperv_init_platform(void)
+ 	machine_ops.crash_shutdown = hv_machine_crash_shutdown;
+ #endif
+ #endif
++	/*
++	 * HV_ACCESS_TSC_INVARIANT is always zero for the root partition. Root
++	 * partition doesn't need to write to synthetic MSR to enable invariant
++	 * TSC feature. It sees what the hardware provides.
++	 */
+ 	if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) {
+ 		/*
+ 		 * Writing to synthetic MSR 0x40000118 updates/changes the
+@@ -636,8 +641,12 @@ static void __init ms_hyperv_init_platform(void)
+ 	 * TSC should be marked as unstable only after Hyper-V
+ 	 * clocksource has been initialized. This ensures that the
+ 	 * stability of the sched_clock is not altered.
++	 *
++	 * HV_ACCESS_TSC_INVARIANT is always zero for the root partition. No
++	 * need to check for it.
+ 	 */
+-	if (!(ms_hyperv.features & HV_ACCESS_TSC_INVARIANT))
++	if (!hv_root_partition() &&
++	    !(ms_hyperv.features & HV_ACCESS_TSC_INVARIANT))
+ 		mark_tsc_unstable("running on Hyper-V");
  
- /* HV_INPUT_UNMAP_DEVICE_INTERRUPT */
+ 	hardlockup_detector_disable();
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index 2edc13ca184e0..10356d4ec55c3 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -549,14 +549,22 @@ static void __init hv_init_tsc_clocksource(void)
+ 	union hv_reference_tsc_msr tsc_msr;
+ 
+ 	/*
++	 * When running as a guest partition:
++	 *
+ 	 * If Hyper-V offers TSC_INVARIANT, then the virtualized TSC correctly
+ 	 * handles frequency and offset changes due to live migration,
+ 	 * pause/resume, and other VM management operations.  So lower the
+ 	 * Hyper-V Reference TSC rating, causing the generic TSC to be used.
+ 	 * TSC_INVARIANT is not offered on ARM64, so the Hyper-V Reference
+ 	 * TSC will be preferred over the virtualized ARM64 arch counter.
++	 *
++	 * When running as the root partition:
++	 *
++	 * There is no HV_ACCESS_TSC_INVARIANT feature. Always lower the rating
++	 * of the Hyper-V Reference TSC.
+ 	 */
+-	if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) {
++	if ((ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) ||
++	    hv_root_partition()) {
+ 		hyperv_cs_tsc.rating = 250;
+ 		hyperv_cs_msr.rating = 245;
+ 	}
 -- 
 2.51.0
 
