@@ -1,127 +1,141 @@
-Return-Path: <linux-hyperv+bounces-7330-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7331-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C6B1C09008
-	for <lists+linux-hyperv@lfdr.de>; Sat, 25 Oct 2025 14:07:33 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6568EC0AB09
+	for <lists+linux-hyperv@lfdr.de>; Sun, 26 Oct 2025 15:50:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AA8CC3AAEA8
-	for <lists+linux-hyperv@lfdr.de>; Sat, 25 Oct 2025 12:07:31 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2924C4E9EEE
+	for <lists+linux-hyperv@lfdr.de>; Sun, 26 Oct 2025 14:50:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BDD9242D95;
-	Sat, 25 Oct 2025 12:07:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F35E2EA14D;
+	Sun, 26 Oct 2025 14:50:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pgieb3JZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IisAOiVo"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFC71E51EB
-	for <linux-hyperv@vger.kernel.org>; Sat, 25 Oct 2025 12:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B722E9EDF;
+	Sun, 26 Oct 2025 14:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761394051; cv=none; b=r+hhb6Fofqa3WzD92uCs51thA9IrvqzdWrqU5wGO4zK4mgZLuxv9jHgptVwZDwLjmHcLJT7RRfpnmseNyUdzScs0fYabQks7y9Egbp9tJ0Ijq8mBAs9v2F7YxesenuFaUX9fU6LUVR02PB0vCKPxmYmOAIwqeZjxOyQDLTFji+w=
+	t=1761490213; cv=none; b=Q+ExCnFmkyi9IQw5a92cfMAbrDJRoT55N3OGE6Xv9Ja+z4kjGGcqc/8nUfN/5Gnf7k3rEwN8/IR2SOspv/W+orTObOl462OazeszApzt7BwuQoqvk1ziZezKbq5EHfwEQ2Esh40aUwSGg/STx9Jhbw3P/HHeTMNMOy74iTIH4NY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761394051; c=relaxed/simple;
-	bh=wZJADg3XnZ6RwpXOOcROiNVqbWnU5p1aLlzgqnZjIX4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JjLm8qTIkPWq44+GtBF2/2EGl9hofF3Wme5tv04OMVOFcXQBvOqoURcNeiARtYe4I1dMrE/yniIX8oT/CqFkYhmjBIDPWwVp7jEgKpNCY/jYADFg7PjVlQ4ikL60wJGu+qe+L8oT3Ax5t0zU+p2AD4yaZgMfFgZYLQUwdXbRvbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pgieb3JZ; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-33bda2306c5so2855424a91.0
-        for <linux-hyperv@vger.kernel.org>; Sat, 25 Oct 2025 05:07:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761394049; x=1761998849; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GvErBYG+vAV0vX5EwaTO9Q2laL6zacG+FzbGHb5fv/4=;
-        b=Pgieb3JZPxoUx175vGf+R47vp01daXZgOR9vtGZBwjzxwPlDVMQE4kc3TLCsQM7Clt
-         +PLd+PoD7+F/PjVEwPi/AvFAkr2aXLDX0fGAp0JxlU/HCVDkWihMpM3ImwFlMMJCOy1f
-         1yXpLO+XEvn2U+M6/FZnnMdKC/uGwZ8AUWUI5RxtPb5kHRb7iuypVNzxYXO9ewvIwtMJ
-         gOz/FBdZLjMq/YBnZv6ObiuibUn2PN2iB0LpmSIbeijbNj0lynePu9XXWWHvfYhetTDc
-         5eWNqGuluBv5xsYbgcV1FXHS0eBXBc0rFO8QShn2nxyIxkQ881+n31vX52WvuUjbZStk
-         j5IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761394049; x=1761998849;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GvErBYG+vAV0vX5EwaTO9Q2laL6zacG+FzbGHb5fv/4=;
-        b=BxIVWRU1oNNN+BXKArJyriKhTj+u2vFJ7iFLFSVcvuVptzuuElta2hHjRruJHdXQy3
-         5Dx+l+voMc2JuC2fQ7faz/5/pN071CCApvUEsGRwR9UxzPD6nE6uz+fqHEy65Gd0nQr3
-         gJ3IiR44Aog2i0tBxZmceXGTYmX/bN40VrJJW1MDLcw33hQune3/+S+Fo4syS1OIXotp
-         47vcR06A5MDLQ9wOwQ/erw/3z8gln8InfpxL0wAj7z2NSt0nqwqe3gpNSWs2RgosY+FJ
-         KCKTo4LwRBN5coyTx23T7kuIf2BUUXCDVVhkQ+tmTjrbVzcZw2bFyix+knycA1JWOBsb
-         Q+8g==
-X-Gm-Message-State: AOJu0YxzASclgFs0vcnl7Mi3YF0Gquyiq9LC4DuB8guu3yC7k41rKvcM
-	8wgJGOB8ua+kkTgzsY7JjcsU+1n6QUDcgFly+tTq2Z1/whcKRzgDluDX
-X-Gm-Gg: ASbGncskiZYUTrJI/BSU2UcwQTmawUNiafO0gjfWtnY99eapRyIBTggRTgZvb1YqPMA
-	M4RCqIyHJFx+pJAbgucH6JhL2HcMukmAyaxdf3ZTUt3iqI4EZkhERnFZf7/uYfoJvjUz050ELoj
-	9W7iuDHaDwaZQsRG7WE+Nv3qr56n4PXEkeR8ilQlMrE4KYb1eG59zEotXe1RlOfh8yZHnDqyp/K
-	WiuC7MY95cOwAFEZsrcMD0Qtbs4lasCs20FWMAWjUlt5W74sj0fo9DhdaAl2o/zi7DH9Wi+G4ux
-	9oIjc9r410T9Aqus7ymkhmUfCH+0Mk74hjIQGsDSXBPVim1WNn1WWiSZS/9ZE3zxImoJSQYpZ9p
-	d6m0WHg6wvTBbq9Kd1Yzxa6r0l1JvLrZm+PgaFpESAzC/epOQCZVKnAlmaUnbOG4+KXMKjWHTbo
-	MW76VQLtGdYb6A/pZR
-X-Google-Smtp-Source: AGHT+IHAYxum3m94nffwJVgTx2pWh1WNJorhHj73gH4JXy6dRTn2aqTnLu+PFuJH09vGy3wCXje9sQ==
-X-Received: by 2002:a17:90b:28c4:b0:327:c0c6:8829 with SMTP id 98e67ed59e1d1-33bcf8e4f50mr39883472a91.24.1761394048970;
-        Sat, 25 Oct 2025 05:07:28 -0700 (PDT)
-Received: from crl-3.node2.local ([125.63.65.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-33fee405b6asm945846a91.3.2025.10.25.05.07.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Oct 2025 05:07:28 -0700 (PDT)
-From: kriish.sharma2006@gmail.com
-To: kys@microsoft.com,
+	s=arc-20240116; t=1761490213; c=relaxed/simple;
+	bh=ojPfbBo/Lc6hYZIEwbwJYWRM8SKQMjVIno53UELYJ4U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=G6wvCrwYixQKo9g3H6Y2uA27kfxxn/SW8QDZGkkQgTfPSLLEZolswacVIr6lTPoP3Ye0n4wpoZLXOD0XivoEycs5cWoxX9eRREO2sRGwdmT0Vz45kmCkAtPPAYnB3wA0gt0oPGnGWCip8XuC9V0vKgdprovIGdqKXepbfbygUtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IisAOiVo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E1CEC4CEF1;
+	Sun, 26 Oct 2025 14:50:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761490212;
+	bh=ojPfbBo/Lc6hYZIEwbwJYWRM8SKQMjVIno53UELYJ4U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=IisAOiVo65sa09KFdempEd/g529KhcQW8Hl2iXQg6INAgLoHE8t2e65an6JL/MHgk
+	 wdy/3nfPphKA55FQETF9I8Iokr9gHooQD7XIZ5Z+dMvMay3EGFO9XA4TqohwMJ+MOX
+	 Hqg5/1f4ayD382YfTQM1ZFnIUERadb+JppQuKq3DMzWK0KbJWAeX8+gD3+8pwz9z5f
+	 hCyq42ozcbJNNYac8uanP753GDK2+I5RDuLhgH+CSw1TLVAnJqc4XrHp9312BXIFFK
+	 FLy6tmRjrv02NpThyHG4F+N5O67tOa9WeQWqdvde8/IUXEywZnjAl17HBzFn6JHBNy
+	 jmhqtgGiw1BBQ==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	kys@microsoft.com,
 	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
 	decui@microsoft.com,
-	longli@microsoft.com
-Cc: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kriish Sharma <kriish.sharma2006@gmail.com>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] hv: fix missing kernel-doc description for 'size' in request_arr_init()
-Date: Sat, 25 Oct 2025 12:07:07 +0000
-Message-Id: <20251025120707.686825-1-kriish.sharma2006@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.17] hyperv: Add missing field to hv_output_map_device_interrupt
+Date: Sun, 26 Oct 2025 10:48:46 -0400
+Message-ID: <20251026144958.26750-8-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251026144958.26750-1-sashal@kernel.org>
+References: <20251026144958.26750-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.17.5
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Kriish Sharma <kriish.sharma2006@gmail.com>
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 
-Add missing kernel-doc entry for the @size parameter in
-request_arr_init(), fixing the following documentation warning
-reported by the kernel test robot and detected via kernel-doc:
+[ Upstream commit 4cd661c248b6671914ad59e16760bb6d908dfc61 ]
 
-Warning: drivers/hv/channel.c:595 function parameter 'size' not described in 'request_arr_init'
+This field is unused, but the correct structure size is needed
+when computing the amount of space for the output argument to
+reside, so that it does not cross a page boundary.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202503021934.wH1BERla-lkp@intel.com
-Signed-off-by: Kriish Sharma <kriish.sharma2006@gmail.com>
+Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hv/channel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-index 88485d255a42..6821f225248b 100644
---- a/drivers/hv/channel.c
-+++ b/drivers/hv/channel.c
-@@ -590,7 +590,7 @@ EXPORT_SYMBOL_GPL(vmbus_establish_gpadl);
-  * keeps track of the next available slot in the array. Initially, each
-  * slot points to the next one (as in a Linked List). The last slot
-  * does not point to anything, so its value is U64_MAX by default.
-- * @size The size of the array
-+ * @size: The size of the array
-  */
- static u64 *request_arr_init(u32 size)
- {
+LLM Generated explanations, may be completely bogus:
+
+YES — The change is a low-risk ABI fix that prevents a real functional
+hazard for the new Hyper-V root-partition path.
+
+- `include/hyperv/hvhdk_mini.h:302-305` now models `struct
+  hv_output_map_device_interrupt` with the host-defined
+  `ext_status_deprecated[5]` trailer. Without those 40 bytes we under-
+  represent what the hypervisor actually writes back for
+  `HVCALL_MAP_DEVICE_INTERRUPT`, so callers reserve too little space for
+  the result.
+- `arch/x86/hyperv/irqdomain.c:21-64` takes the shared per-CPU hypercall
+  output page (`*this_cpu_ptr(hyperv_pcpu_output_arg)`) and hands it
+  straight to the hypervisor expecting exactly `sizeof(struct
+  hv_output_map_device_interrupt)` bytes of room. With the old, shorter
+  definition the host still stores the extra status words, which can
+  spill past the area the kernel thinks is free and into whatever other
+  data has been staged in that page, triggering hypercall failures or
+  corrupting later outputs.
+- The shared-page allocation in `drivers/hv/hv_common.c:470-498` makes
+  this especially risky: every root-partition hypercall in the kernel
+  reuses the very same page, and several (`hv_call_get_vp_registers()`,
+  `hv_call_get_partition_property()`, etc.) rely on the struct
+  definitions to know how much of that page is safe to use. On big
+  systems where the IPI/vpset variable header already consumes most of
+  the page, the missing 40 bytes are enough to push the returned
+  interrupt descriptor over a page boundary, at which point Hyper-V
+  rejects the call with `HV_STATUS_INVALID_PARAMETER` and MSI setup in
+  the nested root partition fails outright.
+
+Given that the regression was introduced with the new root-partition
+headers (commit 0bd921a4b4d9c) and the fix is confined to restoring the
+correct ABI layout, this should go to stable kernels that carry the
+root-partition support. After backporting, run the Hyper-V root-
+partition interrupt mapping or nested MSI smoke tests if available.
+
+ include/hyperv/hvhdk_mini.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/include/hyperv/hvhdk_mini.h b/include/hyperv/hvhdk_mini.h
+index 42e7876455b5b..858f6a3925b30 100644
+--- a/include/hyperv/hvhdk_mini.h
++++ b/include/hyperv/hvhdk_mini.h
+@@ -301,6 +301,7 @@ struct hv_input_map_device_interrupt {
+ /* HV_OUTPUT_MAP_DEVICE_INTERRUPT */
+ struct hv_output_map_device_interrupt {
+ 	struct hv_interrupt_entry interrupt_entry;
++	u64 ext_status_deprecated[5];
+ } __packed;
+ 
+ /* HV_INPUT_UNMAP_DEVICE_INTERRUPT */
 -- 
-2.34.1
+2.51.0
 
 
