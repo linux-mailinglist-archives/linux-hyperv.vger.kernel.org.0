@@ -1,100 +1,121 @@
-Return-Path: <linux-hyperv+bounces-7353-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7354-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76A5BC1185D
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Oct 2025 22:19:45 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AE23C118B0
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Oct 2025 22:24:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 041D54E777A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Oct 2025 21:19:37 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A18914F7A42
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Oct 2025 21:22:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6CE930DEA2;
-	Mon, 27 Oct 2025 21:19:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79C4832A3C1;
+	Mon, 27 Oct 2025 21:21:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="oUsxudKL"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Eg2EjnVG"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 715022E6CA6;
-	Mon, 27 Oct 2025 21:19:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08B2F2E22A6;
+	Mon, 27 Oct 2025 21:21:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761599974; cv=none; b=JvIXl2fyJ0CY2v3xo1GkyCRTnnBC6Nbs92yU4ck8CJCq2PoyaPAzi15cPM5M17fKTa0/B0DnBKmjWpJoImwoey2rOrfiIolgAi5nHRJSenB8+YABnlNfNuFqdnneJKbQLv1zxT70BJ3QF95ROKbbpFSFiuXb+KMglQs8ejZeeY0=
+	t=1761600119; cv=none; b=LXfMyusFvVfKYaXYcqL79pk73AVfJqsb0zHQW2xiNmbQEMemTVVWNKtjdPbgB/OatsKkU5l3mkLtMXsH0OWPeyUulBmbVimwaHaoUNfHscX1HFP5JAJ/zWjbaHYYPUUQPbLv10oXo7cxI93EH3YJCltATdfBfoN+NsqbjZ4X8iQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761599974; c=relaxed/simple;
-	bh=6TCiXmKZmHvlxUnmjyYUaqLbN9oZjycAy1AqgqBs7EI=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Dz/EPgdiUUKiFMGb118uJQgMsxvMygNnoBCmOWb96LxQeqNiGQ9nELuolmYcuVIDNHFcBKjoktV6n2UYqe8xFfN2Qd6GY9jxQtKSpNxY6vPi5PNnwVT0WflUSWHjpRI1MXqmpmQ6vKvSZxqAmtDnnwgpZtFjoSHXnVnmRlwdbIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=oUsxudKL; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1761600119; c=relaxed/simple;
+	bh=Vy4SHCr7raGjYOr05guIcmLTlVdtJNy1rrIG1WAivlo=;
+	h=Message-ID:Date:MIME-Version:To:From:Cc:Subject:Content-Type; b=jcWOmyuAPzcUWuT0AvNa90MgIfhu3AiZGCTu5twk00iiVmcfuBfMTg7J25HO8B0W8sUb/gLwqMJly65UxYhLJX30LWIclrEIunwL8HqythtIXvVw6tpmQnWAGBk13qMb6zeE7NU22vy7vjzYXOnyElcHWvxq4v4KFGHLOVVb21g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Eg2EjnVG; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [192.168.201.246] (unknown [4.194.122.162])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 7D639200FE4F;
-	Mon, 27 Oct 2025 14:19:25 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7D639200FE4F
+Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 0DC96200FE4F;
+	Mon, 27 Oct 2025 14:21:57 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0DC96200FE4F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1761599972;
-	bh=f33z+NeSbMiTM7slCE3zWmMDaC5DHvqCgfHYGeaDfJo=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=oUsxudKLw8X7oPli2lri3x/P9MYBYDiwdXeJsxSrCsJZ8j+lSItOp7bgNpAF6D3yH
-	 bmbBmrcQ72pqREWHK3H/NgkSce640KnZ8aS+rRCcnJwqsyus0LFmbTJxweiz9l+tPN
-	 Ss8AbbVNDxzHdjafT7F+YFpH5fJDyecjSTWaAklQ=
-Message-ID: <accc901b-999c-46fe-9c44-07cbb4301769@linux.microsoft.com>
-Date: Mon, 27 Oct 2025 14:19:21 -0700
+	s=default; t=1761600117;
+	bh=zo4Zdd3KS4ECy8lsDT32wIILISFjSmQ/bpZ4QJoW+rM=;
+	h=Date:To:From:Cc:Subject:From;
+	b=Eg2EjnVGAJDtCBAM0ob1IWBvuUaCz2w+EpjVgvIW1jQ1hVlmhf6Fs+3vWMNvFBaLC
+	 K/IurUGKx+oehnRQmg2bKCaLcd2qq7XnmR7VvVAuHpX2qjEv48VT/Hn1iW7tyOX6hB
+	 8j3/RyiRqne4/y1HGeX2J7eM4afHM9NVVS3TZR78=
+Message-ID: <a9b8a3ee-b35b-5c45-5042-2466607abcd0@linux.microsoft.com>
+Date: Mon, 27 Oct 2025 14:21:56 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, arnd@arndb.de,
- easwar.hariharan@linux.microsoft.com, anbelski@linux.microsoft.com,
- nunodasneves@linux.microsoft.com, skinsburskii@linux.microsoft.com
-Subject: Re: [PATCH v3 2/2] hyperv: Enable clean shutdown for root partition
- with MSHV
-To: Praveen K Paladugu <prapal@linux.microsoft.com>
-References: <20251027202859.72006-1-prapal@linux.microsoft.com>
- <20251027202859.72006-3-prapal@linux.microsoft.com>
-From: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
 Content-Language: en-US
-In-Reply-To: <20251027202859.72006-3-prapal@linux.microsoft.com>
+To: alex.williamson@redhat.com, joe@perches.com
+From: Mukesh R <mrathor@linux.microsoft.com>
+Cc: kvm@vger.kernel.org,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>
+Subject: [RFC] Making vma_to_pfn() public (due to vm_pgoff change)
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 10/27/2025 1:28 PM, Praveen K Paladugu wrote:
-> Without configuing sleep state info within mshv, if a root partition is
-> shut down, it will try to shutdown by writing to ACPI regions. These
-> writes are intercepted by mshv and will result in a Machine Check
-> Exception (MCE).
-> 
-> Root eventually panics with a trace similar to:
-> 
-> [   81.306348] reboot: Power down
-> [   81.314709] mce: [Hardware Error]: CPU 0: Machine Check Exception: 4 Bank 0: b2000000c0060001
-> [   81.314711] mce: [Hardware Error]: TSC 3b8cb60a66 PPIN 11d98332458e4ea9
-> [   81.314713] mce: [Hardware Error]: PROCESSOR 0:606a6 TIME 1759339405 SOCKET 0 APIC 0 microcode ffffffff
-> [   81.314715] mce: [Hardware Error]: Run the above through 'mcelog --ascii'
-> [   81.314716] mce: [Hardware Error]: Machine check: Processor context corrupt
-> [   81.314717] Kernel panic - not syncing: Fatal machine check
-> 
-> To prevent this, properly configure sleep states within MSHV, enable a
-> reboot notifier, allowing the root partition to cleanly shut down without
-> any panics. Only S5 sleep state is enabled for now.
-> 
-> Signed-off-by: Praveen K Paladugu <prapal@linux.microsoft.com>
-> Co-developed-by: Anatol Belski <anbelski@linux.microsoft.com>
-> Signed-off-by: Anatol Belski <anbelski@linux.microsoft.com>
-> ---
->  arch/x86/hyperv/hv_init.c       |   8 +++
->  arch/x86/include/asm/mshyperv.h |   2 +
->  drivers/hv/mshv_common.c        | 103 ++++++++++++++++++++++++++++++++
->  3 files changed, 113 insertions(+)
-> 
+Hi Alex,
 
-Reviewed-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+This regards vfio passthru support on hyperv running linux as dom0 aka
+root. At a high level, cloud hypervisor uses vfio for set up as usual,
+then maps the mmio ranges via the hyperv linux driver ioctls.
+
+Over a year ago, when working on this I had used vm_pgoff to get the pfn
+for the mmio, that was 5.15 and early 6.x kernels. Now that I am porting
+to 6.18 for upstreaming, I noticed:
+
+commit aac6db75a9fc
+Author: Alex Williamson <alex.williamson@redhat.com>
+    vfio/pci: Use unmap_mapping_range()
+
+changed the behavior and vm_pgoff is no longer holding the pfn. In light
+of that, I wondered if the following minor change, making vma_to_pfn() 
+public (after renaming it), would be acceptable to you.
+
+Thanks,
+-Mukesh
+
+-----------------------------------------------------------------------------
+diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+index 7dcf5439dedc..43083a16d8a2 100644
+--- a/drivers/vfio/pci/vfio_pci_core.c
++++ b/drivers/vfio/pci/vfio_pci_core.c
+@@ -1628,7 +1628,7 @@ void vfio_pci_memory_unlock_and_restore(struct vfio_pci_core_device *vdev, u16 c
+ 	up_write(&vdev->memory_lock);
+ }
+ 
+-static unsigned long vma_to_pfn(struct vm_area_struct *vma)
++unsigned long vfio_pci_vma_to_pfn(struct vm_area_struct *vma)
+ {
+ 	struct vfio_pci_core_device *vdev = vma->vm_private_data;
+ 	int index = vma->vm_pgoff >> (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT);
+@@ -1647,7 +1647,7 @@ static vm_fault_t vfio_pci_mmap_huge_fault(struct vm_fault *vmf,
+ 	struct vfio_pci_core_device *vdev = vma->vm_private_data;
+ 	unsigned long addr = vmf->address & ~((PAGE_SIZE << order) - 1);
+ 	unsigned long pgoff = (addr - vma->vm_start) >> PAGE_SHIFT;
+-	unsigned long pfn = vma_to_pfn(vma) + pgoff;
++	unsigned long pfn = vfio_pci_vma_to_pfn(vma) + pgoff;
+ 	vm_fault_t ret = VM_FAULT_SIGBUS;
+ 
+ 	if (order && (addr < vma->vm_start ||
+diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
+index f541044e42a2..88925c6b8a22 100644
+--- a/include/linux/vfio_pci_core.h
++++ b/include/linux/vfio_pci_core.h
+@@ -119,6 +119,7 @@ ssize_t vfio_pci_core_read(struct vfio_device *core_vdev, char __user *buf,
+ 		size_t count, loff_t *ppos);
+ ssize_t vfio_pci_core_write(struct vfio_device *core_vdev, const char __user *buf,
+ 		size_t count, loff_t *ppos);
++unsigned long vfio_pci_vma_to_pfn(struct vm_area_struct *vma);
+ int vfio_pci_core_mmap(struct vfio_device *core_vdev, struct vm_area_struct *vma);
+ void vfio_pci_core_request(struct vfio_device *core_vdev, unsigned int count);
+ int vfio_pci_core_match(struct vfio_device *core_vdev, char *buf);
+
+
 
