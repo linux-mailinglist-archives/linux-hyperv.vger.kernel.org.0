@@ -1,183 +1,114 @@
-Return-Path: <linux-hyperv+bounces-7332-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7333-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84536C0AB51
-	for <lists+linux-hyperv@lfdr.de>; Sun, 26 Oct 2025 15:51:36 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68068C0CDEC
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Oct 2025 11:06:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6E003B2EEA
-	for <lists+linux-hyperv@lfdr.de>; Sun, 26 Oct 2025 14:50:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C587D19A5E7B
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Oct 2025 10:04:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C864F2DF15E;
-	Sun, 26 Oct 2025 14:50:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0425F1DE4E1;
+	Mon, 27 Oct 2025 10:03:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LCqrYxQx"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jnNW8aaQ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD841527B4;
-	Sun, 26 Oct 2025 14:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82C9813B280;
+	Mon, 27 Oct 2025 10:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761490254; cv=none; b=frktvhB4pS4eqrajmU1EdBDWRWHTpDPgXe+wUy6ePikrFSM5fMiMuimlnjOz8yOTftGfoCVnlc1K7r7svRSm4Kaa0ZkGecpt+2J2m/i8d5uf+NGX1HGyocb7QscKsJUiQIlj7BDEpj5F7UZCVqyL+u8HJUCkNgrX1BryP2hDEKE=
+	t=1761559417; cv=none; b=KpZZAnu9wVVQvhqghoUnA5AT1jYHEehwuuhVanSJPCs/bk/73ILSx7V5O+e8oIpF3YgLoPjRSypM/fo/RAwBDN2oBoxyl0c+sZqIm2b6sHvO974xg+o8leUM2Tupp3tz3phyIEsWBgN5agxZHjtfNYXmys5OzrhZp8eMnCgPlMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761490254; c=relaxed/simple;
-	bh=tZ1b/j/xd1u/qe2VCxt/mPYUg7poWAV2HiZHY/okZbA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s5f9EYof9X7PZ04p6dTfZL1oVr/LubQT0G16x9lQkusYtMxG3shcpbnLadrJpVmlVYt+OvsZB7fpP0ILLTWmBOrVBO9c9jxYe7RjqcosGVm0/1SkrNAQQyLE6xKQrEvKto5TLztIcLYdlFd142IXMSBVIRXPF5BH1k0RCxm7qyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LCqrYxQx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2482EC4CEE7;
-	Sun, 26 Oct 2025 14:50:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761490254;
-	bh=tZ1b/j/xd1u/qe2VCxt/mPYUg7poWAV2HiZHY/okZbA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LCqrYxQxmUvs67PQ1gnztDLpP6E7DtwEX/RUh+inS+saHLxYfIlXmlIz4FyeMLbsG
-	 7GDW0oxxljkLSzxM/fXJjnKD7RUhVk+HvVrI8Ljk528OMnjCpbQFa6w6T8GC4nW3Fx
-	 5EI6FSoPIr/BOls5HnRVI3owOGdmOSMCFFtX8sSMLdDYTg7e+eYiGQ2mk8q9Z7KUF5
-	 ygXnIRymU3ZIcKRg9FVILQe/kRcPYzhSCB215bQ9pZ2CvGBhRsW0y8FhF6V2wM8FA7
-	 5mIysJlWkpZym+sVxzKlPWqPpwvmYuDbY6LxD5n3iAKZQJwd2zzFzWPykeY98rGBfz
-	 vGkTSE2aSSjwg==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Wei Liu <wei.liu@kernel.org>,
-	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	Sasha Levin <sashal@kernel.org>,
-	kys@microsoft.com,
+	s=arc-20240116; t=1761559417; c=relaxed/simple;
+	bh=JHwarkqBPq72JFpOasQzHaDBamKHSrbmH4YRuweybHs=;
+	h=From:To:Subject:Date:Message-Id; b=FrMYIu82mMCtITTv/3gFpqT58TdkqSxdPI1hQ4jTWo97EbNMzATxzbFXj1eE2ONYHhVIXk9EKMipaR9I8wDOsddcbBYempO90OlCdw5uLIt+0rSsiUiGxTd00lXoh8y7sPSn0s/PPTAtIQU3DmOr0btSJrutJ8rhPPAnpDX/9Lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jnNW8aaQ; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id AD1F2211D8D8; Mon, 27 Oct 2025 03:03:30 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AD1F2211D8D8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1761559410;
+	bh=EuEAS/gEv10XHC56mPN6AvDAFFpqsTPL7sGSBrWVkXg=;
+	h=From:To:Subject:Date:From;
+	b=jnNW8aaQWFLG60KQSHonqS8ElLyVj/5WkHt+1CWbbsffYBag6VmwPSBmVZvcwkOeq
+	 O84blQ+3W9eSYscSv8nvc3x5es91LV38pa/R0F7MvwD0O7tNO22ogfzQfRXRdZ2Y9D
+	 Jbn9tAum4UvzGvIs17nMZibO2ha7Pjed43XouiDs=
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: kys@microsoft.com,
 	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
 	decui@microsoft.com,
-	daniel.lezcano@linaro.org,
-	tglx@linutronix.de,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	shradhagupta@linux.microsoft.com,
+	ssengar@linux.microsoft.com,
+	ernis@linux.microsoft.com,
+	dipayanroy@linux.microsoft.com,
+	shirazsaleem@microsoft.com,
+	kotaranov@microsoft.com,
+	longli@microsoft.com,
 	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.17] clocksource: hyper-v: Skip unnecessary checks for the root partition
-Date: Sun, 26 Oct 2025 10:49:03 -0400
-Message-ID: <20251026144958.26750-25-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251026144958.26750-1-sashal@kernel.org>
-References: <20251026144958.26750-1-sashal@kernel.org>
+Subject: [PATCH] net: mana: Fix incorrect speed reported by debugfs
+Date: Mon, 27 Oct 2025 03:03:28 -0700
+Message-Id: <1761559408-22534-1-git-send-email-ernis@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.17.5
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-From: Wei Liu <wei.liu@kernel.org>
+Once the netshaper is created for MANA, the current bandwidth
+is reported in debugfs like this:
 
-[ Upstream commit 47691ced158ab3a7ce2189b857b19c0c99a9aa80 ]
+$ sudo ./tools/net/ynl/pyynl/cli.py \
+  --spec Documentation/netlink/specs/net_shaper.yaml \
+  --do set \
+  --json '{"ifindex":'3',
+           "handle":{ "scope": "netdev", "id":'1' },
+           "bw-max": 200000000 }'
+None
 
-The HV_ACCESS_TSC_INVARIANT bit is always zero when Linux runs as the
-root partition. The root partition will see directly what the hardware
-provides.
+$ sudo cat /sys/kernel/debug/mana/1/vport0/current_speed
+200
 
-The old logic in ms_hyperv_init_platform caused the native TSC clock
-source to be incorrectly marked as unstable on x86. Fix it.
+After the shaper  is deleted, it is expected to report
+the maximum speed supported by the SKU. But currently it is
+reporting 0, which is incorrect.
 
-Skip the unnecessary checks in code for the root partition. Add one
-extra comment in code to clarify the behavior.
+Fix this inconsistency, by resetting apc->speed to apc->max_speed
+during deletion of the shaper object. This will improve
+readability and debuggability.
 
-Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
 ---
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-LLM Generated explanations, may be completely bogus:
-
-YES – this fix prevents Linux Hyper-V root partitions from unnecessarily
-downgrading their primary time source.
-
-- `mark_tsc_unstable()` is now gated by `!hv_root_partition()`
-  (`arch/x86/kernel/cpu/mshyperv.c:655`), so the native TSC is no longer
-  flagged as unreliable when the kernel is the Hyper-V root partition.
-  Without this, hosts always fell back to the slower Hyper-V reference
-  clock, hurting timekeeping and scheduler precision.
-- The Hyper-V clocksource ratings are lowered for either
-  `HV_ACCESS_TSC_INVARIANT` guests or root partitions
-  (`drivers/clocksource/hyperv_timer.c:566-569`). That ensures the
-  hardware TSC regains priority on hosts, matching what the platform
-  actually guarantees.
-- All new behaviour is tightly scoped to the root-partition path; guests
-  still see the old logic, so regression risk for common deployments is
-  negligible.
-- The change aligns the code with the documented hardware behaviour
-  (root partitions always see hardware invariant TSC) without
-  introducing new features, making it an appropriate stable fix. (On
-  older trees that still expose `hv_root_partition` as a global, this
-  needs the usual trivial adaptation.)
-
- arch/x86/kernel/cpu/mshyperv.c     | 11 ++++++++++-
- drivers/clocksource/hyperv_timer.c | 10 +++++++++-
- 2 files changed, 19 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index c78f860419d69..25773af116bc4 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -565,6 +565,11 @@ static void __init ms_hyperv_init_platform(void)
- 	machine_ops.crash_shutdown = hv_machine_crash_shutdown;
- #endif
- #endif
-+	/*
-+	 * HV_ACCESS_TSC_INVARIANT is always zero for the root partition. Root
-+	 * partition doesn't need to write to synthetic MSR to enable invariant
-+	 * TSC feature. It sees what the hardware provides.
-+	 */
- 	if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) {
- 		/*
- 		 * Writing to synthetic MSR 0x40000118 updates/changes the
-@@ -636,8 +641,12 @@ static void __init ms_hyperv_init_platform(void)
- 	 * TSC should be marked as unstable only after Hyper-V
- 	 * clocksource has been initialized. This ensures that the
- 	 * stability of the sched_clock is not altered.
-+	 *
-+	 * HV_ACCESS_TSC_INVARIANT is always zero for the root partition. No
-+	 * need to check for it.
- 	 */
--	if (!(ms_hyperv.features & HV_ACCESS_TSC_INVARIANT))
-+	if (!hv_root_partition() &&
-+	    !(ms_hyperv.features & HV_ACCESS_TSC_INVARIANT))
- 		mark_tsc_unstable("running on Hyper-V");
- 
- 	hardlockup_detector_disable();
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index 2edc13ca184e0..10356d4ec55c3 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -549,14 +549,22 @@ static void __init hv_init_tsc_clocksource(void)
- 	union hv_reference_tsc_msr tsc_msr;
- 
- 	/*
-+	 * When running as a guest partition:
-+	 *
- 	 * If Hyper-V offers TSC_INVARIANT, then the virtualized TSC correctly
- 	 * handles frequency and offset changes due to live migration,
- 	 * pause/resume, and other VM management operations.  So lower the
- 	 * Hyper-V Reference TSC rating, causing the generic TSC to be used.
- 	 * TSC_INVARIANT is not offered on ARM64, so the Hyper-V Reference
- 	 * TSC will be preferred over the virtualized ARM64 arch counter.
-+	 *
-+	 * When running as the root partition:
-+	 *
-+	 * There is no HV_ACCESS_TSC_INVARIANT feature. Always lower the rating
-+	 * of the Hyper-V Reference TSC.
- 	 */
--	if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) {
-+	if ((ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) ||
-+	    hv_root_partition()) {
- 		hyperv_cs_tsc.rating = 250;
- 		hyperv_cs_msr.rating = 245;
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 0142fd98392c..9d56bfefd755 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -814,7 +814,7 @@ static int mana_shaper_del(struct net_shaper_binding *binding,
+ 		/* Reset mana port context parameters */
+ 		apc->handle.id = 0;
+ 		apc->handle.scope = NET_SHAPER_SCOPE_UNSPEC;
+-		apc->speed = 0;
++		apc->speed = apc->max_speed;
  	}
+ 
+ 	return err;
 -- 
-2.51.0
+2.43.0
 
 
