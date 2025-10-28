@@ -1,47 +1,87 @@
-Return-Path: <linux-hyperv+bounces-7358-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7359-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id A882BC12E96
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Oct 2025 06:09:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A432BC15315
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Oct 2025 15:39:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2F4D2350E49
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Oct 2025 05:09:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 43BA656315A
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Oct 2025 14:31:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CC51224234;
-	Tue, 28 Oct 2025 05:09:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EFF522173A;
+	Tue, 28 Oct 2025 14:31:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mRfIxqyL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hGyFEA+2"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C09831F4C8E;
-	Tue, 28 Oct 2025 05:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8EF221772A
+	for <linux-hyperv@vger.kernel.org>; Tue, 28 Oct 2025 14:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761628191; cv=none; b=gYLxQhw1wImZLYJDf7/ssBR2Du1u/wCnBNq93vET05Ih+kn8390EmFneY6nAtmWGW6WTDrO5U7YuGiqwmJV3r12NrrS2d1IuS7r9wh+6CqHuLuUpLVibepkVq3V6UFcjGlKBme6eIrNTSfsaEL3Jrjiq3RkZLOpzQPAeevP/7A8=
+	t=1761661896; cv=none; b=UAty3MzNqQ4t5YnLIG8YL4zGClxLp/svYyivdYoIAG69K6yRjV5qV/1ttm99pUcuI7DQ/IAG3p2OoHMvGJyhmYlBzSNhV7vsZO20/4NFj/7B78XBJ/1d47ym6VsTDDPQru7wcU58Pnwg+plScSA5dvLPvz7Jf5eMqkiJd/68Ly8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761628191; c=relaxed/simple;
-	bh=khLhpRe3NhEqJeipfDp4tUJ0g/LDtL5h4GKtbPm1Ljo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=VNB5r45oLfOs4htPyqCUAxjHwulR8UPzMwFqqa1AUjaE/76gIke1PYDTGKiLmZztquRiyHI0PJfl7ra5wLnx6tpWgC1JiOL5Vu28T7FutRtl3S+0VIHzyopJT9F2GJPhMmysX13bQUkfZYttNkrl7x+C0znpVLMbcYS6bz5ZXCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=mRfIxqyL; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.95.76.239] (unknown [167.220.238.207])
-	by linux.microsoft.com (Postfix) with ESMTPSA id AA8C1200FE56;
-	Mon, 27 Oct 2025 22:09:43 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AA8C1200FE56
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1761628188;
-	bh=CrCZotvoz9ZVYe7EM+YL/i9fF6Af8T3thrppv9Sk8j8=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=mRfIxqyL1Ma0E84emoIDM/H95Wqp1QogNbRd4FS5KBAJqVvGUngUBIy7SfohJGHHy
-	 HNFO3iZ6DGRwa8LLggdF3XzLu2wztoDpzZih4Erww4EXYwQp6YopH5LNop/CE2KP8F
-	 4ij2KcGsnKB9tedxNCr6cieuuBpaEqFRWAMuN1Pk=
-Message-ID: <6b4d5054-9adb-4313-b7dc-caa7c0751b5a@linux.microsoft.com>
-Date: Tue, 28 Oct 2025 10:39:41 +0530
+	s=arc-20240116; t=1761661896; c=relaxed/simple;
+	bh=lSvM53GFft+J8S+6HgqdJu8eZNoSNRi/6wce+FaPoNE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fHp1kkrld1uQpngJAkOosoHv2qCkoOZQ2ydwsPcf7M7zHYTuUPsRng+1GlctDo/DQCZNaKj5NBT1foWNwy9iuwnCxeTJX+/8gMviJWFvP91m7a/397bC7iNrKhVeUIJcyqS9pvrAvP8kSk0gKCtkf7Tjk3FKBmh4ji7doxY6JKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hGyFEA+2; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1761661893;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=73/xPfC9sPKYuWBDNGOrntIS8v774C/e1wt54BijNYE=;
+	b=hGyFEA+2qNou4Kab0bzN/De7BVeD2N4vPfemk2obMoAu5zyolB/b6i6x+6650VKtlxkwPd
+	gL6gd7w0GEz5P4SAes75p83y8Wnk4rUsCaKGuGhldCzseLsd0f49LybvUZE4GTnfZFOezK
+	N3QOnncFGfdzJzFsmGPtYEHbsJ7AGDI=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-672--FqLZOCOMtWpNH1YttV9Ow-1; Tue, 28 Oct 2025 10:31:32 -0400
+X-MC-Unique: -FqLZOCOMtWpNH1YttV9Ow-1
+X-Mimecast-MFC-AGG-ID: -FqLZOCOMtWpNH1YttV9Ow_1761661891
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-4284525aecbso4002331f8f.1
+        for <linux-hyperv@vger.kernel.org>; Tue, 28 Oct 2025 07:31:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761661891; x=1762266691;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=73/xPfC9sPKYuWBDNGOrntIS8v774C/e1wt54BijNYE=;
+        b=nd1Jw7W0RKFBcX93vO3HHTJVpgfUq6wKyVc7/KflHtKhqsSkaW+z646Xg/K6sD18ia
+         L6IEUlX3k3jWOMWY+pPISLQrCf45NatZT8RyJQZ77S1FFufmE3YSWqP4O43bq6fgBZ38
+         EU8iuz5kPM2fvC5yf3GAooj0M3TjOp6wog3NJyCLAEGfTLaCr5SbAofohpd1Vcq0+vAR
+         fGo+/oB6qO3zCAx2nJkDGbmGlhP3nY09vqq7UnQNWr4gKxXmnOJsHHoe3xEZxNuOuqzC
+         d5c6WCHOF3NOamMD3Vnem/I9v1Yh0ZrBXWbl5TgpQ82qQSCZkq28IcsAeZYOmf3B/HCS
+         l7ug==
+X-Forwarded-Encrypted: i=1; AJvYcCVaVUnWqndGCOyaNmuPQzXO+2ytBW6tUhXTHq4ydQiKQmCKnhTVX7n14a/PMgkSIDZy5gHGR874Z0r+0eQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytOC5Dp8pFsNt5lTF4Za9OiETPaEf2rtE070P5vFORciC5l4VO
+	ODn6YGddY0FOlVRdtd1pxnElDPSiQALtjd4O3ewSusMMKWp9gUqt6EnF3TOsrJmdvCiEVPLrF05
+	1z8zdu5QBbY64kUaJpifaocDWKG6MFL1E4MC1oTScXKUb98eLzca2ITGlFgIl79rpUw==
+X-Gm-Gg: ASbGncukovUUvZVPxWw46Iy2Qnlqlxk9K9/7dyUUtWiLRiQXWmpTmM08Yh1g6nwF88r
+	WiGdqeToVtg0D1BBHlI+1+YFQx0yiFUga+B/DDMNL4C/UmjKznTY3YS4KVNY47/mRU67kWs6hwX
+	DrIMJzxqOc6agj5ZtNszL1oW0pEq+jJkGApFo8rS2FHk1dM6eFQhgKug+Uh20pc2lbg3sZsuNFI
+	auBQ2Ic8QkltFc1WvuNFJ5by3/IOMwq1b2gmI0LmbaC22yKaLrRj3weskrm3siqIGRBmCJg8ESJ
+	NTOy0/5lr1/HOjPaC08aFqVT8zxB1XZtCN9iRZhc/67J7S2tdhFwjCa3vrQ6K4wR+bTRyM/SiqV
+	u4eO3Hu17xbtl5G5qPMAuTN5N4JxNlxSvkDIcsfYrvDHxaZE=
+X-Received: by 2002:a5d:64c3:0:b0:427:928:78a0 with SMTP id ffacd0b85a97d-429a7e9cb6cmr3247933f8f.63.1761661891142;
+        Tue, 28 Oct 2025 07:31:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGMOTsGZSXAVq3SjJu/2WS9NseH84hxo6jnqAKfyR6/9FeNPp9QtVjNi6BEGt5SyDkugzoCAA==
+X-Received: by 2002:a5d:64c3:0:b0:427:928:78a0 with SMTP id ffacd0b85a97d-429a7e9cb6cmr3247897f8f.63.1761661890726;
+        Tue, 28 Oct 2025 07:31:30 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:2712:7e10:4d59:d956:544f:d65c? ([2a0d:3344:2712:7e10:4d59:d956:544f:d65c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429952b7a94sm24431112f8f.5.2025.10.28.07.31.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Oct 2025 07:31:30 -0700 (PDT)
+Message-ID: <76598660-8b8e-4fe6-974b-5f3eb431a1ec@redhat.com>
+Date: Tue, 28 Oct 2025 15:31:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -49,215 +89,34 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 0/2] Drivers: hv: Introduce new driver - mshv_vtl
-From: Naman Jain <namjain@linux.microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>,
- Mukesh Rathor <mrathor@linux.microsoft.com>,
- Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
- Nuno Das Neves <nunodasneves@linux.microsoft.com>,
- Christoph Hellwig <hch@infradead.org>,
- Saurabh Sengar <ssengar@linux.microsoft.com>,
- ALOK TIWARI <alok.a.tiwari@oracle.com>,
- "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>
-References: <20251017074507.142704-1-namjain@linux.microsoft.com>
- <SN6PR02MB4157AE454F412993BC1D4BFDD4F6A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <0f9f9d71-d12a-4b52-8477-46a66a534eda@linux.microsoft.com>
+Subject: Re: [net-next, v3] net: mana: Support HW link state events
+To: Haiyang Zhang <haiyangz@linux.microsoft.com>,
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org
+Cc: haiyangz@microsoft.com, paulros@microsoft.com, decui@microsoft.com,
+ kys@microsoft.com, wei.liu@kernel.org, edumazet@google.com,
+ davem@davemloft.net, kuba@kernel.org, longli@microsoft.com,
+ ssengar@linux.microsoft.com, ernis@linux.microsoft.com,
+ dipayanroy@linux.microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
+ shradhagupta@linux.microsoft.com, leon@kernel.org, mlevitsk@redhat.com,
+ yury.norov@gmail.com, shirazsaleem@microsoft.com, andrew+netdev@lunn.ch,
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1761270105-27215-1-git-send-email-haiyangz@linux.microsoft.com>
 Content-Language: en-US
-In-Reply-To: <0f9f9d71-d12a-4b52-8477-46a66a534eda@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <1761270105-27215-1-git-send-email-haiyangz@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 10/24/25 3:41 AM, Haiyang Zhang wrote:
+> @@ -3243,6 +3278,8 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
+>  		goto free_indir;
+>  	}
+>  
+> +	netif_carrier_on(ndev);
 
+Why is  the above needed? I thought mana_link_state_handle() should kick
+and set the carrier on as needed???
 
-On 10/23/2025 8:51 PM, Naman Jain wrote:
-> 
-> 
-> On 10/18/2025 12:02 AM, Michael Kelley wrote:
->> From: Naman Jain <namjain@linux.microsoft.com> Sent: Friday, October 
->> 17, 2025 12:45 AM
->>>
->>> Introduce a new mshv_vtl driver to provide an interface for Virtual
->>> Machine Monitor like OpenVMM and its use as OpenHCL paravisor to
->>> control VTL0 (Virtual trust Level).
->>> Expose devices and support IOCTLs for features like VTL creation,
->>> VTL0 memory management, context switch, making hypercalls,
->>> mapping VTL0 address space to VTL2 userspace, getting new VMBus
->>> messages and channel events in VTL2 etc.
->>>
->>> OpenVMM : https://openvmm.dev/guide/
->>>
->>> Changes since v8:
->>> https://lore.kernel.org/all/20251013060353.67326-1- 
->>> namjain@linux.microsoft.com/
->>> Addressed Sean's comments:
->>> * Removed forcing SIGPENDING, and other minor changes, in
->>>    mshv_vtl_ioctl_return_to_lower_vtl after referring
->>>    to Sean's earlier changes for xfer_to_guest_mode_handle_work.
->>>
->>> * Rebased and resolved merge conflicts, compilation errors on latest
->>>    linux-next kernel tip, after Roman's Confidential VM changes,
->>>    which merged recently. No functional changes.
->>
->> Did your testing against the latest linux-next included testing with
->> CONFIG_X86_KERNEL_IBT=y?  This is Indirect Branch Tracking, which would
->> have generated a fault with your v7 series and earlier because of the 
->> indirect
->> call instruction when doing VTL Return through the hypercall page (which
->> doesn't have the needed ENDBR64 instruction). But now that VTL Return is
->> doing a static call, that should be direct, which won't trigger an IBT 
->> fault.
->>
->> To confirm that you really are running with IBT enabled, you should see
->>
->> [    0.047008] CET detected: Indirect Branch Tracking enabled
->>
->> in the VTL2 dmesg output.  And "ibt" should appear in the
->> "flags" output line of 'cat /proc/cpuinfo' (or the 'lscpu' command).
->>
->> Michael
-> 
-> 
-> Hi Michael,
-> I have now tested with and without IBT, and in case of IBT enabled, I do 
-> see the log you pasted for IBT in VTL2 logs and there are no failures.
-> 
-> However, this additional testing uncovered another issue here where 
-> there is a crash in VTL0, some time after boot, due to rbp clobbering in 
-> mshv_vtl_return_hypercall() wrapper function.
-> 
-> Thanks a lot Michael for helping me offline on this, to understand and 
-> identify the issue.
-> 
-> 
-> 
-> Hi Peter, Paolo, Sean,
-> Here is the summary of the problem and the fix:
-> 
-> Assembly code make a call to mshv_vtl_return_hypercall() after handling 
-> rbp properly. However, current wrapper function in C updates rbp to rsp 
-> before making the static call. This creates problems.
-> 
-> <-snippet->
-> 
-> arch/x86/hyperv/mshv_vtl_asm.S:
->      /* make a hypercall to switch VTL */
->      call mshv_vtl_return_hypercall
-> 
-> arch/x86/hyperv/hv_vtl.c:
-> noinstr void mshv_vtl_return_hypercall(void)
-> {
->      asm volatile ("call " 
-> STATIC_CALL_TRAMP_STR(__mshv_vtl_return_hypercall) :
->                ASM_CALL_CONSTRAINT);
-> }
-> 
-> (gdb) disassemble mshv_vtl_return_hypercall
-> Dump of assembler code for function mshv_vtl_return_hypercall:
->     0xffffffff886981a0 <+0>:     push   %rbp
->     0xffffffff886981a1 <+1>:     mov    %rsp,%rbp
->     0xffffffff886981a4 <+4>:     call   0xffffffff886a77a8 
-> <__SCT____mshv_vtl_return_hypercall>
->     0xffffffff886981a9 <+9>:     pop    %rbp
->     0xffffffff886981aa <+10>:    jmp    0xffffffff886a7670 
-> <__x86_return_thunk>
-> 
-> <-end->
-> 
-> 
-> This is fixed after removing ASM_CALL_CONSTRAINT from above function 
-> which makes sure it does not add save/restore rbp logic before the 
-> assembly call instructions.
-> 
-> 
-> <-snippet->
-> 
-> (gdb) disassemble mshv_vtl_return_hypercall
-> Dump of assembler code for function mshv_vtl_return_hypercall:
->     0xffffffff886981a0 <+0>:     call   0xffffffff886a77a8 
-> <__SCT____mshv_vtl_return_hypercall>
->     0xffffffff886981a5 <+5>:     jmp    0xffffffff886a7670 
-> <__x86_return_thunk>
-> End of assembler dump.
-> 
-> <-end->
-> 
-> But then we see a warning reported by objtool for frame pointer, but 
-> since this is expected, I will need to add STACK_FRAME_NON_STANDARD_FP 
-> to suppress it.
-> 
-> vmlinux.o: warning: objtool: mshv_vtl_return_hypercall+0x4: call without 
-> frame pointer save/setup
-> 
-> 
-> During code review, I found CR2 handling was missing after making 
-> mshv_vtl_return_hypercall call in assembly, which I will *additionally* 
-> fix in next version.
-> 
-> Pasting the diff at the end, on top of this patch, which should fix 
-> these issues.
-> 
-> Please let me know if I should be doing it differently or if you foresee 
-> any issues with this approach.
-> 
-> Regards,
-> Naman
-> 
-> ------------------------
-> diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-> index 636e9253b81e..c61d2dce4d68 100644
-> --- a/arch/x86/hyperv/hv_vtl.c
-> +++ b/arch/x86/hyperv/hv_vtl.c
-> @@ -258,9 +258,9 @@ DEFINE_STATIC_CALL_NULL(__mshv_vtl_return_hypercall, 
-> void (*)(void));
-> 
->   noinstr void mshv_vtl_return_hypercall(void)
->   {
-> -       asm volatile ("call " 
-> STATIC_CALL_TRAMP_STR(__mshv_vtl_return_hypercall) :
-> -                     ASM_CALL_CONSTRAINT);
-> +       asm volatile ("call " 
-> STATIC_CALL_TRAMP_STR(__mshv_vtl_return_hypercall));
->   }
-> +STACK_FRAME_NON_STANDARD_FP(mshv_vtl_return_hypercall);
-> 
->   extern void __mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl0);
-> 
-> diff --git a/arch/x86/hyperv/mshv_vtl_asm.S b/arch/x86/hyperv/ 
-> mshv_vtl_asm.S
-> index 4085073a5876..5f4b511749f8 100644
-> --- a/arch/x86/hyperv/mshv_vtl_asm.S
-> +++ b/arch/x86/hyperv/mshv_vtl_asm.S
-> @@ -65,6 +65,9 @@ SYM_FUNC_START(__mshv_vtl_return_call)
->          mov 16(%rsp), %rcx
->          mov 24(%rsp), %rax
-> 
-> +       mov %rdx, MSHV_VTL_CPU_CONTEXT_rdx(%rax)
-> +       mov %cr2, %rdx
-> +       mov %rdx, MSHV_VTL_CPU_CONTEXT_cr2(%rax)
->          pop MSHV_VTL_CPU_CONTEXT_rcx(%rax)
->          pop MSHV_VTL_CPU_CONTEXT_rax(%rax)
->          add $16, %rsp
-
-
-I plan to send the next version of this series, incorporating the 
-changes mentioned above, within the next day or two. Additionally, I 
-will include a comment regarding the use of STACK_FRAME_NON_STANDARD_FP 
-and avoiding ASM_CALL_CONSTRAINT.
-
-If you see any opportunities for improvement or feel something should be 
-approached differently, please let me know.
-
-Regards,
-Naman
-
+/P
 
 
