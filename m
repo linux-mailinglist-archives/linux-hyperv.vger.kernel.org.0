@@ -1,121 +1,228 @@
-Return-Path: <linux-hyperv+bounces-7371-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7372-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id C24B6C19F44
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Oct 2025 12:16:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B831C1ADE2
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Oct 2025 14:45:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id ABA785080EC
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Oct 2025 11:15:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1DB63466893
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Oct 2025 13:19:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F1DF32E125;
-	Wed, 29 Oct 2025 11:14:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EBCA275B05;
+	Wed, 29 Oct 2025 13:12:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="BEuPRpDq"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IZw4DMMV"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A68E32E131;
-	Wed, 29 Oct 2025 11:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E3A637A3C0;
+	Wed, 29 Oct 2025 13:12:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761736478; cv=none; b=aJ6IgKgp7Bj8IJ/SUW4gUwmZtygMpXQV8kJ5uVkJ47WQdCBSw0b92Za2TQJQHimOPtHnX3uTD1y6K46vUIqKWROnKbQCAzvkKq9j57g2AoWIWbZmZ2V3joHFr+cUi9aEgMcHjFbekiQ4MLTMQEn2vRkE6K3vHMt92RxD/C2m7QA=
+	t=1761743558; cv=none; b=WxPZIuKMEFUn9yP2aef7h5g32pXv7pTjHXgv+r7ACClCoW++FHrg+TIHnBdTJ7TVI/Jb0apAGXIpozDMUUaqvNGM29wkASItih3s/Cf6PQD4OZxL6YbRfu7Pq73BOw0Z1rSddsnpMLtCildmc0yB2iivMutPHayp/xlA9ahFWWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761736478; c=relaxed/simple;
-	bh=EoewAb52MRH1aE94oGSQx6yR9L8ttHqchxyjOpRpAO0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b+vWiW1YKltEbsmmst+XE7vrZx89T8hig5iAMlANqEcu6shDQGQwt9xBvmxy5YbOJhzTF2UwvinFCwAYo9Jz5nvUOELV0AKjEtIwy3K2LS8U/l8hLtl1h5oEKzk4ELfQWLwTmtt0bk1uN6FvtVDDDV+Hgu+xS1GshLzh+EvVDMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=BEuPRpDq; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 698F240E021D;
-	Wed, 29 Oct 2025 11:14:31 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Zvn2uvFF2vbQ; Wed, 29 Oct 2025 11:14:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1761736467; bh=DQkRFEIwjwPvCcEFWdB8wz1gQTw6XbuZfP49kLOImGs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BEuPRpDq3zszaDovZGFI8/0iEOp5lkk1+Fb+9sxVcl1e53Fn31OTzn+r1AyMBVypX
-	 7ZnkNwWZe181mZF5BJH5dc7nQBvYX+M0liWMCgXg1keznF5+Q+A1g/SxCd6JTbVmog
-	 3CXOtwluhQQofNJrzpzn3KBR9md+p4P2RDxIM+mf69M9SJUrC04vxJac/UA3BWPVbX
-	 8/LkGkxN6M46IJVen43Nw37Oz20jswQsEzS3MH/VSgDKn7/Z3QVwdNsHpeOWM6JJ/y
-	 TyD7GulXBFfJncn1jt6Ldah2zNZdzXTD4kTPl+GfWZsPB9GRbIAkesaK2g/qnFpGSd
-	 0srRag33S1naiSj6L20uRFYToC9SksN0F6DnOMF4nY/jKNo6rqJ/7UvyMkpAOgwVHo
-	 SiRLemA9m3A6Zs22P6qWL2g3T9tj8tRP/KUqynsF/1yLUCgrm4Jqrl2lyyDkAEVrj2
-	 NOuZcdiC5ytCG+8i7SJpTjj0Kdw2HAQ95Z3UmpaBZ/GSBULTmMm4hcVbNOTTXd/Rj8
-	 91s2A5XswtBP9uKnQpGsbSQhVJlkYe7rQI5R00Zt2PK4hBR555MrKpy2qzcTisSjXY
-	 axj7DVzVxHGOtc8LocTGtMGSO/bI6mmlNBPFlsZCLIe2/v88V+DPs0ClhUZm4HiDbc
-	 AIb2zddL+jvs2J+WXuQnxuxA=
-Received: from zn.tnic (pd9530da1.dip0.t-ipconnect.de [217.83.13.161])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 54A9E40E021A;
-	Wed, 29 Oct 2025 11:14:06 +0000 (UTC)
-Date: Wed, 29 Oct 2025 12:13:58 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>, "Kirill A. Shutemov" <kas@kernel.org>,
-	linux-hyperv@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ricardo Neri <ricardo.neri@intel.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Yunhong Jiang <yunhong.jiang@linux.intel.com>
-Subject: Re: [PATCH v6 02/10] x86/acpi: Move acpi_wakeup_cpu() and helpers to
- smpwakeup.c
-Message-ID: <20251029111358.GDaQH29lURT0p_WWsb@fat_crate.local>
-References: <20251016-rneri-wakeup-mailbox-v6-0-40435fb9305e@linux.intel.com>
- <20251016-rneri-wakeup-mailbox-v6-2-40435fb9305e@linux.intel.com>
- <20251027141835.GYaP9_O1C3cms6msfv@fat_crate.local>
- <20251027205816.GB14161@ranerica-svr.sc.intel.com>
+	s=arc-20240116; t=1761743558; c=relaxed/simple;
+	bh=acVh0xMIF1FK6zvgSwuG0VId6Lw4dlJ8hF/zn9/niSU=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=B5XZyIMMKvweVEjhQMscGZfAdsxoCyymD53zPelGcFcma6NiFbvX8mme8MsOOYTEos0DLxbE/0mH0hu0F2+lWznH9pUQFNXgARRD9Ty4vkvqSqVmv8+dKemhIUJANR2RxSHgB4lIGRp/Uj5owKKg0YrDsTJxfKty5m8I6RTUZ1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IZw4DMMV; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1231)
+	id E16C1211CF97; Wed, 29 Oct 2025 06:12:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E16C1211CF97
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1761743555;
+	bh=RitJErJsOboiiweoi7x9S54p7/I4Sesb8v4ZX4CPXeo=;
+	h=Date:From:To:Subject:From;
+	b=IZw4DMMVGLJSp6wcHKNEvqJ8vUK/n0xG4lw3NaVeNWXgEGxRd1dAcLSyFQOl68BBG
+	 z16SUfhjyASfH/aoEli4Wc8g9bHhLOkueezylehCLzjSkPi/nIN/hXCXzE8Xr783in
+	 qsmVW5v+GIDNUUHiiDJwNDzru2j9ntWf8F0hm0zA=
+Date: Wed, 29 Oct 2025 06:12:35 -0700
+From: Aditya Garg <gargaditya@linux.microsoft.com>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
+	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
+	ernis@linux.microsoft.com, dipayanroy@linux.microsoft.com,
+	shirazsaleem@microsoft.com, linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, gargaditya@microsoft.com
+Subject: [PATCH net-next v2] net: mana: Handle SKB if TX SGEs exceed hardware
+ limit
+Message-ID: <20251029131235.GA3903@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251027205816.GB14161@ranerica-svr.sc.intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Mon, Oct 27, 2025 at 01:58:16PM -0700, Ricardo Neri wrote:
-> Right. All the functions in the file start with the acpi_ prefix. It could
-> be kept under arch/x86/kernel/acpi/. The Kconfig symbol X86_MAILBOX_WAKEUP
-> would have to live in arch/x86/Kconfig as there is no Kconfig file under
-> arch/x86/kernel/acpi. ACPI_MADT_WAKEUP is arch/x86/Kconfig.
-> 
-> Does that sound acceptable?
+The MANA hardware supports a maximum of 30 scatter-gather entries (SGEs)
+per TX WQE. Exceeding this limit can cause TX failures.
+Add ndo_features_check() callback to validate SKB layout before
+transmission. For GSO SKBs that would exceed the hardware SGE limit, clear
+NETIF_F_GSO_MASK to enforce software segmentation in the stack.
+Add a fallback in mana_start_xmit() to linearize non-GSO SKBs that still
+exceed the SGE limit.
 
-Right, this looks kinda weird. You have devicetree thing using ACPI code,
-you're trying to carve it out but then it is ACPI code anyway. So why even do
-that?
+Return NETDEV_TX_BUSY only for -ENOSPC from mana_gd_post_work_request(),
+send other errors to free_sgl_ptr to free resources and record the tx
+drop.
 
-You can simply leave ACPI enabled on that configuration. I don't see yet what
-the point for the split is - saving memory, or...?
+Co-developed-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+Signed-off-by: Aditya Garg <gargaditya@linux.microsoft.com>
+---
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 48 +++++++++++++++++--
+ include/net/mana/gdma.h                       |  6 ++-
+ include/net/mana/mana.h                       |  1 +
+ 3 files changed, 49 insertions(+), 6 deletions(-)
 
-> Thank you for your feedback, Boris,
-
-Sure, np. Trying my best. :-)
-
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 0142fd98392c..1f95b644eba1 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -11,6 +11,7 @@
+ #include <linux/mm.h>
+ #include <linux/pci.h>
+ #include <linux/export.h>
++#include <linux/skbuff.h>
+ 
+ #include <net/checksum.h>
+ #include <net/ip6_checksum.h>
+@@ -289,6 +290,21 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	cq = &apc->tx_qp[txq_idx].tx_cq;
+ 	tx_stats = &txq->stats;
+ 
++	if (MAX_SKB_FRAGS + 2 > MAX_TX_WQE_SGL_ENTRIES &&
++	    skb_shinfo(skb)->nr_frags + 2 > MAX_TX_WQE_SGL_ENTRIES) {
++		/* GSO skb with Hardware SGE limit exceeded is not expected here
++		 * as they are handled in mana_features_check() callback
++		 */
++		if (skb_is_gso(skb))
++			netdev_warn_once(ndev, "GSO enabled skb exceeds max SGE limit\n");
++		if (skb_linearize(skb)) {
++			netdev_warn_once(ndev, "Failed to linearize skb with nr_frags=%d and is_gso=%d\n",
++					 skb_shinfo(skb)->nr_frags,
++					 skb_is_gso(skb));
++			goto tx_drop_count;
++		}
++	}
++
+ 	pkg.tx_oob.s_oob.vcq_num = cq->gdma_id;
+ 	pkg.tx_oob.s_oob.vsq_frame = txq->vsq_frame;
+ 
+@@ -402,8 +418,6 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 		}
+ 	}
+ 
+-	WARN_ON_ONCE(pkg.wqe_req.num_sge > MAX_TX_WQE_SGL_ENTRIES);
+-
+ 	if (pkg.wqe_req.num_sge <= ARRAY_SIZE(pkg.sgl_array)) {
+ 		pkg.wqe_req.sgl = pkg.sgl_array;
+ 	} else {
+@@ -438,9 +452,13 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 
+ 	if (err) {
+ 		(void)skb_dequeue_tail(&txq->pending_skbs);
++		mana_unmap_skb(skb, apc);
+ 		netdev_warn(ndev, "Failed to post TX OOB: %d\n", err);
+-		err = NETDEV_TX_BUSY;
+-		goto tx_busy;
++		if (err == -ENOSPC) {
++			err = NETDEV_TX_BUSY;
++			goto tx_busy;
++		}
++		goto free_sgl_ptr;
+ 	}
+ 
+ 	err = NETDEV_TX_OK;
+@@ -478,6 +496,25 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	return NETDEV_TX_OK;
+ }
+ 
++static netdev_features_t mana_features_check(struct sk_buff *skb,
++					     struct net_device *ndev,
++					     netdev_features_t features)
++{
++	if (MAX_SKB_FRAGS + 2 > MAX_TX_WQE_SGL_ENTRIES &&
++	    skb_shinfo(skb)->nr_frags + 2 > MAX_TX_WQE_SGL_ENTRIES) {
++		/* Exceeds HW SGE limit.
++		 * GSO case:
++		 *   Disable GSO so the stack will software-segment the skb
++		 *   into smaller skbs that fit the SGE budget.
++		 * Non-GSO case:
++		 *   The xmit path will attempt skb_linearize() as a fallback.
++		 */
++		if (skb_is_gso(skb))
++			features &= ~NETIF_F_GSO_MASK;
++	}
++	return features;
++}
++
+ static void mana_get_stats64(struct net_device *ndev,
+ 			     struct rtnl_link_stats64 *st)
+ {
+@@ -838,6 +875,7 @@ static const struct net_device_ops mana_devops = {
+ 	.ndo_open		= mana_open,
+ 	.ndo_stop		= mana_close,
+ 	.ndo_select_queue	= mana_select_queue,
++	.ndo_features_check	= mana_features_check,
+ 	.ndo_start_xmit		= mana_start_xmit,
+ 	.ndo_validate_addr	= eth_validate_addr,
+ 	.ndo_get_stats64	= mana_get_stats64,
+@@ -1606,7 +1644,7 @@ static int mana_move_wq_tail(struct gdma_queue *wq, u32 num_units)
+ 	return 0;
+ }
+ 
+-static void mana_unmap_skb(struct sk_buff *skb, struct mana_port_context *apc)
++void mana_unmap_skb(struct sk_buff *skb, struct mana_port_context *apc)
+ {
+ 	struct mana_skb_head *ash = (struct mana_skb_head *)skb->head;
+ 	struct gdma_context *gc = apc->ac->gdma_dev->gdma_context;
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index 57df78cfbf82..b35ecc58fbab 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -591,6 +591,9 @@ enum {
+ /* Driver can self reset on FPGA Reconfig EQE notification */
+ #define GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE BIT(17)
+ 
++/* Driver supports linearizing the skb when num_sge exceeds hardware limit */
++#define GDMA_DRV_CAP_FLAG_1_SKB_LINEARIZE BIT(20)
++
+ #define GDMA_DRV_CAP_FLAGS1 \
+ 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
+ 	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
+@@ -599,7 +602,8 @@ enum {
+ 	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP | \
+ 	 GDMA_DRV_CAP_FLAG_1_DYNAMIC_IRQ_ALLOC_SUPPORT | \
+ 	 GDMA_DRV_CAP_FLAG_1_SELF_RESET_ON_EQE | \
+-	 GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE)
++	 GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE | \
++	 GDMA_DRV_CAP_FLAG_1_SKB_LINEARIZE)
+ 
+ #define GDMA_DRV_CAP_FLAGS2 0
+ 
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 0921485565c0..330e1bb088bb 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -580,6 +580,7 @@ int mana_set_bw_clamp(struct mana_port_context *apc, u32 speed,
+ void mana_query_phy_stats(struct mana_port_context *apc);
+ int mana_pre_alloc_rxbufs(struct mana_port_context *apc, int mtu, int num_queues);
+ void mana_pre_dealloc_rxbufs(struct mana_port_context *apc);
++void mana_unmap_skb(struct sk_buff *skb, struct mana_port_context *apc);
+ 
+ extern const struct ethtool_ops mana_ethtool_ops;
+ extern struct dentry *mana_debugfs_root;
 -- 
-Regards/Gruss,
-    Boris.
+2.43.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
 
