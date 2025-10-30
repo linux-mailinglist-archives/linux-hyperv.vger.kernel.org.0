@@ -1,120 +1,477 @@
-Return-Path: <linux-hyperv+bounces-7381-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7382-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA9B6C1F2CF
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Oct 2025 10:04:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F364AC22709
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Oct 2025 22:40:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2219D34CB13
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Oct 2025 09:04:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7EBF4423BA6
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Oct 2025 21:40:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BC253375C2;
-	Thu, 30 Oct 2025 09:04:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A997224B1E;
+	Thu, 30 Oct 2025 21:40:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q98e3fyT"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rAcg7ccN"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23A22BFC85;
-	Thu, 30 Oct 2025 09:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 604CF34D3B6;
+	Thu, 30 Oct 2025 21:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761815091; cv=none; b=eNL+ENJfAhzBIIgKZif7CjbQes5DkB2DyTaWXQoZwWvQkt9+dsgNspjQTzw3wz9tAr4i6XEKCEtEgiUl917BfRoKPqoQZxqZyymu/RBCphJwj+1SjjVDabqbbT4l8ooCfk+/ffkMv5RMbJGFpEoRF5Chyynsil/cg+hN4kTwlfk=
+	t=1761860441; cv=none; b=ogVEbTSzeeDIhRYBdic7/8MPchv1EiJw3uePAaJJMKG+8BmAoXTrPTeO7hEcofJ25ff9I1WKm+QPe36HNOH9MvnVVARD82gLkyQEcjmp5zOMK64dGENvb0cTAC6M1Ds7bd0h87zsyifVA90+4nTZOQVPv+QPluDRWQ7Tv8uZPCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761815091; c=relaxed/simple;
-	bh=a4b7pcEFWNkC27iTktg9YRlC8Ldupk1RfbsxDwDDIw4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D9CYIKPTjvvglnHPQnn4JXD5qICXntaU6kGeVd0ywjrCZPd/CIgGzv1Mj4INo74kOx0cewXg+akRmx9XOK/gCDlCmVdqTvN9DcMzVVnwmbMhn0f5SNtlkkZt/aflf1EznCK/jPlpbuFw919ZW8unmno/tLJMUkcXMbO7AS0o+h4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q98e3fyT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 634EFC4CEF1;
-	Thu, 30 Oct 2025 09:04:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761815090;
-	bh=a4b7pcEFWNkC27iTktg9YRlC8Ldupk1RfbsxDwDDIw4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q98e3fyT6ngukxgtjVm+ar7nHCpxBlIZIk2KEeSFHwnVYks3ZbRnZHL0eztvAAUEA
-	 0iSi5J6F76Od4TT1uhw33Tl+EV7lWdnLApwPBNudO5VjUc3YBIEutO5NRaqOXf55b2
-	 zZHwCKYPcpg9KaOFM8HkSNFRCVEdX7ee0WzO15ZWUenZhqS52/+lqNO3vCy7bjQaXY
-	 SE/Y6Diryw4u6g4VF61G4gV2RvxOlo5dLnPmg6ok+y6eWcdKHrcee/mgIbDmWP0kvx
-	 v1/gDEKmtVSnvmAqEkZPpMWpF3dgl6NaOKU5UBQ/uUijmYGLTKGG4gy9suz4Tk3O6I
-	 kZXFtDjE4vPyw==
-Date: Thu, 30 Oct 2025 09:04:44 +0000
-From: Simon Horman <horms@kernel.org>
-To: Aditya Garg <gargaditya@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	longli@microsoft.com, kotaranov@microsoft.com,
-	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
-	ernis@linux.microsoft.com, dipayanroy@linux.microsoft.com,
-	shirazsaleem@microsoft.com, linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, gargaditya@microsoft.com
-Subject: Re: [PATCH net-next v2] net: mana: Handle SKB if TX SGEs exceed
- hardware limit
-Message-ID: <aQMqLN0FRmNU3_ke@horms.kernel.org>
-References: <20251029131235.GA3903@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+	s=arc-20240116; t=1761860441; c=relaxed/simple;
+	bh=kOGdJEqhw7LpwhUmachiTIYBGDY5FzQADV9YTTEFVl0=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=tdmdecZGKipZIVany3foy6YwuwLppG0lw5+AwhtM1FT7+2GkIy8e4cSJQSmjYSj9jGaX7yHmwgprKsrjNs6rWE1QV2K+aZY7AIeOJrOhjPZ27+gLfrtv8NzrSrwNFn2oOlzaPnrwVhxytYjDrHAoINyBmXfpSf0XnWWBuXOe4aE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rAcg7ccN; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1032)
+	id 212BD211D8DD; Thu, 30 Oct 2025 14:40:33 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 212BD211D8DD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1761860433;
+	bh=8Sg50qbBrr9fiFCSih4rdpZFEMRcY6m0ln1oDKqj6LI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rAcg7ccNgRpJdSWMK2ljsC9Q7kBrPfnnwJU2Gf0mdnwW5N0zKdtQTGg1QHrMJaCts
+	 /N7fOGts4j6ScI2FIz8WJV6Hp2H/jzx4GbfBLPDiVXF/BqW3q3tuj1cbBPad69pM+p
+	 vOEjCpxEfkLgdyqiwAM5nKUukr9LAO8EVS4JTmYI=
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	muislam@microsoft.com
+Cc: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	longli@microsoft.com,
+	mhklinux@outlook.com,
+	skinsburskii@linux.microsoft.com,
+	romank@linux.microsoft.com,
+	Jinank Jain <jinankjain@microsoft.com>,
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Subject: [PATCH v2] mshv: Extend create partition ioctl to support cpu features
+Date: Thu, 30 Oct 2025 14:40:31 -0700
+Message-Id: <1761860431-11208-1-git-send-email-nunodasneves@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251029131235.GA3903@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 
-On Wed, Oct 29, 2025 at 06:12:35AM -0700, Aditya Garg wrote:
-> The MANA hardware supports a maximum of 30 scatter-gather entries (SGEs)
-> per TX WQE. Exceeding this limit can cause TX failures.
-> Add ndo_features_check() callback to validate SKB layout before
-> transmission. For GSO SKBs that would exceed the hardware SGE limit, clear
-> NETIF_F_GSO_MASK to enforce software segmentation in the stack.
-> Add a fallback in mana_start_xmit() to linearize non-GSO SKBs that still
-> exceed the SGE limit.
-> 
-> Return NETDEV_TX_BUSY only for -ENOSPC from mana_gd_post_work_request(),
-> send other errors to free_sgl_ptr to free resources and record the tx
-> drop.
-> 
-> Co-developed-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-> Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-> Signed-off-by: Aditya Garg <gargaditya@linux.microsoft.com>
+From: Muminul Islam <muislam@microsoft.com>
 
-...
+The existing mshv create partition ioctl does not provide a way to
+specify which cpu features are enabled in the guest. This was done
+to reduce unnecessary complexity in the API.
 
-> @@ -289,6 +290,21 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
->  	cq = &apc->tx_qp[txq_idx].tx_cq;
->  	tx_stats = &txq->stats;
->  
-> +	if (MAX_SKB_FRAGS + 2 > MAX_TX_WQE_SGL_ENTRIES &&
-> +	    skb_shinfo(skb)->nr_frags + 2 > MAX_TX_WQE_SGL_ENTRIES) {
-> +		/* GSO skb with Hardware SGE limit exceeded is not expected here
-> +		 * as they are handled in mana_features_check() callback
-> +		 */
+However, some new scenarios require fine-grained control over the
+cpu feature bits.
 
-Hi,
+Define a new mshv_create_partition_v2 structure which supports passing
+through the disabled cpu flags and xsave flags to the hypervisor
+directly.
 
-I'm curious to know if we actually need this code.
-Are there cases where the mana_features_check() doesn't
-handle things and the kernel will reach this line?
+When these are not specified (pt_num_cpu_fbanks == 0) or the old
+structure is used, define a set of default flags which cover most
+cases.
 
-> +		if (skb_is_gso(skb))
-> +			netdev_warn_once(ndev, "GSO enabled skb exceeds max SGE limit\n");
-> +		if (skb_linearize(skb)) {
-> +			netdev_warn_once(ndev, "Failed to linearize skb with nr_frags=%d and is_gso=%d\n",
-> +					 skb_shinfo(skb)->nr_frags,
-> +					 skb_is_gso(skb));
-> +			goto tx_drop_count;
-> +		}
-> +	}
-> +
->  	pkg.tx_oob.s_oob.vcq_num = cq->gdma_id;
->  	pkg.tx_oob.s_oob.vsq_frame = txq->vsq_frame;
->  
+Retain backward compatibility with the old structure via a new flag
+MSHV_PT_BIT_CPU_AND_XSAVE_FEATURES which enables the new struct.
 
-...
+Co-developed-by: Jinank Jain <jinankjain@microsoft.com>
+Signed-off-by: Jinank Jain <jinankjain@microsoft.com>
+Signed-off-by: Muminul Islam <muislam@microsoft.com>
+Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+---
+Changes in v2:
+- Fix compilation issues [kernel test robot]
+
+---
+ drivers/hv/mshv_root_main.c | 176 ++++++++++++++++++++++++++++++++----
+ include/hyperv/hvhdk.h      |  86 +++++++++++++++++-
+ include/uapi/linux/mshv.h   |  34 +++++++
+ 3 files changed, 272 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+index d542a0143bb8..ef2c6d9f0a11 100644
+--- a/drivers/hv/mshv_root_main.c
++++ b/drivers/hv/mshv_root_main.c
+@@ -1900,43 +1900,181 @@ add_partition(struct mshv_partition *partition)
+ 	return 0;
+ }
+ 
+-static long
+-mshv_ioctl_create_partition(void __user *user_arg, struct device *module_dev)
++static_assert(MSHV_NUM_CPU_FEATURES_BANKS <=
++	      HV_PARTITION_PROCESSOR_FEATURES_BANKS);
++
++static long mshv_ioctl_process_pt_flags(void __user *user_arg, u64 *pt_flags,
++					struct hv_partition_creation_properties *cr_props,
++					union hv_partition_isolation_properties *isol_props)
+ {
+-	struct mshv_create_partition args;
+-	u64 creation_flags;
+-	struct hv_partition_creation_properties creation_properties = {};
+-	union hv_partition_isolation_properties isolation_properties = {};
+-	struct mshv_partition *partition;
+-	struct file *file;
+-	int fd;
+-	long ret;
++	int i;
++	struct mshv_create_partition_v2 args;
++	union hv_partition_processor_features *disabled_procs;
++	union hv_partition_processor_xsave_features *disabled_xsave;
+ 
+-	if (copy_from_user(&args, user_arg, sizeof(args)))
++	/* First, copy orig struct in case user is on previous versions */
++	if (copy_from_user(&args, user_arg,
++			   sizeof(struct mshv_create_partition)))
+ 		return -EFAULT;
+ 
+ 	if ((args.pt_flags & ~MSHV_PT_FLAGS_MASK) ||
+-	    args.pt_isolation >= MSHV_PT_ISOLATION_COUNT)
++	     args.pt_isolation >= MSHV_PT_ISOLATION_COUNT)
+ 		return -EINVAL;
+ 
++	disabled_procs = &cr_props->disabled_processor_features;
++
++	/* Disable all processor features first */
++	for (i = 0; i < HV_PARTITION_PROCESSOR_FEATURES_BANKS; i++)
++		disabled_procs->as_uint64[i] = -1;
++
++#if IS_ENABLED(CONFIG_X86_64)
++	/* Enable default features that are known to be supported */
++	disabled_procs->cet_ibt_support = 0;
++	disabled_procs->cet_ss_support = 0;
++	disabled_procs->smep_support = 0;
++	disabled_procs->rdtscp_support = 0;
++	disabled_procs->tsc_invariant_support = 0;
++	disabled_procs->sse3_support = 0;
++	disabled_procs->lahf_sahf_support = 0;
++	disabled_procs->ssse3_support = 0;
++	disabled_procs->sse4_1_support = 0;
++	disabled_procs->sse4_2_support = 0;
++	disabled_procs->sse4a_support = 0;
++	disabled_procs->xop_support = 0;
++	disabled_procs->pop_cnt_support = 0;
++	disabled_procs->cmpxchg16b_support = 0;
++	disabled_procs->altmovcr8_support = 0;
++	disabled_procs->lzcnt_support = 0;
++	disabled_procs->mis_align_sse_support = 0;
++	disabled_procs->mmx_ext_support = 0;
++	disabled_procs->amd3dnow_support = 0;
++	disabled_procs->extended_amd3dnow_support = 0;
++	disabled_procs->aes_support = 0;
++	disabled_procs->pclmulqdq_support = 0;
++	disabled_procs->pcid_support = 0;
++	disabled_procs->fma4_support = 0;
++	disabled_procs->f16c_support = 0;
++	disabled_procs->rd_rand_support = 0;
++	disabled_procs->rd_wr_fs_gs_support = 0;
++	disabled_procs->enhanced_fast_string_support = 0;
++	disabled_procs->bmi1_support = 0;
++	disabled_procs->bmi2_support = 0;
++	disabled_procs->hle_support_deprecated = 0;
++	disabled_procs->rtm_support_deprecated = 0;
++	disabled_procs->movbe_support = 0;
++	disabled_procs->npiep1_support = 0;
++	disabled_procs->dep_x87_fpu_save_support = 0;
++	disabled_procs->rd_seed_support = 0;
++	disabled_procs->adx_support = 0;
++	disabled_procs->intel_prefetch_support = 0;
++	disabled_procs->smap_support = 0;
++	disabled_procs->hle_support = 0;
++	disabled_procs->rtm_support = 0;
++	disabled_procs->invpcid_support = 0;
++	disabled_procs->ibrs_support = 0;
++	disabled_procs->stibp_support = 0;
++	disabled_procs->mdd_support = 0;
++	disabled_procs->ibpb_support = 0;
++	disabled_procs->l1dcache_flush_support = 0;
++	disabled_procs->virt_spec_ctrl_support = 0;
++	disabled_procs->mb_clear_support = 0;
++	disabled_procs->tsx_ctrl_support = 0;
++	disabled_procs->clflushopt_support = 0;
++	disabled_procs->rdcl_no_support = 0;
++	disabled_procs->ibrs_all_support = 0;
++	disabled_procs->page_1gb_support = 0;
++	disabled_procs->skip_l1df_support = 0;
++	disabled_procs->ssb_no_support = 0;
++	disabled_procs->mbs_no_support = 0;
++	disabled_procs->taa_no_support = 0;
++	disabled_procs->fb_clear_support = 0;
++	disabled_procs->gds_no_support = 0;
++	disabled_procs->bhi_no_support = 0;
++	disabled_procs->bhi_dis_support = 0;
++	disabled_procs->btc_no_support = 0;
++	disabled_procs->mitigation_ctrl_support = 0;
++	disabled_procs->rfds_no_support = 0;
++	disabled_procs->rfds_clear_support = 0;
++	disabled_procs->unrestricted_guest_support = 0;
++	disabled_procs->fast_short_rep_mov_support = 0;
++	disabled_procs->rsb_a_no_support = 0;
++	disabled_procs->rd_pid_support = 0;
++	disabled_procs->umip_support = 0;
++	disabled_procs->vmx_exception_inject_support = 0;
++	disabled_procs->rdpru_support = 0;
++	disabled_procs->mbec_support = 0;
++	disabled_procs->psfd_support = 0;
++
++	/* Enable default XSave features that are known to be supported*/
++	disabled_xsave = &cr_props->disabled_processor_xsave_features;
++	disabled_xsave->as_uint64 = -1;
++	disabled_xsave->xsave_support = 0;
++	disabled_xsave->xsaveopt_support = 0;
++	disabled_xsave->avx_support = 0;
++	disabled_xsave->xsave_supervisor_support = 0;
++	disabled_xsave->xsave_comp_support = 0;
++#endif
++	/* Check if user provided newer struct with feature fields */
++	if (args.pt_flags & BIT(MSHV_PT_BIT_CPU_AND_XSAVE_FEATURES)) {
++		if (copy_from_user(&args, user_arg, sizeof(args)))
++			return -EFAULT;
++
++		if (args.pt_num_cpu_fbanks > MSHV_NUM_CPU_FEATURES_BANKS ||
++		    mshv_field_nonzero(args, pt_rsvd) ||
++		    mshv_field_nonzero(args, pt_rsvd1))
++			return -EINVAL;
++
++		for (i = 0; i < args.pt_num_cpu_fbanks; i++)
++			disabled_procs->as_uint64[i] = args.pt_cpu_fbanks[i];
++
++#if IS_ENABLED(CONFIG_X86_64)
++		disabled_xsave->as_uint64 = args.pt_disabled_xsave;
++#else
++		if (mshv_field_nonzero(args, pt_rsvd2))
++			return -EINVAL;
++#endif
++	}
++
+ 	/* Only support EXO partitions */
+-	creation_flags = HV_PARTITION_CREATION_FLAG_EXO_PARTITION |
+-			 HV_PARTITION_CREATION_FLAG_INTERCEPT_MESSAGE_PAGE_ENABLED;
++	*pt_flags = HV_PARTITION_CREATION_FLAG_EXO_PARTITION |
++		    HV_PARTITION_CREATION_FLAG_INTERCEPT_MESSAGE_PAGE_ENABLED;
+ 
+ 	if (args.pt_flags & BIT(MSHV_PT_BIT_LAPIC))
+-		creation_flags |= HV_PARTITION_CREATION_FLAG_LAPIC_ENABLED;
++		*pt_flags |= HV_PARTITION_CREATION_FLAG_LAPIC_ENABLED;
+ 	if (args.pt_flags & BIT(MSHV_PT_BIT_X2APIC))
+-		creation_flags |= HV_PARTITION_CREATION_FLAG_X2APIC_CAPABLE;
++		*pt_flags |= HV_PARTITION_CREATION_FLAG_X2APIC_CAPABLE;
+ 	if (args.pt_flags & BIT(MSHV_PT_BIT_GPA_SUPER_PAGES))
+-		creation_flags |= HV_PARTITION_CREATION_FLAG_GPA_SUPER_PAGES_ENABLED;
++		*pt_flags |= HV_PARTITION_CREATION_FLAG_GPA_SUPER_PAGES_ENABLED;
+ 
+ 	switch (args.pt_isolation) {
+ 	case MSHV_PT_ISOLATION_NONE:
+-		isolation_properties.isolation_type =
+-			HV_PARTITION_ISOLATION_TYPE_NONE;
++		isol_props->isolation_type = HV_PARTITION_ISOLATION_TYPE_NONE;
++		break;
++	case MSHV_PT_ISOLATION_SNP:
++		isol_props->isolation_type = HV_PARTITION_ISOLATION_TYPE_SNP;
+ 		break;
+ 	}
+ 
++	return 0;
++}
++
++static long
++mshv_ioctl_create_partition(void __user *user_arg, struct device *module_dev)
++{
++	u64 creation_flags;
++	struct hv_partition_creation_properties creation_properties = {};
++	union hv_partition_isolation_properties isolation_properties = {};
++	struct mshv_partition *partition;
++	struct file *file;
++	int fd;
++	long ret;
++
++	ret = mshv_ioctl_process_pt_flags(user_arg, &creation_flags,
++					  &creation_properties,
++					  &isolation_properties);
++	if (ret)
++		return ret;
++
+ 	partition = kzalloc(sizeof(*partition), GFP_KERNEL);
+ 	if (!partition)
+ 		return -ENOMEM;
+diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
+index 416c0d45b793..221a90ab07fa 100644
+--- a/include/hyperv/hvhdk.h
++++ b/include/hyperv/hvhdk.h
+@@ -220,10 +220,51 @@ union hv_partition_processor_features {
+ 		u64 serialize_support : 1;
+ 		u64 tsc_deadline_tmr_support : 1;
+ 		u64 tsc_adjust_support : 1;
+-		u64 fzlrep_movsb : 1;
+-		u64 fsrep_stosb : 1;
+-		u64 fsrep_cmpsb : 1;
+-		u64 reserved_bank1 : 42;
++		u64 fzl_rep_movsb : 1;
++		u64 fs_rep_stosb : 1;
++		u64 fs_rep_cmpsb : 1;
++		u64 tsx_ld_trk_support : 1;
++		u64 vmx_ins_outs_exit_info_support : 1;
++		u64 hlat_support : 1;
++		u64 sbdr_ssdp_no_support : 1;
++		u64 fbsdp_no_support : 1;
++		u64 psdp_no_support : 1;
++		u64 fb_clear_support : 1;
++		u64 btc_no_support : 1;
++		u64 ibpb_rsb_flush_support : 1;
++		u64 stibp_always_on_support : 1;
++		u64 perf_global_ctrl_support : 1;
++		u64 npt_execute_only_support : 1;
++		u64 npt_ad_flags_support : 1;
++		u64 npt1_gb_page_support : 1;
++		u64 amd_processor_topology_node_id_support : 1;
++		u64 local_machine_check_support : 1;
++		u64 extended_topology_leaf_fp256_amd_support : 1;
++		u64 gds_no_support : 1;
++		u64 cmpccxadd_support : 1;
++		u64 tsc_aux_virtualization_support : 1;
++		u64 rmp_query_support : 1;
++		u64 bhi_no_support : 1;
++		u64 bhi_dis_support : 1;
++		u64 prefetch_i_support : 1;
++		u64 sha512_support : 1;
++		u64 mitigation_ctrl_support : 1;
++		u64 rfds_no_support : 1;
++		u64 rfds_clear_support : 1;
++		u64 sm3_support : 1;
++		u64 sm4_support : 1;
++		u64 secure_avic_support : 1;
++		u64 guest_intercept_ctrl_support : 1;
++		u64 sbpb_supported : 1;
++		u64 ibpb_br_type_supported : 1;
++		u64 srso_no_supported : 1;
++		u64 srso_user_kernel_no_supported : 1;
++		u64 vrew_clear_supported : 1;
++		u64 tsa_l1_no_supported : 1;
++		u64 tsa_sq_no_supported : 1;
++		u64 lass_support : 1;
++		/* Remaining reserved bits */
++		u64 reserved_bank1 : 2;
+ 	} __packed;
+ };
+ 
+@@ -232,7 +273,42 @@ union hv_partition_processor_xsave_features {
+ 		u64 xsave_support : 1;
+ 		u64 xsaveopt_support : 1;
+ 		u64 avx_support : 1;
+-		u64 reserved1 : 61;
++		u64 avx2_support : 1;
++		u64 fma_support: 1;
++		u64 mpx_support: 1;
++		u64 avx512_support : 1;
++		u64 avx512_dq_support : 1;
++		u64 avx512_cd_support : 1;
++		u64 avx512_bw_support : 1;
++		u64 avx512_vl_support : 1;
++		u64 xsave_comp_support : 1;
++		u64 xsave_supervisor_support : 1;
++		u64 xcr1_support : 1;
++		u64 avx512_bitalg_support : 1;
++		u64 avx512_i_fma_support : 1;
++		u64 avx512_v_bmi_support : 1;
++		u64 avx512_v_bmi2_support : 1;
++		u64 avx512_vnni_support : 1;
++		u64 gfni_support : 1;
++		u64 vaes_support : 1;
++		u64 avx512_v_popcntdq_support : 1;
++		u64 vpclmulqdq_support : 1;
++		u64 avx512_bf16_support : 1;
++		u64 avx512_vp2_intersect_support : 1;
++		u64 avx512_fp16_support : 1;
++		u64 xfd_support : 1;
++		u64 amx_tile_support : 1;
++		u64 amx_bf16_support : 1;
++		u64 amx_int8_support : 1;
++		u64 avx_vnni_support : 1;
++		u64 avx_ifma_support : 1;
++		u64 avx_ne_convert_support : 1;
++		u64 avx_vnni_int8_support : 1;
++		u64 avx_vnni_int16_support : 1;
++		u64 avx10_1_256_support : 1;
++		u64 avx10_1_512_support : 1;
++		u64 amx_fp16_support : 1;
++		u64 reserved1 : 26;
+ 	} __packed;
+ 	u64 as_uint64;
+ };
+diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
+index 876bfe4e4227..ee5c69da7b29 100644
+--- a/include/uapi/linux/mshv.h
++++ b/include/uapi/linux/mshv.h
+@@ -26,6 +26,7 @@ enum {
+ 	MSHV_PT_BIT_LAPIC,
+ 	MSHV_PT_BIT_X2APIC,
+ 	MSHV_PT_BIT_GPA_SUPER_PAGES,
++	MSHV_PT_BIT_CPU_AND_XSAVE_FEATURES,
+ 	MSHV_PT_BIT_COUNT,
+ };
+ 
+@@ -33,6 +34,7 @@ enum {
+ 
+ enum {
+ 	MSHV_PT_ISOLATION_NONE,
++	MSHV_PT_ISOLATION_SNP,
+ 	MSHV_PT_ISOLATION_COUNT,
+ };
+ 
+@@ -41,6 +43,8 @@ enum {
+  * @pt_flags: Bitmask of 1 << MSHV_PT_BIT_*
+  * @pt_isolation: MSHV_PT_ISOLATION_*
+  *
++ * This is the initial/v0 version for backward compatibility.
++ *
+  * Returns a file descriptor to act as a handle to a guest partition.
+  * At this point the partition is not yet initialized in the hypervisor.
+  * Some operations must be done with the partition in this state, e.g. setting
+@@ -52,6 +56,36 @@ struct mshv_create_partition {
+ 	__u64 pt_isolation;
+ };
+ 
++#define MSHV_NUM_CPU_FEATURES_BANKS 2
++
++/**
++ * struct mshv_create_partition_v2
++ *
++ * This is extended version of the above initial MSHV_CREATE_PARTITION
++ * ioctl and allows for following additional parameters:
++ *
++ * @pt_num_cpu_fbanks: number of processor feature banks being provided.
++ *                     This must not exceed MSHV_NUM_CPU_FEATURES_BANKS.
++ * @pt_cpu_fbanks: processor feature banks array
++ * @pt_disabled_xsave: disabled xsave feature bits. Refer to
++ *                     union hv_partition_processor_xsave_feature
++ *
++ * Returns : same as above original mshv_create_partition
++ */
++struct mshv_create_partition_v2 {
++	__u64 pt_flags;
++	__u64 pt_isolation;
++	__u16 pt_num_cpu_fbanks;
++	__u8  pt_rsvd[6];		/* MBZ */
++	__u64 pt_cpu_fbanks[MSHV_NUM_CPU_FEATURES_BANKS];
++	__u64 pt_rsvd1[2];		/* MBZ */
++#if defined(__x86_64__)
++	__u64 pt_disabled_xsave;
++#else
++	__u64 pt_rsvd2;			/* MBZ */
++#endif
++} __packed;
++
+ /* /dev/mshv */
+ #define MSHV_CREATE_PARTITION	_IOW(MSHV_IOCTL, 0x00, struct mshv_create_partition)
+ 
+-- 
+2.34.1
+
 
