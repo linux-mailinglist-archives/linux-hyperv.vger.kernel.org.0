@@ -1,108 +1,112 @@
-Return-Path: <linux-hyperv+bounces-7392-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7393-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E456C2694B
-	for <lists+linux-hyperv@lfdr.de>; Fri, 31 Oct 2025 19:33:50 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D644C269DB
+	for <lists+linux-hyperv@lfdr.de>; Fri, 31 Oct 2025 19:38:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 110174F6C76
-	for <lists+linux-hyperv@lfdr.de>; Fri, 31 Oct 2025 18:32:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CB15C1A65E99
+	for <lists+linux-hyperv@lfdr.de>; Fri, 31 Oct 2025 18:38:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 186EB1D7E31;
-	Fri, 31 Oct 2025 18:32:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEAA92EB840;
+	Fri, 31 Oct 2025 18:37:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ujP33nn9"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cVGeyDc/"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F46405F7;
-	Fri, 31 Oct 2025 18:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 430FA2F12B0;
+	Fri, 31 Oct 2025 18:37:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761935526; cv=none; b=iycnpC06vO3tElLwI1eZJiDi5TxjnzMhbJ1XyaO0LF5SnYhd74cmTERiKBvYOLV7Irz/hZ7TSf1UMOCVav/kKQZIM+bz9oVPfSuL4qEH4Vc+kt2Z7FLPtqXK2HJPY67ciwJp4ItlLVkwlEZKKqK9PuC/2ZAr9gaZa3QTAfYj0bw=
+	t=1761935872; cv=none; b=KvST978PGhOifyOkJDCyWk8/4G61Clvga/EXOsTkIkeTpTBElI4Vi1pWCrQMWvNAaSjkJAaTPph+7FNaiNBRuCaE9hwDD3SsiU9IahmNZejfow0Dk2Dt1MiNvlq9IPo8/0QvI+FncrM4L2/QeTLELcTfy3/Hb8pXvlyklumhPcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761935526; c=relaxed/simple;
-	bh=iOhbO4RNyVZThupm0wb+eZKrenQeZqXijyy1/H+MvUU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=prLi7S2iI6Zr20S3/Q8VQq0nyEfKzWbc/cEsz782ATHFYFN1t8PJnElfwhjpFcJEliIoXtn84NU+bU9KcayiWtSntnmToIDurG20vOsPfbLiV2N630PY4GTHLKOo0pAmcLaBRJ/ED7ErtJNtji6FVECR1oOb0/DFZd06X+Ei/1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ujP33nn9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A619C4CEF1;
-	Fri, 31 Oct 2025 18:32:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761935525;
-	bh=iOhbO4RNyVZThupm0wb+eZKrenQeZqXijyy1/H+MvUU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ujP33nn9EgoAJ1KwZYdTn1mTg/dEeRIAz3gO4H1uwN7KMl6xWiQEu6wEjF4bE+NDy
-	 3t5x0qmdjxIiGcuJnPgSX3kGPZ7f0Vz8vKpDth/h3xDkjze5xNvRp4BJpBwLdRKQM9
-	 FlIogTv8Rk9Gv99KZIHtwxLUiEKa2Ch7VGYdLe1mvRaMvmGeZyPFL7tV4rq+RGRdZ8
-	 XKONB79Xy2MnzOfQ1VeX2vzRKpgP+4Ch2HJlLogVvdd00dJcOV4efT3Y9GeSz+gypZ
-	 8HeI5GOjb6yvxeVf1DcsH9fdR8n4JSnBulyQkMDkXJHAShp1VMvrmvwfgfoxJKHpLL
-	 wNjggCjv1Y/IQ==
-Date: Fri, 31 Oct 2025 18:32:03 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] Drivers: hv: Resolve ambiguity in hypervisor version
- log
-Message-ID: <20251031183203.GD2612078@liuwe-devbox-debian-v2.local>
-References: <175996340003.108050.17652201410306711595.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <fa14e8f8-fe92-4636-9565-a6174edcea71@linux.microsoft.com>
+	s=arc-20240116; t=1761935872; c=relaxed/simple;
+	bh=S84aBI11Cwi78Sh4CoE5/xqmzTnuFt8l0phxn1A7lHE=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=nEyXZFdcCCh+UV4mVnOqaCEzKcLVZD3kwc1uZGusxraNYBku9NEF66eaNbkj/+ZXNWJkW+ndMDK7BX/p3QSBNyom5J46taLUAy5TgH8DZCA6nDRv7F6VIKRczR4fr7tez6/vaYbhxLSEr2NGF93rJS9hwcCoyPVyFNNkxUEJHbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=cVGeyDc/; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.201.246] (unknown [4.194.122.170])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 4A7C6211E340;
+	Fri, 31 Oct 2025 11:37:43 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4A7C6211E340
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1761935870;
+	bh=hAeSnh+PBTwEDF8TLrXRk+JviRX/cs7c9zxiIq3XKME=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=cVGeyDc/vnRaIrSL8+PA/ydyTFRoG8DsE9kwsNxoYLvt93cC80unoh3Hu2Rrw4+cj
+	 iPSiQNqZ98bJsMV59OtP2OUb5HF/oSg+81h/z+WMGHx/xfhJKpKNJ3fSYDd10XKqK2
+	 4X0dbZTF/pcmDawRIaEPCJBd+ivVJA7krwfnhDDQ=
+Message-ID: <119f11e7-6074-4bd4-a72b-fc76370c284f@linux.microsoft.com>
+Date: Fri, 31 Oct 2025 11:37:40 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fa14e8f8-fe92-4636-9565-a6174edcea71@linux.microsoft.com>
+User-Agent: Mozilla Thunderbird
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ muislam@microsoft.com, easwar.hariharan@linux.microsoft.com,
+ kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, longli@microsoft.com, mhklinux@outlook.com,
+ skinsburskii@linux.microsoft.com, romank@linux.microsoft.com,
+ Jinank Jain <jinankjain@microsoft.com>
+Subject: Re: [PATCH v2] mshv: Extend create partition ioctl to support cpu
+ features
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+References: <1761860431-11208-1-git-send-email-nunodasneves@linux.microsoft.com>
+From: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <1761860431-11208-1-git-send-email-nunodasneves@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Oct 10, 2025 at 03:49:17PM -0700, Nuno Das Neves wrote:
-> On 10/8/2025 3:43 PM, Stanislav Kinsburskii wrote:
-> > Update the log message in hv_common_init to explicitly state that the
-> > reported version is for the Microsoft Hypervisor, not the host OS.
-> > 
-> > Previously, this message was accurate for guests running on Windows
-> > hosts, where the host and hypervisor versions matched. With support for
-> > Linux hosts running the Hyper-V hypervisor, the host OS and hypervisor
-> > versions may differ.
-> > 
-> > This change avoids confusion by making it clear that the version refers to
-> > the Microsoft Hypervisor regardless of the host operating system.
-> > 
-> > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> > ---
-> >  drivers/hv/hv_common.c |    4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> > index e109a620c83fc..0289ee4ed5ebf 100644
-> > --- a/drivers/hv/hv_common.c
-> > +++ b/drivers/hv/hv_common.c
-> > @@ -315,9 +315,9 @@ int __init hv_common_init(void)
-> >  	int i;
-> >  	union hv_hypervisor_version_info version;
-> >  
-> > -	/* Get information about the Hyper-V host version */
-> > +	/* Get information about the Microsoft Hypervisor version */
-> >  	if (!hv_get_hypervisor_version(&version))
-> > -		pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
-> > +		pr_info("Hyper-V: Hypervisor Build %d.%d.%d.%d-%d-%d\n",
-> >  			version.major_version, version.minor_version,
-> >  			version.build_number, version.service_number,
-> >  			version.service_pack, version.service_branch);
-> > 
-> > 
+On 10/30/2025 2:40 PM, Nuno Das Neves wrote:
+> From: Muminul Islam <muislam@microsoft.com>
 > 
-> Looks like a good idea.
+> The existing mshv create partition ioctl does not provide a way to
+> specify which cpu features are enabled in the guest. This was done
+> to reduce unnecessary complexity in the API.
 > 
-> Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> However, some new scenarios require fine-grained control over the
+> cpu feature bits.
+> 
+> Define a new mshv_create_partition_v2 structure which supports passing
+> through the disabled cpu flags and xsave flags to the hypervisor
+> directly.
+> 
+> When these are not specified (pt_num_cpu_fbanks == 0) or the old
+> structure is used, define a set of default flags which cover most
+> cases.
+> 
+> Retain backward compatibility with the old structure via a new flag
+> MSHV_PT_BIT_CPU_AND_XSAVE_FEATURES which enables the new struct.
+> 
+> Co-developed-by: Jinank Jain <jinankjain@microsoft.com>
+> Signed-off-by: Jinank Jain <jinankjain@microsoft.com>
+> Signed-off-by: Muminul Islam <muislam@microsoft.com>
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> ---
+> Changes in v2:
+> - Fix compilation issues [kernel test robot]
+> 
+> ---
+>  drivers/hv/mshv_root_main.c | 176 ++++++++++++++++++++++++++++++++----
+>  include/hyperv/hvhdk.h      |  86 +++++++++++++++++-
+>  include/uapi/linux/mshv.h   |  34 +++++++
+>  3 files changed, 272 insertions(+), 24 deletions(-)
 
-Applied to hyperv-next.
+lkp also pointed out that we are leaking a kernel config to userspace:
+https://lore.kernel.org/all/202510292330.LCHvPCLt-lkp@intel.com/
+
+In the v3 that Wei requested, please address that as well.
+
+Thanks,
+Easwar (he/him)
+
+<snip>
 
