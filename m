@@ -1,477 +1,186 @@
-Return-Path: <linux-hyperv+bounces-7382-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7383-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F364AC22709
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Oct 2025 22:40:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71931C23D47
+	for <lists+linux-hyperv@lfdr.de>; Fri, 31 Oct 2025 09:34:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7EBF4423BA6
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Oct 2025 21:40:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92A7B1A261D4
+	for <lists+linux-hyperv@lfdr.de>; Fri, 31 Oct 2025 08:34:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A997224B1E;
-	Thu, 30 Oct 2025 21:40:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C18C22BE646;
+	Fri, 31 Oct 2025 08:34:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rAcg7ccN"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="LtKcqfq9"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 604CF34D3B6;
-	Thu, 30 Oct 2025 21:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F412C027C;
+	Fri, 31 Oct 2025 08:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761860441; cv=none; b=ogVEbTSzeeDIhRYBdic7/8MPchv1EiJw3uePAaJJMKG+8BmAoXTrPTeO7hEcofJ25ff9I1WKm+QPe36HNOH9MvnVVARD82gLkyQEcjmp5zOMK64dGENvb0cTAC6M1Ds7bd0h87zsyifVA90+4nTZOQVPv+QPluDRWQ7Tv8uZPCo=
+	t=1761899647; cv=none; b=HqYlTLm4Btp5m8CaDdIJyqEbL9xteYYdjGbxWxfx1iWba2gxnIHjYBkcSegG7i+mZJAUoOFUeQlSbP5dOt1UPV6nooxvBNvJNqFqCaUEA43pIDWqUEPkRmdKcwHtdpooJEoP0bHUJLSqT8mo6UijjdmXrz6rvfolhE6BRxzLPYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761860441; c=relaxed/simple;
-	bh=kOGdJEqhw7LpwhUmachiTIYBGDY5FzQADV9YTTEFVl0=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=tdmdecZGKipZIVany3foy6YwuwLppG0lw5+AwhtM1FT7+2GkIy8e4cSJQSmjYSj9jGaX7yHmwgprKsrjNs6rWE1QV2K+aZY7AIeOJrOhjPZ27+gLfrtv8NzrSrwNFn2oOlzaPnrwVhxytYjDrHAoINyBmXfpSf0XnWWBuXOe4aE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rAcg7ccN; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1032)
-	id 212BD211D8DD; Thu, 30 Oct 2025 14:40:33 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 212BD211D8DD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1761860433;
-	bh=8Sg50qbBrr9fiFCSih4rdpZFEMRcY6m0ln1oDKqj6LI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rAcg7ccNgRpJdSWMK2ljsC9Q7kBrPfnnwJU2Gf0mdnwW5N0zKdtQTGg1QHrMJaCts
-	 /N7fOGts4j6ScI2FIz8WJV6Hp2H/jzx4GbfBLPDiVXF/BqW3q3tuj1cbBPad69pM+p
-	 vOEjCpxEfkLgdyqiwAM5nKUukr9LAO8EVS4JTmYI=
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	muislam@microsoft.com
-Cc: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	mhklinux@outlook.com,
-	skinsburskii@linux.microsoft.com,
-	romank@linux.microsoft.com,
-	Jinank Jain <jinankjain@microsoft.com>,
-	Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Subject: [PATCH v2] mshv: Extend create partition ioctl to support cpu features
-Date: Thu, 30 Oct 2025 14:40:31 -0700
-Message-Id: <1761860431-11208-1-git-send-email-nunodasneves@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	s=arc-20240116; t=1761899647; c=relaxed/simple;
+	bh=8fc1CYRuvMV/op3GcqQv0nuYNwMICElMmVKDirrUN1M=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=sUmEMq60WiU483gFtZL1X0l2YjnZRw1RfCTje9UoMATTbDtDCk0mppccJNDqxBmkWi7Q9GOM/2gxnyJGH3pyDJjVeGlLP9B7rJaPEtwDJqKoDkTJ0vJ4w/RbISKhYUxvAYXrKVyQV/DnkdWtz83ZZE6G/TWlzdtz2cEOeZDpa4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=LtKcqfq9; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1761899600; x=1762504400; i=markus.elfring@web.de;
+	bh=uPCQ1N0hW4Pf0FulsunW1Gh5gBlwYVXBTnopmQ41LN8=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=LtKcqfq9t4qF6D3U2YkTFxAh18DgCdUKZs0Rali3J7b74zftTnP0M+J+yPEdIvAW
+	 N+IFGsFX33/8uspwMKczMaVOYBskEoavKzDK9FPOZokK4t3b4uNCYKVFpfN/a5FnC
+	 NbeXDlGuBJWpUE9A9k56aujJipOxSePFVmBSj1UNndX4qhX5lfhfYljzmGlh0MuF+
+	 AJvLbB8VFb4WgsyriwycHSpIeJky1CLlj9x6F23W0T2GRAR0oASC1Cb6eL6BYLN6G
+	 PIdF/0hHpHjhvtpRIkjCyn8m9iqJZIp58ZgQwAYO72jClVb5jn+JFqtpioFff5hdL
+	 Qmkqc/5Gf80/m1ZkqA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.69.206]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MSqTE-1vghYs0rq2-00KcLo; Fri, 31
+ Oct 2025 09:33:20 +0100
+Message-ID: <d209991b-5aee-4222-aec3-cb662ccb7433@web.de>
+Date: Fri, 31 Oct 2025 09:33:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: linux-hyperv@vger.kernel.org, x86@kernel.org,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>, Long Li <longli@microsoft.com>,
+ Mukesh Rathor <mrathor@linux.microsoft.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Wei Liu <wei.liu@kernel.org>
+Content-Language: en-GB, de-DE
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+ Miaoqian Lin <linmq006@gmail.com>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] x86/hyperv: Use pointer from memcpy() call for assignment in
+ hv_crash_setup_trampdata()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:/tLMazNDgoSvgpqPR+hxh+VIwram1duEYbjtVq8uhlqFa3CixEd
+ O2lZaaOGdSLZZ3OIN7yTqCLzfrNt9bqHPv1UUpiVMDsphdIWpDjGFDzBccaoK8hUOg2ZAqW
+ 48Tgq4VIjEtYVGbA1X/oK/bUwEMaE4kEhEU0WQZgHV7Y2+NvSCHYoNxuIKggPjaP10ChGkL
+ hPKUtTTL9f3AjZFTG7OWA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:7l2Av0ufUkQ=;YQR2EaOYvmMmT6qWwOCctdxqUUF
+ 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
 
-From: Muminul Islam <muislam@microsoft.com>
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Fri, 31 Oct 2025 09:24:31 +0100
 
-The existing mshv create partition ioctl does not provide a way to
-specify which cpu features are enabled in the guest. This was done
-to reduce unnecessary complexity in the API.
+A pointer was assigned to a variable. The same pointer was used for
+the destination parameter of a memcpy() call.
+This function is documented in the way that the same value is returned.
+Thus convert two separate statements into a direct variable assignment for
+the return value from a memory copy action.
 
-However, some new scenarios require fine-grained control over the
-cpu feature bits.
+The source code was transformed by using the Coccinelle software.
 
-Define a new mshv_create_partition_v2 structure which supports passing
-through the disabled cpu flags and xsave flags to the hypervisor
-directly.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ arch/x86/hyperv/hv_crash.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-When these are not specified (pt_num_cpu_fbanks == 0) or the old
-structure is used, define a set of default flags which cover most
-cases.
-
-Retain backward compatibility with the old structure via a new flag
-MSHV_PT_BIT_CPU_AND_XSAVE_FEATURES which enables the new struct.
-
-Co-developed-by: Jinank Jain <jinankjain@microsoft.com>
-Signed-off-by: Jinank Jain <jinankjain@microsoft.com>
-Signed-off-by: Muminul Islam <muislam@microsoft.com>
-Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
----
-Changes in v2:
-- Fix compilation issues [kernel test robot]
-
----
- drivers/hv/mshv_root_main.c | 176 ++++++++++++++++++++++++++++++++----
- include/hyperv/hvhdk.h      |  86 +++++++++++++++++-
- include/uapi/linux/mshv.h   |  34 +++++++
- 3 files changed, 272 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index d542a0143bb8..ef2c6d9f0a11 100644
---- a/drivers/hv/mshv_root_main.c
-+++ b/drivers/hv/mshv_root_main.c
-@@ -1900,43 +1900,181 @@ add_partition(struct mshv_partition *partition)
- 	return 0;
- }
- 
--static long
--mshv_ioctl_create_partition(void __user *user_arg, struct device *module_dev)
-+static_assert(MSHV_NUM_CPU_FEATURES_BANKS <=
-+	      HV_PARTITION_PROCESSOR_FEATURES_BANKS);
-+
-+static long mshv_ioctl_process_pt_flags(void __user *user_arg, u64 *pt_flags,
-+					struct hv_partition_creation_properties *cr_props,
-+					union hv_partition_isolation_properties *isol_props)
- {
--	struct mshv_create_partition args;
--	u64 creation_flags;
--	struct hv_partition_creation_properties creation_properties = {};
--	union hv_partition_isolation_properties isolation_properties = {};
--	struct mshv_partition *partition;
--	struct file *file;
--	int fd;
--	long ret;
-+	int i;
-+	struct mshv_create_partition_v2 args;
-+	union hv_partition_processor_features *disabled_procs;
-+	union hv_partition_processor_xsave_features *disabled_xsave;
- 
--	if (copy_from_user(&args, user_arg, sizeof(args)))
-+	/* First, copy orig struct in case user is on previous versions */
-+	if (copy_from_user(&args, user_arg,
-+			   sizeof(struct mshv_create_partition)))
- 		return -EFAULT;
- 
- 	if ((args.pt_flags & ~MSHV_PT_FLAGS_MASK) ||
--	    args.pt_isolation >= MSHV_PT_ISOLATION_COUNT)
-+	     args.pt_isolation >= MSHV_PT_ISOLATION_COUNT)
- 		return -EINVAL;
- 
-+	disabled_procs = &cr_props->disabled_processor_features;
-+
-+	/* Disable all processor features first */
-+	for (i = 0; i < HV_PARTITION_PROCESSOR_FEATURES_BANKS; i++)
-+		disabled_procs->as_uint64[i] = -1;
-+
-+#if IS_ENABLED(CONFIG_X86_64)
-+	/* Enable default features that are known to be supported */
-+	disabled_procs->cet_ibt_support = 0;
-+	disabled_procs->cet_ss_support = 0;
-+	disabled_procs->smep_support = 0;
-+	disabled_procs->rdtscp_support = 0;
-+	disabled_procs->tsc_invariant_support = 0;
-+	disabled_procs->sse3_support = 0;
-+	disabled_procs->lahf_sahf_support = 0;
-+	disabled_procs->ssse3_support = 0;
-+	disabled_procs->sse4_1_support = 0;
-+	disabled_procs->sse4_2_support = 0;
-+	disabled_procs->sse4a_support = 0;
-+	disabled_procs->xop_support = 0;
-+	disabled_procs->pop_cnt_support = 0;
-+	disabled_procs->cmpxchg16b_support = 0;
-+	disabled_procs->altmovcr8_support = 0;
-+	disabled_procs->lzcnt_support = 0;
-+	disabled_procs->mis_align_sse_support = 0;
-+	disabled_procs->mmx_ext_support = 0;
-+	disabled_procs->amd3dnow_support = 0;
-+	disabled_procs->extended_amd3dnow_support = 0;
-+	disabled_procs->aes_support = 0;
-+	disabled_procs->pclmulqdq_support = 0;
-+	disabled_procs->pcid_support = 0;
-+	disabled_procs->fma4_support = 0;
-+	disabled_procs->f16c_support = 0;
-+	disabled_procs->rd_rand_support = 0;
-+	disabled_procs->rd_wr_fs_gs_support = 0;
-+	disabled_procs->enhanced_fast_string_support = 0;
-+	disabled_procs->bmi1_support = 0;
-+	disabled_procs->bmi2_support = 0;
-+	disabled_procs->hle_support_deprecated = 0;
-+	disabled_procs->rtm_support_deprecated = 0;
-+	disabled_procs->movbe_support = 0;
-+	disabled_procs->npiep1_support = 0;
-+	disabled_procs->dep_x87_fpu_save_support = 0;
-+	disabled_procs->rd_seed_support = 0;
-+	disabled_procs->adx_support = 0;
-+	disabled_procs->intel_prefetch_support = 0;
-+	disabled_procs->smap_support = 0;
-+	disabled_procs->hle_support = 0;
-+	disabled_procs->rtm_support = 0;
-+	disabled_procs->invpcid_support = 0;
-+	disabled_procs->ibrs_support = 0;
-+	disabled_procs->stibp_support = 0;
-+	disabled_procs->mdd_support = 0;
-+	disabled_procs->ibpb_support = 0;
-+	disabled_procs->l1dcache_flush_support = 0;
-+	disabled_procs->virt_spec_ctrl_support = 0;
-+	disabled_procs->mb_clear_support = 0;
-+	disabled_procs->tsx_ctrl_support = 0;
-+	disabled_procs->clflushopt_support = 0;
-+	disabled_procs->rdcl_no_support = 0;
-+	disabled_procs->ibrs_all_support = 0;
-+	disabled_procs->page_1gb_support = 0;
-+	disabled_procs->skip_l1df_support = 0;
-+	disabled_procs->ssb_no_support = 0;
-+	disabled_procs->mbs_no_support = 0;
-+	disabled_procs->taa_no_support = 0;
-+	disabled_procs->fb_clear_support = 0;
-+	disabled_procs->gds_no_support = 0;
-+	disabled_procs->bhi_no_support = 0;
-+	disabled_procs->bhi_dis_support = 0;
-+	disabled_procs->btc_no_support = 0;
-+	disabled_procs->mitigation_ctrl_support = 0;
-+	disabled_procs->rfds_no_support = 0;
-+	disabled_procs->rfds_clear_support = 0;
-+	disabled_procs->unrestricted_guest_support = 0;
-+	disabled_procs->fast_short_rep_mov_support = 0;
-+	disabled_procs->rsb_a_no_support = 0;
-+	disabled_procs->rd_pid_support = 0;
-+	disabled_procs->umip_support = 0;
-+	disabled_procs->vmx_exception_inject_support = 0;
-+	disabled_procs->rdpru_support = 0;
-+	disabled_procs->mbec_support = 0;
-+	disabled_procs->psfd_support = 0;
-+
-+	/* Enable default XSave features that are known to be supported*/
-+	disabled_xsave = &cr_props->disabled_processor_xsave_features;
-+	disabled_xsave->as_uint64 = -1;
-+	disabled_xsave->xsave_support = 0;
-+	disabled_xsave->xsaveopt_support = 0;
-+	disabled_xsave->avx_support = 0;
-+	disabled_xsave->xsave_supervisor_support = 0;
-+	disabled_xsave->xsave_comp_support = 0;
-+#endif
-+	/* Check if user provided newer struct with feature fields */
-+	if (args.pt_flags & BIT(MSHV_PT_BIT_CPU_AND_XSAVE_FEATURES)) {
-+		if (copy_from_user(&args, user_arg, sizeof(args)))
-+			return -EFAULT;
-+
-+		if (args.pt_num_cpu_fbanks > MSHV_NUM_CPU_FEATURES_BANKS ||
-+		    mshv_field_nonzero(args, pt_rsvd) ||
-+		    mshv_field_nonzero(args, pt_rsvd1))
-+			return -EINVAL;
-+
-+		for (i = 0; i < args.pt_num_cpu_fbanks; i++)
-+			disabled_procs->as_uint64[i] = args.pt_cpu_fbanks[i];
-+
-+#if IS_ENABLED(CONFIG_X86_64)
-+		disabled_xsave->as_uint64 = args.pt_disabled_xsave;
-+#else
-+		if (mshv_field_nonzero(args, pt_rsvd2))
-+			return -EINVAL;
-+#endif
-+	}
-+
- 	/* Only support EXO partitions */
--	creation_flags = HV_PARTITION_CREATION_FLAG_EXO_PARTITION |
--			 HV_PARTITION_CREATION_FLAG_INTERCEPT_MESSAGE_PAGE_ENABLED;
-+	*pt_flags = HV_PARTITION_CREATION_FLAG_EXO_PARTITION |
-+		    HV_PARTITION_CREATION_FLAG_INTERCEPT_MESSAGE_PAGE_ENABLED;
- 
- 	if (args.pt_flags & BIT(MSHV_PT_BIT_LAPIC))
--		creation_flags |= HV_PARTITION_CREATION_FLAG_LAPIC_ENABLED;
-+		*pt_flags |= HV_PARTITION_CREATION_FLAG_LAPIC_ENABLED;
- 	if (args.pt_flags & BIT(MSHV_PT_BIT_X2APIC))
--		creation_flags |= HV_PARTITION_CREATION_FLAG_X2APIC_CAPABLE;
-+		*pt_flags |= HV_PARTITION_CREATION_FLAG_X2APIC_CAPABLE;
- 	if (args.pt_flags & BIT(MSHV_PT_BIT_GPA_SUPER_PAGES))
--		creation_flags |= HV_PARTITION_CREATION_FLAG_GPA_SUPER_PAGES_ENABLED;
-+		*pt_flags |= HV_PARTITION_CREATION_FLAG_GPA_SUPER_PAGES_ENABLED;
- 
- 	switch (args.pt_isolation) {
- 	case MSHV_PT_ISOLATION_NONE:
--		isolation_properties.isolation_type =
--			HV_PARTITION_ISOLATION_TYPE_NONE;
-+		isol_props->isolation_type = HV_PARTITION_ISOLATION_TYPE_NONE;
-+		break;
-+	case MSHV_PT_ISOLATION_SNP:
-+		isol_props->isolation_type = HV_PARTITION_ISOLATION_TYPE_SNP;
- 		break;
+diff --git a/arch/x86/hyperv/hv_crash.c b/arch/x86/hyperv/hv_crash.c
+index c0e22921ace1..745d02066308 100644
+=2D-- a/arch/x86/hyperv/hv_crash.c
++++ b/arch/x86/hyperv/hv_crash.c
+@@ -464,9 +464,7 @@ static int hv_crash_setup_trampdata(u64 trampoline_va)
+ 		return -1;
  	}
- 
-+	return 0;
-+}
-+
-+static long
-+mshv_ioctl_create_partition(void __user *user_arg, struct device *module_dev)
-+{
-+	u64 creation_flags;
-+	struct hv_partition_creation_properties creation_properties = {};
-+	union hv_partition_isolation_properties isolation_properties = {};
-+	struct mshv_partition *partition;
-+	struct file *file;
-+	int fd;
-+	long ret;
-+
-+	ret = mshv_ioctl_process_pt_flags(user_arg, &creation_flags,
-+					  &creation_properties,
-+					  &isolation_properties);
-+	if (ret)
-+		return ret;
-+
- 	partition = kzalloc(sizeof(*partition), GFP_KERNEL);
- 	if (!partition)
- 		return -ENOMEM;
-diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
-index 416c0d45b793..221a90ab07fa 100644
---- a/include/hyperv/hvhdk.h
-+++ b/include/hyperv/hvhdk.h
-@@ -220,10 +220,51 @@ union hv_partition_processor_features {
- 		u64 serialize_support : 1;
- 		u64 tsc_deadline_tmr_support : 1;
- 		u64 tsc_adjust_support : 1;
--		u64 fzlrep_movsb : 1;
--		u64 fsrep_stosb : 1;
--		u64 fsrep_cmpsb : 1;
--		u64 reserved_bank1 : 42;
-+		u64 fzl_rep_movsb : 1;
-+		u64 fs_rep_stosb : 1;
-+		u64 fs_rep_cmpsb : 1;
-+		u64 tsx_ld_trk_support : 1;
-+		u64 vmx_ins_outs_exit_info_support : 1;
-+		u64 hlat_support : 1;
-+		u64 sbdr_ssdp_no_support : 1;
-+		u64 fbsdp_no_support : 1;
-+		u64 psdp_no_support : 1;
-+		u64 fb_clear_support : 1;
-+		u64 btc_no_support : 1;
-+		u64 ibpb_rsb_flush_support : 1;
-+		u64 stibp_always_on_support : 1;
-+		u64 perf_global_ctrl_support : 1;
-+		u64 npt_execute_only_support : 1;
-+		u64 npt_ad_flags_support : 1;
-+		u64 npt1_gb_page_support : 1;
-+		u64 amd_processor_topology_node_id_support : 1;
-+		u64 local_machine_check_support : 1;
-+		u64 extended_topology_leaf_fp256_amd_support : 1;
-+		u64 gds_no_support : 1;
-+		u64 cmpccxadd_support : 1;
-+		u64 tsc_aux_virtualization_support : 1;
-+		u64 rmp_query_support : 1;
-+		u64 bhi_no_support : 1;
-+		u64 bhi_dis_support : 1;
-+		u64 prefetch_i_support : 1;
-+		u64 sha512_support : 1;
-+		u64 mitigation_ctrl_support : 1;
-+		u64 rfds_no_support : 1;
-+		u64 rfds_clear_support : 1;
-+		u64 sm3_support : 1;
-+		u64 sm4_support : 1;
-+		u64 secure_avic_support : 1;
-+		u64 guest_intercept_ctrl_support : 1;
-+		u64 sbpb_supported : 1;
-+		u64 ibpb_br_type_supported : 1;
-+		u64 srso_no_supported : 1;
-+		u64 srso_user_kernel_no_supported : 1;
-+		u64 vrew_clear_supported : 1;
-+		u64 tsa_l1_no_supported : 1;
-+		u64 tsa_sq_no_supported : 1;
-+		u64 lass_support : 1;
-+		/* Remaining reserved bits */
-+		u64 reserved_bank1 : 2;
- 	} __packed;
- };
- 
-@@ -232,7 +273,42 @@ union hv_partition_processor_xsave_features {
- 		u64 xsave_support : 1;
- 		u64 xsaveopt_support : 1;
- 		u64 avx_support : 1;
--		u64 reserved1 : 61;
-+		u64 avx2_support : 1;
-+		u64 fma_support: 1;
-+		u64 mpx_support: 1;
-+		u64 avx512_support : 1;
-+		u64 avx512_dq_support : 1;
-+		u64 avx512_cd_support : 1;
-+		u64 avx512_bw_support : 1;
-+		u64 avx512_vl_support : 1;
-+		u64 xsave_comp_support : 1;
-+		u64 xsave_supervisor_support : 1;
-+		u64 xcr1_support : 1;
-+		u64 avx512_bitalg_support : 1;
-+		u64 avx512_i_fma_support : 1;
-+		u64 avx512_v_bmi_support : 1;
-+		u64 avx512_v_bmi2_support : 1;
-+		u64 avx512_vnni_support : 1;
-+		u64 gfni_support : 1;
-+		u64 vaes_support : 1;
-+		u64 avx512_v_popcntdq_support : 1;
-+		u64 vpclmulqdq_support : 1;
-+		u64 avx512_bf16_support : 1;
-+		u64 avx512_vp2_intersect_support : 1;
-+		u64 avx512_fp16_support : 1;
-+		u64 xfd_support : 1;
-+		u64 amx_tile_support : 1;
-+		u64 amx_bf16_support : 1;
-+		u64 amx_int8_support : 1;
-+		u64 avx_vnni_support : 1;
-+		u64 avx_ifma_support : 1;
-+		u64 avx_ne_convert_support : 1;
-+		u64 avx_vnni_int8_support : 1;
-+		u64 avx_vnni_int16_support : 1;
-+		u64 avx10_1_256_support : 1;
-+		u64 avx10_1_512_support : 1;
-+		u64 amx_fp16_support : 1;
-+		u64 reserved1 : 26;
- 	} __packed;
- 	u64 as_uint64;
- };
-diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
-index 876bfe4e4227..ee5c69da7b29 100644
---- a/include/uapi/linux/mshv.h
-+++ b/include/uapi/linux/mshv.h
-@@ -26,6 +26,7 @@ enum {
- 	MSHV_PT_BIT_LAPIC,
- 	MSHV_PT_BIT_X2APIC,
- 	MSHV_PT_BIT_GPA_SUPER_PAGES,
-+	MSHV_PT_BIT_CPU_AND_XSAVE_FEATURES,
- 	MSHV_PT_BIT_COUNT,
- };
- 
-@@ -33,6 +34,7 @@ enum {
- 
- enum {
- 	MSHV_PT_ISOLATION_NONE,
-+	MSHV_PT_ISOLATION_SNP,
- 	MSHV_PT_ISOLATION_COUNT,
- };
- 
-@@ -41,6 +43,8 @@ enum {
-  * @pt_flags: Bitmask of 1 << MSHV_PT_BIT_*
-  * @pt_isolation: MSHV_PT_ISOLATION_*
-  *
-+ * This is the initial/v0 version for backward compatibility.
-+ *
-  * Returns a file descriptor to act as a handle to a guest partition.
-  * At this point the partition is not yet initialized in the hypervisor.
-  * Some operations must be done with the partition in this state, e.g. setting
-@@ -52,6 +56,36 @@ struct mshv_create_partition {
- 	__u64 pt_isolation;
- };
- 
-+#define MSHV_NUM_CPU_FEATURES_BANKS 2
-+
-+/**
-+ * struct mshv_create_partition_v2
-+ *
-+ * This is extended version of the above initial MSHV_CREATE_PARTITION
-+ * ioctl and allows for following additional parameters:
-+ *
-+ * @pt_num_cpu_fbanks: number of processor feature banks being provided.
-+ *                     This must not exceed MSHV_NUM_CPU_FEATURES_BANKS.
-+ * @pt_cpu_fbanks: processor feature banks array
-+ * @pt_disabled_xsave: disabled xsave feature bits. Refer to
-+ *                     union hv_partition_processor_xsave_feature
-+ *
-+ * Returns : same as above original mshv_create_partition
-+ */
-+struct mshv_create_partition_v2 {
-+	__u64 pt_flags;
-+	__u64 pt_isolation;
-+	__u16 pt_num_cpu_fbanks;
-+	__u8  pt_rsvd[6];		/* MBZ */
-+	__u64 pt_cpu_fbanks[MSHV_NUM_CPU_FEATURES_BANKS];
-+	__u64 pt_rsvd1[2];		/* MBZ */
-+#if defined(__x86_64__)
-+	__u64 pt_disabled_xsave;
-+#else
-+	__u64 pt_rsvd2;			/* MBZ */
-+#endif
-+} __packed;
-+
- /* /dev/mshv */
- #define MSHV_CREATE_PARTITION	_IOW(MSHV_IOCTL, 0x00, struct mshv_create_partition)
- 
--- 
-2.34.1
+=20
+-	dest =3D (void *)trampoline_va;
+-	memcpy(dest, &hv_crash_asm32, size);
+-
++	dest =3D memcpy((void *)trampoline_va, &hv_crash_asm32, size);
+ 	dest +=3D size;
+ 	dest =3D (void *)round_up((ulong)dest, 16);
+ 	tramp =3D (struct hv_crash_tramp_data *)dest;
+=2D-=20
+2.51.1
 
 
