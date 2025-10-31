@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-7394-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7395-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCF4BC26D2E
-	for <lists+linux-hyperv@lfdr.de>; Fri, 31 Oct 2025 20:49:19 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78A14C26DE3
+	for <lists+linux-hyperv@lfdr.de>; Fri, 31 Oct 2025 21:09:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id AAF9D4EA1E1
-	for <lists+linux-hyperv@lfdr.de>; Fri, 31 Oct 2025 19:49:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D7CD742755C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 31 Oct 2025 20:08:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A20D3314D02;
-	Fri, 31 Oct 2025 19:49:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFDC531B83B;
+	Fri, 31 Oct 2025 20:08:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dxDfctlv"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gsnc0Mk6"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FC14274B42;
-	Fri, 31 Oct 2025 19:49:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C7D9283FD6;
+	Fri, 31 Oct 2025 20:08:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761940156; cv=none; b=ao+UQFTMluKNXofG+fAq44/wAMdDEltOLqzCLsyHoCcnu0la35NpVu+QzUIa7bBqXLcDrhBYo9tFHU0KaQZNBnSWOxtDfiucr5Yjzc1PWSwFjC+oG/MivPSJf2nHQ0vVK7AHui/2S3WRd6vzofw37CN6whC1u7YmF+jNl/JxiAA=
+	t=1761941329; cv=none; b=DlAEflhhg0kacJht0N870nmlJjIXQnGBSp2tB7sJu0HUKdYX+Z3oziUk0NbAyXY6cpUqvVYPh7dpTop4OMnkLWS9h+RgEFOpkeLO3eF7TcPflTAk+f8SxRqNFoA8Vz3b8B7vRGXCqPpjfpkzUFFW5aCHh0SOzILuXOYhCygn50M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761940156; c=relaxed/simple;
-	bh=huvcD6HQblCYH9tKumQU+KOTOATTW7f7xFYpdnBW7sE=;
+	s=arc-20240116; t=1761941329; c=relaxed/simple;
+	bh=EL9F5S97G8vzOhU7NaniWA8pefyRkwTlhmtrIPEmZkA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uIOpqW9hvxooPsc6H5fnxYsCY9/WZjEWtiLP+aPw+2wezqfqMQttSV3xusSki9dWI3J3uwR2kOveTOGiiXAwFy5WoKn5b/LXLYfTZDTurjrBC+FW/Z/8dvr0+HusTcwxN+bu0bg/B+gYMyhlkiHUhv255/PUM6WSdbit6slHT6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=dxDfctlv; arc=none smtp.client-ip=13.77.154.182
+	 In-Reply-To:Content-Type; b=LTPVMKvjboMwYgYNL/KGEPAhobIATMhMvvhnXra7w3uLQ6wmDZ+er1QxLiRhB7B6WBOumSMJEqjZgc0LzobVPmv0WTOVVQi6L3l7sQfs5NJXsjbwgnb3FvkdR/wcS5iKFfxasPyZsxoqYBX8ISVOVehIjlKpa4bZsrI7m+/kUF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gsnc0Mk6; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from [100.64.208.255] (unknown [52.148.138.235])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 0AD2E211D8DC;
-	Fri, 31 Oct 2025 12:49:13 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0AD2E211D8DC
+	by linux.microsoft.com (Postfix) with ESMTPSA id 64F7C211E344;
+	Fri, 31 Oct 2025 13:08:47 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 64F7C211E344
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1761940154;
-	bh=xM3PEY5QxVmM9YoLt2SHtReJl4SeYau3QeL4aNz8w14=;
+	s=default; t=1761941327;
+	bh=Gx6AHsv91Sdxbg2gKThn+6GlZSNoLXafPPqn8huw99U=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dxDfctlvddpZQ9KXqKAzlQp5ENPpwURhvBqmjamyNtZUCJL23sy1n2JXARNwIA1SA
-	 r1MgZ3ll3oRX++60QtSVz0VzDUZi/0Vb9zPBl0yv1IFGtxY8JSOqhJZIvkBvoLcOpZ
-	 V+VvTWhkmSIYOYrCfVD1CF/1y86jfFJseTzcySIk=
-Message-ID: <ae9c0915-3472-4929-9bfa-866171d32758@linux.microsoft.com>
-Date: Fri, 31 Oct 2025 12:49:12 -0700
+	b=gsnc0Mk6Km5YrmgBqXpgeCXSQQaYnG/jOX5jWeWpWFyThBs5Cpg4S/DaIEnWczYMG
+	 utg2babT7haTySlZoEYHQxTBoiUC5Daqmwhk5QtBZok3yqzwiecxnc4NeVEUdbgr9Q
+	 kuxiXBiT0MCddXLuPk0QM89t7wXgq+HL84EFHHJA=
+Message-ID: <28ab51c0-fe14-4122-8828-3f680207865d@linux.microsoft.com>
+Date: Fri, 31 Oct 2025 13:08:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -51,22 +51,22 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2] mshv: Extend create partition ioctl to support cpu
  features
-To: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+To: Wei Liu <wei.liu@kernel.org>
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
  muislam@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org, decui@microsoft.com, longli@microsoft.com,
- mhklinux@outlook.com, skinsburskii@linux.microsoft.com,
- romank@linux.microsoft.com, Jinank Jain <jinankjain@microsoft.com>
+ decui@microsoft.com, longli@microsoft.com, mhklinux@outlook.com,
+ skinsburskii@linux.microsoft.com, romank@linux.microsoft.com,
+ Jinank Jain <jinankjain@microsoft.com>
 References: <1761860431-11208-1-git-send-email-nunodasneves@linux.microsoft.com>
- <119f11e7-6074-4bd4-a72b-fc76370c284f@linux.microsoft.com>
+ <20251031183109.GC2612078@liuwe-devbox-debian-v2.local>
 Content-Language: en-US
 From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <119f11e7-6074-4bd4-a72b-fc76370c284f@linux.microsoft.com>
+In-Reply-To: <20251031183109.GC2612078@liuwe-devbox-debian-v2.local>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 10/31/2025 11:37 AM, Easwar Hariharan wrote:
-> On 10/30/2025 2:40 PM, Nuno Das Neves wrote:
+On 10/31/2025 11:31 AM, Wei Liu wrote:
+> On Thu, Oct 30, 2025 at 02:40:31PM -0700, Nuno Das Neves wrote:
 >> From: Muminul Islam <muislam@microsoft.com>
 >>
 >> The existing mshv create partition ioctl does not provide a way to
@@ -98,21 +98,24 @@ On 10/31/2025 11:37 AM, Easwar Hariharan wrote:
 >> ---
 >>  drivers/hv/mshv_root_main.c | 176 ++++++++++++++++++++++++++++++++----
 >>  include/hyperv/hvhdk.h      |  86 +++++++++++++++++-
->>  include/uapi/linux/mshv.h   |  34 +++++++
->>  3 files changed, 272 insertions(+), 24 deletions(-)
 > 
-> lkp also pointed out that we are leaking a kernel config to userspace:
-> https://lore.kernel.org/all/202510292330.LCHvPCLt-lkp@intel.com/
+> There is no mention of updating hvhdk.h in the commit message.
 > 
-> In the v3 that Wei requested, please address that as well.
+Ah, that's true..
 
-Thanks, I did fix this issue in v2 but I didn't mention it explicitly.
-I'll update the changelog in v3 to call it out.
+> Can you split out this part to a separate commit?
 
-> 
-> Thanks,
-> Easwar (he/him)
-> 
-> <snip>
+I put the header changes in this patch because a patch containing
+those alone doesn't have much merit on its own.
+
+I know we have split header changes into separate patches in the
+past but I'm not sure it's always the right choice.
+
+Thinking about this, I could also split it up another way: one
+patch to introduce the new cpu features flags and use them in the
+driver, and one patch to introduce mshv_create_partition_v2.
+
+Nuno> 
+> Wei
 
 
