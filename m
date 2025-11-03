@@ -1,155 +1,134 @@
-Return-Path: <linux-hyperv+bounces-7400-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7401-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6A9AC29016
-	for <lists+linux-hyperv@lfdr.de>; Sun, 02 Nov 2025 15:14:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BDD8C2C296
+	for <lists+linux-hyperv@lfdr.de>; Mon, 03 Nov 2025 14:41:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 14A194E1BAD
-	for <lists+linux-hyperv@lfdr.de>; Sun,  2 Nov 2025 14:14:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7ACAB188F88D
+	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Nov 2025 13:41:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76A0821773D;
-	Sun,  2 Nov 2025 14:14:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ABF22FBE08;
+	Mon,  3 Nov 2025 13:41:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N1yrFrh9"
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HOGlu+YF"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88AA772610;
-	Sun,  2 Nov 2025 14:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2391C2DA77E;
+	Mon,  3 Nov 2025 13:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762092860; cv=none; b=jyLgPv9AxpWNM0jExK8gij6CWjU1/ezNUE0IABFmehOnPM0l2qq9OpX/Jstg+yAKJvdf5Vw23z8xgXIAiQOzQ71pMq1SRoMddzORY90JF5PAro4PdYSjOCjRjEya1JspP7IxoYv0EVIIYECPjwA7Ad1g85AjD+UWcv6MfwLKOaM=
+	t=1762177275; cv=none; b=csOEPTe7c/l73OMtZ3SeZ8+F5R14wWRdjiklG967PYFA4IdLwxARTTcASyZONlleAqPCvR2PPvcN6mkduuuHPWoJ2wSHw012uQkbigpcdOCnsAmgH0Fk/NyAG9Poy7ETIJg/bhf3QRZs9YEC3UECfoovjGK3wMUu3sM/qzdftW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762092860; c=relaxed/simple;
-	bh=37V5674L4iSlmwmX1WKaEKq5LWlrQ37iJ549idwApFg=;
+	s=arc-20240116; t=1762177275; c=relaxed/simple;
+	bh=xNvAHzc/ZbWwIrRbPnxFzUiYiwh87HyVAdIpXGZfoLE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A6rzmfUHKQFLI1lQ+icNK2GPy6DSeyJFSZO8d5b5iCTiDOst2iFBBltunRZ2agVTDpWvna00tQibySQqvZKnjstjh9UdRGRTsdLtUMdI7LL4QUuM+Ykw2wvE5C6NbT9FINKYaAoMh1g4+eNc6pEeV0tUJQD9FqmOpeVKGVCVjj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N1yrFrh9; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762092859; x=1793628859;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=37V5674L4iSlmwmX1WKaEKq5LWlrQ37iJ549idwApFg=;
-  b=N1yrFrh9wnJzA/YG8Sz/2xW/qnM6joMnCI+8uOtQ2X0krLavWf+syrVw
-   S1yk33Q7nfidJ7xDsJsjQ7Sx/jvns3OKZSe9uzYXSHdoY91X7oEUQZeLO
-   IP+bvmidVT71Pgq2fB+CC6eG39luqvxUBKBbMB9oKPCjcY+Z8pJ8sbuxb
-   4nGWRHyiR9lDUbV4N6GlqCX1h5xxGXy8OsHQrzxdtJ8Apn/lle5nUExcB
-   JLgblwmWL9HBnwY6FcadLQUYjyTzpqxkovmC27RM/S64a1PF0/ouUDmsY
-   twnlpb9dLaYGerR/yhr1QNBeMlRJJM2qLHZY8STKRyIajE/roaC+OQSg5
-   g==;
-X-CSE-ConnectionGUID: dhyz7f8DRS+C+iGIycW/lA==
-X-CSE-MsgGUID: EN7mRigVSiCTK1syxjUqKQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11601"; a="64285538"
-X-IronPort-AV: E=Sophos;i="6.19,274,1754982000"; 
-   d="scan'208";a="64285538"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2025 06:14:18 -0800
-X-CSE-ConnectionGUID: hHrgI88dRcO1f3ZEFdjbBA==
-X-CSE-MsgGUID: ctZC3L/uT3O2PD1m6SSX4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,274,1754982000"; 
-   d="scan'208";a="186533464"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by fmviesa006.fm.intel.com with ESMTP; 02 Nov 2025 06:14:14 -0800
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vFYqS-000PIW-26;
-	Sun, 02 Nov 2025 14:14:12 +0000
-Date: Sun, 2 Nov 2025 22:13:42 +0800
-From: kernel test robot <lkp@intel.com>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	muislam@microsoft.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	longli@microsoft.com, mhklinux@outlook.com,
-	skinsburskii@linux.microsoft.com, romank@linux.microsoft.com,
-	Jinank Jain <jinankjain@microsoft.com>,
-	Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Subject: Re: [PATCH v2] mshv: Extend create partition ioctl to support cpu
- features
-Message-ID: <202511022246.Tn2DmYLd-lkp@intel.com>
-References: <1761860431-11208-1-git-send-email-nunodasneves@linux.microsoft.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fgy9gd/E1BiEC27zGmlhwE2y79Ct4A54YvBj4To47ZQiieuWjrsBX5Tmxlw2mQ/dvUV3GTn8M+z3xrxQglD/QVasH+BTT6rBlRbAzqupfou8iZ5OT5hB0X4okGCiY0vRL2kwHJNsZmIGty0+k5u78qUqDZ4HPciIXYhGbUtzQZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=HOGlu+YF; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BF52940E01CD;
+	Mon,  3 Nov 2025 13:41:09 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id M-5mD1RyBWtB; Mon,  3 Nov 2025 13:41:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1762177264; bh=GbYczoBSYFJ2a7y6WVUbqvm56JGqfF/fxI6kZKdT9Mc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HOGlu+YF+9++OK+K5VXjZejvirvdFdjbI4VXdONk40BPvl42X9WLtG8ajTCr/4v5w
+	 kGo8hd6hbZE+wSgxx9K/ynxQg3O6XT9Q7luFyLpppI0XYo+mgdziqUB93kb7hXfBy8
+	 Qeisd1m8mP+KXUEAuhDO07FJ1PWaxX9oBPDjfnCNDUTteEJ7PJ+3z6+vWybvhAWtju
+	 Ayq8QtXLWzBDvGoIFXXOtZioR7/7l0ZpesEGusEL0zRshdAS5RRsA/MuBWzCisXrdh
+	 X++plqE37zhumIheUdDtlODh0VBYj6lWfZnr/T9YeyP6xuq7yaIyGsWrPHlHiaTcPR
+	 tVJsXz4ma3QcINfN20fh6YI03CO0UO807ycccShKoDAw5P+sM/weYZU6TD0NuA+U6I
+	 EAAaEjNyoC6hByFbhUYyf+sIUchGNaI3rlt9/V+F5ZXKbbFpbY3xT37NOGCBmm94nY
+	 zOgg1+26fdTA/V+BGLlEOIE2lTWMiOoTei6BcUN3/NE87mY8Jf73zuWoNySNjEnjMG
+	 UGQrWjOJMnzkE3dY2EX/sAhsP4RtC0W22hyjRNyzsA4PtfzUdnVWkb+jgPOA7E0aBY
+	 Rtgn3biQCd1zycSdkMaESnwGVrGlsjtF686NN4jCDzOmAjUNUaYd+kFsgGaTV8mCmx
+	 lzp2v9F1fAdE2eRTMtNaOdCo=
+Received: from zn.tnic (pd9530da1.dip0.t-ipconnect.de [217.83.13.161])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 7937D40E01FA;
+	Mon,  3 Nov 2025 13:40:43 +0000 (UTC)
+Date: Mon, 3 Nov 2025 14:40:37 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Chris Oo <cho@microsoft.com>, "Kirill A. Shutemov" <kas@kernel.org>,
+	linux-hyperv@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ricardo Neri <ricardo.neri@intel.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Yunhong Jiang <yunhong.jiang@linux.intel.com>
+Subject: Re: [PATCH v6 02/10] x86/acpi: Move acpi_wakeup_cpu() and helpers to
+ smpwakeup.c
+Message-ID: <20251103134037.GOaQiw1Y6Iu_ENu6ww@fat_crate.local>
+References: <20251016-rneri-wakeup-mailbox-v6-0-40435fb9305e@linux.intel.com>
+ <20251016-rneri-wakeup-mailbox-v6-2-40435fb9305e@linux.intel.com>
+ <20251027141835.GYaP9_O1C3cms6msfv@fat_crate.local>
+ <20251027205816.GB14161@ranerica-svr.sc.intel.com>
+ <20251029111358.GDaQH29lURT0p_WWsb@fat_crate.local>
+ <20251030054350.GA17477@ranerica-svr.sc.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1761860431-11208-1-git-send-email-nunodasneves@linux.microsoft.com>
+In-Reply-To: <20251030054350.GA17477@ranerica-svr.sc.intel.com>
 
-Hi Nuno,
+On Wed, Oct 29, 2025 at 10:43:50PM -0700, Ricardo Neri wrote:
+> I did not want to enable the whole of ACPI code as I need a tiny portion of it.
+> Then yes, saving memory and having a smaller binary were considerations.
+> 
+> The only dependency that ACPI_MADT_WAKEUP has on ACPI is the code to read and
+> parse the ACPI table that enumerates the mailbox. (There are a couple of
+> declarations for CPU offlining that need tweaking if I want ACPI_MADT_WAKEUP to
+> not depend on ACPI at all).
+> 
+> The DeviceTree firmware only needs the code to wake CPUs up. That is the code
+> I am carving out.
+> 
+> Having said that, vmlinux and bzImage increase by 4% if I enable ACPI.
 
-kernel test robot noticed the following build warnings:
+So, is it a concern or not? I cannot understand from the above whether you
+care about 4% or not.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.18-rc3 next-20251031]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+If you do, I guess you can make a piece of ACPI code available through another
+Kconfig option but keep it in the ACPI hierarchy.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Nuno-Das-Neves/mshv-Extend-create-partition-ioctl-to-support-cpu-features/20251031-054134
-base:   linus/master
-patch link:    https://lore.kernel.org/r/1761860431-11208-1-git-send-email-nunodasneves%40linux.microsoft.com
-patch subject: [PATCH v2] mshv: Extend create partition ioctl to support cpu features
-config: arm64-randconfig-001-20251102 (https://download.01.org/0day-ci/archive/20251102/202511022246.Tn2DmYLd-lkp@intel.com/config)
-compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project d2625a438020ad35330cda29c3def102c1687b1b)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251102/202511022246.Tn2DmYLd-lkp@intel.com/reproduce)
+Because no matter how you look at it, it is ACPI code which is trying to be
+generic and failing at that.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511022246.Tn2DmYLd-lkp@intel.com/
+Unless you scrub it completely and make it a generic thing which is used by
+ACPI too.
 
-All warnings (new ones prefixed by >>):
+Which would be a separate patchset.
 
->> drivers/hv/mshv_root_main.c:1875:47: warning: unused variable 'disabled_xsave' [-Wunused-variable]
-    1875 |         union hv_partition_processor_xsave_features *disabled_xsave;
-         |                                                      ^~~~~~~~~~~~~~
-   1 warning generated.
-
-
-vim +/disabled_xsave +1875 drivers/hv/mshv_root_main.c
-
-  1864	
-  1865	static_assert(MSHV_NUM_CPU_FEATURES_BANKS <=
-  1866		      HV_PARTITION_PROCESSOR_FEATURES_BANKS);
-  1867	
-  1868	static long mshv_ioctl_process_pt_flags(void __user *user_arg, u64 *pt_flags,
-  1869						struct hv_partition_creation_properties *cr_props,
-  1870						union hv_partition_isolation_properties *isol_props)
-  1871	{
-  1872		int i;
-  1873		struct mshv_create_partition_v2 args;
-  1874		union hv_partition_processor_features *disabled_procs;
-> 1875		union hv_partition_processor_xsave_features *disabled_xsave;
-  1876	
-  1877		/* First, copy orig struct in case user is on previous versions */
-  1878		if (copy_from_user(&args, user_arg,
-  1879				   sizeof(struct mshv_create_partition)))
-  1880			return -EFAULT;
-  1881	
-  1882		if ((args.pt_flags & ~MSHV_PT_FLAGS_MASK) ||
-  1883		     args.pt_isolation >= MSHV_PT_ISOLATION_COUNT)
-  1884			return -EINVAL;
-  1885	
-  1886		disabled_procs = &cr_props->disabled_processor_features;
-  1887	
-  1888		/* Disable all processor features first */
-  1889		for (i = 0; i < HV_PARTITION_PROCESSOR_FEATURES_BANKS; i++)
-  1890			disabled_procs->as_uint64[i] = -1;
-  1891	
+Thx.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
