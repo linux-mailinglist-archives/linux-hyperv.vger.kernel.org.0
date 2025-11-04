@@ -1,137 +1,131 @@
-Return-Path: <linux-hyperv+bounces-7402-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7403-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E969FC2CA28
-	for <lists+linux-hyperv@lfdr.de>; Mon, 03 Nov 2025 16:18:04 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5357C30F3C
+	for <lists+linux-hyperv@lfdr.de>; Tue, 04 Nov 2025 13:19:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BB7351893C24
-	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Nov 2025 15:13:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B18BF3BF63F
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Nov 2025 12:16:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95B9F318146;
-	Mon,  3 Nov 2025 14:58:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEC802E7F14;
+	Tue,  4 Nov 2025 12:16:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d3Aq3XRH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fy0FXGS6"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E6C3112BD;
-	Mon,  3 Nov 2025 14:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FBB02DF12B
+	for <linux-hyperv@vger.kernel.org>; Tue,  4 Nov 2025 12:16:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762181925; cv=none; b=eOMcfp5l+2Igm37NvGejtbv+1NpO7Fdy/cI/kkZzgCZQlFIeWzQ5igVGBa4G0t1oe1336hEi8IbilierYAQBGZXjTxl4Ab3/V27DLS4Z18Ea48IAVdxQIZbi4jegvuHv5Ug4Sc4M0Jod1uZY1jPEstolJsaeYWmTEfHLzJRHHXo=
+	t=1762258600; cv=none; b=qAHB1XonkSArEk/cxffr0HSut7pCDEhijcwK7JGmceFjEW745CBFR2uj5ZSOQEcWsWTnfaOz7Z8taNdLxLNIecxL9+0wqKtZKauFGzuLs2QhQc4uTVC/1cD8CEttGWwfyzqKycEuo5/Utk8QyD+RlixNFU0aFBfIXCXqQVr5sZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762181925; c=relaxed/simple;
-	bh=assirJLyUowDfFa7kE1YCP3FONPTzejJ9QbVSRO7hmk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tgPyT96ICT620jPUddb+Z8WUVq6bx8pyZw/GX0+8da1cUhiwLp1qiexCgaLiQEy6x9Q/0MGAFgCpNtnYfyxMrG/iJF/BR2v3Mlx9cjSqfhmLzq43Wkja1BHPppoSml1SJ9OWDWBdp/Q4jBIHKQL0sBVBfhbALCoNNyi/71Z0QTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d3Aq3XRH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F75EC4CEE7;
-	Mon,  3 Nov 2025 14:58:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762181925;
-	bh=assirJLyUowDfFa7kE1YCP3FONPTzejJ9QbVSRO7hmk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d3Aq3XRH4FIiOr1ca7vksnvcqMT2DxCali/3rU18MibxJ85utRKsxdBOYb9EzU40r
-	 xqJtMN8cpcFuO0b4Dn3cRam2oug440FP4XgmXKtrlbxdhKlkrPJwTSrS9RJlekJS1y
-	 vE0aEX8wVSNH/anfrG7cZYrDjbekNqr9A2hq4JI/fFIof+O1C1OPlB08HlkYuwgyD9
-	 b1AhgTX+lC9OWxjwogLjeIqdAkPxnR/ejBDzpFZXDoQu9OIsoCMq3UGCo4otyPO0Wf
-	 DGGnGzWS9urm+sBqvyqfWTJ9stDEiyyA7n4VEE6P/puMYPnrlwgzRQs8p0t32bzEtE
-	 TYQkW0iQbuROQ==
-Date: Mon, 3 Nov 2025 14:58:39 +0000
-From: Simon Horman <horms@kernel.org>
-To: Aditya Garg <gargaditya@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	longli@microsoft.com, kotaranov@microsoft.com,
-	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
-	ernis@linux.microsoft.com, dipayanroy@linux.microsoft.com,
-	shirazsaleem@microsoft.com, linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, gargaditya@microsoft.com
-Subject: Re: [PATCH net-next v2] net: mana: Handle SKB if TX SGEs exceed
- hardware limit
-Message-ID: <aQjDHy5qSGYADPS7@horms.kernel.org>
-References: <20251029131235.GA3903@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <aQMqLN0FRmNU3_ke@horms.kernel.org>
- <347c723b-d47c-49c2-9a3b-b49d967f875b@linux.microsoft.com>
+	s=arc-20240116; t=1762258600; c=relaxed/simple;
+	bh=KmF1ild1xRClyDBcecZ5U1luwkLXb/wS/QXdRFfIuPM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s/JhVtKxm+j8e1M3IXH007kNhEU10YE7NLJOtSuuCWtTnhDx2FJyABPzncujGWBkmEANkyiLJ//lvkSXA/CDgGA1nvrC2KefUuSqKtVmp3v5kIQRI5xguzAg3n5ZdD0NJhiZ1h6rZwFXFh7SVoGJ9DHDJd0iwPc6yRaNXWXVnvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fy0FXGS6; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-27d3540a43fso53839565ad.3
+        for <linux-hyperv@vger.kernel.org>; Tue, 04 Nov 2025 04:16:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762258599; x=1762863399; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qm65bXeCJn5pnj+/OO3CyTJYCu+x03vH4a2TBarzblA=;
+        b=Fy0FXGS6ktrvlQLzcPGqcTYCAaYV6Mdyes6xBQtN5mI8x5UKUfAy9twhYHH+zt+ZCR
+         mLantyz8udWeEwC7AlnGQtIT3zCWHhOoxZx7CiLV9qD8DdM0rnK5mOa8InBXNbcxuagq
+         +DLoGfycDDa7I1SemHjt3c0FiwSAi5gFgy81hb6C9ck6LWb+Lakt7UBjd4ybxz7OAY4U
+         s9KL4z03SdZlFErP1ADh3oSMc3E3WnJ2vKrq6lqOJ9cOex6yj0VuTNFSLdAf2RBYXiP1
+         KTxlR8FiqhEFW2eyIbkVuW5auCcmpIb/5dzmuaenC/ysWNsuDv5s3oakyB/D0TkLckv9
+         /j6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762258599; x=1762863399;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qm65bXeCJn5pnj+/OO3CyTJYCu+x03vH4a2TBarzblA=;
+        b=OoUXHAI1pa6EnHSIzYUDI0RdC3xu5PmmR5dp7WxyEuKGgXgN+jTTX4v2qzGfrs8YIS
+         2URDhWV8PYx6iLxlqWmkat6qmZGMNFx2QNTDRCBP8sFjTBl7t6x0fJUxdOPQT8zp9ADQ
+         rRPCp95mn/8MNI91WqVtmmdl1zPeLTPpbZmrg40JSykj9r9AXLRRVehpzncu1uQ/NH+K
+         YTw+suEem0fK2LtaNIwOaSYwgvXh/mqsd95NUuYuirYtQ1lQO95SaePNj6liGtDSfZJR
+         vePZnqo3VKpiHESmtZxAxIbcNGx5FxYvt9xbMhRTPww+sxraLSkim/CsaUozQzgmG8DM
+         X7gg==
+X-Gm-Message-State: AOJu0YyEEMNjQJQCdJMGscvnQzq6GOX4GLuqsA8wijmD/v321hRi7hdg
+	zL2RJap8LeNv9aHDCEY/sm3+yi1rUy5QBMgZ/EyTEclWzOH6C00osoGN
+X-Gm-Gg: ASbGncttC1eDlAzqRMbN/9lnp4049AjJuYldFjTmyoNhs4Rz7aF4Db6SKkSJL42sV2N
+	pIDKZtU9vDX/PiavsfcJoQTJCc6h7mDihrSDSHiA03qPYl6hnodU0T6OdFrm7NdGwDCRTFk+bHm
+	80i3WgiRjueMctKqHvOzZjqDxwKYrcy3h8Ghk87CbajAmWm3bXcKHbsmj0azCg76H/WRruMMXMu
+	yDk24bxdUUh/GLpMTEet/q3mwPOxdZy5jPxHuW1L/naHc5AT8fKENFsicZ+UvKAL0OlrBv4Dn4R
+	eGXvRroh2aKdLUHbLaJ18QhKbbfv0pA8TJrXX6tqPKU0VZE7aUWRy2i5vdBoe6H1MYueTyyxsfo
+	2nlCanaiOiHKSTTRfyUCFzbtE8FJPgK6QWLpOG6dsVXQcsoQAS6oCKSHjpB3+ip2U2ffYx3dTGF
+	RwOhWHERSo/IMsEQ==
+X-Google-Smtp-Source: AGHT+IHWfL9ukqE2uuV3u9mjGfvafGL1d6Fs8/ftcpn2dBlsfCsDaAEiDNRs1yYtV7lZN1i+KrcEew==
+X-Received: by 2002:a17:902:d486:b0:295:c2e9:604e with SMTP id d9443c01a7336-295c2e96112mr68237335ad.51.1762258598598;
+        Tue, 04 Nov 2025 04:16:38 -0800 (PST)
+Received: from localhost.localdomain ([165.204.156.251])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3415a1c2e69sm4436715a91.6.2025.11.04.04.16.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Nov 2025 04:16:38 -0800 (PST)
+From: Rahul Kumar <rk0006818@gmail.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com
+Cc: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	skhan@linuxfoundation.org,
+	rk0006818@gmail.com
+Subject: [PATCH] drivers/hv: Use kmalloc_array() instead of kmalloc()
+Date: Tue,  4 Nov 2025 17:46:18 +0530
+Message-ID: <20251104121618.1396291-1-rk0006818@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <347c723b-d47c-49c2-9a3b-b49d967f875b@linux.microsoft.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 31, 2025 at 06:50:10PM +0530, Aditya Garg wrote:
-> On 30-10-2025 14:34, Simon Horman wrote:
-> > On Wed, Oct 29, 2025 at 06:12:35AM -0700, Aditya Garg wrote:
-> > > The MANA hardware supports a maximum of 30 scatter-gather entries (SGEs)
-> > > per TX WQE. Exceeding this limit can cause TX failures.
-> > > Add ndo_features_check() callback to validate SKB layout before
-> > > transmission. For GSO SKBs that would exceed the hardware SGE limit, clear
-> > > NETIF_F_GSO_MASK to enforce software segmentation in the stack.
-> > > Add a fallback in mana_start_xmit() to linearize non-GSO SKBs that still
-> > > exceed the SGE limit.
-> > > 
-> > > Return NETDEV_TX_BUSY only for -ENOSPC from mana_gd_post_work_request(),
-> > > send other errors to free_sgl_ptr to free resources and record the tx
-> > > drop.
-> > > 
-> > > Co-developed-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-> > > Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-> > > Signed-off-by: Aditya Garg <gargaditya@linux.microsoft.com>
-> > 
-> > ...
-> > 
-> > > @@ -289,6 +290,21 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-> > >   	cq = &apc->tx_qp[txq_idx].tx_cq;
-> > >   	tx_stats = &txq->stats;
-> > > +	if (MAX_SKB_FRAGS + 2 > MAX_TX_WQE_SGL_ENTRIES &&
-> > > +	    skb_shinfo(skb)->nr_frags + 2 > MAX_TX_WQE_SGL_ENTRIES) {
-> > > +		/* GSO skb with Hardware SGE limit exceeded is not expected here
-> > > +		 * as they are handled in mana_features_check() callback
-> > > +		 */
-> > 
-> > Hi,
-> > 
-> > I'm curious to know if we actually need this code.
-> > Are there cases where the mana_features_check() doesn't
-> > handle things and the kernel will reach this line?
-> > 
-> > > +		if (skb_is_gso(skb))
-> > > +			netdev_warn_once(ndev, "GSO enabled skb exceeds max SGE limit\n");
-> > > +		if (skb_linearize(skb)) {
-> > > +			netdev_warn_once(ndev, "Failed to linearize skb with nr_frags=%d and is_gso=%d\n",
-> > > +					 skb_shinfo(skb)->nr_frags,
-> > > +					 skb_is_gso(skb));
-> > > +			goto tx_drop_count;
-> > > +		}
-> > > +	}
-> > > +
-> > >   	pkg.tx_oob.s_oob.vcq_num = cq->gdma_id;
-> > >   	pkg.tx_oob.s_oob.vsq_frame = txq->vsq_frame;
-> > 
-> > ...
-> 
-> Hi Simon,
-> As it was previously discussed and agreed on with Eric, this is for Non-GSO
-> skbs which could have possibly nr_frags greater than hardware limit.
-> 
-> Quoting Eric's comment from v1 thread: https://lore.kernel.org/netdev/CANn89iKwHWdUaeAsdSuZUXG-W8XwyM2oppQL9spKkex0p9-Azw@mail.gmail.com/
-> "I think that for non GSO, the linearization attempt is fine.
-> 
-> Note that this is extremely unlikely for non malicious users,
-> and MTU being usually small (9K or less),
-> the allocation will be much smaller than a GSO packet."
+Documentation/process/deprecated.rst recommends against the use of
+kmalloc with dynamic size calculations due to the risk of overflow and
+smaller allocation being made than the caller was expecting.
 
-Thanks for the clarification, that makes sense to me.
+Replace kmalloc() with kmalloc_array() in hv_common.c to make the
+intended allocation size clearer and avoid potential overflow issues.
 
-FTR, Jakub's question (elsewhere) is different to mine.
+The number of pages (pgcount) is bounded, so overflow is not a
+practical concern here. However, using kmalloc_array() better reflects
+the intent to allocate an array and improves consistency with other
+allocations.
+
+No functional change intended.
+
+Signed-off-by: Rahul Kumar <rk0006818@gmail.com>
+---
+ drivers/hv/hv_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+index e109a620c83f..68689beb383c 100644
+--- a/drivers/hv/hv_common.c
++++ b/drivers/hv/hv_common.c
+@@ -487,7 +487,7 @@ int hv_common_cpu_init(unsigned int cpu)
+ 	 * online and then taken offline
+ 	 */
+ 	if (!*inputarg) {
+-		mem = kmalloc(pgcount * HV_HYP_PAGE_SIZE, flags);
++		mem = kmalloc_array(pgcount, HV_HYP_PAGE_SIZE, flags);
+ 		if (!mem)
+ 			return -ENOMEM;
+ 
+-- 
+2.43.0
+
 
