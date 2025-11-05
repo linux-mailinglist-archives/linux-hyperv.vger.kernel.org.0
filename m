@@ -1,376 +1,329 @@
-Return-Path: <linux-hyperv+bounces-7413-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7414-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42178C37713
-	for <lists+linux-hyperv@lfdr.de>; Wed, 05 Nov 2025 20:15:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D06B1C38286
+	for <lists+linux-hyperv@lfdr.de>; Wed, 05 Nov 2025 23:16:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 03BD84EB5AD
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Nov 2025 19:10:44 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5758D4E4E95
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Nov 2025 22:16:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 449EF329369;
-	Wed,  5 Nov 2025 19:10:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F9ED29D277;
+	Wed,  5 Nov 2025 22:16:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Lo0K6I2C"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eS3TFBJK"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 772B1321422;
-	Wed,  5 Nov 2025 19:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762369842; cv=none; b=pRZ+STO8HMDpKVBwgpS75CedQnIZSY0nqSSwR12niXB1jpi+PzBuuWPqwIq0tezUR+RxRt8/En8c0rPaHaCYxN4HxFHhAl/wxTw7dqHfCK3nVtHAMROoWMdnjnqmLI74Sa5vaUQU12y3k0kskne7gu54qYLN3xaooyXz1cp5ajI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762369842; c=relaxed/simple;
-	bh=QumDJDKN3BbP+JeTHScZ3LMa/AbubpDuNa6w7jIQhPY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ualQN97B0A69LiHPPPQQ+DeI5WtGu5pJh426yUyE0NYKnvMBXnjz4rV6j4UXKk61kj8tZUEiRaoHh4mr5D4V3kwjba9qdn80Oo9qoW2+GXiwijbz9wBi1iX5Gpa8HaNgX9A7/CSKBoKJWuPsIIW2M6dY9cogR1zg4P819/Hu6gQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Lo0K6I2C; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 33D1D20120AA;
-	Wed,  5 Nov 2025 11:10:39 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 33D1D20120AA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1762369839;
-	bh=EuwYc2LuCt2GdBfXpQF0MJHPZO9Mje71Y+veLXDEU78=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Lo0K6I2Cf+twolyKhr1Lnb4oLxPBLss2OhD9i3d7RBEG53HfLGL4RDMUbPCDxOjbb
-	 eJRHkkheyLWCs0zIgMIh8Jby8OWrRmFbYwGFRGQKw7Iyu5fnBNPQa4JmXd4Wkdvl//
-	 HRqG6ebmfCzUEwbSrCZijM+UXKVyDGizQIr5EYZs=
-Message-ID: <31e9a5be-05d6-49f8-893e-2d8986dc8ce4@linux.microsoft.com>
-Date: Wed, 5 Nov 2025 11:10:28 -0800
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBC9265630;
+	Wed,  5 Nov 2025 22:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762380980; cv=fail; b=I3FQpH6XCp0tGkM9HPoGhnYTnYFQUew6G/zGwrgdHqdn+g115L0iOAwbU0ZuHFrJrgIBc9LG1ImPOQplSsnVhORWWm7sNxw5AtVtnvqOJoSMpov71rx3teORQdyqheQFObqqnTmmLg/BcbU66DvfUDcPVEQVrEHBUlL5U2JTNzk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762380980; c=relaxed/simple;
+	bh=kCieRLGaxHjVqqGUgxL2YNhMW4ZEahkExmkb2YBZq+c=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=XJuDtkpzOmlok8RROfLZGLQ5PI3QhVNVEkqyPYbEfWcxI7oSMyvBD0EPHsDb5o2RnMiOFqodnd3TCIerbRGsVqtjPSzJOmorVnGyNyweNCguKI6V0ZcNJMQlpt/bEAHZ0VUS+yjtGr8g2nT/P4oF2lNU4BPCtuazNjvBcmVMAjI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eS3TFBJK; arc=fail smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762380978; x=1793916978;
+  h=message-id:date:subject:to:references:from:in-reply-to:
+   mime-version;
+  bh=kCieRLGaxHjVqqGUgxL2YNhMW4ZEahkExmkb2YBZq+c=;
+  b=eS3TFBJK27LDgEKPCyXBCYwxmosY7iOiyUcqtRLwOSAhUB4twrNXy3AV
+   fdtXpm4YGWjoI3VO1lcofbu4I4fv065baEU4x48AZiHUjhvLK2t63nOeD
+   0MDdxPfSqaJ7htR73p1nsrme3qee459xEFcduDPOEQQC+c+jxtwTGM9E2
+   1OjgldUeWiwznyRY2XNPj8GZber2j7Xk2KTQliCvNBzRGFgDPr4ZwW3h6
+   JB+SM1nU+Utu8Pbo4uZkW+PegOKR37kU5OFIawgmbBvamv/u8pFkwbS+v
+   KAocy4b6CY7M9sa1GWJhd7Y1gqJvSd/m7Yb6y5r3uxBBgPnRG1CBcvkfF
+   A==;
+X-CSE-ConnectionGUID: R+75NxuaRLSPFBFsH6oU+A==
+X-CSE-MsgGUID: aL/iXFPfR4SP2CxYxFfICA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11604"; a="64205684"
+X-IronPort-AV: E=Sophos;i="6.19,283,1754982000"; 
+   d="asc'?scan'208";a="64205684"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 14:16:08 -0800
+X-CSE-ConnectionGUID: aoVlB2WHTY6sU3wppdATaQ==
+X-CSE-MsgGUID: UfbhT9gpQRWF62/kJlHROg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,283,1754982000"; 
+   d="asc'?scan'208";a="192640566"
+Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 14:16:08 -0800
+Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Wed, 5 Nov 2025 14:16:07 -0800
+Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
+ FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27 via Frontend Transport; Wed, 5 Nov 2025 14:16:07 -0800
+Received: from BYAPR05CU005.outbound.protection.outlook.com (52.101.85.10) by
+ edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Wed, 5 Nov 2025 14:16:07 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=by95CB62PoWge1O+ozxmXHNqjzbdrcQED9PQm+CZhzUfpOYxR7aQvbS++y4V+mDEQBcDv/x+pI8sLM/ylR2964UQk2jqayJwDQ/urBeEhwwp87hZoVIsad7+DcLBmE3EFMosf/mVG+2tyV5L5rcOacZlE0KSgkT5Y3pquDd4S6w1MUb4Jnme4NaA/Squt4xyTu/lu195VZE6YRa5uhAHTb6adgvb29M/ZwaWZwT9ND1pMKz7PY0RA/+XvJCIwr2UnjmHHyN8pIUgkxsxSZWKEx+tWSj5BBAxr3N5hjCtCmcvEjuMm/1/bvvXKg2JJXTg1YFItmFgwGsa/D82kmNDhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=T2O4vcHiO8/6Jclh0mmypRieUfYxzPqY4F+YqBfGxsA=;
+ b=M98JhyJE3rHauxriBRvILbOs7GObaOQtDsBJg3tFB/WDGPhRCeKKsfNdYlDJG6HyBlIfXMfPhUGZUC1Lwk6fR3r7OjVfVhCV1qTahrSSVn709TXOzIp70iSBTA0pQudEYgP3Ne1w8JxteF8MLVVCLNXtjlHJjzkOHznDtVKXoN3ZsAIMeMLSoQ3otw61d0UkhHcmAYaeDZpTiBn/IdhkGXKRA2hf+1lyMgkF3ePpJUac4Tm2sKX2All3atRU9jwf8kkeMJDzZfROYa6cNEyAv7+uUb70DqjNlKxNsKU5ZURlKfqwBeTKSf6Ib2WK7Wzw8sVCm3kg6cyWMueJXglLBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CO1PR11MB5089.namprd11.prod.outlook.com (2603:10b6:303:9b::16)
+ by DM4PR11MB8129.namprd11.prod.outlook.com (2603:10b6:8:183::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.9; Wed, 5 Nov
+ 2025 22:16:00 +0000
+Received: from CO1PR11MB5089.namprd11.prod.outlook.com
+ ([fe80::81f7:c6c0:ca43:11c3]) by CO1PR11MB5089.namprd11.prod.outlook.com
+ ([fe80::81f7:c6c0:ca43:11c3%3]) with mapi id 15.20.9275.015; Wed, 5 Nov 2025
+ 22:16:00 +0000
+Message-ID: <d09ceb78-4f86-4114-8596-9b3d102de96b@intel.com>
+Date: Wed, 5 Nov 2025 14:15:58 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3] net: mana: Fix incorrect speed reported by
+ debugfs
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>, <kys@microsoft.com>,
+	<haiyangz@microsoft.com>, <wei.liu@kernel.org>, <decui@microsoft.com>,
+	<andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <shradhagupta@linux.microsoft.com>,
+	<ssengar@linux.microsoft.com>, <dipayanroy@linux.microsoft.com>,
+	<shirazsaleem@microsoft.com>, <kotaranov@microsoft.com>,
+	<longli@microsoft.com>, <linux-hyperv@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1762369468-32570-1-git-send-email-ernis@linux.microsoft.com>
+Content-Language: en-US
+From: Jacob Keller <jacob.e.keller@intel.com>
+Autocrypt: addr=jacob.e.keller@intel.com; keydata=
+ xjMEaFx9ShYJKwYBBAHaRw8BAQdAE+TQsi9s60VNWijGeBIKU6hsXLwMt/JY9ni1wnsVd7nN
+ J0phY29iIEtlbGxlciA8amFjb2IuZS5rZWxsZXJAaW50ZWwuY29tPsKTBBMWCgA7FiEEIEBU
+ qdczkFYq7EMeapZdPm8PKOgFAmhcfUoCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AA
+ CgkQapZdPm8PKOiZAAEA4UV0uM2PhFAw+tlK81gP+fgRqBVYlhmMyroXadv0lH4BAIf4jLxI
+ UPEL4+zzp4ekaw8IyFz+mRMUBaS2l+cpoBUBzjgEaFx9ShIKKwYBBAGXVQEFAQEHQF386lYe
+ MPZBiQHGXwjbBWS5OMBems5rgajcBMKc4W4aAwEIB8J4BBgWCgAgFiEEIEBUqdczkFYq7EMe
+ apZdPm8PKOgFAmhcfUoCGwwACgkQapZdPm8PKOjbUQD+MsPBANqBUiNt+7w0dC73R6UcQzbg
+ cFx4Yvms6cJjeD4BAKf193xbq7W3T7r9BdfTw6HRFYDiHXgkyoc/2Q4/T+8H
+In-Reply-To: <1762369468-32570-1-git-send-email-ernis@linux.microsoft.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="------------Z3Zpa0dAhOo0qKYjYgmOGhLW"
+X-ClientProxiedBy: MW4PR04CA0325.namprd04.prod.outlook.com
+ (2603:10b6:303:82::30) To CO1PR11MB5089.namprd11.prod.outlook.com
+ (2603:10b6:303:9b::16)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PR11MB5089:EE_|DM4PR11MB8129:EE_
+X-MS-Office365-Filtering-Correlation-Id: caf540dc-7f94-41c5-95a9-08de1cb8e697
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024|921020|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?QXhlMTBWbTNYUVVJd3JPS0Npa0ZXUmx0N3EzdzlzUkh6Wktnam14aVQ1VXdZ?=
+ =?utf-8?B?R3F6czc0S0tGUitDdklaTTBRVWZkbEd0cDk2UitsWk9MZk5tcnZ6NElDKy9O?=
+ =?utf-8?B?bkV6SFlDYnRZSnR5QmVRTmZlYlVhSTlYQkU1eCtLR2xQdy9VTEdiaFBLTSs3?=
+ =?utf-8?B?REFJcEEyd3ppSjNDclJTTm9ERERQR2cwZ3Q5cC9iSHdndUMxa0toeFJVWmZN?=
+ =?utf-8?B?WEtoRVBIZHNMajRWa3gzUG95NlVMN3dkU3dYSGsvckVFMDhlVjlwa3VjQkRo?=
+ =?utf-8?B?ejR6YUF6M0RmTDZZQjdQT2ovMG5YMUs1akZ4MFJPb0JLYXFyc3NTcTZOd3po?=
+ =?utf-8?B?SFlySVZ0U2ZocjIxa1F6VlZrSUhMVjBvV3BLYStZSS85bk5EemxtZ1lyekxP?=
+ =?utf-8?B?U2lrS3JFYWNYKzlxL1JrRjRvOUpuQng3MnFXQUJybGtMUFVzc2FMbHFJMHRI?=
+ =?utf-8?B?Mmk3SGxoT0poeTlFOS9KN0lNTVRmeHpTNkJ2RmpMWWF0Z085YTNIeFRlYldl?=
+ =?utf-8?B?L05wakJXRm5KeCtrMVRkRmw1dE9xUkpIK0I2NEY4OGxOUGw1QXRWZUlJWmtI?=
+ =?utf-8?B?NUp6WE9iVWZBNTNWbUI1YVlQNkVvMlZMbWV4N2NMV0kvRGxtNUJodGFrQjdk?=
+ =?utf-8?B?djlENklTSVFLY1AxeHNTWGN3dkpja1BkZVc0V1lIVVAza1ExSThybGFROG5a?=
+ =?utf-8?B?emNBenhIVzY3eS85djJmUzhMRldaaXpQd1V4U2JJckMwY011aTcxcTBReGlD?=
+ =?utf-8?B?WURVK1o2M0duS0NpamV0ZTNvcGpMS3ZlRGlaS0NOeUNoU3BrYUpXVG43Q0Ni?=
+ =?utf-8?B?SU5yTWs5Ny9zOUlsVm02bVp2WmlYNnlaOHZOR0JhSklYcE1XUlFnWDZQM1dD?=
+ =?utf-8?B?QjMwL2kvaHpWMzRXZmVzakJxOEVQblU4OXlQcS9rQXJqSUxyMDVwQ3NsNzcz?=
+ =?utf-8?B?bzhzeXBLU0xzLzMxUXNyZWRQRXlDOHZJQzVxdFdPNHZycFV0L0VWUXg0eHoz?=
+ =?utf-8?B?M2hVSjNRZkZBY09qTXo0cDQ4QkF0UFJHUUFQVmphZVNTZlNkUmErL0xkQzNo?=
+ =?utf-8?B?QWVCOHVhWFByaTROREUwcHc1Rkg4Vyt1dWE2ZmptaG9Ka3R0bVJabUZETEdN?=
+ =?utf-8?B?dXRvQW1kYkJpZDZkZWdId0xGNXFUUnlUdjE5cExHMElrejh5bDZISzgxSmtZ?=
+ =?utf-8?B?L3d3U3dVSlBIVHlMZTVvNEFWeDljNWhSNlo4YStjZnQwWjl2akRCSFFDWGov?=
+ =?utf-8?B?YXlkT090RDVoWWx5bW5MTEFQcVEzSVdpaVIwTlo3SjdyK3Qwdms2TW83N3ZP?=
+ =?utf-8?B?QjZSRUNmd3JmdGQ2dnZ6aThpOXNKelRPMVRZRmc2cU52MDVrcjNPM3J1SlI4?=
+ =?utf-8?B?ZVN3MUpNalk2SXdOdTJEcjFmZEM1UXdNbWIrNVFoTDBPdFZMaXJJd0JJOXRH?=
+ =?utf-8?B?UkNjTjJiZzVkMm9WL1ZkSDBPNnMvR0pUVCtVYVFJTUlkd3NQckNXWHQ5SElW?=
+ =?utf-8?B?ZkY1QXZuNisva3lsWStJYlBxUS90U3RGQUhNLzFVTStFd1gxWUhmYlB2SHVn?=
+ =?utf-8?B?OTYvWnQzNmxhaXJUS0hacTB1dDd6SitzSE16c3pub0lPZmx5VVg5S2tjdlBl?=
+ =?utf-8?B?d2VqR0FwbUtBV0JPTEpzVVlxOWFnNFNZWW1zRERBN0I5OEV0ZUFkMFdiQnhz?=
+ =?utf-8?B?MEtzZGRFMFI1UWpVNFVNUzduMFcxbG9WOG9aODlCRGg3U1FmZjBWWHN2TXNu?=
+ =?utf-8?B?RVlIMndYOGxtTU9KdEtIdlpQVjQyd0NCVnZRR0NQTHFMYmF2M0VaWlZoQW1C?=
+ =?utf-8?B?a3M4RmtiU3hZaVEvclJadTFNODB6QzdtbTN3Q1R0SmlBazlZZVhEeEgxRHFL?=
+ =?utf-8?B?bjdIOWVaSGkzL2xjY01DUC9pczB5YnZ2WFZZWWlaR1hwN0czWEM0WjZGR002?=
+ =?utf-8?B?SkhlU1JFY2FPM3JzL1FidW9waU9qMjJ5bHJGWnM3NmRSa3FUN0VXNWZ1Tkxp?=
+ =?utf-8?Q?sxR0CSc9YbV4gb09njQWqwk+ZpdNcU=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5089.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bVBuQytyejRvTUd3dmVkSi8yZDBLZ2VwNGhBN3lNS2d1RW5ZRGU2QVpCeU9o?=
+ =?utf-8?B?dnZTNzhFek91RkIrQStqZElJTWpqdWhsU1dDdDRIeVdMdUM5M1dobFlNSzNH?=
+ =?utf-8?B?dlZEbTdpOE5KUnQ4bGpIcEZrRDJXc05lb3RmVytZWGlCcUxlNTgydzJVcURq?=
+ =?utf-8?B?TnNVcDZ4VkhrdDljcTZ2a3VrYzVLL3VXS0Y0WDhuelUzeFlIeFpYTUFwU1BP?=
+ =?utf-8?B?b3IyZWZoR3pvYkRGZUN6TWxVcGZzR2QrajIyWGRiNnI1Wmo3NzlYUDNLb25U?=
+ =?utf-8?B?OXk5Y3NXYmRTclYzUllLSEdxMjRWaThiNzd0Ty8yKy9zc0U5NGI3eTdIZjVu?=
+ =?utf-8?B?YmQ1SytHaHJxT2cyWmZmOXUySXhHSzJSUG5YMjNWYXFCYWI2YUc3N1hLSHpm?=
+ =?utf-8?B?cjFwVlIxR3hyVDhMSjlJTmpydlA1OWdmKzZiOEpzVUtwa09sZmE3andtR0gr?=
+ =?utf-8?B?UkhrZ3I0cXNtektDVU9Sb0Z0QnROTFdBNzhEc2d0THRhbW9aUWZ6Q3hDYUpP?=
+ =?utf-8?B?RXIvK3NnaE1QczdNV05XMTBkazJYU0hjWUM1NGpneElrTm1QbkNQOFdOY016?=
+ =?utf-8?B?Y09IRGUzays0anFVWGcvOGMreTB6UGRLdG1iVUlzUkY3WDNwdWZHODZuMmg3?=
+ =?utf-8?B?bWIwK0ZHNlJSS2tnU1pnMTN5UlJxbDRGMTg0TEVRbnFTWHdGV29CZnR1RFJ1?=
+ =?utf-8?B?ZTgxWUNFZ2dkRU1yWTJFMW5ndmJXd2pMZVVyWTJyeVdPdDFmRTk3RXM0bWtC?=
+ =?utf-8?B?b29tWDRrbWlPb2hDOWpSbWluLzlHNkZzc2ZCZld6NnpiaW4wR3kwcjZJZkw2?=
+ =?utf-8?B?UHlnQ1FCNXhtVGtiUnB5UmJzc25MMlBCT1dVcjBDSlhGbldwV3V6cFdYSUxP?=
+ =?utf-8?B?bE9SRlpvdEkzbEY4U3lhOXN3aytBQnJycWh1QzN6RDlScnp3K0VuWU42b1dn?=
+ =?utf-8?B?ZjFRQ2FQNlBNd0RiWEtxbUY2eGdUcFQ5WEo1VEJFMm5mZUd2b1Y1WGN2dXl0?=
+ =?utf-8?B?bXFXRjZIblJJTjVPZmJhU0R2YkxJQ3lDUldCalV6aFQ1K1ZUYmNzN2dNTlFE?=
+ =?utf-8?B?WHNBdXFrK2s4MkErbkwzVXdsY05mYnQ2bk5KanBxMUpjTTlxbUpIY3o1RXgw?=
+ =?utf-8?B?VzhOZEVueFh6Qk9JVk05aFZJQ013eDZFbkEydHRvSFNCVnVSalhNVjFJcmty?=
+ =?utf-8?B?VEYzVU1mSGRzMlEwU3RkTW9iNmIweWFIVmxNR05neDlObU9rRFptZ0JhNW1o?=
+ =?utf-8?B?ejRkMlJwTDc2Z2ZLbEhmNWdRVlZoVnNOc3BJRk5mTFRLTHVLbnFVbmp5Tnp0?=
+ =?utf-8?B?ZTB3dXNoTjUwYVZBU3hYbjg0Q1RFeEgrVFdXekNXUGpha2JHeGNndWZHcGZO?=
+ =?utf-8?B?OVh0NUl0emVxUEhhSDJPM0hMTEUraGhabjRNZ0dGWUlvTE9jbHhZRDF5QWVx?=
+ =?utf-8?B?a3BkdEZqVVArTVIwM2NSY1JTWGlsYnpBWjlVS0RYOUhETWkxVmErWG84UHVE?=
+ =?utf-8?B?UDJDOFJ1Z3AvYnNPNmdTQThGcTVoOUMyVm9KaUxONVRGMTdwbktydEI2czZ3?=
+ =?utf-8?B?aVVlTHN2N1Jnc2RrNk11aEFqeHZTNDVZZEZNY0JZcHc2eFdmM2QwaXVMUGhN?=
+ =?utf-8?B?OEZJTExJM1Nzcm5USmJKVmdsSXcxV2dvckdiTklMUDk0ZHJUeVZiSUpuNjlv?=
+ =?utf-8?B?SnA5b3JtUXMzU08wSkMxOGpzdit0VkduUnN4d2dvQ1N0VXdWYUpVb1BJTHR4?=
+ =?utf-8?B?SWVVTjBEYk1maEVWMVdkbzNMMTJkV09jSk1Xb3ZYelFBdWx4bEg2ZXQxc0pE?=
+ =?utf-8?B?c3ZneGVZdEt2NmdvbWVqeDJNU2Y5Y1VGaEZaSlVOTU9FeHRNS0k0NCtWUFdV?=
+ =?utf-8?B?ZUZscE5ocFhEUlp3UzhMQjNuQU5McVJNdTlrcytMT3ZsMTl1MkdRVXcxS1hn?=
+ =?utf-8?B?K1FYM1ljRERPY3lyMHI2TTZTZkczWDJTVkVhVUJzTlFkL1Q1dGYxaFF6UDd1?=
+ =?utf-8?B?c25PMllQeElHU0ZwZkVzcFVuUHNlOVQ4Y3RlOW1uamk1VmpJQkVmL0xlM1FB?=
+ =?utf-8?B?RHJnR3JmMmh5VmJqUVZpQmVaRTl6Q2JoOFJuWEtNcXhGU3FNQXRTeENENEZx?=
+ =?utf-8?B?SVhKeHVCemJPc1JNYjVMVFphcEVRK3ozdzRsQXZTcWgzKzBHU3ZpRVJBMnlx?=
+ =?utf-8?B?d0E9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: caf540dc-7f94-41c5-95a9-08de1cb8e697
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5089.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2025 22:16:00.2849
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Djwd6/gCJ/JPolKwShPt8XqrmFTg1SyO03xKzux7XhIwKNz0n682XdYXLjVPGuLZeWTpiePiy/FK33DfpXS8HCtajhHNMa1Xzk5zIxU7O2Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB8129
+X-OriginatorOrg: intel.com
+
+--------------Z3Zpa0dAhOo0qKYjYgmOGhLW
+Content-Type: multipart/mixed; boundary="------------soxuG2T5mjm0zQq3V4Mw2Vdu";
+ protected-headers="v1"
+Message-ID: <d09ceb78-4f86-4114-8596-9b3d102de96b@intel.com>
+Date: Wed, 5 Nov 2025 14:15:58 -0800
+MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] mshv: Extend create partition ioctl to support cpu
- features
-To: Michael Kelley <mhklinux@outlook.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "muislam@microsoft.com" <muislam@microsoft.com>,
- "easwar.hariharan@linux.microsoft.com" <easwar.hariharan@linux.microsoft.com>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "longli@microsoft.com" <longli@microsoft.com>,
- "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
- "romank@linux.microsoft.com" <romank@linux.microsoft.com>,
- Jinank Jain <jinankjain@microsoft.com>
-References: <1762292846-14253-1-git-send-email-nunodasneves@linux.microsoft.com>
- <SN6PR02MB41571FC666D406397858A377D4C5A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Subject: Re: [PATCH net-next v3] net: mana: Fix incorrect speed reported by
+ debugfs
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>, kys@microsoft.com,
+ haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, shradhagupta@linux.microsoft.com,
+ ssengar@linux.microsoft.com, dipayanroy@linux.microsoft.com,
+ shirazsaleem@microsoft.com, kotaranov@microsoft.com, longli@microsoft.com,
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <1762369468-32570-1-git-send-email-ernis@linux.microsoft.com>
 Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB41571FC666D406397858A377D4C5A@SN6PR02MB4157.namprd02.prod.outlook.com>
+From: Jacob Keller <jacob.e.keller@intel.com>
+Autocrypt: addr=jacob.e.keller@intel.com; keydata=
+ xjMEaFx9ShYJKwYBBAHaRw8BAQdAE+TQsi9s60VNWijGeBIKU6hsXLwMt/JY9ni1wnsVd7nN
+ J0phY29iIEtlbGxlciA8amFjb2IuZS5rZWxsZXJAaW50ZWwuY29tPsKTBBMWCgA7FiEEIEBU
+ qdczkFYq7EMeapZdPm8PKOgFAmhcfUoCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AA
+ CgkQapZdPm8PKOiZAAEA4UV0uM2PhFAw+tlK81gP+fgRqBVYlhmMyroXadv0lH4BAIf4jLxI
+ UPEL4+zzp4ekaw8IyFz+mRMUBaS2l+cpoBUBzjgEaFx9ShIKKwYBBAGXVQEFAQEHQF386lYe
+ MPZBiQHGXwjbBWS5OMBems5rgajcBMKc4W4aAwEIB8J4BBgWCgAgFiEEIEBUqdczkFYq7EMe
+ apZdPm8PKOgFAmhcfUoCGwwACgkQapZdPm8PKOjbUQD+MsPBANqBUiNt+7w0dC73R6UcQzbg
+ cFx4Yvms6cJjeD4BAKf193xbq7W3T7r9BdfTw6HRFYDiHXgkyoc/2Q4/T+8H
+In-Reply-To: <1762369468-32570-1-git-send-email-ernis@linux.microsoft.com>
+
+--------------soxuG2T5mjm0zQq3V4Mw2Vdu
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On 11/5/2025 9:41 AM, Michael Kelley wrote:
-> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, November 4, 2025 1:47 PM
->>
->> From: Muminul Islam <muislam@microsoft.com>
->>
->> The existing mshv create partition ioctl does not provide a way to
->> specify which cpu features are enabled in the guest. Instead, it
->> attempts to enable all features and those that are not supported are
->> silently disabled by the hypervisor.
->>
->> This was done to reduce unnecessary complexity and is sufficient for
->> many cases. However, new scenarios require fine-grained control over
->> these features.
->>
->> Define a new mshv_create_partition_v2 structure which supports
->> passing the disabled processor and xsave feature bits through to the
->> create partition hypercall directly.
->>
->> The kernel does not introspect the bits in these new fields as they
->> are part of the hypervisor ABI. Require the caller to provide the
->> number of cpu feature banks passed, to support extending the number
->> of banks in future. Disable all banks that are not specified to ensure
->> the behavior is predictable with newer hypervisors.
->>
->> Introduce a new flag MSHV_PT_BIT_CPU_AND_XSAVE_FEATURES which enables
->> the new structure. If unset, the original mshv_create_partition struct
->> is used, with the old behavior of enabling all features.
->>
->> Co-developed-by: Jinank Jain <jinankjain@microsoft.com>
->> Signed-off-by: Jinank Jain <jinankjain@microsoft.com>
->> Signed-off-by: Muminul Islam <muislam@microsoft.com>
->> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
->> ---
->> Changes in v3:
->> - Remove the new cpu features definitions in hvhdk.h, and retain the
->>   old behavior of enabling all features for the old struct. For the v2
->>   struct, still disable unspecified feature banks, since that makes it
->>   robust to future extensions.
->> - Amend comments and commit message to reflect the above
->> - Fix unused variable on arm64 [kernel test robot]
->>
->> Changes in v2:
->> - Fix exposure of CONFIG_X86_64 to uapi [kernel test robot]
->> - Fix compilation issue on arm64 [kernel test robot]
->>
->> ---
->>  drivers/hv/mshv_root_main.c | 94 ++++++++++++++++++++++++++++++-------
->>  include/uapi/linux/mshv.h   | 34 ++++++++++++++
->>  2 files changed, 110 insertions(+), 18 deletions(-)
->>
->> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
->> index d542a0143bb8..814465a0912d 100644
->> --- a/drivers/hv/mshv_root_main.c
->> +++ b/drivers/hv/mshv_root_main.c
->> @@ -1900,43 +1900,101 @@ add_partition(struct mshv_partition *partition)
->>  	return 0;
->>  }
->>
->> -static long
->> -mshv_ioctl_create_partition(void __user *user_arg, struct device *module_dev)
->> +static_assert(MSHV_NUM_CPU_FEATURES_BANKS <=
->> +	      HV_PARTITION_PROCESSOR_FEATURES_BANKS);
->> +
->> +static long mshv_ioctl_process_pt_flags(void __user *user_arg, u64 *pt_flags,
->> +					struct hv_partition_creation_properties *cr_props,
->> +					union hv_partition_isolation_properties *isol_props)
->>  {
->> -	struct mshv_create_partition args;
->> -	u64 creation_flags;
->> -	struct hv_partition_creation_properties creation_properties = {};
->> -	union hv_partition_isolation_properties isolation_properties = {};
->> -	struct mshv_partition *partition;
->> -	struct file *file;
->> -	int fd;
->> -	long ret;
->> +	int i;
->> +	struct mshv_create_partition_v2 args;
->> +	union hv_partition_processor_features *disabled_procs;
->> +	union hv_partition_processor_xsave_features *disabled_xsave;
->>
->> -	if (copy_from_user(&args, user_arg, sizeof(args)))
->> +	/* First, copy orig struct in case user is on previous versions */
->> +	if (copy_from_user(&args, user_arg,
->> +			   sizeof(struct mshv_create_partition)))
->>  		return -EFAULT;
->>
->>  	if ((args.pt_flags & ~MSHV_PT_FLAGS_MASK) ||
->>  	    args.pt_isolation >= MSHV_PT_ISOLATION_COUNT)
->>  		return -EINVAL;
->>
->> +	disabled_procs = &cr_props->disabled_processor_features;
->> +	disabled_xsave = &cr_props->disabled_processor_xsave_features;
->> +
->> +	/* Check if user provided newer struct with feature fields */
->> +	if (args.pt_flags & BIT(MSHV_PT_BIT_CPU_AND_XSAVE_FEATURES)) {
-> 
-> Should probably be "BIT_ULL" instead of "BIT" since args.pt_flags is a long long field,
-> though it really doesn't matter as long as the number of flags is <= 32.
-> 
-Noted, thanks
 
->> +		if (copy_from_user(&args, user_arg, sizeof(args)))
->> +			return -EFAULT;
->> +
->> +		if (args.pt_num_cpu_fbanks > MSHV_NUM_CPU_FEATURES_BANKS ||
->> +		    mshv_field_nonzero(args, pt_rsvd) ||
->> +		    mshv_field_nonzero(args, pt_rsvd1))
->> +			return -EINVAL;
->> +
->> +
->> +		for (i = 0; i < args.pt_num_cpu_fbanks; i++)
->> +			disabled_procs->as_uint64[i] = args.pt_cpu_fbanks[i];
->> +
->> +		/* Disable any features left unspecified */
->> +		for (; i < HV_PARTITION_PROCESSOR_FEATURES_BANKS; i++)
->> +			disabled_procs->as_uint64[i] = -1;
-> 
-> I'm trying to convince myself that disabling unspecified features is the right
-> thing to do. In the current hypervisor scenario with 2 banks, if the VMM caller
-> specifies only one bank of disable flags, then all the features in the 2nd bank
-> are disabled. That's certainly the reverse from the current code which
-> always enables all features, and from the hypervisor itself which in the
-> hypercall ABI defines the flags as "disable" flags rather than "enable" flags.
-> 
-> Then in a scenario where a new version of the hypervisor shows up with
-> support for 3 banks, the old VMM code that only knows about 2 banks
-> will cause all features in that 3rd bank to be disabled. Again, that's the
-> reverse of the current code.
-> 
-> I guess it depends on how the hypervisor defines any such new features.
-> Are they typically defined to be benign if they are enabled by default? Or
-> is the polarity the opposite, where the VMM must know about new
-> features before they are enabled? The hypercall interface seems to imply
-> the former but maybe I'm reading too much into it.
-> 
-The intent is to provide an interface which allows the VMM to control exactly
-which features are enabled/disabled. E.g. for live migration of a VM, if the
-target machine has more features available and they are enabled inadvertently,
-the state may not be restored properly (particularly an issue for xsave).
 
-So to me it makes sense to disable anything unspecified. In general, enabling
-features by default doesn't cause problems, it's only for specific scenarios
-like the above. I suppose that's why it's a "disable" mask, though I can't
-say I fully understand the reasoning...
+On 11/5/2025 11:04 AM, Erni Sri Satya Vennela wrote:
+> Once the netshaper is created for MANA, the current bandwidth
+> is reported in debugfs like this:
+>=20
+> $ sudo ./tools/net/ynl/pyynl/cli.py \
+>   --spec Documentation/netlink/specs/net_shaper.yaml \
+>   --do set \
+>   --json '{"ifindex":'3',
+>            "handle":{ "scope": "netdev", "id":'1' },
+>            "bw-max": 200000000 }'
+> None
+>=20
+> $ sudo cat /sys/kernel/debug/mana/1/vport0/current_speed
+> 200
+>=20
+> After the shaper  is deleted, it is expected to report
+> the maximum speed supported by the SKU. But currently it is
+> reporting 0, which is incorrect.
+>=20
+> Fix this inconsistency, by resetting apc->speed to apc->max_speed
+> during deletion of the shaper object. This will improve
+> readability and debuggability.
+>=20
+> Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+> ---
 
-> A code comment about the thinking here would be useful for future readers.
-> 
-Noted. I can repeat the reasoning from the commit message if that is
-sufficient:
-"
-Disable all banks that are not specified to ensure
-the behavior is predictable with newer hypervisors.
-"
+Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
 
->> +
->> +#if IS_ENABLED(CONFIG_X86_64)
->> +		disabled_xsave->as_uint64 = args.pt_disabled_xsave;
->> +#else
->> +		if (mshv_field_nonzero(args, pt_rsvd2))
->> +			return -EINVAL;
->> +
->> +		disabled_xsave->as_uint64 = -1;
-> 
-> Does the arm64 version of the hypercall do anything with this field?
-> Or does it just ignore it? I would be more inclined to set ignored
-> fields to zero unless there's an identifiable reason otherwise.
-> (especially since the VMM is required to pass in zero on arm64).
-> 
-Good point. Checking the code, it seems to be completely ignored on arm64.
-I will remove this line.
+> Changes in v3:
+> * Remove Fixes tag.> Changes in v2:
+> * Add Fixes tag.
+> ---
+>  drivers/net/ethernet/microsoft/mana/mana_en.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/ne=
+t/ethernet/microsoft/mana/mana_en.c
+> index 0142fd98392c..9d56bfefd755 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> @@ -814,7 +814,7 @@ static int mana_shaper_del(struct net_shaper_bindin=
+g *binding,
+>  		/* Reset mana port context parameters */
+>  		apc->handle.id =3D 0;
+>  		apc->handle.scope =3D NET_SHAPER_SCOPE_UNSPEC;
+> -		apc->speed =3D 0;
+> +		apc->speed =3D apc->max_speed;
+>  	}
+> =20
+>  	return err;
 
->> +#endif
->> +	} else {
->> +		/* v1 behavior: try to enable everything */
->> +		for (i = 0; i < HV_PARTITION_PROCESSOR_FEATURES_BANKS; i++)
->> +			disabled_procs->as_uint64[i] = 0;
->> +
->> +		disabled_xsave->as_uint64 = 0;
->> +	}
->> +
->>  	/* Only support EXO partitions */
->> -	creation_flags = HV_PARTITION_CREATION_FLAG_EXO_PARTITION  HV_PARTITION_CREATION_FLAG_INTERCEPT_MESSAGE_PAGE_ENABLED;
->> +	*pt_flags = HV_PARTITION_CREATION_FLAG_EXO_PARTITION |
->> +		 HV_PARTITION_CREATION_FLAG_INTERCEPT_MESSAGE_PAGE_ENABLED;
->>
->>  	if (args.pt_flags & BIT(MSHV_PT_BIT_LAPIC))
->> -		creation_flags |= HV_PARTITION_CREATION_FLAG_LAPIC_ENABLED;
->> +		*pt_flags |= HV_PARTITION_CREATION_FLAG_LAPIC_ENABLED;
->>  	if (args.pt_flags & BIT(MSHV_PT_BIT_X2APIC))
->> -		creation_flags |= HV_PARTITION_CREATION_FLAG_X2APIC_CAPABLE;
->> +		*pt_flags |= HV_PARTITION_CREATION_FLAG_X2APIC_CAPABLE;
->>  	if (args.pt_flags & BIT(MSHV_PT_BIT_GPA_SUPER_PAGES))
->> -		creation_flags |= HV_PARTITION_CREATION_FLAG_GPA_SUPER_PAGES_ENABLED;
->> +		*pt_flags |= HV_PARTITION_CREATION_FLAG_GPA_SUPER_PAGES_ENABLED;
->>
->>  	switch (args.pt_isolation) {
->>  	case MSHV_PT_ISOLATION_NONE:
->> -		isolation_properties.isolation_type =
->> -			HV_PARTITION_ISOLATION_TYPE_NONE;
->> +		isol_props->isolation_type = HV_PARTITION_ISOLATION_TYPE_NONE;
->>  		break;
->>  	}
->>
->> +	return 0;
->> +}
->> +
->> +static long
->> +mshv_ioctl_create_partition(void __user *user_arg, struct device *module_dev)
->> +{
->> +	u64 creation_flags;
->> +	struct hv_partition_creation_properties creation_properties = {};
->> +	union hv_partition_isolation_properties isolation_properties = {};
->> +	struct mshv_partition *partition;
->> +	struct file *file;
->> +	int fd;
->> +	long ret;
->> +
->> +	ret = mshv_ioctl_process_pt_flags(user_arg, &creation_flags,
->> +					  &creation_properties,
->> +					  &isolation_properties);
->> +	if (ret)
->> +		return ret;
->> +
->>  	partition = kzalloc(sizeof(*partition), GFP_KERNEL);
->>  	if (!partition)
->>  		return -ENOMEM;
->> diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
->> index 876bfe4e4227..9091946cba23 100644
->> --- a/include/uapi/linux/mshv.h
->> +++ b/include/uapi/linux/mshv.h
->> @@ -26,6 +26,7 @@ enum {
->>  	MSHV_PT_BIT_LAPIC,
->>  	MSHV_PT_BIT_X2APIC,
->>  	MSHV_PT_BIT_GPA_SUPER_PAGES,
->> +	MSHV_PT_BIT_CPU_AND_XSAVE_FEATURES,
->>  	MSHV_PT_BIT_COUNT,
->>  };
->>
->> @@ -41,6 +42,8 @@ enum {
->>   * @pt_flags: Bitmask of 1 << MSHV_PT_BIT_*
->>   * @pt_isolation: MSHV_PT_ISOLATION_*
->>   *
->> + * This is the initial/v0 version for backward compatibility.
->> + *
->>   * Returns a file descriptor to act as a handle to a guest partition.
->>   * At this point the partition is not yet initialized in the hypervisor.
->>   * Some operations must be done with the partition in this state, e.g. setting
->> @@ -52,6 +55,37 @@ struct mshv_create_partition {
->>  	__u64 pt_isolation;
->>  };
->>
->> +#define MSHV_NUM_CPU_FEATURES_BANKS 2
->> +
->> +/**
->> + * struct mshv_create_partition_v2
->> + *
->> + * This is extended version of the above initial MSHV_CREATE_PARTITION
->> + * ioctl and allows for following additional parameters:
->> + *
->> + * @pt_num_cpu_fbanks: number of processor feature banks being provided.
->> + *                     This must not exceed MSHV_NUM_CPU_FEATURES_BANKS.
->> + *                     If set to less than the number of available banks,
->> + *                     additional banks will be set to -1 (disabled).
->> + * @pt_cpu_fbanks: disabled processor feature banks array.
->> + * @pt_disabled_xsave: disabled xsave feature bits.
->> + *
->> + * Returns : same as above original mshv_create_partition
->> + */
->> +struct mshv_create_partition_v2 {
->> +	__u64 pt_flags;
->> +	__u64 pt_isolation;
->> +	__u16 pt_num_cpu_fbanks;
->> +	__u8  pt_rsvd[6];		/* MBZ */
->> +	__u64 pt_cpu_fbanks[MSHV_NUM_CPU_FEATURES_BANKS];
->> +	__u64 pt_rsvd1[2];		/* MBZ */
-> 
-> I presume this is for future expansion of the number of banks?
-> And that the choice of 2 additional banks is somewhat arbitrary?
-> 
-A 3rd bank is sure to be added in the near future. At this rate
-it seems likely a 4th will eventually be needed, though it's hard
-to say for sure.
 
-Nuno
+--------------soxuG2T5mjm0zQq3V4Mw2Vdu--
 
-> Michael
-> 
->> +#if defined(__x86_64__)
->> +	__u64 pt_disabled_xsave;
->> +#else
->> +	__u64 pt_rsvd2;			/* MBZ */
->> +#endif
->> +} __packed;
->> +
->>  /* /dev/mshv */
->>  #define MSHV_CREATE_PARTITION	_IOW(MSHV_IOCTL, 0x00, struct
->> mshv_create_partition)
->>
->> --
->> 2.34.1
+--------------Z3Zpa0dAhOo0qKYjYgmOGhLW
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+wnoEABYIACMWIQQgQFSp1zOQVirsQx5qll0+bw8o6AUCaQvMngUDAAAAAAAKCRBqll0+bw8o6MUS
+AP9f+WO6RGjfqCeor6Go/m3c4xR6AxyIA8BAbWy2IIZn7gD48/LqOTT9RVftqe4mJBuoUdfOmSix
+sNE5RLcJuVpOCg==
+=WZWa
+-----END PGP SIGNATURE-----
+
+--------------Z3Zpa0dAhOo0qKYjYgmOGhLW--
 
