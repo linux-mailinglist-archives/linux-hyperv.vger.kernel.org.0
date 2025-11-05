@@ -1,79 +1,119 @@
-Return-Path: <linux-hyperv+bounces-7411-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7412-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AF9CC3768F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 05 Nov 2025 20:03:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B60AC376C5
+	for <lists+linux-hyperv@lfdr.de>; Wed, 05 Nov 2025 20:06:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7FB9A3BA7ED
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Nov 2025 19:03:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DC56B3BAEC0
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Nov 2025 19:04:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 656E9299AB5;
-	Wed,  5 Nov 2025 19:03:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08F262EDD7C;
+	Wed,  5 Nov 2025 19:04:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rcUF9Jqx"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="SSiqPsXP"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9E895D8F0;
-	Wed,  5 Nov 2025 19:03:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67EB4299AB5;
+	Wed,  5 Nov 2025 19:04:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762369386; cv=none; b=ixMe4gAX3JdavBU/ovn695VzkYCf8yfOttm+sUwCTxwMB795Smrc8xH7hSnf/zN+aocIMW1OQlL2xKLk+G4ms/X00Z7KQkIrrV9GZLbjdyJUkl8qbss2er1k60cVJ/QqORMpu9uZgk6KvEqYoyaUoXc4ORrCCMv5nvjFTpDUqz8=
+	t=1762369471; cv=none; b=s0GoO1Y6MCE0iqVrTzM4sgc1fqF/Bfkrsl/yyb9gy0Q565HIK4ANnRunuKi+ZUBf3uYGZlWMftsRecYprVHeCwZSpqq2yYBXj1sVT45Jm6aUUP4JIBkI5V+HggDTS1gR9ckWDklrAMEXygquhWCtFEygUrvNqmDBdELZIh+j/RY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762369386; c=relaxed/simple;
-	bh=GDAevW6w/y+3rqc0Ck1EDJiUVmQOGyeWqjKim6BaXQ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=spv3mPsrYA8jSES+a0VvXepapu1co7oknZiLu7L6N6nm/vAj45nlUsFjr7CXWU4tS8x0NI9tTH+Wp3dcYu2jGdwnXV+FeD7Qk/5r8q5XdLUaJEfkc6f/hPkfskeu96Hy2IYgthOfgZcHFFYV9PzAtPUwcNQ3oqn49GnDeR4od7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rcUF9Jqx; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1762369471; c=relaxed/simple;
+	bh=RZ9HGuKLUFkmQgMJugWxZNIxILZWaInhLoFzpg9EyaA=;
+	h=From:To:Subject:Date:Message-Id; b=P1GtjUbHmVNu0eyVTu4Aa2x4pU91DLvqTceJIIbyY10PBc9E9zdZpp8cR7fat+M6OkCyyCKyY6UIGRVVpZEkY4tfx3jRAXZKzFUIYVYNyEU9SQOTl4at7bnY34y0NZiNT8OLXo4+7YFpT5hjw83tVk7HLwhgxkf5zsftZ7qKrp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=SSiqPsXP; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id 65C3820120AA; Wed,  5 Nov 2025 11:03:04 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 65C3820120AA
+	id 179CD20120AA; Wed,  5 Nov 2025 11:04:30 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 179CD20120AA
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1762369384;
-	bh=YbKE89r8BFgFqnTov8DjL11BVscXMrXLQpMT89FgTrw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rcUF9Jqxft8mXl0OqK+b+Bzb1TfUqlgMRgXfUsS5uZ3XafnuqE3VJNrerKFyO5hM1
-	 b9ngONkIhESsolb7EwxnimROCJeaA6zlK4rWFYMvIr31l8b6bp92o1QFxHXqAMg0e0
-	 JntEvcvewDmPo0eeHRz7V3NphN4lp/KXlXV1Q4eE=
-Date: Wed, 5 Nov 2025 11:03:04 -0800
+	s=default; t=1762369470;
+	bh=gJLOitnzxxUpLudr21FKrp1Qu36nwEjF5k1Lhwin6lQ=;
+	h=From:To:Subject:Date:From;
+	b=SSiqPsXPSx8IpkFJfI1QcYbQ3o39SqjGLjweOUcgFKE4YsCDyvE7OskcNIbOpRddz
+	 76W5SySqfGV34S1pZNcWMSD+umXhgc9aWSkKPlKrCC73O9F15+g4dfIU/3RlfkHThe
+	 0yIOwirwFxE00at6fCRzVvhSKADNfvuFkyS5j0g4=
 From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, pabeni@redhat.com,
-	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
-	dipayanroy@linux.microsoft.com, shirazsaleem@microsoft.com,
-	kotaranov@microsoft.com, longli@microsoft.com,
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	shradhagupta@linux.microsoft.com,
+	ssengar@linux.microsoft.com,
+	ernis@linux.microsoft.com,
+	dipayanroy@linux.microsoft.com,
+	shirazsaleem@microsoft.com,
+	kotaranov@microsoft.com,
+	longli@microsoft.com,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2] net: mana: Fix incorrect speed reported by
- debugfs
-Message-ID: <20251105190304.GA31854@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1761735154-3593-1-git-send-email-ernis@linux.microsoft.com>
- <20251029185228.0c2da909@kernel.org>
+Subject: [PATCH net-next v3] net: mana: Fix incorrect speed reported by debugfs
+Date: Wed,  5 Nov 2025 11:04:28 -0800
+Message-Id: <1762369468-32570-1-git-send-email-ernis@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251029185228.0c2da909@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Wed, Oct 29, 2025 at 06:52:28PM -0700, Jakub Kicinski wrote:
-> On Wed, 29 Oct 2025 03:52:34 -0700 Erni Sri Satya Vennela wrote:
-> > Fixes: 75cabb46935b ("net: mana: Add support for net_shaper_ops") 
-> 
-> I've preferred this without the fixes tag, TBH.
-> It's debugfs, nobody is supposed to be using it in production.
-> -- 
-> pw-bot: cr
-I'll send v3 without the fixes tag.
-Thankyou for the pointer.
+Once the netshaper is created for MANA, the current bandwidth
+is reported in debugfs like this:
+
+$ sudo ./tools/net/ynl/pyynl/cli.py \
+  --spec Documentation/netlink/specs/net_shaper.yaml \
+  --do set \
+  --json '{"ifindex":'3',
+           "handle":{ "scope": "netdev", "id":'1' },
+           "bw-max": 200000000 }'
+None
+
+$ sudo cat /sys/kernel/debug/mana/1/vport0/current_speed
+200
+
+After the shaper  is deleted, it is expected to report
+the maximum speed supported by the SKU. But currently it is
+reporting 0, which is incorrect.
+
+Fix this inconsistency, by resetting apc->speed to apc->max_speed
+during deletion of the shaper object. This will improve
+readability and debuggability.
+
+Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+---
+Changes in v3:
+* Remove Fixes tag.
+Changes in v2:
+* Add Fixes tag.
+---
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 0142fd98392c..9d56bfefd755 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -814,7 +814,7 @@ static int mana_shaper_del(struct net_shaper_binding *binding,
+ 		/* Reset mana port context parameters */
+ 		apc->handle.id = 0;
+ 		apc->handle.scope = NET_SHAPER_SCOPE_UNSPEC;
+-		apc->speed = 0;
++		apc->speed = apc->max_speed;
+ 	}
+ 
+ 	return err;
+-- 
+2.43.0
+
 
