@@ -1,194 +1,156 @@
-Return-Path: <linux-hyperv+bounces-7408-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7409-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6061C35506
-	for <lists+linux-hyperv@lfdr.de>; Wed, 05 Nov 2025 12:18:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5AF0C36CE9
+	for <lists+linux-hyperv@lfdr.de>; Wed, 05 Nov 2025 17:51:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C8E5F4EFB09
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Nov 2025 11:17:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 62B22189CDE8
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Nov 2025 16:47:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C12E30FC0C;
-	Wed,  5 Nov 2025 11:17:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F358633B96A;
+	Wed,  5 Nov 2025 16:46:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bzuYDp1w"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HL2yqFo5"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9063B30F94A
-	for <linux-hyperv@vger.kernel.org>; Wed,  5 Nov 2025 11:17:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E81AC33B6F1;
+	Wed,  5 Nov 2025 16:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762341460; cv=none; b=jmEZpCaGAa8nZBf7f4lzl1rY1Fh8+nXVYeHaCStO5/QEiF/W7Jc3oqjkP3/oUkM4G0Jg1BM64m6n3BTJ6PO7w4jEXPKmFaX6N3GeJAMpWc5s1A7zdMe2A7Q8D6u1/lW0XNBBRf5EnNPJb09/XGc/gJTKlIEtM913UdJ6AB/vM8k=
+	t=1762361193; cv=none; b=Pdqe/hGPboNCnrcCWY9up1q5dhJBT6j/B0RTLHnFs3MCKRU8Z73jZwKOMC/PiWzu7pWmJ+MXuUjqepeHQBstwYmLA2C3QFvvIi7Irao87bBOcvKnqV4Ki1pyVllXSHvPXjz0BSZHeIsKo+hj5rGIlEBHn0hCm2OoEiadbEoFuoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762341460; c=relaxed/simple;
-	bh=K0CJ52aXaW30yOkXOm79Sjwlq8KF0ufVGkRrUk+tqGg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Z2OigFmsf00CoGrhZ58rFNhXLT2nSi4FlJ1yIegJmafImitVLePVPdCki6X2KEzX2Z6lKHhcZJZyk4zFEIfVswaf4a79dYTOv2dzEVJRHTRm75/1UrNHSHa2DJOSfnX5QhqcXsixI8o+PPcPXDne3khUx6axPaotVhUe4cEtG9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bzuYDp1w; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7aa9be9f03aso2901299b3a.2
-        for <linux-hyperv@vger.kernel.org>; Wed, 05 Nov 2025 03:17:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762341458; x=1762946258; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4cPUaZ1vu8lY7gSxHHPShFsBPH7l58KtQzSSmUne/Kw=;
-        b=bzuYDp1wLcOMG/+Fp/vDm9KoQFVQF02SVnzTyQhTWQHwQNe0gFA820lpG0f2yyGR0g
-         TvPCe/c7lhI0pbEaHmo6KN9IAwfP1hDzVyQMPlRXoyrIbgbuBzdYclUDFpLlDAXeNiJ/
-         p+XqQug9HUR7PalQZA26chhYQ0dcvx6esENuXAZgQBbBFqIWqEm4y/91MjPhCLBfRuhR
-         UAn75qQHFQZhFBUOZD37cltocNbFxpjkPMuol/tBV/11SYG/NTtCI/l6AtepRYV28Y5L
-         Rk3kRqPXkZONiVLGvh8l9K7FEWRedzcpf2M1aa/dGObgzzYP5BS13qOqGV4wnx8hmfd8
-         MFFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762341458; x=1762946258;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4cPUaZ1vu8lY7gSxHHPShFsBPH7l58KtQzSSmUne/Kw=;
-        b=Bv7uv/X1oYb3UtMaglS4h7km9/ccn/TalPPOB4rXU2uFNXsGu9Uq7yw9OPcxFOTB+Z
-         Q3XBWrq8Tvsm1zBfZzIDW4GM379B5pLY7LN4y7QSMNDGw33Qgsm7LYpIPzKSS987eJNt
-         rydCgvBcTAJUrXxsv2rO59nmnqIsxY68+G/OiuL0dd6BZkEFxoRUIZo/7xFPfOZOVlf+
-         SGiPR/eAIG0Txb4bvQI7MG3Wr85rOlhKtPu3A1Iurubos1SsBQtC/lDWLCDuQgMeMB6J
-         E08LypGRyyxiJwrKIazMpRrMlgI+SiKp5x1C3dyNe+aMEPvj7IhC2dzA9ixd2IUYpsCc
-         8G/g==
-X-Forwarded-Encrypted: i=1; AJvYcCUrVJFpv3zAoojbigc2UcuYUN3kjxe698pFBdiHgPkL4JURYuA/Tg8EwBU6GnbSGVxzZlTAOaAFuqrJJAs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9yhUZ+oGN1KvRFENxNqZPLRzFzyoyXYYzkVbT68f8CJ5JnNpw
-	GgaxcVvd1W9Z8SVbaepqLEVq2jICqfQ1wXuUnIi7sRoLiIlBq/KyFpcW
-X-Gm-Gg: ASbGncvyuomj7m59w+JpTa/nCH8OViVIDLzYia2BecrRyjOQE01tZvJEsXdvnjN7N/o
-	1V8yMIYJDRyHlFsS+s8c4Q5QiLLADgmdw/egN+WGxEy/k10ZyFHabp2ZTJXERE4Oh+2AXRjedKM
-	j15n0sYib+LVw1o3SezzfrBDVQHMBCZCiKWJqK1Vuf+639GiBR5PUMtTrfFPS/IkpgDjX6dysQD
-	8XtCL4V19fTD00ubeCY4OfmakI86iYlwO4k4tDV/yZbBRQs9i/DKIHos/3tbN7Fa3KkjQuBLLXN
-	CdSgElMqbClr+xeM9ZRgSmOjAhr3qvKpAyvu76WfOfkXjXR+NkM7bnE2/u6ZSUSkLcgQ1qY95Ww
-	8peS80pXZVjYVgn3wcIUIfCSa2C/8bbZP7xbmHR/TcaNkibeAF6yI5Y/ooCPkFTpbGLCpriyR2L
-	/R
-X-Google-Smtp-Source: AGHT+IFZaWbZGtAjGdCfp4O+yDRRSOyspGYsQrG3GxUOnvH5XrXZUNFKqmpRaeacRw4JF67zTIEhLQ==
-X-Received: by 2002:a05:6a20:3d96:b0:34e:e0ba:7bf with SMTP id adf61e73a8af0-34f839e0a8cmr3972462637.1.1762341457709;
-        Wed, 05 Nov 2025 03:17:37 -0800 (PST)
-Received: from aheev.home ([2401:4900:88f4:f6c4:54cc:cfa8:7cce:97b5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7acd586cec1sm5914971b3a.38.2025.11.05.03.17.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Nov 2025 03:17:37 -0800 (PST)
-From: Ally Heev <allyheev@gmail.com>
-Date: Wed, 05 Nov 2025 16:47:21 +0530
-Subject: [PATCH] net: ethernet: fix uninitialized pointers with free attr
+	s=arc-20240116; t=1762361193; c=relaxed/simple;
+	bh=MfA4DnoDlZZsja0zpAnheKwfORvl0d2lCWWC/hUeGUg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UsTlmBgKJPjNNNwi7462/axAEPMHmlFz26MwSW6WFroGO5N6WpyR7jtOL7quByVhZV/PJSrWLyuhvskHinoqwQjSzXNapNcZXnhe9lazMwhUZFCwdl4QmJjIDji/JjZgg2vH8Q2ahcW3Mt3MCkeK48w8P/S7lrhS156L3yASIPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HL2yqFo5; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.1.19] (unknown [103.212.145.25])
+	by linux.microsoft.com (Postfix) with ESMTPSA id C3DF1201C94E;
+	Wed,  5 Nov 2025 08:40:26 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C3DF1201C94E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1762360832;
+	bh=iqYVFbQgaJqdvK417PuHyWdZtZ0sLBzSqfzt5NDhSmk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HL2yqFo5jX2P3TNsJPKShuTlng5aKhlhS74BIsjIfYxh0RVXpEqxQGPyIK675eJTX
+	 gCvBbZCfOoHlpI4V8cyRNjZa0HAl6fOLh+DDQvznM5eAUnFu9xAXgSTzrCGjWoOUBg
+	 LvoHZnHcvL4hCSPNyELU2nzx3MFzAIlAETb1w1WE=
+Message-ID: <82bcd959-571e-42ce-b341-cbfa19f9f86d@linux.microsoft.com>
+Date: Wed, 5 Nov 2025 22:10:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2] net: mana: Handle SKB if TX SGEs exceed
+ hardware limit
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, longli@microsoft.com,
+ kotaranov@microsoft.com, horms@kernel.org, shradhagupta@linux.microsoft.com,
+ ssengar@linux.microsoft.com, ernis@linux.microsoft.com,
+ dipayanroy@linux.microsoft.com, shirazsaleem@microsoft.com,
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+ gargaditya@microsoft.com
+References: <20251029131235.GA3903@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20251031162611.2a981fdf@kernel.org>
+Content-Language: en-US
+From: Aditya Garg <gargaditya@linux.microsoft.com>
+In-Reply-To: <20251031162611.2a981fdf@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251105-aheev-uninitialized-free-attr-net-ethernet-v1-1-f6ea84bbd750@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAEAyC2kC/x2NwQrCMBAFf6Xs2YWktRb8FfGQmhezIKts0iKW/
- rvR28xlZqMCExQ6dxsZViny1Cb+0NEtB72DJTan3vWj927kkIGVFxWVKuEhH0ROBnCo1VhRGTX
- DfjBF7044hnlIE7Xgy5Dk/Z9drvv+BeWgZBJ8AAAA
-X-Change-ID: 20251105-aheev-uninitialized-free-attr-net-ethernet-7d106e4ab3f7
-To: Tony Nguyen <anthony.l.nguyen@intel.com>, 
- Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- "K. Y. Srinivasan" <kys@microsoft.com>, 
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
- Dexuan Cui <decui@microsoft.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
- Dan Carpenter <dan.carpenter@linaro.org>, Ally Heev <allyheev@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3554; i=allyheev@gmail.com;
- h=from:subject:message-id; bh=K0CJ52aXaW30yOkXOm79Sjwlq8KF0ufVGkRrUk+tqGg=;
- b=owGbwMvMwCU2zXbRFfvr1TKMp9WSGDK5jbzeLrarrTJbv8jhoV1Uz+lgBfPeJ9Lhc15/n1e81
- zz/wcWWjhIWBjEuBlkxRRZGUSk/vU1SE+IOJ32DmcPKBDKEgYtTACayso7hf5rCe93pl8x+tb/O
- miN6XWDtImevtV8Ef7QoJU5fuvajwGmGrxJvLt9rqLFNFHtgXvzgCk/7goaFaTxWh7LW7v37+gc
- HHwA=
-X-Developer-Key: i=allyheev@gmail.com; a=openpgp;
- fpr=01151A4E2EB21A905EC362F6963DA2D43FD77B1C
 
-Uninitialized pointers with `__free` attribute can cause undefined
-behaviour as the memory assigned(randomly) to the pointer is freed
-automatically when the pointer goes out of scope
+On 01-11-2025 04:56, Jakub Kicinski wrote:
+> On Wed, 29 Oct 2025 06:12:35 -0700 Aditya Garg wrote:
+>> @@ -289,6 +290,21 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+>>   	cq = &apc->tx_qp[txq_idx].tx_cq;
+>>   	tx_stats = &txq->stats;
+>>   
+>> +	if (MAX_SKB_FRAGS + 2 > MAX_TX_WQE_SGL_ENTRIES &&
+>> +	    skb_shinfo(skb)->nr_frags + 2 > MAX_TX_WQE_SGL_ENTRIES) {
+>> +		/* GSO skb with Hardware SGE limit exceeded is not expected here
+>> +		 * as they are handled in mana_features_check() callback
+>> +		 */
+>> +		if (skb_is_gso(skb))
+>> +			netdev_warn_once(ndev, "GSO enabled skb exceeds max SGE limit\n");
+> 
+> This could be the same question Simon asked but why do you think you
+> need this line? Sure you need to linearize non-GSO but why do you care
+> to warn specifically about GSO?! Looks like defensive programming or
+> testing leftover..
+> 
+Hi Jakub,
+Agreed, The GSO specific warning is redundant. I'll drop it in next 
+revision.
+>> +		if (skb_linearize(skb)) {
+>> +			netdev_warn_once(ndev, "Failed to linearize skb with nr_frags=%d and is_gso=%d\n",
+>> +					 skb_shinfo(skb)->nr_frags,
+>> +					 skb_is_gso(skb));
+> 
+> .. in practice including is_gso() here as you do is probably enough for
+> debug
+> 
+Ok
+>> +			goto tx_drop_count;
+>> +		}
+>> +	}
+>> +
+>>   	pkg.tx_oob.s_oob.vcq_num = cq->gdma_id;
+>>   	pkg.tx_oob.s_oob.vsq_frame = txq->vsq_frame;
+>>   
+>> @@ -402,8 +418,6 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+>>   		}
+>>   	}
+>>   
+>> -	WARN_ON_ONCE(pkg.wqe_req.num_sge > MAX_TX_WQE_SGL_ENTRIES);
+>> -
+>>   	if (pkg.wqe_req.num_sge <= ARRAY_SIZE(pkg.sgl_array)) {
+>>   		pkg.wqe_req.sgl = pkg.sgl_array;
+>>   	} else {
+>> @@ -438,9 +452,13 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+>>   
+>>   	if (err) {
+>>   		(void)skb_dequeue_tail(&txq->pending_skbs);
+>> +		mana_unmap_skb(skb, apc);
+>>   		netdev_warn(ndev, "Failed to post TX OOB: %d\n", err);
+> 
+> You have a print right here and in the callee. This condition must
+> (almost) never happen in practice. It's likely fine to just drop
+> the packet.
+> The logs placed in callee doesn't covers all the failure scenarios, 
+hence I feel to have this log here with proper status. Maybe I can 
+remove the log in the callee?
 
-net/ethernet doesn't have any bugs related to this as of now,
-but it is better to initialize and assign pointers with `__free` attr
-in one statement to ensure proper scope-based cleanup
+> Either way -- this should be a separate patch.
+> 
+Are you suggesting a separate patch altogether or two patch in the same 
+series?
 
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/all/aPiG_F5EBQUjZqsl@stanley.mountain/
-Signed-off-by: Ally Heev <allyheev@gmail.com>
----
- drivers/net/ethernet/intel/ice/ice_flow.c       | 5 +++--
- drivers/net/ethernet/intel/idpf/idpf_virtchnl.c | 5 +++--
- drivers/net/ethernet/microsoft/mana/gdma_main.c | 2 +-
- 3 files changed, 7 insertions(+), 5 deletions(-)
+Based on your suggestion i can work on v3.
+Regards,
+Aditya
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_flow.c b/drivers/net/ethernet/intel/ice/ice_flow.c
-index 6d5c939dc8a515c252cd2b77d155b69fa264ee92..3590dacf3ee57879b3809d715e40bb290e40c4aa 100644
---- a/drivers/net/ethernet/intel/ice/ice_flow.c
-+++ b/drivers/net/ethernet/intel/ice/ice_flow.c
-@@ -1573,12 +1573,13 @@ ice_flow_set_parser_prof(struct ice_hw *hw, u16 dest_vsi, u16 fdir_vsi,
- 			 struct ice_parser_profile *prof, enum ice_block blk)
- {
- 	u64 id = find_first_bit(prof->ptypes, ICE_FLOW_PTYPE_MAX);
--	struct ice_flow_prof_params *params __free(kfree);
- 	u8 fv_words = hw->blk[blk].es.fvw;
- 	int status;
- 	int i, idx;
- 
--	params = kzalloc(sizeof(*params), GFP_KERNEL);
-+	struct ice_flow_prof_params *params __free(kfree) =
-+		kzalloc(sizeof(*params), GFP_KERNEL);
-+
- 	if (!params)
- 		return -ENOMEM;
- 
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c b/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
-index cbb5fa30f5a0ec778c1ee30470da3ca21cc1af24..368138715cd55cd1dadc686931cdda51c7a5130d 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
-+++ b/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
-@@ -1012,7 +1012,6 @@ static int idpf_send_get_caps_msg(struct idpf_adapter *adapter)
-  */
- static int idpf_send_get_lan_memory_regions(struct idpf_adapter *adapter)
- {
--	struct virtchnl2_get_lan_memory_regions *rcvd_regions __free(kfree);
- 	struct idpf_vc_xn_params xn_params = {
- 		.vc_op = VIRTCHNL2_OP_GET_LAN_MEMORY_REGIONS,
- 		.recv_buf.iov_len = IDPF_CTLQ_MAX_BUF_LEN,
-@@ -1023,7 +1022,9 @@ static int idpf_send_get_lan_memory_regions(struct idpf_adapter *adapter)
- 	ssize_t reply_sz;
- 	int err = 0;
- 
--	rcvd_regions = kzalloc(IDPF_CTLQ_MAX_BUF_LEN, GFP_KERNEL);
-+	struct virtchnl2_get_lan_memory_regions *rcvd_regions __free(kfree) =
-+		kzalloc(IDPF_CTLQ_MAX_BUF_LEN, GFP_KERNEL);
-+
- 	if (!rcvd_regions)
- 		return -ENOMEM;
- 
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 43f034e180c41a595ff570b886569685a56f9fee..8dcba7ee36130d94ba3436c99a5cd5f792a2962e 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -1505,7 +1505,7 @@ static int irq_setup(unsigned int *irqs, unsigned int len, int node,
- 		     bool skip_first_cpu)
- {
- 	const struct cpumask *next, *prev = cpu_none_mask;
--	cpumask_var_t cpus __free(free_cpumask_var);
-+	cpumask_var_t cpus __free(free_cpumask_var) = NULL;
- 	int cpu, weight;
- 
- 	if (!alloc_cpumask_var(&cpus, GFP_KERNEL))
-
----
-base-commit: c9cfc122f03711a5124b4aafab3211cf4d35a2ac
-change-id: 20251105-aheev-uninitialized-free-attr-net-ethernet-7d106e4ab3f7
-
-Best regards,
--- 
-Ally Heev <allyheev@gmail.com>
+>> -		err = NETDEV_TX_BUSY;
+>> -		goto tx_busy;
+>> +		if (err == -ENOSPC) {
+>> +			err = NETDEV_TX_BUSY;
+>> +			goto tx_busy;
+>> +		}
+>> +		goto free_sgl_ptr;
+>>   	}
+>>   
+>>   	err = NETDEV_TX_OK;
+>> @@ -478,6 +496,25 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+>>   	return NETDEV_TX_OK;
+>>   }
 
 
