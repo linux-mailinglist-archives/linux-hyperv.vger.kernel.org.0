@@ -1,187 +1,166 @@
-Return-Path: <linux-hyperv+bounces-7419-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7420-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A46B8C3A312
-	for <lists+linux-hyperv@lfdr.de>; Thu, 06 Nov 2025 11:21:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12C1CC3A369
+	for <lists+linux-hyperv@lfdr.de>; Thu, 06 Nov 2025 11:25:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C4D98460B4F
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Nov 2025 10:12:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF4161A47E7F
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Nov 2025 10:15:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B876D30DD09;
-	Thu,  6 Nov 2025 10:08:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D95F830DECD;
+	Thu,  6 Nov 2025 10:14:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mlEfJF3o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fOa9ZqL8"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BAF2DEA83
-	for <linux-hyperv@vger.kernel.org>; Thu,  6 Nov 2025 10:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3990D272E41
+	for <linux-hyperv@vger.kernel.org>; Thu,  6 Nov 2025 10:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762423735; cv=none; b=KDXqrUpvr2OPpoF1OnnFyTTR63MFi1lLy1/UovMwo/VZgnhRhuMrAmKVIpvv0dV/U7fvD5MVanxD+sGMkeBFcbEqqXR9xxGrHkc5dr7Su1eJpo01nYZKGSC2ln7EcZIEiNLEEqdWbEoEhzyrJ8PSK8L6NSg+sroYfuyJovI73lM=
+	t=1762424041; cv=none; b=TWTQuIYx8UXNj6FmBoByMo/Qu8okebaKa1vE19pZeGOPx4T7jUbHFeAmVfElu5jvF1Cv8ke05teLLunoxtI6ZxSja3IZF4pKMKeQVuPnnK3tYvVlA4de2UvMySIxAJpqoo1nrjN4qVgErmC5/LUvfq632gHcrxZJZi3aIxydb5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762423735; c=relaxed/simple;
-	bh=1DqFSj/S5FdRM8xI1vnmMW27R5cKr38U/BL7DRT8f0g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=infK+qXc4sgkA2VxoEJ48aONfIzeQLKibkbCBWc0+6hBNGDYFX4CjPYy4MjcJ7wNAWQ6y7x9KXnkJ7+H4QAczpJNeEf/u7XDPJXZKAZ19RXpjZQi0tc5Dhz5bRW/78s4Yb6xF80HWbZS/mqNgUpfjYHNONir7lu4LHhNU5VvvZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mlEfJF3o; arc=none smtp.client-ip=209.85.215.182
+	s=arc-20240116; t=1762424041; c=relaxed/simple;
+	bh=3g6OwqvUvgOuE0sVQ1tvj2/4v52gpeHEPrmCnel5VNw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VRQhV8p/g3rn1daFR5v8/UV5WAQoRHqn+kYmyThwsuoxBdGUoI2r4xNwxLk+bO5bCFVBGJIDcQDvlHx/GNnd+vfo4wg7pS2V2OIAqAif9Y8mihPO+ivDfzMAw76tOVf4IRmfveFs1pMPw15wxSs7uzpMnXTyUV/3NZOLk6y97pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fOa9ZqL8; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b55517e74e3so749537a12.2
-        for <linux-hyperv@vger.kernel.org>; Thu, 06 Nov 2025 02:08:53 -0800 (PST)
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-781ea2cee3fso817706b3a.0
+        for <linux-hyperv@vger.kernel.org>; Thu, 06 Nov 2025 02:13:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762423733; x=1763028533; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5B/ZONU+mx/MPUhZ8D2RqXDgUbTh84Ll8Fc5jTmwlA0=;
-        b=mlEfJF3oPxLblRV4lAF2VG3SsP74Gq63409Ip3P24uJlVoujGz4BVdywglFT8UohXt
-         sbu6VzHs7luUzp4Z9UC7y8zs3uwB55x8lHpXaMxor1J6qOkHQuDHtJYoO8tPYk0c7ZoW
-         fzTsCb1fez042OSglt08WcCx4QKUXRbyk9iwd8sYTcycAoQCrooNnnMBqGUX0qcWcrBa
-         Gc9BjVOqMhXXusloJxrcCe4cnNnly4TyN2D6diL3ElnY48QXdC3yBati26R+0sQOnvGS
-         rID/KYCjjOKzPIHe/BNq6fsPsP633oVUrTqBptjTfvyCgB1iYXpcFvkAIxQ8dmGSMmnc
-         y9hQ==
+        d=gmail.com; s=20230601; t=1762424038; x=1763028838; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XVferEyN4+RzXvE7eehEmFRfQazqGQ49nTw3vZt6WP4=;
+        b=fOa9ZqL89qNKkCAz8jQYoADmdLmc1LtqIlsCaUEVxK9YS6x3ZBOhldjv8rDDuf4yvf
+         GhQbPWIX2m8kSLQ7HAZseTB5Tsg8lrSzVTXqPO6aKqiboFeCiC/C58qBa79f2wiRhApB
+         Vtn93e1Kp3oVPkrv9lMvvJ764fw6z8Qw+jLMlOTPSSnRkVdLgp702zIwJszfsM8okrrQ
+         lb/B90zsPEt2Pavga6L2LHM4EV5/3yu2v9PQl7rKjsEyVbRwFpA1CIa9IMvSZ+E6nbRq
+         1ZV8WZ8uXOBdPxRAxkfAI+rxq4KzGAElTBNzHGFzZuX/yRQsZAVr9/XNQy+seOD2PJNM
+         qqVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762423733; x=1763028533;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5B/ZONU+mx/MPUhZ8D2RqXDgUbTh84Ll8Fc5jTmwlA0=;
-        b=l5FHfZ8g6Gpn7devIkraK93VeFwSVW0uus+UwSZFQOGQfR6D89priVEk29xplN7jMR
-         zKoOAhk9uPzJRT6N2XWumCQQ5Nkm5r0a4tjcsd2iHB0lNU5R/EyYB4BoCBSkXvvO09Vv
-         A2FxoEBBTHepoQFNuIqTPHGAfub44/MpbGksb7tgya9CJ8nXMfTxz1SB2ucwPr2uJvzA
-         FzbR3vHOp+yZprwEwpX9Xb57Yxu1urq0lwdg8zYSRIeu6jcS5G3VuJFaN20zUkSxfaJh
-         OVsIKQC8UI7gBST0tRsXM+k9uAPDzSmKB1MrP8DCNRZads5KjUMjsj3KTwPszoy1pJfX
-         b/Ig==
-X-Forwarded-Encrypted: i=1; AJvYcCXME+HTMBYnpVcA90+wN/lFALhMbQD2stRaUgZGR6tIvdFnDL9+9PrHUD/am5sNGio9tgV4cpOBYIowo3g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxP4LIqMPh7bfOcOOSY7fZ1D8J9SSTvuk6hUa1fZ4eOk3KZPiCi
-	kMIVfY31toqwguu2aMwSxkTQ+nAKCT0jIAdtJwolQerP11Bt1ysowuvg
-X-Gm-Gg: ASbGnctfUl+p5dIOPzdSAcZFVqY9LGgAbRhcfpm4TaloCjfwWjFav92daKUe5Odpgkj
-	/cveq/NZTI5qLvjX7nzhBKP0salN4zX9v4DKo5PjzN6m06qTMlO44tCLA2LnkxEt5HunBaXjckh
-	X3fxodjTyZwBpCFFuShg7qvDoHqYuGxqp+3comT4qhnm16xN4/worx76fDWeGS7We+1fs9vmykr
-	1Z2Xhc/bkhllAoi7oVkfKmIPuSAivznglimc61QIaHkiWSQldaF0ZN7s5AWXqJOMsV9e5x/3gic
-	axaL/ZJxTBnkCRR5JG837ocE6no1ms/UYRRiLTliKAfv7VOW/EpfDPgS2tcEyFNsTW1LIDinQeA
-	g/Kyim26bFZE1ffXLrg2JUx499ka8+uY84HmzA997fxfdtL6ZRsxLNd77pZ/6PzSamcQL31WOVF
-	iu
-X-Google-Smtp-Source: AGHT+IGGknNbfaJf1wlwBpbXS9DgfCxm28G8CeSW3otZfXLcPcwJFPQBOKlOcIpLEk4FHszmJ38k6Q==
-X-Received: by 2002:a05:6a20:1b10:b0:343:64dc:8d3 with SMTP id adf61e73a8af0-34f866ffce8mr6522570637.31.1762423733294;
-        Thu, 06 Nov 2025 02:08:53 -0800 (PST)
-Received: from aheev.home ([2401:4900:88f4:f6c4:5041:b658:601d:5d75])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ba902207232sm1855872a12.32.2025.11.06.02.08.47
+        d=1e100.net; s=20230601; t=1762424038; x=1763028838;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XVferEyN4+RzXvE7eehEmFRfQazqGQ49nTw3vZt6WP4=;
+        b=g/t2sZs4sNcWBwFIVe97P8mSPZpuDJxosc9MYnhMXwJQ4vLhHVTW6EIFGkTZFLW+In
+         fHyOTtsSs5/kkxLH0lY7ew8SPVBYk7PVsIFbTihEXjQpCAHNOjpuHAFD1SEU+Bf/2trM
+         wYhBAz+jU1BurR0hUy8zXUBN7kGvsfVQQbNA1UYEaasPv136TN3RYnaN1Tg8ZjP4HdX0
+         +Vj5RcNld4U93znXjcXqOZttwQJEScNXLssHRYeU632EnHS667DrVY56hKFj7/HGxy0M
+         16NgVEDNDh3BVId4K4hv3JnGCroUCXJ6mXEJf59sDo3HRrzNiwSqPlK5YeI4nrOMD/In
+         +p0A==
+X-Forwarded-Encrypted: i=1; AJvYcCVvQTM6AAAN4STAjr0QDelyHK0QmysTvY6ugIlS38ZAHCMhYDLi1kPCdVAAdGNZDg3z3JmuPhNZ27CE5Mk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOwOCGKFFU189OQmDY4rznr1QZlzSdREtQPSJJcaxu/HsrND8A
+	YXZllv9nIyRTUa1vNMHJEmYJcsEXymHHFG5Xjm+dMRv+P2SxJd4YIU74
+X-Gm-Gg: ASbGncs+GCO8diwO1ZQiv2TvI0WrXuGh7+OYc0Xf3VIDdHqdNdEoOBztLEJ8YPsFUpz
+	0Gy/8I2vw6fS8BhBIN3NjUavS7Y8/VyaYemcQdIlhHGYclSC0w7KwhCo93OcVaYrkh4mBkCkHXx
+	FVNz5smUkPq+A4wvj/F89K9MsXv472CaNR30PJi2FbxjakA61u1eSUPyVXcw8jd8fcXotoFP1kg
+	rMz/013PFJ8iNvEhgz1Gzy+Bv8/vlt20Sth84lSwGSKvukCgi1cS7mdUqrFlPOW1AzRWt1SFh6K
+	8l+R424zCFtAFlxf9EyXTLg9ZpkeNhrMn0np4uyL1VeyO19ixrCBI35NZZKh0fJj8EKh56UJ6pS
+	0jxZHLpgWigkaWR0ZnmM+akQH3K/mdufwXTHwLuXZQz86z0x+IgwwSWSo4xQjBJYP8h77dighqY
+	yGYtg1lnlvxXk0P4H9WFMBka990nntpAo74u6NlrytrS2IwD5H
+X-Google-Smtp-Source: AGHT+IHFm4f4DIfuJZeWFWHECmS607MVUrzEbqxwY7bBNABCSqwm+nfFI94x/cfAN4hYxfUSU4FFIA==
+X-Received: by 2002:a05:6a00:2e0d:b0:792:574d:b12 with SMTP id d2e1a72fcca58-7ae1d7350a5mr8116654b3a.10.1762424038444;
+        Thu, 06 Nov 2025 02:13:58 -0800 (PST)
+Received: from ?IPv6:2401:4900:88f4:f6c4:5041:b658:601d:5d75? ([2401:4900:88f4:f6c4:5041:b658:601d:5d75])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7af825fbc63sm2270481b3a.49.2025.11.06.02.13.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Nov 2025 02:08:52 -0800 (PST)
-From: Ally Heev <allyheev@gmail.com>
-Date: Thu, 06 Nov 2025 15:38:41 +0530
-Subject: [PATCH v2] net: ethernet: fix uninitialized pointers with free
- attr
+        Thu, 06 Nov 2025 02:13:58 -0800 (PST)
+Message-ID: <26b0845236aeeedae68b20765376e6acf3bb0e97.camel@gmail.com>
+Subject: Re: [PATCH] net: ethernet: fix uninitialized pointers with free attr
+From: ally heev <allyheev@gmail.com>
+To: kernel test robot <lkp@intel.com>, Tony Nguyen
+ <anthony.l.nguyen@intel.com>,  Przemek Kitszel
+ <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
+ S. Miller"	 <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski	 <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "K. Y.
+ Srinivasan"	 <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ Wei Liu	 <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org, 
+	intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, Dan Carpenter <error27@gmail.com>
+Date: Thu, 06 Nov 2025 15:43:49 +0530
+In-Reply-To: <202511061627.TYBaNPrX-lkp@intel.com>
+References: 
+	<20251105-aheev-uninitialized-free-attr-net-ethernet-v1-1-f6ea84bbd750@gmail.com>
+	 <202511061627.TYBaNPrX-lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1-1+deb13u1 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251106-aheev-uninitialized-free-attr-net-ethernet-v2-1-048da0c5d6b6@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAKhzDGkC/52NTQ6CMBBGr0K6dkyL/BhX3sOwKHRKJ4FiprVRC
- Xe3cAR33/sW760iIBMGcStWwZgo0OIzlKdCDE77EYFMZlHKslZK1qAdYoKXJ0+R9ERfNGAZEXS
- MDB4jYHTI+2iNkg1Wur/YVmThk9HS+4g9usyOQlz4c7ST2t+/MkmBAtugvlZ9b9pa3sdZ03Qel
- ll027b9AKkmv87kAAAA
-X-Change-ID: 20251105-aheev-uninitialized-free-attr-net-ethernet-7d106e4ab3f7
-To: Tony Nguyen <anthony.l.nguyen@intel.com>, 
- Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- "K. Y. Srinivasan" <kys@microsoft.com>, 
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
- Dexuan Cui <decui@microsoft.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
- Dan Carpenter <dan.carpenter@linaro.org>, Ally Heev <allyheev@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3029; i=allyheev@gmail.com;
- h=from:subject:message-id; bh=1DqFSj/S5FdRM8xI1vnmMW27R5cKr38U/BL7DRT8f0g=;
- b=owGbwMvMwCU2zXbRFfvr1TKMp9WSGDJ5ite1TzulbSKvft6+c1daVuL3VXO3XN4S+kf7pZ/nF
- mfjf2sdOkpZGMS4GGTFFFkYRaX89DZJTYg7nPQNZg4rE8gQBi5OAZjIVQmG/45tCdELukNbauaV
- zUr0cPrRop6YYxkY0VLG7HF+isKty4wM7Ynayxg0fV5dMYjz6nz+fpVBVJK8j5Xa1BURM+5Nlmp
- jBQA=
-X-Developer-Key: i=allyheev@gmail.com; a=openpgp;
- fpr=01151A4E2EB21A905EC362F6963DA2D43FD77B1C
 
-Uninitialized pointers with `__free` attribute can cause undefined
-behaviour as the memory assigned(randomly) to the pointer is freed
-automatically when the pointer goes out of scope
+On Thu, 2025-11-06 at 17:06 +0800, kernel test robot wrote:
+> Hi Ally,
+>=20
+> kernel test robot noticed the following build errors:
+>=20
+> [auto build test ERROR on c9cfc122f03711a5124b4aafab3211cf4d35a2ac]
+>=20
+> url:    https://github.com/intel-lab-lkp/linux/commits/Ally-Heev/net-ethe=
+rnet-fix-uninitialized-pointers-with-free-attr/20251105-192022
+> base:   c9cfc122f03711a5124b4aafab3211cf4d35a2ac
+> patch link:    https://lore.kernel.org/r/20251105-aheev-uninitialized-fre=
+e-attr-net-ethernet-v1-1-f6ea84bbd750%40gmail.com
+> patch subject: [PATCH] net: ethernet: fix uninitialized pointers with fre=
+e attr
+> config: x86_64-randconfig-015-20251106 (https://download.01.org/0day-ci/a=
+rchive/20251106/202511061627.TYBaNPrX-lkp@intel.com/config)
+> compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
+ve/20251106/202511061627.TYBaNPrX-lkp@intel.com/reproduce)
+>=20
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes: https://lore.kernel.org/oe-kbuild-all/202511061627.TYBaNPrX-lkp=
+@intel.com/
+>=20
+> All errors (new ones prefixed by >>):
+>=20
+>    In file included from include/uapi/linux/posix_types.h:5,
+>                     from include/uapi/linux/types.h:14,
+>                     from include/linux/types.h:6,
+>                     from include/linux/objtool_types.h:7,
+>                     from include/linux/objtool.h:5,
+>                     from arch/x86/include/asm/bug.h:7,
+>                     from include/linux/bug.h:5,
+>                     from include/linux/vfsdebug.h:5,
+>                     from include/linux/fs.h:5,
+>                     from include/linux/debugfs.h:15,
+>                     from drivers/net/ethernet/microsoft/mana/gdma_main.c:=
+4:
+>    drivers/net/ethernet/microsoft/mana/gdma_main.c: In function 'irq_setu=
+p':
+> > > include/linux/stddef.h:8:14: error: invalid initializer
+>        8 | #define NULL ((void *)0)
+>          |              ^
+>    drivers/net/ethernet/microsoft/mana/gdma_main.c:1508:55: note: in expa=
+nsion of macro 'NULL'
+>     1508 |         cpumask_var_t cpus __free(free_cpumask_var) =3D NULL;
+>          |                                                       ^~~~
+>=20
+>=20
+> vim +8 include/linux/stddef.h
+>=20
+> ^1da177e4c3f41 Linus Torvalds   2005-04-16  6 =20
+> ^1da177e4c3f41 Linus Torvalds   2005-04-16  7  #undef NULL
+> ^1da177e4c3f41 Linus Torvalds   2005-04-16 @8  #define NULL ((void *)0)
+> 6e218287432472 Richard Knutsson 2006-09-30  9 =20
 
-net/ethernet doesn't have any bugs related to this as of now,
-but it is better to initialize and assign pointers with `__free` attr
-in one statement to ensure proper scope-based cleanup
-
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/all/aPiG_F5EBQUjZqsl@stanley.mountain/
-Signed-off-by: Ally Heev <allyheev@gmail.com>
----
-Changes in v2:
-- fixed non pointer initialization to NULL
-- NOTE: drop v1
-- Link to v1: https://lore.kernel.org/r/20251105-aheev-uninitialized-free-attr-net-ethernet-v1-1-f6ea84bbd750@gmail.com
----
- drivers/net/ethernet/intel/ice/ice_flow.c       | 5 +++--
- drivers/net/ethernet/intel/idpf/idpf_virtchnl.c | 5 +++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/ice/ice_flow.c b/drivers/net/ethernet/intel/ice/ice_flow.c
-index 6d5c939dc8a515c252cd2b77d155b69fa264ee92..3590dacf3ee57879b3809d715e40bb290e40c4aa 100644
---- a/drivers/net/ethernet/intel/ice/ice_flow.c
-+++ b/drivers/net/ethernet/intel/ice/ice_flow.c
-@@ -1573,12 +1573,13 @@ ice_flow_set_parser_prof(struct ice_hw *hw, u16 dest_vsi, u16 fdir_vsi,
- 			 struct ice_parser_profile *prof, enum ice_block blk)
- {
- 	u64 id = find_first_bit(prof->ptypes, ICE_FLOW_PTYPE_MAX);
--	struct ice_flow_prof_params *params __free(kfree);
- 	u8 fv_words = hw->blk[blk].es.fvw;
- 	int status;
- 	int i, idx;
- 
--	params = kzalloc(sizeof(*params), GFP_KERNEL);
-+	struct ice_flow_prof_params *params __free(kfree) =
-+		kzalloc(sizeof(*params), GFP_KERNEL);
-+
- 	if (!params)
- 		return -ENOMEM;
- 
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c b/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
-index cbb5fa30f5a0ec778c1ee30470da3ca21cc1af24..368138715cd55cd1dadc686931cdda51c7a5130d 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
-+++ b/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
-@@ -1012,7 +1012,6 @@ static int idpf_send_get_caps_msg(struct idpf_adapter *adapter)
-  */
- static int idpf_send_get_lan_memory_regions(struct idpf_adapter *adapter)
- {
--	struct virtchnl2_get_lan_memory_regions *rcvd_regions __free(kfree);
- 	struct idpf_vc_xn_params xn_params = {
- 		.vc_op = VIRTCHNL2_OP_GET_LAN_MEMORY_REGIONS,
- 		.recv_buf.iov_len = IDPF_CTLQ_MAX_BUF_LEN,
-@@ -1023,7 +1022,9 @@ static int idpf_send_get_lan_memory_regions(struct idpf_adapter *adapter)
- 	ssize_t reply_sz;
- 	int err = 0;
- 
--	rcvd_regions = kzalloc(IDPF_CTLQ_MAX_BUF_LEN, GFP_KERNEL);
-+	struct virtchnl2_get_lan_memory_regions *rcvd_regions __free(kfree) =
-+		kzalloc(IDPF_CTLQ_MAX_BUF_LEN, GFP_KERNEL);
-+
- 	if (!rcvd_regions)
- 		return -ENOMEM;
- 
-
----
-base-commit: c9cfc122f03711a5124b4aafab3211cf4d35a2ac
-change-id: 20251105-aheev-uninitialized-free-attr-net-ethernet-7d106e4ab3f7
-
-Best regards,
--- 
-Ally Heev <allyheev@gmail.com>
-
+Sorry. I think I messed up config somehow during build. Hence, couldn't
+catch the error in local. Fixed in v2
 
