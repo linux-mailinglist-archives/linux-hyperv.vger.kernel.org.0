@@ -1,97 +1,97 @@
-Return-Path: <linux-hyperv+bounces-7433-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7434-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC018C3C60E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 06 Nov 2025 17:24:10 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id C04F5C3C6EF
+	for <lists+linux-hyperv@lfdr.de>; Thu, 06 Nov 2025 17:31:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6FB28352159
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Nov 2025 16:24:10 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7DF554FC2D4
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Nov 2025 16:24:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B8A9350D4D;
-	Thu,  6 Nov 2025 16:16:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC9E7354AF9;
+	Thu,  6 Nov 2025 16:17:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PfDBE7l4";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="VymvqmNg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Li57aPgf";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="iKsVSt5N"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202AD350A15
-	for <linux-hyperv@vger.kernel.org>; Thu,  6 Nov 2025 16:16:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9B0354AC6
+	for <linux-hyperv@vger.kernel.org>; Thu,  6 Nov 2025 16:17:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762445819; cv=none; b=Tub8Nigsvju8iPjfG12bp/NQPgCjI5uolPaw3Ws6Fv8aLTmjAexrMe0wmWoKalkOaRnXxzZ082ToY20WAlCOWBKA9ppJ8MlL+lqKDxVuLN/qSNHVI5lfl+TgcM5IFowsro4chNfgdvw25kuAv0X+R2jHVH+ssCjCo5ixS3FpQwI=
+	t=1762445861; cv=none; b=t2Qaat+DQzR3btJvHK+nsFbu+G+TUonzj0jH5U3RTB2xX+GnhHRM+YYJYICkk6tPGFpvY91Z06dR+k0KeRQO+/3VGllsoCOj8sZUvGM0OM2cHLxQCzscwKRN3JtB8LEmK2hwWUSgCtVEMUPLQNWkhd2DG/uhluJ2/NUqQRck4QI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762445819; c=relaxed/simple;
-	bh=Z7eSKPc3txhBUxRtndXMLROsssDroOhR9kPjB1j/JTA=;
+	s=arc-20240116; t=1762445861; c=relaxed/simple;
+	bh=GtjRPF6DweArbtHMO2aemgxvXl0n5TLyq2tqJNlhivM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SyRDlZ9OHYtZqvqFI2PA55shIrmuBBjA2wTmEXqMi9LHp34ms3AB8kshgCr4TYLBa58sx29F9hE/CI9Bf1a+Ek+pz8uQUG3enfVkzJrzknEBf93TzW28xX62/cehUfIsBVs08BRUTKSe9sSq2HNnQ+Sw+dTLpdS7oghIib4QI2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PfDBE7l4; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=VymvqmNg; arc=none smtp.client-ip=170.10.133.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=YCqhY1zvPzunZYVV8qe0tzc7xVM9WuLT7+AploVOAdekguXwgXL3piVqTWD5/Czlx2stVoKpokm3UK1G+Ia2iROQv+QLP9KMofKuCuDd7v5TbNK98owf43RxFCjrwhKfkwzPnKiJXRqSYnjt+YCzi4pVN1w2Ehfxd4WB2Bxr08A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Li57aPgf; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=iKsVSt5N; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1762445814;
+	s=mimecast20190719; t=1762445858;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9tCanlI7uiN2snt10ROgiGSCHaaEX2aQy3SErwtUYP8=;
-	b=PfDBE7l4+UGFjRYCXMFjnk7zcd9wT55BuAfciLIJe/QKAIq4Pyfv1iup7F1wcERPQ7EPhM
-	mrmwxKAhBP2KrbX4uqzqxzl3sIphh6dhkTEujwA8Q2+yNTEIJWiWaFgQJnIcB9A6LKvvSM
-	eKzw8mKxJi8mfdu1V1ajuvFc5zYNPgU=
+	bh=HE8pWaDjxM5gntEvWaYK9FfKJ/5DWKgS7aJeLXUwhc8=;
+	b=Li57aPgfLfYmzBgNvbippXM1sJ8rYNaloW14bDP0/Hefme0Iek2SH9gVxeWEa/rahNS/Oe
+	u7FI56NrvTztp8LITmYzhjRO8VZ+eLNsg21Y+s7pFtygm7ERl4qc7rQoJc7kXdEAjWHf6q
+	W6pxy2VWYVFu1kFCIDBswsaAlnGk2Qs=
 Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
  [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-572-aBlbxiHbO-W3mgWcf4N6zw-1; Thu, 06 Nov 2025 11:16:53 -0500
-X-MC-Unique: aBlbxiHbO-W3mgWcf4N6zw-1
-X-Mimecast-MFC-AGG-ID: aBlbxiHbO-W3mgWcf4N6zw_1762445812
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-47740c1442dso9292295e9.1
-        for <linux-hyperv@vger.kernel.org>; Thu, 06 Nov 2025 08:16:53 -0800 (PST)
+ us-mta-152-MovC1GF1Pwy_FHeSdk4eCw-1; Thu, 06 Nov 2025 11:17:35 -0500
+X-MC-Unique: MovC1GF1Pwy_FHeSdk4eCw-1
+X-Mimecast-MFC-AGG-ID: MovC1GF1Pwy_FHeSdk4eCw_1762445854
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-47754e6bddbso9301975e9.3
+        for <linux-hyperv@vger.kernel.org>; Thu, 06 Nov 2025 08:17:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1762445812; x=1763050612; darn=vger.kernel.org;
+        d=redhat.com; s=google; t=1762445854; x=1763050654; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9tCanlI7uiN2snt10ROgiGSCHaaEX2aQy3SErwtUYP8=;
-        b=VymvqmNg37y7eS2CDMedoy/aiAdzCNcQO87H+g09/o6vS7bajlOfh61Na8jNasEcVJ
-         r3TTVcdnMz462HK3JQM+Gv/tA6qdQMLyapqammQItHrgHNpMRbbmhDDuRvjA8s6G3sex
-         rfGJyPY7TeB6WRfQqAyNc+N+bwIVwsURvQf54EiF/GmhyOKUXzNfgI02JUDVei/8FB0t
-         6AEJdGsohKvsfqoSA8iXHUs+ReG7y57B8KBmUWyeFZhG3ghv6AnQ0L/BvlpfodwqMW5o
-         sjWHsdySeJYbUo5czTerygXBXvqWCwiDjR+G4cjPKsYX+2jSpUKNoN2eCLcZadHrOn6X
-         yUJQ==
+        bh=HE8pWaDjxM5gntEvWaYK9FfKJ/5DWKgS7aJeLXUwhc8=;
+        b=iKsVSt5Npxh8mfVnPOCQP/U7IHNG73lzYNn5N4BKAHCbGQmx7nrWVsQ6UF3EJ0xQMb
+         7SOdi24OrFPjfVgAaH8kcMdVFCoybqVrZ6feGpBiWYFYFeb+ZSeGSwFeblXBxwa1lSQ+
+         7KBlTHkdsUqZqBT0tHk+vcVltBbulxH9SGqLCml5Y4FSFRRfbxaFCgothSO8PnPRniq5
+         RnuwtTah23BxLYiDLHJu0Zw+0/axKNPJtjkUETBRJ1qhhglw6WQ4QBf4FFEoKdPlsWZg
+         J/sFKu1GmtVmJIlg7OmKM0KeuArcPxgrTRh+HU0I2J9/tWqj/vTBzt5Le3bnhfMtc7Rr
+         9tFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762445812; x=1763050612;
+        d=1e100.net; s=20230601; t=1762445854; x=1763050654;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9tCanlI7uiN2snt10ROgiGSCHaaEX2aQy3SErwtUYP8=;
-        b=KZg1dAB79N6tOy55lBUkXHecTzGh4t3hJ13xawrIqJQCt1ZSWdyocoxcIvzX1Yy+mY
-         EfiTv1AvUTD2HAw6Msv3zGNpsq+8Wsi5aJwxRSj4gZyb3HIX4Xsiloxq4c9pYjBAqwZW
-         E59X6L7Z5moo1ZrM2EYBdJWNMYScGDdAUH7zasaTdVJLCTxzIXgzLZw7bFDw6D21kiRU
-         K/LLCL/iT4yDtv/zlnSl7xGLTYVQQCQfcVLDBiGCkzbHaYCWan7tOkHK0VwF8B5W5+IL
-         yH7ozY29HXiUP7/ZbuyONfw90QGG0fPfZm/ohLU03UxaTLCDGyQiHa65y5Nk+PkTaltH
-         H+ug==
-X-Forwarded-Encrypted: i=1; AJvYcCXR6Kc9VFcHbHn4chJhMv9QRL/0gzN8a1CGzlWG6V5Pg8ezOmNLULXOCY64BfaZCpBHg+HmUpNDgtUtZQ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxluWwuvY+o0dLWCsI2Egi4AVE6T3nqxduCafwN+e5BbUJE+Hw
-	TK5Dl1q8XSYCEOVZqsi4NArpENH3P+yhmYOl8VWvkAbzzQH1U+X76BwZBDDcy7cj+S1N5sf/fhu
-	OzgR8gXDCOaioyQJIhD2dlZXsyDou2rwgmxB5f7kwdxI6V0o+RefgmmSv41wYdHQ61Q==
-X-Gm-Gg: ASbGncuvqPaLnpET39PKUFQTgfjRL2cRtkERkL5BlMYtqB7JyHl/IFRQ/vuaEiKf9O3
-	ass0SGY/3pEUcrAhmv95tEKRN8k7HzntGenYKzFqgly/qhSbtKNuWPDXbVC6N8C2uLhEJGli1fy
-	gkPhXgPdaacwd7oqjqtb7peRmlnU5k25nC1y8h6sQosF2nmujVq/UfoxhDBDKa8X0s9ycZwY1WP
-	4wdzFgSnukxOtkIogx6DyAtXpxAXqFh+ErqBlbT+p8WYNqju65y3skmrlzmvDgPRzIV9b4IycYi
-	uV6YWb/JKO4xjpFfj4cIiyjRJv2YnJjl07xBDNVETSkKyAuf9zU3jN4Jz/w/1pu+n5rNlGvtlDj
-	yOQ==
-X-Received: by 2002:a05:600c:8216:b0:477:10c4:b4e with SMTP id 5b1f17b1804b1-4775ce208a3mr70634145e9.41.1762445812531;
-        Thu, 06 Nov 2025 08:16:52 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEW3IYi/YdprfC2n+fzLAs5f0/Jy2gRulDCDLn2/BkchwC+aok0NFWkDfKX3ED9iPmszk8KKA==
-X-Received: by 2002:a05:600c:8216:b0:477:10c4:b4e with SMTP id 5b1f17b1804b1-4775ce208a3mr70633685e9.41.1762445812098;
-        Thu, 06 Nov 2025 08:16:52 -0800 (PST)
+        bh=HE8pWaDjxM5gntEvWaYK9FfKJ/5DWKgS7aJeLXUwhc8=;
+        b=EKWr7mYRPfE27sD++S53c8r67c4q6+MvqWO6NyXOkpBJ7zO/82zseP/wHXMn0SSpqp
+         nwpWXQevf2G+Jwvule2wiZIex7yuTMPQNzhyXgK3A6ejOQsryIh/e4r7SxiBjEQD1lCZ
+         TcJTMr4MaxSUeBIK7t6VoQEtJw8CgoMnwylu/js7nJLV351pLV+KoD2DZ8PRwjwlVeMN
+         muedCDiBasbbfXxiur4bxJ3/bAtomQ297ACYnDEmAh3HYbXPgefDFG3S+wZAyx4ipS5N
+         Mt3fHrk3NlKrsFVH190Xe/aJibbkJwGtN5/fuYTnbr3mW3tyAxtyN40Z7WiWOO8zk0IY
+         XnQw==
+X-Forwarded-Encrypted: i=1; AJvYcCUovth4DRy88y60kRj15ctO6v12oicV/n90Ymw8lFAQNx+Sk+TPGazEwSSfmQoNgI7AgKzBg/vLcfGY1T0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxO8Ev36QX66yhZCJLOvCe6lqlt1NjpvpkANLF0yD4KnWEZTrFV
+	ETWNrop0TnzYGhVVqFClMg15OlKR6KMidxgn382gHuj3vz9GfAJz+zq7K2f7AvxF7QEWSE7NMjQ
+	FRiqezYcECmnYmJW3FHreQ4B+kt4ybJpUomiDV25pKNSoIhRe7w955ONRkBFb7Ib97g==
+X-Gm-Gg: ASbGncsnSZ6mDedWNsb/TSE9mw/sjtlbBTpiukbB9/+GjBZSVbeaJfR8DAu9sAhgKFo
+	HN5CpJ8AmDYzvFnxbNXzHEhGG5mVMLo8nxMVmsPp+4DxFNn1MRXPpdQ/FEHrLTvE86liX0Lt/32
+	JVEILuTFKKL87hdiF7iv+qJHw7KyNJJd0am5nB20LkgirdjAlH31Ftdkk0qdrshu9hDY0aJaH0s
+	EhOtFw/iJiMaf3WmDaB5wPBLHfNVsG+eUi+gYg4mYFtRc3+PjTB2r19rKYXGbdq0N7ijhxp786+
+	O5B7jqsJDMTPfx7ohu0kYjrG+Oaxbp+6aRC6WR2Szld6d3P0lsb9fmuxzyQ8gfBHTCwVXfUHqQR
+	//A==
+X-Received: by 2002:a05:600c:4ed4:b0:477:63a4:8419 with SMTP id 5b1f17b1804b1-47763a48438mr23006245e9.12.1762445854310;
+        Thu, 06 Nov 2025 08:17:34 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHIyTOWs4nIR7QeOKb8n83iy6iz/GaHMuA92Bwhg2oq7+DwP0ugN/AgSAqGuvWOvF3ICA0YJw==
+X-Received: by 2002:a05:600c:4ed4:b0:477:63a4:8419 with SMTP id 5b1f17b1804b1-47763a48438mr23005835e9.12.1762445853789;
+        Thu, 06 Nov 2025 08:17:33 -0800 (PST)
 Received: from sgarzare-redhat ([78.209.9.120])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477625c2fb8sm54077105e9.10.2025.11.06.08.16.49
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477640fba3esm20572515e9.6.2025.11.06.08.17.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Nov 2025 08:16:51 -0800 (PST)
-Date: Thu, 6 Nov 2025 17:16:46 +0100
+        Thu, 06 Nov 2025 08:17:32 -0800 (PST)
+Date: Thu, 6 Nov 2025 17:17:27 +0100
 From: Stefano Garzarella <sgarzare@redhat.com>
 To: Bobby Eshleman <bobbyeshleman@gmail.com>
 Cc: Shuah Khan <shuah@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
@@ -105,11 +105,10 @@ Cc: Shuah Khan <shuah@kernel.org>, "David S. Miller" <davem@davemloft.net>,
 	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
 	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
 	linux-hyperv@vger.kernel.org, berrange@redhat.com, Bobby Eshleman <bobbyeshleman@meta.com>
-Subject: Re: [PATCH net-next v8 02/14] vsock/virtio: pack struct
- virtio_vsock_skb_cb
-Message-ID: <ruxocfuprofj3mktmjulqy5dhnzkbad3fetqrg2f6kw4gh4wwj@x2mb2dw7pjk5>
+Subject: Re: [PATCH net-next v8 03/14] vsock: add netns to vsock skb cb
+Message-ID: <q5w5y5qomj54k2tzztsy4pz2h2zqkvgfzkysjiv3uguoufrqy7@tfz7dj6cssxf>
 References: <20251023-vsock-vmtest-v8-0-dea984d02bb0@meta.com>
- <20251023-vsock-vmtest-v8-2-dea984d02bb0@meta.com>
+ <20251023-vsock-vmtest-v8-3-dea984d02bb0@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -118,75 +117,88 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20251023-vsock-vmtest-v8-2-dea984d02bb0@meta.com>
+In-Reply-To: <20251023-vsock-vmtest-v8-3-dea984d02bb0@meta.com>
 
-On Thu, Oct 23, 2025 at 11:27:41AM -0700, Bobby Eshleman wrote:
+On Thu, Oct 23, 2025 at 11:27:42AM -0700, Bobby Eshleman wrote:
 >From: Bobby Eshleman <bobbyeshleman@meta.com>
 >
->Reduce holes in struct virtio_vsock_skb_cb. As this struct continues to
->grow, we want to keep it trimmed down so it doesn't exceed the size of
->skb->cb (currently 48 bytes). Eliminating the 2 byte hole provides an
->additional two bytes for new fields at the end of the structure. It does
->not shrink the total size, however.
+>Add a net pointer and net_mode to the vsock skb and helpers for
+>getting/setting them. When skbs are received the transport needs a way
+>to tell the vsock layer and/or virtio common layer which namespace and
+>what namespace mode the packet belongs to. This will be used by those
+>upper layers for finding the correct socket object. This patch stashes
+>these fields in the skb control buffer.
 >
->Future work could include combining fields like reply and tap_delivered
->into a single bitfield, but currently doing so will not make the total
->struct size smaller (although, would extend the tail-end padding area by
->one byte).
->
->Before this patch:
+>This extends virtio_vsock_skb_cb to 24 bytes:
 >
 >struct virtio_vsock_skb_cb {
->	bool                       reply;                /*     0     1 */
->	bool                       tap_delivered;        /*     1     1 */
+>	struct net *               net;                  /*     0     8 */
+>	enum vsock_net_mode        net_mode;        /*     8     4 */
+>	u32                        offset;               /*    12     4 */
+>	bool                       reply;                /*    16     1 */
+>	bool                       tap_delivered;        /*    17     1 */
 >
->	/* XXX 2 bytes hole, try to pack */
->
->	u32                        offset;               /*     4     4 */
->
->	/* size: 8, cachelines: 1, members: 3 */
->	/* sum members: 6, holes: 1, sum holes: 2 */
->	/* last cacheline: 8 bytes */
->};
->;
->
->After this patch:
->
->struct virtio_vsock_skb_cb {
->	u32                        offset;               /*     0     4 */
->	bool                       reply;                /*     4     1 */
->	bool                       tap_delivered;        /*     5     1 */
->
->	/* size: 8, cachelines: 1, members: 3 */
->	/* padding: 2 */
->	/* last cacheline: 8 bytes */
+>	/* size: 24, cachelines: 1, members: 5 */
+>	/* padding: 6 */
+>	/* last cacheline: 24 bytes */
 >};
 >
 >Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
 >---
-> include/linux/virtio_vsock.h | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
-
-Yeah, thanks for that!
+>Changes in v7:
+>- rename `orig_net_mode` to `net_mode`
+>- update commit message with a more complete explanation of changes
+>
+>Changes in v5:
+>- some diff context change due to rebase to current net-next
+>---
+> include/linux/virtio_vsock.h | 23 +++++++++++++++++++++++
+> 1 file changed, 23 insertions(+)
 
 Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 
 >
 >diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
->index 0c67543a45c8..87cf4dcac78a 100644
+>index 87cf4dcac78a..7f334a32133c 100644
 >--- a/include/linux/virtio_vsock.h
 >+++ b/include/linux/virtio_vsock.h
->@@ -10,9 +10,9 @@
+>@@ -10,6 +10,8 @@
 > #define VIRTIO_VSOCK_SKB_HEADROOM (sizeof(struct virtio_vsock_hdr))
 >
 > struct virtio_vsock_skb_cb {
->+	u32 offset;
+>+	struct net *net;
+>+	enum vsock_net_mode net_mode;
+> 	u32 offset;
 > 	bool reply;
 > 	bool tap_delivered;
->-	u32 offset;
-> };
+>@@ -130,6 +132,27 @@ static inline size_t virtio_vsock_skb_len(struct sk_buff *skb)
+> 	return (size_t)(skb_end_pointer(skb) - skb->head);
+> }
 >
-> #define VIRTIO_VSOCK_SKB_CB(skb) ((struct virtio_vsock_skb_cb *)((skb)->cb))
+>+static inline struct net *virtio_vsock_skb_net(struct sk_buff *skb)
+>+{
+>+	return VIRTIO_VSOCK_SKB_CB(skb)->net;
+>+}
+>+
+>+static inline void virtio_vsock_skb_set_net(struct sk_buff *skb, struct net *net)
+>+{
+>+	VIRTIO_VSOCK_SKB_CB(skb)->net = net;
+>+}
+>+
+>+static inline enum vsock_net_mode virtio_vsock_skb_net_mode(struct sk_buff *skb)
+>+{
+>+	return VIRTIO_VSOCK_SKB_CB(skb)->net_mode;
+>+}
+>+
+>+static inline void virtio_vsock_skb_set_net_mode(struct sk_buff *skb,
+>+						      enum vsock_net_mode net_mode)
+>+{
+>+	VIRTIO_VSOCK_SKB_CB(skb)->net_mode = net_mode;
+>+}
+>+
+> /* Dimension the RX SKB so that the entire thing fits exactly into
+>  * a single 4KiB page. This avoids wasting memory due to alloc_skb()
+>  * rounding up to the next page order and also means that we
 >
 >-- 
 >2.47.3
