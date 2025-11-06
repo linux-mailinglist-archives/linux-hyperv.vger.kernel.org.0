@@ -1,200 +1,201 @@
-Return-Path: <linux-hyperv+bounces-7430-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7431-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A5C4C3BEB0
-	for <lists+linux-hyperv@lfdr.de>; Thu, 06 Nov 2025 15:59:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 532FEC3C472
+	for <lists+linux-hyperv@lfdr.de>; Thu, 06 Nov 2025 17:11:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1AA2D500409
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Nov 2025 14:54:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B0D335673D7
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Nov 2025 16:05:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A63E33E356;
-	Thu,  6 Nov 2025 14:54:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B997233C51A;
+	Thu,  6 Nov 2025 16:05:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Aw6RZ4xO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gOBYrVKJ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azolkn19012056.outbound.protection.outlook.com [52.103.10.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C775A3431E4;
-	Thu,  6 Nov 2025 14:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.10.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762440876; cv=fail; b=E8Z0cFdy5k7OLAafA7pvN7o/LcFyZT9xro45ywypEcaFcQeqm6k0Irt72QAyvFWuvoH5HkMAmVQbkUa5bJsrjrjJTKA+RtUhY8kv6zedxeEpD5JJivK8IOhM+h+TcFofIdq+Cc9pMMtp5fV1+JPY67MSXx5uuWDp1qWRnXe4Ctw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762440876; c=relaxed/simple;
-	bh=BDJgYClJiKfRDfgzK4vxehH9voneyh8/H/oZgBgct98=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=g9MkEOUheeHiRUooy4QBRfZd7sQMpsD5Usc0ydHjKBUhxa8YfNPnSMRp56G4+nt+nlAx8ZSs06ruY2M+v89hNZsQTMrXpeN/E8KnMO0Z+Ik5fJ+UtcfW/eSTQljx59Pw37tyHXcB2EYI3c+E+B+oQH/zysRFi12gKqRtwTvR730=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Aw6RZ4xO; arc=fail smtp.client-ip=52.103.10.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PS5uGULEFbCLeWUv3x9/85jqtrwK15mGqdCZ7pYDLphij0D5NHubPN7rZt1Tr9RI3lH00ilD6NlWACXIdmEzRevV5wUcTKFOIGk0DmAfksWs7rjiPgDrUW9sz3CGzf2IGls1GZLe5uj82K8XxD1OMhVoBBtiCEVVfgnCnv5aZJe+yCNYOAc7pqU79AFFgVgktUw5JcEqYVVue+W3AKyOn9wOxZEuOUqjwJM3ibp1S1nZ9nN8bSP+oPxmM+r+ahDZRTdgvLdkO/G0JGghhXHLlyK7ALTSPJOMYHYXyqAK7Lbc4RsEErC9/YGzHdUDgUTd9ts0QbbT62TQfGx3sQAuKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bOeNll4HB24izyKGVPQini3YLI8X6KDyqahKPlns8wY=;
- b=N6c0B+D0fCdD4DPB5xBvNwc7RWjB+VohmDlWhJX9bPfyZoEc4D1pQ3A7pjGfKlvZVSoxBdQxdetr/1Auo9p/ux2wiPZ25uR0Wc3WLFERxLZzSqq6nK5FB/jX9V569C3/aIFqeHbNhqk7Wk0t1Pp6WovgIJlEXkgmhd3wETUVYgUA/jqju17kgi6jN7oy+wNXg0GzBCmsGC6rzH/9kQdDLNU7OhXLMjHZrglTXEADtiN4GOA0ahG1Y97uQ0ZeGidUGLHwxQJbkwtSpkKP+XDeHgInFGFacR6sPoqBSjxolD3LU3aV8xDpVMNRn7U0VJOUsC7La7vPrl2lUV4dtsJoKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bOeNll4HB24izyKGVPQini3YLI8X6KDyqahKPlns8wY=;
- b=Aw6RZ4xOCWmHQ4gBTzJT8Ltf46FhihbdFRbHk+6MSLARZlx7aMBUL9m7WFQMth4OVM1XhkFuthta+eM9lKDBybZxlKTQ8Ty/NLv1GWB2mA1S0eOSwOMuXrxYrCocJMY6lZ8RwJ2327lY+5aVQIpzm2N9rNNuR4rIl7qYec4GdmNlvEwBqRJxYj5tDRAP7qMJE2aWZPt6MKrynCOsQIV0zkp5sZ8AymMAOh6ReR4x2s/hKyCusnUVsWde2hvaaJQmQkPU7dxaVZwYi9XaZQsgl6JQ7bsDrdf1+uJhEuleJNEJA3l9OZIu9QLfSWLlsQjTGtP9TW+OrbZfB44fjKk9iw==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by PH0PR02MB7751.namprd02.prod.outlook.com (2603:10b6:510:51::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.8; Thu, 6 Nov
- 2025 14:54:31 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%2]) with mapi id 15.20.9298.006; Thu, 6 Nov 2025
- 14:54:31 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Naman Jain <namjain@linux.microsoft.com>, "K . Y . Srinivasan"
-	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
-	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Thomas Gleixner
-	<tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
-	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
-	<hpa@zytor.com>
-CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>,
-	Mukesh Rathor <mrathor@linux.microsoft.com>, Stanislav Kinsburskii
-	<skinsburskii@linux.microsoft.com>, Nuno Das Neves
-	<nunodasneves@linux.microsoft.com>, Christoph Hellwig <hch@infradead.org>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>, ALOK TIWARI
-	<alok.a.tiwari@oracle.com>
-Subject: RE: [PATCH v10 2/2] Drivers: hv: Introduce mshv_vtl driver
-Thread-Topic: [PATCH v10 2/2] Drivers: hv: Introduce mshv_vtl driver
-Thread-Index: AQHcSJEwuPVN9e1pIkKH+tLlojvmSLTlxt8w
-Date: Thu, 6 Nov 2025 14:54:31 +0000
-Message-ID:
- <SN6PR02MB41574847FF9B66A3D7321167D4C2A@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20251029050139.46545-1-namjain@linux.microsoft.com>
- <20251029050139.46545-3-namjain@linux.microsoft.com>
-In-Reply-To: <20251029050139.46545-3-namjain@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH0PR02MB7751:EE_
-x-ms-office365-filtering-correlation-id: bf8836a0-db14-48db-7276-08de1d446495
-x-microsoft-antispam:
- BCL:0;ARA:14566002|13091999003|8060799015|8062599012|19110799012|41001999006|31061999003|15080799012|461199028|3412199025|440099028|40105399003|102099032;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?0yAOEVMLpCexzlyU4wddcwLstaLgNvL1HtfwGVr0Gnm6cVBi5QQ4Seh4j6oS?=
- =?us-ascii?Q?t6HsgpYsebsVNsPwbwbB6PQFs+aCwOQ8DO/Kc0SKtO7Z5Zo6GRBALQUQJsiE?=
- =?us-ascii?Q?8JWA3bY/NS5XdvV7vzdNSXTMnEYwEvvEEX24O6qLS1WXCna9qS+dmysTQ6up?=
- =?us-ascii?Q?cbh1YrER1pANS4UMmipG7Fnndtnti/I4GwvLazdhUzI6htazRCxsL8zeqen0?=
- =?us-ascii?Q?IiTHZSGsXQQVTOs4+3Y5/mBCgDLLcWou8YaDjr/rZKIzTiel162kMBHnR697?=
- =?us-ascii?Q?GF7v5IU9mQkMFU6V30UaY1NzsTWJ7DRsoC/O8Uh8zP008RltkESXUDyaUVAL?=
- =?us-ascii?Q?qrX0auJmzkM99289+LtDC+yCCJsyoe73qkF5ggHK+7+UVNUL3vb01iyRWF6o?=
- =?us-ascii?Q?7qq3NkBwPKDM+MvG5nrI98VpY6IW76qjKLHlAJL+k4RvRrAGco/122MuLvjc?=
- =?us-ascii?Q?Gw8UZb3FXZvcg7g8GT3bpvPEhd5fwfw7C9yLMheIPUELhW0u7+GJZLoj7S7a?=
- =?us-ascii?Q?9AYxiWDXyHwAso5F80Ga2rdWBciEbBaULFNMO9pquQTdM3CavxnOgjIuMF8U?=
- =?us-ascii?Q?ZOxqUvw+6KqCKOeMJyjCzMf5p3POd57vAJ8Si5UroYNfFvWzDlrJKE/OhhQS?=
- =?us-ascii?Q?y87C2IxvMKgCA19GjeeWeiaOf8fecvKeY0ALGtBDt5TwE144mD6ASUYvalRe?=
- =?us-ascii?Q?b3csXbl5Cpu3oMRGYTxNnqp5wOKu9vHZWV86wjxWQ4pnzm7ziqA7d0BJ53iS?=
- =?us-ascii?Q?FOW1R//rOxPM/b3DYkDGzcEJXYKwp34lEaJex0mJM9GIyl4K6PNQAuAq2ceV?=
- =?us-ascii?Q?sSKd1D2lCj9GcanmlN7FsNGNn/xpa+mBiLtk1Wuw2czCHz7Q/lQxgDdK3Sqt?=
- =?us-ascii?Q?/uLcnfwWwc1j2qjiI/v9QcGoFHnpCt3pTxmjGhCl4zXmxwoxALoNS5fYaqPp?=
- =?us-ascii?Q?orEst6E0jNgvJN+cXbtqnJpRHTKkD8GUUb+/ZMeP8P8C602LxAZit+HH7Tx1?=
- =?us-ascii?Q?m/MejBd4iQjqHC9CotY8T2/p7msNEg1dk8gn286b+4EMFKV4Ol4mQpHMbDlR?=
- =?us-ascii?Q?04qy0rV89W2V9wq3A0MAsfMnAKNJbGFS7QTE6cDOecrCwkfJrHPBbnpeyy4F?=
- =?us-ascii?Q?z7mk83cJsA4Fam0AaXchU+aSeWItXPmmZRaYaDC8mkdvjzY1gIkFD6weV6U5?=
- =?us-ascii?Q?mGzDtYrTbK9/z0ND4Fx1qhoNLdXOTntodNI8FQ=3D=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?qA/j1ZDebxAyHM/ixRTzqkUiGz8FrUoaKjAWK9fw2VlV6oiYrGDE3knYfPgj?=
- =?us-ascii?Q?Ju/MNP/Hed0NzrnMeBj7fZGJBZmFjeIW0ORlKKDkvCfJeHA91ULA+wBjWznT?=
- =?us-ascii?Q?NfMsa/V88+WbSQqgX9HDf1xfh30MREGDpoD9eFE60tvLOwqzl1W0wwMlAhTb?=
- =?us-ascii?Q?J/QWxKC83rBnYttFHS7NEJmRMKdzWhSPHQ97yVml40zHQOOzcm5TJnoWbh2r?=
- =?us-ascii?Q?gDxGMoe5ugOdLpKiCxkE+tHgsk1MYWZsM5a5bQ4pouxZreehhOInmZkGG2ua?=
- =?us-ascii?Q?Bba+P8DnRkXFfnPMGjSdfj5J2sZz2NqSr+Innb410ikwtSGwdvi6U0zflMzE?=
- =?us-ascii?Q?Qj2ZK49fDqK0DC2CkIBzmOLDM0kx6tuFpuQtrJiZHrKImdDcxSulKPd1sFye?=
- =?us-ascii?Q?hBgu2gkVBwEVsEqifBm1rG5aDDXVW0oF59nZOwlAQ7PYpUXB0u6uFEH6D+Ri?=
- =?us-ascii?Q?hCxDyvRjoXFcSqbuGhfKym8RB0h1wUFFxdmHwoxDpkHL6BRgMV8PXIw/r8z1?=
- =?us-ascii?Q?9Q827iHpTYQj8zI0/BN/rsKH14+1+1ee9atn2M20SoleZuYJp1Byx9v4cFE+?=
- =?us-ascii?Q?V8pcoh/gAFdohp8W09MZosmSedFuhVBDYfu/yMUTi57BYzsaQIMLPwiHqfEO?=
- =?us-ascii?Q?BqkVJVaHJAsy641hP1L7CJySQbbegSjSpZk/dvORuFNAkQvlTKdKVSmJFhDQ?=
- =?us-ascii?Q?I8K42RXbR/WpcuaoSOZ/3mhQOhj7FJLvpxl+Dq54LMK0vfJr0W2Uo+SE6Ghc?=
- =?us-ascii?Q?HGlT2NcTb40IaCh8JF4/R88gVaqgZXW+5u0rxrVBOq0cXg5s6vUjQ+WDljlt?=
- =?us-ascii?Q?F7rw1feG2HdRKtyAz0Ye6uO6/em9es+fWtWrll1JlYhF+R1f45f3+5BBUyyU?=
- =?us-ascii?Q?4/+o6gOvbKf+jrP3qraDjK+kbCWFZkHy30EIc6ViCCpLY6fuVgmtSu0dWlyI?=
- =?us-ascii?Q?ctFLxouMixcuxwNHweQwCn37IdvYgyn01ZX9CRQNN1ndbdxZ5CPhGhosdOip?=
- =?us-ascii?Q?GyMzfmzql7QLTpYz/Q5ryNv8hCMSjkcP9bbOlh6H6Wyzz/dt/kX0/xMr0dup?=
- =?us-ascii?Q?rdNlcDIrla3jwBoDAiZHdtwGARZaRhIPpvykxxm0/b7QF9T2PUZomoJl9DY5?=
- =?us-ascii?Q?v7tUVYJwbQv/ViVGbv03+JVFcKDoi4hE/BApGwuFS3JPwcqdIiA+LpbN0K9S?=
- =?us-ascii?Q?QplgqUHFmbequCapQV80Wh7hyuvmtGTVrOPs7STVxGKoPXVkBvd0VCX5i8g?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411A03321BF
+	for <linux-hyperv@vger.kernel.org>; Thu,  6 Nov 2025 16:05:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762445146; cv=none; b=TtcraRTW3yRVfilxPoOy+ah9IgaUPrCFvnpqF/1mEDAkLpmXgN7omSezl8/vkcUsACahXPC9/DU3O9MIAmQhZAfR9/Ohog6r56k0uG14cOLfcxmx9B2WxZS0r/D+weE7+36MrkyWA2+xqpNIkWq/ufL1Au6B5SDtrMop7wmg1nk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762445146; c=relaxed/simple;
+	bh=2XzFEQIosTqoRCGRFBzMqp/d9PqQjlhTqHGwa99fBRQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=EnvnMjteXiyjD+iCB1CRWU3PsR/POwyXeakpVxU5LdQqJsz9/yMDCwmGFZW5eWh72Cj7rgXBPUyjlIin996zypA2mTqpnuUNkDbQ6pktx9tbVwnU3JkY3z5g0Z32XhrOPWRY5s6gIDMUYX/5g3P6eyMzPDC0bRttIRXlp3LsGCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gOBYrVKJ; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-27c369f8986so11558215ad.3
+        for <linux-hyperv@vger.kernel.org>; Thu, 06 Nov 2025 08:05:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762445144; x=1763049944; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=iV/5B6HmWeJyKHU1V2F6K7SftQouTs2fm0Ng6BYBU90=;
+        b=gOBYrVKJ1Fy83iCOaqBuaXkwPEeInuYqyt1rGIS8QdzSCD6tpAm/hSX9Sl1QEx9ixZ
+         Aww/9IIUjFSBLl3S4DHO2KOjN712hZ9lacrvL8h7yBLZdGauQNORHPXdWMBl0YWBY26S
+         9PeHQfJciKD2dQD8Iayv4GFhmcXqTimNX9I1eMTxR//PBjbjMoe3rhbteUUJ17NTcryg
+         K88tiw+yAryI3xVNYeRnDv+tGdNdTyShBeMwHmL6G198Pw4UI6DB86juuo9Tr8i2JHCt
+         17ilyw10n7UI8+W00LURjJjiprgPeJM2FQxlsyRSniU14Lrt3036ZFb/Sn2ctPozbKwJ
+         H3lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762445144; x=1763049944;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iV/5B6HmWeJyKHU1V2F6K7SftQouTs2fm0Ng6BYBU90=;
+        b=DmWAewTSRByT61+Qg121n5SIpPIeB+k/QMyQ+hFKPL+rY94ZDIX8UlJhGa21eDiRy1
+         kPol0Jt1vRNnLUyyjTHrHFBqFdXGA9bJWIyNuLuqvgPjU0eMQ5945qFGF7GcuMp2fe0N
+         1Nkd+Y3BQb0Z5JzymiodpxUosqaeiMQpu0JpDzof6hpHibftfraxDxYrbPmLsRC2aF/n
+         fiHGCNyVfHffO/+gyXRV5QmNJQUdkSWeTEZmmNel+jEJ+LwFMd7WsBjcjqc+QNAoqhMP
+         w9SzBHp0dbfxOnMJBmZRwL6JkaBfEHd/Iz6oqAK2rlc1HTOS7TgBVPBMGG5xyphRWAT3
+         3VPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXsxNuuLRIYbBFmBvGCPnH4s7RA+ESPtzqyhQAru2rwIYVyIdg5Cy29jO7v7pMDERb87yKyyAqKz6LO6Z0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYS4uK+cVtogHSxN4qBPYAP/ShRuwRi67kDmK2p5eRBajuOtsv
+	l2cBnX8RypTAmsm3mc9ey6N3iR4jpAWcDTc7Ud6PBy7+KsGNqu5rGiPi
+X-Gm-Gg: ASbGncvNV9cLV3nhUJPye77NSUwiWqRDMHV0ftKFYOvEeqCanu4zAdMR5iTJi5+0B47
+	bP8wnStcKTloT3GUnZowcASIPIwC3AgpUwSxKsg71kF/LGgk7XPqNnyMJDj3scgGHp80M9j4MDD
+	UgJzWdnLxcBfzsJIfrfD1CPRnYvIVLNtosroLP6xR0BudmwlhLcHrD81L4TAVOdr2qopjD+Vgm3
+	CHj3TLiiuBaQqCtJo/Wbxr8d5iIcYYhsRhEzARFjFGEeHQKfLayaS1THzK1Gw2iWIALGyRtD0Gy
+	IB5Q5q7H9lAvBdRAbF9FGFZ02q0j4eNfzlg+ozUrOzDD2ydsT0yFaDhfE10Jbc0ar1cDe9sZ7pg
+	VUnokr5FRaNOCkLhHYIbozqZSAO7Hk3fzcb3cBmRT7UG79y6rBK9zMmdsJpcT5foc/Pdq2j7LF0
+	7e9oQsyBVtHftEQxJC6+2WbAx0oSc6qg9/9TSXaTi+jbaiaqfpZB/jD+0ves0hulPlvntAVA==
+X-Google-Smtp-Source: AGHT+IEaemxYcUh/ny7vD1Nzf+YP+qnuQ8bT2tLL0qWHMb/e7UfQ0N9sVifekzAIwlTS01QOSneeow==
+X-Received: by 2002:a17:902:c943:b0:295:21ac:352b with SMTP id d9443c01a7336-297c03ac555mr252575ad.15.1762445144171;
+        Thu, 06 Nov 2025 08:05:44 -0800 (PST)
+Received: from ?IPv6:2401:4900:88f4:f6c4:12e8:f050:511d:31f3? ([2401:4900:88f4:f6c4:12e8:f050:511d:31f3])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-296509680fesm32629925ad.18.2025.11.06.08.05.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Nov 2025 08:05:43 -0800 (PST)
+Message-ID: <00748f83a8ae688b7063f36844e38073d29b5e19.camel@gmail.com>
+Subject: Re: [Intel-wired-lan] [PATCH v3] net: ethernet: fix uninitialized
+ pointers with free attribute
+From: ally heev <allyheev@gmail.com>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Tony Nguyen <anthony.l.nguyen@intel.com>, Przemek Kitszel	
+ <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
+ S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>, "K. Y.
+ Srinivasan" <kys@microsoft.com>, Haiyang Zhang	 <haiyangz@microsoft.com>,
+ Wei Liu <wei.liu@kernel.org>, Dexuan Cui	 <decui@microsoft.com>, Aleksandr
+ Loktionov <aleksandr.loktionov@intel.com>, 
+	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, Dan Carpenter	
+ <dan.carpenter@linaro.org>
+Date: Thu, 06 Nov 2025 21:35:21 +0530
+In-Reply-To: <575bfdb1-8fc4-4147-8af7-33c40e619b66@intel.com>
+References: 
+	<20251106-aheev-uninitialized-free-attr-net-ethernet-v3-1-ef2220f4f476@gmail.com>
+	 <575bfdb1-8fc4-4147-8af7-33c40e619b66@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1-1+deb13u1 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf8836a0-db14-48db-7276-08de1d446495
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2025 14:54:31.5091
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB7751
 
-From: Naman Jain <namjain@linux.microsoft.com> Sent: Tuesday, October 28, 2=
-025 10:02 PM
+On Thu, 2025-11-06 at 15:07 +0100, Alexander Lobakin wrote:
+[..]
+> >=20
+> > diff --git a/drivers/net/ethernet/intel/ice/ice_flow.c b/drivers/net/et=
+hernet/intel/ice/ice_flow.c
+> > index 6d5c939dc8a515c252cd2b77d155b69fa264ee92..3590dacf3ee57879b3809d7=
+15e40bb290e40c4aa 100644
+> > --- a/drivers/net/ethernet/intel/ice/ice_flow.c
+> > +++ b/drivers/net/ethernet/intel/ice/ice_flow.c
+> > @@ -1573,12 +1573,13 @@ ice_flow_set_parser_prof(struct ice_hw *hw, u16=
+ dest_vsi, u16 fdir_vsi,
+> >  			 struct ice_parser_profile *prof, enum ice_block blk)
+> >  {
+> >  	u64 id =3D find_first_bit(prof->ptypes, ICE_FLOW_PTYPE_MAX);
+> > -	struct ice_flow_prof_params *params __free(kfree);
+> >  	u8 fv_words =3D hw->blk[blk].es.fvw;
+> >  	int status;
+> >  	int i, idx;
+> > =20
+> > -	params =3D kzalloc(sizeof(*params), GFP_KERNEL);
+> > +	struct ice_flow_prof_params *params __free(kfree) =3D
+> > +		kzalloc(sizeof(*params), GFP_KERNEL);
 >=20
-> Provide an interface for Virtual Machine Monitor like OpenVMM and its
-> use as OpenHCL paravisor to control VTL0 (Virtual trust Level).
-> Expose devices and support IOCTLs for features like VTL creation,
-> VTL0 memory management, context switch, making hypercalls,
-> mapping VTL0 address space to VTL2 userspace, getting new VMBus
-> messages and channel events in VTL2 etc.
+> Please don't do it that way. It's not C++ with RAII and
+> declare-where-you-use.
+> Just leave the variable declarations where they are, but initialize them
+> with `=3D NULL`.
 >=20
-> Co-developed-by: Roman Kisel <romank@linux.microsoft.com>
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
-> ---
->  arch/x86/hyperv/Makefile           |   10 +-
->  arch/x86/hyperv/hv_vtl.c           |   43 +
->  arch/x86/hyperv/mshv-asm-offsets.c |   37 +
->  arch/x86/hyperv/mshv_vtl_asm.S     |   98 ++
->  arch/x86/include/asm/mshyperv.h    |   34 +
->  drivers/hv/Kconfig                 |   26 +-
->  drivers/hv/Makefile                |    7 +-
->  drivers/hv/mshv_vtl.h              |   25 +
->  drivers/hv/mshv_vtl_main.c         | 1392 ++++++++++++++++++++++++++++
->  include/hyperv/hvgdk_mini.h        |  106 +++
->  include/uapi/linux/mshv.h          |   80 ++
->  11 files changed, 1855 insertions(+), 3 deletions(-)
->  create mode 100644 arch/x86/hyperv/mshv-asm-offsets.c
->  create mode 100644 arch/x86/hyperv/mshv_vtl_asm.S
->  create mode 100644 drivers/hv/mshv_vtl.h
->  create mode 100644 drivers/hv/mshv_vtl_main.c
+> Variable declarations must be in one block and sorted from the longest
+> to the shortest.
 >=20
+> But most important, I'm not even sure how you could trigger an
+> "undefined behaviour" here. Both here and below the variable tagged with
+> `__free` is initialized right after the declaration block, before any
+> return. So how to trigger an UB here?
 
-I've reviewed and made suggestions on most of this code pretty
-carefully over the past few months and through 10 revisions. This
-version addresses my suggestions and looks good to me. There
-are a few areas, such as the assembly code in mshv_vtl_asm.S and
-the details of the hypervisor ABI for doing VTL Return, that are
-outside my area of expertise so I'm limited to a surface level
-review.
+It doesn't occur here. But, many maintainers/developers consider it a
+bad practice because if the function returns before initialization or
+use of `goto` can cause such behaviors.
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+Here though, the definitions are still at the top right? Maybe I could
+just sort them
+
+>=20
+> > +
+> >  	if (!params)
+> >  		return -ENOMEM;
+> > =20
+> > diff --git a/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c b/drivers/=
+net/ethernet/intel/idpf/idpf_virtchnl.c
+> > index cbb5fa30f5a0ec778c1ee30470da3ca21cc1af24..368138715cd55cd1dadc686=
+931cdda51c7a5130d 100644
+> > --- a/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
+> > +++ b/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
+> > @@ -1012,7 +1012,6 @@ static int idpf_send_get_caps_msg(struct idpf_ada=
+pter *adapter)
+> >   */
+> >  static int idpf_send_get_lan_memory_regions(struct idpf_adapter *adapt=
+er)
+> >  {
+> > -	struct virtchnl2_get_lan_memory_regions *rcvd_regions __free(kfree);
+> >  	struct idpf_vc_xn_params xn_params =3D {
+> >  		.vc_op =3D VIRTCHNL2_OP_GET_LAN_MEMORY_REGIONS,
+> >  		.recv_buf.iov_len =3D IDPF_CTLQ_MAX_BUF_LEN,
+> > @@ -1023,7 +1022,9 @@ static int idpf_send_get_lan_memory_regions(struc=
+t idpf_adapter *adapter)
+> >  	ssize_t reply_sz;
+> >  	int err =3D 0;
+> > =20
+> > -	rcvd_regions =3D kzalloc(IDPF_CTLQ_MAX_BUF_LEN, GFP_KERNEL);
+> > +	struct virtchnl2_get_lan_memory_regions *rcvd_regions __free(kfree) =
+=3D
+> > +		kzalloc(IDPF_CTLQ_MAX_BUF_LEN, GFP_KERNEL);
+> > +
+> >  	if (!rcvd_regions)
+> >  		return -ENOMEM;
+>=20
+> Same here, @rcvd_regions is initialized before the very first return, no
+> idea how one can provoke an UB here.
+>=20
+> > =20
+> >=20
+> > ---
+> > base-commit: c9cfc122f03711a5124b4aafab3211cf4d35a2ac
+> > change-id: 20251105-aheev-uninitialized-free-attr-net-ethernet-7d106e4a=
+b3f7
+> >=20
+> > Best regards,
+>=20
+> Thanks,
+> Olek
+
+Regards,
+Ally
 
