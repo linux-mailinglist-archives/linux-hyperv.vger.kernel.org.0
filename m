@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-7443-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7444-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 267E5C3D171
-	for <lists+linux-hyperv@lfdr.de>; Thu, 06 Nov 2025 19:41:45 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F784C3D83E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 06 Nov 2025 22:37:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A6AD14E1D50
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Nov 2025 18:41:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 337A23A4CB3
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Nov 2025 21:37:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47D172BE65F;
-	Thu,  6 Nov 2025 18:41:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AB18301711;
+	Thu,  6 Nov 2025 21:36:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="M9tVNfMA"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ctZ10nOz"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACB0B1F4CB3;
-	Thu,  6 Nov 2025 18:41:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E1AD2E0934;
+	Thu,  6 Nov 2025 21:36:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762454477; cv=none; b=F5l/hReB6T4LxqxonPJZYnG3pvlVxWs4+Vt+UwfexcU6+suXRBJPrgVZQHcokIiH2TQcamr0yLb8H2TaFmQKEYZwxQ3Kvt5cRTQ79HO/ugzhUHy84ZC2rTKU/DES5Xch+GVzjNXnpNpGWjdO0d3ipg9hWerafuRaj8iKBLCQD40=
+	t=1762465017; cv=none; b=qQddRZ36wHJXF01ovEQ0mk/nFGMQaPi3L5Cz2Rb+oFrs1XbCdUZjqHfZX5Us6oOPFGplHbTB02PY/xEHc/DtLXd52M4y/N70BvCImyQ9OLIXQynx7S/PO8LkQH1ODveUFqghhyhXBnIFdjvc+KbzHVdppjrWkgaDAL9dYbh48hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762454477; c=relaxed/simple;
-	bh=vVjIbFYVbF2pWgE63/R68P30jbKSOTUnH4txaahZhCk=;
+	s=arc-20240116; t=1762465017; c=relaxed/simple;
+	bh=oTCfznkhgyFQWLXV098ZqBUkWSDfOrq30RbAqrD6NSY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LpthDa6qR88C4FkoDx2akdyLdus5XrpR9GjiuODXKacia1RXC8ukX1k1SiBDr3gyijyM5LKFAjZJ4QUct2hyF4VU/aKPeYVAgqn50nH6kHmUx7J8UFo3J+MouF4RjsiBR7Y9k7VIGu6zDH8Bwm5ry63W6N9aon/7Rvqe7M8dJ7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=M9tVNfMA; arc=none smtp.client-ip=13.77.154.182
+	 In-Reply-To:Content-Type; b=Ca8GB5UVpii0ignj7AD46aAiTXfYgwWp/Tqbl/qgym13csl5DW21FjWD1osO1JI//WYGyyWCN/TiY9p4TK7dgPsPlcjiFyakQO4KzaYR6oSLLrz+/9F58lKy0DQN9oT6Q++oyNZMwkZ/2gdr7FshBiFazfupJyY4/6bjIpj/UF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ctZ10nOz; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.64.65.119] (unknown [40.65.108.177])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 2D747201DAC8;
-	Thu,  6 Nov 2025 10:41:05 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2D747201DAC8
+Received: from [10.0.0.239] (c-73-83-157-215.hsd1.wa.comcast.net [73.83.157.215])
+	by linux.microsoft.com (Postfix) with ESMTPSA id BE5A62118967;
+	Thu,  6 Nov 2025 13:36:50 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BE5A62118967
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1762454465;
-	bh=GyH50YwfVxJTgWJHbgrAffxp5a5tzVQlYeMZ6mwnNNs=;
+	s=default; t=1762465011;
+	bh=oTCfznkhgyFQWLXV098ZqBUkWSDfOrq30RbAqrD6NSY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=M9tVNfMAnmGgkIinKCTKC4nbzHFscXsK2hcpkjfbjaVzqe61d1UqBRu1CGeOHsGnB
-	 2WXCcVCOC09CFxcKETRG0Z1ac5RoXgSuFpSWSLReVdOjSLlIsLmZqT2CziZrcon10p
-	 byPRpwghSatGHJEK0n134R8eVAZKV4DUid/cldrA=
-Message-ID: <6a5f4ed5-63ae-4760-84c9-7290aaff8bd1@linux.microsoft.com>
-Date: Thu, 6 Nov 2025 10:40:50 -0800
+	b=ctZ10nOzij3Pz1jn48BwSqXS8+7RR9k70veKQD+Zvs3BW87cxZJ8x3gaVbNyPmAoh
+	 cawfFlR/VLqNS0hZj9KVAzNX9cqhWhaNptBeXH4l0xhwWB7GPHbCNrkvZ35ZwK9/MI
+	 3woeNOzcQsKHzvYKjVKckM333+AcLgn7dTN786nM=
+Message-ID: <0bda852b-baaa-4167-ad9d-12931e213e29@linux.microsoft.com>
+Date: Thu, 6 Nov 2025 13:36:50 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -49,130 +49,80 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mshv: Allow mappings that overlap in uaddr
-To: Michael Kelley <mhklinux@outlook.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "magnuskulke@linux.microsoft.com" <magnuskulke@linux.microsoft.com>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "longli@microsoft.com" <longli@microsoft.com>,
- "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
- "prapal@linux.microsoft.com" <prapal@linux.microsoft.com>,
- "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
- "muislam@microsoft.com" <muislam@microsoft.com>
-References: <1762294728-21721-1-git-send-email-nunodasneves@linux.microsoft.com>
- <SN6PR02MB41575BE0406D3AB22E1D7DB5D4C2A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: microsoft: Add vmbus
+ message-connection-id property
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: apais@microsoft.com, cho@microsoft.com, conor+dt@kernel.org,
+ decui@microsoft.com, devicetree@vger.kernel.org, haiyangz@microsoft.com,
+ hargar@microsoft.com, krzk+dt@kernel.org, kys@microsoft.com,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org,
+ ssengar@linux.microsoft.com, wei.liu@kernel.org
+References: <6d3b5d1e-de1b-4d3b-ba14-7029c51b8e05@kernel.org>
+ <1753395133-26061-1-git-send-email-hargar@linux.microsoft.com>
+ <94d3e709-8c8b-40cb-a829-92c2012b4e0a@kernel.org>
+ <f6c01c55-8930-459a-baa5-1465c5047b3e@linux.microsoft.com>
+ <69ed5b38-830d-46d7-a84b-86787c39df7d@kernel.org>
 Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB41575BE0406D3AB22E1D7DB5D4C2A@SN6PR02MB4157.namprd02.prod.outlook.com>
+From: Hardik Garg <hargar@linux.microsoft.com>
+In-Reply-To: <69ed5b38-830d-46d7-a84b-86787c39df7d@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 11/6/2025 5:38 AM, Michael Kelley wrote:
-> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, November 4, 2025 2:19 PM
->>
->> Currently the MSHV driver rejects mappings that would overlap in
->> userspace.
->>
->> Some VMMs require the same memory to be mapped to different parts of
->> the guest's address space, and so working around this restriction is
->> difficult.
->>
->> The hypervisor itself doesn't prohibit mappings that overlap in uaddr,
->> (really in SPA: system physical addresses), so supporting this in the
->> driver doesn't require any extra work, only the checks need to be
->> removed.
->>
->> Since no userspace code up until has been able to overlap regions in
->> userspace, relaxing this constraint can't break any existing code.
->>
->> Signed-off-by: Magnus Kulke <magnuskulke@linux.microsoft.com>
->> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
->> ---
->>  drivers/hv/mshv_root_main.c | 19 +------------------
->>  include/uapi/linux/mshv.h   |  2 +-
->>  2 files changed, 2 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
->> index 814465a0912d..e5da5f2ab6f7 100644
->> --- a/drivers/hv/mshv_root_main.c
->> +++ b/drivers/hv/mshv_root_main.c
->> @@ -1206,21 +1206,6 @@ mshv_partition_region_by_gfn(struct mshv_partition *partition, u64 gfn)
->>  	return NULL;
->>  }
->>
->> -static struct mshv_mem_region *
->> -mshv_partition_region_by_uaddr(struct mshv_partition *partition, u64 uaddr)
->> -{
->> -	struct mshv_mem_region *region;
->> -
->> -	hlist_for_each_entry(region, &partition->pt_mem_regions, hnode) {
->> -		if (uaddr >= region->start_uaddr &&
->> -		    uaddr < region->start_uaddr +
->> -			    (region->nr_pages << HV_HYP_PAGE_SHIFT))
->> -			return region;
->> -	}
->> -
->> -	return NULL;
->> -}
->> -
->>  /*
->>   * NB: caller checks and makes sure mem->size is page aligned
->>   * Returns: 0 with regionpp updated on success, or -errno
->> @@ -1235,9 +1220,7 @@ static int mshv_partition_create_region(struct mshv_partition *partition,
->>
->>  	/* Reject overlapping regions */
->>  	if (mshv_partition_region_by_gfn(partition, mem->guest_pfn) ||
->> -	    mshv_partition_region_by_gfn(partition, mem->guest_pfn + nr_pages - 1) ||
->> -	    mshv_partition_region_by_uaddr(partition, mem->userspace_addr) ||
->> -	    mshv_partition_region_by_uaddr(partition, mem->userspace_addr + mem->size - 1))
->> +	    mshv_partition_region_by_gfn(partition, mem->guest_pfn + nr_pages - 1))
->>  		return -EEXIST;
-> 
-> This existing code (and after this patch) checks for overlap by seeing if the
-> requested starting and ending GFNs are already in some existing region. But
-> is this really sufficient to detect overlap? Consider this example:
-> 
-> 1. Three regions exist covering these GFNs respectively:  100 thru 199,
-> 300 thru 399, and 500 thru 599.
-> 2. A request is made to create a new region for GFNs 250 thru 449.
-> 
-> This new request would pass the check, but would still overlap. Or is there
-> something that prevents this scenario?
-> 
 
-The logic appears wrong to me. I will create a patch to fix it, and amend this
-patch to work with that new logic since it will look a little different. I'll
-post the fix + v2 of this patch as a series.
-
-Thanks
-Nuno
-
+On 11/4/2025 10:55 PM, Krzysztof Kozlowski wrote:
+> On 05/11/2025 02:10, Hardik Garg wrote:
+>> Each guest has a private hypervisor mailbox and cannot access any other
+>> guest’s communication path. Using an incorrect connection ID does not
+>> allow eavesdropping or cause interference — it only results in failed
+>> VMBus initialization because the host drops messages sent to an
+>> unexpected port. Thus, exposing the correct connection ID to the guest
+>> is safe and necessary for correct initialization.
 >>
->>  	region = vzalloc(sizeof(*region) + sizeof(struct page *) * nr_pages);
->> diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
->> index 9091946cba23..b10c8d1cb2ad 100644
->> --- a/include/uapi/linux/mshv.h
->> +++ b/include/uapi/linux/mshv.h
->> @@ -123,7 +123,7 @@ enum {
->>   * @rsvd: MBZ
->>   *
->>   * Map or unmap a region of userspace memory to Guest Physical Addresses (GPA).
->> - * Mappings can't overlap in GPA space or userspace.
->> + * Mappings can't overlap in GPA space.
->>   * To unmap, these fields must match an existing mapping.
->>   */
->>  struct mshv_user_mem_region {
->> --
->> 2.34.1
-> 
-> I've given my Reviewed-by: narrowly for this patch, since it appears to be
-> correct for what it does. But if the approach for detecting overlap really
-> is faulty, an additional patch is needed that might supersede this one.
-> 
-> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+>>> If different values are important for the host, then all guests should
+>>> use whatever 0 which will map to different values on host by other means
+>>> of your protocol.
+>>>
+>> Using a fixed value such as 0 for all guests would not work, because the
+>> Hyper-V host differentiates between multiple control-plane contexts (for
+>> example, VTL0 vs VTL2) using distinct connection IDs. The guest must use
+>> the value assigned by the host, as there is no implicit mapping or
+>> negotiation protocol to determine it otherwise.
+> Sorry, I am not going back to three months old discussion.
+
+I understand your point and I apologize again for the delay in getting
+back to you. It took me some time to explore alternative approaches and
+verify whether the connection ID could be handled differently, but I’m
+now done with that investigation. I’ll make sure to respond in a timely
+manner going forward.
+
+>
+> Therefore I close this topic for me with: since the actual value does
+> not matter for the host - it will discard all messages which are not
+> intended to this guest - you can just use value 0 and your hypervisor
+> will map to proper port.
+
+The connection ID is managed entirely by the hypervisor and varies
+depending on the VM’s configuration (for example, whether the control
+plane is in VTL0 or VTL2). There is no existing mapping logic on the
+guest side that could translate a constant value like 0 into the correct
+port assignment. The host assigns distinct IDs for each configuration,
+and the guest must use that specific value to establish the VMBus
+control channel correctly.
+
+Could you please confirm if I’m misunderstanding your suggestion about
+the mapping mechanism? Without receiving the correct ID from the
+hypervisor (via DT or another interface), the guest cannot infer the
+right port on its own.
+
+Also, since this thread is quite old, would you prefer that I start a new
+thread when I resend the updated patch?
+
+Thanks again for your feedback and patience.
+
+
+
+
+Thanks,
+Hardik
 
 
