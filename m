@@ -1,223 +1,179 @@
-Return-Path: <linux-hyperv+bounces-7464-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7465-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9739C4092A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 07 Nov 2025 16:25:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 433C2C40A8F
+	for <lists+linux-hyperv@lfdr.de>; Fri, 07 Nov 2025 16:47:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8BF2B4E14A3
-	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Nov 2025 15:25:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE5D6189593F
+	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Nov 2025 15:48:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35E4F31A065;
-	Fri,  7 Nov 2025 15:25:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9CFB32ABC2;
+	Fri,  7 Nov 2025 15:47:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="kl2eyM0b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LGrYbGPP"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazolkn19011063.outbound.protection.outlook.com [52.103.14.63])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f47.google.com (mail-yx1-f47.google.com [74.125.224.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7638143AA6;
-	Fri,  7 Nov 2025 15:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.14.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762529117; cv=fail; b=cdGxjMpphVcPvon8MFB38LutR7M+DLN+9pstqNwlngWIyIGcZTzuzqbRTf6FxqIhTITNQYJukQxkuuzrhraEJPjkKk7xkT3qmvJ9pE9MrejsdeEKVYn+CKJS3bwV3Taqcf+kdoG/U+vZ+PtusEz8KXGwx2U38ITb4qxmiSPp/qg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762529117; c=relaxed/simple;
-	bh=tNcS7KOg/i+5uepQrpOZzrGuvDc/7lDR2XmRNQ32pG4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=rg298e1xMTV5HT1X5d2x4MobDhkZpEj31y7DbFoyZn2KbrmUReng3wiWMstyUFkVsI+dDrE5fPpPkKL1qmzADFXXnHhE1iTYJJg6qLIr1cvZTZqyj34Oz5WP5xkfjGeduGmogKvmQJ9nzTtWF86VSQg0+7sneJPn10KgfEgQqUw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=kl2eyM0b; arc=fail smtp.client-ip=52.103.14.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wueNIoDe3fSFuPfLFrS/mVP0gUTwXU5qpxBSP6Q9guY0Hx6CqzHf+zZHOBcWdHMAjJHFMQ4wc10j+7IV/Lpa+29T7Aw4ptGFmVF1zkAgTNSjeriD33szij+3ZKblPb08pM+c1HCZwQqqC6eSCJ0q8CuFtzpvhlzZ9cNYATwQAax1FL2z/BJVY+Sahs2LfUJ6I3EogvAuZTVx2mLMggElTNQgodow/GM7lWk7JPpXQFTglimR+e0Yf3iLc46eRD1Cvbj6ZJEtmduOf6ZNYmzMZOGtGWz+mLydtde2TeleoHC3UPrgOIQJS4u46nclzSd9+glZ8iCkO1jPPs4bYGIGjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WLG7V3tVM8MOc6zo+xywFFUsBpS+bi1ndUj1ABYaagc=;
- b=yzgTwIGjFnurxwG6tYinX2MQXiQ8u5TzsN72nU40OcnzQcmhUtjcCqLkvSjeAElzo68BpgeNkRYxwINEp+XDUzwjl09zZAPx8v9JhO+maMDsQ38ZosChcj2LwT+8D9OF8WpJZ1touyJwWewpCus6VU1GltnRyCY1hnS+azuLS9hLOf1Fvl9NjaROgWUC/bkvb+H/bToVwyfRW1f3iwFFJiW1A7Rh3eXkpuKybW00mpGO1bnyYeScQY5yrpSloV24rMSMlp7FSv2k3MK/NJskOOroCf9eVW5IviqbSO3QxdtfYpucPTStE+eXw+XZEzIn41Y/ya5EmG5LEdgVDoxEsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WLG7V3tVM8MOc6zo+xywFFUsBpS+bi1ndUj1ABYaagc=;
- b=kl2eyM0b15s1Rx2wGs8f7j3ryMKpCYsrVzdA3sSkmwy114cMG72acE0447/1WK8Ohj5SJGl1HnflF1TsZT85rwDpphsvQxXd6pWP6OXsut8wDvhOYBoBpAr6FQPQ7Qi+izCf3+WbEGQqFAWBC2fccbY+j8rFKosfgObtK4E6ZrZQLUJGhxu/Bl4rF9wKaQHzrXT8pH3VFR3L15b+IZB1KwiXHNny4Z/bNzwGz8UtZWxtmUpkwRNx5x8aNQA2bB/7hZiizYYi5PoD8BZl7F0EfRd/4qL5dfu2X7EAWZmpq+d/u4XyfkEJf6MqollkYQNnvIfKcbk072KMo/M4SbwyVA==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SJ0PR02MB8799.namprd02.prod.outlook.com (2603:10b6:a03:3d3::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.13; Fri, 7 Nov
- 2025 15:25:12 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%2]) with mapi id 15.20.9298.006; Fri, 7 Nov 2025
- 15:25:12 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"magnuskulke@linux.microsoft.com" <magnuskulke@linux.microsoft.com>
-CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>, "longli@microsoft.com"
-	<longli@microsoft.com>, "skinsburskii@linux.microsoft.com"
-	<skinsburskii@linux.microsoft.com>, "prapal@linux.microsoft.com"
-	<prapal@linux.microsoft.com>, "mrathor@linux.microsoft.com"
-	<mrathor@linux.microsoft.com>, "muislam@microsoft.com"
-	<muislam@microsoft.com>
-Subject: RE: [PATCH v2 2/2] mshv: Allow mappings that overlap in uaddr
-Thread-Topic: [PATCH v2 2/2] mshv: Allow mappings that overlap in uaddr
-Thread-Index: AQHcT2qZsouJr58XzEGD06aDR9Q7lLTnVk0A
-Date: Fri, 7 Nov 2025 15:25:12 +0000
-Message-ID:
- <SN6PR02MB41571611B46C233A6CFC86E4D4C3A@SN6PR02MB4157.namprd02.prod.outlook.com>
-References:
- <1762467211-8213-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1762467211-8213-3-git-send-email-nunodasneves@linux.microsoft.com>
-In-Reply-To:
- <1762467211-8213-3-git-send-email-nunodasneves@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SJ0PR02MB8799:EE_
-x-ms-office365-filtering-correlation-id: 2933652a-c22b-4308-990d-08de1e11d84d
-x-microsoft-antispam:
- BCL:0;ARA:14566002|13091999003|19110799012|8060799015|8062599012|41001999006|15080799012|51005399006|461199028|31061999003|40105399003|440099028|3412199025|102099032;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?CSHYqRDdmzs9QAUkOk5klrkmngR3dspvt/eZWVx71G0wuUcFG9KCwAju3Za5?=
- =?us-ascii?Q?sQ13Jczgqi2WcEUX17NrZhgkMetA/LWcl5GyCSoFTcO/rwleJ3IgRkaHjiJ9?=
- =?us-ascii?Q?1ef7q6JZClow13naMyiGKoSn5N48qVDjWqoUC+l1FQewnDeu6bO5nSYuuHN2?=
- =?us-ascii?Q?Jeivy42pVKAjy1mOsCd8KXBq8CZIiL+jubaWiJoAsSEfoVxVRi4sQCLjrywR?=
- =?us-ascii?Q?2zeEdDaBM0OH+lJca4Vx0QxCZ/PeNesW62xd9FpBthNZjqXO3jWpJzRGND7+?=
- =?us-ascii?Q?YdWrqtVsoCanxaILNBt1lwIljvSLH+swvGJnj9J1vommFNHOnrdHzMvZN4R4?=
- =?us-ascii?Q?oW1pv+GGYfMvb8ye//JaLEeAXQhJEdygANgP8jmwAMog8WPUs3hw6du42yyJ?=
- =?us-ascii?Q?QQ9sB5fAGbwo3gkXrR6rA2WcfDq5iB05ac54FtX82qvY3JL9b7RQqVfd3zl0?=
- =?us-ascii?Q?4n4ooew8uKli57L4OKw7tzugpAxZtrNvsFeUBSAMl6WY8hr9JDrC6hvvmx7K?=
- =?us-ascii?Q?dcl79A5GI65YwkK2HaYntSjKeH/6PmCiyM1eyPTLKJyRqE4PizKKFRl4yGSp?=
- =?us-ascii?Q?C0xmIYhFYgnYmbjT/nIW9ccEynz+A6pHW9Q3cGaJ4NUtLsGQ5jw5NcsyI6Rw?=
- =?us-ascii?Q?zZyFxrHsRxPGYzjmF9/Iptq1SSCnWQQ20DHApj/PA2nyEskDo2gXeVF8xQSV?=
- =?us-ascii?Q?hXp/rRv3H09ysRey8v6otupL7xiGjd0upC9vy5LrShHVRPkqjPuqyxLC2gCB?=
- =?us-ascii?Q?X/XX/ajEWqa7Er/S0T7tUa+X4NKExlyo9EuWRhpgVLdJ1oV54G+K4DPjj3Zm?=
- =?us-ascii?Q?bi4vFICqrYNwZrzW3YSydPf57J7ecBX8GsJGGHsGaaGLxPkg34yG7LZVcE3h?=
- =?us-ascii?Q?5QDrbUM598wmoPH50kyhXJXhxE+ANTvA+akfAl1nMPEYhhoVaOE/94TIXdnb?=
- =?us-ascii?Q?tP6ihc+gEzW4yYX8TIeNS6cdEm1TBluX4I2ahx5mL1fo1LyGdNSGeN8rLnLc?=
- =?us-ascii?Q?BQQhrm3ECO5pz+6kTcw8d+R1npasQHkv7rDBYgWLzjVd+BbKdBYbcIVoxsZh?=
- =?us-ascii?Q?0k/Cu6kgVC2xjFvQWu8nHiZhUjWDH5pTAd2XrIchmkvVLHqdYrxmlylL0oGn?=
- =?us-ascii?Q?EdJhkWe3zeRC9zGPqs8ue3kYzvJftIaFXZvJkYEf26Y2NWuyWM2+qEAL20rC?=
- =?us-ascii?Q?9JXQeIhPTF1ESjNSZbBKtfHvDkyjyzoiZUKp7SRlhFtiwos4R59yeuioIzA?=
- =?us-ascii?Q?=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?QMIkW3rHgu5/BTuCDg2++Q+jjkDSFAngteUtLq7vfQ07hVCoMrFZ7/e5qTdx?=
- =?us-ascii?Q?5p5GVJrzgknqZ0rMe8ith4UAhovxpGiIr2XpWY4JJTSHN517e1Xd+5wzFN4X?=
- =?us-ascii?Q?qHQK+tS3hA4MgzULnfrjKBYG0b9IwcyGvzSdcu4qvkkvC5j47ngAhSSx3HFE?=
- =?us-ascii?Q?hf7ZeWdq/rDiwrw1ZtiygSnIjX1a11lDaS2S4XLze1PL75rB+CJjQpe86+sU?=
- =?us-ascii?Q?jS+N5eFlhceyxd0mRm8esTw9osqyYEIHS6kN6eK/OuXMmEX6ydJwf4XvzGJz?=
- =?us-ascii?Q?INmAPNJfe0Cyc/9WTqE7kAquSelagWIwrys740eVBIMmLMEXcdq9HC7KuTxU?=
- =?us-ascii?Q?7owr86BiaryTCAOBgg5bMs9MYMcidWGPTCaAZvsknw3ygqc9kAQuE3chWfyM?=
- =?us-ascii?Q?g5ma1P47a+l3xwTr+p6zffONJmgCHKtqzpFWKe/0/S07BQXKg1b+CPJbBW5H?=
- =?us-ascii?Q?dqQxZAYHN7ij3nkOK/DPVSVNtkJZLJ7qSVaHL184Mw46vLWDaOGr/B7Pd993?=
- =?us-ascii?Q?slsxjAo9Cq4kTrubuvxY67Mp8hwroF8ZoHPvibo47ohRhpdOGrsEgLL5bnIK?=
- =?us-ascii?Q?hHIzMbNHypEZVjdtJr1D4vM3Oi2AB+9TAfJ7a8L7/0B4G4GCnAur1JFZ+4fM?=
- =?us-ascii?Q?whfOMEtBE+SwnkEN5DZuQF7u+2tjHw2Uqs3YX10MM6Ggfq+FrQyC8sRJ9Te4?=
- =?us-ascii?Q?f8vwsHE2jVG4Ld/5lUYZsuzKdj9N4uP3L3LMR1fx+bm5qBVP9LJZoFhiuNN5?=
- =?us-ascii?Q?kkBSdFZKMnxVAW2uvzzwIwgcGmB3icgpw9e20sruD7jR1bNs6wDtyFbjTYzI?=
- =?us-ascii?Q?z+n+F3eyzLU9ZItVIIHlL/QZxahH1vj8zNP8IBQvsVINl1sZPGDctRGtS8J0?=
- =?us-ascii?Q?nxYpk+1IlRDpMNrTlPz5mE5Pa2mCKaphhLmxWTQVIJxaJe2B1/G5Y1tvJfhf?=
- =?us-ascii?Q?m25Zhf3YTpvpLjn0Bpwb3jPzitKBE67rSjLc5JFe6FZfFsXDxa6HI8w/Az6z?=
- =?us-ascii?Q?lSXlTvba7v8MlwRdNNRTfVm+yePQ4julhpJfF+WTbWAjbld/z3D9fZcrhI81?=
- =?us-ascii?Q?3D4O+qDLov64TE4zbCQZhtPeojrju/WaQY6cRyN7hkLzGuMmBOpt2+7S8Nhz?=
- =?us-ascii?Q?DzDvnI9Zw1sWQiCvb0mbe+cZcgdWhSuXJqQ2g0gzeGUTz1wOW9W0/jL/oROW?=
- =?us-ascii?Q?oXCYYoODJjhSmjCR0UqTkThG53vzQVT7Wq9pcLMNU+J4r/IpmGV+cU3hmbk?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443052E7F1C
+	for <linux-hyperv@vger.kernel.org>; Fri,  7 Nov 2025 15:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762530452; cv=none; b=HX0LR2Xk9iJ0uew0ZA/YhfOdF9a94hl9hI4jC8dh2ub8aMRH0xTbPYWRNk7SegDq0IavreqyjAS3hBlBd/1uuSHiC/UEQK4jERGpx/5sdUXryCkhMSJZ9d4O37OE9ZdhGbCDmRlV5GPdwBFEKBzHwelt+JSgCCz9iXmgbgFVQMM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762530452; c=relaxed/simple;
+	bh=AgQbQ+KSNY8EMVam7WimxKAMD+pVWQVs4PeEWZxxuTA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PXCpYJcoxeU6gjnPJT5mFtIP0st3PKrc1TdMCj0W21z1dVBz9nHy0vcWg5g55CTPxvN2/NX0WQwwwRfSpEDY6e/4qjvLBeT1HJUgz2TgowoLnYSsIMa9E8rOXP3sP1WJNv/Ou1gEuyBeomKG9RMYrj/9+V+WY/xk6DeZRMhC4GY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LGrYbGPP; arc=none smtp.client-ip=74.125.224.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yx1-f47.google.com with SMTP id 956f58d0204a3-63fc72db706so896958d50.2
+        for <linux-hyperv@vger.kernel.org>; Fri, 07 Nov 2025 07:47:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762530449; x=1763135249; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rNPUJeO0jfL+NoCnK5UCUnDeuVhOeT6TwUJCRr1zq70=;
+        b=LGrYbGPPWMSYQo6Bl/fdlMThyPXwBeofW3UNDk+2BQy3lpnsCwC90fp5XoSfdZmjYX
+         KA6rC+QZUxPdxjFPXRKU6Wke8qiUCwm5fFPQ5zHUSd8mhlJVOYeXYv8kIIKpQoJdDhw8
+         sY6oZ2xI+MujHK3y666q0ZpEkWOw+fMW1qcJdf1w3AGdW/sYfXK79C+uV4i8ulLIsdhc
+         8dvZZDsAfzChW0MTeNxb3eGUt2eeUYZxZZ/bXpc2yt0tdwLbt2F8okc68OnSWb7aN3Z7
+         JfEmRqcQesnbt5hP4KNK3APnm+SPwthrl4kr7MWJaHdpXpaSrPYMBXc6h2EHuBzIzCUm
+         O5sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762530449; x=1763135249;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rNPUJeO0jfL+NoCnK5UCUnDeuVhOeT6TwUJCRr1zq70=;
+        b=goH3toBlY1Fxfk1htp58g1RZiMO7ddHTc02Y9ztw4G42b/J3ClA42pSfOqyDTzV3uf
+         QrYZcd8f3tIi5+gcTna+lcmNkSeXD1JLoVFml27PejAKC80VVorA0juB0hozm0xhF7OL
+         gqCGdytg/EaFQLKgQUu8T5dSAQEQpY4ycJRqF1nEBQigCmmwjn9n0NQEM5Yb39WbjWVH
+         jB78YyJu231qO+80igFwpRkKcpwR07P1JL6xqjGWZMXqei8j3/uNkkkyaibylKoKpYCE
+         lQ8vcr+mOTDSeL/UKrrT38H9LfvaD2HWh7acBDK2vJ9OgZ7iIof24e8zPEY+oN3vXiQl
+         yMUA==
+X-Forwarded-Encrypted: i=1; AJvYcCWRhLap0+Maz8cQMffarRxpu17R09bcp9TQmOuuR4WpW1Y6LHSVzCrnnByj1gXlkY8xHfQA6SOWoBdBqt8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiG84WTJCMFZcJnNA9cJkXiGBQEZpihHKoaaW1KeoiyaXDZg0t
+	b2Wc0FyWMzpbzoymc/w7aB9OW/ITjusVQ+2oPidmFjfTHAdOc5B/Xiyz
+X-Gm-Gg: ASbGnctPDYwh8SgMOMU35td04IpGVuOjTq5rTJyf2GLYa00iT3It0tNlTuK3CZfinTB
+	NVZd/Wt5floM8/MKdMKvPcDDjwDk85LK86FK6KlaKDguqW3pZmz3BJTkdUWNnNqrtoAdf7DxzAb
+	cM1L+HHdfAS7GVbaJtZAnzAfO4BRdqJjk8WyArffVYpqCJLIwbuzdLjM0CY34oHWweFJfZIZMms
+	LwAyrcJ2bc5N02aWYVCEyu8pATrRVm4/fQM+oNhQo9gF7V1OGtnL4hQ4gDSMEP7WJNZs2Yue8WB
+	7LR1jfIC27i9ht4oTlvs8e7GV2VtOkrv4kBMP4pE4ftThOKHyjRU6EVUwF0ks8ZIg0mT18cUb7l
+	W08uSF3Xh6Q5aMBFhsc+qGeffrTE35GtqTPIrygZtnYCILhKONqfA08jEa/VbVSsbHS89RNlq2b
+	z704W1UFRdycMAMfTFWTSoltSbbWVT5kQ10l0=
+X-Google-Smtp-Source: AGHT+IFXvS+IpNFgsgMywAgZqoOQibHP63Xuf6dTUbNtxkKzSlUYwHyXzkOlrbPYGdpQ0cshEmiYAw==
+X-Received: by 2002:a53:acd5:0:10b0:63f:a7dc:5661 with SMTP id 956f58d0204a3-640c4177959mr2767546d50.12.1762530449193;
+        Fri, 07 Nov 2025 07:47:29 -0800 (PST)
+Received: from devvm11784.nha0.facebook.com ([2a03:2880:25ff:c::])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-640b5c91334sm1890653d50.1.2025.11.07.07.47.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Nov 2025 07:47:28 -0800 (PST)
+Date: Fri, 7 Nov 2025 07:47:27 -0800
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Shuah Khan <shuah@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	berrange@redhat.com, Bobby Eshleman <bobbyeshleman@meta.com>
+Subject: Re: [PATCH net-next v8 06/14] vsock/virtio: add netns to virtio
+ transport common
+Message-ID: <aQ4Uj6z129htVqLk@devvm11784.nha0.facebook.com>
+References: <20251023-vsock-vmtest-v8-0-dea984d02bb0@meta.com>
+ <20251023-vsock-vmtest-v8-6-dea984d02bb0@meta.com>
+ <hkwlp6wpiik35zesxqfe6uw7m6uayd4tcbvrg55qhhej3ox33q@lah2dwed477g>
+ <aQ1e3/DZbgnYw4Ja@devvm11784.nha0.facebook.com>
+ <aQ4DPSgu3xJhLkZ4@devvm11784.nha0.facebook.com>
+ <g34g7deirdtzowtpz5pngfpuzvr62u43psmgct34iliu4bhju4@rkrxdy7n2at3>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2933652a-c22b-4308-990d-08de1e11d84d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2025 15:25:12.5287
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR02MB8799
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <g34g7deirdtzowtpz5pngfpuzvr62u43psmgct34iliu4bhju4@rkrxdy7n2at3>
 
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Thursday, Nov=
-ember 6, 2025 2:14 PM
->=20
-> From: Magnus Kulke <magnuskulke@linux.microsoft.com>
->=20
-> Currently the MSHV driver rejects mappings that would overlap in
-> userspace.
->=20
-> Some VMMs require the same memory to be mapped to different parts of
-> the guest's address space, and so working around this restriction is
-> difficult.
->=20
-> The hypervisor itself doesn't prohibit mappings that overlap in uaddr,
-> (really in SPA; system physical addresses), so supporting this in the
-> driver doesn't require any extra work: only the checks need to be
-> removed.
->=20
-> Since no userspace code until now has been able to overlap regions in
-> userspace, relaxing this constraint can't break any existing code.
->=20
-> Signed-off-by: Magnus Kulke <magnuskulke@linux.microsoft.com>
-> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> ---
->  drivers/hv/mshv_root_main.c | 8 ++------
->  include/uapi/linux/mshv.h   | 2 +-
->  2 files changed, 3 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-> index 25a68912a78d..b1821b18fa09 100644
-> --- a/drivers/hv/mshv_root_main.c
-> +++ b/drivers/hv/mshv_root_main.c
-> @@ -1220,12 +1220,8 @@ static int mshv_partition_create_region(struct msh=
-v_partition *partition,
->=20
->  	/* Reject overlapping regions */
->  	hlist_for_each_entry(rg, &partition->pt_mem_regions, hnode) {
-> -		u64 rg_size =3D rg->nr_pages << HV_HYP_PAGE_SHIFT;
-> -
-> -		if ((mem->guest_pfn + nr_pages <=3D rg->start_gfn ||
-> -		     rg->start_gfn + rg->nr_pages <=3D mem->guest_pfn) &&
-> -		    (mem->userspace_addr + mem->size <=3D rg->start_uaddr ||
-> -		     rg->start_uaddr + rg_size <=3D mem->userspace_addr))
-> +		if (mem->guest_pfn + nr_pages <=3D rg->start_gfn ||
-> +		    rg->start_gfn + rg->nr_pages <=3D mem->guest_pfn)
->  			continue;
->=20
->  		return -EEXIST;
-> diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
-> index 9091946cba23..b10c8d1cb2ad 100644
-> --- a/include/uapi/linux/mshv.h
-> +++ b/include/uapi/linux/mshv.h
-> @@ -123,7 +123,7 @@ enum {
->   * @rsvd: MBZ
->   *
->   * Map or unmap a region of userspace memory to Guest Physical Addresses=
- (GPA).
-> - * Mappings can't overlap in GPA space or userspace.
-> + * Mappings can't overlap in GPA space.
->   * To unmap, these fields must match an existing mapping.
->   */
->  struct mshv_user_mem_region {
-> --
-> 2.34.1
+On Fri, Nov 07, 2025 at 04:07:39PM +0100, Stefano Garzarella wrote:
+> On Fri, Nov 07, 2025 at 06:33:33AM -0800, Bobby Eshleman wrote:
+> > > > > diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> > > > > index dcc8a1d5851e..b8e52c71920a 100644
+> > > > > --- a/net/vmw_vsock/virtio_transport_common.c
+> > > > > +++ b/net/vmw_vsock/virtio_transport_common.c
+> > > > > @@ -316,6 +316,15 @@ static struct sk_buff *virtio_transport_alloc_skb(struct virtio_vsock_pkt_info *
+> > > > > 					 info->flags,
+> > > > > 					 zcopy);
+> > > > >
+> > > > > +	/*
+> > > > > +	 * If there is no corresponding socket, then we don't have a
+> > > > > +	 * corresponding namespace. This only happens For VIRTIO_VSOCK_OP_RST.
+> > > > > +	 */
+> > > >
+> > > > So, in virtio_transport_recv_pkt() should we check that `net` is not set?
+> > > >
+> > > > Should we set it to NULL here?
+> > > >
+> > > 
+> > > Sounds good to me.
+> > > 
+> > > > > +	if (vsk) {
+> > > > > +		virtio_vsock_skb_set_net(skb, info->net);
+> > > >
+> > > > Ditto here about the net refcnt, can the net disappear?
+> > > > Should we use get_net() in some way, or the socket will prevent that?
+> > > >
+> > > 
+> > > As long as the socket has an outstanding skb it can't be destroyed and
+> > > so will have a reference to the net, that is after skb_set_owner_w() and
+> > > freeing... so I think this is okay.
+> > > 
+> > > But, maybe we could simplify the implied relationship between skb, sk,
+> > > and net by removing the VIRTIO_VSOCK_SKB_CB(skb)->net entirely, and only
+> > > ever referring to sock_net(skb->sk)? I remember originally having a
+> > > reason for adding it to the cb, but my hunch is it that it was probably
+> > > some confusion over the !vsk case.
+> > > 
+> > > WDYT?
+> > > 
+> > 
+> > ... now I remember the reason, because I didn't want two different
+> > places for storing the net for RX and TX.
+> 
+> Yeah, but if we can reuse skb->sk for one path and pass it as parameter to
+> the other path (see my prev email), why store it?
+> 
+> Or even in the TX maybe it can be passed to .send_pkt() in some way, e.g.
+> storing it in struct virtio_vsock_sock instead that for each skb.
+> 
+> Stefano
+> 
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+That's a good point, the rx path only needs to pass to recv_pkt(), it is
+not needed after the socket lookup there.
 
+With TX, it does look like we could get rid of it via the
+virtio_vsock_sock.
+
+Best,
+Bobby
 
