@@ -1,175 +1,153 @@
-Return-Path: <linux-hyperv+bounces-7457-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7458-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2969DC3EBE7
-	for <lists+linux-hyperv@lfdr.de>; Fri, 07 Nov 2025 08:27:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6FFDC401C0
+	for <lists+linux-hyperv@lfdr.de>; Fri, 07 Nov 2025 14:28:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C2A524E43B1
-	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Nov 2025 07:27:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EED1E189BC52
+	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Nov 2025 13:27:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89B512FB602;
-	Fri,  7 Nov 2025 07:27:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 975AD2DE6F1;
+	Fri,  7 Nov 2025 13:27:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gHF4IDjh"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Fjst45OB"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0087D28F5
-	for <linux-hyperv@vger.kernel.org>; Fri,  7 Nov 2025 07:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E322DCF5D
+	for <linux-hyperv@vger.kernel.org>; Fri,  7 Nov 2025 13:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762500449; cv=none; b=j7NRe06WJvSqb7j0OWmfap9FSFo2SlJ/pX3+mli2vRdxYupdeetaP13qitXISPTPIQE1xzVIyJgQ97s1HV+WRxP30zBwwsIXBDTIBFNWXEw34aG9y4EDXTYnKT1/mevwDHB98YImfhDx+f+ury910/uk875pj1H0bKpUjYUaKag=
+	t=1762522044; cv=none; b=Fx6+vZp7KKwenrMFMvCn0SO/M4VN7Mwp9RQArppo7yJcnB3j/m3uDhr/sVvJ7L1XH0gypvB7+kQqP6Yenrn4kqrfxIM5THUEQuFvb9c1/1hqCpxDoynyCQJztMvYPa8GzbUD6On6S7Vwd19cg2QaVtlyqsY5iL6xxv08SY7SxFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762500449; c=relaxed/simple;
-	bh=edsvEsw+C1MkNyld9yt/hW0PhgdDYzpXUwgbBvSlq6g=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jLfSf9P6t+LU/P9vooJnCG5K5MxFSdz+QKyunr8T1lpBk6d/PzBI6gpGOjtW1pEcSxws3LSbpqHoXRoonlT6Bdt1mAFDFotNy/UNbi+1XAG/XogkEAcyw/eorbrJStw3HWZh6qdkL2RPwSxN5XDswQOKIfRBm0kxfdflZVtrC3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gHF4IDjh; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7b18c6cc278so78417b3a.0
-        for <linux-hyperv@vger.kernel.org>; Thu, 06 Nov 2025 23:27:27 -0800 (PST)
+	s=arc-20240116; t=1762522044; c=relaxed/simple;
+	bh=xOgIgUMI+BwDiOq38R4O8HSLT6TrQvpp/zCzKFcAC5M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eXsc38x0tJ3ugnOXD+HBIdaFfjq/ulG2F0NDlG/w0BnO6HNTMIVUO3X6wpky9AOW3ACin4TSMLAcSRd3BvoD2iDTr7N23uo7I2AVLNbybzHQimgBCfkmOhu7rCv/3kpxjLZuTIWmGrmi2/AmK5Fhee5GpmiyiiW3UAunMErent8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Fjst45OB; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-429b895458cso400292f8f.1
+        for <linux-hyperv@vger.kernel.org>; Fri, 07 Nov 2025 05:27:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762500447; x=1763105247; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Pm6klTaX1rSZ57/FJIJfQv26XKgYx42g4E8YZTbf4DA=;
-        b=gHF4IDjhEUMy2siJcRdjGn/KF3mc3h2xbscek/d37AOWSrKcPyvuNehfJKDyTL9O7y
-         4JbIPlaJzEyLXeyDB1FyJmE4GnCt1mf/r+tmNxXCjWkxyto7n70uEMlQnbavsG4+oZTb
-         8ULYYaVWLFPB/fuscNYNLQvaGi3er3iAxUrqXA2YdGIgZHrp4FLUfNkdfJDPz6uneGMN
-         qBd1twCvwF++thjSSeKsT7IpYhMzdQ18OvqWUbIy76swfmMke+MWznc4GaGcurkGkgTm
-         64gfhFy9U/3O2qiUCmr2tk08Q/wx06WmdcBG/kjHWOzDwNjAS5DzWmSsOk2uV1u7+vcb
-         Fowg==
+        d=suse.com; s=google; t=1762522040; x=1763126840; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gpDBdHac69yHdTxfS3btmvWgT1JTkvIR7tXnz5+sQMg=;
+        b=Fjst45OBz35+4Bm29+PhAJ7YQZmD2SYiwbQ/UXlJDFH30ESQ2Ao83E3ervY7mhqzLD
+         CIiKqEQ1iZq6yMKqUwtmUEfknXQxMs/3ZQGzLgqsVBAGKfUC4CtCc0U2GQCg+ntn8hLP
+         8GNQe0SdW00QkMOhlAKEWPymraLckuZarBm3lBlRVBx5ttT75/hHe8Qwv5/vpehTD2lJ
+         7jTrIR78ILxK8zULOBRDB4capkWnpXH7kzrNTwfrDG0+yR+Jv95NOtdOh2Rai8SnrSyC
+         Cb8AIVQ3q+vuegvMPTl09EBIaH8eeqb+Xqo2OQTKtaCNmcUJzU0d59lNhXaTQtb8eAzH
+         2ffQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762500447; x=1763105247;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pm6klTaX1rSZ57/FJIJfQv26XKgYx42g4E8YZTbf4DA=;
-        b=S1VJbt302jdw9Cv5e0b2wCmyxiYChDkRUimu74fx8hHAQrfloOvd0FLquFzWwMIUXq
-         GVRhyDg6rDEYsA4GG4Ikd88EkYG4/Bi/fzV7wPlzlcWFdfiQIu9v1C9dI8KhN9cdzQIf
-         2f9ugJGonPXvY1+kxKLnpLFJm/qJamaBQEIL1NBnN9hQkEYS2pitahtFDUxKJzKd4Hlo
-         amdlpCGj0nzoQdi7HtpBBUI84q+KPidpoduoZ2L8b4s3BO6/PKzAPm9uoTBuQuex/BsG
-         8nJTZW/bhXebuNUsqeFHbqvFvfbSet6Jh1ted60L8kJsVXLzdNzmGAauuL1IlqSoFoqN
-         EKVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVjYsp73VQNeb9uP7aibAspA9+Mtt7FoKi02mJpb8M9H5EDK/5Y1SC3bBQUUsfam/kg4ZY+0qtoLimpSeQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpTMZJKSmEWmS/uW4PFMa8zMKIuACDR3p0ZTJwd61X5YZnLfze
-	UUS21hJMP4eMnBURT3SA5oYwUAoG0JsC8lHEES3Jt5cKI7wep4kqjC4y
-X-Gm-Gg: ASbGncsS+YULINyGvIlilxJnHDghzryZj1muJSdT6sXJBE1qNeep8tBCEyeP1ykI4if
-	2CmRvcvOHyPx+pNWTBObeSRSCpXKdJq+c+dz66iO7WlrpmzXAjmKjd/DSCoeqcpBPkKcXmj3hEb
-	ZTcO7zcBvFe625H4bwfhe8PNtEoz3zxPDrWi46lCNUIxUvp4UXZYtJeOYTZ3gWEmXzWBIFfOMky
-	g0mEIL2EXJ49/lmiCe2XmD7PucY8jB6eV/50h7LXDwhDYpOJB5eOqWhipOYV42coUff05apLU56
-	aRbasA8SN80XVSnc5sRtEuF2OFJ6IjnVQrk5AuzoBoGmGdWn70LqUdLp4ClFiup2J9uzAArfdh1
-	F08HeLZkljQlsEWMs6c4IquyEc1QM2aF/p8WqwBG25/C68rJUchk6IeOy+pYsuyWKZOjb8VXRDh
-	xryicE0EG4HDk5TANp4MGwkyJoi1g14QLF8FvW1l32POH+UHAAqtX52EpFHoAPgN7N9K2BJw==
-X-Google-Smtp-Source: AGHT+IFO8f3zSjdykqf1Kr0gxE3ErDzCv2okjONO6xVq4LBpyclJaVAQQcXbM33ML2tW+E89S1xQpQ==
-X-Received: by 2002:a17:90b:2b43:b0:340:d1a1:af6d with SMTP id 98e67ed59e1d1-3434c59666cmr2511464a91.36.1762500447252;
-        Thu, 06 Nov 2025 23:27:27 -0800 (PST)
-Received: from ?IPv6:2401:4900:88f4:f6c4:d67f:d090:f2ee:1569? ([2401:4900:88f4:f6c4:d67f:d090:f2ee:1569])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-341d13a6031sm2386518a91.6.2025.11.06.23.27.21
+        d=1e100.net; s=20230601; t=1762522040; x=1763126840;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gpDBdHac69yHdTxfS3btmvWgT1JTkvIR7tXnz5+sQMg=;
+        b=BAhcRVsXYq3fZIFOCVYTyy3o7hr4ZKnOXfHl7/61ooA4BFF+wEGYkFs+JMKrb8H1lS
+         ZvumO7dRga764Y39KR2iOn7zK+G2u47cgWN7UWrHWgc+KUnbXoToQESLOrJFY/SyMMEr
+         WoV7Cg9FaYh4SLJ5xBQazXCLxQeCnWmS72+51XbPjGUC4cKHeq0frXmLYvSn7dtu0xjn
+         YKWJpTiaHy1SHIu3Hx3kFjHREyDlJ7pTNvmZtSKeB9qWKBLyxtadT+OKJuY/J5ZSPqXk
+         oKJzqYONLq+Bu67UFhBJwx3hocPX2zmLl27oRIEfYlSLQqGtPsimI78+1KvmW+wq9CVN
+         PJPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUeU+Cj5YAcoI507f9A1D4dBgO5nvFOphwMYRIr76w9YFzICWVBfav7Z9eFoPurnSVlbmMTfarLw6Uv3DE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzn5oYkGbALf5P4gZ4QLhn8X+wpLk+TbM1sqrEBTQTiR4E5HtR5
+	57wdlRci0WHSjxiDY0jpYMmoza9322kiZjoPC7iKJmOVo6S4PzjK7Jol6GFNlgvP8Lk=
+X-Gm-Gg: ASbGncuWrqHvcqtOZChTeokDE1tyyaqgXGyAiPqhIca3LYL3bjbB6yozDECUcWL6Mtg
+	YuU7v+21+fVv1pjMSnqd/8CGGD5Qd3cc/lRqG9ShMUUvlB27NpGZeZzcZ7HnrTe+6nooGYerg0c
+	LIxyAZMVDyXStYLzIPLmRELhh/Nmj7upv5I38kPFK565Xy+fjPc9lL/R3hrrcvr55IiIjB4aH76
+	degKK8ExuVXCMcb7K+4QBR+UYHb4AovtNLeSoY4s4hHD5OyGTWtTQZncxASlrcRex3LkSTiOYL5
+	9SsaD3tu2uV2WebztjI+wCrFyn7mncT/3ZsXwWV3ddlYe1K5Ssbvl5vX72NcZ5y+Vdk08zZ0q/x
+	WoMk/OWFnDpG8QCBuxuK9bEvvhqupgSXOAgptPd1FduuMUjRN/DZuN7mMJb7jDIuvjEooLyA6zg
+	teXDppJGM23r2wsuQRGlKBUX4P
+X-Google-Smtp-Source: AGHT+IGXoQU2aKwjfhm9zFbD1wEw86QWRNpD8ObJ2BhZ4tbaRurd6UaGdy791fVPME62ucuMSvHuLQ==
+X-Received: by 2002:a5d:5d06:0:b0:427:921:8985 with SMTP id ffacd0b85a97d-42ae5ac206bmr2453743f8f.40.1762522040253;
+        Fri, 07 Nov 2025 05:27:20 -0800 (PST)
+Received: from localhost.localdomain ([2a00:6d43:105:c401:e307:1a37:2e76:ce91])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b29e4b9bdsm907220f8f.32.2025.11.07.05.27.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Nov 2025 23:27:26 -0800 (PST)
-Message-ID: <cb130473feb7b02a85c210df192fc6482ff4fa35.camel@gmail.com>
-Subject: Re: [Intel-wired-lan] [PATCH v3] net: ethernet: fix uninitialized
- pointers with free attribute
-From: ally heev <allyheev@gmail.com>
-To: Przemek Kitszel <przemyslaw.kitszel@intel.com>, Alexander Lobakin
-	 <aleksander.lobakin@intel.com>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>, Andrew Lunn	
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet	 <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni	 <pabeni@redhat.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang
- Zhang	 <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui	
- <decui@microsoft.com>, Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
- 	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, Dan Carpenter	
- <dan.carpenter@linaro.org>
-Date: Fri, 07 Nov 2025 12:57:18 +0530
-In-Reply-To: <afa219b7-9ce3-4da8-a339-8f363d77824e@intel.com>
-References: 
-	<20251106-aheev-uninitialized-free-attr-net-ethernet-v3-1-ef2220f4f476@gmail.com>
-	 <575bfdb1-8fc4-4147-8af7-33c40e619b66@intel.com>
-	 <00748f83a8ae688b7063f36844e38073d29b5e19.camel@gmail.com>
-	 <afa219b7-9ce3-4da8-a339-8f363d77824e@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1+deb13u1 
+        Fri, 07 Nov 2025 05:27:18 -0800 (PST)
+From: Marco Crivellari <marco.crivellari@suse.com>
+To: linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org
+Cc: Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Michal Hocko <mhocko@suse.com>,
+	"K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH] mshv_eventfd: add WQ_PERCPU to alloc_workqueue users
+Date: Fri,  7 Nov 2025 14:27:12 +0100
+Message-ID: <20251107132712.182499-1-marco.crivellari@suse.com>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2025-11-07 at 06:39 +0100, Przemek Kitszel wrote:
-> On 11/6/25 17:05, ally heev wrote:
-> > On Thu, 2025-11-06 at 15:07 +0100, Alexander Lobakin wrote:
-> > [..]
-> > > >=20
-> > > > diff --git a/drivers/net/ethernet/intel/ice/ice_flow.c b/drivers/ne=
-t/ethernet/intel/ice/ice_flow.c
-> > > > index 6d5c939dc8a515c252cd2b77d155b69fa264ee92..3590dacf3ee57879b38=
-09d715e40bb290e40c4aa 100644
-> > > > --- a/drivers/net/ethernet/intel/ice/ice_flow.c
-> > > > +++ b/drivers/net/ethernet/intel/ice/ice_flow.c
-> > > > @@ -1573,12 +1573,13 @@ ice_flow_set_parser_prof(struct ice_hw *hw,=
- u16 dest_vsi, u16 fdir_vsi,
-> > > >   			 struct ice_parser_profile *prof, enum ice_block blk)
-> > > >   {
-> > > >   	u64 id =3D find_first_bit(prof->ptypes, ICE_FLOW_PTYPE_MAX);
-> > > > -	struct ice_flow_prof_params *params __free(kfree);
-> > > >   	u8 fv_words =3D hw->blk[blk].es.fvw;
-> > > >   	int status;
-> > > >   	int i, idx;
-> > > >  =20
-> > > > -	params =3D kzalloc(sizeof(*params), GFP_KERNEL);
-> > > > +	struct ice_flow_prof_params *params __free(kfree) =3D
-> > > > +		kzalloc(sizeof(*params), GFP_KERNEL);
-> > >=20
-> > > Please don't do it that way. It's not C++ with RAII and
-> > > declare-where-you-use.
-> > > Just leave the variable declarations where they are, but initialize t=
-hem
-> > > with `=3D NULL`.
->=20
-> +1
->=20
-> > >=20
-> > > Variable declarations must be in one block and sorted from the longes=
-t
-> > > to the shortest.
-> > >=20
-> > > But most important, I'm not even sure how you could trigger an
-> > > "undefined behaviour" here. Both here and below the variable tagged w=
-ith
-> > > `__free` is initialized right after the declaration block, before any
-> > > return. So how to trigger an UB here?
-> >=20
-> > It doesn't occur here. But, many maintainers/developers consider it a
-> > bad practice because if the function returns before initialization or
-> > use of `goto` can cause such behaviors.
->=20
-> we were bitten by that already, scenario is as follow:
-> 0. have a good code w/o UB and w/o redundant =3D NULL
-> 1. add some early return, say:
-> 	if (dest_vsi =3D=3D fdir_vsi)
-> 		return -EINVAL;
-> 2. almost granted that person adding 1. will forget to add =3D NULL to al=
-l
-> declarations marked __free
->=20
-> >=20
-> > Here though, the definitions are still at the top right? Maybe I could
-> > just sort them
->=20
-> we discourage putting any operations, including allocations, that may
-> fail into the declarations block
->=20
+Currently if a user enqueues a work item using schedule_delayed_work() the
+used wq is "system_wq" (per-cpu wq) while queue_delayed_work() use
+WORK_CPU_UNBOUND (used when a cpu is not specified). The same applies to
+schedule_work() that is using system_wq and queue_work(), that makes use
+again of WORK_CPU_UNBOUND.
+This lack of consistency cannot be addressed without refactoring the API.
 
-Makes sense. I will just initialize them with NULL then
+alloc_workqueue() treats all queues as per-CPU by default, while unbound
+workqueues must opt-in via WQ_UNBOUND.
+
+This default is suboptimal: most workloads benefit from unbound queues,
+allowing the scheduler to place worker threads where they’re needed and
+reducing noise when CPUs are isolated.
+
+This continues the effort to refactor workqueue APIs, which began with
+the introduction of new workqueues and a new alloc_workqueue flag in:
+
+commit 128ea9f6ccfb ("workqueue: Add system_percpu_wq and system_dfl_wq")
+commit 930c2ea566af ("workqueue: Add new WQ_PERCPU flag")
+
+This change adds a new WQ_PERCPU flag to explicitly request
+alloc_workqueue() to be per-cpu when WQ_UNBOUND has not been specified.
+
+With the introduction of the WQ_PERCPU flag (equivalent to !WQ_UNBOUND),
+any alloc_workqueue() caller that doesn’t explicitly specify WQ_UNBOUND
+must now use WQ_PERCPU.
+
+Once migration is complete, WQ_UNBOUND can be removed and unbound will
+become the implicit default.
+
+Suggested-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
+---
+ drivers/hv/mshv_eventfd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hv/mshv_eventfd.c b/drivers/hv/mshv_eventfd.c
+index 806674722868..2a80af1d610a 100644
+--- a/drivers/hv/mshv_eventfd.c
++++ b/drivers/hv/mshv_eventfd.c
+@@ -592,7 +592,7 @@ static void mshv_irqfd_release(struct mshv_partition *pt)
+ 
+ int mshv_irqfd_wq_init(void)
+ {
+-	irqfd_cleanup_wq = alloc_workqueue("mshv-irqfd-cleanup", 0, 0);
++	irqfd_cleanup_wq = alloc_workqueue("mshv-irqfd-cleanup", WQ_PERCPU, 0);
+ 	if (!irqfd_cleanup_wq)
+ 		return -ENOMEM;
+ 
+-- 
+2.51.1
+
 
