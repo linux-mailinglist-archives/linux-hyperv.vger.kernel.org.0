@@ -1,113 +1,107 @@
-Return-Path: <linux-hyperv+bounces-7469-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7470-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id D25B4C415AF
-	for <lists+linux-hyperv@lfdr.de>; Fri, 07 Nov 2025 19:55:27 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B305C41CD7
+	for <lists+linux-hyperv@lfdr.de>; Fri, 07 Nov 2025 23:17:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 98B8C4E3F9B
-	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Nov 2025 18:55:26 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2A38B4E46A4
+	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Nov 2025 22:17:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2CB833B6E6;
-	Fri,  7 Nov 2025 18:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABF8F2E03E6;
+	Fri,  7 Nov 2025 22:17:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gWXqy87Q"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ldRtmr8V"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F20F2F83A5;
-	Fri,  7 Nov 2025 18:54:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D0C62EBDF0;
+	Fri,  7 Nov 2025 22:17:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762541697; cv=none; b=Y627MIPZ+AQqRYct1DMTPFa3uucW9GnPVlhH/b4PB1g1AxaTooN3nJS1gEuXbOb2b2sR30RuSC/9v4ZiZ4hcbyOOxh2kaLQJ9w7VpholhyoGCjJSquwSyrMTbwBCVJ3ONR1h+vlXV9HArh6j9U0forVuXU0hT8etiizqv27Cdrc=
+	t=1762553832; cv=none; b=jaFL+4JqqNmWunxzv7WpbUZSHGNyxSdmE7HyAFi68lsjepiiAQAdK8mnZyxZr8ifhk265Vzk206jxllOa5EsAo4JBeQtO1VOCiMQQVMK+VC8MHFcOON2a+a6f54jc6pnUkLAZuCHnuWKWoPa/cpR904JGYSofjs8Xzfp/RqGf9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762541697; c=relaxed/simple;
-	bh=Gt7M6TvmbPVEnVHc+m2Qlrw4lJaSgvuDjqGiqmRkhQQ=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Enwl/Z8kOgg8UksXG2GesyI31kiDywZ9O+0xngqj0euypq6qING+2N3oPMATjxd3avJaJhdVc93GerIJ/xprbLLtCte4cjEzbFBI+HL5fGw47h6FEXC4gHw1IdrXhGJIhz34ZHnpr1EhnNmSKkTTFd7/63nLP6rsBDd8KM+PlTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gWXqy87Q; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1762553832; c=relaxed/simple;
+	bh=UNQkSdjzAfLy7V0Ul1SWZkO73Cx03JFj5gVUGBp6Vig=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dsNFVxbSjm3+Bu9/fQgQUDtaDrr3ANyvSR9rYueL3crGEIuwGtzxaQNGWtdUymrEcK4+a7I7bYlWaGtwvzaIippY0wu4XbccaZPPry01OynUMiJYf688HcrWiNjkYse6l8JGujXZn8iTRisKeooa2+lxmlk7vatDHnUcBN+RLdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ldRtmr8V; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [192.168.201.246] (unknown [4.194.122.162])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 4AB5B201209F;
-	Fri,  7 Nov 2025 10:54:43 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4AB5B201209F
+Received: from home (unknown [72.191.74.189])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 689D720314A6;
+	Fri,  7 Nov 2025 14:17:09 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 689D720314A6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1762541690;
-	bh=AsvG4/AVmdCT1R9teXGFMlUfCqRmKhnjLGXUPdWX5JE=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=gWXqy87QJctZ8cONqwSbD3oxF1lilgIW6UEqbaGcKCq3uSYhTlVw7GgBkv7j5ZxyB
-	 wge1609GEoSXAa6ugdJ/93Wt0T3mbzlFIVTN1NsgpcAczaJnCIVJO/YW3nZGYNZKl7
-	 encS+zWyeHA6w9MEXSdEg9ZuzPd4zcWufbD4ccpA=
-Message-ID: <b6a7f974-75ee-42fb-944c-e61d1e0238a1@linux.microsoft.com>
-Date: Fri, 7 Nov 2025 10:54:41 -0800
+	s=default; t=1762553830;
+	bh=vuT5qxMTJIwro/wE0kKEkYAYw926ChhRVzHqBGuBObA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ldRtmr8Vy/xnjVRjj19MbPOqarFW0EFcEIBaEM3Dt//ks9hF5/bingeyZVZC4N7k8
+	 PY3g02Z42rv53pPKKMne6+KpexRYeEuouJqpEF3Ur/LA6n2bnx2DiVqK3oF3poRpkH
+	 lyVkjuiT6/MGb9cCTfeh/5ozviv8dH3FfInqLPnw=
+From: Praveen K Paladugu <prapal@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	arnd@arndb.de
+Cc: anbelski@linux.microsoft.com,
+	prapal@linux.microsoft.com,
+	easwar.hariharan@linux.microsoft.com,
+	nunodasneves@linux.microsoft.com,
+	skinsburskii@linux.microsoft.com,
+	mhklinux@outlook.com
+Subject: [PATCH v4 0/3] Add support for clean shutdown with MSHV
+Date: Fri,  7 Nov 2025 16:16:46 -0600
+Message-ID: <20251107221700.45957-1-prapal@linux.microsoft.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
- easwar.hariharan@linux.microsoft.com, Tejun Heo <tj@kernel.org>,
- Lai Jiangshan <jiangshanlai@gmail.com>,
- Frederic Weisbecker <frederic@kernel.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Michal Hocko <mhocko@suse.com>, "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH] mshv_eventfd: add WQ_PERCPU to alloc_workqueue users
-To: Marco Crivellari <marco.crivellari@suse.com>
-References: <20251107132712.182499-1-marco.crivellari@suse.com>
-From: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
-Content-Language: en-US
-In-Reply-To: <20251107132712.182499-1-marco.crivellari@suse.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 11/7/2025 5:27 AM, Marco Crivellari wrote:
-> Currently if a user enqueues a work item using schedule_delayed_work() the
-> used wq is "system_wq" (per-cpu wq) while queue_delayed_work() use
-> WORK_CPU_UNBOUND (used when a cpu is not specified). The same applies to
-> schedule_work() that is using system_wq and queue_work(), that makes use
-> again of WORK_CPU_UNBOUND.
-> This lack of consistency cannot be addressed without refactoring the API.
-> 
-> alloc_workqueue() treats all queues as per-CPU by default, while unbound
-> workqueues must opt-in via WQ_UNBOUND.
-> 
-> This default is suboptimal: most workloads benefit from unbound queues,
-> allowing the scheduler to place worker threads where they’re needed and
-> reducing noise when CPUs are isolated.
-> 
-> This continues the effort to refactor workqueue APIs, which began with
-> the introduction of new workqueues and a new alloc_workqueue flag in:
-> 
-> commit 128ea9f6ccfb ("workqueue: Add system_percpu_wq and system_dfl_wq")
-> commit 930c2ea566af ("workqueue: Add new WQ_PERCPU flag")
-> 
-> This change adds a new WQ_PERCPU flag to explicitly request
-> alloc_workqueue() to be per-cpu when WQ_UNBOUND has not been specified.
-> 
-> With the introduction of the WQ_PERCPU flag (equivalent to !WQ_UNBOUND),
-> any alloc_workqueue() caller that doesn’t explicitly specify WQ_UNBOUND
-> must now use WQ_PERCPU.
-> 
-> Once migration is complete, WQ_UNBOUND can be removed and unbound will
-> become the implicit default.
-> 
-> Suggested-by: Tejun Heo <tj@kernel.org>
-> Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
-> ---
->  drivers/hv/mshv_eventfd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+Add support for clean shutdown of the root partition when running on
+MSHV Hypervisor.
 
-Thank you for the well-written commit message.
+v4:
+ - Adopted machine_ops to order invoking HV_ENTER_SLEEP_STATE as the
+   last step in shutdown sequence.
+ - This ensures rest of the cleanups are done before powering off
+ 
+v3:
+ - Dropped acpi_sleep handlers as they are not used on mshv
+ - Applied ordering for hv_reboot_notifier
+ - Fixed build issues on i386, arm64 architectures
 
-Reviewed-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+v2:
+  - Addressed review comments from v1.
+  - Moved all sleep state handling methods under CONFIG_ACPI stub
+  - - This fixes build issues on non-x86 architectures.
 
-Thanks,
-Easwar (he/him)
+Praveen K Paladugu (3):
+  hyperv: Add definitions for MSHV sleep state configuration
+  hyperv: Use reboot notifier to configure sleep state
+  hyperv: Cleanly shutdown root partition with MSHV
+
+ arch/x86/hyperv/hv_init.c       |  9 +++
+ arch/x86/include/asm/mshyperv.h |  4 ++
+ drivers/hv/mshv_common.c        | 99 +++++++++++++++++++++++++++++++++
+ include/hyperv/hvgdk_mini.h     |  4 +-
+ include/hyperv/hvhdk_mini.h     | 33 +++++++++++
+ 5 files changed, 148 insertions(+), 1 deletion(-)
+
+-- 
+2.51.0
+
 
