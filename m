@@ -1,113 +1,103 @@
-Return-Path: <linux-hyperv+bounces-7460-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7461-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8805CC4063E
-	for <lists+linux-hyperv@lfdr.de>; Fri, 07 Nov 2025 15:35:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A6A6C40653
+	for <lists+linux-hyperv@lfdr.de>; Fri, 07 Nov 2025 15:36:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5C7DF3A87E3
-	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Nov 2025 14:31:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DC293B3605
+	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Nov 2025 14:33:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E553C32AAC2;
-	Fri,  7 Nov 2025 14:31:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 867F6329369;
+	Fri,  7 Nov 2025 14:33:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PUaP2ILJ";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="mLk97YuD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJiKOAMq"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f52.google.com (mail-yx1-f52.google.com [74.125.224.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0719228312F
-	for <linux-hyperv@vger.kernel.org>; Fri,  7 Nov 2025 14:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0D32D780C
+	for <linux-hyperv@vger.kernel.org>; Fri,  7 Nov 2025 14:33:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762525871; cv=none; b=qwGp2+7XeRYFkSLPang+FqRISD6+TPrp01qbBhkfv5wTFpu9y8uor+XHqFFqgBwFA76zEp4bV2kg+pZXkh6bwqdWyX9UNfHU3RO3fMm41mOcta/VHx1PQrbocNaudJtz0SZQlccyLNrNjsY63UhJHBm3nFH/hMOMfbZ4kO9Ii+Q=
+	t=1762526018; cv=none; b=KrDtb0hw+Y6zGSJyH+wQXVtrQNOyREP2Pdv6QuUMqyepT5RSEhh2Ry2JbawoiNy7aEU1JRjc4jV6Tubsb7S7YWg+QFud0E36xC5zycLCqB0Y5TtAtsEYyXWnMZkGXnQklBgRnQ+WU0nIgAw4HqCKxIjZ5TmA93+05i/ZLjgRuI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762525871; c=relaxed/simple;
-	bh=4ACT8X04sb6fAW3+47LxhHcq7/anCem7+kuAeIdPdiU=;
+	s=arc-20240116; t=1762526018; c=relaxed/simple;
+	bh=VYv4VbKIBTMGATkaXkrYMjm0YUGRwfUgEtijjdf3tVg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AffLtG00dMNPCkoOCDam66sm2PiJrkMXb3oI1bwQacRR9kF3i0Cw/dQNk2Wo6/tAtNJJHvvxQrYbG6XuUzU0jBT67/FxNxeOB57roACzmdalYAgWEoR3loo2QJxZEqAyVHgeqNbNjZJ6Fjf+cNOxzmt8vrV5xjntHGeUOTSgUDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PUaP2ILJ; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=mLk97YuD; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1762525868;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xL9UWKNVFseJyc8ZZEBbh4eUS+K/pGNVZX2OMNyP0Mg=;
-	b=PUaP2ILJ0eQ7Swrjje1R9Enx6fEu/eFwiizD1/g6u+KeU9oBWkJ2BXtSQyVAEUtWpYd6TV
-	Mo4Ps0o+PCM3J8q+jzOAsI3j04Im1OqJzxkf3h1dRex4m4UBMtvtfWWrTWOvbNfeIcTQxL
-	hwWce1AbQ77tbZbZogywWSaGQtd5AfE=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-460-dtr_SmyhM72JJZAFUZyLLQ-1; Fri, 07 Nov 2025 09:31:03 -0500
-X-MC-Unique: dtr_SmyhM72JJZAFUZyLLQ-1
-X-Mimecast-MFC-AGG-ID: dtr_SmyhM72JJZAFUZyLLQ_1762525862
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-b72a11466c2so92878566b.1
-        for <linux-hyperv@vger.kernel.org>; Fri, 07 Nov 2025 06:31:03 -0800 (PST)
+	 Content-Type:Content-Disposition:In-Reply-To; b=VAZO+xUusaAnj5ml9WLpvXz/s/ZkXMibZnp6ysrsTxFMIZXk7vbISIi4C8J5/moMpByW6U5WmVmDJWpU3Q+FdKQIJbPX6zVfJY+JrIkf9qPBDCEv2k7BvrcwJivodvpYOmHsZEn3SaQNJR/eMqKX9hfYIiFiWLSVENzlrAFnrSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CJiKOAMq; arc=none smtp.client-ip=74.125.224.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yx1-f52.google.com with SMTP id 956f58d0204a3-640b4a05c1cso761254d50.3
+        for <linux-hyperv@vger.kernel.org>; Fri, 07 Nov 2025 06:33:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1762525862; x=1763130662; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1762526015; x=1763130815; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xL9UWKNVFseJyc8ZZEBbh4eUS+K/pGNVZX2OMNyP0Mg=;
-        b=mLk97YuDYnfIMKSd3JKJTZrltUK5pFbg40ErvP8RuWFTwQaOgCdWIEABTiQkxTvgXS
-         IN+8xcaiO2Wz70H8leqWjgwlAEPtfBF3tc6Z+k9ZLfvPbevMmJr1cf/HTHrx+xhWNy/N
-         SfvR8k3VQSudhECmQeU+1VtiePzpZ1tjOwtPWXn4HLsfEOh+/o6rgNlYLYjXyjluVs2X
-         bKmdLt9Rq6A1RIBuHeJ39twkX3f+84ZaJyagUzUEfANjCBv+sGJ5w6efmik0heIpsSOn
-         OiNEPO/8OI1eLrPOHRWuRR7I8VfRE7+ynJEsWqEY3HVsZCqt14548/7O9I06rwb9mArS
-         DpyQ==
+        bh=BVuiPgxoIdFU9eK0ffLkE96ijOOEBPKS5XMimJNBPpY=;
+        b=CJiKOAMqKo5D/1mQZK/h+5JUwB1sEFbxe7da0jogRS2cdglc4CZAXt5rzdN8HmCjGE
+         tgP4SJRVa0+xqTjl71qWyhEuCYikoE9ZbY1xXX+BU1brjW/tlzk+nUqhmxH4hVfNZDdr
+         wX+gYYNFv7MeHydzMVO2QhwWc34+dwGTJpXHfcUFFKwjX9zblxMY7qJ/Vci6Ygn/hPz4
+         3RUGu8DWjp0BWdJSVAqZgSIN/Op1d5qMMeGSCj6YBl9k+Zvj6B5xTsp1G7fx3n+BgyOU
+         bHaA6FmaNwn1U49b6340jedPawyxnkxZGvCo1PJ3TZQqKW3lZQsxznTENmRO0RnRixPW
+         2Z+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762525862; x=1763130662;
+        d=1e100.net; s=20230601; t=1762526015; x=1763130815;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xL9UWKNVFseJyc8ZZEBbh4eUS+K/pGNVZX2OMNyP0Mg=;
-        b=nvgn03KHtSwDCsAABAJtaELzAHmOZlvoK/Xl2FXq8AhEIaRcU4fHI3jS3ZH+ts+1DT
-         o6EINf4xtAVS4VvOztWsT2HmsopBYUMEAYmS5pj06HZtIJAnCXbo7VupZ3aSkZZqoG9O
-         WU8+/kmhHjbHL3f1JCeyd45QY9BxQs8lTYZa4Qa3bk7Q+ARbKMJxiyooXu8selWeUNvS
-         hh4XhcVQGx8Gd/dTX2jlGnpYUCbGyqMmLtdpPz57frlL1DYxhw02lcJm5/H4euT8IsAJ
-         CsGEa9RjVpSBE2el1hT94OX02oAwTcM0wrknjhZd/EZJoEYATbS5AfXOajSCuCT/Qvg/
-         aMvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWv5bhF0EwrnVKkmK+dZol4bwd6YQ8tmYaO0YyG4aHraiSJ5CglFmcx/kQr3czefEERo1St0bb1ecPU/rM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6hn2mvWfsu1kLkqkSKX/PkvF9RYQXKbawA2k3kjsSzmI2Kmms
-	6eUaDaXDgm0hUwV8N4oLshMFQCJpOYW/WgBIFFw05lKXc3h5pD4qlKsQA4hBbq9OuW2Qfccj7Pp
-	xrCxFc71QxSJGSwksvT1ZxKHe/6uIvbRIEFX46JGR3/0Cq5nGQCsDb300kp90xz2M5w==
-X-Gm-Gg: ASbGncsUWw6E9KE3nZEABCm7g95AY2j1u+RScgZaemc/HMRsWPCuenDjIcWRiJLQRp5
-	g7IbpeHFCDu5IEE5r16gKIBdLcOqD41Ekj+8007PZFUodSfUgYk5Dff0zcYbFfe8B6YH8s9mGV5
-	AVG3OXChvZGAQEpNl/yC83AhBvyI+QhjQT8oqRV1U+R83utFVMlZPz+GxNZM3uxpTf5aF+CY1t6
-	TSKHZXFaWomMvEOK67vYRk8e6mQohc4/YSQnaVz4b0xpem4SF11rWzcDZzKa4U5B8Y6n97KezVx
-	1FOdzHLL1ehai7/2eJBLa/tUw1BTXID52gcDvlXV/kDVNyrYz44fdvnW2GpmKfqCz1knWkdTmzq
-	9Z3P1baDqhQxRSqjrGmKE0SEyGjgGQWmrlOgEyv6LU7f6nn5djsI=
-X-Received: by 2002:a17:907:9713:b0:b70:b4db:ae83 with SMTP id a640c23a62f3a-b72c0db4a61mr338300166b.60.1762525862113;
-        Fri, 07 Nov 2025 06:31:02 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFVGP6jVhYiYdDeDEvDFwhwEthJq43aCkNDIhOMB5uynFpxGPUKrXfFtjd4lbRPq2WOuVI1vw==
-X-Received: by 2002:a17:907:9713:b0:b70:b4db:ae83 with SMTP id a640c23a62f3a-b72c0db4a61mr338295766b.60.1762525861624;
-        Fri, 07 Nov 2025 06:31:01 -0800 (PST)
-Received: from sgarzare-redhat (host-79-46-200-153.retail.telecomitalia.it. [79.46.200.153])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b72bfa11295sm256401966b.67.2025.11.07.06.30.59
+        bh=BVuiPgxoIdFU9eK0ffLkE96ijOOEBPKS5XMimJNBPpY=;
+        b=slI0upNYykLAo0BT8y4TuFVLRbFsnUAPHSQgo1jT7tjoSwWwHqLbEGbB6PcOcqAZxp
+         LBP+qZEbG6gcscEqexI9x35WkbgVp9IHJzkGvLAcpuQvoWgSeUD8yvclhnGtYj6n+g/1
+         bGAbWpxg0q9MsfVkk78iIpabvYLthGFcfpozkja9gRDNvRIU3yOqYme1CNJ+w0Lhp44I
+         fPBhROnbO4kzGuYoAGo/UeZxhtCe6mQpYfDUuvCxJ0tzpabdtllr/GiSp+cAr6kj1pP/
+         62xL2gQPx5PB1hT3m1Qtx+A9jhYQO63fbTgrqPvQLmz8OOrWqGSSLjdKt1JfBxgYPZdg
+         jjhg==
+X-Forwarded-Encrypted: i=1; AJvYcCXOhPtwOv3hsH/1C1jVOqJ3l7yEPWrUA92NWW55BLILZg+9wQ5RvbIUVEmaNx9roEPYoxhjKVnsyqkzMqs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWNPcWQqTdBKoB0lLY1sDXC2Hah9cCqeZRqvwLK156cyH+KLYA
+	PgwiU8GTvG+WDOuoAykLfycsWuMx2y0+KmZcd1X/tutA4BJjDEeQDBad
+X-Gm-Gg: ASbGncvtEmntiUuZoLJmOs287yZslCGH65/GtddpCCmrTd+4J/Kvqeb+/iqUFegfP3w
+	Hipjeighjxky9OpXaiNfhrwnji2W/rWmqwT9GMdDnhwLq0kOzIOe1uqHJ3uwIZ0iteT+QNFbehO
+	mRZpxgjC/1eGXFknQHj1byzzZP0PeJUGZX9OqqNn3jI8qSpVnlpOrfxkKDZs6LBcFtwgbZCuUfK
+	ufcgHHqL7tGUhyj2fTaWKyLrL6vDjght4iCrtNHio+xXUZN25N0WHysWTl9s4IAXXrz8J4gd+8N
+	JxefzoHJjjnj7Vc1ZUKs2hpyQsIbnJ+enVfjPUj85TtqbnbEU9avGk3HlBxCvg26FwTNcunTMlr
+	0oVruOdxmuLUWlidsa/6KU0Pkw805TIWI2o9zSz2r2Ep+jlWHpgePkspUms79Jd338rJjvTLxR5
+	D1YbiDPIcqhvqZE49aagAvHf3UpgwivhNn
+X-Google-Smtp-Source: AGHT+IFGSfosbX24aGud2tUIAN0TjKPBi0xBs/kxp0rskWuLz9Gqspfd/w8KLNX31uQmkNqo82qJIQ==
+X-Received: by 2002:a05:690e:4183:b0:63f:5785:a201 with SMTP id 956f58d0204a3-640c4170b06mr2559782d50.15.1762526015073;
+        Fri, 07 Nov 2025 06:33:35 -0800 (PST)
+Received: from devvm11784.nha0.facebook.com ([2a03:2880:25ff::])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-640c72fa3aasm605605d50.6.2025.11.07.06.33.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Nov 2025 06:31:01 -0800 (PST)
-Date: Fri, 7 Nov 2025 15:30:58 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Bobby Eshleman <bobbyeshleman@gmail.com>
-Cc: Shuah Khan <shuah@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
-	Bryan Tan <bryan-bt.tan@broadcom.com>, Vishnu Dasa <vishnu.dasa@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, berrange@redhat.com, Bobby Eshleman <bobbyeshleman@meta.com>
+        Fri, 07 Nov 2025 06:33:34 -0800 (PST)
+Date: Fri, 7 Nov 2025 06:33:33 -0800
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Shuah Khan <shuah@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	berrange@redhat.com, Bobby Eshleman <bobbyeshleman@meta.com>
 Subject: Re: [PATCH net-next v8 06/14] vsock/virtio: add netns to virtio
  transport common
-Message-ID: <4d365ifyw5ncyboonznnnm6ua7psyt3ripzpvtyd35qa5zsgwv@f2kfgzgoc26c>
+Message-ID: <aQ4DPSgu3xJhLkZ4@devvm11784.nha0.facebook.com>
 References: <20251023-vsock-vmtest-v8-0-dea984d02bb0@meta.com>
  <20251023-vsock-vmtest-v8-6-dea984d02bb0@meta.com>
  <hkwlp6wpiik35zesxqfe6uw7m6uayd4tcbvrg55qhhej3ox33q@lah2dwed477g>
@@ -118,118 +108,53 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <aQ1e3/DZbgnYw4Ja@devvm11784.nha0.facebook.com>
 
-On Thu, Nov 06, 2025 at 06:52:15PM -0800, Bobby Eshleman wrote:
->On Thu, Nov 06, 2025 at 05:20:05PM +0100, Stefano Garzarella wrote:
->> On Thu, Oct 23, 2025 at 11:27:45AM -0700, Bobby Eshleman wrote:
->> > From: Bobby Eshleman <bobbyeshleman@meta.com>
->> >
->> > Enable network namespace support in the virtio-vsock common transport
->> > layer by declaring namespace pointers in the transmit and receive
->> > paths.
->> >
->> > The changes include:
->> > 1. Add a 'net' field to virtio_vsock_pkt_info to carry the namespace
->> >   pointer for outgoing packets.
->> > 2. Store the namespace and namespace mode in the skb control buffer when
->> >   allocating packets (except for VIRTIO_VSOCK_OP_RST packets which do
->> >   not have an associated socket).
->> > 3. Retrieve namespace information from skbs on the receive path for
->> >   lookups using vsock_find_connected_socket_net() and
->> >   vsock_find_bound_socket_net().
->> >
->> > This allows users of virtio transport common code
->> > (vhost-vsock/virtio-vsock) to later enable namespace support.
->> >
->> > Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
->> > ---
->> > Changes in v7:
->> > - add comment explaining the !vsk case in 
->> > virtio_transport_alloc_skb()
->> > ---
->> > include/linux/virtio_vsock.h            |  1 +
->> > net/vmw_vsock/virtio_transport_common.c | 21 +++++++++++++++++++--
->> > 2 files changed, 20 insertions(+), 2 deletions(-)
->> >
->> > diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
->> > index 29290395054c..f90646f82993 100644
->> > --- a/include/linux/virtio_vsock.h
->> > +++ b/include/linux/virtio_vsock.h
->> > @@ -217,6 +217,7 @@ struct virtio_vsock_pkt_info {
->> > 	u32 remote_cid, remote_port;
->> > 	struct vsock_sock *vsk;
->> > 	struct msghdr *msg;
->> > +	struct net *net;
->> > 	u32 pkt_len;
->> > 	u16 type;
->> > 	u16 op;
->> > diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
->> > index dcc8a1d5851e..b8e52c71920a 100644
->> > --- a/net/vmw_vsock/virtio_transport_common.c
->> > +++ b/net/vmw_vsock/virtio_transport_common.c
->> > @@ -316,6 +316,15 @@ static struct sk_buff *virtio_transport_alloc_skb(struct virtio_vsock_pkt_info *
->> > 					 info->flags,
->> > 					 zcopy);
->> >
->> > +	/*
->> > +	 * If there is no corresponding socket, then we don't have a
->> > +	 * corresponding namespace. This only happens For VIRTIO_VSOCK_OP_RST.
->> > +	 */
->>
->> So, in virtio_transport_recv_pkt() should we check that `net` is not set?
->>
->> Should we set it to NULL here?
->>
->
->Sounds good to me.
->
->> > +	if (vsk) {
->> > +		virtio_vsock_skb_set_net(skb, info->net);
->>
->> Ditto here about the net refcnt, can the net disappear?
->> Should we use get_net() in some way, or the socket will prevent that?
->>
->
->As long as the socket has an outstanding skb it can't be destroyed and
->so will have a reference to the net, that is after skb_set_owner_w() and
->freeing... so I think this is okay.
->
->But, maybe we could simplify the implied relationship between skb, sk,
->and net by removing the VIRTIO_VSOCK_SKB_CB(skb)->net entirely, and only
->ever referring to sock_net(skb->sk)? I remember originally having a
->reason for adding it to the cb, but my hunch is it that it was probably
->some confusion over the !vsk case.
->
->WDYT?
+> > > diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> > > index dcc8a1d5851e..b8e52c71920a 100644
+> > > --- a/net/vmw_vsock/virtio_transport_common.c
+> > > +++ b/net/vmw_vsock/virtio_transport_common.c
+> > > @@ -316,6 +316,15 @@ static struct sk_buff *virtio_transport_alloc_skb(struct virtio_vsock_pkt_info *
+> > > 					 info->flags,
+> > > 					 zcopy);
+> > > 
+> > > +	/*
+> > > +	 * If there is no corresponding socket, then we don't have a
+> > > +	 * corresponding namespace. This only happens For VIRTIO_VSOCK_OP_RST.
+> > > +	 */
+> > 
+> > So, in virtio_transport_recv_pkt() should we check that `net` is not set?
+> > 
+> > Should we set it to NULL here?
+> > 
+> 
+> Sounds good to me.
+> 
+> > > +	if (vsk) {
+> > > +		virtio_vsock_skb_set_net(skb, info->net);
+> > 
+> > Ditto here about the net refcnt, can the net disappear?
+> > Should we use get_net() in some way, or the socket will prevent that?
+> > 
+> 
+> As long as the socket has an outstanding skb it can't be destroyed and
+> so will have a reference to the net, that is after skb_set_owner_w() and
+> freeing... so I think this is okay.
+> 
+> But, maybe we could simplify the implied relationship between skb, sk,
+> and net by removing the VIRTIO_VSOCK_SKB_CB(skb)->net entirely, and only
+> ever referring to sock_net(skb->sk)? I remember originally having a
+> reason for adding it to the cb, but my hunch is it that it was probably
+> some confusion over the !vsk case.
+> 
+> WDYT?
+> 
 
-If vsk == NULL, I'm expecting that also skb->sk is not valid, right?
+... now I remember the reason, because I didn't want two different
+places for storing the net for RX and TX.
 
-Indeed we call skb_set_owner_w() only if vsk != NULL in 
-virtio_transport_alloc_skb().
-
-Maybe we need to change virtio_transport_recv_pkt() where the `net` 
-should be passed in some way by the caller, so maybe this is the reason 
-why you needed it in the cb. But also in that case, I think we can get 
-the `net` in some way and pass it to virtio_transport_recv_pkt() and 
-avoid the change in the cb:
-- vsock_lookpback.c in vsock_loopback_work() we can use vsock->net
-- vhost/vsock.c in vhost_vsock_handle_tx_kick(), ditto we can use 
-   vsock->net
-- virtio_transport.c we can just pass always the dummy_net
-
-Same fot the net_mode.
-
-Maybe the real problem is in the send_pkt callbacks, where the skb is 
-used to get the socket, but as you mention, I think in this path 
-skb_set_owner_w() is already called, so we can get that info from there 
-in some way.
-
-Not sure, but yeah, if we can remove that, it will be much clear IMO.
-
-Thanks,
-Stefano
-
+Best,
+Bobby
 
