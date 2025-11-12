@@ -1,287 +1,314 @@
-Return-Path: <linux-hyperv+bounces-7527-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7528-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68B8DC5295C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Nov 2025 15:00:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23D7CC52C60
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Nov 2025 15:43:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7C14318991E4
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Nov 2025 13:55:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 82C9342777C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Nov 2025 14:13:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A708146A66;
-	Wed, 12 Nov 2025 13:55:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 717DD27FB18;
+	Wed, 12 Nov 2025 14:13:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fzxacDtT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N6KzZToe";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZaoUjt4L"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2D72264CB
-	for <linux-hyperv@vger.kernel.org>; Wed, 12 Nov 2025 13:55:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D235265609
+	for <linux-hyperv@vger.kernel.org>; Wed, 12 Nov 2025 14:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762955724; cv=none; b=APRAMgo7LioXRtgnU6Hs45Vl8rFOOWbaufE55fGltJKizotMV04mPlvj/Yk8JQITw/jwjAj/WPu/GQ0i8E6IfZko24UxsU+ajap7EnDYa9z8g5YueWFJJO89CqYXKfmKc8MTGgGXibwWW9Xaxn9QlkXB7ZZJXV/jpMZf7JqMkGs=
+	t=1762956827; cv=none; b=IbweuhPReSuxQswnt0In8B9ZGSAuTuil257oBhRqqc8FgAKvy0KI/Ap6ruxxTwLcnVzmoN2vPTqjlVRMxCLhvIjwJdUCW2OnrLgttQn1+n7atnkqv69haK25xIOphq/68tGswcvnUesEi4Dy0Y7+PsGHxGGp16hIXwnwXcQZ44o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762955724; c=relaxed/simple;
-	bh=mQTO3qMBrrbrec+vOaxyEQHikAOjUWJdth7psxqKQd8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eOBZ79HRiN+++WM7iU6verkcqbMsuphVGSOM03OYzr/V42W51dLrA+ltRJ8CiBPLcLLwf2bikKcCdAdeGsbx+iwvnJl9EfcsupRWBXJZLM+xxXyLfkp0PD3GzNID7SUMMkapvEbsS+XlEmtUxFPXL0Dpr88jTfAnEa6UUIU2GaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fzxacDtT; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4ed9c1924adso7362531cf.1
-        for <linux-hyperv@vger.kernel.org>; Wed, 12 Nov 2025 05:55:22 -0800 (PST)
+	s=arc-20240116; t=1762956827; c=relaxed/simple;
+	bh=0efl0X57BhletZnyf/eddvK+jKMzKLs1ot/NC4gKr6k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OcjJDihG46+7qYiPwrd3HObS8Cq74Re2IhL7heJSVPD53Zr/LLOloJSY9P1ta4PG8Wk4YqAgz/IvOw1zbNsNEDXvfvXxoH1l1+/tzJ+AMKpF5ekslb2EmHIn9ImGbNlWsYMJJIJKv8f2XdLEg+7wZHO0h8m65oRYSIj0Cnl5pyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N6KzZToe; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZaoUjt4L; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1762956824;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9EWdL2WpfP4agPf1IrRgcJrlbWTrsDu6O8KsN+miJKM=;
+	b=N6KzZToeLqDgldiMJ8vOskVStiyxYpIy1xkuRIkCYNpciqK85e3WMXWwx5R6VIT6YpYOqu
+	oCKsMCmPjva69JlxNUFUnOUOWUzc7w81x6vPHmCHO63pZnTszMDz+6NhXXpAiRW2hpgbp3
+	w9uRLD8u6PsANbsRrY1WZYsnoqWOwGc=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-392-cwpxlym9Nmqa6TbW649_6g-1; Wed, 12 Nov 2025 09:13:42 -0500
+X-MC-Unique: cwpxlym9Nmqa6TbW649_6g-1
+X-Mimecast-MFC-AGG-ID: cwpxlym9Nmqa6TbW649_6g_1762956822
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4e89f4a502cso23200981cf.2
+        for <linux-hyperv@vger.kernel.org>; Wed, 12 Nov 2025 06:13:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762955721; x=1763560521; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=olHOzv1HDFcRoKcRPLEDHq3xryx1qVQZjsYC+KidFkM=;
-        b=fzxacDtTVBYEo2ig08MTouQLS7EZwDZWtN79+J7Y3ueIH6+g2jBz3ciIGxzFFe+qPf
-         cvHJeMVlJEj66XqA++SQKpwKEp2atrNZhwUnCrIYYbjSjyZe+sM5Jh3QWzmD+tAy8nyF
-         ne5W0rKBRlNVylPNt4VRIVKl1MBKS4Rn1YTZF7W3dazXrzndxjQBQJ9AOcROgxAHxDH7
-         go8wydTVQPpnRFX3QnTfxGNhM9XCe9A0nq5xCq9uUmqHktOnuWKAIj+cbQGxRjVyV9Ng
-         jrNSUkdkChDcrf7ItxeyNY+DC+Fr7jT7f4kE1hz/VCq1aS+70H+iZofrnmgdY4fbZQwY
-         Lo+w==
+        d=redhat.com; s=google; t=1762956822; x=1763561622; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9EWdL2WpfP4agPf1IrRgcJrlbWTrsDu6O8KsN+miJKM=;
+        b=ZaoUjt4LbGisC7sHCt8fYVo7RDIQwON7QQGqtehGQElUOTZ7Yf5RUtbclSHriAICKA
+         BS6Uw8ZVUPH0YZII//EzCg39tvZNe7DXmVf0b+c6gZF5m+eSnewkB7Vh6HunVS7p1QMI
+         sPvTUf+ASxZ/RUigd2lolnVxnD0q3p8ybGuENH01xozrzVeDPrvHw7KkTE2EhPKUKVRS
+         9WdCP9Di5N/P1Ik9t4KTaOJnS8JPpDJ8KoqW69iOlb4IQgHnYQBOtk6QvMoTyohsyI6v
+         37AvF8HNap0kjYo5Km8Kks59WlO7aW4sRXjQqEA78vUKoxjCEjf2EEpk0g++PXiHHNAN
+         Lu+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762955721; x=1763560521;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=olHOzv1HDFcRoKcRPLEDHq3xryx1qVQZjsYC+KidFkM=;
-        b=AlVnuhrFKTAm6Vm4Ne9v6XbAn3fg9Qm7YFPeSBuHRQcBw5KHSLQUVVjbP8GMZBbDZv
-         w1j3bWy3dhNAXTmRskdieX0hRO+ew6YGPU6l8Dik46lJeLU8HaroWmH+EqLytKp1vdm7
-         u838/hjZ+rYk9nbHtWQJzMUW90qJzjYl6c6ssW1bkk7JYmAPrHBHi8TcmQxqW2R3IMoH
-         6e66vpISy2ZvTKe9Y+G0QVjrXXW8b2bzfmBQudblybGvmqk5aIqMb9ih4PZ9Ygfpp8Tf
-         NILobimC/H6/497aAzvxMgsqVi/WMUvJ4QD1qtpqDTjpB0kVKUlE2D4eD2Ybb/eRYpGb
-         fmgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVwLg53I2lAqlZg1nbWO6O9sEyXO/7MhoYlu61jUuR6RCn8A3bA+E0SRFSCsVUBIS6cNgZM9oarQdF6+xs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTsB9lB6zJLuPuizM7g21kILNIj+XSjABvUezJKoLm50TNRMlR
-	1GyYAr4neECYaZAOQf8vBY1njomoE/PbBPRVha6RmqicxRrmk+DVLmFSAUd5Oy0QOFyS5Yy7WHt
-	dNxKPBOB8+GKORl65bTYYT1D4jZaw48IdUtWhkVmA
-X-Gm-Gg: ASbGnctVysaqjrQMSMicq4TkO5zwmafh+s0WX6MCeFOIuA7J8u2Akd8QVhVi7XqtiI6
-	mSCBQfI7fob+l71qaMWe+36nhM2l64BUqZXwebQJjkk8fwjGz19Rc/9qTOQN1fpGnuFaAKD6BA4
-	ydcqB1pOFdcGN59LLaju3Uwj+G8QUEgtrEX8GiTWgrSIzk44RfI3kcwXqXRgty/1CoiKQsbRn9S
-	YGQMUmM+yUWbZqafKtUc6oUuRZR7EhmJ8Mxl9vAm9LZ0drzCG+O3Ocq0/oB9PJnfZ5ydQp+
-X-Google-Smtp-Source: AGHT+IH5mtOTw5ql/3tyCPfaJIqRYelbwEuY2GxwU9SpSn2Er1u7sqEWL7WpBlKzBs9sxmpYzFu7SfnMl4N6pUgTzCk=
-X-Received: by 2002:a05:622a:54e:b0:4ec:f07c:3e73 with SMTP id
- d75a77b69052e-4eddbe1c28amr37326511cf.76.1762955720119; Wed, 12 Nov 2025
- 05:55:20 -0800 (PST)
+        d=1e100.net; s=20230601; t=1762956822; x=1763561622;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9EWdL2WpfP4agPf1IrRgcJrlbWTrsDu6O8KsN+miJKM=;
+        b=qTUEZBNgt+d7Aos+nR608L+rlsTqvN/GwbHJI5fl1z593m4nQgcHeL8sK2i5vCfoAY
+         L+J75Uy2U3vM1BedSvZhmeadHQlGKypGmn0pAB2ZXWhEz7m3jxQNrGGkkZo4ZpImx6P7
+         onDBSVipouEhvQpmyYLFY5MS2SzrTSt0lbTewMfFBVK98wAqazU9BQqIKze8Yxp5RJGC
+         RYFqRveMKihgBuYFBfJ2H+Vp62equNyGJEgYgOe/DEPFd48c4r3Z+mu/+ImTbNeglHme
+         cQeiMbmjouhnPwvSKUancwdXl5Y6TSw6N0G5LT7kTGuMngR7GGnFizTTgtKjadKr6ksE
+         2NoA==
+X-Forwarded-Encrypted: i=1; AJvYcCVKz0eF8Xgh5TzYfWzpLCdiK/BcgHb4StyMZJLE50YCDdnj7F5LtehvH/stjGC0W0/nHxNZ/AOuFa2DYyM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yww2kj9QrG9V5QN2+DOqD1WrIPGezqLfDQE5i4Ble3y93zvF2D9
+	zX5FEjKcWzchTveVrX/F+qIj+TCKv2fl7HFI8Wq8grz8KlyNhaHhbPXiy5nciTuZlL0JCf+354T
+	kugTcw46FnE0lNLEcpKyeDzFKD/cgWDINKgg2RvigpXbFVtl2wLb1qgaBkWNv2W3t7A==
+X-Gm-Gg: ASbGncsa17aPn9z56ta1sf/j0ZG8NP4wBnjjNP7fANXD0m+6sHYNpzEsCSW8WoqzxHL
+	qRdvvJJeE7Mr7KwtIupv5RNj7//EHddeycipv2yUzpLXNAGHtqf4+IGo/qPjB3vGYqFDiOgd11K
+	/PrsVOk0ypj/H8KPXj0zNpT3O+YIUHib4eUYRdwkoRvv4rjq2hM7iQ74ZuR2qFjx8icaoEtW5CB
+	2lSodHozhuTtQUvZSfVGAs1jXt5Mv65Aof/Yw+Fbm2Ox7hh/0vRWjY5GvBkFgYxgAwHIFtFMF+F
+	JmqzgjXiqIsYz3YDOdvqhGK5W9+pMmx+VCW7gP3Mfs64TPLYMdHGPLDAaXzmMutVI0RzjcWeBHv
+	cTLlKhO3m8fykd6P746V22fVRQFicH0q3LkYnNEG0MCxU76uO2nw=
+X-Received: by 2002:ac8:59c9:0:b0:4ed:6fe8:1396 with SMTP id d75a77b69052e-4eddbdd6d1amr37245851cf.77.1762956822168;
+        Wed, 12 Nov 2025 06:13:42 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHDn3sUGixjKRYmWarO18Beo8/5b+a9+r56tGzTb/AmMIrdVHA0QqmPP6HV3IfDjsUZ1ypKuA==
+X-Received: by 2002:ac8:59c9:0:b0:4ed:6fe8:1396 with SMTP id d75a77b69052e-4eddbdd6d1amr37245241cf.77.1762956821641;
+        Wed, 12 Nov 2025 06:13:41 -0800 (PST)
+Received: from sgarzare-redhat (host-79-46-200-153.retail.telecomitalia.it. [79.46.200.153])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4eda578532csm86211281cf.19.2025.11.12.06.13.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Nov 2025 06:13:41 -0800 (PST)
+Date: Wed, 12 Nov 2025 15:13:34 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Bobby Eshleman <bobbyeshleman@gmail.com>
+Cc: Shuah Khan <shuah@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Bryan Tan <bryan-bt.tan@broadcom.com>, Vishnu Dasa <vishnu.dasa@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>, berrange@redhat.com, 
+	Bobby Eshleman <bobbyeshleman@meta.com>
+Subject: Re: [PATCH net-next v9 01/14] vsock: a per-net vsock NS mode state
+Message-ID: <fr76vx3j47n3nfh753z2stwyu6k4lfdkx7zoisusdbiu27azjr@hygsraaern74>
+References: <20251111-vsock-vmtest-v9-0-852787a37bed@meta.com>
+ <20251111-vsock-vmtest-v9-1-852787a37bed@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1762952506-23593-1-git-send-email-gargaditya@linux.microsoft.com> <1762952506-23593-2-git-send-email-gargaditya@linux.microsoft.com>
-In-Reply-To: <1762952506-23593-2-git-send-email-gargaditya@linux.microsoft.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Wed, 12 Nov 2025 05:55:07 -0800
-X-Gm-Features: AWmQ_bluu1-AEflxU_3suMcewGFMw8kM6f7K2JJf4BGWU2evk1xj6w6Ga79O0hY
-Message-ID: <CANn89iL-RJ84WB9W8SoZn6_UMko8sLBb_FEGjjGZTEO+9KOpAg@mail.gmail.com>
-Subject: Re: [PATCH net-next v4 1/2] net: mana: Handle SKB if TX SGEs exceed
- hardware limit
-To: Aditya Garg <gargaditya@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, 
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net, 
-	kuba@kernel.org, pabeni@redhat.com, longli@microsoft.com, 
-	kotaranov@microsoft.com, horms@kernel.org, shradhagupta@linux.microsoft.com, 
-	ssengar@linux.microsoft.com, ernis@linux.microsoft.com, 
-	dipayanroy@linux.microsoft.com, shirazsaleem@microsoft.com, leon@kernel.org, 
-	mlevitsk@redhat.com, yury.norov@gmail.com, sbhatta@marvell.com, 
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	gargaditya@microsoft.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20251111-vsock-vmtest-v9-1-852787a37bed@meta.com>
 
-On Wed, Nov 12, 2025 at 5:11=E2=80=AFAM Aditya Garg
-<gargaditya@linux.microsoft.com> wrote:
+On Tue, Nov 11, 2025 at 10:54:43PM -0800, Bobby Eshleman wrote:
+>From: Bobby Eshleman <bobbyeshleman@meta.com>
 >
-> The MANA hardware supports a maximum of 30 scatter-gather entries (SGEs)
-> per TX WQE. Exceeding this limit can cause TX failures.
-> Add ndo_features_check() callback to validate SKB layout before
-> transmission. For GSO SKBs that would exceed the hardware SGE limit, clea=
-r
-> NETIF_F_GSO_MASK to enforce software segmentation in the stack.
-> Add a fallback in mana_start_xmit() to linearize non-GSO SKBs that still
-> exceed the SGE limit.
+>Add the per-net vsock NS mode state. This only adds the structure for
+>holding the mode and some of the functions for setting/getting and
+>checking the mode, but does not integrate the functionality yet.
 >
-> Also, Add ethtool counter for SKBs linearized
+>A "net_mode" field is added to vsock_sock to store the mode of the
+>namespace when the vsock_sock was created. In order to evaluate
+>namespace mode rules we need to know both a) which namespace the
+>endpoints are in, and b) what mode that namespace had when the endpoints
+>were created. This allows us to handle the changing of modes from global
+>to local *after* a socket has been created by remembering that the mode
+>was global when the socket was created. If we were to use the current
+>net's mode instead, then the lookup would fail and the socket would
+>break.
 >
-> Co-developed-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-> Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-> Signed-off-by: Aditya Garg <gargaditya@linux.microsoft.com>
-> ---
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 37 ++++++++++++++++++-
->  .../ethernet/microsoft/mana/mana_ethtool.c    |  2 +
->  include/net/mana/gdma.h                       |  6 ++-
->  include/net/mana/mana.h                       |  1 +
->  4 files changed, 43 insertions(+), 3 deletions(-)
+>Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
+>---
+>Changes in v9:
+>- use xchg(), WRITE_ONCE(), READ_ONCE() for mode and mode_locked (Stefano)
+>- clarify mode0/mode1 meaning in vsock_net_check_mode() comment
+>- remove spin lock in net->vsock (not used anymore)
+>- change mode from u8 to enum vsock_net_mode in vsock_net_write_mode()
 >
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/=
-ethernet/microsoft/mana/mana_en.c
-> index cccd5b63cee6..67ae5421f9ee 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> @@ -11,6 +11,7 @@
->  #include <linux/mm.h>
->  #include <linux/pci.h>
->  #include <linux/export.h>
-> +#include <linux/skbuff.h>
+>Changes in v7:
+>- clarify vsock_net_check_mode() comments
+>- change to `orig_net_mode == VSOCK_NET_MODE_GLOBAL && orig_net_mode == vsk->orig_net_mode`
+>- remove extraneous explanation of `orig_net_mode`
+>- rename `written` to `mode_locked`
+>- rename `vsock_hdr` to `sysctl_hdr`
+>- change `orig_net_mode` to `net_mode`
+>- make vsock_net_check_mode() more generic by taking just net pointers
+>  and modes, instead of a vsock_sock ptr, for reuse by transports
+>  (e.g., vhost_vsock)
 >
->  #include <net/checksum.h>
->  #include <net/ip6_checksum.h>
-> @@ -329,6 +330,20 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, str=
-uct net_device *ndev)
->         cq =3D &apc->tx_qp[txq_idx].tx_cq;
->         tx_stats =3D &txq->stats;
+>Changes in v6:
+>- add orig_net_mode to store mode at creation time which will be used to
+>  avoid breakage when namespace changes mode during socket/VM lifespan
 >
-> +       if (MAX_SKB_FRAGS + 2 > MAX_TX_WQE_SGL_ENTRIES &&
-> +           skb_shinfo(skb)->nr_frags + 2 > MAX_TX_WQE_SGL_ENTRIES) {
-> +               /* GSO skb with Hardware SGE limit exceeded is not expect=
-ed here
-> +                * as they are handled in mana_features_check() callback
-> +                */
-> +               if (skb_linearize(skb)) {
-> +                       netdev_warn_once(ndev, "Failed to linearize skb w=
-ith nr_frags=3D%d and is_gso=3D%d\n",
-> +                                        skb_shinfo(skb)->nr_frags,
-> +                                        skb_is_gso(skb));
-> +                       goto tx_drop_count;
-> +               }
-> +               apc->eth_stats.linear_pkt_tx_cnt++;
-> +       }
-> +
->         pkg.tx_oob.s_oob.vcq_num =3D cq->gdma_id;
->         pkg.tx_oob.s_oob.vsq_frame =3D txq->vsq_frame;
+>Changes in v5:
+>- use /proc/sys/net/vsock/ns_mode instead of /proc/net/vsock_ns_mode
+>- change from net->vsock.ns_mode to net->vsock.mode
+>- change vsock_net_set_mode() to vsock_net_write_mode()
+>- vsock_net_write_mode() returns bool for write success to avoid
+>  need to use vsock_net_mode_can_set()
+>- remove vsock_net_mode_can_set()
+>---
+> MAINTAINERS                 |  1 +
+> include/net/af_vsock.h      | 41 +++++++++++++++++++++++++++++++++++++++++
+> include/net/net_namespace.h |  4 ++++
+> include/net/netns/vsock.h   | 17 +++++++++++++++++
+> 4 files changed, 63 insertions(+)
 >
-> @@ -442,8 +457,6 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, stru=
-ct net_device *ndev)
->                 }
->         }
+>diff --git a/MAINTAINERS b/MAINTAINERS
+>index 0dc4aa37d903..15c590a571f2 100644
+>--- a/MAINTAINERS
+>+++ b/MAINTAINERS
+>@@ -27098,6 +27098,7 @@ L:	netdev@vger.kernel.org
+> S:	Maintained
+> F:	drivers/vhost/vsock.c
+> F:	include/linux/virtio_vsock.h
+>+F:	include/net/netns/vsock.h
+> F:	include/uapi/linux/virtio_vsock.h
+> F:	net/vmw_vsock/virtio_transport.c
+> F:	net/vmw_vsock/virtio_transport_common.c
+>diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+>index d40e978126e3..f3c3f74355e8 100644
+>--- a/include/net/af_vsock.h
+>+++ b/include/net/af_vsock.h
+>@@ -10,6 +10,7 @@
 >
-> -       WARN_ON_ONCE(pkg.wqe_req.num_sge > MAX_TX_WQE_SGL_ENTRIES);
-> -
->         if (pkg.wqe_req.num_sge <=3D ARRAY_SIZE(pkg.sgl_array)) {
->                 pkg.wqe_req.sgl =3D pkg.sgl_array;
->         } else {
-> @@ -518,6 +531,25 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, str=
-uct net_device *ndev)
->         return NETDEV_TX_OK;
->  }
+> #include <linux/kernel.h>
+> #include <linux/workqueue.h>
+>+#include <net/netns/vsock.h>
+> #include <net/sock.h>
+> #include <uapi/linux/vm_sockets.h>
+>
+>@@ -65,6 +66,7 @@ struct vsock_sock {
+> 	u32 peer_shutdown;
+> 	bool sent_request;
+> 	bool ignore_connecting_rst;
+>+	enum vsock_net_mode net_mode;
+>
+> 	/* Protected by lock_sock(sk) */
+> 	u64 buffer_size;
+>@@ -256,4 +258,43 @@ static inline bool vsock_msgzerocopy_allow(const struct vsock_transport *t)
+> {
+> 	return t->msgzerocopy_allow && t->msgzerocopy_allow();
+> }
+>+
+>+static inline enum vsock_net_mode vsock_net_mode(struct net *net)
+>+{
+>+	return READ_ONCE(net->vsock.mode);
+>+}
+>+
+>+static inline bool vsock_net_write_mode(struct net *net, enum vsock_net_mode mode)
+>+{
+>+	if (xchg(&net->vsock.mode_locked, true))
+
+LGTM, but it seems that some architecture doesn't support xchg on 1 
+byte, e.g. see commit d66a65b7f5d2 ("scsi: elx: efct: Fix link error for 
+_bad_cmpxchg")
+
+So maybe we just need to change the type of mode_locked to int.
+
+The rest LGTM.
+
+Stefano
+
+>+		return false;
+>+
+>+	WRITE_ONCE(net->vsock.mode, mode);
+>+	return true;
+>+}
+>+
+>+/* Return true if two namespaces and modes pass the mode rules. Otherwise,
+>+ * return false.
+>+ *
+>+ * - ns0 and ns1 are the namespaces being checked.
+>+ * - mode0 and mode1 are the vsock namespace modes of ns0 and ns1 at the time
+>+ *   the vsock objects were created.
+>+ *
+>+ * Read more about modes in the comment header of net/vmw_vsock/af_vsock.c.
+>+ */
+>+static inline bool vsock_net_check_mode(struct net *ns0, enum vsock_net_mode mode0,
+>+					struct net *ns1, enum vsock_net_mode mode1)
+>+{
+>+	/* Any vsocks within the same network namespace are always reachable,
+>+	 * regardless of the mode.
+>+	 */
+>+	if (net_eq(ns0, ns1))
+>+		return true;
+>+
+>+	/*
+>+	 * If the network namespaces differ, vsocks are only reachable if both
+>+	 * were created in VSOCK_NET_MODE_GLOBAL mode.
+>+	 */
+>+	return mode0 == VSOCK_NET_MODE_GLOBAL && mode0 == mode1;
+>+}
+> #endif /* __AF_VSOCK_H__ */
+>diff --git a/include/net/net_namespace.h b/include/net/net_namespace.h
+>index cb664f6e3558..66d3de1d935f 100644
+>--- a/include/net/net_namespace.h
+>+++ b/include/net/net_namespace.h
+>@@ -37,6 +37,7 @@
+> #include <net/netns/smc.h>
+> #include <net/netns/bpf.h>
+> #include <net/netns/mctp.h>
+>+#include <net/netns/vsock.h>
+> #include <net/net_trackers.h>
+> #include <linux/ns_common.h>
+> #include <linux/idr.h>
+>@@ -196,6 +197,9 @@ struct net {
+> 	/* Move to a better place when the config guard is removed. */
+> 	struct mutex		rtnl_mutex;
+> #endif
+>+#if IS_ENABLED(CONFIG_VSOCKETS)
+>+	struct netns_vsock	vsock;
+>+#endif
+> } __randomize_layout;
+>
+> #include <linux/seq_file_net.h>
+>diff --git a/include/net/netns/vsock.h b/include/net/netns/vsock.h
+>new file mode 100644
+>index 000000000000..21189d7bdd4e
+>--- /dev/null
+>+++ b/include/net/netns/vsock.h
+>@@ -0,0 +1,17 @@
+>+/* SPDX-License-Identifier: GPL-2.0 */
+>+#ifndef __NET_NET_NAMESPACE_VSOCK_H
+>+#define __NET_NET_NAMESPACE_VSOCK_H
+>+
+>+#include <linux/types.h>
+>+
+>+enum vsock_net_mode {
+>+	VSOCK_NET_MODE_GLOBAL,
+>+	VSOCK_NET_MODE_LOCAL,
+>+};
+>+
+>+struct netns_vsock {
+>+	struct ctl_table_header *sysctl_hdr;
+>+	enum vsock_net_mode mode;
+>+	bool mode_locked;
+>+};
+>+#endif /* __NET_NET_NAMESPACE_VSOCK_H */
+>
+>-- 
+>2.47.3
 >
 
-
-#if MAX_SKB_FRAGS + 2 > MAX_TX_WQE_SGL_ENTRIES
-
-> +static netdev_features_t mana_features_check(struct sk_buff *skb,
-> +                                            struct net_device *ndev,
-> +                                            netdev_features_t features)
-> +{
-> +       if (MAX_SKB_FRAGS + 2 > MAX_TX_WQE_SGL_ENTRIES &&
-> +           skb_shinfo(skb)->nr_frags + 2 > MAX_TX_WQE_SGL_ENTRIES) {
-> +               /* Exceeds HW SGE limit.
-> +                * GSO case:
-> +                *   Disable GSO so the stack will software-segment the s=
-kb
-> +                *   into smaller skbs that fit the SGE budget.
-> +                * Non-GSO case:
-> +                *   The xmit path will attempt skb_linearize() as a fall=
-back.
-> +                */
-> +               if (skb_is_gso(skb))
-
-No need to test skb_is_gso(skb), you can clear bits, this will be a
-NOP if the packet is non GSO anyway.
-
-> +                       features &=3D ~NETIF_F_GSO_MASK;
-> +       }
-> +       return features;
-> +}
-
-#endif
-
-> +
->  static void mana_get_stats64(struct net_device *ndev,
->                              struct rtnl_link_stats64 *st)
->  {
-> @@ -878,6 +910,7 @@ static const struct net_device_ops mana_devops =3D {
->         .ndo_open               =3D mana_open,
->         .ndo_stop               =3D mana_close,
->         .ndo_select_queue       =3D mana_select_queue,
-> +       .ndo_features_check     =3D mana_features_check,
-
-Note that if your mana_features_check() is a nop if MAX_SKB_FRAGS is
-small enough,
-you could set a non NULL .ndo_features_check based on a preprocessor condit=
-ion
-
-#if MAX_SKB_FRAGS + 2 > MAX_TX_WQE_SGL_ENTRIES
-    .ndo_features_check =3D ....
-#endif
-
-This would avoid an expensive indirect call when possible.
-
-
->         .ndo_start_xmit         =3D mana_start_xmit,
->         .ndo_validate_addr      =3D eth_validate_addr,
->         .ndo_get_stats64        =3D mana_get_stats64,
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers=
-/net/ethernet/microsoft/mana/mana_ethtool.c
-> index a1afa75a9463..fa5e1a2f06a9 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> @@ -71,6 +71,8 @@ static const struct mana_stats_desc mana_eth_stats[] =
-=3D {
->         {"tx_cq_err", offsetof(struct mana_ethtool_stats, tx_cqe_err)},
->         {"tx_cqe_unknown_type", offsetof(struct mana_ethtool_stats,
->                                         tx_cqe_unknown_type)},
-> +       {"linear_pkt_tx_cnt", offsetof(struct mana_ethtool_stats,
-> +                                       linear_pkt_tx_cnt)},
->         {"rx_coalesced_err", offsetof(struct mana_ethtool_stats,
->                                         rx_coalesced_err)},
->         {"rx_cqe_unknown_type", offsetof(struct mana_ethtool_stats,
-> diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-> index 637f42485dba..84614ebe0f4c 100644
-> --- a/include/net/mana/gdma.h
-> +++ b/include/net/mana/gdma.h
-> @@ -592,6 +592,9 @@ enum {
->  #define GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE BIT(17)
->  #define GDMA_DRV_CAP_FLAG_1_HW_VPORT_LINK_AWARE BIT(6)
->
-> +/* Driver supports linearizing the skb when num_sge exceeds hardware lim=
-it */
-> +#define GDMA_DRV_CAP_FLAG_1_SKB_LINEARIZE BIT(20)
-> +
->  #define GDMA_DRV_CAP_FLAGS1 \
->         (GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
->          GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
-> @@ -601,7 +604,8 @@ enum {
->          GDMA_DRV_CAP_FLAG_1_DYNAMIC_IRQ_ALLOC_SUPPORT | \
->          GDMA_DRV_CAP_FLAG_1_SELF_RESET_ON_EQE | \
->          GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE | \
-> -        GDMA_DRV_CAP_FLAG_1_HW_VPORT_LINK_AWARE)
-> +        GDMA_DRV_CAP_FLAG_1_HW_VPORT_LINK_AWARE | \
-> +        GDMA_DRV_CAP_FLAG_1_SKB_LINEARIZE)
->
->  #define GDMA_DRV_CAP_FLAGS2 0
->
-> diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-> index 8906901535f5..50a532fb30d6 100644
-> --- a/include/net/mana/mana.h
-> +++ b/include/net/mana/mana.h
-> @@ -404,6 +404,7 @@ struct mana_ethtool_stats {
->         u64 hc_tx_err_gdma;
->         u64 tx_cqe_err;
->         u64 tx_cqe_unknown_type;
-> +       u64 linear_pkt_tx_cnt;
->         u64 rx_coalesced_err;
->         u64 rx_cqe_unknown_type;
->  };
-> --
-> 2.43.0
->
 
