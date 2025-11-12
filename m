@@ -1,318 +1,81 @@
-Return-Path: <linux-hyperv+bounces-7499-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7500-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 953D3C500AD
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Nov 2025 00:20:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E5FBC502C0
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Nov 2025 02:09:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2F4574E0F58
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Nov 2025 23:20:16 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D3FFE4E6F40
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Nov 2025 01:08:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA5952D6E5B;
-	Tue, 11 Nov 2025 23:20:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14399221555;
+	Wed, 12 Nov 2025 01:08:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="C02hQdhp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i6OJqJ2j"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3428418A6B0;
-	Tue, 11 Nov 2025 23:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7DCD21A457;
+	Wed, 12 Nov 2025 01:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762903212; cv=none; b=tDNvgG1NzCU+CU0p5IsFSDUqELL5NbVG4MH+ks9aWh9HF/XmdKJvpeJlyfC+3VsKVjiY09xBgdqg+PUkfannFK/EJs9JUqcO0u8IH7jFc9Jk6VFQDK1aVxJaicaAydy7lQ7VIYHMLyIsoNRWnxAwzLxD4FEVkFXVoRjlOQPgcsY=
+	t=1762909720; cv=none; b=RooikhWgIWMA9gMTEeW1NW5GTkwGtSRjsN3Wk7KUbLF2te0fOq99JSPKaIP77b/jyWx7P2uoUzwkDwzm6ogofixhzANa1kyISFKEYRahewpW3MQL3Hvj6CdXwLSNT0SrIHQDZHk2JLHGP0a81fvYVI5YYpZjpdsK3/CoWDXFGO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762903212; c=relaxed/simple;
-	bh=TGebJoAqjfY36UY2kNsWyWYzzJ4kHuBeBui4jAdLN2o=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=gfncpeM6Rzub7NmbjQHYh0/TLPIOy6P6yZS2tM3qfviDDuTHZAdFxJNym6aCysFAp7uK0Agh/heXUZ/oXcX2+psMgkzSK2rQ9S5JZMJhBGUh/K93n+B2Z2gDspmxr1YgEXl1e3ovhemf4PG8ycSK7wGDIGiwzfXg6GpKAWCiEI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=C02hQdhp; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1032)
-	id AAEB62013346; Tue, 11 Nov 2025 15:20:10 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AAEB62013346
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1762903210;
-	bh=Wb5WAhAjXFkC3fqwbPujFXDrJaGRdqZ8Yt7XHrNN35g=;
-	h=From:To:Cc:Subject:Date:From;
-	b=C02hQdhpTN92EYpDUW+81sG+AyWULV11qTPK71i0mdQp0sOhI+D3cq/RJwYuNyAZv
-	 m/Ze8iNkyiRBlf3rjzNllspbpwXTK1diTCtRyfggptQDywkoZbzDUehJOtFVZTqWuF
-	 hV9coWJ41My90TPeJ+76I3WQR1i6pmWwjjVfTHTY=
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	wei.liu@kernel.org,
-	mhklinux@outlook.com
-Cc: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	skinsburskii@linux.microsoft.com,
-	prapal@linux.microsoft.com,
-	mrathor@linux.microsoft.com,
-	muislam@microsoft.com,
-	anrayabh@linux.microsoft.com,
-	Jinank Jain <jinankjain@microsoft.com>,
-	Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Subject: [PATCH v4] mshv: Extend create partition ioctl to support cpu features
-Date: Tue, 11 Nov 2025 15:19:54 -0800
-Message-Id: <1762903194-25195-1-git-send-email-nunodasneves@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	s=arc-20240116; t=1762909720; c=relaxed/simple;
+	bh=6i8DPHusq7iBz5T7AQ++bJHhaj2jmtcMe+HUMRFDASM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nbNkVVOA6bQDu0G0UI+k62HjjduhZSkjdtMYxKEeR/8EMw2lufdipOZq3CTNup8lULolI2C+J30RqqTw2MjbIOPiZYBQ48GwhXPLufc0gM/tAygnM0G1ukkbgzwx/ViF2NJh1DZ2RtpOEisqkMeGH/3lqNoSKqflihShqQn6KX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i6OJqJ2j; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42079C4CEF5;
+	Wed, 12 Nov 2025 01:08:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762909719;
+	bh=6i8DPHusq7iBz5T7AQ++bJHhaj2jmtcMe+HUMRFDASM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=i6OJqJ2jM81nRBtViQtU+aJefUBjhbK+gpRrIaRwwKk9KHidu/eOoI1o4kPxT/h9c
+	 KGFXQmgi7r0K3bm26kxvw33Mmvx/Qk0PpS95nkbm1yiG0QXFUF6GwBxpNmAuMp4StL
+	 MDSRvodXIVtedWCv58zoCp3mj55ntRfXg1nfURBHrxJrNqvA9Oaq4519Q0DThe9KuS
+	 AtVvUPD0lBJnAETUPLy5QAVugQhmji5XUA7+AhhyACMMRAUVkgI+/luc6v78JFBkYi
+	 SIaBDukd3PSbYHbW1C1UrvGbg0X8NbngwIYmuFMsc9Bmfh3L1nYN2t9jzb7+p680Ev
+	 RAu7bwQ12FzWg==
+Date: Tue, 11 Nov 2025 17:08:37 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Aditya Garg <gargaditya@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, longli@microsoft.com,
+ kotaranov@microsoft.com, horms@kernel.org,
+ shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
+ ernis@linux.microsoft.com, dipayanroy@linux.microsoft.com,
+ shirazsaleem@microsoft.com, leon@kernel.org, mlevitsk@redhat.com,
+ yury.norov@gmail.com, linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+ gargaditya@microsoft.com
+Subject: Re: [PATCH net-next v3 2/2] net: mana: Drop TX skb on
+ post_work_request failure and unmap resources
+Message-ID: <20251111170837.602904ee@kernel.org>
+In-Reply-To: <1762848781-357-3-git-send-email-gargaditya@linux.microsoft.com>
+References: <1762848781-357-1-git-send-email-gargaditya@linux.microsoft.com>
+	<1762848781-357-3-git-send-email-gargaditya@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Muminul Islam <muislam@microsoft.com>
+On Tue, 11 Nov 2025 00:13:01 -0800 Aditya Garg wrote:
+> Drop TX packets when posting the work request fails and ensure DMA
+> mappings are always cleaned up.
 
-The existing mshv create partition ioctl does not provide a way to
-specify which cpu features are enabled in the guest. Instead, it
-attempts to enable all features and those that are not supported are
-silently disabled by the hypervisor.
-
-This was done to reduce unnecessary complexity and is sufficient for
-many cases. However, new scenarios require fine-grained control over
-these features.
-
-Define a new mshv_create_partition_v2 structure which supports
-passing the disabled processor and xsave feature bits through to the
-create partition hypercall directly.
-
-Introduce a new flag MSHV_PT_BIT_CPU_AND_XSAVE_FEATURES which enables
-the new structure. If unset, the original mshv_create_partition struct
-is used, with the old behavior of enabling all features.
-
-Co-developed-by: Jinank Jain <jinankjain@microsoft.com>
-Signed-off-by: Jinank Jain <jinankjain@microsoft.com>
-Signed-off-by: Muminul Islam <muislam@microsoft.com>
-Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
----
-Changes in v4:
-- Change BIT() to BIT_ULL() [Michael Kelley]
-- Enforce pt_num_cpu_fbanks == MSHV_NUM_CPU_FEATURES_BANKS and expect
-  that number to never change. In future, additional processor banks
-  will be settable as 'early' partition properties. Remove redundant
-  code that set default values for unspecified banks [Michael Kelley]
-- Set xsave features to 0 on arm64 [Michael Kelley]
-- Add clarifying comments in a few places
-
-Changes in v3:
-- Remove the new cpu features definitions in hvhdk.h, and retain the
-  old behavior of enabling all features for the old struct. For the v2
-  struct, still disable unspecified feature banks, since that makes it
-  robust to future extensions.
-- Amend comments and commit message to reflect the above
-- Fix unused variable on arm64 [kernel test robot]
-
-Changes in v2:
-- Fix exposure of CONFIG_X86_64 to uapi [kernel test robot]
-- Fix compilation issue on arm64 [kernel test robot]
----
- drivers/hv/mshv_root_main.c | 113 +++++++++++++++++++++++++++++-------
- include/uapi/linux/mshv.h   |  34 +++++++++++
- 2 files changed, 126 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index d542a0143bb8..9f9438289b60 100644
---- a/drivers/hv/mshv_root_main.c
-+++ b/drivers/hv/mshv_root_main.c
-@@ -1900,43 +1900,114 @@ add_partition(struct mshv_partition *partition)
- 	return 0;
- }
- 
--static long
--mshv_ioctl_create_partition(void __user *user_arg, struct device *module_dev)
-+static_assert(MSHV_NUM_CPU_FEATURES_BANKS ==
-+	      HV_PARTITION_PROCESSOR_FEATURES_BANKS);
-+
-+static long mshv_ioctl_process_pt_flags(void __user *user_arg, u64 *pt_flags,
-+					struct hv_partition_creation_properties *cr_props,
-+					union hv_partition_isolation_properties *isol_props)
- {
--	struct mshv_create_partition args;
--	u64 creation_flags;
--	struct hv_partition_creation_properties creation_properties = {};
--	union hv_partition_isolation_properties isolation_properties = {};
--	struct mshv_partition *partition;
--	struct file *file;
--	int fd;
--	long ret;
-+	int i;
-+	struct mshv_create_partition_v2 args;
-+	union hv_partition_processor_features *disabled_procs;
-+	union hv_partition_processor_xsave_features *disabled_xsave;
- 
--	if (copy_from_user(&args, user_arg, sizeof(args)))
-+	/* First, copy v1 struct in case user is on previous versions */
-+	if (copy_from_user(&args, user_arg,
-+			   sizeof(struct mshv_create_partition)))
- 		return -EFAULT;
- 
- 	if ((args.pt_flags & ~MSHV_PT_FLAGS_MASK) ||
- 	    args.pt_isolation >= MSHV_PT_ISOLATION_COUNT)
- 		return -EINVAL;
- 
-+	disabled_procs = &cr_props->disabled_processor_features;
-+	disabled_xsave = &cr_props->disabled_processor_xsave_features;
-+
-+	/* Check if user provided newer struct with feature fields */
-+	if (args.pt_flags & BIT_ULL(MSHV_PT_BIT_CPU_AND_XSAVE_FEATURES)) {
-+		if (copy_from_user(&args, user_arg, sizeof(args)))
-+			return -EFAULT;
-+
-+		if (args.pt_num_cpu_fbanks != MSHV_NUM_CPU_FEATURES_BANKS ||
-+		    mshv_field_nonzero(args, pt_rsvd) ||
-+		    mshv_field_nonzero(args, pt_rsvd1))
-+			return -EINVAL;
-+
-+		/*
-+		 * Note this assumes MSHV_NUM_CPU_FEATURES_BANKS will never
-+		 * change and equals HV_PARTITION_PROCESSOR_FEATURES_BANKS
-+		 * (i.e. 2).
-+		 *
-+		 * Further banks (index >= 2) will be modifiable as 'early'
-+		 * properties via the set partition property hypercall.
-+		 */
-+		for (i = 0; i < HV_PARTITION_PROCESSOR_FEATURES_BANKS; i++)
-+			disabled_procs->as_uint64[i] = args.pt_cpu_fbanks[i];
-+
-+#if IS_ENABLED(CONFIG_X86_64)
-+		disabled_xsave->as_uint64 = args.pt_disabled_xsave;
-+#else
-+		/*
-+		 * In practice this field is ignored on arm64, but safer to
-+		 * zero it in case it is ever used.
-+		 */
-+		disabled_xsave->as_uint64 = 0;
-+
-+		if (mshv_field_nonzero(args, pt_rsvd2))
-+			return -EINVAL;
-+#endif
-+	} else {
-+		/*
-+		 * v1 behavior: try to enable everything. The hypervisor will
-+		 * disable features that are not supported. The banks can be
-+		 * queried via the get partition property hypercall.
-+		 */
-+		for (i = 0; i < HV_PARTITION_PROCESSOR_FEATURES_BANKS; i++)
-+			disabled_procs->as_uint64[i] = 0;
-+
-+		disabled_xsave->as_uint64 = 0;
-+	}
-+
- 	/* Only support EXO partitions */
--	creation_flags = HV_PARTITION_CREATION_FLAG_EXO_PARTITION |
--			 HV_PARTITION_CREATION_FLAG_INTERCEPT_MESSAGE_PAGE_ENABLED;
-+	*pt_flags = HV_PARTITION_CREATION_FLAG_EXO_PARTITION |
-+		    HV_PARTITION_CREATION_FLAG_INTERCEPT_MESSAGE_PAGE_ENABLED;
-+
-+	if (args.pt_flags & BIT_ULL(MSHV_PT_BIT_LAPIC))
-+		*pt_flags |= HV_PARTITION_CREATION_FLAG_LAPIC_ENABLED;
-+	if (args.pt_flags & BIT_ULL(MSHV_PT_BIT_X2APIC))
-+		*pt_flags |= HV_PARTITION_CREATION_FLAG_X2APIC_CAPABLE;
-+	if (args.pt_flags & BIT_ULL(MSHV_PT_BIT_GPA_SUPER_PAGES))
-+		*pt_flags |= HV_PARTITION_CREATION_FLAG_GPA_SUPER_PAGES_ENABLED;
- 
--	if (args.pt_flags & BIT(MSHV_PT_BIT_LAPIC))
--		creation_flags |= HV_PARTITION_CREATION_FLAG_LAPIC_ENABLED;
--	if (args.pt_flags & BIT(MSHV_PT_BIT_X2APIC))
--		creation_flags |= HV_PARTITION_CREATION_FLAG_X2APIC_CAPABLE;
--	if (args.pt_flags & BIT(MSHV_PT_BIT_GPA_SUPER_PAGES))
--		creation_flags |= HV_PARTITION_CREATION_FLAG_GPA_SUPER_PAGES_ENABLED;
-+	isol_props->as_uint64 = 0;
- 
- 	switch (args.pt_isolation) {
- 	case MSHV_PT_ISOLATION_NONE:
--		isolation_properties.isolation_type =
--			HV_PARTITION_ISOLATION_TYPE_NONE;
-+		isol_props->isolation_type = HV_PARTITION_ISOLATION_TYPE_NONE;
- 		break;
- 	}
- 
-+	return 0;
-+}
-+
-+static long
-+mshv_ioctl_create_partition(void __user *user_arg, struct device *module_dev)
-+{
-+	u64 creation_flags;
-+	struct hv_partition_creation_properties creation_properties;
-+	union hv_partition_isolation_properties isolation_properties;
-+	struct mshv_partition *partition;
-+	struct file *file;
-+	int fd;
-+	long ret;
-+
-+	ret = mshv_ioctl_process_pt_flags(user_arg, &creation_flags,
-+					  &creation_properties,
-+					  &isolation_properties);
-+	if (ret)
-+		return ret;
-+
- 	partition = kzalloc(sizeof(*partition), GFP_KERNEL);
- 	if (!partition)
- 		return -ENOMEM;
-diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
-index 876bfe4e4227..cf904f3aa201 100644
---- a/include/uapi/linux/mshv.h
-+++ b/include/uapi/linux/mshv.h
-@@ -26,6 +26,7 @@ enum {
- 	MSHV_PT_BIT_LAPIC,
- 	MSHV_PT_BIT_X2APIC,
- 	MSHV_PT_BIT_GPA_SUPER_PAGES,
-+	MSHV_PT_BIT_CPU_AND_XSAVE_FEATURES,
- 	MSHV_PT_BIT_COUNT,
- };
- 
-@@ -41,6 +42,8 @@ enum {
-  * @pt_flags: Bitmask of 1 << MSHV_PT_BIT_*
-  * @pt_isolation: MSHV_PT_ISOLATION_*
-  *
-+ * This is the initial/v1 version for backward compatibility.
-+ *
-  * Returns a file descriptor to act as a handle to a guest partition.
-  * At this point the partition is not yet initialized in the hypervisor.
-  * Some operations must be done with the partition in this state, e.g. setting
-@@ -52,6 +55,37 @@ struct mshv_create_partition {
- 	__u64 pt_isolation;
- };
- 
-+#define MSHV_NUM_CPU_FEATURES_BANKS 2
-+
-+/**
-+ * struct mshv_create_partition_v2
-+ *
-+ * This is extended version of the above initial MSHV_CREATE_PARTITION
-+ * ioctl and allows for following additional parameters:
-+ *
-+ * @pt_num_cpu_fbanks: Must be set to MSHV_NUM_CPU_FEATURES_BANKS.
-+ * @pt_cpu_fbanks: Disabled processor feature banks array.
-+ * @pt_disabled_xsave: Disabled xsave feature bits.
-+ *
-+ * pt_cpu_fbanks and pt_disabled_xsave are passed through as-is to the create
-+ * partition hypercall.
-+ *
-+ * Returns : same as above original mshv_create_partition
-+ */
-+struct mshv_create_partition_v2 {
-+	__u64 pt_flags;
-+	__u64 pt_isolation;
-+	__u16 pt_num_cpu_fbanks;
-+	__u8  pt_rsvd[6];		/* MBZ */
-+	__u64 pt_cpu_fbanks[MSHV_NUM_CPU_FEATURES_BANKS];
-+	__u64 pt_rsvd1[2];		/* MBZ */
-+#if defined(__x86_64__)
-+	__u64 pt_disabled_xsave;
-+#else
-+	__u64 pt_rsvd2;			/* MBZ */
-+#endif
-+} __packed;
-+
- /* /dev/mshv */
- #define MSHV_CREATE_PARTITION	_IOW(MSHV_IOCTL, 0x00, struct mshv_create_partition)
- 
+drivers/net/ethernet/microsoft/mana/gdma_main.c:1303:23: warning: variable 'gc' set but not used [-Wunused-but-set-variable]
+ 1303 |         struct gdma_context *gc;
+      |                              ^
 -- 
-2.34.1
-
+pw-bot: cr
 
