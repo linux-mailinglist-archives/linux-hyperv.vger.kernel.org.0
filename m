@@ -1,47 +1,46 @@
-Return-Path: <linux-hyperv+bounces-7572-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7573-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49DA3C5A8CA
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Nov 2025 00:29:37 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEBFAC5AA1A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Nov 2025 00:36:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7B7503534F7
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Nov 2025 23:29:05 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5AFD24E5F62
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Nov 2025 23:32:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 925BB328B45;
-	Thu, 13 Nov 2025 23:29:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9318032A3D8;
+	Thu, 13 Nov 2025 23:31:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="V0Ypzelh"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nGgLUSV5"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674FF328608
-	for <linux-hyperv@vger.kernel.org>; Thu, 13 Nov 2025 23:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21DD5329E77
+	for <linux-hyperv@vger.kernel.org>; Thu, 13 Nov 2025 23:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763076541; cv=none; b=glVmSImDpeOei/CXF7eb5eRubiW9ZLGtVxfUB/P2cTvKqrSj4gPiJGFx5Eu3QNY2Q6Wv06VlRF8symrBAwZSg2ZiQPfiAfXUOoegwIZnHEXRI85AsEBVyMDABZMhvNahNKNe4b5wdRpHyltlROUWbhs176rEJ7pvE0iUl/rt43o=
+	t=1763076670; cv=none; b=rizPmAoP+YMwyTd49i3KaxSYaLcrk+EoUI5CCwZ8fver1X75wTLPn6X+KYTlSY+xOmS37zSKTZJYuaRcLJzeUITLwOfg4IKcKVmZqfAs3ckjijvPMNyRbTeLa2oFcC7/mJZ9yttEwrqL7HqYDjkwNqE6V0d5qAVFHWud57Rjtzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763076541; c=relaxed/simple;
-	bh=gMZKVQqeY7nZOl/zGkQ22NdBV2O+7XIATtpJrC4fO0k=;
+	s=arc-20240116; t=1763076670; c=relaxed/simple;
+	bh=DAbCs//mtPxd5k85nUUfTqCOJpzRV6pSf90G2PjiY5o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Iu84130+YFCJ+Epd85b2ZJB2YXLiXZERcwNbdwR07nXp+uEY2foGK8Jvg7e3FdGMvcpL8b1c93BDXnHj5d1sfeFfNwGC+5ToWy4TARBrWVWynidlrYp22NEKuyYeaMUKXZGUZ77RC91kmevHXJE2pE8di1zKwJbcIKBCQWv0VTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=V0Ypzelh; arc=none smtp.client-ip=91.218.175.177
+	 Content-Type:Content-Disposition:In-Reply-To; b=KLaAfRTcoMS6BDSRE8RG2Nlq7QTntBQktvy/xPJzIBWizqejdRucS0Pd6Zc6dkarDnM96RZ8upDSJNiZORYeIlxq2zoc/3gNZX+qA/j5F1S8SlSGG7Ldi1XTrpvCwrQCl2nonzaBy5sK1ibjRIHKCfFPQmIxLLnyWd6oZzavTLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nGgLUSV5; arc=none smtp.client-ip=91.218.175.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Date: Thu, 13 Nov 2025 23:28:41 +0000
+Date: Thu, 13 Nov 2025 23:30:50 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1763076527;
+	t=1763076665;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zQxu8cfY3zpe4ibXES75EL+tbeWgFHpdhWo+B/hgYak=;
-	b=V0YpzelhtM3fC5uMEIqJKM3uqHniHvnPZpifDHAkm6BQjPqEuUCtthZPa9hOdav+hkSfAR
-	NeK6JH8DZm59HY6eQERyq5I4cK4qyTDfGsf2L6vFD3J3eO16upX0DvGiI9KzCCH/LukloC
-	GDkdnq95PBIKWSlSTnOGhtVgJc97w7w=
+	bh=kBbQ2CJNsfMBaqbZTQqlMMMsF+slfZDXMrzVY/zHEPA=;
+	b=nGgLUSV5szEJY6hsbUE4dE79IjX84miz4QTSXl3E9rQLtAFbG+Qo/3Ip+iKgqSOCsvKJlF
+	YRigJJF9gQemE+GsQ7IYdYKElwueaUM+r8r/QO/HGL0RwZP6TJUJi021S5iPJua3Rubk5V
+	eaTI/3+vPhQmAf2CPTmAJWv8QuM5Tcg=
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Yosry Ahmed <yosry.ahmed@linux.dev>
 To: Sean Christopherson <seanjc@google.com>
@@ -50,79 +49,128 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
 	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH 2/9] KVM: nSVM: Set exit_code_hi to -1 when synthesizing
- SVM_EXIT_ERR (failed VMRUN)
-Message-ID: <x5sx4ljihax3wzm4kfsiiitd3kq62ymon7ggtxixqsxgwnryj2@f7cq4h72h4xu>
+Subject: Re: [PATCH 3/9] KVM: SVM: Add a helper to detect VMRUN failures
+Message-ID: <ellmjkhqmgpsbhc4if3emhn3fzbqd3ji4u2dnyvmub6bjgfnti@vtvjhn5cjwrs>
 References: <20251113225621.1688428-1-seanjc@google.com>
- <20251113225621.1688428-3-seanjc@google.com>
+ <20251113225621.1688428-4-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251113225621.1688428-3-seanjc@google.com>
+In-Reply-To: <20251113225621.1688428-4-seanjc@google.com>
 X-Migadu-Flow: FLOW_OUT
 
-On Thu, Nov 13, 2025 at 02:56:14PM -0800, Sean Christopherson wrote:
-> Set exit_code_hi to -1u as a temporary band-aid to fix a long-standing
-> (effectively since KVM's inception) bug where KVM treats the exit code as
-> a 32-bit value, when in reality it's a 64-bit value.  Per the APM, offset
-> 0x70 is a single 64-bit value:
-> 
->   070h 63:0 EXITCODE
-> 
-> And a sane reading of the error values defined in "Table C-1. SVM Intercept
-> Codes" is that negative values use the full 64 bits:
-> 
->   –1 VMEXIT_INVALID Invalid guest state in VMCB.
->   –2 VMEXIT_BUSYBUSY bit was set in the VMSA
->   –3 VMEXIT_IDLE_REQUIREDThe sibling thread is not in an idle state
->   -4 VMEXIT_INVALID_PMC Invalid PMC state
-> 
-> And that interpretation is confirmed by testing on Milan and Turin (by
-> setting bits in CR0[63:32] to generate VMEXIT_INVALID on VMRUN).
-> 
-> Furthermore, Xen has treated exitcode as a 64-bit value since HVM support
-> was adding in 2006 (see Xen commit d1bd157fbc ("Big merge the HVM
-> full-virtualisation abstractions.")).
+On Thu, Nov 13, 2025 at 02:56:15PM -0800, Sean Christopherson wrote:
+> Add a helper to detect VMRUN failures so that KVM can guard against its
+> own long-standing bug, where KVM neglects to set exitcode[63:32] when
+> synthesizing a nested VMFAIL_INVALID VM-Exit.  This will allow fixing
+> KVM's mess of treating exitcode as two separate 32-bit values without
+> breaking KVM-on-KVM when running on an older, unfixed KVM.
 > 
 > Cc: Jim Mattson <jmattson@google.com>
 > Cc: Yosry Ahmed <yosry.ahmed@linux.dev>
-> Cc: stable@vger.kernel.org
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
-
-Reviewed-by: Yosry Ahmed <yosry.ahmed@linux.dev>
-
 > ---
->  arch/x86/kvm/svm/nested.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  arch/x86/kvm/svm/nested.c | 16 +++++++---------
+>  arch/x86/kvm/svm/svm.c    |  4 ++--
+>  arch/x86/kvm/svm/svm.h    |  5 +++++
+>  3 files changed, 14 insertions(+), 11 deletions(-)
 > 
 > diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-> index c81005b24522..ba0f11c68372 100644
+> index ba0f11c68372..8070e20ed5a7 100644
 > --- a/arch/x86/kvm/svm/nested.c
 > +++ b/arch/x86/kvm/svm/nested.c
-> @@ -985,7 +985,7 @@ int nested_svm_vmrun(struct kvm_vcpu *vcpu)
->  	if (!nested_vmcb_check_save(vcpu) ||
->  	    !nested_vmcb_check_controls(vcpu)) {
->  		vmcb12->control.exit_code    = SVM_EXIT_ERR;
-> -		vmcb12->control.exit_code_hi = 0;
-> +		vmcb12->control.exit_code_hi = -1u;
->  		vmcb12->control.exit_info_1  = 0;
->  		vmcb12->control.exit_info_2  = 0;
->  		goto out;
-> @@ -1018,7 +1018,7 @@ int nested_svm_vmrun(struct kvm_vcpu *vcpu)
->  	svm->soft_int_injected = false;
+> @@ -1134,7 +1134,7 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
+>  	vmcb12->control.exit_info_1       = vmcb02->control.exit_info_1;
+>  	vmcb12->control.exit_info_2       = vmcb02->control.exit_info_2;
 >  
->  	svm->vmcb->control.exit_code    = SVM_EXIT_ERR;
-> -	svm->vmcb->control.exit_code_hi = 0;
-> +	svm->vmcb->control.exit_code_hi = -1u;
->  	svm->vmcb->control.exit_info_1  = 0;
->  	svm->vmcb->control.exit_info_2  = 0;
+> -	if (vmcb12->control.exit_code != SVM_EXIT_ERR)
+> +	if (svm_is_vmrun_failure(vmcb12->control.exit_code))
+
+This was flipped, wasn't it?
+
+>  		nested_save_pending_event_to_vmcb12(svm, vmcb12);
 >  
+>  	if (guest_cpu_cap_has(vcpu, X86_FEATURE_NRIPS))
+> @@ -1425,6 +1425,9 @@ static int nested_svm_intercept(struct vcpu_svm *svm)
+>  	u32 exit_code = svm->vmcb->control.exit_code;
+>  	int vmexit = NESTED_EXIT_HOST;
+>  
+> +	if (svm_is_vmrun_failure(exit_code))
+> +		return NESTED_EXIT_DONE;
+> +
+>  	switch (exit_code) {
+>  	case SVM_EXIT_MSR:
+>  		vmexit = nested_svm_exit_handled_msr(svm);
+> @@ -1432,7 +1435,7 @@ static int nested_svm_intercept(struct vcpu_svm *svm)
+>  	case SVM_EXIT_IOIO:
+>  		vmexit = nested_svm_intercept_ioio(svm);
+>  		break;
+> -	case SVM_EXIT_EXCP_BASE ... SVM_EXIT_EXCP_BASE + 0x1f: {
+> +	case SVM_EXIT_EXCP_BASE ... SVM_EXIT_EXCP_BASE + 0x1f:
+>  		/*
+>  		 * Host-intercepted exceptions have been checked already in
+>  		 * nested_svm_exit_special.  There is nothing to do here,
+> @@ -1440,15 +1443,10 @@ static int nested_svm_intercept(struct vcpu_svm *svm)
+>  		 */
+>  		vmexit = NESTED_EXIT_DONE;
+>  		break;
+> -	}
+> -	case SVM_EXIT_ERR: {
+> -		vmexit = NESTED_EXIT_DONE;
+> -		break;
+> -	}
+> -	default: {
+> +	default:
+>  		if (vmcb12_is_intercept(&svm->nested.ctl, exit_code))
+>  			vmexit = NESTED_EXIT_DONE;
+> -	}
+> +		break;
+>  	}
+>  
+>  	return vmexit;
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index 7ea034ee6b6c..52b759408853 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -3530,7 +3530,7 @@ static int svm_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)
+>  			return 1;
+>  	}
+>  
+> -	if (svm->vmcb->control.exit_code == SVM_EXIT_ERR) {
+> +	if (svm_is_vmrun_failure(svm->vmcb->control.exit_code)) {
+>  		kvm_run->exit_reason = KVM_EXIT_FAIL_ENTRY;
+>  		kvm_run->fail_entry.hardware_entry_failure_reason
+>  			= svm->vmcb->control.exit_code;
+> @@ -4302,7 +4302,7 @@ static __no_kcsan fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
+>  
+>  		/* Track VMRUNs that have made past consistency checking */
+>  		if (svm->nested.nested_run_pending &&
+> -		    svm->vmcb->control.exit_code != SVM_EXIT_ERR)
+> +		    !svm_is_vmrun_failure(svm->vmcb->control.exit_code))
+>                          ++vcpu->stat.nested_run;
+>  
+>  		svm->nested.nested_run_pending = 0;
+> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+> index 253a8dca412c..6b35925e3a33 100644
+> --- a/arch/x86/kvm/svm/svm.h
+> +++ b/arch/x86/kvm/svm/svm.h
+> @@ -426,6 +426,11 @@ static __always_inline struct vcpu_svm *to_svm(struct kvm_vcpu *vcpu)
+>  	return container_of(vcpu, struct vcpu_svm, vcpu);
+>  }
+>  
+> +static inline bool svm_is_vmrun_failure(u64 exit_code)
+> +{
+> +	return (u32)exit_code == (u32)SVM_EXIT_ERR;
+> +}
+> +
+>  /*
+>   * Only the PDPTRs are loaded on demand into the shadow MMU.  All other
+>   * fields are synchronized on VM-Exit, because accessing the VMCB is cheap.
 > -- 
 > 2.52.0.rc1.455.g30608eb744-goog
 > 
