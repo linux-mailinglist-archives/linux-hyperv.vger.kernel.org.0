@@ -1,79 +1,84 @@
-Return-Path: <linux-hyperv+bounces-7560-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7561-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C50A3C5A67B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Nov 2025 23:56:33 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86F74C5A696
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Nov 2025 23:57:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 63E643A67BB
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Nov 2025 22:56:32 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3A2404E7D0B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Nov 2025 22:56:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87D4032693C;
-	Thu, 13 Nov 2025 22:56:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B97D327210;
+	Thu, 13 Nov 2025 22:56:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GlS1JJCj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sPElYpZ5"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012E62D7D47
-	for <linux-hyperv@vger.kernel.org>; Thu, 13 Nov 2025 22:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D13D8326945
+	for <linux-hyperv@vger.kernel.org>; Thu, 13 Nov 2025 22:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763074590; cv=none; b=qRCdwoGXrG3+h5XaeeYdb7KSp84xF6uWqaaluibgk/32zVpebC5iUNDWu1pxjzjmF1YPz0gJ6YNsHh4bvYDxv5FnfoTZRT/Z9AzLwrK7RWPOd+uqPN8Hau3SmFBzjsjQM0wpKEuZTdGi+joiDa9u2J2dTiQP1RXa8dm4T1TkX8M=
+	t=1763074593; cv=none; b=lurZ2xKHSN6lQiuukYmTtORkepJ2SqTpQObq78Be5vk88Rm9B+aMDUx1jNCm1CcNj1/rQcJDZG05l6sJ3R84ONAMY2BxPzfRM08RcpHBwbV3n88NrLpW50a6gVDGUwXCTRHUoDiFOAqkTpcOaYUaUyP7+d44sDoxc1T86kpXmgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763074590; c=relaxed/simple;
-	bh=JpkwLkYqfTWH2af+ev8jNXHZlL9P9xWFIzFSqfC4azA=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=hhkSNAPpg6tT5ySRj8MGqBi43htRrKCpYNU1zlFTBWtNx5osRih7UWrd3xsAWJdua4p/3JOeYxu0WWFv8MkYY1ib4JofRmIc9FQ9EpIBkCh/CFY2cqE3INGWiraJzysSUZHgWjJ9GWESJlJogvCGmph7UEviaIFtae7AMQui0cU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GlS1JJCj; arc=none smtp.client-ip=209.85.214.202
+	s=arc-20240116; t=1763074593; c=relaxed/simple;
+	bh=DZnTVcVd7ilWEk7QprLP8HYWZGe/PyhrQBrHuLnfjVw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=mlcEFDFK/ShWyUmlA7bRjUOT4aMfzBlRq1FCcIlMggl4Urz2zLfjZapVYc4PvSgDMBtTC3SxD+4ScbW/pJpMXNu1IJx8SQQTEtnjRClNnUx29xF9mUwj1vASUrlc3S7j79oTCaf9I/GyY81lVsma0hvOjzE7TMSnH866hVqCipM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sPElYpZ5; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-29848363458so33091165ad.2
-        for <linux-hyperv@vger.kernel.org>; Thu, 13 Nov 2025 14:56:28 -0800 (PST)
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3416dc5754fso1867599a91.1
+        for <linux-hyperv@vger.kernel.org>; Thu, 13 Nov 2025 14:56:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763074588; x=1763679388; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wx3PLPcjBq2xtoETuBloY8IxxCjDmn23349GjtidbtI=;
-        b=GlS1JJCjqo7c7XjeL1zYxj2ihqyWblpQqv07CHRNR3NJYcTgyql5WVJxd+E+xQVnL9
-         LRepsqG8H4HaXAWpGFEfRBcygNvGP9CYWxxlUX6xSxlQ+FFy7xyUnnP9r7nsL85bY9Nm
-         QdHj2gfYOeLwKiTy45E4mySy8QEsVNBHATHgxwqyUMD6T7id91r3+Gspmkvw7ly2IqRy
-         bQuc5M2Lk4EgcFuQ84kAv9CAtgXFpDdGdmzxHpAlIcgVKGe8oboXi1o2FtInnJQdv4RN
-         tRKKN2d70iiKK0DRHjA2lE9L4TsmkES90tRISJ06jJAcr9OI4g3D/x13KHy0HG92+IUK
-         K7VQ==
+        d=google.com; s=20230601; t=1763074590; x=1763679390; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=BxKLVgWi122XtoiJoBFjxbdILt6Adpgcci0Yx4/UOzI=;
+        b=sPElYpZ5qbvV7CgEjpxR2Dy+Yl7szuBZgwNYaWy7bX08vGSH4hqLRjN8hCBCmGFA6E
+         ViaUerATWkBPozqP8UG4ROfuD4fUzQ4HN7Y+61kXldp6XSMu36u/SgM+soTLymGDemlx
+         6rV00Rfozndc+gqSNdJM2XdTNuku/sU9KDTxEmusKUT5PqCwPk1NCMMWlnWosAw7+9Ak
+         BRz4NRJi4Aphhbo1FFUy01HDjmrLpnuscxbxa/i1GmbbKEinTZcjDRcC/w4ppfODqBJX
+         yY5irAT5Pxb2w4V+dEN6A2OGa4UdRWgG2BQ9bXhMI+vZpIW5WtFwAAiVz01YYnO8IaUq
+         nA4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763074588; x=1763679388;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wx3PLPcjBq2xtoETuBloY8IxxCjDmn23349GjtidbtI=;
-        b=i+kmt6yLM3kGFbyfm0Uj40r+S34goxTmYNzH6Ep3JP+4458V/giec967yZ9rP7r72I
-         5aZu3ej01gL6r/eu3TV/tIwm7XLov2twKxA07glUT0FVjDESbjzUhRXoR5RkCegZN+bg
-         j2ZrBKCUOLbrwyH1yhjRuqln4B3/mNtc9oqApGPLBhjoEwFGebwaiH0FtFNnM+qre0hj
-         OGA8tjtGUyxajiitLkL/FsKUt0vG8XO05XVdMgBV6isknaC1nF1U4VBnic/Oyv+3N2an
-         kwXGi9qnx/xIrclHrZFMIkVlm/MeOBJKmJ0J5HTYNStEyGuKF3cDTaaSqddufq9nO38q
-         hVmg==
-X-Forwarded-Encrypted: i=1; AJvYcCXkFZwRPSrsslg0ohZXyH3QF5pvRUL6PUoDTGQS8yhvpXP5MneRbCi6HHQy9oSxuwGWxF9PjiXxSFZ3mQA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyY7q0eS50I7wZm0dXxOwrnWwRThmGdIoR4kd8pfSRtY0Q3jjf6
-	DrgHurkG+Rp8Ir+E2zgnmvIkVi6GsdGRhHo3iAg3tRetnJCrw+Xc48F44AgNhYw5hfs6ylp0s/Y
-	f0Qw1CA==
-X-Google-Smtp-Source: AGHT+IH8hcBLZQlPdbuJlMzm1zBVW2nQnz2ncq3rgCivH92im1o3royXQQqD/TFcgKzEMyHzondAYjwZTLk=
-X-Received: from plmd10.prod.google.com ([2002:a17:903:eca:b0:27e:4187:b4d3])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c942:b0:296:ec5:ab3d
- with SMTP id d9443c01a7336-2986a782c9cmr6357595ad.61.1763074588214; Thu, 13
- Nov 2025 14:56:28 -0800 (PST)
+        d=1e100.net; s=20230601; t=1763074590; x=1763679390;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BxKLVgWi122XtoiJoBFjxbdILt6Adpgcci0Yx4/UOzI=;
+        b=oBVPrzR6JK+AEqTHuv9eutUv/UmfJmK/sKeVJ5XhG0ozxck5OXx+ZhPsRA3aWYVygD
+         jGDaHi13wjDc4O564u86iOHCcft/+gcscY+aQEmrlSVpfJPda1OMBGgQYyUIFPLHxwLZ
+         c4qcv2cLFQ1TB75DKYbjwa7Ah3HoSDXzl2PnNGWQgGHZAnIPefC12s4RI+ap4CIQ4QJD
+         rYb7gcAOFXoGKD1VJztIMu4jZjwHTeHUO7jyVqjSSEHAgH9yvvX0yd5bWYW+S29VNxfV
+         HDrr1ovr/rqNOSEp73JjVJeX6aLRqZYX2o8KwmhjriwpvFmgekdqvQJolTRfiuCElhR3
+         3ABg==
+X-Forwarded-Encrypted: i=1; AJvYcCVDbUR4aYpQT55TPiFj1DJyWsP8kKfmwDJVbj9z/u5HBtVie11oebz/npNHfTcKe9aKDJ8mMbCP4tssZ/k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzkEQAqFLtY0Vk2GU6GGiBoO3n9Df9Sz8aY6kOL9K2lgQVCa2j
+	zM1BlIKjMpJsAki2lncM3DjFwz5/2BG4eimoR/eTB6+gFJiWj+OtvoLkTkMDtCJHPdLxRG6TCdd
+	JfG7evQ==
+X-Google-Smtp-Source: AGHT+IFiv3A2MIePSw/tKTb0y96BVRTrr/TBLsOXY9EWmbc08jEkv0VCYdfjj5l0yUt5Qx95CRl430wU9PY=
+X-Received: from pjbgw11.prod.google.com ([2002:a17:90b:a4b:b0:343:641d:e8c3])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4c48:b0:341:2b78:61b8
+ with SMTP id 98e67ed59e1d1-343fa637866mr946508a91.20.1763074590204; Thu, 13
+ Nov 2025 14:56:30 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 13 Nov 2025 14:56:12 -0800
+Date: Thu, 13 Nov 2025 14:56:13 -0800
+In-Reply-To: <20251113225621.1688428-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20251113225621.1688428-1-seanjc@google.com>
 X-Mailer: git-send-email 2.52.0.rc1.455.g30608eb744-goog
-Message-ID: <20251113225621.1688428-1-seanjc@google.com>
-Subject: [PATCH 0/9] KVM: SVM: Fix (hilarious) exit_code bugs
+Message-ID: <20251113225621.1688428-2-seanjc@google.com>
+Subject: [PATCH 1/9] KVM: nSVM: Clear exit_code_hi in VMCB when synthesizing
+ nested VM-Exits
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Vitaly Kuznetsov <vkuznets@redhat.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
@@ -84,70 +89,57 @@ Cc: kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
 	Yosry Ahmed <yosry.ahmed@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 
-Hyper-V folks, y'all are getting Cc'd because of a change in
-include/hyperv/hvgdk.h to ensure HV_SVM_EXITCODE_ENL is an unsigned value.
-AFAICT, only KVM consumes that macro.  That said, any insight you can provide
-on relevant Hyper-V behavior would be appreciated :-)
+Explicitly clear exit_code_hi in the VMCB when synthesizing "normal"
+nested VM-Exits, as the full exit code is a 64-bit value (spoiler alert),
+and all exit codes for non-failing VMRUN use only bits 31:0.
 
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/svm/svm.c | 2 ++
+ arch/x86/kvm/svm/svm.h | 7 ++++---
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-Fix bugs in SVM that mostly impact nested SVM where KVM treats exit codes
-as 32-bit values instead of 64-bit values.  I have no idea how KVM ended up
-with such an egregious flaw, as the blame trail goes all the way back to
-commit 6aa8b732ca01 ("[PATCH] kvm: userspace interface").  Maybe there was
-pre-production hardware or something?
-
-I'm also fairly surprised no one has noticed, as at least Xen treats exit
-codes as 64-bit values.  Maybe the only people that run hypervisor tests on
-top of KVM are also running KVM, or similarly buggy tests?  /shrug
-
-The most dangerous aspect of the mess is that simply fixing KVM would likely
-break KVM-on-KVM setups if only L1 is patched.  To try and avoid such
-breakage while also fixing KVM, I opted to have KVM retain its checks on
-only bits 31:0 if KVM is running as a VM (as detected by
-X86_FEATURE_HYPERVISOR).
-
-I stumbled on this when trying to resolve a array_index_nospec() build failure
-on 32-bit kernels (array_index_nospec() requires the index to fit in an
-"unsigned long").
-
-Oh, and I have KUT changes to detect the nSVM bugs.
-
-Because of the potential for breakage, I tagged only the nSVM fixes for
-stable@.  E.g. I almost botched things by sending this as two separate
-series, which would have create a window where svm_invoke_exit_handler()
-would process a 64-bit code when running KVM-on-KVM and thus break if L0
-KVM left gargage in bits 63:32.
-
-Sean Christopherson (9):
-  KVM: nSVM: Clear exit_code_hi in VMCB when synthesizing nested
-    VM-Exits
-  KVM: nSVM: Set exit_code_hi to -1 when synthesizing SVM_EXIT_ERR
-    (failed VMRUN)
-  KVM: SVM: Add a helper to detect VMRUN failures
-  KVM: SVM: Open code handling of unexpected exits in
-    svm_invoke_exit_handler()
-  KVM: SVM: Check for an unexpected VM-Exit after RETPOLINE "fast"
-    handling
-  KVM: SVM: Filter out 64-bit exit codes when invoking exit handlers on
-    bare metal
-  KVM: SVM: Treat exit_code as an unsigned 64-bit value through all of
-    KVM
-  KVM: SVM: Limit incorrect check on SVM_EXIT_ERR to running as a VM
-  KVM: SVM: Harden exit_code against being used in Spectre-like attacks
-
- arch/x86/include/asm/svm.h      |  3 +-
- arch/x86/include/uapi/asm/svm.h | 32 ++++++++++-----------
- arch/x86/kvm/svm/hyperv.c       |  1 -
- arch/x86/kvm/svm/nested.c       | 29 +++++++------------
- arch/x86/kvm/svm/sev.c          | 36 ++++++++----------------
- arch/x86/kvm/svm/svm.c          | 49 +++++++++++++++++++--------------
- arch/x86/kvm/svm/svm.h          | 17 ++++++++----
- arch/x86/kvm/trace.h            |  2 +-
- include/hyperv/hvgdk.h          |  2 +-
- 9 files changed, 82 insertions(+), 89 deletions(-)
-
-
-base-commit: 16ec4fb4ac95d878b879192d280db2baeec43272
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index fc42bcdbb520..7ea034ee6b6c 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -2433,6 +2433,7 @@ static bool check_selective_cr0_intercepted(struct kvm_vcpu *vcpu,
+ 
+ 	if (cr0 ^ val) {
+ 		svm->vmcb->control.exit_code = SVM_EXIT_CR0_SEL_WRITE;
++		svm->vmcb->control.exit_code_hi = 0;
+ 		ret = (nested_svm_exit_handled(svm) == NESTED_EXIT_DONE);
+ 	}
+ 
+@@ -4608,6 +4609,7 @@ static int svm_check_intercept(struct kvm_vcpu *vcpu,
+ 	if (static_cpu_has(X86_FEATURE_NRIPS))
+ 		vmcb->control.next_rip  = info->next_rip;
+ 	vmcb->control.exit_code = icpt_info.exit_code;
++	vmcb->control.exit_code_hi = 0;
+ 	vmexit = nested_svm_exit_handled(svm);
+ 
+ 	ret = (vmexit == NESTED_EXIT_DONE) ? X86EMUL_INTERCEPTED
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index c2acaa49ee1c..253a8dca412c 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -763,9 +763,10 @@ int nested_svm_vmexit(struct vcpu_svm *svm);
+ 
+ static inline int nested_svm_simple_vmexit(struct vcpu_svm *svm, u32 exit_code)
+ {
+-	svm->vmcb->control.exit_code   = exit_code;
+-	svm->vmcb->control.exit_info_1 = 0;
+-	svm->vmcb->control.exit_info_2 = 0;
++	svm->vmcb->control.exit_code	= exit_code;
++	svm->vmcb->control.exit_code_hi	= 0;
++	svm->vmcb->control.exit_info_1	= 0;
++	svm->vmcb->control.exit_info_2	= 0;
+ 	return nested_svm_vmexit(svm);
+ }
+ 
 -- 
 2.52.0.rc1.455.g30608eb744-goog
 
