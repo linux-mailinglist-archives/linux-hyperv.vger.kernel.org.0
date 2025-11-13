@@ -1,45 +1,45 @@
-Return-Path: <linux-hyperv+bounces-7543-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7544-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68D16C55AC7
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Nov 2025 05:43:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FCF5C55ACF
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Nov 2025 05:43:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id ED13E349668
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Nov 2025 04:42:28 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id EA04234E0DF
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Nov 2025 04:42:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4BFD2FF147;
-	Thu, 13 Nov 2025 04:42:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B121030100E;
+	Thu, 13 Nov 2025 04:42:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="loxMAWcz"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FqrdLHv3"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F4B31917F0;
-	Thu, 13 Nov 2025 04:42:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A942301004;
+	Thu, 13 Nov 2025 04:42:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763008935; cv=none; b=pNHAZflefYqzPl+C+jFUiVk/gGd3BKI+SKvpRYdObd4NBPZ7fXOOruLBuSlJX3GgK9VrG6pf0aeRmO36zRLDe3lAnLRy3T3ZPCZtryVST1IejBWrinavi0vH7GvmdcVmW18QoXTLii79ozZ85KcPuPfMOD5l4+VuqJB4T1rWsNc=
+	t=1763008945; cv=none; b=KWIh1tkQBAG8tvvhkU25mST9RMHzQDqa1dbVE3/b6EoF8rvQY/uefdEmk2k46zVOKPFZCOLQsb2iFZ0jxDYjDij/zFCKtEHrDnv6mzlTn6DLjV4pMBa+zCrFxEyT8vbOkW5Fu0VikWcMqZnhftXgehccmC/roSo5qP8uzouWmcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763008935; c=relaxed/simple;
-	bh=zb9ctwwC3vJcUTeCQetdrK8Z4hDHpHZHrnpRCACTCPs=;
+	s=arc-20240116; t=1763008945; c=relaxed/simple;
+	bh=bCm1J99NWc4jjQqAlN/imka4xXI5Y0qBL0RgQn5Vfag=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YmpTikNHRFYuWO3ooyvIPR7nxC5jQfDTM/lMZPyJfuliwC50VuC58C8QIGbmVy3vyABmFWesC6S7Jo6gyvG3Gl3nfX8z8TB4y6RuHjq+Cq6T+tgohanDzQSTB1i8W3tkRTrOq0KJqw3C8DrW8YdF0gSO5N15cCMb06OvbKcYF6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=loxMAWcz; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=Dp9yxY6ZqvGVvaNQ/6gOZGhLSnDyRxgZJYGPUV1RAfTQOcGuxHyO6MPo55g8T2uaGSRll8YFrI3zOFZ1Yp8erZ5aOZnto81Q0cP2VaiupGlNIliHi2h9kx+pFCoZELn3HUDo5giEHpuwGzADBecAJOzr52DYJWQTlE1eKNWpNIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=FqrdLHv3; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from CPC-namja-1AYIP.redmond.corp.microsoft.com (unknown [4.213.232.42])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 795D72013368;
-	Wed, 12 Nov 2025 20:42:04 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 795D72013368
+	by linux.microsoft.com (Postfix) with ESMTPSA id A8BFB201336F;
+	Wed, 12 Nov 2025 20:42:14 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A8BFB201336F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1763008933;
-	bh=JqciPxRzBkt61liiMOa1OS2vxRfLzlC77SqEfbDb2oU=;
+	s=default; t=1763008943;
+	bh=ywTpnvyUZ9q8qmgw2M1XvicAqjpo/lYW4xUhfd1xNKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=loxMAWczoRWyFlEd/m/WHVdqhR1P68pCDbtvBnCJDXjGgujKinQ95rZ/Xkka5EG7s
-	 brIhLGOZvnPrRUldG4mR1GAgZmk8vPH1c+L1FKYoFOJbrUbcK8o6Z88Po+fN7iT9J8
-	 42zrTzGuCVyuBs9srzhO8HRbrgYzjhUlPc2Oftl8=
+	b=FqrdLHv3Z5PJuxq7kfT0Xi/QXUsUC7cI5yUM9I4msjKVfYzZouw5FhY/CKcZKr1pF
+	 xjNuy/uUQBY2gtoQVAqjP3eA3qmElL8wm7IKObhJbTOsXDYX0az6soV1bRHL15ewNm
+	 y3IkRE5LuYOvVCp7NFZ294RVR9dxQRuzzCgN5HGU=
 From: Naman Jain <namjain@linux.microsoft.com>
 To: "K . Y . Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
@@ -76,9 +76,9 @@ Cc: linux-hyperv@vger.kernel.org,
 	Christoph Hellwig <hch@infradead.org>,
 	Saurabh Sengar <ssengar@linux.microsoft.com>,
 	ALOK TIWARI <alok.a.tiwari@oracle.com>
-Subject: [PATCH v12 1/3] static_call: allow using STATIC_CALL_TRAMP_STR() from assembly
-Date: Thu, 13 Nov 2025 04:41:47 +0000
-Message-ID: <20251113044149.3710877-2-namjain@linux.microsoft.com>
+Subject: [PATCH v12 2/3] Drivers: hv: Export some symbols for mshv_vtl
+Date: Thu, 13 Nov 2025 04:41:48 +0000
+Message-ID: <20251113044149.3710877-3-namjain@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251113044149.3710877-1-namjain@linux.microsoft.com>
 References: <20251113044149.3710877-1-namjain@linux.microsoft.com>
@@ -90,93 +90,94 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-STATIC_CALL_TRAMP_STR() could not be used from .S files because
-static_call_types.h was not safe to include in assembly as it pulled in C
-types/constructs that are unavailable under __ASSEMBLY__.
-Make the header assembly-friendly by adding __ASSEMBLY__ checks and
-providing only the minimal definitions needed for assembly, so that it
-can be safely included by .S code. This enables emitting the static call
-trampoline symbol name via STATIC_CALL_TRAMP_STR() directly in assembly
-sources, to be used with 'call' instruction. Also, move a certain
-definitions out of __ASSEMBLY__ checks in compiler_types.h to meet
-the dependencies.
+MSHV_VTL driver is going to be introduced, which is supposed to
+provide interface for Virtual Machine Monitors (VMMs) to control
+Virtual Trust Level (VTL). Export the symbols needed
+to make it work (vmbus_isr, hv_context and hv_post_message).
 
-No functional change for C compilation.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Co-developed-by: Roman Kisel <romank@linux.microsoft.com>
+Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202506110544.q0NDMQVc-lkp@intel.com/
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
 ---
- include/linux/compiler_types.h          | 8 ++++----
- include/linux/static_call_types.h       | 4 ++++
- tools/include/linux/static_call_types.h | 4 ++++
- 3 files changed, 12 insertions(+), 4 deletions(-)
+ drivers/hv/hv.c           | 3 +++
+ drivers/hv/hyperv_vmbus.h | 1 +
+ drivers/hv/vmbus_drv.c    | 4 +++-
+ 3 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index 0a1b9598940d..c46855162a8a 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -11,6 +11,10 @@
- #define __has_builtin(x) (0)
- #endif
+diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+index 936c5f310df6..c100f04b3581 100644
+--- a/drivers/hv/hv.c
++++ b/drivers/hv/hv.c
+@@ -18,6 +18,7 @@
+ #include <linux/clockchips.h>
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
++#include <linux/export.h>
+ #include <clocksource/hyperv_timer.h>
+ #include <asm/mshyperv.h>
+ #include <linux/set_memory.h>
+@@ -25,6 +26,7 @@
  
-+/* Indirect macros required for expanded argument pasting, eg. __LINE__. */
-+#define ___PASTE(a, b) a##b
-+#define __PASTE(a, b) ___PASTE(a, b)
-+
- #ifndef __ASSEMBLY__
+ /* The one and only */
+ struct hv_context hv_context;
++EXPORT_SYMBOL_FOR_MODULES(hv_context, "mshv_vtl");
  
  /*
-@@ -79,10 +83,6 @@ static inline void __chk_io_ptr(const volatile void __iomem *ptr) { }
- # define __builtin_warning(x, y...) (1)
- #endif /* __CHECKER__ */
+  * hv_init - Main initialization routine.
+@@ -104,6 +106,7 @@ int hv_post_message(union hv_connection_id connection_id,
  
--/* Indirect macros required for expanded argument pasting, eg. __LINE__. */
--#define ___PASTE(a,b) a##b
--#define __PASTE(a,b) ___PASTE(a,b)
--
- #ifdef __KERNEL__
+ 	return hv_result(status);
+ }
++EXPORT_SYMBOL_FOR_MODULES(hv_post_message, "mshv_vtl");
  
- /* Attributes */
-diff --git a/include/linux/static_call_types.h b/include/linux/static_call_types.h
-index 5a00b8b2cf9f..cfb6ddeb292b 100644
---- a/include/linux/static_call_types.h
-+++ b/include/linux/static_call_types.h
-@@ -25,6 +25,8 @@
- #define STATIC_CALL_SITE_INIT 2UL	/* init section */
- #define STATIC_CALL_SITE_FLAGS 3UL
+ static int hv_alloc_page(void **page, bool decrypt, const char *note)
+ {
+diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+index f7fc2630c054..b2862e0a317a 100644
+--- a/drivers/hv/hyperv_vmbus.h
++++ b/drivers/hv/hyperv_vmbus.h
+@@ -33,6 +33,7 @@
+  */
+ #define HV_UTIL_NEGO_TIMEOUT 55
  
-+#ifndef __ASSEMBLY__
-+
- /*
-  * The static call site table needs to be created by external tooling (objtool
-  * or a compiler plugin).
-@@ -100,4 +102,6 @@ struct static_call_key {
++void vmbus_isr(void);
  
- #endif /* CONFIG_HAVE_STATIC_CALL */
+ /* Definitions for the monitored notification facility */
+ union hv_monitor_trigger_group {
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 0dc4692b411a..47fcab38398a 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -36,6 +36,7 @@
+ #include <linux/syscore_ops.h>
+ #include <linux/dma-map-ops.h>
+ #include <linux/pci.h>
++#include <linux/export.h>
+ #include <clocksource/hyperv_timer.h>
+ #include <asm/mshyperv.h>
+ #include "hyperv_vmbus.h"
+@@ -1349,7 +1350,7 @@ static void vmbus_message_sched(struct hv_per_cpu_context *hv_cpu, void *message
+ 	}
+ }
  
-+#endif /* __ASSEMBLY__ */
-+
- #endif /* _STATIC_CALL_TYPES_H */
-diff --git a/tools/include/linux/static_call_types.h b/tools/include/linux/static_call_types.h
-index 5a00b8b2cf9f..cfb6ddeb292b 100644
---- a/tools/include/linux/static_call_types.h
-+++ b/tools/include/linux/static_call_types.h
-@@ -25,6 +25,8 @@
- #define STATIC_CALL_SITE_INIT 2UL	/* init section */
- #define STATIC_CALL_SITE_FLAGS 3UL
+-static void vmbus_isr(void)
++void vmbus_isr(void)
+ {
+ 	struct hv_per_cpu_context *hv_cpu
+ 		= this_cpu_ptr(hv_context.cpu_context);
+@@ -1362,6 +1363,7 @@ static void vmbus_isr(void)
  
-+#ifndef __ASSEMBLY__
-+
- /*
-  * The static call site table needs to be created by external tooling (objtool
-  * or a compiler plugin).
-@@ -100,4 +102,6 @@ struct static_call_key {
+ 	add_interrupt_randomness(vmbus_interrupt);
+ }
++EXPORT_SYMBOL_FOR_MODULES(vmbus_isr, "mshv_vtl");
  
- #endif /* CONFIG_HAVE_STATIC_CALL */
- 
-+#endif /* __ASSEMBLY__ */
-+
- #endif /* _STATIC_CALL_TYPES_H */
+ static irqreturn_t vmbus_percpu_isr(int irq, void *dev_id)
+ {
 -- 
 2.43.0
 
