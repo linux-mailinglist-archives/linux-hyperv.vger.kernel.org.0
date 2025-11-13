@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-7571-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7572-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AD34C5A852
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Nov 2025 00:22:14 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49DA3C5A8CA
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Nov 2025 00:29:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D0EBB4EA522
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Nov 2025 23:17:51 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7B7503534F7
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Nov 2025 23:29:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE25E311969;
-	Thu, 13 Nov 2025 23:17:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 925BB328B45;
+	Thu, 13 Nov 2025 23:29:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="n4qM6IZk"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="V0Ypzelh"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D519A3168E1;
-	Thu, 13 Nov 2025 23:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674FF328608
+	for <linux-hyperv@vger.kernel.org>; Thu, 13 Nov 2025 23:28:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763075868; cv=none; b=h8DCjXVIFQVd4ZNAnoF9KIVitwY4jM8PVEnZRAjiHSR1PfnWSDGpm8Qv1XFzlmAnVWLuTDcNvmg70LD0tkZtA/p17wZRs71UBgsMbv/rHULbW1VUdXD8aD4xg43v5jhLRGfpXZiJF9eFopsnWx+CTIyPCVnIKVZ8YGWksHDjPuM=
+	t=1763076541; cv=none; b=glVmSImDpeOei/CXF7eb5eRubiW9ZLGtVxfUB/P2cTvKqrSj4gPiJGFx5Eu3QNY2Q6Wv06VlRF8symrBAwZSg2ZiQPfiAfXUOoegwIZnHEXRI85AsEBVyMDABZMhvNahNKNe4b5wdRpHyltlROUWbhs176rEJ7pvE0iUl/rt43o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763075868; c=relaxed/simple;
+	s=arc-20240116; t=1763076541; c=relaxed/simple;
 	bh=gMZKVQqeY7nZOl/zGkQ22NdBV2O+7XIATtpJrC4fO0k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jy73qPEko7aF0xrzcQhch3qmMyl34XUlExLkobdUE76eqPMARb84FBTl4y8uX2ivDdmmdp8M1a9uzth7KfBKLJoJ5Yy9eyWhOSdNvp0JOt+3I/Qkys/by31O8MW5n47JnXBzga2NB66+0+6saFHjBuKCLE0ZCLzpOnaMAHN1tqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=n4qM6IZk; arc=none smtp.client-ip=95.215.58.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iu84130+YFCJ+Epd85b2ZJB2YXLiXZERcwNbdwR07nXp+uEY2foGK8Jvg7e3FdGMvcpL8b1c93BDXnHj5d1sfeFfNwGC+5ToWy4TARBrWVWynidlrYp22NEKuyYeaMUKXZGUZ77RC91kmevHXJE2pE8di1zKwJbcIKBCQWv0VTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=V0Ypzelh; arc=none smtp.client-ip=91.218.175.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Date: Thu, 13 Nov 2025 23:17:22 +0000
+Date: Thu, 13 Nov 2025 23:28:41 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1763075854;
+	t=1763076527;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
 	bh=zQxu8cfY3zpe4ibXES75EL+tbeWgFHpdhWo+B/hgYak=;
-	b=n4qM6IZkxdtcD7LBplzqyGDY0WrwdKy7W24SJC6RPXgq59SPMJD+B3rOe+MchnHWvEjcrM
-	N+kAtzshc+fllu6EQj1acyKC8nNvsUqV8A8/BYLa++ZahPAxn5438wU+bu0HWp3I62m09P
-	56YMlt63/ylTcAK4ddxgRfzd6gf2dJk=
+	b=V0YpzelhtM3fC5uMEIqJKM3uqHniHvnPZpifDHAkm6BQjPqEuUCtthZPa9hOdav+hkSfAR
+	NeK6JH8DZm59HY6eQERyq5I4cK4qyTDfGsf2L6vFD3J3eO16upX0DvGiI9KzCCH/LukloC
+	GDkdnq95PBIKWSlSTnOGhtVgJc97w7w=
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Yosry Ahmed <yosry.ahmed@linux.dev>
 To: Sean Christopherson <seanjc@google.com>
@@ -52,7 +52,7 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	Jim Mattson <jmattson@google.com>
 Subject: Re: [PATCH 2/9] KVM: nSVM: Set exit_code_hi to -1 when synthesizing
  SVM_EXIT_ERR (failed VMRUN)
-Message-ID: <nwvfxozjx6l5yaflvlbbnxqu3opagtnifmmsdv6y3aco3tyhdd@rooicluxzmiu>
+Message-ID: <x5sx4ljihax3wzm4kfsiiitd3kq62ymon7ggtxixqsxgwnryj2@f7cq4h72h4xu>
 References: <20251113225621.1688428-1-seanjc@google.com>
  <20251113225621.1688428-3-seanjc@google.com>
 Precedence: bulk
