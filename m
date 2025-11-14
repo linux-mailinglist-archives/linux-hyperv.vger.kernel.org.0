@@ -1,46 +1,46 @@
-Return-Path: <linux-hyperv+bounces-7576-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7577-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B03AC5AB48
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Nov 2025 01:05:09 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DD04C5AB5A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Nov 2025 01:08:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0A14D4E3DBA
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Nov 2025 00:05:08 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9D2B54E15DF
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Nov 2025 00:07:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 589991F936;
-	Fri, 14 Nov 2025 00:05:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 748C727453;
+	Fri, 14 Nov 2025 00:06:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NP7IVGp4"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uSPuR97R"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C842CA4E
-	for <linux-hyperv@vger.kernel.org>; Fri, 14 Nov 2025 00:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991738F4A
+	for <linux-hyperv@vger.kernel.org>; Fri, 14 Nov 2025 00:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763078705; cv=none; b=Kx+ek7wEwtNVcr/TuPrvxS44Zz4XXp0IZb2bJ1OKGHvsgoMB6TQVYYvcDZm6fiiky6G15UgYaZ4U5GxC3CoBAKD2dfi4YTUpu7sKL8zwOqumD0RoTJRcmTednqBeLQZWVuYjiNLT0e7MlRfPEmfDhUpD+qmy/BRIr1wCOlVtMig=
+	t=1763078818; cv=none; b=ks+j8Q+xopwbQLetgK0U42JgnTMh+zwmmo1CBNApIFD3shuroppBl66/wl95jE7t1ROJRbCpZLk2InD1iEV1PHtzHCDnoCRRpddM1KNDmKmq2nus1upkueHVNPuJ7aVc/Cty1rR4p4haSDqPGumnsyGah0v0cke30gxY6cA1jsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763078705; c=relaxed/simple;
-	bh=DhOIN3ARG/YzOjB8Zthzpl+Qb9Mh4Rfifi9bI5nutAo=;
+	s=arc-20240116; t=1763078818; c=relaxed/simple;
+	bh=R33AdgTjSR1SWKU3UPzVhhkvLoRemUWmq48vjSWAjtU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sEQGRjyntv4uqCcpi44p6NKp+nQKLgBiL0CZREOn4LnX9Mw22jD7NZDE2ERMS3i2nywykCjiEUL+tXC24l15b1YCPYVNg6hW4SCH0jyuiYcM2HnRuSJY1T+jMlElBu09c4LkpiNkBZRVIc76S97hW1ZPWpx0+ENJGa+6L5Fqec8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NP7IVGp4; arc=none smtp.client-ip=91.218.175.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=FgurbMsutaWVIcgBW3dV0JlD9CdYfUrzrlFkmIDoYaMpUrkAmPtoflny070xgkMwb+hhIG9n8cBlhv/d+7+01dozuS871kyM/uu9APEYVPrwVYgSE9t+eMkiCxznIUKlD2meUuVc8hJmOAaMT67X531J9sobBk+nbj1YkRZBz00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uSPuR97R; arc=none smtp.client-ip=91.218.175.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Date: Fri, 14 Nov 2025 00:04:34 +0000
+Date: Fri, 14 Nov 2025 00:06:45 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1763078691;
+	t=1763078814;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fzxBmeF3xd+ODUqUuNrzGl99lENkn92KYzfj1YgGIfQ=;
-	b=NP7IVGp4I6LAmwEo3A0A4rC+NDfFqPVgy4dAsIgRu+U0ZkDL5wfS202+gvmH82noyaN6cn
-	fU4xuW++HxttstBBAQeRjaDFCdy7ziA+Um4zwQgHReOhq1I3oocRMGSYlPr6eyJfBaQe6a
-	/Y5Q3pvoNmdSkKB+ywfyP7rhGcOp8fA=
+	bh=Li0/cPd0Ha1pYMgeIuNhanlXxtY5IF4nmf8wn3pJB6I=;
+	b=uSPuR97RDn+UI2sQer/AiPNjItMLdP/Z9251mA8/dWRxL+R6jAzQspgmv9yF90VsuEehiP
+	8s6BW4BEVMn4OF6yBfJQUpzVBNM1FnYYAfUSoHCur0vYaFa9CCJkZej29tDWbWLtTOuaeZ
+	H+A52yEQ1dze5ObyR0MxoNRKn/X6++c=
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Yosry Ahmed <yosry.ahmed@linux.dev>
 To: Sean Christopherson <seanjc@google.com>
@@ -49,11 +49,11 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
 	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH 5/9] KVM: SVM: Check for an unexpected VM-Exit after
- RETPOLINE "fast" handling
-Message-ID: <ouxrqqbwodwf5gne45xvrtt7t2zqrlq4lpkptwmpsilx3zndsr@yagrxfbudyjy>
+Subject: Re: [PATCH 6/9] KVM: SVM: Filter out 64-bit exit codes when invoking
+ exit handlers on bare metal
+Message-ID: <ajyebe4aiouvjm6craaamaq4nrlgs64ccziexpxdet6cl5yr53@gum4bwvwq5aa>
 References: <20251113225621.1688428-1-seanjc@google.com>
- <20251113225621.1688428-6-seanjc@google.com>
+ <20251113225621.1688428-7-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -62,55 +62,72 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251113225621.1688428-6-seanjc@google.com>
+In-Reply-To: <20251113225621.1688428-7-seanjc@google.com>
 X-Migadu-Flow: FLOW_OUT
 
-On Thu, Nov 13, 2025 at 02:56:17PM -0800, Sean Christopherson wrote:
-> Check for an unexpected/unhandled VM-Exit after the manual RETPOLINE=y
-> handling.  The entire point of the RETPOLINE checks is to optimize for
-> common VM-Exits, i.e. checking for the rare case of an unsupported
-> VM-Exit is counter-productive.  This also aligns SVM and VMX exit handling.
+On Thu, Nov 13, 2025 at 02:56:18PM -0800, Sean Christopherson wrote:
+> Explicitly filter out 64-bit exit codes when invoking exit handlers, as
+> svm_exit_handlers[] will never be sized with entries that use bits 63:32.
 > 
-> No functional change intended.
+> Processing the non-failing exit code as a 32-bit value will allow tracking
+> exit_code as a single 64-bit value (which it is, architecturally).  This
+> will also allow hardening KVM against Spectre-like attacks without needing
+> to do silly things to avoid build failures on 32-bit kernels
+> (array_index_nospec() rightly asserts that the index fits in an "unsigned
+> long").
+> 
+> Omit the check when running as a VM, as KVM has historically failed to set
+> bits 63:32 appropriately when synthesizing VM-Exits, i.e. KVM could get
+> false positives when running as a VM on an older, broken KVM/kernel.  From
+> a functional perspective, omitting the check is "fine", as any unwanted
+> collision between e.g. VMEXIT_INVALID and a 32-bit exit code will be
+> fatal to KVM-on-KVM regardless of what KVM-as-L1 does.
 > 
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
 
 Reviewed-by: Yosry Ahmed <yosry.ahmed@linux.dev>
 
 > ---
->  arch/x86/kvm/svm/svm.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>  arch/x86/kvm/svm/svm.c | 18 ++++++++++++++++--
+>  1 file changed, 16 insertions(+), 2 deletions(-)
 > 
 > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 638a67ef0c37..202a4d8088a2 100644
+> index 202a4d8088a2..3b05476296d0 100644
 > --- a/arch/x86/kvm/svm/svm.c
 > +++ b/arch/x86/kvm/svm/svm.c
-> @@ -3435,12 +3435,6 @@ static void dump_vmcb(struct kvm_vcpu *vcpu)
+> @@ -3433,8 +3433,22 @@ static void dump_vmcb(struct kvm_vcpu *vcpu)
+>  		sev_free_decrypted_vmsa(vcpu, save);
+>  }
 >  
->  int svm_invoke_exit_handler(struct kvm_vcpu *vcpu, u64 exit_code)
+> -int svm_invoke_exit_handler(struct kvm_vcpu *vcpu, u64 exit_code)
+> +int svm_invoke_exit_handler(struct kvm_vcpu *vcpu, u64 __exit_code)
 >  {
-> -	if (exit_code >= ARRAY_SIZE(svm_exit_handlers))
-> -		goto unexpected_vmexit;
-> -
-> -	if (!svm_exit_handlers[exit_code])
-> -		goto unexpected_vmexit;
-> -
+> +	u32 exit_code = __exit_code;
+> +
+> +	/*
+> +	 * SVM uses negative values, i.e. 64-bit values, to indicate that VMRUN
+> +	 * failed.  Report all such errors to userspace (note, VMEXIT_INVALID,
+> +	 * a.k.a. SVM_EXIT_ERR, is special cased by svm_handle_exit()).  Skip
+> +	 * the check when running as a VM, as KVM has historically left garbage
+> +	 * in bits 63:32, i.e. running KVM-on-KVM would hit false positives if
+> +	 * the underlying kernel is buggy.
+> +	 */
+> +	if (!cpu_feature_enabled(X86_FEATURE_HYPERVISOR) &&
+> +	    (u64)exit_code != __exit_code)
+> +		goto unexpected_vmexit;
+> +
 >  #ifdef CONFIG_MITIGATION_RETPOLINE
 >  	if (exit_code == SVM_EXIT_MSR)
 >  		return msr_interception(vcpu);
-> @@ -3457,6 +3451,12 @@ int svm_invoke_exit_handler(struct kvm_vcpu *vcpu, u64 exit_code)
->  		return sev_handle_vmgexit(vcpu);
->  #endif
->  #endif
-> +	if (exit_code >= ARRAY_SIZE(svm_exit_handlers))
-> +		goto unexpected_vmexit;
-> +
-> +	if (!svm_exit_handlers[exit_code])
-> +		goto unexpected_vmexit;
-> +
->  	return svm_exit_handlers[exit_code](vcpu);
+> @@ -3461,7 +3475,7 @@ int svm_invoke_exit_handler(struct kvm_vcpu *vcpu, u64 exit_code)
 >  
 >  unexpected_vmexit:
+>  	dump_vmcb(vcpu);
+> -	kvm_prepare_unexpected_reason_exit(vcpu, exit_code);
+> +	kvm_prepare_unexpected_reason_exit(vcpu, __exit_code);
+>  	return 0;
+>  }
+>  
 > -- 
 > 2.52.0.rc1.455.g30608eb744-goog
 > 
