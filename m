@@ -1,264 +1,235 @@
-Return-Path: <linux-hyperv+bounces-7602-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7603-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 041B7C5F7A3
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Nov 2025 23:14:20 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C49BC5F976
+	for <lists+linux-hyperv@lfdr.de>; Sat, 15 Nov 2025 00:34:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A8BE83BC349
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Nov 2025 22:14:18 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id C689835FBAF
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Nov 2025 23:32:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDCFE3557EF;
-	Fri, 14 Nov 2025 22:14:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14B5A1A08AF;
+	Fri, 14 Nov 2025 23:32:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PePrhLLT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PVAJNmYF";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="gHIavjnW"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE298326947
-	for <linux-hyperv@vger.kernel.org>; Fri, 14 Nov 2025 22:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F6630DD3F
+	for <linux-hyperv@vger.kernel.org>; Fri, 14 Nov 2025 23:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763158444; cv=none; b=jhEDcpyVYAY1bqR0xxPq6+54QxNIS1zvCj7RoE3gX6CAYsmU+3Tif6tAhKRniFCO/qdxDgZkNoqfrlVCBCRiqzfKJefa/D3iJuRiJPErGGX1QFbAgfpmsGgR7w83YSQmkFcMVbmc0eR6AOLY7MybNsVBRvrsJ/CoM4b+CJrwkq0=
+	t=1763163139; cv=none; b=t291G47e4txjNc1gDX7H0v/osiC0GDM6iZIXtv9tELZbDnxWTh6td1m/mxbS2cCZICXfBw7IqB6hCB4TIusoc/ck4oxRyoxerzFd667hNjtaFv0lBcLsvz7MsOcaF92bqfCpAerF/qWZ9I/Q1IfQ1xkffx3I2gEslKTVJp0Xggs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763158444; c=relaxed/simple;
-	bh=YFL5fxxxqEKSNlrulASCd7JeiIbvYBc7XWyMFO10QBg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EkTXPJ2V0G9nK14GuoQThHk/0FnHQtvmxs0bXvUo6huwlSGnJj8k3QATSbsA/uUpYcgfKEaR4GM4aT4/RjvmDmCF5cIAGWgHuLbu4OQbpK0LDLY6QhaUOb4xRCEy9Yvy/KkWO5ILRFgznB4oa/q7CvN2alTsUOOAIZbvWouq5X4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PePrhLLT; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-787eb2d86bfso26418707b3.2
-        for <linux-hyperv@vger.kernel.org>; Fri, 14 Nov 2025 14:14:02 -0800 (PST)
+	s=arc-20240116; t=1763163139; c=relaxed/simple;
+	bh=AbnGhiOXx7dGsbwYslsKjnRY8FJ95Mbk/ikoKAQApZU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BA5aOC7X42G7Oz2EzWI8ywjn0KewcM93cTPHPBeyyTnDjVQmxvh/k3IDHu/Pg6RcdnjT3jL435cCiX6N7EgKPWY7Q/aaDzCXnLb+APxQXCN7JFJjm/8HgeLxVwIPHNvtAOXRU1dirR/eZgqA9ZiznKhdUrZV2/vu3tPcWwaG8+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PVAJNmYF; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=gHIavjnW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1763163133;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=/QYo7Ljqd9DNAGh5/P3lAIO/wCt6rj9fGqv6o3T6eUs=;
+	b=PVAJNmYFzAz3tTB417trYQ3VUDYOMzMMHviHb65bIuLcCG21636NmKfaN2viXa9LfL2cH6
+	s1oy2zaEE7ktePg4DMo3ive/2s1zhG0yHu7KJyCktArdPrJ6BuIMz7C7cQRdFuGNeMGnyq
+	EMjrZL8vCMQ7HdTfiLY0pOtqgqixlmA=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-204-9rGJfN5rO5arczU3tNQPDg-1; Fri, 14 Nov 2025 18:32:11 -0500
+X-MC-Unique: 9rGJfN5rO5arczU3tNQPDg-1
+X-Mimecast-MFC-AGG-ID: 9rGJfN5rO5arczU3tNQPDg_1763163130
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-429cd1d0d98so1649353f8f.3
+        for <linux-hyperv@vger.kernel.org>; Fri, 14 Nov 2025 15:32:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763158442; x=1763763242; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Hykq0AZOv3Mcxta5MvKVi28KK2hR4lRzOujGk7TFas=;
-        b=PePrhLLTUfQKtexRSDhq0+vDtTlm8UAtG/uf2zh9cA+PrBKJxVesO866zg8Z2GfUu5
-         L9jJ683+mjToHB0dZPr0hHg3CDKtoSRxpelPY11Jf89hueGcpka8XspVLMb26GH8BFxh
-         tWyeRoY9KgAXWjfVUJA3mdg+W9PRITh64Txaa2MFr7UyiXy81VLB53P5sZ2Ym4pClIG3
-         xrAL5sYYYUvd2I2cEUNGP/g3nmq6KpaXFqCdSiLnClhV3WMT4rW9XJbT9Gnxpo522th0
-         vwoZVCrX1PK42Ay8ln8cSZ1MUWgZMPNiIMbMb4KNqxT0h5TVOoFT9sobhP6X7koat3u9
-         fNSA==
+        d=redhat.com; s=google; t=1763163130; x=1763767930; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=/QYo7Ljqd9DNAGh5/P3lAIO/wCt6rj9fGqv6o3T6eUs=;
+        b=gHIavjnWVJ62f4o/K2QzUptlA9Hh0wIUjAn1jYVVhEBd6TQ1AIaraco76J4nDr1vQT
+         C5k1VcKKyJQLPeNEMsFYLGgQAbIMqpuiA1kAkuSQcHPxSC/ia+p5xBtUEuivZa8tmSvK
+         jAIx4B5EpQVmsPh2irzvW0UxZGakwh52E9LFf8yoJVOnyPP/gayK98MtFoUBgztk3ap5
+         a1Iw1wpib06GmNB+n7gYnEFmMzVQGNdeYzKBdrty+3CnPphGM3glFEQe6nHTossiW81h
+         loYwV2iIKteEdyCCgjgOZJBJJy7vypE5JRTdFXiktnt+lda7ALqyk1Ufe6WF3U7o2y+e
+         I8/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763158442; x=1763763242;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5Hykq0AZOv3Mcxta5MvKVi28KK2hR4lRzOujGk7TFas=;
-        b=F9hfh6MgGDjQaef5RUKA8nRqUFWMdeQKzZElN2q5lyhHFnb+vT3uZ0JPoB5zSAdXqK
-         TY21BJGaCTesuGQeLkddr5rZmHkBaQazuxPolwYJVdB/mNjV2BFIcDUJCYnUXHZNIyFv
-         xBJcoPOW/obrozkvdmxwlcIOcuJ3pQhhKpRXCBNtcexiDKqGXQ75qw8sXbFW6O5oybdf
-         AP7LY+iym9/RqDaHyLivujlpw/JIONRj1xZ43Wi9vfx7j4Ke4viiuvlXDfsSOD4s6OST
-         /WqefIxGGB0CNueOUzkUr9dQQj3Lf1wKyTGGJGzG6lcwKtawvf4fH0c/RS6f8DY5A9SP
-         /jKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZZ3qlkAkdXNw3jvLKeDyP674LqYXkc6+KU+YyrUsRf7/Cmfnff+ZFaxs7LWT5HWKmUNpj+TY/sbjEQR8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweNefCVK6Lx2x1Y5xe6PiLr3Wo5Dp6c+mDloTxusjcHw9DZYm3
-	Ro2RVpGSbiRhlJ1elOD4YnI6jgai/5Am+JqWc+ZwCxzIjtVa3YSipbip
-X-Gm-Gg: ASbGncts4xNqkFuLaFg/qoTZW4WJAt5xlD9605j0q58NrASmI/iNDSM/0iWQ/0s5owd
-	XXla+v8VTzEg3ZKr3ooGwvQdjHnN/ZwKaxzI5Fr75qE0U4iteHNqXh0luDhDC5MUfkQXo+m2UWO
-	BUoILhQjVY5P/WEaMFo1ZoD0WrHVkhX8l5X33UoLa/Xi1/eR0p/2j+0lLExIXiwH/CHJhFv9WYp
-	xf1VooZJq8vVBQJ++ZN8bqhDbVmT1qbBxFB4ypHBcbC6dPRzdgiSr9+wPmin+XthqSl1Z3giCyF
-	Tih/yoGn6cJwR/s1r5NxqZfQWNcu+PxwRQPoAH0fbW+JOwV1/MB652w93A4+eEnl7tGtxxYUeR0
-	WaAyxLGk0vaQTNFQMMt8dJgyO7zeUD0xc3JtR1V4lxrmUYy5D0GU9a3Pqx1tSNvE8VwoLnRGRTz
-	HA2cbJMN1qTgymk6JmDhJhlBNW8ul6KF3kyhObu7jmj2F2Pw==
-X-Google-Smtp-Source: AGHT+IGcJZO4HUiY70v/QCO/xzK+nTyMf7KdDebKqAftSKwEa0NHlBS6WCaAwow7uyA9ZmNwfg0Gcg==
-X-Received: by 2002:a05:690c:7603:b0:788:ee99:f125 with SMTP id 00721157ae682-78929e0d4a5mr32556247b3.2.1763158441752;
-        Fri, 14 Nov 2025 14:14:01 -0800 (PST)
-Received: from devvm11784.nha0.facebook.com ([2a03:2880:25ff:c::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-78822151d43sm19410627b3.46.2025.11.14.14.14.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Nov 2025 14:14:01 -0800 (PST)
-Date: Fri, 14 Nov 2025 14:13:59 -0800
-From: Bobby Eshleman <bobbyeshleman@gmail.com>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Shuah Khan <shuah@kernel.org>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	Sargun Dhillon <sargun@sargun.me>, berrange@redhat.com,
-	Bobby Eshleman <bobbyeshleman@meta.com>
-Subject: Re: [PATCH net-next v9 06/14] vsock/loopback: add netns support
-Message-ID: <aRepp4Weuhaxgn6W@devvm11784.nha0.facebook.com>
-References: <20251111-vsock-vmtest-v9-0-852787a37bed@meta.com>
- <20251111-vsock-vmtest-v9-6-852787a37bed@meta.com>
- <g6bxp6hketbjrddzni2ln37gsezqvxbu2orheorzh7fs66roll@hhcrgsos3ui3>
- <aRTRhk/ok06YKTEu@devvm11784.nha0.facebook.com>
- <g5dcyor4aryvtcnqxm5aekldbettetlmog3c7sj7sjx3yp2pgy@hcpxyubied2n>
- <aRYivEKsa44u5Mh+@devvm11784.nha0.facebook.com>
- <kwgjzpxxqpkgwafydp65vlj6jlf7h7kcnhwgtwrrhzp2qtgkkq@z3xfl26ejspl>
+        d=1e100.net; s=20230601; t=1763163130; x=1763767930;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/QYo7Ljqd9DNAGh5/P3lAIO/wCt6rj9fGqv6o3T6eUs=;
+        b=avvYfCW1FjeWvMG3Sn40I+2dRgBDXsTJ4g5pCpE00WE+tAUi3f8TX4MFO+t6dHi6ZX
+         0Rdp7rsbR2lEOS9/3HmSvZSDsTzT2azHng2hhRiXm4rLvJW2p8sPXOTiBrHwgnMcDH70
+         nWQkSr/8P20XfLrXBK007Cw9AXLE5JghMFdRRYhp/7S2GplscdjKQs6WUjIGbcwI+NWR
+         mgt0nUN62bM/YHJM9EU5cpECSkSM0gRnsDF+c2QXfQeeW9jy6kSLjxVqTcdmxWYjNhli
+         a/yo6FV7Q+BINWvc87rO4ggFHcWK6we9MuyTWi0NjblhuP4gBXqKe92OKzSpbB4BXfe6
+         OrrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWYKxzg0DYVR40T5I54AWkMpkpbw4CfYzuNcVB0SKcuVdT+oKx3wLsEsa2sKAraMvdrnQnnRxvnsLc36yg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0Rhizved9Y9011j7T8W7hMlOO7+NUi8gex05L2pr7zykE5QF2
+	hnWYulK9EO2UkVxQARectIwYZxKDWaoKBKXCh/wGi0b1NQsVmNbWz6hGKJE+B514sLlE6PjJWDw
+	s3TaA0UPkpp8VGv88g16VDCQQr4kD1k/xqfjKLsgzLcT6M5Njqxcxf2gMV7AcMOA/UA==
+X-Gm-Gg: ASbGncujUmbVwCcdtIHYuJ7Hv9N9oVsiGwe8a094RkqK2Km4BSTFMIZxfMheKE/5tkE
+	T7uCS9l/QdDeCdycXQJynZ+pdOfVrb2CTFwRaVZTwDrg2SANHOf9gvvqr07Uj13iyk2aI8MpJYW
+	wsriW/c6b8xiiRTu6NosbC9jNvocqgX4cbUbAbQTOD2J/V4OQDMJl6W7NHwvT/gygwhOgDcL9Jg
+	t6kc4bfuXzLnJD7MZwzA2iQj9ogmn0tb50salFOMEDsa2JKALwNL0GJh5f2sVoMDK8e8eGkLkJO
+	2SIY02WiyUVQ7Z44kW03mEVwQPGwpZMnWl65vxlYY1lvls89e+tmXg7uaZ3ShDxfbALSHqW5M/7
+	snmXHZIrIKGn92fLN48Onaj5lluny66ZYf4Uzt+3IDlmFryVMtVRninuKuqojzOEFjlPWz9GZfp
+	fJzmeN
+X-Received: by 2002:a05:6000:40de:b0:429:8daa:c6b4 with SMTP id ffacd0b85a97d-42b593497d8mr4293947f8f.21.1763163129942;
+        Fri, 14 Nov 2025 15:32:09 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHLD8BHdcVzHtD6TF4dLvyu5AHqRO8aq+/3QgGswkcNLf/IeBbf1T8H4P8a8bY7RmWd0txzCA==
+X-Received: by 2002:a05:6000:40de:b0:429:8daa:c6b4 with SMTP id ffacd0b85a97d-42b593497d8mr4293924f8f.21.1763163129430;
+        Fri, 14 Nov 2025 15:32:09 -0800 (PST)
+Received: from [192.168.10.48] ([176.206.119.13])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-42b53f17291sm12635481f8f.32.2025.11.14.15.32.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Nov 2025 15:32:08 -0800 (PST)
+Message-ID: <60f7c9b3-312f-41e2-ab47-c4361df1d825@redhat.com>
+Date: Sat, 15 Nov 2025 00:32:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <kwgjzpxxqpkgwafydp65vlj6jlf7h7kcnhwgtwrrhzp2qtgkkq@z3xfl26ejspl>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/9] KVM: SVM: Filter out 64-bit exit codes when invoking
+ exit handlers on bare metal
+To: Sean Christopherson <seanjc@google.com>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>, "K. Y. Srinivasan"
+ <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
+Cc: kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+ Yosry Ahmed <yosry.ahmed@linux.dev>
+References: <20251113225621.1688428-1-seanjc@google.com>
+ <20251113225621.1688428-7-seanjc@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <20251113225621.1688428-7-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Nov 14, 2025 at 10:33:42AM +0100, Stefano Garzarella wrote:
-> On Thu, Nov 13, 2025 at 10:26:04AM -0800, Bobby Eshleman wrote:
-> > On Thu, Nov 13, 2025 at 04:24:44PM +0100, Stefano Garzarella wrote:
-> > > On Wed, Nov 12, 2025 at 10:27:18AM -0800, Bobby Eshleman wrote:
-> > > > On Wed, Nov 12, 2025 at 03:19:47PM +0100, Stefano Garzarella wrote:
-> > > > > On Tue, Nov 11, 2025 at 10:54:48PM -0800, Bobby Eshleman wrote:
-> > > > > > From: Bobby Eshleman <bobbyeshleman@meta.com>
-> > > > > >
-> > > > > > Add NS support to vsock loopback. Sockets in a global mode netns
-> > > > > > communicate with each other, regardless of namespace. Sockets in a local
-> > > > > > mode netns may only communicate with other sockets within the same
-> > > > > > namespace.
-> > > > > >
-> > > > > > Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
-> > 
-> > [...]
-> > 
-> > > > > > @@ -131,7 +136,41 @@ static void vsock_loopback_work(struct work_struct *work)
-> > > > > > 		 */
-> > > > > > 		virtio_transport_consume_skb_sent(skb, false);
-> > > > > > 		virtio_transport_deliver_tap_pkt(skb);
-> > > > > > -		virtio_transport_recv_pkt(&loopback_transport, skb, NULL, 0);
-> > > > > > +
-> > > > > > +		/* In the case of virtio_transport_reset_no_sock(), the skb
-> > > > > > +		 * does not hold a reference on the socket, and so does not
-> > > > > > +		 * transitively hold a reference on the net.
-> > > > > > +		 *
-> > > > > > +		 * There is an ABA race condition in this sequence:
-> > > > > > +		 * 1. the sender sends a packet
-> > > > > > +		 * 2. worker calls virtio_transport_recv_pkt(), using the
-> > > > > > +		 *    sender's net
-> > > > > > +		 * 3. virtio_transport_recv_pkt() uses t->send_pkt() passing the
-> > > > > > +		 *    sender's net
-> > > > > > +		 * 4. virtio_transport_recv_pkt() free's the skb, dropping the
-> > > > > > +		 *    reference to the socket
-> > > > > > +		 * 5. the socket closes, frees its reference to the net
-> > > > > > +		 * 6. Finally, the worker for the second t->send_pkt() call
-> > > > > > +		 *    processes the skb, and uses the now stale net pointer for
-> > > > > > +		 *    socket lookups.
-> > > > > > +		 *
-> > > > > > +		 * To prevent this, we acquire a net reference in vsock_loopback_send_pkt()
-> > > > > > +		 * and hold it until virtio_transport_recv_pkt() completes.
-> > > > > > +		 *
-> > > > > > +		 * Additionally, we must grab a reference on the skb before
-> > > > > > +		 * calling virtio_transport_recv_pkt() to prevent it from
-> > > > > > +		 * freeing the skb before we have a chance to release the net.
-> > > > > > +		 */
-> > > > > > +		net_mode = virtio_vsock_skb_net_mode(skb);
-> > > > > > +		net = virtio_vsock_skb_net(skb);
-> > > > >
-> > > > > Wait, we are adding those just for loopback (in theory used only for
-> > > > > testing/debugging)? And only to support virtio_transport_reset_no_sock() use
-> > > > > case?
-> > > >
-> > > > Yes, exactly, only loopback + reset_no_sock(). The issue doesn't exist
-> > > > for vhost-vsock because vhost_vsock holds a net reference, and it
-> > > > doesn't exist for non-reset_no_sock calls because after looking up the
-> > > > socket we transfer skb ownership to it, which holds down the skb -> sk ->
-> > > > net reference chain.
-> > > >
-> > > > >
-> > > > > Honestly I don't like this, do we have any alternative?
-> > > > >
-> > > > > I'll also try to think something else.
-> > > > >
-> > > > > Stefano
-> > > >
-> > > >
-> > > > I've been thinking about this all morning... maybe
-> > > > we can do something like this:
-> > > >
-> > > > ```
-> > > >
-> > > > virtio_transport_recv_pkt(...,  struct sock *reply_sk) {... }
-> > > >
-> > > > virtio_transport_reset_no_sock(..., reply_sk)
-> > > > {
-> > > > 	if (reply_sk)
-> > > > 		skb_set_owner_sk_safe(reply, reply_sk)
-> > > 
-> > > Interesting, but what about if we call skb_set_owner_sk_safe() in
-> > > vsock_loopback.c just before calling virtio_transport_recv_pkt() for every
-> > > skb?
-> > 
-> > I think the issue with this is that at the time vsock_loopback calls
-> > virtio_transport_recv_pkt() the reply skb hasn't yet been allocated by
-> > virtio_transport_reset_no_sock() and we can't wait for it to return
-> > because the original skb may be freed by then.
+On 11/13/25 23:56, Sean Christopherson wrote:
+> Explicitly filter out 64-bit exit codes when invoking exit handlers, as
+> svm_exit_handlers[] will never be sized with entries that use bits 63:32.
 > 
-> Right!
+> Processing the non-failing exit code as a 32-bit value will allow tracking
+> exit_code as a single 64-bit value (which it is, architecturally).  This
+> will also allow hardening KVM against Spectre-like attacks without needing
+> to do silly things to avoid build failures on 32-bit kernels
+> (array_index_nospec() rightly asserts that the index fits in an "unsigned
+> long").
 > 
-> > 
-> > We might be able to keep it all in vsock_loopback if we removed the need
-> > to use the original skb or sk by just using the net. But to do that we
-> > would need to add a netns_tracker per net somewhere. I guess that would
-> > end up in a list or hashmap in struct vsock_loopback.
-> > 
-> > Another option that does simplify a little, but unfortunately still doesn't keep
-> > everything in loopback:
-> > 
-> > @@ -1205,7 +1205,7 @@ static int virtio_transport_reset_no_sock(const struct virtio_transport *t,
-> > 	if (!reply)
-> > 		return -ENOMEM;
-> > 
-> > -	return t->send_pkt(reply, net, net_mode);
-> > +	return t->send_pkt(reply, net, net_mode, skb->sk);
-> > }
-> > 
-> > @@ -27,11 +27,16 @@ static u32 vsock_loopback_get_local_cid(void)
-> > }
-> > 
-> > static int vsock_loopback_send_pkt(struct sk_buff *skb, struct net *net,
-> > -				   enum vsock_net_mode net_mode)
-> > +				   enum vsock_net_mode net_mode,
-> > +				   struct sock *rst_owner)
-> > {
-> > 	struct vsock_loopback *vsock = &the_vsock_loopback;
-> > 	int len = skb->len;
-> > 
-> > +	if (!skb->sk && rst_owner)
-> > +		WARN_ONCE(!skb_set_owner_sk_safe(skb, rst_owner),
-> > +			  "loopback socket has sk_refcnt == 0\n");
-> > +
+> Omit the check when running as a VM, as KVM has historically failed to set
+> bits 63:32 appropriately when synthesizing VM-Exits, i.e. KVM could get
+> false positives when running as a VM on an older, broken KVM/kernel.  From
+> a functional perspective, omitting the check is "fine", as any unwanted
+> collision between e.g. VMEXIT_INVALID and a 32-bit exit code will be
+> fatal to KVM-on-KVM regardless of what KVM-as-L1 does.
 > 
-> This doesn't seem too bad IMO, but at this point, why we can't do that
-> in virtio_transport_reset_no_sock() for any kind of transport?
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/x86/kvm/svm/svm.c | 18 ++++++++++++++++--
+>   1 file changed, 16 insertions(+), 2 deletions(-)
 > 
-> I mean, in any case the RST packet should be handled by the same net of the
-> "sender", no?
-> 
-> At this point, can we just put the `vsk` of the sender in the `info` and
-> virtio_transport_alloc_skb() will already do that.
-> 
-> WDYT?
-> Am I missing something?
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index 202a4d8088a2..3b05476296d0 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -3433,8 +3433,22 @@ static void dump_vmcb(struct kvm_vcpu *vcpu)
+>   		sev_free_decrypted_vmsa(vcpu, save);
+>   }
+>   
+> -int svm_invoke_exit_handler(struct kvm_vcpu *vcpu, u64 exit_code)
+> +int svm_invoke_exit_handler(struct kvm_vcpu *vcpu, u64 __exit_code)
+>   {
+> +	u32 exit_code = __exit_code;
+> +
+> +	/*
+> +	 * SVM uses negative values, i.e. 64-bit values, to indicate that VMRUN
+> +	 * failed.  Report all such errors to userspace (note, VMEXIT_INVALID,
+> +	 * a.k.a. SVM_EXIT_ERR, is special cased by svm_handle_exit()).  Skip
+> +	 * the check when running as a VM, as KVM has historically left garbage
+> +	 * in bits 63:32, i.e. running KVM-on-KVM would hit false positives if
+> +	 * the underlying kernel is buggy.
+> +	 */
+> +	if (!cpu_feature_enabled(X86_FEATURE_HYPERVISOR) &&
+> +	    (u64)exit_code != __exit_code)
+> +		goto unexpected_vmexit;
 
-This is the right answer... I'm pretty sure this works out-of-the-box
-for all transports.
+I reviewed the series and it looks good, but with respect to this patch 
+and patch 8, is it really worth it?  While there is a possibility that 
+code 0x00000000ffffffff is used, or that any high 32-bit values other 
+than all-zeros or all-ones are used, they'd be presumably enabled by 
+some control bits in the VMCB or some paravirt thing in the hypervisor.
 
-I'll implement it and report back with a new rev if all good or come
-back to this thread to discuss if any issues arise.
+What really matters is that SEV-ES's kvm_get_cached_sw_exit_code() is 
+reading the full 64 bits and discarding invalid codes before reaching 
+svm_invoke_exit_handler().
 
-Have a good weekend!
+I totally agree, of course, with passing __exit_code as u64 and adding a 
+comment explaining what's going on with "u32 exit_code == (u32)__exit_code".
 
-Best,
-Bobby
+Paolo
+
+>   #ifdef CONFIG_MITIGATION_RETPOLINE
+>   	if (exit_code == SVM_EXIT_MSR)
+>   		return msr_interception(vcpu);
+> @@ -3461,7 +3475,7 @@ int svm_invoke_exit_handler(struct kvm_vcpu *vcpu, u64 exit_code)
+>   
+>   unexpected_vmexit:
+>   	dump_vmcb(vcpu);
+> -	kvm_prepare_unexpected_reason_exit(vcpu, exit_code);
+> +	kvm_prepare_unexpected_reason_exit(vcpu, __exit_code);
+>   	return 0;
+>   }
+>   
+
 
