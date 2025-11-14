@@ -1,79 +1,279 @@
-Return-Path: <linux-hyperv+bounces-7582-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7583-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61201C5C25C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Nov 2025 10:05:35 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 950B0C5C586
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Nov 2025 10:44:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 3D664352D63
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Nov 2025 09:03:29 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id CB7263625B4
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Nov 2025 09:34:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E08A123741;
-	Fri, 14 Nov 2025 09:03:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3284309EE1;
+	Fri, 14 Nov 2025 09:33:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=profitora.pl header.i=@profitora.pl header.b="FWaE5fbh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yh6vWaYA";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ib8hE1aZ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail.profitora.pl (mail.profitora.pl [51.77.245.187])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B1F2C326F
-	for <linux-hyperv@vger.kernel.org>; Fri, 14 Nov 2025 09:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.77.245.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BAF3093AD
+	for <linux-hyperv@vger.kernel.org>; Fri, 14 Nov 2025 09:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763111003; cv=none; b=NbL1kTBhCxGyN3hVuZ3MhjkB3Zt5xIWSinQp0M5PEXpu+vn6e05Ni3luDDXGC5otIJrIayg44zEeBpNJhIned+l4txM1ScnK1R95FG5cOisBK5I+Ar+vgQY9gRAdAvi1mhqn8heXJm6ybplWY+5SQ9mXsL7SEhxnzg4KmSs8Hi0=
+	t=1763112839; cv=none; b=Fml/7FkTRbyhvJoXlWMZTXksAJ8YtDoceIiCECYbtpYC6nWsppUduzCbRjvTOcADvgQBDiYi39xFvg3z9Q7IHB1/lenX4vNGCW1GThQcvjwnaAjjXEwvWxKFgL8F6oWyoBbhdFcUH6kTi9zxinK4d4wFPJlj06Qdbp0CZChxosE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763111003; c=relaxed/simple;
-	bh=o86VRlmMq0vXKlTcHzYrlK4QfiiIlkn2xN6ePAtHamk=;
-	h=Message-ID:Date:From:To:Subject:MIME-Version:Content-Type; b=nOIBizWrCuxkiSM3C4+isfsh3TUEwF5Q5ZlZzvzQGlBJ+Y7vUi7xYlDzDjBfVDHnQCXZZeBTyJfuO387xipSrWHdJs47JBLqHxzSV6h3Bc5/G/oGFNkl7aJf/TC6eGVCLYsagkLZ2YYx5sY4PFtNFvVNOWND7ac0urSW9QFsP5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=profitora.pl; spf=pass smtp.mailfrom=profitora.pl; dkim=pass (2048-bit key) header.d=profitora.pl header.i=@profitora.pl header.b=FWaE5fbh; arc=none smtp.client-ip=51.77.245.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=profitora.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=profitora.pl
-Received: by mail.profitora.pl (Postfix, from userid 1002)
-	id 64D6225CFF; Fri, 14 Nov 2025 09:56:25 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=profitora.pl; s=mail;
-	t=1763110601; bh=o86VRlmMq0vXKlTcHzYrlK4QfiiIlkn2xN6ePAtHamk=;
-	h=Date:From:To:Subject:From;
-	b=FWaE5fbhL2NmK0O0P0GUrkAFnxw94jFpY8Xa/eUshtbTvvaV9m1DF4anL+1bDplf3
-	 pC79wCIuMaVHGGIpdlY8JvkHJq/Npd2tdqhSP80kWJE6ke/q4cPXLjRGqZlDnu2i8l
-	 QjsoV9uKXtPQ0HkCt6i1LHzoizYlHtAAy+ZJZmr4pX+ceVObiQAw4ATeYpoRUqO3IF
-	 +UH6ct63So8AdniFE38rxj0aS97K+k8om+5RRfvfAbaxKPgPccVq6AIOHAx/QfxQvT
-	 8RR0ZtrExpKq4u9dj+qQH2SpAvzBjtnCBfP6pzoNiG8+xi356VzH6h7Uvht8Vf2lrZ
-	 enAlq90s/UOJw==
-Received: by mail.profitora.pl for <linux-hyperv@vger.kernel.org>; Fri, 14 Nov 2025 08:56:00 GMT
-Message-ID: <20251114084500-0.1.lv.1n3px.0.o6kzc8dlp0@profitora.pl>
-Date: Fri, 14 Nov 2025 08:56:00 GMT
-From: "Bartosz Witkowski" <bartosz.witkowski@profitora.pl>
-To: <linux-hyperv@vger.kernel.org>
-Subject: Instalacja pv
-X-Mailer: mail.profitora.pl
+	s=arc-20240116; t=1763112839; c=relaxed/simple;
+	bh=RCAYjz6vIOf/R1vbx+PtwnV+PTpqHXlUQYFV+h701Lw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gt62YDsXnCRJ+vdBsOB5OHXjvZJ292FXWteA7dQJzSom9BYuf9HY/iahdesNMpbSN0EUjXV6IOft+RFbHxpdVP5FC3OeERZt/qV83NUF8rOXRJA25LzZnyhqpuzfxA9QFnSBggzfcNKM2BnHUVGoxf3qUZ6tSyBPhc3WkoNaA4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yh6vWaYA; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ib8hE1aZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1763112835;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=36+oyKfeG61oAI4qrJ6KOF+T0ZR3Arugp2HRWWLDhJ4=;
+	b=Yh6vWaYAgOX6gLuYTL/VvQhGyEkMzFc8414NKT0RsoFRN3HSAgZmrXpPsBSV+4Vfrc0LTE
+	pP76wDcyeGqMk3nFMXA8UFqEWSHUSRv4paTakAapKd9FCzoyDF15oMphl4p7vl7Gyk7NuZ
+	VS/WC6A+POeOPG8zHLH80F6W9EnYd/4=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-653-EBpJ7_G9PSmxmP5udF-3jw-1; Fri, 14 Nov 2025 04:33:54 -0500
+X-MC-Unique: EBpJ7_G9PSmxmP5udF-3jw-1
+X-Mimecast-MFC-AGG-ID: EBpJ7_G9PSmxmP5udF-3jw_1763112834
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-8824b00ee8bso25754766d6.0
+        for <linux-hyperv@vger.kernel.org>; Fri, 14 Nov 2025 01:33:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1763112834; x=1763717634; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=36+oyKfeG61oAI4qrJ6KOF+T0ZR3Arugp2HRWWLDhJ4=;
+        b=Ib8hE1aZXz4zT5Lv37neXp5/gUItI6PeSqWfmrJnjjocU2dUB5lrg8JnqhpOxTDNyE
+         H4OR1VS9H9+mDSmGrrMUlu+RyN16z88mCMs0/SNTUIEmwA9vAhTQNDTyDeFRL7hHGQeo
+         elmwWhnix7wzYkzbShb/D9o0JAvahh2O0LNSe5J/OJPWXSMqrHuGYqYXEHMhftM3Ukrt
+         e7J7/4OHwLoQCXTGzesDeDEaER9BknFsDCR9F7Ss0R1M1lp7ZueWf+yCOtCbNagn6h/4
+         6m7jY7rAjn9Cf+d/NxipwqycQ5Yv7H+wVGpydDqh0gFDMZW3FwnjPmH+YOXFwOyjGlkD
+         PMnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763112834; x=1763717634;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=36+oyKfeG61oAI4qrJ6KOF+T0ZR3Arugp2HRWWLDhJ4=;
+        b=V+wXEpvp20Ci3MgzeYFpeyDzx07kMGYiGYXkgJOIKIjmPUR/Tf+i5PiHdIGah2HkGY
+         P+3SGI4Ruy4jo4J6FeyGIzO7Ne/3g/AvzOcbfieea7JhgeCoQClOfFByfYnY8m5iAlt3
+         TSbOcLkb8/Q6UDwkErh38zzsJhKH7nHm4T+tTNDEOSqqmu9/Aw2HP1w0wRBHp09vKosm
+         nQFAEzZV7+jdgnFT6x+VOcP5fGlVCABz3JhpdBvUYvnbVq/26oP3ZZqVG1zaEANrJCL0
+         VtZVjszTZrHNC1F57/DVjmrqw4Vt8KmnZC8FXKHmbPLCegAv+zBjbQhQxIHqd8NzWIpT
+         dYhw==
+X-Forwarded-Encrypted: i=1; AJvYcCXxwhb8+KD8dHOpSE2KOlTFrf29doPLltKfnSPACHrxoC+JVy39OhzOFCqDShQ6iFB2vUefZvPqDK0osOg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyin/regasH/I2dgdW65Qbi6EbZyjzjB1uAuVDDd6Bx79BHpBYj
+	QQOJo0GjiyrtUfwV467ROsCOL7oxeVJnHzgsodN6cXrWJNITG6Br3m6tiyDZG66o+16+GbWo/mJ
+	JcxDVJc0QmJIFfv5NPfxvIy810mPrYJVkfDMVPpJLdF0D7gCZPgcEqTgL1ikvpkpgDw==
+X-Gm-Gg: ASbGncsTG1yv74YHRPTfHc3gyd2vS54oyuM+TGFwEhdu7iDI24cOvmcK87lhYAJhGo/
+	Ovx41MRUOu/sdZ5NxFsxzEzRbZcBPRSRiJQnaw3YGDV2q83D7qxqtLkShRt0jhpJEAiWDNkUVBr
+	wK59uacLOXTSESoNc2xRPl+9dw8AO2VmsyCjb2GN0dnuyw4eFeR4MCKKwpe1QwbghnQDzDOj1c0
+	LcBby5O19A/Q3CfNeJrzhzd60Lxi8K5+4Sxf7V018vGefPYBTDZcTFz1qkOpaV9FAiUycH0G0MP
+	tt0in0GHZ9xD0w5gomF15DVbXlNDKYii55vBt3mbW6FZKz8Gj9PJwmM1yrhQpuu8Mwfin3ztaxi
+	Gl8iwZFCWzXCU4ru4ai3Wn8t7ufmSUB3p4D2BNnJapVOsh2Q0zUA=
+X-Received: by 2002:a05:6214:d05:b0:880:48bc:e08f with SMTP id 6a1803df08f44-88292686794mr35504706d6.40.1763112833685;
+        Fri, 14 Nov 2025 01:33:53 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHjHrJ9Ml1IttqxcPVYY9SH7uhe2Rph9BOIsWj75UI9bX73556O1rec437jZYFpPhU03rOjlA==
+X-Received: by 2002:a05:6214:d05:b0:880:48bc:e08f with SMTP id 6a1803df08f44-88292686794mr35504466d6.40.1763112833200;
+        Fri, 14 Nov 2025 01:33:53 -0800 (PST)
+Received: from sgarzare-redhat (host-79-46-200-153.retail.telecomitalia.it. [79.46.200.153])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-882865342c4sm27689996d6.28.2025.11.14.01.33.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Nov 2025 01:33:51 -0800 (PST)
+Date: Fri, 14 Nov 2025 10:33:42 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Bobby Eshleman <bobbyeshleman@gmail.com>
+Cc: Shuah Khan <shuah@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Bryan Tan <bryan-bt.tan@broadcom.com>, Vishnu Dasa <vishnu.dasa@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>, berrange@redhat.com, 
+	Bobby Eshleman <bobbyeshleman@meta.com>
+Subject: Re: [PATCH net-next v9 06/14] vsock/loopback: add netns support
+Message-ID: <kwgjzpxxqpkgwafydp65vlj6jlf7h7kcnhwgtwrrhzp2qtgkkq@z3xfl26ejspl>
+References: <20251111-vsock-vmtest-v9-0-852787a37bed@meta.com>
+ <20251111-vsock-vmtest-v9-6-852787a37bed@meta.com>
+ <g6bxp6hketbjrddzni2ln37gsezqvxbu2orheorzh7fs66roll@hhcrgsos3ui3>
+ <aRTRhk/ok06YKTEu@devvm11784.nha0.facebook.com>
+ <g5dcyor4aryvtcnqxm5aekldbettetlmog3c7sj7sjx3yp2pgy@hcpxyubied2n>
+ <aRYivEKsa44u5Mh+@devvm11784.nha0.facebook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <aRYivEKsa44u5Mh+@devvm11784.nha0.facebook.com>
 
-Dzie=C5=84 dobry,
+On Thu, Nov 13, 2025 at 10:26:04AM -0800, Bobby Eshleman wrote:
+>On Thu, Nov 13, 2025 at 04:24:44PM +0100, Stefano Garzarella wrote:
+>> On Wed, Nov 12, 2025 at 10:27:18AM -0800, Bobby Eshleman wrote:
+>> > On Wed, Nov 12, 2025 at 03:19:47PM +0100, Stefano Garzarella wrote:
+>> > > On Tue, Nov 11, 2025 at 10:54:48PM -0800, Bobby Eshleman wrote:
+>> > > > From: Bobby Eshleman <bobbyeshleman@meta.com>
+>> > > >
+>> > > > Add NS support to vsock loopback. Sockets in a global mode netns
+>> > > > communicate with each other, regardless of namespace. Sockets in a local
+>> > > > mode netns may only communicate with other sockets within the same
+>> > > > namespace.
+>> > > >
+>> > > > Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
+>
+>[...]
+>
+>> > > > @@ -131,7 +136,41 @@ static void vsock_loopback_work(struct work_struct *work)
+>> > > > 		 */
+>> > > > 		virtio_transport_consume_skb_sent(skb, false);
+>> > > > 		virtio_transport_deliver_tap_pkt(skb);
+>> > > > -		virtio_transport_recv_pkt(&loopback_transport, skb, NULL, 0);
+>> > > > +
+>> > > > +		/* In the case of virtio_transport_reset_no_sock(), the skb
+>> > > > +		 * does not hold a reference on the socket, and so does not
+>> > > > +		 * transitively hold a reference on the net.
+>> > > > +		 *
+>> > > > +		 * There is an ABA race condition in this sequence:
+>> > > > +		 * 1. the sender sends a packet
+>> > > > +		 * 2. worker calls virtio_transport_recv_pkt(), using the
+>> > > > +		 *    sender's net
+>> > > > +		 * 3. virtio_transport_recv_pkt() uses t->send_pkt() passing the
+>> > > > +		 *    sender's net
+>> > > > +		 * 4. virtio_transport_recv_pkt() free's the skb, dropping the
+>> > > > +		 *    reference to the socket
+>> > > > +		 * 5. the socket closes, frees its reference to the net
+>> > > > +		 * 6. Finally, the worker for the second t->send_pkt() call
+>> > > > +		 *    processes the skb, and uses the now stale net pointer for
+>> > > > +		 *    socket lookups.
+>> > > > +		 *
+>> > > > +		 * To prevent this, we acquire a net reference in vsock_loopback_send_pkt()
+>> > > > +		 * and hold it until virtio_transport_recv_pkt() completes.
+>> > > > +		 *
+>> > > > +		 * Additionally, we must grab a reference on the skb before
+>> > > > +		 * calling virtio_transport_recv_pkt() to prevent it from
+>> > > > +		 * freeing the skb before we have a chance to release the net.
+>> > > > +		 */
+>> > > > +		net_mode = virtio_vsock_skb_net_mode(skb);
+>> > > > +		net = virtio_vsock_skb_net(skb);
+>> > >
+>> > > Wait, we are adding those just for loopback (in theory used only for
+>> > > testing/debugging)? And only to support virtio_transport_reset_no_sock() use
+>> > > case?
+>> >
+>> > Yes, exactly, only loopback + reset_no_sock(). The issue doesn't exist
+>> > for vhost-vsock because vhost_vsock holds a net reference, and it
+>> > doesn't exist for non-reset_no_sock calls because after looking up the
+>> > socket we transfer skb ownership to it, which holds down the skb -> sk ->
+>> > net reference chain.
+>> >
+>> > >
+>> > > Honestly I don't like this, do we have any alternative?
+>> > >
+>> > > I'll also try to think something else.
+>> > >
+>> > > Stefano
+>> >
+>> >
+>> > I've been thinking about this all morning... maybe
+>> > we can do something like this:
+>> >
+>> > ```
+>> >
+>> > virtio_transport_recv_pkt(...,  struct sock *reply_sk) {... }
+>> >
+>> > virtio_transport_reset_no_sock(..., reply_sk)
+>> > {
+>> > 	if (reply_sk)
+>> > 		skb_set_owner_sk_safe(reply, reply_sk)
+>>
+>> Interesting, but what about if we call skb_set_owner_sk_safe() in
+>> vsock_loopback.c just before calling virtio_transport_recv_pkt() for every
+>> skb?
+>
+>I think the issue with this is that at the time vsock_loopback calls
+>virtio_transport_recv_pkt() the reply skb hasn't yet been allocated by
+>virtio_transport_reset_no_sock() and we can't wait for it to return
+>because the original skb may be freed by then.
 
-wiem, =C5=BCe fotowoltaika to dla Pa=C5=84stwa dobrze znany temat, ale po=
-zwol=C4=99 sobie jedynie zwr=C3=B3ci=C4=87 uwag=C4=99 na najnowsze dane d=
-otycz=C4=85ce op=C5=82acalno=C5=9Bci tej inwestycji.
+Right!
 
-System o mocy 5 kW pozwala obecnie zaoszcz=C4=99dzi=C4=87 nawet 5000 z=C5=
-=82 rocznie, a dobrze dobrana instalacja pokrywa do 80% rocznego zapotrze=
-bowania na energi=C4=99, zmniejszaj=C4=85c rachunki.=20
+>
+>We might be able to keep it all in vsock_loopback if we removed the need
+>to use the original skb or sk by just using the net. But to do that we
+>would need to add a netns_tracker per net somewhere. I guess that would
+>end up in a list or hashmap in struct vsock_loopback.
+>
+>Another option that does simplify a little, but unfortunately still doesn't keep
+>everything in loopback:
+>
+>@@ -1205,7 +1205,7 @@ static int virtio_transport_reset_no_sock(const struct virtio_transport *t,
+> 	if (!reply)
+> 		return -ENOMEM;
+>
+>-	return t->send_pkt(reply, net, net_mode);
+>+	return t->send_pkt(reply, net, net_mode, skb->sk);
+> }
+>
+>@@ -27,11 +27,16 @@ static u32 vsock_loopback_get_local_cid(void)
+> }
+>
+> static int vsock_loopback_send_pkt(struct sk_buff *skb, struct net *net,
+>-				   enum vsock_net_mode net_mode)
+>+				   enum vsock_net_mode net_mode,
+>+				   struct sock *rst_owner)
+> {
+> 	struct vsock_loopback *vsock = &the_vsock_loopback;
+> 	int len = skb->len;
+>
+>+	if (!skb->sk && rst_owner)
+>+		WARN_ONCE(!skb_set_owner_sk_safe(skb, rst_owner),
+>+			  "loopback socket has sk_refcnt == 0\n");
+>+
 
-Nowoczesne panele s=C4=85 coraz wydajniejsze i trwalsze, a rosn=C4=85ce c=
-eny pr=C4=85du tylko wzmacniaj=C4=85 rentowno=C5=9B=C4=87 projektu.
+This doesn't seem too bad IMO, but at this point, why we can't do that
+in virtio_transport_reset_no_sock() for any kind of transport?
 
-Czy chcieliby Pa=C5=84stwo sprawdzi=C4=87, jak zoptymalizowa=C4=87 istnie=
-j=C4=85c=C4=85 lub planowan=C4=85 instalacj=C4=99?
+I mean, in any case the RST packet should be handled by the same net of 
+the "sender", no?
 
+At this point, can we just put the `vsk` of the sender in the `info` and 
+virtio_transport_alloc_skb() will already do that.
 
-Pozdrawiam
-Bartosz Witkowski
+WDYT?
+Am I missing something?
+
+> 	virtio_vsock_skb_queue_tail(&vsock->pkt_queue, skb);
+> 	queue_work(vsock->workqueue, &vsock->pkt_work);
+>
+>>
+>> Maybe we should refactor a bit virtio_transport_recv_pkt() e.g. moving
+>> `skb_set_owner_sk_safe()` to be sure it's called only when we are sure it's
+>> the right socket (e.g. after checking SOCK_DONE).
+>>
+>> WDYT?
+>
+>I agree, it is called a little prematurely.
+
+Yep, but I'll leave this out for now :-)
+
+Thanks,
+Stefano
+
 
