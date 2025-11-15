@@ -1,342 +1,148 @@
-Return-Path: <linux-hyperv+bounces-7605-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7606-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB449C5FE52
-	for <lists+linux-hyperv@lfdr.de>; Sat, 15 Nov 2025 03:29:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 86066C6008E
+	for <lists+linux-hyperv@lfdr.de>; Sat, 15 Nov 2025 07:23:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A315F4E3859
-	for <lists+linux-hyperv@lfdr.de>; Sat, 15 Nov 2025 02:28:57 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7DD024E5B5B
+	for <lists+linux-hyperv@lfdr.de>; Sat, 15 Nov 2025 06:22:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B47DD1F5846;
-	Sat, 15 Nov 2025 02:28:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0026A1C5D6A;
+	Sat, 15 Nov 2025 06:22:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BPdINZDh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fZipnyDf"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9DE33C1F;
-	Sat, 15 Nov 2025 02:28:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C907C15746E;
+	Sat, 15 Nov 2025 06:22:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763173736; cv=none; b=b452f2qDgPEFEtHmeo8teB0VLPjMBH4iQFmhXAoNneYg/AiUOTcaW+K2AezrEI8pV37tE6ugBWr381DwywnVfTEZ172PxsI5oSCAZS6+fIq3iTkhAioQZZSbHz/KWY3PNvkCmMhTVrWE0yTKwKi1mjeb+9GmdEJeF3KBDjP+q0U=
+	t=1763187762; cv=none; b=XND9Yi+nOZXOnNUL+9H69Z/QKtsyl4cixIPzytzIAPoVFc61neasRl4UfZirkegLYRweRhijtESnRP7u9APk9EcIuPOJXUZ0tYSZ3whZsSOkZexD635BfH9imbqJC8Ht7Dpb7sMb/9uu5ZB/RTr6D74Cbpiai1eIENKWTieA+t4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763173736; c=relaxed/simple;
-	bh=qKecsqXFs4vTGCYS80QsE0pZLtvsNW91EXp7ITNmhhg=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=tixweCH454P3XU1VtiY9PWB/QU01VQJ0N2vwAHMi29UI2t71h89yl8FD8jSLNGYfVI/fDmZ0mzr8XCb0XvszWFAuVSx2gfkuMg0r2sjstu18UHubx6AkI0NSVjAQOF6QFU00OcL0hM6CFqSuiCvmBKBWseVel2oBboXX1Kyhy3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BPdINZDh; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1202)
-	id 7352E201AE66; Fri, 14 Nov 2025 18:28:54 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7352E201AE66
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1763173734;
-	bh=pPZYI4wA1KsyJO4uPRkjUdepTh2HN4KGpnalTBaUpps=;
-	h=From:To:Cc:Subject:Date:From;
-	b=BPdINZDhjwnXJaPb+hEIZFFWNP1QDJSO+kw6I2ZBPmndxrYdhRj5g2TRyMURu8s+P
-	 B174GfUvviTksgHqeT87NFIMa+QUxLLtXXwVK3USNy7mxKzYBr5VExYk6f/mt0Ss99
-	 i70nm18wSwcDXOu2msXPPsgsW1YFsCCUnZNRuBHQ=
-From: longli@linux.microsoft.com
-To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	s=arc-20240116; t=1763187762; c=relaxed/simple;
+	bh=kqxPP4YF5FdjtlCqAHBxAazNBVmTdTzi9eZ1OFqRWaA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tDdu6pXZ/ulHub4S+ff5Sj/S0nqiqjtRZiGrZDbiVi6YnyFPeS6xAJfOYVwzuZbTAwyk/Gy62ttU8pvOTOClAAQ4wWe7a4z+FfXbxEQgjM7F4iUR5+0y18DDTHyDsQp6NNqtDlPGRHLDM0vW0SaP3QaXJmdkicDaKYiUKJEtqqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fZipnyDf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36341C4CEF7;
+	Sat, 15 Nov 2025 06:22:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763187762;
+	bh=kqxPP4YF5FdjtlCqAHBxAazNBVmTdTzi9eZ1OFqRWaA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fZipnyDfayyq0RjHn5c1Pab8EW35eg0t/8RtFUpf4O+LRMHHkiRpRf0oLDgAoY/SJ
+	 5yRBbNA48tJ2ugPoPaDli+h/MNKHt+HsQdAOSqzIbdLT5lolMnXsz98/Pmlxmzlke0
+	 d4AHGRZVa+GpCk+xiyRwX8YXv22VR3joQ1VZYJRQrnXeIKM6sQGlaA/ij9cPt6106S
+	 YWOvaGC/boqPneuBioekLjGE5Fn0lFQJZM+wu12DZ43MIGmEQegk/LQ1rFTydeRosE
+	 0kKvCVse1AWjAblOSX3ifzHm28c3RddRRUW8+OPycndHlmNwYjAi/4R0ubdClWEvO/
+	 v5Y0sRU+w+Qwg==
+Date: Sat, 15 Nov 2025 06:22:40 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Anirudh Rayabharam <anirudh@anirudhrb.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Simon Horman <horms@kernel.org>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Erick Archer <erick.archer@outlook.com>,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Cc: Long Li <longli@microsoft.com>
-Subject: [patch net-next] net: mana: Handle hardware reset events when probing the device
-Date: Fri, 14 Nov 2025 18:28:49 -0800
-Message-Id: <1763173729-28430-1-git-send-email-longli@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Drivers: hv: ioctl for self targeted passthrough hvcalls
+Message-ID: <20251115062240.GA1794663@liuwe-devbox-debian-v2.local>
+References: <20251114095853.3482596-1-anirudh@anirudhrb.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251114095853.3482596-1-anirudh@anirudhrb.com>
 
-From: Long Li <longli@microsoft.com>
+On Fri, Nov 14, 2025 at 09:58:52AM +0000, Anirudh Rayabharam wrote:
+> From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> 
+> Allow MSHV_ROOT_HVCALL IOCTL on the /dev/mshv fd. This IOCTL would
+> execute a passthrough hypercall targeting the root/parent partition
+> i.e. HV_PARTITION_ID_SELF.
+> 
+> This will be useful for the VMM to query things like supported
+> synthetic processor features, supported VMM capabiliites etc.
+> 
+> While at it, add HVCALL_GET_PARTITION_PROPERTY_EX to the allowed list of
+> passthrough hypercalls.
+> 
+> Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
 
-When MANA is being probed, it's possible that hardware is in recovery
-mode and the device may get GDMA_EQE_HWC_RESET_REQUEST over HWC in the
-middle of the probe. Detect such condition and go through the recovery
-service procedure.
+This doesn't apply to hyperv-next. What's its base?
 
-Fixes: fbe346ce9d62 ("net: mana: Handle Reset Request from MANA NIC")
-Signed-off-by: Long Li <longli@microsoft.com>
----
- .../net/ethernet/microsoft/mana/gdma_main.c   | 131 +++++++++++++++---
- include/net/mana/gdma.h                       |   9 +-
- 2 files changed, 122 insertions(+), 18 deletions(-)
+Wei
 
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index effe0a2f207a..1d9c2beb22b2 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -15,6 +15,12 @@
- 
- struct dentry *mana_debugfs_root;
- 
-+static struct mana_serv_delayed_work {
-+	struct delayed_work work;
-+	struct pci_dev *pdev;
-+	enum gdma_eqe_type type;
-+} mns_delayed_wk;
-+
- static u32 mana_gd_r32(struct gdma_context *g, u64 offset)
- {
- 	return readl(g->bar0_va + offset);
-@@ -387,6 +393,25 @@ EXPORT_SYMBOL_NS(mana_gd_ring_cq, "NET_MANA");
- 
- #define MANA_SERVICE_PERIOD 10
- 
-+static void mana_serv_rescan(struct pci_dev *pdev)
-+{
-+	struct pci_bus *parent;
-+
-+	pci_lock_rescan_remove();
-+
-+	parent = pdev->bus;
-+	if (!parent) {
-+		dev_err(&pdev->dev, "MANA service: no parent bus\n");
-+		goto out;
-+	}
-+
-+	pci_stop_and_remove_bus_device(pdev);
-+	pci_rescan_bus(parent);
-+
-+out:
-+	pci_unlock_rescan_remove();
-+}
-+
- static void mana_serv_fpga(struct pci_dev *pdev)
- {
- 	struct pci_bus *bus, *parent;
-@@ -419,9 +444,12 @@ static void mana_serv_reset(struct pci_dev *pdev)
- {
- 	struct gdma_context *gc = pci_get_drvdata(pdev);
- 	struct hw_channel_context *hwc;
-+	int ret;
- 
- 	if (!gc) {
--		dev_err(&pdev->dev, "MANA service: no GC\n");
-+		/* Perform PCI rescan on device if GC is not set up */
-+		dev_err(&pdev->dev, "MANA service: GC not setup, rescanning\n");
-+		mana_serv_rescan(pdev);
- 		return;
- 	}
- 
-@@ -440,9 +468,18 @@ static void mana_serv_reset(struct pci_dev *pdev)
- 
- 	msleep(MANA_SERVICE_PERIOD * 1000);
- 
--	mana_gd_resume(pdev);
-+	ret = mana_gd_resume(pdev);
-+	if (ret == -ETIMEDOUT || ret == -EPROTO) {
-+		/* Perform PCI rescan on device if we failed on HWC */
-+		dev_err(&pdev->dev, "MANA service: resume failed, rescanning\n");
-+		mana_serv_rescan(pdev);
-+		goto out;
-+	}
- 
--	dev_info(&pdev->dev, "MANA reset cycle completed\n");
-+	if (ret)
-+		dev_info(&pdev->dev, "MANA reset cycle failed err %d\n", ret);
-+	else
-+		dev_info(&pdev->dev, "MANA reset cycle completed\n");
- 
- out:
- 	gc->in_service = false;
-@@ -454,18 +491,9 @@ struct mana_serv_work {
- 	enum gdma_eqe_type type;
- };
- 
--static void mana_serv_func(struct work_struct *w)
-+static void mana_do_service(enum gdma_eqe_type type, struct pci_dev *pdev)
- {
--	struct mana_serv_work *mns_wk;
--	struct pci_dev *pdev;
--
--	mns_wk = container_of(w, struct mana_serv_work, serv_work);
--	pdev = mns_wk->pdev;
--
--	if (!pdev)
--		goto out;
--
--	switch (mns_wk->type) {
-+	switch (type) {
- 	case GDMA_EQE_HWC_FPGA_RECONFIG:
- 		mana_serv_fpga(pdev);
- 		break;
-@@ -475,12 +503,36 @@ static void mana_serv_func(struct work_struct *w)
- 		break;
- 
- 	default:
--		dev_err(&pdev->dev, "MANA service: unknown type %d\n",
--			mns_wk->type);
-+		dev_err(&pdev->dev, "MANA service: unknown type %d\n", type);
- 		break;
- 	}
-+}
-+
-+static void mana_serv_delayed_func(struct work_struct *w)
-+{
-+	struct mana_serv_delayed_work *dwork;
-+	struct pci_dev *pdev;
-+
-+	dwork = container_of(w, struct mana_serv_delayed_work, work.work);
-+	pdev = dwork->pdev;
-+
-+	if (pdev)
-+		mana_do_service(dwork->type, pdev);
-+
-+	pci_dev_put(pdev);
-+}
-+
-+static void mana_serv_func(struct work_struct *w)
-+{
-+	struct mana_serv_work *mns_wk;
-+	struct pci_dev *pdev;
-+
-+	mns_wk = container_of(w, struct mana_serv_work, serv_work);
-+	pdev = mns_wk->pdev;
-+
-+	if (pdev)
-+		mana_do_service(mns_wk->type, pdev);
- 
--out:
- 	pci_dev_put(pdev);
- 	kfree(mns_wk);
- 	module_put(THIS_MODULE);
-@@ -541,6 +593,17 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
- 	case GDMA_EQE_HWC_RESET_REQUEST:
- 		dev_info(gc->dev, "Recv MANA service type:%d\n", type);
- 
-+		if (atomic_inc_return(&gc->in_probe) == 1) {
-+			/*
-+			 * Device is in probe and we received an hardware reset
-+			 * event, probe() will detect that "in_probe" has
-+			 * changed and perform service procedure.
-+			 */
-+			dev_info(gc->dev,
-+				 "Service is to be processed in probe\n");
-+			break;
-+		}
-+
- 		if (gc->in_service) {
- 			dev_info(gc->dev, "Already in service\n");
- 			break;
-@@ -1930,6 +1993,8 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		gc->mana_pci_debugfs = debugfs_create_dir(pci_slot_name(pdev->slot),
- 							  mana_debugfs_root);
- 
-+	atomic_set(&gc->in_probe, 0);
-+
- 	err = mana_gd_setup(pdev);
- 	if (err)
- 		goto unmap_bar;
-@@ -1942,8 +2007,19 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (err)
- 		goto cleanup_mana;
- 
-+	/*
-+	 * If a hardware reset event has occurred over HWC during probe,
-+	 * rollback and perform hardware reset procedure.
-+	 */
-+	if (atomic_inc_return(&gc->in_probe) > 1) {
-+		err = -EPROTO;
-+		goto cleanup_mana_rdma;
-+	}
-+
- 	return 0;
- 
-+cleanup_mana_rdma:
-+	mana_rdma_remove(&gc->mana_ib);
- cleanup_mana:
- 	mana_remove(&gc->mana, false);
- cleanup_gd:
-@@ -1967,6 +2043,25 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- disable_dev:
- 	pci_disable_device(pdev);
- 	dev_err(&pdev->dev, "gdma probe failed: err = %d\n", err);
-+
-+	/*
-+	 * Hardware could be in recovery mode and the HWC returns TIMEDOUT or
-+	 * EPROTO from mana_gd_setup(), mana_probe() or mana_rdma_probe(), or
-+	 * we received a hardware reset event over HWC interrupt. In this case,
-+	 * perform the device recovery procedure after MANA_SERVICE_PERIOD
-+	 * seconds.
-+	 */
-+	if (err == -ETIMEDOUT || err == -EPROTO) {
-+		dev_info(&pdev->dev, "Start MANA recovery mode\n");
-+
-+		mns_delayed_wk.pdev = pci_dev_get(pdev);
-+		mns_delayed_wk.type = GDMA_EQE_HWC_RESET_REQUEST;
-+
-+		INIT_DELAYED_WORK(&mns_delayed_wk.work, mana_serv_delayed_func);
-+		schedule_delayed_work(&mns_delayed_wk.work,
-+				      secs_to_jiffies(MANA_SERVICE_PERIOD));
-+	}
-+
- 	return err;
- }
- 
-@@ -2084,6 +2179,8 @@ static int __init mana_driver_init(void)
- 
- static void __exit mana_driver_exit(void)
- {
-+	cancel_delayed_work_sync(&mns_delayed_wk.work);
-+
- 	pci_unregister_driver(&mana_driver);
- 
- 	debugfs_remove(mana_debugfs_root);
-diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index 637f42485dba..1bb4c6ada2b6 100644
---- a/include/net/mana/gdma.h
-+++ b/include/net/mana/gdma.h
-@@ -430,6 +430,9 @@ struct gdma_context {
- 	u64 pf_cap_flags1;
- 
- 	struct workqueue_struct *service_wq;
-+
-+	/* Count how many times we have finished probe or HWC events */
-+	atomic_t		in_probe;
- };
- 
- static inline bool mana_gd_is_mana(struct gdma_dev *gd)
-@@ -592,6 +595,9 @@ enum {
- #define GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE BIT(17)
- #define GDMA_DRV_CAP_FLAG_1_HW_VPORT_LINK_AWARE BIT(6)
- 
-+/* Driver can handle hardware reset events during probe */
-+#define GDMA_DRV_CAP_FLAG_1_RECOVER_PROBE BIT(22)
-+
- #define GDMA_DRV_CAP_FLAGS1 \
- 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
- 	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
-@@ -601,7 +607,8 @@ enum {
- 	 GDMA_DRV_CAP_FLAG_1_DYNAMIC_IRQ_ALLOC_SUPPORT | \
- 	 GDMA_DRV_CAP_FLAG_1_SELF_RESET_ON_EQE | \
- 	 GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE | \
--	 GDMA_DRV_CAP_FLAG_1_HW_VPORT_LINK_AWARE)
-+	 GDMA_DRV_CAP_FLAG_1_HW_VPORT_LINK_AWARE | \
-+	 GDMA_DRV_CAP_FLAG_1_RECOVER_PROBE)
- 
- #define GDMA_DRV_CAP_FLAGS2 0
- 
--- 
-2.43.0
-
+> ---
+>  drivers/hv/mshv_root_main.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> index 20eda00a1b5a..98f56322cd19 100644
+> --- a/drivers/hv/mshv_root_main.c
+> +++ b/drivers/hv/mshv_root_main.c
+> @@ -122,6 +122,7 @@ static struct miscdevice mshv_dev = {
+>   */
+>  static u16 mshv_passthru_hvcalls[] = {
+>  	HVCALL_GET_PARTITION_PROPERTY,
+> +	HVCALL_GET_PARTITION_PROPERTY_EX,
+>  	HVCALL_SET_PARTITION_PROPERTY,
+>  	HVCALL_INSTALL_INTERCEPT,
+>  	HVCALL_GET_VP_REGISTERS,
+> @@ -159,6 +160,7 @@ static int mshv_ioctl_passthru_hvcall(struct mshv_partition *partition,
+>  	unsigned int pages_order;
+>  	void *input_pg = NULL;
+>  	void *output_pg = NULL;
+> +	u64 pt_id = partition ? partition->pt_id : HV_PARTITION_ID_SELF;
+>  
+>  	if (copy_from_user(&args, user_args, sizeof(args)))
+>  		return -EFAULT;
+> @@ -180,7 +182,7 @@ static int mshv_ioctl_passthru_hvcall(struct mshv_partition *partition,
+>  	is_async = mshv_hvcall_is_async(args.code);
+>  	if (is_async) {
+>  		/* async hypercalls can only be called from partition fd */
+> -		if (!partition_locked)
+> +		if (!partition || !partition_locked)
+>  			return -EINVAL;
+>  		ret = mshv_init_async_handler(partition);
+>  		if (ret)
+> @@ -208,7 +210,7 @@ static int mshv_ioctl_passthru_hvcall(struct mshv_partition *partition,
+>  	 * NOTE: This only works because all the allowed hypercalls' input
+>  	 * structs begin with a u64 partition_id field.
+>  	 */
+> -	*(u64 *)input_pg = partition->pt_id;
+> +	*(u64 *)input_pg = pt_id;
+>  
+>  	if (args.reps)
+>  		status = hv_do_rep_hypercall(args.code, args.reps, 0,
+> @@ -226,7 +228,7 @@ static int mshv_ioctl_passthru_hvcall(struct mshv_partition *partition,
+>  	}
+>  
+>  	if (hv_result(status) == HV_STATUS_INSUFFICIENT_MEMORY) {
+> -		ret = hv_call_deposit_pages(NUMA_NO_NODE, partition->pt_id, 1);
+> +		ret = hv_call_deposit_pages(NUMA_NO_NODE, pt_id, 1);
+>  		if (!ret)
+>  			ret = -EAGAIN;
+>  	} else if (!hv_result_success(status)) {
+> @@ -2048,6 +2050,9 @@ static long mshv_dev_ioctl(struct file *filp, unsigned int ioctl,
+>  	case MSHV_CREATE_PARTITION:
+>  		return mshv_ioctl_create_partition((void __user *)arg,
+>  						misc->this_device);
+> +	case MSHV_ROOT_HVCALL:
+> +		return mshv_ioctl_passthru_hvcall(NULL, false,
+> +					(void __user *)arg);
+>  	}
+>  
+>  	return -ENOTTY;
+> -- 
+> 2.34.1
+> 
 
