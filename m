@@ -1,215 +1,121 @@
-Return-Path: <linux-hyperv+bounces-7655-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7656-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B616C66909
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 00:38:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A0BAC66942
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 00:44:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BC9144E1856
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Nov 2025 23:38:02 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E569B4EFB83
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Nov 2025 23:42:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B965F2E0B58;
-	Mon, 17 Nov 2025 23:37:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5349319862;
+	Mon, 17 Nov 2025 23:42:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sNiLrcH2"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Kj9ites8"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1230227FB2E;
-	Mon, 17 Nov 2025 23:37:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32DF827F005;
+	Mon, 17 Nov 2025 23:42:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763422678; cv=none; b=ZZy4rP+6RcRbjyN/8eR9NFRiN2AXlTMTPYQiQM8a9BnMz2V+IbdFZtF2enFvoa1iuUZW8jxdLvb9Jdv7iyY1oE6C3+JuU0XRpG+4vARsAY350GQkxJv0drGiqux7HWLxAaIZV7NpAksl5+UoesauyNJ9C3UIeNQjNnj1UJlULUI=
+	t=1763422955; cv=none; b=Xniut+6Zns6WIQ0+Rqgi7/ThOav0wrAbfhT6V0aLIy/6mqtw87IPSM/8qtdO4rUHCvgqXX1KB7JPG4iG0fvPw0gvvp2LRjgpCdoRVvUBbgp/f8rK0sASERGxcgg0XlGmx5YjLO7n11Vy/tHt/bFpnxZfymkf/MJhn0pY6epc+n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763422678; c=relaxed/simple;
-	bh=7CR2NhKtpNZnnaI8rSD71uaMLrshzqdfJJsa4GrziHw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r6s6t4Kz95lkDnjuZJ6VV6TUZRb00wXYhiWkb8eWioxcUpyvjXTTHPSq3neDkBJspVCXPnGxNuR2xy53mASAudNu0MolAU2hxdRpoXPu6SvFAnXOONbY5tPO13Iae+UhiqNlpuUIYpYolRVxh06wUDZd+Xy/8sSvFCg8SpZRnWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sNiLrcH2; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1763422955; c=relaxed/simple;
+	bh=TTTtp2W8KQZPRVzuSwv+eAtwGAMd6Gp2B+gFS3J77bQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DuiNuPbbjqpeSGL/gahKFXSHzY8ArfVwK3Tc6yX0CfzidiVKq24efPAiAfvIFDQUgQwHM1+1OzYEVsnM7ogWNVFzqtHj0MC6OiGz0QdPcbwCjjxfC6x+9SZ4fWotyPbOgwOudiqTF4Nq8AGvPk/CMji5TkV2Oec1XeIup1aJjAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Kj9ites8; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (unknown [52.148.138.235])
-	by linux.microsoft.com (Postfix) with ESMTPSA id B0A0F201334F;
-	Mon, 17 Nov 2025 15:37:55 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B0A0F201334F
+Received: from [100.64.192.165] (unknown [20.29.225.195])
+	by linux.microsoft.com (Postfix) with ESMTPSA id BC772211083D;
+	Mon, 17 Nov 2025 15:42:32 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BC772211083D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1763422676;
-	bh=Jm+ZlIZmf6rmHDgJofUfc1lgjj+W3/Qv22lzkjSPOSc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sNiLrcH2b0qNnn3uBpl1Ul64m116WVrGGGbe1+uqB0XySqUn/0Xk3GmksA0LVH9rV
-	 wWyl3sL+S5KRzNUIXceiGv5RHq90aj5RcGHtygWoxXmRcmVxv0ZfVMwj1uXCV1gfoX
-	 YcgJ0mQUJEOsaJkUd2vASijVNWGxjTr9qSsyjBuQ=
-Date: Mon, 17 Nov 2025 15:37:54 -0800
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Praveen K Paladugu <prapal@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, arnd@arndb.de, anbelski@linux.microsoft.com,
-	easwar.hariharan@linux.microsoft.com,
-	nunodasneves@linux.microsoft.com
-Subject: Re: [PATCH v5 2/3] hyperv: Use reboot notifier to configure sleep
- state
-Message-ID: <aRux0hIdfHuG0RGD@skinsburskii.localdomain>
-References: <20251117210855.108126-1-prapal@linux.microsoft.com>
- <20251117210855.108126-3-prapal@linux.microsoft.com>
+	s=default; t=1763422952;
+	bh=jsnxaGt48c4zz4+5qQ2SBOm9/4nevYWcEW6BdKHMqtw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Kj9ites88c+bN23gmWgTya2QyEhwmTZfVxezrisWsVVfqqWBV2cXLXWruF1S2/RL+
+	 t8wDvYSs5NQOAFnNJTlP3y/IvoV5aVASZk8+m+gk/Gyny5YBDeX4A7bqAhZ5Obuh4v
+	 37SG/+gmf2k9MolArbxTPCkDLsJqpM7rlMHNn4tU=
+Message-ID: <d65a1b2d-2fdf-4cd1-bd04-a438205c7a70@linux.microsoft.com>
+Date: Mon, 17 Nov 2025 15:42:19 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251117210855.108126-3-prapal@linux.microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] Drivers: hv: ioctl for self targeted passthrough
+ hvcalls
+To: Wei Liu <wei.liu@kernel.org>
+Cc: Anirudh Rayabharam <anirudh@anirudhrb.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Dexuan Cui <decui@microsoft.com>,
+ Long Li <longli@microsoft.com>, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20251117095207.113502-1-anirudh@anirudhrb.com>
+ <36ac7105-3aa7-4e53-b87d-b99438f65295@linux.microsoft.com>
+ <20251117191827.GC2380208@liuwe-devbox-debian-v2.local>
+ <20251117192402.GA2402579@liuwe-devbox-debian-v2.local>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <20251117192402.GA2402579@liuwe-devbox-debian-v2.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Nov 17, 2025 at 03:08:17PM -0600, Praveen K Paladugu wrote:
-> Configure sleep state information in mshv hypervisor. This sleep state
-> information from ACPI will be used by hypervisor to poweroff the host.
+On 11/17/2025 11:24 AM, Wei Liu wrote:
+> On Mon, Nov 17, 2025 at 07:18:27PM +0000, Wei Liu wrote:
+>> On Mon, Nov 17, 2025 at 10:16:12AM -0800, Nuno Das Neves wrote:
+>>> On 11/17/2025 1:52 AM, Anirudh Rayabharam wrote:
+>>>> From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+>>>>
+>>>> Allow MSHV_ROOT_HVCALL IOCTL on the /dev/mshv fd. This IOCTL would
+>>>> execute a passthrough hypercall targeting the root/parent partition
+>>>> i.e. HV_PARTITION_ID_SELF.
+>>>>
+>>>
+>>> I think it's worth taking a moment to check and perhaps explain in
+>>> the commit message/a comment any security implications of the VMM
+>>> process being able to call these hypercalls on the root/parent
+>>> partition.
+>>>
+>>> One implication would be: can the VMM process influence other
+>>> processes in the root partition via these hypercalls,
+>>> e.g. HVCALL_SET_VP_REGISTERS? I would think that the hypervisor
+>>> itself disallows this but we should check. We can ask the
+>>> hypervisor team what they think, and check the hypervisor code.
+>>>
+>>> Specifically we should check on any hypercall that could possibly
+>>> influence partition state, i.e.:
+>>> HVCALL_SET_PARTITION_PROPERTY
+>>> HVCALL_SET_VP_REGISTERS
+>>> HVCALL_INSTALL_INTERCEPT
+>>> HVCALL_CLEAR_VIRTUAL_INTERRUPT
+>>> HVCALL_REGISTER_INTERCEPT_RESULT
+>>> HVCALL_ASSERT_VIRTUAL_INTERRUPT
+>>> HVCALL_SIGNAL_EVENT_DIRECT
+>>> HVCALL_POST_MESSAGE_DIRECT
+>>>
+>>> If it turns out there is something risky we are enabling here, we can
+>>> introduce a new array of hypercalls to restrict which ones can be
+>>> called on HV_PARTITION_ID_SELF.
+>>>
+>>
+>> This is a good point. Please check with the hypervisor team.
 > 
-> Signed-off-by: Praveen K Paladugu <prapal@linux.microsoft.com>
-> Co-developed-by: Anatol Belski <anbelski@linux.microsoft.com>
-> Signed-off-by: Anatol Belski <anbelski@linux.microsoft.com>
-> Reviewed-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
-> ---
->  arch/x86/hyperv/hv_init.c       |  7 +++
->  arch/x86/include/asm/mshyperv.h |  2 +
->  drivers/hv/mshv_common.c        | 78 +++++++++++++++++++++++++++++++++
->  3 files changed, 87 insertions(+)
+> I should add: it is always easier to relax restrictions later than to
+> add them back in, so if there is any doubt and we want this code in as
+> quickly as possible, we can start with a new array and expand it later.
 > 
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index e28737ec7054..645b52dd732e 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -555,6 +555,13 @@ void __init hyperv_init(void)
->  
->  		hv_remap_tsc_clocksource();
->  		hv_root_crash_init();
-> +		/*
-> +		 * The notifier registration might fail at various hops.
-> +		 * Corresponding error messages will land in dmesg. There is
-> +		 * otherwise nothing that can be specifically done to handle
-> +		 * failures here.
-> +		 */
 
-I'd suggest removing this comment: it doesn't bring much value.
+Agreed. I think that's a good approach here, we can just enable
+HVCALL_GET_PARTITION_PROPERTY and HVCALL_GET_PARTITION_PROPERTY_EX for 
+self-targeted passthru hypercalls.
 
-Reviewed-by: Stansialv Kinsburskii <skinsburskii@linux.miscrosoft.com>
+> Wei
 
-> +		hv_sleep_notifiers_register();
->  	} else {
->  		hypercall_msr.guest_physical_address = vmalloc_to_pfn(hv_hypercall_pg);
->  		wrmsrq(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> index 10037125099a..166053df0484 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -182,8 +182,10 @@ int hyperv_fill_flush_guest_mapping_list(
->  void hv_apic_init(void);
->  void __init hv_init_spinlocks(void);
->  bool hv_vcpu_is_preempted(int vcpu);
-> +void hv_sleep_notifiers_register(void);
->  #else
->  static inline void hv_apic_init(void) {}
-> +static inline void hv_sleep_notifiers_register(void) {};
->  #endif
->  
->  struct irq_domain *hv_create_pci_msi_domain(void);
-> diff --git a/drivers/hv/mshv_common.c b/drivers/hv/mshv_common.c
-> index aa2be51979fd..ee733ba1575e 100644
-> --- a/drivers/hv/mshv_common.c
-> +++ b/drivers/hv/mshv_common.c
-> @@ -14,6 +14,9 @@
->  #include <asm/mshyperv.h>
->  #include <linux/resume_user_mode.h>
->  #include <linux/export.h>
-> +#include <linux/acpi.h>
-> +#include <linux/notifier.h>
-> +#include <linux/reboot.h>
->  
->  #include "mshv.h"
->  
-> @@ -138,3 +141,78 @@ int hv_call_get_partition_property(u64 partition_id,
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(hv_call_get_partition_property);
-> +
-> +/*
-> + * Corresponding sleep states have to be initialized in order for a subsequent
-> + * HVCALL_ENTER_SLEEP_STATE call to succeed. Currently only S5 state as per
-> + * ACPI 6.4 chapter 7.4.2 is relevant, while S1, S2 and S3 can be supported.
-> + *
-> + * In order to pass proper PM values to mshv, ACPI should be initialized and
-> + * should support S5 sleep state when this method is invoked.
-> + */
-> +static int hv_initialize_sleep_states(void)
-> +{
-> +	u64 status;
-> +	unsigned long flags;
-> +	struct hv_input_set_system_property *in;
-> +	acpi_status acpi_status;
-> +	u8 sleep_type_a, sleep_type_b;
-> +
-> +	if (!acpi_sleep_state_supported(ACPI_STATE_S5)) {
-> +		pr_err("%s: S5 sleep state not supported.\n", __func__);
-> +		return -ENODEV;
-> +	}
-> +
-> +	acpi_status = acpi_get_sleep_type_data(ACPI_STATE_S5, &sleep_type_a,
-> +					       &sleep_type_b);
-> +	if (ACPI_FAILURE(acpi_status))
-> +		return -ENODEV;
-> +
-> +	local_irq_save(flags);
-> +	in = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> +	memset(in, 0, sizeof(*in));
-> +
-> +	in->property_id = HV_SYSTEM_PROPERTY_SLEEP_STATE;
-> +	in->set_sleep_state_info.sleep_state = HV_SLEEP_STATE_S5;
-> +	in->set_sleep_state_info.pm1a_slp_typ = sleep_type_a;
-> +	in->set_sleep_state_info.pm1b_slp_typ = sleep_type_b;
-> +
-> +	status = hv_do_hypercall(HVCALL_SET_SYSTEM_PROPERTY, in, NULL);
-> +	local_irq_restore(flags);
-> +
-> +	if (!hv_result_success(status)) {
-> +		hv_status_err(status, "\n");
-> +		return hv_result_to_errno(status);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * This notifier initializes sleep states in mshv hypervisor which will be
-> + * used during power off.
-> + */
-> +static int hv_reboot_notifier_handler(struct notifier_block *this,
-> +				      unsigned long code, void *another)
-> +{
-> +	int ret = 0;
-> +
-> +	if (code == SYS_HALT || code == SYS_POWER_OFF)
-> +		ret = hv_initialize_sleep_states();
-> +
-> +	return ret ? NOTIFY_DONE : NOTIFY_OK;
-> +}
-> +
-> +static struct notifier_block hv_reboot_notifier = {
-> +	.notifier_call = hv_reboot_notifier_handler,
-> +};
-> +
-> +void hv_sleep_notifiers_register(void)
-> +{
-> +	int ret;
-> +
-> +	ret = register_reboot_notifier(&hv_reboot_notifier);
-> +	if (ret)
-> +		pr_err("%s: cannot register reboot notifier %d\n", __func__,
-> +		       ret);
-> +}
-> -- 
-> 2.51.0
 
