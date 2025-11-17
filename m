@@ -1,60 +1,58 @@
-Return-Path: <linux-hyperv+bounces-7658-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7659-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DA7DC6695D
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 00:47:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 975A7C669B1
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 00:59:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D72D74E9B8B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Nov 2025 23:47:05 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5D4A34E067A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Nov 2025 23:59:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E010F2989BF;
-	Mon, 17 Nov 2025 23:47:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B030532570F;
+	Mon, 17 Nov 2025 23:58:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YQyfW38f"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="UnwPV8mA"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 646F625F79A;
-	Mon, 17 Nov 2025 23:47:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC247322520;
+	Mon, 17 Nov 2025 23:58:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763423221; cv=none; b=jCW4of515DhhEZmQA0fm4Yb7vl5+YjSSIEtGFO+eN+3VEVXp5BOT4tdzs4152uUo8JO8q56vIIxTajCwygusKtNl8AOfrI6yd3UrL0Rh7LbI3nKnIfJVUOvUI1SBhdoAjOxah5V3ZAdnTMaZ9Ym18UDBMor9csjgoiRJ8sLjcbQ=
+	t=1763423933; cv=none; b=rFuc1dzi6Vh0M0q5QfDRTwgD4IeOk5jx77Ow/yD29bChjiZrsQmwfOhoyaR4we1GVmqRl6jUUek9TQlr2B9ZVeOUpXUdbfLQT537gYVHXr6p5jDovqIZgJrCTTGPBI4coi/xPhunxYzWbuhCt3a8Ba9t+ILtbSUNBbl3acvr6EY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763423221; c=relaxed/simple;
-	bh=RQhCFgNwrRaotV/upBK9cWsfBkpSM+fYGbfhAn6LAL4=;
+	s=arc-20240116; t=1763423933; c=relaxed/simple;
+	bh=BQ73Od/P/55p19hBQWtBu97sJB0ge0NL4kSR7NPswQk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BDEcrQh2dwP85f6xrIR+JuwqkN9ahLes21NmvgVp5fK2/90/CedLAGv0i0/HPeau13yIRExUWPXw1ky/NTu8QcKJI96yGiLBbDcuM2dmGQxARcI7vffLpc9IIocZBggaP9noXh0v2hNWvXWaEfgrbdZL5UlMRs6FmdzLcuHNaYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=YQyfW38f; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=eBWe4f10MZbCVID/dQt5o5L0CjLW2q6XhftPg7gw13phrjbLcX4HzQMuAeEebd3vvkDvgi3+WtL0DKKLWu/N68ohBeMOy25X53ijJcwSpVlohiPVQHbTyaXfz7IXI5i8EwN72c5CtHb2NYy+7YR+TFFmX+26pWVLmF+lRzR3/3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=UnwPV8mA; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii.localdomain (unknown [52.148.140.42])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5B3A02013355;
-	Mon, 17 Nov 2025 15:46:59 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5B3A02013355
+	by linux.microsoft.com (Postfix) with ESMTPSA id 95B3B2013355;
+	Mon, 17 Nov 2025 15:58:49 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 95B3B2013355
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1763423219;
-	bh=lQVfvwZjW9eD+W1udOPIklqgdiBD4TmMEgFnTTbCRJw=;
+	s=default; t=1763423929;
+	bh=boCn+fUA0W8b50+6vT2qAqruaDAj88lWYKrh44E63bA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YQyfW38f5F5uviSnEzTAaKumFEqjAer9Ltzf0DESz9GvQl54vwM2gWz8/3OVBnMfN
-	 IY6Xh2R7Vtvq1hZ64AU1ARqsyb0h3wPkwUrDCTYY0SfqM3khMVVyHN/HMUCCijYAmS
-	 epZkfVbyYn9Y84VhS1+647DYoiEUSBf3vECO/eBk=
-Date: Mon, 17 Nov 2025 15:46:57 -0800
+	b=UnwPV8mAiAODTvAzg7mtiKTxCqYcgFuAae8Z4/mvuVVJ1Y0XrpZqOoN7R8OqtlsqB
+	 nFKZcitlTwRRVIdJXNaKYCVulAEbXF9BjN7mK5BpPpAnnOFrhQlzHSkPtNtzPG6ThN
+	 tLe5TP+baTysqqTieh9pd05U9dTQAtfGnIqm7tcI=
+Date: Mon, 17 Nov 2025 15:58:48 -0800
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Praveen K Paladugu <prapal@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, arnd@arndb.de, anbelski@linux.microsoft.com,
-	easwar.hariharan@linux.microsoft.com,
-	nunodasneves@linux.microsoft.com
-Subject: Re: [PATCH v5 1/3] hyperv: Add definitions for MSHV sleep state
- configuration
-Message-ID: <aRuz8fZQot7awo2S@skinsburskii.localdomain>
-References: <20251117210855.108126-1-prapal@linux.microsoft.com>
- <20251117210855.108126-2-prapal@linux.microsoft.com>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	wei.liu@kernel.org, mhklinux@outlook.com, kys@microsoft.com,
+	haiyangz@microsoft.com, decui@microsoft.com, longli@microsoft.com,
+	prapal@linux.microsoft.com, mrathor@linux.microsoft.com,
+	muislam@microsoft.com, anrayabh@linux.microsoft.com,
+	Jinank Jain <jinankjain@microsoft.com>
+Subject: Re: [PATCH v4] mshv: Extend create partition ioctl to support cpu
+ features
+Message-ID: <aRu2uC4VVazB_SfV@skinsburskii.localdomain>
+References: <1762903194-25195-1-git-send-email-nunodasneves@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -63,121 +61,268 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251117210855.108126-2-prapal@linux.microsoft.com>
+In-Reply-To: <1762903194-25195-1-git-send-email-nunodasneves@linux.microsoft.com>
 
-On Mon, Nov 17, 2025 at 03:08:16PM -0600, Praveen K Paladugu wrote:
-> Add the definitions required to configure sleep states in mshv hypervsior.
+On Tue, Nov 11, 2025 at 03:19:54PM -0800, Nuno Das Neves wrote:
+> From: Muminul Islam <muislam@microsoft.com>
 > 
-> Signed-off-by: Praveen K Paladugu <prapal@linux.microsoft.com>
-> Co-developed-by: Anatol Belski <anbelski@linux.microsoft.com>
-> Signed-off-by: Anatol Belski <anbelski@linux.microsoft.com>
-> Reviewed-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
-> Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> The existing mshv create partition ioctl does not provide a way to
+> specify which cpu features are enabled in the guest. Instead, it
+> attempts to enable all features and those that are not supported are
+> silently disabled by the hypervisor.
+> 
+> This was done to reduce unnecessary complexity and is sufficient for
+> many cases. However, new scenarios require fine-grained control over
+> these features.
+> 
+> Define a new mshv_create_partition_v2 structure which supports
+> passing the disabled processor and xsave feature bits through to the
+> create partition hypercall directly.
+> 
+> Introduce a new flag MSHV_PT_BIT_CPU_AND_XSAVE_FEATURES which enables
+> the new structure. If unset, the original mshv_create_partition struct
+> is used, with the old behavior of enabling all features.
+> 
+> Co-developed-by: Jinank Jain <jinankjain@microsoft.com>
+> Signed-off-by: Jinank Jain <jinankjain@microsoft.com>
+> Signed-off-by: Muminul Islam <muislam@microsoft.com>
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 > ---
->  include/hyperv/hvgdk_mini.h |  4 +++-
->  include/hyperv/hvhdk_mini.h | 40 +++++++++++++++++++++++++++++++++++++
->  2 files changed, 43 insertions(+), 1 deletion(-)
+> Changes in v4:
+> - Change BIT() to BIT_ULL() [Michael Kelley]
+> - Enforce pt_num_cpu_fbanks == MSHV_NUM_CPU_FEATURES_BANKS and expect
+>   that number to never change. In future, additional processor banks
+>   will be settable as 'early' partition properties. Remove redundant
+>   code that set default values for unspecified banks [Michael Kelley]
+> - Set xsave features to 0 on arm64 [Michael Kelley]
+> - Add clarifying comments in a few places
 > 
-> diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
-> index 1d5ce11be8b6..04b18d0e37af 100644
-> --- a/include/hyperv/hvgdk_mini.h
-> +++ b/include/hyperv/hvgdk_mini.h
-> @@ -465,19 +465,21 @@ union hv_vp_assist_msr_contents {	 /* HV_REGISTER_VP_ASSIST_PAGE */
->  #define HVCALL_RESET_DEBUG_SESSION			0x006b
->  #define HVCALL_MAP_STATS_PAGE				0x006c
->  #define HVCALL_UNMAP_STATS_PAGE				0x006d
-> +#define HVCALL_SET_SYSTEM_PROPERTY			0x006f
->  #define HVCALL_ADD_LOGICAL_PROCESSOR			0x0076
->  #define HVCALL_GET_SYSTEM_PROPERTY			0x007b
->  #define HVCALL_MAP_DEVICE_INTERRUPT			0x007c
->  #define HVCALL_UNMAP_DEVICE_INTERRUPT			0x007d
->  #define HVCALL_RETARGET_INTERRUPT			0x007e
->  #define HVCALL_NOTIFY_PARTITION_EVENT                   0x0087
-> +#define HVCALL_ENTER_SLEEP_STATE			0x0084
->  #define HVCALL_NOTIFY_PORT_RING_EMPTY			0x008b
->  #define HVCALL_REGISTER_INTERCEPT_RESULT		0x0091
->  #define HVCALL_ASSERT_VIRTUAL_INTERRUPT			0x0094
->  #define HVCALL_CREATE_PORT				0x0095
->  #define HVCALL_CONNECT_PORT				0x0096
->  #define HVCALL_START_VP					0x0099
-> -#define HVCALL_GET_VP_INDEX_FROM_APIC_ID			0x009a
-> +#define HVCALL_GET_VP_INDEX_FROM_APIC_ID		0x009a
->  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE	0x00af
->  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST	0x00b0
->  #define HVCALL_SIGNAL_EVENT_DIRECT			0x00c0
-> diff --git a/include/hyperv/hvhdk_mini.h b/include/hyperv/hvhdk_mini.h
-> index f2d7b50de7a4..41a29bf8ec14 100644
-> --- a/include/hyperv/hvhdk_mini.h
-> +++ b/include/hyperv/hvhdk_mini.h
-> @@ -140,6 +140,7 @@ enum hv_snp_status {
+> Changes in v3:
+> - Remove the new cpu features definitions in hvhdk.h, and retain the
+>   old behavior of enabling all features for the old struct. For the v2
+>   struct, still disable unspecified feature banks, since that makes it
+>   robust to future extensions.
+> - Amend comments and commit message to reflect the above
+> - Fix unused variable on arm64 [kernel test robot]
+> 
+> Changes in v2:
+> - Fix exposure of CONFIG_X86_64 to uapi [kernel test robot]
+> - Fix compilation issue on arm64 [kernel test robot]
+> ---
+>  drivers/hv/mshv_root_main.c | 113 +++++++++++++++++++++++++++++-------
+>  include/uapi/linux/mshv.h   |  34 +++++++++++
+>  2 files changed, 126 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> index d542a0143bb8..9f9438289b60 100644
+> --- a/drivers/hv/mshv_root_main.c
+> +++ b/drivers/hv/mshv_root_main.c
+> @@ -1900,43 +1900,114 @@ add_partition(struct mshv_partition *partition)
+>  	return 0;
+>  }
 >  
->  enum hv_system_property {
->  	/* Add more values when needed */
-> +	HV_SYSTEM_PROPERTY_SLEEP_STATE = 3,
->  	HV_SYSTEM_PROPERTY_SCHEDULER_TYPE = 15,
->  	HV_DYNAMIC_PROCESSOR_FEATURE_PROPERTY = 21,
->  	HV_SYSTEM_PROPERTY_CRASHDUMPAREA = 47,
-> @@ -155,6 +156,19 @@ union hv_pfn_range {            /* HV_SPA_PAGE_RANGE */
->  	} __packed;
->  };
+> -static long
+> -mshv_ioctl_create_partition(void __user *user_arg, struct device *module_dev)
+> +static_assert(MSHV_NUM_CPU_FEATURES_BANKS ==
+> +	      HV_PARTITION_PROCESSOR_FEATURES_BANKS);
+> +
+> +static long mshv_ioctl_process_pt_flags(void __user *user_arg, u64 *pt_flags,
+> +					struct hv_partition_creation_properties *cr_props,
+> +					union hv_partition_isolation_properties *isol_props)
+>  {
+> -	struct mshv_create_partition args;
+> -	u64 creation_flags;
+> -	struct hv_partition_creation_properties creation_properties = {};
+> -	union hv_partition_isolation_properties isolation_properties = {};
+> -	struct mshv_partition *partition;
+> -	struct file *file;
+> -	int fd;
+> -	long ret;
+> +	int i;
+> +	struct mshv_create_partition_v2 args;
+> +	union hv_partition_processor_features *disabled_procs;
+> +	union hv_partition_processor_xsave_features *disabled_xsave;
 >  
-> +enum hv_sleep_state {
-> +	HV_SLEEP_STATE_S1 = 1,
-> +	HV_SLEEP_STATE_S2 = 2,
-> +	HV_SLEEP_STATE_S3 = 3,
-> +	HV_SLEEP_STATE_S4 = 4,
+> -	if (copy_from_user(&args, user_arg, sizeof(args)))
+> +	/* First, copy v1 struct in case user is on previous versions */
+> +	if (copy_from_user(&args, user_arg,
+> +			   sizeof(struct mshv_create_partition)))
+>  		return -EFAULT;
+>  
+>  	if ((args.pt_flags & ~MSHV_PT_FLAGS_MASK) ||
+>  	    args.pt_isolation >= MSHV_PT_ISOLATION_COUNT)
+>  		return -EINVAL;
+>  
+> +	disabled_procs = &cr_props->disabled_processor_features;
+> +	disabled_xsave = &cr_props->disabled_processor_xsave_features;
+> +
+> +	/* Check if user provided newer struct with feature fields */
+> +	if (args.pt_flags & BIT_ULL(MSHV_PT_BIT_CPU_AND_XSAVE_FEATURES)) {
+> +		if (copy_from_user(&args, user_arg, sizeof(args)))
+> +			return -EFAULT;
+> +
+> +		if (args.pt_num_cpu_fbanks != MSHV_NUM_CPU_FEATURES_BANKS ||
+> +		    mshv_field_nonzero(args, pt_rsvd) ||
+> +		    mshv_field_nonzero(args, pt_rsvd1))
+> +			return -EINVAL;
+> +
+> +		/*
+> +		 * Note this assumes MSHV_NUM_CPU_FEATURES_BANKS will never
+> +		 * change and equals HV_PARTITION_PROCESSOR_FEATURES_BANKS
+> +		 * (i.e. 2).
+> +		 *
+> +		 * Further banks (index >= 2) will be modifiable as 'early'
+> +		 * properties via the set partition property hypercall.
+> +		 */
+> +		for (i = 0; i < HV_PARTITION_PROCESSOR_FEATURES_BANKS; i++)
+> +			disabled_procs->as_uint64[i] = args.pt_cpu_fbanks[i];
+> +
+> +#if IS_ENABLED(CONFIG_X86_64)
+> +		disabled_xsave->as_uint64 = args.pt_disabled_xsave;
+> +#else
+> +		/*
+> +		 * In practice this field is ignored on arm64, but safer to
+> +		 * zero it in case it is ever used.
+> +		 */
+> +		disabled_xsave->as_uint64 = 0;
 
-Why adding the unused states?
-It's not aligned with the common approach for this driver where we add
-only those definitions which are used.
+Why not explicitly treat non-zero value as invalid here instead?
+Isn't it always better than implicitly (and silently) zeroing it?
+
+> +
+> +		if (mshv_field_nonzero(args, pt_rsvd2))
+> +			return -EINVAL;
+> +#endif
+> +	} else {
+> +		/*
+> +		 * v1 behavior: try to enable everything. The hypervisor will
+> +		 * disable features that are not supported. The banks can be
+> +		 * queried via the get partition property hypercall.
+> +		 */
+> +		for (i = 0; i < HV_PARTITION_PROCESSOR_FEATURES_BANKS; i++)
+> +			disabled_procs->as_uint64[i] = 0;
+> +
+> +		disabled_xsave->as_uint64 = 0;
+> +	}
+> +
+>  	/* Only support EXO partitions */
+> -	creation_flags = HV_PARTITION_CREATION_FLAG_EXO_PARTITION |
+> -			 HV_PARTITION_CREATION_FLAG_INTERCEPT_MESSAGE_PAGE_ENABLED;
+> +	*pt_flags = HV_PARTITION_CREATION_FLAG_EXO_PARTITION |
+> +		    HV_PARTITION_CREATION_FLAG_INTERCEPT_MESSAGE_PAGE_ENABLED;
+> +
+> +	if (args.pt_flags & BIT_ULL(MSHV_PT_BIT_LAPIC))
+> +		*pt_flags |= HV_PARTITION_CREATION_FLAG_LAPIC_ENABLED;
+> +	if (args.pt_flags & BIT_ULL(MSHV_PT_BIT_X2APIC))
+> +		*pt_flags |= HV_PARTITION_CREATION_FLAG_X2APIC_CAPABLE;
+> +	if (args.pt_flags & BIT_ULL(MSHV_PT_BIT_GPA_SUPER_PAGES))
+> +		*pt_flags |= HV_PARTITION_CREATION_FLAG_GPA_SUPER_PAGES_ENABLED;
+>  
+> -	if (args.pt_flags & BIT(MSHV_PT_BIT_LAPIC))
+> -		creation_flags |= HV_PARTITION_CREATION_FLAG_LAPIC_ENABLED;
+> -	if (args.pt_flags & BIT(MSHV_PT_BIT_X2APIC))
+> -		creation_flags |= HV_PARTITION_CREATION_FLAG_X2APIC_CAPABLE;
+> -	if (args.pt_flags & BIT(MSHV_PT_BIT_GPA_SUPER_PAGES))
+> -		creation_flags |= HV_PARTITION_CREATION_FLAG_GPA_SUPER_PAGES_ENABLED;
+> +	isol_props->as_uint64 = 0;
+
+These properties are missing the nested one.
+I'd recommend squeezing that change in this patch
 
 Thanks,
 Stanislav
 
-> +	HV_SLEEP_STATE_S5 = 5,
-> +	/*
-> +	 * After hypervisor has received this, any follow up sleep
-> +	 * state registration requests will be rejected.
-> +	 */
-> +	HV_SLEEP_STATE_LOCK = 6
-> +};
-> +
->  enum hv_dynamic_processor_feature_property {
->  	/* Add more values when needed */
->  	HV_X64_DYNAMIC_PROCESSOR_FEATURE_MAX_ENCRYPTED_PARTITIONS = 13,
-> @@ -184,6 +198,32 @@ struct hv_output_get_system_property {
->  	};
->  } __packed;
 >  
-> +struct hv_sleep_state_info {
-> +	u32 sleep_state; /* enum hv_sleep_state */
-> +	u8 pm1a_slp_typ;
-> +	u8 pm1b_slp_typ;
+>  	switch (args.pt_isolation) {
+>  	case MSHV_PT_ISOLATION_NONE:
+> -		isolation_properties.isolation_type =
+> -			HV_PARTITION_ISOLATION_TYPE_NONE;
+> +		isol_props->isolation_type = HV_PARTITION_ISOLATION_TYPE_NONE;
+>  		break;
+>  	}
+>  
+> +	return 0;
+> +}
+> +
+> +static long
+> +mshv_ioctl_create_partition(void __user *user_arg, struct device *module_dev)
+> +{
+> +	u64 creation_flags;
+> +	struct hv_partition_creation_properties creation_properties;
+> +	union hv_partition_isolation_properties isolation_properties;
+> +	struct mshv_partition *partition;
+> +	struct file *file;
+> +	int fd;
+> +	long ret;
+> +
+> +	ret = mshv_ioctl_process_pt_flags(user_arg, &creation_flags,
+> +					  &creation_properties,
+> +					  &isolation_properties);
+> +	if (ret)
+> +		return ret;
+> +
+>  	partition = kzalloc(sizeof(*partition), GFP_KERNEL);
+>  	if (!partition)
+>  		return -ENOMEM;
+> diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
+> index 876bfe4e4227..cf904f3aa201 100644
+> --- a/include/uapi/linux/mshv.h
+> +++ b/include/uapi/linux/mshv.h
+> @@ -26,6 +26,7 @@ enum {
+>  	MSHV_PT_BIT_LAPIC,
+>  	MSHV_PT_BIT_X2APIC,
+>  	MSHV_PT_BIT_GPA_SUPER_PAGES,
+> +	MSHV_PT_BIT_CPU_AND_XSAVE_FEATURES,
+>  	MSHV_PT_BIT_COUNT,
+>  };
+>  
+> @@ -41,6 +42,8 @@ enum {
+>   * @pt_flags: Bitmask of 1 << MSHV_PT_BIT_*
+>   * @pt_isolation: MSHV_PT_ISOLATION_*
+>   *
+> + * This is the initial/v1 version for backward compatibility.
+> + *
+>   * Returns a file descriptor to act as a handle to a guest partition.
+>   * At this point the partition is not yet initialized in the hypervisor.
+>   * Some operations must be done with the partition in this state, e.g. setting
+> @@ -52,6 +55,37 @@ struct mshv_create_partition {
+>  	__u64 pt_isolation;
+>  };
+>  
+> +#define MSHV_NUM_CPU_FEATURES_BANKS 2
+> +
+> +/**
+> + * struct mshv_create_partition_v2
+> + *
+> + * This is extended version of the above initial MSHV_CREATE_PARTITION
+> + * ioctl and allows for following additional parameters:
+> + *
+> + * @pt_num_cpu_fbanks: Must be set to MSHV_NUM_CPU_FEATURES_BANKS.
+> + * @pt_cpu_fbanks: Disabled processor feature banks array.
+> + * @pt_disabled_xsave: Disabled xsave feature bits.
+> + *
+> + * pt_cpu_fbanks and pt_disabled_xsave are passed through as-is to the create
+> + * partition hypercall.
+> + *
+> + * Returns : same as above original mshv_create_partition
+> + */
+> +struct mshv_create_partition_v2 {
+> +	__u64 pt_flags;
+> +	__u64 pt_isolation;
+> +	__u16 pt_num_cpu_fbanks;
+> +	__u8  pt_rsvd[6];		/* MBZ */
+> +	__u64 pt_cpu_fbanks[MSHV_NUM_CPU_FEATURES_BANKS];
+> +	__u64 pt_rsvd1[2];		/* MBZ */
+> +#if defined(__x86_64__)
+> +	__u64 pt_disabled_xsave;
+> +#else
+> +	__u64 pt_rsvd2;			/* MBZ */
+> +#endif
 > +} __packed;
 > +
-> +struct hv_input_set_system_property {
-> +	u32 property_id; /* enum hv_system_property */
-> +	u32 reserved;
-> +	union {
-> +		/* More fields to be filled in when needed */
-> +		struct hv_sleep_state_info set_sleep_state_info;
-> +
-> +		/*
-> +		 * Add a reserved field to ensure the union is 8-byte aligned as
-> +		 * existing members may not be. This is a temporary measure
-> +		 * until all remaining members are added.
-> +		 */
-> +		 u64 reserved0[8];
-> +	};
-> +} __packed;
-> +
-> +struct hv_input_enter_sleep_state {     /* HV_INPUT_ENTER_SLEEP_STATE */
-> +	u32 sleep_state;        /* enum hv_sleep_state */
-> +} __packed;
-> +
->  struct hv_input_map_stats_page {
->  	u32 type; /* enum hv_stats_object_type */
->  	u32 padding;
+>  /* /dev/mshv */
+>  #define MSHV_CREATE_PARTITION	_IOW(MSHV_IOCTL, 0x00, struct mshv_create_partition)
+>  
 > -- 
-> 2.51.0
+> 2.34.1
 
