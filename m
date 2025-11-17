@@ -1,71 +1,101 @@
-Return-Path: <linux-hyperv+bounces-7642-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7643-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFB18C65A1C
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Nov 2025 18:58:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FCA9C65ADB
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Nov 2025 19:15:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id AD23F4E3DDF
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Nov 2025 17:58:29 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 60DCD4EDB11
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Nov 2025 18:12:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DC69303CB7;
-	Mon, 17 Nov 2025 17:58:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F33430AD19;
+	Mon, 17 Nov 2025 18:11:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="Hi8HR6gs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hHtLGW3k"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6903E2C0F89;
-	Mon, 17 Nov 2025 17:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763402306; cv=pass; b=l75+hYDbVJmHHp6IqRrrVtUBEn9/suAC6w/tnD3A4a7nZ8nKuvHpAYl0QObVaW0GtK/6tc5U1s+LDdUzluuTKouGzVsG0pYjmc9rnhvYQhU4YvyIab7IzygOYaJKW6GZDXtAUvNfBCER6PT2j+A5PhiFzSFufy3FcIKHJOlMve8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763402306; c=relaxed/simple;
-	bh=2rNH0yyQwPxiUnte3OgDSEm+m3RdQSUEqi6Z6iLPXfU=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD8C305E00
+	for <linux-hyperv@vger.kernel.org>; Mon, 17 Nov 2025 18:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763403112; cv=none; b=jhvIW+KlgYadGcCQfpMLc7YvzHuLEFQZ8DvkiX9OGepIiSAAMVIt/hrXWsfBi5PxeQrcTxrd82xyYqgrt4MJVST7tbjow1extpBee7PrluxncvA+4ecdaZb1K8UxVzDp+PWxTihYdt6V/yL/ErvTXChI6yP9WDgY2v/JA8oyeRs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763403112; c=relaxed/simple;
+	bh=O7RpA/KmSd4G/hqnUQJhF6HWLcZQ2ssf+Cm4ZqmVphY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P9QVIP9nFV7vA3vLugUHdkG0vxYsvZ+zF0GVK/6a7DXVaz4wMupvhbqbGwG7KSkRB579HRn+kkKpK0QunYHW/Kf9GHXykJDeQZZehy4DLI5U5FbHdgz07Fxn3JM0wgekxCs1PJqAUnL4TNp+1HntdZaPWxxsqOzkQZ5GSO/Z4/I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=Hi8HR6gs; arc=pass smtp.client-ip=136.143.188.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1763402278; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=fW1KtFHpGqgX6RDESPkICQhiCh9G3/yo4r/5y0vrkOTMex5ALVg3g/fMtVLVuICP3i4Ul6cHFzD+6OTBPKl5RxZWgPDPrDM2TQFpZDWHA7MxB0wyq8ww/YMVyOxfAO7TjMp2VlMZQKakDupWxHjV9+ydeI8NVwQX/NxzyLsxduk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1763402278; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Mtj/y1tj4Qb6xMK6ny1DnT4aSEezLdSFUIrKSEg5pAk=; 
-	b=UTJsRkMdK6SN+lBzntZl98xpEXew4eidh25/O+ONsTTTtH2h/A4hl4gkqW50QLLzYnyBDoOe8I2h6Vf0uz2KzQ817LJxsF8HYnkoAeXr5UDipwcQf54DZmr8dcu5ki1E4DxgC5j2n2WD25DN9uKifuS4QLZBitqOCVFGKVGWziI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=anirudhrb.com;
-	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
-	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1763402278;
-	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=Mtj/y1tj4Qb6xMK6ny1DnT4aSEezLdSFUIrKSEg5pAk=;
-	b=Hi8HR6gsKUw7Nb/f4UccZ1opfSR7mbMZJzFhjrCHmGAqyn02ePtYVnRPUqUqFRA9
-	+6s4o474aJbtaPKG0Z+7P5kByh+aovAz9isAXckXnOxwmi1NEfTDjn5hhvc0FbreQO1
-	9MTdgMiG0OFikAN74G36S7hoslEWHmtex2jqIrGY=
-Received: by mx.zohomail.com with SMTPS id 1763402276135717.0723309216664;
-	Mon, 17 Nov 2025 09:57:56 -0800 (PST)
-Date: Mon, 17 Nov 2025 17:57:50 +0000
-From: Anirudh Rayabharam <anirudh@anirudhrb.com>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: Wei Liu <wei.liu@kernel.org>, kernel test robot <lkp@intel.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=aFBfo/unX0g7HTWA8U0KU/kzToLOnJQlzlDOqqabFxhP+Do+j1y07G90clz78oixSuHKif2iu1OtFF7K3Gi0ginImzG5as8Qb/RZSsrMtRjinN84LfKb0J97JwIqMGeCZxn6zuiiCUTVAg8erSEXQq5tRfeZG98L0nWQcVX7QD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hHtLGW3k; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-429c7869704so3527553f8f.2
+        for <linux-hyperv@vger.kernel.org>; Mon, 17 Nov 2025 10:11:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1763403108; x=1764007908; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xkXn2uf2BmayOa330xtRb/7V5dbi6gpwEITJjIUhIzo=;
+        b=hHtLGW3k92cOOb73mCpjPZ3mmvetgZBtDXyLluAqL8sZ3UdRC7P9A6XMnTkuwy1ADQ
+         5lKs/Zp0166Gd2R+f4K382mgZoZGocmipZGDUf7ocLmSpLTp9cgFml9YRU9ZLGpGPikl
+         Nbk1PodKoZM3ubMKzh8+1JfspwAPZf+pSSJZdzhV8Cdrfrk8HQ8YDFQA5NMCdNBJm0gK
+         I+4m8VhuebJlJHzJBzd1LkUu7GyxNwtAXEuPBwvG543RNAhNWRdR5z2pSdKJWJ0KY6ZA
+         SBOuM3syn5FtI4kMLwlBh665N9cIJzsZ3hdFA4eiFopUsmMgci2d1A5oTsOIKh3k3B1F
+         SLYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763403108; x=1764007908;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xkXn2uf2BmayOa330xtRb/7V5dbi6gpwEITJjIUhIzo=;
+        b=hcfIOae/qAzupR4QaDYfpOMm9Oluul5sqcK3vjelrTxJjpAz4JoGj4AY0pK04NmRzL
+         zV3IljDBFmujEeM04n47M3dJOHa/ps0J2Losn3oy+q+MNSIHlWnOBVlCROC2xOJlNhQY
+         dn+W9k8xLWNko2ys/xsePfIl8yGjV869x5PxbkWiYWVHzkZ/zI0I8kmH9bHxlZa6jUeZ
+         ItuTYGDnABA6RApHrGRerWKiwIR8tD9IQcBkmQ+c8NAoV1jTnQd/fmYa5DNvxMaywjsO
+         t+GZanqwsdYvZciNhHgH8DOQrwkYxLA9jT79/EZutGZ/5JHMTk0QtZZmVYSLiLdbvX+U
+         yl0A==
+X-Forwarded-Encrypted: i=1; AJvYcCWLOJa2QK/Czu5zwUpH944gtLuIW4Ifbr09VYI1Z2qmqIPd5L4t5oIYj6JIsPenQAJ7iQbYswWbSYO8pA8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8F0WlDL29Sqggocs8MwdWV7CqrUxhgQXbn/GmQwNzE9ikIVVL
+	HR3KjZl8fMurYbnjrGP02vuk5cfi3/PmjIdcPWw2+00TyOj2V37heSQDnCWPQpVKFCk=
+X-Gm-Gg: ASbGncsaPCsg02oEhMnIDJwWsAtmxWOutHrigp8QF7OAlvDVdXfbquYMwfw+jhVNmya
+	2lUsSnlltUs626py0hUgh+d6Pd5kI2do755PXWLs+kjxX8Z2qk2w6xmVfov86MiqrPKXz7LlZuy
+	zbO5o8sIIECXzNM9vlGf6k9Has/K5gTlMhq2XVOiucf+nr1l5muIp6LNYNwFgRiEZAQK6SyhPlU
+	cUBg08kI3xrHhb0xhcL2pJuSwHdbMDQPTnQD02qqSvO4Xj53zP51jWlWgZ/pq8GfrnJ2nlR5FmV
+	E7LJVj/Z+BSrrhQV7HJLnSBHIKI4Y6Pxvn8pniq1+H8evuLQze0+3W8aF/t17g/EksDBj7WPhph
+	HsUdkVgGNiKwdDDKQtAwwyer2UfFKuFXLjsH01OzbsryqglFiHRVcd8eM28CNUW+UGBTgC+mm3z
+	n3jvcEdJyINs4Kypg4bs37w05dbj4=
+X-Google-Smtp-Source: AGHT+IGHhEQCJaDM/zq/AjpMPqh+c0eOHsOAgGFxOiztiCVkL4Xu6fzfIxyiuFP74BN85ttgdB3SyQ==
+X-Received: by 2002:a05:6000:1849:b0:42b:394a:9e0 with SMTP id ffacd0b85a97d-42b5937879bmr12050647f8f.32.1763403108288;
+        Mon, 17 Nov 2025 10:11:48 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-42b53f0b617sm27141178f8f.31.2025.11.17.10.11.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Nov 2025 10:11:47 -0800 (PST)
+Date: Mon, 17 Nov 2025 21:11:44 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Ally Heev <allyheev@gmail.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
 	"K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
-	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Drivers: hv: ioctl for self targeted passthrough hvcalls
-Message-ID: <aRtiHkEYMi_eqTvQ@anirudh-surface.localdomain>
-References: <20251114095853.3482596-1-anirudh@anirudhrb.com>
- <202511161617.KcDzR4sA-lkp@intel.com>
- <20251117173428.GB2380208@liuwe-devbox-debian-v2.local>
- <522f1bc2-417f-434a-92f9-7b417744cef4@linux.microsoft.com>
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
+	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [Intel-wired-lan] [PATCH v3] net: ethernet: fix uninitialized
+ pointers with free attribute
+Message-ID: <aRtlYIZ2XOQKMGd_@stanley.mountain>
+References: <20251106-aheev-uninitialized-free-attr-net-ethernet-v3-1-ef2220f4f476@gmail.com>
+ <575bfdb1-8fc4-4147-8af7-33c40e619b66@intel.com>
+ <aRsfBDC3Y8OHOnOl@stanley.mountain>
+ <dd88462f-19cb-4fde-b1f0-5caf7e6c6ce6@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -74,70 +104,51 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <522f1bc2-417f-434a-92f9-7b417744cef4@linux.microsoft.com>
-X-ZohoMailClient: External
+In-Reply-To: <dd88462f-19cb-4fde-b1f0-5caf7e6c6ce6@intel.com>
 
-On Mon, Nov 17, 2025 at 09:41:19AM -0800, Nuno Das Neves wrote:
-> On 11/17/2025 9:34 AM, Wei Liu wrote:
-> > +Nuno
-> > 
-> > On Sun, Nov 16, 2025 at 04:17:08PM +0800, kernel test robot wrote:
-> >> Hi Anirudh,
-> >>
-> >> kernel test robot noticed the following build errors:
-> >>
-> >> [auto build test ERROR on linus/master]
-> >> [also build test ERROR on v6.18-rc5]
-> >> [cannot apply to next-20251114]
-> >> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> >> And when submitting patch, we suggest to use '--base' as documented in
-> >> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> >>
-> >> url:    https://github.com/intel-lab-lkp/linux/commits/Anirudh-Rayabharam/Drivers-hv-ioctl-for-self-targeted-passthrough-hvcalls/20251114-182039
-> >> base:   linus/master
-> >> patch link:    https://lore.kernel.org/r/20251114095853.3482596-1-anirudh%40anirudhrb.com
-> >> patch subject: [PATCH] Drivers: hv: ioctl for self targeted passthrough hvcalls
-> >> config: x86_64-buildonly-randconfig-005-20251116 (https://download.01.org/0day-ci/archive/20251116/202511161617.KcDzR4sA-lkp@intel.com/config)
-> >> compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-> >> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251116/202511161617.KcDzR4sA-lkp@intel.com/reproduce)
-> >>
-> >> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> >> the same patch/commit), kindly add following tags
-> >> | Reported-by: kernel test robot <lkp@intel.com>
-> >> | Closes: https://lore.kernel.org/oe-kbuild-all/202511161617.KcDzR4sA-lkp@intel.com/
-> >>
-> >> All errors (new ones prefixed by >>):
-> >>
-> >>>> drivers/hv/mshv_root_main.c:125:2: error: use of undeclared identifier 'HVCALL_GET_PARTITION_PROPERTY_EX'
-> >>      125 |         HVCALL_GET_PARTITION_PROPERTY_EX,
-> >>          |         ^
-> > 
-> > Anirudh, please check this.
-> > 
-> This is introduced in hyperv-next, in:
-> 59aeea195948 mshv: Add the HVCALL_GET_PARTITION_PROPERTY_EX hypercall
+On Mon, Nov 17, 2025 at 03:37:30PM +0100, Alexander Lobakin wrote:
+> From: Dan Carpenter <dan.carpenter@linaro.org>
+> Date: Mon, 17 Nov 2025 16:11:32 +0300
 > 
-> But the bot applies the patch to linus/master, that is probably why.
+> > On Thu, Nov 06, 2025 at 03:07:26PM +0100, Alexander Lobakin wrote:
+> >>> diff --git a/drivers/net/ethernet/intel/ice/ice_flow.c b/drivers/net/ethernet/intel/ice/ice_flow.c
+> >>> index 6d5c939dc8a515c252cd2b77d155b69fa264ee92..3590dacf3ee57879b3809d715e40bb290e40c4aa 100644
+> >>> --- a/drivers/net/ethernet/intel/ice/ice_flow.c
+> >>> +++ b/drivers/net/ethernet/intel/ice/ice_flow.c
+> >>> @@ -1573,12 +1573,13 @@ ice_flow_set_parser_prof(struct ice_hw *hw, u16 dest_vsi, u16 fdir_vsi,
+> >>>  			 struct ice_parser_profile *prof, enum ice_block blk)
+> >>>  {
+> >>>  	u64 id = find_first_bit(prof->ptypes, ICE_FLOW_PTYPE_MAX);
+> >>> -	struct ice_flow_prof_params *params __free(kfree);
+> >>>  	u8 fv_words = hw->blk[blk].es.fvw;
+> >>>  	int status;
+> >>>  	int i, idx;
+> >>>  
+> >>> -	params = kzalloc(sizeof(*params), GFP_KERNEL);
+> >>> +	struct ice_flow_prof_params *params __free(kfree) =
+> >>> +		kzalloc(sizeof(*params), GFP_KERNEL);
+> >>
+> >> Please don't do it that way. It's not C++ with RAII and
+> >> declare-where-you-use.
+> >> Just leave the variable declarations where they are, but initialize them
+> >> with `= NULL`.
+> >>
+> >> Variable declarations must be in one block and sorted from the longest
+> >> to the shortest.
+> >>
+> > 
+> > These days, with __free the trend is to say yes this is RAII and we
+> > should declare it where you use it.  I personally don't have a strong
+> 
+> Sorta, but we can't "declare it where you use it" since we don't allow
+> declaration-after-statement in the kernel.
 
-Right. In the v2 of this patch, I used the --base argument to git
-format-patch as suggested by the tool above. That should help it apply
-the patch in the right tree. Let's see if it still complains.
+That changed when we merged cleanup.h.  It is allowed now.  I still don't
+like to declare variables anywhere unless it's a __free() variable and I
+think almost everyone else agrees.  The only subsystem which I know that
+completely moved to declaring variables willy-nilly was bcachefs.
 
-Anirudh
+regards,
+dan carpenter
 
-> 
-> >>>> drivers/hv/mshv_root_main.c:175:18: error: invalid application of 'sizeof' to an incomplete type 'u16[]' (aka 'unsigned short[]')
-> >>      175 |         for (i = 0; i < ARRAY_SIZE(mshv_passthru_hvcalls); ++i)
-> >>          |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > 
-> > This is from the original patch. Perhaps adding the explicit declaration
-> > of the array size would help.
-> > 
-> 
-> I think this is just due to the earlier error...
-> 
-> Nuno
-> 
-> > Wei
-> 
 
