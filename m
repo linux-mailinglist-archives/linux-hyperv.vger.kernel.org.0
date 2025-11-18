@@ -1,456 +1,281 @@
-Return-Path: <linux-hyperv+bounces-7687-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7688-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75E66C6B1F3
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 19:10:56 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEA8CC6B20D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 19:11:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E472134770A
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 18:10:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTPS id 816B928CDF
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 18:11:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EE842D7DE5;
-	Tue, 18 Nov 2025 18:10:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35E3B31ED80;
+	Tue, 18 Nov 2025 18:10:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QNmjD/kR";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="ANdr4X9o"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="mGn/cwry"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazolkn19011013.outbound.protection.outlook.com [52.103.1.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B83035F8A2
-	for <linux-hyperv@vger.kernel.org>; Tue, 18 Nov 2025 18:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763489441; cv=none; b=W3OUCUxLln9ZexEDQ6XBiHS8y7taAEPOo4KU7MKdwfr7bq7fEHEsoLSXfcyYED+HYquIYHAYCdnuE3w5KCtS48W6cc0QGL8ZxRPJxCEIhv7qJ08kaYWs4QcIepdfkHrxCEIzhXnzhYmD7DLeeWHwWML0a6yXme/cjxoYhN5vIic=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763489441; c=relaxed/simple;
-	bh=I2JJ1tCv8Agm6oYmejeapO9yQ5ZjVer5ugyNFb0NIio=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dHA5su83DmykV/piJe9Y9/npt7CEVo8N+B7qg6OxnP99f1kwhXwZhZEKP1L6w1XxV9geW4t3tRqcrZH26f0jCB6gQYyu6qr9X4KFHPyS5WW0rTPw1xw7WHcCifqnzWwM4zSVPoZvIngbsc7EMvR6o8fpEpP26UiWASJn6hgcxKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QNmjD/kR; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=ANdr4X9o; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763489438;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b54A6joNdavqdu7nYfZhZqdIA9l92Lpt9UfdeKtQjt8=;
-	b=QNmjD/kRmsb6X+fSr+u/TpPVi3MAB3PKHyn4ePuJ4CAuhIQ0hOQMokvgbjTHlqHMEBQ9NT
-	g0QwEvw7HdJRlWFhTx3zOkF7x+EQL7qGeiteMxqAINxhWhYOdk1gFP5oGunri6Ex9hOwZ3
-	ENGR+wp8i53zLTK4WmA9/R07fhJOmzE=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-628-EbxNuSueP6OBQFumNqocmQ-1; Tue, 18 Nov 2025 13:10:36 -0500
-X-MC-Unique: EbxNuSueP6OBQFumNqocmQ-1
-X-Mimecast-MFC-AGG-ID: EbxNuSueP6OBQFumNqocmQ_1763489436
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-640b8087663so9109265a12.3
-        for <linux-hyperv@vger.kernel.org>; Tue, 18 Nov 2025 10:10:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1763489436; x=1764094236; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=b54A6joNdavqdu7nYfZhZqdIA9l92Lpt9UfdeKtQjt8=;
-        b=ANdr4X9oKx1IJQ/IR/03eCCHgaoaZnBKRSKdE48EF9EZY6utlZc+leiP9KwsAXkoBF
-         EkQlVO9sK/O/3p3hHgIbzc0PLx2p+tldYC4pAPKpxCty1jJIwXroGJlPB6sN023pfdln
-         s8LswatuPIg4jC16OjUKsh7qXS9+ohs/hc39FsI8ip5ecnuGAFAl8FXctYGvwLGZKGaS
-         XfWYgwpqv2PjJPJLlntcbHVbdddaDNeFfO9pDdLtsac9dPJRyzImMZE/iq9JtiQy9uKF
-         qFFWHArnVDnLi8nfVHyUgF2nzhbB6h7pUwRWpkaLqluJEEdRhN4NzPjNL31P7RPdjWBS
-         Y4XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763489436; x=1764094236;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b54A6joNdavqdu7nYfZhZqdIA9l92Lpt9UfdeKtQjt8=;
-        b=Sr8HP3srFyJ3IcqfyvqN8ceccpdbLXyaA8hbnswqCFYwlUXVeqIsdLSyiLXq5ndApY
-         pSkRW4pvgIKtDMbHpNH+xR3qHF0a29KLwC6eNXjim5plRUIl47u5SDKyl6fr2aPk4iIp
-         RwLtWnLx8bAGTtVJYD7r2K4g7fvp+8SEYWhjWEDk8kyMhHgUv/v7rMckeh/v4uPip4d0
-         eGLOW2Ahww98OxerkJFCVFKJ32JZRUBfwM5VmY1x1+uj+W851hcO85gxyLOI5b2wUUtV
-         /ipJgxJhgnZIlWSelv25I74Nk1StZ1oWLo2e12t6R0P400wx33Bm613JDttsJOgwMPap
-         xRIA==
-X-Forwarded-Encrypted: i=1; AJvYcCUHiM/ivmyx+fiybSOwlbCQQNnrAmAMJKg7u3mWIrJxHIOlo5O2+ThDocG0AWoDK6CBGhnbodko8VSAioo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHMxt3KFMB2RTCc+rmwQ7b9fCo3Kj7PEb1ASkwgs/5sdTJTovf
-	m4qs29wSpv9UTJmCLBohSZSkQQ9y57DkhydoCnPrqLc8dEA7mRyX98LiWCrourovfeSv9fqRfH5
-	DqI6eOPofdnkg19Fng9DsyeIhw16FAOO/kUjF0EZfNb21lkX0Uc7BxsAfwsNPhAgoDA==
-X-Gm-Gg: ASbGncsw66V0tvJFPWamXTO2dpR8PLHJZaJFQlUXwhytpq1rQODxElHtNOvUmvYWQ+g
-	AOboDixDJh8RuOSMei/lBLbYwIo9L4R9ivVKs7RzGzAq4eF7uboGEDoz2tiIPbMQZ31cCb7S+oa
-	gATvFzUFvzEmH1R/oTrmXilcwgUHh5GZTGYlznK3mQWuHDy0C9BKLVkXa+4hx53XhZJvZTYVmr0
-	I9y5riRAUT31mvnTskr8hmESRya7xmntDayJ4uoI4UeugJkKvCP6ZhFi2J4B2jI5o8rndlizrdg
-	exPilJZ8qG34Z1NYI74VRikJtr1X/sAPJc7nyVMWW/+HMzUUVYTMDiQ9PA9VuH7S4BPttFcOXWM
-	qFV1YzOcQR+sJppYRPDyvf3n/Br05rZiPLAs+GT2HJmX+JJfNX1TjRBdP2Fw=
-X-Received: by 2002:a17:907:25cd:b0:b72:6383:4c57 with SMTP id a640c23a62f3a-b7367b79f4fmr2007938766b.55.1763489435570;
-        Tue, 18 Nov 2025 10:10:35 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHleoKw6aR8fpP9SEzji0mhyusqbHzR6L9dUnAr/MvrkV7jmuKQQd3H8f4997CvU7MIS586og==
-X-Received: by 2002:a17:907:25cd:b0:b72:6383:4c57 with SMTP id a640c23a62f3a-b7367b79f4fmr2007933566b.55.1763489435050;
-        Tue, 18 Nov 2025 10:10:35 -0800 (PST)
-Received: from sgarzare-redhat (host-82-57-51-250.retail.telecomitalia.it. [82.57.51.250])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b734fb12d55sm1400435566b.33.2025.11.18.10.10.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Nov 2025 10:10:34 -0800 (PST)
-Date: Tue, 18 Nov 2025 19:10:28 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Bobby Eshleman <bobbyeshleman@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jason Wang <jasowang@redhat.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
-	Bryan Tan <bryan-bt.tan@broadcom.com>, Vishnu Dasa <vishnu.dasa@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
-	virtualization@lists.linux.dev, netdev@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Sargun Dhillon <sargun@sargun.me>, berrange@redhat.com, Bobby Eshleman <bobbyeshleman@meta.com>
-Subject: Re: [PATCH net-next v10 03/11] vsock: reject bad
- VSOCK_NET_MODE_LOCAL configuration for G2H
-Message-ID: <vsyzveqyufaquwx3xgahsh3stb6i5u3xa4kubpvesfzcuj6dry@sn4kx5ctgpbz>
-References: <20251117-vsock-vmtest-v10-0-df08f165bf3e@meta.com>
- <20251117-vsock-vmtest-v10-3-df08f165bf3e@meta.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA8D3612F0;
+	Tue, 18 Nov 2025 18:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.1.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763489457; cv=fail; b=OrdLbwfCBSdK9qyssn4692XZbsv1ZPKRq1HiqDxCYR8CAUPCVaH/VtKUqsfs79k811Z7xSxbVfIUjlOB5dpQOaQHyNFzylvp4GIRNiVv2Z8PCCvnyK2f4L9Y/K2or/GyVHqr6CNRajy13uDrHckNUK8nEXOdpb8jcydq1XwfZAU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763489457; c=relaxed/simple;
+	bh=WYTPXRyQLni1i/ap3+2lwga7sQcluqE28bAdSQLflqM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZvudAj2saLasXXN5oC/HsvozpMW8xLIj7eB6mt01kMt3YMz5eHggHZAQ7rr7gknRp3FA4YudR/P7NyohVBps6t/JCAS6elQXlgTZ1+lCl2Y69eavKZEKl6q7bDbDPSGco47EJNQJXNrJu5QgrSUG6hzUL6jMbZ3HOD2BkIJ8cXk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=mGn/cwry; arc=fail smtp.client-ip=52.103.1.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XvQHOizwmkHM6ZR4qGDfsZbtZ2NRMjiaefxqJ9GKwnlk3GOQzlO4MBUZYqg5yV40s7z6G9bxY/UK4Gcb5X4wsD83olXzbw5b+VG+Hfiop0dtzqGWPinmwHvYlX+jT4Ec6ab0Hqfe5+u2gM1ZZUHf4H01w2z5v7EZhqi0RuhOADBoPZodzY3QO/kZre7ekC3YEijjmqlXDGTnZoTbnxbZSB+aAx3KgyeHtTmAqMHYE5NM/3L0lOWaQnFKf6r0p4LLPQZwWCRTEScow6kl0jb4IlGXgpKA1UKYU5bcD4CE2txLN9Z6XtC3YqU32WsM3f2E5FRgNdrBaIr6GOimtkcXtg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cjJTfdGaLSwrflGQYCEu8q2/slxnUDozwrjvPFtRwQQ=;
+ b=y0qMJG71b2pDRsyJm+FEojZQurPTW2jAkuYDR+oxEDjl8IeH4rX7FbMlI+JFQEEAxTXLyj3iXuHPWRBoo1BBpq92sevtFSlRiK98As/+U/UYOSU8KDTf/LNif4G0gW73s6ajkta0VLcRASpbXZHrKMFF/k9c7U38gufHPV1s2ioVuGDb7mLc4dRvfM2SRSPlgHnEBxoA04jVUbX9egT0lTR49VlVzFRapxO60zoe464YlSPvMAqnDnpMzDAyCCabomjDUNLvaNOldjku7qVJ/o6GGzTeYWfXD9pmFc6bUVhHtixsBLrF0CVm4nsZ0hUXpPoKnaGGleg8Zbt+s4yLRA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cjJTfdGaLSwrflGQYCEu8q2/slxnUDozwrjvPFtRwQQ=;
+ b=mGn/cwryXH8Gp8GjgcLrKtzEOWr+Y2uO0H2FqFzB7/SdVRdULwafrmdDwCSG7xiRkIZHdU7+nvQakq8TpZzaTCvDe9+0BI/qlG85UC24xf7p+h1GIhw++v3qZj2eQoomLZfkDrYaNx4Y5dLHEKykveCuKkL8IV4cr7+TSjDScb04ankMPgkU5sybvuJM9N17urvfehKM7jc/PgQg5Wyj3yXqPF/u0iSfmG+g85ucDwkB8U+w1ue9pAzLTt5LeubZcGf5FdKWTs4JRjzfn7rrC7OqWGNghQc0x+0TjrP964GR6l8olP4Iu9EcAcLwq8SK/VSxbhipNNxF7lNWLYKFcw==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by DM3PR02MB10231.namprd02.prod.outlook.com (2603:10b6:0:1e::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.10; Tue, 18 Nov
+ 2025 18:10:52 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%2]) with mapi id 15.20.9320.021; Tue, 18 Nov 2025
+ 18:10:52 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Praveen K Paladugu <prapal@linux.microsoft.com>, "kys@microsoft.com"
+	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+	<decui@microsoft.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
+	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "arnd@arndb.de"
+	<arnd@arndb.de>
+CC: "anbelski@linux.microsoft.com" <anbelski@linux.microsoft.com>,
+	"easwar.hariharan@linux.microsoft.com"
+	<easwar.hariharan@linux.microsoft.com>, "nunodasneves@linux.microsoft.com"
+	<nunodasneves@linux.microsoft.com>, "skinsburskii@linux.microsoft.com"
+	<skinsburskii@linux.microsoft.com>
+Subject: RE: [PATCH v5 1/3] hyperv: Add definitions for MSHV sleep state
+ configuration
+Thread-Topic: [PATCH v5 1/3] hyperv: Add definitions for MSHV sleep state
+ configuration
+Thread-Index: AQHcWAal74VHuQyPCUSZhF6MaxKP57T4ueZQ
+Date: Tue, 18 Nov 2025 18:10:51 +0000
+Message-ID:
+ <SN6PR02MB41574A771FC709C6BE97A3E8D4D6A@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20251117210855.108126-1-prapal@linux.microsoft.com>
+ <20251117210855.108126-2-prapal@linux.microsoft.com>
+In-Reply-To: <20251117210855.108126-2-prapal@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|DM3PR02MB10231:EE_
+x-ms-office365-filtering-correlation-id: f8cba72d-ab95-494a-cab7-08de26cdcf1d
+x-ms-exchange-slblob-mailprops:
+ Cq7lScuPrnrSvM2KHQcvRP9S8BO/OGIt1oJuiqibONYDWnsBl7MSJYJKuN+/gYCFxyCCRSRH6oTqam6kXyazWw4saLEUoeYsLZfNfQJVYnzoEtUv6TqXU3HbsUdPIWUKzEIx8AmKIvwafF+MZQCck3LtbR15JmprAJZxGkiTIHbWDqiOzp3B9tJd5c3DdUxCuWxrqHlQudlS87EHRNLf6/tHwSay9x3LnA92CXCjKfHxq8ToQXhNbAE6DLq+J5Ot2vOMc2LCTM4g5cf0ByirnrPLwPTQnweJtJ6rK0o2GBJdu1O0rO8GNbt3EuHM94ssTtIMigju/YAlTgjC/httxvlR25XqnnnAbAkz4owpNWVdRAhHRqB0w6s166B4xigEb3MJTMgIukb7NEZJjZfsQwl8qiOYdNsyDUTsUb/CKcs9SlYLsWlf03yAmn4Dmb4Sd1TYM9x6k4YRXp9kjlM0exK0owojAF3J2Exe2SKQo3FFtclHLJCUM18tqf6t4aUrcEKijOby9xbJwH1aMTwK5Gi1B5pH8UjwQkmo7FPTMDsKOaYEP3otAGU8fF+dbVFcJPTmXqv4qah1bXyioJe52egaPTL00R9hqr2nb+wZLyUOSUwGPLnZctzm3uMg/IpVYz84K7fRKzNEJs678SYZlkRlnNOzon93ZwaJ7EZs9GFxmNyjShs70tNDS+V5gjx3oT5X68fLVe22fW+KafGZbPOYlJNi+sxv/+3iMqMkpJX7SG811V6Kx/da67NJJiYxeic7d7oZAIg=
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|31061999003|51005399006|461199028|8060799015|8062599012|13091999003|41001999006|19110799012|15080799012|440099028|3412199025|40105399003|102099032;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?KciIauZPrXG9z8xcFZZ7DYkN/gpmsFLhCmgCVTZnrS39GjzWMxTuZbw0YdX+?=
+ =?us-ascii?Q?8mn9EBEkY/hyyd2qWeYssLMq2N7tPBSf7zgHJx1eAQ2aGJHrYTz9o9XszgSZ?=
+ =?us-ascii?Q?OrHqvTmqRlrrPcZIJnXtrxkJjllLYU8js1HJQaRR24DtSWabSd2j+3VIMxow?=
+ =?us-ascii?Q?x4eL3Bz6yPb44ImJY8kuOZeZHPvHZZ8cJb4FNz4urEQ72Y1jfL2863WIlMs+?=
+ =?us-ascii?Q?jQE5GbxQdzyt5YTy5RBLu95SeY4dbL0KgQctt1goYhbsCIBaYwEZgoyfkU16?=
+ =?us-ascii?Q?tbt3LrUWrO0wx/6OvF6Vm6dSCvqvcDJYK+1BPR2DUmESDmc7CRapO5boDGvV?=
+ =?us-ascii?Q?0TFdZZ/Hk5V2gPRKebCE23tyEVdkRO8d5ipq8Fhz1tjRXpLGeofGHJCcO4sO?=
+ =?us-ascii?Q?+QBAVEOgdjGwxemfbxzAHGGUVordX3FltVgCLFXfBkRrHg4jO1v8SJF2t/2o?=
+ =?us-ascii?Q?8YzIPK/XtWdbshhrv9Je2RhYSI6FN4zX4Pyzuyzp50R1YrAjjME8El2+YwcD?=
+ =?us-ascii?Q?pfWgyH8I5Lz3os1lsOjngSB0GttVJT+uqysZFTi08fxUKy2zkyd41Iy5hQQO?=
+ =?us-ascii?Q?KW0r+oBL1B5nSooUnVbMJBKOUeWgREbmcw7XZetZOhqdRh2d/WFhUmS6uhVP?=
+ =?us-ascii?Q?zOcirqsD++Wb5QluVMaAgUTPhfdEXPOhV06KhmegM8FbO8ifSOzslUJnA06p?=
+ =?us-ascii?Q?e/WAt9ZrwtGX1rmku0UCex7f+fGZXv2dtWASro5Z7LjP0uBI5tPz8SkVtGKW?=
+ =?us-ascii?Q?7ikBSQrGlETeoFqfeLVtUjmMaQL+FsbONIv8n3oopp0ftCG6FJsDkQziyzVq?=
+ =?us-ascii?Q?mHy49evgSSX3vlNQ3RoiclK1XmK1Fz6v9qqoD4FmN0e451x0QbE1BkqoaFl2?=
+ =?us-ascii?Q?GuPpQClsEV3YmAlxeOWh7ykU9YuNR0hzAsB/apbMnnam4AYoqsOj4W4Vc35+?=
+ =?us-ascii?Q?PjO9IHrhMa9PP/bnsG+liQIyB5KjqchyxLrP/C65iyy2tBDExDZiR8USdQlQ?=
+ =?us-ascii?Q?TVjhjfVPvwsVOLSn4VIlnIwfNYKLABU5tRQ2T5ZH4jXsW9jSD2+uQUkSyCA9?=
+ =?us-ascii?Q?Ctq3xHkz5hTRovWV63gewkvw/T3YvKQAiIpqCaaTrVKsIdKvC/PGDHSkzcbZ?=
+ =?us-ascii?Q?jT5cIme8NLrZaIILO2v3i38rXhZ5CcxwWfAx9LiItFbBbbKGNGK1g5BMroAl?=
+ =?us-ascii?Q?umpU4VMolLv/EMxL7+aA93aQl7UKvoGOjIZm22IUwf5GoBtqE8To1SkJ6OY?=
+ =?us-ascii?Q?=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?IAVB+wceNKuy7QW35e8yVutsh+PkKerKo4teQ1a7n/6YkkfHBm7D0naJyB29?=
+ =?us-ascii?Q?5MLvMZ8WtRm3TjUb+T5/jZsZmhfW18U8JEpkC5x+M/oeV7BKLTrpNISocdxC?=
+ =?us-ascii?Q?zZDC9Xi4blMsCqLSMUsg2P1cBR6T8JUhhjnHIsbt2sPnwu64i/Y6ZNhnnvG5?=
+ =?us-ascii?Q?Z7iOQrVxc4gKU3k/T5BMV8P1TbjyQqcPcfc6jiMhOTUpNAdU68VUMVSO+iOm?=
+ =?us-ascii?Q?rpDJRe7hlM1RE56a3JnJNwdO2UhR8P09ZAH5S8gTV2l6y0wFqsW5XZ9ymYLc?=
+ =?us-ascii?Q?FU68/wo2HmNFcjMj2bXcC68TdmSYaZdEZKKM5+HoYnriZ50cuCXU3M/TTyfe?=
+ =?us-ascii?Q?JVVxAc6QqxcDEWF4QmiVmNoVGoGNVb2PklyG9BCPqTuCpUwWXcCm2BS/JYBK?=
+ =?us-ascii?Q?1YJzS5eClEbNi6sFbhT4lnjom87Fq/Mr6UYQSKL0J3u84LdEDbOa8J+qwCwq?=
+ =?us-ascii?Q?YDyxMmpkpyupf69Dy4uiHkvryzi8zYuB86oIqclDd2N2dAByZz9vpyxQK8XT?=
+ =?us-ascii?Q?pkALpolX4VJIDXcFevYoyF1IOx8DxrCjNY+NUsu64EFOAapvJiUQpEa2qORN?=
+ =?us-ascii?Q?HB4alVYZLL9Ay+hpDv5dQ7FHJ2xqb5JHy5tKFoyFx6aZe7XyDyXi86k6ARS8?=
+ =?us-ascii?Q?lBYimP6e3UWSfycW5QuTqqGjxHOuOlIl4mggIJOVsVVc3vqnmeUKzvdBXl30?=
+ =?us-ascii?Q?fJ+iraKyOJh9yeynfkIkJEtxtxFWNXeq7ngHgfgs7ou62XdimOIhlVyypxPG?=
+ =?us-ascii?Q?kzU6/qiEA8CZWqXya3OEZJFnFTsv5h6EbELUiRiCYeZgmk5QtgolRgYIIEK4?=
+ =?us-ascii?Q?MYlLmntH72qTPZAF+cQFJpJ5cusljGV644CwYDq2z7gTaTI9uD42naBRgHA4?=
+ =?us-ascii?Q?OeXEzJnu6cwzCgA9F81nb1WGe+KyMg1LrHvNan3R4QT55WAN3O/lex2alC4w?=
+ =?us-ascii?Q?DyztAoEz5YLhzDnVUz7LWrDxHnoPzlyC8FtG95a0gPCfiPATZnhKh9z7PBZb?=
+ =?us-ascii?Q?W9bxP1+nhHtusjEQcZ5BX430hlL3+LdMIjnjfEmkuox+GlIpuk2ztssuRH6q?=
+ =?us-ascii?Q?T4gehRUe0aIg2eJczXGJcLxxtcRN4qMh8zUE2MGpc0nQ/qtd/IxPIe9XPAKG?=
+ =?us-ascii?Q?TsyZgG1gwkGByVJPG0qvBNg4J9QrkbbhAv3v/ZUHKZ+5BXZAuHzidUAle2Kl?=
+ =?us-ascii?Q?kLoeD3+MpE19n1YTV9QFfw+NuIhApGHdso2VRsgMxnHGYOOq+81YJpOS+XI?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20251117-vsock-vmtest-v10-3-df08f165bf3e@meta.com>
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: f8cba72d-ab95-494a-cab7-08de26cdcf1d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2025 18:10:51.7569
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR02MB10231
 
-On Mon, Nov 17, 2025 at 06:00:26PM -0800, Bobby Eshleman wrote:
->From: Bobby Eshleman <bobbyeshleman@meta.com>
->
->Reject setting VSOCK_NET_MODE_LOCAL with -EOPNOTSUPP if a G2H transport
->is operational. Additionally, reject G2H transport registration if there
->already exists a namespace in local mode.
->
->G2H sockets break in local mode because the G2H transports don't support
->namespacing yet. The current approach is to coerce packets coming out of
->G2H transports into VSOCK_NET_MODE_GLOBAL mode, but it is not possible
->to coerce sockets in the same way because it cannot be deduced which
->transport will be used by the socket. Specifically, when bound to
->VMADDR_CID_ANY in a nested VM (both G2H and H2G available), it is not
->until a packet is received and matched to the bound socket that we
->assign the transport. This presents a chicken-and-egg problem, because
->we need the namespace to lookup the socket and resolve the transport,
->but we need the transport to know how to use the namespace during
->lookup.
->
->For that reason, this patch prevents VSOCK_NET_MODE_LOCAL from being
->used on systems that support G2H, even nested systems that also have H2G
->transports.
->
->Local mode is blocked based on detecting the presence of G2H devices
->(when possible, as hyperv is special). This means that a host kernel
->with G2H support compiled in (or has the module loaded), will still
->support local mode if there is no G2H (e.g., virtio-vsock) device
->detected. This enables using the same kernel in the host and in the
->guest, as we do in kselftest.
->
->Systems with only namespace-aware transports (vhost-vsock, loopback) can
->still use both VSOCK_NET_MODE_GLOBAL and VSOCK_NET_MODE_LOCAL modes as
->intended.
->
->Add supports_local_mode() transport callback to indicate
->transport-specific local mode support.
->
->These restrictions can be lifted in a future patch series when G2H
->transports gain namespace support.
->
->Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
->---
->Changes in v10:
->- move this patch before any transports bring online namespacing (Stefano)
->- move vsock_net_mode_string into critical section (Stefano)
->- add ->supports_local_mode() callback to transports (Stefano)
->---
-> drivers/vhost/vsock.c            |  6 +++++
-> include/net/af_vsock.h           |  5 ++++
-> net/vmw_vsock/af_vsock.c         | 50 ++++++++++++++++++++++++++++++++++------
-> net/vmw_vsock/hyperv_transport.c |  6 +++++
-> net/vmw_vsock/virtio_transport.c | 13 +++++++++++
-> net/vmw_vsock/vmci_transport.c   |  7 ++++++
-> net/vmw_vsock/vsock_loopback.c   |  6 +++++
-> 7 files changed, 86 insertions(+), 7 deletions(-)
->
->diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
->index 2c937a2df83b..c8319cd1c232 100644
->--- a/drivers/vhost/vsock.c
->+++ b/drivers/vhost/vsock.c
->@@ -64,6 +64,11 @@ static u32 vhost_transport_get_local_cid(void)
-> 	return VHOST_VSOCK_DEFAULT_HOST_CID;
-> }
->
->+static bool vhost_transport_supports_local_mode(void)
->+{
->+	return true;
+From: Praveen K Paladugu <prapal@linux.microsoft.com> Sent: Monday, Novembe=
+r 17, 2025 1:08 PM
+>=20
+> Add the definitions required to configure sleep states in mshv hypervsior=
+.
+>=20
+> Signed-off-by: Praveen K Paladugu <prapal@linux.microsoft.com>
+> Co-developed-by: Anatol Belski <anbelski@linux.microsoft.com>
+> Signed-off-by: Anatol Belski <anbelski@linux.microsoft.com>
+> Reviewed-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+> Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> ---
+>  include/hyperv/hvgdk_mini.h |  4 +++-
+>  include/hyperv/hvhdk_mini.h | 40 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 43 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
+> index 1d5ce11be8b6..04b18d0e37af 100644
+> --- a/include/hyperv/hvgdk_mini.h
+> +++ b/include/hyperv/hvgdk_mini.h
+> @@ -465,19 +465,21 @@ union hv_vp_assist_msr_contents {	 /*
+> HV_REGISTER_VP_ASSIST_PAGE */
+>  #define HVCALL_RESET_DEBUG_SESSION			0x006b
+>  #define HVCALL_MAP_STATS_PAGE				0x006c
+>  #define HVCALL_UNMAP_STATS_PAGE				0x006d
+> +#define HVCALL_SET_SYSTEM_PROPERTY			0x006f
+>  #define HVCALL_ADD_LOGICAL_PROCESSOR			0x0076
+>  #define HVCALL_GET_SYSTEM_PROPERTY			0x007b
+>  #define HVCALL_MAP_DEVICE_INTERRUPT			0x007c
+>  #define HVCALL_UNMAP_DEVICE_INTERRUPT			0x007d
+>  #define HVCALL_RETARGET_INTERRUPT			0x007e
+>  #define HVCALL_NOTIFY_PARTITION_EVENT                   0x0087
+> +#define HVCALL_ENTER_SLEEP_STATE			0x0084
+>  #define HVCALL_NOTIFY_PORT_RING_EMPTY			0x008b
+>  #define HVCALL_REGISTER_INTERCEPT_RESULT		0x0091
+>  #define HVCALL_ASSERT_VIRTUAL_INTERRUPT			0x0094
+>  #define HVCALL_CREATE_PORT				0x0095
+>  #define HVCALL_CONNECT_PORT				0x0096
+>  #define HVCALL_START_VP					0x0099
+> -#define HVCALL_GET_VP_INDEX_FROM_APIC_ID			0x009a
+> +#define HVCALL_GET_VP_INDEX_FROM_APIC_ID		0x009a
+>  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE	0x00af
+>  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST	0x00b0
+>  #define HVCALL_SIGNAL_EVENT_DIRECT			0x00c0
+> diff --git a/include/hyperv/hvhdk_mini.h b/include/hyperv/hvhdk_mini.h
+> index f2d7b50de7a4..41a29bf8ec14 100644
+> --- a/include/hyperv/hvhdk_mini.h
+> +++ b/include/hyperv/hvhdk_mini.h
+> @@ -140,6 +140,7 @@ enum hv_snp_status {
+>=20
+>  enum hv_system_property {
+>  	/* Add more values when needed */
+> +	HV_SYSTEM_PROPERTY_SLEEP_STATE =3D 3,
+>  	HV_SYSTEM_PROPERTY_SCHEDULER_TYPE =3D 15,
+>  	HV_DYNAMIC_PROCESSOR_FEATURE_PROPERTY =3D 21,
+>  	HV_SYSTEM_PROPERTY_CRASHDUMPAREA =3D 47,
+> @@ -155,6 +156,19 @@ union hv_pfn_range {            /* HV_SPA_PAGE_RANGE=
+ */
+>  	} __packed;
+>  };
+>=20
+> +enum hv_sleep_state {
+> +	HV_SLEEP_STATE_S1 =3D 1,
+> +	HV_SLEEP_STATE_S2 =3D 2,
+> +	HV_SLEEP_STATE_S3 =3D 3,
+> +	HV_SLEEP_STATE_S4 =3D 4,
+> +	HV_SLEEP_STATE_S5 =3D 5,
+> +	/*
+> +	 * After hypervisor has received this, any follow up sleep
+> +	 * state registration requests will be rejected.
+> +	 */
+> +	HV_SLEEP_STATE_LOCK =3D 6
+> +};
+> +
+>  enum hv_dynamic_processor_feature_property {
+>  	/* Add more values when needed */
+>  	HV_X64_DYNAMIC_PROCESSOR_FEATURE_MAX_ENCRYPTED_PARTITIONS =3D
+> 13,
+> @@ -184,6 +198,32 @@ struct hv_output_get_system_property {
+>  	};
+>  } __packed;
+>=20
+> +struct hv_sleep_state_info {
+> +	u32 sleep_state; /* enum hv_sleep_state */
+> +	u8 pm1a_slp_typ;
+> +	u8 pm1b_slp_typ;
+> +} __packed;
+> +
+> +struct hv_input_set_system_property {
+> +	u32 property_id; /* enum hv_system_property */
+> +	u32 reserved;
+> +	union {
+> +		/* More fields to be filled in when needed */
+> +		struct hv_sleep_state_info set_sleep_state_info;
+> +
+> +		/*
+> +		 * Add a reserved field to ensure the union is 8-byte aligned as
+> +		 * existing members may not be. This is a temporary measure
+> +		 * until all remaining members are added.
+> +		 */
+> +		 u64 reserved0[8];
 
-Should we enable this later, when we really add support, or it doesn't
-affect anything if vhost-vsock is not really supporting it in this PR
-(thinking about bisection issues).
+I had expected a single u64 to pad out to 64-bit alignment. This is 512 byt=
+es.
 
->+}
->+
-> /* Callers that dereference the return value must hold vhost_vsock_mutex or the
->  * RCU read lock.
->  */
->@@ -412,6 +417,7 @@ static struct virtio_transport vhost_transport = {
-> 		.module                   = THIS_MODULE,
->
-> 		.get_local_cid            = vhost_transport_get_local_cid,
->+		.supports_local_mode	  = vhost_transport_supports_local_mode,
->
-> 		.init                     = virtio_transport_do_socket_init,
-> 		.destruct                 = virtio_transport_destruct,
->diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
->index 59d97a143204..824d89657d41 100644
->--- a/include/net/af_vsock.h
->+++ b/include/net/af_vsock.h
->@@ -180,6 +180,11 @@ struct vsock_transport {
-> 	/* Addressing. */
-> 	u32 (*get_local_cid)(void);
->
->+	/* Return true if this transport supports VSOCK_NET_MODE_LOCAL.
-
-nit: Here I would make it clearer that rather than supporting 
-MODE_LOCAL, the transport is not compatible with it, etc.
-A summary of the excellent description we have in the commit.
-
->+	 * Otherwise, return false.
->+	 */
->+	bool (*supports_local_mode)(void);
->+
-> 	/* Read a single skb */
-> 	int (*read_skb)(struct vsock_sock *, skb_read_actor_t);
->
->diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->index 54373ae101c3..7a235bb94437 100644
->--- a/net/vmw_vsock/af_vsock.c
->+++ b/net/vmw_vsock/af_vsock.c
->@@ -91,6 +91,12 @@
->  *   and locked down by a namespace manager. The default is "global". The mode
->  *   is set per-namespace.
->  *
->+ *   Note: LOCAL mode is only supported when using namespace-aware transports
->+ *   (vhost-vsock, loopback). If a guest-to-host transport (virtio-vsock,
->+ *   hyperv-vsock, vmci-vsock) is loaded, attempts to set LOCAL mode will fail
->+ *   with EOPNOTSUPP, as these transports do not support per-namespace
->+ *   isolation.
-
-Okay, maybe this is fine, so if you don't need to resend, feel free to 
-ignore the previous comment.
-
->+ *
->  *   The modes affect the allocation and accessibility of CIDs as follows:
->  *
->  *   - global - access and allocation are all system-wide
->@@ -2765,17 +2771,30 @@ static int vsock_net_mode_string(const struct ctl_table *table, int write,
-> 	if (*lenp >= sizeof(data))
-> 		return -EINVAL;
->
->-	if (!strncmp(data, VSOCK_NET_MODE_STR_GLOBAL, sizeof(data)))
->+	ret = 0;
-
-IIUC `ret` should already be 0 at this point, no?
-
->+	mutex_lock(&vsock_register_mutex);
-
-I honestly don't like to mix the parsing, with this new check, so what
-about leaving the parsing as before this patch (also without the mutex),
-then just (untested):
-
-	mutex_lock(&vsock_register_mutex);
-	if (mode == VSOCK_NET_MODE_LOCAL && transport_g2h &&
-	    transport_g2h->supports_local_mode &&
-	    !transport_g2h->supports_local_mode()) {
-		ret = -EOPNOTSUPP;
-		goto out;
-	}
-
-	if (!vsock_net_write_mode(net, mode)) {
-		ret = -EPERM;
-	}
-out:
-	mutex_unlock(&vsock_register_mutex);
-	return ret;
-}
-
->+	if (!strncmp(data, VSOCK_NET_MODE_STR_GLOBAL, sizeof(data))) {
-> 		mode = VSOCK_NET_MODE_GLOBAL;
->-	else if (!strncmp(data, VSOCK_NET_MODE_STR_LOCAL, sizeof(data)))
->+	} else if (!strncmp(data, VSOCK_NET_MODE_STR_LOCAL, sizeof(data))) {
->+		if (transport_g2h && transport_g2h->supports_local_mode &&
->+		    !transport_g2h->supports_local_mode()) {
->+			ret = -EOPNOTSUPP;
->+			goto out;
->+		}
-> 		mode = VSOCK_NET_MODE_LOCAL;
->-	else
->-		return -EINVAL;
->+	} else {
->+		ret = -EINVAL;
->+		goto out;
->+	}
->
->-	if (!vsock_net_write_mode(net, mode))
->-		return -EPERM;
->+	if (!vsock_net_write_mode(net, mode)) {
->+		ret = -EPERM;
->+		goto out;
->+	}
->
->-	return 0;
->+out:
->+	mutex_unlock(&vsock_register_mutex);
->+	return ret;
-> }
->
-> static struct ctl_table vsock_table[] = {
->@@ -2916,6 +2935,7 @@ int vsock_core_register(const struct vsock_transport *t, int features)
-> {
-> 	const struct vsock_transport *t_h2g, *t_g2h, *t_dgram, *t_local;
-> 	int err = mutex_lock_interruptible(&vsock_register_mutex);
->+	struct net *net;
->
-> 	if (err)
-> 		return err;
->@@ -2938,6 +2958,22 @@ int vsock_core_register(const struct vsock_transport *t, int features)
-> 			err = -EBUSY;
-> 			goto err_busy;
-> 		}
->+
->+		/* G2H sockets break in LOCAL mode namespaces because G2H
->+		 * transports don't support them yet. Block registering new G2H
->+		 * transports if we already have local mode namespaces on the
->+		 * system.
->+		 */
->+		rcu_read_lock();
->+		for_each_net_rcu(net) {
->+			if (vsock_net_mode(net) == VSOCK_NET_MODE_LOCAL) {
->+				rcu_read_unlock();
->+				err = -EOPNOTSUPP;
->+				goto err_busy;
->+			}
->+		}
->+		rcu_read_unlock();
->+
-> 		t_g2h = t;
-> 	}
->
->diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
->index 432fcbbd14d4..279f04fcd81a 100644
->--- a/net/vmw_vsock/hyperv_transport.c
->+++ b/net/vmw_vsock/hyperv_transport.c
->@@ -833,10 +833,16 @@ int hvs_notify_set_rcvlowat(struct vsock_sock *vsk, int val)
-> 	return -EOPNOTSUPP;
-> }
->
->+static bool hvs_supports_local_mode(void)
->+{
->+	return false;
->+}
->+
-> static struct vsock_transport hvs_transport = {
-> 	.module                   = THIS_MODULE,
->
-> 	.get_local_cid            = hvs_get_local_cid,
->+	.supports_local_mode      = hvs_supports_local_mode,
->
-> 	.init                     = hvs_sock_init,
-> 	.destruct                 = hvs_destruct,
->diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
->index 5d379ccf3770..e585cb66c6f5 100644
->--- a/net/vmw_vsock/virtio_transport.c
->+++ b/net/vmw_vsock/virtio_transport.c
->@@ -94,6 +94,18 @@ static u32 virtio_transport_get_local_cid(void)
-> 	return ret;
-> }
->
->+static bool virtio_transport_supports_local_mode(void)
->+{
->+	struct virtio_vsock *vsock;
->+
->+	rcu_read_lock();
->+	vsock = rcu_dereference(the_virtio_vsock);
->+	rcu_read_unlock();
->+
->+	/* Local mode is supported only when no G2H device is present. */
->+	return vsock ? false : true;
->+}
->+
-> /* Caller need to hold vsock->tx_lock on vq */
-> static int virtio_transport_send_skb(struct sk_buff *skb, struct virtqueue *vq,
-> 				     struct virtio_vsock *vsock, gfp_t gfp)
->@@ -544,6 +556,7 @@ static struct virtio_transport virtio_transport = {
-> 		.module                   = THIS_MODULE,
->
-> 		.get_local_cid            = virtio_transport_get_local_cid,
->+		.supports_local_mode      = virtio_transport_supports_local_mode,
->
-> 		.init                     = virtio_transport_do_socket_init,
-> 		.destruct                 = virtio_transport_destruct,
->diff --git a/net/vmw_vsock/vmci_transport.c b/net/vmw_vsock/vmci_transport.c
->index 7eccd6708d66..da7c52ad7b2a 100644
->--- a/net/vmw_vsock/vmci_transport.c
->+++ b/net/vmw_vsock/vmci_transport.c
->@@ -2033,6 +2033,12 @@ static u32 vmci_transport_get_local_cid(void)
-> 	return vmci_get_context_id();
-> }
->
->+static bool vmci_transport_supports_local_mode(void)
->+{
->+	/* Local mode is supported only when no device is present. */
->+	return vmci_transport_get_local_cid() == VMCI_INVALID_ID;
-
-IIRC vmci can be registered both as H2G and G2H, so should we filter out
-the H2G case?
-
-Also, IMO is better to use VMADDR_CID_ANY with get_local_cid().
-
->+}
->+
-> static struct vsock_transport vmci_transport = {
-> 	.module = THIS_MODULE,
-> 	.init = vmci_transport_socket_init,
->@@ -2062,6 +2068,7 @@ static struct vsock_transport vmci_transport = {
-> 	.notify_send_post_enqueue = vmci_transport_notify_send_post_enqueue,
-> 	.shutdown = vmci_transport_shutdown,
-> 	.get_local_cid = vmci_transport_get_local_cid,
->+	.supports_local_mode = vmci_transport_supports_local_mode,
-> };
->
-> static bool vmci_check_transport(struct vsock_sock *vsk)
->diff --git a/net/vmw_vsock/vsock_loopback.c b/net/vmw_vsock/vsock_loopback.c
->index 8722337a4f80..1e25c1a6b43f 100644
->--- a/net/vmw_vsock/vsock_loopback.c
->+++ b/net/vmw_vsock/vsock_loopback.c
->@@ -26,6 +26,11 @@ static u32 vsock_loopback_get_local_cid(void)
-> 	return VMADDR_CID_LOCAL;
-> }
->
->+static bool vsock_loopback_supports_local_mode(void)
->+{
->+	return true;
->+}
->+
-> static int vsock_loopback_send_pkt(struct sk_buff *skb)
-> {
-> 	struct vsock_loopback *vsock = &the_vsock_loopback;
->@@ -58,6 +63,7 @@ static struct virtio_transport loopback_transport = {
-> 		.module                   = THIS_MODULE,
->
-> 		.get_local_cid            = vsock_loopback_get_local_cid,
->+		.supports_local_mode	  = vsock_loopback_supports_local_mode,
->
-> 		.init                     = virtio_transport_do_socket_init,
-> 		.destruct                 = virtio_transport_destruct,
->
->-- 
->2.47.3
->
+> +	};
+> +} __packed;
+> +
+> +struct hv_input_enter_sleep_state {     /* HV_INPUT_ENTER_SLEEP_STATE */
+> +	u32 sleep_state;        /* enum hv_sleep_state */
+> +} __packed;
+> +
+>  struct hv_input_map_stats_page {
+>  	u32 type; /* enum hv_stats_object_type */
+>  	u32 padding;
+> --
+> 2.51.0
+>=20
 
 
