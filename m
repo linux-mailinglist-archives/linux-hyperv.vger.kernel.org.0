@@ -1,174 +1,132 @@
-Return-Path: <linux-hyperv+bounces-7679-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7680-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D926C690FA
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 12:27:07 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CA79C69A0D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 14:38:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id E0C392AA3F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 11:27:03 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id BA6CE366C1A
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 13:38:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AFBD352F8D;
-	Tue, 18 Nov 2025 11:26:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E666434F263;
+	Tue, 18 Nov 2025 13:38:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="d1lOsvbk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IXEwEs0o"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D148934FF7A;
-	Tue, 18 Nov 2025 11:26:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3D633E357;
+	Tue, 18 Nov 2025 13:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763465185; cv=none; b=GEkHdCg+20Nvcls8XMsLG7pABy4DtRYkgTKgNcVu4gEmX3xPuT7IyJs23oopx7tljGjpt3BEw1VsKoTe5CWxruqk6+M+X/YizgOT6b0eIs6lEwErsrd39vQFQDbCygoAj/AKdVoel35F16q3kZzVIgaBPR8AXuY8Xo1v0LBYcg0=
+	t=1763473118; cv=none; b=Ygzyq/Q3PA1Be8eLknsqPrBrnhp9FDGq2JZjpId1U99O0anS5VnfgNEA9Yaj6BgBAxj+tnuzCdLvjf+ZY7xc2SoiXBTCwn+IrhaF9aab1Nd/DZCwyRbyoGGkDntJ4fGEBp/KvTZtUuNLOGK1W+Kmkel1G4aRSs2h4TjyiHCGc/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763465185; c=relaxed/simple;
-	bh=x1wIAFncgvboxuHLahLbPOyRHNSWyKlaAo8thvAKIWM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=oNPVupgkknnEcv8DCii9KhFgjQIogx3jXogWRBWZGdtzXWosdw9J6Y6GDC+w55D8MdLoOzj4qFRZ5rEDqzN02wNF2d7S84ecpYGJWMUGr5CuJpc49OMkQysXGb2PbVMvdn6LeQeceinsq6gKmtd3cz4jBfqgcTEmBTVxujwtOb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=d1lOsvbk; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1231)
-	id 950B0211CFB8; Tue, 18 Nov 2025 03:26:22 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 950B0211CFB8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1763465182;
-	bh=VgYOnPe2VlONnKvj0poPVh0ufECls3xCkbpzYjs44w4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=d1lOsvbkqVKRVeBYGrM3/egdFnYTgQCvjAI3ojrxuwoAXgGcsVLzf3/PmYayZbJQx
-	 GCtvyapgjKm7oY44uzoX1z2FVL1LkIx5s07R6EH0l0gtxPfti+/GuyFOpqxmS2WGUG
-	 RdVDpzln7Rxp7H2MyZeEyFZ3fpOLVVDoXrw+GRqE=
-From: Aditya Garg <gargaditya@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	longli@microsoft.com,
-	kotaranov@microsoft.com,
-	horms@kernel.org,
-	shradhagupta@linux.microsoft.com,
-	ssengar@linux.microsoft.com,
-	ernis@linux.microsoft.com,
-	dipayanroy@linux.microsoft.com,
-	shirazsaleem@microsoft.com,
-	leon@kernel.org,
-	mlevitsk@redhat.com,
-	yury.norov@gmail.com,
-	sbhatta@marvell.com,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	gargaditya@microsoft.com
-Cc: Aditya Garg <gargaditya@linux.microsoft.com>
-Subject: [PATCH net-next v6 2/2] net: mana: Drop TX skb on post_work_request failure and unmap resources
-Date: Tue, 18 Nov 2025 03:11:09 -0800
-Message-Id: <1763464269-10431-3-git-send-email-gargaditya@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1763464269-10431-1-git-send-email-gargaditya@linux.microsoft.com>
-References: <1763464269-10431-1-git-send-email-gargaditya@linux.microsoft.com>
+	s=arc-20240116; t=1763473118; c=relaxed/simple;
+	bh=xD0xIfmUHSfSojyeEaG/jjEVDerEQblrgY/8iTDoxqA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V47vyvPAno58QQdWRIWZKc2Sw/iSYNufMJ+HLDfBE82PpyLIxLj5gBymuPY1J0ftr/KXdGY+62frnj1yluDrJ7K0cKBBoDJ6X8WlOj0l83+RRUkvECvSpwpKlaDya3Nr1aYJpYN0GmqrqFt/ERWDdk//VDhKxFta80mY+pdeYWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IXEwEs0o; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763473118; x=1795009118;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xD0xIfmUHSfSojyeEaG/jjEVDerEQblrgY/8iTDoxqA=;
+  b=IXEwEs0opqwk6eprR9n1wd3KYvzwu/gHIgiuxcK0aGS/hCd3MrNJyOEs
+   X134h5IUfNSZ+tRHq67lfIDDXlmMlpA+ZMBJzLR7Rpzp+t7DIhK8Fop2J
+   ct1MBJ6CpBFloHkGWHHYv18dtejls+ic4MA3c7feZE3cqcwyDm92oP5HF
+   R8LSE3AYQF1rUTT9ho32sWf+mdVq9+W1kR/wsN3+nF6HB2KmIg9zdwtB3
+   gUWxTJNWDPEIHNOJbAEAdaNrsC4p8Rq7H/jrZ1YEu9KaJLSk5vbdU1Fik
+   EcsIo1nSh4ISDxZuyLh0Txj1dCKpm6rIFDkVX09Hq+P8CeJYOjAneWjyp
+   w==;
+X-CSE-ConnectionGUID: XFySQbBBTcuWmfMHLrVQrA==
+X-CSE-MsgGUID: 9TFhQShwQkGQs2xBVad+/Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="76596172"
+X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
+   d="scan'208";a="76596172"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 05:38:37 -0800
+X-CSE-ConnectionGUID: 9tv8qQwUS/GoN9FDnQEVMw==
+X-CSE-MsgGUID: MCAAgdcMS7qiBUiN8o3zfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
+   d="scan'208";a="190423584"
+Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 18 Nov 2025 05:38:32 -0800
+Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vLLug-0001mf-1f;
+	Tue, 18 Nov 2025 13:38:30 +0000
+Date: Tue, 18 Nov 2025 21:38:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Praveen K Paladugu <prapal@linux.microsoft.com>, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	tglx@linutronix.de, mingo@redhat.com, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	arnd@arndb.de
+Cc: oe-kbuild-all@lists.linux.dev, anbelski@linux.microsoft.com,
+	prapal@linux.microsoft.com, easwar.hariharan@linux.microsoft.com,
+	nunodasneves@linux.microsoft.com, skinsburskii@linux.microsoft.com
+Subject: Re: [PATCH v5 2/3] hyperv: Use reboot notifier to configure sleep
+ state
+Message-ID: <202511182134.X8qi5PeT-lkp@intel.com>
+References: <20251117210855.108126-3-prapal@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251117210855.108126-3-prapal@linux.microsoft.com>
 
-Drop TX packets when posting the work request fails and ensure DMA
-mappings are always cleaned up.
+Hi Praveen,
 
-Signed-off-by: Aditya Garg <gargaditya@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
----
-Changes in v6:
-* No change.
+kernel test robot noticed the following build errors:
 
-Changes in v5:
-* No change.
+[auto build test ERROR on next-20251117]
+[cannot apply to tip/x86/core linus/master v6.18-rc6 v6.18-rc5 v6.18-rc4 v6.18-rc6]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Changes in v4:
-* Fix warning during build reported by kernel test robot
----
- drivers/net/ethernet/microsoft/mana/gdma_main.c | 6 +-----
- drivers/net/ethernet/microsoft/mana/mana_en.c   | 7 +++----
- include/net/mana/mana.h                         | 1 +
- 3 files changed, 5 insertions(+), 9 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Praveen-K-Paladugu/hyperv-Add-definitions-for-MSHV-sleep-state-configuration/20251118-051204
+base:   next-20251117
+patch link:    https://lore.kernel.org/r/20251117210855.108126-3-prapal%40linux.microsoft.com
+patch subject: [PATCH v5 2/3] hyperv: Use reboot notifier to configure sleep state
+config: i386-randconfig-141-20251118 (https://download.01.org/0day-ci/archive/20251118/202511182134.X8qi5PeT-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251118/202511182134.X8qi5PeT-lkp@intel.com/reproduce)
 
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index effe0a2f207a..8fd70b34807a 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -1300,7 +1300,6 @@ int mana_gd_post_work_request(struct gdma_queue *wq,
- 			      struct gdma_posted_wqe_info *wqe_info)
- {
- 	u32 client_oob_size = wqe_req->inline_oob_size;
--	struct gdma_context *gc;
- 	u32 sgl_data_size;
- 	u32 max_wqe_size;
- 	u32 wqe_size;
-@@ -1330,11 +1329,8 @@ int mana_gd_post_work_request(struct gdma_queue *wq,
- 	if (wqe_size > max_wqe_size)
- 		return -EINVAL;
- 
--	if (wq->monitor_avl_buf && wqe_size > mana_gd_wq_avail_space(wq)) {
--		gc = wq->gdma_dev->gdma_context;
--		dev_err(gc->dev, "unsuccessful flow control!\n");
-+	if (wq->monitor_avl_buf && wqe_size > mana_gd_wq_avail_space(wq))
- 		return -ENOSPC;
--	}
- 
- 	if (wqe_info)
- 		wqe_info->wqe_size_in_bu = wqe_size / GDMA_WQE_BU_SIZE;
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 7b49ab005e2d..1ad154f9db1a 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -492,9 +492,9 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 
- 	if (err) {
- 		(void)skb_dequeue_tail(&txq->pending_skbs);
-+		mana_unmap_skb(skb, apc);
- 		netdev_warn(ndev, "Failed to post TX OOB: %d\n", err);
--		err = NETDEV_TX_BUSY;
--		goto tx_busy;
-+		goto free_sgl_ptr;
- 	}
- 
- 	err = NETDEV_TX_OK;
-@@ -514,7 +514,6 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	tx_stats->bytes += len + ((num_gso_seg - 1) * gso_hs);
- 	u64_stats_update_end(&tx_stats->syncp);
- 
--tx_busy:
- 	if (netif_tx_queue_stopped(net_txq) && mana_can_tx(gdma_sq)) {
- 		netif_tx_wake_queue(net_txq);
- 		apc->eth_stats.wake_queue++;
-@@ -1687,7 +1686,7 @@ static int mana_move_wq_tail(struct gdma_queue *wq, u32 num_units)
- 	return 0;
- }
- 
--static void mana_unmap_skb(struct sk_buff *skb, struct mana_port_context *apc)
-+void mana_unmap_skb(struct sk_buff *skb, struct mana_port_context *apc)
- {
- 	struct mana_skb_head *ash = (struct mana_skb_head *)skb->head;
- 	struct gdma_context *gc = apc->ac->gdma_dev->gdma_context;
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index fb28b3cac067..d7e089c6b694 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -593,6 +593,7 @@ int mana_set_bw_clamp(struct mana_port_context *apc, u32 speed,
- void mana_query_phy_stats(struct mana_port_context *apc);
- int mana_pre_alloc_rxbufs(struct mana_port_context *apc, int mtu, int num_queues);
- void mana_pre_dealloc_rxbufs(struct mana_port_context *apc);
-+void mana_unmap_skb(struct sk_buff *skb, struct mana_port_context *apc);
- 
- extern const struct ethtool_ops mana_ethtool_ops;
- extern struct dentry *mana_debugfs_root;
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202511182134.X8qi5PeT-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/hv/mshv_common.c:210:6: error: redefinition of 'hv_sleep_notifiers_register'
+     210 | void hv_sleep_notifiers_register(void)
+         |      ^
+   arch/x86/include/asm/mshyperv.h:188:20: note: previous definition is here
+     188 | static inline void hv_sleep_notifiers_register(void) {};
+         |                    ^
+   1 error generated.
+
+
+vim +/hv_sleep_notifiers_register +210 drivers/hv/mshv_common.c
+
+   209	
+ > 210	void hv_sleep_notifiers_register(void)
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
