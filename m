@@ -1,112 +1,105 @@
-Return-Path: <linux-hyperv+bounces-7673-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7674-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE308C672E8
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 04:47:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DF3BC67342
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 05:01:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 99DBD4E5C0A
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 03:46:30 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 13D554ED7E1
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 04:01:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A8BE23BF91;
-	Tue, 18 Nov 2025 03:46:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B05EA242D9D;
+	Tue, 18 Nov 2025 04:01:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BpseHyje"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NInvcvL/"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B55149C7B;
-	Tue, 18 Nov 2025 03:46:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD1235CBA5;
+	Tue, 18 Nov 2025 04:00:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763437585; cv=none; b=Pmy+iB5M+oVjFI28FNUz4NrBYhR91OMvnfyjar9lUdMfs+J2k1aKy9irRt72s3qfOqRMc/0QIn4ac3mDrtyj0zw0Oh5TWtZ0YXUHnaajuNyu/rpx2+jIJdA3uAJKS/Ne+IghsSYD9v7UfKJtdGYrXdjSQHdhOKB2PiHk5piY6c4=
+	t=1763438460; cv=none; b=H7HALtduN9Vpq3tbjNw7h6vesreTZ3KjNjv7ZUJrNsoRsd24zaN/tCIQhnkcGY5JFMigYvdvTBDWm0AjQ4LEHaMlujRbKqlyXJvyGjanh1mH8SXgiGDhry8IrF1dDl0AgcT0sLmVo/KMaDE83OsHMuBxfulWXzT8ebg4gUHEdrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763437585; c=relaxed/simple;
-	bh=NHRSkMrm5VFbMsl0bkTL+ScNduSSSzLnJ9QB5TdsNPc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Di01MfONep71AjCMeN+nkdhAasvqfLbT26nFCU/aJGPashHThEr7s8UZO/5RaiHWmSyrpbCp43Cw5ma0PQ+HgBNUwy4GkgqT1+E/BmHyX1Z0S7pPDG3cZ+PbL5XM35KSDXOC0B5USPf4/BVfs7LLL2aF+G2nxfeOmkZT8gHICxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BpseHyje; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA2BCC19421;
-	Tue, 18 Nov 2025 03:46:20 +0000 (UTC)
+	s=arc-20240116; t=1763438460; c=relaxed/simple;
+	bh=QJnMpqaql+M1a9+Ul2s/BidVW4uDvaX/cSm5Cf4o+ho=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Gv/9KY5l8mtDfYzs5D1HINpjtd59eqy9gYVQzqPcVjEc834gOJ7BaUdTZLrBZSdbLEAbvSmXiWKtltrKyOLMBzwoOL/6MZZAZcALLOGe2jYuWTHqQLggGx7p8zRr122bn/YUaiQaFgZLecawkJNhdrYCbqZ7lIpLFxmYkphLE6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NInvcvL/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F8BAC116D0;
+	Tue, 18 Nov 2025 04:00:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763437583;
-	bh=NHRSkMrm5VFbMsl0bkTL+ScNduSSSzLnJ9QB5TdsNPc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BpseHyjekH5vSE9flw1mzQvP746Mk/APq+6hu7nBut8ov+sV78qvwawpqfT3uExgQ
-	 /3QGYV1Xvp4ChvQwuWXehHCkejVrxTFp5/t6tsEKvTZQb5ImyvkxXVAo10zA/WFWdv
-	 im5nUZDjtUYpOVzX0Hohq9Q5CZfaPVXnbrlKOeGyS3yLa4EMCEmwicwH7duRwExYe0
-	 TXyQxVjmzkyVbx26I7otc/RGCbZXVouRmmRAN709hqBYg3whiN1eX6yU7YWI7VgDkf
-	 9Q+AmrYbyP78jaxr3vHgyzKx3fUeLXdwrwV13pfsHAN0ekCpDwqetHU9s/u+6pI80A
-	 v4aOlvSF4RxFA==
-Date: Mon, 17 Nov 2025 19:46:18 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Aditya Garg <gargaditya@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, pabeni@redhat.com, longli@microsoft.com,
- kotaranov@microsoft.com, horms@kernel.org,
- shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
- ernis@linux.microsoft.com, dipayanroy@linux.microsoft.com,
- shirazsaleem@microsoft.com, leon@kernel.org, mlevitsk@redhat.com,
- yury.norov@gmail.com, sbhatta@marvell.com, linux-hyperv@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rdma@vger.kernel.org, gargaditya@microsoft.com
-Subject: Re: [PATCH net-next v5 1/2] net: mana: Handle SKB if TX SGEs exceed
- hardware limit
-Message-ID: <20251117194618.33af8e98@kernel.org>
-In-Reply-To: <1763155003-21503-2-git-send-email-gargaditya@linux.microsoft.com>
-References: <1763155003-21503-1-git-send-email-gargaditya@linux.microsoft.com>
-	<1763155003-21503-2-git-send-email-gargaditya@linux.microsoft.com>
+	s=k20201202; t=1763438459;
+	bh=QJnMpqaql+M1a9+Ul2s/BidVW4uDvaX/cSm5Cf4o+ho=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=NInvcvL/JbNusz02kXMbUJwXLZ5zLZ8xd5VKDcJlcLdnMsLGz3SLIPxsEIfC4QjgY
+	 0bt8I/SYdy2uLWvF42UtCRCt5IT690Jh48dXorSXcHYt/CKVnrI6Nh64ux3RTkhQ8M
+	 me4X2ODEm1pNiN6ltimJGw1tN65kD/Wv2hq77gFsRLAU9rT8t6U3aASD31L2OohNNo
+	 3dGr6R8NxTPSW1+APLYzs0Ny7ej2nINaS4BYqglMKbzCsnA6OY2tmRIMOuNi3MPixc
+	 oxgPbR2faeYmaSZsp8RnVlMs/qm01gAwRazObLXkLHJWcIoWQuNPxNGmXY47hzL97S
+	 Pih7I47LkOalQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAF243809A1C;
+	Tue, 18 Nov 2025 04:00:26 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v3 0/2] net: mana: Refactor GF stats handling and
+ add
+ rx_missed_errors counter
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <176343842550.3578356.18200043929984849136.git-patchwork-notify@kernel.org>
+Date: Tue, 18 Nov 2025 04:00:25 +0000
+References: <1763120599-6331-1-git-send-email-ernis@linux.microsoft.com>
+In-Reply-To: <1763120599-6331-1-git-send-email-ernis@linux.microsoft.com>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
+ shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
+ dipayanroy@linux.microsoft.com, shirazsaleem@microsoft.com,
+ sbhatta@marvell.com, linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
 
-On Fri, 14 Nov 2025 13:16:42 -0800 Aditya Garg wrote:
-> The MANA hardware supports a maximum of 30 scatter-gather entries (SGEs)
-> per TX WQE. Exceeding this limit can cause TX failures.
-> Add ndo_features_check() callback to validate SKB layout before
-> transmission. For GSO SKBs that would exceed the hardware SGE limit, clear
-> NETIF_F_GSO_MASK to enforce software segmentation in the stack.
-> Add a fallback in mana_start_xmit() to linearize non-GSO SKBs that still
-> exceed the SGE limit.
+Hello:
 
-> +	BUILD_BUG_ON(MAX_TX_WQE_SGL_ENTRIES != MANA_MAX_TX_WQE_SGL_ENTRIES);
-> +#if (MAX_SKB_FRAGS + 2 > MANA_MAX_TX_WQE_SGL_ENTRIES)
-> +	if (skb_shinfo(skb)->nr_frags + 2 > MAX_TX_WQE_SGL_ENTRIES) {
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-nit: please try to avoid the use of ifdef if you can. This helps to
-avoid build breakage sneaking in as this code will be compiled out
-on default config on all platforms.
+On Fri, 14 Nov 2025 03:43:17 -0800 you wrote:
+> Restructure mana_query_gf_stats() to operate on the per-VF mana_context,
+> instead of per-port statistics. Introduce mana_ethtool_hc_stats to
+> isolate hardware counter statistics and update the
+> "ethtool -S <interface>" output to expose all relevant counters while
+> preserving backward compatibility.
+> 
+> Add support for the standard rx_missed_errors counter by mapping it to
+> the hardware's hc_rx_discards_no_wqe metric. Introduce a
+> global workqueue that refreshes statistics every 2 seconds, ensuring
+> timely and consistent updates of hardware counters.
+> 
+> [...]
 
-Instead you should be able to simply add the static condition to the
-if statement:
+Here is the summary with links:
+  - [net-next,v3,1/2] net: mana: Move hardware counter stats from per-port to per-VF context
+    https://git.kernel.org/netdev/net-next/c/e275d9091c01
+  - [net-next,v3,2/2] net: mana: Add standard counter rx_missed_errors
+    https://git.kernel.org/netdev/net-next/c/be4f1d67ec56
 
-	if (MAX_SKB_FRAGS + 2 > MANA_MAX_TX_WQE_SGL_ENTRIES &&
-	    skb_shinfo(skb)->nr_frags + 2 > MAX_TX_WQE_SGL_ENTRIES) {
-
-and let the compiler (rather than preprocessor) eliminate this if ()
-block.
-
-> +		/* GSO skb with Hardware SGE limit exceeded is not expected here
-> +		 * as they are handled in mana_features_check() callback
-> +		 */
-> +		if (skb_linearize(skb)) {
-> +			netdev_warn_once(ndev, "Failed to linearize skb with nr_frags=%d and is_gso=%d\n",
-> +					 skb_shinfo(skb)->nr_frags,
-> +					 skb_is_gso(skb));
-> +			goto tx_drop_count;
-> +		}
-> +		apc->eth_stats.linear_pkt_tx_cnt++;
-> +	}
-> +#endif
+You are awesome, thank you!
 -- 
-pw-bot: cr
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
 
