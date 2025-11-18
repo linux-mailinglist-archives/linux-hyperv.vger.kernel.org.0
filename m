@@ -1,112 +1,108 @@
-Return-Path: <linux-hyperv+bounces-7675-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7676-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 440A3C67506
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 06:06:18 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07552C68FF1
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 12:10:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A5342360B48
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 05:06:17 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1D64B36880D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 11:08:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94EA22BEFE6;
-	Tue, 18 Nov 2025 05:06:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D5E93321B8;
+	Tue, 18 Nov 2025 11:08:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FlesX1Gf"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hUroG0Ti"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D071199FAB;
-	Tue, 18 Nov 2025 05:06:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D402B2DA76F;
+	Tue, 18 Nov 2025 11:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763442372; cv=none; b=pSuURTOEqHYg2W/n3AxRP/DicssEXjg8eo8vUMxh2KxfZTiwkqqr4wdqVFW7H6YSLNHaBKEARxlo7d83uf/N7JgFCMPbc7Ug2ZAbI7TkY7un65JXcasv2740Pz66jJJ3pmb0XFhKSR4qc16dvQ9o6Uy5Kss4dDj6/3C8UXnorik=
+	t=1763464111; cv=none; b=h506GB3agPesJt7K3eUn17A6PnxwIEB67DlRZfvrSybAql7043swOp0Xe++f2KxuxkqMeJT7lir9gRnNchwKrjGfDtCNKChyZl5kt99RP0YlE85opYTSY+aQLsgT9iXXnlBi8SYeUsK5TW121MDCkSOdKrqm272Fi1zcy2ZE5QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763442372; c=relaxed/simple;
-	bh=E2/GPLD9LHCJFZXvMhhFzt8//OzHpaDK2dnAn8M667U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UWbu4DmsWULwua5aivjIalFHCwMZMXyt859/66g/IvNR2r0vg/G1EpwgeIPKQOGyMsRJeCgPKjU/khVbmVP7rFj9/WgmUJbJYA2dxXGm5KvGU3B9AAFyMsyZQLst1HW5YEBS1bzzr606A3f6aMKkxsyl2pDTniv2NtTgrbtW1rI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FlesX1Gf; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763442371; x=1794978371;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=E2/GPLD9LHCJFZXvMhhFzt8//OzHpaDK2dnAn8M667U=;
-  b=FlesX1Gf7RxBaoT6OpUbRP5wAWTZUkGS2QpVwxTptlvYhMFQnKNssXfk
-   5lF5U7hLNdoN7GRKlKIAuyu7JqGI+RNQKVjcbLIulkrDbf90CFLuNmh0k
-   Vxv7OvJIjM6yBTrBsAO+wEhMdF2yD/jfrDn7u5v0zmuRwLcs+xwh0SPao
-   nVFL+TgzEVfeuyzKEt8OX/63uH2iYxTjSH86uj+Oq49jt4Dit/WnEeqWV
-   km9orCQvke9eGE2nwXKCmAeIIXwvNfCYqgHFI3SHOU4D9tkfYn28o37qC
-   CrnNhJauk6w5caaPQTStpFEKlBYHAROlkkVmxO//AnRKOheHYNxGWD1du
-   w==;
-X-CSE-ConnectionGUID: OQzzHh0VSB+DKfzQYFNNKw==
-X-CSE-MsgGUID: zcR/tvHfSxCJTokGPMtNDw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="69322782"
-X-IronPort-AV: E=Sophos;i="6.19,313,1754982000"; 
-   d="scan'208";a="69322782"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 21:06:09 -0800
-X-CSE-ConnectionGUID: TUIvc8e2Qd+ynF26oQC03Q==
-X-CSE-MsgGUID: QVjn7dujROOjPsWelWPHUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,313,1754982000"; 
-   d="scan'208";a="189916436"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 21:06:08 -0800
-Date: Mon, 17 Nov 2025 21:13:12 -0800
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>, "Kirill A. Shutemov" <kas@kernel.org>,
-	linux-hyperv@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ricardo Neri <ricardo.neri@intel.com>,
-	"Rafael J. Wysocki (Intel)" <rafael.j.wysocki@intel.com>,
-	Yunhong Jiang <yunhong.jiang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v7 0/9] x86/hyperv/hv_vtl: Use a wakeup mailbox to boot
- secondary CPUs
-Message-ID: <20251118051312.GA20802@ranerica-svr.sc.intel.com>
-References: <20251117-rneri-wakeup-mailbox-v7-0-4a8b82ab7c2c@linux.intel.com>
+	s=arc-20240116; t=1763464111; c=relaxed/simple;
+	bh=SLEQlMyT7ru0VVaQBQdfNihYAh6n6dBv4afgIr2ndj0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BJBGVdYeH2sXeEUghv183gk2rsbBNLrFFEo6BLekWxdOUL+KDF3yMsgOTaM1fdtkbTXfGnWmTZ5AdJmyfJiZnmMqa+NNH7tZrryjxmtH3xLoCtfgjPR5g4R1B2NoyFrgD4S1UqLoiu//H8pt4rxQI8oKwvbpcj0i5TEKP//zt/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hUroG0Ti; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.18.184.99] (unknown [167.220.238.131])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 41C81211629A;
+	Tue, 18 Nov 2025 03:08:22 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 41C81211629A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1763464108;
+	bh=7zJSaE+JzYYi1N8vJh6a4WuGQQAD+L77IFF7iUoK80Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hUroG0TirOgzqYQu6NMF9oAs4KsrwaNhJO/foPhUoXM9CbBJdmxzU76ZILvZLz5A7
+	 R8qkmn3FRh4nfjQ8brInNyQEOW9Is6EO/d2pOV5VP9PC4u/JfX8y2wgYukxlSlyqcN
+	 JxoufphicoCndQ59J1f3I4T/P6HexuHPzOFYEPso=
+Message-ID: <fa78f511-6a66-43fe-a41e-771f97ada21c@linux.microsoft.com>
+Date: Tue, 18 Nov 2025 16:38:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251117-rneri-wakeup-mailbox-v7-0-4a8b82ab7c2c@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v5 1/2] net: mana: Handle SKB if TX SGEs exceed
+ hardware limit
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, longli@microsoft.com,
+ kotaranov@microsoft.com, horms@kernel.org, shradhagupta@linux.microsoft.com,
+ ssengar@linux.microsoft.com, ernis@linux.microsoft.com,
+ dipayanroy@linux.microsoft.com, shirazsaleem@microsoft.com, leon@kernel.org,
+ mlevitsk@redhat.com, yury.norov@gmail.com, sbhatta@marvell.com,
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+ gargaditya@microsoft.com
+References: <1763155003-21503-1-git-send-email-gargaditya@linux.microsoft.com>
+ <1763155003-21503-2-git-send-email-gargaditya@linux.microsoft.com>
+ <20251117194618.33af8e98@kernel.org>
+Content-Language: en-US
+From: Aditya Garg <gargaditya@linux.microsoft.com>
+In-Reply-To: <20251117194618.33af8e98@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Nov 17, 2025 at 09:02:46AM -0800, Ricardo Neri wrote:
-> Hi,
+On 18-11-2025 09:16, Jakub Kicinski wrote:
+> On Fri, 14 Nov 2025 13:16:42 -0800 Aditya Garg wrote:
+>> The MANA hardware supports a maximum of 30 scatter-gather entries (SGEs)
+>> per TX WQE. Exceeding this limit can cause TX failures.
+>> Add ndo_features_check() callback to validate SKB layout before
+>> transmission. For GSO SKBs that would exceed the hardware SGE limit, clear
+>> NETIF_F_GSO_MASK to enforce software segmentation in the stack.
+>> Add a fallback in mana_start_xmit() to linearize non-GSO SKBs that still
+>> exceed the SGE limit.
 > 
-> Many thanks to Boris, Rafael, Rob, and Dexuan for their valuable feedback!
-> The main change in this version is the removal of the patch that moved the
-> ACPI mailbox code from the x86 ACPI subsystem to a generic location. Users
-> with DeviceTree-based firmware who wish use the ACPI wakeup mailbox need to
-> select CONFIG_ACPI=y.
+>> +	BUILD_BUG_ON(MAX_TX_WQE_SGL_ENTRIES != MANA_MAX_TX_WQE_SGL_ENTRIES);
+>> +#if (MAX_SKB_FRAGS + 2 > MANA_MAX_TX_WQE_SGL_ENTRIES)
+>> +	if (skb_shinfo(skb)->nr_frags + 2 > MAX_TX_WQE_SGL_ENTRIES) {
+> 
+> nit: please try to avoid the use of ifdef if you can. This helps to
+> avoid build breakage sneaking in as this code will be compiled out
+> on default config on all platforms.
+> 
+> Instead you should be able to simply add the static condition to the
+> if statement:
+> 
+> 	if (MAX_SKB_FRAGS + 2 > MANA_MAX_TX_WQE_SGL_ENTRIES &&
+> 	    skb_shinfo(skb)->nr_frags + 2 > MAX_TX_WQE_SGL_ENTRIES) {
+> 
+> and let the compiler (rather than preprocessor) eliminate this if ()
+> block.
+> 
 
-Also, this patchset uncovered, IMHO, missing definitions in arch/x86/asm/
-topology.h. I posted a patch for that effect here:
+Thanks for review and explanation Jakub, I will incorporate this change 
+in next revision.
 
-https://lore.kernel.org/all/20251117-rneri-topology-cpuinfo-bug-v1-1-a905bb5f91e2@linux.intel.com/
+Regards,
+Aditya
 
-I can repost this patchset along with the patch above if it makes things
-easier.
-
-BR,
-Ricardo
 
