@@ -1,305 +1,210 @@
-Return-Path: <linux-hyperv+bounces-7695-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7696-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F6FBC6B2B9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 19:17:05 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B92FC6BB52
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 22:20:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A16034E3794
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 18:16:33 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id DD48B365DB7
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Nov 2025 21:19:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9ECB03612FD;
-	Tue, 18 Nov 2025 18:16:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3D9D2DC346;
+	Tue, 18 Nov 2025 21:18:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DtkErQYv";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="AUx8QKNE"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="gc97k8m8"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11020123.outbound.protection.outlook.com [52.101.61.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38493612DC
-	for <linux-hyperv@vger.kernel.org>; Tue, 18 Nov 2025 18:16:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763489770; cv=none; b=SGwKLmwWPc/n15J8TcffrGbHraVgOM5iuBxoCc0mbVafi29yp8TuY0X7Y0Cdl8ydSgDVyAk69o1L5HBsjawkNxlx91l9LScJlPMxnZ2FoYxvY29Dd7LX2nhIA+dsEgr2iOrivH2K+aG6t6fDnZ0sFDVOO++YfNmZnepR6TCOMaw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763489770; c=relaxed/simple;
-	bh=z9jngTjYXX2N3hDh12UT7kNeVGRmibW/GBVfuJWh90U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lAvm5V2LocE7IzwuxTA59aN6zUMRtzcINGGHBQ4jDNicqt1EdhfP5z97Cx0zVQ0yfddqiBTa/BiZjK115/smrLUq7597ryargGTMgd1blWWHr3Diz1+JA9t3WuQxZyvtNgRVsqOW3+f+Ek+3GeHWRKgkkkon94JZ+xDObmUZDvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DtkErQYv; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=AUx8QKNE; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763489767;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PCsmT1+txPJIS2fQNp3IVXkXdkTCnaVV7j7GhmxtV/c=;
-	b=DtkErQYvVGYi26a2EOrkH/dsdRsuVt2xMhUcPiyFGp8G55juRFOeZlunU80ONDNsXOQBfd
-	rxVmoLkhq/YyzPx7Uu3xTrqUxV9VyKP8kMcymb59jv3+Xrjb73GxN//lGGMpwaMHy23azp
-	QyObSo5nby/btgUAZTRMf6A5xr2wmAE=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-37-g_bB5DZZMkmrv4Wzk_rXWA-1; Tue, 18 Nov 2025 13:16:00 -0500
-X-MC-Unique: g_bB5DZZMkmrv4Wzk_rXWA-1
-X-Mimecast-MFC-AGG-ID: g_bB5DZZMkmrv4Wzk_rXWA_1763489759
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-640ace5f40dso5972743a12.3
-        for <linux-hyperv@vger.kernel.org>; Tue, 18 Nov 2025 10:16:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1763489759; x=1764094559; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PCsmT1+txPJIS2fQNp3IVXkXdkTCnaVV7j7GhmxtV/c=;
-        b=AUx8QKNErEgQv+mOvNtKSJyIqMXXtm+uHgDK9O1XHiF54XBZ0Spm52tcmMJz1xfwc8
-         2RCqBZnEa0rhBRDCbGfIRWI2HBQziQQrGD2MtwZ29AMUpLC5UMjZanNs7NNRhQd0Ogwj
-         zjuQXNhqjWiv/LdbN7snWjAN6XvekH1KP4KuFIiBmXHPSADxohoUjy5gf5+aPHBvR13V
-         vz98b4x3syXPQ8M+ObY172k2odyTlg9MNDOhmS5tjch2WNMxLw8wAYvDTE6yO1R/1KPc
-         dkwNhs56iukswuq+iyKiKqtt36fX0eW4tRwLRCxSoxf6OcKKsFfh+F32Dh6D68Wrs89A
-         snMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763489759; x=1764094559;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PCsmT1+txPJIS2fQNp3IVXkXdkTCnaVV7j7GhmxtV/c=;
-        b=FJupZFX3LYCIhosLSOsZqF7WMFBkhFoSza7kuRjHQMRZjeyjEPSVamvKjPs8gwOjIh
-         4mnLF2/XYYTzQxLOE1VQwN3pBnMqi+ryz32352OfuEgsPctbV5ypGEOcOpLAQ3RhWIJG
-         IAQ4/C5ogDW0bRPqsxOSTEkchaFZ0C229agusv626K786/hRfXoMNExceuQQwA9eCoIn
-         ygnCI++SWeba8qQmmsTnzd5WP5Rl/kHsRAOjWwQHarqjzAFvCyIKEEo+53C/jRwpy7qz
-         B7PPryguOoZDK9JxUzBu8pES68VpVLvyWmQIrwNA/pGCnt5HnmkwcFYh/UdItRlcWP4G
-         Aqcg==
-X-Forwarded-Encrypted: i=1; AJvYcCWCuN8DmfgZL5HTT0+egh2Oyi/bgDrA3i1TvbQojZePWRuFESd6Kek2i+8jAaeNjVwsnzoVeLwKwhIpzQU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwO1SWfh8381U/0nPc9NjMsOk4yOxJTlHcIff4C85H/iVaUGCx8
-	PE03k6WONsEa2JKXEPigiW6MFT+A/4psTGWJ6hEdeLc5f3HZntov7eFH4sxw9uAOXuFeTbf+d49
-	mhacK04MOp4p5ebGbkhusNh9P+MUfWzkI+hNhDy9hPiSZC2VIOdOJtEfhnNXQ2AEBlQ==
-X-Gm-Gg: ASbGncufMVyVEnV4vinJNy45qypYQlsyaBjMBYp0Qv/cY3EsLbSu4Iaj7cruEADnEgi
-	N70FAb/2deO36juX/dC0l/IxEAiRQrrVTOwkx9Xnx3Qzov6kxCMJl0KH81GPyzukVLusMK4p9xA
-	xlkyaMxo8F+SzUj9lhbsHR+OfyHMQ+nYMjgojluHy20Afr7CCoK3n/dQELrkUdVV2aKSTmVyeML
-	cg54uwskez2ucuGWBwclIXSH+dKex6C6Bi1orvAXKS5St52bZEmvA+l+zyD2mK+kq1JNppc0b3n
-	7VsW+5uQ/oGvND4W1oM0gF7qK+ImoiEydIr5TCO41+F8NtINauaJIGoOAjf7DLigNN4BRDfnF2M
-	QCXqGn3OPv9R23bpMOjLFYypksWRN0cis1Oq4cuw0UESDHUf6T2o1jxvXczc=
-X-Received: by 2002:a05:6402:42c4:b0:643:18c2:124e with SMTP id 4fb4d7f45d1cf-64350e0eedamr16148786a12.7.1763489758973;
-        Tue, 18 Nov 2025 10:15:58 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEoN0mxHlnHDgcN+NdZ5LOvg9qXOI9RJny5diigWO606GHOiHMHqYfRilSL5Y7K5784adc2+Q==
-X-Received: by 2002:a05:6402:42c4:b0:643:18c2:124e with SMTP id 4fb4d7f45d1cf-64350e0eedamr16148731a12.7.1763489758430;
-        Tue, 18 Nov 2025 10:15:58 -0800 (PST)
-Received: from sgarzare-redhat (host-82-57-51-250.retail.telecomitalia.it. [82.57.51.250])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6433a4b28bbsm12919260a12.28.2025.11.18.10.15.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Nov 2025 10:15:56 -0800 (PST)
-Date: Tue, 18 Nov 2025 19:15:50 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Bobby Eshleman <bobbyeshleman@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jason Wang <jasowang@redhat.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
-	Bryan Tan <bryan-bt.tan@broadcom.com>, Vishnu Dasa <vishnu.dasa@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
-	virtualization@lists.linux.dev, netdev@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Sargun Dhillon <sargun@sargun.me>, berrange@redhat.com, Bobby Eshleman <bobbyeshleman@meta.com>
-Subject: Re: [PATCH net-next v10 11/11] selftests/vsock: add tests for
- namespace deletion and mode changes
-Message-ID: <snj3w4fhh2az6wp6kf7ca3bgd6jp2aawvyic7thdnoktdumbx6@zmjqiorc2uda>
-References: <20251117-vsock-vmtest-v10-0-df08f165bf3e@meta.com>
- <20251117-vsock-vmtest-v10-11-df08f165bf3e@meta.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9972C3745;
+	Tue, 18 Nov 2025 21:18:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.123
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763500731; cv=fail; b=gfDfyIyK5zfyjFcE09f8xbWhkS7Ns51kGH5hz9PiNeyYmaTX9Y5/VkZ6OrUmmB0PD3I8l2e2l67Md77Y/NUDPB62hYHAfUfFTA9rOtP2p7wsSoEoMwLK+QLSYJRyrYUkJe/mBphGWF0EV9tD5poU6RBp/fm+03KiuKeYrgdl8bE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763500731; c=relaxed/simple;
+	bh=VFCYfeR9VZAbgwxrgnyTz73UEs+FAZWX37DjjUGzNIQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=cchIxtuZtzt8jkgK9Xes3Ms4G/voauUhCAW3EZj9zgkI6v5559oTcpOPtc3sFtq65KokdadHyL/85tb4KRCsZLY+Ad4fpfHnJszrzcQs0HEo0EdzYZsv+9mKq2FsR70Z9h0RUMkDJLIuA0wvqKi3DDZy+VvP1WZlw0RSPwX8efw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=gc97k8m8; arc=fail smtp.client-ip=52.101.61.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MuX84hfKaNT74WaKaL/9ESRBn5TBENe+6IEURNu2wtrVzCN6FpIvBhnik4mAU643V1gIcaXuHA/cdmecZ5mmOdPY3FaU/BOCcy/+eYUmlaPtN/5vsTWVuoAc1vMDn1nISLPOefrxtHoGg64aw+AIskL5/eU/YO2+Xs86QPPBX8o/jVpjkjmJsDMhsUPn/GiWtwEpoaa9Nl4CcTdUZMkFAlEAqgpR12rIln9LAyuPw3iCoGxrJcez6Lg6WkuwhRSObi2elN5IWyPTnJmm3l15A537kO0p4MPzln37fCvv9deoB27xuaTq7R3gdkIuBO5CoQiARBUq58AJVP3V3J6frw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VFCYfeR9VZAbgwxrgnyTz73UEs+FAZWX37DjjUGzNIQ=;
+ b=IHn87dG+PZ8NpCY/9wk2vq+PpIKbP1ZCPhV4ob6bumSwIQuWDknlk+oWLZKGpppCw1ZjOVujUvmr/Nypa5ENc/89mrv8IIUVlDkO31CSJedQzyEWAlVXZRZBqvH9m8gjlHyspLu3/0KYS/zsrZbKVtGe1+FQHWqXlizbHSiGeYv3p0VkP0IxI/5BYFBtze2Atcw5SBX2XpcseVgAaYKs/21UbmMHdKnz3hw7MIqN90iNHQpdA0L/FS30L+atbpccAS2vnymftQbh0AV/E7qzbhuraB3AanZ3A8Otd0fgrIpb4c3AEssyWIGfVJ0UhF8k3N8GtmDBf23y6ghNuNm5dg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VFCYfeR9VZAbgwxrgnyTz73UEs+FAZWX37DjjUGzNIQ=;
+ b=gc97k8m8mTaS8HwvxNdoMXce0p6IMP87yt1hzAZI7hEUOiqhMIGoTUmIou4w3ULywc/xVfJgDKfRceFwGJ99t7Avr7VuFutkCTB1wO0udzu0Voi3RYAfR7upcCZo9bEu09BH5cMS7Jy2yT71pd+jUJ/ng8KkYqYjPxXHvOXmzC8=
+Received: from SA3PR21MB3867.namprd21.prod.outlook.com (2603:10b6:806:2fc::15)
+ by SA1PR21MB6393.namprd21.prod.outlook.com (2603:10b6:806:4a9::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.2; Tue, 18 Nov
+ 2025 21:18:47 +0000
+Received: from SA3PR21MB3867.namprd21.prod.outlook.com
+ ([fe80::70ff:4d3:2cb6:92a3]) by SA3PR21MB3867.namprd21.prod.outlook.com
+ ([fe80::70ff:4d3:2cb6:92a3%4]) with mapi id 15.20.9343.006; Tue, 18 Nov 2025
+ 21:18:45 +0000
+From: Haiyang Zhang <haiyangz@microsoft.com>
+To: "longli@linux.microsoft.com" <longli@linux.microsoft.com>, KY Srinivasan
+	<kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+	<DECUI@microsoft.com>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Shradha Gupta <shradhagupta@linux.microsoft.com>, Simon
+ Horman <horms@kernel.org>, Konstantin Taranov <kotaranov@microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>, Erick Archer
+	<erick.archer@outlook.com>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-rdma@vger.kernel.org"
+	<linux-rdma@vger.kernel.org>
+CC: Long Li <longli@microsoft.com>
+Subject: RE: [Patch net-next v2] net: mana: Handle hardware recovery events
+ when probing the device
+Thread-Topic: [Patch net-next v2] net: mana: Handle hardware recovery events
+ when probing the device
+Thread-Index: AQHcWC33Blc6Mk6VP0GANQ/jbxrVFbT48UVQ
+Date: Tue, 18 Nov 2025 21:18:45 +0000
+Message-ID:
+ <SA3PR21MB3867EBEB065D328200DAB1A4CAD6A@SA3PR21MB3867.namprd21.prod.outlook.com>
+References: <1763430724-24719-1-git-send-email-longli@linux.microsoft.com>
+In-Reply-To: <1763430724-24719-1-git-send-email-longli@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=42649ba3-361e-46fb-820b-0d04306f2a81;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-11-18T21:17:59Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA3PR21MB3867:EE_|SA1PR21MB6393:EE_
+x-ms-office365-filtering-correlation-id: 9615c2b5-150c-4337-9e72-08de26e80ee3
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|7416014|376014|366016|38070700021|921020;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?wfXQDniWXhLcCEC+2k2wXMse82SjkJ+Zu/OmgyADnkaZIriys1OwKJl9EL9n?=
+ =?us-ascii?Q?5dZ4VhmvAIAvBscaxK/AXCqKemflRad0/8uhGULUVgKYkW0eLVi5zK7mF9US?=
+ =?us-ascii?Q?QHy0Ft67BkXGFGjjpQofAdvgBrOP43uD+XMC1RNegwJQ5bZbqjM7tPb0HaTh?=
+ =?us-ascii?Q?rOv1AcZw69MnjTOgq8EHf3VLuEALPCoCwE4RmKan6OHZgv6Yoq89bEOe0Pdh?=
+ =?us-ascii?Q?9m2+LZ0tqfWv9P7QZLFLPpM04HlmfREHS0ba+Y/ot1j7kMyVJOGY2CYZMZQd?=
+ =?us-ascii?Q?64gzRBLK4qRA+gJ7kDqR1allDaC8YLi3nubKopJ+4e7q7XM+DXVwNBeVeckn?=
+ =?us-ascii?Q?pgAAJDFT68TI/ixETIw927RzlS0LdpFYfmuPnbCdvpiSLga325NoDRuluZ/h?=
+ =?us-ascii?Q?t+uKdHza8G1qyqDNJdXPVdAVjqNCYw2V85u5v5oaEDALh8se59forODGFm2C?=
+ =?us-ascii?Q?jxBjnP5wn3qwU2RnPJnoOf1rlUAajOzfclUpSxJUTEvxb4sVKWi0FBJBp7Ck?=
+ =?us-ascii?Q?vWfYTecpJMQCtedbruZZy73xPG1V4h7QGmiCzWc1OrodCXPJll4pmpgpPlUa?=
+ =?us-ascii?Q?MjfhuzR0mfPDheiJZkErLCrN9wSm+Vvocuq9Zl+KOtD7nE/8VUAHYVYKjCcR?=
+ =?us-ascii?Q?V24ragrSHxsyLGgNw4GDCIgPYQ8ExUdQzemY8VI5/UW7RK9AP754xUzjY0yq?=
+ =?us-ascii?Q?Q2jfK1JeS+eNAsE832I5QsVc2samLVq3U/yJZ1dTkA9QpqkklIcWVPGXmfDA?=
+ =?us-ascii?Q?OTzMVpEdXJQsiTVQqszouNAAp4d1z6xnSenGgz8sWcshb3J7lLXxawdDadPQ?=
+ =?us-ascii?Q?M8wxWUFBv8OwDkcqxfmHAzDdongZOvqpzLCnJzEQJwS/XGnHzFjAoQQv1jo5?=
+ =?us-ascii?Q?93zgwnu/dKcYEfCROVu3jYCx19/IdeZKkEpVW4THBakBGziBrIn/6yUtZNP+?=
+ =?us-ascii?Q?Uy7pO+BIsy3GPvPbyhHm1zuF3NQ98eXZHMhGmhETkbf9UgYmYwgcNz7wzVVO?=
+ =?us-ascii?Q?sabSUH8llxnsm/B7BuM4fxqMor0wQ9gQkoSsF6XfzyqFXoZ+ukJrA+okrGsS?=
+ =?us-ascii?Q?dS4RjqugzrVsWxy/s4nDCRy4Mo3xwEmR4gSh9dzC6ARMviLgxyAKU1NxGrRE?=
+ =?us-ascii?Q?XT5S6aKpqiHfIOgG1unnIaWVGYSg06UsMNpbuMr2MOFcyyIK5vEQnaSPId8q?=
+ =?us-ascii?Q?0OL6sulu3qh3nMfDVYeLPKFXd2Oef+N3RG/YuXiMWS1VVr/s2M89fX6jwpJS?=
+ =?us-ascii?Q?k4EDQcnbkHTy8Wnw+ozWopUTBJGIcSVZ1deadt/l6Et2RJZ2XtqMcWkJIjJO?=
+ =?us-ascii?Q?g5eTLBYY+dQSKOta51EiRuACkDuCahDmnoxqEdb6oIs1uh/xGjYXoJxm295I?=
+ =?us-ascii?Q?pgW8YltOa9ZH2dSmXR5wf6QnIHL3X/N1XzL7fBTHMhaNHPaIdw556tUXQ62j?=
+ =?us-ascii?Q?rsgWPsuNgVvF5BjdGzJs1cSWGf5oaB5dGL/OzV3CA3kjGwNgHP0LbLLt86vV?=
+ =?us-ascii?Q?2RLcMKEFm0AOsZrjzLVz0GBdUsiVoN2MpwSFf0J0cGAww5Ib+E51787Z4A?=
+ =?us-ascii?Q?=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR21MB3867.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(38070700021)(921020);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?8GhNcTFY9FuiK+Ub5fLZK5gMZJgMXIHVbpRiUIPL9AeWFcj0veVhwIMy9KXO?=
+ =?us-ascii?Q?4jpihTWWUJVLwdDqk/RHjrrFe+JZclZ5PkLAXSPDdM29cF9IPIZz2wKyOnRw?=
+ =?us-ascii?Q?fK901/ABrRzo4gU6gl9Dw9hxN5zu06yM5LJCYWub6JfSH5CI5cvbJqTpezH1?=
+ =?us-ascii?Q?EN1BwcoTCo5hLBtmcCwpgND70/tW5rZV2Zxayp2TQ7OgMscHvXu5r0+BR7ST?=
+ =?us-ascii?Q?ZSnrTGaCdWk0l0qBp68SL/JNj4hWYkrFzyCd7BcQ/bx7HRHOeKlP/5UHrp+4?=
+ =?us-ascii?Q?Gj/YWC1sB6UIsCnNtj5iMMYkpvURWaxdsCfrsaKDYCJTfmWhhRPxqhrkyxU1?=
+ =?us-ascii?Q?aWSGCkCQ1+Yu4d+glikbsA5NFoKzShnzp+TjHiBt+0ubpAytbO6QJgxyfjjx?=
+ =?us-ascii?Q?wJQ/krGzN6DwkIe9yXO63+TR85EKmKLdBWZygeTNu4gCalnVoN9YACy35kdX?=
+ =?us-ascii?Q?MthwE1hnZYWJTNRbZHeY+lFS6lsA3kORSpTWt0kZofGxSKS43fdh5aU3I2+G?=
+ =?us-ascii?Q?xLU0BZ0v5nyc3P0/NjrgyA3mjPVuAdlyM68bBgX8KzQTjjyHPxiNnNxIorKV?=
+ =?us-ascii?Q?NKj984qw+J8KbSzDUZwbe74aIO6mIyOI8SHJvFVCe42LVudwzqDiJWhIQ9E1?=
+ =?us-ascii?Q?8sxlsGLPQd3YMC+e0Px8om1xfZX/rLMDRLprBxNJu9P+SyeVdibAu4rAIQTN?=
+ =?us-ascii?Q?PhwPO4V4SzhX9dDVHHcMjdm4+alXDgwt6Rnwb46LkDhd7tyPz7GTny9NKNUm?=
+ =?us-ascii?Q?rPSfT74U5pjf9por74SMqP8CmSZ4bUSPmuAQW9l3DfyQl71GDIQv8kxaAkUW?=
+ =?us-ascii?Q?VvkWZiDvYb8hZKkJHaZmuBPvesZSROP1hBvIDgys5p5OVh7AgUhcfYk0AjwP?=
+ =?us-ascii?Q?QOk0KHx7I8RJ6+RV2bgxvkTMz5ZJDQUAtRNDLLoRCkFU2Cotd8wb2Eg3x9aK?=
+ =?us-ascii?Q?fiEnUAnRw2oLwphrE/NRrgai8qcTd4rWP+rJoPNJFUrPI2C3nCugqtPI4alC?=
+ =?us-ascii?Q?ql/Wqv9UQLt1yQPil1+nMQRyhokjyOqfKtpjNaDrcxsDPj0zCeQca5qSL8uJ?=
+ =?us-ascii?Q?itF9t8R+OIwuUjA7daC71HdPW4OnJsdb/meDJlJdoNSuKeVPrmhYQX4UnsHe?=
+ =?us-ascii?Q?8XB16Q+VFDnU/FJRi+AX8O2QmB3mz+B7hQpk8I6cFqQxaGFxdt1/7OErJD3B?=
+ =?us-ascii?Q?jZ4GEkIPpKy0xUNbJVIPxOD+6ZJormchuRctE4nTqSLWCYRjgTqKr31hPhfN?=
+ =?us-ascii?Q?TBWwYmZLol4+tlmNeA6TUCReuwgeQKmSv91n5VZpfQR9EcW6K2XnVG2RTa+/?=
+ =?us-ascii?Q?sKMP7fcGQWByRpmaA3wNOPdkgfdZycTTfCzYaIcv6fPGShOJRuDNeXU/jEme?=
+ =?us-ascii?Q?1U8KfzUvGI91KM8jx803Dm3+ja6u0oN1bkG53SIbtXZAkDjb21Om10HVEG3v?=
+ =?us-ascii?Q?f9sMFUVv3q5FOPE+2d+/XT4C5To19wZiOjgzs5xEyeJpr+eaobr82SiEceG1?=
+ =?us-ascii?Q?hI1iuDSJ0SMlQNpUSZB0cWE5Jf76nHLuZgPRzU48bD5OOivOMWvVOXBbtKW3?=
+ =?us-ascii?Q?83bQ9g9DSVzfthGDqQM3qJIJbUSf1cL+1MM1D6/V?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20251117-vsock-vmtest-v10-11-df08f165bf3e@meta.com>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA3PR21MB3867.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9615c2b5-150c-4337-9e72-08de26e80ee3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2025 21:18:45.7153
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: W3ZvENIlRieWZBrD61zqqW0JJ+Z9A3MmpJeq4X9XcMhJGAi38PzrgU8JpJsLaYcHmwy6q0ym+Gn6rDUePxX6bQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR21MB6393
 
-On Mon, Nov 17, 2025 at 06:00:34PM -0800, Bobby Eshleman wrote:
->From: Bobby Eshleman <bobbyeshleman@meta.com>
->
->Add tests that validate vsock sockets are resilient to deleting
->namespaces or changing namespace modes from global to local. The vsock
->sockets should still function normally.
->
->The function check_ns_changes_dont_break_connection() is added to re-use
->the step-by-step logic of 1) setup connections, 2) do something that
->would maybe break the connections, 3) check that the connections are
->still ok.
->
->Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
->---
->Changes in v9:
->- more consistent shell style
->- clarify -u usage comment for pipefile
->---
-> tools/testing/selftests/vsock/vmtest.sh | 123 ++++++++++++++++++++++++++++++++
-> 1 file changed, 123 insertions(+)
->
->diff --git a/tools/testing/selftests/vsock/vmtest.sh b/tools/testing/selftests/vsock/vmtest.sh
->index 9c12c1bd1edc..2b6e94aafc19 100755
->--- a/tools/testing/selftests/vsock/vmtest.sh
->+++ b/tools/testing/selftests/vsock/vmtest.sh
->@@ -66,6 +66,12 @@ readonly TEST_NAMES=(
-> 	ns_same_local_loopback_ok
-> 	ns_same_local_host_connect_to_local_vm_ok
-> 	ns_same_local_vm_connect_to_local_host_ok
->+	ns_mode_change_connection_continue_vm_ok
->+	ns_mode_change_connection_continue_host_ok
->+	ns_mode_change_connection_continue_both_ok
->+	ns_delete_vm_ok
->+	ns_delete_host_ok
->+	ns_delete_both_ok
-> )
-> readonly TEST_DESCS=(
-> 	# vm_server_host_client
->@@ -135,6 +141,24 @@ readonly TEST_DESCS=(
->
-> 	# ns_same_local_vm_connect_to_local_host_ok
-> 	"Run vsock_test client in VM in a local ns with server in same ns."
->+
->+	# ns_mode_change_connection_continue_vm_ok
->+	"Check that changing NS mode of VM namespace from global to local after a connection is established doesn't break the connection"
->+
->+	# ns_mode_change_connection_continue_host_ok
->+	"Check that changing NS mode of host namespace from global to 
->local after a connection is established doesn't break the connection"
->+
->+	# ns_mode_change_connection_continue_both_ok
->+	"Check that changing NS mode of host and VM namespaces from global to local after a connection is established doesn't break the connection"
->+
->+	# ns_delete_vm_ok
->+	"Check that deleting the VM's namespace does not break the socket connection"
->+
->+	# ns_delete_host_ok
->+	"Check that deleting the host's namespace does not break the socket connection"
->+
->+	# ns_delete_both_ok
->+	"Check that deleting the VM and host's namespaces does not break the socket connection"
-> )
->
-> readonly USE_SHARED_VM=(
->@@ -1256,6 +1280,105 @@ test_ns_vm_local_mode_rejected() {
-> 	return "${KSFT_PASS}"
-> }
->
->+check_ns_changes_dont_break_connection() {
->+	local pipefile pidfile outfile
->+	local ns0="global0"
->+	local ns1="global1"
->+	local port=12345
->+	local pids=()
->+	local rc=0
->+
->+	init_namespaces
->+
->+	pidfile="$(create_pidfile)"
->+	if ! vm_start "${pidfile}" "${ns0}"; then
->+		return "${KSFT_FAIL}"
->+	fi
->+	vm_wait_for_ssh "${ns0}"
->+
->+	outfile=$(mktemp)
->+	vm_ssh "${ns0}" -- \
->+		socat VSOCK-LISTEN:"${port}",fork STDOUT > "${outfile}" 2>/dev/null &
->+	pids+=($!)
->+
->+	# wait_for_listener() does not work for vsock because vsock does not
->+	# export socket state to /proc/net/. Instead, we have no choice but to
->+	# sleep for some hardcoded time.
->+	sleep "${WAIT_PERIOD}"
 
-can we use `ss --vsock --listening` ?
 
->+
->+	# We use a pipe here so that we can echo into the pipe instead of using
->+	# socat and a unix socket file. We just need a name for the pipe (not a
->+	# regular file) so use -u.
->+	pipefile=$(mktemp -u /tmp/vmtest_pipe_XXXX)
+> -----Original Message-----
+> From: longli@linux.microsoft.com <longli@linux.microsoft.com>
+> Sent: Monday, November 17, 2025 8:52 PM
+> To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; Wei Liu <wei.liu@kernel.org>; Dexuan Cui
+> <DECUI@microsoft.com>; David S. Miller <davem@davemloft.net>; Eric Dumaze=
+t
+> <edumazet@google.com>; Jakub Kicinski <kuba@kernel.org>; Paolo Abeni
+> <pabeni@redhat.com>; Shradha Gupta <shradhagupta@linux.microsoft.com>;
+> Simon Horman <horms@kernel.org>; Konstantin Taranov
+> <kotaranov@microsoft.com>; Souradeep Chakrabarti
+> <schakrabarti@linux.microsoft.com>; Erick Archer
+> <erick.archer@outlook.com>; linux-hyperv@vger.kernel.org;
+> netdev@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> rdma@vger.kernel.org
+> Cc: Long Li <longli@microsoft.com>
+> Subject: [Patch net-next v2] net: mana: Handle hardware recovery events
+> when probing the device
+>=20
+> From: Long Li <longli@microsoft.com>
+>=20
+> When MANA is being probed, it's possible that hardware is in recovery
+> mode and the device may get GDMA_EQE_HWC_RESET_REQUEST over HWC in the
+> middle of the probe. Detect such condition and go through the recovery
+> service procedure.
+>=20
+> Fixes: fbe346ce9d62 ("net: mana: Handle Reset Request from MANA NIC")
+> Signed-off-by: Long Li <longli@microsoft.com>
 
-Should we remove this file at the end of the test?
-
->+	ip netns exec "${ns1}" \
->+		socat PIPE:"${pipefile}" VSOCK-CONNECT:"${VSOCK_CID}":"${port}" &
->+	pids+=($!)
->+
->+	timeout "${WAIT_PERIOD}" \
->+		bash -c 'while [[ ! -e '"${pipefile}"' ]]; do sleep 1; done; exit 0'
->+
->+	if [[ $2 == "delete" ]]; then
->+		if [[ "$1" == "vm" ]]; then
->+			ip netns del "${ns0}"
->+		elif [[ "$1" == "host" ]]; then
->+			ip netns del "${ns1}"
->+		elif [[ "$1" == "both" ]]; then
->+			ip netns del "${ns0}"
->+			ip netns del "${ns1}"
->+		fi
->+	elif [[ $2 == "change_mode" ]]; then
->+		if [[ "$1" == "vm" ]]; then
->+			ns_set_mode "${ns0}" "local"
->+		elif [[ "$1" == "host" ]]; then
->+			ns_set_mode "${ns1}" "local"
->+		elif [[ "$1" == "both" ]]; then
->+			ns_set_mode "${ns0}" "local"
->+			ns_set_mode "${ns1}" "local"
->+		fi
->+	fi
->+
->+	echo "TEST" > "${pipefile}"
->+
->+	timeout "${WAIT_PERIOD}" \
->+		bash -c 'while [[ ! -s '"${outfile}"' ]]; do sleep 1; done; exit 0'
->+
->+	if grep -q "TEST" "${outfile}"; then
->+		rc="${KSFT_PASS}"
->+	else
->+		rc="${KSFT_FAIL}"
->+	fi
->+
->+	terminate_pidfiles "${pidfile}"
->+	terminate_pids "${pids[@]}"
->+	rm -f "${outfile}"
->+
->+	return "${rc}"
->+}
->+
->+test_ns_mode_change_connection_continue_vm_ok() {
->+	check_ns_changes_dont_break_connection "vm" "change_mode"
->+}
->+
->+test_ns_mode_change_connection_continue_host_ok() {
->+	check_ns_changes_dont_break_connection "host" "change_mode"
->+}
->+
->+test_ns_mode_change_connection_continue_both_ok() {
->+	check_ns_changes_dont_break_connection "both" "change_mode"
->+}
->+
->+test_ns_delete_vm_ok() {
->+	check_ns_changes_dont_break_connection "vm" "delete"
->+}
->+
->+test_ns_delete_host_ok() {
->+	check_ns_changes_dont_break_connection "host" "delete"
->+}
->+
->+test_ns_delete_both_ok() {
->+	check_ns_changes_dont_break_connection "both" "delete"
->+}
->+
-> shared_vm_test() {
-> 	local tname
->
->
->-- 
->2.47.3
->
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
 
 
