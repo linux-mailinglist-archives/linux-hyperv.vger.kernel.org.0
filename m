@@ -1,159 +1,224 @@
-Return-Path: <linux-hyperv+bounces-7701-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7702-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3CB3C6F4DE
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Nov 2025 15:33:17 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A547EC7064A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Nov 2025 18:17:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 722C54FA1B5
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Nov 2025 14:25:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTPS id 2148B2F38D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Nov 2025 17:17:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AE6D2727EE;
-	Wed, 19 Nov 2025 14:23:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E58830170C;
+	Wed, 19 Nov 2025 17:17:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GPeo0Jqp"
+	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="ZCyv2dDR"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yx1-f47.google.com (mail-yx1-f47.google.com [74.125.224.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender3-of-o52.zoho.com (sender3-of-o52.zoho.com [136.143.184.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C0BD274B27
-	for <linux-hyperv@vger.kernel.org>; Wed, 19 Nov 2025 14:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763562226; cv=none; b=aOX3onBNbz/rf/0KHoJfk7q5sUZaw2H0CIQqHlgkxdJ9NOHegF9JYKsYH49K0zunZSONfp5oaBFySEuLUqw74wKUTfNqgTfwkJz12dqtMtj5yyOM/AJTJh6NlbPoFFblfz7qBgozaV72e6GahTUwCIDfD6rQwqe6zFlAr1wb13g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763562226; c=relaxed/simple;
-	bh=feLpsTcRooeBUDh1NuZrtx4BR5eXJUHXIjFRyYBOBVE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jpgWPM3j2G9fC+Ll7dya2rLv7MCrB5wuMwqalG+0NSGqvHAugMWu7Yrmob2h/ZdcL1r2U4LmJfBjPIxnOoAv6kZrvQonkdMetvhK9ANDIXeV6u6sp+fZ81wDjupiJAGn9lO+gSGqewxWGS6R9E9uYvrhC7tbDvu1b5GjoFLKYTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GPeo0Jqp; arc=none smtp.client-ip=74.125.224.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yx1-f47.google.com with SMTP id 956f58d0204a3-640d43060d2so6314009d50.2
-        for <linux-hyperv@vger.kernel.org>; Wed, 19 Nov 2025 06:23:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763562222; x=1764167022; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=feLpsTcRooeBUDh1NuZrtx4BR5eXJUHXIjFRyYBOBVE=;
-        b=GPeo0JqptvMsc0yhUlPFO6CYVQsM3mp6jIDIpUEoIY39y4LECUJ6RHGSSAoS9piBGj
-         RMPRCr2NZa7rMp6EyK3iEuWuJMKezjDOblElgaEwzabMj3U+LvU0Tnj0tcP7JCNPQth9
-         8LLqlB7PySSlN2x3tcvrIZiSZnfOV9yr4VJ4e2WeaVNbVOdnSw50HUxhEA9986I8qNoi
-         DPKKvILCu28f8B/zKwjuU2uJNfZCJDbE7Bx4Zgul2hN78d5aeu6hREjRWyvAoSiSYT63
-         bZAUpMywFo0WMqzj6Yf5KcawW8sMiERXPT3HxSDqsy3lXPtCt4wsNAXrjllZ2JAF6OgX
-         oyxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763562222; x=1764167022;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=feLpsTcRooeBUDh1NuZrtx4BR5eXJUHXIjFRyYBOBVE=;
-        b=bh8VvH3kf+EkbBxhSPTNc0nUQukgsjExvlO7cOvnsva5JzGxK2WN95OvuSX8/Ml754
-         AY/KnpR4l46SI4AGyXjxUynHFI9K5zsT9adIFcB8UGXhACekgxuoHGa++Luh3YgU+V8z
-         S5/sdSAplIVwqq+I2zxWqTURN+MTts57aDePkoJINmDW2RgiwvtT1yXsnfBZseKYcF4g
-         CZ1773HeKHOAwpCW2dWocaco1JGwgDLM/hH5MOxn9puet6mLEmiKebKXPoZTtfZ+F5lt
-         0kf9hQXjEfhJHOlw9KYevNvwXFTs++k6Rj9eAaeY+8DKGTUkHyWwj3L8WWzuuh0ddIUQ
-         iCdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUWFIJO0e0gBotenljZc3A1ng/z8QIL2iuH91N5CuCPUW8A8GKtg14jFLAwxh1h+h/gz/nZpnEH3TH1QUg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoJdA+tm+EMJ5nTJxLRkk/uiVAwu4bYYd88SsQHQuHEWar+NvY
-	bIeYWbJCLfLsDgUGXtxQI5bMh0kisv0NSJpT8wcurMzhYTVawMS+4/Ut43OVibZGDXwCbZD0ugL
-	CUiRfeaig3MXaIsUyMMPoClTRlzyhnnA=
-X-Gm-Gg: ASbGnctMxP4TkxmuUXVen5m7oBYbQvpr9Ye2PEKnQwYUdmsXG8IJL1+vdrCAfnvytUT
-	ZL3hwj+7AFTKoJL7XUq5CLSDjrIqYZMmwS+SZn2QEJcwrxwD5Os+m9kuLzoYO90Os4mG8DZvVjG
-	KSpSsO4CSi9p0fxABp+F1W2+RXVcjSVRmzJ9edv+z5fNPN68FBaiZSIew++YVmK7Bm1ok7w86Rg
-	z7dHT/KKoKEubkiEJP9VJ/ri/ANamMKZyycKfJ6m3NARJJfETR+A/xYKtUv76sQZNYdePrDFTYQ
-	6dpoPmxfNKpunUP/+wVXLhxznyz7qTFg5HJdS4bHIfQFQMJJ6K2zRvR8sTLF
-X-Google-Smtp-Source: AGHT+IF5NwixCJp2T74Yk+VGJOFT70YL4ipTdPK29oJUWRmhQ16csu9lLdxNgu9JhRR5iqSvFNtCD4jkp5Voqb6nMwk=
-X-Received: by 2002:a05:690e:4086:b0:63f:b366:98e3 with SMTP id
- 956f58d0204a3-642ed11f6efmr2195929d50.23.1763562222141; Wed, 19 Nov 2025
- 06:23:42 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2273830147A;
+	Wed, 19 Nov 2025 17:17:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763572651; cv=pass; b=f5tl6aM68JO5ta9JRDTxkdsIj8wMGfSqzHGxDD4baCkDJTnECoAtBvtYAS9IqIcDdw0NgABlziDuVXSyvz0AdVVZX1bxsbOm+BiK4LcjJjxG7Cv7f+KcR+Pa+9tVy4FSvEYlDtdl0vYooR6sHoWQ70K/aI7VpF41+9Qx/fdiDdA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763572651; c=relaxed/simple;
+	bh=Qu+2pKTonT+tNuNcwlQSadUEXruudgu0miazKjiT1M8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c2c8hzA0iTvcdkdtsMVlakLlSPEdJ4fCkpRPzmbz2ko4hU1Xx+vNSh1Vb4Mv95VoBB+8pRk1R+mynjifwsN77glcYfdTu7A9Gz0+8WUOdnjA+tujIx0xYjsCjjVTS1galPxOz+fFa3VuyUsjkBhUiruZT6QLBQNItDfyfKOehMY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=ZCyv2dDR; arc=pass smtp.client-ip=136.143.184.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
+ARC-Seal: i=1; a=rsa-sha256; t=1763572641; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=WyEgywdDMpGFM5eOCI0qjCisl4jIxVlxFrBEAX24aNKtLlwYZkx+RQLvixTMw/toFol9nE/dPLZ09ocnxHcvcnzDlq1M1PASK3yxGHIUZ75jdsLklI6J4PNEogwJeG0FwLYuXrzmHiRz5XZgzrSGyEUcZn4kQU1LPFK4mNAbjnk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1763572641; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=CnqwBiOXNHUItkhxV/bgOaHNyWOYT9BVSfpRkQucGYo=; 
+	b=PA+dclY4IqU4knpa1TXqZFnc174t0M1g/H4c927WV4LIlKJ64Q57lnUQO2alDYRCXztWSFH8NhrSO0RObBiimPTAjBv616gKyez+XgQTxHlX6Op1CyNJWUKaMZu1JDGb9hU0YbLEMHH2mYIQLknL9lGSTSOoWkGMFwpSQnUA1Nw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=anirudhrb.com;
+	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
+	dmarc=pass header.from=<anirudh@anirudhrb.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1763572641;
+	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
+	bh=CnqwBiOXNHUItkhxV/bgOaHNyWOYT9BVSfpRkQucGYo=;
+	b=ZCyv2dDRS7X1uLrOjceRux9UuNv84EUtG/ou83K9vx86NsbL+IuDlVH4o1Drmj5T
+	b9x/1bgpCjd3wLanthr6BPjHgkBt71bF7AAri+kdQgVg4UAhTwm7+SS4aOgtv5ZamCO
+	+ED4A46G+QHRyh5sKVVYFhaIxOgxgC1cFtv80Yo8=
+Received: by mx.zohomail.com with SMTPS id 176357263736197.144016026916;
+	Wed, 19 Nov 2025 09:17:17 -0800 (PST)
+From: Anirudh Rayabharam <anirudh@anirudhrb.com>
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>
+Cc: anirudh@anirudhrb.com,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] Drivers: hv: ioctl for self targeted passthrough hvcalls
+Date: Wed, 19 Nov 2025 17:17:08 +0000
+Message-Id: <20251119171708.819072-1-anirudh@anirudhrb.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251115085730.2197-1-namjain@linux.microsoft.com> <dca120db-4751-4de8-961e-05ba701ca100@linux.microsoft.com>
-In-Reply-To: <dca120db-4751-4de8-961e-05ba701ca100@linux.microsoft.com>
-From: Peter Morrow <pdmorrow@gmail.com>
-Date: Wed, 19 Nov 2025 14:23:31 +0000
-X-Gm-Features: AWmQ_bkiYDQ6u5hyLwq5pIsZUbEmRyAM2-OA75PYb-RUfW-RBak2JgjGmjqppv8
-Message-ID: <CAFcZKTxFB_iztzAK_Ljy5sU48qCTUs+FPD1aXUyz3qt7ug8DhA@mail.gmail.com>
-Subject: Re: [PATCH 6.12] uio_hv_generic: Set event for all channels on the device
-To: Naman Jain <namjain@linux.microsoft.com>
-Cc: Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michael Kelley <mhklinux@outlook.com>, 
-	Long Li <longli@microsoft.com>, Saurabh Sengar <ssengar@linux.microsoft.com>, 
-	"K . Y . Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
-	Tianyu Lan <tiala@microsoft.com>, linux-hyperv@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Salvatore Bonaccorso <carnil@debian.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On Sat, 15 Nov 2025 at 09:02, Naman Jain <namjain@linux.microsoft.com> wrote:
->
->
->
-> On 11/15/2025 2:27 PM, Naman Jain wrote:
-> > From: Long Li <longli@microsoft.com>
-> >
-> > Hyper-V may offer a non latency sensitive device with subchannels without
-> > monitor bit enabled. The decision is entirely on the Hyper-V host not
-> > configurable within guest.
-> >
-> > When a device has subchannels, also signal events for the subchannel
-> > if its monitor bit is disabled.
-> >
-> > This patch also removes the memory barrier when monitor bit is enabled
-> > as it is not necessary. The memory barrier is only needed between
-> > setting up interrupt mask and calling vmbus_set_event() when monitor
-> > bit is disabled.
-> >
-> > This is a backport of the upstream commit
-> > d062463edf17 ("uio_hv_generic: Set event for all channels on the device")
-> > with minor modifications to resolve merge conflicts.
-> > Original change was not a fix, but it needs to be backported to fix a
-> > NULL pointer crash resulting from missing interrupt mask setting.
-> >
-> > Commit 37bd91f22794 ("uio_hv_generic: Let userspace take care of interrupt mask")
-> > removed the default setting of interrupt_mask for channels (including
-> > subchannels) in the uio_hv_generic driver, as it relies on the user space
-> > to take care of managing it. This approach works fine when user space
-> > can control this setting using the irqcontrol interface provided for uio
-> > devices. Support for setting the interrupt mask through this interface for
-> > subchannels came only after commit d062463edf17 ("uio_hv_generic: Set event
-> > for all channels on the device"). On older kernels, this change is not
-> > present. With uio_hv_generic no longer setting the interrupt_mask, and
-> > userspace not having the capability to set it, it remains unset,
-> > and interrupts can come for the subchannels, which can result in a crash
-> > in hv_uio_channel_cb. Backport the change to older kernels, where this
-> > change was not present, to allow userspace to set the interrupt mask
-> > properly for subchannels. Additionally, this patch also adds certain
-> > checks for primary vs subchannels in the hv_uio_channel_cb, which can
-> > gracefully handle these two cases and prevent the NULL pointer crashes.
-> >
-> > Signed-off-by: Long Li <longli@microsoft.com>
-> > Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-> > Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > Fixes: 37bd91f22794 ("uio_hv_generic: Let userspace take care of interrupt mask")
->
-> Sorry for missing this, please add Closes tag, if possible before merging.
->
-> Closes: https://bugs.debian.org/1120602
->
-> I have kept it in the other patch for 6.6 and prior kernels.
->
-> Regards,
-> Naman
->
-> > Cc: <stable@vger.kernel.org> # 6.12.x
-> > Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
-> > ---
->
-> Regards,
-> Naman
+From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
 
-Tested-by: Peter Morrow <pdmorrow@gmail.com>
+Allow MSHV_ROOT_HVCALL IOCTL on the /dev/mshv fd. This IOCTL would
+execute a passthrough hypercall targeting the root/parent partition
+i.e. HV_PARTITION_ID_SELF.
+
+This will be useful for the VMM to query things like supported
+synthetic processor features, supported VMM capabiliites etc.
+
+Since hypercalls targeting the host partition could potentially perform
+privileged operations, allow only a limited set of hypercalls. To begin
+with, allow only:
+
+	HVCALL_GET_PARTITION_PROPERTY
+	HVCALL_GET_PARTITION_PROPERTY_EX
+
+Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+---
+
+v3: restricted the allowed self-targeted passthrough hypercalls to
+    smaller, carefully selected list.
+v2: rebased on latest hyperv-next
+
+---
+ drivers/hv/mshv_root_main.c | 47 ++++++++++++++++++++++++++++++-------
+ 1 file changed, 38 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+index 45c7a5fea1cf..acbcd9c151a8 100644
+--- a/drivers/hv/mshv_root_main.c
++++ b/drivers/hv/mshv_root_main.c
+@@ -122,6 +122,7 @@ static struct miscdevice mshv_dev = {
+  */
+ static u16 mshv_passthru_hvcalls[] = {
+ 	HVCALL_GET_PARTITION_PROPERTY,
++	HVCALL_GET_PARTITION_PROPERTY_EX,
+ 	HVCALL_SET_PARTITION_PROPERTY,
+ 	HVCALL_INSTALL_INTERCEPT,
+ 	HVCALL_GET_VP_REGISTERS,
+@@ -136,6 +137,16 @@ static u16 mshv_passthru_hvcalls[] = {
+ 	HVCALL_GET_VP_CPUID_VALUES,
+ };
+ 
++/*
++ * Only allow hypercalls that are safe to be called by the VMM with the host
++ * partition as target (i.e. HV_PARTITION_ID_SELF). Carefully audit that a
++ * hypercall cannot be misused by the VMM before adding it to this list.
++ */
++static u16 mshv_self_passthru_hvcalls[] = {
++	HVCALL_GET_PARTITION_PROPERTY,
++	HVCALL_GET_PARTITION_PROPERTY_EX,
++};
++
+ static bool mshv_hvcall_is_async(u16 code)
+ {
+ 	switch (code) {
+@@ -147,12 +158,30 @@ static bool mshv_hvcall_is_async(u16 code)
+ 	return false;
+ }
+ 
++static inline bool mshv_passthru_hvcall_allowed(u16 code, u64 pt_id)
++{
++	int i;
++	int n = ARRAY_SIZE(mshv_passthru_hvcalls);
++	u16 *allowed_hvcalls = mshv_passthru_hvcalls;
++
++	if (pt_id == HV_PARTITION_ID_SELF) {
++		n = ARRAY_SIZE(mshv_self_passthru_hvcalls);
++		allowed_hvcalls = mshv_self_passthru_hvcalls;
++	}
++
++	for (i = 0; i < n; ++i)
++		if (allowed_hvcalls[i] == code)
++			return true;
++
++	return false;
++}
++
+ static int mshv_ioctl_passthru_hvcall(struct mshv_partition *partition,
+ 				      bool partition_locked,
+ 				      void __user *user_args)
+ {
+ 	u64 status;
+-	int ret = 0, i;
++	int ret = 0;
+ 	bool is_async;
+ 	struct mshv_root_hvcall args;
+ 	struct page *page;
+@@ -160,6 +189,7 @@ static int mshv_ioctl_passthru_hvcall(struct mshv_partition *partition,
+ 	void *input_pg = NULL;
+ 	void *output_pg = NULL;
+ 	u16 reps_completed;
++	u64 pt_id = partition ? partition->pt_id : HV_PARTITION_ID_SELF;
+ 
+ 	if (copy_from_user(&args, user_args, sizeof(args)))
+ 		return -EFAULT;
+@@ -171,17 +201,13 @@ static int mshv_ioctl_passthru_hvcall(struct mshv_partition *partition,
+ 	if (args.out_ptr && (!args.out_sz || args.out_sz > HV_HYP_PAGE_SIZE))
+ 		return -EINVAL;
+ 
+-	for (i = 0; i < ARRAY_SIZE(mshv_passthru_hvcalls); ++i)
+-		if (args.code == mshv_passthru_hvcalls[i])
+-			break;
+-
+-	if (i >= ARRAY_SIZE(mshv_passthru_hvcalls))
++	if (!mshv_passthru_hvcall_allowed(args.code, pt_id))
+ 		return -EINVAL;
+ 
+ 	is_async = mshv_hvcall_is_async(args.code);
+ 	if (is_async) {
+ 		/* async hypercalls can only be called from partition fd */
+-		if (!partition_locked)
++		if (!partition || !partition_locked)
+ 			return -EINVAL;
+ 		ret = mshv_init_async_handler(partition);
+ 		if (ret)
+@@ -209,7 +235,7 @@ static int mshv_ioctl_passthru_hvcall(struct mshv_partition *partition,
+ 	 * NOTE: This only works because all the allowed hypercalls' input
+ 	 * structs begin with a u64 partition_id field.
+ 	 */
+-	*(u64 *)input_pg = partition->pt_id;
++	*(u64 *)input_pg = pt_id;
+ 
+ 	reps_completed = 0;
+ 	do {
+@@ -238,7 +264,7 @@ static int mshv_ioctl_passthru_hvcall(struct mshv_partition *partition,
+ 			ret = hv_result_to_errno(status);
+ 		else
+ 			ret = hv_call_deposit_pages(NUMA_NO_NODE,
+-						    partition->pt_id, 1);
++						    pt_id, 1);
+ 	} while (!ret);
+ 
+ 	args.status = hv_result(status);
+@@ -2050,6 +2076,9 @@ static long mshv_dev_ioctl(struct file *filp, unsigned int ioctl,
+ 	case MSHV_CREATE_PARTITION:
+ 		return mshv_ioctl_create_partition((void __user *)arg,
+ 						misc->this_device);
++	case MSHV_ROOT_HVCALL:
++		return mshv_ioctl_passthru_hvcall(NULL, false,
++					(void __user *)arg);
+ 	}
+ 
+ 	return -ENOTTY;
+
+base-commit: db7df69995ffbe806d60ad46d5fb9d959da9e549
+-- 
+2.34.1
+
 
