@@ -1,75 +1,173 @@
-Return-Path: <linux-hyperv+bounces-7706-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7707-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C478C71290
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Nov 2025 22:36:13 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCF67C7137A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Nov 2025 23:05:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id C85D42F30E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Nov 2025 21:34:52 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id DA73528CFA
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Nov 2025 22:05:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A10AF2EC57D;
-	Wed, 19 Nov 2025 21:34:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F10E02522B6;
+	Wed, 19 Nov 2025 22:05:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NlimW9Ul"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3CWiI2n/"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774A728F935;
-	Wed, 19 Nov 2025 21:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C38A4CB5B
+	for <linux-hyperv@vger.kernel.org>; Wed, 19 Nov 2025 22:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763588079; cv=none; b=fNxAKcjfFfKn83u1orOSRFpAxRpmdOIYoMcADlquN1AbdxyTDcnOUaL2xY//xOAKK2kAFJXA2wtTd1U1av7OkEj4tBt8jlfy0xofX25yaicl8E2nYHBGNwqHu6PlXqKAMERHjJ6O6lrWR7R4L+s9irkm5vjs3/FV8AIR7/qwyDU=
+	t=1763589907; cv=none; b=AjP7ZDl0DHR84zS7bOFsWo8uI6JYgQKNDIH7TC6at8FGW02Lcx4zqkgnPo/EnMbI5q9U5cAnkmeJJPvrgof9AmGRVJFSYq7V+iBzULKF4a1CNLUtBUb2qARiNGlDGE85PRtw3x2JEIE6r94cxoBv/3YcMyyFC+1ZXPxANxnD4us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763588079; c=relaxed/simple;
-	bh=KPaBSLRAdIZ3HfXiKCtKJStDf567xE0DOeK+Gm5iN8s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DgztjGjQ0Xj/6Yh3IdZaHikG4mpo1kzvd88HG78eoiwy44HF7biVuI++QjXm837rWC0m95vLfs1PADC9rrslbr/Z0C4CBf6zCKphimUVtdSEIxnelfFi32+TE79SmJ7tktriQGHK0+ksGcV3g+/IVwht/KH8bVRTMwCR5VazSZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NlimW9Ul; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC81BC4CEF5;
-	Wed, 19 Nov 2025 21:34:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763588079;
-	bh=KPaBSLRAdIZ3HfXiKCtKJStDf567xE0DOeK+Gm5iN8s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NlimW9UlKDX22gQloF71wyklvPyRb5kyUWk0NnXYiV2SxiNph175Xm+/tT3CawdFC
-	 OxnRxmHiXYRRK93bgyqyZvM136M4HXG9CRUnIAVTWIstfSGt5IlG5GHbGmjGZbQiac
-	 Jq2bWGU0J2F+gQNFpA8DPgFUOhAH2RKtcKZuD46Lrlx75Awzi1CAc1lM4Ti8w3aPIu
-	 H2EkS2DVbM0w1/MJ9V23wEfG613i3JvKSOvBoUohGxiP2yiHtWmnBDhrCzRJXIyImb
-	 RdtCPOd95gah2YC6XwHQVAwaAlV5c7IROguVn+5abhP/Jji1VHjUn4/enLFkT2B6dy
-	 7vYsQnZTDteNA==
-Date: Wed, 19 Nov 2025 21:34:37 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Anirudh Rayabharam <anirudh@anirudhrb.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] Drivers: hv: ioctl for self targeted passthrough
- hvcalls
-Message-ID: <20251119213437.GA2848327@liuwe-devbox-debian-v2.local>
-References: <20251119171708.819072-1-anirudh@anirudhrb.com>
+	s=arc-20240116; t=1763589907; c=relaxed/simple;
+	bh=v//uOr2tHb8dcjd8beHYgnv1kgNWrlfObycDOhed1Go=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=DUgMRp4SN35Zoth78B/PrOOFvBgcVIIKzv5VUfaOcig/ZONPXM67a+zzzkIw16fcR6DiWE1kFRsZrEv70yXx0YSaFB6Fnge+GetYRhqV7SGg+pU2TqWsfTtRJffW7yVMh7t2gNERwMXveQ9aB2AD60TdiCuymic1vmVorjN1kgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3CWiI2n/; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3437b43eec4so211132a91.3
+        for <linux-hyperv@vger.kernel.org>; Wed, 19 Nov 2025 14:05:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1763589906; x=1764194706; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sWB7b7gK6U7hKIAe1hY9O5TYN/81WKTU25YszuIj9Y0=;
+        b=3CWiI2n/6HOPhuRGR+u1MStufqyDs0x6xSqRhQ5NGKVxVYzKwOcdZ0qAyWYGZZ4+5L
+         VtmzVA/T/Y0eZS4G20Mu6Mx/SMdtN2NShhPqroBu+jhif5kT0+RPJ251w0epm7J1Qu/7
+         AdoiL0KJT/E4FacQINPK+cjkyZ/ikambyeOHvedujdqD9LXpWsLIyUVKuNkWwaHB8Ub+
+         8hGH2v9d6PJB2Lzf5hYbLu8lmCiVNgwa8bNEHc54PAlkCCBn93FKi6O6R/McYWtkrjqm
+         JcIEaR71HsjFBxr8O7YpMlbiAQEAen3+CcJqisEv4iKch4kkS4xGE1J12IOm0fBSBV9J
+         wkBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763589906; x=1764194706;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sWB7b7gK6U7hKIAe1hY9O5TYN/81WKTU25YszuIj9Y0=;
+        b=U/x78iEvmzVivkRBUZxetz9GtKlAAtGmwTlwokXtpTsZV/haYu7zXmMjast/sC52zO
+         Odm/KOUVGnUmnqzDF49HniPQ8Sk+zbAFha9MNDMl2CbUaVJqouKpzGYlZNifDQJ/Hq3o
+         665bEmIfgSoW3FAJ1NR/xC7snTJ423xGeBZLkMlsCfKDd1Uz2IgHO9Q9x4UZ2EcBuLvO
+         K08rPX4zGvNWkLGYxifEWtGjEFXfwvnjyGxbFzUNGteRrtR4Op9Ob38EzAyLkOLfYzPO
+         GLLEJZI3wvw/vLvP96atKEK2/chN4P56DttkO2p8EFm5kCUqd/jiu3vhHzM619gvppOb
+         0KWw==
+X-Forwarded-Encrypted: i=1; AJvYcCUkT0F+m8++oRh/mMrEe5dnrhpYYGCmxtXNaW+KG2ME4TnWJZHyvSnCAbVKUQbhGOTD/hkhjVEk0Hn6vk8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrDBjFNaWlLlvgwIYVqbYp2AFOw5Ep5oW1lja4ppaY77PuujPl
+	2KMklDLkYrmLIxcAriOcbVYDb5oMCB6ob1MoWZhsEwDoguZ4GhXmzFtjId0gYV3VS++ytDPJiAK
+	7pQXY9A==
+X-Google-Smtp-Source: AGHT+IGXXe2mly3I9lTqRU7DTze6Hy00otxS9GrKuAXQF5ObAvA8SksetaJS6WQra0+gzJ6P5IIGDOGM8jw=
+X-Received: from pjbpd13.prod.google.com ([2002:a17:90b:1dcd:b0:341:8b58:bbce])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:558c:b0:340:d578:f299
+ with SMTP id 98e67ed59e1d1-34728368940mr563956a91.3.1763589905749; Wed, 19
+ Nov 2025 14:05:05 -0800 (PST)
+Date: Wed, 19 Nov 2025 14:05:04 -0800
+In-Reply-To: <60f7c9b3-312f-41e2-ab47-c4361df1d825@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251119171708.819072-1-anirudh@anirudhrb.com>
+Mime-Version: 1.0
+References: <20251113225621.1688428-1-seanjc@google.com> <20251113225621.1688428-7-seanjc@google.com>
+ <60f7c9b3-312f-41e2-ab47-c4361df1d825@redhat.com>
+Message-ID: <aR4_EM5bWKSQ4iOS@google.com>
+Subject: Re: [PATCH 6/9] KVM: SVM: Filter out 64-bit exit codes when invoking
+ exit handlers on bare metal
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, kvm@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Jim Mattson <jmattson@google.com>, 
+	Yosry Ahmed <yosry.ahmed@linux.dev>
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, Nov 19, 2025 at 05:17:08PM +0000, Anirudh Rayabharam wrote:
-[...]
-> +static inline bool mshv_passthru_hvcall_allowed(u16 code, u64 pt_id)
+On Sat, Nov 15, 2025, Paolo Bonzini wrote:
+> On 11/13/25 23:56, Sean Christopherson wrote:
+> > Explicitly filter out 64-bit exit codes when invoking exit handlers, as
+> > svm_exit_handlers[] will never be sized with entries that use bits 63:32.
+> > 
+> > Processing the non-failing exit code as a 32-bit value will allow tracking
+> > exit_code as a single 64-bit value (which it is, architecturally).  This
+> > will also allow hardening KVM against Spectre-like attacks without needing
+> > to do silly things to avoid build failures on 32-bit kernels
+> > (array_index_nospec() rightly asserts that the index fits in an "unsigned
+> > long").
+> > 
+> > Omit the check when running as a VM, as KVM has historically failed to set
+> > bits 63:32 appropriately when synthesizing VM-Exits, i.e. KVM could get
+> > false positives when running as a VM on an older, broken KVM/kernel.  From
+> > a functional perspective, omitting the check is "fine", as any unwanted
+> > collision between e.g. VMEXIT_INVALID and a 32-bit exit code will be
+> > fatal to KVM-on-KVM regardless of what KVM-as-L1 does.
+> > 
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >   arch/x86/kvm/svm/svm.c | 18 ++++++++++++++++--
+> >   1 file changed, 16 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> > index 202a4d8088a2..3b05476296d0 100644
+> > --- a/arch/x86/kvm/svm/svm.c
+> > +++ b/arch/x86/kvm/svm/svm.c
+> > @@ -3433,8 +3433,22 @@ static void dump_vmcb(struct kvm_vcpu *vcpu)
+> >   		sev_free_decrypted_vmsa(vcpu, save);
+> >   }
+> > -int svm_invoke_exit_handler(struct kvm_vcpu *vcpu, u64 exit_code)
+> > +int svm_invoke_exit_handler(struct kvm_vcpu *vcpu, u64 __exit_code)
+> >   {
+> > +	u32 exit_code = __exit_code;
+> > +
+> > +	/*
+> > +	 * SVM uses negative values, i.e. 64-bit values, to indicate that VMRUN
+> > +	 * failed.  Report all such errors to userspace (note, VMEXIT_INVALID,
+> > +	 * a.k.a. SVM_EXIT_ERR, is special cased by svm_handle_exit()).  Skip
+> > +	 * the check when running as a VM, as KVM has historically left garbage
+> > +	 * in bits 63:32, i.e. running KVM-on-KVM would hit false positives if
+> > +	 * the underlying kernel is buggy.
+> > +	 */
+> > +	if (!cpu_feature_enabled(X86_FEATURE_HYPERVISOR) &&
+> > +	    (u64)exit_code != __exit_code)
+> > +		goto unexpected_vmexit;
+> 
+> I reviewed the series and it looks good, but with respect to this patch and
+> patch 8, is it really worth it?  While there is a possibility that code
+> 0x00000000ffffffff is used, or that any high 32-bit values other than
+> all-zeros or all-ones are used, they'd be presumably enabled by some control
+> bits in the VMCB or some paravirt thing in the hypervisor.
 
-There is no need to add inline here. The compiler can decide itself.
+Maybe.  E.g. TDCALL and SEAMCALL VM-Exits on Intel show up without any enablement
+in software (beyond VMXON).  I completely agree that it's extremely unlikely that
+AMD will add a on-negative exit code with bits 63:32 != 0, i.e. that we could get
+a false positive when truncating exit_code to a u32, but it also seems harmless
+to be paranoid.
 
-I can drop this when committing.
+FWIW, I was assuming VMEXIT_INVALID_PMC (-4) was a generic vPMU thing, but it
+looks like that one is also SEV-ES+ specific.
 
-Wei
+As for e57b84699534 ("KVM: SVM: Limit incorrect check on SVM_EXIT_ERR to running
+as a VM"), I agree that being paranoid probably doesn't do anything in practice,
+but I like being consistent. :-)
+
+> What really matters is that SEV-ES's kvm_get_cached_sw_exit_code() is
+> reading the full 64 bits and discarding invalid codes before reaching
+> svm_invoke_exit_handler().
+
+No?  sev_handle_vmgexit() only handles SVM_VMGEXIT_xxx exit codes, everything
+else is punted to svm_invoke_exit_handler()
+
+	exit_code = kvm_get_cached_sw_exit_code(control);
+	switch (exit_code) {
+	case SVM_VMGEXIT_<0>
+	...
+	case SVM_VMGEXIT_<N>
+	default:
+		ret = svm_invoke_exit_handler(vcpu, exit_code);
+	}
+
+And I don't see anything that filters/modifies exit_code_hi.
 
