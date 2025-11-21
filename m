@@ -1,97 +1,97 @@
-Return-Path: <linux-hyperv+bounces-7761-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7762-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D0A7C7A582
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Nov 2025 15:59:10 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 201E8C7A480
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Nov 2025 15:49:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id 60CB62E7B1
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Nov 2025 14:45:19 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTPS id 8F5E0293DC
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Nov 2025 14:49:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 424BF34DB7E;
-	Fri, 21 Nov 2025 14:45:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79102299950;
+	Fri, 21 Nov 2025 14:49:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PuXDjSRt";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="Diif1gUH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gI+zDcBr";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="GRtP+FRY"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFAB2FA0EE
-	for <linux-hyperv@vger.kernel.org>; Fri, 21 Nov 2025 14:44:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3E428850B
+	for <linux-hyperv@vger.kernel.org>; Fri, 21 Nov 2025 14:48:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763736303; cv=none; b=NTXuAVZh/7t5yGl0kZHmczXLek9qFkBro52RLVQSvwG1oK2qSElxqhZHdjKP0KG4iI757ZIKyEk0OMdnGuTigNwP4m5WgfZgMmCV3GxYV6xZP1SBcusS5LFS7x+dd1E94l9tkwkG4Df8Ij0CV+7MXgWh8YbHmh9aYqoXFSr9HKc=
+	t=1763736541; cv=none; b=IPR7Od6wSFJ2MW8Ee7cIRvKpV0OU4kyPiILCtS3iXE8Y7QVkkGo3r0lTKexhW1f4xrX17wSvaJC4M+hXw1q0W6hL+FN65NdB6tdEEMQQTUjO0KNjeJIJGgTgVXlQGAC4Ca7g0hiNA310vw6OeWkzPkQa8mjM+6B3gQq2WxP2IXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763736303; c=relaxed/simple;
-	bh=LpHCzjPaaom0joBAVNNBcfd3LcwKpZxbH6ef2oWlCCw=;
+	s=arc-20240116; t=1763736541; c=relaxed/simple;
+	bh=9ksRgIEpFArrDBwuWTU+fH3xIEsF+1N4YpMi7lIilCw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SwMBpOCvRnHuksBhFGQXJHhw1gD6FGpZL/vdSvWrYVoHa5vvmyJw+9uDLRNaWx+I0pBekMcofMV6QICgxLT5QThLCkJe8gU82SkQ6h4wA9Q/dqjdlQOTCZpGBVKEqOln54Rrb+VeRFgEDn8DIIcZRBORJNFWNpqN4HRe0usudPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PuXDjSRt; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=Diif1gUH; arc=none smtp.client-ip=170.10.129.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=bw+v73xjn6UZ34e7TJMXPh5v7/NWPY59FR2tXqrvoEwkDA+gwriVsqzPN994AhbRpV/bFGy+svomf/Kbmt18BXr2yP1Lob66+ogqHmiljD9Fc9M67yrlrzOO9DPl2M/6EJwD5LtYxN+/fTOGvQw2EuL5URU13f8k5RtGZb5O5hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gI+zDcBr; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=GRtP+FRY; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763736298;
+	s=mimecast20190719; t=1763736536;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RgxHT5eune3fdqhzxzVzF3lvCJWC4Oxvps8mZB9DCRE=;
-	b=PuXDjSRtMJriVWJEDeyAYAye6aVBtOtTE6AJkyIg7DO/WstB7y0UrkJ4KfTuOQhGsvAb62
-	8iAYMuds0fbKpkhUpS1s1TqYwcDBqnsppYDu6nYC7OQplzBElmBKc/r7f2AXCABCm0r6k3
-	QyuEVTWLdf3ab1LF2cw5TydfQfOJrXA=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=qElSsFo0aW6CHPj9+eW97E36THKCE3lxiDkjHrXDAbA=;
+	b=gI+zDcBrL0BYvbgBdnXE2wtuC1JpyO3QSlCnPDf1PL/wVMloK1+WKiL6Ib0gI/dBvS3sMr
+	wACfOlksVOwHXjzWhEN38/Njv7NO30PkGcASbxIMs1ZvVlIZ51BnfTIGcwjlOJ7Rrbc5TT
+	BmYVNa5EJth1+Ny5w1Z9w7+YhvY+2d0=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-153-iSEWZvMmMUysdHfZ-oluAQ-1; Fri, 21 Nov 2025 09:44:57 -0500
-X-MC-Unique: iSEWZvMmMUysdHfZ-oluAQ-1
-X-Mimecast-MFC-AGG-ID: iSEWZvMmMUysdHfZ-oluAQ_1763736296
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4779edba8f3so14307125e9.3
-        for <linux-hyperv@vger.kernel.org>; Fri, 21 Nov 2025 06:44:57 -0800 (PST)
+ us-mta-515-HgkjG1d4PHuaCngiqX6Zag-1; Fri, 21 Nov 2025 09:48:55 -0500
+X-MC-Unique: HgkjG1d4PHuaCngiqX6Zag-1
+X-Mimecast-MFC-AGG-ID: HgkjG1d4PHuaCngiqX6Zag_1763736534
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-6416581521eso2058499a12.2
+        for <linux-hyperv@vger.kernel.org>; Fri, 21 Nov 2025 06:48:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1763736296; x=1764341096; darn=vger.kernel.org;
+        d=redhat.com; s=google; t=1763736534; x=1764341334; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RgxHT5eune3fdqhzxzVzF3lvCJWC4Oxvps8mZB9DCRE=;
-        b=Diif1gUH2r5n7ETnZBnwfCzDBmJVTV+IdYaYcGl2zpPGdNnyiPRPSclgdWDWDOZRfE
-         x9UjpQ/81G7D7d+OI5xfUE3EIEm5inMabGahd+8Js8ff8wLRZWUnr+ALDO/wVgzH5c0c
-         8DP27rBYcMSYe0Sd97TJsDEqAcjcRi5aXh18dPe6Onxjryrx+uW8ALnoZMYC4VcuJ1tf
-         07v9hh1lrRkCN3wOM8cC+YLBcsi7e4Sic/GRTZUMR2CmOrQk5707XriiZ2dTpJewVypg
-         jBV1hRlZlO5a/YRTBF3gHJ4xBSL36Y220thEs+F6zouUGpsvDyeFTTq/0VTlVPvZnyKD
-         zmeA==
+        bh=qElSsFo0aW6CHPj9+eW97E36THKCE3lxiDkjHrXDAbA=;
+        b=GRtP+FRYWH+cKEmhFTxSrAp+qgb02DIzaRMXa/S3rumesM16JfDg1+mURMWjyHMJBr
+         EaVlXM6palPZApdwQsxzgTF/IoV+As2Rwad0A4WPaGLlqVwpPVzQqqfeOLiUpN9ez84h
+         /myMEfm8VQ2Ba5TjEzg29laaoAdWhBA6/B0Vx71PkMvPelIueqRzgkWbPzAdf+Pp9h9t
+         2/dI8y6s9Gds8ObQHGoU1MSMSq9zQ/uyqodz21xOs3ffhQR/3ruFUeNGBa1P2nUp8JwO
+         EOBcuh0tGv4TXQcx+4iZ/o+yJ3cf+sdTxSIpXFkrhQVri3wTiFyEu9/l+/6eIqB5XNME
+         /aAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763736296; x=1764341096;
+        d=1e100.net; s=20230601; t=1763736534; x=1764341334;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RgxHT5eune3fdqhzxzVzF3lvCJWC4Oxvps8mZB9DCRE=;
-        b=X7tdUtHg0btMHR8ec/U5jB0o+kQLIDVIkMKJQIQftDtfKQp5P3Xtha1BibyLtx49Bm
-         laHFDDTNvt4IAC7j+FwhWH6vVgGACgQeo5hI3TgZwCyaJWgKj7+r8TjgMgcMlzLbveb7
-         ZR0nbEyfSDt8sieQPzNKKArM0cVkfXpLIxa+bvRfG7SsXhicZMx4UspkTrnhLl/6f5aF
-         mTNxO8YEyGkO7PtfQiV280UTi/sa68rEV8udXGwMQjE0BiVR5PGDx857/4lZGe+XibJF
-         7PVgTAOGu4DUpOmdVymCgA7mgQp2/Rm/3rIUhppSpopPTWBLfdsBERg3JWJycFfWKZc3
-         nNfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWGAa+nIDH5t30vubPiiJDACWeRXUYncNvD86x2xmDoD2s9iOYEPJeeRrMUxZ8HwNGpzBE8SU/Xja1RAd8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJB8HrYBZWPtX+TDHnrkJwV7SGOUzvulCfo6Ri85tLpyz+IcMO
-	vaSqpnp83bEAoLX8bPDeMxmdRDsSQfMFEQa/heJY2n+tWSj7k4LkrVef6akI8DXRWeQ/Bqk+1rG
-	1wCIGbf9PYFo38wKMVQqm0/CKl7oYTCQoEPmUDKpqmgLw7pQaJJx9rxi4ai6bgNhwvw==
-X-Gm-Gg: ASbGncuR7OxAYiYHf+gs4/76zbtRpHMmkF2G7ba6hokDXz2vslJvTW/JxKR58aznCU9
-	p9pDmzjFcTX5D4C/vttXx47pvnZs7qhzRWAgaQMelkdqGSZL3tSgHGAUiDKaVQ5eZz2uzoD9GRG
-	Uc+679x8Qz7Rt/eEDCZMNBYey1njZVolmTq3RP0S7Ev+1kH1tyE3eUZYmoPp4KKtnL8fRclesxL
-	AInm66Kd69ngJcI35v7SK4pLApdE/ehTYjnCsY4cVgF9HL6yAOp7UspbrcpqLzxIiPY7xI4IdWK
-	CgQ/YaRewkHvFe4r3P7kCdZwX+lRQ5P2bAPAxdt3ULmckULNCaQ8Jy+jgfneKGeJYL1Uvq53sbc
-	GcMk25hWt1p8WYryx4eSu7d+HnVSkZTaLVrpXF+qDRgTX5vxaBBemb9z+NFD+Gw==
-X-Received: by 2002:a05:600c:840f:b0:477:952d:fc00 with SMTP id 5b1f17b1804b1-477c0176752mr30427895e9.12.1763736295849;
-        Fri, 21 Nov 2025 06:44:55 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFhQjxwhyo5mB3NzlUCXU/sejEOwPO9R/xIuzqaGzg0yODnw+n34JzOmiJ5FkYPMcPfuVw+Aw==
-X-Received: by 2002:a05:600c:840f:b0:477:952d:fc00 with SMTP id 5b1f17b1804b1-477c0176752mr30427475e9.12.1763736295264;
-        Fri, 21 Nov 2025 06:44:55 -0800 (PST)
+        bh=qElSsFo0aW6CHPj9+eW97E36THKCE3lxiDkjHrXDAbA=;
+        b=lgXpBdVAugOVTAbGvyklG8CF2ZSgDftFKJ6FF+RXIoRsKpvIhJRHgodUcJh2tUybmD
+         nRyLeHwe3iK1ur+tOb8Tnf8O5k3myNlkUibL8jyt6c5h7MdBmCE8i2cZDaZr2qPRfSjd
+         OIUGhPWamsFjV5DOJ/Rl3mKr8BzLrNNGmifwuD1eszL1/+VldkT76TUSK2zFzO6w57Sp
+         Jgt7GnwsSBkC6n5W9HhsBE/X2POYIRAVhbMg2LmlFCqjHQQKSW6wIMhAF/afKhf7tD2e
+         LyDCHcIki7v4bacJn0nKLJFfutbrvMVxftX+gPuGdJJTyNXjTz+EX0r15TTvoeAYRxe0
+         oRog==
+X-Forwarded-Encrypted: i=1; AJvYcCVMf/8w+Iy5kh7umWxr+pQFf5sji7a8ICU3JI1XU/Moaks1scOaZoLW96z+/rV+mgfKlG/YL3Vlh8RWcVI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaoYMLT8m9gAAOnk8qWzkVx1yg9g063qhX8wdZ+VoXUJV7S4Rr
+	WT5/7aM9UesvEukTtjRluQ1coOiJbvxkHXXCmtw1Jpr0RKxjMkPi65ySxC4D0qPfW/12yLhXHQZ
+	Ftr5gwNc19Pybe8VMTVcKM8WnWS9RgIK+qa9DvOpLwfjmWIoFlkDK6vsU8KyeiIJ2IQ==
+X-Gm-Gg: ASbGncsXw1DeRfaLk2ZujoVpCA2zdziNdn+cmfJTcUJqVDUHkAcpmQcUegUTJ9nA7R8
+	8IWo+aLv1fS+R3kbRxqMa0qEQUJ3HcFnT3El+0KkSXIi4m4r7E2gkVE6h22Z78NhXtW6MTAq+Qw
+	UyvPGYqrfDMHWohXzMgzTviPcuqbsfZOAhZpseoIqUQiSL32MXDBSh9hs9NqTm/JXRKxwFE/DX/
+	IRxfdFTuqd8tRsTl7CWtni06u8lpBXbvjC26BVxuJfduMIz6AmKWgF2pRRLWQztR53/Kujrr46H
+	Ct1eW5dJj7ht2iyiNq2tonZxQvRBP8GShRGXbiFlxPy/xCVj19vybYknNzLsy2ZyLrnfEj+qGqt
+	y/SfTi3n9KFZygpuIKYlmXu7t1j5Du5Z5s54UDm6nPvmo7ujyFSPvBeYOB5lhnQ==
+X-Received: by 2002:a05:6402:50d0:b0:643:804a:fb54 with SMTP id 4fb4d7f45d1cf-64554335d3emr2541669a12.13.1763736534240;
+        Fri, 21 Nov 2025 06:48:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFYJ6NYmSLizuNfGJGB7tJ5ZuOQzhRvgxOwNrAKBcDD7p9ENJ1FC64SfddE4bzlIpGVmVbelg==
+X-Received: by 2002:a05:6402:50d0:b0:643:804a:fb54 with SMTP id 4fb4d7f45d1cf-64554335d3emr2541631a12.13.1763736533716;
+        Fri, 21 Nov 2025 06:48:53 -0800 (PST)
 Received: from sgarzare-redhat (host-87-12-139-91.business.telecomitalia.it. [87.12.139.91])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7f2e556sm11270319f8f.5.2025.11.21.06.44.48
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6453645f2easm4585052a12.33.2025.11.21.06.48.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Nov 2025 06:44:54 -0800 (PST)
-Date: Fri, 21 Nov 2025 15:44:40 +0100
+        Fri, 21 Nov 2025 06:48:53 -0800 (PST)
+Date: Fri, 21 Nov 2025 15:48:41 +0100
 From: Stefano Garzarella <sgarzare@redhat.com>
 To: Bobby Eshleman <bobbyeshleman@gmail.com>
 Cc: "David S. Miller" <davem@davemloft.net>, 
@@ -106,11 +106,11 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	virtualization@lists.linux.dev, netdev@vger.kernel.org, kvm@vger.kernel.org, 
 	linux-hyperv@vger.kernel.org, linux-kselftest@vger.kernel.org, berrange@redhat.com, 
 	Sargun Dhillon <sargun@sargun.me>, Bobby Eshleman <bobbyeshleman@meta.com>
-Subject: Re: [PATCH net-next v11 10/13] selftests/vsock: add tests for proc
- sys vsock ns_mode
-Message-ID: <vkbkaqlc2zqltg5h3murtghok4jdlsbcynz5mir3hrky3ancus@3gyjwzplok3z>
+Subject: Re: [PATCH net-next v11 11/13] selftests/vsock: add namespace tests
+ for CID collisions
+Message-ID: <zpfacrsl6dxmo3ltwiovrcj4rtbqgnms4z6rwnw7o2jncgjw5c@hrorb4elx6mm>
 References: <20251120-vsock-vmtest-v11-0-55cbc80249a7@meta.com>
- <20251120-vsock-vmtest-v11-10-55cbc80249a7@meta.com>
+ <20251120-vsock-vmtest-v11-11-55cbc80249a7@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -119,253 +119,146 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20251120-vsock-vmtest-v11-10-55cbc80249a7@meta.com>
+In-Reply-To: <20251120-vsock-vmtest-v11-11-55cbc80249a7@meta.com>
 
-On Thu, Nov 20, 2025 at 09:44:42PM -0800, Bobby Eshleman wrote:
+On Thu, Nov 20, 2025 at 09:44:43PM -0800, Bobby Eshleman wrote:
 >From: Bobby Eshleman <bobbyeshleman@meta.com>
 >
->Add tests for the /proc/sys/net/vsock/ns_mode interface.  Namely,
->that it accepts "global" and "local" strings and enforces a write-once
->policy.
+>Add tests to verify CID collision rules across different vsock namespace
+>modes.
 >
->Start a convention of commenting the test name over the test
->description. Add test name comments over test descriptions that existed
->before this convention.
+>1. Two VMs with the same CID cannot start in different global namespaces
+>   (ns_global_same_cid_fails)
+>2. Two VMs with the same CID can start in different local namespaces
+>   (ns_local_same_cid_ok)
+>3. VMs with the same CID can coexist when one is in a global namespace
+>   and another is in a local namespace (ns_global_local_same_cid_ok and
+>   ns_local_global_same_cid_ok)
 >
->Add a check_netns() function that checks if the test requires namespaces
->and if the current kernel supports namespaces. Skip tests that require
->namespaces if the system does not have namespace support.
+>The tests ns_global_local_same_cid_ok and ns_local_global_same_cid_ok
+>make sure that ordering does not matter.
 >
->Add a test to verify that guest VMs with an active G2H transport
->(virtio-vsock) cannot set namespace mode to 'local'. This validates
->the mutual exclusion between G2H transports and LOCAL mode.
->
->This patch is the first to add tests that do *not* re-use the same
->shared VM. For that reason, it adds a run_tests() function to run these
->tests and filter out the shared VM tests.
+>The tests use a shared helper function namespaces_can_boot_same_cid()
+>that attempts to start two VMs with identical CIDs in the specified
+>namespaces and verifies whether VM initialization failed or succeeded.
 >
 >Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
 >---
 >Changes in v11:
->- Document ns_ prefix above TEST_NAMES (Stefano)
->
->Changes in v10:
->- Remove extraneous add_namespaces/del_namespaces calls.
->- Rename run_tests() to run_ns_tests() since it is designed to only
->  run ns tests.
->
->Changes in v9:
->- add test ns_vm_local_mode_rejected to check that guests cannot use
->  local mode
+>- check vm_start() rc in namespaces_can_boot_same_cid() (Stefano)
+>- fix ns_local_same_cid_ok() to use local0 and local1 instead of reusing
+>  local0 twice. This check should pass, ensuring local namespaces do not
+>  collide (Stefano)
 >---
-> tools/testing/selftests/vsock/vmtest.sh | 143 +++++++++++++++++++++++++++++++-
-> 1 file changed, 141 insertions(+), 2 deletions(-)
+> tools/testing/selftests/vsock/vmtest.sh | 78 +++++++++++++++++++++++++++++++++
+> 1 file changed, 78 insertions(+)
 
 Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 
 >
 >diff --git a/tools/testing/selftests/vsock/vmtest.sh b/tools/testing/selftests/vsock/vmtest.sh
->index e32997db322d..2e077e8a1777 100755
+>index 2e077e8a1777..f84da1e8ad14 100755
 >--- a/tools/testing/selftests/vsock/vmtest.sh
 >+++ b/tools/testing/selftests/vsock/vmtest.sh
->@@ -41,14 +41,43 @@ readonly KERNEL_CMDLINE="\
-> 	virtme.ssh virtme_ssh_channel=tcp virtme_ssh_user=$USER \
-> "
-> readonly LOG=$(mktemp /tmp/vsock_vmtest_XXXX.log)
->-readonly TEST_NAMES=(vm_server_host_client vm_client_host_server vm_loopback)
->+
->+# Namespace tests must use the ns_ prefix. This is checked in check_netns() and
->+# is used to determine if a test needs namespace setup before test execution.
->+readonly TEST_NAMES=(
->+	vm_server_host_client
->+	vm_client_host_server
->+	vm_loopback
->+	ns_host_vsock_ns_mode_ok
->+	ns_host_vsock_ns_mode_write_once_ok
->+	ns_vm_local_mode_rejected
->+)
+>@@ -51,6 +51,10 @@ readonly TEST_NAMES=(
+> 	ns_host_vsock_ns_mode_ok
+> 	ns_host_vsock_ns_mode_write_once_ok
+> 	ns_vm_local_mode_rejected
+>+	ns_global_same_cid_fails
+>+	ns_local_same_cid_ok
+>+	ns_global_local_same_cid_ok
+>+	ns_local_global_same_cid_ok
+> )
 > readonly TEST_DESCS=(
->+	# vm_server_host_client
-> 	"Run vsock_test in server mode on the VM and in client mode on the host."
+> 	# vm_server_host_client
+>@@ -70,6 +74,18 @@ readonly TEST_DESCS=(
+>
+> 	# ns_vm_local_mode_rejected
+> 	"Test that guest VM with G2H transport cannot set namespace mode to 'local'"
 >+
->+	# vm_client_host_server
-> 	"Run vsock_test in client mode on the VM and in server mode on the host."
+>+	# ns_global_same_cid_fails
+>+	"Check QEMU fails to start two VMs with same CID in two different global namespaces."
 >+
->+	# vm_loopback
-> 	"Run vsock_test using the loopback transport in the VM."
+>+	# ns_local_same_cid_ok
+>+	"Check QEMU successfully starts two VMs with same CID in two different local namespaces."
 >+
->+	# ns_host_vsock_ns_mode_ok
->+	"Check /proc/sys/net/vsock/ns_mode strings on the host."
+>+	# ns_global_local_same_cid_ok
+>+	"Check QEMU successfully starts one VM in a global ns and then another VM in a local ns with the same CID."
 >+
->+	# ns_host_vsock_ns_mode_write_once_ok
->+	"Check /proc/sys/net/vsock/ns_mode is write-once on the host."
->+
->+	# ns_vm_local_mode_rejected
->+	"Test that guest VM with G2H transport cannot set namespace mode to 'local'"
+>+	# ns_local_global_same_cid_ok
+>+	"Check QEMU successfully starts one VM in a local ns and then another VM in a global ns with the same CID."
 > )
 >
->-readonly USE_SHARED_VM=(vm_server_host_client vm_client_host_server vm_loopback)
->+readonly USE_SHARED_VM=(
->+	vm_server_host_client
->+	vm_client_host_server
->+	vm_loopback
->+	ns_vm_local_mode_rejected
->+)
-> readonly NS_MODES=("local" "global")
->
-> VERBOSE=0
->@@ -205,6 +234,20 @@ check_deps() {
-> 	fi
-> }
->
->+check_netns() {
->+	local tname=$1
->+
->+	# If the test requires NS support, check if NS support exists
->+	# using /proc/self/ns
->+	if [[ "${tname}" =~ ^ns_ ]] &&
->+	   [[ ! -e /proc/self/ns ]]; then
->+		log_host "No NS support detected for test ${tname}"
->+		return 1
->+	fi
->+
->+	return 0
->+}
->+
-> check_vng() {
-> 	local tested_versions
-> 	local version
->@@ -528,6 +571,32 @@ log_guest() {
-> 	LOG_PREFIX=guest log "$@"
-> }
->
->+test_ns_host_vsock_ns_mode_ok() {
->+	for mode in "${NS_MODES[@]}"; do
->+		if ! ns_set_mode "${mode}0" "${mode}"; then
->+			return "${KSFT_FAIL}"
->+		fi
->+	done
->+
->+	return "${KSFT_PASS}"
->+}
->+
->+test_ns_host_vsock_ns_mode_write_once_ok() {
->+	for mode in "${NS_MODES[@]}"; do
->+		local ns="${mode}0"
->+		if ! ns_set_mode "${ns}" "${mode}"; then
->+			return "${KSFT_FAIL}"
->+		fi
->+
->+		# try writing again and expect failure
->+		if ns_set_mode "${ns}" "${mode}"; then
->+			return "${KSFT_FAIL}"
->+		fi
->+	done
->+
->+	return "${KSFT_PASS}"
->+}
->+
-> test_vm_server_host_client() {
-> 	if ! vm_vsock_test "init_ns" "server" 2 "${TEST_GUEST_PORT}"; then
-> 		return "${KSFT_FAIL}"
->@@ -569,6 +638,26 @@ test_vm_loopback() {
+> readonly USE_SHARED_VM=(
+>@@ -581,6 +597,68 @@ test_ns_host_vsock_ns_mode_ok() {
 > 	return "${KSFT_PASS}"
 > }
 >
->+test_ns_vm_local_mode_rejected() {
->+	# Guest VMs have a G2H transport (virtio-vsock) active, so they
->+	# should not be able to set namespace mode to 'local'.
->+	# This test verifies that the sysctl write fails as expected.
+>+namespaces_can_boot_same_cid() {
+>+	local ns0=$1
+>+	local ns1=$2
+>+	local pidfile1 pidfile2
+>+	local rc
 >+
->+	# Try to set local mode in the guest's init_ns
->+	if vm_ssh init_ns "echo local | tee /proc/sys/net/vsock/ns_mode &>/dev/null"; then
->+		return "${KSFT_FAIL}"
+>+	pidfile1="$(create_pidfile)"
+>+
+>+	# The first VM should be able to start. If it can't then we have
+>+	# problems and need to return non-zero.
+>+	if ! vm_start "${pidfile1}" "${ns0}"; then
+>+		return 1
 >+	fi
 >+
->+	# Verify mode is still 'global'
->+	local mode
->+	mode=$(vm_ssh init_ns "cat /proc/sys/net/vsock/ns_mode")
->+	if [[ "${mode}" != "global" ]]; then
+>+	pidfile2="$(create_pidfile)"
+>+	vm_start "${pidfile2}" "${ns1}"
+>+	rc=$?
+>+	terminate_pidfiles "${pidfile1}" "${pidfile2}"
+>+
+>+	return "${rc}"
+>+}
+>+
+>+test_ns_global_same_cid_fails() {
+>+	init_namespaces
+>+
+>+	if namespaces_can_boot_same_cid "global0" "global1"; then
 >+		return "${KSFT_FAIL}"
 >+	fi
 >+
 >+	return "${KSFT_PASS}"
 >+}
 >+
-> shared_vm_test() {
-> 	local tname
->
->@@ -601,6 +690,11 @@ run_shared_vm_tests() {
-> 			continue
-> 		fi
->
->+		if ! check_netns "${arg}"; then
->+			check_result "${KSFT_SKIP}" "${arg}"
->+			continue
->+		fi
+>+test_ns_local_global_same_cid_ok() {
+>+	init_namespaces
 >+
-> 		run_shared_vm_test "${arg}"
-> 		check_result "$?" "${arg}"
-> 	done
->@@ -654,6 +748,49 @@ run_shared_vm_test() {
-> 	return "${rc}"
-> }
->
->+run_ns_tests() {
->+	for arg in "${ARGS[@]}"; do
->+		if shared_vm_test "${arg}"; then
->+			continue
->+		fi
+>+	if namespaces_can_boot_same_cid "local0" "global0"; then
+>+		return "${KSFT_PASS}"
+>+	fi
 >+
->+		if ! check_netns "${arg}"; then
->+			check_result "${KSFT_SKIP}" "${arg}"
->+			continue
->+		fi
->+
->+		add_namespaces
->+
->+		name=$(echo "${arg}" | awk '{ print $1 }')
->+		log_host "Executing test_${name}"
->+
->+		host_oops_before=$(dmesg 2>/dev/null | grep -c -i 'Oops')
->+		host_warn_before=$(dmesg --level=warn 2>/dev/null | grep -c -i 'vsock')
->+		eval test_"${name}"
->+		rc=$?
->+
->+		host_oops_after=$(dmesg 2>/dev/null | grep -c -i 'Oops')
->+		if [[ "${host_oops_after}" -gt "${host_oops_before}" ]]; then
->+			echo "FAIL: kernel oops detected on host" | log_host
->+			check_result "${KSFT_FAIL}" "${name}"
->+			del_namespaces
->+			continue
->+		fi
->+
->+		host_warn_after=$(dmesg --level=warn 2>/dev/null | grep -c -i 'vsock')
->+		if [[ "${host_warn_after}" -gt "${host_warn_before}" ]]; then
->+			echo "FAIL: kernel warning detected on host" | log_host
->+			check_result "${KSFT_FAIL}" "${name}"
->+			del_namespaces
->+			continue
->+		fi
->+
->+		check_result "${rc}" "${name}"
->+
->+		del_namespaces
->+	done
+>+	return "${KSFT_FAIL}"
 >+}
 >+
-> BUILD=0
-> QEMU="qemu-system-$(uname -m)"
->
->@@ -699,6 +836,8 @@ if shared_vm_tests_requested "${ARGS[@]}"; then
-> 	terminate_pidfiles "${pidfile}"
-> fi
->
->+run_ns_tests "${ARGS[@]}"
+>+test_ns_global_local_same_cid_ok() {
+>+	init_namespaces
 >+
-> echo "SUMMARY: PASS=${cnt_pass} SKIP=${cnt_skip} FAIL=${cnt_fail}"
-> echo "Log: ${LOG}"
->
+>+	if namespaces_can_boot_same_cid "global0" "local0"; then
+>+		return "${KSFT_PASS}"
+>+	fi
+>+
+>+	return "${KSFT_FAIL}"
+>+}
+>+
+>+test_ns_local_same_cid_ok() {
+>+	init_namespaces
+>+
+>+	if namespaces_can_boot_same_cid "local0" "local1"; then
+>+		return "${KSFT_PASS}"
+>+	fi
+>+
+>+	return "${KSFT_FAIL}"
+>+}
+>+
+> test_ns_host_vsock_ns_mode_write_once_ok() {
+> 	for mode in "${NS_MODES[@]}"; do
+> 		local ns="${mode}0"
 >
 >-- 
 >2.47.3
