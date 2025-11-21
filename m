@@ -1,187 +1,217 @@
-Return-Path: <linux-hyperv+bounces-7745-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7746-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10E25C790B1
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Nov 2025 13:43:15 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51BA1C79F4B
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Nov 2025 15:06:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 673884E79F0
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Nov 2025 12:43:13 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 98300381119
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Nov 2025 14:00:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 440DE313270;
-	Fri, 21 Nov 2025 12:43:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 008E334CFC7;
+	Fri, 21 Nov 2025 13:56:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dia9WHg7"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iMKPWBQ2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Abyw+g0j";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iMKPWBQ2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Abyw+g0j"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B7F52D8379
-	for <linux-hyperv@vger.kernel.org>; Fri, 21 Nov 2025 12:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43EE349B0C
+	for <linux-hyperv@vger.kernel.org>; Fri, 21 Nov 2025 13:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763728989; cv=none; b=UOf4HJAHQmW1EPgLmykYpShHFDNrYELIRKc8FUdZGT+ePPtwLJu7pbhc/2mOnhn6zTtVnnDEoG2IsKaN6gYTSJZkKI8QYkKQdNiO0Sxv7zMpPliDGfzwetfsa2/nhEOuSYlwMstUJf6Lg7T0EkYgs7Cu0hodmk8PYCa/A66Xtdc=
+	t=1763733394; cv=none; b=coWSKLLn5IbYtWPblDlNF9wUFkxQkDRHtnh1d+uIHRvKihQWXNua4t15cv4FwzQkt/fxZHoKLgnQ6yYKISzzoPQNEzBlZPYVPyXymOuQY0DF8ljGmSFSkTOf9QTe6lZaGFUn1Q20Iw6K0DohC/dgpYKI1MDMwzTvV4/f+Rjr/qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763728989; c=relaxed/simple;
-	bh=5+mUUCMR3SZoijvRg46BOPKnSb+b0dNPblN10Nfx8kM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c+rAItB1hch1AqvB16QvqyZNxExCr5jIgTe8V/4s+eOF4BW5fXgkvZoRGlY7iTEOP+XbcfMBQqqZ3y2uRxwTjr8qkno+NVOqU/3/aGWNzr/orJnarDLnNQS459fhwtAYT3gJ8HD136kxY7YUZNNMhPF4ARGe3/pRZmeVnxypZMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dia9WHg7; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-42bb288c219so1838597f8f.1
-        for <linux-hyperv@vger.kernel.org>; Fri, 21 Nov 2025 04:43:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763728985; x=1764333785; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=p2zCvNqGgtbT+DYiS8F37VDn4ftbMHGNVSrKqGSwmzU=;
-        b=Dia9WHg7lxDgb1w2BasYx27dgy1rV+82Oh+GAss90th+dxbZXVYTRKmCODrtRbvkFo
-         /oeUl9fPwRUAene68NdY3+FtURo5aJPOtkyALTkBjKjuFBq0iduNZuDkkyN0xpwzTLtK
-         X9rbnjZHbDwOSgE8RyhLyVkQD/Q3lYhV6fNdHjwJykvA6Ir55ZYc8eJDwwAQmAEz5s7J
-         Pb9Vkrj/RRUgUBO1fF7bCMjrO5P6Z3XJCxuw6cevI7SvSGsrV1OZGwREiumnzHBwlxJA
-         HGdw/FfwpD+OzQTxOwZBUPLsl0GojkuBdct774REg3WMpq4r1GG6enWlacro05Xkb60Z
-         XQCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763728985; x=1764333785;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=p2zCvNqGgtbT+DYiS8F37VDn4ftbMHGNVSrKqGSwmzU=;
-        b=WqYaWaE/ju7axbTPJfJWWHdjsGROSoKZZDmCBVyH1b0wDpnYV8WxpIK+WntnmU08QD
-         ubi/MZLOzEJS89+5UH13eJo2ITcIdiE+0e2QJxWZJb483xUDckBpw+5gV4gocfzg3Nom
-         Jwm2Rqasq3H32iwwHLwsKOWcai6Z1YblZbNjCOBqwXRUG9US3qfJ1YH8G2f7WuyCxbGn
-         fsakgynXgbBp0O+MOrdQaJhjFg174kPHjlVDz27+I7pCzmSNgeUlaLpDMJxWq/l036ei
-         gx8idQOmAEmadE7/DKeDZ5wciL9KeOjxzMD+/cp+4NuniVfSRIMfI9IrDQGriT/6N70u
-         3MGw==
-X-Forwarded-Encrypted: i=1; AJvYcCXxbhPrvdkR5Ix0xl1FBocz27EtFRwymc8ITei8SiNoPfMXcRRBcMlbQTW5JXBGAViPGBizJRpInnh0MkA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCtRb7+w3e+BLJTwsfS/TCx3tUL6Q4GUFm48ixRRWW1P6gOgLL
-	9BKCnFBUHl1TxzCpG0bJxqiGylHBZ0/IUEiD0xmwZT/0r0srSDgt41sX
-X-Gm-Gg: ASbGncsA3IOrDFXxdghGSADU3Vo6UsBgE1Ekz89lL5fuk81BhS4LBowXUuKfXYxYY+7
-	Pf0NtVqSMNO19XXPKYsaEokqKzZpAFKKy8zoR5Z8q9cAznXhp7us/av5Hx5OLi1angfAqVSIj2R
-	O8rCWnjgkgX7cS+Thm5z/vzzeYFdf+RfEj3g5ra9HcGU0xGbaZCeAkEA7a1M9BrpzBVNg6ViGHP
-	u5SM4bMszDvsWkjoeaVvE6+IrUBGkKYpKJf5K+NwajMWY1KKePSuUVRMh61Q4qXEKh6pgqwLy5A
-	w2oJZ0v0ZLi/boBJuzAYmkri2pxiW+d4gSjIXDg/0awBgiTfaakLpz+hpDX2NMF7qJFYGgmRtxO
-	pqO6uqm+xxLtQ9FD4KPyVtQWpgvULzpRaHKKXMgJ/Ji5dpjqWbyGV3jv4xy9/Ya4zLx7DMn4pXl
-	GMXS9cQ8Xzy878cGRopD6RFy5+wmHjcsOppe7Zfrdcotcz
-X-Google-Smtp-Source: AGHT+IEYyrnMjnQzt45RXJSTndXYbiIKdxOV3PNbGbGzl7In1RJUbl41mOUpIYSKX5evZrviAlviFw==
-X-Received: by 2002:a05:6000:230f:b0:42b:4223:e62a with SMTP id ffacd0b85a97d-42cc1cbe219mr2220762f8f.23.1763728984741;
-        Fri, 21 Nov 2025 04:43:04 -0800 (PST)
-Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7f2e556sm10734719f8f.5.2025.11.21.04.43.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Nov 2025 04:43:04 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 673ADBE2EE7; Fri, 21 Nov 2025 13:43:03 +0100 (CET)
-Date: Fri, 21 Nov 2025 13:43:03 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Naman Jain <namjain@linux.microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Long Li <longli@microsoft.com>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	"K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Tianyu Lan <tiala@microsoft.com>, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Peter Morrow <pdmorrow@gmail.com>
-Subject: Re: [PATCH 6.6 and older] uio_hv_generic: Enable user space to
- manage interrupt_mask for subchannels
-Message-ID: <aSBeVyYD2HQ5zNbC@eldamar.lan>
-References: <20251115085937.2237-1-namjain@linux.microsoft.com>
- <2025112109-legroom-resend-643f@gregkh>
+	s=arc-20240116; t=1763733394; c=relaxed/simple;
+	bh=xym5R5yEVSDL4/KM5LMgvvTEfCR+Kft6Tnj1uH1q3FU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Tok9s0vCiVP2sN6SWWPFlBOqv37K3xiNSpCd0orR2CA1tBbr5YOmEP1tNOlkVFtYhN7IWFtgQ4Pz6lQfrGqOAsom9oILMn3AJvugF6VwTMGeh/+7/oI0nmFD72cWcxBnd4++KFURW8HIu8CPAlrDkS4lw7b2aSppR1rFfsKAPQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iMKPWBQ2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Abyw+g0j; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iMKPWBQ2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Abyw+g0j; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 28247218EA;
+	Fri, 21 Nov 2025 13:56:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1763733391; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=2fy6AJV5/LJmpRrj1RphVCyLdSqiM/Tki+XKx37wkHU=;
+	b=iMKPWBQ2/YHLmQOMzgxyhZgL0qVKiRCtXOcpIhrGmp/kgyxlmA98lsYRipa9vkpslgCdGp
+	KdwVujc9na0fwt4t97s6rd4OfBWKtXmh/kRfine8gwUkvhtdVbu9uNgzcGm9EhYGSdMrV1
+	YEibxSNMD8K3yNpaFCBYQBYvBRpv3Ss=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1763733391;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=2fy6AJV5/LJmpRrj1RphVCyLdSqiM/Tki+XKx37wkHU=;
+	b=Abyw+g0jyRAdyZfxtFfsshAV0j5bGUOXfi7JyQENaF5nTh7i2CQVizKVX7OXJuuSarUXYD
+	zmJth7/Q/teZsWBQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=iMKPWBQ2;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Abyw+g0j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1763733391; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=2fy6AJV5/LJmpRrj1RphVCyLdSqiM/Tki+XKx37wkHU=;
+	b=iMKPWBQ2/YHLmQOMzgxyhZgL0qVKiRCtXOcpIhrGmp/kgyxlmA98lsYRipa9vkpslgCdGp
+	KdwVujc9na0fwt4t97s6rd4OfBWKtXmh/kRfine8gwUkvhtdVbu9uNgzcGm9EhYGSdMrV1
+	YEibxSNMD8K3yNpaFCBYQBYvBRpv3Ss=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1763733391;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=2fy6AJV5/LJmpRrj1RphVCyLdSqiM/Tki+XKx37wkHU=;
+	b=Abyw+g0jyRAdyZfxtFfsshAV0j5bGUOXfi7JyQENaF5nTh7i2CQVizKVX7OXJuuSarUXYD
+	zmJth7/Q/teZsWBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B94E83EA61;
+	Fri, 21 Nov 2025 13:56:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id TzTPK45vIGkqdQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 21 Nov 2025 13:56:30 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: ardb@kernel.org,
+	javierm@redhat.com,
+	arnd@arndb.de
+Cc: x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-fbdev@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH 0/6] arch,sysfb: Move screen and edid info into single place
+Date: Fri, 21 Nov 2025 14:36:04 +0100
+Message-ID: <20251121135624.494768-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025112109-legroom-resend-643f@gregkh>
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 28247218EA
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Score: -3.01
 
-Hi,
+Replace screen_info and edid_info with sysfb_primary_device of type
+struct sysfb_display_info. Update all users.
 
-On Fri, Nov 21, 2025 at 11:10:43AM +0100, Greg Kroah-Hartman wrote:
-> On Sat, Nov 15, 2025 at 02:29:37PM +0530, Naman Jain wrote:
-> > From: Long Li <longli@microsoft.com>
-> > 
-> > Enable the user space to manage interrupt_mask for subchannels through
-> > irqcontrol interface for uio device. Also remove the memory barrier
-> > when monitor bit is enabled as it is not necessary.
-> > 
-> > This is a backport of the upstream commit
-> > d062463edf17 ("uio_hv_generic: Set event for all channels on the device")
-> > with some modifications to resolve merge conflicts and take care of
-> > missing support for slow devices on older kernels.
-> > Original change was not a fix, but it needs to be backported to fix a
-> > NULL pointer crash resulting from missing interrupt mask setting.
-> > 
-> > Commit 37bd91f22794 ("uio_hv_generic: Let userspace take care of interrupt mask")
-> > removed the default setting of interrupt_mask for channels (including
-> > subchannels) in the uio_hv_generic driver, as it relies on the user space
-> > to take care of managing it. This approach works fine when user space
-> > can control this setting using the irqcontrol interface provided for uio
-> > devices. Support for setting the interrupt mask through this interface for
-> > subchannels came only after commit d062463edf17 ("uio_hv_generic: Set event
-> > for all channels on the device"). On older kernels, this change is not
-> > present. With uio_hv_generic no longer setting the interrupt_mask, and
-> > userspace not having the capability to set it, it remains unset,
-> > and interrupts can come for the subchannels, which can result in a crash
-> > in hv_uio_channel_cb. Backport the change to older kernels, where this
-> > change was not present, to allow userspace to set the interrupt mask
-> > properly for subchannels. Additionally, this patch also adds certain
-> > checks for primary vs subchannels in the hv_uio_channel_cb, which can
-> > gracefully handle these two cases and prevent the NULL pointer crashes.
-> > 
-> > Signed-off-by: Long Li <longli@microsoft.com>
-> > Fixes: 37bd91f22794 ("uio_hv_generic: Let userspace take care of interrupt mask")
-> 
-> This is a 6.12.y commit id, so a fix for 6.6.y does not make sense :(
+Sysfb DRM drivers currently fetch the global edid_info directly, when
+they should get that information together with the screen_info from their
+device. Wrapping screen_info and edid_info in sysfb_primary_display and
+passing this to drivers enables this.
 
-Should maybe be updated to reflect the original upstream commit. In
-fact b15b7d2a1b09 ("uio_hv_generic: Let userspace take care of
-interrupt mask") was backported to various stable series:
+Replacing both with sysfb_primary_display has been motivate by the EFI
+stub. EFI wants to transfer EDID via config table in a single entry.
+Using struct sysfb_display_info this will become easily possible. Hence
+accept some churn in architecture code for the long-term improvements.
 
-v5.4.301: 540aac117eaea5723cef5e4cbf3035c4ac654d92 uio_hv_generic: Let userspace take care of interrupt mask
-v5.10.246: 65d40acd911c7011745cbbd2aaac34eb5266d11e uio_hv_generic: Let userspace take care of interrupt mask
-v5.15.195: a44f61f878f32071d6378e8dd7c2d47f9490c8f7 uio_hv_generic: Let userspace take care of interrupt mask
-v6.1.156: 01ce972e6f9974a7c76943bcb7e93746917db83a uio_hv_generic: Let userspace take care of interrupt mask
-v6.6.112: 2af39ab5e6dc46b835a52e80a22d0cad430985e3 uio_hv_generic: Let userspace take care of interrupt mask
-v6.12.53: 37bd91f22794dc05436130d6983302cb90ecfe7e uio_hv_generic: Let userspace take care of interrupt mask
-v6.17.3: e29587c07537929684faa365027f4b0d87521e1b uio_hv_generic: Let userspace take care of interrupt mask
+Patches 1 and 2 reduce the exposure of screen_info in EFI-related code.
 
-And Peter just confirmed in
-https://lore.kernel.org/stable/CAFcZKTyOcDqDJRB4sgN7Q-dabBU0eg7KKs=yBJhB=CNDyy7scQ@mail.gmail.com/
-that he is seeing the problem now as well after updating from
-6.1.153-1 to 6.1.158-1 in Debian.
+Patch 3 adds struct sysfb_display_info.
 
-> > Closes: https://bugs.debian.org/1120602
-> > Cc: <stable@vger.kernel.org> # 6.6.x and older
-> 
-> How "old" do you want this?  Can you fix the Fixes: line up and resend
-> with this info?
+Patch 4 replaces scren_info with sysfb_primary_display. This results in
+several changes throught the kernel, but is really just a refactoring.
 
-It is at least relevant for back in 6.1.y now, but I'm not sure about
-the older series. I will let Naman speak up.
+Patch 5 updates sysfb to transfer sysfb_primary_display to the related
+drivers.
 
-I guess the proper fixes tracking is a bit "tricky" because it only
-affected some of the stable series, namely those which had a backport
-of b15b7d2a1b09 ("uio_hv_generic: Let userspace take care of interrupt
-mask") done before the including a backport of d062463edf17
-("uio_hv_generic: Set event for all channels on the device"). So this
-is the reason why we seeing it first in 6.12.y stable series (but now
-as well on olders), but not a problem on 6.17.y.
+Patch 6 moves edid_info into sysfb_primary_display. This resolves some
+drivers' reference to the global edid_info, but also makes the EDID data
+available on non-x86 architectures.
 
-Hope this explanation helps, please keep in mind that I'm no expert
-here by no means, just helping to report it from downstream Debian up
-here.
+The short-term benefit of this series is in patches 5 and 6. With
+sysfb_primary_display in place a follow-up series will improve EFI support
+for EDID as outlined in the series at [1] and [2].
 
-Regards,
-Salvatore
+[1] https://lore.kernel.org/dri-devel/20251015160816.525825-1-tzimmermann@suse.de/
+[2] https://lore.kernel.org/linux-efi/20251119123011.1187249-5-ardb+git@google.com/
+
+Thomas Zimmermann (6):
+  efi: earlycon: Reduce number of references to global screen_info
+  efi: sysfb_efi: Reduce number of references to global screen_info
+  sysfb: Add struct sysfb_display_info
+  sysfb: Replace screen_info with sysfb_primary_display
+  sysfb: Pass sysfb_primary_display to devices
+  sysfb: Move edid_info into sysfb_primary_display
+
+ arch/arm64/kernel/image-vars.h                |  2 +-
+ arch/loongarch/kernel/efi.c                   | 11 +--
+ arch/loongarch/kernel/image-vars.h            |  2 +-
+ arch/riscv/kernel/image-vars.h                |  2 +-
+ arch/x86/kernel/kexec-bzimage64.c             |  4 +-
+ arch/x86/kernel/setup.c                       | 16 ++--
+ arch/x86/video/video-common.c                 |  4 +-
+ drivers/firmware/efi/earlycon.c               | 42 +++++-----
+ drivers/firmware/efi/efi-init.c               | 14 ++--
+ drivers/firmware/efi/libstub/efi-stub-entry.c | 18 +++--
+ drivers/firmware/efi/sysfb_efi.c              | 81 ++++++++++---------
+ drivers/firmware/sysfb.c                      | 13 +--
+ drivers/firmware/sysfb_simplefb.c             |  2 +-
+ drivers/gpu/drm/sysfb/efidrm.c                | 14 ++--
+ drivers/gpu/drm/sysfb/vesadrm.c               | 14 ++--
+ drivers/hv/vmbus_drv.c                        |  6 +-
+ drivers/pci/vgaarb.c                          |  4 +-
+ drivers/video/Kconfig                         |  1 -
+ drivers/video/fbdev/core/fbmon.c              |  8 +-
+ drivers/video/fbdev/efifb.c                   | 10 ++-
+ drivers/video/fbdev/vesafb.c                  | 10 ++-
+ drivers/video/fbdev/vga16fb.c                 |  8 +-
+ drivers/video/screen_info_pci.c               |  5 +-
+ include/linux/screen_info.h                   |  2 -
+ include/linux/sysfb.h                         | 23 ++++--
+ include/video/edid.h                          |  4 -
+ 26 files changed, 177 insertions(+), 143 deletions(-)
+
+
+base-commit: 57e807d4454add8b60e8807ad1cf812141f34cdb
+-- 
+2.51.1
+
 
