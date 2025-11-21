@@ -1,160 +1,341 @@
-Return-Path: <linux-hyperv+bounces-7774-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7775-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECD1EC7ADD2
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Nov 2025 17:33:03 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CA37C7B6C9
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Nov 2025 20:02:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 68DB13649C1
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Nov 2025 16:31:22 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id C9C20353AE8
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Nov 2025 19:02:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A93E72853F1;
-	Fri, 21 Nov 2025 16:31:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C276D2F7AA2;
+	Fri, 21 Nov 2025 19:01:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qSU1u2/6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DInEEPNr"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828BD23A98D
-	for <linux-hyperv@vger.kernel.org>; Fri, 21 Nov 2025 16:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8302F83C0
+	for <linux-hyperv@vger.kernel.org>; Fri, 21 Nov 2025 19:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763742678; cv=none; b=DrhZ1P5vrNEHkGghJ2BqYeAGLX/5mchh0j6uAl4kACy+z/z1dlvv1lPC7sgAldxwW4BPEvCA8A2+z8MKVEC4phHSVbviLTf6md4h6lG2uugkA8V8maA0oAnrwhjY3Gu3GqfgIzhXrsXTddYo+phbBnTeylPJnWu0lLum5qQTlWI=
+	t=1763751718; cv=none; b=tJzjuYkc8YBwpHkuxNTlJztebReGjwGnmDK164J/NbpJtejep8t7vOKJkkTyDmoKhXO6CJXYGuBNW6FOgJGffaLyeV1NEYeuXz20lzRCjZFVdKahcVanOSdXcG7/gMQNCvTlzO82aRndEkj8D2YQr8pkDyBsLGvSkrHsIrERARo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763742678; c=relaxed/simple;
-	bh=cyjFZt5pBXnXq1dohzZ9h4FcHLsal8bFkRJaHhMWMaY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L9IPvmcBUiwoKPK2ACquYMcSgtCeH3UtOv8Un/7zihPBax2rCLJMNwZ2xI9TCGQDLBkd2EHzeGGr3NH2bzbf8m09ygdc6rJU1SNvCrI00ov42TTiuAyGyLVqBfIRtvK7NoWyvEjMImJQCdY45Ag8emzAJ8+bFmOn/53FIaWoWRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qSU1u2/6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33557C16AAE
-	for <linux-hyperv@vger.kernel.org>; Fri, 21 Nov 2025 16:31:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763742678;
-	bh=cyjFZt5pBXnXq1dohzZ9h4FcHLsal8bFkRJaHhMWMaY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qSU1u2/6ipckE+A/OsHbqAjCI7HauJiSh2s1S29Ie812amaZwjQ3D1uHEsNymui1D
-	 WGmrl0EHTPa9Y1RvEF5u0THNmon9mI0hYPxTjjvl6zVdmZg+TDznwbNrL+cEb13ht5
-	 GPOWRMw/8ZsekvhZPaMBnQ8+tlQVkoNj9q0tUoG8EQC8/MU45wwKg/1qcKNrNkLDd/
-	 PBHk6omD2z2gPyjqDktFAJv9YCWCL8yUEhrPrZfp3hWVqmGnN5sjWnYhCzvFoloFwx
-	 OcqRqeIQZLuYAl057xl/eddeQO7fMU/jVtb/7/QjsDeMebFjUwFfoml37ROnHu+nHc
-	 BWyArk68dF2SA==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-595819064cdso3123803e87.0
-        for <linux-hyperv@vger.kernel.org>; Fri, 21 Nov 2025 08:31:18 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWgX6o5/4KHx0wuWXGz1ZSglOM8CFx8ablpfWqCZ1nowdHp6lsqafN8WIJKK+ljU2JDdgTYMFrr5b1hfls=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGujA7geAEORxbR0BMoj/LvLKjesxKy/uGCUdwy2sSBQ2oCvD4
-	zf1NSLV7EXsIwAINyAtzCDvECjHsKwZVjJY2TgQtP95OF4t8++1pad/KhYM9RjMz3JsFNhPFTx9
-	QF7nP+iHjQE5e/zZozZR0O/b0chP5+TQ=
-X-Google-Smtp-Source: AGHT+IHv94YBPiEOZjVBTWao8a3/iUuQL5cnLW52Wc5H+gjJzlYuoPCzdcoJKR5m6QrcIhi6WOqHYr6zv5IgKHaKwNI=
-X-Received: by 2002:a05:6512:1391:b0:594:2bd4:c856 with SMTP id
- 2adb3069b0e04-596a374965amr995757e87.6.1763742676554; Fri, 21 Nov 2025
- 08:31:16 -0800 (PST)
+	s=arc-20240116; t=1763751718; c=relaxed/simple;
+	bh=WArVS6ubEMJkQPVCvjCEWR46mrN5QDyyEmvTxtytRNE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T10dq0ficak0TqCgqlTMypRNoYNIbeSug1ldxOlSy/hQi3CIL2vUlNq+1rS8Iw93UnxYhskImQkNW9LirhpMmJKKF7GpV2MIuEY9HDHpFb98ME40bj0uhKb3MdCAOQjNGdLfM0ODHKzOKTz8uwOSnB3Cfyl1JQ5Rdd9Twj8JeFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DInEEPNr; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-787eb2d86bfso24132477b3.2
+        for <linux-hyperv@vger.kernel.org>; Fri, 21 Nov 2025 11:01:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763751715; x=1764356515; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vHNJK9mSt+s0CGUW2/E9GDvGTfl2Ktm309WYTb92GJQ=;
+        b=DInEEPNrT5OjHsHKx1gQLyfHe07BkXyzJmiV0okgCYoqbzRBV1UU3biywaP91Cj3v7
+         2KI5jmbZQre+/BxTrmRDfDAiFXGjxyUJ5xILxCpc6MZF+qcu1SKwbdJIjhNqjwGxkCyF
+         JwhtQeWOeIf5sqVNUHJE2qNYTuk+/prRzC0w9KGK/4UBYrXOwEruzaa/lIvEqP1GXXu8
+         Jy02ibpAfqjpxlSM/ntOE5CCMVxA/FlVYZJziWfGjg/nBkZHI4ejoMgoi7aQFdGzpgyS
+         JQkCVfQE7cRg+D8JWzHkh2CpLrvwneRQ8Zz4eBZCUHphmazztuFo5gkYo1Th1eGQeMMY
+         kB5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763751715; x=1764356515;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vHNJK9mSt+s0CGUW2/E9GDvGTfl2Ktm309WYTb92GJQ=;
+        b=IT1L1mzsOfkIPbxdZggQR3uNzTxcUeCPbtruU1GHMgKiyLNOd0FlvJhaWlHg2MDseo
+         q+z448L6Pjnq/8gZRajHj/pEGd0Nww8LAKXMfAukugzfPYYH09ms5cR3+4Q0OT8q3CMN
+         AuSM8VsfdgqX4XzTlbU6PoBWGTmNg6Ujsr63MbR4pN1GyXBT6w7ZCt8T9xp3Ksi63diL
+         AMeDVsaM+V8AF/g9ZbapHH8LnksKBKYqF7dM3/zUXu4D054nBlCaOmTkamupCWuEns42
+         RWs6a/pKybUZ87JIzNx4gGK1H3RCXboEeFOTtEEHOLK67dM2ikz5ZaGr37V9eM8LOH9+
+         R/DQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWrs2AOv+0xaMICljXaAOAqoGXHlK8BEeHJ9VTp8qff6DIn1vgNACxpcA7+Ck0HmYsTGTGpcFsbtiFufOI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yysn4tHk8l1t7IwmQ64PubQGrSd6EV2K31PMYKiDvidNtaZh0At
+	g+DZEHwpTBI7cu67nImvO8jGBGf/4/LJdXlYnMoW9ZRZAU+LYhEmqCXx
+X-Gm-Gg: ASbGnct2rBmU8HuAc5bpxOntqkxOBRqdbqyyO8MAjWSTkhGEfyU0/88LIVofsiycTgi
+	6E/PPDcuBTg9U+UAqqBPcqp/1Nry0MUIGR5l68kiBYzsIQeQEQcNmSU0A34toVU1R7mHuwZYbXQ
+	L8+KKNP9YsqCg7vEk8RFrslsLSw89Yemwo6RcAOijkJxz0H5kjq9dVW2H+j3px4tQPFaiEtZWSp
+	WHpFbpiljaQIePKV/085ewgLVRAvtmqdvQdVm5MCtnXh0e1QADyBiY/m7yzbXXrVAFe+liXlLW7
+	+EWThUYKulOOUU3sOqcrH4yWnBreUnZ15ee+V2X8rP5FSSdXayLh0p89mUcQeHyd1Ltncc1EOoy
+	LLeNP3OMvTHWK4CtKqNCn0knc69Qi//2MGIRJrDGza6oT0KDQ+6UU6bIHQyqWVcmGnYs1ESL47j
+	5XN0qQu8N0vrc+Vr+DJlIUNknRCTX7ih0nBytBik/CymYzVaA=
+X-Google-Smtp-Source: AGHT+IH2bgXNRHCjXtFd+F/4K//ws1Kt32CYb3+hrGk5Xkpq6C71Ai7eb5mCRwKQxje9HmmiDX3mIg==
+X-Received: by 2002:a05:690c:6ac7:b0:784:8994:297c with SMTP id 00721157ae682-78a8b499908mr27522337b3.24.1763751715362;
+        Fri, 21 Nov 2025 11:01:55 -0800 (PST)
+Received: from devvm11784.nha0.facebook.com ([2a03:2880:25ff:56::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-78a7992599bsm18071747b3.34.2025.11.21.11.01.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Nov 2025 11:01:54 -0800 (PST)
+Date: Fri, 21 Nov 2025 11:01:53 -0800
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, berrange@redhat.com,
+	Sargun Dhillon <sargun@sargun.me>,
+	Bobby Eshleman <bobbyeshleman@meta.com>
+Subject: Re: [PATCH net-next v11 03/13] vsock: reject bad
+ VSOCK_NET_MODE_LOCAL configuration for G2H
+Message-ID: <aSC3IX81A3UhtD3N@devvm11784.nha0.facebook.com>
+References: <20251120-vsock-vmtest-v11-0-55cbc80249a7@meta.com>
+ <20251120-vsock-vmtest-v11-3-55cbc80249a7@meta.com>
+ <swa5xpovczqucynffqgfotyx34lziccwpqomnm5a7iwmeyixfv@uehtzbdj53b4>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251121135624.494768-1-tzimmermann@suse.de> <96a8d591-29d5-4764-94f9-6042252e53ff@app.fastmail.com>
- <CAMj1kXF1Dh0RbuqYc0fhAPf-CM0mdYh8BhenM8-ugKVHfwnhBg@mail.gmail.com>
- <199e7538-5b4a-483b-8976-84e4a8a0f2fd@suse.de> <CAMj1kXE+mS1Sm5GaROU0P97J2w1pew0P_To4sKiw8h1iOMuLcg@mail.gmail.com>
- <d080729c-6586-4b9c-b234-470977849d3d@suse.de> <6dff8e7e-c99b-443d-a1d8-22650ca0b595@suse.de>
- <CAMj1kXGpC_162bFL65kQw=7qVP7ezYw77Q76y217dDs8pqHogw@mail.gmail.com> <8d0bc096-e346-462b-a274-f0cc1456eea3@suse.de>
-In-Reply-To: <8d0bc096-e346-462b-a274-f0cc1456eea3@suse.de>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 21 Nov 2025 17:31:05 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXFdethf2sb1tm1V4wRW1SyPt-OnCmaAXc5cHNKuLJMXWA@mail.gmail.com>
-X-Gm-Features: AWmQ_bn8zhFEK816tkr85kGEYNB_leVhAjJQxQ75BwMURzs3nYpX4WL_zzKYI_Q
-Message-ID: <CAMj1kXFdethf2sb1tm1V4wRW1SyPt-OnCmaAXc5cHNKuLJMXWA@mail.gmail.com>
-Subject: Re: [PATCH 0/6] arch, sysfb: Move screen and edid info into single place
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Arnd Bergmann <arnd@arndb.de>, Javier Martinez Canillas <javierm@redhat.com>, x86@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, dri-devel@lists.freedesktop.org, 
-	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-fbdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <swa5xpovczqucynffqgfotyx34lziccwpqomnm5a7iwmeyixfv@uehtzbdj53b4>
 
-On Fri, 21 Nov 2025 at 17:26, Thomas Zimmermann <tzimmermann@suse.de> wrote:
->
-> Hi
->
-> Am 21.11.25 um 17:19 schrieb Ard Biesheuvel:
-> > On Fri, 21 Nov 2025 at 17:09, Thomas Zimmermann <tzimmermann@suse.de> wrote:
-> >>
-> >>
-> >> Am 21.11.25 um 17:08 schrieb Thomas Zimmermann:
-> >>> Hi
-> >>>
-> >>> Am 21.11.25 um 16:56 schrieb Ard Biesheuvel:
-> >>>> On Fri, 21 Nov 2025 at 16:53, Thomas Zimmermann <tzimmermann@suse.de>
-> >>>> wrote:
-> >>>>> Hi
-> >>>>>
-> >>>>> Am 21.11.25 um 16:16 schrieb Ard Biesheuvel:
-> >>>>>> On Fri, 21 Nov 2025 at 16:10, Arnd Bergmann <arnd@arndb.de> wrote:
-> >>>>>>> On Fri, Nov 21, 2025, at 14:36, Thomas Zimmermann wrote:
-> >>>>>>>> Replace screen_info and edid_info with sysfb_primary_device of type
-> >>>>>>>> struct sysfb_display_info. Update all users.
-> >>>>>>>>
-> >>>>>>>> Sysfb DRM drivers currently fetch the global edid_info directly,
-> >>>>>>>> when
-> >>>>>>>> they should get that information together with the screen_info
-> >>>>>>>> from their
-> >>>>>>>> device. Wrapping screen_info and edid_info in
-> >>>>>>>> sysfb_primary_display and
-> >>>>>>>> passing this to drivers enables this.
-> >>>>>>>>
-> >>>>>>>> Replacing both with sysfb_primary_display has been motivate by
-> >>>>>>>> the EFI
-> >>>>>>>> stub. EFI wants to transfer EDID via config table in a single entry.
-> >>>>>>>> Using struct sysfb_display_info this will become easily possible.
-> >>>>>>>> Hence
-> >>>>>>>> accept some churn in architecture code for the long-term
-> >>>>>>>> improvements.
-> >>>>>>> This all looks good to me,
-> >>>>>>>
-> >>>>>>> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> >>>>> Thanks
-> >>>>>
-> >>>>>>> It should also bring us one step closer to eventually
-> >>>>>>> disconnecting the x86 boot ABI from the kernel-internal
-> >>>>>>> sysfb_primary_display.
-> >>>>>>>
-> >>>>>> Agreed
-> >>>>>>
-> >>>>>> Acked-by: Ard Biesheuvel <ardb@kernel.org>
-> >>>>> Thanks
-> >>>>>
-> >>>>>> I can take patches 1-2 right away, if that helps during the next
-> >>>>>> cycle.
-> >>>>>    From my sysfb-focused POV, these patches would ideally all go through
-> >>>>> the same tree, say efi or generic arch, or whatever fits best. Most of
-> >>>>> the other code is only renames anyway.
-> >>>>>
-> >>>> I don't mind queueing all of it, but I did get a conflict on
-> >>>> drivers/pci/vgaarb.c
-> >>> Probably from a78835b86a44 ("PCI/VGA: Select SCREEN_INFO on X86")
-> >> https://lore.kernel.org/all/20251013220829.1536292-1-superm1@kernel.org/
-> >>
-> > Yes, if I merge back -rc2 first, I can apply patches 1-5 onto my
-> > efi/next tree. But then I hit
-> >
-> > Applying: sysfb: Move edid_info into sysfb_primary_display
-> > error: sha1 information is lacking or useless (drivers/gpu/drm/sysfb/efidrm.c).
-> > error: could not build fake ancestor
-> > Patch failed at 0006 sysfb: Move edid_info into sysfb_primary_display
-> >
-> > If you prefer, you can take the whole lot via the sysfb tree instead,
-> > assuming it does not depend on the EDID changes I already queued up?
->
-> Sure, I can also add it to the drm-misc tree. ETA in upstream would be
-> v6.20-rc1.
->
+On Fri, Nov 21, 2025 at 03:24:25PM +0100, Stefano Garzarella wrote:
+> On Thu, Nov 20, 2025 at 09:44:35PM -0800, Bobby Eshleman wrote:
+> > From: Bobby Eshleman <bobbyeshleman@meta.com>
+> > 
+> > Reject setting VSOCK_NET_MODE_LOCAL with -EOPNOTSUPP if a G2H transport
+> > is operational. Additionally, reject G2H transport registration if there
+> > already exists a namespace in local mode.
+> > 
+> > G2H sockets break in local mode because the G2H transports don't support
+> > namespacing yet. The current approach is to coerce packets coming out of
+> > G2H transports into VSOCK_NET_MODE_GLOBAL mode, but it is not possible
+> > to coerce sockets in the same way because it cannot be deduced which
+> > transport will be used by the socket. Specifically, when bound to
+> > VMADDR_CID_ANY in a nested VM (both G2H and H2G available), it is not
+> > until a packet is received and matched to the bound socket that we
+> > assign the transport. This presents a chicken-and-egg problem, because
+> > we need the namespace to lookup the socket and resolve the transport,
+> > but we need the transport to know how to use the namespace during
+> > lookup.
+> > 
+> > For that reason, this patch prevents VSOCK_NET_MODE_LOCAL from being
+> > used on systems that support G2H, even nested systems that also have H2G
+> > transports.
+> > 
+> > Local mode is blocked based on detecting the presence of G2H devices
+> > (when possible, as hyperv is special). This means that a host kernel
+> > with G2H support compiled in (or has the module loaded), will still
+> > support local mode if there is no G2H (e.g., virtio-vsock) device
+> > detected. This enables using the same kernel in the host and in the
+> > guest, as we do in kselftest.
+> > 
+> > Systems with only namespace-aware transports (vhost-vsock, loopback) can
+> > still use both VSOCK_NET_MODE_GLOBAL and VSOCK_NET_MODE_LOCAL modes as
+> > intended.
+> > 
+> > Add supports_local_mode() transport callback to indicate
+> > transport-specific local mode support.
+> > 
+> > These restrictions can be lifted in a future patch series when G2H
+> > transports gain namespace support.
+> > 
+> > Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
+> > ---
+> > Changes in v11:
+> > - vhost_transport_supports_local_mode() returns false to keep things
+> >  disabled until support comes online (Stefano)
+> > - add comment above supports_local_mode() cb to clarify (Stefano)
+> > - Remove redundant `ret = 0` initialization in vsock_net_mode_string()
+> >  (Stefano)
+> > - Refactor vsock_net_mode_string() to separate parsing from validation
+> >  (Stefano)
+> > - vmci returns false for supports_local_mode(), with comment
+> > 
+> > Changes in v10:
+> > - move this patch before any transports bring online namespacing (Stefano)
+> > - move vsock_net_mode_string into critical section (Stefano)
+> > - add ->supports_local_mode() callback to transports (Stefano)
+> > ---
+> > drivers/vhost/vsock.c            |  6 ++++++
+> > include/net/af_vsock.h           | 11 +++++++++++
+> > net/vmw_vsock/af_vsock.c         | 32 ++++++++++++++++++++++++++++++++
+> > net/vmw_vsock/hyperv_transport.c |  6 ++++++
+> > net/vmw_vsock/virtio_transport.c | 13 +++++++++++++
+> > net/vmw_vsock/vmci_transport.c   | 12 ++++++++++++
+> > net/vmw_vsock/vsock_loopback.c   |  6 ++++++
+> > 7 files changed, 86 insertions(+)
+> > 
+> > diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+> > index 69074656263d..4e3856aa2479 100644
+> > --- a/drivers/vhost/vsock.c
+> > +++ b/drivers/vhost/vsock.c
+> > @@ -64,6 +64,11 @@ static u32 vhost_transport_get_local_cid(void)
+> > 	return VHOST_VSOCK_DEFAULT_HOST_CID;
+> > }
+> > 
+> > +static bool vhost_transport_supports_local_mode(void)
+> > +{
+> > +	return false;
+> > +}
+> > +
+> > /* Callers that dereference the return value must hold vhost_vsock_mutex or the
+> >  * RCU read lock.
+> >  */
+> > @@ -412,6 +417,7 @@ static struct virtio_transport vhost_transport = {
+> > 		.module                   = THIS_MODULE,
+> > 
+> > 		.get_local_cid            = vhost_transport_get_local_cid,
+> > +		.supports_local_mode	  = vhost_transport_supports_local_mode,
+> > 
+> > 		.init                     = virtio_transport_do_socket_init,
+> > 		.destruct                 = virtio_transport_destruct,
+> > diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+> > index 59d97a143204..e24ef1d9fe02 100644
+> > --- a/include/net/af_vsock.h
+> > +++ b/include/net/af_vsock.h
+> > @@ -180,6 +180,17 @@ struct vsock_transport {
+> > 	/* Addressing. */
+> > 	u32 (*get_local_cid)(void);
+> > 
+> > +	/* Return true if the transport is compatible with
+> > +	 * VSOCK_NET_MODE_LOCAL. Otherwise, return false.
+> > +	 *
+> > +	 * Transports should return false if they lack local-mode namespace
+> > +	 * support (e.g., G2H transports like hyperv-vsock and vmci-vsock).
+> > +	 * virtio-vsock returns true only if no device is present in order to
+> > +	 * enable local mode in nested scenarios in which virtio-vsock is
+> > +	 * loaded or built-in, but nonetheless unusable by sockets.
+> > +	 */
+> > +	bool (*supports_local_mode)(void);
+> > +
+> > 	/* Read a single skb */
+> > 	int (*read_skb)(struct vsock_sock *, skb_read_actor_t);
+> > 
+> > diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+> > index 243c0d588682..120adb9dad9f 100644
+> > --- a/net/vmw_vsock/af_vsock.c
+> > +++ b/net/vmw_vsock/af_vsock.c
+> > @@ -91,6 +91,12 @@
+> >  *   and locked down by a namespace manager. The default is "global". The mode
+> >  *   is set per-namespace.
+> >  *
+> > + *   Note: LOCAL mode is only supported when using namespace-aware transports
+> > + *   (vhost-vsock, loopback). If a guest-to-host transport (virtio-vsock,
+> > + *   hyperv-vsock, vmci-vsock) is operational, attempts to set LOCAL mode will
+> > + *   fail with EOPNOTSUPP, as these transports do not support per-namespace
+> > + *   isolation.
+> > + *
+> >  *   The modes affect the allocation and accessibility of CIDs as follows:
+> >  *
+> >  *   - global - access and allocation are all system-wide
+> > @@ -2794,6 +2800,15 @@ static int vsock_net_mode_string(const struct ctl_table *table, int write,
+> > 	else
+> > 		return -EINVAL;
+> > 
+> > +	mutex_lock(&vsock_register_mutex);
+> > +	if (mode == VSOCK_NET_MODE_LOCAL &&
+> > +	    transport_g2h && transport_g2h->supports_local_mode &&
+> > +	    !transport_g2h->supports_local_mode()) {
+> > +		mutex_unlock(&vsock_register_mutex);
+> > +		return -EOPNOTSUPP;
+> > +	}
+> > +	mutex_unlock(&vsock_register_mutex);
+> 
+> Wait, I think we already discussed about this, vsock_net_write_mode() must
+> be called with the lock held.
+> 
+> See
+> https://lore.kernel.org/netdev/aRTTwuuXSz5CvNjt@devvm11784.nha0.facebook.com/
+> 
 
-But does that mean the EDID firmware on non-x86 will have to wait for
-6.21? I was trying to avoid making this a 6 month effort.
+Ah right, oversight on my part.
+
+> Since I guess we need another version of this patch, can you check the
+> commit description to see if it reflects what we are doing now
+> (e.g vhost is not enabled)?
+> 
+> Also I don't understand why for vhost we will enable it later, but for
+> virtio_transport and vsock_loopback we are enabling it now, also if this
+> patch is before the support on that transports. I'm a bit confused.
+> 
+> If something is unclear, let's discuss it before sending a new version.
+> 
+> 
+> What I had in mind was, add this patch and explain why we need this new
+> callback (like you did), but enable the support in the patches that
+> really enable it for any transport. But maybe what is not clear to me is
+> that we need this only for G2H. But now I'm confused about the discussion
+> around vmci H2G. We decided to discard also that one, but here we are not
+> checking that?
+> I mean here we are calling supports_local_mode() only on G2H IIUC.
+
+Ah right, VMCI broke my original mental model of only needing this check
+for G2H (originally I didn't realize VMCI was H2G too).
+
+I think now, we actually need to do this check for all of the transports
+no? Including h2g, g2h, local, and dgram?
+
+Additionally, the commit description needs to be updated to reflect that.
+
+With this, we then end up with two commits:
+
+	commit 1) This commit which adds the callbacks and gives each
+	transport stubs to return false. Checks all transports (not just
+	G2H). Update the commit. Fix vsock_net_write_mode() race above.
+
+	commit 2) change the virtio-vsock/vhost-vsock/vsock-loopback to
+	add the real implementations (vhost + loopback return true,
+	virtio detects device). The other transports keep their return
+	false stubs so no changes.
+
+Does that seem about right?
+
+> 
+> > +
+> > 	if (!vsock_net_write_mode(net, mode))
+> > 		return -EPERM;
+> > 
+> > @@ -2938,6 +2953,7 @@ int vsock_core_register(const struct vsock_transport *t, int features)
+> > {
+> > 	const struct vsock_transport *t_h2g, *t_g2h, *t_dgram, *t_local;
+> > 	int err = mutex_lock_interruptible(&vsock_register_mutex);
+> > +	struct net *net;
+> > 
+> > 	if (err)
+> > 		return err;
+> > @@ -2960,6 +2976,22 @@ int vsock_core_register(const struct vsock_transport *t, int features)
+> > 			err = -EBUSY;
+> > 			goto err_busy;
+> > 		}
+> > +
+> > +		/* G2H sockets break in LOCAL mode namespaces because G2H
+> 
+> And also here we are talking about only of G2H, so what happen if vmci is
+> loaded as H2G?
+> 
+> IMO we should discuss this a bit more and make it a bit more generic, like
+> check all the transports.
+> 
+> Thanks,
+> Stefano
+
+Agreed.
+
+Best,
+Bobby
 
