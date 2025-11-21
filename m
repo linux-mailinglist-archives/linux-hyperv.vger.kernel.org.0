@@ -1,172 +1,166 @@
-Return-Path: <linux-hyperv+bounces-7741-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7742-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74B31C77CF8
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Nov 2025 09:12:41 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00C50C7859D
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Nov 2025 11:09:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 269014EAF8F
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Nov 2025 08:09:59 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6A8EA355F96
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Nov 2025 10:04:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 071E1305E3F;
-	Fri, 21 Nov 2025 08:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wo6tf/ls"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD046342C98;
+	Fri, 21 Nov 2025 09:59:39 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D633375A4
-	for <linux-hyperv@vger.kernel.org>; Fri, 21 Nov 2025 08:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB98303CA1
+	for <linux-hyperv@vger.kernel.org>; Fri, 21 Nov 2025 09:59:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763712595; cv=none; b=YT2IhXoqi3/d7gj52Lj5tr0g6HXPVNhITNJLcPzrNbFTXHEWXohB6axOaB3uoxe0mOYKg4T6F9ITNj/h0ywVecEFutkSFA0Zue/1g1rZWQYrcqbP5YpFwV8cO26Ee89/m6ffXIxOhuR8CJvw3wBbj8gBsD9e9zL07YLnBYWGOAM=
+	t=1763719179; cv=none; b=hZqDtOUAmepWh9j1vb9Vq1DIAbYeIHAhpiS1HuHS8iRcLEpm/YOU7qWJUh5kjFQul+fPrYZ6yMANN+mVAaEna7KFc5vEV6MnsWcaHp1bVOqKPiF+jlL0+fclWNXuZyoYi9hW0kzp7+IT+sjrsylmpir7EayLgksxBn2vegTpLTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763712595; c=relaxed/simple;
-	bh=zdCRY2T6aJQzhbmON8O3KRUgmRk7a2jIQLsaPu+D4iQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NkVEk0avmJwod1vu9YJspUkDHafjw0np8yeP6o8KOvzx0y/8kJHRcwsBS9vQJ85cD1fPwrCEPgdQad0U9OiOCSU5c0yu6TQMnwMwa1CSCxG5vnaiM//HUEghrD3pWWT+x+ES0nmdcS1CIQVvn9IZL6own9LilXdmLqamNptU24w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wo6tf/ls; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1763719179; c=relaxed/simple;
+	bh=HHsmzhVeoof90NmVVOS0Bqgw+YdMs88RomC1IZl58xg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TsLUdEVYxhpveEaVA49g2AG4YOH0PTOu4FAGpYxal4ucvo3d0lsNnvMa29FuePWVJ3yAHzHQUgx4YJ9thmUvubUR8BZIG9OSxCQPCNstKl/JRUxpKF1bcn4X9j4v/WP38w+9Z9JfpNnCMN5ih509qvpbZi9NUpMS3Q1N/ZdX3Po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-37b495ce059so14352671fa.0
-        for <linux-hyperv@vger.kernel.org>; Fri, 21 Nov 2025 00:09:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763712592; x=1764317392; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+kUJ9RcKJhG9LinHueO+MWyEw0Sz9WNiKd8OaGRbCEc=;
-        b=Wo6tf/lsw4eexw4HUOPGLZ7DiJspoE7sBofPKYfqAvdlVRWHTNi7VXWduQlCXu/sAr
-         WkIwNNRTjnZFTFDT2RKzw2927oUFpeJbfpk8jalUK6NsgBGKDzpyyPSASwB4UFFVf2hs
-         /VCwQXYne1kTZj6NspFfbSXFhCQu5rrAA1h/eTI2AE/4ePzqHIHw+74KHM2W6b4lfOTk
-         tv6+tl0svXJ4c66SpNhmaQVDuH77MGppRO0RgpGQjA9Yk4uQm/KiZMaOkbr+/j60wrBH
-         R6R5P6+MPV9dInmPGb1XnWWzezGBplo7c+FmZuDRuYnWmlrO3HRHPQqs6kIXnRjzUuYx
-         2iCg==
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-7c78d30649aso1272614a34.2
+        for <linux-hyperv@vger.kernel.org>; Fri, 21 Nov 2025 01:59:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763712592; x=1764317392;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=+kUJ9RcKJhG9LinHueO+MWyEw0Sz9WNiKd8OaGRbCEc=;
-        b=q4zRz6zUpegqkXCK/ygaTqsX2gZEHvxZrFL1F9nK1x9xixmLFPn1Kwl2WLkPfIxkJH
-         nZUUt/s5nVKp4YT72XQoUDnQ0f9rdPVCeI5/2GaYXFhnxHj0LV80oiXlhdD/sT4rU5k+
-         KvDaBxJgdHLFADI0/8klVizDhpl64CseIrhZbIXHhmqditJovA64EMICfMEoJobneKZF
-         7EkgtNMHGQMx8/FgjJ+UFUzd9qEi3i5v2aI3x9uy3lnKYSJ8A1E38I6IegihMlZ/2ZXD
-         xgyBPeRKtzCZI22fhOcfC0VSSlP0mXTcVE3/ht6hqPk7rLmFf5o0mFthWNG9jIj60YaL
-         L2pg==
-X-Gm-Message-State: AOJu0YzWabvsOpe2SrELdlGIAkJei/OR7qa5yXvdQpBXunMG5//SlEJ+
-	jm7iL7GF5uLmjTQROMMeer3BKwjRv8trmxCZgctgpfqwmJd7xQx7ixciHy8kJJWDu1jgQRwRO9X
-	1p8yrZDoqyKQKAGq5mz6o/V3FWNYsbbI=
-X-Gm-Gg: ASbGnct9Olwh/ETqbM8sK9LbOlOuNJhTTcjxKSo3OcwMdusHBVUY+DrMyjx3fWmT/a2
-	MPBOMTjK8jU9pUHCYepDNwS9UQ9JTC7xI0+Ma75KT5XIjdQD46XBvfR7jlxMXplDDkz8iNr3bDU
-	rIb1qCa2/p7ISNmbsYwO6FkiXUU/jhhrJ3/WVlkEFHBnuSB59KIFwfwSqePIMDBavIbKM9dwcfB
-	VU2Rt7KR0Dm7GdoIFtdmtd2n7AUnvGc6aT3f2JOldUxg/eJC43iTpEV9k125lkRgxTOWKTTBySX
-	EO2Wqw==
-X-Google-Smtp-Source: AGHT+IHKT/dl+Bb5pmkPwif9lR6rb/vSd4My/N8B0GTWiU6PbPGZSgg8xmyW1QPS21mxg9zMTWWzNIPzitGnql2xLPc=
-X-Received: by 2002:a05:651c:31d1:b0:37a:5cb7:968f with SMTP id
- 38308e7fff4ca-37cd924d252mr4385411fa.29.1763712591500; Fri, 21 Nov 2025
- 00:09:51 -0800 (PST)
+        d=1e100.net; s=20230601; t=1763719173; x=1764323973;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dojRujs9be/TnMeUOsyrcOSTjffwfchyaxGWH58nf/c=;
+        b=n58nNVn5gEJR5Z/d35tiu4is4U53Q2JaYFNLIIcOcDBlkLQHl8n2BL9imOIbC64aL0
+         ljtOXtDDRoGQLdzXto2lSmkAIFty/B05ln55zouluIFWk/M6kT3RCECKQwyA4hpqtntV
+         PsPPIXSsfEuMCCqEV5gwnb0kYxIEtgFXBVEeP4ujkFYvGUB7XfmJiwoxtDuqnqjtx599
+         jsBFUsCttAmtTKlQPVBGaHgoVcz/IcJPRZceBJiUdAWpeoj2QoRbU6ezwafk8FX5nbRE
+         eM/tzYokXj381iK13c6U3vGrC4or22IVEJo9cQvjaPkqlI0xCdzHxcJkZ0XWXCqx24Vm
+         1ygA==
+X-Gm-Message-State: AOJu0YxJ3HGZvJXso+b+rb/DJraR9rLVRO29gwl8jDmeIGm+sW0S5rVv
+	M9Sd5H4Lqmtwm36uU2k+Bdh/NTa/R3C6lmynyJVl+ztdCnxfM8dSLa9e
+X-Gm-Gg: ASbGncurksDC6PiEPDMRYyP9DgjWpXLPw5SdMnDZ4oM5z8SfzUBuW4AvY/4gtaoFv+0
+	fV0N7C9o2GzVTHFFr55Y5C9qnmdd0l0DG9/LH3P4VNEPyy2vcKNYDHER4RLtebAP0DdU8M88rlN
+	pCejJqK/RVMil3lKCsGX3y3kXve0w5BlfolQGmEOp+wSyvVQyXGluVDpXD3o2gIrw2BHcIBhvJI
+	zqrEcrOUTkjlh5OUPNWODr2rNsESbepZYEjSAR25rposgwvsJuXwTHzIeGoaYrJgZVRHIZZO5cT
+	T+C/z865Sq9nSrizvPGMSyyNIm/ihqlPHXgPMzA8dp82JXDAB9dVWfyRs5A9GTBbPSD8tDa0hmv
+	eIXsNBtMgw7wYUkSTLvmDq9LRokq+XcBMkKn4BC5Gyk1tpNKgh/b/1IjaKv//f42R4TM8Ul2v0/
+	oaMotXtTXLGqzx
+X-Google-Smtp-Source: AGHT+IEmWMTd52wJm2+vR5LfqIEecZ5Mvv0Pw3l06fpbNbHelh8zWphqjwBuZeLN8JQFniDGSROkwg==
+X-Received: by 2002:a05:6808:c165:b0:450:794a:6d08 with SMTP id 5614622812f47-45115b870f2mr486336b6e.49.1763719173494;
+        Fri, 21 Nov 2025 01:59:33 -0800 (PST)
+Received: from localhost ([2a03:2880:10ff:3::])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-450ffe2d3d1sm1481532b6e.3.2025.11.21.01.59.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Nov 2025 01:59:32 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+Date: Fri, 21 Nov 2025 01:59:23 -0800
+Subject: [PATCH net-next] net: hyperv: convert to use .get_rx_ring_count
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251120134105.189753-1-ubizjak@gmail.com> <SN6PR02MB41571E23242892F03B528C56D4D5A@SN6PR02MB4157.namprd02.prod.outlook.com>
-In-Reply-To: <SN6PR02MB41571E23242892F03B528C56D4D5A@SN6PR02MB4157.namprd02.prod.outlook.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Fri, 21 Nov 2025 09:09:40 +0100
-X-Gm-Features: AWmQ_bluc3ZPusc0e1J0rgcN2xbuBuagn9aVK0xodafRGWLRM_c-3KuggTnMX9I
-Message-ID: <CAFULd4Z=ZkOR5qiRxE-5LTyn=FrjtDTbjRRQP2n08kDEbc4_aA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] x86: Use MOVL when reading segment registers
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20251121-hyperv_gxrings-v1-1-31293104953b@debian.org>
+X-B4-Tracking: v=1; b=H4sIAPo3IGkC/x3MUQqDMAwG4KuE/9mCKRNLrzLGkBlrXqKkIh3i3
+ Qf7DvBdqOIqFZkuuJxadTNk4o7wWScrEnRGJsQ+Dsycwvrdxc93aa5WauCYBknLND76ER1hd1m
+ 0/cMnTI5g0g687vsHJ6MOM2oAAAA=
+X-Change-ID: 20251118-hyperv_gxrings-1285e8fa7407
+To: "K. Y. Srinivasan" <kys@microsoft.com>, 
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+ Dexuan Cui <decui@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, kernel-team@meta.com, 
+ Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.15-dev-a6db3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1971; i=leitao@debian.org;
+ h=from:subject:message-id; bh=HHsmzhVeoof90NmVVOS0Bqgw+YdMs88RomC1IZl58xg=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBpIDgEo4LlMreBH8CqW3R+2WqEOzseEV2nvmqFo
+ 6LSHROv9uCJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaSA4BAAKCRA1o5Of/Hh3
+ bQVCD/9f2TC3N8TYHjj7vhJb5Ow1BeNu3UI3KrvY7hD0vgMGQo09py6TMUCGy6wSdenlDn4n3Nn
+ IDuifBybnQyrS9HLd3LtbHwAHis2jpTQpIjcuPYt4TbXJN7qiyHuXWjzAi+Ioy26FCH6xNuR8n+
+ IDlIgDeX+SZxl8qAKPIFzJT05w+deSLWvnjKVnI9vy6WdI8fZVKPY/5+lGqttpuLvioDZjPqPpK
+ u4eYBCQZqocKud1djMpV44matf4KeKzYPo4Na470GyXwyRQj0LjbtJCIjf3AU/iqtEEs3yjXtcc
+ s7zDfmd2LRTsVzCG1dUOCf0kW/jNDnHyiTlv8s0vjSI9WQMpezvhekE9Kz20b6Yayn0rdW9EIMe
+ PsMrsPAUlWS1zVkJza/sH8YX2PL5C8DlovOD1PfwtydU9d7x/CRE/o4smikSWoxAETm9+c6TaKe
+ LByaNR4rl66OI7WMRSjzi0GVQrQUL/szcmIyeNcMPXzspDJimiGQAaNj/S0e65ptuMWRXrT197r
+ Z7RxrkDyg8RENCYm9fSNE9eY+E3hUwzCu2BrcJ3Em6vduWmqkDex8MUrojHtezbJRfkUk91D56v
+ 5mFMgO8kdOwwSURLop9TaZhrf2UQs72ggmjMTNGI+9Crp76hL/UUCUe0zW2WTmUw8uRlTlGkRbF
+ H0EpRaWg0NttieA==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-On Fri, Nov 21, 2025 at 2:03=E2=80=AFAM Michael Kelley <mhklinux@outlook.co=
-m> wrote:
->
-> From: Uros Bizjak <ubizjak@gmail.com>
-> >
-> > Use MOVL when reading segment registers to avoid 0x66 operand-size
-> > override insn prefix. The segment value is always 16-bit and gets
-> > zero-extended to the full 32-bit size.
-> >
-> > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Ingo Molnar <mingo@kernel.org>
-> > Cc: Borislav Petkov <bp@alien8.de>
-> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > ---
-> >  arch/x86/include/asm/segment.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/include/asm/segment.h b/arch/x86/include/asm/segm=
-ent.h
-> > index f59ae7186940..9f5be2bbd291 100644
-> > --- a/arch/x86/include/asm/segment.h
-> > +++ b/arch/x86/include/asm/segment.h
-> > @@ -348,7 +348,7 @@ static inline void __loadsegment_fs(unsigned short =
-value)
-> >   * Save a segment register away:
-> >   */
-> >  #define savesegment(seg, value)                              \
-> > -     asm("mov %%" #seg ",%0":"=3Dr" (value) : : "memory")
-> > +     asm("movl %%" #seg ",%k0" : "=3Dr" (value) : : "memory")
-> >
-> >  #endif /* !__ASSEMBLER__ */
-> >  #endif /* __KERNEL__ */
-> > --
-> > 2.51.1
-> >
->
-> I've built a linux-next20251119 kernel plus the three patches in this
-> series, and tested it in an SEV-SNP VM in the Azure public cloud. The VM
-> is a Standard DC16ads v5 (16 vcpus, 64 GiB memory) running Ubuntu
-> 20.04. It boots and does basic smoke tests with no issues. So, for all
-> three patches,
->
-> Tested-by: Michael Kelley <mhklinux@outlook.com>
->
-> I do have a comment on the commit message for Patch 3 (I would have
-> replied there, but for unknown reasons the third patch didn't show up
-> in my LKML feed). The commit message says "VMMCALL ... may be inserted
-> before the frame pointer". This text was somewhat ambiguous to me.
-> I initially read it as "the compiler might insert VMCALL before the
-> frame pointer is set up". But I think you meant "it's OK to allow the
-> compiler to insert the VMMCALL before the frame point is set up".
-> Maybe the intended meaning is obvious to experts in this area,
-> but I'm new enough that it was confusing to me. ;-)
->
-> To avoid any future confusion, I'd suggest this wording, which is explici=
-t
-> about why this patch is appropriate:
->
-> Unlike the CALL instruction, VMMCALL does not push to the stack, so
-> it's OK to allow the compiler to insert it before the frame pointer gets
-> set up by the containing function. ASM_CALL_CONSTRAINT is for CALLs
-> that must be after the frame pointer is set up, so it is over-constrainin=
-g
-> here and can be removed.
->
-> FWIW, removing the ASM_CALL_CONSTRAINT does not change
-> the generated code for hv_snp_hypercall().
+Convert the hyperv netvsc driver to use the new .get_rx_ring_count
+ethtool operation instead of implementing .get_rxnfc solely for handling
+ETHTOOL_GRXRINGS command. This simplifies the code by replacing the
+switch statement with a direct return of the queue count.
 
-Michael,
+The new callback provides the same functionality in a more direct way,
+following the ongoing ethtool API modernization.
 
-thanks for your testing and rewording suggestion! After reading it
-again a couple of times, I agree that the original text is a bit too
-terse, and adding your words indeed clear it up considerably! I have
-changed the patch description as you proposed in v2.
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+Note: This was compile-tested only.
+---
+ drivers/net/hyperv/netvsc_drv.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
 
-BR,
-Uros.
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 39c892e46cb0..3d47d749ef9f 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -1624,22 +1624,15 @@ netvsc_get_rxfh_fields(struct net_device *ndev,
+ 	return 0;
+ }
+ 
+-static int
+-netvsc_get_rxnfc(struct net_device *dev, struct ethtool_rxnfc *info,
+-		 u32 *rules)
++static u32 netvsc_get_rx_ring_count(struct net_device *dev)
+ {
+ 	struct net_device_context *ndc = netdev_priv(dev);
+ 	struct netvsc_device *nvdev = rtnl_dereference(ndc->nvdev);
+ 
+ 	if (!nvdev)
+-		return -ENODEV;
+-
+-	switch (info->cmd) {
+-	case ETHTOOL_GRXRINGS:
+-		info->data = nvdev->num_chn;
+ 		return 0;
+-	}
+-	return -EOPNOTSUPP;
++
++	return nvdev->num_chn;
+ }
+ 
+ static int
+@@ -1969,7 +1962,7 @@ static const struct ethtool_ops ethtool_ops = {
+ 	.get_channels   = netvsc_get_channels,
+ 	.set_channels   = netvsc_set_channels,
+ 	.get_ts_info	= ethtool_op_get_ts_info,
+-	.get_rxnfc	= netvsc_get_rxnfc,
++	.get_rx_ring_count = netvsc_get_rx_ring_count,
+ 	.get_rxfh_key_size = netvsc_get_rxfh_key_size,
+ 	.get_rxfh_indir_size = netvsc_rss_indir_size,
+ 	.get_rxfh	= netvsc_get_rxfh,
+
+---
+base-commit: e2c20036a8879476c88002730d8a27f4e3c32d4b
+change-id: 20251118-hyperv_gxrings-1285e8fa7407
+
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
+
 
