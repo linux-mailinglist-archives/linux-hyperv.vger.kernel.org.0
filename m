@@ -1,171 +1,297 @@
-Return-Path: <linux-hyperv+bounces-7781-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7782-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41BB4C7CEB8
-	for <lists+linux-hyperv@lfdr.de>; Sat, 22 Nov 2025 12:43:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CAAB2C7E546
+	for <lists+linux-hyperv@lfdr.de>; Sun, 23 Nov 2025 19:08:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7895934E176
-	for <lists+linux-hyperv@lfdr.de>; Sat, 22 Nov 2025 11:43:16 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 48ABA3411D7
+	for <lists+linux-hyperv@lfdr.de>; Sun, 23 Nov 2025 18:08:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 243242FD7D0;
-	Sat, 22 Nov 2025 11:43:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0E3B242D70;
+	Sun, 23 Nov 2025 18:08:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ipvswz18"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dcXIcT77"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DFB2FBE1B
-	for <linux-hyperv@vger.kernel.org>; Sat, 22 Nov 2025 11:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B5AA2D3218;
+	Sun, 23 Nov 2025 18:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763811792; cv=none; b=GLAV7G/W6gG6GKPenuiRz+LwRpd0EyFTiUQr+I72Q3Lj1KxwskLo1nJTxK5CvR3LPAK7QV2vWz+aGHxyBYKs4lxqEBPJL1si23i64rQGSx2G5+ts951Z+adG7yUOHfjZ8frfk+SuMAY6RX5cESkbJs70uqc0NGxvomplf24gUwo=
+	t=1763921306; cv=none; b=Yboi88oCIPgtquwnKDRCG53szbvDgDYj5/xckd8ZhY8ihtAUttgWfxtQzwP5gh5jEm992ILu75FoO44f2D9V2I7dhQkRdlDCBqBRbLmXt3QpbLkvwP/2BXQVF/ExtH1rOTANy44C/ndS8pJYoBRxMVYUmFXBn72VaXG9ImnxLjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763811792; c=relaxed/simple;
-	bh=p8H88tgM9+gXap9lRijwllIzLZu5llgC1f7xv5nwybk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h3yanYYUgOdY5Dl4BDbsiCSNZ0ugrO1pug+/87GfV1YVNBylHObRHVm6jGc+tRQz2TS2CCWzdFN4y6KqioIYfoYmwDzaTehzkzslPe/tjSLiUwjSeuH5o92+4Givei5FLq5mh2Q4gVNzyKlO2KZmaaf1E9zbFJNlKrwJ7dZ5Rc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ipvswz18; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC676C19423
-	for <linux-hyperv@vger.kernel.org>; Sat, 22 Nov 2025 11:43:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763811791;
-	bh=p8H88tgM9+gXap9lRijwllIzLZu5llgC1f7xv5nwybk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Ipvswz18aqd0/TPfyaDV4JwDv6OLD0cZeJIq8CrXbsMPz1VZwsapYJAtdiVIc37YT
-	 P/L0lbDBumBVIGHT+mEZV/7MD9cSmtv3T3DWptmTmc9qxDrBKkyRPXa4Ae8aE0PQUQ
-	 HbDVsMpuUKTcGgV/9mxXWCLrCfILdEio7MaZrfnJFLJTlc/yk47dzUsqNJjonEuNfi
-	 r7fYLuhO8HnGh2sORE0RhoxErJSvva28uDuBOu5ftFkehUDuNOUqLnkO6/lmnaImM7
-	 hcZKmV+aF+35cjIVo76O+EsmfvKSnHRb4a8+jOL/NKN437gxi/5FmsRnI8XRWwG0Y8
-	 yt3iC2HpajEig==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5942a631c2dso3364136e87.2
-        for <linux-hyperv@vger.kernel.org>; Sat, 22 Nov 2025 03:43:11 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUFf19jsW7c4BHV/iZcrJaEUU9VG/y5Kr6X5A8VKmepnbuDBrgI2eQospA+pyqUEHTMEB3hPXsNcPV3WR0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFmWi2F/wU/fgNIXavbcJY95aSNyPcRV4OXKX7PW5NyiMfRuap
-	2+pwINX7Mk1tq3JK7zqBqf5Fln/5lfipVuJ7c7wwJcJxj4WzWMkFeUdiTMPwskLIv6Wp9hFyyrA
-	TefuC5EP6Kbh7x5tBH79iKibTr632UAQ=
-X-Google-Smtp-Source: AGHT+IGKRFlgwehxRBm62tvmwTXy609E55PZi7OAqnBZ+de0+tT9jGT1vTKQcXSXNqsiURj9qycDJBw3M2X6JvRwZDY=
-X-Received: by 2002:a05:6512:3b27:b0:592:fa8a:810d with SMTP id
- 2adb3069b0e04-596a3ea7847mr1884146e87.16.1763811789974; Sat, 22 Nov 2025
- 03:43:09 -0800 (PST)
+	s=arc-20240116; t=1763921306; c=relaxed/simple;
+	bh=FK5CO4GeTPmtwy57uc4iEa9rZePcIDRJPX9TXFUhx3M=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=oqdLruGAUO2QFA0Qwyo07mDqeylqJdoCRMCb1fafM252QKnrY7lJw2NRDqmMkQz4uC0X/ddwrfVdUKgLQ+RHSBoR5RL6AdiplkFe2ycW9TF79Fh9TpkTGvsAc/tu4vvyWBCA4UQdzQkLkWvI6RMvxS8+x084PzvVfqV/xqVpQ3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=dcXIcT77; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1204)
+	id 452672129D90; Sun, 23 Nov 2025 10:08:18 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 452672129D90
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1763921298;
+	bh=eUuAW+EBorJhzAJFacpYRZoC+glQCTI9O7wPdIVctLk=;
+	h=Date:From:To:Subject:From;
+	b=dcXIcT77364lmjH8B2tP0sonMDyoxH6wTuoPbH5yRN8mg/bhSCnwzRCu7an+/f98b
+	 jkMEKD1a7ZPFqyca0kSHk1F8SMTnAAgdk7ZRAH4YTLjdZ+MfT/mRM98pxT1tToYmA4
+	 j/DU0A+f0ZMXXNxKgt73RK5wtZMVkCvADxfr/PqA=
+Date: Sun, 23 Nov 2025 10:08:18 -0800
+From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
+	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
+	ernis@linux.microsoft.com, shirazsaleem@microsoft.com,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	dipayanroy@microsoft.com
+Subject: [PATCH net-next, v4] net: mana: Implement ndo_tx_timeout and
+ serialize queue resets per port.
+Message-ID: <20251123180818.GA18398@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251121135624.494768-1-tzimmermann@suse.de> <96a8d591-29d5-4764-94f9-6042252e53ff@app.fastmail.com>
- <CAMj1kXF1Dh0RbuqYc0fhAPf-CM0mdYh8BhenM8-ugKVHfwnhBg@mail.gmail.com>
- <199e7538-5b4a-483b-8976-84e4a8a0f2fd@suse.de> <CAMj1kXE+mS1Sm5GaROU0P97J2w1pew0P_To4sKiw8h1iOMuLcg@mail.gmail.com>
- <d080729c-6586-4b9c-b234-470977849d3d@suse.de> <6dff8e7e-c99b-443d-a1d8-22650ca0b595@suse.de>
- <CAMj1kXGpC_162bFL65kQw=7qVP7ezYw77Q76y217dDs8pqHogw@mail.gmail.com>
- <8d0bc096-e346-462b-a274-f0cc1456eea3@suse.de> <CAMj1kXFdethf2sb1tm1V4wRW1SyPt-OnCmaAXc5cHNKuLJMXWA@mail.gmail.com>
- <4c716fd1-c989-4e48-9878-e7312fefc302@suse.de>
-In-Reply-To: <4c716fd1-c989-4e48-9878-e7312fefc302@suse.de>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sat, 22 Nov 2025 12:42:58 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXHO12LritnbMXapGBV8QnQOCVopJbaBi2ejMUgZQFGdSg@mail.gmail.com>
-X-Gm-Features: AWmQ_blTv2LH7aQFylqJjjKyEMR6uIyXZhGHq7nWzAQ8kC07d8tB-75tF0Nly1A
-Message-ID: <CAMj1kXHO12LritnbMXapGBV8QnQOCVopJbaBi2ejMUgZQFGdSg@mail.gmail.com>
-Subject: Re: [PATCH 0/6] arch, sysfb: Move screen and edid info into single place
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Arnd Bergmann <arnd@arndb.de>, Javier Martinez Canillas <javierm@redhat.com>, x86@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, dri-devel@lists.freedesktop.org, 
-	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-fbdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Sat, 22 Nov 2025 at 11:52, Thomas Zimmermann <tzimmermann@suse.de> wrote:
->
-> Hi
->
-> Am 21.11.25 um 17:31 schrieb Ard Biesheuvel:
-> > On Fri, 21 Nov 2025 at 17:26, Thomas Zimmermann <tzimmermann@suse.de> wrote:
-> >> Hi
-> >>
-> >> Am 21.11.25 um 17:19 schrieb Ard Biesheuvel:
-> >>> On Fri, 21 Nov 2025 at 17:09, Thomas Zimmermann <tzimmermann@suse.de> wrote:
-> >>>>
-> >>>> Am 21.11.25 um 17:08 schrieb Thomas Zimmermann:
-> >>>>> Hi
-> >>>>>
-> >>>>> Am 21.11.25 um 16:56 schrieb Ard Biesheuvel:
-> >>>>>> On Fri, 21 Nov 2025 at 16:53, Thomas Zimmermann <tzimmermann@suse.de>
-> >>>>>> wrote:
-> >>>>>>> Hi
-> >>>>>>>
-> >>>>>>> Am 21.11.25 um 16:16 schrieb Ard Biesheuvel:
-> >>>>>>>> On Fri, 21 Nov 2025 at 16:10, Arnd Bergmann <arnd@arndb.de> wrote:
-> >>>>>>>>> On Fri, Nov 21, 2025, at 14:36, Thomas Zimmermann wrote:
-> >>>>>>>>>> Replace screen_info and edid_info with sysfb_primary_device of type
-> >>>>>>>>>> struct sysfb_display_info. Update all users.
-> >>>>>>>>>>
-> >>>>>>>>>> Sysfb DRM drivers currently fetch the global edid_info directly,
-> >>>>>>>>>> when
-> >>>>>>>>>> they should get that information together with the screen_info
-> >>>>>>>>>> from their
-> >>>>>>>>>> device. Wrapping screen_info and edid_info in
-> >>>>>>>>>> sysfb_primary_display and
-> >>>>>>>>>> passing this to drivers enables this.
-> >>>>>>>>>>
-> >>>>>>>>>> Replacing both with sysfb_primary_display has been motivate by
-> >>>>>>>>>> the EFI
-> >>>>>>>>>> stub. EFI wants to transfer EDID via config table in a single entry.
-> >>>>>>>>>> Using struct sysfb_display_info this will become easily possible.
-> >>>>>>>>>> Hence
-> >>>>>>>>>> accept some churn in architecture code for the long-term
-> >>>>>>>>>> improvements.
-> >>>>>>>>> This all looks good to me,
-> >>>>>>>>>
-> >>>>>>>>> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> >>>>>>> Thanks
-> >>>>>>>
-> >>>>>>>>> It should also bring us one step closer to eventually
-> >>>>>>>>> disconnecting the x86 boot ABI from the kernel-internal
-> >>>>>>>>> sysfb_primary_display.
-> >>>>>>>>>
-> >>>>>>>> Agreed
-> >>>>>>>>
-> >>>>>>>> Acked-by: Ard Biesheuvel <ardb@kernel.org>
-> >>>>>>> Thanks
-> >>>>>>>
-> >>>>>>>> I can take patches 1-2 right away, if that helps during the next
-> >>>>>>>> cycle.
-> >>>>>>>     From my sysfb-focused POV, these patches would ideally all go through
-> >>>>>>> the same tree, say efi or generic arch, or whatever fits best. Most of
-> >>>>>>> the other code is only renames anyway.
-> >>>>>>>
-> >>>>>> I don't mind queueing all of it, but I did get a conflict on
-> >>>>>> drivers/pci/vgaarb.c
-> >>>>> Probably from a78835b86a44 ("PCI/VGA: Select SCREEN_INFO on X86")
-> >>>> https://lore.kernel.org/all/20251013220829.1536292-1-superm1@kernel.org/
-> >>>>
-> >>> Yes, if I merge back -rc2 first, I can apply patches 1-5 onto my
-> >>> efi/next tree. But then I hit
-> >>>
-> >>> Applying: sysfb: Move edid_info into sysfb_primary_display
-> >>> error: sha1 information is lacking or useless (drivers/gpu/drm/sysfb/efidrm.c).
-> >>> error: could not build fake ancestor
-> >>> Patch failed at 0006 sysfb: Move edid_info into sysfb_primary_display
-> >>>
-> >>> If you prefer, you can take the whole lot via the sysfb tree instead,
-> >>> assuming it does not depend on the EDID changes I already queued up?
-> >> Sure, I can also add it to the drm-misc tree. ETA in upstream would be
-> >> v6.20-rc1.
-> >>
-> > But does that mean the EDID firmware on non-x86 will have to wait for
-> > 6.21? I was trying to avoid making this a 6 month effort.
->
-> No problem. Then let me rebase onto linux-next and put the existing EDID
-> patches for EFI on top. It's mostly acked or reviewed already. Once we
-> have it in good shape we can merged it all at once via the linux-efi
-> tree. Does that work for you?
->
+Implement .ndo_tx_timeout for MANA so any stalled TX queue can be detected
+and a device-controlled port reset for all queues can be scheduled to a
+ordered workqueue. The reset for all queues on stall detection is
+recomended by hardware team.
 
-Sounds good.
+The change introduces a single ordered workqueue
+"mana_per_port_queue_reset_wq" queuing one work_struct per port,
+using WQ_UNBOUND | WQ_MEM_RECLAIM so stalled queue reset work can
+run on any CPU and still make forward progress under memory
+pressure.
+
+Reviewed-by: Pavan Chebbi <pavan.chebbi@broadcom.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+---
+Changes in v4:
+  -Fixed commit message, work initialization before registering netdev,
+   fixed potential null pointer de-reference bug.
+Changes in v3:
+  -Fixed commit meesage, removed rtnl_trylock and added
+   disable_work_sync, fixed mana_queue_reset_work, and few
+   cosmetics.
+Changes in v2:
+  -Fixed cosmetic changes.
+---
+---
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 77 ++++++++++++++++++-
+ include/net/mana/gdma.h                       |  7 +-
+ include/net/mana/mana.h                       |  8 +-
+ 3 files changed, 89 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 1ad154f9db1a..7c71257b43a4 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -299,6 +299,42 @@ static int mana_get_gso_hs(struct sk_buff *skb)
+ 	return gso_hs;
+ }
+ 
++static void mana_per_port_queue_reset_work_handler(struct work_struct *work)
++{
++	struct mana_queue_reset_work *reset_queue_work =
++			container_of(work, struct mana_queue_reset_work, work);
++
++	struct mana_port_context *apc = container_of(reset_queue_work,
++						     struct mana_port_context,
++						     queue_reset_work);
++	struct net_device *ndev = apc->ndev;
++	int err;
++
++	rtnl_lock();
++
++	/* Pre-allocate buffers to prevent failure in mana_attach later */
++	err = mana_pre_alloc_rxbufs(apc, ndev->mtu, apc->num_queues);
++	if (err) {
++		netdev_err(ndev, "Insufficient memory for reset post tx stall detection\n");
++		goto out;
++	}
++
++	err = mana_detach(ndev, false);
++	if (err) {
++		netdev_err(ndev, "mana_detach failed: %d\n", err);
++		goto dealloc_pre_rxbufs;
++	}
++
++	err = mana_attach(ndev);
++	if (err)
++		netdev_err(ndev, "mana_attach failed: %d\n", err);
++
++dealloc_pre_rxbufs:
++	mana_pre_dealloc_rxbufs(apc);
++out:
++	rtnl_unlock();
++}
++
+ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ {
+ 	enum mana_tx_pkt_format pkt_fmt = MANA_SHORT_PKT_FMT;
+@@ -839,6 +875,23 @@ static int mana_change_mtu(struct net_device *ndev, int new_mtu)
+ 	return err;
+ }
+ 
++static void mana_tx_timeout(struct net_device *netdev, unsigned int txqueue)
++{
++	struct mana_port_context *apc = netdev_priv(netdev);
++	struct mana_context *ac = apc->ac;
++	struct gdma_context *gc = ac->gdma_dev->gdma_context;
++
++	/* Already in service, hence tx queue reset is not required.*/
++	if (gc->in_service)
++		return;
++
++	/* Note: If there are pending queue reset work for this port(apc),
++	 * subsequent request queued up from here are ignored. This is because
++	 * we are using the same work instance per port(apc).
++	 */
++	queue_work(ac->per_port_queue_reset_wq, &apc->queue_reset_work.work);
++}
++
+ static int mana_shaper_set(struct net_shaper_binding *binding,
+ 			   const struct net_shaper *shaper,
+ 			   struct netlink_ext_ack *extack)
+@@ -924,6 +977,7 @@ static const struct net_device_ops mana_devops = {
+ 	.ndo_bpf		= mana_bpf,
+ 	.ndo_xdp_xmit		= mana_xdp_xmit,
+ 	.ndo_change_mtu		= mana_change_mtu,
++	.ndo_tx_timeout		= mana_tx_timeout,
+ 	.net_shaper_ops         = &mana_shaper_ops,
+ };
+ 
+@@ -3287,6 +3341,7 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
+ 	ndev->min_mtu = ETH_MIN_MTU;
+ 	ndev->needed_headroom = MANA_HEADROOM;
+ 	ndev->dev_port = port_idx;
++	ndev->watchdog_timeo = 15 * HZ;
+ 	SET_NETDEV_DEV(ndev, gc->dev);
+ 
+ 	netif_set_tso_max_size(ndev, GSO_MAX_SIZE);
+@@ -3303,6 +3358,10 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
+ 	if (err)
+ 		goto reset_apc;
+ 
++	/* Initialize the per port queue reset work.*/
++	INIT_WORK(&apc->queue_reset_work.work,
++		  mana_per_port_queue_reset_work_handler);
++
+ 	netdev_lockdep_set_classes(ndev);
+ 
+ 	ndev->hw_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM;
+@@ -3549,6 +3608,15 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
+ 	if (ac->num_ports > MAX_PORTS_IN_MANA_DEV)
+ 		ac->num_ports = MAX_PORTS_IN_MANA_DEV;
+ 
++	ac->per_port_queue_reset_wq =
++			alloc_ordered_workqueue("mana_per_port_queue_reset_wq",
++						WQ_UNBOUND | WQ_MEM_RECLAIM);
++	if (!ac->per_port_queue_reset_wq) {
++		dev_err(dev, "Failed to allocate per port queue reset workqueue\n");
++		err = -ENOMEM;
++		goto out;
++	}
++
+ 	if (!resuming) {
+ 		for (i = 0; i < ac->num_ports; i++) {
+ 			err = mana_probe_port(ac, i, &ac->ports[i]);
+@@ -3616,13 +3684,15 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+ 
+ 	for (i = 0; i < ac->num_ports; i++) {
+ 		ndev = ac->ports[i];
+-		apc = netdev_priv(ndev);
+ 		if (!ndev) {
+ 			if (i == 0)
+ 				dev_err(dev, "No net device to remove\n");
+ 			goto out;
+ 		}
+ 
++		apc = netdev_priv(ndev);
++		disable_work_sync(&apc->queue_reset_work.work);
++
+ 		/* All cleanup actions should stay after rtnl_lock(), otherwise
+ 		 * other functions may access partially cleaned up data.
+ 		 */
+@@ -3647,6 +3717,11 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+ 		free_netdev(ndev);
+ 	}
+ 
++	if (ac->per_port_queue_reset_wq) {
++		destroy_workqueue(ac->per_port_queue_reset_wq);
++		ac->per_port_queue_reset_wq = NULL;
++	}
++
+ 	mana_destroy_eq(ac);
+ out:
+ 	mana_gd_deregister_device(gd);
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index a4cf307859f8..808622ae5ccc 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -592,6 +592,10 @@ enum {
+ 
+ /* Driver can self reset on FPGA Reconfig EQE notification */
+ #define GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE BIT(17)
++
++/* Driver detects stalled send queues and recovers them */
++#define GDMA_DRV_CAP_FLAG_1_HANDLE_STALL_SQ_RECOVERY BIT(18)
++
+ #define GDMA_DRV_CAP_FLAG_1_HW_VPORT_LINK_AWARE BIT(6)
+ 
+ /* Driver supports linearizing the skb when num_sge exceeds hardware limit */
+@@ -611,7 +615,8 @@ enum {
+ 	 GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE | \
+ 	 GDMA_DRV_CAP_FLAG_1_HW_VPORT_LINK_AWARE | \
+ 	 GDMA_DRV_CAP_FLAG_1_PERIODIC_STATS_QUERY | \
+-	 GDMA_DRV_CAP_FLAG_1_SKB_LINEARIZE)
++	 GDMA_DRV_CAP_FLAG_1_SKB_LINEARIZE        | \
++	 GDMA_DRV_CAP_FLAG_1_HANDLE_STALL_SQ_RECOVERY)
+ 
+ #define GDMA_DRV_CAP_FLAGS2 0
+ 
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index d7e089c6b694..cef78a871c7c 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -480,7 +480,7 @@ struct mana_context {
+ 	struct mana_ethtool_hc_stats hc_stats;
+ 	struct mana_eq *eqs;
+ 	struct dentry *mana_eqs_debugfs;
+-
++	struct workqueue_struct *per_port_queue_reset_wq;
+ 	/* Workqueue for querying hardware stats */
+ 	struct delayed_work gf_stats_work;
+ 	bool hwc_timeout_occurred;
+@@ -492,9 +492,15 @@ struct mana_context {
+ 	u32 link_event;
+ };
+ 
++struct mana_queue_reset_work {
++	/* Work structure */
++	struct work_struct work;
++};
++
+ struct mana_port_context {
+ 	struct mana_context *ac;
+ 	struct net_device *ndev;
++	struct mana_queue_reset_work queue_reset_work;
+ 
+ 	u8 mac_addr[ETH_ALEN];
+ 
+-- 
+2.43.0
+
 
