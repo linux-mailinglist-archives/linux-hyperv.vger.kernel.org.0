@@ -1,247 +1,178 @@
-Return-Path: <linux-hyperv+bounces-7810-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7811-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD7C3C821BB
-	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Nov 2025 19:29:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C627C8288B
+	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Nov 2025 22:28:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 85AFE3A87C1
-	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Nov 2025 18:29:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 425893ABCA0
+	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Nov 2025 21:28:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 220673176E4;
-	Mon, 24 Nov 2025 18:29:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D18332E6AA;
+	Mon, 24 Nov 2025 21:28:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHhbsp4x"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="LGPzxP2Q"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8807F314D28
-	for <linux-hyperv@vger.kernel.org>; Mon, 24 Nov 2025 18:29:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A4F932E69B;
+	Mon, 24 Nov 2025 21:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764008968; cv=none; b=oTdkx6mMxtmOF88W7FzyWTJhmt+cTrWqlobE+qH0buC2R+U9KUI1F9RvASL87odbhEUf3zqfZHgW4z4iwQ1ZWauTkQ43c2XO0aY2yD/ObXOnFWLeMM4chOcsaMx1r33AfqSlrS3eRtSot/MHI3jFTLJIfS2H7K7/PllzhLKvoyI=
+	t=1764019694; cv=none; b=a2bCDxA2diz3O4vVXpb7h05hTEloXYrvMr49XaVw591apjqjWkho+F6/WZ65wm0K83OvCB6XBZIrcRR/rDLSLuKH8iGvUfCPAWa2q31NSXqe6GMXY2ZX9u6gIEdvuTdzcPQwc+0E9o+0qBIqFUT8p5jqThEbqd1AjbJjP4rU/3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764008968; c=relaxed/simple;
-	bh=vsh6gCZNT2fH6DetQwFBewFmmMxYo5Aysy5llP/krFQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rbOySjdPJpjbic0t6VTWHsycHC7Up3ssdJ0Cpy66X0URfwGwTwiwszx5TqWgfoHd+RypHmzUX5uFzYLHsnGxUxq4MvKlwYe7ufpMllrhX4DQKD8F3/NeutBr/0wFR2duu1+L/Jfi7FqchpRgNOdIfNt8tIVuvEg1NzIiaHmDggs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IHhbsp4x; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-29555b384acso57447035ad.1
-        for <linux-hyperv@vger.kernel.org>; Mon, 24 Nov 2025 10:29:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764008966; x=1764613766; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=l7g4YApcxeWn1QV0962fcWmEJsVfTz87ip5iTpRI8ow=;
-        b=IHhbsp4xhKyUOXbaOao2NTnD52FQgcCC0UmoZ+P2oBqwdJj0u9S4bEdJnwi+t310qa
-         hzWXhbgw/I8dbG3HXKKQNOV0sav8cDNEvkvYCMWzdl8vfyss0a0WZoE5kdw+Pk8+9Lco
-         C5bxjfO08V1loS4SjFhjJ0szimTW0oD6h8oM7Clnddua8pLn045wzh8TNNg3Xui2kxFz
-         SYY396aECshhbmKtpW0hOBo3WpQFFmi2bl4/oOnTlSYXa2kJ3msnkwtICOOjXrwtDr8f
-         vlQ80HG91NA0eyFvW95yuReAQhagJEeWpEXaYt/TiFOUfREiQCH4Qx2uk9JNnldABt9i
-         58rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764008966; x=1764613766;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l7g4YApcxeWn1QV0962fcWmEJsVfTz87ip5iTpRI8ow=;
-        b=hhksDClUX7fORH8wN9bHZFFvmEwFmylkhbLJOCotDf72oVaexkbuCv8zQKPOD2fea0
-         2TGkiE21QFUPXvg7g6AzArkuob2mYKYRaowpThaYjA+2uM3DKWD7KgMjMU7gy8RGmvQ0
-         11uty3a3WR9aH36WQg7yDFh6QVxEf/iGyBkoZxBAEzJ9dgIJ93illZc/iwbMgbQM4K+/
-         EFm9qMdGIKniyASapm9USqo39rWsf6i8Nwen26teusTpLSY1VPN6PrvfBY0G2vEEJxnh
-         wCqqUb9+3cH/1h17PmlmhrU4aQ5Fx6L8zirtnejRN1D5wKeeAXdj0c7whVkGhacXa7uO
-         cNGA==
-X-Forwarded-Encrypted: i=1; AJvYcCXhMB5g1Gwz1wecd5AGthtxVjICVOPx6f3qNStb6EolTVxNMY1IOUwS+CyCt8K8Rd9C3tG8W+03p6bLyIc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNlYc+Et38+ELD6Z2dno6dTE+C0NajwlGI3smfHldlAwSSdKFt
-	9E2dWLsthS9M0BDHgHAwAHXjU7jkfcZqLcpE8Dl63FNGYwl/Z+TOAmJ0
-X-Gm-Gg: ASbGnctrg73AIWExYDHt6NtG6YOcvSvz2CP2mLk71cJUBP0waZMIUIEqai9SectcwBq
-	Hyuce0dGEHW3pdUH+fsa9APrIuhwPzvGFJgIoHnQgrRcJpK9KChy/HLJkRdrxLCh9rlO3cNffmF
-	8gqkMUL7zfxckFF/+UC702LmviOv1R42fGIjQ6yLA2zBv/3ATWROY6U3Tuoj7mJ9Er9sLv0Vd/y
-	oM7e3VwBHCdCIefhovkUNHa96hDLelKnndYOjbYTKGfZfsdQfAafoC8R6wSDhCxcyL4sTmEE+xb
-	uOpcutdT09oAtmQb+RLy1U87Gk0VDhDboFzDk2l1kAUY2PG6xob/7NXfVj8nQ2BBr6+AS/217qc
-	aG4dMTFYsKkHLBWIRBU839fwttiZNzwBLXRY36R2uISF1XgB24coCNWTk6ajxlFYUU1rGSCj6k8
-	aQURk7WwAWLIdJLw97T+H0N6RXAyO5I9UYdto=
-X-Google-Smtp-Source: AGHT+IFeO+TGaMNPoLfpN+XZe55yTNMT9nF9JthEW58YFJD5Yapc9U9WPxNdIP4Ln2O8C1lyEGrbBw==
-X-Received: by 2002:a17:902:fc43:b0:295:6e0:7b0d with SMTP id d9443c01a7336-29b6c6bb2f3mr142913995ad.56.1764008965654;
-        Mon, 24 Nov 2025 10:29:25 -0800 (PST)
-Received: from ubuntu-Virtual-Machine.mshome.net ([70.37.26.65])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29b5b1070c3sm144760415ad.12.2025.11.24.10.29.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Nov 2025 10:29:24 -0800 (PST)
-From: Tianyu Lan <ltykernel@gmail.com>
-X-Google-Original-From: Tianyu Lan <tiala@microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	vdso@hexbites.dev
-Cc: Tianyu Lan <tiala@microsoft.com>,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] Drivers: hv: Confidential VMBus exernal memory support
-Date: Mon, 24 Nov 2025 13:29:20 -0500
-Message-Id: <20251124182920.9365-1-tiala@microsoft.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1764019694; c=relaxed/simple;
+	bh=TZIxW9GD+DAEWFPpGRTcM/XmuC7sgZFfDKj7jfI72HE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JvNy9u6ctvUGT8MGlnk7Z0iszcgMvTNOZT3oqrlSqbH3XqVq5h/ySFHSsx0Gsh8V55ZOrQQ0hJOPzNnOIiK23wwAxgg7oO9Ny9axvbOBlfskjORezYmk3W7+CtlIMugxBF/cxvDRG7QW0zMqpQvahIfn9wrXR9qaXUud9kR8ymA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=LGPzxP2Q; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from skinsburskii.localdomain (unknown [20.236.10.206])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5DD972120382;
+	Mon, 24 Nov 2025 13:28:04 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5DD972120382
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1764019684;
+	bh=3QNiKRsDcXEBiKDwSBm23e0S49+64xhogRDpiY7/9tQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LGPzxP2QzoJtAx8+/4+u76sbgkHjc1F0bYHsybstW27VSTHRV4DhMJaqkiXuerBST
+	 +mto+Xj4SjcOgfSEgaNvReEcqjSATW8YpnrFjnMrERTgU6YjAOJaCFIFDNy0XWFMaD
+	 Ohnwk2MRI/i+3vb4nOrUnd7M6xqQ5JfWCzFaK9NY=
+Date: Mon, 24 Nov 2025 13:28:02 -0800
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 5/5] Drivers: hv: Add support for movable memory
+ regions
+Message-ID: <aSTN4nlRiXOXmKlA@skinsburskii.localdomain>
+References: <176339789196.27330.10517676002564595057.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <176339837995.27330.14240947043073674139.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <SN6PR02MB4157DB4154734C44B5D85A88D4D6A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <aR5kjh-d6UAqy88t@skinsburskii.localdomain>
+ <SN6PR02MB415740A80DA4FF9661040147D4D5A@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB415740A80DA4FF9661040147D4D5A@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-In CVM(Confidential VM), system memory is encrypted
-by default. Device drivers typically use the swiotlb
-bounce buffer for DMA memory, which is decrypted
-and shared between the guest and host. Confidential
-Vmbus, however, supports a confidential channel
-that employs encrypted memory for the Vmbus ring
-buffer and external DMA memory. The support for
-the confidential ring buffer has already been
-integrated.
+On Fri, Nov 21, 2025 at 05:45:20AM +0000, Michael Kelley wrote:
+> From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Wednesday, November 19, 2025 4:45 PM
+> > 
+> > On Tue, Nov 18, 2025 at 04:29:56PM +0000, Michael Kelley wrote:
+> > > From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Monday, November 17, 2025 8:53 AM
+> 
+> [snip]
+> 
+> > > > diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> > > > index 0b8c391a0342..5f1637cbb6e3 100644
+> > > > --- a/drivers/hv/Kconfig
+> > > > +++ b/drivers/hv/Kconfig
+> > > > @@ -75,6 +75,7 @@ config MSHV_ROOT
+> > > >  	depends on PAGE_SIZE_4KB
+> > > >  	select EVENTFD
+> > > >  	select VIRT_XFER_TO_GUEST_WORK
+> > > > +	select HMM_MIRROR
+> > >
+> > > Couldn't you also do "select MMU_NOTIFIER" to avoid the #ifdef's
+> > > and stubs for when it isn't selected? There are other Linux kernel
+> > > drivers that select it. Or is the intent to allow building an image that
+> > > doesn't support unpinned memory, and the #ifdef's save space?
+> > >
+> > 
+> > That's an interesting question. This driver can function without MMU notifiers
+> > by pinning all memory, which might be advantageous for certain real-time
+> > applications.
+> > However, since most other virtualization solutions use MMU_NOTIFIER, there
+> > doesn't appear to be a strong reason for this driver to deviate.
+> 
+> I'm not clear on your last sentence. Could you elaborate?
+> 
 
-In CVM, device drivers usually employ the standard
-DMA API to map DMA memory with the bounce buffer,
-which remains transparent to the device driver.
-For external DMA memory support, Hyper-V specific
-DMA operations are introduced, bypassing the bounce
-buffer when the confidential external memory flag
-is set. These DMA operations might also be reused
-for TDISP devices in the future, which also support
-DMA operations with encrypted memory.
+I meant I'll select MMU_NOTIFIER.
 
-The DMA operations used are global architecture
-DMA operations (for details, see get_arch_dma_ops()
-and get_dma_ops()), and there is no need to set up
-for each device individually.
+> 
+> Right. But even for pinned regions as coded today, is that assumption
+> correct? Due to memory being fragmented at the time of region creation,
+> it would be possible that some 2Meg ranges in a region are backed by a large
+> page, while other 2Meg ranges are not. In that case, a single per-region flag
+> isn't enough information. Or does the hypercall work OK if the "map huge
+> page" flag is passed when the range isn't a huge page? I'm not clear on what
+> the hypercall requires as input.
+> 
 
-Signed-off-by: Tianyu Lan <tiala@microsoft.com>
----
- drivers/hv/vmbus_drv.c | 90 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 89 insertions(+), 1 deletion(-)
+It is not with THP enabled and missing MAP_HUGETLB mmap flag.
+I'll fix it in the next revision.
 
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 0dc4692b411a..ca31231b2c32 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -39,6 +39,9 @@
- #include <clocksource/hyperv_timer.h>
- #include <asm/mshyperv.h>
- #include "hyperv_vmbus.h"
-+#include "../../kernel/dma/direct.h"
-+
-+extern const struct dma_map_ops *dma_ops;
- 
- struct vmbus_dynid {
- 	struct list_head node;
-@@ -1429,6 +1432,88 @@ static int vmbus_alloc_synic_and_connect(void)
- 	return -ENOMEM;
- }
- 
-+
-+static bool hyperv_private_memory_dma(struct device *dev)
-+{
-+	struct hv_device *hv_dev = device_to_hv_device(dev);
-+
-+	if (hv_dev && hv_dev->channel && hv_dev->channel->co_external_memory)
-+		return true;
-+	else
-+		return false;
-+}
-+
-+static dma_addr_t hyperv_dma_map_page(struct device *dev, struct page *page,
-+		unsigned long offset, size_t size,
-+		enum dma_data_direction dir,
-+		unsigned long attrs)
-+{
-+	phys_addr_t phys = page_to_phys(page) + offset;
-+
-+	if (hyperv_private_memory_dma(dev))
-+		return __phys_to_dma(dev, phys);
-+	else
-+		return dma_direct_map_phys(dev, phys, size, dir, attrs);
-+}
-+
-+static void hyperv_dma_unmap_page(struct device *dev, dma_addr_t dma_handle,
-+		size_t size, enum dma_data_direction dir, unsigned long attrs)
-+{
-+	if (!hyperv_private_memory_dma(dev))
-+		dma_direct_unmap_phys(dev, dma_handle, size, dir, attrs);
-+}
-+
-+static int hyperv_dma_map_sg(struct device *dev, struct scatterlist *sgl,
-+		int nelems, enum dma_data_direction dir,
-+		unsigned long attrs)
-+{
-+	struct scatterlist *sg;
-+	dma_addr_t dma_addr;
-+	int i;
-+
-+	if (hyperv_private_memory_dma(dev)) {
-+		for_each_sg(sgl, sg, nelems, i) {
-+			dma_addr = __phys_to_dma(dev, sg_phys(sg));
-+			sg_dma_address(sg) = dma_addr;
-+			sg_dma_len(sg) = sg->length;
-+		}
-+
-+		return nelems;
-+	} else {
-+		return dma_direct_map_sg(dev, sgl, nelems, dir, attrs);
-+	}
-+}
-+
-+static void hyperv_dma_unmap_sg(struct device *dev, struct scatterlist *sgl,
-+		int nelems, enum dma_data_direction dir, unsigned long attrs)
-+{
-+	if (!hyperv_private_memory_dma(dev))
-+		dma_direct_unmap_sg(dev, sgl, nelems, dir, attrs);
-+}
-+
-+static int hyperv_dma_supported(struct device *dev, u64 mask)
-+{
-+	dev->coherent_dma_mask = mask;
-+	return 1;
-+}
-+
-+static size_t hyperv_dma_max_mapping_size(struct device *dev)
-+{
-+	if (hyperv_private_memory_dma(dev))
-+		return SIZE_MAX;
-+	else
-+		return swiotlb_max_mapping_size(dev);
-+}
-+
-+const struct dma_map_ops hyperv_dma_ops = {
-+	.map_page               = hyperv_dma_map_page,
-+	.unmap_page             = hyperv_dma_unmap_page,
-+	.map_sg                 = hyperv_dma_map_sg,
-+	.unmap_sg               = hyperv_dma_unmap_sg,
-+	.dma_supported          = hyperv_dma_supported,
-+	.max_mapping_size	= hyperv_dma_max_mapping_size,
-+};
-+
- /*
-  * vmbus_bus_init -Main vmbus driver initialization routine.
-  *
-@@ -1479,8 +1564,11 @@ static int vmbus_bus_init(void)
- 	 * doing that on each VP while initializing SynIC's wastes time.
- 	 */
- 	is_confidential = ms_hyperv.confidential_vmbus_available;
--	if (is_confidential)
-+	if (is_confidential) {
-+		dma_ops = &hyperv_dma_ops;
- 		pr_info("Establishing connection to the confidential VMBus\n");
-+	}
-+
- 	hv_para_set_sint_proxy(!is_confidential);
- 	ret = vmbus_alloc_synic_and_connect();
- 	if (ret)
--- 
-2.50.1
+> 
+> OK.  So what is the impact? Losing the perf benefit of mapping guest
+> memory in the SLAT as a 2 Meg large page vs. a bunch of individual 4K
+> pages? Anything else?
+> 
+
+I decided to rework it in scope of these the series.
+
+> > 
+> > This is possible, if hypervisor returns some invalid GFN.
+> > But there is also a possibility, that this code can race with region removal from a guest.
+> > I'll address it in the next revision.
+> 
+> In either of these cases, what happens next? The MSHV_RUN_VP ioctl
+> will return to user space with the unhandled HVMSG_GPA_INTERCEPT
+> message. Is there anything user space can do to enable the VP to make
+> progress past the fault? Or does user space just have to terminate the
+> guest VM?
+> 
+
+I don't think there is much to be done here in kernel.
+Control will be returned to VMM, which will likely kill the guest.
+
+> > >
+> > > I'm pretty sure region->start_uaddr is always page aligned. But what
+> > > about range->start and range->end?  The code here and below assumes
+> > > they are page aligned. It also assumes that range->end is greater than
+> > > range->start so the computation of page_count doesn't wrap and so
+> > > page_count is >= 1. I don't know whether checks for these assumptions
+> > > are appropriate.
+> > >
+> > 
+> > There is a check for memory region size to be non-zero and page aligned
+> > in mshv_partition_ioct_set_memory function, which is the only caller for
+> > memory region creation. And region start is defined in PFNs.
+> > 
+> 
+> Right -- no disagreement that the region start and size are page aligned
+> and non-zero. But what about the range that is being invalidated?
+> (i.e., range->start and range->end) The values in that range are coming
+> from the mm subsystem, and aren't governed by how a region is created.
+> If that range is a subset of the MSHV region, then
+> mshv_region_internal_invalidate() will be operating on whatever subset
+> was provided in the 'range' argument.
+> 
+> mshv_region_interval_invalidate() is ultimately called from
+> mmu_notifier_invalidate_range_start(), which has about 30 different
+> callers in the kernel, mostly in the mm subsystem. It wasn't
+> clear to me what rules, if any, those 30 callers are following when they
+> set up the range to be invalidated. 
+> 
+> Michael
+
+I see what you mean. Yes, these values are guarantee to be page aligned.
+And it must be as anything else can't be invalidated.
+
+Thanks,
+Stanislav
+
 
 
