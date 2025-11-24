@@ -1,260 +1,247 @@
-Return-Path: <linux-hyperv+bounces-7809-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7810-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B5F9C8218E
-	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Nov 2025 19:26:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD7C3C821BB
+	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Nov 2025 19:29:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 83FD134A0A0
-	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Nov 2025 18:26:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 85AFE3A87C1
+	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Nov 2025 18:29:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C1C2319614;
-	Mon, 24 Nov 2025 18:26:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 220673176E4;
+	Mon, 24 Nov 2025 18:29:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aYs2SJEg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHhbsp4x"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081913176E4
-	for <linux-hyperv@vger.kernel.org>; Mon, 24 Nov 2025 18:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8807F314D28
+	for <linux-hyperv@vger.kernel.org>; Mon, 24 Nov 2025 18:29:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764008761; cv=none; b=JHjxs6v79eTYmcnFwIrXNswAEBUm43bVL51C62xatTXF87eUBJETrsKqNAoOrUyu2/7ZXiIzsR+yE7btYjrPPZgfsZ6FmAe8llh1Iet8gVG6a6LOK0FPlQ4QSATUnlAJcMc8+lFvpAinXmKVUqOucr2GIGqCZrMA1MJnctOeyqo=
+	t=1764008968; cv=none; b=oTdkx6mMxtmOF88W7FzyWTJhmt+cTrWqlobE+qH0buC2R+U9KUI1F9RvASL87odbhEUf3zqfZHgW4z4iwQ1ZWauTkQ43c2XO0aY2yD/ObXOnFWLeMM4chOcsaMx1r33AfqSlrS3eRtSot/MHI3jFTLJIfS2H7K7/PllzhLKvoyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764008761; c=relaxed/simple;
-	bh=6AZSCjx0be8QNYc1b9ABiliBH6YVQDDfi0R5FIkWxp8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nFULZDogi+9gZr78UF+JcxKt3gRG6GcO6ytvkieJXU5n6vz07FpVpYqtmfI/SGsZaqFRGOlfDnuNPmYfkLxIF42+aq/qlIOKm5+rfMv7I1OOqtgOVivMxiFlsjwRvscz0pegOdv47Utcl9EBLORVI2+zFigiEAxVzqfhUVp+9sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aYs2SJEg; arc=none smtp.client-ip=209.85.128.177
+	s=arc-20240116; t=1764008968; c=relaxed/simple;
+	bh=vsh6gCZNT2fH6DetQwFBewFmmMxYo5Aysy5llP/krFQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rbOySjdPJpjbic0t6VTWHsycHC7Up3ssdJ0Cpy66X0URfwGwTwiwszx5TqWgfoHd+RypHmzUX5uFzYLHsnGxUxq4MvKlwYe7ufpMllrhX4DQKD8F3/NeutBr/0wFR2duu1+L/Jfi7FqchpRgNOdIfNt8tIVuvEg1NzIiaHmDggs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IHhbsp4x; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-7895017c722so43377587b3.2
-        for <linux-hyperv@vger.kernel.org>; Mon, 24 Nov 2025 10:25:58 -0800 (PST)
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-29555b384acso57447035ad.1
+        for <linux-hyperv@vger.kernel.org>; Mon, 24 Nov 2025 10:29:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764008758; x=1764613558; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=TEB0IVYhYkoeWOmDLi9JAiu4Bvgo6alBDSG0PHHn3mY=;
-        b=aYs2SJEgbdLftah9Q6DJVJMu6BeScc9QWlcEvA6WBeSJbZt72ixRMCvqjg49a4U6HS
-         po3S4QhcWgXgsItovmDpnS4GN+d8mVirwSlG8YGNP0vaFVWkyxdzsd2fTFjxj/6PwO2x
-         PgNvChWqHkDfKQJShotCcbqiWH9aVU/fKVjIYxVGGkEy9GhWqxJgcxt+hKxir0Cj+6fV
-         tNmCFMofRG1t1gexRmZtrp1xBZT/uHTzxRphTvnZpTzBa8fqtKaNbuBI+nx+yW5ywjVi
-         hk/TEX7d50YeaiRxicbV8xT4sh4zK/bvsPEf/ZUCJKF/AAKx4glQmOPC8JVvsGihApKw
-         Ei2Q==
+        d=gmail.com; s=20230601; t=1764008966; x=1764613766; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=l7g4YApcxeWn1QV0962fcWmEJsVfTz87ip5iTpRI8ow=;
+        b=IHhbsp4xhKyUOXbaOao2NTnD52FQgcCC0UmoZ+P2oBqwdJj0u9S4bEdJnwi+t310qa
+         hzWXhbgw/I8dbG3HXKKQNOV0sav8cDNEvkvYCMWzdl8vfyss0a0WZoE5kdw+Pk8+9Lco
+         C5bxjfO08V1loS4SjFhjJ0szimTW0oD6h8oM7Clnddua8pLn045wzh8TNNg3Xui2kxFz
+         SYY396aECshhbmKtpW0hOBo3WpQFFmi2bl4/oOnTlSYXa2kJ3msnkwtICOOjXrwtDr8f
+         vlQ80HG91NA0eyFvW95yuReAQhagJEeWpEXaYt/TiFOUfREiQCH4Qx2uk9JNnldABt9i
+         58rQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764008758; x=1764613558;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TEB0IVYhYkoeWOmDLi9JAiu4Bvgo6alBDSG0PHHn3mY=;
-        b=MB3ciWWYVDQxqB1DxkZWul8gAd+DiXNhnW8v8OMITWk5oTu6zmY2AUxs26F7UnFisb
-         Dsof6l0qVkeEHWrrthJaTCEMwfSCj/ygtsn/qjeI1uWRKzr9hLJSHdjKkO/Ke07AWvW+
-         Ly31Via3Gdzf7ykP76gJ1OdzXO7D+ciKev+FDjntCRCHUPTzcJ4IVRweE1Hvj+0N0nfR
-         UyZkxPLgtA1uQvhsvmxr203IC95mtXjoe2hxfud7qxhesDLX0QkZ19A2n9TIiE2LtL0U
-         7x6rPRI/W8K1R0VJtjjFaMXwQtdPZ5NtfAnsG3OzSsvv1oDsdfjjngfrr3Bd7Z77rb77
-         l2/A==
-X-Forwarded-Encrypted: i=1; AJvYcCVDDbe5wPYxOOvM++F9Uqparbofj8jZ1w7jaeFcszrP2GRlhV7HonV08daB4GBSTlE0R9KMrY0hdbgdfag=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoGot6gvLey59p8u5pCWqnUP4PC0PaEqh8b9F53Zm4XGYx5pJi
-	sQA1o7ceKDgpMr4DwbDy0lBvhrBdsB8atF2SQ8uJ+7T37gVaZzZEAgIc
-X-Gm-Gg: ASbGncv6eV+BOMUDGcAmDGxF31VUxpLvbEXMUyPhjNDZV58Xf5keJZ0lT2sARd8Yhs+
-	yHQTLM0oMaafU2XlqaPXNC7+OsRa44hM7t8M/i8W801ZUunDzrYvmyDTJNdvp3tGwThMbt1adme
-	xAEJ0PYi8HMiZ7cCXRYbk3MAcWmrc2SUssdb78NnYcQl1HjV6XrGagZDUp7LF25dG5EbsLJ1i6p
-	F+Gl0sIKpoKLKdfmxyK4VOuK2R+nWIm1ktmtXMm2u7imN5SWdGP6hVtgUvh0o352dTMHzKLt2Sq
-	WrS6kBh2SA7VQnfBmXjdeqBZOPdBcB5Swc72GFuqiMiIO6exq5/B5tChmMw3cT42LLs1iafcht+
-	W443zbITIgaNvDDLC8GYdHF7fFEIh+OoSrQ/4wNdN76oW+dArJKB2Tt7xEsSumgeyBq4crNUmhP
-	TgF56EUHBaOp/6FozouGh4HHoDk6PkVPYZp87tP7/9YSh6jg==
-X-Google-Smtp-Source: AGHT+IE0ZjSbPsIZXUiMdmSARGNpUZsggdBivDiPOdxixaSe4XdXku94FoT+/xG3xq+0F2N/k+75ZA==
-X-Received: by 2002:a05:690c:6c0a:b0:787:eca1:50cf with SMTP id 00721157ae682-78a8b55dafemr91578177b3.50.1764008757922;
-        Mon, 24 Nov 2025 10:25:57 -0800 (PST)
-Received: from devvm11784.nha0.facebook.com ([2a03:2880:25ff:4::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-78a798a8106sm46963977b3.19.2025.11.24.10.25.57
+        d=1e100.net; s=20230601; t=1764008966; x=1764613766;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l7g4YApcxeWn1QV0962fcWmEJsVfTz87ip5iTpRI8ow=;
+        b=hhksDClUX7fORH8wN9bHZFFvmEwFmylkhbLJOCotDf72oVaexkbuCv8zQKPOD2fea0
+         2TGkiE21QFUPXvg7g6AzArkuob2mYKYRaowpThaYjA+2uM3DKWD7KgMjMU7gy8RGmvQ0
+         11uty3a3WR9aH36WQg7yDFh6QVxEf/iGyBkoZxBAEzJ9dgIJ93illZc/iwbMgbQM4K+/
+         EFm9qMdGIKniyASapm9USqo39rWsf6i8Nwen26teusTpLSY1VPN6PrvfBY0G2vEEJxnh
+         wCqqUb9+3cH/1h17PmlmhrU4aQ5Fx6L8zirtnejRN1D5wKeeAXdj0c7whVkGhacXa7uO
+         cNGA==
+X-Forwarded-Encrypted: i=1; AJvYcCXhMB5g1Gwz1wecd5AGthtxVjICVOPx6f3qNStb6EolTVxNMY1IOUwS+CyCt8K8Rd9C3tG8W+03p6bLyIc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNlYc+Et38+ELD6Z2dno6dTE+C0NajwlGI3smfHldlAwSSdKFt
+	9E2dWLsthS9M0BDHgHAwAHXjU7jkfcZqLcpE8Dl63FNGYwl/Z+TOAmJ0
+X-Gm-Gg: ASbGnctrg73AIWExYDHt6NtG6YOcvSvz2CP2mLk71cJUBP0waZMIUIEqai9SectcwBq
+	Hyuce0dGEHW3pdUH+fsa9APrIuhwPzvGFJgIoHnQgrRcJpK9KChy/HLJkRdrxLCh9rlO3cNffmF
+	8gqkMUL7zfxckFF/+UC702LmviOv1R42fGIjQ6yLA2zBv/3ATWROY6U3Tuoj7mJ9Er9sLv0Vd/y
+	oM7e3VwBHCdCIefhovkUNHa96hDLelKnndYOjbYTKGfZfsdQfAafoC8R6wSDhCxcyL4sTmEE+xb
+	uOpcutdT09oAtmQb+RLy1U87Gk0VDhDboFzDk2l1kAUY2PG6xob/7NXfVj8nQ2BBr6+AS/217qc
+	aG4dMTFYsKkHLBWIRBU839fwttiZNzwBLXRY36R2uISF1XgB24coCNWTk6ajxlFYUU1rGSCj6k8
+	aQURk7WwAWLIdJLw97T+H0N6RXAyO5I9UYdto=
+X-Google-Smtp-Source: AGHT+IFeO+TGaMNPoLfpN+XZe55yTNMT9nF9JthEW58YFJD5Yapc9U9WPxNdIP4Ln2O8C1lyEGrbBw==
+X-Received: by 2002:a17:902:fc43:b0:295:6e0:7b0d with SMTP id d9443c01a7336-29b6c6bb2f3mr142913995ad.56.1764008965654;
+        Mon, 24 Nov 2025 10:29:25 -0800 (PST)
+Received: from ubuntu-Virtual-Machine.mshome.net ([70.37.26.65])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29b5b1070c3sm144760415ad.12.2025.11.24.10.29.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Nov 2025 10:25:57 -0800 (PST)
-Date: Mon, 24 Nov 2025 10:25:56 -0800
-From: Bobby Eshleman <bobbyeshleman@gmail.com>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, berrange@redhat.com,
-	Sargun Dhillon <sargun@sargun.me>,
-	Bobby Eshleman <bobbyeshleman@meta.com>
-Subject: Re: [PATCH net-next v11 03/13] vsock: reject bad
- VSOCK_NET_MODE_LOCAL configuration for G2H
-Message-ID: <aSSjNLrRmaOLkuBN@devvm11784.nha0.facebook.com>
-References: <20251120-vsock-vmtest-v11-0-55cbc80249a7@meta.com>
- <20251120-vsock-vmtest-v11-3-55cbc80249a7@meta.com>
- <swa5xpovczqucynffqgfotyx34lziccwpqomnm5a7iwmeyixfv@uehtzbdj53b4>
- <aSC3IX81A3UhtD3N@devvm11784.nha0.facebook.com>
- <g4xir3lupnjybh7fqig6xonp32ubotdf3emmrozdm52tpaxvxn@2t4ueynb7hqr>
- <aSSV4RlRcW+uGy+n@devvm11784.nha0.facebook.com>
- <qvu2mgxs7scbuwcb2ui7eh3qe3l7mlcjq6e2favd4aqcs52r2r@oqbrlp4gxdwl>
+        Mon, 24 Nov 2025 10:29:24 -0800 (PST)
+From: Tianyu Lan <ltykernel@gmail.com>
+X-Google-Original-From: Tianyu Lan <tiala@microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	longli@microsoft.com,
+	vdso@hexbites.dev
+Cc: Tianyu Lan <tiala@microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] Drivers: hv: Confidential VMBus exernal memory support
+Date: Mon, 24 Nov 2025 13:29:20 -0500
+Message-Id: <20251124182920.9365-1-tiala@microsoft.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <qvu2mgxs7scbuwcb2ui7eh3qe3l7mlcjq6e2favd4aqcs52r2r@oqbrlp4gxdwl>
 
-On Mon, Nov 24, 2025 at 06:54:45PM +0100, Stefano Garzarella wrote:
-> On Mon, Nov 24, 2025 at 09:29:05AM -0800, Bobby Eshleman wrote:
-> > On Mon, Nov 24, 2025 at 11:10:19AM +0100, Stefano Garzarella wrote:
-> > > On Fri, Nov 21, 2025 at 11:01:53AM -0800, Bobby Eshleman wrote:
-> > > > On Fri, Nov 21, 2025 at 03:24:25PM +0100, Stefano Garzarella wrote:
-> > > > > On Thu, Nov 20, 2025 at 09:44:35PM -0800, Bobby Eshleman wrote:
-> 
-> [...]
-> 
-> > > >
-> > > > > Since I guess we need another version of this patch, can you check the
-> > > > > commit description to see if it reflects what we are doing now
-> > > > > (e.g vhost is not enabled)?
-> > > > >
-> > > > > Also I don't understand why for vhost we will enable it later, but for
-> > > > > virtio_transport and vsock_loopback we are enabling it now, also if this
-> > > > > patch is before the support on that transports. I'm a bit confused.
-> > > > >
-> > > > > If something is unclear, let's discuss it before sending a new version.
-> > > > >
-> > > > >
-> > > > > What I had in mind was, add this patch and explain why we need this new
-> > > > > callback (like you did), but enable the support in the patches that
-> > > > > really enable it for any transport. But maybe what is not clear to me is
-> > > > > that we need this only for G2H. But now I'm confused about the discussion
-> > > > > around vmci H2G. We decided to discard also that one, but here we are not
-> > > > > checking that?
-> > > > > I mean here we are calling supports_local_mode() only on G2H IIUC.
-> > > >
-> > > > Ah right, VMCI broke my original mental model of only needing this check
-> > > > for G2H (originally I didn't realize VMCI was H2G too).
-> > > >
-> > > > I think now, we actually need to do this check for all of the transports
-> > > > no? Including h2g, g2h, local, and dgram?
-> > > >
-> > > > Additionally, the commit description needs to be updated to reflect that.
-> > > 
-> > > Let's take a step back, though, because I tried to understand the problem
-> > > better and I'm confused.
-> > > 
-> > > For example, in vmci (G2H side), when a packet arrives, we always use
-> > > vsock_find_connected_socket(), which only searches in GLOBAL. So connections
-> > > originating from the host can only reach global sockets in the guest. In
-> > > this direction (host -> guest), we should be fine, right?
-> > > 
-> > > Now let's consider the other direction, from guest to host, so the
-> > > connection should be generated via vsock_connect().
-> > > Here I see that we are not doing anything with regard to the source
-> > > namespace. At this point, my question is whether we should modify
-> > > vsock_assign_transport() or transport->stream_allow() to do this for each
-> > > stream, and not prevent loading a G2H module a priori.
-> > > 
-> > > For example, stream_allow() could check that the socket namespace is
-> > > supported by the assigned transport. E.g., vmci can check that if the
-> > > namespace mode is not GLOBAL, then it returns false. (Same thing in
-> > > virtio-vsock, I mean the G2H driver).
-> > > 
-> > > This should solve the guest -> host direction, but at this point I wonder if
-> > > I'm missing something.
-> > 
-> > For the G2H connect case that is true, but the situation gets a little
-> > fuzzier on the G2H RX side w/ VMADDR_CID_ANY listeners.
-> > 
-> > Let's say we have a nested system w/ both virtio-vsock and vhost-vsock.
-> > We have a listener in namespace local on VMADDR_CID_ANY. So far, no
-> > transport is assigned, so we can't call t->stream_allow() yet.
-> > virtio-vsock only knows of global mode, so its lookup will fail (unless
-> 
-> What is the problem of failing in this case?
-> I mean, we are documenting that G2H will not be able to reach socket in
-> namespaces with "local" mode. Old (and default) behaviour is still allowing
-> them, right?
-> 
-> I don't think it conflicts with the definition of “local” either, because
-> these connections are coming from outside, and the user doesn't expect to be
-> able to receive them in a “local” namespace, unless there is a way to put
-> the device in the namespace (as with net). But this method doesn't exist
-> yet, and by documenting it sufficiently, we can say that it will be
-> supported in the future, but not for now.
-> 
-> > we hack in some special case to virtio_transport_recv_pkt() to scan
-> > local namespaces). vhost-vsock will work as expected. Letting local mode
-> > sockets be silently unreachable by virtio-vsock seems potentially
-> > confusing for users. If the system were not nested, we can pre-resolve
-> > VMADDR_CID_ANY in bind() and handle things upfront as well. Rejecting
-> > local mode outright is just a broad guardrail.
-> 
-> Okay, but in that case, we are not supporting “local” mode too, but we are
-> also preventing “global” from being used on these when we are in a nested
-> environment. What is the advantage of this approach?
-> 
-> > 
-> > If we're trying to find a less heavy-handed option, we might be able to
-> > do the following:
-> > 
-> > - change bind(cid) w/ cid != VMADDR_CID_ANY to directly assign the
-> > transport
-> >  for all socket types (not just SOCK_DGRAM)
-> 
-> That would be nice, but it wouldn't solve the problem with VMADDR_CID_ANY,
-> which I guess is the use case in 99% of cases.
-> 
-> > 
-> > - vsock_assign_transport() can outright fail if !t->supports_local_mode()
-> >  and sock_net(sk) has mode local
-> 
-> But in this case, why not reusing stream_allow() ?
-> 
-> > 
-> > - bind(VMADDR_CID_ANY) can maybe print (once) to dmesg a warning that
-> >  only the H2G transport will land on VMADDR_CID_ANY sockets.
-> 
-> mmm, I'm not sure about that, we should ask net maintainer, but IMO
-> documenting that in af_vsock.c and man pages should be fine, till G2H will
-> support that.
-> 
-> > 
-> > I'm certainly open to other suggestions.
-> 
-> IMO we should avoid the failure when loading G2H, which is more confusing
-> than just discard connection from the host to a "local" namespace. We should
-> try at least to support the "global" namespace.
-> 
-> Thanks,
-> Stefano
+In CVM(Confidential VM), system memory is encrypted
+by default. Device drivers typically use the swiotlb
+bounce buffer for DMA memory, which is decrypted
+and shared between the guest and host. Confidential
+Vmbus, however, supports a confidential channel
+that employs encrypted memory for the Vmbus ring
+buffer and external DMA memory. The support for
+the confidential ring buffer has already been
+integrated.
 
+In CVM, device drivers usually employ the standard
+DMA API to map DMA memory with the bounce buffer,
+which remains transparent to the device driver.
+For external DMA memory support, Hyper-V specific
+DMA operations are introduced, bypassing the bounce
+buffer when the confidential external memory flag
+is set. These DMA operations might also be reused
+for TDISP devices in the future, which also support
+DMA operations with encrypted memory.
 
-I'm 100% fine with that approach. I just wanted to make sure we landed
-in the right place for how users may encounter places that there is no
-local mode support.
+The DMA operations used are global architecture
+DMA operations (for details, see get_arch_dma_ops()
+and get_dma_ops()), and there is no need to set up
+for each device individually.
 
-So for next steps, we can drop this patch and add explicit logic in
-->stream_allow() to allow local mode for vhost/loopback and reject for
-others? Plus, add documentation about what happens for VMADDR_CID_ANY
-(will only receive vhost/loopback traffic in local mode)?
+Signed-off-by: Tianyu Lan <tiala@microsoft.com>
+---
+ drivers/hv/vmbus_drv.c | 90 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 89 insertions(+), 1 deletion(-)
 
-Best,
-Bobby
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 0dc4692b411a..ca31231b2c32 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -39,6 +39,9 @@
+ #include <clocksource/hyperv_timer.h>
+ #include <asm/mshyperv.h>
+ #include "hyperv_vmbus.h"
++#include "../../kernel/dma/direct.h"
++
++extern const struct dma_map_ops *dma_ops;
+ 
+ struct vmbus_dynid {
+ 	struct list_head node;
+@@ -1429,6 +1432,88 @@ static int vmbus_alloc_synic_and_connect(void)
+ 	return -ENOMEM;
+ }
+ 
++
++static bool hyperv_private_memory_dma(struct device *dev)
++{
++	struct hv_device *hv_dev = device_to_hv_device(dev);
++
++	if (hv_dev && hv_dev->channel && hv_dev->channel->co_external_memory)
++		return true;
++	else
++		return false;
++}
++
++static dma_addr_t hyperv_dma_map_page(struct device *dev, struct page *page,
++		unsigned long offset, size_t size,
++		enum dma_data_direction dir,
++		unsigned long attrs)
++{
++	phys_addr_t phys = page_to_phys(page) + offset;
++
++	if (hyperv_private_memory_dma(dev))
++		return __phys_to_dma(dev, phys);
++	else
++		return dma_direct_map_phys(dev, phys, size, dir, attrs);
++}
++
++static void hyperv_dma_unmap_page(struct device *dev, dma_addr_t dma_handle,
++		size_t size, enum dma_data_direction dir, unsigned long attrs)
++{
++	if (!hyperv_private_memory_dma(dev))
++		dma_direct_unmap_phys(dev, dma_handle, size, dir, attrs);
++}
++
++static int hyperv_dma_map_sg(struct device *dev, struct scatterlist *sgl,
++		int nelems, enum dma_data_direction dir,
++		unsigned long attrs)
++{
++	struct scatterlist *sg;
++	dma_addr_t dma_addr;
++	int i;
++
++	if (hyperv_private_memory_dma(dev)) {
++		for_each_sg(sgl, sg, nelems, i) {
++			dma_addr = __phys_to_dma(dev, sg_phys(sg));
++			sg_dma_address(sg) = dma_addr;
++			sg_dma_len(sg) = sg->length;
++		}
++
++		return nelems;
++	} else {
++		return dma_direct_map_sg(dev, sgl, nelems, dir, attrs);
++	}
++}
++
++static void hyperv_dma_unmap_sg(struct device *dev, struct scatterlist *sgl,
++		int nelems, enum dma_data_direction dir, unsigned long attrs)
++{
++	if (!hyperv_private_memory_dma(dev))
++		dma_direct_unmap_sg(dev, sgl, nelems, dir, attrs);
++}
++
++static int hyperv_dma_supported(struct device *dev, u64 mask)
++{
++	dev->coherent_dma_mask = mask;
++	return 1;
++}
++
++static size_t hyperv_dma_max_mapping_size(struct device *dev)
++{
++	if (hyperv_private_memory_dma(dev))
++		return SIZE_MAX;
++	else
++		return swiotlb_max_mapping_size(dev);
++}
++
++const struct dma_map_ops hyperv_dma_ops = {
++	.map_page               = hyperv_dma_map_page,
++	.unmap_page             = hyperv_dma_unmap_page,
++	.map_sg                 = hyperv_dma_map_sg,
++	.unmap_sg               = hyperv_dma_unmap_sg,
++	.dma_supported          = hyperv_dma_supported,
++	.max_mapping_size	= hyperv_dma_max_mapping_size,
++};
++
+ /*
+  * vmbus_bus_init -Main vmbus driver initialization routine.
+  *
+@@ -1479,8 +1564,11 @@ static int vmbus_bus_init(void)
+ 	 * doing that on each VP while initializing SynIC's wastes time.
+ 	 */
+ 	is_confidential = ms_hyperv.confidential_vmbus_available;
+-	if (is_confidential)
++	if (is_confidential) {
++		dma_ops = &hyperv_dma_ops;
+ 		pr_info("Establishing connection to the confidential VMBus\n");
++	}
++
+ 	hv_para_set_sint_proxy(!is_confidential);
+ 	ret = vmbus_alloc_synic_and_connect();
+ 	if (ret)
+-- 
+2.50.1
+
 
