@@ -1,462 +1,348 @@
-Return-Path: <linux-hyperv+bounces-7785-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7786-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3FAAC7FAF4
-	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Nov 2025 10:43:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E3A0C7FD0E
+	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Nov 2025 11:10:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 420434E4B27
-	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Nov 2025 09:43:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8B6453A32A9
+	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Nov 2025 10:10:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3D3B2F6561;
-	Mon, 24 Nov 2025 09:43:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A1302F8BD1;
+	Mon, 24 Nov 2025 10:10:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="A+sGL1dr";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="A+sGL1dr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T+GfId+2";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="G5YnxEjL"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59DCB2F616D
-	for <linux-hyperv@vger.kernel.org>; Mon, 24 Nov 2025 09:42:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239492F744B
+	for <linux-hyperv@vger.kernel.org>; Mon, 24 Nov 2025 10:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763977381; cv=none; b=ReNuYokqMXwkl0dMkQzcctKLOMFs0yV4Yr7/G2f4vPRLytYPzDCj2ajgeALpNLXPjZCEUUS3ETHuhqqWL1l8rTvrqbm3scuzGo9c+6lFQpIapbX57AENAxjNYsFQ/+nnGr0LtAtd5JcQ6l9NC561nENpmniZkddlxeNEUQM+qbY=
+	t=1763979034; cv=none; b=brsWm290hHXbtqYZc8lvh8GKOzt5ZicW0YolrJ7swjDi3u0RpO3qkaN0lH/v7N8QKH+3HtubDcHKSzIAQTSajckMYiV5DZ8eDQyc4I6kmVE9zJ8i6DW5TQskMBMm6QDen4GH9ZOWmveLHHU7/knAjeM21zm8KTmKPWAXyTmdjDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763977381; c=relaxed/simple;
-	bh=A5ow2gR7SRrzbwsXPsB6yI+XFTtoV4Lp3zqNxZd9nls=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qGVHfjKMs3z0FeCcSPFDoke7WaoOeF+riBUdyyXDUXtX2Eo+Vl+R8l9PYtM7dnWxVmze8jvaGS1vNIl5vjUMbleg5lgxMd+EM7ODS/IlKmm2ZAWahM4WxfNSt7l+DWy+cMwtVFY2Z7C/7QmCBir8TlQU39lgwqxGykbNh6UwRms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=A+sGL1dr; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=A+sGL1dr; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6481F5BD77;
-	Mon, 24 Nov 2025 09:42:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1763977376; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=A5ow2gR7SRrzbwsXPsB6yI+XFTtoV4Lp3zqNxZd9nls=;
-	b=A+sGL1dr7l7VmjFaYtu7yyZBJCek1xS229QbJpQRyY0SEaWfHyv2//EQQVdRujsF6rF5wN
-	sg7Pf9VAroDESXffx7PYVw+JqzxjV7klIF2/ubCUBv7uK/1e9yLRarAJrga56WxGZvJyPq
-	Mppynsla7GTPRm+lYgBhw7nIOqMiGlc=
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1763977376; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=A5ow2gR7SRrzbwsXPsB6yI+XFTtoV4Lp3zqNxZd9nls=;
-	b=A+sGL1dr7l7VmjFaYtu7yyZBJCek1xS229QbJpQRyY0SEaWfHyv2//EQQVdRujsF6rF5wN
-	sg7Pf9VAroDESXffx7PYVw+JqzxjV7klIF2/ubCUBv7uK/1e9yLRarAJrga56WxGZvJyPq
-	Mppynsla7GTPRm+lYgBhw7nIOqMiGlc=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C413E3EA61;
-	Mon, 24 Nov 2025 09:42:54 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ZutXLp4oJGlpeAAAD6G6ig
-	(envelope-from <jgross@suse.com>); Mon, 24 Nov 2025 09:42:54 +0000
-Message-ID: <dec8ee2c-3a00-4027-b762-aada7bc99bd9@suse.com>
-Date: Mon, 24 Nov 2025 10:42:54 +0100
+	s=arc-20240116; t=1763979034; c=relaxed/simple;
+	bh=Ns6LfH0psojXT7Bh+E2CKXpJNrIUwj78AFA2Jq4LOk8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nR4xflbd+Ob2wzw2dq1kX6E6WkyDMoFJalzDsgoGZNJrVHxPUwk5xwtWrSPcMDwMVKx3R5A2oBJlHJ2U+nylCqQ8tIIDp5EInJj1qBf2+89lDWv5MeVibRluSoIomlwHmGpV7yDzyQMC0LV7wLTdWYMJEeA8XlrlINesds9Sf08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T+GfId+2; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=G5YnxEjL; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1763979031;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5u6sQSNL++dp7mJ0fNqBXPU6F3Qeuu2qX0vGBMLsEc4=;
+	b=T+GfId+2vSOq9Ay0qVlFXHrwa73NyMvvX3H+QHZmckwpRnL7mA7aO8VYTeHwP7VxZA06m9
+	CInXMiW+oUFrTb/GyoT3L2F7/V7dy+ZjTcG1KfyYhiwuM+6DhGJynQCPZj+E5BUzH1lmTd
+	YfI06Mbb3MN2sS34gESKo1hN1Eb+/Ns=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-618-2OifmeaEO2q9LzD2oXi6iA-1; Mon, 24 Nov 2025 05:10:28 -0500
+X-MC-Unique: 2OifmeaEO2q9LzD2oXi6iA-1
+X-Mimecast-MFC-AGG-ID: 2OifmeaEO2q9LzD2oXi6iA_1763979028
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-429c93a28ebso2921994f8f.1
+        for <linux-hyperv@vger.kernel.org>; Mon, 24 Nov 2025 02:10:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1763979027; x=1764583827; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5u6sQSNL++dp7mJ0fNqBXPU6F3Qeuu2qX0vGBMLsEc4=;
+        b=G5YnxEjL3fJtNY2LBIbbcQ1URhM6IZRWXMErN/ZZNcW0DOejO08bhXhFEiCb+3Fuen
+         qACF9GiNVAg3uuQVOmTk3dtf6AkLduBT1QAIJxSNu5vDolGKen3tLeHb2zUBgSR9/Z6s
+         V6ElgTSGkxbnuwm/rGqql/4LZ0q7ZmVgHXm9zBaiw07voXIvzqm8bok1SpHS4X31S/4I
+         zPA53zE7pnunb+vcq83ii+yo9SxxqLTZI0AoTV6kB1KWf8U46CT/zBO67ehRb24cMbrI
+         95X9UMcDNeTDI01vPYmjN8kWGQJ2AADyTvr/IK98ldNdaAH2bnvXKQyz13dnOVzQx6J/
+         hzQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763979027; x=1764583827;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5u6sQSNL++dp7mJ0fNqBXPU6F3Qeuu2qX0vGBMLsEc4=;
+        b=YG9YxlN2HzI0QFSfjLEI00V0F2fWNNi+lHZrvNU/lmLspMyQ8FGNQt5obXKCx4Muhl
+         eBfdiUYoVPVSWSPBHAXezCskjAS4MLrmgddic+psKQBiuNgsId9av5/z0UsdgW9Men2w
+         9e8PSY7Xvh07O8URrKzTnx6FysAvhjUlJCDb541gZwwSWasaGWj5dgjh0VfZOwvcR+qN
+         KhvmtkRftDf/+2k9A8CFgM7HcMpGTf1FvO4FHgitXM38+dJFHxG8kyQuAdmGB1pdw888
+         VefC7J0lsi2sgj+x4t12KB/tDZaN2ly9/1Q4Hco+GLmJjuIoJ4cb5z3Q0v2isKAcjKLH
+         4wYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVN5Mc/yyin1Sop2Q1M6Hal3ogKxHhILa3fanErglX6JDiwu2xovkcNDcBg5bE+SUl/TUtfLXffIOTdjDs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwALq3bs7EDCKwB0vlZf4S5xLv4An5/hTTNpIlDg26U5acxynzR
+	sR/KRiT5ETEKtIbFgT/xkdSncW9M+ImJ/X5TmMHx0LFagGQHUDgD7ZnV6h35OXl2OtexnoL7697
+	FoBd7s2xv1ggIYwzWx3qXUXoUy7XyUX7d90donDboBI+GLemSLP3ClhvjCv8Ma5Sf9Q==
+X-Gm-Gg: ASbGncuZ7StXiCoS1tIWnvHAvmj7lb+MUjgYj5AIMK+ctTkx1MUGq/t4yAzgF/BW+x1
+	LJngpDdANdB+9r6enjYjYafmc2NOLTf8c9kJrTmpXvUB6bzH0WWcv7OWUitotGDWW6U2qwQJ5Bi
+	D6iUyIsHJH1OEPkCh/NiqsL3+vWg4LhzO4yf68oiBG/HUmOoTl8PqaL9q2ANx7AtHij4S7Nd2Mn
+	O8YWBEClo0LMoY5st89OB3X8q4Qn1m8cKcb4O7yzdoswqAdVbboQ3WPzLGBQaG7M/S02aILN2wU
+	TJ7htDKf204h1SNfUZm3BKdw2f1vYlZGQH1vsv+V6JZIcXA0H2owk4Fes5OcnS/qs3yx6+i+8Tk
+	BsPkzVOguIeurtIu5KC4s+5qXHxo7gY9nKQKm5d1q98VTaKHlQbpBNNnToDS+BQ==
+X-Received: by 2002:a05:6000:40da:b0:42b:3e60:18cd with SMTP id ffacd0b85a97d-42cc1cd5cccmr12145487f8f.11.1763979027395;
+        Mon, 24 Nov 2025 02:10:27 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGyUT90+gJ9f1dKanVENzRuq3J7mmdAzbMAoIPoT3+96b1SckYvJyZjhh16MBsnzjUYf99sZA==
+X-Received: by 2002:a05:6000:40da:b0:42b:3e60:18cd with SMTP id ffacd0b85a97d-42cc1cd5cccmr12145417f8f.11.1763979026810;
+        Mon, 24 Nov 2025 02:10:26 -0800 (PST)
+Received: from sgarzare-redhat (host-87-12-139-91.business.telecomitalia.it. [87.12.139.91])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7f2e5a3sm27522572f8f.6.2025.11.24.02.10.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Nov 2025 02:10:26 -0800 (PST)
+Date: Mon, 24 Nov 2025 11:10:19 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Bobby Eshleman <bobbyeshleman@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Bryan Tan <bryan-bt.tan@broadcom.com>, Vishnu Dasa <vishnu.dasa@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
+	virtualization@lists.linux.dev, netdev@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, linux-kselftest@vger.kernel.org, berrange@redhat.com, 
+	Sargun Dhillon <sargun@sargun.me>, Bobby Eshleman <bobbyeshleman@meta.com>
+Subject: Re: [PATCH net-next v11 03/13] vsock: reject bad
+ VSOCK_NET_MODE_LOCAL configuration for G2H
+Message-ID: <g4xir3lupnjybh7fqig6xonp32ubotdf3emmrozdm52tpaxvxn@2t4ueynb7hqr>
+References: <20251120-vsock-vmtest-v11-0-55cbc80249a7@meta.com>
+ <20251120-vsock-vmtest-v11-3-55cbc80249a7@meta.com>
+ <swa5xpovczqucynffqgfotyx34lziccwpqomnm5a7iwmeyixfv@uehtzbdj53b4>
+ <aSC3IX81A3UhtD3N@devvm11784.nha0.facebook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/21] paravirt: cleanup and reorg
-To: linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, kvm@vger.kernel.org
-Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Peter Zijlstra <peterz@infradead.org>,
- Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
- Waiman Long <longman@redhat.com>, Jiri Kosina <jikos@kernel.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- xen-devel@lists.xenproject.org, Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.makhalov@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Russell King
- <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- linux-arm-kernel@lists.infradead.org, Paolo Bonzini <pbonzini@redhat.com>,
- Vitaly Kuznetsov <vkuznets@redhat.com>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Oleg Nesterov <oleg@redhat.com>
-References: <20251006074606.1266-1-jgross@suse.com>
-Content-Language: en-US
-From: Juergen Gross <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <20251006074606.1266-1-jgross@suse.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------We5fW6EZMtlKny0A4cau12FQ"
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.70 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SIGNED_PGP(-2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MIME_BASE64_TEXT_BOGUS(1.00)[];
-	MIME_GOOD(-0.20)[multipart/signed,multipart/mixed,text/plain];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_BASE64_TEXT(0.10)[];
-	MIME_UNKNOWN(0.10)[application/pgp-keys];
-	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+,4:~,5:~];
-	FREEMAIL_CC(0.00)[kernel.org,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,microsoft.com,infradead.org,gmail.com,oracle.com,lists.xenproject.org,broadcom.com,armlinux.org.uk,arm.com,xen0n.name,linux.ibm.com,ellerman.id.au,csgroup.eu,dabbelt.com,eecs.berkeley.edu,ghiti.fr,linaro.org,goodmis.org,google.com,suse.de,lists.infradead.org,epam.com];
-	ARC_NA(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	HAS_ATTACHMENT(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[56];
-	TAGGED_RCPT(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:mid]
-X-Spam-Flag: NO
-X-Spam-Score: -3.70
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <aSC3IX81A3UhtD3N@devvm11784.nha0.facebook.com>
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------We5fW6EZMtlKny0A4cau12FQ
-Content-Type: multipart/mixed; boundary="------------DrSPxjHRDVvfvpOSxXEGqtrJ";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, kvm@vger.kernel.org
-Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Peter Zijlstra <peterz@infradead.org>,
- Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
- Waiman Long <longman@redhat.com>, Jiri Kosina <jikos@kernel.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- xen-devel@lists.xenproject.org, Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.makhalov@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Russell King
- <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- linux-arm-kernel@lists.infradead.org, Paolo Bonzini <pbonzini@redhat.com>,
- Vitaly Kuznetsov <vkuznets@redhat.com>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Oleg Nesterov <oleg@redhat.com>
-Message-ID: <dec8ee2c-3a00-4027-b762-aada7bc99bd9@suse.com>
-Subject: Re: [PATCH v3 00/21] paravirt: cleanup and reorg
-References: <20251006074606.1266-1-jgross@suse.com>
-In-Reply-To: <20251006074606.1266-1-jgross@suse.com>
+On Fri, Nov 21, 2025 at 11:01:53AM -0800, Bobby Eshleman wrote:
+>On Fri, Nov 21, 2025 at 03:24:25PM +0100, Stefano Garzarella wrote:
+>> On Thu, Nov 20, 2025 at 09:44:35PM -0800, Bobby Eshleman wrote:
+>> > From: Bobby Eshleman <bobbyeshleman@meta.com>
+>> >
+>> > Reject setting VSOCK_NET_MODE_LOCAL with -EOPNOTSUPP if a G2H transport
+>> > is operational. Additionally, reject G2H transport registration if there
+>> > already exists a namespace in local mode.
+>> >
+>> > G2H sockets break in local mode because the G2H transports don't support
+>> > namespacing yet. The current approach is to coerce packets coming out of
+>> > G2H transports into VSOCK_NET_MODE_GLOBAL mode, but it is not possible
+>> > to coerce sockets in the same way because it cannot be deduced which
+>> > transport will be used by the socket. Specifically, when bound to
+>> > VMADDR_CID_ANY in a nested VM (both G2H and H2G available), it is not
+>> > until a packet is received and matched to the bound socket that we
+>> > assign the transport. This presents a chicken-and-egg problem, because
+>> > we need the namespace to lookup the socket and resolve the transport,
+>> > but we need the transport to know how to use the namespace during
+>> > lookup.
+>> >
+>> > For that reason, this patch prevents VSOCK_NET_MODE_LOCAL from being
+>> > used on systems that support G2H, even nested systems that also have H2G
+>> > transports.
+>> >
+>> > Local mode is blocked based on detecting the presence of G2H devices
+>> > (when possible, as hyperv is special). This means that a host kernel
+>> > with G2H support compiled in (or has the module loaded), will still
+>> > support local mode if there is no G2H (e.g., virtio-vsock) device
+>> > detected. This enables using the same kernel in the host and in the
+>> > guest, as we do in kselftest.
+>> >
+>> > Systems with only namespace-aware transports (vhost-vsock, loopback) can
+>> > still use both VSOCK_NET_MODE_GLOBAL and VSOCK_NET_MODE_LOCAL modes as
+>> > intended.
+>> >
+>> > Add supports_local_mode() transport callback to indicate
+>> > transport-specific local mode support.
+>> >
+>> > These restrictions can be lifted in a future patch series when G2H
+>> > transports gain namespace support.
+>> >
+>> > Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
+>> > ---
+>> > Changes in v11:
+>> > - vhost_transport_supports_local_mode() returns false to keep things
+>> >  disabled until support comes online (Stefano)
+>> > - add comment above supports_local_mode() cb to clarify (Stefano)
+>> > - Remove redundant `ret = 0` initialization in vsock_net_mode_string()
+>> >  (Stefano)
+>> > - Refactor vsock_net_mode_string() to separate parsing from validation
+>> >  (Stefano)
+>> > - vmci returns false for supports_local_mode(), with comment
+>> >
+>> > Changes in v10:
+>> > - move this patch before any transports bring online namespacing (Stefano)
+>> > - move vsock_net_mode_string into critical section (Stefano)
+>> > - add ->supports_local_mode() callback to transports (Stefano)
+>> > ---
+>> > drivers/vhost/vsock.c            |  6 ++++++
+>> > include/net/af_vsock.h           | 11 +++++++++++
+>> > net/vmw_vsock/af_vsock.c         | 32 ++++++++++++++++++++++++++++++++
+>> > net/vmw_vsock/hyperv_transport.c |  6 ++++++
+>> > net/vmw_vsock/virtio_transport.c | 13 +++++++++++++
+>> > net/vmw_vsock/vmci_transport.c   | 12 ++++++++++++
+>> > net/vmw_vsock/vsock_loopback.c   |  6 ++++++
+>> > 7 files changed, 86 insertions(+)
+>> >
+>> > diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+>> > index 69074656263d..4e3856aa2479 100644
+>> > --- a/drivers/vhost/vsock.c
+>> > +++ b/drivers/vhost/vsock.c
+>> > @@ -64,6 +64,11 @@ static u32 vhost_transport_get_local_cid(void)
+>> > 	return VHOST_VSOCK_DEFAULT_HOST_CID;
+>> > }
+>> >
+>> > +static bool vhost_transport_supports_local_mode(void)
+>> > +{
+>> > +	return false;
+>> > +}
+>> > +
+>> > /* Callers that dereference the return value must hold vhost_vsock_mutex or the
+>> >  * RCU read lock.
+>> >  */
+>> > @@ -412,6 +417,7 @@ static struct virtio_transport vhost_transport = {
+>> > 		.module                   = THIS_MODULE,
+>> >
+>> > 		.get_local_cid            = vhost_transport_get_local_cid,
+>> > +		.supports_local_mode	  = vhost_transport_supports_local_mode,
+>> >
+>> > 		.init                     = virtio_transport_do_socket_init,
+>> > 		.destruct                 = virtio_transport_destruct,
+>> > diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+>> > index 59d97a143204..e24ef1d9fe02 100644
+>> > --- a/include/net/af_vsock.h
+>> > +++ b/include/net/af_vsock.h
+>> > @@ -180,6 +180,17 @@ struct vsock_transport {
+>> > 	/* Addressing. */
+>> > 	u32 (*get_local_cid)(void);
+>> >
+>> > +	/* Return true if the transport is compatible with
+>> > +	 * VSOCK_NET_MODE_LOCAL. Otherwise, return false.
+>> > +	 *
+>> > +	 * Transports should return false if they lack local-mode namespace
+>> > +	 * support (e.g., G2H transports like hyperv-vsock and vmci-vsock).
+>> > +	 * virtio-vsock returns true only if no device is present in order to
+>> > +	 * enable local mode in nested scenarios in which virtio-vsock is
+>> > +	 * loaded or built-in, but nonetheless unusable by sockets.
+>> > +	 */
+>> > +	bool (*supports_local_mode)(void);
+>> > +
+>> > 	/* Read a single skb */
+>> > 	int (*read_skb)(struct vsock_sock *, skb_read_actor_t);
+>> >
+>> > diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>> > index 243c0d588682..120adb9dad9f 100644
+>> > --- a/net/vmw_vsock/af_vsock.c
+>> > +++ b/net/vmw_vsock/af_vsock.c
+>> > @@ -91,6 +91,12 @@
+>> >  *   and locked down by a namespace manager. The default is "global". The mode
+>> >  *   is set per-namespace.
+>> >  *
+>> > + *   Note: LOCAL mode is only supported when using namespace-aware transports
+>> > + *   (vhost-vsock, loopback). If a guest-to-host transport (virtio-vsock,
+>> > + *   hyperv-vsock, vmci-vsock) is operational, attempts to set LOCAL mode will
+>> > + *   fail with EOPNOTSUPP, as these transports do not support per-namespace
+>> > + *   isolation.
+>> > + *
+>> >  *   The modes affect the allocation and accessibility of CIDs as follows:
+>> >  *
+>> >  *   - global - access and allocation are all system-wide
+>> > @@ -2794,6 +2800,15 @@ static int vsock_net_mode_string(const struct ctl_table *table, int write,
+>> > 	else
+>> > 		return -EINVAL;
+>> >
+>> > +	mutex_lock(&vsock_register_mutex);
+>> > +	if (mode == VSOCK_NET_MODE_LOCAL &&
+>> > +	    transport_g2h && transport_g2h->supports_local_mode &&
+>> > +	    !transport_g2h->supports_local_mode()) {
+>> > +		mutex_unlock(&vsock_register_mutex);
+>> > +		return -EOPNOTSUPP;
+>> > +	}
+>> > +	mutex_unlock(&vsock_register_mutex);
+>>
+>> Wait, I think we already discussed about this, vsock_net_write_mode() must
+>> be called with the lock held.
+>>
+>> See
+>> https://lore.kernel.org/netdev/aRTTwuuXSz5CvNjt@devvm11784.nha0.facebook.com/
+>>
+>
+>Ah right, oversight on my part.
+>
+>> Since I guess we need another version of this patch, can you check the
+>> commit description to see if it reflects what we are doing now
+>> (e.g vhost is not enabled)?
+>>
+>> Also I don't understand why for vhost we will enable it later, but for
+>> virtio_transport and vsock_loopback we are enabling it now, also if this
+>> patch is before the support on that transports. I'm a bit confused.
+>>
+>> If something is unclear, let's discuss it before sending a new version.
+>>
+>>
+>> What I had in mind was, add this patch and explain why we need this new
+>> callback (like you did), but enable the support in the patches that
+>> really enable it for any transport. But maybe what is not clear to me is
+>> that we need this only for G2H. But now I'm confused about the discussion
+>> around vmci H2G. We decided to discard also that one, but here we are not
+>> checking that?
+>> I mean here we are calling supports_local_mode() only on G2H IIUC.
+>
+>Ah right, VMCI broke my original mental model of only needing this check
+>for G2H (originally I didn't realize VMCI was H2G too).
+>
+>I think now, we actually need to do this check for all of the transports
+>no? Including h2g, g2h, local, and dgram?
+>
+>Additionally, the commit description needs to be updated to reflect that.
 
---------------DrSPxjHRDVvfvpOSxXEGqtrJ
-Content-Type: multipart/mixed; boundary="------------0mve0WRCUDOgkf9JsJIojBKK"
+Let's take a step back, though, because I tried to understand the 
+problem better and I'm confused.
 
---------------0mve0WRCUDOgkf9JsJIojBKK
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+For example, in vmci (G2H side), when a packet arrives, we always use 
+vsock_find_connected_socket(), which only searches in GLOBAL. So 
+connections originating from the host can only reach global sockets in 
+the guest. In this direction (host -> guest), we should be fine, right?
 
-UGluZz8NCg0KSSB0aGluayBhdCBsZWFzdCB0aGUgZmlyc3QgMTIgcGF0Y2hlcyBjYW4ganVz
-dCBnbyBpbi4NCg0KVGhlIG90aGVycyBzdGlsbCBsYWNrIHJldmlldy4NCg0KDQpKdWVyZ2Vu
-DQoNCk9uIDA2LjEwLjI1IDA5OjQ1LCBKdWVyZ2VuIEdyb3NzIHdyb3RlOg0KPiBTb21lIGNs
-ZWFudXBzIGFuZCByZW9yZyBvZiBwYXJhdmlydCBjb2RlIGFuZCBoZWFkZXJzOg0KPiANCj4g
-LSBUaGUgZmlyc3QgMiBwYXRjaGVzIHNob3VsZCBiZSBub3QgY29udHJvdmVyc2lhbCBhdCBh
-bGwsIGFzIHRoZXkNCj4gICAgcmVtb3ZlIGp1c3Qgc29tZSBubyBsb25nZXIgbmVlZGVkICNp
-bmNsdWRlIGFuZCBzdHJ1Y3QgZm9yd2FyZA0KPiAgICBkZWNsYXJhdGlvbnMuDQo+IA0KPiAt
-IFRoZSAzcmQgcGF0Y2ggaXMgcmVtb3ZpbmcgQ09ORklHX1BBUkFWSVJUX0RFQlVHLCB3aGlj
-aCBJTU8gaGFzDQo+ICAgIG5vIHJlYWwgdmFsdWUsIGFzIGl0IGp1c3QgY2hhbmdlcyBhIGNy
-YXNoIHRvIGEgQlVHKCkgKHRoZSBzdGFjaw0KPiAgICB0cmFjZSB3aWxsIGJhc2ljYWxseSBi
-ZSB0aGUgc2FtZSkuIEFzIHRoZSBtYWludGFpbmVyIG9mIHRoZSBtYWluDQo+ICAgIHBhcmF2
-aXJ0IHVzZXIgKFhlbikgSSBoYXZlIG5ldmVyIHNlZW4gdGhpcyBjcmFzaC9CVUcoKSB0byBo
-YXBwZW4uDQo+IA0KPiAtIFRoZSA0dGggcGF0Y2ggaXMganVzdCBhIG1vdmVtZW50IG9mIGNv
-ZGUuDQo+IA0KPiAtIEkgZG9uJ3Qga25vdyBmb3Igd2hhdCByZWFzb24gYXNtL3BhcmF2aXJ0
-X2FwaV9jbG9jay5oIHdhcyBhZGRlZCwNCj4gICAgYXMgYWxsIGFyY2hzIHN1cHBvcnRpbmcg
-aXQgZG8gaXQgZXhhY3RseSBpbiB0aGUgc2FtZSB3YXkuIFBhdGNoDQo+ICAgIDUgaXMgcmVt
-b3ZpbmcgaXQuDQo+IA0KPiAtIFBhdGNoZXMgNi0xNCBhcmUgc3RyZWFtbGluaW5nIHRoZSBw
-YXJhdmlydCBjbG9jayBpbnRlcmZhY2VzIGJ5DQo+ICAgIHVzaW5nIGEgY29tbW9uIGltcGxl
-bWVudGF0aW9uIGFjcm9zcyBhcmNoaXRlY3R1cmVzIHdoZXJlIHBvc3NpYmxlDQo+ICAgIGFu
-ZCBieSBtb3ZpbmcgdGhlIHJlbGF0ZWQgY29kZSBpbnRvIGNvbW1vbiBzY2hlZCBjb2RlLCBh
-cyB0aGlzIGlzDQo+ICAgIHdoZXJlIGl0IHNob3VsZCBsaXZlLg0KPiANCj4gLSBQYXRjaGVz
-IDE1LTIwIGFyZSBtb3JlIGxpa2UgUkZDIG1hdGVyaWFsIHByZXBhcmluZyB0aGUgcGFyYXZp
-cnQNCj4gICAgaW5mcmFzdHJ1Y3R1cmUgdG8gc3VwcG9ydCBtdWx0aXBsZSBwdl9vcHMgZnVu
-Y3Rpb24gYXJyYXlzLg0KPiAgICBBcyBhIHByZXJlcXVpc2l0ZSBmb3IgdGhhdCBpdCBtYWtl
-cyBsaWZlIGluIG9ianRvb2wgbXVjaCBlYXNpZXINCj4gICAgd2l0aCBkcm9wcGluZyB0aGUg
-WGVuIHN0YXRpYyBpbml0aWFsaXplcnMgb2YgdGhlIHB2X29wcyBzdWItDQo+ICAgIHN0cnVj
-dHVyZXMsIHdoaWNoIGlzIGRvbmUgaW4gcGF0Y2hlcyAxNS0xNy4NCj4gICAgUGF0Y2hlcyAx
-OC0yMCBhcmUgZG9pbmcgdGhlIHJlYWwgcHJlcGFyYXRpb25zIGZvciBtdWx0aXBsZSBwdl9v
-cHMNCj4gICAgYXJyYXlzIGFuZCB1c2luZyB0aG9zZSBhcnJheXMgaW4gbXVsdGlwbGUgaGVh
-ZGVycy4NCj4gDQo+IC0gUGF0Y2ggMjEgaXMgYW4gZXhhbXBsZSBob3cgdGhlIG5ldyBzY2hl
-bWUgY2FuIGxvb2sgbGlrZSB1c2luZyB0aGUNCj4gICAgUFYtc3BpbmxvY2tzLg0KPiANCj4g
-Q2hhbmdlcyBpbiBWMjoNCj4gLSBuZXcgcGF0Y2hlcyAxMy0xOCBhbmQgMjANCj4gLSBjb21w
-bGV0ZSByZXdvcmsgb2YgcGF0Y2ggMjENCj4gDQo+IENoYW5nZXMgaW4gVjM6DQo+IC0gZml4
-ZWQgMiBpc3N1ZXMgZGV0ZWN0ZWQgYnkga2VybmVsIHRlc3Qgcm9ib3QNCj4gDQo+IEp1ZXJn
-ZW4gR3Jvc3MgKDIxKToNCj4gICAgeDg2L3BhcmF2aXJ0OiBSZW1vdmUgbm90IG5lZWRlZCBp
-bmNsdWRlcyBvZiBwYXJhdmlydC5oDQo+ICAgIHg4Ni9wYXJhdmlydDogUmVtb3ZlIHNvbWUg
-dW5uZWVkZWQgc3RydWN0IGRlY2xhcmF0aW9ucw0KPiAgICB4ODYvcGFyYXZpcnQ6IFJlbW92
-ZSBQQVJBVklSVF9ERUJVRyBjb25maWcgb3B0aW9uDQo+ICAgIHg4Ni9wYXJhdmlydDogTW92
-ZSB0aHVuayBtYWNyb3MgdG8gcGFyYXZpcnRfdHlwZXMuaA0KPiAgICBwYXJhdmlydDogUmVt
-b3ZlIGFzbS9wYXJhdmlydF9hcGlfY2xvY2suaA0KPiAgICBzY2hlZDogTW92ZSBjbG9jayBy
-ZWxhdGVkIHBhcmF2aXJ0IGNvZGUgdG8ga2VybmVsL3NjaGVkDQo+ICAgIGFybS9wYXJhdmly
-dDogVXNlIGNvbW1vbiBjb2RlIGZvciBwYXJhdmlydF9zdGVhbF9jbG9jaygpDQo+ICAgIGFy
-bTY0L3BhcmF2aXJ0OiBVc2UgY29tbW9uIGNvZGUgZm9yIHBhcmF2aXJ0X3N0ZWFsX2Nsb2Nr
-KCkNCj4gICAgbG9vbmdhcmNoL3BhcmF2aXJ0OiBVc2UgY29tbW9uIGNvZGUgZm9yIHBhcmF2
-aXJ0X3N0ZWFsX2Nsb2NrKCkNCj4gICAgcmlzY3YvcGFyYXZpcnQ6IFVzZSBjb21tb24gY29k
-ZSBmb3IgcGFyYXZpcnRfc3RlYWxfY2xvY2soKQ0KPiAgICB4ODYvcGFyYXZpcnQ6IFVzZSBj
-b21tb24gY29kZSBmb3IgcGFyYXZpcnRfc3RlYWxfY2xvY2soKQ0KPiAgICB4ODYvcGFyYXZp
-cnQ6IE1vdmUgcGFyYXZpcnRfc2NoZWRfY2xvY2soKSByZWxhdGVkIGNvZGUgaW50byB0c2Mu
-Yw0KPiAgICB4ODYvcGFyYXZpcnQ6IEludHJvZHVjZSBuZXcgcGFyYXZpcnQtYmFzZS5oIGhl
-YWRlcg0KPiAgICB4ODYvcGFyYXZpcnQ6IE1vdmUgcHZfbmF0aXZlXyooKSBwcm90b3R5cGVz
-IHRvIHBhcmF2aXJ0LmMNCj4gICAgeDg2L3hlbjogRHJvcCB4ZW5faXJxX29wcw0KPiAgICB4
-ODYveGVuOiBEcm9wIHhlbl9jcHVfb3BzDQo+ICAgIHg4Ni94ZW46IERyb3AgeGVuX21tdV9v
-cHMNCj4gICAgb2JqdG9vbDogQWxsb3cgbXVsdGlwbGUgcHZfb3BzIGFycmF5cw0KPiAgICB4
-ODYvcGFyYXZpcnQ6IEFsbG93IHB2LWNhbGxzIG91dHNpZGUgcGFyYXZpcnQuaA0KPiAgICB4
-ODYvcGFyYXZpcnQ6IFNwZWNpZnkgcHZfb3BzIGFycmF5IGluIHBhcmF2aXJ0IG1hY3Jvcw0K
-PiAgICB4ODYvcHZsb2NrczogTW92ZSBwYXJhdmlydCBzcGlubG9jayBmdW5jdGlvbnMgaW50
-byBvd24gaGVhZGVyDQo+IA0KPiAgIGFyY2gvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICB8ICAgMyArDQo+ICAgYXJjaC9hcm0vS2NvbmZpZyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHwgICAxICsNCj4gICBhcmNoL2FybS9pbmNsdWRlL2FzbS9w
-YXJhdmlydC5oICAgICAgICAgICAgICAgfCAgMjIgLS0NCj4gICBhcmNoL2FybS9pbmNsdWRl
-L2FzbS9wYXJhdmlydF9hcGlfY2xvY2suaCAgICAgfCAgIDEgLQ0KPiAgIGFyY2gvYXJtL2tl
-cm5lbC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICB8ICAgMSAtDQo+ICAgYXJjaC9h
-cm0va2VybmVsL3BhcmF2aXJ0LmMgICAgICAgICAgICAgICAgICAgIHwgIDIzIC0tDQo+ICAg
-YXJjaC9hcm02NC9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsN
-Cj4gICBhcmNoL2FybTY0L2luY2x1ZGUvYXNtL3BhcmF2aXJ0LmggICAgICAgICAgICAgfCAg
-MTQgLQ0KPiAgIGFyY2gvYXJtNjQvaW5jbHVkZS9hc20vcGFyYXZpcnRfYXBpX2Nsb2NrLmgg
-ICB8ICAgMSAtDQo+ICAgYXJjaC9hcm02NC9rZXJuZWwvcGFyYXZpcnQuYyAgICAgICAgICAg
-ICAgICAgIHwgIDExICstDQo+ICAgYXJjaC9sb29uZ2FyY2gvS2NvbmZpZyAgICAgICAgICAg
-ICAgICAgICAgICAgIHwgICAxICsNCj4gICBhcmNoL2xvb25nYXJjaC9pbmNsdWRlL2FzbS9w
-YXJhdmlydC5oICAgICAgICAgfCAgMTMgLQ0KPiAgIC4uLi9pbmNsdWRlL2FzbS9wYXJhdmly
-dF9hcGlfY2xvY2suaCAgICAgICAgICB8ICAgMSAtDQo+ICAgYXJjaC9sb29uZ2FyY2gva2Vy
-bmVsL3BhcmF2aXJ0LmMgICAgICAgICAgICAgIHwgIDEwICstDQo+ICAgYXJjaC9wb3dlcnBj
-L2luY2x1ZGUvYXNtL3BhcmF2aXJ0LmggICAgICAgICAgIHwgICAzIC0NCj4gICBhcmNoL3Bv
-d2VycGMvaW5jbHVkZS9hc20vcGFyYXZpcnRfYXBpX2Nsb2NrLmggfCAgIDIgLQ0KPiAgIGFy
-Y2gvcG93ZXJwYy9wbGF0Zm9ybXMvcHNlcmllcy9zZXR1cC5jICAgICAgICB8ICAgNCArLQ0K
-PiAgIGFyY2gvcmlzY3YvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
-MSArDQo+ICAgYXJjaC9yaXNjdi9pbmNsdWRlL2FzbS9wYXJhdmlydC5oICAgICAgICAgICAg
-IHwgIDE0IC0NCj4gICBhcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL3BhcmF2aXJ0X2FwaV9jbG9j
-ay5oICAgfCAgIDEgLQ0KPiAgIGFyY2gvcmlzY3Yva2VybmVsL3BhcmF2aXJ0LmMgICAgICAg
-ICAgICAgICAgICB8ICAxMSArLQ0KPiAgIGFyY2gveDg2L0tjb25maWcgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICB8ICAgOCArLQ0KPiAgIGFyY2gveDg2L2VudHJ5L2VudHJ5XzY0
-LlMgICAgICAgICAgICAgICAgICAgICB8ICAgMSAtDQo+ICAgYXJjaC94ODYvZW50cnkvdnN5
-c2NhbGwvdnN5c2NhbGxfNjQuYyAgICAgICAgIHwgICAxIC0NCj4gICBhcmNoL3g4Ni9oeXBl
-cnYvaHZfc3BpbmxvY2suYyAgICAgICAgICAgICAgICAgfCAgMTEgKy0NCj4gICBhcmNoL3g4
-Ni9pbmNsdWRlL2FzbS9hcGljLmggICAgICAgICAgICAgICAgICAgfCAgIDQgLQ0KPiAgIGFy
-Y2gveDg2L2luY2x1ZGUvYXNtL2hpZ2htZW0uaCAgICAgICAgICAgICAgICB8ICAgMSAtDQo+
-ICAgYXJjaC94ODYvaW5jbHVkZS9hc20vbXNoeXBlcnYuaCAgICAgICAgICAgICAgIHwgICAx
-IC0NCj4gICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9wYXJhdmlydC1iYXNlLmggICAgICAgICAg
-fCAgMjkgKysNCj4gICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9wYXJhdmlydC1zcGlubG9jay5o
-ICAgICAgfCAxNDYgKysrKysrKysNCj4gICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9wYXJhdmly
-dC5oICAgICAgICAgICAgICAgfCAzMzEgKysrKystLS0tLS0tLS0tLS0tDQo+ICAgYXJjaC94
-ODYvaW5jbHVkZS9hc20vcGFyYXZpcnRfYXBpX2Nsb2NrLmggICAgIHwgICAxIC0NCj4gICBh
-cmNoL3g4Ni9pbmNsdWRlL2FzbS9wYXJhdmlydF90eXBlcy5oICAgICAgICAgfCAyNjkgKysr
-KysrKy0tLS0tLS0NCj4gICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9wZ3RhYmxlXzMyLmggICAg
-ICAgICAgICAgfCAgIDEgLQ0KPiAgIGFyY2gveDg2L2luY2x1ZGUvYXNtL3B0cmFjZS5oICAg
-ICAgICAgICAgICAgICB8ICAgMiArLQ0KPiAgIGFyY2gveDg2L2luY2x1ZGUvYXNtL3FzcGlu
-bG9jay5oICAgICAgICAgICAgICB8ICA4OSArLS0tLQ0KPiAgIGFyY2gveDg2L2luY2x1ZGUv
-YXNtL3NwaW5sb2NrLmggICAgICAgICAgICAgICB8ICAgMSAtDQo+ICAgYXJjaC94ODYvaW5j
-bHVkZS9hc20vdGltZXIuaCAgICAgICAgICAgICAgICAgIHwgICAxICsNCj4gICBhcmNoL3g4
-Ni9pbmNsdWRlL2FzbS90bGJmbHVzaC5oICAgICAgICAgICAgICAgfCAgIDQgLQ0KPiAgIGFy
-Y2gveDg2L2tlcm5lbC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICB8ICAgMiArLQ0K
-PiAgIGFyY2gveDg2L2tlcm5lbC9hcG1fMzIuYyAgICAgICAgICAgICAgICAgICAgICB8ICAg
-MSAtDQo+ICAgYXJjaC94ODYva2VybmVsL2NhbGx0aHVua3MuYyAgICAgICAgICAgICAgICAg
-IHwgICAxIC0NCj4gICBhcmNoL3g4Ni9rZXJuZWwvY3B1L2J1Z3MuYyAgICAgICAgICAgICAg
-ICAgICAgfCAgIDEgLQ0KPiAgIGFyY2gveDg2L2tlcm5lbC9jcHUvdm13YXJlLmMgICAgICAg
-ICAgICAgICAgICB8ICAgMSArDQo+ICAgYXJjaC94ODYva2VybmVsL2t2bS5jICAgICAgICAg
-ICAgICAgICAgICAgICAgIHwgIDExICstDQo+ICAgYXJjaC94ODYva2VybmVsL2t2bWNsb2Nr
-LmMgICAgICAgICAgICAgICAgICAgIHwgICAxICsNCj4gICBhcmNoL3g4Ni9rZXJuZWwvcGFy
-YXZpcnQtc3BpbmxvY2tzLmMgICAgICAgICAgfCAgMjYgKy0NCj4gICBhcmNoL3g4Ni9rZXJu
-ZWwvcGFyYXZpcnQuYyAgICAgICAgICAgICAgICAgICAgfCAgNDIgKy0tDQo+ICAgYXJjaC94
-ODYva2VybmVsL3RzYy5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDEwICstDQo+ICAg
-YXJjaC94ODYva2VybmVsL3ZzbXBfNjQuYyAgICAgICAgICAgICAgICAgICAgIHwgICAxIC0N
-Cj4gICBhcmNoL3g4Ni9rZXJuZWwveDg2X2luaXQuYyAgICAgICAgICAgICAgICAgICAgfCAg
-IDEgLQ0KPiAgIGFyY2gveDg2L2xpYi9jYWNoZS1zbXAuYyAgICAgICAgICAgICAgICAgICAg
-ICB8ICAgMSAtDQo+ICAgYXJjaC94ODYvbW0vaW5pdC5jICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHwgICAxIC0NCj4gICBhcmNoL3g4Ni94ZW4vZW5saWdodGVuX3B2LmMgICAgICAg
-ICAgICAgICAgICAgfCAgODIgKystLS0NCj4gICBhcmNoL3g4Ni94ZW4vaXJxLmMgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgfCAgMjAgKy0NCj4gICBhcmNoL3g4Ni94ZW4vbW11X3B2
-LmMgICAgICAgICAgICAgICAgICAgICAgICAgfCAxMDAgKystLS0tDQo+ICAgYXJjaC94ODYv
-eGVuL3NwaW5sb2NrLmMgICAgICAgICAgICAgICAgICAgICAgIHwgIDExICstDQo+ICAgYXJj
-aC94ODYveGVuL3RpbWUuYyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsNCj4g
-ICBkcml2ZXJzL2Nsb2Nrc291cmNlL2h5cGVydl90aW1lci5jICAgICAgICAgICAgfCAgIDIg
-Kw0KPiAgIGRyaXZlcnMveGVuL3RpbWUuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8
-ICAgMiArLQ0KPiAgIGluY2x1ZGUvbGludXgvc2NoZWQvY3B1dGltZS5oICAgICAgICAgICAg
-ICAgICB8ICAxOCArDQo+ICAga2VybmVsL3NjaGVkL2NvcmUuYyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgICA1ICsNCj4gICBrZXJuZWwvc2NoZWQvY3B1dGltZS5jICAgICAgICAg
-ICAgICAgICAgICAgICAgfCAgMTMgKw0KPiAgIGtlcm5lbC9zY2hlZC9zY2hlZC5oICAgICAg
-ICAgICAgICAgICAgICAgICAgICB8ICAgMyArLQ0KPiAgIHRvb2xzL29ianRvb2wvYXJjaC94
-ODYvZGVjb2RlLmMgICAgICAgICAgICAgICB8ICAgOCArLQ0KPiAgIHRvb2xzL29ianRvb2wv
-Y2hlY2suYyAgICAgICAgICAgICAgICAgICAgICAgICB8ICA3OCArKysrLQ0KPiAgIHRvb2xz
-L29ianRvb2wvaW5jbHVkZS9vYmp0b29sL2NoZWNrLmggICAgICAgICB8ICAgMiArDQo+ICAg
-NjcgZmlsZXMgY2hhbmdlZCwgNjU5IGluc2VydGlvbnMoKyksIDgyNyBkZWxldGlvbnMoLSkN
-Cj4gICBkZWxldGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vaW5jbHVkZS9hc20vcGFyYXZpcnQu
-aA0KPiAgIGRlbGV0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9pbmNsdWRlL2FzbS9wYXJhdmly
-dF9hcGlfY2xvY2suaA0KPiAgIGRlbGV0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9rZXJuZWwv
-cGFyYXZpcnQuYw0KPiAgIGRlbGV0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2luY2x1ZGUv
-YXNtL3BhcmF2aXJ0X2FwaV9jbG9jay5oDQo+ICAgZGVsZXRlIG1vZGUgMTAwNjQ0IGFyY2gv
-bG9vbmdhcmNoL2luY2x1ZGUvYXNtL3BhcmF2aXJ0X2FwaV9jbG9jay5oDQo+ICAgZGVsZXRl
-IG1vZGUgMTAwNjQ0IGFyY2gvcG93ZXJwYy9pbmNsdWRlL2FzbS9wYXJhdmlydF9hcGlfY2xv
-Y2suaA0KPiAgIGRlbGV0ZSBtb2RlIDEwMDY0NCBhcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL3Bh
-cmF2aXJ0X2FwaV9jbG9jay5oDQo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gveDg2L2lu
-Y2x1ZGUvYXNtL3BhcmF2aXJ0LWJhc2UuaA0KPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNo
-L3g4Ni9pbmNsdWRlL2FzbS9wYXJhdmlydC1zcGlubG9jay5oDQo+ICAgZGVsZXRlIG1vZGUg
-MTAwNjQ0IGFyY2gveDg2L2luY2x1ZGUvYXNtL3BhcmF2aXJ0X2FwaV9jbG9jay5oDQo+IA0K
-DQo=
---------------0mve0WRCUDOgkf9JsJIojBKK
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+Now let's consider the other direction, from guest to host, so the 
+connection should be generated via vsock_connect().
+Here I see that we are not doing anything with regard to the source 
+namespace. At this point, my question is whether we should modify 
+vsock_assign_transport() or transport->stream_allow() to do this for 
+each stream, and not prevent loading a G2H module a priori.
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+For example, stream_allow() could check that the socket namespace is 
+supported by the assigned transport. E.g., vmci can check that if the 
+namespace mode is not GLOBAL, then it returns false. (Same thing in 
+virtio-vsock, I mean the G2H driver).
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+This should solve the guest -> host direction, but at this point I 
+wonder if I'm missing something.
 
---------------0mve0WRCUDOgkf9JsJIojBKK--
+>
+>With this, we then end up with two commits:
+>
+>	commit 1) This commit which adds the callbacks and gives each
+>	transport stubs to return false. Checks all transports (not just
+>	G2H). Update the commit. Fix vsock_net_write_mode() race above.
+>
+>	commit 2) change the virtio-vsock/vhost-vsock/vsock-loopback to
+>	add the real implementations (vhost + loopback return true,
+>	virtio detects device). The other transports keep their return
+>	false stubs so no changes.
+>
+>Does that seem about right?
 
---------------DrSPxjHRDVvfvpOSxXEGqtrJ--
+If we really need this approach, this should be fine.
 
---------------We5fW6EZMtlKny0A4cau12FQ
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+Thanks,
+Stefano
 
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmkkKJ4FAwAAAAAACgkQsN6d1ii/Ey96
-XQf/SZ63IJyquodbQLgO7UOlhatNR0JUxtLBGXtzzD9lLJ9MGtRZn78fU/peXEGHNZEA2wJlcKOY
-+2AJ32Xsn9JL/9ZmbQyt014ovVTablifIrv8xlTgAgN99kTtFi2NiYD/AF98VCabwNRx+QK9Vo4n
-N4Eb1eW7YQFGLSAya7T7u2xWNW41xgedaRvQNEMOvGajK6VExI9lo9cXSp5bS+VKZqQWygNsQjAy
-BYg/u1+1sDr7L56331yDxmStB00H20evlCYda5vlv1qP2WpF3CuT+rpLAfQ4Wf1YCS+2ZW6UvLfy
-A6h35oFwyf1ohDIh7OysCxTH57L6hrDqciTpulba8Q==
-=JJbu
------END PGP SIGNATURE-----
-
---------------We5fW6EZMtlKny0A4cau12FQ--
 
