@@ -1,69 +1,66 @@
-Return-Path: <linux-hyperv+bounces-7820-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7821-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E650BC8625F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Nov 2025 18:10:44 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81601C8666D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Nov 2025 19:01:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D252A3B9A9B
-	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Nov 2025 17:05:47 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2D7E134CFDE
+	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Nov 2025 18:01:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28B4132A3F2;
-	Tue, 25 Nov 2025 17:03:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E549A279918;
+	Tue, 25 Nov 2025 18:01:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="quVQ69LJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KFS4oVhC"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from sender3-of-o54.zoho.com (sender3-of-o54.zoho.com [136.143.184.54])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1221D329399;
-	Tue, 25 Nov 2025 17:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764090216; cv=pass; b=JVYwZ1TgvalD3olBhng72YyvJtjvcEqmN/z8A4Fhi0UypZ4YYHSUSfYnb/531I/dEYJd2aC4X6NR75PiM2WQV9WscQtfy72weObTzOL6xz0IGaGuoONHeeZV1CwBB3qjzs80R4siVrOMSxcDe8G+Kr3wXQV6IDKAyFpnpNDDdAg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764090216; c=relaxed/simple;
-	bh=gOzGpO/AiTWTfpSYhMN/sgJw/tiHk4o1JZ7xvjzkzXU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OUwnXKgNcq35vV2vX+Ecjdy5241H/HoSKfNlCiEwwXfV+daa4fdtuLNy+ObvqEwEGBxrsN/u4WsqK2CF2R2YEs5CdMeD/kfkYShWUTMP+QXWe/p2s9rSa8qnJBMgOwpuw0fFF3sUC9YhyJAsbHl2WHmI8Mo5ZSpZ7YH4HxGoOXU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=quVQ69LJ; arc=pass smtp.client-ip=136.143.184.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1764090144; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=RT95WB7XP3yF4hNe0URWd4hj5n5OqH3kD0bG3yA6E5djqYfx7lyd/O0otu1Tz6H8QwoHGzGFzhnUk34OnY/iyEvZur0JmEJXLkCU3k/IsBvGCtFKgg7/8VUMby69d+qTd5nzWOy0N2Fr7ju7f7pOHOT9RNdD5XBU5NyIFcgjoLs=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1764090144; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=rfmkhk6fI8nQ7zM7WRF33dysSOhxawuyL810u6pnhUo=; 
-	b=MArsVwlSCJQhqViFvr3iOkqBRz7dfxo+fKmDYMR4YAqjIQYsfEe985aISe5mjJOsX1GbhimMMB8PMNFDH2YsgL/0F/FFnc8+rPtc4a2lqdjGdG2u6ksd55fKmrOcsRX0WzDP/UEAnbP4ZhNntruD4lns/VhY2tvLKbvwwh/fPHg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=anirudhrb.com;
-	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
-	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1764090144;
-	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=rfmkhk6fI8nQ7zM7WRF33dysSOhxawuyL810u6pnhUo=;
-	b=quVQ69LJP0Zceq6Kbomc9byr+r/F65UXX+YF8LuQsXdIl2GTprpzqRZc3lgDS9aL
-	Nio8FhASGi0DQ5XEVocVIKW+T3kycdSKvIUYCkpRgn1tUVNaQc9KP0IYULFaGeRFb/0
-	VxsCIFSbiVl7IO0c7Zw5xrpLc229W/s3aLDKvGq4=
-Received: by mx.zohomail.com with SMTPS id 1764090142173941.9960396999667;
-	Tue, 25 Nov 2025 09:02:22 -0800 (PST)
-From: Anirudh Raybharam <anirudh@anirudhrb.com>
-To: kys@microsoft.com,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88441E991B;
+	Tue, 25 Nov 2025 18:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764093701; cv=none; b=lAp5hPP8Bl8PDjFZwKRH5e8z9DP+AT634jKMVl40tmn1tiOey9uUHpZUM+VCZ1tQb40gm3GGcZDxW6p4RAFfKIu0vh7NzEgD+5Tu6QRqceN//BcCQCuURDbAmDPSDKYw2oLG2JJy0srG1FIq6xHu4qDPAIWWj5dVHfsjoKz4vdU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764093701; c=relaxed/simple;
+	bh=bj5uo4YFaea0ec4MIEwRCTbZHbCe5TlxVbvsShw1aXY=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K2eZsTsKtmFnb0AC+d2gC3U3sUynw4sIseXEOn1S60ocNnTCP+59z1SLpYXjn335BOY9x3YYefl9yoAuRrPlqWNYbc4ju117kwxuSISwjZnTA67eDG3gLWT62sgklMrAcm6KlaEjVBnsHjagEy0LbOq3bpGeczdf8RzArtxgeHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KFS4oVhC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56034C116B1;
+	Tue, 25 Nov 2025 18:01:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764093701;
+	bh=bj5uo4YFaea0ec4MIEwRCTbZHbCe5TlxVbvsShw1aXY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KFS4oVhCB+VXAulzbDF10yRzV5xjqEkoTNr/UE37efRQYxxXRggZ9Kd5TVAnMSCbs
+	 ZXj2Bs0yd26/naaJK+S3LS3BgC+9KBIaJdXHh3QgrarfrF1hayBhY1gNzW8I9nmpKw
+	 /Z4D8bRawtI0b0UPt/jlfHI6Lcwbl7p3AIloJflYxB9h48EboUoYXyYgO2tSzeCafa
+	 WetwUykAhv1Gq1gnzheNgIgsPEtsPaw/H7suS0hy6eLRgVc5aDkzimzbkAkNEgPVqa
+	 E4m07tmQ87IKQ+NkJY9B+jTKlmpMnbSZ3xcPDPu/Onrv2wyg/1qGH8+w1eW2bmApPj
+	 99UkVyOQoy56Q==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1vNxMA-00000008ExP-3ppO;
+	Tue, 25 Nov 2025 18:01:39 +0000
+Date: Tue, 25 Nov 2025 18:01:38 +0000
+Message-ID: <86bjkqq9dp.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Anirudh Raybharam <anirudh@anirudhrb.com>
+Cc: kys@microsoft.com,
 	haiyangz@microsoft.com,
 	wei.liu@kernel.org,
 	decui@microsoft.com,
 	longli@microsoft.com,
 	catalin.marinas@arm.com,
 	will@kernel.org,
-	maz@kernel.org,
 	tglx@linutronix.de,
 	Arnd Bergmann <arnd@arndb.de>,
 	akpm@linux-foundation.org,
-	anirudh@anirudhrb.com,
 	agordeev@linux.ibm.com,
 	guoweikang.kernel@gmail.com,
 	osandov@fb.com,
@@ -72,213 +69,61 @@ To: kys@microsoft.com,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-arch@vger.kernel.org
-Cc: Jinank Jain <jinankjain@microsoft.com>
-Subject: [PATCH 3/3] mshv: add support for VMEXIT interrupts on aarch64
-Date: Tue, 25 Nov 2025 17:01:24 +0000
-Message-Id: <20251125170124.2443340-4-anirudh@anirudhrb.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20251125170124.2443340-1-anirudh@anirudhrb.com>
+Subject: Re: [PATCH 2/3] irqchip/gic-v3: allocate one SGI for MSHV
+In-Reply-To: <20251125170124.2443340-3-anirudh@anirudhrb.com>
 References: <20251125170124.2443340-1-anirudh@anirudhrb.com>
+	<20251125170124.2443340-3-anirudh@anirudhrb.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: anirudh@anirudhrb.com, kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, longli@microsoft.com, catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de, arnd@arndb.de, akpm@linux-foundation.org, agordeev@linux.ibm.com, guoweikang.kernel@gmail.com, osandov@fb.com, bsz@amazon.de, linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-From: Anirudh Rayabharam <anirudh@anirudhrb.com>
+On Tue, 25 Nov 2025 17:01:23 +0000,
+Anirudh Raybharam <anirudh@anirudhrb.com> wrote:
+> 
+> From: Anirudh Rayabharam <anirudh@anirudhrb.com>
+> 
+> From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> 
+> Currently SGIs are allocated only for the smp subsystem. The MSHV
+> (Microsoft Hypervisor aka Hyper-V) code also needs an SGI that can be
+> programmed into the SYNIC to receive intercepts from the hypervisor. The
+> hypervisor would then assert this SGI whenever there is a guest
+> VMEXIT.
+> 
+> Allocate one SGI for MSHV use in addition to the SGIs allocated for
+> IPIs. When running under MSHV, the full SGI range can be used i.e. no
+> need to reserve SGIs 8-15 for the secure firmware.
+> 
+> Since this SGI is needed only when running as a parent partition (i.e.
+> we can create guest partitions), check for it before allocating an SGI.
 
-From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+Sorry, but that's not an acceptable situation.
 
-Use the SGI allocated for MSHV as the interrupt vector to get notified
-of hypervisor intercepts.
+SGIs are for Linux to use, nobody else, and that allocation must be
+the same irrespective of whether Linux runs virtualised or not. This
+also won't work with GICv5 (there are no SGIs at all), so this is
+doomed from the very start, and would immediately create technical
+debt.
 
-Currently, HYPERVISOR_CALLBACK_VECTOR is hardcoded for this. This macro
-exists only for x86. To make things generic, introduce an arch-specific
-init function mshv_arch_parent_partition_init() which, for now, is
-responsible for setting up the interception interrupt and writing it to
-the mshv_interrupt global. mshv_interrupt is then used when programming
-the SYNIC.
+If you want to signal an interrupt to Linux, expose a device with an
+interrupt in a firmware table (i.e. not an SGI), and use that in your
+driver.
 
-Co-developed-by: Jinank Jain <jinankjain@microsoft.com>
-Signed-off-by: Jinank Jain <jinankjain@microsoft.com>
-Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
----
- drivers/hv/mshv_root_main.c    | 59 ++++++++++++++++++++++++++++++++++
- drivers/hv/mshv_synic.c        | 15 +++++----
- include/asm-generic/mshyperv.h |  3 ++
- 3 files changed, 70 insertions(+), 7 deletions(-)
+Thanks,
 
-diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index bc15d6f6922f..e48a89688ecb 100644
---- a/drivers/hv/mshv_root_main.c
-+++ b/drivers/hv/mshv_root_main.c
-@@ -17,7 +17,9 @@
- #include <linux/file.h>
- #include <linux/anon_inodes.h>
- #include <linux/mm.h>
-+#include <linux/interrupt.h>
- #include <linux/io.h>
-+#include <linux/irq.h>
- #include <linux/cpuhotplug.h>
- #include <linux/random.h>
- #include <asm/mshyperv.h>
-@@ -75,6 +77,11 @@ static vm_fault_t mshv_vp_fault(struct vm_fault *vmf);
- static int mshv_init_async_handler(struct mshv_partition *partition);
- static void mshv_async_hvcall_handler(void *data, u64 *status);
- 
-+
-+int mshv_interrupt = -1;
-+int mshv_irq = -1;
-+static long __percpu *mshv_evt;
-+
- static const union hv_input_vtl input_vtl_zero;
- static const union hv_input_vtl input_vtl_normal = {
- 	.target_vtl = HV_NORMAL_VTL,
-@@ -2311,6 +2318,47 @@ static void mshv_init_vmm_caps(struct device *dev)
- 	dev_dbg(dev, "vmm_caps = %#llx\n", mshv_root.vmm_caps.as_uint64[0]);
- }
- 
-+#if IS_ENABLED(CONFIG_ARM64)
-+static irqreturn_t mshv_percpu_isr(int irq, void *dev_id)
-+{
-+	mshv_isr();
-+	add_interrupt_randomness(irq);
-+	return IRQ_HANDLED;
-+}
-+
-+static int mshv_arch_parent_partition_init(struct device *dev)
-+{
-+	int ret;
-+
-+	mshv_irq = mshv_get_intercept_irq();
-+	mshv_interrupt = irq_get_irq_data(mshv_irq)->hwirq;
-+
-+	mshv_evt = alloc_percpu(long);
-+	if (!mshv_evt) {
-+		dev_err(dev, "Failed to allocate percpu event\n");
-+		return -ENOMEM;
-+	}
-+
-+	ret = request_percpu_irq(mshv_irq, mshv_percpu_isr, "MSHV", mshv_evt);
-+	if (ret) {
-+		dev_err(dev, "Failed to request percpu irq\n");
-+		goto free_percpu_buf;
-+	}
-+
-+	return ret;
-+
-+free_percpu_buf:
-+	free_percpu(mshv_evt);
-+	return ret;
-+}
-+#elif IS_ENABLED(CONFIG_X86_64)
-+static int mshv_arch_parent_partition_init(struct device *dev)
-+{
-+	mshv_interrupt = HYPERVISOR_CALLBACK_VECTOR;
-+	return 0;
-+}
-+#endif
-+
- static int __init mshv_parent_partition_init(void)
- {
- 	int ret;
-@@ -2329,6 +2377,10 @@ static int __init mshv_parent_partition_init(void)
- 
- 	dev = mshv_dev.this_device;
- 
-+	ret = mshv_arch_parent_partition_init(dev);
-+	if (ret)
-+		return ret;
-+
- 	if (version_info.build_number < MSHV_HV_MIN_VERSION ||
- 	    version_info.build_number > MSHV_HV_MAX_VERSION) {
- 		dev_err(dev, "Running on unvalidated Hyper-V version\n");
-@@ -2396,6 +2448,13 @@ static void __exit mshv_parent_partition_exit(void)
- 	mshv_irqfd_wq_cleanup();
- 	if (hv_root_partition())
- 		mshv_root_partition_exit();
-+	if (mshv_irq >= 0) {
-+		if (mshv_evt) {
-+			free_percpu_irq(mshv_irq, mshv_evt);
-+			free_percpu(mshv_evt);
-+			mshv_evt = NULL;
-+		}
-+	}
- 	cpuhp_remove_state(mshv_cpuhp_online);
- 	free_percpu(mshv_root.synic_pages);
- }
-diff --git a/drivers/hv/mshv_synic.c b/drivers/hv/mshv_synic.c
-index f8b0337cdc82..3bdb798f8948 100644
---- a/drivers/hv/mshv_synic.c
-+++ b/drivers/hv/mshv_synic.c
-@@ -10,6 +10,7 @@
- #include <linux/kernel.h>
- #include <linux/slab.h>
- #include <linux/mm.h>
-+#include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/random.h>
- #include <asm/mshyperv.h>
-@@ -451,9 +452,7 @@ int mshv_synic_init(unsigned int cpu)
- 	union hv_synic_simp simp;
- 	union hv_synic_siefp siefp;
- 	union hv_synic_sirbp sirbp;
--#ifdef HYPERVISOR_CALLBACK_VECTOR
- 	union hv_synic_sint sint;
--#endif
- 	union hv_synic_scontrol sctrl;
- 	struct hv_synic_pages *spages = this_cpu_ptr(mshv_root.synic_pages);
- 	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
-@@ -496,10 +495,13 @@ int mshv_synic_init(unsigned int cpu)
- 
- 	hv_set_non_nested_msr(HV_MSR_SIRBP, sirbp.as_uint64);
- 
--#ifdef HYPERVISOR_CALLBACK_VECTOR
-+
-+	if (mshv_irq > 0)
-+		enable_percpu_irq(mshv_irq, 0);
-+
- 	/* Enable intercepts */
- 	sint.as_uint64 = 0;
--	sint.vector = HYPERVISOR_CALLBACK_VECTOR;
-+	sint.vector = mshv_interrupt;
- 	sint.masked = false;
- 	sint.auto_eoi = hv_recommend_using_aeoi();
- 	hv_set_non_nested_msr(HV_MSR_SINT0 + HV_SYNIC_INTERCEPTION_SINT_INDEX,
-@@ -507,13 +509,12 @@ int mshv_synic_init(unsigned int cpu)
- 
- 	/* Doorbell SINT */
- 	sint.as_uint64 = 0;
--	sint.vector = HYPERVISOR_CALLBACK_VECTOR;
-+	sint.vector = mshv_interrupt;
- 	sint.masked = false;
--	sint.as_intercept = 1;
- 	sint.auto_eoi = hv_recommend_using_aeoi();
-+	sint.as_intercept = 1;
- 	hv_set_non_nested_msr(HV_MSR_SINT0 + HV_SYNIC_DOORBELL_SINT_INDEX,
- 			      sint.as_uint64);
--#endif
- 
- 	/* Enable global synic bit */
- 	sctrl.as_uint64 = hv_get_non_nested_msr(HV_MSR_SCONTROL);
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index ecedab554c80..8e30347f7946 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -189,6 +189,9 @@ void hv_setup_crash_handler(void (*handler)(struct pt_regs *regs));
- void hv_remove_crash_handler(void);
- void hv_setup_mshv_handler(void (*handler)(void));
- 
-+extern int mshv_interrupt;
-+extern int mshv_irq;
-+
- #if IS_ENABLED(CONFIG_HYPERV)
- /*
-  * Hypervisor's notion of virtual processor ID is different from
+	M.
+
 -- 
-2.34.1
-
+Without deviation from the norm, progress is not possible.
 
