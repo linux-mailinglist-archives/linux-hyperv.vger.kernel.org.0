@@ -1,45 +1,45 @@
-Return-Path: <linux-hyperv+bounces-7855-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7856-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60314C8C1BE
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Nov 2025 22:50:41 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA063C8C1C1
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Nov 2025 22:50:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id C0E4D355F79
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Nov 2025 21:50:40 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 742A1350BF3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Nov 2025 21:50:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2E9333FE2F;
-	Wed, 26 Nov 2025 21:50:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA5C6341661;
+	Wed, 26 Nov 2025 21:50:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="oceHPcNN"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DX/fqn6k"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FE8033ADB0;
-	Wed, 26 Nov 2025 21:50:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F64834029C;
+	Wed, 26 Nov 2025 21:50:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764193826; cv=none; b=CE5eEF4FpAPoFYxpzRRvME1WaTeLSwxhmNdnIx6TAoHAqiTnBxy9m0EhyAZ4eqrNd19bcAW713UsmMS/pqlYhn3u7k2RhWmnfwFihKtdtzNgK3fYQZwcEQh0vYB1921xzBzCD/4YET5Sxk/p07jA6yE+vy50XYUTySZXlgrdW2E=
+	t=1764193828; cv=none; b=LZC7d58CEF4BUZOkWjwCRxCCvgbddq0qd+rbauosj+5pQ08btK/dNJZ4JYQix7bZDe2j8VTLphF+jUxmRjRrbsVfLoiA/LP5sTeuCBZGIjEBb+seNjuzHwNicvxbPnWXDfZbiyRQWDK42eF2w2ztsvrKO11sqhFQuMo5Xym8HbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764193826; c=relaxed/simple;
-	bh=dMDoQWDNVi87k+xnKRSJoHU214CMiZNYRQCcLpjjplk=;
+	s=arc-20240116; t=1764193828; c=relaxed/simple;
+	bh=BAtxyilWa4xLQIBc3IwlB1l52LGTfDur97nfUognJxM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XFjBozi9r4axRkFsRJosGq/7bXs1hTWq32Jth7IT1vd8ufWxE3HbhgBJApRZo/vNZXsJATAeeTTT4uVCglsyShTBVGjt874kTUQHVhy78dvpqCNUdLoGBUasGm2j+Ul3IrXiiffYCb4YBqPH3mU0hv8QuzxmEfU8esJaLcegKP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=oceHPcNN; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=kUzNDVh9EmipkvhiJu+kCCrHFSnBmIUL0ShyA3KUZVB1fxzWVI74NehjM/bQwg4wqozBCXCBvWD6HDW4He97QG03MYvlICisBYyFKFCjUMUqCaxUvHMKdUOVCoj91SiBXTsKkjoP2qMex5DG9//5iTT7F34PUTqJqf1PxBDITPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=DX/fqn6k; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from home (unknown [72.191.74.189])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 4A7C3200E9E4;
-	Wed, 26 Nov 2025 13:50:23 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4A7C3200E9E4
+	by linux.microsoft.com (Postfix) with ESMTPSA id 30E44200E9E6;
+	Wed, 26 Nov 2025 13:50:25 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 30E44200E9E6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1764193824;
-	bh=WbbrakOWbo6XCX5iG68HaCpdidWSYdDGNVTWGHUuZCI=;
+	s=default; t=1764193826;
+	bh=zq570gQ9+2nFdOn49v1EAVlOeQpuuznKKCEbPxznxyk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oceHPcNNYQeGKDLXao6uqEeO5ZjXFYQDfCBgZJquG5Oa3eJIPn+6Qe60ktZ85aEs4
-	 H2awTmnc5UnquPlH+5rPlBaZNbcJ4F17ytpdbW41seg/ccili869LxKV5JMkeOkO1S
-	 NI/eXIxjU8kUpwzrq4IG4XimCNHL6Sp6RN/xEKC4=
+	b=DX/fqn6kX99KTkY2RM/k2fw0l4wyzj4va6HbOgdW+oBr2PNvg4VJ11JB/MH0fJNLj
+	 k9irjhRDOLmZGVjaOFy0HtwJUX3kWBSbpsnmG+DsGDm2VDoTDU/C3MICf1HzHu5Dkh
+	 00QxkzoiX0ty/W/rWTGkRhfxLIZBuuPblXFmsyDc=
 From: Praveen K Paladugu <prapal@linux.microsoft.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -59,9 +59,9 @@ Cc: anbelski@linux.microsoft.com,
 	easwar.hariharan@linux.microsoft.com,
 	nunodasneves@linux.microsoft.com,
 	skinsburskii@linux.microsoft.com
-Subject: [PATCH v6 2/3] hyperv: Use reboot notifier to configure sleep state
-Date: Wed, 26 Nov 2025 15:49:52 -0600
-Message-ID: <20251126215013.11549-3-prapal@linux.microsoft.com>
+Subject: [PATCH v6 3/3] hyperv: Cleanly shutdown root partition with MSHV
+Date: Wed, 26 Nov 2025 15:49:53 -0600
+Message-ID: <20251126215013.11549-4-prapal@linux.microsoft.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251126215013.11549-1-prapal@linux.microsoft.com>
 References: <20251126215013.11549-1-prapal@linux.microsoft.com>
@@ -73,141 +73,96 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Configure sleep state information in mshv hypervisor. This sleep state
-information from ACPI will be used by hypervisor to poweroff the host.
+When a root partition running on MSHV is powered off, the default
+behavior is to write ACPI registers to power-off. However, this ACPI
+write is intercepted by MSHV and will result in a Machine Check
+Exception(MCE).
+
+The root partition eventually panics with a trace similar to:
+
+  [   81.306348] reboot: Power down
+  [   81.314709] mce: [Hardware Error]: CPU 0: Machine Check Exception: 4 Bank 0: b2000000c0060001
+  [   81.314711] mce: [Hardware Error]: TSC 3b8cb60a66 PPIN 11d98332458e4ea9
+  [   81.314713] mce: [Hardware Error]: PROCESSOR 0:606a6 TIME 1759339405 SOCKET 0 APIC 0 microcode ffffffff
+  [   81.314715] mce: [Hardware Error]: Run the above through 'mcelog --ascii'
+  [   81.314716] mce: [Hardware Error]: Machine check: Processor context corrupt
+  [   81.314717] Kernel panic - not syncing: Fatal machine check
+
+To correctly shutdown a root partition running on MSHV hypervisor, sleep
+state information must be configured within the hypervsior. Later, the
+HVCALL_ENTER_SLEEP_STATE hypercall should be invoked as the last step in
+the shutdown sequence.
+
+The previous patch configures the sleep state information and this patch
+invokes HVCALL_ENTER_SLEEP_STATE hypercall to cleanly shutdown the root
+partition.
 
 Signed-off-by: Praveen K Paladugu <prapal@linux.microsoft.com>
 Co-developed-by: Anatol Belski <anbelski@linux.microsoft.com>
 Signed-off-by: Anatol Belski <anbelski@linux.microsoft.com>
 Reviewed-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
 ---
- arch/x86/hyperv/hv_init.c       |  1 +
- arch/x86/include/asm/mshyperv.h |  2 +
- drivers/hv/mshv_common.c        | 80 +++++++++++++++++++++++++++++++++
- 3 files changed, 83 insertions(+)
+ arch/x86/include/asm/mshyperv.h |  2 ++
+ arch/x86/kernel/cpu/mshyperv.c  |  2 ++
+ drivers/hv/mshv_common.c        | 18 ++++++++++++++++++
+ 3 files changed, 22 insertions(+)
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index e28737ec7054..daf97a984b78 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -555,6 +555,7 @@ void __init hyperv_init(void)
- 
- 		hv_remap_tsc_clocksource();
- 		hv_root_crash_init();
-+		hv_sleep_notifiers_register();
- 	} else {
- 		hypercall_msr.guest_physical_address = vmalloc_to_pfn(hv_hypercall_pg);
- 		wrmsrq(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
 diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index 10037125099a..166053df0484 100644
+index 166053df0484..4c22f3257368 100644
 --- a/arch/x86/include/asm/mshyperv.h
 +++ b/arch/x86/include/asm/mshyperv.h
-@@ -182,8 +182,10 @@ int hyperv_fill_flush_guest_mapping_list(
- void hv_apic_init(void);
+@@ -183,9 +183,11 @@ void hv_apic_init(void);
  void __init hv_init_spinlocks(void);
  bool hv_vcpu_is_preempted(int vcpu);
-+void hv_sleep_notifiers_register(void);
+ void hv_sleep_notifiers_register(void);
++void hv_machine_power_off(void);
  #else
  static inline void hv_apic_init(void) {}
-+static inline void hv_sleep_notifiers_register(void) {};
+ static inline void hv_sleep_notifiers_register(void) {};
++static inline void hv_machine_power_off(void) {};
  #endif
  
  struct irq_domain *hv_create_pci_msi_domain(void);
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index fac9953a72ef..579fb2c64cfd 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -621,6 +621,8 @@ static void __init ms_hyperv_init_platform(void)
+ #endif
+ 
+ #if IS_ENABLED(CONFIG_HYPERV)
++	if (hv_root_partition())
++		machine_ops.power_off = hv_machine_power_off;
+ #if defined(CONFIG_KEXEC_CORE)
+ 	machine_ops.shutdown = hv_machine_shutdown;
+ #endif
 diff --git a/drivers/hv/mshv_common.c b/drivers/hv/mshv_common.c
-index aa2be51979fd..f1d4e81107ee 100644
+index f1d4e81107ee..28905e3ed9c0 100644
 --- a/drivers/hv/mshv_common.c
 +++ b/drivers/hv/mshv_common.c
-@@ -14,6 +14,9 @@
- #include <asm/mshyperv.h>
- #include <linux/resume_user_mode.h>
- #include <linux/export.h>
-+#include <linux/acpi.h>
-+#include <linux/notifier.h>
-+#include <linux/reboot.h>
- 
- #include "mshv.h"
- 
-@@ -138,3 +141,80 @@ int hv_call_get_partition_property(u64 partition_id,
- 	return 0;
+@@ -217,4 +217,22 @@ void hv_sleep_notifiers_register(void)
+ 		pr_err("%s: cannot register reboot notifier %d\n", __func__,
+ 		       ret);
  }
- EXPORT_SYMBOL_GPL(hv_call_get_partition_property);
 +
-+#ifdef CONFIG_X86_64
 +/*
-+ * Corresponding sleep states have to be initialized in order for a subsequent
-+ * HVCALL_ENTER_SLEEP_STATE call to succeed. Currently only S5 state as per
-+ * ACPI 6.4 chapter 7.4.2 is relevant, while S1, S2 and S3 can be supported.
-+ *
-+ * In order to pass proper PM values to mshv, ACPI should be initialized and
-+ * should support S5 sleep state when this method is invoked.
++ * Power off the machine by entering S5 sleep state via Hyper-V hypercall.
++ * This call does not return if successful.
 + */
-+static int hv_initialize_sleep_states(void)
++void hv_machine_power_off(void)
 +{
-+	u64 status;
 +	unsigned long flags;
-+	struct hv_input_set_system_property *in;
-+	acpi_status acpi_status;
-+	u8 sleep_type_a, sleep_type_b;
-+
-+	if (!acpi_sleep_state_supported(ACPI_STATE_S5)) {
-+		pr_err("%s: S5 sleep state not supported.\n", __func__);
-+		return -ENODEV;
-+	}
-+
-+	acpi_status = acpi_get_sleep_type_data(ACPI_STATE_S5, &sleep_type_a,
-+					       &sleep_type_b);
-+	if (ACPI_FAILURE(acpi_status))
-+		return -ENODEV;
++	struct hv_input_enter_sleep_state *in;
 +
 +	local_irq_save(flags);
 +	in = *this_cpu_ptr(hyperv_pcpu_input_arg);
-+	memset(in, 0, sizeof(*in));
++	in->sleep_state = HV_SLEEP_STATE_S5;
 +
-+	in->property_id = HV_SYSTEM_PROPERTY_SLEEP_STATE;
-+	in->set_sleep_state_info.sleep_state = HV_SLEEP_STATE_S5;
-+	in->set_sleep_state_info.pm1a_slp_typ = sleep_type_a;
-+	in->set_sleep_state_info.pm1b_slp_typ = sleep_type_b;
-+
-+	status = hv_do_hypercall(HVCALL_SET_SYSTEM_PROPERTY, in, NULL);
++	(void)hv_do_hypercall(HVCALL_ENTER_SLEEP_STATE, in, NULL);
 +	local_irq_restore(flags);
 +
-+	if (!hv_result_success(status)) {
-+		hv_status_err(status, "\n");
-+		return hv_result_to_errno(status);
-+	}
-+
-+	return 0;
 +}
-+
-+/*
-+ * This notifier initializes sleep states in mshv hypervisor which will be
-+ * used during power off.
-+ */
-+static int hv_reboot_notifier_handler(struct notifier_block *this,
-+				      unsigned long code, void *another)
-+{
-+	int ret = 0;
-+
-+	if (code == SYS_HALT || code == SYS_POWER_OFF)
-+		ret = hv_initialize_sleep_states();
-+
-+	return ret ? NOTIFY_DONE : NOTIFY_OK;
-+}
-+
-+static struct notifier_block hv_reboot_notifier = {
-+	.notifier_call = hv_reboot_notifier_handler,
-+};
-+
-+void hv_sleep_notifiers_register(void)
-+{
-+	int ret;
-+
-+	ret = register_reboot_notifier(&hv_reboot_notifier);
-+	if (ret)
-+		pr_err("%s: cannot register reboot notifier %d\n", __func__,
-+		       ret);
-+}
-+#endif
+ #endif
 -- 
 2.51.0
 
