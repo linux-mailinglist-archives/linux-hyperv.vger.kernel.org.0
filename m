@@ -1,113 +1,104 @@
-Return-Path: <linux-hyperv+bounces-7833-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7834-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22F37C87CAA
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Nov 2025 03:13:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57835C883A6
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Nov 2025 07:15:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E32214E4EBE
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Nov 2025 02:13:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B0CC83B4621
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Nov 2025 06:15:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AA3C308F0A;
-	Wed, 26 Nov 2025 02:13:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B0A63161AA;
+	Wed, 26 Nov 2025 06:15:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WuwSWtCg"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EEjcqSNw"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC713081A2;
-	Wed, 26 Nov 2025 02:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCA9525F995;
+	Wed, 26 Nov 2025 06:15:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764123196; cv=none; b=ad45G3dMywH9bX5BvM0uvxwM2lhID8ttsTbTJVWhgZ1JWNig3R+AkZc4JuKhSntw+8/IOOJl3mNDC0pg31SPL0CeGGvdRfRb2KwKQbHFtyrEfFLCMpsCbCiUGdHv0JS0+FDmnBxxt9mCh/p0apTrr0SvGhCXR9ERCK2/mZe8DP4=
+	t=1764137717; cv=none; b=G0WHt5btEyx86hTerFotBnprK4OWpYFMCEJw8a34yqsMXsfb9TMjgPcL/nEYfDstAj0org9qeDVb2Fh/FIsaa+iiElsecwmfgu/ZUlksua+8XLPasAm8oKrXgRins/kQdR4ZO2am1QNoaBl9b62tuxtUMHQRyMcOvePRtdzU1T4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764123196; c=relaxed/simple;
-	bh=l33CIgyhKLpLw98GU9xdxzTlqqZv4JzOJGO4WqkP2vM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kmk2cIL6D0U3QuyV7aMAxZTe4FM5kRhj1n7YYW2MFtFkhE4HwqcT8S2cjLKVgsxEqw/DYbxuwQ+5HHQviOeA4S09KfLLs04llVOeDQVFheSetFbcxAsqbAXd59+vaCjof7EG2rTnffYv7+qQ0rcJupfnd7aQIxm/XaLKM3qMiKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WuwSWtCg; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764123194; x=1795659194;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=l33CIgyhKLpLw98GU9xdxzTlqqZv4JzOJGO4WqkP2vM=;
-  b=WuwSWtCgDY4S6LS1DeETc2In1PEyqtIzUB1S4HlbYGjTS6cqkcY/aLty
-   kIS7ugCKX1LhpyA1e52RNYC37/seFHWynOzLvsYPZRUkPcwaTJxaounzY
-   SlsPUtVLw9YVecfz7fw7I+JZ6P6lk7ylUBpt1YS+87BgdqjG6kKYu8vlP
-   /7S//gofj9N/L55Xmi4PanuzpHn0vksb1du8G0IfFoVznH+NTy9shx+bl
-   713BdYUGsnbSJGe65iHzJ6wPh8m6Tovt6gEGEIDE00D8A6xeqmcKSiktV
-   e3KruyD1P6c2AFTW96D4jNCr8XEpPmD8RFzlZngN7IN0f8CNUaB47ALaC
-   w==;
-X-CSE-ConnectionGUID: GTcJl0stTR6Sa5d0yNlsNg==
-X-CSE-MsgGUID: xFhHPKt8TQmnhyhpUe/hMg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11624"; a="66040343"
-X-IronPort-AV: E=Sophos;i="6.20,227,1758610800"; 
-   d="scan'208";a="66040343"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 18:13:13 -0800
-X-CSE-ConnectionGUID: 3F08XkzjQ22fv3h6BukwKg==
-X-CSE-MsgGUID: 9txGjdGPR22BjCj9if3Etw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,227,1758610800"; 
-   d="scan'208";a="192696992"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 18:13:13 -0800
-Date: Tue, 25 Nov 2025 18:20:10 -0800
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>, "Kirill A. Shutemov" <kas@kernel.org>,
-	linux-hyperv@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ricardo Neri <ricardo.neri@intel.com>
-Subject: Re: [PATCH v7 1/9] x86/acpi: Add functions to setup and access the
- wakeup mailbox
-Message-ID: <20251126022010.GA27627@ranerica-svr.sc.intel.com>
-References: <20251117-rneri-wakeup-mailbox-v7-0-4a8b82ab7c2c@linux.intel.com>
- <20251117-rneri-wakeup-mailbox-v7-1-4a8b82ab7c2c@linux.intel.com>
- <CAJZ5v0gd_6b6s4aEpSvdfb4-+AULTWkqQqM3OE1eg5XzYaxQFQ@mail.gmail.com>
+	s=arc-20240116; t=1764137717; c=relaxed/simple;
+	bh=bdrLy/roSIjZ9hNJOVMpdv6owYEML9awCGFhifYXlJY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KBI04WAhB114DwykO2QYQkVQKi69W1xnAaln9ocL6sqnR5cXk0gXZaMbw1S9h2Eb3xqspWZvgxegnMr06DC5NfmuHnHD3Dpn242n47/INDFmepKgKHda18G5ZOm9/g4QzuJyK4nn7Q+4w7MkHlXfa3CSj71WP5rZd+78nM0LM2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=EEjcqSNw; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.95.66.235] (unknown [167.220.238.139])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A95212120EAD;
+	Tue, 25 Nov 2025 22:15:07 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A95212120EAD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1764137711;
+	bh=Bc4hdbhO9YOVvNp4UyeZiT+DiaSSmhbUeWedsGko6NU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EEjcqSNwBdZmCZCHYQAJypX7uA5A89diI6v3IuVYWMDVxu8hmKBC0cL3v0TiQfGaN
+	 3JI8F7jnNGfpDM6vzdSmN9U5gYZEizZ4sjFvHMF69BS8xJE6bOusdP/XHSrq80maLA
+	 nmM0fVEHgnx06GxDN9dqhQkWXgi+BIhjknHWCcPY=
+Message-ID: <d3f83ff0-2c4d-4698-a71d-1530b8a2bde7@linux.microsoft.com>
+Date: Wed, 26 Nov 2025 11:45:05 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0gd_6b6s4aEpSvdfb4-+AULTWkqQqM3OE1eg5XzYaxQFQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bug#1120602: [REGRESSION 6.12.y] hyper-v: BUG: kernel NULL
+ pointer dereference, address: 00000000000000a0: RIP:
+ 0010:hv_uio_channel_cb+0xd/0x20 [uio_hv_generic]
+To: Peter Morrow <pdmorrow@gmail.com>
+Cc: Salvatore Bonaccorso <carnil@debian.org>, 1120602@bugs.debian.org,
+ Long Li <longli@microsoft.com>, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org, John Starks <jostarks@microsoft.com>,
+ Michael Kelley <mhklinux@outlook.com>, Tianyu Lan <tiala@microsoft.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <aRYjk4JBqHvVl-wN@eldamar.lan>
+ <7a38c04d-4e54-4f1a-96fd-43f0f11ab97b@linux.microsoft.com>
+ <CAFcZKTwQgd9hrTaXnThML=+WG82TH3DK90FT1-WWsBSoRj7dRw@mail.gmail.com>
+ <176298819854.487825.11724175116974643582.reportbug@p15v.lan>
+ <18bcf829-04f9-46ec-a874-7c2b9338cf3d@linux.microsoft.com>
+ <aRei1DGOWy13GqvE@eldamar.lan>
+ <25aff5ca-b5e1-4907-bd12-6571f8454146@linux.microsoft.com>
+ <CAFcZKTyOcDqDJRB4sgN7Q-dabBU0eg7KKs=yBJhB=CNDyy7scQ@mail.gmail.com>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <CAFcZKTyOcDqDJRB4sgN7Q-dabBU0eg7KKs=yBJhB=CNDyy7scQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Nov 24, 2025 at 05:01:11PM +0100, Rafael J. Wysocki wrote:
-> On Mon, Nov 17, 2025 at 6:04 PM Ricardo Neri
-> <ricardo.neri-calderon@linux.intel.com> wrote:
-> >
-> > Systems that describe hardware using DeviceTree graphs may enumerate and
-> > implement the wakeup mailbox as defined in the ACPI specification but do
-> > not otherwise depend on ACPI. Expose functions to setup and access the
-> > location of the wakeup mailbox from outside ACPI code.
-> >
-> > The function acpi_setup_mp_wakeup_mailbox() stores the physical address of
-> > the mailbox and updates the wakeup_secondary_cpu_64() APIC callback.
-> >
-> > The function acpi_madt_multiproc_wakeup_mailbox() returns a pointer to the
-> > mailbox.
-> >
-> > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+
+
+On 11/21/2025 3:34 PM, Peter Morrow wrote:
+> Hi Naman/Salvatore,
 > 
-> Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+> Is it possible to get this fixed in the 6.1 LTS series too? I just ran
+> into this crash when moving from bookworm based Debian kernel
+> 6.1.153-1 to 6.1.158-1. I saw that "uio_hv_generic: Let userspace take
+> care of interrupt mask" appeared in 6.1.156.
+> 
+> Thanks,
+> Peter.
+> 
 
-Thanks Rafael!
+
+Hi Peter,
+Yes, I have sent a patch for older kernel versions as well.
+I am working to fix the review comments and send new revisions.
+
+Here is the link:
+https://lore.kernel.org/all/20251115085937.2237-1-namjain@linux.microsoft.com/
+
+
+Regards,
+Naman
 
