@@ -1,180 +1,225 @@
-Return-Path: <linux-hyperv+bounces-7822-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7823-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5A32C87367
-	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Nov 2025 22:20:31 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 731EBC879B9
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Nov 2025 01:40:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5DDBE3AD4DA
-	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Nov 2025 21:20:30 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 225494E1506
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Nov 2025 00:40:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEB1E2FBE1B;
-	Tue, 25 Nov 2025 21:20:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 359E414F112;
+	Wed, 26 Nov 2025 00:40:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i2YXELGz"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="LvwSktpG"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11021136.outbound.protection.outlook.com [40.93.194.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF1F2FB0BC;
-	Tue, 25 Nov 2025 21:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764105623; cv=none; b=sHPCfSiaZ94AsNh2iFpXOMWrCRyQYevzJoTxWX7OUF3WwbUfHKdZPS0e2efX7BowBv9UGI91jIsbGd2q20DIYiQYuI8cPSK3gJVQtPNNLqTtYPx2F5zkJOdO7bfwdEZSTLxk4AoEjoHqVqjo50RpEPEiMV84oQ9fdqizUcZzfWA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764105623; c=relaxed/simple;
-	bh=3eMZ/MfM5RHhwJQ7d0IQHir4UVOOL7Et7y72tZ0G6FI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JVhYqhuCk+u6TjU/h6m7u6qLGoRXO2M88NVQWTD76FMp2qIpJAGIKD+TEV+0IgB0/7g2OdQNzCwKUCD7Uz5yUK/DiLQwAHNQ1Hwu+9RmgdSBnbgT+t2UR54IkWhvgZJOtHoBy8IhbKsUFFjYq7LpwtLZMyOw5M9uycsoNAZME50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i2YXELGz; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764105622; x=1795641622;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3eMZ/MfM5RHhwJQ7d0IQHir4UVOOL7Et7y72tZ0G6FI=;
-  b=i2YXELGzRtZ7aHkIjTp4sJk9J9MzR30dEN2JXL58s0wRAlnaR7V8juOJ
-   NeQ03em1sagRC1/BEXBwi3jBMzwfTdpY6qAP3KzTiIl1V9a5ltqLwC3Vf
-   uuf3nwm/ojmuukX5h1lSBgdskGEijFV+w1yQxbKKX5P3dpeKstByhxiNZ
-   8EhdsyoB/KlpfDOA15rXN55SqftFLXRgTaLPoM7RcSEwixvFm/X3kdcji
-   dRNtRYYH0Q/p3d5FbTuRo6p2u14lxhd36qWndQP/IK/e3khSPfD7FbmM+
-   bkReccy5XfA92XuAoy2w3SnJ1huWZ9RB7XFNfj8ndX56IJapwQ4CYlu/4
-   g==;
-X-CSE-ConnectionGUID: iYWJv6P0Q82qkUb61AWuTw==
-X-CSE-MsgGUID: 2iNLX7n1TmaJNR2855P9+w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11624"; a="66167345"
-X-IronPort-AV: E=Sophos;i="6.20,226,1758610800"; 
-   d="scan'208";a="66167345"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 13:20:21 -0800
-X-CSE-ConnectionGUID: +bze+cwnTKGwewcZ8/D4nA==
-X-CSE-MsgGUID: 24lLGtmWRNuYvDsvao4o3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,226,1758610800"; 
-   d="scan'208";a="196911755"
-Received: from lkp-server01.sh.intel.com (HELO 4664bbef4914) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 25 Nov 2025 13:20:16 -0800
-Received: from kbuild by 4664bbef4914 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vO0SM-000000002Gz-0eIn;
-	Tue, 25 Nov 2025 21:20:14 +0000
-Date: Wed, 26 Nov 2025 05:19:14 +0800
-From: kernel test robot <lkp@intel.com>
-To: Anirudh Raybharam <anirudh@anirudhrb.com>, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	longli@microsoft.com, catalin.marinas@arm.com, will@kernel.org,
-	maz@kernel.org, tglx@linutronix.de, Arnd Bergmann <arnd@arndb.de>,
-	akpm@linux-foundation.org, agordeev@linux.ibm.com,
-	guoweikang.kernel@gmail.com, osandov@fb.com, bsz@amazon.de,
-	linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH 1/3] arm64: hyperv: move hyperv detection earlier in boot
-Message-ID: <202511260546.RGx7vwyX-lkp@intel.com>
-References: <20251125170124.2443340-2-anirudh@anirudhrb.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C73E2AE8E;
+	Wed, 26 Nov 2025 00:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.136
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764117613; cv=fail; b=YK63CT7GTQ9JBKbjz14yfSXMooDm/hYJTv0jrh+8eb/PDpX8RxmJ2lzePDuoLgJ6zpSeY8JMAUTHi13JI/xMKlRkSQ8FjockgfL3istFaAOgFKFsVu4Vh2tmBVCzH3sGe00UWoj84iQEtAm4I0rhG0rPF/sLtnZ9gOiq7/+hf0w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764117613; c=relaxed/simple;
+	bh=Zs9M+/CUYuAYmSojjMBfK4E3W8R3touV/mKV/msh02k=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=tQCphcEB75KZ7+9WJEV72q9IpKD8D2ti61vcqM24uqCJKUnPROjqaSOCvT0OluVVZygknZ03d2y+uD9t+Dlcj/lVQmwT8U5Vqdv1cvb3iV1B0wwg67bU7XoP7Swfae8J849ruVpZ+Z5wKvkNuac41srywxzgvfIhHpe0X/vYsi8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=LvwSktpG; arc=fail smtp.client-ip=40.93.194.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bkL6psqZsfueQVPQmc8cNgb6l5bsyt7ZRK1I81ixgTKcrFo1RNMsNkQYZIIFH7+9WXBwsoRB3YfBT0UFw3JlIcN7xLl/alFiljF4iHsNQOvUeINN5Axkxr1cKR9k5jP2B91SYZrEpouhKx26nilL//AygV17QwzN/KidWN3cMpRnD77VJVgm9JIBlolVEFb657JTKnbHQJ9HcB3sWRp/izgVmPEMZrvY5KtPJ6LGhHqDUm3RpAY06kBeorLJrXlYjx33uHVPLToxcctkdMFDIzu+9nZucdiuKYi7Y+Zgq8nad8x38MpQIU9I6RihuYoqfiUrTPOjOKw9Sr1irOst9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iB3eku3oW/44cQ0rNT44pMB5MchbnpR5vO/uv9wGly4=;
+ b=oU7+WNF5/QafH3QuL6lzjNwOVgsWnVC69vwC+npEBerNSp3q07EaRuFMejGl0nbW+yC+VueNX2LrcOeBJ7cO+yrXxMbrlIfeYA4WEcqEhLckd9a1P4n3unZ/qwO6kRdbwrYsaHImaTLsg+Tiwom+aBgmDKzOFcbpqfpYXlWZu/7cyvZ0cwsjUatxum8Ssjag1u7sGg0GHqTdF/Z8mOXrpXaE7pEhNjB6+DKgi1JphmQTRzy8Djv73GX8EDjrHkfqJDj0NqF88rv1XR4g5a24oaBFWfKGEPZXDmI0PnwSoow4IKCEb2rlJtnbn5Y+Tlt+VAcK0jx27u6MM10yIBcBTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iB3eku3oW/44cQ0rNT44pMB5MchbnpR5vO/uv9wGly4=;
+ b=LvwSktpGUE7ZD8aJWkELH22XFfjkS6j9kBgaIE95MONUfkKQ+Xwk0sp3PAMvX5OGIGMF7wjOCswlcaCnG/GV7gufLftkq1HLdvuSw/iJzICijdIFTvvETxOPvQRGPQraQ0lbc2F+ICjN/Va9O+I1iz+4z7ubDw7CyJXbQukHEao=
+Received: from DS3PR21MB5735.namprd21.prod.outlook.com (2603:10b6:8:2e0::20)
+ by DS0PR21MB6050.namprd21.prod.outlook.com (2603:10b6:8:2f5::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.3; Wed, 26 Nov
+ 2025 00:40:08 +0000
+Received: from DS3PR21MB5735.namprd21.prod.outlook.com
+ ([fe80::a3f4:6107:de7c:5925]) by DS3PR21MB5735.namprd21.prod.outlook.com
+ ([fe80::a3f4:6107:de7c:5925%6]) with mapi id 15.20.9388.002; Wed, 26 Nov 2025
+ 00:40:08 +0000
+From: Long Li <longli@microsoft.com>
+To: Simon Horman <horms@kernel.org>, "longli@linux.microsoft.com"
+	<longli@linux.microsoft.com>
+CC: KY Srinivasan <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <DECUI@microsoft.com>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Shradha Gupta
+	<shradhagupta@linux.microsoft.com>, Konstantin Taranov
+	<kotaranov@microsoft.com>, Souradeep Chakrabarti
+	<schakrabarti@linux.microsoft.com>, Erick Archer <erick.archer@outlook.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+Subject: RE: [EXTERNAL] Re: [Patch net-next v3] net: mana: Handle hardware
+ recovery events when probing the device
+Thread-Topic: [EXTERNAL] Re: [Patch net-next v3] net: mana: Handle hardware
+ recovery events when probing the device
+Thread-Index: AQHcWnJxBK4mddwuFE6X/SkYC8/etrUDPf6AgADm1gA=
+Date: Wed, 26 Nov 2025 00:40:08 +0000
+Message-ID:
+ <DS3PR21MB5735CC21A800623D2DB5D144CEDEA@DS3PR21MB5735.namprd21.prod.outlook.com>
+References: <1763680033-5835-1-git-send-email-longli@linux.microsoft.com>
+ <aSWKLefd_mhycGDv@horms.kernel.org>
+In-Reply-To: <aSWKLefd_mhycGDv@horms.kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=06e6a858-a405-48d7-bf0a-c679db3963e3;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-11-26T00:37:36Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DS3PR21MB5735:EE_|DS0PR21MB6050:EE_
+x-ms-office365-filtering-correlation-id: 70f68844-de34-4907-7d3e-08de2c8459ce
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|376014|7416014|1800799024|38070700021;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?WLTN/xV+8yjj45cD74dIjd4o8WVIYzvLxEuKmu8wVYfYwUPLiyzvorulw+xF?=
+ =?us-ascii?Q?+w0YmCqMK3QaSd5gJ0AYEFVxvmdIi2BCcHCe4TjdpIpKIehSjaVcmeM0Sm1y?=
+ =?us-ascii?Q?6PJXePNYMvnGrck23Hf+ht6jsW1sUjZDSRtF9xownFv+y6N47ZiPJeL30RUM?=
+ =?us-ascii?Q?Ji/lJJY34VNBU4PKJTjv9u+yJ+MLDzKNE77fmoUbOwkGHQjgF/BLGqxCdzbh?=
+ =?us-ascii?Q?MLcejPIHpkoyOiE6SNCoHuLxRgkiP/Zi2WRbJN52IbSeN6LK8jnjiuWEx5jY?=
+ =?us-ascii?Q?bPKqYyzDogpQZyp2aHEdCXksemhGPUurQD9+ErJ+a44wyIteXj8ljdXXV9WO?=
+ =?us-ascii?Q?EGdld9LChjwhLlZfww+BoHqqSmiKoTbzQ4zUPAM5TQlXyQTi28e+k+kA0rVq?=
+ =?us-ascii?Q?Km9cM/oF9T00dL1QGUsjPlFO7yOMChL43f+iiyUGHnP2LlPR2723ejKCVdnU?=
+ =?us-ascii?Q?g8KL9BGOY5cQtgK4CivqIHeNYzmBhqL21FQ5mjVK2rTLStJlxyYHXW2dVw/n?=
+ =?us-ascii?Q?i6lHsCWD9Sl5V17N8Yv4Buq1Oa6ffbc4JzPAORb4yAvWn+GsfjZFow4dsAUV?=
+ =?us-ascii?Q?czGSJLDuVVprkXDRIPkw/z6K6eI0CLfUIDq8MxlJpskQr8JohNQTMtWgeWnc?=
+ =?us-ascii?Q?VsJA5SFb+48PzgxMCSm7bLLGWkIgh7CrKw6RToTYiXbmE9+mpJcyt7w2CgLs?=
+ =?us-ascii?Q?LHjCQOpJpKnxA/hmfTPmRlMcv5VF6BV2C07K0IdXBKq3h601vWHa9W4tOZVt?=
+ =?us-ascii?Q?BcnT824lhoYVmehMNjwDaTXxcvmRTzUVCAURfv6jUFjeLB3utFcDdEDvbYNm?=
+ =?us-ascii?Q?f4WTpkYNj8ibn0DCj3T5gZlGQdX+T3qSkSZHMoXufXgxZXhpgSPvfeWJnix5?=
+ =?us-ascii?Q?tZrWv4K6WlnOGYE5WiKbjgaEGRaX1v25bPk2YFTrNFYCC0Ih3DDY155Mt7DZ?=
+ =?us-ascii?Q?X6WqGb+2tQO/CfWmCUTcN3J0l4HD86Mf6hfsSkgPKgXAmor7zZyaz2KNu4Yv?=
+ =?us-ascii?Q?o8DKkR/fvvp6vPp3aV/N8KLLQsY7OIZFNh6PXdp0mVdPSKERDeL6BRAjvhk3?=
+ =?us-ascii?Q?nUpemb8B6XFwezaa9s1LQNnsTcO4PCmdo3dyVFWlV4zHN4LADDd8/3eeE5pS?=
+ =?us-ascii?Q?iEEo5MU/adulWWYSKl/TmBQ2rgtmG3EqiQascZK+1dmnc+2brKNsTMFj8qdQ?=
+ =?us-ascii?Q?fMuj0ihvgMPa94U+hVHvaJmZg4GFGtqMf6fK5rgl1hdL8Cg/332oYzmx9ds9?=
+ =?us-ascii?Q?TWDwzGI1yrMIi+h8x5wTOn1ZT+NJVJhxgLRXnLcJes6gvkWNw/e9/rg9xCUu?=
+ =?us-ascii?Q?ZbjC7hLoxAXAHI405T5xgn734JXb82GboxESMLtIKml2UWeqXTQVU3vzLfer?=
+ =?us-ascii?Q?9RXDaJg7MV9ikMdHnXGY8VYBmw5ByDc25vJdFbK9aLG6JuhiBxVMPfwfykzQ?=
+ =?us-ascii?Q?tF6n2V3fRHbKfgTFagISwiGcgmJUcT4yskBzdNLpw24c1ud0cnFvoA8j7V+l?=
+ =?us-ascii?Q?m0Fyj1Rn6V4EfxceAO/7Mvu02qPBaiLk9tix?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS3PR21MB5735.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(38070700021);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?j1P7s2CZwZWiT5/xBfb3tZM9/xcEGj1vuHMZ2t3Cci5NqXZY+AmvaBAzt8c3?=
+ =?us-ascii?Q?tFJjW9RvaSIVcV+s7vumAEy6QozrzlAwsXqIp/CtIRx5j1B6oHHhOQDtnoOo?=
+ =?us-ascii?Q?GZ0fBscxQaTFzGPfyITagJQVLpGYK7L71+06AEx6eM4d/YG5R0Ch3neo8WFr?=
+ =?us-ascii?Q?SoM1kpxvcB94g2L7M43QD24wX+btvqd8iEOgJE9LcnOSyialqwWGiXi5aaWP?=
+ =?us-ascii?Q?QY3r0CwrZU6V5nz2BX4yNnleeWtJZnitszE8UABlh1F7m/CC9LGaKBo+rrZM?=
+ =?us-ascii?Q?2NBdTsqXUW7QXIdQdlEm5Eh9rHmrOQXgWbm6jATX9hkhJu3UVpCAGkFSK788?=
+ =?us-ascii?Q?GCEluEHz/UDJ22B3zIp6LZowCMeaS2rCs4fIPMY41R0vZeFXfXDVD5O8jxpj?=
+ =?us-ascii?Q?4KsFAPCCb44tVlNZvKJnH+wAo+WvdAPoDuiix5THsfDlhM7mh75hrxleih3f?=
+ =?us-ascii?Q?lwHOpkB8AwAtatHb0fK7Wb5XuDY74Flh+PhJlWuED6j4p3s0QH0rISWJWDXd?=
+ =?us-ascii?Q?tOeCLN/22LyM7ifTJf4nuNpJuXGsrP46Zcmlwz+7ycu0SDj3aUTrX+tv/mCE?=
+ =?us-ascii?Q?0JLiXRFXGcNeleuZ5lzh79pIsW2rjECNuzvm1qd6rRotzvXEXlHSlDZucFQR?=
+ =?us-ascii?Q?oKJlGHyB9fm2ce2rJO5zsq+dl9Sa8gaGCzbPZlO/2VCpWugUBj5VAozil5sc?=
+ =?us-ascii?Q?nhaZoGHk2h6dWQUSaaO8dMSZPuTlzEWn5bgYiSYk0oJ2GGtK5hKNr7jYJfAO?=
+ =?us-ascii?Q?MuaN9k9+3Ms5l9MIl7CKZoMjwCT30r12CX2zyhJvNrggDFWfEEiYL4GsMQj4?=
+ =?us-ascii?Q?QcoPVlkB+Pz0/YCRzbtxL4IY+vH/O4SvtfnRn0Tj8QNnv7Ni2Vk4kx1JNl7a?=
+ =?us-ascii?Q?zm4Cz40+6YRVuh3OKkrqef07vQGHoMNV6nVbTu8i9acF3WHcXlXOTOfqIRbo?=
+ =?us-ascii?Q?FD5gYf+5xq+62M/D0o81SbMeLDgUSG+mR48b6qGnmu2jflDcltJpwcOtSpJJ?=
+ =?us-ascii?Q?YgLyxigdwiWn4r9kCTxZUIhXhUumBS9qdxNxh14aZiH5EAJK8sPhOewzpfRi?=
+ =?us-ascii?Q?FzlO7uqm42wKvjhF1wrbFVYvR5+xp0ufFH/VXacIzSd3Uu1PIEXzV6WcVMlL?=
+ =?us-ascii?Q?K0IwN/fQkG2m0HdcGtQwKo9hioHFLOnbILBuklaW6fSa4nSglQ26uMs5Wh7L?=
+ =?us-ascii?Q?kkC+ARjPl54iY4p5Zgtuk8o40su7XXRzFts53mzWcd/V23dlRyFGMdauTb3z?=
+ =?us-ascii?Q?hRu3oV094sxuviU3yBsVoQT+5l6V6pAlvGh7R8PgSgRgLhF5vJCWy9S6YF7y?=
+ =?us-ascii?Q?ARxYaWfyZzx5MAkbHbMNLeelBVs1nlkAmZaf/nmlr+T3BGjxyRBVHYLuqorm?=
+ =?us-ascii?Q?mYHtqsJVA1MIKBZWySlQE07+7JP2G6aJZIsJiWrpPTeYlNn+Ft9LiSmnhMwb?=
+ =?us-ascii?Q?/aAHCQdDhGA2O1KIH8N3tVObRmFCwPJ0HadJ1nFfkk/7KGWyaS9hlDlvg6/a?=
+ =?us-ascii?Q?zusammxD51lN/LprHBJzhIW3ec6C+hySklFkBeCrrFM2jtAQyolrfFmsbrbC?=
+ =?us-ascii?Q?tWofoXewlJfaMRt13fQ=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251125170124.2443340-2-anirudh@anirudhrb.com>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DS3PR21MB5735.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70f68844-de34-4907-7d3e-08de2c8459ce
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Nov 2025 00:40:08.6313
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MeShuBG6YI60glGp4sxIB+0ZSQ2cONu5BG45CjJmE3qjkH2+oLjmvTUx/7sPFOKctSInbSg/MuZ80VZ6Zm5I8g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR21MB6050
 
-Hi Anirudh,
+> Subject: [EXTERNAL] Re: [Patch net-next v3] net: mana: Handle hardware
+> recovery events when probing the device
+>=20
+> On Thu, Nov 20, 2025 at 03:07:13PM -0800, longli@linux.microsoft.com
+> wrote:
+> > From: Long Li <longli@microsoft.com>
+> >
+> > When MANA is being probed, it's possible that hardware is in recovery
+> > mode and the device may get GDMA_EQE_HWC_RESET_REQUEST over HWC
+> in the
+> > middle of the probe. Detect such condition and go through the recovery
+> > service procedure.
+> >
+> > Fixes: fbe346ce9d62 ("net: mana: Handle Reset Request from MANA NIC")
+>=20
+> If this is a fix, should it be targeted at net rather than net-next?
+>=20
+> Alternatively, if it is not a fix for net, then I suggest dropping the Fi=
+xes tag and
+> adding something about commit fbe346ce9d62 ("net: mana:
+> Handle Reset Request from MANA NIC") to the patch description, above the
+> tags (with a blank line in between).
 
-kernel test robot noticed the following build errors:
+Can we keep the "Fixes" tag and queue the patch to net-next?
 
-[auto build test ERROR on next-20251125]
-[also build test ERROR on v6.18-rc7]
-[cannot apply to arm64/for-next/core tip/irq/core arnd-asm-generic/master linus/master v6.18-rc7 v6.18-rc6 v6.18-rc5]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+There are other MANA patches pending in net-next and they will conflict wit=
+h each other when merging.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Anirudh-Raybharam/arm64-hyperv-move-hyperv-detection-earlier-in-boot/20251126-011057
-base:   next-20251125
-patch link:    https://lore.kernel.org/r/20251125170124.2443340-2-anirudh%40anirudhrb.com
-patch subject: [PATCH 1/3] arm64: hyperv: move hyperv detection earlier in boot
-config: arm64-allnoconfig (https://download.01.org/0day-ci/archive/20251126/202511260546.RGx7vwyX-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251126/202511260546.RGx7vwyX-lkp@intel.com/reproduce)
+Thank you,
+Long
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511260546.RGx7vwyX-lkp@intel.com/
+>=20
+> > Signed-off-by: Long Li <longli@microsoft.com>
+> > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> > ---
+> > Changes
+> > v2: Use a list for handling multiple devices.
+> >     Use disable_delayed_work_sync() on driver exit.
+> >     Replace atomic_t with flags to detect if interrupt happens before
+> > probe finishes
+> >
+> > v3: Rebase to latest net-next. Change list_for_each_entry_safe() to
+> while(!list_empty()).
+>=20
+> Code changes look good to me.
+>=20
+> Reviewed-by: Simon Horman <horms@kernel.org>
 
-All errors (new ones prefixed by >>):
-
-   In file included from arch/arm64/include/asm/mshyperv.h:66,
-                    from arch/arm64/kernel/setup.c:57:
->> include/asm-generic/mshyperv.h:326:38: error: return type is an incomplete type
-     326 | static inline enum hv_isolation_type hv_get_isolation_type(void)
-         |                                      ^~~~~~~~~~~~~~~~~~~~~
-   include/asm-generic/mshyperv.h: In function 'hv_get_isolation_type':
->> include/asm-generic/mshyperv.h:328:16: error: 'HV_ISOLATION_TYPE_NONE' undeclared (first use in this function)
-     328 |         return HV_ISOLATION_TYPE_NONE;
-         |                ^~~~~~~~~~~~~~~~~~~~~~
-   include/asm-generic/mshyperv.h:328:16: note: each undeclared identifier is reported only once for each function it appears in
->> include/asm-generic/mshyperv.h:328:16: error: 'return' with a value, in function returning void [-Wreturn-mismatch]
-   include/asm-generic/mshyperv.h:326:38: note: declared here
-     326 | static inline enum hv_isolation_type hv_get_isolation_type(void)
-         |                                      ^~~~~~~~~~~~~~~~~~~~~
-
-
-vim +326 include/asm-generic/mshyperv.h
-
-7ad9bb9d0f357d Wei Liu                  2021-09-10  289  
-3817854ba89201 Nuno Das Neves           2025-03-14  290  #define _hv_status_fmt(fmt) "%s: Hyper-V status: %#x = %s: " fmt
-3817854ba89201 Nuno Das Neves           2025-03-14  291  #define hv_status_printk(level, status, fmt, ...) \
-3817854ba89201 Nuno Das Neves           2025-03-14  292  do { \
-3817854ba89201 Nuno Das Neves           2025-03-14  293  	u64 __status = (status); \
-3817854ba89201 Nuno Das Neves           2025-03-14  294  	pr_##level(_hv_status_fmt(fmt), __func__, hv_result(__status), \
-3817854ba89201 Nuno Das Neves           2025-03-14  295  		   hv_result_to_string(__status), ##__VA_ARGS__); \
-3817854ba89201 Nuno Das Neves           2025-03-14  296  } while (0)
-3817854ba89201 Nuno Das Neves           2025-03-14  297  #define hv_status_err(status, fmt, ...) \
-3817854ba89201 Nuno Das Neves           2025-03-14  298  	hv_status_printk(err, status, fmt, ##__VA_ARGS__)
-3817854ba89201 Nuno Das Neves           2025-03-14  299  #define hv_status_debug(status, fmt, ...) \
-3817854ba89201 Nuno Das Neves           2025-03-14  300  	hv_status_printk(debug, status, fmt, ##__VA_ARGS__)
-3817854ba89201 Nuno Das Neves           2025-03-14  301  
-3817854ba89201 Nuno Das Neves           2025-03-14  302  const char *hv_result_to_string(u64 hv_status);
-9d8731a1757bef Nuno Das Neves           2025-02-21  303  int hv_result_to_errno(u64 status);
-f3a99e761efa61 Tianyu Lan               2020-04-06  304  void hyperv_report_panic(struct pt_regs *regs, long err, bool in_die);
-765e33f5211ab6 Michael Kelley           2019-05-30  305  bool hv_is_hyperv_initialized(void);
-b96f86534fa310 Dexuan Cui               2019-11-19  306  bool hv_is_hibernation_supported(void);
-a6c76bb08dc7f7 Andrea Parri (Microsoft  2021-02-01  307) enum hv_isolation_type hv_get_isolation_type(void);
-a6c76bb08dc7f7 Andrea Parri (Microsoft  2021-02-01  308) bool hv_is_isolation_supported(void);
-0cc4f6d9f0b9f2 Tianyu Lan               2021-10-25  309  bool hv_isolation_type_snp(void);
-20c89a559e00df Tianyu Lan               2021-10-25  310  u64 hv_ghcb_hypercall(u64 control, void *input, void *output, u32 input_size);
-d6e0228d265f29 Dexuan Cui               2023-08-24  311  u64 hv_tdx_hypercall(u64 control, u64 param1, u64 param2);
-3e1b611515d286 Tianyu Lan               2025-09-18  312  void hv_enable_coco_interrupt(unsigned int cpu, unsigned int vector, bool set);
-a156ad8c508209 Roman Kisel              2025-10-08  313  void hv_para_set_sint_proxy(bool enable);
-e6eeb3c782739c Roman Kisel              2025-10-08  314  u64 hv_para_get_synic_register(unsigned int reg);
-e6eeb3c782739c Roman Kisel              2025-10-08  315  void hv_para_set_synic_register(unsigned int reg, u64 val);
-765e33f5211ab6 Michael Kelley           2019-05-30  316  void hyperv_cleanup(void);
-6dc2a774cb4fdb Sunil Muthuswamy         2021-03-23  317  bool hv_query_ext_cap(u64 cap_query);
-37200078ed6aa2 Michael Kelley           2022-03-24  318  void hv_setup_dma_ops(struct device *dev, bool coherent);
-765e33f5211ab6 Michael Kelley           2019-05-30  319  #else /* CONFIG_HYPERV */
-db912b8954c23a Nuno Das Neves           2025-02-21  320  static inline void hv_identify_partition_type(void) {}
-765e33f5211ab6 Michael Kelley           2019-05-30  321  static inline bool hv_is_hyperv_initialized(void) { return false; }
-b96f86534fa310 Dexuan Cui               2019-11-19  322  static inline bool hv_is_hibernation_supported(void) { return false; }
-765e33f5211ab6 Michael Kelley           2019-05-30  323  static inline void hyperv_cleanup(void) {}
-f2580a907e5c0e Michael Kelley           2024-03-18  324  static inline void ms_hyperv_late_init(void) {}
-0cc4f6d9f0b9f2 Tianyu Lan               2021-10-25  325  static inline bool hv_is_isolation_supported(void) { return false; }
-0cc4f6d9f0b9f2 Tianyu Lan               2021-10-25 @326  static inline enum hv_isolation_type hv_get_isolation_type(void)
-0cc4f6d9f0b9f2 Tianyu Lan               2021-10-25  327  {
-0cc4f6d9f0b9f2 Tianyu Lan               2021-10-25 @328  	return HV_ISOLATION_TYPE_NONE;
-0cc4f6d9f0b9f2 Tianyu Lan               2021-10-25  329  }
-765e33f5211ab6 Michael Kelley           2019-05-30  330  #endif /* CONFIG_HYPERV */
-765e33f5211ab6 Michael Kelley           2019-05-30  331  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
