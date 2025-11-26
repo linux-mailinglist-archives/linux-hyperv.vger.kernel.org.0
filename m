@@ -1,354 +1,197 @@
-Return-Path: <linux-hyperv+bounces-7849-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7850-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97D23C8AD9D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Nov 2025 17:10:52 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02CB1C8C049
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Nov 2025 22:27:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1B891358724
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Nov 2025 16:10:48 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CCEDF4E16A1
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Nov 2025 21:27:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DDDE34028F;
-	Wed, 26 Nov 2025 16:09:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5892D29D289;
+	Wed, 26 Nov 2025 21:27:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gDVVsqKg";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="nlR4bgUc";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gDVVsqKg";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="nlR4bgUc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oanYzg0+"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5332933EAEB
-	for <linux-hyperv@vger.kernel.org>; Wed, 26 Nov 2025 16:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7BB12B93;
+	Wed, 26 Nov 2025 21:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764173376; cv=none; b=TzrvvFzK5gB7/9B1k6z+cwX+P/pBuOXz4Vp4mui+lePDa3Q5B/QDbBsQYZgYByjtKAwH/zNl4nw3sGLoCvKqnr91vDUC7+9pyKbb5ZGxq+cJbGK4UjZ0FWkSWBrgkCTCrWfxQUmBF7X5Z8WVifMOL+aQoNqjzBCn7FArvbLD+Q4=
+	t=1764192439; cv=none; b=LGjexNz9hVOAvlFrjmAUdJMY7j5hgdierz7jP7mn5dTJ5W1K8bq8anDc+XCHtwdmOD1pvvpOyP586NtOZr5YDpE0FF0V2UUgYiuXhcZAEOVvzdWWWQxoz//bRERW3g0RLrn3/12FbD1SQAtbZAOujL03enb3HmA3TfOnvGho0BY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764173376; c=relaxed/simple;
-	bh=CIWnpIXy2b0rOBp4vkPsIt5G3iIH1TZkuRslbfuh9wY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F7GeSv2faqpYZngMZa/C/vm/5IcOdK6joYXIPuQXpEIOn49OL1Bp3F4535Jjp0d0oNPZdw/dwsGYtrgNZ+hpwqqrkzDxSXXEMPF/QPFDTQK/CEwSA8g+fYkrVjI5fGu5PLJdn4lF2k/7J2e9h1Rf4jWIO9I4w+xjNlaaSt3uAnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gDVVsqKg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=nlR4bgUc; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gDVVsqKg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=nlR4bgUc; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id BEC2A33709;
-	Wed, 26 Nov 2025 16:09:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1764173343; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BrrbJ3alRtzOMTMhYJrDntjaxvd3iXypW6GUIunVDTk=;
-	b=gDVVsqKgbfh75SmTezs4cw5BsGWBy1HWvPN0lWCIuapXTEVyitUG1XzH/vT6POLV25petk
-	xGMCONZMHgiWh9wnKy0mv1vTu9BTgYmSvyPi+B68bAGfgTJxXd823j/GznUK0g2MVS1e1g
-	V2cTt2DrASho4AhQNabjuOlHbElHZ8I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1764173343;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BrrbJ3alRtzOMTMhYJrDntjaxvd3iXypW6GUIunVDTk=;
-	b=nlR4bgUcRp9vlyOFO1DCiQOXM5k/oJsckEX/Bytc1gRzOs7DOAyZNjoG25oisWzvkPO71s
-	GHyJmNhl2zcRG3BQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=gDVVsqKg;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=nlR4bgUc
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1764173343; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BrrbJ3alRtzOMTMhYJrDntjaxvd3iXypW6GUIunVDTk=;
-	b=gDVVsqKgbfh75SmTezs4cw5BsGWBy1HWvPN0lWCIuapXTEVyitUG1XzH/vT6POLV25petk
-	xGMCONZMHgiWh9wnKy0mv1vTu9BTgYmSvyPi+B68bAGfgTJxXd823j/GznUK0g2MVS1e1g
-	V2cTt2DrASho4AhQNabjuOlHbElHZ8I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1764173343;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BrrbJ3alRtzOMTMhYJrDntjaxvd3iXypW6GUIunVDTk=;
-	b=nlR4bgUcRp9vlyOFO1DCiQOXM5k/oJsckEX/Bytc1gRzOs7DOAyZNjoG25oisWzvkPO71s
-	GHyJmNhl2zcRG3BQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 463AA3EA65;
-	Wed, 26 Nov 2025 16:09:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id IC+6Dx8mJ2lnIgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 26 Nov 2025 16:09:03 +0000
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: ardb@kernel.org,
-	javierm@redhat.com,
-	arnd@arndb.de,
-	richard.lyu@suse.com,
-	helgaas@kernel.org
-Cc: x86@kernel.org,
+	s=arc-20240116; t=1764192439; c=relaxed/simple;
+	bh=UQnLWxc/wM1eSVgZ7FgjAB7Jt2Jd2XH4TEEk2eldkFE=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q/zuBW0GdDnCVHq61/bP7r/mg0s/FKEW5liZHVie5l8npQsQj/V1yN6GHjGgF2oURYDDGZlvj60nElE1BvOsXv4oRlFhUHJFHA/098troPYQDq0bRxRTpirdcYyhOPTj1/LuYBkQqEY5thHv4MH9t4D+tiI7Ouvmj86QLUBU5/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oanYzg0+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EF23C4CEF7;
+	Wed, 26 Nov 2025 21:27:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764192438;
+	bh=UQnLWxc/wM1eSVgZ7FgjAB7Jt2Jd2XH4TEEk2eldkFE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=oanYzg0+6qQ6bkc5msMLK23EZpc5t7l3oAAM0cDZap+sXWaFe6qamvPE3j7NAWahy
+	 v5GaDqN0z8F9SL3BZWpCHx+siUz3P41tyRsMTRCmSmT44bPSrWGPAC4lOxeOK/T/Fw
+	 JNyqaKR5CWbGDhvnGsR33e81HTibzU9xvH7K+5/dVKw2DyAWsYnuzHGc8pnJYpYI1m
+	 Pnklm7wqgie49eoz7UxUBldhzW1xfRslCt+3XSAckF9hrXNY8JaqrHS8dOzGSNQ1SW
+	 3iiC3J5aaZbnti0Xe5Yzr8kmJs8FhExih/A2TAKKR3YHnWyf33OnzwtWEKIKd+uOHJ
+	 HmyBMZRYhkrQQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1vON2i-00000008c68-0hch;
+	Wed, 26 Nov 2025 21:27:16 +0000
+Date: Wed, 26 Nov 2025 21:27:15 +0000
+Message-ID: <87bjkofpsc.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Anirudh Rayabharam <anirudh@anirudhrb.com>
+Cc: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	longli@microsoft.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	tglx@linutronix.de,
+	Arnd Bergmann <arnd@arndb.de>,
+	akpm@linux-foundation.org,
+	agordeev@linux.ibm.com,
+	guoweikang.kernel@gmail.com,
+	osandov@fb.com,
+	bsz@amazon.de,
+	linux-hyperv@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	dri-devel@lists.freedesktop.org,
-	linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-fbdev@vger.kernel.org,
-	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH v3 9/9] efi: libstub: Simplify interfaces for primary_display
-Date: Wed, 26 Nov 2025 17:03:26 +0100
-Message-ID: <20251126160854.553077-10-tzimmermann@suse.de>
-X-Mailer: git-send-email 2.51.1
-In-Reply-To: <20251126160854.553077-1-tzimmermann@suse.de>
-References: <20251126160854.553077-1-tzimmermann@suse.de>
+	linux-arch@vger.kernel.org
+Subject: Re: [PATCH 2/3] irqchip/gic-v3: allocate one SGI for MSHV
+In-Reply-To: <aSbahzqu_3GN-PPJ@anirudh-surface.localdomain>
+References: <20251125170124.2443340-1-anirudh@anirudhrb.com>
+	<20251125170124.2443340-3-anirudh@anirudhrb.com>
+	<86bjkqq9dp.wl-maz@kernel.org>
+	<aSa_rxG80LDXDlhr@anirudh-surface.localdomain>
+	<86a509qi8p.wl-maz@kernel.org>
+	<aSbahzqu_3GN-PPJ@anirudh-surface.localdomain>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLtfyjk8sg4x43ngtem9djprcp)];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Score: -3.01
-X-Spam-Level: 
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: BEC2A33709
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: anirudh@anirudhrb.com, kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, longli@microsoft.com, catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de, arnd@arndb.de, akpm@linux-foundation.org, agordeev@linux.ibm.com, guoweikang.kernel@gmail.com, osandov@fb.com, bsz@amazon.de, linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Rename alloc_primary_display() and __alloc_primary_display(), clarify
-free semantics to make interfaces easier to understand.
+On Wed, 26 Nov 2025 10:46:31 +0000,
+Anirudh Rayabharam <anirudh@anirudhrb.com> wrote:
+> 
+> On Wed, Nov 26, 2025 at 09:02:30AM +0000, Marc Zyngier wrote:
+> > On Wed, 26 Nov 2025 08:51:59 +0000,
+> > Anirudh Rayabharam <anirudh@anirudhrb.com> wrote:
+> > > 
+> > > On Tue, Nov 25, 2025 at 06:01:38PM +0000, Marc Zyngier wrote:
+> > > > On Tue, 25 Nov 2025 17:01:23 +0000,
+> > > > Anirudh Raybharam <anirudh@anirudhrb.com> wrote:
+> > > > > 
+> > > > > From: Anirudh Rayabharam <anirudh@anirudhrb.com>
+> > > > > 
+> > > > > From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> > > > > 
+> > > > > Currently SGIs are allocated only for the smp subsystem. The MSHV
+> > > > > (Microsoft Hypervisor aka Hyper-V) code also needs an SGI that can be
+> > > > > programmed into the SYNIC to receive intercepts from the hypervisor. The
+> > > > > hypervisor would then assert this SGI whenever there is a guest
+> > > > > VMEXIT.
+> > > > > 
+> > > > > Allocate one SGI for MSHV use in addition to the SGIs allocated for
+> > > > > IPIs. When running under MSHV, the full SGI range can be used i.e. no
+> > > > > need to reserve SGIs 8-15 for the secure firmware.
+> > > > > 
+> > > > > Since this SGI is needed only when running as a parent partition (i.e.
+> > > > > we can create guest partitions), check for it before allocating an SGI.
+> > > > 
+> > > > Sorry, but that's not an acceptable situation.
+> > > > 
+> > > > SGIs are for Linux to use, nobody else, and that allocation must be
+> > > 
+> > > Why does this restriction exist? In the code SGIs 8-15 are left for
+> > > secure firmware. So, things other than Linux can use SGIs. Why not MSHV
+> > > then?
+> > 
+> > Because SGIs are for *internal* usage. Not usage from another random
+> > piece of SW. The ACPI tables explicitly don't describe SGIs. DT
+> > explicitly don't describe SGIs. Do you get the clue?
+> 
+> The name Software Generated Interrupts suggests that it is supposed to be
+> used by pieces of SW.
 
-Rename alloc_primary_display() to lookup_primary_display() as it
-does not necessarily allocate. Then rename __alloc_primary_display()
-to the new alloc_primary_display(). The helper belongs to
-free_primary_display), so it should be named without underscores.
+I'm so glad you spell it out for me, I had no idea. I can't help but
+notice that it is not called SGIFRPOSIDKA (Software Generated
+Interrupt From Random Piece Of Software I Don't Know About).
 
-The lookup helper does not necessarily allocate, so the output
-parameter needs_free to indicate when free should be called. Pass
-an argument through the calls to track this state. Put the free
-handling into release_primary_display() for simplificy.
+Linux owns the SGIs, full stop. If you want to generate interrupts
+from outside of Linux, use a standard interrupts. Not rocket science.
 
-Also move the comment fro primary_display.c to efi-stub-entry.c,
-where it now describes lookup_primary_display().
+> Yes, ACPI/DT don't describe SGIs because they're not supposed to be used
+> by devices. SW has full control over SGIs and it is up to the SW to
+> assign meaning to them, isn't it?
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
----
- drivers/firmware/efi/libstub/efi-stub-entry.c | 23 +++++++++++++++++--
- drivers/firmware/efi/libstub/efi-stub.c       | 22 ++++++++++++------
- drivers/firmware/efi/libstub/efistub.h        |  2 +-
- .../firmware/efi/libstub/primary_display.c    | 17 +-------------
- drivers/firmware/efi/libstub/zboot.c          |  6 +++--
- 5 files changed, 42 insertions(+), 28 deletions(-)
+No. It means that a single *consistent* software agent *owns* these
+interrupts and doesn't have to let *anyone* else use them from outer
+space.
 
-diff --git a/drivers/firmware/efi/libstub/efi-stub-entry.c b/drivers/firmware/efi/libstub/efi-stub-entry.c
-index aa85e910fe59..3077b51fe0b2 100644
---- a/drivers/firmware/efi/libstub/efi-stub-entry.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-entry.c
-@@ -14,10 +14,29 @@ static void *kernel_image_addr(void *addr)
- 	return addr + kernel_image_offset;
- }
- 
--struct sysfb_display_info *alloc_primary_display(void)
-+/*
-+ * There are two ways of populating the core kernel's sysfb_primary_display
-+ * via the stub:
-+ *
-+ *   - using a configuration table, which relies on the EFI init code to
-+ *     locate the table and copy the contents; or
-+ *
-+ *   - by linking directly to the core kernel's copy of the global symbol.
-+ *
-+ * The latter is preferred because it makes the EFIFB earlycon available very
-+ * early, but it only works if the EFI stub is part of the core kernel image
-+ * itself. The zboot decompressor can only use the configuration table
-+ * approach.
-+ */
-+
-+struct sysfb_display_info *lookup_primary_display(bool *needs_free)
- {
-+	*needs_free = true;
-+
- 	if (IS_ENABLED(CONFIG_ARM))
--		return __alloc_primary_display();
-+		return alloc_primary_display();
-+
-+	*needs_free = false;
- 
- 	if (IS_ENABLED(CONFIG_X86) ||
- 	    IS_ENABLED(CONFIG_EFI_EARLYCON) ||
-diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
-index 42d6073bcd06..dc545f62c62b 100644
---- a/drivers/firmware/efi/libstub/efi-stub.c
-+++ b/drivers/firmware/efi/libstub/efi-stub.c
-@@ -51,14 +51,14 @@ static bool flat_va_mapping = (EFI_RT_VIRTUAL_OFFSET != 0);
- void __weak free_primary_display(struct sysfb_display_info *dpy)
- { }
- 
--static struct sysfb_display_info *setup_primary_display(void)
-+static struct sysfb_display_info *setup_primary_display(bool *dpy_needs_free)
- {
- 	struct sysfb_display_info *dpy;
- 	struct screen_info *screen = NULL;
- 	struct edid_info *edid = NULL;
- 	efi_status_t status;
- 
--	dpy = alloc_primary_display();
-+	dpy = lookup_primary_display(dpy_needs_free);
- 	if (!dpy)
- 		return NULL;
- 	screen = &dpy->screen;
-@@ -68,15 +68,22 @@ static struct sysfb_display_info *setup_primary_display(void)
- 
- 	status = efi_setup_graphics(screen, edid);
- 	if (status != EFI_SUCCESS)
--		goto err_free_primary_display;
-+		goto err___free_primary_display;
- 
- 	return dpy;
- 
--err_free_primary_display:
--	free_primary_display(dpy);
-+err___free_primary_display:
-+	if (*dpy_needs_free)
-+		free_primary_display(dpy);
- 	return NULL;
- }
- 
-+static void release_primary_display(struct sysfb_display_info *dpy, bool dpy_needs_free)
-+{
-+	if (dpy && dpy_needs_free)
-+		free_primary_display(dpy);
-+}
-+
- static void install_memreserve_table(void)
- {
- 	struct linux_efi_memreserve *rsv;
-@@ -156,13 +163,14 @@ efi_status_t efi_stub_common(efi_handle_t handle,
- 			     char *cmdline_ptr)
- {
- 	struct sysfb_display_info *dpy;
-+	bool dpy_needs_free;
- 	efi_status_t status;
- 
- 	status = check_platform_features();
- 	if (status != EFI_SUCCESS)
- 		return status;
- 
--	dpy = setup_primary_display();
-+	dpy = setup_primary_display(&dpy_needs_free);
- 
- 	efi_retrieve_eventlog();
- 
-@@ -182,7 +190,7 @@ efi_status_t efi_stub_common(efi_handle_t handle,
- 
- 	status = efi_boot_kernel(handle, image, image_addr, cmdline_ptr);
- 
--	free_primary_display(dpy);
-+	release_primary_display(dpy, dpy_needs_free);
- 
- 	return status;
- }
-diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-index 979a21818cc1..1503ffb82903 100644
---- a/drivers/firmware/efi/libstub/efistub.h
-+++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -1176,8 +1176,8 @@ efi_enable_reset_attack_mitigation(void) { }
- 
- void efi_retrieve_eventlog(void);
- 
-+struct sysfb_display_info *lookup_primary_display(bool *needs_free);
- struct sysfb_display_info *alloc_primary_display(void);
--struct sysfb_display_info *__alloc_primary_display(void);
- void free_primary_display(struct sysfb_display_info *dpy);
- 
- void efi_cache_sync_image(unsigned long image_base,
-diff --git a/drivers/firmware/efi/libstub/primary_display.c b/drivers/firmware/efi/libstub/primary_display.c
-index cdaebab26514..34c54ac1e02a 100644
---- a/drivers/firmware/efi/libstub/primary_display.c
-+++ b/drivers/firmware/efi/libstub/primary_display.c
-@@ -7,24 +7,9 @@
- 
- #include "efistub.h"
- 
--/*
-- * There are two ways of populating the core kernel's sysfb_primary_display
-- * via the stub:
-- *
-- *   - using a configuration table, which relies on the EFI init code to
-- *     locate the table and copy the contents; or
-- *
-- *   - by linking directly to the core kernel's copy of the global symbol.
-- *
-- * The latter is preferred because it makes the EFIFB earlycon available very
-- * early, but it only works if the EFI stub is part of the core kernel image
-- * itself. The zboot decompressor can only use the configuration table
-- * approach.
-- */
--
- static efi_guid_t primary_display_guid = LINUX_EFI_PRIMARY_DISPLAY_TABLE_GUID;
- 
--struct sysfb_display_info *__alloc_primary_display(void)
-+struct sysfb_display_info *alloc_primary_display(void)
- {
- 	struct sysfb_display_info *dpy;
- 	efi_status_t status;
-diff --git a/drivers/firmware/efi/libstub/zboot.c b/drivers/firmware/efi/libstub/zboot.c
-index 4b76f74c56da..c1fd1fdbcb08 100644
---- a/drivers/firmware/efi/libstub/zboot.c
-+++ b/drivers/firmware/efi/libstub/zboot.c
-@@ -26,9 +26,11 @@ void __weak efi_cache_sync_image(unsigned long image_base,
- 	// executable code loaded into memory to be safe for execution.
- }
- 
--struct sysfb_display_info *alloc_primary_display(void)
-+struct sysfb_display_info *lookup_primary_display(bool *needs_free)
- {
--	return __alloc_primary_display();
-+	*needs_free = true;
-+
-+	return alloc_primary_display();
- }
- 
- asmlinkage efi_status_t __efiapi
+> > > > the same irrespective of whether Linux runs virtualised or not. This
+> > > > also won't work with GICv5 (there are no SGIs at all), so this is
+> > > > doomed from the very start, and would immediately create technical
+> > > > debt.
+> > > 
+> > > Hyper-V always presents a GICv3 so we don't need to worry about GICv5.
+> > 
+> > Well, that's pretty short sighted of you, and eventually you'll have
+> > to support it, or just die. So do the right thing from the beginning.
+> 
+> Well, we don't when or if that will happen. But if it does happen, we
+> can solve it in a way that makes sense for GICv5. If there are no SGIs
+> at all, great, maybe we'll have a nicer solution then.
+
+Great. See you then. In the meantime, I have no interest in this sort
+of sorry hacks polluting the stuff I maintain.
+
+> > > > If you want to signal an interrupt to Linux, expose a device with an
+> > > > interrupt in a firmware table (i.e. not an SGI), and use that in your
+> > > > driver.
+> > > 
+> > > You mean in the ACPI tables? That would require us to modify the
+> > > firmware to expose this virtual device right?
+> > 
+> > Yes. How is that surprising?
+> 
+> It's not ideal that we would need some custom firmware to run Linux on
+> MSHV (as a parent). Do you think there could be some other possible solution
+> for handling this in the kernel? Maybe by thinking of it as a platform specific
+> quirk or something?
+
+You either do it the *correct* way, by exposing a virtual device, with
+an edge-triggered PPI, just like other hypervisors have done, or you
+keep your toy to yourself.  It is that simple. We don't have to accept
+ugly crap in Linux just for the sake of you not having to do the right
+thing in your firmware.
+
+Feel free to post a new series once you have something that matches
+the above expectations.
+
+	M.
+
 -- 
-2.51.1
-
+Jazz isn't dead. It just smells funny.
 
