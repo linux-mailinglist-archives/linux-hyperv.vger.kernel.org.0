@@ -1,165 +1,240 @@
-Return-Path: <linux-hyperv+bounces-7839-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7840-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C952DC8963F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Nov 2025 11:50:56 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30F5DC8AD7D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Nov 2025 17:10:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DBBBB3A72E5
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Nov 2025 10:48:22 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 766814ECD06
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Nov 2025 16:09:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 455EF3242B7;
-	Wed, 26 Nov 2025 10:47:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2F9133CE8B;
+	Wed, 26 Nov 2025 16:09:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="GjLHrdFl"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ezr4vDnI";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4GbyUUUq";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ezr4vDnI";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4GbyUUUq"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from sender3-of-o54.zoho.com (sender3-of-o54.zoho.com [136.143.184.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF25D3242D7;
-	Wed, 26 Nov 2025 10:47:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764154026; cv=pass; b=dreBZjZGgFYDb4HzKlAm9iVu3bikBlN7pzQ9zDSPRH60K1jW7nR4W0gv4jpgMJBdk+RZvoY8wUYijmAPIoBJZCDrrwWYDL7hqqmSFrp38JSYm2ObAdyG3Y2I15q3p8FvhGWrtHLsbPfqTlunprcwdvxaGAlz+NReVdqcP+ZYOmI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764154026; c=relaxed/simple;
-	bh=M+zjAZsrQYDnMsG5FXD7DZiUF/GmcJWIUWpKOgYUwvo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CMpP3HbUC8hQbavF4gQlRZaE/yoNpp4vKjYb2Rn6AXiJigqh5OORg52CuTslz9IPpaFCI01/MIR6b72ZFD+9xVa2h5ZtVA7qsBWpxgA3z8/13iGHbd40V9J0gFZ8o2S6qotl8eSKY5outQalnkUvV1v7cJQ3JcvmVNxCGsPHY7g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=GjLHrdFl; arc=pass smtp.client-ip=136.143.184.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1764153999; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=SUtnv6J7VsnEM7W/tPWaAY59MO76NcqiqWLy59E4stpw0Oy/UoQu/9x5KWlWm6p+XmkPpbVbaRwEVfqvVSo8MPTkQGjtP96pRr2cEfN1amil6n/gpsbQ5x5L5/MGEFiHgyaqZgeoi6qGxlz3vs7bbQfI2pilJ5iDZMNdg8MDUAw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1764153999; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=JQa7pr2d2LWfMGLERrFlEKDeH19thDdsNOy8z01FBYg=; 
-	b=RGG3sMdrXFgh+ACK59yNKbWfUlgf3Xw8ab1jH2jy1YZcunteDjaeLXR6tBuN/KK9yxgcGroPLEGVhQvDenfKjYN8u5foLnS4MkYL0hmsdWFr9WbudSL7izeledchIbfm+PcCf4mYJI96Oaosa5OfrwLjA/zVf3T4vzR16tFwN7s=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=anirudhrb.com;
-	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
-	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1764153999;
-	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=JQa7pr2d2LWfMGLERrFlEKDeH19thDdsNOy8z01FBYg=;
-	b=GjLHrdFlCRbKQosUewtLukpsHWYOb1Q/Zw4/NlQxgEGfHGJiVw4DAm6MhlPCBDB0
-	80W0hYhphDDhtGxj4WlqgsDBPLev+nRAmE1NUKmIduuP57b4WfPRbw1mJ8QcfQKosMR
-	uycMbEuEGlqVDGsxpHB0wrEeYYRpaG0guYCZU/g4=
-Received: by mx.zohomail.com with SMTPS id 1764153997500477.0715187596991;
-	Wed, 26 Nov 2025 02:46:37 -0800 (PST)
-Date: Wed, 26 Nov 2025 10:46:31 +0000
-From: Anirudh Rayabharam <anirudh@anirudhrb.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com, catalin.marinas@arm.com,
-	will@kernel.org, tglx@linutronix.de, Arnd Bergmann <arnd@arndb.de>,
-	akpm@linux-foundation.org, agordeev@linux.ibm.com,
-	guoweikang.kernel@gmail.com, osandov@fb.com, bsz@amazon.de,
-	linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH 2/3] irqchip/gic-v3: allocate one SGI for MSHV
-Message-ID: <aSbahzqu_3GN-PPJ@anirudh-surface.localdomain>
-References: <20251125170124.2443340-1-anirudh@anirudhrb.com>
- <20251125170124.2443340-3-anirudh@anirudhrb.com>
- <86bjkqq9dp.wl-maz@kernel.org>
- <aSa_rxG80LDXDlhr@anirudh-surface.localdomain>
- <86a509qi8p.wl-maz@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C9133D6C3
+	for <linux-hyperv@vger.kernel.org>; Wed, 26 Nov 2025 16:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764173344; cv=none; b=klfNj6f2z6+1PVdQGSnqBE/7iFSYX3jgUHaB0kS2/Y3xEVb1ElOrXWC41VRTVzDypXjG8CkJgvjC0QKz4tKXlkMXuPw64rZmJYqcNI2wCsOw1tOyRGIWkttaHOSVatEwW/Ew65a95OKHiJkaVVD8VM7TWs9NMWJ+urN1w3Rgzj0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764173344; c=relaxed/simple;
+	bh=xb7tPH9H1MBueB0fLpet0KsBSzM+SJdYe4tV78sVjoI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YbHRp/rYOMoroGVsxnhdMobd5YW2OBbJiKrV+ep4I+J17OoFB30kSS0M8hxUBWuKLxG5wBxwny8apNcwCYkngxYYPQjM/ae/tYszptYp/UkupfeCd6fQZmKI0Hq/DDD91uMaYuFNa4t6qR5yW4Ny8JHl4Lc4vjkxOXoiX+/SxlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ezr4vDnI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4GbyUUUq; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ezr4vDnI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4GbyUUUq; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 748EC5BE77;
+	Wed, 26 Nov 2025 16:08:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1764173339; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=YbYJIoS8CSkYSEky1xzQmHacWnGGr8CQaD7k/OTeboQ=;
+	b=ezr4vDnI9BlOLnc26FkABd8no3L8/SawwvPCTI6IVIlvPOhxdDOyv8d39UuPjMNL8Mmfx5
+	3jkxeMZmGZWaT2voSsFqhEkuiv5g54zsRyY+5P9CG5e4TZNyO8fPgdKuAaBnCuxgXxFgPP
+	jaadOykargHYJDRdfNNzH3GLgzyOzGk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1764173339;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=YbYJIoS8CSkYSEky1xzQmHacWnGGr8CQaD7k/OTeboQ=;
+	b=4GbyUUUqAKT4zSGNS8PWVY06FymL7ZhyflSM/4I6eu0Khvd0nJ9Pjkq868uBdTDOPVn0Cb
+	7qh/+SPNAeDd9HDA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ezr4vDnI;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=4GbyUUUq
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1764173339; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=YbYJIoS8CSkYSEky1xzQmHacWnGGr8CQaD7k/OTeboQ=;
+	b=ezr4vDnI9BlOLnc26FkABd8no3L8/SawwvPCTI6IVIlvPOhxdDOyv8d39UuPjMNL8Mmfx5
+	3jkxeMZmGZWaT2voSsFqhEkuiv5g54zsRyY+5P9CG5e4TZNyO8fPgdKuAaBnCuxgXxFgPP
+	jaadOykargHYJDRdfNNzH3GLgzyOzGk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1764173339;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=YbYJIoS8CSkYSEky1xzQmHacWnGGr8CQaD7k/OTeboQ=;
+	b=4GbyUUUqAKT4zSGNS8PWVY06FymL7ZhyflSM/4I6eu0Khvd0nJ9Pjkq868uBdTDOPVn0Cb
+	7qh/+SPNAeDd9HDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 05E093EA63;
+	Wed, 26 Nov 2025 16:08:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id DH6WOxomJ2lnIgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 26 Nov 2025 16:08:58 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: ardb@kernel.org,
+	javierm@redhat.com,
+	arnd@arndb.de,
+	richard.lyu@suse.com,
+	helgaas@kernel.org
+Cc: x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-fbdev@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH v3 0/9] arch,sysfb,efi: Support EDID on non-x86 EFI systems
+Date: Wed, 26 Nov 2025 17:03:17 +0100
+Message-ID: <20251126160854.553077-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86a509qi8p.wl-maz@kernel.org>
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:mid,suse.de:dkim];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spam-Score: -3.01
+X-Spam-Level: 
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 748EC5BE77
 
-On Wed, Nov 26, 2025 at 09:02:30AM +0000, Marc Zyngier wrote:
-> On Wed, 26 Nov 2025 08:51:59 +0000,
-> Anirudh Rayabharam <anirudh@anirudhrb.com> wrote:
-> > 
-> > On Tue, Nov 25, 2025 at 06:01:38PM +0000, Marc Zyngier wrote:
-> > > On Tue, 25 Nov 2025 17:01:23 +0000,
-> > > Anirudh Raybharam <anirudh@anirudhrb.com> wrote:
-> > > > 
-> > > > From: Anirudh Rayabharam <anirudh@anirudhrb.com>
-> > > > 
-> > > > From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
-> > > > 
-> > > > Currently SGIs are allocated only for the smp subsystem. The MSHV
-> > > > (Microsoft Hypervisor aka Hyper-V) code also needs an SGI that can be
-> > > > programmed into the SYNIC to receive intercepts from the hypervisor. The
-> > > > hypervisor would then assert this SGI whenever there is a guest
-> > > > VMEXIT.
-> > > > 
-> > > > Allocate one SGI for MSHV use in addition to the SGIs allocated for
-> > > > IPIs. When running under MSHV, the full SGI range can be used i.e. no
-> > > > need to reserve SGIs 8-15 for the secure firmware.
-> > > > 
-> > > > Since this SGI is needed only when running as a parent partition (i.e.
-> > > > we can create guest partitions), check for it before allocating an SGI.
-> > > 
-> > > Sorry, but that's not an acceptable situation.
-> > > 
-> > > SGIs are for Linux to use, nobody else, and that allocation must be
-> > 
-> > Why does this restriction exist? In the code SGIs 8-15 are left for
-> > secure firmware. So, things other than Linux can use SGIs. Why not MSHV
-> > then?
-> 
-> Because SGIs are for *internal* usage. Not usage from another random
-> piece of SW. The ACPI tables explicitly don't describe SGIs. DT
-> explicitly don't describe SGIs. Do you get the clue?
+Replace screen_info and edid_info with sysfb_primary_device of type
+struct sysfb_display_info. Update all users. Then implement EDID support
+in the kernel EFI code.
 
-The name Software Generated Interrupts suggests that it is supposed to be
-used by pieces of SW.
+Sysfb DRM drivers currently fetch the global edid_info directly, when
+they should get that information together with the screen_info from their
+device. Wrapping screen_info and edid_info in sysfb_primary_display and
+passing this to drivers enables this.
 
-Yes, ACPI/DT don't describe SGIs because they're not supposed to be used
-by devices. SW has full control over SGIs and it is up to the SW to
-assign meaning to them, isn't it?
+Replacing both with sysfb_primary_display has been motivate by the EFI
+stub. EFI wants to transfer EDID via config table in a single entry.
+Using struct sysfb_display_info this will become easily possible. Hence
+accept some churn in architecture code for the long-term improvements.
 
-> 
-> > > the same irrespective of whether Linux runs virtualised or not. This
-> > > also won't work with GICv5 (there are no SGIs at all), so this is
-> > > doomed from the very start, and would immediately create technical
-> > > debt.
-> > 
-> > Hyper-V always presents a GICv3 so we don't need to worry about GICv5.
-> 
-> Well, that's pretty short sighted of you, and eventually you'll have
-> to support it, or just die. So do the right thing from the beginning.
+Patches 1 and 2 reduce the exposure of screen_info in EFI-related code.
 
-Well, we don't when or if that will happen. But if it does happen, we
-can solve it in a way that makes sense for GICv5. If there are no SGIs
-at all, great, maybe we'll have a nicer solution then.
+Patch 3 adds struct sysfb_display_info.
 
-> 
-> > >
-> > > If you want to signal an interrupt to Linux, expose a device with an
-> > > interrupt in a firmware table (i.e. not an SGI), and use that in your
-> > > driver.
-> > 
-> > You mean in the ACPI tables? That would require us to modify the
-> > firmware to expose this virtual device right?
-> 
-> Yes. How is that surprising?
+Patch 4 replaces scren_info with sysfb_primary_display. This results in
+several changes throught the kernel, but is really just a refactoring.
 
-It's not ideal that we would need some custom firmware to run Linux on
-MSHV (as a parent). Do you think there could be some other possible solution
-for handling this in the kernel? Maybe by thinking of it as a platform specific
-quirk or something?
+Patch 5 updates sysfb to transfer sysfb_primary_display to the related
+drivers.
 
-Thanks,
-Anirudh.
+Patch 6 moves edid_info into sysfb_primary_display. This resolves some
+drivers' reference to the global edid_info, but also makes the EDID data
+available on non-x86 architectures.
 
-> 
-> 	M.
-> 
-> -- 
-> Without deviation from the norm, progress is not possible.
+Patches 7 and 8 add support for EDID transfers on non-x86 EFI systems.
+
+Patch 9 cleans up the config-table allocation to be easier to understand.
+
+v3:
+- replace SCREEN_INFO table entry (Ard)
+- merge libstub patch into kernel patch
+v2:
+- combine v1 of the series at [1] plus changes from [2] and [3].
+
+[1] https://lore.kernel.org/dri-devel/20251121135624.494768-1-tzimmermann@suse.de/
+[2] https://lore.kernel.org/dri-devel/20251015160816.525825-1-tzimmermann@suse.de/
+[3] https://lore.kernel.org/linux-efi/20251119123011.1187249-5-ardb+git@google.com/
+
+Thomas Zimmermann (9):
+  efi: earlycon: Reduce number of references to global screen_info
+  efi: sysfb_efi: Reduce number of references to global screen_info
+  sysfb: Add struct sysfb_display_info
+  sysfb: Replace screen_info with sysfb_primary_display
+  sysfb: Pass sysfb_primary_display to devices
+  sysfb: Move edid_info into sysfb_primary_display
+  efi: Refactor init_primary_display() helpers
+  efi: Support EDID information
+  efi: libstub: Simplify interfaces for primary_display
+
+ arch/arm64/kernel/image-vars.h                |  2 +-
+ arch/loongarch/kernel/efi.c                   | 38 ++++-----
+ arch/loongarch/kernel/image-vars.h            |  2 +-
+ arch/riscv/kernel/image-vars.h                |  2 +-
+ arch/x86/kernel/kexec-bzimage64.c             |  4 +-
+ arch/x86/kernel/setup.c                       | 16 ++--
+ arch/x86/video/video-common.c                 |  4 +-
+ drivers/firmware/efi/earlycon.c               | 42 +++++-----
+ drivers/firmware/efi/efi-init.c               | 46 ++++++-----
+ drivers/firmware/efi/efi.c                    |  4 +-
+ drivers/firmware/efi/libstub/Makefile         |  2 +-
+ drivers/firmware/efi/libstub/efi-stub-entry.c | 36 +++++++--
+ drivers/firmware/efi/libstub/efi-stub.c       | 49 +++++++----
+ drivers/firmware/efi/libstub/efistub.h        |  7 +-
+ .../firmware/efi/libstub/primary_display.c    | 41 ++++++++++
+ drivers/firmware/efi/libstub/screen_info.c    | 53 ------------
+ drivers/firmware/efi/libstub/zboot.c          |  6 +-
+ drivers/firmware/efi/sysfb_efi.c              | 81 ++++++++++---------
+ drivers/firmware/sysfb.c                      | 13 +--
+ drivers/firmware/sysfb_simplefb.c             |  2 +-
+ drivers/gpu/drm/sysfb/efidrm.c                | 14 ++--
+ drivers/gpu/drm/sysfb/vesadrm.c               | 14 ++--
+ drivers/hv/vmbus_drv.c                        |  6 +-
+ drivers/pci/vgaarb.c                          |  4 +-
+ drivers/video/Kconfig                         |  8 +-
+ drivers/video/fbdev/core/fbmon.c              |  8 +-
+ drivers/video/fbdev/efifb.c                   | 10 ++-
+ drivers/video/fbdev/vesafb.c                  | 10 ++-
+ drivers/video/fbdev/vga16fb.c                 |  8 +-
+ drivers/video/screen_info_pci.c               |  5 +-
+ include/linux/efi.h                           |  9 ++-
+ include/linux/screen_info.h                   |  2 -
+ include/linux/sysfb.h                         | 23 ++++--
+ include/video/edid.h                          |  4 -
+ 34 files changed, 321 insertions(+), 254 deletions(-)
+ create mode 100644 drivers/firmware/efi/libstub/primary_display.c
+ delete mode 100644 drivers/firmware/efi/libstub/screen_info.c
+
+
+base-commit: d724c6f85e80a23ed46b7ebc6e38b527c09d64f5
+-- 
+2.51.1
+
 
