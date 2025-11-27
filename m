@@ -1,304 +1,361 @@
-Return-Path: <linux-hyperv+bounces-7869-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7870-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1B54C8D264
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Nov 2025 08:43:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7914AC8D2EC
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Nov 2025 08:48:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 94F3D34AC8E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Nov 2025 07:43:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 291353B0F33
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Nov 2025 07:48:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 594CA320A01;
-	Thu, 27 Nov 2025 07:43:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FA023203B5;
+	Thu, 27 Nov 2025 07:47:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tHKYVma4";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sSfQgU6T";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tHKYVma4";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sSfQgU6T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gBFtq/AG"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5BF31C58A
-	for <linux-hyperv@vger.kernel.org>; Thu, 27 Nov 2025 07:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1FC31D39F
+	for <linux-hyperv@vger.kernel.org>; Thu, 27 Nov 2025 07:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764229407; cv=none; b=dqPvY6thT17kccJ94jr7aapyV4R6sFrGQOA5RApBiyiGuVzA93pB4n0kfc+Qip9B5Ru5O66A9P/Gepw8CgEP4QZIZvfoy/XPpWXnDIZD5Ax3ol3B9TRQ125J00xi3ZDYR8foyxrQ+2kTUm0e7hFBeB8maZXMZskttl5oJhm6ztw=
+	t=1764229666; cv=none; b=KBB4Hu5STQ3yPbPLGrYKKxTPfrI8LkKHpqLFo9j2gXkNLgO7/HWlWuJmQ7fBS8eG+UoOlCXpOwfg5b2TpI96gMlhWymc07Am9XMFLx7jWXPw5lveJEvBtNernG5fmkIcTLMg0btHGMUXgcT1NiUy1l9xh4vGUAQuXJng8mPNO9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764229407; c=relaxed/simple;
-	bh=2aa7/jpUbDAxAdHmOQT5ki0TSEgpqQs/3fnTyfytNTo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iPg2A25jFbU70W+F1DH9owi3L1yIaAltYqofRuZ/pjNe58OUon2h2ydO5SE36DcGXtHIujZK4/5Ca3S4+xulNc0LAdxrkmoN8Jd9UTsQRZ87wDdy6ATxkAklE3OTnP6zC0h/3bdTmfyvZz8W51L9Axu07oUXzuYYVEfs6O2SKTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tHKYVma4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sSfQgU6T; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tHKYVma4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sSfQgU6T; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7CBC85BCC4;
-	Thu, 27 Nov 2025 07:43:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1764229402; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WyScJv6L7nzXkZtam1LWxY9xGCwufyeEcL9m/K/r7IE=;
-	b=tHKYVma4XZcx7EoM5DNtmhDH8d9dYIT1zjyPWiuzOKkrRbwdogT20g9OvB1gPa65N29ize
-	4GtRmeOztqDc1JFFXCNPXnbPEn6m/rt5ROFlvRnW8gSriK+vchWuJejUle4Bf0lctpAMe0
-	BsoNiayfk0hMxzZbyHAvwrSNJm15elw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1764229402;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WyScJv6L7nzXkZtam1LWxY9xGCwufyeEcL9m/K/r7IE=;
-	b=sSfQgU6T/Yx+fCh1hUALVRAufEwp3ATFz5uXMj/P6VqdhPQInFT9HtHsc4EUhWkDPLvvYo
-	oVeaJ0hOAb6l9vDg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1764229402; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WyScJv6L7nzXkZtam1LWxY9xGCwufyeEcL9m/K/r7IE=;
-	b=tHKYVma4XZcx7EoM5DNtmhDH8d9dYIT1zjyPWiuzOKkrRbwdogT20g9OvB1gPa65N29ize
-	4GtRmeOztqDc1JFFXCNPXnbPEn6m/rt5ROFlvRnW8gSriK+vchWuJejUle4Bf0lctpAMe0
-	BsoNiayfk0hMxzZbyHAvwrSNJm15elw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1764229402;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WyScJv6L7nzXkZtam1LWxY9xGCwufyeEcL9m/K/r7IE=;
-	b=sSfQgU6T/Yx+fCh1hUALVRAufEwp3ATFz5uXMj/P6VqdhPQInFT9HtHsc4EUhWkDPLvvYo
-	oVeaJ0hOAb6l9vDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0A0413EA63;
-	Thu, 27 Nov 2025 07:43:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id DU/CABoBKGnXfAAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Thu, 27 Nov 2025 07:43:22 +0000
-Message-ID: <fc4ea259-3389-46e2-b860-972aa8179507@suse.de>
-Date: Thu, 27 Nov 2025 08:43:21 +0100
+	s=arc-20240116; t=1764229666; c=relaxed/simple;
+	bh=TNNne8XLhqlNlunNPucnkVWhceVeGlCmRI4NfOKpkeA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hS0QA6GdDQgz8Ea5oHcgk443BQglA77r2hRVUqZcWxqjPBAK/Epp/7drRleXdGOgvCmDR2g7Apc6Wou3bC6T0wR5K8YQdvlFRGq0Vxu2xYljBB/BfWdleHGIgjOoYxiTES1H5SBCnbVegTCmlteYEckX333k1om+p6/twWMyr1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gBFtq/AG; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7ba92341f83so951269b3a.0
+        for <linux-hyperv@vger.kernel.org>; Wed, 26 Nov 2025 23:47:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764229663; x=1764834463; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0ZAA6uw9c2Lc+DAsj4spPmKywmkPEH3VXjHiCbvXTz0=;
+        b=gBFtq/AGQfQ4WPUOfpnY47e4dslwjrapyyGrQmxVYfWpI+0mcJP6S5BxYQXYpGRi0m
+         SoC4HUdaKw4NpmlozzwNcXrrE42oUBV434nAW975eStH8JDyKTP6OrU3FItJz8iVaRCI
+         iQRy/w7lFWINxEbsWu/iCw6Cy3STWMgbBQzHh57Z11cl0ZHCu31mwHoYBG+lfXAX2M7B
+         w5R4s+DXEyZmi/m/b6mplAFIDVoecb4ghsVHG7rmAMiyFkZ4NZ6UiLpc9HV9beQEF3zh
+         fwZ7TjvBTX2uPKIivdp/6gzDe5UdBEXRWIvS9/bzjLm66D8jjvLXVj7RXw6Hl90yNGQQ
+         JzpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764229663; x=1764834463;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0ZAA6uw9c2Lc+DAsj4spPmKywmkPEH3VXjHiCbvXTz0=;
+        b=C1cGSHWzjkynpOZeg5j6pxz8LP5PjqyspNpyXd3SJPA3liDid8Wbr01r9Wkj4I5RlI
+         Ph4tYPVhJAAyN4QJhNF/AW+NdM9dtnUn/TgVMUttUkP+Eap1GcuaQSwZt3aErTvB7b9z
+         VxxWJfE9QQloJoRx0Vrz/FyV3aTaZWvW/0SiTG9nAcN23xPVr8Nxo167zynoCLieEe3H
+         /QDwyLGEQNzqy8Co/fZvUSZIuTi2HNDhAwKPlLkf8rQ1yInOEB+Dd1aAEmxSbntWUYDF
+         K4OaVW1Nc3+11AZvOqDSJq75bHdsWyevNtv2+Sh9tyMp8Cq/pQUQF/jb0xhoSXUmfAue
+         80Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCXAUPkZryv4kTNNKLK4sobYCh8D6MIcHRabiUoZpg3DZC0+1w+uoUIJ6hmRpTk7vNPTuCoyW7Nx0d9veqE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBO4fohn9e6LlQpGEQ5DiCeeVMmiyRP7QlyQtUlxIbl0+UstvM
+	OzOEgeEhGrJLo61jaXO+M/GVGHzyQk0da4wekpvfRgZWcL/69JT/7dOj
+X-Gm-Gg: ASbGnctF4UrnLLWMBmsBpvbsAemjiFbpdpN+UOeQhJ/a3xB5GNegmD6lrBVT32Eq6Am
+	Sdz1RafBH8EhWgiciuLh3hgpATgEqCqYIbAiCkEbT+ZUFgDZPHoXAoAE0KnrkhrDwoK0uPqjWKy
+	SaE/Oa9eNBxKrmgfCryZawxBNTxJHv0qkuCTT/YcUIAoM7jKGKVdOWKP2d50FX7eZN5rJlnzCcO
+	RfD0b1V9TpMa1h89V33Go6FLdX9oyU8YJxPRwK6//q4oW1Y6GWx/QjIpqw6ffPwFa8iNJYdSovS
+	Vdmn7jM7EHz+Aq5B/4BkPcRAtVJWgXonbQpGFNMUTWNBNypXa1/Q1CkRfXlOP1stD9wvGyPj/+v
+	k4Wpl8un4ZBOI2vRm90uon+ZmbAg7lg+p6KlO7myRLHSRDwRSuMz4jt4UywtByj2Fd7ZB6vYAD8
+	/j8jPa1aXMlVAvsT0EFR8=
+X-Google-Smtp-Source: AGHT+IEMHFIfTY6i1S/akQaQN4HyWaVoZ4LOyH7x2PsJhD3hks5PhCeUCyC7Oz/YmSm3eXvprDRIbw==
+X-Received: by 2002:a05:6a20:12cb:b0:361:1cef:c39b with SMTP id adf61e73a8af0-3637e0b12camr11136512637.45.1764229662566;
+        Wed, 26 Nov 2025 23:47:42 -0800 (PST)
+Received: from localhost ([2a03:2880:2ff:3::])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7d15e9c3d90sm919235b3a.38.2025.11.26.23.47.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Nov 2025 23:47:41 -0800 (PST)
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+Subject: [PATCH net-next v12 00/12] vsock: add namespace support to
+ vhost-vsock and loopback
+Date: Wed, 26 Nov 2025 23:47:29 -0800
+Message-Id: <20251126-vsock-vmtest-v12-0-257ee21cd5de@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/9] arch,sysfb,efi: Support EDID on non-x86 EFI
- systems
-To: Richard Lyu <richard.lyu@suse.com>, ardb@kernel.org, javierm@redhat.com,
- arnd@arndb.de, helgaas@kernel.org
-Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-fbdev@vger.kernel.org
-References: <20251126160854.553077-1-tzimmermann@suse.de>
- <aSe1ZBXa3JBidhem@r1chard>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <aSe1ZBXa3JBidhem@r1chard>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.com:url]
-X-Spam-Level: 
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABICKGkC/5WTS27bQBBEr0LMWh109/yFIPA9Ai/m07SJmJIjM
+ oQDQ3cPxAgWM/Ima+LVGxa63tUkp0Emte/e1UmWYRqOB7XviHedKs/p8CQwVLXvFCNb1GxhmY7
+ lByzjLNMMWSemyoRcWO069XqSfnhb876rg8xwkLdZPe469TxM8/H0exUttH5fIw3hv5ELAUGvb
+ QpUU46hPDyNaXj5Uo7jGrTwFvYNzECgI1JirzVJaGG9gTk0sAYCCpR6R073WlrY3GCLrdkAgRN
+ O0bPjUt0G3l3rC2jvIAS0UYqllInoYZQ53YR2IyTdsBYIjHhbTDK2SP5MyP4OQsCcbMAsVWxuh
+ G4rbB/rgCCmnkpB1hHxE2EkdwchoDOVJWMJsTZC/yEkZGpYv7KOss+ux7Bp5+r7L2b1ha2vbTQ
+ AQpUUg6nIOWPDEt5gurs8wgvdY+jJ2Xy5noamDc13R0+AYG3JJSCbmPyGPv8d1kl+/hqmYb6ua
+ 5RpSus8993X6w/xNXWSl/6SO8G6RkiHCsP4ejouMsphni4jQ5AqmXyszjj9oft26TanSaAcx3G
+ Y9110nIotKcZkixZvXGSyuTfeejYGDXLtq43q8Xz+A9UoUFJQBAAA
+X-Change-ID: 20250325-vsock-vmtest-b3a21d2102c2
+To: Stefano Garzarella <sgarzare@redhat.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Stefan Hajnoczi <stefanha@redhat.com>, 
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+ "K. Y. Srinivasan" <kys@microsoft.com>, 
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+ Dexuan Cui <decui@microsoft.com>, Bryan Tan <bryan-bt.tan@broadcom.com>, 
+ Vishnu Dasa <vishnu.dasa@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev, 
+ netdev@vger.kernel.org, kvm@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, berrange@redhat.com, 
+ Sargun Dhillon <sargun@sargun.me>, Bobby Eshleman <bobbyeshleman@gmail.com>, 
+ Bobby Eshleman <bobbyeshleman@meta.com>
+X-Mailer: b4 0.14.3
 
-Hi
+This series adds namespace support to vhost-vsock and loopback. It does
+not add namespaces to any of the other guest transports (virtio-vsock,
+hyperv, or vmci).
 
-Am 27.11.25 um 03:20 schrieb Richard Lyu:
-> Hi Thomas,
->
-> I am attempting to test this patch series but encountered merge conflicts when applying it to various trees.
-> Could you please clarify the specific base commit (or branch/tag) this series was generated against?
+The current revision supports two modes: local and global. Local
+mode is complete isolation of namespaces, while global mode is complete
+sharing between namespaces of CIDs (the original behavior).
 
-Thanks for testing.
+The mode is set using /proc/sys/net/vsock/ns_mode.
 
->
-> When testing on the next branch on commits 7a2ff00 and e41ef37, I hit a conflict on PATCH v3 4/9:
-> patching file drivers/pci/vgaarb.c
-> Hunk #2 FAILED at 557.
-> 1 out of 2 hunks FAILED -- rejects in file drivers/pci/vgaarb.c
->
-> When testing against 3a86608 (Linux 6.18-rc1), the following conflicts occurred:
-> patching file drivers/gpu/drm/sysfb/efidrm.c
-> Hunk #1 FAILED at 24.
-> 1 out of 2 hunks FAILED -- rejects in file drivers/gpu/drm/sysfb/efidrm.c
-> patching file drivers/gpu/drm/sysfb/vesadrm.c
-> Hunk #1 FAILED at 25.
-> 1 out of 2 hunks FAILED -- rejects in file drivers/gpu/drm/sysfb/vesadrm.c
->
-> Please let me know the correct base, and I will retest.
+Modes are per-netns and write-once. This allows a system to configure
+namespaces independently (some may share CIDs, others are completely
+isolated). This also supports future possible mixed use cases, where
+there may be namespaces in global mode spinning up VMs while there are
+mixed mode namespaces that provide services to the VMs, but are not
+allowed to allocate from the global CID pool (this mode is not
+implemented in this series).
 
-It's in the cover letter: d724c6f85e80a23ed46b7ebc6e38b527c09d64f5 The 
-commit is in linux-next. The idea is that the EFI tree can pick up the 
-changes easily in the next cycle. linux-next seemed like the best 
-choice. Best regards Thomas
->
-> Thanks,
-> Richard Lyu
->
-> On 2025/11/26 17:03, Thomas Zimmermann wrote:
->> Replace screen_info and edid_info with sysfb_primary_device of type
->> struct sysfb_display_info. Update all users. Then implement EDID support
->> in the kernel EFI code.
->>
->> Sysfb DRM drivers currently fetch the global edid_info directly, when
->> they should get that information together with the screen_info from their
->> device. Wrapping screen_info and edid_info in sysfb_primary_display and
->> passing this to drivers enables this.
->>
->> Replacing both with sysfb_primary_display has been motivate by the EFI
->> stub. EFI wants to transfer EDID via config table in a single entry.
->> Using struct sysfb_display_info this will become easily possible. Hence
->> accept some churn in architecture code for the long-term improvements.
->>
->> Patches 1 and 2 reduce the exposure of screen_info in EFI-related code.
->>
->> Patch 3 adds struct sysfb_display_info.
->>
->> Patch 4 replaces scren_info with sysfb_primary_display. This results in
->> several changes throught the kernel, but is really just a refactoring.
->>
->> Patch 5 updates sysfb to transfer sysfb_primary_display to the related
->> drivers.
->>
->> Patch 6 moves edid_info into sysfb_primary_display. This resolves some
->> drivers' reference to the global edid_info, but also makes the EDID data
->> available on non-x86 architectures.
->>
->> Patches 7 and 8 add support for EDID transfers on non-x86 EFI systems.
->>
->> Patch 9 cleans up the config-table allocation to be easier to understand.
->>
->> v3:
->> - replace SCREEN_INFO table entry (Ard)
->> - merge libstub patch into kernel patch
->> v2:
->> - combine v1 of the series at [1] plus changes from [2] and [3].
->>
->> [1] https://lore.kernel.org/dri-devel/20251121135624.494768-1-tzimmermann@suse.de/
->> [2] https://lore.kernel.org/dri-devel/20251015160816.525825-1-tzimmermann@suse.de/
->> [3] https://lore.kernel.org/linux-efi/20251119123011.1187249-5-ardb+git@google.com/
->>
->> Thomas Zimmermann (9):
->>    efi: earlycon: Reduce number of references to global screen_info
->>    efi: sysfb_efi: Reduce number of references to global screen_info
->>    sysfb: Add struct sysfb_display_info
->>    sysfb: Replace screen_info with sysfb_primary_display
->>    sysfb: Pass sysfb_primary_display to devices
->>    sysfb: Move edid_info into sysfb_primary_display
->>    efi: Refactor init_primary_display() helpers
->>    efi: Support EDID information
->>    efi: libstub: Simplify interfaces for primary_display
->>
->>   arch/arm64/kernel/image-vars.h                |  2 +-
->>   arch/loongarch/kernel/efi.c                   | 38 ++++-----
->>   arch/loongarch/kernel/image-vars.h            |  2 +-
->>   arch/riscv/kernel/image-vars.h                |  2 +-
->>   arch/x86/kernel/kexec-bzimage64.c             |  4 +-
->>   arch/x86/kernel/setup.c                       | 16 ++--
->>   arch/x86/video/video-common.c                 |  4 +-
->>   drivers/firmware/efi/earlycon.c               | 42 +++++-----
->>   drivers/firmware/efi/efi-init.c               | 46 ++++++-----
->>   drivers/firmware/efi/efi.c                    |  4 +-
->>   drivers/firmware/efi/libstub/Makefile         |  2 +-
->>   drivers/firmware/efi/libstub/efi-stub-entry.c | 36 +++++++--
->>   drivers/firmware/efi/libstub/efi-stub.c       | 49 +++++++----
->>   drivers/firmware/efi/libstub/efistub.h        |  7 +-
->>   .../firmware/efi/libstub/primary_display.c    | 41 ++++++++++
->>   drivers/firmware/efi/libstub/screen_info.c    | 53 ------------
->>   drivers/firmware/efi/libstub/zboot.c          |  6 +-
->>   drivers/firmware/efi/sysfb_efi.c              | 81 ++++++++++---------
->>   drivers/firmware/sysfb.c                      | 13 +--
->>   drivers/firmware/sysfb_simplefb.c             |  2 +-
->>   drivers/gpu/drm/sysfb/efidrm.c                | 14 ++--
->>   drivers/gpu/drm/sysfb/vesadrm.c               | 14 ++--
->>   drivers/hv/vmbus_drv.c                        |  6 +-
->>   drivers/pci/vgaarb.c                          |  4 +-
->>   drivers/video/Kconfig                         |  8 +-
->>   drivers/video/fbdev/core/fbmon.c              |  8 +-
->>   drivers/video/fbdev/efifb.c                   | 10 ++-
->>   drivers/video/fbdev/vesafb.c                  | 10 ++-
->>   drivers/video/fbdev/vga16fb.c                 |  8 +-
->>   drivers/video/screen_info_pci.c               |  5 +-
->>   include/linux/efi.h                           |  9 ++-
->>   include/linux/screen_info.h                   |  2 -
->>   include/linux/sysfb.h                         | 23 ++++--
->>   include/video/edid.h                          |  4 -
->>   34 files changed, 321 insertions(+), 254 deletions(-)
->>   create mode 100644 drivers/firmware/efi/libstub/primary_display.c
->>   delete mode 100644 drivers/firmware/efi/libstub/screen_info.c
->>
->>
->> base-commit: d724c6f85e80a23ed46b7ebc6e38b527c09d64f5
->> -- 
->> 2.51.1
->>
+If a socket or VM is created when a namespace is global but the
+namespace changes to local, the socket or VM will continue working
+normally. That is, the socket or VM assumes the mode behavior of the
+namespace at the time the socket/VM was created. The original mode is
+captured in vsock_create() and so occurs at the time of socket(2) and
+accept(2) for sockets and open(2) on /dev/vhost-vsock for VMs. This
+prevents a socket/VM connection from suddenly breaking due to a
+namespace mode change. Any new sockets/VMs created after the mode change
+will adopt the new mode's behavior.
 
+Additionally, added tests for the new namespace features:
+
+tools/testing/selftests/vsock/vmtest.sh
+1..28
+ok 1 vm_server_host_client
+ok 2 vm_client_host_server
+ok 3 vm_loopback
+ok 4 ns_host_vsock_ns_mode_ok
+ok 5 ns_host_vsock_ns_mode_write_once_ok
+ok 6 ns_global_same_cid_fails
+ok 7 ns_local_same_cid_ok
+ok 8 ns_global_local_same_cid_ok
+ok 9 ns_local_global_same_cid_ok
+ok 10 ns_diff_global_host_connect_to_global_vm_ok
+ok 11 ns_diff_global_host_connect_to_local_vm_fails
+ok 12 ns_diff_global_vm_connect_to_global_host_ok
+ok 13 ns_diff_global_vm_connect_to_local_host_fails
+ok 14 ns_diff_local_host_connect_to_local_vm_fails
+ok 15 ns_diff_local_vm_connect_to_local_host_fails
+ok 16 ns_diff_global_to_local_loopback_local_fails
+ok 17 ns_diff_local_to_global_loopback_fails
+ok 18 ns_diff_local_to_local_loopback_fails
+ok 19 ns_diff_global_to_global_loopback_ok
+ok 20 ns_same_local_loopback_ok
+ok 21 ns_same_local_host_connect_to_local_vm_ok
+ok 22 ns_same_local_vm_connect_to_local_host_ok
+ok 23 ns_mode_change_connection_continue_vm_ok
+ok 24 ns_mode_change_connection_continue_host_ok
+ok 25 ns_mode_change_connection_continue_both_ok
+ok 26 ns_delete_vm_ok
+ok 27 ns_delete_host_ok
+ok 28 ns_delete_both_ok
+SUMMARY: PASS=28 SKIP=0 FAIL=0
+
+Dependent on series:
+https://lore.kernel.org/all/20251108-vsock-selftests-fixes-and-improvements-v4-0-d5e8d6c87289@meta.com/
+
+Thanks again for everyone's help and reviews!
+
+Suggested-by: Sargun Dhillon <sargun@sargun.me>
+Signed-off-by: Bobby Eshleman <bobbyeshleman@gmail.com>
+
+Changes in v12:
+- add ns mode checking to _allow() callbacks to reject local mode for
+  incompatible transports (Stefano)
+- flip vhost/loopback to return true for stream_allow() and
+  seqpacket_allow() in "vsock: add netns support to virtio transports"
+  (Stefano)
+- add VMADDR_CID_ANY + local mode documentation in af_vsock.c (Stefano)
+- change "selftests/vsock: add tests for host <-> vm connectivity with
+  namespaces" to skip test 29 in vsock_test for namespace local
+  vsock_test calls in a host local-mode namespace. There is a
+  false-positive edge case for that test encountered with the
+  ->stream_allow() approach. More details in that patch.
+- updated cover letter with new test output
+- Link to v11: https://lore.kernel.org/r/20251120-vsock-vmtest-v11-0-55cbc80249a7@meta.com
+
+Changes in v11:
+- vmtest: add a patch to use ss in wait_for_listener functions and
+  support vsock, tcp, and unix. Change all patches to use the new
+  functions.
+- vmtest: add a patch to re-use vm dmesg / warn counting functions
+- Link to v10: https://lore.kernel.org/r/20251117-vsock-vmtest-v10-0-df08f165bf3e@meta.com
+
+Changes in v10:
+- Combine virtio common patches into one (Stefano)
+- Resolve vsock_loopback virtio_transport_reset_no_sock() issue
+  with info->vsk setting. This eliminates the need for skb->cb,
+  so remove skb->cb patches.
+- many line width 80 fixes
+- Link to v9: https://lore.kernel.org/all/20251111-vsock-vmtest-v9-0-852787a37bed@meta.com
+
+Changes in v9:
+- reorder loopback patch after patch for virtio transport common code
+- remove module ordering tests patch because loopback no longer depends
+  on pernet ops
+- major simplifications in vsock_loopback
+- added a new patch for blocking local mode for guests, added test case
+  to check
+- add net ref tracking to vsock_loopback patch
+- Link to v8: https://lore.kernel.org/r/20251023-vsock-vmtest-v8-0-dea984d02bb0@meta.com
+
+Changes in v8:
+- Break generic cleanup/refactoring patches into standalone series,
+  remove those from this series
+- Link to dependency: https://lore.kernel.org/all/20251022-vsock-selftests-fixes-and-improvements-v1-0-edeb179d6463@meta.com/
+- Link to v7: https://lore.kernel.org/r/20251021-vsock-vmtest-v7-0-0661b7b6f081@meta.com
+
+Changes in v7:
+- fix hv_sock build
+- break out vmtest patches into distinct, more well-scoped patches
+- change `orig_net_mode` to `net_mode`
+- many fixes and style changes in per-patch change sets (see individual
+  patches for specific changes)
+- optimize `virtio_vsock_skb_cb` layout
+- update commit messages with more useful descriptions
+- vsock_loopback: use orig_net_mode instead of current net mode
+- add tests for edge cases (ns deletion, mode changing, loopback module
+  load ordering)
+- Link to v6: https://lore.kernel.org/r/20250916-vsock-vmtest-v6-0-064d2eb0c89d@meta.com
+
+Changes in v6:
+- define behavior when mode changes to local while socket/VM is alive
+- af_vsock: clarify description of CID behavior
+- af_vsock: use stronger langauge around CID rules (dont use "may")
+- af_vsock: improve naming of buf/buffer
+- af_vsock: improve string length checking on proc writes
+- vsock_loopback: add space in struct to clarify lock protection
+- vsock_loopback: do proper cleanup/unregister on vsock_loopback_exit()
+- vsock_loopback: use virtio_vsock_skb_net() instead of sock_net()
+- vsock_loopback: set loopback to NULL after kfree()
+- vsock_loopback: use pernet_operations and remove callback mechanism
+- vsock_loopback: add macros for "global" and "local"
+- vsock_loopback: fix length checking
+- vmtest.sh: check for namespace support in vmtest.sh
+- Link to v5: https://lore.kernel.org/r/20250827-vsock-vmtest-v5-0-0ba580bede5b@meta.com
+
+Changes in v5:
+- /proc/net/vsock_ns_mode -> /proc/sys/net/vsock/ns_mode
+- vsock_global_net -> vsock_global_dummy_net
+- fix netns lookup in vhost_vsock to respect pid namespaces
+- add callbacks for vsock_loopback to avoid circular dependency
+- vmtest.sh loads vsock_loopback module
+- remove vsock_net_mode_can_set()
+- change vsock_net_write_mode() to return true/false based on success
+- make vsock_net_mode enum instead of u8
+- Link to v4: https://lore.kernel.org/r/20250805-vsock-vmtest-v4-0-059ec51ab111@meta.com
+
+Changes in v4:
+- removed RFC tag
+- implemented loopback support
+- renamed new tests to better reflect behavior
+- completed suite of tests with permutations of ns modes and vsock_test
+  as guest/host
+- simplified socat bridging with unix socket instead of tcp + veth
+- only use vsock_test for success case, socat for failure case (context
+  in commit message)
+- lots of cleanup
+
+Changes in v3:
+- add notion of "modes"
+- add procfs /proc/net/vsock_ns_mode
+- local and global modes only
+- no /dev/vhost-vsock-netns
+- vmtest.sh already merged, so new patch just adds new tests for NS
+- Link to v2:
+  https://lore.kernel.org/kvm/20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com
+
+Changes in v2:
+- only support vhost-vsock namespaces
+- all g2h namespaces retain old behavior, only common API changes
+  impacted by vhost-vsock changes
+- add /dev/vhost-vsock-netns for "opt-in"
+- leave /dev/vhost-vsock to old behavior
+- removed netns module param
+- Link to v1:
+  https://lore.kernel.org/r/20200116172428.311437-1-sgarzare@redhat.com
+
+Changes in v1:
+- added 'netns' module param to vsock.ko to enable the
+  network namespace support (disabled by default)
+- added 'vsock_net_eq()' to check the "net" assigned to a socket
+  only when 'netns' support is enabled
+- Link to RFC: https://patchwork.ozlabs.org/cover/1202235/
+
+---
+Bobby Eshleman (12):
+      vsock: a per-net vsock NS mode state
+      vsock: add netns to vsock core
+      virtio: set skb owner of virtio_transport_reset_no_sock() reply
+      vsock: add netns support to virtio transports
+      selftests/vsock: add namespace helpers to vmtest.sh
+      selftests/vsock: prepare vm management helpers for namespaces
+      selftests/vsock: add vm_dmesg_{warn,oops}_count() helpers
+      selftests/vsock: use ss to wait for listeners instead of /proc/net
+      selftests/vsock: add tests for proc sys vsock ns_mode
+      selftests/vsock: add namespace tests for CID collisions
+      selftests/vsock: add tests for host <-> vm connectivity with namespaces
+      selftests/vsock: add tests for namespace deletion and mode changes
+
+ MAINTAINERS                             |    1 +
+ drivers/vhost/vsock.c                   |   59 +-
+ include/linux/virtio_vsock.h            |   12 +-
+ include/net/af_vsock.h                  |   57 +-
+ include/net/net_namespace.h             |    4 +
+ include/net/netns/vsock.h               |   17 +
+ net/vmw_vsock/af_vsock.c                |  272 +++++++-
+ net/vmw_vsock/hyperv_transport.c        |    7 +-
+ net/vmw_vsock/virtio_transport.c        |   19 +-
+ net/vmw_vsock/virtio_transport_common.c |   75 ++-
+ net/vmw_vsock/vmci_transport.c          |   26 +-
+ net/vmw_vsock/vsock_loopback.c          |   23 +-
+ tools/testing/selftests/vsock/vmtest.sh | 1077 +++++++++++++++++++++++++++++--
+ 13 files changed, 1522 insertions(+), 127 deletions(-)
+---
+base-commit: 962ac5ca99a5c3e7469215bf47572440402dfd59
+change-id: 20250325-vsock-vmtest-b3a21d2102c2
+prerequisite-message-id: <20251022-vsock-selftests-fixes-and-improvements-v1-0-edeb179d6463@meta.com>
+prerequisite-patch-id: a2eecc3851f2509ed40009a7cab6990c6d7cfff5
+prerequisite-patch-id: 501db2100636b9c8fcb3b64b8b1df797ccbede85
+prerequisite-patch-id: ba1a2f07398a035bc48ef72edda41888614be449
+prerequisite-patch-id: fd5cc5445aca9355ce678e6d2bfa89fab8a57e61
+prerequisite-patch-id: 795ab4432ffb0843e22b580374782e7e0d99b909
+prerequisite-patch-id: 1499d263dc933e75366c09e045d2125ca39f7ddd
+prerequisite-patch-id: f92d99bb1d35d99b063f818a19dcda999152d74c
+prerequisite-patch-id: e3296f38cdba6d903e061cff2bbb3e7615e8e671
+prerequisite-patch-id: bc4662b4710d302d4893f58708820fc2a0624325
+prerequisite-patch-id: f8991f2e98c2661a706183fde6b35e2b8d9aedcf
+prerequisite-patch-id: 44bf9ed69353586d284e5ee63d6fffa30439a698
+prerequisite-patch-id: d50621bc630eeaf608bbaf260370c8dabf6326df
+
+Best regards,
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
-GF: Jochen Jaser, Andrew McDonald, Werner Knoblich, (HRB 36809, AG Nürnberg)
-
+Bobby Eshleman <bobbyeshleman@meta.com>
 
 
