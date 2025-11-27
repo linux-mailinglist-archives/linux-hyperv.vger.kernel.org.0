@@ -1,222 +1,106 @@
-Return-Path: <linux-hyperv+bounces-7861-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7862-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id A333AC8CA61
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Nov 2025 03:20:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 613FCC8CC93
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Nov 2025 05:05:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8CCF04E224D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Nov 2025 02:20:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 18B5A3B0CCB
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Nov 2025 04:05:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C415A24466C;
-	Thu, 27 Nov 2025 02:20:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A2052D2481;
+	Thu, 27 Nov 2025 04:05:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DqVsP5/1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aBBg9IU/"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C6F23ED6A
-	for <linux-hyperv@vger.kernel.org>; Thu, 27 Nov 2025 02:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FCFD3595D;
+	Thu, 27 Nov 2025 04:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764210033; cv=none; b=pgIA7UW/wBwrCD5HVg6RFmUSZfQlQYQz6B3vNHZ7VxnZ7Q3sAr35SbHuAV9Q1JduTNmzroalId2vhvTDv10JbiGoSa6SPbtKNROx6eOBBUHHE16VbyOVCr4zpTQJbUke9QTCDUetOrKE/II5JnEFoCUsfuQLhMm912IjhV1pR3Y=
+	t=1764216343; cv=none; b=CDUySK467ZFa6nGKysd7cuN0YA6dbi76Z6WdHIFSDY21uPeFDurWvOtw94/bcO9RDP4MsVcBJzXfZfgIRLZV9otYVsdaVTT+3rT72kk8jiRY6UKAuoSobjdIHdJnPlQo3pro37RwRXyGGghwNhNRypLsXck2vhaDmaI0Z34GOuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764210033; c=relaxed/simple;
-	bh=O5+FwqoY/zKpG5o8W+7yvGXAPlP0E+ecret6xMCqLzA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tApxV50iEzEOpdL58ZlNrb6dn8M55X0VJmHtyqVxf3QmqltnlSbTZjwnBIf7WL1lVGhatczTNZHQp8BTrCvKF1o/7Tgs+HL4AfusgaSKImR40sxyWiuoMlWvjtsJl5dofDtquMG7ff94rc0uYfIta/AqabxbQrHg+JdvfT8ySqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DqVsP5/1; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-477b198f4bcso1681805e9.3
-        for <linux-hyperv@vger.kernel.org>; Wed, 26 Nov 2025 18:20:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1764210029; x=1764814829; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:date:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K4URCfDbXaJDpqc3Jy/ygM5tnfYeP0a6DjdNrUnYNok=;
-        b=DqVsP5/1cU0UgBXytfZJCMR7JVyL6LKJEnUvhD5SsNp78Oj2kUl775cO9xn5nblNLm
-         SqcnG4a7aPCruqgOMMR1kGd4uvip517CNPJpMmV0C/ogJVwSITCjTWqIwV7SsO7me10o
-         8gfMhs7WXxJ8fk+CQ663gB3yXHp4qlcyAmAqiflp4DUOmyeO907avn7fzdrxi7CqezAE
-         dHOv9/pajYIu1BkXXpGVScKwDNyIaJ46vloWBW/hNdER6fcoTg5pCiZ2SWnINzRkFD4f
-         lSvjKknDVOuAcxiNbBS3OpDqO233o16SvPAPf0Sm7cPju4YlLPrjzqZPXF4zIsDs4fVA
-         gnkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764210029; x=1764814829;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=K4URCfDbXaJDpqc3Jy/ygM5tnfYeP0a6DjdNrUnYNok=;
-        b=RxbpxuhpLa8cyhCU1AZFLWcrIvoltsvQIHQeS3S37k3GNIr10M4U045uVZVKSujytW
-         INEqiyozsU/HeLyhFUhnaub59GiTx1vlBuYoCIhVannPnsXP8vN+5DzDffGkCzrqQWhA
-         wCb396pJPhJirEC9rlJajX5kBmDVy2MZcUrXOF0FF8poxQBUePrkIqvtweB9ilcnBZ4t
-         v+nhFvvBaQELmrHrDLpEZCozFbh1xFhvcuVemYe4Vxr7u3+5U6/+7qyIgT37MrAmyOB5
-         lLWYJK+c+4yfzoLabvEyRwPW+a+gL6UnrE6EYTIdDaKU+Fwo9RIvaNRMT6k7QOiGYV1b
-         HoJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWjgoWekgYVjHlKmQrQmA1hp1vjE9X75Gi4ZQJ79qJuN1NoH9cGL1zNXvHKTTxbCybSCu0xB3JFTI/fgs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYj6uv7MHcJmXK+UXoGe2Y2c/BPpt6Km05/0Tq8u741/X8ro3M
-	DinUN5xE66iom51nRYL0OrIdwE31YtUGSpd6iHZ39Has69oJCE9WDfxYFrmzbtZ581w=
-X-Gm-Gg: ASbGncs0bv8QZBndGuyKJz3+WEXGn8Pveertky3w4JV9iSUAcHj/obJ3D/LPiF/fY81
-	kwn5JehfNmjsDrgCUTT0jqeESLKriCFKpWM+l/1w9K11Zf5RLGIJXVQrpK+Zei6C61CvchCYzQs
-	rHCemw5zU1EVCz16UPWOU2iCLcgmI1yIfAGP1b40cRPUvzBJpZDNSdiUXGk7uMPe56KMRU/FiWa
-	/aFVkzirKaYu9jiZMt6PhHHj5bMVSy1xVeR+/dch8XXrt5PTfeS63US6ltUmJjh8dr3+32TdfwX
-	1XmxMUn3DzLVRflzNQ+d2EFIrQE6i+hHaofnrWGRQPyJbt5CdITABq7eDwtk4jUr9UfAKH6XnZv
-	1EiW+nPEGdsBXsX6kellMQAd9/tZzK112C7rsdjjp4JfGryTwqKZ6BFMdIMk0JaMusBrLt40IOu
-	rK5xb2JFau/qC03wdAMCctfE7vCri8iagq
-X-Google-Smtp-Source: AGHT+IGspC1YV2yyiMXXnAe8/Td7EsFQhaqJU5qYzu5f0NQl+Us+ioM0vDMgGxEbw6PNx9+MNqPMRQ==
-X-Received: by 2002:a05:600c:474b:b0:477:9dc1:b706 with SMTP id 5b1f17b1804b1-477c01b494fmr204934695e9.19.1764210029052;
-        Wed, 26 Nov 2025 18:20:29 -0800 (PST)
-Received: from r1chard (1-169-246-18.dynamic-ip.hinet.net. [1.169.246.18])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3477b20b5d6sm67743a91.6.2025.11.26.18.20.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Nov 2025 18:20:28 -0800 (PST)
-From: Richard Lyu <richard.lyu@suse.com>
-X-Google-Original-From: Richard Lyu <r1chard@r1chard>
-Date: Thu, 27 Nov 2025 10:20:20 +0800
-To: Thomas Zimmermann <tzimmermann@suse.de>, ardb@kernel.org,
-	javierm@redhat.com, arnd@arndb.de, helgaas@kernel.org
-Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v3 0/9] arch,sysfb,efi: Support EDID on non-x86 EFI
- systems
-Message-ID: <aSe1ZBXa3JBidhem@r1chard>
-References: <20251126160854.553077-1-tzimmermann@suse.de>
+	s=arc-20240116; t=1764216343; c=relaxed/simple;
+	bh=ngfO4JdLWiXUNR+lbSQDH07CvdmvNAc4Esy3trJSZYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=p/jQBjtMmetfVNQpO1imIntgyF+s1f1vElcvNMp2S0iBdnsAfGQ2z6tQbXQmjfE+f9Fi4oO1xsn2LubNDD03xq7QTs2lF8ujYdtK02brJ6mM7UkJcsV195Puz2WLZbLhCMyQ2sxxfHurWyZ1R6e8+iXgTNwbLaQbl0Qm1ITEUCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aBBg9IU/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55022C4CEF8;
+	Thu, 27 Nov 2025 04:05:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764216343;
+	bh=ngfO4JdLWiXUNR+lbSQDH07CvdmvNAc4Esy3trJSZYM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=aBBg9IU/SdfDU/VUSINnIwuz3NItEv8TvI/efpdI7lT9AlmfpXzlkGF4d8+TnAZTP
+	 3fW3jYxFYOHeDxcfMqmcjvJShrJSURqktJsS5m7ercDz1ksUHbxla3EuVUQeJuoBXZ
+	 aQCj+KD2bMB6aww72EdN9tATqFd8lsGnYuNwPs2WaMsVYX8WItwSzPllBGY3tUprw8
+	 PGKuWrg5yBVFLAxOpkovq1SwpFACY8IS2hP7g4fcPXUjxS3zSs9VCIEmCQCw4a4dFa
+	 vvgBQwWdJC0HQdpP13Ry54BVRbCFg+0VV4SAg7cWbYkmMxqxj2iYYFxSMp5aJbvfL1
+	 rV/gRl8t6gZQA==
+Date: Wed, 26 Nov 2025 20:05:41 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, longli@microsoft.com,
+ kotaranov@microsoft.com, horms@kernel.org,
+ shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
+ ernis@linux.microsoft.com, shirazsaleem@microsoft.com,
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+ dipayanroy@microsoft.com
+Subject: Re: [PATCH net-next, v4] net: mana: Implement ndo_tx_timeout and
+ serialize queue resets per port.
+Message-ID: <20251126200541.00e5270f@kernel.org>
+In-Reply-To: <20251123180818.GA18398@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20251123180818.GA18398@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251126160854.553077-1-tzimmermann@suse.de>
-User-Agent: Mutt/2.2.13 (2024-03-09)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Thomas,
+On Sun, 23 Nov 2025 10:08:18 -0800 Dipayaan Roy wrote:
+> Implement .ndo_tx_timeout for MANA so any stalled TX queue can be detected
+> and a device-controlled port reset for all queues can be scheduled to a
+> ordered workqueue. The reset for all queues on stall detection is
+> recomended by hardware team.
+> 
+> The change introduces a single ordered workqueue
+> "mana_per_port_queue_reset_wq" queuing one work_struct per port,
+> using WQ_UNBOUND | WQ_MEM_RECLAIM so stalled queue reset work can
+> run on any CPU and still make forward progress under memory
+> pressure.
 
-I am attempting to test this patch series but encountered merge conflicts when applying it to various trees.
-Could you please clarify the specific base commit (or branch/tag) this series was generated against?
+And we need to be able to reset the NIC queue under memory pressure
+because.. ?  I could be wrong but I still find this unusual / defensive
+programming, if you could point me at some existing drivers that'd help.
 
-When testing on the next branch on commits 7a2ff00 and e41ef37, I hit a conflict on PATCH v3 4/9:
-patching file drivers/pci/vgaarb.c
-Hunk #2 FAILED at 557.
-1 out of 2 hunks FAILED -- rejects in file drivers/pci/vgaarb.c
+> @@ -3287,6 +3341,7 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
+>  	ndev->min_mtu = ETH_MIN_MTU;
+>  	ndev->needed_headroom = MANA_HEADROOM;
+>  	ndev->dev_port = port_idx;
+> +	ndev->watchdog_timeo = 15 * HZ;
 
-When testing against 3a86608 (Linux 6.18-rc1), the following conflicts occurred:
-patching file drivers/gpu/drm/sysfb/efidrm.c
-Hunk #1 FAILED at 24.
-1 out of 2 hunks FAILED -- rejects in file drivers/gpu/drm/sysfb/efidrm.c
-patching file drivers/gpu/drm/sysfb/vesadrm.c
-Hunk #1 FAILED at 25.
-1 out of 2 hunks FAILED -- rejects in file drivers/gpu/drm/sysfb/vesadrm.c
+5 sec is typical, off the top of my head
 
-Please let me know the correct base, and I will retest.
+> @@ -3647,6 +3717,11 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+>  		free_netdev(ndev);
+>  	}
+>  
+> +	if (ac->per_port_queue_reset_wq) {
+> +		destroy_workqueue(ac->per_port_queue_reset_wq);
+> +		ac->per_port_queue_reset_wq = NULL;
+> +	}
 
-Thanks,
-Richard Lyu
-
-On 2025/11/26 17:03, Thomas Zimmermann wrote:
-> Replace screen_info and edid_info with sysfb_primary_device of type
-> struct sysfb_display_info. Update all users. Then implement EDID support
-> in the kernel EFI code.
-> 
-> Sysfb DRM drivers currently fetch the global edid_info directly, when
-> they should get that information together with the screen_info from their
-> device. Wrapping screen_info and edid_info in sysfb_primary_display and
-> passing this to drivers enables this.
-> 
-> Replacing both with sysfb_primary_display has been motivate by the EFI
-> stub. EFI wants to transfer EDID via config table in a single entry.
-> Using struct sysfb_display_info this will become easily possible. Hence
-> accept some churn in architecture code for the long-term improvements.
-> 
-> Patches 1 and 2 reduce the exposure of screen_info in EFI-related code.
-> 
-> Patch 3 adds struct sysfb_display_info.
-> 
-> Patch 4 replaces scren_info with sysfb_primary_display. This results in
-> several changes throught the kernel, but is really just a refactoring.
-> 
-> Patch 5 updates sysfb to transfer sysfb_primary_display to the related
-> drivers.
-> 
-> Patch 6 moves edid_info into sysfb_primary_display. This resolves some
-> drivers' reference to the global edid_info, but also makes the EDID data
-> available on non-x86 architectures.
-> 
-> Patches 7 and 8 add support for EDID transfers on non-x86 EFI systems.
-> 
-> Patch 9 cleans up the config-table allocation to be easier to understand.
-> 
-> v3:
-> - replace SCREEN_INFO table entry (Ard)
-> - merge libstub patch into kernel patch
-> v2:
-> - combine v1 of the series at [1] plus changes from [2] and [3].
-> 
-> [1] https://lore.kernel.org/dri-devel/20251121135624.494768-1-tzimmermann@suse.de/
-> [2] https://lore.kernel.org/dri-devel/20251015160816.525825-1-tzimmermann@suse.de/
-> [3] https://lore.kernel.org/linux-efi/20251119123011.1187249-5-ardb+git@google.com/
-> 
-> Thomas Zimmermann (9):
->   efi: earlycon: Reduce number of references to global screen_info
->   efi: sysfb_efi: Reduce number of references to global screen_info
->   sysfb: Add struct sysfb_display_info
->   sysfb: Replace screen_info with sysfb_primary_display
->   sysfb: Pass sysfb_primary_display to devices
->   sysfb: Move edid_info into sysfb_primary_display
->   efi: Refactor init_primary_display() helpers
->   efi: Support EDID information
->   efi: libstub: Simplify interfaces for primary_display
-> 
->  arch/arm64/kernel/image-vars.h                |  2 +-
->  arch/loongarch/kernel/efi.c                   | 38 ++++-----
->  arch/loongarch/kernel/image-vars.h            |  2 +-
->  arch/riscv/kernel/image-vars.h                |  2 +-
->  arch/x86/kernel/kexec-bzimage64.c             |  4 +-
->  arch/x86/kernel/setup.c                       | 16 ++--
->  arch/x86/video/video-common.c                 |  4 +-
->  drivers/firmware/efi/earlycon.c               | 42 +++++-----
->  drivers/firmware/efi/efi-init.c               | 46 ++++++-----
->  drivers/firmware/efi/efi.c                    |  4 +-
->  drivers/firmware/efi/libstub/Makefile         |  2 +-
->  drivers/firmware/efi/libstub/efi-stub-entry.c | 36 +++++++--
->  drivers/firmware/efi/libstub/efi-stub.c       | 49 +++++++----
->  drivers/firmware/efi/libstub/efistub.h        |  7 +-
->  .../firmware/efi/libstub/primary_display.c    | 41 ++++++++++
->  drivers/firmware/efi/libstub/screen_info.c    | 53 ------------
->  drivers/firmware/efi/libstub/zboot.c          |  6 +-
->  drivers/firmware/efi/sysfb_efi.c              | 81 ++++++++++---------
->  drivers/firmware/sysfb.c                      | 13 +--
->  drivers/firmware/sysfb_simplefb.c             |  2 +-
->  drivers/gpu/drm/sysfb/efidrm.c                | 14 ++--
->  drivers/gpu/drm/sysfb/vesadrm.c               | 14 ++--
->  drivers/hv/vmbus_drv.c                        |  6 +-
->  drivers/pci/vgaarb.c                          |  4 +-
->  drivers/video/Kconfig                         |  8 +-
->  drivers/video/fbdev/core/fbmon.c              |  8 +-
->  drivers/video/fbdev/efifb.c                   | 10 ++-
->  drivers/video/fbdev/vesafb.c                  | 10 ++-
->  drivers/video/fbdev/vga16fb.c                 |  8 +-
->  drivers/video/screen_info_pci.c               |  5 +-
->  include/linux/efi.h                           |  9 ++-
->  include/linux/screen_info.h                   |  2 -
->  include/linux/sysfb.h                         | 23 ++++--
->  include/video/edid.h                          |  4 -
->  34 files changed, 321 insertions(+), 254 deletions(-)
->  create mode 100644 drivers/firmware/efi/libstub/primary_display.c
->  delete mode 100644 drivers/firmware/efi/libstub/screen_info.c
-> 
-> 
-> base-commit: d724c6f85e80a23ed46b7ebc6e38b527c09d64f5
-> -- 
-> 2.51.1
-> 
+I think you're missing this cleanup in the failure path of mana_probe
+-- 
+pw-bot: cr
 
