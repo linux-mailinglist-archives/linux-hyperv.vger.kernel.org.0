@@ -1,247 +1,200 @@
-Return-Path: <linux-hyperv+bounces-7863-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7864-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2300FC8CDEA
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Nov 2025 06:26:53 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39013C8CEAF
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Nov 2025 07:27:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF9F23AD9FB
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Nov 2025 05:26:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0F103AB835
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Nov 2025 06:27:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE2E91EA7CC;
-	Thu, 27 Nov 2025 05:26:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10ADD2D8393;
+	Thu, 27 Nov 2025 06:27:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hexbites.dev header.i=@hexbites.dev header.b="IMHFGSuL"
+	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="GOt4N6OM"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mout-y-111.mailbox.org (mout-y-111.mailbox.org [91.198.250.236])
+Received: from sender3-of-o54.zoho.com (sender3-of-o54.zoho.com [136.143.184.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C832C8F4A;
-	Thu, 27 Nov 2025 05:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.198.250.236
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764221210; cv=none; b=rJzQpLQH6YdTwggfx/RME1HwgPMsj8Jq2wTTR1ww1k3HQBlCmfnlBp8evVDWcSYTAkkm2myUN7wgXGXTkoD6IsPw/l3c0rg3f+VgTh6yrGrmfU/hrPR+4oy0gLCER8AxwaMFq/VvOzKUavashzu9TA3PT+mID/eUz0ThX4yGnMo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764221210; c=relaxed/simple;
-	bh=/GER6qx6PTvc64ZKpqAzaD29rdaOtTO+szsW/UovgRk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R9EVwktkUQRni5qCKoV0NSmlgrdNIVuGewo2heLv6ncPd5BvpFAoY7s3OmalgDIpA/IUAzqsKiAFcW3FEm8GISYeXDABrxVevGPmhV1TSy0hdR504XiEwMFJ9k19nuRBC/iA3SeZ0oBve0DN/FMa9bgZRNGJx63txS/OBa5QtcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hexbites.dev; spf=pass smtp.mailfrom=hexbites.dev; dkim=pass (2048-bit key) header.d=hexbites.dev header.i=@hexbites.dev header.b=IMHFGSuL; arc=none smtp.client-ip=91.198.250.236
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hexbites.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hexbites.dev
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-y-111.mailbox.org (Postfix) with ESMTPS id 4dH4RM61x7z9ypV;
-	Thu, 27 Nov 2025 06:16:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hexbites.dev;
-	s=MBO0001; t=1764220607;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=h3crp1oAMGcLM/mqJd/tUs0ah6/JZWuP7G4VEK1d0n4=;
-	b=IMHFGSuLUkl4sELUttdcrtjPwzri5P67OEO0RCwD658lvRzQISogpAuKVun7ZFRTWcXMS/
-	A1QqCGLd15I8RsivqqODa0JXFtGYHUN3NnSfxWvvg0nvhqVnBbj5KsDvPKq5suq+qsvlHf
-	Gjwrucn+XhhvyIWNJr4/h0675tIBGgerSQuYxN6I526x1JZCu8JtYAMWpuPARC0nID4Giz
-	MoNmmbwJ2OWcVG7AT75Z0j8fWguQ5VFBRMNg2fBi8WqkaCy+R+5wRYe3m/oo01YYqSrvQv
-	u8yqb3+QNAggCnSmbRVRKjlDedI4PoOtGgYd5x053XX/7LzpLzoxzJ3D+9qI2g==
-Authentication-Results: outgoing_mbo_mout;
-	dkim=none;
-	spf=pass (outgoing_mbo_mout: domain of vdso@hexbites.dev designates 2001:67c:2050:b231:465::102 as permitted sender) smtp.mailfrom=vdso@hexbites.dev
-From: vdso@hexbites.dev
-To: ltykernel@gmail.com
-Cc: decui@microsoft.com,
-	haiyangz@microsoft.com,
-	kys@microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	longli@microsoft.com,
-	tiala@microsoft.com,
-	vdso@hexbites.dev,
-	wei.liu@kernel.org
-Subject: Re: [RFC PATCH] Drivers: hv: Confidential VMBus exernal memory support
-Date: Wed, 26 Nov 2025 21:15:59 -0800
-Message-ID: <20251127051559.60238-1-vdso@hexbites.dev>
-In-Reply-To: <20251124182920.9365-1-tiala@microsoft.com>
-References: <20251124182920.9365-1-tiala@microsoft.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FFD4A0C;
+	Thu, 27 Nov 2025 06:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764224832; cv=pass; b=EX0ylAJ13wacX3p1wy7XtChQkwh7dcgOaXpoNLnBMvsVWiTFLa7MsaLX3TcJ4aVNxbMLUEXZDNk9QYvsTjXUdLezl5JQzD9+YAjPkagImp0TvEQOJltGqPYlirvi6pUoxdkl3RDwjVtNlhcxSKJzfSUh4C2oH5JZJXoMlwaSvmM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764224832; c=relaxed/simple;
+	bh=gdBinVxQsbFZOHfBQ40vtQyAZxxJI3gz5alE10yUZCM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QTy+C0BQlreG4Hg7GNP3zOznWQWxHg87aY4hmUgkQx4AUiDTdw8eUzvH+J+EnOi5T0FZ8Vi3hAVvTT8v7xtWArDiFq6KFayEzyMTpu+qzsovIIX3nch/rbYhmqNfDQygi2Npuvp8kdm2QWKwiIcSEWJoGSm2qxoMn3gOiHbJHRk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=GOt4N6OM; arc=pass smtp.client-ip=136.143.184.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
+ARC-Seal: i=1; a=rsa-sha256; t=1764224786; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=dE3lq7tv3WQRQfECKsEi0hDF4pwVV163Ye3Z1xfhudGgqBuQM0UqaAprpuKtXfRpPKUJDz1Abug7/uXKgO+5U/7hEBsQiOjN2FGoapLQe0I7OfB00Ht8Q2f+cdVVcxH7RdyGXmAUhCFsn75OQX6gX/tBubpoqrQbUUEBikhDD6Q=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1764224786; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=xO3M9bvoRJsOaEEeuSrleP65nQq5qE6zfFwVwcTwieI=; 
+	b=ZBWfA8pCpGTm0dpkMRTefwIlntWw5EcPAVSUU/T9osBHUdFO8OaQjsNb5KpOKw566hGCTBZlrvbklJe7lDbP6QPSCW/8UctpE7O91NJOJNgBFksDrIPhYy3PSdNTkTB9wgswpVEFXdy2eq5+qLNSVSt5eUIglR1WsRRx+/GHOts=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=anirudhrb.com;
+	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
+	dmarc=pass header.from=<anirudh@anirudhrb.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1764224786;
+	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=xO3M9bvoRJsOaEEeuSrleP65nQq5qE6zfFwVwcTwieI=;
+	b=GOt4N6OMOHfzkAK0kZCguNHuDlcLhKDVb7Q7QLg6N+VwKHJoIV9GoD9BnCn0H7uV
+	uUBgeKT+epT9Kg4+V76ysHCTPFlcH/lOJaOJ3RjR4hClbcvbduvNervAYHcnqlwdVzy
+	Y9Sj76CLyw2McOIzdviaWLHGUKW1VpH5icW2Cp+A=
+Received: by mx.zohomail.com with SMTPS id 1764224784283849.3243083730232;
+	Wed, 26 Nov 2025 22:26:24 -0800 (PST)
+Date: Thu, 27 Nov 2025 06:26:16 +0000
+From: Anirudh Rayabharam <anirudh@anirudhrb.com>
+To: Marc Zyngier <maz@kernel.org>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com, catalin.marinas@arm.com,
+	will@kernel.org, tglx@linutronix.de, Arnd Bergmann <arnd@arndb.de>,
+	akpm@linux-foundation.org, agordeev@linux.ibm.com,
+	guoweikang.kernel@gmail.com, osandov@fb.com, bsz@amazon.de,
+	linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH 2/3] irqchip/gic-v3: allocate one SGI for MSHV
+Message-ID: <aSfvCBYySLGpyk1L@anirudh-surface.localdomain>
+References: <20251125170124.2443340-1-anirudh@anirudhrb.com>
+ <20251125170124.2443340-3-anirudh@anirudhrb.com>
+ <86bjkqq9dp.wl-maz@kernel.org>
+ <aSa_rxG80LDXDlhr@anirudh-surface.localdomain>
+ <86a509qi8p.wl-maz@kernel.org>
+ <aSbahzqu_3GN-PPJ@anirudh-surface.localdomain>
+ <87bjkofpsc.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4dH4RM61x7z9ypV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87bjkofpsc.wl-maz@kernel.org>
+X-ZohoMailClient: External
 
-From: Roman Kisel <vdso@hexbites.dev>
+On Wed, Nov 26, 2025 at 09:27:15PM +0000, Marc Zyngier wrote:
+> On Wed, 26 Nov 2025 10:46:31 +0000,
+> Anirudh Rayabharam <anirudh@anirudhrb.com> wrote:
+> > 
+> > On Wed, Nov 26, 2025 at 09:02:30AM +0000, Marc Zyngier wrote:
+> > > On Wed, 26 Nov 2025 08:51:59 +0000,
+> > > Anirudh Rayabharam <anirudh@anirudhrb.com> wrote:
+> > > > 
+> > > > On Tue, Nov 25, 2025 at 06:01:38PM +0000, Marc Zyngier wrote:
+> > > > > On Tue, 25 Nov 2025 17:01:23 +0000,
+> > > > > Anirudh Raybharam <anirudh@anirudhrb.com> wrote:
+> > > > > > 
+> > > > > > From: Anirudh Rayabharam <anirudh@anirudhrb.com>
+> > > > > > 
+> > > > > > From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> > > > > > 
+> > > > > > Currently SGIs are allocated only for the smp subsystem. The MSHV
+> > > > > > (Microsoft Hypervisor aka Hyper-V) code also needs an SGI that can be
+> > > > > > programmed into the SYNIC to receive intercepts from the hypervisor. The
+> > > > > > hypervisor would then assert this SGI whenever there is a guest
+> > > > > > VMEXIT.
+> > > > > > 
+> > > > > > Allocate one SGI for MSHV use in addition to the SGIs allocated for
+> > > > > > IPIs. When running under MSHV, the full SGI range can be used i.e. no
+> > > > > > need to reserve SGIs 8-15 for the secure firmware.
+> > > > > > 
+> > > > > > Since this SGI is needed only when running as a parent partition (i.e.
+> > > > > > we can create guest partitions), check for it before allocating an SGI.
+> > > > > 
+> > > > > Sorry, but that's not an acceptable situation.
+> > > > > 
+> > > > > SGIs are for Linux to use, nobody else, and that allocation must be
+> > > > 
+> > > > Why does this restriction exist? In the code SGIs 8-15 are left for
+> > > > secure firmware. So, things other than Linux can use SGIs. Why not MSHV
+> > > > then?
+> > > 
+> > > Because SGIs are for *internal* usage. Not usage from another random
+> > > piece of SW. The ACPI tables explicitly don't describe SGIs. DT
+> > > explicitly don't describe SGIs. Do you get the clue?
+> > 
+> > The name Software Generated Interrupts suggests that it is supposed to be
+> > used by pieces of SW.
+> 
+> I'm so glad you spell it out for me, I had no idea. I can't help but
+> notice that it is not called SGIFRPOSIDKA (Software Generated
+> Interrupt From Random Piece Of Software I Don't Know About).
 
-Tianyu Lan wrote:
+Haha.
 
-> In CVM(Confidential VM), system memory is encrypted
-> by default. Device drivers typically use the swiotlb
-> bounce buffer for DMA memory, which is decrypted
-> and shared between the guest and host. Confidential
-> Vmbus, however, supports a confidential channel
-> that employs encrypted memory for the Vmbus ring
-> buffer and external DMA memory. The support for
-> the confidential ring buffer has already been
-> integrated.
->
-> In CVM, device drivers usually employ the standard
-> DMA API to map DMA memory with the bounce buffer,
-> which remains transparent to the device driver.
-> For external DMA memory support, Hyper-V specific
-> DMA operations are introduced, bypassing the bounce
-> buffer when the confidential external memory flag
-> is set. These DMA operations might also be reused
-> for TDISP devices in the future, which also support
-> DMA operations with encrypted memory.
->
-> The DMA operations used are global architecture
-> DMA operations (for details, see get_arch_dma_ops()
-> and get_dma_ops()), and there is no need to set up
-> for each device individually.
->
-> Signed-off-by: Tianyu Lan <tiala@microsoft.com>
+> 
+> Linux owns the SGIs, full stop. If you want to generate interrupts
+> from outside of Linux, use a standard interrupts. Not rocket science.
+> 
+> > Yes, ACPI/DT don't describe SGIs because they're not supposed to be used
+> > by devices. SW has full control over SGIs and it is up to the SW to
+> > assign meaning to them, isn't it?
+> 
+> No. It means that a single *consistent* software agent *owns* these
+> interrupts and doesn't have to let *anyone* else use them from outer
+> space.
 
-Tinayu,
+Okay, got it.
 
-Looks great to me!
+> 
+> > > > > the same irrespective of whether Linux runs virtualised or not. This
+> > > > > also won't work with GICv5 (there are no SGIs at all), so this is
+> > > > > doomed from the very start, and would immediately create technical
+> > > > > debt.
+> > > > 
+> > > > Hyper-V always presents a GICv3 so we don't need to worry about GICv5.
+> > > 
+> > > Well, that's pretty short sighted of you, and eventually you'll have
+> > > to support it, or just die. So do the right thing from the beginning.
+> > 
+> > Well, we don't when or if that will happen. But if it does happen, we
+> > can solve it in a way that makes sense for GICv5. If there are no SGIs
+> > at all, great, maybe we'll have a nicer solution then.
+> 
+> Great. See you then. In the meantime, I have no interest in this sort
+> of sorry hacks polluting the stuff I maintain.
+> 
+> > > > > If you want to signal an interrupt to Linux, expose a device with an
+> > > > > interrupt in a firmware table (i.e. not an SGI), and use that in your
+> > > > > driver.
+> > > > 
+> > > > You mean in the ACPI tables? That would require us to modify the
+> > > > firmware to expose this virtual device right?
+> > > 
+> > > Yes. How is that surprising?
+> > 
+> > It's not ideal that we would need some custom firmware to run Linux on
+> > MSHV (as a parent). Do you think there could be some other possible solution
+> > for handling this in the kernel? Maybe by thinking of it as a platform specific
+> > quirk or something?
+> 
+> You either do it the *correct* way, by exposing a virtual device, with
+> an edge-triggered PPI, just like other hypervisors have done, or you
+> keep your toy to yourself.  It is that simple. We don't have to accept
+> ugly crap in Linux just for the sake of you not having to do the right
+> thing in your firmware.
+> 
+> Feel free to post a new series once you have something that matches
+> the above expectations.
 
-Reviewed-by: Roman Kisel <vdso@hexbites.dev>
+Okay got it, I'll come up with a series that reads PPIs from ACPI.
 
-P.S. For the inclined reader, here is how the old, only for
-storage and not satisfactory in other ways my attempt to solve this:
+Thanks for your feedback!
 
-https://lore.kernel.org/linux-hyperv/20250409000835.285105-6-romank@linux.microsoft.com/
-https://lore.kernel.org/linux-hyperv/20250409000835.285105-7-romank@linux.microsoft.com/
+Anirudh.
 
-Maybe it'd be a good idea to CC folks who provided feedback back then.
-
-> ---
->  drivers/hv/vmbus_drv.c | 90 +++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 89 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 0dc4692b411a..ca31231b2c32 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -39,6 +39,9 @@
->  #include <clocksource/hyperv_timer.h>
->  #include <asm/mshyperv.h>
->  #include "hyperv_vmbus.h"
-> +#include "../../kernel/dma/direct.h"
-> +
-> +extern const struct dma_map_ops *dma_ops;
->
->  struct vmbus_dynid {
->  	struct list_head node;
-> @@ -1429,6 +1432,88 @@ static int vmbus_alloc_synic_and_connect(void)
->  	return -ENOMEM;
->  }
->
-> +
-> +static bool hyperv_private_memory_dma(struct device *dev)
-> +{
-> +	struct hv_device *hv_dev = device_to_hv_device(dev);
-> +
-> +	if (hv_dev && hv_dev->channel && hv_dev->channel->co_external_memory)
-> +		return true;
-> +	else
-> +		return false;
-> +}
-> +
-> +static dma_addr_t hyperv_dma_map_page(struct device *dev, struct page *page,
-> +		unsigned long offset, size_t size,
-> +		enum dma_data_direction dir,
-> +		unsigned long attrs)
-> +{
-> +	phys_addr_t phys = page_to_phys(page) + offset;
-> +
-> +	if (hyperv_private_memory_dma(dev))
-> +		return __phys_to_dma(dev, phys);
-> +	else
-> +		return dma_direct_map_phys(dev, phys, size, dir, attrs);
-> +}
-> +
-> +static void hyperv_dma_unmap_page(struct device *dev, dma_addr_t dma_handle,
-> +		size_t size, enum dma_data_direction dir, unsigned long attrs)
-> +{
-> +	if (!hyperv_private_memory_dma(dev))
-> +		dma_direct_unmap_phys(dev, dma_handle, size, dir, attrs);
-> +}
-> +
-> +static int hyperv_dma_map_sg(struct device *dev, struct scatterlist *sgl,
-> +		int nelems, enum dma_data_direction dir,
-> +		unsigned long attrs)
-> +{
-> +	struct scatterlist *sg;
-> +	dma_addr_t dma_addr;
-> +	int i;
-> +
-> +	if (hyperv_private_memory_dma(dev)) {
-> +		for_each_sg(sgl, sg, nelems, i) {
-> +			dma_addr = __phys_to_dma(dev, sg_phys(sg));
-> +			sg_dma_address(sg) = dma_addr;
-> +			sg_dma_len(sg) = sg->length;
-> +		}
-> +
-> +		return nelems;
-> +	} else {
-> +		return dma_direct_map_sg(dev, sgl, nelems, dir, attrs);
-> +	}
-> +}
-> +
-> +static void hyperv_dma_unmap_sg(struct device *dev, struct scatterlist *sgl,
-> +		int nelems, enum dma_data_direction dir, unsigned long attrs)
-> +{
-> +	if (!hyperv_private_memory_dma(dev))
-> +		dma_direct_unmap_sg(dev, sgl, nelems, dir, attrs);
-> +}
-> +
-> +static int hyperv_dma_supported(struct device *dev, u64 mask)
-> +{
-> +	dev->coherent_dma_mask = mask;
-> +	return 1;
-> +}
-> +
-> +static size_t hyperv_dma_max_mapping_size(struct device *dev)
-> +{
-> +	if (hyperv_private_memory_dma(dev))
-> +		return SIZE_MAX;
-> +	else
-> +		return swiotlb_max_mapping_size(dev);
-> +}
-> +
-> +const struct dma_map_ops hyperv_dma_ops = {
-> +	.map_page               = hyperv_dma_map_page,
-> +	.unmap_page             = hyperv_dma_unmap_page,
-> +	.map_sg                 = hyperv_dma_map_sg,
-> +	.unmap_sg               = hyperv_dma_unmap_sg,
-> +	.dma_supported          = hyperv_dma_supported,
-> +	.max_mapping_size	= hyperv_dma_max_mapping_size,
-> +};
-> +
->  /*
->   * vmbus_bus_init -Main vmbus driver initialization routine.
->   *
-> @@ -1479,8 +1564,11 @@ static int vmbus_bus_init(void)
->  	 * doing that on each VP while initializing SynIC's wastes time.
->  	 */
->  	is_confidential = ms_hyperv.confidential_vmbus_available;
-> -	if (is_confidential)
-> +	if (is_confidential) {
-> +		dma_ops = &hyperv_dma_ops;
->  		pr_info("Establishing connection to the confidential VMBus\n");
-> +	}
-> +
->  	hv_para_set_sint_proxy(!is_confidential);
->  	ret = vmbus_alloc_synic_and_connect();
->  	if (ret)
-> --
-> 2.50.1
+> 
+> 	M.
+> 
+> -- 
+> Jazz isn't dead. It just smells funny.
 
