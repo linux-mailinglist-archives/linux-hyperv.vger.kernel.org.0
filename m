@@ -1,133 +1,136 @@
-Return-Path: <linux-hyperv+bounces-7899-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7900-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 218E4C92D2A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Nov 2025 18:47:16 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13667C938BD
+	for <lists+linux-hyperv@lfdr.de>; Sat, 29 Nov 2025 07:48:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B4BC93A8CEE
-	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Nov 2025 17:47:14 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id ADA944E033E
+	for <lists+linux-hyperv@lfdr.de>; Sat, 29 Nov 2025 06:48:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C594F288535;
-	Fri, 28 Nov 2025 17:47:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 800F92264DC;
+	Sat, 29 Nov 2025 06:48:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Q/QfJ7pD"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="mUD8tU3K"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazolkn19013083.outbound.protection.outlook.com [52.103.14.83])
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azolkn19010021.outbound.protection.outlook.com [52.103.23.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B62B285406;
-	Fri, 28 Nov 2025 17:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.14.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C20422154B;
+	Sat, 29 Nov 2025 06:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.23.21
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764352032; cv=fail; b=jvjEGu45IL2yBTGCchzJngTo3SIV/Q/r6sYwFraNvm5U/H/fC1IhxC99P68CW6CjRStBkYhGfCzxjqBCgm3Nfm4WrPxwmea2oT//5nZgN7iJaxAScusvwss2lN93oq9tCzVpd/EZ3HzRW22OWNgP+rQMElkkqdLgBekYMQTjXd8=
+	t=1764398920; cv=fail; b=jgn+Qo0M8BbntIEri6sid7gIkPBv5DVkqsZMjIZz83qKrhnUmGlZ8C9DrgssvFu7U/oSV7zzotYZzUAzxUP3qcEw7PCMpPMUpM4nKE73XzsSGL3LmFrEnxzDx3bUiV6XhEXMW6WhmlMEcGaJ30tcYqaeAcraqlu49E8YOobwbVo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764352032; c=relaxed/simple;
-	bh=8y30V/JrPiezWx5KpZNJTE6JrOyHhGIzzP46LmVWEXI=;
+	s=arc-20240116; t=1764398920; c=relaxed/simple;
+	bh=vTjjjZ9baRbJ2sP7iZ9rKL0TSIJP+R0cY3lwUodM50w=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=BaYfeeZVSY3iYXUlUmyg9NXZF/MjzZIcXqyJwDN2fOEsuBW9Q5Q918SlJWa6sOP8kbrgyMsEOvxGkrrFbVOJdpWznTA9ntM30dayURpW2DFSrCJHuFo04eFimd5KOeDLb4Q73/Tgv2liLXYGj/70kLVmSqXBIrxnsXGR/K/L3us=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Q/QfJ7pD; arc=fail smtp.client-ip=52.103.14.83
+	 Content-Type:MIME-Version; b=XW5jyP0K/42YVW7K8KZfeVgYjkSbJApLYSRsueNYG5uOOZfNwbUk3X89lSKlwci/4NBZrMX22xhW0HI8Niue4nwFlMVsbaEmij4ies+Im0PFPDZVDWP4g63GR9NnjTk6/n+ObA/wSnlh9ct5cO/IHopABlntjq85mjsMXsw4nCU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=mUD8tU3K; arc=fail smtp.client-ip=52.103.23.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ejS9fpLjp68WU7FmvGOiPOphiLVC+xtl4C9yaV+stBw4OMo4Vzk5sogUeLR6hvWGWoZed8NkK4UNeu15oMV2dhBGHfCZmoXluV9gPYXpf0+iqaoSWGLJzK2pAs6jpa59bjSDRr+I2V5ngykc/AGO6cuLaU/31K/uEX9xlFVRtWqK44UMVDIBfPkMQV1JswPFrF6UAGxeBIbbQxr9hl5bp8agu0m54fRUYbi1GtJlTKC09ZL3ewG220G0UMzte3LPB6hrAykNTSOfU/4gSOPHLrMxYlqjsF15z/rjyMLiCHOp01qO9+wdBMRz0Emetd87higOpJd+VPOqp18MwkGr3Q==
+ b=m0k2R7fGz/HS9SBR/Nu77I1EefL6zMYEqwQqCs3ex4VhLAFM/luFsKwlgHgPhGgO+/RqxNAveM05j0AyK6ELlBkKa11059TPplBAEpSJ6rsvZLm7Pash81v/WfgrEuQftukiZRuSd9vmZG9kxGFPr9qRNF4G07iHZXCuMPAUxIvUAYUSWMCxLhVnBQnD65AvE4ObXvq92Rs7kQiWZN3yvKQrMZnz+QsRhU5cTRKGNrGmnCbVWi7NduhGmOTO/aXUubqhKJIGFM4wDKNQt3dKIk8kcEn8pIpRiuVmQxAc1KL1zJWBfBzNd0IbTFl/LKeK35z2je8zI3/wogG5b43/tw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tUDUMvIkyqBtAZTP4q6XxptOhqU7Uc7OFBIKqSgMEX4=;
- b=lHNQWxA4jpfrxPMg+sD9w89BPGdCVXkO17QC8ywQE74qi2ahVK0XRE3ZFwqtmX6RoIhxjuENQx7nlEBVTkvoq4wCC/oBCUe6/lQb/1dBorVuaVc+qipotVV8imrYmsZZWhdwqETzZkrk+U5bJahfw464wsA3TnYRO5Y4ZpGDqrJ7m8vOs3zA82lhaMx9OlTNn0+FmxC36YQIx1ZGOSZwRRSajsTH6nSdkj0F5C0KW2ZmBnDhUU7SvNqVKzytV12GyBaSFHMvw2Rugaf0T3hybwaHKr6D5f9lE+ZEG484O4i4qNRpGOVINBcmyvtGagpYj4fb4mJtr2Q8RFSMM8XoMQ==
+ bh=wkv+RbdrTIn4E5TA/ldArwN8eORktzMVaZ+suyTJIZU=;
+ b=uk0jyEN6ACxeOnWu0igxfeQlKzDIhYI5oDxxUQlsd0HZvi5UX8vr+MEIE/A+TMtZTHLCJlcdIOYPHlYvPh2kbD2Oy0bBS//eK4wUz4/kMchCyfIjtaVkZBHkOQWurtF0H9Vsz7PAxNz8DqR8mn/tu66wc1kTskFmfos51glIJF15D6g2ono0D632qSoXt1Y4jOGSGB3AXDzn46D/73N5tQOOdCi+ARZvquNtoj6Acqw+B7ZY/e1TQo7p822GDdljkvvxqVUqOfYTiZ6O/oVoQ/Bv9v5uevaC5y1bvhtQni1HYxnYqlQgZJxZnSEArXFxjqq5ayfX+GEcrB0SHQnkcQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tUDUMvIkyqBtAZTP4q6XxptOhqU7Uc7OFBIKqSgMEX4=;
- b=Q/QfJ7pDtWxQ/qfGBzYUbjIJ9+m3LLMtDJB+b/OFSaA80ROdXnLiss7yFhfXZ4FQNEGruvBgasplvOwLPJES/5o33OtlDglfuiabQkkZTQ8DzEgEHhNl8hmigUIfeT1cbCSMOzR5VuLoEeeb4FKwo7hXdcIOeMHDHhlc7C2JzSTsW3HzMbthv7Tw57VJGOY/6myfQKoU6CD33inKPz9rPu6pbQYbnwUm1xK2GoFtRCwzxemyfZsV+z2jnaIv6DZ9stkLdKrUP5Vuo3GMQllUwmpvMQ2fdLfC6dBx1IglrJ4oPt2hSETscv5JXFSCjmQVqLeb85e8Qge+tow6NCrOwg==
+ bh=wkv+RbdrTIn4E5TA/ldArwN8eORktzMVaZ+suyTJIZU=;
+ b=mUD8tU3KxkDdiK0oYS+IsA44pKf8IpKYdSIkD9ZCd7Nglt+RerS4YaIj5miU1ss9iSEJ/mU2vYt3y5ZhXJBH2k4WJfjR35rDbCWciSxKOBNVh13HN+m0jJpUJzMUozessNfB4x53iooFx0ELHUXOJ4Q1IaOK97XRNd21tnwLY8wc0kjJMSMKsPM+nhjxbLv4IHtcb+xuo0fF9cOIZB2vlJ69B+k0bG3jUqj+LsEGpYZIvqYoe0scVKuHAZm28nGDo+ZKCGRnG/SYP3uYvZDUzbKqgQxmAjmFiQZ4CE4yMEJERqexWj3A4gygkDTJObcQBdKFpWEtyJBf8DtUvRlCWw==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by MN2PR02MB7070.namprd02.prod.outlook.com (2603:10b6:208:1f6::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.17; Fri, 28 Nov
- 2025 17:47:08 +0000
+ by DM4PR02MB8936.namprd02.prod.outlook.com (2603:10b6:8:8b::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9366.12; Sat, 29 Nov 2025 06:48:36 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%3]) with mapi id 15.20.9366.009; Fri, 28 Nov 2025
- 17:47:06 +0000
+ ([fe80::900:1ccf:2b1e:52b6%3]) with mapi id 15.20.9366.012; Sat, 29 Nov 2025
+ 06:48:36 +0000
 From: Michael Kelley <mhklinux@outlook.com>
-To: Tianyu Lan <ltykernel@gmail.com>, "kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org"
-	<wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>,
-	"longli@microsoft.com" <longli@microsoft.com>, "vdso@hexbites.dev"
-	<vdso@hexbites.dev>
-CC: Tianyu Lan <tiala@microsoft.com>, "linux-hyperv@vger.kernel.org"
+To: Praveen K Paladugu <prapal@linux.microsoft.com>, "kys@microsoft.com"
+	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+	<decui@microsoft.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>, "linux-hyperv@vger.kernel.org"
 	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [RFC PATCH] Drivers: hv: Confidential VMBus exernal memory
- support
-Thread-Topic: [RFC PATCH] Drivers: hv: Confidential VMBus exernal memory
- support
-Thread-Index: AQHcXXBK+tjOpvoLpkujwICroliGzLUIRIrA
-Date: Fri, 28 Nov 2025 17:47:05 +0000
+	<linux-kernel@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
+	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "arnd@arndb.de"
+	<arnd@arndb.de>
+CC: "anbelski@linux.microsoft.com" <anbelski@linux.microsoft.com>,
+	"easwar.hariharan@linux.microsoft.com"
+	<easwar.hariharan@linux.microsoft.com>, "nunodasneves@linux.microsoft.com"
+	<nunodasneves@linux.microsoft.com>, "skinsburskii@linux.microsoft.com"
+	<skinsburskii@linux.microsoft.com>
+Subject: RE: [PATCH v6 0/3] Add support for clean shutdown with MSHV
+Thread-Topic: [PATCH v6 0/3] Add support for clean shutdown with MSHV
+Thread-Index: AQHcXx6xe4Ys3qrPJESaCCzD1Bsln7UJMHZg
+Date: Sat, 29 Nov 2025 06:48:36 +0000
 Message-ID:
- <SN6PR02MB4157DAE6D8CC6BA11CA87298D4DCA@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20251124182920.9365-1-tiala@microsoft.com>
-In-Reply-To: <20251124182920.9365-1-tiala@microsoft.com>
+ <SN6PR02MB415792702B78B9855485DCE5D4DDA@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20251126215013.11549-1-prapal@linux.microsoft.com>
+In-Reply-To: <20251126215013.11549-1-prapal@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|MN2PR02MB7070:EE_
-x-ms-office365-filtering-correlation-id: 3f14f6d6-0c1e-47fb-1e4c-08de2ea62581
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|DM4PR02MB8936:EE_
+x-ms-office365-filtering-correlation-id: 90511b9b-a6de-42dc-b21b-08de2f135225
 x-microsoft-antispam:
- BCL:0;ARA:14566002|31061999003|51005399006|41001999006|15080799012|461199028|13091999003|19110799012|8060799015|8062599012|440099028|3412199025|40105399003|102099032;
+ BCL:0;ARA:14566002|13091999003|461199028|8060799015|8062599012|19110799012|12121999013|15080799012|31061999003|8022599003|440099028|3412199025|102099032;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?yS8No3SSRxkFHmeq3YUkSI1RZST79PirLeclZV+lAwXEngaaLuF+JZvZtJBS?=
- =?us-ascii?Q?AQB0ZVioBpKuJeydrMqjLcRI/5jdYfTZwtUi+8lEdcCkAEfqlCBw7Jl8pDL+?=
- =?us-ascii?Q?eTJyigCH4tOLaDb+4Kl8y9mrMKgCkPXBJZx+ui9u8Ea4O+7NedRQODwaQi6i?=
- =?us-ascii?Q?LK45cw3O8NVsD8S1aoZXUu8eVC2E+SAYtFl4ep7XYapdtKIgVpUiXxQYsdK3?=
- =?us-ascii?Q?i8wVE8c7h320mrSgbIIWGINO5gwrsAXDy8x7sHge7E8CgUi51dYcTJF0GLg1?=
- =?us-ascii?Q?wxu4lEb3nCxA7r49cBdTDHLW+Sj5XEF2Ma+Y+xcF/HJ0AsHTiv+rU/yTsOA/?=
- =?us-ascii?Q?MxbEP9KURaLTAOMWc9OGvD0a5N2MECoHuw5ZnGal8O+hPAi92gxApEReFVQp?=
- =?us-ascii?Q?qU17RQTXNJXyEdalh0Vhqgq9Choi4QG5gaGk2WxHp4A1OYKVdJyk3dxio6BP?=
- =?us-ascii?Q?tuLDtPj38EFpmQt2hTqjQDWlQbRGmEc9vnfbzfJduSAwekVLvjhar9zsotWy?=
- =?us-ascii?Q?cmaJcr0ZUEUdO4Mq3+E740WZNZOsqYRMpxkTcjr3JPBes/wpYRwFpRjUBrzz?=
- =?us-ascii?Q?hdfuC4gvDfq0t5mgCTY2Pz4mj/jMSdaJjtFCaD12Suy5NbpkESaW7d8u9Vx1?=
- =?us-ascii?Q?SFHRewlrVrDBYxcyNklM9vpWovjElay6hCj7EtRELsopwEQmuyWSJBO0wdf/?=
- =?us-ascii?Q?Bxqv3bwUFCXQ7walCC3GvSk7Bf+oDgMNU2/+GyOr1gKyHI78Oi36UuUVT4kC?=
- =?us-ascii?Q?H0sR0AqwPZI4OMdrjKvMwgzW64OZMNZA6WFznRUT1gdHVYA7hQFFJrS5KklH?=
- =?us-ascii?Q?aCtIyuf9wHaC+WItuOMah4hJwwchsGPmlyHBgBdGWWJjFrpeeHlVp2pjUrtF?=
- =?us-ascii?Q?6Mjss2xlZf2Kycu/4fvksGNLC14ECKMidcGYuE3XzrcqNJcexgA73b9qEllX?=
- =?us-ascii?Q?ZGiaeqDkpIfeQTtBzeA9MPKa1kg0VzCNYHr8xVHnwJNAU224wlt64+HSINTJ?=
- =?us-ascii?Q?7/+Gnk60PC2r1F22eMQLBdyD3aIE0VK8dWdpcCOP9nLbGFSQ0zTWBcXSfWDB?=
- =?us-ascii?Q?kH6GgjAovgxTFmhtvzK75oOuSdgOCgLyJfPn3LWS6WKBwdfX/LtrmS6NLyiC?=
- =?us-ascii?Q?hWMu9i/fO6MRsyZzndCptmWBFUnD5VWK9veNHVK+t4YlYnsxSeEei0VO8Hnx?=
- =?us-ascii?Q?g0h5C6uCAncJYbJa3UVla2nh4KT9hqqz5X//OBRjPngtN9uK3u1N/sZfB8O6?=
- =?us-ascii?Q?7j7C/+HIKDxgN2oN5yZv?=
+ =?us-ascii?Q?lSbirG22ARwk/v4ihvtKmeXO0blJzmaiAI8td2nQu3LReYX32Bi2GOW+M8zk?=
+ =?us-ascii?Q?/0NjdiNR0XovffUeuFen+V06r1CSpkknwVXHxkHwydvnu7QS2CZzqhQOI564?=
+ =?us-ascii?Q?j/19nrv3eAWHOijbezsBLYEZER6rAf+zhGWad4eZqT0YTLIn7Yz1PxnGRQ+U?=
+ =?us-ascii?Q?p1YO1pEgK8VyS04LRGS8EmGZ2Ky9I6r9VDa5hYQ/cLQwdsKSKC6etRpM2J+8?=
+ =?us-ascii?Q?B+YpuzQZWzM4JUHoENz6FD5oWwkJokRVnVkSaRC/rilKnnl6K5XaCeiLatTg?=
+ =?us-ascii?Q?mDMNL/ULyqL8RB/3N87mkCcJ2WKb7+QQetI2bMogrn0gdHQZHR0cdUjDUrem?=
+ =?us-ascii?Q?Yua3ISa1mkQEC34cGdh4y5KPgAkf7VqZM1FcPNeUKeqftlUiuXnIGib82/yL?=
+ =?us-ascii?Q?tpSTP4Z0f1IA+02axoPSWP5Gua6f68OBPSxpN1ATQBuhCmPgeGgvsgEpchke?=
+ =?us-ascii?Q?lkGGe+dHFqfT+xeASV8jvuGnZdELU8N9plkUS9+/RIfTot6/wDDQLqBWsG85?=
+ =?us-ascii?Q?bfExSd0R8DFmDBqLYirPnLImyG7aLL/5p8O96UFiKNhC6d5IIChCz6EWcI5l?=
+ =?us-ascii?Q?ux+NTzkVw8+4BpSv6+IBJQgSQn2ALS61nmu5VX6C9WDYRln8/JDqDVCFnu9t?=
+ =?us-ascii?Q?fbZKPMV7hk13guNXJStbCxPHX9p2aniHQ7aRV748UvhteY/HlyfuJThtMjuN?=
+ =?us-ascii?Q?O5h97nmyS2OV4dIDtygQa57eECmX5A7z903i8t1yFXygunTUeBhFaMSvX0uq?=
+ =?us-ascii?Q?qyzjY9PRxEHFdVIpZ4UBTtamrU5KdqqLRMuLAlWWnl/ee+QuGM50bFdGcXex?=
+ =?us-ascii?Q?JVC1tBxwt67F8Oo6qtqRgfHgNmOzE8Os8JEmGzajuilK2JRGiHA3RYl2RVLV?=
+ =?us-ascii?Q?L2IhHS+0tPuRqmT4tAV37/nKTRiZjF5rUFgDzsPJMfIFEsnySJwUA6nUKmaR?=
+ =?us-ascii?Q?tVq+dn1/2hRYBMv5m+H1WteuXMsAjp3a4iEH+aIzUos73yJSdtffW58Rme3R?=
+ =?us-ascii?Q?BnZqCbHjrEtdu/8/Vm+pTswEz+wcxSta+SYcQTnDqwPhuXi6PS8bNQPQ0LGu?=
+ =?us-ascii?Q?2xM4nL38AzuUwYkBVXboZGEUvbnHukgedVHJdIhiWZ6EXlfvS8FURrpoGZGH?=
+ =?us-ascii?Q?MfICwykDIueA9Ss+SebRoUZ28eIj6LQB+zs9Ubz3/pRD19wXfbSR9EdCPgdU?=
+ =?us-ascii?Q?LiqwxigGwIRGEVmFGOUbEsznLO0bqeIrRSziug=3D=3D?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?s6izGQP/INydB1EvEEUfl2fGUkIOtAyJsh+bvUReIW6P+H1EYwlTLTr7AE1v?=
- =?us-ascii?Q?LBya2ou3CjoORyoChSuczI83Ti11wZ5BYLWMoPPkGkCJ2vZqJRkbt2ZwxaRr?=
- =?us-ascii?Q?MRpS1y85UhvhPy7ctZhlGtc+tqkBO/sa3SFBkcrjKf4cp/HZkeZdBJuvXwiP?=
- =?us-ascii?Q?tdycCqhiefML7oy2jMaKkFGNIxvlFC3mIrJfheF+L2o54Wdz43Dnv2C2k91z?=
- =?us-ascii?Q?9uqva/C3opmThsxprJ9JKOONsGnvurauM6pXjPOnB69/xhP5vVwk0yGISWnt?=
- =?us-ascii?Q?WCUyCeSo/8zGM2P/scMVdaGyhh0Yve+HEE4XuANVpvTxQZzE886mI3o2XYuF?=
- =?us-ascii?Q?yHvNwRwYCyxIyb2DcDKL+r/9HyCHsZnd+LU5oU2JoMNoe1xEfH+kf/iAfbFK?=
- =?us-ascii?Q?/qqncOpZSUIPdZX4NHD9pO+3Z9eUv/pZDaTZvr/uXMEpCREMuqrAuQEZT3xH?=
- =?us-ascii?Q?0M0GRwG+aTWOvub5yXUgBP0kBqIujatVDbCCfWNJUF0c623GGASaTUCST5gG?=
- =?us-ascii?Q?QpzIGOUYax71C0LS1f2gJU6S/ZIli9gfdL+5EK/EOb82k772nz0eYcU5XaUJ?=
- =?us-ascii?Q?hU2ZAarkJF6Kw7H/UrKF1h4+IHMqRYUexZZAYGfGOtisvn4YmxtKfxndFreB?=
- =?us-ascii?Q?KUYvN5OT5KY3pIlM3LIomqeMyStORgUi6WUaLblqKbKrBFzlSZadhLonn4JR?=
- =?us-ascii?Q?CWzNX3S1Vp4uS+yaJO28e8YJB33NIs7m3a6MVeArlIAFVTHH+ClkqTUqIx8h?=
- =?us-ascii?Q?OutsajWtQhHBVLYjLKuhqufbde+/0GhL0zPFosii7nAbLnhciWBW7eV7qzuU?=
- =?us-ascii?Q?zZH2tUYLWzsnerdG7wTEZutYEfk6sHMDnSCeayG7/WWJZFagWPkdeMfzNogQ?=
- =?us-ascii?Q?xk4AK4PQQYtfhieYQKnMEKHBx/nrfMtfGtcXNFt42Z00TekhCSf6sllilCC6?=
- =?us-ascii?Q?6zOAbAY6hP+Y9zJeXob9SRgU1RHcCT5+VxonfLWSB4jG2MDuwOufLkC/Mp0M?=
- =?us-ascii?Q?/SKMrq3hlT4+s/BjRfOW9S0zGW0SAghTFqCeAzEY7D2gYo+tjhjaFLzmQWrm?=
- =?us-ascii?Q?Bf6C9tKdvLOSgZ/QcRwAruOMOB9FBM10FzhreTORbKrprnEkp5oMnLwsenkz?=
- =?us-ascii?Q?y0QB8wwYcxoN4+yUSpDwBuhmkVloNiHaRSuJd/9pGSVP0nk7noXe4DZM5csH?=
- =?us-ascii?Q?YX1yZVJloiqC2bPpQfzHOoDPS3w6cqRAEEHV9ShfXpeAgJCQ7NgLqvZzvek?=
+ =?us-ascii?Q?QnhUW1dRL54bo0s4864r3Ku7X7AdxV8ZH7EfRwqkargb04aXD+7D8fYKD2lW?=
+ =?us-ascii?Q?kyC0CyFZkEJOewmmpJTM57N3wN/MGr5efKce6F/1U/6NefNMkXKDwXvIaklR?=
+ =?us-ascii?Q?+f2x4A28B6vurlqEQYgGVIOHsQvqfp0kuiexcp266tJnJpiLdpuIJZWDJUHQ?=
+ =?us-ascii?Q?VYbvhlGE0GYzwmc3S85ho/LLQrHiUi7F8V1ER6S9945mKwDKNiU0N+RAfvde?=
+ =?us-ascii?Q?RKaU668jYbwOpJ05he3g7B8W7zp3f3sploPfpGbOqrEur4JUCJxcI0XPYPGQ?=
+ =?us-ascii?Q?MyXSwZgQFRM4htHtYRRkvKZCCAeekJ9KzKYbaHjW2neLVxzEXbe2QTXEZDF2?=
+ =?us-ascii?Q?SQ/YxctF+FSh2E7n5jfX2AGz6nWvUlhKMCfoREueoKW5/FRHr/aA683JQHPG?=
+ =?us-ascii?Q?S8vfs1D+ypuij+T3WPVQf4rzmPw8HNuyyEIwmeVEGlGU5J78UX1Xf2fRo/RF?=
+ =?us-ascii?Q?MJvv3gX267jKkUTPifGaaAmiLImQalGGDcYZ7gU91aV0L7s1pDz3/G2hPbEC?=
+ =?us-ascii?Q?JrKqHahnKxQ/XRppEDpHt0ZxceijU9lweHYfuZj7e423jiBKFnqrxeVyzWns?=
+ =?us-ascii?Q?dlJpQNa+mjUPa2UwzavC8PrnX6I6lLPBtJ2MoSLxVCHMZ9QNMZ+2off2niaZ?=
+ =?us-ascii?Q?TMpQb2NGTf2npgGGcWcvOZPzh05uvs3oj04aMrkjlMNKN4toKUu52U10T8MK?=
+ =?us-ascii?Q?YFKOvDP/xpqEWdbHRqRCLd79ig72LrLz5AvLtUwqrqlfjaWuMgKq8qnK+5bv?=
+ =?us-ascii?Q?f9M9M8fzqbxWwuvuydoAJCIxbw30CuOFhLv1czijRkiJKydy/X9mY7ogTTd5?=
+ =?us-ascii?Q?cQPt6WAeRKEEw/BTDxAbQ566zq50UksjlWAtg4U/ZPWQAM7rpr7PaOe1qoV1?=
+ =?us-ascii?Q?VzaDGr+/6oKtCRhM9J5yE6FcnRL9uSY43/bpdZoBowvvhRURdkoPyKUkRqVr?=
+ =?us-ascii?Q?VHh2IfZn7NZQF+R3k0zbVLWFSfOFDVFo3GJ64vAdBdtxDh1yVGdQdREAVI4n?=
+ =?us-ascii?Q?3x1bvJSX1MKqPXMvrDnI3GE+VYpi/ijNhu0knsNGtaIqhd2trD7i7QPs3THl?=
+ =?us-ascii?Q?OY1wJmZHb7hQHRDYpRXY4YH9fJuHfiEAD2cNFLbRS4Zz4JayPVUQAOaa1w7C?=
+ =?us-ascii?Q?3KfKouDmqzFY9HoDwr/bhdoEMSuaIOyBshYC9umKTeN4DHglVOaI6gHwiDoa?=
+ =?us-ascii?Q?4HFNxtgH1DvrDYdNHgoizTMzorx+1wRISx+C6iMOeTU4KRnvWUWAmzJc2oI?=
  =?us-ascii?Q?=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -141,301 +144,165 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3f14f6d6-0c1e-47fb-1e4c-08de2ea62581
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Nov 2025 17:47:06.1434
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90511b9b-a6de-42dc-b21b-08de2f135225
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Nov 2025 06:48:36.1711
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB7070
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR02MB8936
 
-From: Tianyu Lan <ltykernel@gmail.com> Sent: Monday, November 24, 2025 10:2=
-9 AM
+From: Praveen K Paladugu <prapal@linux.microsoft.com> Sent: Wednesday, Nove=
+mber 26, 2025 1:50 PM
 >=20
-> In CVM(Confidential VM), system memory is encrypted
-> by default. Device drivers typically use the swiotlb
-> bounce buffer for DMA memory, which is decrypted
-> and shared between the guest and host. Confidential
-> Vmbus, however, supports a confidential channel
-
-s/Vmbus/VMBus/   [and elsewhere in this commit msg]
-
-> that employs encrypted memory for the Vmbus ring
-> buffer and external DMA memory. The support for
-> the confidential ring buffer has already been
-> integrated.
+> Add support for clean shutdown of the root partition when running on
+> MSHV Hypervisor.
 >=20
-> In CVM, device drivers usually employ the standard
-> DMA API to map DMA memory with the bounce buffer,
-> which remains transparent to the device driver.
-> For external DMA memory support,
+> v6:
+>  - Fixed build errors, by adding CONFIG_X86_64 guard
 
-The "external memory" terminology is not at all clear in the context
-of Linux. Presumably the terminology came from Hyper-V or the
-paravisor, but I never understood what the "external" refers to. Maybe
-it is memory that is "external" with respect to the hypervisor, and therefo=
-re
-not shared between the hypervisor and guest? But that meaning won't be
-evident to other reviewers in the Linux kernel community. In any case, some
-explanation of "external memory" is needed. And even consider changing the
-field names in the code to be something that makes more sense to Linux.
+Adding the CONFIG_X86_64 guard seems like the right solution, and it does
+make the build errors go away. However note that as coded in drivers/hv/Mak=
+efile,
+ the code under the new guard won't be built at all unless CONFIG_MSHV_ROOT
+is set (ignoring the VTL case for now), which can only happen in the X86_64=
+ or
+ARM64 cases. So it was nagging at me as to why the guard is needed for an
+x86 32-bit build failure reported by the kernel test robot.
 
-> Hyper-V specific
-> DMA operations are introduced, bypassing the bounce
-> buffer when the confidential external memory flag
-> is set.
+It turns out there's an underlying bug in drivers/hv/Makefile causing
+mshv_common.o to be built in cases when it shouldn't be, such as the x86
+32-bit case. The build failures reported by the kernel test robot were on t=
+hese
+cases when it shouldn't be built in the first place. The bug is in this Mak=
+efile line:
 
-This commit message never explains why it is important to not do bounce
-buffering. There's the obvious but unstated reason of improving performance=
-,
-but that's not the main reason. The main reason is a confidentiality leak.
-When available, Confidential VMBus would be used because it keeps the
-DMA data private (i.e., encrypted) and confidential to the guest. Bounce
-buffering copies the data to shared (i.e., decrypted) swiotlb memory, where
-it is exposed to the hypervisor. That's a confidentiality leak, and is the
-primary reason the bounce buffering must be eliminated. This requirement
-was pointed out by Robin Murphy in the discussion of Roman Kisel's
-original code to eliminate the bounce buffering.
+ifneq ($(CONFIG_MSHV_ROOT) $(CONFIG_MSHV_VTL),)
 
-Separately, I have major qualms about using an approach with Hyper-V specif=
-ic
-DMA operations. As implemented here, these DMA operations bypass all
-the kernel DMA layer logic when the VMBus synthetic device indicates
-"external memory". In that case, the supplied physical address is just used
-as the DMA address and everything else is bypassed. While this actually wor=
-ks
-for VMBus synthetic devices because of their simple requirements, it also
-is implicitly making some assumptions. These assumptions are true today
-(as far as I know) but won't necessarily be true in the future.  The assump=
-tions
-include:
+which should be=20
 
-* There's no vIOMMU in the guest VM. IOMMUs in CoCo VMs have their
-own issues to work out, but an implementation that bypasses any IOMMU
-logic in the DMA layer is very short-term thinking.
+ifneq ($(CONFIG_MSHV_ROOT)$(CONFIG_MSHV_VTL),)
 
-* There are no PCI pass-thru devices in the guest.  Since the implementatio=
-n
-changes the global dma_ops, the drivers for such PCI pass-thru devices woul=
-d
-use the same global dma_ops, and would fail.
+The buggy version has a spurious "space" character before the start of
+$(CONFIG_MSHV_VTL) such that the result is always "not equal" and
+mshv_common.o is always built.
 
-The code also has some other problems that I point out further down.
+If the Makefile is fixed, then the X86_64 guards you added in
+mshv_common.c are not needed. Furthermore, the stubs for
+hv_sleep_notifiers_register() and hv_machine_power_off() in
+arch/x86/include/asm/mshyperv.h for the !CONFIG_X86_64 case aren't
+needed. And the declarations for hv_sleep_notifiers_register() and
+hv_machine_power_off() can be moved out from under the #ifdef
+CONFIG_X86_64. The bottom line is that nothing in this patch set needs
+to be guarded by CONFIG_X86_64.
 
-In any case, an approach with Hyper-V specific DMA operations seems like
-a very temporary fix (hack?) at best. Further down, I'll proposed at altern=
-ate
-approach that preserves all the existing DMA layer functionality.
+Here's a quick diff of what I changed on top of your v6 patch set
+(including the fix to drivers/hv/Makefile). I tested the build process
+on both x86/64 and arm64, with and without CONFIG_MSHV_ROOT
+selected.
 
-> These DMA operations might also be reused
-> for TDISP devices in the future, which also support
-> DMA operations with encrypted memory.
->=20
-> The DMA operations used are global architecture
-> DMA operations (for details, see get_arch_dma_ops()
-> and get_dma_ops()), and there is no need to set up
-> for each device individually.
->=20
-> Signed-off-by: Tianyu Lan <tiala@microsoft.com>
-> ---
->  drivers/hv/vmbus_drv.c | 90 +++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 89 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 0dc4692b411a..ca31231b2c32 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -39,6 +39,9 @@
->  #include <clocksource/hyperv_timer.h>
->  #include <asm/mshyperv.h>
->  #include "hyperv_vmbus.h"
-> +#include "../../kernel/dma/direct.h"
-> +
-> +extern const struct dma_map_ops *dma_ops;
->=20
->  struct vmbus_dynid {
->  	struct list_head node;
-> @@ -1429,6 +1432,88 @@ static int vmbus_alloc_synic_and_connect(void)
->  	return -ENOMEM;
->  }
->=20
-> +
-> +static bool hyperv_private_memory_dma(struct device *dev)
-> +{
-> +	struct hv_device *hv_dev =3D device_to_hv_device(dev);
+diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyper=
+v.h
+index 4c22f3257368..01d192e70211 100644
+--- a/arch/x86/include/asm/mshyperv.h
++++ b/arch/x86/include/asm/mshyperv.h
+@@ -178,16 +178,15 @@ int hyperv_fill_flush_guest_mapping_list(
+                struct hv_guest_mapping_flush_list *flush,
+                u64 start_gfn, u64 end_gfn);
 
-device_to_hv_device() works only when "dev" is for a VMBus device. As noted=
- above,
-if a CoCo VM were ever to have a PCI pass-thru device doing DMA, "dev" woul=
-d
-be some PCI device, and device_to_hv_device() would return garbage.=20
-
-> +
-> +	if (hv_dev && hv_dev->channel && hv_dev->channel->co_external_memory)
-> +		return true;
-> +	else
-> +		return false;
-> +}
-> +
-> +static dma_addr_t hyperv_dma_map_page(struct device *dev, struct page *p=
-age,
-> +		unsigned long offset, size_t size,
-> +		enum dma_data_direction dir,
-> +		unsigned long attrs)
-> +{
-> +	phys_addr_t phys =3D page_to_phys(page) + offset;
-> +
-> +	if (hyperv_private_memory_dma(dev))
-> +		return __phys_to_dma(dev, phys);
-> +	else
-> +		return dma_direct_map_phys(dev, phys, size, dir, attrs);
-
-This code won't build when the VMBus driver is built as a module.=20
-dma_direct_map_phys() is in inline function that references several other
-DMA functions that aren't exported because they aren't intended to be
-used by drivers. Same problems occur with dma_direct_unmap_phys()
-and similar functions used below.
-
-> +}
-> +
-> +static void hyperv_dma_unmap_page(struct device *dev, dma_addr_t dma_han=
-dle,
-> +		size_t size, enum dma_data_direction dir, unsigned long attrs)
-> +{
-> +	if (!hyperv_private_memory_dma(dev))
-> +		dma_direct_unmap_phys(dev, dma_handle, size, dir, attrs);
-> +}
-> +
-> +static int hyperv_dma_map_sg(struct device *dev, struct scatterlist *sgl=
-,
-> +		int nelems, enum dma_data_direction dir,
-> +		unsigned long attrs)
-> +{
-> +	struct scatterlist *sg;
-> +	dma_addr_t dma_addr;
-> +	int i;
-> +
-> +	if (hyperv_private_memory_dma(dev)) {
-> +		for_each_sg(sgl, sg, nelems, i) {
-> +			dma_addr =3D __phys_to_dma(dev, sg_phys(sg));
-> +			sg_dma_address(sg) =3D dma_addr;
-> +			sg_dma_len(sg) =3D sg->length;
-> +		}
-> +
-> +		return nelems;
-> +	} else {
-> +		return dma_direct_map_sg(dev, sgl, nelems, dir, attrs);
-> +	}
-> +}
-> +
-> +static void hyperv_dma_unmap_sg(struct device *dev, struct scatterlist *=
-sgl,
-> +		int nelems, enum dma_data_direction dir, unsigned long attrs)
-> +{
-> +	if (!hyperv_private_memory_dma(dev))
-> +		dma_direct_unmap_sg(dev, sgl, nelems, dir, attrs);
-> +}
-> +
-> +static int hyperv_dma_supported(struct device *dev, u64 mask)
-> +{
-> +	dev->coherent_dma_mask =3D mask;
-> +	return 1;
-> +}
-> +
-> +static size_t hyperv_dma_max_mapping_size(struct device *dev)
-> +{
-> +	if (hyperv_private_memory_dma(dev))
-> +		return SIZE_MAX;
-> +	else
-> +		return swiotlb_max_mapping_size(dev);
-> +}
-> +
-> +const struct dma_map_ops hyperv_dma_ops =3D {
-> +	.map_page               =3D hyperv_dma_map_page,
-> +	.unmap_page             =3D hyperv_dma_unmap_page,
-> +	.map_sg                 =3D hyperv_dma_map_sg,
-> +	.unmap_sg               =3D hyperv_dma_unmap_sg,
-> +	.dma_supported          =3D hyperv_dma_supported,
-> +	.max_mapping_size	=3D hyperv_dma_max_mapping_size,
-> +};
-> +
->  /*
->   * vmbus_bus_init -Main vmbus driver initialization routine.
->   *
-> @@ -1479,8 +1564,11 @@ static int vmbus_bus_init(void)
->  	 * doing that on each VP while initializing SynIC's wastes time.
->  	 */
->  	is_confidential =3D ms_hyperv.confidential_vmbus_available;
-> -	if (is_confidential)
-> +	if (is_confidential) {
-> +		dma_ops =3D &hyperv_dma_ops;
-
-arm64 doesn't have the global variable dma_ops, so this patch
-won't build on arm64, even if Confidential VMBus isn't yet available
-for arm64.
-
->  		pr_info("Establishing connection to the confidential VMBus\n");
-> +	}
-> +
->  	hv_para_set_sint_proxy(!is_confidential);
->  	ret =3D vmbus_alloc_synic_and_connect();
->  	if (ret)
-> --
-> 2.50.1
->
-
-Here's my idea for an alternate approach.  The goal is to allow use of the
-swiotlb to be disabled on a per-device basis. A device is initialized for s=
-wiotlb
-usage by swiotlb_dev_init(), which sets dev->dma_io_tlb_mem to point to the
-default swiotlb memory.  For VMBus devices, the calling sequence is
-vmbus_device_register() -> device_register() -> device_initialize() ->
-swiotlb_dev_init(). But if vmbus_device_register() could override the
-dev->dma_io_tlb_mem value and put it back to NULL, swiotlb operations
-would be disabled on the device. Furthermore, is_swiotlb_force_bounce()
-would return "false", and the normal DMA functions would not force the
-use of bounce buffers. The entire code change looks like this:
-
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -2133,11 +2133,15 @@ int vmbus_device_register(struct hv_device *child_d=
-evice_obj)
-        child_device_obj->device.dma_mask =3D &child_device_obj->dma_mask;
-        dma_set_mask(&child_device_obj->device, DMA_BIT_MASK(64));
-
-+       device_initialize(&child_device_obj->device);
-+       if (child_device_obj->channel->co_external_memory)
-+               child_device_obj->device.dma_io_tlb_mem =3D NULL;
++void hv_sleep_notifiers_register(void);
++void hv_machine_power_off(void);
 +
-        /*
-         * Register with the LDM. This will kick off the driver/device
-         * binding...which will eventually call vmbus_match() and vmbus_pro=
-be()
-         */
--       ret =3D device_register(&child_device_obj->device);
-+       ret =3D device_add(&child_device_obj->device);
-        if (ret) {
-                pr_err("Unable to register child device\n");
-                put_device(&child_device_obj->device);
+ #ifdef CONFIG_X86_64
+ void hv_apic_init(void);
+ void __init hv_init_spinlocks(void);
+ bool hv_vcpu_is_preempted(int vcpu);
+-void hv_sleep_notifiers_register(void);
+-void hv_machine_power_off(void);
+ #else
+ static inline void hv_apic_init(void) {}
+-static inline void hv_sleep_notifiers_register(void) {};
+-static inline void hv_machine_power_off(void) {};
+ #endif
 
-I've only compile tested the above since I don't have an environment where
-I can test Confidential VMBus. You would need to verify whether my thinking
-is correct and this produces the intended result.
+ struct irq_domain *hv_create_pci_msi_domain(void);
+diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
+index 58b8d07639f3..6d929fb0e13d 100644
+--- a/drivers/hv/Makefile
++++ b/drivers/hv/Makefile
+@@ -20,6 +20,6 @@ mshv_vtl-y :=3D mshv_vtl_main.o
+ # Code that must be built-in
+ obj-$(CONFIG_HYPERV) +=3D hv_common.o
+ obj-$(subst m,y,$(CONFIG_MSHV_ROOT)) +=3D hv_proc.o
+-ifneq ($(CONFIG_MSHV_ROOT) $(CONFIG_MSHV_VTL),)
++ifneq ($(CONFIG_MSHV_ROOT)$(CONFIG_MSHV_VTL),)
+        obj-y +=3D mshv_common.o
+ endif
+diff --git a/drivers/hv/mshv_common.c b/drivers/hv/mshv_common.c
+index 28905e3ed9c0..73505cbdc324 100644
+--- a/drivers/hv/mshv_common.c
++++ b/drivers/hv/mshv_common.c
+@@ -142,7 +142,6 @@ int hv_call_get_partition_property(u64 partition_id,
+ }
+ EXPORT_SYMBOL_GPL(hv_call_get_partition_property);
 
-Directly setting dma_io_tlb_mem to NULL isn't great. It would be better
-to add an exported function swiotlb_dev_disable() to swiotlb code that sets
-dma_io_tlb_mem to NULL, but you get the idea.
+-#ifdef CONFIG_X86_64
+ /*
+  * Corresponding sleep states have to be initialized in order for a subseq=
+uent
+  * HVCALL_ENTER_SLEEP_STATE call to succeed. Currently only S5 state as pe=
+r
+@@ -235,4 +234,3 @@ void hv_machine_power_off(void)
+        local_irq_restore(flags);
 
-Other reviewers may still see this approach as a bit of a hack, but it's a =
-lot
-less of a hack than introducing Hyper-V specific DMA functions.
-swiotlb_dev_disable() is conceptually needed for TDISP devices, as TDISP
-devices must similarly protect confidentiality by not allowing use of the s=
-wiotlb.
-So adding swiotlb_dev_disable() is a step in the right direction, even if t=
-he
-eventual TDISP code does it slightly differently. Doing the disable on a
-per-device basis is also the right thing in the long run.
+ }
+-#endif
+
+The Makefile fix needs to be a separate patch.
+
+I think I got all this correct, but please double-check my work! :-)
 
 Michael
+
+>  - Moved machine_ops hook definition to ms_hyperv_init_platform
+>  - Addressed review comments in v5
+>=20
+> v5:
+>  - Fixed build errors
+>  - Padded struct hv_input_set_system_property for alignment
+>  - Dropped CONFIG_ACPI stub
+>=20
+> v4:
+>  - Adopted machine_ops to order invoking HV_ENTER_SLEEP_STATE as the
+>    last step in shutdown sequence.
+>  - This ensures rest of the cleanups are done before powering off
+>=20
+> v3:
+>  - Dropped acpi_sleep handlers as they are not used on mshv
+>  - Applied ordering for hv_reboot_notifier
+>  - Fixed build issues on i386, arm64 architectures
+>=20
+> v2:
+>   - Addressed review comments from v1.
+>   - Moved all sleep state handling methods under CONFIG_ACPI stub
+>   - - This fixes build issues on non-x86 architectures.
+>=20
+>=20
+> Praveen K Paladugu (3):
+>   hyperv: Add definitions for MSHV sleep state configuration
+>   hyperv: Use reboot notifier to configure sleep state
+>   hyperv: Cleanly shutdown root partition with MSHV
+>=20
+>  arch/x86/hyperv/hv_init.c       |  1 +
+>  arch/x86/include/asm/mshyperv.h |  4 ++
+>  arch/x86/kernel/cpu/mshyperv.c  |  2 +
+>  drivers/hv/mshv_common.c        | 98 +++++++++++++++++++++++++++++++++
+>  include/hyperv/hvgdk_mini.h     |  4 +-
+>  include/hyperv/hvhdk_mini.h     | 40 ++++++++++++++
+>  6 files changed, 148 insertions(+), 1 deletion(-)
+>=20
+> --
+> 2.51.0
+>=20
+
 
