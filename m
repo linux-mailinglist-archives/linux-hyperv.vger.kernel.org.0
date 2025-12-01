@@ -1,97 +1,98 @@
-Return-Path: <linux-hyperv+bounces-7910-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7911-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4A50C98B53
-	for <lists+linux-hyperv@lfdr.de>; Mon, 01 Dec 2025 19:27:00 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACAE9C99491
+	for <lists+linux-hyperv@lfdr.de>; Mon, 01 Dec 2025 23:03:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 885633A4351
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Dec 2025 18:26:58 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 07EB23462B4
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Dec 2025 22:03:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35C15338590;
-	Mon,  1 Dec 2025 18:26:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DE16287516;
+	Mon,  1 Dec 2025 22:03:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ghWnJWTp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bdZwhU2a"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAEB233858A;
-	Mon,  1 Dec 2025 18:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3E4283C8E;
+	Mon,  1 Dec 2025 22:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764613618; cv=none; b=FIx3VJr6SwTBJhHqZgB4cHv6lo53lSXQQ1sZ2uu3AatCUR9ow+sBGQ8h2S7fxu5EkwuY6Nsgiwc5BjWftMp8OBl806vSTNByk1YOSOW9L8IBJoeUD7dZOSuTtO6VJkW0faF0cPXPmfURs5tOrEGY2WqWd51SQg3fB5dTXPdkxf4=
+	t=1764626593; cv=none; b=cNvfgHA6bk265voHheiw8NFgeklNVFxPZhO+Pu2M8KRuGwz5ss4dip8MVfe/URpgrgVEZDAinZrDCEOe+iF4amdNuLgnw3PO8bk76mwFJRRZyVPOYbP4ailRUjhztjAEF5RbbFNrOYVaWwal1LE/v/xl7lINl7CJi/2IbqJHfFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764613618; c=relaxed/simple;
-	bh=CgFJ4QUr8AaBrr9T2aC6PpKxqJJBahQ51gbfPjUxZ/c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ukwnWU5IZw6hSaVAXS/gN5jer+wShZEx2yyBkeHm5sXo2Rve/oWCr+fuWF21D+bdr1REfqa+cZFs48Xi5IwW43c5V1cEGVle0X6Pl7sZUHITOYIdtIjD99klgvdNbg499NXPS+3UsNLlnlwgkRbUC66/YaGmhwZGScIQFq573Jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ghWnJWTp; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (unknown [52.148.171.5])
-	by linux.microsoft.com (Postfix) with ESMTPSA id CA5AA201A7C8;
-	Mon,  1 Dec 2025 10:26:55 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CA5AA201A7C8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1764613616;
-	bh=pt6WLygOz9yPQCW5bO4V3L0zzdG9D795/IwWETgHRwQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ghWnJWTpZLuwUNNviSDjPq5w4j1VVojMAZV0nq9ReljxsAp0e9RAukDyedTR7WSvd
-	 fj+rGtzOXa8qHe7tpzaruExNasxHSYLZAz+mJHhnkuSpNoJ5O5c4UpYHYIxrFDQhTo
-	 RhflHOCWp36BoKF53Vkid47ZcRdRI6In94h7VDAA=
-Date: Mon, 1 Dec 2025 10:26:53 -0800
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Anirudh Rayabharam <anirudh@anirudhrb.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 4/7] Drivers: hv: Fix huge page handling in memory
- region traversal
-Message-ID: <aS3d7Ybs2iS4qo13@skinsburskii.localdomain>
-References: <176412196000.447063.4256335030026363827.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <176412295155.447063.16512843211428609586.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <aS2vtXBx9uJ2U7F1@anirudh-surface.localdomain>
+	s=arc-20240116; t=1764626593; c=relaxed/simple;
+	bh=COJX3I7JPxdMQbwBfXX31vKlq5L3/HXH0MQ8yei2Usg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=ebShwKalbMM3yy3hY1c1woryHtLeajUQraMctFJy+ZtEK88Nml8MAdaZwfLc4ee/i3/OOwxIJtHQe4wMvPRULmb9dt5/EAbH3hMMwNGla8PgbB5ox2PQJkgPDcS1g38j3xRjNQFvDI+z0mC9OLkEJ57gZDTwMkFNKXymfMywkyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bdZwhU2a; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 946B2C116D0;
+	Mon,  1 Dec 2025 22:03:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764626591;
+	bh=COJX3I7JPxdMQbwBfXX31vKlq5L3/HXH0MQ8yei2Usg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=bdZwhU2agBEae/My+f6BJv3Xv6DhHBq8HTxERDP/gWm71KgRpteRvG8NnFTPriUAy
+	 +j9TrYKYcC3/e7yNEZNVtVaTyQj9inRYIDk5yzTMCYadMwY6v3WdTnwlXydEMMXrPF
+	 VWT8hhv3TGwJRgSKyTO4Ld5fSoNHSNv8cuL5VL2E3WvAZt2nJJVBdrm2kn6JmVyByi
+	 LnKYP/Yscti6hhZlLJsYEh2s+4tNNrIKL4d5vN1PHAkXxqXibmvIuODJ2gvdoo8IwS
+	 YBLkLZ5Bok21n43CjZtyDvnyEk9oHsXEDI+kaXlrqYrLP3rLBbMQ5DNWmQMjQQqAyz
+	 9sraMeUwSRXdw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B588E381196A;
+	Mon,  1 Dec 2025 22:00:12 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aS2vtXBx9uJ2U7F1@anirudh-surface.localdomain>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [Patch net-next v4] net: mana: Handle hardware recovery events
+ when
+ probing the device
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <176462641145.2561615.8399106632061162779.git-patchwork-notify@kernel.org>
+Date: Mon, 01 Dec 2025 22:00:11 +0000
+References: <1764193552-9712-1-git-send-email-longli@linux.microsoft.com>
+In-Reply-To: <1764193552-9712-1-git-send-email-longli@linux.microsoft.com>
+To: None <longli@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, shradhagupta@linux.microsoft.com,
+ horms@kernel.org, kotaranov@microsoft.com, schakrabarti@linux.microsoft.com,
+ erick.archer@outlook.com, linux-hyperv@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, longli@microsoft.com
 
-On Mon, Dec 01, 2025 at 03:09:41PM +0000, Anirudh Rayabharam wrote:
-> On Wed, Nov 26, 2025 at 02:09:11AM +0000, Stanislav Kinsburskii wrote:
-> > The previous code assumed that if a region's first page was huge, the
-> > entire region consisted of huge pages and stored this in a large_pages
-> > flag. This premise is incorrect not only for movable regions (where
-> > pages can be split and merged on invalidate callbacks or page faults),
-> > but even for pinned regions: THPs can be split and merged during
-> > allocation, so a large, pinned region may contain a mix of huge and
-> > regular pages.
-> > 
-> > This change removes the large_pages flag and replaces region-wide
-> > assumptions with per-chunk inspection of the actual page size when
-> > mapping, unmapping, sharing, and unsharing. This makes huge page
-> > handling correct for mixed-page regions and avoids relying on stale
-> > metadata that can easily become invalid as memory is remapped.
-> > 
-> > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> > ---
-> >  drivers/hv/mshv_regions.c |  213 +++++++++++++++++++++++++++++++++++++++------
-> >  drivers/hv/mshv_root.h    |    3 -
-> >  2 files changed, 184 insertions(+), 32 deletions(-)
+Hello:
+
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Wed, 26 Nov 2025 13:45:52 -0800 you wrote:
+> From: Long Li <longli@microsoft.com>
 > 
-> Except the warning reported by kernel test robot:
+> When MANA is being probed, it's possible that hardware is in recovery
+> mode and the device may get GDMA_EQE_HWC_RESET_REQUEST over HWC in the
+> middle of the probe. Detect such condition and go through the recovery
+> service procedure.
 > 
+> [...]
 
-This one is a good catch.
-I'll fix it in the next revision.
+Here is the summary with links:
+  - [net-next,v4] net: mana: Handle hardware recovery events when probing the device
+    https://git.kernel.org/netdev/net-next/c/9bf66036d686
 
-Thanks,
-Stanislav
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-> Reviewed-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+
 
