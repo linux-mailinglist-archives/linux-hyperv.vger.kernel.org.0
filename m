@@ -1,59 +1,57 @@
-Return-Path: <linux-hyperv+bounces-7909-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7910-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BEBEC98677
-	for <lists+linux-hyperv@lfdr.de>; Mon, 01 Dec 2025 18:06:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4A50C98B53
+	for <lists+linux-hyperv@lfdr.de>; Mon, 01 Dec 2025 19:27:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id CF924343120
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Dec 2025 17:06:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 885633A4351
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Dec 2025 18:26:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F30A4334C06;
-	Mon,  1 Dec 2025 17:05:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35C15338590;
+	Mon,  1 Dec 2025 18:26:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sa/8CcZB"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ghWnJWTp"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E33732D0D4;
-	Mon,  1 Dec 2025 17:05:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAEB233858A;
+	Mon,  1 Dec 2025 18:26:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764608759; cv=none; b=tpSs5cChwLdRCDSACCembc+7zseyQoEeFvhQ9OriW3PPopgQu0N8cg7QJhnYgr4HCYJL1b/qvbrKb938mToqbdT2L7oxaivoQ/ah2iOim0Bzk4pKIf4NF3fuI57T35q2ZIxWs9hIUZU3QJFOSdAPIZ5ihj/TMwFUnQVKC5phds0=
+	t=1764613618; cv=none; b=FIx3VJr6SwTBJhHqZgB4cHv6lo53lSXQQ1sZ2uu3AatCUR9ow+sBGQ8h2S7fxu5EkwuY6Nsgiwc5BjWftMp8OBl806vSTNByk1YOSOW9L8IBJoeUD7dZOSuTtO6VJkW0faF0cPXPmfURs5tOrEGY2WqWd51SQg3fB5dTXPdkxf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764608759; c=relaxed/simple;
-	bh=p4UoQ46q883HdXYyNa/Xv7qlzhDiz3s5GJruHmWTyK0=;
+	s=arc-20240116; t=1764613618; c=relaxed/simple;
+	bh=CgFJ4QUr8AaBrr9T2aC6PpKxqJJBahQ51gbfPjUxZ/c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IJkx24o3MObgA26AEZpjkZ9QLi4kBE0GJcwg3vlQULIFuBVKJCXoWQSeMFWxRayp34/Pf4nyNF9yFDAXx6HSBL3Knj/RifhY06KtPUYZeJ57JpYMWYdmcIARJNj+qN1Q3EywP2tR18nXTyOkj5DB6F+zcsRKbeSFL5TN1QG5Ym0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sa/8CcZB; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=ukwnWU5IZw6hSaVAXS/gN5jer+wShZEx2yyBkeHm5sXo2Rve/oWCr+fuWF21D+bdr1REfqa+cZFs48Xi5IwW43c5V1cEGVle0X6Pl7sZUHITOYIdtIjD99klgvdNbg499NXPS+3UsNLlnlwgkRbUC66/YaGmhwZGScIQFq573Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ghWnJWTp; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (c-98-225-44-166.hsd1.wa.comcast.net [98.225.44.166])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 3E5C6200DFDA;
-	Mon,  1 Dec 2025 09:05:57 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3E5C6200DFDA
+Received: from skinsburskii.localdomain (unknown [52.148.171.5])
+	by linux.microsoft.com (Postfix) with ESMTPSA id CA5AA201A7C8;
+	Mon,  1 Dec 2025 10:26:55 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CA5AA201A7C8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1764608757;
-	bh=pSbTPYuk7USYMdJHqeMGfqFk+uhe4xz7erbBkr29E78=;
+	s=default; t=1764613616;
+	bh=pt6WLygOz9yPQCW5bO4V3L0zzdG9D795/IwWETgHRwQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sa/8CcZB9upXOY0S2GsX1arE2lPlVVMEVDHFV9zv4CM3EwYVr2CQmO/OB4KKHDOlW
-	 pF7Nxa9qkIhDLoCBM74e31AUkxpsI7pUkj7sLVgtr9/P9Go3/83OdXObWRtFACaBu1
-	 z27nd6b80QBSIv13vkkaEl/dS85dYSucBzCnDx2c=
-Date: Mon, 1 Dec 2025 09:05:55 -0800
+	b=ghWnJWTpZLuwUNNviSDjPq5w4j1VVojMAZV0nq9ReljxsAp0e9RAukDyedTR7WSvd
+	 fj+rGtzOXa8qHe7tpzaruExNasxHSYLZAz+mJHhnkuSpNoJ5O5c4UpYHYIxrFDQhTo
+	 RhflHOCWp36BoKF53Vkid47ZcRdRI6In94h7VDAA=
+Date: Mon, 1 Dec 2025 10:26:53 -0800
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Praveen K Paladugu <prapal@linux.microsoft.com>
+To: Anirudh Rayabharam <anirudh@anirudhrb.com>
 Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, arnd@arndb.de, anbelski@linux.microsoft.com,
-	easwar.hariharan@linux.microsoft.com,
-	nunodasneves@linux.microsoft.com
-Subject: Re: [PATCH v6 3/3] hyperv: Cleanly shutdown root partition with MSHV
-Message-ID: <aS3K898vD31Qi8mE@skinsburskii.localdomain>
-References: <20251126215013.11549-1-prapal@linux.microsoft.com>
- <20251126215013.11549-4-prapal@linux.microsoft.com>
+	decui@microsoft.com, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 4/7] Drivers: hv: Fix huge page handling in memory
+ region traversal
+Message-ID: <aS3d7Ybs2iS4qo13@skinsburskii.localdomain>
+References: <176412196000.447063.4256335030026363827.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <176412295155.447063.16512843211428609586.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <aS2vtXBx9uJ2U7F1@anirudh-surface.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -62,104 +60,38 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251126215013.11549-4-prapal@linux.microsoft.com>
+In-Reply-To: <aS2vtXBx9uJ2U7F1@anirudh-surface.localdomain>
 
-On Wed, Nov 26, 2025 at 03:49:53PM -0600, Praveen K Paladugu wrote:
-> When a root partition running on MSHV is powered off, the default
-> behavior is to write ACPI registers to power-off. However, this ACPI
-> write is intercepted by MSHV and will result in a Machine Check
-> Exception(MCE).
+On Mon, Dec 01, 2025 at 03:09:41PM +0000, Anirudh Rayabharam wrote:
+> On Wed, Nov 26, 2025 at 02:09:11AM +0000, Stanislav Kinsburskii wrote:
+> > The previous code assumed that if a region's first page was huge, the
+> > entire region consisted of huge pages and stored this in a large_pages
+> > flag. This premise is incorrect not only for movable regions (where
+> > pages can be split and merged on invalidate callbacks or page faults),
+> > but even for pinned regions: THPs can be split and merged during
+> > allocation, so a large, pinned region may contain a mix of huge and
+> > regular pages.
+> > 
+> > This change removes the large_pages flag and replaces region-wide
+> > assumptions with per-chunk inspection of the actual page size when
+> > mapping, unmapping, sharing, and unsharing. This makes huge page
+> > handling correct for mixed-page regions and avoids relying on stale
+> > metadata that can easily become invalid as memory is remapped.
+> > 
+> > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+> > ---
+> >  drivers/hv/mshv_regions.c |  213 +++++++++++++++++++++++++++++++++++++++------
+> >  drivers/hv/mshv_root.h    |    3 -
+> >  2 files changed, 184 insertions(+), 32 deletions(-)
 > 
-> The root partition eventually panics with a trace similar to:
+> Except the warning reported by kernel test robot:
 > 
->   [   81.306348] reboot: Power down
->   [   81.314709] mce: [Hardware Error]: CPU 0: Machine Check Exception: 4 Bank 0: b2000000c0060001
->   [   81.314711] mce: [Hardware Error]: TSC 3b8cb60a66 PPIN 11d98332458e4ea9
->   [   81.314713] mce: [Hardware Error]: PROCESSOR 0:606a6 TIME 1759339405 SOCKET 0 APIC 0 microcode ffffffff
->   [   81.314715] mce: [Hardware Error]: Run the above through 'mcelog --ascii'
->   [   81.314716] mce: [Hardware Error]: Machine check: Processor context corrupt
->   [   81.314717] Kernel panic - not syncing: Fatal machine check
-> 
-> To correctly shutdown a root partition running on MSHV hypervisor, sleep
-> state information must be configured within the hypervsior. Later, the
-> HVCALL_ENTER_SLEEP_STATE hypercall should be invoked as the last step in
-> the shutdown sequence.
-> 
-> The previous patch configures the sleep state information and this patch
-> invokes HVCALL_ENTER_SLEEP_STATE hypercall to cleanly shutdown the root
-> partition.
-> 
-> Signed-off-by: Praveen K Paladugu <prapal@linux.microsoft.com>
-> Co-developed-by: Anatol Belski <anbelski@linux.microsoft.com>
-> Signed-off-by: Anatol Belski <anbelski@linux.microsoft.com>
-> Reviewed-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
-> ---
->  arch/x86/include/asm/mshyperv.h |  2 ++
->  arch/x86/kernel/cpu/mshyperv.c  |  2 ++
->  drivers/hv/mshv_common.c        | 18 ++++++++++++++++++
->  3 files changed, 22 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> index 166053df0484..4c22f3257368 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -183,9 +183,11 @@ void hv_apic_init(void);
->  void __init hv_init_spinlocks(void);
->  bool hv_vcpu_is_preempted(int vcpu);
->  void hv_sleep_notifiers_register(void);
-> +void hv_machine_power_off(void);
->  #else
->  static inline void hv_apic_init(void) {}
->  static inline void hv_sleep_notifiers_register(void) {};
-> +static inline void hv_machine_power_off(void) {};
->  #endif
->  
->  struct irq_domain *hv_create_pci_msi_domain(void);
-> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-> index fac9953a72ef..579fb2c64cfd 100644
-> --- a/arch/x86/kernel/cpu/mshyperv.c
-> +++ b/arch/x86/kernel/cpu/mshyperv.c
-> @@ -621,6 +621,8 @@ static void __init ms_hyperv_init_platform(void)
->  #endif
->  
->  #if IS_ENABLED(CONFIG_HYPERV)
-> +	if (hv_root_partition())
-> +		machine_ops.power_off = hv_machine_power_off;
->  #if defined(CONFIG_KEXEC_CORE)
->  	machine_ops.shutdown = hv_machine_shutdown;
->  #endif
-> diff --git a/drivers/hv/mshv_common.c b/drivers/hv/mshv_common.c
-> index f1d4e81107ee..28905e3ed9c0 100644
-> --- a/drivers/hv/mshv_common.c
-> +++ b/drivers/hv/mshv_common.c
-> @@ -217,4 +217,22 @@ void hv_sleep_notifiers_register(void)
->  		pr_err("%s: cannot register reboot notifier %d\n", __func__,
->  		       ret);
->  }
-> +
-> +/*
-> + * Power off the machine by entering S5 sleep state via Hyper-V hypercall.
-> + * This call does not return if successful.
-> + */
-> +void hv_machine_power_off(void)
-> +{
-> +	unsigned long flags;
-> +	struct hv_input_enter_sleep_state *in;
-> +
-> +	local_irq_save(flags);
-> +	in = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> +	in->sleep_state = HV_SLEEP_STATE_S5;
-> +
-> +	(void)hv_do_hypercall(HVCALL_ENTER_SLEEP_STATE, in, NULL);
 
-Should this the error be printed?
+This one is a good catch.
+I'll fix it in the next revision.
 
-Acked-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Thanks,
+Stanislav
 
-> +	local_irq_restore(flags);
-> +
-> +}
->  #endif
-> -- 
-> 2.51.0
+> Reviewed-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
 
