@@ -1,237 +1,159 @@
-Return-Path: <linux-hyperv+bounces-7946-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7947-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11DC6CA1934
-	for <lists+linux-hyperv@lfdr.de>; Wed, 03 Dec 2025 21:36:19 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D941CA1B16
+	for <lists+linux-hyperv@lfdr.de>; Wed, 03 Dec 2025 22:40:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A7148300D4A0
-	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Dec 2025 20:36:15 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 55A73300CA3B
+	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Dec 2025 21:40:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BD79255E43;
-	Wed,  3 Dec 2025 20:36:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4C2F2D7D47;
+	Wed,  3 Dec 2025 21:40:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qalnHqRF"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YSwlSozD"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 677442C0268;
-	Wed,  3 Dec 2025 20:36:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E72B02C21D0;
+	Wed,  3 Dec 2025 21:40:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764794175; cv=none; b=Qka35iy7SwIB+3oaYUOujmKhwEnIgRJrFngOobGItbFCGYIaS3GCJgy29xYC99UM1TkGC3U6oNNrsGX9hBhHdKgVOYpU9xDxqJZvJmhriFdhc7AxRxt7NdmCtYQCmQK5a5a6o0A4j+JqQh/t29LO/Ryu01bVvjVd+r41QJgqZt4=
+	t=1764798036; cv=none; b=ip3Xbj2Jqd3eE5p/Oc48TtdA2FXEucBWPFlqZHsyNY2UX2xSwqE4UYrM5PdWrjVZ9iIDuxKnv5z5+kY4ON4uuN6WlxbEYOYYYBGOP4eR/NgoTwRKyg444YM03QYLW6jaF6DjtWIeutRqmGECqHyaTrcBeAtUpxeNCDQBVio+N60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764794175; c=relaxed/simple;
-	bh=gKq7ltB2vo2ue6PpgBSO4YWyGDaumHjYNBKIGo3k1a8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JROiReaZm0jTjowwYIn/CNkcacdJV+DoCGimYZrg+9AJLMIfhDrnX3IdAJplgUvOQ2Vu63rkEqSSfgDk10+cU65Nvm2i/VmU53K34GOyCvmu4AeY9aJHMm4wUetT0FP5v5jJumzjawQ/T2GCKYv1+eytPejCYFrpgzVEcEhNJc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qalnHqRF; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1764798036; c=relaxed/simple;
+	bh=wLWyPR/DHJ6mj91eIzTE94YFO7JGCzEw2cvblrQQHmg=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=qNptsKfm/igbrx/V6IZFdV8JfykIFxelKTA2VXmzMmRUUc3w9G4gS0PSf0aK8tpcTqv8WJzpUkMYBNY7yhY8L/rsLA9GWBkY7SdFbrjcT+aspz1DoI0LiRUDeCjUrSTH93l2iN8InUIowOwilqVTviessxQjMLDkkbZt02TOrVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=YSwlSozD; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.64.161.205] (unknown [52.148.140.42])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1805D2120731;
-	Wed,  3 Dec 2025 12:36:09 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1805D2120731
+Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 1971F200E9F8;
+	Wed,  3 Dec 2025 13:40:34 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1971F200E9F8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1764794169;
-	bh=LWhJ8Vu5dz9/Cy/AR6IXcX1SRP4joxugXUc3wgVRJF4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qalnHqRFWL7Y7IwIRaEvxFlUYOPqao8zDOFEPFCPzVu+zbiZ1Etlia6e+Wwq1zlye
-	 L43jjsFQoWD8UBVZVjUTQkWzCgI+CuExdvgRN74xwixRGXxoWEyJrWLHFq5tEhiSOu
-	 lsOEtV5PJiOabNu/TuH7HXNk2eszXNqLsdVL9ILM=
-Message-ID: <5d309f95-84d0-462e-a463-16d303629907@linux.microsoft.com>
-Date: Wed, 3 Dec 2025 12:36:07 -0800
+	s=default; t=1764798034;
+	bh=PZ5jdFFNCSzp8W2eRJ4uer/W7xyftFsEtiLg2ySPw6c=;
+	h=Subject:From:To:Cc:Date:From;
+	b=YSwlSozDA+E+wLbs8+Q8Y/WCjvnSWXbQRgBficHa5ntEANveg5DpRqix1VygMd75h
+	 phfMQnmony40IHekxMNXOQJtaZyc/ixXNNNhaoDbyxZpuaJRqLr/9RkkBttlGCAOOB
+	 ekx6No0s9pD7INrRkacadRek5xRRcN5fgV7OMlPY=
+Subject: [PATCH v9 0/6] Introduce movable pages for Hyper-V guests
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 03 Dec 2025 21:40:33 +0000
+Message-ID: 
+ <176479772384.304819.9168337792948347657.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 6/6] Drivers: hv: Add support for movable memory
- regions
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
- kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <176478581828.114132.13305536829966527782.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <176478627345.114132.10738191092601354463.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <176478627345.114132.10738191092601354463.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 12/3/2025 10:24 AM, Stanislav Kinsburskii wrote:
-> Introduce support for movable memory regions in the Hyper-V root partition
-> driver to improve memory management flexibility and enable advanced use
-> cases such as dynamic memory remapping.
-> 
-> Mirror the address space between the Linux root partition and guest VMs
-> using HMM. The root partition owns the memory, while guest VMs act as
-> devices with page tables managed via hypercalls. MSHV handles VP intercepts
-> by invoking hmm_range_fault() and updating SLAT entries. When memory is
-> reclaimed, HMM invalidates the relevant regions, prompting MSHV to clear
-> SLAT entries; guest VMs will fault again on access.
-> 
-> Integrate mmu_interval_notifier for movable regions, implement handlers for
-> HMM faults and memory invalidation, and update memory region mapping logic
-> to support movable regions.
-> 
-> While MMU notifiers are commonly used in virtualization drivers, this
-> implementation leverages HMM (Heterogeneous Memory Management) for its
-> specialized functionality. HMM provides a framework for mirroring,
-> invalidation, and fault handling, reducing boilerplate and improving
-> maintainability compared to generic MMU notifiers.
-> 
-> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> ---
->  drivers/hv/Kconfig          |    2 
->  drivers/hv/mshv_regions.c   |  215 ++++++++++++++++++++++++++++++++++++++++++-
->  drivers/hv/mshv_root.h      |   17 +++
->  drivers/hv/mshv_root_main.c |  139 +++++++++++++++++++++++-----
->  4 files changed, 343 insertions(+), 30 deletions(-)
-> 
-> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-> index d4a8d349200c..7937ac0cbd0f 100644
-> --- a/drivers/hv/Kconfig
-> +++ b/drivers/hv/Kconfig
-> @@ -76,6 +76,8 @@ config MSHV_ROOT
->  	depends on PAGE_SIZE_4KB
->  	select EVENTFD
->  	select VIRT_XFER_TO_GUEST_WORK
-> +	select HMM_MIRROR
-> +	select MMU_NOTIFIER
->  	default n
->  	help
->  	  Select this option to enable support for booting and running as root
-> diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
-> index 94f33754f545..afe03258caf0 100644
-> --- a/drivers/hv/mshv_regions.c
-> +++ b/drivers/hv/mshv_regions.c
-> @@ -7,6 +7,8 @@
->   * Authors: Microsoft Linux virtualization team
->   */
->  
-> +#include <linux/hmm.h>
-> +#include <linux/hyperv.h>
->  #include <linux/kref.h>
->  #include <linux/mm.h>
->  #include <linux/vmalloc.h>
-> @@ -15,6 +17,8 @@
->  
->  #include "mshv_root.h"
->  
-> +#define MSHV_MAP_FAULT_IN_PAGES				PTRS_PER_PMD
-> +
->  /**
->   * mshv_region_process_chunk - Processes a contiguous chunk of memory pages
->   *                             in a region.
-> @@ -152,9 +156,6 @@ struct mshv_mem_region *mshv_region_create(u64 guest_pfn, u64 nr_pages,
->  	if (flags & BIT(MSHV_SET_MEM_BIT_EXECUTABLE))
->  		region->hv_map_flags |= HV_MAP_GPA_EXECUTABLE;
->  
-> -	if (!is_mmio)
-> -		region->flags.range_pinned = true;
-> -
+From the start, the root-partition driver allocates, pins, and maps all
+guest memory into the hypervisor at guest creation. This is simple: Linux
+cannot move the pages, so the guest’s view in Linux and in Microsoft
+Hypervisor never diverges.
 
-The parameter is_mmio is now unused in this function.
+However, this approach has major drawbacks:
+ - NUMA: affinity can’t be changed at runtime, so you can’t migrate guest memory closer to the CPUs running it → performance hit.
+ - Memory management: unused guest memory can’t be swapped out, compacted, or merged.
+ - Provisioning time: upfront allocation/pinning slows guest create/destroy.
+ - Overcommit: no memory overcommit on hosts with pinned-guest memory.
 
->  	kref_init(&region->refcount);
->  
->  	return region;
-> @@ -239,7 +240,7 @@ int mshv_region_map(struct mshv_mem_region *region)
->  static void mshv_region_invalidate_pages(struct mshv_mem_region *region,
->  					 u64 page_offset, u64 page_count)
->  {
-> -	if (region->flags.range_pinned)
-> +	if (region->type == MSHV_REGION_TYPE_MEM_PINNED)
->  		unpin_user_pages(region->pages + page_offset, page_count);
->  
->  	memset(region->pages + page_offset, 0,
-> @@ -313,6 +314,9 @@ static void mshv_region_destroy(struct kref *ref)
->  	struct mshv_partition *partition = region->partition;
->  	int ret;
->  
-> +	if (region->type == MSHV_REGION_TYPE_MEM_MOVABLE)
-> +		mshv_region_movable_fini(region);
-> +
->  	if (mshv_partition_encrypted(partition)) {
->  		ret = mshv_region_share(region);
->  		if (ret) {
-> @@ -339,3 +343,206 @@ int mshv_region_get(struct mshv_mem_region *region)
->  {
->  	return kref_get_unless_zero(&region->refcount);
->  }
-> +
-> +/**
-> + * mshv_region_hmm_fault_and_lock - Handle HMM faults and lock the memory region
-> + * @region: Pointer to the memory region structure
-> + * @range: Pointer to the HMM range structure
-> + *
-> + * This function performs the following steps:
-> + * 1. Reads the notifier sequence for the HMM range.
-> + * 2. Acquires a read lock on the memory map.
-> + * 3. Handles HMM faults for the specified range.
-> + * 4. Releases the read lock on the memory map.
-> + * 5. If successful, locks the memory region mutex.
-> + * 6. Verifies if the notifier sequence has changed during the operation.
-> + *    If it has, releases the mutex and returns -EBUSY to match with
-> + *    hmm_range_fault() return code for repeating.
-> + *
-> + * Return: 0 on success, a negative error code otherwise.
-> + */
-> +static int mshv_region_hmm_fault_and_lock(struct mshv_mem_region *region,
-> +					  struct hmm_range *range)
-> +{
-> +	int ret;
-> +
-> +	range->notifier_seq = mmu_interval_read_begin(range->notifier);
-> +	mmap_read_lock(region->mni.mm);
-> +	ret = hmm_range_fault(range);
-> +	mmap_read_unlock(region->mni.mm);
-> +	if (ret)
-> +		return ret;
-> +
-> +	mutex_lock(&region->mutex);
-> +
-> +	if (mmu_interval_read_retry(range->notifier, range->notifier_seq)) {
-> +		mutex_unlock(&region->mutex);
-> +		cond_resched();
-> +		return -EBUSY;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * mshv_region_range_fault - Handle memory range faults for a given region.
-> + * @region: Pointer to the memory region structure.
-> + * @page_offset: Offset of the page within the region.
-> + * @page_count: Number of pages to handle.
-> + *
-> + * This function resolves memory faults for a specified range of pages
-> + * within a memory region. It uses HMM (Heterogeneous Memory Management)
-> + * to fault in the required pages and updates the region's page array.
-> + *
-> + * Return: 0 on success, negative error code on failure.
-> + */
-> +static int mshv_region_range_fault(struct mshv_mem_region *region,
-> +				   u64 page_offset, u64 page_count)
-> +{
-> +	struct hmm_range range = {
-> +		.notifier = &region->mni,
-> +		.default_flags = HMM_PFN_REQ_FAULT | HMM_PFN_REQ_WRITE,
-> +	};
-> +	unsigned long *pfns;
-> +	int ret;
-> +	u64 i;
-> +
-> +	pfns = kmalloc_array(page_count, sizeof(unsigned long), GFP_KERNEL);
+This series adds movable memory pages for Hyper-V child partitions. Guest
+pages are no longer allocated upfront; they’re allocated and mapped into
+the hypervisor on demand (i.e., when the guest touches a GFN that isn’t yet
+backed by a host PFN).
+When a page is moved, Linux no longer holds it and it is unmapped from the hypervisor.
+As a result, Hyper-V guests behave like regular Linux processes, enabling standard Linux memory features to apply to guests.
 
-nit: Prefer sizeof(*pfns)
+Exceptions (still pinned):
+ 1. Encrypted guests (explicit).
+ 2. Guests with passthrough devices (implicitly pinned by the VFIO framework).
 
-<snip>
+v9:
+ - Fix check to huge page order in the region traversal logic.
+ - Fix check for page is huge in region traversal callbacks to support
+   hugetlb pages.
+ - Removed now unused is_mmio parameter from region creation function.
+ - Array allocation change to use the actual variable size instead of
+   type size.
 
-The rest looks fine to me. With the minor issues above fixed,
-Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+v8:
+ - Drop the guest regions intersection clean up patch as it's doesn't catch
+   a case when a new region completely overlaps an existing region.
+ - Fix missing propagation of passed region unmap flags during chunk unmap.
+
+v7:
+ - Only the first two patches remain unchanged from v6.
+ - Introduced reference counting for memory regions to resolve a race
+   condition between region servicing (faulting and invalidation) and region
+   destruction.
+ - Corrected the assumption that regions starting with a huge page contain
+   only huge pages; the code now properly handles regions with mixed page
+   size segments.
+ - Consolidated region management logic into a dedicated file.
+ - Updated the driver to select MMU_NOTIFIER, removing support for
+   configurations without this option.
+ - Cleaned up and refactored the region management code.
+ - Fixed a build issue reported by the kernel test robot for configurations
+   where HPAGE_PMD_NR is defined to result in build bug.
+ - Replaced VALUE_PMD_ALIGNED with the generic IS_ALIGNED macro.
+ - Simplified region flags by introducing a region type for clarity.
+ - Improved commit messages.
+
+v6:
+ - Fix a bug in large page remapping where setting the large map flag based
+   on the PFN offset's large page alignment within the region implicitly
+   assumed that the region's start offset was also large page aligned,
+   which could cause map hypercall failures.
+ - Fix a bug in large page unmapping where setting the large unmap flag for
+   an unaligned guest PFN range could result in unmap hypercall failures.
+
+v5:
+ - Fix a bug in MMU notifier handling where an uninitialized 'ret' variable
+   could cause the warning about failed page invalidation to be skipped.
+ - Improve comment grammar regarding skipping the unmapping of non-mapped pages.
+
+v4:
+ - Fix a bug in batch unmapping can skip mapped pages when selecting a new
+   batch due to wrong offset calculation.
+ - Fix an error message in case of failed memory region pinning.
+
+v3:
+ - Region is invalidated even if the mm has no users.
+ - Page remapping logic is updated to support 2M-unaligned remappings for
+   regions that are PMD-aligned, which can occur during both faults and
+   invalidations.
+
+v2:
+ - Split unmap batching into a separate patch.
+ - Fixed commit messages from v1 review.
+ - Renamed a few functions for clarity.
+
+---
+
+Stanislav Kinsburskii (6):
+      Drivers: hv: Refactor and rename memory region handling functions
+      Drivers: hv: Centralize guest memory region destruction
+      Drivers: hv: Move region management to mshv_regions.c
+      Drivers: hv: Fix huge page handling in memory region traversal
+      Drivers: hv: Add refcount and locking to mem regions
+      Drivers: hv: Add support for movable memory regions
+
+
+ drivers/hv/Kconfig          |    2 
+ drivers/hv/Makefile         |    2 
+ drivers/hv/mshv_regions.c   |  555 +++++++++++++++++++++++++++++++++++++++++++
+ drivers/hv/mshv_root.h      |   31 ++
+ drivers/hv/mshv_root_main.c |  375 +++++++++++++----------------
+ 5 files changed, 748 insertions(+), 217 deletions(-)
+ create mode 100644 drivers/hv/mshv_regions.c
+
 
