@@ -1,52 +1,51 @@
-Return-Path: <linux-hyperv+bounces-7951-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7952-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54D74CA1B31
-	for <lists+linux-hyperv@lfdr.de>; Wed, 03 Dec 2025 22:41:58 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE43FCA1B3A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 03 Dec 2025 22:42:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C1D30302017B
-	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Dec 2025 21:41:01 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 81BF630253C8
+	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Dec 2025 21:41:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A96772D8DC2;
-	Wed,  3 Dec 2025 21:40:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A95CE2D8377;
+	Wed,  3 Dec 2025 21:41:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RqqvO/K+"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nyRQDXqt"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E42452D7DEF;
-	Wed,  3 Dec 2025 21:40:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 045432D7DDC;
+	Wed,  3 Dec 2025 21:41:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764798059; cv=none; b=eeXdD6NA5Oz138r1C0AOKP5nXm6NzgeVLAt3JmqCRRHlrqDA2cVqcnUU4v4KlRN4xuSMpoW0yBIWBmNfELUxPmQjj0LqviA4B5Ft887I5T70m9y7APnSiJNYYvzRc2E6l6sYFIjSI2b9qg12K2w8fw/3Gnb9bIn7gzQhF0dImVM=
+	t=1764798067; cv=none; b=jUqZ7MuQk2XKsiecShgz5eH5hKbVOJ8+3gsPbvifwy3MZrWdt108Ol0PzS73U6xgcss80hNwQ+lMjERPaCdI70yuRkKQNLqIKOq90OuQMVwE711dzPKUUtsCjQ/oAV5TQ335kpD15HwkFIwEyHfdkr61+Ia9zkVJ+6N0j1ko2eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764798059; c=relaxed/simple;
-	bh=xZV0OXZdn9tiH5W2Yn7eJLoulB1SmD5RASF4ggv42sw=;
+	s=arc-20240116; t=1764798067; c=relaxed/simple;
+	bh=f/VgY/PViOFhq8RJ+WpLLJk0SYU+SccNZdP8ADJuOwg=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lLRtQa2/ps90ZinyO7uuVZP6YsziMQNXiSoQUkZnCy66mdeOX3rFk8yOKJhjthu7FQIsUpOTbKm3KNW0CQldZAwY5fv3KLZQ3cqRnMwq1+LmjO9WE0XhKcGrugLbKTvUCNf2Ol+9a1vUQsl2wfJRLHINIweXlR/8ZSCUDvnltFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RqqvO/K+; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version:Content-Type; b=m1jNUihk6ejIKjJT563Nz4XNncAPn9OU9Qu4I2c84hEP+tHTjstBYzKG/KSsnBM2jc0jr3YZCKNGfqrSvvShwTK5iDFh5zce16CHxcPN0ekCYC316Tbt6G/1BfHV4Fv09Edopj+0lQUjecib7e+DtVpYRCPh/sblgz9k72mBtTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=nyRQDXqt; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id EA2C82120E8B;
-	Wed,  3 Dec 2025 13:40:56 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EA2C82120E8B
+	by linux.microsoft.com (Postfix) with ESMTPSA id D7139212326F;
+	Wed,  3 Dec 2025 13:41:02 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D7139212326F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1764798057;
-	bh=rBwN1PmXACDwN60ssIVpRrB8Ua25i4Q/X1TfPecDBLE=;
+	s=default; t=1764798062;
+	bh=gYLya0rqS5cpv2upQ49IgAB0eCpR9aSi74TuJIV9nA8=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=RqqvO/K+U0FWenKB5TW45t1VQ7CTND/ki1x2pnkdfCMC8GqlJZ571eUQxqHCIQ+Pl
-	 bDWkEaPx3T1zHP/fTsRWWcBrsSeOrVuLll0s5oKf8lIxamtMmUyITOPTwdoo0qRjA1
-	 w+44isSJjLNUaL85co7zWJJo5n+yj33pW8OhXqt8=
-Subject: [PATCH v9 4/6] Drivers: hv: Fix huge page handling in memory region
- traversal
+	b=nyRQDXqtFYRBdxq/7IsI0FMiuy+CVg6hHFkz9T9RvKWZY2AAKYvE8nX+EqTspB0hO
+	 3EJn1ZAmbcwsUJbAnDWUWarODG9hs6USJ4m49wS5xs/ET9FD3uDQ1z/9unnHXxrz35
+	 pyYBTL+IApcxyrXp5r4XJhjaossQ0BmtlkSbg65s=
+Subject: [PATCH v9 5/6] Drivers: hv: Add refcount and locking to mem regions
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 03 Dec 2025 21:40:56 +0000
+Date: Wed, 03 Dec 2025 21:41:02 +0000
 Message-ID: 
- <176479805682.304819.16453923977474855999.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <176479806274.304819.6733471661684698320.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 In-Reply-To: 
  <176479772384.304819.9168337792948347657.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 References: 
@@ -61,333 +60,198 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-The previous code assumed that if a region's first page was huge, the
-entire region consisted of huge pages and stored this in a large_pages
-flag. This premise is incorrect not only for movable regions (where
-pages can be split and merged on invalidate callbacks or page faults),
-but even for pinned regions: THPs can be split and merged during
-allocation, so a large, pinned region may contain a mix of huge and
-regular pages.
+Introduce kref-based reference counting and spinlock protection for
+memory regions in Hyper-V partition management. This change improves
+memory region lifecycle management and ensures thread-safe access to the
+region list.
 
-This change removes the large_pages flag and replaces region-wide
-assumptions with per-chunk inspection of the actual page size when
-mapping, unmapping, sharing, and unsharing. This makes huge page
-handling correct for mixed-page regions and avoids relying on stale
-metadata that can easily become invalid as memory is remapped.
+Also improves the check for overlapped memory regions during region
+creation, preventing duplicate or conflicting mappings.
+
+Previously, the regions list was protected by the partition mutex.
+However, this approach is too heavy for frequent fault and invalidation
+operations. Finer grained locking is now used to improve efficiency and
+concurrency.
+
+This is a precursor to supporting movable memory regions. Fault and
+invalidation handling for movable regions will require safe traversal of
+the region list and holding a region reference while performing
+invalidation or fault operations.
 
 Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Reviewed-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
 ---
- drivers/hv/mshv_regions.c |  219 +++++++++++++++++++++++++++++++++++++++------
- drivers/hv/mshv_root.h    |    3 -
- 2 files changed, 191 insertions(+), 31 deletions(-)
+ drivers/hv/mshv_regions.c   |   19 ++++++++++++++++---
+ drivers/hv/mshv_root.h      |    6 +++++-
+ drivers/hv/mshv_root_main.c |   32 ++++++++++++++++++++++++--------
+ 3 files changed, 45 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
-index 35b866670840..40126c12ab33 100644
+index 40126c12ab33..4ec78fdaf56d 100644
 --- a/drivers/hv/mshv_regions.c
 +++ b/drivers/hv/mshv_regions.c
-@@ -14,6 +14,124 @@
+@@ -7,6 +7,7 @@
+  * Authors: Microsoft Linux virtualization team
+  */
  
- #include "mshv_root.h"
++#include <linux/kref.h>
+ #include <linux/mm.h>
+ #include <linux/vmalloc.h>
  
-+/**
-+ * mshv_region_process_chunk - Processes a contiguous chunk of memory pages
-+ *                             in a region.
-+ * @region     : Pointer to the memory region structure.
-+ * @flags      : Flags to pass to the handler.
-+ * @page_offset: Offset into the region's pages array to start processing.
-+ * @page_count : Number of pages to process.
-+ * @handler    : Callback function to handle the chunk.
-+ *
-+ * This function scans the region's pages starting from @page_offset,
-+ * checking for contiguous present pages of the same size (normal or huge).
-+ * It invokes @handler for the chunk of contiguous pages found. Returns the
-+ * number of pages handled, or a negative error code if the first page is
-+ * not present or the handler fails.
-+ *
-+ * Note: The @handler callback must be able to handle both normal and huge
-+ * pages.
-+ *
-+ * Return: Number of pages handled, or negative error code.
-+ */
-+static long mshv_region_process_chunk(struct mshv_mem_region *region,
-+				      u32 flags,
-+				      u64 page_offset, u64 page_count,
-+				      int (*handler)(struct mshv_mem_region *region,
-+						     u32 flags,
-+						     u64 page_offset,
-+						     u64 page_count))
-+{
-+	u64 count, stride;
-+	unsigned int page_order;
-+	struct page *page;
-+	int ret;
-+
-+	page = region->pages[page_offset];
-+	if (!page)
-+		return -EINVAL;
-+
-+	page_order = folio_order(page_folio(page));
-+	/* The hypervisor only supports 4K and 2M page sizes */
-+	if (page_order && page_order != HPAGE_PMD_ORDER)
-+		return -EINVAL;
-+
-+	stride = 1 << page_order;
-+
-+	/* Start at stride since the first page is validated */
-+	for (count = stride; count < page_count; count += stride) {
-+		page = region->pages[page_offset + count];
-+
-+		/* Break if current page is not present */
-+		if (!page)
-+			break;
-+
-+		/* Break if page size changes */
-+		if (page_order != folio_order(page_folio(page)))
-+			break;
-+	}
-+
-+	ret = handler(region, flags, page_offset, count);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+/**
-+ * mshv_region_process_range - Processes a range of memory pages in a
-+ *                             region.
-+ * @region     : Pointer to the memory region structure.
-+ * @flags      : Flags to pass to the handler.
-+ * @page_offset: Offset into the region's pages array to start processing.
-+ * @page_count : Number of pages to process.
-+ * @handler    : Callback function to handle each chunk of contiguous
-+ *               pages.
-+ *
-+ * Iterates over the specified range of pages in @region, skipping
-+ * non-present pages. For each contiguous chunk of present pages, invokes
-+ * @handler via mshv_region_process_chunk.
-+ *
-+ * Note: The @handler callback must be able to handle both normal and huge
-+ * pages.
-+ *
-+ * Returns 0 on success, or a negative error code on failure.
-+ */
-+static int mshv_region_process_range(struct mshv_mem_region *region,
-+				     u32 flags,
-+				     u64 page_offset, u64 page_count,
-+				     int (*handler)(struct mshv_mem_region *region,
-+						    u32 flags,
-+						    u64 page_offset,
-+						    u64 page_count))
-+{
-+	long ret;
-+
-+	if (page_offset + page_count > region->nr_pages)
-+		return -EINVAL;
-+
-+	while (page_count) {
-+		/* Skip non-present pages */
-+		if (!region->pages[page_offset]) {
-+			page_offset++;
-+			page_count--;
-+			continue;
-+		}
-+
-+		ret = mshv_region_process_chunk(region, flags,
-+						page_offset,
-+						page_count,
-+						handler);
-+		if (ret < 0)
-+			return ret;
-+
-+		page_offset += ret;
-+		page_count -= ret;
-+	}
-+
-+	return 0;
-+}
-+
- struct mshv_mem_region *mshv_region_create(u64 guest_pfn, u64 nr_pages,
- 					   u64 uaddr, u32 flags,
- 					   bool is_mmio)
-@@ -33,55 +151,86 @@ struct mshv_mem_region *mshv_region_create(u64 guest_pfn, u64 nr_pages,
- 	if (flags & BIT(MSHV_SET_MEM_BIT_EXECUTABLE))
- 		region->hv_map_flags |= HV_MAP_GPA_EXECUTABLE;
- 
--	/* Note: large_pages flag populated when we pin the pages */
+@@ -154,6 +155,8 @@ struct mshv_mem_region *mshv_region_create(u64 guest_pfn, u64 nr_pages,
  	if (!is_mmio)
  		region->flags.range_pinned = true;
  
++	kref_init(&region->refcount);
++
  	return region;
  }
  
-+static int mshv_region_chunk_share(struct mshv_mem_region *region,
-+				   u32 flags,
-+				   u64 page_offset, u64 page_count)
-+{
-+	struct page *page = region->pages[page_offset];
-+
-+	if (PageHuge(page) || PageTransCompound(page))
-+		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
-+
-+	return hv_call_modify_spa_host_access(region->partition->pt_id,
-+					      region->pages + page_offset,
-+					      page_count,
-+					      HV_MAP_GPA_READABLE |
-+					      HV_MAP_GPA_WRITABLE,
-+					      flags, true);
-+}
-+
- int mshv_region_share(struct mshv_mem_region *region)
- {
- 	u32 flags = HV_MODIFY_SPA_PAGE_HOST_ACCESS_MAKE_SHARED;
- 
--	if (region->flags.large_pages)
-+	return mshv_region_process_range(region, flags,
-+					 0, region->nr_pages,
-+					 mshv_region_chunk_share);
-+}
-+
-+static int mshv_region_chunk_unshare(struct mshv_mem_region *region,
-+				     u32 flags,
-+				     u64 page_offset, u64 page_count)
-+{
-+	struct page *page = region->pages[page_offset];
-+
-+	if (PageHuge(page) || PageTransCompound(page))
- 		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
- 
- 	return hv_call_modify_spa_host_access(region->partition->pt_id,
--			region->pages, region->nr_pages,
--			HV_MAP_GPA_READABLE | HV_MAP_GPA_WRITABLE,
--			flags, true);
-+					      region->pages + page_offset,
-+					      page_count, 0,
-+					      flags, false);
+@@ -311,13 +314,13 @@ static int mshv_region_unmap(struct mshv_mem_region *region)
+ 					 mshv_region_chunk_unmap);
  }
  
- int mshv_region_unshare(struct mshv_mem_region *region)
+-void mshv_region_destroy(struct mshv_mem_region *region)
++static void mshv_region_destroy(struct kref *ref)
  {
- 	u32 flags = HV_MODIFY_SPA_PAGE_HOST_ACCESS_MAKE_EXCLUSIVE;
- 
--	if (region->flags.large_pages)
--		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
--
--	return hv_call_modify_spa_host_access(region->partition->pt_id,
--			region->pages, region->nr_pages,
--			0,
--			flags, false);
-+	return mshv_region_process_range(region, flags,
-+					 0, region->nr_pages,
-+					 mshv_region_chunk_unshare);
- }
- 
--static int mshv_region_remap_pages(struct mshv_mem_region *region,
--				   u32 map_flags,
-+static int mshv_region_chunk_remap(struct mshv_mem_region *region,
-+				   u32 flags,
- 				   u64 page_offset, u64 page_count)
- {
--	if (page_offset + page_count > region->nr_pages)
--		return -EINVAL;
-+	struct page *page = region->pages[page_offset];
- 
--	if (region->flags.large_pages)
--		map_flags |= HV_MAP_GPA_LARGE_PAGE;
-+	if (PageHuge(page) || PageTransCompound(page))
-+		flags |= HV_MAP_GPA_LARGE_PAGE;
- 
- 	return hv_call_map_gpa_pages(region->partition->pt_id,
- 				     region->start_gfn + page_offset,
--				     page_count, map_flags,
-+				     page_count, flags,
- 				     region->pages + page_offset);
- }
- 
-+static int mshv_region_remap_pages(struct mshv_mem_region *region,
-+				   u32 map_flags,
-+				   u64 page_offset, u64 page_count)
-+{
-+	return mshv_region_process_range(region, map_flags,
-+					 page_offset, page_count,
-+					 mshv_region_chunk_remap);
-+}
-+
- int mshv_region_map(struct mshv_mem_region *region)
- {
- 	u32 map_flags = region->hv_map_flags;
-@@ -134,9 +283,6 @@ int mshv_region_pin(struct mshv_mem_region *region)
- 			goto release_pages;
- 	}
- 
--	if (PageHuge(region->pages[0]))
--		region->flags.large_pages = true;
--
- 	return 0;
- 
- release_pages:
-@@ -144,10 +290,30 @@ int mshv_region_pin(struct mshv_mem_region *region)
- 	return ret;
- }
- 
-+static int mshv_region_chunk_unmap(struct mshv_mem_region *region,
-+				   u32 flags,
-+				   u64 page_offset, u64 page_count)
-+{
-+	struct page *page = region->pages[page_offset];
-+
-+	if (PageHuge(page) || PageTransCompound(page))
-+		flags |= HV_UNMAP_GPA_LARGE_PAGE;
-+
-+	return hv_call_unmap_gpa_pages(region->partition->pt_id,
-+				       region->start_gfn + page_offset,
-+				       page_count, flags);
-+}
-+
-+static int mshv_region_unmap(struct mshv_mem_region *region)
-+{
-+	return mshv_region_process_range(region, 0,
-+					 0, region->nr_pages,
-+					 mshv_region_chunk_unmap);
-+}
-+
- void mshv_region_destroy(struct mshv_mem_region *region)
- {
++	struct mshv_mem_region *region =
++		container_of(ref, struct mshv_mem_region, refcount);
  	struct mshv_partition *partition = region->partition;
--	u32 unmap_flags = 0;
  	int ret;
  
- 	hlist_del(&region->hnode);
-@@ -162,12 +328,7 @@ void mshv_region_destroy(struct mshv_mem_region *region)
- 		}
- 	}
- 
--	if (region->flags.large_pages)
--		unmap_flags |= HV_UNMAP_GPA_LARGE_PAGE;
+-	hlist_del(&region->hnode);
 -
--	/* ignore unmap failures and continue as process may be exiting */
--	hv_call_unmap_gpa_pages(partition->pt_id, region->start_gfn,
--				region->nr_pages, unmap_flags);
-+	mshv_region_unmap(region);
+ 	if (mshv_partition_encrypted(partition)) {
+ 		ret = mshv_region_share(region);
+ 		if (ret) {
+@@ -334,3 +337,13 @@ void mshv_region_destroy(struct mshv_mem_region *region)
  
- 	mshv_region_invalidate(region);
- 
+ 	vfree(region);
+ }
++
++void mshv_region_put(struct mshv_mem_region *region)
++{
++	kref_put(&region->refcount, mshv_region_destroy);
++}
++
++int mshv_region_get(struct mshv_mem_region *region)
++{
++	return kref_get_unless_zero(&region->refcount);
++}
 diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
-index 0366f416c2f0..ff3374f13691 100644
+index ff3374f13691..4249534ba900 100644
 --- a/drivers/hv/mshv_root.h
 +++ b/drivers/hv/mshv_root.h
-@@ -77,9 +77,8 @@ struct mshv_mem_region {
+@@ -72,6 +72,7 @@ do { \
+ 
+ struct mshv_mem_region {
+ 	struct hlist_node hnode;
++	struct kref refcount;
+ 	u64 nr_pages;
+ 	u64 start_gfn;
  	u64 start_uaddr;
- 	u32 hv_map_flags;
- 	struct {
--		u64 large_pages:  1; /* 2MiB */
- 		u64 range_pinned: 1;
--		u64 reserved:	 62;
-+		u64 reserved:	 63;
- 	} flags;
- 	struct mshv_partition *partition;
- 	struct page *pages[];
+@@ -97,6 +98,8 @@ struct mshv_partition {
+ 	u64 pt_id;
+ 	refcount_t pt_ref_count;
+ 	struct mutex pt_mutex;
++
++	spinlock_t pt_mem_regions_lock;
+ 	struct hlist_head pt_mem_regions; // not ordered
+ 
+ 	u32 pt_vp_count;
+@@ -319,6 +322,7 @@ int mshv_region_unshare(struct mshv_mem_region *region);
+ int mshv_region_map(struct mshv_mem_region *region);
+ void mshv_region_invalidate(struct mshv_mem_region *region);
+ int mshv_region_pin(struct mshv_mem_region *region);
+-void mshv_region_destroy(struct mshv_mem_region *region);
++void mshv_region_put(struct mshv_mem_region *region);
++int mshv_region_get(struct mshv_mem_region *region);
+ 
+ #endif /* _MSHV_ROOT_H_ */
+diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+index 5dfb933da981..aa1a11f4dc3e 100644
+--- a/drivers/hv/mshv_root_main.c
++++ b/drivers/hv/mshv_root_main.c
+@@ -1086,13 +1086,15 @@ static int mshv_partition_create_region(struct mshv_partition *partition,
+ 	u64 nr_pages = HVPFN_DOWN(mem->size);
+ 
+ 	/* Reject overlapping regions */
++	spin_lock(&partition->pt_mem_regions_lock);
+ 	hlist_for_each_entry(rg, &partition->pt_mem_regions, hnode) {
+ 		if (mem->guest_pfn + nr_pages <= rg->start_gfn ||
+ 		    rg->start_gfn + rg->nr_pages <= mem->guest_pfn)
+ 			continue;
+-
++		spin_unlock(&partition->pt_mem_regions_lock);
+ 		return -EEXIST;
+ 	}
++	spin_unlock(&partition->pt_mem_regions_lock);
+ 
+ 	rg = mshv_region_create(mem->guest_pfn, nr_pages,
+ 				mem->userspace_addr, mem->flags,
+@@ -1224,8 +1226,9 @@ mshv_map_user_memory(struct mshv_partition *partition,
+ 	if (ret)
+ 		goto errout;
+ 
+-	/* Install the new region */
++	spin_lock(&partition->pt_mem_regions_lock);
+ 	hlist_add_head(&region->hnode, &partition->pt_mem_regions);
++	spin_unlock(&partition->pt_mem_regions_lock);
+ 
+ 	return 0;
+ 
+@@ -1244,17 +1247,27 @@ mshv_unmap_user_memory(struct mshv_partition *partition,
+ 	if (!(mem.flags & BIT(MSHV_SET_MEM_BIT_UNMAP)))
+ 		return -EINVAL;
+ 
++	spin_lock(&partition->pt_mem_regions_lock);
++
+ 	region = mshv_partition_region_by_gfn(partition, mem.guest_pfn);
+-	if (!region)
+-		return -EINVAL;
++	if (!region) {
++		spin_unlock(&partition->pt_mem_regions_lock);
++		return -ENOENT;
++	}
+ 
+ 	/* Paranoia check */
+ 	if (region->start_uaddr != mem.userspace_addr ||
+ 	    region->start_gfn != mem.guest_pfn ||
+-	    region->nr_pages != HVPFN_DOWN(mem.size))
++	    region->nr_pages != HVPFN_DOWN(mem.size)) {
++		spin_unlock(&partition->pt_mem_regions_lock);
+ 		return -EINVAL;
++	}
++
++	hlist_del(&region->hnode);
+ 
+-	mshv_region_destroy(region);
++	spin_unlock(&partition->pt_mem_regions_lock);
++
++	mshv_region_put(region);
+ 
+ 	return 0;
+ }
+@@ -1657,8 +1670,10 @@ static void destroy_partition(struct mshv_partition *partition)
+ 	remove_partition(partition);
+ 
+ 	hlist_for_each_entry_safe(region, n, &partition->pt_mem_regions,
+-				  hnode)
+-		mshv_region_destroy(region);
++				  hnode) {
++		hlist_del(&region->hnode);
++		mshv_region_put(region);
++	}
+ 
+ 	/* Withdraw and free all pages we deposited */
+ 	hv_call_withdraw_memory(U64_MAX, NUMA_NO_NODE, partition->pt_id);
+@@ -1856,6 +1871,7 @@ mshv_ioctl_create_partition(void __user *user_arg, struct device *module_dev)
+ 
+ 	INIT_HLIST_HEAD(&partition->pt_devices);
+ 
++	spin_lock_init(&partition->pt_mem_regions_lock);
+ 	INIT_HLIST_HEAD(&partition->pt_mem_regions);
+ 
+ 	mshv_eventfd_init(partition);
 
 
 
