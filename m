@@ -1,110 +1,213 @@
-Return-Path: <linux-hyperv+bounces-7960-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7961-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E6F7CA2FB0
-	for <lists+linux-hyperv@lfdr.de>; Thu, 04 Dec 2025 10:27:05 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBCFDCA3756
+	for <lists+linux-hyperv@lfdr.de>; Thu, 04 Dec 2025 12:37:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 5EE953006FDB
-	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Dec 2025 09:26:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 79970304077D
+	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Dec 2025 11:35:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30EFD335064;
-	Thu,  4 Dec 2025 09:17:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B854A2F2603;
+	Thu,  4 Dec 2025 11:35:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lXMJFlx5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PE2D3ncJ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3345334C10
-	for <linux-hyperv@vger.kernel.org>; Thu,  4 Dec 2025 09:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5BA185B48
+	for <linux-hyperv@vger.kernel.org>; Thu,  4 Dec 2025 11:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764839863; cv=none; b=G+kZJBh3fX6s0P13RGwbNteaFfHQIi2s5jJ6ukTbNEJluSYYduLNFGx48Y0Ylsrj0M28kenF3IB/YycjQapiYpAWEeQG+DaTp9y5wM8OBM56/Kab5fDlwJG3JiCGvuEzouMLCbpxW98wOtx3b1p/motTfjSn/jt5OB3eteBTDoY=
+	t=1764848135; cv=none; b=oaQF2xD/bhCQT28xNGcF0IPsBWpqVVYzhBbsqQp0xcb40Q56D/iTjZ+vvHBsVdoSy1lj4AVZShHWXTSMMN+D8kGpVLNzNA9Qyt023/dwKjuYrP35mhAmRYLFCNtbbES20jeMyzRi4ale2wnLoxNKS677KcXB5nJc5OVL8pRzsmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764839863; c=relaxed/simple;
-	bh=bdxR7v9DL4giaQ0nD6cGSOn8HPdLK+CBHB+mv5p51TE=;
+	s=arc-20240116; t=1764848135; c=relaxed/simple;
+	bh=EMpcWrGGQwTXgeTLemTtgVh+nkLljKRqYaXSkt9phIE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rRwrzqEVKMtJ8+iMtaGwHYY/B5a8BgX9H6mt4VTYpU6r2n/t4Qvn4Z/W3VJm1GdMCut2w9IRkAopfodFjssKA0XABrIDRvREdWHJrxlrMB3/wF3YupTKmwM0rmoKJhiKceJcIKNlfbJlgA5CeCJ2dzM7wFBt5+RjfRKcHbPOfMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lXMJFlx5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DB3FC116C6
-	for <linux-hyperv@vger.kernel.org>; Thu,  4 Dec 2025 09:17:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764839863;
-	bh=bdxR7v9DL4giaQ0nD6cGSOn8HPdLK+CBHB+mv5p51TE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lXMJFlx51rTedas29KHnOrmyDSqkZ9OMYrKSulTiX57PBwHm2eQiqLevCstNDBnVT
-	 nCVGTNp7fzETozRNuQAA5mbYmXhdurch8QsIn1ts0SUX0878qPP6F5FVDYrBr3wT9W
-	 AkgTKbQXFCzm1WMgZMKHaINZLTSqwLCCAD0dAxU5Kk45tsxO0uZPJvt91vcWn+0bYC
-	 C2IgMJeK7my4B4xpP9tsR0pWBNKZ4d4GMAlf00wpJGT2bjit1qFoztrZDlC8sl6QNP
-	 7TWkDlYiX/OoujuaVpQfW9eeV92YLP9lkU3JZRQx/bEk4561i1k13l8QYbKxWEI4oz
-	 nLySSoiGo2EBQ==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5942a631c2dso1075251e87.2
-        for <linux-hyperv@vger.kernel.org>; Thu, 04 Dec 2025 01:17:43 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWG8AiqCBREIkRTjqUhjWUrjC3EmhGBCl8MVTRBLySIRmq/3XJJ85TiaENtAFQ6iazrkqqoN/HuQbsCU6E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuLAtvtGrAvW0AUo77J6C2sTNzrhZ1KoRYa7LhUyaqMkPlFoXR
-	f/kdM71ait69vO8IebClHdzRkA0wJqVTpF+Ax/WOJ7dtCn1nHVpuj3CZEAYCsNkQxJf7nd4Wsk8
-	cHbnzd1Qlh1B1p7qwVsnh0SvUtqgGPDU=
-X-Google-Smtp-Source: AGHT+IEepIIomfWFRr0Rx3UmKjb+4HGFPEe9u/4871RbpTRAjdKjp2QqrAmQWNspq2CaP1lGYKWgUBnucw5FQcFMAE4=
-X-Received: by 2002:a05:6512:3b0e:b0:55f:4633:7b2 with SMTP id
- 2adb3069b0e04-597d3fdddf4mr1972090e87.46.1764839861912; Thu, 04 Dec 2025
- 01:17:41 -0800 (PST)
+	 To:Cc:Content-Type; b=ft3ZmtDCSuYKPHF8SmLUfenFAWktMhXo9XAxSRoPFquZyPNLRM1h4cfYewIfVSzXhDOL3rm9cxzL15FjSMYzMmlSj2uB7YYVbsxl+GzPnWNSUvicMdlwoBl+GEzmX2hIECuFXXjaUmmPG6ssI2wQlY3dqvji6ZgMVgCB1rWQPFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PE2D3ncJ; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b98983bae80so794275a12.0
+        for <linux-hyperv@vger.kernel.org>; Thu, 04 Dec 2025 03:35:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764848133; x=1765452933; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ETT37Ok2evrsGxBi30r3TjGdteYNKEZEEnmPEtqgVI0=;
+        b=PE2D3ncJV3tDWM16hEM36qhahSKK6R2Gkagm6k3hjOGKV5y25gqac4GVLikwceHpOA
+         4LMiKmzTgb2LWosfamRLPJCEXXoXjEtlt4kusk3Wh0u6n8Q9ZkLLjaxlL18dQ2B8nFr6
+         RRJVIqMANEYwwBR/eU78j0qL5maP3T9eO7PD/u4rWPDfk8ff70YsIWpTWrVGCeNfhsyB
+         a6+cvFSApAwMkSIegm15DM1rQ+E4H51RMQp1UwYoTWdMaDrutTt2/efmltKtLq86aSZu
+         6+DC/1FK4trLWVERg9Tkm2rxq1vWt5d7cLI8KG4Eqm1he8zMgpjFMFBWY++ntUA/Bgzr
+         zMyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764848133; x=1765452933;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ETT37Ok2evrsGxBi30r3TjGdteYNKEZEEnmPEtqgVI0=;
+        b=CqSePjH4S5sn86VuHobCslE4ndgPvSYc7NN1/GaP0JxUVLAnFrQ1d4P2lsuyBn6yPd
+         zNCgfRF1R9yw+SHTw4e2Uss1aJn5jIu1C+IGT00gQc1XJehOpcmc9EOWyiGcoEMlC+1a
+         Hta1M0btZcD/NS+h6wPI69g9Eg10Z3wU+WA8VrCP6jBLEj4sFqQvaE1tdU09A+e5PClM
+         DjHkq5/EWV46zBoPhlCfjYFptBJyXOBECwEn8By6ggDcmnxLNA35G8zNW00GqcBKhq/X
+         ipCKniKeNJH+DHJhjZfkPaET7RoaPg6FHjGEfVIOagKv23iTByO/3Bi3YprBqU1Yd2+m
+         dzGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkIeQhoA5br0sqFtqfLMEoQOUDIo5N6BFUa//JNqvpT93HlzN9TUGU3ZdL4++osupQSNxfTplpnpTfErk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJ0Tu+kpYXu0VI7UU5wCWVQpaBqJHVyh/gcqzwTTkxMgO3WjV0
+	KgrpvTySjmoFxBk6YUh5sxPrWAGNocjJyZVphIy2kdSwyzKbeCUO2WFqmTYbw36+S+YwLD7V96k
+	GawpC5p+LGvSjMT+0evZCFHoNU/Er1Eg=
+X-Gm-Gg: ASbGncvrHCaPGEEGV0AJu0YaQ7ynp5d5XAt2gWsiHJ88BBDehgz3YOAbLQtbTz4TJnO
+	pKJaA5VZRmMPww9sodQE+YHIFZSxu2+Mlpe7+ekFNFqi5U+cKD/26zPAPLyG58WXYQOf+AJqps/
+	xf58b9c8XcdAEVXmVKqa+lGY4qRSyyB0OdxuoueSjT5Q+o4DB+QxGo04UY9+UiXfPPqVZq9uxMv
+	CohgyQQYwXZIKlYLVJOZaD8pFEHkNsgRZ9J1qsH6N7fCZrVQasgph/f/OIRQyu2xDxYsvShtrYs
+	2pBQw1yDurvJ
+X-Google-Smtp-Source: AGHT+IE/MHWwLB1TRSsJutMU8M0edDfRdxiVaFety8T6LMGUASyTd4pqnNsqOGrJr1VEowCUhJGMFkUbbWxR4bt3EHI=
+X-Received: by 2002:a05:693c:2d86:b0:2a4:664e:a5af with SMTP id
+ 5a478bee46e88-2ab92e88ab7mr5301129eec.28.1764848132964; Thu, 04 Dec 2025
+ 03:35:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251126160854.553077-1-tzimmermann@suse.de> <aSe1ZBXa3JBidhem@r1chard>
- <fc4ea259-3389-46e2-b860-972aa8179507@suse.de>
-In-Reply-To: <fc4ea259-3389-46e2-b860-972aa8179507@suse.de>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 4 Dec 2025 10:17:29 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXE8Q6FGX5+64gPyW=ExicR4UbnEDeW4ycCsSsD2WtaYJA@mail.gmail.com>
-X-Gm-Features: AWmQ_bm9xn92SSdHRbzJXHCDOFUkHMVJIr0kEdVYpgmMwEspup4WiDKMgeR24mo
-Message-ID: <CAMj1kXE8Q6FGX5+64gPyW=ExicR4UbnEDeW4ycCsSsD2WtaYJA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/9] arch,sysfb,efi: Support EDID on non-x86 EFI systems
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Richard Lyu <richard.lyu@suse.com>, javierm@redhat.com, arnd@arndb.de, 
-	helgaas@kernel.org, x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-fbdev@vger.kernel.org
+References: <20251124182920.9365-1-tiala@microsoft.com> <SN6PR02MB4157DAE6D8CC6BA11CA87298D4DCA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <CAMvTesCbNYHjiwaZC4EJopErZhW+vM0d87zJ54RT_AKXb-2yjw@mail.gmail.com> <SN6PR02MB4157FB57619785BAA50B3586D4A6A@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <SN6PR02MB4157FB57619785BAA50B3586D4A6A@SN6PR02MB4157.namprd02.prod.outlook.com>
+From: Tianyu Lan <ltykernel@gmail.com>
+Date: Thu, 4 Dec 2025 19:35:16 +0800
+X-Gm-Features: AWmQ_blU30QGLug8m7DiXQZ-kSvKchskuNzClEBRXP-OaTdHiiqHokRUZi1EUWU
+Message-ID: <CAMvTesB7shuS8HYifEN37bHPR0mWx9c4ZWNH8_cJwXOywa93zQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] Drivers: hv: Confidential VMBus exernal memory support
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Christoph Hellwig <hch@infradead.org>, Robin Murphy <robin.murphy@arm.com>, 
+	"kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>, 
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>, 
+	"longli@microsoft.com" <longli@microsoft.com>, "vdso@hexbites.dev" <vdso@hexbites.dev>, 
+	Tianyu Lan <tiala@microsoft.com>, 
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 27 Nov 2025 at 08:43, Thomas Zimmermann <tzimmermann@suse.de> wrote:
+On Thu, Dec 4, 2025 at 11:35=E2=80=AFAM Michael Kelley <mhklinux@outlook.co=
+m> wrote:
 >
-> Hi
->
-> Am 27.11.25 um 03:20 schrieb Richard Lyu:
-> > Hi Thomas,
+> From: Tianyu Lan <ltykernel@gmail.com> Sent: Wednesday, December 3, 2025 =
+6:21 AM
 > >
-> > I am attempting to test this patch series but encountered merge conflicts when applying it to various trees.
-> > Could you please clarify the specific base commit (or branch/tag) this series was generated against?
+> > On Sat, Nov 29, 2025 at 1:47=E2=80=AFAM Michael Kelley <mhklinux@outloo=
+k.com> wrote:
+> > >
+> > > From: Tianyu Lan <ltykernel@gmail.com> Sent: Monday, November 24, 202=
+5 10:29 AM
 >
-> Thanks for testing.
+> [snip]
 >
-> >
-> > When testing on the next branch on commits 7a2ff00 and e41ef37, I hit a conflict on PATCH v3 4/9:
-> > patching file drivers/pci/vgaarb.c
-> > Hunk #2 FAILED at 557.
-> > 1 out of 2 hunks FAILED -- rejects in file drivers/pci/vgaarb.c
-> >
-> > When testing against 3a86608 (Linux 6.18-rc1), the following conflicts occurred:
-> > patching file drivers/gpu/drm/sysfb/efidrm.c
-> > Hunk #1 FAILED at 24.
-> > 1 out of 2 hunks FAILED -- rejects in file drivers/gpu/drm/sysfb/efidrm.c
-> > patching file drivers/gpu/drm/sysfb/vesadrm.c
-> > Hunk #1 FAILED at 25.
-> > 1 out of 2 hunks FAILED -- rejects in file drivers/gpu/drm/sysfb/vesadrm.c
-> >
-> > Please let me know the correct base, and I will retest.
+> > >
+> > > Here's my idea for an alternate approach.  The goal is to allow use o=
+f the
+> > > swiotlb to be disabled on a per-device basis. A device is initialized=
+ for swiotlb
+> > > usage by swiotlb_dev_init(), which sets dev->dma_io_tlb_mem to point =
+to the
+> > > default swiotlb memory.  For VMBus devices, the calling sequence is
+> > > vmbus_device_register() -> device_register() -> device_initialize() -=
 >
-> It's in the cover letter: d724c6f85e80a23ed46b7ebc6e38b527c09d64f5 The
-> commit is in linux-next. The idea is that the EFI tree can pick up the
-> changes easily in the next cycle. linux-next seemed like the best
-> choice. Best regards Thomas
+> > > swiotlb_dev_init(). But if vmbus_device_register() could override the
+> > > dev->dma_io_tlb_mem value and put it back to NULL, swiotlb operations
+> > > would be disabled on the device. Furthermore, is_swiotlb_force_bounce=
+()
+> > > would return "false", and the normal DMA functions would not force th=
+e
+> > > use of bounce buffers. The entire code change looks like this:
+> > >
+> > > --- a/drivers/hv/vmbus_drv.c
+> > > +++ b/drivers/hv/vmbus_drv.c
+> > > @@ -2133,11 +2133,15 @@ int vmbus_device_register(struct hv_device *c=
+hild_device_obj)
+> > >         child_device_obj->device.dma_mask =3D &child_device_obj->dma_=
+mask;
+> > >         dma_set_mask(&child_device_obj->device, DMA_BIT_MASK(64));
+> > >
+> > > +       device_initialize(&child_device_obj->device);
+> > > +       if (child_device_obj->channel->co_external_memory)
+> > > +               child_device_obj->device.dma_io_tlb_mem =3D NULL;
+> > > +
+> > >         /*
+> > >          * Register with the LDM. This will kick off the driver/devic=
+e
+> > >          * binding...which will eventually call vmbus_match() and vmb=
+us_probe()
+> > >          */
+> > > -       ret =3D device_register(&child_device_obj->device);
+> > > +       ret =3D device_add(&child_device_obj->device);
+> > >         if (ret) {
+> > >                 pr_err("Unable to register child device\n");
+> > >                 put_device(&child_device_obj->device);
+> > >
+> > > I've only compile tested the above since I don't have an environment =
+where
+> > > I can test Confidential VMBus. You would need to verify whether my th=
+inking
+> > > is correct and this produces the intended result.
+> >
+> > Thanks Michael. I tested it and it seems to hit an issue. Will double c=
+heck.with
+> > HCL/paravisor team.
+> >
+> >  We considered such a change before. From Roman's previous patch, it se=
+ems to
+> > need to change phys_to_dma() and force_dma_unencrypted().
+>
+> In a Hyper-V SEV-SNP VM with a paravisor, I assert that phys_to_dma() and
+> __phys_to_dma() do the same thing.  phys_to_dma() calls dma_addr_encrypte=
+d(),
+> which does __sme_set().  But in a Hyper-V VM using vTOM, sme_me_mask is
+> always 0, so dma_addr_encrypted() is a no-op.  dma_addr_unencrypted() and
+> dma_addr_canonical() are also no-ops. See include/linux/mem_encrypt.h. So
+> in a Hyper-V SEV-SNP VM, the DMA layer doesn't change anything related to
+> encryption when translating between a physical address and a DMA address.
+> Same thing is true for a Hyper-V TDX VM with paravisor.
+>
+> force_dma_unencrypted() will indeed return "true", and it is used in
+> phys_to_dma_direct(). But both return paths in phys_to_dma_direct() retur=
+n the
+> same result because of dma_addr_unencrypted() and dma_addr_encrypted()
+> being no-ops. Other uses of force_dma_unencrypted() are only in the
+> dma_alloc_*() paths, but dma_alloc_*() isn't used by VMBus devices becaus=
+e
+> the device control structures are in the ring buffer, which as you have n=
+oted, is
+> already handled separately. So for the moment, I don't think the return v=
+alue
+> from force_dma_unencrypted() matters.
+>
+> So I'm guessing something else unexpected is happening such that just dis=
+abling
+> the swiotlb on a per-device basis doesn't work. Assuming that Roman's ori=
+ginal
+> patch actually worked, I'm trying to figure out how my idea is different =
+in a way
+> that has a material effect on things. And if your patch works by going di=
+rectly to
+> __phys_to_dma(), it should also work when using phys_to_dma() instead.
+>
 
-Thanks. I will queue this up as soon as -rc1 is released.
+I agree with your analysis and your proposal is much simpler. The
+issue I hit was a lot
+of user space tasks were blocked after FIO test of several minutes. I
+also reproduced
+with DMA ops patch after longer test and so need to double check
+whether we missed
+something or it's caused by other issue. If it's related with
+private/shared address used
+in the normal guest, we may debug in the paravisor.
+
+--=20
+Thanks
+Tianyu Lan
 
