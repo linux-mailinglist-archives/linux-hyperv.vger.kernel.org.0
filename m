@@ -1,42 +1,43 @@
-Return-Path: <linux-hyperv+bounces-7975-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7976-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BA19CA93D6
-	for <lists+linux-hyperv@lfdr.de>; Fri, 05 Dec 2025 21:17:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id ABA66CA93DC
+	for <lists+linux-hyperv@lfdr.de>; Fri, 05 Dec 2025 21:18:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3E6F530A82C8
-	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Dec 2025 20:17:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1736330C4098
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Dec 2025 20:17:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7228626A1A4;
-	Fri,  5 Dec 2025 20:17:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B272128A1D5;
+	Fri,  5 Dec 2025 20:17:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="X/r8qjhN"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hiPmfBoc"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E534F2B9BA;
-	Fri,  5 Dec 2025 20:17:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59D2D20010A;
+	Fri,  5 Dec 2025 20:17:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764965851; cv=none; b=sYFBkZXYL9uGDNN6ZAqrAQeG1bknjY8zStHQYrCE6JWyWXN6+b5ecLngk/9qcKzqUU+MP+zAq121kLbo/chwLbX4t+Fjxrtybg4uvr4I6MihS4p2RdDR9A8PkkXV78B5b8hCCjX1ZNCAs/s/MYj0+Dsfb3f3vRtKvvuIZiMAfL8=
+	t=1764965852; cv=none; b=iFjYadA/xBriq3N5/zqouBjcF3J09ktR61PEB9R0x/ZU1xQ7a7GsZsRP6IRtBlrFIe/vEVkLrH1+H9j045vVbHZY0My+AWhmZVTiA2lKviGhvHbECp4C1jvOIVyycNUcN3J6z2vcZXqcnEi0EEgnNO11dFy4pD4DT3PXCBB+vaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764965851; c=relaxed/simple;
-	bh=7gT4cZp46+eFvUhjUUYM90pX+P1tOrIijKEdBlZAHKA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aROnLq7KhmgudnOdVSLtKHC+0EI1VuzozA3Erk9KhrOdYw3gUE5ISOEloHt9+GEb/5TT/N0a5eN9AqyW5sXLWrvIj9ZjXrOKRwJcu/GKLK3rodmsG2O0Tf9cTa6mGqd2pcXHquqRnIH/z90Ut4DI6r/pIgSUM1ehi7yQzJUWCSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=X/r8qjhN; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1764965852; c=relaxed/simple;
+	bh=n9gV4DrpdvreX38QQ1D2a1kZySMSBZwlagGVB9JHbt8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=S8cOCYtgEjLc0MKjTGJ8jkaOCRwEy70+DjkYZXCZ7IWKdZz7EL1Bh8hluhonI0VCh5MOJWMGUbqtaAI12lNZzqssnCfpD8tC92n0a14csWcmpDhBNW+bozJPRlbbQUuuMAPKLnTi+n5+VUTbytUiMxtsq59tuiRTTV88DaXxq8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hiPmfBoc; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from home (unknown [72.191.74.189])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 18ADB200DFD0;
-	Fri,  5 Dec 2025 12:17:28 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 18ADB200DFD0
+	by linux.microsoft.com (Postfix) with ESMTPSA id 9A7A82116020;
+	Fri,  5 Dec 2025 12:17:29 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9A7A82116020
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1764965849;
-	bh=8a4ZAFjRMb+HnnqvWbeH9fEkrqyVwvU/z+guNCoveN8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=X/r8qjhNdKDUMBvZL0SIUPb0aMLArAk5LfEPh3RuRmfUNHAgyHMGiNkG8EFTU5w9f
-	 Vh/hEEDY2d5kk7OWk+oMFMNKCg6l2AOn8yXAaoZe25p0KqpCi3C4PyH0aSE+ZnrMre
-	 SfBFHq09z2QYG6pvC4otj/b4/C6sAXtRUTorZkHg=
+	s=default; t=1764965850;
+	bh=e8rblt25W34KVLuFYTjAZnmSf2qSFyvu+2x0Oe8gFKo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hiPmfBocTm/CA0mr47LqhV10bIN2wclQHPIHwhiVt86d4XFPCSSqFDn6+t+x//5SQ
+	 HBVXHmKUCWVo18qyesCw7GtT5TRH/Un8BJpwqYfPu63ajBSzOxAk0bkwYCz09qYwVH
+	 GL0LBKMLTFcwexRAvm/iGGY1aj6hPYW4CDeu1yXY=
 From: Praveen K Paladugu <prapal@linux.microsoft.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -56,10 +57,12 @@ Cc: anbelski@linux.microsoft.com,
 	easwar.hariharan@linux.microsoft.com,
 	nunodasneves@linux.microsoft.com,
 	skinsburskii@linux.microsoft.com
-Subject: [PATCH v7 0/4] Add support for clean shutdown with MSHV
-Date: Fri,  5 Dec 2025 14:17:04 -0600
-Message-ID: <20251205201721.7253-1-prapal@linux.microsoft.com>
+Subject: [PATCH v7 1/4] fixup! Drivers: hv: Introduce mshv_vtl driver
+Date: Fri,  5 Dec 2025 14:17:05 -0600
+Message-ID: <20251205201721.7253-2-prapal@linux.microsoft.com>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251205201721.7253-1-prapal@linux.microsoft.com>
+References: <20251205201721.7253-1-prapal@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -68,53 +71,27 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for clean shutdown of the root partition when running on
-MSHV Hypervisor.
+Drop the spurios "space" character in Makefile condition check
+that causes mshv_common.o to be built regardless of the CONFIG settings.
 
-v7:
- - Fix Makefile condition for building mshv_common.c
- - Drop the now unnecessary CONFIG_X86_64 guards
+Signed-off-by: Praveen K Paladugu <prapal@linux.microsoft.com>
+Suggested-by: Michael Kelley <mhklinux@outlook.com>
+---
+ drivers/hv/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v6:
- - Fixed build errors, by adding CONFIG_X86_64 guard
- - Moved machine_ops hook definition to ms_hyperv_init_platform
- - Addressed review comments in v5
-
-v5:
- - Fixed build errors
- - Padded struct hv_input_set_system_property for alignment
- - Dropped CONFIG_ACPI stub
-
-v4:
- - Adopted machine_ops to order invoking HV_ENTER_SLEEP_STATE as the
-   last step in shutdown sequence.
- - This ensures rest of the cleanups are done before powering off
-
-v3:
- - Dropped acpi_sleep handlers as they are not used on mshv
- - Applied ordering for hv_reboot_notifier
- - Fixed build issues on i386, arm64 architectures
-
-v2:
-  - Addressed review comments from v1.
-  - Moved all sleep state handling methods under CONFIG_ACPI stub
-  - - This fixes build issues on non-x86 architectures.
-
-Praveen K Paladugu (4):
-  fixup! Drivers: hv: Introduce mshv_vtl driver
-  hyperv: Add definitions for MSHV sleep state configuration
-  hyperv: Use reboot notifier to configure sleep state
-  hyperv: Cleanly shutdown root partition with MSHV
-
- arch/x86/hyperv/hv_init.c       |  1 +
- arch/x86/include/asm/mshyperv.h |  2 +
- arch/x86/kernel/cpu/mshyperv.c  |  2 +
- drivers/hv/Makefile             |  2 +-
- drivers/hv/mshv_common.c        | 99 +++++++++++++++++++++++++++++++++
- include/hyperv/hvgdk_mini.h     |  4 +-
- include/hyperv/hvhdk_mini.h     | 40 +++++++++++++
- 7 files changed, 148 insertions(+), 2 deletions(-)
-
+diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
+index 58b8d07639f3..6d929fb0e13d 100644
+--- a/drivers/hv/Makefile
++++ b/drivers/hv/Makefile
+@@ -20,6 +20,6 @@ mshv_vtl-y := mshv_vtl_main.o
+ # Code that must be built-in
+ obj-$(CONFIG_HYPERV) += hv_common.o
+ obj-$(subst m,y,$(CONFIG_MSHV_ROOT)) += hv_proc.o
+-ifneq ($(CONFIG_MSHV_ROOT) $(CONFIG_MSHV_VTL),)
++ifneq ($(CONFIG_MSHV_ROOT)$(CONFIG_MSHV_VTL),)
+ 	obj-y += mshv_common.o
+ endif
 -- 
 2.51.0
 
