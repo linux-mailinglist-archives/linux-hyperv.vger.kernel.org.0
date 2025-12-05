@@ -1,58 +1,56 @@
-Return-Path: <linux-hyperv+bounces-7982-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7983-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF70BCA994D
-	for <lists+linux-hyperv@lfdr.de>; Sat, 06 Dec 2025 00:09:44 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id CEE28CA993E
+	for <lists+linux-hyperv@lfdr.de>; Sat, 06 Dec 2025 00:06:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C96163005EBC
-	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Dec 2025 23:06:27 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 994B43014418
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Dec 2025 23:06:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFE7121FF3B;
-	Fri,  5 Dec 2025 23:06:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 730183B8D7D;
+	Fri,  5 Dec 2025 23:06:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sDjmjnpP"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="M7V1dKn2"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E60433BC;
-	Fri,  5 Dec 2025 23:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB1FF433BC;
+	Fri,  5 Dec 2025 23:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764975986; cv=none; b=q6Dm+NwBkyxSmB2gwZCjJmjEJW2IB13z01xa4kzbAXq+aC0a6ToloKkEFUQfT24RikUIY7c+IXloa4/25AlGD02vAGhYVcz2dFqWW42dumub1onbV+afizX2HLIvuiKVqYkh+Khyt8twDOwkVgKWwXK85+M0hZtT9q8zDHZZBWE=
+	t=1764976005; cv=none; b=nK+I5anPwBhDpc9SgkL3j6SSA24t20bLkh5Glk9vX1tEqWiXYwhDlAk14qIw+56toiATyZ9oHG5qzLY8QTcOXnQOxzeNRhDHHlPWDJM5yOKmm68D5XCLFmJYVvWwF1fCB4G51koYexvWzLxUdYg7nXXEV8jUQ2mYlZTDJmVtEpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764975986; c=relaxed/simple;
-	bh=S8Guuc8LW33dqLYXWNrPbbx1uN50/rSVNlYomRWfJ5Y=;
+	s=arc-20240116; t=1764976005; c=relaxed/simple;
+	bh=8bwas+fbuVuqB4V4uAhqo/SkcWe2M/VMtZL7f7R3kGU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I+YmgHb5klub9y/732s142osyecT+eDV4gz5LAGRH7w/iaS7aGUgV1dyirUejKPtH8VrWZ8tfgu7Ii36lSeBaU6Os0BcKDo5Wvv4MNEfkyd0CEIOcH9dUWNnUVYTi7OgNP97xr+c9Df/tTEjmjz8EeWS8I9KFG4k6+0Z0HEYZ1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sDjmjnpP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 165DFC4CEF1;
-	Fri,  5 Dec 2025 23:06:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764975986;
-	bh=S8Guuc8LW33dqLYXWNrPbbx1uN50/rSVNlYomRWfJ5Y=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=gJwIOqZMCqwXDb/Z+DLAdk9hzu0DvtHxxbYzrFI287bo6vf5yJMJz3TPXOsdratgpkVdbcTLbOMG0o4RhQ8yO2JKUUBJQjTTgksmswPsAbwFmRU5sL4f1XRtwOcu9+8fMXePZ43NxO88W4D7BqYAbR5KqLGRtizou6Tw7pWRHxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=M7V1dKn2; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from skinsburskii.localdomain (c-98-225-44-166.hsd1.wa.comcast.net [98.225.44.166])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 80A06201D7E6;
+	Fri,  5 Dec 2025 15:06:39 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 80A06201D7E6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1764976000;
+	bh=xo3lXgtKCCpZ9omBDOYSMyuvg1lviIOtYmhqAIl9mvM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sDjmjnpP3oyvWE4fe0ARSjrDRMEkBg/Km90n4Q9CVyE563C3V3RgU02I3P9hFoKXa
-	 RbH/vYFiJnbF53yXW/f+NDMqShN4EolE72XuWFtL2BH73wRrKDU8KhSwUqvMK9P1zb
-	 a+Jieoimt+wKOiSGeODBn9ywx6W3XxaLnzQF0WQKAwE5sRopHXhyaZeohfob5wgEHx
-	 kVfAhFNGN13CHpOy9RLUYKBVZGFdyyDF1eUr/168rTDavGB7/gmMz3zGmPdKa1NDRd
-	 j63DvMc4rBLXBShmMYITPqwUHIXbbIlG0foDiUjLCPU8vF8d8FKEhy1sW2IAPZLI1Z
-	 5Kr/s0hNksFkA==
-Date: Fri, 5 Dec 2025 23:06:24 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Praveen K Paladugu <prapal@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, arnd@arndb.de, anbelski@linux.microsoft.com,
-	easwar.hariharan@linux.microsoft.com,
-	nunodasneves@linux.microsoft.com, skinsburskii@linux.microsoft.com
-Subject: Re: [PATCH v7 1/4] fixup! Drivers: hv: Introduce mshv_vtl driver
-Message-ID: <20251205230624.GA1942423@liuwe-devbox-debian-v2.local>
-References: <20251205201721.7253-1-prapal@linux.microsoft.com>
- <20251205201721.7253-2-prapal@linux.microsoft.com>
+	b=M7V1dKn2j1tir8pitt28TvulBIRxdKc4LT1DtFf4QDMvZbjQVO6eWBc3K2uR4p6F8
+	 260ZjGEb7e62h5xsF7nK5qMSKx1M2Mhhn37BZa0CbhtLrLLY3x/OzNsYZ/TnsgsDtU
+	 ksLYKQ4vrSrESMjrsvgznnC+d7M0PCT3VvbnoSt8=
+Date: Fri, 5 Dec 2025 15:06:37 -0800
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com, mhklinux@outlook.com,
+	prapal@linux.microsoft.com, mrathor@linux.microsoft.com,
+	paekkaladevi@linux.microsoft.com,
+	Jinank Jain <jinankjain@microsoft.com>
+Subject: Re: [PATCH v2 3/3] mshv: Add debugfs to view hypervisor statistics
+Message-ID: <aTNlVUHt6jE2U-yc@skinsburskii.localdomain>
+References: <1764961122-31679-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1764961122-31679-4-git-send-email-nunodasneves@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -61,36 +59,1240 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251205201721.7253-2-prapal@linux.microsoft.com>
+In-Reply-To: <1764961122-31679-4-git-send-email-nunodasneves@linux.microsoft.com>
 
-Please provide a proper commit subject.
-
-On Fri, Dec 05, 2025 at 02:17:05PM -0600, Praveen K Paladugu wrote:
-> Drop the spurios "space" character in Makefile condition check
-> that causes mshv_common.o to be built regardless of the CONFIG settings.
+On Fri, Dec 05, 2025 at 10:58:42AM -0800, Nuno Das Neves wrote:
+> Introduce a debugfs interface to expose root and child partition stats
+> when running with mshv_root.
 > 
-> Signed-off-by: Praveen K Paladugu <prapal@linux.microsoft.com>
-> Suggested-by: Michael Kelley <mhklinux@outlook.com>
-
-This should come with a Fixes: tag.
-
-> ---
->  drivers/hv/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Create a debugfs directory "mshv" containing 'stats' files organized by
+> type and id. A stats file contains a number of counters depending on
+> its type. e.g. an excerpt from a VP stats file:
 > 
-> diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
-> index 58b8d07639f3..6d929fb0e13d 100644
-> --- a/drivers/hv/Makefile
-> +++ b/drivers/hv/Makefile
-> @@ -20,6 +20,6 @@ mshv_vtl-y := mshv_vtl_main.o
->  # Code that must be built-in
->  obj-$(CONFIG_HYPERV) += hv_common.o
->  obj-$(subst m,y,$(CONFIG_MSHV_ROOT)) += hv_proc.o
-> -ifneq ($(CONFIG_MSHV_ROOT) $(CONFIG_MSHV_VTL),)
-> +ifneq ($(CONFIG_MSHV_ROOT)$(CONFIG_MSHV_VTL),)
->  	obj-y += mshv_common.o
->  endif
+> TotalRunTime                  : 1997602722
+> HypervisorRunTime             : 649671371
+> RemoteNodeRunTime             : 0
+> NormalizedRunTime             : 1997602721
+> IdealCpu                      : 0
+> HypercallsCount               : 1708169
+> HypercallsTime                : 111914774
+> PageInvalidationsCount        : 0
+> PageInvalidationsTime         : 0
+> 
+> On a root partition with some active child partitions, the entire
+> directory structure may look like:
+> 
+> mshv/
+>   stats             # hypervisor stats
+>   lp/               # logical processors
+>     0/              # LP id
+>       stats         # LP 0 stats
+>     1/
+>     2/
+>     3/
+>   partition/        # partition stats
+>     1/              # root partition id
+>       stats         # root partition stats
+>       vp/           # root virtual processors
+>         0/          # root VP id
+>           stats     # root VP 0 stats
+>         1/
+>         2/
+>         3/
+>     42/             # child partition id
+>       stats         # child partition stats
+>       vp/           # child VPs
+>         0/          # child VP id
+>           stats     # child VP 0 stats
+>         1/
+>     43/
+>     55/
+> 
+> On L1VH, some stats are not present as it does not own the hardware
+> like the root partition does:
+> - The hypervisor and lp stats are not present
+> - L1VH's partition directory is named "self" because it can't get its
+>   own id
+> - Some of L1VH's partition and VP stats fields are not populated, because
+>   it can't map its own HV_STATS_AREA_PARENT page.
+> 
+
+<snip>
+
+> +static void __init *lp_debugfs_stats_create(u32 lp_index, struct dentry *parent)
+
+It would be better to return struct hv_stats_page from this (and other
+functions).
+
+> +{
+> +	struct dentry *dentry;
+> +	void *stats;
+> +
+> +	stats = mshv_lp_stats_map(lp_index);
+> +	if (IS_ERR(stats))
+> +		return stats;
+> +
+> +	dentry = debugfs_create_file("stats", 0400, parent,
+> +				     stats, &lp_stats_fops);
+> +	if (IS_ERR(dentry)) {
+> +		mshv_lp_stats_unmap(lp_index, stats);
+> +		return dentry;
+
+This is sloppy as it returns struct dentry instead of struct
+hv_stats_page and using void here simply sweeps the problem under the
+carpet which otherwise the compiler would catch.
+How about using ERR_CAST instead as it will make this behavior explicit?
+
+> +	}
+> +	return stats;
+> +}
+> +
+> +static int __init lp_debugfs_create(u32 lp_index, struct dentry *parent)
+> +{
+> +	struct dentry *idx;
+> +	char lp_idx_str[U32_BUF_SZ];
+> +	void *stats;
+> +	int err;
+> +
+> +	sprintf(lp_idx_str, "%u", lp_index);
+> +
+> +	idx = debugfs_create_dir(lp_idx_str, parent);
+> +	if (IS_ERR(idx))
+> +		return PTR_ERR(idx);
+> +
+> +	stats = lp_debugfs_stats_create(lp_index, idx);
+> +	if (IS_ERR(stats)) {
+> +		err = PTR_ERR(stats);
+> +		goto remove_debugfs_lp_idx;
+> +	}
+> +
+> +	return 0;
+> +
+> +remove_debugfs_lp_idx:
+> +	debugfs_remove_recursive(idx);
+> +	return err;
+> +}
+> +
+> +static void mshv_debugfs_lp_remove(void)
+> +{
+> +	int lp_index;
+> +
+> +	debugfs_remove_recursive(mshv_debugfs_lp);
+> +
+> +	for (lp_index = 0; lp_index < mshv_lps_count; lp_index++)
+> +		mshv_lp_stats_unmap(lp_index, NULL);
+> +}
+> +
+> +static int __init mshv_debugfs_lp_create(struct dentry *parent)
+> +{
+> +	struct dentry *lp_dir;
+> +	int err, lp_index;
+> +
+> +	lp_dir = debugfs_create_dir("lp", parent);
+> +	if (IS_ERR(lp_dir))
+> +		return PTR_ERR(lp_dir);
+> +
+> +	for (lp_index = 0; lp_index < mshv_lps_count; lp_index++) {
+> +		err = lp_debugfs_create(lp_index, lp_dir);
+> +		if (err)
+> +			goto remove_debugfs_lps;
+> +	}
+> +
+> +	mshv_debugfs_lp = lp_dir;
+> +
+> +	return 0;
+> +
+> +remove_debugfs_lps:
+> +	for (lp_index -= 1; lp_index >= 0; lp_index--)
+> +		mshv_lp_stats_unmap(lp_index, NULL);
+> +	debugfs_remove_recursive(lp_dir);
+> +	return err;
+> +}
+> +
+> +static int vp_stats_show(struct seq_file *m, void *v)
+> +{
+> +	const struct hv_stats_page **pstats = m->private;
+> +
+> +#define VP_SEQ_PRINTF(cnt)				 \
+> +do {								 \
+> +	if (pstats[HV_STATS_AREA_SELF]->vp_cntrs[Vp##cnt]) \
+> +		seq_printf(m, "%-30s: %llu\n", __stringify(cnt), \
+> +			pstats[HV_STATS_AREA_SELF]->vp_cntrs[Vp##cnt]); \
+> +	else \
+> +		seq_printf(m, "%-30s: %llu\n", __stringify(cnt), \
+> +			pstats[HV_STATS_AREA_PARENT]->vp_cntrs[Vp##cnt]); \
+> +} while (0)
+> +
+> +	VP_SEQ_PRINTF(TotalRunTime);
+> +	VP_SEQ_PRINTF(HypervisorRunTime);
+> +	VP_SEQ_PRINTF(RemoteNodeRunTime);
+> +	VP_SEQ_PRINTF(NormalizedRunTime);
+> +	VP_SEQ_PRINTF(IdealCpu);
+> +	VP_SEQ_PRINTF(HypercallsCount);
+> +	VP_SEQ_PRINTF(HypercallsTime);
+> +#if IS_ENABLED(CONFIG_X86_64)
+> +	VP_SEQ_PRINTF(PageInvalidationsCount);
+> +	VP_SEQ_PRINTF(PageInvalidationsTime);
+> +	VP_SEQ_PRINTF(ControlRegisterAccessesCount);
+> +	VP_SEQ_PRINTF(ControlRegisterAccessesTime);
+> +	VP_SEQ_PRINTF(IoInstructionsCount);
+> +	VP_SEQ_PRINTF(IoInstructionsTime);
+> +	VP_SEQ_PRINTF(HltInstructionsCount);
+> +	VP_SEQ_PRINTF(HltInstructionsTime);
+> +	VP_SEQ_PRINTF(MwaitInstructionsCount);
+> +	VP_SEQ_PRINTF(MwaitInstructionsTime);
+> +	VP_SEQ_PRINTF(CpuidInstructionsCount);
+> +	VP_SEQ_PRINTF(CpuidInstructionsTime);
+> +	VP_SEQ_PRINTF(MsrAccessesCount);
+> +	VP_SEQ_PRINTF(MsrAccessesTime);
+> +	VP_SEQ_PRINTF(OtherInterceptsCount);
+> +	VP_SEQ_PRINTF(OtherInterceptsTime);
+> +	VP_SEQ_PRINTF(ExternalInterruptsCount);
+> +	VP_SEQ_PRINTF(ExternalInterruptsTime);
+> +	VP_SEQ_PRINTF(PendingInterruptsCount);
+> +	VP_SEQ_PRINTF(PendingInterruptsTime);
+> +	VP_SEQ_PRINTF(EmulatedInstructionsCount);
+> +	VP_SEQ_PRINTF(EmulatedInstructionsTime);
+> +	VP_SEQ_PRINTF(DebugRegisterAccessesCount);
+> +	VP_SEQ_PRINTF(DebugRegisterAccessesTime);
+> +	VP_SEQ_PRINTF(PageFaultInterceptsCount);
+> +	VP_SEQ_PRINTF(PageFaultInterceptsTime);
+> +	VP_SEQ_PRINTF(GuestPageTableMaps);
+> +	VP_SEQ_PRINTF(LargePageTlbFills);
+> +	VP_SEQ_PRINTF(SmallPageTlbFills);
+> +	VP_SEQ_PRINTF(ReflectedGuestPageFaults);
+> +	VP_SEQ_PRINTF(ApicMmioAccesses);
+> +	VP_SEQ_PRINTF(IoInterceptMessages);
+> +	VP_SEQ_PRINTF(MemoryInterceptMessages);
+> +	VP_SEQ_PRINTF(ApicEoiAccesses);
+> +	VP_SEQ_PRINTF(OtherMessages);
+> +	VP_SEQ_PRINTF(PageTableAllocations);
+> +	VP_SEQ_PRINTF(LogicalProcessorMigrations);
+> +	VP_SEQ_PRINTF(AddressSpaceEvictions);
+> +	VP_SEQ_PRINTF(AddressSpaceSwitches);
+> +	VP_SEQ_PRINTF(AddressDomainFlushes);
+> +	VP_SEQ_PRINTF(AddressSpaceFlushes);
+> +	VP_SEQ_PRINTF(GlobalGvaRangeFlushes);
+> +	VP_SEQ_PRINTF(LocalGvaRangeFlushes);
+> +	VP_SEQ_PRINTF(PageTableEvictions);
+> +	VP_SEQ_PRINTF(PageTableReclamations);
+> +	VP_SEQ_PRINTF(PageTableResets);
+> +	VP_SEQ_PRINTF(PageTableValidations);
+> +	VP_SEQ_PRINTF(ApicTprAccesses);
+> +	VP_SEQ_PRINTF(PageTableWriteIntercepts);
+> +	VP_SEQ_PRINTF(SyntheticInterrupts);
+> +	VP_SEQ_PRINTF(VirtualInterrupts);
+> +	VP_SEQ_PRINTF(ApicIpisSent);
+> +	VP_SEQ_PRINTF(ApicSelfIpisSent);
+> +	VP_SEQ_PRINTF(GpaSpaceHypercalls);
+> +	VP_SEQ_PRINTF(LogicalProcessorHypercalls);
+> +	VP_SEQ_PRINTF(LongSpinWaitHypercalls);
+> +	VP_SEQ_PRINTF(OtherHypercalls);
+> +	VP_SEQ_PRINTF(SyntheticInterruptHypercalls);
+> +	VP_SEQ_PRINTF(VirtualInterruptHypercalls);
+> +	VP_SEQ_PRINTF(VirtualMmuHypercalls);
+> +	VP_SEQ_PRINTF(VirtualProcessorHypercalls);
+> +	VP_SEQ_PRINTF(HardwareInterrupts);
+> +	VP_SEQ_PRINTF(NestedPageFaultInterceptsCount);
+> +	VP_SEQ_PRINTF(NestedPageFaultInterceptsTime);
+> +	VP_SEQ_PRINTF(PageScans);
+> +	VP_SEQ_PRINTF(LogicalProcessorDispatches);
+> +	VP_SEQ_PRINTF(WaitingForCpuTime);
+> +	VP_SEQ_PRINTF(ExtendedHypercalls);
+> +	VP_SEQ_PRINTF(ExtendedHypercallInterceptMessages);
+> +	VP_SEQ_PRINTF(MbecNestedPageTableSwitches);
+> +	VP_SEQ_PRINTF(OtherReflectedGuestExceptions);
+> +	VP_SEQ_PRINTF(GlobalIoTlbFlushes);
+> +	VP_SEQ_PRINTF(GlobalIoTlbFlushCost);
+> +	VP_SEQ_PRINTF(LocalIoTlbFlushes);
+> +	VP_SEQ_PRINTF(LocalIoTlbFlushCost);
+> +	VP_SEQ_PRINTF(HypercallsForwardedCount);
+> +	VP_SEQ_PRINTF(HypercallsForwardingTime);
+> +	VP_SEQ_PRINTF(PageInvalidationsForwardedCount);
+> +	VP_SEQ_PRINTF(PageInvalidationsForwardingTime);
+> +	VP_SEQ_PRINTF(ControlRegisterAccessesForwardedCount);
+> +	VP_SEQ_PRINTF(ControlRegisterAccessesForwardingTime);
+> +	VP_SEQ_PRINTF(IoInstructionsForwardedCount);
+> +	VP_SEQ_PRINTF(IoInstructionsForwardingTime);
+> +	VP_SEQ_PRINTF(HltInstructionsForwardedCount);
+> +	VP_SEQ_PRINTF(HltInstructionsForwardingTime);
+> +	VP_SEQ_PRINTF(MwaitInstructionsForwardedCount);
+> +	VP_SEQ_PRINTF(MwaitInstructionsForwardingTime);
+> +	VP_SEQ_PRINTF(CpuidInstructionsForwardedCount);
+> +	VP_SEQ_PRINTF(CpuidInstructionsForwardingTime);
+> +	VP_SEQ_PRINTF(MsrAccessesForwardedCount);
+> +	VP_SEQ_PRINTF(MsrAccessesForwardingTime);
+> +	VP_SEQ_PRINTF(OtherInterceptsForwardedCount);
+> +	VP_SEQ_PRINTF(OtherInterceptsForwardingTime);
+> +	VP_SEQ_PRINTF(ExternalInterruptsForwardedCount);
+> +	VP_SEQ_PRINTF(ExternalInterruptsForwardingTime);
+> +	VP_SEQ_PRINTF(PendingInterruptsForwardedCount);
+> +	VP_SEQ_PRINTF(PendingInterruptsForwardingTime);
+> +	VP_SEQ_PRINTF(EmulatedInstructionsForwardedCount);
+> +	VP_SEQ_PRINTF(EmulatedInstructionsForwardingTime);
+> +	VP_SEQ_PRINTF(DebugRegisterAccessesForwardedCount);
+> +	VP_SEQ_PRINTF(DebugRegisterAccessesForwardingTime);
+> +	VP_SEQ_PRINTF(PageFaultInterceptsForwardedCount);
+> +	VP_SEQ_PRINTF(PageFaultInterceptsForwardingTime);
+> +	VP_SEQ_PRINTF(VmclearEmulationCount);
+> +	VP_SEQ_PRINTF(VmclearEmulationTime);
+> +	VP_SEQ_PRINTF(VmptrldEmulationCount);
+> +	VP_SEQ_PRINTF(VmptrldEmulationTime);
+> +	VP_SEQ_PRINTF(VmptrstEmulationCount);
+> +	VP_SEQ_PRINTF(VmptrstEmulationTime);
+> +	VP_SEQ_PRINTF(VmreadEmulationCount);
+> +	VP_SEQ_PRINTF(VmreadEmulationTime);
+> +	VP_SEQ_PRINTF(VmwriteEmulationCount);
+> +	VP_SEQ_PRINTF(VmwriteEmulationTime);
+> +	VP_SEQ_PRINTF(VmxoffEmulationCount);
+> +	VP_SEQ_PRINTF(VmxoffEmulationTime);
+> +	VP_SEQ_PRINTF(VmxonEmulationCount);
+> +	VP_SEQ_PRINTF(VmxonEmulationTime);
+> +	VP_SEQ_PRINTF(NestedVMEntriesCount);
+> +	VP_SEQ_PRINTF(NestedVMEntriesTime);
+> +	VP_SEQ_PRINTF(NestedSLATSoftPageFaultsCount);
+> +	VP_SEQ_PRINTF(NestedSLATSoftPageFaultsTime);
+> +	VP_SEQ_PRINTF(NestedSLATHardPageFaultsCount);
+> +	VP_SEQ_PRINTF(NestedSLATHardPageFaultsTime);
+> +	VP_SEQ_PRINTF(InvEptAllContextEmulationCount);
+> +	VP_SEQ_PRINTF(InvEptAllContextEmulationTime);
+> +	VP_SEQ_PRINTF(InvEptSingleContextEmulationCount);
+> +	VP_SEQ_PRINTF(InvEptSingleContextEmulationTime);
+> +	VP_SEQ_PRINTF(InvVpidAllContextEmulationCount);
+> +	VP_SEQ_PRINTF(InvVpidAllContextEmulationTime);
+> +	VP_SEQ_PRINTF(InvVpidSingleContextEmulationCount);
+> +	VP_SEQ_PRINTF(InvVpidSingleContextEmulationTime);
+> +	VP_SEQ_PRINTF(InvVpidSingleAddressEmulationCount);
+> +	VP_SEQ_PRINTF(InvVpidSingleAddressEmulationTime);
+> +	VP_SEQ_PRINTF(NestedTlbPageTableReclamations);
+> +	VP_SEQ_PRINTF(NestedTlbPageTableEvictions);
+> +	VP_SEQ_PRINTF(FlushGuestPhysicalAddressSpaceHypercalls);
+> +	VP_SEQ_PRINTF(FlushGuestPhysicalAddressListHypercalls);
+> +	VP_SEQ_PRINTF(PostedInterruptNotifications);
+> +	VP_SEQ_PRINTF(PostedInterruptScans);
+> +	VP_SEQ_PRINTF(TotalCoreRunTime);
+> +	VP_SEQ_PRINTF(MaximumRunTime);
+> +	VP_SEQ_PRINTF(HwpRequestContextSwitches);
+> +	VP_SEQ_PRINTF(WaitingForCpuTimeBucket0);
+> +	VP_SEQ_PRINTF(WaitingForCpuTimeBucket1);
+> +	VP_SEQ_PRINTF(WaitingForCpuTimeBucket2);
+> +	VP_SEQ_PRINTF(WaitingForCpuTimeBucket3);
+> +	VP_SEQ_PRINTF(WaitingForCpuTimeBucket4);
+> +	VP_SEQ_PRINTF(WaitingForCpuTimeBucket5);
+> +	VP_SEQ_PRINTF(WaitingForCpuTimeBucket6);
+> +	VP_SEQ_PRINTF(VmloadEmulationCount);
+> +	VP_SEQ_PRINTF(VmloadEmulationTime);
+> +	VP_SEQ_PRINTF(VmsaveEmulationCount);
+> +	VP_SEQ_PRINTF(VmsaveEmulationTime);
+> +	VP_SEQ_PRINTF(GifInstructionEmulationCount);
+> +	VP_SEQ_PRINTF(GifInstructionEmulationTime);
+> +	VP_SEQ_PRINTF(EmulatedErrataSvmInstructions);
+> +	VP_SEQ_PRINTF(Placeholder1);
+> +	VP_SEQ_PRINTF(Placeholder2);
+> +	VP_SEQ_PRINTF(Placeholder3);
+> +	VP_SEQ_PRINTF(Placeholder4);
+> +	VP_SEQ_PRINTF(Placeholder5);
+> +	VP_SEQ_PRINTF(Placeholder6);
+> +	VP_SEQ_PRINTF(Placeholder7);
+> +	VP_SEQ_PRINTF(Placeholder8);
+> +	VP_SEQ_PRINTF(Placeholder9);
+> +	VP_SEQ_PRINTF(Placeholder10);
+> +	VP_SEQ_PRINTF(SchedulingPriority);
+> +	VP_SEQ_PRINTF(RdpmcInstructionsCount);
+> +	VP_SEQ_PRINTF(RdpmcInstructionsTime);
+> +	VP_SEQ_PRINTF(PerfmonPmuMsrAccessesCount);
+> +	VP_SEQ_PRINTF(PerfmonLbrMsrAccessesCount);
+> +	VP_SEQ_PRINTF(PerfmonIptMsrAccessesCount);
+> +	VP_SEQ_PRINTF(PerfmonInterruptCount);
+> +	VP_SEQ_PRINTF(Vtl1DispatchCount);
+> +	VP_SEQ_PRINTF(Vtl2DispatchCount);
+> +	VP_SEQ_PRINTF(Vtl2DispatchBucket0);
+> +	VP_SEQ_PRINTF(Vtl2DispatchBucket1);
+> +	VP_SEQ_PRINTF(Vtl2DispatchBucket2);
+> +	VP_SEQ_PRINTF(Vtl2DispatchBucket3);
+> +	VP_SEQ_PRINTF(Vtl2DispatchBucket4);
+> +	VP_SEQ_PRINTF(Vtl2DispatchBucket5);
+> +	VP_SEQ_PRINTF(Vtl2DispatchBucket6);
+> +	VP_SEQ_PRINTF(Vtl1RunTime);
+> +	VP_SEQ_PRINTF(Vtl2RunTime);
+> +	VP_SEQ_PRINTF(IommuHypercalls);
+> +	VP_SEQ_PRINTF(CpuGroupHypercalls);
+> +	VP_SEQ_PRINTF(VsmHypercalls);
+> +	VP_SEQ_PRINTF(EventLogHypercalls);
+> +	VP_SEQ_PRINTF(DeviceDomainHypercalls);
+> +	VP_SEQ_PRINTF(DepositHypercalls);
+> +	VP_SEQ_PRINTF(SvmHypercalls);
+> +	VP_SEQ_PRINTF(BusLockAcquisitionCount);
+> +#elif IS_ENABLED(CONFIG_ARM64)
+> +	VP_SEQ_PRINTF(SysRegAccessesCount);
+> +	VP_SEQ_PRINTF(SysRegAccessesTime);
+> +	VP_SEQ_PRINTF(SmcInstructionsCount);
+> +	VP_SEQ_PRINTF(SmcInstructionsTime);
+> +	VP_SEQ_PRINTF(OtherInterceptsCount);
+> +	VP_SEQ_PRINTF(OtherInterceptsTime);
+> +	VP_SEQ_PRINTF(ExternalInterruptsCount);
+> +	VP_SEQ_PRINTF(ExternalInterruptsTime);
+> +	VP_SEQ_PRINTF(PendingInterruptsCount);
+> +	VP_SEQ_PRINTF(PendingInterruptsTime);
+> +	VP_SEQ_PRINTF(GuestPageTableMaps);
+> +	VP_SEQ_PRINTF(LargePageTlbFills);
+> +	VP_SEQ_PRINTF(SmallPageTlbFills);
+> +	VP_SEQ_PRINTF(ReflectedGuestPageFaults);
+> +	VP_SEQ_PRINTF(MemoryInterceptMessages);
+> +	VP_SEQ_PRINTF(OtherMessages);
+> +	VP_SEQ_PRINTF(LogicalProcessorMigrations);
+> +	VP_SEQ_PRINTF(AddressDomainFlushes);
+> +	VP_SEQ_PRINTF(AddressSpaceFlushes);
+> +	VP_SEQ_PRINTF(SyntheticInterrupts);
+> +	VP_SEQ_PRINTF(VirtualInterrupts);
+> +	VP_SEQ_PRINTF(ApicSelfIpisSent);
+> +	VP_SEQ_PRINTF(GpaSpaceHypercalls);
+> +	VP_SEQ_PRINTF(LogicalProcessorHypercalls);
+> +	VP_SEQ_PRINTF(LongSpinWaitHypercalls);
+> +	VP_SEQ_PRINTF(OtherHypercalls);
+> +	VP_SEQ_PRINTF(SyntheticInterruptHypercalls);
+> +	VP_SEQ_PRINTF(VirtualInterruptHypercalls);
+> +	VP_SEQ_PRINTF(VirtualMmuHypercalls);
+> +	VP_SEQ_PRINTF(VirtualProcessorHypercalls);
+> +	VP_SEQ_PRINTF(HardwareInterrupts);
+> +	VP_SEQ_PRINTF(NestedPageFaultInterceptsCount);
+> +	VP_SEQ_PRINTF(NestedPageFaultInterceptsTime);
+> +	VP_SEQ_PRINTF(LogicalProcessorDispatches);
+> +	VP_SEQ_PRINTF(WaitingForCpuTime);
+> +	VP_SEQ_PRINTF(ExtendedHypercalls);
+> +	VP_SEQ_PRINTF(ExtendedHypercallInterceptMessages);
+> +	VP_SEQ_PRINTF(MbecNestedPageTableSwitches);
+> +	VP_SEQ_PRINTF(OtherReflectedGuestExceptions);
+> +	VP_SEQ_PRINTF(GlobalIoTlbFlushes);
+> +	VP_SEQ_PRINTF(GlobalIoTlbFlushCost);
+> +	VP_SEQ_PRINTF(LocalIoTlbFlushes);
+> +	VP_SEQ_PRINTF(LocalIoTlbFlushCost);
+> +	VP_SEQ_PRINTF(FlushGuestPhysicalAddressSpaceHypercalls);
+> +	VP_SEQ_PRINTF(FlushGuestPhysicalAddressListHypercalls);
+> +	VP_SEQ_PRINTF(PostedInterruptNotifications);
+> +	VP_SEQ_PRINTF(PostedInterruptScans);
+> +	VP_SEQ_PRINTF(TotalCoreRunTime);
+> +	VP_SEQ_PRINTF(MaximumRunTime);
+> +	VP_SEQ_PRINTF(WaitingForCpuTimeBucket0);
+> +	VP_SEQ_PRINTF(WaitingForCpuTimeBucket1);
+> +	VP_SEQ_PRINTF(WaitingForCpuTimeBucket2);
+> +	VP_SEQ_PRINTF(WaitingForCpuTimeBucket3);
+> +	VP_SEQ_PRINTF(WaitingForCpuTimeBucket4);
+> +	VP_SEQ_PRINTF(WaitingForCpuTimeBucket5);
+> +	VP_SEQ_PRINTF(WaitingForCpuTimeBucket6);
+> +	VP_SEQ_PRINTF(HwpRequestContextSwitches);
+> +	VP_SEQ_PRINTF(Placeholder2);
+> +	VP_SEQ_PRINTF(Placeholder3);
+> +	VP_SEQ_PRINTF(Placeholder4);
+> +	VP_SEQ_PRINTF(Placeholder5);
+> +	VP_SEQ_PRINTF(Placeholder6);
+> +	VP_SEQ_PRINTF(Placeholder7);
+> +	VP_SEQ_PRINTF(Placeholder8);
+> +	VP_SEQ_PRINTF(ContentionTime);
+> +	VP_SEQ_PRINTF(WakeUpTime);
+> +	VP_SEQ_PRINTF(SchedulingPriority);
+> +	VP_SEQ_PRINTF(Vtl1DispatchCount);
+> +	VP_SEQ_PRINTF(Vtl2DispatchCount);
+> +	VP_SEQ_PRINTF(Vtl2DispatchBucket0);
+> +	VP_SEQ_PRINTF(Vtl2DispatchBucket1);
+> +	VP_SEQ_PRINTF(Vtl2DispatchBucket2);
+> +	VP_SEQ_PRINTF(Vtl2DispatchBucket3);
+> +	VP_SEQ_PRINTF(Vtl2DispatchBucket4);
+> +	VP_SEQ_PRINTF(Vtl2DispatchBucket5);
+> +	VP_SEQ_PRINTF(Vtl2DispatchBucket6);
+> +	VP_SEQ_PRINTF(Vtl1RunTime);
+> +	VP_SEQ_PRINTF(Vtl2RunTime);
+> +	VP_SEQ_PRINTF(IommuHypercalls);
+> +	VP_SEQ_PRINTF(CpuGroupHypercalls);
+> +	VP_SEQ_PRINTF(VsmHypercalls);
+> +	VP_SEQ_PRINTF(EventLogHypercalls);
+> +	VP_SEQ_PRINTF(DeviceDomainHypercalls);
+> +	VP_SEQ_PRINTF(DepositHypercalls);
+> +	VP_SEQ_PRINTF(SvmHypercalls);
+> +#endif
+> +
+> +	return 0;
+> +}
+> +DEFINE_SHOW_ATTRIBUTE(vp_stats);
+> +
+> +static void mshv_vp_stats_unmap(u64 partition_id, u32 vp_index, void *stats_page_addr,
+> +				enum hv_stats_area_type stats_area_type)
+> +{
+> +	union hv_stats_object_identity identity = {
+> +		.vp.partition_id = partition_id,
+> +		.vp.vp_index = vp_index,
+> +		.vp.stats_area_type = stats_area_type,
+> +	};
+> +	int err;
+> +
+> +	err = hv_unmap_stats_page(HV_STATS_OBJECT_VP, stats_page_addr, &identity);
+> +	if (err)
+> +		pr_err("%s: failed to unmap partition %llu vp %u %s stats, err: %d\n",
+> +		       __func__, partition_id, vp_index,
+> +		       (stats_area_type == HV_STATS_AREA_SELF) ? "self" : "parent",
+> +		       err);
+> +}
+> +
+> +static void *mshv_vp_stats_map(u64 partition_id, u32 vp_index,
+> +			       enum hv_stats_area_type stats_area_type)
+> +{
+> +	union hv_stats_object_identity identity = {
+> +		.vp.partition_id = partition_id,
+> +		.vp.vp_index = vp_index,
+> +		.vp.stats_area_type = stats_area_type,
+> +	};
+> +	void *stats;
+> +	int err;
+> +
+> +	err = hv_map_stats_page(HV_STATS_OBJECT_VP, &identity, &stats);
+> +	if (err) {
+> +		pr_err("%s: failed to map partition %llu vp %u %s stats, err: %d\n",
+> +		       __func__, partition_id, vp_index,
+> +		       (stats_area_type == HV_STATS_AREA_SELF) ? "self" : "parent",
+> +		       err);
+> +		return ERR_PTR(err);
+> +	}
+> +	return stats;
+> +}
+> +
+> +static int vp_debugfs_stats_create(u64 partition_id, u32 vp_index,
+> +				   struct dentry **vp_stats_ptr,
+> +				   struct dentry *parent)
+> +{
+> +	struct dentry *dentry;
+> +	struct hv_stats_page **pstats;
+> +	int err;
+> +
+> +	pstats = kcalloc(2, sizeof(struct hv_stats_page *), GFP_KERNEL_ACCOUNT);
+> +	if (!pstats)
+> +		return -ENOMEM;
+> +
+> +	pstats[HV_STATS_AREA_SELF] = mshv_vp_stats_map(partition_id, vp_index,
+> +						       HV_STATS_AREA_SELF);
+> +	if (IS_ERR(pstats[HV_STATS_AREA_SELF])) {
+> +		err = PTR_ERR(pstats[HV_STATS_AREA_SELF]);
+> +		goto cleanup;
+> +	}
+> +
+> +	/*
+> +	 * L1VH partition cannot access its vp stats in parent area.
+> +	 */
+> +	if (is_l1vh_parent(partition_id)) {
+> +		pstats[HV_STATS_AREA_PARENT] = pstats[HV_STATS_AREA_SELF];
+> +	} else {
+> +		pstats[HV_STATS_AREA_PARENT] = mshv_vp_stats_map(
+> +			partition_id, vp_index, HV_STATS_AREA_PARENT);
+> +		if (IS_ERR(pstats[HV_STATS_AREA_PARENT])) {
+> +			err = PTR_ERR(pstats[HV_STATS_AREA_PARENT]);
+> +			goto unmap_self;
+> +		}
+> +		if (!pstats[HV_STATS_AREA_PARENT])
+> +			pstats[HV_STATS_AREA_PARENT] = pstats[HV_STATS_AREA_SELF];
+> +	}
+> +
+> +	dentry = debugfs_create_file("stats", 0400, parent,
+> +				     pstats, &vp_stats_fops);
+> +	if (IS_ERR(dentry)) {
+> +		err = PTR_ERR(dentry);
+> +		goto unmap_vp_stats;
+> +	}
+> +
+> +	*vp_stats_ptr = dentry;
+> +	return 0;
+> +
+> +unmap_vp_stats:
+> +	if (pstats[HV_STATS_AREA_PARENT] != pstats[HV_STATS_AREA_SELF])
+> +		mshv_vp_stats_unmap(partition_id, vp_index, pstats[HV_STATS_AREA_PARENT],
+> +				    HV_STATS_AREA_PARENT);
+> +unmap_self:
+> +	mshv_vp_stats_unmap(partition_id, vp_index, pstats[HV_STATS_AREA_SELF],
+> +			    HV_STATS_AREA_SELF);
+> +cleanup:
+> +	kfree(pstats);
+> +	return err;
+> +}
+> +
+> +static void vp_debugfs_remove(u64 partition_id, u32 vp_index,
+> +			      struct dentry *vp_stats)
+> +{
+> +	struct hv_stats_page **pstats = NULL;
+> +	void *stats;
+> +
+> +	pstats = vp_stats->d_inode->i_private;
+> +	debugfs_remove_recursive(vp_stats->d_parent);
+> +	if (pstats[HV_STATS_AREA_PARENT] != pstats[HV_STATS_AREA_SELF]) {
+> +		stats = pstats[HV_STATS_AREA_PARENT];
+> +		mshv_vp_stats_unmap(partition_id, vp_index, stats,
+> +				    HV_STATS_AREA_PARENT);
+> +	}
+> +
+> +	stats = pstats[HV_STATS_AREA_SELF];
+> +	mshv_vp_stats_unmap(partition_id, vp_index, stats, HV_STATS_AREA_SELF);
+> +
+> +	kfree(pstats);
+> +}
+> +
+> +static int vp_debugfs_create(u64 partition_id, u32 vp_index,
+> +			     struct dentry **vp_stats_ptr,
+> +			     struct dentry *parent)
+> +{
+> +	struct dentry *vp_idx_dir;
+> +	char vp_idx_str[U32_BUF_SZ];
+> +	int err;
+> +
+> +	sprintf(vp_idx_str, "%u", vp_index);
+> +
+> +	vp_idx_dir = debugfs_create_dir(vp_idx_str, parent);
+> +	if (IS_ERR(vp_idx_dir))
+> +		return PTR_ERR(vp_idx_dir);
+> +
+> +	err = vp_debugfs_stats_create(partition_id, vp_index, vp_stats_ptr,
+> +				      vp_idx_dir);
+> +	if (err)
+> +		goto remove_debugfs_vp_idx;
+> +
+> +	return 0;
+> +
+> +remove_debugfs_vp_idx:
+> +	debugfs_remove_recursive(vp_idx_dir);
+> +	return err;
+> +}
+> +
+> +static int partition_stats_show(struct seq_file *m, void *v)
+> +{
+> +	const struct hv_stats_page **pstats = m->private;
+> +
+> +#define PARTITION_SEQ_PRINTF(cnt)				 \
+> +do {								 \
+> +	if (pstats[HV_STATS_AREA_SELF]->pt_cntrs[Partition##cnt]) \
+> +		seq_printf(m, "%-30s: %llu\n", __stringify(cnt), \
+> +			pstats[HV_STATS_AREA_SELF]->pt_cntrs[Partition##cnt]); \
+> +	else \
+> +		seq_printf(m, "%-30s: %llu\n", __stringify(cnt), \
+> +			pstats[HV_STATS_AREA_PARENT]->pt_cntrs[Partition##cnt]); \
+> +} while (0)
+> +
+> +	PARTITION_SEQ_PRINTF(VirtualProcessors);
+> +	PARTITION_SEQ_PRINTF(TlbSize);
+> +	PARTITION_SEQ_PRINTF(AddressSpaces);
+> +	PARTITION_SEQ_PRINTF(DepositedPages);
+> +	PARTITION_SEQ_PRINTF(GpaPages);
+> +	PARTITION_SEQ_PRINTF(GpaSpaceModifications);
+> +	PARTITION_SEQ_PRINTF(VirtualTlbFlushEntires);
+> +	PARTITION_SEQ_PRINTF(RecommendedTlbSize);
+> +	PARTITION_SEQ_PRINTF(GpaPages4K);
+> +	PARTITION_SEQ_PRINTF(GpaPages2M);
+> +	PARTITION_SEQ_PRINTF(GpaPages1G);
+> +	PARTITION_SEQ_PRINTF(GpaPages512G);
+> +	PARTITION_SEQ_PRINTF(DevicePages4K);
+> +	PARTITION_SEQ_PRINTF(DevicePages2M);
+> +	PARTITION_SEQ_PRINTF(DevicePages1G);
+> +	PARTITION_SEQ_PRINTF(DevicePages512G);
+> +	PARTITION_SEQ_PRINTF(AttachedDevices);
+> +	PARTITION_SEQ_PRINTF(DeviceInterruptMappings);
+> +	PARTITION_SEQ_PRINTF(IoTlbFlushes);
+> +	PARTITION_SEQ_PRINTF(IoTlbFlushCost);
+> +	PARTITION_SEQ_PRINTF(DeviceInterruptErrors);
+> +	PARTITION_SEQ_PRINTF(DeviceDmaErrors);
+> +	PARTITION_SEQ_PRINTF(DeviceInterruptThrottleEvents);
+> +	PARTITION_SEQ_PRINTF(SkippedTimerTicks);
+> +	PARTITION_SEQ_PRINTF(PartitionId);
+> +#if IS_ENABLED(CONFIG_X86_64)
+> +	PARTITION_SEQ_PRINTF(NestedTlbSize);
+> +	PARTITION_SEQ_PRINTF(RecommendedNestedTlbSize);
+> +	PARTITION_SEQ_PRINTF(NestedTlbFreeListSize);
+> +	PARTITION_SEQ_PRINTF(NestedTlbTrimmedPages);
+> +	PARTITION_SEQ_PRINTF(PagesShattered);
+> +	PARTITION_SEQ_PRINTF(PagesRecombined);
+> +	PARTITION_SEQ_PRINTF(HwpRequestValue);
+> +#elif IS_ENABLED(CONFIG_ARM64)
+> +	PARTITION_SEQ_PRINTF(HwpRequestValue);
+> +#endif
+> +
+> +	return 0;
+> +}
+> +DEFINE_SHOW_ATTRIBUTE(partition_stats);
+> +
+> +static void mshv_partition_stats_unmap(u64 partition_id, void *stats_page_addr,
+> +				       enum hv_stats_area_type stats_area_type)
+> +{
+> +	union hv_stats_object_identity identity = {
+> +		.partition.partition_id = partition_id,
+> +		.partition.stats_area_type = stats_area_type,
+> +	};
+> +	int err;
+> +
+> +	err = hv_unmap_stats_page(HV_STATS_OBJECT_PARTITION, stats_page_addr,
+> +				  &identity);
+> +	if (err) {
+
+nit: redundant curly brackets
+
+> +		pr_err("%s: failed to unmap partition %lld %s stats, err: %d\n",
+> +		       __func__, partition_id,
+> +		       (stats_area_type == HV_STATS_AREA_SELF) ? "self" : "parent",
+> +		       err);
+> +	}
+> +}
+> +
+> +static void *mshv_partition_stats_map(u64 partition_id,
+> +				      enum hv_stats_area_type stats_area_type)
+> +{
+> +	union hv_stats_object_identity identity = {
+> +		.partition.partition_id = partition_id,
+> +		.partition.stats_area_type = stats_area_type,
+> +	};
+> +	void *stats;
+> +	int err;
+> +
+> +	err = hv_map_stats_page(HV_STATS_OBJECT_PARTITION, &identity, &stats);
+> +	if (err) {
+> +		pr_err("%s: failed to map partition %lld %s stats, err: %d\n",
+> +		       __func__, partition_id,
+> +		       (stats_area_type == HV_STATS_AREA_SELF) ? "self" : "parent",
+> +		       err);
+> +		return ERR_PTR(err);
+> +	}
+> +	return stats;
+> +}
+> +
+> +static int mshv_debugfs_partition_stats_create(u64 partition_id,
+> +					    struct dentry **partition_stats_ptr,
+> +					    struct dentry *parent)
+> +{
+> +	struct dentry *dentry;
+> +	struct hv_stats_page **pstats;
+> +	int err;
+> +
+> +	pstats = kcalloc(2, sizeof(struct hv_stats_page *), GFP_KERNEL_ACCOUNT);
+> +	if (!pstats)
+> +		return -ENOMEM;
+> +
+> +	pstats[HV_STATS_AREA_SELF] = mshv_partition_stats_map(partition_id,
+> +							      HV_STATS_AREA_SELF);
+> +	if (IS_ERR(pstats[HV_STATS_AREA_SELF])) {
+> +		err = PTR_ERR(pstats[HV_STATS_AREA_SELF]);
+> +		goto cleanup;
+> +	}
+> +
+> +	/*
+> +	 * L1VH partition cannot access its partition stats in parent area.
+> +	 */
+> +	if (is_l1vh_parent(partition_id)) {
+> +		pstats[HV_STATS_AREA_PARENT] = pstats[HV_STATS_AREA_SELF];
+> +	} else {
+> +		pstats[HV_STATS_AREA_PARENT] = mshv_partition_stats_map(partition_id,
+> +									HV_STATS_AREA_PARENT);
+> +		if (IS_ERR(pstats[HV_STATS_AREA_PARENT])) {
+> +			err = PTR_ERR(pstats[HV_STATS_AREA_PARENT]);
+> +			goto unmap_self;
+> +		}
+> +		if (!pstats[HV_STATS_AREA_PARENT])
+> +			pstats[HV_STATS_AREA_PARENT] = pstats[HV_STATS_AREA_SELF];
+> +	}
+> +
+> +	dentry = debugfs_create_file("stats", 0400, parent,
+> +				     pstats, &partition_stats_fops);
+> +	if (IS_ERR(dentry)) {
+> +		err = PTR_ERR(dentry);
+> +		goto unmap_partition_stats;
+> +	}
+> +
+> +	*partition_stats_ptr = dentry;
+> +	return 0;
+> +
+> +unmap_partition_stats:
+> +	if (pstats[HV_STATS_AREA_PARENT] != pstats[HV_STATS_AREA_SELF])
+> +		mshv_partition_stats_unmap(partition_id, pstats[HV_STATS_AREA_PARENT],
+> +					   HV_STATS_AREA_PARENT);
+> +unmap_self:
+> +	mshv_partition_stats_unmap(partition_id, pstats[HV_STATS_AREA_SELF],
+> +				   HV_STATS_AREA_SELF);
+> +cleanup:
+> +	kfree(pstats);
+> +	return err;
+> +}
+> +
+> +static void partition_debugfs_remove(u64 partition_id, struct dentry *dentry)
+> +{
+> +	struct hv_stats_page **pstats = NULL;
+> +	void *stats;
+
+nit: stats variable looks redundant
+
+> +
+> +	pstats = dentry->d_inode->i_private;
+> +
+> +	debugfs_remove_recursive(dentry->d_parent);
+> +
+> +	if (pstats[HV_STATS_AREA_PARENT] != pstats[HV_STATS_AREA_SELF]) {
+> +		stats = pstats[HV_STATS_AREA_PARENT];
+> +		mshv_partition_stats_unmap(partition_id, stats, HV_STATS_AREA_PARENT);
+> +	}
+> +
+> +	stats = pstats[HV_STATS_AREA_SELF];
+> +	mshv_partition_stats_unmap(partition_id, stats, HV_STATS_AREA_SELF);
+> +
+> +	kfree(pstats);
+> +}
+> +
+> +static int partition_debugfs_create(u64 partition_id,
+> +				    struct dentry **vp_dir_ptr,
+> +				    struct dentry **partition_stats_ptr,
+> +				    struct dentry *parent)
+> +{
+> +	char part_id_str[U64_BUF_SZ];
+> +	struct dentry *part_id_dir, *vp_dir;
+> +	int err;
+> +
+> +	if (is_l1vh_parent(partition_id))
+> +		sprintf(part_id_str, "self");
+> +	else
+> +		sprintf(part_id_str, "%llu", partition_id);
+> +
+> +	part_id_dir = debugfs_create_dir(part_id_str, parent);
+> +	if (IS_ERR(part_id_dir))
+> +		return PTR_ERR(part_id_dir);
+> +
+> +	vp_dir = debugfs_create_dir("vp", part_id_dir);
+> +	if (IS_ERR(vp_dir)) {
+> +		err = PTR_ERR(vp_dir);
+> +		goto remove_debugfs_partition_id;
+> +	}
+> +
+> +	err = mshv_debugfs_partition_stats_create(partition_id,
+> +						  partition_stats_ptr,
+> +						  part_id_dir);
+> +	if (err)
+> +		goto remove_debugfs_partition_id;
+> +
+> +	*vp_dir_ptr = vp_dir;
+> +
+> +	return 0;
+> +
+> +remove_debugfs_partition_id:
+> +	debugfs_remove_recursive(part_id_dir);
+> +	return err;
+> +}
+> +
+> +static void mshv_debugfs_parent_partition_remove(void)
+> +{
+> +	int idx;
+> +
+> +	for_each_online_cpu(idx)
+> +		vp_debugfs_remove(hv_current_partition_id, idx, NULL);
+> +
+> +	partition_debugfs_remove(hv_current_partition_id, NULL);
+> +}
+> +
+> +static int __init mshv_debugfs_parent_partition_create(void)
+> +{
+> +	struct dentry *partition_stats, *vp_dir;
+> +	int err, idx, i;
+> +
+> +	mshv_debugfs_partition = debugfs_create_dir("partition",
+> +						     mshv_debugfs);
+> +	if (IS_ERR(mshv_debugfs_partition))
+> +		return PTR_ERR(mshv_debugfs_partition);
+> +
+> +	err = partition_debugfs_create(hv_current_partition_id,
+> +				       &vp_dir,
+> +				       &partition_stats,
+> +				       mshv_debugfs_partition);
+> +	if (err)
+> +		goto remove_debugfs_partition;
+> +
+> +	for_each_online_cpu(idx) {
+> +		struct dentry *vp_stats;
+> +
+> +		err = vp_debugfs_create(hv_current_partition_id,
+> +					hv_vp_index[idx],
+> +					&vp_stats,
+> +					vp_dir);
+> +		if (err)
+> +			goto remove_debugfs_partition_vp;
+> +	}
+> +
+> +	return 0;
+> +
+> +remove_debugfs_partition_vp:
+> +	for_each_online_cpu(i) {
+> +		if (i >= idx)
+> +			break;
+> +		vp_debugfs_remove(hv_current_partition_id, i, NULL);
+> +	}
+> +	partition_debugfs_remove(hv_current_partition_id, NULL);
+> +remove_debugfs_partition:
+> +	debugfs_remove_recursive(mshv_debugfs_partition);
+> +	return err;
+> +}
+> +
+> +static int hv_stats_show(struct seq_file *m, void *v)
+> +{
+> +	const struct hv_stats_page *stats = m->private;
+> +
+> +#define HV_SEQ_PRINTF(cnt)		\
+> +	seq_printf(m, "%-25s: %llu\n", __stringify(cnt), stats->hv_cntrs[Hv##cnt])
+> +
+> +	HV_SEQ_PRINTF(LogicalProcessors);
+> +	HV_SEQ_PRINTF(Partitions);
+> +	HV_SEQ_PRINTF(TotalPages);
+> +	HV_SEQ_PRINTF(VirtualProcessors);
+> +	HV_SEQ_PRINTF(MonitoredNotifications);
+> +	HV_SEQ_PRINTF(ModernStandbyEntries);
+> +	HV_SEQ_PRINTF(PlatformIdleTransitions);
+> +	HV_SEQ_PRINTF(HypervisorStartupCost);
+> +	HV_SEQ_PRINTF(IOSpacePages);
+> +	HV_SEQ_PRINTF(NonEssentialPagesForDump);
+> +	HV_SEQ_PRINTF(SubsumedPages);
+> +
+> +	return 0;
+> +}
+> +DEFINE_SHOW_ATTRIBUTE(hv_stats);
+> +
+> +static void mshv_hv_stats_unmap(void)
+> +{
+> +	union hv_stats_object_identity identity = {
+> +		.hv.stats_area_type = HV_STATS_AREA_SELF,
+> +	};
+> +	int err;
+> +
+> +	err = hv_unmap_stats_page(HV_STATS_OBJECT_HYPERVISOR, NULL, &identity);
+> +	if (err)
+> +		pr_err("%s: failed to unmap hypervisor stats: %d\n",
+> +		       __func__, err);
+> +}
+> +
+> +static void * __init mshv_hv_stats_map(void)
+> +{
+> +	union hv_stats_object_identity identity = {
+> +		.hv.stats_area_type = HV_STATS_AREA_SELF,
+> +	};
+> +	void *stats;
+> +	int err;
+> +
+> +	err = hv_map_stats_page(HV_STATS_OBJECT_HYPERVISOR, &identity, &stats);
+> +	if (err) {
+> +		pr_err("%s: failed to map hypervisor stats: %d\n",
+> +		       __func__, err);
+> +		return ERR_PTR(err);
+> +	}
+> +	return stats;
+> +}
+> +
+> +static int __init mshv_debugfs_hv_stats_create(struct dentry *parent)
+> +{
+> +	struct dentry *dentry;
+> +	u64 *stats;
+> +	int err;
+> +
+> +	stats = mshv_hv_stats_map();
+> +	if (IS_ERR(stats))
+> +		return PTR_ERR(stats);
+> +
+> +	dentry = debugfs_create_file("stats", 0400, parent,
+> +				     stats, &hv_stats_fops);
+> +	if (IS_ERR(dentry)) {
+> +		err = PTR_ERR(dentry);
+> +		pr_err("%s: failed to create hypervisor stats dentry: %d\n",
+> +		       __func__, err);
+> +		goto unmap_hv_stats;
+> +	}
+> +
+> +	mshv_lps_count = stats[HvLogicalProcessors];
+> +
+> +	return 0;
+> +
+> +unmap_hv_stats:
+> +	mshv_hv_stats_unmap();
+> +	return err;
+> +}
+> +
+> +int mshv_debugfs_vp_create(struct mshv_vp *vp)
+> +{
+> +	struct mshv_partition *p = vp->vp_partition;
+> +	int err;
+
+nit: redundant variable
+
+> +
+> +	if (!mshv_debugfs)
+> +		return 0;
+> +
+> +	err = vp_debugfs_create(p->pt_id, vp->vp_index,
+> +				&vp->vp_debugfs_stats_dentry,
+> +				p->pt_debugfs_vp_dentry);
+> +	if (err)
+> +		return err;
+> +
+> +	return 0;
+> +}
+> +
+> +void mshv_debugfs_vp_remove(struct mshv_vp *vp)
+> +{
+> +	if (!mshv_debugfs)
+> +		return;
+> +
+> +	vp_debugfs_remove(vp->vp_partition->pt_id, vp->vp_index,
+> +			  vp->vp_debugfs_stats_dentry);
+> +}
+> +
+> +int mshv_debugfs_partition_create(struct mshv_partition *partition)
+> +{
+> +	int err;
+> +
+> +	if (!mshv_debugfs)
+> +		return 0;
+> +
+> +	err = partition_debugfs_create(partition->pt_id,
+> +				       &partition->pt_debugfs_vp_dentry,
+> +				       &partition->pt_debugfs_stats_dentry,
+> +				       mshv_debugfs_partition);
+> +	if (err)
+> +		return err;
+> +
+> +	return 0;
+> +}
+> +
+> +void mshv_debugfs_partition_remove(struct mshv_partition *partition)
+> +{
+> +	if (!mshv_debugfs)
+> +		return;
+> +
+> +	partition_debugfs_remove(partition->pt_id,
+> +				 partition->pt_debugfs_stats_dentry);
+> +}
+> +
+> +int __init mshv_debugfs_init(void)
+> +{
+> +	int err;
+> +
+> +	mshv_debugfs = debugfs_create_dir("mshv", NULL);
+> +	if (IS_ERR(mshv_debugfs)) {
+> +		pr_err("%s: failed to create debugfs directory\n", __func__);
+> +		return PTR_ERR(mshv_debugfs);
+> +	}
+> +
+> +	if (hv_root_partition()) {
+> +		err = mshv_debugfs_hv_stats_create(mshv_debugfs);
+> +		if (err)
+> +			goto remove_mshv_dir;
+> +
+> +		err = mshv_debugfs_lp_create(mshv_debugfs);
+> +		if (err)
+> +			goto unmap_hv_stats;
+> +	}
+> +
+> +	err = mshv_debugfs_parent_partition_create();
+> +	if (err)
+> +		goto unmap_lp_stats;
+> +
+> +	return 0;
+> +
+> +unmap_lp_stats:
+> +	if (hv_root_partition())
+> +		mshv_debugfs_lp_remove();
+> +unmap_hv_stats:
+> +	if (hv_root_partition())
+> +		mshv_hv_stats_unmap();
+> +remove_mshv_dir:
+> +	debugfs_remove_recursive(mshv_debugfs);
+> +	return err;
+> +}
+> +
+> +void mshv_debugfs_exit(void)
+> +{
+> +	mshv_debugfs_parent_partition_remove();
+> +
+> +	if (hv_root_partition()) {
+> +		mshv_debugfs_lp_remove();
+> +		mshv_hv_stats_unmap();
+> +	}
+> +
+> +	debugfs_remove_recursive(mshv_debugfs);
+> +}
+> diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
+> index 3eb815011b46..1f1b1984449b 100644
+> --- a/drivers/hv/mshv_root.h
+> +++ b/drivers/hv/mshv_root.h
+> @@ -51,6 +51,9 @@ struct mshv_vp {
+>  		unsigned int kicked_by_hv;
+>  		wait_queue_head_t vp_suspend_queue;
+>  	} run;
+> +#if IS_ENABLED(CONFIG_DEBUG_FS)
+> +	struct dentry *vp_debugfs_stats_dentry;
+
+nit: the name could be shorter like vp_stats_dentry, for example
+
+> +#endif
+>  };
+>  
+>  #define vp_fmt(fmt) "p%lluvp%u: " fmt
+> @@ -128,6 +131,10 @@ struct mshv_partition {
+>  	u64 isolation_type;
+>  	bool import_completed;
+>  	bool pt_initialized;
+> +#if IS_ENABLED(CONFIG_DEBUG_FS)
+> +	struct dentry *pt_debugfs_stats_dentry;
+> +	struct dentry *pt_debugfs_vp_dentry;
+
+same here
+
+> +#endif
+>  };
+>  
+>  #define pt_fmt(fmt) "p%llu: " fmt
+> @@ -308,6 +315,33 @@ int hv_call_modify_spa_host_access(u64 partition_id, struct page **pages,
+>  int hv_call_get_partition_property_ex(u64 partition_id, u64 property_code, u64 arg,
+>  				      void *property_value, size_t property_value_sz);
+>  
+> +#if IS_ENABLED(CONFIG_DEBUG_FS)
+> +int __init mshv_debugfs_init(void);
+> +void mshv_debugfs_exit(void);
+> +
+> +int mshv_debugfs_partition_create(struct mshv_partition *partition);
+> +void mshv_debugfs_partition_remove(struct mshv_partition *partition);
+> +int mshv_debugfs_vp_create(struct mshv_vp *vp);
+> +void mshv_debugfs_vp_remove(struct mshv_vp *vp);
+> +#else
+> +static inline int __init mshv_debugfs_init(void)
+> +{
+> +	return 0;
+> +}
+> +static inline void mshv_debugfs_exit(void) { }
+> +
+> +static inline int mshv_debugfs_partition_create(struct mshv_partition *partition)
+> +{
+> +	return 0;
+> +}
+> +static inline void mshv_debugfs_partition_remove(struct mshv_partition *partition) { }
+> +static inline int mshv_debugfs_vp_create(struct mshv_vp *vp)
+> +{
+> +	return 0;
+> +}
+> +static inline void mshv_debugfs_vp_remove(struct mshv_vp *vp) { }
+> +#endif
+> +
+>  extern struct mshv_root mshv_root;
+>  extern enum hv_scheduler_type hv_scheduler_type;
+>  extern u8 * __percpu *hv_synic_eventring_tail;
+> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> index 19006b788e85..152fcd9b45e6 100644
+> --- a/drivers/hv/mshv_root_main.c
+> +++ b/drivers/hv/mshv_root_main.c
+> @@ -982,6 +982,10 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
+>  	if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
+>  		memcpy(vp->vp_stats_pages, stats_pages, sizeof(stats_pages));
+>  
+> +	ret = mshv_debugfs_vp_create(vp);
+> +	if (ret)
+> +		goto put_partition;
+> +
+>  	/*
+>  	 * Keep anon_inode_getfd last: it installs fd in the file struct and
+>  	 * thus makes the state accessible in user space.
+> @@ -989,7 +993,7 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
+>  	ret = anon_inode_getfd("mshv_vp", &mshv_vp_fops, vp,
+>  			       O_RDWR | O_CLOEXEC);
+>  	if (ret < 0)
+> -		goto put_partition;
+> +		goto remove_debugfs_vp;
+>  
+>  	/* already exclusive with the partition mutex for all ioctls */
+>  	partition->pt_vp_count++;
+> @@ -997,6 +1001,8 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
+>  
+>  	return ret;
+>  
+> +remove_debugfs_vp:
+> +	mshv_debugfs_vp_remove(vp);
+>  put_partition:
+>  	mshv_partition_put(partition);
+>  free_vp:
+> @@ -1556,13 +1562,18 @@ mshv_partition_ioctl_initialize(struct mshv_partition *partition)
+>  
+>  	ret = hv_call_initialize_partition(partition->pt_id);
+>  	if (ret)
+> -		goto withdraw_mem;
+
+Looks like the behavior changed here. Could you explain?
+
+
+> +		return ret;
+> +
+> +	ret = mshv_debugfs_partition_create(partition);
+> +	if (ret)
+> +		goto finalize_partition;
+>  
+>  	partition->pt_initialized = true;
+>  
+>  	return 0;
+>  
+> -withdraw_mem:
+> +finalize_partition:
+> +	hv_call_finalize_partition(partition->pt_id);
+>  	hv_call_withdraw_memory(U64_MAX, NUMA_NO_NODE, partition->pt_id);
+>  
+>  	return ret;
+> @@ -1741,6 +1752,8 @@ static void destroy_partition(struct mshv_partition *partition)
+>  			if (!vp)
+>  				continue;
+>  
+> +			mshv_debugfs_vp_remove(vp);
+> +
+>  			if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
+>  				mshv_vp_stats_unmap(partition->pt_id, vp->vp_index,
+>  						    (void **)vp->vp_stats_pages);
+> @@ -1775,6 +1788,8 @@ static void destroy_partition(struct mshv_partition *partition)
+>  			partition->pt_vp_array[i] = NULL;
+>  		}
+>  
+> +		mshv_debugfs_partition_remove(partition);
+> +
+>  		/* Deallocates and unmaps everything including vcpus, GPA mappings etc */
+>  		hv_call_finalize_partition(partition->pt_id);
+>  
+> @@ -2351,10 +2366,14 @@ static int __init mshv_parent_partition_init(void)
+>  
+>  	mshv_init_vmm_caps(dev);
+>  
+> -	ret = mshv_irqfd_wq_init();
+> +	ret = mshv_debugfs_init();
+>  	if (ret)
+>  		goto exit_partition;
+>  
+> +	ret = mshv_irqfd_wq_init();
+> +	if (ret)
+> +		goto exit_debugfs;
+> +
+>  	spin_lock_init(&mshv_root.pt_ht_lock);
+>  	hash_init(mshv_root.pt_htable);
+>  
+> @@ -2362,6 +2381,10 @@ static int __init mshv_parent_partition_init(void)
+>  
+>  	return 0;
+>  
+> +destroy_irqds_wq:
+
+Where is this label used?
+
+Thanks,
+Stanislav
+
+> +	mshv_irqfd_wq_cleanup();
+> +exit_debugfs:
+> +	mshv_debugfs_exit();
+>  exit_partition:
+>  	if (hv_root_partition())
+>  		mshv_root_partition_exit();
+> @@ -2378,6 +2401,7 @@ static void __exit mshv_parent_partition_exit(void)
+>  {
+>  	hv_setup_mshv_handler(NULL);
+>  	mshv_port_table_fini();
+> +	mshv_debugfs_exit();
+>  	misc_deregister(&mshv_dev);
+>  	mshv_irqfd_wq_cleanup();
+>  	if (hv_root_partition())
 > -- 
-> 2.51.0
-> 
+> 2.34.1
 
