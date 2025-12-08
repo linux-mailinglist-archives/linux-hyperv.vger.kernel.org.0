@@ -1,71 +1,71 @@
-Return-Path: <linux-hyperv+bounces-7988-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-7989-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53AF7CABEC3
-	for <lists+linux-hyperv@lfdr.de>; Mon, 08 Dec 2025 04:08:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F3F7CAC1C7
+	for <lists+linux-hyperv@lfdr.de>; Mon, 08 Dec 2025 07:03:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F2E8A304C9ED
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Dec 2025 03:05:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3E3D3300B9A6
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Dec 2025 06:03:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF2CF2E7198;
-	Mon,  8 Dec 2025 03:05:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF83B1632DD;
+	Mon,  8 Dec 2025 06:03:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G/v4wGQE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NKJS365a"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3CB273D8F;
-	Mon,  8 Dec 2025 03:04:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468671547F2;
+	Mon,  8 Dec 2025 06:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765163101; cv=none; b=Y0tPywWA6FTyooocEbAbx52xSu5+BFREts8j/T95R0QkZAqGAqbrbnjVHwWHIWsGjloOrY9xS43S0L0/xrj9j0gjGoLDG9K2WBi+uad7xC2rJTpjEFT/+BrAoINkbkcvRtEMJrTLOTc+i+lSSOnJMoeEHuj0J1QpsIZj8tznet4=
+	t=1765173785; cv=none; b=QV1FoT1Om7HhZJD5VTwLMulw93wpNzHnRqDoe3q/Grl7gb665JJtodiPI4t+RZdzxXXmewMyntzMCf9O+EM31pZBp5hSFOpwFwVC3m4dKnQsgLkjJccZ/dCj/cTkDy4dIk6pXXPGvqS77eAhDaDBPJ9leyNN/zdndXAGFmGEbhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765163101; c=relaxed/simple;
-	bh=fA6lTbgQDY3+JQPsBJw1SsIrNj/2jqzT56e6yGhqve0=;
+	s=arc-20240116; t=1765173785; c=relaxed/simple;
+	bh=Zfh1zyeBQCFWPowgwDbAqgBe3hcWFQJZYr7wiHbAB7Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VpTIym9HIZqH98lxmsUbN0UYFWLwYRAENbqBNgeu+V6AjeItyJAtdFptHolZY7+NjAe64wOaTTvMcnst/9w2QeimaUWHsQ58qs3fRKbFOzFoJQ2oI/aORBYTP1IyTVpsNIw7eZiIMayapt57m86hIcB/yNKH/09WZHdND3IFG7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G/v4wGQE; arc=none smtp.client-ip=192.198.163.11
+	 Content-Type:Content-Disposition:In-Reply-To; b=Er1Q+NRazV08Al7TURcOS47xeS5NBGlQTvRC87GY5pOpu+V2BBdGKVrscmm+0IdmaQUEAnBJLp8yTa9CdpUNXOwy0mzNaoXu5wcAEa1dHbwLhbz6s2+TIuQcc6ZHZjwCivRuua5uhn/ese/h8WT7bj3oRot9XuxT3Y3twc4VNwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NKJS365a; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765163091; x=1796699091;
+  t=1765173783; x=1796709783;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=fA6lTbgQDY3+JQPsBJw1SsIrNj/2jqzT56e6yGhqve0=;
-  b=G/v4wGQE8qNDVNCqYvpHBmeq2xbRJvuYhxIJYWvF2CDAn8LRQuIZZ+Wy
-   RwrHZUW1ler+BBitEQw/TcypnNXuMUKSYYW20nCloQT2l/3DrUZwAwqpi
-   ziPUk513N8/zcwUNdAjep4qZ/jzZdvkatwDNve1EQRa5/Z4L6vgn+k80J
-   kHF88KRRUHCp7GfEIElG80fznGQmZIsKpR9fhiU7ga/a3ykw4RcU1MLwG
-   TL/0sizmCTrWNJ739TcRglow0P0JfVHzuPEaMWnjI8ocDyh2/6PkqaHIC
-   u41hCJXzOhN0ypXj06+MPcHZ2jwvb9GmsHBZgmVdNnxkcNKoZ1f8Dpwyq
-   A==;
-X-CSE-ConnectionGUID: H/g3vEZTSDigpwh6TVxXDQ==
-X-CSE-MsgGUID: cxPa9mr+Qc+9DnklqLm7AA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11635"; a="77722168"
+  bh=Zfh1zyeBQCFWPowgwDbAqgBe3hcWFQJZYr7wiHbAB7Q=;
+  b=NKJS365a8vkCfWNcVdOpvjw+tGB07Za62iYgZM6XL7jVNXenMAKi41ww
+   2VInESrbUb7Igb1I+vYAd+PzUaJbORUPTEv27odvfkvGVcSe2w9AFniLl
+   RPwLaV96uM6NUKuEccf+BlZMIVVIcFOplGT5fgTNxuJDwpLCYLMGpnUdL
+   EC7uhn2Ym4vQUz4uRt2b8hnh+DjKKMIk6PLNuncbRze86JeC3xtRMflnQ
+   ymhCH5ljIimbyTe/fUzkRBQTINl2mEtsOMzu86mclBdnksFYd6pkfM88F
+   rZHQIWNnbN5dC8qxv+coP1MapXw/c9+ri6/Zq3aMF15+E2y3Rj9yojZc3
+   g==;
+X-CSE-ConnectionGUID: y8Xw+At5TlSYP023g1KlAA==
+X-CSE-MsgGUID: a0O0aC4wQkmjXJ6E1x+BlQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11635"; a="77796162"
 X-IronPort-AV: E=Sophos;i="6.20,258,1758610800"; 
-   d="scan'208";a="77722168"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2025 19:04:51 -0800
-X-CSE-ConnectionGUID: 0hbwR9+5S5yHuWy1oYbDvg==
-X-CSE-MsgGUID: Vk90ca2hRSGRlAwKOT3XhA==
+   d="scan'208";a="77796162"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2025 22:03:02 -0800
+X-CSE-ConnectionGUID: 49xaL76+SdiZ2NAUwVPwrA==
+X-CSE-MsgGUID: raBO6p/eTkejGXTTnDtHbg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,258,1758610800"; 
-   d="scan'208";a="195851869"
+   d="scan'208";a="219199879"
 Received: from lkp-server01.sh.intel.com (HELO 4664bbef4914) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 07 Dec 2025 19:04:47 -0800
+  by fmviesa002.fm.intel.com with ESMTP; 07 Dec 2025 22:02:59 -0800
 Received: from kbuild by 4664bbef4914 with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1vSRYK-00000000JsV-3ugb;
-	Mon, 08 Dec 2025 03:04:44 +0000
-Date: Mon, 8 Dec 2025 11:04:20 +0800
+	id 1vSUKm-00000000K1N-43PA;
+	Mon, 08 Dec 2025 06:02:56 +0000
+Date: Mon, 8 Dec 2025 14:02:05 +0800
 From: kernel test robot <lkp@intel.com>
 To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
 	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
 	skinsburskii@linux.microsoft.com
-Cc: oe-kbuild-all@lists.linux.dev, kys@microsoft.com,
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, kys@microsoft.com,
 	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
 	longli@microsoft.com, mhklinux@outlook.com,
 	prapal@linux.microsoft.com, mrathor@linux.microsoft.com,
@@ -73,7 +73,7 @@ Cc: oe-kbuild-all@lists.linux.dev, kys@microsoft.com,
 	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
 	Jinank Jain <jinankjain@microsoft.com>
 Subject: Re: [PATCH v2 3/3] mshv: Add debugfs to view hypervisor statistics
-Message-ID: <202512081050.0AW9Ecvg-lkp@intel.com>
+Message-ID: <202512081314.ULBIWb1d-lkp@intel.com>
 References: <1764961122-31679-4-git-send-email-nunodasneves@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -99,21 +99,21 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Nuno-Das-Neves/mshv-Ignor
 base:   next-20251205
 patch link:    https://lore.kernel.org/r/1764961122-31679-4-git-send-email-nunodasneves%40linux.microsoft.com
 patch subject: [PATCH v2 3/3] mshv: Add debugfs to view hypervisor statistics
-config: x86_64-randconfig-002-20251208 (https://download.01.org/0day-ci/archive/20251208/202512081050.0AW9Ecvg-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.4.0-5) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251208/202512081050.0AW9Ecvg-lkp@intel.com/reproduce)
+config: x86_64-randconfig-076-20251208 (https://download.01.org/0day-ci/archive/20251208/202512081314.ULBIWb1d-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251208/202512081314.ULBIWb1d-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512081050.0AW9Ecvg-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202512081314.ULBIWb1d-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
-   drivers/hv/mshv_root_main.c: In function 'mshv_parent_partition_init':
->> drivers/hv/mshv_root_main.c:2369:1: warning: label 'destroy_irqds_wq' defined but not used [-Wunused-label]
+>> drivers/hv/mshv_root_main.c:2369:1: warning: unused label 'destroy_irqds_wq' [-Wunused-label]
     2369 | destroy_irqds_wq:
-         | ^~~~~~~~~~~~~~~~
+         | ^~~~~~~~~~~~~~~~~
+   1 warning generated.
 
 
 vim +/destroy_irqds_wq +2369 drivers/hv/mshv_root_main.c
