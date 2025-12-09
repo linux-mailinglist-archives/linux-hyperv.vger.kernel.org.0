@@ -1,116 +1,84 @@
-Return-Path: <linux-hyperv+bounces-8002-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8003-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89A38CAEEEA
-	for <lists+linux-hyperv@lfdr.de>; Tue, 09 Dec 2025 06:22:07 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8D6FCB099E
+	for <lists+linux-hyperv@lfdr.de>; Tue, 09 Dec 2025 17:37:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 617763037178
-	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Dec 2025 05:22:03 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 78B4D301F038
+	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Dec 2025 16:37:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EABA223BD06;
-	Tue,  9 Dec 2025 05:22:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC4BE2FF653;
+	Tue,  9 Dec 2025 16:37:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dD6UYubF"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="oRrZ6kmT"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94413B8D47;
-	Tue,  9 Dec 2025 05:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CE612FF672;
+	Tue,  9 Dec 2025 16:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765257721; cv=none; b=utN8mD9xFW17xnfOfh3bdQQxByk1PlZb0XaqM/dU9rW+/72vNHg1v2LYlSWVfObbVCF9ON0dyPMoBOscMmiLu0gYf9lUoMx0My9Ly3PCfhV9RiBnsApZHBJkBLYGpK0+SqqN8qNCn+bmNJ5LUdCYu3kkQFefeaUNQKy4S4zPyGA=
+	t=1765298248; cv=none; b=G7BIjxUFWaZPzw1CB5h0JBh4WRDBUmrpuLXCGL4BEURYM6X23tY/hbodrJqAd46y3A18h5NlChOeH7i3IgZ7VQDUspMqmt2e2cYpLwX9CsgLBaVc/4RIrsvmqVcU08oFzFMP1fxDrsN3RePMyaqSvUTuQaq34OlEo9I9Hfu/72g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765257721; c=relaxed/simple;
-	bh=Y1ISChCvN4rGF4eHQAR4mbEjh9zxxcl/le19l+rizto=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lB9u2BAlTeDCnQ70qi78qqUXFxUoSePtOOboyKEuOGSm/9C9C6yXP2t4zKj28f6KGvZFT7l7MwA7D1qFCfBU+ZwK7xPvO1GszfeSVqrN6taNlnjWld1YgKOFgIMd6ztVa3Q7Zp2M2jBc5kgaKj4KTsqT083JuYfNzCJ/GzTcLTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dD6UYubF; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=YchsnvWsC4ACnO5+lr7kbAnSRYpvYY5UhD+2GuaQTdk=; b=dD6UYubFJHxnLtUn8tIrYxkw1r
-	wEdVJq9UHEp+Ch/s9Y7VGi3Sh//EQloN1yd4t40Hec6cFIcTzcHp7uS19al+qdJuarrKCugZ7+TWI
-	JgKLCxZijvh9HdrwtTNWFfQNWyoWd5kMn8/Jv8w4xOQlhjJ3EbG0zKoFZXcntO6TMYKFuTwJXmmkG
-	UcT5IxJvOSAA4tTcMryD4cjoGgZWe/6pTEAxW5GeJaWc9UY5+fnf4vru/8irhx3bq9nkBBhnh2czZ
-	yYfLMPjlE5xzfu7fmvQOmsUDEfySOVVMb5db3aGT65byqRIFrayRVJXWY3bM5fYnFM//WUMRDAcU8
-	NOpn+cPw==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vSqAg-0000000Dq2a-0MQz;
-	Tue, 09 Dec 2025 05:21:58 +0000
-Message-ID: <827c75e4-8e6c-4e98-9a1a-80ddba0de61a@infradead.org>
-Date: Mon, 8 Dec 2025 21:21:55 -0800
+	s=arc-20240116; t=1765298248; c=relaxed/simple;
+	bh=Diw35JF+7zQTIAfbT55xJkTorTSvu16zooOic5VssNU=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=Ia6OgyJI1FgIaHk8XQltX8I2LdgjcyvCZ0Qmxm8Tj6cT4RTwpVGF3edcbyQP8S3NssG3d1V/Qfgjc3XSVpwPTebuIQXjt252dUFPJioWJx3LJL7D1CizM2/KAILnUHQaHovO4G4BABYH5eJYfonpOup6xyQsKVZYte9gndntJXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=oRrZ6kmT; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 11ECB20156A9;
+	Tue,  9 Dec 2025 08:37:21 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 11ECB20156A9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1765298241;
+	bh=JgN6I1MKMFjwpH7qPn++VLVFdZwiPMMx2reD2VTRr08=;
+	h=Subject:From:To:Cc:Date:From;
+	b=oRrZ6kmTHEjrjg1Bxy0weT3RZzo9MiqyUHBhI4V+lpHtiqqQBSvFYzg2Ecsv+WwXU
+	 FS4CpQsG2H6zsk0dv1Wh65v4atAG1kwN6kLpHwG930LAuEzSN1x1QALoM+Mh+USTNv
+	 /5+W7JOmVRBl7iIq43fKouC6G533v/rqfnfOK0z8=
+Subject: [PATCH] mshv: Use PMD_ORDER instead of HPAGE_PMD_ORDER when
+ processing regions
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, longli@microsoft.com
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 09 Dec 2025 16:37:20 +0000
+Message-ID: 
+ <176529822862.17729.14849117117197568731.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v1 1/5] PCI: hv: Create and export hv_build_logical_dev_id()
-To: Yu Zhang <zhangyu1@linux.microsoft.com>, linux-kernel@vger.kernel.org,
- linux-hyperv@vger.kernel.org, iommu@lists.linux.dev,
- linux-pci@vger.kernel.org
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
- mani@kernel.org, robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
- joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
- easwar.hariharan@linux.microsoft.com, jacob.pan@linux.microsoft.com,
- nunodasneves@linux.microsoft.com, mrathor@linux.microsoft.com,
- mhklinux@outlook.com, peterz@infradead.org, linux-arch@vger.kernel.org
-References: <20251209051128.76913-1-zhangyu1@linux.microsoft.com>
- <20251209051128.76913-2-zhangyu1@linux.microsoft.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20251209051128.76913-2-zhangyu1@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-Hi--
+Fix page order determination logic when CONFIG_PGTABLE_HAS_HUGE_LEAVES
+is undefined, as HPAGE_PMD_SHIFT is defined as BUILD_BUG in that case.
 
-On 12/8/25 9:11 PM, Yu Zhang wrote:
-> From: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
-> 
-> Hyper-V uses a logical device ID to identify a PCI endpoint device for
-> child partitions. This ID will also be required for future hypercalls
-> used by the Hyper-V IOMMU driver.
-> 
-> Refactor the logic for building this logical device ID into a standalone
-> helper function and export the interface for wider use.
-> 
-> Signed-off-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
-> Signed-off-by: Yu Zhang <zhangyu1@linux.microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 28 ++++++++++++++++++++--------
->  include/asm-generic/mshyperv.h      |  2 ++
->  2 files changed, 22 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 146b43981b27..4b82e06b5d93 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -598,15 +598,31 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
->  
->  #define hv_msi_prepare		pci_msi_prepare
->  
-> +/**
-> + * Build a "Device Logical ID" out of this PCI bus's instance GUID and the
-> + * function number of the device.
-> + */
+Fixes: abceb4297bf8 ("mshv: Fix huge page handling in memory region
+traversal")
+Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+---
+ drivers/hv/mshv_regions.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Don't use kernel-doc notation "/**" unless you are using kernel-doc comments.
-You could just convert it to a kernel-doc style comment...
+diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
+index 202b9d551e39..dc2d7044fb91 100644
+--- a/drivers/hv/mshv_regions.c
++++ b/drivers/hv/mshv_regions.c
+@@ -58,7 +58,7 @@ static long mshv_region_process_chunk(struct mshv_mem_region *region,
+ 
+ 	page_order = folio_order(page_folio(page));
+ 	/* The hypervisor only supports 4K and 2M page sizes */
+-	if (page_order && page_order != HPAGE_PMD_ORDER)
++	if (page_order && page_order != PMD_ORDER)
+ 		return -EINVAL;
+ 
+ 	stride = 1 << page_order;
 
-> +u64 hv_build_logical_dev_id(struct pci_dev *pdev)
-> +{
-
-thanks.
--- 
-~Randy
 
 
