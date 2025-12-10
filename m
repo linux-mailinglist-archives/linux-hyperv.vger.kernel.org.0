@@ -1,104 +1,159 @@
-Return-Path: <linux-hyperv+bounces-8009-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8010-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 260B7CB3B35
-	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Dec 2025 18:55:52 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DD27CB412F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Dec 2025 22:39:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9E21430155FB
-	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Dec 2025 17:55:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F0E673088BA3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Dec 2025 21:39:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BED62F12C0;
-	Wed, 10 Dec 2025 17:55:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07DF932939E;
+	Wed, 10 Dec 2025 21:39:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="aOToH8Xd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RT/0M17v"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 240C12E173E;
-	Wed, 10 Dec 2025 17:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16BC302CD0;
+	Wed, 10 Dec 2025 21:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765389349; cv=none; b=X8Ufqr5BHDcsDemeWbSDypsBo+tBjWkqaMMCFwFM4KvkSxjAmCSAbU8bdqmUYqB4n+fDTUClpsargIGvB1z1QFjiAgd8MbBFkUgLOzFkxHR1ppeuxUqyK8WA2uExu0DnHV2CZVi7McptZIjzK5tXT/TWsZCn3kwuDs1IyZcWamw=
+	t=1765402789; cv=none; b=LPEIQA36s24THg1hGOlKfbV0K97zNS/aqCiKTTP0yLAMSA+e4HNfCwkFq4e/nfDTVP/pH85xnq9BMOJHE6AFLHqSu0JH3R1OqecM71tNSHJclts3lGBLMStXnydHbLoaVd1FiDCVHr3FQQ75n5QOLDYaWGZj4bfKBLYX8zK0SAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765389349; c=relaxed/simple;
-	bh=BshfaIrw9Zg3l/N2lZtgTYfPtZ453ECubO3qifeWUtA=;
-	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=I00vHOnQ+bK3HNooFq98LSBLTBLAkrWdZ5S4wtPblgWhvzL/4C4qQkf0WR0pIYVjKyrjiWO9zY54Z+OZ5Zs+Il56z/bRmxeJF8/QypgLRSDGodFfXFPmFx+j41344Efg/aePfbidC481Sfi8Y7zUHnaEBvEh/rvo3lrXIYvfe9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=aOToH8Xd; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 8B9D82116032;
-	Wed, 10 Dec 2025 09:55:47 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8B9D82116032
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1765389347;
-	bh=e76f2j3RTVYfvY3BPLRbYMnB6ZA+QOC6rQGgrvu1jf0=;
-	h=Subject:From:To:Cc:Date:From;
-	b=aOToH8XddijC2VgpKjrbnSV9TNb3xm0JadqEo2siXI8exjMHdJwlEM9227pTjbB0H
-	 CpsVblHooKbXzDpjM3beL89Ma4ZBHUp+TmRsBlA63ajbX/U/lVQ2FNiLIIorjtIwyo
-	 VqQpKGKmGM/TywhKAlUfGUqwqF/ND1lUi9/LNBtA=
-Subject: [PATCH] mshv: Initialize local variables early upon region
- invalidation
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, longli@microsoft.com
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 10 Dec 2025 17:55:47 +0000
-Message-ID: 
- <176538934140.22759.15324831745272282048.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-User-Agent: StGit/0.19
+	s=arc-20240116; t=1765402789; c=relaxed/simple;
+	bh=5pRIxpBxRl7AulJUBlK43AxD0UvUN1i64TGtHpo8nE8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=FvaaRlsKW+SoEYy6nyIvKqmZjyK+8m/obF+zNs8nOfSNGgCNxNIo0UaO06uhLUgyTzBeRLEc9ueZA3hA2fv9h10evPC5fe99V/jKwJ0yaY6gpTU533ymPfuZH6TJsSjmzrE8w5QNXnhb+fjsayATKVDW2eSQ4jv7fCQ27BBPMCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RT/0M17v; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22FECC4CEF1;
+	Wed, 10 Dec 2025 21:39:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765402787;
+	bh=5pRIxpBxRl7AulJUBlK43AxD0UvUN1i64TGtHpo8nE8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=RT/0M17v5pqvDKvkWhG6SvnyBVuypV2tRmP26c9Wl83/u5rWFLOS27O4ySBP7DZIP
+	 4swIvxphfWya1QIcBUwgvfmck7j3R70RQOHFuDEZnP7xbf7McDMOi7g0ZDd/Qmvr9E
+	 TGTOz3/dHk+yy7i2AK/C4WgyPogmZFmpaDZziwwdEO4BkMWtA0JMyrAKa7KJZ2fthX
+	 bqywMkgtxi0P6pQZFxq4ais/oXJ67nuwcfVJXMX2a4Y82BiRgvbUURLDJ2W8ilUArP
+	 FknpLAhMkQWlxvDDkaS7SGpCIR0KRX/Vi1hxyhZNU6AFOgppuUABjEGcEHvjcbPoHx
+	 gximRenkH8xDg==
+Date: Wed, 10 Dec 2025 15:39:45 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Yu Zhang <zhangyu1@linux.microsoft.com>
+Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	iommu@lists.linux.dev, linux-pci@vger.kernel.org, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
+	joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
+	easwar.hariharan@linux.microsoft.com, jacob.pan@linux.microsoft.com,
+	nunodasneves@linux.microsoft.com, mrathor@linux.microsoft.com,
+	mhklinux@outlook.com, peterz@infradead.org,
+	linux-arch@vger.kernel.org
+Subject: Re: [RFC v1 1/5] PCI: hv: Create and export hv_build_logical_dev_id()
+Message-ID: <20251210213945.GA3541010@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251209051128.76913-2-zhangyu1@linux.microsoft.com>
 
-Ensure local variables are initialized before use so that the warning can
-print the right values if locking the region to invalidate fails due to
-inability to lock the region.
+On Tue, Dec 09, 2025 at 01:11:24PM +0800, Yu Zhang wrote:
+> From: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+> 
+> Hyper-V uses a logical device ID to identify a PCI endpoint device for
+> child partitions. This ID will also be required for future hypercalls
+> used by the Hyper-V IOMMU driver.
+> 
+> Refactor the logic for building this logical device ID into a standalone
+> helper function and export the interface for wider use.
+> 
+> Signed-off-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+> Signed-off-by: Yu Zhang <zhangyu1@linux.microsoft.com>
 
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Fixes: b9a66cd5ccbb ("mshv: Add support for movable memory regions")
-Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
----
- drivers/hv/mshv_regions.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
-index dc2d7044fb91..8abf80129f9b 100644
---- a/drivers/hv/mshv_regions.c
-+++ b/drivers/hv/mshv_regions.c
-@@ -494,13 +494,6 @@ static bool mshv_region_interval_invalidate(struct mmu_interval_notifier *mni,
- 	unsigned long mstart, mend;
- 	int ret = -EPERM;
- 
--	if (mmu_notifier_range_blockable(range))
--		mutex_lock(&region->mutex);
--	else if (!mutex_trylock(&region->mutex))
--		goto out_fail;
--
--	mmu_interval_set_seq(mni, cur_seq);
--
- 	mstart = max(range->start, region->start_uaddr);
- 	mend = min(range->end, region->start_uaddr +
- 		   (region->nr_pages << HV_HYP_PAGE_SHIFT));
-@@ -508,6 +501,13 @@ static bool mshv_region_interval_invalidate(struct mmu_interval_notifier *mni,
- 	page_offset = HVPFN_DOWN(mstart - region->start_uaddr);
- 	page_count = HVPFN_DOWN(mend - mstart);
- 
-+	if (mmu_notifier_range_blockable(range))
-+		mutex_lock(&region->mutex);
-+	else if (!mutex_trylock(&region->mutex))
-+		goto out_fail;
-+
-+	mmu_interval_set_seq(mni, cur_seq);
-+
- 	ret = mshv_region_remap_pages(region, HV_MAP_GPA_NO_ACCESS,
- 				      page_offset, page_count);
- 	if (ret)
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 28 ++++++++++++++++++++--------
+>  include/asm-generic/mshyperv.h      |  2 ++
+>  2 files changed, 22 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 146b43981b27..4b82e06b5d93 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -598,15 +598,31 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
+>  
+>  #define hv_msi_prepare		pci_msi_prepare
+>  
+> +/**
+> + * Build a "Device Logical ID" out of this PCI bus's instance GUID and the
+> + * function number of the device.
+> + */
+> +u64 hv_build_logical_dev_id(struct pci_dev *pdev)
+> +{
+> +	struct pci_bus *pbus = pdev->bus;
+> +	struct hv_pcibus_device *hbus = container_of(pbus->sysdata,
+> +						struct hv_pcibus_device, sysdata);
+> +
+> +	return (u64)((hbus->hdev->dev_instance.b[5] << 24) |
+> +		     (hbus->hdev->dev_instance.b[4] << 16) |
+> +		     (hbus->hdev->dev_instance.b[7] << 8)  |
+> +		     (hbus->hdev->dev_instance.b[6] & 0xf8) |
+> +		     PCI_FUNC(pdev->devfn));
+> +}
+> +EXPORT_SYMBOL_GPL(hv_build_logical_dev_id);
+> +
+>  /**
+>   * hv_irq_retarget_interrupt() - "Unmask" the IRQ by setting its current
+>   * affinity.
+>   * @data:	Describes the IRQ
+>   *
+>   * Build new a destination for the MSI and make a hypercall to
+> - * update the Interrupt Redirection Table. "Device Logical ID"
+> - * is built out of this PCI bus's instance GUID and the function
+> - * number of the device.
+> + * update the Interrupt Redirection Table.
+>   */
+>  static void hv_irq_retarget_interrupt(struct irq_data *data)
+>  {
+> @@ -642,11 +658,7 @@ static void hv_irq_retarget_interrupt(struct irq_data *data)
+>  	params->int_entry.source = HV_INTERRUPT_SOURCE_MSI;
+>  	params->int_entry.msi_entry.address.as_uint32 = int_desc->address & 0xffffffff;
+>  	params->int_entry.msi_entry.data.as_uint32 = int_desc->data;
+> -	params->device_id = (hbus->hdev->dev_instance.b[5] << 24) |
+> -			   (hbus->hdev->dev_instance.b[4] << 16) |
+> -			   (hbus->hdev->dev_instance.b[7] << 8) |
+> -			   (hbus->hdev->dev_instance.b[6] & 0xf8) |
+> -			   PCI_FUNC(pdev->devfn);
+> +	params->device_id = hv_build_logical_dev_id(pdev);
+>  	params->int_target.vector = hv_msi_get_int_vector(data);
+>  
+>  	if (hbus->protocol_version >= PCI_PROTOCOL_VERSION_1_2) {
+> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+> index 64ba6bc807d9..1a205ed69435 100644
+> --- a/include/asm-generic/mshyperv.h
+> +++ b/include/asm-generic/mshyperv.h
+> @@ -71,6 +71,8 @@ extern enum hv_partition_type hv_curr_partition_type;
+>  extern void * __percpu *hyperv_pcpu_input_arg;
+>  extern void * __percpu *hyperv_pcpu_output_arg;
+>  
+> +extern u64 hv_build_logical_dev_id(struct pci_dev *pdev);
 
+Curious why you would include the "extern" in this declaration?  It's
+not *wrong*, but it's not necessary, and other declarations in this
+file omit it, e.g., the ones below:
 
+>  u64 hv_do_hypercall(u64 control, void *inputaddr, void *outputaddr);
+>  u64 hv_do_fast_hypercall8(u16 control, u64 input8);
+>  u64 hv_do_fast_hypercall16(u16 control, u64 input1, u64 input2);
+> -- 
+> 2.49.0
+> 
 
