@@ -1,183 +1,126 @@
-Return-Path: <linux-hyperv+bounces-8025-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8026-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B238CC0AA0
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 04:00:30 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBFB7CC2095
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 11:55:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7D2CD3007296
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 03:00:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 77FF9302356F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 10:55:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A09F12F25F2;
-	Tue, 16 Dec 2025 03:00:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09030316194;
+	Tue, 16 Dec 2025 10:55:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="gF4/mIzU"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lA7HgkV5"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8329A29E110
-	for <linux-hyperv@vger.kernel.org>; Tue, 16 Dec 2025 03:00:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C51C2BCF6C;
+	Tue, 16 Dec 2025 10:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765854028; cv=none; b=czy8OsTF/EM1zu/ohqS/h+tTMZTrc5R+PpxqoZfzKO7NyNxoQZVehFWvzA0jM1bDP12oiUpN34yJEF8iYGEdUnaxkklxOzR1VqQzHotTI98f7F74bviE0ynUfvnaa/OLLLYiIpK52GF9AKm/7JKaJyVxvt/0I1fITqkbznE8hKs=
+	t=1765882509; cv=none; b=JPMtSiU6CtZs5RFtuiQ7WxYxjtgS7RLcjqOQK9F6w/FonVcHSvVIZdah+G5RPGfaVpFRXB032luupha/9NBDc6YkvPyueunnLDPC8WRgmqQ1OSSCTkaK6IYg+O/IFUUBxHL99jaxze5TMxurvog051lcF7WYYCAGBa9mu3YjN3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765854028; c=relaxed/simple;
-	bh=nSNHqt3Dath+fYr+MNVMjbKePREvVtOoT4gZgfyJKbE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qOiCkZPPHUeCYWA2Ls4lWkiGOwvxZQ/23F9xQr93zJoP7y+01I1fJ6rR+WSJqq21n95kygLDk5CurTJp7v1NTe7L0GdJjMwqfB7wgpL2rPKBQGe7kFyioWlvwc3LSiVgHmIpppe3xc+mJG1NHZ3tzlR9KxOEZ3XllUUzDJxR0Z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=gF4/mIzU; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
-Received: from eig-obgw-6007b.ext.cloudfilter.net ([10.0.30.166])
-	by cmsmtp with ESMTPS
-	id VATyvxf4DipkCVLISvnzoE; Tue, 16 Dec 2025 03:00:20 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id VLIRvPo17h8QWVLISvAe40; Tue, 16 Dec 2025 03:00:20 +0000
-X-Authority-Analysis: v=2.4 cv=Mcdsu4/f c=1 sm=1 tr=0 ts=6940cb44
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=ujWNxKVE5dX343uAl30YYw==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=5TVvHJhSY-PbQlZ89gMA:9 a=QEXdDO2ut3YA:10 a=2aFnImwKRvkU0tJ3nQRT:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=PsjzeEqvjX0PgDjgXUpv1lzs6nM5Lg9h/IvyfHZ2a9g=; b=gF4/mIzUYheUAddQQ9l/51rh5m
-	B75Ctq5Fr2WsH8McbRrMs6MhX0N3fQ0XDvVaTL8vTohXLvjp90M57J4vwWaQTCU26/2mA34F6cQux
-	G37STXArEsf9MFajWPtsp5hUhQhOKBdGCaT8/Cyh0daHEXgLycVfM4x13oq+fBa2Dqxux/8MpMSFm
-	b8gd3qPBh8Eyy14BmqsKeyWsSXque44g4XkU0g/uZ06ajLGlpnE+KgpcUsGKZ372UAHgdtVJbSoOk
-	O7OFDp6opQdkpVKoQX8Kf1azFXz+wbbm0p2oqhl7IbBRZiu9DHYNdelV6dlRx+PXFclUcHWx7Jg1c
-	ficOHYbA==;
-Received: from i118-18-233-1.s41.a027.ap.plala.or.jp ([118.18.233.1]:62552 helo=[10.83.24.44])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1vVLIR-00000001Tqd-1dwi;
-	Mon, 15 Dec 2025 21:00:19 -0600
-Message-ID: <8aa5928f-4338-4ab5-a144-e6ab3b9644d6@embeddedor.com>
-Date: Tue, 16 Dec 2025 11:59:50 +0900
+	s=arc-20240116; t=1765882509; c=relaxed/simple;
+	bh=B+f4zlNzZBPUZPXd/Z+otBEhzXLqmkj0hCenAv9cAlk=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=fQxTv/72I055TQ0uIM3PCN9zjNnmSqQV1BCs9kiZkciQEnAYntHHVOVU8eiHXl4f6Is0hXYD9VgQEv9eSnV7pFLmEVhIDA98Oa7fTT4W//jDUhkb9TNoHF0889hWvAj2TeYeb7oPWxoo/teneViTPH0Wg9s+a4xPqSiDOkrPa6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lA7HgkV5; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1204)
+	id 12DFF2012428; Tue, 16 Dec 2025 02:55:08 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 12DFF2012428
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1765882508;
+	bh=o3bOnnraKXEZsNJ4ojfTJylt4MC87O/BQeSoi/0QbqQ=;
+	h=Date:From:To:Subject:From;
+	b=lA7HgkV5xivU+TzKse12cYyk9AIxKkh68l2nIfjWbYPpzxUM/0LrWQxKF7aHl7trW
+	 mFtT76ta/vpMlvRUdp04WLcWldNLODntHTbgtRONdwEnL+oSY5rxgG1A3oGFvLqiI7
+	 sfrDvMaPiLsSLryH+pMgXQ8y8AvEnp6UBJ8dqO40=
+Date: Tue, 16 Dec 2025 02:55:08 -0800
+From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
+	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
+	ernis@linux.microsoft.com, shirazsaleem@microsoft.com,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	dipayanroy@microsoft.com
+Subject: [PATCH net-next] net: mana: Fix use-after-free in reset service
+ rescan path
+Message-ID: <20251216105508.GA13584@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] hyperv: Avoid -Wflex-array-member-not-at-end
- warning
-To: Wei Liu <wei.liu@kernel.org>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Dexuan Cui <decui@microsoft.com>,
- Long Li <longli@microsoft.com>, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <aTu54qH2iHLKScRW@kspp>
- <20251215184759.GA654575@liuwe-devbox-debian-v2.local>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20251215184759.GA654575@liuwe-devbox-debian-v2.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 118.18.233.1
-X-Source-L: No
-X-Exim-ID: 1vVLIR-00000001Tqd-1dwi
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: i118-18-233-1.s41.a027.ap.plala.or.jp ([10.83.24.44]) [118.18.233.1]:62552
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfFlVckDsqBmrphtfNxRj5us1YT17buWXlhgamwp6qmWJcPuCQKHO5WApVbyLq0Qfj2gGDCPAte/Rgj2nOKCQlOiL/4/KE1bcFbarTkTrDWIaWAZcT7y9
- OFwrWSGpkULV+ErW5so/5L+ZxN2CtJ5c6/BP7KzDjc6kUnXCKrg5Ib4Ynq3BTVO6+NTc8hX9hBIL6nwxOvyMq0KspoGK2N95W4Le5xUI+rGT+0yBZrZiB39m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
+When mana_serv_reset() encounters -ETIMEDOUT or -EPROTO from
+mana_gd_resume(), it performs a PCI rescan via mana_serv_rescan().
 
+mana_serv_rescan() calls pci_stop_and_remove_bus_device(), which can
+invoke the driver's remove path and free the gdma_context associated
+with the device. After returning, mana_serv_reset() currently jumps to
+the out label and attempts to clear gc->in_service, dereferencing a
+freed gdma_context.
 
-On 12/16/25 03:47, Wei Liu wrote:
-> On Fri, Dec 12, 2025 at 03:44:50PM +0900, Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->> getting ready to enable it, globally.
->>
->> Use the new __TRAILING_OVERLAP() helper to fix the following warning:
->>
->> include/hyperv/hvgdk_mini.h:581:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->>
->> This helper creates a union between a flexible-array member (FAM) and a
->> set of MEMBERS that would otherwise follow it.
->>
->> This overlays the trailing MEMBER u64 gva_list[]; onto the FAM
->> struct hv_tlb_flush_ex::hv_vp_set.bank_contents[], while keeping
->> the FAM and the start of MEMBER aligned.
->>
->> The static_assert() ensures this alignment remains, and it's
->> intentionally placed inmediately after the related structure --no
->> blank line in between.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> Gustavo, what is your build command? I would like to incorporate that
-> into my own build tests.
+The issue was observed with the following call logs:
+[  698.942636] BUG: unable to handle page fault for address: ff6c2b638088508d
+[  698.943121] #PF: supervisor write access in kernel mode
+[  698.943423] #PF: error_code(0x0002) - not-present page
+[S[  698.943793] Pat Dec  6 07:GD5 100000067 P4D 1002f7067 PUD 1002f8067 PMD 101bef067 PTE 0
+0:56 2025] hv_[n e 698.944283] Oops: Oops: 0002 [#1] SMP NOPTI
+tvsc f8615163-00[  698.944611] CPU: 28 UID: 0 PID: 249 Comm: kworker/28:1
+...
+[Sat Dec  6 07:50:56 2025] R10: [  699.121594] mana 7870:00:00.0 enP30832s1: Configured vPort 0 PD 18 DB 16
+000000000000001b R11: 0000000000000000 R12: ff44cf3f40270000
+[Sat Dec  6 07:50:56 2025] R13: 0000000000000001 R14: ff44cf3f402700c8 R15: ff44cf3f4021b405
+[Sat Dec  6 07:50:56 2025] FS:  0000000000000000(0000) GS:ff44cf7e9fcf9000(0000) knlGS:0000000000000000
+[Sat Dec  6 07:50:56 2025] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[Sat Dec  6 07:50:56 2025] CR2: ff6c2b638088508d CR3: 000000011fe43001 CR4: 0000000000b73ef0
+[Sat Dec  6 07:50:56 2025] Call Trace:
+[Sat Dec  6 07:50:56 2025]  <TASK>
+[Sat Dec  6 07:50:56 2025]  mana_serv_func+0x24/0x50 [mana]
+[Sat Dec  6 07:50:56 2025]  process_one_work+0x190/0x350
+[Sat Dec  6 07:50:56 2025]  worker_thread+0x2b7/0x3d0
+[Sat Dec  6 07:50:56 2025]  kthread+0xf3/0x200
+[Sat Dec  6 07:50:56 2025]  ? __pfx_worker_thread+0x10/0x10
+[Sat Dec  6 07:50:56 2025]  ? __pfx_kthread+0x10/0x10
+[Sat Dec  6 07:50:56 2025]  ret_from_fork+0x21a/0x250
+[Sat Dec  6 07:50:56 2025]  ? __pfx_kthread+0x10/0x10
+[Sat Dec  6 07:50:56 2025]  ret_from_fork_asm+0x1a/0x30
+[Sat Dec  6 07:50:56 2025]  </TASK>
 
-I'm using the following patch (which is the one I'll actually submit
-upstream once all these warnings are fixed).
+Fix this by returning immediately after mana_serv_rescan() to avoid
+accessing GC state that may no longer be valid.
 
-diff --git a/Makefile b/Makefile
-index e404e4767944..0d6a0d8f791b 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1086,6 +1086,8 @@ KBUILD_CFLAGS += $(call cc-option, -fstrict-flex-arrays=3)
-  # Allow including a tagged struct or union anonymously in another struct/union.
-  KBUILD_CFLAGS += -fms-extensions
+Fixes: 9bf66036d686 ("net: mana: Handle hardware recovery events when probing the device")
 
-+KBUILD_CFLAGS += $(call cc-option, -Wflex-array-member-not-at-end)
-+
-  # disable invalid "can't wrap" optimizations for signed / pointers
-  KBUILD_CFLAGS  += -fno-strict-overflow
+Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+---
+ drivers/net/ethernet/microsoft/mana/gdma_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-Thanks
--Gustavo
-
-> 
-> Thanks,
-> Wei
-> 
->> ---
->>   include/hyperv/hvgdk_mini.h | 7 +++++--
->>   1 file changed, 5 insertions(+), 2 deletions(-)
->>
->> diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
->> index 04b18d0e37af..30fbbde81c5c 100644
->> --- a/include/hyperv/hvgdk_mini.h
->> +++ b/include/hyperv/hvgdk_mini.h
->> @@ -578,9 +578,12 @@ struct hv_tlb_flush {	 /* HV_INPUT_FLUSH_VIRTUAL_ADDRESS_LIST */
->>   struct hv_tlb_flush_ex {
->>   	u64 address_space;
->>   	u64 flags;
->> -	struct hv_vpset hv_vp_set;
->> -	u64 gva_list[];
->> +	__TRAILING_OVERLAP(struct hv_vpset, hv_vp_set, bank_contents, __packed,
->> +		u64 gva_list[];
->> +	);
->>   } __packed;
->> +static_assert(offsetof(struct hv_tlb_flush_ex, hv_vp_set.bank_contents) ==
->> +	      offsetof(struct hv_tlb_flush_ex, gva_list));
->>   
->>   struct ms_hyperv_tsc_page {	 /* HV_REFERENCE_TSC_PAGE */
->>   	volatile u32 tsc_sequence;
->> -- 
->> 2.43.0
->>
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index efb4e412ec7e..0055c231acf6 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -481,7 +481,7 @@ static void mana_serv_reset(struct pci_dev *pdev)
+ 		/* Perform PCI rescan on device if we failed on HWC */
+ 		dev_err(&pdev->dev, "MANA service: resume failed, rescanning\n");
+ 		mana_serv_rescan(pdev);
+-		goto out;
++		return;
+ 	}
+ 
+ 	if (ret)
+-- 
+2.34.1
 
 
