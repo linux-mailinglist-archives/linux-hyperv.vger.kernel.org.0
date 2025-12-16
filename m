@@ -1,250 +1,165 @@
-Return-Path: <linux-hyperv+bounces-8037-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8038-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1656ECC4245
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 17:10:35 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBC24CC4317
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 17:17:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9BBB1304FEB2
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 16:08:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A8F8D30221AD
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 16:11:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C763234F46B;
-	Tue, 16 Dec 2025 15:58:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 713B428A3FA;
+	Tue, 16 Dec 2025 16:11:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kuzj30AF"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Hx7Y7Py4"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1746734E251;
-	Tue, 16 Dec 2025 15:58:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECD652652B0;
+	Tue, 16 Dec 2025 16:11:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765900718; cv=none; b=FpS0rAO0AS8Jk1NHamWfxX5i08Wngf9jEaKdCcVC6EVijjWn85Gsx2Hzynkm+3XW/5SpEcoTU3EK3IE9p8ELrNRttLZ6VnN3L6lyUVyprdJ+3lPx3rfBcM7rz229AZyQrv87oSzNEgVGlxAQvunct5cj1gKmHYZpuLsFJTYjVz4=
+	t=1765901466; cv=none; b=lAIaTM1LhT5MhkcuccH5Vmw6ScS9MBshT1nSK0bg9TnO0C06kZYwCw6ZiKbwG+41JHvBZ2pTzdRfcgCQuYZ8QHSYI59bY443BResZ2EHJGDbegaC5H0zOu0OIjIHuemjKers6teYrBza01KnNLiiCXokI2kNDSrpRAw72yr1BY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765900718; c=relaxed/simple;
-	bh=8Cr7i59W/Y6MXosiPPE0ImJKXNOb4XIlNH3R+d6Ws88=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=OJJ8JWhPpvG44MhffLM9uFFgUAo/YAeFwNjcy8x1xPo1BENaexyhbUSzLgpp38yeiY9uCQPU7oA/BC9W+/6TmlYjwdX54MtdIgC3148qB4sqTtCbid5p+o21x2D5BI4nNEcHZH8H8rTfzFkiCIJpZQRZjdX8gFnSpEsKaq+sFQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=kuzj30AF; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1765901466; c=relaxed/simple;
+	bh=rIYXXwGc848NzWrAXTtsvMu593ydNFHRlu2gYtIZlh0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kgBRSnc5afm/JYmnpMpZ1oqrVnL4G7WNTaqFDf3qEBMrxUb7i5arHokCR82fU/DszoD14ppmOSuF9iIcZXv3IS0WLcoSiyfGTc8Pcn56ygUsygG2jJiCoyOK4BgY3RxpAp0HWKx3hvvnuUBLz5X7CCbxLsJ/BXemI1L7k77feI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Hx7Y7Py4; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1006)
-	id CBBCF200D62A; Tue, 16 Dec 2025 07:58:36 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CBBCF200D62A
+Received: from skinsburskii.localdomain (c-98-225-44-166.hsd1.wa.comcast.net [98.225.44.166])
+	by linux.microsoft.com (Postfix) with ESMTPSA id F4005200D637;
+	Tue, 16 Dec 2025 08:11:03 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F4005200D637
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1765900716;
-	bh=HEP60+8Vo7T50Jr3+kbQqaia7d5ZTn5s1mTO0BUZpR8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kuzj30AFXuD3vUqIteLbDvVIvAF5XxaYkqFpbhKpyza6x31Wk6k4diYvGeDGClwHA
-	 VH69EQVO6kzSisJaKFVWsTR7T9E2C4Zfn8rcmkeMLLyI7yQCHo9bifHoURQKLrMSVz
-	 c0drALHa8rR5vSMNfXiZnKv4aP7PKDtSTXeiTnaU=
-From: Haiyang Zhang <haiyangz@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Long Li <longli@microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Aditya Garg <gargaditya@linux.microsoft.com>,
-	Dipayaan Roy <dipayanroy@linux.microsoft.com>,
-	Shiraz Saleem <shirazsaleem@microsoft.com>,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Cc: paulros@microsoft.com
-Subject: [PATCH RFC 2/2] net: mana: Add ethtool counters for RX CQEs in coalesced type
-Date: Tue, 16 Dec 2025 07:57:55 -0800
-Message-Id: <1765900682-22114-2-git-send-email-haiyangz@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1765900682-22114-1-git-send-email-haiyangz@linux.microsoft.com>
-References: <1765900682-22114-1-git-send-email-haiyangz@linux.microsoft.com>
+	s=default; t=1765901464;
+	bh=qBsBfAd61nSY6ZnIJ+HNzx1T7sGNXAlci92O3KjhZYY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hx7Y7Py4ZGZeoluYekyfTGMkJ/x/wVSqJ+A+ksw1sG8ViRgk0Jtt+xmg8ebQoKEp4
+	 Q7FRO/G8gz5lp0P1RLIMpGBJKK6rLSC5JO8eTco+4f4uq0Vs/M3gn5k77Xw/znB5zi
+	 HZ0XQdrQ/pK93OtMghnK0RB+I4ar/J6QtiP2985w=
+Date: Tue, 16 Dec 2025 08:11:01 -0800
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Anirudh Rayabharam <anirudh@anirudhrb.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] mshv: handle gpa intercepts for arm64
+Message-ID: <aUGElRga1r2g8cb-@skinsburskii.localdomain>
+References: <20251216142030.4095527-1-anirudh@anirudhrb.com>
+ <20251216142030.4095527-3-anirudh@anirudhrb.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251216142030.4095527-3-anirudh@anirudhrb.com>
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+On Tue, Dec 16, 2025 at 02:20:29PM +0000, Anirudh Rayabharam wrote:
+> From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> 
+> The mshv driver now uses movable pages for guests. For arm64 guests
+> to be functional, handle gpa intercepts for arm64 too (the current
+> code implements handling only for x86). Without this, arm64 guests are
+> broken.
+> 
+> Move some arch-agnostic functions out of #ifdefs so that they can be
+> re-used.
+> 
+> Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> ---
+>  drivers/hv/mshv_root_main.c | 38 ++++++++++++++++++++++++++++---------
+>  1 file changed, 29 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> index 9cf28a3f12fe..882605349664 100644
+> --- a/drivers/hv/mshv_root_main.c
+> +++ b/drivers/hv/mshv_root_main.c
+> @@ -608,7 +608,6 @@ mshv_partition_region_by_gfn(struct mshv_partition *partition, u64 gfn)
+>  	return NULL;
+>  }
+>  
+> -#ifdef CONFIG_X86_64
+>  static struct mshv_mem_region *
+>  mshv_partition_region_by_gfn_get(struct mshv_partition *p, u64 gfn)
+>  {
+> @@ -625,6 +624,34 @@ mshv_partition_region_by_gfn_get(struct mshv_partition *p, u64 gfn)
+>  	return region;
+>  }
+>  
+> +#ifdef CONFIG_X86_64
+> +static u64 mshv_get_gpa_intercept_gfn(struct mshv_vp *vp)
+> +{
+> +	struct hv_x64_memory_intercept_message *msg;
+> +	u64 gfn;
+> +
+> +	msg = (struct hv_x64_memory_intercept_message *)
+> +		vp->vp_intercept_msg_page->u.payload;
+> +
+> +	gfn = HVPFN_DOWN(msg->guest_physical_address);
+> +
+> +	return gfn;
+> +}
+> +#else  /* CONFIG_X86_64 */
 
-For RX CQEs with type CQE_RX_COALESCED_4, to measure the coalescing
-efficiency, add counters to count how many CQEs contain 2, 3, 4 packets
-respectively.
-Also, add a counter for the error case of first packet with lenth == 0.
+It's better to explicitly branch for ARM64 here for clarity as
+hv_arm64_memory_intercept_message is defined only for ARM64.
 
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 25 +++++++++++++++++--
- .../ethernet/microsoft/mana/mana_ethtool.c    | 17 ++++++++++---
- include/net/mana/mana.h                       | 10 +++++---
- 3 files changed, 42 insertions(+), 10 deletions(-)
+> +static u64 mshv_get_gpa_intercept_gfn(struct mshv_vp *vp)
+> +{
+> +	struct hv_arm64_memory_intercept_message *msg;
+> +	u64 gfn;
+> +
+> +	msg = (struct hv_arm64_memory_intercept_message *)
+> +		vp->vp_intercept_msg_page->u.payload;
+> +
+> +	gfn = HVPFN_DOWN(msg->guest_physical_address);
+> +
+> +	return gfn;
+> +}
+> +#endif /* CONFIG_X86_64 */
+> +
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index a46a1adf83bc..78824567d80b 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -2083,8 +2083,22 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
- 
- nextpkt:
- 	pktlen = oob->ppi[i].pkt_len;
--	if (pktlen == 0)
-+	if (pktlen == 0) {
-+		/* Collect coalesced CQE count based on packets processed.
-+		 * Coalesced CQEs have at least 2 packets, so index is i - 2.
-+		 */
-+		if (i > 1) {
-+			u64_stats_update_begin(&rxq->stats.syncp);
-+			rxq->stats.coalesced_cqe[i - 2]++;
-+			u64_stats_update_end(&rxq->stats.syncp);
-+		} else if (i == 0) {
-+			/* Error case stat */
-+			u64_stats_update_begin(&rxq->stats.syncp);
-+			rxq->stats.pkt_len0_err++;
-+			u64_stats_update_end(&rxq->stats.syncp);
-+		}
- 		return;
-+	}
- 
- 	curr = rxq->buf_index;
- 	rxbuf_oob = &rxq->rx_oobs[curr];
-@@ -2102,8 +2116,15 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
- 
- 	mana_post_pkt_rxq(rxq);
- 
--	if (coalesced && (++i < MANA_RXCOMP_OOB_NUM_PPI))
-+	if (!coalesced)
-+		return;
-+
-+	if (++i < MANA_RXCOMP_OOB_NUM_PPI)
- 		goto nextpkt;
-+
-+	u64_stats_update_begin(&rxq->stats.syncp);
-+	rxq->stats.coalesced_cqe[MANA_RXCOMP_OOB_NUM_PPI - 2]++;
-+	u64_stats_update_end(&rxq->stats.syncp);
- }
- 
- static void mana_poll_rx_cq(struct mana_cq *cq)
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-index 1b9ed5c9bbff..773f50b1a4f4 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-@@ -20,8 +20,6 @@ static const struct mana_stats_desc mana_eth_stats[] = {
- 					tx_cqe_unknown_type)},
- 	{"tx_linear_pkt_cnt", offsetof(struct mana_ethtool_stats,
- 				       tx_linear_pkt_cnt)},
--	{"rx_coalesced_err", offsetof(struct mana_ethtool_stats,
--					rx_coalesced_err)},
- 	{"rx_cqe_unknown_type", offsetof(struct mana_ethtool_stats,
- 					rx_cqe_unknown_type)},
- };
-@@ -151,7 +149,7 @@ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
- {
- 	struct mana_port_context *apc = netdev_priv(ndev);
- 	unsigned int num_queues = apc->num_queues;
--	int i;
-+	int i, j;
- 
- 	if (stringset != ETH_SS_STATS)
- 		return;
-@@ -170,6 +168,9 @@ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
- 		ethtool_sprintf(&data, "rx_%d_xdp_drop", i);
- 		ethtool_sprintf(&data, "rx_%d_xdp_tx", i);
- 		ethtool_sprintf(&data, "rx_%d_xdp_redirect", i);
-+		ethtool_sprintf(&data, "rx_%d_pkt_len0_err", i);
-+		for (j = 0; j < MANA_RXCOMP_OOB_NUM_PPI - 1; j++)
-+			ethtool_sprintf(&data, "rx_%d_coalesced_cqe_%d", i, j + 2);
- 	}
- 
- 	for (i = 0; i < num_queues; i++) {
-@@ -203,6 +204,8 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
- 	u64 xdp_xmit;
- 	u64 xdp_drop;
- 	u64 xdp_tx;
-+	u64 pkt_len0_err;
-+	u64 coalesced_cqe[MANA_RXCOMP_OOB_NUM_PPI - 1];
- 	u64 tso_packets;
- 	u64 tso_bytes;
- 	u64 tso_inner_packets;
-@@ -211,7 +214,7 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
- 	u64 short_pkt_fmt;
- 	u64 csum_partial;
- 	u64 mana_map_err;
--	int q, i = 0;
-+	int q, i = 0, j;
- 
- 	if (!apc->port_is_up)
- 		return;
-@@ -241,6 +244,9 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
- 			xdp_drop = rx_stats->xdp_drop;
- 			xdp_tx = rx_stats->xdp_tx;
- 			xdp_redirect = rx_stats->xdp_redirect;
-+			pkt_len0_err = rx_stats->pkt_len0_err;
-+			for (j = 0; j < MANA_RXCOMP_OOB_NUM_PPI - 1; j++)
-+				coalesced_cqe[j] = rx_stats->coalesced_cqe[j];
- 		} while (u64_stats_fetch_retry(&rx_stats->syncp, start));
- 
- 		data[i++] = packets;
-@@ -248,6 +254,9 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
- 		data[i++] = xdp_drop;
- 		data[i++] = xdp_tx;
- 		data[i++] = xdp_redirect;
-+		data[i++] = pkt_len0_err;
-+		for (j = 0; j < MANA_RXCOMP_OOB_NUM_PPI - 1; j++)
-+			data[i++] = coalesced_cqe[j];
- 	}
- 
- 	for (q = 0; q < num_queues; q++) {
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 51d26ebeff6c..f8dd19860103 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -61,8 +61,11 @@ enum TRI_STATE {
- 
- #define MAX_PORTS_IN_MANA_DEV 256
- 
-+/* Maximum number of packets per coalesced CQE */
-+#define MANA_RXCOMP_OOB_NUM_PPI 4
-+
- /* Update this count whenever the respective structures are changed */
--#define MANA_STATS_RX_COUNT 5
-+#define MANA_STATS_RX_COUNT (6 + MANA_RXCOMP_OOB_NUM_PPI - 1)
- #define MANA_STATS_TX_COUNT 11
- 
- #define MANA_RX_FRAG_ALIGNMENT 64
-@@ -73,6 +76,8 @@ struct mana_stats_rx {
- 	u64 xdp_drop;
- 	u64 xdp_tx;
- 	u64 xdp_redirect;
-+	u64 pkt_len0_err;
-+	u64 coalesced_cqe[MANA_RXCOMP_OOB_NUM_PPI - 1];
- 	struct u64_stats_sync syncp;
- };
- 
-@@ -227,8 +232,6 @@ struct mana_rxcomp_perpkt_info {
- 	u32 pkt_hash;
- }; /* HW DATA */
- 
--#define MANA_RXCOMP_OOB_NUM_PPI 4
--
- /* Receive completion OOB */
- struct mana_rxcomp_oob {
- 	struct mana_cqe_header cqe_hdr;
-@@ -378,7 +381,6 @@ struct mana_ethtool_stats {
- 	u64 tx_cqe_err;
- 	u64 tx_cqe_unknown_type;
- 	u64 tx_linear_pkt_cnt;
--	u64 rx_coalesced_err;
- 	u64 rx_cqe_unknown_type;
- };
- 
--- 
-2.34.1
+Are these functions really needed?
+It would be clearer (and shorter) to branch directly in
+mshv_handle_gpa_intercept.
 
+Thanks,
+Stanislav
+
+>  /**
+>   * mshv_handle_gpa_intercept - Handle GPA (Guest Physical Address) intercepts.
+>   * @vp: Pointer to the virtual processor structure.
+> @@ -640,14 +667,10 @@ static bool mshv_handle_gpa_intercept(struct mshv_vp *vp)
+>  {
+>  	struct mshv_partition *p = vp->vp_partition;
+>  	struct mshv_mem_region *region;
+> -	struct hv_x64_memory_intercept_message *msg;
+>  	bool ret;
+>  	u64 gfn;
+>  
+> -	msg = (struct hv_x64_memory_intercept_message *)
+> -		vp->vp_intercept_msg_page->u.payload;
+> -
+> -	gfn = HVPFN_DOWN(msg->guest_physical_address);
+> +	gfn = mshv_get_gpa_intercept_gfn(vp);
+>  
+>  	region = mshv_partition_region_by_gfn_get(p, gfn);
+>  	if (!region)
+> @@ -663,9 +686,6 @@ static bool mshv_handle_gpa_intercept(struct mshv_vp *vp)
+>  
+>  	return ret;
+>  }
+> -#else  /* CONFIG_X86_64 */
+> -static bool mshv_handle_gpa_intercept(struct mshv_vp *vp) { return false; }
+> -#endif /* CONFIG_X86_64 */
+>  
+>  static bool mshv_vp_handle_intercept(struct mshv_vp *vp)
+>  {
+> -- 
+> 2.34.1
+> 
 
