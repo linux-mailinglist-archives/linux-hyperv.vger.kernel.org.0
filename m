@@ -1,68 +1,68 @@
-Return-Path: <linux-hyperv+bounces-8028-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8029-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF04DCC3C23
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 15:53:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F7E0CC3A79
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 15:40:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D952B30269A5
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 14:53:25 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 675A13072424
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 14:33:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EF54262FFC;
-	Tue, 16 Dec 2025 13:23:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79B48347BCA;
+	Tue, 16 Dec 2025 13:40:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGre6Dbv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NeZdgjmo"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0767625228D
-	for <linux-hyperv@vger.kernel.org>; Tue, 16 Dec 2025 13:23:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532B4347BA3
+	for <linux-hyperv@vger.kernel.org>; Tue, 16 Dec 2025 13:40:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765891420; cv=none; b=Pb97RHGUxwDYOCDlYwgNhotCi6Z3ct1cGUtj/Vn2LmWcWoo3NuRrbfUfUolV8iHAsb9EHH+mKqlxlDzMjHl1A1+BsrDf8beOoC2jaeqY3NLsXYyXoXCuNcXXrDutQ4SMIdb0yZV43WYF5DNA9xJKMr0V9WZ8ZxvTfDxggoRuT4M=
+	t=1765892454; cv=none; b=pJWsLCBeDWfYX1aC9FwnTTchgNUxtKjyxn0jr0AJXHANtsQEPkQR2JHjOZUec/GDT58XXVBLNh3alafzSBgQU0EC7UT2raPjMvG9v8YEAk2qwi0/iC5sz/eNNAVHRo4fY+k607+X2LLghAWSYumAdYp+5PpbSlR/RFJFWcPKWlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765891420; c=relaxed/simple;
-	bh=DPq1jAGc1D2O/ZyUazla2tvm5eNJUgScceBv0fDtLkU=;
+	s=arc-20240116; t=1765892454; c=relaxed/simple;
+	bh=bpE6mSMhtsJNcViEHUKqxdpK/zXIk25nSDmiikJg7Jo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dd5/rVUJduoySTK8AsSeAWCls4etQsBFXJApLnZNgALJWVUh8w0IaTLFUxCE9tvmUaYkD959HhN4PX+IaxF7AePJL2b1hIeIbqmbNtUZpRDLURuA6Td7HESbUTAAoG+m0aB7dPZDZA3U7ebhWruQw4lnbH+zvtSRw6kdqx50Tm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGre6Dbv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1E45C4CEF5
-	for <linux-hyperv@vger.kernel.org>; Tue, 16 Dec 2025 13:23:39 +0000 (UTC)
+	 To:Cc:Content-Type; b=UDnLu/QJChokIYPRgkQFjsaNufPaXEesJ6367LT9Ft31+9NSksxGOcFGvnl1ez33jd64WZ6f0Q08Jqjc74/iJMKTY+K6DIQ5u2wlPl/F+AF4N/5Zy1ut+VyUHrY4d0QtXKsBieo2qqOX+JhCDNl/Bzbf18G1igOuKV5Qw5Nz22o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NeZdgjmo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A62EC19422
+	for <linux-hyperv@vger.kernel.org>; Tue, 16 Dec 2025 13:40:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765891419;
-	bh=DPq1jAGc1D2O/ZyUazla2tvm5eNJUgScceBv0fDtLkU=;
+	s=k20201202; t=1765892454;
+	bh=bpE6mSMhtsJNcViEHUKqxdpK/zXIk25nSDmiikJg7Jo=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nGre6DbvGUgnZ+ESxttsrnECY5lWVvqQ1gRq4R08/NWMM6Rb5ayGTuV9K9W/HqR3Q
-	 YGAGrMdKjxCZnF9RFyzdK69F1AQUANMKOGzht2N/FoW3JIeHZRdnF2XsY2K6sgW70V
-	 U+HDhuzRiG/Lo6imIWRSAqVyL/NRr0FvFO4gOUpyGp6IDnfl/qh3D/gj1x5B8ycpG2
-	 gAzN/+9lxsa+fl1T+WbVyRxI/k88S3LHjZRCLCWuBXE6N3osXAj09ZGHK4TAGCckwT
-	 gZZIYQP8g382SyQr6jZi16qKdej6YlbWsF/u8WCmfc+fxrtTHYs0PrlqLhepsiLRQ3
-	 PMZCjx7IxWsOg==
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-34c902f6845so2807313a91.2
-        for <linux-hyperv@vger.kernel.org>; Tue, 16 Dec 2025 05:23:39 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV+8TzqhiFigDPeM2iCo45igO+glTYCds9yCcooQV+DDKY/Lvr3jfZ0riSEOZZLV9/9/GXpaho8pQnR4Tc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIUoK9wb/uIumJNHkLW62Pv9RlqTEnWDdW88FYg5oALNhLO0aY
-	gHK884bI5KEKM9T+l8t4PXE300NTn7hrqA1v/0SCc6Dn/YOS4XcM/J6Plalp6jE6nf7VBUrdShi
-	a53jMzjpSFUP6avOHMPBRtxizJ1Nljjg=
-X-Google-Smtp-Source: AGHT+IHUnDpKNHYUuXbGrQN2jg3vGOrZPyoOq5q+Rmr8AbIh7IbWBUkMTVkTTrw2Wag6CLrhtskPUlwtBJIXFO06Kbc=
-X-Received: by 2002:a17:90b:4cce:b0:34a:b1ea:664e with SMTP id
- 98e67ed59e1d1-34abd734361mr11835652a91.15.1765891419204; Tue, 16 Dec 2025
- 05:23:39 -0800 (PST)
+	b=NeZdgjmofb5XyxZ/9WvmQDRKMMTSL7UvRP7wXhCM0Sn1k0OBFCu7ph/Ju5GY0XNL7
+	 aqoPVZqK6Uf82+24gaphNn/PeUkv1uFk6jNXl84kPZwk63Ov+FFGyxxW3JfHP6gQ7K
+	 hiEX4jmVRRQ4gXRa8TTiN7k2GFggH0g4IrXrHv/svzQ67VjOTSouguE4IL4rEqYkRu
+	 1fCwDjUzmIhKIHieXY7Djjg+l3hHsd53Fuu1izTymS6+7mURvOZSjrfDGXv1E1njvR
+	 VE6jFsByaR6RC69K1SiOW4Utea7uiGZbxTDnZaJaogGFKZ85nLoQzcQrm6ab4btr3s
+	 ikpOL4/rzbaVQ==
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2a12ebe4b74so15608095ad.0
+        for <linux-hyperv@vger.kernel.org>; Tue, 16 Dec 2025 05:40:54 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXkpBFfRXzzixM/94qbR0zpqHHQv0xKi9EFGn49sTclV4B33fmwMLWxbwnNApsL7i3L/76jPaDnFayC6jw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2DMFV3BvzWYMSCR2axK98ICTqq/6eAgzGpBRp0eG0ybrU0HZR
+	3Z3yV0Fwny2u8pIfIagr08sdPeynmu72tPAbngm+qt+tPeDSCafVThbUkTBGvVDHiFidotAnZoz
+	cu0Rcn+qyE6FmbrqiaLBaqwmPY7QwUm0=
+X-Google-Smtp-Source: AGHT+IHcmZJ38d94bL4vjoP1Iao4l30Ahx8lP9aMcBlBTOZ7Gso5/FdhsFfK6P+oxGrsyN3M1S7cHEzzA6Roze4LOiE=
+X-Received: by 2002:a17:902:cf0d:b0:2a0:d59e:9848 with SMTP id
+ d9443c01a7336-2a0d59e9a43mr99280585ad.53.1765892453645; Tue, 16 Dec 2025
+ 05:40:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251126160854.553077-1-tzimmermann@suse.de> <20251126160854.553077-10-tzimmermann@suse.de>
-In-Reply-To: <20251126160854.553077-10-tzimmermann@suse.de>
+References: <20251126160854.553077-1-tzimmermann@suse.de> <20251126160854.553077-8-tzimmermann@suse.de>
+In-Reply-To: <20251126160854.553077-8-tzimmermann@suse.de>
 From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 16 Dec 2025 14:23:28 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXFeBS7O5A-CPds3UfFnjegGTpVsuF7VznBc-zZ+gjygtw@mail.gmail.com>
-X-Gm-Features: AQt7F2oAVMGGFI57G40bXQNZ0WT8L2VZYIDSVOafxb5SZLs3ZzjQIedL6et7Yfs
-Message-ID: <CAMj1kXFeBS7O5A-CPds3UfFnjegGTpVsuF7VznBc-zZ+gjygtw@mail.gmail.com>
-Subject: Re: [PATCH v3 9/9] efi: libstub: Simplify interfaces for primary_display
+Date: Tue, 16 Dec 2025 14:40:42 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXG6cFsKwZk3a+xRrOYNz73efxjo=6Jnnr8HCKRO0X-zCQ@mail.gmail.com>
+X-Gm-Features: AQt7F2qIXhwz3lKtiowhJ6LkUm-qxxF02G3Bdlrhhj6FcFVAi1NXBSE5o0PIhTQ
+Message-ID: <CAMj1kXG6cFsKwZk3a+xRrOYNz73efxjo=6Jnnr8HCKRO0X-zCQ@mail.gmail.com>
+Subject: Re: [PATCH v3 7/9] efi: Refactor init_primary_display() helpers
 To: Thomas Zimmermann <tzimmermann@suse.de>
 Cc: javierm@redhat.com, arnd@arndb.de, richard.lyu@suse.com, 
 	helgaas@kernel.org, x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
@@ -72,221 +72,99 @@ Cc: javierm@redhat.com, arnd@arndb.de, richard.lyu@suse.com,
 	linux-pci@vger.kernel.org, linux-fbdev@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Thomas
-
 On Wed, 26 Nov 2025 at 17:09, Thomas Zimmermann <tzimmermann@suse.de> wrote:
 >
-> Rename alloc_primary_display() and __alloc_primary_display(), clarify
-> free semantics to make interfaces easier to understand.
->
-> Rename alloc_primary_display() to lookup_primary_display() as it
-> does not necessarily allocate. Then rename __alloc_primary_display()
-> to the new alloc_primary_display(). The helper belongs to
-> free_primary_display), so it should be named without underscores.
->
-> The lookup helper does not necessarily allocate, so the output
-> parameter needs_free to indicate when free should be called.
-
-I don't understand why we need this. Whether or not the helper
-allocates is a compile time decision, and in builds where it doesn't,
-the free helper doesn't do anything.
-
-I'm all for making things simpler, but I don't think this patch
-achieves that tbh.
-
-I've queued up this series now up until this patch - once we converge
-on the simplification, I'm happy to apply it on top.
-
-Thanks,
-
-
-
-> Pass
-> an argument through the calls to track this state. Put the free
-> handling into release_primary_display() for simplificy.
->
-> Also move the comment fro primary_display.c to efi-stub-entry.c,
-> where it now describes lookup_primary_display().
+> Rework the kernel's init_primary_display() helpers to allow for later
+> support of additional config-table entries and EDID information. No
+> functional changes.
 >
 > Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 > ---
->  drivers/firmware/efi/libstub/efi-stub-entry.c | 23 +++++++++++++++++--
->  drivers/firmware/efi/libstub/efi-stub.c       | 22 ++++++++++++------
->  drivers/firmware/efi/libstub/efistub.h        |  2 +-
->  .../firmware/efi/libstub/primary_display.c    | 17 +-------------
->  drivers/firmware/efi/libstub/zboot.c          |  6 +++--
->  5 files changed, 42 insertions(+), 28 deletions(-)
+>  arch/loongarch/kernel/efi.c     | 22 +++++++++++-----------
+>  drivers/firmware/efi/efi-init.c | 19 ++++++++++---------
+>  2 files changed, 21 insertions(+), 20 deletions(-)
 >
-> diff --git a/drivers/firmware/efi/libstub/efi-stub-entry.c b/drivers/firmware/efi/libstub/efi-stub-entry.c
-> index aa85e910fe59..3077b51fe0b2 100644
-> --- a/drivers/firmware/efi/libstub/efi-stub-entry.c
-> +++ b/drivers/firmware/efi/libstub/efi-stub-entry.c
-> @@ -14,10 +14,29 @@ static void *kernel_image_addr(void *addr)
->         return addr + kernel_image_offset;
->  }
+
+This patch seems unnecessary now that we've replace one table with another.
+
+I've dropped it for now - let me know if you really want to keep it.
+
+
+> diff --git a/arch/loongarch/kernel/efi.c b/arch/loongarch/kernel/efi.c
+> index 638a392d2cd2..1ef38036e8ae 100644
+> --- a/arch/loongarch/kernel/efi.c
+> +++ b/arch/loongarch/kernel/efi.c
+> @@ -81,19 +81,19 @@ EXPORT_SYMBOL_GPL(sysfb_primary_display);
 >
-> -struct sysfb_display_info *alloc_primary_display(void)
-> +/*
-> + * There are two ways of populating the core kernel's sysfb_primary_display
-> + * via the stub:
-> + *
-> + *   - using a configuration table, which relies on the EFI init code to
-> + *     locate the table and copy the contents; or
-> + *
-> + *   - by linking directly to the core kernel's copy of the global symbol.
-> + *
-> + * The latter is preferred because it makes the EFIFB earlycon available very
-> + * early, but it only works if the EFI stub is part of the core kernel image
-> + * itself. The zboot decompressor can only use the configuration table
-> + * approach.
-> + */
-> +
-> +struct sysfb_display_info *lookup_primary_display(bool *needs_free)
+>  static void __init init_primary_display(void)
 >  {
-> +       *needs_free = true;
-> +
->         if (IS_ENABLED(CONFIG_ARM))
-> -               return __alloc_primary_display();
-> +               return alloc_primary_display();
-> +
-> +       *needs_free = false;
->
->         if (IS_ENABLED(CONFIG_X86) ||
->             IS_ENABLED(CONFIG_EFI_EARLYCON) ||
-> diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
-> index 42d6073bcd06..dc545f62c62b 100644
-> --- a/drivers/firmware/efi/libstub/efi-stub.c
-> +++ b/drivers/firmware/efi/libstub/efi-stub.c
-> @@ -51,14 +51,14 @@ static bool flat_va_mapping = (EFI_RT_VIRTUAL_OFFSET != 0);
->  void __weak free_primary_display(struct sysfb_display_info *dpy)
->  { }
->
-> -static struct sysfb_display_info *setup_primary_display(void)
-> +static struct sysfb_display_info *setup_primary_display(bool *dpy_needs_free)
->  {
->         struct sysfb_display_info *dpy;
->         struct screen_info *screen = NULL;
->         struct edid_info *edid = NULL;
->         efi_status_t status;
->
-> -       dpy = alloc_primary_display();
-> +       dpy = lookup_primary_display(dpy_needs_free);
->         if (!dpy)
->                 return NULL;
->         screen = &dpy->screen;
-> @@ -68,15 +68,22 @@ static struct sysfb_display_info *setup_primary_display(void)
->
->         status = efi_setup_graphics(screen, edid);
->         if (status != EFI_SUCCESS)
-> -               goto err_free_primary_display;
-> +               goto err___free_primary_display;
->
->         return dpy;
->
-> -err_free_primary_display:
-> -       free_primary_display(dpy);
-> +err___free_primary_display:
-> +       if (*dpy_needs_free)
-> +               free_primary_display(dpy);
->         return NULL;
->  }
->
-> +static void release_primary_display(struct sysfb_display_info *dpy, bool dpy_needs_free)
-> +{
-> +       if (dpy && dpy_needs_free)
-> +               free_primary_display(dpy);
-> +}
-> +
->  static void install_memreserve_table(void)
->  {
->         struct linux_efi_memreserve *rsv;
-> @@ -156,13 +163,14 @@ efi_status_t efi_stub_common(efi_handle_t handle,
->                              char *cmdline_ptr)
->  {
->         struct sysfb_display_info *dpy;
-> +       bool dpy_needs_free;
->         efi_status_t status;
->
->         status = check_platform_features();
->         if (status != EFI_SUCCESS)
->                 return status;
->
-> -       dpy = setup_primary_display();
-> +       dpy = setup_primary_display(&dpy_needs_free);
->
->         efi_retrieve_eventlog();
->
-> @@ -182,7 +190,7 @@ efi_status_t efi_stub_common(efi_handle_t handle,
->
->         status = efi_boot_kernel(handle, image, image_addr, cmdline_ptr);
->
-> -       free_primary_display(dpy);
-> +       release_primary_display(dpy, dpy_needs_free);
->
->         return status;
->  }
-> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-> index 979a21818cc1..1503ffb82903 100644
-> --- a/drivers/firmware/efi/libstub/efistub.h
-> +++ b/drivers/firmware/efi/libstub/efistub.h
-> @@ -1176,8 +1176,8 @@ efi_enable_reset_attack_mitigation(void) { }
->
->  void efi_retrieve_eventlog(void);
->
-> +struct sysfb_display_info *lookup_primary_display(bool *needs_free);
->  struct sysfb_display_info *alloc_primary_display(void);
-> -struct sysfb_display_info *__alloc_primary_display(void);
->  void free_primary_display(struct sysfb_display_info *dpy);
->
->  void efi_cache_sync_image(unsigned long image_base,
-> diff --git a/drivers/firmware/efi/libstub/primary_display.c b/drivers/firmware/efi/libstub/primary_display.c
-> index cdaebab26514..34c54ac1e02a 100644
-> --- a/drivers/firmware/efi/libstub/primary_display.c
-> +++ b/drivers/firmware/efi/libstub/primary_display.c
-> @@ -7,24 +7,9 @@
->
->  #include "efistub.h"
->
-> -/*
-> - * There are two ways of populating the core kernel's sysfb_primary_display
-> - * via the stub:
-> - *
-> - *   - using a configuration table, which relies on the EFI init code to
-> - *     locate the table and copy the contents; or
-> - *
-> - *   - by linking directly to the core kernel's copy of the global symbol.
-> - *
-> - * The latter is preferred because it makes the EFIFB earlycon available very
-> - * early, but it only works if the EFI stub is part of the core kernel image
-> - * itself. The zboot decompressor can only use the configuration table
-> - * approach.
-> - */
+> -       struct screen_info *si;
 > -
->  static efi_guid_t primary_display_guid = LINUX_EFI_PRIMARY_DISPLAY_TABLE_GUID;
->
-> -struct sysfb_display_info *__alloc_primary_display(void)
-> +struct sysfb_display_info *alloc_primary_display(void)
->  {
->         struct sysfb_display_info *dpy;
->         efi_status_t status;
-> diff --git a/drivers/firmware/efi/libstub/zboot.c b/drivers/firmware/efi/libstub/zboot.c
-> index 4b76f74c56da..c1fd1fdbcb08 100644
-> --- a/drivers/firmware/efi/libstub/zboot.c
-> +++ b/drivers/firmware/efi/libstub/zboot.c
-> @@ -26,9 +26,11 @@ void __weak efi_cache_sync_image(unsigned long image_base,
->         // executable code loaded into memory to be safe for execution.
->  }
->
-> -struct sysfb_display_info *alloc_primary_display(void)
-> +struct sysfb_display_info *lookup_primary_display(bool *needs_free)
->  {
-> -       return __alloc_primary_display();
-> +       *needs_free = true;
+> -       if (screen_info_table == EFI_INVALID_TABLE_ADDR)
+> -               return;
+> -
+> -       si = early_memremap(screen_info_table, sizeof(*si));
+> -       if (!si) {
+> -               pr_err("Could not map screen_info config table\n");
+> +       if (screen_info_table == EFI_INVALID_TABLE_ADDR) {
+> +               struct screen_info *si = early_memremap(screen_info_table, sizeof(*si));
 > +
-> +       return alloc_primary_display();
+> +               if (!si) {
+> +                       pr_err("Could not map screen_info config table\n");
+> +                       return;
+> +               }
+> +               sysfb_primary_display.screen = *si;
+> +               memset(si, 0, sizeof(*si));
+> +               early_memunmap(si, sizeof(*si));
+> +       } else {
+>                 return;
+>         }
+> -       sysfb_primary_display.screen = *si;
+> -       memset(si, 0, sizeof(*si));
+> -       early_memunmap(si, sizeof(*si));
+>
+>         memblock_reserve(__screen_info_lfb_base(&sysfb_primary_display.screen),
+>                          sysfb_primary_display.screen.lfb_size);
+> diff --git a/drivers/firmware/efi/efi-init.c b/drivers/firmware/efi/efi-init.c
+> index d1d418a34407..ca697d485116 100644
+> --- a/drivers/firmware/efi/efi-init.c
+> +++ b/drivers/firmware/efi/efi-init.c
+> @@ -67,10 +67,9 @@ EXPORT_SYMBOL_GPL(sysfb_primary_display);
+>
+>  static void __init init_primary_display(void)
+>  {
+> -       struct screen_info *si;
+> -
+>         if (screen_info_table != EFI_INVALID_TABLE_ADDR) {
+> -               si = early_memremap(screen_info_table, sizeof(*si));
+> +               struct screen_info *si = early_memremap(screen_info_table, sizeof(*si));
+> +
+>                 if (!si) {
+>                         pr_err("Could not map screen_info config table\n");
+>                         return;
+> @@ -78,14 +77,16 @@ static void __init init_primary_display(void)
+>                 sysfb_primary_display.screen = *si;
+>                 memset(si, 0, sizeof(*si));
+>                 early_memunmap(si, sizeof(*si));
+> +       } else {
+> +               return;
+> +       }
+>
+> -               if (memblock_is_map_memory(sysfb_primary_display.screen.lfb_base))
+> -                       memblock_mark_nomap(sysfb_primary_display.screen.lfb_base,
+> -                                           sysfb_primary_display.screen.lfb_size);
+> +       if (memblock_is_map_memory(sysfb_primary_display.screen.lfb_base))
+> +               memblock_mark_nomap(sysfb_primary_display.screen.lfb_base,
+> +                                   sysfb_primary_display.screen.lfb_size);
+>
+> -               if (IS_ENABLED(CONFIG_EFI_EARLYCON))
+> -                       efi_earlycon_reprobe();
+> -       }
+> +       if (IS_ENABLED(CONFIG_EFI_EARLYCON))
+> +               efi_earlycon_reprobe();
 >  }
 >
->  asmlinkage efi_status_t __efiapi
+>  static int __init uefi_init(u64 efi_system_table)
 > --
 > 2.51.1
 >
