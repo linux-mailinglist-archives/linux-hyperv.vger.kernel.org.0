@@ -1,60 +1,111 @@
-Return-Path: <linux-hyperv+bounces-8023-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8024-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F892CBFB61
-	for <lists+linux-hyperv@lfdr.de>; Mon, 15 Dec 2025 21:17:58 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF72FCC071A
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 02:23:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 939D93003F71
-	for <lists+linux-hyperv@lfdr.de>; Mon, 15 Dec 2025 20:13:01 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2A65C30365A7
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 01:22:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 807C230C35F;
-	Mon, 15 Dec 2025 20:13:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4C2D2673A5;
+	Tue, 16 Dec 2025 01:22:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qlQ7YAWL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E85KftC4"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FDD91DF75B;
-	Mon, 15 Dec 2025 20:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-yx1-f42.google.com (mail-yx1-f42.google.com [74.125.224.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C1923C503
+	for <linux-hyperv@vger.kernel.org>; Tue, 16 Dec 2025 01:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765829580; cv=none; b=V2YBIWQix6FUJAaQj+OnzQDI7xrBnY3ha9aUvMGYH5BkkcAA3J2M9WQ+PpXaIVy/602s7mYCGp0pWvEWD/Rq7isnEveUXutL2DBy+CiDq0JAoRxBBf28fyj3PXTdLQN/spAeLw1jHOQWbTD1k1qXiZA97zztnvSzICQD8BkFy3w=
+	t=1765848130; cv=none; b=ugjdbJu9OmHjSXBBromUZ4iQ8OvAEHGm+gronEMBYO0Nhy4WBq93yW3Vb5hgctc4GPN2YxOAyOGoO07Dt/zy3NJcTavzo/6f6pa3aYcGU9ELxqJTUp+X7LX2Vfq7otwpjfI9cbUUs7KgMEvHBrQlesKxF/kBOZmt3q8irWUQYw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765829580; c=relaxed/simple;
-	bh=Zq0hcMcIbQhk7TjBpKZbwHh9Jln6DkDO5vGTDLqCHZw=;
+	s=arc-20240116; t=1765848130; c=relaxed/simple;
+	bh=KhTpBrq3o1OcDzqZyQ5v6akeq46HasfcRLGJ5YYrEKI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jjVCTHcyU3BTClLfN7/sXLCbwNQgyGPz+NIUUTSk9O5R8aohBMRGXfU8PjkZRHKFwSV2OgfsF384lapMm+8vrdOjQSMH6akOYlykcGw2X3q1VqxuVGjoJ203qiyxp5P9aY4H1kgd56N3dZtH7ovURVO/IimMVwUvQeXJ3VOSidQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qlQ7YAWL; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (c-98-225-44-166.hsd1.wa.comcast.net [98.225.44.166])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 74659200D626;
-	Mon, 15 Dec 2025 12:12:50 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 74659200D626
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1765829570;
-	bh=AupiNJ3Q5CoZkiRyC/MSrJvKCwKKhgSZhbO0uiaxMvY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qlQ7YAWLXvegEztJr0IGAVB6ycgPhXHvJ96z2CY+MSezAWHF2A1T7o1dk1BG77KG0
-	 sIFr1yUoLxRMhcauGKiCJO/OKbs4Vclfm8wZYnex8xbd41WCDOvnnRA3/IdiNn2YGc
-	 6E7jgfSFNwz8ir2o4d7VnYPsKpNIZHGu+W3xLjEk=
-Date: Mon, 15 Dec 2025 12:12:48 -0800
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 4/7] Drivers: hv: Fix huge page handling in memory
- region traversal
-Message-ID: <aUBrwAWqGEgV9GxK@skinsburskii.localdomain>
-References: <176412196000.447063.4256335030026363827.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <176412295155.447063.16512843211428609586.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <SN6PR02MB4157F10A84C4BE170AB040F4D4A6A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <aTH4T-FKcL1knHaD@skinsburskii.localdomain>
- <SN6PR02MB4157978DFAA6C2584D0678E1D4A1A@SN6PR02MB4157.namprd02.prod.outlook.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=fgohb1LTFnrGciUm/GSsAylewnmzv5sRVPvnUkZduGbuTYlyV4k66pT2cJHodw7/SYCoj5pSsDy6i7MmhmULVJf0NRsHDVe33l4ayt5EbZQTc0XXOUsrbwCtA9ABmo/nxNc0CN1vwOWXKTHXuJMoG6TJjM/mhftE0L+SJZGPn2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E85KftC4; arc=none smtp.client-ip=74.125.224.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yx1-f42.google.com with SMTP id 956f58d0204a3-640e065991dso3243132d50.3
+        for <linux-hyperv@vger.kernel.org>; Mon, 15 Dec 2025 17:22:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765848127; x=1766452927; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lI4+C9X3I7yvyc2773MJlpz/r2L4renU7eOoChO1rz0=;
+        b=E85KftC4BWZfUx89LtZEIH8y7/RxFdxyiOLkF/oGhurra3KCTuuTJmFT29mGuDqhmC
+         ekGXhRUT8UCkCdfhC1g+OBDvcWXLE7x4vuiTCBNxq/6/oSLmJxCCudHAeg9dtOwTLhP7
+         2zVPhEafOkBq3IsFm0xmc8K0M1DRgZab9KpcWlxKImXXLmk7i5/EZoqvUdSVy3d3keUq
+         u09A5L3XTMi7GhosnNUH3ITVQbgUophG9kNdAB/9iUGr5yLfZURBwoHfkZj6DwpuDSOf
+         Ox+M5hZD4MSgsMS29AuTiQo4tbX85GGZR9einVh9K+y4ecgUvbTD8aF1JF8NPyJMEC5K
+         PiHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765848127; x=1766452927;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lI4+C9X3I7yvyc2773MJlpz/r2L4renU7eOoChO1rz0=;
+        b=d1qxbyCX6tVG5ySWLYsx9A6O7GHvLXtTprVE2ut5hhFthsvjDZ9Q13Aq4+v7cBuptT
+         fJe7qAXMvWaeW1T3d3J3NsdjtNiYy0npktG0eyTpzQePBqQ9GMnBX3RpH/BoJFpHP9eG
+         25gP9m5Cpy1ku8d7GIfR/cdGkUsJcxiifCQLUDIBqXh6Z42ztkgss4Wt7arv6jXSl3hO
+         LwPJMDxl/jKfdB1O5fvyqjKY1BmgZPQ3GqOVrEbQvaIcLIJXIUspRTRB2nJv5rulfbK9
+         bMuVEZKDBIAuj/bJtqPESORW/N3O/Sc/kE/7lBXOukUzBKYOiFCFb8gLn15jKnvgwMU8
+         4GYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVuaSfX7iQrPwcD/7q4JbEaOCTkuvwfXRqBIM8Nfm3oPQvQHpBY4MHOflUiuREPA4ne4CRn3O58GXXJ4hQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeuZ+Rv3BCijIIBgmgSnyfDleW9OQRh0HONrRPpXzWUksQ9AF9
+	rOwSvoOBbZZfKMwr7zQh9pZb2rdsRnqOfm/9b7XYpzN4U1s9acQgY4g7
+X-Gm-Gg: AY/fxX4cbRYHwcK4R0myZ6xpCpeORhtZvsU7A0b1KVSHE+/K5yCR34owprXivoHcklY
+	uuUffCGEjLqbZiNOz0vy7K+GDZ/pbH+Ur6Wb8lzBieLigWn4rP2aJSO6OLLAUzuE5xPrBIU/mja
+	r88Kt77Pz9y8ezyrMg+i4VeQ93se7ixP5q1/NFa4C2RWr9om9l0YtmcWW4LsjNZ41EGcs+vOyzo
+	cwa5QqK4GGXl8hcrIQj0wl/lJnuy/hQfTp69BlVVab060UyXXQJzGQFRCV/tHFuvyKMQ9nC1MNW
+	N71Pjf15ZjbWP7TO46/0T7z1MCfKRKO3ow7Dkxl6VVXebYhbJ+OeUa/YutwXa0LTjktyWeWA5OE
+	KKy9kkyvCunn2ySh8S45xJhmSN2kupxU+Y0mKpM2yPrvmhAIT4CXkeypuzkL+c1cLDzROufzEzW
+	3luP4g/0r7me9YBA6mDeXBYEEh53BvCvQx0d9VyF1UyvXzQEI=
+X-Google-Smtp-Source: AGHT+IHFuEiGcW0GH4lABrKUUSbE6qv7huuMOYC9DtT8UyxlS9XUtUukZA6W5M9Qt9zONS5q8T2xVg==
+X-Received: by 2002:a05:690e:128c:b0:63f:ab00:1a07 with SMTP id 956f58d0204a3-64555643a56mr9274950d50.49.1765848124847;
+        Mon, 15 Dec 2025 17:22:04 -0800 (PST)
+Received: from devvm11784.nha0.facebook.com ([2a03:2880:25ff:58::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-78e748cecd9sm34175187b3.9.2025.12.15.17.22.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Dec 2025 17:22:04 -0800 (PST)
+Date: Mon, 15 Dec 2025 17:22:02 -0800
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Paolo Abeni <pabeni@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, berrange@redhat.com,
+	Sargun Dhillon <sargun@sargun.me>,
+	Bobby Eshleman <bobbyeshleman@meta.com>
+Subject: Re: [PATCH net-next v12 04/12] vsock: add netns support to virtio
+ transports
+Message-ID: <aUC0Op2trtt3z405@devvm11784.nha0.facebook.com>
+References: <20251126-vsock-vmtest-v12-0-257ee21cd5de@meta.com>
+ <20251126-vsock-vmtest-v12-4-257ee21cd5de@meta.com>
+ <6cef5a68-375a-4bb6-84f8-fccc00cf7162@redhat.com>
+ <aS8oMqafpJxkRKW5@devvm11784.nha0.facebook.com>
+ <06b7cfea-d366-44f7-943e-087ead2f25c2@redhat.com>
+ <aS9hoOKb7yA5Qgod@devvm11784.nha0.facebook.com>
+ <aTw0F6lufR/nT7OY@devvm11784.nha0.facebook.com>
+ <uidarlot7opjsuozylevyrlgdpjd32tsi7mwll2lsvce226v24@75sq4jdo5tgv>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -63,99 +114,122 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SN6PR02MB4157978DFAA6C2584D0678E1D4A1A@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <uidarlot7opjsuozylevyrlgdpjd32tsi7mwll2lsvce226v24@75sq4jdo5tgv>
 
-On Thu, Dec 11, 2025 at 05:37:26PM +0000, Michael Kelley wrote:
-> From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Thursday, December 4, 2025 1:09 PM
-> > 
-> > On Thu, Dec 04, 2025 at 04:03:26PM +0000, Michael Kelley wrote:
-> > > From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Tuesday, November 25, 2025 6:09 PM
+On Mon, Dec 15, 2025 at 03:11:22PM +0100, Stefano Garzarella wrote:
+> On Fri, Dec 12, 2025 at 07:26:15AM -0800, Bobby Eshleman wrote:
+> > On Tue, Dec 02, 2025 at 02:01:04PM -0800, Bobby Eshleman wrote:
+> > > On Tue, Dec 02, 2025 at 09:47:19PM +0100, Paolo Abeni wrote:
+> > > > On 12/2/25 6:56 PM, Bobby Eshleman wrote:
+> > > > > On Tue, Dec 02, 2025 at 11:18:14AM +0100, Paolo Abeni wrote:
+> > > > >> On 11/27/25 8:47 AM, Bobby Eshleman wrote:
+> > > > >>> @@ -674,6 +689,17 @@ static int vhost_vsock_dev_open(struct inode *inode, struct file *file)
+> > > > >>>  		goto out;
+> > > > >>>  	}
+> > > > >>>
+> > > > >>> +	net = current->nsproxy->net_ns;
+> > > > >>> +	vsock->net = get_net_track(net, &vsock->ns_tracker, GFP_KERNEL);
+> > > > >>> +
+> > > > >>> +	/* Store the mode of the namespace at the time of creation. If this
+> > > > >>> +	 * namespace later changes from "global" to "local", we want this vsock
+> > > > >>> +	 * to continue operating normally and not suddenly break. For that
+> > > > >>> +	 * reason, we save the mode here and later use it when performing
+> > > > >>> +	 * socket lookups with vsock_net_check_mode() (see vhost_vsock_get()).
+> > > > >>> +	 */
+> > > > >>> +	vsock->net_mode = vsock_net_mode(net);
+> > > > >>
+> > > > >> I'm sorry for the very late feedback. I think that at very least the
+> > > > >> user-space needs a way to query if the given transport is in local or
+> > > > >> global mode, as AFAICS there is no way to tell that when socket creation
+> > > > >> races with mode change.
+> > > > >
+> > > > > Are you thinking something along the lines of sockopt?
 > > > >
-> 
-> [snip]
-> 
-
-<snip>
-
-> > > > +
-> > > > +	stride = 1 << page_order;
-> > > > +
-> > > > +	/* Start at stride since the first page is validated */
-> > > > +	for (count = stride; count < page_count; count += stride) {
-> > >
-> > > This striding doesn't work properly in the general case. Suppose the
-> > > page_offset value puts the start of the chunk in the middle of a 2 Meg
-> > > page, and that 2 Meg page is then followed by a bunch of single pages.
-> > > (Presumably the mmu notifier "invalidate" callback could do this.)
-> > > The use of the full stride here jumps over the remaining portion of the
-> > > 2 Meg page plus some number of the single pages, which isn't what you
-> > > want. For the striding to work, it must figure out how much remains in the
-> > > initial large page, and then once the striding is aligned to the large page
-> > > boundaries, the full stride length works.
-> > >
-> > > Also, what do the hypercalls in the handler functions do if a chunk starts
-> > > in the middle of a 2 Meg page? It looks like the handler functions will set
-> > > the *_LARGE_PAGE flag to the hypercall but then the hv_call_* function
-> > > will fail if the page_count isn't 2 Meg aligned.
-> > >
+> > > > I'd like to see a way for the user-space to query the socket 'namespace
+> > > > mode'.
+> > > >
+> > > > sockopt could be an option; a possibly better one could be sock_diag. Or
+> > > > you could do both using dumping the info with a shared helper invoked by
+> > > > both code paths, alike what TCP is doing.
+> > > > >> Also I'm a bit uneasy with the model implemented here, as 'local' socket
+> > > > >> may cross netns boundaris and connect to 'local' socket in other netns
+> > > > >> (if I read correctly patch 2/12). That in turns AFAICS break the netns
+> > > > >> isolation.
+> > > > >
+> > > > > Local mode sockets are unable to communicate with local mode (and global
+> > > > > mode too) sockets that are in other namespaces. The key piece of code
+> > > > > for that is vsock_net_check_mode(), where if either modes is local the
+> > > > > namespaces must be the same.
+> > > >
+> > > > Sorry, I likely misread the large comment in patch 2:
+> > > >
+> > > > https://lore.kernel.org/netdev/20251126-vsock-vmtest-v12-2-257ee21cd5de@meta.com/
+> > > >
+> > > > >> Have you considered instead a slightly different model, where the
+> > > > >> local/global model is set in stone at netns creation time - alike what
+> > > > >> /proc/sys/net/ipv4/tcp_child_ehash_entries is doing[1] - and
+> > > > >> inter-netns connectivity is explicitly granted by the admin (I guess
+> > > > >> you will need new transport operations for that)?
+> > > > >>
+> > > > >> /P
+> > > > >>
+> > > > >> [1] tcp allows using per-netns established socket lookup tables - as
+> > > > >> opposed to the default global lookup table (even if match always takes
+> > > > >> in account the netns obviously). The mentioned sysctl specify such
+> > > > >> configuration for the children namespaces, if any.
+> > > > >
+> > > > > I'll save this discussion if the above doesn't resolve your concerns.
+> > > > I still have some concern WRT the dynamic mode change after netns
+> > > > creation. I fear some 'unsolvable' (or very hard to solve) race I can't
+> > > > see now. A tcp_child_ehash_entries-like model will avoid completely the
+> > > > issue, but I understand it would be a significant change over the
+> > > > current status.
+> > > >
+> > > > "Luckily" the merge window is on us and we have some time to discuss. Do
+> > > > you have a specific use-case for the ability to change the netns >
+> > > mode
+> > > > after creation?
+> > > >
+> > > > /P
+> > > 
+> > > I don't think there is a hard requirement that the mode be change-able
+> > > after creation. Though I'd love to avoid such a big change... or at
+> > > least leave unchanged as much of what we've already reviewed as
+> > > possible.
+> > > 
+> > > In the scheme of defining the mode at creation and following the
+> > > tcp_child_ehash_entries-ish model, what I'm imagining is:
+> > > - /proc/sys/net/vsock/child_ns_mode can be set to "local" or "global"
+> > > - /proc/sys/net/vsock/child_ns_mode is not immutable, can change any
+> > >   number of times
+> > > 
+> > > - when a netns is created, the new netns mode is inherited from
+> > >   child_ns_mode, being assigned using something like:
+> > > 
+> > > 	  net->vsock.ns_mode =
+> > > 		get_net_ns_by_pid(current->pid)->child_ns_mode
+> > > 
+> > > - /proc/sys/net/vsock/ns_mode queries the current mode, returning
+> > >   "local" or "global", returning value of net->vsock.ns_mode
+> > > - /proc/sys/net/vsock/ns_mode and net->vsock.ns_mode are immutable and
+> > >   reject writes
+> > > 
+> > > Does that align with what you have in mind?
 > > 
-> > This situation you described is not possible, because invalidation
-> > callback simply can't invalidate a part of the huge page even in THP
-> > case (leave aside hugetlb case) without splitting it beforehand, and
-> > splitting a huge page requires invalidation of the whole huge page
-> > first.
+> > Hey Paolo, I just wanted to sync up on this one. Does the above align
+> > with what you envision?
 > 
-> I've been playing around with mmu notifiers and 2 Meg pages. At least in my
-> experiment, there's a case where the .invalidate callback is invoked on a
-> range *before* the 2 Meg page is split. The kernel code that does this is
-> in zap_page_range_single_batched(). Early on this function calls
-> mmu_notifier_invalidate_range_start(), which invokes the .invalidate
-> callback on the initial range. Later on, unmap_single_vma() is called, which
-> does the split and eventually makes a second .invalidate callback for the
-> entire 2 Meg page.
+> Hi Bobby, AFAIK Paolo was at LPC, so there could be some delay.
 > 
-> Details:  My experiment is a user space program that does the following:
+> FYI I'll be off from Dec 25 to Jan 6, so if we want to do an RFC in the
+> middle, I'll do my best to take a look before my time off.
 > 
-> 1. Allocates 16 Megs of memory on a 16 Meg boundary using
-> posix_memalign(). So this is private anonymous memory. Transparent
-> huge pages are enabled.
-> 
-> 2. Writes to a byte in each 4K page so they are all populated. 
-> /proc/meminfo shows eight 2 Meg pages have been allocated.
-> 
-> 3. Creates an mmu notifier for the allocated 16 Megs, using an ioctl
-> hacked into the kernel for experimentation purposes.
-> 
-> 4. Uses madvise() with the DONTNEED option to free 32 Kbytes on a 4K
-> page boundary somewhere in the 16 Meg allocation. This results in an mmu
-> notifier invalidate callback for that 32 Kbytes. Then there's a second invalidate
-> callback covering the entire 2 Meg page that contains the 32 Kbyte range.
-> Kernel stack traces for the two invalidate callbacks show them originating
-> in zap_page_range_single_batched().
-> 
-> 5. Sleeps for 60 seconds. During that time, khugepaged wakes up and does
-> hpage_collapse_scan_pmd() -> collapse_huge_page(), which generates a third
-> .invalidate callback for the 2 Meg page. I'm haven't investigated what this is
-> all about.
-> 
-> 6. Interestingly, if Step 4 above does a slightly different operation using
-> mprotect() with PROT_READ instead of madvise(), the 2 Meg page is split first.
-> The .invalidate callback for the full 2 Meg happens before the .invalidate
-> callback for the specified range.
-> 
-> The root partition probably isn't doing madvise() with DONTNEED for memory
-> allocated for guests. But regardless of what user space does or doesn't do, MSHV's
-> invalidate callback path should be made safe for this case. Maybe that's just
-> detecting it and returning an error (and maybe a WARN_ON) if user space
-> doesn't need it to work.
+> Thanks,
+> Stefano
 > 
 
-This is a deep research, Michael. Thanks a lot for you effort.
-I'll think more about it and will likely follow up.
+Sounds like a plan, thanks!
 
-Thank you,
-Stanislav
-
-> Michael
-> 
+Best,
+Bobby
 
