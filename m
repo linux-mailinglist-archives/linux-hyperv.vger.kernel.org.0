@@ -1,53 +1,54 @@
-Return-Path: <linux-hyperv+bounces-8030-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8031-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37857CC3A22
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 15:37:24 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A98FCC3A55
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 15:38:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B82BF30D48D1
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 14:31:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6537030DFFB6
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 14:32:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 097D530DD3A;
-	Tue, 16 Dec 2025 14:29:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B5BF339846;
+	Tue, 16 Dec 2025 14:29:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="tx1jQlyM"
+	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="nmP9WKB8"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FAA7313532;
-	Tue, 16 Dec 2025 14:29:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D7B3101AD;
+	Tue, 16 Dec 2025 14:29:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765895362; cv=pass; b=Rxq3P62w4RU9WcvAu9ysuF1DKTGDtcpz+Gj4spLZj0f0DLg+ZB2j33kMGINLk8vZVu37QbVyeAbKZJ7U4iGhLRIKiJ8BiRBKElkiT/tzZbXlFNrBqYU4l2mijbLh+4Giu2hUbfvSi9KtFKCzhNT9jBc52TVHKGYfNGzonZBPkFc=
+	t=1765895369; cv=pass; b=GJGeEQajMhSa0KBL8S5JnRkymZ0e3XKTG03UErtbvw8hBYVhGdEKEfLKx7MQ9h8TfM3G2y7qtyO/fj0JvPIndjEPfnCBWCXf1jCvKOJz9XiK/VKwojIfADbDDhDCifRO3sYfoY34b1ekOSKClzE8Jq1Cr6LZLTwi+PjufKGMNF0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765895362; c=relaxed/simple;
-	bh=iTG5kudv0LLqMSfUADCRTDCdWv3Bb2JZP3g2DxjmPBw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ht0m08IpDCzCTJcJ/F51VkOJ+bBm4lHyAHZlRxzull6uIhPcJFIHCQEjPzhT0xl0DQfpM/GNSRFv0pm2gTKDkPnK1S0eLROIc9USboZ46I/adzFLiP40BaaJppd+h1/xWc4C/6W55A4DVdXpYW4h/f9OwJgj64rzqyAeFAjGqF4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=tx1jQlyM; arc=pass smtp.client-ip=136.143.188.52
+	s=arc-20240116; t=1765895369; c=relaxed/simple;
+	bh=zcnEiUbrTrjAWPvSfGmCBVqU+Lolp4XTvj1tacfRak0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=lYszewAj0smpA7oZ+Y8ALN3aPbc5nCzbJq7glwe39zcfYLe84iyxHjFQ+4lsJn4VUfsCHfhENSQ/SZfdxdIWeE/3xgeNbZJMTIhDvsSyXf9VGRzw3bBO651DlsdxQYLS9jQr4Ur+N6VFm2l1qyKTKqSInKOnpgkgJyRuVTo6SCI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=nmP9WKB8; arc=pass smtp.client-ip=136.143.188.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1765895343; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1765895349; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=bwT1jyUkcMrddUns2lPM06gls4cAMpu60XShULHqKKhiA51CNrMdUZYiGE3LFmkhikR7mEU49dZaCRwFbOnfcCbyyTZoVNL0QHEuhaP8DAKGVMYfJIsVBJ0rvQEW7b+r276/gW6X4VAObMQr3zblCJinuPvNTp1pfwJz99Hsknk=
+	b=ChsumNi9TKevOJ1GsBhyGosukmt00gP2oDK7jdyh9qHzUjyi2Xp/pRdG/+TMylb74sSwNb4aMDSQlOH6Rdw3HaQxgszYtzNsLJ15ZAEEjpOKA+vx+oiKRE7b6bYFKRBR75uSKT6lPFO/Aev0gmPjC1/QC8fuusiLB4EycZSj+9c=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1765895343; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=92HO9inEmk9leCSO2rvQ+LumJHx4Ox4JH2MG3d3mlfs=; 
-	b=BiJtnLkOUdd1Coq3yuEMrLMsgCKcG15BWSo7BmVQJvWktcxsxTZGMdQRQblFsJVdAJz3THMNFH1Nu+OM1w3vfsRkLioZFPJuxONjqlOWc6DfOLw8sW+OWT3H/BTuwSuVb5FwjrlhaIS3SErWUd0vleUpUEpBmDfYv0LR45HhuZA=
+	t=1765895349; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=yZ4QmkDSQEPgsBVMbQvcxL4TzoqYmIuNbuF9xkeY7K8=; 
+	b=chtSwZv6MXqUpqzMh7d2I/tgDuRRHJhKFh/e8N0cDQq7E7CbADOdnK32VbNAgXPi7UcbXAGAY9qJRc42SupAZaM3C+97Lg8znTdXuWiumpZscTtmVrb++a0Jggz5VmtOve0IOcUSv5W690KB7MptGtzZFCRXwPVttAmK6O0nsFo=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=anirudhrb.com;
 	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
 	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1765895343;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1765895349;
 	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=92HO9inEmk9leCSO2rvQ+LumJHx4Ox4JH2MG3d3mlfs=;
-	b=tx1jQlyMT6OKIO9dvlLZ+CJe7A9uJ9oPZ5I1aDLQq4dsLiZLwyeN7iFc389sKjLB
-	95z8jdTSMxOVMpSUrptH87Mbrzx91UcHd/GTn0hsLT5kknFyvnAmo2yPaBjx62VDk6A
-	DvATtM+C0lpLgAnuiaIxncLy44KCYiCI/HnlHNRM=
-Received: by mx.zohomail.com with SMTPS id 1765895341555361.763133173876;
-	Tue, 16 Dec 2025 06:29:01 -0800 (PST)
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To;
+	bh=yZ4QmkDSQEPgsBVMbQvcxL4TzoqYmIuNbuF9xkeY7K8=;
+	b=nmP9WKB8Bqx9gW7QHBBCPqQguYEDdo1lRlrrRc0Er9pbQTnHJBNFXgR0fgfb/CYy
+	dhUG3oAkHX6Um3qRNe3mcBYJQRd609RtoT/rxh5yEPAqGkgKF8FfhcdTA7i52ImxkdM
+	sz7QaMW46rhlRHWM0USBN2PShJmpK0oxBChJd1Qs=
+Received: by mx.zohomail.com with SMTPS id 1765895348311554.6134755506345;
+	Tue, 16 Dec 2025 06:29:08 -0800 (PST)
 From: Anirudh Rayabharam <anirudh@anirudhrb.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -57,10 +58,12 @@ To: kys@microsoft.com,
 	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: anirudh@anirudhrb.com
-Subject: [PATCH 0/3] Fixes for movable pages
-Date: Tue, 16 Dec 2025 14:20:27 +0000
-Message-Id: <20251216142030.4095527-1-anirudh@anirudhrb.com>
+Subject: [PATCH 1/3] hyperv: add definitions for arm64 gpa intercepts
+Date: Tue, 16 Dec 2025 14:20:28 +0000
+Message-Id: <20251216142030.4095527-2-anirudh@anirudhrb.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20251216142030.4095527-1-anirudh@anirudhrb.com>
+References: <20251216142030.4095527-1-anirudh@anirudhrb.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -70,23 +73,73 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-From: "Anirudh Rayabharam (Microsoft)" <anirudh@anirudhrb.com>
+From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
 
-Fix movable pages for arm64 guests by implementing a GPA intercept
-handler.
+Add definitions required for handling GPA intercepts on arm64.
 
-Fix an improper cleanup issue in the region invalidation failure path.
+Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+---
+ include/hyperv/hvhdk.h | 47 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-Anirudh Rayabharam (Microsoft) (3):
-  hyperv: add definitions for arm64 gpa intercepts
-  mshv: handle gpa intercepts for arm64
-  mshv: release mutex on region invalidation failure
-
- drivers/hv/mshv_regions.c   |  4 +++-
- drivers/hv/mshv_root_main.c | 38 +++++++++++++++++++++++-------
- include/hyperv/hvhdk.h      | 47 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 79 insertions(+), 10 deletions(-)
-
+diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
+index 469186df7826..a286f75f0afa 100644
+--- a/include/hyperv/hvhdk.h
++++ b/include/hyperv/hvhdk.h
+@@ -800,6 +800,53 @@ struct hv_x64_memory_intercept_message {
+ 	u8 instruction_bytes[16];
+ } __packed;
+ 
++#if IS_ENABLED(CONFIG_ARM64)
++union hv_arm64_vp_execution_state {
++	u16 as_uint16;
++	struct {
++		u16 cpl:2;
++		u16 debug_active:1;
++		u16 interruption_pending:1;
++		u16 vtl:4;
++		u16 virtualization_fault_active:1;
++		u16 reserved:7;
++	} __packed;
++};
++
++struct hv_arm64_intercept_message_header {
++	u32 vp_index;
++	u8 instruction_length;
++	u8 intercept_access_type;
++	union hv_arm64_vp_execution_state execution_state;
++	u64 pc;
++	u64 cpsr;
++} __packed;
++
++union hv_arm64_memory_access_info {
++	u8 as_uint8;
++	struct {
++		u8 gva_valid:1;
++		u8 gva_gpa_valid:1;
++		u8 hypercall_output_pending:1;
++		u8 reserved:5;
++	} __packed;
++};
++
++struct hv_arm64_memory_intercept_message {
++	struct hv_arm64_intercept_message_header header;
++	u32 cache_type; /* enum hv_cache_type */
++	u8 instruction_byte_count;
++	union hv_arm64_memory_access_info memory_access_info;
++	u16 reserved1;
++	u8 instruction_bytes[4];
++	u32 reserved2;
++	u64 guest_virtual_address;
++	u64 guest_physical_address;
++	u64 syndrome;
++} __packed;
++
++#endif /* CONFIG_ARM64 */
++
+ /*
+  * Dispatch state for the VP communicated by the hypervisor to the
+  * VP-dispatching thread in the root on return from HVCALL_DISPATCH_VP.
 -- 
 2.34.1
 
