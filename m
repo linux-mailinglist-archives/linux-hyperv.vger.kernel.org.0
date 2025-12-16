@@ -1,116 +1,291 @@
-Return-Path: <linux-hyperv+bounces-8035-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8036-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8D72CC3D84
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 16:14:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A197CC422D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 17:10:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 78D503009F2D
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 15:14:49 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D4F303030CA2
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Dec 2025 16:08:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A1E93596E1;
-	Tue, 16 Dec 2025 15:14:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52A20342512;
+	Tue, 16 Dec 2025 15:58:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="i262Xwwu"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PzoVB5KM"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AA83590D6;
-	Tue, 16 Dec 2025 15:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98527330646;
+	Tue, 16 Dec 2025 15:58:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765898088; cv=none; b=djxjhiiCYv+Qgd714owlG9FRp3AkCU/sLAtaLTnRAI5gXZXlaoLGn52lzqT6Q6TfJGeLgtp7UY/AzsdgJrNdKFYXj1t7bjBmhsUCukeM0Zv+l0dEGeYiXRtUXZtJ7HKEsGUUR9nJZ3NDJKkUm8KI7JtC9McBnQ9xCC/+OUnG+Ns=
+	t=1765900704; cv=none; b=ahPRJAzvNxm6LBk70UTtbU9WdBEC9tm9VcTZahnf5AJzkAo/zeSfrhXC8VBoQmA5FeCnKJZSIRoJdZ3t+9V8szbWVOOEzIdSxMuLQeeDWZtbMh6m0t5HZCiZrtnOukjTNh0JKwrgdERVf0b01ssM0GSjYAYIm2CN7kB44AHuK6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765898088; c=relaxed/simple;
-	bh=vbH4lfU4OaMRR6m/SXJoCDqFgTX/oggcskfyWPQN/W8=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=O9gDSlvRy+dpEBmbO01jhqidR2qev+Y3sfqFRn42kGGr7Gy6zq+RVdjNMagPw1Wg0AEgYZggcSf+o3BFnMFJhdumQqgSdHlzPED8BcoGa5VNxvXJfdtnf/sH7yRkTXhYkQP2C/lqGSRyLdTrW4V1nQrIIhzd5Ff88njBlWXWF2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=i262Xwwu; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4dW0pV5WWBz9tNR;
-	Tue, 16 Dec 2025 16:14:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1765898082;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5ZAv/aSP68imDCSQcg3eQLhImeRHS9IyQKJ4c4ZFsa4=;
-	b=i262Xwwudk/tNN8hFzXF/Ngga2gw2r+8Fz3CfYS5Yb+G1oXJMJqJFdutpKZ7eEuKoijVis
-	IMDe4nMT5bS8NYqvkle8+kwnzlfBR0YrhdGKyXKmS/cCkdZ8TOTNPp7wjROzqVGovQJRzo
-	TU17c9qLmgrXaPjj8KXim+XU8Mznj8TTiMkvIwJwbhGYvdJZplyodAUfmHKc0tnMRBq3bD
-	G/0BlhtVmjMlBMJaPbnNgMv5KkYyLQA59D1r4mPLVspj0IDDWZG830Gfl77adUrI75xlS7
-	HXvR65f1fFZ646JqprZr0dPaWllaBge7dDBkRnxpbII56ypZnKQMjuYkdxpI3g==
-Date: Tue, 16 Dec 2025 07:14:40 -0800 (PST)
-From: vdso@mailbox.org
-To: Anirudh Rayabharam <anirudh@anirudhrb.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, longli@microsoft.com,
-	decui@microsoft.com, wei.liu@kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <912772765.178375.1765898080667@app.mailbox.org>
-In-Reply-To: <20251216142030.4095527-4-anirudh@anirudhrb.com>
-References: <20251216142030.4095527-1-anirudh@anirudhrb.com>
- <20251216142030.4095527-4-anirudh@anirudhrb.com>
-Subject: Re: [PATCH 3/3] mshv: release mutex on region invalidation failure
+	s=arc-20240116; t=1765900704; c=relaxed/simple;
+	bh=XowZTd2mQEZTrab8yUt35vDdm0ayAgxkKMoP5IySFuw=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=uQgBqmMgmJDLPk2eSjU026H8BkTXQKxEfBjqDJdvSDaYBKxZVvFnP4VGWQKRU2So34tPJjwq/3UZHl+9xdErOX6TVUYUBwKMSrnXy469EaN2hWY/fFNXcpTog414NNu9MRGzFixVfpUP/eHpihCOkEeM6REC+KYERfSxk7I+jQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PzoVB5KM; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1006)
+	id 14B33200D634; Tue, 16 Dec 2025 07:58:22 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 14B33200D634
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1765900702;
+	bh=GnoEUkMiB9Khm77EWJmo+0d7HBPDrUmiG7jx0eDwXBI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PzoVB5KMNaq/Cyu9QandoRLmVtbZEkHEQbv2pIxfdbBbx+GcDs5OV62+rWGgzrvrn
+	 nsdMxHAoTVk63PKPDBxC3ESjDQb1mZ6oqv+svBYNkRI4jwrEg3NCdb58kjqUq1SFzu
+	 sOY728BopNrT+izZV1a27ller4dAIBud/nrDjs3M=
+From: Haiyang Zhang <haiyangz@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Long Li <longli@microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Aditya Garg <gargaditya@linux.microsoft.com>,
+	Dipayaan Roy <dipayanroy@linux.microsoft.com>,
+	Shiraz Saleem <shirazsaleem@microsoft.com>,
+	linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Cc: paulros@microsoft.com
+Subject: [PATCH RFC 1/2] net: mana: Add support for coalesced RX packets on CQE
+Date: Tue, 16 Dec 2025 07:57:54 -0800
+Message-Id: <1765900682-22114-1-git-send-email-haiyangz@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-MBO-RS-ID: dc6751303d40ab2286f
-X-MBO-RS-META: g5psqzmyxaqm5w68qr1uoakbe4pmkcif
 
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-> On 12/16/2025 6:20 AM  Anirudh Rayabharam <anirudh@anirudhrb.com> wrote:
-> 
->  
-> From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
-> 
-> In the region invalidation failure path in
-> mshv_region_interval_invalidate(), the region mutex is not released. Fix
-> it by releasing the mutex in the failure path.
-> 
-> Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+Our NIC can have up to 4 RX packets on 1 CQE. To support this feature,
+check and process the type CQE_RX_COALESCED_4. The default setting is
+disabled, to avoid possible regression on latency.
 
-Reviewed-by: Roman Kisel <vdso@mailbox.org>
+And add ethtool handler to switch this feature. To turn it on, run:
+  ethtool -C <nic> rx-frames 4
+To turn it off:
+  ethtool -C <nic> rx-frames 1
 
-> ---
->  drivers/hv/mshv_regions.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
-> index 8abf80129f9b..30bacba6aec3 100644
-> --- a/drivers/hv/mshv_regions.c
-> +++ b/drivers/hv/mshv_regions.c
-> @@ -511,7 +511,7 @@ static bool mshv_region_interval_invalidate(struct mmu_interval_notifier *mni,
->  	ret = mshv_region_remap_pages(region, HV_MAP_GPA_NO_ACCESS,
->  				      page_offset, page_count);
->  	if (ret)
-> -		goto out_fail;
-> +		goto out_unlock;
->  
->  	mshv_region_invalidate_pages(region, page_offset, page_count);
->  
-> @@ -519,6 +519,8 @@ static bool mshv_region_interval_invalidate(struct mmu_interval_notifier *mni,
->  
->  	return true;
->  
-> +out_unlock:
-> +	mutex_unlock(&region->mutex);
->  out_fail:
->  	WARN_ONCE(ret,
->  		  "Failed to invalidate region %#llx-%#llx (range %#lx-%#lx, event: %u, pages %#llx-%#llx, mm: %#llx): %d\n",
-> -- 
-> 2.34.1
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+---
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 32 ++++++-----
+ .../ethernet/microsoft/mana/mana_ethtool.c    | 55 +++++++++++++++++++
+ include/net/mana/mana.h                       |  2 +
+ 3 files changed, 74 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 1ad154f9db1a..a46a1adf83bc 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -1330,7 +1330,7 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+ 	req->update_hashkey = update_key;
+ 	req->update_indir_tab = update_tab;
+ 	req->default_rxobj = apc->default_rxobj;
+-	req->cqe_coalescing_enable = 0;
++	req->cqe_coalescing_enable = apc->cqe_coalescing_enable;
+ 
+ 	if (update_key)
+ 		memcpy(&req->hashkey, apc->hashkey, MANA_HASH_KEY_SIZE);
+@@ -1864,11 +1864,12 @@ static struct sk_buff *mana_build_skb(struct mana_rxq *rxq, void *buf_va,
+ }
+ 
+ static void mana_rx_skb(void *buf_va, bool from_pool,
+-			struct mana_rxcomp_oob *cqe, struct mana_rxq *rxq)
++			struct mana_rxcomp_oob *cqe, struct mana_rxq *rxq,
++			int i)
+ {
+ 	struct mana_stats_rx *rx_stats = &rxq->stats;
+ 	struct net_device *ndev = rxq->ndev;
+-	uint pkt_len = cqe->ppi[0].pkt_len;
++	uint pkt_len = cqe->ppi[i].pkt_len;
+ 	u16 rxq_idx = rxq->rxq_idx;
+ 	struct napi_struct *napi;
+ 	struct xdp_buff xdp = {};
+@@ -1912,7 +1913,7 @@ static void mana_rx_skb(void *buf_va, bool from_pool,
+ 	}
+ 
+ 	if (cqe->rx_hashtype != 0 && (ndev->features & NETIF_F_RXHASH)) {
+-		hash_value = cqe->ppi[0].pkt_hash;
++		hash_value = cqe->ppi[i].pkt_hash;
+ 
+ 		if (cqe->rx_hashtype & MANA_HASH_L4)
+ 			skb_set_hash(skb, hash_value, PKT_HASH_TYPE_L4);
+@@ -2047,9 +2048,11 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+ 	struct mana_recv_buf_oob *rxbuf_oob;
+ 	struct mana_port_context *apc;
+ 	struct device *dev = gc->dev;
++	bool coalesced = false;
+ 	void *old_buf = NULL;
+ 	u32 curr, pktlen;
+ 	bool old_fp;
++	int i = 0;
+ 
+ 	apc = netdev_priv(ndev);
+ 
+@@ -2064,9 +2067,8 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+ 		goto drop;
+ 
+ 	case CQE_RX_COALESCED_4:
+-		netdev_err(ndev, "RX coalescing is unsupported\n");
+-		apc->eth_stats.rx_coalesced_err++;
+-		return;
++		coalesced = true;
++		break;
+ 
+ 	case CQE_RX_OBJECT_FENCE:
+ 		complete(&rxq->fence_event);
+@@ -2079,14 +2081,10 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+ 		return;
+ 	}
+ 
+-	pktlen = oob->ppi[0].pkt_len;
+-
+-	if (pktlen == 0) {
+-		/* data packets should never have packetlength of zero */
+-		netdev_err(ndev, "RX pkt len=0, rq=%u, cq=%u, rxobj=0x%llx\n",
+-			   rxq->gdma_id, cq->gdma_id, rxq->rxobj);
++nextpkt:
++	pktlen = oob->ppi[i].pkt_len;
++	if (pktlen == 0)
+ 		return;
+-	}
+ 
+ 	curr = rxq->buf_index;
+ 	rxbuf_oob = &rxq->rx_oobs[curr];
+@@ -2097,12 +2095,15 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+ 	/* Unsuccessful refill will have old_buf == NULL.
+ 	 * In this case, mana_rx_skb() will drop the packet.
+ 	 */
+-	mana_rx_skb(old_buf, old_fp, oob, rxq);
++	mana_rx_skb(old_buf, old_fp, oob, rxq, i);
+ 
+ drop:
+ 	mana_move_wq_tail(rxq->gdma_rq, rxbuf_oob->wqe_inf.wqe_size_in_bu);
+ 
+ 	mana_post_pkt_rxq(rxq);
++
++	if (coalesced && (++i < MANA_RXCOMP_OOB_NUM_PPI))
++		goto nextpkt;
+ }
+ 
+ static void mana_poll_rx_cq(struct mana_cq *cq)
+@@ -3276,6 +3277,7 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
+ 	apc->port_handle = INVALID_MANA_HANDLE;
+ 	apc->pf_filter_handle = INVALID_MANA_HANDLE;
+ 	apc->port_idx = port_idx;
++	apc->cqe_coalescing_enable = 0;
+ 
+ 	mutex_init(&apc->vport_mutex);
+ 	apc->vport_use_count = 0;
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+index 0e2f4343ac67..1b9ed5c9bbff 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+@@ -397,6 +397,58 @@ static void mana_get_channels(struct net_device *ndev,
+ 	channel->combined_count = apc->num_queues;
+ }
+ 
++static int mana_get_coalesce(struct net_device *ndev,
++			     struct ethtool_coalesce *ec,
++			     struct kernel_ethtool_coalesce *kernel_coal,
++			     struct netlink_ext_ack *extack)
++{
++	struct mana_port_context *apc = netdev_priv(ndev);
++
++	ec->rx_max_coalesced_frames =
++		apc->cqe_coalescing_enable ? MANA_RXCOMP_OOB_NUM_PPI : 1;
++
++	return 0;
++}
++
++static int mana_set_coalesce(struct net_device *ndev,
++			     struct ethtool_coalesce *ec,
++			     struct kernel_ethtool_coalesce *kernel_coal,
++			     struct netlink_ext_ack *extack)
++{
++	struct mana_port_context *apc = netdev_priv(ndev);
++	u8 saved_cqe_coalescing_enable;
++	int err;
++
++	if (ec->rx_max_coalesced_frames != 1 &&
++	    ec->rx_max_coalesced_frames != MANA_RXCOMP_OOB_NUM_PPI) {
++		NL_SET_ERR_MSG_FMT(extack,
++				   "rx-frames must be 1 or %u, got %u",
++				   MANA_RXCOMP_OOB_NUM_PPI,
++				   ec->rx_max_coalesced_frames);
++		return -EINVAL;
++	}
++
++	saved_cqe_coalescing_enable = apc->cqe_coalescing_enable;
++	apc->cqe_coalescing_enable =
++		ec->rx_max_coalesced_frames == MANA_RXCOMP_OOB_NUM_PPI;
++
++	if (!apc->port_is_up)
++		return 0;
++
++	err = mana_config_rss(apc, TRI_STATE_TRUE, false, false);
++
++	if (err) {
++		netdev_err(ndev, "Set rx-frames to %u failed:%d\n",
++			   ec->rx_max_coalesced_frames, err);
++		NL_SET_ERR_MSG_FMT(extack, "Set rx-frames to %u failed:%d\n",
++				   ec->rx_max_coalesced_frames, err);
++
++		apc->cqe_coalescing_enable = saved_cqe_coalescing_enable;
++	}
++
++	return err;
++}
++
+ static int mana_set_channels(struct net_device *ndev,
+ 			     struct ethtool_channels *channels)
+ {
+@@ -517,6 +569,7 @@ static int mana_get_link_ksettings(struct net_device *ndev,
+ }
+ 
+ const struct ethtool_ops mana_ethtool_ops = {
++	.supported_coalesce_params = ETHTOOL_COALESCE_RX_MAX_FRAMES,
+ 	.get_ethtool_stats	= mana_get_ethtool_stats,
+ 	.get_sset_count		= mana_get_sset_count,
+ 	.get_strings		= mana_get_strings,
+@@ -527,6 +580,8 @@ const struct ethtool_ops mana_ethtool_ops = {
+ 	.set_rxfh		= mana_set_rxfh,
+ 	.get_channels		= mana_get_channels,
+ 	.set_channels		= mana_set_channels,
++	.get_coalesce		= mana_get_coalesce,
++	.set_coalesce		= mana_set_coalesce,
+ 	.get_ringparam          = mana_get_ringparam,
+ 	.set_ringparam          = mana_set_ringparam,
+ 	.get_link_ksettings	= mana_get_link_ksettings,
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index d7e089c6b694..51d26ebeff6c 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -556,6 +556,8 @@ struct mana_port_context {
+ 	bool port_is_up;
+ 	bool port_st_save; /* Saved port state */
+ 
++	u8 cqe_coalescing_enable;
++
+ 	struct mana_ethtool_stats eth_stats;
+ 
+ 	struct mana_ethtool_phy_stats phy_stats;
+-- 
+2.34.1
+
 
