@@ -1,64 +1,65 @@
-Return-Path: <linux-hyperv+bounces-8046-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8047-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BFC1CC5FFE
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Dec 2025 06:04:09 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41E98CC600A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Dec 2025 06:09:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E6CE13021FB2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Dec 2025 05:03:33 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2540A301CD1F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Dec 2025 05:09:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F1B2221710;
-	Wed, 17 Dec 2025 05:03:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B41B258CDA;
+	Wed, 17 Dec 2025 05:09:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="n7JHjA1+"
+	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="LPiefPXy"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E2C21B9DA;
-	Wed, 17 Dec 2025 05:03:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B879239E7D;
+	Wed, 17 Dec 2025 05:09:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765947812; cv=pass; b=BFD0Bf0mHpZ64pbJto73uMC4ASdpMAT6aDbZaDt5CE8EXv44xdc/mDaTB4kD5ElYmf2ri9j4fAzbgFu6wagUBaOPrKhtw89ubQOtYqy22lXebe4oL14QmjCnX3pm0nLY2WS2CLgAeNaOsymQZIY14DkJG/VsmjSAUIZfWXDxPHQ=
+	t=1765948153; cv=pass; b=Q1eusDxzn7ZqlpW8RpbCZYRo7q9uPSlCgpTzVJ89wq6E6dCB0TRis5cpUuaYidAkJrh17LgSaj+henv+ZymJjx6qgtWBiqxjsL4G6EMlM+ulzbbchUCr30bkTLvU42S+6s79ZJoKfs0eo+Ryf+RmNshB7vvWpu+GblwvJB6KQdk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765947812; c=relaxed/simple;
-	bh=F726bWFnRdIUfeCqYrL9weXvCh2N1tbkdgFggthuqcU=;
+	s=arc-20240116; t=1765948153; c=relaxed/simple;
+	bh=dGKoVSYSorKQMpf8epoVc22DOD3rPG9huNjUNRRiwqo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cTFkhJ1Mapgw6q+DegtPwbq5pY5jxzcFSaNrbkYEdRaqjDqALszRSwYtRmK4NAFgPBP++YaflS+Gh9uNYE7ddluf60Am7m52pYpLeN3iBl6QkNf4/A8JJrM2Bp2ZBJkl7/YYfMpZrLSmurdG1urC5nfGgai/L0yzYKtkGn2B8W0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=n7JHjA1+; arc=pass smtp.client-ip=136.143.188.52
+	 Content-Type:Content-Disposition:In-Reply-To; b=r9GLtJVk8z36PKcaz2uUs65RlLGShIYj1/cBiHGXJh8ZrwCaklh1Zfyym+oeGXqORlCAVwV1joxfdGuQwxi5M7Syvud86bLXr9gDbQxwK1fvWd3b2vDWN2NVXJ/u2PQb0iDvfHc07M+YvDDOce41NgrV1UF2KbYtOwazJQjHLzk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=LPiefPXy; arc=pass smtp.client-ip=136.143.188.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1765947803; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1765948133; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=iRfk7UuvfTH8LS+RwhFXwYNYnnhrCi1TCfQwpSE2s22Ci+inuZnorSyEeBYMPl+4AwEF1W6i3kudl/d4wsYutuIovzt+bUAZ1HhcYY/nhJOja4cKq6Cv7ji/xbL39Rs4icRU0Z59js3zR5jw3SlOQNlRIBDlGibnMQTCGROu3qE=
+	b=TZGbXpU5MqTPjuUcfu3kKlqqnsa2lpabsNRVnxazqSuREcG6zwy2JTmFlfENd3vYH/dFIIyaUF5GBKF2suUOEvoEmgYqv+4o8EE3aBfCKvOzLfAeQmWajIz7gRkP62a2QdKrjuoGb43shoMCKk7ZJJqvWhpCHPeLBCxz4/1rqXk=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1765947803; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=XDmGqa3RcQdXEMw1it2akeAdqeI3NF4O2Nb9BVDAOOk=; 
-	b=GlcBBfcMXG63tfxDYzPiCRDcFo6NJMfo4uC5P6YtyBJ7h3sKoIO9Aib1SjnZuHnjE0z4Gqf2LyZBjqdzzFpQiFi5SAmhIKmJ0nWSd6YCPnSJyBSleTAb7rGanrpZk2dTV3wiw+Y3habX8Ac0Z/bg0zIlS9c9mnzF0f7WGEsl67c=
+	t=1765948133; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ay/cmM/WZQ/dWOPMHrfOo1HOzeeAGoRPPR4uGiEjetc=; 
+	b=QXTEfhohZhfYuxFeHT869HSu4DAmtrFnrCM5boc9GptO9241noi5jDx6rnd/WuU5VX1kIE5RAJo7FV5pfRDvO0eBBrAcygEcSZvnBlCAv3/+azo7aYBP3WYkEcq9Qnm3VP4i7xHkY4YHGaZZTz0N9XrZVpWwmUah/K5VQRsyeKY=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=anirudhrb.com;
 	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
 	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1765947802;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1765948133;
 	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
 	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=XDmGqa3RcQdXEMw1it2akeAdqeI3NF4O2Nb9BVDAOOk=;
-	b=n7JHjA1+/MqRPHorupwdPgc1DGbBi53wH4NFpWGtwsBi4jfHgYBIEt+vElQBKPoV
-	Ow69l4sxvWK8WMjYFBr6UFoZGTX4tw3AHYQoEnJj50P+0Um7LAqD4BbD730v7SpqqHc
-	TPGX+VPWEj9Pk35XlQZY9RdOR7SHbI55D30M+QpQ=
-Received: by mx.zohomail.com with SMTPS id 176594780122233.91876533300103;
-	Tue, 16 Dec 2025 21:03:21 -0800 (PST)
-Date: Wed, 17 Dec 2025 10:33:14 +0530
+	bh=ay/cmM/WZQ/dWOPMHrfOo1HOzeeAGoRPPR4uGiEjetc=;
+	b=LPiefPXyDIs1VlyVGnVBoFP0G0mmYzVeX252GuE4+qseRjCJMmHHogjccAFmHaTj
+	Qsor3zwAL56BZfEviwESB/96LmO06j9+ECUdUHRRn9tXLrHaHWKjSZVYLR3hr5VqMJq
+	vzWuZeMkdlp/aZ4rI2c4+X4MP6TmYy2/CYVEw2i0=
+Received: by mx.zohomail.com with SMTPS id 1765948132906954.2416869670858;
+	Tue, 16 Dec 2025 21:08:52 -0800 (PST)
+Date: Wed, 17 Dec 2025 10:38:47 +0530
 From: Anirudh Rayabharam <anirudh@anirudhrb.com>
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, 
-	decui@microsoft.com, longli@microsoft.com, linux-hyperv@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mshv: Use PMD_ORDER instead of HPAGE_PMD_ORDER when
- processing regions
-Message-ID: <pgl5c2qr4dawzjssjvs4qd5bzke75hwokgpj65wjy6ry3tl37g@ds3i7u7mzfzm>
-References: <176529822862.17729.14849117117197568731.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+To: vdso@mailbox.org
+Cc: kys@microsoft.com, decui@microsoft.com, haiyangz@microsoft.com, 
+	linux-kernel@vger.kernel.org, longli@microsoft.com, wei.liu@kernel.org, 
+	linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 1/3] hyperv: add definitions for arm64 gpa intercepts
+Message-ID: <jhyqp7vlqsmnps52cgzzuyon3aihcxizog4bknnofuibhud5ry@3nix3cwzwapw>
+References: <20251216142030.4095527-1-anirudh@anirudhrb.com>
+ <20251216142030.4095527-2-anirudh@anirudhrb.com>
+ <1801063954.177813.1765897665357@app.mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -67,33 +68,28 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <176529822862.17729.14849117117197568731.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+In-Reply-To: <1801063954.177813.1765897665357@app.mailbox.org>
 X-ZohoMailClient: External
 
-On Tue, Dec 09, 2025 at 04:37:20PM +0000, Stanislav Kinsburskii wrote:
-> Fix page order determination logic when CONFIG_PGTABLE_HAS_HUGE_LEAVES
-> is undefined, as HPAGE_PMD_SHIFT is defined as BUILD_BUG in that case.
+On Tue, Dec 16, 2025 at 07:07:45AM -0800, vdso@mailbox.org wrote:
 > 
-> Fixes: abceb4297bf8 ("mshv: Fix huge page handling in memory region
-> traversal")
-> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> ---
->  drivers/hv/mshv_regions.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > On 12/16/2025 6:20 AM  Anirudh Rayabharam <anirudh@anirudhrb.com> wrote:
 > 
-> diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
-> index 202b9d551e39..dc2d7044fb91 100644
-> --- a/drivers/hv/mshv_regions.c
-> +++ b/drivers/hv/mshv_regions.c
-> @@ -58,7 +58,7 @@ static long mshv_region_process_chunk(struct mshv_mem_region *region,
->  
->  	page_order = folio_order(page_folio(page));
->  	/* The hypervisor only supports 4K and 2M page sizes */
-> -	if (page_order && page_order != HPAGE_PMD_ORDER)
-> +	if (page_order && page_order != PMD_ORDER)
->  		return -EINVAL;
->  
->  	stride = 1 << page_order;
+> [...]
+> 
+> > +#if IS_ENABLED(CONFIG_ARM64)
+> > +union hv_arm64_vp_execution_state {
+> > +	u16 as_uint16;
+> > +	struct {
+> > +		u16 cpl:2;
+> 
+> That looks oddly x86(-64)-specific (Current Priviledge Level).
+> 
+> Unless I'm mistaken, CPL doesn't belong here, and the bitfield isn't
+> used on ARM64. Provided the layout of the struct is correct, the
+> bitfield can have a better name of `reserved0` or something like that.
 
-Reviewed-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+Hmmm... this is how it is defined in the hypervisor headers though.
+
+Anirudh.
 
