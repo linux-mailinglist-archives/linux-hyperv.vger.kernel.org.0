@@ -1,246 +1,130 @@
-Return-Path: <linux-hyperv+bounces-8043-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8044-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7B9FCC59D9
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Dec 2025 01:41:23 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9613FCC59FD
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Dec 2025 01:45:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 11422300D8F8
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Dec 2025 00:41:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 21DF23028DAA
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Dec 2025 00:45:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB86E1EDA2C;
-	Wed, 17 Dec 2025 00:41:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C14F19CCFD;
+	Wed, 17 Dec 2025 00:45:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="M1QpYNTO"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ArBgX1li"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DF304AEE2;
-	Wed, 17 Dec 2025 00:41:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D278A1E50E;
+	Wed, 17 Dec 2025 00:45:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765932081; cv=none; b=GgvR7+0egomDK70K6VKpUkeJEoF1Plx/zeSBhG6OktDmJbbl6B67VHjx6XEdomsNUsV5YbJLfiTRv22WFh0tszM2EXlaFl+H6dnQYHrTGXSjUWVISU3sedf8C5yq1NBSQh2iXzfEOeApwkk+GBYdelRw21eeB067uQPk7SAA9lQ=
+	t=1765932318; cv=none; b=th+UlJTNh2iyYKmPp6EIZWFkMsnGOVVn3dfCLPPBth/ncoxAzY2GShFPazEtlRuKSsJmBpnxPJoEguNRUw1q68HSyeOWpDYW4P2rlz9uGq4OkWdgLykakJmcy7Dahy5sv+uIXikOkOZljRnOd23A8VfWo+65NJbwog/qUlcGw5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765932081; c=relaxed/simple;
-	bh=K+BZakohZSBzRZJeHSKitoAHrLzYgjpfBeNBM4PXKnA=;
-	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=s4iE9SukPb9E73aUsOOjL0OGpCKWkFqniZIs8BDojoCMrU5a51TSaFqyFJeH9mtn33E7e6V65T13j43IKgbOpBz33MyJR+xF4cPqDwvZZpd0OMPstdL9Gr/hVvy1oJ3E95wTI7CrVQ3d3K68v4XzuLwjoPmIvtWy+nYQ0hf2Ze8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=M1QpYNTO; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1765932318; c=relaxed/simple;
+	bh=mxuMPDZfc7IPfHb74eP86EePxY94M9soIY9e3F67tco=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cNiJd/iS6LDyxVmdwmNRewqZb5zKuW+a7Wx+HvfEfThvCiCxDuUrEwmNayz549zhWDMQXiRoEOIqjqiWj8/9uOpk5JArLembYniHQzkiruKkRkrZsBFgsYxTDwT/UlZEvHVoQlUdbGJD16Lg/x507sgf/M3NfwLPlYdk02edbqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ArBgX1li; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 28E84200D63B;
-	Tue, 16 Dec 2025 16:41:19 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 28E84200D63B
+Received: from skinsburskii.localdomain (unknown [20.236.10.120])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 6425D200D641;
+	Tue, 16 Dec 2025 16:45:14 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6425D200D641
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1765932079;
-	bh=mBlJLK6jQTfOz+/AYjA44IB1lkaD7r2xeVR4bxCX/dU=;
-	h=Subject:From:To:Cc:Date:From;
-	b=M1QpYNTO2FtMCNAGp2N5lQWDHOVYeLek4ocg8fGoUmjLy9SVV29y48kYIj6so/KX8
-	 MREy8zicU7Fc0K5+b7KHpw3eD/P8AfG31Livs7wICos1CQ8XCMEOd5B1tazr87dJ0x
-	 QWS8GvnjNivcVd0UL02BnjwkJ0Gy0SvMJ9FsvisQ=
-Subject: [PATCH] mshv: Align huge page stride with guest mapping
+	s=default; t=1765932314;
+	bh=qTk2pAUuPOQECROXNeIvo5BgCJM7QiJ+tFdc8PMvSKU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ArBgX1lizotouIWTU9LmZpsJ4NJha4rDX08t1IhJzuClVrvsej9Zl1cRYZmYa4sfR
+	 eTlHY62qNFl8NoX+iCKoNlFA3rePukoWY4ojXAEILn0YEICrPxHFuvrARXq8OIYrpC
+	 c5sytDgxmynHUkaXcy4e3+rn58M43C88UoCy6/0Q=
+Date: Tue, 16 Dec 2025 16:45:12 -0800
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, longli@microsoft.com
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 17 Dec 2025 00:41:19 +0000
-Message-ID: 
- <176593206931.276257.13023250440372517478.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-User-Agent: StGit/0.19
+To: Wei Liu <wei.liu@kernel.org>
+Cc: Arnd Bergmann <arnd@kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+	Stansialv Kinsburskii <skinsburskii@linux.miscrosoft.com>,
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	Praveen K Paladugu <prapal@linux.microsoft.com>,
+	Easwar Hariharan <easwar.hariharan@linux.microsoft.com>,
+	Anatol Belski <anbelski@linux.microsoft.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sean Christopherson <seanjc@google.com>,
+	Naman Jain <namjain@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mshv: hide x86-specific functions on arm64
+Message-ID: <aUH9GGzROHfbP6pj@skinsburskii.localdomain>
+References: <20251216213619.115259-1-arnd@kernel.org>
+ <20251216222129.GA1300707@liuwe-devbox-debian-v2.local>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251216222129.GA1300707@liuwe-devbox-debian-v2.local>
 
-Ensure that a stride larger than 1 (huge page) is only used when both
-the guest frame number (gfn) and the operation size (page_count) are
-aligned to the huge page size (PTRS_PER_PMD). This matches the
-hypervisor requirement that map/unmap operations for huge pages must be
-guest-aligned and cover a full huge page.
+On Tue, Dec 16, 2025 at 10:21:29PM +0000, Wei Liu wrote:
+> On Tue, Dec 16, 2025 at 10:36:12PM +0100, Arnd Bergmann wrote:
+> > From: Arnd Bergmann <arnd@arndb.de>
+> > 
+> > The hv_sleep_notifiers_register() and hv_machine_power_off() functions are
+> > only called and declared on x86, but cause a warning on arm64:
+> > 
+> > drivers/hv/mshv_common.c:210:6: error: no previous prototype for 'hv_sleep_notifiers_register' [-Werror=missing-prototypes]
+> >   210 | void hv_sleep_notifiers_register(void)
+> >       |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > drivers/hv/mshv_common.c:224:6: error: no previous prototype for 'hv_machine_power_off' [-Werror=missing-prototypes]
+> >   224 | void hv_machine_power_off(void)
+> >       |      ^~~~~~~~~~~~~~~~~~~~
+> > 
+> > Hide both inside of an #ifdef block.
+> > 
+> > Fixes: f0be2600ac55 ("mshv: Use reboot notifier to configure sleep state")
+> > Fixes: 615a6e7d83f9 ("mshv: Cleanly shutdown root partition with MSHV")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> Thanks Arnd. I have a queued up a patch which make available the
+> declarations to arm64. Let me think about whether to use your patch
+> instead.
+> 
+> Anyway, this issue will be fixed one way or the other once I send a PR
+> to Linus.
+> 
 
-Add mshv_chunk_stride() to encapsulate this alignment and page-order
-validation, and plumb a huge_page flag into the region chunk handlers.
-This prevents issuing large-page map/unmap/share operations that the
-hypervisor would reject due to misaligned guest mappings.
+The whole idea of mshv_common.c is to have common code for all archs.
+It would be nice to keep this file as it is.
 
-Fixes: abceb4297bf8 ("mshv: Fix huge page handling in memory region traversal")
-Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
----
- drivers/hv/mshv_regions.c |   94 ++++++++++++++++++++++++++++++---------------
- 1 file changed, 63 insertions(+), 31 deletions(-)
+Thanks,
+Stanislav
 
-diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
-index 30bacba6aec3..29776019bcde 100644
---- a/drivers/hv/mshv_regions.c
-+++ b/drivers/hv/mshv_regions.c
-@@ -19,6 +19,42 @@
- 
- #define MSHV_MAP_FAULT_IN_PAGES				PTRS_PER_PMD
- 
-+/**
-+ * mshv_chunk_stride - Compute stride for mapping guest memory
-+ * @page      : The page to check for huge page backing
-+ * @gfn       : Guest frame number for the mapping
-+ * @page_count: Total number of pages in the mapping
-+ *
-+ * Determines the appropriate stride (in pages) for mapping guest memory.
-+ * Uses huge page stride if the backing page is huge and the guest mapping
-+ * is properly aligned; otherwise falls back to single page stride.
-+ *
-+ * Return: Stride in pages, or -EINVAL if page order is unsupported.
-+ */
-+static int mshv_chunk_stride(struct page *page,
-+			     u64 gfn, u64 page_count)
-+{
-+	unsigned int page_order;
-+
-+	page_order = folio_order(page_folio(page));
-+	/* The hypervisor only supports 4K and 2M page sizes */
-+	if (page_order && page_order != PMD_ORDER)
-+		return -EINVAL;
-+
-+	/*
-+	 * Default to a single page stride. If page_order is set and both
-+	 * the guest frame number (gfn) and page_count are huge-page
-+	 * aligned (PTRS_PER_PMD), use a larger stride so the mapping can
-+	 * be backed by a huge page in both guest and hypervisor.
-+	 */
-+	if (page_order &&
-+	    IS_ALIGNED(gfn, PTRS_PER_PMD) &&
-+	    IS_ALIGNED(page_count, PTRS_PER_PMD))
-+		return 1 << page_order;
-+
-+	return 1;
-+}
-+
- /**
-  * mshv_region_process_chunk - Processes a contiguous chunk of memory pages
-  *                             in a region.
-@@ -45,25 +81,23 @@ static long mshv_region_process_chunk(struct mshv_mem_region *region,
- 				      int (*handler)(struct mshv_mem_region *region,
- 						     u32 flags,
- 						     u64 page_offset,
--						     u64 page_count))
-+						     u64 page_count,
-+						     bool huge_page))
- {
--	u64 count, stride;
--	unsigned int page_order;
-+	u64 gfn = region->start_gfn + page_offset;
-+	u64 count;
- 	struct page *page;
--	int ret;
-+	int stride, ret;
- 
- 	page = region->pages[page_offset];
- 	if (!page)
- 		return -EINVAL;
- 
--	page_order = folio_order(page_folio(page));
--	/* The hypervisor only supports 4K and 2M page sizes */
--	if (page_order && page_order != PMD_ORDER)
--		return -EINVAL;
--
--	stride = 1 << page_order;
-+	stride = mshv_chunk_stride(page, gfn, page_count);
-+	if (stride < 0)
-+		return stride;
- 
--	/* Start at stride since the first page is validated */
-+	/* Start at stride since the first stride is validated */
- 	for (count = stride; count < page_count; count += stride) {
- 		page = region->pages[page_offset + count];
- 
-@@ -71,12 +105,13 @@ static long mshv_region_process_chunk(struct mshv_mem_region *region,
- 		if (!page)
- 			break;
- 
--		/* Break if page size changes */
--		if (page_order != folio_order(page_folio(page)))
-+		/* Break if stride size changes */
-+		if (stride != mshv_chunk_stride(page, gfn + count,
-+						page_count - count))
- 			break;
- 	}
- 
--	ret = handler(region, flags, page_offset, count);
-+	ret = handler(region, flags, page_offset, count, stride > 1);
- 	if (ret)
- 		return ret;
- 
-@@ -108,7 +143,8 @@ static int mshv_region_process_range(struct mshv_mem_region *region,
- 				     int (*handler)(struct mshv_mem_region *region,
- 						    u32 flags,
- 						    u64 page_offset,
--						    u64 page_count))
-+						    u64 page_count,
-+						    bool huge_page))
- {
- 	long ret;
- 
-@@ -162,11 +198,10 @@ struct mshv_mem_region *mshv_region_create(u64 guest_pfn, u64 nr_pages,
- 
- static int mshv_region_chunk_share(struct mshv_mem_region *region,
- 				   u32 flags,
--				   u64 page_offset, u64 page_count)
-+				   u64 page_offset, u64 page_count,
-+				   bool huge_page)
- {
--	struct page *page = region->pages[page_offset];
--
--	if (PageHuge(page) || PageTransCompound(page))
-+	if (huge_page)
- 		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
- 
- 	return hv_call_modify_spa_host_access(region->partition->pt_id,
-@@ -188,11 +223,10 @@ int mshv_region_share(struct mshv_mem_region *region)
- 
- static int mshv_region_chunk_unshare(struct mshv_mem_region *region,
- 				     u32 flags,
--				     u64 page_offset, u64 page_count)
-+				     u64 page_offset, u64 page_count,
-+				     bool huge_page)
- {
--	struct page *page = region->pages[page_offset];
--
--	if (PageHuge(page) || PageTransCompound(page))
-+	if (huge_page)
- 		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
- 
- 	return hv_call_modify_spa_host_access(region->partition->pt_id,
-@@ -212,11 +246,10 @@ int mshv_region_unshare(struct mshv_mem_region *region)
- 
- static int mshv_region_chunk_remap(struct mshv_mem_region *region,
- 				   u32 flags,
--				   u64 page_offset, u64 page_count)
-+				   u64 page_offset, u64 page_count,
-+				   bool huge_page)
- {
--	struct page *page = region->pages[page_offset];
--
--	if (PageHuge(page) || PageTransCompound(page))
-+	if (huge_page)
- 		flags |= HV_MAP_GPA_LARGE_PAGE;
- 
- 	return hv_call_map_gpa_pages(region->partition->pt_id,
-@@ -295,11 +328,10 @@ int mshv_region_pin(struct mshv_mem_region *region)
- 
- static int mshv_region_chunk_unmap(struct mshv_mem_region *region,
- 				   u32 flags,
--				   u64 page_offset, u64 page_count)
-+				   u64 page_offset, u64 page_count,
-+				   bool huge_page)
- {
--	struct page *page = region->pages[page_offset];
--
--	if (PageHuge(page) || PageTransCompound(page))
-+	if (huge_page)
- 		flags |= HV_UNMAP_GPA_LARGE_PAGE;
- 
- 	return hv_call_unmap_gpa_pages(region->partition->pt_id,
-
-
+> Wei
+> 
+> > ---
+> >  drivers/hv/mshv_common.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/drivers/hv/mshv_common.c b/drivers/hv/mshv_common.c
+> > index 58027b23c206..63f09bb5136e 100644
+> > --- a/drivers/hv/mshv_common.c
+> > +++ b/drivers/hv/mshv_common.c
+> > @@ -142,6 +142,7 @@ int hv_call_get_partition_property(u64 partition_id,
+> >  }
+> >  EXPORT_SYMBOL_GPL(hv_call_get_partition_property);
+> >  
+> > +#ifdef CONFIG_X86
+> >  /*
+> >   * Corresponding sleep states have to be initialized in order for a subsequent
+> >   * HVCALL_ENTER_SLEEP_STATE call to succeed. Currently only S5 state as per
+> > @@ -237,3 +238,4 @@ void hv_machine_power_off(void)
+> >  	BUG();
+> >  
+> >  }
+> > +#endif
+> > -- 
+> > 2.39.5
+> > 
 
