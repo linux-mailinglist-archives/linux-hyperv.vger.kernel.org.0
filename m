@@ -1,109 +1,127 @@
-Return-Path: <linux-hyperv+bounces-8049-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8050-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A282CC6183
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Dec 2025 06:47:03 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF2B1CCBF39
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Dec 2025 14:17:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2B209301D9C7
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Dec 2025 05:47:02 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E2C08304412A
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Dec 2025 13:16:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12DE526F28D;
-	Wed, 17 Dec 2025 05:47:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B71233D519;
+	Thu, 18 Dec 2025 13:11:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="Li0wqpSk"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="auh/lOWZ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB0825D1E6;
-	Wed, 17 Dec 2025 05:46:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0281B33D4ED;
+	Thu, 18 Dec 2025 13:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765950421; cv=none; b=KxklE+TdgDmjcOA2bwvv56MP3kh4lD/ChVoQ2t0JSITdLMDgAbQkaYDMyzlYjRVrArECbun0HycmdXEo8NFZeZvyoze15v54xNyLocVdPxgQRiEf5d78eEJMLrCR7k6+i5YdcU6n8GHtFLQzR0vKA+rc0S4HM1OMi/nj6WDluas=
+	t=1766063465; cv=none; b=kbZ0C7HJ40Zrx0A5k8HKxQpTc3t60wsekBH8jztlC5JSIVu2/1uMD5er98+zojEinCu+8y0z3n0qyAnpyWMuIA7N8ilq0bI3+QtCupuKVb19Pmx38J5KQIIrCIiJUQTcvDJfrpCBYCI6JD4eJ/VayffGeuIfFjQeTQ5DVnoj1F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765950421; c=relaxed/simple;
-	bh=lFajYfOjE3Vmskc4D/5y/15zOH6ZoqutLU0ilEB8tPI=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=bNua/4WLGdllHC6bZ8MjyMk7EJJdgttHHn0ii9gBUyWuaQBykqdAxkJftyBzfPa9vYhvTAt7cBBRRRh3eJY8NHxzMHUWNH4OfGvPtgQS4OB2sBbcArGZBHWdkyQyDO7rCWT42DFC2puN8jEgw4ItW6RzBv4kwmFpaJOgvcOQZ18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=Li0wqpSk; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4dWN8n4qyxz9v8V;
-	Wed, 17 Dec 2025 06:46:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1765950409;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XlC9z316sUmT6TwSLTdHinkuee3+qPAl97FbIS3atCE=;
-	b=Li0wqpSk3YV1DILIQzfQ3JQTvej0ApMN9zszbNkr+cOvYMd/rfShXryJvnsduNXSs+sbVK
-	7avO+rqCCIMw446f74itTGrv0YP/nsYwzkZejeVfugp4oMFFwYUpJ5fL/wtIjoApylRc1L
-	u/qRCIpzMnVOLCJufCyxOl2gfWEkaPt1nd+ZPET9+xBa0a9QBUqtHRDW/18JNWZ9/ziv9B
-	UQ5smnkv1nJXT2tPLyTwtwoV6wQL2QHzTHT2U0uFFsN8miiV3b6rBdKJD6Wn9I22yjePoW
-	6UjN1ewrYcKnWAHATft1CFhkK8tnAo9K+LJ1i9XrAuH+1CAIlhv27cZJ9414Ww==
-Date: Tue, 16 Dec 2025 21:46:48 -0800 (PST)
-From: vdso@mailbox.org
-To: Anirudh Rayabharam <anirudh@anirudhrb.com>
-Cc: kys@microsoft.com, decui@microsoft.com, haiyangz@microsoft.com,
-	linux-kernel@vger.kernel.org, longli@microsoft.com,
-	wei.liu@kernel.org, linux-hyperv@vger.kernel.org
-Message-ID: <549411914.201492.1765950408211@app.mailbox.org>
-In-Reply-To: <jhyqp7vlqsmnps52cgzzuyon3aihcxizog4bknnofuibhud5ry@3nix3cwzwapw>
-References: <20251216142030.4095527-1-anirudh@anirudhrb.com>
- <20251216142030.4095527-2-anirudh@anirudhrb.com>
- <1801063954.177813.1765897665357@app.mailbox.org>
- <jhyqp7vlqsmnps52cgzzuyon3aihcxizog4bknnofuibhud5ry@3nix3cwzwapw>
-Subject: Re: [PATCH 1/3] hyperv: add definitions for arm64 gpa intercepts
+	s=arc-20240116; t=1766063465; c=relaxed/simple;
+	bh=9uyvVoAwaaSXEm/9xYmGIpt0UEUWAvZjSJaIIGtK1HA=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=PGImaAJKA+Ip/C0RMoanL/OVitCz1gVwA9erZ/zAYIcTxVH23c/K9VPZ8SOOtkEoaYseRBeVFREJ0sZSqx2Amo9e/BdCeWjzqcw330g85dfOl0C6YfDJOmnDixE/Y3h6msIMclmUndKWzwAW69KDz5QNV7nwxIdy9Ms7OwCury0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=auh/lOWZ; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1204)
+	id 8E7142012434; Thu, 18 Dec 2025 05:10:54 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8E7142012434
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1766063454;
+	bh=TMw9pOTn5uAMLC86wI4i4CWFIVExYXMjnk2FqSE3yTQ=;
+	h=Date:From:To:Subject:From;
+	b=auh/lOWZJw48s3fj389H5MBMpCBhPX40WBAt94f2gxI+CHapw5KantD460lU7gjsv
+	 ie8mt3v/uBZYboYaNJMXF38NDN9CQM9i3+cuyvrMBegZfwWZgrpTg/9YNnfs5gKtaJ
+	 3RxtS4xoCboBUAUj83cZLJaMPhZrUh11vvLFg2k0=
+Date: Thu, 18 Dec 2025 05:10:54 -0800
+From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
+	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
+	ernis@linux.microsoft.com, shirazsaleem@microsoft.com,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	dipayanroy@microsoft.com
+Subject: [PATCH net, v2] net: mana: Fix use-after-free in reset service
+ rescan path
+Message-ID: <20251218131054.GA3173@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-MBO-RS-ID: 0cdaf22a4858ef887df
-X-MBO-RS-META: u5fu5tboqb4jpee3mpwnuw43au1mstky
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
+When mana_serv_reset() encounters -ETIMEDOUT or -EPROTO from
+mana_gd_resume(), it performs a PCI rescan via mana_serv_rescan().
 
-> On 12/16/2025 9:08 PM  Anirudh Rayabharam <anirudh@anirudhrb.com> wrote:
-> 
->  
-> On Tue, Dec 16, 2025 at 07:07:45AM -0800, vdso@mailbox.org wrote:
-> > 
-> > > On 12/16/2025 6:20 AM  Anirudh Rayabharam <anirudh@anirudhrb.com> wrote:
-> > 
-> > [...]
-> > 
-> > > +#if IS_ENABLED(CONFIG_ARM64)
-> > > +union hv_arm64_vp_execution_state {
-> > > +	u16 as_uint16;
-> > > +	struct {
-> > > +		u16 cpl:2;
-> > 
-> > That looks oddly x86(-64)-specific (Current Priviledge Level).
-> > 
-> > Unless I'm mistaken, CPL doesn't belong here, and the bitfield isn't
-> > used on ARM64. Provided the layout of the struct is correct, the
-> > bitfield can have a better name of `reserved0` or something like that.
-> 
-> Hmmm... this is how it is defined in the hypervisor headers though.
+mana_serv_rescan() calls pci_stop_and_remove_bus_device(), which can
+invoke the driver's remove path and free the gdma_context associated
+with the device. After returning, mana_serv_reset() currently jumps to
+the out label and attempts to clear gc->in_service, dereferencing a
+freed gdma_context.
 
-The questions would be why the hypervisor has got that there (e.g., the
-definitions of that struct for x86 and ARM64 are merged), and if Linux needs
-to care about the reason valid in the hv's codebase. Perhaps the definitions
-are merged there to write less arch-specific code, similar to what Stas suggested
-for the patch 2.
+The issue was observed with the following call logs:
+[  698.942636] BUG: unable to handle page fault for address: ff6c2b638088508d
+[  698.943121] #PF: supervisor write access in kernel mode
+[  698.943423] #PF: error_code(0x0002) - not-present page
+[S[  698.943793] Pat Dec  6 07:GD5 100000067 P4D 1002f7067 PUD 1002f8067 PMD 101bef067 PTE 0
+0:56 2025] hv_[n e 698.944283] Oops: Oops: 0002 [#1] SMP NOPTI
+tvsc f8615163-00[  698.944611] CPU: 28 UID: 0 PID: 249 Comm: kworker/28:1
+...
+[Sat Dec  6 07:50:56 2025] R10: [  699.121594] mana 7870:00:00.0 enP30832s1: Configured vPort 0 PD 18 DB 16
+000000000000001b R11: 0000000000000000 R12: ff44cf3f40270000
+[Sat Dec  6 07:50:56 2025] R13: 0000000000000001 R14: ff44cf3f402700c8 R15: ff44cf3f4021b405
+[Sat Dec  6 07:50:56 2025] FS:  0000000000000000(0000) GS:ff44cf7e9fcf9000(0000) knlGS:0000000000000000
+[Sat Dec  6 07:50:56 2025] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[Sat Dec  6 07:50:56 2025] CR2: ff6c2b638088508d CR3: 000000011fe43001 CR4: 0000000000b73ef0
+[Sat Dec  6 07:50:56 2025] Call Trace:
+[Sat Dec  6 07:50:56 2025]  <TASK>
+[Sat Dec  6 07:50:56 2025]  mana_serv_func+0x24/0x50 [mana]
+[Sat Dec  6 07:50:56 2025]  process_one_work+0x190/0x350
+[Sat Dec  6 07:50:56 2025]  worker_thread+0x2b7/0x3d0
+[Sat Dec  6 07:50:56 2025]  kthread+0xf3/0x200
+[Sat Dec  6 07:50:56 2025]  ? __pfx_worker_thread+0x10/0x10
+[Sat Dec  6 07:50:56 2025]  ? __pfx_kthread+0x10/0x10
+[Sat Dec  6 07:50:56 2025]  ret_from_fork+0x21a/0x250
+[Sat Dec  6 07:50:56 2025]  ? __pfx_kthread+0x10/0x10
+[Sat Dec  6 07:50:56 2025]  ret_from_fork_asm+0x1a/0x30
+[Sat Dec  6 07:50:56 2025]  </TASK>
 
-I haven't been able to find anything called CPL in the ARM64 arch docs, and
-that field really sticks out as the x86-64's CPL. Naming it like that in an
-ARM64-specific structure doesn't look justified.
+Fix this by returning immediately after mana_serv_rescan() to avoid
+accessing GC state that may no longer be valid.
+
+Fixes: 9bf66036d686 ("net: mana: Handle hardware recovery events when probing the device")
+Reviewed-by: Simon Horman <horms@kernel.org>
+Reviewed-by: Long Li <longli@microsoft.com>
+Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+---
+ drivers/net/ethernet/microsoft/mana/gdma_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index efb4e412ec7e..0055c231acf6 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -481,7 +481,7 @@ static void mana_serv_reset(struct pci_dev *pdev)
+ 		/* Perform PCI rescan on device if we failed on HWC */
+ 		dev_err(&pdev->dev, "MANA service: resume failed, rescanning\n");
+ 		mana_serv_rescan(pdev);
+-		goto out;
++		return;
+ 	}
+ 
+ 	if (ret)
+-- 
+2.34.1
+
 
