@@ -1,136 +1,142 @@
-Return-Path: <linux-hyperv+bounces-8056-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8057-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC01ECCE4DA
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Dec 2025 03:53:32 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D65DCD0D53
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Dec 2025 17:22:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 6439F305BFDE
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Dec 2025 02:53:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5F99B31E1AAC
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Dec 2025 16:11:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EC1028A3F8;
-	Fri, 19 Dec 2025 02:53:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8033C350D52;
+	Fri, 19 Dec 2025 16:08:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="P4PjLmrh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HlyUXmvn"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0E82BDC03
-	for <linux-hyperv@vger.kernel.org>; Fri, 19 Dec 2025 02:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92B3350A1E
+	for <linux-hyperv@vger.kernel.org>; Fri, 19 Dec 2025 16:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766112811; cv=none; b=MLtRodpgaVmvmIsRpk85BQPEosXc3buWhbDB/aqY++dU+Pb/YqVVAGEBiK/c59f8ClII/9ZXCu/P3jFafDjEdKN8RBt6U7RE3kkWur3lEvot3wqkDOmUcQ+0i8ZenChGC9WjNXGimfFYYdRFhHmY/3ing1w6fgr5d8MtupxrjhI=
+	t=1766160523; cv=none; b=B6oMoxxCNWH8bUvlKH/GwfcfNTCRWy+kkjbDgb2HFB1DGYI7zT9TJDkWj0nc1Ki7TQWbuBjOZk+XLR9CohoT25/re4T+6hyWH94rhBPFW49SMfjXDwnWhwTBYkGEttzZC6cHBoYgbza496XFRtGmGIEE9DtkmHps6/VoKaT1PmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766112811; c=relaxed/simple;
-	bh=AuTX65V3JLnGhvP/vnLYKJptahJFmpjAno8GOEofUPc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sa3aWpJ/BGx5BWtiPqAsOZvNjYj+jc7EsZoX/KprUwicNWWi00hFd5lKnMc77Eyo27dF49JJCR973PIBBlzi6UF8jEOR06X2OIfaHbmtn/w9nRQTqaXSSRMeHywPwquCPzRB14QVKpmfloOZCgeoSBm8a8xbWpLGmzjFoAm04Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=P4PjLmrh; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
-Received: from eig-obgw-5001b.ext.cloudfilter.net ([10.0.29.181])
-	by cmsmtp with ESMTPS
-	id WPmovHZ6oKXDJWQcNvBJyT; Fri, 19 Dec 2025 02:53:23 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id WQcMvHwgVMvWIWQcNvipuR; Fri, 19 Dec 2025 02:53:23 +0000
-X-Authority-Analysis: v=2.4 cv=Ud5RSLSN c=1 sm=1 tr=0 ts=6944be23
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=ujWNxKVE5dX343uAl30YYw==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=XhWbaVAy7xEXXl44f-sA:9 a=QEXdDO2ut3YA:10 a=2aFnImwKRvkU0tJ3nQRT:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ALKBGoGMdPGtSNDGcZh3KUBZxKBEajnQ+q5oKWA11Zk=; b=P4PjLmrhutqtkBl0Du9R+rta+r
-	HaVRlHkqZJ5MVj7FGrZRdJhfJbhu3nTnK1TvO+vl9JvyV+JH0yC1qNHg7ZN+aOlcCprUqVwJPjlDK
-	Fyr9NSYNpB+OoUxDj0U+iNY2bsG6BWTxwTbCvXi/3NhRJBLpH8CFD3SljluihYN68WD+7k0L0mio5
-	Ex6WDLn0kAwh5gL60DUFaBOqUHPahP87/XYf/+SFXfjFA1zFo8kSDwmPuDaCXIO7oW18L0+Jf6fWF
-	8zgQSj1Et8p6Zl96ViOPrf8XZ3sO1h/0mvL5MM2HtnRk5xyCdxLlGzMSiALQZKgM/AjLqSBKNAS5r
-	Nzgr3D6g==;
-Received: from i118-18-233-1.s41.a027.ap.plala.or.jp ([118.18.233.1]:60394 helo=[10.83.24.44])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1vWQcM-00000003cGZ-0Hjm;
-	Thu, 18 Dec 2025 20:53:22 -0600
-Message-ID: <cb7d056c-1647-409a-a6ca-0be264137041@embeddedor.com>
-Date: Fri, 19 Dec 2025 11:53:16 +0900
+	s=arc-20240116; t=1766160523; c=relaxed/simple;
+	bh=LladhLvwRMWhA8vGb+dOSlzPqutFbgYvVLti9ZD7ET4=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=R2GmAaW3cLRV68cXo+Pp/qP9jQeU0sOMk6wjXesZ/oLwwoo+Xxop5lMqtayd7R+Vg7+n9rzcN90E24kqQxpznGYrvcDrPWtSdedhZeGNlkZQlDEq7Gg1oP+ysDzFGv1zh2DM7kUtD28C1/eR6hL4Z3jOKkd+uOkUc1URaZSAZKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HlyUXmvn; arc=none smtp.client-ip=209.85.214.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-2a0834769f0so18285495ad.2
+        for <linux-hyperv@vger.kernel.org>; Fri, 19 Dec 2025 08:08:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766160521; x=1766765321; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PMjHkQgefsgKMNiMw1uK49UtpaTPx9PY394Kz4+AQqk=;
+        b=HlyUXmvnTCmkzrh2CltaqvT0jRvH6PNJFmDhC/FYJJgKwpfdDa908Zz04TATcVoWmX
+         7y/OnE54LM7ONkwW71uVac5djlEJtjSrxYtDcRZvvzuB8bED83uIuGoTwP+SeX/EY3CZ
+         Rm3Fu2TCSW+NhMZYDsdzHc5tV49N4HKH28yTeZwE9aJwjr36Ngy0yMfnJ6prbdgkbJ7O
+         to/0EyrMzg6If+fYzrfdg9Ncq+5r9S0AULlx83wuGuIgqCjsJWm8LLE6vSGcF9GqGFHl
+         4H9J7RgovmvVwaAXLcSm3VLZJka4eHQKSE3UcLihodvmnX9Twcl5SGsA4qnvrf+xI7vD
+         7s2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766160521; x=1766765321;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PMjHkQgefsgKMNiMw1uK49UtpaTPx9PY394Kz4+AQqk=;
+        b=TG7mP/suQ7mvmYJcb/LJLa2YqxTmlbNPkTdSfj7+S5tcWw8NPSAf/FTjixKE/FdF3T
+         44TUg9Bo26Qjd8xigjDv3ZsDrs7ttAJ1tPDuk3hyqUllFeysUGrqXrhn4Zn0qTQDkizu
+         f+1bXyVZ+EW7ezKEE2oT9mPYgy0KKTA0YUqDbiPoikmVDAcGY9AFJeHQ1Qxrh9Nq0TB8
+         DT3tqWQw8DZR9ZvVREMnK8CwjM70K6lYJhdOBzS7dT/s7hYynUiU2O6jU8ILgRDWol4a
+         mJPtG3hd6SlNF9SWDKQI6HxDRsnTui8PxtwLAQtvM+8/ftvDpNauxfUCV9gUxZbLWmtL
+         +Neg==
+X-Forwarded-Encrypted: i=1; AJvYcCWq2RTo4M/PuCxIi/2Klf9ESJkpg0xDGpgzU4W2Xab/NitkrAcs/NlUG6lbeV3AP7FdPTijMioT0FubLFQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQ1raCEaTTykRtFMYuZJRTbyVIe4TpWJRSFV3p/MV1Dvk9OVwW
+	gWqsxEvUnh0p88vUZyI/HCSEoQAOb6tVM/342rbTsKeqQUaBtsX7MzNW
+X-Gm-Gg: AY/fxX4RNTP+l/BIxnsyvvEeyno28v1jGpQ3bHJSVwlawWvSRRKSwrDTyOHhVYTd03M
+	xGGHPAlYTHWIfWf/Rm9fHtPEaFZ1QckRaBbcnSrJ6gdglXvvN6mu8+Z9yj2+TgS+A5P70TNGG7B
+	GpYmXBpkBJyGp4pQ/56DC/zXkx26O2snh5kdN0B4bRpYqvc/uqXRCvPlin05Aix7LFpAUH1+Tg5
+	0RdqzHx6fDkY8bZgI2nLGsU1e0fXklo0YNHfFBGBOsZWjJtdxPJT6Neo1ciWQGIMd2Al8MBtD7c
+	E50ypvVxQUc7qRVySONu92cCqYAPAC8wnY77xJLCJsvAgcsvUKRX0DWn1USzRiKpf4NERXfDlLX
+	HjH4yWiDRbhw/SqJr8nkU1T/rcpFNT5WhprL+a14lLVrvrQT3dtMH27Lzgv9XUwZAYe53CXsV91
+	305zCr6Bx2ZXUYyxNibpQFTCT8HOwCVYBo36JE//qVWfcIg0djWD8BWPh0DKD6PRQT3w==
+X-Google-Smtp-Source: AGHT+IFL4JzuGa8U7btTbb/2CeaC/I5S375hPppiUk8LVW3VtrA7jLwJS5y2cbwGa1+cXTgyvr0QHA==
+X-Received: by 2002:a17:903:1a68:b0:2a0:da38:96d8 with SMTP id d9443c01a7336-2a2f2422906mr34105005ad.25.1766160521059;
+        Fri, 19 Dec 2025 08:08:41 -0800 (PST)
+Received: from localhost.localdomain (c-174-165-208-10.hsd1.wa.comcast.net. [174.165.208.10])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2f3c66bd3sm26625355ad.1.2025.12.19.08.08.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Dec 2025 08:08:40 -0800 (PST)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	kys@microsoft.com,
+	linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	dan.carpenter@linaro.org
+Subject: [PATCH 1/1] Drivers: hv: Fix uninit'ed variable in hv_msg_dump() if CONFIG_PRINTK not set
+Date: Fri, 19 Dec 2025 08:08:32 -0800
+Message-Id: <20251219160832.1628-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] hyperv: Avoid -Wflex-array-member-not-at-end
- warning
-To: Wei Liu <wei.liu@kernel.org>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Dexuan Cui <decui@microsoft.com>,
- Long Li <longli@microsoft.com>, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <aTu54qH2iHLKScRW@kspp>
- <20251218194231.GC1749918@liuwe-devbox-debian-v2.local>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20251218194231.GC1749918@liuwe-devbox-debian-v2.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 118.18.233.1
-X-Source-L: No
-X-Exim-ID: 1vWQcM-00000003cGZ-0Hjm
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: i118-18-233-1.s41.a027.ap.plala.or.jp ([10.83.24.44]) [118.18.233.1]:60394
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 11
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfCuD+1cwJUXwuIInTTHoZzWPfsxydmw01x/k+dXDZ9LZsuo4SbIt0TouU1wtLzDjWxLH35l4F3bIKVO2UeoEDjIKBvd+MZZuTPS+KaWCuXcA11J10f1W
- quX/ppIYleStiy3Gd8M1a0bnSdtOSYIBdiudWiX8JIrb+e6hYoewbDAOZR50JoRtBLOW+JbZb5EsawVw5XSCompLB/I8+v7sPXqvHKrObLEIpef7uK5tMnii
+Content-Transfer-Encoding: 8bit
 
+From: Michael Kelley <mhklinux@outlook.com>
 
+When CONFIG_PRINTK is not set, kmsg_dump_get_buffer() returns 'false'
+without setting the bytes_written argument. In such case, bytes_written
+is uninitialized when it is tested for zero.
 
-On 12/19/25 04:42, Wei Liu wrote:
-> On Fri, Dec 12, 2025 at 03:44:50PM +0900, Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->> getting ready to enable it, globally.
->>
->> Use the new __TRAILING_OVERLAP() helper to fix the following warning:
->>
->> include/hyperv/hvgdk_mini.h:581:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->>
->> This helper creates a union between a flexible-array member (FAM) and a
->> set of MEMBERS that would otherwise follow it.
->>
->> This overlays the trailing MEMBER u64 gva_list[]; onto the FAM
->> struct hv_tlb_flush_ex::hv_vp_set.bank_contents[], while keeping
->> the FAM and the start of MEMBER aligned.
->>
->> The static_assert() ensures this alignment remains, and it's
->> intentionally placed inmediately after the related structure --no
->> blank line in between.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> Applied. I fixed a typo in the commit message ("inmediately" ->
-> "immediately").
+This is admittedly an unlikely scenario, but in the interest of correctness
+and avoiding tool noise about uninitialized variables, fix this by testing
+the return value before testing bytes_written.
 
-Awesome. :)
+Fixes: 9c318a1d9b50 ("Drivers: hv: move panic report code from vmbus to hv early init code")
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/all/202512172102.OcUspn1Z-lkp@intel.com/
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+---
+ drivers/hv/hv_common.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Thanks
--Gustavo
+diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+index f466a6099eff..de9e069c5a0c 100644
+--- a/drivers/hv/hv_common.c
++++ b/drivers/hv/hv_common.c
+@@ -188,6 +188,7 @@ static void hv_kmsg_dump(struct kmsg_dumper *dumper,
+ {
+ 	struct kmsg_dump_iter iter;
+ 	size_t bytes_written;
++	bool ret;
+ 
+ 	/* We are only interested in panics. */
+ 	if (detail->reason != KMSG_DUMP_PANIC || !sysctl_record_panic_msg)
+@@ -198,9 +199,9 @@ static void hv_kmsg_dump(struct kmsg_dumper *dumper,
+ 	 * be single-threaded.
+ 	 */
+ 	kmsg_dump_rewind(&iter);
+-	kmsg_dump_get_buffer(&iter, false, hv_panic_page, HV_HYP_PAGE_SIZE,
+-			     &bytes_written);
+-	if (!bytes_written)
++	ret = kmsg_dump_get_buffer(&iter, false, hv_panic_page, HV_HYP_PAGE_SIZE,
++				   &bytes_written);
++	if (!ret || !bytes_written)
+ 		return;
+ 	/*
+ 	 * P3 to contain the physical address of the panic page & P4 to
+-- 
+2.25.1
+
 
