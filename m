@@ -1,332 +1,408 @@
-Return-Path: <linux-hyperv+bounces-8058-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8059-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58EA8CD2259
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Dec 2025 23:53:55 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AAC4CD42D3
+	for <lists+linux-hyperv@lfdr.de>; Sun, 21 Dec 2025 17:18:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 20BF5301C0B0
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Dec 2025 22:53:54 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1E3CD3003BD0
+	for <lists+linux-hyperv@lfdr.de>; Sun, 21 Dec 2025 16:18:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44E9925F7A9;
-	Fri, 19 Dec 2025 22:53:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 141B42FE589;
+	Sun, 21 Dec 2025 16:18:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MpRc6QdP"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mCnt4Y8g";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+fysO4lT";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SK/TpTNu";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JK9Vnvs5"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74347136349;
-	Fri, 19 Dec 2025 22:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6EF288C0A
+	for <linux-hyperv@vger.kernel.org>; Sun, 21 Dec 2025 16:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766184833; cv=none; b=fnzGYQptKDe73AXJpGqtICSa3HHEu/lIF44utyB7F5vvvJAlBS/rmfevOKB65Imcx5kAi7pconlUq1dTwLWRmhRuDENggpOKbE7tsbAoSFJvaMyiFV5StCwEP0W7K6FVdEHEHeu74FJszTczaVFjoRSeLHfvJKok0v8l2liuSLY=
+	t=1766333918; cv=none; b=Z1QPW0XZdTT8WPclu0IypQURr91ociKX2A/DagpSO+CSDgkUhbQo4FaqBnhUhgTmO5CrL6WDJF26ScCSt/h+AC5A9vS0WHCfyoJArNYDaaif/COnXoAPD/V7tTpaR71HGrptl8uU6Nsvoag9LRexFBfMv+h2t+RMpd20blHfTeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766184833; c=relaxed/simple;
-	bh=6UWj4Ouw7WmEWTvwXPPSg5+XcHeIgeQxsnpKmnZlmQY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lme4nwPcgPRCUB53SqJhKyV+RsruTzW4Xp7NHC6udfQIApppAcRDjepRRBCMjv/cQN0ENS6lFcPWO6Vj7YKzLnz+3cr3/fitWAgzsYkXTHBiD43dsfpnB0RKskO1Q7eXHQgNFD98ZFPMQ5NSUayNoUa26yjRGmVfw47f/P61w8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MpRc6QdP; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (unknown [20.236.10.66])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 385B721260C7;
-	Fri, 19 Dec 2025 14:53:44 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 385B721260C7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1766184824;
-	bh=SDZOKDw3nX4xq1oBebrbB+bToH8Rl2kE+KCKaHF2v50=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MpRc6QdP1+bTWSPfR1xoCZIi/sIQVooX7t8U2ZTTWe50i7JPOnBWyXKYvKyc5Vqur
-	 ajmXyd9y2ZnVI/b+dWAddYySGeXGZLEj8qw4sMF6Gp+L14rOY61P99dXSswBpkmmv1
-	 QtcRYmGxMNStUXZCJXCw8KKTuu5L0vEwOGgOJ6Co=
-Date: Fri, 19 Dec 2025 14:53:42 -0800
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"longli@microsoft.com" <longli@microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mshv: Align huge page stride with guest mapping
-Message-ID: <aUXXdjMyZ5swiCI2@skinsburskii.localdomain>
-References: <176593206931.276257.13023250440372517478.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <SN6PR02MB4157D69A4C08B0A4FE01F9FED4A8A@SN6PR02MB4157.namprd02.prod.outlook.com>
+	s=arc-20240116; t=1766333918; c=relaxed/simple;
+	bh=b6N6Jj7QBC5KdMoc+yYcrtzg/8owWwq3DmZcwg0Z8v8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XOTqERgDBERjMVG4+RWYYALh4ZBLhJqrLDSyHH8yiv/ubqZ93WFldVDbC0fhU6SutSsxdMtefxCVxTNWWs7rkWPIg8N6taawSpGMef58p8rLZ5XtCOH1PWtEUIgP3HF/n/gBF+Sw5uOcM/YatPmTYXOyhOcyFoU8ZvjRPCVEfxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mCnt4Y8g; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+fysO4lT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SK/TpTNu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JK9Vnvs5; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 653C35BCC2;
+	Sun, 21 Dec 2025 16:18:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1766333910; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=3Yj5PCkcX3NpOx0MVubHGjm/vyE75Or7OKm5HcbRRAM=;
+	b=mCnt4Y8g9wsGeC8a71YqMV35vOzr1m0HM69UW17UulhUuwVG0ydF3uuvzeXLa4GIvslZ7S
+	QYQc3/3AA/mLmpp+EtuVSWHSFyj2qHFq13+nY3F0Sz2QLUSg458KpQloTphi22MZ5Meq/4
+	GIRIQkIUdIRy7RQxjyXcgjxIfnpljRA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1766333910;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=3Yj5PCkcX3NpOx0MVubHGjm/vyE75Or7OKm5HcbRRAM=;
+	b=+fysO4lT9QRvCJD4KFhF25SM1m1m/VNA80U1DScLwbWpQQYgUEyHmTeDGtG7rBrqQV+M1F
+	6h3OrRzIQ6Ob+kBA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="SK/TpTNu";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=JK9Vnvs5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1766333909; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=3Yj5PCkcX3NpOx0MVubHGjm/vyE75Or7OKm5HcbRRAM=;
+	b=SK/TpTNuD9iwQ9XXcNlTwGcmiWFxH31bYOz2qi35e3x4fDRgAsvNA+ZhUzRPxq2nzxPFHF
+	RvhyFdO8JkbXaUmVNgZ58vW8x0HCHKwcOGRGsaidcJfg1bVOfg3aVOEyZwSXTlFJXdYsPb
+	LNIrSYQRjUUWwcmwLqIn/6OIXHPU5xM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1766333909;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=3Yj5PCkcX3NpOx0MVubHGjm/vyE75Or7OKm5HcbRRAM=;
+	b=JK9Vnvs5Ps/AD+vFcl47c3Ac/ds9F0AXi/mGl57Rxm+IAa4aNyMKLohCuHyatBPjX+BmXa
+	jJVUd9ZB1w6TZPCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E8B7513A54;
+	Sun, 21 Dec 2025 16:18:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id oHBlN9QdSGnANgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Sun, 21 Dec 2025 16:18:28 +0000
+Message-ID: <0204b4f2-98b3-4463-9ae7-fc3657ce2fc1@suse.de>
+Date: Sun, 21 Dec 2025 17:18:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 9/9] efi: libstub: Simplify interfaces for
+ primary_display
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: javierm@redhat.com, arnd@arndb.de, richard.lyu@suse.com,
+ helgaas@kernel.org, x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-fbdev@vger.kernel.org
+References: <20251126160854.553077-1-tzimmermann@suse.de>
+ <20251126160854.553077-10-tzimmermann@suse.de>
+ <CAMj1kXFeBS7O5A-CPds3UfFnjegGTpVsuF7VznBc-zZ+gjygtw@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <CAMj1kXFeBS7O5A-CPds3UfFnjegGTpVsuF7VznBc-zZ+gjygtw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <SN6PR02MB4157D69A4C08B0A4FE01F9FED4A8A@SN6PR02MB4157.namprd02.prod.outlook.com>
+X-Spam-Flag: NO
+X-Spam-Score: -4.51
+X-Rspamd-Queue-Id: 653C35BCC2
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:dkim,suse.de:email];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Level: 
 
-On Thu, Dec 18, 2025 at 07:41:24PM +0000, Michael Kelley wrote:
-> From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Tuesday, December 16, 2025 4:41 PM
-> > 
-> > Ensure that a stride larger than 1 (huge page) is only used when both
-> > the guest frame number (gfn) and the operation size (page_count) are
-> > aligned to the huge page size (PTRS_PER_PMD). This matches the
-> > hypervisor requirement that map/unmap operations for huge pages must be
-> > guest-aligned and cover a full huge page.
-> > 
-> > Add mshv_chunk_stride() to encapsulate this alignment and page-order
-> > validation, and plumb a huge_page flag into the region chunk handlers.
-> > This prevents issuing large-page map/unmap/share operations that the
-> > hypervisor would reject due to misaligned guest mappings.
-> 
-> This code looks good to me on the surface. But I can only make an educated
-> guess as to the hypervisor behavior in certain situations, and if my guess is
-> correct there's still a flaw in one case.
-> 
-> Consider the madvise() DONTNEED experiment that I previously called out. [1]
-> I surmise that the intent of this patch is to make that case work correctly.
-> When the .invalidate callback is made for the 32 Kbyte range embedded in
-> a previously mapped 2 Meg page, this new code detects that case. It calls the
-> hypervisor to remap the 32 Kbyte range for no access, and clears the 8
-> corresponding entries in the struct page array attached to the mshv region. The
-> call to the hypervisor is made *without* the HV_MAP_GPA_LARGE_PAGE flag.
-> Since the mapping was originally done *with* the HV_MAP_GPA_LARGE_PAGE
-> flag, my guess is that the hypervisor is smart enough to handle this case by
-> splitting the 2 Meg mapping it created, setting the 32 Kbyte range to no access,
-> and returning "success". If my guess is correct, there's no problem here.
-> 
-> But then there's a second .invalidate callback for the entire 2 Meg page. Here's
-> the call stack:
-> 
-> [  194.259337]  dump_stack+0x14/0x20
-> [  194.259339]  mhktest_invalidate+0x2a/0x40  [my dummy invalidate callback]
-> [  194.259342]  __mmu_notifier_invalidate_range_start+0x1f4/0x250
-> [  194.259347]  __split_huge_pmd+0x14f/0x170
-> [  194.259349]  unmap_page_range+0x104d/0x1a00
-> [  194.259358]  unmap_single_vma+0x7d/0xc0
-> [  194.259360]  zap_page_range_single_batched+0xe0/0x1c0
-> [  194.259363]  madvise_vma_behavior+0xb01/0xc00
-> [  194.259366]  madvise_do_behavior.part.0+0x3cd/0x4a0
-> [  194.259375]  do_madvise+0xc7/0x170
-> [  194.259380]  __x64_sys_madvise+0x2f/0x40
-> [  194.259382]  x64_sys_call+0x1d77/0x21b0
-> [  194.259385]  do_syscall_64+0x56/0x640
-> [  194.259388]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> 
-> In __split_huge_pmd(), the .invalidate callback is made *before* the 2 Meg
-> page is actually split by the root partition. So mshv_chunk_stride() returns "9"
-> for the stride, and the hypervisor is called with HV_MAP_GPA_LARGE_PAGE
-> set. My guess is that the hypervisor returns an error because it has already
-> split the mapping. The whole point of this patch set is to avoid passing
-> HV_MAP_GPA_LARGE_PAGE to the hypervisor when the hypervisor mapping
-> is not a large page mapping, but this looks like a case where it still happens.
-> 
-> My concern is solely from looking at the code and thinking about the problem,
-> as I don't have an environment where I can test root partition interactions
-> with the hypervisor. So maybe I'm missing something. Lemme know what you
-> think .....
-> 
+Hi
 
-Yeah, I see your point: according to this stack, once a part of the page
-is invalidated, the folio order remains the same until another invocation
-of the same callback — this time for the whole huge
-page — is made. Thus, the stride is still reported as the huge page size,
-even though a part of the page has already been unmapped.
+Am 16.12.25 um 14:23 schrieb Ard Biesheuvel:
+> Hi Thomas
+>
+> On Wed, 26 Nov 2025 at 17:09, Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>> Rename alloc_primary_display() and __alloc_primary_display(), clarify
+>> free semantics to make interfaces easier to understand.
+>>
+>> Rename alloc_primary_display() to lookup_primary_display() as it
+>> does not necessarily allocate. Then rename __alloc_primary_display()
+>> to the new alloc_primary_display(). The helper belongs to
+>> free_primary_display), so it should be named without underscores.
+>>
+>> The lookup helper does not necessarily allocate, so the output
+>> parameter needs_free to indicate when free should be called.
+> I don't understand why we need this. Whether or not the helper
+> allocates is a compile time decision, and in builds where it doesn't,
+> the free helper doesn't do anything.
+>
+> I'm all for making things simpler, but I don't think this patch
+> achieves that tbh.
+>
+> I've queued up this series now up until this patch - once we converge
+> on the simplification, I'm happy to apply it on top.
 
-This indeed looks like a flaw in the current approach, but it's actually
-not. The reason is that upon the invalidation callback, the driver
-simply remaps the whole huge page with no access (in this case, the PFNs
-provided to the hypervisor are zero), and it's fine as the hypervisor
-simply drops all the pages from the previous mapping and marks this page
-as inaccessible. The only check the hypervisor makes in this case is
-that both the GFN and mapping size are huge page aligned (which they are
-in this case).
- 
-I hope this clarifies the situation. Please let me know if you have any
-other questions.
+If you don't want this patch, just leave it out then. Coming from 
+another subsystem, I found the current logic and naming confusing THB.
 
-Thanks,
-Stanislav
+Best regards
+Thomas
 
-> Michael
-> 
-> [1] https://lore.kernel.org/linux-hyperv/SN6PR02MB4157978DFAA6C2584D0678E1D4A1A@SN6PR02MB4157.namprd02.prod.outlook.com/
-> 
-> > 
-> > Fixes: abceb4297bf8 ("mshv: Fix huge page handling in memory region traversal")
-> > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> > ---
-> >  drivers/hv/mshv_regions.c |   94 ++++++++++++++++++++++++++++++---------------
-> >  1 file changed, 63 insertions(+), 31 deletions(-)
-> > 
-> > diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
-> > index 30bacba6aec3..29776019bcde 100644
-> > --- a/drivers/hv/mshv_regions.c
-> > +++ b/drivers/hv/mshv_regions.c
-> > @@ -19,6 +19,42 @@
-> > 
-> >  #define MSHV_MAP_FAULT_IN_PAGES				PTRS_PER_PMD
-> > 
-> > +/**
-> > + * mshv_chunk_stride - Compute stride for mapping guest memory
-> > + * @page      : The page to check for huge page backing
-> > + * @gfn       : Guest frame number for the mapping
-> > + * @page_count: Total number of pages in the mapping
-> > + *
-> > + * Determines the appropriate stride (in pages) for mapping guest memory.
-> > + * Uses huge page stride if the backing page is huge and the guest mapping
-> > + * is properly aligned; otherwise falls back to single page stride.
-> > + *
-> > + * Return: Stride in pages, or -EINVAL if page order is unsupported.
-> > + */
-> > +static int mshv_chunk_stride(struct page *page,
-> > +			     u64 gfn, u64 page_count)
-> > +{
-> > +	unsigned int page_order;
-> > +
-> > +	page_order = folio_order(page_folio(page));
-> > +	/* The hypervisor only supports 4K and 2M page sizes */
-> > +	if (page_order && page_order != PMD_ORDER)
-> > +		return -EINVAL;
-> > +
-> > +	/*
-> > +	 * Default to a single page stride. If page_order is set and both
-> > +	 * the guest frame number (gfn) and page_count are huge-page
-> > +	 * aligned (PTRS_PER_PMD), use a larger stride so the mapping can
-> > +	 * be backed by a huge page in both guest and hypervisor.
-> > +	 */
-> > +	if (page_order &&
-> > +	    IS_ALIGNED(gfn, PTRS_PER_PMD) &&
-> > +	    IS_ALIGNED(page_count, PTRS_PER_PMD))
-> > +		return 1 << page_order;
-> > +
-> > +	return 1;
-> > +}
-> > +
-> >  /**
-> >   * mshv_region_process_chunk - Processes a contiguous chunk of memory pages
-> >   *                             in a region.
-> > @@ -45,25 +81,23 @@ static long mshv_region_process_chunk(struct mshv_mem_region *region,
-> >  				      int (*handler)(struct mshv_mem_region *region,
-> >  						     u32 flags,
-> >  						     u64 page_offset,
-> > -						     u64 page_count))
-> > +						     u64 page_count,
-> > +						     bool huge_page))
-> >  {
-> > -	u64 count, stride;
-> > -	unsigned int page_order;
-> > +	u64 gfn = region->start_gfn + page_offset;
-> > +	u64 count;
-> >  	struct page *page;
-> > -	int ret;
-> > +	int stride, ret;
-> > 
-> >  	page = region->pages[page_offset];
-> >  	if (!page)
-> >  		return -EINVAL;
-> > 
-> > -	page_order = folio_order(page_folio(page));
-> > -	/* The hypervisor only supports 4K and 2M page sizes */
-> > -	if (page_order && page_order != PMD_ORDER)
-> > -		return -EINVAL;
-> > -
-> > -	stride = 1 << page_order;
-> > +	stride = mshv_chunk_stride(page, gfn, page_count);
-> > +	if (stride < 0)
-> > +		return stride;
-> > 
-> > -	/* Start at stride since the first page is validated */
-> > +	/* Start at stride since the first stride is validated */
-> >  	for (count = stride; count < page_count; count += stride) {
-> >  		page = region->pages[page_offset + count];
-> > 
-> > @@ -71,12 +105,13 @@ static long mshv_region_process_chunk(struct mshv_mem_region *region,
-> >  		if (!page)
-> >  			break;
-> > 
-> > -		/* Break if page size changes */
-> > -		if (page_order != folio_order(page_folio(page)))
-> > +		/* Break if stride size changes */
-> > +		if (stride != mshv_chunk_stride(page, gfn + count,
-> > +						page_count - count))
-> >  			break;
-> >  	}
-> > 
-> > -	ret = handler(region, flags, page_offset, count);
-> > +	ret = handler(region, flags, page_offset, count, stride > 1);
-> >  	if (ret)
-> >  		return ret;
-> > 
-> > @@ -108,7 +143,8 @@ static int mshv_region_process_range(struct mshv_mem_region *region,
-> >  				     int (*handler)(struct mshv_mem_region *region,
-> >  						    u32 flags,
-> >  						    u64 page_offset,
-> > -						    u64 page_count))
-> > +						    u64 page_count,
-> > +						    bool huge_page))
-> >  {
-> >  	long ret;
-> > 
-> > @@ -162,11 +198,10 @@ struct mshv_mem_region *mshv_region_create(u64 guest_pfn, u64 nr_pages,
-> > 
-> >  static int mshv_region_chunk_share(struct mshv_mem_region *region,
-> >  				   u32 flags,
-> > -				   u64 page_offset, u64 page_count)
-> > +				   u64 page_offset, u64 page_count,
-> > +				   bool huge_page)
-> >  {
-> > -	struct page *page = region->pages[page_offset];
-> > -
-> > -	if (PageHuge(page) || PageTransCompound(page))
-> > +	if (huge_page)
-> >  		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
-> > 
-> >  	return hv_call_modify_spa_host_access(region->partition->pt_id,
-> > @@ -188,11 +223,10 @@ int mshv_region_share(struct mshv_mem_region *region)
-> > 
-> >  static int mshv_region_chunk_unshare(struct mshv_mem_region *region,
-> >  				     u32 flags,
-> > -				     u64 page_offset, u64 page_count)
-> > +				     u64 page_offset, u64 page_count,
-> > +				     bool huge_page)
-> >  {
-> > -	struct page *page = region->pages[page_offset];
-> > -
-> > -	if (PageHuge(page) || PageTransCompound(page))
-> > +	if (huge_page)
-> >  		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
-> > 
-> >  	return hv_call_modify_spa_host_access(region->partition->pt_id,
-> > @@ -212,11 +246,10 @@ int mshv_region_unshare(struct mshv_mem_region *region)
-> > 
-> >  static int mshv_region_chunk_remap(struct mshv_mem_region *region,
-> >  				   u32 flags,
-> > -				   u64 page_offset, u64 page_count)
-> > +				   u64 page_offset, u64 page_count,
-> > +				   bool huge_page)
-> >  {
-> > -	struct page *page = region->pages[page_offset];
-> > -
-> > -	if (PageHuge(page) || PageTransCompound(page))
-> > +	if (huge_page)
-> >  		flags |= HV_MAP_GPA_LARGE_PAGE;
-> > 
-> >  	return hv_call_map_gpa_pages(region->partition->pt_id,
-> > @@ -295,11 +328,10 @@ int mshv_region_pin(struct mshv_mem_region *region)
-> > 
-> >  static int mshv_region_chunk_unmap(struct mshv_mem_region *region,
-> >  				   u32 flags,
-> > -				   u64 page_offset, u64 page_count)
-> > +				   u64 page_offset, u64 page_count,
-> > +				   bool huge_page)
-> >  {
-> > -	struct page *page = region->pages[page_offset];
-> > -
-> > -	if (PageHuge(page) || PageTransCompound(page))
-> > +	if (huge_page)
-> >  		flags |= HV_UNMAP_GPA_LARGE_PAGE;
-> > 
-> >  	return hv_call_unmap_gpa_pages(region->partition->pt_id,
-> > 
-> > 
-> 
+
+>
+> Thanks,
+>
+>
+>
+>> Pass
+>> an argument through the calls to track this state. Put the free
+>> handling into release_primary_display() for simplificy.
+>>
+>> Also move the comment fro primary_display.c to efi-stub-entry.c,
+>> where it now describes lookup_primary_display().
+>>
+>> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+>> ---
+>>   drivers/firmware/efi/libstub/efi-stub-entry.c | 23 +++++++++++++++++--
+>>   drivers/firmware/efi/libstub/efi-stub.c       | 22 ++++++++++++------
+>>   drivers/firmware/efi/libstub/efistub.h        |  2 +-
+>>   .../firmware/efi/libstub/primary_display.c    | 17 +-------------
+>>   drivers/firmware/efi/libstub/zboot.c          |  6 +++--
+>>   5 files changed, 42 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/drivers/firmware/efi/libstub/efi-stub-entry.c b/drivers/firmware/efi/libstub/efi-stub-entry.c
+>> index aa85e910fe59..3077b51fe0b2 100644
+>> --- a/drivers/firmware/efi/libstub/efi-stub-entry.c
+>> +++ b/drivers/firmware/efi/libstub/efi-stub-entry.c
+>> @@ -14,10 +14,29 @@ static void *kernel_image_addr(void *addr)
+>>          return addr + kernel_image_offset;
+>>   }
+>>
+>> -struct sysfb_display_info *alloc_primary_display(void)
+>> +/*
+>> + * There are two ways of populating the core kernel's sysfb_primary_display
+>> + * via the stub:
+>> + *
+>> + *   - using a configuration table, which relies on the EFI init code to
+>> + *     locate the table and copy the contents; or
+>> + *
+>> + *   - by linking directly to the core kernel's copy of the global symbol.
+>> + *
+>> + * The latter is preferred because it makes the EFIFB earlycon available very
+>> + * early, but it only works if the EFI stub is part of the core kernel image
+>> + * itself. The zboot decompressor can only use the configuration table
+>> + * approach.
+>> + */
+>> +
+>> +struct sysfb_display_info *lookup_primary_display(bool *needs_free)
+>>   {
+>> +       *needs_free = true;
+>> +
+>>          if (IS_ENABLED(CONFIG_ARM))
+>> -               return __alloc_primary_display();
+>> +               return alloc_primary_display();
+>> +
+>> +       *needs_free = false;
+>>
+>>          if (IS_ENABLED(CONFIG_X86) ||
+>>              IS_ENABLED(CONFIG_EFI_EARLYCON) ||
+>> diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
+>> index 42d6073bcd06..dc545f62c62b 100644
+>> --- a/drivers/firmware/efi/libstub/efi-stub.c
+>> +++ b/drivers/firmware/efi/libstub/efi-stub.c
+>> @@ -51,14 +51,14 @@ static bool flat_va_mapping = (EFI_RT_VIRTUAL_OFFSET != 0);
+>>   void __weak free_primary_display(struct sysfb_display_info *dpy)
+>>   { }
+>>
+>> -static struct sysfb_display_info *setup_primary_display(void)
+>> +static struct sysfb_display_info *setup_primary_display(bool *dpy_needs_free)
+>>   {
+>>          struct sysfb_display_info *dpy;
+>>          struct screen_info *screen = NULL;
+>>          struct edid_info *edid = NULL;
+>>          efi_status_t status;
+>>
+>> -       dpy = alloc_primary_display();
+>> +       dpy = lookup_primary_display(dpy_needs_free);
+>>          if (!dpy)
+>>                  return NULL;
+>>          screen = &dpy->screen;
+>> @@ -68,15 +68,22 @@ static struct sysfb_display_info *setup_primary_display(void)
+>>
+>>          status = efi_setup_graphics(screen, edid);
+>>          if (status != EFI_SUCCESS)
+>> -               goto err_free_primary_display;
+>> +               goto err___free_primary_display;
+>>
+>>          return dpy;
+>>
+>> -err_free_primary_display:
+>> -       free_primary_display(dpy);
+>> +err___free_primary_display:
+>> +       if (*dpy_needs_free)
+>> +               free_primary_display(dpy);
+>>          return NULL;
+>>   }
+>>
+>> +static void release_primary_display(struct sysfb_display_info *dpy, bool dpy_needs_free)
+>> +{
+>> +       if (dpy && dpy_needs_free)
+>> +               free_primary_display(dpy);
+>> +}
+>> +
+>>   static void install_memreserve_table(void)
+>>   {
+>>          struct linux_efi_memreserve *rsv;
+>> @@ -156,13 +163,14 @@ efi_status_t efi_stub_common(efi_handle_t handle,
+>>                               char *cmdline_ptr)
+>>   {
+>>          struct sysfb_display_info *dpy;
+>> +       bool dpy_needs_free;
+>>          efi_status_t status;
+>>
+>>          status = check_platform_features();
+>>          if (status != EFI_SUCCESS)
+>>                  return status;
+>>
+>> -       dpy = setup_primary_display();
+>> +       dpy = setup_primary_display(&dpy_needs_free);
+>>
+>>          efi_retrieve_eventlog();
+>>
+>> @@ -182,7 +190,7 @@ efi_status_t efi_stub_common(efi_handle_t handle,
+>>
+>>          status = efi_boot_kernel(handle, image, image_addr, cmdline_ptr);
+>>
+>> -       free_primary_display(dpy);
+>> +       release_primary_display(dpy, dpy_needs_free);
+>>
+>>          return status;
+>>   }
+>> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+>> index 979a21818cc1..1503ffb82903 100644
+>> --- a/drivers/firmware/efi/libstub/efistub.h
+>> +++ b/drivers/firmware/efi/libstub/efistub.h
+>> @@ -1176,8 +1176,8 @@ efi_enable_reset_attack_mitigation(void) { }
+>>
+>>   void efi_retrieve_eventlog(void);
+>>
+>> +struct sysfb_display_info *lookup_primary_display(bool *needs_free);
+>>   struct sysfb_display_info *alloc_primary_display(void);
+>> -struct sysfb_display_info *__alloc_primary_display(void);
+>>   void free_primary_display(struct sysfb_display_info *dpy);
+>>
+>>   void efi_cache_sync_image(unsigned long image_base,
+>> diff --git a/drivers/firmware/efi/libstub/primary_display.c b/drivers/firmware/efi/libstub/primary_display.c
+>> index cdaebab26514..34c54ac1e02a 100644
+>> --- a/drivers/firmware/efi/libstub/primary_display.c
+>> +++ b/drivers/firmware/efi/libstub/primary_display.c
+>> @@ -7,24 +7,9 @@
+>>
+>>   #include "efistub.h"
+>>
+>> -/*
+>> - * There are two ways of populating the core kernel's sysfb_primary_display
+>> - * via the stub:
+>> - *
+>> - *   - using a configuration table, which relies on the EFI init code to
+>> - *     locate the table and copy the contents; or
+>> - *
+>> - *   - by linking directly to the core kernel's copy of the global symbol.
+>> - *
+>> - * The latter is preferred because it makes the EFIFB earlycon available very
+>> - * early, but it only works if the EFI stub is part of the core kernel image
+>> - * itself. The zboot decompressor can only use the configuration table
+>> - * approach.
+>> - */
+>> -
+>>   static efi_guid_t primary_display_guid = LINUX_EFI_PRIMARY_DISPLAY_TABLE_GUID;
+>>
+>> -struct sysfb_display_info *__alloc_primary_display(void)
+>> +struct sysfb_display_info *alloc_primary_display(void)
+>>   {
+>>          struct sysfb_display_info *dpy;
+>>          efi_status_t status;
+>> diff --git a/drivers/firmware/efi/libstub/zboot.c b/drivers/firmware/efi/libstub/zboot.c
+>> index 4b76f74c56da..c1fd1fdbcb08 100644
+>> --- a/drivers/firmware/efi/libstub/zboot.c
+>> +++ b/drivers/firmware/efi/libstub/zboot.c
+>> @@ -26,9 +26,11 @@ void __weak efi_cache_sync_image(unsigned long image_base,
+>>          // executable code loaded into memory to be safe for execution.
+>>   }
+>>
+>> -struct sysfb_display_info *alloc_primary_display(void)
+>> +struct sysfb_display_info *lookup_primary_display(bool *needs_free)
+>>   {
+>> -       return __alloc_primary_display();
+>> +       *needs_free = true;
+>> +
+>> +       return alloc_primary_display();
+>>   }
+>>
+>>   asmlinkage efi_status_t __efiapi
+>> --
+>> 2.51.1
+>>
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
+GF: Jochen Jaser, Andrew McDonald, Werner Knoblich, (HRB 36809, AG Nürnberg)
+
+
 
