@@ -1,408 +1,326 @@
-Return-Path: <linux-hyperv+bounces-8059-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8060-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AAC4CD42D3
-	for <lists+linux-hyperv@lfdr.de>; Sun, 21 Dec 2025 17:18:40 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0A98CD6E3D
+	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Dec 2025 19:25:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1E3CD3003BD0
-	for <lists+linux-hyperv@lfdr.de>; Sun, 21 Dec 2025 16:18:39 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 9BEA830036CD
+	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Dec 2025 18:25:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 141B42FE589;
-	Sun, 21 Dec 2025 16:18:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83CC63090CD;
+	Mon, 22 Dec 2025 18:25:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mCnt4Y8g";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+fysO4lT";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SK/TpTNu";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JK9Vnvs5"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="t4IaFfHW"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazolkn19012017.outbound.protection.outlook.com [52.103.11.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6EF288C0A
-	for <linux-hyperv@vger.kernel.org>; Sun, 21 Dec 2025 16:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766333918; cv=none; b=Z1QPW0XZdTT8WPclu0IypQURr91ociKX2A/DagpSO+CSDgkUhbQo4FaqBnhUhgTmO5CrL6WDJF26ScCSt/h+AC5A9vS0WHCfyoJArNYDaaif/COnXoAPD/V7tTpaR71HGrptl8uU6Nsvoag9LRexFBfMv+h2t+RMpd20blHfTeA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766333918; c=relaxed/simple;
-	bh=b6N6Jj7QBC5KdMoc+yYcrtzg/8owWwq3DmZcwg0Z8v8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XOTqERgDBERjMVG4+RWYYALh4ZBLhJqrLDSyHH8yiv/ubqZ93WFldVDbC0fhU6SutSsxdMtefxCVxTNWWs7rkWPIg8N6taawSpGMef58p8rLZ5XtCOH1PWtEUIgP3HF/n/gBF+Sw5uOcM/YatPmTYXOyhOcyFoU8ZvjRPCVEfxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mCnt4Y8g; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+fysO4lT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SK/TpTNu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JK9Vnvs5; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 653C35BCC2;
-	Sun, 21 Dec 2025 16:18:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1766333910; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3Yj5PCkcX3NpOx0MVubHGjm/vyE75Or7OKm5HcbRRAM=;
-	b=mCnt4Y8g9wsGeC8a71YqMV35vOzr1m0HM69UW17UulhUuwVG0ydF3uuvzeXLa4GIvslZ7S
-	QYQc3/3AA/mLmpp+EtuVSWHSFyj2qHFq13+nY3F0Sz2QLUSg458KpQloTphi22MZ5Meq/4
-	GIRIQkIUdIRy7RQxjyXcgjxIfnpljRA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1766333910;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3Yj5PCkcX3NpOx0MVubHGjm/vyE75Or7OKm5HcbRRAM=;
-	b=+fysO4lT9QRvCJD4KFhF25SM1m1m/VNA80U1DScLwbWpQQYgUEyHmTeDGtG7rBrqQV+M1F
-	6h3OrRzIQ6Ob+kBA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="SK/TpTNu";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=JK9Vnvs5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1766333909; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3Yj5PCkcX3NpOx0MVubHGjm/vyE75Or7OKm5HcbRRAM=;
-	b=SK/TpTNuD9iwQ9XXcNlTwGcmiWFxH31bYOz2qi35e3x4fDRgAsvNA+ZhUzRPxq2nzxPFHF
-	RvhyFdO8JkbXaUmVNgZ58vW8x0HCHKwcOGRGsaidcJfg1bVOfg3aVOEyZwSXTlFJXdYsPb
-	LNIrSYQRjUUWwcmwLqIn/6OIXHPU5xM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1766333909;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3Yj5PCkcX3NpOx0MVubHGjm/vyE75Or7OKm5HcbRRAM=;
-	b=JK9Vnvs5Ps/AD+vFcl47c3Ac/ds9F0AXi/mGl57Rxm+IAa4aNyMKLohCuHyatBPjX+BmXa
-	jJVUd9ZB1w6TZPCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E8B7513A54;
-	Sun, 21 Dec 2025 16:18:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id oHBlN9QdSGnANgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Sun, 21 Dec 2025 16:18:28 +0000
-Message-ID: <0204b4f2-98b3-4463-9ae7-fc3657ce2fc1@suse.de>
-Date: Sun, 21 Dec 2025 17:18:28 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9016450276;
+	Mon, 22 Dec 2025 18:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.11.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1766427911; cv=fail; b=PEJZ2I2KRxmBlNTeouYwWAq5aUWBs0JxL1iQ1v6u+gCT+C1SAcrMlgztiYS2nN8lSZjt5hGxM2jQdeQ7hrLH/B9OSt/ILtnExFVtuJKxluLFXCyiyfGO7kKfjFip6FBR9xqaiPJh5tZA70sBNhJuTekZBKRADGa2LKjJkt5pOOE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1766427911; c=relaxed/simple;
+	bh=IdQEEvp6FJFI5o5QGJ5ZUATGUUF6koJId6cnj+3dz9o=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=GSMaueem1iItHlDgCByMsdFH1vg5I5aEi+4Pypt+rzNZzrsq5dyzaydg/oteM+VjpdW3ZDi9iwyjYcaBAS4OE/gDf0g8becTvYFQcLvXdvpU8qMISW2RIQWwpuANCdb6NpH1MQYpH1pTbpQxZVr+4QAUzjku2+1wzYbule33MZs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=t4IaFfHW; arc=fail smtp.client-ip=52.103.11.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=apNIUYJXxQCxNMD6tFwnEkEZw+tKBbuL2jWUPuUGJbEzhTwlhdC63/Hh0Pcc7N/GXFmH6hzgbP8PfAVBLvSFlIYbH16/21Jbks4oJ/ja4nzBSyPWxI0k9ohJU3s6k6NUx8Ue4KtBEQL1LwyueLDuXj+/kAS03maDe8qMgTXzKhlKAavRdJ4JllYrOBWlNqH6LlFB4qbdS2sJmxRDPnH15aJIHjubG7ZJCQ7rxrRdMz1g04uzUUwr4b+2uZ3XXdnRfFQb6BrkggaaH+M9ae+2uYepExJPkncXuik56f3VGhZWIgOdengC+EVQvJjFnIm9sAUsq6rA5hCSEd6v8gCoYg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ukPgIV8CE707kHwFy23b2ebNpJPorI78U11et8MhJNg=;
+ b=Jm79kMXgjK5rn8WvdurZiF7qpB3I6xl01VD9OfjrWxLiNXNa40KFyyhzyu+kDS4vlFVSQSS082Z9mdsAvqWbAzncLltEI5CAa/QodI1ExP+Nzjp2qkyuU3OlFwjpoYNRH8DksvtA0114gkSyyYL9dV6PgeeKyIT0DQDvTbO+Q9Bnsf6M5Mndpm8J6zh6ww61LmWXejv5rmSrHJK3fndrjVuLPFPMg7j+lpoV3MpVljxkRiSjHGlgKwqPYahRLCCfJgNOOB+gjp651aMpdYlNjSko6qVPkg7NfhirmOENz40uLyiFDCrsK/on+JXOaVtA32Xn2xLhT/wa2gliLrIgJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ukPgIV8CE707kHwFy23b2ebNpJPorI78U11et8MhJNg=;
+ b=t4IaFfHWZi+2jEg36Y10+iGmR4FtanqhuA+PM6tfPDjb1bK90ePG7lNvAGOZVJK1K3QL4/KJAbsdjizneGzY2P8YopK6X1pSicuYkAQGzyR/K67kRHUm8eu1ehabHGhS5feLAjeT2BhOzoVF8+Fd0gPZuMncls9eQC00myPSUl4JS/uaX+N9OyNY5cJDPmUXzGGslRLuxOlfZetTP3W8czuFTu5rS95Ia55peI+Hg7NIM6Hvaa/915dukLuPpnUwbPu5qi0igcItmh3JNd3nvzjsJYrUuV5KBiB1t6xDhH8yOyyeRauQSfmGWc9gFieOW/rfHNAv3V/SA/szz30mZQ==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by DM6PR02MB7017.namprd02.prod.outlook.com (2603:10b6:5:251::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.10; Mon, 22 Dec
+ 2025 18:25:05 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6%3]) with mapi id 15.20.9434.009; Mon, 22 Dec 2025
+ 18:25:02 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>, "longli@microsoft.com"
+	<longli@microsoft.com>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] mshv: Align huge page stride with guest mapping
+Thread-Topic: [PATCH] mshv: Align huge page stride with guest mapping
+Thread-Index: AQHcbu3m/1KRrXDdWE2Bee61xybnKLUnwn/AgAHUSgCAAZKpIA==
+Date: Mon, 22 Dec 2025 18:25:02 +0000
+Message-ID:
+ <SN6PR02MB41578A17A4DADD9276392298D4B4A@SN6PR02MB4157.namprd02.prod.outlook.com>
+References:
+ <176593206931.276257.13023250440372517478.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <SN6PR02MB4157D69A4C08B0A4FE01F9FED4A8A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <aUXXdjMyZ5swiCI2@skinsburskii.localdomain>
+In-Reply-To: <aUXXdjMyZ5swiCI2@skinsburskii.localdomain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|DM6PR02MB7017:EE_
+x-ms-office365-filtering-correlation-id: 9a86aab3-5b86-4568-c148-08de41876c6d
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|461199028|13091999003|8060799015|8062599012|19110799012|41001999006|15080799012|12121999013|51005399006|31061999003|1602099012|40105399003|4302099013|440099028|10035399007|3412199025|102099032;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?qvezWNn6atMB6tfdQx3VYL0XM/ocQDyYqS7U6osS4K82Bxm0WJ0H5CEg4bEq?=
+ =?us-ascii?Q?Lw6d/1GIWqBtEQHMw4xrZcTWeMJxHotUDfwW5HfHqs3XXbiqDSgTv8R/oN6M?=
+ =?us-ascii?Q?DORL9CuX08HKB+IT7UAGWlHY9HUhHu6CJtuQK6mmYgznZnb0d5NJUU0N4hdL?=
+ =?us-ascii?Q?WYWuD4DB1aKpsJsecX8K7U8mqoTfmlq8MR0MPEKuHEfWKc3YhZ89g5LUhK0O?=
+ =?us-ascii?Q?TsCwB14U9ThNSOKtsfgrb7PmqbbPSs2wA+622hYqYR/RlsRbJTCJ8WhF9zil?=
+ =?us-ascii?Q?0U+1CLCHTQrcXEmsfu3w8YvL3hSXUmj9BFcKGLuKAEpX3IZBQ2iAMxyRyZWb?=
+ =?us-ascii?Q?0rDLW+kRQwc/8fkMUHCaBxr3MFGSNU0M+Wif8sI8LxNX/FryrsvY11zLmdij?=
+ =?us-ascii?Q?ltoGfeeknFJcvS6Ni6C0cwFl5memNFisWzQW/cbzjeOKUcv52dFAk7T1aQZX?=
+ =?us-ascii?Q?2LQag7QigfkG+ajHp9PiuW1QyJ5n5A7a59tw0hun/6NhLxMzX4d+wtP2Crnl?=
+ =?us-ascii?Q?2SsUeEBgydEA3Pf7fu1XkoL5jxJJBX3GTvjlQHXQVahwjQBLMRmCQaeUIIB7?=
+ =?us-ascii?Q?1EkU09uZ/9hKH40Je7hkoV8BM1h1/VySkBCwASyXdqoB0uSG/FT6SShKGwlN?=
+ =?us-ascii?Q?M5lafXNb5g4Ptg/etbxDXdSuwPYxSBxQ/zLWlC7D8/PJm/rBYUCcdbWWCucE?=
+ =?us-ascii?Q?clBRCv809MJKEaSYidULi7LCU2pFw4SD8HdNOpUWCPdUS8T5F5hYVAuaMtJ9?=
+ =?us-ascii?Q?4jztPSeYAr30CJMrLNVJcva+eaO3eBhcpYRBZ0+KDBsIlIAhd99+8KFgYWbv?=
+ =?us-ascii?Q?e6r9ArRU0/DbzR/1oomvvTwYmxpT0VvJvyW2PbKQDVoNTaiLn7p9I2LuVAIB?=
+ =?us-ascii?Q?s6cK9FaRntsuJ4GhKdBQE4lU+pBj/OFflsVJ1Roh/4njorHPzV2iqkN6Y1WA?=
+ =?us-ascii?Q?m9YYeLmzLJRCR2zrV+XYxDY1p3C1kP4ajXH+pu9J2H2RbyG5/fvU7yDfGlZF?=
+ =?us-ascii?Q?ArtOf26rdiWGkLdo5956TbzcQFuycqtHTzqvxjvuR5KNLto5QN2HFc5qAK01?=
+ =?us-ascii?Q?HEvcDj8QHd+KVAGgljO5HKXH4Muhet1wli+Bf4TVHTzhYXQLahxsnEDvBePL?=
+ =?us-ascii?Q?pM2GwzsXodZfdJQBGLEYtbvP47SaKnaLJpCRnusNQA60EbLQUc11XTsjqxkn?=
+ =?us-ascii?Q?o9G03dD16l4Y+1MyuNSeE2F/vHhUk0g16bD0nKZA526z2QBdGpPTKWHjoISU?=
+ =?us-ascii?Q?3QL8OfCPn8eANHrtxCwyOzwMUxVzX/LH+iQxXwmllBBHuXJ50ei0Jzz1UMOw?=
+ =?us-ascii?Q?qAhFGWhKVjBQzxMejGe6THgYE+lhiLZGTIBgPuh5yi8+nZfLfrjCW5lK8TpN?=
+ =?us-ascii?Q?J017+cpgnpRiv2X1R6IAmZB566X4xvBoUM1jnugLlcZGU8t+6g=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?qpEvat4M48Gf8rpxGq+urhhITkLehXrtEqv+fDP/vNRPMhtKtvc+0RLVf9al?=
+ =?us-ascii?Q?vnu1bF9tyo+6WR+YA6D6LSsmlf5+vEcjq+k02CsdkCcSgVgTQYuc2Vt9ndwH?=
+ =?us-ascii?Q?aoZFENFWOjKa6OSWjkkPeo4BRbtMhmva+UpLumyU+xmonvcUhJD7deKiMXQ4?=
+ =?us-ascii?Q?IYeN3osKbG9zrIAiLZTRlgbVIBJjSoug7qpH1G4pHLjD9nrS/9R1P4LcXJ/B?=
+ =?us-ascii?Q?6nu9lH7M7b4qD5xcQzUHTy1/gKf58TTWhEAta7/dlYEJCk23wsoPJScGREPr?=
+ =?us-ascii?Q?2oCkXjT5yUbJC7HQ1XFgoEzUfo59ZeyOBD/hPw32iA/wnHB0E89K+9ubGlu6?=
+ =?us-ascii?Q?BSYQxME8e+2bpjXYbj4Ggd60PzaLAtRAMZX1VG34vBXwULPPb45NeM6G4YMq?=
+ =?us-ascii?Q?hWi39hpwHN8zhV0dyuT8uvzyimPCH/2FYgv7zONcG2m4YaKPTcPpXGYBcQrW?=
+ =?us-ascii?Q?/JiXkVL0EYz1ZIvt3eWLWl9Cok87F/7ra2IDEUHDpGEBpQHGLLJupNwc5zp6?=
+ =?us-ascii?Q?0wo9XdsrOLF4Hq5K8nKh0A8S+EKLEtXHTtm2QmjSm2bSnoDjMnBLq6gJluGn?=
+ =?us-ascii?Q?1nLsRL8NfQrQmuNWmaRsIkAIlkQhA7+CcxukTXu1os4mBMT3TDm1zQ5RbV8o?=
+ =?us-ascii?Q?coQg4XoD7Hjo51KRyQogUndE41JLXD/RH+rjeG6SSFmI7GI57l31oTSnT01z?=
+ =?us-ascii?Q?fELZzVTr3to0gqc7ozAGXpIJ/deX3wwiPTJpnDNLU9Hrg1A8wcYxhIRW7itN?=
+ =?us-ascii?Q?Qdv4c9MRdYdddLduBzzs5yJALIXWh5V5f/FoWzfFfsKAkPiDxlaPMWMRDyri?=
+ =?us-ascii?Q?3OgmXNw1MqepE5TnsvPftm4uurxO5QXMYyJFJaH6eNv2D6kn4DoZSa6wyaYT?=
+ =?us-ascii?Q?YSw18NhSD8Us7/MaU0K4ANqq6yIY/YdFk4CjFZczY6dZKqnvm+Me0CCZ3t9Y?=
+ =?us-ascii?Q?dGsVA5KR0G2ev+OWLCf6RHhg74lpsCb+1iJOGxuTptCCquVnIXcWXD04Pv5m?=
+ =?us-ascii?Q?hqZisF4Q7aOd/cYWyxIWFbqIFQk/o+qR0jU/Vtu+QRyvZzKlxdjYw3Yj2u4B?=
+ =?us-ascii?Q?Z1/j5XgBWkI9qiPUDpRlJPZGIar/nuG2FQdA++S35BEk5x6aah+LQ3cEwTnO?=
+ =?us-ascii?Q?+Wx1eggQGHFidNcuq40lr13t+6hSbYfFaSwsZBUxuBsRGTcZ8ne9M/yyIVzm?=
+ =?us-ascii?Q?RDQoG82BlNCqy86S+7cmudmKlSR6diuLrU7KqFDhhnPiUQ9rNKwKNadlIpdF?=
+ =?us-ascii?Q?KDvmlT3NuNtQf5B89/FMCgqDd9k+zRjEWju+lOd7wOXIgbTXXpl7UHnQ4IZU?=
+ =?us-ascii?Q?fktpbdU8TPk+2Mn1vpFU37yKoqFE3ByIQMJ0V1kuKFkR+/Ot2Yh1cVkcoEDp?=
+ =?us-ascii?Q?mQQIP20=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 9/9] efi: libstub: Simplify interfaces for
- primary_display
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: javierm@redhat.com, arnd@arndb.de, richard.lyu@suse.com,
- helgaas@kernel.org, x86@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-fbdev@vger.kernel.org
-References: <20251126160854.553077-1-tzimmermann@suse.de>
- <20251126160854.553077-10-tzimmermann@suse.de>
- <CAMj1kXFeBS7O5A-CPds3UfFnjegGTpVsuF7VznBc-zZ+gjygtw@mail.gmail.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <CAMj1kXFeBS7O5A-CPds3UfFnjegGTpVsuF7VznBc-zZ+gjygtw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -4.51
-X-Rspamd-Queue-Id: 653C35BCC2
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:dkim,suse.de:email];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Level: 
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a86aab3-5b86-4568-c148-08de41876c6d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Dec 2025 18:25:02.8528
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB7017
 
-Hi
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Friday=
+, December 19, 2025 2:54 PM
+>=20
+> On Thu, Dec 18, 2025 at 07:41:24PM +0000, Michael Kelley wrote:
+> > From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Tu=
+esday,
+> December 16, 2025 4:41 PM
+> > >
+> > > Ensure that a stride larger than 1 (huge page) is only used when both
+> > > the guest frame number (gfn) and the operation size (page_count) are
+> > > aligned to the huge page size (PTRS_PER_PMD). This matches the
+> > > hypervisor requirement that map/unmap operations for huge pages must =
+be
+> > > guest-aligned and cover a full huge page.
+> > >
+> > > Add mshv_chunk_stride() to encapsulate this alignment and page-order
+> > > validation, and plumb a huge_page flag into the region chunk handlers=
+.
+> > > This prevents issuing large-page map/unmap/share operations that the
+> > > hypervisor would reject due to misaligned guest mappings.
+> >
+> > This code looks good to me on the surface. But I can only make an educa=
+ted
+> > guess as to the hypervisor behavior in certain situations, and if my gu=
+ess is
+> > correct there's still a flaw in one case.
+> >
+> > Consider the madvise() DONTNEED experiment that I previously called out=
+. [1]
+> > I surmise that the intent of this patch is to make that case work corre=
+ctly.
+> > When the .invalidate callback is made for the 32 Kbyte range embedded i=
+n
+> > a previously mapped 2 Meg page, this new code detects that case. It cal=
+ls the
+> > hypervisor to remap the 32 Kbyte range for no access, and clears the 8
+> > corresponding entries in the struct page array attached to the mshv reg=
+ion. The
+> > call to the hypervisor is made *without* the HV_MAP_GPA_LARGE_PAGE flag=
+.
+> > Since the mapping was originally done *with* the HV_MAP_GPA_LARGE_PAGE
+> > flag, my guess is that the hypervisor is smart enough to handle this ca=
+se by
+> > splitting the 2 Meg mapping it created, setting the 32 Kbyte range to n=
+o access,
+> > and returning "success". If my guess is correct, there's no problem her=
+e.
+> >
+> > But then there's a second .invalidate callback for the entire 2 Meg pag=
+e. Here's
+> > the call stack:
+> >
+> > [  194.259337]  dump_stack+0x14/0x20
+> > [  194.259339]  mhktest_invalidate+0x2a/0x40  [my dummy invalidate call=
+back]
+> > [  194.259342]  __mmu_notifier_invalidate_range_start+0x1f4/0x250
+> > [  194.259347]  __split_huge_pmd+0x14f/0x170
+> > [  194.259349]  unmap_page_range+0x104d/0x1a00
+> > [  194.259358]  unmap_single_vma+0x7d/0xc0
+> > [  194.259360]  zap_page_range_single_batched+0xe0/0x1c0
+> > [  194.259363]  madvise_vma_behavior+0xb01/0xc00
+> > [  194.259366]  madvise_do_behavior.part.0+0x3cd/0x4a0
+> > [  194.259375]  do_madvise+0xc7/0x170
+> > [  194.259380]  __x64_sys_madvise+0x2f/0x40
+> > [  194.259382]  x64_sys_call+0x1d77/0x21b0
+> > [  194.259385]  do_syscall_64+0x56/0x640
+> > [  194.259388]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> >
+> > In __split_huge_pmd(), the .invalidate callback is made *before* the 2 =
+Meg
+> > page is actually split by the root partition. So mshv_chunk_stride() re=
+turns "9"
+> > for the stride, and the hypervisor is called with HV_MAP_GPA_LARGE_PAGE
+> > set. My guess is that the hypervisor returns an error because it has al=
+ready
+> > split the mapping. The whole point of this patch set is to avoid passin=
+g
+> > HV_MAP_GPA_LARGE_PAGE to the hypervisor when the hypervisor mapping
+> > is not a large page mapping, but this looks like a case where it still =
+happens.
+> >
+> > My concern is solely from looking at the code and thinking about the pr=
+oblem,
+> > as I don't have an environment where I can test root partition interact=
+ions
+> > with the hypervisor. So maybe I'm missing something. Lemme know what yo=
+u
+> > think .....
+> >
+>=20
+> Yeah, I see your point: according to this stack, once a part of the page
+> is invalidated, the folio order remains the same until another invocation
+> of the same callback - this time for the whole huge
+> page - is made. Thus, the stride is still reported as the huge page size,
+> even though a part of the page has already been unmapped.
+>=20
+> This indeed looks like a flaw in the current approach, but it's actually
+> not. The reason is that upon the invalidation callback, the driver
+> simply remaps the whole huge page with no access (in this case, the PFNs
+> provided to the hypervisor are zero), and it's fine as the hypervisor
+> simply drops all the pages from the previous mapping and marks this page
+> as inaccessible. The only check the hypervisor makes in this case is
+> that both the GFN and mapping size are huge page aligned (which they are
+> in this case).
+>=20
+> I hope this clarifies the situation. Please let me know if you have any
+> other questions.
 
-Am 16.12.25 um 14:23 schrieb Ard Biesheuvel:
-> Hi Thomas
->
-> On Wed, 26 Nov 2025 at 17:09, Thomas Zimmermann <tzimmermann@suse.de> wrote:
->> Rename alloc_primary_display() and __alloc_primary_display(), clarify
->> free semantics to make interfaces easier to understand.
->>
->> Rename alloc_primary_display() to lookup_primary_display() as it
->> does not necessarily allocate. Then rename __alloc_primary_display()
->> to the new alloc_primary_display(). The helper belongs to
->> free_primary_display), so it should be named without underscores.
->>
->> The lookup helper does not necessarily allocate, so the output
->> parameter needs_free to indicate when free should be called.
-> I don't understand why we need this. Whether or not the helper
-> allocates is a compile time decision, and in builds where it doesn't,
-> the free helper doesn't do anything.
->
-> I'm all for making things simpler, but I don't think this patch
-> achieves that tbh.
->
-> I've queued up this series now up until this patch - once we converge
-> on the simplification, I'm happy to apply it on top.
+Thanks. Yes, this clarifies. My guess about the hypervisor behavior was wro=
+ng.
+Based on what you've said about what the hypervisor does, and further study=
+ing
+MSHV code, here's my recap of the HV_MAP_GPA_LARGE_PAGE flag:
 
-If you don't want this patch, just leave it out then. Coming from 
-another subsystem, I found the current logic and naming confusing THB.
+1. The hypervisor uses the flag to determine the granularity (4K or 2M) of =
+the
+mapping HVCALL_MAP_GPA_PAGES or HVCALL_UNMAP_GPA_PAGES will
+create/remove. As such, the hypercall "repcount" is in this granularity. GF=
+Ns,
+such as the target_gpa_base input parameter and GFNs in the pfn_array, are
+always 4K GFNs, but if the flag is set, a GFN is treated as the first 4K GF=
+N in
+a contiguous 2M range. If the flag is set, the target_gpa_base GFN must be
+2M aligned.
 
-Best regards
-Thomas
+2. The hypervisor doesn't care whether any existing mapping is 4K or 2M. It
+always removes an existing mapping, including splitting any 2M mappings if
+necessary. Then if the operation is to create/re-create a mapping, it creat=
+es
+an appropriate new mapping.
 
+My error was in thinking that the flag had to match any existing mapping.
+But the behavior you've clarified is certainly better. It handles the vagar=
+ies
+of the Linux "mm" subsystem, which in one case in my original experiment
+(madvise) invalidates the small range, then the 2M range, but the other
+case (mprotect) invalidates the 2M range, then the small range.
 
->
-> Thanks,
->
->
->
->> Pass
->> an argument through the calls to track this state. Put the free
->> handling into release_primary_display() for simplificy.
->>
->> Also move the comment fro primary_display.c to efi-stub-entry.c,
->> where it now describes lookup_primary_display().
->>
->> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
->> ---
->>   drivers/firmware/efi/libstub/efi-stub-entry.c | 23 +++++++++++++++++--
->>   drivers/firmware/efi/libstub/efi-stub.c       | 22 ++++++++++++------
->>   drivers/firmware/efi/libstub/efistub.h        |  2 +-
->>   .../firmware/efi/libstub/primary_display.c    | 17 +-------------
->>   drivers/firmware/efi/libstub/zboot.c          |  6 +++--
->>   5 files changed, 42 insertions(+), 28 deletions(-)
->>
->> diff --git a/drivers/firmware/efi/libstub/efi-stub-entry.c b/drivers/firmware/efi/libstub/efi-stub-entry.c
->> index aa85e910fe59..3077b51fe0b2 100644
->> --- a/drivers/firmware/efi/libstub/efi-stub-entry.c
->> +++ b/drivers/firmware/efi/libstub/efi-stub-entry.c
->> @@ -14,10 +14,29 @@ static void *kernel_image_addr(void *addr)
->>          return addr + kernel_image_offset;
->>   }
->>
->> -struct sysfb_display_info *alloc_primary_display(void)
->> +/*
->> + * There are two ways of populating the core kernel's sysfb_primary_display
->> + * via the stub:
->> + *
->> + *   - using a configuration table, which relies on the EFI init code to
->> + *     locate the table and copy the contents; or
->> + *
->> + *   - by linking directly to the core kernel's copy of the global symbol.
->> + *
->> + * The latter is preferred because it makes the EFIFB earlycon available very
->> + * early, but it only works if the EFI stub is part of the core kernel image
->> + * itself. The zboot decompressor can only use the configuration table
->> + * approach.
->> + */
->> +
->> +struct sysfb_display_info *lookup_primary_display(bool *needs_free)
->>   {
->> +       *needs_free = true;
->> +
->>          if (IS_ENABLED(CONFIG_ARM))
->> -               return __alloc_primary_display();
->> +               return alloc_primary_display();
->> +
->> +       *needs_free = false;
->>
->>          if (IS_ENABLED(CONFIG_X86) ||
->>              IS_ENABLED(CONFIG_EFI_EARLYCON) ||
->> diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
->> index 42d6073bcd06..dc545f62c62b 100644
->> --- a/drivers/firmware/efi/libstub/efi-stub.c
->> +++ b/drivers/firmware/efi/libstub/efi-stub.c
->> @@ -51,14 +51,14 @@ static bool flat_va_mapping = (EFI_RT_VIRTUAL_OFFSET != 0);
->>   void __weak free_primary_display(struct sysfb_display_info *dpy)
->>   { }
->>
->> -static struct sysfb_display_info *setup_primary_display(void)
->> +static struct sysfb_display_info *setup_primary_display(bool *dpy_needs_free)
->>   {
->>          struct sysfb_display_info *dpy;
->>          struct screen_info *screen = NULL;
->>          struct edid_info *edid = NULL;
->>          efi_status_t status;
->>
->> -       dpy = alloc_primary_display();
->> +       dpy = lookup_primary_display(dpy_needs_free);
->>          if (!dpy)
->>                  return NULL;
->>          screen = &dpy->screen;
->> @@ -68,15 +68,22 @@ static struct sysfb_display_info *setup_primary_display(void)
->>
->>          status = efi_setup_graphics(screen, edid);
->>          if (status != EFI_SUCCESS)
->> -               goto err_free_primary_display;
->> +               goto err___free_primary_display;
->>
->>          return dpy;
->>
->> -err_free_primary_display:
->> -       free_primary_display(dpy);
->> +err___free_primary_display:
->> +       if (*dpy_needs_free)
->> +               free_primary_display(dpy);
->>          return NULL;
->>   }
->>
->> +static void release_primary_display(struct sysfb_display_info *dpy, bool dpy_needs_free)
->> +{
->> +       if (dpy && dpy_needs_free)
->> +               free_primary_display(dpy);
->> +}
->> +
->>   static void install_memreserve_table(void)
->>   {
->>          struct linux_efi_memreserve *rsv;
->> @@ -156,13 +163,14 @@ efi_status_t efi_stub_common(efi_handle_t handle,
->>                               char *cmdline_ptr)
->>   {
->>          struct sysfb_display_info *dpy;
->> +       bool dpy_needs_free;
->>          efi_status_t status;
->>
->>          status = check_platform_features();
->>          if (status != EFI_SUCCESS)
->>                  return status;
->>
->> -       dpy = setup_primary_display();
->> +       dpy = setup_primary_display(&dpy_needs_free);
->>
->>          efi_retrieve_eventlog();
->>
->> @@ -182,7 +190,7 @@ efi_status_t efi_stub_common(efi_handle_t handle,
->>
->>          status = efi_boot_kernel(handle, image, image_addr, cmdline_ptr);
->>
->> -       free_primary_display(dpy);
->> +       release_primary_display(dpy, dpy_needs_free);
->>
->>          return status;
->>   }
->> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
->> index 979a21818cc1..1503ffb82903 100644
->> --- a/drivers/firmware/efi/libstub/efistub.h
->> +++ b/drivers/firmware/efi/libstub/efistub.h
->> @@ -1176,8 +1176,8 @@ efi_enable_reset_attack_mitigation(void) { }
->>
->>   void efi_retrieve_eventlog(void);
->>
->> +struct sysfb_display_info *lookup_primary_display(bool *needs_free);
->>   struct sysfb_display_info *alloc_primary_display(void);
->> -struct sysfb_display_info *__alloc_primary_display(void);
->>   void free_primary_display(struct sysfb_display_info *dpy);
->>
->>   void efi_cache_sync_image(unsigned long image_base,
->> diff --git a/drivers/firmware/efi/libstub/primary_display.c b/drivers/firmware/efi/libstub/primary_display.c
->> index cdaebab26514..34c54ac1e02a 100644
->> --- a/drivers/firmware/efi/libstub/primary_display.c
->> +++ b/drivers/firmware/efi/libstub/primary_display.c
->> @@ -7,24 +7,9 @@
->>
->>   #include "efistub.h"
->>
->> -/*
->> - * There are two ways of populating the core kernel's sysfb_primary_display
->> - * via the stub:
->> - *
->> - *   - using a configuration table, which relies on the EFI init code to
->> - *     locate the table and copy the contents; or
->> - *
->> - *   - by linking directly to the core kernel's copy of the global symbol.
->> - *
->> - * The latter is preferred because it makes the EFIFB earlycon available very
->> - * early, but it only works if the EFI stub is part of the core kernel image
->> - * itself. The zboot decompressor can only use the configuration table
->> - * approach.
->> - */
->> -
->>   static efi_guid_t primary_display_guid = LINUX_EFI_PRIMARY_DISPLAY_TABLE_GUID;
->>
->> -struct sysfb_display_info *__alloc_primary_display(void)
->> +struct sysfb_display_info *alloc_primary_display(void)
->>   {
->>          struct sysfb_display_info *dpy;
->>          efi_status_t status;
->> diff --git a/drivers/firmware/efi/libstub/zboot.c b/drivers/firmware/efi/libstub/zboot.c
->> index 4b76f74c56da..c1fd1fdbcb08 100644
->> --- a/drivers/firmware/efi/libstub/zboot.c
->> +++ b/drivers/firmware/efi/libstub/zboot.c
->> @@ -26,9 +26,11 @@ void __weak efi_cache_sync_image(unsigned long image_base,
->>          // executable code loaded into memory to be safe for execution.
->>   }
->>
->> -struct sysfb_display_info *alloc_primary_display(void)
->> +struct sysfb_display_info *lookup_primary_display(bool *needs_free)
->>   {
->> -       return __alloc_primary_display();
->> +       *needs_free = true;
->> +
->> +       return alloc_primary_display();
->>   }
->>
->>   asmlinkage efi_status_t __efiapi
->> --
->> 2.51.1
->>
+Since there's no documentation for these root partition hypercalls, it sure
+would be nice if this info could be captured in code comments for some
+future developer to benefit from. If that's not something you want to
+worry about, I could submit a patch later to add the code comments
+(subject to your review, of course).
 
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
-GF: Jochen Jaser, Andrew McDonald, Werner Knoblich, (HRB 36809, AG Nürnberg)
+Separately, in looking at this, I spotted another potential problem with
+2 Meg mappings that somewhat depends on hypervisor behavior that I'm
+not clear on. To create a new region, the user space VMM issues the
+MSHV_GET_GUEST_MEMORY ioctl, specifying the userspace address, the
+size, and the guest PFN. The only requirement on these values is that the
+userspace address and size be page aligned. But suppose a 4 Meg region is
+specified where the userspace address and the guest PFN have different
+offsets modulo 2 Meg. The userspace address range gets populated first,
+and may contain a 2 Meg large page. Then when mshv_chunk_stride()
+detects a 2 Meg aligned guest PFN so HVCALL_MAP_GPA_PAGES can be told
+to create a 2 Meg mapping for the guest, the corresponding system PFN in
+the page array may not be 2 Meg aligned. What does the hypervisor do in
+this case? It can't create a 2 Meg mapping, right? So does it silently fall=
+back
+to creating 4K mappings, or does it return an error? Returning an error wou=
+ld
+seem to be problematic for movable pages because the error wouldn't
+occur until the guest VM is running and takes a range fault on the region.
+Silently falling back to creating 4K mappings has performance implications,
+though I guess it would work. My question is whether the
+MSHV_GET_GUEST_MEMORY ioctl should detect this case and return an
+error immediately.
 
+Michael
 
+> >
+> > [1] https://lore.kernel.org/linux-hyperv/SN6PR02MB4157978DFAA6C2584D067=
+8E1D4A1A@SN6PR02MB4157.namprd02.prod.outlook.com/
 
