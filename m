@@ -1,57 +1,57 @@
-Return-Path: <linux-hyperv+bounces-8060-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8061-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0A98CD6E3D
-	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Dec 2025 19:25:15 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0AD59CD9DD3
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Dec 2025 16:52:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 9BEA830036CD
-	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Dec 2025 18:25:12 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EA3EA300E7BB
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Dec 2025 15:51:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83CC63090CD;
-	Mon, 22 Dec 2025 18:25:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D9A52512C8;
+	Tue, 23 Dec 2025 15:51:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="t4IaFfHW"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="IEMDCV4R"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazolkn19012017.outbound.protection.outlook.com [52.103.11.17])
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azolkn19011070.outbound.protection.outlook.com [52.103.23.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9016450276;
-	Mon, 22 Dec 2025 18:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.11.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E768313D891;
+	Tue, 23 Dec 2025 15:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.23.70
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766427911; cv=fail; b=PEJZ2I2KRxmBlNTeouYwWAq5aUWBs0JxL1iQ1v6u+gCT+C1SAcrMlgztiYS2nN8lSZjt5hGxM2jQdeQ7hrLH/B9OSt/ILtnExFVtuJKxluLFXCyiyfGO7kKfjFip6FBR9xqaiPJh5tZA70sBNhJuTekZBKRADGa2LKjJkt5pOOE=
+	t=1766505086; cv=fail; b=SSaI8q0QHoG5J8DA8NQ6ghoCl4c444HwmgrOTI+gCsX0olv31qunvbh4RfKRCeU70RLty+g8fs2RlemdJKm6w77hDTkYEpfZ56TwIu71bcxHmmFx9k2Yj0i5VGpemt8ie7Jbaz6fZE+pZ+5awuN01Ge+tTY4/IyDC/dNLIFnmRI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766427911; c=relaxed/simple;
-	bh=IdQEEvp6FJFI5o5QGJ5ZUATGUUF6koJId6cnj+3dz9o=;
+	s=arc-20240116; t=1766505086; c=relaxed/simple;
+	bh=s2SeyY3Ye6JxRm5vFg9Nxr82fmOH56OaYCA/GDl+XL0=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=GSMaueem1iItHlDgCByMsdFH1vg5I5aEi+4Pypt+rzNZzrsq5dyzaydg/oteM+VjpdW3ZDi9iwyjYcaBAS4OE/gDf0g8becTvYFQcLvXdvpU8qMISW2RIQWwpuANCdb6NpH1MQYpH1pTbpQxZVr+4QAUzjku2+1wzYbule33MZs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=t4IaFfHW; arc=fail smtp.client-ip=52.103.11.17
+	 Content-Type:MIME-Version; b=LMPUCYdt9qTip4uRVdr9e6gh2+IaBD7daTL8PmTC4rI/F+vR55sufqKufBBxS38IY/h61luGZzW2FAX1egd7Fpnf0fBex81kmIgJO0Qrh7lOujoBFxgZD1KutF3vnLMQ2zU5HvG9pFHdYfDyf6T6E4OTu3qLsaISv2/yyX7Tm28=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=IEMDCV4R; arc=fail smtp.client-ip=52.103.23.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=apNIUYJXxQCxNMD6tFwnEkEZw+tKBbuL2jWUPuUGJbEzhTwlhdC63/Hh0Pcc7N/GXFmH6hzgbP8PfAVBLvSFlIYbH16/21Jbks4oJ/ja4nzBSyPWxI0k9ohJU3s6k6NUx8Ue4KtBEQL1LwyueLDuXj+/kAS03maDe8qMgTXzKhlKAavRdJ4JllYrOBWlNqH6LlFB4qbdS2sJmxRDPnH15aJIHjubG7ZJCQ7rxrRdMz1g04uzUUwr4b+2uZ3XXdnRfFQb6BrkggaaH+M9ae+2uYepExJPkncXuik56f3VGhZWIgOdengC+EVQvJjFnIm9sAUsq6rA5hCSEd6v8gCoYg==
+ b=eogczvBjlKkbRn1j6J/pTfqBa8zeYa7y3JSTUDebclKiCJINHewIWPkRvLVyJi7M+s9xapu7lPOlyQ1dGtGIHBbbcd7C3ZfVk9qstfZKTSe25iOWpFqU1i0CQqkVyJACB3RyqA89cScGev2BLOoFVJHExPqmUB70SH89Gd63RuToJdKxTFLaka5DVcCaaQdagcEbmYmEXTN9k9Na2f3Uu58ksjeKMjlmlewRp8fs55y57+SGmjsMlz3Ej9VX319HHEac98Nq9iryuJPhhK5NZvfwQVcb+VlMMO/3lX3Br6j58yuPg/Rxkoiyx4msrFvQEw6SP4SZomAiwf0CR0jHgw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ukPgIV8CE707kHwFy23b2ebNpJPorI78U11et8MhJNg=;
- b=Jm79kMXgjK5rn8WvdurZiF7qpB3I6xl01VD9OfjrWxLiNXNa40KFyyhzyu+kDS4vlFVSQSS082Z9mdsAvqWbAzncLltEI5CAa/QodI1ExP+Nzjp2qkyuU3OlFwjpoYNRH8DksvtA0114gkSyyYL9dV6PgeeKyIT0DQDvTbO+Q9Bnsf6M5Mndpm8J6zh6ww61LmWXejv5rmSrHJK3fndrjVuLPFPMg7j+lpoV3MpVljxkRiSjHGlgKwqPYahRLCCfJgNOOB+gjp651aMpdYlNjSko6qVPkg7NfhirmOENz40uLyiFDCrsK/on+JXOaVtA32Xn2xLhT/wa2gliLrIgJA==
+ bh=JQd4XvIcUEZsPIGNR0lvwyH9Ue8wo2JwN/Qo+JphN94=;
+ b=kjgV1HNHkSBLGi6OEEXq7rBBarxv5LduaqC89vD1O97hgbOImSNb/zxj0EGhLYoAT+Qu7iAXF6TZgKqxLfsoVkCyTjLYdukA23KQsLqpVWTavktIK5smjY01AxRdnogUA+zX1NZFWMAscXlKk0h1aeT4j++MuIX/I2L1eBJVhxNnUIY+RUKBEl6nVMcsSqNDYJbe8xCbklkSjq1VXL4xdAjsvQ6d5334YhQVXXj/CAgX4TrY9QSWvAnBTPEWrEvHoebBZVf4egMoPYyKtatfqlNXD85m0oeuAjsOfaDRNRcMKHQSOHtRfGdYvu4MexWW182tWrIJUz0dhjrjLuQECA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ukPgIV8CE707kHwFy23b2ebNpJPorI78U11et8MhJNg=;
- b=t4IaFfHWZi+2jEg36Y10+iGmR4FtanqhuA+PM6tfPDjb1bK90ePG7lNvAGOZVJK1K3QL4/KJAbsdjizneGzY2P8YopK6X1pSicuYkAQGzyR/K67kRHUm8eu1ehabHGhS5feLAjeT2BhOzoVF8+Fd0gPZuMncls9eQC00myPSUl4JS/uaX+N9OyNY5cJDPmUXzGGslRLuxOlfZetTP3W8czuFTu5rS95Ia55peI+Hg7NIM6Hvaa/915dukLuPpnUwbPu5qi0igcItmh3JNd3nvzjsJYrUuV5KBiB1t6xDhH8yOyyeRauQSfmGWc9gFieOW/rfHNAv3V/SA/szz30mZQ==
+ bh=JQd4XvIcUEZsPIGNR0lvwyH9Ue8wo2JwN/Qo+JphN94=;
+ b=IEMDCV4RWAbhq5/LnRhyz3ZhZ5NDajOj9pLkKrat1FvWNGle6mRd0zPj+VCfQAh0kwSCk4JjpOIWQ5beNRciUahUhBts9OXWO581YEX4DilKGQuvVqd6PZoPZy8xop2WxZiHHdNjRiDba5Au53gpO9DAcme+VrO6U85so5bVKev5mUOEXlQ/7WNDasxQwPVtZEtcE6y1yZvofZsSMettvyHWLqZ0C8l/27/1jNN+zyo4lu+hdtXMgE5k42ORS4ZDydMNxC9Mm/W542IGt2F9MnfBjzzxUdKQ9YV9pCQkanUwZHtS1+zrSqtgb1QPamTG5U94uUcX/ZXy+N4OAnQQmg==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by DM6PR02MB7017.namprd02.prod.outlook.com (2603:10b6:5:251::9) with
+ by LV3PR02MB9958.namprd02.prod.outlook.com (2603:10b6:408:19d::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.10; Mon, 22 Dec
- 2025 18:25:05 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9456.11; Tue, 23 Dec
+ 2025 15:51:22 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%3]) with mapi id 15.20.9434.009; Mon, 22 Dec 2025
- 18:25:02 +0000
+ ([fe80::900:1ccf:2b1e:52b6%3]) with mapi id 15.20.9434.009; Tue, 23 Dec 2025
+ 15:51:22 +0000
 From: Michael Kelley <mhklinux@outlook.com>
 To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
@@ -62,75 +62,75 @@ CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
 	<linux-kernel@vger.kernel.org>
 Subject: RE: [PATCH] mshv: Align huge page stride with guest mapping
 Thread-Topic: [PATCH] mshv: Align huge page stride with guest mapping
-Thread-Index: AQHcbu3m/1KRrXDdWE2Bee61xybnKLUnwn/AgAHUSgCAAZKpIA==
-Date: Mon, 22 Dec 2025 18:25:02 +0000
+Thread-Index: AQHcbu3m/1KRrXDdWE2Bee61xybnKLUnwn/AgAHUSgCAAZKpIIAEOHMA
+Date: Tue, 23 Dec 2025 15:51:22 +0000
 Message-ID:
- <SN6PR02MB41578A17A4DADD9276392298D4B4A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB4157AAFDD8BD5BDCD2D3DB99D4B5A@SN6PR02MB4157.namprd02.prod.outlook.com>
 References:
  <176593206931.276257.13023250440372517478.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
  <SN6PR02MB4157D69A4C08B0A4FE01F9FED4A8A@SN6PR02MB4157.namprd02.prod.outlook.com>
  <aUXXdjMyZ5swiCI2@skinsburskii.localdomain>
-In-Reply-To: <aUXXdjMyZ5swiCI2@skinsburskii.localdomain>
+ <SN6PR02MB41578A17A4DADD9276392298D4B4A@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To:
+ <SN6PR02MB41578A17A4DADD9276392298D4B4A@SN6PR02MB4157.namprd02.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|DM6PR02MB7017:EE_
-x-ms-office365-filtering-correlation-id: 9a86aab3-5b86-4568-c148-08de41876c6d
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|LV3PR02MB9958:EE_
+x-ms-office365-filtering-correlation-id: 9f1b91d8-73d3-4759-1cd2-08de423b1f35
 x-microsoft-antispam:
- BCL:0;ARA:14566002|461199028|13091999003|8060799015|8062599012|19110799012|41001999006|15080799012|12121999013|51005399006|31061999003|1602099012|40105399003|4302099013|440099028|10035399007|3412199025|102099032;
+ BCL:0;ARA:14566002|15080799012|13091999003|19110799012|461199028|8060799015|8062599012|31061999003|51005399006|41001999006|440099028|3412199025|40105399003|102099032;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?qvezWNn6atMB6tfdQx3VYL0XM/ocQDyYqS7U6osS4K82Bxm0WJ0H5CEg4bEq?=
- =?us-ascii?Q?Lw6d/1GIWqBtEQHMw4xrZcTWeMJxHotUDfwW5HfHqs3XXbiqDSgTv8R/oN6M?=
- =?us-ascii?Q?DORL9CuX08HKB+IT7UAGWlHY9HUhHu6CJtuQK6mmYgznZnb0d5NJUU0N4hdL?=
- =?us-ascii?Q?WYWuD4DB1aKpsJsecX8K7U8mqoTfmlq8MR0MPEKuHEfWKc3YhZ89g5LUhK0O?=
- =?us-ascii?Q?TsCwB14U9ThNSOKtsfgrb7PmqbbPSs2wA+622hYqYR/RlsRbJTCJ8WhF9zil?=
- =?us-ascii?Q?0U+1CLCHTQrcXEmsfu3w8YvL3hSXUmj9BFcKGLuKAEpX3IZBQ2iAMxyRyZWb?=
- =?us-ascii?Q?0rDLW+kRQwc/8fkMUHCaBxr3MFGSNU0M+Wif8sI8LxNX/FryrsvY11zLmdij?=
- =?us-ascii?Q?ltoGfeeknFJcvS6Ni6C0cwFl5memNFisWzQW/cbzjeOKUcv52dFAk7T1aQZX?=
- =?us-ascii?Q?2LQag7QigfkG+ajHp9PiuW1QyJ5n5A7a59tw0hun/6NhLxMzX4d+wtP2Crnl?=
- =?us-ascii?Q?2SsUeEBgydEA3Pf7fu1XkoL5jxJJBX3GTvjlQHXQVahwjQBLMRmCQaeUIIB7?=
- =?us-ascii?Q?1EkU09uZ/9hKH40Je7hkoV8BM1h1/VySkBCwASyXdqoB0uSG/FT6SShKGwlN?=
- =?us-ascii?Q?M5lafXNb5g4Ptg/etbxDXdSuwPYxSBxQ/zLWlC7D8/PJm/rBYUCcdbWWCucE?=
- =?us-ascii?Q?clBRCv809MJKEaSYidULi7LCU2pFw4SD8HdNOpUWCPdUS8T5F5hYVAuaMtJ9?=
- =?us-ascii?Q?4jztPSeYAr30CJMrLNVJcva+eaO3eBhcpYRBZ0+KDBsIlIAhd99+8KFgYWbv?=
- =?us-ascii?Q?e6r9ArRU0/DbzR/1oomvvTwYmxpT0VvJvyW2PbKQDVoNTaiLn7p9I2LuVAIB?=
- =?us-ascii?Q?s6cK9FaRntsuJ4GhKdBQE4lU+pBj/OFflsVJ1Roh/4njorHPzV2iqkN6Y1WA?=
- =?us-ascii?Q?m9YYeLmzLJRCR2zrV+XYxDY1p3C1kP4ajXH+pu9J2H2RbyG5/fvU7yDfGlZF?=
- =?us-ascii?Q?ArtOf26rdiWGkLdo5956TbzcQFuycqtHTzqvxjvuR5KNLto5QN2HFc5qAK01?=
- =?us-ascii?Q?HEvcDj8QHd+KVAGgljO5HKXH4Muhet1wli+Bf4TVHTzhYXQLahxsnEDvBePL?=
- =?us-ascii?Q?pM2GwzsXodZfdJQBGLEYtbvP47SaKnaLJpCRnusNQA60EbLQUc11XTsjqxkn?=
- =?us-ascii?Q?o9G03dD16l4Y+1MyuNSeE2F/vHhUk0g16bD0nKZA526z2QBdGpPTKWHjoISU?=
- =?us-ascii?Q?3QL8OfCPn8eANHrtxCwyOzwMUxVzX/LH+iQxXwmllBBHuXJ50ei0Jzz1UMOw?=
- =?us-ascii?Q?qAhFGWhKVjBQzxMejGe6THgYE+lhiLZGTIBgPuh5yi8+nZfLfrjCW5lK8TpN?=
- =?us-ascii?Q?J017+cpgnpRiv2X1R6IAmZB566X4xvBoUM1jnugLlcZGU8t+6g=3D=3D?=
+ =?us-ascii?Q?2rwRnJoypnpyZt6PQjLW1eBAardWhZv40akLYL2mjrKR/8c8CMZeyi3+mgLA?=
+ =?us-ascii?Q?5YwRWlQKhFtODBGsvFQKbLF0xc8w3Fbw8w8p4n7YYclJWkwHHpLHRvxIbiAn?=
+ =?us-ascii?Q?ViZeww9uR0sUsX3Em1EqXLZK4Y8Glyoq/aN04eBOY/16nOP1DtYnjkiBp9fU?=
+ =?us-ascii?Q?AjqBhSPiFJFq7uuO4fpjMp34HSCdXMPU79kOu50dh+cwwkrnveCcLIy/Fjsq?=
+ =?us-ascii?Q?h6aShX3C9aHY+Ly5iuK+hDT6ivBh5PYhR8cSUD+BHX1bYqzkGgw8tc3tWGgz?=
+ =?us-ascii?Q?LCn4wmtbMZImS3A8STBXnax04hy66EpDbShwFEvn6LXkYqt9Nt6XERTmsd1x?=
+ =?us-ascii?Q?skdbH4tpHLJ3TU/Ro2XsnZH/V3oJjhynFHqSy1U12okYGV6zL4jEncHB55no?=
+ =?us-ascii?Q?pfEFjNyfgboNXEAY9Wd36LEwGz/bUJZbqCX3eQgtbnVdazbVEwMseMY0DqlL?=
+ =?us-ascii?Q?0JNfilGzDXLfnMPj+jiWNLK95Zb1S8jT48bLNflB8IyDfiKwk/i3KRwxDlct?=
+ =?us-ascii?Q?2P8cI5FLCq/CAMgeOvmfGqvXF21d9jLBAg2uCZQT1ihkFFBGzE347zr/vgjc?=
+ =?us-ascii?Q?zBN5yRqrGcxOA3o0fFK24NwJfQdI00lMQaxJDljEzc8C0AEYmfs76tJ+Bt/j?=
+ =?us-ascii?Q?mGvhySKDVv4qS2mwXgkM5y1KXdSVQXOEtiWxt/V2p7QkGYE2l3SB2sIt01+s?=
+ =?us-ascii?Q?kS9SALcmgd6ySiYfsE/4no31sxDMvhpb2H84Xt6gTlCeT9+5YGRxke+vfx33?=
+ =?us-ascii?Q?CFDed5RImiTFS3TG7laTjFO/Mssk9ypnqxOmjJfasj/UmmdXoLE7xfj8R+lA?=
+ =?us-ascii?Q?CkBlR1a9z61LwXHktUAiN9YKjmCfkfL8JXMKf5Qcwcss2JoyfnKw1jvt1Xna?=
+ =?us-ascii?Q?x/A5w7YZj2BaQ79WwbQzOy/OSxC8iRnO9aOO3GcFu69/Vi9KjIzR6fpZp5sp?=
+ =?us-ascii?Q?jBcUw6IosrQItfE8H8Z9W+1dumQWP846bJTjMBVrUw/hmkfiv+CHvKvdj2rk?=
+ =?us-ascii?Q?yD3nXfXQUBfrIXfX5RN60Pn8etLb/cnx1jWYrtD5cSA6O0+rCN0GAMj1o0ep?=
+ =?us-ascii?Q?mlZLOVqk0ILKmW/6OfJMFKj24oqxZ0HlHmcBcXVoEv+yus1pI3Pvl1zOQmPN?=
+ =?us-ascii?Q?6TI+jb4lnDpCftqI0v1nG/D0m8BKUsD+GMRPaRzlZZVjn3OWR1lTsYe9Ibrf?=
+ =?us-ascii?Q?qcaV/DTrhoH8Tzx8CYTtIeMw6zU7zJ8jYwQBck+r6BRgkJ8fgwbaodcyx9R2?=
+ =?us-ascii?Q?oaor2az6VCChgtgPQ/Cv?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?qpEvat4M48Gf8rpxGq+urhhITkLehXrtEqv+fDP/vNRPMhtKtvc+0RLVf9al?=
- =?us-ascii?Q?vnu1bF9tyo+6WR+YA6D6LSsmlf5+vEcjq+k02CsdkCcSgVgTQYuc2Vt9ndwH?=
- =?us-ascii?Q?aoZFENFWOjKa6OSWjkkPeo4BRbtMhmva+UpLumyU+xmonvcUhJD7deKiMXQ4?=
- =?us-ascii?Q?IYeN3osKbG9zrIAiLZTRlgbVIBJjSoug7qpH1G4pHLjD9nrS/9R1P4LcXJ/B?=
- =?us-ascii?Q?6nu9lH7M7b4qD5xcQzUHTy1/gKf58TTWhEAta7/dlYEJCk23wsoPJScGREPr?=
- =?us-ascii?Q?2oCkXjT5yUbJC7HQ1XFgoEzUfo59ZeyOBD/hPw32iA/wnHB0E89K+9ubGlu6?=
- =?us-ascii?Q?BSYQxME8e+2bpjXYbj4Ggd60PzaLAtRAMZX1VG34vBXwULPPb45NeM6G4YMq?=
- =?us-ascii?Q?hWi39hpwHN8zhV0dyuT8uvzyimPCH/2FYgv7zONcG2m4YaKPTcPpXGYBcQrW?=
- =?us-ascii?Q?/JiXkVL0EYz1ZIvt3eWLWl9Cok87F/7ra2IDEUHDpGEBpQHGLLJupNwc5zp6?=
- =?us-ascii?Q?0wo9XdsrOLF4Hq5K8nKh0A8S+EKLEtXHTtm2QmjSm2bSnoDjMnBLq6gJluGn?=
- =?us-ascii?Q?1nLsRL8NfQrQmuNWmaRsIkAIlkQhA7+CcxukTXu1os4mBMT3TDm1zQ5RbV8o?=
- =?us-ascii?Q?coQg4XoD7Hjo51KRyQogUndE41JLXD/RH+rjeG6SSFmI7GI57l31oTSnT01z?=
- =?us-ascii?Q?fELZzVTr3to0gqc7ozAGXpIJ/deX3wwiPTJpnDNLU9Hrg1A8wcYxhIRW7itN?=
- =?us-ascii?Q?Qdv4c9MRdYdddLduBzzs5yJALIXWh5V5f/FoWzfFfsKAkPiDxlaPMWMRDyri?=
- =?us-ascii?Q?3OgmXNw1MqepE5TnsvPftm4uurxO5QXMYyJFJaH6eNv2D6kn4DoZSa6wyaYT?=
- =?us-ascii?Q?YSw18NhSD8Us7/MaU0K4ANqq6yIY/YdFk4CjFZczY6dZKqnvm+Me0CCZ3t9Y?=
- =?us-ascii?Q?dGsVA5KR0G2ev+OWLCf6RHhg74lpsCb+1iJOGxuTptCCquVnIXcWXD04Pv5m?=
- =?us-ascii?Q?hqZisF4Q7aOd/cYWyxIWFbqIFQk/o+qR0jU/Vtu+QRyvZzKlxdjYw3Yj2u4B?=
- =?us-ascii?Q?Z1/j5XgBWkI9qiPUDpRlJPZGIar/nuG2FQdA++S35BEk5x6aah+LQ3cEwTnO?=
- =?us-ascii?Q?+Wx1eggQGHFidNcuq40lr13t+6hSbYfFaSwsZBUxuBsRGTcZ8ne9M/yyIVzm?=
- =?us-ascii?Q?RDQoG82BlNCqy86S+7cmudmKlSR6diuLrU7KqFDhhnPiUQ9rNKwKNadlIpdF?=
- =?us-ascii?Q?KDvmlT3NuNtQf5B89/FMCgqDd9k+zRjEWju+lOd7wOXIgbTXXpl7UHnQ4IZU?=
- =?us-ascii?Q?fktpbdU8TPk+2Mn1vpFU37yKoqFE3ByIQMJ0V1kuKFkR+/Ot2Yh1cVkcoEDp?=
- =?us-ascii?Q?mQQIP20=3D?=
+ =?us-ascii?Q?LXaLknI52MZvHE3Da8ioqVkk1Ic1Rq+q+Bp7mwxEm7I88PFj8BhFTHD8vbY3?=
+ =?us-ascii?Q?xw076exazawBpPCnAM//yXFw+/IssPq9WTpajuu4FFSRLVG3zRQ3OtMHOJ+6?=
+ =?us-ascii?Q?kvwqYqcnzmh45HEHcwQbJpxSjpzg6k+vOgqi3GwgDxo2QFsvK8DtZhNOjRJs?=
+ =?us-ascii?Q?VuhCf1pGKbLL+0+L9+ttN9YTGR/10vKz0zFpqGByn4duHo5rZg6RKCzH/QNW?=
+ =?us-ascii?Q?MbK+P7pRtn+hXgDMHGyYU7mTRmnj6Yihhbs2cQTulQMj8mb3Z/LeUvvL7tBl?=
+ =?us-ascii?Q?FtSRJmSewVi0KlOpx2nOk9Igd9qlSRqHDATPVlaB+tQf+TSNarMdJv3nhEyP?=
+ =?us-ascii?Q?R4Qws8IIF7AMs6D9nJFD68wVzO8+ALL9kdegBApxvCCxIIe7F8BQpadu/ao3?=
+ =?us-ascii?Q?xUQ9Wv3eYldxZGhhC6F1g4EmdNGrb362idvhkcW2qr+WyMrU6LZGfMZRy5Ue?=
+ =?us-ascii?Q?74Iuo8eZrPi+4Q5axgMZNrclmLhf5PMRWUlUncI6QyYcQoBYPJLeejdor4Xj?=
+ =?us-ascii?Q?oGzX09gxLhtE74M5fhIXgqSehBwjcpt5oxLmpghkp0WDWZlv7wfskMrf0Z7V?=
+ =?us-ascii?Q?keD9+tOeQ+fdnZ2XscOaNSyIXfZHh9A9yvZh2c7P8pnwm6Ycnj/xuZsf4Rrs?=
+ =?us-ascii?Q?Orq5lbNYALq/eDQtWqlX882CGaNsEesDwj+wrzUQ62F7uwDjWb5s2Obqi/pL?=
+ =?us-ascii?Q?8EyuRp2I/uyoeDB9XWCAff3OYIM46sMujmBQEVDaioruZjfSv6LIO8EUFD4Q?=
+ =?us-ascii?Q?DgOkS6q79VEFuxzjG27s1BheEVBB3zKfFB+CmIycuyJJq3LUBKy8izwqCo8/?=
+ =?us-ascii?Q?I3gvS7NyuPE50en2avhqrlNOs3ztdDV0ufz94JSTFAeb0r1Dv/tT5elWdj0p?=
+ =?us-ascii?Q?gZfMGOBofuB+VDo2ewbqUaX9cU2i1XvWVtj3t3MrFj6A9PmJ5kIjYwf/6qtL?=
+ =?us-ascii?Q?fWLXK04mraZTwm/LT2Ts/vI1G7hqxnmSUt87Ljsn53sMEchm+kEuT/jg7Ww9?=
+ =?us-ascii?Q?JgR2SXkYXWLrJn0NlyHnm/RKLifOkngJLNpIRpPMq9p6jJEKy1TuEZVxAMyE?=
+ =?us-ascii?Q?PK5168MnWgIS7uu2HmZxmSDnczmPPo8BY2wcJvHoog0+J6JnKTamHBe/IMI7?=
+ =?us-ascii?Q?fCaokWJaWvVWbSbqaXbOKdQ9p+kbfMRNx0+2TTdDgOiRnpnF7dQYsbAUOpXs?=
+ =?us-ascii?Q?strv0G//otZnmjTlbuZMI+UXnY3UZUvrMiviW9Hg5ApSWJdT4eZHY3TdrXfL?=
+ =?us-ascii?Q?yijc7U4XGmB/6wWchwuRQU4ic9ko+xkhpV/+qvH6ApWJbFWISjVz5N4iq3jh?=
+ =?us-ascii?Q?wisyLUDzDY+eDs/dz3Q/6GqpMvzcJ3Rn3YUsYcwhMTU7iWOGQEsAbBWfMZDQ?=
+ =?us-ascii?Q?aQ+r8lk=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -143,184 +143,75 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a86aab3-5b86-4568-c148-08de41876c6d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Dec 2025 18:25:02.8528
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f1b91d8-73d3-4759-1cd2-08de423b1f35
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Dec 2025 15:51:22.6315
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB7017
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR02MB9958
 
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Friday=
-, December 19, 2025 2:54 PM
+From: Michael Kelley Sent: Monday, December 22, 2025 10:25 AM
 >=20
-> On Thu, Dec 18, 2025 at 07:41:24PM +0000, Michael Kelley wrote:
-> > From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Tu=
-esday,
-> December 16, 2025 4:41 PM
-> > >
-> > > Ensure that a stride larger than 1 (huge page) is only used when both
-> > > the guest frame number (gfn) and the operation size (page_count) are
-> > > aligned to the huge page size (PTRS_PER_PMD). This matches the
-> > > hypervisor requirement that map/unmap operations for huge pages must =
-be
-> > > guest-aligned and cover a full huge page.
-> > >
-> > > Add mshv_chunk_stride() to encapsulate this alignment and page-order
-> > > validation, and plumb a huge_page flag into the region chunk handlers=
+[snip]
+>=20
+> Separately, in looking at this, I spotted another potential problem with
+> 2 Meg mappings that somewhat depends on hypervisor behavior that I'm
+> not clear on. To create a new region, the user space VMM issues the
+> MSHV_GET_GUEST_MEMORY ioctl, specifying the userspace address, the
+> size, and the guest PFN. The only requirement on these values is that the
+> userspace address and size be page aligned. But suppose a 4 Meg region is
+> specified where the userspace address and the guest PFN have different
+> offsets modulo 2 Meg. The userspace address range gets populated first,
+> and may contain a 2 Meg large page. Then when mshv_chunk_stride()
+> detects a 2 Meg aligned guest PFN so HVCALL_MAP_GPA_PAGES can be told
+> to create a 2 Meg mapping for the guest, the corresponding system PFN in
+> the page array may not be 2 Meg aligned. What does the hypervisor do in
+> this case? It can't create a 2 Meg mapping, right? So does it silently fa=
+llback
+> to creating 4K mappings, or does it return an error? Returning an error w=
+ould
+> seem to be problematic for movable pages because the error wouldn't
+> occur until the guest VM is running and takes a range fault on the region=
 .
-> > > This prevents issuing large-page map/unmap/share operations that the
-> > > hypervisor would reject due to misaligned guest mappings.
-> >
-> > This code looks good to me on the surface. But I can only make an educa=
-ted
-> > guess as to the hypervisor behavior in certain situations, and if my gu=
-ess is
-> > correct there's still a flaw in one case.
-> >
-> > Consider the madvise() DONTNEED experiment that I previously called out=
-. [1]
-> > I surmise that the intent of this patch is to make that case work corre=
-ctly.
-> > When the .invalidate callback is made for the 32 Kbyte range embedded i=
-n
-> > a previously mapped 2 Meg page, this new code detects that case. It cal=
-ls the
-> > hypervisor to remap the 32 Kbyte range for no access, and clears the 8
-> > corresponding entries in the struct page array attached to the mshv reg=
-ion. The
-> > call to the hypervisor is made *without* the HV_MAP_GPA_LARGE_PAGE flag=
-.
-> > Since the mapping was originally done *with* the HV_MAP_GPA_LARGE_PAGE
-> > flag, my guess is that the hypervisor is smart enough to handle this ca=
-se by
-> > splitting the 2 Meg mapping it created, setting the 32 Kbyte range to n=
-o access,
-> > and returning "success". If my guess is correct, there's no problem her=
-e.
-> >
-> > But then there's a second .invalidate callback for the entire 2 Meg pag=
-e. Here's
-> > the call stack:
-> >
-> > [  194.259337]  dump_stack+0x14/0x20
-> > [  194.259339]  mhktest_invalidate+0x2a/0x40  [my dummy invalidate call=
-back]
-> > [  194.259342]  __mmu_notifier_invalidate_range_start+0x1f4/0x250
-> > [  194.259347]  __split_huge_pmd+0x14f/0x170
-> > [  194.259349]  unmap_page_range+0x104d/0x1a00
-> > [  194.259358]  unmap_single_vma+0x7d/0xc0
-> > [  194.259360]  zap_page_range_single_batched+0xe0/0x1c0
-> > [  194.259363]  madvise_vma_behavior+0xb01/0xc00
-> > [  194.259366]  madvise_do_behavior.part.0+0x3cd/0x4a0
-> > [  194.259375]  do_madvise+0xc7/0x170
-> > [  194.259380]  __x64_sys_madvise+0x2f/0x40
-> > [  194.259382]  x64_sys_call+0x1d77/0x21b0
-> > [  194.259385]  do_syscall_64+0x56/0x640
-> > [  194.259388]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> >
-> > In __split_huge_pmd(), the .invalidate callback is made *before* the 2 =
-Meg
-> > page is actually split by the root partition. So mshv_chunk_stride() re=
-turns "9"
-> > for the stride, and the hypervisor is called with HV_MAP_GPA_LARGE_PAGE
-> > set. My guess is that the hypervisor returns an error because it has al=
-ready
-> > split the mapping. The whole point of this patch set is to avoid passin=
-g
-> > HV_MAP_GPA_LARGE_PAGE to the hypervisor when the hypervisor mapping
-> > is not a large page mapping, but this looks like a case where it still =
-happens.
-> >
-> > My concern is solely from looking at the code and thinking about the pr=
-oblem,
-> > as I don't have an environment where I can test root partition interact=
-ions
-> > with the hypervisor. So maybe I'm missing something. Lemme know what yo=
-u
-> > think .....
-> >
+> Silently falling back to creating 4K mappings has performance implication=
+s,
+> though I guess it would work. My question is whether the
+> MSHV_GET_GUEST_MEMORY ioctl should detect this case and return an
+> error immediately.
 >=20
-> Yeah, I see your point: according to this stack, once a part of the page
-> is invalidated, the folio order remains the same until another invocation
-> of the same callback - this time for the whole huge
-> page - is made. Thus, the stride is still reported as the huge page size,
-> even though a part of the page has already been unmapped.
->=20
-> This indeed looks like a flaw in the current approach, but it's actually
-> not. The reason is that upon the invalidation callback, the driver
-> simply remaps the whole huge page with no access (in this case, the PFNs
-> provided to the hypervisor are zero), and it's fine as the hypervisor
-> simply drops all the pages from the previous mapping and marks this page
-> as inaccessible. The only check the hypervisor makes in this case is
-> that both the GFN and mapping size are huge page aligned (which they are
-> in this case).
->=20
-> I hope this clarifies the situation. Please let me know if you have any
-> other questions.
 
-Thanks. Yes, this clarifies. My guess about the hypervisor behavior was wro=
-ng.
-Based on what you've said about what the hypervisor does, and further study=
-ing
-MSHV code, here's my recap of the HV_MAP_GPA_LARGE_PAGE flag:
+In thinking about this more, I can answer my own question about the
+hypervisor behavior. When HVCALL_MAP_GPA_PAGES is set, the full
+list of 4K system PFNs is not provided as an input to the hypercall, so
+the hypervisor cannot silently fall back to 4K mappings. Assuming
+sequential PFNs would be wrong, so it must return an error if the
+alignment of a system PFN isn't on a 2 Meg boundary.
 
-1. The hypervisor uses the flag to determine the granularity (4K or 2M) of =
-the
-mapping HVCALL_MAP_GPA_PAGES or HVCALL_UNMAP_GPA_PAGES will
-create/remove. As such, the hypercall "repcount" is in this granularity. GF=
-Ns,
-such as the target_gpa_base input parameter and GFNs in the pfn_array, are
-always 4K GFNs, but if the flag is set, a GFN is treated as the first 4K GF=
-N in
-a contiguous 2M range. If the flag is set, the target_gpa_base GFN must be
-2M aligned.
+For a pinned region, this error happens in mshv_region_map() as
+called from  mshv_prepare_pinned_region(), so will propagate back
+to the ioctl. But the error happens only if pin_user_pages_fast()
+allocates one or more 2 Meg pages. So creating a pinned region
+where the guest PFN and userspace address have different offsets
+modulo 2 Meg might or might not succeed.
 
-2. The hypervisor doesn't care whether any existing mapping is 4K or 2M. It
-always removes an existing mapping, including splitting any 2M mappings if
-necessary. Then if the operation is to create/re-create a mapping, it creat=
-es
-an appropriate new mapping.
+For a movable region, the error probably can't occur.
+mshv_region_handle_gfn_fault() builds an aligned 2 Meg chunk
+around the faulting guest PFN. mshv_region_range_fault() then
+determines the corresponding userspace addr, which won't be on
+a 2 Meg boundary, so the allocated memory won't contain a 2 Meg
+page. With no 2 Meg pages, mshv_region_remap_pages() will
+always do 4K mappings and will succeed. The downside is that a
+movable region with a guest PFN and userspace address with
+different offsets never gets any 2 Meg pages or mappings.
 
-My error was in thinking that the flag had to match any existing mapping.
-But the behavior you've clarified is certainly better. It handles the vagar=
-ies
-of the Linux "mm" subsystem, which in one case in my original experiment
-(madvise) invalidates the small range, then the 2M range, but the other
-case (mprotect) invalidates the 2M range, then the small range.
-
-Since there's no documentation for these root partition hypercalls, it sure
-would be nice if this info could be captured in code comments for some
-future developer to benefit from. If that's not something you want to
-worry about, I could submit a patch later to add the code comments
-(subject to your review, of course).
-
-Separately, in looking at this, I spotted another potential problem with
-2 Meg mappings that somewhat depends on hypervisor behavior that I'm
-not clear on. To create a new region, the user space VMM issues the
-MSHV_GET_GUEST_MEMORY ioctl, specifying the userspace address, the
-size, and the guest PFN. The only requirement on these values is that the
-userspace address and size be page aligned. But suppose a 4 Meg region is
-specified where the userspace address and the guest PFN have different
-offsets modulo 2 Meg. The userspace address range gets populated first,
-and may contain a 2 Meg large page. Then when mshv_chunk_stride()
-detects a 2 Meg aligned guest PFN so HVCALL_MAP_GPA_PAGES can be told
-to create a 2 Meg mapping for the guest, the corresponding system PFN in
-the page array may not be 2 Meg aligned. What does the hypervisor do in
-this case? It can't create a 2 Meg mapping, right? So does it silently fall=
-back
-to creating 4K mappings, or does it return an error? Returning an error wou=
-ld
-seem to be problematic for movable pages because the error wouldn't
-occur until the guest VM is running and takes a range fault on the region.
-Silently falling back to creating 4K mappings has performance implications,
-though I guess it would work. My question is whether the
-MSHV_GET_GUEST_MEMORY ioctl should detect this case and return an
-error immediately.
+My conclusion is the same -- such misalignment should not be
+allowed when creating a region that has the potential to use 2 Meg
+pages. Regions less than 2 Meg in size could be excluded from such
+a requirement if there is benefit in doing so. It's possible to have
+regions up to (but not including) 4 Meg where the alignment prevents
+having a 2 Meg page, and those could also be excluded from the
+requirement.
 
 Michael
-
-> >
-> > [1] https://lore.kernel.org/linux-hyperv/SN6PR02MB4157978DFAA6C2584D067=
-8E1D4A1A@SN6PR02MB4157.namprd02.prod.outlook.com/
 
