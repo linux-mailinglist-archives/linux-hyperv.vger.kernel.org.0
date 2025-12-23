@@ -1,45 +1,45 @@
-Return-Path: <linux-hyperv+bounces-8066-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8067-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D936CDACBC
-	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Dec 2025 00:07:31 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id A62CFCDACD1
+	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Dec 2025 00:09:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 4A8383016931
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Dec 2025 23:07:28 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 3418F3017E13
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Dec 2025 23:09:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B41972F12C9;
-	Tue, 23 Dec 2025 23:07:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD9AD30AD06;
+	Tue, 23 Dec 2025 23:09:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rjBI2ba3"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="llDbrej8"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4062F2D97AC;
-	Tue, 23 Dec 2025 23:07:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CEC32F12C9;
+	Tue, 23 Dec 2025 23:09:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766531246; cv=none; b=NB/Kh43HXnyyQ3SLGArIc8SVGD0OLEWds4TCji9ntnnRBMQ7ktHBoqSY+Ip+39QI1lzLzYazvQWPdyqPvfOtr9T6J3zPak/RDGJKiEAS0HBQY9ey5Zo58PDrj6ZgpEqjjN7HIYsRwgMHSK44n8l0nf1VefZJR1YtdIg/+5mhX14=
+	t=1766531368; cv=none; b=L7d2Ck5Z7H6E8UdtLbykNWfdZguRMR3/E/NpA6yerF/DD8tcJiBsV5vVeVjlqdZTJ+qEtACLIdgABk/Hx1JjS2LGHpP7cY25O7iJSizniC0XUx87Kezx3uMcLDSK828xZozv/69o1L3vEAcnMPloEs2WO+5m6g/CicsSkbtBoT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766531246; c=relaxed/simple;
-	bh=p4Vim08FZY9jFjXJAON9DOs70JPSNCDFirXt+o6YuZU=;
+	s=arc-20240116; t=1766531368; c=relaxed/simple;
+	bh=sAwwy2sio6lkc47FDsReM8SoyBwcC4MIdfRDutt5yKw=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=c26EBgXpn+gmdJQYiaB9XfBUEF7P36Y5mJ4dowNtTNM6FDmY7fuB/MC9FGdfcj0pnCZyhdLT1gQiPH/93NYpK3CGnVITAh6FaCuRRHk09AiXpl3+WNEwdtxsLks9OPqWwFPod8AKS8hdeuSrHD06OJyGt5Athqo2/aQs/c3M/+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rjBI2ba3; arc=none smtp.client-ip=13.77.154.182
+	 In-Reply-To:Content-Type; b=RHYMImCGobNis2Pegz2LLkEabB9xvLD9m3bex+wKsR8OtipMPy0y3AtKlo/2/T9dpm5AkFRFcSM8tIb2wowbh31ceZBdKN5cm96XfnMkisHfbJRsPaCAqfuHOlE5l5FaUwsEfIAn4LkvMJ8giu/8rRFxMifDZcuCJBeCGS5sHXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=llDbrej8; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.65.0.124] (unknown [20.236.10.206])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 24F85212A423;
-	Tue, 23 Dec 2025 15:07:24 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 24F85212A423
+Received: from [100.65.0.124] (unknown [20.236.11.102])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 4D2A1212A423;
+	Tue, 23 Dec 2025 15:09:26 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4D2A1212A423
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1766531244;
-	bh=p4Vim08FZY9jFjXJAON9DOs70JPSNCDFirXt+o6YuZU=;
+	s=default; t=1766531366;
+	bh=sAwwy2sio6lkc47FDsReM8SoyBwcC4MIdfRDutt5yKw=;
 	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=rjBI2ba38RfTtEu5BbW0kliCcvjdRDZn23LebTve+rriaXtKHUwweXK1ufb9SN3oR
-	 8JYF2egfQA8WfvpHErFhRijLanLhcXu5bc6b9FTj8iAd2WEz1cllsopr3s7vktmNfM
-	 pzmi4i3eYsbkDLvjtBWhAtoJMKzkxdk1Ui8X5Wco=
-Message-ID: <3fe6a9a3-b6e2-4550-b2a9-924b1fca21b5@linux.microsoft.com>
-Date: Tue, 23 Dec 2025 15:07:22 -0800
+	b=llDbrej8RnKs7HiCXtYol6Xr74gRhUTQrEcaA/KKSG+N+Sh20qp6TGcYvt3bBlCN2
+	 0wCGNwfDaGB/0eCKtBuNaBLT8jlI36puukcIoq/Um4aRmh5Ai88d/bRPQST+bVbl1Z
+	 i6H3r7qWW4HPJOlfCXGHrhiVESPFH+bwwaFodIEc=
+Message-ID: <10482c90-50c8-4e72-ba40-1d0e6e722128@linux.microsoft.com>
+Date: Tue, 23 Dec 2025 15:09:24 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -47,8 +47,8 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: [PATCH v5 1/2] dt-bindings: microsoft: Add vmbus
- message-connection-id property
+Subject: [PATCH v5 2/2] Drivers: hv: vmbus: retrieve connection-id from
+ DeviceTree
 From: Hardik Garg <hargar@linux.microsoft.com>
 To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, krzk+dt@kernel.org, robh@kernel.org,
@@ -63,33 +63,16 @@ In-Reply-To: <58cb22cb-b0c8-4694-b9e4-971aa7f0f972@linux.microsoft.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Document the microsoft,message-connection-id property for VMBus
-DeviceTree node. The connection-id is a hardware-level identifier
-that specifies which Hyper-V message port (or mailbox slot) the
-guest should use to communicate with the VMBus control plane.
-Historically, VMBus always used a single, fixed connection ID.
-However, with the introduction of Virtual Trust Level 2 (VTL2)
-support, the control plane can now reside in a different trust
-level, requiring the guest to communicate through a different
-message port. This connection-id is determined by the hypervisor
-based on the status of VMBus relay. From the guests perspective,
-it is completely static for the lifetime of that VM instance, it
-never changes at runtime. Once the kernel boots, it must read this
-value to establish communication with the correct VMBus control
-plane. There is currently no system API, or discoverable interface
-that allows the guest to determine this value dynamically.
-
-Each guest has a private hypervisor mailbox and cannot access any other
-guests communication path. Using an incorrect connection ID does not
-allow eavesdropping or cause interference, it only results in failed
-VMBus initialization because the host drops messages sent to an
-unexpected port. Thus, exposing the correct connection ID to the guest
-is safe and necessary for correct initialization.
+The connection-id determines which hypervisor communication channel
+the guest should use to talk to the VMBus host. Add steps to read
+this value from the DeviceTree. When this property is not present,
+the driver selects the connection ID based on the protocol version
+(4 for VERSION_WIN10_V5 and newer, or 1 for older versions).
 
 Signed-off-by: Hardik Garg <hargar@linux.microsoft.com>
 ---
 v4:
-https://lore.kernel.org/all/1750374395-14615-2-git-send-email-hargar@linux.microsoft.com
+https://lore.kernel.org/all/1750374395-14615-3-git-send-email-hargar@linux.microsoft.com
 v3:
 https://lore.kernel.org/all/6a92ca86-ad6b-4d49-af6e-1ed7651b8ab8@linux.microsoft.com
 v2:
@@ -97,40 +80,57 @@ https://lore.kernel.org/all/096edaf7-cc90-42b6-aff4-c5f088574e1e@linux.microsoft
 v1:
 https://lore.kernel.org/all/6acee4bf-cb04-43b9-9476-e8d811d26dfd@linux.microsoft.com
 ---
- .../devicetree/bindings/bus/microsoft,vmbus.yaml     | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/hv/connection.c |  7 +++++--
+ drivers/hv/vmbus_drv.c  |  8 ++++++++
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-index 0bea4f5287ce..4745c2b89ac5 100644
---- a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-+++ b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-@@ -17,6 +17,17 @@ properties:
-   compatible:
-     const: microsoft,vmbus
+diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+index 5d9cb5bf2d62..660cad3886f5 100644
+--- a/drivers/hv/connection.c
++++ b/drivers/hv/connection.c
+@@ -100,12 +100,15 @@ int vmbus_negotiate_version(struct
+vmbus_channel_msginfo *msginfo, u32 version)
+     if (version >= VERSION_WIN10_V5) {
+         msg->msg_sint = VMBUS_MESSAGE_SINT;
+         msg->msg_vtl = ms_hyperv.vtl;
+-        vmbus_connection.msg_conn_id = VMBUS_MESSAGE_CONNECTION_ID_4;
+     } else {
+         msg->interrupt_page = virt_to_phys(vmbus_connection.int_page);
+-        vmbus_connection.msg_conn_id = VMBUS_MESSAGE_CONNECTION_ID;
+     }
  
-+  microsoft,message-connection-id:
-+    description:
-+      connection-id is a hardware-level identifier that specifies
-+      which Hyper-V message port (or mailbox slot) the guest should
-+      use to communicate with the VMBus control plane. When this
-+      property is not present, the driver selects the connection ID
-+      based on the protocol version (4 for VERSION_WIN10_V5 and
-+      newer, or 1 for older versions).
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 1
++    /* Set default connection ID if not provided via DeviceTree */
++    if (!vmbus_connection.msg_conn_id)
++        vmbus_connection.msg_conn_id = (version >= VERSION_WIN10_V5) ?
++            VMBUS_MESSAGE_CONNECTION_ID_4 : VMBUS_MESSAGE_CONNECTION_ID;
 +
-   ranges: true
+     if (vmbus_is_confidential() && version >= VERSION_WIN10_V6_0)
+         msg->feature_flags = VMBUS_FEATURE_FLAG_CONFIDENTIAL_CHANNELS;
  
-   '#address-cells':
-@@ -55,6 +66,7 @@ examples:
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 47fcab38398a..f8c0594ab85f 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -2600,10 +2600,18 @@ static int vmbus_device_add(struct
+platform_device *pdev)
+     struct of_range range;
+     struct of_range_parser parser;
+     struct device_node *np = pdev->dev.of_node;
++   unsigned int conn_id;
+     int ret;
  
-             vmbus@ff0000000 {
-                 compatible = "microsoft,vmbus";
-+                microsoft,message-connection-id = <4>;
-                 #address-cells = <2>;
-                 #size-cells = <1>;
-                 ranges = <0x0f 0xf0000000 0x0f 0xf0000000 0x10000000>;
+     vmbus_root_device = &pdev->dev;
+ 
++    /* Read connection ID from DeviceTree */
++    if (!of_property_read_u32(np, "microsoft,message-connection-id",
++                  &conn_id)) {
++        pr_info("VMBus message connection ID: %u\n", conn_id);
++        vmbus_connection.msg_conn_id = conn_id;
++    }
++
+     ret = of_range_parser_init(&parser, np);
+     if (ret)
+         return ret;
 -- 
 2.34.1
 
