@@ -1,103 +1,112 @@
-Return-Path: <linux-hyperv+bounces-8080-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8083-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADAD8CDB249
-	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Dec 2025 03:15:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AE3BCDC4E1
+	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Dec 2025 14:02:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5B4FD3029205
-	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Dec 2025 02:15:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1048A3080B76
+	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Dec 2025 13:01:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 984E12BD5A1;
-	Wed, 24 Dec 2025 02:15:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8054226F2AD;
+	Wed, 24 Dec 2025 13:01:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ff86+NJi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BAGu+9Ld";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="uNMtlKXN"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C945C1F0994
-	for <linux-hyperv@vger.kernel.org>; Wed, 24 Dec 2025 02:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA61830B519
+	for <linux-hyperv@vger.kernel.org>; Wed, 24 Dec 2025 13:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766542501; cv=none; b=qhvOeDNUD+Yo2HQNXetXbI3lqIU/QAM22GsAzLu3S/ijuhrMQkd3ERIsd/0/x6Tn/il/Wu8CNzYcoZqwr/oN1WV8NDEoVv7+XyLyRiCDkvQnz2OllHIrPITViXOL0okdpjbFiGpTu/SsLL5zYwv34gZvIqnUlDYlEuKCkxrwaEU=
+	t=1766581284; cv=none; b=R51J0oYqYCFwe63juddz0YAXPfu+D5E8KECfACDRQC2NtkwoHkfigwTNQqgkYn5FCzGmQywMo1kYuCX33+vcPdO2QL7uOmrL/QUeZzWUjrXmjj4hTF/uXIYg/Nv9TNvoryE52h3K1Dqd4meXexZrni375V/lre9VnACa8Vqp/KU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766542501; c=relaxed/simple;
-	bh=fag3FxlJG3ZXO56Q4uis4IXo7o2vEhpJMwuQCgBCfc8=;
+	s=arc-20240116; t=1766581284; c=relaxed/simple;
+	bh=ZPltMTzBETTQT1CqF+sZl3/fAao1GzI/HXVbssWVgUQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FqlMU/B+Drt8xVCWtcwI20bTjxZqLtfoKTFauw9Lv4sgLu+mae6iHBxUMDfJjCFpizixtRrOpbsuYX5xmJ1z1DCZRJSJcvI4mBxwsPNQqJzLawkDJWYRM87+4hNyMubFSR3c4GjICp43JrRbxZCi6sc7vt+354BXw/N+W5LXCC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ff86+NJi; arc=none smtp.client-ip=209.85.160.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-3ec96ee3dabso4385058fac.1
-        for <linux-hyperv@vger.kernel.org>; Tue, 23 Dec 2025 18:14:59 -0800 (PST)
+	 Content-Type:Content-Disposition:In-Reply-To; b=mYlzmtjkbJq/lZ0gpfbtO/uriTt5mP+xwEU31pq9V057u+TVey5/jw1QA6ZxPu+Xd3bjN0Lq66jEitxrf2piqkQMBk6ADjMHuhqb71PNLQUZfVftPpZ4cw6DmYOMA5JOgbD+D8eOBSXIhN4tjHAce+5Wh0CFSImpts0wkDkybh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BAGu+9Ld; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=uNMtlKXN; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1766581281;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZPltMTzBETTQT1CqF+sZl3/fAao1GzI/HXVbssWVgUQ=;
+	b=BAGu+9LdkgXJve6guLUEb/NUDKR2WiUSbkG0BwECraH/zP1zfNijwcQnTQ8aJl+dXopbvz
+	0pn3fVxQTiYjpbRQcI6MmTFKKrU4tmkwtfDV4HYHpOn3uBlKTmitFYVbqfeItwNdIfYS1w
+	3ob99kfYk7CVJB5aUlEsIWCyltQvSr4=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-659-XLnvev-fOBGIBBA9jXzd8w-1; Wed, 24 Dec 2025 08:01:20 -0500
+X-MC-Unique: XLnvev-fOBGIBBA9jXzd8w-1
+X-Mimecast-MFC-AGG-ID: XLnvev-fOBGIBBA9jXzd8w_1766581278
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-47904cdb9bbso57717975e9.1
+        for <linux-hyperv@vger.kernel.org>; Wed, 24 Dec 2025 05:01:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766542499; x=1767147299; darn=vger.kernel.org;
+        d=redhat.com; s=google; t=1766581278; x=1767186078; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mn5gdOJNVLCgqxTAZaOj5KghlS4vIZEHYcNf0bwJm28=;
-        b=Ff86+NJieNY0LIRZJF9PpLgBlT98PpUiPWKSDq3pQf4r9DyAxZoWwUyE80CqvYGguy
-         C9O00n7doT4zcnxX/QrIlzwx1HCUfz3GtT2HADIgRQIqalGn6Xkbu0DC+8ekuRbIT5in
-         /nf0CciZJuUgO1sSUjdOuImoRsubUJj9ygcKI5Xt53KaZmkZ/LePDoMiC9hgu1z3FbjF
-         pQL04aOR+xQ2AbQk6Zm4oHtuy/QAk6PCLda7F+2K245U5grpbCKw+a8ycia9+/Nvvi7B
-         p7304wrSl/5DAJqH9aZZ7AG3ybpQTns+BRARESTBjce0cMb9hU1y0jDBXAYU8I4E3dy+
-         zj7A==
+        bh=ZPltMTzBETTQT1CqF+sZl3/fAao1GzI/HXVbssWVgUQ=;
+        b=uNMtlKXNNG/lVwjdQjqTUwZPFSWRlFQpHTOF0uphMYaQKf/d/C7lSmZDkUCJOFAson
+         9ac5Ekf5eRJRCTZmwMZ6F3EMvIxTZLrhD05Rn918KZP4A2xl4mIe4K/7PeBMYBoquE6Z
+         QjspJV/d5vPuMqkA0jDsr3nR4+GJfDpflJ7IX3NWbDE/11IPowFo4UMVsW0q8jGvxLH4
+         E9II5bWbrrh19qy5G5+7dC0vzeaCZ7y9SGjUrMN8fTaJ/z931MxXo1pL1NaF9Y+l1D3n
+         LcSvPDkcSLvsZpkoDowQn1FNfDGmsq1hazpyMLfgyA9qEJ1w15RUlPmP7RQXRD93fT9O
+         lD7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766542499; x=1767147299;
+        d=1e100.net; s=20230601; t=1766581278; x=1767186078;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Mn5gdOJNVLCgqxTAZaOj5KghlS4vIZEHYcNf0bwJm28=;
-        b=kMbJ3US1v3/vvWdNCLL1YqY7iZ8rp89OvYvqBi/78RO64gf1ChBsKNb3cZcnzRwvhT
-         YjOnOIA8Ol0jdKdGn7d5/94vtwRjE2dGe6DN+Xw/euiQxGtYvkcJAD04UYLA7H5+Hq+7
-         FsFb0/QDPe5OolZsfeoRHYCZzUGvEgr5ZioDPyGOrj8U0GD3NyTpJbFXWqm4HEWe5n9B
-         PlDxjAi+whyefcY/hu7rWpEQWCoh5VitL+8Vdbcl9HUteyabotDTF1pItB+7uMPYa7ha
-         TJP20nkFMR7fc1O6ef4WbijMoR93xE9kN5cXUuU2/I7XHKL3RLANo0pD/RHw42tZxXKE
-         GdNw==
-X-Forwarded-Encrypted: i=1; AJvYcCXvoRr9Ir54sAItcW5XBldc+YmA5iROtn3trv+6a8gb2YbPrxs5STaT6HArfZXjG4RLM1kqJEwoP4Nd9vc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDG/ZleMWQdcOumffrVGf1Ige3uuFFZldGnZFe8wOebooC6a4I
-	FyjKhq7yXh4duH+I+k5YzGAmQdaA51kFNGrqxwrQ9LZPYJwnKldp+rd4xqVrsw==
-X-Gm-Gg: AY/fxX4eoG2fSgeoHoX5kTd+k3kO30e1pNaZoYPxxuZ6pcFEmEk3/Yw3vSz1LVG6EJb
-	Q0uRhBeZLk6FPHbzCxpOMAx9Xu6q1dvF+15sCaRas35ML1JWMJtcsuG4HwN03+2obRFE835I+fX
-	ZN38uanwU4frN0mRGkDatpgOyEuHhLWGpifMDLTBM4Y6WUpkq73zuuzIc/1EWPIuqRNT63zFajr
-	r4fMXMg2m4gFlbRL1DJNz7r+7I5Wur5a/U6rFUSKv9REIU2OtFUld08umWaZftAxOgOzGLqK6xy
-	r5TszSDeCIGXTfxK4NdDwI3+kvOCjbnnIi4WtK5VhZZh55gynHrLdIp8lCYbroMbJncIsevjfyE
-	aNB290PAgWrUtFDT3BuR+1Mxk4x7eB4NdZYSR9+lZHl1ZfTZf24HlswX11YL81i2aCST3mUJ5Q2
-	+DUBIWytqUqrbs61DxGJhwIvpXAZeylQBUnf/ex2VgI9sN6G8=
-X-Google-Smtp-Source: AGHT+IGl4lY3C5uaIhAdAeU51l9QnKvRP/mJp5bbTNMXCgmCDrIGHmPARt/rlh3H/cQnB4TIEc9mUg==
-X-Received: by 2002:a05:690c:d96:b0:78f:aa6d:48cd with SMTP id 00721157ae682-78fb3d52b45mr134838347b3.0.1766536355576;
-        Tue, 23 Dec 2025 16:32:35 -0800 (PST)
-Received: from devvm11784.nha0.facebook.com ([2a03:2880:25ff:5f::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-78fb4378372sm59887097b3.12.2025.12.23.16.32.34
+        bh=ZPltMTzBETTQT1CqF+sZl3/fAao1GzI/HXVbssWVgUQ=;
+        b=chW/+tmsOJtZ+EfQoWUNreXpaL43H4O45UOPPZP7ja9JB+TaLcVUvvWEhh5tWOfGZM
+         Z/NqST2TwVv5cR/6NJjDzBPu8GG2DcUzIspOoNulXiFRKUaUbZzfQdoJZfL2+WLpkjmb
+         sKsWQmViUU9ZeriscjDPQPl1VjQtNYZ/uvqlJvC/sshyEP1pQUyaUQctxz4ulbOilQ44
+         fh/Vl6mfoL7Nqd6WLcQYsInOAywZmduRaheNnKxrXsQY/MrhsRFTeVSis3G1fEHjWtsZ
+         WFE5RvolVldeGS29ZSplUdupU530CUK4/vvxw9CfIAr2ZCrGIBq1305PW3LsRXN+SxId
+         ZI2w==
+X-Forwarded-Encrypted: i=1; AJvYcCWy9kKzGgb7eJFlPfIpTaxXvgub1d3JWcjE0+4tq22wfs2yKf1JZMZFCPU/nZfDfglbP4WTEuZ7ixVI8Ho=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpgI1meuwz3w06TVryyHRHZTgf2wFP+k/Dgp7BKSm4qnHYVOJS
+	fW+QesY3w/o9rytmmpBZB4VO8Ww9jTgt53PD3D1+pZ4XL+nTu0LYbBn3cYVr2fkO04dXWZaSioo
+	l/7+Eqf1JJNwwhH0L6+QptawOx8Ypwr5SgW99I/XjdVuQUjv8PemGuEbyY5XG6THZbw==
+X-Gm-Gg: AY/fxX4/CfRREZcShM3SplvvvF8gVStnOU06rjqqBXtlEn1b2OeZQM2h1ajjuLzuGlk
+	Z7/8ZN0hm/5ng1HUnPYY85xf8jOS6ljx2W95dpfaY8T4B/xxvluAHOYNJRg1Q3CummfytCwjjeD
+	T89K+BqsGGun/6JCuLYHhQJl/wK+MKyqCVgg0bfxsePdc04bE1v6zzbYYpxflBjELb5XsoMfcoz
+	vlMwQgWHbP3LBXzc/KYOXDAOVjn6oyzvE/hX7/gqIkzDLwpUWgZ7nVfeLdZwtnljWiWsXYdpl+M
+	k+RCv2Ciy+C8m8skalBMN4QjQa6XpuAGJV4gYImuzuB15H36d6xMOezyz0JcT2UkXBR1C5em89F
+	JTB0r2rbB9GsCXunY
+X-Received: by 2002:a05:600c:3508:b0:479:1348:c63e with SMTP id 5b1f17b1804b1-47d18bd57bemr161759415e9.9.1766581278032;
+        Wed, 24 Dec 2025 05:01:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHybeuqcZcHlfztr3bbKh1cFE8NLb3cLhTczAcvHp67h5Q0r41aRhsvZBwseTxwsTVGzvf/GQ==
+X-Received: by 2002:a05:600c:3508:b0:479:1348:c63e with SMTP id 5b1f17b1804b1-47d18bd57bemr161759125e9.9.1766581277580;
+        Wed, 24 Dec 2025 05:01:17 -0800 (PST)
+Received: from sgarzare-redhat ([193.207.128.114])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47be272e46fsm339791035e9.4.2025.12.24.05.01.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Dec 2025 16:32:35 -0800 (PST)
-Date: Tue, 23 Dec 2025 16:32:30 -0800
-From: Bobby Eshleman <bobbyeshleman@gmail.com>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, berrange@redhat.com,
-	Sargun Dhillon <sargun@sargun.me>,
-	Bobby Eshleman <bobbyeshleman@meta.com>
+        Wed, 24 Dec 2025 05:01:16 -0800 (PST)
+Date: Wed, 24 Dec 2025 14:01:03 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Bobby Eshleman <bobbyeshleman@gmail.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Bryan Tan <bryan-bt.tan@broadcom.com>, Vishnu Dasa <vishnu.dasa@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
+	virtualization@lists.linux.dev, netdev@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, linux-kselftest@vger.kernel.org, berrange@redhat.com, 
+	Sargun Dhillon <sargun@sargun.me>, Bobby Eshleman <bobbyeshleman@meta.com>
 Subject: Re: [PATCH net-next v12 04/12] vsock: add netns support to virtio
  transports
-Message-ID: <aUs0no+ni8/R8/1N@devvm11784.nha0.facebook.com>
+Message-ID: <aUvjj1HyEG6_hoLR@sgarzare-redhat>
 References: <20251126-vsock-vmtest-v12-0-257ee21cd5de@meta.com>
  <20251126-vsock-vmtest-v12-4-257ee21cd5de@meta.com>
  <6cef5a68-375a-4bb6-84f8-fccc00cf7162@redhat.com>
@@ -107,133 +116,42 @@ References: <20251126-vsock-vmtest-v12-0-257ee21cd5de@meta.com>
  <aTw0F6lufR/nT7OY@devvm11784.nha0.facebook.com>
  <uidarlot7opjsuozylevyrlgdpjd32tsi7mwll2lsvce226v24@75sq4jdo5tgv>
  <aUC0Op2trtt3z405@devvm11784.nha0.facebook.com>
+ <aUs0no+ni8/R8/1N@devvm11784.nha0.facebook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <aUC0Op2trtt3z405@devvm11784.nha0.facebook.com>
+In-Reply-To: <aUs0no+ni8/R8/1N@devvm11784.nha0.facebook.com>
 
-On Mon, Dec 15, 2025 at 05:22:02PM -0800, Bobby Eshleman wrote:
-> On Mon, Dec 15, 2025 at 03:11:22PM +0100, Stefano Garzarella wrote:
-> > On Fri, Dec 12, 2025 at 07:26:15AM -0800, Bobby Eshleman wrote:
-> > > On Tue, Dec 02, 2025 at 02:01:04PM -0800, Bobby Eshleman wrote:
-> > > > On Tue, Dec 02, 2025 at 09:47:19PM +0100, Paolo Abeni wrote:
-> > > > > On 12/2/25 6:56 PM, Bobby Eshleman wrote:
-> > > > > > On Tue, Dec 02, 2025 at 11:18:14AM +0100, Paolo Abeni wrote:
-> > > > > >> On 11/27/25 8:47 AM, Bobby Eshleman wrote:
-> > > > > >>> @@ -674,6 +689,17 @@ static int vhost_vsock_dev_open(struct inode *inode, struct file *file)
-> > > > > >>>  		goto out;
-> > > > > >>>  	}
-> > > > > >>>
-> > > > > >>> +	net = current->nsproxy->net_ns;
-> > > > > >>> +	vsock->net = get_net_track(net, &vsock->ns_tracker, GFP_KERNEL);
-> > > > > >>> +
-> > > > > >>> +	/* Store the mode of the namespace at the time of creation. If this
-> > > > > >>> +	 * namespace later changes from "global" to "local", we want this vsock
-> > > > > >>> +	 * to continue operating normally and not suddenly break. For that
-> > > > > >>> +	 * reason, we save the mode here and later use it when performing
-> > > > > >>> +	 * socket lookups with vsock_net_check_mode() (see vhost_vsock_get()).
-> > > > > >>> +	 */
-> > > > > >>> +	vsock->net_mode = vsock_net_mode(net);
-> > > > > >>
-> > > > > >> I'm sorry for the very late feedback. I think that at very least the
-> > > > > >> user-space needs a way to query if the given transport is in local or
-> > > > > >> global mode, as AFAICS there is no way to tell that when socket creation
-> > > > > >> races with mode change.
-> > > > > >
-> > > > > > Are you thinking something along the lines of sockopt?
-> > > > >
-> > > > > I'd like to see a way for the user-space to query the socket 'namespace
-> > > > > mode'.
-> > > > >
-> > > > > sockopt could be an option; a possibly better one could be sock_diag. Or
-> > > > > you could do both using dumping the info with a shared helper invoked by
-> > > > > both code paths, alike what TCP is doing.
-> > > > > >> Also I'm a bit uneasy with the model implemented here, as 'local' socket
-> > > > > >> may cross netns boundaris and connect to 'local' socket in other netns
-> > > > > >> (if I read correctly patch 2/12). That in turns AFAICS break the netns
-> > > > > >> isolation.
-> > > > > >
-> > > > > > Local mode sockets are unable to communicate with local mode (and global
-> > > > > > mode too) sockets that are in other namespaces. The key piece of code
-> > > > > > for that is vsock_net_check_mode(), where if either modes is local the
-> > > > > > namespaces must be the same.
-> > > > >
-> > > > > Sorry, I likely misread the large comment in patch 2:
-> > > > >
-> > > > > https://lore.kernel.org/netdev/20251126-vsock-vmtest-v12-2-257ee21cd5de@meta.com/
-> > > > >
-> > > > > >> Have you considered instead a slightly different model, where the
-> > > > > >> local/global model is set in stone at netns creation time - alike what
-> > > > > >> /proc/sys/net/ipv4/tcp_child_ehash_entries is doing[1] - and
-> > > > > >> inter-netns connectivity is explicitly granted by the admin (I guess
-> > > > > >> you will need new transport operations for that)?
-> > > > > >>
-> > > > > >> /P
-> > > > > >>
-> > > > > >> [1] tcp allows using per-netns established socket lookup tables - as
-> > > > > >> opposed to the default global lookup table (even if match always takes
-> > > > > >> in account the netns obviously). The mentioned sysctl specify such
-> > > > > >> configuration for the children namespaces, if any.
-> > > > > >
-> > > > > > I'll save this discussion if the above doesn't resolve your concerns.
-> > > > > I still have some concern WRT the dynamic mode change after netns
-> > > > > creation. I fear some 'unsolvable' (or very hard to solve) race I can't
-> > > > > see now. A tcp_child_ehash_entries-like model will avoid completely the
-> > > > > issue, but I understand it would be a significant change over the
-> > > > > current status.
-> > > > >
-> > > > > "Luckily" the merge window is on us and we have some time to discuss. Do
-> > > > > you have a specific use-case for the ability to change the netns >
-> > > > mode
-> > > > > after creation?
-> > > > >
-> > > > > /P
-> > > > 
-> > > > I don't think there is a hard requirement that the mode be change-able
-> > > > after creation. Though I'd love to avoid such a big change... or at
-> > > > least leave unchanged as much of what we've already reviewed as
-> > > > possible.
-> > > > 
-> > > > In the scheme of defining the mode at creation and following the
-> > > > tcp_child_ehash_entries-ish model, what I'm imagining is:
-> > > > - /proc/sys/net/vsock/child_ns_mode can be set to "local" or "global"
-> > > > - /proc/sys/net/vsock/child_ns_mode is not immutable, can change any
-> > > >   number of times
-> > > > 
-> > > > - when a netns is created, the new netns mode is inherited from
-> > > >   child_ns_mode, being assigned using something like:
-> > > > 
-> > > > 	  net->vsock.ns_mode =
-> > > > 		get_net_ns_by_pid(current->pid)->child_ns_mode
-> > > > 
-> > > > - /proc/sys/net/vsock/ns_mode queries the current mode, returning
-> > > >   "local" or "global", returning value of net->vsock.ns_mode
-> > > > - /proc/sys/net/vsock/ns_mode and net->vsock.ns_mode are immutable and
-> > > >   reject writes
-> > > > 
-> > > > Does that align with what you have in mind?
-> > > 
-> > > Hey Paolo, I just wanted to sync up on this one. Does the above align
-> > > with what you envision?
-> > 
-> > Hi Bobby, AFAIK Paolo was at LPC, so there could be some delay.
-> > 
-> > FYI I'll be off from Dec 25 to Jan 6, so if we want to do an RFC in the
-> > middle, I'll do my best to take a look before my time off.
-> > 
-> > Thanks,
-> > Stefano
+On Tue, Dec 23, 2025 at 04:32:30PM -0800, Bobby Eshleman wrote:
+>On Mon, Dec 15, 2025 at 05:22:02PM -0800, Bobby Eshleman wrote:
+>> On Mon, Dec 15, 2025 at 03:11:22PM +0100, Stefano Garzarella wrote:
 
-Just sent this out, though I acknowledge its pretty last minute WRT
-your time off.
+[...]
 
-If I don't hear from you before then, have a good holiday!
+>> >
+>> > FYI I'll be off from Dec 25 to Jan 6, so if we want to do an RFC in the
+>> > middle, I'll do my best to take a look before my time off.
+>> >
+>> > Thanks,
+>> > Stefano
+>
+>Just sent this out, though I acknowledge its pretty last minute WRT
+>your time off.
 
-Best,
-Bobby
+Thanks for that, but yeah I didn't have time to take a closer look :-(
+I'll do as soon I'm back!
+
+>
+>If I don't hear from you before then, have a good holiday!
+
+Thanks, you too if you will have the opportunity!
+
+Thanks,
+Stefano
+
 
