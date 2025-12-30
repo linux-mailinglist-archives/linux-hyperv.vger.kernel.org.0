@@ -1,70 +1,70 @@
-Return-Path: <linux-hyperv+bounces-8097-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8098-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 121D8CEAB06
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Dec 2025 22:14:25 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70C88CEAB1B
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Dec 2025 22:14:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 32AC23010AA6
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Dec 2025 21:13:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 887D9303A08F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Dec 2025 21:14:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABFD52FD689;
-	Tue, 30 Dec 2025 21:13:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE01830649C;
+	Tue, 30 Dec 2025 21:13:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TdMM4Mkm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cfsZcIU4"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE4D2F1FEF
-	for <linux-hyperv@vger.kernel.org>; Tue, 30 Dec 2025 21:13:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDEEC2FD69B
+	for <linux-hyperv@vger.kernel.org>; Tue, 30 Dec 2025 21:13:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767129234; cv=none; b=TVEjtnooQyLmF+5A5m9zzFHisV86o40Chw5vGQ2guEZegyVrgc3ZoLJykRnLmISRg2mSaq8v9LeiJD9V/iuGSie6HaAgFiGSyXTqhN8cF3X02Xr/9Uxg6AO8qY17Cc1S+3pMpkUrbuzfFK1tHDjeqoLX6ptHaPyTdUTwQRulwpI=
+	t=1767129237; cv=none; b=ewB3dSTu0XM/knSGa/CmmdctihSxBoXB1HbQ+NOVHYpJTfFTErBKpfdZFnLNF5VrIZQTdpjWgFWPi19qW7bxOeLDA3SOh9BBSo5iLWbLJ8+QHpHvv7Vd2S5xUgPc7mMnPmDrVTrYWsqzDDiOjJklew+Q+HeQh1QWzNUnt2LBkEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767129234; c=relaxed/simple;
-	bh=C0RT9xfmtmFEbcE2vwzv7EC+1IXAWAUmiIkyGSmxhK0=;
+	s=arc-20240116; t=1767129237; c=relaxed/simple;
+	bh=B+4ERGzRCfw5jMwC37fXuEHs9A9jh2a1ZNa1zK4cuGQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=V7eBGqwrOuJefm8sGap4a3sv60+80XNDD8NKcxgbpq0tO9+sFFcobFrN/HMro5voq0YvOMVKEF9yUmf72Dol58lxpAcwWe+mygkw81qqQRWqs52MItw9lylwMpmzM/gs72Z1X6a+bSmJkvnnpMZdJ3v6N4AZvoGkX4f+TksYkio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TdMM4Mkm; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=dpoP/Ilfbrp2zRJtoxECHhZgqN6+m+E1bNlKZp6JrYtu32sOaVvOsf6A86hFmrK2N8XDh5m6miPdVqcOXdaxArPdzBBzY+u+54A3rmDygM1ToYIGrzbeaBwKuajsoZxdqGLqE2uHvw9uFu9uZz9WP1N+I6NOHs5SW+GUwmUf6/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cfsZcIU4; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-34c21341f56so30623443a91.2
-        for <linux-hyperv@vger.kernel.org>; Tue, 30 Dec 2025 13:13:52 -0800 (PST)
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7d24bbb9278so20070092b3a.0
+        for <linux-hyperv@vger.kernel.org>; Tue, 30 Dec 2025 13:13:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1767129232; x=1767734032; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1767129234; x=1767734034; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=7wqozHQILfBR+7AGDrYzCeWuem5verec2J4wlm1ug8s=;
-        b=TdMM4Mkm4X25WU9tn63WPYvV4ZpEzUTXJsuXTt444BEiDSxoTbLDhOIoqRBNVSLyvV
-         SaY7KeOVSMNNdOTWxzZyBjkBjGRdebZayxpxc1X72IA5bIpZqQrsMsFYcxcAprxnETZ0
-         6Jzpn84V3c8U0E0cTwoQxIg95ApOUVpaVk2q4DUE+WS+71BC69hIvRoRKqBiJ+vigNfN
-         pZxN5qxhdRf666+LJLteKLqumQnEQFECOTG1YO4eXA5uzpo4/vHeFx6i1WHQovmVRoYK
-         6a/7FZ+nQqNHOtAqlGl5G2RUgfwRIErSmN3gLy+Vouii9DvDrprcovaKVzntWkKuoM8I
-         9Oww==
+        bh=v9BolbukkfXEm81oWgJJ+XaSPsS7Ia/w4dyAHDKHDXI=;
+        b=cfsZcIU4Mnl4KsKMlbqWzOnkdE+yckHbKFlkok9wX2gIXDpxPPm9cgRH3WAzAo5Nwd
+         bbpgWLa0egLVgPNviLesbRJdItivXru0K1z08vkbBOW05Fgs6JKcJjHjsCLvgbdR4oam
+         b6NxKlm51XBZPjmFuKSD46R1p5Q71TdG3oLinGh/3tyrBIgi4hNu9qDR9aBUT2UzqaM/
+         yG4f9L6akK0+kqnREWATJu6FHBdmHveBgNaRBYioaLJk4N13rfTuQQtXlhch8s/YerV0
+         LPWPp/OmL5CTJUwsbrc7anMCl3EVqZapWKBSCSlrtIkXJ0rLY+2jkcITcRvS6ZVeKd8q
+         BBHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767129232; x=1767734032;
+        d=1e100.net; s=20230601; t=1767129234; x=1767734034;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7wqozHQILfBR+7AGDrYzCeWuem5verec2J4wlm1ug8s=;
-        b=tl872TyAMT+bZqqe5vdYzl4HZftFEo3gmwJXUOobkTquGRIBhjSrdCpzdk5MukXaph
-         YiuF8MfeORCoffosNcrC/5VZg5GXj4ipF0aH4qSlD50q/6S+7NwG4vsvVxx673e3c7I3
-         W65SlmSYb3yj4uVxKi9rvaTI89iD/K1nAiV/6eakEi0wrPZrP3irftuaLrJmerdoyM0F
-         moU/UmijhAEUdpykyHhYxGMu75tq/3/slgcuqoj/wkym9EHmAoTtHOZ+XgJnIx4y2MKB
-         HlYIjabB/C5FfLSFY8QHwJXsLJAmiYzXPxgOrYw/HA3JO4VsWzAVynxcl88O53oYTqOr
-         6IWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVI/7dOioA++Sz6EL0uPW4/FvdoOaIFlbZ4DncjsVkx6uDhkhn5fuOgbltm3XzASynKp1p0jGmGswoYGRU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNmFfnxMqI5hIYtf7jEfxH6uA+jnY7WmmN6xcygx0hsLQSSfs6
-	dRux+4yvcTHsaQ+8AwFUzPptO1AhrlGDQF2Wjn7X4opSUPgfS0KrHORsDzZjUXGZrIyqFiBg8qx
-	Htu7qdg==
-X-Google-Smtp-Source: AGHT+IFFJm+456D6lf8JwJ1xaSWe0/SdbTVKGZR7AlvWe/wQ/+5VUBL7ZmZTigDPzAcFVXg81Hi1qQTBfRc=
-X-Received: from pjee13.prod.google.com ([2002:a17:90b:578d:b0:34a:c87f:a95a])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4c46:b0:347:5ddd:b2d1
- with SMTP id 98e67ed59e1d1-34e921ccb5cmr30678426a91.27.1767129232376; Tue, 30
- Dec 2025 13:13:52 -0800 (PST)
+        bh=v9BolbukkfXEm81oWgJJ+XaSPsS7Ia/w4dyAHDKHDXI=;
+        b=rO256pTEKIBMmSpdSFX/heTo6k5oPU6f1Fj5AWnmzT9njDMQkjmYyydEZHhlZa9Ql1
+         UCAA2z37AArsJlyhCS36+gehs9a8USiXjhYmXT0tVrekUFLfY3tLs1bCR1egH1wRTBdy
+         6dgt3vg9CpcQ7g75xPYzjlVfez8KJYM7Vs24cq1y8ywzXdaEoH28QnC4Zpb54hsSTykC
+         +oGCodL1+Rk4PI0nz/xzVBZiiLW/5X8Rft3yWheKdzLQmt19J3CQm+9Wyre7XFuZ9G5h
+         rG9zewNHeYTTo9ToWfc2LvQppa843a4Q6CjDxfRpKki/09OkHzGvtdv5ctU/haxegrcL
+         lfQw==
+X-Forwarded-Encrypted: i=1; AJvYcCWL0dQwGJZHCTvnYoJIAB40Rcz3LKD2p+5Lr88duZWjAUT3B4ElQTYtPUjmOy0yLDa38TBAz5/4f2Shv0c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxzrmYQGbCk4R/+7c4fH9IYm/vGbhdpmOsaIXdmpPkzsgA8JCC
+	akXLni/xwsGO0WNUm2GwL6k+2dMMVGZruWEhsv7rsUm0I76OHm5uY9IU54tECRm3NLm02OMcFQy
+	81IbiFw==
+X-Google-Smtp-Source: AGHT+IHHfrYGaC61aPB/ea5B/ICFankJwCsUHy15saTAvrWaEpZGe7M7AgYdzFXF+BVWYJ5DWGu3cCUZQeI=
+X-Received: from pfez22.prod.google.com ([2002:aa7:8896:0:b0:7b7:8636:7b21])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1d0c:b0:7e8:43f5:bd23
+ with SMTP id d2e1a72fcca58-7ff6735eb64mr31633129b3a.56.1767129234006; Tue, 30
+ Dec 2025 13:13:54 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 30 Dec 2025 13:13:40 -0800
+Date: Tue, 30 Dec 2025 13:13:41 -0800
 In-Reply-To: <20251230211347.4099600-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -74,8 +74,8 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251230211347.4099600-1-seanjc@google.com>
 X-Mailer: git-send-email 2.52.0.351.gbe84eed79e-goog
-Message-ID: <20251230211347.4099600-2-seanjc@google.com>
-Subject: [PATCH v2 1/8] KVM: SVM: Add a helper to detect VMRUN failures
+Message-ID: <20251230211347.4099600-3-seanjc@google.com>
+Subject: [PATCH v2 2/8] KVM: SVM: Open code handling of unexpected exits in svm_invoke_exit_handler()
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Vitaly Kuznetsov <vkuznets@redhat.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
@@ -86,109 +86,65 @@ Cc: kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
 	Yosry Ahmed <yosry.ahmed@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 
-Add a helper to detect VMRUN failures so that KVM can guard against its
-own long-standing bug, where KVM neglects to set exitcode[63:32] when
-synthesizing a nested VMFAIL_INVALID VM-Exit.  This will allow fixing
-KVM's mess of treating exitcode as two separate 32-bit values without
-breaking KVM-on-KVM when running on an older, unfixed KVM.
+Fold svm_check_exit_valid() and svm_handle_invalid_exit() into their sole
+caller, svm_invoke_exit_handler(), as having tiny single-use helpers makes
+the code unncessarily difficult to follow.  This will also allow for
+additional cleanups in svm_invoke_exit_handler().
 
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Yosry Ahmed <yosry.ahmed@linux.dev>
+No functional change intended.
+
+Suggested-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+Reviewed-by: Yosry Ahmed <yosry.ahmed@linux.dev>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/svm/nested.c | 16 +++++++---------
- arch/x86/kvm/svm/svm.c    |  4 ++--
- arch/x86/kvm/svm/svm.h    |  5 +++++
- 3 files changed, 14 insertions(+), 11 deletions(-)
+ arch/x86/kvm/svm/svm.c | 25 ++++++++++---------------
+ 1 file changed, 10 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index ba0f11c68372..f5bde972a2b1 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -1134,7 +1134,7 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
- 	vmcb12->control.exit_info_1       = vmcb02->control.exit_info_1;
- 	vmcb12->control.exit_info_2       = vmcb02->control.exit_info_2;
- 
--	if (vmcb12->control.exit_code != SVM_EXIT_ERR)
-+	if (!svm_is_vmrun_failure(vmcb12->control.exit_code))
- 		nested_save_pending_event_to_vmcb12(svm, vmcb12);
- 
- 	if (guest_cpu_cap_has(vcpu, X86_FEATURE_NRIPS))
-@@ -1425,6 +1425,9 @@ static int nested_svm_intercept(struct vcpu_svm *svm)
- 	u32 exit_code = svm->vmcb->control.exit_code;
- 	int vmexit = NESTED_EXIT_HOST;
- 
-+	if (svm_is_vmrun_failure(exit_code))
-+		return NESTED_EXIT_DONE;
-+
- 	switch (exit_code) {
- 	case SVM_EXIT_MSR:
- 		vmexit = nested_svm_exit_handled_msr(svm);
-@@ -1432,7 +1435,7 @@ static int nested_svm_intercept(struct vcpu_svm *svm)
- 	case SVM_EXIT_IOIO:
- 		vmexit = nested_svm_intercept_ioio(svm);
- 		break;
--	case SVM_EXIT_EXCP_BASE ... SVM_EXIT_EXCP_BASE + 0x1f: {
-+	case SVM_EXIT_EXCP_BASE ... SVM_EXIT_EXCP_BASE + 0x1f:
- 		/*
- 		 * Host-intercepted exceptions have been checked already in
- 		 * nested_svm_exit_special.  There is nothing to do here,
-@@ -1440,15 +1443,10 @@ static int nested_svm_intercept(struct vcpu_svm *svm)
- 		 */
- 		vmexit = NESTED_EXIT_DONE;
- 		break;
--	}
--	case SVM_EXIT_ERR: {
--		vmexit = NESTED_EXIT_DONE;
--		break;
--	}
--	default: {
-+	default:
- 		if (vmcb12_is_intercept(&svm->nested.ctl, exit_code))
- 			vmexit = NESTED_EXIT_DONE;
--	}
-+		break;
- 	}
- 
- 	return vmexit;
 diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 24d59ccfa40d..c2ddf2e0aa1a 100644
+index c2ddf2e0aa1a..a523011f0923 100644
 --- a/arch/x86/kvm/svm/svm.c
 +++ b/arch/x86/kvm/svm/svm.c
-@@ -3540,7 +3540,7 @@ static int svm_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)
- 			return 1;
- 	}
- 
--	if (svm->vmcb->control.exit_code == SVM_EXIT_ERR) {
-+	if (svm_is_vmrun_failure(svm->vmcb->control.exit_code)) {
- 		kvm_run->exit_reason = KVM_EXIT_FAIL_ENTRY;
- 		kvm_run->fail_entry.hardware_entry_failure_reason
- 			= svm->vmcb->control.exit_code;
-@@ -4311,7 +4311,7 @@ static __no_kcsan fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
- 
- 		/* Track VMRUNs that have made past consistency checking */
- 		if (svm->nested.nested_run_pending &&
--		    svm->vmcb->control.exit_code != SVM_EXIT_ERR)
-+		    !svm_is_vmrun_failure(svm->vmcb->control.exit_code))
-                         ++vcpu->stat.nested_run;
- 
- 		svm->nested.nested_run_pending = 0;
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 01be93a53d07..0f006793f973 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -424,6 +424,11 @@ static __always_inline struct vcpu_svm *to_svm(struct kvm_vcpu *vcpu)
- 	return container_of(vcpu, struct vcpu_svm, vcpu);
+@@ -3443,23 +3443,13 @@ static void dump_vmcb(struct kvm_vcpu *vcpu)
+ 		sev_free_decrypted_vmsa(vcpu, save);
  }
  
-+static inline bool svm_is_vmrun_failure(u64 exit_code)
-+{
-+	return (u32)exit_code == (u32)SVM_EXIT_ERR;
-+}
+-static bool svm_check_exit_valid(u64 exit_code)
+-{
+-	return (exit_code < ARRAY_SIZE(svm_exit_handlers) &&
+-		svm_exit_handlers[exit_code]);
+-}
+-
+-static int svm_handle_invalid_exit(struct kvm_vcpu *vcpu, u64 exit_code)
+-{
+-	dump_vmcb(vcpu);
+-	kvm_prepare_unexpected_reason_exit(vcpu, exit_code);
+-	return 0;
+-}
+-
+ int svm_invoke_exit_handler(struct kvm_vcpu *vcpu, u64 exit_code)
+ {
+-	if (!svm_check_exit_valid(exit_code))
+-		return svm_handle_invalid_exit(vcpu, exit_code);
++	if (exit_code >= ARRAY_SIZE(svm_exit_handlers))
++		goto unexpected_vmexit;
 +
- /*
-  * Only the PDPTRs are loaded on demand into the shadow MMU.  All other
-  * fields are synchronized on VM-Exit, because accessing the VMCB is cheap.
++	if (!svm_exit_handlers[exit_code])
++		goto unexpected_vmexit;
+ 
+ #ifdef CONFIG_MITIGATION_RETPOLINE
+ 	if (exit_code == SVM_EXIT_MSR)
+@@ -3478,6 +3468,11 @@ int svm_invoke_exit_handler(struct kvm_vcpu *vcpu, u64 exit_code)
+ #endif
+ #endif
+ 	return svm_exit_handlers[exit_code](vcpu);
++
++unexpected_vmexit:
++	dump_vmcb(vcpu);
++	kvm_prepare_unexpected_reason_exit(vcpu, exit_code);
++	return 0;
+ }
+ 
+ static void svm_get_exit_info(struct kvm_vcpu *vcpu, u32 *reason,
 -- 
 2.52.0.351.gbe84eed79e-goog
 
