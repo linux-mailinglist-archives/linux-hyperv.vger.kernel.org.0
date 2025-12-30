@@ -1,70 +1,70 @@
-Return-Path: <linux-hyperv+bounces-8098-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8099-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70C88CEAB1B
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Dec 2025 22:14:57 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3FE7CEAB1E
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Dec 2025 22:15:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 887D9303A08F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Dec 2025 21:14:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0B111303C20A
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Dec 2025 21:14:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE01830649C;
-	Tue, 30 Dec 2025 21:13:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 401A4306B08;
+	Tue, 30 Dec 2025 21:13:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cfsZcIU4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="swrQSEnX"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDEEC2FD69B
-	for <linux-hyperv@vger.kernel.org>; Tue, 30 Dec 2025 21:13:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82B125C80D
+	for <linux-hyperv@vger.kernel.org>; Tue, 30 Dec 2025 21:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767129237; cv=none; b=ewB3dSTu0XM/knSGa/CmmdctihSxBoXB1HbQ+NOVHYpJTfFTErBKpfdZFnLNF5VrIZQTdpjWgFWPi19qW7bxOeLDA3SOh9BBSo5iLWbLJ8+QHpHvv7Vd2S5xUgPc7mMnPmDrVTrYWsqzDDiOjJklew+Q+HeQh1QWzNUnt2LBkEg=
+	t=1767129238; cv=none; b=ZB6abEvhBEVcqaBVOgGE9Gdq25/i/hUbkaSVK9kHDnYf2soRGTgu+y/sBWfu8UiSDItqUgos+uzEAOgknE9ffhPqyLsoacQ8pNhdPnStILNZ5/usV5ZU6qMqkn61hSgF2JCzUELTgNPsg9bNEtzNWHfjC/1ZLJPSOhhV+xKFYVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767129237; c=relaxed/simple;
-	bh=B+4ERGzRCfw5jMwC37fXuEHs9A9jh2a1ZNa1zK4cuGQ=;
+	s=arc-20240116; t=1767129238; c=relaxed/simple;
+	bh=dFYvwKO0rAM5gd+DQa6wT7749+Cjr6pisryKGAR8XHI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=dpoP/Ilfbrp2zRJtoxECHhZgqN6+m+E1bNlKZp6JrYtu32sOaVvOsf6A86hFmrK2N8XDh5m6miPdVqcOXdaxArPdzBBzY+u+54A3rmDygM1ToYIGrzbeaBwKuajsoZxdqGLqE2uHvw9uFu9uZz9WP1N+I6NOHs5SW+GUwmUf6/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cfsZcIU4; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=UG/MUzGYxCHSMwKp4Zbbajg33/GjeEY7rLhKpUZwhgmsJmpsz1PIm5LXiUgAARGScl2az3YQ9wntrdG+stbHJskypHaU0T1WXgu5p9x0GSu4ELhEu10xQX2Wvl2sHuS68RCmfWVlH2k+A8M0PLfap8f0bUW4HiWN1MrAuC2HdtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=swrQSEnX; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7d24bbb9278so20070092b3a.0
-        for <linux-hyperv@vger.kernel.org>; Tue, 30 Dec 2025 13:13:54 -0800 (PST)
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-29f26fc6476so168737495ad.1
+        for <linux-hyperv@vger.kernel.org>; Tue, 30 Dec 2025 13:13:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1767129234; x=1767734034; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1767129236; x=1767734036; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=v9BolbukkfXEm81oWgJJ+XaSPsS7Ia/w4dyAHDKHDXI=;
-        b=cfsZcIU4Mnl4KsKMlbqWzOnkdE+yckHbKFlkok9wX2gIXDpxPPm9cgRH3WAzAo5Nwd
-         bbpgWLa0egLVgPNviLesbRJdItivXru0K1z08vkbBOW05Fgs6JKcJjHjsCLvgbdR4oam
-         b6NxKlm51XBZPjmFuKSD46R1p5Q71TdG3oLinGh/3tyrBIgi4hNu9qDR9aBUT2UzqaM/
-         yG4f9L6akK0+kqnREWATJu6FHBdmHveBgNaRBYioaLJk4N13rfTuQQtXlhch8s/YerV0
-         LPWPp/OmL5CTJUwsbrc7anMCl3EVqZapWKBSCSlrtIkXJ0rLY+2jkcITcRvS6ZVeKd8q
-         BBHQ==
+        bh=OP9hotpCQrsVZqE8v5eRxWNMJZgi8k5mDCW7kmyDFTA=;
+        b=swrQSEnX12C3++X4mU5FO25yCDLIaVsgFNv8gPCgdAsBePsTO9fQgoBerVBSje06y5
+         STgaKGOWQdDhyCvrl7lNTsXlGWFUBVZDh3l0x2K0UQLiZoZZoGPLZEbell3P5Hkb05Jx
+         yEPRA6X6o9ZejCPZuoddf2kcUYmZe572ThMN1fh6QA5/z8XxrkVnED/+35bQMu79jNBp
+         +wdlox8HSwv2SyXKaMneaVnevTSVomvjUOY8RG7CaCtiVXWy6xC0xbnTnGHZ2XSZLROb
+         8xSynvtZxkfWdcpOpQl6fP4MjVLH7B1CdSD8aLIW7GAQOEsW0gnQpHyzVv0nUC/5loEl
+         Jmtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767129234; x=1767734034;
+        d=1e100.net; s=20230601; t=1767129236; x=1767734036;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=v9BolbukkfXEm81oWgJJ+XaSPsS7Ia/w4dyAHDKHDXI=;
-        b=rO256pTEKIBMmSpdSFX/heTo6k5oPU6f1Fj5AWnmzT9njDMQkjmYyydEZHhlZa9Ql1
-         UCAA2z37AArsJlyhCS36+gehs9a8USiXjhYmXT0tVrekUFLfY3tLs1bCR1egH1wRTBdy
-         6dgt3vg9CpcQ7g75xPYzjlVfez8KJYM7Vs24cq1y8ywzXdaEoH28QnC4Zpb54hsSTykC
-         +oGCodL1+Rk4PI0nz/xzVBZiiLW/5X8Rft3yWheKdzLQmt19J3CQm+9Wyre7XFuZ9G5h
-         rG9zewNHeYTTo9ToWfc2LvQppa843a4Q6CjDxfRpKki/09OkHzGvtdv5ctU/haxegrcL
-         lfQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWL0dQwGJZHCTvnYoJIAB40Rcz3LKD2p+5Lr88duZWjAUT3B4ElQTYtPUjmOy0yLDa38TBAz5/4f2Shv0c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxzrmYQGbCk4R/+7c4fH9IYm/vGbhdpmOsaIXdmpPkzsgA8JCC
-	akXLni/xwsGO0WNUm2GwL6k+2dMMVGZruWEhsv7rsUm0I76OHm5uY9IU54tECRm3NLm02OMcFQy
-	81IbiFw==
-X-Google-Smtp-Source: AGHT+IHHfrYGaC61aPB/ea5B/ICFankJwCsUHy15saTAvrWaEpZGe7M7AgYdzFXF+BVWYJ5DWGu3cCUZQeI=
-X-Received: from pfez22.prod.google.com ([2002:aa7:8896:0:b0:7b7:8636:7b21])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1d0c:b0:7e8:43f5:bd23
- with SMTP id d2e1a72fcca58-7ff6735eb64mr31633129b3a.56.1767129234006; Tue, 30
- Dec 2025 13:13:54 -0800 (PST)
+        bh=OP9hotpCQrsVZqE8v5eRxWNMJZgi8k5mDCW7kmyDFTA=;
+        b=k3JSh5w8Ifych94+uzA0PSnfVzbT/XcAvd/YdsTLPo3h5AvGWa7DdOUcm+2I78ma6P
+         tOxh34sa/t8ynxPdCAIvLYD7CLH84dWf/X+1vWMmKyTr+wZAuUkfqZip0ijm3nTweOtg
+         zT/OCSyzXneUo+4nQnKJX3k9qwIjwYjA9So6LZ1QTzsdq1xz6hCi9vrXsyA6x0wbcRVK
+         mjL2tDmpCwGHbT7mUWq6KuW40Pbc4WnHmZSASKedo1YszB7jKB1T23cNvKDKGZXGh8UU
+         HFEB5H1Ivfql+cVSQvGFmzrjvNY8RDUZEsXBF2jiiAYTFP3qS0Bmtrx48mnfQCa80ggz
+         GD9g==
+X-Forwarded-Encrypted: i=1; AJvYcCWXKyY1fntkyAgIwN1TpuaNG9rkKszxzMKegujZ7jsJtToa8KL4IB1oRwetf0wdtht+3cRZsSDAL6IiLMU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxx+bk+wcbwczsHxjVnW59XB+e+ILFL7spfRhTPayrBtl7JUB8I
+	7OgKiac8XGS+uSZFQj93SGk1UIymG0xX6cnZQM9VrW/3TnsQTcmqmRj1i6PSmT2agnHbcFbLdO+
+	U0g8k2g==
+X-Google-Smtp-Source: AGHT+IGUJEnlpUD6Gd1YvivFP9uFX0/uZZ/iPrK157AWfRyC2+k/meCq+u7wH7O0QvzOvD9z3tsbRw5bG4o=
+X-Received: from pjbqb12.prod.google.com ([2002:a17:90b:280c:b0:34a:4aa7:b774])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f78d:b0:2a0:c35c:572e
+ with SMTP id d9443c01a7336-2a2f2836480mr346664485ad.30.1767129235953; Tue, 30
+ Dec 2025 13:13:55 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 30 Dec 2025 13:13:41 -0800
+Date: Tue, 30 Dec 2025 13:13:42 -0800
 In-Reply-To: <20251230211347.4099600-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -74,8 +74,9 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251230211347.4099600-1-seanjc@google.com>
 X-Mailer: git-send-email 2.52.0.351.gbe84eed79e-goog
-Message-ID: <20251230211347.4099600-3-seanjc@google.com>
-Subject: [PATCH v2 2/8] KVM: SVM: Open code handling of unexpected exits in svm_invoke_exit_handler()
+Message-ID: <20251230211347.4099600-4-seanjc@google.com>
+Subject: [PATCH v2 3/8] KVM: SVM: Check for an unexpected VM-Exit after
+ RETPOLINE "fast" handling
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Vitaly Kuznetsov <vkuznets@redhat.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
@@ -86,65 +87,49 @@ Cc: kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
 	Yosry Ahmed <yosry.ahmed@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 
-Fold svm_check_exit_valid() and svm_handle_invalid_exit() into their sole
-caller, svm_invoke_exit_handler(), as having tiny single-use helpers makes
-the code unncessarily difficult to follow.  This will also allow for
-additional cleanups in svm_invoke_exit_handler().
+Check for an unexpected/unhandled VM-Exit after the manual RETPOLINE=y
+handling.  The entire point of the RETPOLINE checks is to optimize for
+common VM-Exits, i.e. checking for the rare case of an unsupported
+VM-Exit is counter-productive.  This also aligns SVM and VMX exit handling.
 
 No functional change intended.
 
-Suggested-by: Yosry Ahmed <yosry.ahmed@linux.dev>
 Reviewed-by: Yosry Ahmed <yosry.ahmed@linux.dev>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/svm/svm.c | 25 ++++++++++---------------
- 1 file changed, 10 insertions(+), 15 deletions(-)
+ arch/x86/kvm/svm/svm.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index c2ddf2e0aa1a..a523011f0923 100644
+index a523011f0923..e24bedf1fc81 100644
 --- a/arch/x86/kvm/svm/svm.c
 +++ b/arch/x86/kvm/svm/svm.c
-@@ -3443,23 +3443,13 @@ static void dump_vmcb(struct kvm_vcpu *vcpu)
- 		sev_free_decrypted_vmsa(vcpu, save);
- }
+@@ -3445,12 +3445,6 @@ static void dump_vmcb(struct kvm_vcpu *vcpu)
  
--static bool svm_check_exit_valid(u64 exit_code)
--{
--	return (exit_code < ARRAY_SIZE(svm_exit_handlers) &&
--		svm_exit_handlers[exit_code]);
--}
--
--static int svm_handle_invalid_exit(struct kvm_vcpu *vcpu, u64 exit_code)
--{
--	dump_vmcb(vcpu);
--	kvm_prepare_unexpected_reason_exit(vcpu, exit_code);
--	return 0;
--}
--
  int svm_invoke_exit_handler(struct kvm_vcpu *vcpu, u64 exit_code)
  {
--	if (!svm_check_exit_valid(exit_code))
--		return svm_handle_invalid_exit(vcpu, exit_code);
+-	if (exit_code >= ARRAY_SIZE(svm_exit_handlers))
+-		goto unexpected_vmexit;
+-
+-	if (!svm_exit_handlers[exit_code])
+-		goto unexpected_vmexit;
+-
+ #ifdef CONFIG_MITIGATION_RETPOLINE
+ 	if (exit_code == SVM_EXIT_MSR)
+ 		return msr_interception(vcpu);
+@@ -3467,6 +3461,12 @@ int svm_invoke_exit_handler(struct kvm_vcpu *vcpu, u64 exit_code)
+ 		return sev_handle_vmgexit(vcpu);
+ #endif
+ #endif
 +	if (exit_code >= ARRAY_SIZE(svm_exit_handlers))
 +		goto unexpected_vmexit;
 +
 +	if (!svm_exit_handlers[exit_code])
 +		goto unexpected_vmexit;
- 
- #ifdef CONFIG_MITIGATION_RETPOLINE
- 	if (exit_code == SVM_EXIT_MSR)
-@@ -3478,6 +3468,11 @@ int svm_invoke_exit_handler(struct kvm_vcpu *vcpu, u64 exit_code)
- #endif
- #endif
- 	return svm_exit_handlers[exit_code](vcpu);
 +
-+unexpected_vmexit:
-+	dump_vmcb(vcpu);
-+	kvm_prepare_unexpected_reason_exit(vcpu, exit_code);
-+	return 0;
- }
+ 	return svm_exit_handlers[exit_code](vcpu);
  
- static void svm_get_exit_info(struct kvm_vcpu *vcpu, u32 *reason,
+ unexpected_vmexit:
 -- 
 2.52.0.351.gbe84eed79e-goog
 
