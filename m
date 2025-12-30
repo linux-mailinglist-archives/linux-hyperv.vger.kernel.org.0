@@ -1,301 +1,211 @@
-Return-Path: <linux-hyperv+bounces-8092-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8093-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id D05C9CE89E1
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Dec 2025 04:04:29 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C1F6CE9244
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Dec 2025 10:06:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 6E6AC3001E1B
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Dec 2025 03:04:27 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 96F0F300206D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Dec 2025 09:06:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B88B11607A4;
-	Tue, 30 Dec 2025 03:04:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B122271456;
+	Tue, 30 Dec 2025 09:06:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="BSBfu4mL"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="SYEtH0Wt"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azolkn19011070.outbound.protection.outlook.com [52.103.23.70])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78D82D6E78;
-	Tue, 30 Dec 2025 03:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.23.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767063864; cv=fail; b=Lk3teKZcrVAh/2tw+OAkcLUTR0KXvqHGflXIVs6cxouUN8NiT6+hGKWOulVtSWMTsW5QoO9OBoPv4lbcUvaixk2sVgmDJP+0Fw6Xreu4vM2Vx3x0v5TJxT+TvY7h6bnLqq4ePpUxu9lQS+5t7ebzrdoCx3ni6AJ4bs9d/9XZTzU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767063864; c=relaxed/simple;
-	bh=mF+J/24hlhzJhbI+IVH/4no16uBVh5tAF8egHDjhibk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=MAJvBtCydVkfd/EgQIs5/Yf7jVLawsQkI3Y89oiVWYHLyC8RduNJ1PGGR4OZpsfFmmBe+XYzvUuyTUPmlMfJXSBqN0kJnbTUXmxHX7onMUK1G+GbVqMiM80LLRzce4f1Ou58NENau3IJ17jpejWeGo8yx+bIxuN234Luv6+4gW0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=BSBfu4mL; arc=fail smtp.client-ip=52.103.23.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=l++cWxqBnWpvKHDNOb1gYKW4JYfjLE1swcN5RroYvqKh1wZJGXtEOMEZVPZyyDHYNFeI7pxehyk1k1CnivV0BmFdyd+aM9cnc/KLRzy+7bAA5jMEi3nF2p3cdQaGyREvdxOg8vb1Pvf6sXPOtfvKeCoytwFnT9SwkNehVVbFdDB39b5XY03qXI79/oWvc+2ochSPgeaSTEQixYWWFYZs9FIwFsK2Nd++JbRYcvvB8bv6H3ln082knuyxumm1+XNauK15d7YwzDQbtndGdtKdX8iLEeWZIDvJbi8k67oPPql4tIzC7NmtGm9n5UVz4sjW+XKcRhd9aEEHCx/aPsdb6w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cMTKPwOLlNOmcQissHwV49+nSoOTSwoEyj1uiU/Oh0s=;
- b=ApARQ15XO/Yivj2ZhwUOkPoY9pJQQwgqF5jdbpdEgDz2CSivC3/RSziM5/7Uf7Eb7O64RIWnt9vX56z94W7ZhTBLixL4B6zm3wq/TLLF0XjsBQ2h8qWSKDzJCAnCZQcRunXZf+XXfXi1PELCYFyw2gFEQEFjNlG87uEt5cr6+dOgbIu3WqiMM0s1IFa0qOB1ILUUQAU1Plk4K8KofcYTl0Xv6mLH6CxglClDnVt1JQ1m5A1WYft4u5+Wi1BrpBnPh6k95UgdiqyJdCclPJlWkrHyhxqrDNDYCzIrW7K0tinJGmLyZlq2brKEmFdsDb1j1KrCLyfkGUs4hTE23hxWQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cMTKPwOLlNOmcQissHwV49+nSoOTSwoEyj1uiU/Oh0s=;
- b=BSBfu4mLEOc905gjT+sXhPCD/m4WFQgksYtQFh5Tee25hBxXVx180K9K4op4VQe2W80mRiq1UbwII24dghQ8wQ255L59fd205vHeNWrBXaQczVbpi4+AOU8FUdB6v+9UWGuWx5kf7Ss9zLXuo5gZWN0TiOFsMldXrTFST9OBAnHLi5TAjOy8tl9qtM7y1m8D+POrXbjD9S+CpWtQyyU5TJ8vN5OJt+t8eaWVamIT6SvW6LcTOJtRdstaggRdNujb+ZJl5SpKkiV+su9a+j8t2RM7o1GvRTk6UucLPmWerEVg1I5z6xaNYyu7KbMxHPZZYW3so0c8lwo5wDCeX/BqBA==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by DS0PR02MB9570.namprd02.prod.outlook.com (2603:10b6:8:f2::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9456.14; Tue, 30 Dec 2025 03:04:20 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%3]) with mapi id 15.20.9456.013; Tue, 30 Dec 2025
- 03:04:20 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: "vdso@mailbox.org" <vdso@mailbox.org>, "mhkelley58@gmail.com"
-	<mhkelley58@gmail.com>
-CC: "haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org"
-	<wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>,
-	"kys@microsoft.com" <kys@microsoft.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "dan.carpenter@linaro.org"
-	<dan.carpenter@linaro.org>
-Subject: RE: [PATCH 1/1] Drivers: hv: Fix uninit'ed variable in hv_msg_dump()
- if CONFIG_PRINTK not set
-Thread-Topic: [PATCH 1/1] Drivers: hv: Fix uninit'ed variable in hv_msg_dump()
- if CONFIG_PRINTK not set
-Thread-Index: AQHccQSCpYnwovAUE0yn4gaYWmR63LU4EIEAgAF4c2A=
-Date: Tue, 30 Dec 2025 03:04:20 +0000
-Message-ID:
- <SN6PR02MB4157065BCB5064B3587F9E4AD4BCA@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20251219160832.1628-1-mhklinux@outlook.com>
- <21281086.36492.1766981516854@app.mailbox.org>
-In-Reply-To: <21281086.36492.1766981516854@app.mailbox.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|DS0PR02MB9570:EE_
-x-ms-office365-filtering-correlation-id: c54d9701-97ac-4798-180b-08de475020bb
-x-microsoft-antispam:
- BCL:0;ARA:14566002|8060799015|19110799012|461199028|31061999003|8062599012|15080799012|13091999003|41001999006|51005399006|3412199025|440099028|40105399003|102099032;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?Y+YEcMTajZ6lsp0+3/0MeB695wHnTtfHGTMRyH86v8OZvepo06lbfdJPTh6r?=
- =?us-ascii?Q?5D3qGcbqDuSUKC6g4DVOqmX1pTFHr99D5xlNuEee/jzvCUzlmup57Spdpqyr?=
- =?us-ascii?Q?llqpOgWfKrQQeFEJ5DXAs8q4yE4RiJdPHX+e2BJMLw9E1vbfh3bcgEFkohdK?=
- =?us-ascii?Q?g3ETJS8p1wEAB3XZH7zXo2H3t831dGcmBF1pqOqmouB+gwz1+5trL3520yx1?=
- =?us-ascii?Q?aQR2Zq6mnfUSXza3vwzAl3UpY3CFEPUG8QdQGZNikfEhyhdWaJQ7ZtcTPOwr?=
- =?us-ascii?Q?XbBS/HN5ymFZxsF84787u0QoIGCJdMp6Ca1+82coR+HYDil/WetkTE11ItEH?=
- =?us-ascii?Q?hSsMccOn9fkVVmGWk+MIyMtKXC8mmR30ApogyqWHU6DiCaE3EHlKHRx9fWRm?=
- =?us-ascii?Q?oy3qFxwhCeU9Km7QSp6zjV5aOClVunh/WKNSec9yH6zFuCkzDJLHGnB5X4N9?=
- =?us-ascii?Q?XkK7hv/4V6Z0x0rPljlh+fhtQHnDp7vym/nO+BwA3PP8rnzw0xXFshqxCnCH?=
- =?us-ascii?Q?Dylb7yYx8EZHZaaRnfEmnlVLfOT1GqdjEuF/4YlsImG3RHcDMV1P1IzPm1T8?=
- =?us-ascii?Q?OI6MbQO52Qa/G162Cw+lG+48m5chZmCFC0S1Cb/hUFUT45F6yuVc9sPOrYCj?=
- =?us-ascii?Q?AD0t0LybAc4uJyZ4OwFoDU0Brq6GaDQWsvven+H42vYt4W/64xx96smji/3H?=
- =?us-ascii?Q?F/kEBKGJK6KINbGB1tjnzi52SgoGjjb31a+JUFz06GxxDIonHZ0Y4LN3BJrK?=
- =?us-ascii?Q?hbUeD3uJSFNnUTSxT8FYgCeZMI3pxpGU6RFTq0A4Wr7qedOfvhjUMMI7ePE0?=
- =?us-ascii?Q?fD6MpMpTWOPaZ9a7UGUeRuK4+HI/2+m2rR+LstOlulvNgvoXhgpnEews9U12?=
- =?us-ascii?Q?ddHL39VUW47UxoZzgT9G5jQXXne/6ajENLu0tREkuXFqPm0LWghJwAHUvd0x?=
- =?us-ascii?Q?1++c9/GCQIaWfT5/UvZQjTgsQE/GnMf5RBWvhO7t0qoMhOmRGJdp6MrR98BR?=
- =?us-ascii?Q?1POC8r8vYyokHeX/lHfpF80c6u0Nk00aLKyfNeUtW5+PYP0c4hZmuZju9vUS?=
- =?us-ascii?Q?30YcaozC/IbTOvleYcoaUCk0DDtZu3JZtmffx/Fws0TFLvy6jA6xa0cjzR94?=
- =?us-ascii?Q?NZSjaRtdAgeJfBNljLgKqPoJyKRYxnyYt5U6NenwSVWUUlQQuBKD/G73aCQs?=
- =?us-ascii?Q?5Frutk+h7NH0TPlgdrbMnrPuVsAuALNbi8eglWErwriaomI72xsQOabqCI4?=
- =?us-ascii?Q?=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?e76Yh9sYjqiY5FMo2MLwB5kX85PVNw3s1BSVjMjuwoC+6umLPMnX0M+AYJiS?=
- =?us-ascii?Q?patYreP/4feqHzFsoMOsaFFk9V9q2W4LV5Ug1Rl085iQVdsJJhSVDcOvyVw1?=
- =?us-ascii?Q?VQwZL10u6h39lwxKV97A8FwQxAzzKGcDdms8QKjMM28aj/VbeFvuzuBAlCY2?=
- =?us-ascii?Q?ogbgXe0wQoTGjimON/CAsGZm3TyR+qws8Bp6ZvXWJcWhKQuE5Ohsa0U72PQy?=
- =?us-ascii?Q?TnBq24Bhysyvar6H1Nj6DPrhu8Ina5cvx20Z2tHIjZkNkfQOQStpYWHjqJE1?=
- =?us-ascii?Q?vhhJUVXcxJBMj7EVvslN8XiIpUQbOzbN0+s3gWPqht2yY0wLhHNgn3iZRDMv?=
- =?us-ascii?Q?COGbT/0lCmVc9lhfwYLaWh3xWPUSoipUgHbdYwhP/HTGwXa3mJFh4NAv7sfK?=
- =?us-ascii?Q?mGl0lcuOsBRJtdinwaaFy1/e/rwT+Cfke3duv/Ve0d/rGT2wmUAsUgQq/Qrc?=
- =?us-ascii?Q?SpiiAPCGOY7UaRqHxPUxLheGVXeMR7PMQHTd/jSBYWVKHOBudzu1vpKllH3N?=
- =?us-ascii?Q?JP4ibV2uR7P9wCGGjujmiFM9FqKua8YG0wg+eSWcitoOYGTug3xlBQAzVwih?=
- =?us-ascii?Q?HB0PhRxe59w/5ZHwVgkHub0xPE8mmB38sb0E3tCVwgghGrZpbG2WFrF2zEhq?=
- =?us-ascii?Q?VSt7wSnyQ8obWF1iCR7uJVxfuBPa4J5sy6f1Kp5UvdWt9GC72wwr6WDRHmVK?=
- =?us-ascii?Q?Hz3QSMp4qIN52TrvrGU5NQoRqydne2ShGghv9oIKjQnYsVugiqmFD/jnvEWw?=
- =?us-ascii?Q?c5TZ0tlOgOqRBVmGbNWCVM3HTQu1h1ONOSNl5f8UJgVEvio13jDvidpLggH0?=
- =?us-ascii?Q?GFn80kV3z7z6rIEq9hUqpl9ppqX4tAqxqghwyfylDvoe8uflkijNgfsnlMux?=
- =?us-ascii?Q?Xx2+bDYWAYzxxeSzavodrMgdI4/H+UbwrY98MGZ6gb9KhR3pDC8I270WeO1/?=
- =?us-ascii?Q?vHOgOytjsjoSAtv9QZvt7hKsDgH72nqg2+cvV34kbUREoRbI6HP64w7x0cUX?=
- =?us-ascii?Q?6FDg2peAEjR/0KgSAUYaTVmoJoUaqVREm8Pf/nSV9kWu0h32DY1FSg13Xg7P?=
- =?us-ascii?Q?jffimr3tUpewf52nqy5+ZTnlopq/bOeF4UifLIHGqLrM4rPxvAzKgFuT9fl/?=
- =?us-ascii?Q?CgcJLM6upjIbz7PXxz87zZ0PtfMiBUoz3HPTxSkmlcBic8YuMO2XweEDMimu?=
- =?us-ascii?Q?UYbr0Qsegwl8qntKTfOpMBpSlPEyimugMzkYch4L8viKDdqj5o41ez5om0P3?=
- =?us-ascii?Q?H3KYKvXsXL2WZcLdbTGvobDVk60G+HAQKtGtuHuC4wuWqoSR3kASUKehuwqY?=
- =?us-ascii?Q?5yBrg7YYFgVsqhmsTyshjk6FrYNqKDS2UfStxs4bS7Wfedt3m8CKKC7vJiLQ?=
- =?us-ascii?Q?zAb8lUE=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B3A41F3BA4;
+	Tue, 30 Dec 2025 09:06:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767085610; cv=none; b=iKpB9oax1JeS3+ie2zsf1wGaS+deXScslb6BPOWrohB8TWhxnAUEpIsv31RjvH/7VKUyg2s8F597Nvsid4LW4Z6csNZyn8/XMiuS7LqyKNvl4tT/ACJx9nTb9CcTuENQnyoh7YZPHWizEAsr9y2yix3VsT0Y8UFpb1KCRk8xkNU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767085610; c=relaxed/simple;
+	bh=7GWUYWa0YUGGFihxgoNeAXPCh5JAGlN/r8VVx31kZQ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ut2C1ygcB4f7BlyxZF9XJMfsswXUDt3racZwgLO6ASxWVpN4i9piMmsUvA2k+TtVuDxp6TSbqPjdOblVuElblIKda5WuuOGGMrd0HV5ohKSSNuI+5q6u7ps++PzgrNmNqVcpcvCZaf/pY/TtiZCP3bnKUOL4zH/Cay35WpRCxFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=SYEtH0Wt; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1767085606; x=1767690406; i=deller@gmx.de;
+	bh=UYTthbqv87PcJYGWmq49/Q+i3e6V/KQdQOU3fVJiFFk=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=SYEtH0WtqspHsC63yDDY5IO3Mo+M4MagNYlM4v7byY2K8ay0KH+edgn6pjW/OlfV
+	 FUiUTBO7Mz3HU3TxjhrglNLzKlnEb6sjwGa85OiU2uL8SpbPO9+P+HjneFVJ6gCQj
+	 lw53/fzxBxnIuDPPSZbfoo28h1yhUAfXOATuo5TpPLo7xRM5T+m5hlQ1OQmpJKOSV
+	 A8spDEVbpoLfhenmMjHsnp9v9UgQh9+K4EtrpEjw6Rz6sxkBK9ygkRCixoOdYXWi5
+	 uOzpQXrahvnm9THehAhZ1xHXtbQag5b3RnKYM+V7/ZWI0vcP/V4fxq7A4WYl3wZxm
+	 25z+vpi7/DsmFeoQFA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.20.55] ([109.250.51.253]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MTzf6-1vRGIG1fiU-00Y1MZ; Tue, 30
+ Dec 2025 10:06:46 +0100
+Message-ID: <e37ef037-fb4f-418c-937b-b3deb632d0ca@gmx.de>
+Date: Tue, 30 Dec 2025 10:06:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: c54d9701-97ac-4798-180b-08de475020bb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Dec 2025 03:04:20.4767
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR02MB9570
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] drivers: video: fbdev: Remove hyperv_fb driver
+To: Prasanna Kumar T S M <ptsm@linux.microsoft.com>,
+ linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-hyperv@vger.kernel.org, ssengar@linux.microsoft.com,
+ mhklinux@outlook.com, wei.liu@kernel.org, kys@microsoft.com,
+ haiyangz@microsoft.com, decui@microsoft.com
+Cc: linux-kernel@vger.kernel.org
+References: <1766809486-24731-1-git-send-email-ptsm@linux.microsoft.com>
+Content-Language: en-US
+From: Helge Deller <deller@gmx.de>
+Autocrypt: addr=deller@gmx.de; keydata=
+ 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
+In-Reply-To: <1766809486-24731-1-git-send-email-ptsm@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:MeEDMYW4+fo6IE1TOf/hGs+ScfOOpvAi8qPZh+OD/wN5NUVap8C
+ ctl7le+vWiXoel3IkcHfQ/0x9zOrMvH0FTAn6z8rWukllPVOYJduaoQ/772ZWMV6F+dXwMt
+ dPSBySAk1cYH3XXVRCk4IywIkR3N4tJg1OGC7EQktf/7nHCvHKPB7j1/C6ndZXhzk+iZSXT
+ Otc5cqoeJagS/W5bcf1ow==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:b22fajR1TCk=;dTDmnR+2TxtR9PhQrQyekYBXFca
+ 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
+ nPNz6xh4bOUm7plTA5ObjY7+/7E0+0oS291VfM
 
-From: vdso@mailbox.org <vdso@mailbox.org> Sent: Sunday, December 28, 2025 8=
-:12 PM
+On 12/27/25 05:24, Prasanna Kumar T S M wrote:
+> The HyperV DRM driver is available since 5.14. This makes the hyperv_fb
+> driver redundant, remove it.
 >=20
-> > On 12/19/2025 8:08 AM  mhkelley58@gmail.com wrote:
+> Signed-off-by: Prasanna Kumar T S M <ptsm@linux.microsoft.com>
+> ---
+>   MAINTAINERS                     |   10 -
+>   drivers/video/fbdev/Kconfig     |   11 -
+>   drivers/video/fbdev/Makefile    |    1 -
+>   drivers/video/fbdev/hyperv_fb.c | 1388 -------------------------------
+>   4 files changed, 1410 deletions(-)
+>   delete mode 100644 drivers/video/fbdev/hyperv_fb.c
 
-[snip]
+applied to fbdev git tree.
 
-> > @@ -198,9 +199,9 @@ static void hv_kmsg_dump(struct kmsg_dumper *dumper=
-,
-> >  	 * be single-threaded.
-> >  	 */
-> >  	kmsg_dump_rewind(&iter);
-> > -	kmsg_dump_get_buffer(&iter, false, hv_panic_page, HV_HYP_PAGE_SIZE,
-> > -			     &bytes_written);
-> > -	if (!bytes_written)
-> > +	ret =3D kmsg_dump_get_buffer(&iter, false, hv_panic_page, HV_HYP_PAGE=
-_SIZE,
-> > +				   &bytes_written);
-> > +	if (!ret || !bytes_written)
-> >  		return;
-> >  	/*
-> >  	 * P3 to contain the physical address of the panic page & P4 to
->=20
-> The existing code
->=20
-> 1. doesn't care about the return value from kmsg_dump_get_buffer.
->    The return value wouldn't make the function return before, why does th=
-at
->    need to change?
-
-The existing code depends on the implementation of kmsg_dump_get_buffer()
-always setting bytes_written, even if it fails. That's atypical behavior, b=
-ut it is
-what kmsg_dump_get_buffer() does -- except that if CONFIG_PRINTK=3Dn, the
-stub kmsg_dump_get_buffer() does *not* do that. Testing the return value is
-the more typical pattern, and bytes_written should be used only if the retu=
-rn
-value indicates success. So that's why I proposed this change, instead of j=
-ust
-initializing bytes_written to zero when it is defined. My proposed change
-makes the overall pattern more typical, and would work if the implementatio=
-n
-of kmsg_dump_get_buffer() should ever change to not set bytes_written in
-some error case.
-
->=20
-> 2. returns early when there are no bytes written.
->    I think it shouldn't as otherwise the crash control register isn't wri=
-tten to,
->    and the panic isn't signalled to the host. Is there another path maybe=
- that
->    I'm not noticing?
-
-You make an excellent point. I didn't even think about the possibility of t=
-he
-current logic being wrong. There is hyperv_report_panic(), but it is not ca=
-lled
-if hv_panic_page is allocated, in order to avoid duplicate reports. I agree=
- that
-this code should go ahead and send the panic report even if there's no
-message data. And in that case the discussion about testing the return valu=
-e
-from kmsg_dump_get_buffer() is moot.
-
-I'll submit a new patch to change the behavior to send the panic report to
-the host even if the message length is zero. I did a quick test of that cas=
-e,
-and it behaves like the case where HV_CRASH_CTL_CRASH_NOTIFY_MSG
-is not set, which is fine.
-
-I'll submit a new version of the patch focused on submitting the panic
-report to the hypervisor even if the message size is zero. Avoiding the
-uninitialized bytes_written will fall out of that change.
-
-See a comment below in your suggested patch.
-
->=20
-> That said, would it make sense to you the patch be something similar to:
->=20
-> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> index 0a3ab7efed46..20e4a9a13b32 100644
-> --- a/drivers/hv/hv_common.c
-> +++ b/drivers/hv/hv_common.c
-> @@ -188,6 +188,7 @@ static void hv_kmsg_dump(struct kmsg_dumper *dumper,
->  {
->         struct kmsg_dump_iter iter;
->         size_t bytes_written;
-> +       bool ret;
->=20
->         /* We are only interested in panics. */
->         if (detail->reason !=3D KMSG_DUMP_PANIC || !sysctl_record_panic_m=
-sg)
-> @@ -197,11 +198,16 @@ static void hv_kmsg_dump(struct kmsg_dumper *dumper=
-,
->          * Write dump contents to the page. No need to synchronize; panic=
- should
->          * be single-threaded.
->          */
-> +       bytes_written =3D 0;
->         kmsg_dump_rewind(&iter);
-> -       kmsg_dump_get_buffer(&iter, false, hv_panic_page, HV_HYP_PAGE_SIZ=
-E,
-> +       ret =3D kmsg_dump_get_buffer(&iter, false, hv_panic_page, HV_HYP_=
-PAGE_SIZE,
->                              &bytes_written);
-
-Ignoring the return value can be made explicit as:
-
- +       (void)kmsg_dump_get_buffer(&iter, false, hv_panic_page, HV_HYP_PAG=
-E_SIZE,
-                              &bytes_written);
-
-Plus an appropriate comment. Then there's no need to introduce the "ret" lo=
-cal
-variable and the somewhat funky:
-
-	(void) ret;
-
-Michael
-
-> -       if (!bytes_written)
-> -               return;
-> +       /*
-> +        * Whether there is more data available or not, send what has bee=
-n captured
-> +        * to the host. Ignore the return value.
-> +        */
-> +       (void) ret;
-> +
->         /*
->          * P3 to contain the physical address of the panic page & P4 to
->          * contain the size of the panic data in that page. Rest of the
-> @@ -210,7 +216,7 @@ static void hv_kmsg_dump(struct kmsg_dumper *dumper,
->         hv_set_msr(HV_MSR_CRASH_P0, 0);
->         hv_set_msr(HV_MSR_CRASH_P1, 0);
->         hv_set_msr(HV_MSR_CRASH_P2, 0);
-> -       hv_set_msr(HV_MSR_CRASH_P3, virt_to_phys(hv_panic_page));
-> +       hv_set_msr(HV_MSR_CRASH_P3, bytes_written ? virt_to_phys(hv_panic=
-_page) : NULL);
->         hv_set_msr(HV_MSR_CRASH_P4, bytes_written);
->=20
->         /*
->=20
-> --
-> Cheers,
-> Roman
->=20
-> > --
-> > 2.25.1
+Thanks!
+Helge
 
