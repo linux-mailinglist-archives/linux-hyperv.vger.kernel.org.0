@@ -1,200 +1,233 @@
-Return-Path: <linux-hyperv+bounces-8089-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8091-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B058DCE8422
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Dec 2025 23:02:42 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB529CE8674
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Dec 2025 01:27:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 41B80304ED8A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Dec 2025 21:59:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7FA1B3008FBF
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Dec 2025 00:27:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 187C731195A;
-	Mon, 29 Dec 2025 21:59:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55C8F2836A6;
+	Tue, 30 Dec 2025 00:27:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gDQIf74g"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FsQeQ7MM"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-oa1-f97.google.com (mail-oa1-f97.google.com [209.85.160.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F6B310644
-	for <linux-hyperv@vger.kernel.org>; Mon, 29 Dec 2025 21:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.97
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4DE127F171;
+	Tue, 30 Dec 2025 00:27:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767045589; cv=none; b=KySnR5DZBdXEWLUx/d6GioHmvJ+5dnZp0ZLmXhVb9BySPvF00l6P3rGqop1QtZSAjsGsPtCSSHz0NlgGPuiBEe6XsxCqpZq4Lkipei0BeNAQioDL704cZXpvMIjL8QQD2u9zjG5feSwFos9Gt1MMEjzAHhrPpb1zqYOj9f33v/o=
+	t=1767054455; cv=none; b=Cx7yBCdlj483Glb91zVV+m/ydFqapZhZaEaW82ZTB9d/rdP2kdCik0EBkwlvfDiNTVgZrGBOvRBDwZervDF3xAoJOF+yD/8mr0Xa+q9EqrbuZ3GWoTdj/PM+JvbGax3XbDti3ECkVKokwQ561hlMYZVazx9TV6eQqUO1vYWsGkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767045589; c=relaxed/simple;
-	bh=dQpvv6P8rpsc9VhbHXErM++gAE6dp88Qa5WuWmijx9Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a7CdEjQT8ek45vzzVKpI9a4MO4k96Ih9mo2yn/22+JIu67P8cZRqZUHBYnjdCg2WoZmqFv3k3w2hwn48UhMO6oNJYenx0rrLUnCKOnd5JJa7/gw/qZdRxIt+cjAiuStb8faj80DqRlRjv2lEtP/GWMgw0i5xJBH864+G79g0jXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=gDQIf74g; arc=none smtp.client-ip=209.85.160.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-oa1-f97.google.com with SMTP id 586e51a60fabf-3ec4d494383so6713620fac.3
-        for <linux-hyperv@vger.kernel.org>; Mon, 29 Dec 2025 13:59:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767045584; x=1767650384;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:dkim-signature:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4cjHGpdx5LLmnDfUfy3cg6m+WR+7JCISjjlWlDNw0F4=;
-        b=NomkfwWOGKF7WWqyyFLSTPzYWOcz/4EmWuVxImS2PsD+NkZ7/RrL4WJrn0NghrQajf
-         +UE9UCr+Fh3WstJvMGqemY7/Ceyh+1IINT4NJwa8pm6wLTdu0SO/9Ln/E1/tYB8CDpWr
-         2XUKJvf8Po9vk6FZGQ1QPin0GRJGL4OPBdkuWwEvuHHTPHz26P9/lDDgEk3eFsdaaaaZ
-         qYaPw5NNTM5LN+GAoFhbV10S5eaMZMR32hjCNmRkb0xMlZYh5QK5UTWk+GCxIqc0Zu8z
-         AK+HlN8ZkeRhSXoLaRADBqQiKS6Zl2MinbYqeUU9wUDhLKar63Ld4pk0MBlLaTYVkfuX
-         nHTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVUGkeRILsTEq8FcAicA/50kEqKGQqqmNliu8CYg35GH4eir9S4CkVWctOIqwCsWtHL+I27um13+ocQykU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZkHiXntoS7nev1U+6uxGZ1tJgZIqCTq4GGJeW9dibCEu3MOHK
-	wWbwTQSqGa6tLMteId+6NfMAYpavSufIJldebw7gvvRWflzMCtjAtQpnFgkhXY6ZYwzoI/ULROi
-	xnVSq/N5g6sgS+/je5cRRk112J0lhaaDRD9Hfn0OgcZmekR8tavCf/18hrl2eA9CUdA6T8Dqkxu
-	/D3jslguvrs2X4wm5ciF0fDCmh07N+5VQHtEXZook1/ofzpunuJJr6hvJXpRrgY70QRSXnvME+3
-	rgGq0KudNiiCKJl
-X-Gm-Gg: AY/fxX4OT6BEDq99oTLZ1ZmPHVvLyf0iSNUxvNqlpizxZ9R0lEJ84ftwB5vHfNYbMBR
-	kZ8vFkR6wnh+Hs0uPPsTBU2ZW7Q05rUUXHvJH/FDsJywKS7Ls3JG3XL/YJah2gWoGTZWh7LLjyr
-	94RgJC1KdUBvUNnGqWPxCFVmJJaKiywcs0Db+cciEw03PKuvBsV+27VReSMxTcyMSHYLuOxzSom
-	TpseYQ2mKTIZ+PVF6EFoGDSxJZ6ZjWcU+3B9IKzQNKpBWN7dVW6a8qKG0E03Uuxt5KvMHmlTubW
-	WHSlCCnkwU8gTsY8UmDXGbcZMtQESF/9rBQEa2jTp8LBK7UZzRcyCkfydZrnDll3Q+DDvXO8TYU
-	nBD1Sdn6qaBQDdWjK5MvTO4cq1jJjFrxF/ZKcdW91AwHisEyqZqn+73PxQ1pKEDFSMatK7zvywr
-	BYX3A4IPmYZUYOcn/LGNUkIclmnuryiksEe+jl1I0jnzYz
-X-Google-Smtp-Source: AGHT+IFlBP9i2ua3qJjsetn0/kZWWw3DnLUQCQyMRQdkYQTvz2OztLw2bHGQx2Cokjz9PH4msi14HIzT6iss
-X-Received: by 2002:a05:6870:e181:b0:332:1b00:6d5 with SMTP id 586e51a60fabf-3fda58cf74bmr15826984fac.39.1767045584269;
-        Mon, 29 Dec 2025 13:59:44 -0800 (PST)
-Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-117.dlp.protect.broadcom.com. [144.49.247.117])
-        by smtp-relay.gmail.com with ESMTPS id 586e51a60fabf-3fdaab62235sm3141197fac.9.2025.12.29.13.59.40
-        for <linux-hyperv@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Dec 2025 13:59:44 -0800 (PST)
-X-Relaying-Domain: broadcom.com
-X-CFilter-Loop: Reflected
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-88a360b8096so245148536d6.0
-        for <linux-hyperv@vger.kernel.org>; Mon, 29 Dec 2025 13:59:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1767045579; x=1767650379; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4cjHGpdx5LLmnDfUfy3cg6m+WR+7JCISjjlWlDNw0F4=;
-        b=gDQIf74g0f4XN814wGOEeni7K74zctudEumOwUwtDut0irXYw8qeKDbeygAknuCbjW
-         TXPFwcAJhveCNs5mBxBt9XOqkWHPnqycUegmsVGP/0IVTgvWXjUlRARmNSF9neLrlUbf
-         fVA4cOKJgsQW1IvzVSMY0Qa5XLoI3dBhQ4eGg=
-X-Forwarded-Encrypted: i=1; AJvYcCUNE+veyrEjqMq4ABQxg7+YqNb9YxJa4iBWrxPJlVQpthlvfioA1Uy1s848BAyJH5LnsTC11GdVzWi03fQ=@vger.kernel.org
-X-Received: by 2002:a05:6214:458b:b0:882:437d:282d with SMTP id 6a1803df08f44-88d82de8226mr482656316d6.30.1767045579112;
-        Mon, 29 Dec 2025 13:59:39 -0800 (PST)
-X-Received: by 2002:a05:6214:458b:b0:882:437d:282d with SMTP id 6a1803df08f44-88d82de8226mr482656146d6.30.1767045578716;
-        Mon, 29 Dec 2025 13:59:38 -0800 (PST)
-Received: from localhost.localdomain (pool-173-49-113-140.phlapa.fios.verizon.net. [173.49.113.140])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-88d9759f164sm231530026d6.24.2025.12.29.13.59.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Dec 2025 13:59:36 -0800 (PST)
-From: Zack Rusin <zack.rusin@broadcom.com>
-To: dri-devel@lists.freedesktop.org
-Cc: Deepak Rawat <drawat.floss@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 09/12] drm/hyperv: Add sysfb restore on probe failure
-Date: Mon, 29 Dec 2025 16:58:15 -0500
-Message-ID: <20251229215906.3688205-10-zack.rusin@broadcom.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20251229215906.3688205-1-zack.rusin@broadcom.com>
-References: <20251229215906.3688205-1-zack.rusin@broadcom.com>
+	s=arc-20240116; t=1767054455; c=relaxed/simple;
+	bh=g7RjodGt6MF/mkLiIMyHaVA0mOY4CoZjQ6Lmg+udvvg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VQCz2RGY1mEjPMutTbceEglDQvyaA3jUHHcPvQ4uqx0sdkrQ+IUcgHsm8ixfyQT0sjIMLyL5GTmaCYNZSmhA/xV25H56WovnmOtqi1E6BHpaoz67soIxbTkeZKyPsgfcuzaIIY+LoDe+14VWGSVEIRpzCcoPCt82aIlIHJwNnHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=FsQeQ7MM; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.64.208.55] (unknown [40.65.108.177])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5EF5721246E2;
+	Mon, 29 Dec 2025 16:27:32 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5EF5721246E2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1767054452;
+	bh=3sBeOI2MixFkMjoOM+ZfX7Z9nUAF+2n/aiQ4awwT5Ao=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FsQeQ7MM7/ek5pCVnyQdZnp/tme9UghpxUgJIsCW3wTqdmGetJa4RlDf9WvptG2TD
+	 8W5ZYkYzfeOo5e3LJMH0RNwY7F5tIKFY5LCWLYZ9UMbn38kTdQRodab9wS67gqS7mW
+	 ntFMauWqt1aCdvD8uSheAz7r8+kIne2g/1zS7raQ=
+Message-ID: <9a997f03-f1be-411b-b4b2-c28069b2a3ce@linux.microsoft.com>
+Date: Mon, 29 Dec 2025 16:27:31 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] mshv: Ignore second stats page map result failure
+To: Michael Kelley <mhklinux@outlook.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "longli@microsoft.com" <longli@microsoft.com>,
+ "prapal@linux.microsoft.com" <prapal@linux.microsoft.com>,
+ "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
+ "paekkaladevi@linux.microsoft.com" <paekkaladevi@linux.microsoft.com>
+References: <1764961122-31679-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1764961122-31679-2-git-send-email-nunodasneves@linux.microsoft.com>
+ <SN6PR02MB41578C85BD5C114340677F84D4A2A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB41578C85BD5C114340677F84D4A2A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Register a devm action on the vmbus device to restore the system
-framebuffer (efifb/simpledrm) if the driver's probe fails after
-removing the firmware framebuffer.
+On 12/8/2025 7:12 AM, Michael Kelley wrote:
+> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Friday, December 5, 2025 10:59 AM
+>>
+>> From: Purna Pavan Chandra Aekkaladevi <paekkaladevi@linux.microsoft.com>
+>>
+>> Older versions of the hypervisor do not support HV_STATS_AREA_PARENT
+>> and return HV_STATUS_INVALID_PARAMETER for the second stats page
+>> mapping request.
+>>
+>> This results a failure in module init. Instead of failing, gracefully
+>> fall back to populating stats_pages[HV_STATS_AREA_PARENT] with the
+>> already-mapped stats_pages[HV_STATS_AREA_SELF].
+> 
+> This explains "what" this patch does. But could you add an explanation of "why"
+> substituting SELF for the unavailable PARENT is the right thing to do? As a somewhat
+> outside reviewer, I don't know enough about SELF vs. PARENT to immediately know
+> why this substitution makes sense.
+> 
+I'll attempt to explain. I'm a little hindered by the fact that like many of the
+root interfaces this is not well-documented, but this is my understanding:
 
-Unlike PCI drivers, hyperv cannot use the
-devm_aperture_remove_conflicting_pci_devices() helper because this
-is a vmbus device, not a PCI device. Instead, register the sysfb
-restore action on the hv device (&hdev->device) which will be
-released if probe fails. Cancel the action after successful probe
-since the driver is now responsible for display output.
+The stats areas HV_STATS_AREA_SELF and HV_STATS_AREA_PARENT indicate the privilege
+level of the data in the mapped stats page.
 
-This ensures users don't lose display output if the hyperv driver
-fails to probe after removing the firmware framebuffer.
+Both SELF and PARENT contain the same fields, but some fields that are 0 in the
+SELF page may be nonzero in PARENT page, and vice-versa. So, to read all the fields
+we need to map both pages if possible, and prioritize reading non-zero data from
+each field, by checking both the SELF and PARENT pages.
 
-Signed-off-by: Zack Rusin <zack.rusin@broadcom.com>
-Cc: Deepak Rawat <drawat.floss@gmail.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: David Airlie <airlied@gmail.com>
-Cc: Simona Vetter <simona@ffwll.ch>
-Cc: linux-hyperv@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/gpu/drm/hyperv/hyperv_drm_drv.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+I don't know if it's possible for a given field to have a different (nonzero) value
+in both SELF and PARENT pages. I imagine in that case we'd want to prioritize the
+PARENT value, but it may simply not be possible.
 
-diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-index 06b5d96e6eaf..6d66cd243bab 100644
---- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-+++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-@@ -8,6 +8,7 @@
- #include <linux/hyperv.h>
- #include <linux/module.h>
- #include <linux/pci.h>
-+#include <linux/sysfb.h>
- 
- #include <drm/clients/drm_client_setup.h>
- #include <drm/drm_atomic_helper.h>
-@@ -102,6 +103,11 @@ static int hyperv_setup_vram(struct hyperv_drm_device *hv,
- 	return ret;
- }
- 
-+static void hyperv_restore_sysfb(void *unused)
-+{
-+	sysfb_restore();
-+}
-+
- static int hyperv_vmbus_probe(struct hv_device *hdev,
- 			      const struct hv_vmbus_device_id *dev_id)
- {
-@@ -127,6 +133,17 @@ static int hyperv_vmbus_probe(struct hv_device *hdev,
- 
- 	aperture_remove_all_conflicting_devices(hyperv_driver.name);
- 
-+	/*
-+	 * Register sysfb restore on the hv device. We can't use
-+	 * devm_aperture_remove_conflicting_pci_devices() because this
-+	 * is a vmbus device, not a PCI device. Register on &hdev->device
-+	 * so it fires if our probe fails after removing firmware FB.
-+	 */
-+	ret = devm_add_action_or_reset(&hdev->device, hyperv_restore_sysfb,
-+				       NULL);
-+	if (ret)
-+		goto err_vmbus_close;
-+
- 	ret = hyperv_setup_vram(hv, hdev);
- 	if (ret)
- 		goto err_vmbus_close;
-@@ -152,6 +169,12 @@ static int hyperv_vmbus_probe(struct hv_device *hdev,
- 
- 	drm_client_setup(dev, NULL);
- 
-+	/*
-+	 * Probe succeeded - cancel sysfb restore. We're now responsible
-+	 * for display output.
-+	 */
-+	devm_remove_action(&hdev->device, hyperv_restore_sysfb, NULL);
-+
- 	return 0;
- 
- err_free_mmio:
--- 
-2.48.1
+The API is designed in this way to be backward-compatible with older hypervisors
+that didn't have a concept of SELF and PARENT. Hence on older hypervisors (detectable
+via the error code), all we can do is map SELF and use it for everything.
+
+> Also, does this patch affect the logic in mshv_vp_dispatch_thread_blocked() where
+> a zero value for the SELF version of VpRootDispatchThreadBlocked is replaced by
+> the PARENT value? But that logic seems to be in the reverse direction -- replacing
+> a missing SELF value with the PARENT value -- whereas this patch is about replacing
+> missing PARENT values with SELF values. So are there two separate PARENT vs. SELF
+> issues overall? And after this patch is in place and PARENT values are replaced with
+> SELF on older hypervisor versions, the logic in mshv_vp_dispatch_thread_blocked()
+> then effectively becomes a no-op if the SELF value is zero, and the return value will
+> be zero. Is that problem?
+> 
+This is the same issue, because we only care about any nonzero value in
+mshv_vp_dispatch_thread_blocked(). It doesn't matter which page we check first in that
+code, just that any nonzero value is returned as a boolean to indicate a blocked state.
+
+The code in question could be rewritten:
+
+return self_vp_cntrs[VpRootDispatchThreadBlocked] || parent_vp_cntrs[VpRootDispatchThreadBlocked];
+
+>>
+>> Signed-off-by: Purna Pavan Chandra Aekkaladevi <paekkaladevi@linux.microsoft.com>
+>> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+>> Reviewed-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+>> ---
+>>  drivers/hv/mshv_root_hv_call.c | 41 ++++++++++++++++++++++++++++++----
+>>  drivers/hv/mshv_root_main.c    |  3 +++
+>>  2 files changed, 40 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
+>> index 598eaff4ff29..b1770c7b500c 100644
+>> --- a/drivers/hv/mshv_root_hv_call.c
+>> +++ b/drivers/hv/mshv_root_hv_call.c
+>> @@ -855,6 +855,24 @@ static int hv_call_map_stats_page2(enum
+>> hv_stats_object_type type,
+>>  	return ret;
+>>  }
+>>
+>> +static int
+>> +hv_stats_get_area_type(enum hv_stats_object_type type,
+>> +		       const union hv_stats_object_identity *identity)
+>> +{
+>> +	switch (type) {
+>> +	case HV_STATS_OBJECT_HYPERVISOR:
+>> +		return identity->hv.stats_area_type;
+>> +	case HV_STATS_OBJECT_LOGICAL_PROCESSOR:
+>> +		return identity->lp.stats_area_type;
+>> +	case HV_STATS_OBJECT_PARTITION:
+>> +		return identity->partition.stats_area_type;
+>> +	case HV_STATS_OBJECT_VP:
+>> +		return identity->vp.stats_area_type;
+>> +	}
+>> +
+>> +	return -EINVAL;
+>> +}
+>> +
+>>  static int hv_call_map_stats_page(enum hv_stats_object_type type,
+>>  				  const union hv_stats_object_identity *identity,
+>>  				  void **addr)
+>> @@ -863,7 +881,7 @@ static int hv_call_map_stats_page(enum hv_stats_object_type type,
+>>  	struct hv_input_map_stats_page *input;
+>>  	struct hv_output_map_stats_page *output;
+>>  	u64 status, pfn;
+>> -	int ret = 0;
+>> +	int hv_status, ret = 0;
+>>
+>>  	do {
+>>  		local_irq_save(flags);
+>> @@ -878,11 +896,26 @@ static int hv_call_map_stats_page(enum hv_stats_object_type type,
+>>  		pfn = output->map_location;
+>>
+>>  		local_irq_restore(flags);
+>> -		if (hv_result(status) != HV_STATUS_INSUFFICIENT_MEMORY) {
+>> -			ret = hv_result_to_errno(status);
+>> +
+>> +		hv_status = hv_result(status);
+>> +		if (hv_status != HV_STATUS_INSUFFICIENT_MEMORY) {
+>>  			if (hv_result_success(status))
+>>  				break;
+>> -			return ret;
+>> +
+>> +			/*
+>> +			 * Older versions of the hypervisor do not support the
+>> +			 * PARENT stats area. In this case return "success" but
+>> +			 * set the page to NULL. The caller should check for
+>> +			 * this case and instead just use the SELF area.
+>> +			 */
+>> +			if (hv_stats_get_area_type(type, identity) == HV_STATS_AREA_PARENT &&
+>> +			    hv_status == HV_STATUS_INVALID_PARAMETER) {
+>> +				*addr = NULL;
+>> +				return 0;
+>> +			}
+>> +
+>> +			hv_status_debug(status, "\n");
+>> +			return hv_result_to_errno(status);
+> 
+> Does the hv_call_map_stats_page2() function need a similar fix? Or is there a linkage
+> in hypervisor functionality where any hypervisor version that supports an overlay GPFN
+> also supports the PARENT stats? If such a linkage is why hv_call_map_stats_page2()
+> doesn't need a similar fix, please add a code comment to that effect in
+> hv_call_map_stats_page2().
+> 
+Exactly; hv_call_map_stats_page2() is only available on hypervisors where the PARENT
+page is also available. I'll add a comment.
+
+>>  		}
+>>
+>>  		ret = hv_call_deposit_pages(NUMA_NO_NODE,
+>> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+>> index bc15d6f6922f..f59a4ab47685 100644
+>> --- a/drivers/hv/mshv_root_main.c
+>> +++ b/drivers/hv/mshv_root_main.c
+>> @@ -905,6 +905,9 @@ static int mshv_vp_stats_map(u64 partition_id, u32 vp_index,
+>>  	if (err)
+>>  		goto unmap_self;
+>>
+>> +	if (!stats_pages[HV_STATS_AREA_PARENT])
+>> +		stats_pages[HV_STATS_AREA_PARENT] =
+>> stats_pages[HV_STATS_AREA_SELF];
+>> +
+>>  	return 0;
+>>
+>>  unmap_self:
+>> --
+>> 2.34.1
 
 
