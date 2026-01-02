@@ -1,402 +1,241 @@
-Return-Path: <linux-hyperv+bounces-8122-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8123-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED956CEF24A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 02 Jan 2026 19:11:52 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67E79CEF38A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 02 Jan 2026 20:11:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4B84530049E7
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Jan 2026 18:11:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 27B6A3014D9F
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Jan 2026 19:11:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 060353128BA;
-	Fri,  2 Jan 2026 18:05:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7BCA24468B;
+	Fri,  2 Jan 2026 19:11:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="gCDesX0V"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="lbY4aILq"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azolkn19010017.outbound.protection.outlook.com [52.103.23.17])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D713128A7;
-	Fri,  2 Jan 2026 18:04:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.23.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767377103; cv=fail; b=hcqW1XqrxTOUzKcS5idLNWHbpT21L229EyXZdBBrFoONuxkKK2jyVF9+tAjEyqYVpCZy9PC3y3JAnKXpTuuzQTaZyoZtiY0NS4+VDiUe+rHvNHgnj/uXU2IZ8roPkR9JYUypWrnGslDrQZxKHWAT2en6twWNS9b/SE4kKj0PxIo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767377103; c=relaxed/simple;
-	bh=rRUiq2bmNauBiSCNQC8N0sbimPWD/z/vG/HhMsCN2b4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=rOEV3z3SdA1XidG1lGONAv1B/2EtN7bFHxbML10EJCRVlLDk2W4Gl3PQLH+szGrv1Mu9WGt//QxecymDkX6pzUila9M1hos31hQBXynzazbQK6THURaMoIrl405wE9hCjC/mOXnRAEsB4/561Sw3eoZ6wyhugyczc5Wdub2uUR8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=gCDesX0V; arc=fail smtp.client-ip=52.103.23.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JrgnvOgw+FfEB9PuXCBGgBPG/LYcqi1Id6bkixOzQOx9b9GLI0gZgsTx9VlHKabnSiRfMv+7E5WuupOc8BWyer811bQwyqilpGmYOspkSJCftNBk9n5F9NlamgsXPENDvTC/9TTn2Y0jo4ogUIsaL13HCrVr7UqjO9LvEBn9hOpf8JxCYGgn97g57x0kNeXwqj2KTiUQwR6qWhjXEEtPLps50wecmlpeRO+M6uJHvITKtkD7pGsdh3vqxQ0F7X4XVdZtQTSW3kuACfLq74iAL0r0j8HKVVqkZdm0ziAGtmJYCDrOOzqjHk912rcgrUcUHqSam1SlM3E9etVS+qQ1RQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4ZATto3DgXOT7looj9KWhIlMqdTK/YF9+okgKbfulrU=;
- b=g0xi52lfYZ5bz5mQIQxbM4AwB6cU2A/IhZwZNu70XaMXqpcx/WV4RaAiwFunnrTIGdt9L5N3uX3lTJLW02jZlPz5c09zogWKliHO7zUb/ovatizdOETRDIXt48duFzcygo6/bCrqwCi/2CD8KM0j53ZUEBZ7PJeG/Nb/z8sjtVT8qu3HX+agAa5FFzswc6EIRxNQXFBr6nXYC4DOmY9cwhaK9LSMJfFp6FCWYw5tYwguiNS9QhnSDz9uox1tr5+fDs7wKSl6R9XvUh4qnBk3ErlBREM0g3wqI9yoHbZ7bIVy7pbleEFHRQ+jBX1fgPrnP0H5tX6RDcTyCMFmtMQstA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4ZATto3DgXOT7looj9KWhIlMqdTK/YF9+okgKbfulrU=;
- b=gCDesX0V6NORTtBp9Tmrm84H4ZiFKmRCOLdob9hyNUUy1x1CHSrztzcGqTp3xfZrjQ27Fl3y0dyZEN/2gKssTM760Ym56J4Pc398e9UcJJ/VrE8VddMFtHEaxyv1SkJeKt3AnfVSFWcHzV3OGogeYCQ6Lx8cxjjQhMbm7oBtMOMmPRl8Fg4RYtvVWTiTFiFx7wKJ1F03iW/QaE4HGBuJXZV3wwOKo+mj1CQRnW0VEhQF4uAvDtiWSBZ+rpqd+4UcNE721EiPCWrDu8EbT87nimepUYTcBjz4RY8JeA0xfy/qhNwHH4hpbT6rS4SOlW1Qa8DclsBE5b1r92y1g29hvg==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by CO6PR02MB8771.namprd02.prod.outlook.com (2603:10b6:303:142::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9478.4; Fri, 2 Jan
- 2026 18:04:57 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%3]) with mapi id 15.20.9478.004; Fri, 2 Jan 2026
- 18:04:56 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>, "longli@microsoft.com"
-	<longli@microsoft.com>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] mshv: Align huge page stride with guest mapping
-Thread-Topic: [PATCH] mshv: Align huge page stride with guest mapping
-Thread-Index:
- AQHcbu3m/1KRrXDdWE2Bee61xybnKLUnwn/AgAHUSgCAAZKpIIAEOHMAgAASAICAABt8UIAPsSwAgAABuuA=
-Date: Fri, 2 Jan 2026 18:04:56 +0000
-Message-ID:
- <SN6PR02MB4157288D26ECC9E69240CFECD4BBA@SN6PR02MB4157.namprd02.prod.outlook.com>
-References:
- <176593206931.276257.13023250440372517478.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <SN6PR02MB4157D69A4C08B0A4FE01F9FED4A8A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <aUXXdjMyZ5swiCI2@skinsburskii.localdomain>
- <SN6PR02MB41578A17A4DADD9276392298D4B4A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <SN6PR02MB4157AAFDD8BD5BDCD2D3DB99D4B5A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <aUrCr5wBSTrGm-IM@skinsburskii.localdomain>
- <SN6PR02MB41573BF52C6A4447C720CDD6D4B5A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <aVgDloDX9nMH6hZH@skinsburskii.localdomain>
-In-Reply-To: <aVgDloDX9nMH6hZH@skinsburskii.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CO6PR02MB8771:EE_
-x-ms-office365-filtering-correlation-id: e08c0389-4228-4556-dc7b-08de4a29700d
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199028|31061999003|13091999003|8060799015|8062599012|15080799012|51005399006|41001999006|19110799012|440099028|40105399003|3412199025|102099032;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?mH5OTWHFiQHKkeeOFIlqDibwTXIeAxLCEm/AEcpKO6W8bG1naPv5AXvk4iO7?=
- =?us-ascii?Q?90UKnc3BfSiwgaq7Z+75mtd8whSvEczVBQqg+2wEVrNx9fUZQKM2sEO2+hGT?=
- =?us-ascii?Q?fUMBq2OQJGs2NnmvoSXvTrt5QtXbQ0QFBLGw8Nm4N+tfETT0bBZd0eXPKIW8?=
- =?us-ascii?Q?bICZals7dBDjGwDcU1B64Ii5+2jiH9Ai78ycKjuRrU+PNUvXcJtTmP5heHCi?=
- =?us-ascii?Q?vIDIsxLaIozTyxovlU+rc0WKIXDBoIYsD73qRfRLlS6CuxcELUb481n457N5?=
- =?us-ascii?Q?KcJlbsvjB4hiqJewnB+EzJuJ7Lf2rtrMqg9AdeK3YmJaikyOHJdUGlr++Q+v?=
- =?us-ascii?Q?cpCRgVg4eu1ud3b3SgHBoH35Cvie0NuDVrODdg/Rmc9xMM+4NHxmBMsXeD5x?=
- =?us-ascii?Q?+15duLwRUW+56nBL1++23rirev9sVpMuXr1423low42603+mTi3+K5Yw2hWF?=
- =?us-ascii?Q?mPdn29qJoCkdnj+LaIALglKQzgrxbDbUFHClvACY74Yg/Z2tYD0y4XUDxfTA?=
- =?us-ascii?Q?RoJJByBohi8SIr7VMIslVqD2sSn4/9RNRO5mrBdWLlnWtpOBECT20m5fuV9a?=
- =?us-ascii?Q?/cIHALXQKri8FNLWe66UANUryVnEhih4qUBEHxG+SAb/uVJBn42DAq+xMGgk?=
- =?us-ascii?Q?KTygoH82jzBtoHqqyPjZL85VC8Ph4EQ3B8RtXsLdDQgFjdGCXQbmbfnpZ590?=
- =?us-ascii?Q?JmbhAuvVKGxXS0+rtO/4CHgS8rmnBHJuR/d4grLDUF3ff231hoZkinQwdlrP?=
- =?us-ascii?Q?nsQU4o6jHJPfhE7s6Olx9CqwSj7REpqQhIeGD6WcIZBP/PUVwGlv7sco8axg?=
- =?us-ascii?Q?zL9KyKb1kAM25ZQYxBYdSIlYFnyZ66q37YlDjfBmL7ZjQQ0XITkDjxheHhtj?=
- =?us-ascii?Q?TXh8XXKsNKvXx3TmrgTmY1BxPHszW53BtREAWi48Np58PhnBVX3zw6FFCCVU?=
- =?us-ascii?Q?JchGeHwbkwcI/NC+lMnzKQZItL9VVHSC6Gjtk1WSYt99M5k8hcCINojC6SDs?=
- =?us-ascii?Q?KcKEH3j81m/qiat5iBPiAzj5+AzY217JeVaz2veBBymHjnQIrvaIvPe/r3kj?=
- =?us-ascii?Q?NWNgyp1+UBSenra9jmW9oFcZniteKkZhZN7U6IG3GruCaHL+kqL+yHluxHJ+?=
- =?us-ascii?Q?UGgbMVkfJJmfw0eWI0nV4jjZqTtjs4UlGU+F/j1l9IF2bmJMeut9cElpMs2V?=
- =?us-ascii?Q?3ESOjU4JKDsdzIuz06kI27TlTeNad8C5gsbIEGgqJ1Z7+ksKH0jE5Iu8IlA?=
- =?us-ascii?Q?=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?+viLWY/nOeeZnLW8/9pHFkhi4UEsmgXqXFdj542brQoUBJjdDWA0M6+6EpGs?=
- =?us-ascii?Q?QThcQyFi+/QXSwsPmM/RP/+xCSKvlPlpUCHPPduFar8shYZL83h/ilqTv1Sw?=
- =?us-ascii?Q?ebtXFuQwv4EtYrtxEvInaFtEyo+PrxUEW04ycdO2aFAgtB/KTSUmvp9UkU1Y?=
- =?us-ascii?Q?XDfY5GvMdhLXtU8APuxblFbJgZEPQ4hokHlv1y84ix2bRJC58l0ydZhFX8w3?=
- =?us-ascii?Q?mWSrEyBm2ZUUujCpDGb/2YUO9PuDFhzOk8qHqMBWW22a9bTSaSxjN7Bz4acm?=
- =?us-ascii?Q?KivNVhGT/VhXHniovMfVFn4sdtju4QdKfEWIMfE6nspVV6HU/Y4gS4c90cNT?=
- =?us-ascii?Q?TvYZHdy9TQWGp3AcZcnxMlajCHzLi+o1p7yLsXa/GSYIEk3DABm2S9pJBXKF?=
- =?us-ascii?Q?UC2QSyBJ5ndiYXXK+Vbvo5yaZeAWVGOkPETTkQUxALv16mdwlyuXk1njPOh7?=
- =?us-ascii?Q?XbkxwyIgKUPEiqQMR5jAyXYkG28It+5mQ7HskDAbImDLCGnLprVb0I42OD8l?=
- =?us-ascii?Q?k0r4lLE6xbpaCn5NEGweJR2to2+uNRttW9Yvv5nHlzpCeXbF/0wZNWIMWyvU?=
- =?us-ascii?Q?9eYqJFGSZsJbrnTxvklBt1QkKKuYZ+lK8UfQtrHuzIMYTtR5alHvU6Cg/cqd?=
- =?us-ascii?Q?jiWSm/VqxIVH50KcEzp35SNA30WCtg0XeNPGrQxMOekw/HFCcbIAnuqcuSxR?=
- =?us-ascii?Q?IZ7UWrcIncFWa0xrFfoK5czpv8UkiB//XgjGKidTzzjzF2GJBKZ/eDD8c7PL?=
- =?us-ascii?Q?ER5hISZdtr29YHKUzKr4///iw/23RqPBFgF/JPpfCG7CmEn7ImOwLe6Z/Jxy?=
- =?us-ascii?Q?6X4B0Zg+t6P0QL43+z9kzLeg5aW9cpYfeehv5hxzt6Ax3FblBCDNqGf2MFNX?=
- =?us-ascii?Q?xAzQJ2g4sf3iskBzs1TeStPSH55lwb4M4N505GeIivGoGLqkbjcYAus4cKSa?=
- =?us-ascii?Q?VJvIpywDRla95bAEWubn4wb/KyL2FxqYeD6wmFmQBrCv8zpyHPCdw0jLDVqn?=
- =?us-ascii?Q?s3+CzXUYeZjzQ+YXepeYwz8YyA1n83XOV8rJc9Zj1g8Y/cvf/ER+lmeiJaWh?=
- =?us-ascii?Q?px1G/IoaYhdgba3kDcUSp3iVSixk+z1i8FvXHrcoo4B4JTzsUw5loJavO0/x?=
- =?us-ascii?Q?wsKwmCbkIntN7/eGhjGvyi9aTjts/I0Hqhz0ZcJYKb5RtUV/v6rTJ2imeQte?=
- =?us-ascii?Q?bCefjXHBWID2L6wDCTv4HBmcjiZaLe1bgT868EniRGLN6B5JTTiD/H9sfOGP?=
- =?us-ascii?Q?FGraujYCr7q4/zQarMOpKmkYXDLDOIKXI/E5FwmEM35v11cY5qtzWFz/8o9s?=
- =?us-ascii?Q?XKafKOUCFBOmg//wfLYijyFQuhJeysNBD3T/l02Xl9WvRlSmRYeSwYsjfgvX?=
- =?us-ascii?Q?i2EXf4Y=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46951885A5;
+	Fri,  2 Jan 2026 19:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767381064; cv=none; b=IzAhvAI7Q211UYl70bo2eWf8elT9JJgLnKZVI3FLpYg2gGP+adZCvG8qRlvy6WUKhmGQUAjexHO4z3DzhIaKo58DyktL86bBz8kuaaVjkE69VvxIBmM09h/v3uYP1at3AkzeZwNm4YPHAbmmyCZ5i6HAnCxReseJcX6GLWT50eo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767381064; c=relaxed/simple;
+	bh=WC2aPMBvjwOhDf8xXQXRTczIl/6KJyrowBdGWLrko/w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nppmxFgx1uXSiygRlcLtX+UooOXHnnNrmZRQ7GmNoxw7k4kXJS9QIyN2NyCkytqz0vq8G5P1vz7Pgh7HaTZuu/TzEvX357KCxSQd41ODzr+OVcQniI9sDp+pQGGGlZVf638gQ0VZWFxnoBHU5VltmGKSuHLqLypL5w6MmjDJJrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=lbY4aILq; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1767381051; x=1767985851; i=deller@gmx.de;
+	bh=CqxWdNNNuKJFGf7GQHrnO5nTip6NFKdpo/xr5XhRsxE=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=lbY4aILqz/oDnwBMMAnzfKQ+jh4NJHcEo1B0BxrkJa7+EV82fDxgymH8r+tZSM5v
+	 KhFNm1BTQUV/DptRov7CMzsYN0wXnI4pTD5dS+X949uXPSTNNVHQ4T+jA1PaJAgX5
+	 FE6+MeIp60xXEncmazfh56Y3IYxYOcqjRAPSOkI5XEbklKCA5FbTsOhfdobquCwOj
+	 fFVk6qn3kd/dJbSi2k/jwTwOnfgn46TbZ3ODTfqNnBn2RRwyTqH47ss4prrG+F51h
+	 ZsRnN5qiqmdIiRJp6sPyuDFow0Qlinm3BfFtZ0strX5RA+Lz4IjLrMjsOx6evXuG8
+	 uvJevPEX+fldL6wNNA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [10.142.105.83] ([138.201.30.247]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M9o1v-1vYiH01qkf-000jMm; Fri, 02
+ Jan 2026 20:10:51 +0100
+Message-ID: <7d2fbfe3-eac9-421b-8e75-8d44b26fd2b3@gmx.de>
+Date: Fri, 2 Jan 2026 20:10:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: e08c0389-4228-4556-dc7b-08de4a29700d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jan 2026 18:04:56.6788
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR02MB8771
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] drivers: video: fbdev: Remove hyperv_fb driver
+To: Michael Kelley <mhklinux@outlook.com>,
+ Prasanna Kumar T S M <ptsm@linux.microsoft.com>,
+ "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1766809486-24731-1-git-send-email-ptsm@linux.microsoft.com>
+ <e37ef037-fb4f-418c-937b-b3deb632d0ca@gmx.de>
+ <SN6PR02MB415700F34CA2A4296A542F73D4BBA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Helge Deller <deller@gmx.de>
+Autocrypt: addr=deller@gmx.de; keydata=
+ xsFNBF3Ia3MBEAD3nmWzMgQByYAWnb9cNqspnkb2GLVKzhoH2QD4eRpyDLA/3smlClbeKkWT
+ HLnjgkbPFDmcmCz5V0Wv1mKYRClAHPCIBIJgyICqqUZo2qGmKstUx3pFAiztlXBANpRECgwJ
+ r+8w6mkccOM9GhoPU0vMaD/UVJcJQzvrxVHO8EHS36aUkjKd6cOpdVbCt3qx8cEhCmaFEO6u
+ CL+k5AZQoABbFQEBocZE1/lSYzaHkcHrjn4cQjc3CffXnUVYwlo8EYOtAHgMDC39s9a7S90L
+ 69l6G73lYBD/Br5lnDPlG6dKfGFZZpQ1h8/x+Qz366Ojfq9MuuRJg7ZQpe6foiOtqwKym/zV
+ dVvSdOOc5sHSpfwu5+BVAAyBd6hw4NddlAQUjHSRs3zJ9OfrEx2d3mIfXZ7+pMhZ7qX0Axlq
+ Lq+B5cfLpzkPAgKn11tfXFxP+hcPHIts0bnDz4EEp+HraW+oRCH2m57Y9zhcJTOJaLw4YpTY
+ GRUlF076vZ2Hz/xMEvIJddRGId7UXZgH9a32NDf+BUjWEZvFt1wFSW1r7zb7oGCwZMy2LI/G
+ aHQv/N0NeFMd28z+deyxd0k1CGefHJuJcOJDVtcE1rGQ43aDhWSpXvXKDj42vFD2We6uIo9D
+ 1VNre2+uAxFzqqf026H6cH8hin9Vnx7p3uq3Dka/Y/qmRFnKVQARAQABzRxIZWxnZSBEZWxs
+ ZXIgPGRlbGxlckBnbXguZGU+wsGRBBMBCAA7AhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheA
+ FiEERUSCKCzZENvvPSX4Pl89BKeiRgMFAl3J1zsCGQEACgkQPl89BKeiRgNK7xAAg6kJTPje
+ uBm9PJTUxXaoaLJFXbYdSPfXhqX/BI9Xi2VzhwC2nSmizdFbeobQBTtRIz5LPhjk95t11q0s
+ uP5htzNISPpwxiYZGKrNnXfcPlziI2bUtlz4ke34cLK6MIl1kbS0/kJBxhiXyvyTWk2JmkMi
+ REjR84lCMAoJd1OM9XGFOg94BT5aLlEKFcld9qj7B4UFpma8RbRUpUWdo0omAEgrnhaKJwV8
+ qt0ULaF/kyP5qbI8iA2PAvIjq73dA4LNKdMFPG7Rw8yITQ1Vi0DlDgDT2RLvKxEQC0o3C6O4
+ iQq7qamsThLK0JSDRdLDnq6Phv+Yahd7sDMYuk3gIdoyczRkXzncWAYq7XTWl7nZYBVXG1D8
+ gkdclsnHzEKpTQIzn/rGyZshsjL4pxVUIpw/vdfx8oNRLKj7iduf11g2kFP71e9v2PP94ik3
+ Xi9oszP+fP770J0B8QM8w745BrcQm41SsILjArK+5mMHrYhM4ZFN7aipK3UXDNs3vjN+t0zi
+ qErzlrxXtsX4J6nqjs/mF9frVkpv7OTAzj7pjFHv0Bu8pRm4AyW6Y5/H6jOup6nkJdP/AFDu
+ 5ImdlA0jhr3iLk9s9WnjBUHyMYu+HD7qR3yhX6uWxg2oB2FWVMRLXbPEt2hRGq09rVQS7DBy
+ dbZgPwou7pD8MTfQhGmDJFKm2jvOwU0EXchrcwEQAOsDQjdtPeaRt8EP2pc8tG+g9eiiX9Sh
+ rX87SLSeKF6uHpEJ3VbhafIU6A7hy7RcIJnQz0hEUdXjH774B8YD3JKnAtfAyuIU2/rOGa/v
+ UN4BY6U6TVIOv9piVQByBthGQh4YHhePSKtPzK9Pv/6rd8H3IWnJK/dXiUDQllkedrENXrZp
+ eLUjhyp94ooo9XqRl44YqlsrSUh+BzW7wqwfmu26UjmAzIZYVCPCq5IjD96QrhLf6naY6En3
+ ++tqCAWPkqKvWfRdXPOz4GK08uhcBp3jZHTVkcbo5qahVpv8Y8mzOvSIAxnIjb+cklVxjyY9
+ dVlrhfKiK5L+zA2fWUreVBqLs1SjfHm5OGuQ2qqzVcMYJGH/uisJn22VXB1c48yYyGv2HUN5
+ lC1JHQUV9734I5cczA2Gfo27nTHy3zANj4hy+s/q1adzvn7hMokU7OehwKrNXafFfwWVK3OG
+ 1dSjWtgIv5KJi1XZk5TV6JlPZSqj4D8pUwIx3KSp0cD7xTEZATRfc47Yc+cyKcXG034tNEAc
+ xZNTR1kMi9njdxc1wzM9T6pspTtA0vuD3ee94Dg+nDrH1As24uwfFLguiILPzpl0kLaPYYgB
+ wumlL2nGcB6RVRRFMiAS5uOTEk+sJ/tRiQwO3K8vmaECaNJRfJC7weH+jww1Dzo0f1TP6rUa
+ fTBRABEBAAHCwXYEGAEIACAWIQRFRIIoLNkQ2+89Jfg+Xz0Ep6JGAwUCXchrcwIbDAAKCRA+
+ Xz0Ep6JGAxtdEAC54NQMBwjUNqBNCMsh6WrwQwbg9tkJw718QHPw43gKFSxFIYzdBzD/YMPH
+ l+2fFiefvmI4uNDjlyCITGSM+T6b8cA7YAKvZhzJyJSS7pRzsIKGjhk7zADL1+PJei9p9idy
+ RbmFKo0dAL+ac0t/EZULHGPuIiavWLgwYLVoUEBwz86ZtEtVmDmEsj8ryWw75ZIarNDhV74s
+ BdM2ffUJk3+vWe25BPcJiaZkTuFt+xt2CdbvpZv3IPrEkp9GAKof2hHdFCRKMtgxBo8Kao6p
+ Ws/Vv68FusAi94ySuZT3fp1xGWWf5+1jX4ylC//w0Rj85QihTpA2MylORUNFvH0MRJx4mlFk
+ XN6G+5jIIJhG46LUucQ28+VyEDNcGL3tarnkw8ngEhAbnvMJ2RTx8vGh7PssKaGzAUmNNZiG
+ MB4mPKqvDZ02j1wp7vthQcOEg08z1+XHXb8ZZKST7yTVa5P89JymGE8CBGdQaAXnqYK3/yWf
+ FwRDcGV6nxanxZGKEkSHHOm8jHwvQWvPP73pvuPBEPtKGLzbgd7OOcGZWtq2hNC6cRtsRdDx
+ 4TAGMCz4j238m+2mdbdhRh3iBnWT5yPFfnv/2IjFAk+sdix1Mrr+LIDF++kiekeq0yUpDdc4
+ ExBy2xf6dd+tuFFBp3/VDN4U0UfG4QJ2fg19zE5Z8dS4jGIbLg==
+In-Reply-To: <SN6PR02MB415700F34CA2A4296A542F73D4BBA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:u3vcq0OaX+HmjVRBaMQ2uGl8IYVgD4wk87gv6fBfCpbA2vozIoV
+ ndsPCAdmyhk2I82+MzSYpjUcfNLL42dfSDzrK8kmu+hyjM+oECjVXoiO6ZI0CMfW4yyxphr
+ 4WMPvbS0QuUST6/W41A4zQyz9Vc2OWtilJ3wG708h1haw+aa2x7yZkeU9Wt2Jwo6GRcsAVv
+ aacVejv3HTLDDUudaP8Cg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:KGsK3SzpBfY=;CLwhj3s5ktwZ6E0BrGVsuGqECA2
+ 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
+ rkoIl4DY=
 
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Friday=
-, January 2, 2026 9:43 AM
+On 1/2/26 18:45, Michael Kelley wrote:
+> From: Helge Deller <deller@gmx.de> Sent: Tuesday, December 30, 2025 1:07=
+ AM
+>>
+>> On 12/27/25 05:24, Prasanna Kumar T S M wrote:
+>>> The HyperV DRM driver is available since 5.14. This makes the hyperv_f=
+b
+>>> driver redundant, remove it.
+>>>
+>>> Signed-off-by: Prasanna Kumar T S M <ptsm@linux.microsoft.com>
+>>> ---
+>>>    MAINTAINERS                     |   10 -
+>>>    drivers/video/fbdev/Kconfig     |   11 -
+>>>    drivers/video/fbdev/Makefile    |    1 -
+>>>    drivers/video/fbdev/hyperv_fb.c | 1388 ----------------------------=
+=2D--
+>>>    4 files changed, 1410 deletions(-)
+>>>    delete mode 100644 drivers/video/fbdev/hyperv_fb.c
+>>
+>> applied to fbdev git tree.
+>>
 >=20
-> On Tue, Dec 23, 2025 at 07:17:23PM +0000, Michael Kelley wrote:
-> > From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Tu=
-esday,
-> December 23, 2025 8:26 AM
-> > >
-> > > On Tue, Dec 23, 2025 at 03:51:22PM +0000, Michael Kelley wrote:
-> > > > From: Michael Kelley Sent: Monday, December 22, 2025 10:25 AM
-> > > > >
-> > > > [snip]
-> > > > >
-> > > > > Separately, in looking at this, I spotted another potential probl=
-em with
-> > > > > 2 Meg mappings that somewhat depends on hypervisor behavior that =
-I'm
-> > > > > not clear on. To create a new region, the user space VMM issues t=
-he
-> > > > > MSHV_GET_GUEST_MEMORY ioctl, specifying the userspace address, th=
-e
-> > > > > size, and the guest PFN. The only requirement on these values is =
-that the
-> > > > > userspace address and size be page aligned. But suppose a 4 Meg r=
-egion is
-> > > > > specified where the userspace address and the guest PFN have diff=
-erent
-> > > > > offsets modulo 2 Meg. The userspace address range gets populated =
-first,
-> > > > > and may contain a 2 Meg large page. Then when mshv_chunk_stride()
-> > > > > detects a 2 Meg aligned guest PFN so HVCALL_MAP_GPA_PAGES can be =
-told
-> > > > > to create a 2 Meg mapping for the guest, the corresponding system=
- PFN in
-> > > > > the page array may not be 2 Meg aligned. What does the hypervisor=
- do in
-> > > > > this case? It can't create a 2 Meg mapping, right? So does it sil=
-ently fallback
-> > > > > to creating 4K mappings, or does it return an error? Returning an=
- error would
-> > > > > seem to be problematic for movable pages because the error wouldn=
-'t
-> > > > > occur until the guest VM is running and takes a range fault on th=
-e region.
-> > > > > Silently falling back to creating 4K mappings has performance imp=
-lications,
-> > > > > though I guess it would work. My question is whether the
-> > > > > MSHV_GET_GUEST_MEMORY ioctl should detect this case and return an
-> > > > > error immediately.
-> > > > >
-> > > >
-> > > > In thinking about this more, I can answer my own question about the
-> > > > hypervisor behavior. When HVCALL_MAP_GPA_PAGES is set, the full
-> > > > list of 4K system PFNs is not provided as an input to the hypercall=
-, so
-> > > > the hypervisor cannot silently fall back to 4K mappings. Assuming
-> > > > sequential PFNs would be wrong, so it must return an error if the
-> > > > alignment of a system PFN isn't on a 2 Meg boundary.
-> > > >
-> > > > For a pinned region, this error happens in mshv_region_map() as
-> > > > called from  mshv_prepare_pinned_region(), so will propagate back
-> > > > to the ioctl. But the error happens only if pin_user_pages_fast()
-> > > > allocates one or more 2 Meg pages. So creating a pinned region
-> > > > where the guest PFN and userspace address have different offsets
-> > > > modulo 2 Meg might or might not succeed.
-> > > >
-> > > > For a movable region, the error probably can't occur.
-> > > > mshv_region_handle_gfn_fault() builds an aligned 2 Meg chunk
-> > > > around the faulting guest PFN. mshv_region_range_fault() then
-> > > > determines the corresponding userspace addr, which won't be on
-> > > > a 2 Meg boundary, so the allocated memory won't contain a 2 Meg
-> > > > page. With no 2 Meg pages, mshv_region_remap_pages() will
-> > > > always do 4K mappings and will succeed. The downside is that a
-> > > > movable region with a guest PFN and userspace address with
-> > > > different offsets never gets any 2 Meg pages or mappings.
-> > > >
-> > > > My conclusion is the same -- such misalignment should not be
-> > > > allowed when creating a region that has the potential to use 2 Meg
-> > > > pages. Regions less than 2 Meg in size could be excluded from such
-> > > > a requirement if there is benefit in doing so. It's possible to hav=
-e
-> > > > regions up to (but not including) 4 Meg where the alignment prevent=
-s
-> > > > having a 2 Meg page, and those could also be excluded from the
-> > > > requirement.
-> > > >
-> > >
-> > > I'm not sure I understand the problem.
-> > > There are three cases to consider:
-> > > 1. Guest mapping, where page sizes are controlled by the guest.
-> > > 2. Host mapping, where page sizes are controlled by the host.
-> >
-> > And by "host", you mean specifically the Linux instance running in the
-> > root partition. It hosts the VMM processes and creates the memory
-> > regions for each guest.
-> >
-> > > 3. Hypervisor mapping, where page sizes are controlled by the hypervi=
-sor.
-> > >
-> > > The first case is not relevant here and is included for completeness.
-> >
-> > Agreed.
-> >
-> > >
-> > > The second and third cases (host and hypervisor) share the memory lay=
-out,
-> >
-> > Right. More specifically, they are both operating on the same set of ph=
-ysical
-> > memory pages, and hence "share" a set of what I've referred to as
-> > "system PFNs" (to distinguish from guest PFNs, or GFNs).
-> >
-> > > but it is up
-> > > to each entity to decide which page sizes to use. For example, the ho=
-st might map the
-> > > proposed 4M region with only 4K pages, even if a 2M page is available=
- in the middle.
-> >
-> > Agreed.
-> >
-> > > In this case, the host will map the memory as represented by 4K pages=
-, but the hypervisor
-> > > can still discover the 2M page in the middle and adjust its page tabl=
-es to use a 2M page.
-> >
-> > Yes, that's possible, but subject to significant requirements. A 2M pag=
-e can be
-> > used only if the underlying physical memory is a physically contiguous =
-2M chunk.
-> > Furthermore, that contiguous 2M chunk must start on a physical 2M bound=
-ary,
-> > and the virtual address to which it is being mapped must be on a 2M bou=
-ndary.
-> > In the case of the host, that virtual address is the user space address=
- in the
-> > user space process. In the case of the hypervisor, that "virtual addres=
-s" is the
-> > the location in guest physical address space; i.e., the guest PFN left-=
-shifted 9
-> > to be a guest physical address.
-> >
-> > These requirements are from the physical processor and its requirements=
- on
-> > page table formats as specified by the hardware architecture. Whereas t=
-he
-> > page table entry for a 4K page contains the entire PFN, the page table =
-entry
-> > for a 2M page omits the low order 9 bits of the PFN -- those bits must =
-be zero,
-> > which is equivalent to requiring that the PFN be on a 2M boundary. Thes=
-e
-> > requirements apply to both host and hypervisor mappings.
-> >
-> > When MSHV code in the host creates a new pinned region via the ioctl,
-> > MSHV code first allocates memory for the region using pin_user_pages_fa=
-st(),
-> > which returns the system PFN for each page of physical memory that is
-> > allocated. If the host, at its discretion, allocates a 2M page, then a =
-series
-> > of 512 sequential 4K PFNs is returned for that 2M page, and the first o=
-f
-> > the 512 sequential PFNs must have its low order 9 bits be zero.
-> >
-> > Then the MSHV ioctl makes the HVCALL_MAP_GPA_PAGES hypercall for
-> > the hypervisor to map the allocated memory into the guest physical
-> > address space at a particular guest PFN. If the allocated memory contai=
-ns
-> > a 2M page, mshv_chunk_stride() will see a folio order of 9 for the 2M p=
-age,
-> > causing the HV_MAP_GPA_LARGE_PAGE flag to be set, which requests that
-> > the hypervisor do that mapping as a 2M large page. The hypercall does n=
-ot
-> > have the option of dropping back to 4K page mappings in this case. If
-> > the 2M alignment of the system PFN is different from the 2M alignment
-> > of the target guest PFN, it's not possible to create the mapping and th=
-e
-> > hypercall fails.
-> >
-> > The core problem is that the same 2M of physical memory wants to be
-> > mapped by the host as a 2M page and by the hypervisor as a 2M page.
-> > That can't be done unless the host alignment (in the VMM virtual addres=
-s
-> > space) and the guest physical address (i.e., the target guest PFN) alig=
-nment
-> > match and are both on 2M boundaries.
-> >
->=20
-> But why is it a problem? If both the host and the hypervisor can map ap
-> huge page, but the guest can't, it's still a win, no?
-> In other words, if VMM passes a host huge page aligned region as a guest
-> unaligned, it's a VMM problem, not a hypervisor problem. And I' don't
-> understand why would we want to prevent such cases.
->=20
+> Helge -- it looks like you picked up only this patch of the three-patch =
+series.
+> The other two patches of the series are fixing up comments that referenc
+> the hyperv_fb driver, and they affect the DRM and Hyper-V subsystems. Ju=
+st
+> want to make sure those maintainers pick up the other two patches if tha=
+t's
+> your intent.
 
-Fair enough -- mostly. If you want to allow the misaligned case and live
-with not getting the 2M mapping in the guest, that works except in the
-situation that I described above, where the HVCALL_MAP_GPA_PAGES
-hypercall fails when creating a pinned region.
+Since the patches #2 and #3 only fix comments, I've now applied both to
+the fbdev tree as well. If there will be conflicts (e.g. if maintainers pi=
+ck up too),
+I can easily drop them again.
 
-The failure is flakey in that if the Linux in the root partition does not
-map any of the region as a 2M page, the hypercall succeeds and the
-MSHV_GET_GUEST_MEMORY ioctl succeeds. But if the root partition
-happens to map any of the region as a 2M page, the hypercall will fail,
-and the MSHV_GET_GUEST_MEMORY ioctl will fail. Presumably such
-flakey behavior is bad for the VMM.
-
-One solution is that mshv_chunk_stride() must return a stride > 1 only
-if both the gfn (which it currently checks) AND the corresponding
-userspace_addr are 2M aligned. Then the HVCALL_MAP_GPA_PAGES
-hypercall will never have HV_MAP_GPA_LARGE_PAGE set for the
-misaligned case, and the failure won't occur.
-
-Michael
-
->=20
-> > Movable regions behave a bit differently because the memory for the
-> > region is not allocated on the host "up front" when the region is creat=
-ed.
-> > The memory is faulted in as the guest runs, and the vagaries of the cur=
-rent
-> > MSHV in Linux code are such that 2M pages are never created on the host
-> > if the alignments don't match. HV_MAP_GPA_LARGE_PAGE is never passed
-> > to the HVCALL_MAP_GPA_PAGES hypercall, so the hypervisor just does 4K
-> > mappings, which works even with the misalignment.
-> >
-> > >
-> > > This adjustment happens at runtime. Could this be the missing detail =
-here?
-> >
-> > Adjustments at runtime are a different topic from the issue I'm raising=
-,
-> > though eventually there's some relationship. My issue occurs in the
-> > creation of a new region, and the setting up of the initial hypervisor
-> > mapping. I haven't thought through the details of adjustments at runtim=
-e.
-> >
-> > My usual caveats apply -- this is all "thought experiment". If I had th=
-e
-> > means do some runtime testing to confirm, I would. It's possible the
-> > hypervisor is playing some trick I haven't envisioned, but I'm skeptica=
-l of
-> > that given the basics of how physical processors work with page tables.
-> >
-> > Michael
+Thanks!
+Helge
 
