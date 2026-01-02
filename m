@@ -1,250 +1,131 @@
-Return-Path: <linux-hyperv+bounces-8131-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8132-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52D3BCEF5BB
-	for <lists+linux-hyperv@lfdr.de>; Fri, 02 Jan 2026 22:37:58 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1596CEF648
+	for <lists+linux-hyperv@lfdr.de>; Fri, 02 Jan 2026 23:02:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 56818300C148
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Jan 2026 21:37:57 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 619813001BF9
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Jan 2026 22:02:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E65529993A;
-	Fri,  2 Jan 2026 21:37:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E594B1547EE;
+	Fri,  2 Jan 2026 22:02:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VD6euAVD"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dyOui6Aw"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01E02245019;
-	Fri,  2 Jan 2026 21:37:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F1593A1E6C;
+	Fri,  2 Jan 2026 22:02:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767389876; cv=none; b=rahbsd2tmqFPjoEN1JFNZTww0RUgl3arHISaGU1YyWFqXy15hsR5hBqdNfG7+xonh7J+nLrg0lRxxSa2b+ccy1cgoDc5cNA8mVgVJbT+q67ZFJzeftW85M6wgUoKjntGOhA3uuqEhSRgAWHif1/K4Hz9FDYRvUjIS9NjFiTYhtc=
+	t=1767391342; cv=none; b=QzIhWCydpZ3jHduK0hosmxLIiR/0POcC8XoP/KBsEKlVOiWtIdKCO8QhGxkPRVPp+BH6D5+XE4pELoeRr9kRWScYR2NqxhVPyKhZ1J3b3TToBBPVnMFgLy7Ns7oKrE576FLPnh+MYI0K8DAo+prC7BDeFKnK7Eg1n0SrdVRg1r4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767389876; c=relaxed/simple;
-	bh=+FD0V0EJPERUoQUgBeN2NkS/rAttv8C1gPYbZv1vKJk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=MeCAttjNn848AbnLGB6o5wcABVlSp/GHPYUBXoybVIQJ9d6RrqWmwgpwirT+cA+GiiVD12i8LFy57VgDTURWSFQQwQEcKsefPmN+gxlFSrtRskEIAvwvaqxefBRuLO0/c5VygP2nTWs1NqJ6V1frVtkJde2gZlAAR7ykD3mvonI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=VD6euAVD; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1767391342; c=relaxed/simple;
+	bh=QXy6VLkNrDMaowsb6/hSzPc7LiC1wOc9VpQYPD4mQvs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EJVNGlxsZN6zUQc7feUjKoBce6p1Jt8L0zGVvHsaVRlVaqeMqKMxgfCGeB5tAmp1XxHQa2MkzB+i2eZNmbPGmjBX3RiyEJ+sQ/iXSHFN9SxhNbFdBO52+X7iC08mwsifr20+PQV5MxxTg2J/5e9KWecQJoj01VBx5oxeP/Yv+Fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=dyOui6Aw; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1006)
-	id AEE612125362; Fri,  2 Jan 2026 13:37:54 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AEE612125362
+Received: from mrdev.corp.microsoft.com (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 70B9C2125367;
+	Fri,  2 Jan 2026 14:02:20 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 70B9C2125367
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1767389874;
-	bh=MMYlzxb9LGt6lSZq2UX+9M01F33aytJB+tqipZTzYWw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VD6euAVDltdlhWYYQBE37cfRYq10mFNcOidREy2spa8weLOt30lDPxAYLzoDa66HU
-	 arZ1qzqVRe74/ODZLuxY6lB/s71pHP/Ob7nMVKqdd9WSaba16iHGvQWUhmc/zxFmeM
-	 oyMy0PQ2pkgnhcHMduUGvosSJu7EbPIAnL7qHLjY=
-From: Haiyang Zhang <haiyangz@linux.microsoft.com>
+	s=default; t=1767391340;
+	bh=8Dg+F4TP5nB1N2fxDG4A+LwdJkRlm4eZGCPBvvIHdJQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=dyOui6Aw7U89LE/WDMCvct8LOUjS3O6nK9m9VKg96EEdrzOTY/4WRCmI5hpE84XCI
+	 cvYHbzBg8/x6lJ+xCVA1A8KKLh7AeWkB2fQlO1qH56om/69xdUoDloNanOLR8UtCCN
+	 k3z0VDnDX+FoCXPF4436nTx2a9phG3fhkyPU25es=
+From: Mukesh Rathor <mrathor@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Long Li <longli@microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Aditya Garg <gargaditya@linux.microsoft.com>,
-	Dipayaan Roy <dipayanroy@linux.microsoft.com>,
-	Shiraz Saleem <shirazsaleem@microsoft.com>,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Cc: paulros@microsoft.com
-Subject: [PATCH net-next, 2/2] net: mana: Add ethtool counters for RX CQEs in coalesced type
-Date: Fri,  2 Jan 2026 13:35:58 -0800
-Message-Id: <1767389759-3460-3-git-send-email-haiyangz@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1767389759-3460-1-git-send-email-haiyangz@linux.microsoft.com>
-References: <1767389759-3460-1-git-send-email-haiyangz@linux.microsoft.com>
+	linux-kernel@vger.kernel.org
+Cc: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	longli@microsoft.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com
+Subject: [PATCH v1] x86/hyperv: Reserve 3 interrupt vectors used exclusively by mshv
+Date: Fri,  2 Jan 2026 14:02:08 -0800
+Message-ID: <20260102220208.862818-1-mrathor@linux.microsoft.com>
+X-Mailer: git-send-email 2.51.2.vfs.0.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+MSVC compiler, used to compile the Microsoft Hyper-V hypervisor currently,
+has an assert intrinsic that uses interrupt vector 0x29 to create an
+exception. This will cause hypervisor to then crash and collect core. As
+such, if this interrupt number is assigned to a device by linux and the
+device generates it, hypervisor will crash. There are two other such
+vectors hard coded in the hypervisor, 0x2C and 0x2D for debug purposes.
+Fortunately, the three vectors are part of the kernel driver space and
+that makes it feasible to reserve them early so they are not assigned
+later.
 
-For RX CQEs with type CQE_RX_COALESCED_4, to measure the coalescing
-efficiency, add counters to count how many contains 2, 3, 4 packets
-respectively.
-Also, add a counter for the error case of first packet with length == 0.
-
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
 ---
- drivers/net/ethernet/microsoft/mana/mana_en.c | 25 +++++++++++++++++--
- .../ethernet/microsoft/mana/mana_ethtool.c    | 17 ++++++++++---
- include/net/mana/mana.h                       | 10 +++++---
- 3 files changed, 42 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index a46a1adf83bc..78824567d80b 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -2083,8 +2083,22 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
- 
- nextpkt:
- 	pktlen = oob->ppi[i].pkt_len;
--	if (pktlen == 0)
-+	if (pktlen == 0) {
-+		/* Collect coalesced CQE count based on packets processed.
-+		 * Coalesced CQEs have at least 2 packets, so index is i - 2.
-+		 */
-+		if (i > 1) {
-+			u64_stats_update_begin(&rxq->stats.syncp);
-+			rxq->stats.coalesced_cqe[i - 2]++;
-+			u64_stats_update_end(&rxq->stats.syncp);
-+		} else if (i == 0) {
-+			/* Error case stat */
-+			u64_stats_update_begin(&rxq->stats.syncp);
-+			rxq->stats.pkt_len0_err++;
-+			u64_stats_update_end(&rxq->stats.syncp);
-+		}
- 		return;
-+	}
- 
- 	curr = rxq->buf_index;
- 	rxbuf_oob = &rxq->rx_oobs[curr];
-@@ -2102,8 +2116,15 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
- 
- 	mana_post_pkt_rxq(rxq);
- 
--	if (coalesced && (++i < MANA_RXCOMP_OOB_NUM_PPI))
-+	if (!coalesced)
-+		return;
-+
-+	if (++i < MANA_RXCOMP_OOB_NUM_PPI)
- 		goto nextpkt;
-+
-+	u64_stats_update_begin(&rxq->stats.syncp);
-+	rxq->stats.coalesced_cqe[MANA_RXCOMP_OOB_NUM_PPI - 2]++;
-+	u64_stats_update_end(&rxq->stats.syncp);
+v1: Add ifndef CONFIG_X86_FRED (thanks hpa)
+
+ arch/x86/kernel/cpu/mshyperv.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index 579fb2c64cfd..8ef4ca6733ac 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -478,6 +478,27 @@ int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
  }
+ EXPORT_SYMBOL_GPL(hv_get_hypervisor_version);
  
- static void mana_poll_rx_cq(struct mana_cq *cq)
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-index 1b9ed5c9bbff..773f50b1a4f4 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-@@ -20,8 +20,6 @@ static const struct mana_stats_desc mana_eth_stats[] = {
- 					tx_cqe_unknown_type)},
- 	{"tx_linear_pkt_cnt", offsetof(struct mana_ethtool_stats,
- 				       tx_linear_pkt_cnt)},
--	{"rx_coalesced_err", offsetof(struct mana_ethtool_stats,
--					rx_coalesced_err)},
- 	{"rx_cqe_unknown_type", offsetof(struct mana_ethtool_stats,
- 					rx_cqe_unknown_type)},
- };
-@@ -151,7 +149,7 @@ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
- {
- 	struct mana_port_context *apc = netdev_priv(ndev);
- 	unsigned int num_queues = apc->num_queues;
--	int i;
-+	int i, j;
- 
- 	if (stringset != ETH_SS_STATS)
- 		return;
-@@ -170,6 +168,9 @@ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
- 		ethtool_sprintf(&data, "rx_%d_xdp_drop", i);
- 		ethtool_sprintf(&data, "rx_%d_xdp_tx", i);
- 		ethtool_sprintf(&data, "rx_%d_xdp_redirect", i);
-+		ethtool_sprintf(&data, "rx_%d_pkt_len0_err", i);
-+		for (j = 0; j < MANA_RXCOMP_OOB_NUM_PPI - 1; j++)
-+			ethtool_sprintf(&data, "rx_%d_coalesced_cqe_%d", i, j + 2);
- 	}
- 
- 	for (i = 0; i < num_queues; i++) {
-@@ -203,6 +204,8 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
- 	u64 xdp_xmit;
- 	u64 xdp_drop;
- 	u64 xdp_tx;
-+	u64 pkt_len0_err;
-+	u64 coalesced_cqe[MANA_RXCOMP_OOB_NUM_PPI - 1];
- 	u64 tso_packets;
- 	u64 tso_bytes;
- 	u64 tso_inner_packets;
-@@ -211,7 +214,7 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
- 	u64 short_pkt_fmt;
- 	u64 csum_partial;
- 	u64 mana_map_err;
--	int q, i = 0;
-+	int q, i = 0, j;
- 
- 	if (!apc->port_is_up)
- 		return;
-@@ -241,6 +244,9 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
- 			xdp_drop = rx_stats->xdp_drop;
- 			xdp_tx = rx_stats->xdp_tx;
- 			xdp_redirect = rx_stats->xdp_redirect;
-+			pkt_len0_err = rx_stats->pkt_len0_err;
-+			for (j = 0; j < MANA_RXCOMP_OOB_NUM_PPI - 1; j++)
-+				coalesced_cqe[j] = rx_stats->coalesced_cqe[j];
- 		} while (u64_stats_fetch_retry(&rx_stats->syncp, start));
- 
- 		data[i++] = packets;
-@@ -248,6 +254,9 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
- 		data[i++] = xdp_drop;
- 		data[i++] = xdp_tx;
- 		data[i++] = xdp_redirect;
-+		data[i++] = pkt_len0_err;
-+		for (j = 0; j < MANA_RXCOMP_OOB_NUM_PPI - 1; j++)
-+			data[i++] = coalesced_cqe[j];
- 	}
- 
- 	for (q = 0; q < num_queues; q++) {
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 51d26ebeff6c..f8dd19860103 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -61,8 +61,11 @@ enum TRI_STATE {
- 
- #define MAX_PORTS_IN_MANA_DEV 256
- 
-+/* Maximum number of packets per coalesced CQE */
-+#define MANA_RXCOMP_OOB_NUM_PPI 4
++#ifndef CONFIG_X86_FRED
++/*
++ * Reserve vectors hard coded in the hypervisor. If used outside, the hypervisor
++ * will crash or hang or break into debugger.
++ */
++static void hv_reserve_irq_vectors(void)
++{
++	#define HYPERV_DBG_FASTFAIL_VECTOR	0x29
++	#define HYPERV_DBG_ASSERT_VECTOR	0x2C
++	#define HYPERV_DBG_SERVICE_VECTOR	0x2D
 +
- /* Update this count whenever the respective structures are changed */
--#define MANA_STATS_RX_COUNT 5
-+#define MANA_STATS_RX_COUNT (6 + MANA_RXCOMP_OOB_NUM_PPI - 1)
- #define MANA_STATS_TX_COUNT 11
++	if (test_and_set_bit(HYPERV_DBG_ASSERT_VECTOR, system_vectors) ||
++	    test_and_set_bit(HYPERV_DBG_SERVICE_VECTOR, system_vectors) ||
++	    test_and_set_bit(HYPERV_DBG_FASTFAIL_VECTOR, system_vectors))
++		BUG();
++
++	pr_info("Hyper-V:reserve vectors: %d %d %d\n", HYPERV_DBG_ASSERT_VECTOR,
++		HYPERV_DBG_SERVICE_VECTOR, HYPERV_DBG_FASTFAIL_VECTOR);
++}
++#endif          /* CONFIG_X86_FRED */
++
+ static void __init ms_hyperv_init_platform(void)
+ {
+ 	int hv_max_functions_eax, eax;
+@@ -510,6 +531,11 @@ static void __init ms_hyperv_init_platform(void)
  
- #define MANA_RX_FRAG_ALIGNMENT 64
-@@ -73,6 +76,8 @@ struct mana_stats_rx {
- 	u64 xdp_drop;
- 	u64 xdp_tx;
- 	u64 xdp_redirect;
-+	u64 pkt_len0_err;
-+	u64 coalesced_cqe[MANA_RXCOMP_OOB_NUM_PPI - 1];
- 	struct u64_stats_sync syncp;
- };
+ 	hv_identify_partition_type();
  
-@@ -227,8 +232,6 @@ struct mana_rxcomp_perpkt_info {
- 	u32 pkt_hash;
- }; /* HW DATA */
- 
--#define MANA_RXCOMP_OOB_NUM_PPI 4
--
- /* Receive completion OOB */
- struct mana_rxcomp_oob {
- 	struct mana_cqe_header cqe_hdr;
-@@ -378,7 +381,6 @@ struct mana_ethtool_stats {
- 	u64 tx_cqe_err;
- 	u64 tx_cqe_unknown_type;
- 	u64 tx_linear_pkt_cnt;
--	u64 rx_coalesced_err;
- 	u64 rx_cqe_unknown_type;
- };
++#ifndef CONFIG_X86_FRED
++	if (hv_root_partition())
++		hv_reserve_irq_vectors();
++#endif  /* CONFIG_X86_FRED */
++
+ 	if (cc_platform_has(CC_ATTR_SNP_SECURE_AVIC))
+ 		ms_hyperv.hints |= HV_DEPRECATING_AEOI_RECOMMENDED;
  
 -- 
-2.34.1
+2.51.2.vfs.0.1
 
 
