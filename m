@@ -1,294 +1,219 @@
-Return-Path: <linux-hyperv+bounces-8136-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8137-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DF15CEFAD9
-	for <lists+linux-hyperv@lfdr.de>; Sat, 03 Jan 2026 05:57:12 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2D05CF0591
+	for <lists+linux-hyperv@lfdr.de>; Sat, 03 Jan 2026 21:34:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B8567300F897
-	for <lists+linux-hyperv@lfdr.de>; Sat,  3 Jan 2026 04:57:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 93C8C30133B2
+	for <lists+linux-hyperv@lfdr.de>; Sat,  3 Jan 2026 20:34:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAB55224240;
-	Sat,  3 Jan 2026 04:57:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B20BF29BDAE;
+	Sat,  3 Jan 2026 20:34:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Z44brt+4"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="UVqV4ctF"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20C9E20E31C;
-	Sat,  3 Jan 2026 04:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767416227; cv=none; b=dmZfndUaV+z1VDwpMGzXhuLtskzh3A/035NlrMzRupkq0XK3jbqsWYBYZDyKNjXJB2TZVEUor2HUENi0IQ9FUr8mxg9GNS6Zsmahko3P6Wsfm93rez+FI6QatOZuP0e9zxsCmFS1aL3CQ3sdmgDMsmBKVrYdkahJnSFZjVa0qL0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767416227; c=relaxed/simple;
-	bh=+f3ZRJAXg+xPmggbZCY4R8p0d2XUOUhaFD61CPOaa+4=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=L5/3Rcw+Klg3E/Otkvf6TdNKxQe0LHJVjg5fuo/8XbwNQkZ9NmARSS94H//WE4VGBqlEETca6YX50/daHcjzzA/JheqyKtN+dRO8Bka1bJ8wjoZF4mhhmTvGIptyRPojecnFdV1Ts74HGsLnXaP/tohkAL2lMlhW3ZmGOqIu6Kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Z44brt+4; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1204)
-	id A31E2212536C; Fri,  2 Jan 2026 20:57:05 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A31E2212536C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1767416225;
-	bh=HuIWNrscgxXLoTeyAWg1MtA44CEADUTTT7E6koSAQ9g=;
-	h=Date:From:To:Subject:From;
-	b=Z44brt+4AnkBlBQ13REvAabQ2E6ktBUvrwBUSgYRGPNmHbiPNdR96lICeIC7nI4C9
-	 psX6rkvEwLoPMQKLueAemfXOHBoZ7u1P1E0IBxAQnTLLBSNCskaegxrzWEWUUFyrsD
-	 9BHc3Dsohx+UMGtfahaMcxMOlUu4NqoahnFfW2b0=
-Date: Fri, 2 Jan 2026 20:57:05 -0800
-From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
-	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
-	ernis@linux.microsoft.com, shirazsaleem@microsoft.com,
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	dipayanroy@microsoft.com
-Subject: [PATCH net-next, v6] net: mana: Implement ndo_tx_timeout and
- serialize queue resets per port.
-Message-ID: <20260103045705.GA3757@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11020087.outbound.protection.outlook.com [52.101.46.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2170D28F50F;
+	Sat,  3 Jan 2026 20:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767472458; cv=fail; b=MzaUtPoe/j/Ydxu7sYqWDyWEFaYB7QUWKl0AFu+QqmmKehnAPx4yUpjEyZz9DfyRpMD5n/fqSnD+LSDbg+W/I7M5vaum/aTH0WvxwMUhfOSx2KYeNqgKWJIrZMBtvb6x0Mn43eZBpMf1ijo6c0MWF8BGXR8GlagS5UiNH9r2RCI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767472458; c=relaxed/simple;
+	bh=YhspdBsaW0kr0lSRrqunJszoCPBcl88DenyU8XcffRU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=glkYpKKTPGlCC7ouKo7zKQzpsmWcFoiPT+7YqjcPNi4eKAjUZKRmZ8bSfeO1wxd1CP9VCgVd++Ueu1glzIvKWMczuO3gaT0xHkHewJr/xcQrozh4QDjhZhvFgOElAGeT3KR7B1d+/08Gep49HkHBsEEGmrO1de6ky9kYNM+W30o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=UVqV4ctF; arc=fail smtp.client-ip=52.101.46.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Q5YKpJqNNo0uJmEX9DyjqKxbefV9UhTovsuBME7VV7BiUBXllwRe5rKlU231kP3+V03w7VyFt0szhqF0P2T3xncZbQbZhLeHLyI2x8fxZ0UmVgirjEo9k+joKM4OAxSdHvJ1OSSp2asKCMcI45UJPpYUNk4M5edGAvwtTI6II8RrY0nZnjK1X2Udht8GwXV4sz1G7FSufNcjH5fkh5ky35i4fwBjUTfnO4kUt1TY2Hm5XJl29U9UEDrgD8moO22lar9Y1Bmc9PBz5LDpBbuN54oMpaDISdl0tQbpbdbh+7AlYt17GAMIkF7bHDnCng/3uZuFFYkbMybj423NpOqagQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7xy7QmyossDddd86txsmz6trUfWAkooOihca3M6/cts=;
+ b=faAT1lzwjGOjTnBJQ1ixuxEX5mhfoFf6kWss0yBcJrLCw0/H1G8MtUskjAWBxql7Nvw3V4lQvUgszlymWS48Iov65Ybu1ox7iPVaFCo5/EwNqSvB8qH8A31msSKQT7vmfo1Z0WWs+oHYC9N1xAn5nYhmHKE32sDOzUl39PuRCt3v18e+aE2WT1DeIZeAul4iANEnMoX7x6Dxc+tuRe4M8fOLFKmQ+Byp6AdMWd+AjY7hSII8+HKZgboB6DoE0rDyyqa+YP+cFd2MVQthUyW5+mrYII1NoSMukPsV7noSFwPPTReMT7m2n73eRLFetHWs9Q2QG+t6LrsAkBZUmdYLBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7xy7QmyossDddd86txsmz6trUfWAkooOihca3M6/cts=;
+ b=UVqV4ctFUHftkn+RP8Z9/upZMiL7WraxrIFNq3DU8wL0/FWtx8nX4p0XpFE9EQIUrxu8GELZ/qNpqqb88hMsgnCesd+Ex2q4c4jySYvkO+tUff6uoaQ4VKTjhLTOAOZAsO+thZVlPYs0vZ5KqN2SGR+GHTxak5v8XHc6uy1Rfxs=
+Received: from SA3PR21MB3867.namprd21.prod.outlook.com (2603:10b6:806:2fc::15)
+ by SA3PR21MB5771.namprd21.prod.outlook.com (2603:10b6:806:492::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.1; Sat, 3 Jan
+ 2026 20:34:13 +0000
+Received: from SA3PR21MB3867.namprd21.prod.outlook.com
+ ([fe80::70ff:4d3:2cb6:92a3]) by SA3PR21MB3867.namprd21.prod.outlook.com
+ ([fe80::70ff:4d3:2cb6:92a3%6]) with mapi id 15.20.9520.000; Sat, 3 Jan 2026
+ 20:34:13 +0000
+From: Haiyang Zhang <haiyangz@microsoft.com>
+To: Jakub Kicinski <kuba@kernel.org>, Haiyang Zhang
+	<haiyangz@linux.microsoft.com>
+CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, KY Srinivasan
+	<kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+	<DECUI@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+	<pabeni@redhat.com>, Long Li <longli@microsoft.com>, Konstantin Taranov
+	<kotaranov@microsoft.com>, Simon Horman <horms@kernel.org>, Erni Sri Satya
+ Vennela <ernis@linux.microsoft.com>, Shradha Gupta
+	<shradhagupta@linux.microsoft.com>, Saurabh Sengar
+	<ssengar@linux.microsoft.com>, Aditya Garg <gargaditya@linux.microsoft.com>,
+	Dipayaan Roy <dipayanroy@linux.microsoft.com>, Shiraz Saleem
+	<shirazsaleem@microsoft.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-rdma@vger.kernel.org"
+	<linux-rdma@vger.kernel.org>, Paul Rosswurm <paulros@microsoft.com>
+Subject: RE: [EXTERNAL] Re: [PATCH net-next, 1/2] net: mana: Add support for
+ coalesced RX packets on CQE
+Thread-Topic: [EXTERNAL] Re: [PATCH net-next, 1/2] net: mana: Add support for
+ coalesced RX packets on CQE
+Thread-Index: AQHcfDAC9zbupp0oYUqTZlvwbw1m4rU/krmAgAFVTPA=
+Date: Sat, 3 Jan 2026 20:34:13 +0000
+Message-ID:
+ <SA3PR21MB3867EFB48C19C1457B547F33CAB8A@SA3PR21MB3867.namprd21.prod.outlook.com>
+References: <1767389759-3460-1-git-send-email-haiyangz@linux.microsoft.com>
+	<1767389759-3460-2-git-send-email-haiyangz@linux.microsoft.com>
+ <20260102161147.1938b51d@kernel.org>
+In-Reply-To: <20260102161147.1938b51d@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=430089c3-d348-4c05-b716-2a8f1cdb585a;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-01-03T20:33:20Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA3PR21MB3867:EE_|SA3PR21MB5771:EE_
+x-ms-office365-filtering-correlation-id: ae6c9751-4922-4b65-63b0-08de4b077541
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|7416014|376014|1800799024|38070700021;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?axy3BjRxHtioZrHgqXfyLoyrcfILG2J1QF8gaSKHw/489kP2tw2p+Vjn+N8c?=
+ =?us-ascii?Q?WGHhALczoElA1BQYA7A+sR/cIv0IcLGXLJqOM02HgKRPhBtcRp4U1ouP4b3Z?=
+ =?us-ascii?Q?Glc9iPA/DdO4p2CJpEOpiAPwmuTrvP777LmkOiUMxIYq2h6j6/cnAjXX5ofZ?=
+ =?us-ascii?Q?Xp2XUAzhaR4Lr6C1YxLKk7mpJVIVSACm4Cv1oYFDhfKGYYtZXHopzY/rOq7X?=
+ =?us-ascii?Q?mBJCSAk6kaJTGpKKQZvvqShSBxjWiQ4YJGXuJa2K+VG1t+7Z+BqsShMIEslg?=
+ =?us-ascii?Q?JCD9uwxfcHiovUzHz9P5YKmsAcLESnZ8t6oCUeaoxNA1z4BhkcjkHlOGpYHe?=
+ =?us-ascii?Q?JA52NdZWH0pWSKx+TmZG7Yt7BXzxoWwjqhRopOgNdggYZBgb+Cc7itplGC4B?=
+ =?us-ascii?Q?LcfaAYKZ9LRoZJFjGDeiavFxWfvMVsu4NhamUA5lmlKnhAMu88E+nQo3PAsm?=
+ =?us-ascii?Q?UV+9KXP9eqG8XfxNs/DsxwqXUyzm4xDxTb80zLa30Gr/N/n54iLBoi+5sQ9d?=
+ =?us-ascii?Q?Hu67s/cJbBfwpbItoyCxRsPF7DVpfwfPHQnRVzSK+pDKDtWnGZl8DtkMAb1K?=
+ =?us-ascii?Q?KJk6E8ZCOo/m8K4Y8YKjpi8CfCwmgXnpyjDefqeArNr6ExWJUXH5bK5CgZoA?=
+ =?us-ascii?Q?bBGEZcJdUtpZdgA+3HQqBWLf1plUg1xtkCmncELY91YVH57/4yTEIy/mT/BS?=
+ =?us-ascii?Q?ZoTrYNFbvcestRGCGObY68iree4yp1PYlqaLYIBUhldrJNtey15pbX3yd776?=
+ =?us-ascii?Q?Oju5yBPCixuAwmV9qhr7qtnDlkRyLgrYNBwdDOxUmIRtDdK0/lJO5NdorPyl?=
+ =?us-ascii?Q?pvFjBVj9W3mGiYCMmZZY7LzDXXZWxrcQxWB9NfEwSUfNlcIITp+KQDOKXy4b?=
+ =?us-ascii?Q?GKSvu8LDV5HjfEDbYWBtthVq+QIsbPNQcOgP2O+VkhMo/H2EJkejwlZnHYiO?=
+ =?us-ascii?Q?T24hBe0Tyb77uzt3YdMyXZMi5OR5prdscmr+KwPBByuLRmaaRuURs0ybONCp?=
+ =?us-ascii?Q?vcxZxvss4res0TwLi7KygqV3prxNxRhBZmG70aQKLQZAynyM/qO33JR4AD6K?=
+ =?us-ascii?Q?C3iSJ+WU7UhZvlysOKxYbYgeIAjANDXar7XhLds+RXjvptqSfXohnLd82Zk7?=
+ =?us-ascii?Q?G7oS3l8QM/9UKYDdWGqitsVOnLM3B1vx1P8vKkrbfomgZkg2Oq4nUWFiSYv5?=
+ =?us-ascii?Q?lQPpP4oirrPQiTu7tKT3HZl3/wGXEnQiLP3KljvFreFYX3NY/463p/1eqUzP?=
+ =?us-ascii?Q?8GjTNvi7N720c2PUxJ+RzDTJgpcZJFw4/g0xg8xAouqDv1BzSLJIKkYWWQAs?=
+ =?us-ascii?Q?Zsw/6wQ5cQqJol9ZAi+4vwkkgS2RJd40MN11UZo2D64paeGWdp5JLdGflcpk?=
+ =?us-ascii?Q?xTiG/mohfT+3RRJamDMHP7WSeWBHyey2P8i+v5VZ1CvEAT4VvZlhv+4vuRV9?=
+ =?us-ascii?Q?HxaiI+ewt3w2qO+j9PoTimmk7tv/fIftWxKsc0uacdAtADBfb1t6G4mv2rwU?=
+ =?us-ascii?Q?WiBYTWbKuD7LeZngTCIUdJcACZny3mCL0BUq?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR21MB3867.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(38070700021);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?LnpniloHq+Y9JI1pDm6SB0bwPnyZtFaWvJSGAfIWaq3I/zoS5Js0D40kEvce?=
+ =?us-ascii?Q?uQuy+4jdguuwB22Dh1cVDsH8Ro87AypoRa/k0GHtd79+iUYsyjeNsgRLV46R?=
+ =?us-ascii?Q?8eai3SZ6UcU/LH18G9cXjKknmpfXh+2Ry+/aEFtCVx4grkIRiXMcmqW0EdGi?=
+ =?us-ascii?Q?pe4E8cve3uJI9UyVc3ng9DRLT3outPi3iXbl5K9ccAB7O5qPsbDNRZrwia/5?=
+ =?us-ascii?Q?WK7qxTVg+bS7o+nhVGLtgFOSEDQ8izmO09AnKou1JzMM4wxFazFW+qQPyRcw?=
+ =?us-ascii?Q?gF5eusjmtJaDe7qxE+GCIxNk6a7J1LL+7VB9e+1YeZBcTeHuvt5Y3o3h8mAR?=
+ =?us-ascii?Q?rKaQ4i6egld5zxIslmP7Plzv5AhsrR7OFs5sCgdnuCvxcQpxvE4DXleYVqJQ?=
+ =?us-ascii?Q?k0agBwYD5v0KBjsIL1BGEydsIW9Oezsww2g6Mb7d1pVAfGR7zKKstYq02rVV?=
+ =?us-ascii?Q?F0+u7YW39xw1pS7rlenjRllqbV+ELCtObNGAXRap7mez1w8ZCIc4dNenpPzN?=
+ =?us-ascii?Q?L1vNLtUba8uDTAlsZagWw+Ky4gh/G7OyD9CQXJ1lkLDRIvc70FGqih1LD1Rw?=
+ =?us-ascii?Q?U7IOYRYuI1BXqSLo5Y2J+SOeN1UlnUQjrVGhWy76YIaMxtW0Nhl5gJR1KUe9?=
+ =?us-ascii?Q?Dh53eUT5zmLjBkpN+cL2uQCr9UvVCp8Ge7V3+llGDQupfS3gUmFwfiUZazcU?=
+ =?us-ascii?Q?eFGet/5R+v7Mt+CqYjzxy79VGjPRLnF5s1cecCgMbhzh5hJegGdL+8OGR8Qb?=
+ =?us-ascii?Q?MBagq76sTlD6lPDIjk3QS4Gm89zgDrKTiKOiHFg+TBYeXCiJy4Twk5p28SkI?=
+ =?us-ascii?Q?aKXYLLTWfDU+Evv9+bwFtcQZl7zinTH5UJDUe0WbsQQLZeTosjANb1/rdvmc?=
+ =?us-ascii?Q?HVIY81RKGqc0C6BizwhC8l+qgy6m6J6Hsc8yj9C/tMZkhMXzvdFueOUmZvJa?=
+ =?us-ascii?Q?54TVAjkOICIfONE4a932Phv6uYBhjUXTDghp+0odDs6VqhqLFZrharnRuqs7?=
+ =?us-ascii?Q?uwfpvXhV3I1MPIWT4q5yxbHUHXwxQwNnJMlfR42ILop3biCJ0NnmCCkv27KF?=
+ =?us-ascii?Q?2Ha8ngm+7/tBQhJTYrx2sFP8xvfqGskURwUhhpiHAuHqguZtej2S7A1+dZg1?=
+ =?us-ascii?Q?DBskwVjZDQMt4VqnNEZCva8LX912TCxuCb/Hx8/T62dMGXJ4WhcdFVqqg7YM?=
+ =?us-ascii?Q?TdKuJGO6Z3X7G2tQA74tzgxGUGPVoXXVp2eSy/LhBFuFxzASTq4NpQnh9ron?=
+ =?us-ascii?Q?lG61HJ5qkHWHp6U5ul2jAIhexWY/GJ5z4uRb7Xq0x/kLuXGNsgZm6Mx4kA3l?=
+ =?us-ascii?Q?CoRA/ZDmYizmzuG2c3ebz/Ek8rDYnNr2jABJGciZnPbTGmkwSBVsUG3uHD7u?=
+ =?us-ascii?Q?JWr5fPyWDSODWLCEVn7IcYp9if0t1xPcUIPIxvvzwI+9o41NmXaTd9XLj0e2?=
+ =?us-ascii?Q?JxZ6HAabtdyjsW79VvtUEKrX0pSSNHK2KIrw7J7UOPPJElBxRWL8UwMViS8J?=
+ =?us-ascii?Q?e4f9hpweiR/L+NtJYxORh/d9aRuaRKjog3cxNsMqxC2fK0EDTH6bBEVN/QHw?=
+ =?us-ascii?Q?hryMqJb/C46TQQsaeodrqfUIo7Onv074szamroMObG9NPqYaujIoR2v8IbGi?=
+ =?us-ascii?Q?23lnKMgCCRo+j+RrCBzN68Q8E6zc8qNT5QbydTDPJDNEUtsrHEOktepzaTar?=
+ =?us-ascii?Q?AZMyawlcMF9VX7LGLjTh4JHcWqiMHq26Ld8PntS0OwEmYUx6?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA3PR21MB3867.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae6c9751-4922-4b65-63b0-08de4b077541
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jan 2026 20:34:13.7097
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vFolhAs70/893Uelxs2KTLLr2QyEVDnL/P9H9nY46gF4jqJZbR0HkKC0iNejVQ8uczcConUlMzdNjzfmiGgUTw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR21MB5771
 
-Implement .ndo_tx_timeout for MANA so any stalled TX queue can be detected
-and a device-controlled port reset for all queues can be scheduled to a
-ordered workqueue. The reset for all queues on stall detection is
-recomended by hardware team.
 
-Reviewed-by: Pavan Chebbi <pavan.chebbi@broadcom.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
----
-Changes in v6:
-  - Rebased.
-Changes in v5:
-  -Fixed commit message, used 'create_singlethread_workqueue' and fixed
-   cleanup part.
-Changes in v4:
-  -Fixed commit message, work initialization before registering netdev,
-   fixed potential null pointer de-reference bug.
-Changes in v3:
-  -Fixed commit meesage, removed rtnl_trylock and added
-   disable_work_sync, fixed mana_queue_reset_work, and few
-   cosmetics.
-Changes in v2:
-  -Fixed cosmetic changes.
----
----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 77 ++++++++++++++++++-
- include/net/mana/gdma.h                       |  7 +-
- include/net/mana/mana.h                       |  8 +-
- 3 files changed, 89 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 1ad154f9db1a..d8451f550db4 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -299,6 +299,42 @@ static int mana_get_gso_hs(struct sk_buff *skb)
- 	return gso_hs;
- }
- 
-+static void mana_per_port_queue_reset_work_handler(struct work_struct *work)
-+{
-+	struct mana_queue_reset_work *reset_queue_work =
-+			container_of(work, struct mana_queue_reset_work, work);
-+
-+	struct mana_port_context *apc = container_of(reset_queue_work,
-+						     struct mana_port_context,
-+						     queue_reset_work);
-+	struct net_device *ndev = apc->ndev;
-+	int err;
-+
-+	rtnl_lock();
-+
-+	/* Pre-allocate buffers to prevent failure in mana_attach later */
-+	err = mana_pre_alloc_rxbufs(apc, ndev->mtu, apc->num_queues);
-+	if (err) {
-+		netdev_err(ndev, "Insufficient memory for reset post tx stall detection\n");
-+		goto out;
-+	}
-+
-+	err = mana_detach(ndev, false);
-+	if (err) {
-+		netdev_err(ndev, "mana_detach failed: %d\n", err);
-+		goto dealloc_pre_rxbufs;
-+	}
-+
-+	err = mana_attach(ndev);
-+	if (err)
-+		netdev_err(ndev, "mana_attach failed: %d\n", err);
-+
-+dealloc_pre_rxbufs:
-+	mana_pre_dealloc_rxbufs(apc);
-+out:
-+	rtnl_unlock();
-+}
-+
- netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- {
- 	enum mana_tx_pkt_format pkt_fmt = MANA_SHORT_PKT_FMT;
-@@ -839,6 +875,23 @@ static int mana_change_mtu(struct net_device *ndev, int new_mtu)
- 	return err;
- }
- 
-+static void mana_tx_timeout(struct net_device *netdev, unsigned int txqueue)
-+{
-+	struct mana_port_context *apc = netdev_priv(netdev);
-+	struct mana_context *ac = apc->ac;
-+	struct gdma_context *gc = ac->gdma_dev->gdma_context;
-+
-+	/* Already in service, hence tx queue reset is not required.*/
-+	if (gc->in_service)
-+		return;
-+
-+	/* Note: If there are pending queue reset work for this port(apc),
-+	 * subsequent request queued up from here are ignored. This is because
-+	 * we are using the same work instance per port(apc).
-+	 */
-+	queue_work(ac->per_port_queue_reset_wq, &apc->queue_reset_work.work);
-+}
-+
- static int mana_shaper_set(struct net_shaper_binding *binding,
- 			   const struct net_shaper *shaper,
- 			   struct netlink_ext_ack *extack)
-@@ -924,6 +977,7 @@ static const struct net_device_ops mana_devops = {
- 	.ndo_bpf		= mana_bpf,
- 	.ndo_xdp_xmit		= mana_xdp_xmit,
- 	.ndo_change_mtu		= mana_change_mtu,
-+	.ndo_tx_timeout		= mana_tx_timeout,
- 	.net_shaper_ops         = &mana_shaper_ops,
- };
- 
-@@ -3287,6 +3341,8 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
- 	ndev->min_mtu = ETH_MIN_MTU;
- 	ndev->needed_headroom = MANA_HEADROOM;
- 	ndev->dev_port = port_idx;
-+	/* Recommended timeout based on HW FPGA re-config scenario. */
-+	ndev->watchdog_timeo = 15 * HZ;
- 	SET_NETDEV_DEV(ndev, gc->dev);
- 
- 	netif_set_tso_max_size(ndev, GSO_MAX_SIZE);
-@@ -3303,6 +3359,10 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
- 	if (err)
- 		goto reset_apc;
- 
-+	/* Initialize the per port queue reset work.*/
-+	INIT_WORK(&apc->queue_reset_work.work,
-+		  mana_per_port_queue_reset_work_handler);
-+
- 	netdev_lockdep_set_classes(ndev);
- 
- 	ndev->hw_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM;
-@@ -3549,6 +3609,14 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
- 	if (ac->num_ports > MAX_PORTS_IN_MANA_DEV)
- 		ac->num_ports = MAX_PORTS_IN_MANA_DEV;
- 
-+	ac->per_port_queue_reset_wq =
-+		create_singlethread_workqueue("mana_per_port_queue_reset_wq");
-+	if (!ac->per_port_queue_reset_wq) {
-+		dev_err(dev, "Failed to allocate per port queue reset workqueue\n");
-+		err = -ENOMEM;
-+		goto out;
-+	}
-+
- 	if (!resuming) {
- 		for (i = 0; i < ac->num_ports; i++) {
- 			err = mana_probe_port(ac, i, &ac->ports[i]);
-@@ -3616,13 +3684,15 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
- 
- 	for (i = 0; i < ac->num_ports; i++) {
- 		ndev = ac->ports[i];
--		apc = netdev_priv(ndev);
- 		if (!ndev) {
- 			if (i == 0)
- 				dev_err(dev, "No net device to remove\n");
- 			goto out;
- 		}
- 
-+		apc = netdev_priv(ndev);
-+		disable_work_sync(&apc->queue_reset_work.work);
-+
- 		/* All cleanup actions should stay after rtnl_lock(), otherwise
- 		 * other functions may access partially cleaned up data.
- 		 */
-@@ -3649,6 +3719,11 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
- 
- 	mana_destroy_eq(ac);
- out:
-+	if (ac->per_port_queue_reset_wq) {
-+		destroy_workqueue(ac->per_port_queue_reset_wq);
-+		ac->per_port_queue_reset_wq = NULL;
-+	}
-+
- 	mana_gd_deregister_device(gd);
- 
- 	if (suspending)
-diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index eaa27483f99b..a59bd4035a99 100644
---- a/include/net/mana/gdma.h
-+++ b/include/net/mana/gdma.h
-@@ -598,6 +598,10 @@ enum {
- 
- /* Driver can self reset on FPGA Reconfig EQE notification */
- #define GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE BIT(17)
-+
-+/* Driver detects stalled send queues and recovers them */
-+#define GDMA_DRV_CAP_FLAG_1_HANDLE_STALL_SQ_RECOVERY BIT(18)
-+
- #define GDMA_DRV_CAP_FLAG_1_HW_VPORT_LINK_AWARE BIT(6)
- 
- /* Driver supports linearizing the skb when num_sge exceeds hardware limit */
-@@ -621,7 +625,8 @@ enum {
- 	 GDMA_DRV_CAP_FLAG_1_HW_VPORT_LINK_AWARE | \
- 	 GDMA_DRV_CAP_FLAG_1_PERIODIC_STATS_QUERY | \
- 	 GDMA_DRV_CAP_FLAG_1_SKB_LINEARIZE | \
--	 GDMA_DRV_CAP_FLAG_1_PROBE_RECOVERY)
-+	 GDMA_DRV_CAP_FLAG_1_PROBE_RECOVERY | \
-+	 GDMA_DRV_CAP_FLAG_1_HANDLE_STALL_SQ_RECOVERY)
- 
- #define GDMA_DRV_CAP_FLAGS2 0
- 
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index d7e089c6b694..cef78a871c7c 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -480,7 +480,7 @@ struct mana_context {
- 	struct mana_ethtool_hc_stats hc_stats;
- 	struct mana_eq *eqs;
- 	struct dentry *mana_eqs_debugfs;
--
-+	struct workqueue_struct *per_port_queue_reset_wq;
- 	/* Workqueue for querying hardware stats */
- 	struct delayed_work gf_stats_work;
- 	bool hwc_timeout_occurred;
-@@ -492,9 +492,15 @@ struct mana_context {
- 	u32 link_event;
- };
- 
-+struct mana_queue_reset_work {
-+	/* Work structure */
-+	struct work_struct work;
-+};
-+
- struct mana_port_context {
- 	struct mana_context *ac;
- 	struct net_device *ndev;
-+	struct mana_queue_reset_work queue_reset_work;
- 
- 	u8 mac_addr[ETH_ALEN];
- 
--- 
-2.43.0
+> -----Original Message-----
+> From: Jakub Kicinski <kuba@kernel.org>
+> Sent: Friday, January 2, 2026 7:12 PM
+> To: Haiyang Zhang <haiyangz@linux.microsoft.com>
+> Cc: linux-hyperv@vger.kernel.org; netdev@vger.kernel.org; KY Srinivasan
+> <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>; Wei Liu
+> <wei.liu@kernel.org>; Dexuan Cui <DECUI@microsoft.com>; Andrew Lunn
+> <andrew+netdev@lunn.ch>; David S. Miller <davem@davemloft.net>; Eric
+> Dumazet <edumazet@google.com>; Paolo Abeni <pabeni@redhat.com>; Long Li
+> <longli@microsoft.com>; Konstantin Taranov <kotaranov@microsoft.com>;
+> Simon Horman <horms@kernel.org>; Erni Sri Satya Vennela
+> <ernis@linux.microsoft.com>; Shradha Gupta
+> <shradhagupta@linux.microsoft.com>; Saurabh Sengar
+> <ssengar@linux.microsoft.com>; Aditya Garg
+> <gargaditya@linux.microsoft.com>; Dipayaan Roy
+> <dipayanroy@linux.microsoft.com>; Shiraz Saleem
+> <shirazsaleem@microsoft.com>; linux-kernel@vger.kernel.org; linux-
+> rdma@vger.kernel.org; Paul Rosswurm <paulros@microsoft.com>
+> Subject: [EXTERNAL] Re: [PATCH net-next, 1/2] net: mana: Add support for
+> coalesced RX packets on CQE
+>=20
+> On Fri,  2 Jan 2026 13:35:57 -0800 Haiyang Zhang wrote:
+> > +		NL_SET_ERR_MSG_FMT(extack, "Set rx-frames to %u failed:%d\n",
+> > +				   ec->rx_max_coalesced_frames, err);
+>=20
+> No trailing new line in extack messages, please.
+> Also please do not duplicate the err value in the message itself,
+> it's already passed to user space. Well behaved user space will format
+> this as eg:
+>=20
+>   Set rx-frames to 123 failed:-11: Invalid argument
 
+I will update the patch.
+
+Thanks,
+- Haiyang
 
