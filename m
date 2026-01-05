@@ -1,219 +1,187 @@
-Return-Path: <linux-hyperv+bounces-8137-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8138-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2D05CF0591
-	for <lists+linux-hyperv@lfdr.de>; Sat, 03 Jan 2026 21:34:20 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B592CF2A06
+	for <lists+linux-hyperv@lfdr.de>; Mon, 05 Jan 2026 10:08:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 93C8C30133B2
-	for <lists+linux-hyperv@lfdr.de>; Sat,  3 Jan 2026 20:34:19 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id E0882302CABB
+	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jan 2026 09:06:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B20BF29BDAE;
-	Sat,  3 Jan 2026 20:34:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61C6C329C7C;
+	Mon,  5 Jan 2026 09:00:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="UVqV4ctF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hWeDhtjU";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="ceAPleqL"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11020087.outbound.protection.outlook.com [52.101.46.87])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2170D28F50F;
-	Sat,  3 Jan 2026 20:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767472458; cv=fail; b=MzaUtPoe/j/Ydxu7sYqWDyWEFaYB7QUWKl0AFu+QqmmKehnAPx4yUpjEyZz9DfyRpMD5n/fqSnD+LSDbg+W/I7M5vaum/aTH0WvxwMUhfOSx2KYeNqgKWJIrZMBtvb6x0Mn43eZBpMf1ijo6c0MWF8BGXR8GlagS5UiNH9r2RCI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767472458; c=relaxed/simple;
-	bh=YhspdBsaW0kr0lSRrqunJszoCPBcl88DenyU8XcffRU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=glkYpKKTPGlCC7ouKo7zKQzpsmWcFoiPT+7YqjcPNi4eKAjUZKRmZ8bSfeO1wxd1CP9VCgVd++Ueu1glzIvKWMczuO3gaT0xHkHewJr/xcQrozh4QDjhZhvFgOElAGeT3KR7B1d+/08Gep49HkHBsEEGmrO1de6ky9kYNM+W30o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=UVqV4ctF; arc=fail smtp.client-ip=52.101.46.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Q5YKpJqNNo0uJmEX9DyjqKxbefV9UhTovsuBME7VV7BiUBXllwRe5rKlU231kP3+V03w7VyFt0szhqF0P2T3xncZbQbZhLeHLyI2x8fxZ0UmVgirjEo9k+joKM4OAxSdHvJ1OSSp2asKCMcI45UJPpYUNk4M5edGAvwtTI6II8RrY0nZnjK1X2Udht8GwXV4sz1G7FSufNcjH5fkh5ky35i4fwBjUTfnO4kUt1TY2Hm5XJl29U9UEDrgD8moO22lar9Y1Bmc9PBz5LDpBbuN54oMpaDISdl0tQbpbdbh+7AlYt17GAMIkF7bHDnCng/3uZuFFYkbMybj423NpOqagQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7xy7QmyossDddd86txsmz6trUfWAkooOihca3M6/cts=;
- b=faAT1lzwjGOjTnBJQ1ixuxEX5mhfoFf6kWss0yBcJrLCw0/H1G8MtUskjAWBxql7Nvw3V4lQvUgszlymWS48Iov65Ybu1ox7iPVaFCo5/EwNqSvB8qH8A31msSKQT7vmfo1Z0WWs+oHYC9N1xAn5nYhmHKE32sDOzUl39PuRCt3v18e+aE2WT1DeIZeAul4iANEnMoX7x6Dxc+tuRe4M8fOLFKmQ+Byp6AdMWd+AjY7hSII8+HKZgboB6DoE0rDyyqa+YP+cFd2MVQthUyW5+mrYII1NoSMukPsV7noSFwPPTReMT7m2n73eRLFetHWs9Q2QG+t6LrsAkBZUmdYLBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7xy7QmyossDddd86txsmz6trUfWAkooOihca3M6/cts=;
- b=UVqV4ctFUHftkn+RP8Z9/upZMiL7WraxrIFNq3DU8wL0/FWtx8nX4p0XpFE9EQIUrxu8GELZ/qNpqqb88hMsgnCesd+Ex2q4c4jySYvkO+tUff6uoaQ4VKTjhLTOAOZAsO+thZVlPYs0vZ5KqN2SGR+GHTxak5v8XHc6uy1Rfxs=
-Received: from SA3PR21MB3867.namprd21.prod.outlook.com (2603:10b6:806:2fc::15)
- by SA3PR21MB5771.namprd21.prod.outlook.com (2603:10b6:806:492::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.1; Sat, 3 Jan
- 2026 20:34:13 +0000
-Received: from SA3PR21MB3867.namprd21.prod.outlook.com
- ([fe80::70ff:4d3:2cb6:92a3]) by SA3PR21MB3867.namprd21.prod.outlook.com
- ([fe80::70ff:4d3:2cb6:92a3%6]) with mapi id 15.20.9520.000; Sat, 3 Jan 2026
- 20:34:13 +0000
-From: Haiyang Zhang <haiyangz@microsoft.com>
-To: Jakub Kicinski <kuba@kernel.org>, Haiyang Zhang
-	<haiyangz@linux.microsoft.com>
-CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, KY Srinivasan
-	<kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
-	<DECUI@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
-	<pabeni@redhat.com>, Long Li <longli@microsoft.com>, Konstantin Taranov
-	<kotaranov@microsoft.com>, Simon Horman <horms@kernel.org>, Erni Sri Satya
- Vennela <ernis@linux.microsoft.com>, Shradha Gupta
-	<shradhagupta@linux.microsoft.com>, Saurabh Sengar
-	<ssengar@linux.microsoft.com>, Aditya Garg <gargaditya@linux.microsoft.com>,
-	Dipayaan Roy <dipayanroy@linux.microsoft.com>, Shiraz Saleem
-	<shirazsaleem@microsoft.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-rdma@vger.kernel.org"
-	<linux-rdma@vger.kernel.org>, Paul Rosswurm <paulros@microsoft.com>
-Subject: RE: [EXTERNAL] Re: [PATCH net-next, 1/2] net: mana: Add support for
- coalesced RX packets on CQE
-Thread-Topic: [EXTERNAL] Re: [PATCH net-next, 1/2] net: mana: Add support for
- coalesced RX packets on CQE
-Thread-Index: AQHcfDAC9zbupp0oYUqTZlvwbw1m4rU/krmAgAFVTPA=
-Date: Sat, 3 Jan 2026 20:34:13 +0000
-Message-ID:
- <SA3PR21MB3867EFB48C19C1457B547F33CAB8A@SA3PR21MB3867.namprd21.prod.outlook.com>
-References: <1767389759-3460-1-git-send-email-haiyangz@linux.microsoft.com>
-	<1767389759-3460-2-git-send-email-haiyangz@linux.microsoft.com>
- <20260102161147.1938b51d@kernel.org>
-In-Reply-To: <20260102161147.1938b51d@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=430089c3-d348-4c05-b716-2a8f1cdb585a;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-01-03T20:33:20Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA3PR21MB3867:EE_|SA3PR21MB5771:EE_
-x-ms-office365-filtering-correlation-id: ae6c9751-4922-4b65-63b0-08de4b077541
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|7416014|376014|1800799024|38070700021;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?axy3BjRxHtioZrHgqXfyLoyrcfILG2J1QF8gaSKHw/489kP2tw2p+Vjn+N8c?=
- =?us-ascii?Q?WGHhALczoElA1BQYA7A+sR/cIv0IcLGXLJqOM02HgKRPhBtcRp4U1ouP4b3Z?=
- =?us-ascii?Q?Glc9iPA/DdO4p2CJpEOpiAPwmuTrvP777LmkOiUMxIYq2h6j6/cnAjXX5ofZ?=
- =?us-ascii?Q?Xp2XUAzhaR4Lr6C1YxLKk7mpJVIVSACm4Cv1oYFDhfKGYYtZXHopzY/rOq7X?=
- =?us-ascii?Q?mBJCSAk6kaJTGpKKQZvvqShSBxjWiQ4YJGXuJa2K+VG1t+7Z+BqsShMIEslg?=
- =?us-ascii?Q?JCD9uwxfcHiovUzHz9P5YKmsAcLESnZ8t6oCUeaoxNA1z4BhkcjkHlOGpYHe?=
- =?us-ascii?Q?JA52NdZWH0pWSKx+TmZG7Yt7BXzxoWwjqhRopOgNdggYZBgb+Cc7itplGC4B?=
- =?us-ascii?Q?LcfaAYKZ9LRoZJFjGDeiavFxWfvMVsu4NhamUA5lmlKnhAMu88E+nQo3PAsm?=
- =?us-ascii?Q?UV+9KXP9eqG8XfxNs/DsxwqXUyzm4xDxTb80zLa30Gr/N/n54iLBoi+5sQ9d?=
- =?us-ascii?Q?Hu67s/cJbBfwpbItoyCxRsPF7DVpfwfPHQnRVzSK+pDKDtWnGZl8DtkMAb1K?=
- =?us-ascii?Q?KJk6E8ZCOo/m8K4Y8YKjpi8CfCwmgXnpyjDefqeArNr6ExWJUXH5bK5CgZoA?=
- =?us-ascii?Q?bBGEZcJdUtpZdgA+3HQqBWLf1plUg1xtkCmncELY91YVH57/4yTEIy/mT/BS?=
- =?us-ascii?Q?ZoTrYNFbvcestRGCGObY68iree4yp1PYlqaLYIBUhldrJNtey15pbX3yd776?=
- =?us-ascii?Q?Oju5yBPCixuAwmV9qhr7qtnDlkRyLgrYNBwdDOxUmIRtDdK0/lJO5NdorPyl?=
- =?us-ascii?Q?pvFjBVj9W3mGiYCMmZZY7LzDXXZWxrcQxWB9NfEwSUfNlcIITp+KQDOKXy4b?=
- =?us-ascii?Q?GKSvu8LDV5HjfEDbYWBtthVq+QIsbPNQcOgP2O+VkhMo/H2EJkejwlZnHYiO?=
- =?us-ascii?Q?T24hBe0Tyb77uzt3YdMyXZMi5OR5prdscmr+KwPBByuLRmaaRuURs0ybONCp?=
- =?us-ascii?Q?vcxZxvss4res0TwLi7KygqV3prxNxRhBZmG70aQKLQZAynyM/qO33JR4AD6K?=
- =?us-ascii?Q?C3iSJ+WU7UhZvlysOKxYbYgeIAjANDXar7XhLds+RXjvptqSfXohnLd82Zk7?=
- =?us-ascii?Q?G7oS3l8QM/9UKYDdWGqitsVOnLM3B1vx1P8vKkrbfomgZkg2Oq4nUWFiSYv5?=
- =?us-ascii?Q?lQPpP4oirrPQiTu7tKT3HZl3/wGXEnQiLP3KljvFreFYX3NY/463p/1eqUzP?=
- =?us-ascii?Q?8GjTNvi7N720c2PUxJ+RzDTJgpcZJFw4/g0xg8xAouqDv1BzSLJIKkYWWQAs?=
- =?us-ascii?Q?Zsw/6wQ5cQqJol9ZAi+4vwkkgS2RJd40MN11UZo2D64paeGWdp5JLdGflcpk?=
- =?us-ascii?Q?xTiG/mohfT+3RRJamDMHP7WSeWBHyey2P8i+v5VZ1CvEAT4VvZlhv+4vuRV9?=
- =?us-ascii?Q?HxaiI+ewt3w2qO+j9PoTimmk7tv/fIftWxKsc0uacdAtADBfb1t6G4mv2rwU?=
- =?us-ascii?Q?WiBYTWbKuD7LeZngTCIUdJcACZny3mCL0BUq?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR21MB3867.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(38070700021);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?LnpniloHq+Y9JI1pDm6SB0bwPnyZtFaWvJSGAfIWaq3I/zoS5Js0D40kEvce?=
- =?us-ascii?Q?uQuy+4jdguuwB22Dh1cVDsH8Ro87AypoRa/k0GHtd79+iUYsyjeNsgRLV46R?=
- =?us-ascii?Q?8eai3SZ6UcU/LH18G9cXjKknmpfXh+2Ry+/aEFtCVx4grkIRiXMcmqW0EdGi?=
- =?us-ascii?Q?pe4E8cve3uJI9UyVc3ng9DRLT3outPi3iXbl5K9ccAB7O5qPsbDNRZrwia/5?=
- =?us-ascii?Q?WK7qxTVg+bS7o+nhVGLtgFOSEDQ8izmO09AnKou1JzMM4wxFazFW+qQPyRcw?=
- =?us-ascii?Q?gF5eusjmtJaDe7qxE+GCIxNk6a7J1LL+7VB9e+1YeZBcTeHuvt5Y3o3h8mAR?=
- =?us-ascii?Q?rKaQ4i6egld5zxIslmP7Plzv5AhsrR7OFs5sCgdnuCvxcQpxvE4DXleYVqJQ?=
- =?us-ascii?Q?k0agBwYD5v0KBjsIL1BGEydsIW9Oezsww2g6Mb7d1pVAfGR7zKKstYq02rVV?=
- =?us-ascii?Q?F0+u7YW39xw1pS7rlenjRllqbV+ELCtObNGAXRap7mez1w8ZCIc4dNenpPzN?=
- =?us-ascii?Q?L1vNLtUba8uDTAlsZagWw+Ky4gh/G7OyD9CQXJ1lkLDRIvc70FGqih1LD1Rw?=
- =?us-ascii?Q?U7IOYRYuI1BXqSLo5Y2J+SOeN1UlnUQjrVGhWy76YIaMxtW0Nhl5gJR1KUe9?=
- =?us-ascii?Q?Dh53eUT5zmLjBkpN+cL2uQCr9UvVCp8Ge7V3+llGDQupfS3gUmFwfiUZazcU?=
- =?us-ascii?Q?eFGet/5R+v7Mt+CqYjzxy79VGjPRLnF5s1cecCgMbhzh5hJegGdL+8OGR8Qb?=
- =?us-ascii?Q?MBagq76sTlD6lPDIjk3QS4Gm89zgDrKTiKOiHFg+TBYeXCiJy4Twk5p28SkI?=
- =?us-ascii?Q?aKXYLLTWfDU+Evv9+bwFtcQZl7zinTH5UJDUe0WbsQQLZeTosjANb1/rdvmc?=
- =?us-ascii?Q?HVIY81RKGqc0C6BizwhC8l+qgy6m6J6Hsc8yj9C/tMZkhMXzvdFueOUmZvJa?=
- =?us-ascii?Q?54TVAjkOICIfONE4a932Phv6uYBhjUXTDghp+0odDs6VqhqLFZrharnRuqs7?=
- =?us-ascii?Q?uwfpvXhV3I1MPIWT4q5yxbHUHXwxQwNnJMlfR42ILop3biCJ0NnmCCkv27KF?=
- =?us-ascii?Q?2Ha8ngm+7/tBQhJTYrx2sFP8xvfqGskURwUhhpiHAuHqguZtej2S7A1+dZg1?=
- =?us-ascii?Q?DBskwVjZDQMt4VqnNEZCva8LX912TCxuCb/Hx8/T62dMGXJ4WhcdFVqqg7YM?=
- =?us-ascii?Q?TdKuJGO6Z3X7G2tQA74tzgxGUGPVoXXVp2eSy/LhBFuFxzASTq4NpQnh9ron?=
- =?us-ascii?Q?lG61HJ5qkHWHp6U5ul2jAIhexWY/GJ5z4uRb7Xq0x/kLuXGNsgZm6Mx4kA3l?=
- =?us-ascii?Q?CoRA/ZDmYizmzuG2c3ebz/Ek8rDYnNr2jABJGciZnPbTGmkwSBVsUG3uHD7u?=
- =?us-ascii?Q?JWr5fPyWDSODWLCEVn7IcYp9if0t1xPcUIPIxvvzwI+9o41NmXaTd9XLj0e2?=
- =?us-ascii?Q?JxZ6HAabtdyjsW79VvtUEKrX0pSSNHK2KIrw7J7UOPPJElBxRWL8UwMViS8J?=
- =?us-ascii?Q?e4f9hpweiR/L+NtJYxORh/d9aRuaRKjog3cxNsMqxC2fK0EDTH6bBEVN/QHw?=
- =?us-ascii?Q?hryMqJb/C46TQQsaeodrqfUIo7Onv074szamroMObG9NPqYaujIoR2v8IbGi?=
- =?us-ascii?Q?23lnKMgCCRo+j+RrCBzN68Q8E6zc8qNT5QbydTDPJDNEUtsrHEOktepzaTar?=
- =?us-ascii?Q?AZMyawlcMF9VX7LGLjTh4JHcWqiMHq26Ld8PntS0OwEmYUx6?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379AD32939C
+	for <linux-hyperv@vger.kernel.org>; Mon,  5 Jan 2026 09:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767603614; cv=none; b=Vk3aDGGj1izWhNTj9YPSXI4mkzhKXTFbvLAvZepE/G67Od4gy4oZalBqbdlTXE7Q1qfJzRYVQVQYUe6FN2WR+KgVjKfpFAyF+ekjWO46hoeo4yzqsLfZD9RLaWQiJqCm3dfjjWid3tyFezUIyx0YmobsKTw1X03wX2jf2x+e2y0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767603614; c=relaxed/simple;
+	bh=ajQxi6UwJp3C/EKgUIeE0e0aBYbCLoFLV3jCXPnSzV4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Tfx2mC7cgPDcYoJ26y+SAQuUlJgHQNc2XUcTqHJWgD0bAJH3O4kpRmH2/RsYdmtupRFu8jP+t5LZl0ZcrYTJUNOvlJplAWjQgbFnPxJf2+27Bhcwr7uMwNBD0UMAPm25qPwyOXyEedjat9Aip/hdd9ylq6tYFGCHon3nfr/PIkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hWeDhtjU; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=ceAPleqL; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1767603610;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QmolwYpg0GTIXzwxeSlS9Zjh3lPmDzNI91+vRS/C+K4=;
+	b=hWeDhtjUTSJkam388dRAeOFixMFTA1kbRZWJWT+iDmxKJ4u5bh4bPh2R8bvSZDNmo4db0h
+	z2Xa/KFXs12EitMyilOEdu9pcpWEi4z7IxgCMAoqUddH+bAZ8cdbu+smjxbw9tYCARreD9
+	llxpy6km8qe00TnGNDuOSxHsCo9Loww=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-516--EtkiyyxMBO3xYCXlTf_tQ-1; Mon, 05 Jan 2026 04:00:09 -0500
+X-MC-Unique: -EtkiyyxMBO3xYCXlTf_tQ-1
+X-Mimecast-MFC-AGG-ID: -EtkiyyxMBO3xYCXlTf_tQ_1767603608
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-477b8a667bcso184922955e9.2
+        for <linux-hyperv@vger.kernel.org>; Mon, 05 Jan 2026 01:00:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1767603608; x=1768208408; darn=vger.kernel.org;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QmolwYpg0GTIXzwxeSlS9Zjh3lPmDzNI91+vRS/C+K4=;
+        b=ceAPleqLe38iHJ4VJ+fb9d/bUE/ldaRZ5WSAGTczgCh4r9WOpzMMtgTu1iZYzz5Tc3
+         A9G7yV1THa9coxmq8nrnShEcIYvO8hshIPCbdrBBJ5/AQJJk+fCDqt0rZcpLFj+1RZUS
+         47rD4ep2VKfFZB9IgaUB5MaAnHq1UxtGH7pmL/sMSI2VDjp73DhiZQ52koyVsg30EjZv
+         iAnVmsiETv3klxh+LQXLcmXWY5RMKLOoMCtDcWE6lL6/SjE6Ve9Cy8Y33qjGbI8Y92Mv
+         UHMbXz6pt44qkASLSr/qlNbYj8QIRRqi35Exs2ieeB4rEYZpwDOnrHLIetVXUv42PvRe
+         Y5AQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767603608; x=1768208408;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QmolwYpg0GTIXzwxeSlS9Zjh3lPmDzNI91+vRS/C+K4=;
+        b=EqIY/dJbt3YBkBGN/bmN+Vsnp5+5ZZmc8NibKWzJrXvMgtLtz5iybZX/W/dfFJ6uEk
+         HTCkRhSsy7dZ4Jkh/vDEnVRPfnRAjg4maxsIJWWFtSY7iYHj1dUE2gHso0mJeeaCidoy
+         Qbg6CqWRDL5sk9geMn6ouYleys8v77oBCt2PVG1cate+NnWVW12uo8FLmpJVoMQN3plY
+         B5mnTTUa1akV6qzewONlQh2X34bX/5qWD4hFZx43CQedI5XqI2FNTHHwQTiD6hTDbr5v
+         hvFfdGlHmkiXByQfkjXXWvlTjVoRmxukhA/2q6F90Wu6EhC0HoRiAt7C1n21hYBidy53
+         CIvw==
+X-Forwarded-Encrypted: i=1; AJvYcCWmD7v6Tvth5Gc2C8Dd/tFJS5+vnFg6OCaAPXs204eMpJOheYFiCc4WTXgFlrf/h8G06+7cCyDVUPR1dU0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWCd8kcXdVjLbIqANECdskHW1yAR1acB6KdzdKjEt7SE/HQDKO
+	xiDc6tfpu6mtv0Cq+WpbSiTYusUDSXurbS0M+gtV1yrGWzTggMAIYmJEJ10qIgzvaY6RSwbyMm7
+	dEL8wCyG1hqSkr2ltfuv2t5iEypqasdMkVmKSDRZIaoNRdSNubIpYe6D9IQRWiL6wpQ==
+X-Gm-Gg: AY/fxX45F4IQbXqhvgKcz1Xny34XMETG+VKhNtlCKVx5ZWmzTYFpmtkG+My6GbMJ4Zh
+	TlKkkTotPLsM0nvxh3O9gSh15mfuT43rbqEpCRkFWltX6/HboxhzzO6enBn++Dy7+o7NRNNg9Cd
+	qC0dvR3LgJPBZiVf8gkq1pBVnJukMS2q6v9j7VCc9n5pDZI707isj/CSKbwNd3WMvZj3fij0p7e
+	QgytA70Y5Syzhe52B00k9bq8DE9JrtUElS38n2l+fRlCfo5d0bgtZprKuFBsDwcdBaTo3N4JGt8
+	sOM+mH+3CkGDW1t1jOdmyH5XWEIIwVEH/WqqyhCZGawoppnEM+tA9FU8fHMwIVqYCwA96dWlUJS
+	MLxHU/g==
+X-Received: by 2002:a05:600c:3555:b0:47d:649b:5c48 with SMTP id 5b1f17b1804b1-47d649b5d5bmr187270395e9.36.1767603607361;
+        Mon, 05 Jan 2026 01:00:07 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEZIR4puYONtUAS5jkDiNPmcRew+6uEAxQeWfERZZ03vpK8NK5h9FGygT/q4u7IkopnNbAs0A==
+X-Received: by 2002:a05:600c:3555:b0:47d:649b:5c48 with SMTP id 5b1f17b1804b1-47d649b5d5bmr187269565e9.36.1767603606633;
+        Mon, 05 Jan 2026 01:00:06 -0800 (PST)
+Received: from fedora (g3.ign.cz. [91.219.240.17])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324eab2c4fsm99649717f8f.42.2026.01.05.01.00.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Jan 2026 01:00:06 -0800 (PST)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: Michael Kelley <mhklinux@outlook.com>, Mukesh Rathor
+ <mrathor@linux.microsoft.com>, "linux-hyperv@vger.kernel.org"
+ <linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>
+Cc: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+ <haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>, "longli@microsoft.com"
+ <longli@microsoft.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
+ "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>
+Subject: RE: [RFC][PATCH v0] x86/hyperv: Reserve 3 interrupt vectors used
+ exclusively by mshv
+In-Reply-To: <SN6PR02MB41575124C6D2CD7492899991D4BBA@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20251231012100.681060-1-mrathor@linux.microsoft.com>
+ <877bu0au1t.fsf@redhat.com>
+ <SN6PR02MB41575124C6D2CD7492899991D4BBA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Date: Mon, 05 Jan 2026 10:00:05 +0100
+Message-ID: <874ip0bfje.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR21MB3867.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae6c9751-4922-4b65-63b0-08de4b077541
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jan 2026 20:34:13.7097
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vFolhAs70/893Uelxs2KTLLr2QyEVDnL/P9H9nY46gF4jqJZbR0HkKC0iNejVQ8uczcConUlMzdNjzfmiGgUTw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR21MB5771
+Content-Type: text/plain
 
+Michael Kelley <mhklinux@outlook.com> writes:
 
+> From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Friday, January 2, 2026 7:55 AM
+>> 
+>> Mukesh Rathor <mrathor@linux.microsoft.com> writes:
+>> 
+>> > MSVC compiler used to compile the Microsoft Hyper-V hypervisor currently,
+>> > has an assert intrinsic that uses interrupt vector 0x29 to create an
+>> > exception. This will cause hypervisor to then crash and collect core. As
+>> > such, if this interrupt number is assigned to a device by linux and the
+>> > device generates it, hypervisor will crash. There are two other such
+>> > vectors hard coded in the hypervisor, 0x2C and 0x2D.
+>> >
+>> > Fortunately, the three vectors are part of the kernel driver space, and
+>> > that makes it feasible to reserve them early so they are not assigned
+>> > later.
+>> >
+>> > Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+>> > ---
+>> >  arch/x86/kernel/cpu/mshyperv.c | 22 ++++++++++++++++++++++
+>> >  1 file changed, 22 insertions(+)
+>> >
+>> > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+>> > index 579fb2c64cfd..19d41f7434df 100644
+>> > --- a/arch/x86/kernel/cpu/mshyperv.c
+>> > +++ b/arch/x86/kernel/cpu/mshyperv.c
+>> > @@ -478,6 +478,25 @@ int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
+>> >  }
+>> >  EXPORT_SYMBOL_GPL(hv_get_hypervisor_version);
+>> >
+>> > +/*
+>> > + * Reserve vectors hard coded in the hypervisor. If used outside, the hypervisor
+>> > + * will crash or hang or break into debugger.
+>> > + */
+>> > +static void hv_reserve_irq_vectors(void)
+>> > +{
+>> > +	#define HYPERV_DBG_FASTFAIL_VECTOR	0x29
+>> > +	#define HYPERV_DBG_ASSERT_VECTOR	0x2C
+>> > +	#define HYPERV_DBG_SERVICE_VECTOR	0x2D
+>> > +
+>> > +	if (test_and_set_bit(HYPERV_DBG_ASSERT_VECTOR, system_vectors) ||
+>> > +	    test_and_set_bit(HYPERV_DBG_SERVICE_VECTOR, system_vectors) ||
+>> > +	    test_and_set_bit(HYPERV_DBG_FASTFAIL_VECTOR, system_vectors))
+>> > +		BUG();
+>> 
+>> Would it be less hackish to use sysvec_install() with a dummy handler
+>> for all three vectors instead?
+>
+> It would be, but unfortunately, it doesn't work. sysvec_install() requires
+> that the vector be >= FIRST_SYSTEM_VECTOR, and these vectors are not.
+>
 
-> -----Original Message-----
-> From: Jakub Kicinski <kuba@kernel.org>
-> Sent: Friday, January 2, 2026 7:12 PM
-> To: Haiyang Zhang <haiyangz@linux.microsoft.com>
-> Cc: linux-hyperv@vger.kernel.org; netdev@vger.kernel.org; KY Srinivasan
-> <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>; Wei Liu
-> <wei.liu@kernel.org>; Dexuan Cui <DECUI@microsoft.com>; Andrew Lunn
-> <andrew+netdev@lunn.ch>; David S. Miller <davem@davemloft.net>; Eric
-> Dumazet <edumazet@google.com>; Paolo Abeni <pabeni@redhat.com>; Long Li
-> <longli@microsoft.com>; Konstantin Taranov <kotaranov@microsoft.com>;
-> Simon Horman <horms@kernel.org>; Erni Sri Satya Vennela
-> <ernis@linux.microsoft.com>; Shradha Gupta
-> <shradhagupta@linux.microsoft.com>; Saurabh Sengar
-> <ssengar@linux.microsoft.com>; Aditya Garg
-> <gargaditya@linux.microsoft.com>; Dipayaan Roy
-> <dipayanroy@linux.microsoft.com>; Shiraz Saleem
-> <shirazsaleem@microsoft.com>; linux-kernel@vger.kernel.org; linux-
-> rdma@vger.kernel.org; Paul Rosswurm <paulros@microsoft.com>
-> Subject: [EXTERNAL] Re: [PATCH net-next, 1/2] net: mana: Add support for
-> coalesced RX packets on CQE
->=20
-> On Fri,  2 Jan 2026 13:35:57 -0800 Haiyang Zhang wrote:
-> > +		NL_SET_ERR_MSG_FMT(extack, "Set rx-frames to %u failed:%d\n",
-> > +				   ec->rx_max_coalesced_frames, err);
->=20
-> No trailing new line in extack messages, please.
-> Also please do not duplicate the err value in the message itself,
-> it's already passed to user space. Well behaved user space will format
-> this as eg:
->=20
->   Set rx-frames to 123 failed:-11: Invalid argument
+True; then maybe introduce a new API like sysvec_reserve() without the
+limitation? What I'm personally afraid of is that looking at
+sysvec_install() it already has an additional fred_install_sysvec()
+which operates over its own sysvec_table and only does
+idt_install_sysvec() when !cpu_feature_enabled(X86_FEATURE_FRED) -- and
+this patch just plays with system_vectors directly. Maybe this is even
+correct for now but I believe can be fragile in the future.
 
-I will update the patch.
+Ultimately, I think it's up to x86 maintainers to say whether they think
+that playing with system_vectors outside of the core is OK and expected
+or if a new, explicit API is preferable.
 
-Thanks,
-- Haiyang
+-- 
+Vitaly
+
 
