@@ -1,94 +1,94 @@
-Return-Path: <linux-hyperv+bounces-8140-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8141-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14112CF2A00
-	for <lists+linux-hyperv@lfdr.de>; Mon, 05 Jan 2026 10:08:35 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9354BCF2A24
+	for <lists+linux-hyperv@lfdr.de>; Mon, 05 Jan 2026 10:10:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id AC73F302465C
-	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jan 2026 09:06:25 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id D61B0301B416
+	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jan 2026 09:07:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1919B332EA0;
-	Mon,  5 Jan 2026 09:04:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8357733375C;
+	Mon,  5 Jan 2026 09:04:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kxecu9OE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JEQ0a+5z"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAB2332913
-	for <linux-hyperv@vger.kernel.org>; Mon,  5 Jan 2026 09:04:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62D7333445
+	for <linux-hyperv@vger.kernel.org>; Mon,  5 Jan 2026 09:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767603877; cv=none; b=V/uxlQMG+qjBSLGBsBdwQ++TXmaw5KkmbvuEFOyxPm93PC1JuW61PLgTguLPDSvQ5Vm2uBrPvtsAprSpVkWn/HpWPRCt16O0wcUWol8bIyeiAflfZmZ14AjB+ahq/V6Rlh35r++z7b0Ym3qQ/oWbSX2TcEXpPcHqPNHMQ6zS3gg=
+	t=1767603881; cv=none; b=AjheuUM+sHWdISnsyfgguzAwvBGqoTwOT9c6HnjPT7oNziG11psS29pEZw7dh3xiPafJ/6f6/VNbZMC4qZpv7amYmEAh6QbLqkUBr06GvuvuUk+gLWjpPNSs9Bkhuy7cMH0JMQgZ3vuY3egplVPA5XOKyZyQEWQ/yCHmEASQ6E8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767603877; c=relaxed/simple;
-	bh=loaBc+S9gx5SefF69kEypUtGb1sSYutm3S9LGoMHCB4=;
+	s=arc-20240116; t=1767603881; c=relaxed/simple;
+	bh=cF0HqpOjPFVBzYPhHAhvX3LaVUpaHrS55tPoqFcFmRM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kBRnJY3ph7DnqTvin5+gwmScNzAYUcuXAII4CKicNGUtR/fQ4k3cMH5lEqL8pSjID4HSs89zrpbHsDKJX6a1m7UuiFxoJ4fVOoH7ehvj+pXAxaZ7uibEmoTf6Bk8aa8tykyTOx1FU/C53wRITIYLOr3Tq8Dv89X/S3cFYtaCkKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kxecu9OE; arc=none smtp.client-ip=209.85.208.51
+	 MIME-Version; b=ejDG6uJw9VAP+LAouEOde876GXNd9N1wtGiRw1cyXVns4a8FPpx8OyHzPXJHWsDoaw4pabQWHNMzLyx5ShwyMhteyIGIWRELsYU9BT5gyZT8pzlp2K95TCQs1T/D8rxA827Hy2oMlNhUdDjlVtZNglQf0NvQxhz3JixmXLq0ipc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JEQ0a+5z; arc=none smtp.client-ip=209.85.218.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-64bea6c5819so17225468a12.3
-        for <linux-hyperv@vger.kernel.org>; Mon, 05 Jan 2026 01:04:34 -0800 (PST)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b7ce5d6627dso2551994866b.2
+        for <linux-hyperv@vger.kernel.org>; Mon, 05 Jan 2026 01:04:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767603873; x=1768208673; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1767603877; x=1768208677; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zFyeVs291sZ8T07f6Gs8jIFIePxj6hgdTz6x9pMic/E=;
-        b=Kxecu9OEcFkvpLF95oRiSByjxLzoAxYkBzLqAUmW1kkkTH30qdJ3yslFzB/F9lnRgn
-         3nnWAsbiJFeyxSX8bPJNXuSEqGoQ84SQdzeolFSy5QYlomZMMG4gQVKo0Hd8NSxE0OLe
-         ReZqGTpItwulXvCYbH6UYBCkAom5k+73DEOcHJp4hwvzhkcvHJdW4L5PetjiamUap7Jj
-         tuMG2RQbf6EDZ5a33GPZHT8HH6If7MQMt7wH28fJ4ONsTFRNw/EFEcnFPiZ6H2FB+jQ8
-         Bm91RzvoCdih+EksU6g4dGrwVWe6JXUoGocosiD/HwXNM/MQTD99jakYOe/xDe1Dsz8S
-         QNcg==
+        bh=Ib9jpmX7sNQQB8uf2G1Nm3PDrzKBuAb2KF+Gs046Th4=;
+        b=JEQ0a+5zGyzewxQ4cN/Xd16iCiC2XzLdUEQh6ZZZO7rHadnkTK2TTpFJQaipebpnd3
+         NNrT/lGGcuxUeHLXP1KLMkDCGvc6CB2rVCX0PJxr3wlRPt5C4TygzDjjgWzXxMYd8cAL
+         K7nNLlr6v+Hs/+Bt1cO+xYWJDWqEZ+4Sc+mIMtpZfjG8btmn0bFWinumeQlEUZVkEfeB
+         T8GhSpuwtrXdQGJkr3T5NzjAfrZaVRJ+w+nbB6UKJyYxWMvuVew/fTvyQlaOnVe2JbrQ
+         yhIDl8jvMrVd38I1tX7rtAOVMCI5+/BLTRF0yGc7Z2hAYhF83yYHVFd7PJI64NKhAZc6
+         vvTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767603873; x=1768208673;
+        d=1e100.net; s=20230601; t=1767603877; x=1768208677;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=zFyeVs291sZ8T07f6Gs8jIFIePxj6hgdTz6x9pMic/E=;
-        b=nWSUZ1+JVF4NAC45tB2nnWbw4R4biRa1sxhOuRphHxdqBtkNd/tJpkorv00v44tTlO
-         l/IHpAYywp2e6JsEzrHoxlZ68Go913RW6okkjfsoJQLCQRBRs4bUx3KKZOZN3XjFzTym
-         woXveHxwiuCN0Qzs+RQn0iOhPlicBV39SvbjCQ6JB+13ADRuqCzsHcQm5ee7lZi16gya
-         cgs5E4nbD23J5CdSprrukJodC8booRtTmvJbOmF9uNmh9E0OwLYO3DTDtbgaywO0dhEG
-         VjtlFNKkEvUHqtYe7xnA8prqRD4lAUA4k4CXB4lCCZTLvZYDPQdR8I2x5yMa5z3r2agS
-         SLCQ==
-X-Gm-Message-State: AOJu0YxiOZqiYNw2vkk5k89yv2aLe4yGp5R/owIP4HFBTF8YK3Qwtmcd
-	mmVKkMROUiy0sopcdizkMZqOBPw0YmaZrXLyc+RWXxFcrxuJgfSMnHrKcj373g==
-X-Gm-Gg: AY/fxX7DAxvEyL3P+XChWT8QbRgIvsTQOgyWOskiH5V5XckKFaSlaKCod9BiS30dhed
-	if/zqzrARfvWmWzV4Fsmmb5KT6qHg/vyrKhCgaJ15r/p6m0c0+IgDaMdTh0GX3n03v6nikMK3at
-	kEOAdjRu3EkJzbGmPEvkxRzQdvJvYeVLKYZG80xGe+DkIY6GfgNLy2dZs7zXOQ6t32wOQN/o0j8
-	acuqEIlv1S55+0iRIWOW1aOGflW0UE6dHqUWsFqvSosRid28LFwUWyOsNcbFzZnwy/jqM4p5mzw
-	B0ze5xiS7/kPdSc2E7pBeUVgoVwVd2DeWm2AzxL2htq3gqM5mtC7ZKl3hNXXS4Q7Y1+wZrtPCSK
-	IgMeZ4R8oXfYo72IOwHGfnFAcm6xmXb8fnnUkLzGyuG1orPz+hMGRsWTKTQ/APW5q1X46FITg+B
-	rQ42LDLvNFqO1XjB9jp/mvGABNytjqmHSTQQFhONBExpc=
-X-Google-Smtp-Source: AGHT+IG6R/QwWg98fdh9ZUhbh5oNNDrzwqktF8jdC68MqB05XeY2271qVPo4K3wegM1wYYuWMNSnmg==
-X-Received: by 2002:a17:906:c109:b0:b80:325d:99e2 with SMTP id a640c23a62f3a-b803705ddb6mr5492183666b.33.1767603872588;
-        Mon, 05 Jan 2026 01:04:32 -0800 (PST)
+        bh=Ib9jpmX7sNQQB8uf2G1Nm3PDrzKBuAb2KF+Gs046Th4=;
+        b=giImGx/2xXvigXAkAGeqUehZgnO0ObY0PfrnQakgPBj9E1pJeLdNUg/23cCa5c2M/K
+         UTRI5AgWpgQVlQbJxrkcZBcLHgQzYNkqUg8f7KOEj5FuWmeFRxJbp9MpRUKzV8bYZ5vU
+         p796uyGmDGSEUG3K53J7T1xaFondLItgGEmYu1dELFUHQnhSBAlkOBVEzAMsoUZyIFzI
+         C7s+K5+VFwLrk+C4bT4O9wu33zoyZGeVtyHkR8Au6mcqlT9CDb+vKzsM80HFqo3avuDD
+         IoN+E/O3jVZGybFk09Lj/LVvbvUGz3x+SwEIoWz+hKeru10G6k0vbKblfhIgwoOrUouO
+         sjIg==
+X-Gm-Message-State: AOJu0YxD73ldlrAyr2ps86B8tFvIG1VgMsQLgxlh7RSHt5ZlcNXj5W6z
+	0GXxh6vqOdh+PoYDJAeDTsPa7Li3VNw4OH3BGhD4Ili7k+fTgBfLYp3p16091A==
+X-Gm-Gg: AY/fxX5/rvp9AHDmC/DMCmPgVMLpY4PZngLQEprsiNlHJsdgOh+bCHsy/fHPTDVe8Kh
+	afZNXcrHVWlSfTh2EjWtRiqRphcKUDV6YPD5rpGj41o6QJfecPSLtUG1ZcQYVfuJHqih/iI48gr
+	BTQrAzKU64WTy4FL8XytbLVMIQypvxtcF2Fpv8MocW+n5qUsX9r/AUJ0WG9TnldWbE7eqxdiNsl
+	4M9yJNj5ALNiseg1CgeHJiDaKzFYu62GvwS8j/WkteAWyx24784kvIgBl9olHz280Q4eWe2svKS
+	VD4vLtMs/w4JV7mGws5ZX/vhSeLhQE7KPQ0ViU7JiCJGjbG/EhNUjSY5ajXVw3CicClp6crm/Re
+	srPwrtOCjUKcpI1mYIzJ/zGyXiM5Lw6xVg2QnDJ6binSp0BKiE2Loug9M4xesCcyZQ3yN0dj4Z5
+	NO1yQWwN/ikoNtnWeoyVt1LVichU0mZrds+AKv4OW/7XQ=
+X-Google-Smtp-Source: AGHT+IFOiCERt1NZCR4+Z8iIL46M+Y6pZisWGWoycfh6mZ3Sg82rc/1tH4HUJRB0QF6kN1BwWwW6mw==
+X-Received: by 2002:a17:906:6a1c:b0:b7c:e320:522c with SMTP id a640c23a62f3a-b80371d4499mr5498240366b.53.1767603876170;
+        Mon, 05 Jan 2026 01:04:36 -0800 (PST)
 Received: from fedora ([193.77.86.199])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8037de0de1sm5521794766b.40.2026.01.05.01.04.31
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8037de0de1sm5521794766b.40.2026.01.05.01.04.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Jan 2026 01:04:31 -0800 (PST)
+        Mon, 05 Jan 2026 01:04:33 -0800 (PST)
 From: Uros Bizjak <ubizjak@gmail.com>
 To: linux-hyperv@vger.kernel.org,
 	x86@kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Wei Liu <wei.liu@kernel.org>,
 	Michael Kelley <mhklinux@outlook.com>,
 	"K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
 	Dexuan Cui <decui@microsoft.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
 	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH RESEND v2 2/3] x86/hyperv: Use savesegment() instead of inline asm() to save segment registers
-Date: Mon,  5 Jan 2026 10:02:33 +0100
-Message-ID: <20260105090422.6243-2-ubizjak@gmail.com>
+Subject: [PATCH RESEND v2 3/3] x86/hyperv: Remove ASM_CALL_CONSTRAINT with VMMCALL insn
+Date: Mon,  5 Jan 2026 10:02:34 +0100
+Message-ID: <20260105090422.6243-3-ubizjak@gmail.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260105090422.6243-1-ubizjak@gmail.com>
 References: <20260105090422.6243-1-ubizjak@gmail.com>
@@ -100,13 +100,17 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use standard savesegment() utility macro to save segment registers.
+Unlike CALL instruction, VMMCALL does not push to the stack, so it's
+OK to allow the compiler to insert it before the frame pointer gets
+set up by the containing function. ASM_CALL_CONSTRAINT is for CALLs
+that must be inserted after the frame pointer is set up, so it is
+over-constraining here and can be removed.
 
 Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Acked-by: Wei Liu <wei.liu@kernel.org>
 Tested-by: Michael Kelley <mhklinux@outlook.com>
 Cc: "K. Y. Srinivasan" <kys@microsoft.com>
 Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>
 Cc: Dexuan Cui <decui@microsoft.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Ingo Molnar <mingo@redhat.com>
@@ -114,42 +118,24 @@ Cc: Borislav Petkov <bp@alien8.de>
 Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
 ---
- arch/x86/hyperv/ivm.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+v2: Expand commit message and include ASM_CALL_CONSTRAINT explanation
+---
+ arch/x86/hyperv/ivm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-index 651771534cae..7365d8f43181 100644
+index 7365d8f43181..be7fad43a88d 100644
 --- a/arch/x86/hyperv/ivm.c
 +++ b/arch/x86/hyperv/ivm.c
-@@ -25,6 +25,7 @@
- #include <asm/e820/api.h>
- #include <asm/desc.h>
- #include <asm/msr.h>
-+#include <asm/segment.h>
- #include <uapi/asm/vmx.h>
+@@ -392,7 +392,7 @@ u64 hv_snp_hypercall(u64 control, u64 param1, u64 param2)
  
- #ifdef CONFIG_AMD_MEM_ENCRYPT
-@@ -315,16 +316,16 @@ int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip, unsigned int cpu)
- 	vmsa->gdtr.base = gdtr.address;
- 	vmsa->gdtr.limit = gdtr.size;
+ 	register u64 __r8 asm("r8") = param2;
+ 	asm volatile("vmmcall"
+-		     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
++		     : "=a" (hv_status),
+ 		       "+c" (control), "+d" (param1), "+r" (__r8)
+ 		     : : "cc", "memory", "r9", "r10", "r11");
  
--	asm volatile("movl %%es, %%eax;" : "=a" (vmsa->es.selector));
-+	savesegment(es, vmsa->es.selector);
- 	hv_populate_vmcb_seg(vmsa->es, vmsa->gdtr.base);
- 
--	asm volatile("movl %%cs, %%eax;" : "=a" (vmsa->cs.selector));
-+	savesegment(cs, vmsa->cs.selector);
- 	hv_populate_vmcb_seg(vmsa->cs, vmsa->gdtr.base);
- 
--	asm volatile("movl %%ss, %%eax;" : "=a" (vmsa->ss.selector));
-+	savesegment(ss, vmsa->ss.selector);
- 	hv_populate_vmcb_seg(vmsa->ss, vmsa->gdtr.base);
- 
--	asm volatile("movl %%ds, %%eax;" : "=a" (vmsa->ds.selector));
-+	savesegment(ds, vmsa->ds.selector);
- 	hv_populate_vmcb_seg(vmsa->ds, vmsa->gdtr.base);
- 
- 	vmsa->efer = native_read_msr(MSR_EFER);
 -- 
 2.52.0
 
