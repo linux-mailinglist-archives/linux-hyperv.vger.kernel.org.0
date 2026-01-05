@@ -1,137 +1,170 @@
-Return-Path: <linux-hyperv+bounces-8149-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8150-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1727CF3864
-	for <lists+linux-hyperv@lfdr.de>; Mon, 05 Jan 2026 13:30:12 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43C81CF485E
+	for <lists+linux-hyperv@lfdr.de>; Mon, 05 Jan 2026 16:53:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 3A2E830060E5
-	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jan 2026 12:30:12 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2B994302C9D5
+	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jan 2026 15:52:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F35033BBD3;
-	Mon,  5 Jan 2026 12:29:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 926042DEA78;
+	Mon,  5 Jan 2026 15:52:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="nSiKLJrb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rNOiiN49"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DF533BBD6;
-	Mon,  5 Jan 2026 12:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767616158; cv=pass; b=hvSJQoBf8qET07aU6DQvjmV4wXQ7jOBh8lopQTZrYrtBA3D/NFPXKDdyF+6mmK5InTd9rYpiYEKthpHML6MmKZvtcqPSgLlvnUcUOoZLZj38ym49zDceTCXsIDrkYpksMMIpnmY0bqAQFFtrY4YcVLCmrf+4gENcnrWBO1X4Sh0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767616158; c=relaxed/simple;
-	bh=GGPXvC2qVvhjV6soKdPKL88SGkOq4Fh/Abkd32uQe4U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SGLTrPZbO4ihltrCodKjoYPP3IkkUW7gu9zFyNVSkyLtS12cHBdhSjtC7G0gaoj4UU+udEhM7x+lWteAXCtGkOmHzYoFpzzUTRexAO7DY2Qeev2Qo2z/XfyHJlVJS5aotZ0ieoscbHivbf1D4KjXSAOk78QNKkx5CtURlwKdDmg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=nSiKLJrb; arc=pass smtp.client-ip=136.143.188.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1767616144; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=b2M/fSbn767uJraNwO5n1yyogJGcuRWiXfDxmdPJeHsTr+lN6PmhB89f28CEkrSTd574gMXNJ/sLzN7Rik0qfd8LSDq/zPVJQOH7+wPD3wqDsnxUteS0vNhrqbBpWyiqtKTw+Wo1D/vesM3LTIvK1BzicOzVx+xt1Cxy/wxkS9A=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1767616144; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=C2c1vhOKm50oXDZHbkO2WlrpgJh1RklsPFHVTLTxfqY=; 
-	b=cSqsaeL7ZJ6geEspVd0YRxPhlIeZgqKvEQ2y1EGj9r04WUM4HdBqgL0EUwGq4c5f9dsgSYapB8TlH1MP4oBm5pKjtxCZoJuQaH3wwEA7zIXJhzRe/s6/KNc7tjyX3yYZJCT7c87x6kF23hk2Cu3LyAmsxSxssqe61/Tsj9FV2X8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=anirudhrb.com;
-	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
-	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1767616144;
-	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=C2c1vhOKm50oXDZHbkO2WlrpgJh1RklsPFHVTLTxfqY=;
-	b=nSiKLJrbDiyFeU67YD429CIHO0oxBupNwC67uCiG+XCnkk4W2XSF0wypX0W4VHhi
-	lVQSvxoERfevwBerbCn5j1Pw4CLY+q4bTf0O85HUEwfR+iZ97TjxBwBbOjdNVRaN2ss
-	EGLHIONzezRGN2oZmpM9z0ZO609qeCNFt0mHsOaI=
-Received: by mx.zohomail.com with SMTPS id 1767616141147155.20323072971576;
-	Mon, 5 Jan 2026 04:29:01 -0800 (PST)
-From: Anirudh Rayabharam <anirudh@anirudhrb.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: anirudh@anirudhrb.com
-Subject: [PATCH v2 2/2] mshv: handle gpa intercepts for arm64
-Date: Mon,  5 Jan 2026 12:28:37 +0000
-Message-Id: <20260105122837.1083896-3-anirudh@anirudhrb.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260105122837.1083896-1-anirudh@anirudhrb.com>
-References: <20260105122837.1083896-1-anirudh@anirudhrb.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AED17736
+	for <linux-hyperv@vger.kernel.org>; Mon,  5 Jan 2026 15:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767628328; cv=none; b=VS5k87hlArUSnhX87FIlD5ELrZJu2IUxuy4GmIs3g1PfG2LX4BlNb3oJpvYWX3mzOGfzXvpMuptTx1N8kD6xyTU7l3lTh5ADxCY4Ncvv1ld11qK0QW/xIWbufCXKP4zW8vYd8IBLeHT3j0ZzLdABoefkd5g+Mq2wxuD+ODCdKk4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767628328; c=relaxed/simple;
+	bh=RCqc1K2H51T+0fRx+YAw2QfwgUtkd5MfFqKUMXEaI9E=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=pv2P2AhTgrvRgHhbgwYMJEApkNpO9S1Bi5pZolZcJ4JrOmKbPl7bD49yVUFDKRywzIlLrw6IFR4P6CJFR+F3mHt4maDoKT67biurrJM2a20S3HuFeq9KFdhD6I5acZZHGTo4KCVvcCuab/x2cnamkY4dg4UKlp9xBj0V0rE5N/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rNOiiN49; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-34c6e05af6fso98214a91.1
+        for <linux-hyperv@vger.kernel.org>; Mon, 05 Jan 2026 07:52:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1767628326; x=1768233126; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=u7ZrFjM0PFkxi63NtaMx1QrjwmvFUSpNxs6Nn+92Dw8=;
+        b=rNOiiN49uKrAUy7L3MlQ9Pc1V7zQT5OpFb0qagoODZ1LIonRE/Ncw87b+GRm7p4A7v
+         UPOLJUZbppb8PMyVpxiPeHjwoxTUbibf2DLmqLQiCT7POZjeY37ma6tjTyPPH5jNJVBt
+         LF7d27RP6iw77fGfMq9FfmK+fHBZlHN4MQ/S9RSD4koh3KdV/CG0YlU1I+0E8MYSMm2t
+         R+jKPzqdzAU+GtiyrN0kpUojqDPqAmy3CRmQpRo7nymW2khgVbNSF9n/tRy8md0c0TQO
+         98PPH8kj1jdr8f45Ep6N1dbhdDV+F0y+swDVopHHRT78bi+nHGyPtVCWj/4serS/nQZv
+         Ybqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767628326; x=1768233126;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u7ZrFjM0PFkxi63NtaMx1QrjwmvFUSpNxs6Nn+92Dw8=;
+        b=ujZ8kBrSV3POjLmZeq4ZKTVOTSp4+q7/VotiR5qKjOUnmrxLJSpdFPH4SOP8Zu0xAe
+         APVOiRzXDKAoj0Ng30WLBkMdFHQDtRPwiBi61wvcmjry1afRZhZpAhTBgInYDhu8TX/L
+         O2jTpdF5GlCfnMMHLqvcWwnI0gaRhzgr8stimc7CziuD1YOhnG0xACl9xOwx2zMQZs0l
+         /IYeA6KCLs3AmltvAzROsMws/LIywD8Q0PMtP7yFcp+DhDDyYR/LgxTvvNGxZiZEPt/W
+         QoF/HhsPBXVKt3rtEchLYwVmadWPAHid4t2chL87PbkeZaJJ8DfMiQll6vQFHb9MAwRn
+         KM3A==
+X-Forwarded-Encrypted: i=1; AJvYcCWo0A2HJC6BIIZO0dh/JEzICqe1y/uGWvpfKvas8dr+BjMuS5rRTN0YgqFaEFH9p6MX55rShgto5e2CSZ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4OPAp6dx5u5F5kkTRdox6GdUqQMDmY14Q7CElLlOgEdYc8PxE
+	Fn7xuqIXn2Je+Pdvq1M94urnbUVhQFs9+kOBfuI8W2e9tZpTVoJzfpSX9S8DPnAEATDXVcxUsXn
+	p4hPE/g==
+X-Google-Smtp-Source: AGHT+IEWgZO5625IXW8fQ0Tp1xvUFHo/yvm04nNJi/rgYNfnXJNwr5M+AFDOogDHvIl8zXGJ+W/FMgqnXK4=
+X-Received: from pjca7.prod.google.com ([2002:a17:90b:5b87:b0:34e:8f5a:9197])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3c4b:b0:34c:e5fc:faec
+ with SMTP id 98e67ed59e1d1-34e9212f72dmr34857608a91.2.1767628326173; Mon, 05
+ Jan 2026 07:52:06 -0800 (PST)
+Date: Mon, 5 Jan 2026 07:52:01 -0800
+In-Reply-To: <87eco8bajg.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Mime-Version: 1.0
+References: <20251230211347.4099600-1-seanjc@google.com> <20251230211347.4099600-9-seanjc@google.com>
+ <87eco8bajg.fsf@redhat.com>
+Message-ID: <aVveISeqIBPmZ7xW@google.com>
+Subject: Re: [PATCH v2 8/8] KVM: SVM: Assert that Hyper-V's
+ HV_SVM_EXITCODE_ENL == SVM_EXIT_SW
+From: Sean Christopherson <seanjc@google.com>
+To: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, kvm@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Jim Mattson <jmattson@google.com>, Yosry Ahmed <yosry.ahmed@linux.dev>
+Content-Type: text/plain; charset="us-ascii"
 
-From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+On Fri, Jan 02, 2026, Vitaly Kuznetsov wrote:
+> Sean Christopherson <seanjc@google.com> writes:
+> 
+> > Add a build-time assertiont that Hyper-V's "enlightened" exit code is that,
+> > same as the AMD-defined "Reserved for Host" exit code, mostly to help
+> > readers connect the dots and understand why synthesizing a software-defined
+> > exit code is safe/ok.
+> >
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >  arch/x86/kvm/svm/hyperv.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/arch/x86/kvm/svm/hyperv.c b/arch/x86/kvm/svm/hyperv.c
+> > index 3ec580d687f5..4f24dcb45116 100644
+> > --- a/arch/x86/kvm/svm/hyperv.c
+> > +++ b/arch/x86/kvm/svm/hyperv.c
+> > @@ -10,6 +10,12 @@ void svm_hv_inject_synthetic_vmexit_post_tlb_flush(struct kvm_vcpu *vcpu)
+> >  {
+> >  	struct vcpu_svm *svm = to_svm(vcpu);
+> >  
+> > +	/*
+> > +	 * The exit code used by Hyper-V for software-defined exits is reserved
+> > +	 * by AMD specifically for such use cases.
+> > +	 */
+> > +	BUILD_BUG_ON(HV_SVM_EXITCODE_ENL != SVM_EXIT_SW);
+> > +
+> >  	svm->vmcb->control.exit_code = HV_SVM_EXITCODE_ENL;
+> >  	svm->vmcb->control.exit_info_1 = HV_SVM_ENL_EXITCODE_TRAP_AFTER_FLUSH;
+> >  	svm->vmcb->control.exit_info_2 = 0;
+> 
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> 
+> Alternatively (or additionally?) to BUG_ON, I guess we could've
+> 
+> #define HV_SVM_EXITCODE_ENL SVM_EXIT_SW 
+> 
+> unless including SVM's headers into include/hyperv/hvgdk.h is too big of
+> a mess.
 
-The mshv driver now uses movable pages for guests. For arm64 guests
-to be functional, handle gpa intercepts for arm64 too (the current
-code implements handling only for x86).
+Heh, I had the same thought[*], but Wei pointed out that the definitions in hvgdk.h
+mirror internal Microsoft headers:
 
-Move some arch-agnostic functions out of #ifdefs so that they can be
-re-used.
+  On Fri, Nov 14, 2025, Wei Liu wrote:
+  > On Fri, Nov 14, 2025 at 07:22:41AM -0800, Sean Christopherson wrote:
+  > > On Fri, Nov 14, 2025, Michael Kelley wrote:
+  > > > From: Sean Christopherson <seanjc@google.com> Sent: Thursday, November 13, 2025 2:56 PM
+  > > > > @@ -281,7 +281,7 @@ struct hv_vmcb_enlightenments {
+  > > > >  #define HV_VMCB_NESTED_ENLIGHTENMENTS		31
+  > > > > 
+  > > > >  /* Synthetic VM-Exit */
+  > > > > -#define HV_SVM_EXITCODE_ENL			0xf0000000
+  > > > > +#define HV_SVM_EXITCODE_ENL			0xf0000000u
+  > > > 
+  > > > Is there a reason for making this Hyper-V code just "u", while
+  > > > making the SVM_VMGEXIT_* values "ull"? I don't think
+  > > > "u" vs. "ull" shouldn't make any difference when assigning to a
+  > > > u64, but the inconsistency piqued my interest ....
+  > > 
+  > > I hedged and went for a more "minimal" change because it isn't KVM code, and at
+  > > the time because I thought the value isn't defined by the APM.  Though looking
+  > > again at the APM, it does reserve that value for software
+  > > 
+  > >   F000_000h    Unused    Reserved for Host.
+  > > 
+  > > and I can't find anything in the TLFS.  Ah, my PDF copy is just stale, it's indeed
+  > > defined as a synthetic exit.
+  > > 
+  > >   https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/nested-virtualization#synthetic-vm-exit
+  > > 
+  > > Anyways, I'm in favor of making HV_SVM_EXITCODE_ENL an ull, though part of me
+  > > wonders if we should do:
+  > > 
+  > >   #define HV_SVM_EXITCODE_ENL	SVM_EXIT_SW
+  > 
+  > I know this is very tempting, but these headers are supposed to mirror
+  > Microsoft's internal headers, so we would like to keep them
+  > self-contained for ease of tracking.
+  > 
+  > It should be fine to add the "ull" suffix here. I briefly talked to a
+  > hypervisor developer and they agreed.
 
-Fixes: b9a66cd5ccbb ("mshv: Add support for movable memory regions")
-Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
----
- drivers/hv/mshv_root_main.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index 9cf28a3f12fe..f8c4c2ae2cc9 100644
---- a/drivers/hv/mshv_root_main.c
-+++ b/drivers/hv/mshv_root_main.c
-@@ -608,7 +608,6 @@ mshv_partition_region_by_gfn(struct mshv_partition *partition, u64 gfn)
- 	return NULL;
- }
- 
--#ifdef CONFIG_X86_64
- static struct mshv_mem_region *
- mshv_partition_region_by_gfn_get(struct mshv_partition *p, u64 gfn)
- {
-@@ -640,12 +639,17 @@ static bool mshv_handle_gpa_intercept(struct mshv_vp *vp)
- {
- 	struct mshv_partition *p = vp->vp_partition;
- 	struct mshv_mem_region *region;
--	struct hv_x64_memory_intercept_message *msg;
- 	bool ret;
- 	u64 gfn;
--
--	msg = (struct hv_x64_memory_intercept_message *)
-+#if defined(CONFIG_X86_64)
-+	struct hv_x64_memory_intercept_message *msg =
-+		(struct hv_x64_memory_intercept_message *)
-+		vp->vp_intercept_msg_page->u.payload;
-+#elif defined(CONFIG_ARM64)
-+	struct hv_arm64_memory_intercept_message *msg =
-+		(struct hv_arm64_memory_intercept_message *)
- 		vp->vp_intercept_msg_page->u.payload;
-+#endif
- 
- 	gfn = HVPFN_DOWN(msg->guest_physical_address);
- 
-@@ -663,9 +667,6 @@ static bool mshv_handle_gpa_intercept(struct mshv_vp *vp)
- 
- 	return ret;
- }
--#else  /* CONFIG_X86_64 */
--static bool mshv_handle_gpa_intercept(struct mshv_vp *vp) { return false; }
--#endif /* CONFIG_X86_64 */
- 
- static bool mshv_vp_handle_intercept(struct mshv_vp *vp)
- {
--- 
-2.34.1
-
+[*] https://lore.kernel.org/all/aRdJQQ7_j6RcHwjJ@google.com
 
