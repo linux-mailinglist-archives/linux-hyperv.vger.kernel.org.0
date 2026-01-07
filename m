@@ -1,56 +1,67 @@
-Return-Path: <linux-hyperv+bounces-8170-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8171-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16EEBCFB50E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 07 Jan 2026 00:04:45 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FF0ACFC63F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 07 Jan 2026 08:36:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4E159301099A
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Jan 2026 23:04:42 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A35DB3008546
+	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Jan 2026 07:36:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A7542E542C;
-	Tue,  6 Jan 2026 23:04:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C703254B19;
+	Wed,  7 Jan 2026 07:36:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HgArL7pN"
+	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="q5trSt+n"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 515FF22A4FE;
-	Tue,  6 Jan 2026 23:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767740681; cv=none; b=KVvO2YW6W2lp2glQqUpby7qTzNSVJNlptb8dgheFh3HKdQhDp+qiBf4Nwp+VvG2TMciSSyQAafaAEjKyYc0LucQzIyjq7NFXLXH3nTLf1EswRgKIfO0RW81g9xISc9eBvRf6lPA4ExDx1FkgSkHu0SPMYzd7dWmlJIbIRv1hu1o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767740681; c=relaxed/simple;
-	bh=PW1JI1GD6GuSz6leFyrwu+u9oTX2ygX83rq100yR+GE=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=WroyY5otmgqcVYe2QDQldWxCHVR2NS6FDGVz1ONGEzaV/RQJN9SG2AjnnO5Nhul9XhhySE7wl9k26YElw2YxadEvncTOiI1ExlpaqW47Nm6bvfgBJAMjKuQtO6SIvIJdnZN317jkDximLzeyTxEfk8UjkSTrFKyNORePshHICmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HgArL7pN; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1204)
-	id DCF142016FFE; Tue,  6 Jan 2026 15:04:38 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DCF142016FFE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1767740678;
-	bh=iFZO62YgIN/aSwltQJLgbsfsbdIw2TmpGfwlOYF0pVE=;
-	h=Date:From:To:Subject:From;
-	b=HgArL7pNhZCRS7sQ0xZ++98H2xgQLsbPzgPe3xOhYETNC5wLAqedZmb5gVkrhLVJb
-	 8xYKPqBaXkxvh7LIJppyKU4lJmtW3RcQ3ilfjPS0upUlKfMECTOLYel8fKAsvUsOXW
-	 D+2yFhTB6yfRqPClOGUCJhSGDQFR1J/VSFH8p2Ng=
-Date: Tue, 6 Jan 2026 15:04:38 -0800
-From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
-	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
-	ernis@linux.microsoft.com, shirazsaleem@microsoft.com,
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	dipayanroy@microsoft.com
-Subject: [PATCH net-next, v7] net: mana: Implement ndo_tx_timeout and
- serialize queue resets per port.
-Message-ID: <20260106230438.GA13125@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD2727C866
+	for <linux-hyperv@vger.kernel.org>; Wed,  7 Jan 2026 07:36:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767771368; cv=pass; b=YGaZSpBtYbYO8dUujFmA0U2rh6TdrO9btguQrDGTGiz5+3UQcrvGW/DNUOUvAk6kn9vD40KW2oh0zob1n1wvAnTryl5HhvLjIdRPFQGxdMXkuYW33reEnDhhlCv8OJyW9qqYh3M3eyxnn92mJ9hPpuCIb4fekhTivSlanzFZ4xY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767771368; c=relaxed/simple;
+	bh=Jc8f5GSp+9L5AUj8UpSd7RKjfeTe9a8yJZhh9ykSJoI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iC/iO1h4qTgdsMPq4sVZQnrYx+ezRMvKF1bNmMm8VSruUzVGgOsBYhWCoMeN31OMrl5Pb5HbKGhmu6uPefuEveJvV+w22G4eijdHEAs6Boc7E3OGwjEt3MK/lTWjqi/6q0zqR9Qk8QI/tx9G4lcfKQUnZsS4vx113a6ADWqOQH0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=q5trSt+n; arc=pass smtp.client-ip=136.143.188.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
+ARC-Seal: i=1; a=rsa-sha256; t=1767771350; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=WV02RcEOoBAjvl3JH6t0KINq2QQD43ll/zqxM7w09s9DbVPsnGWYNBQXwr2XRBythCIbPC94CUeSB4P8NYtgk+6cBfUzZGc0vDl1kXYJ/UMsZkPZPVJshe5wDsC1sZvBJo9ZhBYjQxt2O0XEFPMVgiMT7etE21d44pXPDD/p84E=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1767771350; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=0jePfcBJJqIJIg7sXdXbFtV2bmEwA30Fp06aKjpEanc=; 
+	b=FZ3mzpYhwzUu0ugBb8i2J0HVHfF7b8L8YONt2GcUEWlGkvvyiNsZkq0ucb46MxIq8P6hVjcFn46lmQXrxPCidKh1s5FxrANNsGD59EsbiSekQazILSktzd2CHfX+BWlQb3Na2fFfuJgfCWpyiLK+YIdvU2FC6K19wW+Ukj7GeTA=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=anirudhrb.com;
+	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
+	dmarc=pass header.from=<anirudh@anirudhrb.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1767771350;
+	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=0jePfcBJJqIJIg7sXdXbFtV2bmEwA30Fp06aKjpEanc=;
+	b=q5trSt+nN/ReqG59WnnCFt7BCBJtQfS1ZvcBapTogd1BfBf53PApdTEZdgpQBiHV
+	wacCnI/ReKHOVbavSY7pEzYIHh4V9NeJinhixrodJidMz5OBA20t+Uhj949qIRLqaW9
+	Wi6KQpqk/XPm1Mq5G2yYjILqyLgJkYMV46xMWOaE=
+Received: by mx.zohomail.com with SMTPS id 1767771348521785.4129004339576;
+	Tue, 6 Jan 2026 23:35:48 -0800 (PST)
+Date: Wed, 7 Jan 2026 07:35:42 +0000
+From: Anirudh Rayabharam <anirudh@anirudhrb.com>
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] mshv: handle gpa intercepts for arm64
+Message-ID: <aV4Mzj9_6lOhSU1l@anirudh-surface.localdomain>
+References: <20260105122837.1083896-1-anirudh@anirudhrb.com>
+ <20260105122837.1083896-3-anirudh@anirudhrb.com>
+ <aVvvAlsohGEdC6Wv@skinsburskii.localdomain>
+ <aVy4BUk9X18KiPCO@anirudh-surface.localdomain>
+ <aV05_2Lw6x8Qr_Je@skinsburskii.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -59,255 +70,106 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <aV05_2Lw6x8Qr_Je@skinsburskii.localdomain>
+X-ZohoMailClient: External
 
-Implement .ndo_tx_timeout for MANA so any stalled TX queue can be detected
-and a device-controlled port reset for all queues can be scheduled to a
-ordered workqueue. The reset for all queues on stall detection is
-recomended by hardware team.
+On Tue, Jan 06, 2026 at 08:36:15AM -0800, Stanislav Kinsburskii wrote:
+> On Tue, Jan 06, 2026 at 07:21:41AM +0000, Anirudh Rayabharam wrote:
+> > On Mon, Jan 05, 2026 at 09:04:02AM -0800, Stanislav Kinsburskii wrote:
+> > > On Mon, Jan 05, 2026 at 12:28:37PM +0000, Anirudh Rayabharam wrote:
+> > > > From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> > > > 
+> > > > The mshv driver now uses movable pages for guests. For arm64 guests
+> > > > to be functional, handle gpa intercepts for arm64 too (the current
+> > > > code implements handling only for x86).
+> > > > 
+> > > > Move some arch-agnostic functions out of #ifdefs so that they can be
+> > > > re-used.
+> > > > 
+> > > > Fixes: b9a66cd5ccbb ("mshv: Add support for movable memory regions")
+> > > 
+> > > I'm not sure that this patch needs "Fixes" tag as it introduced new
+> > > functionality rather than fixing a bug.
+> > 
+> > This does fix a bug. The commit mentioned here regressed arm64 guests because
+> > it didn't have GPA intercept handling for arm64.
+> > 
+> 
+> Were ARM guests functional before this commit? If yes, then I agree that
 
-Reviewed-by: Pavan Chebbi <pavan.chebbi@broadcom.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
----
-Changes in v7:
-  - Add enable_work in resume path.
-Changes in v6:
-  - Rebased.
-Changes in v5:
-  -Fixed commit message, used 'create_singlethread_workqueue' and fixed
-   cleanup part.
-Changes in v4:
-  -Fixed commit message, work initialization before registering netdev,
-   fixed potential null pointer de-reference bug.
-Changes in v3:
-  -Fixed commit meesage, removed rtnl_trylock and added
-   disable_work_sync, fixed mana_queue_reset_work, and few
-   cosmetics.
-Changes in v2:
-  -Fixed cosmetic changes.
----
----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 80 ++++++++++++++++++-
- include/net/mana/gdma.h                       |  7 +-
- include/net/mana/mana.h                       |  8 +-
- 3 files changed, 92 insertions(+), 3 deletions(-)
+Yes.
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 1ad154f9db1a..d3e73a0bb442 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -299,6 +299,42 @@ static int mana_get_gso_hs(struct sk_buff *skb)
- 	return gso_hs;
- }
- 
-+static void mana_per_port_queue_reset_work_handler(struct work_struct *work)
-+{
-+	struct mana_queue_reset_work *reset_queue_work =
-+			container_of(work, struct mana_queue_reset_work, work);
-+
-+	struct mana_port_context *apc = container_of(reset_queue_work,
-+						     struct mana_port_context,
-+						     queue_reset_work);
-+	struct net_device *ndev = apc->ndev;
-+	int err;
-+
-+	rtnl_lock();
-+
-+	/* Pre-allocate buffers to prevent failure in mana_attach later */
-+	err = mana_pre_alloc_rxbufs(apc, ndev->mtu, apc->num_queues);
-+	if (err) {
-+		netdev_err(ndev, "Insufficient memory for reset post tx stall detection\n");
-+		goto out;
-+	}
-+
-+	err = mana_detach(ndev, false);
-+	if (err) {
-+		netdev_err(ndev, "mana_detach failed: %d\n", err);
-+		goto dealloc_pre_rxbufs;
-+	}
-+
-+	err = mana_attach(ndev);
-+	if (err)
-+		netdev_err(ndev, "mana_attach failed: %d\n", err);
-+
-+dealloc_pre_rxbufs:
-+	mana_pre_dealloc_rxbufs(apc);
-+out:
-+	rtnl_unlock();
-+}
-+
- netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- {
- 	enum mana_tx_pkt_format pkt_fmt = MANA_SHORT_PKT_FMT;
-@@ -839,6 +875,23 @@ static int mana_change_mtu(struct net_device *ndev, int new_mtu)
- 	return err;
- }
- 
-+static void mana_tx_timeout(struct net_device *netdev, unsigned int txqueue)
-+{
-+	struct mana_port_context *apc = netdev_priv(netdev);
-+	struct mana_context *ac = apc->ac;
-+	struct gdma_context *gc = ac->gdma_dev->gdma_context;
-+
-+	/* Already in service, hence tx queue reset is not required.*/
-+	if (gc->in_service)
-+		return;
-+
-+	/* Note: If there are pending queue reset work for this port(apc),
-+	 * subsequent request queued up from here are ignored. This is because
-+	 * we are using the same work instance per port(apc).
-+	 */
-+	queue_work(ac->per_port_queue_reset_wq, &apc->queue_reset_work.work);
-+}
-+
- static int mana_shaper_set(struct net_shaper_binding *binding,
- 			   const struct net_shaper *shaper,
- 			   struct netlink_ext_ack *extack)
-@@ -924,6 +977,7 @@ static const struct net_device_ops mana_devops = {
- 	.ndo_bpf		= mana_bpf,
- 	.ndo_xdp_xmit		= mana_xdp_xmit,
- 	.ndo_change_mtu		= mana_change_mtu,
-+	.ndo_tx_timeout		= mana_tx_timeout,
- 	.net_shaper_ops         = &mana_shaper_ops,
- };
- 
-@@ -3287,6 +3341,8 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
- 	ndev->min_mtu = ETH_MIN_MTU;
- 	ndev->needed_headroom = MANA_HEADROOM;
- 	ndev->dev_port = port_idx;
-+	/* Recommended timeout based on HW FPGA re-config scenario. */
-+	ndev->watchdog_timeo = 15 * HZ;
- 	SET_NETDEV_DEV(ndev, gc->dev);
- 
- 	netif_set_tso_max_size(ndev, GSO_MAX_SIZE);
-@@ -3303,6 +3359,10 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
- 	if (err)
- 		goto reset_apc;
- 
-+	/* Initialize the per port queue reset work.*/
-+	INIT_WORK(&apc->queue_reset_work.work,
-+		  mana_per_port_queue_reset_work_handler);
-+
- 	netdev_lockdep_set_classes(ndev);
- 
- 	ndev->hw_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM;
-@@ -3492,6 +3552,7 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
- {
- 	struct gdma_context *gc = gd->gdma_context;
- 	struct mana_context *ac = gd->driver_data;
-+	struct mana_port_context *apc = NULL;
- 	struct device *dev = gc->dev;
- 	u8 bm_hostmode = 0;
- 	u16 num_ports = 0;
-@@ -3549,6 +3610,14 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
- 	if (ac->num_ports > MAX_PORTS_IN_MANA_DEV)
- 		ac->num_ports = MAX_PORTS_IN_MANA_DEV;
- 
-+	ac->per_port_queue_reset_wq =
-+		create_singlethread_workqueue("mana_per_port_queue_reset_wq");
-+	if (!ac->per_port_queue_reset_wq) {
-+		dev_err(dev, "Failed to allocate per port queue reset workqueue\n");
-+		err = -ENOMEM;
-+		goto out;
-+	}
-+
- 	if (!resuming) {
- 		for (i = 0; i < ac->num_ports; i++) {
- 			err = mana_probe_port(ac, i, &ac->ports[i]);
-@@ -3565,6 +3634,8 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
- 	} else {
- 		for (i = 0; i < ac->num_ports; i++) {
- 			rtnl_lock();
-+			apc = netdev_priv(ac->ports[i]);
-+			enable_work(&apc->queue_reset_work.work);
- 			err = mana_attach(ac->ports[i]);
- 			rtnl_unlock();
- 			/* we log the port for which the attach failed and stop
-@@ -3616,13 +3687,15 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
- 
- 	for (i = 0; i < ac->num_ports; i++) {
- 		ndev = ac->ports[i];
--		apc = netdev_priv(ndev);
- 		if (!ndev) {
- 			if (i == 0)
- 				dev_err(dev, "No net device to remove\n");
- 			goto out;
- 		}
- 
-+		apc = netdev_priv(ndev);
-+		disable_work_sync(&apc->queue_reset_work.work);
-+
- 		/* All cleanup actions should stay after rtnl_lock(), otherwise
- 		 * other functions may access partially cleaned up data.
- 		 */
-@@ -3649,6 +3722,11 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
- 
- 	mana_destroy_eq(ac);
- out:
-+	if (ac->per_port_queue_reset_wq) {
-+		destroy_workqueue(ac->per_port_queue_reset_wq);
-+		ac->per_port_queue_reset_wq = NULL;
-+	}
-+
- 	mana_gd_deregister_device(gd);
- 
- 	if (suspending)
-diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index eaa27483f99b..a59bd4035a99 100644
---- a/include/net/mana/gdma.h
-+++ b/include/net/mana/gdma.h
-@@ -598,6 +598,10 @@ enum {
- 
- /* Driver can self reset on FPGA Reconfig EQE notification */
- #define GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE BIT(17)
-+
-+/* Driver detects stalled send queues and recovers them */
-+#define GDMA_DRV_CAP_FLAG_1_HANDLE_STALL_SQ_RECOVERY BIT(18)
-+
- #define GDMA_DRV_CAP_FLAG_1_HW_VPORT_LINK_AWARE BIT(6)
- 
- /* Driver supports linearizing the skb when num_sge exceeds hardware limit */
-@@ -621,7 +625,8 @@ enum {
- 	 GDMA_DRV_CAP_FLAG_1_HW_VPORT_LINK_AWARE | \
- 	 GDMA_DRV_CAP_FLAG_1_PERIODIC_STATS_QUERY | \
- 	 GDMA_DRV_CAP_FLAG_1_SKB_LINEARIZE | \
--	 GDMA_DRV_CAP_FLAG_1_PROBE_RECOVERY)
-+	 GDMA_DRV_CAP_FLAG_1_PROBE_RECOVERY | \
-+	 GDMA_DRV_CAP_FLAG_1_HANDLE_STALL_SQ_RECOVERY)
- 
- #define GDMA_DRV_CAP_FLAGS2 0
- 
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index d7e089c6b694..cef78a871c7c 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -480,7 +480,7 @@ struct mana_context {
- 	struct mana_ethtool_hc_stats hc_stats;
- 	struct mana_eq *eqs;
- 	struct dentry *mana_eqs_debugfs;
--
-+	struct workqueue_struct *per_port_queue_reset_wq;
- 	/* Workqueue for querying hardware stats */
- 	struct delayed_work gf_stats_work;
- 	bool hwc_timeout_occurred;
-@@ -492,9 +492,15 @@ struct mana_context {
- 	u32 link_event;
- };
- 
-+struct mana_queue_reset_work {
-+	/* Work structure */
-+	struct work_struct work;
-+};
-+
- struct mana_port_context {
- 	struct mana_context *ac;
- 	struct net_device *ndev;
-+	struct mana_queue_reset_work queue_reset_work;
- 
- 	u8 mac_addr[ETH_ALEN];
- 
--- 
-2.43.0
+> this patch fixes a bug. If no, then this is just adding new
+> functionality.
+> I had an impression ARM is not yet supported in MSHV, so please clarify.
 
+No, ARM is very much supported in MSHV. Going forward all new
+code/features should be written for arm64 too. Missing arm64
+implementation in way that leaves guests broken is a bug.
+
+Thanks,
+Anirudh.
+
+> 
+> Thanks,
+> Stanislav
+> 
+> > Thanks,
+> > Anirudh.
+> > 
+> > > 
+> > > Thanks,
+> > > Stanislav
+> > > 
+> > > > Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> > > > ---
+> > > >  drivers/hv/mshv_root_main.c | 15 ++++++++-------
+> > > >  1 file changed, 8 insertions(+), 7 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> > > > index 9cf28a3f12fe..f8c4c2ae2cc9 100644
+> > > > --- a/drivers/hv/mshv_root_main.c
+> > > > +++ b/drivers/hv/mshv_root_main.c
+> > > > @@ -608,7 +608,6 @@ mshv_partition_region_by_gfn(struct mshv_partition *partition, u64 gfn)
+> > > >  	return NULL;
+> > > >  }
+> > > >  
+> > > > -#ifdef CONFIG_X86_64
+> > > >  static struct mshv_mem_region *
+> > > >  mshv_partition_region_by_gfn_get(struct mshv_partition *p, u64 gfn)
+> > > >  {
+> > > > @@ -640,12 +639,17 @@ static bool mshv_handle_gpa_intercept(struct mshv_vp *vp)
+> > > >  {
+> > > >  	struct mshv_partition *p = vp->vp_partition;
+> > > >  	struct mshv_mem_region *region;
+> > > > -	struct hv_x64_memory_intercept_message *msg;
+> > > >  	bool ret;
+> > > >  	u64 gfn;
+> > > > -
+> > > > -	msg = (struct hv_x64_memory_intercept_message *)
+> > > > +#if defined(CONFIG_X86_64)
+> > > > +	struct hv_x64_memory_intercept_message *msg =
+> > > > +		(struct hv_x64_memory_intercept_message *)
+> > > > +		vp->vp_intercept_msg_page->u.payload;
+> > > > +#elif defined(CONFIG_ARM64)
+> > > > +	struct hv_arm64_memory_intercept_message *msg =
+> > > > +		(struct hv_arm64_memory_intercept_message *)
+> > > >  		vp->vp_intercept_msg_page->u.payload;
+> > > > +#endif
+> > > >  
+> > > >  	gfn = HVPFN_DOWN(msg->guest_physical_address);
+> > > >  
+> > > > @@ -663,9 +667,6 @@ static bool mshv_handle_gpa_intercept(struct mshv_vp *vp)
+> > > >  
+> > > >  	return ret;
+> > > >  }
+> > > > -#else  /* CONFIG_X86_64 */
+> > > > -static bool mshv_handle_gpa_intercept(struct mshv_vp *vp) { return false; }
+> > > > -#endif /* CONFIG_X86_64 */
+> > > >  
+> > > >  static bool mshv_vp_handle_intercept(struct mshv_vp *vp)
+> > > >  {
+> > > > -- 
+> > > > 2.34.1
+> > > > 
 
