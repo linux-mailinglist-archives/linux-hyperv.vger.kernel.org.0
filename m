@@ -1,235 +1,305 @@
-Return-Path: <linux-hyperv+bounces-8201-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8202-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60248D0C0E4
-	for <lists+linux-hyperv@lfdr.de>; Fri, 09 Jan 2026 20:24:48 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D35ED0C236
+	for <lists+linux-hyperv@lfdr.de>; Fri, 09 Jan 2026 21:07:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 819733009F14
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Jan 2026 19:24:33 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 40CBE30327A3
+	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Jan 2026 20:06:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A5C62DFA5B;
-	Fri,  9 Jan 2026 19:24:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C90BD366DD6;
+	Fri,  9 Jan 2026 20:06:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="kw0stkII"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Vp3EQhLg"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazolkn19012052.outbound.protection.outlook.com [52.103.2.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05EC2EAD1C;
-	Fri,  9 Jan 2026 19:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.2.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767986672; cv=fail; b=A3WryYn2qRJbgW22h+gUmO3CBrGX/tmRLxqfP+HGRbEjJrqWox1OmtKo/f+1HJ5CyPgjpuj5dkE7eScWg8bMEEXPQXsGPyvFpXT6wxxfSc51W6gX2TPQkR/mh4dnNF668EebOHvRcpcqMbBB0RYQp+xxXUFHYNhua8xa9ocRQ+M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767986672; c=relaxed/simple;
-	bh=+2UFKn5kCglFWytbv+4mEQgEGLmIMj6IJpWjkiSJnnE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=slYxqHcUDETSdALaDGgQwPFAMtUIVirsqTYuDvnjWvQbwGglREQi0s+axXawOUsrYTFW5Zt2oe2Z678xg/HFDouPLYrZSRVcllhFtVTtY+hiIB6Bdy8cRh/6jEQItJExzaxVtv7Dcqu8OnGnJxDt6n2oJxtGqIWNdGt9wdccBeg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=kw0stkII; arc=fail smtp.client-ip=52.103.2.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QwY7Iz7px8skFMmaNhyQHzEVZ5m70m34cF5m5u7YzfEMFTfjQtsutzuYsPqHyjXq8odTWD5tr9J/X9/FSvVD0eUpIQrB+v+YoTiwB8Lg117sfckCeLb2XrybwcHR3VvEJJuRJEYnJFoLAjIdtbzSqWCGiD7RkjrukaKh4ojjhu19AiQODu5ruPdN2t8nIzONYTu4F8x14i1/OPazQ8VMSDh/2pn4KA710DmmTj+JtvHMR6PahJVwlsAAAMyAjK6UtwMe1CFCSM2BvsrYWAlytJnp+VuWNLatJWo3zk+tr2jpEQ0okNFpDPrBcA1HCqPdxaM0BKZXmViWHmCsi6nTRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+2UFKn5kCglFWytbv+4mEQgEGLmIMj6IJpWjkiSJnnE=;
- b=fbBEb97LPP7TtrWnRFkWaLWsqeqLitlRn4LnE9KL4pjqEDw/zUReik/Nt+47Z9ZP310sSkYfqNsS1iAo7Z0HnNpm+QDSBIBYP7JE+Dtlrj3ULpcW7smIX2HkNgmXwJLdVGyezTaC9tUTwCdC+2WBV5JOUNlLa6R8CR1bB23WuZS3UDmimg78TLQNCM33IUAhpaQFj/0CD+SmhvOEsX0ViJjO8u6Tldp69mwac01uFkfcwGun44tweTV9kbg8CjKCbWnNJFIv5EUJsomN9wcTby6XbLf2UTyS9Ihfk0s4HoxjspvIKl0DUKm2DXbG7cK0+sLUMiDy92/BQTVQDuMskA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+2UFKn5kCglFWytbv+4mEQgEGLmIMj6IJpWjkiSJnnE=;
- b=kw0stkIIFcCKlCmPTVp54RsTaBLUFv5qHCc4hEPKkdGrSUSa1dWnw/T/Idi6pV7d4JmLofJ174MQ15o5EvYnS/KTDEgWfpMofRUKPiXnXhsPDafhqGnGDUdHQIhwIh/waaqaNpCLq+Lbo6Cbr//MEZolrdG8OOhoW3MebVYtFPmA1TEIacQ0rkBQi79R+2FUOekYI20wSheDU3PbL5jQGtPgLAAGhJBf10AwyWN8pyEMQy5QL3ON/Tc9ozYNVoRdmDHOWCag3qyRg7m5TpEkg03iB82zqkN5/noXMjNntFOoQsbpgYC6tTL2QwKjSURIvCwiFZ3z7F1Ui0/haGFe8w==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by LV2PR02MB11304.namprd02.prod.outlook.com (2603:10b6:408:351::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.2; Fri, 9 Jan
- 2026 19:24:25 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%6]) with mapi id 15.20.9499.004; Fri, 9 Jan 2026
- 19:24:25 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
-CC: Yu Zhang <zhangyu1@linux.microsoft.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "iommu@lists.linux.dev"
-	<iommu@lists.linux.dev>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org"
-	<wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kwilczynski@kernel.org"
-	<kwilczynski@kernel.org>, "mani@kernel.org" <mani@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com"
-	<bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "joro@8bytes.org"
-	<joro@8bytes.org>, "will@kernel.org" <will@kernel.org>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"jacob.pan@linux.microsoft.com" <jacob.pan@linux.microsoft.com>,
-	"nunodasneves@linux.microsoft.com" <nunodasneves@linux.microsoft.com>,
-	"mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
-	"peterz@infradead.org" <peterz@infradead.org>, "linux-arch@vger.kernel.org"
-	<linux-arch@vger.kernel.org>
-Subject: RE: [RFC v1 3/5] hyperv: Introduce new hypercall interfaces used by
- Hyper-V guest IOMMU
-Thread-Topic: [RFC v1 3/5] hyperv: Introduce new hypercall interfaces used by
- Hyper-V guest IOMMU
-Thread-Index: AQHcaMpUCD6VSZQZOU6EcthBZLbCPrVIporQgAG4pgCAAAXQYA==
-Date: Fri, 9 Jan 2026 19:24:25 +0000
-Message-ID:
- <SN6PR02MB4157009C747D487E289B96B9D482A@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20251209051128.76913-1-zhangyu1@linux.microsoft.com>
- <20251209051128.76913-4-zhangyu1@linux.microsoft.com>
- <SN6PR02MB415755B0CED30E8BEB062942D485A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <330d26ac-f1a2-4ee9-8cd7-20fd17db9f92@linux.microsoft.com>
-In-Reply-To: <330d26ac-f1a2-4ee9-8cd7-20fd17db9f92@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|LV2PR02MB11304:EE_
-x-ms-office365-filtering-correlation-id: 02481486-d750-4b9a-3182-08de4fb4b320
-x-microsoft-antispam:
- BCL:0;ARA:14566002|15080799012|31061999003|461199028|51005399006|19110799012|13091999003|8060799015|8062599012|3412199025|440099028|40105399003|12091999003|102099032|56899033;
-x-microsoft-antispam-message-info:
- =?utf-8?B?SnFOdWtzMGlEbmJhTlJmR2FyVmJCUC9Qc05OTVVZNWVEdTNFT3lMTGlnTk5K?=
- =?utf-8?B?RzdiazQ2N0dxTWpIVWF5c3hSWEwvK2ovc2VXK2k0Q0JpQ2VVaGtFSmJRSHNu?=
- =?utf-8?B?V2lWR3llUjBWbVg3M2ZzbEh3a2EzcXpkREhSdnZXVXdwTmR3TXRKbEFrMzNT?=
- =?utf-8?B?M1Nvc3g0cG5QSWsreFpiRm9ka3drN3V5blhNRVpXVjBDSHJlOFR6NzZQaUFx?=
- =?utf-8?B?d05JaXVsaWJieEU4TW9xTXlVM1hITWZ1T2dpckxGSVJLeGVCZ3VJUEVTQTV1?=
- =?utf-8?B?QXEzOUEvVEdENHp5UXlUelZDUGh6S0IyWkJMWG5LcHh5TXJVRlhFc0lKbm5M?=
- =?utf-8?B?T1ZzYUJ0bVFVTWVPdERmclZoV0diV0xicmJIOTQ4d3p0QXFOVlBhQ3RCSG94?=
- =?utf-8?B?MlRIbDMzYjBZTGp2SUVIdXJYRXowaGRiaUUwUW91cGNKUWJBZXNIdmh4ZmVk?=
- =?utf-8?B?Mmc0SjBYRlBuUFNnaUE1NmdaSHJVS3J6NWdHM2toS21pRndXL0RiL25uOHBS?=
- =?utf-8?B?ekVwb09ZVU16ZWMvK3c5cUw1dWxRRWZTRmhjNlA0aGlRQmNjS3BicUR3Ulgz?=
- =?utf-8?B?NW5VUmlHRVR4NHZqS1g2aklKdGhQbjduQ3FPbVN1ZTZSdUlNZFh4YjdmRWtN?=
- =?utf-8?B?blNGQlNSbnhHekxqNlRRc01xQmRZV1BqT0VrcUwxdWRwSHZCbXRtWFN3VVo0?=
- =?utf-8?B?elMyZm12QWpGQ0VVZXBnbHZjN2NBVEcxRjUyZDR0UjFyeElUbEtlYzNTYUFJ?=
- =?utf-8?B?endocEFtaGVOaHQ1QzN4cTEyQkE5ZExGenpUdU9Ud3FwR0NpOUNIOE9VQjJF?=
- =?utf-8?B?WGEwM1JBOTRFSk1CV2dncDRSWkFpejNER2plQjMxSFhQWldNdVR0VHFTQjJC?=
- =?utf-8?B?MVZxMXpndHhwdk5ab2M1U1NGenBBWTMxTUhIN3ljcEVHZmFLSG5aRjRDdG04?=
- =?utf-8?B?bjcvVzZmd0QxNjRsbEE1dm1abXZXRkNrVytYVzZ6NkdEY0ZjM25FN3QvN0xY?=
- =?utf-8?B?bjcrNExtbEVITWRBMGphZFdJRFlVUU8yK3VCMWhuS2I3NTlubnFMTFQ3MHdU?=
- =?utf-8?B?dFN4RUNtaUpwbWVEeGhzOWs5VDA4dFhIUmY0VXZ6MVk0d1RJMGl2VzBiejJ6?=
- =?utf-8?B?M1dEMzh5dFNYanNwTk9uZkJHTzUzOStPZlZiK1RKL1NmbFFRKytlZWFURjdC?=
- =?utf-8?B?MTNsdnhyNkRhemNTRXBlR2dWNE04ejI1bE1GRXBUQ1d6Uk83RU1OTG0xR1hO?=
- =?utf-8?B?bWlJMFZrcFdHUUxTMEh3MUNOZGpUMVR6R3AyUElxZkxWaCtkc2dhMVp1K21F?=
- =?utf-8?B?UGdCbzVwci85T0xuMDBZb3RWb1VMbS9qL1dMQ0sxZTQwRXdHTWxmaFVyU1RZ?=
- =?utf-8?B?TlZ2Nmk1dFFVWXplTUVNeHYrU1F3cm1VWndNREZIMituczNGUlVWQkQ3bGVk?=
- =?utf-8?B?MGFYbUtSRnU5NDBuQ1F1Nk9BT3hnSHkrazIyOWZSNUJOTG9kaFEvVmdJSXhL?=
- =?utf-8?B?RG5hQ2F4V3JaQnloKy92UHZwOUREUHVveC8ydXZ5ZmNDZXR1V2o1R3RwMzZW?=
- =?utf-8?B?TTRwWnBzT0FKSVVLRjVmOUlKQ2k4NC9CK1AwZU5mencwVUVIcXRGaE80U01m?=
- =?utf-8?B?bis4TkZwVDdJWE9IOFpqUkNNbGt4OWVlSkJhYUpIZFg1V3gvUFNIN0loSm5E?=
- =?utf-8?Q?sijfvuuVCHGZVvMtxSha?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?LzY2SklzelU1WjBMMXVkNHpvSXkxL2RJTS9JZzdLQ2FnbkhTTk8yNTJMeDVw?=
- =?utf-8?B?NXRLekltWmJsemxSL0g2UERnV1R3bTZxeXVxMVFRa1MrZjZaYzRFek1SRVRo?=
- =?utf-8?B?R2sxV053akpGL25qSE9uYVpWc3Q1ckhqMHZvMkRyczlrQkl0Tzk3QmIwQlJu?=
- =?utf-8?B?Sy9Lb3llWlQ0d2xTcys1b0lYOEVzY2lNbGI5SlkyOUpmMmErWUtadTN2YkZZ?=
- =?utf-8?B?em4rK2UrR3FhMGJKUVdqQ3c0NTNHT1g0S1orSmxsdkROY3pPZUxkeUF0aXlD?=
- =?utf-8?B?TEkwSXhFWDh4TnllSmR1YUxDM2lBM0tzdkJaS0NUVzVKaWo1RGFvMFVEY0lN?=
- =?utf-8?B?cWtKYTFjRjVpYjNFdVV4blp6cHh3R3BXeldjbElodDcvMjFrZGQ3WlY4MzdE?=
- =?utf-8?B?cVlHcW1ONXlVem4rR2UzVW5wMDF5WElWZWZ2RXJwb2FWNnFBRHFtcE9hTmM5?=
- =?utf-8?B?WldYeVlrcHVEaUlCVFBxbHZNTHdwR25RNVZQVVBJQ2w4Wm5FeHRGVHJudmo4?=
- =?utf-8?B?LzJSbldncVVUOWY4Z1AyMVZnRGUxZHBaN2g3YmJXVkNlSjV0UHJDUklRcm9h?=
- =?utf-8?B?Ti90ZFRvNGx5RXRJTkhQVnp3bmlFMGxlV3N3TC9GVC9MTEp4RElGWjZQalFk?=
- =?utf-8?B?S0tiRGRHdXd5bkFjQTVhKzlPSzlGVnVWa2tCWTFCQjhHR3NYbmlsS05CYkVL?=
- =?utf-8?B?RXNTalI1bGZjNEpad0QvMzJxdUFsOW92dzFxZit1ZVV3aXM0L21uQmFCMUV3?=
- =?utf-8?B?ejY4eVcxSkVQRlBEdVZFMk5Jd3FwKytvd05mck1OSnZwaWNUN0t4S2I2U0RC?=
- =?utf-8?B?b1NXK3RQU0FJOFJIL0tKL010VEkycHcyQzNZd3hKQTM4cURHTzU3SHBNMUEw?=
- =?utf-8?B?ZFhpNmdjMXc2a0NzNDFlaXJzNnZ4RXhHc2E1RkhaVzkvTldXZUJ4MldMS1RG?=
- =?utf-8?B?OTF2MWtvSXp5M20zcHpLM05TVCtNYndkWDFGS1FwMFo5Y0x1TldONm1uUVVi?=
- =?utf-8?B?RjBHT0ticTF0cVloSUN2UHp4anFVYXdsbkNjMXUvSkF5UUVhNUlzWDU2dGU4?=
- =?utf-8?B?cExrUkV0THgxbWhHN250TGJKcDB1VnFyTWtSa3NpRjhlWnNscXFtY1JMZk9r?=
- =?utf-8?B?YjIzcFFyeS9xdjFVeDJvRGc2eHl6VkNZVEN4NVlDWE9VZ214MVhyWGJvREdn?=
- =?utf-8?B?TG1sUTFnemtvYjdMZmdyeE5KS2djVEdqS0NXaTArYmdNY3BXWUJ6THpsRkZW?=
- =?utf-8?B?WDhtMDQ5elZzRmoyRDI4NDlRd3ZFcjlkOVdBdXFKaHVzUUVzYVU0UDRmN1p5?=
- =?utf-8?B?ZldhNFgrSDBlU3p3aHBMY1h2UzhNeFRiSCs4V01Qa0NyQnJxOE45Mm1ISWtJ?=
- =?utf-8?B?aFRpMGZ5SkdLSjFuZDc2NUlYRjBnVWFDMXlKdlZKNU1QV3JwbDNsbVN3MWgx?=
- =?utf-8?B?OGI4V1dUQzdoTlE1V3FwZ1RabzFDcUZjdVBIZnYrcU1halVsSkduSkNNKzd5?=
- =?utf-8?B?aG1lR3JQVmEwenp5VENIdldJZHZnRmZoVjFEdHRvaFB2T3VuOXhueHF1a0Ri?=
- =?utf-8?B?bjBuK3RObnd6a0laanlGc0RCdldhQ3dTTkdmMDBPcFlYVWRldDRNV1ZWRWFq?=
- =?utf-8?B?ektNcmpTaHIzb1BzSkJMSmFHaENKNmpWSUdsNmszeStOc3JDcERjTVJsWCth?=
- =?utf-8?B?OXA0eUd6UlNJUmVOWTRROG1WU01pUnI5V3N6aHhWb3VsOUpmcDVKZXJ1dXlD?=
- =?utf-8?B?dmErT3VTYzFueW5PdE5qMTNDUWdEa1Z6N0I2amQ5K0xiUHFFbXZveGxZMG5F?=
- =?utf-8?Q?I3L8MThk//ag2nNFmvENH9do8DH2BUNwyDlhs=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4712C366562
+	for <linux-hyperv@vger.kernel.org>; Fri,  9 Jan 2026 20:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767989190; cv=none; b=h1oEau02F/B0b/t++ilfFSFygnFeyAwPKwyUc3U2m9AgGmibMp8/EuB+BTEO7RbzFfWNieYj8mEB+6me7A52p8HHzV6ViqoJd9cN3gXCd2GBk5+H2aCGDSuPD7nKi1y678Uomr1kTBA9EDs4DDe+/thboBswlizTHdyO6lHIPnM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767989190; c=relaxed/simple;
+	bh=6CBiVzeubTP4FZKYp+AeRaOq+XUJUHEr6JdHXsZ6bik=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kBYDHYQwxf8uJMYCujk0gT2CrXxHF4sItxhF8nuhc7ZmEZSuJSbIMddCZnpdmxfWM7pdprCtm8iSx2w6sLNGjXrNMxNFkOudNNmB/hLFBmW3goDYTkUlfiW/2p06Qj6AmE0YU5syBzSE63Cw3FmFJxVNfaK1skY7TdICtOuJMdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Vp3EQhLg; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from mrdev.corp.microsoft.com (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 28CBF201AC73;
+	Fri,  9 Jan 2026 12:06:22 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 28CBF201AC73
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1767989182;
+	bh=TiBEJKRjJcVE6cVJFJTQRoVJdlRzhbBQ7mMyf+nx918=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Vp3EQhLgreQZi4sXcFO9d1l5OZL+UBVJsy/DekKsxXjLcVYr/YFgcxZM7s0yYM24e
+	 pjSZbiwLPNYI1/XqaYSiHUBgBAdFBzq8QCtw54fEG9HKFW06cnbC7FZBAbSgZDdZnf
+	 bDG5VExEvg8LNbFrarA8qlp7oi55Gs0QKYf//ASk=
+From: Mukesh Rathor <mrathor@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org
+Cc: wei.liu@kernel.org,
+	nunodasneves@linux.microsoft.com
+Subject: [PATCH] mshv: make certain field names descriptive in a header struct
+Date: Fri,  9 Jan 2026 12:06:11 -0800
+Message-ID: <20260109200611.1422390-1-mrathor@linux.microsoft.com>
+X-Mailer: git-send-email 2.51.2.vfs.0.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02481486-d750-4b9a-3182-08de4fb4b320
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2026 19:24:25.0733
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR02MB11304
+Content-Transfer-Encoding: 8bit
 
-RnJvbTogRWFzd2FyIEhhcmloYXJhbiA8ZWFzd2FyLmhhcmloYXJhbkBsaW51eC5taWNyb3NvZnQu
-Y29tPiBTZW50OiBGcmlkYXksIEphbnVhcnkgOSwgMjAyNiAxMDo0NyBBTQ0KPiANCj4gT24gMS84
-LzIwMjYgMTA6NDcgQU0sIE1pY2hhZWwgS2VsbGV5IHdyb3RlOg0KPiA+IEZyb206IFl1IFpoYW5n
-IDx6aGFuZ3l1MUBsaW51eC5taWNyb3NvZnQuY29tPiBTZW50OiBNb25kYXksIERlY2VtYmVyIDgs
-IDIwMjUgOToxMSBQTQ0KPiA+Pg0KPiA+PiBGcm9tOiBXZWkgTGl1IDx3ZWkubGl1QGtlcm5lbC5v
-cmc+DQo+ID4+DQo+IA0KPiA8c25pcD4NCj4gDQo+ID4+ICtzdHJ1Y3QgaHZfaW5wdXRfZ2V0X2lv
-bW11X2NhcGFiaWxpdGllcyB7DQo+ID4+ICsJdTY0IHBhcnRpdGlvbl9pZDsNCj4gPj4gKwl1NjQg
-cmVzZXJ2ZWQ7DQo+ID4+ICt9IF9fcGFja2VkOw0KPiA+PiArDQo+ID4+ICtzdHJ1Y3QgaHZfb3V0
-cHV0X2dldF9pb21tdV9jYXBhYmlsaXRpZXMgew0KPiA+PiArCXUzMiBzaXplOw0KPiA+PiArCXUx
-NiByZXNlcnZlZDsNCj4gPj4gKwl1OCAgbWF4X2lvdmFfd2lkdGg7DQo+ID4+ICsJdTggIG1heF9w
-YXNpZF93aWR0aDsNCj4gPj4gKw0KPiA+PiArI2RlZmluZSBIVl9JT01NVV9DQVBfUFJFU0VOVCAo
-MVVMTCA8PCAwKQ0KPiA+PiArI2RlZmluZSBIVl9JT01NVV9DQVBfUzIgKDFVTEwgPDwgMSkNCj4g
-Pj4gKyNkZWZpbmUgSFZfSU9NTVVfQ0FQX1MxICgxVUxMIDw8IDIpDQo+ID4+ICsjZGVmaW5lIEhW
-X0lPTU1VX0NBUF9TMV81TFZMICgxVUxMIDw8IDMpDQo+ID4+ICsjZGVmaW5lIEhWX0lPTU1VX0NB
-UF9QQVNJRCAoMVVMTCA8PCA0KQ0KPiA+PiArI2RlZmluZSBIVl9JT01NVV9DQVBfQVRTICgxVUxM
-IDw8IDUpDQo+ID4+ICsjZGVmaW5lIEhWX0lPTU1VX0NBUF9QUkkgKDFVTEwgPDwgNikNCj4gPj4g
-Kw0KPiA+PiArCXU2NCBpb21tdV9jYXA7DQo+ID4+ICsJdTY0IHBnc2l6ZV9iaXRtYXA7DQo+ID4+
-ICt9IF9fcGFja2VkOw0KPiA+PiArDQo+ID4+ICtlbnVtIGh2X2xvZ2ljYWxfZGV2aWNlX3Byb3Bl
-cnR5X2NvZGUgew0KPiA+PiArCUhWX0xPR0lDQUxfREVWSUNFX1BST1BFUlRZX1BWSU9NTVUgPSAx
-MCwNCj4gPj4gK307DQo+ID4+ICsNCj4gPj4gK3N0cnVjdCBodl9pbnB1dF9nZXRfbG9naWNhbF9k
-ZXZpY2VfcHJvcGVydHkgew0KPiA+PiArCXU2NCBwYXJ0aXRpb25faWQ7DQo+ID4+ICsJdTY0IGxv
-Z2ljYWxfZGV2aWNlX2lkOw0KPiA+PiArCWVudW0gaHZfbG9naWNhbF9kZXZpY2VfcHJvcGVydHlf
-Y29kZSBjb2RlOw0KPiA+DQo+ID4gSGlzdG9yaWNhbGx5IHdlJ3ZlIGF2b2lkZWQgImVudW0iIHR5
-cGVzIGluIHN0cnVjdHVyZXMgdGhhdCBhcmUgcGFydCBvZg0KPiA+IHRoZSBoeXBlcnZpc29yIEFC
-SS4gVXNlIHUzMiBoZXJlPw0KPiANCj4gPHNuaXA+DQo+IFdoYXQgaGFzIGJlZW4gdGhlIHJlYXNv
-bmluZyBmb3IgdGhhdCBwcmFjdGljZT8gU2luY2UgdGhlIGludHJvZHVjdGlvbiBvZiB0aGUNCj4g
-aW5jbHVkZS9oeXBlcnYvIGhlYWRlcnMsIHdlIGhhdmUgZ2VuZXJhbGx5IHdhbnRlZCB0byBpbXBv
-cnQgYXMgZGlyZWN0bHkgYXMNCj4gcG9zc2libGUgdGhlIHJlbGV2YW50IGRlZmluaXRpb25zIGZy
-b20gdGhlIGh5cGVydmlzb3IgY29kZSBiYXNlLiBJZiB0aGVyZSdzDQo+IGEgc3Ryb25nIHJlYXNv
-biwgd2UgY291bGQgY29uc2lkZXIgc3dpdGNoaW5nIHRoZSBlbnVtIGZvciBhIHUzMiBoZXJlDQo+
-IHNpbmNlLCBhdCBsZWFzdCBmb3IgdGhlIG1vbWVudCwgdGhlcmUncyBvbmx5IGEgc2luZ2xlIHZh
-bHVlIGJlaW5nIHVzZWQuDQo+IA0KDQpJbiB0aGUgQyBsYW5ndWFnZSwgdGhlIHNpemUgb2YgYW4g
-ZW51bSBpcyBpbXBsZW1lbnRhdGlvbiBkZWZpbmVkLiBEbw0KYSBDby1QaWxvdCBzZWFyY2ggb24g
-IkhvdyBtYW55IGJ5dGVzIGlzIGFuIGVudW0gaW4gQyIsIGFuZCB5b3UnbGwgZ2V0IGENCmZhaXJs
-eSBsb25nIGFuc3dlciBleHBsYWluaW5nIHRoZSBpZGlvc3luY3Jhc2llcy4gRm9yIGdjYywgYW5k
-IGZvciBNU1ZDIG9uDQp0aGUgaHlwZXJ2aXNvciBzaWRlLCB0aGUgZGVmYXVsdCBpcyB0aGF0IGFu
-ICJlbnVtIiBzaXplIGlzIHRoZSBzYW1lIGFzIGFuDQoiaW50Iiwgc28gZXZlcnl0aGluZyB3b3Jr
-cyBpbiBjdXJyZW50IHByYWN0aWNlLiBCdXQgdGhlIGNvbXBpbGVyIGlzIGFsbG93ZWQNCnRvIG9w
-dGltaXplIHRoZSBzaXplIG9mIGFuIGVudW0gaWYgYSBzbWFsbGVyIGludGVnZXIgdHlwZSBjYW4g
-Y29udGFpbiBhbGwNCnRoZSB2YWx1ZXMsIGFuZCB0aGF0IHdvdWxkIG1lc3MgdGhpbmdzIHVwIGlu
-IGFuIEFCSS4gSGVuY2UgdGhlIGludGVudA0KdG8gbm90IHVzZSAiZW51bSIgaW4gdGhlIGh5cGVy
-dmlzb3IgQUJJLiBXaW5kb3dzL0h5cGVyLVYgaGlzdG9yaWNhbGx5DQpkaWRuJ3QgaGF2ZSB0byB3
-b3JyeSBhYm91dCBzdWNoIHRoaW5ncyBzaW5jZSB0aGV5IGNvbnRyb2xsZWQgYm90aCBzaWRlcw0K
-b2YgdGhlIEFCSSwgYnV0IHRoZSBtb3JlIExpbnV4IHVzZXMgdGhlIEFCSSwgdGhlIGdyZWF0ZXIg
-cG90ZW50aWFsIGZvcg0Kc29tZXRoaW5nIHRvIGdvIHdyb25nLg0KDQpJIHdpc2ggV2luZG93cy9I
-eXBlci1WIHdvdWxkIHRpZ2h0ZW4gdXAgdGhlaXIgQUJJIHNwZWNpZmljYXRpb24sIGJ1dA0KaXQg
-aXMgd2hhdCBpdCBpcy4gU28gSSdtIG5vdCBzdXJlIGhvdyBiZXN0IHRvIGRlYWwgd2l0aCB0aGUg
-aXNzdWUgaW4gbGlnaHQNCm9mIHdhbnRpbmcgdG8gdGFrZSB0aGUgaHlwZXJ2aXNvciBBQkkgZGVm
-aW5pdGlvbnMgZGlyZWN0bHkgZnJvbSB0aGUNCldpbmRvd3MgZW52aXJvbm1lbnQgYW5kIG5vdCBt
-b2RpZnkgdGhlbS4gSSBkaWQgYSBxdWljayBncmVwIG9mIHRoZQ0KaHYqLmggZmlsZXMgaW4gaW5j
-bHVkZS9oeXBlcnYgZnJvbSBsaW51eC1uZXh0LCBhbmQgd2hpbGUgdGhlcmUgYXJlIG1hbnkNCmVu
-dW0gdHlwZXMgZGVmaW5lZCwgbm9uZSBhcmUgdXNlZCBhcyBmaWVsZHMgaW4gYSBzdHJ1Y3R1cmUu
-IFRoZXJlIGFyZQ0KbWFueSBjYXNlcyBvZiB1MzIsIGFuZCBhIGNvdXBsZSB1MTYncywgZm9sbG93
-ZWQgYnkgYSBjb21tZW50DQppZGVudGlmeWluZyB0aGUgZW51bSB0eXBlIHRoYXQgc2hvdWxkIGJl
-IHVzZWQgdG8gcG9wdWxhdGUgdGhlIGZpZWxkLg0KDQpNaWNoYWVsDQo=
+There is no functional change. Just make couple field names in
+struct mshv_mem_region, in a header that can be used in many
+places, a little descriptive to make code easier to read by
+allowing better support for grep, cscope, etc.
+
+Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+---
+ drivers/hv/mshv_regions.c   | 44 ++++++++++++++++++-------------------
+ drivers/hv/mshv_root.h      |  6 ++---
+ drivers/hv/mshv_root_main.c | 10 ++++-----
+ 3 files changed, 30 insertions(+), 30 deletions(-)
+
+diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
+index 202b9d551e39..af81405f859b 100644
+--- a/drivers/hv/mshv_regions.c
++++ b/drivers/hv/mshv_regions.c
+@@ -52,7 +52,7 @@ static long mshv_region_process_chunk(struct mshv_mem_region *region,
+ 	struct page *page;
+ 	int ret;
+ 
+-	page = region->pages[page_offset];
++	page = region->mreg_pages[page_offset];
+ 	if (!page)
+ 		return -EINVAL;
+ 
+@@ -65,7 +65,7 @@ static long mshv_region_process_chunk(struct mshv_mem_region *region,
+ 
+ 	/* Start at stride since the first page is validated */
+ 	for (count = stride; count < page_count; count += stride) {
+-		page = region->pages[page_offset + count];
++		page = region->mreg_pages[page_offset + count];
+ 
+ 		/* Break if current page is not present */
+ 		if (!page)
+@@ -117,7 +117,7 @@ static int mshv_region_process_range(struct mshv_mem_region *region,
+ 
+ 	while (page_count) {
+ 		/* Skip non-present pages */
+-		if (!region->pages[page_offset]) {
++		if (!region->mreg_pages[page_offset]) {
+ 			page_offset++;
+ 			page_count--;
+ 			continue;
+@@ -164,13 +164,13 @@ static int mshv_region_chunk_share(struct mshv_mem_region *region,
+ 				   u32 flags,
+ 				   u64 page_offset, u64 page_count)
+ {
+-	struct page *page = region->pages[page_offset];
++	struct page *page = region->mreg_pages[page_offset];
+ 
+ 	if (PageHuge(page) || PageTransCompound(page))
+ 		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
+ 
+ 	return hv_call_modify_spa_host_access(region->partition->pt_id,
+-					      region->pages + page_offset,
++					      region->mreg_pages + page_offset,
+ 					      page_count,
+ 					      HV_MAP_GPA_READABLE |
+ 					      HV_MAP_GPA_WRITABLE,
+@@ -190,13 +190,13 @@ static int mshv_region_chunk_unshare(struct mshv_mem_region *region,
+ 				     u32 flags,
+ 				     u64 page_offset, u64 page_count)
+ {
+-	struct page *page = region->pages[page_offset];
++	struct page *page = region->mreg_pages[page_offset];
+ 
+ 	if (PageHuge(page) || PageTransCompound(page))
+ 		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
+ 
+ 	return hv_call_modify_spa_host_access(region->partition->pt_id,
+-					      region->pages + page_offset,
++					      region->mreg_pages + page_offset,
+ 					      page_count, 0,
+ 					      flags, false);
+ }
+@@ -214,7 +214,7 @@ static int mshv_region_chunk_remap(struct mshv_mem_region *region,
+ 				   u32 flags,
+ 				   u64 page_offset, u64 page_count)
+ {
+-	struct page *page = region->pages[page_offset];
++	struct page *page = region->mreg_pages[page_offset];
+ 
+ 	if (PageHuge(page) || PageTransCompound(page))
+ 		flags |= HV_MAP_GPA_LARGE_PAGE;
+@@ -222,7 +222,7 @@ static int mshv_region_chunk_remap(struct mshv_mem_region *region,
+ 	return hv_call_map_gpa_pages(region->partition->pt_id,
+ 				     region->start_gfn + page_offset,
+ 				     page_count, flags,
+-				     region->pages + page_offset);
++				     region->mreg_pages + page_offset);
+ }
+ 
+ static int mshv_region_remap_pages(struct mshv_mem_region *region,
+@@ -245,10 +245,10 @@ int mshv_region_map(struct mshv_mem_region *region)
+ static void mshv_region_invalidate_pages(struct mshv_mem_region *region,
+ 					 u64 page_offset, u64 page_count)
+ {
+-	if (region->type == MSHV_REGION_TYPE_MEM_PINNED)
+-		unpin_user_pages(region->pages + page_offset, page_count);
++	if (region->mreg_type == MSHV_REGION_TYPE_MEM_PINNED)
++		unpin_user_pages(region->mreg_pages + page_offset, page_count);
+ 
+-	memset(region->pages + page_offset, 0,
++	memset(region->mreg_pages + page_offset, 0,
+ 	       page_count * sizeof(struct page *));
+ }
+ 
+@@ -265,7 +265,7 @@ int mshv_region_pin(struct mshv_mem_region *region)
+ 	int ret;
+ 
+ 	for (done_count = 0; done_count < region->nr_pages; done_count += ret) {
+-		pages = region->pages + done_count;
++		pages = region->mreg_pages + done_count;
+ 		userspace_addr = region->start_uaddr +
+ 				 done_count * HV_HYP_PAGE_SIZE;
+ 		nr_pages = min(region->nr_pages - done_count,
+@@ -297,7 +297,7 @@ static int mshv_region_chunk_unmap(struct mshv_mem_region *region,
+ 				   u32 flags,
+ 				   u64 page_offset, u64 page_count)
+ {
+-	struct page *page = region->pages[page_offset];
++	struct page *page = region->mreg_pages[page_offset];
+ 
+ 	if (PageHuge(page) || PageTransCompound(page))
+ 		flags |= HV_UNMAP_GPA_LARGE_PAGE;
+@@ -321,7 +321,7 @@ static void mshv_region_destroy(struct kref *ref)
+ 	struct mshv_partition *partition = region->partition;
+ 	int ret;
+ 
+-	if (region->type == MSHV_REGION_TYPE_MEM_MOVABLE)
++	if (region->mreg_type == MSHV_REGION_TYPE_MEM_MOVABLE)
+ 		mshv_region_movable_fini(region);
+ 
+ 	if (mshv_partition_encrypted(partition)) {
+@@ -374,9 +374,9 @@ static int mshv_region_hmm_fault_and_lock(struct mshv_mem_region *region,
+ 	int ret;
+ 
+ 	range->notifier_seq = mmu_interval_read_begin(range->notifier);
+-	mmap_read_lock(region->mni.mm);
++	mmap_read_lock(region->mreg_mni.mm);
+ 	ret = hmm_range_fault(range);
+-	mmap_read_unlock(region->mni.mm);
++	mmap_read_unlock(region->mreg_mni.mm);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -407,7 +407,7 @@ static int mshv_region_range_fault(struct mshv_mem_region *region,
+ 				   u64 page_offset, u64 page_count)
+ {
+ 	struct hmm_range range = {
+-		.notifier = &region->mni,
++		.notifier = &region->mreg_mni,
+ 		.default_flags = HMM_PFN_REQ_FAULT | HMM_PFN_REQ_WRITE,
+ 	};
+ 	unsigned long *pfns;
+@@ -430,7 +430,7 @@ static int mshv_region_range_fault(struct mshv_mem_region *region,
+ 		goto out;
+ 
+ 	for (i = 0; i < page_count; i++)
+-		region->pages[page_offset + i] = hmm_pfn_to_page(pfns[i]);
++		region->mreg_pages[page_offset + i] = hmm_pfn_to_page(pfns[i]);
+ 
+ 	ret = mshv_region_remap_pages(region, region->hv_map_flags,
+ 				      page_offset, page_count);
+@@ -489,7 +489,7 @@ static bool mshv_region_interval_invalidate(struct mmu_interval_notifier *mni,
+ {
+ 	struct mshv_mem_region *region = container_of(mni,
+ 						      struct mshv_mem_region,
+-						      mni);
++						      mreg_mni);
+ 	u64 page_offset, page_count;
+ 	unsigned long mstart, mend;
+ 	int ret = -EPERM;
+@@ -535,14 +535,14 @@ static const struct mmu_interval_notifier_ops mshv_region_mni_ops = {
+ 
+ void mshv_region_movable_fini(struct mshv_mem_region *region)
+ {
+-	mmu_interval_notifier_remove(&region->mni);
++	mmu_interval_notifier_remove(&region->mreg_mni);
+ }
+ 
+ bool mshv_region_movable_init(struct mshv_mem_region *region)
+ {
+ 	int ret;
+ 
+-	ret = mmu_interval_notifier_insert(&region->mni, current->mm,
++	ret = mmu_interval_notifier_insert(&region->mreg_mni, current->mm,
+ 					   region->start_uaddr,
+ 					   region->nr_pages << HV_HYP_PAGE_SHIFT,
+ 					   &mshv_region_mni_ops);
+diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
+index 3c1d88b36741..f5b6d3979e5a 100644
+--- a/drivers/hv/mshv_root.h
++++ b/drivers/hv/mshv_root.h
+@@ -85,10 +85,10 @@ struct mshv_mem_region {
+ 	u64 start_uaddr;
+ 	u32 hv_map_flags;
+ 	struct mshv_partition *partition;
+-	enum mshv_region_type type;
+-	struct mmu_interval_notifier mni;
++	enum mshv_region_type mreg_type;
++	struct mmu_interval_notifier mreg_mni;
+ 	struct mutex mutex;	/* protects region pages remapping */
+-	struct page *pages[];
++	struct page *mreg_pages[];
+ };
+ 
+ struct mshv_irq_ack_notifier {
+diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+index 1134a82c7881..eff1b21461dc 100644
+--- a/drivers/hv/mshv_root_main.c
++++ b/drivers/hv/mshv_root_main.c
+@@ -657,7 +657,7 @@ static bool mshv_handle_gpa_intercept(struct mshv_vp *vp)
+ 		return false;
+ 
+ 	/* Only movable memory ranges are supported for GPA intercepts */
+-	if (region->type == MSHV_REGION_TYPE_MEM_MOVABLE)
++	if (region->mreg_type == MSHV_REGION_TYPE_MEM_MOVABLE)
+ 		ret = mshv_region_handle_gfn_fault(region, gfn);
+ 	else
+ 		ret = false;
+@@ -1175,12 +1175,12 @@ static int mshv_partition_create_region(struct mshv_partition *partition,
+ 		return PTR_ERR(rg);
+ 
+ 	if (is_mmio)
+-		rg->type = MSHV_REGION_TYPE_MMIO;
++		rg->mreg_type = MSHV_REGION_TYPE_MMIO;
+ 	else if (mshv_partition_encrypted(partition) ||
+ 		 !mshv_region_movable_init(rg))
+-		rg->type = MSHV_REGION_TYPE_MEM_PINNED;
++		rg->mreg_type = MSHV_REGION_TYPE_MEM_PINNED;
+ 	else
+-		rg->type = MSHV_REGION_TYPE_MEM_MOVABLE;
++		rg->mreg_type = MSHV_REGION_TYPE_MEM_MOVABLE;
+ 
+ 	rg->partition = partition;
+ 
+@@ -1297,7 +1297,7 @@ mshv_map_user_memory(struct mshv_partition *partition,
+ 	if (ret)
+ 		return ret;
+ 
+-	switch (region->type) {
++	switch (region->mreg_type) {
+ 	case MSHV_REGION_TYPE_MEM_PINNED:
+ 		ret = mshv_prepare_pinned_region(region);
+ 		break;
+-- 
+2.51.2.vfs.0.1
+
 
