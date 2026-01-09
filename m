@@ -1,350 +1,190 @@
-Return-Path: <linux-hyperv+bounces-8197-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8198-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC7A8D0899E
-	for <lists+linux-hyperv@lfdr.de>; Fri, 09 Jan 2026 11:35:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E4145D0BC2D
+	for <lists+linux-hyperv@lfdr.de>; Fri, 09 Jan 2026 18:54:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 59A7D305B5B5
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Jan 2026 10:34:41 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 39AF83002D2A
+	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Jan 2026 17:48:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37F942F83D8;
-	Fri,  9 Jan 2026 10:34:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACD1927FB12;
+	Fri,  9 Jan 2026 17:48:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AYGkFnRw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IHUFvxjX";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AYGkFnRw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IHUFvxjX"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ULhyJstk"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azolkn19010037.outbound.protection.outlook.com [52.103.10.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6183B3382E5
-	for <linux-hyperv@vger.kernel.org>; Fri,  9 Jan 2026 10:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767954881; cv=none; b=rvym80KO6oQn0USB3/+prhZOARyGc/0DloArAzAyCCbhr9ww32K1RQcueRavbAL1yGblZ2DeR+iGdw2IpILrV53g9ab7pkd3G14pN0dKxUvWhvh7lonFizDAAz3+Qu8wEs/ChEl+s1wb6cumRAu2bDzGigZKQgp2Zyhrvj6Vma0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767954881; c=relaxed/simple;
-	bh=pDV+Y2brq5Y/jlC+k4P9H3Hzq52Ia6LIXFxRhCL7Apk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kTjzrcjcUZrBc7snUL5cZ/NGfbxt8J5sNmkxLpEN2HhDtA/0r7ywtNmZOxNuPpBUXt7fGNeLJNvNxYcJIT/AOVH5IDcfc55QL9usWISUVEAkKe5uU8SS99KTKs5rkv7pFBXDV+JlQj4R6EcLrFrOYRKHJm5m4A/9pJJDGUAwLD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AYGkFnRw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IHUFvxjX; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AYGkFnRw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IHUFvxjX; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 892485BD4C;
-	Fri,  9 Jan 2026 10:34:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1767954869; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=quXykmFucH86nMSyArVgl9RjHoQwr+Ungu8b5HjPcy4=;
-	b=AYGkFnRwOFEi2fS+0MgdGKuPjA5xML1KOEc0VNsILP7ImaqRJ4uUWXamjRs8/0o0vpKGhf
-	7MdEAeqQ4bcAxw2TDloU/+OssmLjWH5UUlO21Va39W6gTXrp1mv9PEbzCDRLA8v7bJkvGC
-	fj9pE11XRgdPxIiiCGMLZ4rIU7VzfFA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1767954869;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=quXykmFucH86nMSyArVgl9RjHoQwr+Ungu8b5HjPcy4=;
-	b=IHUFvxjXt6RNe94raOnQ1X8PE56K7NAxMjFmxFzfDsr06Ts6Avcj62ovlK3mxFEbcYeb9j
-	Lla84MGwl3Bi/IDw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1767954869; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=quXykmFucH86nMSyArVgl9RjHoQwr+Ungu8b5HjPcy4=;
-	b=AYGkFnRwOFEi2fS+0MgdGKuPjA5xML1KOEc0VNsILP7ImaqRJ4uUWXamjRs8/0o0vpKGhf
-	7MdEAeqQ4bcAxw2TDloU/+OssmLjWH5UUlO21Va39W6gTXrp1mv9PEbzCDRLA8v7bJkvGC
-	fj9pE11XRgdPxIiiCGMLZ4rIU7VzfFA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1767954869;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=quXykmFucH86nMSyArVgl9RjHoQwr+Ungu8b5HjPcy4=;
-	b=IHUFvxjXt6RNe94raOnQ1X8PE56K7NAxMjFmxFzfDsr06Ts6Avcj62ovlK3mxFEbcYeb9j
-	Lla84MGwl3Bi/IDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5C7883EA63;
-	Fri,  9 Jan 2026 10:34:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id LvUmFbTZYGkGRAAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Fri, 09 Jan 2026 10:34:28 +0000
-Message-ID: <c816f7ed-66e0-4773-b3d1-4769234bd30b@suse.de>
-Date: Fri, 9 Jan 2026 11:34:27 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A7121019C;
+	Fri,  9 Jan 2026 17:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.10.37
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767980924; cv=fail; b=WKepKvGe4jkD5I4E4c0N2YemkCDPI1qJL8l35+vb6jejQBl7poVq+uVUnZ0wIOcR+QALAGw7QDDj6JyXGqeD9ccjWy4XUL2kWnxYUfd3/FFWu02mMjBrKdsHMEBtzyYVPtDeEmXI2P2qcKO/C8b9T3Hg7VZnRYkqQl3Oez86xv4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767980924; c=relaxed/simple;
+	bh=NSyv4AdIRjmxII0012qDb1oxGCya8avfw8uTTyf/h6Q=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Dtlxr+0hkWDoWicT7d5C8vL/IxC9bbsidL9AwSRcCgpG7DcgdZTMR+s35o187pLXwreoq/G77pS7tfB7hYyO30pid/UgFr7RYiuPktEU7TVuk4cH6GmiR1440RW62HBfxu3ZlysvncCp02Gd/ruOHorNFf5QMF5AC5x4BI3G77U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ULhyJstk; arc=fail smtp.client-ip=52.103.10.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bjs7CqyB7iF09N7Mn2A49mjcGt/csx9DIIgQJWadxoiLdZVabZVMgUr3KG0mRwBvRmcylM8e5ZfNkuqT3HH17b0R+QvQRy3xfMhYsY6jOe+Ecuy5qbXZWRzdbr8RNAekI3LS5WCHhJRRKtOqLzShZqPCaZwK1X97NR8ctJ9vXx+8/hiugn9nNgiMRDfPiq8R1eFjVIJWAvxUE1Sjvs0uPcRgwy2VpU5M+ASV91rbUC0bRnPC/lZJ9Iouii2JnwVXKgQhRlpQoXzD7xJbKg5mhlMvXGsvKu8l4vgpBjBHT72aZGiIlrkW1oogK5phrBvT6kfKOZQuQEpdMJardy2wwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Sm/jC7P74gy5GVng5CZmYJ0hYX/O6ln9jpK/HYkMTeo=;
+ b=iCzHHw4UNIFkPsuVZpA0f7fsA6cwhse5pz0JkJ73pIC7dzMdnMcsWwandfWaz+Tq2+hj2jkfJClwIsZ/7vCKeBe4jXrfyBbqefF3fYeFjYRDpOuBAYOz2ueANz7DHCmZLSwNSXZM8Am0An5FhNjvJ3vyDSs3X26iK6QI2mZCCKm9FlfPZrUHczW/ncQRozlToxEFIOfnwMI+Py9ZsP85aGtDnk9Tdgr98gM2cZErQ2AdBXSZd82eE5JXzK78k7Xg1NSfvjs0QTcZM6LBSsQ9MnZWSC/UQ3YAHzhcY0vbBsDjy2jOAq04fkC+E6E0pchpK7ESFPTldfAaxj+/aceyIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Sm/jC7P74gy5GVng5CZmYJ0hYX/O6ln9jpK/HYkMTeo=;
+ b=ULhyJstkM+0F3lgXZJx/55e0EwlH6IrcUPNqMqFa8D+gyKuzuji1O8AJj1MFBD5/yaAkEgP1yE5N1UuneQW+mmLkMn8WsEt1uYHSIL5YDMwbDlcLgDo7m9seCJA+CTZil7xcbIFxTxvHP/NzbYfrJ0AQjVW7OC8YJ99rl/1rRZapDxo0bLIjQUm35d2ACJCnq0sJJ7ALGjl7uIID/jOZBqlVQsMw7xtXLy9cAcv9MdWZW9Oepsq8buvwpAo8GYZPYtvPLwwRzmGVD4k5c2X6aohwuB0f7TB4haXX1qVylQskxhyBPk0eaW7OtTHogSpaMr8Bn5T5nch/4rEN24yAew==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by CO6PR02MB7553.namprd02.prod.outlook.com (2603:10b6:303:a6::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.4; Fri, 9 Jan
+ 2026 17:48:38 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6%6]) with mapi id 15.20.9499.004; Fri, 9 Jan 2026
+ 17:48:38 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: "longli@linux.microsoft.com" <longli@linux.microsoft.com>, "K. Y.
+ Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei
+ Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, "James E.J.
+ Bottomley" <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
+	<martin.petersen@oracle.com>, James Bottomley <JBottomley@Odin.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC: Long Li <longli@microsoft.com>, "stable@kernel.org" <stable@kernel.org>
+Subject: RE: [PATCH] scsi: storvsc: Process unsupported MODE_SENSE_10
+Thread-Topic: [PATCH] scsi: storvsc: Process unsupported MODE_SENSE_10
+Thread-Index: AQHcgA/ZdvXNwjcnQUWATOkFvIuG4rVKHsfQ
+Date: Fri, 9 Jan 2026 17:48:38 +0000
+Message-ID:
+ <SN6PR02MB4157232BE7BB9B6B1AA81AEBD482A@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <1767815803-3747-1-git-send-email-longli@linux.microsoft.com>
+In-Reply-To: <1767815803-3747-1-git-send-email-longli@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CO6PR02MB7553:EE_
+x-ms-office365-filtering-correlation-id: a598e32f-e140-4a80-efde-08de4fa751a6
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|8060799015|8062599012|19110799012|13091999003|12121999013|15080799012|461199028|31061999003|41001999006|40105399003|52005399003|440099028|3412199025|102099032;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?1Y3Im0Ta+0GJ+p4zBV9nfptEy8Ja1V0MnchUcIsMNl+UzJSWmMiICei09t+w?=
+ =?us-ascii?Q?ZYlBAMsGTlY11G9CYRjERZ/vfZRuwufBbOlaX4O/jSvk6dJX0oUyKPCRn3X2?=
+ =?us-ascii?Q?xQiZMT5wPslXKd01ilU26wwFuwfZXX4Gj6611oxHphW/a+28iNN+WE5VL/rW?=
+ =?us-ascii?Q?np4VcwCEVyJV8+MN9TiG8UJwBy7LHDawYFwJNeIW/nqZOjhF5GKj+gw3DtSp?=
+ =?us-ascii?Q?XDKDPj+lwd9JXrFrPqHCemythBxn+vnFo8VXqWpi8VuVQY2gjUpfzaiiG5j8?=
+ =?us-ascii?Q?NHvp+ZRmHLKEuleQi5O/UyoR5xbYN5V+pIu46u/NfiIB3IfMndizkqPtye0+?=
+ =?us-ascii?Q?C9vfQvED5GgSokoVNZ2PPv1ZLaVHcP6KMZU6mH28Qd62O/b5VR06RlD99wLD?=
+ =?us-ascii?Q?pUP7We1lc0FuzqSCDQr3BG2q1t7Byd45LPAmhwRam2+ebURRjG3DsX4SELGu?=
+ =?us-ascii?Q?tR86tepMMPX2Mv1CT0Y27sTLYXY6Ba+2JYa/hXNEiZ9MIFGJkn+jHmyBmr+g?=
+ =?us-ascii?Q?tsCSu2lWPQ8hmau0naTjMmU/3CDCKerOg8ibA522if1GLtaDwszXQ34O9nyI?=
+ =?us-ascii?Q?9mupdMoSQu95QyBqroUxK9OGRABzZK8YAStFmte4r45uGHQJVCxDwNtoOF46?=
+ =?us-ascii?Q?1BHqnbtfpF+IXNPbBcT0T5fy76pjZYDatIjswh12IWOEQqjisslAuREGeOKZ?=
+ =?us-ascii?Q?QkX2A/yE53yMeoY6cSUkIO0RXqi3dunuCRb2AAYtG++hpg+auTWZaWD4hkYA?=
+ =?us-ascii?Q?YyxqIIIboSnK5V8XjMCh9ejM4sbCKJ4p3ViJ6fmCe9hsqKFvT5Rrdi3AtHw8?=
+ =?us-ascii?Q?YEkycUTLZ/dplquDGfttFkmDN7srpwy0zA3RevakbNHHRJkFty09LuQWUitR?=
+ =?us-ascii?Q?7+fp39Wu+juWd/MMPH6PDT2loo/XLYgaueerh9DOpiu4ivm9JqEdjDE13Fwx?=
+ =?us-ascii?Q?mUdw+559qcVGZ0VAWmVbLE5VoBLUE9z7t5DE8pwrW50CAFC3uyL/JiwJX/PM?=
+ =?us-ascii?Q?Z0SckXNg2SJO2Af0JccyERqLo0WHWZjHbk3jlkZ9vH8AaedefcMiGzsiTcJy?=
+ =?us-ascii?Q?uhvjTzIkUUw1IgDv08bcvorlgU3EFZUAC1r3jaMfySomDZaguihAIQKiyv78?=
+ =?us-ascii?Q?/CzZ6vloIE5SHIanI+329qE4m6mfqesM+nWdTKXpRBpd5QJGodXawBHl4qMN?=
+ =?us-ascii?Q?Z2wivb3CGJQLEkQ+0sYsdgN1O8S/LSqV5aDksgYImMrmnCMRqxGlzMvCL2bs?=
+ =?us-ascii?Q?876F80I1uflf1ApMOfOb32ZII1BPu39CfZDjY+ujOw=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?vahQmim+R/6nvj0tZOPwWcotzMYWZ0FC6AM+fu2HvnBEOE2tDwYSG1tJAN4G?=
+ =?us-ascii?Q?6AajbQdIYsl0b1vMUbD2zXmKnnUzmJ1c0wNBDfTB5I4RqPGTZzfQESNSoDbk?=
+ =?us-ascii?Q?oWvXIRfTnZaAdJa/0EGb0qV5j4hpkoJqrbOZu0BcPC4qMG1IZr+taUK5r5Ih?=
+ =?us-ascii?Q?aSyCPGI0hq5yh23t6FGE0QcqHvRq+5Oi0Tzhq91Uo9lv5MY/+lu0M14C6RD8?=
+ =?us-ascii?Q?3rmEe9EEKXw/N+IBVzVgAgZLulMOvsaAqX17G9DZ74UbLrGlQHr8Ql052IcE?=
+ =?us-ascii?Q?hQuXHfKZHxRRsLtJ3TF1jVumabj6rBaQAR8nGwnW7LIKT5WYlBMaiaVP02t4?=
+ =?us-ascii?Q?fz8dAwrq2gkpX3Vc6UfPtOyC4dMggElncaeXx5QCIAXSfsleujAgcIHN55fv?=
+ =?us-ascii?Q?C5bydPoqNa7afR3PIua27m5STV4XxQMP7mZYjneLZ502vbRBSJLQcg7t21M0?=
+ =?us-ascii?Q?GzW5fz26/Dtx+4LJKszc+zZ3khZXWPrzR3VYDHBY0dK5hs5SGtqdriaJHzFF?=
+ =?us-ascii?Q?qG0DTbJV3GGZxbF4BezKRAIZ1Gqd7j4uBGFoXvcavETeqiCnJG9LBYd8P4w1?=
+ =?us-ascii?Q?JQpyZKqnC8RVNc9q0+jfyfDSn9fZqYbRcK/wBhdMRfBjLWHda3Ovyb1HUDAG?=
+ =?us-ascii?Q?ZDN5uIECkGd8r/zpS8zkT+5AdD8Vp9zg1yzbQGeu7xZinGfLboPM3CFc7EFK?=
+ =?us-ascii?Q?IR7HUL9D88k9IArghbIxQuoX3jrkGlaf4DrE7tr4YACD+Kfr/vVGARgevBoS?=
+ =?us-ascii?Q?1fAZxztE417CwWYKH53I4Q7qdiJsONdJc9cDkBP3vamM1+twvSxNF9mZb4Hm?=
+ =?us-ascii?Q?PCnexPmubDMpAOUIWk5fAZF8ugC9bvn04BfvBf761bPpbJS8520/lddcTu0Q?=
+ =?us-ascii?Q?vFmsdXA+RN7vJvIFqxG0G4ahE5r7dgn4qjgQZaDFUKpfd6uRX6qFVNDjymPx?=
+ =?us-ascii?Q?+zYdPTJBhXGGJ82DDrzqLr77/qSXqLCli5CJxKZxYniGVAtAoog4XFvFA05d?=
+ =?us-ascii?Q?VP8hOY+XZe91d1yxg2RU4CsZ3jnrAd5JKTeqrATKHOutyHI5l2r2N93G0BGG?=
+ =?us-ascii?Q?I7KZ2h+IO+gpj3yTHlUOiZkLYMHJt8D4vh0C32tvCvZpUXRL9Tns+jqbd3eO?=
+ =?us-ascii?Q?1ECmLAEnG99h8DNzLAMfj5b3Ht5enKvB5ZSV/5AvbA+PoIAc7yW/0xnf4Orl?=
+ =?us-ascii?Q?j0AyVsXolsyTR1sI6j03uhQ1ecBlcDzjsDPWn042YEGuBxdoTvZ/ZF2TvYn5?=
+ =?us-ascii?Q?D8Dcetkx0zJLnY1LxN66a2mS4GXROl0xv0oei4YzzehgEJEdD9bSOE8+MT5Q?=
+ =?us-ascii?Q?Ibo+uOmo4vT0wbRdEK/I0gZKh6T7+cEUysGW1HF1RRCj0U3bbnPSL1q037Gd?=
+ =?us-ascii?Q?uTCn4Kk=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/12] Recover sysfb after DRM probe failure
-To: Zack Rusin <zack.rusin@broadcom.com>, dri-devel@lists.freedesktop.org
-Cc: Alex Deucher <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org,
- Ard Biesheuvel <ardb@kernel.org>, Ce Sun <cesun102@amd.com>,
- Chia-I Wu <olvaffe@gmail.com>, =?UTF-8?Q?Christian_K=C3=B6nig?=
- <christian.koenig@amd.com>, Danilo Krummrich <dakr@kernel.org>,
- Dave Airlie <airlied@redhat.com>, Deepak Rawat <drawat.floss@gmail.com>,
- Dmitry Osipenko <dmitry.osipenko@collabora.com>,
- Gerd Hoffmann <kraxel@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>,
- Hans de Goede <hansg@kernel.org>, Hawking Zhang <Hawking.Zhang@amd.com>,
- Helge Deller <deller@gmx.de>, intel-gfx@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, Jani Nikula <jani.nikula@linux.intel.com>,
- Javier Martinez Canillas <javierm@redhat.com>,
- Jocelyn Falempe <jfalempe@redhat.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Lijo Lazar <lijo.lazar@amd.com>, linux-efi@vger.kernel.org,
- linux-fbdev@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, Lucas De Marchi <lucas.demarchi@intel.com>,
- Lyude Paul <lyude@redhat.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- "Mario Limonciello (AMD)" <superm1@kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Maxime Ripard <mripard@kernel.org>, nouveau@lists.freedesktop.org,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>,
- spice-devel@lists.freedesktop.org,
- =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- =?UTF-8?Q?Timur_Krist=C3=B3f?= <timur.kristof@gmail.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>, virtualization@lists.linux.dev,
- Vitaly Prosyak <vitaly.prosyak@amd.com>
-References: <20251229215906.3688205-1-zack.rusin@broadcom.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20251229215906.3688205-1-zack.rusin@broadcom.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[43];
-	TAGGED_RCPT(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLxtqcp3yg5i7i9mi6syp13ijk)];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[amd.com,lists.freedesktop.org,kernel.org,gmail.com,redhat.com,collabora.com,chromium.org,gmx.de,linux.intel.com,vger.kernel.org,intel.com,ffwll.ch,ursulin.net,lists.linux.dev];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,suse.com:url,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo,lists.freedesktop.org:email]
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
-X-Spam-Level: 
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: a598e32f-e140-4a80-efde-08de4fa751a6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2026 17:48:38.1102
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR02MB7553
 
-Hi
+From: longli@linux.microsoft.com <longli@linux.microsoft.com> Sent: Wednesd=
+ay, January 7, 2026 11:57 AM
+>=20
+> The Hyper-V host does not support MODE_SENSE_10 and MODE_SENSE.
+> The driver handles MODE_SENSE as unsupported command, but not for
+> MODE_SENSE_10. Add MODE_SENSE_10 to the same handling logic and
+> return correct code to SCSI layer.
+>=20
+> Fixes: 89ae7d709357 ("Staging: hv: storvsc: Move the storage driver out o=
+f the staging area")
+> Cc: stable@kernel.org
+> Signed-off-by: Long Li <longli@microsoft.com>
+> ---
+>  drivers/scsi/storvsc_drv.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+> index 6e4112143c76..9b15784e2d64 100644
+> --- a/drivers/scsi/storvsc_drv.c
+> +++ b/drivers/scsi/storvsc_drv.c
+> @@ -1154,6 +1154,7 @@ static void storvsc_on_io_completion(struct storvsc=
+_device
+> *stor_device,
+>=20
+>  	if ((stor_pkt->vm_srb.cdb[0] =3D=3D INQUIRY) ||
+>  	   (stor_pkt->vm_srb.cdb[0] =3D=3D MODE_SENSE) ||
+> +	   (stor_pkt->vm_srb.cdb[0] =3D=3D MODE_SENSE_10) ||
+>  	   (stor_pkt->vm_srb.cdb[0] =3D=3D MAINTENANCE_IN &&
+>  	   hv_dev_is_fc(device))) {
+>  		vstor_packet->vm_srb.scsi_status =3D 0;
 
-Am 29.12.25 um 22:58 schrieb Zack Rusin:
-> Almost a rite of passage for every DRM developer and most Linux users
-> is upgrading your DRM driver/updating boot flags/changing some config
-> and having DRM driver fail at probe resulting in a blank screen.
->
-> Currently there's no way to recover from DRM driver probe failure. PCI
-> DRM driver explicitly throw out the existing sysfb to get exclusive
-> access to PCI resources so if the probe fails the system is left without
-> a functioning display driver.
->
-> Add code to sysfb to recever system framebuffer when DRM driver's probe
-> fails. This means that a DRM driver that fails to load reloads the system
-> framebuffer driver.
->
-> This works best with simpledrm. Without it Xorg won't recover because
-> it still tries to load the vendor specific driver which ends up usually
-> not working at all. With simpledrm the system recovers really nicely
-> ending up with a working console and not a blank screen.
->
-> There's a caveat in that some hardware might require some special magic
-> register write to recover EFI display. I'd appreciate it a lot if
-> maintainers could introduce a temporary failure in their drivers
-> probe to validate that the sysfb recovers and they get a working console.
-> The easiest way to double check it is by adding:
->   /* XXX: Temporary failure to test sysfb restore - REMOVE BEFORE COMMIT */
->   dev_info(&pdev->dev, "Testing sysfb restore: forcing probe failure\n");
->   ret = -EINVAL;
->   goto out_error;
-> or such right after the devm_aperture_remove_conflicting_pci_devices .
+There's a code comment above this "if" statement that describes the situati=
+on.
+The comment specifically lists INQUIRY, MODE_SENSE, and MAINTENANCE_IN. For
+consistency, it should be updated to include MODE_SENSE_10.
 
-Recovering the display like that is guess work and will at best work 
-with simple discrete devices where the framebuffer is always located in 
-a confined graphics aperture.
+With the comment updated,
 
-But the problem you're trying to solve is a real one.
-
-What we'd want to do instead is to take the initial hardware state into 
-account when we do the initial mode-setting operation.
-
-The first step is to move each driver's remove_conflicting_devices call 
-to the latest possible location in the probe function. We usually do it 
-first, because that's easy. But on most hardware, it could happen much 
-later. The native driver is free to examine hardware state while probing 
-the device as long as it does not interfere with the pre-configured 
-framebuffer mode/format/address. Hence it can set up it's internal 
-structures while the sysfb device is still active.
-
-The next step for the native driver is to load the pre-configured 
-hardware state into its initial internal atomic state. Maxime has worked 
-on that on and off. The last iteration I'm aware of is at [1].
-
-After the state-readout, the sysfb device has to be unplugged. But as 
-the underlying hardware config remains active, the native driver can now 
-use and modify it. We currently do a drm_mode_config_reset(), which 
-clears the state and then let the first client set a new display state. 
-But with state-readout, we could either pick up the existing framebuffer 
-directly or do a proper modeset from existing state.
-
-As DRM clients control the mode setting, they'd likely need some changes 
-to handle state-readout. There's such code in i915's fbdev support AFAIK.
-
-Best regards
-Thomas
-
-[1] 
-https://lore.kernel.org/dri-devel/20250902-drm-state-readout-v1-0-14ad5315da3f@kernel.org/
-
->
-> Cc: Alex Deucher <alexander.deucher@amd.com>
-> Cc: amd-gfx@lists.freedesktop.org
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Ce Sun <cesun102@amd.com>
-> Cc: Chia-I Wu <olvaffe@gmail.com>
-> Cc: "Christian König" <christian.koenig@amd.com>
-> Cc: Danilo Krummrich <dakr@kernel.org>
-> Cc: Dave Airlie <airlied@redhat.com>
-> Cc: Deepak Rawat <drawat.floss@gmail.com>
-> Cc: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: Gerd Hoffmann <kraxel@redhat.com>
-> Cc: Gurchetan Singh <gurchetansingh@chromium.org>
-> Cc: Hans de Goede <hansg@kernel.org>
-> Cc: Hawking Zhang <Hawking.Zhang@amd.com>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: intel-gfx@lists.freedesktop.org
-> Cc: intel-xe@lists.freedesktop.org
-> Cc: Jani Nikula <jani.nikula@linux.intel.com>
-> Cc: Javier Martinez Canillas <javierm@redhat.com>
-> Cc: Jocelyn Falempe <jfalempe@redhat.com>
-> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> Cc: Lijo Lazar <lijo.lazar@amd.com>
-> Cc: linux-efi@vger.kernel.org
-> Cc: linux-fbdev@vger.kernel.org
-> Cc: linux-hyperv@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Lucas De Marchi <lucas.demarchi@intel.com>
-> Cc: Lyude Paul <lyude@redhat.com>
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: "Mario Limonciello (AMD)" <superm1@kernel.org>
-> Cc: Mario Limonciello <mario.limonciello@amd.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: nouveau@lists.freedesktop.org
-> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> Cc: Simona Vetter <simona@ffwll.ch>
-> Cc: spice-devel@lists.freedesktop.org
-> Cc: "Thomas Hellström" <thomas.hellstrom@linux.intel.com>
-> Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: "Timur Kristóf" <timur.kristof@gmail.com>
-> Cc: Tvrtko Ursulin <tursulin@ursulin.net>
-> Cc: virtualization@lists.linux.dev
-> Cc: Vitaly Prosyak <vitaly.prosyak@amd.com>
->
-> Zack Rusin (12):
->    video/aperture: Add sysfb restore on DRM probe failure
->    drm/vmwgfx: Use devm aperture helpers for sysfb restore on probe
->      failure
->    drm/xe: Use devm aperture helpers for sysfb restore on probe failure
->    drm/amdgpu: Use devm aperture helpers for sysfb restore on probe
->      failure
->    drm/virtio: Add sysfb restore on probe failure
->    drm/nouveau: Use devm aperture helpers for sysfb restore on probe
->      failure
->    drm/qxl: Use devm aperture helpers for sysfb restore on probe failure
->    drm/vboxvideo: Use devm aperture helpers for sysfb restore on probe
->      failure
->    drm/hyperv: Add sysfb restore on probe failure
->    drm/ast: Use devm aperture helpers for sysfb restore on probe failure
->    drm/radeon: Use devm aperture helpers for sysfb restore on probe
->      failure
->    drm/i915: Use devm aperture helpers for sysfb restore on probe failure
->
->   drivers/firmware/efi/sysfb_efi.c           |   2 +-
->   drivers/firmware/sysfb.c                   | 191 +++++++++++++--------
->   drivers/firmware/sysfb_simplefb.c          |  10 +-
->   drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |   9 +-
->   drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c    |   7 +
->   drivers/gpu/drm/ast/ast_drv.c              |  13 +-
->   drivers/gpu/drm/hyperv/hyperv_drm_drv.c    |  23 +++
->   drivers/gpu/drm/i915/i915_driver.c         |  13 +-
->   drivers/gpu/drm/nouveau/nouveau_drm.c      |  16 +-
->   drivers/gpu/drm/qxl/qxl_drv.c              |  14 +-
->   drivers/gpu/drm/radeon/radeon_drv.c        |  15 +-
->   drivers/gpu/drm/vboxvideo/vbox_drv.c       |  13 +-
->   drivers/gpu/drm/virtio/virtgpu_drv.c       |  29 ++++
->   drivers/gpu/drm/vmwgfx/vmwgfx_drv.c        |  13 +-
->   drivers/gpu/drm/xe/xe_device.c             |   7 +-
->   drivers/gpu/drm/xe/xe_pci.c                |   7 +
->   drivers/video/aperture.c                   |  54 ++++++
->   include/linux/aperture.h                   |  14 ++
->   include/linux/sysfb.h                      |   6 +
->   19 files changed, 368 insertions(+), 88 deletions(-)
->
-
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
-GF: Jochen Jaser, Andrew McDonald, Werner Knoblich, (HRB 36809, AG Nürnberg)
-
-
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 
