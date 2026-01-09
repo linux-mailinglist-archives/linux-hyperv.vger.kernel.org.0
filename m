@@ -1,45 +1,93 @@
-Return-Path: <linux-hyperv+bounces-8196-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8197-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E999D05F74
-	for <lists+linux-hyperv@lfdr.de>; Thu, 08 Jan 2026 21:03:33 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC7A8D0899E
+	for <lists+linux-hyperv@lfdr.de>; Fri, 09 Jan 2026 11:35:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id ECD3330019F8
-	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Jan 2026 20:03:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 59A7D305B5B5
+	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Jan 2026 10:34:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A86133148AC;
-	Thu,  8 Jan 2026 20:03:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37F942F83D8;
+	Fri,  9 Jan 2026 10:34:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iyAxf7QT"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AYGkFnRw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IHUFvxjX";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AYGkFnRw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IHUFvxjX"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6679F284684;
-	Thu,  8 Jan 2026 20:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6183B3382E5
+	for <linux-hyperv@vger.kernel.org>; Fri,  9 Jan 2026 10:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767902607; cv=none; b=sc8ciGnTGNzKAxDjdIBoQZRsuPGBZ3YUmRcXvRpjZPFD3jEl6Qnsweh+TaaNofoePGQFDug+R+WXq0XxNkwHIyo+iaI2xUiznwvS4f7Vmq1FnitwvUnhbmrdFdVopZl3WQQOd9TohiBb/MSuFOq0gxQm5vWJAOp8GmY/RLMsq+s=
+	t=1767954881; cv=none; b=rvym80KO6oQn0USB3/+prhZOARyGc/0DloArAzAyCCbhr9ww32K1RQcueRavbAL1yGblZ2DeR+iGdw2IpILrV53g9ab7pkd3G14pN0dKxUvWhvh7lonFizDAAz3+Qu8wEs/ChEl+s1wb6cumRAu2bDzGigZKQgp2Zyhrvj6Vma0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767902607; c=relaxed/simple;
-	bh=xT1YWrNNd8xLx4uikI9DuowmJgibeH9vJ42OIJA6Dv4=;
+	s=arc-20240116; t=1767954881; c=relaxed/simple;
+	bh=pDV+Y2brq5Y/jlC+k4P9H3Hzq52Ia6LIXFxRhCL7Apk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vDe2e0TXwrfUcHOWFuGxHhAJphjMTtN1sFgMOJjgc+ximqdb8Yjlvu9u9bBnGaUVITna0xFmSmkmibX0+4xb25zSfWVAkJQq00xs3pS4W5mWdekzeKkWy9ltahaAgW0ZuSi36loE2yEegVhZ2GbylPwCMgKrmzIwXILx5A0O8Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=iyAxf7QT; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.64.161.206] (unknown [20.191.74.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 0E75A2125396;
-	Thu,  8 Jan 2026 12:03:19 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0E75A2125396
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1767902600;
-	bh=CDJ6iRDC7HFAeZDc7qqM3Drcfscp0HmyA4zqD4iMK8U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iyAxf7QTJvsLtJcDExrZjjAZa8eG/npE8PGQg8P+0BHIueCSwrk+FgN2Rp6t9VhRL
-	 Yys57aJnOkXUrYmjO4zxii+AGzwJv5hbc0wi0CdOa69wtnQwIbx+kzBlXDZSN5KJVA
-	 CckjqyiVSiEao8W5cB3OHHtrvnzgsn6KgHt6ehxI=
-Message-ID: <f46b9c60-a1d5-4d2c-9aaa-d4ba738f1491@linux.microsoft.com>
-Date: Thu, 8 Jan 2026 12:03:19 -0800
+	 In-Reply-To:Content-Type; b=kTjzrcjcUZrBc7snUL5cZ/NGfbxt8J5sNmkxLpEN2HhDtA/0r7ywtNmZOxNuPpBUXt7fGNeLJNvNxYcJIT/AOVH5IDcfc55QL9usWISUVEAkKe5uU8SS99KTKs5rkv7pFBXDV+JlQj4R6EcLrFrOYRKHJm5m4A/9pJJDGUAwLD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AYGkFnRw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IHUFvxjX; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AYGkFnRw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IHUFvxjX; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 892485BD4C;
+	Fri,  9 Jan 2026 10:34:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1767954869; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=quXykmFucH86nMSyArVgl9RjHoQwr+Ungu8b5HjPcy4=;
+	b=AYGkFnRwOFEi2fS+0MgdGKuPjA5xML1KOEc0VNsILP7ImaqRJ4uUWXamjRs8/0o0vpKGhf
+	7MdEAeqQ4bcAxw2TDloU/+OssmLjWH5UUlO21Va39W6gTXrp1mv9PEbzCDRLA8v7bJkvGC
+	fj9pE11XRgdPxIiiCGMLZ4rIU7VzfFA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1767954869;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=quXykmFucH86nMSyArVgl9RjHoQwr+Ungu8b5HjPcy4=;
+	b=IHUFvxjXt6RNe94raOnQ1X8PE56K7NAxMjFmxFzfDsr06Ts6Avcj62ovlK3mxFEbcYeb9j
+	Lla84MGwl3Bi/IDw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1767954869; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=quXykmFucH86nMSyArVgl9RjHoQwr+Ungu8b5HjPcy4=;
+	b=AYGkFnRwOFEi2fS+0MgdGKuPjA5xML1KOEc0VNsILP7ImaqRJ4uUWXamjRs8/0o0vpKGhf
+	7MdEAeqQ4bcAxw2TDloU/+OssmLjWH5UUlO21Va39W6gTXrp1mv9PEbzCDRLA8v7bJkvGC
+	fj9pE11XRgdPxIiiCGMLZ4rIU7VzfFA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1767954869;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=quXykmFucH86nMSyArVgl9RjHoQwr+Ungu8b5HjPcy4=;
+	b=IHUFvxjXt6RNe94raOnQ1X8PE56K7NAxMjFmxFzfDsr06Ts6Avcj62ovlK3mxFEbcYeb9j
+	Lla84MGwl3Bi/IDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5C7883EA63;
+	Fri,  9 Jan 2026 10:34:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id LvUmFbTZYGkGRAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 09 Jan 2026 10:34:28 +0000
+Message-ID: <c816f7ed-66e0-4773-b3d1-4769234bd30b@suse.de>
+Date: Fri, 9 Jan 2026 11:34:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -47,36 +95,256 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mshv: Align huge page stride with guest mapping
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
- kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, longli@microsoft.com
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <176781093198.21595.6373086133020540990.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+Subject: Re: [PATCH 00/12] Recover sysfb after DRM probe failure
+To: Zack Rusin <zack.rusin@broadcom.com>, dri-devel@lists.freedesktop.org
+Cc: Alex Deucher <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org,
+ Ard Biesheuvel <ardb@kernel.org>, Ce Sun <cesun102@amd.com>,
+ Chia-I Wu <olvaffe@gmail.com>, =?UTF-8?Q?Christian_K=C3=B6nig?=
+ <christian.koenig@amd.com>, Danilo Krummrich <dakr@kernel.org>,
+ Dave Airlie <airlied@redhat.com>, Deepak Rawat <drawat.floss@gmail.com>,
+ Dmitry Osipenko <dmitry.osipenko@collabora.com>,
+ Gerd Hoffmann <kraxel@redhat.com>,
+ Gurchetan Singh <gurchetansingh@chromium.org>,
+ Hans de Goede <hansg@kernel.org>, Hawking Zhang <Hawking.Zhang@amd.com>,
+ Helge Deller <deller@gmx.de>, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, Jani Nikula <jani.nikula@linux.intel.com>,
+ Javier Martinez Canillas <javierm@redhat.com>,
+ Jocelyn Falempe <jfalempe@redhat.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Lijo Lazar <lijo.lazar@amd.com>, linux-efi@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Lucas De Marchi <lucas.demarchi@intel.com>,
+ Lyude Paul <lyude@redhat.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ "Mario Limonciello (AMD)" <superm1@kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Maxime Ripard <mripard@kernel.org>, nouveau@lists.freedesktop.org,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>,
+ spice-devel@lists.freedesktop.org,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ =?UTF-8?Q?Timur_Krist=C3=B3f?= <timur.kristof@gmail.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, virtualization@lists.linux.dev,
+ Vitaly Prosyak <vitaly.prosyak@amd.com>
+References: <20251229215906.3688205-1-zack.rusin@broadcom.com>
 Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <176781093198.21595.6373086133020540990.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20251229215906.3688205-1-zack.rusin@broadcom.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[43];
+	TAGGED_RCPT(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RLxtqcp3yg5i7i9mi6syp13ijk)];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[amd.com,lists.freedesktop.org,kernel.org,gmail.com,redhat.com,collabora.com,chromium.org,gmx.de,linux.intel.com,vger.kernel.org,intel.com,ffwll.ch,ursulin.net,lists.linux.dev];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,suse.com:url,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo,lists.freedesktop.org:email]
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spam-Level: 
 
-On 1/7/2026 10:45 AM, Stanislav Kinsburskii wrote:
-> Ensure that a stride larger than 1 (huge page) is only used when page
-> points to a head of a huge page and both the guest frame number (gfn) and
-> the operation size (page_count) are aligned to the huge page size
-> (PTRS_PER_PMD). This matches the hypervisor requirement that map/unmap
-> operations for huge pages must be guest-aligned and cover a full huge page.
-> 
-> Add mshv_chunk_stride() to encapsulate this alignment and page-order
-> validation, and plumb a huge_page flag into the region chunk handlers.
-> This prevents issuing large-page map/unmap/share operations that the
-> hypervisor would reject due to misaligned guest mappings.
-> 
-> Fixes: abceb4297bf8 ("mshv: Fix huge page handling in memory region traversal")
-> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> ---
->  drivers/hv/mshv_regions.c |   93 ++++++++++++++++++++++++++++++---------------
->  1 file changed, 62 insertions(+), 31 deletions(-)
-> 
+Hi
 
-Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Am 29.12.25 um 22:58 schrieb Zack Rusin:
+> Almost a rite of passage for every DRM developer and most Linux users
+> is upgrading your DRM driver/updating boot flags/changing some config
+> and having DRM driver fail at probe resulting in a blank screen.
+>
+> Currently there's no way to recover from DRM driver probe failure. PCI
+> DRM driver explicitly throw out the existing sysfb to get exclusive
+> access to PCI resources so if the probe fails the system is left without
+> a functioning display driver.
+>
+> Add code to sysfb to recever system framebuffer when DRM driver's probe
+> fails. This means that a DRM driver that fails to load reloads the system
+> framebuffer driver.
+>
+> This works best with simpledrm. Without it Xorg won't recover because
+> it still tries to load the vendor specific driver which ends up usually
+> not working at all. With simpledrm the system recovers really nicely
+> ending up with a working console and not a blank screen.
+>
+> There's a caveat in that some hardware might require some special magic
+> register write to recover EFI display. I'd appreciate it a lot if
+> maintainers could introduce a temporary failure in their drivers
+> probe to validate that the sysfb recovers and they get a working console.
+> The easiest way to double check it is by adding:
+>   /* XXX: Temporary failure to test sysfb restore - REMOVE BEFORE COMMIT */
+>   dev_info(&pdev->dev, "Testing sysfb restore: forcing probe failure\n");
+>   ret = -EINVAL;
+>   goto out_error;
+> or such right after the devm_aperture_remove_conflicting_pci_devices .
+
+Recovering the display like that is guess work and will at best work 
+with simple discrete devices where the framebuffer is always located in 
+a confined graphics aperture.
+
+But the problem you're trying to solve is a real one.
+
+What we'd want to do instead is to take the initial hardware state into 
+account when we do the initial mode-setting operation.
+
+The first step is to move each driver's remove_conflicting_devices call 
+to the latest possible location in the probe function. We usually do it 
+first, because that's easy. But on most hardware, it could happen much 
+later. The native driver is free to examine hardware state while probing 
+the device as long as it does not interfere with the pre-configured 
+framebuffer mode/format/address. Hence it can set up it's internal 
+structures while the sysfb device is still active.
+
+The next step for the native driver is to load the pre-configured 
+hardware state into its initial internal atomic state. Maxime has worked 
+on that on and off. The last iteration I'm aware of is at [1].
+
+After the state-readout, the sysfb device has to be unplugged. But as 
+the underlying hardware config remains active, the native driver can now 
+use and modify it. We currently do a drm_mode_config_reset(), which 
+clears the state and then let the first client set a new display state. 
+But with state-readout, we could either pick up the existing framebuffer 
+directly or do a proper modeset from existing state.
+
+As DRM clients control the mode setting, they'd likely need some changes 
+to handle state-readout. There's such code in i915's fbdev support AFAIK.
+
+Best regards
+Thomas
+
+[1] 
+https://lore.kernel.org/dri-devel/20250902-drm-state-readout-v1-0-14ad5315da3f@kernel.org/
+
+>
+> Cc: Alex Deucher <alexander.deucher@amd.com>
+> Cc: amd-gfx@lists.freedesktop.org
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Ce Sun <cesun102@amd.com>
+> Cc: Chia-I Wu <olvaffe@gmail.com>
+> Cc: "Christian König" <christian.koenig@amd.com>
+> Cc: Danilo Krummrich <dakr@kernel.org>
+> Cc: Dave Airlie <airlied@redhat.com>
+> Cc: Deepak Rawat <drawat.floss@gmail.com>
+> Cc: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: Gerd Hoffmann <kraxel@redhat.com>
+> Cc: Gurchetan Singh <gurchetansingh@chromium.org>
+> Cc: Hans de Goede <hansg@kernel.org>
+> Cc: Hawking Zhang <Hawking.Zhang@amd.com>
+> Cc: Helge Deller <deller@gmx.de>
+> Cc: intel-gfx@lists.freedesktop.org
+> Cc: intel-xe@lists.freedesktop.org
+> Cc: Jani Nikula <jani.nikula@linux.intel.com>
+> Cc: Javier Martinez Canillas <javierm@redhat.com>
+> Cc: Jocelyn Falempe <jfalempe@redhat.com>
+> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+> Cc: Lijo Lazar <lijo.lazar@amd.com>
+> Cc: linux-efi@vger.kernel.org
+> Cc: linux-fbdev@vger.kernel.org
+> Cc: linux-hyperv@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Lucas De Marchi <lucas.demarchi@intel.com>
+> Cc: Lyude Paul <lyude@redhat.com>
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: "Mario Limonciello (AMD)" <superm1@kernel.org>
+> Cc: Mario Limonciello <mario.limonciello@amd.com>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: nouveau@lists.freedesktop.org
+> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Cc: Simona Vetter <simona@ffwll.ch>
+> Cc: spice-devel@lists.freedesktop.org
+> Cc: "Thomas Hellström" <thomas.hellstrom@linux.intel.com>
+> Cc: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: "Timur Kristóf" <timur.kristof@gmail.com>
+> Cc: Tvrtko Ursulin <tursulin@ursulin.net>
+> Cc: virtualization@lists.linux.dev
+> Cc: Vitaly Prosyak <vitaly.prosyak@amd.com>
+>
+> Zack Rusin (12):
+>    video/aperture: Add sysfb restore on DRM probe failure
+>    drm/vmwgfx: Use devm aperture helpers for sysfb restore on probe
+>      failure
+>    drm/xe: Use devm aperture helpers for sysfb restore on probe failure
+>    drm/amdgpu: Use devm aperture helpers for sysfb restore on probe
+>      failure
+>    drm/virtio: Add sysfb restore on probe failure
+>    drm/nouveau: Use devm aperture helpers for sysfb restore on probe
+>      failure
+>    drm/qxl: Use devm aperture helpers for sysfb restore on probe failure
+>    drm/vboxvideo: Use devm aperture helpers for sysfb restore on probe
+>      failure
+>    drm/hyperv: Add sysfb restore on probe failure
+>    drm/ast: Use devm aperture helpers for sysfb restore on probe failure
+>    drm/radeon: Use devm aperture helpers for sysfb restore on probe
+>      failure
+>    drm/i915: Use devm aperture helpers for sysfb restore on probe failure
+>
+>   drivers/firmware/efi/sysfb_efi.c           |   2 +-
+>   drivers/firmware/sysfb.c                   | 191 +++++++++++++--------
+>   drivers/firmware/sysfb_simplefb.c          |  10 +-
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |   9 +-
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c    |   7 +
+>   drivers/gpu/drm/ast/ast_drv.c              |  13 +-
+>   drivers/gpu/drm/hyperv/hyperv_drm_drv.c    |  23 +++
+>   drivers/gpu/drm/i915/i915_driver.c         |  13 +-
+>   drivers/gpu/drm/nouveau/nouveau_drm.c      |  16 +-
+>   drivers/gpu/drm/qxl/qxl_drv.c              |  14 +-
+>   drivers/gpu/drm/radeon/radeon_drv.c        |  15 +-
+>   drivers/gpu/drm/vboxvideo/vbox_drv.c       |  13 +-
+>   drivers/gpu/drm/virtio/virtgpu_drv.c       |  29 ++++
+>   drivers/gpu/drm/vmwgfx/vmwgfx_drv.c        |  13 +-
+>   drivers/gpu/drm/xe/xe_device.c             |   7 +-
+>   drivers/gpu/drm/xe/xe_pci.c                |   7 +
+>   drivers/video/aperture.c                   |  54 ++++++
+>   include/linux/aperture.h                   |  14 ++
+>   include/linux/sysfb.h                      |   6 +
+>   19 files changed, 368 insertions(+), 88 deletions(-)
+>
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
+GF: Jochen Jaser, Andrew McDonald, Werner Knoblich, (HRB 36809, AG Nürnberg)
+
+
 
