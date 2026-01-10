@@ -1,305 +1,141 @@
-Return-Path: <linux-hyperv+bounces-8202-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8203-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D35ED0C236
-	for <lists+linux-hyperv@lfdr.de>; Fri, 09 Jan 2026 21:07:18 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B03ED0C9AE
+	for <lists+linux-hyperv@lfdr.de>; Sat, 10 Jan 2026 01:11:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 40CBE30327A3
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Jan 2026 20:06:36 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 292CB303ADD2
+	for <lists+linux-hyperv@lfdr.de>; Sat, 10 Jan 2026 00:11:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C90BD366DD6;
-	Fri,  9 Jan 2026 20:06:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2749781ACA;
+	Sat, 10 Jan 2026 00:11:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Vp3EQhLg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WF5/fIAP"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4712C366562
-	for <linux-hyperv@vger.kernel.org>; Fri,  9 Jan 2026 20:06:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-yx1-f42.google.com (mail-yx1-f42.google.com [74.125.224.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78851CFBA
+	for <linux-hyperv@vger.kernel.org>; Sat, 10 Jan 2026 00:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767989190; cv=none; b=h1oEau02F/B0b/t++ilfFSFygnFeyAwPKwyUc3U2m9AgGmibMp8/EuB+BTEO7RbzFfWNieYj8mEB+6me7A52p8HHzV6ViqoJd9cN3gXCd2GBk5+H2aCGDSuPD7nKi1y678Uomr1kTBA9EDs4DDe+/thboBswlizTHdyO6lHIPnM=
+	t=1768003877; cv=none; b=ces8x0E3GHNiZhx7oxPYUADUOKZpPxhic2DNbfrS+5kyFuXsCYKDIEHqqbTBWlJ7CXz+vsIjUGsmv6qf8Vkzpv62kLDWztgI+XXWvx65ZkNQLPnDC1qPEBLPAjAQ5mgb7FhIZ0qBEbmeezW+HviNwCfhdlXeV/TMs7PDZmE6iIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767989190; c=relaxed/simple;
-	bh=6CBiVzeubTP4FZKYp+AeRaOq+XUJUHEr6JdHXsZ6bik=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kBYDHYQwxf8uJMYCujk0gT2CrXxHF4sItxhF8nuhc7ZmEZSuJSbIMddCZnpdmxfWM7pdprCtm8iSx2w6sLNGjXrNMxNFkOudNNmB/hLFBmW3goDYTkUlfiW/2p06Qj6AmE0YU5syBzSE63Cw3FmFJxVNfaK1skY7TdICtOuJMdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Vp3EQhLg; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from mrdev.corp.microsoft.com (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 28CBF201AC73;
-	Fri,  9 Jan 2026 12:06:22 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 28CBF201AC73
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1767989182;
-	bh=TiBEJKRjJcVE6cVJFJTQRoVJdlRzhbBQ7mMyf+nx918=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Vp3EQhLgreQZi4sXcFO9d1l5OZL+UBVJsy/DekKsxXjLcVYr/YFgcxZM7s0yYM24e
-	 pjSZbiwLPNYI1/XqaYSiHUBgBAdFBzq8QCtw54fEG9HKFW06cnbC7FZBAbSgZDdZnf
-	 bDG5VExEvg8LNbFrarA8qlp7oi55Gs0QKYf//ASk=
-From: Mukesh Rathor <mrathor@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org
-Cc: wei.liu@kernel.org,
-	nunodasneves@linux.microsoft.com
-Subject: [PATCH] mshv: make certain field names descriptive in a header struct
-Date: Fri,  9 Jan 2026 12:06:11 -0800
-Message-ID: <20260109200611.1422390-1-mrathor@linux.microsoft.com>
-X-Mailer: git-send-email 2.51.2.vfs.0.1
+	s=arc-20240116; t=1768003877; c=relaxed/simple;
+	bh=XszBXPJ18HkMpycCWMX0Y8i3Aoh/kyFsduWJiX9qSIA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cgTw4YLfACgF6Yp5Mtgy9Avo+OGv460nBwT2EzKRlnv5vWRI8pgYV26XHxU7Y4pChoTG1uU0xXx8yjFi08s0PVjIWuTOUSl28ySTxZcVZB9lBXV+KxuDNCgg3bakFs0C7H4ocMvNZ6zHdiRyxEH0V9fLmwXiyaMmXu7P9mrLc/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WF5/fIAP; arc=none smtp.client-ip=74.125.224.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yx1-f42.google.com with SMTP id 956f58d0204a3-6455a60c11fso4019369d50.2
+        for <linux-hyperv@vger.kernel.org>; Fri, 09 Jan 2026 16:11:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768003874; x=1768608674; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6N0A2c2LYMc0dJDgYzdUUiKfOdoal/WEyiilk+5HTkg=;
+        b=WF5/fIAP4AEyO4f6KWSJP2rwaSy/sViblkfSeeU8EGHt4W8zcGu8GdInztygNBG+SI
+         lFZMtf5mk92Bho0bl/kz0wrylefbq54djvfDKFetQZqFm4VltIFlMyuYZ3TYsee7EuPv
+         cuFATTU+AojUbvwayi9w7OyNstSzzzIWEbhQr08urKNmtzyFQEASvw8VCOBtpjn1hEZ7
+         /S6AXS4ADril+8pCuPrnQcp3DFjvjtLVBL9cCPyinaRd8F5C9kJqxbl7/LUxO4bKzb5y
+         2VTvsnHADEUfrU8ytID59HZXZVXxMG6DT+qvAAEn0faaDEgjA/ym8ZI4sdu6WxDKie2G
+         EoTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768003874; x=1768608674;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6N0A2c2LYMc0dJDgYzdUUiKfOdoal/WEyiilk+5HTkg=;
+        b=r3h746uepulhV7nVuChtOD63YO17cF4G1lXnJXKEwmFyY5nrOWIsR8yYKfM18+FkHT
+         t5jk/+BFQV+AoHUSZPvwe/J59CfpyLvSlZE1lTCodEzd2of63c8ZxRW3EhVph9aeVVUi
+         Jrz+OKACROUkdB/4814RRw08QjW9VxPubwrwAf5u7sE7IV8i3fph6k0y6Jxy7te4ekCr
+         X8n77KcwDXPleFL9wZmEKJ5dLCm5axQ+4uUzzAzuYqvFUbJFqjLFP0+IYVynlGCaEaun
+         /YsfEQWqZg31+B68//EzMxv5qaPF0l8TYr8T+r1QuuRByr9+K+QX5cpIxfOAZ0t99U9d
+         wRqg==
+X-Forwarded-Encrypted: i=1; AJvYcCV6q66abz5Ss4kCYt6Md8sXWP/hn4xs+c4XWshuWfbttJ3PClet2mX224A/Sib69I2r/X/suRLmLTwwVlE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9uCkWrMmkeiX5iRiXnfwawNPa0SoLzQFBL3YBdgzK2D8hPCfV
+	YwYcVj2rjHiyUdFep0UAGzlko6060xEMu44tIqQZ+GIAwBHeo9r8lrnQ
+X-Gm-Gg: AY/fxX7l4B5KRPncxBM8Kn2ViqK/LllI/im4Vuw+cmmf0KfhqWm+OY+IwpMDmhOtaHS
+	3eRycc7UPqUMCdPyO7+W+yKBChB640t7itr8toq73rzLF9guCJprf5IigxMLkLuhxWFEt/aSgHU
+	vvLG8yYbVpbW+Bu/YquajxzcfLa4oSd6VK6XcAeNrN+pJBvxUwCpMyXYaHMpbeVFtbcB47s9sIu
+	Pq9JyZ3kelsIOnCN5bNGuEh3Eom244pfLGBCfyHs2+YS8Iy5+dmzFdC1tFL/JoAJKhsUhxNEwP8
+	/K4FCg3POxDcXN7E5hTrEldsc59w6o0waSD1RSSclNu0vt2CZ5/4U+zYE1GOzOblAHTIeua62kI
+	fqDhMME0lNpy1/J4odqDkI7/bdDiU6XUKNeib6dFc5GmisKLrCFIbA5Iwdk82S0PYLQAfkkZwZF
+	oj4ZU0WLpxeXfSArN3Bknmby5Ir4w9S2sGzw==
+X-Google-Smtp-Source: AGHT+IE5CW/VP1bFR/Dosae0XD0Rb9scRJI8ZCC2GQQ5cF/xpuuKEVGU70q9buii5G2BZNROzhlUqg==
+X-Received: by 2002:a05:690e:1611:b0:644:7712:ed72 with SMTP id 956f58d0204a3-64716bd7b38mr8182868d50.43.1768003873903;
+        Fri, 09 Jan 2026 16:11:13 -0800 (PST)
+Received: from devvm11784.nha0.facebook.com ([2a03:2880:25ff:a::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-790aa553ac3sm46524707b3.5.2026.01.09.16.11.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jan 2026 16:11:13 -0800 (PST)
+Date: Fri, 9 Jan 2026 16:11:12 -0800
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Stefano Garzarella <sgarzare@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Shuah Khan <shuah@kernel.org>, Long Li <longli@microsoft.com>
+Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+	netdev@vger.kernel.org, kvm@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	berrange@redhat.com, Sargun Dhillon <sargun@sargun.me>,
+	Bobby Eshleman <bobbyeshleman@meta.com>
+Subject: Re: [PATCH RFC net-next v13 00/13] vsock: add namespace support to
+ vhost-vsock and loopback
+Message-ID: <aWGZILlNWzIbRNuO@devvm11784.nha0.facebook.com>
+References: <20251223-vsock-vmtest-v13-0-9d6db8e7c80b@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251223-vsock-vmtest-v13-0-9d6db8e7c80b@meta.com>
 
-There is no functional change. Just make couple field names in
-struct mshv_mem_region, in a header that can be used in many
-places, a little descriptive to make code easier to read by
-allowing better support for grep, cscope, etc.
+On Tue, Dec 23, 2025 at 04:28:34PM -0800, Bobby Eshleman wrote:
+> This series adds namespace support to vhost-vsock and loopback. It does
+> not add namespaces to any of the other guest transports (virtio-vsock,
+> hyperv, or vmci).
+> 
+> The current revision supports two modes: local and global. Local
+> mode is complete isolation of namespaces, while global mode is complete
+> sharing between namespaces of CIDs (the original behavior).
+> 
+> The mode is set using the parent namespace's
+> /proc/sys/net/vsock/child_ns_mode and inherited when a new namespace is
+> created. The mode of the current namespace can be queried by reading
+> /proc/sys/net/vsock/ns_mode. The mode can not change after the namespace
+> has been created.
+> 
+> Modes are per-netns. This allows a system to configure namespaces
+> independently (some may share CIDs, others are completely isolated).
+> This also supports future possible mixed use cases, where there may be
+> namespaces in global mode spinning up VMs while there are mixed mode
+> namespaces that provide services to the VMs, but are not allowed to
+> allocate from the global CID pool (this mode is not implemented in this
+> series).
 
-Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
----
- drivers/hv/mshv_regions.c   | 44 ++++++++++++++++++-------------------
- drivers/hv/mshv_root.h      |  6 ++---
- drivers/hv/mshv_root_main.c | 10 ++++-----
- 3 files changed, 30 insertions(+), 30 deletions(-)
+Stefano, would like me to resend this without the RFC tag, or should I
+just leave as is for review? I don't have any planned changes at the
+moment.
 
-diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
-index 202b9d551e39..af81405f859b 100644
---- a/drivers/hv/mshv_regions.c
-+++ b/drivers/hv/mshv_regions.c
-@@ -52,7 +52,7 @@ static long mshv_region_process_chunk(struct mshv_mem_region *region,
- 	struct page *page;
- 	int ret;
- 
--	page = region->pages[page_offset];
-+	page = region->mreg_pages[page_offset];
- 	if (!page)
- 		return -EINVAL;
- 
-@@ -65,7 +65,7 @@ static long mshv_region_process_chunk(struct mshv_mem_region *region,
- 
- 	/* Start at stride since the first page is validated */
- 	for (count = stride; count < page_count; count += stride) {
--		page = region->pages[page_offset + count];
-+		page = region->mreg_pages[page_offset + count];
- 
- 		/* Break if current page is not present */
- 		if (!page)
-@@ -117,7 +117,7 @@ static int mshv_region_process_range(struct mshv_mem_region *region,
- 
- 	while (page_count) {
- 		/* Skip non-present pages */
--		if (!region->pages[page_offset]) {
-+		if (!region->mreg_pages[page_offset]) {
- 			page_offset++;
- 			page_count--;
- 			continue;
-@@ -164,13 +164,13 @@ static int mshv_region_chunk_share(struct mshv_mem_region *region,
- 				   u32 flags,
- 				   u64 page_offset, u64 page_count)
- {
--	struct page *page = region->pages[page_offset];
-+	struct page *page = region->mreg_pages[page_offset];
- 
- 	if (PageHuge(page) || PageTransCompound(page))
- 		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
- 
- 	return hv_call_modify_spa_host_access(region->partition->pt_id,
--					      region->pages + page_offset,
-+					      region->mreg_pages + page_offset,
- 					      page_count,
- 					      HV_MAP_GPA_READABLE |
- 					      HV_MAP_GPA_WRITABLE,
-@@ -190,13 +190,13 @@ static int mshv_region_chunk_unshare(struct mshv_mem_region *region,
- 				     u32 flags,
- 				     u64 page_offset, u64 page_count)
- {
--	struct page *page = region->pages[page_offset];
-+	struct page *page = region->mreg_pages[page_offset];
- 
- 	if (PageHuge(page) || PageTransCompound(page))
- 		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
- 
- 	return hv_call_modify_spa_host_access(region->partition->pt_id,
--					      region->pages + page_offset,
-+					      region->mreg_pages + page_offset,
- 					      page_count, 0,
- 					      flags, false);
- }
-@@ -214,7 +214,7 @@ static int mshv_region_chunk_remap(struct mshv_mem_region *region,
- 				   u32 flags,
- 				   u64 page_offset, u64 page_count)
- {
--	struct page *page = region->pages[page_offset];
-+	struct page *page = region->mreg_pages[page_offset];
- 
- 	if (PageHuge(page) || PageTransCompound(page))
- 		flags |= HV_MAP_GPA_LARGE_PAGE;
-@@ -222,7 +222,7 @@ static int mshv_region_chunk_remap(struct mshv_mem_region *region,
- 	return hv_call_map_gpa_pages(region->partition->pt_id,
- 				     region->start_gfn + page_offset,
- 				     page_count, flags,
--				     region->pages + page_offset);
-+				     region->mreg_pages + page_offset);
- }
- 
- static int mshv_region_remap_pages(struct mshv_mem_region *region,
-@@ -245,10 +245,10 @@ int mshv_region_map(struct mshv_mem_region *region)
- static void mshv_region_invalidate_pages(struct mshv_mem_region *region,
- 					 u64 page_offset, u64 page_count)
- {
--	if (region->type == MSHV_REGION_TYPE_MEM_PINNED)
--		unpin_user_pages(region->pages + page_offset, page_count);
-+	if (region->mreg_type == MSHV_REGION_TYPE_MEM_PINNED)
-+		unpin_user_pages(region->mreg_pages + page_offset, page_count);
- 
--	memset(region->pages + page_offset, 0,
-+	memset(region->mreg_pages + page_offset, 0,
- 	       page_count * sizeof(struct page *));
- }
- 
-@@ -265,7 +265,7 @@ int mshv_region_pin(struct mshv_mem_region *region)
- 	int ret;
- 
- 	for (done_count = 0; done_count < region->nr_pages; done_count += ret) {
--		pages = region->pages + done_count;
-+		pages = region->mreg_pages + done_count;
- 		userspace_addr = region->start_uaddr +
- 				 done_count * HV_HYP_PAGE_SIZE;
- 		nr_pages = min(region->nr_pages - done_count,
-@@ -297,7 +297,7 @@ static int mshv_region_chunk_unmap(struct mshv_mem_region *region,
- 				   u32 flags,
- 				   u64 page_offset, u64 page_count)
- {
--	struct page *page = region->pages[page_offset];
-+	struct page *page = region->mreg_pages[page_offset];
- 
- 	if (PageHuge(page) || PageTransCompound(page))
- 		flags |= HV_UNMAP_GPA_LARGE_PAGE;
-@@ -321,7 +321,7 @@ static void mshv_region_destroy(struct kref *ref)
- 	struct mshv_partition *partition = region->partition;
- 	int ret;
- 
--	if (region->type == MSHV_REGION_TYPE_MEM_MOVABLE)
-+	if (region->mreg_type == MSHV_REGION_TYPE_MEM_MOVABLE)
- 		mshv_region_movable_fini(region);
- 
- 	if (mshv_partition_encrypted(partition)) {
-@@ -374,9 +374,9 @@ static int mshv_region_hmm_fault_and_lock(struct mshv_mem_region *region,
- 	int ret;
- 
- 	range->notifier_seq = mmu_interval_read_begin(range->notifier);
--	mmap_read_lock(region->mni.mm);
-+	mmap_read_lock(region->mreg_mni.mm);
- 	ret = hmm_range_fault(range);
--	mmap_read_unlock(region->mni.mm);
-+	mmap_read_unlock(region->mreg_mni.mm);
- 	if (ret)
- 		return ret;
- 
-@@ -407,7 +407,7 @@ static int mshv_region_range_fault(struct mshv_mem_region *region,
- 				   u64 page_offset, u64 page_count)
- {
- 	struct hmm_range range = {
--		.notifier = &region->mni,
-+		.notifier = &region->mreg_mni,
- 		.default_flags = HMM_PFN_REQ_FAULT | HMM_PFN_REQ_WRITE,
- 	};
- 	unsigned long *pfns;
-@@ -430,7 +430,7 @@ static int mshv_region_range_fault(struct mshv_mem_region *region,
- 		goto out;
- 
- 	for (i = 0; i < page_count; i++)
--		region->pages[page_offset + i] = hmm_pfn_to_page(pfns[i]);
-+		region->mreg_pages[page_offset + i] = hmm_pfn_to_page(pfns[i]);
- 
- 	ret = mshv_region_remap_pages(region, region->hv_map_flags,
- 				      page_offset, page_count);
-@@ -489,7 +489,7 @@ static bool mshv_region_interval_invalidate(struct mmu_interval_notifier *mni,
- {
- 	struct mshv_mem_region *region = container_of(mni,
- 						      struct mshv_mem_region,
--						      mni);
-+						      mreg_mni);
- 	u64 page_offset, page_count;
- 	unsigned long mstart, mend;
- 	int ret = -EPERM;
-@@ -535,14 +535,14 @@ static const struct mmu_interval_notifier_ops mshv_region_mni_ops = {
- 
- void mshv_region_movable_fini(struct mshv_mem_region *region)
- {
--	mmu_interval_notifier_remove(&region->mni);
-+	mmu_interval_notifier_remove(&region->mreg_mni);
- }
- 
- bool mshv_region_movable_init(struct mshv_mem_region *region)
- {
- 	int ret;
- 
--	ret = mmu_interval_notifier_insert(&region->mni, current->mm,
-+	ret = mmu_interval_notifier_insert(&region->mreg_mni, current->mm,
- 					   region->start_uaddr,
- 					   region->nr_pages << HV_HYP_PAGE_SHIFT,
- 					   &mshv_region_mni_ops);
-diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
-index 3c1d88b36741..f5b6d3979e5a 100644
---- a/drivers/hv/mshv_root.h
-+++ b/drivers/hv/mshv_root.h
-@@ -85,10 +85,10 @@ struct mshv_mem_region {
- 	u64 start_uaddr;
- 	u32 hv_map_flags;
- 	struct mshv_partition *partition;
--	enum mshv_region_type type;
--	struct mmu_interval_notifier mni;
-+	enum mshv_region_type mreg_type;
-+	struct mmu_interval_notifier mreg_mni;
- 	struct mutex mutex;	/* protects region pages remapping */
--	struct page *pages[];
-+	struct page *mreg_pages[];
- };
- 
- struct mshv_irq_ack_notifier {
-diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index 1134a82c7881..eff1b21461dc 100644
---- a/drivers/hv/mshv_root_main.c
-+++ b/drivers/hv/mshv_root_main.c
-@@ -657,7 +657,7 @@ static bool mshv_handle_gpa_intercept(struct mshv_vp *vp)
- 		return false;
- 
- 	/* Only movable memory ranges are supported for GPA intercepts */
--	if (region->type == MSHV_REGION_TYPE_MEM_MOVABLE)
-+	if (region->mreg_type == MSHV_REGION_TYPE_MEM_MOVABLE)
- 		ret = mshv_region_handle_gfn_fault(region, gfn);
- 	else
- 		ret = false;
-@@ -1175,12 +1175,12 @@ static int mshv_partition_create_region(struct mshv_partition *partition,
- 		return PTR_ERR(rg);
- 
- 	if (is_mmio)
--		rg->type = MSHV_REGION_TYPE_MMIO;
-+		rg->mreg_type = MSHV_REGION_TYPE_MMIO;
- 	else if (mshv_partition_encrypted(partition) ||
- 		 !mshv_region_movable_init(rg))
--		rg->type = MSHV_REGION_TYPE_MEM_PINNED;
-+		rg->mreg_type = MSHV_REGION_TYPE_MEM_PINNED;
- 	else
--		rg->type = MSHV_REGION_TYPE_MEM_MOVABLE;
-+		rg->mreg_type = MSHV_REGION_TYPE_MEM_MOVABLE;
- 
- 	rg->partition = partition;
- 
-@@ -1297,7 +1297,7 @@ mshv_map_user_memory(struct mshv_partition *partition,
- 	if (ret)
- 		return ret;
- 
--	switch (region->type) {
-+	switch (region->mreg_type) {
- 	case MSHV_REGION_TYPE_MEM_PINNED:
- 		ret = mshv_prepare_pinned_region(region);
- 		break;
--- 
-2.51.2.vfs.0.1
-
+Best,
+Bobby
 
