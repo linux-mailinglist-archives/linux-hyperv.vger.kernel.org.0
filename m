@@ -1,141 +1,171 @@
-Return-Path: <linux-hyperv+bounces-8203-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8204-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B03ED0C9AE
-	for <lists+linux-hyperv@lfdr.de>; Sat, 10 Jan 2026 01:11:42 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73006D0CC7E
+	for <lists+linux-hyperv@lfdr.de>; Sat, 10 Jan 2026 02:56:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 292CB303ADD2
-	for <lists+linux-hyperv@lfdr.de>; Sat, 10 Jan 2026 00:11:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 31F61303211C
+	for <lists+linux-hyperv@lfdr.de>; Sat, 10 Jan 2026 01:56:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2749781ACA;
-	Sat, 10 Jan 2026 00:11:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC32023AB88;
+	Sat, 10 Jan 2026 01:56:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WF5/fIAP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xf8OEhkE"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yx1-f42.google.com (mail-yx1-f42.google.com [74.125.224.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78851CFBA
-	for <linux-hyperv@vger.kernel.org>; Sat, 10 Jan 2026 00:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B902046BA;
+	Sat, 10 Jan 2026 01:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768003877; cv=none; b=ces8x0E3GHNiZhx7oxPYUADUOKZpPxhic2DNbfrS+5kyFuXsCYKDIEHqqbTBWlJ7CXz+vsIjUGsmv6qf8Vkzpv62kLDWztgI+XXWvx65ZkNQLPnDC1qPEBLPAjAQ5mgb7FhIZ0qBEbmeezW+HviNwCfhdlXeV/TMs7PDZmE6iIs=
+	t=1768010172; cv=none; b=SpOPix4r7+SPHJRMhBWS+qWVi02Nkiak2NRC+whVrGKf63xtvIJGa3EAeN46dtyrkgYC4suPM5EYL4UUQP0c/Hnf2l/zesvCyzzwnny7aBk1d6G3Z46G18bJu0Op4zOA7QkzifVMbkIMivFNF8t1vfOahaeMSuYZmGC5Z/N5pu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768003877; c=relaxed/simple;
-	bh=XszBXPJ18HkMpycCWMX0Y8i3Aoh/kyFsduWJiX9qSIA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cgTw4YLfACgF6Yp5Mtgy9Avo+OGv460nBwT2EzKRlnv5vWRI8pgYV26XHxU7Y4pChoTG1uU0xXx8yjFi08s0PVjIWuTOUSl28ySTxZcVZB9lBXV+KxuDNCgg3bakFs0C7H4ocMvNZ6zHdiRyxEH0V9fLmwXiyaMmXu7P9mrLc/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WF5/fIAP; arc=none smtp.client-ip=74.125.224.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yx1-f42.google.com with SMTP id 956f58d0204a3-6455a60c11fso4019369d50.2
-        for <linux-hyperv@vger.kernel.org>; Fri, 09 Jan 2026 16:11:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768003874; x=1768608674; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6N0A2c2LYMc0dJDgYzdUUiKfOdoal/WEyiilk+5HTkg=;
-        b=WF5/fIAP4AEyO4f6KWSJP2rwaSy/sViblkfSeeU8EGHt4W8zcGu8GdInztygNBG+SI
-         lFZMtf5mk92Bho0bl/kz0wrylefbq54djvfDKFetQZqFm4VltIFlMyuYZ3TYsee7EuPv
-         cuFATTU+AojUbvwayi9w7OyNstSzzzIWEbhQr08urKNmtzyFQEASvw8VCOBtpjn1hEZ7
-         /S6AXS4ADril+8pCuPrnQcp3DFjvjtLVBL9cCPyinaRd8F5C9kJqxbl7/LUxO4bKzb5y
-         2VTvsnHADEUfrU8ytID59HZXZVXxMG6DT+qvAAEn0faaDEgjA/ym8ZI4sdu6WxDKie2G
-         EoTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768003874; x=1768608674;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6N0A2c2LYMc0dJDgYzdUUiKfOdoal/WEyiilk+5HTkg=;
-        b=r3h746uepulhV7nVuChtOD63YO17cF4G1lXnJXKEwmFyY5nrOWIsR8yYKfM18+FkHT
-         t5jk/+BFQV+AoHUSZPvwe/J59CfpyLvSlZE1lTCodEzd2of63c8ZxRW3EhVph9aeVVUi
-         Jrz+OKACROUkdB/4814RRw08QjW9VxPubwrwAf5u7sE7IV8i3fph6k0y6Jxy7te4ekCr
-         X8n77KcwDXPleFL9wZmEKJ5dLCm5axQ+4uUzzAzuYqvFUbJFqjLFP0+IYVynlGCaEaun
-         /YsfEQWqZg31+B68//EzMxv5qaPF0l8TYr8T+r1QuuRByr9+K+QX5cpIxfOAZ0t99U9d
-         wRqg==
-X-Forwarded-Encrypted: i=1; AJvYcCV6q66abz5Ss4kCYt6Md8sXWP/hn4xs+c4XWshuWfbttJ3PClet2mX224A/Sib69I2r/X/suRLmLTwwVlE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9uCkWrMmkeiX5iRiXnfwawNPa0SoLzQFBL3YBdgzK2D8hPCfV
-	YwYcVj2rjHiyUdFep0UAGzlko6060xEMu44tIqQZ+GIAwBHeo9r8lrnQ
-X-Gm-Gg: AY/fxX7l4B5KRPncxBM8Kn2ViqK/LllI/im4Vuw+cmmf0KfhqWm+OY+IwpMDmhOtaHS
-	3eRycc7UPqUMCdPyO7+W+yKBChB640t7itr8toq73rzLF9guCJprf5IigxMLkLuhxWFEt/aSgHU
-	vvLG8yYbVpbW+Bu/YquajxzcfLa4oSd6VK6XcAeNrN+pJBvxUwCpMyXYaHMpbeVFtbcB47s9sIu
-	Pq9JyZ3kelsIOnCN5bNGuEh3Eom244pfLGBCfyHs2+YS8Iy5+dmzFdC1tFL/JoAJKhsUhxNEwP8
-	/K4FCg3POxDcXN7E5hTrEldsc59w6o0waSD1RSSclNu0vt2CZ5/4U+zYE1GOzOblAHTIeua62kI
-	fqDhMME0lNpy1/J4odqDkI7/bdDiU6XUKNeib6dFc5GmisKLrCFIbA5Iwdk82S0PYLQAfkkZwZF
-	oj4ZU0WLpxeXfSArN3Bknmby5Ir4w9S2sGzw==
-X-Google-Smtp-Source: AGHT+IE5CW/VP1bFR/Dosae0XD0Rb9scRJI8ZCC2GQQ5cF/xpuuKEVGU70q9buii5G2BZNROzhlUqg==
-X-Received: by 2002:a05:690e:1611:b0:644:7712:ed72 with SMTP id 956f58d0204a3-64716bd7b38mr8182868d50.43.1768003873903;
-        Fri, 09 Jan 2026 16:11:13 -0800 (PST)
-Received: from devvm11784.nha0.facebook.com ([2a03:2880:25ff:a::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-790aa553ac3sm46524707b3.5.2026.01.09.16.11.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jan 2026 16:11:13 -0800 (PST)
-Date: Fri, 9 Jan 2026 16:11:12 -0800
-From: Bobby Eshleman <bobbyeshleman@gmail.com>
-To: Stefano Garzarella <sgarzare@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Shuah Khan <shuah@kernel.org>, Long Li <longli@microsoft.com>
-Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	netdev@vger.kernel.org, kvm@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	berrange@redhat.com, Sargun Dhillon <sargun@sargun.me>,
-	Bobby Eshleman <bobbyeshleman@meta.com>
-Subject: Re: [PATCH RFC net-next v13 00/13] vsock: add namespace support to
- vhost-vsock and loopback
-Message-ID: <aWGZILlNWzIbRNuO@devvm11784.nha0.facebook.com>
-References: <20251223-vsock-vmtest-v13-0-9d6db8e7c80b@meta.com>
+	s=arc-20240116; t=1768010172; c=relaxed/simple;
+	bh=rXXujbRvygfxf3ROuA/kqYfnbIKAXbFIuX5lgeH+heo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WHi4L4veh+9poUhkorr/uQvHqUKMUheoQUz81bCND5dLPq8vp9ixasAdzoq7+E/jpd/4q9PYTxO2puRBdqsj2kXQ1hze0GaOP+NlGPM0A4On6/xPCiswcklrOaE4YEOdqccH3r3IWBQTA5641Paa4DwQzFQfyGWepIGp1ihXXgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xf8OEhkE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57AD8C4CEF1;
+	Sat, 10 Jan 2026 01:56:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768010172;
+	bh=rXXujbRvygfxf3ROuA/kqYfnbIKAXbFIuX5lgeH+heo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Xf8OEhkEZdQ1q6nF764VpkCUg+f/NFM4ZN9oCENwBwLdM8kpdgE4Ah2MDXrLvMtQY
+	 vpYHr3m2JkvhHLR9TrP2XbwiN2Y8y8RVbF7D0CBctnDiG9CPCw5kwuqEPZYl4es2Ky
+	 K8RQDQreLKOmiI0FlmjT6niYVFojlvuKCx67VqlJQUdXaGBaGmOZ6wCQXGOLDBAGR1
+	 jlUN7gTLC5Azsyj7COeFPX1+CPZ4seqTYil4dgGYov2dHE2KR6CZ9Vpr32IEZx+Ys0
+	 rZqHuO3vMk9/C3oggScSOhJ5KZGLg0rJZIzT6iZRpsGdXK9VU8IIsF9bi2kq0/feIw
+	 jLb2yaGK1PwbA==
+Date: Fri, 9 Jan 2026 17:56:10 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Haiyang Zhang <haiyangz@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, "K. Y. Srinivasan"
+ <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
+ <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Long Li
+ <longli@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
+ Abeni <pabeni@redhat.com>, Konstantin Taranov <kotaranov@microsoft.com>,
+ Simon Horman <horms@kernel.org>, Erni Sri Satya Vennela
+ <ernis@linux.microsoft.com>, Shradha Gupta
+ <shradhagupta@linux.microsoft.com>, Saurabh Sengar
+ <ssengar@linux.microsoft.com>, Aditya Garg
+ <gargaditya@linux.microsoft.com>, Dipayaan Roy
+ <dipayanroy@linux.microsoft.com>, Shiraz Saleem
+ <shirazsaleem@microsoft.com>, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, paulros@microsoft.com
+Subject: Re: [PATCH V2,net-next, 1/2] net: mana: Add support for coalesced
+ RX packets on CQE
+Message-ID: <20260109175610.0eb69acb@kernel.org>
+In-Reply-To: <1767732407-12389-2-git-send-email-haiyangz@linux.microsoft.com>
+References: <1767732407-12389-1-git-send-email-haiyangz@linux.microsoft.com>
+	<1767732407-12389-2-git-send-email-haiyangz@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251223-vsock-vmtest-v13-0-9d6db8e7c80b@meta.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Dec 23, 2025 at 04:28:34PM -0800, Bobby Eshleman wrote:
-> This series adds namespace support to vhost-vsock and loopback. It does
-> not add namespaces to any of the other guest transports (virtio-vsock,
-> hyperv, or vmci).
+On Tue,  6 Jan 2026 12:46:46 -0800 Haiyang Zhang wrote:
+> From: Haiyang Zhang <haiyangz@microsoft.com>
 > 
-> The current revision supports two modes: local and global. Local
-> mode is complete isolation of namespaces, while global mode is complete
-> sharing between namespaces of CIDs (the original behavior).
+> Our NIC can have up to 4 RX packets on 1 CQE. To support this feature,
+> check and process the type CQE_RX_COALESCED_4. The default setting is
+> disabled, to avoid possible regression on latency.
 > 
-> The mode is set using the parent namespace's
-> /proc/sys/net/vsock/child_ns_mode and inherited when a new namespace is
-> created. The mode of the current namespace can be queried by reading
-> /proc/sys/net/vsock/ns_mode. The mode can not change after the namespace
-> has been created.
-> 
-> Modes are per-netns. This allows a system to configure namespaces
-> independently (some may share CIDs, others are completely isolated).
-> This also supports future possible mixed use cases, where there may be
-> namespaces in global mode spinning up VMs while there are mixed mode
-> namespaces that provide services to the VMs, but are not allowed to
-> allocate from the global CID pool (this mode is not implemented in this
-> series).
+> And add ethtool handler to switch this feature. To turn it on, run:
+>   ethtool -C <nic> rx-frames 4
+> To turn it off:
+>   ethtool -C <nic> rx-frames 1
 
-Stefano, would like me to resend this without the RFC tag, or should I
-just leave as is for review? I don't have any planned changes at the
-moment.
+Exposing just rx frame count, and only two values is quite unusual.
+Please explain in more detail the coalescing logic of the device.
 
-Best,
-Bobby
+> @@ -2079,14 +2081,10 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+>  		return;
+>  	}
+>  
+> -	pktlen = oob->ppi[0].pkt_len;
+> -
+> -	if (pktlen == 0) {
+> -		/* data packets should never have packetlength of zero */
+> -		netdev_err(ndev, "RX pkt len=0, rq=%u, cq=%u, rxobj=0x%llx\n",
+> -			   rxq->gdma_id, cq->gdma_id, rxq->rxobj);
+> +nextpkt:
+> +	pktlen = oob->ppi[i].pkt_len;
+> +	if (pktlen == 0)
+>  		return;
+> -	}
+>  
+>  	curr = rxq->buf_index;
+>  	rxbuf_oob = &rxq->rx_oobs[curr];
+> @@ -2097,12 +2095,15 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+>  	/* Unsuccessful refill will have old_buf == NULL.
+>  	 * In this case, mana_rx_skb() will drop the packet.
+>  	 */
+> -	mana_rx_skb(old_buf, old_fp, oob, rxq);
+> +	mana_rx_skb(old_buf, old_fp, oob, rxq, i);
+>  
+>  drop:
+>  	mana_move_wq_tail(rxq->gdma_rq, rxbuf_oob->wqe_inf.wqe_size_in_bu);
+>  
+>  	mana_post_pkt_rxq(rxq);
+> +
+> +	if (coalesced && (++i < MANA_RXCOMP_OOB_NUM_PPI))
+> +		goto nextpkt;
+
+Please code this up as a loop. Using gotos for control flow other than
+to jump to error handling epilogues is a poor coding practice (see the
+kernel coding style).
+
+> +static int mana_set_coalesce(struct net_device *ndev,
+> +			     struct ethtool_coalesce *ec,
+> +			     struct kernel_ethtool_coalesce *kernel_coal,
+> +			     struct netlink_ext_ack *extack)
+> +{
+> +	struct mana_port_context *apc = netdev_priv(ndev);
+> +	u8 saved_cqe_coalescing_enable;
+> +	int err;
+> +
+> +	if (ec->rx_max_coalesced_frames != 1 &&
+> +	    ec->rx_max_coalesced_frames != MANA_RXCOMP_OOB_NUM_PPI) {
+> +		NL_SET_ERR_MSG_FMT(extack,
+> +				   "rx-frames must be 1 or %u, got %u",
+> +				   MANA_RXCOMP_OOB_NUM_PPI,
+> +				   ec->rx_max_coalesced_frames);
+> +		return -EINVAL;
+> +	}
+> +
+> +	saved_cqe_coalescing_enable = apc->cqe_coalescing_enable;
+> +	apc->cqe_coalescing_enable =
+> +		ec->rx_max_coalesced_frames == MANA_RXCOMP_OOB_NUM_PPI;
+> +
+> +	if (!apc->port_is_up)
+> +		return 0;
+> +
+> +	err = mana_config_rss(apc, TRI_STATE_TRUE, false, false);
+> +
+
+unnecessary empty line
+
+> +	if (err) {
+> +		netdev_err(ndev, "Set rx-frames to %u failed:%d\n",
+> +			   ec->rx_max_coalesced_frames, err);
+> +		NL_SET_ERR_MSG_FMT(extack, "Set rx-frames to %u failed",
+> +				   ec->rx_max_coalesced_frames);
+
+These messages are both pointless. If HW communication has failed
+presumably there will already be an error in the logs. The extack
+gives the user no information they wouldn't already have.
+
+> +		apc->cqe_coalescing_enable = saved_cqe_coalescing_enable;
+> +	}
+> +
+> +	return err;
+> +}
 
