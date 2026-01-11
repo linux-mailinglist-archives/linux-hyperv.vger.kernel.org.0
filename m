@@ -1,180 +1,128 @@
-Return-Path: <linux-hyperv+bounces-8214-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8215-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 069EED0E70F
-	for <lists+linux-hyperv@lfdr.de>; Sun, 11 Jan 2026 10:16:41 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A396CD0F79B
+	for <lists+linux-hyperv@lfdr.de>; Sun, 11 Jan 2026 18:00:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8B4CD3015EDF
-	for <lists+linux-hyperv@lfdr.de>; Sun, 11 Jan 2026 09:16:13 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2671E30381BD
+	for <lists+linux-hyperv@lfdr.de>; Sun, 11 Jan 2026 17:00:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E0B6330661;
-	Sun, 11 Jan 2026 09:16:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8B7A7261C;
+	Sun, 11 Jan 2026 17:00:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fZHESGw4";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="eK2GgtJY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TUq8J65M"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f68.google.com (mail-pj1-f68.google.com [209.85.216.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92E832F76D
-	for <linux-hyperv@vger.kernel.org>; Sun, 11 Jan 2026 09:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D4B500963
+	for <linux-hyperv@vger.kernel.org>; Sun, 11 Jan 2026 17:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768122972; cv=none; b=WZ3kNodipMuygx3JsaT+DZ6RioeMSAfUw0MZA4UOcGSWVDD5WTwj4jptaSZhvTP94gwAwbSHjbterud5UTQqUUOqgHcgSdAZHE2f/XjYtROgfvWeSeucJuj7ndNOnVeE59PNxPQYegAOdzJxq3bLDNZhbPPlnOL69P5bWBycqks=
+	t=1768150846; cv=none; b=Vdg7LhHQWl68kE+27vf7cjnyX/TdYsbiTYl2DZXJ1JTygeop28Cn8dpByfM3KHG/blIUDVO7oULxUQMmSlYIoGihu7Z6XsPRODDB8e8kXeljYqkSjkFd4k1Fdu4eCOFwAqjIdmC7jtSSTZ9EGJB6sm9Pu+zbrrQlEVUkjLHy+OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768122972; c=relaxed/simple;
-	bh=BZOccm4XxVdjIcV5Tne5ceXK0NuuvIGdkFXUs4hhCZY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SS/paq8HYDAf2jjzGV9w9ybVxFRkTmi5CswlSOxIqZGHMGHoh4lmMxdRxWobfiFBpjXl6ZbcQ3B9kbTT3xmUpJMjET3Pz96OG5x9c7Z3qex+6NozAM2L32lkhZ9z+HIPFllpaN2z2J6xiO8sKHNNZuA10VwVpYLvVOgEBWsY/mY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fZHESGw4; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=eK2GgtJY; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768122968;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WS2+XzdVc7BsmtGzyRzQokn3ZRi3QBRYwnL4Qo9AS50=;
-	b=fZHESGw46MqZ/BTH1GEtg6wncEo7GcqVL82wRt2A6LWNsiz7SO0Gsdlp2vGkCyapXKWOvh
-	0SVUl3GUodpOPK6w8g64SxV8gb9WFo9VfoW+JKO25f3Y6OtyIJFJph8wMenkakx6xQ5P16
-	8HvOhFg10Gz0KDzgh4Rv1Xq182t/EKg=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-607-ZVihf0CvMb6bMXy9mfl5-Q-1; Sun, 11 Jan 2026 04:16:07 -0500
-X-MC-Unique: ZVihf0CvMb6bMXy9mfl5-Q-1
-X-Mimecast-MFC-AGG-ID: ZVihf0CvMb6bMXy9mfl5-Q_1768122966
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-47a83800743so21650655e9.0
-        for <linux-hyperv@vger.kernel.org>; Sun, 11 Jan 2026 01:16:07 -0800 (PST)
+	s=arc-20240116; t=1768150846; c=relaxed/simple;
+	bh=hRpSrENs+exAzLmmyDR9z10zgMQx/BnRWTtqM7vZG+Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=REv5y7piGY9RbHYoKLrio5f64a4VsWLf8LriOK+AB2I3UfrP7sg5S0Ghoz1yejF/hPuKO8FjLYRiB580IrY9SojA41nB+1lEGEP6WhSujnyS70uBxzwUIAQtLQq7NlLYeEyJdkKEGoZZKlEtVzgMJG9y6xnAIqH/LdKn2Qx99Ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TUq8J65M; arc=none smtp.client-ip=209.85.216.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f68.google.com with SMTP id 98e67ed59e1d1-34c84ec3b6eso5437328a91.3
+        for <linux-hyperv@vger.kernel.org>; Sun, 11 Jan 2026 09:00:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1768122966; x=1768727766; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WS2+XzdVc7BsmtGzyRzQokn3ZRi3QBRYwnL4Qo9AS50=;
-        b=eK2GgtJYRxTqI9k6TKmJPoD82wmLnI3rqB9NyUoDEHY8KJF4aliV39nsigBXoY6pUc
-         vfaIyZguYN/6Kmh1oOQy7KHuj6ENMBb1EAShoq3EoukQtBH/MXgyrEnreUym8eIxjWCo
-         xF9GiWFSnFmg4kXQt/R18sW3cgt8j11Xw8Kp6YiRxJH6Am4vrIUPnbIx816QBvksQohP
-         P7lzmgiGh8o3mc4GpTKNTmnSfikQKqbhm1Us3YgzGH1nTiCE5qiVwlOOtsKsOKNeU/OU
-         piBfJu66XJMjh56ZyzqntcvWURH6B4MmPNu8hr6mkykiN74eGI3u5oi5SeKa5mIj+a9V
-         C3Cg==
+        d=gmail.com; s=20230601; t=1768150845; x=1768755645; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6kjR6vJVSaNEP/K31+so/7gi81I0rHPjTD6YqT7uJyY=;
+        b=TUq8J65MimOKt5h/a2F+ggaiFTL0YBloJ6YFScfTLef+x1Rk+QZs2u4n8aIWkxLFXz
+         2Cfa5tGcR7HGXUkEZzl8ahC9zI+NrbuDZNbO/5jV2illBLNZsFazvYyvBHA7H6mjiT6O
+         9NTM/gRhB2B+Qf+I+eEtpmSugFhHUUyouVKLDxBpx81qCVwqLCzr/V5Op5hHMpyZ2zWS
+         fALrJe8jKaq/0eCkrmO1PoiUvn/sqd3vFXDkJVqWab1J69wEe1E/jQXjGujLKWFi4tk5
+         WMuxmKOaSGX7zgawm2NgnTadXs1eJCmueYtBY/KdpKHmhpJNtn4F/oq0CZtqY3nKuJd4
+         JX+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768122966; x=1768727766;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WS2+XzdVc7BsmtGzyRzQokn3ZRi3QBRYwnL4Qo9AS50=;
-        b=ZLHmrR3H1uD7Drw8dXjm27UcUxAm/vNCQtKhmSwtp7WCexWZ9ics9vuWJmiYkzuTdd
-         XvHkaJradkTkpWPYxXWEB4xwlEbxAoHeBWn8a/DwqUg01WXeRpeooOqSkp5x3BWUEXkh
-         2T/P9LpEL58FlIhEi//sB0dmqBX18LM+ViN1M1otq+40/TLhfcLwaGqSm8/L1vFfJoxE
-         S9UyaJcW3n9YuSCTwFFGpapSafyMOiToxNmAcNKK6jyYDnlg9wJpZxacWgiQvxU3w+Wx
-         kQ+/DGAe20b3viaxNcBfxDTqoRh1DmK1f7oWH/IcrKYfiTGaQSCdNHZ/4Vq5lu7O5un6
-         SEpA==
-X-Forwarded-Encrypted: i=1; AJvYcCVebNTYgNXcLre33155zf63TRRdWJb4bc93kLWDZMPIoDYCezkYlQUIC2TXa9n6uVMLZByg+c4F4fWfryA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiSPVYopYPBCBJ8JNVXarhRiPtpfaezJaTFoeCVnpzpBp8eCK6
-	ZC1U169czgkHurFi3B92RQzH3WwXVNXlDdD1dxiqjlOHqEjySa9I4blISSikOJApBOIMnd9y7c2
-	gK7vde6rDWB0wnS5X/90C439Zl3m4azS0IDSHWZw81G6mu07/jucen4VRe8cXs9/ZrQ==
-X-Gm-Gg: AY/fxX4iepAFz9c3wnx0wE0sSMEWWZJp8GnbzCyulvcimiqHkaXxnwKZybJNQ79vQPy
-	HtE/YB2STVMtnjnrp36loPyP+RnN+Gkxx2Q5skfgv4fGsMo4PHAXTAXogIeO9n5liWnitkyjhiK
-	Fxd5YqZhAtzuD8JFqW0WE6UD+JcAYUPp6hmTuFB8HdrkoZqnCEiqMh5r0isi/SF/RMyLTz/AThk
-	QgRN0KlTl/A/53LlXKtzwPCDsN+w9HYoN+CtSGMsOdwo61B0BiyMKrccH7E/6PLOOa9Ha1t9Ewi
-	tY6WymPZvXK/5DnHOjY+rNhVDKwX9CrjvzQLADOSjFygvQl3PKGm7rPk6ekFWJsZlgEsA0W+NrZ
-	QbPJfN+BapaLck+ZHluMs7SxrotV6trI=
-X-Received: by 2002:a05:600c:3ba9:b0:477:9d88:2da6 with SMTP id 5b1f17b1804b1-47d847d0f30mr193215325e9.0.1768122966053;
-        Sun, 11 Jan 2026 01:16:06 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG1T4RKFHLydRXZSk4hv5pRkHtZL1MUAZhZsWSp+woZTG55Ip7dDXQ0exZCHM77fG+sLNTHpQ==
-X-Received: by 2002:a05:600c:3ba9:b0:477:9d88:2da6 with SMTP id 5b1f17b1804b1-47d847d0f30mr193214965e9.0.1768122965611;
-        Sun, 11 Jan 2026 01:16:05 -0800 (PST)
-Received: from redhat.com (IGLD-80-230-35-22.inter.net.il. [80.230.35.22])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d7f69e13bsm296398485e9.7.2026.01.11.01.16.03
+        d=1e100.net; s=20230601; t=1768150845; x=1768755645;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6kjR6vJVSaNEP/K31+so/7gi81I0rHPjTD6YqT7uJyY=;
+        b=keqjlmseGj2ONqdHT+3dAtz3bRSYZm49SA7Xs+Pg9BsJouJ8l80UefzTwxnn8Z34uH
+         jszKJFxmsSaUMTEvrj+xLPwUDQtEdlb4vUxKJNGPd1aw/quq/Kjgw8Hom3VnmCQKm0iR
+         KCO3a9bWdfSJ9I8jOzXevm3nClaq5ru/cWy35/uw5X0sUyt67z2lD6py4vPirJA7Jdv5
+         dASiX8J65yHEzOp9s00RFlKKbymz/SFuFc2lCWqzx5sUa/QxEF2wGRrdW43VM+kMDbek
+         X+4gfdZrbmn8nC0EP4/FA+F/hS0LMUCk4CuhKQeFBO23LrGEZrlDSeSzbkO/4ECFtr3M
+         uitw==
+X-Forwarded-Encrypted: i=1; AJvYcCV/vMUG/BHFa7O0K+V9aFUA3JRqrWZAc85mZteuVy6AWUWv+JYAOuNOri1+S1weMd+aVa6N2X2knRKNQcs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfXP46nChnbneXA6rJsfLe3tHwFlqRCAMsaAIcbwD0UH4DhoA/
+	r+aSCvFmvBrZCCGa0ai0BpM/L20opkvIgVzqeF9tPVeJ/SgcdGRpPFvxQREn5a6J
+X-Gm-Gg: AY/fxX4fy+nE+4DQ1Db/sBWAUGie+pJ0DeUrp0oUJx6Rhg+VVUSXkBZz6M9e8lG5Z7I
+	df10rcYqAvgLsfNBDwILG15wt05YjHbpCEaLlkTDy5JTzHDGSSLfsRXA8Y4vuquMbZm/MQX1NBa
+	WqilwKxExLIkOpzh0ilsOpFkLJdmTgnZ2CCVxeFp0jH2cYajAM4iNUoDt/TVyKdDgpFQ8EQo4d0
+	RnR/CF+b7q3BFD/H+qmj1fXEDAtQlyQO4WiTinejCz5+YPUGzPLpDoZZGFYIQ9kRZ2c/R1mjWaG
+	xXy0JjORTVDnMV9v4oVCz4cekXbfi5nB9MJDRA2TKuVGY9IcnopIOCYS3giITi4X18B/eChxNKp
+	3kvalnJrTYajRbbSmvcPWEk6MKjg1fnqlRc5tmu27JDACIVDuJ7MSmk/kamh+cMc14v5GqzKmE7
+	zE9ny0wreWrJY4l7TqCpQysJU1BewQz3ekq3GzdFu1WBZRgpodaIVZTsEJAupfTG1sKg==
+X-Google-Smtp-Source: AGHT+IFt0ORucE5sJv3IM0mkDwpWDLSo+rRqQTXeM/xgroPRzc2ArLXkenT9yyjgZva8oiZUDVKi9A==
+X-Received: by 2002:a17:903:298b:b0:2a0:d5bf:b271 with SMTP id d9443c01a7336-2a3ee486f81mr144561425ad.32.1768150844710;
+        Sun, 11 Jan 2026 09:00:44 -0800 (PST)
+Received: from localhost.localdomain (c-174-165-208-10.hsd1.wa.comcast.net. [174.165.208.10])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a3e3c3a507sm150677795ad.3.2026.01.11.09.00.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Jan 2026 01:16:05 -0800 (PST)
-Date: Sun, 11 Jan 2026 04:16:01 -0500
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Bobby Eshleman <bobbyeshleman@gmail.com>
-Cc: Stefano Garzarella <sgarzare@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, berrange@redhat.com,
-	Sargun Dhillon <sargun@sargun.me>,
-	Bobby Eshleman <bobbyeshleman@meta.com>
-Subject: Re: [PATCH net-next v12 02/12] vsock: add netns to vsock core
-Message-ID: <20260111030617-mutt-send-email-mst@kernel.org>
-References: <20251126-vsock-vmtest-v12-0-257ee21cd5de@meta.com>
- <20251126-vsock-vmtest-v12-2-257ee21cd5de@meta.com>
+        Sun, 11 Jan 2026 09:00:44 -0800 (PST)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	longli@microsoft.com,
+	lpieralisi@kernel.org,
+	kwilczynski@kernel.org,
+	mani@kernel.org,
+	robh@kernel.org,
+	bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org
+Subject: [PATCH 1/1] PCI: hv: Remove unused field pci_bus in struct hv_pcibus_device
+Date: Sun, 11 Jan 2026 09:00:34 -0800
+Message-Id: <20260111170034.67558-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251126-vsock-vmtest-v12-2-257ee21cd5de@meta.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 26, 2025 at 11:47:31PM -0800, Bobby Eshleman wrote:
-> From: Bobby Eshleman <bobbyeshleman@meta.com>
-> 
-> Add netns logic to vsock core. Additionally, modify transport hook
-> prototypes to be used by later transport-specific patches (e.g.,
-> *_seqpacket_allow()).
-> 
-> Namespaces are supported primarily by changing socket lookup functions
-> (e.g., vsock_find_connected_socket()) to take into account the socket
-> namespace and the namespace mode before considering a candidate socket a
-> "match".
-> 
-> This patch also introduces the sysctl /proc/sys/net/vsock/ns_mode that
-> accepts the "global" or "local" mode strings.
-> 
-> Add netns functionality (initialization, passing to transports, procfs,
-> etc...) to the af_vsock socket layer. Later patches that add netns
-> support to transports depend on this patch.
-> 
-> dgram_allow(), stream_allow(), and seqpacket_allow() callbacks are
-> modified to take a vsk in order to perform logic on namespace modes. In
-> future patches, the net and net_mode will also be used for socket
-> lookups in these functions.
-> 
-> Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
-> ---
+From: Michael Kelley <mhklinux@outlook.com>
 
-...
+Field pci_bus in struct hv_pcibus_device is unused since
+commit 418cb6c8e051 ("PCI: hv: Generify PCI probing"). Remove it.
 
-> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-> index adcba1b7bf74..6113c22db8dc 100644
-> --- a/net/vmw_vsock/af_vsock.c
-> +++ b/net/vmw_vsock/af_vsock.c
+No functional change.
 
-...
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+---
+ drivers/pci/controller/pci-hyperv.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> @@ -2658,6 +2745,142 @@ static struct miscdevice vsock_device = {
->  	.fops		= &vsock_device_ops,
->  };
->  
-> +static int vsock_net_mode_string(const struct ctl_table *table, int write,
-> +				 void *buffer, size_t *lenp, loff_t *ppos)
-> +{
-> +	char data[VSOCK_NET_MODE_STR_MAX] = {0};
-> +	enum vsock_net_mode mode;
-> +	struct ctl_table tmp;
-
-nit: this file should now include linux/sysctl.h for this struct definition I
-think?
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 1e237d3538f9..7fcba05cec30 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -501,7 +501,6 @@ struct hv_pcibus_device {
+ 	struct resource *low_mmio_res;
+ 	struct resource *high_mmio_res;
+ 	struct completion *survey_event;
+-	struct pci_bus *pci_bus;
+ 	spinlock_t config_lock;	/* Avoid two threads writing index page */
+ 	spinlock_t device_list_lock;	/* Protect lists below */
+ 	void __iomem *cfg_addr;
+-- 
+2.25.1
 
 
