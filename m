@@ -1,226 +1,180 @@
-Return-Path: <linux-hyperv+bounces-8234-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8235-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F88FD155E3
-	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Jan 2026 22:03:20 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D140D15C4D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Jan 2026 00:19:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 00914300926B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Jan 2026 21:03:20 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3D2433016EDA
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Jan 2026 23:19:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFE6332C306;
-	Mon, 12 Jan 2026 21:03:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40A131FDE31;
+	Mon, 12 Jan 2026 23:19:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="geUFfnC8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OHTJv0Ef"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11022107.outbound.protection.outlook.com [52.101.48.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C04530F54A;
-	Mon, 12 Jan 2026 21:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.107
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768251796; cv=fail; b=oGsP+zNFUzI8QdR0K4si1VKbmg/+ioS6pESz0uG0ohw9STl4s5wZhJES2esuFGenCZ+bmIhovcG/9vXMc3i95VGFf+sFRdZlo6DxbA6WFn5whshqZfbsBFN551FS/vqbZ6OjGM3FL7KNHjZhO8zlYiXX2CoXCrUoz9blpMtgmhI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768251796; c=relaxed/simple;
-	bh=xTS7MGGpJvC0Y8WlP1b/ygpUbonhN1u41WriLJGDGLQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=GmBMDFyeUR0Qd/TMjXRQ8CxvZb/t/k6pD5snarJOQD6a9WXLFjL6QWcX9MkubAMHa2cbmZR1D837FGRJ8wlrfYevRytSkKFmFpC/579DcKlD+tH6mee1JZ/tM0npMPjcihUMxjrfYk9OB7+bUtyFVlxyNpkaHRxrW8DDBN4jFWM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=geUFfnC8; arc=fail smtp.client-ip=52.101.48.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JpLpFxQ9ttlEOZpLcpiw5j0TGZeJKfELZyQxKVEKrMCoj4+TESxFnz312NCVTH8QSB1Iw/yYSGIDvIga3hlh1DUPpW4hx/48ZP95C0VcPOA6MuRbQmlGX+PBI+Zvzv+ZFPPGY9IY1TEFnvSARMomASrr5lDC0uPJdSF/sH/Xg4Uxns/KNpaIz5cFROqISTipBnbguRgKjkhZReF7g2FXEpGJUrkQ1PAowyS3hiDPTAsKsX9s3w+LCpiFKrnUp3xDeDgLVMRp/zwXqhE07lKFZYNthYUs5uhVL9oaLy7iT2BKkCfaCFTMK75PijKc1ESP8TPebKCcHpRcgkuz91nHTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=z5ZYdltgLjnNIbJf7uEwneFQClaiMBrRHKqKFsL/pJ8=;
- b=XDzYKxI6lx+5gBMXbPlmtCctWS2qJ5/FLzLUtlTv3TeSp0UYPNcWghIeH6vrW34KP6weL+p/bQo785X8y7bq9VE2X/+MOmyt4W8uTRL/RjpWkYL2Fs87mOpnf6c7n6K+QOQzd2uDfje6cI4YwNLJInWnP1Fk+i/QlEFS4ZY8upfIeJt4aZj1RbYPn0A0e108/qFnQh2TAA/1n86aQOVNiC6rKXMVWIvjJ0WNd0mUhDi24cMd0I7XbbCRfnWbd2IEj5DsFB8Gez6gB5X4cRQnUBWTyEMVTVNcZ0Nsc8njm8TYN0MqwLN9pCmrCgBCT8lzKQG5cxzWVBGNTkLXAinWLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z5ZYdltgLjnNIbJf7uEwneFQClaiMBrRHKqKFsL/pJ8=;
- b=geUFfnC8A1XyXPxryv/GlYXFd3Hutqf23O2yYpjGLJbailhVvOMlKYa+dtN8LTNOWmAM5VsByLXnFz/CKcvxXiCdbrNGzlzwbf+AFxdXk0qNf5JUaKieBDIfXap2AaWt6fW81Vi5IS0CXwvSwZBXjGW0LaEc/fyTfRrL1yCsRxc=
-Received: from SA3PR21MB3867.namprd21.prod.outlook.com (2603:10b6:806:2fc::15)
- by SA1PR21MB6034.namprd21.prod.outlook.com (2603:10b6:806:4af::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.1; Mon, 12 Jan
- 2026 21:03:13 +0000
-Received: from SA3PR21MB3867.namprd21.prod.outlook.com
- ([fe80::70ff:4d3:2cb6:92a3]) by SA3PR21MB3867.namprd21.prod.outlook.com
- ([fe80::70ff:4d3:2cb6:92a3%6]) with mapi id 15.20.9520.001; Mon, 12 Jan 2026
- 21:03:13 +0000
-From: Haiyang Zhang <haiyangz@microsoft.com>
-To: Jakub Kicinski <kuba@kernel.org>, Haiyang Zhang
-	<haiyangz@linux.microsoft.com>
-CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, KY Srinivasan
-	<kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
-	<DECUI@microsoft.com>, Long Li <longli@microsoft.com>, Andrew Lunn
-	<andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Konstantin
- Taranov <kotaranov@microsoft.com>, Simon Horman <horms@kernel.org>, Erni Sri
- Satya Vennela <ernis@linux.microsoft.com>, Shradha Gupta
-	<shradhagupta@linux.microsoft.com>, Saurabh Sengar
-	<ssengar@linux.microsoft.com>, Aditya Garg <gargaditya@linux.microsoft.com>,
-	Dipayaan Roy <dipayanroy@linux.microsoft.com>, Shiraz Saleem
-	<shirazsaleem@microsoft.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-rdma@vger.kernel.org"
-	<linux-rdma@vger.kernel.org>, Paul Rosswurm <paulros@microsoft.com>
-Subject: RE: [EXTERNAL] Re: [PATCH V2,net-next, 2/2] net: mana: Add ethtool
- counters for RX CQEs in coalesced type
-Thread-Topic: [EXTERNAL] Re: [PATCH V2,net-next, 2/2] net: mana: Add ethtool
- counters for RX CQEs in coalesced type
-Thread-Index: AQHcf02vovGckqnBaUyi1QeGJul7JLVKqgUAgARk5/A=
-Date: Mon, 12 Jan 2026 21:03:13 +0000
-Message-ID:
- <SA3PR21MB386767DAF624033E55FECA38CA81A@SA3PR21MB3867.namprd21.prod.outlook.com>
-References: <1767732407-12389-1-git-send-email-haiyangz@linux.microsoft.com>
-	<1767732407-12389-3-git-send-email-haiyangz@linux.microsoft.com>
- <20260109175620.3e461176@kernel.org>
-In-Reply-To: <20260109175620.3e461176@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=432aca39-706b-43b2-b81e-0122a79f343a;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-01-12T21:02:30Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA3PR21MB3867:EE_|SA1PR21MB6034:EE_
-x-ms-office365-filtering-correlation-id: 1be41e4e-6e0c-4710-6bc6-08de521dffc5
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700021;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?FMGhB4E7lG5cf8hsPnOha8yJDovwOykxBIdMl1LJqYCYebe+1V+cV9Gmt4Xa?=
- =?us-ascii?Q?ZpFHngBTzXUYz9QMLo9L5L9D6LCKLQrTMc3fc8Owb229LZbee98L35+q70HS?=
- =?us-ascii?Q?T8gjC68qHt+dTSOblaQIpMkmU0R5ibN9DbYTIxjZIaFApIKLGKulom+/TLoD?=
- =?us-ascii?Q?vJ2pX8SCcufSX2ZaBBaZjG83VRNl42pBz3rj19c8XS2AG2isJZ/l7zrK8Rdk?=
- =?us-ascii?Q?n7Tanp/u1h4d7oTCepEsJDdjbBShs0jvO8YPHxNgKYkB4P7JtL8BIZbNstsy?=
- =?us-ascii?Q?4rv6BhBv1I74uDxkd5VaIxKPiDgib18/84tegecI5THFN0cHcbMtYCq4QDH2?=
- =?us-ascii?Q?i+/d2F5MPVTOGM9VTjwMn2x5zf+08ph2rRL+zsYpHtdLKX+hvMWF0JlPI8Es?=
- =?us-ascii?Q?KcoyZoDcgj6+j+jBVFMb3+3cEumAIrgBXpj0LLK5IS4TEexlwwmg2ZnFvJJ0?=
- =?us-ascii?Q?1J3HRuSFLBPq5acvA3QZSuKrbdzUqeOjQmJRf66APk/A91G8Oe4opFNCruX2?=
- =?us-ascii?Q?HrYC6AwR7TlYml9zOCbbbfMv0oasivpBGBEvNWEXu2EXNWxMsu+ZhcsJx/Ia?=
- =?us-ascii?Q?YNhgPhSTbLI+vuI4HANN2aCTl76V8ZXUB1zhG3Y1UTL3Uz8oejvDFDI5xqks?=
- =?us-ascii?Q?nvCI5dQ4Ijs2Jy4Dv7+z2AjqopGSLw0CGLUAAIU2jAUVOt95Rm+yxecBZ3xA?=
- =?us-ascii?Q?bFU32QQKZjM/aCAPljnSaUicpFMeCgFSdU8qDHWy9NXfVXvfLDjtttbi2RHZ?=
- =?us-ascii?Q?M+ILKt37xBYmn+kwY7l22VXcsNNtn55ms4/wDLURp0rsiNOuu+iFYnCD1eT3?=
- =?us-ascii?Q?HxdXhGXozcSq7eSSnjylguYuIGuejUMqcP3I3BFibQUPei3z3M6g1W3ivQOJ?=
- =?us-ascii?Q?Cvnb/PjZUCuDDtE8cqpyuvW/n3cvD2F6TxnbLx820jt4wgC2JLllszugtFgI?=
- =?us-ascii?Q?uK4v5kKhCi0kHtIsczwDfGLZVL9OthsWGJ6ucSwkuliClxQzcmJwaukaqgX0?=
- =?us-ascii?Q?EBlCvTO5bQvYlfvIkpI/QGqH6f+r2AIscFOgvJw2/rkfIGxzM8P+TmIQBV1f?=
- =?us-ascii?Q?oER4Ux4JgUqNzdGrSwWcxuQ24OPtEsMYvZvILAeQLvsX9kxjGflHEm01PE8I?=
- =?us-ascii?Q?dVOog9QDMPzDghVKuDjPU6Uu521UdTfUrSg1RoT1sTOT7pO/vS5FmXqAnyfu?=
- =?us-ascii?Q?0FoglntRWwsZmERf4UVprvR5GUBGG4o8GOSjJ0UsK0BU0FQKk6oodGxk9DhI?=
- =?us-ascii?Q?Pjgu6j69zFZmDlNzorP593UUsYrB287D5VEewSWkHIl3Qjd+G1xptFjmp/6o?=
- =?us-ascii?Q?z5rTwi4ls7iKr6G5GWMk+0K6jPyPUy7cL6mPxzTl+oBVVUmlhHLG4NqjlSUm?=
- =?us-ascii?Q?39Yxd4KWurm5FWafOJG8nK7o0diRiSNY4Vfk9z0z9hTQ8okjUknl+gNIHP52?=
- =?us-ascii?Q?2x8vzFSStUi9K6SbL6zOpAoxWeOgxR+GNrdxciviaRCmQ7cljlPd+6PyP/Ha?=
- =?us-ascii?Q?oE7sxVauFI6GVBEtxruNMOOqaxhezXKCujJ2?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR21MB3867.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700021);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?xJvBXt7EA/Mj6RKRQyI9uD8dXdwoivTZC0wwezJXe6kRXYRvj926bfdeQTTa?=
- =?us-ascii?Q?5yu8v5FLWhhjM5dPE+DT6RLOhtYoX3Z9k5MTx0ru9w5H14JWHK1S6l7vPF0B?=
- =?us-ascii?Q?iW6Evw44QOvMk7XwSw1YgFAsfRzVp6rjzNzkzrLuISPZp+VGuxur7jYMUUrD?=
- =?us-ascii?Q?azDyD7Qvq+GgdkPW06J0Rc2GVv7ykgr86RkAZNMmMgfy4IyCkT8Qj0HRut2D?=
- =?us-ascii?Q?nr4JOxoLNZXOcncql2lMo/EomxS8KuVDi10ZdoH+pXh19ovwFNVnOIvRiBOe?=
- =?us-ascii?Q?aINCaUBl20WDEWN++9UR7HaYrNEF5aXhqkjBaxPHy/Jm5q3xdxxJiZX+u7/1?=
- =?us-ascii?Q?TgszvlAlAdBH1FGK/yg9MNAAjUKoo450MCupGWFUpIRjxdqkQeXYMPSDKp6q?=
- =?us-ascii?Q?xfQO7rDkEdEyKrDZpAgrH0Kc0Lvigu1WWLkbE1QhNf0YCiYh+K0R+qfAgaKH?=
- =?us-ascii?Q?AQT8lXtwTs/4nOA28H+4TgJkSOKFQa2UQ0Sg+8upiapTNDR/dZAbp3izXRZU?=
- =?us-ascii?Q?PeUbpePJtZCiAUR6VXoalhmwTJiom7NEDPuKb3VxM1uSFDRdYGWZ4BSqsYUJ?=
- =?us-ascii?Q?cxzSy55ueAb9R/qd3+cl7YOyKzYIHOR3OmnTJRgI/2j0diq6sFUiD5nJjnni?=
- =?us-ascii?Q?1AGjA0HdY2iIOa/zE8UoYNGZpXOjAA5FZr+yxWt2fB3DO0rfkQhLYOJRakMP?=
- =?us-ascii?Q?a01jOabYnHmnzkvSAE0PVNlUWndJwkYr/rezQq2ksCdr7+33C+X+yOxnnk/b?=
- =?us-ascii?Q?SNbUpMfGim86Ns3U0Au4kPPRqM5fkVQaGWvWPtBsepSzKz5bvLgWBeZGFAc3?=
- =?us-ascii?Q?znPipqCbFf5aCPB3uXiwJ8Lu7sUUXpouWeCkPMYgXKUH5YQ3A2v5nFL9NMLg?=
- =?us-ascii?Q?H8n8um14OSYrP4+qBMproZSFFla7+d7mOXvcIb2GniC2fGy82QkLSptgXHFB?=
- =?us-ascii?Q?ia8W74Nf9+vbSob1VdROS3Z3iWS7yANC8mnHElOByrcT+VFSLAUo1/m/Ug3q?=
- =?us-ascii?Q?8JxAhYm+h7j8n0MPTQZAK3vAxoZMgw+up1yNm6XHFUwAuR1oM69RQTGDFN64?=
- =?us-ascii?Q?hLrjFUiOhW7BwFfQHCQJ3tmC28gZgaPvaHFCUqga6Oj/vxRKtnVWjlSKdS83?=
- =?us-ascii?Q?5H2jsccbbH7C23stlpATTmr4titMgsq/PW4RHKDvzRsx2Utjra02FVZOqx79?=
- =?us-ascii?Q?MXEMCj/gtopzX3lH8Nosrm6d9Pf7ttp7S2LO+DMkPrWOfXSYV1cqqxFgMKKQ?=
- =?us-ascii?Q?RxIeyNjwClwwW5whbClyl97Ot/fYflUdxow+RLJrwL6uoQijSaU4Pec9wQuS?=
- =?us-ascii?Q?btbM88sGAX74+8clQxhNIcoy7BR5P4OiIjBy4hSIRsKqhby1zUOmTJZv1/Vu?=
- =?us-ascii?Q?V6EYiQr3jipjetg+28fR3K/8p7Ft+BNkiA+T7sm040rKc/k146ym0HImP31E?=
- =?us-ascii?Q?PXTkuxOnnP+Rw+KOfO8ce+xzGRjeHVtVOtCiCdYpccPBfGKkv2UIgNandqRC?=
- =?us-ascii?Q?VXGKHZx54aqHlOFGxWaiqjdN8iqCYTMy7yNnbqXgBQeoWpAuynoQ/F2M9THR?=
- =?us-ascii?Q?UbAhrd6u/vxgTn1Vo39iZVJPmzFtAXfvBmQDRDqo4NBNs73BS/+o0omTqrbA?=
- =?us-ascii?Q?9FsJdDZcuwWoCTjOIidNac9HV/bpFZJAJE3pgKB44ggmSiI5xF/2YHD8gm/O?=
- =?us-ascii?Q?50rYchE+dktMIStfaEJ+ueWor1LdOH2/lGKM7EOI6LdPrau1?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8C319992C
+	for <linux-hyperv@vger.kernel.org>; Mon, 12 Jan 2026 23:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768259968; cv=none; b=OVCqc7X/XFEMK0xo3Wi0BgabyBYEctJQNR6dbLMgV6Ver8oNVuclRI8Em31AUKlcL4seT5MeoCH5JAriBX8ofWkl+97+PpIre9USsD+s6E3MM5cN7wQAraKp/2askbTIkccDiI1FIYts6M1z7TI6+B8Syk+Yl8cMQfRw7yvRH1Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768259968; c=relaxed/simple;
+	bh=D/QOV+PvgeGDhnZ/ix6Fp2phNTxa9gFGlVxWZXZmAqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J7ZWHLIXTHgOLiLXXYL4KzTmCAWkvWDXvzEGXFdnGMuMid6tBjAdgK1lsGm3qwRRcv1ZkyGZt5FawxIZjHQV+tC4v7c08pCloMiKxEA3Xpd4PLPPNiIo+ESJwkOUg345ICUgD1xaaFgIdWfzLiAmT7gfDQccmoGDiUGcjj7hnDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OHTJv0Ef; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-88a35a00502so65925876d6.0
+        for <linux-hyperv@vger.kernel.org>; Mon, 12 Jan 2026 15:19:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768259966; x=1768864766; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VrgEBLHMQ7w7z7OSk0+LmFxB5np8c3y6da/CYllo/d4=;
+        b=OHTJv0EfjdNx6Z3Vl9dWL+2LEBe6Nmrp4V88b5vaaAj++P6ge7gp1rGoIIKW2rGY0N
+         +8IG1OyWQ5hf8S5dMlLxsf513maTNgvBuZ5ZRsfdRleEzFUImDz+6I4gEJ+JgLILeRYl
+         ctNZNgLN4/u/fqJw6EWgTbkCtzxbklxhidPwRdy5t4V3rUcffTeMEo2bW0WdDBoCa1jf
+         U3B1Whsjl2YmxKaObqQ14r4i5GJj9s4qMt+8B5dqqAyvg2+iGdgzq1x/ncwKFzxHsZvM
+         AlrxCl3DjLAq9qTFeYxF34qYsbvqqPlIj4RJoTLIkCyLSmQIqA3HsnjTtMX2u4rjWQJq
+         Is2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768259966; x=1768864766;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VrgEBLHMQ7w7z7OSk0+LmFxB5np8c3y6da/CYllo/d4=;
+        b=LzLDHGnzYl9L1lsVqZEH1okEVm2qqTJGO82+e35mDBx3zfdmW9HLAq35b+ovhYJx1m
+         lIFlM2gv84RroqRBuJCXE33SeU+ND0Zx9lI7LfFrdfxJJIrHG5y0VN29ugdXVRJKNo7j
+         5H0+A8JXb5xa8AKSnfzuhowM10vZP+q9Y2/0s5DNYRZj+0gzzhNIS9Vi78w2V0I3m8TV
+         Qg4ZCdEXs5GBIoznO37VHpzTusgb8DABmODXTxyDtoJU6Jf655Oych+Wg/+aDOofTHwd
+         ti0zwNFzXUcElgexLctRMkmRfaIXrXndqegNlWH27Jd3ooIXG9gQISoLfDfCaOKorgUj
+         03IA==
+X-Forwarded-Encrypted: i=1; AJvYcCW3+6bEFeshZyxABvjs/gcfeYAyC/k6aNdAjbC4OuftduPFbsLaAnqS+gigq7Z7nugmL8OTU1ypgyX5x14=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTpZlmnVljXUr861ogHjE3MHLyjq6sTYEEcT08fFquX97SXpxu
+	fzREX7PL67/YyxMi92tpsSWuobw5wV8zKiNELLCLNSNbPclcBd3R2Mi/sc6I3w==
+X-Gm-Gg: AY/fxX6EfyqAhl2azQRJcOk4sz9V51WjFL0box7METjy4g2PYprDr+8GOGMVugbxhF+
+	wl1fqj2z7cPRRiPR06z4fNAnEOwzQBxq6zh0vs0CEdq3NFzbchayPC0evtYg9yG5mZQmWlXa21+
+	qno5IcWVqk1gZ6kwrreQPuyKygIRE3bG/OGO/uAI+z4XJqLfur7pCO4umCjfZ7E5pPUkyW7m7Oj
+	GIfLUOt4GKYRO/EbAbwidzHvTVHm5eysd2VS5e+rVhQxjMqcxOyIre3qnzqbnRS9QjyGe/2SRUj
+	nENsdrgrbFMuWQAOwXLwpj02yo/C1YNA8t57/cnhsuHGMFIIo8I1Jx3GqYif1n773O3op2qUEPo
+	snk/XDjo1KcCZqvIdfkbWLTCRTafck1e3XW/mxakcCPX9uyOMdyAgS4rcbtD9tvxBj+95XmEH3p
+	Pb8P3KD4hXq8zw9mhTVImW7wTCrdSx6P3RZg==
+X-Google-Smtp-Source: AGHT+IEEIChW46EWJZZzmGq0dv1aKbX23y4OJcSbpVgI4A7CpdyG+MDzyxvMqujhAfbDeFoADMp1dQ==
+X-Received: by 2002:a53:e303:0:b0:63f:a727:8403 with SMTP id 956f58d0204a3-64716bd78d9mr12404043d50.38.1768254541320;
+        Mon, 12 Jan 2026 13:49:01 -0800 (PST)
+Received: from devvm11784.nha0.facebook.com ([2a03:2880:25ff:8::])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-6470d7f7c04sm8530959d50.2.2026.01.12.13.49.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jan 2026 13:49:00 -0800 (PST)
+Date: Mon, 12 Jan 2026 13:48:58 -0800
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Shuah Khan <shuah@kernel.org>, Long Li <longli@microsoft.com>,
+	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+	netdev@vger.kernel.org, kvm@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	berrange@redhat.com, Sargun Dhillon <sargun@sargun.me>,
+	Bobby Eshleman <bobbyeshleman@meta.com>
+Subject: Re: [PATCH RFC net-next v13 00/13] vsock: add namespace support to
+ vhost-vsock and loopback
+Message-ID: <aWVsSq7lORhM+prM@devvm11784.nha0.facebook.com>
+References: <20251223-vsock-vmtest-v13-0-9d6db8e7c80b@meta.com>
+ <aWGZILlNWzIbRNuO@devvm11784.nha0.facebook.com>
+ <20260110191107-mutt-send-email-mst@kernel.org>
+ <aWUnqbDlBmjfnC_Q@sgarzare-redhat>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR21MB3867.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1be41e4e-6e0c-4710-6bc6-08de521dffc5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jan 2026 21:03:13.1434
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vrnN+vZf4K7cZ0NaZLKMnZoXbfF7No6pb0kmC9EjZsV3J+uWh72eEuAD85psycun2CK6yQP4HtFkfhx+pIudug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR21MB6034
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aWUnqbDlBmjfnC_Q@sgarzare-redhat>
 
+On Mon, Jan 12, 2026 at 06:26:18PM +0100, Stefano Garzarella wrote:
+> On Sat, Jan 10, 2026 at 07:12:07PM -0500, Michael S. Tsirkin wrote:
+> > On Fri, Jan 09, 2026 at 04:11:12PM -0800, Bobby Eshleman wrote:
+> > > On Tue, Dec 23, 2025 at 04:28:34PM -0800, Bobby Eshleman wrote:
+> > > > This series adds namespace support to vhost-vsock and loopback. It does
+> > > > not add namespaces to any of the other guest transports (virtio-vsock,
+> > > > hyperv, or vmci).
+> > > >
+> > > > The current revision supports two modes: local and global. Local
+> > > > mode is complete isolation of namespaces, while global mode is complete
+> > > > sharing between namespaces of CIDs (the original behavior).
+> > > >
+> > > > The mode is set using the parent namespace's
+> > > > /proc/sys/net/vsock/child_ns_mode and inherited when a new namespace is
+> > > > created. The mode of the current namespace can be queried by reading
+> > > > /proc/sys/net/vsock/ns_mode. The mode can not change after the namespace
+> > > > has been created.
+> > > >
+> > > > Modes are per-netns. This allows a system to configure namespaces
+> > > > independently (some may share CIDs, others are completely isolated).
+> > > > This also supports future possible mixed use cases, where there may be
+> > > > namespaces in global mode spinning up VMs while there are mixed mode
+> > > > namespaces that provide services to the VMs, but are not allowed to
+> > > > allocate from the global CID pool (this mode is not implemented in this
+> > > > series).
+> > > 
+> > > Stefano, would like me to resend this without the RFC tag, or should I
+> > > just leave as is for review? I don't have any planned changes at the
+> > > moment.
+> > > 
+> > > Best,
+> > > Bobby
+> > 
+> > i couldn't apply it on top of net-next so pls do.
+> > 
+> 
+> Yeah, some difficulties to apply also here.
+> I tried `base-commit: 962ac5ca99a5c3e7469215bf47572440402dfd59` as mentioned
+> in the cover, but didn't apply. After several tries I successfully applied
+> on top of commit bc69ed975203 ("Merge tag 'for_linus' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost")
+> 
+> So, I agree, better to resend and you can remove RFC.
+> 
+> BTW I'll do my best to start to review tomorrow!
+> 
+> Thanks,
+> Stefano
+> 
 
+Sounds good to me. Sorry about that, I must have done something weird
+with b4 to pin the base commit because it has been
+962ac5ca99a5c3e7469215bf47572440402dfd59 for the last several revisions.
 
-> -----Original Message-----
-> From: Jakub Kicinski <kuba@kernel.org>
-> Sent: Friday, January 9, 2026 8:56 PM
-> To: Haiyang Zhang <haiyangz@linux.microsoft.com>
-> Cc: linux-hyperv@vger.kernel.org; netdev@vger.kernel.org; KY Srinivasan
-> <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>; Wei Liu
-> <wei.liu@kernel.org>; Dexuan Cui <DECUI@microsoft.com>; Long Li
-> <longli@microsoft.com>; Andrew Lunn <andrew+netdev@lunn.ch>; David S.
-> Miller <davem@davemloft.net>; Eric Dumazet <edumazet@google.com>; Paolo
-> Abeni <pabeni@redhat.com>; Konstantin Taranov <kotaranov@microsoft.com>;
-> Simon Horman <horms@kernel.org>; Erni Sri Satya Vennela
-> <ernis@linux.microsoft.com>; Shradha Gupta
-> <shradhagupta@linux.microsoft.com>; Saurabh Sengar
-> <ssengar@linux.microsoft.com>; Aditya Garg
-> <gargaditya@linux.microsoft.com>; Dipayaan Roy
-> <dipayanroy@linux.microsoft.com>; Shiraz Saleem
-> <shirazsaleem@microsoft.com>; linux-kernel@vger.kernel.org; linux-
-> rdma@vger.kernel.org; Paul Rosswurm <paulros@microsoft.com>
-> Subject: [EXTERNAL] Re: [PATCH V2,net-next, 2/2] net: mana: Add ethtool
-> counters for RX CQEs in coalesced type
->=20
-> On Tue,  6 Jan 2026 12:46:47 -0800 Haiyang Zhang wrote:
-> > @@ -227,8 +232,6 @@ struct mana_rxcomp_perpkt_info {
-> >  	u32 pkt_hash;
-> >  }; /* HW DATA */
-> >
-> > -#define MANA_RXCOMP_OOB_NUM_PPI 4
-> > -
-> >  /* Receive completion OOB */
-> >  struct mana_rxcomp_oob {
-> >  	struct mana_cqe_header cqe_hdr;
-> > @@ -378,7 +381,6 @@ struct mana_ethtool_stats {
-> >  	u64 tx_cqe_err;
-> >  	u64 tx_cqe_unknown_type;
-> >  	u64 tx_linear_pkt_cnt;
-> > -	u64 rx_coalesced_err;
-> >  	u64 rx_cqe_unknown_type;
-> >  };
->=20
-> This should be deleted in the previous patch already
-Will do.
+Looks like my local of this is actually based on:
 
-- Haiyang
+7b8e9264f55a ("Merge tag 'net-6.19-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net")
+
+I'll re-apply to head and resend today!
+
+While I'm at it I will try to address Michael's feedback and bump a
+version.
+
+Best,
+Bobby
 
