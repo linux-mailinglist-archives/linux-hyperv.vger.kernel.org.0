@@ -1,57 +1,64 @@
-Return-Path: <linux-hyperv+bounces-8221-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8222-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6411ED12B31
-	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Jan 2026 14:12:19 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 052DBD13446
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Jan 2026 15:46:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E15183011FBC
-	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Jan 2026 13:09:19 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 608BF3066D73
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Jan 2026 14:40:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C85A3587D5;
-	Mon, 12 Jan 2026 13:09:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29AA725A642;
+	Mon, 12 Jan 2026 14:40:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WMi/luJo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=outgoing.csail.mit.edu header.i=@outgoing.csail.mit.edu header.b="kgH9Gpiu"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2588B358D20;
-	Mon, 12 Jan 2026 13:09:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from outgoing2021.csail.mit.edu (outgoing2021.csail.mit.edu [128.30.2.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2683225B1D2;
+	Mon, 12 Jan 2026 14:40:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.30.2.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768223359; cv=none; b=f5Hw0BylCGxMHN9/196/YVei5vNOVzneoK3BzXTGREwyeKGuOLhMbEYkel4D8RFXQKWbHZSSNh36dfCWZ7JKhFDDJ62uJbzd+SHRRkWpwKsF1RzVx0hEw8u4XE3Gy8lwd5LLzES4XraYf74FY9MQqWPql39vdoUgAg82H/x0EGA=
+	t=1768228806; cv=none; b=cwURC0cVWoGT/ruY2pYp9W6oU71RQcANeLoSiMw0ws5bKpbk7QmParebX1awnUIMjawRoLN0ZWmfduiLBJM3W+loFNJFzkmxbZPRfOuH72dPirnelo4wncGLGJt+QK06oY9K7CQRxBaVnaaKdQfvs09DIDGW6ZJBYFLa+vtl/ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768223359; c=relaxed/simple;
-	bh=BKB9L3/szgoPtLh+SOGFMPh4uRLxohuFEDrbXrgCRdc=;
+	s=arc-20240116; t=1768228806; c=relaxed/simple;
+	bh=o1iNiArgHH8WtIVlO9KKHPRIhCKW0gyuEJqSdpVC20U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HHZfw9vfX3NP8Gkz0tKgJqbfPomVgxcyLCR46uFZcAEjOC3Ep3PtrJ8gz4cAtDlqQT6f5nDl+rSK0UOk5bFOb4d9pUcyo5wSr7+DFqMMjdn6rEcK1bIeZCBTxf0klOw2LdNplCgoyXf/m9/LCL5KA5zicTRnjzQh550VfAy+EyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=WMi/luJo; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1204)
-	id C400B201AC8B; Mon, 12 Jan 2026 05:09:07 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C400B201AC8B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1768223347;
-	bh=X5c6NHQ/R9EQQOdmt1M+0D3XF7Fx/S84TCxOUPYVNvM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WMi/luJoDWmaez/mkmmbx9R7o583mFZxT12FblvS8QKPooGyDuzKNABAOPJZTRRpG
-	 R10pdl1DvvwVCecxymFF9iInH7O74XyYz8kapjYmTrZYvw7hdX3hJKrQZ77alArZp6
-	 pa0Mdeh/70A0VwB2WmofLNtgj2qPYHFtB+EnZtY0=
-Date: Mon, 12 Jan 2026 05:09:07 -0800
-From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-To: Aditya Garg <gargaditya@linux.microsoft.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=VmFq9SzeUSt5FQCJ/mqo2G+KKOBcHif50p7OGOAiEUoWF54T+xfITeBaamQ8C3d+WLHeSswQH72euNFuB+JI+KzMH+Iw8z9JLzDQKNJJZk4k5JfaRu4veF/1xKJNXRTZbQPzkpef2QHl07pamJNQ6MzrL/+ZgX6JFouhLw76a3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csail.mit.edu; spf=pass smtp.mailfrom=csail.mit.edu; dkim=pass (2048-bit key) header.d=outgoing.csail.mit.edu header.i=@outgoing.csail.mit.edu header.b=kgH9Gpiu; arc=none smtp.client-ip=128.30.2.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csail.mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csail.mit.edu
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=outgoing.csail.mit.edu; s=test20231205; h=In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ydrZoxkV6O7ZRauys1QMgFWqtUFjFYz2TetCiceIH5A=; t=1768228804; x=1769092804; 
+	b=kgH9GpiuIrusaqPYpDpqRH68LCPsIHcKL01BYaXPXteS0ZbVRqY5ewlzxgt532vqRP6qy3ZL+VD
+	t/oEN4deillAVg1goTktr1ezjcFsmRPUaTX5MkYobmyV4hy3hZX2tg64agZbZWCbeV9e7/Br/00An
+	mWjOfjxBPMI3il73g2neMerqCJ/WUAZsKUuNSa47KqMyif3PxA0UjL6aHk4KkMyT1m+B7VVt0lOiX
+	87FnVfb95TtYA8g4D7nlBTjednFfN3QyOXjn7CJEL1n6+5mKSGj+u1BovxwmupvbrUZpb4+l9hFw0
+	nGOVILaf+Ng+oAubCaWMLsGdnXZPnkViP+Pw==;
+Received: from [49.207.196.83] (helo=csail.mit.edu)
+	by outgoing2021.csail.mit.edu with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <srivatsa@csail.mit.edu>)
+	id 1vfIvD-006Jsn-62;
+	Mon, 12 Jan 2026 09:29:31 -0500
+Date: Mon, 12 Jan 2026 19:59:17 +0530
+From: "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+To: mhklinux@outlook.com
 Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, stephen@networkplumber.org,
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ssengar@linux.microsoft.com,
-	shradhagupta@linux.microsoft.com, ernis@linux.microsoft.com,
-	gargaditya@microsoft.com
-Subject: Re: [PATCH net-next] net: hv_netvsc: reject RSS hash key programming
- without RX indirection table
-Message-ID: <20260112130907.GA13088@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1768212093-1594-1-git-send-email-gargaditya@linux.microsoft.com>
+	decui@microsoft.com, longli@microsoft.com, lpieralisi@kernel.org,
+	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI: hv: Remove unused field pci_bus in struct
+ hv_pcibus_device
+Message-ID: <aWUFPUxrMkM32zDD@csail.mit.edu>
+References: <20260111170034.67558-1-mhklinux@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -60,45 +67,49 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1768212093-1594-1-git-send-email-gargaditya@linux.microsoft.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20260111170034.67558-1-mhklinux@outlook.com>
 
-On Mon, Jan 12, 2026 at 02:01:33AM -0800, Aditya Garg wrote:
-> RSS configuration requires a valid RX indirection table. When the device
-> reports a single receive queue, rndis_filter_device_add() does not
-> allocate an indirection table, accepting RSS hash key updates in this
-> state leads to a hang.
+Hi Michael,
+
+On Sun, Jan 11, 2026 at 09:00:34AM -0800, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
 > 
-> Fix this by gating netvsc_set_rxfh() on ndc->rx_table_sz and return
-> -EOPNOTSUPP when the table is absent. This aligns set_rxfh with the device
-> capabilities and prevents incorrect behavior.
+> Field pci_bus in struct hv_pcibus_device is unused since
+> commit 418cb6c8e051 ("PCI: hv: Generify PCI probing"). Remove it.
 > 
-> Fixes: 962f3fee83a4 ("netvsc: add ethtool ops to get/set RSS key")
-> Signed-off-by: Aditya Garg <gargaditya@linux.microsoft.com>
-> Reviewed-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+
+Since that commit is several years old (2021), I was curious if this was found by
+manual inspection or if the compiler was able to flag the unused
+variable as well.
+
+> No functional change.
+> 
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+
+Reviewed-by: Srivatsa S. Bhat (Microsoft) <srivatsa@csail.mit.edu>
+
+Regards,
+Srivatsa
+Microsoft Linux Systems Group
+
 > ---
->  drivers/net/hyperv/netvsc_drv.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  drivers/pci/controller/pci-hyperv.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-> index 3d47d749ef9f..cbd52cb79268 100644
-> --- a/drivers/net/hyperv/netvsc_drv.c
-> +++ b/drivers/net/hyperv/netvsc_drv.c
-> @@ -1750,6 +1750,9 @@ static int netvsc_set_rxfh(struct net_device *dev,
->  	    rxfh->hfunc != ETH_RSS_HASH_TOP)
->  		return -EOPNOTSUPP;
->  
-> +	if (!ndc->rx_table_sz)
-> +		return -EOPNOTSUPP;
-> +
->  	rndis_dev = ndev->extension;
->  	if (rxfh->indir) {
->  		for (i = 0; i < ndc->rx_table_sz; i++)
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 1e237d3538f9..7fcba05cec30 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -501,7 +501,6 @@ struct hv_pcibus_device {
+>  	struct resource *low_mmio_res;
+>  	struct resource *high_mmio_res;
+>  	struct completion *survey_event;
+> -	struct pci_bus *pci_bus;
+>  	spinlock_t config_lock;	/* Avoid two threads writing index page */
+>  	spinlock_t device_list_lock;	/* Protect lists below */
+>  	void __iomem *cfg_addr;
 > -- 
-> 2.43.0
->
-
-LGTM.
-
-Reviewed-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+> 2.25.1
+> 
+> 
 
