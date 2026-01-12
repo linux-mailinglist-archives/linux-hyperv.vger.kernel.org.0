@@ -1,324 +1,267 @@
-Return-Path: <linux-hyperv+bounces-8225-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8227-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 774C2D14315
-	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Jan 2026 17:55:49 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3F6CD14357
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Jan 2026 17:57:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id EEFF430024EB
-	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Jan 2026 16:55:48 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5B4373026F3B
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Jan 2026 16:56:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8C8736B049;
-	Mon, 12 Jan 2026 16:55:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FE2037418A;
+	Mon, 12 Jan 2026 16:56:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hDVyFbTH"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Iyp0LtXm"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4439D2FA0DD
-	for <linux-hyperv@vger.kernel.org>; Mon, 12 Jan 2026 16:55:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E22B374162;
+	Mon, 12 Jan 2026 16:56:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768236946; cv=none; b=qT6ubDyKFb7YOC8p5mvxRiR2P4GcpcvvopS71w2Sx/ZpYDmdl9+sniIzWWCfUvXdwu9avCFUEHKFu+aEEu7Bsp5DfO+/KHwD8/B9VO9xGnrRz4TdZt+OzvEjwORo1jV7wXcbd4v414JG2ZWoBEh+ye94D5hzZbD8aq2HhLEJPQY=
+	t=1768236972; cv=none; b=RpscMs6RGycK7Ie0aWoVlPVmicDOvdtp1pBidGcvI53ztIyJLwJ8VaSfNYskSACTiSNt0+uXe6XM5lWcKizqTr4h2JwdKpDGPYU0kZ3jER6oB+1LTDJ1K4/GTe54wRuFW6rit+MmqNFD5pg1WnSMr9N4cnHhHnk05l5iukisS3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768236946; c=relaxed/simple;
-	bh=r6TnOQCfBQOydTUZGnyfzUxDOA4tyATsr9E345ZA9Ds=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G/lYMPq03VokxWlFG+CdnTcJNUFmU5bArq3kHxi6YY69y3rb4Td2wvqBKW8A2jL8T9v+AgSdiZ9VRdrbHt9fYb9Si8UknJsUBWxs+dn1ByRe0N5I68K1+lpVExb0ah4Cjbg4TqXgOXPWhGs3pwgxL5gjjdAGLaA0iWrivdjn6zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hDVyFbTH; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1768236972; c=relaxed/simple;
+	bh=4AIR4AvPq3Ns2DHXtbzi9LyzcVtMVSrGcoQEOK0g09A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tg6pFJP8egcgQlabLKjaIEiCNNdCxBhDeJpl8QdXhNfIXSkDuUq7wPriD8I2jHmLd9LmEBTMmLPnluJmGP7gEKUZs3dUFQY8MyBSvywJiKJ1WDiO0Bebv6IEWGhwoCTZRFTgTRc3qTGkmZhDGSYnd9RhwreyIWV6kIwiqy9YrKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Iyp0LtXm; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.65.232.172] (unknown [20.236.11.102])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 2CF54200DF42;
-	Mon, 12 Jan 2026 08:55:44 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2CF54200DF42
+Received: from localhost (unknown [167.220.232.230])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 93229200DF42;
+	Mon, 12 Jan 2026 08:56:08 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 93229200DF42
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1768236944;
-	bh=+u/W8SYif5zTjZ7eOSv6K5o3dY7v1GG3FEkYFuSEGHA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hDVyFbTHIAJwDHer5w0RYcsd3ze0UpdeUPKJqQl1ZgjD1x40PVfM7zDAObK9QIPZ1
-	 bg+thp/XhhV5eaBlfXY7G7/v9SeBvMssZSZOhaLa2nOXFuLwdeerw/71UIJF9ml8b/
-	 zT75toHNWwmsYjqpnkMIO9yW++GrjyfLUXeiTsaA=
-Message-ID: <1f772249-9f8a-4469-9dd9-2dde24850428@linux.microsoft.com>
-Date: Mon, 12 Jan 2026 08:55:43 -0800
+	s=default; t=1768236969;
+	bh=9ykwBAFENziY1dzJcAT4kgTGes6gFi0zDtJJzU5PgnU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Iyp0LtXm9vd9sZCnHL6bXM+gkE0eeFFH98lUF/kx/XqkyQbpU9X6DKxz3Qx+rVkKj
+	 fZp7Agbify5AcXGt5NCQ4D1W+o+apsAGDsr6GxRJ9S40te3+XTZnGMMBADAlFSTiwP
+	 0WOfJ/1Kf+DazvD7YnO2+X6pV3abncilnzFsCGPo=
+Date: Tue, 13 Jan 2026 00:56:07 +0800
+From: Yu Zhang <zhangyu1@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>, 
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kys@microsoft.com" <kys@microsoft.com>, 
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>, 
+	"decui@microsoft.com" <decui@microsoft.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
+	"kwilczynski@kernel.org" <kwilczynski@kernel.org>, "mani@kernel.org" <mani@kernel.org>, 
+	"robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, 
+	"arnd@arndb.de" <arnd@arndb.de>, "joro@8bytes.org" <joro@8bytes.org>, 
+	"will@kernel.org" <will@kernel.org>, "robin.murphy@arm.com" <robin.murphy@arm.com>, 
+	"easwar.hariharan@linux.microsoft.com" <easwar.hariharan@linux.microsoft.com>, "jacob.pan@linux.microsoft.com" <jacob.pan@linux.microsoft.com>, 
+	"nunodasneves@linux.microsoft.com" <nunodasneves@linux.microsoft.com>, "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: [RFC v1 5/5] iommu/hyperv: Add para-virtualized IOMMU support
+ for Hyper-V guest
+Message-ID: <dws34g6znmam7eabwetg722b4wgf2wxufcqxqphhbqlryx23mb@we5utwanawe2>
+References: <20251209051128.76913-1-zhangyu1@linux.microsoft.com>
+ <20251209051128.76913-6-zhangyu1@linux.microsoft.com>
+ <SN6PR02MB41572D46CF6C1DE68974EAA1D485A@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mshv: make certain field names descriptive in a header
- struct
-To: Mukesh Rathor <mrathor@linux.microsoft.com>, linux-hyperv@vger.kernel.org
-Cc: wei.liu@kernel.org
-References: <20260109200611.1422390-1-mrathor@linux.microsoft.com>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <20260109200611.1422390-1-mrathor@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB41572D46CF6C1DE68974EAA1D485A@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-On 1/9/2026 12:06 PM, Mukesh Rathor wrote:
-> There is no functional change. Just make couple field names in
-> struct mshv_mem_region, in a header that can be used in many
-> places, a little descriptive to make code easier to read by
-> allowing better support for grep, cscope, etc.
+On Thu, Jan 08, 2026 at 06:48:59PM +0000, Michael Kelley wrote:
+> From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Monday, December 8, 2025 9:11 PM
+
+<snip>
+Thank you so much, Michael, for the thorough review!
+
+I've snipped some comments I fully agree with and will address in 
+next version. Actually, I have to admit I agree with your remaining
+comments below as well. :)
+
+> > +struct hv_iommu_dev *hv_iommu_device;
+> > +static struct hv_iommu_domain hv_identity_domain;
+> > +static struct hv_iommu_domain hv_blocking_domain;
+> 
+> Why is hv_iommu_device allocated dynamically while the two
+> domains are allocated statically? Seems like the approach could
+> be consistent, though maybe there's some reason I'm missing.
 > 
 
-The commit message could be a improved a bit. Putting the
-motivation first is usually better e.g.:
+On second thought, `hv_identity_domain` and `hv_blocking_domain` should
+likely be allocated dynamically as well, consistent with `hv_iommu_device`.
 
-"
-When struct fields use very common names like "pages" or "type",
-it makes it difficult to find uses of these fields with tools
-like grep and cscope.
-
-Add the prefix mreg_ to some fields in struct mshv_mem_region to
-make it easier to find them. No functional change.
-"
-
-Looks good to me otherwise.
-
-> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
-> ---
->  drivers/hv/mshv_regions.c   | 44 ++++++++++++++++++-------------------
->  drivers/hv/mshv_root.h      |  6 ++---
->  drivers/hv/mshv_root_main.c | 10 ++++-----
->  3 files changed, 30 insertions(+), 30 deletions(-)
+<snip>
+> > +static int hv_iommu_get_logical_device_property(struct device *dev,
+> > +					enum hv_logical_device_property_code code,
+> > +					struct hv_output_get_logical_device_property *property)
+> > +{
+> > +	u64 status;
+> > +	unsigned long flags;
+> > +	struct hv_input_get_logical_device_property *input;
+> > +	struct hv_output_get_logical_device_property *output;
+> > +
+> > +	local_irq_save(flags);
+> > +
+> > +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> > +	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
+> > +	memset(input, 0, sizeof(*input));
+> > +	memset(output, 0, sizeof(*output));
 > 
-> diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
-> index 202b9d551e39..af81405f859b 100644
-> --- a/drivers/hv/mshv_regions.c
-> +++ b/drivers/hv/mshv_regions.c
-> @@ -52,7 +52,7 @@ static long mshv_region_process_chunk(struct mshv_mem_region *region,
->  	struct page *page;
->  	int ret;
->  
-> -	page = region->pages[page_offset];
-> +	page = region->mreg_pages[page_offset];
->  	if (!page)
->  		return -EINVAL;
->  
-> @@ -65,7 +65,7 @@ static long mshv_region_process_chunk(struct mshv_mem_region *region,
->  
->  	/* Start at stride since the first page is validated */
->  	for (count = stride; count < page_count; count += stride) {
-> -		page = region->pages[page_offset + count];
-> +		page = region->mreg_pages[page_offset + count];
->  
->  		/* Break if current page is not present */
->  		if (!page)
-> @@ -117,7 +117,7 @@ static int mshv_region_process_range(struct mshv_mem_region *region,
->  
->  	while (page_count) {
->  		/* Skip non-present pages */
-> -		if (!region->pages[page_offset]) {
-> +		if (!region->mreg_pages[page_offset]) {
->  			page_offset++;
->  			page_count--;
->  			continue;
-> @@ -164,13 +164,13 @@ static int mshv_region_chunk_share(struct mshv_mem_region *region,
->  				   u32 flags,
->  				   u64 page_offset, u64 page_count)
->  {
-> -	struct page *page = region->pages[page_offset];
-> +	struct page *page = region->mreg_pages[page_offset];
->  
->  	if (PageHuge(page) || PageTransCompound(page))
->  		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
->  
->  	return hv_call_modify_spa_host_access(region->partition->pt_id,
-> -					      region->pages + page_offset,
-> +					      region->mreg_pages + page_offset,
->  					      page_count,
->  					      HV_MAP_GPA_READABLE |
->  					      HV_MAP_GPA_WRITABLE,
-> @@ -190,13 +190,13 @@ static int mshv_region_chunk_unshare(struct mshv_mem_region *region,
->  				     u32 flags,
->  				     u64 page_offset, u64 page_count)
->  {
-> -	struct page *page = region->pages[page_offset];
-> +	struct page *page = region->mreg_pages[page_offset];
->  
->  	if (PageHuge(page) || PageTransCompound(page))
->  		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
->  
->  	return hv_call_modify_spa_host_access(region->partition->pt_id,
-> -					      region->pages + page_offset,
-> +					      region->mreg_pages + page_offset,
->  					      page_count, 0,
->  					      flags, false);
->  }
-> @@ -214,7 +214,7 @@ static int mshv_region_chunk_remap(struct mshv_mem_region *region,
->  				   u32 flags,
->  				   u64 page_offset, u64 page_count)
->  {
-> -	struct page *page = region->pages[page_offset];
-> +	struct page *page = region->mreg_pages[page_offset];
->  
->  	if (PageHuge(page) || PageTransCompound(page))
->  		flags |= HV_MAP_GPA_LARGE_PAGE;
-> @@ -222,7 +222,7 @@ static int mshv_region_chunk_remap(struct mshv_mem_region *region,
->  	return hv_call_map_gpa_pages(region->partition->pt_id,
->  				     region->start_gfn + page_offset,
->  				     page_count, flags,
-> -				     region->pages + page_offset);
-> +				     region->mreg_pages + page_offset);
->  }
->  
->  static int mshv_region_remap_pages(struct mshv_mem_region *region,
-> @@ -245,10 +245,10 @@ int mshv_region_map(struct mshv_mem_region *region)
->  static void mshv_region_invalidate_pages(struct mshv_mem_region *region,
->  					 u64 page_offset, u64 page_count)
->  {
-> -	if (region->type == MSHV_REGION_TYPE_MEM_PINNED)
-> -		unpin_user_pages(region->pages + page_offset, page_count);
-> +	if (region->mreg_type == MSHV_REGION_TYPE_MEM_PINNED)
-> +		unpin_user_pages(region->mreg_pages + page_offset, page_count);
->  
-> -	memset(region->pages + page_offset, 0,
-> +	memset(region->mreg_pages + page_offset, 0,
->  	       page_count * sizeof(struct page *));
->  }
->  
-> @@ -265,7 +265,7 @@ int mshv_region_pin(struct mshv_mem_region *region)
->  	int ret;
->  
->  	for (done_count = 0; done_count < region->nr_pages; done_count += ret) {
-> -		pages = region->pages + done_count;
-> +		pages = region->mreg_pages + done_count;
->  		userspace_addr = region->start_uaddr +
->  				 done_count * HV_HYP_PAGE_SIZE;
->  		nr_pages = min(region->nr_pages - done_count,
-> @@ -297,7 +297,7 @@ static int mshv_region_chunk_unmap(struct mshv_mem_region *region,
->  				   u32 flags,
->  				   u64 page_offset, u64 page_count)
->  {
-> -	struct page *page = region->pages[page_offset];
-> +	struct page *page = region->mreg_pages[page_offset];
->  
->  	if (PageHuge(page) || PageTransCompound(page))
->  		flags |= HV_UNMAP_GPA_LARGE_PAGE;
-> @@ -321,7 +321,7 @@ static void mshv_region_destroy(struct kref *ref)
->  	struct mshv_partition *partition = region->partition;
->  	int ret;
->  
-> -	if (region->type == MSHV_REGION_TYPE_MEM_MOVABLE)
-> +	if (region->mreg_type == MSHV_REGION_TYPE_MEM_MOVABLE)
->  		mshv_region_movable_fini(region);
->  
->  	if (mshv_partition_encrypted(partition)) {
-> @@ -374,9 +374,9 @@ static int mshv_region_hmm_fault_and_lock(struct mshv_mem_region *region,
->  	int ret;
->  
->  	range->notifier_seq = mmu_interval_read_begin(range->notifier);
-> -	mmap_read_lock(region->mni.mm);
-> +	mmap_read_lock(region->mreg_mni.mm);
->  	ret = hmm_range_fault(range);
-> -	mmap_read_unlock(region->mni.mm);
-> +	mmap_read_unlock(region->mreg_mni.mm);
->  	if (ret)
->  		return ret;
->  
-> @@ -407,7 +407,7 @@ static int mshv_region_range_fault(struct mshv_mem_region *region,
->  				   u64 page_offset, u64 page_count)
->  {
->  	struct hmm_range range = {
-> -		.notifier = &region->mni,
-> +		.notifier = &region->mreg_mni,
->  		.default_flags = HMM_PFN_REQ_FAULT | HMM_PFN_REQ_WRITE,
->  	};
->  	unsigned long *pfns;
-> @@ -430,7 +430,7 @@ static int mshv_region_range_fault(struct mshv_mem_region *region,
->  		goto out;
->  
->  	for (i = 0; i < page_count; i++)
-> -		region->pages[page_offset + i] = hmm_pfn_to_page(pfns[i]);
-> +		region->mreg_pages[page_offset + i] = hmm_pfn_to_page(pfns[i]);
->  
->  	ret = mshv_region_remap_pages(region, region->hv_map_flags,
->  				      page_offset, page_count);
-> @@ -489,7 +489,7 @@ static bool mshv_region_interval_invalidate(struct mmu_interval_notifier *mni,
->  {
->  	struct mshv_mem_region *region = container_of(mni,
->  						      struct mshv_mem_region,
-> -						      mni);
-> +						      mreg_mni);
->  	u64 page_offset, page_count;
->  	unsigned long mstart, mend;
->  	int ret = -EPERM;
-> @@ -535,14 +535,14 @@ static const struct mmu_interval_notifier_ops mshv_region_mni_ops = {
->  
->  void mshv_region_movable_fini(struct mshv_mem_region *region)
->  {
-> -	mmu_interval_notifier_remove(&region->mni);
-> +	mmu_interval_notifier_remove(&region->mreg_mni);
->  }
->  
->  bool mshv_region_movable_init(struct mshv_mem_region *region)
->  {
->  	int ret;
->  
-> -	ret = mmu_interval_notifier_insert(&region->mni, current->mm,
-> +	ret = mmu_interval_notifier_insert(&region->mreg_mni, current->mm,
->  					   region->start_uaddr,
->  					   region->nr_pages << HV_HYP_PAGE_SHIFT,
->  					   &mshv_region_mni_ops);
-> diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
-> index 3c1d88b36741..f5b6d3979e5a 100644
-> --- a/drivers/hv/mshv_root.h
-> +++ b/drivers/hv/mshv_root.h
-> @@ -85,10 +85,10 @@ struct mshv_mem_region {
->  	u64 start_uaddr;
->  	u32 hv_map_flags;
->  	struct mshv_partition *partition;
-> -	enum mshv_region_type type;
-> -	struct mmu_interval_notifier mni;
-> +	enum mshv_region_type mreg_type;
-> +	struct mmu_interval_notifier mreg_mni;
->  	struct mutex mutex;	/* protects region pages remapping */
-> -	struct page *pages[];
-> +	struct page *mreg_pages[];
->  };
->  
->  struct mshv_irq_ack_notifier {
-> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-> index 1134a82c7881..eff1b21461dc 100644
-> --- a/drivers/hv/mshv_root_main.c
-> +++ b/drivers/hv/mshv_root_main.c
-> @@ -657,7 +657,7 @@ static bool mshv_handle_gpa_intercept(struct mshv_vp *vp)
->  		return false;
->  
->  	/* Only movable memory ranges are supported for GPA intercepts */
-> -	if (region->type == MSHV_REGION_TYPE_MEM_MOVABLE)
-> +	if (region->mreg_type == MSHV_REGION_TYPE_MEM_MOVABLE)
->  		ret = mshv_region_handle_gfn_fault(region, gfn);
->  	else
->  		ret = false;
-> @@ -1175,12 +1175,12 @@ static int mshv_partition_create_region(struct mshv_partition *partition,
->  		return PTR_ERR(rg);
->  
->  	if (is_mmio)
-> -		rg->type = MSHV_REGION_TYPE_MMIO;
-> +		rg->mreg_type = MSHV_REGION_TYPE_MMIO;
->  	else if (mshv_partition_encrypted(partition) ||
->  		 !mshv_region_movable_init(rg))
-> -		rg->type = MSHV_REGION_TYPE_MEM_PINNED;
-> +		rg->mreg_type = MSHV_REGION_TYPE_MEM_PINNED;
->  	else
-> -		rg->type = MSHV_REGION_TYPE_MEM_MOVABLE;
-> +		rg->mreg_type = MSHV_REGION_TYPE_MEM_MOVABLE;
->  
->  	rg->partition = partition;
->  
-> @@ -1297,7 +1297,7 @@ mshv_map_user_memory(struct mshv_partition *partition,
->  	if (ret)
->  		return ret;
->  
-> -	switch (region->type) {
-> +	switch (region->mreg_type) {
->  	case MSHV_REGION_TYPE_MEM_PINNED:
->  		ret = mshv_prepare_pinned_region(region);
->  		break;
+> General practice is to *not* zero the output area prior to a hypercall. The hypervisor
+> should be correctly setting all the output bits. There are a couple of cases in the new
+> MSHV code where the output is zero'ed, but I'm planning to submit a patch to
+> remove those so that hypercall call sites that have output are consistent across the
+> code base. Of course, it's possible to have a Hyper-V bug where it doesn't do the
+> right thing, and zero'ing the output could be done as a workaround. But such cases
+> should be explicitly known with code comments indicating the reason for the
+> zero'ing.
+> 
+> Same applies in hv_iommu_detect().
+> 
 
+Thanks for the information! Just to clarify: this is only because Hyper-V is
+supposed to zero the output page, and for input page, memset is still needed.
+Am I correct?
+
+<snip>
+
+> > +static void hv_iommu_shutdown(void)
+> > +{
+> > +	iommu_device_sysfs_remove(&hv_iommu_device->iommu);
+> > +
+> > +	kfree(hv_iommu_device);
+> > +}
+> > +
+> > +static struct syscore_ops hv_iommu_syscore_ops = {
+> > +	.shutdown = hv_iommu_shutdown,
+> > +};
+> 
+> Why is a shutdown needed at all?  hv_iommu_shutdown() doesn't do anything
+> that really needed, since sysfs entries are transient, and freeing memory isn't
+> relevant for a shutdown.
+> 
+
+For iommu_device_sysfs_remove(), I guess they are not necessary, and
+I will need to do some homework to better understand the sysfs. :)
+Originally, we wanted a shutdown routine to trigger some hypercall,
+so that Hyper-V will disable the DMA translation, e.g., during the VM
+reboot process. 
+
+<snip>
+
+> > +device_initcall(hv_iommu_init);
+> 
+> I'm concerned about the timing of this initialization. VMBus is initialized with
+> subsys_initcall(), which is initcall level 4 while device_initcall() is initcall level 6.
+> So VMBus initialization happens quite a bit earlier, and the hypervisor starts
+> offering devices to the guest, including PCI pass-thru devices, before the
+> IOMMU initialization starts. I cobbled together a way to make this IOMMU code
+> run in an Azure VM using the identity domain. The VM has an NVMe OS disk,
+> two NVMe data disks, and a MANA NIC. The NVMe devices were offered, and
+> completed hv_pci_probe() before this IOMMU initialization was started. When
+> IOMMU initialization did run, it went back and found the NVMe devices. But
+> I'm unsure if that's OK because my hacked together environment obviously
+> couldn't do real IOMMU mapping. It appears that the NVMe device driver
+> didn't start its initialization until after the IOMMU driver was setup, which
+> would probably make everything OK. But that might be just timing luck, or
+> maybe there's something that affirmatively prevents the native PCI driver
+> (like NVMe) from getting started until after all the initcalls have finished.
+> 
+
+This is yet another immature attempt by me to do the hv_iommu_init() in
+an arch-independent path. And I do not think using device_initcall() is
+harmless. This patch set was tested using an assigned Intel DSA device,
+and the DMA tests succeeded w/o any error. But that is not enough to
+justify using device_initcall(): I reset the idxd driver as kernel
+builtin and realized, just like you said, both hv_pci_probe() and
+idxd_pci_probe() were triggered before hv_iommu_init(), and when pvIOMMU
+tries to probe the endpoint device, a warning is printed:
+
+[    3.609697] idxd 13d7:00:00.0: late IOMMU probe at driver bind, something fishy here!
+
+> I'm planning to look at this further to see if there's a way for a PCI driver
+> to try initializing a pass-thru device *before* this IOMMU driver has initialized.
+> If so, a different way to do the IOMMU initialization will be needed that is
+> linked to VMBus initialization so things can't happen out-of-order. Establishing
+> such a linkage is probably a good idea regardless.
+> 
+> FWIW, the Azure VM with the 3 NVMe devices and MANA, and operating with
+> the identity IOMMU domain, all seemed to work fine! Got 4 IOMMU groups,
+> and devices coming and going dynamically all worked correctly. When a device
+> was removed, it was moved to the blocking domain, and then flushed before
+> being finally removed. All good! I wish I had a way to test with an IOMMU
+> paging domain that was doing real translation.
+> 
+
+Thank you, Michael! I really appreciate you running these extra experiments!
+
+My tests on this DSA device passed (using paging domain) too, with no DMA
+errors observed (regardless its driver is builtin or as a kernel module).
+But that doesn't make me confident about using `device_initcall`. I believe
+your concern is valid. E.g., an endpoint device might allocate a DMA address(
+using a raw GPA, instead of gIOVA) before pvIOMMU is initialized, and then
+use that address for DMA later, after a paging domain is attached?
+
+> > diff --git a/drivers/iommu/hyperv/iommu.h b/drivers/iommu/hyperv/iommu.h
+> > new file mode 100644
+> > index 000000000000..c8657e791a6e
+> > --- /dev/null
+> > +++ b/drivers/iommu/hyperv/iommu.h
+> > @@ -0,0 +1,53 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +
+> > +/*
+> > + * Hyper-V IOMMU driver.
+> > + *
+> > + * Copyright (C) 2024-2025, Microsoft, Inc.
+> > + *
+> > + */
+> > +
+> > +#ifndef _HYPERV_IOMMU_H
+> > +#define _HYPERV_IOMMU_H
+> > +
+> > +struct hv_iommu_dev {
+> > +	struct iommu_device iommu;
+> > +	struct ida domain_ids;
+> > +
+> > +	/* Device configuration */
+> > +	u8  max_iova_width;
+> > +	u8  max_pasid_width;
+> > +	u64 cap;
+> > +	u64 pgsize_bitmap;
+> > +
+> > +	struct iommu_domain_geometry geometry;
+> > +	u64 first_domain;
+> > +	u64 last_domain;
+> > +};
+> > +
+> > +struct hv_iommu_domain {
+> > +	union {
+> > +		struct iommu_domain    domain;
+> > +		struct pt_iommu        pt_iommu;
+> > +		struct pt_iommu_x86_64 pt_iommu_x86_64;
+> > +	};
+> > +	struct hv_iommu_dev *hv_iommu;
+> > +	struct hv_input_device_domain device_domain;
+> > +	u64		pgsize_bitmap;
+> > +
+> > +	spinlock_t lock; /* protects dev_list and TLB flushes */
+> > +	/* List of devices in this DMA domain */
+> 
+> It appears that this list is really a list of endpoints (i.e., struct
+> hv_iommu_endpoint), not devices (which I read to be struct
+> hv_iommu_dev). 
+> 
+> But that said, what is the list used for?  I see code to add
+> endpoints to the list, and to remove then, but the list is never
+> walked by any code in this patch set. If there is an anticipated
+> future use, it would be better to add the list as part of the code
+> for that future use.
+> 
+
+Yes, we do not really need this list for this patch set. Thanks!
+
+B.R.
+Yu
 
