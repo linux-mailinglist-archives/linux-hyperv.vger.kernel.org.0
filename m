@@ -1,271 +1,196 @@
-Return-Path: <linux-hyperv+bounces-8274-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8275-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D354D1A917
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Jan 2026 18:17:30 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id A939ED1AA15
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Jan 2026 18:30:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 588CF302EA04
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Jan 2026 17:17:11 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 85E69304D18D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Jan 2026 17:29:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0280A24A06B;
-	Tue, 13 Jan 2026 17:17:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACDA6366546;
+	Tue, 13 Jan 2026 17:29:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NHVkp9rW";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="SvcC94OG"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rEhrHDPf"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20C932B98F
-	for <linux-hyperv@vger.kernel.org>; Tue, 13 Jan 2026 17:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F4C7350A25;
+	Tue, 13 Jan 2026 17:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768324629; cv=none; b=K7MugAyzUew4mwomX8D8zaZr0NNMXvtNaKRCYmJXI51b4Brob4YK+SWTjSN9vXrhCgPpZiCVTqWfuo6EBNYfGVT3VpmOH7Ptpouw5is6DAchrkjXueQJaPBMHsGTWlSFWwnvnKG1ujFKrnKwgupnjufeILJAw7LYes592KS2S0s=
+	t=1768325384; cv=none; b=eg4hHd/53nH9CC1m+gSs7GOZ0mEVq4bExqdMjH4wqD/9kXhollDhceShyUMqX4qTspmB2eWMcG1pmwWill3hzG5+shq80CcY1VdGqDgzVa/kC8SD08x+Da3qDZRhZdDtcnkqQtU2WUKClsgqX2Ok+pCkRWdc60oSqxBbWJ3MDPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768324629; c=relaxed/simple;
-	bh=BOiAlUio2xt6kMFB7Iqg42Lzr5vEiOhyy/79lkkulkY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=doWS+0ysWjVnsJZs6WHUbuEfg5oQbURvMlnN6/d0C5t4Ti4/ntvm4KTgO3CsCOPicVQETIkzXC3iPhEsRFh/mpHoAJccPDd3L8ZZcbzaFnTo5YxB9qWF96liz8P1dRcPnMDOf9WkpRMoNGEO9m35qUboq6hrm4EhXLdezMDjwvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NHVkp9rW; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=SvcC94OG; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768324625;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3UUsl99U+a3n2frGXSYzi136UPXsqcjTTgTorfCP1Ac=;
-	b=NHVkp9rWef3cOzZxI5LMGcVajFLYa324YszaVUXnNnW38uvMo6mEjYb11b8CDFgAJTKY8S
-	cpnhnDDkUC06Rctsn1nAAzWX6Gm6WI1Mzgc8cv09je4d2c13r4GByJdk5InkroaW3QSM27
-	2MjeEjmPB7LYaH6iOlAP4M7vHw5ZYRE=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-685-CKfCV4nFNsOXpksr8YLI2Q-1; Tue, 13 Jan 2026 12:17:04 -0500
-X-MC-Unique: CKfCV4nFNsOXpksr8YLI2Q-1
-X-Mimecast-MFC-AGG-ID: CKfCV4nFNsOXpksr8YLI2Q_1768324623
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-47ed980309aso144915e9.0
-        for <linux-hyperv@vger.kernel.org>; Tue, 13 Jan 2026 09:17:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1768324623; x=1768929423; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3UUsl99U+a3n2frGXSYzi136UPXsqcjTTgTorfCP1Ac=;
-        b=SvcC94OGsB4Xo9umWEL7eXkSL+IYl73oOEst/2yYt4/gjx95IV8BbRUNTHACNc8xt8
-         TbWNdq8s0Bg1OCIllQ/NuYmJPuPGVZGQtrrlZzx5NJRlDA9pPjHyunSzGOR7TElSl+mX
-         1fSmS/khCurnqtRRhSJs3TUApeP178AJ4Zb7kEX5l3LvSFYLp8r0ojVM4kHYIIp168I2
-         W7yGwVUo7kiNmQ2ibu1lMREcy/rcZ/UhBHNzU+XXR0lxFJam0VVxlvL5tZhm+upd421g
-         RmKYRJJGmU/i/iZqoz90k0WVa9+MrYoC77clj07L4n171UYpUYddw//TMykMKDOrrBNy
-         C1bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768324623; x=1768929423;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3UUsl99U+a3n2frGXSYzi136UPXsqcjTTgTorfCP1Ac=;
-        b=VtMs9LRLe9RkXaZx5w5VE7EnddE9KH0nbhXjHCFkKs+kDMTbmM6/LUskXlvFnQ7FEC
-         Ka9k9rgqOLbKyvO9goHe6gOJF0GV4FHhy4yGKL48XBUZabFTYahd0X3xmvLO9xJbtl7J
-         MRQUm4gFBfVWjgFYGuxyBTGX47qum7SidtwbVmTVVQXC2EZDsozo5ukPeTq79Rdh57nQ
-         /KiZuwGRHkI5n3wi0rtDl3gAzyauRkvHUzwiKSE1XLfpgidvLIrkXv0lIIJlqC5XR2cC
-         V7t2Pjhx2f8rBXo+zCh4SUFGfESgRHwz3Gj0QUMwVqokhcc9b1AXUztgRW3xlyRWSBO2
-         uMUA==
-X-Forwarded-Encrypted: i=1; AJvYcCWYSgSex3ihrph8FcayruN6r5Qn3GQ5vxaUBdm4AMZFmmOcX9ijcCoNBZhM25EVIWpNstYHO3z4RNQmun4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnR4LydMxgu7lCKmfcRmJpS1F+kpSBxUzANgQ1bLGMpqE0gMQ0
-	B9ozsGYPTAu+o1sXu3hZ1jH0mO3ayKhUiFwzuy7sZxjqc5/ByIUZTuKtztpVYnP4F1sUQwLXjE+
-	cBTXQzy23kvNsubTKGM6o7oXIRn10jav82uUt9Cntc1Aokl0foclLdIrIuiqWh/9wbA==
-X-Gm-Gg: AY/fxX7KOjfGFUffpvD0afEdz4JxN2A4f12HgDz4bOKVlaZ4pA5OZEEsm3aswJ/pbj5
-	/INLoQcQNB977EE7U6wnz5RFPQ2tg6zu7jMZbNJTffEOfbIJ6mMwzOBcQgFV33K4H5ThhLg2+vT
-	3nPAWalybFvwY74J7UmGt/lhtmmlMWFsbIV3NufcsxH2wYfPzY7v0c6aPS3uOWWVfbwT4Izv3Kx
-	awCfzN9LoZG6/Uov+h70gcI216v6yehTZ+3+xnhwVQgTcS0tg4dg155BiHFKrio14zJlPAx0yLt
-	NnCyYw/a29ow0G+hHThfuvdPGWNWdN9/P7HUPJjH5W4/NqXhAaPmlokLSHaRbgJL1e5YcnCGefr
-	X1Jq1j3O/KVPc7zjsIYXu2kY7u46bq/smgQPEfDwQIcO81hagKXazke6EXn//DA==
-X-Received: by 2002:a05:600c:450a:b0:471:5c0:94fc with SMTP id 5b1f17b1804b1-47ed7c074f8mr51944445e9.6.1768324622966;
-        Tue, 13 Jan 2026 09:17:02 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGCSYBYlMR5NUmwo3nUrikwa7NopKszIR4niyQXAQsU/DKal6wX+cyMdumSidxaQyfxjCmWhA==
-X-Received: by 2002:a05:600c:450a:b0:471:5c0:94fc with SMTP id 5b1f17b1804b1-47ed7c074f8mr51943825e9.6.1768324622288;
-        Tue, 13 Jan 2026 09:17:02 -0800 (PST)
-Received: from sgarzare-redhat (host-87-12-25-233.business.telecomitalia.it. [87.12.25.233])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd0e17aasm45799146f8f.15.2026.01.13.09.16.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jan 2026 09:17:01 -0800 (PST)
-Date: Tue, 13 Jan 2026 18:16:41 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Bobby Eshleman <bobbyeshleman@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jason Wang <jasowang@redhat.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
-	Bryan Tan <bryan-bt.tan@broadcom.com>, Vishnu Dasa <vishnu.dasa@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Shuah Khan <shuah@kernel.org>, Long Li <longli@microsoft.com>, 
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	berrange@redhat.com, Sargun Dhillon <sargun@sargun.me>, 
-	Bobby Eshleman <bobbyeshleman@meta.com>
-Subject: Re: [PATCH net-next v14 12/12] selftests/vsock: add tests for
- namespace deletion
-Message-ID: <aWZ92zp_zphz7geq@sgarzare-redhat>
-References: <20260112-vsock-vmtest-v14-0-a5c332db3e2b@meta.com>
- <20260112-vsock-vmtest-v14-12-a5c332db3e2b@meta.com>
+	s=arc-20240116; t=1768325384; c=relaxed/simple;
+	bh=LhFzFpqZCkTlg+4EdN58/iujAtnb8yiY5L+KDY9IGBk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mtMHVspX3u/RzhpWfja1YUUj3tE9NQjf9NaIsYgXoz9EQC7zw2e/Dqd/jh8QNTOX5E0PhYenksmWr4E7wTkZT+AB5NoG8icO46rG8O/UFV9xJ8XpCAafzTU+iei3H+7KHpqr0RFUbt0LmhjB1i3TEhaZvfJwOBYobSJDHwQkG1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rEhrHDPf; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from localhost (unknown [20.236.11.42])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 62AE620B716E;
+	Tue, 13 Jan 2026 09:29:41 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 62AE620B716E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1768325382;
+	bh=C4y6lqCer5WCpiCbWDllL4m7vUvxhKlPrlTUCsJaCKY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rEhrHDPf0ohClKYxtcWftDMzjclcsu19XUgvYouGFQ0IUPkhtcPJYct2FErUegenL
+	 sG2a7uFooNbvJQuyVHs7iEL5saHdANhDSbqSj0Plu8dz6BeoM503I77um3Vn7p2WjD
+	 IRV4xWtqXce+W7WPRG5BM1+dzopxxeMxzSo0xO1A=
+Date: Tue, 13 Jan 2026 09:29:40 -0800
+From: Jacob Pan <jacob.pan@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Yu Zhang <zhangyu1@linux.microsoft.com>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
+ <linux-hyperv@vger.kernel.org>, "iommu@lists.linux.dev"
+ <iommu@lists.linux.dev>, "linux-pci@vger.kernel.org"
+ <linux-pci@vger.kernel.org>, "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org"
+ <wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kwilczynski@kernel.org"
+ <kwilczynski@kernel.org>, "mani@kernel.org" <mani@kernel.org>,
+ "robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com"
+ <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "joro@8bytes.org"
+ <joro@8bytes.org>, "will@kernel.org" <will@kernel.org>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>,
+ "easwar.hariharan@linux.microsoft.com"
+ <easwar.hariharan@linux.microsoft.com>, "nunodasneves@linux.microsoft.com"
+ <nunodasneves@linux.microsoft.com>, "mrathor@linux.microsoft.com"
+ <mrathor@linux.microsoft.com>, "peterz@infradead.org"
+ <peterz@infradead.org>, "linux-arch@vger.kernel.org"
+ <linux-arch@vger.kernel.org>
+Subject: Re: [RFC v1 5/5] iommu/hyperv: Add para-virtualized IOMMU support
+ for Hyper-V guest
+Message-ID: <20260113092940.000050b8@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB41571D67D866538138D06585D481A@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20251209051128.76913-1-zhangyu1@linux.microsoft.com>
+	<20251209051128.76913-6-zhangyu1@linux.microsoft.com>
+	<SN6PR02MB41572D46CF6C1DE68974EAA1D485A@SN6PR02MB4157.namprd02.prod.outlook.com>
+	<dws34g6znmam7eabwetg722b4wgf2wxufcqxqphhbqlryx23mb@we5utwanawe2>
+	<SN6PR02MB41571D67D866538138D06585D481A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Organization: LSG
+X-Mailer: Claws Mail 3.21.0 (GTK+ 2.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20260112-vsock-vmtest-v14-12-a5c332db3e2b@meta.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 12, 2026 at 07:11:21PM -0800, Bobby Eshleman wrote:
->From: Bobby Eshleman <bobbyeshleman@meta.com>
->
->Add tests that validate vsock sockets are resilient to deleting
->namespaces. The vsock sockets should still function normally.
->
->The function check_ns_delete_doesnt_break_connection() is added to
->re-use the step-by-step logic of 1) setup connections, 2) delete ns,
->3) check that the connections are still ok.
->
->Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
->---
->Changes in v13:
->- remove tests that change the mode after socket creation (this is not
->  supported behavior now and the immutability property is tested in other
->  tests)
->- remove "change_mode" behavior of
->  check_ns_changes_dont_break_connection() and rename to
->  check_ns_delete_doesnt_break_connection() because we only need to test
->  namespace deletion (other tests confirm that the mode cannot change)
->
->Changes in v11:
->- remove pipefile (Stefano)
->
->Changes in v9:
->- more consistent shell style
->- clarify -u usage comment for pipefile
->---
-> tools/testing/selftests/vsock/vmtest.sh | 84 +++++++++++++++++++++++++++++++++
-> 1 file changed, 84 insertions(+)
+Hi Michael,
 
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+On Mon, 12 Jan 2026 17:48:30 +0000
+Michael Kelley <mhklinux@outlook.com> wrote:
 
->
->diff --git a/tools/testing/selftests/vsock/vmtest.sh b/tools/testing/selftests/vsock/vmtest.sh
->index a9eaf37bc31b..dc8dbe74a6d0 100755
->--- a/tools/testing/selftests/vsock/vmtest.sh
->+++ b/tools/testing/selftests/vsock/vmtest.sh
->@@ -68,6 +68,9 @@ readonly TEST_NAMES=(
-> 	ns_same_local_loopback_ok
-> 	ns_same_local_host_connect_to_local_vm_ok
-> 	ns_same_local_vm_connect_to_local_host_ok
->+	ns_delete_vm_ok
->+	ns_delete_host_ok
->+	ns_delete_both_ok
-> )
-> readonly TEST_DESCS=(
-> 	# vm_server_host_client
->@@ -135,6 +138,15 @@ readonly TEST_DESCS=(
->
-> 	# ns_same_local_vm_connect_to_local_host_ok
-> 	"Run vsock_test client in VM in a local ns with server in same ns."
->+
->+	# ns_delete_vm_ok
->+	"Check that deleting the VM's namespace does not break the socket connection"
->+
->+	# ns_delete_host_ok
->+	"Check that deleting the host's namespace does not break the socket connection"
->+
->+	# ns_delete_both_ok
->+	"Check that deleting the VM and host's namespaces does not break the socket connection"
-> )
->
-> readonly USE_SHARED_VM=(
->@@ -1287,6 +1299,78 @@ test_vm_loopback() {
-> 	return "${KSFT_PASS}"
-> }
->
->+check_ns_delete_doesnt_break_connection() {
->+	local pipefile pidfile outfile
->+	local ns0="global0"
->+	local ns1="global1"
->+	local port=12345
->+	local pids=()
->+	local rc=0
->+
->+	init_namespaces
->+
->+	pidfile="$(create_pidfile)"
->+	if ! vm_start "${pidfile}" "${ns0}"; then
->+		return "${KSFT_FAIL}"
->+	fi
->+	vm_wait_for_ssh "${ns0}"
->+
->+	outfile=$(mktemp)
->+	vm_ssh "${ns0}" -- \
->+		socat VSOCK-LISTEN:"${port}",fork STDOUT > "${outfile}" 2>/dev/null &
->+	pids+=($!)
->+	vm_wait_for_listener "${ns0}" "${port}" "vsock"
->+
->+	# We use a pipe here so that we can echo into the pipe instead of using
->+	# socat and a unix socket file. We just need a name for the pipe (not a
->+	# regular file) so use -u.
->+	pipefile=$(mktemp -u /tmp/vmtest_pipe_XXXX)
->+	ip netns exec "${ns1}" \
->+		socat PIPE:"${pipefile}" VSOCK-CONNECT:"${VSOCK_CID}":"${port}" &
->+	pids+=($!)
->+
->+	timeout "${WAIT_PERIOD}" \
->+		bash -c 'while [[ ! -e '"${pipefile}"' ]]; do sleep 1; done; exit 0'
->+
->+	if [[ "$1" == "vm" ]]; then
->+		ip netns del "${ns0}"
->+	elif [[ "$1" == "host" ]]; then
->+		ip netns del "${ns1}"
->+	elif [[ "$1" == "both" ]]; then
->+		ip netns del "${ns0}"
->+		ip netns del "${ns1}"
->+	fi
->+
->+	echo "TEST" > "${pipefile}"
->+
->+	timeout "${WAIT_PERIOD}" \
->+		bash -c 'while [[ ! -s '"${outfile}"' ]]; do sleep 1; done; exit 0'
->+
->+	if grep -q "TEST" "${outfile}"; then
->+		rc="${KSFT_PASS}"
->+	else
->+		rc="${KSFT_FAIL}"
->+	fi
->+
->+	terminate_pidfiles "${pidfile}"
->+	terminate_pids "${pids[@]}"
->+	rm -f "${outfile}" "${pipefile}"
->+
->+	return "${rc}"
->+}
->+
->+test_ns_delete_vm_ok() {
->+	check_ns_delete_doesnt_break_connection "vm"
->+}
->+
->+test_ns_delete_host_ok() {
->+	check_ns_delete_doesnt_break_connection "host"
->+}
->+
->+test_ns_delete_both_ok() {
->+	check_ns_delete_doesnt_break_connection "both"
->+}
->+
-> shared_vm_test() {
-> 	local tname
->
->
->-- 
->2.47.3
->
+> From: Michael Kelley <mhklinux@outlook.com>
+> To: Yu Zhang <zhangyu1@linux.microsoft.com>
+> CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+> "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+> "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+> "linux-pci@vger.kernel.org"  <linux-pci@vger.kernel.org>,
+> "kys@microsoft.com" <kys@microsoft.com>,  "haiyangz@microsoft.com"
+> <haiyangz@microsoft.com>, "wei.liu@kernel.org"  <wei.liu@kernel.org>,
+> "decui@microsoft.com" <decui@microsoft.com>,  "lpieralisi@kernel.org"
+> <lpieralisi@kernel.org>, "kwilczynski@kernel.org"
+> <kwilczynski@kernel.org>, "mani@kernel.org" <mani@kernel.org>,
+> "robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com"
+> <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>,
+> "joro@8bytes.org"  <joro@8bytes.org>, "will@kernel.org"
+> <will@kernel.org>,  "robin.murphy@arm.com" <robin.murphy@arm.com>,
+> "easwar.hariharan@linux.microsoft.com"
+> <easwar.hariharan@linux.microsoft.com>,
+> "jacob.pan@linux.microsoft.com"  <jacob.pan@linux.microsoft.com>,
+> "nunodasneves@linux.microsoft.com"
+> <nunodasneves@linux.microsoft.com>, "mrathor@linux.microsoft.com"
+> <mrathor@linux.microsoft.com>, "peterz@infradead.org"
+> <peterz@infradead.org>,  "linux-arch@vger.kernel.org"
+> <linux-arch@vger.kernel.org> Subject: RE: [RFC v1 5/5] iommu/hyperv:
+> Add para-virtualized IOMMU support for  Hyper-V guest Date: Mon, 12
+> Jan 2026 17:48:30 +0000
+>=20
+> From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Monday, January
+> 12, 2026 8:56 AM
+> >=20
+> > On Thu, Jan 08, 2026 at 06:48:59PM +0000, Michael Kelley wrote: =20
+> > > From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Monday,
+> > > December 8, 2025 9:11 PM =20
+> >=20
+> > <snip>
+> > Thank you so much, Michael, for the thorough review!
+> >=20
+> > I've snipped some comments I fully agree with and will address in
+> > next version. Actually, I have to admit I agree with your remaining
+> > comments below as well. :)
+> >  =20
+> > > > +struct hv_iommu_dev *hv_iommu_device;
+> > > > +static struct hv_iommu_domain hv_identity_domain;
+> > > > +static struct hv_iommu_domain hv_blocking_domain; =20
+> > >
+> > > Why is hv_iommu_device allocated dynamically while the two
+> > > domains are allocated statically? Seems like the approach could
+> > > be consistent, though maybe there's some reason I'm missing.
+> > > =20
+> >=20
+> > On second thought, `hv_identity_domain` and `hv_blocking_domain`
+> > should likely be allocated dynamically as well, consistent with
+> > `hv_iommu_device`. =20
+>=20
+> I don't know if there's a strong rationale either way (static
+> allocation vs. dynamic). If the long-term expectation is that there
+> is never more than one PV IOMMU in a guest, then static would be OK.
+> If future direction allows that there could be multiple PV IOMMUs in
+> a guest, then doing dynamic from the start is justifiable (though the
+> current PV IOMMU hypercalls seem to assume only one PV IOMMU). But
+> either way, being consistent is desirable.
+>=20
+I believe we only need a single global static identity domain here
+regardless how many vIOMMUs there may be. From the guest=E2=80=99s perspect=
+ive,
+the hvIOMMU only supports hardware=E2=80=91passthrough identity domains, wh=
+ich
+do not maintain any per=E2=80=91IOMMU state, i.e., there is no S1 IO page t=
+able
+based identity domain.
 
+The expectation of physical IOMMU settings for guest identity
+domain should be as follows:
+- Intel vtd PASID entry PGTT =3D 010b (Second-stage Translation only)
+- AMD DTE TV=3D1; GV=3D0
+
+> >=20
+> > <snip>
+> >  =20
+> > > > +static void hv_iommu_shutdown(void)
+> > > > +{
+> > > > +	iommu_device_sysfs_remove(&hv_iommu_device->iommu);
+> > > > +
+> > > > +	kfree(hv_iommu_device);
+> > > > +}
+> > > > +
+> > > > +static struct syscore_ops hv_iommu_syscore_ops =3D {
+> > > > +	.shutdown =3D hv_iommu_shutdown,
+> > > > +}; =20
+>  [...] =20
+> >=20
+> > For iommu_device_sysfs_remove(), I guess they are not necessary, and
+> > I will need to do some homework to better understand the sysfs. :)
+> > Originally, we wanted a shutdown routine to trigger some hypercall,
+> > so that Hyper-V will disable the DMA translation, e.g., during the
+> > VM reboot process. =20
+>=20
+> I would presume that if Hyper-V reboots the VM, Hyper-V automatically
+> resets the PV IOMMU and prevents any further DMA operations. But
+> consider kexec(), where a new kernel gets loaded without going through
+> the hypervisor "reboot-this-VM" path. There have been problems in the
+> past with kexec() where parts of Hyper-V state for the guest didn't
+> get reset, and the PV IOMMU is likely something in that category. So
+> there may indeed be a need to tell the hypervisor to reset everything
+> related to the PV IOMMU. There are already functions to do Hyper-V
+> cleanup: see vmbus_initiate_unload() and hyperv_cleanup(). These
+> existing functions may be a better place to do PV IOMMU cleanup/reset
+> if needed.
+That would be my vote also.
 
