@@ -1,174 +1,246 @@
-Return-Path: <linux-hyperv+bounces-8266-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8267-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB61AD198A3
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Jan 2026 15:40:35 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01D83D19C04
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Jan 2026 16:10:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9C76230552D8
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Jan 2026 14:38:00 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id CB092300CA38
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Jan 2026 15:09:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F82229E11A;
-	Tue, 13 Jan 2026 14:38:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FA402E8DE3;
+	Tue, 13 Jan 2026 15:09:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fr7MxQBj";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="s2E2NNak"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Cf5hmJCa"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11023139.outbound.protection.outlook.com [40.93.196.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E971D2882D0
-	for <linux-hyperv@vger.kernel.org>; Tue, 13 Jan 2026 14:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768315080; cv=none; b=qs6U0lhoRMP93CLxvc6mUtI/j46fqLLIWeCiJz2Rcl0WGlKzp8buU2s+mUoBI5vnmoDkJ+7HoWNP22eMDVIbUgzNtX+iogB3V7ve1BJmJgwL2OY6rZv4ke0KBdi63FyeYjKQ8yTXgaUAU2P/pCTXnrIu8Ld5jdWFBf9qcRxo8vo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768315080; c=relaxed/simple;
-	bh=E5/n+gp4oJScjwiNqhRtlKeTPug5EnnZg1wflCdJ81E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g6PLNxyeg0CnrzMPjCGhGA0LB/BgcZoIhiCzHn0Q5KrOB+Ly0iK8zSjfTsq/8eqxZneIkqtRd9MYA4Woh38BvJIaYmFH8Fd5TU3LyLVj69NKQdKKGMEOP5FUZSvlh6YdNBDxAgAf/ME4f4jqDkzOLrtWskhY0l7AEVhe44L1fL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fr7MxQBj; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=s2E2NNak; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768315077;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9LgnqaJM+XpiwDFJ8HhQp/PFSeMXCj9ObUTssbWH+C8=;
-	b=fr7MxQBjWUI4oclKG/Dt3rMpmCxIRqHpk5lilGSwTcqer7ZytXA4v7Sk1ab1aAmR8Y5d1N
-	0x0bAzPXJ2RodPv1N49erED2XSMHN8RKScFH216wL0FhULKP7J2F8MZU7lOIzVTYzLeGUF
-	21QVw5k75k58VCttEDDGDsuiTICNAzk=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-592-nqRNLnneO-Os11YMU5h97g-1; Tue, 13 Jan 2026 09:37:55 -0500
-X-MC-Unique: nqRNLnneO-Os11YMU5h97g-1
-X-Mimecast-MFC-AGG-ID: nqRNLnneO-Os11YMU5h97g_1768315074
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-4325aa61c6bso4829510f8f.0
-        for <linux-hyperv@vger.kernel.org>; Tue, 13 Jan 2026 06:37:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1768315074; x=1768919874; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9LgnqaJM+XpiwDFJ8HhQp/PFSeMXCj9ObUTssbWH+C8=;
-        b=s2E2NNakzQc7podiTgkDwSS5JrrpBYsAzaBHukJI9cqCG7upriReWrViXdTo2VMN0z
-         LotNkZzHizyLR6li7dHoBMGiiQktpC9CIZB4UiXf2olFdiLvJEc0pXtYNTFWgKr88uMC
-         zsoEMY9hDitlVZlhniO4dU6uiBM2o4qVMrz4pKwXfK8mbOGW8K0kye5K4gxlFkfeGNyP
-         G34PO3NqjWoj1l/j4KV6sy1YTr17HPyKQnGPTRmTjH+7oFmeyDjJ9EGQIpjGdJEq5REf
-         0aFvAal+JDajv63n8AotnK7fETt5wITk/BS0xsHAwCUBMsxEQ/fm100YlBmnLWlbTYDP
-         MElg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768315074; x=1768919874;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9LgnqaJM+XpiwDFJ8HhQp/PFSeMXCj9ObUTssbWH+C8=;
-        b=AjNORwzm6XCeO1vwlpQDYThmQj/Xwp2xe5DDONV0tteSoduEADy4Qyti/34WtFikQa
-         cEwGPf4sUW9s6DYN1BPYDlkupONBAb0aPvsVmX/zQ4SLsSnp/nqkmxw4mwI+eKiH4t0e
-         TgqqkWtn6vi40Z1g2bku5Y8bHTPVKWvPtSkMAe/BHuudWDrUbaVF5DIn8JK7OaA0wxPy
-         gr3UVmiBOA6vWfcTx5I4qctfTz3VSCBKAM9TTrmUczVM6eQ/z/ddpNLU62GkCsLsboSU
-         nblscN8QcbHvunDiVHsTCc6+3yYekvsY2RoMMG7q+hjtnlyiBwVIsa6itraM3FJKnxjD
-         bqMA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBT5czSBZuTS2n4KBb0A1Orr7om7zMrT8Eilm+/Bo/btE5fTbfaPZbDZLP8I04PC95dw9EPXvcb9m9S0Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+A/i0wYElonBdgkvHPu2Ya0vOd+0jOhqA4RFHZfIKicgUTB+s
-	60dDEZh0yNn0/AZ7ynu/j1yZi8E86ETERDGjchdNtZeaLKNxZddzAaFId60xijUsNwZ0bj4tYA1
-	Vr9LQknDxKVwSWhXXPKtk6B7nkPeVx86r23w/WBHoN6fd1j9l2V0KJ8uQ899+kP6LzA==
-X-Gm-Gg: AY/fxX5nSuT3bLPRxjf/2zgN06DhhwR6n9IAf1l5XMBVbude2Rv0c8J49evuRd5G2Ar
-	/Jv7EDDfzmh60djKqTmzQPS8v14MqdLQ050G/LHeXlBZLEoYWNHjrAERTk7+y7fP5OZxaYpTRkf
-	mSgdMKqoFXECvJ2ynoRzdNl8nxwTKa4QypqlBDSHglLkAjRehtRzw58X4m7+4ac8uCt2COhROFL
-	9U0kPcUZVLpLz2e/WUxt7JloeMf3FksKWgDkjVogr9tktiBbGhpEi8oK9rmQSR/Oovqc3RwlBDf
-	unGE3VNdyGKUKa9EPzcjo1jKnuE44Bi1QRCwnfrd1l95QD+ZAuJkWjcboa3RhHsjBIlMNZ41ERj
-	/yqL9/sRdKhXooT4vI8H+e6YW07XCEBYk0pk7H5m6FXCKAXP+BZB4PAFDSdzH4g==
-X-Received: by 2002:a05:6000:2512:b0:430:f58d:40e5 with SMTP id ffacd0b85a97d-432c374ff28mr26117962f8f.30.1768315074279;
-        Tue, 13 Jan 2026 06:37:54 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEaDijBjyQACs7Ec+s3xS5LP+GgM+l6sMs4Twqit+l71cMf1frrOWuoQfHaWNAhM1zfLnP+kg==
-X-Received: by 2002:a05:6000:2512:b0:430:f58d:40e5 with SMTP id ffacd0b85a97d-432c374ff28mr26117921f8f.30.1768315073807;
-        Tue, 13 Jan 2026 06:37:53 -0800 (PST)
-Received: from sgarzare-redhat (host-87-12-25-233.business.telecomitalia.it. [87.12.25.233])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd0e17aasm45089151f8f.15.2026.01.13.06.37.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jan 2026 06:37:53 -0800 (PST)
-Date: Tue, 13 Jan 2026 15:37:50 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Bobby Eshleman <bobbyeshleman@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jason Wang <jasowang@redhat.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
-	Bryan Tan <bryan-bt.tan@broadcom.com>, Vishnu Dasa <vishnu.dasa@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Shuah Khan <shuah@kernel.org>, Long Li <longli@microsoft.com>, 
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	berrange@redhat.com, Sargun Dhillon <sargun@sargun.me>, 
-	Bobby Eshleman <bobbyeshleman@meta.com>
-Subject: Re: [PATCH net-next v14 03/12] vsock: add netns support to virtio
- transports
-Message-ID: <aWZSeBAdiVs89wz7@sgarzare-redhat>
-References: <20260112-vsock-vmtest-v14-0-a5c332db3e2b@meta.com>
- <20260112-vsock-vmtest-v14-3-a5c332db3e2b@meta.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9FA210F59;
+	Tue, 13 Jan 2026 15:09:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.139
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768316959; cv=fail; b=i7JKor9bP3Ppd0sMjE984nAWSMkkpjHo7dtsaGl/07oYzMl1enO1p5X8wHiCrmLkJhcj8lUbiHAxcp24V73FP6KM1dQADkA30/FyR7fG1V5J9DWSHYsLU90ImYoZ5oyb5sayi1QEbYM/O5oOb0MEft2DAMIDZEiSuByv96kHowA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768316959; c=relaxed/simple;
+	bh=GtNCLG9sIAvj8ipVa263jpKEqH2WzKPasTecKlpdIXc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=mBhSZzMni/v0pljj9ydPV7yNVLov9taMxJxGJVWxvJTagFRUPJb1NDkZM2UoUMIoNGI+3DGVm3AUzMZwZprHt93biT6oV5ouGqU00z66jkM5EL4OlXo4J6ZMwg7+V//JeGd5QZuhLAtydghZlFfY8HzeiAMOo3khK+9ZlPL0kJA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=Cf5hmJCa; arc=fail smtp.client-ip=40.93.196.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OJC8we78m7lqv3+5/XLirgKw10yIBVl1BmvZdftj557EamDCCtHImlV2A1Uxjr1SaeVB/pHEvQ+/T2JvBI+8GcXB/3f5IXuU0LxO30kJ21FC8O9nH5DG15hssvvzZHmyk0tDSuzx6dm0XXnUmMHs902GUwAykqYBQk5oPf44SAOUJJES6Wz1F9wkSyctHUBD0RE4ObgkRSdcZq9J5v17LtIybvKrrVd3TDuv1eYNngvu4zoKz1hQDtaIew4OpLbC1h2jyHPQnTLF0maFbTPob+MxSAW8nKWv8lNSP/JYDg7xrkeRRVcfK+Ga67ky9fk1jIqsj9m42u7pO8Vs7OpVoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZUv/5YHuwsuaoe1vXlZIut2HoZN8FU8kxoKhgqWyQu8=;
+ b=Aj5FA8oKDgeZBTsaAnR1sI8Z8lXmLQQvvKs9VRPBU3Y7B0hXxf0SHhu/1M03Og76Ep3LOwi62XSMJ9Oe4Cx2SoIVjcgopE65VOZVcQ6yq78ti+gYjXdzHosr4Be4tRxHvo7roCAv+LQLP1sS739HduelFaxO+4KLOJaQFOKZfEXH4ogPhbsBN2BHuGxHb6AwctmQ+pVCGY1+GkdX8miVpOIxEzOPyfjDrZAfGFFx+7ZmGHQlqKibQi6vCOoC5CzxQ0pJG8NOU96oV5BvTDbgwKQl+7z8zFqLL+YgcxxPdoZB7o8SbSvRqp/N4wmgaveO5dlcNfMvOTMrLVfdqjVbcw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZUv/5YHuwsuaoe1vXlZIut2HoZN8FU8kxoKhgqWyQu8=;
+ b=Cf5hmJCasiu2yKWW+kwh++jaHWJ6Y9IxOMLgClfZHxWce7b9S59xki7KHzYsE9pWVkvGAWsxHBwfhPKDUqxG1zt10VRh6nOHg9Le+XXGeIKPuL+nZgQqwWQKY4CBLQNJbtCsQd+bBVd2bW2UpHizGlVgWJpKi890t0koXd0Hz2I=
+Received: from SA3PR21MB3867.namprd21.prod.outlook.com (2603:10b6:806:2fc::15)
+ by SA1PR21MB6825.namprd21.prod.outlook.com (2603:10b6:806:4a9::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.1; Tue, 13 Jan
+ 2026 15:09:15 +0000
+Received: from SA3PR21MB3867.namprd21.prod.outlook.com
+ ([fe80::70ff:4d3:2cb6:92a3]) by SA3PR21MB3867.namprd21.prod.outlook.com
+ ([fe80::70ff:4d3:2cb6:92a3%6]) with mapi id 15.20.9542.000; Tue, 13 Jan 2026
+ 15:09:15 +0000
+From: Haiyang Zhang <haiyangz@microsoft.com>
+To: Jakub Kicinski <kuba@kernel.org>
+CC: Haiyang Zhang <haiyangz@linux.microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, KY Srinivasan
+	<kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+	<DECUI@microsoft.com>, Long Li <longli@microsoft.com>, Andrew Lunn
+	<andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Konstantin
+ Taranov <kotaranov@microsoft.com>, Simon Horman <horms@kernel.org>, Erni Sri
+ Satya Vennela <ernis@linux.microsoft.com>, Shradha Gupta
+	<shradhagupta@linux.microsoft.com>, Saurabh Sengar
+	<ssengar@linux.microsoft.com>, Aditya Garg <gargaditya@linux.microsoft.com>,
+	Dipayaan Roy <dipayanroy@linux.microsoft.com>, Shiraz Saleem
+	<shirazsaleem@microsoft.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-rdma@vger.kernel.org"
+	<linux-rdma@vger.kernel.org>, Paul Rosswurm <paulros@microsoft.com>
+Subject: RE: [EXTERNAL] Re: [PATCH V2,net-next, 1/2] net: mana: Add support
+ for coalesced RX packets on CQE
+Thread-Topic: [EXTERNAL] Re: [PATCH V2,net-next, 1/2] net: mana: Add support
+ for coalesced RX packets on CQE
+Thread-Index: AQHcf02oLJOgwMZgokiNaAnIBRMMibVKqfoAgARiUFCAAEsSAIAA4mDA
+Date: Tue, 13 Jan 2026 15:09:15 +0000
+Message-ID:
+ <SA3PR21MB3867B36A9565AB01B0114D3ACA8EA@SA3PR21MB3867.namprd21.prod.outlook.com>
+References: <1767732407-12389-1-git-send-email-haiyangz@linux.microsoft.com>
+	<1767732407-12389-2-git-send-email-haiyangz@linux.microsoft.com>
+	<20260109175610.0eb69acb@kernel.org>
+	<SA3PR21MB3867BAD6022A1CAE2AC9E202CA81A@SA3PR21MB3867.namprd21.prod.outlook.com>
+ <20260112172146.04b4a70f@kernel.org>
+In-Reply-To: <20260112172146.04b4a70f@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c47e728f-c9eb-47f5-a22f-72e8344ebfe3;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-01-13T14:51:59Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA3PR21MB3867:EE_|SA1PR21MB6825:EE_
+x-ms-office365-filtering-correlation-id: 114e0e0f-75bf-41f7-3d1f-08de52b5b76a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700021;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?uaI2odR9srnNDksoVmwdOCMbPiyk2Ct2V+qfd4DEBQoT0SXLGKNYos57u+9u?=
+ =?us-ascii?Q?4kI7co0TupCpBBbfotwa/LYykgg79NN8UxA+RiVND9g1Ugr6vBwjKYwkySTG?=
+ =?us-ascii?Q?2cwJQ1MpbrbFdjIFzx0ziAZii2247IDRX2/7CUYDR+Wbzsm7XIbMh5W9dT0j?=
+ =?us-ascii?Q?9gS8YZtUD9EBoRCIarS3MHuHZto5bWoJmIH2xoKyljvKJ6/KaMYo5zLQCsa8?=
+ =?us-ascii?Q?oA5Vp4sqZNJhZRCzxNjkbDcJFykrVeiqzvDBTLQnZ1Iuy9wg2PjmuIJ1Qc4l?=
+ =?us-ascii?Q?7+YB/XkXdLzaYg1GWhB/s6lf2odOsUnSq/inyNLxgxsvtZGmxPT9GdTYXOJ9?=
+ =?us-ascii?Q?uJAMaY6foFOt5ipxztcDUO4IN3gmjkRF3v2tu4SXTMmSqOqjc2QiN/+ojI8N?=
+ =?us-ascii?Q?aXRHI54anqR/0zmqtn5UZlWLVYqzIi8hvfaAUdQG5KOJ2ji7MK0x5SwEjrVP?=
+ =?us-ascii?Q?02qLHMdgkMIP7Qk7HluPrU15NSyrGhq2khDDYgcqQgfQm5JfU10vCJXfuiHf?=
+ =?us-ascii?Q?k48FfBJNH8eeOMGGnoAW4geDgDE2URcW3NuSRxgaCYG3nrUfknbkujLFMr6T?=
+ =?us-ascii?Q?Bb8MoeLB/YQXDow0FX+qR4R0AMi83G0PODZx73x5xdJsuOyQGZq7wawYf1ZD?=
+ =?us-ascii?Q?wEX/A8bJoqsqH8ypESTeJCi4e/Y5fXFRRfPsp0GadUUt67IJF2MdUzx+y+52?=
+ =?us-ascii?Q?4cW8882esav9sqUnfjdlAJgba98KdUugepTqd/SXh7Mvptejy9CVqkVpws/U?=
+ =?us-ascii?Q?oANgJFM3EAB6cXMoKYVpe6EQWsMiVQckvRQzsJi30TuwKi+ypJdNPQRHOHu3?=
+ =?us-ascii?Q?pt0LMijPtrdIma5QRYPzLSjwr60dw8hWTeBLaj7f9xPSZlkUI+5O6yuspU3r?=
+ =?us-ascii?Q?tDH/yQ+ZNCZUYJIbxjx07+ETduvEpTj9TXLj9CQ9piEnh9qAJqNFUWAMaw5H?=
+ =?us-ascii?Q?hCmcGyaJ9LKQ7NaOLG2xJ17DsD5Tq8XIheoGKw70M83PfEwqEF3IXvfXE7DW?=
+ =?us-ascii?Q?uz5qAv1Pxwcze32cgzXWrMVgH22ljAhePa0aSmv7ptAGejfo6MFHODPfGD1n?=
+ =?us-ascii?Q?UqLrIOLbX+CUJ5qtfhDHscf9g39ZOplJgW+Sfv2u2s1QtvMnf464U2us29W4?=
+ =?us-ascii?Q?psippnhjm15tNUhlRx2Fftooh2RaDvYfSMU4gjVLQOvPMH81UXayMErn35+i?=
+ =?us-ascii?Q?sub+sBl6qPCbtre9QCKU1V86GCwdxR1jREaEShPwcdPw7MQxSnCv4OjcqiKL?=
+ =?us-ascii?Q?7eOCLnz61HKbGupNXhjEKWRAyrYafpYYZOd71nbUN8SxycP4O9YjxKgt99P1?=
+ =?us-ascii?Q?9lDsq0SWhv14gi7WWch0g+0bYpFhvcFay5x3jLJD0/kvaayFXvFrAzRu5irY?=
+ =?us-ascii?Q?HEnkzhyiRQzjry9aPTsVRARouCU2rec7QdQeTQfcNG87yWcoYzgTQP+hHNtZ?=
+ =?us-ascii?Q?BRgYkJc/TybIcGSnqzbWV0+gKeaORqg1pvwLqZO0E7YB3qASonzLFZmb1BxS?=
+ =?us-ascii?Q?0H9f3R2PFa1iByQjrMgL+3bFsCl5Wh5DGIQS?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR21MB3867.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700021);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?2nhaR8Gex1wx+2rkuPRkZd8IgTOARAZrjgtNXmEInv8ovLxgZZT3AvazsJUh?=
+ =?us-ascii?Q?HJDAAJ37vlEHN/pEOYJjuEU3QHqjNeE3Qi5OLIqt65EaVtSU90ZXyXWSSWHM?=
+ =?us-ascii?Q?De252EhVv6xjfuBZXzwQCOPVp8rGb1aTzRU0j7GBQeL2ek9jcQBohG7kK5Ie?=
+ =?us-ascii?Q?yTyTEcIdYYKIOl+vH+18RBlInQ8cP6JUmp5U6t+lIUhmpfjOBsDR6KtgCeM9?=
+ =?us-ascii?Q?LjLIk6yBFLXixWPT94gSOPokEv/1ewCe4PFyfhegqdGwfeIkZvPTQD4z9KEI?=
+ =?us-ascii?Q?e718E6Hg3aIpIfeypvdFhpK/ZfmSLFAvFsAmt98FabAZXd/be6YeQU7kMHQi?=
+ =?us-ascii?Q?x0SRM+JLVtgCyMY/JKcCfWtEVXujHHonLfVo3kLlljdK5hAJJfPTKJ0HjC/W?=
+ =?us-ascii?Q?wI9SOKppHjrVAI1ZzaOfIU6wpCyWT87DMnvZ1VQHep+rYnFNeaDQ5Wi/4Ryv?=
+ =?us-ascii?Q?ac6pfd5q37L+LhwIO8h1NSg7ScHmT1jsgix8HRc6iFuOixGZwN8S2WVIubVo?=
+ =?us-ascii?Q?2egc6dywozo6+satsWvZ0pDeF0VyS1MCE04HqOZNAdsBfuDrU6Wuse8bJxOt?=
+ =?us-ascii?Q?4mqGeSQisSLoKOhONa6Fa2mpbpImQ/1EyEC+ztcimlFmjiGDslAL706/mye3?=
+ =?us-ascii?Q?Fx608+sHMAblNchbN+Jx1YATfsJRhd6a3uyqDjn4o0PJezkZ/u7vYBn7z92B?=
+ =?us-ascii?Q?Ft84dNtLO84EyytqFWvZBDx1OSrEmTHBPQWm/z1s4+o+hKE6DE0AWctt5va6?=
+ =?us-ascii?Q?D3VETSRjcejcSOXCh0AH+ecJKRZK6BWzDmRPx11wgBxOxjkuguYzMFvCdfXb?=
+ =?us-ascii?Q?TIzA/CntUJIhcF5IC7hFCRdIESA/4BmkUTEjCLebkL0oeFVUxI1kIbnaQEnL?=
+ =?us-ascii?Q?AEZs2ZwBvuWYiC4j+/2hsuEvn7K8GKwv94GMPCvLMrPh2gs+hhXYAaafLAyC?=
+ =?us-ascii?Q?cPa53Y9dHAcxQjrjMf5tR+fJRqIHzlH7bLVuBCMrY1wQ7GVc8AqOFP/a6OI7?=
+ =?us-ascii?Q?i9kLuO+Hd70VqiuHiigE5Tu96b9FvuTBb7Slny7IErtUCfCwwWqMlhu8s4H5?=
+ =?us-ascii?Q?qhXher92OjTrhRKSIBwVBvqiIcvcmqlj4JT4/LWgFWusQ9KujBElSdYFFqz4?=
+ =?us-ascii?Q?iPsqZnbOk4y9tMCB/wanJbSUI/YAe7kIXtbp7JNr4x8UfxRlGPvftyltYec/?=
+ =?us-ascii?Q?fp/hxjZgfbM8tHFKWMvYzYUJ3tgJ5wwnLEpt8Plin1FwCpTvqIKyDcF9JYrx?=
+ =?us-ascii?Q?wOokMxv/oNRDrmjPWNcqRPnZEQ9lTkY1bZzabrV6uUYPusMbz0PruiA6MQsw?=
+ =?us-ascii?Q?QKlyHNA/8a2dokcvJYt0MItFVf6UnJhrudShUyMX/yFaq0QS47v5tdCm+dsf?=
+ =?us-ascii?Q?TuW4swfoC0TXNA9AINUi0t6GkBDMDC8o4SaSGwxRiu50P5jE8QCtUfFGZr1g?=
+ =?us-ascii?Q?h1JDP+5zVh4Xr3C+fOq9oaZKQuEFHgbxAhDFgzU1KIg4+ShuVJIN7GaR2No+?=
+ =?us-ascii?Q?CE7PCNv8/Dbx0I3g07MFncrdKuV2IgV3FKHMXDSBXKLCL8P3RVurtkP48if/?=
+ =?us-ascii?Q?/42Ekmv3yp0WNS8d7Y7TCAWry4N6/XKxvH1IRLvicl+XpAGH/J5Aqgjiu7Du?=
+ =?us-ascii?Q?eaKoM50QHiB3uf0NaeQFPrOlVR2/0H90uALHW3lyvO0qaDd+EVnrQqq/Hudx?=
+ =?us-ascii?Q?RBoWCGpYPe+iRkaYYUWOXlBoskuBBpp+mZsGeaEtdsicQ/YstT5gnE5UO6Eh?=
+ =?us-ascii?Q?Vl/+D2EThA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20260112-vsock-vmtest-v14-3-a5c332db3e2b@meta.com>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA3PR21MB3867.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 114e0e0f-75bf-41f7-3d1f-08de52b5b76a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2026 15:09:15.2790
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KKEs96HZCN6h1hTUuhg+cqXWAUA5Li0gP+qe0xQqa/CuwSJjPXvCfE773++sVWxVgkU7fqH9ANlZdtdBRBQVmQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR21MB6825
 
-On Mon, Jan 12, 2026 at 07:11:12PM -0800, Bobby Eshleman wrote:
->From: Bobby Eshleman <bobbyeshleman@meta.com>
->
->Add netns support to loopback and vhost. Keep netns disabled for
->virtio-vsock, but add necessary changes to comply with common API
->updates.
->
->This is the patch in the series when vhost-vsock namespaces actually
->come online.
->
->Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
->---
->Changes in v14:
->- fixed merge conflicts in drivers/vhost/vsock.c
->
->Changes in v13:
->- do not store or pass the mode around now that net->vsock.mode is
->  immutable
->- move virtio_transport_stream_allow() into virtio_transport.c
->  because virtio is the only caller now
->
->Changes in v12:
->- change seqpacket_allow() and stream_allow() to return true for
->  loopback and vhost (Stefano)
->
->Changes in v11:
->- reorder with the skb ownership patch for loopback (Stefano)
->- toggle vhost_transport_supports_local_mode() to true
->
->Changes in v10:
->- Splitting patches complicates the series with meaningless placeholder
->  values that eventually get replaced anyway, so to avoid that this
->  patch combines into one. Links to previous patches here:
->  - Link: https://lore.kernel.org/all/20251111-vsock-vmtest-v9-3-852787a37bed@meta.com/
->  - Link: https://lore.kernel.org/all/20251111-vsock-vmtest-v9-6-852787a37bed@meta.com/
->  - Link: https://lore.kernel.org/all/20251111-vsock-vmtest-v9-7-852787a37bed@meta.com/
->- remove placeholder values (Stefano)
->- update comment describe net/net_mode for
->  virtio_transport_reset_no_sock()
->---
-> drivers/vhost/vsock.c                   | 38 ++++++++++++++++-------
-> include/linux/virtio_vsock.h            |  5 +--
-> net/vmw_vsock/virtio_transport.c        | 13 ++++++--
-> net/vmw_vsock/virtio_transport_common.c | 54 +++++++++++++++++++--------------
-> net/vmw_vsock/vsock_loopback.c          | 14 +++++++--
-> 5 files changed, 84 insertions(+), 40 deletions(-)
 
-LGTM!
 
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+> -----Original Message-----
+> From: Jakub Kicinski <kuba@kernel.org>
+> Sent: Monday, January 12, 2026 8:22 PM
+> To: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@linux.microsoft.com>; linux-
+> hyperv@vger.kernel.org; netdev@vger.kernel.org; KY Srinivasan
+> <kys@microsoft.com>; Wei Liu <wei.liu@kernel.org>; Dexuan Cui
+> <DECUI@microsoft.com>; Long Li <longli@microsoft.com>; Andrew Lunn
+> <andrew+netdev@lunn.ch>; David S. Miller <davem@davemloft.net>; Eric
+> Dumazet <edumazet@google.com>; Paolo Abeni <pabeni@redhat.com>; Konstanti=
+n
+> Taranov <kotaranov@microsoft.com>; Simon Horman <horms@kernel.org>; Erni
+> Sri Satya Vennela <ernis@linux.microsoft.com>; Shradha Gupta
+> <shradhagupta@linux.microsoft.com>; Saurabh Sengar
+> <ssengar@linux.microsoft.com>; Aditya Garg
+> <gargaditya@linux.microsoft.com>; Dipayaan Roy
+> <dipayanroy@linux.microsoft.com>; Shiraz Saleem
+> <shirazsaleem@microsoft.com>; linux-kernel@vger.kernel.org; linux-
+> rdma@vger.kernel.org; Paul Rosswurm <paulros@microsoft.com>
+> Subject: Re: [EXTERNAL] Re: [PATCH V2,net-next, 1/2] net: mana: Add
+> support for coalesced RX packets on CQE
+>=20
+> On Mon, 12 Jan 2026 21:01:59 +0000 Haiyang Zhang wrote:
+> > > > Our NIC can have up to 4 RX packets on 1 CQE. To support this
+> feature,
+> > > > check and process the type CQE_RX_COALESCED_4. The default setting
+> is
+> > > > disabled, to avoid possible regression on latency.
+> > > >
+> > > > And add ethtool handler to switch this feature. To turn it on, run:
+> > > >   ethtool -C <nic> rx-frames 4
+> > > > To turn it off:
+> > > >   ethtool -C <nic> rx-frames 1
+> > >
+> > > Exposing just rx frame count, and only two values is quite unusual.
+> > > Please explain in more detail the coalescing logic of the device.
+> > Our NIC device only supports coalescing on RX. And when it's disabled
+> each
+> > RX CQE indicates 1 RX packet; when enabled each RX CQE indicates up to =
+4
+> packets.
+>=20
+> I get that. What is the logic for combining 4 packets into a single
+> completion? How does it work? Your commit message mentions "regression
+> on latency" - what is the bound on that regression?
+
+When we received CQE type CQE_RX_COALESCED_4, it's a coalesced CQE. And in =
+the CQE
+OOB, there is an array with 4 PPI elements, with each pkt's length:
+oob->ppi[i].pkt_len.
+
+So we read the related WQE and the DMA buffers for the RX pkt payloads, up =
+to 4.
+But, if the coalesced pkts <4, the pkt_len will be 0 after the last pkt, so=
+ we
+know when to stop reading the WQEs.
+
+Thanks,
+- Haiyang
 
 
