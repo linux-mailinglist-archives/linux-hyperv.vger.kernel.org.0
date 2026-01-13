@@ -1,129 +1,133 @@
-Return-Path: <linux-hyperv+bounces-8279-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8280-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A163D1BAB2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jan 2026 00:13:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 40EFDD1BBB6
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jan 2026 00:36:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B7D723036B93
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Jan 2026 23:13:03 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3884F30069AE
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Jan 2026 23:36:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3372536A005;
-	Tue, 13 Jan 2026 23:13:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0968336A039;
+	Tue, 13 Jan 2026 23:36:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nqAAh529"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FQzahpKa"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC8335CB93;
-	Tue, 13 Jan 2026 23:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B397B350A2F;
+	Tue, 13 Jan 2026 23:36:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768345980; cv=none; b=KcIZy2X6gGlM5j4Zib5R0f1IICzHVB8UlrEkDXhdrUx9z59X3NEVlvWO5d/635cROUQM9gi8GuGHFi3wcv+P5FPUGeAQ75uBEjNPUT/ffydelTXlforaztNUigKr9vf03S/Kr3slDKGz5j0OIDTD3yMWQtyrzTrWWs4w7/vLWLU=
+	t=1768347413; cv=none; b=PiwTbjEo/AMfdXlc2W6FT9lNWxOPipXkzRAZGnDQWWG7/FYPVHZAbhgrEdA/PUhCN1sMkwdlp+5xMVkZifHAEczZT/9d8q2oQ6PaGRVSXOXfpJwNcwA7f6eb5pma19jeK0vtBn46oHvmHmwkG1bCLyX33N9caAXz5CBcdyc4EIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768345980; c=relaxed/simple;
-	bh=tfux4HuM++A7BLYQlaWz5mpF//WwyNWgU6Ipl96sA5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RIoomfMS18r7Qpy4BSLqBXioMPiXzEGH8tiDMwErwmJA5vDc2yRBjkQo2DI5qmtGXZhF2Ig0sNxNUXAbTRuldDG5o+xKDIks28l6CR605eF0goebpETeuQzWt3cLLJ8o1NJWAjP/X6V2LjjvrrjxWYDvPg5z2jQm6cA9IoeIfNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nqAAh529; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768345978; x=1799881978;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tfux4HuM++A7BLYQlaWz5mpF//WwyNWgU6Ipl96sA5I=;
-  b=nqAAh529Wap5PRAuBNWOW1ERqtSVdKqybJiJ2X0aGgs8bkMDkE4Ogk5y
-   SqEdgCbGQwAczu0baC93vAUgXpYKyBCfwFpAKxR67zSRxPXZwekkv8/SG
-   DGRdgVLTHv+F2UMaWFVojMUMGh4pzIF73sZVGD7NtMy0Ud2FWZIEJduLL
-   UCYWgXaIkMVhlzLSGTfPPEtUnVhL9gDQRFzrEIB8QOIf9uk9UjfTDe421
-   3z/I6+EOQjSi742o7f2dNl2sVUimySh64fHhUcN4l08TkGLAqzhPOEmMH
-   02V4ZU0eG0n3X+Tmu3jXTOGKmq+wmhwqVJjrJl5tuu0ZcRqztR6xvw2aM
-   Q==;
-X-CSE-ConnectionGUID: Dzp/q/EJQ3Sbq7j+4clz+Q==
-X-CSE-MsgGUID: KQ/P4AJmQV2SNN53EoZ6WQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="69376945"
-X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
-   d="scan'208";a="69376945"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 15:12:57 -0800
-X-CSE-ConnectionGUID: kzgyrO3ORaOlo4V3eNE03g==
-X-CSE-MsgGUID: IWu9cYVeQviBmeKCDLTDgg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
-   d="scan'208";a="204307734"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 13 Jan 2026 15:12:52 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vfnZB-00000000FTo-04NN;
-	Tue, 13 Jan 2026 23:12:49 +0000
-Date: Wed, 14 Jan 2026 07:12:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bobby Eshleman <bobbyeshleman@gmail.com>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Long Li <longli@microsoft.com>
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, berrange@redhat.com,
-	Sargun Dhillon <sargun@sargun.me>,
-	Bobby Eshleman <bobbyeshleman@gmail.com>
-Subject: Re: [PATCH net-next v14 01/12] vsock: add netns to vsock core
-Message-ID: <202601140749.5TXm5gpl-lkp@intel.com>
-References: <20260112-vsock-vmtest-v14-1-a5c332db3e2b@meta.com>
+	s=arc-20240116; t=1768347413; c=relaxed/simple;
+	bh=nQ1Er+e6wiAGW985FIUiLA7461AK7NqClc19JOQg8mM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NOCt25ULWuZWQI0LV71ptOghTERSOAauVII6nHDudlRs0yFVpya2wCte5uewIaPu1qvRwvupbq35nYs7PhoaHX6+YmbGeR3/WvGgaCe7jxMDIMEeapDrYcRqWe1oWesrIFmQzUh9RLZZwvbO3Dh/nQwwexjL6GAiVvDMVJ2LFmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=FQzahpKa; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 86B8020B7165;
+	Tue, 13 Jan 2026 15:36:51 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 86B8020B7165
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1768347411;
+	bh=EgyExoSDN5kPVh+zTwTWyc3xFjQLCGJpKNu/GKPBTTM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FQzahpKaWtI21sUUZuniYfTBtjFbdO9s+OD6cdHUuqrorzru+98HIkrfKvlAuf1KP
+	 KMqyt1dLzKY3xTbD6J4jljmDU/HWayD4/jg1j7xd6OJ30gvXnlHfZke8wV1XiebexP
+	 ItDGE+/Evq3dlSwivHIGW1hVosiDj66fRAR29qnM=
+Message-ID: <88b38aff-51b8-57d8-e548-00d42254a541@linux.microsoft.com>
+Date: Tue, 13 Jan 2026 15:36:51 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260112-vsock-vmtest-v14-1-a5c332db3e2b@meta.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v3 5/6] x86/hyperv: Implement hypervisor RAM collection
+ into vmcore
+Content-Language: en-US
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+ mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
+ hpa@zytor.com, arnd@arndb.de
+References: <20251006224208.1060990-1-mrathor@linux.microsoft.com>
+ <20251006224208.1060990-6-mrathor@linux.microsoft.com>
+ <20260113111412.GAaWYpBFPPLRG-YxNt@fat_crate.local>
+From: Mukesh R <mrathor@linux.microsoft.com>
+In-Reply-To: <20260113111412.GAaWYpBFPPLRG-YxNt@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Bobby,
+On 1/13/26 03:14, Borislav Petkov wrote:
+> On Mon, Oct 06, 2025 at 03:42:07PM -0700, Mukesh Rathor wrote:
+>> Introduce a new file to implement collection of hypervisor RAM into the
+>> vmcore collected by linux. By default, the hypervisor RAM is locked, ie,
+>> protected via hw page table. Hyper-V implements a disable hypercall which
+>> essentially devirtualizes the system on the fly. This mechanism makes the
+>> hypervisor RAM accessible to linux. Because the hypervisor RAM is already
+>> mapped into linux address space (as reserved RAM), it is automatically
+>> collected into the vmcore without extra work. More details of the
+>> implementation are available in the file prologue.
+>>
+>> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+>> ---
+>>   arch/x86/hyperv/hv_crash.c | 642 +++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 642 insertions(+)
+>>   create mode 100644 arch/x86/hyperv/hv_crash.c
+> 
+> This breaks randconfig builds here:
+> 
+> arch/x86/hyperv/hv_crash.c:631:2: error: must use 'struct' tag to refer to type 'smp_ops'
+>    631 |         smp_ops.crash_stop_other_cpus = hv_crash_stop_other_cpus;
+>        |         ^
+>        |         struct
+> arch/x86/hyperv/hv_crash.c:631:9: error: expected identifier or '('
+>    631 |         smp_ops.crash_stop_other_cpus = hv_crash_stop_other_cpus;
+>        |                ^
+> 2 errors generated.
+> make[4]: *** [scripts/Makefile.build:287: arch/x86/hyperv/hv_crash.o] Error 1
+> make[4]: *** Waiting for unfinished jobs....
+> make[3]: *** [scripts/Makefile.build:544: arch/x86/hyperv] Error 2
+> make[3]: *** Waiting for unfinished jobs....
+> make[2]: *** [scripts/Makefile.build:544: arch/x86] Error 2
+> make[2]: *** Waiting for unfinished jobs....
+> make[1]: *** [/home/amd/kernel/linux/Makefile:2054: .] Error 2
+> make: *** [Makefile:248: __sub-make] Error 2
+> 
+> config 01-18-21-randconfig-x86_64-13708.cfg attached. Note that this is
+> a clang build:
+> 
+> Ubuntu clang version 18.1.3 (1ubuntu1)
+> 
+> It fails with gcc too tho:
+> 
+> arch/x86/hyperv/hv_crash.c: In function ?hv_root_crash_init?:
+> arch/x86/hyperv/hv_crash.c:631:9: error: ?smp_ops? undeclared (first use in this function)
+>    631 |         smp_ops.crash_stop_other_cpus = hv_crash_stop_other_cpus;
+>        |         ^~~~~~~
+> arch/x86/hyperv/hv_crash.c:631:9: note: each undeclared identifier is reported only once for each function it appears in
+> make[4]: *** [scripts/Makefile.build:287: arch/x86/hyperv/hv_crash.o] Error 1
+> make[4]: *** Waiting for unfinished jobs....
+> make[3]: *** [scripts/Makefile.build:544: arch/x86/hyperv] Error 2
+> make[3]: *** Waiting for unfinished jobs....
+> make[2]: *** [scripts/Makefile.build:544: arch/x86] Error 2
+> make[2]: *** Waiting for unfinished jobs....
+> make[1]: *** [/home/amd/kernel/linux/Makefile:2054: .] Error 2
+> make: *** [Makefile:248: __sub-make] Error 2
+> 
 
-kernel test robot noticed the following build warnings:
+Looks like needs some config option around it, probably SMP. Will take
+a look in a day or two. Thanks for letting us know.
 
-[auto build test WARNING on net-next/main]
+-Mukesh
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bobby-Eshleman/virtio-set-skb-owner-of-virtio_transport_reset_no_sock-reply/20260113-125559
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20260112-vsock-vmtest-v14-1-a5c332db3e2b%40meta.com
-patch subject: [PATCH net-next v14 01/12] vsock: add netns to vsock core
-config: x86_64-buildonly-randconfig-004-20260113 (https://download.01.org/0day-ci/archive/20260114/202601140749.5TXm5gpl-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260114/202601140749.5TXm5gpl-lkp@intel.com/reproduce)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601140749.5TXm5gpl-lkp@intel.com/
 
-All warnings (new ones prefixed by >>, old ones prefixed by <<):
-
->> WARNING: modpost: net/vmw_vsock/vsock: section mismatch in reference: vsock_exit+0x25 (section: .exit.text) -> vsock_sysctl_ops (section: .init.data)
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
