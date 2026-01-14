@@ -1,151 +1,133 @@
-Return-Path: <linux-hyperv+bounces-8288-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8289-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42784D2001D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jan 2026 17:00:01 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42097D2069C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jan 2026 18:07:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 0D3BF3009099
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jan 2026 15:54:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BA7343007C7D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jan 2026 17:01:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 371CE399A60;
-	Wed, 14 Jan 2026 15:54:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30EA227FD51;
+	Wed, 14 Jan 2026 17:01:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MrXFRNpY";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="HfUYU3I6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OiT9Lvm4"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1253A0B39
-	for <linux-hyperv@vger.kernel.org>; Wed, 14 Jan 2026 15:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93262857CC
+	for <linux-hyperv@vger.kernel.org>; Wed, 14 Jan 2026 17:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768406074; cv=none; b=V24guKmL+os+GxghaDbBBgyOgfkTwf8NgSV8W6vO3Ma42SqKkuY5La9embkRPIWvB1e8nFivaAG0MgfnmyTOY7LcOtK3yOQ0VbI+uzOjR6Rnot+EfZ5K9B3nE5MzWtrwshXOk3MibJuN4kyLLLtCrsc5mRIra/MBgEu90K/QaIk=
+	t=1768410087; cv=none; b=BvtIxepZi07yxVOqc7L1PxxSR6xmJ6rjbgGnWYbSV/8UZyj2p/NXPowozYoKYJNL4EN17T/j/5ViUIEnkDHZbZxmfptodF7p7kqtejAEjYT0Z6DH/MUFD7fKlVqbgdat0sa3uUQm21i661oMxa5dFws36h7X1TOz8MLaAeazCz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768406074; c=relaxed/simple;
-	bh=vu8wNkY+ONyZ11dQOa1RhYbfZ6CIfKh+CDlvLi9Pphk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i8USEQVbqD70+BSHbBnXi4duqxsiRplwf1hZyv8vjkPO81jqEo1tB6P3UJQ9Xf/0stGnu3OQKiWpsKEPgyLpbyhIyxpZznQNxQdvgaNjsQ+7b4O1CT73Am/cXrBCMK42IWGq+LyzbZFEmGI5+Vvz5DP6mbzMSTjOMCwUMvGgKag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MrXFRNpY; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=HfUYU3I6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768406071;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=45w2Nqp7W5ReZCd4Up6qyFBRnRWCXaqu4990woCkPZ0=;
-	b=MrXFRNpYH8wUVQnmIR9XvMEq7byxOJlTwsZK9GiQ0thZ9Ob/iBxJ4ZuSDmekt4/Hn+VP+A
-	9MKY0TwRcytqfMXhQslgez1p6JTTZ081M9SzeJuOamrqXeuGOQtr0AXriIYALqcgTR4DfA
-	JzS8pP5CFj0VsTclfA1AxZE9fd5ffJA=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-453-83dhkSeYP5ORnicJp9YZvA-1; Wed, 14 Jan 2026 10:54:30 -0500
-X-MC-Unique: 83dhkSeYP5ORnicJp9YZvA-1
-X-Mimecast-MFC-AGG-ID: 83dhkSeYP5ORnicJp9YZvA_1768406068
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-34ac814f308so12934085a91.3
-        for <linux-hyperv@vger.kernel.org>; Wed, 14 Jan 2026 07:54:29 -0800 (PST)
+	s=arc-20240116; t=1768410087; c=relaxed/simple;
+	bh=32+KbSU+C/+4RoIvG+cmqU+nzpA71iEPfyKd4r/EvO0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rbfZr3aOQubUCwbeCPa66l4IewhgwVQr5tHMLOWIbDx7EJZYJh18xcIqjKH+C3Rc2nJidQ2g32cPktIcGELWwbNHDTNqEMw72Hy4Zr4PqOlxqtG8NNXzdF0MBv8DcSc8L1GKbQQO9h/KMhJsLgxDpK3NCNiXFvXixNquHfB49sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OiT9Lvm4; arc=none smtp.client-ip=209.85.214.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-2a0bae9aca3so424955ad.3
+        for <linux-hyperv@vger.kernel.org>; Wed, 14 Jan 2026 09:01:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1768406068; x=1769010868; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=45w2Nqp7W5ReZCd4Up6qyFBRnRWCXaqu4990woCkPZ0=;
-        b=HfUYU3I67nA80vs1ntunHYhEWVdZpA75QutEdzJDO9yTjYaEF1+7mFCQDghFSlT4cC
-         WYrjBmLkCWxH/ice8Q+FsXKECBpBjIbLhuV09EyYLkveJnpuiEiKvw4aYp2xB8V/lit6
-         GBakRdXp+8+c78uXoT4w3LRwD9Wdc7qfLHfhx4JJ+4EHGOPKDRqnhA1esGNK17KrwdHN
-         VUi7TYB6zLWaU+Jpaja3P6e/260gfdSHJSJ+U1mizjLtw+B4b8UKLzAdjmEFCM3iKl3P
-         MxWZhBCQjqFEg8WV5Ek+2wjH2w6lEXB5uQVKtFDL+DowQma0So4LWt4RLcEccmlNs5SO
-         RSxQ==
+        d=gmail.com; s=20230601; t=1768410081; x=1769014881; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lLHkoZcf5k+PDGpju0fWjh4ERD3YSbGkdU0XXav4POY=;
+        b=OiT9Lvm4BSZSgIC4O4L8W9EEqP8oKqHcvIuTjVeOO2Z4wePx2/aSbllZ/yEhnsc6p+
+         z70KlesSoXHFgKcWd3itB8QjYMx1fOap6McSjpcmtVQofXbtSBE2ba4xRv7TwPvijvUh
+         RYpa1I46+8bxLG1eWZlG7lboVmG1zQ74n9ZG9QXHGK0ddAAAbzjngnvMtN17Lm93MI5E
+         aavwNGmO4O1ws0OvDQCgnru2XTo8T0B/HOqRwZykcr4nFq0vaxaBkvghoC8c+5M6r2OV
+         T0/53mb6SA1xlskiwwMsPAhipoSnmIStpRtbB4MhqCMyADsk6bl1w+6I0QcXRkYwY621
+         ODiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768406068; x=1769010868;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=45w2Nqp7W5ReZCd4Up6qyFBRnRWCXaqu4990woCkPZ0=;
-        b=xLQzh1tOUSuzHKklN1eB/9XM95kmwTIl5szS7mWfwroaE+vSeulbPFkBRonaWy7A+1
-         f/0oCwx9ZoK66b1WRpDoA6ByYvYWuwhDtBNpki2eDr2z+Z/kivE4GURyVr4JvRwKiR99
-         9v6Q/fDk2l6xDxyhnlLIqXfNFfBk5BLsKYY3uTPHFYlBXne7XGQiYOaLW8h0QSDiEug9
-         BabfXnQile7e7N1dMououbFsMWes5sw7R9u9xZhevJvxXCHBCGKOlwOh2Z8TOMTlko7E
-         EFNkVTFp8vWkCdChJUYV8/BzCIA1blj/ni3aXsKDER7XqUXA9qZrRIFZLXY5uES/nnPG
-         qSFA==
-X-Forwarded-Encrypted: i=1; AJvYcCW5y0JPvDrK/jBGZtyKkNdEbjsYK/uzttdnGlvXmXk9DSaF0wIEyoX5o7GRlXnlyq23Eg8nUSDHcXQDKX0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymqIW7VXGjDSRq3yVB7qqtocjoMU2JvDFeL7lF0Ibhkd1P/u7V
-	yWurMj9OgTGV/JHd8xI+2AaJrg6n1Rz0kxEsEsECbWVkKBjGqFh9PUA7QJH8GCa/yi44gBsENNk
-	cQIqJpdCqwfkSRu2NqgEO738DwHwP2MOYSpywBiduRlu+ppq0zsdPdNtZrgcDcpffJMgBq/tb5e
-	2TLtcBaYyPBoorqyt6+bQCDql8ZBeO9ykQ/1KUa4KG
-X-Gm-Gg: AY/fxX7AL/uYbYTOknalnusk1RktzCoUZ2kWWQM3i6nKXtEjbe7T0w1J6llngKwT4uq
-	66NCcmnIiIdjLFxRgtNEAVLscnXQ+Az+RqEWIHvpVhvk0Jh95WBPCzjZu/rlOy8uKtgt0x3GIdy
-	4fpWc90cVlnujodkes1rZLpb6whMxSpf/igoUzYvX+YR/QzfZ8Hy2Er8Y1luzGMxo4
-X-Received: by 2002:a17:90b:590c:b0:34c:f8e6:5ec1 with SMTP id 98e67ed59e1d1-35109163a89mr3116105a91.35.1768406068143;
-        Wed, 14 Jan 2026 07:54:28 -0800 (PST)
-X-Received: by 2002:a17:90b:590c:b0:34c:f8e6:5ec1 with SMTP id
- 98e67ed59e1d1-35109163a89mr3116054a91.35.1768406067530; Wed, 14 Jan 2026
- 07:54:27 -0800 (PST)
+        d=1e100.net; s=20230601; t=1768410081; x=1769014881;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lLHkoZcf5k+PDGpju0fWjh4ERD3YSbGkdU0XXav4POY=;
+        b=PAYJ2gKQCaPjbIN4YVENx6beQyBbDVdEHZA0xlbW30jfMuOBpKdcjOoTpuO0ZcuxoM
+         jothjGpLJZXw8dqsP+SSI3eU6KNStLPq8Ue2JPaWoDP0QzsBdHFwf1uCHv1UUCZqKegP
+         XhkwVOcaCV1IQSMeSNVOXfcgStaafbYQjbKJVG8ERT/D3NlCgNk20j6AH5dJVsyuPbu5
+         O2YB1xp0BI6wo2XUJPCe3WbkdvMJFvzCQdMoMsh46BSWXW9rWeRETFzSeKsQilXETIkY
+         OpN46rDrWKCHLhXg7ScDFN1hozgdIB6vjIJjl+XTKbJ5oC+pVooRua9f0omzeYiOEHzH
+         lsUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUu3lEuy0G2RNqBR1h9xZA4VJX4+tkiyEcuJeQgqLmoOSLY9TFPC7lQ8u70R846ecbgLZqslvJJ+JRfQ4A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyi7HBEAJ+k3jOe8lF6eI0L4KjQ53UGxdAQv+WDalU6ONBcsooy
+	kEswOjqXEhB98H1dXZzGF8MeHyO0i60TdQd2yTaWD3Qrpd9WGErk6gq2
+X-Gm-Gg: AY/fxX6pHNk4lvS9iNjIy6spJeFH5wFaDLtwo4rvJCOZ0i3LWo2VIdbo89OBnuLVNeN
+	R2MrMhV8B498d3dW+x21/5zT3TYCnHb3F31OhLsTqmKvBC1yOMLnKkIIrss5RCAZ2TdN3NnqdBQ
+	iVgMFu7FCQiRomNUw8y0ktPXiRemwvNqadRaNM/u8LRA2FyKQUqUFu7/eV6letyp1EUs67SAlh5
+	jPqA+9mZv+YGS/CylFzTOdLie5S64/B2AuyCvQXgwTXxVCEJolfbHP7qVnfYBIiwPQiQIlvtiSP
+	sTFijbXMHr8Ok0iNwHtNCPEiQRXvANCLQno7p1jtnNHdYAwdiv7M7cLBSF9qZdY4nrJFU2jFBmg
+	fzmoJEAQ3UVHtnNUyvwZ86+GI+YXAOmwwyRJe76ZoZWJ/luBAXKgkG5vp1FbIadMu6NYt/orcnu
+	ZiwJwMGi6NdPTPS833unstLKW/Ox/9MV3LDi2wm7hMuTWS30NN+sX5HM2hR3+3m9v2WbO+1l/E1
+	+06
+X-Received: by 2002:a17:903:2443:b0:29a:5ce:b467 with SMTP id d9443c01a7336-2a599e5b158mr31084535ad.54.1768410080917;
+        Wed, 14 Jan 2026 09:01:20 -0800 (PST)
+Received: from localhost.localdomain (c-174-165-208-10.hsd1.wa.comcast.net. [174.165.208.10])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a3e3cd2906sm231144965ad.87.2026.01.14.09.01.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Jan 2026 09:01:20 -0800 (PST)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	longli@microsoft.com,
+	linux-hyperv@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] mshv: Store the result of vfs_poll in a variable of type __poll_t
+Date: Wed, 14 Jan 2026 09:01:12 -0800
+Message-Id: <20260114170112.102673-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260112-vsock-vmtest-v14-1-a5c332db3e2b@meta.com> <202601140749.5TXm5gpl-lkp@intel.com>
-In-Reply-To: <202601140749.5TXm5gpl-lkp@intel.com>
-From: Stefano Garzarella <sgarzare@redhat.com>
-Date: Wed, 14 Jan 2026 16:54:15 +0100
-X-Gm-Features: AZwV_Qg5JTJCQi1Wwfd0jbkgP1qN1I8qkJH4vIis9H-XSIO4o_clOB-LFig_dcA
-Message-ID: <CAGxU2F45q7CWy3O_QhYj0Y2Bt84vA=eaTeBTu+TvEmFm0_E7Jw@mail.gmail.com>
-Subject: Re: [PATCH net-next v14 01/12] vsock: add netns to vsock core
-To: Bobby Eshleman <bobbyeshleman@gmail.com>
-Cc: kernel test robot <lkp@intel.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Stefan Hajnoczi <stefanha@redhat.com>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	=?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Bryan Tan <bryan-bt.tan@broadcom.com>, 
-	Vishnu Dasa <vishnu.dasa@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Long Li <longli@microsoft.com>, 
-	oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev, 
-	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, berrange@redhat.com, 
-	Sargun Dhillon <sargun@sargun.me>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, 14 Jan 2026 at 00:13, kernel test robot <lkp@intel.com> wrote:
->
-> Hi Bobby,
->
-> kernel test robot noticed the following build warnings:
->
-> [auto build test WARNING on net-next/main]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/Bobby-Eshleman/virtio-set-skb-owner-of-virtio_transport_reset_no_sock-reply/20260113-125559
-> base:   net-next/main
-> patch link:    https://lore.kernel.org/r/20260112-vsock-vmtest-v14-1-a5c332db3e2b%40meta.com
-> patch subject: [PATCH net-next v14 01/12] vsock: add netns to vsock core
-> config: x86_64-buildonly-randconfig-004-20260113 (https://download.01.org/0day-ci/archive/20260114/202601140749.5TXm5gpl-lkp@intel.com/config)
-> compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260114/202601140749.5TXm5gpl-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202601140749.5TXm5gpl-lkp@intel.com/
->
-> All warnings (new ones prefixed by >>, old ones prefixed by <<):
->
-> >> WARNING: modpost: net/vmw_vsock/vsock: section mismatch in reference: vsock_exit+0x25 (section: .exit.text) -> vsock_sysctl_ops (section: .init.data)
+From: Michael Kelley <mhklinux@outlook.com>
 
-Bobby can you check this report?
+vfs_poll() returns a result of type __poll_t, but current code is using
+an "unsigned int" local variable. The difference is that __poll_t carries
+the "bitwise" attribute. This attribute is not interpreted by the C
+compiler; it is only used by 'sparse' to flag incorrect usage of the
+return value. The return value is used correctly here, so there's no
+bug, but sparse complains about the type mismatch.
 
-Could be related to `__net_initdata` annotation of `vsock_sysctl_ops` ?
-Why we need that?
+In the interest of general correctness and to avoid noise from sparse,
+change the local variable to type __poll_t. No functional change.
 
-Thanks,
-Stefano
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202512141339.791TCKnB-lkp@intel.com/
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+---
+This change is not marked with a Fixes: tag as there's no value in
+backporting to older stable releases.
+
+ drivers/hv/mshv_eventfd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hv/mshv_eventfd.c b/drivers/hv/mshv_eventfd.c
+index d93a18f09c76..0b75ff1edb73 100644
+--- a/drivers/hv/mshv_eventfd.c
++++ b/drivers/hv/mshv_eventfd.c
+@@ -388,7 +388,7 @@ static int mshv_irqfd_assign(struct mshv_partition *pt,
+ {
+ 	struct eventfd_ctx *eventfd = NULL, *resamplefd = NULL;
+ 	struct mshv_irqfd *irqfd, *tmp;
+-	unsigned int events;
++	__poll_t events;
+ 	int ret;
+ 	int idx;
+ 
+-- 
+2.25.1
 
 
