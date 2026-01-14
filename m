@@ -1,42 +1,42 @@
-Return-Path: <linux-hyperv+bounces-8299-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8300-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55F39D21694
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jan 2026 22:44:13 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EF80D21637
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jan 2026 22:41:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6401830F73B1
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jan 2026 21:38:47 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4EEE93057097
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jan 2026 21:39:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 528A63793D5;
-	Wed, 14 Jan 2026 21:38:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 152553793C6;
+	Wed, 14 Jan 2026 21:39:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Zi1ZLZDX"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="eAB5m7gq"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB412378D84;
-	Wed, 14 Jan 2026 21:38:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34131378D6E;
+	Wed, 14 Jan 2026 21:38:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768426722; cv=none; b=Ai+sZ0ujbJAFceA9mZlh2ldbMqIWqDpC1OsX6nYMgnZxQpQ/EPkZQsVz8DUUgoNlQV4kseitRxe+llYt0xLu/iL/xwf2hD1pV3SmXKy57l34PBJJT+50VKng5bJUhEnbX9HqXR15ow0HEGaCtMISrIBHh8c//VQ07cVuinakIQU=
+	t=1768426738; cv=none; b=LkbHGXYQaQwQ/Y8uSS6yH/dcc5AcWodb23RiAWZ+fQZfnZVQFPLf7B8xUDK8H0yqGcF8qlrd92fIvPG83HAhHx7gRiaaoQnQhiQrrVU7aD8Erd1M98rBYp3l+2fEu3xd/+Pstn6rt0J03EuHhaAmHSTjWLW6dBM3ADJwNvwCLOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768426722; c=relaxed/simple;
-	bh=L4E1wo8/6fKvJEozXW8vtzU2hTEpjK6jREA7Bfv0oJw=;
+	s=arc-20240116; t=1768426738; c=relaxed/simple;
+	bh=FDoU1Gi/i8ZMnp+Zc11WoFZWUaIQtVkd5+RXg9MB40E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mPZrd5PLW7XqGgBp2QCw8mwGy2pa0y3iuVV2A9x65LiVFL7K7uLTWuQMVzIEuhiMB+ExGOaI78rYigzDaiJabgUupsW/bZxZ4pwbxzW64XfE9gxcJmj2yjTxjJZNL7BE8maxZpKTw27PVppoT4/k8yKS4rmt+LOSpSlV+CjGDZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Zi1ZLZDX; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=osw0RgY5yQuLlpv1A/RFSWAM16ROOxOBorLb7CLqf3bPuVUPzPprQfBuJzkvM4sP+g9OPkDh2pkFyIYMygokqnCZG6dCiDgd7sU6MpIcpBDyz91CUPVL55YQlm1C29r2LU/a/oCGz3Q5CRtKvXICf3urFQACBRJ9JJ7yXUpeRNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=eAB5m7gq; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1032)
-	id 333DE20B7170; Wed, 14 Jan 2026 13:38:08 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 333DE20B7170
+	id 9C75720B7171; Wed, 14 Jan 2026 13:38:08 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9C75720B7171
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1768426688;
-	bh=uE6yNFSdJktjcXi31tIk+NXAAyXVgXT3CJcMYC5oQGk=;
+	bh=ai1DyyXBZjALJy4uy4yRy+9Mc23QnNbctkJfAcFq0bo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Zi1ZLZDXIpo7o8UftS5FupdR5zX+31AiUiJfVeGfAsuJ1Y1IiPE54hl/8PRSUiuHp
-	 HegJs8eqFLBuzf+i+SeIeHUpYTJaUpPZS7KKgl8+XfvS8xwE7VZuIEs3nfxRTKwNJS
-	 Ipzfu8h8nAiM03DYrHp4tC68bfQYW15M0/iXjLdQ=
+	b=eAB5m7gqUaTXZHoHd6wl5cG5ogArF+fZAB/9GPLdwaF6eFcBY4P4OlO9dytpZv34B
+	 ppR5Br3T9CJDmzuFrWKNKGyvp1us+ioBm5zBPTxXWob/WnYEeprWw1iRYFxW3oBPNA
+	 IIqlUjCsr+AeufDOil6/fCXf1W6+/jOHw+v7C8KA=
 From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -51,9 +51,9 @@ Cc: kys@microsoft.com,
 	mrathor@linux.microsoft.com,
 	paekkaladevi@linux.microsoft.com,
 	Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Subject: [PATCH v3 4/6] mshv: Always map child vp stats pages regardless of scheduler type
-Date: Wed, 14 Jan 2026 13:38:01 -0800
-Message-ID: <20260114213803.143486-5-nunodasneves@linux.microsoft.com>
+Subject: [PATCH v3 5/6] mshv: Add definitions for stats pages
+Date: Wed, 14 Jan 2026 13:38:02 -0800
+Message-ID: <20260114213803.143486-6-nunodasneves@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260114213803.143486-1-nunodasneves@linux.microsoft.com>
 References: <20260114213803.143486-1-nunodasneves@linux.microsoft.com>
@@ -65,80 +65,501 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Add the definitions for hypervisor, logical processor, and partition
+stats pages.
 
-Currently vp->vp_stats_pages is only used by the root scheduler for fast
-interrupt injection.
+Move the definition for the VP stats page to its rightful place in
+hvhdk.h, and add the missing members.
 
-Soon, vp_stats_pages will also be needed for exposing child VP stats to
-userspace via debugfs. Mapping the pages a second time to a different
-address causes an error on L1VH.
+While at it, correct the ARM64 value of VpRootDispatchThreadBlocked,
+(which is not yet used, so there is no impact).
 
-Remove the scheduler requirement and always map the vp stats pages.
+These enum members retain their CamelCase style, since they are imported
+directly from the hypervisor code. They will be stringified when
+printing the stats out, and retain more readability in this form.
 
-Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 ---
- drivers/hv/mshv_root_main.c | 25 ++++++++-----------------
- 1 file changed, 8 insertions(+), 17 deletions(-)
+ drivers/hv/mshv_root_main.c |  17 --
+ include/hyperv/hvhdk.h      | 437 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 437 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index faca3cc63e79..fbfc9e7d9fa4 100644
+index fbfc9e7d9fa4..724bbaa0b08c 100644
 --- a/drivers/hv/mshv_root_main.c
 +++ b/drivers/hv/mshv_root_main.c
-@@ -1077,16 +1077,10 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
- 			goto unmap_register_page;
- 	}
+@@ -39,23 +39,6 @@ MODULE_AUTHOR("Microsoft");
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("Microsoft Hyper-V root partition VMM interface /dev/mshv");
  
--	/*
--	 * This mapping of the stats page is for detecting if dispatch thread
--	 * is blocked - only relevant for root scheduler
--	 */
--	if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT) {
--		ret = mshv_vp_stats_map(partition->pt_id, args.vp_index,
--					stats_pages);
--		if (ret)
--			goto unmap_ghcb_page;
--	}
-+	ret = mshv_vp_stats_map(partition->pt_id, args.vp_index,
-+				stats_pages);
-+	if (ret)
-+		goto unmap_ghcb_page;
+-/* TODO move this to another file when debugfs code is added */
+-enum hv_stats_vp_counters {			/* HV_THREAD_COUNTER */
+-#if defined(CONFIG_X86)
+-	VpRootDispatchThreadBlocked			= 202,
+-#elif defined(CONFIG_ARM64)
+-	VpRootDispatchThreadBlocked			= 94,
+-#endif
+-	VpStatsMaxCounter
+-};
+-
+-struct hv_stats_page {
+-	union {
+-		u64 vp_cntrs[VpStatsMaxCounter];		/* VP counters */
+-		u8 data[HV_HYP_PAGE_SIZE];
+-	};
+-} __packed;
+-
+ struct mshv_root mshv_root;
  
- 	vp = kzalloc(sizeof(*vp), GFP_KERNEL);
- 	if (!vp)
-@@ -1110,8 +1104,7 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
- 	if (mshv_partition_encrypted(partition) && is_ghcb_mapping_available())
- 		vp->vp_ghcb_page = page_to_virt(ghcb_page);
+ enum hv_scheduler_type hv_scheduler_type;
+diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
+index 469186df7826..8bddd11feeba 100644
+--- a/include/hyperv/hvhdk.h
++++ b/include/hyperv/hvhdk.h
+@@ -10,6 +10,443 @@
+ #include "hvhdk_mini.h"
+ #include "hvgdk.h"
  
--	if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
--		memcpy(vp->vp_stats_pages, stats_pages, sizeof(stats_pages));
-+	memcpy(vp->vp_stats_pages, stats_pages, sizeof(stats_pages));
- 
- 	/*
- 	 * Keep anon_inode_getfd last: it installs fd in the file struct and
-@@ -1133,8 +1126,7 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
- free_vp:
- 	kfree(vp);
- unmap_stats_pages:
--	if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
--		mshv_vp_stats_unmap(partition->pt_id, args.vp_index, stats_pages);
-+	mshv_vp_stats_unmap(partition->pt_id, args.vp_index, stats_pages);
- unmap_ghcb_page:
- 	if (mshv_partition_encrypted(partition) && is_ghcb_mapping_available())
- 		hv_unmap_vp_state_page(partition->pt_id, args.vp_index,
-@@ -1754,9 +1746,8 @@ static void destroy_partition(struct mshv_partition *partition)
- 			if (!vp)
- 				continue;
- 
--			if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
--				mshv_vp_stats_unmap(partition->pt_id, vp->vp_index,
--						    vp->vp_stats_pages);
-+			mshv_vp_stats_unmap(partition->pt_id, vp->vp_index,
-+					    vp->vp_stats_pages);
- 
- 			if (vp->vp_register_page) {
- 				(void)hv_unmap_vp_state_page(partition->pt_id,
++enum hv_stats_hypervisor_counters {		/* HV_HYPERVISOR_COUNTER */
++	HvLogicalProcessors			= 1,
++	HvPartitions				= 2,
++	HvTotalPages				= 3,
++	HvVirtualProcessors			= 4,
++	HvMonitoredNotifications		= 5,
++	HvModernStandbyEntries			= 6,
++	HvPlatformIdleTransitions		= 7,
++	HvHypervisorStartupCost			= 8,
++	HvIOSpacePages				= 10,
++	HvNonEssentialPagesForDump		= 11,
++	HvSubsumedPages				= 12,
++	HvStatsMaxCounter
++};
++
++enum hv_stats_partition_counters {		/* HV_PROCESS_COUNTER */
++	PartitionVirtualProcessors		= 1,
++	PartitionTlbSize			= 3,
++	PartitionAddressSpaces			= 4,
++	PartitionDepositedPages			= 5,
++	PartitionGpaPages			= 6,
++	PartitionGpaSpaceModifications		= 7,
++	PartitionVirtualTlbFlushEntires		= 8,
++	PartitionRecommendedTlbSize		= 9,
++	PartitionGpaPages4K			= 10,
++	PartitionGpaPages2M			= 11,
++	PartitionGpaPages1G			= 12,
++	PartitionGpaPages512G			= 13,
++	PartitionDevicePages4K			= 14,
++	PartitionDevicePages2M			= 15,
++	PartitionDevicePages1G			= 16,
++	PartitionDevicePages512G		= 17,
++	PartitionAttachedDevices		= 18,
++	PartitionDeviceInterruptMappings	= 19,
++	PartitionIoTlbFlushes			= 20,
++	PartitionIoTlbFlushCost			= 21,
++	PartitionDeviceInterruptErrors		= 22,
++	PartitionDeviceDmaErrors		= 23,
++	PartitionDeviceInterruptThrottleEvents	= 24,
++	PartitionSkippedTimerTicks		= 25,
++	PartitionPartitionId			= 26,
++#if IS_ENABLED(CONFIG_X86_64)
++	PartitionNestedTlbSize			= 27,
++	PartitionRecommendedNestedTlbSize	= 28,
++	PartitionNestedTlbFreeListSize		= 29,
++	PartitionNestedTlbTrimmedPages		= 30,
++	PartitionPagesShattered			= 31,
++	PartitionPagesRecombined		= 32,
++	PartitionHwpRequestValue		= 33,
++#elif IS_ENABLED(CONFIG_ARM64)
++	PartitionHwpRequestValue		= 27,
++#endif
++	PartitionStatsMaxCounter
++};
++
++enum hv_stats_vp_counters {			/* HV_THREAD_COUNTER */
++	VpTotalRunTime					= 1,
++	VpHypervisorRunTime				= 2,
++	VpRemoteNodeRunTime				= 3,
++	VpNormalizedRunTime				= 4,
++	VpIdealCpu					= 5,
++	VpHypercallsCount				= 7,
++	VpHypercallsTime				= 8,
++#if IS_ENABLED(CONFIG_X86_64)
++	VpPageInvalidationsCount			= 9,
++	VpPageInvalidationsTime				= 10,
++	VpControlRegisterAccessesCount			= 11,
++	VpControlRegisterAccessesTime			= 12,
++	VpIoInstructionsCount				= 13,
++	VpIoInstructionsTime				= 14,
++	VpHltInstructionsCount				= 15,
++	VpHltInstructionsTime				= 16,
++	VpMwaitInstructionsCount			= 17,
++	VpMwaitInstructionsTime				= 18,
++	VpCpuidInstructionsCount			= 19,
++	VpCpuidInstructionsTime				= 20,
++	VpMsrAccessesCount				= 21,
++	VpMsrAccessesTime				= 22,
++	VpOtherInterceptsCount				= 23,
++	VpOtherInterceptsTime				= 24,
++	VpExternalInterruptsCount			= 25,
++	VpExternalInterruptsTime			= 26,
++	VpPendingInterruptsCount			= 27,
++	VpPendingInterruptsTime				= 28,
++	VpEmulatedInstructionsCount			= 29,
++	VpEmulatedInstructionsTime			= 30,
++	VpDebugRegisterAccessesCount			= 31,
++	VpDebugRegisterAccessesTime			= 32,
++	VpPageFaultInterceptsCount			= 33,
++	VpPageFaultInterceptsTime			= 34,
++	VpGuestPageTableMaps				= 35,
++	VpLargePageTlbFills				= 36,
++	VpSmallPageTlbFills				= 37,
++	VpReflectedGuestPageFaults			= 38,
++	VpApicMmioAccesses				= 39,
++	VpIoInterceptMessages				= 40,
++	VpMemoryInterceptMessages			= 41,
++	VpApicEoiAccesses				= 42,
++	VpOtherMessages					= 43,
++	VpPageTableAllocations				= 44,
++	VpLogicalProcessorMigrations			= 45,
++	VpAddressSpaceEvictions				= 46,
++	VpAddressSpaceSwitches				= 47,
++	VpAddressDomainFlushes				= 48,
++	VpAddressSpaceFlushes				= 49,
++	VpGlobalGvaRangeFlushes				= 50,
++	VpLocalGvaRangeFlushes				= 51,
++	VpPageTableEvictions				= 52,
++	VpPageTableReclamations				= 53,
++	VpPageTableResets				= 54,
++	VpPageTableValidations				= 55,
++	VpApicTprAccesses				= 56,
++	VpPageTableWriteIntercepts			= 57,
++	VpSyntheticInterrupts				= 58,
++	VpVirtualInterrupts				= 59,
++	VpApicIpisSent					= 60,
++	VpApicSelfIpisSent				= 61,
++	VpGpaSpaceHypercalls				= 62,
++	VpLogicalProcessorHypercalls			= 63,
++	VpLongSpinWaitHypercalls			= 64,
++	VpOtherHypercalls				= 65,
++	VpSyntheticInterruptHypercalls			= 66,
++	VpVirtualInterruptHypercalls			= 67,
++	VpVirtualMmuHypercalls				= 68,
++	VpVirtualProcessorHypercalls			= 69,
++	VpHardwareInterrupts				= 70,
++	VpNestedPageFaultInterceptsCount		= 71,
++	VpNestedPageFaultInterceptsTime			= 72,
++	VpPageScans					= 73,
++	VpLogicalProcessorDispatches			= 74,
++	VpWaitingForCpuTime				= 75,
++	VpExtendedHypercalls				= 76,
++	VpExtendedHypercallInterceptMessages		= 77,
++	VpMbecNestedPageTableSwitches			= 78,
++	VpOtherReflectedGuestExceptions			= 79,
++	VpGlobalIoTlbFlushes				= 80,
++	VpGlobalIoTlbFlushCost				= 81,
++	VpLocalIoTlbFlushes				= 82,
++	VpLocalIoTlbFlushCost				= 83,
++	VpHypercallsForwardedCount			= 84,
++	VpHypercallsForwardingTime			= 85,
++	VpPageInvalidationsForwardedCount		= 86,
++	VpPageInvalidationsForwardingTime		= 87,
++	VpControlRegisterAccessesForwardedCount		= 88,
++	VpControlRegisterAccessesForwardingTime		= 89,
++	VpIoInstructionsForwardedCount			= 90,
++	VpIoInstructionsForwardingTime			= 91,
++	VpHltInstructionsForwardedCount			= 92,
++	VpHltInstructionsForwardingTime			= 93,
++	VpMwaitInstructionsForwardedCount		= 94,
++	VpMwaitInstructionsForwardingTime		= 95,
++	VpCpuidInstructionsForwardedCount		= 96,
++	VpCpuidInstructionsForwardingTime		= 97,
++	VpMsrAccessesForwardedCount			= 98,
++	VpMsrAccessesForwardingTime			= 99,
++	VpOtherInterceptsForwardedCount			= 100,
++	VpOtherInterceptsForwardingTime			= 101,
++	VpExternalInterruptsForwardedCount		= 102,
++	VpExternalInterruptsForwardingTime		= 103,
++	VpPendingInterruptsForwardedCount		= 104,
++	VpPendingInterruptsForwardingTime		= 105,
++	VpEmulatedInstructionsForwardedCount		= 106,
++	VpEmulatedInstructionsForwardingTime		= 107,
++	VpDebugRegisterAccessesForwardedCount		= 108,
++	VpDebugRegisterAccessesForwardingTime		= 109,
++	VpPageFaultInterceptsForwardedCount		= 110,
++	VpPageFaultInterceptsForwardingTime		= 111,
++	VpVmclearEmulationCount				= 112,
++	VpVmclearEmulationTime				= 113,
++	VpVmptrldEmulationCount				= 114,
++	VpVmptrldEmulationTime				= 115,
++	VpVmptrstEmulationCount				= 116,
++	VpVmptrstEmulationTime				= 117,
++	VpVmreadEmulationCount				= 118,
++	VpVmreadEmulationTime				= 119,
++	VpVmwriteEmulationCount				= 120,
++	VpVmwriteEmulationTime				= 121,
++	VpVmxoffEmulationCount				= 122,
++	VpVmxoffEmulationTime				= 123,
++	VpVmxonEmulationCount				= 124,
++	VpVmxonEmulationTime				= 125,
++	VpNestedVMEntriesCount				= 126,
++	VpNestedVMEntriesTime				= 127,
++	VpNestedSLATSoftPageFaultsCount			= 128,
++	VpNestedSLATSoftPageFaultsTime			= 129,
++	VpNestedSLATHardPageFaultsCount			= 130,
++	VpNestedSLATHardPageFaultsTime			= 131,
++	VpInvEptAllContextEmulationCount		= 132,
++	VpInvEptAllContextEmulationTime			= 133,
++	VpInvEptSingleContextEmulationCount		= 134,
++	VpInvEptSingleContextEmulationTime		= 135,
++	VpInvVpidAllContextEmulationCount		= 136,
++	VpInvVpidAllContextEmulationTime		= 137,
++	VpInvVpidSingleContextEmulationCount		= 138,
++	VpInvVpidSingleContextEmulationTime		= 139,
++	VpInvVpidSingleAddressEmulationCount		= 140,
++	VpInvVpidSingleAddressEmulationTime		= 141,
++	VpNestedTlbPageTableReclamations		= 142,
++	VpNestedTlbPageTableEvictions			= 143,
++	VpFlushGuestPhysicalAddressSpaceHypercalls	= 144,
++	VpFlushGuestPhysicalAddressListHypercalls	= 145,
++	VpPostedInterruptNotifications			= 146,
++	VpPostedInterruptScans				= 147,
++	VpTotalCoreRunTime				= 148,
++	VpMaximumRunTime				= 149,
++	VpHwpRequestContextSwitches			= 150,
++	VpWaitingForCpuTimeBucket0			= 151,
++	VpWaitingForCpuTimeBucket1			= 152,
++	VpWaitingForCpuTimeBucket2			= 153,
++	VpWaitingForCpuTimeBucket3			= 154,
++	VpWaitingForCpuTimeBucket4			= 155,
++	VpWaitingForCpuTimeBucket5			= 156,
++	VpWaitingForCpuTimeBucket6			= 157,
++	VpVmloadEmulationCount				= 158,
++	VpVmloadEmulationTime				= 159,
++	VpVmsaveEmulationCount				= 160,
++	VpVmsaveEmulationTime				= 161,
++	VpGifInstructionEmulationCount			= 162,
++	VpGifInstructionEmulationTime			= 163,
++	VpEmulatedErrataSvmInstructions			= 164,
++	VpPlaceholder1					= 165,
++	VpPlaceholder2					= 166,
++	VpPlaceholder3					= 167,
++	VpPlaceholder4					= 168,
++	VpPlaceholder5					= 169,
++	VpPlaceholder6					= 170,
++	VpPlaceholder7					= 171,
++	VpPlaceholder8					= 172,
++	VpPlaceholder9					= 173,
++	VpPlaceholder10					= 174,
++	VpSchedulingPriority				= 175,
++	VpRdpmcInstructionsCount			= 176,
++	VpRdpmcInstructionsTime				= 177,
++	VpPerfmonPmuMsrAccessesCount			= 178,
++	VpPerfmonLbrMsrAccessesCount			= 179,
++	VpPerfmonIptMsrAccessesCount			= 180,
++	VpPerfmonInterruptCount				= 181,
++	VpVtl1DispatchCount				= 182,
++	VpVtl2DispatchCount				= 183,
++	VpVtl2DispatchBucket0				= 184,
++	VpVtl2DispatchBucket1				= 185,
++	VpVtl2DispatchBucket2				= 186,
++	VpVtl2DispatchBucket3				= 187,
++	VpVtl2DispatchBucket4				= 188,
++	VpVtl2DispatchBucket5				= 189,
++	VpVtl2DispatchBucket6				= 190,
++	VpVtl1RunTime					= 191,
++	VpVtl2RunTime					= 192,
++	VpIommuHypercalls				= 193,
++	VpCpuGroupHypercalls				= 194,
++	VpVsmHypercalls					= 195,
++	VpEventLogHypercalls				= 196,
++	VpDeviceDomainHypercalls			= 197,
++	VpDepositHypercalls				= 198,
++	VpSvmHypercalls					= 199,
++	VpBusLockAcquisitionCount			= 200,
++	VpLoadAvg					= 201,
++	VpRootDispatchThreadBlocked			= 202,
++#elif IS_ENABLED(CONFIG_ARM64)
++	VpSysRegAccessesCount				= 9,
++	VpSysRegAccessesTime				= 10,
++	VpSmcInstructionsCount				= 11,
++	VpSmcInstructionsTime				= 12,
++	VpOtherInterceptsCount				= 13,
++	VpOtherInterceptsTime				= 14,
++	VpExternalInterruptsCount			= 15,
++	VpExternalInterruptsTime			= 16,
++	VpPendingInterruptsCount			= 17,
++	VpPendingInterruptsTime				= 18,
++	VpGuestPageTableMaps				= 19,
++	VpLargePageTlbFills				= 20,
++	VpSmallPageTlbFills				= 21,
++	VpReflectedGuestPageFaults			= 22,
++	VpMemoryInterceptMessages			= 23,
++	VpOtherMessages					= 24,
++	VpLogicalProcessorMigrations			= 25,
++	VpAddressDomainFlushes				= 26,
++	VpAddressSpaceFlushes				= 27,
++	VpSyntheticInterrupts				= 28,
++	VpVirtualInterrupts				= 29,
++	VpApicSelfIpisSent				= 30,
++	VpGpaSpaceHypercalls				= 31,
++	VpLogicalProcessorHypercalls			= 32,
++	VpLongSpinWaitHypercalls			= 33,
++	VpOtherHypercalls				= 34,
++	VpSyntheticInterruptHypercalls			= 35,
++	VpVirtualInterruptHypercalls			= 36,
++	VpVirtualMmuHypercalls				= 37,
++	VpVirtualProcessorHypercalls			= 38,
++	VpHardwareInterrupts				= 39,
++	VpNestedPageFaultInterceptsCount		= 40,
++	VpNestedPageFaultInterceptsTime			= 41,
++	VpLogicalProcessorDispatches			= 42,
++	VpWaitingForCpuTime				= 43,
++	VpExtendedHypercalls				= 44,
++	VpExtendedHypercallInterceptMessages		= 45,
++	VpMbecNestedPageTableSwitches			= 46,
++	VpOtherReflectedGuestExceptions			= 47,
++	VpGlobalIoTlbFlushes				= 48,
++	VpGlobalIoTlbFlushCost				= 49,
++	VpLocalIoTlbFlushes				= 50,
++	VpLocalIoTlbFlushCost				= 51,
++	VpFlushGuestPhysicalAddressSpaceHypercalls	= 52,
++	VpFlushGuestPhysicalAddressListHypercalls	= 53,
++	VpPostedInterruptNotifications			= 54,
++	VpPostedInterruptScans				= 55,
++	VpTotalCoreRunTime				= 56,
++	VpMaximumRunTime				= 57,
++	VpWaitingForCpuTimeBucket0			= 58,
++	VpWaitingForCpuTimeBucket1			= 59,
++	VpWaitingForCpuTimeBucket2			= 60,
++	VpWaitingForCpuTimeBucket3			= 61,
++	VpWaitingForCpuTimeBucket4			= 62,
++	VpWaitingForCpuTimeBucket5			= 63,
++	VpWaitingForCpuTimeBucket6			= 64,
++	VpHwpRequestContextSwitches			= 65,
++	VpPlaceholder2					= 66,
++	VpPlaceholder3					= 67,
++	VpPlaceholder4					= 68,
++	VpPlaceholder5					= 69,
++	VpPlaceholder6					= 70,
++	VpPlaceholder7					= 71,
++	VpPlaceholder8					= 72,
++	VpContentionTime				= 73,
++	VpWakeUpTime					= 74,
++	VpSchedulingPriority				= 75,
++	VpVtl1DispatchCount				= 76,
++	VpVtl2DispatchCount				= 77,
++	VpVtl2DispatchBucket0				= 78,
++	VpVtl2DispatchBucket1				= 79,
++	VpVtl2DispatchBucket2				= 80,
++	VpVtl2DispatchBucket3				= 81,
++	VpVtl2DispatchBucket4				= 82,
++	VpVtl2DispatchBucket5				= 83,
++	VpVtl2DispatchBucket6				= 84,
++	VpVtl1RunTime					= 85,
++	VpVtl2RunTime					= 86,
++	VpIommuHypercalls				= 87,
++	VpCpuGroupHypercalls				= 88,
++	VpVsmHypercalls					= 89,
++	VpEventLogHypercalls				= 90,
++	VpDeviceDomainHypercalls			= 91,
++	VpDepositHypercalls				= 92,
++	VpSvmHypercalls					= 93,
++	VpLoadAvg					= 94,
++	VpRootDispatchThreadBlocked			= 95,
++#endif
++	VpStatsMaxCounter
++};
++
++enum hv_stats_lp_counters {			/* HV_CPU_COUNTER */
++	LpGlobalTime				= 1,
++	LpTotalRunTime				= 2,
++	LpHypervisorRunTime			= 3,
++	LpHardwareInterrupts			= 4,
++	LpContextSwitches			= 5,
++	LpInterProcessorInterrupts		= 6,
++	LpSchedulerInterrupts			= 7,
++	LpTimerInterrupts			= 8,
++	LpInterProcessorInterruptsSent		= 9,
++	LpProcessorHalts			= 10,
++	LpMonitorTransitionCost			= 11,
++	LpContextSwitchTime			= 12,
++	LpC1TransitionsCount			= 13,
++	LpC1RunTime				= 14,
++	LpC2TransitionsCount			= 15,
++	LpC2RunTime				= 16,
++	LpC3TransitionsCount			= 17,
++	LpC3RunTime				= 18,
++	LpRootVpIndex				= 19,
++	LpIdleSequenceNumber			= 20,
++	LpGlobalTscCount			= 21,
++	LpActiveTscCount			= 22,
++	LpIdleAccumulation			= 23,
++	LpReferenceCycleCount0			= 24,
++	LpActualCycleCount0			= 25,
++	LpReferenceCycleCount1			= 26,
++	LpActualCycleCount1			= 27,
++	LpProximityDomainId			= 28,
++	LpPostedInterruptNotifications		= 29,
++	LpBranchPredictorFlushes		= 30,
++#if IS_ENABLED(CONFIG_X86_64)
++	LpL1DataCacheFlushes			= 31,
++	LpImmediateL1DataCacheFlushes		= 32,
++	LpMbFlushes				= 33,
++	LpCounterRefreshSequenceNumber		= 34,
++	LpCounterRefreshReferenceTime		= 35,
++	LpIdleAccumulationSnapshot		= 36,
++	LpActiveTscCountSnapshot		= 37,
++	LpHwpRequestContextSwitches		= 38,
++	LpPlaceholder1				= 39,
++	LpPlaceholder2				= 40,
++	LpPlaceholder3				= 41,
++	LpPlaceholder4				= 42,
++	LpPlaceholder5				= 43,
++	LpPlaceholder6				= 44,
++	LpPlaceholder7				= 45,
++	LpPlaceholder8				= 46,
++	LpPlaceholder9				= 47,
++	LpPlaceholder10				= 48,
++	LpReserveGroupId			= 49,
++	LpRunningPriority			= 50,
++	LpPerfmonInterruptCount			= 51,
++#elif IS_ENABLED(CONFIG_ARM64)
++	LpCounterRefreshSequenceNumber		= 31,
++	LpCounterRefreshReferenceTime		= 32,
++	LpIdleAccumulationSnapshot		= 33,
++	LpActiveTscCountSnapshot		= 34,
++	LpHwpRequestContextSwitches		= 35,
++	LpPlaceholder2				= 36,
++	LpPlaceholder3				= 37,
++	LpPlaceholder4				= 38,
++	LpPlaceholder5				= 39,
++	LpPlaceholder6				= 40,
++	LpPlaceholder7				= 41,
++	LpPlaceholder8				= 42,
++	LpPlaceholder9				= 43,
++	LpSchLocalRunListSize			= 44,
++	LpReserveGroupId			= 45,
++	LpRunningPriority			= 46,
++#endif
++	LpStatsMaxCounter
++};
++
++/*
++ * Hypervisor statistics page format
++ */
++struct hv_stats_page {
++	union {
++		u64 hv_cntrs[HvStatsMaxCounter];		/* Hypervisor counters */
++		u64 pt_cntrs[PartitionStatsMaxCounter];		/* Partition counters */
++		u64 vp_cntrs[VpStatsMaxCounter];		/* VP counters */
++		u64 lp_cntrs[LpStatsMaxCounter];		/* LP counters */
++		u8 data[HV_HYP_PAGE_SIZE];
++	};
++} __packed;
++
+ /* Bits for dirty mask of hv_vp_register_page */
+ #define HV_X64_REGISTER_CLASS_GENERAL	0
+ #define HV_X64_REGISTER_CLASS_IP	1
 -- 
 2.34.1
 
