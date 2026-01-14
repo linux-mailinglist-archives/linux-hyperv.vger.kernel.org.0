@@ -1,52 +1,52 @@
-Return-Path: <linux-hyperv+bounces-8281-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8282-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E054AD1BD49
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jan 2026 01:41:16 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5FFFD1BDD3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jan 2026 01:49:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 969E93019194
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jan 2026 00:41:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 330FF306A0E2
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jan 2026 00:47:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DDAD1D5ABA;
-	Wed, 14 Jan 2026 00:41:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5BC0137930;
+	Wed, 14 Jan 2026 00:47:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Lbf1Sqex"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TRX4FzC3"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EA9E1A08AF
-	for <linux-hyperv@vger.kernel.org>; Wed, 14 Jan 2026 00:41:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EF291CEADB
+	for <linux-hyperv@vger.kernel.org>; Wed, 14 Jan 2026 00:47:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768351274; cv=none; b=ira+6ElVxCvNew+VESJaV2Twu+UWWFjN1OFSfAO5cB0yHJslTEWJ9wGr7r5+CcuLs6R+waqZiFDkexplSn5AGJDeOXFofG0dRKAPqmPOor9t7lwRg7FnJk7KyYPe7eCwwjJNrmO8Vv5HQtczrM7hJuQbNuZsVn4dYtGiHF6PlJs=
+	t=1768351678; cv=none; b=ftbfBV8Onr6bPkg/2ZsgTifWD7Mh06NPehF71CV2upgX1Q+0p+CYf7El1roJJMtEvL1O/CbP9HNHbZ6bM+KdU1axARGi7ju/NjcE6/tBfKRG+b6UOaaQuCXTztlh5ihR/1B4MxZONxkGlPJW6BOs+aStK46LncAWO8bIu2mPNvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768351274; c=relaxed/simple;
-	bh=VgKKjYiqnYnAeueHrcrTggKN7xjWLttTdGnEDkGEblQ=;
+	s=arc-20240116; t=1768351678; c=relaxed/simple;
+	bh=n6yOs0EwprGM0rtUPMQKG0WKCPZjpf1DDbqcqcHcavU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FWoyTJHJ+jxfo65ZfhUlIJk4r33CKcs/5ZJlM1xSUt0WHm65gNpvPVmJr4Az1kTrb34VrMjR/wsPrsbejXg256N/cVcErOpBIyesazJR72MnOIaVal7LrjfaYXqAOvNB97xBBQWbtw6mYXUkKCOjc1BReJtm2KmIY+NXu8sm8Vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Lbf1Sqex; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=NBojA5/sezX7b6iG+8GpqvUXcY0Nvyyvn1wLozpjZtwA2zlvOIEX5DOnV5dK+kqGhLMy15XaQa7plEmeGj/tYETUDqn1o0Nlb3seFsYIX4BgMoZK7DUKlDzS8DuNZVK11u7yMyu2wMkiF2oBeYjt6AuWRCeFpItpSoJI/6PX/PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TRX4FzC3; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii.localdomain (unknown [52.148.140.42])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 8B62D20B7165;
-	Tue, 13 Jan 2026 16:41:09 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8B62D20B7165
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5650420B716D;
+	Tue, 13 Jan 2026 16:47:56 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5650420B716D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1768351269;
-	bh=O7bKS0vm7dq30JeRN/aIA8W4b5uAK9gbRaq6BkOs6aE=;
+	s=default; t=1768351676;
+	bh=HpA4kt6NTR7LEL8qb6nnxJgiK/KxYU6ytS31NOr3Ye8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Lbf1SqexcqBBv6garwWiX7DGAUA77GWESRVpLQoiPhCOq1OI2RHwiNh8NENkDZLLT
-	 L8ySgNNW9AxkTTPvKsLoXDUfmGRhrDU7FnmknLNQOXy1wZmN9JduzjACO+U4M4AtVG
-	 IhGJoUiXz4W2TDXYOZC3pNup/+82rIrH3rdcHXvE=
-Date: Tue, 13 Jan 2026 16:41:08 -0800
+	b=TRX4FzC3IARhIaMjHYzc/Ri31K/cpBHjUiL1IFJIxaDSmzoWB+jcsd8DUuUwRCuWb
+	 LZ6LOYzH009CBqMYPDoz373Tl8pkfcS/DFHswJLupbod0MCSO/tMugXiQEjfEy+NlX
+	 EM7DjNoKgp77YAPhCEcPzPRqj6QrwSaFGIcMkyQs=
+Date: Tue, 13 Jan 2026 16:47:54 -0800
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: Mukesh Rathor <mrathor@linux.microsoft.com>
 Cc: linux-hyperv@vger.kernel.org, wei.liu@kernel.org,
 	nunodasneves@linux.microsoft.com
-Subject: Re: [PATCH] mshv: make certain field names descriptive in a header
- struct
-Message-ID: <aWbmJPkrJyICk4Rh@skinsburskii.localdomain>
-References: <20260109200611.1422390-1-mrathor@linux.microsoft.com>
+Subject: Re: [PATCH v1] mshv: make certain field names descriptive in a
+ header struct
+Message-ID: <aWbnuujMGpPUHQxW@skinsburskii.localdomain>
+References: <20260112194943.1701785-1-mrathor@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -55,13 +55,15 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260109200611.1422390-1-mrathor@linux.microsoft.com>
+In-Reply-To: <20260112194943.1701785-1-mrathor@linux.microsoft.com>
 
-On Fri, Jan 09, 2026 at 12:06:11PM -0800, Mukesh Rathor wrote:
-> There is no functional change. Just make couple field names in
-> struct mshv_mem_region, in a header that can be used in many
-> places, a little descriptive to make code easier to read by
-> allowing better support for grep, cscope, etc.
+On Mon, Jan 12, 2026 at 11:49:43AM -0800, Mukesh Rathor wrote:
+> When header struct fields use very common names like "pages" or "type",
+> it makes it difficult to find uses of these fields with tools like grep
+> and cscope.  Add the prefix mreg_ to some fields in struct
+> mshv_mem_region to make it easier to find them.
+> 
+> There is no functional change.
 > 
 > Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
 > ---
@@ -81,11 +83,12 @@ On Fri, Jan 09, 2026 at 12:06:11PM -0800, Mukesh Rathor wrote:
 > -	page = region->pages[page_offset];
 > +	page = region->mreg_pages[page_offset];
 
-What does "m" mean here - "mreg_pages"? Is it "memory region"?
-If so, then it's misleading, because the same region stuct is used to
-the MMIO regions as well. Maybe "region_pages" would be better?
+Should have answered to this version instead of the previous one.
+Please, take a look at the reply.
 
-Also, while we're at it, maybe rename "mshv_mem_region" to "mshv_region" to reflect that?
+Also, patch version represent a number of version sent out, thus there
+is no "v0" revision, and the second revions comes with "v2" tag and not
+"v1".
 
 Thanks,
 Stanislav
