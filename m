@@ -1,41 +1,42 @@
-Return-Path: <linux-hyperv+bounces-8298-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8296-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2795ED21619
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jan 2026 22:39:07 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B66B7D21667
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jan 2026 22:42:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C6BC0304EBF3
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jan 2026 21:38:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F2922308D06B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jan 2026 21:38:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ACFE37C0E8;
-	Wed, 14 Jan 2026 21:38:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6397D379979;
+	Wed, 14 Jan 2026 21:38:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kh1GoLPU"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="H8PrVe/5"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E4343793BF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80A2F3793BA;
 	Wed, 14 Jan 2026 21:38:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768426720; cv=none; b=C9+YyC8qVwbChrmIvS6OSzyoq6LddbP+ZwBpqMMBcaFvrGIVAJoyk52B5bN9jM19Ou6LsCyrmlyYkrzyqDsTAq00unt8/icLEB5og2NtM/XtsfOhD6mI2r6guw9VamVer4IFc3cntU1F4ZxsBpEZ9QqgcbnhmH3BV+xI1ISJW5A=
+	t=1768426706; cv=none; b=KzImArIK3eWHtN6mtJlGLwPHcRbjvSxJECWxg1bXx75pVdAh0X/Z1WKBBO2y/nmem24pzDJIuAD90X4nH8xDja9JcB+Wom/8Sa2T0qkslVBcczIrgj+yhpaEYJCwLS1j+SXdYZw516AXTepsbU7wKAYgd9J2kA/p9PB86ZVnQl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768426720; c=relaxed/simple;
-	bh=Ud9CO7xK3C6FIHXGrUVPSXdkbGzlwdZeUQL/ELqGItY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oFSft+7t4VepgAyr2TMqaM/I8WRa7QDDf1kOmZmEF3/g7uky/dvTtERCZEr1TopCpgpXU3KUYnARGOx8D9PRHiAE1S4S0UdNhfbATO+7g5qLPIpb6MPgF3Uc2lIxw1F9byqNZdOCOxwvgVdpwriuMYBalwsU1qfA/BhJxhlRhFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=kh1GoLPU; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1768426706; c=relaxed/simple;
+	bh=uzeRuEk6mtsIaTnRbzrMVlLOgjMqQcPry4umGAax9Uw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kSnnhn/33UrEz1RYPKRNkXlfouhLBuwDPOITM3k7EtPsImH1Iwny9APdNkJfgqeF0tIe6y9JFPMOMRmqdQnUNUwrDmfGJZ7TJPjEwPYa33is8ZgbRqOBhdvkWYHirmCdz6t5j25y7rz0WJG3w/LxzqqM2QcOZCign35eb8pn9t0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=H8PrVe/5; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1032)
-	id 7FCBA20B7165; Wed, 14 Jan 2026 13:38:06 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7FCBA20B7165
+	id 0F4B820B716D; Wed, 14 Jan 2026 13:38:07 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0F4B820B716D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1768426686;
-	bh=3FPKL6RKZS3PAfmJj/ndI52aBJ1Zr63x+RcAackQQO0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=kh1GoLPU0fsRrcvTx+MFGHYHpnW0h6HWITifRMu82LApikQM2wqMYexVJUaPKNqIC
-	 /x2cWYFvPVClknzenMmsVYDavTCbyUjGhER3oL/rCOz3bVbZ/Qd/GG80/20IE7aRf0
-	 5mzelCXNuuZg0JZYGSzt4L4Is5SSQrpDDoUmK1SU=
+	s=default; t=1768426687;
+	bh=z2o6YdqfB0oQMRtuk5ZapbPpFV9AcJv3FrMTfcI1w9U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=H8PrVe/5nbVl/9C3iNC+HWTluQ8PvxawDzzinZRPI+Te2h0TnVnNG3HoXz4eCzVgf
+	 FE0wN16rdYn2gUBd8Tdq4RfocOedP2B3EOSat3pP/O5W160yPMupgmxY6vkx3Xvvzq
+	 d3X2rk2tDH9N1E5bAlwwJwL9pNEb9xmtKRraaYCY=
 From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -50,10 +51,12 @@ Cc: kys@microsoft.com,
 	mrathor@linux.microsoft.com,
 	paekkaladevi@linux.microsoft.com,
 	Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Subject: [PATCH v3 0/6] mshv: Debugfs interface for mshv_root
-Date: Wed, 14 Jan 2026 13:37:57 -0800
-Message-ID: <20260114213803.143486-1-nunodasneves@linux.microsoft.com>
+Subject: [PATCH v3 1/6] mshv: Ignore second stats page map result failure
+Date: Wed, 14 Jan 2026 13:37:58 -0800
+Message-ID: <20260114213803.143486-2-nunodasneves@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.7
+In-Reply-To: <20260114213803.143486-1-nunodasneves@linux.microsoft.com>
+References: <20260114213803.143486-1-nunodasneves@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -62,65 +65,130 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Expose hypervisor, logical processor, partition, and virtual processor
-statistics via debugfs. These are provided by mapping 'stats' pages via
-hypercall.
+From: Purna Pavan Chandra Aekkaladevi <paekkaladevi@linux.microsoft.com>
 
-Patch #1: Update hv_call_map_stats_page() to return success when
-          HV_STATS_AREA_PARENT is unavailable, which is the case on some
-          hypervisor versions, where it can fall back to HV_STATS_AREA_SELF
-Patch #2: Use struct hv_stats_page pointers instead of void *
-Patch #3: Make mshv_vp_stats_map/unmap() more flexible to use with debugfs code
-Patch #4: Always map vp stats page regardless of scheduler, to reuse in debugfs
-Patch #5: Introduce the definitions needed for the various stats pages
-Patch #6: Add mshv_debugfs.c, and integrate it with the mshv_root driver to
-          expose the partition and VP stats.
+Older versions of the hypervisor do not have a concept of separate SELF
+and PARENT stats areas. In this case, mapping the HV_STATS_AREA_SELF page
+is sufficient - it's the only page and it contains all available stats.
 
+Mapping HV_STATS_AREA_PARENT returns HV_STATUS_INVALID_PARAMETER which
+currently causes module init to fail on older hypevisor versions.
+
+Detect this case and gracefully fall back to populating
+stats_pages[HV_STATS_AREA_PARENT] with the already-mapped SELF page.
+
+Add comments to clarify the behavior, including a clarification of why
+this isn't needed for hv_call_map_stats_page2() which always supports
+PARENT and SELF areas.
+
+Signed-off-by: Purna Pavan Chandra Aekkaladevi <paekkaladevi@linux.microsoft.com>
+Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Reviewed-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 ---
-Changes in v3:
-- Add 3 small refactor/cleanup patches (patches 2,3,4) from Stanislav. These
-  simplify some of the debugfs code, and fix issues with mapping VP stats on
-  L1VH.
-- Fix cleanup of parent stats dentries on module removal (via squashing some
-  internal patches into patch #6) [Praveen]
-- Remove unused goto label [Stanislav, kernel bot]
-- Use struct hv_stats_page * instead of void * in mshv_debugfs.c [Stanislav]
-- Remove some redundant variables [Stanislav]
-- Rename debugfs dentry fields for brevity [Stanislav]
-- Use ERR_CAST() for the dentry error pointer returned from
-  lp_debugfs_stats_create() [Stanislav]
-- Fix leak of pages allocated for lp stats mappings by storing them in an array
-  [Michael]
-- Add comments to clarify PARENT vs SELF usage and edge cases [Michael]
-- Add VpLoadAvg for x86 and print the stat [Michael]
-- Add NUM_STATS_AREAS for array sizing in mshv_debugfs.c [Michael]
+ drivers/hv/mshv_root_hv_call.c | 52 +++++++++++++++++++++++++++++++---
+ drivers/hv/mshv_root_main.c    |  3 ++
+ 2 files changed, 51 insertions(+), 4 deletions(-)
 
-Changes in v2:
-- Remove unnecessary pr_debug_once() in patch 1 [Stanislav Kinsburskii]
-- CONFIG_X86 -> CONFIG_X86_64 in patch 2 [Stanislav Kinsburskii]
-
----
-Nuno Das Neves (2):
-  mshv: Add definitions for stats pages
-  mshv: Add debugfs to view hypervisor statistics
-
-Purna Pavan Chandra Aekkaladevi (1):
-  mshv: Ignore second stats page map result failure
-
-Stanislav Kinsburskii (3):
-  mshv: Use typed hv_stats_page pointers
-  mshv: Improve mshv_vp_stats_map/unmap(), add them to mshv_root.h
-  mshv: Always map child vp stats pages regardless of scheduler type
-
- drivers/hv/Makefile            |    1 +
- drivers/hv/mshv_debugfs.c      | 1103 ++++++++++++++++++++++++++++++++
- drivers/hv/mshv_root.h         |   49 +-
- drivers/hv/mshv_root_hv_call.c |   64 +-
- drivers/hv/mshv_root_main.c    |  130 ++--
- include/hyperv/hvhdk.h         |  437 +++++++++++++
- 6 files changed, 1721 insertions(+), 63 deletions(-)
- create mode 100644 drivers/hv/mshv_debugfs.c
-
+diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
+index 598eaff4ff29..1f93b94d7580 100644
+--- a/drivers/hv/mshv_root_hv_call.c
++++ b/drivers/hv/mshv_root_hv_call.c
+@@ -813,6 +813,13 @@ hv_call_notify_port_ring_empty(u32 sint_index)
+ 	return hv_result_to_errno(status);
+ }
+ 
++/*
++ * Equivalent of hv_call_map_stats_page() for cases when the caller provides
++ * the map location.
++ *
++ * NOTE: This is a newer hypercall that always supports SELF and PARENT stats
++ * areas, unlike hv_call_map_stats_page().
++ */
+ static int hv_call_map_stats_page2(enum hv_stats_object_type type,
+ 				   const union hv_stats_object_identity *identity,
+ 				   u64 map_location)
+@@ -855,6 +862,34 @@ static int hv_call_map_stats_page2(enum hv_stats_object_type type,
+ 	return ret;
+ }
+ 
++static int
++hv_stats_get_area_type(enum hv_stats_object_type type,
++		       const union hv_stats_object_identity *identity)
++{
++	switch (type) {
++	case HV_STATS_OBJECT_HYPERVISOR:
++		return identity->hv.stats_area_type;
++	case HV_STATS_OBJECT_LOGICAL_PROCESSOR:
++		return identity->lp.stats_area_type;
++	case HV_STATS_OBJECT_PARTITION:
++		return identity->partition.stats_area_type;
++	case HV_STATS_OBJECT_VP:
++		return identity->vp.stats_area_type;
++	}
++
++	return -EINVAL;
++}
++
++/*
++ * Map a stats page, where the page location is provided by the hypervisor.
++ *
++ * NOTE: The concept of separate SELF and PARENT stats areas does not exist on
++ * older hypervisor versions. All the available stats information can be found
++ * on the SELF page. When attempting to map the PARENT area on a hypervisor
++ * that doesn't support it, return "success" but with a NULL address. The
++ * caller should check for this case and instead fallback to the SELF area
++ * alone.
++ */
+ static int hv_call_map_stats_page(enum hv_stats_object_type type,
+ 				  const union hv_stats_object_identity *identity,
+ 				  void **addr)
+@@ -863,7 +898,7 @@ static int hv_call_map_stats_page(enum hv_stats_object_type type,
+ 	struct hv_input_map_stats_page *input;
+ 	struct hv_output_map_stats_page *output;
+ 	u64 status, pfn;
+-	int ret = 0;
++	int hv_status, ret = 0;
+ 
+ 	do {
+ 		local_irq_save(flags);
+@@ -878,11 +913,20 @@ static int hv_call_map_stats_page(enum hv_stats_object_type type,
+ 		pfn = output->map_location;
+ 
+ 		local_irq_restore(flags);
+-		if (hv_result(status) != HV_STATUS_INSUFFICIENT_MEMORY) {
+-			ret = hv_result_to_errno(status);
++
++		hv_status = hv_result(status);
++		if (hv_status != HV_STATUS_INSUFFICIENT_MEMORY) {
+ 			if (hv_result_success(status))
+ 				break;
+-			return ret;
++
++			if (hv_stats_get_area_type(type, identity) == HV_STATS_AREA_PARENT &&
++			    hv_status == HV_STATUS_INVALID_PARAMETER) {
++				*addr = NULL;
++				return 0;
++			}
++
++			hv_status_debug(status, "\n");
++			return hv_result_to_errno(status);
+ 		}
+ 
+ 		ret = hv_call_deposit_pages(NUMA_NO_NODE,
+diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+index 1134a82c7881..1777778f84b8 100644
+--- a/drivers/hv/mshv_root_main.c
++++ b/drivers/hv/mshv_root_main.c
+@@ -992,6 +992,9 @@ static int mshv_vp_stats_map(u64 partition_id, u32 vp_index,
+ 	if (err)
+ 		goto unmap_self;
+ 
++	if (!stats_pages[HV_STATS_AREA_PARENT])
++		stats_pages[HV_STATS_AREA_PARENT] = stats_pages[HV_STATS_AREA_SELF];
++
+ 	return 0;
+ 
+ unmap_self:
 -- 
 2.34.1
 
