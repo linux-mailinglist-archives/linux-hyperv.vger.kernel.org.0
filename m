@@ -1,58 +1,60 @@
-Return-Path: <linux-hyperv+bounces-8311-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8312-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34C18D22DE0
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 08:36:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F38D9D22DE3
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 08:36:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EB49C3030FD0
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 07:36:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6B715304BE42
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 07:36:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B39C7223708;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C677F325709;
 	Thu, 15 Jan 2026 07:36:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0Z7qyqsv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M4iX2Hk8"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rON4D/uq";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IzWc++SX"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00E02749C1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82C52DF12F;
 	Thu, 15 Jan 2026 07:36:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768462562; cv=none; b=Dqw+Cw8JdzzE8HBrAAnUICke+t9TMEypkrIKehkbIuGZ6aowiYrZl7dt1LpjdHOfGEcBlhMglcp7qHZRPVSB12gsUY7bd1W3U0FHzSUNLSTD5XsS7UwfLIwzxT6vtwCMgfuWLboMm6sHrega7u8TY3yWjGzE3A2GwTJdR/BkQC8=
+	t=1768462562; cv=none; b=lZxd75o/IP0nbwzhzKVXv72eqi0HgyKt5NcEIaFfhN3CWa3kakx+C0cmckNnr3Ljtct1het16nUeWaZXpkIIf8JZZ9XuacTN0LnKUOfPEchmuJepFeoE7ewRESyNLclsQIEqvTjl7JbO/Yzni+32S42VqSiMSXGsmGrru6iLpCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1768462562; c=relaxed/simple;
-	bh=xSQrENMvTf6b9ThXFTgPHxAcI4c/NoVt1Mf+iRCU0UY=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=WKUDHLUcpV5Z0HpWVFeYzkXRBSb2neVAFzhbeWDYOsYZZ3BHptrZnZmCsFz7wx4hIsATr8u8OP/7xpik7l86cp08pTZ4YdduySXJFbll15RxERiqFrDDt6aLuYI9IyAfB0nnv9euXMo2TJgkJLESSbdA95TQKAaxGI71LiS9wmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0Z7qyqsv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=M4iX2Hk8; arc=none smtp.client-ip=193.142.43.55
+	bh=gQlXs4q19xMLM8Wc0CIfifmCM1u8xor1ADjg8gkJ/Mk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ubR848okkoKyEVp85wIwngOsrX3ITXb7ULOnOfUiVllEihF8l3LdmA/MuKvw3xxagozyr9XPmPtzgCix0DIHzwJvE3eeEnhbLD2GbLcSfATj8gYipkn3dOhxpQFI1Oc79Pd6SSZsLiS9ILSTyOCdn6hJlMbdweITlDS2Ir87xOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rON4D/uq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IzWc++SX; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1768462558;
+	s=2020; t=1768462559;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=yfItQ88zI/umVs0bHSlohMlDtNI1ProqVRKim2s0a1U=;
-	b=0Z7qyqsv2sC0m/uaL6xo7iMRd6vAu7mvKicqJ2ImCuQOKwtNF0l030kHixd9Zrc0yfbKKw
-	7yl2XmB+OHZpSHxXW83ox4Pjs6dal6q+smUzV3OxmhF8/8aL+OM6PPHnaBbRS8g+WCd7NF
-	T9zTq6Cpawpj04R1nKry8l2PTEDSGRuIqgFKHjz5LFaHEf/htXrQ+npkq1c+axEirdZHkX
-	Ox/hQ9QGFSjrPHh69X5/vIEqO3gs5/J+SYh7Fh6PVy2pJ9/Z6WGRbkHwT/i+nKm29DjMcK
-	m4ZbojCGYn3h7Ly5FUWKNUFH6bjy/XGAlTFC3qNliYwI1esTTU8iPj+rviE/YQ==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SuFTyZHzQGk2QqDXdX5OISfkQ27KHUy/T6UHqgFncd4=;
+	b=rON4D/uqufLb7MBQX7MP9+157kpnGJfYzYe693nFE0CfGwYJqMsg6c1qiF9tj9lYct82+1
+	Q5WEarD5jWgy0/rsFEA3vAZlK6CpgNWfTRvvMDVPSByFuOmkp5REJlXa4U27nqcgt7/IA4
+	JEUi6zCP8Nl1P6tzcdg9nBo0m6Dxh826ha2VOdmKkLhET9Taz5PvNvZK7puuwD734Z2bgL
+	SyLkE0kiMwKUagONYKFDX0I34gQUhl+IEKvH2mejMLgGEOY5MybB7vmTUTFEGm9DRqrQUY
+	oAD9MTXEqR3lE/90PtkfCDKYDMyh2Q+EaoAw6bS5vEPTK/JaweMqpxIMCN8XeA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1768462558;
+	s=2020e; t=1768462559;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=yfItQ88zI/umVs0bHSlohMlDtNI1ProqVRKim2s0a1U=;
-	b=M4iX2Hk8eA7RWjy4Dar9V+1/186VAaia4CLhqNVsZw79LuS3ivb6UUi1uLOaLXOBEN08NK
-	YUd7/4DcAWfGfzCQ==
-Subject: [PATCH 0/2] kbuild, uapi: Mark inner unions in packed structs as
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SuFTyZHzQGk2QqDXdX5OISfkQ27KHUy/T6UHqgFncd4=;
+	b=IzWc++SXQVXqyTI6SLJupr/3UgPlHEDDdzHpCHUjM0XhXA1tkcyxgTJvlbqw1lB0XNH6aW
+	18FPsH7CsUWBP/Dg==
+Date: Thu, 15 Jan 2026 08:35:44 +0100
+Subject: [PATCH 1/2] hyper-v: Mark inner union in hv_kvp_exchg_msg_value as
  packed
-Date: Thu, 15 Jan 2026 08:35:43 +0100
-Message-Id: <20260115-kbuild-alignment-vbox-v1-0-076aed1623ff@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -61,10 +63,9 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAM+YaGkC/x3MQQ5AMBBA0avIrE3Sqkq4iliUDiYoaZEm4u4ay
- 7f4/4FAnilAkz3g6ebAu0uQeQbDbNxEyDYZClFUQkqNS3/xatGsPLmN3Il3v0e0ohS1VKVVSkN
- qD08jx//bdu/7AYQOXPJnAAAA
-X-Change-ID: 20260115-kbuild-alignment-vbox-d0409134d335
+Message-Id: <20260115-kbuild-alignment-vbox-v1-1-076aed1623ff@linutronix.de>
+References: <20260115-kbuild-alignment-vbox-v1-0-076aed1623ff@linutronix.de>
+In-Reply-To: <20260115-kbuild-alignment-vbox-v1-0-076aed1623ff@linutronix.de>
 To: "K. Y. Srinivasan" <kys@microsoft.com>, 
  Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
  Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
@@ -77,39 +78,55 @@ Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
  llvm@lists.linux.dev, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
  kernel test robot <lkp@intel.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1768462556; l=876;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1768462556; l=1716;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=xSQrENMvTf6b9ThXFTgPHxAcI4c/NoVt1Mf+iRCU0UY=;
- b=rDzhxsNfCUeqLHHdwI6mKudiIl7BxWLmKjM2T8nsHThSwnWifa46R2rYISCPQSDmtp/+zwuV7
- 4iY6qfLT6lLCWjIbbHwYCN/rzmsFWr1HBv90qbpq7XcBNKwJ8RNp2Ea
+ bh=gQlXs4q19xMLM8Wc0CIfifmCM1u8xor1ADjg8gkJ/Mk=;
+ b=SIoPm7+F/yGCU03lpF4m0kxUTlX7Bb+SOZO7DxAscLIoTmLE0klPAVbhDlHusnht1D/WG98ND
+ q/0fZdrq4gnDQSjppUjJXcfn92bIN6mKVkogvcWF+E+xoranVUtvIPg
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-The unpacked unions within a packed struct generates alignment warnings
-on clang for 32-bit ARM.
+The unpacked union within a packed struct generates alignment warnings
+on clang for 32-bit ARM:
+
+./usr/include/linux/hyperv.h:361:2: error: field  within 'struct hv_kvp_exchg_msg_value'
+  is less aligned than 'union hv_kvp_exchg_msg_value::(anonymous at ./usr/include/linux/hyperv.h:361:2)'
+  and is usually due to 'struct hv_kvp_exchg_msg_value' being packed,
+  which can lead to unaligned accesses [-Werror,-Wunaligned-access]
+     361 |         union {
+         |         ^
 
 With the recent changes to compile-test the UAPI headers in more cases,
-these warning in combination with CONFIG_WERROR breaks the build.
+this warning in combination with CONFIG_WERROR breaks the build.
 
-Fix the warnings.
+Fix the warning.
 
-Intended for the kbuild tree.
-
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202512140314.DzDxpIVn-lkp@intel.com/
+Reported-by: Nathan Chancellor <nathan@kernel.org>
+Closes: https://lore.kernel.org/linux-kbuild/20260110-uapi-test-disable-headers-arm-clang-unaligned-access-v1-1-b7b0fa541daa@kernel.org/
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/linux-kbuild/29b2e736-d462-45b7-a0a9-85f8d8a3de56@app.fastmail.com/
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
-Thomas Weißschuh (2):
-      hyper-v: Mark inner union in hv_kvp_exchg_msg_value as packed
-      virt: vbox: uapi: Mark inner unions in packed structs as packed
+ include/uapi/linux/hyperv.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- include/uapi/linux/hyperv.h            | 2 +-
- include/uapi/linux/vbox_vmmdev_types.h | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
----
-base-commit: e3970d77ec504e54c3f91a48b2125775c16ba4c0
-change-id: 20260115-kbuild-alignment-vbox-d0409134d335
+diff --git a/include/uapi/linux/hyperv.h b/include/uapi/linux/hyperv.h
+index aaa502a7bff4..1749b35ab2c2 100644
+--- a/include/uapi/linux/hyperv.h
++++ b/include/uapi/linux/hyperv.h
+@@ -362,7 +362,7 @@ struct hv_kvp_exchg_msg_value {
+ 		__u8 value[HV_KVP_EXCHANGE_MAX_VALUE_SIZE];
+ 		__u32 value_u32;
+ 		__u64 value_u64;
+-	};
++	} __attribute__((packed));
+ } __attribute__((packed));
+ 
+ struct hv_kvp_msg_enumerate {
 
-Best regards,
 -- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+2.52.0
 
 
