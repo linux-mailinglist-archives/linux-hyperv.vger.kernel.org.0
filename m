@@ -1,54 +1,53 @@
-Return-Path: <linux-hyperv+bounces-8305-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8306-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FE4CD22B3C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 08:05:17 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70AC9D22BB4
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 08:10:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4BCDE30915C8
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 07:01:53 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 0130330039C5
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 07:10:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 226363254B1;
-	Thu, 15 Jan 2026 07:01:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 167D43254AE;
+	Thu, 15 Jan 2026 07:10:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="daj5//Iy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RWJGKEB0"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36BD325492;
-	Thu, 15 Jan 2026 07:01:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F7522DFA4;
+	Thu, 15 Jan 2026 07:10:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768460512; cv=none; b=kogHQudGqaJvwSr2p1yz/z1fS/ofaddsucq6qB4rt8kqvJV/IlArgWF0D9HhOCdoFHQkg/OEu/WMvqx1p3WZSHjPTrEIDZs/QG+7Ey5B9kqZez73M6GhEsW43LFVxhkUYs2S6BXSDGwDhdd96EmQl6TLzHW8bQKbuzF9B+nMr30=
+	t=1768461048; cv=none; b=aJwD8ao4vDfbRDYSHgI9P44wFUDcMLEJRVnm4vl9dfjI0x5Eiq1unz0+08cCk6ER87bXgiKIvAeTBQgenssw8wh6bDTorT9cFyQv4+JBckOLGb6XWdBbK1e1u5g3wlY4BE7/sIOiSMVsvagFwDMV28koOY2ZyguCiV1gE9Ot1hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768460512; c=relaxed/simple;
-	bh=jIXnJCbBS9XgkTALoJxcyQ4qQdTjTBXVlAe4FG5f/Pg=;
+	s=arc-20240116; t=1768461048; c=relaxed/simple;
+	bh=eO+Sw8wsqQe+oHKVZDeBwvpIM9kgU8Dsz92izQ4hEqo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=esYidWhubSncOmhWgjgHzpfL9H8L5HquliIu0kcYh2Q+u3/vsTNIFKu6iREvpUzmwd2mx0Lk7NxtMWWBWA+f/Ts7qvjgUiGGHTx5giWaGM4Ae+ROVxXV82aX3M01MleUjS6/iyHS0bCeprNC54sS4ttIQZ+BTWtODrrdIBKLZfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=daj5//Iy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DBA8C116D0;
-	Thu, 15 Jan 2026 07:01:51 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=R+p9DHdsOVJDTQTcSqz4dlSm+4+bSn3ggacgUd+VMY+vXgvWym4bID68Ga006e83h0/fPBA/aIAJ7AHbLwqdrLpS5B0VJ2bkaSAYzX7ABzKBdOmdIMZVdWc3v8hb6RlshDmrudgbsetEuo5SXUHxqn2tKiLXz/TTgzrQeoQIIJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RWJGKEB0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 808C3C116D0;
+	Thu, 15 Jan 2026 07:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768460511;
-	bh=jIXnJCbBS9XgkTALoJxcyQ4qQdTjTBXVlAe4FG5f/Pg=;
+	s=k20201202; t=1768461047;
+	bh=eO+Sw8wsqQe+oHKVZDeBwvpIM9kgU8Dsz92izQ4hEqo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=daj5//IyOdGfEK+FV9UxJyQgtAFlODHOD1e5wkuFtJRU5i80/Fb7VltQDVaWxDUnY
-	 9G/S7T+GU5uy15Z7Ol7oqtgFLjblxmAX+xlpZZguSsq0PZIiHNDBJCJnXSR6hLVnLY
-	 KUP/HsYV0O3xPGSDM3nCD0U1Avh2BvjoR+D86S7miP8otpTJX3ZDzkxw1wa9W6bXqt
-	 fTn9mZ6xIVuxwWNQeHo1MawnlaAgHzSvRStVFrshKhZoG7QdW9UticXtrJhmlbIw5C
-	 UkK3L7HKNZkEsj1kUh8VqZrMu+9pwcNB5dI6mOQvcmxdV1HlPzOaV130msw8Iq+KwL
-	 OXUKhx7yyxNYQ==
-Date: Thu, 15 Jan 2026 07:01:50 +0000
+	b=RWJGKEB052qgGfco9Fb3imScCu5Y7XTc3hjqjH3YeHwqWExFhNgwuTL6OnseFpmo6
+	 j+vewaxb06SqCfxcg7BKhs2vLDOmdm3S9qS7V23dVa8bTADvyj4jFrQ/ocN7/WLW/q
+	 4NRxmQG38Bpl7fc8SvxaD0lB8qLr1XZlz9P8C2rsOkn0hoFFlbglr/STrzrqPODOnU
+	 2lwAcLxafJ/xO/J5Yajls/0DVY3aQLGyzhvyw3JEgkCHdu46GgWyFvkZgs0txpTw91
+	 fCG+ePJ0BYB+G0czHwqOYkb/VJgLVQnusU9RDMqssGI0spkSBLlm7Abk1dY9GZeDCd
+	 VWbqjSWNIlaHg==
+Date: Thu, 15 Jan 2026 07:10:46 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: mhklinux@outlook.com
-Cc: haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	kys@microsoft.com, linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, dan.carpenter@linaro.org
-Subject: Re: [PATCH v2 1/1] Drivers: hv: Always do Hyper-V panic notification
- in hv_kmsg_dump()
-Message-ID: <20260115070150.GB3557088@liuwe-devbox-debian-v2.local>
-References: <20251231201447.1399-1-mhklinux@outlook.com>
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mshv: Align huge page stride with guest mapping
+Message-ID: <20260115071046.GC3557088@liuwe-devbox-debian-v2.local>
+References: <176781093198.21595.6373086133020540990.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -57,29 +56,22 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251231201447.1399-1-mhklinux@outlook.com>
+In-Reply-To: <176781093198.21595.6373086133020540990.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 
-On Wed, Dec 31, 2025 at 12:14:47PM -0800, mhkelley58@gmail.com wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
+On Wed, Jan 07, 2026 at 06:45:43PM +0000, Stanislav Kinsburskii wrote:
+> Ensure that a stride larger than 1 (huge page) is only used when page
+> points to a head of a huge page and both the guest frame number (gfn) and
+> the operation size (page_count) are aligned to the huge page size
+> (PTRS_PER_PMD). This matches the hypervisor requirement that map/unmap
+> operations for huge pages must be guest-aligned and cover a full huge page.
 > 
-> hv_kmsg_dump() currently skips the panic notification entirely if it
-> doesn't get any message bytes to pass to Hyper-V due to an error from
-> kmsg_dump_get_buffer(). Skipping the notification is undesirable because
-> it leaves the Hyper-V host uncertain about the state of a panic'ed guest.
+> Add mshv_chunk_stride() to encapsulate this alignment and page-order
+> validation, and plumb a huge_page flag into the region chunk handlers.
+> This prevents issuing large-page map/unmap/share operations that the
+> hypervisor would reject due to misaligned guest mappings.
 > 
-> Fix this by always doing the panic notification, even if bytes_written
-> is zero. Also ensure that bytes_written is initialized, which fixes a
-> kernel test robot warning. The warning is actually bogus because
-> kmsg_dump_get_buffer() happens to set bytes_written even if it fails, and
-> in the kernel test robot's CONFIG_PRINTK not set case, hv_kmsg_dump() is
-> never called. But do the initialization for robustness and to quiet the
-> static checker.
-> 
-> Fixes: 9c318a1d9b50 ("Drivers: hv: move panic report code from vmbus to hv early init code")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/all/202512172103.OcUspn1Z-lkp@intel.com/
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> Fixes: abceb4297bf8 ("mshv: Fix huge page handling in memory region traversal")
+> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 
-Applied. Thanks.
+Applied.
 
