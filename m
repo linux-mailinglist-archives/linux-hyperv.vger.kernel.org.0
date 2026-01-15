@@ -1,53 +1,55 @@
-Return-Path: <linux-hyperv+bounces-8306-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8307-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70AC9D22BB4
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 08:10:52 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E183D22BC9
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 08:11:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 0130330039C5
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 07:10:49 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8098E3009FE1
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 07:11:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 167D43254AE;
-	Thu, 15 Jan 2026 07:10:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6A68314D2C;
+	Thu, 15 Jan 2026 07:11:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RWJGKEB0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGixqhF9"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F7522DFA4;
-	Thu, 15 Jan 2026 07:10:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9429C25A2DD;
+	Thu, 15 Jan 2026 07:11:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768461048; cv=none; b=aJwD8ao4vDfbRDYSHgI9P44wFUDcMLEJRVnm4vl9dfjI0x5Eiq1unz0+08cCk6ER87bXgiKIvAeTBQgenssw8wh6bDTorT9cFyQv4+JBckOLGb6XWdBbK1e1u5g3wlY4BE7/sIOiSMVsvagFwDMV28koOY2ZyguCiV1gE9Ot1hk=
+	t=1768461108; cv=none; b=WzXAWHeubYYDevEEqHne3E2RUGVZwCeZdyeyEs3CUTJm4mnRcDU3YlT85qd91P3HihjWiGbMt8WN6Y8spDQgjnpAbdpjj/latiWWlBZzlo8nBWytsQnZr9HUwaLSkRsnWEtZ/GRwmA1J9+k7EokRYnnVNjqmJIIkPhnJUs67RW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768461048; c=relaxed/simple;
-	bh=eO+Sw8wsqQe+oHKVZDeBwvpIM9kgU8Dsz92izQ4hEqo=;
+	s=arc-20240116; t=1768461108; c=relaxed/simple;
+	bh=MkFD9KJikE6P9YEGWCAqOlXhGrIIdKoOevrdTBS9Qag=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R+p9DHdsOVJDTQTcSqz4dlSm+4+bSn3ggacgUd+VMY+vXgvWym4bID68Ga006e83h0/fPBA/aIAJ7AHbLwqdrLpS5B0VJ2bkaSAYzX7ABzKBdOmdIMZVdWc3v8hb6RlshDmrudgbsetEuo5SXUHxqn2tKiLXz/TTgzrQeoQIIJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RWJGKEB0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 808C3C116D0;
-	Thu, 15 Jan 2026 07:10:47 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=alnxILDJpl6RUjAYKX0hNHNhnlAN4Bp6yyu2ac7LxnKQbSa3WAHamtI2CXJdQyeT2dM1Jxk4dksIKWg+5h3hf5V33qUi0Zy8FGGftmY1xLcXPies3KC0hGb4mwCK9EIDHFkR+tBkBECeT91GXUM+5zZFCyn4R4CXZeK+G7KCqWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EGixqhF9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10E2AC116D0;
+	Thu, 15 Jan 2026 07:11:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768461047;
-	bh=eO+Sw8wsqQe+oHKVZDeBwvpIM9kgU8Dsz92izQ4hEqo=;
+	s=k20201202; t=1768461108;
+	bh=MkFD9KJikE6P9YEGWCAqOlXhGrIIdKoOevrdTBS9Qag=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RWJGKEB052qgGfco9Fb3imScCu5Y7XTc3hjqjH3YeHwqWExFhNgwuTL6OnseFpmo6
-	 j+vewaxb06SqCfxcg7BKhs2vLDOmdm3S9qS7V23dVa8bTADvyj4jFrQ/ocN7/WLW/q
-	 4NRxmQG38Bpl7fc8SvxaD0lB8qLr1XZlz9P8C2rsOkn0hoFFlbglr/STrzrqPODOnU
-	 2lwAcLxafJ/xO/J5Yajls/0DVY3aQLGyzhvyw3JEgkCHdu46GgWyFvkZgs0txpTw91
-	 fCG+ePJ0BYB+G0czHwqOYkb/VJgLVQnusU9RDMqssGI0spkSBLlm7Abk1dY9GZeDCd
-	 VWbqjSWNIlaHg==
-Date: Thu, 15 Jan 2026 07:10:46 +0000
+	b=EGixqhF9ljmY5DfZ3DsC+ojmlsedNJ12zDDPUNKsqr/QWBrRoZ2VhQKbdNY902XaV
+	 H8GNQbPpOm8ZWqPv6E+OHEmOY8ihbYEOSreDY/Y1WRL+0uMCpseEPl9pVxLRkVl/LR
+	 Px1TDkx0SxLDqfk8WRYbhX43BWvCBHQ8IKSxvK+jdQu2MjVwE/8gZv0i4SjN9Vgd5V
+	 Kx99DnCNXbeLwimAt2KFj0yoMjBrVw0NXnPn3DSCZVofZjE5spc0IK5xiMgK5iaCQY
+	 sUX8WNaIgD5HY88ukkDtCMmgSWXZfHuj9+qlBv3INx97V6iE0vPJ3tZM/rXm0g+jVJ
+	 Hsc7b6aVFzl8A==
+Date: Thu, 15 Jan 2026 07:11:46 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com,
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
+	wei.liu@kernel.org, decui@microsoft.com, longli@microsoft.com,
 	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mshv: Align huge page stride with guest mapping
-Message-ID: <20260115071046.GC3557088@liuwe-devbox-debian-v2.local>
-References: <176781093198.21595.6373086133020540990.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+Subject: Re: [PATCH 1/1] mshv: Store the result of vfs_poll in a variable of
+ type __poll_t
+Message-ID: <20260115071146.GD3557088@liuwe-devbox-debian-v2.local>
+References: <20260114170112.102673-1-mhklinux@outlook.com>
+ <49fd5523-f558-4ac0-b1a5-d0ead75bd9f3@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -56,22 +58,47 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <176781093198.21595.6373086133020540990.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+In-Reply-To: <49fd5523-f558-4ac0-b1a5-d0ead75bd9f3@linux.microsoft.com>
 
-On Wed, Jan 07, 2026 at 06:45:43PM +0000, Stanislav Kinsburskii wrote:
-> Ensure that a stride larger than 1 (huge page) is only used when page
-> points to a head of a huge page and both the guest frame number (gfn) and
-> the operation size (page_count) are aligned to the huge page size
-> (PTRS_PER_PMD). This matches the hypervisor requirement that map/unmap
-> operations for huge pages must be guest-aligned and cover a full huge page.
+On Wed, Jan 14, 2026 at 10:40:04AM -0800, Nuno Das Neves wrote:
+> On 1/14/2026 9:01 AM, mhkelley58@gmail.com wrote:
+> > From: Michael Kelley <mhklinux@outlook.com>
+> > 
+> > vfs_poll() returns a result of type __poll_t, but current code is using
+> > an "unsigned int" local variable. The difference is that __poll_t carries
+> > the "bitwise" attribute. This attribute is not interpreted by the C
+> > compiler; it is only used by 'sparse' to flag incorrect usage of the
+> > return value. The return value is used correctly here, so there's no
+> > bug, but sparse complains about the type mismatch.
+> > 
+> > In the interest of general correctness and to avoid noise from sparse,
+> > change the local variable to type __poll_t. No functional change.
+> > 
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes: https://lore.kernel.org/oe-kbuild-all/202512141339.791TCKnB-lkp@intel.com/
+> > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> > ---
+> > This change is not marked with a Fixes: tag as there's no value in
+> > backporting to older stable releases.
+> > 
+> >  drivers/hv/mshv_eventfd.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/hv/mshv_eventfd.c b/drivers/hv/mshv_eventfd.c
+> > index d93a18f09c76..0b75ff1edb73 100644
+> > --- a/drivers/hv/mshv_eventfd.c
+> > +++ b/drivers/hv/mshv_eventfd.c
+> > @@ -388,7 +388,7 @@ static int mshv_irqfd_assign(struct mshv_partition *pt,
+> >  {
+> >  	struct eventfd_ctx *eventfd = NULL, *resamplefd = NULL;
+> >  	struct mshv_irqfd *irqfd, *tmp;
+> > -	unsigned int events;
+> > +	__poll_t events;
+> >  	int ret;
+> >  	int idx;
+> >  
 > 
-> Add mshv_chunk_stride() to encapsulate this alignment and page-order
-> validation, and plumb a huge_page flag into the region chunk handlers.
-> This prevents issuing large-page map/unmap/share operations that the
-> hypervisor would reject due to misaligned guest mappings.
-> 
-> Fixes: abceb4297bf8 ("mshv: Fix huge page handling in memory region traversal")
-> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+> Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 
 Applied.
 
