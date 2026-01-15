@@ -1,58 +1,54 @@
-Return-Path: <linux-hyperv+bounces-8304-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8305-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C1F5D22B27
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 08:03:37 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FE4CD22B3C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 08:05:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AA449303F353
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 07:00:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4BCDE30915C8
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 07:01:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 732212EBBAF;
-	Thu, 15 Jan 2026 07:00:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 226363254B1;
+	Thu, 15 Jan 2026 07:01:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fVUU/cCw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="daj5//Iy"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506162DCF7B;
-	Thu, 15 Jan 2026 07:00:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36BD325492;
+	Thu, 15 Jan 2026 07:01:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768460433; cv=none; b=iirx+wWK72ItesXs16o6nXXmLDK031yk3e0r/SlnM+kFzjWMv2wkUftlYTTEyH2OdwaF9hAr6wkHfzUbq9vpgJVeLO9hOk7d1cblWC8ww5aFFiZZCrwJhl+p8p9Cxv3x4zD1Erd0LrJHfolDdWFo788ZogjYLErrHjxM/WAE9to=
+	t=1768460512; cv=none; b=kogHQudGqaJvwSr2p1yz/z1fS/ofaddsucq6qB4rt8kqvJV/IlArgWF0D9HhOCdoFHQkg/OEu/WMvqx1p3WZSHjPTrEIDZs/QG+7Ey5B9kqZez73M6GhEsW43LFVxhkUYs2S6BXSDGwDhdd96EmQl6TLzHW8bQKbuzF9B+nMr30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768460433; c=relaxed/simple;
-	bh=Eg2yGtjmWDrMBaQeNK9+f9HpENRZrawORb/NKZHLrIY=;
+	s=arc-20240116; t=1768460512; c=relaxed/simple;
+	bh=jIXnJCbBS9XgkTALoJxcyQ4qQdTjTBXVlAe4FG5f/Pg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MmUpZY3J4GggbAJl1djmmTQmh+tdQ73W8STpE/ZSOQqCbVbEYwtyVQkUpEaeYhcLw5weaSnQuZfwcOj141iM1Pl+t/9/eoeLst/03VnAcre2Quck7mfnisLqikvKaUEVsNJn/gglZRuqbCOEziXXMMQN3EK+M7INIEeKPkNxJ/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fVUU/cCw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7269C116D0;
-	Thu, 15 Jan 2026 07:00:32 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=esYidWhubSncOmhWgjgHzpfL9H8L5HquliIu0kcYh2Q+u3/vsTNIFKu6iREvpUzmwd2mx0Lk7NxtMWWBWA+f/Ts7qvjgUiGGHTx5giWaGM4Ae+ROVxXV82aX3M01MleUjS6/iyHS0bCeprNC54sS4ttIQZ+BTWtODrrdIBKLZfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=daj5//Iy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DBA8C116D0;
+	Thu, 15 Jan 2026 07:01:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768460432;
-	bh=Eg2yGtjmWDrMBaQeNK9+f9HpENRZrawORb/NKZHLrIY=;
+	s=k20201202; t=1768460511;
+	bh=jIXnJCbBS9XgkTALoJxcyQ4qQdTjTBXVlAe4FG5f/Pg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fVUU/cCwMMWIPiATLyexwcw8QFrwwg4G9h/D5cXTBJSdhvT4utdLqLyQaNyKPZVe2
-	 6mz1nzc+K44jWd5EDdGyJuA3KVkwQvfqQKyheZ8LwWBaNLRpAQjGOqB+Mieit7k0z0
-	 kFaKUeKLbzjFEUwXJQypsHzl0ocf8SJxwqcMV3GXhoAliQKdqqYI2jG4Sb/zlH8WUh
-	 elpKn4VVDEUA0zn2u3WqnL64KjJ2W4kTAUfXrKY34Qt7z5HS04t5t/EvXFswOpNqIV
-	 7p6UcndIZbrvbkvII3NCgBlOhILlxDZyVf9rr3YmqRZL0+XCnV3AG0myeOE0ecFAGl
-	 UsJOi2or69m0g==
-Date: Thu, 15 Jan 2026 07:00:31 +0000
+	b=daj5//IyOdGfEK+FV9UxJyQgtAFlODHOD1e5wkuFtJRU5i80/Fb7VltQDVaWxDUnY
+	 9G/S7T+GU5uy15Z7Ol7oqtgFLjblxmAX+xlpZZguSsq0PZIiHNDBJCJnXSR6hLVnLY
+	 KUP/HsYV0O3xPGSDM3nCD0U1Avh2BvjoR+D86S7miP8otpTJX3ZDzkxw1wa9W6bXqt
+	 fTn9mZ6xIVuxwWNQeHo1MawnlaAgHzSvRStVFrshKhZoG7QdW9UticXtrJhmlbIw5C
+	 UkK3L7HKNZkEsj1kUh8VqZrMu+9pwcNB5dI6mOQvcmxdV1HlPzOaV130msw8Iq+KwL
+	 OXUKhx7yyxNYQ==
+Date: Thu, 15 Jan 2026 07:01:50 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: vdso@mailbox.org
-Cc: Julia Lawall <Julia.Lawall@inria.fr>, yunbolyu@smu.edu.sg,
-	kexinsun@smail.nju.edu.cn, ratnadiraw@smu.edu.sg,
-	xutong.ma@inria.fr, Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>
-Subject: Re: [PATCH] Drivers: hv: vmbus: fix typo in function name reference
-Message-ID: <20260115070031.GA3557088@liuwe-devbox-debian-v2.local>
-References: <20251230141414.94472-1-Julia.Lawall@inria.fr>
- <1647289009.63012.1767104334567@app.mailbox.org>
+To: mhklinux@outlook.com
+Cc: haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	kys@microsoft.com, linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, dan.carpenter@linaro.org
+Subject: Re: [PATCH v2 1/1] Drivers: hv: Always do Hyper-V panic notification
+ in hv_kmsg_dump()
+Message-ID: <20260115070150.GB3557088@liuwe-devbox-debian-v2.local>
+References: <20251231201447.1399-1-mhklinux@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -61,21 +57,29 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1647289009.63012.1767104334567@app.mailbox.org>
+In-Reply-To: <20251231201447.1399-1-mhklinux@outlook.com>
 
-On Tue, Dec 30, 2025 at 06:18:54AM -0800, vdso@mailbox.org wrote:
+On Wed, Dec 31, 2025 at 12:14:47PM -0800, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
 > 
-> > On 12/30/2025 6:14 AM  Julia Lawall <julia.lawall@inria.fr> wrote:
-> > 
-> >  
-> > Replace cmxchg by cmpxchg.
-> > 
-> > Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
-> > 
+> hv_kmsg_dump() currently skips the panic notification entirely if it
+> doesn't get any message bytes to pass to Hyper-V due to an error from
+> kmsg_dump_get_buffer(). Skipping the notification is undesirable because
+> it leaves the Hyper-V host uncertain about the state of a panic'ed guest.
 > 
-> Reviewed-by: Roman Kisel <vdso@mailbox.org>
+> Fix this by always doing the panic notification, even if bytes_written
+> is zero. Also ensure that bytes_written is initialized, which fixes a
+> kernel test robot warning. The warning is actually bogus because
+> kmsg_dump_get_buffer() happens to set bytes_written even if it fails, and
+> in the kernel test robot's CONFIG_PRINTK not set case, hv_kmsg_dump() is
+> never called. But do the initialization for robustness and to quiet the
+> static checker.
 > 
+> Fixes: 9c318a1d9b50 ("Drivers: hv: move panic report code from vmbus to hv early init code")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Closes: https://lore.kernel.org/all/202512172103.OcUspn1Z-lkp@intel.com/
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 
-Applied. Thank you.
-
+Applied. Thanks.
 
