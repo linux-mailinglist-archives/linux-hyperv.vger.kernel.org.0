@@ -1,342 +1,655 @@
-Return-Path: <linux-hyperv+bounces-8326-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8327-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA38CD27F0B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 20:08:19 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96B5BD2820D
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 20:34:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4AEFA30053DF
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 19:03:45 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 189763003185
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jan 2026 19:34:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E16571799F;
-	Thu, 15 Jan 2026 19:03:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D0E13191C3;
+	Thu, 15 Jan 2026 19:34:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rn9G9x7i"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="LjezWY6I"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56D2825F994
-	for <linux-hyperv@vger.kernel.org>; Thu, 15 Jan 2026 19:03:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3002830C618;
+	Thu, 15 Jan 2026 19:34:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768503824; cv=none; b=UJZqdYtHG5pT2F856O5c0wloKVl4y/cBhyIH2l4wIDG/U817Pcwrm5C6NfTeihZxb21CkgN7J8vchue9OCJGt+hgFrtVQ3WS20ZWRQE4Ky0FEbuEPbRcDsAlb7sVlI8Z+qcnF/3hL+9EC2rBosJRYNeICefpL7OPzb/fAzVDbxk=
+	t=1768505692; cv=none; b=pWVzH6NMnOdM+QiIhoVI3uxXjMvpz69Sr5u+oJbFaX1ne+7EHcBDMuhSwM52KfIrRM7Bf4dTSYdHlB9dmOm+z94Uyt+vwKiYz2naVoAQk5lJUc7zNgaQLl6fbXzdJmqMYSxfsF7VTPdM4laPfLTgsPolre2aBv4cTjksM5uJyxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768503824; c=relaxed/simple;
-	bh=5UCDJyJXjI9lNPhnlXRukvimZWPeubgBAFOb+FC0NQQ=;
+	s=arc-20240116; t=1768505692; c=relaxed/simple;
+	bh=079VivrIZBH7OkbNUwN49xBdo7QIBjHD/DqL8/rY4yE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ebne0O//I0XX7VYWqqljQ9zOxzyHTmdJriDXHTvnpW25QwvI4xXhfDg/9BE+UzbWpVnf7lRA6HaPDI0yBmRPkTYYx+p0JQ/M9y8ApdiuzWfXrmmKAOmpDwgYid+ODk+9sDn4rQFi8KJN//zHQL+x8FTuaHVaqxebuYyYxVS1R5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rn9G9x7i; arc=none smtp.client-ip=13.77.154.182
+	 In-Reply-To:Content-Type; b=WyyoK2Q9Wg4FJespYqnsNp/qI/v5eo3PRze6e92OZWc1EUNxsa5lK4xAkErHWhebtDtFb2f7BDlZHxlZQeg+wTpKDVJCGWVUJ3eC5SUl7ljWQJSmBevGplk1aaBh8ii6hdJpXHmOEC2enWlMIugRRB+Egr4XjO7DhKbYymIaFNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=LjezWY6I; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1D17420B716A;
-	Thu, 15 Jan 2026 11:03:37 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1D17420B716A
+Received: from [100.65.232.205] (unknown [20.236.10.163])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8BF5C20B716A;
+	Thu, 15 Jan 2026 11:34:48 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8BF5C20B716A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1768503817;
-	bh=ssYE23pnbPLp/pUU6HXmrUa8HZVhH3cphPCF5nqd/Eg=;
+	s=default; t=1768505688;
+	bh=mvBzZpTVb5lhtK2H+pfEPbI4EnDFLraPOm+Ev0ruGNQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rn9G9x7i1Q5ZqXG0xXIRIMiLpRd8sy39YG6XEP0ca+1sRbTCEgGX2qQ5UAhP1+bLm
-	 e4a1RCw3NdiuWaxHUc2SkW5O9h1nvA+eKk8bTNFpd/6S9GSrx5LfrK4SiEGq2QiF+s
-	 duM3lT02e0tAPCktXrot1ucWGsoZXZJxQUvkTySI=
-Message-ID: <1ac21e5b-5ff9-0ff9-c886-33997ad3f7da@linux.microsoft.com>
-Date: Thu, 15 Jan 2026 11:03:36 -0800
+	b=LjezWY6IXsm0UosG9Gn6J8lt1UwkdUKe0YGaYfwkqV5791SK045/vhQddO9G1P1Fj
+	 XvMxWhf+gSacfp2IIyOJhmwDwxyPVQSMbpjfZSEjOr7nwnuLRnA6klIf4WwJ1VLVc2
+	 xcIk+uBltrgTmh2O0IiTV0zV3sznvG00mrWb6Tv8=
+Message-ID: <89385dc3-e702-4bf6-8ad7-f6e634851851@linux.microsoft.com>
+Date: Thu, 15 Jan 2026 11:34:48 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v1] mshv: make certain field names descriptive in a header
- struct
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/6] mshv: Add definitions for stats pages
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, longli@microsoft.com,
+ prapal@linux.microsoft.com, mrathor@linux.microsoft.com,
+ paekkaladevi@linux.microsoft.com
+References: <20260114213803.143486-1-nunodasneves@linux.microsoft.com>
+ <20260114213803.143486-6-nunodasneves@linux.microsoft.com>
+ <aWkTd2zkbVQqePVa@skinsburskii.localdomain>
 Content-Language: en-US
-To: Anirudh Rayabharam <anirudh@anirudhrb.com>
-Cc: linux-hyperv@vger.kernel.org, wei.liu@kernel.org,
- nunodasneves@linux.microsoft.com
-References: <20260112194943.1701785-1-mrathor@linux.microsoft.com>
- <d4iddlkzjapad2xck7oualffcncyyue2hcqa6u7cf7w62llejk@cgjt2fjvbaz6>
-From: Mukesh R <mrathor@linux.microsoft.com>
-In-Reply-To: <d4iddlkzjapad2xck7oualffcncyyue2hcqa6u7cf7w62llejk@cgjt2fjvbaz6>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <aWkTd2zkbVQqePVa@skinsburskii.localdomain>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 1/15/26 10:51, Anirudh Rayabharam wrote:
-> On Mon, Jan 12, 2026 at 11:49:43AM -0800, Mukesh Rathor wrote:
->> When header struct fields use very common names like "pages" or "type",
->> it makes it difficult to find uses of these fields with tools like grep
->> and cscope.  Add the prefix mreg_ to some fields in struct
->> mshv_mem_region to make it easier to find them.
+On 1/15/2026 8:19 AM, Stanislav Kinsburskii wrote:
+> On Wed, Jan 14, 2026 at 01:38:02PM -0800, Nuno Das Neves wrote:
+>> Add the definitions for hypervisor, logical processor, and partition
+>> stats pages.
 >>
->> There is no functional change.
+> 
+> The definitions in for partition and virtual processor are outdated.
+> Now is the good time to sync the new values in.
+> 
+> Thanks,
+> Stanislav
+> 
+
+Good point, thanks, I will update it for v4.
+
+I'm finally noticing that these counters are not really from hvhdk.h, in
+the windows code, but their own file. Since I'm still iterating on this,
+what do you think about creating a file just for the counters?
+e.g. drivers/hv/hvcounters.h, which combines hvcountersarm64 and amd64.
+
+That would have a couple of advantages:
+1. Not putting things in hvhdk.h which aren't actually there in the
+   Windows source
+2. Less visibility of CamelCase naming outside our driver
+3. I could define the enums using "X macro"s to generate the show() code
+   more cleanly in mshv_debugfs.c, which is something Michael suggested
+   here:
+https://lore.kernel.org/linux-hyperv/SN6PR02MB4157938404BC0D12978ACD9BD4A2A@SN6PR02MB4157.namprd02.prod.outlook.com/
+
+It would look something like this:
+
+In hvcounters.h:
+
+#if is_enabled(CONFIG_X86_64)
+	
+#define HV_COUNTER_VP_LIST(X) \
+	X(VpTotalRunTime, 1), \
+	X(VpHypervisorRunTime, 2), \
+	X(VpRemoteNodeRunTime, 3), \
+/* <snip> */
+
+#elif is_enabled(CONFIG_ARM64)
+
+/* <snip> */
+
+#endif
+
+Just like now, it's a copy/paste from Windows + simple pattern
+replacement. Note with this approach we need separate lists for arm64
+and x86, but that matches how the enums are defined in Windows.
+
+Then, in mshv_debugfs.c:
+
+/*
+ * We need the strings paired with their enum values.
+ * This structure can be used for all the different stat types.
+ */
+struct hv_counter_entry {
+	char *name;
+	int idx;
+};
+
+/* Define an array entry (again, reusable) */
+#define HV_COUNTER_LIST(name, idx) \
+	{ __stringify(name), idx },
+
+/* Create our static array */
+static struct hv_counter_entry hv_counter_vp_array[] = {
+	HV_ST_COUNTER_VP(HV_COUNTER_VP)
+};
+
+static int vp_stats_show(struct seq_file *m, void *v)
+{
+	const struct hv_stats_page **pstats = m->private;
+	int i;
+
+	for (i = 0; i < ARRAY_SIZE(hv_counter_vp_array); ++i) {
+		struct hv_counter_entry entry = hv_counter_vp_array[i];
+		u64 parent_val = pstats[HV_STATS_AREA_PARENT]->vp_cntrs[entry.idx];
+		u64 self_val = pstats[HV_STATS_AREA_SELF]->vp_cntrs[entry.idx];
+
+		/* Prioritize the PARENT area value */
+		seq_printf(m, "%-30s: %llu\n", entry.name,
+			   parent_val ? parent_val : self_val);
+	}
+}
+
+Any thoughts? I was originally going to just go with the pattern we had,
+but since these definitions aren't from the hv*dk.h files, we can maybe
+get more creative and make the resulting code look a bit better.
+
+Thanks
+Nuno
+
+>> Move the definition for the VP stats page to its rightful place in
+>> hvhdk.h, and add the missing members.
 >>
->> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+>> While at it, correct the ARM64 value of VpRootDispatchThreadBlocked,
+>> (which is not yet used, so there is no impact).
+>>
+>> These enum members retain their CamelCase style, since they are imported
+>> directly from the hypervisor code. They will be stringified when
+>> printing the stats out, and retain more readability in this form.
+>>
+>> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 >> ---
->>   drivers/hv/mshv_regions.c   | 44 ++++++++++++++++++-------------------
->>   drivers/hv/mshv_root.h      |  6 ++---
->>   drivers/hv/mshv_root_main.c | 10 ++++-----
->>   3 files changed, 30 insertions(+), 30 deletions(-)
+>>  drivers/hv/mshv_root_main.c |  17 --
+>>  include/hyperv/hvhdk.h      | 437 ++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 437 insertions(+), 17 deletions(-)
 >>
->> diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
->> index 202b9d551e39..af81405f859b 100644
->> --- a/drivers/hv/mshv_regions.c
->> +++ b/drivers/hv/mshv_regions.c
->> @@ -52,7 +52,7 @@ static long mshv_region_process_chunk(struct mshv_mem_region *region,
->>   	struct page *page;
->>   	int ret;
->>   
->> -	page = region->pages[page_offset];
->> +	page = region->mreg_pages[page_offset];
->>   	if (!page)
->>   		return -EINVAL;
->>   
->> @@ -65,7 +65,7 @@ static long mshv_region_process_chunk(struct mshv_mem_region *region,
->>   
->>   	/* Start at stride since the first page is validated */
->>   	for (count = stride; count < page_count; count += stride) {
->> -		page = region->pages[page_offset + count];
->> +		page = region->mreg_pages[page_offset + count];
->>   
->>   		/* Break if current page is not present */
->>   		if (!page)
->> @@ -117,7 +117,7 @@ static int mshv_region_process_range(struct mshv_mem_region *region,
->>   
->>   	while (page_count) {
->>   		/* Skip non-present pages */
->> -		if (!region->pages[page_offset]) {
->> +		if (!region->mreg_pages[page_offset]) {
->>   			page_offset++;
->>   			page_count--;
->>   			continue;
->> @@ -164,13 +164,13 @@ static int mshv_region_chunk_share(struct mshv_mem_region *region,
->>   				   u32 flags,
->>   				   u64 page_offset, u64 page_count)
->>   {
->> -	struct page *page = region->pages[page_offset];
->> +	struct page *page = region->mreg_pages[page_offset];
->>   
->>   	if (PageHuge(page) || PageTransCompound(page))
->>   		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
->>   
->>   	return hv_call_modify_spa_host_access(region->partition->pt_id,
->> -					      region->pages + page_offset,
->> +					      region->mreg_pages + page_offset,
->>   					      page_count,
->>   					      HV_MAP_GPA_READABLE |
->>   					      HV_MAP_GPA_WRITABLE,
->> @@ -190,13 +190,13 @@ static int mshv_region_chunk_unshare(struct mshv_mem_region *region,
->>   				     u32 flags,
->>   				     u64 page_offset, u64 page_count)
->>   {
->> -	struct page *page = region->pages[page_offset];
->> +	struct page *page = region->mreg_pages[page_offset];
->>   
->>   	if (PageHuge(page) || PageTransCompound(page))
->>   		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
->>   
->>   	return hv_call_modify_spa_host_access(region->partition->pt_id,
->> -					      region->pages + page_offset,
->> +					      region->mreg_pages + page_offset,
->>   					      page_count, 0,
->>   					      flags, false);
->>   }
->> @@ -214,7 +214,7 @@ static int mshv_region_chunk_remap(struct mshv_mem_region *region,
->>   				   u32 flags,
->>   				   u64 page_offset, u64 page_count)
->>   {
->> -	struct page *page = region->pages[page_offset];
->> +	struct page *page = region->mreg_pages[page_offset];
->>   
->>   	if (PageHuge(page) || PageTransCompound(page))
->>   		flags |= HV_MAP_GPA_LARGE_PAGE;
->> @@ -222,7 +222,7 @@ static int mshv_region_chunk_remap(struct mshv_mem_region *region,
->>   	return hv_call_map_gpa_pages(region->partition->pt_id,
->>   				     region->start_gfn + page_offset,
->>   				     page_count, flags,
->> -				     region->pages + page_offset);
->> +				     region->mreg_pages + page_offset);
->>   }
->>   
->>   static int mshv_region_remap_pages(struct mshv_mem_region *region,
->> @@ -245,10 +245,10 @@ int mshv_region_map(struct mshv_mem_region *region)
->>   static void mshv_region_invalidate_pages(struct mshv_mem_region *region,
->>   					 u64 page_offset, u64 page_count)
->>   {
->> -	if (region->type == MSHV_REGION_TYPE_MEM_PINNED)
->> -		unpin_user_pages(region->pages + page_offset, page_count);
->> +	if (region->mreg_type == MSHV_REGION_TYPE_MEM_PINNED)
->> +		unpin_user_pages(region->mreg_pages + page_offset, page_count);
->>   
->> -	memset(region->pages + page_offset, 0,
->> +	memset(region->mreg_pages + page_offset, 0,
->>   	       page_count * sizeof(struct page *));
->>   }
->>   
->> @@ -265,7 +265,7 @@ int mshv_region_pin(struct mshv_mem_region *region)
->>   	int ret;
->>   
->>   	for (done_count = 0; done_count < region->nr_pages; done_count += ret) {
->> -		pages = region->pages + done_count;
->> +		pages = region->mreg_pages + done_count;
->>   		userspace_addr = region->start_uaddr +
->>   				 done_count * HV_HYP_PAGE_SIZE;
->>   		nr_pages = min(region->nr_pages - done_count,
->> @@ -297,7 +297,7 @@ static int mshv_region_chunk_unmap(struct mshv_mem_region *region,
->>   				   u32 flags,
->>   				   u64 page_offset, u64 page_count)
->>   {
->> -	struct page *page = region->pages[page_offset];
->> +	struct page *page = region->mreg_pages[page_offset];
->>   
->>   	if (PageHuge(page) || PageTransCompound(page))
->>   		flags |= HV_UNMAP_GPA_LARGE_PAGE;
->> @@ -321,7 +321,7 @@ static void mshv_region_destroy(struct kref *ref)
->>   	struct mshv_partition *partition = region->partition;
->>   	int ret;
->>   
->> -	if (region->type == MSHV_REGION_TYPE_MEM_MOVABLE)
->> +	if (region->mreg_type == MSHV_REGION_TYPE_MEM_MOVABLE)
->>   		mshv_region_movable_fini(region);
->>   
->>   	if (mshv_partition_encrypted(partition)) {
->> @@ -374,9 +374,9 @@ static int mshv_region_hmm_fault_and_lock(struct mshv_mem_region *region,
->>   	int ret;
->>   
->>   	range->notifier_seq = mmu_interval_read_begin(range->notifier);
->> -	mmap_read_lock(region->mni.mm);
->> +	mmap_read_lock(region->mreg_mni.mm);
->>   	ret = hmm_range_fault(range);
->> -	mmap_read_unlock(region->mni.mm);
->> +	mmap_read_unlock(region->mreg_mni.mm);
->>   	if (ret)
->>   		return ret;
->>   
->> @@ -407,7 +407,7 @@ static int mshv_region_range_fault(struct mshv_mem_region *region,
->>   				   u64 page_offset, u64 page_count)
->>   {
->>   	struct hmm_range range = {
->> -		.notifier = &region->mni,
->> +		.notifier = &region->mreg_mni,
->>   		.default_flags = HMM_PFN_REQ_FAULT | HMM_PFN_REQ_WRITE,
->>   	};
->>   	unsigned long *pfns;
->> @@ -430,7 +430,7 @@ static int mshv_region_range_fault(struct mshv_mem_region *region,
->>   		goto out;
->>   
->>   	for (i = 0; i < page_count; i++)
->> -		region->pages[page_offset + i] = hmm_pfn_to_page(pfns[i]);
->> +		region->mreg_pages[page_offset + i] = hmm_pfn_to_page(pfns[i]);
->>   
->>   	ret = mshv_region_remap_pages(region, region->hv_map_flags,
->>   				      page_offset, page_count);
->> @@ -489,7 +489,7 @@ static bool mshv_region_interval_invalidate(struct mmu_interval_notifier *mni,
->>   {
->>   	struct mshv_mem_region *region = container_of(mni,
->>   						      struct mshv_mem_region,
->> -						      mni);
->> +						      mreg_mni);
->>   	u64 page_offset, page_count;
->>   	unsigned long mstart, mend;
->>   	int ret = -EPERM;
->> @@ -535,14 +535,14 @@ static const struct mmu_interval_notifier_ops mshv_region_mni_ops = {
->>   
->>   void mshv_region_movable_fini(struct mshv_mem_region *region)
->>   {
->> -	mmu_interval_notifier_remove(&region->mni);
->> +	mmu_interval_notifier_remove(&region->mreg_mni);
->>   }
->>   
->>   bool mshv_region_movable_init(struct mshv_mem_region *region)
->>   {
->>   	int ret;
->>   
->> -	ret = mmu_interval_notifier_insert(&region->mni, current->mm,
->> +	ret = mmu_interval_notifier_insert(&region->mreg_mni, current->mm,
->>   					   region->start_uaddr,
->>   					   region->nr_pages << HV_HYP_PAGE_SHIFT,
->>   					   &mshv_region_mni_ops);
->> diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
->> index 3c1d88b36741..f5b6d3979e5a 100644
->> --- a/drivers/hv/mshv_root.h
->> +++ b/drivers/hv/mshv_root.h
->> @@ -85,10 +85,10 @@ struct mshv_mem_region {
->>   	u64 start_uaddr;
->>   	u32 hv_map_flags;
->>   	struct mshv_partition *partition;
->> -	enum mshv_region_type type;
->> -	struct mmu_interval_notifier mni;
->> +	enum mshv_region_type mreg_type;
->> +	struct mmu_interval_notifier mreg_mni;
->>   	struct mutex mutex;	/* protects region pages remapping */
->> -	struct page *pages[];
->> +	struct page *mreg_pages[];
->>   };
->>   
->>   struct mshv_irq_ack_notifier {
 >> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
->> index 1134a82c7881..eff1b21461dc 100644
+>> index fbfc9e7d9fa4..724bbaa0b08c 100644
 >> --- a/drivers/hv/mshv_root_main.c
 >> +++ b/drivers/hv/mshv_root_main.c
->> @@ -657,7 +657,7 @@ static bool mshv_handle_gpa_intercept(struct mshv_vp *vp)
->>   		return false;
->>   
->>   	/* Only movable memory ranges are supported for GPA intercepts */
->> -	if (region->type == MSHV_REGION_TYPE_MEM_MOVABLE)
->> +	if (region->mreg_type == MSHV_REGION_TYPE_MEM_MOVABLE)
->>   		ret = mshv_region_handle_gfn_fault(region, gfn);
->>   	else
->>   		ret = false;
->> @@ -1175,12 +1175,12 @@ static int mshv_partition_create_region(struct mshv_partition *partition,
->>   		return PTR_ERR(rg);
->>   
->>   	if (is_mmio)
->> -		rg->type = MSHV_REGION_TYPE_MMIO;
->> +		rg->mreg_type = MSHV_REGION_TYPE_MMIO;
->>   	else if (mshv_partition_encrypted(partition) ||
->>   		 !mshv_region_movable_init(rg))
->> -		rg->type = MSHV_REGION_TYPE_MEM_PINNED;
->> +		rg->mreg_type = MSHV_REGION_TYPE_MEM_PINNED;
->>   	else
->> -		rg->type = MSHV_REGION_TYPE_MEM_MOVABLE;
->> +		rg->mreg_type = MSHV_REGION_TYPE_MEM_MOVABLE;
->>   
->>   	rg->partition = partition;
->>   
->> @@ -1297,7 +1297,7 @@ mshv_map_user_memory(struct mshv_partition *partition,
->>   	if (ret)
->>   		return ret;
->>   
->> -	switch (region->type) {
->> +	switch (region->mreg_type) {
->>   	case MSHV_REGION_TYPE_MEM_PINNED:
->>   		ret = mshv_prepare_pinned_region(region);
->>   		break;
+>> @@ -39,23 +39,6 @@ MODULE_AUTHOR("Microsoft");
+>>  MODULE_LICENSE("GPL");
+>>  MODULE_DESCRIPTION("Microsoft Hyper-V root partition VMM interface /dev/mshv");
+>>  
+>> -/* TODO move this to another file when debugfs code is added */
+>> -enum hv_stats_vp_counters {			/* HV_THREAD_COUNTER */
+>> -#if defined(CONFIG_X86)
+>> -	VpRootDispatchThreadBlocked			= 202,
+>> -#elif defined(CONFIG_ARM64)
+>> -	VpRootDispatchThreadBlocked			= 94,
+>> -#endif
+>> -	VpStatsMaxCounter
+>> -};
+>> -
+>> -struct hv_stats_page {
+>> -	union {
+>> -		u64 vp_cntrs[VpStatsMaxCounter];		/* VP counters */
+>> -		u8 data[HV_HYP_PAGE_SIZE];
+>> -	};
+>> -} __packed;
+>> -
+>>  struct mshv_root mshv_root;
+>>  
+>>  enum hv_scheduler_type hv_scheduler_type;
+>> diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
+>> index 469186df7826..8bddd11feeba 100644
+>> --- a/include/hyperv/hvhdk.h
+>> +++ b/include/hyperv/hvhdk.h
+>> @@ -10,6 +10,443 @@
+>>  #include "hvhdk_mini.h"
+>>  #include "hvgdk.h"
+>>  
+>> +enum hv_stats_hypervisor_counters {		/* HV_HYPERVISOR_COUNTER */
+>> +	HvLogicalProcessors			= 1,
+>> +	HvPartitions				= 2,
+>> +	HvTotalPages				= 3,
+>> +	HvVirtualProcessors			= 4,
+>> +	HvMonitoredNotifications		= 5,
+>> +	HvModernStandbyEntries			= 6,
+>> +	HvPlatformIdleTransitions		= 7,
+>> +	HvHypervisorStartupCost			= 8,
+>> +	HvIOSpacePages				= 10,
+>> +	HvNonEssentialPagesForDump		= 11,
+>> +	HvSubsumedPages				= 12,
+>> +	HvStatsMaxCounter
+>> +};
+>> +
+>> +enum hv_stats_partition_counters {		/* HV_PROCESS_COUNTER */
+>> +	PartitionVirtualProcessors		= 1,
+>> +	PartitionTlbSize			= 3,
+>> +	PartitionAddressSpaces			= 4,
+>> +	PartitionDepositedPages			= 5,
+>> +	PartitionGpaPages			= 6,
+>> +	PartitionGpaSpaceModifications		= 7,
+>> +	PartitionVirtualTlbFlushEntires		= 8,
+>> +	PartitionRecommendedTlbSize		= 9,
+>> +	PartitionGpaPages4K			= 10,
+>> +	PartitionGpaPages2M			= 11,
+>> +	PartitionGpaPages1G			= 12,
+>> +	PartitionGpaPages512G			= 13,
+>> +	PartitionDevicePages4K			= 14,
+>> +	PartitionDevicePages2M			= 15,
+>> +	PartitionDevicePages1G			= 16,
+>> +	PartitionDevicePages512G		= 17,
+>> +	PartitionAttachedDevices		= 18,
+>> +	PartitionDeviceInterruptMappings	= 19,
+>> +	PartitionIoTlbFlushes			= 20,
+>> +	PartitionIoTlbFlushCost			= 21,
+>> +	PartitionDeviceInterruptErrors		= 22,
+>> +	PartitionDeviceDmaErrors		= 23,
+>> +	PartitionDeviceInterruptThrottleEvents	= 24,
+>> +	PartitionSkippedTimerTicks		= 25,
+>> +	PartitionPartitionId			= 26,
+>> +#if IS_ENABLED(CONFIG_X86_64)
+>> +	PartitionNestedTlbSize			= 27,
+>> +	PartitionRecommendedNestedTlbSize	= 28,
+>> +	PartitionNestedTlbFreeListSize		= 29,
+>> +	PartitionNestedTlbTrimmedPages		= 30,
+>> +	PartitionPagesShattered			= 31,
+>> +	PartitionPagesRecombined		= 32,
+>> +	PartitionHwpRequestValue		= 33,
+>> +#elif IS_ENABLED(CONFIG_ARM64)
+>> +	PartitionHwpRequestValue		= 27,
+>> +#endif
+>> +	PartitionStatsMaxCounter
+>> +};
+>> +
+>> +enum hv_stats_vp_counters {			/* HV_THREAD_COUNTER */
+>> +	VpTotalRunTime					= 1,
+>> +	VpHypervisorRunTime				= 2,
+>> +	VpRemoteNodeRunTime				= 3,
+>> +	VpNormalizedRunTime				= 4,
+>> +	VpIdealCpu					= 5,
+>> +	VpHypercallsCount				= 7,
+>> +	VpHypercallsTime				= 8,
+>> +#if IS_ENABLED(CONFIG_X86_64)
+>> +	VpPageInvalidationsCount			= 9,
+>> +	VpPageInvalidationsTime				= 10,
+>> +	VpControlRegisterAccessesCount			= 11,
+>> +	VpControlRegisterAccessesTime			= 12,
+>> +	VpIoInstructionsCount				= 13,
+>> +	VpIoInstructionsTime				= 14,
+>> +	VpHltInstructionsCount				= 15,
+>> +	VpHltInstructionsTime				= 16,
+>> +	VpMwaitInstructionsCount			= 17,
+>> +	VpMwaitInstructionsTime				= 18,
+>> +	VpCpuidInstructionsCount			= 19,
+>> +	VpCpuidInstructionsTime				= 20,
+>> +	VpMsrAccessesCount				= 21,
+>> +	VpMsrAccessesTime				= 22,
+>> +	VpOtherInterceptsCount				= 23,
+>> +	VpOtherInterceptsTime				= 24,
+>> +	VpExternalInterruptsCount			= 25,
+>> +	VpExternalInterruptsTime			= 26,
+>> +	VpPendingInterruptsCount			= 27,
+>> +	VpPendingInterruptsTime				= 28,
+>> +	VpEmulatedInstructionsCount			= 29,
+>> +	VpEmulatedInstructionsTime			= 30,
+>> +	VpDebugRegisterAccessesCount			= 31,
+>> +	VpDebugRegisterAccessesTime			= 32,
+>> +	VpPageFaultInterceptsCount			= 33,
+>> +	VpPageFaultInterceptsTime			= 34,
+>> +	VpGuestPageTableMaps				= 35,
+>> +	VpLargePageTlbFills				= 36,
+>> +	VpSmallPageTlbFills				= 37,
+>> +	VpReflectedGuestPageFaults			= 38,
+>> +	VpApicMmioAccesses				= 39,
+>> +	VpIoInterceptMessages				= 40,
+>> +	VpMemoryInterceptMessages			= 41,
+>> +	VpApicEoiAccesses				= 42,
+>> +	VpOtherMessages					= 43,
+>> +	VpPageTableAllocations				= 44,
+>> +	VpLogicalProcessorMigrations			= 45,
+>> +	VpAddressSpaceEvictions				= 46,
+>> +	VpAddressSpaceSwitches				= 47,
+>> +	VpAddressDomainFlushes				= 48,
+>> +	VpAddressSpaceFlushes				= 49,
+>> +	VpGlobalGvaRangeFlushes				= 50,
+>> +	VpLocalGvaRangeFlushes				= 51,
+>> +	VpPageTableEvictions				= 52,
+>> +	VpPageTableReclamations				= 53,
+>> +	VpPageTableResets				= 54,
+>> +	VpPageTableValidations				= 55,
+>> +	VpApicTprAccesses				= 56,
+>> +	VpPageTableWriteIntercepts			= 57,
+>> +	VpSyntheticInterrupts				= 58,
+>> +	VpVirtualInterrupts				= 59,
+>> +	VpApicIpisSent					= 60,
+>> +	VpApicSelfIpisSent				= 61,
+>> +	VpGpaSpaceHypercalls				= 62,
+>> +	VpLogicalProcessorHypercalls			= 63,
+>> +	VpLongSpinWaitHypercalls			= 64,
+>> +	VpOtherHypercalls				= 65,
+>> +	VpSyntheticInterruptHypercalls			= 66,
+>> +	VpVirtualInterruptHypercalls			= 67,
+>> +	VpVirtualMmuHypercalls				= 68,
+>> +	VpVirtualProcessorHypercalls			= 69,
+>> +	VpHardwareInterrupts				= 70,
+>> +	VpNestedPageFaultInterceptsCount		= 71,
+>> +	VpNestedPageFaultInterceptsTime			= 72,
+>> +	VpPageScans					= 73,
+>> +	VpLogicalProcessorDispatches			= 74,
+>> +	VpWaitingForCpuTime				= 75,
+>> +	VpExtendedHypercalls				= 76,
+>> +	VpExtendedHypercallInterceptMessages		= 77,
+>> +	VpMbecNestedPageTableSwitches			= 78,
+>> +	VpOtherReflectedGuestExceptions			= 79,
+>> +	VpGlobalIoTlbFlushes				= 80,
+>> +	VpGlobalIoTlbFlushCost				= 81,
+>> +	VpLocalIoTlbFlushes				= 82,
+>> +	VpLocalIoTlbFlushCost				= 83,
+>> +	VpHypercallsForwardedCount			= 84,
+>> +	VpHypercallsForwardingTime			= 85,
+>> +	VpPageInvalidationsForwardedCount		= 86,
+>> +	VpPageInvalidationsForwardingTime		= 87,
+>> +	VpControlRegisterAccessesForwardedCount		= 88,
+>> +	VpControlRegisterAccessesForwardingTime		= 89,
+>> +	VpIoInstructionsForwardedCount			= 90,
+>> +	VpIoInstructionsForwardingTime			= 91,
+>> +	VpHltInstructionsForwardedCount			= 92,
+>> +	VpHltInstructionsForwardingTime			= 93,
+>> +	VpMwaitInstructionsForwardedCount		= 94,
+>> +	VpMwaitInstructionsForwardingTime		= 95,
+>> +	VpCpuidInstructionsForwardedCount		= 96,
+>> +	VpCpuidInstructionsForwardingTime		= 97,
+>> +	VpMsrAccessesForwardedCount			= 98,
+>> +	VpMsrAccessesForwardingTime			= 99,
+>> +	VpOtherInterceptsForwardedCount			= 100,
+>> +	VpOtherInterceptsForwardingTime			= 101,
+>> +	VpExternalInterruptsForwardedCount		= 102,
+>> +	VpExternalInterruptsForwardingTime		= 103,
+>> +	VpPendingInterruptsForwardedCount		= 104,
+>> +	VpPendingInterruptsForwardingTime		= 105,
+>> +	VpEmulatedInstructionsForwardedCount		= 106,
+>> +	VpEmulatedInstructionsForwardingTime		= 107,
+>> +	VpDebugRegisterAccessesForwardedCount		= 108,
+>> +	VpDebugRegisterAccessesForwardingTime		= 109,
+>> +	VpPageFaultInterceptsForwardedCount		= 110,
+>> +	VpPageFaultInterceptsForwardingTime		= 111,
+>> +	VpVmclearEmulationCount				= 112,
+>> +	VpVmclearEmulationTime				= 113,
+>> +	VpVmptrldEmulationCount				= 114,
+>> +	VpVmptrldEmulationTime				= 115,
+>> +	VpVmptrstEmulationCount				= 116,
+>> +	VpVmptrstEmulationTime				= 117,
+>> +	VpVmreadEmulationCount				= 118,
+>> +	VpVmreadEmulationTime				= 119,
+>> +	VpVmwriteEmulationCount				= 120,
+>> +	VpVmwriteEmulationTime				= 121,
+>> +	VpVmxoffEmulationCount				= 122,
+>> +	VpVmxoffEmulationTime				= 123,
+>> +	VpVmxonEmulationCount				= 124,
+>> +	VpVmxonEmulationTime				= 125,
+>> +	VpNestedVMEntriesCount				= 126,
+>> +	VpNestedVMEntriesTime				= 127,
+>> +	VpNestedSLATSoftPageFaultsCount			= 128,
+>> +	VpNestedSLATSoftPageFaultsTime			= 129,
+>> +	VpNestedSLATHardPageFaultsCount			= 130,
+>> +	VpNestedSLATHardPageFaultsTime			= 131,
+>> +	VpInvEptAllContextEmulationCount		= 132,
+>> +	VpInvEptAllContextEmulationTime			= 133,
+>> +	VpInvEptSingleContextEmulationCount		= 134,
+>> +	VpInvEptSingleContextEmulationTime		= 135,
+>> +	VpInvVpidAllContextEmulationCount		= 136,
+>> +	VpInvVpidAllContextEmulationTime		= 137,
+>> +	VpInvVpidSingleContextEmulationCount		= 138,
+>> +	VpInvVpidSingleContextEmulationTime		= 139,
+>> +	VpInvVpidSingleAddressEmulationCount		= 140,
+>> +	VpInvVpidSingleAddressEmulationTime		= 141,
+>> +	VpNestedTlbPageTableReclamations		= 142,
+>> +	VpNestedTlbPageTableEvictions			= 143,
+>> +	VpFlushGuestPhysicalAddressSpaceHypercalls	= 144,
+>> +	VpFlushGuestPhysicalAddressListHypercalls	= 145,
+>> +	VpPostedInterruptNotifications			= 146,
+>> +	VpPostedInterruptScans				= 147,
+>> +	VpTotalCoreRunTime				= 148,
+>> +	VpMaximumRunTime				= 149,
+>> +	VpHwpRequestContextSwitches			= 150,
+>> +	VpWaitingForCpuTimeBucket0			= 151,
+>> +	VpWaitingForCpuTimeBucket1			= 152,
+>> +	VpWaitingForCpuTimeBucket2			= 153,
+>> +	VpWaitingForCpuTimeBucket3			= 154,
+>> +	VpWaitingForCpuTimeBucket4			= 155,
+>> +	VpWaitingForCpuTimeBucket5			= 156,
+>> +	VpWaitingForCpuTimeBucket6			= 157,
+>> +	VpVmloadEmulationCount				= 158,
+>> +	VpVmloadEmulationTime				= 159,
+>> +	VpVmsaveEmulationCount				= 160,
+>> +	VpVmsaveEmulationTime				= 161,
+>> +	VpGifInstructionEmulationCount			= 162,
+>> +	VpGifInstructionEmulationTime			= 163,
+>> +	VpEmulatedErrataSvmInstructions			= 164,
+>> +	VpPlaceholder1					= 165,
+>> +	VpPlaceholder2					= 166,
+>> +	VpPlaceholder3					= 167,
+>> +	VpPlaceholder4					= 168,
+>> +	VpPlaceholder5					= 169,
+>> +	VpPlaceholder6					= 170,
+>> +	VpPlaceholder7					= 171,
+>> +	VpPlaceholder8					= 172,
+>> +	VpPlaceholder9					= 173,
+>> +	VpPlaceholder10					= 174,
+>> +	VpSchedulingPriority				= 175,
+>> +	VpRdpmcInstructionsCount			= 176,
+>> +	VpRdpmcInstructionsTime				= 177,
+>> +	VpPerfmonPmuMsrAccessesCount			= 178,
+>> +	VpPerfmonLbrMsrAccessesCount			= 179,
+>> +	VpPerfmonIptMsrAccessesCount			= 180,
+>> +	VpPerfmonInterruptCount				= 181,
+>> +	VpVtl1DispatchCount				= 182,
+>> +	VpVtl2DispatchCount				= 183,
+>> +	VpVtl2DispatchBucket0				= 184,
+>> +	VpVtl2DispatchBucket1				= 185,
+>> +	VpVtl2DispatchBucket2				= 186,
+>> +	VpVtl2DispatchBucket3				= 187,
+>> +	VpVtl2DispatchBucket4				= 188,
+>> +	VpVtl2DispatchBucket5				= 189,
+>> +	VpVtl2DispatchBucket6				= 190,
+>> +	VpVtl1RunTime					= 191,
+>> +	VpVtl2RunTime					= 192,
+>> +	VpIommuHypercalls				= 193,
+>> +	VpCpuGroupHypercalls				= 194,
+>> +	VpVsmHypercalls					= 195,
+>> +	VpEventLogHypercalls				= 196,
+>> +	VpDeviceDomainHypercalls			= 197,
+>> +	VpDepositHypercalls				= 198,
+>> +	VpSvmHypercalls					= 199,
+>> +	VpBusLockAcquisitionCount			= 200,
+>> +	VpLoadAvg					= 201,
+>> +	VpRootDispatchThreadBlocked			= 202,
+>> +#elif IS_ENABLED(CONFIG_ARM64)
+>> +	VpSysRegAccessesCount				= 9,
+>> +	VpSysRegAccessesTime				= 10,
+>> +	VpSmcInstructionsCount				= 11,
+>> +	VpSmcInstructionsTime				= 12,
+>> +	VpOtherInterceptsCount				= 13,
+>> +	VpOtherInterceptsTime				= 14,
+>> +	VpExternalInterruptsCount			= 15,
+>> +	VpExternalInterruptsTime			= 16,
+>> +	VpPendingInterruptsCount			= 17,
+>> +	VpPendingInterruptsTime				= 18,
+>> +	VpGuestPageTableMaps				= 19,
+>> +	VpLargePageTlbFills				= 20,
+>> +	VpSmallPageTlbFills				= 21,
+>> +	VpReflectedGuestPageFaults			= 22,
+>> +	VpMemoryInterceptMessages			= 23,
+>> +	VpOtherMessages					= 24,
+>> +	VpLogicalProcessorMigrations			= 25,
+>> +	VpAddressDomainFlushes				= 26,
+>> +	VpAddressSpaceFlushes				= 27,
+>> +	VpSyntheticInterrupts				= 28,
+>> +	VpVirtualInterrupts				= 29,
+>> +	VpApicSelfIpisSent				= 30,
+>> +	VpGpaSpaceHypercalls				= 31,
+>> +	VpLogicalProcessorHypercalls			= 32,
+>> +	VpLongSpinWaitHypercalls			= 33,
+>> +	VpOtherHypercalls				= 34,
+>> +	VpSyntheticInterruptHypercalls			= 35,
+>> +	VpVirtualInterruptHypercalls			= 36,
+>> +	VpVirtualMmuHypercalls				= 37,
+>> +	VpVirtualProcessorHypercalls			= 38,
+>> +	VpHardwareInterrupts				= 39,
+>> +	VpNestedPageFaultInterceptsCount		= 40,
+>> +	VpNestedPageFaultInterceptsTime			= 41,
+>> +	VpLogicalProcessorDispatches			= 42,
+>> +	VpWaitingForCpuTime				= 43,
+>> +	VpExtendedHypercalls				= 44,
+>> +	VpExtendedHypercallInterceptMessages		= 45,
+>> +	VpMbecNestedPageTableSwitches			= 46,
+>> +	VpOtherReflectedGuestExceptions			= 47,
+>> +	VpGlobalIoTlbFlushes				= 48,
+>> +	VpGlobalIoTlbFlushCost				= 49,
+>> +	VpLocalIoTlbFlushes				= 50,
+>> +	VpLocalIoTlbFlushCost				= 51,
+>> +	VpFlushGuestPhysicalAddressSpaceHypercalls	= 52,
+>> +	VpFlushGuestPhysicalAddressListHypercalls	= 53,
+>> +	VpPostedInterruptNotifications			= 54,
+>> +	VpPostedInterruptScans				= 55,
+>> +	VpTotalCoreRunTime				= 56,
+>> +	VpMaximumRunTime				= 57,
+>> +	VpWaitingForCpuTimeBucket0			= 58,
+>> +	VpWaitingForCpuTimeBucket1			= 59,
+>> +	VpWaitingForCpuTimeBucket2			= 60,
+>> +	VpWaitingForCpuTimeBucket3			= 61,
+>> +	VpWaitingForCpuTimeBucket4			= 62,
+>> +	VpWaitingForCpuTimeBucket5			= 63,
+>> +	VpWaitingForCpuTimeBucket6			= 64,
+>> +	VpHwpRequestContextSwitches			= 65,
+>> +	VpPlaceholder2					= 66,
+>> +	VpPlaceholder3					= 67,
+>> +	VpPlaceholder4					= 68,
+>> +	VpPlaceholder5					= 69,
+>> +	VpPlaceholder6					= 70,
+>> +	VpPlaceholder7					= 71,
+>> +	VpPlaceholder8					= 72,
+>> +	VpContentionTime				= 73,
+>> +	VpWakeUpTime					= 74,
+>> +	VpSchedulingPriority				= 75,
+>> +	VpVtl1DispatchCount				= 76,
+>> +	VpVtl2DispatchCount				= 77,
+>> +	VpVtl2DispatchBucket0				= 78,
+>> +	VpVtl2DispatchBucket1				= 79,
+>> +	VpVtl2DispatchBucket2				= 80,
+>> +	VpVtl2DispatchBucket3				= 81,
+>> +	VpVtl2DispatchBucket4				= 82,
+>> +	VpVtl2DispatchBucket5				= 83,
+>> +	VpVtl2DispatchBucket6				= 84,
+>> +	VpVtl1RunTime					= 85,
+>> +	VpVtl2RunTime					= 86,
+>> +	VpIommuHypercalls				= 87,
+>> +	VpCpuGroupHypercalls				= 88,
+>> +	VpVsmHypercalls					= 89,
+>> +	VpEventLogHypercalls				= 90,
+>> +	VpDeviceDomainHypercalls			= 91,
+>> +	VpDepositHypercalls				= 92,
+>> +	VpSvmHypercalls					= 93,
+>> +	VpLoadAvg					= 94,
+>> +	VpRootDispatchThreadBlocked			= 95,
+>> +#endif
+>> +	VpStatsMaxCounter
+>> +};
+>> +
+>> +enum hv_stats_lp_counters {			/* HV_CPU_COUNTER */
+>> +	LpGlobalTime				= 1,
+>> +	LpTotalRunTime				= 2,
+>> +	LpHypervisorRunTime			= 3,
+>> +	LpHardwareInterrupts			= 4,
+>> +	LpContextSwitches			= 5,
+>> +	LpInterProcessorInterrupts		= 6,
+>> +	LpSchedulerInterrupts			= 7,
+>> +	LpTimerInterrupts			= 8,
+>> +	LpInterProcessorInterruptsSent		= 9,
+>> +	LpProcessorHalts			= 10,
+>> +	LpMonitorTransitionCost			= 11,
+>> +	LpContextSwitchTime			= 12,
+>> +	LpC1TransitionsCount			= 13,
+>> +	LpC1RunTime				= 14,
+>> +	LpC2TransitionsCount			= 15,
+>> +	LpC2RunTime				= 16,
+>> +	LpC3TransitionsCount			= 17,
+>> +	LpC3RunTime				= 18,
+>> +	LpRootVpIndex				= 19,
+>> +	LpIdleSequenceNumber			= 20,
+>> +	LpGlobalTscCount			= 21,
+>> +	LpActiveTscCount			= 22,
+>> +	LpIdleAccumulation			= 23,
+>> +	LpReferenceCycleCount0			= 24,
+>> +	LpActualCycleCount0			= 25,
+>> +	LpReferenceCycleCount1			= 26,
+>> +	LpActualCycleCount1			= 27,
+>> +	LpProximityDomainId			= 28,
+>> +	LpPostedInterruptNotifications		= 29,
+>> +	LpBranchPredictorFlushes		= 30,
+>> +#if IS_ENABLED(CONFIG_X86_64)
+>> +	LpL1DataCacheFlushes			= 31,
+>> +	LpImmediateL1DataCacheFlushes		= 32,
+>> +	LpMbFlushes				= 33,
+>> +	LpCounterRefreshSequenceNumber		= 34,
+>> +	LpCounterRefreshReferenceTime		= 35,
+>> +	LpIdleAccumulationSnapshot		= 36,
+>> +	LpActiveTscCountSnapshot		= 37,
+>> +	LpHwpRequestContextSwitches		= 38,
+>> +	LpPlaceholder1				= 39,
+>> +	LpPlaceholder2				= 40,
+>> +	LpPlaceholder3				= 41,
+>> +	LpPlaceholder4				= 42,
+>> +	LpPlaceholder5				= 43,
+>> +	LpPlaceholder6				= 44,
+>> +	LpPlaceholder7				= 45,
+>> +	LpPlaceholder8				= 46,
+>> +	LpPlaceholder9				= 47,
+>> +	LpPlaceholder10				= 48,
+>> +	LpReserveGroupId			= 49,
+>> +	LpRunningPriority			= 50,
+>> +	LpPerfmonInterruptCount			= 51,
+>> +#elif IS_ENABLED(CONFIG_ARM64)
+>> +	LpCounterRefreshSequenceNumber		= 31,
+>> +	LpCounterRefreshReferenceTime		= 32,
+>> +	LpIdleAccumulationSnapshot		= 33,
+>> +	LpActiveTscCountSnapshot		= 34,
+>> +	LpHwpRequestContextSwitches		= 35,
+>> +	LpPlaceholder2				= 36,
+>> +	LpPlaceholder3				= 37,
+>> +	LpPlaceholder4				= 38,
+>> +	LpPlaceholder5				= 39,
+>> +	LpPlaceholder6				= 40,
+>> +	LpPlaceholder7				= 41,
+>> +	LpPlaceholder8				= 42,
+>> +	LpPlaceholder9				= 43,
+>> +	LpSchLocalRunListSize			= 44,
+>> +	LpReserveGroupId			= 45,
+>> +	LpRunningPriority			= 46,
+>> +#endif
+>> +	LpStatsMaxCounter
+>> +};
+>> +
+>> +/*
+>> + * Hypervisor statistics page format
+>> + */
+>> +struct hv_stats_page {
+>> +	union {
+>> +		u64 hv_cntrs[HvStatsMaxCounter];		/* Hypervisor counters */
+>> +		u64 pt_cntrs[PartitionStatsMaxCounter];		/* Partition counters */
+>> +		u64 vp_cntrs[VpStatsMaxCounter];		/* VP counters */
+>> +		u64 lp_cntrs[LpStatsMaxCounter];		/* LP counters */
+>> +		u8 data[HV_HYP_PAGE_SIZE];
+>> +	};
+>> +} __packed;
+>> +
+>>  /* Bits for dirty mask of hv_vp_register_page */
+>>  #define HV_X64_REGISTER_CLASS_GENERAL	0
+>>  #define HV_X64_REGISTER_CLASS_IP	1
 >> -- 
->> 2.51.2.vfs.0.1
->>
-> 
-> TBH, all these new names look ugly to me. Moreover, they are redundant.
-> For example, region->type makes it clear that we're talking about the
-> type *of a region*. Calling it mreg_type adds no additional semantic
-> information; it's just visual noise.
-> 
-> Coming to the part about finding it via grep/cscope. You could have
-> easily found these reference by searching for "region->type",
-> "region->mni" etc. Perhaps we can change the variable naming convention
-> i.e. call a struct mshv_mem_region "mreg" everywhere and then one could
-> grep for "mreg->mni" and so on. Also, using more powerful tools such as
-> LSPs (clangd) can help find references more easily without tripping up
-> on common terms like "type", "pages" etc.
-
-Huh! There is no way to enforce that one use ptrs with only certain names,
-and that is unreasonable requirement. What if the field is accessed by
-struct.field reference? Are you suggesting that struct naming be enforced?
-Ability to read code is far far more important to make sure bug free code
-is written, it is a very small price for a large benefit. One gets used to
-it so easily. Why do we prefix function names with mshv_ or hv_, should
-we get rid of that also? And it's not just cscope or grep, sometimes
-you're dealing with corrupt binary or coredump and you use "strings"
-to get some meaning out of it. So I totally disagree with you. If you
-don't like mreg_, please suggest alternates that are easy to find.
+>> 2.34.1
 
 
