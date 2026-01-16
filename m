@@ -1,102 +1,388 @@
-Return-Path: <linux-hyperv+bounces-8351-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8352-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC374D38915
-	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Jan 2026 23:06:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EA26FD38974
+	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Jan 2026 23:49:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 75034302D2FC
-	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Jan 2026 22:06:26 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7F6C23036C60
+	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Jan 2026 22:49:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5BBC2F8BD3;
-	Fri, 16 Jan 2026 22:06:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DE657260D;
+	Fri, 16 Jan 2026 22:49:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ki7+D5zM"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nwmj7j8G"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFBA2F49F8;
-	Fri, 16 Jan 2026 22:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CCE12DE6FF
+	for <linux-hyperv@vger.kernel.org>; Fri, 16 Jan 2026 22:49:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768601183; cv=none; b=URGiwwEF7G6MprgHF2SXcC56RMx5gUGR+D4FLeslBJu1xAlVkUYCx9zFNF+HjPUyn77qYtTtdD4C12tauawtjqRDpyzbwlBzGW7jpEQgSXySfWMYjBraBh+uhmBbn+Tf4Lm8I5BiGy17fFV2Bk21D2/dzppWCcYMrz5CnXX0wBI=
+	t=1768603758; cv=none; b=Qo8Z5+oMg+gTR/FZ2/B+nqpxuglpz8d8sW0jC4exlntbuRmmB0rp2xrVVWkPjOR8YtQs7CjgIdb5JnsA0NzzDHY5RLPKds/pnN5CwSJMdDzECoF7AmaQwIZKGL9Ddahy9qo2FGYdKoG97LJKoo7I8cgB/nciq9AyDqn4rVSbf1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768601183; c=relaxed/simple;
-	bh=EzzsnpJqQeFX65vdO2xqUr8mbhB6kqT5NEAk1PFa+Bo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=g6CH17NLbkVXUM26F1B9znrfrsZQiTuhto5SjYs5y3a0HjSus0oCOeoj2ssp70t3BtfdkBYQ5YVhc5s1g+kFR1QgP1oVEmp4xCq+M4GPfe6i+MdTDiuEdMTXIY6BMTgW8tlqeY1GxWyeJkVG9Iu5aovgrrQhDo7Wku+JlplOPY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ki7+D5zM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31BF3C116C6;
-	Fri, 16 Jan 2026 22:06:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768601183;
-	bh=EzzsnpJqQeFX65vdO2xqUr8mbhB6kqT5NEAk1PFa+Bo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=ki7+D5zMdagPdM1BslM407qhVB0UbFVvlLrCm55ESIxA/+GBlqgePANqrCiw8v0Ye
-	 fIoPozH/TPNbLWVTTqAnNuRptROlUrMzU/ng5KOLiyFLWdqcvL1OZlUAfhtMJTE3x/
-	 s5fYlggQ2DGNWORsEYTKSAhQ9cc96ANESuXW0PFpKsPU17/RF17xIxJPU78SfPoM3w
-	 f3eJ7dZPsakq1VLDcztSfbVHDov21ycDL8TYtHTkduQwuu4DL88vboujReTE7khqzP
-	 zXkkzSqj4pooSZX+oRdWPGt+tE5SZyXM4RYRE3onIusjCHHUcb+C6J+TuX05/Yoc8i
-	 GzfaplnTEC6CA==
-From: Nathan Chancellor <nathan@kernel.org>
-To: "K. Y. Srinivasan" <kys@microsoft.com>, 
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
- Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
- Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- Hans de Goede <hansg@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
- llvm@lists.linux.dev, kernel test robot <lkp@intel.com>
-In-Reply-To: <20260115-kbuild-alignment-vbox-v1-0-076aed1623ff@linutronix.de>
-References: <20260115-kbuild-alignment-vbox-v1-0-076aed1623ff@linutronix.de>
-Subject: Re: [PATCH 0/2] kbuild, uapi: Mark inner unions in packed structs
- as packed
-Message-Id: <176860117992.3208640.15511985701328893417.b4-ty@kernel.org>
-Date: Fri, 16 Jan 2026 15:06:19 -0700
+	s=arc-20240116; t=1768603758; c=relaxed/simple;
+	bh=cdv+hEgf9dzjp0uJ2BKfkXilBppNVShepQRlyjTTc+8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G4Nxndih+CaWhLMEb50KBeZiU6BwWqd61mfQ/zKzVqPyXfk5HAUuS2SeFSRi9SO1r/bDbU016eb9XASlntOnOxQDflp3lfm3l28Yc304H5kmqhlUy/dC2SvLFwYFvNyA9rgJIOtkpv7jdHj4wy19Z/bGmTfDsfQS2QIooT4/BMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=nwmj7j8G; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from mrdev.corp.microsoft.com (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 2F7B520B7165;
+	Fri, 16 Jan 2026 14:49:16 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2F7B520B7165
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1768603756;
+	bh=Hn7Z2adtvmkPKPCVOp5PZ2Uo7ddeQSCjycoqDkcZK6k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nwmj7j8G0VkDyhZo3Bhy5HnM0Sr6zUEZa44reO34wBbhZjxdWQBcT2pdI6c4Vb9TG
+	 ebVwNGJMP9MkkSo7KikXkHp96FiTmhg2So4sacrOSfHSjm/0GWaQXiQ9LDjGUkUd/e
+	 yQFLbMGywBh6cKuu+4zWpzTrV5B+hxj6Eb+Cgmis=
+From: Mukesh Rathor <mrathor@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org
+Cc: wei.liu@kernel.org,
+	nunodasneves@linux.microsoft.com
+Subject: [PATCH v2] mshv: make certain field names descriptive in a header struct
+Date: Fri, 16 Jan 2026 14:49:04 -0800
+Message-ID: <20260116224904.2532807-1-mrathor@linux.microsoft.com>
+X-Mailer: git-send-email 2.51.2.vfs.0.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev
 
-On Thu, 15 Jan 2026 08:35:43 +0100, Thomas Weißschuh wrote:
-> The unpacked unions within a packed struct generates alignment warnings
-> on clang for 32-bit ARM.
-> 
-> With the recent changes to compile-test the UAPI headers in more cases,
-> these warning in combination with CONFIG_WERROR breaks the build.
-> 
-> Fix the warnings.
-> 
-> [...]
+When struct fields use very common names like "pages" or "type", it makes
+it difficult to find uses of these fields with tools like grep, cscope,
+etc when the struct is in a header file included in many places. Add the
+prefix mreg_ to some fields in struct mshv_mem_region to make it easier
+to find them.
 
-Applied to
+There is no functional change.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/kbuild/linux.git kbuild-next
+Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+---
+v2: make mutex and refcount descriptive also.
 
-Thanks!
+ drivers/hv/mshv_regions.c   | 66 ++++++++++++++++++-------------------
+ drivers/hv/mshv_root.h      | 10 +++---
+ drivers/hv/mshv_root_main.c | 10 +++---
+ 3 files changed, 43 insertions(+), 43 deletions(-)
 
-[1/2] hyper-v: Mark inner union in hv_kvp_exchg_msg_value as packed
-      https://git.kernel.org/kbuild/c/1e5271393d777
-[2/2] virt: vbox: uapi: Mark inner unions in packed structs as packed
-      https://git.kernel.org/kbuild/c/c25d01e1c4f2d
-
-Please look out for regression or issue reports or other follow up
-comments, as they may result in the patch/series getting dropped or
-reverted. Patches applied to an "unstable" branch are accepted pending
-wider testing in -next and any post-commit review; they will generally
-be moved to the main branch in a week if no issues are found.
-
-Best regards,
+diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
+index 202b9d551e39..fec8ae9b2069 100644
+--- a/drivers/hv/mshv_regions.c
++++ b/drivers/hv/mshv_regions.c
+@@ -52,7 +52,7 @@ static long mshv_region_process_chunk(struct mshv_mem_region *region,
+ 	struct page *page;
+ 	int ret;
+ 
+-	page = region->pages[page_offset];
++	page = region->mreg_pages[page_offset];
+ 	if (!page)
+ 		return -EINVAL;
+ 
+@@ -65,7 +65,7 @@ static long mshv_region_process_chunk(struct mshv_mem_region *region,
+ 
+ 	/* Start at stride since the first page is validated */
+ 	for (count = stride; count < page_count; count += stride) {
+-		page = region->pages[page_offset + count];
++		page = region->mreg_pages[page_offset + count];
+ 
+ 		/* Break if current page is not present */
+ 		if (!page)
+@@ -117,7 +117,7 @@ static int mshv_region_process_range(struct mshv_mem_region *region,
+ 
+ 	while (page_count) {
+ 		/* Skip non-present pages */
+-		if (!region->pages[page_offset]) {
++		if (!region->mreg_pages[page_offset]) {
+ 			page_offset++;
+ 			page_count--;
+ 			continue;
+@@ -155,7 +155,7 @@ struct mshv_mem_region *mshv_region_create(u64 guest_pfn, u64 nr_pages,
+ 	if (flags & BIT(MSHV_SET_MEM_BIT_EXECUTABLE))
+ 		region->hv_map_flags |= HV_MAP_GPA_EXECUTABLE;
+ 
+-	kref_init(&region->refcount);
++	kref_init(&region->mreg_refcount);
+ 
+ 	return region;
+ }
+@@ -164,13 +164,13 @@ static int mshv_region_chunk_share(struct mshv_mem_region *region,
+ 				   u32 flags,
+ 				   u64 page_offset, u64 page_count)
+ {
+-	struct page *page = region->pages[page_offset];
++	struct page *page = region->mreg_pages[page_offset];
+ 
+ 	if (PageHuge(page) || PageTransCompound(page))
+ 		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
+ 
+ 	return hv_call_modify_spa_host_access(region->partition->pt_id,
+-					      region->pages + page_offset,
++					      region->mreg_pages + page_offset,
+ 					      page_count,
+ 					      HV_MAP_GPA_READABLE |
+ 					      HV_MAP_GPA_WRITABLE,
+@@ -190,13 +190,13 @@ static int mshv_region_chunk_unshare(struct mshv_mem_region *region,
+ 				     u32 flags,
+ 				     u64 page_offset, u64 page_count)
+ {
+-	struct page *page = region->pages[page_offset];
++	struct page *page = region->mreg_pages[page_offset];
+ 
+ 	if (PageHuge(page) || PageTransCompound(page))
+ 		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
+ 
+ 	return hv_call_modify_spa_host_access(region->partition->pt_id,
+-					      region->pages + page_offset,
++					      region->mreg_pages + page_offset,
+ 					      page_count, 0,
+ 					      flags, false);
+ }
+@@ -214,7 +214,7 @@ static int mshv_region_chunk_remap(struct mshv_mem_region *region,
+ 				   u32 flags,
+ 				   u64 page_offset, u64 page_count)
+ {
+-	struct page *page = region->pages[page_offset];
++	struct page *page = region->mreg_pages[page_offset];
+ 
+ 	if (PageHuge(page) || PageTransCompound(page))
+ 		flags |= HV_MAP_GPA_LARGE_PAGE;
+@@ -222,7 +222,7 @@ static int mshv_region_chunk_remap(struct mshv_mem_region *region,
+ 	return hv_call_map_gpa_pages(region->partition->pt_id,
+ 				     region->start_gfn + page_offset,
+ 				     page_count, flags,
+-				     region->pages + page_offset);
++				     region->mreg_pages + page_offset);
+ }
+ 
+ static int mshv_region_remap_pages(struct mshv_mem_region *region,
+@@ -245,10 +245,10 @@ int mshv_region_map(struct mshv_mem_region *region)
+ static void mshv_region_invalidate_pages(struct mshv_mem_region *region,
+ 					 u64 page_offset, u64 page_count)
+ {
+-	if (region->type == MSHV_REGION_TYPE_MEM_PINNED)
+-		unpin_user_pages(region->pages + page_offset, page_count);
++	if (region->mreg_type == MSHV_REGION_TYPE_MEM_PINNED)
++		unpin_user_pages(region->mreg_pages + page_offset, page_count);
+ 
+-	memset(region->pages + page_offset, 0,
++	memset(region->mreg_pages + page_offset, 0,
+ 	       page_count * sizeof(struct page *));
+ }
+ 
+@@ -265,7 +265,7 @@ int mshv_region_pin(struct mshv_mem_region *region)
+ 	int ret;
+ 
+ 	for (done_count = 0; done_count < region->nr_pages; done_count += ret) {
+-		pages = region->pages + done_count;
++		pages = region->mreg_pages + done_count;
+ 		userspace_addr = region->start_uaddr +
+ 				 done_count * HV_HYP_PAGE_SIZE;
+ 		nr_pages = min(region->nr_pages - done_count,
+@@ -297,7 +297,7 @@ static int mshv_region_chunk_unmap(struct mshv_mem_region *region,
+ 				   u32 flags,
+ 				   u64 page_offset, u64 page_count)
+ {
+-	struct page *page = region->pages[page_offset];
++	struct page *page = region->mreg_pages[page_offset];
+ 
+ 	if (PageHuge(page) || PageTransCompound(page))
+ 		flags |= HV_UNMAP_GPA_LARGE_PAGE;
+@@ -317,11 +317,11 @@ static int mshv_region_unmap(struct mshv_mem_region *region)
+ static void mshv_region_destroy(struct kref *ref)
+ {
+ 	struct mshv_mem_region *region =
+-		container_of(ref, struct mshv_mem_region, refcount);
++		container_of(ref, struct mshv_mem_region, mreg_refcount);
+ 	struct mshv_partition *partition = region->partition;
+ 	int ret;
+ 
+-	if (region->type == MSHV_REGION_TYPE_MEM_MOVABLE)
++	if (region->mreg_type == MSHV_REGION_TYPE_MEM_MOVABLE)
+ 		mshv_region_movable_fini(region);
+ 
+ 	if (mshv_partition_encrypted(partition)) {
+@@ -343,12 +343,12 @@ static void mshv_region_destroy(struct kref *ref)
+ 
+ void mshv_region_put(struct mshv_mem_region *region)
+ {
+-	kref_put(&region->refcount, mshv_region_destroy);
++	kref_put(&region->mreg_refcount, mshv_region_destroy);
+ }
+ 
+ int mshv_region_get(struct mshv_mem_region *region)
+ {
+-	return kref_get_unless_zero(&region->refcount);
++	return kref_get_unless_zero(&region->mreg_refcount);
+ }
+ 
+ /**
+@@ -374,16 +374,16 @@ static int mshv_region_hmm_fault_and_lock(struct mshv_mem_region *region,
+ 	int ret;
+ 
+ 	range->notifier_seq = mmu_interval_read_begin(range->notifier);
+-	mmap_read_lock(region->mni.mm);
++	mmap_read_lock(region->mreg_mni.mm);
+ 	ret = hmm_range_fault(range);
+-	mmap_read_unlock(region->mni.mm);
++	mmap_read_unlock(region->mreg_mni.mm);
+ 	if (ret)
+ 		return ret;
+ 
+-	mutex_lock(&region->mutex);
++	mutex_lock(&region->mreg_mutex);
+ 
+ 	if (mmu_interval_read_retry(range->notifier, range->notifier_seq)) {
+-		mutex_unlock(&region->mutex);
++		mutex_unlock(&region->mreg_mutex);
+ 		cond_resched();
+ 		return -EBUSY;
+ 	}
+@@ -407,7 +407,7 @@ static int mshv_region_range_fault(struct mshv_mem_region *region,
+ 				   u64 page_offset, u64 page_count)
+ {
+ 	struct hmm_range range = {
+-		.notifier = &region->mni,
++		.notifier = &region->mreg_mni,
+ 		.default_flags = HMM_PFN_REQ_FAULT | HMM_PFN_REQ_WRITE,
+ 	};
+ 	unsigned long *pfns;
+@@ -430,12 +430,12 @@ static int mshv_region_range_fault(struct mshv_mem_region *region,
+ 		goto out;
+ 
+ 	for (i = 0; i < page_count; i++)
+-		region->pages[page_offset + i] = hmm_pfn_to_page(pfns[i]);
++		region->mreg_pages[page_offset + i] = hmm_pfn_to_page(pfns[i]);
+ 
+ 	ret = mshv_region_remap_pages(region, region->hv_map_flags,
+ 				      page_offset, page_count);
+ 
+-	mutex_unlock(&region->mutex);
++	mutex_unlock(&region->mreg_mutex);
+ out:
+ 	kfree(pfns);
+ 	return ret;
+@@ -489,14 +489,14 @@ static bool mshv_region_interval_invalidate(struct mmu_interval_notifier *mni,
+ {
+ 	struct mshv_mem_region *region = container_of(mni,
+ 						      struct mshv_mem_region,
+-						      mni);
++						      mreg_mni);
+ 	u64 page_offset, page_count;
+ 	unsigned long mstart, mend;
+ 	int ret = -EPERM;
+ 
+ 	if (mmu_notifier_range_blockable(range))
+-		mutex_lock(&region->mutex);
+-	else if (!mutex_trylock(&region->mutex))
++		mutex_lock(&region->mreg_mutex);
++	else if (!mutex_trylock(&region->mreg_mutex))
+ 		goto out_fail;
+ 
+ 	mmu_interval_set_seq(mni, cur_seq);
+@@ -515,7 +515,7 @@ static bool mshv_region_interval_invalidate(struct mmu_interval_notifier *mni,
+ 
+ 	mshv_region_invalidate_pages(region, page_offset, page_count);
+ 
+-	mutex_unlock(&region->mutex);
++	mutex_unlock(&region->mreg_mutex);
+ 
+ 	return true;
+ 
+@@ -535,21 +535,21 @@ static const struct mmu_interval_notifier_ops mshv_region_mni_ops = {
+ 
+ void mshv_region_movable_fini(struct mshv_mem_region *region)
+ {
+-	mmu_interval_notifier_remove(&region->mni);
++	mmu_interval_notifier_remove(&region->mreg_mni);
+ }
+ 
+ bool mshv_region_movable_init(struct mshv_mem_region *region)
+ {
+ 	int ret;
+ 
+-	ret = mmu_interval_notifier_insert(&region->mni, current->mm,
++	ret = mmu_interval_notifier_insert(&region->mreg_mni, current->mm,
+ 					   region->start_uaddr,
+ 					   region->nr_pages << HV_HYP_PAGE_SHIFT,
+ 					   &mshv_region_mni_ops);
+ 	if (ret)
+ 		return false;
+ 
+-	mutex_init(&region->mutex);
++	mutex_init(&region->mreg_mutex);
+ 
+ 	return true;
+ }
+diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
+index 3c1d88b36741..2a03ad3dc574 100644
+--- a/drivers/hv/mshv_root.h
++++ b/drivers/hv/mshv_root.h
+@@ -79,16 +79,16 @@ enum mshv_region_type {
+ 
+ struct mshv_mem_region {
+ 	struct hlist_node hnode;
+-	struct kref refcount;
++	struct kref mreg_refcount;
+ 	u64 nr_pages;
+ 	u64 start_gfn;
+ 	u64 start_uaddr;
+ 	u32 hv_map_flags;
+ 	struct mshv_partition *partition;
+-	enum mshv_region_type type;
+-	struct mmu_interval_notifier mni;
+-	struct mutex mutex;	/* protects region pages remapping */
+-	struct page *pages[];
++	enum mshv_region_type mreg_type;
++	struct mmu_interval_notifier mreg_mni;
++	struct mutex mreg_mutex;	/* protects region pages remapping */
++	struct page *mreg_pages[];
+ };
+ 
+ struct mshv_irq_ack_notifier {
+diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+index 1134a82c7881..eff1b21461dc 100644
+--- a/drivers/hv/mshv_root_main.c
++++ b/drivers/hv/mshv_root_main.c
+@@ -657,7 +657,7 @@ static bool mshv_handle_gpa_intercept(struct mshv_vp *vp)
+ 		return false;
+ 
+ 	/* Only movable memory ranges are supported for GPA intercepts */
+-	if (region->type == MSHV_REGION_TYPE_MEM_MOVABLE)
++	if (region->mreg_type == MSHV_REGION_TYPE_MEM_MOVABLE)
+ 		ret = mshv_region_handle_gfn_fault(region, gfn);
+ 	else
+ 		ret = false;
+@@ -1175,12 +1175,12 @@ static int mshv_partition_create_region(struct mshv_partition *partition,
+ 		return PTR_ERR(rg);
+ 
+ 	if (is_mmio)
+-		rg->type = MSHV_REGION_TYPE_MMIO;
++		rg->mreg_type = MSHV_REGION_TYPE_MMIO;
+ 	else if (mshv_partition_encrypted(partition) ||
+ 		 !mshv_region_movable_init(rg))
+-		rg->type = MSHV_REGION_TYPE_MEM_PINNED;
++		rg->mreg_type = MSHV_REGION_TYPE_MEM_PINNED;
+ 	else
+-		rg->type = MSHV_REGION_TYPE_MEM_MOVABLE;
++		rg->mreg_type = MSHV_REGION_TYPE_MEM_MOVABLE;
+ 
+ 	rg->partition = partition;
+ 
+@@ -1297,7 +1297,7 @@ mshv_map_user_memory(struct mshv_partition *partition,
+ 	if (ret)
+ 		return ret;
+ 
+-	switch (region->type) {
++	switch (region->mreg_type) {
+ 	case MSHV_REGION_TYPE_MEM_PINNED:
+ 		ret = mshv_prepare_pinned_region(region);
+ 		break;
 -- 
-Nathan Chancellor <nathan@kernel.org>
+2.51.2.vfs.0.1
 
 
