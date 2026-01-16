@@ -1,198 +1,717 @@
-Return-Path: <linux-hyperv+bounces-8336-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8337-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8ACC8D372B1
-	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Jan 2026 18:18:47 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6FE0D3846C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Jan 2026 19:34:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 7C47E300079E
-	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Jan 2026 17:18:46 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id D799B300E4F0
+	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Jan 2026 18:34:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4485728C009;
-	Fri, 16 Jan 2026 17:18:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F396347FDE;
+	Fri, 16 Jan 2026 18:34:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ZHHJ1HJO"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RqHc/8q0"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazolkn19010019.outbound.protection.outlook.com [52.103.7.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC20518E1F;
-	Fri, 16 Jan 2026 17:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.7.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768583925; cv=fail; b=DfuatTlgXUDyKxBI5M1djs4XjAItFbMN4O7kXLRiwhPb0pPvPs73+uLPc2oDB+3iWE3J389pJX38Hy9G0AT0UKPWEFK5iOypE8ovNeKeYnYp2czp827BhfdOwNvOokSHlecssjVchF1ilOI8VM6ez1Cm68lRttHfPS0iruMZJzs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768583925; c=relaxed/simple;
-	bh=qHedPZ1+vmJ7xM5U7a85HCUSo6qRsBreTK8A55r6eoM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZkEAr7rggusgBrsXzNjww0/WVH+AOoXg6vQmlPufre3mYbk9gN0ZdEAAp08QAmvhlKXlvgQVuhSu80Dloy4GeME5VQ1kyGnuOXHzPw1fQY4F2YsoD/ZJOdm3WrJCbGJ9c+WRbHHH1I2hx+Il9Aa4zSL6xqVwwp9AGuce29tM9RA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ZHHJ1HJO; arc=fail smtp.client-ip=52.103.7.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=C90xqvdL68fnETFH8on5X/DOvIZEzNdsjsoNJW4whv5kLSkNcicckTwPJ7ZpGTZ6DNjxnzSSxCvzDSbuuxt+nNbQ7DFF4KsV2qDG5kgeHFm++4i2x+pN0mgwScpCuCtEvld0QYtVZQmneTgepnAmyDXpkOE0mB9Yb27/74o1ml1chFOdcD24RuH2+k40XqOaj9kPPULViJRysUPUJMW6Vmnts+FmZK+5+CRffOVkueddF8G+iRCMZ8EYSZu/ybAxN1qkd0T+Dx4cPtxi4qR74YnDmCU7Rjd6hKc3sMuR/4c/9aYWb7icYyr5bWTDeG1GHcLMDKXgIjb4zskuTW0qLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZKYAzt05Qi5B0NEFLgsrB37FtgPr7xWeGcsm6hdjGas=;
- b=l+aOFQrrmreM/deLKLP/mbKC82g8EZwy5m2uPyYGZSa5J006DK/Fo4qq80sihs3ZaJMmNoeGQDbNdIyZXPFCdI/EFZ6+O6K8OwAv+396Bfksc1AFRhRaY9WcZaVSw7CTA6m493VNNq3hdY/vKqL6EFleetD9I90dA8NOr5b4HoJFQKmbBIaKtEp5MOhna72xfj2L6/5rdPtKCngrpTmL4jvh36SijbnIUgZP6IeJ195eo97NvX2Dl983B+v0HGT8AcU7VvTrpaycje/n7GgYttBImzSEMu6K8iP9SDiuwkxn44NK3txcdY26p+XFiF3iQoZe4QuY0WvuvM3YC87anQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZKYAzt05Qi5B0NEFLgsrB37FtgPr7xWeGcsm6hdjGas=;
- b=ZHHJ1HJO3dbSxYBxnZ18iGVvqy3csN5FcNcJCj4cjnzFnYDfwq8kv/1R2cHRLBlwsS97y6viSO7cnTSt6Pmdw6RvDvGJHd9pmmarO9Z1RMWpBjY0bJuS3+4IQevfFadWtVPJXpv6Ii+aNwYK1CQrJP38M+1QHTp2wijVSuMy6NpKlSD1NmwVD700bl6goqWspFGjY0DnCQ1yza6XlUkPetU4nIohpkvp/X0OcXObb1aIH5KLKrJPv1ctPiyUSx5f3rHdMDrnLQ36vu6FyWxo20Hks7iDftdfXsTtuapYCg4/jsgi2iA5o1Hj1iDSicfUzS2ZVM8NMFylTEmuMig20w==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by DS0PR02MB9149.namprd02.prod.outlook.com (2603:10b6:8:13d::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.4; Fri, 16 Jan
- 2026 17:18:42 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%6]) with mapi id 15.20.9520.005; Fri, 16 Jan 2026
- 17:18:42 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Prasanna Kumar T S M <ptsm@linux.microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"longli@microsoft.com" <longli@microsoft.com>, "decui@microsoft.com"
-	<decui@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "kys@microsoft.com"
-	<kys@microsoft.com>, Helge Deller <deller@gmx.de>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/3] drivers: hv: vmbus_drv: Remove reference to hpyerv_fb
-Thread-Topic: [PATCH 2/3] drivers: hv: vmbus_drv: Remove reference to
- hpyerv_fb
-Thread-Index: AQHcdukiW7V7J9pkmEC7Z/gNYeylzLVVKQsA
-Date: Fri, 16 Jan 2026 17:18:41 +0000
-Message-ID:
- <SN6PR02MB4157835733E027C3BBAD0366D48DA@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <1766809486-24731-1-git-send-email-ptsm@linux.microsoft.com>
- <1766809622-25388-1-git-send-email-ptsm@linux.microsoft.com>
-In-Reply-To: <1766809622-25388-1-git-send-email-ptsm@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|DS0PR02MB9149:EE_
-x-ms-office365-filtering-correlation-id: a78c1404-4d06-475f-eee8-08de55234c04
-x-ms-exchange-slblob-mailprops:
- AZnQBsB9XmqhcEBlXno9HJGOoZcx42eNIVwP+OxIit7tZkh6SzmV42Wdl6Sn5TYCMGseqW2uOnN2iKoFUtnHZuiIhSKvH9fRwWneSB0ccBuMwxvreiyxTrhZVTOnVkMI+pfvB4fBgswm4d47MSuPQt9s9WWChrzXuebKh/HWjSX+bEEKAQk9LVLFXLAwXHcWsk267jh5s4OBP6t6sHQIr/GqGwiUlgFlbGhV2Ikj4jUNEp6uw/ZYH8+RsmW6NaRszCeMKiJ147nrFB0/5nlCrQWlILW3vG8hG+yUDd/bRx8tI0sILMFOl5C1OgPOxNFo5/XUcKkHq1DScqyFcMXn/X8oqbC7wzHrdwubo8MCTzxZPIBHjEymY2MLRGheNeJPLJ7XUUmD1NWgLDM/qwaE4jhM5dEqGop2DmlAFPfsy5r0/S11YPXTlg29w/YknTK6GAalgprIDG7PNryQ0J3tnsrakl4UhNXEFbXoK8ghvrwBI1610TjugXGbo3/GLcdmxPQND9V1sxXLSOs07Aa3VlYhw4mMsLN3BLdzPib+dHWG3ByYfsaLLnb+0CRmWL0INXDigX6Cr0h7I5cGL5Tb2HwUz2+NQ/P/644pPyagislx+5C16iJVas9rzPW5Gv/WYLt67Cg4dKC/JlbJCopiqwz8voRTiFX8EHHDCwEf45y8MByLkTvtDDY33uhIW9KnHlCF6SAFW3qmQip7LOKQcDA7eMErgeGKdwguBnqf2wh4rEfkGCmLoOR3U6zr9O9WVOC3OulTpdo=
-x-microsoft-antispam:
- BCL:0;ARA:14566002|8060799015|13091999003|8062599012|19110799012|51005399006|31061999003|461199028|15080799012|3412199025|440099028|40105399003|102099032;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?YPVoTYIcTMhv4TOdgdz/n8Nxm5pqpx8jktiXGudvIVdIyABIdEMR2hZkOgmi?=
- =?us-ascii?Q?CVN03hCfyBRFF9xmN1rZ6srtD9sflGTLo2ByIYvPx+F1FTw0vRpXnvqmyU8/?=
- =?us-ascii?Q?mhcNp0CNHulzHfsWGRb4vvBTxNRaelV5NZeUdLxtyElifLhVbOVnwiT0vCo3?=
- =?us-ascii?Q?LkgRJ+wbfS0+FZ6pPcx8sdNmzFgJ9pr99R+qhIhqLLHpKsgEVs9pLVi9tXRN?=
- =?us-ascii?Q?rxWXBjlQpv767CLkOsKpDhzL+Snd4njahEOHwoBIBotQR7NQFKfOO0seKpcI?=
- =?us-ascii?Q?KIgbYRYutWvgFUySz325Oiqm21jjcCIlLND/RXwqxnawoVC50FpZc4TfjBGX?=
- =?us-ascii?Q?FkElNzLRLJ/IstAachq+yLzsRyp/UTL+AZnhx1DQyK6BXe3JFpJOd+u8Txp3?=
- =?us-ascii?Q?xAtZM85enCH/Y5fVlY6fqCmh/E/li6UNVvb7tnvXl7bd728bKiyhEiUgaFEg?=
- =?us-ascii?Q?j+hSIEGyYGsNbMebGVejUnSKV0bANClnl7QgPXFxEpPfhJst7TyhBh8pFU63?=
- =?us-ascii?Q?efe/t+nGqHKdRNA22a+96wtIgIFhqyRDil/uVoqaaPlAKenkQ7c9S8L/jiPt?=
- =?us-ascii?Q?8c+rzi/fRBq2VDNZGc9OA0devmN52cfdDP7IGV4WOL/zU9emhsdbsyPqdMkZ?=
- =?us-ascii?Q?Hop+yzHqcSB4jtYXiMCnAzUdzcXiFg1+DMYQijAGVJ1HE/XCWiflWqfLtcE2?=
- =?us-ascii?Q?s7SY8lstPFS7F2SDIwZGUo3T4QWhZ/oT3vWgkAsoqGcf1p9Kc4o+c84UCuWq?=
- =?us-ascii?Q?HXOWkkdpd8QRk+pRWs+5O87srMVlO7iC00bejq/0dwT6Fz0Cx06OTuKqA4KG?=
- =?us-ascii?Q?3TylSrZNof/GUxPBycEkCiFSztPUHXqef3lArwrvnN8uLbpoEBZqFF4dyMuP?=
- =?us-ascii?Q?xTADPrGM/CVuLbij2WWCLxM0TqcGeOuuedfGhKynlf4vMQ0TAnVlniDNlwnZ?=
- =?us-ascii?Q?wNEGHKFA+feXiTcQcI3vQ/UX67PHscoMjItdvzwcQr6S8vsseMrIKqj/wch5?=
- =?us-ascii?Q?jex3j10TIfJAJjCq/fHdcM/IMh8GLmwHVz8/jj2Bty2GLO9NGRgv/y5GwTO7?=
- =?us-ascii?Q?Empv7cKpKgRcHLY4vpEG3rNerBM4/mYmx5tee0ohsj286ikkR9hkcNoXDpnB?=
- =?us-ascii?Q?2Yhf/JsMQSQOFP1Z16hK4o6QAPvP523+efVAvUsCqqK2eaMdzzL0sAJgEljE?=
- =?us-ascii?Q?qAV3iEbcYd9+BSHY6s/AT3cs20hEO8+36pkaGQ=3D=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?VZZRTVoJeunqOJU6aWbV/SjPni0V10co86jnYI5cQWTOYPRZLRvsTJXMxXTG?=
- =?us-ascii?Q?Be5Uo5QXJfteGl7vkFaf9NluXD2epLaRoqj/+MQl9phfxSwjPluoW1HBAmnN?=
- =?us-ascii?Q?hixnP0mKm0hXqVFAmxPvO5O4mNhYyjYiiGqAt8e6mPMYKzcXSCjuel6Ml2Xr?=
- =?us-ascii?Q?3VQEVHCjb0nT2Uib619VjLR7zVVQumh6aUflVU3MKlwoNr6rOLiUZ4Sweup5?=
- =?us-ascii?Q?w0uxrwiTgku/qYZIui6/PmVtO5Mwzl8JIX63RUk+LmBWv4wHrDx2VR0Qx1qb?=
- =?us-ascii?Q?s8P2iChmtfeJ0UXZW1KGO7R/x8fjZGr6zH7kk6PYUNh6SsXBueQ0kKEejOhd?=
- =?us-ascii?Q?gn1DBqFL+PDSoKENfEEuhyBZeGpg/BtR9+siei3Tp2fGEZGuU9bYm4+CjGyK?=
- =?us-ascii?Q?/FaDb6G4eWHVboTT5AtxRHjRuid8EqNn72Ks/SKVraVov3IAcJdUmMH6pp4P?=
- =?us-ascii?Q?gRJkrlvNVW0xyg+tRk/Hmciit9r5Z3m+L43Y0i9bvbFU9z2V2sNthJ3b4Wsl?=
- =?us-ascii?Q?+DRDxmW8n5DDC+bAOOQSO4kaWkC/Tjrzn6F6E7aQkGAXeBijh4HUomGRIBIk?=
- =?us-ascii?Q?nk7hzHIogmG7P0whXrBTAre+kRUIhfUFcd21mN49GxJb0tErU6EZ9uDMs5kS?=
- =?us-ascii?Q?h5bp2I84LrMC59Ti9+EGlblR8gz+A8XLIzrag1oxfZ0WLeUH2iuTUQWXvepj?=
- =?us-ascii?Q?X4WYU9Q7670DpcBfgUV29vnblCV83eRFppluxSGwvoAcQmSoLZY17jmtmac/?=
- =?us-ascii?Q?sdhtG3Bgs4qThBcr+cuiWkhwXqyHKCERgI+Yg4mOkZNTig6u+yE+pvCJB5L5?=
- =?us-ascii?Q?O/FJjANbEaRaPHzgQitnstxhss9mTniq6D6+Sb674BZdEuZSvEcBv9vpYaQa?=
- =?us-ascii?Q?nDLXhvN9XgDb8/YIf/uBDTUEyrLAAVwaNpZasdRTwrd65u1dCQxDAaLtVusB?=
- =?us-ascii?Q?9ZaN9D0u8cm+3giiZsCbOYe3E2W8cjnd4T14lKLpANRyAPTiWyLD+lKDaKvU?=
- =?us-ascii?Q?QeGuycvra/ibpfTa4UMt+7h2vKKJTLANRSQtmiZoWcR2EIFjhHu4i7glOQg7?=
- =?us-ascii?Q?PbJMEEmVnHPyX0sjBjuF5EPWX7X3ZdQgA8h8IZF7xAf/DMqIeKBH+U+6+TUc?=
- =?us-ascii?Q?JO1vxZJksjxwvYlakPxjrOL8EIijSD3hjCK+aEwGeR+cdtXmNZu7fbToYYxq?=
- =?us-ascii?Q?m2oP5pskhbjNTCUKsXCF5YEUdaDiOqyG0GLb6C+Q4FnCjZmVjUBr8J+9Rr0c?=
- =?us-ascii?Q?IINUMFeYlmePC+0CwAzEvaWO0ED5FD+5WHvca74EvfhGAmc8BzzabPxM12Ca?=
- =?us-ascii?Q?nKCj0j5qVMSVMO9lzejTPFVVl0KUnm/xTICIwSue9wqWM2v7ET/JOi6N4A9p?=
- =?us-ascii?Q?c5Q5Rco=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C9C033C538;
+	Fri, 16 Jan 2026 18:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768588441; cv=none; b=e0ZmxHpmyJqxFyRtpWBmf2qpElhnKjK/ggLjqF91SG+vC8loxxDWCSR03FoQGExnXxwp8LeTuhmUGTM8CwVXGUS1zdhk2HYVxZu9hAIJ7uEjpn8WNpKCzHyKi50lROQfOtu+UOB7CUVkqk8HEpTEdxNvvXmOkE+5shVNUobJgcg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768588441; c=relaxed/simple;
+	bh=2aas91OBX+0Z24CTP8RX2IJIXePNld9mg5T4x5aD+pA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Noxuqb9nlbPvPlu61KCuY2/xhqhDBGFCRBYSbVwkmPhOo81LsmFMN5CbSjv9GSE/fS0YA+YSxlIXlXnQLUCOwQxn0iEFHLMyiYl9Wdeenh3bCjp8UXJpYFqK7f8PK5Ok/n87vxja7GXXY+jRCRKFfEP+s7En+9EnWo90gASjpJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RqHc/8q0; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.65.64.149] (unknown [20.236.10.163])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 6E69F20B716A;
+	Fri, 16 Jan 2026 10:33:57 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6E69F20B716A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1768588437;
+	bh=9ufr5fr7b+X1Q6rQGeqGMPEl8fztw8OZoSXASInuQ9I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RqHc/8q09bdcRj7R+6mefqlMxBchftVAwZbGBUQWDkgda+fg1IB6+k6/bEn2LoTHq
+	 nPEFoMnS+te37xM94pwOjtefd4iZob7I1oc1AOqi/ywmztsYitHcRhmnVF/oVblAIn
+	 uHoreeBv/3Yv8GW4jTehMCAN4qKjXJAITdrFrIfY=
+Message-ID: <e75faa74-4d49-4b17-8e16-4f05b56c1f32@linux.microsoft.com>
+Date: Fri, 16 Jan 2026 10:33:56 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: a78c1404-4d06-475f-eee8-08de55234c04
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2026 17:18:42.0216
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR02MB9149
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/6] mshv: Add definitions for stats pages
+To: Michael Kelley <mhklinux@outlook.com>,
+ Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "longli@microsoft.com" <longli@microsoft.com>,
+ "prapal@linux.microsoft.com" <prapal@linux.microsoft.com>,
+ "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
+ "paekkaladevi@linux.microsoft.com" <paekkaladevi@linux.microsoft.com>
+References: <20260114213803.143486-1-nunodasneves@linux.microsoft.com>
+ <20260114213803.143486-6-nunodasneves@linux.microsoft.com>
+ <aWkTd2zkbVQqePVa@skinsburskii.localdomain>
+ <89385dc3-e702-4bf6-8ad7-f6e634851851@linux.microsoft.com>
+ <SN6PR02MB41575DED97B3E791238296AAD48DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB41575DED97B3E791238296AAD48DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Prasanna Kumar T S M <ptsm@linux.microsoft.com> Sent: Friday, Decembe=
-r 26, 2025 8:27 PM
->=20
+On 1/16/2026 9:01 AM, Michael Kelley wrote:
+> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Thursday, January 15, 2026 11:35 AM
+>>
+>> On 1/15/2026 8:19 AM, Stanislav Kinsburskii wrote:
+>>> On Wed, Jan 14, 2026 at 01:38:02PM -0800, Nuno Das Neves wrote:
+>>>> Add the definitions for hypervisor, logical processor, and partition
+>>>> stats pages.
+>>>>
+>>>
+>>> The definitions in for partition and virtual processor are outdated.
+>>> Now is the good time to sync the new values in.
+>>>
+>>> Thanks,
+>>> Stanislav
+>>>
+>>
+>> Good point, thanks, I will update it for v4.
+>>
+>> I'm finally noticing that these counters are not really from hvhdk.h, in
+>> the windows code, but their own file. Since I'm still iterating on this,
+>> what do you think about creating a file just for the counters?
+>> e.g. drivers/hv/hvcounters.h, which combines hvcountersarm64 and amd64.
+>>
+>> That would have a couple of advantages:
+>> 1. Not putting things in hvhdk.h which aren't actually there in the
+>>    Windows source
+>> 2. Less visibility of CamelCase naming outside our driver
+>> 3. I could define the enums using "X macro"s to generate the show() code
+>>    more cleanly in mshv_debugfs.c, which is something Michael suggested
+>>    here:
+>> https://lore.kernel.org/linux-hyperv/SN6PR02MB4157938404BC0D12978ACD9BD4A2A@SN6PR02MB4157.namprd02.prod.outlook.com/
+>>
+>> It would look something like this:
+>>
+>> In hvcounters.h:
+>>
+>> #if is_enabled(CONFIG_X86_64)
+>>
+>> #define HV_COUNTER_VP_LIST(X) \
+>> 	X(VpTotalRunTime, 1), \
+>> 	X(VpHypervisorRunTime, 2), \
+>> 	X(VpRemoteNodeRunTime, 3), \
+>> /* <snip> */
+>>
+>> #elif is_enabled(CONFIG_ARM64)
+>>
+>> /* <snip> */
+>>
+>> #endif
+>>
+>> Just like now, it's a copy/paste from Windows + simple pattern
+>> replacement. Note with this approach we need separate lists for arm64
+>> and x86, but that matches how the enums are defined in Windows.
+>>
+>> Then, in mshv_debugfs.c:
+>>
+>> /*
+>>  * We need the strings paired with their enum values.
+>>  * This structure can be used for all the different stat types.
+>>  */
+>> struct hv_counter_entry {
+>> 	char *name;
+>> 	int idx;
+>> };
+>>
+>> /* Define an array entry (again, reusable) */
+>> #define HV_COUNTER_LIST(name, idx) \
+>> 	{ __stringify(name), idx },
+> 
+> Couldn't this also go in hvcounters.h, so it doesn't need to be
+> passed as a parameter to HV_COUNTER_VP_LIST() and friends?
+> Or is the goal to keep hvcounters.h as bare minimum as possible?
+> 
 
-Helge --
+Oh, yes certainly the struct and macros could all be hv_counters.h.
 
-I don't know why I'm just noticing this now, but this patch that you picked=
- up
-also has a "hyperv_fb" spelling typo in the Subject: line. To match histori=
-cal practice,
-the Subject: line really should be:
+>>
+>> /* Create our static array */
+>> static struct hv_counter_entry hv_counter_vp_array[] = {
+>> 	HV_ST_COUNTER_VP(HV_COUNTER_VP)
+>> };
+> 
+> Shouldn't the above be HV_COUNTER_VP_LIST(HV_COUNTER_LIST)
+> to match the #define in hvcounters.h, and the macro that does the
+> __stringify()? Assuming so, I think I understand the overall idea you
+> are proposing. It's pretty clever. :-)
+> 
 
-Drivers: hv: vmbus: Remove reference to hyperv_fb
+Oh, yes it should be HV_COUNTER_VP_LIST(HV_COUNTER_LIST)
 
-If it's something you can clean up easily, that would be nice. If it's a pa=
-in,
-don't worry about it.
+> The #define of HV_COUNTER_VP_LIST() in hvcounters.h gets large
+> for VP stats -- the #define will be about 200 lines. I have no sense
+> of whether being that large is problematic for the tooling. And that
+> question needs to be considered beyond just the C preprocessor and
+> compiler, to include things like sparse, cscope, and other tools that
+> parse source code. I had originally suggested building the static array
+> directly in a .c file, which would avoid the need for the big #define.
+> And maybe you could still do that with a separate .c source file just
+> for the static arrays -- i.e., hvcounters.h becomes hvcounters.c. It
+> seems like the " it's a copy/paste from Windows + simple pattern
+> replacement" could be done to generate a .c file as easily as a .h file
+> while still keeping the file contents to a bare minimum.
+> 
 
-Michael
+Good point... I usually reach for this "X macros" technique when I have
+a list of things that needs to be repeated in multiple places (e.g.
+defining a big enum AND also using the enum values in a big switch
+statement).
 
-> Remove hyperv_fb reference as the driver is removed.
->=20
-> Signed-off-by: Prasanna Kumar T S M <ptsm@linux.microsoft.com>
-> ---
->  drivers/hv/vmbus_drv.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index a53af6fe81a6..7758d7e25a7b 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -2356,8 +2356,8 @@ static void __maybe_unused vmbus_reserve_fb(void)
->  		}
->=20
->  		/*
-> -		 * Release the PCI device so hyperv_drm or hyperv_fb driver can
-> -		 * grab it later.
-> +		 * Release the PCI device so hyperv_drm driver can grab it
-> +		 * later.
->  		 */
->  		pci_dev_put(pdev);
->  	}
-> --
-> 2.49.0
->=20
+Since we don't need the enum after all, apparently (it's not in hvhdk.h),
+your original suggestion is probably the most straightforward thing; just
+putting the values into a static array directly.
+
+Putting it in it's own .c file and including that might be the easiest
+thing, I'll give that a go and see how it looks.
+
+> Either way (.h or .c file), I like the idea.
+> 
+> Michael
+> 
+>>
+>> static int vp_stats_show(struct seq_file *m, void *v)
+>> {
+>> 	const struct hv_stats_page **pstats = m->private;
+>> 	int i;
+>>
+>> 	for (i = 0; i < ARRAY_SIZE(hv_counter_vp_array); ++i) {
+>> 		struct hv_counter_entry entry = hv_counter_vp_array[i];
+>> 		u64 parent_val = pstats[HV_STATS_AREA_PARENT]->vp_cntrs[entry.idx];
+>> 		u64 self_val = pstats[HV_STATS_AREA_SELF]->vp_cntrs[entry.idx];
+>>
+>> 		/* Prioritize the PARENT area value */
+>> 		seq_printf(m, "%-30s: %llu\n", entry.name,
+>> 			   parent_val ? parent_val : self_val);
+>> 	}
+>> }
+>>
+>> Any thoughts? I was originally going to just go with the pattern we had,
+>> but since these definitions aren't from the hv*dk.h files, we can maybe
+>> get more creative and make the resulting code look a bit better.
+>>
+>> Thanks
+>> Nuno
+>>
+>>>> Move the definition for the VP stats page to its rightful place in
+>>>> hvhdk.h, and add the missing members.
+>>>>
+>>>> While at it, correct the ARM64 value of VpRootDispatchThreadBlocked,
+>>>> (which is not yet used, so there is no impact).
+>>>>
+>>>> These enum members retain their CamelCase style, since they are imported
+>>>> directly from the hypervisor code. They will be stringified when
+>>>> printing the stats out, and retain more readability in this form.
+>>>>
+>>>> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+>>>> ---
+>>>>  drivers/hv/mshv_root_main.c |  17 --
+>>>>  include/hyperv/hvhdk.h      | 437 ++++++++++++++++++++++++++++++++++++
+>>>>  2 files changed, 437 insertions(+), 17 deletions(-)
+>>>>
+>>>> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+>>>> index fbfc9e7d9fa4..724bbaa0b08c 100644
+>>>> --- a/drivers/hv/mshv_root_main.c
+>>>> +++ b/drivers/hv/mshv_root_main.c
+>>>> @@ -39,23 +39,6 @@ MODULE_AUTHOR("Microsoft");
+>>>>  MODULE_LICENSE("GPL");
+>>>>  MODULE_DESCRIPTION("Microsoft Hyper-V root partition VMM interface
+>> /dev/mshv");
+>>>>
+>>>> -/* TODO move this to another file when debugfs code is added */
+>>>> -enum hv_stats_vp_counters {			/* HV_THREAD_COUNTER */
+>>>> -#if defined(CONFIG_X86)
+>>>> -	VpRootDispatchThreadBlocked			= 202,
+>>>> -#elif defined(CONFIG_ARM64)
+>>>> -	VpRootDispatchThreadBlocked			= 94,
+>>>> -#endif
+>>>> -	VpStatsMaxCounter
+>>>> -};
+>>>> -
+>>>> -struct hv_stats_page {
+>>>> -	union {
+>>>> -		u64 vp_cntrs[VpStatsMaxCounter];		/* VP counters */
+>>>> -		u8 data[HV_HYP_PAGE_SIZE];
+>>>> -	};
+>>>> -} __packed;
+>>>> -
+>>>>  struct mshv_root mshv_root;
+>>>>
+>>>>  enum hv_scheduler_type hv_scheduler_type;
+>>>> diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
+>>>> index 469186df7826..8bddd11feeba 100644
+>>>> --- a/include/hyperv/hvhdk.h
+>>>> +++ b/include/hyperv/hvhdk.h
+>>>> @@ -10,6 +10,443 @@
+>>>>  #include "hvhdk_mini.h"
+>>>>  #include "hvgdk.h"
+>>>>
+>>>> +enum hv_stats_hypervisor_counters {		/* HV_HYPERVISOR_COUNTER
+>> */
+>>>> +	HvLogicalProcessors			= 1,
+>>>> +	HvPartitions				= 2,
+>>>> +	HvTotalPages				= 3,
+>>>> +	HvVirtualProcessors			= 4,
+>>>> +	HvMonitoredNotifications		= 5,
+>>>> +	HvModernStandbyEntries			= 6,
+>>>> +	HvPlatformIdleTransitions		= 7,
+>>>> +	HvHypervisorStartupCost			= 8,
+>>>> +	HvIOSpacePages				= 10,
+>>>> +	HvNonEssentialPagesForDump		= 11,
+>>>> +	HvSubsumedPages				= 12,
+>>>> +	HvStatsMaxCounter
+>>>> +};
+>>>> +
+>>>> +enum hv_stats_partition_counters {		/* HV_PROCESS_COUNTER */
+>>>> +	PartitionVirtualProcessors		= 1,
+>>>> +	PartitionTlbSize			= 3,
+>>>> +	PartitionAddressSpaces			= 4,
+>>>> +	PartitionDepositedPages			= 5,
+>>>> +	PartitionGpaPages			= 6,
+>>>> +	PartitionGpaSpaceModifications		= 7,
+>>>> +	PartitionVirtualTlbFlushEntires		= 8,
+>>>> +	PartitionRecommendedTlbSize		= 9,
+>>>> +	PartitionGpaPages4K			= 10,
+>>>> +	PartitionGpaPages2M			= 11,
+>>>> +	PartitionGpaPages1G			= 12,
+>>>> +	PartitionGpaPages512G			= 13,
+>>>> +	PartitionDevicePages4K			= 14,
+>>>> +	PartitionDevicePages2M			= 15,
+>>>> +	PartitionDevicePages1G			= 16,
+>>>> +	PartitionDevicePages512G		= 17,
+>>>> +	PartitionAttachedDevices		= 18,
+>>>> +	PartitionDeviceInterruptMappings	= 19,
+>>>> +	PartitionIoTlbFlushes			= 20,
+>>>> +	PartitionIoTlbFlushCost			= 21,
+>>>> +	PartitionDeviceInterruptErrors		= 22,
+>>>> +	PartitionDeviceDmaErrors		= 23,
+>>>> +	PartitionDeviceInterruptThrottleEvents	= 24,
+>>>> +	PartitionSkippedTimerTicks		= 25,
+>>>> +	PartitionPartitionId			= 26,
+>>>> +#if IS_ENABLED(CONFIG_X86_64)
+>>>> +	PartitionNestedTlbSize			= 27,
+>>>> +	PartitionRecommendedNestedTlbSize	= 28,
+>>>> +	PartitionNestedTlbFreeListSize		= 29,
+>>>> +	PartitionNestedTlbTrimmedPages		= 30,
+>>>> +	PartitionPagesShattered			= 31,
+>>>> +	PartitionPagesRecombined		= 32,
+>>>> +	PartitionHwpRequestValue		= 33,
+>>>> +#elif IS_ENABLED(CONFIG_ARM64)
+>>>> +	PartitionHwpRequestValue		= 27,
+>>>> +#endif
+>>>> +	PartitionStatsMaxCounter
+>>>> +};
+>>>> +
+>>>> +enum hv_stats_vp_counters {			/* HV_THREAD_COUNTER */
+>>>> +	VpTotalRunTime					= 1,
+>>>> +	VpHypervisorRunTime				= 2,
+>>>> +	VpRemoteNodeRunTime				= 3,
+>>>> +	VpNormalizedRunTime				= 4,
+>>>> +	VpIdealCpu					= 5,
+>>>> +	VpHypercallsCount				= 7,
+>>>> +	VpHypercallsTime				= 8,
+>>>> +#if IS_ENABLED(CONFIG_X86_64)
+>>>> +	VpPageInvalidationsCount			= 9,
+>>>> +	VpPageInvalidationsTime				= 10,
+>>>> +	VpControlRegisterAccessesCount			= 11,
+>>>> +	VpControlRegisterAccessesTime			= 12,
+>>>> +	VpIoInstructionsCount				= 13,
+>>>> +	VpIoInstructionsTime				= 14,
+>>>> +	VpHltInstructionsCount				= 15,
+>>>> +	VpHltInstructionsTime				= 16,
+>>>> +	VpMwaitInstructionsCount			= 17,
+>>>> +	VpMwaitInstructionsTime				= 18,
+>>>> +	VpCpuidInstructionsCount			= 19,
+>>>> +	VpCpuidInstructionsTime				= 20,
+>>>> +	VpMsrAccessesCount				= 21,
+>>>> +	VpMsrAccessesTime				= 22,
+>>>> +	VpOtherInterceptsCount				= 23,
+>>>> +	VpOtherInterceptsTime				= 24,
+>>>> +	VpExternalInterruptsCount			= 25,
+>>>> +	VpExternalInterruptsTime			= 26,
+>>>> +	VpPendingInterruptsCount			= 27,
+>>>> +	VpPendingInterruptsTime				= 28,
+>>>> +	VpEmulatedInstructionsCount			= 29,
+>>>> +	VpEmulatedInstructionsTime			= 30,
+>>>> +	VpDebugRegisterAccessesCount			= 31,
+>>>> +	VpDebugRegisterAccessesTime			= 32,
+>>>> +	VpPageFaultInterceptsCount			= 33,
+>>>> +	VpPageFaultInterceptsTime			= 34,
+>>>> +	VpGuestPageTableMaps				= 35,
+>>>> +	VpLargePageTlbFills				= 36,
+>>>> +	VpSmallPageTlbFills				= 37,
+>>>> +	VpReflectedGuestPageFaults			= 38,
+>>>> +	VpApicMmioAccesses				= 39,
+>>>> +	VpIoInterceptMessages				= 40,
+>>>> +	VpMemoryInterceptMessages			= 41,
+>>>> +	VpApicEoiAccesses				= 42,
+>>>> +	VpOtherMessages					= 43,
+>>>> +	VpPageTableAllocations				= 44,
+>>>> +	VpLogicalProcessorMigrations			= 45,
+>>>> +	VpAddressSpaceEvictions				= 46,
+>>>> +	VpAddressSpaceSwitches				= 47,
+>>>> +	VpAddressDomainFlushes				= 48,
+>>>> +	VpAddressSpaceFlushes				= 49,
+>>>> +	VpGlobalGvaRangeFlushes				= 50,
+>>>> +	VpLocalGvaRangeFlushes				= 51,
+>>>> +	VpPageTableEvictions				= 52,
+>>>> +	VpPageTableReclamations				= 53,
+>>>> +	VpPageTableResets				= 54,
+>>>> +	VpPageTableValidations				= 55,
+>>>> +	VpApicTprAccesses				= 56,
+>>>> +	VpPageTableWriteIntercepts			= 57,
+>>>> +	VpSyntheticInterrupts				= 58,
+>>>> +	VpVirtualInterrupts				= 59,
+>>>> +	VpApicIpisSent					= 60,
+>>>> +	VpApicSelfIpisSent				= 61,
+>>>> +	VpGpaSpaceHypercalls				= 62,
+>>>> +	VpLogicalProcessorHypercalls			= 63,
+>>>> +	VpLongSpinWaitHypercalls			= 64,
+>>>> +	VpOtherHypercalls				= 65,
+>>>> +	VpSyntheticInterruptHypercalls			= 66,
+>>>> +	VpVirtualInterruptHypercalls			= 67,
+>>>> +	VpVirtualMmuHypercalls				= 68,
+>>>> +	VpVirtualProcessorHypercalls			= 69,
+>>>> +	VpHardwareInterrupts				= 70,
+>>>> +	VpNestedPageFaultInterceptsCount		= 71,
+>>>> +	VpNestedPageFaultInterceptsTime			= 72,
+>>>> +	VpPageScans					= 73,
+>>>> +	VpLogicalProcessorDispatches			= 74,
+>>>> +	VpWaitingForCpuTime				= 75,
+>>>> +	VpExtendedHypercalls				= 76,
+>>>> +	VpExtendedHypercallInterceptMessages		= 77,
+>>>> +	VpMbecNestedPageTableSwitches			= 78,
+>>>> +	VpOtherReflectedGuestExceptions			= 79,
+>>>> +	VpGlobalIoTlbFlushes				= 80,
+>>>> +	VpGlobalIoTlbFlushCost				= 81,
+>>>> +	VpLocalIoTlbFlushes				= 82,
+>>>> +	VpLocalIoTlbFlushCost				= 83,
+>>>> +	VpHypercallsForwardedCount			= 84,
+>>>> +	VpHypercallsForwardingTime			= 85,
+>>>> +	VpPageInvalidationsForwardedCount		= 86,
+>>>> +	VpPageInvalidationsForwardingTime		= 87,
+>>>> +	VpControlRegisterAccessesForwardedCount		= 88,
+>>>> +	VpControlRegisterAccessesForwardingTime		= 89,
+>>>> +	VpIoInstructionsForwardedCount			= 90,
+>>>> +	VpIoInstructionsForwardingTime			= 91,
+>>>> +	VpHltInstructionsForwardedCount			= 92,
+>>>> +	VpHltInstructionsForwardingTime			= 93,
+>>>> +	VpMwaitInstructionsForwardedCount		= 94,
+>>>> +	VpMwaitInstructionsForwardingTime		= 95,
+>>>> +	VpCpuidInstructionsForwardedCount		= 96,
+>>>> +	VpCpuidInstructionsForwardingTime		= 97,
+>>>> +	VpMsrAccessesForwardedCount			= 98,
+>>>> +	VpMsrAccessesForwardingTime			= 99,
+>>>> +	VpOtherInterceptsForwardedCount			= 100,
+>>>> +	VpOtherInterceptsForwardingTime			= 101,
+>>>> +	VpExternalInterruptsForwardedCount		= 102,
+>>>> +	VpExternalInterruptsForwardingTime		= 103,
+>>>> +	VpPendingInterruptsForwardedCount		= 104,
+>>>> +	VpPendingInterruptsForwardingTime		= 105,
+>>>> +	VpEmulatedInstructionsForwardedCount		= 106,
+>>>> +	VpEmulatedInstructionsForwardingTime		= 107,
+>>>> +	VpDebugRegisterAccessesForwardedCount		= 108,
+>>>> +	VpDebugRegisterAccessesForwardingTime		= 109,
+>>>> +	VpPageFaultInterceptsForwardedCount		= 110,
+>>>> +	VpPageFaultInterceptsForwardingTime		= 111,
+>>>> +	VpVmclearEmulationCount				= 112,
+>>>> +	VpVmclearEmulationTime				= 113,
+>>>> +	VpVmptrldEmulationCount				= 114,
+>>>> +	VpVmptrldEmulationTime				= 115,
+>>>> +	VpVmptrstEmulationCount				= 116,
+>>>> +	VpVmptrstEmulationTime				= 117,
+>>>> +	VpVmreadEmulationCount				= 118,
+>>>> +	VpVmreadEmulationTime				= 119,
+>>>> +	VpVmwriteEmulationCount				= 120,
+>>>> +	VpVmwriteEmulationTime				= 121,
+>>>> +	VpVmxoffEmulationCount				= 122,
+>>>> +	VpVmxoffEmulationTime				= 123,
+>>>> +	VpVmxonEmulationCount				= 124,
+>>>> +	VpVmxonEmulationTime				= 125,
+>>>> +	VpNestedVMEntriesCount				= 126,
+>>>> +	VpNestedVMEntriesTime				= 127,
+>>>> +	VpNestedSLATSoftPageFaultsCount			= 128,
+>>>> +	VpNestedSLATSoftPageFaultsTime			= 129,
+>>>> +	VpNestedSLATHardPageFaultsCount			= 130,
+>>>> +	VpNestedSLATHardPageFaultsTime			= 131,
+>>>> +	VpInvEptAllContextEmulationCount		= 132,
+>>>> +	VpInvEptAllContextEmulationTime			= 133,
+>>>> +	VpInvEptSingleContextEmulationCount		= 134,
+>>>> +	VpInvEptSingleContextEmulationTime		= 135,
+>>>> +	VpInvVpidAllContextEmulationCount		= 136,
+>>>> +	VpInvVpidAllContextEmulationTime		= 137,
+>>>> +	VpInvVpidSingleContextEmulationCount		= 138,
+>>>> +	VpInvVpidSingleContextEmulationTime		= 139,
+>>>> +	VpInvVpidSingleAddressEmulationCount		= 140,
+>>>> +	VpInvVpidSingleAddressEmulationTime		= 141,
+>>>> +	VpNestedTlbPageTableReclamations		= 142,
+>>>> +	VpNestedTlbPageTableEvictions			= 143,
+>>>> +	VpFlushGuestPhysicalAddressSpaceHypercalls	= 144,
+>>>> +	VpFlushGuestPhysicalAddressListHypercalls	= 145,
+>>>> +	VpPostedInterruptNotifications			= 146,
+>>>> +	VpPostedInterruptScans				= 147,
+>>>> +	VpTotalCoreRunTime				= 148,
+>>>> +	VpMaximumRunTime				= 149,
+>>>> +	VpHwpRequestContextSwitches			= 150,
+>>>> +	VpWaitingForCpuTimeBucket0			= 151,
+>>>> +	VpWaitingForCpuTimeBucket1			= 152,
+>>>> +	VpWaitingForCpuTimeBucket2			= 153,
+>>>> +	VpWaitingForCpuTimeBucket3			= 154,
+>>>> +	VpWaitingForCpuTimeBucket4			= 155,
+>>>> +	VpWaitingForCpuTimeBucket5			= 156,
+>>>> +	VpWaitingForCpuTimeBucket6			= 157,
+>>>> +	VpVmloadEmulationCount				= 158,
+>>>> +	VpVmloadEmulationTime				= 159,
+>>>> +	VpVmsaveEmulationCount				= 160,
+>>>> +	VpVmsaveEmulationTime				= 161,
+>>>> +	VpGifInstructionEmulationCount			= 162,
+>>>> +	VpGifInstructionEmulationTime			= 163,
+>>>> +	VpEmulatedErrataSvmInstructions			= 164,
+>>>> +	VpPlaceholder1					= 165,
+>>>> +	VpPlaceholder2					= 166,
+>>>> +	VpPlaceholder3					= 167,
+>>>> +	VpPlaceholder4					= 168,
+>>>> +	VpPlaceholder5					= 169,
+>>>> +	VpPlaceholder6					= 170,
+>>>> +	VpPlaceholder7					= 171,
+>>>> +	VpPlaceholder8					= 172,
+>>>> +	VpPlaceholder9					= 173,
+>>>> +	VpPlaceholder10					= 174,
+>>>> +	VpSchedulingPriority				= 175,
+>>>> +	VpRdpmcInstructionsCount			= 176,
+>>>> +	VpRdpmcInstructionsTime				= 177,
+>>>> +	VpPerfmonPmuMsrAccessesCount			= 178,
+>>>> +	VpPerfmonLbrMsrAccessesCount			= 179,
+>>>> +	VpPerfmonIptMsrAccessesCount			= 180,
+>>>> +	VpPerfmonInterruptCount				= 181,
+>>>> +	VpVtl1DispatchCount				= 182,
+>>>> +	VpVtl2DispatchCount				= 183,
+>>>> +	VpVtl2DispatchBucket0				= 184,
+>>>> +	VpVtl2DispatchBucket1				= 185,
+>>>> +	VpVtl2DispatchBucket2				= 186,
+>>>> +	VpVtl2DispatchBucket3				= 187,
+>>>> +	VpVtl2DispatchBucket4				= 188,
+>>>> +	VpVtl2DispatchBucket5				= 189,
+>>>> +	VpVtl2DispatchBucket6				= 190,
+>>>> +	VpVtl1RunTime					= 191,
+>>>> +	VpVtl2RunTime					= 192,
+>>>> +	VpIommuHypercalls				= 193,
+>>>> +	VpCpuGroupHypercalls				= 194,
+>>>> +	VpVsmHypercalls					= 195,
+>>>> +	VpEventLogHypercalls				= 196,
+>>>> +	VpDeviceDomainHypercalls			= 197,
+>>>> +	VpDepositHypercalls				= 198,
+>>>> +	VpSvmHypercalls					= 199,
+>>>> +	VpBusLockAcquisitionCount			= 200,
+>>>> +	VpLoadAvg					= 201,
+>>>> +	VpRootDispatchThreadBlocked			= 202,
+>>>> +#elif IS_ENABLED(CONFIG_ARM64)
+>>>> +	VpSysRegAccessesCount				= 9,
+>>>> +	VpSysRegAccessesTime				= 10,
+>>>> +	VpSmcInstructionsCount				= 11,
+>>>> +	VpSmcInstructionsTime				= 12,
+>>>> +	VpOtherInterceptsCount				= 13,
+>>>> +	VpOtherInterceptsTime				= 14,
+>>>> +	VpExternalInterruptsCount			= 15,
+>>>> +	VpExternalInterruptsTime			= 16,
+>>>> +	VpPendingInterruptsCount			= 17,
+>>>> +	VpPendingInterruptsTime				= 18,
+>>>> +	VpGuestPageTableMaps				= 19,
+>>>> +	VpLargePageTlbFills				= 20,
+>>>> +	VpSmallPageTlbFills				= 21,
+>>>> +	VpReflectedGuestPageFaults			= 22,
+>>>> +	VpMemoryInterceptMessages			= 23,
+>>>> +	VpOtherMessages					= 24,
+>>>> +	VpLogicalProcessorMigrations			= 25,
+>>>> +	VpAddressDomainFlushes				= 26,
+>>>> +	VpAddressSpaceFlushes				= 27,
+>>>> +	VpSyntheticInterrupts				= 28,
+>>>> +	VpVirtualInterrupts				= 29,
+>>>> +	VpApicSelfIpisSent				= 30,
+>>>> +	VpGpaSpaceHypercalls				= 31,
+>>>> +	VpLogicalProcessorHypercalls			= 32,
+>>>> +	VpLongSpinWaitHypercalls			= 33,
+>>>> +	VpOtherHypercalls				= 34,
+>>>> +	VpSyntheticInterruptHypercalls			= 35,
+>>>> +	VpVirtualInterruptHypercalls			= 36,
+>>>> +	VpVirtualMmuHypercalls				= 37,
+>>>> +	VpVirtualProcessorHypercalls			= 38,
+>>>> +	VpHardwareInterrupts				= 39,
+>>>> +	VpNestedPageFaultInterceptsCount		= 40,
+>>>> +	VpNestedPageFaultInterceptsTime			= 41,
+>>>> +	VpLogicalProcessorDispatches			= 42,
+>>>> +	VpWaitingForCpuTime				= 43,
+>>>> +	VpExtendedHypercalls				= 44,
+>>>> +	VpExtendedHypercallInterceptMessages		= 45,
+>>>> +	VpMbecNestedPageTableSwitches			= 46,
+>>>> +	VpOtherReflectedGuestExceptions			= 47,
+>>>> +	VpGlobalIoTlbFlushes				= 48,
+>>>> +	VpGlobalIoTlbFlushCost				= 49,
+>>>> +	VpLocalIoTlbFlushes				= 50,
+>>>> +	VpLocalIoTlbFlushCost				= 51,
+>>>> +	VpFlushGuestPhysicalAddressSpaceHypercalls	= 52,
+>>>> +	VpFlushGuestPhysicalAddressListHypercalls	= 53,
+>>>> +	VpPostedInterruptNotifications			= 54,
+>>>> +	VpPostedInterruptScans				= 55,
+>>>> +	VpTotalCoreRunTime				= 56,
+>>>> +	VpMaximumRunTime				= 57,
+>>>> +	VpWaitingForCpuTimeBucket0			= 58,
+>>>> +	VpWaitingForCpuTimeBucket1			= 59,
+>>>> +	VpWaitingForCpuTimeBucket2			= 60,
+>>>> +	VpWaitingForCpuTimeBucket3			= 61,
+>>>> +	VpWaitingForCpuTimeBucket4			= 62,
+>>>> +	VpWaitingForCpuTimeBucket5			= 63,
+>>>> +	VpWaitingForCpuTimeBucket6			= 64,
+>>>> +	VpHwpRequestContextSwitches			= 65,
+>>>> +	VpPlaceholder2					= 66,
+>>>> +	VpPlaceholder3					= 67,
+>>>> +	VpPlaceholder4					= 68,
+>>>> +	VpPlaceholder5					= 69,
+>>>> +	VpPlaceholder6					= 70,
+>>>> +	VpPlaceholder7					= 71,
+>>>> +	VpPlaceholder8					= 72,
+>>>> +	VpContentionTime				= 73,
+>>>> +	VpWakeUpTime					= 74,
+>>>> +	VpSchedulingPriority				= 75,
+>>>> +	VpVtl1DispatchCount				= 76,
+>>>> +	VpVtl2DispatchCount				= 77,
+>>>> +	VpVtl2DispatchBucket0				= 78,
+>>>> +	VpVtl2DispatchBucket1				= 79,
+>>>> +	VpVtl2DispatchBucket2				= 80,
+>>>> +	VpVtl2DispatchBucket3				= 81,
+>>>> +	VpVtl2DispatchBucket4				= 82,
+>>>> +	VpVtl2DispatchBucket5				= 83,
+>>>> +	VpVtl2DispatchBucket6				= 84,
+>>>> +	VpVtl1RunTime					= 85,
+>>>> +	VpVtl2RunTime					= 86,
+>>>> +	VpIommuHypercalls				= 87,
+>>>> +	VpCpuGroupHypercalls				= 88,
+>>>> +	VpVsmHypercalls					= 89,
+>>>> +	VpEventLogHypercalls				= 90,
+>>>> +	VpDeviceDomainHypercalls			= 91,
+>>>> +	VpDepositHypercalls				= 92,
+>>>> +	VpSvmHypercalls					= 93,
+>>>> +	VpLoadAvg					= 94,
+>>>> +	VpRootDispatchThreadBlocked			= 95,
+>>>> +#endif
+>>>> +	VpStatsMaxCounter
+>>>> +};
+>>>> +
+>>>> +enum hv_stats_lp_counters {			/* HV_CPU_COUNTER */
+>>>> +	LpGlobalTime				= 1,
+>>>> +	LpTotalRunTime				= 2,
+>>>> +	LpHypervisorRunTime			= 3,
+>>>> +	LpHardwareInterrupts			= 4,
+>>>> +	LpContextSwitches			= 5,
+>>>> +	LpInterProcessorInterrupts		= 6,
+>>>> +	LpSchedulerInterrupts			= 7,
+>>>> +	LpTimerInterrupts			= 8,
+>>>> +	LpInterProcessorInterruptsSent		= 9,
+>>>> +	LpProcessorHalts			= 10,
+>>>> +	LpMonitorTransitionCost			= 11,
+>>>> +	LpContextSwitchTime			= 12,
+>>>> +	LpC1TransitionsCount			= 13,
+>>>> +	LpC1RunTime				= 14,
+>>>> +	LpC2TransitionsCount			= 15,
+>>>> +	LpC2RunTime				= 16,
+>>>> +	LpC3TransitionsCount			= 17,
+>>>> +	LpC3RunTime				= 18,
+>>>> +	LpRootVpIndex				= 19,
+>>>> +	LpIdleSequenceNumber			= 20,
+>>>> +	LpGlobalTscCount			= 21,
+>>>> +	LpActiveTscCount			= 22,
+>>>> +	LpIdleAccumulation			= 23,
+>>>> +	LpReferenceCycleCount0			= 24,
+>>>> +	LpActualCycleCount0			= 25,
+>>>> +	LpReferenceCycleCount1			= 26,
+>>>> +	LpActualCycleCount1			= 27,
+>>>> +	LpProximityDomainId			= 28,
+>>>> +	LpPostedInterruptNotifications		= 29,
+>>>> +	LpBranchPredictorFlushes		= 30,
+>>>> +#if IS_ENABLED(CONFIG_X86_64)
+>>>> +	LpL1DataCacheFlushes			= 31,
+>>>> +	LpImmediateL1DataCacheFlushes		= 32,
+>>>> +	LpMbFlushes				= 33,
+>>>> +	LpCounterRefreshSequenceNumber		= 34,
+>>>> +	LpCounterRefreshReferenceTime		= 35,
+>>>> +	LpIdleAccumulationSnapshot		= 36,
+>>>> +	LpActiveTscCountSnapshot		= 37,
+>>>> +	LpHwpRequestContextSwitches		= 38,
+>>>> +	LpPlaceholder1				= 39,
+>>>> +	LpPlaceholder2				= 40,
+>>>> +	LpPlaceholder3				= 41,
+>>>> +	LpPlaceholder4				= 42,
+>>>> +	LpPlaceholder5				= 43,
+>>>> +	LpPlaceholder6				= 44,
+>>>> +	LpPlaceholder7				= 45,
+>>>> +	LpPlaceholder8				= 46,
+>>>> +	LpPlaceholder9				= 47,
+>>>> +	LpPlaceholder10				= 48,
+>>>> +	LpReserveGroupId			= 49,
+>>>> +	LpRunningPriority			= 50,
+>>>> +	LpPerfmonInterruptCount			= 51,
+>>>> +#elif IS_ENABLED(CONFIG_ARM64)
+>>>> +	LpCounterRefreshSequenceNumber		= 31,
+>>>> +	LpCounterRefreshReferenceTime		= 32,
+>>>> +	LpIdleAccumulationSnapshot		= 33,
+>>>> +	LpActiveTscCountSnapshot		= 34,
+>>>> +	LpHwpRequestContextSwitches		= 35,
+>>>> +	LpPlaceholder2				= 36,
+>>>> +	LpPlaceholder3				= 37,
+>>>> +	LpPlaceholder4				= 38,
+>>>> +	LpPlaceholder5				= 39,
+>>>> +	LpPlaceholder6				= 40,
+>>>> +	LpPlaceholder7				= 41,
+>>>> +	LpPlaceholder8				= 42,
+>>>> +	LpPlaceholder9				= 43,
+>>>> +	LpSchLocalRunListSize			= 44,
+>>>> +	LpReserveGroupId			= 45,
+>>>> +	LpRunningPriority			= 46,
+>>>> +#endif
+>>>> +	LpStatsMaxCounter
+>>>> +};
+>>>> +
+>>>> +/*
+>>>> + * Hypervisor statistics page format
+>>>> + */
+>>>> +struct hv_stats_page {
+>>>> +	union {
+>>>> +		u64 hv_cntrs[HvStatsMaxCounter];		/* Hypervisor counters
+>> */
+>>>> +		u64 pt_cntrs[PartitionStatsMaxCounter];		/* Partition
+>> counters */
+>>>> +		u64 vp_cntrs[VpStatsMaxCounter];		/* VP counters */
+>>>> +		u64 lp_cntrs[LpStatsMaxCounter];		/* LP counters */
+>>>> +		u8 data[HV_HYP_PAGE_SIZE];
+>>>> +	};
+>>>> +} __packed;
+>>>> +
+>>>>  /* Bits for dirty mask of hv_vp_register_page */
+>>>>  #define HV_X64_REGISTER_CLASS_GENERAL	0
+>>>>  #define HV_X64_REGISTER_CLASS_IP	1
+>>>> --
+>>>> 2.34.1
 
 
