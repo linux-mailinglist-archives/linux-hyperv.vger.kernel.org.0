@@ -1,138 +1,145 @@
-Return-Path: <linux-hyperv+bounces-8359-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8360-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E059D39166
-	for <lists+linux-hyperv@lfdr.de>; Sat, 17 Jan 2026 23:48:55 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7170DD39834
+	for <lists+linux-hyperv@lfdr.de>; Sun, 18 Jan 2026 18:03:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 153BA3004EF0
-	for <lists+linux-hyperv@lfdr.de>; Sat, 17 Jan 2026 22:48:52 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id D974030010CF
+	for <lists+linux-hyperv@lfdr.de>; Sun, 18 Jan 2026 17:02:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A561029BDBF;
-	Sat, 17 Jan 2026 22:48:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FEBF1D798E;
+	Sun, 18 Jan 2026 17:02:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WdlGoPd3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gC5y9GVw"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA821F1932;
-	Sat, 17 Jan 2026 22:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC929500976
+	for <linux-hyperv@vger.kernel.org>; Sun, 18 Jan 2026 17:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768690129; cv=none; b=rVEK0edTF5/KcSnF5PHvvo57fsKhqtdjMUg37ll3kwvJB6mm2ipWs1zvg60LvuNyWNcc4Yrr2xqqvP1ssL0+ebyMZI2Fef7ifaa/TN67Zzx824MQ+I5pKJ08M6eiYXbDz7sSQW8YRXXTpStQ0VakIKTFiWluL2WITvbIQEw8jc8=
+	t=1768755776; cv=none; b=dxPWOAAm5PzLwlLXiEeocSyKdhKsOnvOW5UBH6dImVA5RUjUGiQpdVz/zAKcLTyiOX1t371uXP+/LA3j9EFeHQFlfc33DsSu3JIT4OX8Rp5Hq09laMzXQpbALR4modwfU+D/qq3mDBkjTAMEQ87CxFDoz5Y4HeirM8nZyfEfiNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768690129; c=relaxed/simple;
-	bh=eoAiYzEULWXg85JvXinMkueaZK1CXYsvYGXVb4A1ZXw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LRkjhcPLVtegOP9nGl09vA3C8y4vzQI6rjSA9fpRUdiM35l4Db9Qf98qeW0FozQ/w1KTU2o2k3cPqieYEWgxiXsSfrAppbcYLqS5LaLV9mLB1ZvdItDsOVeUcR52VgJ0SHWwIs7iEA3QZherCkFhy6RQB+fOcIFtrCMOUG3xWZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WdlGoPd3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D65CC4CEF7;
-	Sat, 17 Jan 2026 22:48:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768690129;
-	bh=eoAiYzEULWXg85JvXinMkueaZK1CXYsvYGXVb4A1ZXw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WdlGoPd3xUSeKCaUCX77/Cu1pCRP7hsPL1PgaOFepU5A7GYkQJ6+fHEaerTwHTkbX
-	 YU5/qQK4JiyPPwsnk4D52CvbUq9mRLkz9IeDrhTjaeuO4hqeraP897byXK/9fkzKem
-	 94Dt2pmAYzFRTNnaKmepRXlZhallnlRealw2QTuY82TQAc61UWWFTF2iasO0xniWWY
-	 /1GaBW1JfcDImvVd8uKjH7YZlB8EQmygEVYhHEPdNFUo/CHxlK1HLuFST1hGibsSyd
-	 OR5dRPzGlo9iTrVV5Dg+b2bwN9hU/opF+bkgR6BNy4qz+dzK9hlsiIRKIeHRqgen3J
-	 ZD0U6xBJAmZgg==
-Date: Sat, 17 Jan 2026 14:48:47 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@linux.microsoft.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>, KY Srinivasan
- <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
- <DECUI@microsoft.com>, Long Li <longli@microsoft.com>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Konstantin
- Taranov <kotaranov@microsoft.com>, Simon Horman <horms@kernel.org>, Erni
- Sri Satya Vennela <ernis@linux.microsoft.com>, Shradha Gupta
- <shradhagupta@linux.microsoft.com>, Saurabh Sengar
- <ssengar@linux.microsoft.com>, Aditya Garg
- <gargaditya@linux.microsoft.com>, Dipayaan Roy
- <dipayanroy@linux.microsoft.com>, Shiraz Saleem
- <shirazsaleem@microsoft.com>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-rdma@vger.kernel.org"
- <linux-rdma@vger.kernel.org>, Paul Rosswurm <paulros@microsoft.com>
-Subject: Re: [EXTERNAL] Re: [PATCH V2,net-next, 1/2] net: mana: Add support
- for coalesced RX packets on CQE
-Message-ID: <20260117144847.20676729@kernel.org>
-In-Reply-To: <SA3PR21MB3867D18555258EDB7FCF9ACACA8AA@SA3PR21MB3867.namprd21.prod.outlook.com>
-References: <1767732407-12389-1-git-send-email-haiyangz@linux.microsoft.com>
-	<1767732407-12389-2-git-send-email-haiyangz@linux.microsoft.com>
-	<20260109175610.0eb69acb@kernel.org>
-	<SA3PR21MB3867BAD6022A1CAE2AC9E202CA81A@SA3PR21MB3867.namprd21.prod.outlook.com>
-	<20260112172146.04b4a70f@kernel.org>
-	<SA3PR21MB3867B36A9565AB01B0114D3ACA8EA@SA3PR21MB3867.namprd21.prod.outlook.com>
-	<SA3PR21MB3867A54AA709CEE59F610943CA8EA@SA3PR21MB3867.namprd21.prod.outlook.com>
-	<20260113170948.1d6fbdaf@kernel.org>
-	<SA3PR21MB38676C98AA702F212CE391E2CA8FA@SA3PR21MB3867.namprd21.prod.outlook.com>
-	<20260114185450.58db5a6d@kernel.org>
-	<SA3PR21MB38673CA4DDE618A5D9C4FA99CA8CA@SA3PR21MB3867.namprd21.prod.outlook.com>
-	<20260115181434.4494fe9f@kernel.org>
-	<SA3PR21MB3867B98BBA96FF3BA7F42F3FCA8DA@SA3PR21MB3867.namprd21.prod.outlook.com>
-	<20260117085850.0ece5765@kernel.org>
-	<SA3PR21MB3867D18555258EDB7FCF9ACACA8AA@SA3PR21MB3867.namprd21.prod.outlook.com>
+	s=arc-20240116; t=1768755776; c=relaxed/simple;
+	bh=twzUG/3AjOfMMPYomGUOPbcCEi4NPF834XhrQbjN9rQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Rvah5nTpMMq9hYEHGCkxF8Pb9kvRQuP4A+25et5zau4E5mwUc9slvEDzb8xZKQ/4641XWiFhrH4PKcFa/Z48YpKoaHNymLVXUqXfm6Idw+r0b9vbk5V5q+wJowWrUnHQwvisoM/eAPmZVMXuhITWv7TKegpVSP36AzXjl0zNwMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gC5y9GVw; arc=none smtp.client-ip=209.85.210.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-81345800791so2153600b3a.0
+        for <linux-hyperv@vger.kernel.org>; Sun, 18 Jan 2026 09:02:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768755774; x=1769360574; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bNLpQwv6x4AVFBP8uMEikkKSaNejL9z6qE3ug9GA0tY=;
+        b=gC5y9GVwBnlP/CalntdpaJEESzpCqCMAUDWEm3n4mq0aNZocEoY8FVJcxvRLKiNaIy
+         8AhZ4IJE+xC6pnWfp6VMN7AES8HFm+lbdID/dENc9FB5wONyJXEjnAThb5WqrCP3Igul
+         yJQyQ6bb/X4MwgM+KXOstNbzjdP6KXYEj4KbXbxjhIczZV2sRmASUQCeBooHkA0D/Jlo
+         He85aKxIwhVzg9/0JgZAGpRcfEVn6O5lKpyA1LrAFBq4to9o7kw8ln0Z7du4wmRPa7RV
+         uTkZBQ8ny16GxXG4Zov3Oqvl35y7ecqYqxqimjMZG9IIsObibgjSrzZwbxfDH8i4IXcc
+         3aFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768755774; x=1769360574;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bNLpQwv6x4AVFBP8uMEikkKSaNejL9z6qE3ug9GA0tY=;
+        b=n83z+s3NYUPtxHduXLlPW9x0yv5AjyWNnDdIMJWt5vxeY3qlNpJifNwzAEaHcWmaYt
+         i2V99jKZgXulilFzjEYtdsoCa1eKx2WDG+Me53kC4ECRocaIZGnjgMXAEerne5qP9zgi
+         gJnvqrG0qMKn4O0PPRWWBhYrhUvEqxOAKhEZhU4ZXW3V6MPbZqHJaMN7FVvG93RSXv5r
+         K1NFq6PIcVMvnQKfqrZ5VRC6ENheJqNDF/7ctvWuZYFwQ+KU8q2k4VRii2htiiVC5EFx
+         CZv78qcSvMSnq6P9KKPUOo2X9RcJA+Ne9mnm34iYVP0KjyeeR/GEy3x1Lidoi0iFrRuG
+         z+lg==
+X-Forwarded-Encrypted: i=1; AJvYcCWyGvpBSAvDOk8wVuSNqV7KTJzSY3wRT5DakaFL9aLR6DqxedTAhFJ4X1qtIq8nzttA5I4YjRIGjB3mvqs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzA7rixBwmx4QzZRmoamQNgbygnJXTNkZsu/DsbLLqVmqPqHWe/
+	erGZJu+QVznmLXEmc0AqH6UeGLdvMFC9gYfCqoXjCbOAXNA2quU5TlZc
+X-Gm-Gg: AY/fxX62su1j//Zkqo3Dx2/5+iiaeDNlGL2iiuLy826IVOFdPVlq5alK0hLIGt/WF5m
+	Z/6kL50P85q2hBUvfjXxAj50OQdllZC6jRhP0N60RUKlxRIzjJxaOOHhMW//e8Sz8UGos8sJSVw
+	IHNT4/rnyZm5n+iX3fPbSNqI/ITjcfmNrQufK7CuAEfuG6U+JyNTBCAT1LAyj8fut9AfkSRJ+HG
+	PVWRY4YRpMFaRfu/NbGdFIKI/RrUTdeo0ifNGn+27nRbtB38RhEr0w++wwsn6daPjgzEQoF2e4b
+	QhhyRHTs1Uy3dihPJ4KV+sApBoiNc7W9Yzk43BuMqEqnydQ5ckSAIpD7HKFLHPklxozLqyzqKWd
+	zQ/1+IfAMVG/0eXSNXj2UVwiI+tQAbOQ/F6ScpY5is8NB6/lxGnR67Akcq4/kqIIUW5BQcez+y1
+	hW34zTxk+U7oH6l5/tAZmhLiRrwt6RQ6pYeeKNJBolaCTeVmooc5n0QwQweQ9g7yWy+FWi8WutV
+	iie
+X-Received: by 2002:a05:6a00:3397:b0:81f:4566:cce8 with SMTP id d2e1a72fcca58-81fa184d5b5mr6837551b3a.55.1768755774223;
+        Sun, 18 Jan 2026 09:02:54 -0800 (PST)
+Received: from localhost.localdomain (c-174-165-208-10.hsd1.wa.comcast.net. [174.165.208.10])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-81fa1094bfasm7050390b3a.1.2026.01.18.09.02.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Jan 2026 09:02:53 -0800 (PST)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	longli@microsoft.com,
+	linux-hyperv@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] mshv: Fix compiler warning about cast converting incompatible function type
+Date: Sun, 18 Jan 2026 09:02:45 -0800
+Message-Id: <20260118170245.160050-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Sat, 17 Jan 2026 18:01:18 +0000 Haiyang Zhang wrote:
-> > > Since this feature is not common to other NICs, can we use an
-> > > ethtool private flag instead?  
-> > 
-> > It's extremely common. Descriptor writeback at the granularity of one
-> > packet would kill PCIe performance. We just don't have uAPI so NICs
-> > either don't expose the knob or "reuse" another coalescing param.  
-> 
-> I see. So how about adding a new param like below to "ethtool -C"?
-> ethtool -C|--coalesce devname [rx-cqe-coalesce on|off]
+From: Michael Kelley <mhklinux@outlook.com>
 
-I don't think we need on / off, just the params.
-If someone needs on / off setting - the size to 1 is basically off.
+In mshv_vtl_sint_ioctl_pause_msg_stream(), the reference to function
+mshv_vtl_synic_mask_vmbus_sint() is cast to type smp_call_func_t. The
+cast generates a compiler warning because the function signature of
+mshv_vtl_synic_mask_vmbus_sint() doesn't match smp_call_func_t.
 
-> > > When the flag is set, the CQE coalescing will be enabled and put
-> > > up to 4 pkts in a CQE. support  
-> > > Does the "size" mean the max pks per CQE (1 or 4)?  
->  [...]  
-> 
-> In "ethtool -c" output, add a new value like this?
-> rx-cqe-frames:      (1 or 4 frames/CQE for this NIC)
+There's no actual bug here because the mis-matched function signatures
+are compatible at runtime. Nonetheless, eliminate the compiler warning
+by changing the function signature of mshv_vtl_synic_mask_vmbus_sint()
+to match what on_each_cpu() expects. Remove the cast because it is then
+no longer necessary.
 
-SG
+No functional change.
 
-> > > The timeout value is not even exposed to driver, and subject to change
-> > > in the future. Also the HW mechanism is proprietary... So, can we not
-> > > "expose" the timeout value in "ethtool -c" outputs, because it's not
-> > > available at driver level?  
-> > 
-> > Add it to the FW API and have FW send the current value to the driver?  
-> 
-> I don't know where is the timeout value in the HW / FW layers. Adding 
-> new info to the HW/FW API needs other team's approval, and their work, 
-> which will need a complex process and a long time.
-> 
-> > You were concerned (in the commit msg) that there's a latency cost,
-> > which is fair but I think for 99% of users 2usec is absolutely
-> > not detectable (it takes longer for the CPU to wake). So I think it'd
-> > be very valuable to the user to understand the order of magnitude of
-> > latency we're talking about here.  
-> 
-> For now, may I document the 2us in the patch description? And add a
-> new item to the "ethtool -c" output, like "rx-cqe-usecs", label is as 
-> "n/a" for now, while we work out with other teams on the time value 
-> API at HW/FW layers? So, this CQE coalescing feature support won't be
-> blocked by this "2usec" info API for a long time?
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202601170352.qbh3EKH5-lkp@intel.com/
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+---
+ drivers/hv/mshv_vtl_main.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Please do it right. We are in no rush upstream. It can't be that hard
-to add a single API to the FW within a single organization..
+diff --git a/drivers/hv/mshv_vtl_main.c b/drivers/hv/mshv_vtl_main.c
+index 2cebe9de5a5a..7bbbce009732 100644
+--- a/drivers/hv/mshv_vtl_main.c
++++ b/drivers/hv/mshv_vtl_main.c
+@@ -845,9 +845,10 @@ static const struct file_operations mshv_vtl_fops = {
+ 	.mmap = mshv_vtl_mmap,
+ };
+ 
+-static void mshv_vtl_synic_mask_vmbus_sint(const u8 *mask)
++static void mshv_vtl_synic_mask_vmbus_sint(void *info)
+ {
+ 	union hv_synic_sint sint;
++	const u8 *mask = info;
+ 
+ 	sint.as_uint64 = 0;
+ 	sint.vector = HYPERVISOR_CALLBACK_VECTOR;
+@@ -999,7 +1000,7 @@ static int mshv_vtl_sint_ioctl_pause_msg_stream(struct mshv_sint_mask __user *ar
+ 	if (copy_from_user(&mask, arg, sizeof(mask)))
+ 		return -EFAULT;
+ 	guard(mutex)(&vtl2_vmbus_sint_mask_mutex);
+-	on_each_cpu((smp_call_func_t)mshv_vtl_synic_mask_vmbus_sint, &mask.mask, 1);
++	on_each_cpu(mshv_vtl_synic_mask_vmbus_sint, &mask.mask, 1);
+ 	WRITE_ONCE(vtl_synic_mask_vmbus_sint_masked, mask.mask != 0);
+ 	if (mask.mask)
+ 		wake_up_interruptible_poll(&fd_wait_queue, EPOLLIN);
+-- 
+2.25.1
+
 
