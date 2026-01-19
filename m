@@ -1,276 +1,160 @@
-Return-Path: <linux-hyperv+bounces-8364-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8365-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E7A5D3A42A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Jan 2026 11:06:39 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05F06D3AFD1
+	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Jan 2026 16:59:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6043F306436D
-	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Jan 2026 10:03:18 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 2EDC430055A8
+	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Jan 2026 15:59:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E98A134BA2E;
-	Mon, 19 Jan 2026 10:03:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4BEB38E118;
+	Mon, 19 Jan 2026 15:59:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="GpEEGbk7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BjmeC9q7"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011008.outbound.protection.outlook.com [52.101.52.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6D11E32CF;
-	Mon, 19 Jan 2026 10:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768816997; cv=fail; b=POcuEdfNOnGlaPIoNtsNdpJJTegzPqEIq0SCu50Ucl4oo9ZvHd5XkIfFwG49XWkeAovaZsmK+8C+GG1b6K8kf1UFk5EbXY/qa4wQTbF0/H9c+5vduF8lSK6RyUln/zE6iSnjL4pwjhf54mk78aoa0zZPb0bMlaB7Ogh74a3+1uQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768816997; c=relaxed/simple;
-	bh=vANberz8ED21XySiZg6lXAglzcFmb8bJH7myL00/Hms=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=aWje0mVLHgdYYnb+PbAW3ZnigiMOZCs5F6fVmvksQ5YiRV+PjHVHgW/Jf+zKLvR8CEgCeqFlTx1SX245E62TCJP3x6g2zsMDsVW656My9CA2YEUE1RYXhf+Xnms1SNnPqCFhl4GVrVrnXIZjinOZT0m6cbovFIfe6ro8uKPv10c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=GpEEGbk7; arc=fail smtp.client-ip=52.101.52.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=p3CeNXa875P5PVZfIPTFSvPlFIiYAVGRP7qIKbOMF50VBq/bXjRRgchRKswssq69Q1rzRk8OYIy/bAnQ7H7F1f1Hyb/QQUth/n+ijkDb0NMm09uwR4VD/fn1LQ8H37Z5vmZn293DEN3USYGps06/cwLCXd6PG4UQN0Nz3EVTHiEqnUNKoBMjgzOSErAG0aeO02l3j6mPuP0/DxsSvxhoTR4iIV3XpLVgRD1vIhDzFscUj+xbzVS7qvxPLqQK0qyPTBUQamEzEOsZ6Uv5Q3G+s3UNeXAFQgyhH/CvO/dAiy/L7x57itE73mgd+5HheO66UkEhPbll188OHHSXws2Hlg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SFTKdGWFrjLyS8X5crONs5wz2+BPgW7kMXu+BJTcKJM=;
- b=hq41MtbtJiS17tSBC1Ph0P+lxankD+wdunl9T0LV9gpJHTr6UR4exBMcrJ/xMEVVDIdFcjXq+NWUYP25hyN40ZFhD1hVq3vSp/rHmwJ5qQ/Me8F5TfsHAGKkxqou179zP96+M9QE0Curv4QzaEXZJ7jLgBwyaT9heUk/g1l7juXO2Ke/aoePs06+D88RcFr526mRl+sWzd2oYxgngGNkIdCAysRZrIayOG7FWwMx3F/2qDj1n+5RrZsFgakHyxN7DClDFr2kmKvq15sFOd5s+Egfo0p1JpgYQr7U+WIOCddz66TVzbaEpavmuoXKWYjitgDN1rT1HcX4z8M7h/XixQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SFTKdGWFrjLyS8X5crONs5wz2+BPgW7kMXu+BJTcKJM=;
- b=GpEEGbk7ANKHd9QBBfgP6jdMW8KysYCBZeXGV+Y+3hLaeZ/x/+UcpizcLOKGoXefmaHOkWd/wtzwpZxFomGVUoBaiubfCmdekWeHAGI6ZnI5FX3aQcRPT475GRTeVROUIog6G+voGVGCoXCCmivH2SfGiTX/Qs/fPk0xo1QDyyg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by DS0PR12MB999103.namprd12.prod.outlook.com (2603:10b6:8:2fe::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.11; Mon, 19 Jan
- 2026 10:03:14 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%4]) with mapi id 15.20.9520.011; Mon, 19 Jan 2026
- 10:03:14 +0000
-Message-ID: <8ae98c9c-9cea-4c31-b888-9e3fcda42d86@amd.com>
-Date: Mon, 19 Jan 2026 11:03:00 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/12] Recover sysfb after DRM probe failure
-To: Zack Rusin <zack.rusin@broadcom.com>,
- Thomas Zimmermann <tzimmermann@suse.de>
-Cc: dri-devel@lists.freedesktop.org, Alex Deucher
- <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org,
- Ard Biesheuvel <ardb@kernel.org>, Ce Sun <cesun102@amd.com>,
- Chia-I Wu <olvaffe@gmail.com>, Danilo Krummrich <dakr@kernel.org>,
- Dave Airlie <airlied@redhat.com>, Deepak Rawat <drawat.floss@gmail.com>,
- Dmitry Osipenko <dmitry.osipenko@collabora.com>,
- Gerd Hoffmann <kraxel@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>,
- Hans de Goede <hansg@kernel.org>, Hawking Zhang <Hawking.Zhang@amd.com>,
- Helge Deller <deller@gmx.de>, intel-gfx@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, Jani Nikula <jani.nikula@linux.intel.com>,
- Javier Martinez Canillas <javierm@redhat.com>,
- Jocelyn Falempe <jfalempe@redhat.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Lijo Lazar <lijo.lazar@amd.com>, linux-efi@vger.kernel.org,
- linux-fbdev@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, Lucas De Marchi <lucas.demarchi@intel.com>,
- Lyude Paul <lyude@redhat.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- "Mario Limonciello (AMD)" <superm1@kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Maxime Ripard <mripard@kernel.org>, nouveau@lists.freedesktop.org,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>,
- spice-devel@lists.freedesktop.org,
- =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- =?UTF-8?Q?Timur_Krist=C3=B3f?= <timur.kristof@gmail.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>, virtualization@lists.linux.dev,
- Vitaly Prosyak <vitaly.prosyak@amd.com>
-References: <20251229215906.3688205-1-zack.rusin@broadcom.com>
- <c816f7ed-66e0-4773-b3d1-4769234bd30b@suse.de>
- <CABQX2QNQU4XZ1rJFqnJeMkz8WP=t9atj0BqXHbDQab7ZnAyJxg@mail.gmail.com>
- <97993761-5884-4ada-b345-9fb64819e02a@suse.de>
- <CABQX2QMn_dTh2h44LRwB7+RxGqK3Jn+QCx38xWrzpNJG5SZ9-Q@mail.gmail.com>
- <f3643c19-c250-4927-b39d-37d2494c7c84@suse.de>
- <CABQX2QM0_6DJtrahJS7x9iF_wcSZRc4dohEiPnMCtAg7Vt7JPQ@mail.gmail.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <CABQX2QM0_6DJtrahJS7x9iF_wcSZRc4dohEiPnMCtAg7Vt7JPQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR2P281CA0078.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:9a::20) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5159C38E10D
+	for <linux-hyperv@vger.kernel.org>; Mon, 19 Jan 2026 15:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.194
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768838387; cv=none; b=dEzxbZ/w5YxP/37WNskeFYOcy/bf1Ec/fLHoSSGK5g0qHJx6MV2KJaqXrY6PDQM1mqjfBZ+NlAfwLImmK0d48+iDrAtuo2Kkbhby5QVqRcw3fOmCa3hfGC6rHjtoK66S1MrQxhH0+66xekxxL0QyIFG55JtlY29f4eXmfiuaA3Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768838387; c=relaxed/simple;
+	bh=ul1iBwV17n5WsyCmr/KCxFbChBqQIKDCJp2OvGvZe/g=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=Bi4/hRRMpZwmIKgRFO4AvQactIIgTcGrX0eXEuAodjbhEcnjgqXnCLFkzPoKFW+iQaY1FWWI4rSlm4ljHFnDhuwu+Y2lGT73nxRKMdAalbxqNr3PnrEIlNNzVmxfwzQ1n4DlXlBpdVf6ZnGzsjyBULyFcZcecKjvWy3KjyMjoYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BjmeC9q7; arc=none smtp.client-ip=209.85.210.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-7f89d0b37f0so2595985b3a.0
+        for <linux-hyperv@vger.kernel.org>; Mon, 19 Jan 2026 07:59:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768838386; x=1769443186; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MU79p+y/0COiaT48U0qEL3YPxlYifFAsQFE8p7qpyKQ=;
+        b=BjmeC9q7twZiQpjxIyHxpywnCiMhpTSQbvOmLJ4oKtje5OtEg5R5Cgc6SdaU+kYxsy
+         JaurHCTsldWBbRkgG1Psz/xRhgLq40EHGnafUe18pj0SNQlgyY9H18UyoFtYbUEvGUs2
+         +NM0MoVQlYogvzKO+xA89KThEj2bCQPeg+s0ruh3RLNAivWOJwCM1Cm6WMGjypErs1KP
+         GBp6gShRMn46i3RjeBxg/Khjsbs7tmPPZjmSWsFW8zCmZpoI+vTeN4Txm0ZouIH1o5gR
+         isMhYtbW5qHpH7jkJgNwcKkH9uEh114NIkwjusTItToRIaHbMROB7M70g+ZTZooEbl60
+         EVrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768838386; x=1769443186;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MU79p+y/0COiaT48U0qEL3YPxlYifFAsQFE8p7qpyKQ=;
+        b=Xx38UTkPP3S5wC4Wv0wqSQ4P++QNX004trHr1UVEmSOQY1Xwrh1e6SDgPTgULYLQ5U
+         epoIp60hhLRBsK3XZiJ6jhdy5HqEZSHdFQVfYAEoGXawDk2nhV6Gj426fMKFYu+JsOFy
+         aQquSIa2/AkGKan8djkMthVhfq4J79oPwaJy+J8Og5P7EBjAbR2MivDpSqdEiyvI+ZR0
+         d1bihwAx1XUiZnY3gFBrZTsJU3POC8d9RNl37fOFxXMr4UqFwScFve6USx9nzIOIKf1l
+         Qe5SpJvLiYkFnVuwyBXp0tVCj4gCpMIMFmvtRmeG0yrX6F2lt0vWrvGvSgVLCjQjBddM
+         Wddg==
+X-Forwarded-Encrypted: i=1; AJvYcCWsDrBOgninWZdPpk0D04+Sae09GiGeCbyZ/6hBydh62vdGxWyZnSEgvoPVMLDxlStkp8gsD9ken17oG3g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxkCpD+iW35CKHrd6/tg4eXO9oNFs92jkdmsMXkF9zzILGRKN7
+	fC95xgaGA+M+ZEgrvLdl0HHKuM3The6CE1KTnwXFvo592d9uu7h+hD4y
+X-Gm-Gg: AY/fxX6urTQSEmJRogYwIlaOg2hLqYnho8rAEYute1ews/3eITJxCxCuzhLQ5jGhIN6
+	kYxhhIg8C74J4PA7dYvSTsVn89mE0szjS3cTYgtm4ruM7Xi50DV4krIr08EQac1+ph+O8BxRi8u
+	85q8ivfNyDezErMqzc2XJgc3e3WWz0CshuQiobGd+7BYLzLh4NoAwwRmxjin3gvif7sysoFP1ve
+	NkOMl4nogBAOI3vDYGJkmtzdboNiqDBHWz/QFnAlmQQBPivS+TCp0i8vnmz0TjTqQ8N8xsZF8OA
+	+gdEc13f2vIUQiQR5JFPBm/KwZZw0LqYAVpvxSzcNr/sGhPPcFEh3/eqo5+dqVy49A10P7ekTs1
+	nONTOpOyYl/HycUzTMO93XNgcboUlXnbKIsQX+0HjtF3Bo86G+R2nr26sPKkSNIy3cLd58/f3Ua
+	8b8TcbMgUicA65i7gFmXQX+naURx+LcvFHgPNn413gO7yzcIOvVoiFnZ26gdmtRDdfTA==
+X-Received: by 2002:a05:6a21:d8a:b0:342:2a1b:870f with SMTP id adf61e73a8af0-38dff368227mr9950468637.20.1768838385667;
+        Mon, 19 Jan 2026 07:59:45 -0800 (PST)
+Received: from localhost.localdomain (c-174-165-208-10.hsd1.wa.comcast.net. [174.165.208.10])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c5edf3791e5sm8120403a12.31.2026.01.19.07.59.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Jan 2026 07:59:45 -0800 (PST)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	longli@microsoft.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] x86/hyperv: Use memremap()/memunmap() instead of ioremap_cache()/iounmap()
+Date: Mon, 19 Jan 2026 07:59:37 -0800
+Message-Id: <20260119155937.46203-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|DS0PR12MB999103:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5ac04a43-7bcc-4274-7af4-08de5741f599
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UUErbXNjNXY5dFVJWjh6VEp0TkhMOGFhQXRSSzlEWXNhYXRCQUIyZXc3ZEZj?=
- =?utf-8?B?cENsd1N1eUFCYk5rQS95NjY4UDd2TlNOSCt3R0lMQU9wYVlIZXVLMVFGYTFK?=
- =?utf-8?B?TnBKakQ0a2tXbm5UYjgwUjJrdDdnKzZnMFVNNG1rVTlOVjhtbEdYUE5MREta?=
- =?utf-8?B?dnR5TWhIYmR5SE14UGx0Nzd3S2pMaHB6eUF4OEl4dk9pU3BIbG1meXltUkMz?=
- =?utf-8?B?SS9JOUIrRDhuejZiNSsyb2s0RG9uSmlxVUJjVDUzb1lkMnhteTEwV1k1Zndz?=
- =?utf-8?B?ajhpVjdpQzQrZHdPYkw5a1Z1MnRLb1g3MEwzRmxvTVQzcHpJZEhmOXU3dEZV?=
- =?utf-8?B?aU1LRWZFM1V1OWlMUkxoOFdrZ3RrWWNOdWMwanZEcEttckhpS28zSkVvdVJH?=
- =?utf-8?B?SnpCNUtOa2dKUFhQdCtwOE0rTTN3Q2htSjZYOThDbXVROGNZeGxCZk0wU1Vl?=
- =?utf-8?B?SEFLZVp6R2xycDh6TnVMM1plaVIxYmxUWEhnL1ltcmdST09MUVBGb25GblhH?=
- =?utf-8?B?dG1BS2hVUVFVdnp0M01lUEJ3T0JKaXFPS3JxZ2l5RGxWY256Y3pHVEw2SGtV?=
- =?utf-8?B?VWJ6RHp1a3UrZFlwdEw3dm5IT1htdThOR01EM0hqUTlIcXpTV0ZGa1pRSUZv?=
- =?utf-8?B?SENWVUk2WWJvSUxDaEJKMUwvQ0F2TVc1NStoU29xSHJMamc5ZGtPbGgvQXpn?=
- =?utf-8?B?Uk9VdzliYXNFRTk4TkFZV3d4aFFOOEZRRTFDQjBBVXBQeUdIaXpyc0FTWm5C?=
- =?utf-8?B?dG43UTFRYW90dHFGQjIwbW81MzRDOWdENVZJaks3ZkFxUXp4Smp0b015WXdY?=
- =?utf-8?B?ZkRLeFZVYUY1WGUyU2FOTERsTVdxR2VLRFIzQ2V4eWhHdFVzd1ZPSEpvbFF2?=
- =?utf-8?B?alpBdi9SdHlrcFp0Mjc4WnFKdzF1Qkp1a0pHNXplcjdlRTFMd05NZXhFOFRD?=
- =?utf-8?B?NXJtVmtVQ3VMNnpCNXdwR0Q3K2MzbURSK3ZINlhQUDJDL291anpyWXd6UHl0?=
- =?utf-8?B?QVU0LytVc1NKb2QyOEtiM2RNNUI0RFZrSjdhTzh5MDFOdjBFUWRqT2dHSWpW?=
- =?utf-8?B?Q3FCa0dhcEphd2VvbUJOOEZtcEZ1d2RjN3lZcjF1V1JMNjdJNTFmUFRzcUk0?=
- =?utf-8?B?N0dJVUpLOVhyOVJ0Tkw2TXducEJ5NWtpYW55UVBEMGdOak1tZnFmTXRzSUt6?=
- =?utf-8?B?WmFMVHBxeUtreFhBZWRZNEx1MGhWNXNuWEM0QWNON0xsSTV6UnV2bnAvWnZP?=
- =?utf-8?B?SW4za3IvUllwMFRyQ2dvaDJ2UHljdGh0Y3BOd0JNdHZqMkhiQjVBaHdxenVr?=
- =?utf-8?B?eDljSzFwZVNMUE1mZVZTM0Q0Zi84d2NLRHJVQitJMC9lc08zaHNSOTFjMlJD?=
- =?utf-8?B?a0VSbEQrcFdSMHdodnhZWUtxWDBjOWJFNldLWGN2eFd4Y0JyYytWSDVUWW81?=
- =?utf-8?B?N0ptRWpjbG1Gb0lPYzIrdUVKd1lEZjV6QmJ1K1VVdWJYSlB4cmhlbmVQQmNP?=
- =?utf-8?B?V3pVYjB0V1VmQUdkbUt6UCsvcW9tRGRrQWdjUnRzQ2xtMitKOU5yRmdGeGd0?=
- =?utf-8?B?ZWhDZFgyUllhbXBJV1dRSjZ6azE2azY5c0ZlVWl4S1lVQ0xWQS9DYmdNWHRB?=
- =?utf-8?B?aWhhbnNDeHYwMnJXL0RyVGREMkx5aHVEbGNqejZFZTdqc1BJZFU4WEdCTUR2?=
- =?utf-8?B?N29walZSMk5BZzUrRkdxcmcrRnlReEZmeUNmMzg1ZlZFMDBrMWNKWGVmOHlX?=
- =?utf-8?B?YVFHV1pra0lWTXIzU3FsTHJoMVJvVXhDNEQ3dFNncW9IKzg2ZUVyVnVlamZV?=
- =?utf-8?B?anpsVlY3NDliOFNtWWIrMk9tUXgyb0ZHZ3RkNVZlY0VaeWluNVIweHJESWxw?=
- =?utf-8?B?UU96eWZCWmpzdXMzbkh3UnltUEhtMHB1eHgrMWRBSUxrcTR6elh2QTV4N0xO?=
- =?utf-8?B?UUZJL3VsZ1F6Zk1lL0hZbDA2UkVRcUFZN2dOUlRabVVXSzlSUWNIVktWaTUz?=
- =?utf-8?B?UjIrd1FNMElnQlFRREdCbzJMMFU1bTZiVzRwUlJyZi8xelAzQUJkMjBoamdq?=
- =?utf-8?B?cVo3aXp2c09JVEcvQllwRFlHSVBYbVNWZndKclFYSk9vRjY2dkk0dkRZSjVE?=
- =?utf-8?Q?4LmY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MnZQZDdlbnFhb3lmWThNYzdlTURmWmdoYklpUHlvZTZVUURsbmpJRW5Wei80?=
- =?utf-8?B?OEQrTUxMTGliL0hMMXg1Uk1MZUN4a0Z6TGdTcWtIM0hhWVArQXRSQkNGNTNV?=
- =?utf-8?B?TW56Mit2ZExxZTlnQkNON0NibmxBaHAraW5xSjdWbzBPSGZoN016VWpUeFRM?=
- =?utf-8?B?UWR1Q29IVVl0UVVmZ0pHK2pKblo2amhoUVN4TGQ3UTFiaSttMTQ1VVBZTG53?=
- =?utf-8?B?UldEOVppZ3VDeUhNR1dlUjdOM1dQdU5BQ0h0cS9UVWRoRDNsNmFXMjNNVEJy?=
- =?utf-8?B?QzVKQVRCRE5pbmNxT3lPVnNGaDVBVmJaRXNqVEhqQ1hhRXpNMlMwQjdLbnJR?=
- =?utf-8?B?dnViMVQxV1RBSmRaUUpVTTMzdG1EVmNLQUhiQkorZFcrUk9pOExyMGFkUkxr?=
- =?utf-8?B?T0hpbEZFdTBVd08rZFNIdUtCVE92U29saUhSWE82OFEyK2d3R2ptQm04ZlNi?=
- =?utf-8?B?dGtSblJmbk9CTUtIMzhvV2c1QVZJajhDWHdVUFcxb1Q2bk5qbVZsckF5YS9R?=
- =?utf-8?B?dUJrczJLb1lZNDJUYnhBS2tNeW9aM1pBblBRUi9zOU8vVGpQT2IyOWl5ZWUy?=
- =?utf-8?B?cENoU1ErWE5XSFdzdDh6YkJBUFdmb3RaSXVENGdneVgzcFZOMTdCUVprWHFm?=
- =?utf-8?B?R3RxQk8yU29odi9VK3hORkVIK3BzVWRaeU9KL2pzNnNhK2p2Ui9tcnVvSUdX?=
- =?utf-8?B?ejRQb0dJQXQvRDAzRUlVVHlHMWtNeGJ0bFlTcERIVXRKcGxSbmxqVjQ3bnVU?=
- =?utf-8?B?NGRKanFEN0ZUZGlWK3lSSG10S3p2MzVYSVkzWDlQUmovb3JPNXo4a1hrbjBC?=
- =?utf-8?B?dTNybTVOTHNmNnduOEswaitQK2wxUWZsMmF6dE8vcEhnUjhjZnoyMGd5LzZH?=
- =?utf-8?B?L0J3U1FQaDhPS3VqcnFvbjZrRC9tRy9xV3RwYVVEbjRzY1Fod3JnNDZZaUYx?=
- =?utf-8?B?M0tBU0o4bGE5Skw4M1ZyOGxMVTZoTEdXbHI1cWFBSnpxbmx3dHVTK1FoWkFV?=
- =?utf-8?B?L1NOUmRwQktJb1U1RUlFUnRmN1JxR3YxYmRTWG9YM2xCZUNRZTJXY2RJM3Y0?=
- =?utf-8?B?TFh2S2VHcFcyUnJKUXVyak1VSUc1RmUza1Via1pLeXNsZnFGekd1dlVxNUU3?=
- =?utf-8?B?RDRvcnFiM09rNHJNbUk5Zk1aVEEvY3M4eUZhb1hhUlNKNzlFRjdqRWdVVUlW?=
- =?utf-8?B?WEdZcER0dVByRWdmUllCd01Qazl1S0cyMU13c2dqVkFIaTJ2SU40THlaRzhL?=
- =?utf-8?B?Q0ZIS3p4WU5DTlF5a0xCT3J6UmtxVTFGbzNrYXlYbEhxaHV3MENLaWlFOEZp?=
- =?utf-8?B?TUJ2VzdUL3BUaGE3czJpb1V0S0JwUjVXaWtLbWs1UDFpZWloeHBHNnlkTlpV?=
- =?utf-8?B?dGsrWGVsd2FFd2ZHQ0l4REswN2IzaHY2TFR3U010WmxraHMrdVFrQ1hzRU44?=
- =?utf-8?B?RUxHVkV6ZFlTbVRFWEdjeFUzSk0xTDFiYldFbHBEa09UU0tNZE1WMzE1Z3JK?=
- =?utf-8?B?dXVwM3N4Q3d2YWlWZkZ4VzVScDdpUGcvYkNMSjZGcGZvd0JnOTFDKys3UDkx?=
- =?utf-8?B?Q1hzWWFMckFSTWU5MzBrN21FTE0rejFFT0dLRUpEYzhvRmNBclBNQmpmV1Uw?=
- =?utf-8?B?SWQwMmY2OFI1VWlrZGNVQlFleldmeGFuRXZOQ0g2bkxsemNuZVJxcnpMMkY3?=
- =?utf-8?B?MlJWYWcxWWtWS1Y5OE42U3FtV0NPU0xZWm9ZUElQTzhQd1EvTmlNUG8zUk5m?=
- =?utf-8?B?bkhRS1IyakFiNm16VnhQeEFOVy81U3RlMCsvMXZicDV2bjJ5VDVDb1R0WldN?=
- =?utf-8?B?ekhSaDE4dU56cVk1L3htdlQzSFk5bGNpdnFZb2dwVTAxWk1KdUFnT211eHNq?=
- =?utf-8?B?a091bi9Eb1lzOWd1OUNWYm16NlFTRG9reEhBaDZvNXVVdFpvZUZmbmVzcFBJ?=
- =?utf-8?B?OEwrSTVyeXRwdjlmNkhVK2ZLTFdnZGV3QWZ4b3BKYm85Q0pkTUZCNXR6VHVy?=
- =?utf-8?B?SHo4d0V2VTdtbGNCU29ESDBEdG9ES0p5bGN6WGVQNXJYbFA2T29GdDVZUVcr?=
- =?utf-8?B?RFdWVFB1bFZhOW1sYWczYTl3d0pCMlZra0VtY0Q3Yk5YcWFXeGNPTEloZDFQ?=
- =?utf-8?B?NXhHdWNRN01HalpEanlGS1grNjcrc1VHamFuMVBscm9LOHJnd1BadGMyanZs?=
- =?utf-8?B?Y2hBUXpNU0g1c3pJbGVVQWZjTkMxTHo1a1ozWjhtK0N5TG5QTGhkc3dBNmwv?=
- =?utf-8?B?VW5GZEJ2d0NNM3VLVWFiY3V1ZlB0YS9ibHlyekR4dGNiZjc3c09OMWxMNUFs?=
- =?utf-8?Q?jaB2aGGklRkEgcx4oy?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ac04a43-7bcc-4274-7af4-08de5741f599
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2026 10:03:13.9919
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kwhI5gdpQX3txLeuFYgdHaHLP7sHAOxP/GZndYflLnqehrcaw4zlCL12M5CpDKoq
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB999103
+Content-Transfer-Encoding: 8bit
 
-On 1/17/26 07:02, Zack Rusin wrote:
-> On Fri, Jan 16, 2026 at 2:58 AM Thomas Zimmermann <tzimmermann@suse.de> wrote:
->>
->> Hi
->>
->> Am 16.01.26 um 04:59 schrieb Zack Rusin:
->>> On Thu, Jan 15, 2026 at 6:02 AM Thomas Zimmermann <tzimmermann@suse.de> wrote:
->>>> That's really not going to work. For example, in the current series, you
->>>> invoke devm_aperture_remove_conflicting_pci_devices_done() after
->>>> drm_mode_reset(), drm_dev_register() and drm_client_setup().
->>> That's perfectly fine,
->>> devm_aperture_remove_conflicting_pci_devices_done is removing the
->>> reload behavior not doing anything.
->>>
->>> This series, essentially, just adds a "defer" statement to
->>> aperture_remove_conflicting_pci_devices that says
->>>
->>> "reload sysfb if this driver unloads".
->>>
->>> devm_aperture_remove_conflicting_pci_devices_done just cancels that defer.
->>
->> Exactly. And if that reload happens after the hardware state has been
->> changed, the result is undefined.
-> 
-> This is all predicated on drivers actually cleaning up after
-> themselves. I don't think any amount of good will or api design is
-> going to fix device specific state mismatches.
-> 
->> The current recovery/reload is not reliable in any case. A number of
->> high-profile devs have also said that it doesn't work with their driver.
->> The same is true for ast. So the current approach is not going to happen.
->>
->>> There also might be the case of some crazy behavior, e.g. pci bar
->>> resize in the driver makes the vga hardware crash or something, in
->>> which case, yea, we should definitely skip this patch, at least until
->>> those drivers properly cleanup on exit.
->>
->> There's nothing crazy here. It's standard probing code.
->>
->> If you want to to move forward, my suggestion is to look at the proposal
->> with the aperture_funcs callbacks that control sysfb device access. And
->> from there, build a full prototype with one or two drivers.
-> 
-> I don't think that approach is going to work. I don't think there's
-> anything that can be done if drivers didn't cleanup everything they've
-> done that might have broken sysfb on unload. I'm going to drop it
-> then, it's obviously a shame because it works fine with virtualized
-> drivers and they're ones that would likely profit from this the most
-> but I'm sceptical that I could do full system state set reset in a
-> generalized fashion for hw drivers or that the work required would be
-> worth the payoff.
+From: Michael Kelley <mhklinux@outlook.com>
 
-Well at least for PCI devices you could try doing a function level reset to get the HW back into some usable state.
+When running with a paravisor and SEV-SNP, the GHCB page is provided
+by the paravisor instead of being allocated by Linux. The provided page
+is normal memory, but is outside of the physical address space seen by
+Linux. As such it cannot be accessed via the kernel's direct map, and
+must be explicitly mapped to a kernel virtual address.
 
-This does *not* work for AMD HW since we have HW/FW bugs, but at least for your virtualized use case it might work.
+Current code uses ioremap_cache() and iounmap() to map and unmap the page.
+These functions are for use on I/O address space that may not behave as
+normal memory, so they generate or expect addresses with the __iomem
+attribute. For normal memory, the preferred functions are memremap() and
+memunmap(), which operate similarly but without __iomem.
 
-All you need then is an EFI, Vesa or int10 call to re-init the HW to the pre-driver load setup.
+At the time of the original work on CoCo VMs on Hyper-V, memremap() did not
+support creating a decrypted mapping, so ioremap_cache() was used instead,
+since I/O address space is always mapped decrypted. memremap() has since
+been enhanced to allow decrypted mappings, so replace ioremap_cache() with
+memremap() when mapping the GHCB page. Similarly, replace iounmap() with
+memunmap(). As a side benefit, the replacement cleans up 'sparse' warnings
+about __iomem mismatches.
 
-I know that is not the easiest thing to do, but still better than a black screen.
+The replacement is done to use the correct functions as long-term goodness
+and to clean up the sparse warnings. No runtime bugs are fixed.
 
-Regards,
-Christian.
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202311111925.iPGGJik4-lkp@intel.com/
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+---
+ arch/x86/hyperv/hv_init.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> 
-> z
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 14de43f4bc6c..ca992ca6394c 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -103,9 +103,9 @@ static int hyperv_init_ghcb(void)
+ 	 */
+ 	rdmsrq(MSR_AMD64_SEV_ES_GHCB, ghcb_gpa);
+ 
+-	/* Mask out vTOM bit. ioremap_cache() maps decrypted */
++	/* Mask out vTOM bit and map as decrypted */
+ 	ghcb_gpa &= ~ms_hyperv.shared_gpa_boundary;
+-	ghcb_va = (void *)ioremap_cache(ghcb_gpa, HV_HYP_PAGE_SIZE);
++	ghcb_va = memremap(ghcb_gpa, HV_HYP_PAGE_SIZE, MEMREMAP_WB | MEMREMAP_DEC);
+ 	if (!ghcb_va)
+ 		return -ENOMEM;
+ 
+@@ -277,7 +277,7 @@ static int hv_cpu_die(unsigned int cpu)
+ 	if (hv_ghcb_pg) {
+ 		ghcb_va = (void **)this_cpu_ptr(hv_ghcb_pg);
+ 		if (*ghcb_va)
+-			iounmap(*ghcb_va);
++			memunmap(*ghcb_va);
+ 		*ghcb_va = NULL;
+ 	}
+ 
+-- 
+2.25.1
 
 
