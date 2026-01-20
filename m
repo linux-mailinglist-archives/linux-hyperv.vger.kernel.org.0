@@ -1,239 +1,196 @@
-Return-Path: <linux-hyperv+bounces-8390-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8391-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iMPtINj/b2mUUgAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8390-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jan 2026 23:21:12 +0100
+	id +LkBKeoIcGlyUwAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8391-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jan 2026 23:59:54 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38E924CE12
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jan 2026 23:21:12 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C8AB4D649
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jan 2026 23:59:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id EBF8A8EEEED
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jan 2026 21:10:09 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3C7A9A4CC8A
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jan 2026 21:50:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5648438BDA9;
-	Tue, 20 Jan 2026 21:10:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C68AC3C1999;
+	Tue, 20 Jan 2026 21:50:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qf/4opCa"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XdU2nnEI"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B471B3A8FED;
-	Tue, 20 Jan 2026 21:10:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E95D3A7DEF;
+	Tue, 20 Jan 2026 21:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768943404; cv=none; b=cCCENc926QOhDt9JFPjJaN7qex5xxD9R/y4LbZwvmMbIiyWqFHm36+LKR/1HLQs0VjiymAODG7UPKJ3odJnbB8dYrfIJihxDbAsi9r0U7DFjiC/sSQwmGrKcDnTnRav0X7r3rpw8fV+xr5+93jddiYef5iO4FJExd4iPLGen+PU=
+	t=1768945838; cv=none; b=A/4J9znQBlJyGgiMySdNfpB5ZoMfFeI6nlfw4oqXerK5XbbqvtLB9849ue30txAcXTlljGww4i4AP7JDoCSBWj5eVOicaZrmZhmN90u6+Xbkkn1j/KWBSAZUAm/q0biyzc/QF65TL1JXgbPH6+Z5kbKim2kgjXNLKUigDbkl07E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768943404; c=relaxed/simple;
-	bh=ivHtQ6gh6IXT2hO8yZKcCr+q7hqDkcejJS3fvf52Ppo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N4cQdZk9DOhFIiOYHvB7yKWchEuds5yOzzTqKsWT2zAeZPB4GULz20pr6RrQpyTM+YgSXjjozXHNbmNPkKcu/oWHH2O4S3QJw1DbUweWaOt2INTSlxwMLQrK8cOj4oVkLwMTLQriO6wj2Reny93Im6Vsi4/euzfMwmO/WJUyc/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qf/4opCa; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768943402; x=1800479402;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ivHtQ6gh6IXT2hO8yZKcCr+q7hqDkcejJS3fvf52Ppo=;
-  b=Qf/4opCa5ESpQw/lRu/NTfJuA2nWFDkuAr2Pe2lz7WJLivxv01l0ND/Z
-   HMPSxuQ9WLHfFtTatWSdQnrwUnxUEFaHMsOciSXzJYUxqs0pvOC/GeRHC
-   ME7xP2UgaN8WDL2/15YBWVK5hfbwjF3bNCqWbkGllW5U9baQLWvqAxmdl
-   AFWk9fKxIJsIxpYkKyAjscNheDfO/2SHMNNaFQA+agpQHQL5CeGLVZZFw
-   FG14Gm2ukPYJR/oOrtnI0jCo1eNdfB/gwbhS3I6z41IVhFptAT0J0V48x
-   1jmrn1x/B//O4Ggk4U4Y3XqVyMY0VmS+pHCt4BdQWphD20ITPYwD6Z/HJ
-   w==;
-X-CSE-ConnectionGUID: IxF5pwnASuO1cPShdSJq6A==
-X-CSE-MsgGUID: 1ee2jgbARveVhxGhBOmHig==
-X-IronPort-AV: E=McAfee;i="6800,10657,11677"; a="80791588"
-X-IronPort-AV: E=Sophos;i="6.21,241,1763452800"; 
-   d="scan'208";a="80791588"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 13:10:01 -0800
-X-CSE-ConnectionGUID: AXjcRiQeSHCcT9bTnSKtZg==
-X-CSE-MsgGUID: g2PZWbUQQhiY3dv6ggSIEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,241,1763452800"; 
-   d="scan'208";a="237482957"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 20 Jan 2026 13:09:54 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1viIz1-00000000PXR-2Z9s;
-	Tue, 20 Jan 2026 21:09:51 +0000
-Date: Wed, 21 Jan 2026 05:09:48 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mukesh R <mrathor@linux.microsoft.com>, linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	iommu@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	longli@microsoft.com, catalin.marinas@arm.com, will@kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com, joro@8bytes.org,
-	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
-	robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
-	nunodasneves@linux.microsoft.com, mhklinux@outlook.com,
-	romank@linux.microsoft.com
-Subject: Re: [PATCH v0 01/15] iommu/hyperv: rename hyperv-iommu.c to
- hyperv-irq.c
-Message-ID: <202601210423.wwOrf2K8-lkp@intel.com>
-References: <20260120064230.3602565-2-mrathor@linux.microsoft.com>
+	s=arc-20240116; t=1768945838; c=relaxed/simple;
+	bh=BnPPPDyiswmapn7ng53S90CUXPw2YkgJ8Uvlh8KUbv4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=byBrvhrn0wJ0WFJ2hWpG2/f1VyK131UWyRKFcnUlhOUIb7CWD+g4kOenhmOncdp3d9RAgdYQeKMOn9gbtrPA3rQx4Ox/V+pBS3I6S3Qa5LmhKBAsFaUoohI0Ac16UiUhsbOeHH/cIe91NHuq9H6VwX58jtfzxMIo4KoxbP2/WxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XdU2nnEI; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from localhost (unknown [20.236.11.185])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8301220B7167;
+	Tue, 20 Jan 2026 13:50:33 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8301220B7167
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1768945834;
+	bh=DwMx1fGfc/oMBGTHztc/dxOH22dYYQr047Mb7LvAKtc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XdU2nnEITnohdXjTAjZux5Tf14cVyNK+1C0eGq/oK+KE1lzbPRUSq+ZyoEC65z6Nu
+	 428sRK77k7ioALgSM4txW6tNcXrwJ2u07BXXVCqLB4vhBS/Keavg5KXscUf6CpEo6j
+	 ONB3467l8VndQ/7q+tIfu5XMSAqJ2PcV4iH0KMsk=
+Date: Tue, 20 Jan 2026 13:50:32 -0800
+From: Jacob Pan <jacob.pan@linux.microsoft.com>
+To: Mukesh R <mrathor@linux.microsoft.com>
+Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+ linux-pci@vger.kernel.org, linux-arch@vger.kernel.org, kys@microsoft.com,
+ haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+ longli@microsoft.com, catalin.marinas@arm.com, will@kernel.org,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, joro@8bytes.org,
+ lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+ robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
+ nunodasneves@linux.microsoft.com, mhklinux@outlook.com
+Subject: Re: [PATCH v0 00/15] PCI passthru on Hyper-V (Part I)
+Message-ID: <20260120134933.00004f2a@linux.microsoft.com>
+In-Reply-To: <20260120064230.3602565-1-mrathor@linux.microsoft.com>
+References: <20260120064230.3602565-1-mrathor@linux.microsoft.com>
+Organization: LSG
+X-Mailer: Claws Mail 3.21.0 (GTK+ 2.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260120064230.3602565-2-mrathor@linux.microsoft.com>
-X-Spamd-Result: default: False [-0.96 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-1.96 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[lists.linux.dev,microsoft.com,kernel.org,arm.com,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,8bytes.org,google.com,arndb.de,linux.microsoft.com,outlook.com];
-	RCPT_COUNT_TWELVE(0.00)[30];
-	TAGGED_FROM(0.00)[bounces-8390-lists,linux-hyperv=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8391-lists,linux-hyperv=lfdr.de];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,microsoft.com,kernel.org,arm.com,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,8bytes.org,google.com,arndb.de,linux.microsoft.com,outlook.com];
+	RCPT_COUNT_TWELVE(0.00)[28];
 	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	HAS_ORG_HEADER(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[linux.microsoft.com,none];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_POLICY_ALLOW(0.00)[intel.com,none];
-	DKIM_TRACE(0.00)[intel.com:+];
-	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[jacob.pan@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
+	R_SPF_SOFTFAIL(0.00)[~all:c];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo,intel.com:email,intel.com:dkim,intel.com:mid,01.org:url,git-scm.com:url]
-X-Rspamd-Queue-Id: 38E924CE12
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:mid,linux.microsoft.com:dkim,dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo]
+X-Rspamd-Queue-Id: 1C8AB4D649
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 Hi Mukesh,
 
-kernel test robot noticed the following build warnings:
+On Mon, 19 Jan 2026 22:42:15 -0800
+Mukesh R <mrathor@linux.microsoft.com> wrote:
 
-[auto build test WARNING on tip/x86/core]
-[also build test WARNING on pci/next pci/for-linus arm64/for-next/core clk/clk-next soc/for-next linus/master arnd-asm-generic/master v6.19-rc6 next-20260120]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> From: Mukesh Rathor <mrathor@linux.microsoft.com>
+>=20
+> Implement passthru of PCI devices to unprivileged virtual machines
+> (VMs) when Linux is running as a privileged VM on Microsoft Hyper-V
+> hypervisor. This support is made to fit within the workings of VFIO
+> framework, and any VMM needing to use it must use the VFIO subsystem.
+> This supports both full device passthru and SR-IOV based VFs.
+>=20
+> There are 3 cases where Linux can run as a privileged VM (aka MSHV):
+>   Baremetal root (meaning Hyper-V+Linux), L1VH, and Nested.
+>=20
+I think some introduction/background to L1VH would help.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mukesh-R/iommu-hyperv-rename-hyperv-iommu-c-to-hyperv-irq-c/20260120-145832
-base:   tip/x86/core
-patch link:    https://lore.kernel.org/r/20260120064230.3602565-2-mrathor%40linux.microsoft.com
-patch subject: [PATCH v0 01/15] iommu/hyperv: rename hyperv-iommu.c to hyperv-irq.c
-config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20260121/202601210423.wwOrf2K8-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260121/202601210423.wwOrf2K8-lkp@intel.com/reproduce)
+> At a high level, the hypervisor supports traditional mapped iommu
+> domains that use explicit map and unmap hypercalls for mapping and
+> unmapping guest RAM into the iommu subsystem.
+It may be clearer to state that the hypervisor supports Linux IOMMU
+paging domains through map/unmap hypercalls, mapping GPAs to HPAs using
+stage=E2=80=912 I/O page tables.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601210423.wwOrf2K8-lkp@intel.com/
+> Hyper-V also has a
+> concept of direct attach devices whereby the iommu subsystem simply
+> uses the guest HW page table (ept/npt/..). This series adds support
+> for both, and both are made to work in VFIO type1 subsystem.
+>=20
+This may warrant introducing a new IOMMU domain feature flag, as it
+performs mappings but does not support map/unmap semantics in the same
+way as a paging domain.
 
-All warnings (new ones prefixed by >>):
+> While this Part I focuses on memory mappings, upcoming Part II
+> will focus on irq bypass along with some minor irq remapping=20
+> updates.
+>=20
+> This patch series was tested using Cloud Hypervisor verion 48. Qemu
+> support of MSHV is in the works, and that will be extended to include
+> PCI passthru and SR-IOV support also in near future.
+>=20
+> Based on: 8f0b4cce4481 (origin/hyperv-next)
+>=20
+> Thanks,
+> -Mukesh
+>=20
+> Mukesh Rathor (15):
+>   iommu/hyperv: rename hyperv-iommu.c to hyperv-irq.c
+>   x86/hyperv: cosmetic changes in irqdomain.c for readability
+>   x86/hyperv: add insufficient memory support in irqdomain.c
+>   mshv: Provide a way to get partition id if running in a VMM process
+>   mshv: Declarations and definitions for VFIO-MSHV bridge device
+>   mshv: Implement mshv bridge device for VFIO
+>   mshv: Add ioctl support for MSHV-VFIO bridge device
+>   PCI: hv: rename hv_compose_msi_msg to hv_vmbus_compose_msi_msg
+>   mshv: Import data structs around device domains and irq remapping
+>   PCI: hv: Build device id for a VMBus device
+>   x86/hyperv: Build logical device ids for PCI passthru hcalls
+>   x86/hyperv: Implement hyperv virtual iommu
+>   x86/hyperv: Basic interrupt support for direct attached devices
+>   mshv: Remove mapping of mmio space during map user ioctl
+>   mshv: Populate mmio mappings for PCI passthru
+>=20
+>  MAINTAINERS                         |    1 +
+>  arch/arm64/include/asm/mshyperv.h   |   15 +
+>  arch/x86/hyperv/irqdomain.c         |  314 ++++++---
+>  arch/x86/include/asm/mshyperv.h     |   21 +
+>  arch/x86/kernel/pci-dma.c           |    2 +
+>  drivers/hv/Makefile                 |    3 +-
+>  drivers/hv/mshv_root.h              |   24 +
+>  drivers/hv/mshv_root_main.c         |  296 +++++++-
+>  drivers/hv/mshv_vfio.c              |  210 ++++++
+>  drivers/iommu/Kconfig               |    1 +
+>  drivers/iommu/Makefile              |    2 +-
+>  drivers/iommu/hyperv-iommu.c        | 1004
+> +++++++++++++++++++++------ drivers/iommu/hyperv-irq.c          |
+> 330 +++++++++ drivers/pci/controller/pci-hyperv.c |  207 ++++--
+>  include/asm-generic/mshyperv.h      |    1 +
+>  include/hyperv/hvgdk_mini.h         |   11 +
+>  include/hyperv/hvhdk_mini.h         |  112 +++
+>  include/linux/hyperv.h              |    6 +
+>  include/uapi/linux/mshv.h           |   31 +
+>  19 files changed, 2182 insertions(+), 409 deletions(-)
+>  create mode 100644 drivers/hv/mshv_vfio.c
+>  create mode 100644 drivers/iommu/hyperv-irq.c
+>=20
 
-   In file included from drivers/iommu/intel/irq_remapping.c:6:
-   include/linux/dmar.h:269:17: error: unknown type name '__u128'; did you mean '__u32'?
-     269 |                 __u128 irte;
-         |                 ^~~~~~
-         |                 __u32
-   drivers/iommu/intel/irq_remapping.c: In function 'modify_irte':
-   drivers/iommu/intel/irq_remapping.c:181:17: error: unknown type name 'u128'
-     181 |                 u128 old = irte->irte;
-         |                 ^~~~
-   In file included from arch/x86/include/asm/bug.h:193,
-                    from arch/x86/include/asm/alternative.h:9,
-                    from arch/x86/include/asm/barrier.h:5,
-                    from include/asm-generic/bitops/generic-non-atomic.h:7,
-                    from include/linux/bitops.h:28,
-                    from include/linux/kernel.h:23,
-                    from include/linux/interrupt.h:6,
-                    from drivers/iommu/intel/irq_remapping.c:5:
-   include/linux/atomic/atomic-arch-fallback.h:326:14: error: void value not ignored as it ought to be
-     326 |         ___r = raw_cmpxchg128((_ptr), ___o, (_new)); \
-         |              ^
-   include/asm-generic/bug.h:110:32: note: in definition of macro 'WARN_ON'
-     110 |         int __ret_warn_on = !!(condition);                              \
-         |                                ^~~~~~~~~
-   include/linux/atomic/atomic-instrumented.h:4956:9: note: in expansion of macro 'raw_try_cmpxchg128'
-    4956 |         raw_try_cmpxchg128(__ai_ptr, __ai_oldp, __VA_ARGS__); \
-         |         ^~~~~~~~~~~~~~~~~~
-   drivers/iommu/intel/irq_remapping.c:182:26: note: in expansion of macro 'try_cmpxchg128'
-     182 |                 WARN_ON(!try_cmpxchg128(&irte->irte, &old, irte_modified->irte));
-         |                          ^~~~~~~~~~~~~~
-   drivers/iommu/intel/irq_remapping.c: In function 'intel_ir_set_vcpu_affinity':
->> drivers/iommu/intel/irq_remapping.c:1270:40: warning: left shift count >= width of type [-Wshift-count-overflow]
-    1270 |                                 ~(-1UL << PDA_HIGH_BIT);
-         |                                        ^~
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for IRQ_REMAP
-   Depends on [n]: IOMMU_SUPPORT [=y] && X86_64 [=n] && X86_IO_APIC [=y] && PCI_MSI [=y] && ACPI [=y]
-   Selected by [y]:
-   - HYPERV_IOMMU [=y] && IOMMU_SUPPORT [=y] && HYPERV [=y] && X86 [=y]
-
-
-vim +1270 drivers/iommu/intel/irq_remapping.c
-
-b106ee63abccbba drivers/iommu/intel_irq_remapping.c Jiang Liu           2015-04-13  1241  
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1242  static int intel_ir_set_vcpu_affinity(struct irq_data *data, void *info)
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1243  {
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1244  	struct intel_ir_data *ir_data = data->chip_data;
-53527ea1b70224d drivers/iommu/intel/irq_remapping.c Sean Christopherson 2025-06-11  1245  	struct intel_iommu_pi_data *pi_data = info;
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1246  
-ed1e48ea4370300 drivers/iommu/intel/irq_remapping.c Jacob Pan           2024-04-23  1247  	/* stop posting interrupts, back to the default mode */
-53527ea1b70224d drivers/iommu/intel/irq_remapping.c Sean Christopherson 2025-06-11  1248  	if (!pi_data) {
-2454823e97a63d8 drivers/iommu/intel/irq_remapping.c Sean Christopherson 2025-03-19  1249  		__intel_ir_reconfigure_irte(data, true);
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1250  	} else {
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1251  		struct irte irte_pi;
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1252  
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1253  		/*
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1254  		 * We are not caching the posted interrupt entry. We
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1255  		 * copy the data from the remapped entry and modify
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1256  		 * the fields which are relevant for posted mode. The
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1257  		 * cached remapped entry is used for switching back to
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1258  		 * remapped mode.
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1259  		 */
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1260  		memset(&irte_pi, 0, sizeof(irte_pi));
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1261  		dmar_copy_shared_irte(&irte_pi, &ir_data->irte_entry);
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1262  
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1263  		/* Update the posted mode fields */
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1264  		irte_pi.p_pst = 1;
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1265  		irte_pi.p_urgent = 0;
-53527ea1b70224d drivers/iommu/intel/irq_remapping.c Sean Christopherson 2025-06-11  1266  		irte_pi.p_vector = pi_data->vector;
-53527ea1b70224d drivers/iommu/intel/irq_remapping.c Sean Christopherson 2025-06-11  1267  		irte_pi.pda_l = (pi_data->pi_desc_addr >>
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1268  				(32 - PDA_LOW_BIT)) & ~(-1UL << PDA_LOW_BIT);
-53527ea1b70224d drivers/iommu/intel/irq_remapping.c Sean Christopherson 2025-06-11  1269  		irte_pi.pda_h = (pi_data->pi_desc_addr >> 32) &
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09 @1270  				~(-1UL << PDA_HIGH_BIT);
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1271  
-688124cc541f60d drivers/iommu/intel/irq_remapping.c Sean Christopherson 2025-03-19  1272  		ir_data->irq_2_iommu.posted_vcpu = true;
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1273  		modify_irte(&ir_data->irq_2_iommu, &irte_pi);
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1274  	}
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1275  
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1276  	return 0;
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1277  }
-8541186faf3b596 drivers/iommu/intel_irq_remapping.c Feng Wu             2015-06-09  1278  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
