@@ -1,64 +1,68 @@
-Return-Path: <linux-hyperv+bounces-8385-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8386-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EGS2G8Ctb2nxEwAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8385-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jan 2026 17:30:56 +0100
+	id eAyxLgW1b2nHMAAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8386-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jan 2026 18:01:57 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F45F4790B
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jan 2026 17:30:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 618F148369
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jan 2026 18:01:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A077052D0C9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jan 2026 16:11:19 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4A7BA40D2EC
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jan 2026 16:23:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA24A441042;
-	Tue, 20 Jan 2026 15:52:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FF3844CF31;
+	Tue, 20 Jan 2026 16:09:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sgq+qqiz"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KDJga7K0"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A74EE21D59B;
-	Tue, 20 Jan 2026 15:52:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32A0344CF54;
+	Tue, 20 Jan 2026 16:09:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768924365; cv=none; b=rbYjPEAu4YSb0zM6mZeVBNU/u8Hx+PT5348deMDKiffjpvj2oU2JlB6Iqd+rg5eAB8iNSApkHi2VbVSn8E0rTmS2ZvQvCQad8cLuYjmX3lLB0Dn2yhaAwQ8P8ApfqCbQlF9duU2lb81O7ZI9KT66BxUva60PS9GzmDoj+fh2Od4=
+	t=1768925344; cv=none; b=KdsYD1IPJXRWIbv/+39L73F6m04hMAVgeb63F7q4ZVRRgjMKlHe2ugFHXHPsN2E/VZbQljeRLv9mUtNSVwKVwUDZwrVW0Tfqe+4JLunjDEpn/4JgTtn7Uwnzdfh7JA+8qkFK0Yor2m6TxaCPkn/etYJnQi3iJ3ygRzeEvHA2upI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768924365; c=relaxed/simple;
-	bh=7oezF4HJtt2EACq0nGMrPcHhyT2WC16fV7tjKfMLnXo=;
+	s=arc-20240116; t=1768925344; c=relaxed/simple;
+	bh=0rIs6thx3jDKb/dI+dzD7t5H6DNv9t1pVMHjiruS7ns=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dctusjw154WlbmX93TBxmRiWpF4xqsLS3nvLqbQs6Y1ncAgGfA4KUsXW2YY2dFG9dLc2Ajpf7SeOFqGcLY19T5m+y9Q+gQ0zjd2L4AGM2+sonyWXV8ptHuDZIoOzR8YWOLva78fSyE7CeNccp1AGQYWUBaVE9VSZyWgkGZOt/ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sgq+qqiz; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=ffmen9Qap//ByUkTMK+D1K2VkjsEd9DFIwb62C7OsncmCep9Zx+F+NoOIzdMevKRl0rlTH5uEamD22RwM3Cq+t1fQmDjJi3ABlcv590SYFhFqtpLN4ex3OALSa0brIGpkT4VXQrzV02L+bEKSWt6vYoPodSdyahpK2pEMMKP52s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KDJga7K0; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii.localdomain (unknown [20.236.11.102])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 58F8120B7167;
-	Tue, 20 Jan 2026 07:52:42 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 58F8120B7167
+	by linux.microsoft.com (Postfix) with ESMTPSA id 2544020B7167;
+	Tue, 20 Jan 2026 08:09:02 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2544020B7167
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1768924362;
-	bh=SYuBXqHB3gSTUvZaW+aLs+DY0EXET7eVbNQze3aFJco=;
+	s=default; t=1768925342;
+	bh=iIZ7bzfOU+32o456dducA6V77xDpYZ8q7ZzTpg2VDtM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sgq+qqiz/v4LPJonbaUn2PRIluMNJG/DB8GvbDhc053Zwqs8CmjewNM8Gi7LFT1oY
-	 gWtclWKwqUX912fU7+fe1SCy7IGk2eJ5EvfOegNWeNkEkJJn9tRNIA6Hz6NmJF5eGC
-	 YIrhl5NVMQFRDknQira8yvepCaYjHMR4a4eux9ko=
-Date: Tue, 20 Jan 2026 07:52:42 -0800
+	b=KDJga7K0N+4P68lcEAZIkzvNWr/d4a4erZoM6A9oDmUjDtDW8qpeY2QlJaVLNMMho
+	 AjVJWrCGPrMN01TJa64q6v0vAEqXHMR6+xcTbpJMwqsm9W/h3tQqNtNaYNf0kDWpBb
+	 Npz5ZO5vyjcIirlciM5xur4auzAEdCskgnwCgqtk=
+Date: Tue, 20 Jan 2026 08:09:02 -0800
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
-	wei.liu@kernel.org, decui@microsoft.com, longli@microsoft.com,
-	prapal@linux.microsoft.com, mrathor@linux.microsoft.com,
-	paekkaladevi@linux.microsoft.com
-Subject: Re: [PATCH v3 5/6] mshv: Add definitions for stats pages
-Message-ID: <aW-kysSRTpoyWljf@skinsburskii.localdomain>
-References: <20260114213803.143486-1-nunodasneves@linux.microsoft.com>
- <20260114213803.143486-6-nunodasneves@linux.microsoft.com>
- <aWkTd2zkbVQqePVa@skinsburskii.localdomain>
- <89385dc3-e702-4bf6-8ad7-f6e634851851@linux.microsoft.com>
+To: Mukesh R <mrathor@linux.microsoft.com>
+Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com, catalin.marinas@arm.com,
+	will@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, joro@8bytes.org,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
+	nunodasneves@linux.microsoft.com, mhklinux@outlook.com,
+	romank@linux.microsoft.com
+Subject: Re: [PATCH v0 06/15] mshv: Implement mshv bridge device for VFIO
+Message-ID: <aW-oniY3VpagQMPb@skinsburskii.localdomain>
+References: <20260120064230.3602565-1-mrathor@linux.microsoft.com>
+ <20260120064230.3602565-7-mrathor@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -67,7 +71,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <89385dc3-e702-4bf6-8ad7-f6e634851851@linux.microsoft.com>
+In-Reply-To: <20260120064230.3602565-7-mrathor@linux.microsoft.com>
 X-Spamd-Result: default: False [-1.96 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
@@ -75,13 +79,13 @@ X-Spamd-Result: default: False [-1.96 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,outlook.com,microsoft.com,kernel.org,linux.microsoft.com];
-	TAGGED_FROM(0.00)[bounces-8385-lists,linux-hyperv=lfdr.de];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,microsoft.com,kernel.org,arm.com,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,8bytes.org,google.com,arndb.de,linux.microsoft.com,outlook.com];
+	TAGGED_FROM(0.00)[bounces-8386-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DMARC_POLICY_ALLOW(0.00)[linux.microsoft.com,none];
-	RCPT_COUNT_TWELVE(0.00)[12];
+	RCPT_COUNT_TWELVE(0.00)[29];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	FROM_HAS_DN(0.00)[];
@@ -94,609 +98,273 @@ X-Spamd-Result: default: False [-1.96 / 15.00];
 	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo,linux.microsoft.com:dkim,skinsburskii.localdomain:mid]
-X-Rspamd-Queue-Id: 0F45F4790B
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo,skinsburskii.localdomain:mid]
+X-Rspamd-Queue-Id: 618F148369
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Jan 15, 2026 at 11:34:48AM -0800, Nuno Das Neves wrote:
-> On 1/15/2026 8:19 AM, Stanislav Kinsburskii wrote:
-> > On Wed, Jan 14, 2026 at 01:38:02PM -0800, Nuno Das Neves wrote:
-> >> Add the definitions for hypervisor, logical processor, and partition
-> >> stats pages.
-> >>
-> > 
-> > The definitions in for partition and virtual processor are outdated.
-> > Now is the good time to sync the new values in.
-> > 
-> > Thanks,
-> > Stanislav
-> > 
+On Mon, Jan 19, 2026 at 10:42:21PM -0800, Mukesh R wrote:
+> From: Mukesh Rathor <mrathor@linux.microsoft.com>
 > 
-> Good point, thanks, I will update it for v4.
+> Add a new file to implement VFIO-MSHV bridge pseudo device. These
+> functions are called in the VFIO framework, and credits to kvm/vfio.c
+> as this file was adapted from it.
 > 
-> I'm finally noticing that these counters are not really from hvhdk.h, in
-> the windows code, but their own file. Since I'm still iterating on this,
-> what do you think about creating a file just for the counters?
-> e.g. drivers/hv/hvcounters.h, which combines hvcountersarm64 and amd64.
+> Original author: Wei Liu <wei.liu@kernel.org>
+> (Slightly modified from the original version).
 > 
 
-I don't have a preference as I personanly think the the while idea of
-keeping the headers in sync with Windows naming scheme isn't great, but
-if you think it makes sense, go ahead.
+There is a Linux standard for giving credits when code is adapted from.
+This doesn't follow that standard. Please fix.
 
-> That would have a couple of advantages:
-> 1. Not putting things in hvhdk.h which aren't actually there in the
->    Windows source
-> 2. Less visibility of CamelCase naming outside our driver
-> 3. I could define the enums using "X macro"s to generate the show() code
->    more cleanly in mshv_debugfs.c, which is something Michael suggested
->    here:
-> https://lore.kernel.org/linux-hyperv/SN6PR02MB4157938404BC0D12978ACD9BD4A2A@SN6PR02MB4157.namprd02.prod.outlook.com/
+> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+> ---
+>  drivers/hv/Makefile    |   3 +-
+>  drivers/hv/mshv_vfio.c | 210 +++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 212 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/hv/mshv_vfio.c
 > 
-> It would look something like this:
-> 
-> In hvcounters.h:
-> 
-> #if is_enabled(CONFIG_X86_64)
-> 	
-> #define HV_COUNTER_VP_LIST(X) \
-> 	X(VpTotalRunTime, 1), \
-> 	X(VpHypervisorRunTime, 2), \
-> 	X(VpRemoteNodeRunTime, 3), \
-> /* <snip> */
-> 
-> #elif is_enabled(CONFIG_ARM64)
-> 
-> /* <snip> */
-> 
-> #endif
-> 
-> Just like now, it's a copy/paste from Windows + simple pattern
-> replacement. Note with this approach we need separate lists for arm64
-> and x86, but that matches how the enums are defined in Windows.
-> 
-> Then, in mshv_debugfs.c:
-> 
-> /*
->  * We need the strings paired with their enum values.
->  * This structure can be used for all the different stat types.
->  */
-> struct hv_counter_entry {
-> 	char *name;
-> 	int idx;
-> };
-> 
-> /* Define an array entry (again, reusable) */
-> #define HV_COUNTER_LIST(name, idx) \
-> 	{ __stringify(name), idx },
-> 
-> /* Create our static array */
-> static struct hv_counter_entry hv_counter_vp_array[] = {
-> 	HV_ST_COUNTER_VP(HV_COUNTER_VP)
-> };
-> 
-> static int vp_stats_show(struct seq_file *m, void *v)
-> {
-> 	const struct hv_stats_page **pstats = m->private;
-> 	int i;
-> 
-> 	for (i = 0; i < ARRAY_SIZE(hv_counter_vp_array); ++i) {
-> 		struct hv_counter_entry entry = hv_counter_vp_array[i];
-> 		u64 parent_val = pstats[HV_STATS_AREA_PARENT]->vp_cntrs[entry.idx];
-> 		u64 self_val = pstats[HV_STATS_AREA_SELF]->vp_cntrs[entry.idx];
-> 
-> 		/* Prioritize the PARENT area value */
-> 		seq_printf(m, "%-30s: %llu\n", entry.name,
-> 			   parent_val ? parent_val : self_val);
-> 	}
-> }
-> 
-> Any thoughts? I was originally going to just go with the pattern we had,
-> but since these definitions aren't from the hv*dk.h files, we can maybe
-> get more creative and make the resulting code look a bit better.
-> 
+> diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
+> index a49f93c2d245..eae003c4cb8f 100644
+> --- a/drivers/hv/Makefile
+> +++ b/drivers/hv/Makefile
+> @@ -14,7 +14,8 @@ hv_vmbus-y := vmbus_drv.o \
+>  hv_vmbus-$(CONFIG_HYPERV_TESTING)	+= hv_debugfs.o
+>  hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_utils_transport.o
+>  mshv_root-y := mshv_root_main.o mshv_synic.o mshv_eventfd.o mshv_irq.o \
+> -	       mshv_root_hv_call.o mshv_portid_table.o mshv_regions.o
+> +	       mshv_root_hv_call.o mshv_portid_table.o mshv_regions.o \
+> +               mshv_vfio.o
+>  mshv_vtl-y := mshv_vtl_main.o
+>  
+>  # Code that must be built-in
+> diff --git a/drivers/hv/mshv_vfio.c b/drivers/hv/mshv_vfio.c
+> new file mode 100644
+> index 000000000000..6ea4d99a3bd2
+> --- /dev/null
+> +++ b/drivers/hv/mshv_vfio.c
+> @@ -0,0 +1,210 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * VFIO-MSHV bridge pseudo device
+> + *
+> + * Heavily inspired by the VFIO-KVM bridge pseudo device.
+> + */
+> +#include <linux/errno.h>
+> +#include <linux/file.h>
+> +#include <linux/list.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/slab.h>
+> +#include <linux/vfio.h>
+> +
+> +#include "mshv.h"
+> +#include "mshv_root.h"
+> +
+> +struct mshv_vfio_file {
+> +	struct list_head node;
+> +	struct file *file;	/* list of struct mshv_vfio_file */
+> +};
+> +
+> +struct mshv_vfio {
+> +	struct list_head file_list;
+> +	struct mutex lock;
+> +};
+> +
+> +static bool mshv_vfio_file_is_valid(struct file *file)
+> +{
+> +	bool (*fn)(struct file *file);
+> +	bool ret;
+> +
+> +	fn = symbol_get(vfio_file_is_valid);
+> +	if (!fn)
+> +		return false;
+> +
+> +	ret = fn(file);
+> +
+> +	symbol_put(vfio_file_is_valid);
+> +
+> +	return ret;
+> +}
+> +
+> +static long mshv_vfio_file_add(struct mshv_device *mshvdev, unsigned int fd)
+> +{
+> +	struct mshv_vfio *mshv_vfio = mshvdev->device_private;
+> +	struct mshv_vfio_file *mvf;
+> +	struct file *filp;
+> +	long ret = 0;
+> +
+> +	filp = fget(fd);
+> +	if (!filp)
+> +		return -EBADF;
+> +
+> +	/* Ensure the FD is a vfio FD. */
+> +	if (!mshv_vfio_file_is_valid(filp)) {
+> +		ret = -EINVAL;
+> +		goto out_fput;
+> +	}
+> +
+> +	mutex_lock(&mshv_vfio->lock);
+> +
+> +	list_for_each_entry(mvf, &mshv_vfio->file_list, node) {
+> +		if (mvf->file == filp) {
+> +			ret = -EEXIST;
+> +			goto out_unlock;
+> +		}
+> +	}
+> +
+> +	mvf = kzalloc(sizeof(*mvf), GFP_KERNEL_ACCOUNT);
+> +	if (!mvf) {
+> +		ret = -ENOMEM;
+> +		goto out_unlock;
+> +	}
+> +
+> +	mvf->file = get_file(filp);
+> +	list_add_tail(&mvf->node, &mshv_vfio->file_list);
+> +
+> +out_unlock:
+> +	mutex_unlock(&mshv_vfio->lock);
+> +out_fput:
+> +	fput(filp);
+> +	return ret;
+> +}
+> +
+> +static long mshv_vfio_file_del(struct mshv_device *mshvdev, unsigned int fd)
+> +{
+> +	struct mshv_vfio *mshv_vfio = mshvdev->device_private;
+> +	struct mshv_vfio_file *mvf;
+> +	long ret;
+> +
+> +	CLASS(fd, f)(fd);
+> +
+> +	if (fd_empty(f))
+> +		return -EBADF;
+> +
+> +	ret = -ENOENT;
+> +	mutex_lock(&mshv_vfio->lock);
+> +
+> +	list_for_each_entry(mvf, &mshv_vfio->file_list, node) {
+> +		if (mvf->file != fd_file(f))
+> +			continue;
+> +
+> +		list_del(&mvf->node);
+> +		fput(mvf->file);
+> +		kfree(mvf);
+> +		ret = 0;
+> +		break;
+> +	}
+> +
+> +	mutex_unlock(&mshv_vfio->lock);
+> +	return ret;
+> +}
+> +
+> +static long mshv_vfio_set_file(struct mshv_device *mshvdev, long attr,
+> +			      void __user *arg)
+> +{
+> +	int32_t __user *argp = arg;
+> +	int32_t fd;
+> +
+> +	switch (attr) {
+> +	case MSHV_DEV_VFIO_FILE_ADD:
+> +		if (get_user(fd, argp))
+> +			return -EFAULT;
+> +		return mshv_vfio_file_add(mshvdev, fd);
+> +
+> +	case MSHV_DEV_VFIO_FILE_DEL:
+> +		if (get_user(fd, argp))
+> +			return -EFAULT;
+> +		return mshv_vfio_file_del(mshvdev, fd);
+> +	}
+> +
+> +	return -ENXIO;
+> +}
+> +
+> +static long mshv_vfio_set_attr(struct mshv_device *mshvdev,
+> +			      struct mshv_device_attr *attr)
+> +{
+> +	switch (attr->group) {
+> +	case MSHV_DEV_VFIO_FILE:
+> +		return mshv_vfio_set_file(mshvdev, attr->attr,
+> +					  u64_to_user_ptr(attr->addr));
+> +	}
+> +
+> +	return -ENXIO;
+> +}
+> +
+> +static long mshv_vfio_has_attr(struct mshv_device *mshvdev,
+> +			      struct mshv_device_attr *attr)
+> +{
+> +	switch (attr->group) {
+> +	case MSHV_DEV_VFIO_FILE:
+> +		switch (attr->attr) {
+> +		case MSHV_DEV_VFIO_FILE_ADD:
+> +		case MSHV_DEV_VFIO_FILE_DEL:
+> +			return 0;
+> +		}
+> +
+> +		break;
+> +	}
+> +
+> +	return -ENXIO;
+> +}
+> +
+> +static long mshv_vfio_create_device(struct mshv_device *mshvdev, u32 type)
+> +{
+> +	struct mshv_device *tmp;
+> +	struct mshv_vfio *mshv_vfio;
+> +
+> +	/* Only one VFIO "device" per VM */
+> +	hlist_for_each_entry(tmp, &mshvdev->device_pt->pt_devices,
+> +			     device_ptnode)
+> +		if (tmp->device_ops == &mshv_vfio_device_ops)
+> +			return -EBUSY;
+> +
+> +	mshv_vfio = kzalloc(sizeof(*mshv_vfio), GFP_KERNEL_ACCOUNT);
+> +	if (mshv_vfio == NULL)
+> +		return -ENOMEM;
+> +
+> +	INIT_LIST_HEAD(&mshv_vfio->file_list);
+> +	mutex_init(&mshv_vfio->lock);
+> +
+> +	mshvdev->device_private = mshv_vfio;
+> +
+> +	return 0;
+> +}
+> +
+> +/* This is called from mshv_device_fop_release() */
+> +static void mshv_vfio_release_device(struct mshv_device *mshvdev)
+> +{
+> +	struct mshv_vfio *mv = mshvdev->device_private;
+> +	struct mshv_vfio_file *mvf, *tmp;
+> +
+> +	list_for_each_entry_safe(mvf, tmp, &mv->file_list, node) {
+> +		fput(mvf->file);
 
-Looks good to me.
+This put must be sync as device must be detached from domain before
+attempting partition destruction.
+This was explicitly mentioned in the patch originated this code.
+Please fix, add a comment and credits to the commit message.
 
 Thanks,
 Stanislav
 
-> Thanks
-> Nuno
+
+> +		list_del(&mvf->node);
+> +		kfree(mvf);
+> +	}
+> +
+> +	kfree(mv);
+> +	kfree(mshvdev);
+> +}
+> +
+> +struct mshv_device_ops mshv_vfio_device_ops = {
+> +	.device_name = "mshv-vfio",
+> +	.device_create = mshv_vfio_create_device,
+> +	.device_release = mshv_vfio_release_device,
+> +	.device_set_attr = mshv_vfio_set_attr,
+> +	.device_has_attr = mshv_vfio_has_attr,
+> +};
+> -- 
+> 2.51.2.vfs.0.1
 > 
-> >> Move the definition for the VP stats page to its rightful place in
-> >> hvhdk.h, and add the missing members.
-> >>
-> >> While at it, correct the ARM64 value of VpRootDispatchThreadBlocked,
-> >> (which is not yet used, so there is no impact).
-> >>
-> >> These enum members retain their CamelCase style, since they are imported
-> >> directly from the hypervisor code. They will be stringified when
-> >> printing the stats out, and retain more readability in this form.
-> >>
-> >> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> >> ---
-> >>  drivers/hv/mshv_root_main.c |  17 --
-> >>  include/hyperv/hvhdk.h      | 437 ++++++++++++++++++++++++++++++++++++
-> >>  2 files changed, 437 insertions(+), 17 deletions(-)
-> >>
-> >> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-> >> index fbfc9e7d9fa4..724bbaa0b08c 100644
-> >> --- a/drivers/hv/mshv_root_main.c
-> >> +++ b/drivers/hv/mshv_root_main.c
-> >> @@ -39,23 +39,6 @@ MODULE_AUTHOR("Microsoft");
-> >>  MODULE_LICENSE("GPL");
-> >>  MODULE_DESCRIPTION("Microsoft Hyper-V root partition VMM interface /dev/mshv");
-> >>  
-> >> -/* TODO move this to another file when debugfs code is added */
-> >> -enum hv_stats_vp_counters {			/* HV_THREAD_COUNTER */
-> >> -#if defined(CONFIG_X86)
-> >> -	VpRootDispatchThreadBlocked			= 202,
-> >> -#elif defined(CONFIG_ARM64)
-> >> -	VpRootDispatchThreadBlocked			= 94,
-> >> -#endif
-> >> -	VpStatsMaxCounter
-> >> -};
-> >> -
-> >> -struct hv_stats_page {
-> >> -	union {
-> >> -		u64 vp_cntrs[VpStatsMaxCounter];		/* VP counters */
-> >> -		u8 data[HV_HYP_PAGE_SIZE];
-> >> -	};
-> >> -} __packed;
-> >> -
-> >>  struct mshv_root mshv_root;
-> >>  
-> >>  enum hv_scheduler_type hv_scheduler_type;
-> >> diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
-> >> index 469186df7826..8bddd11feeba 100644
-> >> --- a/include/hyperv/hvhdk.h
-> >> +++ b/include/hyperv/hvhdk.h
-> >> @@ -10,6 +10,443 @@
-> >>  #include "hvhdk_mini.h"
-> >>  #include "hvgdk.h"
-> >>  
-> >> +enum hv_stats_hypervisor_counters {		/* HV_HYPERVISOR_COUNTER */
-> >> +	HvLogicalProcessors			= 1,
-> >> +	HvPartitions				= 2,
-> >> +	HvTotalPages				= 3,
-> >> +	HvVirtualProcessors			= 4,
-> >> +	HvMonitoredNotifications		= 5,
-> >> +	HvModernStandbyEntries			= 6,
-> >> +	HvPlatformIdleTransitions		= 7,
-> >> +	HvHypervisorStartupCost			= 8,
-> >> +	HvIOSpacePages				= 10,
-> >> +	HvNonEssentialPagesForDump		= 11,
-> >> +	HvSubsumedPages				= 12,
-> >> +	HvStatsMaxCounter
-> >> +};
-> >> +
-> >> +enum hv_stats_partition_counters {		/* HV_PROCESS_COUNTER */
-> >> +	PartitionVirtualProcessors		= 1,
-> >> +	PartitionTlbSize			= 3,
-> >> +	PartitionAddressSpaces			= 4,
-> >> +	PartitionDepositedPages			= 5,
-> >> +	PartitionGpaPages			= 6,
-> >> +	PartitionGpaSpaceModifications		= 7,
-> >> +	PartitionVirtualTlbFlushEntires		= 8,
-> >> +	PartitionRecommendedTlbSize		= 9,
-> >> +	PartitionGpaPages4K			= 10,
-> >> +	PartitionGpaPages2M			= 11,
-> >> +	PartitionGpaPages1G			= 12,
-> >> +	PartitionGpaPages512G			= 13,
-> >> +	PartitionDevicePages4K			= 14,
-> >> +	PartitionDevicePages2M			= 15,
-> >> +	PartitionDevicePages1G			= 16,
-> >> +	PartitionDevicePages512G		= 17,
-> >> +	PartitionAttachedDevices		= 18,
-> >> +	PartitionDeviceInterruptMappings	= 19,
-> >> +	PartitionIoTlbFlushes			= 20,
-> >> +	PartitionIoTlbFlushCost			= 21,
-> >> +	PartitionDeviceInterruptErrors		= 22,
-> >> +	PartitionDeviceDmaErrors		= 23,
-> >> +	PartitionDeviceInterruptThrottleEvents	= 24,
-> >> +	PartitionSkippedTimerTicks		= 25,
-> >> +	PartitionPartitionId			= 26,
-> >> +#if IS_ENABLED(CONFIG_X86_64)
-> >> +	PartitionNestedTlbSize			= 27,
-> >> +	PartitionRecommendedNestedTlbSize	= 28,
-> >> +	PartitionNestedTlbFreeListSize		= 29,
-> >> +	PartitionNestedTlbTrimmedPages		= 30,
-> >> +	PartitionPagesShattered			= 31,
-> >> +	PartitionPagesRecombined		= 32,
-> >> +	PartitionHwpRequestValue		= 33,
-> >> +#elif IS_ENABLED(CONFIG_ARM64)
-> >> +	PartitionHwpRequestValue		= 27,
-> >> +#endif
-> >> +	PartitionStatsMaxCounter
-> >> +};
-> >> +
-> >> +enum hv_stats_vp_counters {			/* HV_THREAD_COUNTER */
-> >> +	VpTotalRunTime					= 1,
-> >> +	VpHypervisorRunTime				= 2,
-> >> +	VpRemoteNodeRunTime				= 3,
-> >> +	VpNormalizedRunTime				= 4,
-> >> +	VpIdealCpu					= 5,
-> >> +	VpHypercallsCount				= 7,
-> >> +	VpHypercallsTime				= 8,
-> >> +#if IS_ENABLED(CONFIG_X86_64)
-> >> +	VpPageInvalidationsCount			= 9,
-> >> +	VpPageInvalidationsTime				= 10,
-> >> +	VpControlRegisterAccessesCount			= 11,
-> >> +	VpControlRegisterAccessesTime			= 12,
-> >> +	VpIoInstructionsCount				= 13,
-> >> +	VpIoInstructionsTime				= 14,
-> >> +	VpHltInstructionsCount				= 15,
-> >> +	VpHltInstructionsTime				= 16,
-> >> +	VpMwaitInstructionsCount			= 17,
-> >> +	VpMwaitInstructionsTime				= 18,
-> >> +	VpCpuidInstructionsCount			= 19,
-> >> +	VpCpuidInstructionsTime				= 20,
-> >> +	VpMsrAccessesCount				= 21,
-> >> +	VpMsrAccessesTime				= 22,
-> >> +	VpOtherInterceptsCount				= 23,
-> >> +	VpOtherInterceptsTime				= 24,
-> >> +	VpExternalInterruptsCount			= 25,
-> >> +	VpExternalInterruptsTime			= 26,
-> >> +	VpPendingInterruptsCount			= 27,
-> >> +	VpPendingInterruptsTime				= 28,
-> >> +	VpEmulatedInstructionsCount			= 29,
-> >> +	VpEmulatedInstructionsTime			= 30,
-> >> +	VpDebugRegisterAccessesCount			= 31,
-> >> +	VpDebugRegisterAccessesTime			= 32,
-> >> +	VpPageFaultInterceptsCount			= 33,
-> >> +	VpPageFaultInterceptsTime			= 34,
-> >> +	VpGuestPageTableMaps				= 35,
-> >> +	VpLargePageTlbFills				= 36,
-> >> +	VpSmallPageTlbFills				= 37,
-> >> +	VpReflectedGuestPageFaults			= 38,
-> >> +	VpApicMmioAccesses				= 39,
-> >> +	VpIoInterceptMessages				= 40,
-> >> +	VpMemoryInterceptMessages			= 41,
-> >> +	VpApicEoiAccesses				= 42,
-> >> +	VpOtherMessages					= 43,
-> >> +	VpPageTableAllocations				= 44,
-> >> +	VpLogicalProcessorMigrations			= 45,
-> >> +	VpAddressSpaceEvictions				= 46,
-> >> +	VpAddressSpaceSwitches				= 47,
-> >> +	VpAddressDomainFlushes				= 48,
-> >> +	VpAddressSpaceFlushes				= 49,
-> >> +	VpGlobalGvaRangeFlushes				= 50,
-> >> +	VpLocalGvaRangeFlushes				= 51,
-> >> +	VpPageTableEvictions				= 52,
-> >> +	VpPageTableReclamations				= 53,
-> >> +	VpPageTableResets				= 54,
-> >> +	VpPageTableValidations				= 55,
-> >> +	VpApicTprAccesses				= 56,
-> >> +	VpPageTableWriteIntercepts			= 57,
-> >> +	VpSyntheticInterrupts				= 58,
-> >> +	VpVirtualInterrupts				= 59,
-> >> +	VpApicIpisSent					= 60,
-> >> +	VpApicSelfIpisSent				= 61,
-> >> +	VpGpaSpaceHypercalls				= 62,
-> >> +	VpLogicalProcessorHypercalls			= 63,
-> >> +	VpLongSpinWaitHypercalls			= 64,
-> >> +	VpOtherHypercalls				= 65,
-> >> +	VpSyntheticInterruptHypercalls			= 66,
-> >> +	VpVirtualInterruptHypercalls			= 67,
-> >> +	VpVirtualMmuHypercalls				= 68,
-> >> +	VpVirtualProcessorHypercalls			= 69,
-> >> +	VpHardwareInterrupts				= 70,
-> >> +	VpNestedPageFaultInterceptsCount		= 71,
-> >> +	VpNestedPageFaultInterceptsTime			= 72,
-> >> +	VpPageScans					= 73,
-> >> +	VpLogicalProcessorDispatches			= 74,
-> >> +	VpWaitingForCpuTime				= 75,
-> >> +	VpExtendedHypercalls				= 76,
-> >> +	VpExtendedHypercallInterceptMessages		= 77,
-> >> +	VpMbecNestedPageTableSwitches			= 78,
-> >> +	VpOtherReflectedGuestExceptions			= 79,
-> >> +	VpGlobalIoTlbFlushes				= 80,
-> >> +	VpGlobalIoTlbFlushCost				= 81,
-> >> +	VpLocalIoTlbFlushes				= 82,
-> >> +	VpLocalIoTlbFlushCost				= 83,
-> >> +	VpHypercallsForwardedCount			= 84,
-> >> +	VpHypercallsForwardingTime			= 85,
-> >> +	VpPageInvalidationsForwardedCount		= 86,
-> >> +	VpPageInvalidationsForwardingTime		= 87,
-> >> +	VpControlRegisterAccessesForwardedCount		= 88,
-> >> +	VpControlRegisterAccessesForwardingTime		= 89,
-> >> +	VpIoInstructionsForwardedCount			= 90,
-> >> +	VpIoInstructionsForwardingTime			= 91,
-> >> +	VpHltInstructionsForwardedCount			= 92,
-> >> +	VpHltInstructionsForwardingTime			= 93,
-> >> +	VpMwaitInstructionsForwardedCount		= 94,
-> >> +	VpMwaitInstructionsForwardingTime		= 95,
-> >> +	VpCpuidInstructionsForwardedCount		= 96,
-> >> +	VpCpuidInstructionsForwardingTime		= 97,
-> >> +	VpMsrAccessesForwardedCount			= 98,
-> >> +	VpMsrAccessesForwardingTime			= 99,
-> >> +	VpOtherInterceptsForwardedCount			= 100,
-> >> +	VpOtherInterceptsForwardingTime			= 101,
-> >> +	VpExternalInterruptsForwardedCount		= 102,
-> >> +	VpExternalInterruptsForwardingTime		= 103,
-> >> +	VpPendingInterruptsForwardedCount		= 104,
-> >> +	VpPendingInterruptsForwardingTime		= 105,
-> >> +	VpEmulatedInstructionsForwardedCount		= 106,
-> >> +	VpEmulatedInstructionsForwardingTime		= 107,
-> >> +	VpDebugRegisterAccessesForwardedCount		= 108,
-> >> +	VpDebugRegisterAccessesForwardingTime		= 109,
-> >> +	VpPageFaultInterceptsForwardedCount		= 110,
-> >> +	VpPageFaultInterceptsForwardingTime		= 111,
-> >> +	VpVmclearEmulationCount				= 112,
-> >> +	VpVmclearEmulationTime				= 113,
-> >> +	VpVmptrldEmulationCount				= 114,
-> >> +	VpVmptrldEmulationTime				= 115,
-> >> +	VpVmptrstEmulationCount				= 116,
-> >> +	VpVmptrstEmulationTime				= 117,
-> >> +	VpVmreadEmulationCount				= 118,
-> >> +	VpVmreadEmulationTime				= 119,
-> >> +	VpVmwriteEmulationCount				= 120,
-> >> +	VpVmwriteEmulationTime				= 121,
-> >> +	VpVmxoffEmulationCount				= 122,
-> >> +	VpVmxoffEmulationTime				= 123,
-> >> +	VpVmxonEmulationCount				= 124,
-> >> +	VpVmxonEmulationTime				= 125,
-> >> +	VpNestedVMEntriesCount				= 126,
-> >> +	VpNestedVMEntriesTime				= 127,
-> >> +	VpNestedSLATSoftPageFaultsCount			= 128,
-> >> +	VpNestedSLATSoftPageFaultsTime			= 129,
-> >> +	VpNestedSLATHardPageFaultsCount			= 130,
-> >> +	VpNestedSLATHardPageFaultsTime			= 131,
-> >> +	VpInvEptAllContextEmulationCount		= 132,
-> >> +	VpInvEptAllContextEmulationTime			= 133,
-> >> +	VpInvEptSingleContextEmulationCount		= 134,
-> >> +	VpInvEptSingleContextEmulationTime		= 135,
-> >> +	VpInvVpidAllContextEmulationCount		= 136,
-> >> +	VpInvVpidAllContextEmulationTime		= 137,
-> >> +	VpInvVpidSingleContextEmulationCount		= 138,
-> >> +	VpInvVpidSingleContextEmulationTime		= 139,
-> >> +	VpInvVpidSingleAddressEmulationCount		= 140,
-> >> +	VpInvVpidSingleAddressEmulationTime		= 141,
-> >> +	VpNestedTlbPageTableReclamations		= 142,
-> >> +	VpNestedTlbPageTableEvictions			= 143,
-> >> +	VpFlushGuestPhysicalAddressSpaceHypercalls	= 144,
-> >> +	VpFlushGuestPhysicalAddressListHypercalls	= 145,
-> >> +	VpPostedInterruptNotifications			= 146,
-> >> +	VpPostedInterruptScans				= 147,
-> >> +	VpTotalCoreRunTime				= 148,
-> >> +	VpMaximumRunTime				= 149,
-> >> +	VpHwpRequestContextSwitches			= 150,
-> >> +	VpWaitingForCpuTimeBucket0			= 151,
-> >> +	VpWaitingForCpuTimeBucket1			= 152,
-> >> +	VpWaitingForCpuTimeBucket2			= 153,
-> >> +	VpWaitingForCpuTimeBucket3			= 154,
-> >> +	VpWaitingForCpuTimeBucket4			= 155,
-> >> +	VpWaitingForCpuTimeBucket5			= 156,
-> >> +	VpWaitingForCpuTimeBucket6			= 157,
-> >> +	VpVmloadEmulationCount				= 158,
-> >> +	VpVmloadEmulationTime				= 159,
-> >> +	VpVmsaveEmulationCount				= 160,
-> >> +	VpVmsaveEmulationTime				= 161,
-> >> +	VpGifInstructionEmulationCount			= 162,
-> >> +	VpGifInstructionEmulationTime			= 163,
-> >> +	VpEmulatedErrataSvmInstructions			= 164,
-> >> +	VpPlaceholder1					= 165,
-> >> +	VpPlaceholder2					= 166,
-> >> +	VpPlaceholder3					= 167,
-> >> +	VpPlaceholder4					= 168,
-> >> +	VpPlaceholder5					= 169,
-> >> +	VpPlaceholder6					= 170,
-> >> +	VpPlaceholder7					= 171,
-> >> +	VpPlaceholder8					= 172,
-> >> +	VpPlaceholder9					= 173,
-> >> +	VpPlaceholder10					= 174,
-> >> +	VpSchedulingPriority				= 175,
-> >> +	VpRdpmcInstructionsCount			= 176,
-> >> +	VpRdpmcInstructionsTime				= 177,
-> >> +	VpPerfmonPmuMsrAccessesCount			= 178,
-> >> +	VpPerfmonLbrMsrAccessesCount			= 179,
-> >> +	VpPerfmonIptMsrAccessesCount			= 180,
-> >> +	VpPerfmonInterruptCount				= 181,
-> >> +	VpVtl1DispatchCount				= 182,
-> >> +	VpVtl2DispatchCount				= 183,
-> >> +	VpVtl2DispatchBucket0				= 184,
-> >> +	VpVtl2DispatchBucket1				= 185,
-> >> +	VpVtl2DispatchBucket2				= 186,
-> >> +	VpVtl2DispatchBucket3				= 187,
-> >> +	VpVtl2DispatchBucket4				= 188,
-> >> +	VpVtl2DispatchBucket5				= 189,
-> >> +	VpVtl2DispatchBucket6				= 190,
-> >> +	VpVtl1RunTime					= 191,
-> >> +	VpVtl2RunTime					= 192,
-> >> +	VpIommuHypercalls				= 193,
-> >> +	VpCpuGroupHypercalls				= 194,
-> >> +	VpVsmHypercalls					= 195,
-> >> +	VpEventLogHypercalls				= 196,
-> >> +	VpDeviceDomainHypercalls			= 197,
-> >> +	VpDepositHypercalls				= 198,
-> >> +	VpSvmHypercalls					= 199,
-> >> +	VpBusLockAcquisitionCount			= 200,
-> >> +	VpLoadAvg					= 201,
-> >> +	VpRootDispatchThreadBlocked			= 202,
-> >> +#elif IS_ENABLED(CONFIG_ARM64)
-> >> +	VpSysRegAccessesCount				= 9,
-> >> +	VpSysRegAccessesTime				= 10,
-> >> +	VpSmcInstructionsCount				= 11,
-> >> +	VpSmcInstructionsTime				= 12,
-> >> +	VpOtherInterceptsCount				= 13,
-> >> +	VpOtherInterceptsTime				= 14,
-> >> +	VpExternalInterruptsCount			= 15,
-> >> +	VpExternalInterruptsTime			= 16,
-> >> +	VpPendingInterruptsCount			= 17,
-> >> +	VpPendingInterruptsTime				= 18,
-> >> +	VpGuestPageTableMaps				= 19,
-> >> +	VpLargePageTlbFills				= 20,
-> >> +	VpSmallPageTlbFills				= 21,
-> >> +	VpReflectedGuestPageFaults			= 22,
-> >> +	VpMemoryInterceptMessages			= 23,
-> >> +	VpOtherMessages					= 24,
-> >> +	VpLogicalProcessorMigrations			= 25,
-> >> +	VpAddressDomainFlushes				= 26,
-> >> +	VpAddressSpaceFlushes				= 27,
-> >> +	VpSyntheticInterrupts				= 28,
-> >> +	VpVirtualInterrupts				= 29,
-> >> +	VpApicSelfIpisSent				= 30,
-> >> +	VpGpaSpaceHypercalls				= 31,
-> >> +	VpLogicalProcessorHypercalls			= 32,
-> >> +	VpLongSpinWaitHypercalls			= 33,
-> >> +	VpOtherHypercalls				= 34,
-> >> +	VpSyntheticInterruptHypercalls			= 35,
-> >> +	VpVirtualInterruptHypercalls			= 36,
-> >> +	VpVirtualMmuHypercalls				= 37,
-> >> +	VpVirtualProcessorHypercalls			= 38,
-> >> +	VpHardwareInterrupts				= 39,
-> >> +	VpNestedPageFaultInterceptsCount		= 40,
-> >> +	VpNestedPageFaultInterceptsTime			= 41,
-> >> +	VpLogicalProcessorDispatches			= 42,
-> >> +	VpWaitingForCpuTime				= 43,
-> >> +	VpExtendedHypercalls				= 44,
-> >> +	VpExtendedHypercallInterceptMessages		= 45,
-> >> +	VpMbecNestedPageTableSwitches			= 46,
-> >> +	VpOtherReflectedGuestExceptions			= 47,
-> >> +	VpGlobalIoTlbFlushes				= 48,
-> >> +	VpGlobalIoTlbFlushCost				= 49,
-> >> +	VpLocalIoTlbFlushes				= 50,
-> >> +	VpLocalIoTlbFlushCost				= 51,
-> >> +	VpFlushGuestPhysicalAddressSpaceHypercalls	= 52,
-> >> +	VpFlushGuestPhysicalAddressListHypercalls	= 53,
-> >> +	VpPostedInterruptNotifications			= 54,
-> >> +	VpPostedInterruptScans				= 55,
-> >> +	VpTotalCoreRunTime				= 56,
-> >> +	VpMaximumRunTime				= 57,
-> >> +	VpWaitingForCpuTimeBucket0			= 58,
-> >> +	VpWaitingForCpuTimeBucket1			= 59,
-> >> +	VpWaitingForCpuTimeBucket2			= 60,
-> >> +	VpWaitingForCpuTimeBucket3			= 61,
-> >> +	VpWaitingForCpuTimeBucket4			= 62,
-> >> +	VpWaitingForCpuTimeBucket5			= 63,
-> >> +	VpWaitingForCpuTimeBucket6			= 64,
-> >> +	VpHwpRequestContextSwitches			= 65,
-> >> +	VpPlaceholder2					= 66,
-> >> +	VpPlaceholder3					= 67,
-> >> +	VpPlaceholder4					= 68,
-> >> +	VpPlaceholder5					= 69,
-> >> +	VpPlaceholder6					= 70,
-> >> +	VpPlaceholder7					= 71,
-> >> +	VpPlaceholder8					= 72,
-> >> +	VpContentionTime				= 73,
-> >> +	VpWakeUpTime					= 74,
-> >> +	VpSchedulingPriority				= 75,
-> >> +	VpVtl1DispatchCount				= 76,
-> >> +	VpVtl2DispatchCount				= 77,
-> >> +	VpVtl2DispatchBucket0				= 78,
-> >> +	VpVtl2DispatchBucket1				= 79,
-> >> +	VpVtl2DispatchBucket2				= 80,
-> >> +	VpVtl2DispatchBucket3				= 81,
-> >> +	VpVtl2DispatchBucket4				= 82,
-> >> +	VpVtl2DispatchBucket5				= 83,
-> >> +	VpVtl2DispatchBucket6				= 84,
-> >> +	VpVtl1RunTime					= 85,
-> >> +	VpVtl2RunTime					= 86,
-> >> +	VpIommuHypercalls				= 87,
-> >> +	VpCpuGroupHypercalls				= 88,
-> >> +	VpVsmHypercalls					= 89,
-> >> +	VpEventLogHypercalls				= 90,
-> >> +	VpDeviceDomainHypercalls			= 91,
-> >> +	VpDepositHypercalls				= 92,
-> >> +	VpSvmHypercalls					= 93,
-> >> +	VpLoadAvg					= 94,
-> >> +	VpRootDispatchThreadBlocked			= 95,
-> >> +#endif
-> >> +	VpStatsMaxCounter
-> >> +};
-> >> +
-> >> +enum hv_stats_lp_counters {			/* HV_CPU_COUNTER */
-> >> +	LpGlobalTime				= 1,
-> >> +	LpTotalRunTime				= 2,
-> >> +	LpHypervisorRunTime			= 3,
-> >> +	LpHardwareInterrupts			= 4,
-> >> +	LpContextSwitches			= 5,
-> >> +	LpInterProcessorInterrupts		= 6,
-> >> +	LpSchedulerInterrupts			= 7,
-> >> +	LpTimerInterrupts			= 8,
-> >> +	LpInterProcessorInterruptsSent		= 9,
-> >> +	LpProcessorHalts			= 10,
-> >> +	LpMonitorTransitionCost			= 11,
-> >> +	LpContextSwitchTime			= 12,
-> >> +	LpC1TransitionsCount			= 13,
-> >> +	LpC1RunTime				= 14,
-> >> +	LpC2TransitionsCount			= 15,
-> >> +	LpC2RunTime				= 16,
-> >> +	LpC3TransitionsCount			= 17,
-> >> +	LpC3RunTime				= 18,
-> >> +	LpRootVpIndex				= 19,
-> >> +	LpIdleSequenceNumber			= 20,
-> >> +	LpGlobalTscCount			= 21,
-> >> +	LpActiveTscCount			= 22,
-> >> +	LpIdleAccumulation			= 23,
-> >> +	LpReferenceCycleCount0			= 24,
-> >> +	LpActualCycleCount0			= 25,
-> >> +	LpReferenceCycleCount1			= 26,
-> >> +	LpActualCycleCount1			= 27,
-> >> +	LpProximityDomainId			= 28,
-> >> +	LpPostedInterruptNotifications		= 29,
-> >> +	LpBranchPredictorFlushes		= 30,
-> >> +#if IS_ENABLED(CONFIG_X86_64)
-> >> +	LpL1DataCacheFlushes			= 31,
-> >> +	LpImmediateL1DataCacheFlushes		= 32,
-> >> +	LpMbFlushes				= 33,
-> >> +	LpCounterRefreshSequenceNumber		= 34,
-> >> +	LpCounterRefreshReferenceTime		= 35,
-> >> +	LpIdleAccumulationSnapshot		= 36,
-> >> +	LpActiveTscCountSnapshot		= 37,
-> >> +	LpHwpRequestContextSwitches		= 38,
-> >> +	LpPlaceholder1				= 39,
-> >> +	LpPlaceholder2				= 40,
-> >> +	LpPlaceholder3				= 41,
-> >> +	LpPlaceholder4				= 42,
-> >> +	LpPlaceholder5				= 43,
-> >> +	LpPlaceholder6				= 44,
-> >> +	LpPlaceholder7				= 45,
-> >> +	LpPlaceholder8				= 46,
-> >> +	LpPlaceholder9				= 47,
-> >> +	LpPlaceholder10				= 48,
-> >> +	LpReserveGroupId			= 49,
-> >> +	LpRunningPriority			= 50,
-> >> +	LpPerfmonInterruptCount			= 51,
-> >> +#elif IS_ENABLED(CONFIG_ARM64)
-> >> +	LpCounterRefreshSequenceNumber		= 31,
-> >> +	LpCounterRefreshReferenceTime		= 32,
-> >> +	LpIdleAccumulationSnapshot		= 33,
-> >> +	LpActiveTscCountSnapshot		= 34,
-> >> +	LpHwpRequestContextSwitches		= 35,
-> >> +	LpPlaceholder2				= 36,
-> >> +	LpPlaceholder3				= 37,
-> >> +	LpPlaceholder4				= 38,
-> >> +	LpPlaceholder5				= 39,
-> >> +	LpPlaceholder6				= 40,
-> >> +	LpPlaceholder7				= 41,
-> >> +	LpPlaceholder8				= 42,
-> >> +	LpPlaceholder9				= 43,
-> >> +	LpSchLocalRunListSize			= 44,
-> >> +	LpReserveGroupId			= 45,
-> >> +	LpRunningPriority			= 46,
-> >> +#endif
-> >> +	LpStatsMaxCounter
-> >> +};
-> >> +
-> >> +/*
-> >> + * Hypervisor statistics page format
-> >> + */
-> >> +struct hv_stats_page {
-> >> +	union {
-> >> +		u64 hv_cntrs[HvStatsMaxCounter];		/* Hypervisor counters */
-> >> +		u64 pt_cntrs[PartitionStatsMaxCounter];		/* Partition counters */
-> >> +		u64 vp_cntrs[VpStatsMaxCounter];		/* VP counters */
-> >> +		u64 lp_cntrs[LpStatsMaxCounter];		/* LP counters */
-> >> +		u8 data[HV_HYP_PAGE_SIZE];
-> >> +	};
-> >> +} __packed;
-> >> +
-> >>  /* Bits for dirty mask of hv_vp_register_page */
-> >>  #define HV_X64_REGISTER_CLASS_GENERAL	0
-> >>  #define HV_X64_REGISTER_CLASS_IP	1
-> >> -- 
-> >> 2.34.1
 
