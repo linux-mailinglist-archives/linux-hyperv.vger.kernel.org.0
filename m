@@ -1,56 +1,62 @@
-Return-Path: <linux-hyperv+bounces-8439-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8440-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YAh5AM1UcWkNEwAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8439-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 23:35:57 +0100
+	id KIyFG91UcWkNEwAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8440-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 23:36:13 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AEE75EE30
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 23:35:56 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE01B5EE3F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 23:36:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id ECF9D5075CE
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 22:35:55 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 762284FCEA5
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 22:36:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E802E3A7DE9;
-	Wed, 21 Jan 2026 22:35:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71EA83A7DE9;
+	Wed, 21 Jan 2026 22:35:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="eSxzS4qJ"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jr/fTc+E"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B376410D3E;
-	Wed, 21 Jan 2026 22:35:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00EA4421F05;
+	Wed, 21 Jan 2026 22:35:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769034950; cv=none; b=t12LUFsL3v/Fn+OQ8pSqT6zkybQcc9+wrM+Bzpv9du9n/PaMiNye/DIcw532TV8wT3sclIF6x19u10xPuTA/Osiztfe2jBAhg4yFXn0QS2doi0tw7R0QzVMYdZ/VGxIPE9oplSTOASUTaXBosCiO/KM1qu0ASDO0gws5iOh2S7U=
+	t=1769034956; cv=none; b=jkZti9mpk+QhIrNiHd2ZMXzpAvwPG+ut0NwLrqij93NugxFfgAhYGrEfYQQEKZtMty4eceOV46La9Xu4Ld/XLS8H+m6t9ITMouScLWLGvMUJr2FYCUjYvl2x5Rk17yo3mcNx/qrJqJW4wycEwxNCkckaaXyFBWkdlm2uBprh9yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769034950; c=relaxed/simple;
-	bh=NsISPSisMUvM3sAGZu14B8bxaXk+BuJSNHWxK2/zB2w=;
-	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=FjEzrJeL2fLiG3xVwNvX26VSIfai+erzebncJGVTLdcDx8PjmJ5tRZujDBYW9O4l/lVHXiKlBM9AMySDrNs2OcQmRiVVfMDToTS25cHM+y1k40sZjms963s94c1Dl2uEfCLz3mRVacYXOJf79DZufb+g7zLI5YlF9Br02N+JO+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=eSxzS4qJ; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1769034956; c=relaxed/simple;
+	bh=xzg+wWpeslx7cmSf3+9oCHglph+ucNBV7vA7snnS3vQ=;
+	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uB3rcxBhWQ9XA/c0Zi4gJ0/ZtTJYydAcAkB6f1fQHk77HJc67J8Nm2dEXNdjtxiOXqOZqhvZyubY0veZQyNSKVachyAZ0XyAsVwQb4YnEdmctL6Rya2GK4sqp0R9We3vWJ1EIZFks1iRcyMQZRcguZW3L0XOYbKBAwQTYQEvNb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jr/fTc+E; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id C86A720B7167;
-	Wed, 21 Jan 2026 14:35:48 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C86A720B7167
+	by linux.microsoft.com (Postfix) with ESMTPSA id 46FBC20B7167;
+	Wed, 21 Jan 2026 14:35:54 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 46FBC20B7167
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1769034948;
-	bh=PmjoVkUqKpw128I4MnFQMcOf59dbMnertfkZXkwfEbY=;
-	h=Subject:From:To:Cc:Date:From;
-	b=eSxzS4qJwtYbT7/K7DvL13HP567Fxu/AFhMF8T0fJpDNQm6Y/+HFrM/UAJkKERH2Q
-	 J3jkpghzbkG1WWndPP6XRZfgS4Xwk6vVfTMSvUw8yWALbYa/YbWxvO88h0GdVN3fnW
-	 CONYrlnA7wsCLKys1WSpjvgjEnFjccO2AXGg26Jk=
-Subject: [PATCH 0/2] Introduce Hyper-V integrated scheduler support
+	s=default; t=1769034954;
+	bh=qVZNQJTar5ROG4ASJsek+RWuoUtiqtq+N+dHoONkc9c=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=jr/fTc+EAAoohhzwGvY2TB5uszipsw4MSWwOwI5QJy+0vz+ecqa4+1PHzvojbYVcD
+	 W6zgOfm/GRss/k3JpSgpGjPspHptmp/eh1vCsYTMbM7/CbIfxZyx7a2aVpQJkzkBk6
+	 AG01AD+hbBnF3myf/w5IapBpEHVKDAPJ99RS40Rw=
+Subject: [PATCH 1/2] hyperv: Sync guest VMM capabilities structure with
+ Microsoft Hypervisor ABI
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, longli@microsoft.com
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 21 Jan 2026 22:35:48 +0000
+Date: Wed, 21 Jan 2026 22:35:54 +0000
 Message-ID: 
+ <176903495416.166619.16629695002971245203.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+In-Reply-To: 
+ <176903475057.166619.9437539561789960983.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+References: 
  <176903475057.166619.9437539561789960983.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 User-Agent: StGit/0.19
 Precedence: bulk
@@ -60,7 +66,7 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.96 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -72,57 +78,59 @@ X-Spamd-Result: default: False [-1.96 / 15.00];
 	DMARC_POLICY_ALLOW(0.00)[linux.microsoft.com,none];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-8439-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8440-lists,linux-hyperv=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a01:60a::1994:3:14:from];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[142.0.200.124:from];
 	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
+	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
 	TO_DN_NONE(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[52.25.139.140:received,13.77.154.182:received,4.155.116.186:received];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[4.155.116.186:received,13.77.154.182:received,52.25.139.140:received];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:helo,ams.mirrors.kernel.org:rdns,skinsburskii-cloud-desktop.internal.cloudapp.net:mid]
-X-Rspamd-Queue-Id: 8AEE75EE30
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,dfw.mirrors.kernel.org:helo,dfw.mirrors.kernel.org:rdns,skinsburskii-cloud-desktop.internal.cloudapp.net:mid]
+X-Rspamd-Queue-Id: EE01B5EE3F
 X-Rspamd-Action: no action
 
-Microsoft Hypervisor originally provided two schedulers: root and core. The
-root scheduler allows the root partition to schedule guest vCPUs across
-physical cores, supporting both time slicing and CPU affinity (e.g., via
-cgroups). In contrast, the core scheduler delegates vCPU-to-physical-core
-scheduling entirely to the hypervisor.
+From: Andreea Pintilie <anpintil@microsoft.com>
 
-Direct virtualization introduces a new privileged guest partition type - L1
-Virtual Host (L1VH) — which can create child partitions from its own
-resources. These child partitions are effectively siblings, scheduled by
-the hypervisor's core scheduler. This prevents the L1VH parent from setting
-affinity or time slicing for its own processes or guest VPs. While cgroups,
-CFS, and cpuset controllers can still be used, their effectiveness is
-unpredictable, as the core scheduler swaps vCPUs according to its own logic
-(typically round-robin across all allocated physical CPUs). As a result,
-the system may appear to "steal" time from the L1VH and its children.
+Update the partition VMM capability structure to match the hypervisor
+representation to bring it to the up to date state. A precursor patch for
+Root-on-Core scheduler feature support.
 
-To address this, Microsoft Hypervisor introduces the integrated scheduler.
-This allows an L1VH partition to schedule its own vCPUs and those of its
-guests across its "physical" cores, effectively emulating root scheduler
-behavior within the L1VH, while retaining core scheduler behavior for the
-rest of the system.
-
+Signed-off-by: Andreea Pintilie <anpintil@microsoft.com>
+Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 ---
+ include/hyperv/hvhdk_mini.h |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Andreea Pintilie (2):
-      hyperv: Sync guest VMM capabilities structure with Microsoft Hypervisor ABI
-      mshv: Add support for integrated scheduler
+diff --git a/include/hyperv/hvhdk_mini.h b/include/hyperv/hvhdk_mini.h
+index 41a29bf8ec14..aa03616f965b 100644
+--- a/include/hyperv/hvhdk_mini.h
++++ b/include/hyperv/hvhdk_mini.h
+@@ -102,7 +102,7 @@ enum hv_partition_property_code {
+ };
+ 
+ #define HV_PARTITION_VMM_CAPABILITIES_BANK_COUNT		1
+-#define HV_PARTITION_VMM_CAPABILITIES_RESERVED_BITFIELD_COUNT	59
++#define HV_PARTITION_VMM_CAPABILITIES_RESERVED_BITFIELD_COUNT	58
+ 
+ struct hv_partition_property_vmm_capabilities {
+ 	u16 bank_count;
+@@ -119,6 +119,7 @@ struct hv_partition_property_vmm_capabilities {
+ 			u64 reservedbit3: 1;
+ #endif
+ 			u64 assignable_synthetic_proc_features: 1;
++			u64 tag_hv_message_from_child: 1;
+ 			u64 reserved0: HV_PARTITION_VMM_CAPABILITIES_RESERVED_BITFIELD_COUNT;
+ 		} __packed;
+ 	};
 
-
- drivers/hv/mshv_root_main.c |   79 +++++++++++++++++++++++++++++--------------
- include/hyperv/hvhdk_mini.h |    7 +++-
- 2 files changed, 59 insertions(+), 27 deletions(-)
 
 
