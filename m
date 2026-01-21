@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-8422-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8423-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AOfEDXlMcWkahAAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8422-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 23:00:25 +0100
+	id IJtZMeBLcWkahAAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8423-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 22:57:52 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCF155E6AF
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 23:00:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 716E25E627
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 22:57:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E250078BE8F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 21:46:32 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 313B278C9E3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 21:46:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE76B3659EF;
-	Wed, 21 Jan 2026 21:46:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E77838BDA7;
+	Wed, 21 Jan 2026 21:46:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qpDZqImn"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mnFD4pdQ"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2822E224AE0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86B1722F388;
 	Wed, 21 Jan 2026 21:46:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769031987; cv=none; b=m3iJZipR4YXt6DqR8lYqdY07SORt6PYEFI+8mtNU1CH9L35hwvDZr4eN+ll+rxganpDB+SHY+CmrIPa5bA0fltavgojHIO9GmUQHl3d9yTz6Oe1HrKaIvXhqcoz9q7NlbeAneq5VZirsiAL7OAouNFazPYT9M6icur7nKsvlWFk=
+	t=1769031988; cv=none; b=qkj3NwqqEUD8FjFW3xUDvaEY6upziSmmD9OZkWexsmMA1K08fTw5BAtKvpGBYsAKmd3+6s05BWo6vcjAMaa8x6Kkxq+5AvszuhU6n4vdEy+waPrIttTLnCupIvPmQXq4YO6OofPVWk9fRCs+uYSYzE4Tal0mZqNiRorRU/BW6Wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769031987; c=relaxed/simple;
-	bh=HFNNVSweFvuB84DU2B4ROhCi6CUVW6aVVK9SMK14epw=;
+	s=arc-20240116; t=1769031988; c=relaxed/simple;
+	bh=2s9lIeHsh8FM2pqJpMLaCsT4ujORbpAFNEZIFfRk+Y0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=twXEmYtFVnNjpf37yIw7ijA0KUsE2onY+DQfdg17ciGT7BflRFymeVcl1XAcl5/Q5qAmaoKHGJAAkJuHmhrEUnl/fYbXIVOXmYQoO9ufHjroMC2gh1dkETWUsOjPPnUJSjcVdrD7elHQ7IiCyIV5+Ygyhr/FGPAaElqjZ/y9yzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qpDZqImn; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=fEj3DD4CMBjhR3Lo475OO8pw4g9wHOaYDZSJMeG+uQf7TxYrm1cnY50C3J8UMfqaJ1orGnIOUvekHnsv2sdVWosq9Errp9fAwXeFvXb23Z2uhntpjIODIti3ZodcxEew2J9A0Xr7mrhfZaW5QmHw2KRhl79azrDXsUNwQ/wPiGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=mnFD4pdQ; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1032)
-	id CB96520B716B; Wed, 21 Jan 2026 13:46:25 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CB96520B716B
+	id 27E3020B716C; Wed, 21 Jan 2026 13:46:26 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 27E3020B716C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1769031985;
-	bh=ARHwRQoJMl3xBLyBPZgcJm/EEXDHa34ijHjF+rMvoPE=;
+	s=default; t=1769031986;
+	bh=9BzoOa0wVBQB143I2PH957+WYxTAU/R3jKcGrn898r4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qpDZqImnjh1tzEPUa0ryO4JBeNM5Do88PtRTzq6HdeLS8lA80uUws836pmVYI9Gh7
-	 jGyKNX4SqSF3XtyghoUCuf2CFU5fQak98Uv4Pi+ExFKr6ZFMbz2TIA3F5i6zy9dt28
-	 aaRbHVRzw1egQKtfKAAY6u6Ic6M8JSQkRrzeNDL8=
+	b=mnFD4pdQYLOx/wpK7yrZqns3LEldUQUqqo+oq3cMXrLjjHddyFJNfYIsgdcL+fGp4
+	 9zEjwXVL2cQgo9agOEB7Kz4bjpYM33lcdtbmLVRAXtostk+Rk0TbEPDNGTKL3zVyhl
+	 UXwxn4ARlqhQhLXtQFlFQIvLsJ3ebeVxd+yPvftM=
 From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -58,9 +58,9 @@ Cc: kys@microsoft.com,
 	mrathor@linux.microsoft.com,
 	paekkaladevi@linux.microsoft.com,
 	Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Subject: [PATCH v4 2/7] mshv: Use typed hv_stats_page pointers
-Date: Wed, 21 Jan 2026 13:46:18 -0800
-Message-ID: <20260121214623.76374-3-nunodasneves@linux.microsoft.com>
+Subject: [PATCH v4 3/7] mshv: Improve mshv_vp_stats_map/unmap(), add them to mshv_root.h
+Date: Wed, 21 Jan 2026 13:46:19 -0800
+Message-ID: <20260121214623.76374-4-nunodasneves@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260121214623.76374-1-nunodasneves@linux.microsoft.com>
 References: <20260121214623.76374-1-nunodasneves@linux.microsoft.com>
@@ -85,7 +85,7 @@ X-Spamd-Result: default: False [-0.46 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8422-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8423-lists,linux-hyperv=lfdr.de];
 	FREEMAIL_TO(0.00)[vger.kernel.org,outlook.com,linux.microsoft.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
@@ -98,118 +98,148 @@ X-Spamd-Result: default: False [-0.46 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo,linux.microsoft.com:mid,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: DCF155E6AF
+X-Rspamd-Queue-Id: 716E25E627
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 
-Refactor all relevant functions to use struct hv_stats_page pointers
-instead of void pointers for stats page mapping and unmapping thus
-improving type safety and code clarity across the Hyper-V stats mapping
-APIs.
+These functions are currently only used to map child partition VP stats,
+on root partition. However, they will soon be used on L1VH, and and also
+used for mapping the host's own VP stats.
+
+Introduce a helper is_l1vh_parent() to determine whether we are mapping
+our own VP stats. In this case, do not attempt to map the PARENT area.
+Note this is a different case than mapping PARENT on an older hypervisor
+where it is not available at all, so must be handled separately.
+
+On unmap, pass the stats pages since on L1VH the kernel allocates them
+and they must be freed in hv_unmap_stats_page().
 
 Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 ---
- drivers/hv/mshv_root.h         |  5 +++--
- drivers/hv/mshv_root_hv_call.c | 12 +++++++-----
- drivers/hv/mshv_root_main.c    |  8 ++++----
- 3 files changed, 14 insertions(+), 11 deletions(-)
+ drivers/hv/mshv_root.h      | 10 ++++++
+ drivers/hv/mshv_root_main.c | 61 ++++++++++++++++++++++++++-----------
+ 2 files changed, 54 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
-index 3c1d88b36741..05ba1f716f9e 100644
+index 05ba1f716f9e..e4912b0618fa 100644
 --- a/drivers/hv/mshv_root.h
 +++ b/drivers/hv/mshv_root.h
-@@ -307,8 +307,9 @@ int hv_call_disconnect_port(u64 connection_partition_id,
- int hv_call_notify_port_ring_empty(u32 sint_index);
- int hv_map_stats_page(enum hv_stats_object_type type,
- 		      const union hv_stats_object_identity *identity,
--		      void **addr);
--int hv_unmap_stats_page(enum hv_stats_object_type type, void *page_addr,
-+		      struct hv_stats_page **addr);
-+int hv_unmap_stats_page(enum hv_stats_object_type type,
-+			struct hv_stats_page *page_addr,
- 			const union hv_stats_object_identity *identity);
- int hv_call_modify_spa_host_access(u64 partition_id, struct page **pages,
- 				   u64 page_struct_count, u32 host_access,
-diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
-index 1f93b94d7580..daee036e48bc 100644
---- a/drivers/hv/mshv_root_hv_call.c
-+++ b/drivers/hv/mshv_root_hv_call.c
-@@ -890,9 +890,10 @@ hv_stats_get_area_type(enum hv_stats_object_type type,
-  * caller should check for this case and instead fallback to the SELF area
-  * alone.
-  */
--static int hv_call_map_stats_page(enum hv_stats_object_type type,
--				  const union hv_stats_object_identity *identity,
--				  void **addr)
-+static int
-+hv_call_map_stats_page(enum hv_stats_object_type type,
-+		       const union hv_stats_object_identity *identity,
-+		       struct hv_stats_page **addr)
- {
- 	unsigned long flags;
- 	struct hv_input_map_stats_page *input;
-@@ -942,7 +943,7 @@ static int hv_call_map_stats_page(enum hv_stats_object_type type,
+@@ -254,6 +254,16 @@ struct mshv_partition *mshv_partition_get(struct mshv_partition *partition);
+ void mshv_partition_put(struct mshv_partition *partition);
+ struct mshv_partition *mshv_partition_find(u64 partition_id) __must_hold(RCU);
  
- int hv_map_stats_page(enum hv_stats_object_type type,
- 		      const union hv_stats_object_identity *identity,
--		      void **addr)
-+		      struct hv_stats_page **addr)
- {
- 	int ret;
- 	struct page *allocated_page = NULL;
-@@ -990,7 +991,8 @@ static int hv_call_unmap_stats_page(enum hv_stats_object_type type,
- 	return hv_result_to_errno(status);
- }
++static inline bool is_l1vh_parent(u64 partition_id)
++{
++	return hv_l1vh_partition() && (partition_id == HV_PARTITION_ID_SELF);
++}
++
++int mshv_vp_stats_map(u64 partition_id, u32 vp_index,
++		      struct hv_stats_page **stats_pages);
++void mshv_vp_stats_unmap(u64 partition_id, u32 vp_index,
++			 struct hv_stats_page **stats_pages);
++
+ /* hypercalls */
  
--int hv_unmap_stats_page(enum hv_stats_object_type type, void *page_addr,
-+int hv_unmap_stats_page(enum hv_stats_object_type type,
-+			struct hv_stats_page *page_addr,
- 			const union hv_stats_object_identity *identity)
- {
- 	int ret;
+ int hv_call_withdraw_memory(u64 count, int node, u64 partition_id);
 diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index 1777778f84b8..be5ad0fbfbee 100644
+index be5ad0fbfbee..faca3cc63e79 100644
 --- a/drivers/hv/mshv_root_main.c
 +++ b/drivers/hv/mshv_root_main.c
-@@ -957,7 +957,7 @@ mshv_vp_release(struct inode *inode, struct file *filp)
+@@ -956,23 +956,36 @@ mshv_vp_release(struct inode *inode, struct file *filp)
+ 	return 0;
  }
  
- static void mshv_vp_stats_unmap(u64 partition_id, u32 vp_index,
--				void *stats_pages[])
-+				struct hv_stats_page *stats_pages[])
+-static void mshv_vp_stats_unmap(u64 partition_id, u32 vp_index,
+-				struct hv_stats_page *stats_pages[])
++void mshv_vp_stats_unmap(u64 partition_id, u32 vp_index,
++			 struct hv_stats_page *stats_pages[])
  {
  	union hv_stats_object_identity identity = {
  		.vp.partition_id = partition_id,
-@@ -972,7 +972,7 @@ static void mshv_vp_stats_unmap(u64 partition_id, u32 vp_index,
+ 		.vp.vp_index = vp_index,
+ 	};
++	int err;
+ 
+ 	identity.vp.stats_area_type = HV_STATS_AREA_SELF;
+-	hv_unmap_stats_page(HV_STATS_OBJECT_VP, NULL, &identity);
+-
+-	identity.vp.stats_area_type = HV_STATS_AREA_PARENT;
+-	hv_unmap_stats_page(HV_STATS_OBJECT_VP, NULL, &identity);
++	err = hv_unmap_stats_page(HV_STATS_OBJECT_VP,
++				  stats_pages[HV_STATS_AREA_SELF],
++				  &identity);
++	if (err)
++		pr_err("%s: failed to unmap partition %llu vp %u self stats, err: %d\n",
++		       __func__, partition_id, vp_index, err);
++
++	if (stats_pages[HV_STATS_AREA_PARENT] != stats_pages[HV_STATS_AREA_SELF]) {
++		identity.vp.stats_area_type = HV_STATS_AREA_PARENT;
++		err = hv_unmap_stats_page(HV_STATS_OBJECT_VP,
++					  stats_pages[HV_STATS_AREA_PARENT],
++					  &identity);
++		if (err)
++			pr_err("%s: failed to unmap partition %llu vp %u parent stats, err: %d\n",
++			       __func__, partition_id, vp_index, err);
++	}
  }
  
- static int mshv_vp_stats_map(u64 partition_id, u32 vp_index,
--			     void *stats_pages[])
-+			     struct hv_stats_page *stats_pages[])
+-static int mshv_vp_stats_map(u64 partition_id, u32 vp_index,
+-			     struct hv_stats_page *stats_pages[])
++int mshv_vp_stats_map(u64 partition_id, u32 vp_index,
++		      struct hv_stats_page *stats_pages[])
  {
  	union hv_stats_object_identity identity = {
  		.vp.partition_id = partition_id,
-@@ -1010,7 +1010,7 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
- 	struct mshv_create_vp args;
- 	struct mshv_vp *vp;
- 	struct page *intercept_msg_page, *register_page, *ghcb_page;
--	void *stats_pages[2];
-+	struct hv_stats_page *stats_pages[2];
- 	long ret;
+@@ -983,23 +996,37 @@ static int mshv_vp_stats_map(u64 partition_id, u32 vp_index,
+ 	identity.vp.stats_area_type = HV_STATS_AREA_SELF;
+ 	err = hv_map_stats_page(HV_STATS_OBJECT_VP, &identity,
+ 				&stats_pages[HV_STATS_AREA_SELF]);
+-	if (err)
++	if (err) {
++		pr_err("%s: failed to map partition %llu vp %u self stats, err: %d\n",
++		       __func__, partition_id, vp_index, err);
+ 		return err;
++	}
  
- 	if (copy_from_user(&args, arg, sizeof(args)))
-@@ -1729,7 +1729,7 @@ static void destroy_partition(struct mshv_partition *partition)
+-	identity.vp.stats_area_type = HV_STATS_AREA_PARENT;
+-	err = hv_map_stats_page(HV_STATS_OBJECT_VP, &identity,
+-				&stats_pages[HV_STATS_AREA_PARENT]);
+-	if (err)
+-		goto unmap_self;
+-
+-	if (!stats_pages[HV_STATS_AREA_PARENT])
++	/*
++	 * L1VH partition cannot access its vp stats in parent area.
++	 */
++	if (is_l1vh_parent(partition_id)) {
+ 		stats_pages[HV_STATS_AREA_PARENT] = stats_pages[HV_STATS_AREA_SELF];
++	} else {
++		identity.vp.stats_area_type = HV_STATS_AREA_PARENT;
++		err = hv_map_stats_page(HV_STATS_OBJECT_VP, &identity,
++					&stats_pages[HV_STATS_AREA_PARENT]);
++		if (err) {
++			pr_err("%s: failed to map partition %llu vp %u parent stats, err: %d\n",
++			       __func__, partition_id, vp_index, err);
++			goto unmap_self;
++		}
++		if (!stats_pages[HV_STATS_AREA_PARENT])
++			stats_pages[HV_STATS_AREA_PARENT] = stats_pages[HV_STATS_AREA_SELF];
++	}
  
- 			if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
- 				mshv_vp_stats_unmap(partition->pt_id, vp->vp_index,
--						    (void **)vp->vp_stats_pages);
-+						    vp->vp_stats_pages);
+ 	return 0;
  
- 			if (vp->vp_register_page) {
- 				(void)hv_unmap_vp_state_page(partition->pt_id,
+ unmap_self:
+ 	identity.vp.stats_area_type = HV_STATS_AREA_SELF;
+-	hv_unmap_stats_page(HV_STATS_OBJECT_VP, NULL, &identity);
++	hv_unmap_stats_page(HV_STATS_OBJECT_VP,
++			    stats_pages[HV_STATS_AREA_SELF],
++			    &identity);
+ 	return err;
+ }
+ 
 -- 
 2.34.1
 
