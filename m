@@ -1,89 +1,89 @@
-Return-Path: <linux-hyperv+bounces-8418-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8419-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KKNsInMmcWl8eQAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8418-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 20:18:11 +0100
+	id CA+QF6svcWmcfAAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8419-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 20:57:31 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70C425BF8E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 20:18:11 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id E49BE5CAF8
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 20:57:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 5815F8601AD
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 17:47:59 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 351966C0113
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 19:40:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C021F3A6409;
-	Wed, 21 Jan 2026 17:36:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 081B835CBAE;
+	Wed, 21 Jan 2026 19:40:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cCCGwsSn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gOE5PIZD"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yx1-f48.google.com (mail-yx1-f48.google.com [74.125.224.48])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9047633C189
-	for <linux-hyperv@vger.kernel.org>; Wed, 21 Jan 2026 17:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DFD346E59
+	for <linux-hyperv@vger.kernel.org>; Wed, 21 Jan 2026 19:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769017014; cv=none; b=ccYSsWjQP3JUFfbuVSpNjUHmNtFOa2FBbJZtOQeYG4t2tmZ7v664LymH3E5UReL4nN4b29IYhHI8pP4qkJwVHhGRTeb4tEbpIe0+rffGJu00rOrd4yWz19smPP48+9CubAom2zlkaZX3QaUARQniLSontd4MkI36krgg2qNG3WA=
+	t=1769024426; cv=none; b=V7PT7RAz2Tm/39YugY5YIBA4Ddx+zSVF2oYnPmr5z3cL0Zehs1LqeNmQ5MCIklPHQeqD/IGKiJZeoD+llkr/EUDO6kyDuobuTfLmRmBAgvtKEvL4zyMmPx6HYJrowjxQb3swEbqQqYP10HJzktwY3ej+sl0NwPRIQgduvLm7OSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769017014; c=relaxed/simple;
-	bh=tpGlhPJQhs6K29z4KKdexPB885DZk84UD04BRE7PW+k=;
+	s=arc-20240116; t=1769024426; c=relaxed/simple;
+	bh=Lu0kHih9UWQeJ+lp2O4spjT0NK81+eYFDqsV1ZmCcuk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X+CnoypvD7dJKG/FpJuhF5w5EAahuo2lmYqsI2jdX9oIU36A5JWxNMZdFcH4k+xi0Iko/VsyULrleWr5hACrX04AGYASWvwhLmf/lKjWBV9REfua6+VGwByOFR/5jArTVUDDBz7Gnjyj0FEkEeTwPVJnsiJFYeSSEA9LocXkIto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cCCGwsSn; arc=none smtp.client-ip=74.125.224.48
+	 Content-Type:Content-Disposition:In-Reply-To; b=HtuN3OzBnCSfqw7Ytn+gbO+Pj2E1isVw7GgiuicjUnsO6lKKhbXuAC3RzlWFuQgxLnjz5WmwfNTnxeQbiLh5HO1wq5dXKfgRJ7SAItcRAGtjcurcGfQmkEy16I8btBc20akiOb0P3JcWLX/RIaEENWPARvT0LA4DX8XqC2d0j5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gOE5PIZD; arc=none smtp.client-ip=209.85.222.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-640d4f2f13dso159035d50.1
-        for <linux-hyperv@vger.kernel.org>; Wed, 21 Jan 2026 09:36:51 -0800 (PST)
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-8c537a42b53so26037685a.0
+        for <linux-hyperv@vger.kernel.org>; Wed, 21 Jan 2026 11:40:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769017010; x=1769621810; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1769024423; x=1769629223; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TzQpPNktFvNOdBi7+gsCZqhpBpuEURHyo6CUuqA6z7E=;
-        b=cCCGwsSnRtmoCkAf/NTQtmaBasIN2I58Q15Ljxb++/KX+GhSiZ/IiKr6dn6nIzF/Qz
-         N1/VL2O9l4io6YRGd/QZx2JxTaoe3km0Ux9s5s0uFOVmfZ4DrdIx5tHlEfnGjWlwVbgD
-         Mm0CVcdR9PjNS5Pqba2TWoKXbXQ3hTnsxAta+gcYwXnQvRWGmReuuAxfXK+WVJ42w7xP
-         HHZznvsa4G9/Z1WE3+wi4VZWZxLvSN6FCnjetTk2698CYz0oek0L0+RMSYU9Bj7R0gsa
-         sGeyyBgemZDSTFqHIlYSpvicCd74Ff+j7gr8yCi2LKY2g7AL4vOu1gPNXxgOiG2iYlT6
-         ijSQ==
+        bh=iOPRZD47F8f143cIEqQqsk0mY0SdG+TC6tAqQjFOOoM=;
+        b=gOE5PIZDqwTPHMCyQGI4O7Vj4S6jgL24e9PSP2iTcPf5v4Iuq3QTf1ir/JLBPrnoSm
+         olHTE/YLZoLvDfP5VFsIMmdETTCsUTsLuZA2IlGFSOs6SA1k1wvBSDn8hGLckW0j/GRu
+         pWL7Cw5s2NRPaMCJLb/KPwll71vrVe5pOfaODnx5X9VfX1SZfKEOiKFDVFXYDbM0RQyT
+         k6KI+aB9Vxni+3FBYn0KSNR8OdUQJflavRvqqSsKEPpwI5xk+h8m/7uUgkchBM4Yk5SU
+         svK/dzdRmJCqFOTuVWAL+ZWs9d7Z38dGpfBBqnRUoqlnXeYwX55CFsIk4zmo6IrxiFdm
+         Q9lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769017010; x=1769621810;
+        d=1e100.net; s=20230601; t=1769024423; x=1769629223;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TzQpPNktFvNOdBi7+gsCZqhpBpuEURHyo6CUuqA6z7E=;
-        b=dA8dCPaEE3jwVPzv0A9jAOlAUd/8JyuQmG2lku0g07MQtVNWJrzoHX702+51BRnPBC
-         YiDBIiHYuGf5BKJdxD2/pdJ14srHVqZjkxTVTWYGb9TfFDWS+BUCHehp8r+L7Pltu8TD
-         yccf4G1titJdfpPCiUOjzBlLSsgyBK9dYgVBr1o2wdRjbI8V8fwZJB8NQlWrRnFZicwD
-         KMO/mPb63H2BFwdQ5ruGUKN2E6G6SoC8LGTCjFZpcSIpGd2HXjuHPoxqCoCl4drvTaEh
-         3r02R3meiCuMc0WlG7l12Ykve/DgtYc3Ie5pj3LwSPAjzO2G5Qiks9qGw2mnddFgq5AT
-         fNhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU6XkQSYlygF7S4nGtj2HQTin1rOzKtr8BEyzbFwGf9SOw6LB4gFJqD3C4XUCuYKP8yM6opMLEubJrqpJE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbhagZjUwOLrqHGdd/C+iKPHuq1t9ZmvZnyGmSghZR+2sFS+S+
-	YAQ9lvRsc/kCLFisXQ5Cxb448k9lN+Z5pllPr3/n2N0JWmCnocNOBZ9R
-X-Gm-Gg: AZuq6aJA3Fhp1IGgVFLNI2+CvBQjLoSKxPCuhV7OgR+Iwb6cJDlN7aTSqsoXW9m8oE6
-	YuaB5l8BOl5N4fJmCyWjAKFGlPQI9xNvRKZ54UrznXT6XxMId2YBC49Jv4eKAHUF6ygS84awGi+
-	G9WBYvF1fsorxjF9AfeGjtXWm6oEGoz3eh7qgxCOlz9x9qgsD6ywITAuKC2mQGpYDG2pD/osyXa
-	V5Rj/TT8iSvSSkd6asFr78oOmToM4ry12vObYLALa9LEBMhcckNLiw3D5PKL0W2yRAH5Y3LNyYy
-	ThA0VSGa5RjUbaxu5gUgxWbXTHGk8pGu9DVuuVICcEVaAsGSpvyGEZhTmDZdGUT2mnzx64BREve
-	S5CUdVUMNazgRZGHkSk2aJbeZVbn3KbJil3AOBG2kfZcrTA65QbtZP2a6G3mRf0scCWwVUI92BP
-	s09dqbWyCjBcYmWhTi+xIyFyimX+cmzr0TPRcaFZQwWD7c
-X-Received: by 2002:a05:690e:1c1c:b0:644:60d9:864d with SMTP id 956f58d0204a3-6493c872baemr4135180d50.92.1769017010185;
-        Wed, 21 Jan 2026 09:36:50 -0800 (PST)
-Received: from devvm11784.nha0.facebook.com ([2a03:2880:25ff:d::])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-649170adf11sm8096311d50.16.2026.01.21.09.36.49
+        bh=iOPRZD47F8f143cIEqQqsk0mY0SdG+TC6tAqQjFOOoM=;
+        b=MR1pW6TzStIoJ50ncffAyMN2r4m1/KiKx7XMsb9lXjVgHVMUM4PK0tXo3VwEHt1Ygw
+         +fRyYmVDuKYbJIwcJTn97soY+W2RTSe9lbnHjY4Dl1EAHUExHDcvfCw2pZCHlOICibFR
+         WdyhZ5AqKIBwHu5eThYJX9ewzyWBM0Ko1KUjYSnQ2O0REdM1g3rHoxhD4lGfEIAu5jU/
+         raiiAt/40Pj1xLav9ZpDMX9+pPDthk8Pi8Rnn1L7wNcJsheXBBlkRgDRcVi8E1ePwV7K
+         +K3gFodb/K0Frbz8J+24Lw3Gs72qMIjWdv85fMLk7NaHAYGzsobPAWotGWHdMd1CnMce
+         h5mw==
+X-Forwarded-Encrypted: i=1; AJvYcCVATv9G3vonMOeioMuW+mIHv09RWhoviOdoRzrABT16CNgu2WZM2KFbCT85S9ZD5wdqwmtzLXFWs2FsBRY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFqdqSyzMzV1GTLlYVqmtbOWIzzrCqtQE+bKPEVAMZvIuP9yUc
+	DpYUAFJ+Aqbk/lVYc/fNmLiHqudhVVUlNKczUKhrR3EnnM289rx9z91m
+X-Gm-Gg: AZuq6aJm/VrcfurXgvaKP1FojzXYUt7t65Ous5/VNvHFdYk/kdAGSKHl+E/b44D9z9B
+	3lz8b2u4Ns+mmlDrK1h5xWEtl+yhnsEePU1ib9UTt6QJsCc6PmpJRC0jxdzeaTzuPBen03WrQWu
+	3MGkVNKI6AUVI9RISFnHxGMtOoA/6/dAoDsrZFBEbY2L3c96Xupy4PvK+OWx5kmVt6wvqJuqUsO
+	lGYe9SWi4S/l+EofyoS/TRAL+SElzQ+cJRl0ZpGWnK26BjXnmch29wdaNrO9DVrT/nkRAv/WsoJ
+	YqFFlQL78gX2dmI6IE2tj+21X78+swyCJolUbyfw0hhlmdN/hkZA2UCNUuz8angkPywddIpiDQs
+	eu68Bb+9C8iAqsZh6eWSrou/p7gmZx30b2zNH8y+bgJl3q/92H7JerOvB0uTcrvjp5VvnpPP3a8
+	r42Nymb+qMfOuxPBk/3cAeC3KWX4c7xH++SPY=
+X-Received: by 2002:a05:690c:6089:b0:792:7113:a305 with SMTP id 00721157ae682-793c671a7f3mr146815807b3.29.1769017778141;
+        Wed, 21 Jan 2026 09:49:38 -0800 (PST)
+Received: from devvm11784.nha0.facebook.com ([2a03:2880:25ff:40::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-793c66f6f97sm68737717b3.16.2026.01.21.09.49.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jan 2026 09:36:49 -0800 (PST)
-Date: Wed, 21 Jan 2026 09:36:48 -0800
+        Wed, 21 Jan 2026 09:49:37 -0800 (PST)
+Date: Wed, 21 Jan 2026 09:49:36 -0800
 From: Bobby Eshleman <bobbyeshleman@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Stefano Garzarella <sgarzare@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
 	Stefan Hajnoczi <stefanha@redhat.com>,
 	"Michael S. Tsirkin" <mst@redhat.com>,
 	Jason Wang <jasowang@redhat.com>,
@@ -103,11 +103,10 @@ Cc: Stefano Garzarella <sgarzare@redhat.com>,
 	Sargun Dhillon <sargun@sargun.me>, linux-doc@vger.kernel.org,
 	Bobby Eshleman <bobbyeshleman@meta.com>
 Subject: Re: [PATCH net-next v15 01/12] vsock: add netns to vsock core
-Message-ID: <aXEOoCqMvsbN2gtJ@devvm11784.nha0.facebook.com>
+Message-ID: <aXERsFJLz9b9Fzce@devvm11784.nha0.facebook.com>
 References: <20260116-vsock-vmtest-v15-0-bbfd1a668548@meta.com>
  <20260116-vsock-vmtest-v15-1-bbfd1a668548@meta.com>
  <aXDYfYy3f1NQm5A0@sgarzare-redhat>
- <4997118e-471c-45fe-bc1f-8f6140199db5@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -116,7 +115,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4997118e-471c-45fe-bc1f-8f6140199db5@redhat.com>
+In-Reply-To: <aXDYfYy3f1NQm5A0@sgarzare-redhat>
 X-Spamd-Result: default: False [-1.96 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
@@ -124,89 +123,249 @@ X-Spamd-Result: default: False [-1.96 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-8419-lists,linux-hyperv=lfdr.de];
 	DMARC_POLICY_ALLOW(0.00)[gmail.com,none];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TAGGED_FROM(0.00)[bounces-8418-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[31];
+	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[31];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
+	TO_DN_SOME(0.00)[];
+	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[bobbyeshleman@gmail.com,linux-hyperv@vger.kernel.org];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	R_SPF_SOFTFAIL(0.00)[~all:c];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 70C425BF8E
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,devvm11784.nha0.facebook.com:mid,meta.com:email]
+X-Rspamd-Queue-Id: E49BE5CAF8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, Jan 21, 2026 at 05:32:34PM +0100, Paolo Abeni wrote:
-> On 1/21/26 3:48 PM, Stefano Garzarella wrote:
-> >> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> >> index a8d0afde7f85..b6e3bfe365a1 100644
-> >> --- a/Documentation/admin-guide/kernel-parameters.txt
-> >> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> >> @@ -8253,6 +8253,20 @@ Kernel parameters
-> >> 			            them quite hard to use for exploits but
-> >> 			            might break your system.
-> >>
-> >> +	vsock_init_ns_mode=
-> >> +			[KNL,NET] Set the vsock namespace mode for the init
-> >> +			(root) network namespace.
-> >> +
-> >> +			global      [default] The init namespace operates in
-> >> +			            global mode where CIDs are system-wide and
-> >> +			            sockets can communicate across global
-> >> +			            namespaces.
-> >> +
-> >> +			local       The init namespace operates in local mode
-> >> +			            where CIDs are private to the namespace and
-> >> +			            sockets can only communicate within the same
-> >> +			            namespace.
-> >> +
+On Wed, Jan 21, 2026 at 03:48:13PM +0100, Stefano Garzarella wrote:
+> On Fri, Jan 16, 2026 at 01:28:41PM -0800, Bobby Eshleman wrote:
+> > From: Bobby Eshleman <bobbyeshleman@meta.com>
 > > 
-> > My comment on v14 was more to start a discussion :-) sorry to not be 
-> > clear.
+> > Add netns logic to vsock core. Additionally, modify transport hook
+> > prototypes to be used by later transport-specific patches (e.g.,
+> > *_seqpacket_allow()).
 > > 
-> > I briefly discussed it with Paolo in chat to better understand our 
-> > policy between cmdline parameters and module parameters, and it seems 
-> > that both are discouraged.
-> 
-> Double checking the git log it looks like __setup() usage is less
-> constrained/restricted than what I thought.
-> 
-> > So he asked me if we have a use case for this, and thinking about it, I 
-> > don't have one at the moment. Also, if a user decides to set all netns 
-> > to local, whether init_net is local or global doesn't really matter, 
-> > right?
+> > Namespaces are supported primarily by changing socket lookup functions
+> > (e.g., vsock_find_connected_socket()) to take into account the socket
+> > namespace and the namespace mode before considering a candidate socket a
+> > "match".
 > > 
-> > So perhaps before adding this, we should have a real use case.
-> > Perhaps more than this feature, I would add a way to change the default 
-> > of all netns (including init_net) from global to local. But we can do 
-> > that later, since all netns have a way to understand what mode they are 
-> > in, so we don't break anything and the user has to explicitly change it, 
-> > knowing that they are breaking compatibility with pre-netns support.\
+> > This patch also introduces the sysctl /proc/sys/net/vsock/ns_mode to
+> > report the mode and /proc/sys/net/vsock/child_ns_mode to set the mode
+> > for new namespaces.
+> > 
+> > Add netns functionality (initialization, passing to transports, procfs,
+> > etc...) to the af_vsock socket layer. Later patches that add netns
+> > support to transports depend on this patch.
 > 
-> Lacking a clear use-case for vsock_init_ns_mode I tend to think it would
-> be better to postpone its introduction. It should be easier to add it
-> later than vice-versa.
+> nit: maybe we should mention here why we changed the random port allocation
 > 
-> If there is a clear/well defined/known use-case, I guess the series can
-> go as-is.
+> (not a big deal, only if you need to resend)
 > 
-> /P
+> > 
+> > dgram_allow(), stream_allow(), and seqpacket_allow() callbacks are
+> > modified to take a vsk in order to perform logic on namespace modes. In
+> > future patches, the net will also be used for socket
+> > lookups in these functions.
+> > 
+> > Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
+> > ---
+> > Changes in v15:
+> > - make static port in __vsock_bind_connectible per-netns
+> > - remove __net_initdata because we want the ops beyond just boot
+> > - add vsock_init_ns_mode kernel cmdline parameter to set init ns mode
+> > - use if (ret || !write) in __vsock_net_mode_string() (Stefano)
+> > - add vsock_net_mode_global() (Stefano)
+> > - hide !net == VSOCK_NET_MODE_GLOBAL inside vsock_net_mode() (Stefano)
+> > - clarify af_vsock.c comments on ns_mode/child_ns_mode (Stefano)
+> > 
+> > Changes in v14:
+> > - include linux/sysctl.h in af_vsock.c
+> > - squash patch 'vsock: add per-net vsock NS mode state' into this patch
+> >  (prior version can be found here):
+> >  https://lore.kernel.org/all/20251223-vsock-vmtest-v13-1-9d6db8e7c80b@meta.com/)
+> > 
+> > Changes in v13:
+> > - remove net_mode and replace with direct accesses to net->vsock.mode,
+> >  since this is now immutable.
+> > - update comments about mode behavior and mutability, and sysctl API
+> > - only pass NULL for net when wanting global, instead of net_mode ==
+> >  VSOCK_NET_MODE_GLOBAL. This reflects the new logic
+> >  of vsock_net_check_mode() that only requires net pointers (not
+> >  net_mode).
+> > - refactor sysctl string code into a re-usable function, because
+> >  child_ns_mode and ns_mode both handle the same strings.
+> > - remove redundant vsock_net_init(&init_net) call in module init because
+> >  pernet registration calls the callback on the init_net too
+> > 
+> > Changes in v12:
+> > - return true in dgram_allow(), stream_allow(), and seqpacket_allow()
+> >  only if net_mode == VSOCK_NET_MODE_GLOBAL (Stefano)
+> > - document bind(VMADDR_CID_ANY) case in af_vsock.c (Stefano)
+> > - change order of stream_allow() call in vmci so we can pass vsk
+> >  to it
+> > 
+> > Changes in v10:
+> > - add file-level comment about what happens to sockets/devices
+> >  when the namespace mode changes (Stefano)
+> > - change the 'if (write)' boolean in vsock_net_mode_string() to
+> >  if (!write), this simplifies a later patch which adds "goto"
+> >  for mutex unlocking on function exit.
+> > 
+> > Changes in v9:
+> > - remove virtio_vsock_alloc_rx_skb() (Stefano)
+> > - remove vsock_global_dummy_net, not needed as net=NULL +
+> >  net_mode=VSOCK_NET_MODE_GLOBAL achieves identical result
+> > 
+> > Changes in v7:
+> > - hv_sock: fix hyperv build error
+> > - explain why vhost does not use the dummy
+> > - explain usage of __vsock_global_dummy_net
+> > - explain why VSOCK_NET_MODE_STR_MAX is 8 characters
+> > - use switch-case in vsock_net_mode_string()
+> > - avoid changing transports as much as possible
+> > - add vsock_find_{bound,connected}_socket_net()
+> > - rename `vsock_hdr` to `sysctl_hdr`
+> > - add virtio_vsock_alloc_linear_skb() wrapper for setting dummy net and
+> >  global mode for virtio-vsock, move skb->cb zero-ing into wrapper
+> > - explain seqpacket_allow() change
+> > - move net setting to __vsock_create() instead of vsock_create() so
+> >  that child sockets also have their net assigned upon accept()
+> > 
+> > Changes in v6:
+> > - unregister sysctl ops in vsock_exit()
+> > - af_vsock: clarify description of CID behavior
+> > - af_vsock: fix buf vs buffer naming, and length checking
+> > - af_vsock: fix length checking w/ correct ctl_table->maxlen
+> > 
+> > Changes in v5:
+> > - vsock_global_net() -> vsock_global_dummy_net()
+> > - update comments for new uAPI
+> > - use /proc/sys/net/vsock/ns_mode instead of /proc/net/vsock_ns_mode
+> > - add prototype changes so patch remains c)mpilable
+> > ---
+> > Documentation/admin-guide/kernel-parameters.txt |  14 +
+> > MAINTAINERS                                     |   1 +
+> > drivers/vhost/vsock.c                           |   6 +-
+> > include/linux/virtio_vsock.h                    |   4 +-
+> > include/net/af_vsock.h                          |  61 ++++-
+> > include/net/net_namespace.h                     |   4 +
+> > include/net/netns/vsock.h                       |  21 ++
+> > net/vmw_vsock/af_vsock.c                        | 328 ++++++++++++++++++++++--
+> > net/vmw_vsock/hyperv_transport.c                |   7 +-
+> > net/vmw_vsock/virtio_transport.c                |   9 +-
+> > net/vmw_vsock/virtio_transport_common.c         |   6 +-
+> > net/vmw_vsock/vmci_transport.c                  |  26 +-
+> > net/vmw_vsock/vsock_loopback.c                  |   8 +-
+> > 13 files changed, 444 insertions(+), 51 deletions(-)
+> > 
+> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > index a8d0afde7f85..b6e3bfe365a1 100644
+> > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -8253,6 +8253,20 @@ Kernel parameters
+> > 			            them quite hard to use for exploits but
+> > 			            might break your system.
+> > 
+> > +	vsock_init_ns_mode=
+> > +			[KNL,NET] Set the vsock namespace mode for the init
+> > +			(root) network namespace.
+> > +
+> > +			global      [default] The init namespace operates in
+> > +			            global mode where CIDs are system-wide and
+> > +			            sockets can communicate across global
+> > +			            namespaces.
+> > +
+> > +			local       The init namespace operates in local mode
+> > +			            where CIDs are private to the namespace and
+> > +			            sockets can only communicate within the same
+> > +			            namespace.
+> > +
 > 
+> My comment on v14 was more to start a discussion :-) sorry to not be clear.
 
-Our use case also does not need the ability to set the init ns mode, so
-I'll revert this bit.
+No worries, resending with this included started a good discussion so
+not for nil.
 
-Thanks,
+> 
+> I briefly discussed it with Paolo in chat to better understand our policy
+> between cmdline parameters and module parameters, and it seems that both are
+> discouraged.
+> 
+> So he asked me if we have a use case for this, and thinking about it, I
+> don't have one at the moment. Also, if a user decides to set all netns to
+> local, whether init_net is local or global doesn't really matter, right?
+> 
+> So perhaps before adding this, we should have a real use case.
+> Perhaps more than this feature, I would add a way to change the default of
+> all netns (including init_net) from global to local. But we can do that
+> later, since all netns have a way to understand what mode they are in, so we
+> don't break anything and the user has to explicitly change it, knowing that
+> they are breaking compatibility with pre-netns support.\
+> 
+> 
+> That said, at this point, maybe we can remove this, documenting that
+> init_net is always global, and if we have a use case in the future, we can
+> add this (or something else) to set the init_net mode (or change the default
+> for all netns).
+> 
+> Let's wait a bit before next version to wait a comment from Paolo or Jakub
+> on this. But I'm almost fine with both ways, so:
+> 
+> Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+> 
+> > 	vt.color=	[VT] Default text color.
+> > 			Format: 0xYX, X = foreground, Y = background.
+> > 			Default: 0x07 = light gray on black.
+> 
+> [...]
+> 
+> > diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+> > index a3505a4dcee0..3fc8160d51df 100644
+> > --- a/net/vmw_vsock/af_vsock.c
+> > +++ b/net/vmw_vsock/af_vsock.c
+> 
+> [...]
+> 
+> > @@ -235,33 +303,42 @@ static void __vsock_remove_connected(struct
+> > vsock_sock *vsk)
+> > 	sock_put(&vsk->sk);
+> > }
+> > 
+> 
+> In the v14 I suggested to add some documentation on top of the vsock_find*()
+> vs vsock_find_*_net() to explain better which one should be used by
+> transports.
+> 
+> Again is not a big deal, we can fix later if you don't need to resend.
+> 
+> Thanks,
+> Stefano
+
+Sorry about that slipping through the cracks, will add to v16.
+
+I'll resend with:
+
+1. revert init ns cmdline
+2. update this message about why the port allocation changes
+3. fix the vmtest missing ns arg bug that Kuba mentioned
+4. update documentation on top of vsock_find* / vsock_find_*_net
+5. update documentation on top of af_vsock.c w/ note about init_ns
+having its mode fixed to global
+
+Unless any prior feedback slipped, I think this captures everything
+pending? 
+
+Best,
 Bobby
 
