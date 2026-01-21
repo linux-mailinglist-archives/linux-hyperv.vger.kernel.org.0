@@ -1,51 +1,51 @@
-Return-Path: <linux-hyperv+bounces-8395-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8396-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MLSLMAoacGkEVwAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8395-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 01:12:58 +0100
+	id yKCgBRkicGlRVwAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8396-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 01:47:21 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 676134E5F1
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 01:12:58 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B95C4EACF
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 01:47:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2ED79A066CD
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 00:12:52 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DB7317ACD0F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 00:47:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6866B22F388;
-	Wed, 21 Jan 2026 00:12:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FE17277017;
+	Wed, 21 Jan 2026 00:47:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Hi5jMIa7"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jVdufeK1"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 496D922FE0A;
-	Wed, 21 Jan 2026 00:12:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC37CBA21;
+	Wed, 21 Jan 2026 00:47:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768954369; cv=none; b=m1jWqtL+nvnKCiQlkPKM7c/BK7ayypGcdtmDXzWvik2s6xb2E6lhvvPwxjmDR5OfE/dpc/1E14U50KG178Ju33ZTBzr4sxj1kCZp4uN7BWWLUdkwx4HUk2tZ1uuPJo3SIL6WyRdBCMBdat0HuxuEAwif6b2ocgQYWYS1Qn/35cQ=
+	t=1768956432; cv=none; b=Xt658d0EAz3SiNmiNnXrq/3/8RIkGtajNO6/hIbOg9TJ/ogXev0V/WNlUD0unnigikFE19/pwz3hoItiw+lr3fqVtMxoVGuOBcvyImAV0EdtzgcwCogEamywCbealjbg9zx4wV42Wg8PKMWkyYpKcfjp3MaebELAesFQNJVt0lw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768954369; c=relaxed/simple;
-	bh=RtLG0OUhBwK1Jei6p2z+7ArvMVxe/zzHPIFTVL6agpc=;
+	s=arc-20240116; t=1768956432; c=relaxed/simple;
+	bh=64UfuJvuZ6Enfcvhuw2yo6WS8srWJK1pgUrCVYBUHq8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CGHwmvbbuGdPDBIZc7nvshZ2c3ffhNs/25+NmbJBVYaJ44rNn6mczlowkLwE+oycq8EIaHjeNfV8HtickMZ8LdhYx+aWF0eWlNuhr4IfmcYSN21T0gl3mqC8eP6FUeIpYVhvD73vorwIb6QMHpGRqJsESOyx0VxuSMJAu0ETYxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Hi5jMIa7; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=LWUxLNDKu8Doi9SXBYtDPkeiKCmguUfHLV/j+qGyTNgu0ExYCDujsEqB6TX7po9n9pLcaGuUTn6m12Ly1BlckMc33WFvglWdntkSEErlSDWXaxIHPcXPiduyLdDaN1ChKUNTmP0G+KA/5NXKOF+Q1L4/C8q9etr6+xjEPVpVy8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jVdufeK1; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii.localdomain (c-98-225-44-182.hsd1.wa.comcast.net [98.225.44.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 0E30D20B7167;
-	Tue, 20 Jan 2026 16:12:44 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0E30D20B7167
+	by linux.microsoft.com (Postfix) with ESMTPSA id 4630520B7167;
+	Tue, 20 Jan 2026 16:47:09 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4630520B7167
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1768954365;
-	bh=QAVJUEmvT9aTM2fLS245BGTZsBolrREALDyvAOsdH5k=;
+	s=default; t=1768956430;
+	bh=Eeq/gG1sg6NAOFvmrBFw+IwsTvdCLhlsdiEeaLVVzdw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hi5jMIa7Xoi7Dlq4mRvRUfm+MGAGpB735LMdtsFacbNAA3gazWlKbISAz/v6oS45m
-	 1c66+deUWtHc0dG8MzPJflMzxeUBELBqKut+tuJaSmGZ459N1p+a5vdlkc1ZF1tw4S
-	 K5cLICPBDEGvVtrfU0wqbdKngqlNIeA5rc7f+4xc=
-Date: Tue, 20 Jan 2026 16:12:42 -0800
+	b=jVdufeK10Ad5GzcwvLybsmRsA5sujY3rHvkaXZJDg4OmIbsiJMPuIUiyPx3ZBMJNH
+	 Dsymq4JAmkDfe7grA7380zvn4fOYE5zuo0g2l1agO69GBQ76zKKBt4sE5mRx0DlhYd
+	 YzTC/yJtkuASgPPbsVjystJHOZEXCfTJb60KY4hg=
+Date: Tue, 20 Jan 2026 16:47:07 -0800
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: Mukesh R <mrathor@linux.microsoft.com>
 Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
@@ -59,10 +59,11 @@ Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
 	robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
 	nunodasneves@linux.microsoft.com, mhklinux@outlook.com,
 	romank@linux.microsoft.com
-Subject: Re: [PATCH v0 12/15] x86/hyperv: Implement hyperv virtual iommu
-Message-ID: <aXAZ-r1PeUBAHwaK@skinsburskii.localdomain>
+Subject: Re: [PATCH v0 13/15] x86/hyperv: Basic interrupt support for direct
+ attached devices
+Message-ID: <aXAiCw9Dk7GDfagy@skinsburskii.localdomain>
 References: <20260120064230.3602565-1-mrathor@linux.microsoft.com>
- <20260120064230.3602565-13-mrathor@linux.microsoft.com>
+ <20260120064230.3602565-14-mrathor@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -71,7 +72,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260120064230.3602565-13-mrathor@linux.microsoft.com>
+In-Reply-To: <20260120064230.3602565-14-mrathor@linux.microsoft.com>
 X-Spamd-Result: default: False [-1.96 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
@@ -80,7 +81,7 @@ X-Spamd-Result: default: False [-1.96 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,microsoft.com,kernel.org,arm.com,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,8bytes.org,google.com,arndb.de,linux.microsoft.com,outlook.com];
-	TAGGED_FROM(0.00)[bounces-8395-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8396-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -95,864 +96,387 @@ X-Spamd-Result: default: False [-1.96 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
+	ASN(0.00)[asn:7979, ipnet:2605:f480::/32, country:US];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo,skinsburskii.localdomain:mid,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: 676134E5F1
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo]
+X-Rspamd-Queue-Id: 7B95C4EACF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Jan 19, 2026 at 10:42:27PM -0800, Mukesh R wrote:
+On Mon, Jan 19, 2026 at 10:42:28PM -0800, Mukesh R wrote:
 > From: Mukesh Rathor <mrathor@linux.microsoft.com>
 > 
-> Add a new file to implement management of device domains, mapping and
-> unmapping of iommu memory, and other iommu_ops to fit within the VFIO
-> framework for PCI passthru on Hyper-V running Linux as root or L1VH
-> parent. This also implements direct attach mechanism for PCI passthru,
-> and it is also made to work within the VFIO framework.
+> As mentioned previously, a direct attached device must be referenced
+> via logical device id which is formed in the initial attach hypercall.
+> Interrupt mapping paths for direct attached devices are almost same,
+> except we must use logical device ids instead of the PCI device ids.
 > 
-> At a high level, during boot the hypervisor creates a default identity
-> domain and attaches all devices to it. This nicely maps to Linux iommu
-> subsystem IOMMU_DOMAIN_IDENTITY domain. As a result, Linux does not
-> need to explicitly ask Hyper-V to attach devices and do maps/unmaps
-> during boot. As mentioned previously, Hyper-V supports two ways to do
-> PCI passthru:
+> L1VH only supports direct attaches for passing thru devices to its guests,
+> and devices on L1VH are VMBus based. However, the interrupts are mapped
+> via the map interrupt hypercall and not the traditional method of VMBus
+> messages.
 > 
->   1. Device Domain: root must create a device domain in the hypervisor,
->      and do map/unmap hypercalls for mapping and unmapping guest RAM.
->      All hypervisor communications use device id of type PCI for
->      identifying and referencing the device.
+> Partition id for the relevant hypercalls is tricky. This because a device
+> could be moving from root to guest and then back to the root. In case
+> of L1VH, it could be moving from system host to L1VH root to a guest,
+> then back to the L1VH root. So, it is carefully crafted by keeping
+> track of whether the call is on behalf of a VMM process, whether the
+> device is attached device (as opposed to mapped), and whether we are in
+> an L1VH root/parent. If VMM process, we assume it is on behalf of a
+> guest. Otherwise, the device is being attached or detached during boot
+> or shutdown of the privileged partition.
 > 
->   2. Direct Attach: the hypervisor will simply use the guest's HW
->      page table for mappings, thus the host need not do map/unmap
->      device memory hypercalls. As such, direct attach passthru setup
->      during guest boot is extremely fast. A direct attached device
->      must be referenced via logical device id and not via the PCI
->      device id.
+> Lastly, a dummy cpu and vector is used to map interrupt for a direct
+> attached device. This because, once a device is marked for direct attach,
+> hypervisor will not let any interrupts be mapped to host. So it is mapped
+> to guest dummy cpu and dummy vector. This is then correctly mapped during
+> guest boot via the retarget paths.
 > 
-> At present, L1VH root/parent only supports direct attaches. Also direct
-> attach is default in non-L1VH cases because there are some significant
-> performance issues with device domain implementation currently for guests
-> with higher RAM (say more than 8GB), and that unfortunately cannot be
-> addressed in the short term.
+> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+> ---
+>  arch/arm64/include/asm/mshyperv.h   | 15 +++++
+>  arch/x86/hyperv/irqdomain.c         | 57 +++++++++++++-----
+>  arch/x86/include/asm/mshyperv.h     |  4 ++
+>  drivers/pci/controller/pci-hyperv.c | 91 +++++++++++++++++++++++++----
+>  4 files changed, 142 insertions(+), 25 deletions(-)
 > 
-
-<snip>
-
-> +/*
-> + * If the current thread is a VMM thread, return the partition id of the VM it
-> + * is managing, else return HV_PARTITION_ID_INVALID.
-> + */
-> +u64 hv_iommu_get_curr_partid(void)
+> diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/mshyperv.h
+> index b721d3134ab6..27da480f94f6 100644
+> --- a/arch/arm64/include/asm/mshyperv.h
+> +++ b/arch/arm64/include/asm/mshyperv.h
+> @@ -53,6 +53,21 @@ static inline u64 hv_get_non_nested_msr(unsigned int reg)
+>  	return hv_get_msr(reg);
+>  }
+>  
+> +struct irq_data;
+> +struct msi_msg;
+> +struct pci_dev;
+> +static inline void hv_irq_compose_msi_msg(struct irq_data *data,
+> +					  struct msi_msg *msg) {};
+> +static inline int hv_unmap_msi_interrupt(struct pci_dev *pdev,
+> +					struct hv_interrupt_entry *hvirqe)
 > +{
-> +	u64 (*fn)(pid_t pid);
-> +	u64 partid;
-> +
-> +	fn = symbol_get(mshv_pid_to_partid);
-> +	if (!fn)
-> +		return HV_PARTITION_ID_INVALID;
-> +
-> +	partid = fn(current->tgid);
-> +	symbol_put(mshv_pid_to_partid);
-> +
-> +	return partid;
+> +	return -EOPNOTSUPP;
 > +}
-> +
-> +/* If this is a VMM thread, then this domain is for a guest VM */
-> +static bool hv_curr_thread_is_vmm(void)
+> +static inline bool hv_pcidev_is_attached_dev(struct pci_dev *pdev)
 > +{
-> +	return hv_iommu_get_curr_partid() != HV_PARTITION_ID_INVALID;
-> +}
-> +
-> +static bool hv_iommu_capable(struct device *dev, enum iommu_cap cap)
-> +{
-> +	switch (cap) {
-> +	case IOMMU_CAP_CACHE_COHERENCY:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +	return false;
-
-The return above is never reached.
-
-> +}
-> +
-> +/*
-> + * Check if given pci device is a direct attached device. Caller must have
-> + * verified pdev is a valid pci device.
-> + */
-> +bool hv_pcidev_is_attached_dev(struct pci_dev *pdev)
-> +{
-> +	struct iommu_domain *iommu_domain;
-> +	struct hv_domain *hvdom;
-> +	struct device *dev = &pdev->dev;
-> +
-> +	iommu_domain = iommu_get_domain_for_dev(dev);
-> +	if (iommu_domain) {
-> +		hvdom = to_hv_domain(iommu_domain);
-
-hvdom varaible is redundant.
-
-> +		return hvdom->attached_dom;
-> +	}
-> +
 > +	return false;
 > +}
-> +EXPORT_SYMBOL_GPL(hv_pcidev_is_attached_dev);
 > +
-> +/* Create a new device domain in the hypervisor */
-> +static int hv_iommu_create_hyp_devdom(struct hv_domain *hvdom)
-> +{
-> +	u64 status;
-> +	unsigned long flags;
-> +	struct hv_input_device_domain *ddp;
-> +	struct hv_input_create_device_domain *input;
+>  /* SMCCC hypercall parameters */
+>  #define HV_SMCCC_FUNC_NUMBER	1
+>  #define HV_FUNC_ID	ARM_SMCCC_CALL_VAL(			\
+> diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
+> index 33017aa0caa4..e6eb457f791e 100644
+> --- a/arch/x86/hyperv/irqdomain.c
+> +++ b/arch/x86/hyperv/irqdomain.c
+> @@ -13,6 +13,16 @@
+>  #include <linux/irqchip/irq-msi-lib.h>
+>  #include <asm/mshyperv.h>
+>  
+> +/*
+> + * For direct attached devices (which use logical device ids), hypervisor will
+> + * not allow mappings to host. But VFIO needs to bind the interrupt at the very
+> + * start before the guest cpu/vector is known. So we use dummy cpu and vector
+> + * to bind in such case, and later when the guest starts, retarget will move it
+> + * to correct guest cpu and vector.
+> + */
+> +#define HV_DDA_DUMMY_CPU      0
+> +#define HV_DDA_DUMMY_VECTOR  32
 > +
-> +	local_irq_save(flags);
-> +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> +	memset(input, 0, sizeof(*input));
-> +
-> +	ddp = &input->device_domain;
-> +	ddp->partition_id = HV_PARTITION_ID_SELF;
-> +	ddp->domain_id.type = HV_DEVICE_DOMAIN_TYPE_S2;
-> +	ddp->domain_id.id = hvdom->domid_num;
-> +
-> +	input->create_device_domain_flags.forward_progress_required = 1;
-> +	input->create_device_domain_flags.inherit_owning_vtl = 0;
-> +
-> +	status = hv_do_hypercall(HVCALL_CREATE_DEVICE_DOMAIN, input, NULL);
-> +
-> +	local_irq_restore(flags);
-> +
-> +	if (!hv_result_success(status))
-> +		hv_status_err(status, "\n");
-> +
-> +	return hv_result_to_errno(status);
-> +}
-> +
-> +/* During boot, all devices are attached to this */
-> +static struct iommu_domain *hv_iommu_domain_alloc_identity(struct device *dev)
-> +{
-> +	return &hv_def_identity_dom.iommu_dom;
-> +}
-> +
-> +static struct iommu_domain *hv_iommu_domain_alloc_paging(struct device *dev)
-> +{
-> +	struct hv_domain *hvdom;
-> +	int rc;
-> +
-> +	if (hv_l1vh_partition() && !hv_curr_thread_is_vmm() && !hv_no_attdev) {
-> +		pr_err("Hyper-V: l1vh iommu does not support host devices\n");
-> +		return NULL;
+>  static u64 hv_map_interrupt_hcall(u64 ptid, union hv_device_id hv_devid,
+>  				  bool level, int cpu, int vector,
+>  				  struct hv_interrupt_entry *ret_entry)
+> @@ -24,6 +34,11 @@ static u64 hv_map_interrupt_hcall(u64 ptid, union hv_device_id hv_devid,
+>  	u64 status;
+>  	int nr_bank, var_size;
+>  
+> +	if (hv_devid.device_type == HV_DEVICE_TYPE_LOGICAL) {
+> +		cpu = HV_DDA_DUMMY_CPU;
+> +		vector = HV_DDA_DUMMY_VECTOR;
 > +	}
 > +
-> +	hvdom = kzalloc(sizeof(struct hv_domain), GFP_KERNEL);
-> +	if (hvdom == NULL)
-> +		goto out;
-
-Why goto here and not return NULL like above?
-
+>  	local_irq_save(flags);
+>  
+>  	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> @@ -95,7 +110,8 @@ static int hv_map_interrupt(u64 ptid, union hv_device_id device_id, bool level,
+>  	return hv_result_to_errno(status);
+>  }
+>  
+> -static int hv_unmap_interrupt(u64 id, struct hv_interrupt_entry *irq_entry)
+> +static int hv_unmap_interrupt(union hv_device_id hv_devid,
+> +			      struct hv_interrupt_entry *irq_entry)
+>  {
+>  	unsigned long flags;
+>  	struct hv_input_unmap_device_interrupt *input;
+> @@ -103,10 +119,14 @@ static int hv_unmap_interrupt(u64 id, struct hv_interrupt_entry *irq_entry)
+>  
+>  	local_irq_save(flags);
+>  	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> -
+>  	memset(input, 0, sizeof(*input));
+> -	input->partition_id = hv_current_partition_id;
+> -	input->device_id = id;
 > +
-> +	spin_lock_init(&hvdom->mappings_lock);
-> +	hvdom->mappings_tree = RB_ROOT_CACHED;
-> +
-> +	if (++unique_id == HV_DEVICE_DOMAIN_ID_S2_DEFAULT)   /* ie, 0 */
-> +		goto out_free;
-> +
-> +	hvdom->domid_num = unique_id;
-> +	hvdom->iommu_dom.geometry = default_geometry;
-> +	hvdom->iommu_dom.pgsize_bitmap = HV_IOMMU_PGSIZES;
-> +
-> +	/* For guests, by default we do direct attaches, so no domain in hyp */
-> +	if (hv_curr_thread_is_vmm() && !hv_no_attdev)
-> +		hvdom->attached_dom = true;
-> +	else {
-> +		rc = hv_iommu_create_hyp_devdom(hvdom);
-> +		if (rc)
-> +			goto out_free_id;
-> +	}
-> +
-> +	return &hvdom->iommu_dom;
-> +
-> +out_free_id:
-> +	unique_id--;
-> +out_free:
-> +	kfree(hvdom);
-> +out:
-> +	return NULL;
-> +}
-> +
-> +static void hv_iommu_domain_free(struct iommu_domain *immdom)
-> +{
-> +	struct hv_domain *hvdom = to_hv_domain(immdom);
-> +	unsigned long flags;
-> +	u64 status;
-> +	struct hv_input_delete_device_domain *input;
-> +
-> +	if (hv_special_domain(hvdom))
-> +		return;
-> +
-> +	if (hvdom->num_attchd) {
-> +		pr_err("Hyper-V: can't free busy iommu domain (%p)\n", immdom);
-> +		return;
-> +	}
-> +
-> +	if (!hv_curr_thread_is_vmm() || hv_no_attdev) {
-> +		struct hv_input_device_domain *ddp;
-> +
-> +		local_irq_save(flags);
-> +		input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> +		ddp = &input->device_domain;
-> +		memset(input, 0, sizeof(*input));
-> +
-> +		ddp->partition_id = HV_PARTITION_ID_SELF;
-> +		ddp->domain_id.type = HV_DEVICE_DOMAIN_TYPE_S2;
-> +		ddp->domain_id.id = hvdom->domid_num;
-> +
-> +		status = hv_do_hypercall(HVCALL_DELETE_DEVICE_DOMAIN, input,
-> +					 NULL);
-> +		local_irq_restore(flags);
-> +
-> +		if (!hv_result_success(status))
-> +			hv_status_err(status, "\n");
-> +	}
-> +
-> +	kfree(hvdom);
-> +}
-> +
-> +/* Attach a device to a domain previously created in the hypervisor */
-> +static int hv_iommu_att_dev2dom(struct hv_domain *hvdom, struct pci_dev *pdev)
-> +{
-> +	unsigned long flags;
-> +	u64 status;
-> +	enum hv_device_type dev_type;
-> +	struct hv_input_attach_device_domain *input;
-> +
-> +	local_irq_save(flags);
-> +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> +	memset(input, 0, sizeof(*input));
-> +
-> +	input->device_domain.partition_id = HV_PARTITION_ID_SELF;
-> +	input->device_domain.domain_id.type = HV_DEVICE_DOMAIN_TYPE_S2;
-> +	input->device_domain.domain_id.id = hvdom->domid_num;
-> +
-> +	/* NB: Upon guest shutdown, device is re-attached to the default domain
-> +	 * without explicit detach.
-> +	 */
-> +	if (hv_l1vh_partition())
-> +		dev_type = HV_DEVICE_TYPE_LOGICAL;
+> +	if (hv_devid.device_type == HV_DEVICE_TYPE_LOGICAL)
+> +		input->partition_id = hv_iommu_get_curr_partid();
 > +	else
-> +		dev_type = HV_DEVICE_TYPE_PCI;
+> +		input->partition_id = hv_current_partition_id;
 > +
-> +	input->device_id.as_uint64 = hv_build_devid_oftype(pdev, dev_type);
-> +
-> +	status = hv_do_hypercall(HVCALL_ATTACH_DEVICE_DOMAIN, input, NULL);
-> +	local_irq_restore(flags);
-> +
-> +	if (!hv_result_success(status))
-> +		hv_status_err(status, "\n");
-> +
-> +	return hv_result_to_errno(status);
-> +}
-> +
-> +/* Caller must have validated that dev is a valid pci dev */
-> +static int hv_iommu_direct_attach_device(struct pci_dev *pdev)
-> +{
-> +	struct hv_input_attach_device *input;
-> +	u64 status;
-> +	int rc;
-> +	unsigned long flags;
-> +	union hv_device_id host_devid;
-> +	enum hv_device_type dev_type;
-> +	u64 ptid = hv_iommu_get_curr_partid();
-> +
-> +	if (ptid == HV_PARTITION_ID_INVALID) {
-> +		pr_err("Hyper-V: Invalid partition id in direct attach\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (hv_l1vh_partition())
-> +		dev_type = HV_DEVICE_TYPE_LOGICAL;
-> +	else
-> +		dev_type = HV_DEVICE_TYPE_PCI;
-> +
-> +	host_devid.as_uint64 = hv_build_devid_oftype(pdev, dev_type);
-> +
-> +	do {
-> +		local_irq_save(flags);
-> +		input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> +		memset(input, 0, sizeof(*input));
-> +		input->partition_id = ptid;
-> +		input->device_id = host_devid;
-> +
-> +		/* Hypervisor associates logical_id with this device, and in
-> +		 * some hypercalls like retarget interrupts, logical_id must be
-> +		 * used instead of the BDF. It is a required parameter.
-> +		 */
-> +		input->attdev_flags.logical_id = 1;
-> +		input->logical_devid =
-> +			   hv_build_devid_oftype(pdev, HV_DEVICE_TYPE_LOGICAL);
-> +
-> +		status = hv_do_hypercall(HVCALL_ATTACH_DEVICE, input, NULL);
-> +		local_irq_restore(flags);
-> +
-> +		if (hv_result(status) == HV_STATUS_INSUFFICIENT_MEMORY) {
-> +			rc = hv_call_deposit_pages(NUMA_NO_NODE, ptid, 1);
-> +			if (rc)
-> +				break;
-> +		}
-> +	} while (hv_result(status) == HV_STATUS_INSUFFICIENT_MEMORY);
-> +
-> +	if (!hv_result_success(status))
-> +		hv_status_err(status, "\n");
-> +
-> +	return hv_result_to_errno(status);
-> +}
-> +
-> +/* This to attach a device to both host app (like DPDK) and a guest VM */
-> +static int hv_iommu_attach_dev(struct iommu_domain *immdom, struct device *dev,
-> +			       struct iommu_domain *old)
-> +{
-> +	struct pci_dev *pdev;
-> +	int rc;
-> +	struct hv_domain *hvdom_new = to_hv_domain(immdom);
-> +	struct hv_domain *hvdom_prev = dev_iommu_priv_get(dev);
-> +
-> +	/* Only allow PCI devices for now */
-> +	if (!dev_is_pci(dev))
-> +		return -EINVAL;
-> +
-> +	pdev = to_pci_dev(dev);
-> +
-> +	/* l1vh does not support host device (eg DPDK) passthru */
-> +	if (hv_l1vh_partition() && !hv_special_domain(hvdom_new) &&
-> +	    !hvdom_new->attached_dom)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * VFIO does not do explicit detach calls, hence check first if we need
-> +	 * to detach first. Also, in case of guest shutdown, it's the VMM
-> +	 * thread that attaches it back to the hv_def_identity_dom, and
-> +	 * hvdom_prev will not be null then. It is null during boot.
-> +	 */
-> +	if (hvdom_prev)
-> +		if (!hv_l1vh_partition() || !hv_special_domain(hvdom_prev))
-> +			hv_iommu_detach_dev(&hvdom_prev->iommu_dom, dev);
-> +
-> +	if (hv_l1vh_partition() && hv_special_domain(hvdom_new)) {
-> +		dev_iommu_priv_set(dev, hvdom_new);  /* sets "private" field */
-> +		return 0;
-> +	}
-> +
-> +	if (hvdom_new->attached_dom)
-> +		rc = hv_iommu_direct_attach_device(pdev);
-> +	else
-> +		rc = hv_iommu_att_dev2dom(hvdom_new, pdev);
-> +
-> +	if (rc && hvdom_prev) {
-> +		int rc1;
-> +
-> +		if (hvdom_prev->attached_dom)
-> +			rc1 = hv_iommu_direct_attach_device(pdev);
+> +	input->device_id = hv_devid.as_uint64;
+>  	input->interrupt_entry = *irq_entry;
+>  
+>  	status = hv_do_hypercall(HVCALL_UNMAP_DEVICE_INTERRUPT, input, NULL);
+> @@ -263,6 +283,7 @@ static u64 hv_build_irq_devid(struct pci_dev *pdev)
+>  int hv_map_msi_interrupt(struct irq_data *data,
+>  			 struct hv_interrupt_entry *out_entry)
+>  {
+> +	u64 ptid;
+>  	struct irq_cfg *cfg = irqd_cfg(data);
+>  	struct hv_interrupt_entry dummy;
+>  	union hv_device_id hv_devid;
+> @@ -275,8 +296,17 @@ int hv_map_msi_interrupt(struct irq_data *data,
+>  	hv_devid.as_uint64 = hv_build_irq_devid(pdev);
+>  	cpu = cpumask_first(irq_data_get_effective_affinity_mask(data));
+>  
+> -	return hv_map_interrupt(hv_current_partition_id, hv_devid, false, cpu,
+> -				cfg->vector, out_entry ? out_entry : &dummy);
+> +	if (hv_devid.device_type == HV_DEVICE_TYPE_LOGICAL)
+> +		if (hv_pcidev_is_attached_dev(pdev))
+> +			ptid = hv_iommu_get_curr_partid();
 > +		else
-> +			rc1 = hv_iommu_att_dev2dom(hvdom_prev, pdev);
-> +
-> +		if (rc1)
-> +			pr_err("Hyper-V: iommu could not restore orig device state.. dev:%s\n",
-> +			       dev_name(dev));
-> +	}
-> +
-> +	if (rc == 0) {
-> +		dev_iommu_priv_set(dev, hvdom_new);  /* sets "private" field */
-> +		hvdom_new->num_attchd++;
-> +	}
-> +
-> +	return rc;
-> +}
-> +
-> +static void hv_iommu_det_dev_from_guest(struct hv_domain *hvdom,
-> +					struct pci_dev *pdev)
-> +{
-> +	struct hv_input_detach_device *input;
-> +	u64 status, log_devid;
-> +	unsigned long flags;
-> +
-> +	log_devid = hv_build_devid_oftype(pdev, HV_DEVICE_TYPE_LOGICAL);
-> +
-> +	local_irq_save(flags);
-> +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> +	memset(input, 0, sizeof(*input));
-> +
-> +	input->partition_id = hv_iommu_get_curr_partid();
-> +	input->logical_devid = log_devid;
-> +	status = hv_do_hypercall(HVCALL_DETACH_DEVICE, input, NULL);
-> +	local_irq_restore(flags);
-> +
-> +	if (!hv_result_success(status))
-> +		hv_status_err(status, "\n");
-> +}
-> +
-> +static void hv_iommu_det_dev_from_dom(struct hv_domain *hvdom,
-> +				      struct pci_dev *pdev)
-> +{
-> +	u64 status, devid;
-> +	unsigned long flags;
-> +	struct hv_input_detach_device_domain *input;
-> +
-> +	devid = hv_build_devid_oftype(pdev, HV_DEVICE_TYPE_PCI);
-> +
-> +	local_irq_save(flags);
-> +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> +	memset(input, 0, sizeof(*input));
-> +
-> +	input->partition_id = HV_PARTITION_ID_SELF;
-> +	input->device_id.as_uint64 = devid;
-> +	status = hv_do_hypercall(HVCALL_DETACH_DEVICE_DOMAIN, input, NULL);
-> +	local_irq_restore(flags);
-> +
-> +	if (!hv_result_success(status))
-> +		hv_status_err(status, "\n");
-> +}
-> +
-> +static void hv_iommu_detach_dev(struct iommu_domain *immdom, struct device *dev)
-> +{
-> +	struct pci_dev *pdev;
-> +	struct hv_domain *hvdom = to_hv_domain(immdom);
-> +
-> +	/* See the attach function, only PCI devices for now */
-> +	if (!dev_is_pci(dev))
-> +		return;
-> +
-> +	if (hvdom->num_attchd == 0)
-> +		pr_warn("Hyper-V: num_attchd is zero (%s)\n", dev_name(dev));
-> +
-> +	pdev = to_pci_dev(dev);
-> +
-> +	if (hvdom->attached_dom) {
-> +		hv_iommu_det_dev_from_guest(hvdom, pdev);
-> +
-> +		/* Do not reset attached_dom, hv_iommu_unmap_pages happens
-> +		 * next.
-> +		 */
-> +	} else {
-> +		hv_iommu_det_dev_from_dom(hvdom, pdev);
-> +	}
-> +
-> +	hvdom->num_attchd--;
+> +			/* Device actually on l1vh root, not passthru'd to vm */
 
-Shouldn't this be modified iff the detach succeeded?
+l1vh and root are mutually exclusive partitions.
+If you wanted to highlight that it's l1vh itself and not its child guest, then
+"l1vh parent" term would do.
 
-> +}
-> +
-> +static int hv_iommu_add_tree_mapping(struct hv_domain *hvdom,
-> +				     unsigned long iova, phys_addr_t paddr,
-> +				     size_t size, u32 flags)
-> +{
-> +	unsigned long irqflags;
-> +	struct hv_iommu_mapping *mapping;
-> +
-> +	mapping = kzalloc(sizeof(*mapping), GFP_ATOMIC);
-> +	if (!mapping)
-> +		return -ENOMEM;
-> +
-> +	mapping->paddr = paddr;
-> +	mapping->iova.start = iova;
-> +	mapping->iova.last = iova + size - 1;
-> +	mapping->flags = flags;
-> +
-> +	spin_lock_irqsave(&hvdom->mappings_lock, irqflags);
-> +	interval_tree_insert(&mapping->iova, &hvdom->mappings_tree);
-> +	spin_unlock_irqrestore(&hvdom->mappings_lock, irqflags);
-> +
-> +	return 0;
-> +}
-> +
-> +static size_t hv_iommu_del_tree_mappings(struct hv_domain *hvdom,
-> +					unsigned long iova, size_t size)
-> +{
-> +	unsigned long flags;
-> +	size_t unmapped = 0;
-> +	unsigned long last = iova + size - 1;
-> +	struct hv_iommu_mapping *mapping = NULL;
-> +	struct interval_tree_node *node, *next;
-> +
-> +	spin_lock_irqsave(&hvdom->mappings_lock, flags);
-> +	next = interval_tree_iter_first(&hvdom->mappings_tree, iova, last);
-> +	while (next) {
-> +		node = next;
-> +		mapping = container_of(node, struct hv_iommu_mapping, iova);
-> +		next = interval_tree_iter_next(node, iova, last);
-> +
-> +		/* Trying to split a mapping? Not supported for now. */
-> +		if (mapping->iova.start < iova)
-> +			break;
-> +
-> +		unmapped += mapping->iova.last - mapping->iova.start + 1;
-> +
-> +		interval_tree_remove(node, &hvdom->mappings_tree);
-> +		kfree(mapping);
-> +	}
-> +	spin_unlock_irqrestore(&hvdom->mappings_lock, flags);
-> +
-> +	return unmapped;
-> +}
-> +
-> +/* Return: must return exact status from the hypercall without changes */
-> +static u64 hv_iommu_map_pgs(struct hv_domain *hvdom,
-> +			    unsigned long iova, phys_addr_t paddr,
-> +			    unsigned long npages, u32 map_flags)
-> +{
-> +	u64 status;
-> +	int i;
-> +	struct hv_input_map_device_gpa_pages *input;
-> +	unsigned long flags, pfn = paddr >> HV_HYP_PAGE_SHIFT;
-> +
-> +	local_irq_save(flags);
-> +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> +	memset(input, 0, sizeof(*input));
-> +
-> +	input->device_domain.partition_id = HV_PARTITION_ID_SELF;
-> +	input->device_domain.domain_id.type = HV_DEVICE_DOMAIN_TYPE_S2;
-> +	input->device_domain.domain_id.id = hvdom->domid_num;
-> +	input->map_flags = map_flags;
-> +	input->target_device_va_base = iova;
-> +
-> +	pfn = paddr >> HV_HYP_PAGE_SHIFT;
-> +	for (i = 0; i < npages; i++, pfn++)
-> +		input->gpa_page_list[i] = pfn;
-> +
-> +	status = hv_do_rep_hypercall(HVCALL_MAP_DEVICE_GPA_PAGES, npages, 0,
-> +				     input, NULL);
-> +
-> +	local_irq_restore(flags);
-> +	return status;
-> +}
-> +
-> +/*
-> + * The core VFIO code loops over memory ranges calling this function with
-> + * the largest size from HV_IOMMU_PGSIZES. cond_resched() is in vfio_iommu_map.
-> + */
-> +static int hv_iommu_map_pages(struct iommu_domain *immdom, ulong iova,
-> +			      phys_addr_t paddr, size_t pgsize, size_t pgcount,
-> +			      int prot, gfp_t gfp, size_t *mapped)
-> +{
-> +	u32 map_flags;
-> +	int ret;
-> +	u64 status;
-> +	unsigned long npages, done = 0;
-> +	struct hv_domain *hvdom = to_hv_domain(immdom);
-> +	size_t size = pgsize * pgcount;
-> +
-> +	map_flags = HV_MAP_GPA_READABLE;	/* required */
-> +	map_flags |= prot & IOMMU_WRITE ? HV_MAP_GPA_WRITABLE : 0;
-> +
-> +	ret = hv_iommu_add_tree_mapping(hvdom, iova, paddr, size, map_flags);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (hvdom->attached_dom) {
-> +		*mapped = size;
-> +		return 0;
-> +	}
-> +
-> +	npages = size >> HV_HYP_PAGE_SHIFT;
-> +	while (done < npages) {
-> +		ulong completed, remain = npages - done;
-> +
-> +		status = hv_iommu_map_pgs(hvdom, iova, paddr, remain,
-> +					  map_flags);
-> +
-> +		completed = hv_repcomp(status);
-> +		done = done + completed;
-> +		iova = iova + (completed << HV_HYP_PAGE_SHIFT);
-> +		paddr = paddr + (completed << HV_HYP_PAGE_SHIFT);
-> +
-> +		if (hv_result(status) == HV_STATUS_INSUFFICIENT_MEMORY) {
-> +			ret = hv_call_deposit_pages(NUMA_NO_NODE,
-> +						    hv_current_partition_id,
-> +						    256);
-> +			if (ret)
-> +				break;
-> +		}
-> +		if (!hv_result_success(status))
-> +			break;
-> +	}
-> +
-> +	if (!hv_result_success(status)) {
-> +		size_t done_size = done << HV_HYP_PAGE_SHIFT;
-> +
-> +		hv_status_err(status, "pgs:%lx/%lx iova:%lx\n",
-> +			      done, npages, iova);
-> +		/*
-> +		 * lookup tree has all mappings [0 - size-1]. Below unmap will
-> +		 * only remove from [0 - done], we need to remove second chunk
-> +		 * [done+1 - size-1].
-> +		 */
-> +		hv_iommu_del_tree_mappings(hvdom, iova, size - done_size);
-> +		hv_iommu_unmap_pages(immdom, iova - done_size, pgsize,
-> +				     done, NULL);
-> +		if (mapped)
-> +			*mapped = 0;
-> +	} else
-> +		if (mapped)
-> +			*mapped = size;
-> +
-> +	return hv_result_to_errno(status);
-> +}
-> +
-> +static size_t hv_iommu_unmap_pages(struct iommu_domain *immdom, ulong iova,
-> +				   size_t pgsize, size_t pgcount,
-> +				   struct iommu_iotlb_gather *gather)
-> +{
-> +	unsigned long flags, npages;
-> +	struct hv_input_unmap_device_gpa_pages *input;
-> +	u64 status;
-> +	struct hv_domain *hvdom = to_hv_domain(immdom);
-> +	size_t unmapped, size = pgsize * pgcount;
-> +
-> +	unmapped = hv_iommu_del_tree_mappings(hvdom, iova, size);
-> +	if (unmapped < size)
-> +		pr_err("%s: could not delete all mappings (%lx:%lx/%lx)\n",
-> +		       __func__, iova, unmapped, size);
-> +
-> +	if (hvdom->attached_dom)
-> +		return size;
-> +
-> +	npages = size >> HV_HYP_PAGE_SHIFT;
-> +
-> +	local_irq_save(flags);
-> +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> +	memset(input, 0, sizeof(*input));
-> +
-> +	input->device_domain.partition_id = HV_PARTITION_ID_SELF;
-> +	input->device_domain.domain_id.type = HV_DEVICE_DOMAIN_TYPE_S2;
-> +	input->device_domain.domain_id.id = hvdom->domid_num;
-> +	input->target_device_va_base = iova;
-> +
-> +	status = hv_do_rep_hypercall(HVCALL_UNMAP_DEVICE_GPA_PAGES, npages,
-> +				     0, input, NULL);
-> +	local_irq_restore(flags);
-> +
-> +	if (!hv_result_success(status))
-> +		hv_status_err(status, "\n");
-> +
-
-There is some inconsistency in namings and behaviour of paired
-functions:
-1. The pair of hv_iommu_unmap_pages is called hv_iommu_map_pgs
-2. hv_iommu_map_pgs doesn't print status in case of error.
-
-It would be much better to keep this code consistent.
-
-> +	return unmapped;
-> +}
-> +
-> +static phys_addr_t hv_iommu_iova_to_phys(struct iommu_domain *immdom,
-> +					 dma_addr_t iova)
-> +{
-> +	u64 paddr = 0;
-> +	unsigned long flags;
-> +	struct hv_iommu_mapping *mapping;
-> +	struct interval_tree_node *node;
-> +	struct hv_domain *hvdom = to_hv_domain(immdom);
-> +
-> +	spin_lock_irqsave(&hvdom->mappings_lock, flags);
-> +	node = interval_tree_iter_first(&hvdom->mappings_tree, iova, iova);
-> +	if (node) {
-> +		mapping = container_of(node, struct hv_iommu_mapping, iova);
-> +		paddr = mapping->paddr + (iova - mapping->iova.start);
-> +	}
-> +	spin_unlock_irqrestore(&hvdom->mappings_lock, flags);
-> +
-> +	return paddr;
-> +}
-> +
-> +/*
-> + * Currently, hypervisor does not provide list of devices it is using
-> + * dynamically. So use this to allow users to manually specify devices that
-> + * should be skipped. (eg. hypervisor debugger using some network device).
-> + */
-> +static struct iommu_device *hv_iommu_probe_device(struct device *dev)
-> +{
-> +	if (!dev_is_pci(dev))
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	if (pci_devs_to_skip && *pci_devs_to_skip) {
-> +		int rc, pos = 0;
-> +		int parsed;
-> +		int segment, bus, slot, func;
-> +		struct pci_dev *pdev = to_pci_dev(dev);
-> +
-> +		do {
-> +			parsed = 0;
-> +
-> +			rc = sscanf(pci_devs_to_skip + pos, " (%x:%x:%x.%x) %n",
-> +				    &segment, &bus, &slot, &func, &parsed);
-> +			if (rc)
-> +				break;
-> +			if (parsed <= 0)
-> +				break;
-> +
-> +			if (pci_domain_nr(pdev->bus) == segment &&
-> +			    pdev->bus->number == bus &&
-> +			    PCI_SLOT(pdev->devfn) == slot &&
-> +			    PCI_FUNC(pdev->devfn) == func) {
-> +
-> +				dev_info(dev, "skipped by Hyper-V IOMMU\n");
-> +				return ERR_PTR(-ENODEV);
-> +			}
-> +			pos += parsed;
-> +
-> +		} while (pci_devs_to_skip[pos]);
-> +	}
-> +
-> +	/* Device will be explicitly attached to the default domain, so no need
-> +	 * to do dev_iommu_priv_set() here.
-> +	 */
-> +
-> +	return &hv_virt_iommu;
-> +}
-> +
-> +static void hv_iommu_probe_finalize(struct device *dev)
-> +{
-> +	struct iommu_domain *immdom = iommu_get_domain_for_dev(dev);
-> +
-> +	if (immdom && immdom->type == IOMMU_DOMAIN_DMA)
-> +		iommu_setup_dma_ops(dev);
+> +			ptid = hv_current_partition_id;
 > +	else
-> +		set_dma_ops(dev, NULL);
-> +}
-> +
-> +static void hv_iommu_release_device(struct device *dev)
-> +{
-> +	struct hv_domain *hvdom = dev_iommu_priv_get(dev);
-> +
-> +	/* Need to detach device from device domain if necessary. */
-> +	if (hvdom)
-> +		hv_iommu_detach_dev(&hvdom->iommu_dom, dev);
-> +
-> +	dev_iommu_priv_set(dev, NULL);
-> +	set_dma_ops(dev, NULL);
-> +}
-> +
-> +static struct iommu_group *hv_iommu_device_group(struct device *dev)
-> +{
-> +	if (dev_is_pci(dev))
-> +		return pci_device_group(dev);
-> +	else
-> +		return generic_device_group(dev);
-> +}
-> +
-> +static int hv_iommu_def_domain_type(struct device *dev)
-> +{
-> +	/* The hypervisor always creates this by default during boot */
-> +	return IOMMU_DOMAIN_IDENTITY;
-> +}
-> +
-> +static struct iommu_ops hv_iommu_ops = {
-> +	.capable	    = hv_iommu_capable,
-> +	.domain_alloc_identity	= hv_iommu_domain_alloc_identity,
-> +	.domain_alloc_paging	= hv_iommu_domain_alloc_paging,
-> +	.probe_device	    = hv_iommu_probe_device,
-> +	.probe_finalize     = hv_iommu_probe_finalize,
-> +	.release_device     = hv_iommu_release_device,
-> +	.def_domain_type    = hv_iommu_def_domain_type,
-> +	.device_group	    = hv_iommu_device_group,
-> +	.default_domain_ops = &(const struct iommu_domain_ops) {
-> +		.attach_dev   = hv_iommu_attach_dev,
-> +		.map_pages    = hv_iommu_map_pages,
-> +		.unmap_pages  = hv_iommu_unmap_pages,
-> +		.iova_to_phys = hv_iommu_iova_to_phys,
-> +		.free	      = hv_iommu_domain_free,
-> +	},
-> +	.owner		    = THIS_MODULE,
-> +};
-> +
-> +static void __init hv_initialize_special_domains(void)
-> +{
-> +	hv_def_identity_dom.iommu_dom.geometry = default_geometry;
-> +	hv_def_identity_dom.domid_num = HV_DEVICE_DOMAIN_ID_S2_DEFAULT; /* 0 */
+> +		ptid = hv_current_partition_id;
 
-hv_def_identity_dom is a static global variable.
-Why not initialize hv_def_identity_dom upon definition instead of
-introducing a new function?
-
-> +}
-> +
-> +static int __init hv_iommu_init(void)
-> +{
-> +	int ret;
-> +	struct iommu_device *iommup = &hv_virt_iommu;
-> +
-> +	if (!hv_is_hyperv_initialized())
-> +		return -ENODEV;
-> +
-> +	ret = iommu_device_sysfs_add(iommup, NULL, NULL, "%s", "hyperv-iommu");
-> +	if (ret) {
-> +		pr_err("Hyper-V: iommu_device_sysfs_add failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	/* This must come before iommu_device_register because the latter calls
-> +	 * into the hooks.
-> +	 */
-> +	hv_initialize_special_domains();
-> +
-> +	ret = iommu_device_register(iommup, &hv_iommu_ops, NULL);
-
-It looks weird to initialize an object after creating sysfs entries for
-it.
-It should be the other way around.
+Looks like the only special case is for attached logical devices,
+otherwise hv_current_partition_id is used.
+Can the logic simplified here?
 
 Thanks,
 Stanislav
 
-> +	if (ret) {
-> +		pr_err("Hyper-V: iommu_device_register failed: %d\n", ret);
-> +		goto err_sysfs_remove;
+> +
+> +	return hv_map_interrupt(ptid, hv_devid, false, cpu, cfg->vector,
+> +				out_entry ? out_entry : &dummy);
+>  }
+>  EXPORT_SYMBOL_GPL(hv_map_msi_interrupt);
+>  
+> @@ -289,10 +319,7 @@ static void entry_to_msi_msg(struct hv_interrupt_entry *entry,
+>  	msg->data = entry->msi_entry.data.as_uint32;
+>  }
+>  
+> -static int hv_unmap_msi_interrupt(struct pci_dev *pdev,
+> -				  struct hv_interrupt_entry *irq_entry);
+> -
+> -static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+> +void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>  {
+>  	struct hv_interrupt_entry *stored_entry;
+>  	struct irq_cfg *cfg = irqd_cfg(data);
+> @@ -341,16 +368,18 @@ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>  	data->chip_data = stored_entry;
+>  	entry_to_msi_msg(data->chip_data, msg);
+>  }
+> +EXPORT_SYMBOL_GPL(hv_irq_compose_msi_msg);
+>  
+> -static int hv_unmap_msi_interrupt(struct pci_dev *pdev,
+> -				  struct hv_interrupt_entry *irq_entry)
+> +int hv_unmap_msi_interrupt(struct pci_dev *pdev,
+> +			   struct hv_interrupt_entry *irq_entry)
+>  {
+>  	union hv_device_id hv_devid;
+>  
+>  	hv_devid.as_uint64 = hv_build_irq_devid(pdev);
+>  
+> -	return hv_unmap_interrupt(hv_devid.as_uint64, irq_entry);
+> +	return hv_unmap_interrupt(hv_devid, irq_entry);
+>  }
+> +EXPORT_SYMBOL_GPL(hv_unmap_msi_interrupt);
+>  
+>  /* NB: during map, hv_interrupt_entry is saved via data->chip_data */
+>  static void hv_teardown_msi_irq(struct pci_dev *pdev, struct irq_data *irqd)
+> @@ -486,7 +515,7 @@ int hv_unmap_ioapic_interrupt(int ioapic_id, struct hv_interrupt_entry *entry)
+>  	hv_devid.device_type = HV_DEVICE_TYPE_IOAPIC;
+>  	hv_devid.ioapic.ioapic_id = (u8)ioapic_id;
+>  
+> -	return hv_unmap_interrupt(hv_devid.as_uint64, entry);
+> +	return hv_unmap_interrupt(hv_devid, entry);
+>  }
+>  EXPORT_SYMBOL_GPL(hv_unmap_ioapic_interrupt);
+>  
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> index e4ccdbbf1d12..b6facd3a0f5e 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -204,11 +204,15 @@ static inline u64 hv_iommu_get_curr_partid(void)
+>  #endif	/* CONFIG_HYPERV_IOMMU */
+>  
+>  u64 hv_pci_vmbus_device_id(struct pci_dev *pdev);
+> +void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg);
+> +extern bool hv_no_attdev;
+>  
+>  struct irq_domain *hv_create_pci_msi_domain(void);
+>  
+>  int hv_map_msi_interrupt(struct irq_data *data,
+>  			 struct hv_interrupt_entry *out_entry);
+> +int hv_unmap_msi_interrupt(struct pci_dev *dev,
+> +			   struct hv_interrupt_entry *hvirqe);
+>  int hv_map_ioapic_interrupt(int ioapic_id, bool level, int vcpu, int vector,
+>  		struct hv_interrupt_entry *entry);
+>  int hv_unmap_ioapic_interrupt(int ioapic_id, struct hv_interrupt_entry *entry);
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 40f0b06bb966..71d1599dc4a8 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -660,15 +660,17 @@ static void hv_irq_retarget_interrupt(struct irq_data *data)
+>  
+>  	params = *this_cpu_ptr(hyperv_pcpu_input_arg);
+>  	memset(params, 0, sizeof(*params));
+> -	params->partition_id = HV_PARTITION_ID_SELF;
+> +
+> +	if (hv_pcidev_is_attached_dev(pdev))
+> +		params->partition_id = hv_iommu_get_curr_partid();
+> +	else
+> +		params->partition_id = HV_PARTITION_ID_SELF;
+> +
+>  	params->int_entry.source = HV_INTERRUPT_SOURCE_MSI;
+> -	params->int_entry.msi_entry.address.as_uint32 = int_desc->address & 0xffffffff;
+> +	params->int_entry.msi_entry.address.as_uint32 =
+> +						int_desc->address & 0xffffffff;
+>  	params->int_entry.msi_entry.data.as_uint32 = int_desc->data;
+> -	params->device_id = (hbus->hdev->dev_instance.b[5] << 24) |
+> -			   (hbus->hdev->dev_instance.b[4] << 16) |
+> -			   (hbus->hdev->dev_instance.b[7] << 8) |
+> -			   (hbus->hdev->dev_instance.b[6] & 0xf8) |
+> -			   PCI_FUNC(pdev->devfn);
+> +	params->device_id = hv_pci_vmbus_device_id(pdev);
+>  	params->int_target.vector = hv_msi_get_int_vector(data);
+>  
+>  	if (hbus->protocol_version >= PCI_PROTOCOL_VERSION_1_2) {
+> @@ -1263,6 +1265,15 @@ static void _hv_pcifront_read_config(struct hv_pci_dev *hpdev, int where,
+>  			mb();
+>  		}
+>  		spin_unlock_irqrestore(&hbus->config_lock, flags);
+> +		/*
+> +		 * Make sure PCI_INTERRUPT_PIN is hard-wired to 0 since it may
+> +		 * be read using a 32bit read which is skipped by the above
+> +		 * emulation.
+> +		 */
+> +		if (PCI_INTERRUPT_PIN >= where &&
+> +		    PCI_INTERRUPT_PIN <= (where + size)) {
+> +			*((char *)val + PCI_INTERRUPT_PIN - where) = 0;
+> +		}
+>  	} else {
+>  		dev_err(dev, "Attempt to read beyond a function's config space.\n");
+>  	}
+> @@ -1731,14 +1742,22 @@ static void hv_msi_free(struct irq_domain *domain, unsigned int irq)
+>  	if (!int_desc)
+>  		return;
+>  
+> -	irq_data->chip_data = NULL;
+>  	hpdev = get_pcichild_wslot(hbus, devfn_to_wslot(pdev->devfn));
+>  	if (!hpdev) {
+> +		irq_data->chip_data = NULL;
+>  		kfree(int_desc);
+>  		return;
+>  	}
+>  
+> -	hv_int_desc_free(hpdev, int_desc);
+> +	if (hv_pcidev_is_attached_dev(pdev)) {
+> +		hv_unmap_msi_interrupt(pdev, irq_data->chip_data);
+> +		kfree(irq_data->chip_data);
+> +		irq_data->chip_data = NULL;
+> +	} else {
+> +		irq_data->chip_data = NULL;
+> +		hv_int_desc_free(hpdev, int_desc);
 > +	}
 > +
-> +	pr_info("Hyper-V IOMMU initialized\n");
-> +
-> +	return 0;
-> +
-> +err_sysfs_remove:
-> +	iommu_device_sysfs_remove(iommup);
-> +	return ret;
-> +}
-> +
-> +void __init hv_iommu_detect(void)
-> +{
-> +	if (no_iommu || iommu_detected)
-> +		return;
-> +
-> +	/* For l1vh, always expose an iommu unit */
-> +	if (!hv_l1vh_partition())
-> +		if (!(ms_hyperv.misc_features & HV_DEVICE_DOMAIN_AVAILABLE))
-> +			return;
-> +
-> +	iommu_detected = 1;
-> +	x86_init.iommu.iommu_init = hv_iommu_init;
-> +
-> +	pci_request_acs();
-> +}
-> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-> index dfc516c1c719..2ad111727e82 100644
-> --- a/include/linux/hyperv.h
-> +++ b/include/linux/hyperv.h
-> @@ -1767,4 +1767,10 @@ static inline unsigned long virt_to_hvpfn(void *addr)
->  #define HVPFN_DOWN(x)	((x) >> HV_HYP_PAGE_SHIFT)
->  #define page_to_hvpfn(page)	(page_to_pfn(page) * NR_HV_HYP_PAGES_IN_PAGE)
+>  	put_pcichild(hpdev);
+>  }
 >  
-> +#ifdef CONFIG_HYPERV_IOMMU
-> +void __init hv_iommu_detect(void);
-> +#else
-> +static inline void hv_iommu_detect(void) { }
-> +#endif /* CONFIG_HYPERV_IOMMU */
+> @@ -2139,6 +2158,56 @@ static void hv_vmbus_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>  	msg->data = 0;
+>  }
+>  
+> +/* Compose an msi message for a directly attached device */
+> +static void hv_dda_compose_msi_msg(struct irq_data *irq_data,
+> +				   struct msi_desc *msi_desc,
+> +				   struct msi_msg *msg)
+> +{
+> +	bool multi_msi;
+> +	struct hv_pcibus_device *hbus;
+> +	struct hv_pci_dev *hpdev;
+> +	struct pci_dev *pdev = msi_desc_to_pci_dev(msi_desc);
 > +
->  #endif /* _HYPERV_H */
+> +	multi_msi = !msi_desc->pci.msi_attrib.is_msix &&
+> +		    msi_desc->nvec_used > 1;
+> +
+> +	if (multi_msi) {
+> +		dev_err(&hbus->hdev->device,
+> +			"Passthru direct attach does not support multi msi\n");
+> +		goto outerr;
+> +	}
+> +
+> +	hbus = container_of(pdev->bus->sysdata, struct hv_pcibus_device,
+> +			    sysdata);
+> +
+> +	hpdev = get_pcichild_wslot(hbus, devfn_to_wslot(pdev->devfn));
+> +	if (!hpdev)
+> +		goto outerr;
+> +
+> +	/* will unmap if needed and also update irq_data->chip_data */
+> +	hv_irq_compose_msi_msg(irq_data, msg);
+> +
+> +	put_pcichild(hpdev);
+> +	return;
+> +
+> +outerr:
+> +	memset(msg, 0, sizeof(*msg));
+> +}
+> +
+> +static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+> +{
+> +	struct pci_dev *pdev;
+> +	struct msi_desc *msi_desc;
+> +
+> +	msi_desc = irq_data_get_msi_desc(data);
+> +	pdev = msi_desc_to_pci_dev(msi_desc);
+> +
+> +	if (hv_pcidev_is_attached_dev(pdev))
+> +		hv_dda_compose_msi_msg(data, msi_desc, msg);
+> +	else
+> +		hv_vmbus_compose_msi_msg(data, msg);
+> +}
+> +
+>  static bool hv_pcie_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
+>  				      struct irq_domain *real_parent, struct msi_domain_info *info)
+>  {
+> @@ -2177,7 +2246,7 @@ static const struct msi_parent_ops hv_pcie_msi_parent_ops = {
+>  /* HW Interrupt Chip Descriptor */
+>  static struct irq_chip hv_msi_irq_chip = {
+>  	.name			= "Hyper-V PCIe MSI",
+> -	.irq_compose_msi_msg	= hv_vmbus_compose_msi_msg,
+> +	.irq_compose_msi_msg	= hv_compose_msi_msg,
+>  	.irq_set_affinity	= irq_chip_set_affinity_parent,
+>  	.irq_ack		= irq_chip_ack_parent,
+>  	.irq_eoi		= irq_chip_eoi_parent,
+> @@ -4096,7 +4165,7 @@ static int hv_pci_restore_msi_msg(struct pci_dev *pdev, void *arg)
+>  		irq_data = irq_get_irq_data(entry->irq);
+>  		if (WARN_ON_ONCE(!irq_data))
+>  			return -EINVAL;
+> -		hv_vmbus_compose_msi_msg(irq_data, &entry->msg);
+> +		hv_compose_msi_msg(irq_data, &entry->msg);
+>  	}
+>  	return 0;
+>  }
 > -- 
 > 2.51.2.vfs.0.1
 > 
