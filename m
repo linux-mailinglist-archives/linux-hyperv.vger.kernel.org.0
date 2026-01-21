@@ -1,271 +1,467 @@
-Return-Path: <linux-hyperv+bounces-8402-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8404-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wFIOOSt5cGktYAAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8402-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 07:58:51 +0100
+	id CBr2HoHycGk+awAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8404-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 16:36:33 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 899E0527C4
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 07:58:51 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF71C59484
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 16:36:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6B8C04215E2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 06:57:13 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A899FA2DD50
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 15:04:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B7CE25A354;
-	Wed, 21 Jan 2026 06:57:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BD754C8FFD;
+	Wed, 21 Jan 2026 14:48:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="f7bcWhC6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HdxWSVmv";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="YRjmRTpM"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3DEB345753;
-	Wed, 21 Jan 2026 06:57:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624124C8FE3
+	for <linux-hyperv@vger.kernel.org>; Wed, 21 Jan 2026 14:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768978627; cv=none; b=HX/rOADL5/NVbWSe0o0H//3i58s8ZNCc6jHM0ml+kvc/HPRpCWknJhV26rP3JxMMx525QrybGHPQ8RMSGlm6T/ItT5m5O/Oc4MYVLuRxCF6T36J/dfgTRvNiB0AHcTmyLqU1Ga2NEdNulfMeBu9Ghqmr9YdA+Roybf+XpO/ZCuc=
+	t=1769006906; cv=none; b=j4uCvHyo1nIu5yg8pxTUoRZm3MF5h6eB/VH5bOnlVHe+k+8tDVlByeY7TlNdIeuSr/A3ByB3EVk59NhifD2apgkN55t1Rh61we+usMd8EoXxeiPvANHVTYuM6kYi2rFXRBwtDHAgVCoEIFGVZWQXHXJaMel+CxSsOXh/On0JJLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768978627; c=relaxed/simple;
-	bh=AJUBvzyfUyr6MfMUlTjBVwweSnUK0dpns8p84dQGWS8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=jSpMfeJiQr9N/OiTcGqIkoM2XZGcuiskEF0U5tcRZzJoB3s929l6uPsrP1Qr9cHclgXpGtnBoHkn0mYgH5V5ko5ZeGzk1g1KVu4fbEiuMnSWO/XC9bDtSMN5+nZFObLezirFNBA7LWja/TQV0yD8Y7X9wdGcWuUqQyEDKIhWSEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=f7bcWhC6; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id B439120B7167; Tue, 20 Jan 2026 22:56:58 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B439120B7167
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1768978618;
-	bh=6qm2Z1st83nm1z41Pvq6Stoxjnaqb/vwxE+6a3Vupf0=;
-	h=From:To:Subject:Date:From;
-	b=f7bcWhC6qGyI4+TjkLcJL/19foEP5AqSzhp++fx9Nsurz7pEmcxujQFdcjOBYDJ+G
-	 XqajTrVx+10Ziko6K7dzqM7lkMrGaU0CKJsoE57eGGYMZ14OdCxUuz4II8Sv5aKuBa
-	 yCTuBrscD92IOXIFFTqy6T6iYohCk4ZF/n5ODHpo=
-From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	leon@kernel.org,
-	kotaranov@microsoft.com,
-	shradhagupta@linux.microsoft.com,
-	ernis@linux.microsoft.com,
-	yury.norov@gmail.com,
-	dipayanroy@linux.microsoft.com,
-	shirazsaleem@microsoft.com,
-	ssengar@linux.microsoft.com,
-	gargaditya@linux.microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2] net: mana: Improve diagnostic logging for better debuggability
-Date: Tue, 20 Jan 2026 22:56:55 -0800
-Message-ID: <20260121065655.18249-1-ernis@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.7
+	s=arc-20240116; t=1769006906; c=relaxed/simple;
+	bh=QUpRm5BO1PsMpJA/m+7TudemIjgPpKiHIo5jnkzHoIA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nuD6vpMxR0hBw3G0eUql6BTi5vJwC80FX1FNaeqyJJZX6nXofBvRy2ZjG0Zi+X59SlgVHsbh5lZQsW5iOET17Fn55ugz2QcUdknna4oXWqGsiVW88/lSPQhEI+zFX5kwMdgK4BTZetfg2jmFEF2WYEDm1wxO7hBIAZqjbHln3gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HdxWSVmv; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=YRjmRTpM; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1769006903;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VUJ1S4k/wjMiGcuwXZdRwnP1r4qcoeHu/Fk7TCF9Czg=;
+	b=HdxWSVmvrP3HV7eq6pNTBhwT5yMg2mKTy0i9WI4KwX2iH41j+P7qo9Whn0Iiegd2cHV3QP
+	AKryT+Dcu8ADkEq8h1Q/7hG4EX6mSafzpMveLeWDK/zuKONiM5Hev7hHLykep6fFUdfy00
+	Y76yomIVMnnVNoVc7erjgcl9wknAek0=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-312-cmqNWS9gO6K9u_0sK4PbQA-1; Wed, 21 Jan 2026 09:48:19 -0500
+X-MC-Unique: cmqNWS9gO6K9u_0sK4PbQA-1
+X-Mimecast-MFC-AGG-ID: cmqNWS9gO6K9u_0sK4PbQA_1769006899
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4779ecc3cc8so49093965e9.3
+        for <linux-hyperv@vger.kernel.org>; Wed, 21 Jan 2026 06:48:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1769006898; x=1769611698; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VUJ1S4k/wjMiGcuwXZdRwnP1r4qcoeHu/Fk7TCF9Czg=;
+        b=YRjmRTpMJdzf8jSCZR5c6CUp2tqRg1IYXX7KFzzPx+S1hKu0rBPBEabK10izkFbZb7
+         8aTnKUHGysBsdMwSM6i9tSiwT71ZCiKtR2fQRqKUiZmonS6Z8AyvmSmolPtWBVzi7hid
+         EriDanVwNTHpbXWDo6tL0DmgFyKRtm45oqiTwimWc6fGHGZqX9bFE4/tqm8Mrcrc5sMj
+         x3yLAIEr2mCNho2mM2Zl7hYMhul16caalRx/hFxITRdpOGTsUitDlvoxNGSWYIWp3/L4
+         vieFfk4GkGCcCeXe+jUnyK529YJzuOzknU5KJP4gS1gW7Uht45DCb4t/gtJJAyN3p+jr
+         Zv8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769006898; x=1769611698;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VUJ1S4k/wjMiGcuwXZdRwnP1r4qcoeHu/Fk7TCF9Czg=;
+        b=XXg0P/+8YFyFRtx3pLRmPKPdslRz6LDd68xXJYXD7rAjPhLplWPpl8BF+GsK9++Zx5
+         eDRrAwVnrh1olqKjhY7sp9rxVOk68fjmXZ62fzA5ffR7o79fKIpJ8LOMjbsg07+WTxTq
+         jnKaX0Lb5EcKBuGkec5HNGuhjU7pkujXhvLBPCIPTueThTw0sgBFpBNOQNg7kkotz8C2
+         QFcQZJ9FCWH8YzmfBNYme/Yue5vN/b0Vp2c4rEweYWBwLGeL+TR1IMNbP9Ouz2JFQwKz
+         M9cnWbxGX5AXJsZ2JoaUzqXLPtShJfP3kLgl8qpUr4eXEs+dChW2WmFA2lYscMlEdo+Q
+         Aycw==
+X-Forwarded-Encrypted: i=1; AJvYcCWxxGHAJbMU7J5qZIrWZJqyfzsJjYevUhX5w3AdeCysIKq/N28juvYMcCS5wdUyRH02aWo8vvFSWDUXxgQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvzUEiQIVKK0s4h0Oae4m/VdwqgEl6biw5folGF4NvQeOLNwLK
+	Q1zaH7Lzcz09pSxtAZBtxy3C+6e6Fv1vFQPxrwfOzFlQyGU1yYMgZdXfEiTdiF3jIAM4I2Bb1Dp
+	2q/I5sMSfgoXmAyqWivHYtAfNXua28u9xl49UvKgDtIHZ6hRxqAZRFI9YkYOOYAr9MQ==
+X-Gm-Gg: AZuq6aLT0nHWyEZgjl/ZwONKHOxmqzh0pBHComWi14gDxtXIxYMzk3TcK4zzFJF+F70
+	VI6CIrn6P+936TbguCopn9rKYLxrwk/cEJoN1081xB3dfduvyV8XXS1gDmPM5L415AsENjSWxbe
+	+5UVMdDh4mhy/EzBSEc1Y9RjOSMrlYOduBJncLbFwaWoAA4wHu09DuN6QlMUDiWrrYqbGVxuJgf
+	dXUVLUfA7OHkKfkHF1WRm4JtguRNLTNi/QASa9AcRGa5mv0YC8zX4XivvLfXv18srqKpCVOsocP
+	x2hpIMlGq2Jqvv+oA4jrAzDNP6eY2aKedCQ5kaAHfwFCCEGw9WZCWG8qwGMA2iqsl0GS90FNR4F
+	uU6sVqqt2u61jXDnvL4iU8l3mqplBjGNuj3uMU9w5sib5WWbpjQWMNaRlA7c=
+X-Received: by 2002:a05:600c:820b:b0:47a:9560:ec28 with SMTP id 5b1f17b1804b1-4803e7a2d1dmr73114015e9.13.1769006898438;
+        Wed, 21 Jan 2026 06:48:18 -0800 (PST)
+X-Received: by 2002:a05:600c:820b:b0:47a:9560:ec28 with SMTP id 5b1f17b1804b1-4803e7a2d1dmr73113705e9.13.1769006897944;
+        Wed, 21 Jan 2026 06:48:17 -0800 (PST)
+Received: from sgarzare-redhat (host-82-53-134-58.retail.telecomitalia.it. [82.53.134.58])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48042c5965fsm22479875e9.17.2026.01.21.06.48.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Jan 2026 06:48:16 -0800 (PST)
+Date: Wed, 21 Jan 2026 15:48:13 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Bobby Eshleman <bobbyeshleman@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Bryan Tan <bryan-bt.tan@broadcom.com>, Vishnu Dasa <vishnu.dasa@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Shuah Khan <shuah@kernel.org>, Long Li <longli@microsoft.com>, 
+	Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, virtualization@lists.linux.dev, 
+	netdev@vger.kernel.org, kvm@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, berrange@redhat.com, Sargun Dhillon <sargun@sargun.me>, 
+	linux-doc@vger.kernel.org, Bobby Eshleman <bobbyeshleman@meta.com>
+Subject: Re: [PATCH net-next v15 01/12] vsock: add netns to vsock core
+Message-ID: <aXDYfYy3f1NQm5A0@sgarzare-redhat>
+References: <20260116-vsock-vmtest-v15-0-bbfd1a668548@meta.com>
+ <20260116-vsock-vmtest-v15-1-bbfd1a668548@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [1.04 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20260116-vsock-vmtest-v15-1-bbfd1a668548@meta.com>
+X-Spamd-Result: default: False [-1.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
+	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-8402-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,gmail.com,vger.kernel.org];
-	DMARC_POLICY_ALLOW(0.00)[linux.microsoft.com,none];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ernis@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-8404-lists,linux-hyperv=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[31];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	DMARC_POLICY_ALLOW(0.00)[redhat.com,quarantine];
+	DKIM_TRACE(0.00)[redhat.com:+];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	TO_DN_SOME(0.00)[];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	TO_DN_NONE(0.00)[];
-	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
-X-Rspamd-Queue-Id: 899E0527C4
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sgarzare@redhat.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[meta.com:email,dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo]
+X-Rspamd-Queue-Id: DF71C59484
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Enhance MANA driver logging to provide better visibility into
-hardware configuration and error states during driver initialization
-and runtime operations.
+On Fri, Jan 16, 2026 at 01:28:41PM -0800, Bobby Eshleman wrote:
+>From: Bobby Eshleman <bobbyeshleman@meta.com>
+>
+>Add netns logic to vsock core. Additionally, modify transport hook
+>prototypes to be used by later transport-specific patches (e.g.,
+>*_seqpacket_allow()).
+>
+>Namespaces are supported primarily by changing socket lookup functions
+>(e.g., vsock_find_connected_socket()) to take into account the socket
+>namespace and the namespace mode before considering a candidate socket a
+>"match".
+>
+>This patch also introduces the sysctl /proc/sys/net/vsock/ns_mode to
+>report the mode and /proc/sys/net/vsock/child_ns_mode to set the mode
+>for new namespaces.
+>
+>Add netns functionality (initialization, passing to transports, procfs,
+>etc...) to the af_vsock socket layer. Later patches that add netns
+>support to transports depend on this patch.
 
-Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
----
-Changes in v2:
-* Update commit message.
-* Use "Enabled vPort ..." instead of "Configured vPort" in
-  mana_cfg_vport.
-* Add info log in mana_uncfg_vport, mana_gd_verify_vf_version,
-  mana_gd_query_max_resources, mana_query_device_cfg and
-  mana_query_vport_cfg.
----
- .../net/ethernet/microsoft/mana/gdma_main.c   |  6 +++++
- .../net/ethernet/microsoft/mana/hw_channel.c  | 12 ++++++----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 23 ++++++++++++++-----
- 3 files changed, 30 insertions(+), 11 deletions(-)
+nit: maybe we should mention here why we changed the random port 
+allocation
 
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 0055c231acf6..c7b65ddea651 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -152,6 +152,9 @@ static int mana_gd_query_max_resources(struct pci_dev *pdev)
- 	if (gc->max_num_queues > gc->num_msix_usable - 1)
- 		gc->max_num_queues = gc->num_msix_usable - 1;
- 
-+	dev_info(gc->dev, "Max Resources: msix_usable=%u max_queues=%u\n",
-+		 gc->num_msix_usable, gc->max_num_queues);
-+
- 	return 0;
- }
- 
-@@ -1229,6 +1232,9 @@ int mana_gd_verify_vf_version(struct pci_dev *pdev)
- 		}
- 		dev_dbg(gc->dev, "set the hwc timeout to %u\n", hwc->hwc_timeout);
- 	}
-+
-+	dev_info(gc->dev, "VF Version: protocol=0x%llx pf_caps=[0x%llx]\n",
-+		 resp.gdma_protocol_ver, gc->pf_cap_flags1);
- 	return 0;
- }
- 
-diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
-index aa4e2731e2ba..71a18c70ecaf 100644
---- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
-+++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
-@@ -853,6 +853,7 @@ int mana_hwc_send_request(struct hw_channel_context *hwc, u32 req_len,
- 	struct hwc_caller_ctx *ctx;
- 	u32 dest_vrcq = 0;
- 	u32 dest_vrq = 0;
-+	u32 command;
- 	u16 msg_id;
- 	int err;
- 
-@@ -877,6 +878,7 @@ int mana_hwc_send_request(struct hw_channel_context *hwc, u32 req_len,
- 
- 	req_msg->req.hwc_msg_id = msg_id;
- 
-+	command = req_msg->req.msg_type;
- 	tx_wr->msg_size = req_len;
- 
- 	if (gc->is_pf) {
-@@ -893,8 +895,8 @@ int mana_hwc_send_request(struct hw_channel_context *hwc, u32 req_len,
- 	if (!wait_for_completion_timeout(&ctx->comp_event,
- 					 (msecs_to_jiffies(hwc->hwc_timeout)))) {
- 		if (hwc->hwc_timeout != 0)
--			dev_err(hwc->dev, "HWC: Request timed out: %u ms\n",
--				hwc->hwc_timeout);
-+			dev_err(hwc->dev, "HWC: Request timed out: %u ms for command 0x%x\n",
-+				hwc->hwc_timeout, command);
- 
- 		/* Reduce further waiting if HWC no response */
- 		if (hwc->hwc_timeout > 1)
-@@ -914,9 +916,9 @@ int mana_hwc_send_request(struct hw_channel_context *hwc, u32 req_len,
- 			err = -EOPNOTSUPP;
- 			goto out;
- 		}
--		if (req_msg->req.msg_type != MANA_QUERY_PHY_STAT)
--			dev_err(hwc->dev, "HWC: Failed hw_channel req: 0x%x\n",
--				ctx->status_code);
-+		if (command != MANA_QUERY_PHY_STAT)
-+			dev_err(hwc->dev, "hw_channel command 0x%x failed with status: 0x%x\n",
-+				command, ctx->status_code);
- 		err = -EPROTO;
- 		goto out;
- 	}
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 91c418097284..09064f9706b8 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -1026,8 +1026,8 @@ static int mana_send_request(struct mana_context *ac, void *in_buf,
- 
- 		if (req->req.msg_type != MANA_QUERY_PHY_STAT &&
- 		    mana_need_log(gc, err))
--			dev_err(dev, "Failed to send mana message: %d, 0x%x\n",
--				err, resp->status);
-+			dev_err(dev, "Command 0x%x failed with status: 0x%x, err: %d\n",
-+				req->req.msg_type, resp->status, err);
- 		return err ? err : -EPROTO;
- 	}
- 
-@@ -1222,6 +1222,9 @@ static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
- 	else
- 		*bm_hostmode = 0;
- 
-+	dev_info(dev, "Device Config: max_vports=%u adapter_mtu=%u bm_hostmode=%u\n",
-+		 *max_num_vports, gc->adapter_mtu, *bm_hostmode);
-+
- 	debugfs_create_u16("adapter-MTU", 0400, gc->mana_pci_debugfs, &gc->adapter_mtu);
- 
- 	return 0;
-@@ -1268,6 +1271,9 @@ static int mana_query_vport_cfg(struct mana_port_context *apc, u32 vport_index,
- 	apc->port_handle = resp.vport;
- 	ether_addr_copy(apc->mac_addr, resp.mac_addr);
- 
-+	netdev_info(apc->ndev, "VPort Config: vport=0x%llx max_sq=%u max_rq=%u indir_ent=%u MAC=%pM",
-+		    apc->port_handle, *max_sq, *max_rq, *num_indir_entry, apc->mac_addr);
-+
- 	return 0;
- }
- 
-@@ -1277,6 +1283,9 @@ void mana_uncfg_vport(struct mana_port_context *apc)
- 	apc->vport_use_count--;
- 	WARN_ON(apc->vport_use_count < 0);
- 	mutex_unlock(&apc->vport_mutex);
-+
-+	netdev_info(apc->ndev, "Disabled vPort %llu MAC %pM\n",
-+		    apc->port_handle, apc->mac_addr);
- }
- EXPORT_SYMBOL_NS(mana_uncfg_vport, "NET_MANA");
- 
-@@ -1340,8 +1349,8 @@ int mana_cfg_vport(struct mana_port_context *apc, u32 protection_dom_id,
- 	apc->tx_shortform_allowed = resp.short_form_allowed;
- 	apc->tx_vp_offset = resp.tx_vport_offset;
- 
--	netdev_info(apc->ndev, "Configured vPort %llu PD %u DB %u\n",
--		    apc->port_handle, protection_dom_id, doorbell_pg_id);
-+	netdev_info(apc->ndev, "Enabled vPort %llu PD %u DB %u MAC %pM\n",
-+		    apc->port_handle, protection_dom_id, doorbell_pg_id, apc->mac_addr);
- out:
- 	if (err)
- 		mana_uncfg_vport(apc);
-@@ -1412,8 +1421,10 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
- 		err = -EPROTO;
- 	}
- 
--	netdev_info(ndev, "Configured steering vPort %llu entries %u\n",
--		    apc->port_handle, apc->indir_table_sz);
-+	netdev_info(ndev,
-+		    "Configured steering vPort %llu entries %u MAC %pM [rx:%u rss:%u update_indirection_table:%u cqe_coalescing:%u]\n",
-+		    apc->port_handle, apc->indir_table_sz, apc->mac_addr,
-+		    rx, apc->rss_state, update_tab, req->cqe_coalescing_enable);
- out:
- 	kfree(req);
- 	return err;
--- 
-2.34.1
+(not a big deal, only if you need to resend)
+
+>
+>dgram_allow(), stream_allow(), and seqpacket_allow() callbacks are
+>modified to take a vsk in order to perform logic on namespace modes. In
+>future patches, the net will also be used for socket
+>lookups in these functions.
+>
+>Signed-off-by: Bobby Eshleman <bobbyeshleman@meta.com>
+>---
+>Changes in v15:
+>- make static port in __vsock_bind_connectible per-netns
+>- remove __net_initdata because we want the ops beyond just boot
+>- add vsock_init_ns_mode kernel cmdline parameter to set init ns mode
+>- use if (ret || !write) in __vsock_net_mode_string() (Stefano)
+>- add vsock_net_mode_global() (Stefano)
+>- hide !net == VSOCK_NET_MODE_GLOBAL inside vsock_net_mode() (Stefano)
+>- clarify af_vsock.c comments on ns_mode/child_ns_mode (Stefano)
+>
+>Changes in v14:
+>- include linux/sysctl.h in af_vsock.c
+>- squash patch 'vsock: add per-net vsock NS mode state' into this patch
+>  (prior version can be found here):
+>  https://lore.kernel.org/all/20251223-vsock-vmtest-v13-1-9d6db8e7c80b@meta.com/)
+>
+>Changes in v13:
+>- remove net_mode and replace with direct accesses to net->vsock.mode,
+>  since this is now immutable.
+>- update comments about mode behavior and mutability, and sysctl API
+>- only pass NULL for net when wanting global, instead of net_mode ==
+>  VSOCK_NET_MODE_GLOBAL. This reflects the new logic
+>  of vsock_net_check_mode() that only requires net pointers (not
+>  net_mode).
+>- refactor sysctl string code into a re-usable function, because
+>  child_ns_mode and ns_mode both handle the same strings.
+>- remove redundant vsock_net_init(&init_net) call in module init because
+>  pernet registration calls the callback on the init_net too
+>
+>Changes in v12:
+>- return true in dgram_allow(), stream_allow(), and seqpacket_allow()
+>  only if net_mode == VSOCK_NET_MODE_GLOBAL (Stefano)
+>- document bind(VMADDR_CID_ANY) case in af_vsock.c (Stefano)
+>- change order of stream_allow() call in vmci so we can pass vsk
+>  to it
+>
+>Changes in v10:
+>- add file-level comment about what happens to sockets/devices
+>  when the namespace mode changes (Stefano)
+>- change the 'if (write)' boolean in vsock_net_mode_string() to
+>  if (!write), this simplifies a later patch which adds "goto"
+>  for mutex unlocking on function exit.
+>
+>Changes in v9:
+>- remove virtio_vsock_alloc_rx_skb() (Stefano)
+>- remove vsock_global_dummy_net, not needed as net=NULL +
+>  net_mode=VSOCK_NET_MODE_GLOBAL achieves identical result
+>
+>Changes in v7:
+>- hv_sock: fix hyperv build error
+>- explain why vhost does not use the dummy
+>- explain usage of __vsock_global_dummy_net
+>- explain why VSOCK_NET_MODE_STR_MAX is 8 characters
+>- use switch-case in vsock_net_mode_string()
+>- avoid changing transports as much as possible
+>- add vsock_find_{bound,connected}_socket_net()
+>- rename `vsock_hdr` to `sysctl_hdr`
+>- add virtio_vsock_alloc_linear_skb() wrapper for setting dummy net and
+>  global mode for virtio-vsock, move skb->cb zero-ing into wrapper
+>- explain seqpacket_allow() change
+>- move net setting to __vsock_create() instead of vsock_create() so
+>  that child sockets also have their net assigned upon accept()
+>
+>Changes in v6:
+>- unregister sysctl ops in vsock_exit()
+>- af_vsock: clarify description of CID behavior
+>- af_vsock: fix buf vs buffer naming, and length checking
+>- af_vsock: fix length checking w/ correct ctl_table->maxlen
+>
+>Changes in v5:
+>- vsock_global_net() -> vsock_global_dummy_net()
+>- update comments for new uAPI
+>- use /proc/sys/net/vsock/ns_mode instead of /proc/net/vsock_ns_mode
+>- add prototype changes so patch remains c)mpilable
+>---
+> Documentation/admin-guide/kernel-parameters.txt |  14 +
+> MAINTAINERS                                     |   1 +
+> drivers/vhost/vsock.c                           |   6 +-
+> include/linux/virtio_vsock.h                    |   4 +-
+> include/net/af_vsock.h                          |  61 ++++-
+> include/net/net_namespace.h                     |   4 +
+> include/net/netns/vsock.h                       |  21 ++
+> net/vmw_vsock/af_vsock.c                        | 328 ++++++++++++++++++++++--
+> net/vmw_vsock/hyperv_transport.c                |   7 +-
+> net/vmw_vsock/virtio_transport.c                |   9 +-
+> net/vmw_vsock/virtio_transport_common.c         |   6 +-
+> net/vmw_vsock/vmci_transport.c                  |  26 +-
+> net/vmw_vsock/vsock_loopback.c                  |   8 +-
+> 13 files changed, 444 insertions(+), 51 deletions(-)
+>
+>diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>index a8d0afde7f85..b6e3bfe365a1 100644
+>--- a/Documentation/admin-guide/kernel-parameters.txt
+>+++ b/Documentation/admin-guide/kernel-parameters.txt
+>@@ -8253,6 +8253,20 @@ Kernel parameters
+> 			            them quite hard to use for exploits but
+> 			            might break your system.
+>
+>+	vsock_init_ns_mode=
+>+			[KNL,NET] Set the vsock namespace mode for the init
+>+			(root) network namespace.
+>+
+>+			global      [default] The init namespace operates in
+>+			            global mode where CIDs are system-wide and
+>+			            sockets can communicate across global
+>+			            namespaces.
+>+
+>+			local       The init namespace operates in local mode
+>+			            where CIDs are private to the namespace and
+>+			            sockets can only communicate within the same
+>+			            namespace.
+>+
+
+My comment on v14 was more to start a discussion :-) sorry to not be 
+clear.
+
+I briefly discussed it with Paolo in chat to better understand our 
+policy between cmdline parameters and module parameters, and it seems 
+that both are discouraged.
+
+So he asked me if we have a use case for this, and thinking about it, I 
+don't have one at the moment. Also, if a user decides to set all netns 
+to local, whether init_net is local or global doesn't really matter, 
+right?
+
+So perhaps before adding this, we should have a real use case.
+Perhaps more than this feature, I would add a way to change the default 
+of all netns (including init_net) from global to local. But we can do 
+that later, since all netns have a way to understand what mode they are 
+in, so we don't break anything and the user has to explicitly change it, 
+knowing that they are breaking compatibility with pre-netns support.\
+
+
+That said, at this point, maybe we can remove this, documenting that 
+init_net is always global, and if we have a use case in the future, we 
+can add this (or something else) to set the init_net mode (or change the 
+default for all netns).
+
+Let's wait a bit before next version to wait a comment from Paolo or 
+Jakub on this. But I'm almost fine with both ways, so:
+
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+
+> 	vt.color=	[VT] Default text color.
+> 			Format: 0xYX, X = foreground, Y = background.
+> 			Default: 0x07 = light gray on black.
+
+[...]
+
+>diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>index a3505a4dcee0..3fc8160d51df 100644
+>--- a/net/vmw_vsock/af_vsock.c
+>+++ b/net/vmw_vsock/af_vsock.c
+
+[...]
+
+>@@ -235,33 +303,42 @@ static void __vsock_remove_connected(struct 
+>vsock_sock *vsk)
+> 	sock_put(&vsk->sk);
+> }
+>
+
+In the v14 I suggested to add some documentation on top of the 
+vsock_find*() vs vsock_find_*_net() to explain better which one should 
+be used by transports.
+
+Again is not a big deal, we can fix later if you don't need to resend.
+
+Thanks,
+Stefano
+
+>-static struct sock *__vsock_find_bound_socket(struct sockaddr_vm *addr)
+>+static struct sock *__vsock_find_bound_socket_net(struct sockaddr_vm *addr,
+>+						  struct net *net)
+> {
+> 	struct vsock_sock *vsk;
+>
+> 	list_for_each_entry(vsk, vsock_bound_sockets(addr), bound_table) {
+>-		if (vsock_addr_equals_addr(addr, &vsk->local_addr))
+>-			return sk_vsock(vsk);
+>+		struct sock *sk = sk_vsock(vsk);
+>+
+>+		if (vsock_addr_equals_addr(addr, &vsk->local_addr) &&
+>+		    vsock_net_check_mode(sock_net(sk), net))
+>+			return sk;
+>
+> 		if (addr->svm_port == vsk->local_addr.svm_port &&
+> 		    (vsk->local_addr.svm_cid == VMADDR_CID_ANY ||
+>-		     addr->svm_cid == VMADDR_CID_ANY))
+>-			return sk_vsock(vsk);
+>+		     addr->svm_cid == VMADDR_CID_ANY) &&
+>+		     vsock_net_check_mode(sock_net(sk), net))
+>+			return sk;
+> 	}
+>
+> 	return NULL;
+> }
+>
+>-static struct sock *__vsock_find_connected_socket(struct sockaddr_vm *src,
+>-						  struct sockaddr_vm *dst)
+>+static struct sock *
+>+__vsock_find_connected_socket_net(struct sockaddr_vm *src,
+>+				  struct sockaddr_vm *dst, struct net *net)
+> {
+> 	struct vsock_sock *vsk;
+>
+> 	list_for_each_entry(vsk, vsock_connected_sockets(src, dst),
+> 			    connected_table) {
+>+		struct sock *sk = sk_vsock(vsk);
+>+
+> 		if (vsock_addr_equals_addr(src, &vsk->remote_addr) &&
+>-		    dst->svm_port == vsk->local_addr.svm_port) {
+>-			return sk_vsock(vsk);
+>+		    dst->svm_port == vsk->local_addr.svm_port &&
+>+		    vsock_net_check_mode(sock_net(sk), net)) {
+>+			return sk;
+> 		}
+> 	}
+>
+>@@ -304,12 +381,13 @@ void vsock_remove_connected(struct vsock_sock *vsk)
+> }
+> EXPORT_SYMBOL_GPL(vsock_remove_connected);
+>
+>-struct sock *vsock_find_bound_socket(struct sockaddr_vm *addr)
+>+struct sock *vsock_find_bound_socket_net(struct sockaddr_vm *addr,
+>+					 struct net *net)
+> {
+> 	struct sock *sk;
+>
+> 	spin_lock_bh(&vsock_table_lock);
+>-	sk = __vsock_find_bound_socket(addr);
+>+	sk = __vsock_find_bound_socket_net(addr, net);
+> 	if (sk)
+> 		sock_hold(sk);
+>
+>@@ -317,15 +395,22 @@ struct sock *vsock_find_bound_socket(struct sockaddr_vm *addr)
+>
+> 	return sk;
+> }
+>+EXPORT_SYMBOL_GPL(vsock_find_bound_socket_net);
+>+
+>+struct sock *vsock_find_bound_socket(struct sockaddr_vm *addr)
+>+{
+>+	return vsock_find_bound_socket_net(addr, NULL);
+>+}
+> EXPORT_SYMBOL_GPL(vsock_find_bound_socket);
+>
+>-struct sock *vsock_find_connected_socket(struct sockaddr_vm *src,
+>-					 struct sockaddr_vm *dst)
+>+struct sock *vsock_find_connected_socket_net(struct sockaddr_vm *src,
+>+					     struct sockaddr_vm *dst,
+>+					     struct net *net)
+> {
+> 	struct sock *sk;
+>
+> 	spin_lock_bh(&vsock_table_lock);
+>-	sk = __vsock_find_connected_socket(src, dst);
+>+	sk = __vsock_find_connected_socket_net(src, dst, net);
+> 	if (sk)
+> 		sock_hold(sk);
+>
+>@@ -333,6 +418,13 @@ struct sock *vsock_find_connected_socket(struct sockaddr_vm *src,
+>
+> 	return sk;
+> }
+>+EXPORT_SYMBOL_GPL(vsock_find_connected_socket_net);
+>+
+>+struct sock *vsock_find_connected_socket(struct sockaddr_vm *src,
+>+					 struct sockaddr_vm *dst)
+>+{
+>+	return vsock_find_connected_socket_net(src, dst, NULL);
+>+}
+> EXPORT_SYMBOL_GPL(vsock_find_connected_socket);
+>
+> void vsock_remove_sock(struct vsock_sock *vsk)
 
 
