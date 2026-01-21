@@ -1,285 +1,139 @@
-Return-Path: <linux-hyperv+bounces-8399-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8400-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UCq1L6kxcGkSXAAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8399-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 02:53:45 +0100
+	id GOoxDbA+cGnXXAAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8400-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 03:49:20 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F83A4F632
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 02:53:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AA1F5005D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 03:49:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BA93A7E59D7
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 01:53:43 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4A8405AFA2E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 02:44:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8415320382;
-	Wed, 21 Jan 2026 01:53:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDEE13570CE;
+	Wed, 21 Jan 2026 02:40:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IbluBz1J"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ecP9vS5P"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69F3F321F5E;
-	Wed, 21 Jan 2026 01:53:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35F38332EC8;
+	Wed, 21 Jan 2026 02:40:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768960420; cv=none; b=AK6xRfCWIf+vb3RJvdN5jFWCe3iV+8CQxT5QztvWEVSqi9jSdPxYr9y49ooMHcfFnIKsnTdcVKdl81Hjq+VkKnQecCwbqtsuOVmtx0RkSeYiPSSW4pN3/QluoQdFDO8ie4Ng26bOfJJB6F/U6SbyTmAhA80Pzld72YgrXWk9uTE=
+	t=1768963248; cv=none; b=tgqBbfzrmHxjV5lGx2kCjMLGQXK8C/Ab0zAX3AjXzN4qfB4s2Zc+mB5kgXKmLjhF0A/2zFfxNPVhd16elHOpL3dm5uHg6EyqXdob+841A1uifw49dQCBu3ajjdfw7Hef3cVOVFWmuX2G2Xh3p5gTlIeEbi9de59+wgtDPvNF62o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768960420; c=relaxed/simple;
-	bh=GWd3kE5nzbALiYd9w/RRKzSE7RaI32EBz0diWTgONxE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R7IoqbaMMfech09OTtsoECUmhPMME/dQpHQTKjewK6UXIrR05KXC1oHezrQT38t3iCSM//aMDniag5NRTlccYv9x26RCmIEw/vSm+6G7ZHWHTtZeSkyrxCFMXCs5i9yd3aDueBhu+7uZTSa4GCtb9mfaySEahDH3RWhkLHwFH3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IbluBz1J; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1768963248; c=relaxed/simple;
+	bh=En2HW4+UaKjpZS8Kh7qdMgwX3h09E7xgLtKoyYzyLAc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Do6dQks9YLdNlZsFxq1Hmz94cgEENT8rvPz0aErgwfjhK9ls9w2NIPcvfdNNaB2ufzSay8ZaU7DGuLPa7p+koG99Huv8KALqwA5FTLqU7nnakY1ftSeEVTfkpGoAkPkmqvqm0Ua4YVZMyw5OttsiiIkCXilNupg8Ea9rJxwqK5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ecP9vS5P; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (unknown [20.236.10.163])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 916ED20B7167;
-	Tue, 20 Jan 2026 17:53:30 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 916ED20B7167
+Received: from mrdev.corp.microsoft.com (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 82A4720B7167;
+	Tue, 20 Jan 2026 18:40:46 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 82A4720B7167
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1768960411;
-	bh=Ymw6zhgGVeFVyXTu0csGpSjrM5/LURY8dThwT1pHr1g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IbluBz1JLfnfdfGrhKQDQkff+no9Xt61GmK/MxRcADLiMlxt2AFu4VsDIxwK/r8KE
-	 1M36jL8WfIMUbzlGyoMAAOTNsz1rZ2bN/HcHJMHK30JunRpnZLI6AxGsKP7ofA5SNG
-	 prJ3EYaLv9L0r0x5imz0gAe5MPs+pN/qtNn09OHE=
-Date: Tue, 20 Jan 2026 17:53:29 -0800
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Mukesh R <mrathor@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com, catalin.marinas@arm.com,
-	will@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com, joro@8bytes.org,
-	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
-	robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
-	nunodasneves@linux.microsoft.com, mhklinux@outlook.com,
-	romank@linux.microsoft.com
-Subject: Re: [PATCH v0 15/15] mshv: Populate mmio mappings for PCI passthru
-Message-ID: <aXAxmYm4zbOzGztz@skinsburskii.localdomain>
-References: <20260120064230.3602565-1-mrathor@linux.microsoft.com>
- <20260120064230.3602565-16-mrathor@linux.microsoft.com>
+	s=default; t=1768963246;
+	bh=CVwJONf59IKX8KA1dnLan/FVVfzrrZSgGi4IehKl2o8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ecP9vS5PNiQ8qSE77OFehPJEAfantY8fFYQgOf+Vl+fb1H+WuT8nM8VTj0UtbrHVu
+	 Z7QvgaZd8sfZ96MzTxE5jxJOyiXu+FGE7Fts6fGTcBDPdhkSyvoB+meBzcBH/eM/pN
+	 /tvfNszGt9s2lEFtXk0+flKA4e5TMFgbw2qUqg+E=
+From: Mukesh R <mrathor@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: wei.liu@kernel.org
+Subject: [PATCH V0] x86/hyperv: Fix compiler warnings in hv_crash.c
+Date: Tue, 20 Jan 2026 18:40:45 -0800
+Message-ID: <20260121024045.3834787-1-mrathor@linux.microsoft.com>
+X-Mailer: git-send-email 2.51.2.vfs.0.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260120064230.3602565-16-mrathor@linux.microsoft.com>
-X-Spamd-Result: default: False [-1.96 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-0.46 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,microsoft.com,kernel.org,arm.com,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,8bytes.org,google.com,arndb.de,linux.microsoft.com,outlook.com];
-	TAGGED_FROM(0.00)[bounces-8399-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DMARC_POLICY_ALLOW(0.00)[linux.microsoft.com,none];
-	RCPT_COUNT_TWELVE(0.00)[29];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	R_SPF_SOFTFAIL(0.00)[~all:c];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-8400-lists,linux-hyperv=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	ASN(0.00)[asn:7979, ipnet:2605:f480::/32, country:US];
+	MIME_TRACE(0.00)[0:+];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mrathor@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	R_SPF_SOFTFAIL(0.00)[~all:c];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	TO_DN_NONE(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[skinsburskii.localdomain:mid,dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: 2F83A4F632
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:mid,linux.microsoft.com:dkim,intel.com:email,dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo]
+X-Rspamd-Queue-Id: 9AA1F5005D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Jan 19, 2026 at 10:42:30PM -0800, Mukesh R wrote:
-> From: Mukesh Rathor <mrathor@linux.microsoft.com>
-> 
-> Upon guest access, in case of missing mmio mapping, the hypervisor
-> generates an unmapped gpa intercept. In this path, lookup the PCI
-> resource pfn for the guest gpa, and ask the hypervisor to map it
-> via hypercall. The PCI resource pfn is maintained by the VFIO driver,
-> and obtained via fixup_user_fault call (similar to KVM).
-> 
-> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
-> ---
->  drivers/hv/mshv_root_main.c | 115 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 115 insertions(+)
-> 
-> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-> index 03f3aa9f5541..4c8bc7cd0888 100644
-> --- a/drivers/hv/mshv_root_main.c
-> +++ b/drivers/hv/mshv_root_main.c
-> @@ -56,6 +56,14 @@ struct hv_stats_page {
->  	};
->  } __packed;
->  
-> +bool hv_nofull_mmio;   /* don't map entire mmio region upon fault */
-> +static int __init setup_hv_full_mmio(char *str)
-> +{
-> +	hv_nofull_mmio = true;
-> +	return 0;
-> +}
-> +__setup("hv_nofull_mmio", setup_hv_full_mmio);
-> +
->  struct mshv_root mshv_root;
->  
->  enum hv_scheduler_type hv_scheduler_type;
-> @@ -612,6 +620,109 @@ mshv_partition_region_by_gfn(struct mshv_partition *partition, u64 gfn)
->  }
->  
->  #ifdef CONFIG_X86_64
-> +
-> +/*
-> + * Check if uaddr is for mmio range. If yes, return 0 with mmio_pfn filled in
-> + * else just return -errno.
-> + */
-> +static int mshv_chk_get_mmio_start_pfn(struct mshv_partition *pt, u64 gfn,
-> +				       u64 *mmio_pfnp)
-> +{
-> +	struct vm_area_struct *vma;
-> +	bool is_mmio;
-> +	u64 uaddr;
-> +	struct mshv_mem_region *mreg;
-> +	struct follow_pfnmap_args pfnmap_args;
-> +	int rc = -EINVAL;
-> +
-> +	/*
-> +	 * Do not allow mem region to be deleted beneath us. VFIO uses
-> +	 * useraddr vma to lookup pci bar pfn.
-> +	 */
-> +	spin_lock(&pt->pt_mem_regions_lock);
-> +
-> +	/* Get the region again under the lock */
-> +	mreg = mshv_partition_region_by_gfn(pt, gfn);
-> +	if (mreg == NULL || mreg->type != MSHV_REGION_TYPE_MMIO)
-> +		goto unlock_pt_out;
-> +
-> +	uaddr = mreg->start_uaddr +
-> +		((gfn - mreg->start_gfn) << HV_HYP_PAGE_SHIFT);
-> +
-> +	mmap_read_lock(current->mm);
+Fix two compiler warnings:
+  o smp_ops is only defined if CONFIG_SMP
+  o status is set but not explicitly used.
 
-Semaphore can't be taken under spinlock.
-Get it instead.
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202512301641.FC6OAbGM-lkp@intel.com/
+Signed-off-by: Mukesh R <mrathor@linux.microsoft.com>
+---
+ arch/x86/hyperv/hv_crash.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> +	vma = vma_lookup(current->mm, uaddr);
-> +	is_mmio = vma ? !!(vma->vm_flags & (VM_IO | VM_PFNMAP)) : 0;
+diff --git a/arch/x86/hyperv/hv_crash.c b/arch/x86/hyperv/hv_crash.c
+index c0e22921ace1..82915b22ceae 100644
+--- a/arch/x86/hyperv/hv_crash.c
++++ b/arch/x86/hyperv/hv_crash.c
+@@ -279,7 +279,6 @@ static void hv_notify_prepare_hyp(void)
+ static noinline __noclone void crash_nmi_callback(struct pt_regs *regs)
+ {
+ 	struct hv_input_disable_hyp_ex *input;
+-	u64 status;
+ 	int msecs = 1000, ccpu = smp_processor_id();
+ 
+ 	if (ccpu == 0) {
+@@ -313,7 +312,7 @@ static noinline __noclone void crash_nmi_callback(struct pt_regs *regs)
+ 	input->rip = trampoline_pa;
+ 	input->arg = devirt_arg;
+ 
+-	status = hv_do_hypercall(HVCALL_DISABLE_HYP_EX, input, NULL);
++	hv_do_hypercall(HVCALL_DISABLE_HYP_EX, input, NULL);
+ 
+ 	hv_panic_timeout_reboot();
+ }
+@@ -628,8 +627,9 @@ void hv_root_crash_init(void)
+ 	if (rc)
+ 		goto err_out;
+ 
++#ifdef CONFIG_SMP
+ 	smp_ops.crash_stop_other_cpus = hv_crash_stop_other_cpus;
+-
++#endif
+ 	crash_kexec_post_notifiers = true;
+ 	hv_crash_enabled = true;
+ 	pr_info("Hyper-V: both linux and hypervisor kdump support enabled\n");
+-- 
+2.51.2.vfs.0.1
 
-Why this check is needed again?
-The region type is stored on the region itself.
-And the type is checked on the caller side.
-
-> +	if (!is_mmio)
-> +		goto unlock_mmap_out;
-> +
-> +	pfnmap_args.vma = vma;
-> +	pfnmap_args.address = uaddr;
-> +
-> +	rc = follow_pfnmap_start(&pfnmap_args);
-> +	if (rc) {
-> +		rc = fixup_user_fault(current->mm, uaddr, FAULT_FLAG_WRITE,
-> +				      NULL);
-> +		if (rc)
-> +			goto unlock_mmap_out;
-> +
-> +		rc = follow_pfnmap_start(&pfnmap_args);
-> +		if (rc)
-> +			goto unlock_mmap_out;
-> +	}
-> +
-> +	*mmio_pfnp = pfnmap_args.pfn;
-> +	follow_pfnmap_end(&pfnmap_args);
-> +
-> +unlock_mmap_out:
-> +	mmap_read_unlock(current->mm);
-> +unlock_pt_out:
-> +	spin_unlock(&pt->pt_mem_regions_lock);
-> +	return rc;
-> +}
-> +
-> +/*
-> + * At present, the only unmapped gpa is mmio space. Verify if it's mmio
-> + * and resolve if possible.
-> + * Returns: True if valid mmio intercept and it was handled, else false
-> + */
-> +static bool mshv_handle_unmapped_gpa(struct mshv_vp *vp)
-> +{
-> +	struct hv_message *hvmsg = vp->vp_intercept_msg_page;
-> +	struct hv_x64_memory_intercept_message *msg;
-> +	union hv_x64_memory_access_info accinfo;
-> +	u64 gfn, mmio_spa, numpgs;
-> +	struct mshv_mem_region *mreg;
-> +	int rc;
-> +	struct mshv_partition *pt = vp->vp_partition;
-> +
-> +	msg = (struct hv_x64_memory_intercept_message *)hvmsg->u.payload;
-> +	accinfo = msg->memory_access_info;
-> +
-> +	if (!accinfo.gva_gpa_valid)
-> +		return false;
-> +
-> +	/* Do a fast check and bail if non mmio intercept */
-> +	gfn = msg->guest_physical_address >> HV_HYP_PAGE_SHIFT;
-> +	mreg = mshv_partition_region_by_gfn(pt, gfn);
-
-This call needs to be protected by the spinlock.
-
-Thanks,
-Stanislav 
-
-> +	if (mreg == NULL || mreg->type != MSHV_REGION_TYPE_MMIO)
-> +		return false;
-> +
-> +	rc = mshv_chk_get_mmio_start_pfn(pt, gfn, &mmio_spa);
-> +	if (rc)
-> +		return false;
-> +
-> +	if (!hv_nofull_mmio) {		/* default case */
-> +		gfn = mreg->start_gfn;
-> +		mmio_spa = mmio_spa - (gfn - mreg->start_gfn);
-> +		numpgs = mreg->nr_pages;
-> +	} else
-> +		numpgs = 1;
-> +
-> +	rc = hv_call_map_mmio_pages(pt->pt_id, gfn, mmio_spa, numpgs);
-> +
-> +	return rc == 0;
-> +}
-> +
->  static struct mshv_mem_region *
->  mshv_partition_region_by_gfn_get(struct mshv_partition *p, u64 gfn)
->  {
-> @@ -666,13 +777,17 @@ static bool mshv_handle_gpa_intercept(struct mshv_vp *vp)
->  
->  	return ret;
->  }
-> +
->  #else  /* CONFIG_X86_64 */
-> +static bool mshv_handle_unmapped_gpa(struct mshv_vp *vp) { return false; }
->  static bool mshv_handle_gpa_intercept(struct mshv_vp *vp) { return false; }
->  #endif /* CONFIG_X86_64 */
->  
->  static bool mshv_vp_handle_intercept(struct mshv_vp *vp)
->  {
->  	switch (vp->vp_intercept_msg_page->header.message_type) {
-> +	case HVMSG_UNMAPPED_GPA:
-> +		return mshv_handle_unmapped_gpa(vp);
->  	case HVMSG_GPA_INTERCEPT:
->  		return mshv_handle_gpa_intercept(vp);
->  	}
-> -- 
-> 2.51.2.vfs.0.1
-> 
 
