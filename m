@@ -1,69 +1,91 @@
-Return-Path: <linux-hyperv+bounces-8396-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8397-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yKCgBRkicGlRVwAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8396-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 01:47:21 +0100
+	id oEvvFd8jcGlRVwAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8397-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 01:54:55 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B95C4EACF
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 01:47:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 038B84EBD6
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 01:54:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DB7317ACD0F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 00:47:17 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B89C18255C2
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 00:54:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FE17277017;
-	Wed, 21 Jan 2026 00:47:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2E712DE71B;
+	Wed, 21 Jan 2026 00:54:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jVdufeK1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WLLvlzZF"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC37CBA21;
-	Wed, 21 Jan 2026 00:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535EC2DC32B;
+	Wed, 21 Jan 2026 00:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768956432; cv=none; b=Xt658d0EAz3SiNmiNnXrq/3/8RIkGtajNO6/hIbOg9TJ/ogXev0V/WNlUD0unnigikFE19/pwz3hoItiw+lr3fqVtMxoVGuOBcvyImAV0EdtzgcwCogEamywCbealjbg9zx4wV42Wg8PKMWkyYpKcfjp3MaebELAesFQNJVt0lw=
+	t=1768956862; cv=none; b=O1t3WfSUvxWh0tWQszdwqP76Cb0OvkeI8e7/wH0SN7Dhv9TaZOmbbT73ahUr/h/5xo4HqGXLyf8Uk/W7xgrXkewbAUaOHK5/ebyDtPgDbECQmo2ILXEqIF+DYUjFl+jl9st8CGlGRTw3l+KRD67ezw71Lj1J9gO/113ippvG6jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768956432; c=relaxed/simple;
-	bh=64UfuJvuZ6Enfcvhuw2yo6WS8srWJK1pgUrCVYBUHq8=;
+	s=arc-20240116; t=1768956862; c=relaxed/simple;
+	bh=69IQMwe9upLzgpC2oBZtZFsOB+a5jIJ7cJY12DniSbA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LWUxLNDKu8Doi9SXBYtDPkeiKCmguUfHLV/j+qGyTNgu0ExYCDujsEqB6TX7po9n9pLcaGuUTn6m12Ly1BlckMc33WFvglWdntkSEErlSDWXaxIHPcXPiduyLdDaN1ChKUNTmP0G+KA/5NXKOF+Q1L4/C8q9etr6+xjEPVpVy8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jVdufeK1; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (c-98-225-44-182.hsd1.wa.comcast.net [98.225.44.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 4630520B7167;
-	Tue, 20 Jan 2026 16:47:09 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4630520B7167
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1768956430;
-	bh=Eeq/gG1sg6NAOFvmrBFw+IwsTvdCLhlsdiEeaLVVzdw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jVdufeK10Ad5GzcwvLybsmRsA5sujY3rHvkaXZJDg4OmIbsiJMPuIUiyPx3ZBMJNH
-	 Dsymq4JAmkDfe7grA7380zvn4fOYE5zuo0g2l1agO69GBQ76zKKBt4sE5mRx0DlhYd
-	 YzTC/yJtkuASgPPbsVjystJHOZEXCfTJb60KY4hg=
-Date: Tue, 20 Jan 2026 16:47:07 -0800
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Mukesh R <mrathor@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com, catalin.marinas@arm.com,
-	will@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	 Content-Type:Content-Disposition:In-Reply-To; b=mihTInssFszNXj3hBBOOOsInBGmJx9lFoPyUke4l/ajw0/P77MrA5poK1s3BVQUUfjICUZHApFxPXQ3h2vrM13IqgpCUzSNEXPA6E2Yc//C/CQI82RWusMbEFrT2dNdLxVPQ4FjnvanMbWEuXMQ6MC9Vhda3FrBF8EQOahQwDXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WLLvlzZF; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768956862; x=1800492862;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=69IQMwe9upLzgpC2oBZtZFsOB+a5jIJ7cJY12DniSbA=;
+  b=WLLvlzZF8Z98Zf+FIvg/1nSPusiHGpQTU5O5p5SHLyBPDpQz1VCUY6l7
+   6OVNGMpd2UwGN7bPZZTbpUkbPnyN49HFSexfSWDEPZm95u0HGmOvgVtw1
+   Lz7j90mbicDdiyXCSBJV+4afEH6M/w20y5KRIOCxm8XF/EAoEG2yNV51j
+   hlcwG/qktwJV/FWK5WXRU6v5Z4uaDd95BMZtkH1sO79Yn4WSj0argPmF6
+   LZzOSF0tkAjKUs0gyXBPhPkEm4aPMHsIUNLmxaY9Lmc2Fk7k8ppYCGj27
+   JVGd8OEuS4wgOewWa+WXcq2b7ng4lVyv2S4Rpkew7Qrd8vVF0+VYcxpfD
+   Q==;
+X-CSE-ConnectionGUID: KR7CHNliRiG0XEKKP3EfJQ==
+X-CSE-MsgGUID: 4E+izE2DSYyLGgN7ZQ/+RA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11677"; a="70083916"
+X-IronPort-AV: E=Sophos;i="6.21,242,1763452800"; 
+   d="scan'208";a="70083916"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 16:54:21 -0800
+X-CSE-ConnectionGUID: cZWcoejfSjeisQa/O17UuQ==
+X-CSE-MsgGUID: m8tR31AxS6mJ9HycUVnXaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,242,1763452800"; 
+   d="scan'208";a="236942661"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 20 Jan 2026 16:54:14 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1viMU7-00000000Pmv-2DUO;
+	Wed, 21 Jan 2026 00:54:11 +0000
+Date: Wed, 21 Jan 2026 08:53:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mukesh R <mrathor@linux.microsoft.com>, linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev, linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	longli@microsoft.com, catalin.marinas@arm.com, will@kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
 	dave.hansen@linux.intel.com, hpa@zytor.com, joro@8bytes.org,
 	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
 	robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
 	nunodasneves@linux.microsoft.com, mhklinux@outlook.com,
 	romank@linux.microsoft.com
-Subject: Re: [PATCH v0 13/15] x86/hyperv: Basic interrupt support for direct
- attached devices
-Message-ID: <aXAiCw9Dk7GDfagy@skinsburskii.localdomain>
-References: <20260120064230.3602565-1-mrathor@linux.microsoft.com>
- <20260120064230.3602565-14-mrathor@linux.microsoft.com>
+Subject: Re: [PATCH v0 03/15] x86/hyperv: add insufficient memory support in
+ irqdomain.c
+Message-ID: <202601210731.f1WLdgcO-lkp@intel.com>
+References: <20260120064230.3602565-4-mrathor@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -72,412 +94,94 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260120064230.3602565-14-mrathor@linux.microsoft.com>
-X-Spamd-Result: default: False [-1.96 / 15.00];
+In-Reply-To: <20260120064230.3602565-4-mrathor@linux.microsoft.com>
+X-Spamd-Result: default: False [-0.96 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,microsoft.com,kernel.org,arm.com,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,8bytes.org,google.com,arndb.de,linux.microsoft.com,outlook.com];
-	TAGGED_FROM(0.00)[bounces-8396-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_POLICY_ALLOW(0.00)[linux.microsoft.com,none];
-	RCPT_COUNT_TWELVE(0.00)[29];
+	FREEMAIL_CC(0.00)[lists.linux.dev,microsoft.com,kernel.org,arm.com,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,8bytes.org,google.com,arndb.de,linux.microsoft.com,outlook.com];
+	RCPT_COUNT_TWELVE(0.00)[30];
+	TAGGED_FROM(0.00)[bounces-8397-lists,linux-hyperv=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[intel.com,none];
+	DKIM_TRACE(0.00)[intel.com:+];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	RCVD_COUNT_FIVE(0.00)[6];
 	ASN(0.00)[asn:7979, ipnet:2605:f480::/32, country:US];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo]
-X-Rspamd-Queue-Id: 7B95C4EACF
+	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,git-scm.com:url,01.org:url,intel.com:email,intel.com:dkim,intel.com:mid]
+X-Rspamd-Queue-Id: 038B84EBD6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Jan 19, 2026 at 10:42:28PM -0800, Mukesh R wrote:
-> From: Mukesh Rathor <mrathor@linux.microsoft.com>
-> 
-> As mentioned previously, a direct attached device must be referenced
-> via logical device id which is formed in the initial attach hypercall.
-> Interrupt mapping paths for direct attached devices are almost same,
-> except we must use logical device ids instead of the PCI device ids.
-> 
-> L1VH only supports direct attaches for passing thru devices to its guests,
-> and devices on L1VH are VMBus based. However, the interrupts are mapped
-> via the map interrupt hypercall and not the traditional method of VMBus
-> messages.
-> 
-> Partition id for the relevant hypercalls is tricky. This because a device
-> could be moving from root to guest and then back to the root. In case
-> of L1VH, it could be moving from system host to L1VH root to a guest,
-> then back to the L1VH root. So, it is carefully crafted by keeping
-> track of whether the call is on behalf of a VMM process, whether the
-> device is attached device (as opposed to mapped), and whether we are in
-> an L1VH root/parent. If VMM process, we assume it is on behalf of a
-> guest. Otherwise, the device is being attached or detached during boot
-> or shutdown of the privileged partition.
-> 
-> Lastly, a dummy cpu and vector is used to map interrupt for a direct
-> attached device. This because, once a device is marked for direct attach,
-> hypervisor will not let any interrupts be mapped to host. So it is mapped
-> to guest dummy cpu and dummy vector. This is then correctly mapped during
-> guest boot via the retarget paths.
-> 
-> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
-> ---
->  arch/arm64/include/asm/mshyperv.h   | 15 +++++
->  arch/x86/hyperv/irqdomain.c         | 57 +++++++++++++-----
->  arch/x86/include/asm/mshyperv.h     |  4 ++
->  drivers/pci/controller/pci-hyperv.c | 91 +++++++++++++++++++++++++----
->  4 files changed, 142 insertions(+), 25 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/mshyperv.h
-> index b721d3134ab6..27da480f94f6 100644
-> --- a/arch/arm64/include/asm/mshyperv.h
-> +++ b/arch/arm64/include/asm/mshyperv.h
-> @@ -53,6 +53,21 @@ static inline u64 hv_get_non_nested_msr(unsigned int reg)
->  	return hv_get_msr(reg);
->  }
->  
-> +struct irq_data;
-> +struct msi_msg;
-> +struct pci_dev;
-> +static inline void hv_irq_compose_msi_msg(struct irq_data *data,
-> +					  struct msi_msg *msg) {};
-> +static inline int hv_unmap_msi_interrupt(struct pci_dev *pdev,
-> +					struct hv_interrupt_entry *hvirqe)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +static inline bool hv_pcidev_is_attached_dev(struct pci_dev *pdev)
-> +{
-> +	return false;
-> +}
-> +
->  /* SMCCC hypercall parameters */
->  #define HV_SMCCC_FUNC_NUMBER	1
->  #define HV_FUNC_ID	ARM_SMCCC_CALL_VAL(			\
-> diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
-> index 33017aa0caa4..e6eb457f791e 100644
-> --- a/arch/x86/hyperv/irqdomain.c
-> +++ b/arch/x86/hyperv/irqdomain.c
-> @@ -13,6 +13,16 @@
->  #include <linux/irqchip/irq-msi-lib.h>
->  #include <asm/mshyperv.h>
->  
-> +/*
-> + * For direct attached devices (which use logical device ids), hypervisor will
-> + * not allow mappings to host. But VFIO needs to bind the interrupt at the very
-> + * start before the guest cpu/vector is known. So we use dummy cpu and vector
-> + * to bind in such case, and later when the guest starts, retarget will move it
-> + * to correct guest cpu and vector.
-> + */
-> +#define HV_DDA_DUMMY_CPU      0
-> +#define HV_DDA_DUMMY_VECTOR  32
-> +
->  static u64 hv_map_interrupt_hcall(u64 ptid, union hv_device_id hv_devid,
->  				  bool level, int cpu, int vector,
->  				  struct hv_interrupt_entry *ret_entry)
-> @@ -24,6 +34,11 @@ static u64 hv_map_interrupt_hcall(u64 ptid, union hv_device_id hv_devid,
->  	u64 status;
->  	int nr_bank, var_size;
->  
-> +	if (hv_devid.device_type == HV_DEVICE_TYPE_LOGICAL) {
-> +		cpu = HV_DDA_DUMMY_CPU;
-> +		vector = HV_DDA_DUMMY_VECTOR;
-> +	}
-> +
->  	local_irq_save(flags);
->  
->  	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> @@ -95,7 +110,8 @@ static int hv_map_interrupt(u64 ptid, union hv_device_id device_id, bool level,
->  	return hv_result_to_errno(status);
->  }
->  
-> -static int hv_unmap_interrupt(u64 id, struct hv_interrupt_entry *irq_entry)
-> +static int hv_unmap_interrupt(union hv_device_id hv_devid,
-> +			      struct hv_interrupt_entry *irq_entry)
->  {
->  	unsigned long flags;
->  	struct hv_input_unmap_device_interrupt *input;
-> @@ -103,10 +119,14 @@ static int hv_unmap_interrupt(u64 id, struct hv_interrupt_entry *irq_entry)
->  
->  	local_irq_save(flags);
->  	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> -
->  	memset(input, 0, sizeof(*input));
-> -	input->partition_id = hv_current_partition_id;
-> -	input->device_id = id;
-> +
-> +	if (hv_devid.device_type == HV_DEVICE_TYPE_LOGICAL)
-> +		input->partition_id = hv_iommu_get_curr_partid();
-> +	else
-> +		input->partition_id = hv_current_partition_id;
-> +
-> +	input->device_id = hv_devid.as_uint64;
->  	input->interrupt_entry = *irq_entry;
->  
->  	status = hv_do_hypercall(HVCALL_UNMAP_DEVICE_INTERRUPT, input, NULL);
-> @@ -263,6 +283,7 @@ static u64 hv_build_irq_devid(struct pci_dev *pdev)
->  int hv_map_msi_interrupt(struct irq_data *data,
->  			 struct hv_interrupt_entry *out_entry)
->  {
-> +	u64 ptid;
->  	struct irq_cfg *cfg = irqd_cfg(data);
->  	struct hv_interrupt_entry dummy;
->  	union hv_device_id hv_devid;
-> @@ -275,8 +296,17 @@ int hv_map_msi_interrupt(struct irq_data *data,
->  	hv_devid.as_uint64 = hv_build_irq_devid(pdev);
->  	cpu = cpumask_first(irq_data_get_effective_affinity_mask(data));
->  
-> -	return hv_map_interrupt(hv_current_partition_id, hv_devid, false, cpu,
-> -				cfg->vector, out_entry ? out_entry : &dummy);
-> +	if (hv_devid.device_type == HV_DEVICE_TYPE_LOGICAL)
-> +		if (hv_pcidev_is_attached_dev(pdev))
-> +			ptid = hv_iommu_get_curr_partid();
-> +		else
-> +			/* Device actually on l1vh root, not passthru'd to vm */
+Hi Mukesh,
 
-l1vh and root are mutually exclusive partitions.
-If you wanted to highlight that it's l1vh itself and not its child guest, then
-"l1vh parent" term would do.
+kernel test robot noticed the following build warnings:
 
-> +			ptid = hv_current_partition_id;
-> +	else
-> +		ptid = hv_current_partition_id;
+[auto build test WARNING on tip/x86/core]
+[also build test WARNING on pci/next pci/for-linus arm64/for-next/core clk/clk-next soc/for-next linus/master v6.19-rc6 next-20260120]
+[cannot apply to arnd-asm-generic/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Looks like the only special case is for attached logical devices,
-otherwise hv_current_partition_id is used.
-Can the logic simplified here?
+url:    https://github.com/intel-lab-lkp/linux/commits/Mukesh-R/iommu-hyperv-rename-hyperv-iommu-c-to-hyperv-irq-c/20260120-145832
+base:   tip/x86/core
+patch link:    https://lore.kernel.org/r/20260120064230.3602565-4-mrathor%40linux.microsoft.com
+patch subject: [PATCH v0 03/15] x86/hyperv: add insufficient memory support in irqdomain.c
+config: i386-randconfig-053-20260120 (https://download.01.org/0day-ci/archive/20260121/202601210731.f1WLdgcO-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
 
-Thanks,
-Stanislav
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601210731.f1WLdgcO-lkp@intel.com/
 
-> +
-> +	return hv_map_interrupt(ptid, hv_devid, false, cpu, cfg->vector,
-> +				out_entry ? out_entry : &dummy);
->  }
->  EXPORT_SYMBOL_GPL(hv_map_msi_interrupt);
->  
-> @@ -289,10 +319,7 @@ static void entry_to_msi_msg(struct hv_interrupt_entry *entry,
->  	msg->data = entry->msi_entry.data.as_uint32;
->  }
->  
-> -static int hv_unmap_msi_interrupt(struct pci_dev *pdev,
-> -				  struct hv_interrupt_entry *irq_entry);
-> -
-> -static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
-> +void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
->  {
->  	struct hv_interrupt_entry *stored_entry;
->  	struct irq_cfg *cfg = irqd_cfg(data);
-> @@ -341,16 +368,18 @@ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
->  	data->chip_data = stored_entry;
->  	entry_to_msi_msg(data->chip_data, msg);
->  }
-> +EXPORT_SYMBOL_GPL(hv_irq_compose_msi_msg);
->  
-> -static int hv_unmap_msi_interrupt(struct pci_dev *pdev,
-> -				  struct hv_interrupt_entry *irq_entry)
-> +int hv_unmap_msi_interrupt(struct pci_dev *pdev,
-> +			   struct hv_interrupt_entry *irq_entry)
->  {
->  	union hv_device_id hv_devid;
->  
->  	hv_devid.as_uint64 = hv_build_irq_devid(pdev);
->  
-> -	return hv_unmap_interrupt(hv_devid.as_uint64, irq_entry);
-> +	return hv_unmap_interrupt(hv_devid, irq_entry);
->  }
-> +EXPORT_SYMBOL_GPL(hv_unmap_msi_interrupt);
->  
->  /* NB: during map, hv_interrupt_entry is saved via data->chip_data */
->  static void hv_teardown_msi_irq(struct pci_dev *pdev, struct irq_data *irqd)
-> @@ -486,7 +515,7 @@ int hv_unmap_ioapic_interrupt(int ioapic_id, struct hv_interrupt_entry *entry)
->  	hv_devid.device_type = HV_DEVICE_TYPE_IOAPIC;
->  	hv_devid.ioapic.ioapic_id = (u8)ioapic_id;
->  
-> -	return hv_unmap_interrupt(hv_devid.as_uint64, entry);
-> +	return hv_unmap_interrupt(hv_devid, entry);
->  }
->  EXPORT_SYMBOL_GPL(hv_unmap_ioapic_interrupt);
->  
-> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> index e4ccdbbf1d12..b6facd3a0f5e 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -204,11 +204,15 @@ static inline u64 hv_iommu_get_curr_partid(void)
->  #endif	/* CONFIG_HYPERV_IOMMU */
->  
->  u64 hv_pci_vmbus_device_id(struct pci_dev *pdev);
-> +void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg);
-> +extern bool hv_no_attdev;
->  
->  struct irq_domain *hv_create_pci_msi_domain(void);
->  
->  int hv_map_msi_interrupt(struct irq_data *data,
->  			 struct hv_interrupt_entry *out_entry);
-> +int hv_unmap_msi_interrupt(struct pci_dev *dev,
-> +			   struct hv_interrupt_entry *hvirqe);
->  int hv_map_ioapic_interrupt(int ioapic_id, bool level, int vcpu, int vector,
->  		struct hv_interrupt_entry *entry);
->  int hv_unmap_ioapic_interrupt(int ioapic_id, struct hv_interrupt_entry *entry);
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 40f0b06bb966..71d1599dc4a8 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -660,15 +660,17 @@ static void hv_irq_retarget_interrupt(struct irq_data *data)
->  
->  	params = *this_cpu_ptr(hyperv_pcpu_input_arg);
->  	memset(params, 0, sizeof(*params));
-> -	params->partition_id = HV_PARTITION_ID_SELF;
-> +
-> +	if (hv_pcidev_is_attached_dev(pdev))
-> +		params->partition_id = hv_iommu_get_curr_partid();
-> +	else
-> +		params->partition_id = HV_PARTITION_ID_SELF;
-> +
->  	params->int_entry.source = HV_INTERRUPT_SOURCE_MSI;
-> -	params->int_entry.msi_entry.address.as_uint32 = int_desc->address & 0xffffffff;
-> +	params->int_entry.msi_entry.address.as_uint32 =
-> +						int_desc->address & 0xffffffff;
->  	params->int_entry.msi_entry.data.as_uint32 = int_desc->data;
-> -	params->device_id = (hbus->hdev->dev_instance.b[5] << 24) |
-> -			   (hbus->hdev->dev_instance.b[4] << 16) |
-> -			   (hbus->hdev->dev_instance.b[7] << 8) |
-> -			   (hbus->hdev->dev_instance.b[6] & 0xf8) |
-> -			   PCI_FUNC(pdev->devfn);
-> +	params->device_id = hv_pci_vmbus_device_id(pdev);
->  	params->int_target.vector = hv_msi_get_int_vector(data);
->  
->  	if (hbus->protocol_version >= PCI_PROTOCOL_VERSION_1_2) {
-> @@ -1263,6 +1265,15 @@ static void _hv_pcifront_read_config(struct hv_pci_dev *hpdev, int where,
->  			mb();
->  		}
->  		spin_unlock_irqrestore(&hbus->config_lock, flags);
-> +		/*
-> +		 * Make sure PCI_INTERRUPT_PIN is hard-wired to 0 since it may
-> +		 * be read using a 32bit read which is skipped by the above
-> +		 * emulation.
-> +		 */
-> +		if (PCI_INTERRUPT_PIN >= where &&
-> +		    PCI_INTERRUPT_PIN <= (where + size)) {
-> +			*((char *)val + PCI_INTERRUPT_PIN - where) = 0;
-> +		}
->  	} else {
->  		dev_err(dev, "Attempt to read beyond a function's config space.\n");
->  	}
-> @@ -1731,14 +1742,22 @@ static void hv_msi_free(struct irq_domain *domain, unsigned int irq)
->  	if (!int_desc)
->  		return;
->  
-> -	irq_data->chip_data = NULL;
->  	hpdev = get_pcichild_wslot(hbus, devfn_to_wslot(pdev->devfn));
->  	if (!hpdev) {
-> +		irq_data->chip_data = NULL;
->  		kfree(int_desc);
->  		return;
->  	}
->  
-> -	hv_int_desc_free(hpdev, int_desc);
-> +	if (hv_pcidev_is_attached_dev(pdev)) {
-> +		hv_unmap_msi_interrupt(pdev, irq_data->chip_data);
-> +		kfree(irq_data->chip_data);
-> +		irq_data->chip_data = NULL;
-> +	} else {
-> +		irq_data->chip_data = NULL;
-> +		hv_int_desc_free(hpdev, int_desc);
-> +	}
-> +
->  	put_pcichild(hpdev);
->  }
->  
-> @@ -2139,6 +2158,56 @@ static void hv_vmbus_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
->  	msg->data = 0;
->  }
->  
-> +/* Compose an msi message for a directly attached device */
-> +static void hv_dda_compose_msi_msg(struct irq_data *irq_data,
-> +				   struct msi_desc *msi_desc,
-> +				   struct msi_msg *msg)
-> +{
-> +	bool multi_msi;
-> +	struct hv_pcibus_device *hbus;
-> +	struct hv_pci_dev *hpdev;
-> +	struct pci_dev *pdev = msi_desc_to_pci_dev(msi_desc);
-> +
-> +	multi_msi = !msi_desc->pci.msi_attrib.is_msix &&
-> +		    msi_desc->nvec_used > 1;
-> +
-> +	if (multi_msi) {
-> +		dev_err(&hbus->hdev->device,
-> +			"Passthru direct attach does not support multi msi\n");
-> +		goto outerr;
-> +	}
-> +
-> +	hbus = container_of(pdev->bus->sysdata, struct hv_pcibus_device,
-> +			    sysdata);
-> +
-> +	hpdev = get_pcichild_wslot(hbus, devfn_to_wslot(pdev->devfn));
-> +	if (!hpdev)
-> +		goto outerr;
-> +
-> +	/* will unmap if needed and also update irq_data->chip_data */
-> +	hv_irq_compose_msi_msg(irq_data, msg);
-> +
-> +	put_pcichild(hpdev);
-> +	return;
-> +
-> +outerr:
-> +	memset(msg, 0, sizeof(*msg));
-> +}
-> +
-> +static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
-> +{
-> +	struct pci_dev *pdev;
-> +	struct msi_desc *msi_desc;
-> +
-> +	msi_desc = irq_data_get_msi_desc(data);
-> +	pdev = msi_desc_to_pci_dev(msi_desc);
-> +
-> +	if (hv_pcidev_is_attached_dev(pdev))
-> +		hv_dda_compose_msi_msg(data, msi_desc, msg);
-> +	else
-> +		hv_vmbus_compose_msi_msg(data, msg);
-> +}
-> +
->  static bool hv_pcie_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
->  				      struct irq_domain *real_parent, struct msi_domain_info *info)
->  {
-> @@ -2177,7 +2246,7 @@ static const struct msi_parent_ops hv_pcie_msi_parent_ops = {
->  /* HW Interrupt Chip Descriptor */
->  static struct irq_chip hv_msi_irq_chip = {
->  	.name			= "Hyper-V PCIe MSI",
-> -	.irq_compose_msi_msg	= hv_vmbus_compose_msi_msg,
-> +	.irq_compose_msi_msg	= hv_compose_msi_msg,
->  	.irq_set_affinity	= irq_chip_set_affinity_parent,
->  	.irq_ack		= irq_chip_ack_parent,
->  	.irq_eoi		= irq_chip_eoi_parent,
-> @@ -4096,7 +4165,7 @@ static int hv_pci_restore_msi_msg(struct pci_dev *pdev, void *arg)
->  		irq_data = irq_get_irq_data(entry->irq);
->  		if (WARN_ON_ONCE(!irq_data))
->  			return -EINVAL;
-> -		hv_vmbus_compose_msi_msg(irq_data, &entry->msg);
-> +		hv_compose_msi_msg(irq_data, &entry->msg);
->  	}
->  	return 0;
->  }
-> -- 
-> 2.51.2.vfs.0.1
-> 
+cocci warnings: (new ones prefixed by >>)
+>> arch/x86/hyperv/irqdomain.c:90:2-3: Unneeded semicolon
+
+vim +90 arch/x86/hyperv/irqdomain.c
+
+    72	
+    73	static int hv_map_interrupt(u64 ptid, union hv_device_id device_id, bool level,
+    74				    int cpu, int vector,
+    75				    struct hv_interrupt_entry *ret_entry)
+    76	{
+    77		u64 status;
+    78		int rc, deposit_pgs = 16;		/* don't loop forever */
+    79	
+    80		while (deposit_pgs--) {
+    81			status = hv_map_interrupt_hcall(ptid, device_id, level, cpu,
+    82							vector, ret_entry);
+    83	
+    84			if (hv_result(status) != HV_STATUS_INSUFFICIENT_MEMORY)
+    85				break;
+    86	
+    87			rc = hv_call_deposit_pages(NUMA_NO_NODE, ptid, 1);
+    88			if (rc)
+    89				break;
+  > 90		};
+    91	
+    92		if (!hv_result_success(status))
+    93			hv_status_err(status, "\n");
+    94	
+    95		return hv_result_to_errno(status);
+    96	}
+    97	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
