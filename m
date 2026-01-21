@@ -1,57 +1,90 @@
-Return-Path: <linux-hyperv+bounces-8400-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8401-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GOoxDbA+cGnXXAAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8400-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 03:49:20 +0100
+	id KK3PLVhAcGnXXAAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8401-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 03:56:24 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AA1F5005D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 03:49:19 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CA7D5018C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 03:56:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4A8405AFA2E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 02:44:30 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4B4FCACA046
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jan 2026 02:54:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDEE13570CE;
-	Wed, 21 Jan 2026 02:40:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BFE32C1586;
+	Wed, 21 Jan 2026 02:54:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ecP9vS5P"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A428TEJc"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35F38332EC8;
-	Wed, 21 Jan 2026 02:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927F9271A9A;
+	Wed, 21 Jan 2026 02:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768963248; cv=none; b=tgqBbfzrmHxjV5lGx2kCjMLGQXK8C/Ab0zAX3AjXzN4qfB4s2Zc+mB5kgXKmLjhF0A/2zFfxNPVhd16elHOpL3dm5uHg6EyqXdob+841A1uifw49dQCBu3ajjdfw7Hef3cVOVFWmuX2G2Xh3p5gTlIeEbi9de59+wgtDPvNF62o=
+	t=1768964080; cv=none; b=W2+Ba1AU1IGCKPX1R9em1ef+pz1mwnUYJ69L1C/Wbz5qFa3ZERe7Lwzb+RagWBpyU8KlYG9q3FVKNfeGbbnLb131qiA1P2OvRgVrn8Yr3mz/zxCHWKMrqKyudmNiRTtUVUW5vl3thXsxtPEvb98ND4um3K42x0PaiH7UfH5frBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768963248; c=relaxed/simple;
-	bh=En2HW4+UaKjpZS8Kh7qdMgwX3h09E7xgLtKoyYzyLAc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Do6dQks9YLdNlZsFxq1Hmz94cgEENT8rvPz0aErgwfjhK9ls9w2NIPcvfdNNaB2ufzSay8ZaU7DGuLPa7p+koG99Huv8KALqwA5FTLqU7nnakY1ftSeEVTfkpGoAkPkmqvqm0Ua4YVZMyw5OttsiiIkCXilNupg8Ea9rJxwqK5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ecP9vS5P; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from mrdev.corp.microsoft.com (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 82A4720B7167;
-	Tue, 20 Jan 2026 18:40:46 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 82A4720B7167
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1768963246;
-	bh=CVwJONf59IKX8KA1dnLan/FVVfzrrZSgGi4IehKl2o8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ecP9vS5PNiQ8qSE77OFehPJEAfantY8fFYQgOf+Vl+fb1H+WuT8nM8VTj0UtbrHVu
-	 Z7QvgaZd8sfZ96MzTxE5jxJOyiXu+FGE7Fts6fGTcBDPdhkSyvoB+meBzcBH/eM/pN
-	 /tvfNszGt9s2lEFtXk0+flKA4e5TMFgbw2qUqg+E=
-From: Mukesh R <mrathor@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: wei.liu@kernel.org
-Subject: [PATCH V0] x86/hyperv: Fix compiler warnings in hv_crash.c
-Date: Tue, 20 Jan 2026 18:40:45 -0800
-Message-ID: <20260121024045.3834787-1-mrathor@linux.microsoft.com>
-X-Mailer: git-send-email 2.51.2.vfs.0.1
+	s=arc-20240116; t=1768964080; c=relaxed/simple;
+	bh=TIlXfufaQqj6LTdjbzk1q92qYzxDMCtuVIRH+l5iFZU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=j7UVwGsHXDB2pN4zuK+aetoWhaLFqRM3HwYW7OC+yc0Zwnj6hJdzAXrihDp53TKz/VyrJV2RW+qzH+WsU+mzel/hCkDE33urYlFugQPbmnt4XFUTRo2S10mgfOvFwAvNQzOeA3EZHphgUPn1pxKlwPgP3KJdgoNpPHtMWGUnOQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A428TEJc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF009C16AAE;
+	Wed, 21 Jan 2026 02:54:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768964080;
+	bh=TIlXfufaQqj6LTdjbzk1q92qYzxDMCtuVIRH+l5iFZU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=A428TEJchUatkmEAey+yhDf1jtpU4cdJjHdKGMhIAMKPgPczAikb2496oVHVtixNq
+	 5iCGnH0TChP9PGq1SGnf4vkogSdrJK1DyHqbIH5uBuRIpNSbue+7VCD/irIUe00IqC
+	 lP0FpIcaDi6okYKNJWGvGWapp53FH6FKN65tmR9G1YojFkO/MpYQGQ1dBautXNGgk1
+	 6prR/osTet9ZnIEtXDqGKQixNnTSE0e/8V3BA9S5ibOTpsgL4ExX4sXc7rYafN960W
+	 kdFJ3aH+iZnMqKThqiCQ7muWPGGEodVgqkofKNr801+Io0kYKM6fSLdASctjCcq7BC
+	 +Lf8jZDjia2EQ==
+From: Jakub Kicinski <kuba@kernel.org>
+To: bobbyeshleman@gmail.com
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	sgarzare@redhat.com,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mst@redhat.com,
+	horms@kernel.org,
+	bobbyeshleman@meta.com,
+	corbet@lwn.net,
+	xuanzhuo@linux.alibaba.com,
+	haiyangz@microsoft.com,
+	jasowang@redhat.com,
+	linux-hyperv@vger.kernel.org,
+	pabeni@redhat.com,
+	kys@microsoft.com,
+	vishnu.dasa@broadcom.com,
+	longli@microsoft.com,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	netdev@vger.kernel.org,
+	stefanha@redhat.com,
+	berrange@redhat.com,
+	decui@microsoft.com,
+	bryan-bt.tan@broadcom.com,
+	eperezma@redhat.com,
+	wei.liu@kernel.org,
+	davem@davemloft.net,
+	shuah@kernel.org,
+	bcm-kernel-feedback-list@broadcom.com,
+	edumazet@google.com,
+	virtualization@lists.linux.dev,
+	sargun@sargun.me
+Subject: Re: [net-next,v15,06/12] selftests/vsock: prepare vm management helpers for namespaces
+Date: Tue, 20 Jan 2026 18:54:21 -0800
+Message-ID: <20260121025420.1999992-2-kuba@kernel.org>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260116-vsock-vmtest-v15-6-bbfd1a668548@meta.com>
+References: <20260116-vsock-vmtest-v15-6-bbfd1a668548@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -64,76 +97,87 @@ X-Spamd-Result: default: False [-0.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_POLICY_ALLOW(0.00)[linux.microsoft.com,none];
-	TAGGED_FROM(0.00)[bounces-8400-lists,linux-hyperv=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	ASN(0.00)[asn:7979, ipnet:2605:f480::/32, country:US];
+	TAGGED_FROM(0.00)[bounces-8401-lists,linux-hyperv=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[32];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mrathor@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[kuba@kernel.org,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	TO_DN_NONE(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:mid,linux.microsoft.com:dkim,intel.com:email,dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo]
-X-Rspamd-Queue-Id: 9AA1F5005D
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:url,dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo]
+X-Rspamd-Queue-Id: 2CA7D5018C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Fix two compiler warnings:
-  o smp_ops is only defined if CONFIG_SMP
-  o status is set but not explicitly used.
+In case you need to respin..
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202512301641.FC6OAbGM-lkp@intel.com/
-Signed-off-by: Mukesh R <mrathor@linux.microsoft.com>
+This is an AI-generated review of your patch.
+For local reproduction steps see https://netdev-ai.bots.linux.dev/ai-local.html
 ---
- arch/x86/hyperv/hv_crash.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+selftests/vsock: prepare vm management helpers for namespaces
 
-diff --git a/arch/x86/hyperv/hv_crash.c b/arch/x86/hyperv/hv_crash.c
-index c0e22921ace1..82915b22ceae 100644
---- a/arch/x86/hyperv/hv_crash.c
-+++ b/arch/x86/hyperv/hv_crash.c
-@@ -279,7 +279,6 @@ static void hv_notify_prepare_hyp(void)
- static noinline __noclone void crash_nmi_callback(struct pt_regs *regs)
- {
- 	struct hv_input_disable_hyp_ex *input;
--	u64 status;
- 	int msecs = 1000, ccpu = smp_processor_id();
- 
- 	if (ccpu == 0) {
-@@ -313,7 +312,7 @@ static noinline __noclone void crash_nmi_callback(struct pt_regs *regs)
- 	input->rip = trampoline_pa;
- 	input->arg = devirt_arg;
- 
--	status = hv_do_hypercall(HVCALL_DISABLE_HYP_EX, input, NULL);
-+	hv_do_hypercall(HVCALL_DISABLE_HYP_EX, input, NULL);
- 
- 	hv_panic_timeout_reboot();
- }
-@@ -628,8 +627,9 @@ void hv_root_crash_init(void)
- 	if (rc)
- 		goto err_out;
- 
-+#ifdef CONFIG_SMP
- 	smp_ops.crash_stop_other_cpus = hv_crash_stop_other_cpus;
--
-+#endif
- 	crash_kexec_post_notifiers = true;
- 	hv_crash_enabled = true;
- 	pr_info("Hyper-V: both linux and hypervisor kdump support enabled\n");
--- 
-2.51.2.vfs.0.1
+This commit adds namespace support to VM management helpers and wrapper
+functions, requiring callers to explicitly pass "init_ns" for the init
+namespace. The commit message states "No functional changes for existing
+tests. All have been updated to pass 'init_ns' explicitly."
 
+> diff --git a/tools/testing/selftests/vsock/vmtest.sh b/tools/testing/selftests/vsock/vmtest.sh
+> index c2bdc293b94c..1d03acb62347 100755
+> --- a/tools/testing/selftests/vsock/vmtest.sh
+> +++ b/tools/testing/selftests/vsock/vmtest.sh
+> @@ -135,7 +135,18 @@ del_namespaces() {
+>  }
+>
+>  vm_ssh() {
+> -	ssh -q -o UserKnownHostsFile=/dev/null -p ${SSH_HOST_PORT} localhost "$@"
+> +	local ns_exec
+> +
+> +	if [[ "${1}" == init_ns ]]; then
+> +		ns_exec=""
+> +	else
+> +		ns_exec="ip netns exec ${1}"
+> +	fi
+> +
+> +	shift
+> +
+> +	${ns_exec} ssh -q -o UserKnownHostsFile=/dev/null -p "${SSH_HOST_PORT}" localhost "$@"
+> +
+>  	return $?
+>  }
+
+The vm_ssh() function now expects a namespace as its first argument, but
+run_shared_vm_test() still calls vm_ssh without this parameter:
+
+    vm_oops_cnt_before=$(vm_ssh -- dmesg | grep -c -i 'Oops')
+    vm_warn_cnt_before=$(vm_ssh -- dmesg --level=warn | grep -c -i 'vsock')
+    vm_oops_cnt_after=$(vm_ssh -- dmesg | grep -i 'Oops' | wc -l)
+    vm_warn_cnt_after=$(vm_ssh -- dmesg --level=warn | grep -c -i 'vsock')
+
+When called as "vm_ssh -- dmesg", the "--" is interpreted as the namespace
+argument. Since "--" does not equal "init_ns", the function sets
+ns_exec="ip netns exec --" which is invalid. The shift then consumes "--"
+and the command becomes "ip netns exec -- ssh ... dmesg" which will fail.
+
+Interestingly, the v9 version of this patch on lore correctly updated these
+calls to pass "init_ns", but this change appears to have been lost between
+v9 and v15. The fix for this regression is present later in the series in
+commit 3ae984505e00 ("selftests/vsock: add vm_dmesg_{warn,oops}_count()
+helpers").
+
+[ ... ]
 
