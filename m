@@ -1,62 +1,68 @@
-Return-Path: <linux-hyperv+bounces-8496-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8497-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MPrgEjX2c2nG0QAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8496-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Jan 2026 23:29:09 +0100
+	id YCoGLrv2c2nG0QAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8497-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Jan 2026 23:31:23 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D94F7B281
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Jan 2026 23:29:08 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 308EE7B2F2
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Jan 2026 23:31:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 94AB53003729
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Jan 2026 22:29:04 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 21428300F1A6
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Jan 2026 22:31:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 553BF2C0F7C;
-	Fri, 23 Jan 2026 22:29:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6BED27B327;
+	Fri, 23 Jan 2026 22:31:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Jt4jCLBM"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bhUcZ/dX"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 675AB19CD06;
-	Fri, 23 Jan 2026 22:29:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99E2626FA50;
+	Fri, 23 Jan 2026 22:31:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769207342; cv=none; b=QKYYLpHIyzQX/sR6QCcgPN4OCVtaeCyZX3Wtid8dbqilrn3ko+J/s0nTZK/87zdu490G2iCQHiNdDB6u7BcriaUZ6wWMQYa6TMf1hDdmki3GDHQJ4X6b3FTThNl/KZ2W2SSES0KnXFBcu6kkBcDB3F2gtDX2RAxIOJt0KjInTqk=
+	t=1769207480; cv=none; b=tu6jQotquBvZxPPBrLV6UjsDpCQu6/5vbPXD9ovsDBPrQ3ej94f2s7WIwrdag/+3tPzIof9aLUSyKId92Y4XpxmLwHB7iSWSoX5U6ZKFNxSFSAKAD+8snVfvYukcopXLdyt6LsP3nO1W6EM0passQN8kXdu1huVxbdXzYRn/egA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769207342; c=relaxed/simple;
-	bh=IZ/AhkAGS0JEWOkQl5GiGZu8STvu4uYVzmP5vOQca7A=;
+	s=arc-20240116; t=1769207480; c=relaxed/simple;
+	bh=iT+w7zpJJTJw7jdAksAxX4YGW6KRCRxmpH71j6Kxtwc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e6gA4MTVtDl0WDXTEFd2MvZsVWn+nM7DouX0jmT8kfx+I83WWYNpaQSdXC8VoT84K/8rjNofXfCNmEkTUnqBvr2oTiKyHsdkhBZG0cx78qkoi0HMOgz+0Py9gj22fvQr1Pf5RB82G42sHYWguwz0miRNd1BNwD7+Hr3ko90iHao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Jt4jCLBM; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=IT4b8V7bEg4PMnROPmS53MrXU5ZYR0KWMBSdlm0MACEZpLOqHdUJOqgUGNnQapqZe+iCCg0dKtewQjoFnj1lu/7+02xSPNGL/Mw3cqeOWpbJU3XqJ/yucxqeihiO5LOoO6GYhrhBIPQnBHYXHv+1Koau1V9Ua/Kyfdkj/FVDYio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bhUcZ/dX; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii.localdomain (unknown [20.236.11.102])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1D4C020B7167;
-	Fri, 23 Jan 2026 14:28:59 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1D4C020B7167
+	by linux.microsoft.com (Postfix) with ESMTPSA id 6945620B7167;
+	Fri, 23 Jan 2026 14:31:17 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6945620B7167
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1769207339;
-	bh=Arz4F3ePeFDXPXzZ3P9yqBIuB4G93S0bsSwSlKDt/cg=;
+	s=default; t=1769207477;
+	bh=S31Rj5XGiNrVlDYZerbLrkgmCrtxOIUNFcJFDcfQedc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Jt4jCLBMkXnNxAcA5XKETTHh/7ae6vUsPNtDNJcw8JDswqacWSPNDnrKd+G9v5JTH
-	 e2clffxIz4Y6R7DU7AvdUIkE+F4pMSYcJ7yq1q2QM+bst+exkLK3VChUZ4iBs9ALXF
-	 ZN4MpQC9cmsOfiVLAmFkjGg/fOTygrB+rFptX978=
-Date: Fri, 23 Jan 2026 14:28:57 -0800
+	b=bhUcZ/dXVCsbFB47hMZln15IKjaCoq8hn5Xs33mmNklwBBZEJEua7GCjUr67wkrXp
+	 ikDGRI7Lfoa7SOCIfi2M11LpbLVgh1DJTOpJw1hXJ7+ew5WI6fkSXK/EMLSm+sdynW
+	 6iq+BmpgTvm483eI2BRjVf5xGtrG2Qml2VY/SXss=
+Date: Fri, 23 Jan 2026 14:31:15 -0800
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
-	wei.liu@kernel.org, decui@microsoft.com, longli@microsoft.com,
-	prapal@linux.microsoft.com, mrathor@linux.microsoft.com,
-	paekkaladevi@linux.microsoft.com
+Cc: Michael Kelley <mhklinux@outlook.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"longli@microsoft.com" <longli@microsoft.com>,
+	"prapal@linux.microsoft.com" <prapal@linux.microsoft.com>,
+	"mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
+	"paekkaladevi@linux.microsoft.com" <paekkaladevi@linux.microsoft.com>
 Subject: Re: [PATCH v4 6/7] mshv: Add data for printing stats page counters
-Message-ID: <aXP2KTM0aUOI76lu@skinsburskii.localdomain>
+Message-ID: <aXP2s7V7u6aScDHv@skinsburskii.localdomain>
 References: <20260121214623.76374-1-nunodasneves@linux.microsoft.com>
  <20260121214623.76374-7-nunodasneves@linux.microsoft.com>
- <aXF61f8meLJr9T0z@skinsburskii.localdomain>
- <3ecdc642-75de-4622-a010-dc6edc78137c@linux.microsoft.com>
+ <SN6PR02MB41572B2CC3494BE6BC737424D494A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <2ea6f13f-ac2e-4ed7-9f2c-6c079cb25b85@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -65,45 +71,85 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3ecdc642-75de-4622-a010-dc6edc78137c@linux.microsoft.com>
+In-Reply-To: <2ea6f13f-ac2e-4ed7-9f2c-6c079cb25b85@linux.microsoft.com>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8496-lists,linux-hyperv=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[outlook.com,vger.kernel.org,microsoft.com,kernel.org,linux.microsoft.com];
+	TAGGED_FROM(0.00)[bounces-8497-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,outlook.com,microsoft.com,kernel.org,linux.microsoft.com];
-	RCPT_COUNT_TWELVE(0.00)[12];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.980];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.980];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: 3D94F7B281
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 308EE7B2F2
 X-Rspamd-Action: no action
 
-On Thu, Jan 22, 2026 at 10:21:17AM -0800, Nuno Das Neves wrote:
-> On 1/21/2026 5:18 PM, Stanislav Kinsburskii wrote:
-> > On Wed, Jan 21, 2026 at 01:46:22PM -0800, Nuno Das Neves wrote:
+On Fri, Jan 23, 2026 at 11:04:52AM -0800, Nuno Das Neves wrote:
+> On 1/23/2026 9:09 AM, Michael Kelley wrote:
+> > From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Wednesday, January 21, 2026 1:46 PM
+> >>
 > >> Introduce hv_counters.c, containing static data corresponding to
 > >> HV_*_COUNTER enums in the hypervisor source. Defining the enum
 > >> members as an array instead makes more sense, since it will be
 > >> iterated over to print counter information to debugfs.
+> > 
+> > I would have expected the filename to be mshv_counters.c, so that the association
+> > with the MS hypervisor is clear. And the file is inextricably linked to mshv_debugfs.c,
+> > which of course has the "mshv_" prefix. Or is there some thinking I'm not aware of
+> > for using the "hv_" prefix?
+> > 
+> Good question - I originally thought of using hv_ because the definitions inside are
+> part of the hypervisor ABI, and hence also have the hv_ prefix.
+> 
+> However you have a good point, and I'm not opposed to changing it.
+> 
+> Maybe to just be super explicit: "mshv_debugfs_counters.c" ?
+> 
+
+This is reudnant from my POV.
+If these counters are only used by mshv_debugfs.c, then should rather be
+a part of this file.
+What was the reason to move them elsewhere?
+
+Thanks,
+Stanislav
+
+> > Also, I see in Patch 7 of this series that hv_counters.c is #included as a .c file
+> > in mshv_debugfs.c. Is there a reason for doing the #include instead of adding
+> > hv_counters.c to the Makefile and building it on its own? You would need to
+> > add a handful of extern statements to mshv_root.h so that the tables are
+> > referenceable from mshv_debugfs.c. But that would seem to be the more
+> > normal way of doing things.  #including a .c file is unusual.
+> > 
+> 
+> Yes...I thought I could avoid noise in mshv_root.h and the Makefile, since it's
+> only relevant for mshv_debugfs.c. However I could see this file (whether as .c or
+> .h) being misused and included elsewhere inadvertantly, which would duplicate the
+> tables, so maybe doing it the normal way is a better idea, even if mshv_debugfs.c
+> is likely the only user.
+> 
+> > See one more comment on the last line of this patch ...
+> > 
 > >>
 > >> Include hypervisor, logical processor, partition, and virtual
 > >> processor counters.
@@ -133,84 +179,6 @@ On Thu, Jan 22, 2026 at 10:21:17AM -0800, Nuno Das Neves wrote:
 > >> +	char *name;
 > >> +	int idx;
 > >> +};
-> > 
-> > This structure looks redundant to me mostly because of the "idx".
-> > It looks what you need here is an arry of pointers to strings, like
-> > below:
-> > 
-> > static const char *hv_hypervisor_counters[] = {
-> >         NULL, /* 0 is unused */
-> > 	"HvLogicalProcessors",
-> > 	"HvPartitions",
-> > 	"HvTotalPages",
-> > 	"HvVirtualProcessors",
-> > 	"HvMonitoredNotifications",
-> > 	"HvModernStandbyEntries",
-> > 	"HvPlatformIdleTransitions",
-> > 	"HvHypervisorStartupCost",
-> > 	NULL, /* 9 is unused */
-> > 	"HvIOSpacePages",
-> > 	...
-> > };
-> > 
-> > which can be iterated like this:
-> > 
-> > for (idx = 0; idx < ARRAY_SIZE(hv_hypervisor_counters); idx++) {
-> >     const char *name = hv_hypervisor_counters[idx];
-> >     if (!name)
-> > 	continue;
-> >     /* print */
-> >     ...
-> > }
-> > 
-> > What do you think?
-> 
-> It's an elegant option, given the values are almost uniformly
-> tightly packed. It also saves a fair bit of space - around 2.5Kb.
-> 
-> For my taste, I do like being able to visually verify the
-> correctness of any given member. That way whenever I look at it, I
-> don't have to blindly trust that the list was previously set up
-> correctly, or count the lines to check if a given value is correct.
-> Not a big deal, but it does introduce some friction.
-> 
-> We could also use a designated initializer list:
-> 
-> static const char *hv_hypervisor_counters[] = {
-> 	[1] = "HvLogicalProcessors",
-> 	[2] = "HvPartitions",
-> 	[3] = "HvTotalPages",
-> 	[4] = "HvVirtualProcessors",
-> 	[5] = "HvMonitoredNotifications",
-> 	[6] = "HvModernStandbyEntries",
-> 	[7] = "HvPlatformIdleTransitions",
-> 	[8] = "HvHypervisorStartupCost",
-> 
-> 	[10] = "HvIOSpacePages",
-> 	...
-> };
-> 
-> The indices are explicit, so it's easy to visually verify that any
-> particular part of the list is correct. It's functionally identical
-> to your approach, so it saves the same amount of space, and the
-> explicit NULLs are unnecessary so it's more straightforward to
-> transform from the Windows source in case of any gaps that are
-> harder to notice later on in the list.
-> 
-> How does that sound?
-> 
-
-Fine by me.
-
-Thanks,
-Stanislav
-
-> Nuno
-> 
-> > 
-> > Thanks,
-> > Stanislav
-> > 
 > >> +
 > >> +/* HV_HYPERVISOR_COUNTER */
 > >> +static struct hv_counter_entry hv_hypervisor_counters[] = {
@@ -686,6 +654,19 @@ Stanislav
 > >> +#endif
 > >> +};
 > >> +
-> >> -- 
-> >> 2.34.1
+> > 
+> > The patch puts a blank line at the end of the new hv_counters.c file. When using
+> > "git am" to apply this patch, I get this warning:
+> > 
+> > .git/rebase-apply/patch:499: new blank line at EOF.
+> > +
+> > warning: 1 line adds whitespace errors.
+> > 
+> > Line 499 is that blank line at the end of the new file. If I modify the patch to remove
+> > the adding of the blank line, "git am" will apply the patch with no warning. This
+> > should probably be fixed.
+> > 
+> Thanks for pointing that out, I'll fix it!
+> 
+> > Michael
 
