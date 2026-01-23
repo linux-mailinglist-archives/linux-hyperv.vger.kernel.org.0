@@ -1,227 +1,140 @@
-Return-Path: <linux-hyperv+bounces-8479-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8480-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4KyEJVbRcmnKpgAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8479-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Jan 2026 02:39:34 +0100
+	id cLTuD/3XcmmqqAAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8480-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Jan 2026 03:07:57 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 928916F2E3
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Jan 2026 02:39:33 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDB7F6F72C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Jan 2026 03:07:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 5D217301F23C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Jan 2026 01:36:00 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 95F283016838
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Jan 2026 02:07:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9877338910;
-	Fri, 23 Jan 2026 01:35:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58C5E2E54DE;
+	Fri, 23 Jan 2026 02:07:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iBFDGT54"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ee97lJSo"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9426163;
-	Fri, 23 Jan 2026 01:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D433570A6;
+	Fri, 23 Jan 2026 02:07:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769132156; cv=none; b=MPZefNwMT2wBvYrDaK9pJ2tkZJ+OYB66NBwN83dhKPbYQ4RksLD3wKIYv3yVVWPNx3PPzRrdmThEW/OF/FsfBhX1irFLIWSm4Cnez+P4aNUnSdXhxB1L5mH1POWN8x8gjG5wS7TKjjV+hZrGX+j+TKDj7vP8sCN3wTrc5/+ppkA=
+	t=1769134069; cv=none; b=JNpFLE94E2NpXPIDZrGDjqxupIFOpsCgKyx2gxVDCBHWSGnxTjoxnREgYcpl7HY6kpJeu+94wVXl34r8t6ggTNHzVqhqv87d/sxy7qP7KEB4HmCkls4w6EyOAe/3wbTqKeME+jR3d5J8twN1KK+FSmRYfmR956bXQKJGRW6/QSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769132156; c=relaxed/simple;
-	bh=nNcTBApfRjCfBuW+Cz8XEj3WoIA/I6Xd2tXSHbDP19E=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WBlc/WpCm+UMyjDn8o6ysuth3vV1NamofX8wgRzyWguViJwFUoGgG/sVG9+7c0L/umYhkfRw//diIAQRjPRfiH5hlKM06DxccReBbTSBRpZhjnQif2DTCWGl/9+XjmyRyQfrPRRc/twXfd7XABoiEU7QV2Ae0QkL25DkdGUNxsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=iBFDGT54; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 45E8D20B7196;
-	Thu, 22 Jan 2026 17:35:34 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 45E8D20B7196
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1769132134;
-	bh=hOltQxHdeY9K7U1HdsyL5wctDElwKdfqcvWb9XBjfJ4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=iBFDGT54dN5Msyj0teUw1OK0q7kTkNB6OgavSRcRMTd9G1+RoCQ8hG+hwjQzwslr5
-	 ze2bFZ3f3qpuYvVl80HIYZQj/POoYLifpp+Y5VhaVIvxUo9aTRN1GmLjFP/5AYpgCo
-	 zgcpVJsDXYsNuCX9tvV80U96S8juNo2Judefwo7c=
-Subject: [PATCH 4/4] mshv: Handle insufficient root memory hypervisor statuses
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, longli@microsoft.com
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Fri, 23 Jan 2026 01:35:34 +0000
-Message-ID: 
- <176913213416.89165.12097472046071061525.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-In-Reply-To: 
- <176913164914.89165.5792608454600292463.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-References: 
- <176913164914.89165.5792608454600292463.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-User-Agent: StGit/0.19
+	s=arc-20240116; t=1769134069; c=relaxed/simple;
+	bh=ojY+a6IfkT840fPN5tM8nzTECaysVirE3PfMTI1+SuM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eyiod9JaYIMaFTFQsIFp4gEsXrGy9c3GC6LN7Xz3ZdRL0CzoTBQFwGtLz7R33cbdOfW4lHzADzgtXIM7l/uDYYTR2a0J1cBRCBOmRi/B8ZGTIcNIYJMDSItWpcCqZOBwNDX0Y7X7uf+puPw4gwqRGACDWrZNXORCveTVr6/RC+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ee97lJSo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D625FC116C6;
+	Fri, 23 Jan 2026 02:07:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769134067;
+	bh=ojY+a6IfkT840fPN5tM8nzTECaysVirE3PfMTI1+SuM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ee97lJSoS7sUWr1c5RupjKPQxlSGiZTywM5czO+bqyqLr1zUHdT/J7u+gujqQjP+X
+	 apZZ5jgm/FcJ/9KFIaWKdZKA+rN/Up/of9JGYsLk/ECdG0qzhRXyYTCt5C0de2rEZa
+	 G+Iy5XdtBa0UHV/XwFPleXcv6fD/LdxFAnfYbX7sqEGlHAN6ugd+lphdlHyc6iV3Hs
+	 EmIm7lEb3233ejBOafMBTuw/QJu3nDigB4BOL6biA8vJoyC2Zc/HeZsYIUw/gMNMx1
+	 O6Jys3frxanSbQAf1dS2iIXmGghyrFcH9MoF0/DRcw7eHst/m6fQQ4PKPF1lJBGX13
+	 IDP2v2MA1wJ1g==
+Date: Thu, 22 Jan 2026 18:07:45 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, longli@microsoft.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ leon@kernel.org, kotaranov@microsoft.com, shradhagupta@linux.microsoft.com,
+ yury.norov@gmail.com, dipayanroy@linux.microsoft.com,
+ shirazsaleem@microsoft.com, ssengar@linux.microsoft.com,
+ gargaditya@linux.microsoft.com, linux-hyperv@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2] net: mana: Improve diagnostic logging for
+ better debuggability
+Message-ID: <20260122180745.3b5607cf@kernel.org>
+In-Reply-To: <aXJhzi58GqLKtui4@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20260121065655.18249-1-ernis@linux.microsoft.com>
+	<20260121201412.179f9b37@kernel.org>
+	<aXJhzi58GqLKtui4@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_FROM(0.00)[bounces-8479-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-8480-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2600:3c15:e001:75::12fc:5321:from];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,gmail.com,vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[21];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_NONE(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.989];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	NEURAL_HAM(-0.00)[-0.998];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[13.77.154.182:received,4.155.116.186:received,100.90.174.1:received];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linux.microsoft.com:dkim,skinsburskii-cloud-desktop.internal.cloudapp.net:mid]
-X-Rspamd-Queue-Id: 928916F2E3
+	FROM_NEQ_ENVFROM(0.00)[kuba@kernel.org,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: DDB7F6F72C
 X-Rspamd-Action: no action
 
-When creating guest partition objects, the hypervisor may fail to
-allocate root partition pages and return an insufficient memory status.
-In this case, deposit memory using the root partition ID instead.
+On Thu, 22 Jan 2026 09:43:42 -0800 Erni Sri Satya Vennela wrote:
+> On Wed, Jan 21, 2026 at 08:14:12PM -0800, Jakub Kicinski wrote:
+> > On Tue, 20 Jan 2026 22:56:55 -0800 Erni Sri Satya Vennela wrote:  
+> > > Enhance MANA driver logging to provide better visibility into
+> > > hardware configuration and error states during driver initialization
+> > > and runtime operations.  
+> >   
+> > > +	dev_info(gc->dev, "Max Resources: msix_usable=%u max_queues=%u\n",
+> > > +		 gc->num_msix_usable, gc->max_num_queues);  
+> >   
+> > > +	dev_info(dev, "Device Config: max_vports=%u adapter_mtu=%u bm_hostmode=%u\n",
+> > > +		 *max_num_vports, gc->adapter_mtu, *bm_hostmode);  
+> > 
+> > IIUC in networking we try to follow the mantra that if the system is
+> > functioning correctly there should be no logs. You can expose the debug
+> > info via ethtool, devlink, debugfs etc. Take your pick.  
+> 
+> We discussed this internally and noted that customers often cannot
+> reliably reproduce the VM issue. In such cases, the only evidence
+> available is the dmesg logs captured during the incident. Asking them to
+> re-enable debug options later is not practical, since the problem may
+> not occur again. Similarly, exposing the information via ethtool,
+> devlink, or debugfs is less effective because the data is transient and
+> lost after a reboot. As these messages are printed only once during
+> initialization, and not repeated during runtime or driver load/unload,
+> we decided to keep them at info level to aid troubleshooting without
+> adding noise.
 
-Note: This error should never occur in a guest of L1VH partition context.
-
-Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
----
- drivers/hv/hv_common.c      |    2 +
- drivers/hv/hv_proc.c        |   14 ++++++++++
- include/hyperv/hvgdk_mini.h |   58 ++++++++++++++++++++++---------------------
- 3 files changed, 46 insertions(+), 28 deletions(-)
-
-diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-index c7f63c9de503..cab0d1733607 100644
---- a/drivers/hv/hv_common.c
-+++ b/drivers/hv/hv_common.c
-@@ -792,6 +792,8 @@ static const struct hv_status_info hv_status_infos[] = {
- 	_STATUS_INFO(HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE,	-EIO),
- 	_STATUS_INFO(HV_STATUS_INSUFFICIENT_MEMORY,		-ENOMEM),
- 	_STATUS_INFO(HV_STATUS_INSUFFICIENT_CONTIGUOUS_MEMORY,	-ENOMEM),
-+	_STATUS_INFO(HV_STATUS_INSUFFICIENT_ROOT_MEMORY,	-ENOMEM),
-+	_STATUS_INFO(HV_STATUS_INSUFFICIENT_CONTIGUOUS_ROOT_MEMORY,	-ENOMEM),
- 	_STATUS_INFO(HV_STATUS_INVALID_PARTITION_ID,		-EINVAL),
- 	_STATUS_INFO(HV_STATUS_INVALID_VP_INDEX,		-EINVAL),
- 	_STATUS_INFO(HV_STATUS_NOT_FOUND,			-EIO),
-diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
-index ac21e16f9348..89870c1b0087 100644
---- a/drivers/hv/hv_proc.c
-+++ b/drivers/hv/hv_proc.c
-@@ -122,6 +122,18 @@ int hv_deposit_memory_node(int node, u64 partition_id,
- 	case HV_STATUS_INSUFFICIENT_CONTIGUOUS_MEMORY:
- 		num_pages = HV_MAX_CONTIGUOUS_ALLOCATION_PAGES;
- 		break;
-+
-+	case HV_STATUS_INSUFFICIENT_CONTIGUOUS_ROOT_MEMORY:
-+		num_pages = HV_MAX_CONTIGUOUS_ALLOCATION_PAGES;
-+		fallthrough;
-+	case HV_STATUS_INSUFFICIENT_ROOT_MEMORY:
-+		if (!hv_root_partition()) {
-+			hv_status_err(hv_status, "Unexpected root memory deposit\n");
-+			return -ENOMEM;
-+		}
-+		partition_id = HV_PARTITION_ID_SELF;
-+		break;
-+
- 	default:
- 		hv_status_err(hv_status, "Unexpected!\n");
- 		return -ENOMEM;
-@@ -135,6 +147,8 @@ bool hv_result_oom(u64 status)
- 	switch (hv_result(status)) {
- 	case HV_STATUS_INSUFFICIENT_MEMORY:
- 	case HV_STATUS_INSUFFICIENT_CONTIGUOUS_MEMORY:
-+	case HV_STATUS_INSUFFICIENT_ROOT_MEMORY:
-+	case HV_STATUS_INSUFFICIENT_CONTIGUOUS_ROOT_MEMORY:
- 		return true;
- 	}
- 	return false;
-diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
-index 70f22ef44948..5b74a857ef43 100644
---- a/include/hyperv/hvgdk_mini.h
-+++ b/include/hyperv/hvgdk_mini.h
-@@ -14,34 +14,36 @@ struct hv_u128 {
- } __packed;
- 
- /* NOTE: when adding below, update hv_result_to_string() */
--#define HV_STATUS_SUCCESS			    0x0
--#define HV_STATUS_INVALID_HYPERCALL_CODE	    0x2
--#define HV_STATUS_INVALID_HYPERCALL_INPUT	    0x3
--#define HV_STATUS_INVALID_ALIGNMENT		    0x4
--#define HV_STATUS_INVALID_PARAMETER		    0x5
--#define HV_STATUS_ACCESS_DENIED			    0x6
--#define HV_STATUS_INVALID_PARTITION_STATE	    0x7
--#define HV_STATUS_OPERATION_DENIED		    0x8
--#define HV_STATUS_UNKNOWN_PROPERTY		    0x9
--#define HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE	    0xA
--#define HV_STATUS_INSUFFICIENT_MEMORY		    0xB
--#define HV_STATUS_INVALID_PARTITION_ID		    0xD
--#define HV_STATUS_INVALID_VP_INDEX		    0xE
--#define HV_STATUS_NOT_FOUND			    0x10
--#define HV_STATUS_INVALID_PORT_ID		    0x11
--#define HV_STATUS_INVALID_CONNECTION_ID		    0x12
--#define HV_STATUS_INSUFFICIENT_BUFFERS		    0x13
--#define HV_STATUS_NOT_ACKNOWLEDGED		    0x14
--#define HV_STATUS_INVALID_VP_STATE		    0x15
--#define HV_STATUS_NO_RESOURCES			    0x1D
--#define HV_STATUS_PROCESSOR_FEATURE_NOT_SUPPORTED   0x20
--#define HV_STATUS_INVALID_LP_INDEX		    0x41
--#define HV_STATUS_INVALID_REGISTER_VALUE	    0x50
--#define HV_STATUS_OPERATION_FAILED		    0x71
--#define HV_STATUS_INSUFFICIENT_CONTIGUOUS_MEMORY    0x75
--#define HV_STATUS_TIME_OUT			    0x78
--#define HV_STATUS_CALL_PENDING			    0x79
--#define HV_STATUS_VTL_ALREADY_ENABLED		    0x86
-+#define HV_STATUS_SUCCESS				0x0
-+#define HV_STATUS_INVALID_HYPERCALL_CODE		0x2
-+#define HV_STATUS_INVALID_HYPERCALL_INPUT		0x3
-+#define HV_STATUS_INVALID_ALIGNMENT			0x4
-+#define HV_STATUS_INVALID_PARAMETER			0x5
-+#define HV_STATUS_ACCESS_DENIED				0x6
-+#define HV_STATUS_INVALID_PARTITION_STATE		0x7
-+#define HV_STATUS_OPERATION_DENIED			0x8
-+#define HV_STATUS_UNKNOWN_PROPERTY			0x9
-+#define HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE		0xA
-+#define HV_STATUS_INSUFFICIENT_MEMORY			0xB
-+#define HV_STATUS_INVALID_PARTITION_ID			0xD
-+#define HV_STATUS_INVALID_VP_INDEX			0xE
-+#define HV_STATUS_NOT_FOUND				0x10
-+#define HV_STATUS_INVALID_PORT_ID			0x11
-+#define HV_STATUS_INVALID_CONNECTION_ID			0x12
-+#define HV_STATUS_INSUFFICIENT_BUFFERS			0x13
-+#define HV_STATUS_NOT_ACKNOWLEDGED			0x14
-+#define HV_STATUS_INVALID_VP_STATE			0x15
-+#define HV_STATUS_NO_RESOURCES				0x1D
-+#define HV_STATUS_PROCESSOR_FEATURE_NOT_SUPPORTED	0x20
-+#define HV_STATUS_INVALID_LP_INDEX			0x41
-+#define HV_STATUS_INVALID_REGISTER_VALUE		0x50
-+#define HV_STATUS_OPERATION_FAILED			0x71
-+#define HV_STATUS_INSUFFICIENT_ROOT_MEMORY		0x73
-+#define HV_STATUS_INSUFFICIENT_CONTIGUOUS_MEMORY	0x75
-+#define HV_STATUS_TIME_OUT				0x78
-+#define HV_STATUS_CALL_PENDING				0x79
-+#define HV_STATUS_INSUFFICIENT_CONTIGUOUS_ROOT_MEMORY	0x83
-+#define HV_STATUS_VTL_ALREADY_ENABLED			0x86
- 
- /*
-  * The Hyper-V TimeRefCount register and the TSC
-
-
+You will have to build proper support tooling like every single vendor
+before you. Presumably you can also log from the hypervisor side which
+makes your life so much easier than supporting real HW. Yet, real
+NIC don't spew random trash to the logs all the time. SMH. Respectfully,
+next time y'all "discuss things internally" start with the question of
+what makes your case special :|
 
