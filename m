@@ -1,50 +1,50 @@
-Return-Path: <linux-hyperv+bounces-8513-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8514-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AIG9ETIsdGkV2wAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8513-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Jan 2026 03:19:30 +0100
+	id mFueBB4udGl92wAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8514-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Jan 2026 03:27:42 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD0B07C345
-	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Jan 2026 03:19:29 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 694107C387
+	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Jan 2026 03:27:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BAB243019536
-	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Jan 2026 02:19:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3E9103019920
+	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Jan 2026 02:27:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EC1221C9F9;
-	Sat, 24 Jan 2026 02:19:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E577720B7ED;
+	Sat, 24 Jan 2026 02:27:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="pbJg5wFr"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mm3uS6ln"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDEE326AC3;
-	Sat, 24 Jan 2026 02:19:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AD4D2AE8D;
+	Sat, 24 Jan 2026 02:27:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769221159; cv=none; b=Oy/BujwUzUkvBKfi3Xq5BaMzMVyhpc8nnSvJM5Fka/5XPoRxPxidnRWEQJ9vZ2InaWQQ4g9jXjEI0DZ/2eymS004ZB/MHtBj4fjH7SCgrE/qt68GlB0uyYINyWs1UqEM57DBbMYqKXYOiyfcCqX4wFYZZOJqIy5k6Phe2f8ScYU=
+	t=1769221657; cv=none; b=SlaorXOii+z91GnC+2GEAIpT6B6C5btcMtDQnuardEP9iLfLsirugVcCfB7+VfWbU34wGKR83nD2jbQJFdYfdn4NW/PMlBY1HHUfyfDZxd1NkPUXuAWsP1o3WMTPuP4WHYTKy7vFTqVn3vAyLtZPu98gSBKFiKpNXkOg1Divyas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769221159; c=relaxed/simple;
-	bh=gHblcHf8toO1qzWYI2BjHRzI89JzqJYRmhYadFw5CyY=;
+	s=arc-20240116; t=1769221657; c=relaxed/simple;
+	bh=6QoxWTLvgZMqmlC876KlJ3u6SCCBvsx0O80CrSJNRg0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dTKL7OMhyT8Qtu6tTaaheGPq1YtwS5Az/A9HNt1spawL7f+xWadf+Tjhody0fvdLwcVlTflrB9clB4x0yzxZ85EGCLj69cMjlR0EgX7Mwns7oq5NASuDDKXlywDl/zazRY6yLmoy959PRPgFWUn9rBQ1khSbPPkYvfVjZ5Dpw9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=pbJg5wFr; arc=none smtp.client-ip=13.77.154.182
+	 In-Reply-To:Content-Type; b=ilrYMZOaWomTnjrtrJ5AEg+QHsZVYERmPDQSItpRFgtY1AFneltJWURfzjhRck2/CkAn9Wg2n/SjTrKyjWcD5v1rONQ2IqRLLP9OFWGLxx6v0iTj0iKOgwO5yrT1HoLtxO/FmAoPPJ5ZCAL45SNroj8Wid7wy74dMsezR4N2YX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=mm3uS6ln; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.75.32.59] (unknown [40.78.12.246])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 624B020B716A;
-	Fri, 23 Jan 2026 18:19:16 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 624B020B716A
+Received: from [100.75.32.59] (unknown [40.78.13.147])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 238F120B7167;
+	Fri, 23 Jan 2026 18:27:35 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 238F120B7167
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1769221157;
-	bh=Tx1igJAT4Nfi9ptBN0NFzftBMJu0gD+njaZnwR5n+0U=;
+	s=default; t=1769221655;
+	bh=kCVqDvHy5B6w0DimA3jf1nqis+n/ymqDPTFfWJQ9xCQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pbJg5wFreEU4KxrvvBIyzRVnVFk2Go0V2FCcHP1MgnTMxdCdpQ4voBsWg1nxrCkJ/
-	 F+Cj6PKOYaBFFghWnevVVx+Jo/FYmob1L9Q9wl4H8bDsVbQV8NsyiKZInIXufMq77j
-	 wQhWk7Fjbw+a0KBpJM1P36tBysMVZ6vfFPXQ34jo=
-Message-ID: <45e7a4c0-f1d8-b8b4-8c03-56d06845323b@linux.microsoft.com>
-Date: Fri, 23 Jan 2026 18:19:15 -0800
+	b=mm3uS6lnYTE7qJBLr9zU/W/yLV8ymPsdbCUmrntTDqIEQnaCgtahGfq6XhrFvBXLb
+	 NdvnxrCtd4vngwf37xU01YelLuRbT3RZ7JhQvpfoZueaI4h3cScWInpsmJZbzOoNE7
+	 1ryZR0dNAUUaomPkj6zTA1NLy2Korhz2Ht/j9OCI=
+Message-ID: <8300a3b5-873c-4911-689f-cd3ab2d9d7e4@linux.microsoft.com>
+Date: Fri, 23 Jan 2026 18:27:34 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -53,9 +53,9 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.13.1
-Subject: Re: [PATCH v0 15/15] mshv: Populate mmio mappings for PCI passthru
+Subject: Re: [PATCH v0 00/15] PCI passthru on Hyper-V (Part I)
 Content-Language: en-US
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Jacob Pan <jacob.pan@linux.microsoft.com>
 Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
  linux-pci@vger.kernel.org, linux-arch@vger.kernel.org, kys@microsoft.com,
@@ -67,30 +67,29 @@ Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
  robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
  nunodasneves@linux.microsoft.com, mhklinux@outlook.com
 References: <20260120064230.3602565-1-mrathor@linux.microsoft.com>
- <20260120064230.3602565-16-mrathor@linux.microsoft.com>
- <aXAxmYm4zbOzGztz@skinsburskii.localdomain>
+ <20260120134933.00004f2a@linux.microsoft.com>
 From: Mukesh R <mrathor@linux.microsoft.com>
-In-Reply-To: <aXAxmYm4zbOzGztz@skinsburskii.localdomain>
+In-Reply-To: <20260120134933.00004f2a@linux.microsoft.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8513-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8514-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,microsoft.com,kernel.org,arm.com,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,8bytes.org,google.com,arndb.de,linux.microsoft.com,outlook.com];
 	RCPT_COUNT_TWELVE(0.00)[28];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
@@ -101,204 +100,106 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:mid,linux.microsoft.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: CD0B07C345
+X-Rspamd-Queue-Id: 694107C387
 X-Rspamd-Action: no action
 
-On 1/20/26 17:53, Stanislav Kinsburskii wrote:
-> On Mon, Jan 19, 2026 at 10:42:30PM -0800, Mukesh R wrote:
+On 1/20/26 13:50, Jacob Pan wrote:
+> Hi Mukesh,
+> 
+> On Mon, 19 Jan 2026 22:42:15 -0800
+> Mukesh R <mrathor@linux.microsoft.com> wrote:
+> 
 >> From: Mukesh Rathor <mrathor@linux.microsoft.com>
 >>
->> Upon guest access, in case of missing mmio mapping, the hypervisor
->> generates an unmapped gpa intercept. In this path, lookup the PCI
->> resource pfn for the guest gpa, and ask the hypervisor to map it
->> via hypercall. The PCI resource pfn is maintained by the VFIO driver,
->> and obtained via fixup_user_fault call (similar to KVM).
+>> Implement passthru of PCI devices to unprivileged virtual machines
+>> (VMs) when Linux is running as a privileged VM on Microsoft Hyper-V
+>> hypervisor. This support is made to fit within the workings of VFIO
+>> framework, and any VMM needing to use it must use the VFIO subsystem.
+>> This supports both full device passthru and SR-IOV based VFs.
 >>
->> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
->> ---
->>   drivers/hv/mshv_root_main.c | 115 ++++++++++++++++++++++++++++++++++++
->>   1 file changed, 115 insertions(+)
+>> There are 3 cases where Linux can run as a privileged VM (aka MSHV):
+>>    Baremetal root (meaning Hyper-V+Linux), L1VH, and Nested.
 >>
->> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
->> index 03f3aa9f5541..4c8bc7cd0888 100644
->> --- a/drivers/hv/mshv_root_main.c
->> +++ b/drivers/hv/mshv_root_main.c
->> @@ -56,6 +56,14 @@ struct hv_stats_page {
->>   	};
->>   } __packed;
->>   
->> +bool hv_nofull_mmio;   /* don't map entire mmio region upon fault */
->> +static int __init setup_hv_full_mmio(char *str)
->> +{
->> +	hv_nofull_mmio = true;
->> +	return 0;
->> +}
->> +__setup("hv_nofull_mmio", setup_hv_full_mmio);
->> +
->>   struct mshv_root mshv_root;
->>   
->>   enum hv_scheduler_type hv_scheduler_type;
->> @@ -612,6 +620,109 @@ mshv_partition_region_by_gfn(struct mshv_partition *partition, u64 gfn)
->>   }
->>   
->>   #ifdef CONFIG_X86_64
->> +
->> +/*
->> + * Check if uaddr is for mmio range. If yes, return 0 with mmio_pfn filled in
->> + * else just return -errno.
->> + */
->> +static int mshv_chk_get_mmio_start_pfn(struct mshv_partition *pt, u64 gfn,
->> +				       u64 *mmio_pfnp)
->> +{
->> +	struct vm_area_struct *vma;
->> +	bool is_mmio;
->> +	u64 uaddr;
->> +	struct mshv_mem_region *mreg;
->> +	struct follow_pfnmap_args pfnmap_args;
->> +	int rc = -EINVAL;
->> +
->> +	/*
->> +	 * Do not allow mem region to be deleted beneath us. VFIO uses
->> +	 * useraddr vma to lookup pci bar pfn.
->> +	 */
->> +	spin_lock(&pt->pt_mem_regions_lock);
->> +
->> +	/* Get the region again under the lock */
->> +	mreg = mshv_partition_region_by_gfn(pt, gfn);
->> +	if (mreg == NULL || mreg->type != MSHV_REGION_TYPE_MMIO)
->> +		goto unlock_pt_out;
->> +
->> +	uaddr = mreg->start_uaddr +
->> +		((gfn - mreg->start_gfn) << HV_HYP_PAGE_SHIFT);
->> +
->> +	mmap_read_lock(current->mm);
-> 
-> Semaphore can't be taken under spinlock.
-> Get it instead.
+> I think some introduction/background to L1VH would help.
 
-Yeah, something didn't feel right here and I meant to recheck, now regret
-rushing to submit the patch.
+Ok, i can add something, but l1vh was very well introduced if you
+search the mshv commits for "l1vh".
 
-Rethinking, I think the pt_mem_regions_lock is not needed to protect
-the uaddr because unmap will properly serialize via the mm lock.
+>> At a high level, the hypervisor supports traditional mapped iommu
+>> domains that use explicit map and unmap hypercalls for mapping and
+>> unmapping guest RAM into the iommu subsystem.
+> It may be clearer to state that the hypervisor supports Linux IOMMU
+> paging domains through map/unmap hypercalls, mapping GPAs to HPAs using
+> stage?2 I/O page tables.
 
+sure.
 
->> +	vma = vma_lookup(current->mm, uaddr);
->> +	is_mmio = vma ? !!(vma->vm_flags & (VM_IO | VM_PFNMAP)) : 0;
-> 
-> Why this check is needed again?
+>> Hyper-V also has a
+>> concept of direct attach devices whereby the iommu subsystem simply
+>> uses the guest HW page table (ept/npt/..). This series adds support
+>> for both, and both are made to work in VFIO type1 subsystem.
+>>
+> This may warrant introducing a new IOMMU domain feature flag, as it
+> performs mappings but does not support map/unmap semantics in the same
+> way as a paging domain.
 
-To make sure region did not change. This check is under lock.
+Yeah, I was hoping we can get by for now without it. At least in case of
+the cloud hypervisor, entire guest ram is mapped anyways. We can document
+it and work on enhancements which are much easier once we have a baseline.
+For now, it's a paging domain will all pages pinned.. :).
 
-> The region type is stored on the region itself.
-> And the type is checked on the caller side.
-> 
->> +	if (!is_mmio)
->> +		goto unlock_mmap_out;
->> +
->> +	pfnmap_args.vma = vma;
->> +	pfnmap_args.address = uaddr;
->> +
->> +	rc = follow_pfnmap_start(&pfnmap_args);
->> +	if (rc) {
->> +		rc = fixup_user_fault(current->mm, uaddr, FAULT_FLAG_WRITE,
->> +				      NULL);
->> +		if (rc)
->> +			goto unlock_mmap_out;
->> +
->> +		rc = follow_pfnmap_start(&pfnmap_args);
->> +		if (rc)
->> +			goto unlock_mmap_out;
->> +	}
->> +
->> +	*mmio_pfnp = pfnmap_args.pfn;
->> +	follow_pfnmap_end(&pfnmap_args);
->> +
->> +unlock_mmap_out:
->> +	mmap_read_unlock(current->mm);
->> +unlock_pt_out:
->> +	spin_unlock(&pt->pt_mem_regions_lock);
->> +	return rc;
->> +}
->> +
->> +/*
->> + * At present, the only unmapped gpa is mmio space. Verify if it's mmio
->> + * and resolve if possible.
->> + * Returns: True if valid mmio intercept and it was handled, else false
->> + */
->> +static bool mshv_handle_unmapped_gpa(struct mshv_vp *vp)
->> +{
->> +	struct hv_message *hvmsg = vp->vp_intercept_msg_page;
->> +	struct hv_x64_memory_intercept_message *msg;
->> +	union hv_x64_memory_access_info accinfo;
->> +	u64 gfn, mmio_spa, numpgs;
->> +	struct mshv_mem_region *mreg;
->> +	int rc;
->> +	struct mshv_partition *pt = vp->vp_partition;
->> +
->> +	msg = (struct hv_x64_memory_intercept_message *)hvmsg->u.payload;
->> +	accinfo = msg->memory_access_info;
->> +
->> +	if (!accinfo.gva_gpa_valid)
->> +		return false;
->> +
->> +	/* Do a fast check and bail if non mmio intercept */
->> +	gfn = msg->guest_physical_address >> HV_HYP_PAGE_SHIFT;
->> +	mreg = mshv_partition_region_by_gfn(pt, gfn);
-> 
-> This call needs to be protected by the spinlock.
-
-This is sorta fast path to bail. We recheck under partition lock above.
-
-Thanks,
--Mukesh
-
-
-> Thanks,
-> Stanislav
-> 
->> +	if (mreg == NULL || mreg->type != MSHV_REGION_TYPE_MMIO)
->> +		return false;
->> +
->> +	rc = mshv_chk_get_mmio_start_pfn(pt, gfn, &mmio_spa);
->> +	if (rc)
->> +		return false;
->> +
->> +	if (!hv_nofull_mmio) {		/* default case */
->> +		gfn = mreg->start_gfn;
->> +		mmio_spa = mmio_spa - (gfn - mreg->start_gfn);
->> +		numpgs = mreg->nr_pages;
->> +	} else
->> +		numpgs = 1;
->> +
->> +	rc = hv_call_map_mmio_pages(pt->pt_id, gfn, mmio_spa, numpgs);
->> +
->> +	return rc == 0;
->> +}
->> +
->>   static struct mshv_mem_region *
->>   mshv_partition_region_by_gfn_get(struct mshv_partition *p, u64 gfn)
->>   {
->> @@ -666,13 +777,17 @@ static bool mshv_handle_gpa_intercept(struct mshv_vp *vp)
->>   
->>   	return ret;
->>   }
->> +
->>   #else  /* CONFIG_X86_64 */
->> +static bool mshv_handle_unmapped_gpa(struct mshv_vp *vp) { return false; }
->>   static bool mshv_handle_gpa_intercept(struct mshv_vp *vp) { return false; }
->>   #endif /* CONFIG_X86_64 */
->>   
->>   static bool mshv_vp_handle_intercept(struct mshv_vp *vp)
->>   {
->>   	switch (vp->vp_intercept_msg_page->header.message_type) {
->> +	case HVMSG_UNMAPPED_GPA:
->> +		return mshv_handle_unmapped_gpa(vp);
->>   	case HVMSG_GPA_INTERCEPT:
->>   		return mshv_handle_gpa_intercept(vp);
->>   	}
->> -- 
->> 2.51.2.vfs.0.1
+>> While this Part I focuses on memory mappings, upcoming Part II
+>> will focus on irq bypass along with some minor irq remapping
+>> updates.
+>>
+>> This patch series was tested using Cloud Hypervisor verion 48. Qemu
+>> support of MSHV is in the works, and that will be extended to include
+>> PCI passthru and SR-IOV support also in near future.
+>>
+>> Based on: 8f0b4cce4481 (origin/hyperv-next)
+>>
+>> Thanks,
+>> -Mukesh
+>>
+>> Mukesh Rathor (15):
+>>    iommu/hyperv: rename hyperv-iommu.c to hyperv-irq.c
+>>    x86/hyperv: cosmetic changes in irqdomain.c for readability
+>>    x86/hyperv: add insufficient memory support in irqdomain.c
+>>    mshv: Provide a way to get partition id if running in a VMM process
+>>    mshv: Declarations and definitions for VFIO-MSHV bridge device
+>>    mshv: Implement mshv bridge device for VFIO
+>>    mshv: Add ioctl support for MSHV-VFIO bridge device
+>>    PCI: hv: rename hv_compose_msi_msg to hv_vmbus_compose_msi_msg
+>>    mshv: Import data structs around device domains and irq remapping
+>>    PCI: hv: Build device id for a VMBus device
+>>    x86/hyperv: Build logical device ids for PCI passthru hcalls
+>>    x86/hyperv: Implement hyperv virtual iommu
+>>    x86/hyperv: Basic interrupt support for direct attached devices
+>>    mshv: Remove mapping of mmio space during map user ioctl
+>>    mshv: Populate mmio mappings for PCI passthru
+>>
+>>   MAINTAINERS                         |    1 +
+>>   arch/arm64/include/asm/mshyperv.h   |   15 +
+>>   arch/x86/hyperv/irqdomain.c         |  314 ++++++---
+>>   arch/x86/include/asm/mshyperv.h     |   21 +
+>>   arch/x86/kernel/pci-dma.c           |    2 +
+>>   drivers/hv/Makefile                 |    3 +-
+>>   drivers/hv/mshv_root.h              |   24 +
+>>   drivers/hv/mshv_root_main.c         |  296 +++++++-
+>>   drivers/hv/mshv_vfio.c              |  210 ++++++
+>>   drivers/iommu/Kconfig               |    1 +
+>>   drivers/iommu/Makefile              |    2 +-
+>>   drivers/iommu/hyperv-iommu.c        | 1004
+>> +++++++++++++++++++++------ drivers/iommu/hyperv-irq.c          |
+>> 330 +++++++++ drivers/pci/controller/pci-hyperv.c |  207 ++++--
+>>   include/asm-generic/mshyperv.h      |    1 +
+>>   include/hyperv/hvgdk_mini.h         |   11 +
+>>   include/hyperv/hvhdk_mini.h         |  112 +++
+>>   include/linux/hyperv.h              |    6 +
+>>   include/uapi/linux/mshv.h           |   31 +
+>>   19 files changed, 2182 insertions(+), 409 deletions(-)
+>>   create mode 100644 drivers/hv/mshv_vfio.c
+>>   create mode 100644 drivers/iommu/hyperv-irq.c
 >>
 
 
