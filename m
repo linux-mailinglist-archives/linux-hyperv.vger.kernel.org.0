@@ -1,50 +1,50 @@
-Return-Path: <linux-hyperv+bounces-8500-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8501-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2JY6BnIPdGmp1wAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8500-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Jan 2026 01:16:50 +0100
+	id qMJABPYSdGkX2AAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8501-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Jan 2026 01:31:50 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74E587BA05
-	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Jan 2026 01:16:49 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 586347BAD2
+	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Jan 2026 01:31:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 385833013013
-	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Jan 2026 00:16:37 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 353E63012CAA
+	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Jan 2026 00:31:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E9FA4369A;
-	Sat, 24 Jan 2026 00:16:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C4667263B;
+	Sat, 24 Jan 2026 00:31:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Aoa5TueK"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Y6vqnb4w"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21B3CF9D9;
-	Sat, 24 Jan 2026 00:16:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21E7811CAF;
+	Sat, 24 Jan 2026 00:31:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769213796; cv=none; b=j7aQbLD1YcPQMNZ9/vYuW3td8EFO8XC3ifZZ5V95f8sZBvD0HG5gC47r66ZUnk+VO3pGDFaSSOjgWi3WtLKHuTysrLxq4adeR0pc8OoQ/1pkaG1HMwNriN5x/yjyVM0u5PT5wmVBDQBcUC/pGN6eCQS1lLWu5e7C+ZesjdDGFjc=
+	t=1769214706; cv=none; b=tiaZf4YixrBElfZLEGXFrMIRzjpGEaO9riMIzm2/XmhEL4iKubJZntF9lfyG1LYdyN4MSAM8BGvnF6uxVPw2wrFZpdnEI8DX9FX8zxmmSPy7CZKulpymKtN7Z8ZihrSkccFnrrtuplg+jYb2/rgwqCRGtDTpMP9Ln7WWXx78thM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769213796; c=relaxed/simple;
-	bh=eeUDYx/KEqNcnAZl3H51Zi1YvtK5Vn6KIT1KnsyFDBM=;
+	s=arc-20240116; t=1769214706; c=relaxed/simple;
+	bh=bp7W1LluwPTvO993c8YXztTV176NNCh/Yqs/zYvO2Tc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k996y1bYYmavPaFG2U/XokJUoy4h1YvleqVr1ut48mz5d3Dk0QmXzBKxAC/ZFoTK2rvLr4rR8M2cntOSYzCTOExN+6KrKC/Jp8getNQ5OgB0aYJfrGkrfFCDihhFMqn/PhZpKvqAeYlogoGrV/XH6NEznaWr4Ub59NuyFnj/zeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Aoa5TueK; arc=none smtp.client-ip=13.77.154.182
+	 In-Reply-To:Content-Type; b=NDAXZjM5T5QyNJHDkFx68xUxZQDKnN5+++A0AyUi83wNMNu69H5lTZ16lyuNJ8jFdENyjZkX4jzrwS9C2iFA8PmaEa3+lp94F2tgeYkarcWp9OzKOn41zPx/sIA5Q4iSS2SA1EmhcPFmYkzvsEqx+qt8dE11Dj4KQhXyP7gMvGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Y6vqnb4w; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.75.32.59] (unknown [40.78.13.147])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5874820B7167;
-	Fri, 23 Jan 2026 16:16:34 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5874820B7167
+Received: from [100.75.32.59] (unknown [40.78.12.246])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 48D3620B7167;
+	Fri, 23 Jan 2026 16:31:44 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 48D3620B7167
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1769213794;
-	bh=qDPebu+VYKh4SHEsugrX7nkwnEnxxaP4Wnfy4G0gCbs=;
+	s=default; t=1769214704;
+	bh=FYKAGYoWAEaU2oyCkGdagiYy+0oD4ZgKAkaWOpjpW3s=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Aoa5TueKP9nesierISYQdK6vFQi25Jawv3Sg5s7doKuUu0zIbxJTHaQyQbj2nqJCm
-	 eDr9YG+rHyLQHQl0gm090Ley7Clmz5R2o4Xs917RnPwdXeOqeE/z1HHq3WH2JUtrGK
-	 7FCtSWAvtHLHHVTnq13PplubAXoAjoG8VViuiI3w=
-Message-ID: <549041d1-360d-d34c-4e3b-62802346acaa@linux.microsoft.com>
-Date: Fri, 23 Jan 2026 16:16:33 -0800
+	b=Y6vqnb4weeOHgo/KIXLwHNWc1gvEFFggaQg3nBO7mcZTK5GeUDSWPiimn07c2i+vN
+	 50rgSM/BXnmHsq0ez0tYIR9wLWKbDG+zC66b0KuuGX54TJZzEKUDtSRJ4gdV7pbGqx
+	 1/G4CpTj96Etlc5F3T8dmkcNke/Bj7sKoXN80KsU=
+Message-ID: <6bca523f-4133-948c-71bf-24475e7292a7@linux.microsoft.com>
+Date: Fri, 23 Jan 2026 16:31:43 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -53,28 +53,29 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.13.1
-Subject: Re: [PATCH] mshv: Make MSHV mutually exclusive with KEXEC
+Subject: Re: [PATCH 1/4] mshv: Introduce hv_result_oom() helper function
 Content-Language: en-US
 To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
  kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, longli@microsoft.com
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <176920684805.250171.6817228088359793537.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+References: <176913164914.89165.5792608454600292463.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <176913211358.89165.15502151782362191256.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 From: Mukesh R <mrathor@linux.microsoft.com>
-In-Reply-To: <176920684805.250171.6817228088359793537.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+In-Reply-To: <176913211358.89165.15502151782362191256.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8500-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8501-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -90,44 +91,59 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.microsoft.com:mid,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: 74E587BA05
+X-Rspamd-Queue-Id: 586347BAD2
 X-Rspamd-Action: no action
 
-On 1/23/26 14:20, Stanislav Kinsburskii wrote:
-> The MSHV driver deposits kernel-allocated pages to the hypervisor during
-> runtime and never withdraws them. This creates a fundamental incompatibility
-> with KEXEC, as these deposited pages remain unavailable to the new kernel
-> loaded via KEXEC, leading to potential system crashes upon kernel accessing
-> hypervisor deposited pages.
+On 1/22/26 17:35, Stanislav Kinsburskii wrote:
+> Replace direct comparisons of hv_result(status) against
+> HV_STATUS_INSUFFICIENT_MEMORY with a new hv_result_oom() helper function.
+> This improves code readability and provides a consistent and extendable
+> interface for checking out-of-memory conditions in hypercall results.
 > 
-> Make MSHV mutually exclusive with KEXEC until proper page lifecycle
-> management is implemented.
+> No functional changes intended.
 > 
 > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 > ---
->   drivers/hv/Kconfig |    1 +
->   1 file changed, 1 insertion(+)
+>   drivers/hv/hv_proc.c           |   14 ++++++++++++--
+>   drivers/hv/mshv_root_hv_call.c |   20 ++++++++++----------
+>   drivers/hv/mshv_root_main.c    |    2 +-
+>   include/asm-generic/mshyperv.h |    3 +++
+>   4 files changed, 26 insertions(+), 13 deletions(-)
 > 
-> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-> index 7937ac0cbd0f..cfd4501db0fa 100644
-> --- a/drivers/hv/Kconfig
-> +++ b/drivers/hv/Kconfig
-> @@ -74,6 +74,7 @@ config MSHV_ROOT
->   	# e.g. When withdrawing memory, the hypervisor gives back 4k pages in
->   	# no particular order, making it impossible to reassemble larger pages
->   	depends on PAGE_SIZE_4KB
-> +	depends on !KEXEC
->   	select EVENTFD
->   	select VIRT_XFER_TO_GUEST_WORK
->   	select HMM_MIRROR
-> 
-> 
+> diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
+> index fbb4eb3901bb..80c66d1c74d5 100644
+> --- a/drivers/hv/hv_proc.c
+> +++ b/drivers/hv/hv_proc.c
+> @@ -110,6 +110,16 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+>   }
+>   EXPORT_SYMBOL_GPL(hv_call_deposit_pages);
+>   
+> +bool hv_result_oom(u64 status)
+> +{
+> +	switch (hv_result(status)) {
+> +	case HV_STATUS_INSUFFICIENT_MEMORY:
+> +		return true;
+> +	}
+> +	return false;
+> +}
+> +EXPORT_SYMBOL_GPL(hv_result_oom);
 
-Will this affect CRASH kexec? I see few CONFIG_CRASH_DUMP in kexec.c
-implying that crash dump might be involved. Or did you test kdump
-and it was fine?
+I had mentioned this during internal review previously, so forgive me
+for repeating. I don't think using _oom suffix is a good idea. Firstly,
+system is not out of memory, hypervisor will continue to work perfectly,
+just the particalur hypercall needs a bit more ram to succeed. Secondly
+and more importantly, "oom" has come to mean a very specific event
+in linux, and as such reusing it for something totally different is
+unnecessary. For example, if another maintainer working on oom happens
+to see this, and not being familiar with HyperV may get totally confused
+and waste time unnecessarily.
+
+It can easily be renamed: hv_result_insuff_mem, or hv_result_enomem,
+or hv_result_deposit_ram etc... there are many options.
 
 Thanks,
 -Mukesh
+
+.... deleted ...
 
 
