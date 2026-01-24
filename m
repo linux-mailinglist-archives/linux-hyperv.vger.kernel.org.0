@@ -1,57 +1,57 @@
-Return-Path: <linux-hyperv+bounces-8518-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8519-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gApzEaISdWkAAgEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8518-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Jan 2026 19:42:42 +0100
+	id 0K1/AqASdWkAAgEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8519-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Jan 2026 19:42:40 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id A605C7E827
-	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Jan 2026 19:42:41 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EDF67E81A
+	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Jan 2026 19:42:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D36183023A7B
-	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Jan 2026 18:42:25 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id D57DA3005A9C
+	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Jan 2026 18:42:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9012259C92;
-	Sat, 24 Jan 2026 18:42:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E6F61E9B3F;
+	Sat, 24 Jan 2026 18:42:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="noer5zTu"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="i4zAoeb2"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F25B20B7ED;
-	Sat, 24 Jan 2026 18:42:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07D2724DD1F;
+	Sat, 24 Jan 2026 18:42:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769280142; cv=none; b=hb/e5AEF3tUZeqjHUo1d+Lh6qCU7Y9U+pVZ/d5pzFIcbkkTRV0yaxhBV3jvVqyY1aKmv55ogEPiPjJV57Ls967vRkDAj9Zja0DJyxq2x4kmO3dQq7CscqMknRjVbgsq072VXbsqGWBEm470asq5SQ0jQL0bjHZ/FaBjqNyHfhwI=
+	t=1769280148; cv=none; b=FWRi7+aZxjBLc6ts3Wv5grxu6kDw296slIYkL4bMsFzGhj5lLGoglpTEpM1fCLdjGW7eavGjTl6jgq9BgzoXVXTmE50c1SMnwNosMsBNK/y4MmjXkrIvlJOHLoR3Tfl5lkn1rASBOpd59daZWQXudx3l/R9d/XHrlbimcsB04mM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769280142; c=relaxed/simple;
-	bh=ZRwrc7QpnZW/HRScmuYmlYRK3LwcR3DVyz9vBxxmvLg=;
+	s=arc-20240116; t=1769280148; c=relaxed/simple;
+	bh=b+niw3TVr453DSg14YIFxGYb597QXQrLNKcj+epc9lc=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JGVjvRu20qX7PdIZNwy1jNiP/ghyZPCFHURjpb3TwV9yBdsXdMANoDpYx1B5lLMSYDVMOIG9QvZnp7GS8GVYT+HoIrhNqkey73Oun/mtskl2WIR4/cyV5Q+hJW1BsQLehQnvKJib+o6PSTmhl83xssljh676V6KmnPnhOT0iye8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=noer5zTu; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version:Content-Type; b=khmtdUYQI9xuT6v4dLRD03wo9NXZI2VuOtqyms2rvKdRfKbscBR5IWbWGLcN9i7qrFUATD07aKDJV1G1X2umFUFwdpG2u/1U6ObNKRyDaSNU3HtPe7Qd6j5q9bNdgGtP0a5WTFSZW1oiJuD9k877DwpVY9++TX+dnV0KmGmDPUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=i4zAoeb2; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 01B3320B716C;
-	Sat, 24 Jan 2026 10:42:20 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 01B3320B716C
+	by linux.microsoft.com (Postfix) with ESMTPSA id 80FA920B7165;
+	Sat, 24 Jan 2026 10:42:26 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 80FA920B7165
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1769280141;
-	bh=eA+nG3vfeFyTZ0Mk5bJOxocYpGx9J5hYxQHB/ecszXA=;
+	s=default; t=1769280146;
+	bh=h308bi5+er73P7cw3kjDIHF43wragB3maCUn3DZmXH4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=noer5zTuLJehxqp1VEWQQxDhUG3iA1/Yuqzb6StLDcLL8dQEe2+ASdXjqTHNKdWbs
-	 3kYBa19qnATbBglS2A+FKfp4xo7pYMJxJCFdJlaIU6fY59A8ZdGQcmnMj1doN+Zd/L
-	 qTdXhgy6u2/B6kQG0a5w143ulmh3SxX0QlDPnOeE=
-Subject: [RFC PATCH 2/3] mshv: Account pages deposited to hypervisor
+	b=i4zAoeb27vsjnLg0dH3yFaNvZEfnOZ9ZsykC0uCUxQ+PK7WXnmxeeqNlmZlu7tocj
+	 oBhJaX1hI7hBF9Dl3nrB+y1hEWRepuy/Sz9BZlLPrXc85PBh6dFFzYryUnCN725lR0
+	 Ct23NK86tNPMpB9tdo73JDOiTzTuaDSry9Zm4dUo=
+Subject: [RFC PATCH 3/3] mshv: Block kexec when hypervisor has pages deposited
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: pasha.tatashin@soleen.com, rppt@kernel.org, pratyush@kernel.org,
  kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, longli@microsoft.com
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Sat, 24 Jan 2026 18:42:20 +0000
+Date: Sat, 24 Jan 2026 18:42:26 +0000
 Message-ID: 
- <176928014080.26405.17823443762395754699.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <176928014633.26405.12867581880963943842.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 In-Reply-To: 
  <176927917602.26405.4149319776242398706.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 References: 
@@ -69,88 +69,296 @@ X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.microsoft.com:dkim,skinsburskii-cloud-desktop.internal.cloudapp.net:mid];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	TAGGED_FROM(0.00)[bounces-8519-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8518-lists,linux-hyperv=lfdr.de];
-	TO_DN_NONE(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+]
-X-Rspamd-Queue-Id: A605C7E827
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	TO_DN_NONE(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,skinsburskii-cloud-desktop.internal.cloudapp.net:mid]
+X-Rspamd-Queue-Id: 9EDF67E81A
 X-Rspamd-Action: no action
 
-This is a preparatory change for blocking kexec is there are any pages
-deposited, as this information is lost after kexec and the pages aren't
-accessible by kernel.
+Use the live update infrastructure to make kexec safe when Microsoft
+Hypervisor is active.
+
+The kernel cannot access hypervisor-deposited pages; any access triggers a
+GPF. Until the deposited-page state can be handed over to the next kernel,
+kexec must be blocked is there is any hsared state between kernel and
+hypervisor.
+
+During the freeze stage:
+- Refuse the transition while VMs are running
+- Withdraw all pages from L1VH host (guest pages are withdrawn
+  upon guest shutdown)
+- Verify no deposited pages remain
+
+Abort kexec if any of the above checks fail.
 
 Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 ---
- drivers/hv/hv_proc.c           |    4 ++++
- drivers/hv/mshv_root.h         |    1 +
- drivers/hv/mshv_root_hv_call.c |    2 ++
- 3 files changed, 7 insertions(+)
+ MAINTAINERS                  |    1 
+ drivers/hv/Kconfig           |    1 
+ drivers/hv/Makefile          |    1 
+ drivers/hv/mshv_luo.c        |  113 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/hv/mshv_root.h       |   13 +++++
+ drivers/hv/mshv_root_main.c  |    7 +++
+ include/linux/kho/abi/mshv.h |   14 +++++
+ 7 files changed, 150 insertions(+)
+ create mode 100644 drivers/hv/mshv_luo.c
+ create mode 100644 include/linux/kho/abi/mshv.h
 
-diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
-index 89870c1b0087..39bbbedb0340 100644
---- a/drivers/hv/hv_proc.c
-+++ b/drivers/hv/hv_proc.c
-@@ -15,6 +15,8 @@
-  */
- #define HV_DEPOSIT_MAX (HV_HYP_PAGE_SIZE / sizeof(u64) - 1)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5b11839cba9d..d625a1c111e2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11756,6 +11756,7 @@ F:	include/hyperv/hvgdk_mini.h
+ F:	include/hyperv/hvhdk.h
+ F:	include/hyperv/hvhdk_mini.h
+ F:	include/linux/hyperv.h
++F:	include/linux/kho/abi/mshv.h
+ F:	include/net/mana
+ F:	include/uapi/linux/hyperv.h
+ F:	include/uapi/rdma/mana-abi.h
+diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+index 7937ac0cbd0f..94887b8b92b5 100644
+--- a/drivers/hv/Kconfig
++++ b/drivers/hv/Kconfig
+@@ -78,6 +78,7 @@ config MSHV_ROOT
+ 	select VIRT_XFER_TO_GUEST_WORK
+ 	select HMM_MIRROR
+ 	select MMU_NOTIFIER
++	select LIVEUPDATE
+ 	default n
+ 	help
+ 	  Select this option to enable support for booting and running as root
+diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
+index a49f93c2d245..73258fb811eb 100644
+--- a/drivers/hv/Makefile
++++ b/drivers/hv/Makefile
+@@ -15,6 +15,7 @@ hv_vmbus-$(CONFIG_HYPERV_TESTING)	+= hv_debugfs.o
+ hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_utils_transport.o
+ mshv_root-y := mshv_root_main.o mshv_synic.o mshv_eventfd.o mshv_irq.o \
+ 	       mshv_root_hv_call.o mshv_portid_table.o mshv_regions.o
++mshv_root-$(CONFIG_LIVEUPDATE) += mshv_luo.o
+ mshv_vtl-y := mshv_vtl_main.o
  
-+atomic_t hv_pages_deposited;
+ # Code that must be built-in
+diff --git a/drivers/hv/mshv_luo.c b/drivers/hv/mshv_luo.c
+new file mode 100644
+index 000000000000..eed7755fc27e
+--- /dev/null
++++ b/drivers/hv/mshv_luo.c
+@@ -0,0 +1,113 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2026, Microsoft Corporation.
++ *
++ * Live update orchestration management for mshv_root module.
++ *
++ * Author: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
++ */
 +
- /* Deposits exact number of pages. Must be called with interrupts enabled.  */
- int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
- {
-@@ -93,6 +95,8 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
- 		goto err_free_allocations;
- 	}
- 
-+	atomic_add(page_count, &hv_pages_deposited);
++#include <linux/errno.h>
++#include <linux/liveupdate.h>
++#include <linux/file.h>
++#include <linux/fs.h>
++#include <linux/kho/abi/mshv.h>
++#include <asm/mshyperv.h>
++#include "mshv_root.h"
 +
- 	ret = 0;
- 	goto free_buf;
- 
++static struct file *mshv_luo_file;
++
++static void mshv_luo_finish(struct liveupdate_file_op_args *args)
++{
++}
++
++static int mshv_luo_retrieve(struct liveupdate_file_op_args *args)
++{
++	return 0;
++}
++
++static int mshv_luo_freeze(struct liveupdate_file_op_args *args)
++{
++	if (!hash_empty(mshv_root.pt_htable)) {
++		pr_warn("mshv: Cannot perform live update while VMs are active\n");
++		return -EBUSY;
++	}
++
++	if (hv_l1vh_partition()) {
++		int err;
++
++		/* Attempt to withdraw all the deposited pages */
++		err = hv_call_withdraw_memory(U64_MAX, NUMA_NO_NODE,
++					      hv_current_partition_id);
++		if (err) {
++			pr_err("mshv: Failed to withdraw memory from L1 virtualization: %d\n", err);
++			return err;
++		}
++	}
++
++	if (atomic_read(&hv_pages_deposited)) {
++		pr_warn("mshv: Cannot perform live update while pages are deposited\n");
++		return -EBUSY;
++	}
++	return 0;
++}
++
++static void mshv_luo_unpreserve(struct liveupdate_file_op_args *args)
++{
++}
++
++static int mshv_luo_preserve(struct liveupdate_file_op_args *args)
++{
++	return 0;
++}
++
++static bool mshv_luo_can_preserve(struct liveupdate_file_handler *handler,
++				  struct file *file)
++{
++	return file == mshv_luo_file;
++}
++
++static const struct liveupdate_file_ops mshv_luo_file_ops = {
++	.can_preserve = mshv_luo_can_preserve,
++	.preserve = mshv_luo_preserve,
++	.unpreserve = mshv_luo_unpreserve,
++	.retrieve = mshv_luo_retrieve,
++	.freeze = mshv_luo_freeze,
++	.finish = mshv_luo_finish,
++	.owner = THIS_MODULE,
++};
++
++static struct liveupdate_file_handler mshv_luo_handler = {
++	.ops = &mshv_luo_file_ops,
++	.compatible = MSHV_LUO_FH_COMPATIBLE,
++};
++
++int __init mshv_luo_init(void)
++{
++	int err;
++
++	err = liveupdate_register_file_handler(&mshv_luo_handler);
++	if (err && err != -EOPNOTSUPP) {
++		pr_err("Could not register luo filesystem handler: %pe\n",
++		       ERR_PTR(err));
++		return err;
++	}
++
++	err = liveupdate_session_create("mshv_root", &mshv_luo_file);
++	if (err)
++		goto err_session;
++
++	pr_info("mshv_root live update handler registered\n");
++	return 0;
++
++err_session:
++	liveupdate_unregister_file_handler(&mshv_luo_handler);
++	return err;
++}
++
++void __exit mshv_luo_exit(void)
++{
++	if (mshv_luo_file)
++		fput(mshv_luo_file);
++	liveupdate_unregister_file_handler(&mshv_luo_handler);
++}
 diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
-index 3c1d88b36741..c792afce0839 100644
+index c792afce0839..89d5ece0b538 100644
 --- a/drivers/hv/mshv_root.h
 +++ b/drivers/hv/mshv_root.h
-@@ -319,6 +319,7 @@ int hv_call_get_partition_property_ex(u64 partition_id, u64 property_code, u64 a
- extern struct mshv_root mshv_root;
- extern enum hv_scheduler_type hv_scheduler_type;
- extern u8 * __percpu *hv_synic_eventring_tail;
-+extern atomic_t hv_pages_deposited;
+@@ -17,6 +17,7 @@
+ #include <linux/build_bug.h>
+ #include <linux/mmu_notifier.h>
+ #include <uapi/linux/mshv.h>
++#include <hyperv/hvhdk.h>
  
- struct mshv_mem_region *mshv_region_create(u64 guest_pfn, u64 nr_pages,
- 					   u64 uaddr, u32 flags);
-diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
-index 06f2bac8039d..4203af5190ee 100644
---- a/drivers/hv/mshv_root_hv_call.c
-+++ b/drivers/hv/mshv_root_hv_call.c
-@@ -73,6 +73,8 @@ int hv_call_withdraw_memory(u64 count, int node, u64 partition_id)
- 		for (i = 0; i < completed; i++)
- 			__free_page(pfn_to_page(output_page->gpa_page_list[i]));
+ /*
+  * Hypervisor must be between these version numbers (inclusive)
+@@ -334,4 +335,16 @@ bool mshv_region_handle_gfn_fault(struct mshv_mem_region *region, u64 gfn);
+ void mshv_region_movable_fini(struct mshv_mem_region *region);
+ bool mshv_region_movable_init(struct mshv_mem_region *region);
  
-+		atomic_sub(completed, &hv_pages_deposited);
++#if IS_ENABLED(CONFIG_LIVEUPDATE)
++int __init mshv_luo_init(void);
++void __exit mshv_luo_exit(void);
++#else
++static inline int mshv_luo_init(void)
++{
++	return 0;
++}
 +
- 		if (!hv_result_success(status)) {
- 			if (hv_result(status) == HV_STATUS_NO_RESOURCES)
- 				status = HV_STATUS_SUCCESS;
++static inline void mshv_luo_exit(void) { }
++#endif
++
+ #endif /* _MSHV_ROOT_H_ */
+diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+index 5fc572e31cd7..c0274bbc65ac 100644
+--- a/drivers/hv/mshv_root_main.c
++++ b/drivers/hv/mshv_root_main.c
+@@ -2330,6 +2330,10 @@ static int __init mshv_parent_partition_init(void)
+ 	if (ret)
+ 		goto deinit_root_scheduler;
+ 
++	ret = mshv_luo_init();
++	if (ret)
++		goto deinit_irqfd_wq;
++
+ 	spin_lock_init(&mshv_root.pt_ht_lock);
+ 	hash_init(mshv_root.pt_htable);
+ 
+@@ -2337,6 +2341,8 @@ static int __init mshv_parent_partition_init(void)
+ 
+ 	return 0;
+ 
++deinit_irqfd_wq:
++	mshv_irqfd_wq_cleanup();
+ deinit_root_scheduler:
+ 	root_scheduler_deinit();
+ exit_partition:
+@@ -2356,6 +2362,7 @@ static void __exit mshv_parent_partition_exit(void)
+ 	hv_setup_mshv_handler(NULL);
+ 	mshv_port_table_fini();
+ 	misc_deregister(&mshv_dev);
++	mshv_luo_exit();
+ 	mshv_irqfd_wq_cleanup();
+ 	root_scheduler_deinit();
+ 	if (hv_root_partition())
+diff --git a/include/linux/kho/abi/mshv.h b/include/linux/kho/abi/mshv.h
+new file mode 100644
+index 000000000000..e6ae5a731802
+--- /dev/null
++++ b/include/linux/kho/abi/mshv.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2026, Microsoft Corporation.
++ *
++ * Author: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
++ */
++
++#ifndef _LINUX_KHO_ABI_MSHV_H
++#define _LINUX_KHO_ABI_MSHV_H
++
++/* The compatibility string for mshv file handler */
++#define MSHV_LUO_FH_COMPATIBLE "mshv-v1"
++
++#endif /* _LINUX_KHO_ABI_MSHV_H */
 
 
 
