@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-8536-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8537-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aLPdGjrWd2mFlwEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8536-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Jan 2026 22:01:46 +0100
+	id IPujIkHWd2mFlwEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8537-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Jan 2026 22:01:53 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E22CA8D6F4
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Jan 2026 22:01:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 21E548D70A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Jan 2026 22:01:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 433D73083AC8
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Jan 2026 20:56:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B439030D1EB7
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Jan 2026 20:56:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD4392DBF75;
-	Mon, 26 Jan 2026 20:56:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 664712D9EEA;
+	Mon, 26 Jan 2026 20:56:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TDs1Zb3Q"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XOsTbMOq"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 932232D94B0;
-	Mon, 26 Jan 2026 20:56:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AE482D9EEC;
+	Mon, 26 Jan 2026 20:56:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769460968; cv=none; b=LLNzXeA/bu/s1Weov5iWg0GfZDKAcAtuNW1Go7IOeL5Ps8Aaz0gEoT4H/+cWTOJvtfYjnQjNACryRr0MM2353w3fECVPZQLMN/ViBFRc0EnMQ/dt938mghQWxWTHnHHv+CT9qVtjQY7vUj/GDJfBapb5ID12cVegqfR/hyTCCCE=
+	t=1769460969; cv=none; b=LQ6uMSnxfUtfa6PP0LlBpVOQtI18jVcYOZIsCMXMv45yKqhE+1Iblj1aBLCAp+ch/ZSTDw4da21dJSiPexn39IJHxAOVRdxh/PzWTEdQAjLDr6QkDEgmDTPgNe2BdnBmqxJoYJDZo5tQl3NBxk1/NXoCQH8b18Kowl7EsXDDX/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769460968; c=relaxed/simple;
-	bh=bL+GjY+6kSdseXlmacyPtt/tkE0Dwxmuc4bPM61gQZQ=;
+	s=arc-20240116; t=1769460969; c=relaxed/simple;
+	bh=+P10XApdy/ttFptXElH5VjKZJUS+4MArBT59eNERt6E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tLaZHnXKrZn1Cahq9ZwXbkWbURHpl0zdgPYyby8h6fzjbamL/kNhDyPWToPUZ/kesvnUYxPgBm4MePHH4jJoIn8eFBxL0NpwCKj/AQIgko6ciojYXXuxa5OVQcluzWt4MlaT21Fttg3NcbmcjF/3s6FtYduFiv2DKECT4p8JJhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TDs1Zb3Q; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=f9thNh6B1M5R6GCc+2J5WSUehxcnKTGVodpaR4c7pIoCxmPp8LPCP3FwqzOYBGqFm8KXD8c0d1x6Vbf4xDg9oQBxgsU2fP/bh1xCnTmvnk2XiFMNnY9P2HV2v7N7UvS4MWyo4liIbd0wos+NewFSH3r2Q1Y5Zi2j+EvDxfHUAx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XOsTbMOq; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1032)
-	id 9AECA20B716C; Mon, 26 Jan 2026 12:56:06 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9AECA20B716C
+	id 284EC20B716D; Mon, 26 Jan 2026 12:56:07 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 284EC20B716D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1769460966;
-	bh=/jeSCL044D3RarJ1mBPkSmMa+MkLBoSircR76TJs2LE=;
+	s=default; t=1769460967;
+	bh=feGsppMUwnMaHYvtllNSMuZ52sxsXXKlyMWLAM5cmGM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TDs1Zb3Qcal8XKV7dEmhN6dy5DGZhKfxsWkMKEXLkd4ftXbwQOugM3B0RDRc7y3Rf
-	 Wg56AbJ1nBbZU8ls3iCO5ZQqemFnzcOKramE/z2GSSpUhjieVfsF10EkghkuOBDRR9
-	 WRfPo2uoe7MxT0MUzM58cD0HzJEeV+4eYuqXt6oo=
+	b=XOsTbMOqva4n5qdX2/g2jD+1PjiKqE0Lml0j/jXZ32eG5TFLUGWbuLlHs+QbgiRpW
+	 JoN0P13nL89Yo6lCJpcdEiz3P56Yn90Vr1pXFBm1VJGLAKyLIWp06XTQrHdjoEDTRB
+	 zUMB7UpKpwz2s0AZEVNcMrDENvnRd8n45yMeQ/Qc=
 From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -55,10 +55,11 @@ Cc: kys@microsoft.com,
 	prapal@linux.microsoft.com,
 	mrathor@linux.microsoft.com,
 	paekkaladevi@linux.microsoft.com,
-	Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Subject: [PATCH v5 6/7] mshv: Add data for printing stats page counters
-Date: Mon, 26 Jan 2026 12:56:02 -0800
-Message-ID: <20260126205603.404655-7-nunodasneves@linux.microsoft.com>
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	Jinank Jain <jinankjain@microsoft.com>
+Subject: [PATCH v5 7/7] mshv: Add debugfs to view hypervisor statistics
+Date: Mon, 26 Jan 2026 12:56:03 -0800
+Message-ID: <20260126205603.404655-8-nunodasneves@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260126205603.404655-1-nunodasneves@linux.microsoft.com>
 References: <20260126205603.404655-1-nunodasneves@linux.microsoft.com>
@@ -75,16 +76,16 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8536-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8537-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_TO(0.00)[vger.kernel.org,outlook.com,linux.microsoft.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -97,520 +98,986 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:mid,linux.microsoft.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: E22CA8D6F4
+X-Rspamd-Queue-Id: 21E548D70A
 X-Rspamd-Action: no action
 
-Introduce mshv_debugfs_counters.c, containing static data
-corresponding to HV_*_COUNTER enums in the hypervisor source.
-Defining the enum members as an array instead makes more sense,
-since it will be iterated over to print counter information to
-debugfs.
+Introduce a debugfs interface to expose root and child partition stats
+when running with mshv_root.
 
-Include hypervisor, logical processor, partition, and virtual
-processor counters.
+Create a debugfs directory "mshv" containing 'stats' files organized by
+type and id. A stats file contains a number of counters depending on
+its type. e.g. an excerpt from a VP stats file:
 
+TotalRunTime                  : 1997602722
+HypervisorRunTime             : 649671371
+RemoteNodeRunTime             : 0
+NormalizedRunTime             : 1997602721
+IdealCpu                      : 0
+HypercallsCount               : 1708169
+HypercallsTime                : 111914774
+PageInvalidationsCount        : 0
+PageInvalidationsTime         : 0
+
+On a root partition with some active child partitions, the entire
+directory structure may look like:
+
+mshv/
+  stats             # hypervisor stats
+  lp/               # logical processors
+    0/              # LP id
+      stats         # LP 0 stats
+    1/
+    2/
+    3/
+  partition/        # partition stats
+    1/              # root partition id
+      stats         # root partition stats
+      vp/           # root virtual processors
+        0/          # root VP id
+          stats     # root VP 0 stats
+        1/
+        2/
+        3/
+    42/             # child partition id
+      stats         # child partition stats
+      vp/           # child VPs
+        0/          # child VP id
+          stats     # child VP 0 stats
+        1/
+    43/
+    55/
+
+On L1VH, some stats are not present as it does not own the hardware
+like the root partition does:
+- The hypervisor and lp stats are not present
+- L1VH's partition directory is named "self" because it can't get its
+  own id
+- Some of L1VH's partition and VP stats fields are not populated, because
+  it can't map its own HV_STATS_AREA_PARENT page.
+
+Co-developed-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Co-developed-by: Praveen K Paladugu <prapal@linux.microsoft.com>
+Signed-off-by: Praveen K Paladugu <prapal@linux.microsoft.com>
+Co-developed-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+Co-developed-by: Purna Pavan Chandra Aekkaladevi <paekkaladevi@linux.microsoft.com>
+Signed-off-by: Purna Pavan Chandra Aekkaladevi <paekkaladevi@linux.microsoft.com>
+Co-developed-by: Jinank Jain <jinankjain@microsoft.com>
+Signed-off-by: Jinank Jain <jinankjain@microsoft.com>
 Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Reviewed-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 ---
- drivers/hv/mshv_debugfs_counters.c | 490 +++++++++++++++++++++++++++++
- 1 file changed, 490 insertions(+)
- create mode 100644 drivers/hv/mshv_debugfs_counters.c
+ drivers/hv/Makefile         |   1 +
+ drivers/hv/mshv_debugfs.c   | 726 ++++++++++++++++++++++++++++++++++++
+ drivers/hv/mshv_root.h      |  34 ++
+ drivers/hv/mshv_root_main.c |  26 +-
+ 4 files changed, 785 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/hv/mshv_debugfs.c
 
-diff --git a/drivers/hv/mshv_debugfs_counters.c b/drivers/hv/mshv_debugfs_counters.c
+diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
+index a49f93c2d245..2593711c3628 100644
+--- a/drivers/hv/Makefile
++++ b/drivers/hv/Makefile
+@@ -15,6 +15,7 @@ hv_vmbus-$(CONFIG_HYPERV_TESTING)	+= hv_debugfs.o
+ hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_utils_transport.o
+ mshv_root-y := mshv_root_main.o mshv_synic.o mshv_eventfd.o mshv_irq.o \
+ 	       mshv_root_hv_call.o mshv_portid_table.o mshv_regions.o
++mshv_root-$(CONFIG_DEBUG_FS) += mshv_debugfs.o
+ mshv_vtl-y := mshv_vtl_main.o
+ 
+ # Code that must be built-in
+diff --git a/drivers/hv/mshv_debugfs.c b/drivers/hv/mshv_debugfs.c
 new file mode 100644
-index 000000000000..838af4673dd1
+index 000000000000..4553163e8665
 --- /dev/null
-+++ b/drivers/hv/mshv_debugfs_counters.c
-@@ -0,0 +1,490 @@
++++ b/drivers/hv/mshv_debugfs.c
+@@ -0,0 +1,726 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Copyright (c) 2026, Microsoft Corporation.
 + *
-+ * Data for printing stats page counters via debugfs.
++ * The /sys/kernel/debug/mshv directory contents.
++ * Contains various statistics data, provided by the hypervisor.
 + *
 + * Authors: Microsoft Linux virtualization team
 + */
 +
-+/*
-+ * For simplicity, this file is included directly in mshv_debugfs.c.
-+ * If these are ever needed elsewhere they should be compiled separately.
-+ * Ensure this file is not used twice by accident.
-+ */
-+#ifndef MSHV_DEBUGFS_C
-+#error "This file should only be included in mshv_debugfs.c"
-+#endif
++#include <linux/debugfs.h>
++#include <linux/stringify.h>
++#include <asm/mshyperv.h>
++#include <linux/slab.h>
 +
++#include "mshv.h"
++#include "mshv_root.h"
++
++/* Ensure this file is not used elsewhere by accident */
++#define MSHV_DEBUGFS_C
++#include "mshv_debugfs_counters.c"
++
++#define U32_BUF_SZ 11
++#define U64_BUF_SZ 21
++/* Only support SELF and PARENT areas */
++#define NUM_STATS_AREAS 2
++static_assert(HV_STATS_AREA_SELF == 0 && HV_STATS_AREA_PARENT == 1,
++	      "SELF and PARENT areas must be usable as indices into an array of size NUM_STATS_AREAS");
 +/* HV_HYPERVISOR_COUNTER */
-+static char *hv_hypervisor_counters[] = {
-+	[1] = "HvLogicalProcessors",
-+	[2] = "HvPartitions",
-+	[3] = "HvTotalPages",
-+	[4] = "HvVirtualProcessors",
-+	[5] = "HvMonitoredNotifications",
-+	[6] = "HvModernStandbyEntries",
-+	[7] = "HvPlatformIdleTransitions",
-+	[8] = "HvHypervisorStartupCost",
++#define HV_HYPERVISOR_COUNTER_LOGICAL_PROCESSORS 1
 +
-+	[10] = "HvIOSpacePages",
-+	[11] = "HvNonEssentialPagesForDump",
-+	[12] = "HvSubsumedPages",
-+};
++static struct dentry *mshv_debugfs;
++static struct dentry *mshv_debugfs_partition;
++static struct dentry *mshv_debugfs_lp;
++static struct dentry **parent_vp_stats;
++static struct dentry *parent_partition_stats;
 +
-+/* HV_CPU_COUNTER */
-+static char *hv_lp_counters[] = {
-+	[1] = "LpGlobalTime",
-+	[2] = "LpTotalRunTime",
-+	[3] = "LpHypervisorRunTime",
-+	[4] = "LpHardwareInterrupts",
-+	[5] = "LpContextSwitches",
-+	[6] = "LpInterProcessorInterrupts",
-+	[7] = "LpSchedulerInterrupts",
-+	[8] = "LpTimerInterrupts",
-+	[9] = "LpInterProcessorInterruptsSent",
-+	[10] = "LpProcessorHalts",
-+	[11] = "LpMonitorTransitionCost",
-+	[12] = "LpContextSwitchTime",
-+	[13] = "LpC1TransitionsCount",
-+	[14] = "LpC1RunTime",
-+	[15] = "LpC2TransitionsCount",
-+	[16] = "LpC2RunTime",
-+	[17] = "LpC3TransitionsCount",
-+	[18] = "LpC3RunTime",
-+	[19] = "LpRootVpIndex",
-+	[20] = "LpIdleSequenceNumber",
-+	[21] = "LpGlobalTscCount",
-+	[22] = "LpActiveTscCount",
-+	[23] = "LpIdleAccumulation",
-+	[24] = "LpReferenceCycleCount0",
-+	[25] = "LpActualCycleCount0",
-+	[26] = "LpReferenceCycleCount1",
-+	[27] = "LpActualCycleCount1",
-+	[28] = "LpProximityDomainId",
-+	[29] = "LpPostedInterruptNotifications",
-+	[30] = "LpBranchPredictorFlushes",
-+#if IS_ENABLED(CONFIG_X86_64)
-+	[31] = "LpL1DataCacheFlushes",
-+	[32] = "LpImmediateL1DataCacheFlushes",
-+	[33] = "LpMbFlushes",
-+	[34] = "LpCounterRefreshSequenceNumber",
-+	[35] = "LpCounterRefreshReferenceTime",
-+	[36] = "LpIdleAccumulationSnapshot",
-+	[37] = "LpActiveTscCountSnapshot",
-+	[38] = "LpHwpRequestContextSwitches",
-+	[39] = "LpPlaceholder1",
-+	[40] = "LpPlaceholder2",
-+	[41] = "LpPlaceholder3",
-+	[42] = "LpPlaceholder4",
-+	[43] = "LpPlaceholder5",
-+	[44] = "LpPlaceholder6",
-+	[45] = "LpPlaceholder7",
-+	[46] = "LpPlaceholder8",
-+	[47] = "LpPlaceholder9",
-+	[48] = "LpSchLocalRunListSize",
-+	[49] = "LpReserveGroupId",
-+	[50] = "LpRunningPriority",
-+	[51] = "LpPerfmonInterruptCount",	
-+#elif IS_ENABLED(CONFIG_ARM64)
-+	[31] = "LpCounterRefreshSequenceNumber",
-+	[32] = "LpCounterRefreshReferenceTime",
-+	[33] = "LpIdleAccumulationSnapshot",
-+	[34] = "LpActiveTscCountSnapshot",
-+	[35] = "LpHwpRequestContextSwitches",
-+	[36] = "LpPlaceholder2",
-+	[37] = "LpPlaceholder3",
-+	[38] = "LpPlaceholder4",
-+	[39] = "LpPlaceholder5",
-+	[40] = "LpPlaceholder6",
-+	[41] = "LpPlaceholder7",
-+	[42] = "LpPlaceholder8",
-+	[43] = "LpPlaceholder9",
-+	[44] = "LpSchLocalRunListSize",
-+	[45] = "LpReserveGroupId",
-+	[46] = "LpRunningPriority",	
++static u64 mshv_lps_count;
++static struct hv_stats_page **mshv_lps_stats;
++
++static int lp_stats_show(struct seq_file *m, void *v)
++{
++	const struct hv_stats_page *stats = m->private;
++	int idx;
++
++	for (idx = 0; idx < ARRAY_SIZE(hv_lp_counters); idx++) {
++		char *name = hv_lp_counters[idx];
++
++		if (!name)
++			continue;
++		seq_printf(m, "%-32s: %llu\n", name, stats->data[idx]);
++	}
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(lp_stats);
++
++static void mshv_lp_stats_unmap(u32 lp_index)
++{
++	union hv_stats_object_identity identity = {
++		.lp.lp_index = lp_index,
++		.lp.stats_area_type = HV_STATS_AREA_SELF,
++	};
++	int err;
++
++	err = hv_unmap_stats_page(HV_STATS_OBJECT_LOGICAL_PROCESSOR,
++				  mshv_lps_stats[lp_index], &identity);
++	if (err)
++		pr_err("%s: failed to unmap logical processor %u stats, err: %d\n",
++		       __func__, lp_index, err);
++
++	mshv_lps_stats[lp_index] = NULL;
++}
++
++static struct hv_stats_page * __init mshv_lp_stats_map(u32 lp_index)
++{
++	union hv_stats_object_identity identity = {
++		.lp.lp_index = lp_index,
++		.lp.stats_area_type = HV_STATS_AREA_SELF,
++	};
++	struct hv_stats_page *stats;
++	int err;
++
++	err = hv_map_stats_page(HV_STATS_OBJECT_LOGICAL_PROCESSOR, &identity,
++				&stats);
++	if (err) {
++		pr_err("%s: failed to map logical processor %u stats, err: %d\n",
++		       __func__, lp_index, err);
++		return ERR_PTR(err);
++	}
++	mshv_lps_stats[lp_index] = stats;
++
++	return stats;
++}
++
++static struct hv_stats_page * __init lp_debugfs_stats_create(u32 lp_index,
++							     struct dentry *parent)
++{
++	struct dentry *dentry;
++	struct hv_stats_page *stats;
++
++	stats = mshv_lp_stats_map(lp_index);
++	if (IS_ERR(stats))
++		return stats;
++
++	dentry = debugfs_create_file("stats", 0400, parent,
++				     stats, &lp_stats_fops);
++	if (IS_ERR(dentry)) {
++		mshv_lp_stats_unmap(lp_index);
++		return ERR_CAST(dentry);
++	}
++	return stats;
++}
++
++static int __init lp_debugfs_create(u32 lp_index, struct dentry *parent)
++{
++	struct dentry *idx;
++	char lp_idx_str[U32_BUF_SZ];
++	struct hv_stats_page *stats;
++	int err;
++
++	sprintf(lp_idx_str, "%u", lp_index);
++
++	idx = debugfs_create_dir(lp_idx_str, parent);
++	if (IS_ERR(idx))
++		return PTR_ERR(idx);
++
++	stats = lp_debugfs_stats_create(lp_index, idx);
++	if (IS_ERR(stats)) {
++		err = PTR_ERR(stats);
++		goto remove_debugfs_lp_idx;
++	}
++
++	return 0;
++
++remove_debugfs_lp_idx:
++	debugfs_remove_recursive(idx);
++	return err;
++}
++
++static void mshv_debugfs_lp_remove(void)
++{
++	int lp_index;
++
++	debugfs_remove_recursive(mshv_debugfs_lp);
++
++	for (lp_index = 0; lp_index < mshv_lps_count; lp_index++)
++		mshv_lp_stats_unmap(lp_index);
++
++	kfree(mshv_lps_stats);
++	mshv_lps_stats = NULL;
++}
++
++static int __init mshv_debugfs_lp_create(struct dentry *parent)
++{
++	struct dentry *lp_dir;
++	int err, lp_index;
++
++	mshv_lps_stats = kcalloc(mshv_lps_count,
++				 sizeof(*mshv_lps_stats),
++				 GFP_KERNEL_ACCOUNT);
++
++	if (!mshv_lps_stats)
++		return -ENOMEM;
++
++	lp_dir = debugfs_create_dir("lp", parent);
++	if (IS_ERR(lp_dir)) {
++		err = PTR_ERR(lp_dir);
++		goto free_lp_stats;
++	}
++
++	for (lp_index = 0; lp_index < mshv_lps_count; lp_index++) {
++		err = lp_debugfs_create(lp_index, lp_dir);
++		if (err)
++			goto remove_debugfs_lps;
++	}
++
++	mshv_debugfs_lp = lp_dir;
++
++	return 0;
++
++remove_debugfs_lps:
++	for (lp_index -= 1; lp_index >= 0; lp_index--)
++		mshv_lp_stats_unmap(lp_index);
++	debugfs_remove_recursive(lp_dir);
++free_lp_stats:
++	kfree(mshv_lps_stats);
++	mshv_lps_stats = NULL;
++
++	return err;
++}
++
++static int vp_stats_show(struct seq_file *m, void *v)
++{
++	const struct hv_stats_page **pstats = m->private;
++	u64 parent_val, self_val;
++	int idx;
++
++	/*
++	 * For VP and partition stats, there may be two stats areas mapped,
++	 * SELF and PARENT. These refer to the privilege level of the data in
++	 * each page. Some fields may be 0 in SELF and nonzero in PARENT, or
++	 * vice versa.
++	 *
++	 * Hence, prioritize printing from the PARENT page (more privileged
++	 * data), but use the value from the SELF page if the PARENT value is
++	 * 0.
++	 */
++
++	for (idx = 0; idx < ARRAY_SIZE(hv_vp_counters); idx++) {
++		char *name = hv_vp_counters[idx];
++
++		if (!name)
++			continue;
++
++		parent_val = pstats[HV_STATS_AREA_PARENT]->data[idx];
++		self_val = pstats[HV_STATS_AREA_SELF]->data[idx];
++		seq_printf(m, "%-43s: %llu\n", name,
++			   parent_val ? parent_val : self_val);
++	}
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(vp_stats);
++
++static void vp_debugfs_remove(struct dentry *vp_stats)
++{
++	debugfs_remove_recursive(vp_stats->d_parent);
++}
++
++static int vp_debugfs_create(u64 partition_id, u32 vp_index,
++			     struct hv_stats_page **pstats,
++			     struct dentry **vp_stats_ptr,
++			     struct dentry *parent)
++{
++	struct dentry *vp_idx_dir, *d;
++	char vp_idx_str[U32_BUF_SZ];
++	int err;
++
++	sprintf(vp_idx_str, "%u", vp_index);
++
++	vp_idx_dir = debugfs_create_dir(vp_idx_str, parent);
++	if (IS_ERR(vp_idx_dir))
++		return PTR_ERR(vp_idx_dir);
++
++	d = debugfs_create_file("stats", 0400, vp_idx_dir,
++				     pstats, &vp_stats_fops);
++	if (IS_ERR(d)) {
++		err = PTR_ERR(d);
++		goto remove_debugfs_vp_idx;
++	}
++
++	*vp_stats_ptr = d;
++
++	return 0;
++
++remove_debugfs_vp_idx:
++	debugfs_remove_recursive(vp_idx_dir);
++	return err;
++}
++
++static int partition_stats_show(struct seq_file *m, void *v)
++{
++	const struct hv_stats_page **pstats = m->private;
++	u64 parent_val, self_val;
++	int idx;
++
++	for (idx = 0; idx < ARRAY_SIZE(hv_partition_counters); idx++) {
++		char *name = hv_partition_counters[idx];
++
++		if (!name)
++			continue;
++
++		parent_val = pstats[HV_STATS_AREA_PARENT]->data[idx];
++		self_val = pstats[HV_STATS_AREA_SELF]->data[idx];
++		seq_printf(m, "%-37s: %llu\n", name,
++			   parent_val ? parent_val : self_val);
++	}
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(partition_stats);
++
++static void mshv_partition_stats_unmap(u64 partition_id,
++				       struct hv_stats_page *stats_page,
++				       enum hv_stats_area_type stats_area_type)
++{
++	union hv_stats_object_identity identity = {
++		.partition.partition_id = partition_id,
++		.partition.stats_area_type = stats_area_type,
++	};
++	int err;
++
++	err = hv_unmap_stats_page(HV_STATS_OBJECT_PARTITION, stats_page,
++				  &identity);
++	if (err)
++		pr_err("%s: failed to unmap partition %lld %s stats, err: %d\n",
++		       __func__, partition_id,
++		       (stats_area_type == HV_STATS_AREA_SELF) ? "self" : "parent",
++		       err);
++}
++
++static struct hv_stats_page *mshv_partition_stats_map(u64 partition_id,
++						      enum hv_stats_area_type stats_area_type)
++{
++	union hv_stats_object_identity identity = {
++		.partition.partition_id = partition_id,
++		.partition.stats_area_type = stats_area_type,
++	};
++	struct hv_stats_page *stats;
++	int err;
++
++	err = hv_map_stats_page(HV_STATS_OBJECT_PARTITION, &identity, &stats);
++	if (err) {
++		pr_err("%s: failed to map partition %lld %s stats, err: %d\n",
++		       __func__, partition_id,
++		       (stats_area_type == HV_STATS_AREA_SELF) ? "self" : "parent",
++		       err);
++		return ERR_PTR(err);
++	}
++	return stats;
++}
++
++static int mshv_debugfs_partition_stats_create(u64 partition_id,
++					    struct dentry **partition_stats_ptr,
++					    struct dentry *parent)
++{
++	struct dentry *dentry;
++	struct hv_stats_page **pstats;
++	int err;
++
++	pstats = kcalloc(NUM_STATS_AREAS, sizeof(struct hv_stats_page *),
++			 GFP_KERNEL_ACCOUNT);
++	if (!pstats)
++		return -ENOMEM;
++
++	pstats[HV_STATS_AREA_SELF] = mshv_partition_stats_map(partition_id,
++							      HV_STATS_AREA_SELF);
++	if (IS_ERR(pstats[HV_STATS_AREA_SELF])) {
++		err = PTR_ERR(pstats[HV_STATS_AREA_SELF]);
++		goto cleanup;
++	}
++
++	/*
++	 * L1VH partition cannot access its partition stats in parent area.
++	 */
++	if (is_l1vh_parent(partition_id)) {
++		pstats[HV_STATS_AREA_PARENT] = pstats[HV_STATS_AREA_SELF];
++	} else {
++		pstats[HV_STATS_AREA_PARENT] = mshv_partition_stats_map(partition_id,
++									HV_STATS_AREA_PARENT);
++		if (IS_ERR(pstats[HV_STATS_AREA_PARENT])) {
++			err = PTR_ERR(pstats[HV_STATS_AREA_PARENT]);
++			goto unmap_self;
++		}
++		if (!pstats[HV_STATS_AREA_PARENT])
++			pstats[HV_STATS_AREA_PARENT] = pstats[HV_STATS_AREA_SELF];
++	}
++
++	dentry = debugfs_create_file("stats", 0400, parent,
++				     pstats, &partition_stats_fops);
++	if (IS_ERR(dentry)) {
++		err = PTR_ERR(dentry);
++		goto unmap_partition_stats;
++	}
++
++	*partition_stats_ptr = dentry;
++	return 0;
++
++unmap_partition_stats:
++	if (pstats[HV_STATS_AREA_PARENT] != pstats[HV_STATS_AREA_SELF])
++		mshv_partition_stats_unmap(partition_id, pstats[HV_STATS_AREA_PARENT],
++					   HV_STATS_AREA_PARENT);
++unmap_self:
++	mshv_partition_stats_unmap(partition_id, pstats[HV_STATS_AREA_SELF],
++				   HV_STATS_AREA_SELF);
++cleanup:
++	kfree(pstats);
++	return err;
++}
++
++static void partition_debugfs_remove(u64 partition_id, struct dentry *dentry)
++{
++	struct hv_stats_page **pstats = NULL;
++
++	pstats = dentry->d_inode->i_private;
++
++	debugfs_remove_recursive(dentry->d_parent);
++
++	if (pstats[HV_STATS_AREA_PARENT] != pstats[HV_STATS_AREA_SELF]) {
++		mshv_partition_stats_unmap(partition_id,
++					   pstats[HV_STATS_AREA_PARENT],
++					   HV_STATS_AREA_PARENT);
++	}
++
++	mshv_partition_stats_unmap(partition_id,
++				   pstats[HV_STATS_AREA_SELF],
++				   HV_STATS_AREA_SELF);
++
++	kfree(pstats);
++}
++
++static int partition_debugfs_create(u64 partition_id,
++				    struct dentry **vp_dir_ptr,
++				    struct dentry **partition_stats_ptr,
++				    struct dentry *parent)
++{
++	char part_id_str[U64_BUF_SZ];
++	struct dentry *part_id_dir, *vp_dir;
++	int err;
++
++	if (is_l1vh_parent(partition_id))
++		sprintf(part_id_str, "self");
++	else
++		sprintf(part_id_str, "%llu", partition_id);
++
++	part_id_dir = debugfs_create_dir(part_id_str, parent);
++	if (IS_ERR(part_id_dir))
++		return PTR_ERR(part_id_dir);
++
++	vp_dir = debugfs_create_dir("vp", part_id_dir);
++	if (IS_ERR(vp_dir)) {
++		err = PTR_ERR(vp_dir);
++		goto remove_debugfs_partition_id;
++	}
++
++	err = mshv_debugfs_partition_stats_create(partition_id,
++						  partition_stats_ptr,
++						  part_id_dir);
++	if (err)
++		goto remove_debugfs_partition_id;
++
++	*vp_dir_ptr = vp_dir;
++
++	return 0;
++
++remove_debugfs_partition_id:
++	debugfs_remove_recursive(part_id_dir);
++	return err;
++}
++
++static void parent_vp_debugfs_remove(u32 vp_index,
++				     struct dentry *vp_stats_ptr)
++{
++	struct hv_stats_page **pstats;
++
++	pstats = vp_stats_ptr->d_inode->i_private;
++	vp_debugfs_remove(vp_stats_ptr);
++	mshv_vp_stats_unmap(hv_current_partition_id, vp_index, pstats);
++	kfree(pstats);
++}
++
++static void mshv_debugfs_parent_partition_remove(void)
++{
++	int idx;
++
++	for_each_online_cpu(idx)
++		parent_vp_debugfs_remove(hv_vp_index[idx],
++					 parent_vp_stats[idx]);
++
++	partition_debugfs_remove(hv_current_partition_id,
++				 parent_partition_stats);
++	kfree(parent_vp_stats);
++	parent_vp_stats = NULL;
++	parent_partition_stats = NULL;
++}
++
++static int __init parent_vp_debugfs_create(u32 vp_index,
++					   struct dentry **vp_stats_ptr,
++					   struct dentry *parent)
++{
++	struct hv_stats_page **pstats;
++	int err;
++
++	pstats = kcalloc(NUM_STATS_AREAS, sizeof(struct hv_stats_page *),
++			 GFP_KERNEL_ACCOUNT);
++	if (!pstats)
++		return -ENOMEM;
++
++	err = mshv_vp_stats_map(hv_current_partition_id, vp_index, pstats);
++	if (err)
++		goto cleanup;
++
++	err = vp_debugfs_create(hv_current_partition_id, vp_index, pstats,
++				vp_stats_ptr, parent);
++	if (err)
++		goto unmap_vp_stats;
++
++	return 0;
++
++unmap_vp_stats:
++	mshv_vp_stats_unmap(hv_current_partition_id, vp_index, pstats);
++cleanup:
++	kfree(pstats);
++	return err;
++}
++
++static int __init mshv_debugfs_parent_partition_create(void)
++{
++	struct dentry *vp_dir;
++	int err, idx, i;
++
++	mshv_debugfs_partition = debugfs_create_dir("partition",
++						     mshv_debugfs);
++	if (IS_ERR(mshv_debugfs_partition))
++		return PTR_ERR(mshv_debugfs_partition);
++
++	err = partition_debugfs_create(hv_current_partition_id,
++				       &vp_dir,
++				       &parent_partition_stats,
++				       mshv_debugfs_partition);
++	if (err)
++		goto remove_debugfs_partition;
++
++	parent_vp_stats = kcalloc(nr_cpu_ids, sizeof(*parent_vp_stats),
++				  GFP_KERNEL);
++	if (!parent_vp_stats) {
++		err = -ENOMEM;
++		goto remove_debugfs_partition;
++	}
++
++	for_each_online_cpu(idx) {
++		err = parent_vp_debugfs_create(hv_vp_index[idx],
++					       &parent_vp_stats[idx],
++					       vp_dir);
++		if (err)
++			goto remove_debugfs_partition_vp;
++	}
++
++	return 0;
++
++remove_debugfs_partition_vp:
++	for_each_online_cpu(i) {
++		if (i >= idx)
++			break;
++		parent_vp_debugfs_remove(i, parent_vp_stats[i]);
++	}
++	partition_debugfs_remove(hv_current_partition_id,
++				 parent_partition_stats);
++
++	kfree(parent_vp_stats);
++	parent_vp_stats = NULL;
++	parent_partition_stats = NULL;
++
++remove_debugfs_partition:
++	debugfs_remove_recursive(mshv_debugfs_partition);
++	mshv_debugfs_partition = NULL;
++	return err;
++}
++
++static int hv_stats_show(struct seq_file *m, void *v)
++{
++	const struct hv_stats_page *stats = m->private;
++	int idx;
++
++	for (idx = 0; idx < ARRAY_SIZE(hv_hypervisor_counters); idx++) {
++		char *name = hv_hypervisor_counters[idx];
++
++		if (!name)
++			continue;
++		seq_printf(m, "%-27s: %llu\n", name, stats->data[idx]);
++	}
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(hv_stats);
++
++static void mshv_hv_stats_unmap(void)
++{
++	union hv_stats_object_identity identity = {
++		.hv.stats_area_type = HV_STATS_AREA_SELF,
++	};
++	int err;
++
++	err = hv_unmap_stats_page(HV_STATS_OBJECT_HYPERVISOR, NULL, &identity);
++	if (err)
++		pr_err("%s: failed to unmap hypervisor stats: %d\n",
++		       __func__, err);
++}
++
++static void * __init mshv_hv_stats_map(void)
++{
++	union hv_stats_object_identity identity = {
++		.hv.stats_area_type = HV_STATS_AREA_SELF,
++	};
++	struct hv_stats_page *stats;
++	int err;
++
++	err = hv_map_stats_page(HV_STATS_OBJECT_HYPERVISOR, &identity, &stats);
++	if (err) {
++		pr_err("%s: failed to map hypervisor stats: %d\n",
++		       __func__, err);
++		return ERR_PTR(err);
++	}
++	return stats;
++}
++
++static int __init mshv_debugfs_hv_stats_create(struct dentry *parent)
++{
++	struct dentry *dentry;
++	u64 *stats;
++	int err;
++
++	stats = mshv_hv_stats_map();
++	if (IS_ERR(stats))
++		return PTR_ERR(stats);
++
++	dentry = debugfs_create_file("stats", 0400, parent,
++				     stats, &hv_stats_fops);
++	if (IS_ERR(dentry)) {
++		err = PTR_ERR(dentry);
++		pr_err("%s: failed to create hypervisor stats dentry: %d\n",
++		       __func__, err);
++		goto unmap_hv_stats;
++	}
++
++	mshv_lps_count = stats[HV_HYPERVISOR_COUNTER_LOGICAL_PROCESSORS];
++
++	return 0;
++
++unmap_hv_stats:
++	mshv_hv_stats_unmap();
++	return err;
++}
++
++int mshv_debugfs_vp_create(struct mshv_vp *vp)
++{
++	struct mshv_partition *p = vp->vp_partition;
++
++	if (!mshv_debugfs)
++		return 0;
++
++	return vp_debugfs_create(p->pt_id, vp->vp_index,
++				 vp->vp_stats_pages,
++				 &vp->vp_stats_dentry,
++				 p->pt_vp_dentry);
++}
++
++void mshv_debugfs_vp_remove(struct mshv_vp *vp)
++{
++	if (!mshv_debugfs)
++		return;
++
++	vp_debugfs_remove(vp->vp_stats_dentry);
++}
++
++int mshv_debugfs_partition_create(struct mshv_partition *partition)
++{
++	int err;
++
++	if (!mshv_debugfs)
++		return 0;
++
++	err = partition_debugfs_create(partition->pt_id,
++				       &partition->pt_vp_dentry,
++				       &partition->pt_stats_dentry,
++				       mshv_debugfs_partition);
++	if (err)
++		return err;
++
++	return 0;
++}
++
++void mshv_debugfs_partition_remove(struct mshv_partition *partition)
++{
++	if (!mshv_debugfs)
++		return;
++
++	partition_debugfs_remove(partition->pt_id,
++				 partition->pt_stats_dentry);
++}
++
++int __init mshv_debugfs_init(void)
++{
++	int err;
++
++	mshv_debugfs = debugfs_create_dir("mshv", NULL);
++	if (IS_ERR(mshv_debugfs)) {
++		pr_err("%s: failed to create debugfs directory\n", __func__);
++		return PTR_ERR(mshv_debugfs);
++	}
++
++	if (hv_root_partition()) {
++		err = mshv_debugfs_hv_stats_create(mshv_debugfs);
++		if (err)
++			goto remove_mshv_dir;
++
++		err = mshv_debugfs_lp_create(mshv_debugfs);
++		if (err)
++			goto unmap_hv_stats;
++	}
++
++	err = mshv_debugfs_parent_partition_create();
++	if (err)
++		goto unmap_lp_stats;
++
++	return 0;
++
++unmap_lp_stats:
++	if (hv_root_partition()) {
++		mshv_debugfs_lp_remove();
++		mshv_debugfs_lp = NULL;
++	}
++unmap_hv_stats:
++	if (hv_root_partition())
++		mshv_hv_stats_unmap();
++remove_mshv_dir:
++	debugfs_remove_recursive(mshv_debugfs);
++	mshv_debugfs = NULL;
++	return err;
++}
++
++void mshv_debugfs_exit(void)
++{
++	mshv_debugfs_parent_partition_remove();
++
++	if (hv_root_partition()) {
++		mshv_debugfs_lp_remove();
++		mshv_debugfs_lp = NULL;
++		mshv_hv_stats_unmap();
++	}
++
++	debugfs_remove_recursive(mshv_debugfs);
++	mshv_debugfs = NULL;
++	mshv_debugfs_partition = NULL;
++}
+diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
+index e4912b0618fa..7332d9af8373 100644
+--- a/drivers/hv/mshv_root.h
++++ b/drivers/hv/mshv_root.h
+@@ -52,6 +52,9 @@ struct mshv_vp {
+ 		unsigned int kicked_by_hv;
+ 		wait_queue_head_t vp_suspend_queue;
+ 	} run;
++#if IS_ENABLED(CONFIG_DEBUG_FS)
++	struct dentry *vp_stats_dentry;
 +#endif
-+};
-+
-+/* HV_PROCESS_COUNTER */
-+static char *hv_partition_counters[] = {
-+	[1] = "PtVirtualProcessors",
-+
-+	[3] = "PtTlbSize",
-+	[4] = "PtAddressSpaces",
-+	[5] = "PtDepositedPages",
-+	[6] = "PtGpaPages",
-+	[7] = "PtGpaSpaceModifications",
-+	[8] = "PtVirtualTlbFlushEntires",
-+	[9] = "PtRecommendedTlbSize",
-+	[10] = "PtGpaPages4K",
-+	[11] = "PtGpaPages2M",
-+	[12] = "PtGpaPages1G",
-+	[13] = "PtGpaPages512G",
-+	[14] = "PtDevicePages4K",
-+	[15] = "PtDevicePages2M",
-+	[16] = "PtDevicePages1G",
-+	[17] = "PtDevicePages512G",
-+	[18] = "PtAttachedDevices",
-+	[19] = "PtDeviceInterruptMappings",
-+	[20] = "PtIoTlbFlushes",
-+	[21] = "PtIoTlbFlushCost",
-+	[22] = "PtDeviceInterruptErrors",
-+	[23] = "PtDeviceDmaErrors",
-+	[24] = "PtDeviceInterruptThrottleEvents",
-+	[25] = "PtSkippedTimerTicks",
-+	[26] = "PtPartitionId",
-+#if IS_ENABLED(CONFIG_X86_64)
-+	[27] = "PtNestedTlbSize",
-+	[28] = "PtRecommendedNestedTlbSize",
-+	[29] = "PtNestedTlbFreeListSize",
-+	[30] = "PtNestedTlbTrimmedPages",
-+	[31] = "PtPagesShattered",
-+	[32] = "PtPagesRecombined",
-+	[33] = "PtHwpRequestValue",
-+	[34] = "PtAutoSuspendEnableTime",
-+	[35] = "PtAutoSuspendTriggerTime",
-+	[36] = "PtAutoSuspendDisableTime",
-+	[37] = "PtPlaceholder1",
-+	[38] = "PtPlaceholder2",
-+	[39] = "PtPlaceholder3",
-+	[40] = "PtPlaceholder4",
-+	[41] = "PtPlaceholder5",
-+	[42] = "PtPlaceholder6",
-+	[43] = "PtPlaceholder7",
-+	[44] = "PtPlaceholder8",
-+	[45] = "PtHypervisorStateTransferGeneration",
-+	[46] = "PtNumberofActiveChildPartitions",
-+#elif IS_ENABLED(CONFIG_ARM64)
-+	[27] = "PtHwpRequestValue",
-+	[28] = "PtAutoSuspendEnableTime",
-+	[29] = "PtAutoSuspendTriggerTime",
-+	[30] = "PtAutoSuspendDisableTime",
-+	[31] = "PtPlaceholder1",
-+	[32] = "PtPlaceholder2",
-+	[33] = "PtPlaceholder3",
-+	[34] = "PtPlaceholder4",
-+	[35] = "PtPlaceholder5",
-+	[36] = "PtPlaceholder6",
-+	[37] = "PtPlaceholder7",
-+	[38] = "PtPlaceholder8",
-+	[39] = "PtHypervisorStateTransferGeneration",
-+	[40] = "PtNumberofActiveChildPartitions",
+ };
+ 
+ #define vp_fmt(fmt) "p%lluvp%u: " fmt
+@@ -136,6 +139,10 @@ struct mshv_partition {
+ 	u64 isolation_type;
+ 	bool import_completed;
+ 	bool pt_initialized;
++#if IS_ENABLED(CONFIG_DEBUG_FS)
++	struct dentry *pt_stats_dentry;
++	struct dentry *pt_vp_dentry;
 +#endif
-+};
+ };
+ 
+ #define pt_fmt(fmt) "p%llu: " fmt
+@@ -327,6 +334,33 @@ int hv_call_modify_spa_host_access(u64 partition_id, struct page **pages,
+ int hv_call_get_partition_property_ex(u64 partition_id, u64 property_code, u64 arg,
+ 				      void *property_value, size_t property_value_sz);
+ 
++#if IS_ENABLED(CONFIG_DEBUG_FS)
++int __init mshv_debugfs_init(void);
++void mshv_debugfs_exit(void);
 +
-+/* HV_THREAD_COUNTER */
-+static char *hv_vp_counters[] = {
-+	[1] = "VpTotalRunTime",
-+	[2] = "VpHypervisorRunTime",
-+	[3] = "VpRemoteNodeRunTime",
-+	[4] = "VpNormalizedRunTime",
-+	[5] = "VpIdealCpu",
++int mshv_debugfs_partition_create(struct mshv_partition *partition);
++void mshv_debugfs_partition_remove(struct mshv_partition *partition);
++int mshv_debugfs_vp_create(struct mshv_vp *vp);
++void mshv_debugfs_vp_remove(struct mshv_vp *vp);
++#else
++static inline int __init mshv_debugfs_init(void)
++{
++	return 0;
++}
++static inline void mshv_debugfs_exit(void) { }
 +
-+	[7] = "VpHypercallsCount",
-+	[8] = "VpHypercallsTime",
-+#if IS_ENABLED(CONFIG_X86_64)
-+	[9] = "VpPageInvalidationsCount",
-+	[10] = "VpPageInvalidationsTime",
-+	[11] = "VpControlRegisterAccessesCount",
-+	[12] = "VpControlRegisterAccessesTime",
-+	[13] = "VpIoInstructionsCount",
-+	[14] = "VpIoInstructionsTime",
-+	[15] = "VpHltInstructionsCount",
-+	[16] = "VpHltInstructionsTime",
-+	[17] = "VpMwaitInstructionsCount",
-+	[18] = "VpMwaitInstructionsTime",
-+	[19] = "VpCpuidInstructionsCount",
-+	[20] = "VpCpuidInstructionsTime",
-+	[21] = "VpMsrAccessesCount",
-+	[22] = "VpMsrAccessesTime",
-+	[23] = "VpOtherInterceptsCount",
-+	[24] = "VpOtherInterceptsTime",
-+	[25] = "VpExternalInterruptsCount",
-+	[26] = "VpExternalInterruptsTime",
-+	[27] = "VpPendingInterruptsCount",
-+	[28] = "VpPendingInterruptsTime",
-+	[29] = "VpEmulatedInstructionsCount",
-+	[30] = "VpEmulatedInstructionsTime",
-+	[31] = "VpDebugRegisterAccessesCount",
-+	[32] = "VpDebugRegisterAccessesTime",
-+	[33] = "VpPageFaultInterceptsCount",
-+	[34] = "VpPageFaultInterceptsTime",
-+	[35] = "VpGuestPageTableMaps",
-+	[36] = "VpLargePageTlbFills",
-+	[37] = "VpSmallPageTlbFills",
-+	[38] = "VpReflectedGuestPageFaults",
-+	[39] = "VpApicMmioAccesses",
-+	[40] = "VpIoInterceptMessages",
-+	[41] = "VpMemoryInterceptMessages",
-+	[42] = "VpApicEoiAccesses",
-+	[43] = "VpOtherMessages",
-+	[44] = "VpPageTableAllocations",
-+	[45] = "VpLogicalProcessorMigrations",
-+	[46] = "VpAddressSpaceEvictions",
-+	[47] = "VpAddressSpaceSwitches",
-+	[48] = "VpAddressDomainFlushes",
-+	[49] = "VpAddressSpaceFlushes",
-+	[50] = "VpGlobalGvaRangeFlushes",
-+	[51] = "VpLocalGvaRangeFlushes",
-+	[52] = "VpPageTableEvictions",
-+	[53] = "VpPageTableReclamations",
-+	[54] = "VpPageTableResets",
-+	[55] = "VpPageTableValidations",
-+	[56] = "VpApicTprAccesses",
-+	[57] = "VpPageTableWriteIntercepts",
-+	[58] = "VpSyntheticInterrupts",
-+	[59] = "VpVirtualInterrupts",
-+	[60] = "VpApicIpisSent",
-+	[61] = "VpApicSelfIpisSent",
-+	[62] = "VpGpaSpaceHypercalls",
-+	[63] = "VpLogicalProcessorHypercalls",
-+	[64] = "VpLongSpinWaitHypercalls",
-+	[65] = "VpOtherHypercalls",
-+	[66] = "VpSyntheticInterruptHypercalls",
-+	[67] = "VpVirtualInterruptHypercalls",
-+	[68] = "VpVirtualMmuHypercalls",
-+	[69] = "VpVirtualProcessorHypercalls",
-+	[70] = "VpHardwareInterrupts",
-+	[71] = "VpNestedPageFaultInterceptsCount",
-+	[72] = "VpNestedPageFaultInterceptsTime",
-+	[73] = "VpPageScans",
-+	[74] = "VpLogicalProcessorDispatches",
-+	[75] = "VpWaitingForCpuTime",
-+	[76] = "VpExtendedHypercalls",
-+	[77] = "VpExtendedHypercallInterceptMessages",
-+	[78] = "VpMbecNestedPageTableSwitches",
-+	[79] = "VpOtherReflectedGuestExceptions",
-+	[80] = "VpGlobalIoTlbFlushes",
-+	[81] = "VpGlobalIoTlbFlushCost",
-+	[82] = "VpLocalIoTlbFlushes",
-+	[83] = "VpLocalIoTlbFlushCost",
-+	[84] = "VpHypercallsForwardedCount",
-+	[85] = "VpHypercallsForwardingTime",
-+	[86] = "VpPageInvalidationsForwardedCount",
-+	[87] = "VpPageInvalidationsForwardingTime",
-+	[88] = "VpControlRegisterAccessesForwardedCount",
-+	[89] = "VpControlRegisterAccessesForwardingTime",
-+	[90] = "VpIoInstructionsForwardedCount",
-+	[91] = "VpIoInstructionsForwardingTime",
-+	[92] = "VpHltInstructionsForwardedCount",
-+	[93] = "VpHltInstructionsForwardingTime",
-+	[94] = "VpMwaitInstructionsForwardedCount",
-+	[95] = "VpMwaitInstructionsForwardingTime",
-+	[96] = "VpCpuidInstructionsForwardedCount",
-+	[97] = "VpCpuidInstructionsForwardingTime",
-+	[98] = "VpMsrAccessesForwardedCount",
-+	[99] = "VpMsrAccessesForwardingTime",
-+	[100] = "VpOtherInterceptsForwardedCount",
-+	[101] = "VpOtherInterceptsForwardingTime",
-+	[102] = "VpExternalInterruptsForwardedCount",
-+	[103] = "VpExternalInterruptsForwardingTime",
-+	[104] = "VpPendingInterruptsForwardedCount",
-+	[105] = "VpPendingInterruptsForwardingTime",
-+	[106] = "VpEmulatedInstructionsForwardedCount",
-+	[107] = "VpEmulatedInstructionsForwardingTime",
-+	[108] = "VpDebugRegisterAccessesForwardedCount",
-+	[109] = "VpDebugRegisterAccessesForwardingTime",
-+	[110] = "VpPageFaultInterceptsForwardedCount",
-+	[111] = "VpPageFaultInterceptsForwardingTime",
-+	[112] = "VpVmclearEmulationCount",
-+	[113] = "VpVmclearEmulationTime",
-+	[114] = "VpVmptrldEmulationCount",
-+	[115] = "VpVmptrldEmulationTime",
-+	[116] = "VpVmptrstEmulationCount",
-+	[117] = "VpVmptrstEmulationTime",
-+	[118] = "VpVmreadEmulationCount",
-+	[119] = "VpVmreadEmulationTime",
-+	[120] = "VpVmwriteEmulationCount",
-+	[121] = "VpVmwriteEmulationTime",
-+	[122] = "VpVmxoffEmulationCount",
-+	[123] = "VpVmxoffEmulationTime",
-+	[124] = "VpVmxonEmulationCount",
-+	[125] = "VpVmxonEmulationTime",
-+	[126] = "VpNestedVMEntriesCount",
-+	[127] = "VpNestedVMEntriesTime",
-+	[128] = "VpNestedSLATSoftPageFaultsCount",
-+	[129] = "VpNestedSLATSoftPageFaultsTime",
-+	[130] = "VpNestedSLATHardPageFaultsCount",
-+	[131] = "VpNestedSLATHardPageFaultsTime",
-+	[132] = "VpInvEptAllContextEmulationCount",
-+	[133] = "VpInvEptAllContextEmulationTime",
-+	[134] = "VpInvEptSingleContextEmulationCount",
-+	[135] = "VpInvEptSingleContextEmulationTime",
-+	[136] = "VpInvVpidAllContextEmulationCount",
-+	[137] = "VpInvVpidAllContextEmulationTime",
-+	[138] = "VpInvVpidSingleContextEmulationCount",
-+	[139] = "VpInvVpidSingleContextEmulationTime",
-+	[140] = "VpInvVpidSingleAddressEmulationCount",
-+	[141] = "VpInvVpidSingleAddressEmulationTime",
-+	[142] = "VpNestedTlbPageTableReclamations",
-+	[143] = "VpNestedTlbPageTableEvictions",
-+	[144] = "VpFlushGuestPhysicalAddressSpaceHypercalls",
-+	[145] = "VpFlushGuestPhysicalAddressListHypercalls",
-+	[146] = "VpPostedInterruptNotifications",
-+	[147] = "VpPostedInterruptScans",
-+	[148] = "VpTotalCoreRunTime",
-+	[149] = "VpMaximumRunTime",
-+	[150] = "VpHwpRequestContextSwitches",
-+	[151] = "VpWaitingForCpuTimeBucket0",
-+	[152] = "VpWaitingForCpuTimeBucket1",
-+	[153] = "VpWaitingForCpuTimeBucket2",
-+	[154] = "VpWaitingForCpuTimeBucket3",
-+	[155] = "VpWaitingForCpuTimeBucket4",
-+	[156] = "VpWaitingForCpuTimeBucket5",
-+	[157] = "VpWaitingForCpuTimeBucket6",
-+	[158] = "VpVmloadEmulationCount",
-+	[159] = "VpVmloadEmulationTime",
-+	[160] = "VpVmsaveEmulationCount",
-+	[161] = "VpVmsaveEmulationTime",
-+	[162] = "VpGifInstructionEmulationCount",
-+	[163] = "VpGifInstructionEmulationTime",
-+	[164] = "VpEmulatedErrataSvmInstructions",
-+	[165] = "VpPlaceholder1",
-+	[166] = "VpPlaceholder2",
-+	[167] = "VpPlaceholder3",
-+	[168] = "VpPlaceholder4",
-+	[169] = "VpPlaceholder5",
-+	[170] = "VpPlaceholder6",
-+	[171] = "VpPlaceholder7",
-+	[172] = "VpPlaceholder8",
-+	[173] = "VpContentionTime",
-+	[174] = "VpWakeUpTime",
-+	[175] = "VpSchedulingPriority",
-+	[176] = "VpRdpmcInstructionsCount",
-+	[177] = "VpRdpmcInstructionsTime",
-+	[178] = "VpPerfmonPmuMsrAccessesCount",
-+	[179] = "VpPerfmonLbrMsrAccessesCount",
-+	[180] = "VpPerfmonIptMsrAccessesCount",
-+	[181] = "VpPerfmonInterruptCount",
-+	[182] = "VpVtl1DispatchCount",
-+	[183] = "VpVtl2DispatchCount",
-+	[184] = "VpVtl2DispatchBucket0",
-+	[185] = "VpVtl2DispatchBucket1",
-+	[186] = "VpVtl2DispatchBucket2",
-+	[187] = "VpVtl2DispatchBucket3",
-+	[188] = "VpVtl2DispatchBucket4",
-+	[189] = "VpVtl2DispatchBucket5",
-+	[190] = "VpVtl2DispatchBucket6",
-+	[191] = "VpVtl1RunTime",
-+	[192] = "VpVtl2RunTime",
-+	[193] = "VpIommuHypercalls",
-+	[194] = "VpCpuGroupHypercalls",
-+	[195] = "VpVsmHypercalls",
-+	[196] = "VpEventLogHypercalls",
-+	[197] = "VpDeviceDomainHypercalls",
-+	[198] = "VpDepositHypercalls",
-+	[199] = "VpSvmHypercalls",
-+	[200] = "VpBusLockAcquisitionCount",
-+	[201] = "VpLoadAvg",
-+	[202] = "VpRootDispatchThreadBlocked",
-+	[203] = "VpIdleCpuTime",
-+	[204] = "VpWaitingForCpuTimeBucket7",
-+	[205] = "VpWaitingForCpuTimeBucket8",
-+	[206] = "VpWaitingForCpuTimeBucket9",
-+	[207] = "VpWaitingForCpuTimeBucket10",
-+	[208] = "VpWaitingForCpuTimeBucket11",
-+	[209] = "VpWaitingForCpuTimeBucket12",
-+	[210] = "VpHierarchicalSuspendTime",
-+	[211] = "VpExpressSchedulingAttempts",
-+	[212] = "VpExpressSchedulingCount",
-+#elif IS_ENABLED(CONFIG_ARM64)
-+	[9] = "VpSysRegAccessesCount",
-+	[10] = "VpSysRegAccessesTime",
-+	[11] = "VpSmcInstructionsCount",
-+	[12] = "VpSmcInstructionsTime",
-+	[13] = "VpOtherInterceptsCount",
-+	[14] = "VpOtherInterceptsTime",
-+	[15] = "VpExternalInterruptsCount",
-+	[16] = "VpExternalInterruptsTime",
-+	[17] = "VpPendingInterruptsCount",
-+	[18] = "VpPendingInterruptsTime",
-+	[19] = "VpGuestPageTableMaps",
-+	[20] = "VpLargePageTlbFills",
-+	[21] = "VpSmallPageTlbFills",
-+	[22] = "VpReflectedGuestPageFaults",
-+	[23] = "VpMemoryInterceptMessages",
-+	[24] = "VpOtherMessages",
-+	[25] = "VpLogicalProcessorMigrations",
-+	[26] = "VpAddressDomainFlushes",
-+	[27] = "VpAddressSpaceFlushes",
-+	[28] = "VpSyntheticInterrupts",
-+	[29] = "VpVirtualInterrupts",
-+	[30] = "VpApicSelfIpisSent",
-+	[31] = "VpGpaSpaceHypercalls",
-+	[32] = "VpLogicalProcessorHypercalls",
-+	[33] = "VpLongSpinWaitHypercalls",
-+	[34] = "VpOtherHypercalls",
-+	[35] = "VpSyntheticInterruptHypercalls",
-+	[36] = "VpVirtualInterruptHypercalls",
-+	[37] = "VpVirtualMmuHypercalls",
-+	[38] = "VpVirtualProcessorHypercalls",
-+	[39] = "VpHardwareInterrupts",
-+	[40] = "VpNestedPageFaultInterceptsCount",
-+	[41] = "VpNestedPageFaultInterceptsTime",
-+	[42] = "VpLogicalProcessorDispatches",
-+	[43] = "VpWaitingForCpuTime",
-+	[44] = "VpExtendedHypercalls",
-+	[45] = "VpExtendedHypercallInterceptMessages",
-+	[46] = "VpMbecNestedPageTableSwitches",
-+	[47] = "VpOtherReflectedGuestExceptions",
-+	[48] = "VpGlobalIoTlbFlushes",
-+	[49] = "VpGlobalIoTlbFlushCost",
-+	[50] = "VpLocalIoTlbFlushes",
-+	[51] = "VpLocalIoTlbFlushCost",
-+	[52] = "VpFlushGuestPhysicalAddressSpaceHypercalls",
-+	[53] = "VpFlushGuestPhysicalAddressListHypercalls",
-+	[54] = "VpPostedInterruptNotifications",
-+	[55] = "VpPostedInterruptScans",
-+	[56] = "VpTotalCoreRunTime",
-+	[57] = "VpMaximumRunTime",
-+	[58] = "VpWaitingForCpuTimeBucket0",
-+	[59] = "VpWaitingForCpuTimeBucket1",
-+	[60] = "VpWaitingForCpuTimeBucket2",
-+	[61] = "VpWaitingForCpuTimeBucket3",
-+	[62] = "VpWaitingForCpuTimeBucket4",
-+	[63] = "VpWaitingForCpuTimeBucket5",
-+	[64] = "VpWaitingForCpuTimeBucket6",
-+	[65] = "VpHwpRequestContextSwitches",
-+	[66] = "VpPlaceholder2",
-+	[67] = "VpPlaceholder3",
-+	[68] = "VpPlaceholder4",
-+	[69] = "VpPlaceholder5",
-+	[70] = "VpPlaceholder6",
-+	[71] = "VpPlaceholder7",
-+	[72] = "VpPlaceholder8",
-+	[73] = "VpContentionTime",
-+	[74] = "VpWakeUpTime",
-+	[75] = "VpSchedulingPriority",
-+	[76] = "VpVtl1DispatchCount",
-+	[77] = "VpVtl2DispatchCount",
-+	[78] = "VpVtl2DispatchBucket0",
-+	[79] = "VpVtl2DispatchBucket1",
-+	[80] = "VpVtl2DispatchBucket2",
-+	[81] = "VpVtl2DispatchBucket3",
-+	[82] = "VpVtl2DispatchBucket4",
-+	[83] = "VpVtl2DispatchBucket5",
-+	[84] = "VpVtl2DispatchBucket6",
-+	[85] = "VpVtl1RunTime",
-+	[86] = "VpVtl2RunTime",
-+	[87] = "VpIommuHypercalls",
-+	[88] = "VpCpuGroupHypercalls",
-+	[89] = "VpVsmHypercalls",
-+	[90] = "VpEventLogHypercalls",
-+	[91] = "VpDeviceDomainHypercalls",
-+	[92] = "VpDepositHypercalls",
-+	[93] = "VpSvmHypercalls",
-+	[94] = "VpLoadAvg",
-+	[95] = "VpRootDispatchThreadBlocked",
-+	[96] = "VpIdleCpuTime",
-+	[97] = "VpWaitingForCpuTimeBucket7",
-+	[98] = "VpWaitingForCpuTimeBucket8",
-+	[99] = "VpWaitingForCpuTimeBucket9",
-+	[100] = "VpWaitingForCpuTimeBucket10",
-+	[101] = "VpWaitingForCpuTimeBucket11",
-+	[102] = "VpWaitingForCpuTimeBucket12",
-+	[103] = "VpHierarchicalSuspendTime",
-+	[104] = "VpExpressSchedulingAttempts",
-+	[105] = "VpExpressSchedulingCount",	
++static inline int mshv_debugfs_partition_create(struct mshv_partition *partition)
++{
++	return 0;
++}
++static inline void mshv_debugfs_partition_remove(struct mshv_partition *partition) { }
++static inline int mshv_debugfs_vp_create(struct mshv_vp *vp)
++{
++	return 0;
++}
++static inline void mshv_debugfs_vp_remove(struct mshv_vp *vp) { }
 +#endif
-+};
++
+ extern struct mshv_root mshv_root;
+ extern enum hv_scheduler_type hv_scheduler_type;
+ extern u8 * __percpu *hv_synic_eventring_tail;
+diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+index 414d9cee5252..3a43e41e16a1 100644
+--- a/drivers/hv/mshv_root_main.c
++++ b/drivers/hv/mshv_root_main.c
+@@ -1095,6 +1095,10 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
+ 
+ 	memcpy(vp->vp_stats_pages, stats_pages, sizeof(stats_pages));
+ 
++	ret = mshv_debugfs_vp_create(vp);
++	if (ret)
++		goto put_partition;
++
+ 	/*
+ 	 * Keep anon_inode_getfd last: it installs fd in the file struct and
+ 	 * thus makes the state accessible in user space.
+@@ -1102,7 +1106,7 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
+ 	ret = anon_inode_getfd("mshv_vp", &mshv_vp_fops, vp,
+ 			       O_RDWR | O_CLOEXEC);
+ 	if (ret < 0)
+-		goto put_partition;
++		goto remove_debugfs_vp;
+ 
+ 	/* already exclusive with the partition mutex for all ioctls */
+ 	partition->pt_vp_count++;
+@@ -1110,6 +1114,8 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
+ 
+ 	return ret;
+ 
++remove_debugfs_vp:
++	mshv_debugfs_vp_remove(vp);
+ put_partition:
+ 	mshv_partition_put(partition);
+ free_vp:
+@@ -1552,10 +1558,16 @@ mshv_partition_ioctl_initialize(struct mshv_partition *partition)
+ 	if (ret)
+ 		goto withdraw_mem;
+ 
++	ret = mshv_debugfs_partition_create(partition);
++	if (ret)
++		goto finalize_partition;
++
+ 	partition->pt_initialized = true;
+ 
+ 	return 0;
+ 
++finalize_partition:
++	hv_call_finalize_partition(partition->pt_id);
+ withdraw_mem:
+ 	hv_call_withdraw_memory(U64_MAX, NUMA_NO_NODE, partition->pt_id);
+ 
+@@ -1735,6 +1747,7 @@ static void destroy_partition(struct mshv_partition *partition)
+ 			if (!vp)
+ 				continue;
+ 
++			mshv_debugfs_vp_remove(vp);
+ 			mshv_vp_stats_unmap(partition->pt_id, vp->vp_index,
+ 					    vp->vp_stats_pages);
+ 
+@@ -1768,6 +1781,8 @@ static void destroy_partition(struct mshv_partition *partition)
+ 			partition->pt_vp_array[i] = NULL;
+ 		}
+ 
++		mshv_debugfs_partition_remove(partition);
++
+ 		/* Deallocates and unmaps everything including vcpus, GPA mappings etc */
+ 		hv_call_finalize_partition(partition->pt_id);
+ 
+@@ -2313,10 +2328,14 @@ static int __init mshv_parent_partition_init(void)
+ 
+ 	mshv_init_vmm_caps(dev);
+ 
+-	ret = mshv_irqfd_wq_init();
++	ret = mshv_debugfs_init();
+ 	if (ret)
+ 		goto exit_partition;
+ 
++	ret = mshv_irqfd_wq_init();
++	if (ret)
++		goto exit_debugfs;
++
+ 	spin_lock_init(&mshv_root.pt_ht_lock);
+ 	hash_init(mshv_root.pt_htable);
+ 
+@@ -2324,6 +2343,8 @@ static int __init mshv_parent_partition_init(void)
+ 
+ 	return 0;
+ 
++exit_debugfs:
++	mshv_debugfs_exit();
+ exit_partition:
+ 	if (hv_root_partition())
+ 		mshv_root_partition_exit();
+@@ -2340,6 +2361,7 @@ static void __exit mshv_parent_partition_exit(void)
+ {
+ 	hv_setup_mshv_handler(NULL);
+ 	mshv_port_table_fini();
++	mshv_debugfs_exit();
+ 	misc_deregister(&mshv_dev);
+ 	mshv_irqfd_wq_cleanup();
+ 	if (hv_root_partition())
 -- 
 2.34.1
 
