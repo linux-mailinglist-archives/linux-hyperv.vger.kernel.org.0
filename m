@@ -1,58 +1,68 @@
-Return-Path: <linux-hyperv+bounces-8528-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8529-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oNs3Bn7Td2mFlwEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8528-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Jan 2026 21:50:06 +0100
+	id 2OQHNoLTd2mFlwEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8529-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Jan 2026 21:50:10 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A3BB8D484
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Jan 2026 21:50:05 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 391438D48B
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Jan 2026 21:50:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EE6EB305D6C9
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Jan 2026 20:46:47 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 99020301BEC7
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Jan 2026 20:50:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 847BC2D8382;
-	Mon, 26 Jan 2026 20:46:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41D262D8396;
+	Mon, 26 Jan 2026 20:50:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mbRsZlpt"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="K74TQNGc"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 518BC2D7DFE;
-	Mon, 26 Jan 2026 20:46:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E42A528643A;
+	Mon, 26 Jan 2026 20:50:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769460407; cv=none; b=qujvxqUP1wz05eDp/2HEL5QTFjbNTFPy+i4osJhNKPUYK2uutwSrJ0pUKbluFvuoJ28UtC88mYjAiatar+Ef6g2ErHQb2ylQvgSdOyrWUsa5rbmxA8pwBwsd8NjDyy+2VuHIK+2onyQXVKEW11A2FtnbmqW6Jnez9cbvFqqx4ms=
+	t=1769460607; cv=none; b=UFlMe9LS2otAzx8t2rkklyhLh46v22ffwgZfJy7+D2IrRHiyLW89IzptC6dTWUGBGdPu0ug3WrahHGPX52xtNKkkb+lU3wD4GyKK15dcUp7uOZqKlYb576zdnju0Mi6F6W/SR0nz5CEhbQNXDSGewTTcoP0s6A3D44ORqHqNfl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769460407; c=relaxed/simple;
-	bh=/Rt3uFgkEFvsJSuQhBDn6jiR3OsdxS1YKHgUSbmeIA8=;
+	s=arc-20240116; t=1769460607; c=relaxed/simple;
+	bh=S1uSk3BD8ULucBF3SDqkazr75drJ3at/HYBKxGFswEY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WZ/2qJALWa71omyRuaVCWZOmQ4VXKc+f3kPVm2OJ3gBVECO23y15MX1OYdakhRIjv72kZNTF7kkEg0Rf0H+CAnZC8FdgWqeYXPZAKKdnMeiGKV1R4an+mcqimmj7YW2Efk4oRxwdGgwxIDE3S3r/1UL9qkpzwV+SFisxe23AiXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=mbRsZlpt; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=A1LNzBy4+3dlQQe6/TEDuW1gARWB+KM1zOzjiDqDHXfJmq4Z4NNCi9+rDtPmOaG1c1dwSP8EJQlbFOiXO9YfXgRYgoC2motd3TSNA0QbGaE6Zh2yXg7nA/yJOUSieWMuZ8FrPLJZNXRF5qeI6yTNEgsz5bxcpYSYGxt8q3vOG9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=K74TQNGc; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii.localdomain (c-98-225-44-182.hsd1.wa.comcast.net [98.225.44.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id C630320B7165;
-	Mon, 26 Jan 2026 12:46:45 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C630320B7165
+	by linux.microsoft.com (Postfix) with ESMTPSA id E3D6220B716E;
+	Mon, 26 Jan 2026 12:50:04 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E3D6220B716E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1769460405;
-	bh=iF2f2ql0FFriZuZkNbddybQR7oFP1PFZ4G3/LKW5c9g=;
+	s=default; t=1769460605;
+	bh=aMPla4QrmCDTRq11ONPUsMeTtcU4Ek4C0hGQgcBMl74=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mbRsZlpt0ITUS5IhH+eleS3f+Agfs3ini8ZcXPI04jsSOeyMpwVdaVE+OhCHweR0g
-	 YImMU7ZE7C2vLKQtxoGydwvLSWTQwiaqkAOXDXt2xnE1vT1Mwa57ayy1q6XSWuJPLO
-	 /Ml4AZfaIMzLFlP2UDO+I6ucISBG9cFK6Cdf8wSg=
-Date: Mon, 26 Jan 2026 12:46:44 -0800
+	b=K74TQNGczFpAfhA3gfdl31xMldWM2jUiuWpBExIFe8FFA6T5VENcXMxblu6H+Fd5J
+	 q31ZsLv/+62nFidQMGJr5Cq+fCxyk5SPvvE1q3mXtZMAVywKuoK9pr5vk4Vvdey2oC
+	 u17S0GoZNJ5mz+dz8ev/+3idfQ7uW/nxPVpCrXyE=
+Date: Mon, 26 Jan 2026 12:50:03 -0800
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Anirudh Rayabharam <anirudh@anirudhrb.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mshv: Make MSHV mutually exclusive with KEXEC
-Message-ID: <aXfStKqKiSSHEmXj@skinsburskii.localdomain>
-References: <176920684805.250171.6817228088359793537.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <xyzkeqng3767mlpzu7xbmgobjr6ob2wp2brocmjczbbl4dypxh@wkibga46f33c>
+To: Mukesh R <mrathor@linux.microsoft.com>
+Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com, catalin.marinas@arm.com,
+	will@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, joro@8bytes.org,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
+	nunodasneves@linux.microsoft.com, mhklinux@outlook.com,
+	romank@linux.microsoft.com
+Subject: Re: [PATCH v0 10/15] PCI: hv: Build device id for a VMBus device
+Message-ID: <aXfTezmeX52VWFx6@skinsburskii.localdomain>
+References: <20260120064230.3602565-1-mrathor@linux.microsoft.com>
+ <20260120064230.3602565-11-mrathor@linux.microsoft.com>
+ <aXAAH4G9ztAGDWuy@skinsburskii.localdomain>
+ <a2e54fff-3cbb-e332-c35e-7520c36eceed@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -61,89 +71,160 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <xyzkeqng3767mlpzu7xbmgobjr6ob2wp2brocmjczbbl4dypxh@wkibga46f33c>
+In-Reply-To: <a2e54fff-3cbb-e332-c35e-7520c36eceed@linux.microsoft.com>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8528-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8529-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,microsoft.com,kernel.org,arm.com,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,8bytes.org,google.com,arndb.de,linux.microsoft.com,outlook.com];
+	RCPT_COUNT_TWELVE(0.00)[29];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: 6A3BB8D484
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.microsoft.com:dkim]
+X-Rspamd-Queue-Id: 391438D48B
 X-Rspamd-Action: no action
 
-On Tue, Jan 27, 2026 at 12:19:24AM +0530, Anirudh Rayabharam wrote:
-> On Fri, Jan 23, 2026 at 10:20:53PM +0000, Stanislav Kinsburskii wrote:
-> > The MSHV driver deposits kernel-allocated pages to the hypervisor during
-> > runtime and never withdraws them. This creates a fundamental incompatibility
-> > with KEXEC, as these deposited pages remain unavailable to the new kernel
-> > loaded via KEXEC, leading to potential system crashes upon kernel accessing
-> > hypervisor deposited pages.
+On Fri, Jan 23, 2026 at 04:42:54PM -0800, Mukesh R wrote:
+> On 1/20/26 14:22, Stanislav Kinsburskii wrote:
+> > On Mon, Jan 19, 2026 at 10:42:25PM -0800, Mukesh R wrote:
+> > > From: Mukesh Rathor <mrathor@linux.microsoft.com>
+> > > 
+> > > On Hyper-V, most hypercalls related to PCI passthru to map/unmap regions,
+> > > interrupts, etc need a device id as a parameter. This device id refers
+> > > to that specific device during the lifetime of passthru.
+> > > 
+> > > An L1VH VM only contains VMBus based devices. A device id for a VMBus
+> > > device is slightly different in that it uses the hv_pcibus_device info
+> > > for building it to make sure it matches exactly what the hypervisor
+> > > expects. This VMBus based device id is needed when attaching devices in
+> > > an L1VH based guest VM. Before building it, a check is done to make sure
+> > > the device is a valid VMBus device.
+> > > 
+> > > Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+> > > ---
+> > >   arch/x86/include/asm/mshyperv.h     |  2 ++
+> > >   drivers/pci/controller/pci-hyperv.c | 29 +++++++++++++++++++++++++++++
+> > >   2 files changed, 31 insertions(+)
+> > > 
+> > > diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> > > index eef4c3a5ba28..0d7fdfb25e76 100644
+> > > --- a/arch/x86/include/asm/mshyperv.h
+> > > +++ b/arch/x86/include/asm/mshyperv.h
+> > > @@ -188,6 +188,8 @@ bool hv_vcpu_is_preempted(int vcpu);
+> > >   static inline void hv_apic_init(void) {}
+> > >   #endif
+> > > +u64 hv_pci_vmbus_device_id(struct pci_dev *pdev);
+> > > +
+> > >   struct irq_domain *hv_create_pci_msi_domain(void);
+> > >   int hv_map_msi_interrupt(struct irq_data *data,
+> > > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> > > index 8bc6a38c9b5a..40f0b06bb966 100644
+> > > --- a/drivers/pci/controller/pci-hyperv.c
+> > > +++ b/drivers/pci/controller/pci-hyperv.c
+> > > @@ -579,6 +579,8 @@ static void hv_pci_onchannelcallback(void *context);
+> > >   #define DELIVERY_MODE		APIC_DELIVERY_MODE_FIXED
+> > >   #define HV_MSI_CHIP_FLAGS	MSI_CHIP_FLAG_SET_ACK
+> > > +static bool hv_vmbus_pci_device(struct pci_bus *pbus);
+> > > +
 > > 
-> > Make MSHV mutually exclusive with KEXEC until proper page lifecycle
-> > management is implemented.
+> > Why not moving this static function definition above the called instead of
+> > defining the prototype?
 > 
-> Someone might want to stop all guest VMs and do a kexec. Which is valid
-> and would work without any issue for L1VH.
-> 
-
-No, it won't work and hypervsisor depostied pages won't be withdrawn.
-Also, kernel consisntency must no depend on use space behavior. 
-
-> Also, I don't think it is reasonable at all that someone needs to
-> disable basic kernel functionality such as kexec in order to use our
-> driver.
+> Did you see the function implementation? It has other dependencies that
+> are later, it would need code reorg.
 > 
 
-It's a temporary measure until proper page lifecycle management is
-supported in the driver.
-Mutual exclusion of the driver and kexec is given and thus should be
-expclitily stated in the Kconfig.
+Why not placing the caller side after the function definition then?
 
 Thanks,
 Stanislav
 
 > Thanks,
-> Anirudh.
+> -Mukesh
 > 
+> 
+> > >   static int hv_pci_irqchip_init(void)
+> > >   {
+> > >   	return 0;
+> > > @@ -598,6 +600,26 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
+> > >   #define hv_msi_prepare		pci_msi_prepare
+> > > +u64 hv_pci_vmbus_device_id(struct pci_dev *pdev)
+> > > +{
+> > > +	u64 u64val;
 > > 
-> > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> > ---
-> >  drivers/hv/Kconfig |    1 +
-> >  1 file changed, 1 insertion(+)
+> > This variable is redundant.
+> 
+> Not really. It helps with debug by putting a quick print, and is
+> harmless.
+> 
+> > > +	struct hv_pcibus_device *hbus;
+> > > +	struct pci_bus *pbus = pdev->bus;
+> > > +
+> > > +	if (!hv_vmbus_pci_device(pbus))
+> > > +		return 0;
+> > > +
+> > > +	hbus = container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
+> > > +	u64val = (hbus->hdev->dev_instance.b[5] << 24) |
+> > > +		 (hbus->hdev->dev_instance.b[4] << 16) |
+> > > +		 (hbus->hdev->dev_instance.b[7] << 8) |
+> > > +		 (hbus->hdev->dev_instance.b[6] & 0xf8) |
+> > > +		 PCI_FUNC(pdev->devfn);
+> > > +
 > > 
-> > diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-> > index 7937ac0cbd0f..cfd4501db0fa 100644
-> > --- a/drivers/hv/Kconfig
-> > +++ b/drivers/hv/Kconfig
-> > @@ -74,6 +74,7 @@ config MSHV_ROOT
-> >  	# e.g. When withdrawing memory, the hypervisor gives back 4k pages in
-> >  	# no particular order, making it impossible to reassemble larger pages
-> >  	depends on PAGE_SIZE_4KB
-> > +	depends on !KEXEC
-> >  	select EVENTFD
-> >  	select VIRT_XFER_TO_GUEST_WORK
-> >  	select HMM_MIRROR
+> > It looks like this value always fits into 32 bit, so what is the value
+> > in returning 64 bit?
+> 
+> The ABI has device id defined as 64bits where this is assigned.
+> 
+> Thanks,
+> -Mukesh
+> 
+> 
+> 
+> 
+> > Thanks,
+> > Stanislav
 > > 
-> > 
+> > > +	return u64val;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(hv_pci_vmbus_device_id);
+> > > +
+> > >   /**
+> > >    * hv_irq_retarget_interrupt() - "Unmask" the IRQ by setting its current
+> > >    * affinity.
+> > > @@ -1404,6 +1426,13 @@ static struct pci_ops hv_pcifront_ops = {
+> > >   	.write = hv_pcifront_write_config,
+> > >   };
+> > > +#ifdef CONFIG_X86
+> > > +static bool hv_vmbus_pci_device(struct pci_bus *pbus)
+> > > +{
+> > > +	return pbus->ops == &hv_pcifront_ops;
+> > > +}
+> > > +#endif /* CONFIG_X86 */
+> > > +
+> > >   /*
+> > >    * Paravirtual backchannel
+> > >    *
+> > > -- 
+> > > 2.51.2.vfs.0.1
+> > > 
 
