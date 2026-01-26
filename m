@@ -1,230 +1,196 @@
-Return-Path: <linux-hyperv+bounces-8529-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8530-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2OQHNoLTd2mFlwEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8529-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Jan 2026 21:50:10 +0100
+	id eOiGNtXVd2mFlwEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8530-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Jan 2026 22:00:05 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 391438D48B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Jan 2026 21:50:10 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E1538D67A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Jan 2026 22:00:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 99020301BEC7
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Jan 2026 20:50:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6C0FF3008A4C
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Jan 2026 20:56:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41D262D8396;
-	Mon, 26 Jan 2026 20:50:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06B1A2C235E;
+	Mon, 26 Jan 2026 20:56:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="K74TQNGc"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZuFvVyFl"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E42A528643A;
-	Mon, 26 Jan 2026 20:50:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAF05199E89;
+	Mon, 26 Jan 2026 20:56:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769460607; cv=none; b=UFlMe9LS2otAzx8t2rkklyhLh46v22ffwgZfJy7+D2IrRHiyLW89IzptC6dTWUGBGdPu0ug3WrahHGPX52xtNKkkb+lU3wD4GyKK15dcUp7uOZqKlYb576zdnju0Mi6F6W/SR0nz5CEhbQNXDSGewTTcoP0s6A3D44ORqHqNfl0=
+	t=1769460965; cv=none; b=cehbBHWMXPaQX7oZeHHLEOQ6S6XT6QM9dCZYfv45FxeQ26MY2D87mDCz4Q6nkntm5wuM2MhWgX32cucsO6zPjygba61efdIm2l1vM+Giw3UfW+hjxEZ/hSEyOHe7PXVYbZlMKa9lhOAZdsVzH9bP1wK1PjYHds9Ni3zHxMOpKrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769460607; c=relaxed/simple;
-	bh=S1uSk3BD8ULucBF3SDqkazr75drJ3at/HYBKxGFswEY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A1LNzBy4+3dlQQe6/TEDuW1gARWB+KM1zOzjiDqDHXfJmq4Z4NNCi9+rDtPmOaG1c1dwSP8EJQlbFOiXO9YfXgRYgoC2motd3TSNA0QbGaE6Zh2yXg7nA/yJOUSieWMuZ8FrPLJZNXRF5qeI6yTNEgsz5bxcpYSYGxt8q3vOG9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=K74TQNGc; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1769460965; c=relaxed/simple;
+	bh=Nac/G+czoQuZw+myB2Y9qaWWC0RqIEDhmv+uLQHeq8E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MFxS7a3j3sIRFGFT5uDrP9E8aPxfarcjvpzdZhl4ByYN7fx9uJcWli0q+eHO8iXQ5n/30WY4nWdqeFci87UEgnSD98ICd29QLRjjFivmn/CrECHG5lmUHCd/pFOudVz/TEVVfr7jeirI01qoJVMhdbW1+sQ6cce4ghh/YrKnjOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ZuFvVyFl; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (c-98-225-44-182.hsd1.wa.comcast.net [98.225.44.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id E3D6220B716E;
-	Mon, 26 Jan 2026 12:50:04 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E3D6220B716E
+Received: by linux.microsoft.com (Postfix, from userid 1032)
+	id 88F3120B7165; Mon, 26 Jan 2026 12:56:04 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 88F3120B7165
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1769460605;
-	bh=aMPla4QrmCDTRq11ONPUsMeTtcU4Ek4C0hGQgcBMl74=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K74TQNGczFpAfhA3gfdl31xMldWM2jUiuWpBExIFe8FFA6T5VENcXMxblu6H+Fd5J
-	 q31ZsLv/+62nFidQMGJr5Cq+fCxyk5SPvvE1q3mXtZMAVywKuoK9pr5vk4Vvdey2oC
-	 u17S0GoZNJ5mz+dz8ev/+3idfQ7uW/nxPVpCrXyE=
-Date: Mon, 26 Jan 2026 12:50:03 -0800
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Mukesh R <mrathor@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com, catalin.marinas@arm.com,
-	will@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com, joro@8bytes.org,
-	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
-	robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
-	nunodasneves@linux.microsoft.com, mhklinux@outlook.com,
-	romank@linux.microsoft.com
-Subject: Re: [PATCH v0 10/15] PCI: hv: Build device id for a VMBus device
-Message-ID: <aXfTezmeX52VWFx6@skinsburskii.localdomain>
-References: <20260120064230.3602565-1-mrathor@linux.microsoft.com>
- <20260120064230.3602565-11-mrathor@linux.microsoft.com>
- <aXAAH4G9ztAGDWuy@skinsburskii.localdomain>
- <a2e54fff-3cbb-e332-c35e-7520c36eceed@linux.microsoft.com>
+	s=default; t=1769460964;
+	bh=VV1Zn6U99uP1U06jL5GZ6X2ROBFux7vFkwA8CEdgXu4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZuFvVyFlEYEzoPCjKHQD+QfHRM1D8zNCMh5h/1wQAQ8Bz1feOIDHdSukJhhLY6I2m
+	 2ANj2D229XKYDNQ/S4cfnoGddRCesInv09/DQUOrm1MLYZyVc1rLCdJmsOomIgZTsP
+	 I2LoQbaZo1e3AuCITQt12XyLgFIKGSPw/LBExFRo=
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mhklinux@outlook.com,
+	skinsburskii@linux.microsoft.com
+Cc: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	longli@microsoft.com,
+	prapal@linux.microsoft.com,
+	mrathor@linux.microsoft.com,
+	paekkaladevi@linux.microsoft.com,
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Subject: [PATCH v5 0/7] mshv: Debugfs interface for mshv_root
+Date: Mon, 26 Jan 2026 12:55:56 -0800
+Message-ID: <20260126205603.404655-1-nunodasneves@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a2e54fff-3cbb-e332-c35e-7520c36eceed@linux.microsoft.com>
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8529-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,microsoft.com,kernel.org,arm.com,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,8bytes.org,google.com,arndb.de,linux.microsoft.com,outlook.com];
-	RCPT_COUNT_TWELVE(0.00)[29];
+	TAGGED_FROM(0.00)[bounces-8530-lists,linux-hyperv=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FREEMAIL_TO(0.00)[vger.kernel.org,outlook.com,linux.microsoft.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: 391438D48B
+	FROM_NEQ_ENVFROM(0.00)[nunodasneves@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	PRECEDENCE_BULK(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:mid,linux.microsoft.com:dkim]
+X-Rspamd-Queue-Id: 3E1538D67A
 X-Rspamd-Action: no action
 
-On Fri, Jan 23, 2026 at 04:42:54PM -0800, Mukesh R wrote:
-> On 1/20/26 14:22, Stanislav Kinsburskii wrote:
-> > On Mon, Jan 19, 2026 at 10:42:25PM -0800, Mukesh R wrote:
-> > > From: Mukesh Rathor <mrathor@linux.microsoft.com>
-> > > 
-> > > On Hyper-V, most hypercalls related to PCI passthru to map/unmap regions,
-> > > interrupts, etc need a device id as a parameter. This device id refers
-> > > to that specific device during the lifetime of passthru.
-> > > 
-> > > An L1VH VM only contains VMBus based devices. A device id for a VMBus
-> > > device is slightly different in that it uses the hv_pcibus_device info
-> > > for building it to make sure it matches exactly what the hypervisor
-> > > expects. This VMBus based device id is needed when attaching devices in
-> > > an L1VH based guest VM. Before building it, a check is done to make sure
-> > > the device is a valid VMBus device.
-> > > 
-> > > Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
-> > > ---
-> > >   arch/x86/include/asm/mshyperv.h     |  2 ++
-> > >   drivers/pci/controller/pci-hyperv.c | 29 +++++++++++++++++++++++++++++
-> > >   2 files changed, 31 insertions(+)
-> > > 
-> > > diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> > > index eef4c3a5ba28..0d7fdfb25e76 100644
-> > > --- a/arch/x86/include/asm/mshyperv.h
-> > > +++ b/arch/x86/include/asm/mshyperv.h
-> > > @@ -188,6 +188,8 @@ bool hv_vcpu_is_preempted(int vcpu);
-> > >   static inline void hv_apic_init(void) {}
-> > >   #endif
-> > > +u64 hv_pci_vmbus_device_id(struct pci_dev *pdev);
-> > > +
-> > >   struct irq_domain *hv_create_pci_msi_domain(void);
-> > >   int hv_map_msi_interrupt(struct irq_data *data,
-> > > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> > > index 8bc6a38c9b5a..40f0b06bb966 100644
-> > > --- a/drivers/pci/controller/pci-hyperv.c
-> > > +++ b/drivers/pci/controller/pci-hyperv.c
-> > > @@ -579,6 +579,8 @@ static void hv_pci_onchannelcallback(void *context);
-> > >   #define DELIVERY_MODE		APIC_DELIVERY_MODE_FIXED
-> > >   #define HV_MSI_CHIP_FLAGS	MSI_CHIP_FLAG_SET_ACK
-> > > +static bool hv_vmbus_pci_device(struct pci_bus *pbus);
-> > > +
-> > 
-> > Why not moving this static function definition above the called instead of
-> > defining the prototype?
-> 
-> Did you see the function implementation? It has other dependencies that
-> are later, it would need code reorg.
-> 
+Expose hypervisor, logical processor, partition, and virtual processor
+statistics via debugfs. These are provided by mapping 'stats' pages via
+hypercall.
 
-Why not placing the caller side after the function definition then?
+Patch #1: Update hv_call_map_stats_page() to return success when
+          HV_STATS_AREA_PARENT is unavailable, which is the case on some
+          hypervisor versions, where it can fall back to HV_STATS_AREA_SELF
+Patch #2: Use struct hv_stats_page pointers instead of void *
+Patch #3: Make mshv_vp_stats_map/unmap() more flexible to use with debugfs code
+Patch #4: Always map vp stats page regardless of scheduler, to reuse in debugfs
+Patch #5: Change to hv_stats_page definition and VpRootDispatchThreadBlocked
+Patch #6: Introduce the definitions needed for the various stats pages
+Patch #7: Add mshv_debugfs.c, and integrate it with the mshv_root driver to
+          expose the partition and VP stats.
 
-Thanks,
-Stanislav
+---
+Changes in v5:
+- Rename hv_counters.c to mshv_debugfs_counters.c [Michael]
+- Clarify unusual inclusion of mshv_debugfs_counters.c with comment. After
+  discussion it is still included directly to keep things simple. Including
+  arrays with unspecified size via a header means sizeof() cannot be used on
+  the array.
+- Error if mshv_debugfs_counters.c is included elsewhere than mshv_debugfs.c
+- Use array index as stats page index to save space [Stanislav]
+- Enforce HV_STATS_AREA_PARENT and SELF fit in NUM_STATS_AREAS with
+  static_assert and clarify with comment [Michael]
+- Return to using lp count from hv stats page for mshv_lps_count [Michael]
+- Use nr_cpu_ids instead of num_possible_cpus() [Michael]
+- Set mshv_lps_stats[idx] and the array itself to NULL on unmap and cleanup
+  [Michael]
+- Rename HvLogicalProcessors and VpRootDispatchThreadBlocked to Linux style
+- Translate Linux cpu index to vp index via hv_vp_index on partition destroy
+  [Michael]
+- Minor formatting cleanups [Michael]
 
-> Thanks,
-> -Mukesh
-> 
-> 
-> > >   static int hv_pci_irqchip_init(void)
-> > >   {
-> > >   	return 0;
-> > > @@ -598,6 +600,26 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
-> > >   #define hv_msi_prepare		pci_msi_prepare
-> > > +u64 hv_pci_vmbus_device_id(struct pci_dev *pdev)
-> > > +{
-> > > +	u64 u64val;
-> > 
-> > This variable is redundant.
-> 
-> Not really. It helps with debug by putting a quick print, and is
-> harmless.
-> 
-> > > +	struct hv_pcibus_device *hbus;
-> > > +	struct pci_bus *pbus = pdev->bus;
-> > > +
-> > > +	if (!hv_vmbus_pci_device(pbus))
-> > > +		return 0;
-> > > +
-> > > +	hbus = container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
-> > > +	u64val = (hbus->hdev->dev_instance.b[5] << 24) |
-> > > +		 (hbus->hdev->dev_instance.b[4] << 16) |
-> > > +		 (hbus->hdev->dev_instance.b[7] << 8) |
-> > > +		 (hbus->hdev->dev_instance.b[6] & 0xf8) |
-> > > +		 PCI_FUNC(pdev->devfn);
-> > > +
-> > 
-> > It looks like this value always fits into 32 bit, so what is the value
-> > in returning 64 bit?
-> 
-> The ABI has device id defined as 64bits where this is assigned.
-> 
-> Thanks,
-> -Mukesh
-> 
-> 
-> 
-> 
-> > Thanks,
-> > Stanislav
-> > 
-> > > +	return u64val;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(hv_pci_vmbus_device_id);
-> > > +
-> > >   /**
-> > >    * hv_irq_retarget_interrupt() - "Unmask" the IRQ by setting its current
-> > >    * affinity.
-> > > @@ -1404,6 +1426,13 @@ static struct pci_ops hv_pcifront_ops = {
-> > >   	.write = hv_pcifront_write_config,
-> > >   };
-> > > +#ifdef CONFIG_X86
-> > > +static bool hv_vmbus_pci_device(struct pci_bus *pbus)
-> > > +{
-> > > +	return pbus->ops == &hv_pcifront_ops;
-> > > +}
-> > > +#endif /* CONFIG_X86 */
-> > > +
-> > >   /*
-> > >    * Paravirtual backchannel
-> > >    *
-> > > -- 
-> > > 2.51.2.vfs.0.1
-> > > 
+Changes in v4:
+- Put the counters definitions in static arrays in hv_counters.c, instead of as
+  enums in hvhdk.h [Michael]
+- Due to the above, add an additional patch (#5) to simplify hv_stats_page, and
+  retain the enum definition at the top of mshv_root_main.c for use with
+  VpRootDispatchThreadBlocked. That is the only remaining use of the counter
+  enum.
+- Due to the above, use num_present_cpus() as the number of LPs to map stats
+  pages for - this number shouldn't change at runtime because the hypervisor
+  doesn't support hotplug for root partition.
+
+Changes in v3:
+- Add 3 small refactor/cleanup patches (patches 2,3,4) from Stanislav. These
+  simplify some of the debugfs code, and fix issues with mapping VP stats on
+  L1VH.
+- Fix cleanup of parent stats dentries on module removal (via squashing some
+  internal patches into patch #6) [Praveen]
+- Remove unused goto label [Stanislav, kernel bot]
+- Use struct hv_stats_page * instead of void * in mshv_debugfs.c [Stanislav]
+- Remove some redundant variables [Stanislav]
+- Rename debugfs dentry fields for brevity [Stanislav]
+- Use ERR_CAST() for the dentry error pointer returned from
+  lp_debugfs_stats_create() [Stanislav]
+- Fix leak of pages allocated for lp stats mappings by storing them in an array
+  [Michael]
+- Add comments to clarify PARENT vs SELF usage and edge cases [Michael]
+- Add VpLoadAvg for x86 and print the stat [Michael]
+- Add NUM_STATS_AREAS for array sizing in mshv_debugfs.c [Michael]
+
+Changes in v2:
+- Remove unnecessary pr_debug_once() in patch 1 [Stanislav Kinsburskii]
+- CONFIG_X86 -> CONFIG_X86_64 in patch 2 [Stanislav Kinsburskii]
+
+---
+Nuno Das Neves (3):
+  mshv: Update hv_stats_page definitions
+  mshv: Add data for printing stats page counters
+  mshv: Add debugfs to view hypervisor statistics
+
+Purna Pavan Chandra Aekkaladevi (1):
+  mshv: Ignore second stats page map result failure
+
+Stanislav Kinsburskii (3):
+  mshv: Use typed hv_stats_page pointers
+  mshv: Improve mshv_vp_stats_map/unmap(), add them to mshv_root.h
+  mshv: Always map child vp stats pages regardless of scheduler type
+
+ drivers/hv/Makefile                |   1 +
+ drivers/hv/mshv_debugfs.c          | 726 +++++++++++++++++++++++++++++
+ drivers/hv/mshv_debugfs_counters.c | 490 +++++++++++++++++++
+ drivers/hv/mshv_root.h             |  49 +-
+ drivers/hv/mshv_root_hv_call.c     |  64 ++-
+ drivers/hv/mshv_root_main.c        | 140 +++---
+ include/hyperv/hvhdk.h             |   8 +
+ 7 files changed, 1413 insertions(+), 65 deletions(-)
+ create mode 100644 drivers/hv/mshv_debugfs.c
+ create mode 100644 drivers/hv/mshv_debugfs_counters.c
+
+-- 
+2.34.1
+
 
