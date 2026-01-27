@@ -1,84 +1,80 @@
-Return-Path: <linux-hyperv+bounces-8548-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8549-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OrSfJx/6eGlfuQEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8548-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Jan 2026 18:47:11 +0100
+	id OGovGjoEeWk3ugEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8549-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Jan 2026 19:30:18 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8435989E0
-	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Jan 2026 18:47:10 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8C75990E4
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Jan 2026 19:30:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 5B5753001078
-	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Jan 2026 17:47:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6AFF4303DAD6
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Jan 2026 18:30:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 191D027B35F;
-	Tue, 27 Jan 2026 17:47:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 768D4327202;
+	Tue, 27 Jan 2026 18:30:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iJRc/NQb"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MDXYAekg"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAFF81A9F9B;
-	Tue, 27 Jan 2026 17:47:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED5A8279907;
+	Tue, 27 Jan 2026 18:30:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769536026; cv=none; b=BUPGhGHmVb8jyC8LYXdnb+PhP+ncwIF/dpQsY4pPw6N9GEn/r2CyeNJbqD0iE6i1g3DgMdlJQGQs1ptg6pJkfQTYmv/DaCwFFyBEyDsbm3KZvuc/KlSK2hUzrQOoWdWVdPVxWAt9WvxCA5rUmgNqXlOHGKyPVOU0TcCs5kxZLO0=
+	t=1769538615; cv=none; b=Xbi8sUDgZnaK3T5yN/EGCjRJr91LskPEMH18vOKEIlpQu+GAujfW6yriHui0dEW6sq7MBYBsK6ratpyJk6Jcsv1Ar51g6If+D57pJj1exHH18obOhwlJG5boEMdNkNbR/RzMMi57MMGLuzfRrAP5gRfQJ7H8VsyLQxFEB4VKsMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769536026; c=relaxed/simple;
-	bh=EYobg1EIS1i0gBCT6Uuan9+JkqNhHsAp7qFNldHx/qI=;
+	s=arc-20240116; t=1769538615; c=relaxed/simple;
+	bh=U2XEATTfURjO9oXNZuXDArrkDH5LGMyJ4nsR7zMiL2E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O3EYiYcMnjphsOVV0ltL/IGr07kiYbc1NUW9dVl9gkNPEv7hNnIfw1jpb1s462lBJfb0Km4Ejx+/lcVRrWFBm87TRPqs5k5UCKFNoNMJCEYE7kC7wjJveM8mGie3bPYqmztjMj37gZOY7kGSo1SpwncYTBu4YcOdR3YdWgJTgYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=iJRc/NQb; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=DrXgyI7O8dYwzny0rg3TPIm3rgXmgcv9JoetChLybwiz61kLimuReQ6f2OcpfVEG2B/F/O6j5u/PlM1p3g2gMm9lTVHZ8B+ObzWiUP9M23nuEnF3Ldz260t6YmQw+93DiZPG2eh5RRh8FcyGrU1qH+K+B55vQ+ol0Z+nSSIIMJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MDXYAekg; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii.localdomain (c-98-225-44-182.hsd1.wa.comcast.net [98.225.44.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id BF4DF20B7165;
-	Tue, 27 Jan 2026 09:47:03 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BF4DF20B7165
+	by linux.microsoft.com (Postfix) with ESMTPSA id DB3F120B7165;
+	Tue, 27 Jan 2026 10:30:12 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DB3F120B7165
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1769536024;
-	bh=OIaiBSFdpW5WtE03veURky3VhO0cvG4QrEmlhgmAjV8=;
+	s=default; t=1769538613;
+	bh=V1hcMz64KRI1tog8IVLnBXS5bBgoOqJ333Bj0FzlyiU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iJRc/NQbp8L+R+0exQgBuMZfiLMpzAfDpc2ZY89kliv31Ak0/eeMAUATMj9f06J8F
-	 ljnmnw0u7+2hMCyp10Xm7D5OHaq1Yp57/WH1qwaEaNnHXVMqntVhMOScLSktJNicqy
-	 lQ4J7PaK4JNZEm03gbj9u1dZsnn8bzodeHbjRiUM=
-Date: Tue, 27 Jan 2026 09:47:01 -0800
+	b=MDXYAekgsp+pOiBxsswZ6h0TomqwWlbWmu92MYqeZakQZQaHQfTeOeuyn2y37mDQy
+	 ABdLHtAsFM6nGalzruPNczVnvzQ0wSyNofzIx4cBC1YKhIlv/kl55/tKZAJW51vamF
+	 uMkOOUlkqVRGYMdPMMFvHQTAtmcfZ27J6MwBZ21U=
+Date: Tue, 27 Jan 2026 10:30:10 -0800
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: Mukesh R <mrathor@linux.microsoft.com>
 Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
 	decui@microsoft.com, longli@microsoft.com,
 	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mshv: Make MSHV mutually exclusive with KEXEC
-Message-ID: <aXj6FXahxZU8QFq0@skinsburskii.localdomain>
-References: <176920684805.250171.6817228088359793537.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <549041d1-360d-d34c-4e3b-62802346acaa@linux.microsoft.com>
- <aXabnnCV50Thv9tZ@skinsburskii.localdomain>
- <890506f6-9b91-5d59-8c98-086cf5d206bb@linux.microsoft.com>
- <aXfSDm-4BjPPZMNu@skinsburskii.localdomain>
- <2b42997d-7cc0-56ba-e1ca-a8640ce71ea9@linux.microsoft.com>
- <aXgFFz7YuJJQabyp@skinsburskii.localdomain>
- <257ad7f1-5dc0-2644-41c3-960c396caa38@linux.microsoft.com>
+Subject: Re: [PATCH 2/4] mshv: Introduce hv_deposit_memory helper functions
+Message-ID: <aXkEMnDy8UFwJitP@skinsburskii.localdomain>
+References: <176913164914.89165.5792608454600292463.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <176913212322.89165.12915292926444353627.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <23f52e20-f156-a2aa-ff04-00dc55238c51@linux.microsoft.com>
+ <aXacAQP3gjZ1gSLs@skinsburskii.localdomain>
+ <df21ce10-3cd5-9d78-a3ce-84c4b1ff9275@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <257ad7f1-5dc0-2644-41c3-960c396caa38@linux.microsoft.com>
+In-Reply-To: <df21ce10-3cd5-9d78-a3ce-84c4b1ff9275@linux.microsoft.com>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8548-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8549-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -86,7 +82,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
@@ -95,137 +91,241 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B8435989E0
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,skinsburskii.localdomain:mid,linux.microsoft.com:dkim]
+X-Rspamd-Queue-Id: B8C75990E4
 X-Rspamd-Action: no action
 
-On Mon, Jan 26, 2026 at 05:39:49PM -0800, Mukesh R wrote:
-> On 1/26/26 16:21, Stanislav Kinsburskii wrote:
-> > On Mon, Jan 26, 2026 at 03:07:18PM -0800, Mukesh R wrote:
-> > > On 1/26/26 12:43, Stanislav Kinsburskii wrote:
-> > > > On Mon, Jan 26, 2026 at 12:20:09PM -0800, Mukesh R wrote:
-> > > > > On 1/25/26 14:39, Stanislav Kinsburskii wrote:
-> > > > > > On Fri, Jan 23, 2026 at 04:16:33PM -0800, Mukesh R wrote:
-> > > > > > > On 1/23/26 14:20, Stanislav Kinsburskii wrote:
-> > > > > > > > The MSHV driver deposits kernel-allocated pages to the hypervisor during
-> > > > > > > > runtime and never withdraws them. This creates a fundamental incompatibility
-> > > > > > > > with KEXEC, as these deposited pages remain unavailable to the new kernel
-> > > > > > > > loaded via KEXEC, leading to potential system crashes upon kernel accessing
-> > > > > > > > hypervisor deposited pages.
-> > > > > > > > 
-> > > > > > > > Make MSHV mutually exclusive with KEXEC until proper page lifecycle
-> > > > > > > > management is implemented.
-> > > > > > > > 
-> > > > > > > > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> > > > > > > > ---
-> > > > > > > >      drivers/hv/Kconfig |    1 +
-> > > > > > > >      1 file changed, 1 insertion(+)
-> > > > > > > > 
-> > > > > > > > diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-> > > > > > > > index 7937ac0cbd0f..cfd4501db0fa 100644
-> > > > > > > > --- a/drivers/hv/Kconfig
-> > > > > > > > +++ b/drivers/hv/Kconfig
-> > > > > > > > @@ -74,6 +74,7 @@ config MSHV_ROOT
-> > > > > > > >      	# e.g. When withdrawing memory, the hypervisor gives back 4k pages in
-> > > > > > > >      	# no particular order, making it impossible to reassemble larger pages
-> > > > > > > >      	depends on PAGE_SIZE_4KB
-> > > > > > > > +	depends on !KEXEC
-> > > > > > > >      	select EVENTFD
-> > > > > > > >      	select VIRT_XFER_TO_GUEST_WORK
-> > > > > > > >      	select HMM_MIRROR
-> > > > > > > > 
-> > > > > > > > 
-> > > > > > > 
-> > > > > > > Will this affect CRASH kexec? I see few CONFIG_CRASH_DUMP in kexec.c
-> > > > > > > implying that crash dump might be involved. Or did you test kdump
-> > > > > > > and it was fine?
-> > > > > > > 
-> > > > > > 
-> > > > > > Yes, it will. Crash kexec depends on normal kexec functionality, so it
-> > > > > > will be affected as well.
-> > > > > 
-> > > > > So not sure I understand the reason for this patch. We can just block
-> > > > > kexec if there are any VMs running, right? Doing this would mean any
-> > > > > further developement would be without a ver important and major feature,
-> > > > > right?
+On Mon, Jan 26, 2026 at 06:06:23PM -0800, Mukesh R wrote:
+> On 1/25/26 14:41, Stanislav Kinsburskii wrote:
+> > On Fri, Jan 23, 2026 at 04:33:39PM -0800, Mukesh R wrote:
+> > > On 1/22/26 17:35, Stanislav Kinsburskii wrote:
+> > > > Introduce hv_deposit_memory_node() and hv_deposit_memory() helper
+> > > > functions to handle memory deposition with proper error handling.
 > > > > 
-> > > > This is an option. But until it's implemented and merged, a user mshv
-> > > > driver gets into a situation where kexec is broken in a non-obvious way.
-> > > > The system may crash at any time after kexec, depending on whether the
-> > > > new kernel touches the pages deposited to hypervisor or not. This is a
-> > > > bad user experience.
+> > > > The new hv_deposit_memory_node() function takes the hypervisor status
+> > > > as a parameter and validates it before depositing pages. It checks for
+> > > > HV_STATUS_INSUFFICIENT_MEMORY specifically and returns an error for
+> > > > unexpected status codes.
+> > > > 
+> > > > This is a precursor patch to new out-of-memory error codes support.
+> > > > No functional changes intended.
+> > > > 
+> > > > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+> > > > ---
+> > > >    drivers/hv/hv_proc.c           |   22 ++++++++++++++++++++--
+> > > >    drivers/hv/mshv_root_hv_call.c |   25 +++++++++----------------
+> > > >    drivers/hv/mshv_root_main.c    |    3 +--
+> > > >    include/asm-generic/mshyperv.h |   10 ++++++++++
+> > > >    4 files changed, 40 insertions(+), 20 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
+> > > > index 80c66d1c74d5..c0c2bfc80d77 100644
+> > > > --- a/drivers/hv/hv_proc.c
+> > > > +++ b/drivers/hv/hv_proc.c
+> > > > @@ -110,6 +110,23 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+> > > >    }
+> > > >    EXPORT_SYMBOL_GPL(hv_call_deposit_pages);
+> > > > +int hv_deposit_memory_node(int node, u64 partition_id,
+> > > > +			   u64 hv_status)
+> > > > +{
+> > > > +	u32 num_pages;
+> > > > +
+> > > > +	switch (hv_result(hv_status)) {
+> > > > +	case HV_STATUS_INSUFFICIENT_MEMORY:
+> > > > +		num_pages = 1;
+> > > > +		break;
+> > > > +	default:
+> > > > +		hv_status_err(hv_status, "Unexpected!\n");
+> > > > +		return -ENOMEM;
+> > > > +	}
+> > > > +	return hv_call_deposit_pages(node, partition_id, num_pages);
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(hv_deposit_memory_node);
+> > > > +
 > > > 
-> > > I understand that. But with this we cannot collect core and debug any
-> > > crashes. I was thinking there would be a quick way to prohibit kexec
-> > > for update via notifier or some other quick hack. Did you already
-> > > explore that and didn't find anything, hence this?
+> > > Different hypercalls may want to deposit different number of pages in one
+> > > shot. As feature evolves, page sizes get mixed, we'd almost need that
+> > > flexibility. So, imo, either we just don't do this for now, or add num pages
+> > > parameter to be passed down.
 > > > 
 > > 
-> > This quick hack you mention isn't quick in the upstream kernel as there
-> > is no hook to interrupt kexec process except the live update one.
+> > What you do mean by "page sizes get mixed"?
+> > A helper to deposit num pages already exists: its
+> > hv_call_deposit_pages().
 > 
-> That's the one we want to interrupt and block right? crash kexec
-> is ok and should be allowed. We can document we don't support kexec
-> for update for now.
+> My point, you are removing number of pages, and we may want to keep
+> that so one can quickly play around and change them.
 > 
-> > I sent an RFC for that one but given todays conversation details is
-> > won't be accepted as is.
+> -                       ret = hv_call_deposit_pages(NUMA_NO_NODE,
+> -                                                   pt_id, 1);
+> +                       ret = hv_deposit_memory(pt_id, status);
 > 
-> Are you taking about this?
-> 
->         "mshv: Add kexec safety for deposited pages"
-> 
-
-Yes.
-
-> > Making mshv mutually exclusive with kexec is the only viable option for
-> > now given time constraints.
-> > It is intended to be replaced with proper page lifecycle management in
-> > the future.
-> 
-> Yeah, that could take a long time and imo we cannot just disable KEXEC
-> completely. What we want is just block kexec for updates from some
-> mshv file for now, we an print during boot that kexec for updates is
-> not supported on mshv. Hope that makes sense.
+> For example, in hv_call_initialize_partition() we may realize after
+> some analysis that depositing 2 pages or 4 pages is much better.
 > 
 
-The trade-off here is between disabling kexec support and having the
-kernel crash after kexec in a non-obvious way. This affects both regular
-kexec and crash kexec.
+We have been using this 1-page deposit logic from the beginning. To
+change the number of pages, simply replace hv_deposit_memory with
+hv_call_deposit_pages and specify the desired number of pages.
 
-It’s a pity we can’t apply a quick hack to disable only regular kexec.
-However, since crash kexec would hit the same issues, until we have a
-proper state transition for deposted pages, the best workaround for now
-is to reset the hypervisor state on every kexec, which needs design,
-work, and testing.
-
-Disabling kexec is the only consistent way to handle this in the
-upstream kernel at the moment.
-
-Thanks, Stanislav
+The proposed approach reduces code duplication and is less error-prone,
+as there are multiple error codes to handle. Consolidating the logic
+also makes the driver more robust.
 
 
-> Thanks,
-> -Mukesh
-> 
-> 
-> 
+Thanks,  Stanislav
+
 > > Thanks,
 > > Stanislav
 > > 
 > > > Thanks,
 > > > -Mukesh
 > > > 
-> > > > Therefor it should be explicitly forbidden as it's essentially not
-> > > > supported yet.
+> > > 
+> > > 
+> > > >    bool hv_result_oom(u64 status)
+> > > >    {
+> > > >    	switch (hv_result(status)) {
+> > > > @@ -155,7 +172,8 @@ int hv_call_add_logical_proc(int node, u32 lp_index, u32 apic_id)
+> > > >    			}
+> > > >    			break;
+> > > >    		}
+> > > > -		ret = hv_call_deposit_pages(node, hv_current_partition_id, 1);
+> > > > +		ret = hv_deposit_memory_node(node, hv_current_partition_id,
+> > > > +					     status);
+> > > >    	} while (!ret);
+> > > >    	return ret;
+> > > > @@ -197,7 +215,7 @@ int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags)
+> > > >    			}
+> > > >    			break;
+> > > >    		}
+> > > > -		ret = hv_call_deposit_pages(node, partition_id, 1);
+> > > > +		ret = hv_deposit_memory_node(node, partition_id, status);
+> > > >    	} while (!ret);
+> > > > diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
+> > > > index 58c5cbf2e567..06f2bac8039d 100644
+> > > > --- a/drivers/hv/mshv_root_hv_call.c
+> > > > +++ b/drivers/hv/mshv_root_hv_call.c
+> > > > @@ -123,8 +123,7 @@ int hv_call_create_partition(u64 flags,
+> > > >    			break;
+> > > >    		}
+> > > >    		local_irq_restore(irq_flags);
+> > > > -		ret = hv_call_deposit_pages(NUMA_NO_NODE,
+> > > > -					    hv_current_partition_id, 1);
+> > > > +		ret = hv_deposit_memory(hv_current_partition_id, status);
+> > > >    	} while (!ret);
+> > > >    	return ret;
+> > > > @@ -151,7 +150,7 @@ int hv_call_initialize_partition(u64 partition_id)
+> > > >    			ret = hv_result_to_errno(status);
+> > > >    			break;
+> > > >    		}
+> > > > -		ret = hv_call_deposit_pages(NUMA_NO_NODE, partition_id, 1);
+> > > > +		ret = hv_deposit_memory(partition_id, status);
+> > > >    	} while (!ret);
+> > > >    	return ret;
+> > > > @@ -465,8 +464,7 @@ int hv_call_get_vp_state(u32 vp_index, u64 partition_id,
+> > > >    		}
+> > > >    		local_irq_restore(flags);
+> > > > -		ret = hv_call_deposit_pages(NUMA_NO_NODE,
+> > > > -					    partition_id, 1);
+> > > > +		ret = hv_deposit_memory(partition_id, status);
+> > > >    	} while (!ret);
+> > > >    	return ret;
+> > > > @@ -525,8 +523,7 @@ int hv_call_set_vp_state(u32 vp_index, u64 partition_id,
+> > > >    		}
+> > > >    		local_irq_restore(flags);
+> > > > -		ret = hv_call_deposit_pages(NUMA_NO_NODE,
+> > > > -					    partition_id, 1);
+> > > > +		ret = hv_deposit_memory(partition_id, status);
+> > > >    	} while (!ret);
+> > > >    	return ret;
+> > > > @@ -573,7 +570,7 @@ static int hv_call_map_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
+> > > >    		local_irq_restore(flags);
+> > > > -		ret = hv_call_deposit_pages(NUMA_NO_NODE, partition_id, 1);
+> > > > +		ret = hv_deposit_memory(partition_id, status);
+> > > >    	} while (!ret);
+> > > >    	return ret;
+> > > > @@ -722,8 +719,7 @@ hv_call_create_port(u64 port_partition_id, union hv_port_id port_id,
+> > > >    			ret = hv_result_to_errno(status);
+> > > >    			break;
+> > > >    		}
+> > > > -		ret = hv_call_deposit_pages(NUMA_NO_NODE, port_partition_id, 1);
+> > > > -
+> > > > +		ret = hv_deposit_memory(port_partition_id, status);
+> > > >    	} while (!ret);
+> > > >    	return ret;
+> > > > @@ -776,8 +772,7 @@ hv_call_connect_port(u64 port_partition_id, union hv_port_id port_id,
+> > > >    			ret = hv_result_to_errno(status);
+> > > >    			break;
+> > > >    		}
+> > > > -		ret = hv_call_deposit_pages(NUMA_NO_NODE,
+> > > > -					    connection_partition_id, 1);
+> > > > +		ret = hv_deposit_memory(connection_partition_id, status);
+> > > >    	} while (!ret);
+> > > >    	return ret;
+> > > > @@ -848,8 +843,7 @@ static int hv_call_map_stats_page2(enum hv_stats_object_type type,
+> > > >    			break;
+> > > >    		}
+> > > > -		ret = hv_call_deposit_pages(NUMA_NO_NODE,
+> > > > -					    hv_current_partition_id, 1);
+> > > > +		ret = hv_deposit_memory(hv_current_partition_id, status);
+> > > >    	} while (!ret);
+> > > >    	return ret;
+> > > > @@ -885,8 +879,7 @@ static int hv_call_map_stats_page(enum hv_stats_object_type type,
+> > > >    			return ret;
+> > > >    		}
+> > > > -		ret = hv_call_deposit_pages(NUMA_NO_NODE,
+> > > > -					    hv_current_partition_id, 1);
+> > > > +		ret = hv_deposit_memory(hv_current_partition_id, status);
+> > > >    		if (ret)
+> > > >    			return ret;
+> > > >    	} while (!ret);
+> > > > diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> > > > index f4697497f83e..5fc572e31cd7 100644
+> > > > --- a/drivers/hv/mshv_root_main.c
+> > > > +++ b/drivers/hv/mshv_root_main.c
+> > > > @@ -264,8 +264,7 @@ static int mshv_ioctl_passthru_hvcall(struct mshv_partition *partition,
+> > > >    		if (!hv_result_oom(status))
+> > > >    			ret = hv_result_to_errno(status);
+> > > >    		else
+> > > > -			ret = hv_call_deposit_pages(NUMA_NO_NODE,
+> > > > -						    pt_id, 1);
+> > > > +			ret = hv_deposit_memory(pt_id, status);
+> > > >    	} while (!ret);
+> > > >    	args.status = hv_result(status);
+> > > > diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+> > > > index b73352a7fc9e..c8e8976839f8 100644
+> > > > --- a/include/asm-generic/mshyperv.h
+> > > > +++ b/include/asm-generic/mshyperv.h
+> > > > @@ -344,6 +344,7 @@ static inline bool hv_parent_partition(void)
+> > > >    }
+> > > >    bool hv_result_oom(u64 status);
+> > > > +int hv_deposit_memory_node(int node, u64 partition_id, u64 status);
+> > > >    int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages);
+> > > >    int hv_call_add_logical_proc(int node, u32 lp_index, u32 acpi_id);
+> > > >    int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags);
+> > > > @@ -353,6 +354,10 @@ static inline bool hv_root_partition(void) { return false; }
+> > > >    static inline bool hv_l1vh_partition(void) { return false; }
+> > > >    static inline bool hv_parent_partition(void) { return false; }
+> > > >    static inline bool hv_result_oom(u64 status) { return false; }
+> > > > +static inline int hv_deposit_memory_node(int node, u64 partition_id, u64 status)
+> > > > +{
+> > > > +	return -EOPNOTSUPP;
+> > > > +}
+> > > >    static inline int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+> > > >    {
+> > > >    	return -EOPNOTSUPP;
+> > > > @@ -367,6 +372,11 @@ static inline int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u3
+> > > >    }
+> > > >    #endif /* CONFIG_MSHV_ROOT */
+> > > > +static inline int hv_deposit_memory(u64 partition_id, u64 status)
+> > > > +{
+> > > > +	return hv_deposit_memory_node(NUMA_NO_NODE, partition_id, status);
+> > > > +}
+> > > > +
+> > > >    #if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
+> > > >    u8 __init get_vtl(void);
+> > > >    #else
 > > > > 
-> > > > Thanks,
-> > > > Stanislav
 > > > > 
-> > > > > 
-> > > > > > Thanks,
-> > > > > > Stanislav
-> > > > > > 
-> > > > > > > Thanks,
-> > > > > > > -Mukesh
 
