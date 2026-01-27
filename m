@@ -1,128 +1,186 @@
-Return-Path: <linux-hyperv+bounces-8539-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8540-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YJVEOQYDeGlPnQEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8539-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Jan 2026 01:12:54 +0100
+	id eAtQGB8FeGmUnQEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8540-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Jan 2026 01:21:51 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 771BC8E68B
-	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Jan 2026 01:12:54 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8BF68E733
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Jan 2026 01:21:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6E9143025F7C
-	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Jan 2026 00:12:53 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8A40F301370F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Jan 2026 00:21:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54AB8FC0A;
-	Tue, 27 Jan 2026 00:12:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A32161A23A4;
+	Tue, 27 Jan 2026 00:21:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="SoOUK2P6"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nBRxfVn1"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF9E742A82;
-	Tue, 27 Jan 2026 00:12:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52DAD18CC13;
+	Tue, 27 Jan 2026 00:21:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769472772; cv=none; b=pAenKtThcjptuI+I1MOcKZSZu8cB7tfCSBbDfPEyumkdBIFio/IHfrdtEAI5ydMe+aP8I153MpcmBByFpLZMmMWcV+fcYbSo6bdP9DFIqfNjMjGKM8445UazFJqb/9Y9z/FYB0XTqqER6by71GIjqH8qZ1x2RoL2KToo5PuNp+E=
+	t=1769473307; cv=none; b=fvA1+gJ0VnRFmnvcZ+P/wK4Pksb7U7DcuSrD7aQwo3itTy0v4KaKsIAgF/R+RnxyO5Z49LWLWDU++09ikPxvQsldKM6BxakrB3r54/C+9X8Vvcy/dOnYEj40zYMqsc/XycqUTLa7US0Mxpu3UipsqLPPUeUfRWfBzD7+/YxKEbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769472772; c=relaxed/simple;
-	bh=zdmajJzDp/psdFRxl0ZcH62OrdSpFyzRjV6JfY4r7DI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=CMs7DtH0x0pz0hI7adB93bXD+RN4XoBpjElyMsM55sfaPA6nExxjyfMMN9nnacEzT9yU2Ux84v6l4mM+F+XJzJV6/YJNgFsN70BnNV8Yjz5Y2Ht3HecTKRs4M2BZeIruuhd5NMDuy0ZOGVcQfrWncc8LRNdul7QMC4gQonEApkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=SoOUK2P6; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1769473307; c=relaxed/simple;
+	bh=BV7gsD3HvmzKXjC4RMsMkRse1E9PHoMMOEA+6p71Mto=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OzyTmhP4ygR/VYNPOeHpJARcFLxhUyF6KW5O8A+XQ4txaHR4ffntw6hm2QChYJykVouNK28Z62EBkKtvUx/7DSUnHPBU/tDUYwFlsgEs8tIVzVdu3/m4cVU2gi0FgmrLwR7XKb+1vbVNe2f1cuVkheNEvlhXK0UrfqI41R1xlBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=nBRxfVn1; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.65.200.230] (unknown [20.236.11.29])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 14E8820B7165;
-	Mon, 26 Jan 2026 16:12:50 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 14E8820B7165
+Received: from skinsburskii.localdomain (c-98-225-44-182.hsd1.wa.comcast.net [98.225.44.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id B2BF120B7165;
+	Mon, 26 Jan 2026 16:21:45 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B2BF120B7165
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1769472770;
-	bh=6smxruiRdaZfdeGOTbp2HZfZaukKEptCoPsgRHW3hec=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=SoOUK2P6Ewe9+u7DPzgBrLB2SsaZi4N7JAoDDZt5A5xqUNrNEBvYWQsZBH2i477VN
-	 WDCWLOvTCQ+5TAB9EDb5NuVSA19gmXszEnnQX5d6p0gCXNblKMliNRtF0EhkNXY797
-	 wKlWis/mBTI7VveHkmqdlS1Qhg3CCuoUTcZbftY4=
-Message-ID: <ce54d00e-f252-48ac-8b0e-2992d1d4ef70@linux.microsoft.com>
-Date: Mon, 26 Jan 2026 16:12:48 -0800
+	s=default; t=1769473305;
+	bh=kcx5joyh6i8meOw9oApnZ0Iu4rF/ZMWtoh18XohUr2U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nBRxfVn1QlraJvvm8iuPkuygcsORiagB0dh7Z6fPUnYMQvzHYyUcL7Z2tKk3DRxVP
+	 4egnErzqwSafYF/wqV2HbLq0GE3ccw3mmV9Y8ETNUpYFae0TSnmXR8qQHQmH0LITkg
+	 kTHpRVJetXepwWzWl3c0bHmxDvGqPkT50c6mQHVs=
+Date: Mon, 26 Jan 2026 16:21:43 -0800
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Mukesh R <mrathor@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mshv: Make MSHV mutually exclusive with KEXEC
+Message-ID: <aXgFFz7YuJJQabyp@skinsburskii.localdomain>
+References: <176920684805.250171.6817228088359793537.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <549041d1-360d-d34c-4e3b-62802346acaa@linux.microsoft.com>
+ <aXabnnCV50Thv9tZ@skinsburskii.localdomain>
+ <890506f6-9b91-5d59-8c98-086cf5d206bb@linux.microsoft.com>
+ <aXfSDm-4BjPPZMNu@skinsburskii.localdomain>
+ <2b42997d-7cc0-56ba-e1ca-a8640ce71ea9@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/2] Add VMBus message connection ID support via
- DeviceTree
-From: Hardik Garg <hargar@linux.microsoft.com>
-To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, krzk+dt@kernel.org, robh@kernel.org,
- conor+dt@kernel.org, mhklinux@outlook.com
-Cc: devicetree@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, ssengar@linux.microsoft.com,
- longli@microsoft.com, Naman Jain <namjain@linux.microsoft.com>,
- hargar@microsoft.com, jacob.pan@linux.microsoft.com
-References: <58cb22cb-b0c8-4694-b9e4-971aa7f0f972@linux.microsoft.com>
-Content-Language: en-US
-In-Reply-To: <58cb22cb-b0c8-4694-b9e4-971aa7f0f972@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2b42997d-7cc0-56ba-e1ca-a8640ce71ea9@linux.microsoft.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-8540-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8539-lists,linux-hyperv=lfdr.de];
-	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,outlook.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hargar@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	MID_RHS_MATCH_FROM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 771BC8E68B
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,skinsburskii.localdomain:mid]
+X-Rspamd-Queue-Id: C8BF68E733
 X-Rspamd-Action: no action
 
-Just a gentle ping on this patch in case it got lost. I want to
-check if anyone had a chance to look at it, or if there is
-anything I should update or clarify.
+On Mon, Jan 26, 2026 at 03:07:18PM -0800, Mukesh R wrote:
+> On 1/26/26 12:43, Stanislav Kinsburskii wrote:
+> > On Mon, Jan 26, 2026 at 12:20:09PM -0800, Mukesh R wrote:
+> > > On 1/25/26 14:39, Stanislav Kinsburskii wrote:
+> > > > On Fri, Jan 23, 2026 at 04:16:33PM -0800, Mukesh R wrote:
+> > > > > On 1/23/26 14:20, Stanislav Kinsburskii wrote:
+> > > > > > The MSHV driver deposits kernel-allocated pages to the hypervisor during
+> > > > > > runtime and never withdraws them. This creates a fundamental incompatibility
+> > > > > > with KEXEC, as these deposited pages remain unavailable to the new kernel
+> > > > > > loaded via KEXEC, leading to potential system crashes upon kernel accessing
+> > > > > > hypervisor deposited pages.
+> > > > > > 
+> > > > > > Make MSHV mutually exclusive with KEXEC until proper page lifecycle
+> > > > > > management is implemented.
+> > > > > > 
+> > > > > > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+> > > > > > ---
+> > > > > >     drivers/hv/Kconfig |    1 +
+> > > > > >     1 file changed, 1 insertion(+)
+> > > > > > 
+> > > > > > diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> > > > > > index 7937ac0cbd0f..cfd4501db0fa 100644
+> > > > > > --- a/drivers/hv/Kconfig
+> > > > > > +++ b/drivers/hv/Kconfig
+> > > > > > @@ -74,6 +74,7 @@ config MSHV_ROOT
+> > > > > >     	# e.g. When withdrawing memory, the hypervisor gives back 4k pages in
+> > > > > >     	# no particular order, making it impossible to reassemble larger pages
+> > > > > >     	depends on PAGE_SIZE_4KB
+> > > > > > +	depends on !KEXEC
+> > > > > >     	select EVENTFD
+> > > > > >     	select VIRT_XFER_TO_GUEST_WORK
+> > > > > >     	select HMM_MIRROR
+> > > > > > 
+> > > > > > 
+> > > > > 
+> > > > > Will this affect CRASH kexec? I see few CONFIG_CRASH_DUMP in kexec.c
+> > > > > implying that crash dump might be involved. Or did you test kdump
+> > > > > and it was fine?
+> > > > > 
+> > > > 
+> > > > Yes, it will. Crash kexec depends on normal kexec functionality, so it
+> > > > will be affected as well.
+> > > 
+> > > So not sure I understand the reason for this patch. We can just block
+> > > kexec if there are any VMs running, right? Doing this would mean any
+> > > further developement would be without a ver important and major feature,
+> > > right?
+> > 
+> > This is an option. But until it's implemented and merged, a user mshv
+> > driver gets into a situation where kexec is broken in a non-obvious way.
+> > The system may crash at any time after kexec, depending on whether the
+> > new kernel touches the pages deposited to hypervisor or not. This is a
+> > bad user experience.
+> 
+> I understand that. But with this we cannot collect core and debug any
+> crashes. I was thinking there would be a quick way to prohibit kexec
+> for update via notifier or some other quick hack. Did you already
+> explore that and didn't find anything, hence this?
+> 
 
-I’ve also noticed a formatting issue in patch 2/2, which I
-will address when sending a v6 along with any feedback.
-
-
+This quick hack you mention isn't quick in the upstream kernel as there
+is no hook to interrupt kexec process except the live update one.
+I sent an RFC for that one but given todays conversation details is
+won't be accepted as is.
+Making mshv mutually exclusive with kexec is the only viable option for
+now given time constraints.
+It is intended to be replaced with proper page lifecycle management in
+the future.
 
 Thanks,
-Hardik
+Stanislav
 
-On 12/23/2025 3:05 PM, Hardik Garg wrote:
-> This patch series adds support for reading the VMBus message
-> connection ID from DeviceTree. The connection-id determines which
-> hypervisor communication channel the guest should use to talk to
-> the VMBus host.
->
-> Changes in v5:
-> - Updated subject line and commit description to clarify what
->   connection ID is and why DeviceTree support is required
-> - Addressed reviewer feedback about zero handling and binding
->   constraints
-> - Revised binding description to clarify version-based selection
->   instead of using "defaults" language
-> - Fixed checkpatch warnings (indentation and alignment) 
+> Thanks,
+> -Mukesh
+> 
+> > Therefor it should be explicitly forbidden as it's essentially not
+> > supported yet.
+> > 
+> > Thanks,
+> > Stanislav
+> > 
+> > > 
+> > > > Thanks,
+> > > > Stanislav
+> > > > 
+> > > > > Thanks,
+> > > > > -Mukesh
 
