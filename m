@@ -1,323 +1,433 @@
-Return-Path: <linux-hyperv+bounces-8575-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8576-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QOe6E31hemk75gEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8575-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 20:20:29 +0100
+	id gIzyFN6Vemku8QEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8576-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Jan 2026 00:03:58 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF7EFA81DF
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 20:20:28 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF56CA9D26
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Jan 2026 00:03:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 16CFE3030EA5
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 19:20:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6B1FE300E71A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 23:03:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A943536E47F;
-	Wed, 28 Jan 2026 19:20:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD78C2FFF90;
+	Wed, 28 Jan 2026 23:03:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="oC2lwDSN"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="a4qUx1Ot"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azolkn19010021.outbound.protection.outlook.com [52.103.23.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7FA2D9EDC;
-	Wed, 28 Jan 2026 19:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.23.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769628014; cv=fail; b=o3VIL9iuZ1lZOvdNLAazbVltzF/LCEjXbYItoVyqvmZYoI+Db5ZGnmh2zAderykbZr4OqeOcAmsoEZ1vZgpuA+Sfe8BCtvaNzbrVlZWuV5y2jndsun9w5njronkbLnh9KAIy2d15FVC3vHuyygMx216ixoQ6ZzEonUvdx7M/t4A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769628014; c=relaxed/simple;
-	bh=6MIB2WmG5a+NkHb4HiJ+SxeDMcwbkkIDb77Ud7bFamQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=KdkZPSC/sHQdwop0zmQUBjeabLfAPFqaoolBVjuJobIEY/nBUa+fFgWpdsWhgugjHZ+DSW7AQWv6dLru34Ov/jBocxgIUgj1tvs/OAQ1oqBfkaFTihADpya7BNbawkN8aHZ+dSr5xe7ZVj9EuoPbyJSc68eDvUHPSVb2ntyH8Ww=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=oC2lwDSN; arc=fail smtp.client-ip=52.103.23.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ouqed5ry4SrAfEpA4V7dWKuyukMm+u+3seurSOauD73PmqXThv+XEVm4Zx8Py7BnPcBSbk3Pt+vc49+iPqYdiExxnsJnr8KF4lf8/N/MthO0WHhu0YymK3iHcY4VsaiKHKYNlScgOdB43vqKPpTNa/BODdQxY/z7M7ThfgxZOidOv8mJmGIgbTamOZ3o7U4P45SqmSdGAGY6tYoJsbyci+rlN/gUvKbQw3G2Mof+Hf+aFracc9dMyu7nviWuSwP+U2/F1yMYG4aSiwMYWSU+iOCxORsg2QD6xgLbzXAVhgcoeeSelbH0Y8oZL33hstzvwjb71dP2TNhDRwK1wtb3Gg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AOJOnapXKRbI3FycG3AIdHKz24Y+RrhPt5t0QVCCNTE=;
- b=DqqnW53GyIAZKfOH/VZ0DaPWggqwan+1yf8llrXGz7Aqa6m6e7eU2Tq6YNS5fa7Ijx5Q9es3DseFZi5vp3UlErGmrWAvCYN7RzmEpYCnXWRduTlGUTEaY4xF211mW+ycLGjw4qusFT8PyY5dwuQ5xs0w6l8sJ+KP8GUzeEwRDrQhk6XGH8QgNrRMEjo3Z5MVRPGEzSZFMYyQ8d5mPOQM+XgEmaftN1gc+CQHTj2nTW0Zbua/MYirdrrF+7kvNtOwDwrj4jDShYfHt/kq35ntFDN5d1YtRPnFXMRfwp1fYk3U+9/N/ELGfMbeX0rg3R115md7AhWgm1kDqtVZmPW33A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AOJOnapXKRbI3FycG3AIdHKz24Y+RrhPt5t0QVCCNTE=;
- b=oC2lwDSN1h9zHtTvyf0d5Hx+UasA8xkPu2DGMHeGkktLeDih8K4NqP4NY0wRJNmL0VDE451FawGZYno6299UPaJ0OvjY34sh25BBUtzHlbqbP5VGROEwLBMxOyKxrUWU0Py6Io7dlggF/SlQzF/rSpSL0sf9sh0sBFk5m3lAaPGjKU7eG6z5oxTDGTYmQ/RMz62k86vl/7ANzwN08s+VrIemD24cawQR3hXd9PpUhybskeAIDVlPL4+ZGDEsLtCHF2sqBSEc9I48uVfmFE8wsHwQksSiD6Vx+nDvcKk13USKq7+UnVHxZNYARp9tzrYNJltIUTBq7PGczF0Mmst/WQ==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SN4PR0201MB8728.namprd02.prod.outlook.com (2603:10b6:806:1eb::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.7; Wed, 28 Jan
- 2026 19:20:10 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%6]) with mapi id 15.20.9564.006; Wed, 28 Jan 2026
- 19:20:10 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>
-CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>, "longli@microsoft.com"
-	<longli@microsoft.com>, "prapal@linux.microsoft.com"
-	<prapal@linux.microsoft.com>, "mrathor@linux.microsoft.com"
-	<mrathor@linux.microsoft.com>, "paekkaladevi@linux.microsoft.com"
-	<paekkaladevi@linux.microsoft.com>
-Subject: RE: [PATCH v6 0/7] mshv: Debugfs interface for mshv_root
-Thread-Topic: [PATCH v6 0/7] mshv: Debugfs interface for mshv_root
-Thread-Index: AQHckIGS0PKjuGa7rEuZsJjqXKz60rVn9OaQ
-Date: Wed, 28 Jan 2026 19:20:10 +0000
-Message-ID:
- <SN6PR02MB4157774303E3E31251C6804AD491A@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20260128181146.517708-1-nunodasneves@linux.microsoft.com>
-In-Reply-To: <20260128181146.517708-1-nunodasneves@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SN4PR0201MB8728:EE_
-x-ms-office365-filtering-correlation-id: 1650f32b-18f0-4aff-28c7-08de5ea24175
-x-ms-exchange-slblob-mailprops:
- WaIXnCbdHrPy8Gg0T1tV+ubdyTLMpos/ddKIhkiwYV/V9rzSeWQ5wt7F2mn/7P7JSMHOx97MZvyeE1VnuCy/vS5UxBKAek8qEHn+oLAKASqcifEnE954lgNkLyiX81xwxITVzzA1UV1ourMWVN0WArA/AizwxmyuEFmki+sW3fGIqdz7L+/4T9xo+Hl6YbjqSV26aFWm2WmJSr24HpXH9uG91HwMO/wChjHCBuyqmD/JZL/HrTTFkxwuB8CcJcAZ99JgR4e/b2xx6rnCBtx6ACN6wZJ1zM5u6xcmWnOboZ8Ph6rFm1E1p+VYKn2QYYRBDIK4eo9rDXsaiTCdei61HHUrsbWw/tHS2Xlc6Z8x2ayJgxWlBt6OMu3N/yXy3ibd5/9/8MQCuAlZ+ttJqphqkcv8f1gUDlrUQsVmKcdVcMhfXfS5FfJhpIKJm1w3aMGipDo4CDqZleAkOQuBAjrWFdKJlp8XcSdGmvXivS6k+lkDefMGJKJfwOCI8nGgqxGRqCG8rTRew73Cpbrv0/N0DyJUtOmQZswVR8iB99Pw2d7s9dDgxFp5AWQaGb4ckkvPSkCWH/NFfvwFq/AXCg1Yvk9J44Qj/dEXn4Id5sdhC+Ngy4xV1aRh91GoTUkGwKPOqTlsdnu/fuxlEiFZqHhKPxpY0gsVf6UiZVcr4pdSzVHMwCed1ALFZYG7YmBZsL2lvl8+F8ceZTIE+W0pYaFIVB8sBqjjoKsxGlnSsNXtjFWQANxFGu0hb025jBjwuixj37zdPAaAfxY=
-x-microsoft-antispam:
- BCL:0;ARA:14566002|31061999003|13091999003|15080799012|19110799012|461199028|51005399006|8062599012|8060799015|41001999006|40105399003|3412199025|440099028|102099032|12091999003;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?e4D7ZbeetxfuogKwmIyi+l9+7SSNpbNiqE6yN1EfpUjM6v9duXaBZN4gtgLK?=
- =?us-ascii?Q?NcujFqXuSNF6rtX0sxZ73wylmTqHf1ABxTnfcwL0m8XLYP6a760H5G+CJfOh?=
- =?us-ascii?Q?ohquJfH1RSyh7U8fKHwpxlE2oBwC8hZcNVTv5fQ/LLMVgWVB6vKiBlrPeuql?=
- =?us-ascii?Q?wibhaL3kQ+jzAjr0gQfXa3eV4eJz/63/P3Te6QAhtlscJ/+8gxrFSICYBKVC?=
- =?us-ascii?Q?BZpACG+sTDV8XPrtU4Aa4JbHmuGC9soNbBjZkDf8ivDSHmiEVC8drPFEhzZC?=
- =?us-ascii?Q?L6E293PlqaFwHxHZJbVCCse9OSqIVVYQ/CwJ78MegG+CGJzI3HzzGXuKw+Yh?=
- =?us-ascii?Q?lgNo2jTg+5lS266bhjQrLcKPDZyDP6Sgqp5XTZqdYFz3Kjpo9OKa/B4FkX7d?=
- =?us-ascii?Q?j4ei7IZRf0qR/nQ9+lSkjuHQu7BOP6/l2/OmDJ8vwZjk26tyYy/2GXwgcANw?=
- =?us-ascii?Q?f/sTqrgoXIbRiwFgBHgIzNqied4o4Mg/9a4CAjQz8G7QS9QUynMGZjmwK8Kr?=
- =?us-ascii?Q?pRwVB3ULen+pPaMLZZeci5uBdW0gWC6fC8KOop2q4CCNZcGczfyqPc7fQ+rC?=
- =?us-ascii?Q?8Ge30+R8CgsYJjE0NSBITiIa53vayT0dIdKlqCaW37bviprQKJNEoPLvdeVW?=
- =?us-ascii?Q?X6NDoYWoZWFE1LVoki1hVGyHlWJDC9/otkaaq6xt8cnOqyn/NhfKsvuiCEBU?=
- =?us-ascii?Q?q+t0mWwJRaiF1BNojAQqlOmFEXqVDrfHUqppuH73hAIe49ZQdIyq3xwGtnnX?=
- =?us-ascii?Q?hgqDu96hgdZZ/3d+ukKGAKWLmmA0FmixjFApmgcK61qujdRSEUHxgTZBi520?=
- =?us-ascii?Q?76EKqOC1eF2BRM1CaCwPeUIhRDryr7KRmESSZ25CeZTexCozqXWgNdyGyD+y?=
- =?us-ascii?Q?G15Xy7N4J7F3UwCJ7Shz6QH/gBYncutFQ9lzGXeEzeyas/c3FrCuacxcDVbJ?=
- =?us-ascii?Q?keA3QqRLwLP8rPwujmS47ebfsqlS88oAoj/5mKjY6QwjPZeOItnNv8cRl+rD?=
- =?us-ascii?Q?Hb6DaBHvDgBjaaDbzCnn7T4R+5y5OpZ8Ju0RV9YIbxP3s5FAFzA6a2btw256?=
- =?us-ascii?Q?F5Xvu1few7sQlRrdCnITc44IITnDs0HrNPpi1g5YYtfjgBceGsHP8oZs1FD8?=
- =?us-ascii?Q?9YOWZQXLFvzXuDHQyz7dlOZzT745quZPNEO4mu/KYF+p11XftEqxJjGtt3jH?=
- =?us-ascii?Q?D0qeXOQfk0OfiC+EPpQ/0snBkdtcGkRsJE6dPwA2LIKgOE2MQmT+3vQnz8aq?=
- =?us-ascii?Q?5RnNMsI4GRYlMDZSntaF+dbaSkxGIBlJNQVMWLcmoQ=3D=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Tu3mttgyR1LLafdUXhsK5X7SmReH2UwJtOX+Iahs5ccRjaG4cPEUEolVHlmN?=
- =?us-ascii?Q?DoyxkXpCS9Bd3vHnF0epMfAHGuGDulpG4JFpYdoR4ZEsDO7i/SsAZD9Tqvfx?=
- =?us-ascii?Q?NptIO4aRkDWucZ0iCEUMbZNWNZ8g9wZ10mJtjL4SuHxqohLvfkAbAQ0pSW6K?=
- =?us-ascii?Q?/Uu0vD/UPKRfW2nkfFTv8AWta5wpd7Skhx1hKfPmCd+fGxWt2UzjJZM4pCjc?=
- =?us-ascii?Q?ocRdsDZKH6EeCelDwc332Mhee9bLbgx7xq7t+NoA7OvoqEVqAOOJGajNFv8N?=
- =?us-ascii?Q?4qgoR+NaAi1ubBmi1OJv6fQs/dtG1iPRwen+bdK+a3HslMYmNEB/lpobTk09?=
- =?us-ascii?Q?uocvHZbfkQwwzpOhq+toX+uYtW7/S7joEuOxU12ZdomwSaNY+2r5gfLCSRlt?=
- =?us-ascii?Q?pcT18V5D7M+4YEyOTvqpFV5VJT93RbtY8H1B7FVthabgd0T2ibe+AAqeGaeS?=
- =?us-ascii?Q?EBxp56NKcmh/ccjnhnnxHJ5myBxfWfLiPvoG37sMRDUhshjCLCcwahUj3nXf?=
- =?us-ascii?Q?eNmZQnKG7kmLeZkKM8dybHZJGQWSNxe4u42AxJXUACO37kD1pCdgvduPn02Y?=
- =?us-ascii?Q?Pg+5ELmckQXSneSBzmDsnr9p2dLQ+sUgZ3oxDbzb9yvz0KtrZNukeh0r3ALD?=
- =?us-ascii?Q?HmWW4lcuahSvj9PChbEwpWFDPQEUG/6+A216aivznwRD0+ogeJgpnL4uhV5O?=
- =?us-ascii?Q?sYJkyYFlMNBm5WJ690iOM3GqLPOkbTvVtjQRxYyglLGUDbocjQr4iQHwn12U?=
- =?us-ascii?Q?3wGKvFV6hu1RmS84DnuJ76BEJxecVIN0JKoypNsV4Qqi/goB3XfIr576bBQ5?=
- =?us-ascii?Q?tD5N0ogeU5ZnWIgt5fmn5s2Y2wMqoz5yHHFRU4SP3Wkfa3fY9XREdIcNZQi/?=
- =?us-ascii?Q?oYImiDO4SzuwRcT1rdRup2yUyp45ad31myvs9fspsup4aMPA6Nn9RY1Rhq77?=
- =?us-ascii?Q?kvKjupAXONh5VjWU8ApyqZVOFeqCv0VFdCEZO9mDwNKBbxGLf1yJc4NRNwlI?=
- =?us-ascii?Q?5qZOtGB5vR2hMJwpHNv5O/BIhHyhIbZhsNurQJ8llLPPrepeomrg+X85qNlB?=
- =?us-ascii?Q?fWOtjgxd8hOPzxbph8P3iDeBIEa8E/62vFGlZOxaX968rx7agKHjNBmVIzDn?=
- =?us-ascii?Q?k11956axX5yNtdGynbsxydOS6TweHG9VJTe28MURIVNEUaPgrZuzIBQ4JbmO?=
- =?us-ascii?Q?nQ6e8hv8KmBXv8vp/pXk0qw1CKNmZ0fWTQEMw/j1fkSR1p9nLG1gFqhoUZpn?=
- =?us-ascii?Q?K+1tP0GsADO3FX5fIG9kL9964KA5e/qQQuh8KblX5akqcbeaEEFgxeaj1QKs?=
- =?us-ascii?Q?HXw1w2G4yiJ9JIZ3fGysodDzbwLHXMONfKsKYK5xlHR2QNEeZfila6ru+ymf?=
- =?us-ascii?Q?L6mNssw=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2730F2DF134;
+	Wed, 28 Jan 2026 23:03:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769641435; cv=none; b=JkZ5AgPAN9KJfFtCWTu2NbLIgSltjSllTQYohJmgLNhgr7KWbfp798Db7oEeDD+iJm6nSvBA4yvh/PDrMs2SoX4SeubsmB1xechNIXRqXAAEOouNtaToeuEuWpenxdxO29Xr2ckJTl4enpiqbfnvR4B6ApFgE2WFVog/J5vzxOk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769641435; c=relaxed/simple;
+	bh=UDb7cq9ZL71GKBbeQ4DM8sItqgPpcO14OocrFEST9Vo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xf40cW42P6AktkTnOgArizuPzAGlg+mRFvCBM9bTKRcezOr+YB7UkJCvjimjbdkG57w5VME8nblEsXFzq6FG7UFT2Bjo3OuQvDUz3f4y1dghFPISMp/GCbvtcJKKqFYBoiOIQV+52X5AGpa+H9PS6wM59f2XvtoW8+//UwZ9G/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=a4qUx1Ot; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from skinsburskii.localdomain (unknown [20.29.225.195])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 6D27E20B7165;
+	Wed, 28 Jan 2026 15:03:53 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6D27E20B7165
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1769641433;
+	bh=d6CMwaSEj4O7SHP+o7sQH+mP8QB4iMitkOUTWU8CKtQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a4qUx1OtjZF5MBb6Jw7QdczK7tey3GeGfNo4d+QSXbuyt1Q/Y5IJbpEgyCnFziXf+
+	 Ue2Kg02HAPiyXKMuwj5DKoUr/WtrClBJlRuWCiNY29/0JVfuN8kd4/VarDmevJpzTY
+	 NYu43eMU/Z8No19KkVzMum3u7DWBJFb7MJPv3GnE=
+Date: Wed, 28 Jan 2026 15:03:51 -0800
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Anirudh Rayabharam <anirudh@anirudhrb.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mshv: add arm64 support for doorbell & intercept
+ SINTs
+Message-ID: <aXqV127NzazbDkau@skinsburskii.localdomain>
+References: <20260128160437.3342167-1-anirudh@anirudhrb.com>
+ <20260128160437.3342167-3-anirudh@anirudhrb.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1650f32b-18f0-4aff-28c7-08de5ea24175
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2026 19:20:10.8460
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB8728
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260128160437.3342167-3-anirudh@anirudhrb.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8575-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_FROM(0.00)[outlook.com];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	DKIM_TRACE(0.00)[outlook.com:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-8576-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,outlook.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,SN6PR02MB4157.namprd02.prod.outlook.com:mid]
-X-Rspamd-Queue-Id: AF7EFA81DF
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: AF56CA9D26
 X-Rspamd-Action: no action
 
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Wednesday, Ja=
-nuary 28, 2026 10:12 AM
->=20
-> Expose hypervisor, logical processor, partition, and virtual processor
-> statistics via debugfs. These are provided by mapping 'stats' pages via
-> hypercall.
->=20
-> Patch #1: Update hv_call_map_stats_page() to return success when
->           HV_STATS_AREA_PARENT is unavailable, which is the case on some
->           hypervisor versions, where it can fall back to HV_STATS_AREA_SE=
-LF
-> Patch #2: Use struct hv_stats_page pointers instead of void *
-> Patch #3: Make mshv_vp_stats_map/unmap() more flexible to use with debugf=
-s
->           code
-> Patch #4: Always map vp stats page regardless of scheduler, to reuse in
->           debugfs
-> Patch #5: Change to hv_stats_page definition and
->           VpRootDispatchThreadBlocked
-> Patch #6: Introduce the definitions needed for the various stats pages
-> Patch #7: Add mshv_debugfs.c, and integrate it with the mshv_root driver =
-to
->           expose the partition and VP stats.
->=20
+On Wed, Jan 28, 2026 at 04:04:37PM +0000, Anirudh Rayabharam wrote:
+> From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> 
+> On x86, the HYPERVISOR_CALLBACK_VECTOR is used to receive synthetic
+> interrupts (SINTs) from the hypervisor for doorbells and intercepts.
+> There is no such vector reserved for arm64.
+> 
+> On arm64, the INTID for SINTs should be in the SGI or PPI range. The
+> hypervisor exposes a virtual device in the ACPI that reserves a
+> PPI for this use. Introduce a platform_driver that binds to this ACPI
+> device and obtains the interrupt vector that can be used for SINTs.
+> 
+> To better unify x86 and arm64 paths, introduce mshv_sint_irq_init() that
+
+Where is mshv_sint_irq_init?
+
+> either registers the platform_driver and obtains the INTID (arm64) or
+> just uses HYPERVISOR_CALLBACK_VECTOR as the interrupt vector (x86).
+> 
+> Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
 > ---
-> Changes in v6:
-> - Fix whitespace and other checkpatch issues [Michael]
->=20
-> Changes in v5:
-> - Rename hv_counters.c to mshv_debugfs_counters.c [Michael]
-> - Clarify unusual inclusion of mshv_debugfs_counters.c with comment. Afte=
-r
->   discussion it is still included directly to keep things simple. Includi=
-ng
->   arrays with unspecified size via a header means sizeof() cannot be used=
- on
->   the array.
-> - Error if mshv_debugfs_counters.c is included elsewhere than mshv_debugf=
-s.c
-> - Use array index as stats page index to save space [Stanislav]
-> - Enforce HV_STATS_AREA_PARENT and SELF fit in NUM_STATS_AREAS with
->   static_assert and clarify with comment [Michael]
-> - Return to using lp count from hv stats page for mshv_lps_count [Michael=
-]
-> - Use nr_cpu_ids instead of num_possible_cpus() [Michael]
-> - Set mshv_lps_stats[idx] and the array itself to NULL on unmap and clean=
-up
->   [Michael]
-> - Rename HvLogicalProcessors and VpRootDispatchThreadBlocked to Linux sty=
-le
-> - Translate Linux cpu index to vp index via hv_vp_index on partition dest=
-roy
->   [Michael]
-> - Minor formatting cleanups [Michael]
->=20
-> Changes in v4:
-> - Put the counters definitions in static arrays in hv_counters.c, instead=
- of
->   as enums in hvhdk.h [Michael]
-> - Due to the above, add an additional patch (#5) to simplify hv_stats_pag=
-e,
->   and retain the enum definition at the top of mshv_root_main.c for use w=
-ith
->   VpRootDispatchThreadBlocked. That is the only remaining use of the coun=
-ter
->   enum.
-> - Due to the above, use num_present_cpus() as the number of LPs to map st=
-ats
->   pages for - this number shouldn't change at runtime because the hypervi=
-sor
->   doesn't support hotplug for root partition.
->=20
-> Changes in v3:
-> - Add 3 small refactor/cleanup patches (patches 2,3,4) from Stanislav. Th=
-ese
->   simplify some of the debugfs code, and fix issues with mapping VP stats=
- on
->   L1VH.
-> - Fix cleanup of parent stats dentries on module removal (via squashing s=
-ome
->   internal patches into patch #6) [Praveen]
-> - Remove unused goto label [Stanislav, kernel bot]
-> - Use struct hv_stats_page * instead of void * in mshv_debugfs.c [Stanisl=
-av]
-> - Remove some redundant variables [Stanislav]
-> - Rename debugfs dentry fields for brevity [Stanislav]
-> - Use ERR_CAST() for the dentry error pointer returned from
->   lp_debugfs_stats_create() [Stanislav]
-> - Fix leak of pages allocated for lp stats mappings by storing them in an=
- array
->   [Michael]
-> - Add comments to clarify PARENT vs SELF usage and edge cases [Michael]
-> - Add VpLoadAvg for x86 and print the stat [Michael]
-> - Add NUM_STATS_AREAS for array sizing in mshv_debugfs.c [Michael]
->=20
-> Changes in v2:
-> - Remove unnecessary pr_debug_once() in patch 1 [Stanislav Kinsburskii]
-> - CONFIG_X86 -> CONFIG_X86_64 in patch 2 [Stanislav Kinsburskii]
->=20
-> ---
-> Nuno Das Neves (3):
->   mshv: Update hv_stats_page definitions
->   mshv: Add data for printing stats page counters
->   mshv: Add debugfs to view hypervisor statistics
->=20
-> Purna Pavan Chandra Aekkaladevi (1):
->   mshv: Ignore second stats page map result failure
->=20
-> Stanislav Kinsburskii (3):
->   mshv: Use typed hv_stats_page pointers
->   mshv: Improve mshv_vp_stats_map/unmap(), add them to mshv_root.h
->   mshv: Always map child vp stats pages regardless of scheduler type
->=20
->  drivers/hv/Makefile                |   1 +
->  drivers/hv/mshv_debugfs.c          | 726 +++++++++++++++++++++++++++++
->  drivers/hv/mshv_debugfs_counters.c | 490 +++++++++++++++++++
->  drivers/hv/mshv_root.h             |  49 +-
->  drivers/hv/mshv_root_hv_call.c     |  64 ++-
->  drivers/hv/mshv_root_main.c        | 140 +++---
->  include/hyperv/hvhdk.h             |   7 +
->  7 files changed, 1412 insertions(+), 65 deletions(-)
->  create mode 100644 drivers/hv/mshv_debugfs.c
->  create mode 100644 drivers/hv/mshv_debugfs_counters.c
->=20
-> --
+>  drivers/hv/mshv_root.h      |   2 +
+>  drivers/hv/mshv_root_main.c |  11 ++-
+>  drivers/hv/mshv_synic.c     | 152 ++++++++++++++++++++++++++++++++++--
+>  3 files changed, 158 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
+> index c02513f75429..c2d1e8d7452c 100644
+> --- a/drivers/hv/mshv_root.h
+> +++ b/drivers/hv/mshv_root.h
+> @@ -332,5 +332,7 @@ int mshv_region_get(struct mshv_mem_region *region);
+>  bool mshv_region_handle_gfn_fault(struct mshv_mem_region *region, u64 gfn);
+>  void mshv_region_movable_fini(struct mshv_mem_region *region);
+>  bool mshv_region_movable_init(struct mshv_mem_region *region);
+> +int mshv_synic_init(void);
+> +void mshv_synic_cleanup(void);
+>  
+>  #endif /* _MSHV_ROOT_H_ */
+> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> index abb34b37d552..6c2d4a80dbe3 100644
+> --- a/drivers/hv/mshv_root_main.c
+> +++ b/drivers/hv/mshv_root_main.c
+> @@ -2276,11 +2276,17 @@ static int __init mshv_parent_partition_init(void)
+>  			MSHV_HV_MAX_VERSION);
+>  	}
+>  
+> +	ret = mshv_synic_init();
+> +	if (ret) {
+> +		dev_err(dev, "Failed to initialize synic: %i\n", ret);
+> +		goto device_deregister;
+> +	}
+> +
+>  	mshv_root.synic_pages = alloc_percpu(struct hv_synic_pages);
+>  	if (!mshv_root.synic_pages) {
+>  		dev_err(dev, "Failed to allocate percpu synic page\n");
+>  		ret = -ENOMEM;
+> -		goto device_deregister;
+> +		goto synic_cleanup;
+>  	}
+
+Should this become a part of mshv_synic_init()?
+
+>  
+>  	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "mshv_synic",
+> @@ -2322,6 +2328,8 @@ static int __init mshv_parent_partition_init(void)
+>  	cpuhp_remove_state(mshv_cpuhp_online);
+>  free_synic_pages:
+>  	free_percpu(mshv_root.synic_pages);
+> +synic_cleanup:
+> +	mshv_synic_cleanup();
+>  device_deregister:
+>  	misc_deregister(&mshv_dev);
+>  	return ret;
+> @@ -2337,6 +2345,7 @@ static void __exit mshv_parent_partition_exit(void)
+>  		mshv_root_partition_exit();
+>  	cpuhp_remove_state(mshv_cpuhp_online);
+>  	free_percpu(mshv_root.synic_pages);
+> +	mshv_synic_cleanup();
+
+Please, follow the common convention where cleaup path is the reverse of
+init path.
+
+>  }
+>  
+>  module_init(mshv_parent_partition_init);
+> diff --git a/drivers/hv/mshv_synic.c b/drivers/hv/mshv_synic.c
+> index ba89655b0910..b7860a75b97e 100644
+> --- a/drivers/hv/mshv_synic.c
+> +++ b/drivers/hv/mshv_synic.c
+> @@ -10,13 +10,19 @@
+>  #include <linux/kernel.h>
+>  #include <linux/slab.h>
+>  #include <linux/mm.h>
+> +#include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/random.h>
+>  #include <asm/mshyperv.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/acpi.h>
+>  
+>  #include "mshv_eventfd.h"
+>  #include "mshv.h"
+>  
+> +static int mshv_interrupt = -1;
+
+The name is a bit too short. What about mshv_callback_vector or
+mshv_irq_vector?
+
+> +static int mshv_irq = -1;
+> +
+
+Should this be a path of mshv_root structure?
+
+>  static u32 synic_event_ring_get_queued_port(u32 sint_index)
+>  {
+>  	struct hv_synic_event_ring_page **event_ring_page;
+> @@ -446,14 +452,144 @@ void mshv_isr(void)
+>  	}
+>  }
+>  
+> +#ifndef HYPERVISOR_CALLBACK_VECTOR
+> +#ifdef CONFIG_ACPI
+> +static long __percpu *mshv_evt;
+> +
+> +static acpi_status mshv_walk_resources(struct acpi_resource *res, void *ctx)
+> +{
+> +	struct resource r;
+> +
+> +	switch (res->type) {
+> +	case ACPI_RESOURCE_TYPE_EXTENDED_IRQ:
+> +		if (!acpi_dev_resource_interrupt(res, 0, &r)) {
+> +			pr_err("Unable to parse MSHV ACPI interrupt\n");
+> +			return AE_ERROR;
+> +		}
+> +		/* ARM64 INTID */
+> +		mshv_interrupt = res->data.extended_irq.interrupts[0];
+> +		/* Linux IRQ number */
+> +		mshv_irq = r.start;
+> +		pr_info("MSHV SINT INTID %d, IRQ %d\n",
+> +			mshv_interrupt, mshv_irq);
+> +		return AE_OK;
+> +	default:
+> +		/* Unused resource type */
+> +		return AE_OK;
+> +	}
+> +
+> +	return AE_OK;
+> +}
+> +
+> +static irqreturn_t mshv_percpu_isr(int irq, void *dev_id)
+> +{
+> +	mshv_isr();
+> +	add_interrupt_randomness(irq);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int mshv_sint_probe(struct platform_device *pdev)
+> +{
+> +	acpi_status result;
+> +	int ret = 0;
+> +	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
+> +
+> +	result = acpi_walk_resources(device->handle, METHOD_NAME__CRS,
+> +					mshv_walk_resources, NULL);
+> +
+> +	if (ACPI_FAILURE(result)) {
+> +		ret = -ENODEV;
+> +		goto out;
+> +	}
+> +
+> +	mshv_evt = alloc_percpu(long);
+> +	if (!mshv_evt) {
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	ret = request_percpu_irq(mshv_irq, mshv_percpu_isr, "MSHV", mshv_evt);
+> +out:
+> +	return ret;
+> +}
+> +
+> +static void mshv_sint_remove(struct platform_device *pdev)
+> +{
+> +	free_percpu_irq(mshv_irq, mshv_evt);
+> +	free_percpu(mshv_evt);
+> +}
+> +#else
+> +static int mshv_sint_probe(struct platform_device *pdev)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +static void mshv_sint_remove(struct platform_device *pdev)
+> +{
+> +	return;
+> +}
+> +#endif
+> +
+
+Is this all x86-compatible?
+The commit message says it's introduced for arm64.
+If it's incompatible, please, wrap it into #ifdefs and compile out for
+x86_64.
+
+> +
+> +static const __maybe_unused struct acpi_device_id mshv_sint_device_ids[] = {
+> +	{"MSFT1003", 0},
+> +	{"", 0},
+> +};
+> +
+> +static struct platform_driver mshv_sint_drv = {
+> +	.probe = mshv_sint_probe,
+> +	.remove = mshv_sint_remove,
+> +	.driver = {
+> +		.name = "mshv_sint",
+> +		.acpi_match_table = ACPI_PTR(mshv_sint_device_ids),
+> +		.probe_type = PROBE_FORCE_SYNCHRONOUS,
+> +	},
+> +};
+> +#endif /* HYPERVISOR_CALLBACK_VECTOR */
+> +
+> +int mshv_synic_init(void)
+> +{
+> +#ifdef HYPERVISOR_CALLBACK_VECTOR
+> +	mshv_interrupt = HYPERVISOR_CALLBACK_VECTOR;
+> +	mshv_irq = -1;
+> +	return 0;
+> +#else
+> +	int ret;
+> +
+> +	if (acpi_disabled)
+> +		return -ENODEV;
+> +
+> +	ret = platform_driver_register(&mshv_sint_drv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (mshv_interrupt == -1 || mshv_irq == -1) {
+> +		ret = -ENODEV;
+> +		goto out_unregister;
+> +	}
+> +
+> +	return 0;
+> +
+> +out_unregister:
+> +	platform_driver_unregister(&mshv_sint_drv);
+> +	return ret;
+> +#endif
+> +}
+> +
+> +void mshv_synic_cleanup(void)
+> +{
+> +#ifndef HYPERVISOR_CALLBACK_VECTOR
+> +	if (!acpi_disabled)
+> +		platform_driver_unregister(&mshv_sint_drv);
+> +#endif
+> +}
+> +
+>  int mshv_synic_cpu_init(unsigned int cpu)
+>  {
+>  	union hv_synic_simp simp;
+>  	union hv_synic_siefp siefp;
+>  	union hv_synic_sirbp sirbp;
+> -#ifdef HYPERVISOR_CALLBACK_VECTOR
+>  	union hv_synic_sint sint;
+> -#endif
+>  	union hv_synic_scontrol sctrl;
+>  	struct hv_synic_pages *spages = this_cpu_ptr(mshv_root.synic_pages);
+>  	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
+> @@ -496,10 +632,12 @@ int mshv_synic_cpu_init(unsigned int cpu)
+>  
+>  	hv_set_non_nested_msr(HV_MSR_SIRBP, sirbp.as_uint64);
+>  
+> -#ifdef HYPERVISOR_CALLBACK_VECTOR
+> +	if (mshv_irq != -1)
+> +		enable_percpu_irq(mshv_irq, 0);
+> +
+
+It's better to explicitly separate x86 and arm64 paths with #ifdefs.
+For example:
+
+#ifdef CONFIG_X86_64
+int setup_cpu_sint() {
+  	/* Enable intercepts */
+  	sint.as_uint64 = 0;
+	sint.vector = HYPERVISOR_CALLBACK_VECTOR;
+	....
+}
+#endif
+#ifdef CONFIG_ARM64
+int setup_cpu_sint() {
+	enable_percpu_irq(mshv_irq, 0);
+
+  	/* Enable intercepts */
+  	sint.as_uint64 = 0;
+	sint.vector = mshv_interrupt;
+	....
+}
+#endif
+
+Thanks,
+Stanislav
+
+>  	/* Enable intercepts */
+>  	sint.as_uint64 = 0;
+> -	sint.vector = HYPERVISOR_CALLBACK_VECTOR;
+> +	sint.vector = mshv_interrupt;
+>  	sint.masked = false;
+>  	sint.auto_eoi = hv_recommend_using_aeoi();
+>  	hv_set_non_nested_msr(HV_MSR_SINT0 + HV_SYNIC_INTERCEPTION_SINT_INDEX,
+> @@ -507,13 +645,12 @@ int mshv_synic_cpu_init(unsigned int cpu)
+>  
+>  	/* Doorbell SINT */
+>  	sint.as_uint64 = 0;
+> -	sint.vector = HYPERVISOR_CALLBACK_VECTOR;
+> +	sint.vector = mshv_interrupt;
+>  	sint.masked = false;
+>  	sint.as_intercept = 1;
+>  	sint.auto_eoi = hv_recommend_using_aeoi();
+>  	hv_set_non_nested_msr(HV_MSR_SINT0 + HV_SYNIC_DOORBELL_SINT_INDEX,
+>  			      sint.as_uint64);
+> -#endif
+>  
+>  	/* Enable global synic bit */
+>  	sctrl.as_uint64 = hv_get_non_nested_msr(HV_MSR_SCONTROL);
+> @@ -568,6 +705,9 @@ int mshv_synic_cpu_exit(unsigned int cpu)
+>  	hv_set_non_nested_msr(HV_MSR_SINT0 + HV_SYNIC_DOORBELL_SINT_INDEX,
+>  			      sint.as_uint64);
+>  
+> +	if (mshv_irq != -1)
+> +		disable_percpu_irq(mshv_irq);
+> +
+>  	/* Disable Synic's event ring page */
+>  	sirbp.as_uint64 = hv_get_non_nested_msr(HV_MSR_SIRBP);
+>  	sirbp.sirbp_enabled = false;
+> -- 
 > 2.34.1
-
-Everything looks good to me.
-
-For the entire series,
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-
+> 
 
