@@ -1,53 +1,54 @@
-Return-Path: <linux-hyperv+bounces-8557-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8558-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WP3yAlwXemkq2gEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8557-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 15:04:12 +0100
+	id KPXWFX0femmv2wEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8558-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 15:38:53 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3726A2733
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 15:04:11 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B543A2EC8
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 15:38:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 07DBD300490D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 14:04:11 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 7F257300106B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 14:36:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13B7923C4F4;
-	Wed, 28 Jan 2026 14:04:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD1BE35B623;
+	Wed, 28 Jan 2026 14:36:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qBmX2s/6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dLgYQaz3"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3938225390;
-	Wed, 28 Jan 2026 14:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988A0350A14;
+	Wed, 28 Jan 2026 14:36:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769609050; cv=none; b=WqfIidKGq3/xxiCDBB8XGEaVAuzJaHlssCKtszieIPb61QNkyLNqCxGbrPtgVq77yoStCtX6V4F3v5PoFn2gtApKcLuXjOri3e8/jBUOpDthQbXOMnRnKB/SwFp/ccAvXUlmnrnfqazI+DT5cVvyKnUA+p6SsdjazxxJ/qiB/jY=
+	t=1769610994; cv=none; b=OxAESKj6ExPuqv8S5LVblWi9rN87B/gPCQNBEJz33P4mUEAk0ROSXLIlBrbukYuO2Z22pZTLVS6tXXZUBlmYndoF1/2v8UYqWD4X+XMVDNt98V5VcpXwHb7oJM31vNKC2KaGMs0X98QhLLQMWOHLi9UnCy+SwJ1nC32B6LP67tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769609050; c=relaxed/simple;
-	bh=hxcTLKnHYOGMq+wQPMZTSaN0ajdDCwMjn4DWO3u/5yQ=;
+	s=arc-20240116; t=1769610994; c=relaxed/simple;
+	bh=w7RrBBzZIuz8xqrWdZPUre+AvVJylwUW9queAH7gzkE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ERWZDlF7jeROShxc/NRaziSHiwDCBu8Eyrs2MOQPiIP4TGTVKFpsD59YVPDzPFLC8fW69yOJp1+3+A/t/7VUqZT+hWY1Kj2dp+fvePKNhVYJDhbzGqkd9Ekg67jfwnILOWaq/xztF29ou8g2nIgkcW2H/HvkD8toiEXsmE3uEnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qBmX2s/6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FAACC4CEF1;
-	Wed, 28 Jan 2026 14:04:01 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=dG258EeYvedlFQQYkhekzd5JjfRxMI1t6+3GcFrwNAIjhp5oVuqv6JlpcS+Ppqk/Sw3n4heSIsDhGVF9GMABmS2bh626I8Z3cr1AA8Q5Of0ls3I/ECPAy9O48ZVCMRnr/JMeFWAwZNTx8hlyepD1UNmh6HE4YNAaS6UfyDJe7eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dLgYQaz3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2DEBC4CEF1;
+	Wed, 28 Jan 2026 14:36:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769609049;
-	bh=hxcTLKnHYOGMq+wQPMZTSaN0ajdDCwMjn4DWO3u/5yQ=;
+	s=k20201202; t=1769610994;
+	bh=w7RrBBzZIuz8xqrWdZPUre+AvVJylwUW9queAH7gzkE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qBmX2s/6+TKnA4ruOgDeCz8Uda1gcQC9EwGYIy6HZgS1rK0fQN8lvanAQWsQG4FHr
-	 efFxiO46WeHJtVMkykabrelayOE+mNenoVa/UzQxpVxiguCgG5ZD4xCS/6T0yz/LYL
-	 trJjYc5/JS8FV/dLQW6ufEJsTQlln6gQIrgiPhXYmE6CGWP+f49Ygj+2bZ+6irjFEd
-	 OTKH6k5alYzhaNTSSxS6uF4eBdi8lSN2U0vqKn84ltESdIfFZJw9yA3vIVOCWJ479l
-	 5IBQFybOTcSGB6anIChgTwieDZOAHVkOzhnZAtYJbdhdXMDWa30vPxTzsI50uTbR5L
-	 WsjzD+C7DuVeg==
-Date: Wed, 28 Jan 2026 19:33:57 +0530
+	b=dLgYQaz3hk08B66xJru+tcLyUXLfa2syE5i0+ySVr5hp2pTvBHFoYfN2RUqzL63xr
+	 TnXnJYFbFmIqK0F84CfWyeINuD4unEvDN9HxQVQpR/uTo8mtdSMIA6pEe+dNcxk18+
+	 GJWNXS6LU16HcUVNJhaTri8i7hdJOaZhFOZIGyFlK0gMlXsenBJFkcC3m/5zQ2SFWZ
+	 +B/2/0DdD9Gu9ZhaCDQ83hv55zLYP27Yhesox8Sh5yOEZs5Yoo8RrDJpPH27u9fRnr
+	 t222h4hNov3WoLGJ3NJjV9LL8kcHxUjOdj1AeqOS02hJaBhsfWFJNWnVbZiExRrfSs
+	 w+hRuUqcOcsYA==
+Date: Wed, 28 Jan 2026 20:06:21 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
 To: Mukesh R <mrathor@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+Cc: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, 
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
 	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev, linux-pci@vger.kernel.org, 
 	linux-arch@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, 
 	decui@microsoft.com, longli@microsoft.com, catalin.marinas@arm.com, will@kernel.org, 
@@ -55,11 +56,12 @@ Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
 	hpa@zytor.com, joro@8bytes.org, lpieralisi@kernel.org, kwilczynski@kernel.org, 
 	robh@kernel.org, bhelgaas@google.com, arnd@arndb.de, 
 	nunodasneves@linux.microsoft.com, mhklinux@outlook.com, romank@linux.microsoft.com
-Subject: Re: [PATCH v0 08/15] PCI: hv: rename hv_compose_msi_msg to
- hv_vmbus_compose_msi_msg
-Message-ID: <vvxvn53hffoh6w4lkpfnwaenmz4nib3tbolvnxcggperdtamdl@j7d6ub75r7d4>
+Subject: Re: [PATCH v0 10/15] PCI: hv: Build device id for a VMBus device
+Message-ID: <323krpkmg4zmswo567ccah2g7ymprs66nfei3eo6saobl2azda@35jdfloq5g3g>
 References: <20260120064230.3602565-1-mrathor@linux.microsoft.com>
- <20260120064230.3602565-9-mrathor@linux.microsoft.com>
+ <20260120064230.3602565-11-mrathor@linux.microsoft.com>
+ <aXAAH4G9ztAGDWuy@skinsburskii.localdomain>
+ <a2e54fff-3cbb-e332-c35e-7520c36eceed@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -69,23 +71,23 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260120064230.3602565-9-mrathor@linux.microsoft.com>
+In-Reply-To: <a2e54fff-3cbb-e332-c35e-7520c36eceed@linux.microsoft.com>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8557-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8558-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,microsoft.com,kernel.org,arm.com,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,8bytes.org,google.com,arndb.de,linux.microsoft.com,outlook.com];
-	RCPT_COUNT_TWELVE(0.00)[28];
+	FREEMAIL_CC(0.00)[linux.microsoft.com,vger.kernel.org,lists.infradead.org,lists.linux.dev,microsoft.com,kernel.org,arm.com,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,8bytes.org,google.com,arndb.de,outlook.com];
+	RCPT_COUNT_TWELVE(0.00)[29];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -95,251 +97,84 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[mani@kernel.org,linux-hyperv@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: A3726A2733
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 6B543A2EC8
 X-Rspamd-Action: no action
 
-On Mon, Jan 19, 2026 at 10:42:23PM -0800, Mukesh R wrote:
-> From: Mukesh Rathor <mrathor@linux.microsoft.com>
+On Fri, Jan 23, 2026 at 04:42:54PM -0800, Mukesh R wrote:
+> On 1/20/26 14:22, Stanislav Kinsburskii wrote:
+> > On Mon, Jan 19, 2026 at 10:42:25PM -0800, Mukesh R wrote:
+> > > From: Mukesh Rathor <mrathor@linux.microsoft.com>
+> > > 
+> > > On Hyper-V, most hypercalls related to PCI passthru to map/unmap regions,
+> > > interrupts, etc need a device id as a parameter. This device id refers
+> > > to that specific device during the lifetime of passthru.
+> > > 
+> > > An L1VH VM only contains VMBus based devices. A device id for a VMBus
+> > > device is slightly different in that it uses the hv_pcibus_device info
+> > > for building it to make sure it matches exactly what the hypervisor
+> > > expects. This VMBus based device id is needed when attaching devices in
+> > > an L1VH based guest VM. Before building it, a check is done to make sure
+> > > the device is a valid VMBus device.
+> > > 
+> > > Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+> > > ---
+> > >   arch/x86/include/asm/mshyperv.h     |  2 ++
+> > >   drivers/pci/controller/pci-hyperv.c | 29 +++++++++++++++++++++++++++++
+> > >   2 files changed, 31 insertions(+)
+> > > 
+> > > diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> > > index eef4c3a5ba28..0d7fdfb25e76 100644
+> > > --- a/arch/x86/include/asm/mshyperv.h
+> > > +++ b/arch/x86/include/asm/mshyperv.h
+> > > @@ -188,6 +188,8 @@ bool hv_vcpu_is_preempted(int vcpu);
+> > >   static inline void hv_apic_init(void) {}
+> > >   #endif
+> > > +u64 hv_pci_vmbus_device_id(struct pci_dev *pdev);
+> > > +
+> > >   struct irq_domain *hv_create_pci_msi_domain(void);
+> > >   int hv_map_msi_interrupt(struct irq_data *data,
+> > > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> > > index 8bc6a38c9b5a..40f0b06bb966 100644
+> > > --- a/drivers/pci/controller/pci-hyperv.c
+> > > +++ b/drivers/pci/controller/pci-hyperv.c
+> > > @@ -579,6 +579,8 @@ static void hv_pci_onchannelcallback(void *context);
+> > >   #define DELIVERY_MODE		APIC_DELIVERY_MODE_FIXED
+> > >   #define HV_MSI_CHIP_FLAGS	MSI_CHIP_FLAG_SET_ACK
+> > > +static bool hv_vmbus_pci_device(struct pci_bus *pbus);
+> > > +
+> > 
+> > Why not moving this static function definition above the called instead of
+> > defining the prototype?
 > 
-> Main change here is to rename hv_compose_msi_msg to
-> hv_vmbus_compose_msi_msg as we introduce hv_compose_msi_msg in upcoming
-> patches that builds MSI messages for both VMBus and non-VMBus cases. VMBus
-> is not used on baremetal root partition for example.
+> Did you see the function implementation? It has other dependencies that
+> are later, it would need code reorg.
+> 
+> Thanks,
+> -Mukesh
+> 
+> 
+> > >   static int hv_pci_irqchip_init(void)
+> > >   {
+> > >   	return 0;
+> > > @@ -598,6 +600,26 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
+> > >   #define hv_msi_prepare		pci_msi_prepare
+> > > +u64 hv_pci_vmbus_device_id(struct pci_dev *pdev)
+> > > +{
+> > > +	u64 u64val;
+> > 
+> > This variable is redundant.
+> 
+> Not really. It helps with debug by putting a quick print, and is
+> harmless.
+> 
 
-> While at it, replace
-> spaces with tabs and fix some formatting involving excessive line wraps.
->
-
-Don't mix up cleanup changes. Do it in a separate patch.
+Such debug print do not exist now. So there is no need of a variable, drop it.
 
 - Mani
- 
-> There is no functional change.
-> 
-> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 95 +++++++++++++++--------------
->  1 file changed, 48 insertions(+), 47 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 1e237d3538f9..8bc6a38c9b5a 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -30,7 +30,7 @@
->   * function's configuration space is zero.
->   *
->   * The rest of this driver mostly maps PCI concepts onto underlying Hyper-V
-> - * facilities.  For instance, the configuration space of a function exposed
-> + * facilities.	For instance, the configuration space of a function exposed
->   * by Hyper-V is mapped into a single page of memory space, and the
->   * read and write handlers for config space must be aware of this mechanism.
->   * Similarly, device setup and teardown involves messages sent to and from
-> @@ -109,33 +109,33 @@ enum pci_message_type {
->  	/*
->  	 * Version 1.1
->  	 */
-> -	PCI_MESSAGE_BASE                = 0x42490000,
-> -	PCI_BUS_RELATIONS               = PCI_MESSAGE_BASE + 0,
-> -	PCI_QUERY_BUS_RELATIONS         = PCI_MESSAGE_BASE + 1,
-> -	PCI_POWER_STATE_CHANGE          = PCI_MESSAGE_BASE + 4,
-> +	PCI_MESSAGE_BASE		= 0x42490000,
-> +	PCI_BUS_RELATIONS		= PCI_MESSAGE_BASE + 0,
-> +	PCI_QUERY_BUS_RELATIONS		= PCI_MESSAGE_BASE + 1,
-> +	PCI_POWER_STATE_CHANGE		= PCI_MESSAGE_BASE + 4,
->  	PCI_QUERY_RESOURCE_REQUIREMENTS = PCI_MESSAGE_BASE + 5,
-> -	PCI_QUERY_RESOURCE_RESOURCES    = PCI_MESSAGE_BASE + 6,
-> -	PCI_BUS_D0ENTRY                 = PCI_MESSAGE_BASE + 7,
-> -	PCI_BUS_D0EXIT                  = PCI_MESSAGE_BASE + 8,
-> -	PCI_READ_BLOCK                  = PCI_MESSAGE_BASE + 9,
-> -	PCI_WRITE_BLOCK                 = PCI_MESSAGE_BASE + 0xA,
-> -	PCI_EJECT                       = PCI_MESSAGE_BASE + 0xB,
-> -	PCI_QUERY_STOP                  = PCI_MESSAGE_BASE + 0xC,
-> -	PCI_REENABLE                    = PCI_MESSAGE_BASE + 0xD,
-> -	PCI_QUERY_STOP_FAILED           = PCI_MESSAGE_BASE + 0xE,
-> -	PCI_EJECTION_COMPLETE           = PCI_MESSAGE_BASE + 0xF,
-> -	PCI_RESOURCES_ASSIGNED          = PCI_MESSAGE_BASE + 0x10,
-> -	PCI_RESOURCES_RELEASED          = PCI_MESSAGE_BASE + 0x11,
-> -	PCI_INVALIDATE_BLOCK            = PCI_MESSAGE_BASE + 0x12,
-> -	PCI_QUERY_PROTOCOL_VERSION      = PCI_MESSAGE_BASE + 0x13,
-> -	PCI_CREATE_INTERRUPT_MESSAGE    = PCI_MESSAGE_BASE + 0x14,
-> -	PCI_DELETE_INTERRUPT_MESSAGE    = PCI_MESSAGE_BASE + 0x15,
-> +	PCI_QUERY_RESOURCE_RESOURCES	= PCI_MESSAGE_BASE + 6,
-> +	PCI_BUS_D0ENTRY			= PCI_MESSAGE_BASE + 7,
-> +	PCI_BUS_D0EXIT			= PCI_MESSAGE_BASE + 8,
-> +	PCI_READ_BLOCK			= PCI_MESSAGE_BASE + 9,
-> +	PCI_WRITE_BLOCK			= PCI_MESSAGE_BASE + 0xA,
-> +	PCI_EJECT			= PCI_MESSAGE_BASE + 0xB,
-> +	PCI_QUERY_STOP			= PCI_MESSAGE_BASE + 0xC,
-> +	PCI_REENABLE			= PCI_MESSAGE_BASE + 0xD,
-> +	PCI_QUERY_STOP_FAILED		= PCI_MESSAGE_BASE + 0xE,
-> +	PCI_EJECTION_COMPLETE		= PCI_MESSAGE_BASE + 0xF,
-> +	PCI_RESOURCES_ASSIGNED		= PCI_MESSAGE_BASE + 0x10,
-> +	PCI_RESOURCES_RELEASED		= PCI_MESSAGE_BASE + 0x11,
-> +	PCI_INVALIDATE_BLOCK		= PCI_MESSAGE_BASE + 0x12,
-> +	PCI_QUERY_PROTOCOL_VERSION	= PCI_MESSAGE_BASE + 0x13,
-> +	PCI_CREATE_INTERRUPT_MESSAGE	= PCI_MESSAGE_BASE + 0x14,
-> +	PCI_DELETE_INTERRUPT_MESSAGE	= PCI_MESSAGE_BASE + 0x15,
->  	PCI_RESOURCES_ASSIGNED2		= PCI_MESSAGE_BASE + 0x16,
->  	PCI_CREATE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x17,
->  	PCI_DELETE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x18, /* unused */
->  	PCI_BUS_RELATIONS2		= PCI_MESSAGE_BASE + 0x19,
-> -	PCI_RESOURCES_ASSIGNED3         = PCI_MESSAGE_BASE + 0x1A,
-> -	PCI_CREATE_INTERRUPT_MESSAGE3   = PCI_MESSAGE_BASE + 0x1B,
-> +	PCI_RESOURCES_ASSIGNED3		= PCI_MESSAGE_BASE + 0x1A,
-> +	PCI_CREATE_INTERRUPT_MESSAGE3	= PCI_MESSAGE_BASE + 0x1B,
->  	PCI_MESSAGE_MAXIMUM
->  };
->  
-> @@ -1775,20 +1775,21 @@ static u32 hv_compose_msi_req_v1(
->   * via the HVCALL_RETARGET_INTERRUPT hypercall. But the choice of dummy vCPU is
->   * not irrelevant because Hyper-V chooses the physical CPU to handle the
->   * interrupts based on the vCPU specified in message sent to the vPCI VSP in
-> - * hv_compose_msi_msg(). Hyper-V's choice of pCPU is not visible to the guest,
-> - * but assigning too many vPCI device interrupts to the same pCPU can cause a
-> - * performance bottleneck. So we spread out the dummy vCPUs to influence Hyper-V
-> - * to spread out the pCPUs that it selects.
-> + * hv_vmbus_compose_msi_msg(). Hyper-V's choice of pCPU is not visible to the
-> + * guest, but assigning too many vPCI device interrupts to the same pCPU can
-> + * cause a performance bottleneck. So we spread out the dummy vCPUs to influence
-> + * Hyper-V to spread out the pCPUs that it selects.
->   *
->   * For the single-MSI and MSI-X cases, it's OK for hv_compose_msi_req_get_cpu()
->   * to always return the same dummy vCPU, because a second call to
-> - * hv_compose_msi_msg() contains the "real" vCPU, causing Hyper-V to choose a
-> - * new pCPU for the interrupt. But for the multi-MSI case, the second call to
-> - * hv_compose_msi_msg() exits without sending a message to the vPCI VSP, so the
-> - * original dummy vCPU is used. This dummy vCPU must be round-robin'ed so that
-> - * the pCPUs are spread out. All interrupts for a multi-MSI device end up using
-> - * the same pCPU, even though the vCPUs will be spread out by later calls
-> - * to hv_irq_unmask(), but that is the best we can do now.
-> + * hv_vmbus_compose_msi_msg() contains the "real" vCPU, causing Hyper-V to
-> + * choose a new pCPU for the interrupt. But for the multi-MSI case, the second
-> + * call to hv_vmbus_compose_msi_msg() exits without sending a message to the
-> + * vPCI VSP, so the original dummy vCPU is used. This dummy vCPU must be
-> + * round-robin'ed so that the pCPUs are spread out. All interrupts for a
-> + * multi-MSI device end up using the same pCPU, even though the vCPUs will be
-> + * spread out by later calls to hv_irq_unmask(), but that is the best we can do
-> + * now.
->   *
->   * With Hyper-V in Nov 2022, the HVCALL_RETARGET_INTERRUPT hypercall does *not*
->   * cause Hyper-V to reselect the pCPU based on the specified vCPU. Such an
-> @@ -1863,7 +1864,7 @@ static u32 hv_compose_msi_req_v3(
->  }
->  
->  /**
-> - * hv_compose_msi_msg() - Supplies a valid MSI address/data
-> + * hv_vmbus_compose_msi_msg() - Supplies a valid MSI address/data
->   * @data:	Everything about this MSI
->   * @msg:	Buffer that is filled in by this function
->   *
-> @@ -1873,7 +1874,7 @@ static u32 hv_compose_msi_req_v3(
->   * response supplies a data value and address to which that data
->   * should be written to trigger that interrupt.
->   */
-> -static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
-> +static void hv_vmbus_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
->  {
->  	struct hv_pcibus_device *hbus;
->  	struct vmbus_channel *channel;
-> @@ -1955,7 +1956,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
->  			return;
->  		}
->  		/*
-> -		 * The vector we select here is a dummy value.  The correct
-> +		 * The vector we select here is a dummy value.	The correct
->  		 * value gets sent to the hypervisor in unmask().  This needs
->  		 * to be aligned with the count, and also not zero.  Multi-msi
->  		 * is powers of 2 up to 32, so 32 will always work here.
-> @@ -2047,7 +2048,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
->  
->  		/*
->  		 * Make sure that the ring buffer data structure doesn't get
-> -		 * freed while we dereference the ring buffer pointer.  Test
-> +		 * freed while we dereference the ring buffer pointer.	Test
->  		 * for the channel's onchannel_callback being NULL within a
->  		 * sched_lock critical section.  See also the inline comments
->  		 * in vmbus_reset_channel_cb().
-> @@ -2147,7 +2148,7 @@ static const struct msi_parent_ops hv_pcie_msi_parent_ops = {
->  /* HW Interrupt Chip Descriptor */
->  static struct irq_chip hv_msi_irq_chip = {
->  	.name			= "Hyper-V PCIe MSI",
-> -	.irq_compose_msi_msg	= hv_compose_msi_msg,
-> +	.irq_compose_msi_msg	= hv_vmbus_compose_msi_msg,
->  	.irq_set_affinity	= irq_chip_set_affinity_parent,
->  	.irq_ack		= irq_chip_ack_parent,
->  	.irq_eoi		= irq_chip_eoi_parent,
-> @@ -2159,8 +2160,8 @@ static int hv_pcie_domain_alloc(struct irq_domain *d, unsigned int virq, unsigne
->  			       void *arg)
->  {
->  	/*
-> -	 * TODO: Allocating and populating struct tran_int_desc in hv_compose_msi_msg()
-> -	 * should be moved here.
-> +	 * TODO: Allocating and populating struct tran_int_desc in
-> +	 *	 hv_vmbus_compose_msi_msg() should be moved here.
->  	 */
->  	int ret;
->  
-> @@ -2227,7 +2228,7 @@ static int hv_pcie_init_irq_domain(struct hv_pcibus_device *hbus)
->  /**
->   * get_bar_size() - Get the address space consumed by a BAR
->   * @bar_val:	Value that a BAR returned after -1 was written
-> - *              to it.
-> + *		to it.
->   *
->   * This function returns the size of the BAR, rounded up to 1
->   * page.  It has to be rounded up because the hypervisor's page
-> @@ -2573,7 +2574,7 @@ static void q_resource_requirements(void *context, struct pci_response *resp,
->   * new_pcichild_device() - Create a new child device
->   * @hbus:	The internal struct tracking this root PCI bus.
->   * @desc:	The information supplied so far from the host
-> - *              about the device.
-> + *		about the device.
->   *
->   * This function creates the tracking structure for a new child
->   * device and kicks off the process of figuring out what it is.
-> @@ -3100,7 +3101,7 @@ static void hv_pci_onchannelcallback(void *context)
->  			 * sure that the packet pointer is still valid during the call:
->  			 * here 'valid' means that there's a task still waiting for the
->  			 * completion, and that the packet data is still on the waiting
-> -			 * task's stack.  Cf. hv_compose_msi_msg().
-> +			 * task's stack.  Cf. hv_vmbus_compose_msi_msg().
->  			 */
->  			comp_packet->completion_func(comp_packet->compl_ctxt,
->  						     response,
-> @@ -3417,7 +3418,7 @@ static int hv_allocate_config_window(struct hv_pcibus_device *hbus)
->  	 * vmbus_allocate_mmio() gets used for allocating both device endpoint
->  	 * resource claims (those which cannot be overlapped) and the ranges
->  	 * which are valid for the children of this bus, which are intended
-> -	 * to be overlapped by those children.  Set the flag on this claim
-> +	 * to be overlapped by those children.	Set the flag on this claim
->  	 * meaning that this region can't be overlapped.
->  	 */
->  
-> @@ -4066,7 +4067,7 @@ static int hv_pci_restore_msi_msg(struct pci_dev *pdev, void *arg)
->  		irq_data = irq_get_irq_data(entry->irq);
->  		if (WARN_ON_ONCE(!irq_data))
->  			return -EINVAL;
-> -		hv_compose_msi_msg(irq_data, &entry->msg);
-> +		hv_vmbus_compose_msi_msg(irq_data, &entry->msg);
->  	}
->  	return 0;
->  }
-> @@ -4074,7 +4075,7 @@ static int hv_pci_restore_msi_msg(struct pci_dev *pdev, void *arg)
->  /*
->   * Upon resume, pci_restore_msi_state() -> ... ->  __pci_write_msi_msg()
->   * directly writes the MSI/MSI-X registers via MMIO, but since Hyper-V
-> - * doesn't trap and emulate the MMIO accesses, here hv_compose_msi_msg()
-> + * doesn't trap and emulate the MMIO accesses, here hv_vmbus_compose_msi_msg()
->   * must be used to ask Hyper-V to re-create the IOMMU Interrupt Remapping
->   * Table entries.
->   */
-> -- 
-> 2.51.2.vfs.0.1
-> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
