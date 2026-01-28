@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-8571-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8572-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4IY2OsxTemnk5AEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8571-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 19:22:04 +0100
+	id MPNsKYZSemnk5AEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8572-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 19:16:38 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96229A7B66
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 19:22:04 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 586ECA7A41
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 19:16:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CCC3C304AD94
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 18:11:54 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id E888A302CBFD
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 18:12:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4966371063;
-	Wed, 28 Jan 2026 18:11:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6A2B330641;
+	Wed, 28 Jan 2026 18:11:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bC7bYxjB"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rP4Cocqg"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93E2030DD03;
-	Wed, 28 Jan 2026 18:11:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B5FD36EAB6;
+	Wed, 28 Jan 2026 18:11:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769623909; cv=none; b=EaEbN1Umnt4Rut1Eu/T6E6h6a8WxIrD0j+tGOo9L8YaJBl8U2k7Xb2nZxTXP8rzUN9LeeUwjTmu1M9ToReMsYJzqS2hiEmJduBbv9c+qrP3YbFKfINcrb7RKZJYsb17EoaQ54ZVjefS6jifnrMSviWLftqoiV0qGXwFcQi2le6U=
+	t=1769623910; cv=none; b=tBA/1g8ao569RhaNTnVMwR63Vu2hQyPnPjCNACYcB7yTUwIwbTh4JgqOXhuBAJFYNONm8AKhaSau57cY6K+2pLCU0gpu4Ah1LIRp7V9HWLzUvgJRzQwrMjLLvfTiekKvpUpWgCEyjU1yRhs4M9xu4B0f9JIv0FNe0K9SgoWhKjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769623909; c=relaxed/simple;
-	bh=L4E1wo8/6fKvJEozXW8vtzU2hTEpjK6jREA7Bfv0oJw=;
+	s=arc-20240116; t=1769623910; c=relaxed/simple;
+	bh=vIRH8VDWdNsEhFXuPSCq00V3pn3IFa1wRT7mYXnnmj4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZyBJzX84k/UvHCnGrNVofE+P73Wa1p6IPh2dc3hdEJBesXiTF6OAJVBIx1X7sJBsunE3e9g0/rvTxLOc3mZh7V3K1yjXylXIXtHYi2sPfByCDi8q6OUakBuQx28DoO9M1K/wDgFljxAtMlIwdiwsfcYVz3z/lL+i2ShS/Y3gPVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bC7bYxjB; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=DDUyEHGt8D4/E3bzx3Bu3483TFh83cw3FtWtT+bZBmHtBXUnWxm5GjTodC4XYltIPDD1/D2ZFYEfg3aCTInFJtSc9jJi5RGWWLvJ7VglKqZ5q5uK3pk+4Q8cqd/SQHnQvtutojieG9FgWtdGcsVcsHpLq9FdvecjY+VdRS5a55U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rP4Cocqg; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1032)
-	id AC38A20B716A; Wed, 28 Jan 2026 10:11:48 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AC38A20B716A
+	id DAD0020B716B; Wed, 28 Jan 2026 10:11:48 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DAD0020B716B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1769623908;
-	bh=uE6yNFSdJktjcXi31tIk+NXAAyXVgXT3CJcMYC5oQGk=;
+	bh=ep4GmkV6PrsxU5Ez3hsswpTJDjwvDSgFu/tErSVW+YE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bC7bYxjBQBCrgzTJZ0LBNetaU2vUYgAYoNGyHXno1kzrohE7yF8Mwhu1cHQc2hYC7
-	 tW976ZRpONWqj2P7jXQaxSmwSO/2ZvEKTG+n86X1+aURFvjNWVW7WNyRo2rnU0HcRC
-	 at8YEqWPR/CUrlos9bTUxS9t28kX+5msEvpc4xgA=
+	b=rP4CocqgcDEaKApNBbMJlbCEyhW3bMFGKmkJwDO5KAErDdI8aGywYFP+89ySON0+l
+	 Ipik9JNFV7ddhpcN9/LpSOroIgTnYc2L7ljTixpRXc0FLkglPIKXdnuP8V14OBHUyh
+	 /7eUu7/Bv4nAqHqM6tL4ZLL4f+piGwdmzlwx4QXA=
 From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -56,9 +56,9 @@ Cc: kys@microsoft.com,
 	mrathor@linux.microsoft.com,
 	paekkaladevi@linux.microsoft.com,
 	Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Subject: [PATCH v6 4/7] mshv: Always map child vp stats pages regardless of scheduler type
-Date: Wed, 28 Jan 2026 10:11:43 -0800
-Message-ID: <20260128181146.517708-5-nunodasneves@linux.microsoft.com>
+Subject: [PATCH v6 5/7] mshv: Update hv_stats_page definitions
+Date: Wed, 28 Jan 2026 10:11:44 -0800
+Message-ID: <20260128181146.517708-6-nunodasneves@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260128181146.517708-1-nunodasneves@linux.microsoft.com>
 References: <20260128181146.517708-1-nunodasneves@linux.microsoft.com>
@@ -71,109 +71,114 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8571-lists,linux-hyperv=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[vger.kernel.org,outlook.com,linux.microsoft.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nunodasneves@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	TAGGED_FROM(0.00)[bounces-8572-lists,linux-hyperv=lfdr.de];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	FROM_NEQ_ENVFROM(0.00)[nunodasneves@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:mid,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: 96229A7B66
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: 586ECA7A41
 X-Rspamd-Action: no action
 
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+hv_stats_page belongs in hvhdk.h, move it there.
 
-Currently vp->vp_stats_pages is only used by the root scheduler for fast
-interrupt injection.
+It does not require a union to access the data for different counters,
+just use a single u64 array for simplicity and to match the Windows
+definitions.
 
-Soon, vp_stats_pages will also be needed for exposing child VP stats to
-userspace via debugfs. Mapping the pages a second time to a different
-address causes an error on L1VH.
+While at it, correct the ARM64 value for VpRootDispatchThreadBlocked.
 
-Remove the scheduler requirement and always map the vp stats pages.
-
-Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 ---
- drivers/hv/mshv_root_main.c | 25 ++++++++-----------------
- 1 file changed, 8 insertions(+), 17 deletions(-)
+ drivers/hv/mshv_root_main.c | 27 ++++++++-------------------
+ include/hyperv/hvhdk.h      |  7 +++++++
+ 2 files changed, 15 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index faca3cc63e79..fbfc9e7d9fa4 100644
+index fbfc9e7d9fa4..414d9cee5252 100644
 --- a/drivers/hv/mshv_root_main.c
 +++ b/drivers/hv/mshv_root_main.c
-@@ -1077,16 +1077,10 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
- 			goto unmap_register_page;
- 	}
+@@ -39,22 +39,12 @@ MODULE_AUTHOR("Microsoft");
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("Microsoft Hyper-V root partition VMM interface /dev/mshv");
  
--	/*
--	 * This mapping of the stats page is for detecting if dispatch thread
--	 * is blocked - only relevant for root scheduler
--	 */
--	if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT) {
--		ret = mshv_vp_stats_map(partition->pt_id, args.vp_index,
--					stats_pages);
--		if (ret)
--			goto unmap_ghcb_page;
--	}
-+	ret = mshv_vp_stats_map(partition->pt_id, args.vp_index,
-+				stats_pages);
-+	if (ret)
-+		goto unmap_ghcb_page;
+-/* TODO move this to another file when debugfs code is added */
+-enum hv_stats_vp_counters {			/* HV_THREAD_COUNTER */
+-#if defined(CONFIG_X86)
+-	VpRootDispatchThreadBlocked			= 202,
++/* HV_THREAD_COUNTER */
++#if defined(CONFIG_X86_64)
++#define HV_VP_COUNTER_ROOT_DISPATCH_THREAD_BLOCKED 202
+ #elif defined(CONFIG_ARM64)
+-	VpRootDispatchThreadBlocked			= 94,
++#define HV_VP_COUNTER_ROOT_DISPATCH_THREAD_BLOCKED 95
+ #endif
+-	VpStatsMaxCounter
+-};
+-
+-struct hv_stats_page {
+-	union {
+-		u64 vp_cntrs[VpStatsMaxCounter];		/* VP counters */
+-		u8 data[HV_HYP_PAGE_SIZE];
+-	};
+-} __packed;
  
- 	vp = kzalloc(sizeof(*vp), GFP_KERNEL);
- 	if (!vp)
-@@ -1110,8 +1104,7 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
- 	if (mshv_partition_encrypted(partition) && is_ghcb_mapping_available())
- 		vp->vp_ghcb_page = page_to_virt(ghcb_page);
+ struct mshv_root mshv_root;
  
--	if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
--		memcpy(vp->vp_stats_pages, stats_pages, sizeof(stats_pages));
-+	memcpy(vp->vp_stats_pages, stats_pages, sizeof(stats_pages));
+@@ -485,12 +475,11 @@ static u64 mshv_vp_interrupt_pending(struct mshv_vp *vp)
+ static bool mshv_vp_dispatch_thread_blocked(struct mshv_vp *vp)
+ {
+ 	struct hv_stats_page **stats = vp->vp_stats_pages;
+-	u64 *self_vp_cntrs = stats[HV_STATS_AREA_SELF]->vp_cntrs;
+-	u64 *parent_vp_cntrs = stats[HV_STATS_AREA_PARENT]->vp_cntrs;
++	u64 *self_vp_cntrs = stats[HV_STATS_AREA_SELF]->data;
++	u64 *parent_vp_cntrs = stats[HV_STATS_AREA_PARENT]->data;
  
- 	/*
- 	 * Keep anon_inode_getfd last: it installs fd in the file struct and
-@@ -1133,8 +1126,7 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
- free_vp:
- 	kfree(vp);
- unmap_stats_pages:
--	if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
--		mshv_vp_stats_unmap(partition->pt_id, args.vp_index, stats_pages);
-+	mshv_vp_stats_unmap(partition->pt_id, args.vp_index, stats_pages);
- unmap_ghcb_page:
- 	if (mshv_partition_encrypted(partition) && is_ghcb_mapping_available())
- 		hv_unmap_vp_state_page(partition->pt_id, args.vp_index,
-@@ -1754,9 +1746,8 @@ static void destroy_partition(struct mshv_partition *partition)
- 			if (!vp)
- 				continue;
+-	if (self_vp_cntrs[VpRootDispatchThreadBlocked])
+-		return self_vp_cntrs[VpRootDispatchThreadBlocked];
+-	return parent_vp_cntrs[VpRootDispatchThreadBlocked];
++	return parent_vp_cntrs[HV_VP_COUNTER_ROOT_DISPATCH_THREAD_BLOCKED] ||
++	       self_vp_cntrs[HV_VP_COUNTER_ROOT_DISPATCH_THREAD_BLOCKED];
+ }
  
--			if (hv_scheduler_type == HV_SCHEDULER_TYPE_ROOT)
--				mshv_vp_stats_unmap(partition->pt_id, vp->vp_index,
--						    vp->vp_stats_pages);
-+			mshv_vp_stats_unmap(partition->pt_id, vp->vp_index,
-+					    vp->vp_stats_pages);
+ static int
+diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
+index 469186df7826..d87cfdb7d360 100644
+--- a/include/hyperv/hvhdk.h
++++ b/include/hyperv/hvhdk.h
+@@ -10,6 +10,13 @@
+ #include "hvhdk_mini.h"
+ #include "hvgdk.h"
  
- 			if (vp->vp_register_page) {
- 				(void)hv_unmap_vp_state_page(partition->pt_id,
++/*
++ * Hypervisor statistics page format
++ */
++struct hv_stats_page {
++	u64 data[HV_HYP_PAGE_SIZE / sizeof(u64)];
++} __packed;
++
+ /* Bits for dirty mask of hv_vp_register_page */
+ #define HV_X64_REGISTER_CLASS_GENERAL	0
+ #define HV_X64_REGISTER_CLASS_IP	1
 -- 
 2.34.1
 
