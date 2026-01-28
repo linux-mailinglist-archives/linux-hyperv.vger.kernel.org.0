@@ -1,57 +1,61 @@
-Return-Path: <linux-hyperv+bounces-8564-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8565-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WLQHBSJLemkp5AEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8564-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 18:45:06 +0100
+	id cHOXByZLemkp5AEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8565-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 18:45:10 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DCC4A7156
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 18:45:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B98F8A715E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 18:45:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B35CB301E3DB
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 17:42:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 25D9F3028EC2
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 17:42:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61D2130FC35;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8906D31E0FB;
 	Wed, 28 Jan 2026 17:42:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="J4DTxvm4"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DvnrCSw9"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 214FF248861;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49AA228CF6F;
 	Wed, 28 Jan 2026 17:42:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769622123; cv=none; b=hUoZxCvav6ynExg5dXZ7LijCUw8Csf0/WmL7darLexO7vIFHNShDWZ3+qK4OlPpSoGF9eJ86ZrNCGFLovv4M3yxQhEROWVmQQZ2jWs0tgZK8l9V3fe3P2v0D/DLDPWM2MDRkYkGQTZUszXGf44ibstMVAW9ftX1BMxCmeqT1kDw=
+	t=1769622123; cv=none; b=Xllc6HuMKS5J4D+/GFPMAimhhA83M6d4f1jyBY1L0lMCqC59WqMNW8aqm/MkylSrnloHzbmwfYiXx+MEv0sJioKjEWFK11SYdpWVMZwDpVgqnkTTcIPadp6H4wty00KrMYNMcmHKrnsfP0LFNKOY6lP2Yrze9LTu6OuolOFE1KQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1769622123; c=relaxed/simple;
-	bh=4MV+sxYAXFmiGUuFYef4Riivb6GqxI2NoxIR9rPLND4=;
-	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=UJCQVwQmo5S3ikH1JVcPjG3sS2WXe3pnHWM1KMh0O5u8L/zrrtjhoH4/0A6g2tc4wCuL7RsCLWADhj6YK+dGb+CNREdSzF763XR0/wskqTQSZCufC6H1rzVRA1sNwuBtzCFgMCGoNgCjDMO4dNhAG+11XG5NohxgOgXRq5fahBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=J4DTxvm4; arc=none smtp.client-ip=13.77.154.182
+	bh=a2uK/DPWKK9or/3ApipBtxVHDoyWYTzSwq8Jgym17X8=;
+	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D4kPXcm+1l0fylwJc59OPNKIwQaX52icqcZFb6KueBfZ4r8V5GiRTPa0XfZ+2M6vsBnR8lY7D0Ax8tOuTcBNXGwk8xrG9hd2FGdf52U4a9BgQP5B2hysXMTDJua4hi955CqtJo1aarZvIMWmppA/PDj1pbUPJwctB8rQYKXfoBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=DvnrCSw9; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 80BCE20B7165;
-	Wed, 28 Jan 2026 09:41:56 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 80BCE20B7165
+	by linux.microsoft.com (Postfix) with ESMTPSA id 06ED720B7167;
+	Wed, 28 Jan 2026 09:42:02 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 06ED720B7167
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1769622116;
-	bh=MwsAKtB1TdslBChA/QaO2udawN6BW3NQscLnpI6z1uk=;
-	h=Subject:From:To:Cc:Date:From;
-	b=J4DTxvm4kRrZgoQn30xmwcM1RG7SvmBji6ufucYKoNL/rQlySET+GZZORrK6foPw0
-	 8aED/KJYFEw97QPvFdxQcisN8zfEie/lu5/mqEl8Anium4xSuQJUm5zuV0E1vnCEKb
-	 31RxVY2zTKNw2heWXh54Cj4apQr5MJR1AJ7wSWmg=
-Subject: [PATCH 0/2] kexec: Refuse kernel-unsafe Microsoft Hypervisor
- transitions
+	s=default; t=1769622122;
+	bh=8SqHw41EAdVlzG5tsfsM6/eoFMPvWeoo+r07cYXCW8c=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=DvnrCSw9Ph5QEjihqQ8sJSPp+5VEcsMWDj14YEefJHmm0/tWsTQQULO8w+EM//Ui9
+	 wnAz2COGAKG5CcVTNRWwvJhuiI0rOywJL79mIZ520M/NI4orBKrXhc38X1HsnplOE2
+	 18nWlLeURWXw1riBuMuKxA+LgSyQ04xJgEMg6rAY=
+Subject: [PATCH 1/2] kexec: Add permission notifier chain for kexec operations
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: rppt@kernel.org, akpm@linux-foundation.org, bhe@redhat.com,
  kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, longli@microsoft.com
 Cc: kexec@lists.infradead.org, linux-hyperv@vger.kernel.org,
  linux-kernel@vger.kernel.org
-Date: Wed, 28 Jan 2026 17:41:56 +0000
+Date: Wed, 28 Jan 2026 17:42:01 +0000
 Message-ID: 
+ <176962212169.85424.4683391728440118017.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+In-Reply-To: 
+ <176962149772.85424.9395505307198316093.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+References: 
  <176962149772.85424.9395505307198316093.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 User-Agent: StGit/0.19
 Precedence: bulk
@@ -61,18 +65,18 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_FROM(0.00)[bounces-8564-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8565-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
@@ -87,44 +91,105 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[11];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,skinsburskii-cloud-desktop.internal.cloudapp.net:mid,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: 5DCC4A7156
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:dkim,skinsburskii-cloud-desktop.internal.cloudapp.net:mid]
+X-Rspamd-Queue-Id: B98F8A715E
 X-Rspamd-Action: no action
 
-When Microsoft Hypervisor is active, the kernel may have memory “deposited”
-to the hypervisor. Those pages are no longer safe for the kernel to touch,
-and attempting to access them can trigger a GPF. The problem becomes acute
-with kexec: the “deposited pages” state does not survive the transition,
-and the next kernel has no reliable way to know which pages are still
-owned/managed by the hypervisor.
+Add a blocking notifier chain to allow subsystems to be notified
+before kexec execution. This enables modules to perform necessary
+cleanup or validation before the system transitions to a new kernel or
+block kexec if not possible under current conditions.
 
-Until there is a proper handoff mechanism to preserve that state across
-kexec, the only safe behavior is to refuse kexec whenever there is shared
-hypervisor state that cannot survive the transition—most notably deposited
-pages, and also cases where VMs are still running.
-
-This series adds the missing kexec integration point needed by MSHV: a
-callback at the kexec “freeze” stage so the driver can make the transition
-safe (or block it). With this hook, MSHV can refuse kexec while VMs are
-running, attempt to withdraw deposited pages when possible (e.g. L1VH
-host), and fail the transition if any pages remain deposited.
-
+Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 ---
+ include/linux/kexec.h |    6 ++++++
+ kernel/kexec_core.c   |   24 ++++++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
 
-Stanislav Kinsburskii (2):
-      kexec: Add permission notifier chain for kexec operations
-      mshv: Add kexec blocking support
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index ff7e231b0485..311037d30f9e 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -35,6 +35,7 @@ extern note_buf_t __percpu *crash_notes;
+ #include <linux/ioport.h>
+ #include <linux/module.h>
+ #include <linux/highmem.h>
++#include <linux/notifier.h>
+ #include <asm/kexec.h>
+ #include <linux/crash_core.h>
+ 
+@@ -532,10 +533,13 @@ extern bool kexec_file_dbg_print;
+ 
+ extern void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size);
+ extern void kimage_unmap_segment(void *buffer);
++extern int kexec_block_notifier_register(struct notifier_block *nb);
++extern int kexec_block_notifier_unregister(struct notifier_block *nb);
+ #else /* !CONFIG_KEXEC_CORE */
+ struct pt_regs;
+ struct task_struct;
+ struct kimage;
++struct notifier_block;
+ static inline void __crash_kexec(struct pt_regs *regs) { }
+ static inline void crash_kexec(struct pt_regs *regs) { }
+ static inline int kexec_should_crash(struct task_struct *p) { return 0; }
+@@ -543,6 +547,8 @@ static inline int kexec_crash_loaded(void) { return 0; }
+ static inline void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size)
+ { return NULL; }
+ static inline void kimage_unmap_segment(void *buffer) { }
++static inline int kexec_block_notifier_register(struct notifier_block *nb) { }
++static inline int kexec_block_notifier_unregister(struct notifier_block *nb) { }
+ #define kexec_in_progress false
+ #endif /* CONFIG_KEXEC_CORE */
+ 
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 0f92acdd354d..1e86a6f175f0 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -57,6 +57,20 @@ bool kexec_in_progress = false;
+ 
+ bool kexec_file_dbg_print;
+ 
++static BLOCKING_NOTIFIER_HEAD(kexec_block_list);
++
++int kexec_block_notifier_register(struct notifier_block *nb)
++{
++	return blocking_notifier_chain_register(&kexec_block_list, nb);
++}
++EXPORT_SYMBOL_GPL(kexec_block_notifier_register);
++
++int kexec_block_notifier_unregister(struct notifier_block *nb)
++{
++	return blocking_notifier_chain_unregister(&kexec_block_list, nb);
++}
++EXPORT_SYMBOL_GPL(kexec_block_notifier_unregister);
++
+ /*
+  * When kexec transitions to the new kernel there is a one-to-one
+  * mapping between physical and virtual addresses.  On processors
+@@ -1124,6 +1138,12 @@ bool kexec_load_permitted(int kexec_image_type)
+ 	return true;
+ }
+ 
++static int kexec_check_blockers(void)
++{
++	/* Notify subsystems of impending kexec */
++	return blocking_notifier_call_chain(&kexec_block_list, 0, NULL);
++}
++
+ /*
+  * Move into place and start executing a preloaded standalone
+  * executable.  If nothing was preloaded return an error.
+@@ -1139,6 +1159,10 @@ int kernel_kexec(void)
+ 		goto Unlock;
+ 	}
+ 
++	error = kexec_check_blockers();
++	if (error)
++		goto Unlock;
++
+ 	error = liveupdate_reboot();
+ 	if (error)
+ 		goto Unlock;
 
-
- drivers/hv/Makefile            |    1 +
- drivers/hv/hv_proc.c           |    4 ++
- drivers/hv/mshv_kexec.c        |   66 ++++++++++++++++++++++++++++++++++++++++
- drivers/hv/mshv_root.h         |   14 ++++++++
- drivers/hv/mshv_root_hv_call.c |    2 +
- drivers/hv/mshv_root_main.c    |    7 ++++
- include/linux/kexec.h          |    6 ++++
- kernel/kexec_core.c            |   24 +++++++++++++++
- 8 files changed, 124 insertions(+)
- create mode 100644 drivers/hv/mshv_kexec.c
 
 
