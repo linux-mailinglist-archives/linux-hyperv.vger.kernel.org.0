@@ -1,1083 +1,323 @@
-Return-Path: <linux-hyperv+bounces-8574-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8575-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SAchNaJSemnk5AEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8574-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 19:17:06 +0100
+	id QOe6E31hemk75gEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8575-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 20:20:29 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BD98A7A50
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 19:17:06 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF7EFA81DF
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 20:20:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id BF2E9302E471
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 18:12:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 16CFE3030EA5
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 19:20:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A21537417D;
-	Wed, 28 Jan 2026 18:11:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A943536E47F;
+	Wed, 28 Jan 2026 19:20:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IBpuyK/y"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="oC2lwDSN"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7811371065;
-	Wed, 28 Jan 2026 18:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769623912; cv=none; b=KQAUnD19lOUg0qgPI67nhq+1hm514y1fR/HgUmnSU4Qni7vjPSGTNH9eLj61WSOlkvTw7KM1TB+ujUQu2LCQveP3N1qmEWTP/5iZ4ViI4jIUTjlqh1QstqYpvtdcUM6jSN1fq9Rxt7+B2SD5oYPc6Rtm+1aQ/AwO+pZF3KgBDYo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769623912; c=relaxed/simple;
-	bh=z+4jYHc9rrfYSyc9V99ZLhGU6EsV2Bu8Lm/9X4RQpXg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IN3gIcXU5BpgUoTY4aH8cRBxKHKzGaGVmxO+sEMbwwY/gtbfiMPb9vkON85z91QR4DeCCpaWKQL6x0ayXujQbfENuWcjsYpNqt01ijfC0Spy5A5asX4IU4A522z6rn/DWl8JJGuIjfigN2Uzh7CcxP+/eKjPr7Z2dXBjsiPGbxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IBpuyK/y; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1032)
-	id 3D9D620B716E; Wed, 28 Jan 2026 10:11:49 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3D9D620B716E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1769623909;
-	bh=XktaTb79CBAxA44Dt4ZFpyBuHnfZtfaw/0FSCkZZAqM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IBpuyK/ynLayLGGdvQqQHzvLdcvnJUjBOqIHiv4e4yztWwvrnHTvksFNEmTyDm1j7
-	 r295eQH5Warn32noMWUJjRYxLw4U01WsexRJXvDGjxrM9qjtO4ypSe8JFXfvg21qpk
-	 +ZMhKdDseL6C7MJl9sB3xzXo1CoTlUEDq6WDe3c4=
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mhklinux@outlook.com,
-	skinsburskii@linux.microsoft.com
-Cc: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	prapal@linux.microsoft.com,
-	mrathor@linux.microsoft.com,
-	paekkaladevi@linux.microsoft.com,
-	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	Jinank Jain <jinankjain@microsoft.com>
-Subject: [PATCH v6 7/7] mshv: Add debugfs to view hypervisor statistics
-Date: Wed, 28 Jan 2026 10:11:46 -0800
-Message-ID: <20260128181146.517708-8-nunodasneves@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <20260128181146.517708-1-nunodasneves@linux.microsoft.com>
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azolkn19010021.outbound.protection.outlook.com [52.103.23.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7FA2D9EDC;
+	Wed, 28 Jan 2026 19:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.23.21
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769628014; cv=fail; b=o3VIL9iuZ1lZOvdNLAazbVltzF/LCEjXbYItoVyqvmZYoI+Db5ZGnmh2zAderykbZr4OqeOcAmsoEZ1vZgpuA+Sfe8BCtvaNzbrVlZWuV5y2jndsun9w5njronkbLnh9KAIy2d15FVC3vHuyygMx216ixoQ6ZzEonUvdx7M/t4A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769628014; c=relaxed/simple;
+	bh=6MIB2WmG5a+NkHb4HiJ+SxeDMcwbkkIDb77Ud7bFamQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=KdkZPSC/sHQdwop0zmQUBjeabLfAPFqaoolBVjuJobIEY/nBUa+fFgWpdsWhgugjHZ+DSW7AQWv6dLru34Ov/jBocxgIUgj1tvs/OAQ1oqBfkaFTihADpya7BNbawkN8aHZ+dSr5xe7ZVj9EuoPbyJSc68eDvUHPSVb2ntyH8Ww=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=oC2lwDSN; arc=fail smtp.client-ip=52.103.23.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ouqed5ry4SrAfEpA4V7dWKuyukMm+u+3seurSOauD73PmqXThv+XEVm4Zx8Py7BnPcBSbk3Pt+vc49+iPqYdiExxnsJnr8KF4lf8/N/MthO0WHhu0YymK3iHcY4VsaiKHKYNlScgOdB43vqKPpTNa/BODdQxY/z7M7ThfgxZOidOv8mJmGIgbTamOZ3o7U4P45SqmSdGAGY6tYoJsbyci+rlN/gUvKbQw3G2Mof+Hf+aFracc9dMyu7nviWuSwP+U2/F1yMYG4aSiwMYWSU+iOCxORsg2QD6xgLbzXAVhgcoeeSelbH0Y8oZL33hstzvwjb71dP2TNhDRwK1wtb3Gg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AOJOnapXKRbI3FycG3AIdHKz24Y+RrhPt5t0QVCCNTE=;
+ b=DqqnW53GyIAZKfOH/VZ0DaPWggqwan+1yf8llrXGz7Aqa6m6e7eU2Tq6YNS5fa7Ijx5Q9es3DseFZi5vp3UlErGmrWAvCYN7RzmEpYCnXWRduTlGUTEaY4xF211mW+ycLGjw4qusFT8PyY5dwuQ5xs0w6l8sJ+KP8GUzeEwRDrQhk6XGH8QgNrRMEjo3Z5MVRPGEzSZFMYyQ8d5mPOQM+XgEmaftN1gc+CQHTj2nTW0Zbua/MYirdrrF+7kvNtOwDwrj4jDShYfHt/kq35ntFDN5d1YtRPnFXMRfwp1fYk3U+9/N/ELGfMbeX0rg3R115md7AhWgm1kDqtVZmPW33A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AOJOnapXKRbI3FycG3AIdHKz24Y+RrhPt5t0QVCCNTE=;
+ b=oC2lwDSN1h9zHtTvyf0d5Hx+UasA8xkPu2DGMHeGkktLeDih8K4NqP4NY0wRJNmL0VDE451FawGZYno6299UPaJ0OvjY34sh25BBUtzHlbqbP5VGROEwLBMxOyKxrUWU0Py6Io7dlggF/SlQzF/rSpSL0sf9sh0sBFk5m3lAaPGjKU7eG6z5oxTDGTYmQ/RMz62k86vl/7ANzwN08s+VrIemD24cawQR3hXd9PpUhybskeAIDVlPL4+ZGDEsLtCHF2sqBSEc9I48uVfmFE8wsHwQksSiD6Vx+nDvcKk13USKq7+UnVHxZNYARp9tzrYNJltIUTBq7PGczF0Mmst/WQ==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by SN4PR0201MB8728.namprd02.prod.outlook.com (2603:10b6:806:1eb::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.7; Wed, 28 Jan
+ 2026 19:20:10 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6%6]) with mapi id 15.20.9564.006; Wed, 28 Jan 2026
+ 19:20:10 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>
+CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>, "longli@microsoft.com"
+	<longli@microsoft.com>, "prapal@linux.microsoft.com"
+	<prapal@linux.microsoft.com>, "mrathor@linux.microsoft.com"
+	<mrathor@linux.microsoft.com>, "paekkaladevi@linux.microsoft.com"
+	<paekkaladevi@linux.microsoft.com>
+Subject: RE: [PATCH v6 0/7] mshv: Debugfs interface for mshv_root
+Thread-Topic: [PATCH v6 0/7] mshv: Debugfs interface for mshv_root
+Thread-Index: AQHckIGS0PKjuGa7rEuZsJjqXKz60rVn9OaQ
+Date: Wed, 28 Jan 2026 19:20:10 +0000
+Message-ID:
+ <SN6PR02MB4157774303E3E31251C6804AD491A@SN6PR02MB4157.namprd02.prod.outlook.com>
 References: <20260128181146.517708-1-nunodasneves@linux.microsoft.com>
+In-Reply-To: <20260128181146.517708-1-nunodasneves@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SN4PR0201MB8728:EE_
+x-ms-office365-filtering-correlation-id: 1650f32b-18f0-4aff-28c7-08de5ea24175
+x-ms-exchange-slblob-mailprops:
+ WaIXnCbdHrPy8Gg0T1tV+ubdyTLMpos/ddKIhkiwYV/V9rzSeWQ5wt7F2mn/7P7JSMHOx97MZvyeE1VnuCy/vS5UxBKAek8qEHn+oLAKASqcifEnE954lgNkLyiX81xwxITVzzA1UV1ourMWVN0WArA/AizwxmyuEFmki+sW3fGIqdz7L+/4T9xo+Hl6YbjqSV26aFWm2WmJSr24HpXH9uG91HwMO/wChjHCBuyqmD/JZL/HrTTFkxwuB8CcJcAZ99JgR4e/b2xx6rnCBtx6ACN6wZJ1zM5u6xcmWnOboZ8Ph6rFm1E1p+VYKn2QYYRBDIK4eo9rDXsaiTCdei61HHUrsbWw/tHS2Xlc6Z8x2ayJgxWlBt6OMu3N/yXy3ibd5/9/8MQCuAlZ+ttJqphqkcv8f1gUDlrUQsVmKcdVcMhfXfS5FfJhpIKJm1w3aMGipDo4CDqZleAkOQuBAjrWFdKJlp8XcSdGmvXivS6k+lkDefMGJKJfwOCI8nGgqxGRqCG8rTRew73Cpbrv0/N0DyJUtOmQZswVR8iB99Pw2d7s9dDgxFp5AWQaGb4ckkvPSkCWH/NFfvwFq/AXCg1Yvk9J44Qj/dEXn4Id5sdhC+Ngy4xV1aRh91GoTUkGwKPOqTlsdnu/fuxlEiFZqHhKPxpY0gsVf6UiZVcr4pdSzVHMwCed1ALFZYG7YmBZsL2lvl8+F8ceZTIE+W0pYaFIVB8sBqjjoKsxGlnSsNXtjFWQANxFGu0hb025jBjwuixj37zdPAaAfxY=
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|31061999003|13091999003|15080799012|19110799012|461199028|51005399006|8062599012|8060799015|41001999006|40105399003|3412199025|440099028|102099032|12091999003;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?e4D7ZbeetxfuogKwmIyi+l9+7SSNpbNiqE6yN1EfpUjM6v9duXaBZN4gtgLK?=
+ =?us-ascii?Q?NcujFqXuSNF6rtX0sxZ73wylmTqHf1ABxTnfcwL0m8XLYP6a760H5G+CJfOh?=
+ =?us-ascii?Q?ohquJfH1RSyh7U8fKHwpxlE2oBwC8hZcNVTv5fQ/LLMVgWVB6vKiBlrPeuql?=
+ =?us-ascii?Q?wibhaL3kQ+jzAjr0gQfXa3eV4eJz/63/P3Te6QAhtlscJ/+8gxrFSICYBKVC?=
+ =?us-ascii?Q?BZpACG+sTDV8XPrtU4Aa4JbHmuGC9soNbBjZkDf8ivDSHmiEVC8drPFEhzZC?=
+ =?us-ascii?Q?L6E293PlqaFwHxHZJbVCCse9OSqIVVYQ/CwJ78MegG+CGJzI3HzzGXuKw+Yh?=
+ =?us-ascii?Q?lgNo2jTg+5lS266bhjQrLcKPDZyDP6Sgqp5XTZqdYFz3Kjpo9OKa/B4FkX7d?=
+ =?us-ascii?Q?j4ei7IZRf0qR/nQ9+lSkjuHQu7BOP6/l2/OmDJ8vwZjk26tyYy/2GXwgcANw?=
+ =?us-ascii?Q?f/sTqrgoXIbRiwFgBHgIzNqied4o4Mg/9a4CAjQz8G7QS9QUynMGZjmwK8Kr?=
+ =?us-ascii?Q?pRwVB3ULen+pPaMLZZeci5uBdW0gWC6fC8KOop2q4CCNZcGczfyqPc7fQ+rC?=
+ =?us-ascii?Q?8Ge30+R8CgsYJjE0NSBITiIa53vayT0dIdKlqCaW37bviprQKJNEoPLvdeVW?=
+ =?us-ascii?Q?X6NDoYWoZWFE1LVoki1hVGyHlWJDC9/otkaaq6xt8cnOqyn/NhfKsvuiCEBU?=
+ =?us-ascii?Q?q+t0mWwJRaiF1BNojAQqlOmFEXqVDrfHUqppuH73hAIe49ZQdIyq3xwGtnnX?=
+ =?us-ascii?Q?hgqDu96hgdZZ/3d+ukKGAKWLmmA0FmixjFApmgcK61qujdRSEUHxgTZBi520?=
+ =?us-ascii?Q?76EKqOC1eF2BRM1CaCwPeUIhRDryr7KRmESSZ25CeZTexCozqXWgNdyGyD+y?=
+ =?us-ascii?Q?G15Xy7N4J7F3UwCJ7Shz6QH/gBYncutFQ9lzGXeEzeyas/c3FrCuacxcDVbJ?=
+ =?us-ascii?Q?keA3QqRLwLP8rPwujmS47ebfsqlS88oAoj/5mKjY6QwjPZeOItnNv8cRl+rD?=
+ =?us-ascii?Q?Hb6DaBHvDgBjaaDbzCnn7T4R+5y5OpZ8Ju0RV9YIbxP3s5FAFzA6a2btw256?=
+ =?us-ascii?Q?F5Xvu1few7sQlRrdCnITc44IITnDs0HrNPpi1g5YYtfjgBceGsHP8oZs1FD8?=
+ =?us-ascii?Q?9YOWZQXLFvzXuDHQyz7dlOZzT745quZPNEO4mu/KYF+p11XftEqxJjGtt3jH?=
+ =?us-ascii?Q?D0qeXOQfk0OfiC+EPpQ/0snBkdtcGkRsJE6dPwA2LIKgOE2MQmT+3vQnz8aq?=
+ =?us-ascii?Q?5RnNMsI4GRYlMDZSntaF+dbaSkxGIBlJNQVMWLcmoQ=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?Tu3mttgyR1LLafdUXhsK5X7SmReH2UwJtOX+Iahs5ccRjaG4cPEUEolVHlmN?=
+ =?us-ascii?Q?DoyxkXpCS9Bd3vHnF0epMfAHGuGDulpG4JFpYdoR4ZEsDO7i/SsAZD9Tqvfx?=
+ =?us-ascii?Q?NptIO4aRkDWucZ0iCEUMbZNWNZ8g9wZ10mJtjL4SuHxqohLvfkAbAQ0pSW6K?=
+ =?us-ascii?Q?/Uu0vD/UPKRfW2nkfFTv8AWta5wpd7Skhx1hKfPmCd+fGxWt2UzjJZM4pCjc?=
+ =?us-ascii?Q?ocRdsDZKH6EeCelDwc332Mhee9bLbgx7xq7t+NoA7OvoqEVqAOOJGajNFv8N?=
+ =?us-ascii?Q?4qgoR+NaAi1ubBmi1OJv6fQs/dtG1iPRwen+bdK+a3HslMYmNEB/lpobTk09?=
+ =?us-ascii?Q?uocvHZbfkQwwzpOhq+toX+uYtW7/S7joEuOxU12ZdomwSaNY+2r5gfLCSRlt?=
+ =?us-ascii?Q?pcT18V5D7M+4YEyOTvqpFV5VJT93RbtY8H1B7FVthabgd0T2ibe+AAqeGaeS?=
+ =?us-ascii?Q?EBxp56NKcmh/ccjnhnnxHJ5myBxfWfLiPvoG37sMRDUhshjCLCcwahUj3nXf?=
+ =?us-ascii?Q?eNmZQnKG7kmLeZkKM8dybHZJGQWSNxe4u42AxJXUACO37kD1pCdgvduPn02Y?=
+ =?us-ascii?Q?Pg+5ELmckQXSneSBzmDsnr9p2dLQ+sUgZ3oxDbzb9yvz0KtrZNukeh0r3ALD?=
+ =?us-ascii?Q?HmWW4lcuahSvj9PChbEwpWFDPQEUG/6+A216aivznwRD0+ogeJgpnL4uhV5O?=
+ =?us-ascii?Q?sYJkyYFlMNBm5WJ690iOM3GqLPOkbTvVtjQRxYyglLGUDbocjQr4iQHwn12U?=
+ =?us-ascii?Q?3wGKvFV6hu1RmS84DnuJ76BEJxecVIN0JKoypNsV4Qqi/goB3XfIr576bBQ5?=
+ =?us-ascii?Q?tD5N0ogeU5ZnWIgt5fmn5s2Y2wMqoz5yHHFRU4SP3Wkfa3fY9XREdIcNZQi/?=
+ =?us-ascii?Q?oYImiDO4SzuwRcT1rdRup2yUyp45ad31myvs9fspsup4aMPA6Nn9RY1Rhq77?=
+ =?us-ascii?Q?kvKjupAXONh5VjWU8ApyqZVOFeqCv0VFdCEZO9mDwNKBbxGLf1yJc4NRNwlI?=
+ =?us-ascii?Q?5qZOtGB5vR2hMJwpHNv5O/BIhHyhIbZhsNurQJ8llLPPrepeomrg+X85qNlB?=
+ =?us-ascii?Q?fWOtjgxd8hOPzxbph8P3iDeBIEa8E/62vFGlZOxaX968rx7agKHjNBmVIzDn?=
+ =?us-ascii?Q?k11956axX5yNtdGynbsxydOS6TweHG9VJTe28MURIVNEUaPgrZuzIBQ4JbmO?=
+ =?us-ascii?Q?nQ6e8hv8KmBXv8vp/pXk0qw1CKNmZ0fWTQEMw/j1fkSR1p9nLG1gFqhoUZpn?=
+ =?us-ascii?Q?K+1tP0GsADO3FX5fIG9kL9964KA5e/qQQuh8KblX5akqcbeaEEFgxeaj1QKs?=
+ =?us-ascii?Q?HXw1w2G4yiJ9JIZ3fGysodDzbwLHXMONfKsKYK5xlHR2QNEeZfila6ru+ymf?=
+ =?us-ascii?Q?L6mNssw=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1650f32b-18f0-4aff-28c7-08de5ea24175
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2026 19:20:10.8460
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB8728
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-8575-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[vger.kernel.org,outlook.com,linux.microsoft.com];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	TAGGED_FROM(0.00)[bounces-8574-lists,linux-hyperv=lfdr.de];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nunodasneves@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_FROM(0.00)[outlook.com];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	DKIM_TRACE(0.00)[outlook.com:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 6BD98A7A50
+	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,outlook.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,SN6PR02MB4157.namprd02.prod.outlook.com:mid]
+X-Rspamd-Queue-Id: AF7EFA81DF
 X-Rspamd-Action: no action
 
-Introduce a debugfs interface to expose root and child partition stats
-when running with mshv_root.
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Wednesday, Ja=
+nuary 28, 2026 10:12 AM
+>=20
+> Expose hypervisor, logical processor, partition, and virtual processor
+> statistics via debugfs. These are provided by mapping 'stats' pages via
+> hypercall.
+>=20
+> Patch #1: Update hv_call_map_stats_page() to return success when
+>           HV_STATS_AREA_PARENT is unavailable, which is the case on some
+>           hypervisor versions, where it can fall back to HV_STATS_AREA_SE=
+LF
+> Patch #2: Use struct hv_stats_page pointers instead of void *
+> Patch #3: Make mshv_vp_stats_map/unmap() more flexible to use with debugf=
+s
+>           code
+> Patch #4: Always map vp stats page regardless of scheduler, to reuse in
+>           debugfs
+> Patch #5: Change to hv_stats_page definition and
+>           VpRootDispatchThreadBlocked
+> Patch #6: Introduce the definitions needed for the various stats pages
+> Patch #7: Add mshv_debugfs.c, and integrate it with the mshv_root driver =
+to
+>           expose the partition and VP stats.
+>=20
+> ---
+> Changes in v6:
+> - Fix whitespace and other checkpatch issues [Michael]
+>=20
+> Changes in v5:
+> - Rename hv_counters.c to mshv_debugfs_counters.c [Michael]
+> - Clarify unusual inclusion of mshv_debugfs_counters.c with comment. Afte=
+r
+>   discussion it is still included directly to keep things simple. Includi=
+ng
+>   arrays with unspecified size via a header means sizeof() cannot be used=
+ on
+>   the array.
+> - Error if mshv_debugfs_counters.c is included elsewhere than mshv_debugf=
+s.c
+> - Use array index as stats page index to save space [Stanislav]
+> - Enforce HV_STATS_AREA_PARENT and SELF fit in NUM_STATS_AREAS with
+>   static_assert and clarify with comment [Michael]
+> - Return to using lp count from hv stats page for mshv_lps_count [Michael=
+]
+> - Use nr_cpu_ids instead of num_possible_cpus() [Michael]
+> - Set mshv_lps_stats[idx] and the array itself to NULL on unmap and clean=
+up
+>   [Michael]
+> - Rename HvLogicalProcessors and VpRootDispatchThreadBlocked to Linux sty=
+le
+> - Translate Linux cpu index to vp index via hv_vp_index on partition dest=
+roy
+>   [Michael]
+> - Minor formatting cleanups [Michael]
+>=20
+> Changes in v4:
+> - Put the counters definitions in static arrays in hv_counters.c, instead=
+ of
+>   as enums in hvhdk.h [Michael]
+> - Due to the above, add an additional patch (#5) to simplify hv_stats_pag=
+e,
+>   and retain the enum definition at the top of mshv_root_main.c for use w=
+ith
+>   VpRootDispatchThreadBlocked. That is the only remaining use of the coun=
+ter
+>   enum.
+> - Due to the above, use num_present_cpus() as the number of LPs to map st=
+ats
+>   pages for - this number shouldn't change at runtime because the hypervi=
+sor
+>   doesn't support hotplug for root partition.
+>=20
+> Changes in v3:
+> - Add 3 small refactor/cleanup patches (patches 2,3,4) from Stanislav. Th=
+ese
+>   simplify some of the debugfs code, and fix issues with mapping VP stats=
+ on
+>   L1VH.
+> - Fix cleanup of parent stats dentries on module removal (via squashing s=
+ome
+>   internal patches into patch #6) [Praveen]
+> - Remove unused goto label [Stanislav, kernel bot]
+> - Use struct hv_stats_page * instead of void * in mshv_debugfs.c [Stanisl=
+av]
+> - Remove some redundant variables [Stanislav]
+> - Rename debugfs dentry fields for brevity [Stanislav]
+> - Use ERR_CAST() for the dentry error pointer returned from
+>   lp_debugfs_stats_create() [Stanislav]
+> - Fix leak of pages allocated for lp stats mappings by storing them in an=
+ array
+>   [Michael]
+> - Add comments to clarify PARENT vs SELF usage and edge cases [Michael]
+> - Add VpLoadAvg for x86 and print the stat [Michael]
+> - Add NUM_STATS_AREAS for array sizing in mshv_debugfs.c [Michael]
+>=20
+> Changes in v2:
+> - Remove unnecessary pr_debug_once() in patch 1 [Stanislav Kinsburskii]
+> - CONFIG_X86 -> CONFIG_X86_64 in patch 2 [Stanislav Kinsburskii]
+>=20
+> ---
+> Nuno Das Neves (3):
+>   mshv: Update hv_stats_page definitions
+>   mshv: Add data for printing stats page counters
+>   mshv: Add debugfs to view hypervisor statistics
+>=20
+> Purna Pavan Chandra Aekkaladevi (1):
+>   mshv: Ignore second stats page map result failure
+>=20
+> Stanislav Kinsburskii (3):
+>   mshv: Use typed hv_stats_page pointers
+>   mshv: Improve mshv_vp_stats_map/unmap(), add them to mshv_root.h
+>   mshv: Always map child vp stats pages regardless of scheduler type
+>=20
+>  drivers/hv/Makefile                |   1 +
+>  drivers/hv/mshv_debugfs.c          | 726 +++++++++++++++++++++++++++++
+>  drivers/hv/mshv_debugfs_counters.c | 490 +++++++++++++++++++
+>  drivers/hv/mshv_root.h             |  49 +-
+>  drivers/hv/mshv_root_hv_call.c     |  64 ++-
+>  drivers/hv/mshv_root_main.c        | 140 +++---
+>  include/hyperv/hvhdk.h             |   7 +
+>  7 files changed, 1412 insertions(+), 65 deletions(-)
+>  create mode 100644 drivers/hv/mshv_debugfs.c
+>  create mode 100644 drivers/hv/mshv_debugfs_counters.c
+>=20
+> --
+> 2.34.1
 
-Create a debugfs directory "mshv" containing 'stats' files organized by
-type and id. A stats file contains a number of counters depending on
-its type. e.g. an excerpt from a VP stats file:
+Everything looks good to me.
 
-TotalRunTime                  : 1997602722
-HypervisorRunTime             : 649671371
-RemoteNodeRunTime             : 0
-NormalizedRunTime             : 1997602721
-IdealCpu                      : 0
-HypercallsCount               : 1708169
-HypercallsTime                : 111914774
-PageInvalidationsCount        : 0
-PageInvalidationsTime         : 0
-
-On a root partition with some active child partitions, the entire
-directory structure may look like:
-
-mshv/
-  stats             # hypervisor stats
-  lp/               # logical processors
-    0/              # LP id
-      stats         # LP 0 stats
-    1/
-    2/
-    3/
-  partition/        # partition stats
-    1/              # root partition id
-      stats         # root partition stats
-      vp/           # root virtual processors
-        0/          # root VP id
-          stats     # root VP 0 stats
-        1/
-        2/
-        3/
-    42/             # child partition id
-      stats         # child partition stats
-      vp/           # child VPs
-        0/          # child VP id
-          stats     # child VP 0 stats
-        1/
-    43/
-    55/
-
-On L1VH, some stats are not present as it does not own the hardware
-like the root partition does:
-- The hypervisor and lp stats are not present
-- L1VH's partition directory is named "self" because it can't get its
-  own id
-- Some of L1VH's partition and VP stats fields are not populated, because
-  it can't map its own HV_STATS_AREA_PARENT page.
-
-Co-developed-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Co-developed-by: Praveen K Paladugu <prapal@linux.microsoft.com>
-Signed-off-by: Praveen K Paladugu <prapal@linux.microsoft.com>
-Co-developed-by: Mukesh Rathor <mrathor@linux.microsoft.com>
-Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
-Co-developed-by: Purna Pavan Chandra Aekkaladevi <paekkaladevi@linux.microsoft.com>
-Signed-off-by: Purna Pavan Chandra Aekkaladevi <paekkaladevi@linux.microsoft.com>
-Co-developed-by: Jinank Jain <jinankjain@microsoft.com>
-Signed-off-by: Jinank Jain <jinankjain@microsoft.com>
-Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Reviewed-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
----
- drivers/hv/Makefile         |   1 +
- drivers/hv/mshv_debugfs.c   | 726 ++++++++++++++++++++++++++++++++++++
- drivers/hv/mshv_root.h      |  34 ++
- drivers/hv/mshv_root_main.c |  26 +-
- 4 files changed, 785 insertions(+), 2 deletions(-)
- create mode 100644 drivers/hv/mshv_debugfs.c
-
-diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
-index a49f93c2d245..2593711c3628 100644
---- a/drivers/hv/Makefile
-+++ b/drivers/hv/Makefile
-@@ -15,6 +15,7 @@ hv_vmbus-$(CONFIG_HYPERV_TESTING)	+= hv_debugfs.o
- hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_utils_transport.o
- mshv_root-y := mshv_root_main.o mshv_synic.o mshv_eventfd.o mshv_irq.o \
- 	       mshv_root_hv_call.o mshv_portid_table.o mshv_regions.o
-+mshv_root-$(CONFIG_DEBUG_FS) += mshv_debugfs.o
- mshv_vtl-y := mshv_vtl_main.o
- 
- # Code that must be built-in
-diff --git a/drivers/hv/mshv_debugfs.c b/drivers/hv/mshv_debugfs.c
-new file mode 100644
-index 000000000000..ebf2549eb44d
---- /dev/null
-+++ b/drivers/hv/mshv_debugfs.c
-@@ -0,0 +1,726 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2026, Microsoft Corporation.
-+ *
-+ * The /sys/kernel/debug/mshv directory contents.
-+ * Contains various statistics data, provided by the hypervisor.
-+ *
-+ * Authors: Microsoft Linux virtualization team
-+ */
-+
-+#include <linux/debugfs.h>
-+#include <linux/stringify.h>
-+#include <asm/mshyperv.h>
-+#include <linux/slab.h>
-+
-+#include "mshv.h"
-+#include "mshv_root.h"
-+
-+/* Ensure this file is not used elsewhere by accident */
-+#define MSHV_DEBUGFS_C
-+#include "mshv_debugfs_counters.c"
-+
-+#define U32_BUF_SZ 11
-+#define U64_BUF_SZ 21
-+/* Only support SELF and PARENT areas */
-+#define NUM_STATS_AREAS 2
-+static_assert(HV_STATS_AREA_SELF == 0 && HV_STATS_AREA_PARENT == 1,
-+	      "SELF and PARENT areas must be usable as indices into an array of size NUM_STATS_AREAS");
-+/* HV_HYPERVISOR_COUNTER */
-+#define HV_HYPERVISOR_COUNTER_LOGICAL_PROCESSORS 1
-+
-+static struct dentry *mshv_debugfs;
-+static struct dentry *mshv_debugfs_partition;
-+static struct dentry *mshv_debugfs_lp;
-+static struct dentry **parent_vp_stats;
-+static struct dentry *parent_partition_stats;
-+
-+static u64 mshv_lps_count;
-+static struct hv_stats_page **mshv_lps_stats;
-+
-+static int lp_stats_show(struct seq_file *m, void *v)
-+{
-+	const struct hv_stats_page *stats = m->private;
-+	int idx;
-+
-+	for (idx = 0; idx < ARRAY_SIZE(hv_lp_counters); idx++) {
-+		char *name = hv_lp_counters[idx];
-+
-+		if (!name)
-+			continue;
-+		seq_printf(m, "%-32s: %llu\n", name, stats->data[idx]);
-+	}
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(lp_stats);
-+
-+static void mshv_lp_stats_unmap(u32 lp_index)
-+{
-+	union hv_stats_object_identity identity = {
-+		.lp.lp_index = lp_index,
-+		.lp.stats_area_type = HV_STATS_AREA_SELF,
-+	};
-+	int err;
-+
-+	err = hv_unmap_stats_page(HV_STATS_OBJECT_LOGICAL_PROCESSOR,
-+				  mshv_lps_stats[lp_index], &identity);
-+	if (err)
-+		pr_err("%s: failed to unmap logical processor %u stats, err: %d\n",
-+		       __func__, lp_index, err);
-+
-+	mshv_lps_stats[lp_index] = NULL;
-+}
-+
-+static struct hv_stats_page * __init mshv_lp_stats_map(u32 lp_index)
-+{
-+	union hv_stats_object_identity identity = {
-+		.lp.lp_index = lp_index,
-+		.lp.stats_area_type = HV_STATS_AREA_SELF,
-+	};
-+	struct hv_stats_page *stats;
-+	int err;
-+
-+	err = hv_map_stats_page(HV_STATS_OBJECT_LOGICAL_PROCESSOR, &identity,
-+				&stats);
-+	if (err) {
-+		pr_err("%s: failed to map logical processor %u stats, err: %d\n",
-+		       __func__, lp_index, err);
-+		return ERR_PTR(err);
-+	}
-+	mshv_lps_stats[lp_index] = stats;
-+
-+	return stats;
-+}
-+
-+static struct hv_stats_page * __init lp_debugfs_stats_create(u32 lp_index,
-+							     struct dentry *parent)
-+{
-+	struct dentry *dentry;
-+	struct hv_stats_page *stats;
-+
-+	stats = mshv_lp_stats_map(lp_index);
-+	if (IS_ERR(stats))
-+		return stats;
-+
-+	dentry = debugfs_create_file("stats", 0400, parent,
-+				     stats, &lp_stats_fops);
-+	if (IS_ERR(dentry)) {
-+		mshv_lp_stats_unmap(lp_index);
-+		return ERR_CAST(dentry);
-+	}
-+	return stats;
-+}
-+
-+static int __init lp_debugfs_create(u32 lp_index, struct dentry *parent)
-+{
-+	struct dentry *idx;
-+	char lp_idx_str[U32_BUF_SZ];
-+	struct hv_stats_page *stats;
-+	int err;
-+
-+	sprintf(lp_idx_str, "%u", lp_index);
-+
-+	idx = debugfs_create_dir(lp_idx_str, parent);
-+	if (IS_ERR(idx))
-+		return PTR_ERR(idx);
-+
-+	stats = lp_debugfs_stats_create(lp_index, idx);
-+	if (IS_ERR(stats)) {
-+		err = PTR_ERR(stats);
-+		goto remove_debugfs_lp_idx;
-+	}
-+
-+	return 0;
-+
-+remove_debugfs_lp_idx:
-+	debugfs_remove_recursive(idx);
-+	return err;
-+}
-+
-+static void mshv_debugfs_lp_remove(void)
-+{
-+	int lp_index;
-+
-+	debugfs_remove_recursive(mshv_debugfs_lp);
-+
-+	for (lp_index = 0; lp_index < mshv_lps_count; lp_index++)
-+		mshv_lp_stats_unmap(lp_index);
-+
-+	kfree(mshv_lps_stats);
-+	mshv_lps_stats = NULL;
-+}
-+
-+static int __init mshv_debugfs_lp_create(struct dentry *parent)
-+{
-+	struct dentry *lp_dir;
-+	int err, lp_index;
-+
-+	mshv_lps_stats = kcalloc(mshv_lps_count,
-+				 sizeof(*mshv_lps_stats),
-+				 GFP_KERNEL_ACCOUNT);
-+
-+	if (!mshv_lps_stats)
-+		return -ENOMEM;
-+
-+	lp_dir = debugfs_create_dir("lp", parent);
-+	if (IS_ERR(lp_dir)) {
-+		err = PTR_ERR(lp_dir);
-+		goto free_lp_stats;
-+	}
-+
-+	for (lp_index = 0; lp_index < mshv_lps_count; lp_index++) {
-+		err = lp_debugfs_create(lp_index, lp_dir);
-+		if (err)
-+			goto remove_debugfs_lps;
-+	}
-+
-+	mshv_debugfs_lp = lp_dir;
-+
-+	return 0;
-+
-+remove_debugfs_lps:
-+	for (lp_index -= 1; lp_index >= 0; lp_index--)
-+		mshv_lp_stats_unmap(lp_index);
-+	debugfs_remove_recursive(lp_dir);
-+free_lp_stats:
-+	kfree(mshv_lps_stats);
-+	mshv_lps_stats = NULL;
-+
-+	return err;
-+}
-+
-+static int vp_stats_show(struct seq_file *m, void *v)
-+{
-+	const struct hv_stats_page **pstats = m->private;
-+	u64 parent_val, self_val;
-+	int idx;
-+
-+	/*
-+	 * For VP and partition stats, there may be two stats areas mapped,
-+	 * SELF and PARENT. These refer to the privilege level of the data in
-+	 * each page. Some fields may be 0 in SELF and nonzero in PARENT, or
-+	 * vice versa.
-+	 *
-+	 * Hence, prioritize printing from the PARENT page (more privileged
-+	 * data), but use the value from the SELF page if the PARENT value is
-+	 * 0.
-+	 */
-+
-+	for (idx = 0; idx < ARRAY_SIZE(hv_vp_counters); idx++) {
-+		char *name = hv_vp_counters[idx];
-+
-+		if (!name)
-+			continue;
-+
-+		parent_val = pstats[HV_STATS_AREA_PARENT]->data[idx];
-+		self_val = pstats[HV_STATS_AREA_SELF]->data[idx];
-+		seq_printf(m, "%-43s: %llu\n", name,
-+			   parent_val ? parent_val : self_val);
-+	}
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(vp_stats);
-+
-+static void vp_debugfs_remove(struct dentry *vp_stats)
-+{
-+	debugfs_remove_recursive(vp_stats->d_parent);
-+}
-+
-+static int vp_debugfs_create(u64 partition_id, u32 vp_index,
-+			     struct hv_stats_page **pstats,
-+			     struct dentry **vp_stats_ptr,
-+			     struct dentry *parent)
-+{
-+	struct dentry *vp_idx_dir, *d;
-+	char vp_idx_str[U32_BUF_SZ];
-+	int err;
-+
-+	sprintf(vp_idx_str, "%u", vp_index);
-+
-+	vp_idx_dir = debugfs_create_dir(vp_idx_str, parent);
-+	if (IS_ERR(vp_idx_dir))
-+		return PTR_ERR(vp_idx_dir);
-+
-+	d = debugfs_create_file("stats", 0400, vp_idx_dir,
-+				pstats, &vp_stats_fops);
-+	if (IS_ERR(d)) {
-+		err = PTR_ERR(d);
-+		goto remove_debugfs_vp_idx;
-+	}
-+
-+	*vp_stats_ptr = d;
-+
-+	return 0;
-+
-+remove_debugfs_vp_idx:
-+	debugfs_remove_recursive(vp_idx_dir);
-+	return err;
-+}
-+
-+static int partition_stats_show(struct seq_file *m, void *v)
-+{
-+	const struct hv_stats_page **pstats = m->private;
-+	u64 parent_val, self_val;
-+	int idx;
-+
-+	for (idx = 0; idx < ARRAY_SIZE(hv_partition_counters); idx++) {
-+		char *name = hv_partition_counters[idx];
-+
-+		if (!name)
-+			continue;
-+
-+		parent_val = pstats[HV_STATS_AREA_PARENT]->data[idx];
-+		self_val = pstats[HV_STATS_AREA_SELF]->data[idx];
-+		seq_printf(m, "%-37s: %llu\n", name,
-+			   parent_val ? parent_val : self_val);
-+	}
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(partition_stats);
-+
-+static void mshv_partition_stats_unmap(u64 partition_id,
-+				       struct hv_stats_page *stats_page,
-+				       enum hv_stats_area_type stats_area_type)
-+{
-+	union hv_stats_object_identity identity = {
-+		.partition.partition_id = partition_id,
-+		.partition.stats_area_type = stats_area_type,
-+	};
-+	int err;
-+
-+	err = hv_unmap_stats_page(HV_STATS_OBJECT_PARTITION, stats_page,
-+				  &identity);
-+	if (err)
-+		pr_err("%s: failed to unmap partition %lld %s stats, err: %d\n",
-+		       __func__, partition_id,
-+		       (stats_area_type == HV_STATS_AREA_SELF) ? "self" : "parent",
-+		       err);
-+}
-+
-+static struct hv_stats_page *mshv_partition_stats_map(u64 partition_id,
-+						      enum hv_stats_area_type stats_area_type)
-+{
-+	union hv_stats_object_identity identity = {
-+		.partition.partition_id = partition_id,
-+		.partition.stats_area_type = stats_area_type,
-+	};
-+	struct hv_stats_page *stats;
-+	int err;
-+
-+	err = hv_map_stats_page(HV_STATS_OBJECT_PARTITION, &identity, &stats);
-+	if (err) {
-+		pr_err("%s: failed to map partition %lld %s stats, err: %d\n",
-+		       __func__, partition_id,
-+		       (stats_area_type == HV_STATS_AREA_SELF) ? "self" : "parent",
-+		       err);
-+		return ERR_PTR(err);
-+	}
-+	return stats;
-+}
-+
-+static int mshv_debugfs_partition_stats_create(u64 partition_id,
-+					       struct dentry **partition_stats_ptr,
-+					       struct dentry *parent)
-+{
-+	struct dentry *dentry;
-+	struct hv_stats_page **pstats;
-+	int err;
-+
-+	pstats = kcalloc(NUM_STATS_AREAS, sizeof(struct hv_stats_page *),
-+			 GFP_KERNEL_ACCOUNT);
-+	if (!pstats)
-+		return -ENOMEM;
-+
-+	pstats[HV_STATS_AREA_SELF] = mshv_partition_stats_map(partition_id,
-+							      HV_STATS_AREA_SELF);
-+	if (IS_ERR(pstats[HV_STATS_AREA_SELF])) {
-+		err = PTR_ERR(pstats[HV_STATS_AREA_SELF]);
-+		goto cleanup;
-+	}
-+
-+	/*
-+	 * L1VH partition cannot access its partition stats in parent area.
-+	 */
-+	if (is_l1vh_parent(partition_id)) {
-+		pstats[HV_STATS_AREA_PARENT] = pstats[HV_STATS_AREA_SELF];
-+	} else {
-+		pstats[HV_STATS_AREA_PARENT] = mshv_partition_stats_map(partition_id,
-+									HV_STATS_AREA_PARENT);
-+		if (IS_ERR(pstats[HV_STATS_AREA_PARENT])) {
-+			err = PTR_ERR(pstats[HV_STATS_AREA_PARENT]);
-+			goto unmap_self;
-+		}
-+		if (!pstats[HV_STATS_AREA_PARENT])
-+			pstats[HV_STATS_AREA_PARENT] = pstats[HV_STATS_AREA_SELF];
-+	}
-+
-+	dentry = debugfs_create_file("stats", 0400, parent,
-+				     pstats, &partition_stats_fops);
-+	if (IS_ERR(dentry)) {
-+		err = PTR_ERR(dentry);
-+		goto unmap_partition_stats;
-+	}
-+
-+	*partition_stats_ptr = dentry;
-+	return 0;
-+
-+unmap_partition_stats:
-+	if (pstats[HV_STATS_AREA_PARENT] != pstats[HV_STATS_AREA_SELF])
-+		mshv_partition_stats_unmap(partition_id, pstats[HV_STATS_AREA_PARENT],
-+					   HV_STATS_AREA_PARENT);
-+unmap_self:
-+	mshv_partition_stats_unmap(partition_id, pstats[HV_STATS_AREA_SELF],
-+				   HV_STATS_AREA_SELF);
-+cleanup:
-+	kfree(pstats);
-+	return err;
-+}
-+
-+static void partition_debugfs_remove(u64 partition_id, struct dentry *dentry)
-+{
-+	struct hv_stats_page **pstats = NULL;
-+
-+	pstats = dentry->d_inode->i_private;
-+
-+	debugfs_remove_recursive(dentry->d_parent);
-+
-+	if (pstats[HV_STATS_AREA_PARENT] != pstats[HV_STATS_AREA_SELF]) {
-+		mshv_partition_stats_unmap(partition_id,
-+					   pstats[HV_STATS_AREA_PARENT],
-+					   HV_STATS_AREA_PARENT);
-+	}
-+
-+	mshv_partition_stats_unmap(partition_id,
-+				   pstats[HV_STATS_AREA_SELF],
-+				   HV_STATS_AREA_SELF);
-+
-+	kfree(pstats);
-+}
-+
-+static int partition_debugfs_create(u64 partition_id,
-+				    struct dentry **vp_dir_ptr,
-+				    struct dentry **partition_stats_ptr,
-+				    struct dentry *parent)
-+{
-+	char part_id_str[U64_BUF_SZ];
-+	struct dentry *part_id_dir, *vp_dir;
-+	int err;
-+
-+	if (is_l1vh_parent(partition_id))
-+		sprintf(part_id_str, "self");
-+	else
-+		sprintf(part_id_str, "%llu", partition_id);
-+
-+	part_id_dir = debugfs_create_dir(part_id_str, parent);
-+	if (IS_ERR(part_id_dir))
-+		return PTR_ERR(part_id_dir);
-+
-+	vp_dir = debugfs_create_dir("vp", part_id_dir);
-+	if (IS_ERR(vp_dir)) {
-+		err = PTR_ERR(vp_dir);
-+		goto remove_debugfs_partition_id;
-+	}
-+
-+	err = mshv_debugfs_partition_stats_create(partition_id,
-+						  partition_stats_ptr,
-+						  part_id_dir);
-+	if (err)
-+		goto remove_debugfs_partition_id;
-+
-+	*vp_dir_ptr = vp_dir;
-+
-+	return 0;
-+
-+remove_debugfs_partition_id:
-+	debugfs_remove_recursive(part_id_dir);
-+	return err;
-+}
-+
-+static void parent_vp_debugfs_remove(u32 vp_index,
-+				     struct dentry *vp_stats_ptr)
-+{
-+	struct hv_stats_page **pstats;
-+
-+	pstats = vp_stats_ptr->d_inode->i_private;
-+	vp_debugfs_remove(vp_stats_ptr);
-+	mshv_vp_stats_unmap(hv_current_partition_id, vp_index, pstats);
-+	kfree(pstats);
-+}
-+
-+static void mshv_debugfs_parent_partition_remove(void)
-+{
-+	int idx;
-+
-+	for_each_online_cpu(idx)
-+		parent_vp_debugfs_remove(hv_vp_index[idx],
-+					 parent_vp_stats[idx]);
-+
-+	partition_debugfs_remove(hv_current_partition_id,
-+				 parent_partition_stats);
-+	kfree(parent_vp_stats);
-+	parent_vp_stats = NULL;
-+	parent_partition_stats = NULL;
-+}
-+
-+static int __init parent_vp_debugfs_create(u32 vp_index,
-+					   struct dentry **vp_stats_ptr,
-+					   struct dentry *parent)
-+{
-+	struct hv_stats_page **pstats;
-+	int err;
-+
-+	pstats = kcalloc(NUM_STATS_AREAS, sizeof(struct hv_stats_page *),
-+			 GFP_KERNEL_ACCOUNT);
-+	if (!pstats)
-+		return -ENOMEM;
-+
-+	err = mshv_vp_stats_map(hv_current_partition_id, vp_index, pstats);
-+	if (err)
-+		goto cleanup;
-+
-+	err = vp_debugfs_create(hv_current_partition_id, vp_index, pstats,
-+				vp_stats_ptr, parent);
-+	if (err)
-+		goto unmap_vp_stats;
-+
-+	return 0;
-+
-+unmap_vp_stats:
-+	mshv_vp_stats_unmap(hv_current_partition_id, vp_index, pstats);
-+cleanup:
-+	kfree(pstats);
-+	return err;
-+}
-+
-+static int __init mshv_debugfs_parent_partition_create(void)
-+{
-+	struct dentry *vp_dir;
-+	int err, idx, i;
-+
-+	mshv_debugfs_partition = debugfs_create_dir("partition",
-+						    mshv_debugfs);
-+	if (IS_ERR(mshv_debugfs_partition))
-+		return PTR_ERR(mshv_debugfs_partition);
-+
-+	err = partition_debugfs_create(hv_current_partition_id,
-+				       &vp_dir,
-+				       &parent_partition_stats,
-+				       mshv_debugfs_partition);
-+	if (err)
-+		goto remove_debugfs_partition;
-+
-+	parent_vp_stats = kcalloc(nr_cpu_ids, sizeof(*parent_vp_stats),
-+				  GFP_KERNEL);
-+	if (!parent_vp_stats) {
-+		err = -ENOMEM;
-+		goto remove_debugfs_partition;
-+	}
-+
-+	for_each_online_cpu(idx) {
-+		err = parent_vp_debugfs_create(hv_vp_index[idx],
-+					       &parent_vp_stats[idx],
-+					       vp_dir);
-+		if (err)
-+			goto remove_debugfs_partition_vp;
-+	}
-+
-+	return 0;
-+
-+remove_debugfs_partition_vp:
-+	for_each_online_cpu(i) {
-+		if (i >= idx)
-+			break;
-+		parent_vp_debugfs_remove(i, parent_vp_stats[i]);
-+	}
-+	partition_debugfs_remove(hv_current_partition_id,
-+				 parent_partition_stats);
-+
-+	kfree(parent_vp_stats);
-+	parent_vp_stats = NULL;
-+	parent_partition_stats = NULL;
-+
-+remove_debugfs_partition:
-+	debugfs_remove_recursive(mshv_debugfs_partition);
-+	mshv_debugfs_partition = NULL;
-+	return err;
-+}
-+
-+static int hv_stats_show(struct seq_file *m, void *v)
-+{
-+	const struct hv_stats_page *stats = m->private;
-+	int idx;
-+
-+	for (idx = 0; idx < ARRAY_SIZE(hv_hypervisor_counters); idx++) {
-+		char *name = hv_hypervisor_counters[idx];
-+
-+		if (!name)
-+			continue;
-+		seq_printf(m, "%-27s: %llu\n", name, stats->data[idx]);
-+	}
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(hv_stats);
-+
-+static void mshv_hv_stats_unmap(void)
-+{
-+	union hv_stats_object_identity identity = {
-+		.hv.stats_area_type = HV_STATS_AREA_SELF,
-+	};
-+	int err;
-+
-+	err = hv_unmap_stats_page(HV_STATS_OBJECT_HYPERVISOR, NULL, &identity);
-+	if (err)
-+		pr_err("%s: failed to unmap hypervisor stats: %d\n",
-+		       __func__, err);
-+}
-+
-+static void * __init mshv_hv_stats_map(void)
-+{
-+	union hv_stats_object_identity identity = {
-+		.hv.stats_area_type = HV_STATS_AREA_SELF,
-+	};
-+	struct hv_stats_page *stats;
-+	int err;
-+
-+	err = hv_map_stats_page(HV_STATS_OBJECT_HYPERVISOR, &identity, &stats);
-+	if (err) {
-+		pr_err("%s: failed to map hypervisor stats: %d\n",
-+		       __func__, err);
-+		return ERR_PTR(err);
-+	}
-+	return stats;
-+}
-+
-+static int __init mshv_debugfs_hv_stats_create(struct dentry *parent)
-+{
-+	struct dentry *dentry;
-+	u64 *stats;
-+	int err;
-+
-+	stats = mshv_hv_stats_map();
-+	if (IS_ERR(stats))
-+		return PTR_ERR(stats);
-+
-+	dentry = debugfs_create_file("stats", 0400, parent,
-+				     stats, &hv_stats_fops);
-+	if (IS_ERR(dentry)) {
-+		err = PTR_ERR(dentry);
-+		pr_err("%s: failed to create hypervisor stats dentry: %d\n",
-+		       __func__, err);
-+		goto unmap_hv_stats;
-+	}
-+
-+	mshv_lps_count = stats[HV_HYPERVISOR_COUNTER_LOGICAL_PROCESSORS];
-+
-+	return 0;
-+
-+unmap_hv_stats:
-+	mshv_hv_stats_unmap();
-+	return err;
-+}
-+
-+int mshv_debugfs_vp_create(struct mshv_vp *vp)
-+{
-+	struct mshv_partition *p = vp->vp_partition;
-+
-+	if (!mshv_debugfs)
-+		return 0;
-+
-+	return vp_debugfs_create(p->pt_id, vp->vp_index,
-+				 vp->vp_stats_pages,
-+				 &vp->vp_stats_dentry,
-+				 p->pt_vp_dentry);
-+}
-+
-+void mshv_debugfs_vp_remove(struct mshv_vp *vp)
-+{
-+	if (!mshv_debugfs)
-+		return;
-+
-+	vp_debugfs_remove(vp->vp_stats_dentry);
-+}
-+
-+int mshv_debugfs_partition_create(struct mshv_partition *partition)
-+{
-+	int err;
-+
-+	if (!mshv_debugfs)
-+		return 0;
-+
-+	err = partition_debugfs_create(partition->pt_id,
-+				       &partition->pt_vp_dentry,
-+				       &partition->pt_stats_dentry,
-+				       mshv_debugfs_partition);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+void mshv_debugfs_partition_remove(struct mshv_partition *partition)
-+{
-+	if (!mshv_debugfs)
-+		return;
-+
-+	partition_debugfs_remove(partition->pt_id,
-+				 partition->pt_stats_dentry);
-+}
-+
-+int __init mshv_debugfs_init(void)
-+{
-+	int err;
-+
-+	mshv_debugfs = debugfs_create_dir("mshv", NULL);
-+	if (IS_ERR(mshv_debugfs)) {
-+		pr_err("%s: failed to create debugfs directory\n", __func__);
-+		return PTR_ERR(mshv_debugfs);
-+	}
-+
-+	if (hv_root_partition()) {
-+		err = mshv_debugfs_hv_stats_create(mshv_debugfs);
-+		if (err)
-+			goto remove_mshv_dir;
-+
-+		err = mshv_debugfs_lp_create(mshv_debugfs);
-+		if (err)
-+			goto unmap_hv_stats;
-+	}
-+
-+	err = mshv_debugfs_parent_partition_create();
-+	if (err)
-+		goto unmap_lp_stats;
-+
-+	return 0;
-+
-+unmap_lp_stats:
-+	if (hv_root_partition()) {
-+		mshv_debugfs_lp_remove();
-+		mshv_debugfs_lp = NULL;
-+	}
-+unmap_hv_stats:
-+	if (hv_root_partition())
-+		mshv_hv_stats_unmap();
-+remove_mshv_dir:
-+	debugfs_remove_recursive(mshv_debugfs);
-+	mshv_debugfs = NULL;
-+	return err;
-+}
-+
-+void mshv_debugfs_exit(void)
-+{
-+	mshv_debugfs_parent_partition_remove();
-+
-+	if (hv_root_partition()) {
-+		mshv_debugfs_lp_remove();
-+		mshv_debugfs_lp = NULL;
-+		mshv_hv_stats_unmap();
-+	}
-+
-+	debugfs_remove_recursive(mshv_debugfs);
-+	mshv_debugfs = NULL;
-+	mshv_debugfs_partition = NULL;
-+}
-diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
-index e4912b0618fa..7332d9af8373 100644
---- a/drivers/hv/mshv_root.h
-+++ b/drivers/hv/mshv_root.h
-@@ -52,6 +52,9 @@ struct mshv_vp {
- 		unsigned int kicked_by_hv;
- 		wait_queue_head_t vp_suspend_queue;
- 	} run;
-+#if IS_ENABLED(CONFIG_DEBUG_FS)
-+	struct dentry *vp_stats_dentry;
-+#endif
- };
- 
- #define vp_fmt(fmt) "p%lluvp%u: " fmt
-@@ -136,6 +139,10 @@ struct mshv_partition {
- 	u64 isolation_type;
- 	bool import_completed;
- 	bool pt_initialized;
-+#if IS_ENABLED(CONFIG_DEBUG_FS)
-+	struct dentry *pt_stats_dentry;
-+	struct dentry *pt_vp_dentry;
-+#endif
- };
- 
- #define pt_fmt(fmt) "p%llu: " fmt
-@@ -327,6 +334,33 @@ int hv_call_modify_spa_host_access(u64 partition_id, struct page **pages,
- int hv_call_get_partition_property_ex(u64 partition_id, u64 property_code, u64 arg,
- 				      void *property_value, size_t property_value_sz);
- 
-+#if IS_ENABLED(CONFIG_DEBUG_FS)
-+int __init mshv_debugfs_init(void);
-+void mshv_debugfs_exit(void);
-+
-+int mshv_debugfs_partition_create(struct mshv_partition *partition);
-+void mshv_debugfs_partition_remove(struct mshv_partition *partition);
-+int mshv_debugfs_vp_create(struct mshv_vp *vp);
-+void mshv_debugfs_vp_remove(struct mshv_vp *vp);
-+#else
-+static inline int __init mshv_debugfs_init(void)
-+{
-+	return 0;
-+}
-+static inline void mshv_debugfs_exit(void) { }
-+
-+static inline int mshv_debugfs_partition_create(struct mshv_partition *partition)
-+{
-+	return 0;
-+}
-+static inline void mshv_debugfs_partition_remove(struct mshv_partition *partition) { }
-+static inline int mshv_debugfs_vp_create(struct mshv_vp *vp)
-+{
-+	return 0;
-+}
-+static inline void mshv_debugfs_vp_remove(struct mshv_vp *vp) { }
-+#endif
-+
- extern struct mshv_root mshv_root;
- extern enum hv_scheduler_type hv_scheduler_type;
- extern u8 * __percpu *hv_synic_eventring_tail;
-diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index 414d9cee5252..3a43e41e16a1 100644
---- a/drivers/hv/mshv_root_main.c
-+++ b/drivers/hv/mshv_root_main.c
-@@ -1095,6 +1095,10 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
- 
- 	memcpy(vp->vp_stats_pages, stats_pages, sizeof(stats_pages));
- 
-+	ret = mshv_debugfs_vp_create(vp);
-+	if (ret)
-+		goto put_partition;
-+
- 	/*
- 	 * Keep anon_inode_getfd last: it installs fd in the file struct and
- 	 * thus makes the state accessible in user space.
-@@ -1102,7 +1106,7 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
- 	ret = anon_inode_getfd("mshv_vp", &mshv_vp_fops, vp,
- 			       O_RDWR | O_CLOEXEC);
- 	if (ret < 0)
--		goto put_partition;
-+		goto remove_debugfs_vp;
- 
- 	/* already exclusive with the partition mutex for all ioctls */
- 	partition->pt_vp_count++;
-@@ -1110,6 +1114,8 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
- 
- 	return ret;
- 
-+remove_debugfs_vp:
-+	mshv_debugfs_vp_remove(vp);
- put_partition:
- 	mshv_partition_put(partition);
- free_vp:
-@@ -1552,10 +1558,16 @@ mshv_partition_ioctl_initialize(struct mshv_partition *partition)
- 	if (ret)
- 		goto withdraw_mem;
- 
-+	ret = mshv_debugfs_partition_create(partition);
-+	if (ret)
-+		goto finalize_partition;
-+
- 	partition->pt_initialized = true;
- 
- 	return 0;
- 
-+finalize_partition:
-+	hv_call_finalize_partition(partition->pt_id);
- withdraw_mem:
- 	hv_call_withdraw_memory(U64_MAX, NUMA_NO_NODE, partition->pt_id);
- 
-@@ -1735,6 +1747,7 @@ static void destroy_partition(struct mshv_partition *partition)
- 			if (!vp)
- 				continue;
- 
-+			mshv_debugfs_vp_remove(vp);
- 			mshv_vp_stats_unmap(partition->pt_id, vp->vp_index,
- 					    vp->vp_stats_pages);
- 
-@@ -1768,6 +1781,8 @@ static void destroy_partition(struct mshv_partition *partition)
- 			partition->pt_vp_array[i] = NULL;
- 		}
- 
-+		mshv_debugfs_partition_remove(partition);
-+
- 		/* Deallocates and unmaps everything including vcpus, GPA mappings etc */
- 		hv_call_finalize_partition(partition->pt_id);
- 
-@@ -2313,10 +2328,14 @@ static int __init mshv_parent_partition_init(void)
- 
- 	mshv_init_vmm_caps(dev);
- 
--	ret = mshv_irqfd_wq_init();
-+	ret = mshv_debugfs_init();
- 	if (ret)
- 		goto exit_partition;
- 
-+	ret = mshv_irqfd_wq_init();
-+	if (ret)
-+		goto exit_debugfs;
-+
- 	spin_lock_init(&mshv_root.pt_ht_lock);
- 	hash_init(mshv_root.pt_htable);
- 
-@@ -2324,6 +2343,8 @@ static int __init mshv_parent_partition_init(void)
- 
- 	return 0;
- 
-+exit_debugfs:
-+	mshv_debugfs_exit();
- exit_partition:
- 	if (hv_root_partition())
- 		mshv_root_partition_exit();
-@@ -2340,6 +2361,7 @@ static void __exit mshv_parent_partition_exit(void)
- {
- 	hv_setup_mshv_handler(NULL);
- 	mshv_port_table_fini();
-+	mshv_debugfs_exit();
- 	misc_deregister(&mshv_dev);
- 	mshv_irqfd_wq_cleanup();
- 	if (hv_root_partition())
--- 
-2.34.1
+For the entire series,
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 
 
