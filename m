@@ -1,231 +1,496 @@
-Return-Path: <linux-hyperv+bounces-8581-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8582-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4D2IHZnjemn5/AEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8581-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Jan 2026 05:35:37 +0100
+	id AJ2IIPrjemn5/AEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8582-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Jan 2026 05:37:14 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5E69ABB12
-	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Jan 2026 05:35:36 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25490ABB32
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Jan 2026 05:37:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D7D303013842
-	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Jan 2026 04:35:35 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 8A9D83004631
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Jan 2026 04:37:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 086BA2797AC;
-	Thu, 29 Jan 2026 04:35:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50F0627B357;
+	Thu, 29 Jan 2026 04:37:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="kVXURQ+d"
+	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="p7beqqdu"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazolkn19013095.outbound.protection.outlook.com [52.103.20.95])
+Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D222586FE;
-	Thu, 29 Jan 2026 04:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C1A26ED2A;
+	Thu, 29 Jan 2026 04:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769661333; cv=fail; b=uJrefodRtFaglVFrV4U75EQU75g44NgzaaOJ9tLB3exL3xoDQQl+nFgwf+cX95DKj6YgXwPKhyQED9RdFGmxV77GBja2gPhhIy5u0rEvJzD8x/vHVVJUJ8rlwgo9PA5E1X0wycVBzEx6gVnqVXvqx9dvhrXBqKFcZZ5kp1UisRE=
+	t=1769661431; cv=pass; b=eJ96J9wo5g2RN3fDBeh1FQjnSyyaF+kMiY5mHue2UpWd/VRErrB1koULzv2Z/4Tcm8isx8EbE/EXLAzmU0gGWvWg3iNWaB0FYkvxaXZv0zFVJ8hbATPI0plpo8WFMWBsIU0ouPKvn2xLT+n6SaD3X4M00ri+w88H2racVJPOnO0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769661333; c=relaxed/simple;
-	bh=XlEoM7m2NlSvDveCRuMu5rhp6+AFM13wtaFBB86s9WM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=chErCIoh8ZH8ySTY3TT0idoe7/y7zTRcfdrGu2CkXfsuR9KBC8jY0Vg6JlEL4QkwyaQ1UrJ1csMztAExfYtgT9xc7QHXFKP/dQrT1ysq3SOuNVHF2vPNb7x3+ZHDZJrRcQ7Ia9QtGv1hHYdjC2Z7U0BXTe5fJoaHSir3TLy32EM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=kVXURQ+d; arc=fail smtp.client-ip=52.103.20.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mKDajKvwO+bYe1hV5sqHoOaeBVWAEyTUzp7z2a/KrWusa4uFF/MicTLtLedDF0JpPJWq49Plwgvif6hGmhC+Axm87HEzfBZGjwoSZD3z/9Z1CNYUI2TD/EHZvdhs7FN7t2YSqxlidWLlDaYwhNxgjlR92x2amOxB+hRb1aohOcC+5QNacVDp4v9oq99zvAgrcRtIqdLWmkjkuIDj5AiC8HguTscpZZpIy2V4psSPW6BL3tH5OZ+x9JKaWwT7BD4T4lg911Nwq1H1bGTYCdB2xG2YGZXd15HgPtQ2Z7PaKN6nFLXiHTZzV1FYcrA7KeiqmXZCLaZNM8s6XWVfu76hxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2J0Mcds6n2nyiGLSo2/OdxoubcDtQ56U0x1MIWqNrMk=;
- b=d45Qep+/eBO/gKfT6ee6viUF8k9S1jKmjnWi2+0yVATdRMrOHxtdrN63JqcBW3KXozQ/PzcG+2ztnHUaULUJEMkdcM0XqoV6ZV9+JYyQWNJDcDSJNjwuSPY9RkZxtmdkgfWn5YK4i8utjoqnrovlVIOl1wa/umacltFMhAawq9LsEiFhg/4wK1x2Js19j5ZLSUgtbI8uWBJipISUixpx2JTjAA+nOXYKOpfw8ErdJUEpJ//WJqVs40kbzU6lzpBF14QcyQ/c13td73iHfBFswTIG/CFQXgU6C2ZZCcMQm6xqXpdUPy4I2eyXjxCkv0Dr/bYLVbfbNYF6MMogElr18Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2J0Mcds6n2nyiGLSo2/OdxoubcDtQ56U0x1MIWqNrMk=;
- b=kVXURQ+dIs9EQOLARhawwixRMMbEBU/PjXvRLOgCzEJAEPCbMKhcWkEYy2Y+9f/QIg7/8HdAsk5njuvNwmHs0VrFi6pCInRhKeaeIPIYNrZThbIsCMzUfiMKLIDdS5GPenWcjWkmoQSCuROZwkfWTarfkQxrhpPguNkRzZTGxxOzr0iDglpmKxtMv2ym9lVZdG81v0tM0fLZNwJw9lCk0YAcI90JSEDWr4zPYFeFxOX8wLsGB+qLF8EvZvhx1Pi2nvX/u3QLcaOjUgAnqcIfi8mamdu84w9wYlxXB/Mpu3ypwBWJBxPdulhhWQIsJFzkGd2hSMtrFNzEMjknVex5vQ==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SJ0PR02MB8561.namprd02.prod.outlook.com (2603:10b6:a03:3f0::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.15; Thu, 29 Jan
- 2026 04:35:30 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%6]) with mapi id 15.20.9564.006; Thu, 29 Jan 2026
- 04:35:30 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kwilczynski@kernel.org"
-	<kwilczynski@kernel.org>, "mani@kernel.org" <mani@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com"
-	<bhelgaas@google.com>
-CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, Michael Kelley
-	<mhklinux@outlook.com>, "kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org"
-	<wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>,
-	"longli@microsoft.com" <longli@microsoft.com>
-Subject: RE: [PATCH 1/1] PCI: hv: Remove unused field pci_bus in struct
- hv_pcibus_device
-Thread-Topic: [PATCH 1/1] PCI: hv: Remove unused field pci_bus in struct
- hv_pcibus_device
-Thread-Index: AQHcgxvbxTpq11Tjn06iuwMa8TiYF7VoqkXQ
-Date: Thu, 29 Jan 2026 04:35:29 +0000
-Message-ID:
- <SN6PR02MB41575DE702FAF2BCE5FD38CFD49EA@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20260111170034.67558-1-mhklinux@outlook.com>
-In-Reply-To: <20260111170034.67558-1-mhklinux@outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SJ0PR02MB8561:EE_
-x-ms-office365-filtering-correlation-id: 94c625e4-0c32-499e-1ea4-08de5eefd52b
-x-ms-exchange-slblob-mailprops:
- Cq7lScuPrnr9cOglUl1urTSFBsjx1OD0huxaSd7s7v4s8+NnFQi03yyqMOHCMLlUNNJii47drNusAr1GTk81rvLxmTSSYfdTqIbWQ6jdTTf80FicyHvYZ0eEqeJGa8bSE7Rcfa8h9Ly/AHsa2PHcxHgkuRFQhpn98daJ+dJQN/7HALvIJ8Wdvt9L75aI94PrLfpeAK7298ReJsrkugPezXklT2WtGZvFC5tLmudisb8k9k9O6Fp0H7DEl9a67/w5QUBABXDTRZv3rr50QCFEBTfMTtdTgIhNT1PzhGHDRf8xSPbyRS2HLS6aIiicpyzGEaclqobxthstZ5SnfkmbN+pW/0U1rC1xJT0XEKNdEwA80Dot75sw9GMyB833dwJKkyVmOP65Ac9bYhhyrfedqzp1W1ngN0Sq/D/6UGC6HNeL3W2yK+DE5kT+Wt8471z63tVDj8/JHDaGn/UTmGmsjchmhN5oMPSxC1SbkDjEzVkjRNNhTKRgYPYBt6FvC/xZomcPjgFyLAN678XLNd5M2+oZBnZla4V2g3sgZHgdgS132F6knx72FP/CgMnJel14epf6Ek0TxfnW2vKp3Ef0W+vRXfvR1FQBq2LTtzmSikZAjNrZCtg6Ju/BxeIcEixSsV7amR1OQ9gAAS23hyDBZCBIgw2GHvzTJivXr0mZPzks4H3Mv+CJUmcoWZIeWc6IyrWizy9Ocm0iwp9w/Z7sGxkSwyZW6bZR88QftbgKULDv+b0iJ8oLIJz4+bHQAY922i8/Pkqq1NI=
-x-microsoft-antispam:
- BCL:0;ARA:14566002|13091999003|19110799012|15080799012|8060799015|51005399006|8062599012|461199028|31061999003|440099028|3412199025|40105399003|102099032|1710799026;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?mzBMecDAO3X0vfJMaz7gpW0nvrdO8VvxgsCW6IFqIDs8VOLEbKIJgVfpwH+5?=
- =?us-ascii?Q?pB2CsDlN97v3Ngh0APoxTZvD6FaSw8l/fQ1cAzperghi4VfxRQYiYBy1i8GV?=
- =?us-ascii?Q?QeIGoP745WdTur1L2wzRjsULuI0ylEfsGDt3eMbqzKZH3scuR1w8Tn6Umv1j?=
- =?us-ascii?Q?9HsKC7+Rw3riDkocJftVUuP2ZuK27sDBSE2/5+ujgWTqOkXWqXAp8SEQr5ED?=
- =?us-ascii?Q?9rPLxs2HQoxQ/PnrTPfVCfAfAO/s2Ys42jIFwM9Off/S09UA5uHVpROqFYAf?=
- =?us-ascii?Q?PfOqu7dMbFxNjDp7hGOnZedk5hQL2seTmq26E0Ysmh0t5UGPem3zHHs3gs6F?=
- =?us-ascii?Q?jREaCriV2z0NYGqtG0iwajN1UHoUywSQIuBQzXz76ZnCbmWwqzlQILfVXHLE?=
- =?us-ascii?Q?SN5UHhcEdMnvoa8PfUTqrYjdQ606zRmrXGAbQosPrgJ5nlwzCj+ucRJc/9C/?=
- =?us-ascii?Q?59/FaxJj5ieob+D3nkdtoQXgfPIv0zDnRL3+SfAQZGkUZ4eBGiiP/7a0rU9G?=
- =?us-ascii?Q?g1uxpY2xUe4/zYjZ81Uz5rPrfU2ClUC0b4i127vVQIDTdeGWO3rdDFL7dXmp?=
- =?us-ascii?Q?jHdsGK/vxVDp7AEp69HNvuqqK3FrKkS/4VmujPjhhWIGYsop7fhXm2bPa+WE?=
- =?us-ascii?Q?aJcAkqHRI8undNjTSvcJkXweoJtZTVmpy51brK3WVB+ND/ePEj5b/gPNg3k7?=
- =?us-ascii?Q?ot9fe+tFF8OUluiY3bDfyvQ2Sz7cOZrlXkLC6Zd98dIH42xjV2wTNfvgKelR?=
- =?us-ascii?Q?aS/Oy42N3NDLacAjRwjkMxQ8IuA/5QxOLlFUwPtsJQ5wuIJmSmxRA6slzs89?=
- =?us-ascii?Q?SS0lIrsBuaqXPU+Wk9aHPVJxeGhzaltK9hKTfFPmq+5bk3FVJ2xO1f7ZlnOM?=
- =?us-ascii?Q?q5ctvTNEoW83mCsVI2kb8a16IU92eg/de8y11Ud7RASxPQmAyOx4kawNCwRI?=
- =?us-ascii?Q?X+hF5SNqiT+ISvxzsyTpFI1fnl7vNj1zFvNzlf5VKDpAP97TZyhxLOXLHSXC?=
- =?us-ascii?Q?dvCE2cYV7IyyGSpzZmYtSggkL0ebvuMlpEBe7tIe/rE5wMAKa/07Zdj40P80?=
- =?us-ascii?Q?W+Wz5hAfyQeR8sR5UKN74GyF6CCXyZ0cJxmVfip49RmvrQ5P3/Kf+d5bxPSz?=
- =?us-ascii?Q?w2fqLARlsIzvAz16nIRQwA9jcTEi/ex65eLrNW2gmD2iZl30yZDS6zig08D9?=
- =?us-ascii?Q?zG7QkR570NIN9t9UnvWvHKavrVvdizQG8iPnsCSqQKOITBu5z7tPeJuvpS4?=
- =?us-ascii?Q?=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?axtgk6uD+hAYN77Pv2LNVj7cTYKiwn+t1yZyz9VVj7noEf/+UvdTTfyOdKal?=
- =?us-ascii?Q?K0E1+K5kjB+hL2x55B5tdqwHANGMDU4MWER0yxr7m0Vd0XYAuekRTxh+HPJd?=
- =?us-ascii?Q?leTW3bB28gJQsPSLopMS77Knf3qqTXvSengyKRxVDKpYkcLCqXNkf2Ta6SIE?=
- =?us-ascii?Q?bQUNXPhGTg1hMOC1QMUngw4BmyQWTY6AK6hfABhHSFb1crHurRq27oQd4iJQ?=
- =?us-ascii?Q?c2DJbzlaktYhW4Uv2PugA9fX7ZiBxQj5b02rDZkMLdIVyCXgzapgQ/R7dlvl?=
- =?us-ascii?Q?c2MKh0nzjK8pLDjaopoJnZzsAASMtHFTp1bcRMDL8ntfosN6L5C+cYccAsl/?=
- =?us-ascii?Q?V0kCPGisKG/ySQvEvcjfoGgSkWvkY4jnTIjnzHiHnuJgtRgHJNsTGNtpDKZw?=
- =?us-ascii?Q?IbRJHpJjHhr7h5V2wVOkAhOh3nRHIBT03Dl1rsdfyxoS/1gdJbtOEAZnYUel?=
- =?us-ascii?Q?oXpiECo/MnaVwwgU4F3H8S1AQBL3lVAan3+NuAdfM/yxhqV5wrTFOGuilplY?=
- =?us-ascii?Q?KH82SnjQYIcSjKVvEMXntp7RbNeyMBWxt4H+O7aHvn2ErCg2CELCexXKIvAd?=
- =?us-ascii?Q?qp4DdyHr46lu4UeMEcRzkkqQyBI0SHv78NYM1a30zvxk+s9Eus7JFCW7C/J0?=
- =?us-ascii?Q?+zxS7b+/tes5JQwgBIWYe0ZuPk2ybXvl5QfZOYfIISQ0y6yo7YqwjlELGMuY?=
- =?us-ascii?Q?0eftTQp3q/qpPlH7HzJSkPk2m884vwsnev0Bx/Mb8eQg5BLVyaCBqvNwVwLB?=
- =?us-ascii?Q?WZ2SL3oxi78ZDSpAfEmzWNMGYZtK5lW7nz7XfzGjYlCLcSTbC8UNgwCgFpeF?=
- =?us-ascii?Q?e30So9zwYZxdPCWoOud4bNkdGjBaCJNC8wL9JQxJx/XqVYwoAZHgpMZycBR0?=
- =?us-ascii?Q?65MxtRW+N5a4FvYxIyzsJkJFa0ka/OC8xWG4c69K2u/U4sownyVy6mkpAjkh?=
- =?us-ascii?Q?iYkFTh614cQ+tocnTLSfDJaSqkQa7T5qw+fBHPuURb7l9tNWYJ4S2Bf/hJuP?=
- =?us-ascii?Q?qwRK+AgZF947Hkq7AD2sbjXaKGqsHatWJ3sDIHCePBoS/pnpXqFn0GdwDfVj?=
- =?us-ascii?Q?OEuErVaKniE+Pr2+2JQL37WtvLlRMoobbL+kCdjfW7Nnc9ja0AQFtn0fkY+V?=
- =?us-ascii?Q?W1o7pDVLQVZUACAYcXqqvaJhPLielQWq01QjWg8YeOCbbVl8/rI0l+PcqCax?=
- =?us-ascii?Q?RPeJ6kf98mzyntQ14kZGTkTHwROw0fVAfW8XOu6BI2joNgSA8CakjNfdMaqt?=
- =?us-ascii?Q?z+345qf3K4H+m8030l7c1Il/gR541087mM6TifMCFUDARdFZ9ZPYReNYcmM8?=
- =?us-ascii?Q?YkOOLLuZHmqfzOPZivHHOS3VIGjXsxec0WkeZsm6KL02PYKc2CIvtkTa+WEo?=
- =?us-ascii?Q?QAQjteE=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1769661431; c=relaxed/simple;
+	bh=F6E9k7UAiOLFE5b5L4OXWO2mXPs4f2aEc1xvxJbaBWw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XuCKeczbhr2xu3/GRa1XerxuU48dIaHiikMsfMUZazhVVDKtA6RfkN1+MAgMyLodqexjvzTMcjEi7D9cDyWQ1Ibwf8hJ/J52B2/67mSlF96mpKeZv/GnR8iALGeDrVJH0/x+lgxXXxDlW2Pul3+7fbRyeiUg/apkWGP7AQsKLD0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=p7beqqdu; arc=pass smtp.client-ip=136.143.188.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
+ARC-Seal: i=1; a=rsa-sha256; t=1769661420; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=NTesVd6yJTmDTmdxNM1glIStC4PSkTg/RveAnSLppJXEdRgnoTb/r5U07sEYYXCJm1CUCmybCPPHtSciBZyAhy4b7WMZcsWuat4BnTiZTlKKclnrOEQuuzdS3qhaEJpADoOfQz8qvhLIV+izz3cgR/F5yWhtsJjmp598IQamEbI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1769661420; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=LtDpMtwjGblqNyIE4SLdAAwYTriC/igvU7B6WXLHIP0=; 
+	b=cDtpcWmfKaLx+HNaXyqcJcCWopITzXouFywTx+LgCeDpKyYswrD+AxhufKN3jwqq72YL5AVCHbV9t/dTXxVRysYkasdMx5LYt+6X0MLmIYGx6oAz3W3U9nYS7cYR2l2mgKwz7PkfX1Kf0QvBg6vBhDANSRY66ZcLG4wIEjfJfXM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=anirudhrb.com;
+	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
+	dmarc=pass header.from=<anirudh@anirudhrb.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1769661420;
+	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=LtDpMtwjGblqNyIE4SLdAAwYTriC/igvU7B6WXLHIP0=;
+	b=p7beqqduziHLXf0m8I83yYqNivDTykben99dYC1Q1C872f5CQAGltBCRiVXy3/ck
+	oX92+831eucraCPM/JR4HHggiXMnP2ZCAZdRiKopWG30CV/naXLvXUM5t21wEOiHefi
+	W/rMqA2PC9rZ6ZB+XSbrV9SjujylClFnjbsZQP7A=
+Received: by mx.zohomail.com with SMTPS id 1769661416953309.5866630388397;
+	Wed, 28 Jan 2026 20:36:56 -0800 (PST)
+Date: Thu, 29 Jan 2026 04:36:51 +0000
+From: Anirudh Rayabharam <anirudh@anirudhrb.com>
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mshv: add arm64 support for doorbell & intercept
+ SINTs
+Message-ID: <aXrj4-KAxYfuK7k0@anirudh-surface.localdomain>
+References: <20260128160437.3342167-1-anirudh@anirudhrb.com>
+ <20260128160437.3342167-3-anirudh@anirudhrb.com>
+ <aXqV127NzazbDkau@skinsburskii.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 94c625e4-0c32-499e-1ea4-08de5eefd52b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jan 2026 04:35:29.9170
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR02MB8561
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aXqV127NzazbDkau@skinsburskii.localdomain>
+X-ZohoMailClient: External
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
+X-Spamd-Result: default: False [-1.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8581-lists,linux-hyperv=lfdr.de];
-	FREEMAIL_CC(0.00)[vger.kernel.org,outlook.com,microsoft.com,kernel.org];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_FROM(0.00)[outlook.com];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	DKIM_TRACE(0.00)[outlook.com:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,outlook.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,SN6PR02MB4157.namprd02.prod.outlook.com:mid]
-X-Rspamd-Queue-Id: E5E69ABB12
+	RCPT_COUNT_SEVEN(0.00)[8];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[anirudh@anirudhrb.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DMARC_NA(0.00)[anirudhrb.com];
+	PRECEDENCE_BULK(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8582-lists,linux-hyperv=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[anirudhrb.com:+]
+X-Rspamd-Queue-Id: 25490ABB32
 X-Rspamd-Action: no action
 
-From: mhkelley58@gmail.com <mhkelley58@gmail.com> Sent: Sunday, January 11,=
- 2026 9:01 AM
->=20
-> From: Michael Kelley <mhklinux@outlook.com>
->=20
-> Field pci_bus in struct hv_pcibus_device is unused since
-> commit 418cb6c8e051 ("PCI: hv: Generify PCI probing"). Remove it.
->=20
-> No functional change.
->=20
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+On Wed, Jan 28, 2026 at 03:03:51PM -0800, Stanislav Kinsburskii wrote:
+> On Wed, Jan 28, 2026 at 04:04:37PM +0000, Anirudh Rayabharam wrote:
+> > From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> > 
+> > On x86, the HYPERVISOR_CALLBACK_VECTOR is used to receive synthetic
+> > interrupts (SINTs) from the hypervisor for doorbells and intercepts.
+> > There is no such vector reserved for arm64.
+> > 
+> > On arm64, the INTID for SINTs should be in the SGI or PPI range. The
+> > hypervisor exposes a virtual device in the ACPI that reserves a
+> > PPI for this use. Introduce a platform_driver that binds to this ACPI
+> > device and obtains the interrupt vector that can be used for SINTs.
+> > 
+> > To better unify x86 and arm64 paths, introduce mshv_sint_irq_init() that
+> 
+> Where is mshv_sint_irq_init?
 
-Could a PCI maintainer give an Ack for this trivial patch?
+Oops, this should be mshv_synic_init(). Leftover from previous
+development version of this patch :)
 
-Thx, Michael
+Will fix in the next version.
 
-> ---
->  drivers/pci/controller/pci-hyperv.c | 1 -
->  1 file changed, 1 deletion(-)
->=20
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
-/pci-hyperv.c
-> index 1e237d3538f9..7fcba05cec30 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -501,7 +501,6 @@ struct hv_pcibus_device {
->  	struct resource *low_mmio_res;
->  	struct resource *high_mmio_res;
->  	struct completion *survey_event;
-> -	struct pci_bus *pci_bus;
->  	spinlock_t config_lock;	/* Avoid two threads writing index page */
->  	spinlock_t device_list_lock;	/* Protect lists below */
->  	void __iomem *cfg_addr;
-> --
-> 2.25.1
->=20
+> 
+> > either registers the platform_driver and obtains the INTID (arm64) or
+> > just uses HYPERVISOR_CALLBACK_VECTOR as the interrupt vector (x86).
+> > 
+> > Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> > ---
+> >  drivers/hv/mshv_root.h      |   2 +
+> >  drivers/hv/mshv_root_main.c |  11 ++-
+> >  drivers/hv/mshv_synic.c     | 152 ++++++++++++++++++++++++++++++++++--
+> >  3 files changed, 158 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
+> > index c02513f75429..c2d1e8d7452c 100644
+> > --- a/drivers/hv/mshv_root.h
+> > +++ b/drivers/hv/mshv_root.h
+> > @@ -332,5 +332,7 @@ int mshv_region_get(struct mshv_mem_region *region);
+> >  bool mshv_region_handle_gfn_fault(struct mshv_mem_region *region, u64 gfn);
+> >  void mshv_region_movable_fini(struct mshv_mem_region *region);
+> >  bool mshv_region_movable_init(struct mshv_mem_region *region);
+> > +int mshv_synic_init(void);
+> > +void mshv_synic_cleanup(void);
+> >  
+> >  #endif /* _MSHV_ROOT_H_ */
+> > diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> > index abb34b37d552..6c2d4a80dbe3 100644
+> > --- a/drivers/hv/mshv_root_main.c
+> > +++ b/drivers/hv/mshv_root_main.c
+> > @@ -2276,11 +2276,17 @@ static int __init mshv_parent_partition_init(void)
+> >  			MSHV_HV_MAX_VERSION);
+> >  	}
+> >  
+> > +	ret = mshv_synic_init();
+> > +	if (ret) {
+> > +		dev_err(dev, "Failed to initialize synic: %i\n", ret);
+> > +		goto device_deregister;
+> > +	}
+> > +
+> >  	mshv_root.synic_pages = alloc_percpu(struct hv_synic_pages);
+> >  	if (!mshv_root.synic_pages) {
+> >  		dev_err(dev, "Failed to allocate percpu synic page\n");
+> >  		ret = -ENOMEM;
+> > -		goto device_deregister;
+> > +		goto synic_cleanup;
+> >  	}
+> 
+> Should this become a part of mshv_synic_init()?
 
+Yeah, good idea. Maybe even the below cpuhp_setup_state can be moved.
+
+> 
+> >  
+> >  	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "mshv_synic",
+> > @@ -2322,6 +2328,8 @@ static int __init mshv_parent_partition_init(void)
+> >  	cpuhp_remove_state(mshv_cpuhp_online);
+> >  free_synic_pages:
+> >  	free_percpu(mshv_root.synic_pages);
+> > +synic_cleanup:
+> > +	mshv_synic_cleanup();
+> >  device_deregister:
+> >  	misc_deregister(&mshv_dev);
+> >  	return ret;
+> > @@ -2337,6 +2345,7 @@ static void __exit mshv_parent_partition_exit(void)
+> >  		mshv_root_partition_exit();
+> >  	cpuhp_remove_state(mshv_cpuhp_online);
+> >  	free_percpu(mshv_root.synic_pages);
+> > +	mshv_synic_cleanup();
+> 
+> Please, follow the common convention where cleaup path is the reverse of
+> init path.
+
+Right, will fix this.
+
+> 
+> >  }
+> >  
+> >  module_init(mshv_parent_partition_init);
+> > diff --git a/drivers/hv/mshv_synic.c b/drivers/hv/mshv_synic.c
+> > index ba89655b0910..b7860a75b97e 100644
+> > --- a/drivers/hv/mshv_synic.c
+> > +++ b/drivers/hv/mshv_synic.c
+> > @@ -10,13 +10,19 @@
+> >  #include <linux/kernel.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/mm.h>
+> > +#include <linux/interrupt.h>
+> >  #include <linux/io.h>
+> >  #include <linux/random.h>
+> >  #include <asm/mshyperv.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/acpi.h>
+> >  
+> >  #include "mshv_eventfd.h"
+> >  #include "mshv.h"
+> >  
+> > +static int mshv_interrupt = -1;
+> 
+> The name is a bit too short. What about mshv_callback_vector or
+> mshv_irq_vector?
+
+I like mshv_callback_vector. I'll change to that in the next version
+unless someone else comes up with a better suggestion.
+
+> 
+> > +static int mshv_irq = -1;
+> > +
+> 
+> Should this be a path of mshv_root structure?
+
+This doesn't need to be globally accessible. It is only used in this file.
+So I guess it doesn't need to be in mshv_root. What do you think?
+
+> 
+> >  static u32 synic_event_ring_get_queued_port(u32 sint_index)
+> >  {
+> >  	struct hv_synic_event_ring_page **event_ring_page;
+> > @@ -446,14 +452,144 @@ void mshv_isr(void)
+> >  	}
+> >  }
+> >  
+> > +#ifndef HYPERVISOR_CALLBACK_VECTOR
+> > +#ifdef CONFIG_ACPI
+> > +static long __percpu *mshv_evt;
+> > +
+> > +static acpi_status mshv_walk_resources(struct acpi_resource *res, void *ctx)
+> > +{
+> > +	struct resource r;
+> > +
+> > +	switch (res->type) {
+> > +	case ACPI_RESOURCE_TYPE_EXTENDED_IRQ:
+> > +		if (!acpi_dev_resource_interrupt(res, 0, &r)) {
+> > +			pr_err("Unable to parse MSHV ACPI interrupt\n");
+> > +			return AE_ERROR;
+> > +		}
+> > +		/* ARM64 INTID */
+> > +		mshv_interrupt = res->data.extended_irq.interrupts[0];
+> > +		/* Linux IRQ number */
+> > +		mshv_irq = r.start;
+> > +		pr_info("MSHV SINT INTID %d, IRQ %d\n",
+> > +			mshv_interrupt, mshv_irq);
+> > +		return AE_OK;
+> > +	default:
+> > +		/* Unused resource type */
+> > +		return AE_OK;
+> > +	}
+> > +
+> > +	return AE_OK;
+> > +}
+> > +
+> > +static irqreturn_t mshv_percpu_isr(int irq, void *dev_id)
+> > +{
+> > +	mshv_isr();
+> > +	add_interrupt_randomness(irq);
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> > +static int mshv_sint_probe(struct platform_device *pdev)
+> > +{
+> > +	acpi_status result;
+> > +	int ret = 0;
+> > +	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
+> > +
+> > +	result = acpi_walk_resources(device->handle, METHOD_NAME__CRS,
+> > +					mshv_walk_resources, NULL);
+> > +
+> > +	if (ACPI_FAILURE(result)) {
+> > +		ret = -ENODEV;
+> > +		goto out;
+> > +	}
+> > +
+> > +	mshv_evt = alloc_percpu(long);
+> > +	if (!mshv_evt) {
+> > +		ret = -ENOMEM;
+> > +		goto out;
+> > +	}
+> > +
+> > +	ret = request_percpu_irq(mshv_irq, mshv_percpu_isr, "MSHV", mshv_evt);
+> > +out:
+> > +	return ret;
+> > +}
+> > +
+> > +static void mshv_sint_remove(struct platform_device *pdev)
+> > +{
+> > +	free_percpu_irq(mshv_irq, mshv_evt);
+> > +	free_percpu(mshv_evt);
+> > +}
+> > +#else
+> > +static int mshv_sint_probe(struct platform_device *pdev)
+> > +{
+> > +	return -ENODEV;
+> > +}
+> > +
+> > +static void mshv_sint_remove(struct platform_device *pdev)
+> > +{
+> > +	return;
+> > +}
+> > +#endif
+> > +
+> 
+> Is this all x86-compatible?
+> The commit message says it's introduced for arm64.
+> If it's incompatible, please, wrap it into #ifdefs and compile out for
+> x86_64.
+
+They are wrapped in #ifndef HYPERVISOR_CALLBACK_VECTOR.
+
+If that is defined we use the hardcoded vector. It is currently
+only defined for x86 so HYPERVISOR_CALLBACK_VECTOR is effectively a proxy
+for "x86 enabled". This approach is better because we're not concerned
+about whether it is x86 or arm, what we really want to figure out
+is whether we have a pre-defined vector or not.
+
+The VMBus driver follows this pattern too.
+
+> 
+> > +
+> > +static const __maybe_unused struct acpi_device_id mshv_sint_device_ids[] = {
+> > +	{"MSFT1003", 0},
+> > +	{"", 0},
+> > +};
+> > +
+> > +static struct platform_driver mshv_sint_drv = {
+> > +	.probe = mshv_sint_probe,
+> > +	.remove = mshv_sint_remove,
+> > +	.driver = {
+> > +		.name = "mshv_sint",
+> > +		.acpi_match_table = ACPI_PTR(mshv_sint_device_ids),
+> > +		.probe_type = PROBE_FORCE_SYNCHRONOUS,
+> > +	},
+> > +};
+> > +#endif /* HYPERVISOR_CALLBACK_VECTOR */
+> > +
+> > +int mshv_synic_init(void)
+> > +{
+> > +#ifdef HYPERVISOR_CALLBACK_VECTOR
+> > +	mshv_interrupt = HYPERVISOR_CALLBACK_VECTOR;
+> > +	mshv_irq = -1;
+> > +	return 0;
+> > +#else
+> > +	int ret;
+> > +
+> > +	if (acpi_disabled)
+> > +		return -ENODEV;
+> > +
+> > +	ret = platform_driver_register(&mshv_sint_drv);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (mshv_interrupt == -1 || mshv_irq == -1) {
+> > +		ret = -ENODEV;
+> > +		goto out_unregister;
+> > +	}
+> > +
+> > +	return 0;
+> > +
+> > +out_unregister:
+> > +	platform_driver_unregister(&mshv_sint_drv);
+> > +	return ret;
+> > +#endif
+> > +}
+> > +
+> > +void mshv_synic_cleanup(void)
+> > +{
+> > +#ifndef HYPERVISOR_CALLBACK_VECTOR
+> > +	if (!acpi_disabled)
+> > +		platform_driver_unregister(&mshv_sint_drv);
+> > +#endif
+> > +}
+> > +
+> >  int mshv_synic_cpu_init(unsigned int cpu)
+> >  {
+> >  	union hv_synic_simp simp;
+> >  	union hv_synic_siefp siefp;
+> >  	union hv_synic_sirbp sirbp;
+> > -#ifdef HYPERVISOR_CALLBACK_VECTOR
+> >  	union hv_synic_sint sint;
+> > -#endif
+> >  	union hv_synic_scontrol sctrl;
+> >  	struct hv_synic_pages *spages = this_cpu_ptr(mshv_root.synic_pages);
+> >  	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
+> > @@ -496,10 +632,12 @@ int mshv_synic_cpu_init(unsigned int cpu)
+> >  
+> >  	hv_set_non_nested_msr(HV_MSR_SIRBP, sirbp.as_uint64);
+> >  
+> > -#ifdef HYPERVISOR_CALLBACK_VECTOR
+> > +	if (mshv_irq != -1)
+> > +		enable_percpu_irq(mshv_irq, 0);
+> > +
+> 
+> It's better to explicitly separate x86 and arm64 paths with #ifdefs.
+> For example:
+> 
+> #ifdef CONFIG_X86_64
+> int setup_cpu_sint() {
+>   	/* Enable intercepts */
+>   	sint.as_uint64 = 0;
+> 	sint.vector = HYPERVISOR_CALLBACK_VECTOR;
+> 	....
+> }
+> #endif
+> #ifdef CONFIG_ARM64
+> int setup_cpu_sint() {
+> 	enable_percpu_irq(mshv_irq, 0);
+> 
+>   	/* Enable intercepts */
+>   	sint.as_uint64 = 0;
+> 	sint.vector = mshv_interrupt;
+> 	....
+> }
+> #endif
+
+This seems unnecessary. We've made the paths that determine
+mshv_interrupt separate. Now we can just use that here.
+
+There is no need to write two copies of 
+
+	...
+   	sint.as_uint64 = 0;
+ 	sint.vector = <whatever>;
+	...
+
+I could do the enable_percpu_irq() inside an ifdef. But do we gain
+anything from it? Won't the compiler optimize the current code as well
+since mshv_irq will always be -1 whenever HYPERVISOR_CALLBACK_VECTOR is
+defined?
+
+Thanks,
+Anirudh.
+
+> 
+> Thanks,
+> Stanislav
+> 
+> >  	/* Enable intercepts */
+> >  	sint.as_uint64 = 0;
+> > -	sint.vector = HYPERVISOR_CALLBACK_VECTOR;
+> > +	sint.vector = mshv_interrupt;
+> >  	sint.masked = false;
+> >  	sint.auto_eoi = hv_recommend_using_aeoi();
+> >  	hv_set_non_nested_msr(HV_MSR_SINT0 + HV_SYNIC_INTERCEPTION_SINT_INDEX,
+> > @@ -507,13 +645,12 @@ int mshv_synic_cpu_init(unsigned int cpu)
+> >  
+> >  	/* Doorbell SINT */
+> >  	sint.as_uint64 = 0;
+> > -	sint.vector = HYPERVISOR_CALLBACK_VECTOR;
+> > +	sint.vector = mshv_interrupt;
+> >  	sint.masked = false;
+> >  	sint.as_intercept = 1;
+> >  	sint.auto_eoi = hv_recommend_using_aeoi();
+> >  	hv_set_non_nested_msr(HV_MSR_SINT0 + HV_SYNIC_DOORBELL_SINT_INDEX,
+> >  			      sint.as_uint64);
+> > -#endif
+> >  
+> >  	/* Enable global synic bit */
+> >  	sctrl.as_uint64 = hv_get_non_nested_msr(HV_MSR_SCONTROL);
+> > @@ -568,6 +705,9 @@ int mshv_synic_cpu_exit(unsigned int cpu)
+> >  	hv_set_non_nested_msr(HV_MSR_SINT0 + HV_SYNIC_DOORBELL_SINT_INDEX,
+> >  			      sint.as_uint64);
+> >  
+> > +	if (mshv_irq != -1)
+> > +		disable_percpu_irq(mshv_irq);
+> > +
+> >  	/* Disable Synic's event ring page */
+> >  	sirbp.as_uint64 = hv_get_non_nested_msr(HV_MSR_SIRBP);
+> >  	sirbp.sirbp_enabled = false;
+> > -- 
+> > 2.34.1
+> > 
 
