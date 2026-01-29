@@ -1,351 +1,252 @@
-Return-Path: <linux-hyperv+bounces-8579-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8580-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KPetAJuZemnZ8QEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8579-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Jan 2026 00:19:55 +0100
+	id 4FyVE2vgemnD/AEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8580-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Jan 2026 05:22:03 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64399A9F05
-	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Jan 2026 00:19:54 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1DE1ABA67
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Jan 2026 05:22:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9DDCF301187C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jan 2026 23:18:36 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 745AA300D60F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Jan 2026 04:22:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B16D2DC79A;
-	Wed, 28 Jan 2026 23:18:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFDA4242D7B;
+	Thu, 29 Jan 2026 04:22:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nKMTmsot"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="kL2R6ubw"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB1285B5AB;
-	Wed, 28 Jan 2026 23:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769642316; cv=none; b=Z9MopK53HsaulHxKI+iVvdEikbtsqdKHElsj+MUH94izYKA5wbRWWaDlO4P9dkd4wdcRgxrfwc1F8Z+/QXw9Vrmszl0oHLmD2F7FfMesFbEJky2DZgJSM+s16iDsWNSogvtv5Qbw/R3pauOJfhey1NqRV6PT4NbFozptvwxl2Sk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769642316; c=relaxed/simple;
-	bh=09t+8ErG5jND80w/LMShQhNKI4RRXrltJYelXSSu+U0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cs6zUh/XO7N8r/GG6AtdzQeTArKy//Amzhm6KLwt8jsXO7SP3IVJ9XzFIKLK4LPoRiMidiUKXYK0yrU2x9rjwHhf4HnAsKsBWTdGUimvQpaE2xyIH9dvEukjETNjXFSubXJ81/pMsjCMGrzf9Edzy/cTIGevjUJoX7rg/KE7uIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=nKMTmsot; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (unknown [20.191.74.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id CD86D20B7165;
-	Wed, 28 Jan 2026 15:18:33 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CD86D20B7165
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1769642314;
-	bh=xduUeD+GReQzIkX+hcESA/g/QXXq/S/0aYR/LH0XWBo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nKMTmsotHO0pMWNLpPIAhDeq2CzUjPQudQl8tZjRovfXI5Okn+P6wUR8VxMDWIDWv
-	 YkHc+9923DjxUmtsofPn82V0e6AhS1aak9lOOgmDZlYXWgEebkAO9xNedY4HPrY+Jn
-	 SEEz0n2vtPon6rUZ5fBbAjLh/JWQbH8rN/9Qze40=
-Date: Wed, 28 Jan 2026 15:18:32 -0800
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Mukesh R <mrathor@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] mshv: Introduce hv_deposit_memory helper functions
-Message-ID: <aXqZSKmRdJMc6x5u@skinsburskii.localdomain>
-References: <176913164914.89165.5792608454600292463.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <176913212322.89165.12915292926444353627.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <23f52e20-f156-a2aa-ff04-00dc55238c51@linux.microsoft.com>
- <aXacAQP3gjZ1gSLs@skinsburskii.localdomain>
- <df21ce10-3cd5-9d78-a3ce-84c4b1ff9275@linux.microsoft.com>
- <aXkEMnDy8UFwJitP@skinsburskii.localdomain>
- <8d141a6a-d06f-f91a-686b-82f8f0facabc@linux.microsoft.com>
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazolkn19010003.outbound.protection.outlook.com [52.103.20.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A01199FBA;
+	Thu, 29 Jan 2026 04:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.3
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769660520; cv=fail; b=ntgf/uKMBf5tqnxgBVsPtXOaSqQZGSH/WZSdjXKncosVBSgDx5q8XA7QqNBonfksLljeqfdN15vI3v+K6DXV+ElN+A6ah/qGrXkPeXsNklt3inhxeu9DKj8OwwMpftuKXQ23l7p6WCBzJI4aoESKoK3Nf/mOQkAYi/iRUfvBUGE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769660520; c=relaxed/simple;
+	bh=Vg72rODSzftz3cN01Iy6FR/6qLi/ch4YDlAW1lB8cGs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=cbVxPU8jDsRTxrvGEPw30NaPBGbWnO5SBgGuKqSmgGGe6VYIVgBh7VYgvE1V05e67WZqo/DaVFAXaVBQ6PKJIOX2YXIXuCmRuveRMq4TnWfbm/UaAaqoPVM0vV+Q/7i7HHb816jRKr+8B2h4ftTqOBYEiLUPDDOp/netUUgi6mI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=kL2R6ubw; arc=fail smtp.client-ip=52.103.20.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mo70tgdJ5i7kdytmOW/kbw7bN/h6udvNOG4oopPQqhatpBece7Np0/tDcT/egTrfP9AEisSjoCynAKdzlwwl6S2liklso+GSbyzqR77BE94h3CpQHOJfeMVzEfOUUzg0nMYM9YEXIYApAFCtHLzkqwGJHnCMZQy7cDCDoofozQW384vAl6NHoGiH+W/I362Jd6eexLr7eUOXFvObZw4iF3S2SeBsv4fA/74ickmWs7Lpi6Y5Us4R/43cTzF6Seb+MIoyEFi23i/I4Z7CI6QRHThiyeYLlsncBPHAeVrKmHNjhz5bV4yr5pmgTHEjaWc/naiQ4YRGsnUYBvHLpXVW6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iw5sJVypjKmyCU82+TUKppE68sYCXrA8PnKEiauCxIM=;
+ b=EEqiSO+rMQH6iolo+g72szTqxS+f48mzK0zM+XXlqNlZP9rItoB5IWgKbqYZOLpZnQjOFjRi7mxt9O8vZ6gFuOgLh3BUCMf2YL4osM9UWoBhTR9umWI3TTQt0kYIOl0fxL4zfM4Nz6ZYvUb3gvU4PZvBPDfxd8wfCWQj+QpKHL1iuEtcan4t1xzZTrwOURuG8BoxB9NL/jASy7mdv67XSCV84HPueNGJbpZnoSsk3+3sjzUrmAXu7crF4FPzKntV6EU8XKKSS/YvHcXNkYK0ldIQlKL9+SwItzWGLER/Iv4snWjZbaDGd/foj9a7m8kn+oYwJKsHLnYimlIXe1YZfw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iw5sJVypjKmyCU82+TUKppE68sYCXrA8PnKEiauCxIM=;
+ b=kL2R6ubw2YxvBaTyqmuCHN8iIfVNJhYfSh5kxJtZxCymjWCZ4YXsPkG9QRxuTDx9C2PYKx8jreQEgCzVmznPbIBSDO2JTsxOcJJHvdbZr1mzcCnJ/PR4hb/W9AkiPfanGbNTXzNijFRf/jJW6zRQ9lsa9UWuln7n8MzqpgNQi123eweSD3JuiYAuTc0sNG7MoFtjwqcLZxfTYt+wuWZwVS5NdWHvqt7OlYo+UHtUZ+rn0+tWu7U/ROQrdbuM9haKJqHt/gTqY5w/oS/mW8sL3KsJ/ApKuFAeD5lOoVwZ5fGfDmwFD5/rfmdwOHJSVpophblq6dIDU/q+WnlTjUWGsg==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by IA0PR02MB9808.namprd02.prod.outlook.com (2603:10b6:208:490::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.15; Thu, 29 Jan
+ 2026 04:21:56 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6%6]) with mapi id 15.20.9564.006; Thu, 29 Jan 2026
+ 04:21:56 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Mukesh R <mrathor@linux.microsoft.com>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+CC: "wei.liu@kernel.org" <wei.liu@kernel.org>
+Subject: RE: [PATCH V0] x86/hyperv: Fix compiler warnings in hv_crash.c
+Thread-Topic: [PATCH V0] x86/hyperv: Fix compiler warnings in hv_crash.c
+Thread-Index: AQHcioqaeW54Ou9v50GB7tADNUOJnrVomILg
+Date: Thu, 29 Jan 2026 04:21:56 +0000
+Message-ID:
+ <SN6PR02MB4157F7458CA9AE3F84B9B95BD49EA@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20260121024045.3834787-1-mrathor@linux.microsoft.com>
+In-Reply-To: <20260121024045.3834787-1-mrathor@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|IA0PR02MB9808:EE_
+x-ms-office365-filtering-correlation-id: 62835aa7-c888-48a4-105a-08de5eedf06b
+x-ms-exchange-slblob-mailprops:
+ P1EfU6pZOd8VPwDsmXmpSwyPl9aRR8R+GDi+H6fd4ugzEk+W70RbYs54E1NAzTf/yJAxVd6pKMWa5DoW6YaudKeFjDCma01WV2KHxZpRx6P4gMSpMAdKPJfrCzWzSEVW1irytBxm2m+euO7qchSnOY+rfaZQI9ZMykVAb0MHgKQQmvdd8PsAf/ReVMOmRp9exDqcp0owLMjmsvuvrbARqt+pmVl2pkzp6RfF6I1rii8PuVlfGLhcnE2a5ZbY8ZnRiBmcOVADZv8Fno5colbcPf6m2CYgtIJKwH+FzE+a47aYRQlG1X4VVr5t3co1O0ZHu0e8QuVWfj3hFUpLkPMi/E5hfUq0DnKcfhxZs45w6AL0mGc163/MZnLtYbLzQWoaL/JL1vdm0jVhfCJznzNgdQ6ogYAwQBfeHGogQdFgaRq5KSa5gD/X0fLrjw9wi3fCbfo3Av5jM2jIPvK54y5PlVtqe8FYa/nvMocZMavEZjWGlslnfKLVTPD/c8GL1Dpg9N1bKX7uBwWn48LRbpkrUUYYUNWT5dJnUAkduW2OyQCokbMO80jFdVn6kIgmzpkOxy+Uy1hD3m1ZIKTJYDV1ITb/579zzrb32JgqE+ZECKmaXGpFkswzHHTU10Z3xDz6d0CVkzW5/ZctfjKSYz33fxSn6GHprIO+unUgK/IQakY45X8eA09FV7FnRLh/P0Gp/HA6AXfPXQRHuj3E1r2WHmYZS23bO83vxUcDSyXIKj7XJk3YAilxr/ZwpUlumF1YRDStPtkr7zN0ygj2ec/TX73MNN1X9FOjIZxPG9sNL+7s5foPztOXSQ==
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|19110799012|41001999006|8060799015|15080799012|13091999003|8062599012|51005399006|461199028|31061999003|1602099012|10035399007|440099028|3412199025|4302099013|40105399003|102099032;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?gKamrhDJFeQMYS4rbObMbjQkyjFMeTyRUFP2vw+Lts9k3qYQuJi6afwqSKjw?=
+ =?us-ascii?Q?bkcy9+hQ+NYBBE6q/c5HjXSddNwdtdPjvGdfdZ5/sDuFpWfHclkPi5C2E9Ij?=
+ =?us-ascii?Q?fyWOKvbYibuWVhHOBBekVQFlc1zFeZ04yfXEQwcHqzihvluUKtwyQNTR6by1?=
+ =?us-ascii?Q?WLjBJ7xKyFlDIS73XYx00nVGl7wvkL5VTKFDjG6HTeL0YwffJTaXTtQGNzms?=
+ =?us-ascii?Q?5eljZ5FK8yOqhL80aEOS4SasS+/ZTDkOGta7awtDgHmphsWrXzMXzHAmZOoN?=
+ =?us-ascii?Q?mWR87FRROvA2igsB2SAmTKOSMhPoEVjPqV/o00foprxTbHi4WGcBkJeIahTY?=
+ =?us-ascii?Q?JjQ4x2gdXuwbjtzp0Y5I1wokxhRPLwvd+oOcg0NH27vuEMsrnG2HOjAp8M+d?=
+ =?us-ascii?Q?STVYyTekmrRPH/Pj3nQziG+rC/0/cgGnSaoc5Rq1dIy0+DgWQ1kiW8ccm+Qh?=
+ =?us-ascii?Q?BMf7QccT0F3asmzzqx8cw7M4nMD6vICwwT6xo9475NYO4qWNzSeYAz6B+2KM?=
+ =?us-ascii?Q?pCXD3jRm42iThvjTuvZYJMV0YL1h/GlIQ53I3jAkJeo3Bok/iS5m7qJowyhI?=
+ =?us-ascii?Q?Q5Oar1+RzXDVHiI4CSvI2Oje5CrNwmvSZIegZ1gtUvaiETSToHirJwuUFEp2?=
+ =?us-ascii?Q?V/XqfjqJ+/wfY00IfeDRFuVLi62Dl/lJngndawMntA8ojOgTVQF3HW5WojTH?=
+ =?us-ascii?Q?LeGlw7bX17R2rnG1JncC1uPA4npzIS6vY/oshSwdyjulZ2TqYo4xjaMoS0Vo?=
+ =?us-ascii?Q?E2cRHrqrJ0yV18+9FVXiexybPg+q+gNzyXTUFV81O2zI29KWZgQqNo1oPapp?=
+ =?us-ascii?Q?dgyRgTDFERdd99khAqnqFDt51SeR0jbxkMLiN0WIYIOxjUTy2v+rjipqS1tI?=
+ =?us-ascii?Q?LSV+E0/hu6MRvPfYClb5FjopbboTtuy3956Y2tBwPw5BmzG0h2GITXFthVCY?=
+ =?us-ascii?Q?OHCfP3BOMmUTiwp9MRMgmgZp006xJfqcdSIfc64G+UdUi65u7im+qtHNgsOc?=
+ =?us-ascii?Q?2lm5my1NgbhooSeB0hYRDRu9U6APfxCFgoKl9Fsria8YKjkr2BVIX/O/C8dJ?=
+ =?us-ascii?Q?wP3AdI3hmmDo7sEoYSL3FS7zmd/pW9X3ZDbEj/Qhss6E5KyeWOhsy59jfZBV?=
+ =?us-ascii?Q?WEKeC53tDFD8cfDv+8lEKxkLl71QSydcQyuIyHCb/Fbe+2x3l4WluvgLXMkp?=
+ =?us-ascii?Q?wflRAdnu3/HDMYNklPJ+qOtojuqkuFx8WVLu7Bwl3jOgKSVDt6WOIbtVeb5h?=
+ =?us-ascii?Q?lPDpbDlop0X2E0fp3lQYgCNbAlOMoUTffwScWzOkutcM/whb8onVRXYOMNFN?=
+ =?us-ascii?Q?KCdXWrPhH4fSulnh/EyEUPVMzpCjtnMU3ev2eFYz1ifSukMzzlzUw2KPFojQ?=
+ =?us-ascii?Q?juXThJluYcu0wqRVScoAe4m6zTp9?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?fuQ8IXsJt5pjGCD+XKGmL+x1iOTdNl/5RHD7WmORwHHUEBqssTTh42fHHook?=
+ =?us-ascii?Q?6a0iuSUJKcdq5Qsjwy7zPLKjqoj+3rxmqLvBOhbUZJ1YXtdEgQxWHKcLrDqv?=
+ =?us-ascii?Q?zUYsl17PfAYdGZ3g0HYdEw0JAzlXWaatkSEcxzRTAKaJbjM7FlhD7xYSsLAE?=
+ =?us-ascii?Q?/eTiILxn/DyzQWa7nX2WBt5gWBZsAh/4HhaFdRtCJxR2yYlZHbpZjmoq3kep?=
+ =?us-ascii?Q?RAVCcA+UnZbx0XX2axjldb1YJNmC0mxDZsAkAfyH+qwvxHv2KASJqdB5uooY?=
+ =?us-ascii?Q?/JelmsXuj3d8iyeXpN+XUcNpMjnylRfcs2bEXYriPLMV1NtxB+lsTjrCz7jp?=
+ =?us-ascii?Q?OofoBvXxizUvqISMjZRO9K6EPhw6iKNGJn8Hd9x/Cx2MzMpSeEuxaHbmXeBV?=
+ =?us-ascii?Q?urLvTmyZReQmw7raZbvsNilNA52VL28hySQiOx8ZTyjnGxiMI7AZcIiH0BbW?=
+ =?us-ascii?Q?pXLFa/R/g5DcrdBkq6YhMfRWM2yH2ZHsH7M2DaupGn2lPHSbg8AFCIlyFkrM?=
+ =?us-ascii?Q?Xm2loFlOf01BUuDb3nBHldkeXF8Q6Lp1i8vw2s2X7vba7+cEPavzFBzkqBr0?=
+ =?us-ascii?Q?pKYDyk/RrTXqX4CRuN+3DVZWJzYncFc+19dHwc8+Dgm3q3fHO3vojWOGtHLL?=
+ =?us-ascii?Q?q1Qj2Ax/YbW7L9v7JWmCupJkrAZlmDgGjTkzet4bPKnNpwjqAv8EzI65Wy8d?=
+ =?us-ascii?Q?5Uu1vH4YGyxO7XvlFlCmaiS5M2o080Z2xpSFDUrrsU5ZF44u6t1SxoFu0gi/?=
+ =?us-ascii?Q?11ZdK6l1VWwePUIf6HgSfX+fuw46aWNE6M+Jj7m6oaHUUSD+G1uvpj+sy8iS?=
+ =?us-ascii?Q?ARm2Pa+GIP6fD3MrW7N0y10otVMeq3L+01ociXOuQXSIH0IKh8SbR+ZBtfYh?=
+ =?us-ascii?Q?UK7gMXjTWgG+OOOinS1S00Ik/qsxZdyxRPq4trpjhNVN5jcDSLDUdLmK2JjT?=
+ =?us-ascii?Q?Mv5SdNbOHvYYF38w++JaM+577p8ho0I4YaYgMM9wslHLPi33V6d6AreoJVT+?=
+ =?us-ascii?Q?DrGGv/l2NbSm1R80rPQgDiXhF/Q2OFKg+0/9v3oyir2Cnm9LRoaxSa1fLO2J?=
+ =?us-ascii?Q?VopC6KsMXCXZPyNrcJwb3xHZPkXMc5wwtfiLDp27Vna6aEaiOX0E/zH/NfK6?=
+ =?us-ascii?Q?m6+MN3ugKm1X7KlpVCkBg4ojMDdExL5++TgdD+VgvCPcL4egEbfKnVL3KNf4?=
+ =?us-ascii?Q?2jdmmRibhfT4gCTbvVGgv7e8+8Mtpvm4ysqc3sUFgkh0nPD7btlOEb35xNbP?=
+ =?us-ascii?Q?6KfCnUDM/VZakcg6F0LV/Z2uoiKA+9qpSB95154JngKreWemu0jcTvKAJpvw?=
+ =?us-ascii?Q?pIPXzheutH4tJnzd5BsMaaxVnz4m+s+/nN9RZgsZJL12sAkH3ZnMSWcd+h0E?=
+ =?us-ascii?Q?I5y3YRc=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8d141a6a-d06f-f91a-686b-82f8f0facabc@linux.microsoft.com>
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62835aa7-c888-48a4-105a-08de5eedf06b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jan 2026 04:21:56.6576
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR02MB9808
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
+	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8579-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8580-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FREEMAIL_FROM(0.00)[outlook.com];
 	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[outlook.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: 64399A9F05
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,outlook.com:dkim,intel.com:email]
+X-Rspamd-Queue-Id: B1DE1ABA67
 X-Rspamd-Action: no action
 
-On Tue, Jan 27, 2026 at 11:44:25AM -0800, Mukesh R wrote:
-> On 1/27/26 10:30, Stanislav Kinsburskii wrote:
-> > On Mon, Jan 26, 2026 at 06:06:23PM -0800, Mukesh R wrote:
-> > > On 1/25/26 14:41, Stanislav Kinsburskii wrote:
-> > > > On Fri, Jan 23, 2026 at 04:33:39PM -0800, Mukesh R wrote:
-> > > > > On 1/22/26 17:35, Stanislav Kinsburskii wrote:
-> > > > > > Introduce hv_deposit_memory_node() and hv_deposit_memory() helper
-> > > > > > functions to handle memory deposition with proper error handling.
-> > > > > > 
-> > > > > > The new hv_deposit_memory_node() function takes the hypervisor status
-> > > > > > as a parameter and validates it before depositing pages. It checks for
-> > > > > > HV_STATUS_INSUFFICIENT_MEMORY specifically and returns an error for
-> > > > > > unexpected status codes.
-> > > > > > 
-> > > > > > This is a precursor patch to new out-of-memory error codes support.
-> > > > > > No functional changes intended.
-> > > > > > 
-> > > > > > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> > > > > > ---
-> > > > > >     drivers/hv/hv_proc.c           |   22 ++++++++++++++++++++--
-> > > > > >     drivers/hv/mshv_root_hv_call.c |   25 +++++++++----------------
-> > > > > >     drivers/hv/mshv_root_main.c    |    3 +--
-> > > > > >     include/asm-generic/mshyperv.h |   10 ++++++++++
-> > > > > >     4 files changed, 40 insertions(+), 20 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
-> > > > > > index 80c66d1c74d5..c0c2bfc80d77 100644
-> > > > > > --- a/drivers/hv/hv_proc.c
-> > > > > > +++ b/drivers/hv/hv_proc.c
-> > > > > > @@ -110,6 +110,23 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
-> > > > > >     }
-> > > > > >     EXPORT_SYMBOL_GPL(hv_call_deposit_pages);
-> > > > > > +int hv_deposit_memory_node(int node, u64 partition_id,
-> > > > > > +			   u64 hv_status)
-> > > > > > +{
-> > > > > > +	u32 num_pages;
-> > > > > > +
-> > > > > > +	switch (hv_result(hv_status)) {
-> > > > > > +	case HV_STATUS_INSUFFICIENT_MEMORY:
-> > > > > > +		num_pages = 1;
-> > > > > > +		break;
-> > > > > > +	default:
-> > > > > > +		hv_status_err(hv_status, "Unexpected!\n");
-> > > > > > +		return -ENOMEM;
-> > > > > > +	}
-> > > > > > +	return hv_call_deposit_pages(node, partition_id, num_pages);
-> > > > > > +}
-> > > > > > +EXPORT_SYMBOL_GPL(hv_deposit_memory_node);
-> > > > > > +
-> > > > > 
-> > > > > Different hypercalls may want to deposit different number of pages in one
-> > > > > shot. As feature evolves, page sizes get mixed, we'd almost need that
-> > > > > flexibility. So, imo, either we just don't do this for now, or add num pages
-> > > > > parameter to be passed down.
-> > > > > 
-> > > > 
-> > > > What you do mean by "page sizes get mixed"?
-> > > > A helper to deposit num pages already exists: its
-> > > > hv_call_deposit_pages().
-> > > 
-> > > My point, you are removing number of pages, and we may want to keep
-> > > that so one can quickly play around and change them.
-> > > 
-> > > -                       ret = hv_call_deposit_pages(NUMA_NO_NODE,
-> > > -                                                   pt_id, 1);
-> > > +                       ret = hv_deposit_memory(pt_id, status);
-> > > 
-> > > For example, in hv_call_initialize_partition() we may realize after
-> > > some analysis that depositing 2 pages or 4 pages is much better.
-> > > 
-> > 
-> > We have been using this 1-page deposit logic from the beginning. To
-> > change the number of pages, simply replace hv_deposit_memory with
-> > hv_call_deposit_pages and specify the desired number of pages.
-> 
-> You could perhaps rename it to hv_deposit_page().
-> 
+From: Mukesh R <mrathor@linux.microsoft.com> Sent: Tuesday, January 20, 202=
+6 6:41 PM
+>=20
+> Fix two compiler warnings:
+>   o smp_ops is only defined if CONFIG_SMP
+>   o status is set but not explicitly used.
+>=20
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202512301641.FC6OAbGM-lkp@i=
+ntel.com/
+> Signed-off-by: Mukesh R <mrathor@linux.microsoft.com>
+> ---
+>  arch/x86/hyperv/hv_crash.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/arch/x86/hyperv/hv_crash.c b/arch/x86/hyperv/hv_crash.c
+> index c0e22921ace1..82915b22ceae 100644
+> --- a/arch/x86/hyperv/hv_crash.c
+> +++ b/arch/x86/hyperv/hv_crash.c
+> @@ -279,7 +279,6 @@ static void hv_notify_prepare_hyp(void)
+>  static noinline __noclone void crash_nmi_callback(struct pt_regs *regs)
+>  {
+>  	struct hv_input_disable_hyp_ex *input;
+> -	u64 status;
+>  	int msecs =3D 1000, ccpu =3D smp_processor_id();
+>=20
+>  	if (ccpu =3D=3D 0) {
+> @@ -313,7 +312,7 @@ static noinline __noclone void crash_nmi_callback(str=
+uct
+> pt_regs *regs)
+>  	input->rip =3D trampoline_pa;
+>  	input->arg =3D devirt_arg;
+>=20
+> -	status =3D hv_do_hypercall(HVCALL_DISABLE_HYP_EX, input, NULL);
+> +	hv_do_hypercall(HVCALL_DISABLE_HYP_EX, input, NULL);
+>=20
+>  	hv_panic_timeout_reboot();
+>  }
+> @@ -628,8 +627,9 @@ void hv_root_crash_init(void)
+>  	if (rc)
+>  		goto err_out;
+>=20
+> +#ifdef CONFIG_SMP
+>  	smp_ops.crash_stop_other_cpus =3D hv_crash_stop_other_cpus;
+> -
+> +#endif
+>  	crash_kexec_post_notifiers =3D true;
+>  	hv_crash_enabled =3D true;
+>  	pr_info("Hyper-V: both linux and hypervisor kdump support enabled\n");
+> --
+> 2.51.2.vfs.0.1
+>=20
 
-Yes, this would be a good name, but unfortunately we can now receive
-statuses like HV_STATUS_INSUFFICIENT_CONTIGUOUS_MEMORY, where we need to
-deposit at least 8 consecutive pages. There is also another pair of
-status codes for required root pages, even when a guest partition-related
-hypercall is performed (see the next patch for details).
-This new helper is intended to cover all such cases, instead of branching
-for all these different cases in every function.
+Ingo Molnar has separately fixed the smp_ops problem in [1]. Removing
+the unused "status" value looks good to me, though it's probably slightly
+better to add (void) to hv_do_hypercall() as an explicit acknowledgement
+that there's a return value that's not relevant and is being ignored; i.e.,
 
-Thanks,
-Stanislav
+	(void)hv_do_hypercall(HVCALL_DISABLE_HYP_EX, input, NULL);
 
+Regardless, for the unused "status" part of this patch,
 
-> > The proposed approach reduces code duplication and is less error-prone,
-> > as there are multiple error codes to handle. Consolidating the logic
-> > also makes the driver more robust.
-> > 
-> > 
-> > Thanks,  Stanislav
-> > 
-> > > > Thanks,
-> > > > Stanislav
-> > > > 
-> > > > > Thanks,
-> > > > > -Mukesh
-> > > > > 
-> > > > > 
-> > > > > 
-> > > > > >     bool hv_result_oom(u64 status)
-> > > > > >     {
-> > > > > >     	switch (hv_result(status)) {
-> > > > > > @@ -155,7 +172,8 @@ int hv_call_add_logical_proc(int node, u32 lp_index, u32 apic_id)
-> > > > > >     			}
-> > > > > >     			break;
-> > > > > >     		}
-> > > > > > -		ret = hv_call_deposit_pages(node, hv_current_partition_id, 1);
-> > > > > > +		ret = hv_deposit_memory_node(node, hv_current_partition_id,
-> > > > > > +					     status);
-> > > > > >     	} while (!ret);
-> > > > > >     	return ret;
-> > > > > > @@ -197,7 +215,7 @@ int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags)
-> > > > > >     			}
-> > > > > >     			break;
-> > > > > >     		}
-> > > > > > -		ret = hv_call_deposit_pages(node, partition_id, 1);
-> > > > > > +		ret = hv_deposit_memory_node(node, partition_id, status);
-> > > > > >     	} while (!ret);
-> > > > > > diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
-> > > > > > index 58c5cbf2e567..06f2bac8039d 100644
-> > > > > > --- a/drivers/hv/mshv_root_hv_call.c
-> > > > > > +++ b/drivers/hv/mshv_root_hv_call.c
-> > > > > > @@ -123,8 +123,7 @@ int hv_call_create_partition(u64 flags,
-> > > > > >     			break;
-> > > > > >     		}
-> > > > > >     		local_irq_restore(irq_flags);
-> > > > > > -		ret = hv_call_deposit_pages(NUMA_NO_NODE,
-> > > > > > -					    hv_current_partition_id, 1);
-> > > > > > +		ret = hv_deposit_memory(hv_current_partition_id, status);
-> > > > > >     	} while (!ret);
-> > > > > >     	return ret;
-> > > > > > @@ -151,7 +150,7 @@ int hv_call_initialize_partition(u64 partition_id)
-> > > > > >     			ret = hv_result_to_errno(status);
-> > > > > >     			break;
-> > > > > >     		}
-> > > > > > -		ret = hv_call_deposit_pages(NUMA_NO_NODE, partition_id, 1);
-> > > > > > +		ret = hv_deposit_memory(partition_id, status);
-> > > > > >     	} while (!ret);
-> > > > > >     	return ret;
-> > > > > > @@ -465,8 +464,7 @@ int hv_call_get_vp_state(u32 vp_index, u64 partition_id,
-> > > > > >     		}
-> > > > > >     		local_irq_restore(flags);
-> > > > > > -		ret = hv_call_deposit_pages(NUMA_NO_NODE,
-> > > > > > -					    partition_id, 1);
-> > > > > > +		ret = hv_deposit_memory(partition_id, status);
-> > > > > >     	} while (!ret);
-> > > > > >     	return ret;
-> > > > > > @@ -525,8 +523,7 @@ int hv_call_set_vp_state(u32 vp_index, u64 partition_id,
-> > > > > >     		}
-> > > > > >     		local_irq_restore(flags);
-> > > > > > -		ret = hv_call_deposit_pages(NUMA_NO_NODE,
-> > > > > > -					    partition_id, 1);
-> > > > > > +		ret = hv_deposit_memory(partition_id, status);
-> > > > > >     	} while (!ret);
-> > > > > >     	return ret;
-> > > > > > @@ -573,7 +570,7 @@ static int hv_call_map_vp_state_page(u64 partition_id, u32 vp_index, u32 type,
-> > > > > >     		local_irq_restore(flags);
-> > > > > > -		ret = hv_call_deposit_pages(NUMA_NO_NODE, partition_id, 1);
-> > > > > > +		ret = hv_deposit_memory(partition_id, status);
-> > > > > >     	} while (!ret);
-> > > > > >     	return ret;
-> > > > > > @@ -722,8 +719,7 @@ hv_call_create_port(u64 port_partition_id, union hv_port_id port_id,
-> > > > > >     			ret = hv_result_to_errno(status);
-> > > > > >     			break;
-> > > > > >     		}
-> > > > > > -		ret = hv_call_deposit_pages(NUMA_NO_NODE, port_partition_id, 1);
-> > > > > > -
-> > > > > > +		ret = hv_deposit_memory(port_partition_id, status);
-> > > > > >     	} while (!ret);
-> > > > > >     	return ret;
-> > > > > > @@ -776,8 +772,7 @@ hv_call_connect_port(u64 port_partition_id, union hv_port_id port_id,
-> > > > > >     			ret = hv_result_to_errno(status);
-> > > > > >     			break;
-> > > > > >     		}
-> > > > > > -		ret = hv_call_deposit_pages(NUMA_NO_NODE,
-> > > > > > -					    connection_partition_id, 1);
-> > > > > > +		ret = hv_deposit_memory(connection_partition_id, status);
-> > > > > >     	} while (!ret);
-> > > > > >     	return ret;
-> > > > > > @@ -848,8 +843,7 @@ static int hv_call_map_stats_page2(enum hv_stats_object_type type,
-> > > > > >     			break;
-> > > > > >     		}
-> > > > > > -		ret = hv_call_deposit_pages(NUMA_NO_NODE,
-> > > > > > -					    hv_current_partition_id, 1);
-> > > > > > +		ret = hv_deposit_memory(hv_current_partition_id, status);
-> > > > > >     	} while (!ret);
-> > > > > >     	return ret;
-> > > > > > @@ -885,8 +879,7 @@ static int hv_call_map_stats_page(enum hv_stats_object_type type,
-> > > > > >     			return ret;
-> > > > > >     		}
-> > > > > > -		ret = hv_call_deposit_pages(NUMA_NO_NODE,
-> > > > > > -					    hv_current_partition_id, 1);
-> > > > > > +		ret = hv_deposit_memory(hv_current_partition_id, status);
-> > > > > >     		if (ret)
-> > > > > >     			return ret;
-> > > > > >     	} while (!ret);
-> > > > > > diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-> > > > > > index f4697497f83e..5fc572e31cd7 100644
-> > > > > > --- a/drivers/hv/mshv_root_main.c
-> > > > > > +++ b/drivers/hv/mshv_root_main.c
-> > > > > > @@ -264,8 +264,7 @@ static int mshv_ioctl_passthru_hvcall(struct mshv_partition *partition,
-> > > > > >     		if (!hv_result_oom(status))
-> > > > > >     			ret = hv_result_to_errno(status);
-> > > > > >     		else
-> > > > > > -			ret = hv_call_deposit_pages(NUMA_NO_NODE,
-> > > > > > -						    pt_id, 1);
-> > > > > > +			ret = hv_deposit_memory(pt_id, status);
-> > > > > >     	} while (!ret);
-> > > > > >     	args.status = hv_result(status);
-> > > > > > diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-> > > > > > index b73352a7fc9e..c8e8976839f8 100644
-> > > > > > --- a/include/asm-generic/mshyperv.h
-> > > > > > +++ b/include/asm-generic/mshyperv.h
-> > > > > > @@ -344,6 +344,7 @@ static inline bool hv_parent_partition(void)
-> > > > > >     }
-> > > > > >     bool hv_result_oom(u64 status);
-> > > > > > +int hv_deposit_memory_node(int node, u64 partition_id, u64 status);
-> > > > > >     int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages);
-> > > > > >     int hv_call_add_logical_proc(int node, u32 lp_index, u32 acpi_id);
-> > > > > >     int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags);
-> > > > > > @@ -353,6 +354,10 @@ static inline bool hv_root_partition(void) { return false; }
-> > > > > >     static inline bool hv_l1vh_partition(void) { return false; }
-> > > > > >     static inline bool hv_parent_partition(void) { return false; }
-> > > > > >     static inline bool hv_result_oom(u64 status) { return false; }
-> > > > > > +static inline int hv_deposit_memory_node(int node, u64 partition_id, u64 status)
-> > > > > > +{
-> > > > > > +	return -EOPNOTSUPP;
-> > > > > > +}
-> > > > > >     static inline int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
-> > > > > >     {
-> > > > > >     	return -EOPNOTSUPP;
-> > > > > > @@ -367,6 +372,11 @@ static inline int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u3
-> > > > > >     }
-> > > > > >     #endif /* CONFIG_MSHV_ROOT */
-> > > > > > +static inline int hv_deposit_memory(u64 partition_id, u64 status)
-> > > > > > +{
-> > > > > > +	return hv_deposit_memory_node(NUMA_NO_NODE, partition_id, status);
-> > > > > > +}
-> > > > > > +
-> > > > > >     #if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
-> > > > > >     u8 __init get_vtl(void);
-> > > > > >     #else
-> > > > > > 
-> > > > > > 
-> 
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+
+[1] https://lore.kernel.org/all/176959812223.510.4055929851272785854.tip-bo=
+t2@tip-bot2/
 
