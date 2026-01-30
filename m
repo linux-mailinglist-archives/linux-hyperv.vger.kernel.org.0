@@ -1,50 +1,50 @@
-Return-Path: <linux-hyperv+bounces-8596-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8597-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mJYaBxEdfGmAKgIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8596-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 03:53:05 +0100
+	id EWyKCJkefGmgKgIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8597-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 03:59:37 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F6A1B697E
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 03:53:04 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 638CDB6A54
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 03:59:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D46CB300D449
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 02:53:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F1556300D453
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 02:59:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D4592FD1CF;
-	Fri, 30 Jan 2026 02:53:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ADC22459E5;
+	Fri, 30 Jan 2026 02:59:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lTq+nwuB"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rP06X/uD"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1310F1E3DDE;
-	Fri, 30 Jan 2026 02:53:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17FE2D531;
+	Fri, 30 Jan 2026 02:59:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769741582; cv=none; b=rQgnvQNZXMR+pcENsjOsLsTUhxuJ7dd4qvsELHmrsRGXFWqGHorGLkLgYK3UJZ5Zubz4QCoDxdxVh6r4hbwoNWwpM1lIZt7AbmHzFeMWlMJ5TukNuTNMHeC/ewG/5rY3zlgwnVJjtP4FOC6YTNVLA7Nvbmk0lVeLiw3AcGmi05I=
+	t=1769741974; cv=none; b=uCiFX50n6bQlnP1Fci2ahK8iCsmAODkEq1ERAcxDIYwnKX+6vU1j1ZeVi/B1rNnLjI7XQ4aU8dDBYsg9HOmPRSrFr4vZoBz6wf3R5UwRYvkpo2+qDRu6uUN3PZ1iNQUEUxOE3nV+M8CHuAEzliCpOmIFBG0mA6hUUu4+S4N1A4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769741582; c=relaxed/simple;
-	bh=pa9KSP2ETTIjMmTecDGbtbIslfVbLGe6PnXsrnXYGKY=;
+	s=arc-20240116; t=1769741974; c=relaxed/simple;
+	bh=7Uk+ZEuPYatvsyaJm2suJb7vBz2Tyy/2XKhvZ1E5ZIE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mTTGBksUxM5lH+X7d4BLhpMnrZhdls7KmR9Q4loFx5YbliR+gskWqXFVuz+SVex+R12b2NOeLoi6/S5EVSQO3fpU0zxh2rngpvXCqZlMqNhU+l/wtgQ0R4hUnSkX1XdM2alLTy0Umbz+4YIUcHRt0bOiysX8T8yvQq3+4DLlSz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lTq+nwuB; arc=none smtp.client-ip=13.77.154.182
+	 In-Reply-To:Content-Type; b=k11OvwoPBCtF/kkcFYJ58hulFs9sReTtyofl7FgUqlaE2UT+FZ8eHrwZT7U50/reUHw+nhttdPVkh8HdZmZh9nPunWPtSXS3ZeiIxXZdiWq2z40T/JirFxzzXnS8iAyWTOzQaInHYKfnV+XRCogmsHpAQEFfaI56ezaTGK0dU18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rP06X/uD; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from [100.93.96.72] (unknown [40.118.131.60])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5689020B7167;
-	Thu, 29 Jan 2026 18:53:00 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5689020B7167
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8662E20B7167;
+	Thu, 29 Jan 2026 18:59:32 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8662E20B7167
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1769741580;
-	bh=qJbEnXaZFlp7XQYHqLovcTm6TAqRuPhpqXHxd4OSaQ0=;
+	s=default; t=1769741972;
+	bh=ws8fU+u6oIT40gVv4hOR3t6onI87N9K9q5BzJacLZHc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lTq+nwuBIzU2NUDrjYwnqvB9RrUgFkCFhn0A+jejgcBzpE+RJs86AaNf6c/Zx6079
-	 sE41OcIBVxjn4FjJAcfMlDI0TYzNvJ6sLu2A+7kXIbFzKqjnFecDuOGlpRPsU+dwj/
-	 rRpHIzKLLF31N71zvGx9JUGOslVEoc4bkF4AIDio=
-Message-ID: <6e480ee7-683a-e5f1-7448-51f257d58614@linux.microsoft.com>
-Date: Thu, 29 Jan 2026 18:52:59 -0800
+	b=rP06X/uDitH1hgfYmE2n93gX6MSU5UMkHwIo7J/LWVuGIvxV69tPwBTjbd5gmxJy5
+	 NE40N630YpmNwNAZxSn11asXXH1xO09j+8pre5Vrm5xgdqNDkS07F/LsbvCtvv+8Nb
+	 gHWVrsD2zIDF/xxX1wusJD90QO0c1LqH4Pykpags=
+Message-ID: <919446c3-e02f-d532-3ea8-74d0cee38d33@linux.microsoft.com>
+Date: Thu, 29 Jan 2026 18:59:31 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -55,15 +55,10 @@ User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.13.1
 Subject: Re: [PATCH] mshv: Make MSHV mutually exclusive with KEXEC
 Content-Language: en-US
-To: Michael Kelley <mhklinux@outlook.com>,
- Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "longli@microsoft.com" <longli@microsoft.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, longli@microsoft.com, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 References: <176920684805.250171.6817228088359793537.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
  <549041d1-360d-d34c-4e3b-62802346acaa@linux.microsoft.com>
  <aXabnnCV50Thv9tZ@skinsburskii.localdomain>
@@ -74,51 +69,43 @@ References: <176920684805.250171.6817228088359793537.stgit@skinsburskii-cloud-de
  <257ad7f1-5dc0-2644-41c3-960c396caa38@linux.microsoft.com>
  <aXj6FXahxZU8QFq0@skinsburskii.localdomain>
  <4bcd7b66-6e3b-8f53-b688-ce0272123839@linux.microsoft.com>
- <SN6PR02MB4157EDC69791EF24D5DA8661D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <aXqW7v-lnAT_gr0s@skinsburskii.localdomain>
 From: Mukesh R <mrathor@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB4157EDC69791EF24D5DA8661D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <aXqW7v-lnAT_gr0s@skinsburskii.localdomain>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-8597-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8596-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[outlook.com,linux.microsoft.com];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[mrathor@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:mid,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: 3F6A1B697E
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:mid,linux.microsoft.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 638CDB6A54
 X-Rspamd-Action: no action
 
-On 1/28/26 07:53, Michael Kelley wrote:
-> From: Mukesh R <mrathor@linux.microsoft.com> Sent: Tuesday, January 27, 2026 11:56 AM
->> To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
->> Cc: kys@microsoft.com; haiyangz@microsoft.com; wei.liu@kernel.org;
->> decui@microsoft.com; longli@microsoft.com; linux-hyperv@vger.kernel.org; linux-
->> kernel@vger.kernel.org
->> Subject: Re: [PATCH] mshv: Make MSHV mutually exclusive with KEXEC
->>
+On 1/28/26 15:08, Stanislav Kinsburskii wrote:
+> On Tue, Jan 27, 2026 at 11:56:02AM -0800, Mukesh R wrote:
 >> On 1/27/26 09:47, Stanislav Kinsburskii wrote:
 >>> On Mon, Jan 26, 2026 at 05:39:49PM -0800, Mukesh R wrote:
 >>>> On 1/26/26 16:21, Stanislav Kinsburskii wrote:
@@ -217,49 +204,26 @@ On 1/28/26 07:53, Michael Kelley wrote:
 >> crash kexec on baremetal is not affected, hence disabling that
 >> doesn't make sense as we can't debug crashes then on bm.
 >>
+> 
+> Bare metal support is not currently relevant, as it is not available.
+> This is the upstream kernel, and this driver will be accessible to
+> third-party customers beginning with kernel 6.19 for running their
+> kernels in Azure L1VH, so consistency is required.
+
+Well, without crashdump support, customers will not be running anything
+anywhere.
+
+Thanks,
+-Mukesh
+
+> Thanks,
+> Stanislav
+> 
 >> Let me think and explore a bit, and if I come up with something, I'll
 >> send a patch here. If nothing, then we can do this as last resort.
 >>
 >> Thanks,
 >> -Mukesh
-> 
-> Maybe you've already looked at this, but there's a sysctl parameter
-> kernel.kexec_load_limit_reboot that prevents loading a kexec
-> kernel for reboot if the value is zero. Separately, there is
-> kernel.kexec_load_limit_panic that controls whether a kexec
-> kernel can be loaded for kdump purposes.
-> 
-> kernel.kexec_load_limit_reboot defaults to -1, which allows an
-> unlimited number of loading a kexec kernel for reboot. But the value
-> can be set to zero with this kernel boot line parameter:
-> 
-> sysctl.kernel.kexec_load_limit_reboot=0
-> 
-> Alternatively, the mshv driver initialization could add code along
-> the lines of process_sysctl_arg() to open
-> /proc/sys/kernel/kexec_load_limit_reboot and write a value of zero.
-> Then there's no dependency on setting the kernel boot line.
-> 
-> The downside to either method is that after Linux in the root partition
-> is up-and-running, it is possible to change the sysctl to a non-zero value,
-> and then load a kexec kernel for reboot. So this approach isn't absolute
-> protection against doing a kexec for reboot. But it makes it harder, and
-> until there's a mechanism to reclaim the deposited pages, it might be
-> a viable compromise to allow kdump to still be used.
-
-Mmm...eee...weelll... i think i see a much easier way to do this by
-just hijacking __kexec_lock. I will resume my normal work tmrw/Fri,
-so let me test it out. if it works, will send patch Monday.
-
-Thanks,
--Mukesh
-
-
-
-> Just a thought ....
-> 
-> Michael
-> 
 >>
 >>
 >>> It?s a pity we can?t apply a quick hack to disable only regular kexec.
@@ -272,5 +236,30 @@ Thanks,
 >>> upstream kernel at the moment.
 >>>
 >>> Thanks, Stanislav
+>>>
+>>>
+>>>> Thanks,
+>>>> -Mukesh
+>>>>
+>>>>
+>>>>
+>>>>> Thanks,
+>>>>> Stanislav
+>>>>>
+>>>>>> Thanks,
+>>>>>> -Mukesh
+>>>>>>
+>>>>>>> Therefor it should be explicitly forbidden as it's essentially not
+>>>>>>> supported yet.
+>>>>>>>
+>>>>>>> Thanks,
+>>>>>>> Stanislav
+>>>>>>>
+>>>>>>>>
+>>>>>>>>> Thanks,
+>>>>>>>>> Stanislav
+>>>>>>>>>
+>>>>>>>>>> Thanks,
+>>>>>>>>>> -Mukesh
 
 
