@@ -1,319 +1,247 @@
-Return-Path: <linux-hyperv+bounces-8602-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8603-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eI5iAKPWfGlbOwIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8602-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 17:04:51 +0100
+	id yLsrNzTlfGlDPQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8603-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 18:07:00 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 507ABBC5E1
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 17:04:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 458AFBCD23
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 18:07:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 34FA830071D8
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 16:04:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E7A5E302A044
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 17:02:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDCAB346776;
-	Fri, 30 Jan 2026 16:04:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97C143563E7;
+	Fri, 30 Jan 2026 17:02:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="h8iQfAyD"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="W0V9V4ZH"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52E57342C98;
-	Fri, 30 Jan 2026 16:04:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769789056; cv=none; b=Pg4ZQefElFmMZEZMr4GCGZhzjf6bwW2GG0Xkis6Yugi0d7AMRBz+EiI+Eo5i71dcFmHEElQSIWgFD0eI81i9PxvBFie0woApEWY78bmFQFS2NXWm/YrXM0A5PzDNCT4MMblooDhnNyY0xPmApn6SdlLA8XJW6PIUKmHCfuUc3Dg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769789056; c=relaxed/simple;
-	bh=X3dA4yCS8zOy7aMdg/DXDhy5eqI/93oTgmEwtm9k56g=;
-	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=A0b6A+MjKv5o17qneFg5/vXF89N9iLKCHWDDnsOLte/sYDUmTzaJIMDu7mkHymMQs9jzjGOWWgjiWUH6fZF6v6oMPD89WDff3U1G8+1sP+W3btJn1Y4VRtWMu5drgadP5xYbcvqeag9uWnahk3sB8Yf26trl/GA+cXu0VER2jWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=h8iQfAyD; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id E5CE120B7167;
-	Fri, 30 Jan 2026 08:04:14 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E5CE120B7167
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1769789054;
-	bh=li4/cpFA1WoAkhSAb71w/OXwnMvfM+gMJYJjYBWbSnE=;
-	h=Subject:From:To:Cc:Date:From;
-	b=h8iQfAyDqBfjVP5R7plUP6IGxy9nCm8ahsly/xGjWsQ7Ehp06espEHwJrpIAqpvNS
-	 MlLXhxKxD3CjqB7B7H0BD/I5CYV6vC+xOrCsK7vEDMp5ItLsae751WLhSEVYAz/Obq
-	 tmN5afWNFOfkOpCARUmoPwNuATyHXJuRjBvLUWaQ=
-Subject: [PATCH v3] mshv: Add support for integrated scheduler
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, longli@microsoft.com
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Fri, 30 Jan 2026 16:04:14 +0000
-Message-ID: 
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazolkn19012051.outbound.protection.outlook.com [52.103.20.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229A93557E7;
+	Fri, 30 Jan 2026 17:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769792573; cv=fail; b=LGOi0b2Ijqd5tRtt0WGjZFIgp/7m1SD2AnXG94kL7jfvhU+yzEcmCM5OExB1hM8Ur1DnIBmiRP7rHRl8axPLn8cGTdJMtsNteIkNuAmzMH3Z+C9jwSAaeWBvpPNM4C7lDItR/7DCgtXBjURMu7u1YbqeQh+mZc5uA8c5DW2pTj4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769792573; c=relaxed/simple;
+	bh=ecn0as81ESxyO5imFQdZxOetnV1ikfE7apdBcdlFUrg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=WgK0CLtyqeGPxrJHujP0Y+CwEHhzdZYwLpjSCd6OvSwHdqpWmknfq+7QghH+GZfQ2UzAjO1/irdHCVUAGCDo3elBm5sd0SRHWzYLsWzYPrt+hezXyje/2l4IpUrpDlW21cMXiEGkiA4qXhxljxS7AinBDM8eipFS8l7RciDME/c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=W0V9V4ZH; arc=fail smtp.client-ip=52.103.20.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mYEUdQw8dESRYbo1e2+0o+a6STITR3TuksEgGNnRqsBFNyLINuNdIjKe/Nsaq4RIdG0dwiEhd95dPtItkUhcS9XdOvgX+qRhkBDUhGjYxQDqTFT46lsGy7OlJGhKOcjKFh3Cajy1Uj/5k8CR5MiaPemA3L3sYvqgvxLkj0qtV4aJrCTqz/M3DD5xa7kov5UhiRb89wA+mCGULdOk1rjzoDg2ITEEVoypXRqOoAo/hYaQDu/yfOyZ76ME64zUR6TTdHckJwUtUlE9EB/Xg+fFdBAE2A5Zijb00i6nGVD4kcAaRrkXaC/V12i6de8QFVKbMZbMAFJ//45ftwVd26pWCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ecn0as81ESxyO5imFQdZxOetnV1ikfE7apdBcdlFUrg=;
+ b=uqc+X9leZsplYR7hgOzM+IGb7bojFyzKZoV9WpQizkkoMfP3G5mzSKkoS7W2iT4DMHzoWJEylXxoptYLZR8vYvnb7CiLcnr5qdYpO0CtocoIepmb7ivgL2+FFQlkuftbN4VIUMLLEn79r5FH8umszIWcBa+INSu99KRCYaKqPremjltc2ncAZL3lgtcAF1+MJk72jtrtPjp5ZjW541YLCNkWVgz4U3TUID2qZn+mpEAtBRRBmKb3lZ15UZdD5KtnY1ULbsFeB8kqzfQNZdcI0ExNrQY0zqCvufwGKJiFDeFcRtCiWeBCj0PB6iZSqRV+RIM+lgIQ63CB7xED7JWb2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ecn0as81ESxyO5imFQdZxOetnV1ikfE7apdBcdlFUrg=;
+ b=W0V9V4ZHgwQiOsuf48lpBPWV/8YHkooLsnjlmPg23rDgw73cOgUcpy3pBY4zpdebJOhFuDw2CB/IWCMaNgAC88/zp8V46Iqnzo/IvwxJ6jJszWCV/ps6dEzrDsmVbxFU2C1nJ1AUbCvTrUc2A1mxFgn0anCf8HFzZFcS27B+PEtqT1hd8sYdiDNoDM/JXrrm4BXLv6jEX7G51AfAiV6ixtSJw/JXgG4Hpxp9i17jsmXqjr9Ynb9Zi8ifw9NJaAE8ydcfNqj8lnCvQzdRJIv/yCjAwnEAfiEVNBRPJ3PLERo7G0e7dWfr77sA6As6+gW3HCFBb6alvgukwbjm+ejpqA==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by CYYPR02MB9764.namprd02.prod.outlook.com (2603:10b6:930:b9::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.7; Fri, 30 Jan
+ 2026 17:02:49 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6%6]) with mapi id 15.20.9564.010; Fri, 30 Jan 2026
+ 17:02:49 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	"kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>, "longli@microsoft.com"
+	<longli@microsoft.com>
+CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3] mshv: Add support for integrated scheduler
+Thread-Topic: [PATCH v3] mshv: Add support for integrated scheduler
+Thread-Index: AQHckgJHZx7IYfaMKE2CkgqsEpEfmLVq8Hyw
+Date: Fri, 30 Jan 2026 17:02:49 +0000
+Message-ID:
+ <SN6PR02MB41577D7BDB3BF3DD669CBBD2D49FA@SN6PR02MB4157.namprd02.prod.outlook.com>
+References:
  <176978905128.18763.15996443783319253336.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-User-Agent: StGit/0.19
+In-Reply-To:
+ <176978905128.18763.15996443783319253336.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CYYPR02MB9764:EE_
+x-ms-office365-filtering-correlation-id: 28d441d7-2790-4337-e6eb-08de6021662a
+x-ms-exchange-slblob-mailprops:
+ igNrEvV8uhEvpyeJ/Jdph30uiRXy5wZP8BnkkNTekwC9HxamvVxgmPf2pitbmgvEg+dqXBEi2QkCEzJmq4hgckrVpFgCiM9rmXEdrtEMVrJuJhoDA1jbBnZ03cm34TliuepvuYv++RHGwTt/CXtlrvrXN7HpPEiXLZVtD92PdOc4TK5GJLJ0O+g7nQ19JvSeoSUPg5P7Hn2tU7r5CpXz4aJVT5t6WftxiD7aor7WLK5P87/kLsxi/tKpGqTiLKf9zauRThJDDyo99xuZ9wd3qbuGlgtX6ylry7OMGodJtEj88Ko0fT9wzXUjXME8HFPYvorRwZtP4U7eynv1MSpsTo3Z2QYCc6uBekvkMNODRw07JSv5hPsI26j+nL7fdxFc34bIwLFk9Hak7fXxenHhQC4Eu7moYPUAo58lCHaZGH9cjPGSYygZWu5DgZsZMNPys5SyrfRS1I38oX+4bM4r9ViUcd0lzYG9ND4Bl/F7ECpDWAFRH7GTkJ0T8X4nXUKrRkbkHqa+MycNu3yAAmQlZDKCTQ1SuCzKumReqUTRdSRr4tYyPic9tGpE6ItRHsgY8NjjvmQ18IA+NHMJ/kNwcxoEu1uTFdCtA5XZiWyaBoFKfdbHHQuXclg5XOscVxMGyWXoiLC9+hQDTaoE7C2dmfmJs5SCqh9c+5QB62umrk8iibaTNk76IZNG14EofBqMztEq5wFiLvk=
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|12121999013|51005399006|15080799012|8062599012|8060799015|13091999003|19110799012|461199028|41001999006|31061999003|3412199025|440099028|40105399003|102099032;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?TnJ6Sm5namI2NTVncUE0T1ZzbFNQUy9ReWtrWkR1UDN2VGcrOFlDVnNvUjU5?=
+ =?utf-8?B?c1FCa243TGZyQ0VlcU9NcFBQZEtHbk1pV1FRczRqa1FzZ1o2c0Z5bVhJWVZO?=
+ =?utf-8?B?dnJBTnJLVjZyYitKL3NDK1B3MHVMcENpVWM1OWdaMmF6QkR5cWtVQXl5alF3?=
+ =?utf-8?B?UTQzdVhLbFFEUWI2TWZ5WW1teEZYYlhnOHIyVHE0V3dxMnJTeDhJeHc5dTZU?=
+ =?utf-8?B?eXNVaTNlN1dRTytlbkJzc25TV1FFUHh6dWlrY1hyc2JpWGVlZUtlWTN0aDFx?=
+ =?utf-8?B?TEliRmVBN2RzaW1EYlFBNFEyS1B0VDVZRCtNTVNBanAyS3lvVWVSNEJmT2Nt?=
+ =?utf-8?B?OUdXMERWNmpvMWJ1M1lQQ3FyUmRJNG52Ymp1RnBNRjNaNGVOL3JzYVhYR0hO?=
+ =?utf-8?B?U3ZqNFRhamhCZWF0SUl2SVAwOG9qcjJvaWlTUkJPWHdEdFpBMW5uWnV4dXR1?=
+ =?utf-8?B?S2RlVXFhVEg3VDBnZm5iaGxwbkJPQS9VZUdzR2dWQzVkampsbUFvWXFSYjY5?=
+ =?utf-8?B?dlZ1Q0p2K0JUMzFqUitMeU1uQzZURldyQmU4YlY3OGRFd2NzczE0VDZvL1lh?=
+ =?utf-8?B?SFVYQlEzcTNnNnl3TjdLcXd3NkpLTGVFZ2pyYmFJZkpVOUxrOEdNRmNVMmFK?=
+ =?utf-8?B?T09oOFRiUHdWZWJUV3p6YzFVNWYrQnR3My9UbFBIYVo5cGp4M3BhUGVnb09p?=
+ =?utf-8?B?QU94bEpGYyt5UjdFZXhpd2pQYmhjZE5SV0lvVTRYZSs2VWh4UzFkTHk5U1kz?=
+ =?utf-8?B?WUhqWXBKRjdNSTJIdldHWGxMLzBGZ0ttT1NWaGRiT2paWjA5RnFNMXZ6RUVD?=
+ =?utf-8?B?U09oQXFZUzhPSlp2WmhIdlVjMWJDdm14aVludlByK0FNcmlqMUxuQ1RybGp4?=
+ =?utf-8?B?c3dhQUo4bXExUEdMRmtDMGtGYk03d0wxM3hTVEZOaGx1STFRRGxjd2VyMzAw?=
+ =?utf-8?B?bkl3aHltRWR1MXlwbGJQQ3JGSXJ6byt4YUZ3TlZsQmsyZjZja0hpT0xnQjRS?=
+ =?utf-8?B?MGZZV05NZHFtZ1ZLR0lXdDZKa0s5QnRiakNJa3J6bjc3dldKYUxnVHZoemc0?=
+ =?utf-8?B?dDBKbzNjVThOc2tUVkRyNXY5bEVlMktrNmJBaHJiSG5jQXpvcEk0R0ZxNitt?=
+ =?utf-8?B?a2Urc2FkUFZ5clRUK1ZSMXpNR2NabzZuaXBnK1lFVDd2TFZVemVSMC9hdEZw?=
+ =?utf-8?B?aENBTEc1bjBZbkM0b0xuNjNkT0Y4cFZEbGIzQWduQk9tTGVMdEtOcEtJd050?=
+ =?utf-8?B?SHN3eUg3K0FwU1IzbENxWnovMG83UVN4YzE4Y1JFU3pXQ0NtVWNnYUxDNHZC?=
+ =?utf-8?B?Rmcvdmk4T1ZGUDdmUEdEdE1VcFVxNkszeDI4ZWxHa0Q1aXJzN0lpVnNSREJ2?=
+ =?utf-8?B?ZytjWUdxaCt0eEhNYndpMnFJdEdDUitXQjVkaUZNTmpzSHhDZDBnQkhEbmZM?=
+ =?utf-8?B?aHU0SjBJR0RGNWFtcCtFc09QSzNvaFBNWXJEUE1aUURJTkRaMlNWTXR6R3J1?=
+ =?utf-8?B?a2NySy9qRkZPWnBXUWxMVS9idzNJT2s0VDMvd3FuQVMyR3IraE4rRnJVbzJN?=
+ =?utf-8?B?LzM5dnZpV29zZWNaRUhPVXFQT051bjhsTFZ6d2QzL0RIU3VuSVZpa2Fvdm1V?=
+ =?utf-8?B?Mm9CNmdKNTYvdktiSFR3YUh5TEtkRDk1SmpJc0NoQmdZazZvOVBUWFM5aXgr?=
+ =?utf-8?B?YUJiaVV6Y3poa1BNRFBHUGFYNkx1NVFlRHd0V0o2WkJHdkhhTWVReHpnPT0=?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?Ky9wbHRVc004eWROcXJLcXhCN1FCb2J5N1RTOXFiNzY0dkxEcW5ERnkwSnpp?=
+ =?utf-8?B?UUc3Z1RBWGdCN1p1Ymx3dForaU1KTG91ZkV4M2drTkNJUlpRK0ZGeVJjcUNW?=
+ =?utf-8?B?aHdockZic054V1RzeW9hb2Q2U25TRUx5TG9TdHFIS1VuaHh1Q1VHL2ZhZVow?=
+ =?utf-8?B?eGtEZENWT2ZiSHVaR0IvK0M5a1U1WEhERDB4ajl1S1FseGJ1RzBUZ1Z4MURW?=
+ =?utf-8?B?UXRvSDZyWUtVVmJJcDl6Y2JsaUpjSU9pY2JCZTJVOUNyUnJtRlBYSWQzNGJh?=
+ =?utf-8?B?TVErUlF3ZSttVCtadCtIZXhwUVJmWDQ0QjJqM3N0ZEpsUE41WGRhOXRzbzV1?=
+ =?utf-8?B?N29IVGZOUDdQVFloT3F6MWs0ZG9pNEtGMy9nbU9OOEh4S2Z6eDZRZlRMK1hR?=
+ =?utf-8?B?Y1NhZjZyNWhjOVJMSVVrZ3VCd0pyM2ZseG1oTDIyakZnK250bUhmTDI2NkEz?=
+ =?utf-8?B?Qzk0SjZEUFFqSVB2RFRLWmkwaFdaT0doLzVPMnUwcHdIV0lUa2Q4cFVEOTlx?=
+ =?utf-8?B?MUxkem1WeHdaVE5KbDZxVGZYK3p1ZzVIdWZsT0pzbXc3a3BoSkhQNmtMRklk?=
+ =?utf-8?B?UXRmb3RqL2U4VXlPV2p2YkFCOTRoblErRjE4eDdiWmd3bW9MSm1XbzZWcGFr?=
+ =?utf-8?B?YzZXenU3bzVDSm81bkc5Ylh6UzVkNCtGRmlUTFpzckJ2OFQza21kTFdaMnFI?=
+ =?utf-8?B?WXNLRGtuSHpFTkg1eENsSmZjanVrS28vWVY2d01pdy9kRGE3OGdiNzdsbTJL?=
+ =?utf-8?B?Vmlac2NUb0hWR2JFVWhxMFI4TTJ5MmFzUDlMbFlzd0dzMmJBWXBWcUN3WU5U?=
+ =?utf-8?B?SkNqZWVySnhLeXE0MnQ0TkNVakd0bEc3ZzY3bVJVTUtrclZJd2xLUUl6dnpm?=
+ =?utf-8?B?djA2b2VUZWxrNFFPYlFoRUQvL3lESk41c2RqT1owRjRINnJlQnpNVFNLVGNX?=
+ =?utf-8?B?cU9TOUpiL1pKQ1ppUmFLYS9PckZvMCtPSVZHV3ZsY2VldXViWGxpc0lpMU1o?=
+ =?utf-8?B?MU8vUklObktzSXJxUXhWN1V6Q2lYWGk3MWtxL3VGUXRNcko5NzNJclRoOHJn?=
+ =?utf-8?B?ZVlsQmRBNDZLYXRtTkRlcmlDbDJ1dXVMcnY1dkpZcFZ5STd5RHNSUzlOM1pS?=
+ =?utf-8?B?TXNtYzJ5ZUZKaWF3ZDV3WnRXUmowN1g2Qyt5cWVzY2ttV0tkV0lSYXJWbU5Y?=
+ =?utf-8?B?Ny9UOTBPQmZPMm9NNHZPaTh0NENKQW8yYmhhVThnUFZMbnlNR1dHd1dRSmZp?=
+ =?utf-8?B?K3JROEtRTE9wZVF2ZFZFZ3BFOFJTNjBCQ25MK2dzdGtPSWY2U0w1ZkhjamxS?=
+ =?utf-8?B?L2l3OXZKSU93MkhFZ3dtOTVta2E5aGhzN0NkVHBuTDAwZDUyZ1o3RElzTy9p?=
+ =?utf-8?B?TjZRWVhGVkJreGcycGJHWVNVSEltaXNzV2hrbHc4ajkwSVo2Mjlwd2F3cTZv?=
+ =?utf-8?B?RmhENlgvSHJReXhPQm5udWU0czZBcUhoOXFzVmpab0dwNmxOeEhNYXRycTdy?=
+ =?utf-8?B?Z2dCald1dTcxZEpYNnpvWGxzZitNU0cwWUMyRXo1cVdFZGhodmN5Tm9tZ0xu?=
+ =?utf-8?B?VXZXMGp2ZmtUWWowL0dNZlViMHV3V0IzdDBrYXpTRU15bzBZR3ExeHl0Rldw?=
+ =?utf-8?B?M01HT0lMeUNid0l4M01MQXVCanlXc2lJVmw5R3pyU0ZteUpmVFdCUzRvYnVh?=
+ =?utf-8?B?cGhFb1QzbXgwMkkrSXRtWXN1Zk1YM05LTHdTRVhNSUV6OXpRUEd2WmNuVldt?=
+ =?utf-8?B?RXR3cUJ1djRuVWRWenFVZ2hRNGR5c3VYM2xsdzl4OEs2UGtHTWVPNU01RE1Y?=
+ =?utf-8?Q?DOOvU+EDf57QP7BXIG9JsLwf643PIT9AAQFOk=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28d441d7-2790-4337-e6eb-08de6021662a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2026 17:02:49.7206
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR02MB9764
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+X-Spamd-Result: default: False [-0.06 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_FROM(0.00)[bounces-8602-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-8603-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[outlook.com:+];
+	MISSING_XM_UA(0.00)[];
+	FREEMAIL_FROM(0.00)[outlook.com];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_NONE(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,skinsburskii-cloud-desktop.internal.cloudapp.net:mid]
-X-Rspamd-Queue-Id: 507ABBC5E1
+	FORGED_SENDER_MAILLIST(0.00)[]
+X-Rspamd-Queue-Id: 458AFBCD23
 X-Rspamd-Action: no action
 
-Query the hypervisor for integrated scheduler support and use it if
-configured.
-
-Microsoft Hypervisor originally provided two schedulers: root and core. The
-root scheduler allows the root partition to schedule guest vCPUs across
-physical cores, supporting both time slicing and CPU affinity (e.g., via
-cgroups). In contrast, the core scheduler delegates vCPU-to-physical-core
-scheduling entirely to the hypervisor.
-
-Direct virtualization introduces a new privileged guest partition type - L1
-Virtual Host (L1VH) — which can create child partitions from its own
-resources. These child partitions are effectively siblings, scheduled by
-the hypervisor's core scheduler. This prevents the L1VH parent from setting
-affinity or time slicing for its own processes or guest VPs. While cgroups,
-CFS, and cpuset controllers can still be used, their effectiveness is
-unpredictable, as the core scheduler swaps vCPUs according to its own logic
-(typically round-robin across all allocated physical CPUs). As a result,
-the system may appear to "steal" time from the L1VH and its children.
-
-To address this, Microsoft Hypervisor introduces the integrated scheduler.
-This allows an L1VH partition to schedule its own vCPUs and those of its
-guests across its "physical" cores, effectively emulating root scheduler
-behavior within the L1VH, while retaining core scheduler behavior for the
-rest of the system.
-
-The integrated scheduler is controlled by the root partition and gated by
-the vmm_enable_integrated_scheduler capability bit. If set, the hypervisor
-supports the integrated scheduler. The L1VH partition must then check if it
-is enabled by querying the corresponding extended partition property. If
-this property is true, the L1VH partition must use the root scheduler
-logic; otherwise, it must use the core scheduler. This requirement makes
-reading VMM capabilities in L1VH partition a requirement too.
-
-Signed-off-by: Andreea Pintilie <anpintil@microsoft.com>
-Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
----
- drivers/hv/mshv_root_main.c |   85 +++++++++++++++++++++++++++----------------
- include/hyperv/hvhdk_mini.h |    7 +++-
- 2 files changed, 59 insertions(+), 33 deletions(-)
-
-diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index 1134a82c7881..6a6bf641b352 100644
---- a/drivers/hv/mshv_root_main.c
-+++ b/drivers/hv/mshv_root_main.c
-@@ -2053,6 +2053,32 @@ static const char *scheduler_type_to_string(enum hv_scheduler_type type)
- 	};
- }
- 
-+static int __init l1vh_retrive_scheduler_type(enum hv_scheduler_type *out)
-+{
-+	u64 integrated_sched_enabled;
-+	int ret;
-+
-+	*out = HV_SCHEDULER_TYPE_CORE_SMT;
-+
-+	if (!mshv_root.vmm_caps.vmm_enable_integrated_scheduler)
-+		return 0;
-+
-+	ret = hv_call_get_partition_property_ex(HV_PARTITION_ID_SELF,
-+						HV_PARTITION_PROPERTY_INTEGRATED_SCHEDULER_ENABLED,
-+						0, &integrated_sched_enabled,
-+						sizeof(integrated_sched_enabled));
-+	if (ret)
-+		return ret;
-+
-+	if (integrated_sched_enabled)
-+		*out = HV_SCHEDULER_TYPE_ROOT;
-+
-+	pr_debug("%s: integrated scheduler property read: ret=%d value=%llu\n",
-+		 __func__, ret, integrated_sched_enabled);
-+
-+	return 0;
-+}
-+
- /* TODO move this to hv_common.c when needed outside */
- static int __init hv_retrieve_scheduler_type(enum hv_scheduler_type *out)
- {
-@@ -2085,13 +2111,12 @@ static int __init hv_retrieve_scheduler_type(enum hv_scheduler_type *out)
- /* Retrieve and stash the supported scheduler type */
- static int __init mshv_retrieve_scheduler_type(struct device *dev)
- {
--	int ret = 0;
-+	int ret;
- 
- 	if (hv_l1vh_partition())
--		hv_scheduler_type = HV_SCHEDULER_TYPE_CORE_SMT;
-+		ret = l1vh_retrive_scheduler_type(&hv_scheduler_type);
- 	else
- 		ret = hv_retrieve_scheduler_type(&hv_scheduler_type);
--
- 	if (ret)
- 		return ret;
- 
-@@ -2211,42 +2236,29 @@ struct notifier_block mshv_reboot_nb = {
- static void mshv_root_partition_exit(void)
- {
- 	unregister_reboot_notifier(&mshv_reboot_nb);
--	root_scheduler_deinit();
- }
- 
- static int __init mshv_root_partition_init(struct device *dev)
- {
--	int err;
--
--	err = root_scheduler_init(dev);
--	if (err)
--		return err;
--
--	err = register_reboot_notifier(&mshv_reboot_nb);
--	if (err)
--		goto root_sched_deinit;
--
--	return 0;
--
--root_sched_deinit:
--	root_scheduler_deinit();
--	return err;
-+	return register_reboot_notifier(&mshv_reboot_nb);
- }
- 
--static void mshv_init_vmm_caps(struct device *dev)
-+static int __init mshv_init_vmm_caps(struct device *dev)
- {
--	/*
--	 * This can only fail here if HVCALL_GET_PARTITION_PROPERTY_EX or
--	 * HV_PARTITION_PROPERTY_VMM_CAPABILITIES are not supported. In that
--	 * case it's valid to proceed as if all vmm_caps are disabled (zero).
--	 */
--	if (hv_call_get_partition_property_ex(HV_PARTITION_ID_SELF,
--					      HV_PARTITION_PROPERTY_VMM_CAPABILITIES,
--					      0, &mshv_root.vmm_caps,
--					      sizeof(mshv_root.vmm_caps)))
--		dev_warn(dev, "Unable to get VMM capabilities\n");
-+	int ret;
-+
-+	ret = hv_call_get_partition_property_ex(HV_PARTITION_ID_SELF,
-+						HV_PARTITION_PROPERTY_VMM_CAPABILITIES,
-+						0, &mshv_root.vmm_caps,
-+						sizeof(mshv_root.vmm_caps));
-+	if (ret && hv_l1vh_partition()) {
-+		dev_err(dev, "Failed to get VMM capabilities: %d\n", ret);
-+		return ret;
-+	}
- 
- 	dev_dbg(dev, "vmm_caps = %#llx\n", mshv_root.vmm_caps.as_uint64[0]);
-+
-+	return 0;
- }
- 
- static int __init mshv_parent_partition_init(void)
-@@ -2292,6 +2304,10 @@ static int __init mshv_parent_partition_init(void)
- 
- 	mshv_cpuhp_online = ret;
- 
-+	ret = mshv_init_vmm_caps(dev);
-+	if (ret)
-+		goto remove_cpu_state;
-+
- 	ret = mshv_retrieve_scheduler_type(dev);
- 	if (ret)
- 		goto remove_cpu_state;
-@@ -2301,11 +2317,13 @@ static int __init mshv_parent_partition_init(void)
- 	if (ret)
- 		goto remove_cpu_state;
- 
--	mshv_init_vmm_caps(dev);
-+	ret = root_scheduler_init(dev);
-+	if (ret)
-+		goto exit_partition;
- 
- 	ret = mshv_irqfd_wq_init();
- 	if (ret)
--		goto exit_partition;
-+		goto deinit_root_scheduler;
- 
- 	spin_lock_init(&mshv_root.pt_ht_lock);
- 	hash_init(mshv_root.pt_htable);
-@@ -2314,6 +2332,8 @@ static int __init mshv_parent_partition_init(void)
- 
- 	return 0;
- 
-+deinit_root_scheduler:
-+	root_scheduler_deinit();
- exit_partition:
- 	if (hv_root_partition())
- 		mshv_root_partition_exit();
-@@ -2332,6 +2352,7 @@ static void __exit mshv_parent_partition_exit(void)
- 	mshv_port_table_fini();
- 	misc_deregister(&mshv_dev);
- 	mshv_irqfd_wq_cleanup();
-+	root_scheduler_deinit();
- 	if (hv_root_partition())
- 		mshv_root_partition_exit();
- 	cpuhp_remove_state(mshv_cpuhp_online);
-diff --git a/include/hyperv/hvhdk_mini.h b/include/hyperv/hvhdk_mini.h
-index 41a29bf8ec14..c0300910808b 100644
---- a/include/hyperv/hvhdk_mini.h
-+++ b/include/hyperv/hvhdk_mini.h
-@@ -87,6 +87,9 @@ enum hv_partition_property_code {
- 	HV_PARTITION_PROPERTY_PRIVILEGE_FLAGS			= 0x00010000,
- 	HV_PARTITION_PROPERTY_SYNTHETIC_PROC_FEATURES		= 0x00010001,
- 
-+	/* Integrated scheduling properties */
-+	HV_PARTITION_PROPERTY_INTEGRATED_SCHEDULER_ENABLED	= 0x00020005,
-+
- 	/* Resource properties */
- 	HV_PARTITION_PROPERTY_GPA_PAGE_ACCESS_TRACKING		= 0x00050005,
- 	HV_PARTITION_PROPERTY_UNIMPLEMENTED_MSR_ACTION		= 0x00050017,
-@@ -102,7 +105,7 @@ enum hv_partition_property_code {
- };
- 
- #define HV_PARTITION_VMM_CAPABILITIES_BANK_COUNT		1
--#define HV_PARTITION_VMM_CAPABILITIES_RESERVED_BITFIELD_COUNT	59
-+#define HV_PARTITION_VMM_CAPABILITIES_RESERVED_BITFIELD_COUNT	57
- 
- struct hv_partition_property_vmm_capabilities {
- 	u16 bank_count;
-@@ -119,6 +122,8 @@ struct hv_partition_property_vmm_capabilities {
- 			u64 reservedbit3: 1;
- #endif
- 			u64 assignable_synthetic_proc_features: 1;
-+			u64 reservedbit5: 1;
-+			u64 vmm_enable_integrated_scheduler : 1;
- 			u64 reserved0: HV_PARTITION_VMM_CAPABILITIES_RESERVED_BITFIELD_COUNT;
- 		} __packed;
- 	};
-
-
+RnJvbTogU3RhbmlzbGF2IEtpbnNidXJza2lpIDxza2luc2J1cnNraWlAbGludXgubWljcm9zb2Z0
+LmNvbT4gU2VudDogRnJpZGF5LCBKYW51YXJ5IDMwLCAyMDI2IDg6MDQgQU0NCj4gDQo+IFF1ZXJ5
+IHRoZSBoeXBlcnZpc29yIGZvciBpbnRlZ3JhdGVkIHNjaGVkdWxlciBzdXBwb3J0IGFuZCB1c2Ug
+aXQgaWYNCj4gY29uZmlndXJlZC4NCj4gDQo+IE1pY3Jvc29mdCBIeXBlcnZpc29yIG9yaWdpbmFs
+bHkgcHJvdmlkZWQgdHdvIHNjaGVkdWxlcnM6IHJvb3QgYW5kIGNvcmUuIFRoZQ0KPiByb290IHNj
+aGVkdWxlciBhbGxvd3MgdGhlIHJvb3QgcGFydGl0aW9uIHRvIHNjaGVkdWxlIGd1ZXN0IHZDUFVz
+IGFjcm9zcw0KPiBwaHlzaWNhbCBjb3Jlcywgc3VwcG9ydGluZyBib3RoIHRpbWUgc2xpY2luZyBh
+bmQgQ1BVIGFmZmluaXR5IChlLmcuLCB2aWENCj4gY2dyb3VwcykuIEluIGNvbnRyYXN0LCB0aGUg
+Y29yZSBzY2hlZHVsZXIgZGVsZWdhdGVzIHZDUFUtdG8tcGh5c2ljYWwtY29yZQ0KPiBzY2hlZHVs
+aW5nIGVudGlyZWx5IHRvIHRoZSBoeXBlcnZpc29yLg0KPiANCj4gRGlyZWN0IHZpcnR1YWxpemF0
+aW9uIGludHJvZHVjZXMgYSBuZXcgcHJpdmlsZWdlZCBndWVzdCBwYXJ0aXRpb24gdHlwZSAtIEwx
+DQo+IFZpcnR1YWwgSG9zdCAoTDFWSCkg4oCUIHdoaWNoIGNhbiBjcmVhdGUgY2hpbGQgcGFydGl0
+aW9ucyBmcm9tIGl0cyBvd24NCj4gcmVzb3VyY2VzLiBUaGVzZSBjaGlsZCBwYXJ0aXRpb25zIGFy
+ZSBlZmZlY3RpdmVseSBzaWJsaW5ncywgc2NoZWR1bGVkIGJ5DQo+IHRoZSBoeXBlcnZpc29yJ3Mg
+Y29yZSBzY2hlZHVsZXIuIFRoaXMgcHJldmVudHMgdGhlIEwxVkggcGFyZW50IGZyb20gc2V0dGlu
+Zw0KPiBhZmZpbml0eSBvciB0aW1lIHNsaWNpbmcgZm9yIGl0cyBvd24gcHJvY2Vzc2VzIG9yIGd1
+ZXN0IFZQcy4gV2hpbGUgY2dyb3VwcywNCj4gQ0ZTLCBhbmQgY3B1c2V0IGNvbnRyb2xsZXJzIGNh
+biBzdGlsbCBiZSB1c2VkLCB0aGVpciBlZmZlY3RpdmVuZXNzIGlzDQo+IHVucHJlZGljdGFibGUs
+IGFzIHRoZSBjb3JlIHNjaGVkdWxlciBzd2FwcyB2Q1BVcyBhY2NvcmRpbmcgdG8gaXRzIG93biBs
+b2dpYw0KPiAodHlwaWNhbGx5IHJvdW5kLXJvYmluIGFjcm9zcyBhbGwgYWxsb2NhdGVkIHBoeXNp
+Y2FsIENQVXMpLiBBcyBhIHJlc3VsdCwNCj4gdGhlIHN5c3RlbSBtYXkgYXBwZWFyIHRvICJzdGVh
+bCIgdGltZSBmcm9tIHRoZSBMMVZIIGFuZCBpdHMgY2hpbGRyZW4uDQo+IA0KPiBUbyBhZGRyZXNz
+IHRoaXMsIE1pY3Jvc29mdCBIeXBlcnZpc29yIGludHJvZHVjZXMgdGhlIGludGVncmF0ZWQgc2No
+ZWR1bGVyLg0KPiBUaGlzIGFsbG93cyBhbiBMMVZIIHBhcnRpdGlvbiB0byBzY2hlZHVsZSBpdHMg
+b3duIHZDUFVzIGFuZCB0aG9zZSBvZiBpdHMNCj4gZ3Vlc3RzIGFjcm9zcyBpdHMgInBoeXNpY2Fs
+IiBjb3JlcywgZWZmZWN0aXZlbHkgZW11bGF0aW5nIHJvb3Qgc2NoZWR1bGVyDQo+IGJlaGF2aW9y
+IHdpdGhpbiB0aGUgTDFWSCwgd2hpbGUgcmV0YWluaW5nIGNvcmUgc2NoZWR1bGVyIGJlaGF2aW9y
+IGZvciB0aGUNCj4gcmVzdCBvZiB0aGUgc3lzdGVtLg0KPiANCj4gVGhlIGludGVncmF0ZWQgc2No
+ZWR1bGVyIGlzIGNvbnRyb2xsZWQgYnkgdGhlIHJvb3QgcGFydGl0aW9uIGFuZCBnYXRlZCBieQ0K
+PiB0aGUgdm1tX2VuYWJsZV9pbnRlZ3JhdGVkX3NjaGVkdWxlciBjYXBhYmlsaXR5IGJpdC4gSWYg
+c2V0LCB0aGUgaHlwZXJ2aXNvcg0KPiBzdXBwb3J0cyB0aGUgaW50ZWdyYXRlZCBzY2hlZHVsZXIu
+IFRoZSBMMVZIIHBhcnRpdGlvbiBtdXN0IHRoZW4gY2hlY2sgaWYgaXQNCj4gaXMgZW5hYmxlZCBi
+eSBxdWVyeWluZyB0aGUgY29ycmVzcG9uZGluZyBleHRlbmRlZCBwYXJ0aXRpb24gcHJvcGVydHku
+IElmDQo+IHRoaXMgcHJvcGVydHkgaXMgdHJ1ZSwgdGhlIEwxVkggcGFydGl0aW9uIG11c3QgdXNl
+IHRoZSByb290IHNjaGVkdWxlcg0KPiBsb2dpYzsgb3RoZXJ3aXNlLCBpdCBtdXN0IHVzZSB0aGUg
+Y29yZSBzY2hlZHVsZXIuIFRoaXMgcmVxdWlyZW1lbnQgbWFrZXMNCj4gcmVhZGluZyBWTU0gY2Fw
+YWJpbGl0aWVzIGluIEwxVkggcGFydGl0aW9uIGEgcmVxdWlyZW1lbnQgdG9vLg0KPiANCj4gU2ln
+bmVkLW9mZi1ieTogQW5kcmVlYSBQaW50aWxpZSA8YW5waW50aWxAbWljcm9zb2Z0LmNvbT4NCj4g
+U2lnbmVkLW9mZi1ieTogU3RhbmlzbGF2IEtpbnNidXJza2lpIDxza2luc2J1cnNraWlAbGludXgu
+bWljcm9zb2Z0LmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2h2L21zaHZfcm9vdF9tYWluLmMgfCAg
+IDg1ICsrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0NCj4gIGluY2x1
+ZGUvaHlwZXJ2L2h2aGRrX21pbmkuaCB8ICAgIDcgKysrLQ0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA1
+OSBpbnNlcnRpb25zKCspLCAzMyBkZWxldGlvbnMoLSkNCg0KUmV2aWV3ZWQtYnk6IE1pY2hhZWwg
+S2VsbGV5IDxtaGtsaW51eEBvdXRsb29rLmNvbT4NCg==
 
