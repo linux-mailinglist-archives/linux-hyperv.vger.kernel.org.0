@@ -1,352 +1,306 @@
-Return-Path: <linux-hyperv+bounces-8610-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8611-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KFy3FNjufGndPQIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8610-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 18:48:08 +0100
+	id oHAcChXvfGndPQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8611-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 18:49:09 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8BADBD6E5
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 18:48:07 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78FB5BD710
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 18:49:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 3AC4A3002301
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 17:48:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 21F94300823A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 17:49:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAFD52DCC13;
-	Fri, 30 Jan 2026 17:48:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67AD427A92E;
+	Fri, 30 Jan 2026 17:49:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="eQqT1p8x"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ZrmMTJFp"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
+Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azolkn19012038.outbound.protection.outlook.com [52.103.23.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545C127A92E;
-	Fri, 30 Jan 2026 17:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E406E15E8B;
+	Fri, 30 Jan 2026 17:49:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.23.38
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769795284; cv=pass; b=erhNQ53F8DOe7bAnCW8AuILa5hVI+KmeSI0Y0/EeqTUqrLNjr1mCB07xYmJIN0meca55zfMbPNWTOVYPT7FCIOrMR1ahDZG12YSqMa+tOZXxoAi3iSVTDwsyhWicSwxCsJuSY/eXIfF1dS2Rme99yAY7Znd78OICQoDZlzpxVOc=
+	t=1769795346; cv=fail; b=lCNeK0tiNiOe8ZH5qxfZ5IJKt/Wabvb9V5aK1cdURzGMpT/6IMGFGsM4yHZcDqnu8T3oHV+A+T0+lPgdcm0FefQPtu7PmYXiSYaC/V2NbJa3XxNR0jJhqTqy9TbMZCUAG3y56n4wa3FolwCfvmdDGQqg5zt9QLaB7U4aqoeEL9k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769795284; c=relaxed/simple;
-	bh=QTQ7XFA5XRG8tcwtt6tiJIextTYg8TGEP8f8+qZ9PhI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bz4E9c4v5XeYNmdjo0uxl689cU5tfpA16hZ6pp2qoQaSO0nwRAYtrusphzoQKCY6g2xNU2HMM42WAwkttK2nwReujMwjhMj+kkgCQkoMSuSV82eywyBaYbQsGQ7g9h5px5PwYUiffN+uiWaHTmIn8b3yPSOW0pog8Yf7JJ2URR0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=eQqT1p8x; arc=pass smtp.client-ip=136.143.188.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1769795275; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=dZuXjRfCTCMqIVJYpXQRIymOOyxhNAoyYWUgJRySzJKitDxdUpFYG8LcDHz2Zm0aW2K5axGybQxRSGq4xGWVE4nzRF34wo0FxEuKfNgCIgG4KncWSUdDlpdNaZBzoVo2wjL3u5jyKGhtqtfc8XqxkwuZlXS5CIdhJ9Fgt3LCfVI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1769795275; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=lxQcQLTUjK6ww2BTR1trNdzW2oCrPSzlR1CA+fgRuxM=; 
-	b=gFUAGV8KEwIb6Y/hPgo4gRBMsuY0fy566l0jxlmc0kOBraQ68X5/Th2jMk3MKCKj26PMUo5xC3bdpZUzwUicf17jEnZWCAfR53Nrn/8w+srpNJIxcdTWMa6eONEWWWruC4NIbebYfduJDsJ7xAWsFKaM6+ZIUqlh7zaZwvcDKJ4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=anirudhrb.com;
-	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
-	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1769795275;
-	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:Message-Id:Reply-To;
-	bh=lxQcQLTUjK6ww2BTR1trNdzW2oCrPSzlR1CA+fgRuxM=;
-	b=eQqT1p8xgvnNGBqZiIKTp+MPEiZi6ndkKKQnExtWzKvcQak1zXvlgtngjPK5UNJR
-	5EcY6GG8WEoCyNrrOvdnvQ7cL9DnaG76SPf+9jE0n+VwEsiP6w80zB1pJthgG/x4GD0
-	umracGhUXDgti4JnARQnci6yQXsTlTsqp01WEymg=
-Received: by mx.zohomail.com with SMTPS id 176979527402215.41466216751644;
-	Fri, 30 Jan 2026 09:47:54 -0800 (PST)
-Date: Fri, 30 Jan 2026 17:47:48 +0000
-From: Anirudh Rayabharam <anirudh@anirudhrb.com>
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] mshv: Add support for integrated scheduler
-Message-ID: <aXzuxHwLofHaW-Xe@anirudh-surface.localdomain>
-References: <176978905128.18763.15996443783319253336.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+	s=arc-20240116; t=1769795346; c=relaxed/simple;
+	bh=KHGvPnHuh/AUfbfcJf0KGDCVuR/H/TeHSNEv9Fh4BFA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=eQbyOLCEFi4U3NdniHNosPUb+1dO59+j0Nx4n0Km15r1QSS7/zAEf4FxMmaLMMYXBrBXZgJYZ6pQorGNmkVUtO3ClhPjaDpGWgQ3AjLj2GEECNT6WPU5+b/Fup1ydH+uk02iMWNUyYmXCKkzDe82BceHagf31vbSAk9sH5XJsJo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ZrmMTJFp; arc=fail smtp.client-ip=52.103.23.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=C7lQpeTZrTYU1myh6gav5YpDN2de2Td1j0BNLYrlYPNwfysM5dA9IHuHQQibBmIUlZz9R3Ln5jDfAJVPUo1otxPLPaj7B0KeRH2VPBjoqiknwoWxrXn0gYSEx//bSUgQpxRZKiOiy5ePJU047wrQ54uCJvpO+Oj9hG2Yk8JWAZ9analAaGeIRuATH3DDh6lnAKXUkOnN+P54Zgk+kPErJd8cv5VR+kvZmltmbEbsKlyAb6KhaRDmlN03dQlv/Nx+IhSY+dHpdhyDjOid8OkLjCh+2vYtiJf6ybX20uZvu1sZBOqS1gxEO4dEzURcFwTCZNha+seJ8K7m1wCHKbqDiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PyLNVjQLlkEj2hgLWTOFjcoMtKHo2Jzw9BCcfIfP0tM=;
+ b=fOO4jT6XzKppVkKxSlbKR8ps32r+JXDpqW25VXLpOpZVBzGW24jia6IZT6NBjvV7T8UBk1JMCzCE3jU9hCxnTQ1qdnJ1qoSjsXO3C1tJFhcqmP5OlfKnjcl65pVA7CCRt5tbhr8xa6Oyo5GRmiUe2YjZtRcZJQcH9vP0iJp3Nnjr8ty5PfCNAFrHSbjF0vnw8zkBzngP22RGgwvuTOi4JyxVYG83QrancQB9KRV573yx2dcaJ8Ph7wH8yS6H+dzwf2dkF0KTLr0x7gVegPgg3zvx6O9x0V9BzDYSirjE4vUBjS1MtuAYDXwNBt+nWAUyAu9zgEnPuxnOACxsx1eFlA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PyLNVjQLlkEj2hgLWTOFjcoMtKHo2Jzw9BCcfIfP0tM=;
+ b=ZrmMTJFpwUNVpp9YpVDo8mv/4pC8GfChkDTVdVFn2Aymo049jHoHvi0hWTEp7NVzcUtr3ICsQ2WzONM4NLOPN5sQs+KsHWbYy1E9j6yYbR54LFgRl+efFVDrbAowscN1freOcs42wjsoJfjrUVHCYmmyoPdfTCAnUYhtMyvqNF2pkOFtN7kXOoZyn+yulmREHgWh5BGmQeA/oIBIM+EOaLQNjAgGcgUcbpz/Pw8SRqDLDcwfyJbvievz7o2m4+NI9/miIgSirob+anTJE6B5JJdwamiGy4k52haeOJInEXuYiYhHspO1t25asSAHAnQkfIrI52IActcwOmEiGhOwMA==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by CY8PR02MB9204.namprd02.prod.outlook.com (2603:10b6:930:9f::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.12; Fri, 30 Jan
+ 2026 17:49:02 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6%6]) with mapi id 15.20.9564.010; Fri, 30 Jan 2026
+ 17:49:02 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Anirudh Rayabharam <anirudh@anirudhrb.com>
+CC: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	"kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>, "longli@microsoft.com"
+	<longli@microsoft.com>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/2] mshv: Add support for integrated scheduler
+Thread-Topic: [PATCH 2/2] mshv: Add support for integrated scheduler
+Thread-Index: AQHci72MSasuUoF5ME+DlBsQrQadr7VpZ+CwgAAmTgCAAGPYQIABFK8AgAABreA=
+Date: Fri, 30 Jan 2026 17:49:02 +0000
+Message-ID:
+ <SN6PR02MB41570DFE89DFBC3476432562D49FA@SN6PR02MB4157.namprd02.prod.outlook.com>
+References:
+ <176903475057.166619.9437539561789960983.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <176903495970.166619.12888807009225201668.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <SN6PR02MB415767BB59E00442812F47B5D49EA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <aXuwes2HNf4Og8lW@skinsburskii.localdomain>
+ <SN6PR02MB4157EE41697ABC1002750297D49FA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <aXzsVN3SnNXIDPMV@anirudh-surface.localdomain>
+In-Reply-To: <aXzsVN3SnNXIDPMV@anirudh-surface.localdomain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CY8PR02MB9204:EE_
+x-ms-office365-filtering-correlation-id: e3abddce-4a7f-436b-f089-08de6027dace
+x-ms-exchange-slblob-mailprops:
+ igNrEvV8uhEvpyeJ/Jdph30uiRXy5wZPWOCR3hobzXKEERHY1GLewzmVgIJRIfxtuyo7HuX2ApZ3/yN5c72uB7DzCs33y1RCRn6Gh0xtT49Ad/5R6VOesojdhnMG1I7tg7tUkN7lmMXSjcy8TEN3XBnAipQTZghQibsK9ieEwsOYLgBfSt6QFlPOjZdm8WxYJLtVY4W5byBq3v1UAibI2tEiLsKo57ko3s4ykF4hyBPzEHWou66AvraAWCHYipg0fHmNAfZeosg8MlHy01fcv01rPuGrx2W7D9xodulHGwQaRCF2wjxRcGFzAxS2oU4rc7Nt9LE3HIv3UWYa+W3hU/GSdqzVJZSqEl6YVLsg2BPVrp0QSi7hNlQ3wf/4haYSSG/5PF3fbPYTvqCK7HNb4ZbZd/Ni/tmNzwg+T4PiObUiLCDHkkfEqRbQ1SE0mht9jq3iHgo3TProSMiI2WQgKhOguhZeUGDI8gnZee8jXlgvVwwSsRCznUHuQ5fEjO7cfDmAIpuFu+7IfTExstXTeFLvVtVUtIt+yXM5COlDbfp728vNGJfda4kloKOaOs8a2016gMhbMeDNxo8CWD0bkYiXWYnAu+WZCpCPL4f9t4TqUaRgZIuk/H6eKU8wUPdIdFyw/+HcYf0rrLxSeqCTDZZxp6685R6En+jamW/hJ2I0gs6BaSLcxrIBtG6bAdfZWaunBHmvuIU=
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|31061999003|461199028|15080799012|13091999003|41001999006|51005399006|8062599012|19110799012|8060799015|440099028|3412199025|40105399003|12091999003|102099032;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?oJc81yAY1Qb2mbHlwZPDSWQWzpIs+1ihYxf22rCkox0kC75sBPMCT+Vm2DMy?=
+ =?us-ascii?Q?jzyNvmMFpA0nROciuAb3W7EXkTwU7lKiErAZq6s92MoZW5A55wLfhYpfheI5?=
+ =?us-ascii?Q?RJAP68aFGqenaOvpzU0L2DKLherRL2tpjZQgFdmobzQI/p4JvwnRkAH9r4+e?=
+ =?us-ascii?Q?rTLmMtqzukPKUSaH0AEVADvWxkdSzcQ7GMWWUkEPLas1Hx5tjZnL3vvptBjH?=
+ =?us-ascii?Q?8u1v+dYHzDHbyBG5QHm3mXr32xau2sbj1jnhG3ncX2EDTiqLXobEmBzV8nkg?=
+ =?us-ascii?Q?u5XkHjCRfmcwSBTG0F6G3kb2TatKtmtbetEYFYExLQTP4PkGElb8QMCXiT6x?=
+ =?us-ascii?Q?cdQ4Eo6rdz9v8j/ddwW2FL5ksuwvfnBTQZh6UrroVsKwzc5CC5nJXZlnLGf+?=
+ =?us-ascii?Q?HIyDyn2YKa0ZhDgOO2APYoRsRnaVgUGaewSMvu2kv3mOL9QsSzgfuFz5U4M9?=
+ =?us-ascii?Q?Lw2nAzT3d2jZWoqHujYdLlFUYN/S3MivshOux8SJyWscVQxNK50sNMptIOy2?=
+ =?us-ascii?Q?ProCvWllR5VTN9VoiU3vAEZdEpo5OoDpUqkQEJve8pqCZQtxp18+x1yr0f6x?=
+ =?us-ascii?Q?mQVLlgCxl8LnQAxFULSaFPwaK8a7UR+sAP+qLB3VgAVhU8Ylv3VN2Ut+YUhZ?=
+ =?us-ascii?Q?VM3azV9WsTcismKmHWFRcZyYhNJdmE1QdjFk0fs81RJ8g/ooL1C6MBuk26Xe?=
+ =?us-ascii?Q?iLTNGzwW8+cQE0aXc7ImQ6RUoJqCAg4bBiUqmYWAFRy4V6/toOBUQBahltCo?=
+ =?us-ascii?Q?PjtDWf6WoHC8uKuQtCYDOFZw6WRa1U0rRDzbJzf9WN2NEzuC2f+0zV9xQfj+?=
+ =?us-ascii?Q?Fvf0nA2XH4QDF1NF23vQ8GQr/pemiYJI54nkOnI0iNFfGWPjvI90AFUyoAac?=
+ =?us-ascii?Q?xmop1Geqb9lWlX4G8Xzf+Juezs9HBOQA9LQDwflhPS9SilogIDlHS3njjUqi?=
+ =?us-ascii?Q?W17CvglDrOfhHX0/NIKzAXRqTO94X0FE3Uw1I9L5Y0fHup49sksKmvOtloLl?=
+ =?us-ascii?Q?h1NQwk0J5fXYw+jIlR8PIaxpbaoVuq3RElxa/NZeefqRyb1hMpQm81TfR5je?=
+ =?us-ascii?Q?El/msvXrdm4L/tIbV4r4VbsJNdbnA3FvGVHFtpnLlFTPL2mrl/1G3r/BTM6z?=
+ =?us-ascii?Q?oQark71YNCI5DxJvwLDr7pSpNIACsT6Jtua2pWRm6n4fEtTIAEhmfU6oNsSz?=
+ =?us-ascii?Q?rzIkZ7T/XtFpoIzdamP+03vkvQOhEnpZC54XXzDZGtrr+eOCU0/TRBYw/M9k?=
+ =?us-ascii?Q?rudQIu/vQGLAR1PMYjY75ztrCYc6EnIfHPzDXQXq0g=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?qBuujdA6lSS2og5EAdaVTW8Qm2B+l/LH1M0R9Qg/W7Lr9pDTE0tKcwQC8U/c?=
+ =?us-ascii?Q?P+TT8vYso3gC+ULs33BnwOV7wlYoaxL4QVXDeC347I0JEywG8B+Z/JvwOPr8?=
+ =?us-ascii?Q?fSYX1Nn6JRRHpIf6ahIFexF3e9VWbteKX9XX/aocJtVcIsh+obeXI9KE2uik?=
+ =?us-ascii?Q?VRteHuCig5RWgOW6kohuOyFteFbGE4dGo0TwQMSSRJTffc2nvMGAoqtFMUQq?=
+ =?us-ascii?Q?NpmRZcpc3oyYna8OoaB8+ttUGTDR3pPDicLWO+CaFr5zeOfOXSZUZLarkXJT?=
+ =?us-ascii?Q?2t6l9VaJxBKQq/62T76tn1mGiylaG8k0PlmuZbMPOQTVDyp0PmS8okar/pvQ?=
+ =?us-ascii?Q?lph9ZT1VYS7fzhZUgXm0eLzQmYXKJ+/hRmluViDYhJWIC7ABAzQLYMhZjxqc?=
+ =?us-ascii?Q?7+SKVmVwGZ8eVoyict7kxLqdUY4g1lC+qKXF6JKtg/Hz5MrMPFHdyJxpIT5E?=
+ =?us-ascii?Q?xaDajMusJOzVqzyTEiNY+Xgy3QXDh1/zlHYb7WMkFuNfRKZj+FLx7ehdsdsp?=
+ =?us-ascii?Q?eLSDQQzd9cTfK4sZxuIKws+uDOq82kYYHGIltdoWTBrc1ur4rQ1PXHkVURBc?=
+ =?us-ascii?Q?nN7KT5RJmUCbYCzErNkIE0+pM1PDRa9VOhcjRz6pKEfBRrKMxFx6Wh8RYTjm?=
+ =?us-ascii?Q?a1DHby2vwCQx9cOrJzg2xBHYtzN23Ksh6chrckVG8KGg6lbSf36KXmsh1LT6?=
+ =?us-ascii?Q?EoigEscNIPSkmbtsFvlHTQnGRJZyXH9yFJbNZtiqkSIF5xagLdSiX6my3oQa?=
+ =?us-ascii?Q?4HgIqJp1BLLtCI7M96wnV1QJRLqzAW0VFAm3hn0VKbDlpwhNfOo9RK8V0t/k?=
+ =?us-ascii?Q?Wq71YXeyP5TFdnn4Krcdj+WwJ/Rv/EEj80ZXoIMkOeU50j8nNHBKL5n2T7+M?=
+ =?us-ascii?Q?X9Vd3VMycBiCtJcw8+rHY5JW17I+t4xMwURGttREedrI4rQihyoRwQzT2B3C?=
+ =?us-ascii?Q?6nieG+bSXpnGD/zz2I5hfTT0D8QFjiLm+epv0xu8PklthYEe6w68KwpnC9pY?=
+ =?us-ascii?Q?5Qd20Ks/06PJWt4NQmhkOPTYOyCwg4RaL7j+3+6bClBn6cZ++4ztw8ltUGv4?=
+ =?us-ascii?Q?nuBoARGHmiC1Q2imDQnRxEOJ0uO6AzmNpTXOS30hjbC/TbfzY3P0do/3crEC?=
+ =?us-ascii?Q?0b3akhZhZMcLpu8/YZDHoZVd6/ibjexk7uHL+4JnrLxlY0cAzgLTYY7UrgbF?=
+ =?us-ascii?Q?Pb7czlxTw2f3YTEGh07H3E6WUnAJ1EdATJghqc6l5gV3sXLjHY/uaWz2wLxy?=
+ =?us-ascii?Q?IMdX1kJtwlIIZXTkpvp7SI2/pCt6gov+CHKACOPF3PkACiOg/AfQYwuogmHN?=
+ =?us-ascii?Q?E5jOR6zGWzUlLu93KMcKZEjojm6Q+E9fnD6nFq8fijtr1ULbx11su2qN7jT+?=
+ =?us-ascii?Q?mG7Ktlk=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <176978905128.18763.15996443783319253336.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-X-ZohoMailClient: External
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3abddce-4a7f-436b-f089-08de6027dace
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2026 17:49:02.3837
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR02MB9204
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	DMARC_NA(0.00)[anirudhrb.com];
-	TAGGED_FROM(0.00)[bounces-8610-lists,linux-hyperv=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-8611-lists,linux-hyperv=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[anirudhrb.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FREEMAIL_FROM(0.00)[outlook.com];
+	DKIM_TRACE(0.00)[outlook.com:+];
 	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[anirudh@anirudhrb.com,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,anirudh-surface.localdomain:mid]
-X-Rspamd-Queue-Id: D8BADBD6E5
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,outlook.com:dkim,SN6PR02MB4157.namprd02.prod.outlook.com:mid]
+X-Rspamd-Queue-Id: 78FB5BD710
 X-Rspamd-Action: no action
 
-On Fri, Jan 30, 2026 at 04:04:14PM +0000, Stanislav Kinsburskii wrote:
-> Query the hypervisor for integrated scheduler support and use it if
-> configured.
-> 
-> Microsoft Hypervisor originally provided two schedulers: root and core. The
-> root scheduler allows the root partition to schedule guest vCPUs across
-> physical cores, supporting both time slicing and CPU affinity (e.g., via
-> cgroups). In contrast, the core scheduler delegates vCPU-to-physical-core
-> scheduling entirely to the hypervisor.
-> 
-> Direct virtualization introduces a new privileged guest partition type - L1
-> Virtual Host (L1VH) — which can create child partitions from its own
-> resources. These child partitions are effectively siblings, scheduled by
-> the hypervisor's core scheduler. This prevents the L1VH parent from setting
-> affinity or time slicing for its own processes or guest VPs. While cgroups,
-> CFS, and cpuset controllers can still be used, their effectiveness is
-> unpredictable, as the core scheduler swaps vCPUs according to its own logic
-> (typically round-robin across all allocated physical CPUs). As a result,
-> the system may appear to "steal" time from the L1VH and its children.
-> 
-> To address this, Microsoft Hypervisor introduces the integrated scheduler.
-> This allows an L1VH partition to schedule its own vCPUs and those of its
+From: Anirudh Rayabharam <anirudh@anirudhrb.com> Sent: Friday, January 30, =
+2026 9:37 AM
+>=20
+> On Fri, Jan 30, 2026 at 01:24:34AM +0000, Michael Kelley wrote:
+> > From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Th=
+ursday, January 29, 2026 11:10 AM
+> > >
+> > > On Thu, Jan 29, 2026 at 05:47:02PM +0000, Michael Kelley wrote:
+> > > > From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent=
+: Wednesday, January 21, 2026 2:36 PM
+> > >
+> > > <snip>
+> > >
+> > > > >  static int __init mshv_root_partition_init(struct device *dev)
+> > > > >  {
+> > > > >  	int err;
+> > > > >
+> > > > > -	err =3D root_scheduler_init(dev);
+> > > > > -	if (err)
+> > > > > -		return err;
+> > > > > -
+> > > > >  	err =3D register_reboot_notifier(&mshv_reboot_nb);
+> > > > >  	if (err)
+> > > > > -		goto root_sched_deinit;
+> > > > > +		return err;
+> > > > >
+> > > > >  	return 0;
+> > > >
+> > > > This code is now:
+> > > >
+> > > > 	if (err)
+> > > > 		return err;
+> > > > 	return 0;
+> > > >
+> > > > which can be simplified to just:
+> > > >
+> > > > 	return err;
+> > > >
+> > > > Or drop the local variable 'err' and simplify the entire function t=
+o:
+> > > >
+> > > > 	return register_reboot_notifier(&mshv_reboot_nb);
+> > > >
+> > > > There's a tangential question here: Why is this reboot notifier
+> > > > needed in the first place? All it does is remove the cpuhp state
+> > > > that allocates/frees the per-cpu root_scheduler_input and
+> > > > root_scheduler_output pages. Removing the state will free
+> > > > the pages, but if Linux is rebooting, why bother?
+> > > >
+> > >
+> > > This was originally done to support kexec.
+> > > Here is the original commit message:
+> > >
+> > >     mshv: perform synic cleanup during kexec
+> > >
+> > >     Register a reboot notifier that performs synic cleanup when a kex=
+ec
+> > >     is in progress.
+> > >
+> > >     One notable issue this commit fixes is one where after a kexec, v=
+irtio
+> > >     devices are not functional. Linux root partition receives MMIO do=
+orbell
+> > >     events in the ring buffer in the SIRB synic page. The hypervisor =
+maintains
+> > >     a head pointer where it writes new events into the ring buffer. T=
+he root
+> > >     partition maintains a tail pointer to read events from the buffer=
+.
+> > >
+> > >     Upon kexec reboot, all root data structures are re-initialized an=
+d thus the
+> > >     tail pointer gets reset to zero. The hypervisor on the other hand=
+ still
+> > >     retains the pre-kexec head pointer which could be non-zero. This =
+means that
+> > >     when the hypervisor writes new events to the ring buffer, the roo=
+t
+> > >     partition looks at the wrong place and doesn't find any events. S=
+o, future
+> > >     doorbell events never get delivered. As a result, virtqueue kicks=
+ never get
+> > >     delivered to the host.
+> > >
+> > >     When the SIRB page is disabled the hypervisor resets the head poi=
+nter.
+> >
+> > FWIW, I don't see that commit message anywhere in a public source code
+> > tree. The calls to register/unregister_reboot_notifier() were in the or=
+iginal
+> > introduction of mshv_root_main.c in upstream commit 621191d709b14.
+> > Evidently the code described by that commit message was not submitted
+> > upstream. And of course, the kexec() topic is now being revisited ....
+> >
+> > So to clarify: Do you expect that in the future the reboot notifier wil=
+l be
+> > used for something that really is required for resetting hypervisor sta=
+te
+> > in the case of a kexec reboot?
+>=20
+> While that commit wasn't individually sent upstream but all the code
+> from that commit did land upstream probably bundled with other commits
+> when the mshv driver was introduced. So the reboot notifier is indeed
+> currently used for resetting the synic correctly during kexec reboot.
+>=20
 
-How could an L1VH partition schedule its own vCPUs?
+Indeed, you are right. I confused the "mshv_root_sched_online" and
+"mshv_cpuhp_online" cpuhp states. The reboot notifier removes the latter,
+not the former.  And the latter does substantive cleanup work on the SynIC
+when the state is removed. Apologies for the confusion.
 
-> guests across its "physical" cores, effectively emulating root scheduler
-> behavior within the L1VH, while retaining core scheduler behavior for the
-> rest of the system.
-> 
-> The integrated scheduler is controlled by the root partition and gated by
-> the vmm_enable_integrated_scheduler capability bit. If set, the hypervisor
-> supports the integrated scheduler. The L1VH partition must then check if it
-> is enabled by querying the corresponding extended partition property. If
-> this property is true, the L1VH partition must use the root scheduler
-> logic; otherwise, it must use the core scheduler. This requirement makes
-> reading VMM capabilities in L1VH partition a requirement too.
-> 
-> Signed-off-by: Andreea Pintilie <anpintil@microsoft.com>
-> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> ---
->  drivers/hv/mshv_root_main.c |   85 +++++++++++++++++++++++++++----------------
->  include/hyperv/hvhdk_mini.h |    7 +++-
->  2 files changed, 59 insertions(+), 33 deletions(-)
-> 
-> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-> index 1134a82c7881..6a6bf641b352 100644
-> --- a/drivers/hv/mshv_root_main.c
-> +++ b/drivers/hv/mshv_root_main.c
-> @@ -2053,6 +2053,32 @@ static const char *scheduler_type_to_string(enum hv_scheduler_type type)
->  	};
->  }
->  
-> +static int __init l1vh_retrive_scheduler_type(enum hv_scheduler_type *out)
-
-typo: retrieve*
-
-> +{
-> +	u64 integrated_sched_enabled;
-> +	int ret;
-> +
-> +	*out = HV_SCHEDULER_TYPE_CORE_SMT;
-> +
-> +	if (!mshv_root.vmm_caps.vmm_enable_integrated_scheduler)
-> +		return 0;
-> +
-> +	ret = hv_call_get_partition_property_ex(HV_PARTITION_ID_SELF,
-> +						HV_PARTITION_PROPERTY_INTEGRATED_SCHEDULER_ENABLED,
-> +						0, &integrated_sched_enabled,
-> +						sizeof(integrated_sched_enabled));
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (integrated_sched_enabled)
-> +		*out = HV_SCHEDULER_TYPE_ROOT;
-> +
-> +	pr_debug("%s: integrated scheduler property read: ret=%d value=%llu\n",
-> +		 __func__, ret, integrated_sched_enabled);
-
-ret is always 0 here, right? We don't need to bother printing then.
-
-> +
-> +	return 0;
-> +}
-> +
->  /* TODO move this to hv_common.c when needed outside */
->  static int __init hv_retrieve_scheduler_type(enum hv_scheduler_type *out)
->  {
-> @@ -2085,13 +2111,12 @@ static int __init hv_retrieve_scheduler_type(enum hv_scheduler_type *out)
->  /* Retrieve and stash the supported scheduler type */
->  static int __init mshv_retrieve_scheduler_type(struct device *dev)
->  {
-> -	int ret = 0;
-> +	int ret;
->  
->  	if (hv_l1vh_partition())
-> -		hv_scheduler_type = HV_SCHEDULER_TYPE_CORE_SMT;
-> +		ret = l1vh_retrive_scheduler_type(&hv_scheduler_type);
->  	else
->  		ret = hv_retrieve_scheduler_type(&hv_scheduler_type);
-> -
->  	if (ret)
->  		return ret;
->  
-> @@ -2211,42 +2236,29 @@ struct notifier_block mshv_reboot_nb = {
->  static void mshv_root_partition_exit(void)
->  {
->  	unregister_reboot_notifier(&mshv_reboot_nb);
-> -	root_scheduler_deinit();
->  }
->  
->  static int __init mshv_root_partition_init(struct device *dev)
->  {
-> -	int err;
-> -
-> -	err = root_scheduler_init(dev);
-> -	if (err)
-> -		return err;
-> -
-> -	err = register_reboot_notifier(&mshv_reboot_nb);
-> -	if (err)
-> -		goto root_sched_deinit;
-> -
-> -	return 0;
-> -
-> -root_sched_deinit:
-> -	root_scheduler_deinit();
-> -	return err;
-> +	return register_reboot_notifier(&mshv_reboot_nb);
->  }
->  
-> -static void mshv_init_vmm_caps(struct device *dev)
-> +static int __init mshv_init_vmm_caps(struct device *dev)
->  {
-> -	/*
-> -	 * This can only fail here if HVCALL_GET_PARTITION_PROPERTY_EX or
-> -	 * HV_PARTITION_PROPERTY_VMM_CAPABILITIES are not supported. In that
-> -	 * case it's valid to proceed as if all vmm_caps are disabled (zero).
-> -	 */
-> -	if (hv_call_get_partition_property_ex(HV_PARTITION_ID_SELF,
-> -					      HV_PARTITION_PROPERTY_VMM_CAPABILITIES,
-> -					      0, &mshv_root.vmm_caps,
-> -					      sizeof(mshv_root.vmm_caps)))
-> -		dev_warn(dev, "Unable to get VMM capabilities\n");
-> +	int ret;
-> +
-> +	ret = hv_call_get_partition_property_ex(HV_PARTITION_ID_SELF,
-> +						HV_PARTITION_PROPERTY_VMM_CAPABILITIES,
-> +						0, &mshv_root.vmm_caps,
-> +						sizeof(mshv_root.vmm_caps));
-> +	if (ret && hv_l1vh_partition()) {
-> +		dev_err(dev, "Failed to get VMM capabilities: %d\n", ret);
-> +		return ret;
-
-I don't think we need to fail here. If there are not VMM caps available,
-that means integrated scheduler is not supported by the hypervisor, so
-fall back to core scheduler.
-
-Thanks,
-Anirudh
-
-> +	}
->  
->  	dev_dbg(dev, "vmm_caps = %#llx\n", mshv_root.vmm_caps.as_uint64[0]);
-> +
-> +	return 0;
->  }
->  
->  static int __init mshv_parent_partition_init(void)
-> @@ -2292,6 +2304,10 @@ static int __init mshv_parent_partition_init(void)
->  
->  	mshv_cpuhp_online = ret;
->  
-> +	ret = mshv_init_vmm_caps(dev);
-> +	if (ret)
-> +		goto remove_cpu_state;
-> +
->  	ret = mshv_retrieve_scheduler_type(dev);
->  	if (ret)
->  		goto remove_cpu_state;
-> @@ -2301,11 +2317,13 @@ static int __init mshv_parent_partition_init(void)
->  	if (ret)
->  		goto remove_cpu_state;
->  
-> -	mshv_init_vmm_caps(dev);
-> +	ret = root_scheduler_init(dev);
-> +	if (ret)
-> +		goto exit_partition;
->  
->  	ret = mshv_irqfd_wq_init();
->  	if (ret)
-> -		goto exit_partition;
-> +		goto deinit_root_scheduler;
->  
->  	spin_lock_init(&mshv_root.pt_ht_lock);
->  	hash_init(mshv_root.pt_htable);
-> @@ -2314,6 +2332,8 @@ static int __init mshv_parent_partition_init(void)
->  
->  	return 0;
->  
-> +deinit_root_scheduler:
-> +	root_scheduler_deinit();
->  exit_partition:
->  	if (hv_root_partition())
->  		mshv_root_partition_exit();
-> @@ -2332,6 +2352,7 @@ static void __exit mshv_parent_partition_exit(void)
->  	mshv_port_table_fini();
->  	misc_deregister(&mshv_dev);
->  	mshv_irqfd_wq_cleanup();
-> +	root_scheduler_deinit();
->  	if (hv_root_partition())
->  		mshv_root_partition_exit();
->  	cpuhp_remove_state(mshv_cpuhp_online);
-> diff --git a/include/hyperv/hvhdk_mini.h b/include/hyperv/hvhdk_mini.h
-> index 41a29bf8ec14..c0300910808b 100644
-> --- a/include/hyperv/hvhdk_mini.h
-> +++ b/include/hyperv/hvhdk_mini.h
-> @@ -87,6 +87,9 @@ enum hv_partition_property_code {
->  	HV_PARTITION_PROPERTY_PRIVILEGE_FLAGS			= 0x00010000,
->  	HV_PARTITION_PROPERTY_SYNTHETIC_PROC_FEATURES		= 0x00010001,
->  
-> +	/* Integrated scheduling properties */
-> +	HV_PARTITION_PROPERTY_INTEGRATED_SCHEDULER_ENABLED	= 0x00020005,
-> +
->  	/* Resource properties */
->  	HV_PARTITION_PROPERTY_GPA_PAGE_ACCESS_TRACKING		= 0x00050005,
->  	HV_PARTITION_PROPERTY_UNIMPLEMENTED_MSR_ACTION		= 0x00050017,
-> @@ -102,7 +105,7 @@ enum hv_partition_property_code {
->  };
->  
->  #define HV_PARTITION_VMM_CAPABILITIES_BANK_COUNT		1
-> -#define HV_PARTITION_VMM_CAPABILITIES_RESERVED_BITFIELD_COUNT	59
-> +#define HV_PARTITION_VMM_CAPABILITIES_RESERVED_BITFIELD_COUNT	57
->  
->  struct hv_partition_property_vmm_capabilities {
->  	u16 bank_count;
-> @@ -119,6 +122,8 @@ struct hv_partition_property_vmm_capabilities {
->  			u64 reservedbit3: 1;
->  #endif
->  			u64 assignable_synthetic_proc_features: 1;
-> +			u64 reservedbit5: 1;
-> +			u64 vmm_enable_integrated_scheduler : 1;
->  			u64 reserved0: HV_PARTITION_VMM_CAPABILITIES_RESERVED_BITFIELD_COUNT;
->  		} __packed;
->  	};
-> 
-> 
+Michael
 
