@@ -1,80 +1,65 @@
-Return-Path: <linux-hyperv+bounces-8600-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8601-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YG3yK9/JfGnaOgIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8600-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 16:10:23 +0100
+	id kAqVAmbTfGlbOwIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8601-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 16:51:02 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B6A1BBE34
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 16:10:23 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B27FBC38C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 16:51:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 809CD300AB30
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 15:10:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 79F92303FAC2
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 15:49:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A605034F474;
-	Fri, 30 Jan 2026 15:10:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C53933A9D3;
+	Fri, 30 Jan 2026 15:49:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L6dXAS0d"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lw8UUKrM"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11234314A83;
-	Fri, 30 Jan 2026 15:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4C1D328B69;
+	Fri, 30 Jan 2026 15:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769785821; cv=none; b=Z/5duLcaYeoHl2jQxzC9i+s7t5CE8k/LehIdkqdoOxYrwKiUUQwinEY2cgJNWgSe03z/gd6KssDsgk+QU4L8gj4rzfzn7sS2qGNs2Fuhsft0ZE+Ip84wZCVkWp70bbBbq2Ds1p/gBPA0RqOUNIOFkHfe0Ku7oJ1/5i8Bt0Oop1I=
+	t=1769788146; cv=none; b=TUIQq/9PnopK7ijW30zzHs/EyobVlxTsbKUcjLaXMviqZIni96djmMlLxxdVwd1pda9wi9G6Hen1txtoxyujOF8ptO5o9B2yWmZNHskt57qbBUrocVPG9E4c1o///Mu7DIs13+3DMgZe3zIjCtcNGz/uno+O+XufYsnUbzVGZCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769785821; c=relaxed/simple;
-	bh=Tk+4n5bagQc1C4YDearYoI/yMNEgljf3iNZ/nmG4k8Q=;
+	s=arc-20240116; t=1769788146; c=relaxed/simple;
+	bh=uetvXCW4ckYYfuIokCe7rnB4KZ2lB2VJmb6U10W2p1E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YEdIwUPDfyIPQrxWTXJxuFquh7MxEJKj8hy0071f9JXpGcZLrYfHVo2OA18JgMPjnulogVzbspOPGPacI8aB49ZeFn2VXBcQwxCq8thCf9TNvI/UTWUPs4337FSNbaS1DADFwYmxb6QT8BQCheKedf9QbP2glXbpV9qI6AFrgvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L6dXAS0d; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769785820; x=1801321820;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Tk+4n5bagQc1C4YDearYoI/yMNEgljf3iNZ/nmG4k8Q=;
-  b=L6dXAS0d1XUtMEh7aoHPEaRa9tOAdlmFEtC23v1wmcxsq/F4KaNHDS5/
-   w+qLC4RRob0hTb/KrwL9aXRNPBcUeJaUY/tvZPYW6OtTQTaKKiQBohIV0
-   DxECC82lgKRwxm/m/VEaDhGeGlFqBecG0G9sg46430dl0tRor8FrTcXVK
-   gr7MKns7Dsqsen3EKCuPQrd3qMg7g0qyUE7G0M1J6cmsRRZTpKnJKyhh6
-   5VC+Bq+G3BFsEYMhQx9mO8nTn7ygAwlYoHAXgFVUWW9TaORlb7Fgy4Zc4
-   1Sc4YdZWcJHPIWS7lh9N2QqdbGsa9JtteiXU83Hz8nZ2y+zNLRKc6DqNA
-   g==;
-X-CSE-ConnectionGUID: fG3mwN9CRS69qHwSi14eMQ==
-X-CSE-MsgGUID: rtQ/zqpdQEKj4i5v3i8Xbg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11686"; a="73636617"
-X-IronPort-AV: E=Sophos;i="6.21,263,1763452800"; 
-   d="scan'208";a="73636617"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2026 07:10:19 -0800
-X-CSE-ConnectionGUID: uMyE01xhTGqOzOsd7xxxvg==
-X-CSE-MsgGUID: V849l9CKQpS77pKHW9S/Og==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,263,1763452800"; 
-   d="scan'208";a="209124436"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 30 Jan 2026 07:10:15 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vlq8U-00000000d4O-2luX;
-	Fri, 30 Jan 2026 15:10:14 +0000
-Date: Fri, 30 Jan 2026 23:09:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mshv: Add support for integrated scheduler
-Message-ID: <202601302238.nUbp7p58-lkp@intel.com>
-References: <176971725312.67225.3938191771112866951.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+	 Content-Type:Content-Disposition:In-Reply-To; b=n2IjOCDETpVdgXMDLAtCca9zR7bujwzvUFuXFzjcxXjEx6O4x9sCfpyeosSOLSEd9RMRPJG+CR5zlfHX50nxMdm5SvIVSIqLygLqKsB3TLTfEhDNoswHzS/AOSyf7rGBtIm7VvkQ+Zh7E4xs62aAMUmP2B6vxx4YooZ5DAc3VG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lw8UUKrM; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from skinsburskii.localdomain (c-98-225-44-182.hsd1.wa.comcast.net [98.225.44.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D26D820B7167;
+	Fri, 30 Jan 2026 07:49:04 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D26D820B7167
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1769788145;
+	bh=Y7rFLVQtwnTXgFLRjNly1o4YEBvUgqVnKy+WWXvEVlg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lw8UUKrMvESW5yxCtL5HulkskLUEgWuLfXvHFvBKxht4LKiZ/SflKtwksOeNzACca
+	 0J9s75tJ5QbIVYuNdmJrnlnqxuP7hE+b9meO+GcM9Xe/HOvsfbvO5MWTwHaAiiOU7U
+	 9jUDZjpV9Ybu5VAsc+DVGRljKRSgT4LvQYX7dEfI=
+Date: Fri, 30 Jan 2026 07:49:05 -0800
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"longli@microsoft.com" <longli@microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] mshv: Add support for integrated scheduler
+Message-ID: <aXzS8VPmfInQVort@skinsburskii.localdomain>
+References: <176903475057.166619.9437539561789960983.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <176903495970.166619.12888807009225201668.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <SN6PR02MB415767BB59E00442812F47B5D49EA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <aXuwes2HNf4Og8lW@skinsburskii.localdomain>
+ <SN6PR02MB4157EE41697ABC1002750297D49FA@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -83,141 +68,174 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <176971725312.67225.3938191771112866951.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+In-Reply-To: <SN6PR02MB4157EE41697ABC1002750297D49FA@SN6PR02MB4157.namprd02.prod.outlook.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	TAGGED_FROM(0.00)[bounces-8600-lists,linux-hyperv=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	TAGGED_FROM(0.00)[bounces-8601-lists,linux-hyperv=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[outlook.com];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-hyperv@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[01.org:url,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,intel.com:email,intel.com:dkim,intel.com:mid]
-X-Rspamd-Queue-Id: 2B6A1BBE34
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,skinsburskii.localdomain:mid]
+X-Rspamd-Queue-Id: 5B27FBC38C
 X-Rspamd-Action: no action
 
-Hi Stanislav,
+On Fri, Jan 30, 2026 at 01:24:34AM +0000, Michael Kelley wrote:
+> From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Thursday, January 29, 2026 11:10 AM
+> > 
+> > On Thu, Jan 29, 2026 at 05:47:02PM +0000, Michael Kelley wrote:
+> > > From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Wednesday, January 21, 2026 2:36 PM
+> > 
+> > <snip>
+> > 
+> > > >  static int __init mshv_root_partition_init(struct device *dev)
+> > > >  {
+> > > >  	int err;
+> > > >
+> > > > -	err = root_scheduler_init(dev);
+> > > > -	if (err)
+> > > > -		return err;
+> > > > -
+> > > >  	err = register_reboot_notifier(&mshv_reboot_nb);
+> > > >  	if (err)
+> > > > -		goto root_sched_deinit;
+> > > > +		return err;
+> > > >
+> > > >  	return 0;
+> > >
+> > > This code is now:
+> > >
+> > > 	if (err)
+> > > 		return err;
+> > > 	return 0;
+> > >
+> > > which can be simplified to just:
+> > >
+> > > 	return err;
+> > >
+> > > Or drop the local variable 'err' and simplify the entire function to:
+> > >
+> > > 	return register_reboot_notifier(&mshv_reboot_nb);
+> > >
+> > > There's a tangential question here: Why is this reboot notifier
+> > > needed in the first place? All it does is remove the cpuhp state
+> > > that allocates/frees the per-cpu root_scheduler_input and
+> > > root_scheduler_output pages. Removing the state will free
+> > > the pages, but if Linux is rebooting, why bother?
+> > >
+> > 
+> > This was originally done to support kexec.
+> > Here is the original commit message:
+> > 
+> >     mshv: perform synic cleanup during kexec
+> > 
+> >     Register a reboot notifier that performs synic cleanup when a kexec
+> >     is in progress.
+> > 
+> >     One notable issue this commit fixes is one where after a kexec, virtio
+> >     devices are not functional. Linux root partition receives MMIO doorbell
+> >     events in the ring buffer in the SIRB synic page. The hypervisor maintains
+> >     a head pointer where it writes new events into the ring buffer. The root
+> >     partition maintains a tail pointer to read events from the buffer.
+> > 
+> >     Upon kexec reboot, all root data structures are re-initialized and thus the
+> >     tail pointer gets reset to zero. The hypervisor on the other hand still
+> >     retains the pre-kexec head pointer which could be non-zero. This means that
+> >     when the hypervisor writes new events to the ring buffer, the root
+> >     partition looks at the wrong place and doesn't find any events. So, future
+> >     doorbell events never get delivered. As a result, virtqueue kicks never get
+> >     delivered to the host.
+> > 
+> >     When the SIRB page is disabled the hypervisor resets the head pointer.
+> 
+> FWIW, I don't see that commit message anywhere in a public source code
+> tree. The calls to register/unregister_reboot_notifier() were in the original
+> introduction of mshv_root_main.c in upstream commit 621191d709b14.
+> Evidently the code described by that commit message was not submitted
+> upstream. And of course, the kexec() topic is now being revisited ....
+> 
+> So to clarify: Do you expect that in the future the reboot notifier will be
+> used for something that really is required for resetting hypervisor state
+> in the case of a kexec reboot?
+> 
 
-kernel test robot noticed the following build errors:
+Yes, for now it's the best we have.
+This code can be dropped later if we get a better way to handle kexec.
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.19-rc7 next-20260129]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > 
+> > > > -root_sched_deinit:
+> > > > -	root_scheduler_deinit();
+> > > > -	return err;
+> > > >  }
+> > > >
+> > > > -static void mshv_init_vmm_caps(struct device *dev)
+> > > > +static int mshv_init_vmm_caps(struct device *dev)
+> > > >  {
+> > > > -	/*
+> > > > -	 * This can only fail here if HVCALL_GET_PARTITION_PROPERTY_EX or
+> > > > -	 * HV_PARTITION_PROPERTY_VMM_CAPABILITIES are not supported. In that
+> > > > -	 * case it's valid to proceed as if all vmm_caps are disabled (zero).
+> > > > -	 */
+> > > > -	if (hv_call_get_partition_property_ex(HV_PARTITION_ID_SELF,
+> > > > -					      HV_PARTITION_PROPERTY_VMM_CAPABILITIES,
+> > > > -					      0, &mshv_root.vmm_caps,
+> > > > -					      sizeof(mshv_root.vmm_caps)))
+> > > > -		dev_warn(dev, "Unable to get VMM capabilities\n");
+> > > > +	int ret;
+> > > > +
+> > > > +	ret = hv_call_get_partition_property_ex(HV_PARTITION_ID_SELF,
+> > > > +					 	HV_PARTITION_PROPERTY_VMM_CAPABILITIES,
+> > > > +						0, &mshv_root.vmm_caps,
+> > > > +						sizeof(mshv_root.vmm_caps));
+> > > > +	if (ret) {
+> > > > +		dev_err(dev, "Failed to get VMM capabilities: %d\n", ret);
+> > > > +		return ret;
+> > > > +	}
+> > >
+> > > This is a functional change that isn't mentioned in the commit message.
+> > > Why is it now appropriate to fail instead of treating the VMM capabilities
+> > > as all disabled? Presumably there are older versions of the hypervisor that
+> > > don't support the requirements described in the original comment, but
+> > > perhaps they are no longer relevant?
+> > >
+> > 
+> > To fail is now the only option for the L1VH partition. It must discover
+> > the scheduler type. Without this information, the partition cannot
+> > operate. The core scheduler logic will not work with an integrated
+> > scheduler, and vice versa.
+> > 
+> > And yes, older hypervisor versions do not support L1VH.
+> 
+> That makes sense. Your change in v2 of the patch handles this
+> nicely. For the non-L1VH case, the v2 behavior is the same as before in
+> that the init path won't error out on older hypervisors that don't
+> support the requirements described in the original comment. That's
+> the case I am concerned about.
+> 
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Stanislav-Kinsburskii/mshv-Add-support-for-integrated-scheduler/20260130-041014
-base:   linus/master
-patch link:    https://lore.kernel.org/r/176971725312.67225.3938191771112866951.stgit%40skinsburskii-cloud-desktop.internal.cloudapp.net
-patch subject: [PATCH v2] mshv: Add support for integrated scheduler
-config: x86_64-randconfig-002-20260130 (https://download.01.org/0day-ci/archive/20260130/202601302238.nUbp7p58-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260130/202601302238.nUbp7p58-lkp@intel.com/reproduce)
+Yes. Thank you for the review and feedback!
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601302238.nUbp7p58-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/hv/mshv_root_main.c: In function 'mshv_init_vmm_caps':
-   drivers/hv/mshv_root_main.c:2255:9: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
-    2255 |         if (ret && hv_l1vh_partition())
-         |         ^~
-   drivers/hv/mshv_root_main.c:2257:17: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
-    2257 |                 return ret;
-         |                 ^~~~~~
-   In file included from include/linux/device.h:15,
-                    from include/linux/blk_types.h:11,
-                    from include/linux/writeback.h:13,
-                    from include/linux/memcontrol.h:23,
-                    from include/linux/resume_user_mode.h:8,
-                    from include/linux/entry-virt.h:6,
-                    from drivers/hv/mshv_root_main.c:11:
-   drivers/hv/mshv_root_main.c: At top level:
->> include/linux/dev_printk.h:137:10: error: expected identifier or '(' before '{' token
-     137 |         ({                                                              \
-         |          ^
-   include/linux/dev_printk.h:171:9: note: in expansion of macro 'dev_no_printk'
-     171 |         dev_no_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__)
-         |         ^~~~~~~~~~~~~
-   drivers/hv/mshv_root_main.c:2260:9: note: in expansion of macro 'dev_dbg'
-    2260 |         dev_dbg(dev, "vmm_caps = %#llx\n", mshv_root.vmm_caps.as_uint64[0]);
-         |         ^~~~~~~
-   drivers/hv/mshv_root_main.c:2262:9: error: expected identifier or '(' before 'return'
-    2262 |         return 0;
-         |         ^~~~~~
-   drivers/hv/mshv_root_main.c:2263:1: error: expected identifier or '(' before '}' token
-    2263 | }
-         | ^
-
-
-vim +137 include/linux/dev_printk.h
-
-af628aae8640c26 Greg Kroah-Hartman 2019-12-09   99  
-ad7d61f159db739 Chris Down         2021-06-15  100  /*
-ad7d61f159db739 Chris Down         2021-06-15  101   * Need to take variadic arguments even though we don't use them, as dev_fmt()
-ad7d61f159db739 Chris Down         2021-06-15  102   * may only just have been expanded and may result in multiple arguments.
-ad7d61f159db739 Chris Down         2021-06-15  103   */
-ad7d61f159db739 Chris Down         2021-06-15  104  #define dev_printk_index_emit(level, fmt, ...) \
-ad7d61f159db739 Chris Down         2021-06-15  105  	printk_index_subsys_emit("%s %s: ", level, fmt)
-ad7d61f159db739 Chris Down         2021-06-15  106  
-ad7d61f159db739 Chris Down         2021-06-15  107  #define dev_printk_index_wrap(_p_func, level, dev, fmt, ...)		\
-ad7d61f159db739 Chris Down         2021-06-15  108  	({								\
-ad7d61f159db739 Chris Down         2021-06-15  109  		dev_printk_index_emit(level, fmt);			\
-ad7d61f159db739 Chris Down         2021-06-15  110  		_p_func(dev, fmt, ##__VA_ARGS__);			\
-ad7d61f159db739 Chris Down         2021-06-15  111  	})
-ad7d61f159db739 Chris Down         2021-06-15  112  
-ad7d61f159db739 Chris Down         2021-06-15  113  /*
-ad7d61f159db739 Chris Down         2021-06-15  114   * Some callsites directly call dev_printk rather than going through the
-ad7d61f159db739 Chris Down         2021-06-15  115   * dev_<level> infrastructure, so we need to emit here as well as inside those
-ad7d61f159db739 Chris Down         2021-06-15  116   * level-specific macros. Only one index entry will be produced, either way,
-ad7d61f159db739 Chris Down         2021-06-15  117   * since dev_printk's `fmt` isn't known at compile time if going through the
-ad7d61f159db739 Chris Down         2021-06-15  118   * dev_<level> macros.
-ad7d61f159db739 Chris Down         2021-06-15  119   *
-ad7d61f159db739 Chris Down         2021-06-15  120   * dev_fmt() isn't called for dev_printk when used directly, as it's used by
-ad7d61f159db739 Chris Down         2021-06-15  121   * the dev_<level> macros internally which already have dev_fmt() processed.
-ad7d61f159db739 Chris Down         2021-06-15  122   *
-ad7d61f159db739 Chris Down         2021-06-15  123   * We also can't use dev_printk_index_wrap directly, because we have a separate
-ad7d61f159db739 Chris Down         2021-06-15  124   * level to process.
-ad7d61f159db739 Chris Down         2021-06-15  125   */
-ad7d61f159db739 Chris Down         2021-06-15  126  #define dev_printk(level, dev, fmt, ...)				\
-ad7d61f159db739 Chris Down         2021-06-15  127  	({								\
-ad7d61f159db739 Chris Down         2021-06-15  128  		dev_printk_index_emit(level, fmt);			\
-ad7d61f159db739 Chris Down         2021-06-15  129  		_dev_printk(level, dev, fmt, ##__VA_ARGS__);		\
-ad7d61f159db739 Chris Down         2021-06-15  130  	})
-ad7d61f159db739 Chris Down         2021-06-15  131  
-c26ec799042a388 Geert Uytterhoeven 2024-02-28  132  /*
-c26ec799042a388 Geert Uytterhoeven 2024-02-28  133   * Dummy dev_printk for disabled debugging statements to use whilst maintaining
-c26ec799042a388 Geert Uytterhoeven 2024-02-28  134   * gcc's format checking.
-c26ec799042a388 Geert Uytterhoeven 2024-02-28  135   */
-c26ec799042a388 Geert Uytterhoeven 2024-02-28  136  #define dev_no_printk(level, dev, fmt, ...)				\
-c26ec799042a388 Geert Uytterhoeven 2024-02-28 @137  	({								\
-c26ec799042a388 Geert Uytterhoeven 2024-02-28  138  		if (0)							\
-c26ec799042a388 Geert Uytterhoeven 2024-02-28  139  			_dev_printk(level, dev, fmt, ##__VA_ARGS__);	\
-c26ec799042a388 Geert Uytterhoeven 2024-02-28  140  	})
-c26ec799042a388 Geert Uytterhoeven 2024-02-28  141  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Stanislav
+> Michael
 
