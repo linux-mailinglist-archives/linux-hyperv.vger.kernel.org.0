@@ -1,265 +1,231 @@
-Return-Path: <linux-hyperv+bounces-8597-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8598-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EWyKCJkefGmgKgIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8597-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 03:59:37 +0100
+	id cBFTHCdHfGn8LgIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8598-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 06:52:39 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 638CDB6A54
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 03:59:36 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCF60B77E6
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 06:52:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F1556300D453
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 02:59:34 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id CB028300C268
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jan 2026 05:52:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ADC22459E5;
-	Fri, 30 Jan 2026 02:59:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43EFE3783DB;
+	Fri, 30 Jan 2026 05:52:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rP06X/uD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l7LUwIzI"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17FE2D531;
-	Fri, 30 Jan 2026 02:59:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B012874E9;
+	Fri, 30 Jan 2026 05:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769741974; cv=none; b=uCiFX50n6bQlnP1Fci2ahK8iCsmAODkEq1ERAcxDIYwnKX+6vU1j1ZeVi/B1rNnLjI7XQ4aU8dDBYsg9HOmPRSrFr4vZoBz6wf3R5UwRYvkpo2+qDRu6uUN3PZ1iNQUEUxOE3nV+M8CHuAEzliCpOmIFBG0mA6hUUu4+S4N1A4o=
+	t=1769752357; cv=none; b=EX6JF/KaUEdsip9xVKs/7/qC+M8QweFPji5t1DfXH7vPp3WtPUm3PZfvGCW0u4pAQVnR6UX/GdhQNYmsBr3rc3BlqXkufYfvm5iQHEUWiOWx45zRODQMlT1AVRY0+9Z004HL8edRQ5HgsAuLvX7+ve0SLb1Z+u3DdnYk4K+Sld0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769741974; c=relaxed/simple;
-	bh=7Uk+ZEuPYatvsyaJm2suJb7vBz2Tyy/2XKhvZ1E5ZIE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k11OvwoPBCtF/kkcFYJ58hulFs9sReTtyofl7FgUqlaE2UT+FZ8eHrwZT7U50/reUHw+nhttdPVkh8HdZmZh9nPunWPtSXS3ZeiIxXZdiWq2z40T/JirFxzzXnS8iAyWTOzQaInHYKfnV+XRCogmsHpAQEFfaI56ezaTGK0dU18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rP06X/uD; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.93.96.72] (unknown [40.118.131.60])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 8662E20B7167;
-	Thu, 29 Jan 2026 18:59:32 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8662E20B7167
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1769741972;
-	bh=ws8fU+u6oIT40gVv4hOR3t6onI87N9K9q5BzJacLZHc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rP06X/uDitH1hgfYmE2n93gX6MSU5UMkHwIo7J/LWVuGIvxV69tPwBTjbd5gmxJy5
-	 NE40N630YpmNwNAZxSn11asXXH1xO09j+8pre5Vrm5xgdqNDkS07F/LsbvCtvv+8Nb
-	 gHWVrsD2zIDF/xxX1wusJD90QO0c1LqH4Pykpags=
-Message-ID: <919446c3-e02f-d532-3ea8-74d0cee38d33@linux.microsoft.com>
-Date: Thu, 29 Jan 2026 18:59:31 -0800
+	s=arc-20240116; t=1769752357; c=relaxed/simple;
+	bh=9ayXIsHcKJtGatNJ5F6AW00zSHoqpxpTsNBom1CuDLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EEWroiW35cfge5kIxbRUomNYSKb5TmlRinsFOtX34v7Zeydj6GMe4384+04hCvItbh1sghIjXPjDMHIHEGy7cURqEHinKgY6i8yu5nuaFVBB5qlODhd60aSGg02SFVaPuElwCD9kL6Ug3EWugkIP5VtzvG3xGpqgNQv1+mVyRQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l7LUwIzI; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1769752355; x=1801288355;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9ayXIsHcKJtGatNJ5F6AW00zSHoqpxpTsNBom1CuDLQ=;
+  b=l7LUwIzIQnzFei0L4PNlQNn4EsdzWNyrZxoJY4W9IsDOWNx2YpS9Mu2h
+   +m5QUo/Cvlg+1d2m1iZZP+oGCybXcY/bz2212rcJtdX8rArcDO4kW2+0Z
+   yngwnpBBkQrcpwxEF/qTeCap+Xvs8L9yA9+YdIa5EDK0QIYWMEqcuThsO
+   D/w/7XpVkJnoGmumhT0zZfOBIg494TPKPd5UmNgvzEUOPgnWAYXGY6P0o
+   oCpd5gCj2AgsJ55LC8/bU407Ju2eGHe0/ro9Uu09Nb/ChUHUaHzjEoT5s
+   /mjEjHV7X2FuhGda8BEqvj4ZjM+i2rg83MKsbjBigT8Y+T+ecVOkDa0eX
+   A==;
+X-CSE-ConnectionGUID: AhWc4P5pTe+SZUDuRRwleg==
+X-CSE-MsgGUID: EwrgD8j+SPyGOiqKRpWzUw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11686"; a="70718660"
+X-IronPort-AV: E=Sophos;i="6.21,262,1763452800"; 
+   d="scan'208";a="70718660"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2026 21:52:35 -0800
+X-CSE-ConnectionGUID: pIfDgLSPTQqhHJkUIh1xjg==
+X-CSE-MsgGUID: VTohgTu3RBGrkTKHaeXOfA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,262,1763452800"; 
+   d="scan'208";a="209192306"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 29 Jan 2026 21:52:32 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vlhQj-00000000cEW-380R;
+	Fri, 30 Jan 2026 05:52:29 +0000
+Date: Fri, 30 Jan 2026 13:51:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com
+Cc: oe-kbuild-all@lists.linux.dev, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mshv: Add support for integrated scheduler
+Message-ID: <202601301357.SWdA3gzf-lkp@intel.com>
+References: <176971725312.67225.3938191771112866951.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH] mshv: Make MSHV mutually exclusive with KEXEC
-Content-Language: en-US
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, longli@microsoft.com, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <176920684805.250171.6817228088359793537.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <549041d1-360d-d34c-4e3b-62802346acaa@linux.microsoft.com>
- <aXabnnCV50Thv9tZ@skinsburskii.localdomain>
- <890506f6-9b91-5d59-8c98-086cf5d206bb@linux.microsoft.com>
- <aXfSDm-4BjPPZMNu@skinsburskii.localdomain>
- <2b42997d-7cc0-56ba-e1ca-a8640ce71ea9@linux.microsoft.com>
- <aXgFFz7YuJJQabyp@skinsburskii.localdomain>
- <257ad7f1-5dc0-2644-41c3-960c396caa38@linux.microsoft.com>
- <aXj6FXahxZU8QFq0@skinsburskii.localdomain>
- <4bcd7b66-6e3b-8f53-b688-ce0272123839@linux.microsoft.com>
- <aXqW7v-lnAT_gr0s@skinsburskii.localdomain>
-From: Mukesh R <mrathor@linux.microsoft.com>
-In-Reply-To: <aXqW7v-lnAT_gr0s@skinsburskii.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <176971725312.67225.3938191771112866951.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.16 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8597-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	TAGGED_FROM(0.00)[bounces-8598-lists,linux-hyperv=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mrathor@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-hyperv@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:mid,linux.microsoft.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 638CDB6A54
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,intel.com:email,intel.com:dkim,intel.com:mid]
+X-Rspamd-Queue-Id: DCF60B77E6
 X-Rspamd-Action: no action
 
-On 1/28/26 15:08, Stanislav Kinsburskii wrote:
-> On Tue, Jan 27, 2026 at 11:56:02AM -0800, Mukesh R wrote:
->> On 1/27/26 09:47, Stanislav Kinsburskii wrote:
->>> On Mon, Jan 26, 2026 at 05:39:49PM -0800, Mukesh R wrote:
->>>> On 1/26/26 16:21, Stanislav Kinsburskii wrote:
->>>>> On Mon, Jan 26, 2026 at 03:07:18PM -0800, Mukesh R wrote:
->>>>>> On 1/26/26 12:43, Stanislav Kinsburskii wrote:
->>>>>>> On Mon, Jan 26, 2026 at 12:20:09PM -0800, Mukesh R wrote:
->>>>>>>> On 1/25/26 14:39, Stanislav Kinsburskii wrote:
->>>>>>>>> On Fri, Jan 23, 2026 at 04:16:33PM -0800, Mukesh R wrote:
->>>>>>>>>> On 1/23/26 14:20, Stanislav Kinsburskii wrote:
->>>>>>>>>>> The MSHV driver deposits kernel-allocated pages to the hypervisor during
->>>>>>>>>>> runtime and never withdraws them. This creates a fundamental incompatibility
->>>>>>>>>>> with KEXEC, as these deposited pages remain unavailable to the new kernel
->>>>>>>>>>> loaded via KEXEC, leading to potential system crashes upon kernel accessing
->>>>>>>>>>> hypervisor deposited pages.
->>>>>>>>>>>
->>>>>>>>>>> Make MSHV mutually exclusive with KEXEC until proper page lifecycle
->>>>>>>>>>> management is implemented.
->>>>>>>>>>>
->>>>>>>>>>> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
->>>>>>>>>>> ---
->>>>>>>>>>>        drivers/hv/Kconfig |    1 +
->>>>>>>>>>>        1 file changed, 1 insertion(+)
->>>>>>>>>>>
->>>>>>>>>>> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
->>>>>>>>>>> index 7937ac0cbd0f..cfd4501db0fa 100644
->>>>>>>>>>> --- a/drivers/hv/Kconfig
->>>>>>>>>>> +++ b/drivers/hv/Kconfig
->>>>>>>>>>> @@ -74,6 +74,7 @@ config MSHV_ROOT
->>>>>>>>>>>        	# e.g. When withdrawing memory, the hypervisor gives back 4k pages in
->>>>>>>>>>>        	# no particular order, making it impossible to reassemble larger pages
->>>>>>>>>>>        	depends on PAGE_SIZE_4KB
->>>>>>>>>>> +	depends on !KEXEC
->>>>>>>>>>>        	select EVENTFD
->>>>>>>>>>>        	select VIRT_XFER_TO_GUEST_WORK
->>>>>>>>>>>        	select HMM_MIRROR
->>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Will this affect CRASH kexec? I see few CONFIG_CRASH_DUMP in kexec.c
->>>>>>>>>> implying that crash dump might be involved. Or did you test kdump
->>>>>>>>>> and it was fine?
->>>>>>>>>>
->>>>>>>>>
->>>>>>>>> Yes, it will. Crash kexec depends on normal kexec functionality, so it
->>>>>>>>> will be affected as well.
->>>>>>>>
->>>>>>>> So not sure I understand the reason for this patch. We can just block
->>>>>>>> kexec if there are any VMs running, right? Doing this would mean any
->>>>>>>> further developement would be without a ver important and major feature,
->>>>>>>> right?
->>>>>>>
->>>>>>> This is an option. But until it's implemented and merged, a user mshv
->>>>>>> driver gets into a situation where kexec is broken in a non-obvious way.
->>>>>>> The system may crash at any time after kexec, depending on whether the
->>>>>>> new kernel touches the pages deposited to hypervisor or not. This is a
->>>>>>> bad user experience.
->>>>>>
->>>>>> I understand that. But with this we cannot collect core and debug any
->>>>>> crashes. I was thinking there would be a quick way to prohibit kexec
->>>>>> for update via notifier or some other quick hack. Did you already
->>>>>> explore that and didn't find anything, hence this?
->>>>>>
->>>>>
->>>>> This quick hack you mention isn't quick in the upstream kernel as there
->>>>> is no hook to interrupt kexec process except the live update one.
->>>>
->>>> That's the one we want to interrupt and block right? crash kexec
->>>> is ok and should be allowed. We can document we don't support kexec
->>>> for update for now.
->>>>
->>>>> I sent an RFC for that one but given todays conversation details is
->>>>> won't be accepted as is.
->>>>
->>>> Are you taking about this?
->>>>
->>>>           "mshv: Add kexec safety for deposited pages"
->>>>
->>>
->>> Yes.
->>>
->>>>> Making mshv mutually exclusive with kexec is the only viable option for
->>>>> now given time constraints.
->>>>> It is intended to be replaced with proper page lifecycle management in
->>>>> the future.
->>>>
->>>> Yeah, that could take a long time and imo we cannot just disable KEXEC
->>>> completely. What we want is just block kexec for updates from some
->>>> mshv file for now, we an print during boot that kexec for updates is
->>>> not supported on mshv. Hope that makes sense.
->>>>
->>>
->>> The trade-off here is between disabling kexec support and having the
->>> kernel crash after kexec in a non-obvious way. This affects both regular
->>> kexec and crash kexec.
->>
->> crash kexec on baremetal is not affected, hence disabling that
->> doesn't make sense as we can't debug crashes then on bm.
->>
-> 
-> Bare metal support is not currently relevant, as it is not available.
-> This is the upstream kernel, and this driver will be accessible to
-> third-party customers beginning with kernel 6.19 for running their
-> kernels in Azure L1VH, so consistency is required.
+Hi Stanislav,
 
-Well, without crashdump support, customers will not be running anything
-anywhere.
+kernel test robot noticed the following build warnings:
 
-Thanks,
--Mukesh
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.19-rc7 next-20260129]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> Thanks,
-> Stanislav
-> 
->> Let me think and explore a bit, and if I come up with something, I'll
->> send a patch here. If nothing, then we can do this as last resort.
->>
->> Thanks,
->> -Mukesh
->>
->>
->>> It?s a pity we can?t apply a quick hack to disable only regular kexec.
->>> However, since crash kexec would hit the same issues, until we have a
->>> proper state transition for deposted pages, the best workaround for now
->>> is to reset the hypervisor state on every kexec, which needs design,
->>> work, and testing.
->>>
->>> Disabling kexec is the only consistent way to handle this in the
->>> upstream kernel at the moment.
->>>
->>> Thanks, Stanislav
->>>
->>>
->>>> Thanks,
->>>> -Mukesh
->>>>
->>>>
->>>>
->>>>> Thanks,
->>>>> Stanislav
->>>>>
->>>>>> Thanks,
->>>>>> -Mukesh
->>>>>>
->>>>>>> Therefor it should be explicitly forbidden as it's essentially not
->>>>>>> supported yet.
->>>>>>>
->>>>>>> Thanks,
->>>>>>> Stanislav
->>>>>>>
->>>>>>>>
->>>>>>>>> Thanks,
->>>>>>>>> Stanislav
->>>>>>>>>
->>>>>>>>>> Thanks,
->>>>>>>>>> -Mukesh
+url:    https://github.com/intel-lab-lkp/linux/commits/Stanislav-Kinsburskii/mshv-Add-support-for-integrated-scheduler/20260130-041014
+base:   linus/master
+patch link:    https://lore.kernel.org/r/176971725312.67225.3938191771112866951.stgit%40skinsburskii-cloud-desktop.internal.cloudapp.net
+patch subject: [PATCH v2] mshv: Add support for integrated scheduler
+config: x86_64-randconfig-014-20260130 (https://download.01.org/0day-ci/archive/20260130/202601301357.SWdA3gzf-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260130/202601301357.SWdA3gzf-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601301357.SWdA3gzf-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/hv/mshv_root_main.c: In function 'mshv_init_vmm_caps':
+>> drivers/hv/mshv_root_main.c:2255:9: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
+    2255 |         if (ret && hv_l1vh_partition())
+         |         ^~
+   drivers/hv/mshv_root_main.c:2257:17: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
+    2257 |                 return ret;
+         |                 ^~~~~~
+   In file included from include/linux/printk.h:621,
+                    from include/asm-generic/bug.h:31,
+                    from arch/x86/include/asm/bug.h:193,
+                    from arch/x86/include/asm/alternative.h:9,
+                    from arch/x86/include/asm/segment.h:6,
+                    from arch/x86/include/asm/ptrace.h:5,
+                    from arch/x86/include/asm/math_emu.h:5,
+                    from arch/x86/include/asm/processor.h:13,
+                    from include/linux/sched.h:13,
+                    from include/linux/resume_user_mode.h:6,
+                    from include/linux/entry-virt.h:6,
+                    from drivers/hv/mshv_root_main.c:11:
+   drivers/hv/mshv_root_main.c: At top level:
+   include/linux/dynamic_debug.h:228:58: error: expected identifier or '(' before 'do'
+     228 | #define __dynamic_func_call_cls(id, cls, fmt, func, ...) do {   \
+         |                                                          ^~
+   include/linux/dynamic_debug.h:259:9: note: in expansion of macro '__dynamic_func_call_cls'
+     259 |         __dynamic_func_call_cls(__UNIQUE_ID(ddebug), cls, fmt, func, ##__VA_ARGS__)
+         |         ^~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/dynamic_debug.h:261:9: note: in expansion of macro '_dynamic_func_call_cls'
+     261 |         _dynamic_func_call_cls(_DPRINTK_CLASS_DFLT, fmt, func, ##__VA_ARGS__)
+         |         ^~~~~~~~~~~~~~~~~~~~~~
+   include/linux/dynamic_debug.h:284:9: note: in expansion of macro '_dynamic_func_call'
+     284 |         _dynamic_func_call(fmt, __dynamic_dev_dbg,              \
+         |         ^~~~~~~~~~~~~~~~~~
+   include/linux/dev_printk.h:165:9: note: in expansion of macro 'dynamic_dev_dbg'
+     165 |         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |         ^~~~~~~~~~~~~~~
+   drivers/hv/mshv_root_main.c:2260:9: note: in expansion of macro 'dev_dbg'
+    2260 |         dev_dbg(dev, "vmm_caps = %#llx\n", mshv_root.vmm_caps.as_uint64[0]);
+         |         ^~~~~~~
+   include/linux/dynamic_debug.h:234:3: error: expected identifier or '(' before 'while'
+     234 | } while (0)
+         |   ^~~~~
+   include/linux/dynamic_debug.h:259:9: note: in expansion of macro '__dynamic_func_call_cls'
+     259 |         __dynamic_func_call_cls(__UNIQUE_ID(ddebug), cls, fmt, func, ##__VA_ARGS__)
+         |         ^~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/dynamic_debug.h:261:9: note: in expansion of macro '_dynamic_func_call_cls'
+     261 |         _dynamic_func_call_cls(_DPRINTK_CLASS_DFLT, fmt, func, ##__VA_ARGS__)
+         |         ^~~~~~~~~~~~~~~~~~~~~~
+   include/linux/dynamic_debug.h:284:9: note: in expansion of macro '_dynamic_func_call'
+     284 |         _dynamic_func_call(fmt, __dynamic_dev_dbg,              \
+         |         ^~~~~~~~~~~~~~~~~~
+   include/linux/dev_printk.h:165:9: note: in expansion of macro 'dynamic_dev_dbg'
+     165 |         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |         ^~~~~~~~~~~~~~~
+   drivers/hv/mshv_root_main.c:2260:9: note: in expansion of macro 'dev_dbg'
+    2260 |         dev_dbg(dev, "vmm_caps = %#llx\n", mshv_root.vmm_caps.as_uint64[0]);
+         |         ^~~~~~~
+   drivers/hv/mshv_root_main.c:2262:9: error: expected identifier or '(' before 'return'
+    2262 |         return 0;
+         |         ^~~~~~
+   drivers/hv/mshv_root_main.c:2263:1: error: expected identifier or '(' before '}' token
+    2263 | }
+         | ^
+
+
+vim +/if +2255 drivers/hv/mshv_root_main.c
+
+  2246	
+  2247	static int __init mshv_init_vmm_caps(struct device *dev)
+  2248	{
+  2249		int ret;
+  2250	
+  2251		ret = hv_call_get_partition_property_ex(HV_PARTITION_ID_SELF,
+  2252							HV_PARTITION_PROPERTY_VMM_CAPABILITIES,
+  2253							0, &mshv_root.vmm_caps,
+  2254							sizeof(mshv_root.vmm_caps));
+> 2255		if (ret && hv_l1vh_partition())
+  2256			dev_err(dev, "Failed to get VMM capabilities: %d\n", ret);
+  2257			return ret;
+  2258		}
+  2259	
+  2260		dev_dbg(dev, "vmm_caps = %#llx\n", mshv_root.vmm_caps.as_uint64[0]);
+  2261	
+  2262		return 0;
+  2263	}
+  2264	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
