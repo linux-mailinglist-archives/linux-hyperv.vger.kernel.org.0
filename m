@@ -1,66 +1,58 @@
-Return-Path: <linux-hyperv+bounces-8661-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8662-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aLUYH4j4gGmxDQMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8661-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Feb 2026 20:18:32 +0100
+	id GCp5MOP6gGn9DQMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8662-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Feb 2026 20:28:35 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7378D0744
-	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Feb 2026 20:18:31 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15D45D084F
+	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Feb 2026 20:28:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1245A30215AA
-	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Feb 2026 19:18:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 72E9B307EEF6
+	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Feb 2026 19:24:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C8AB2F2918;
-	Mon,  2 Feb 2026 19:18:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 959443033E7;
+	Mon,  2 Feb 2026 19:24:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lZEvELF5"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XOuDm3p+"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B38152F25F4;
-	Mon,  2 Feb 2026 19:18:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CCDF3033CF;
+	Mon,  2 Feb 2026 19:24:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770059909; cv=none; b=WIvH8SfdJyFgwhm5ydUGhmfpu93xLWOwxHY+NyWOt5yPLOiIaQaEOYvl9kDxpksMVaZlRTcRqkCSEOLkJvFjV9cnrp8ayz9JORx2/VQ9zgx8uBn5Yo+J/P7cgsp5yJ+OZjE2qRYlA2Sh8v5moHJDH1x6f8x58zLyMJgnfp/bY7Q=
+	t=1770060265; cv=none; b=ds0ic9X8ji9rzjh5JQnQYbMVe5KlknmJgLlXQocs1x+/i66d6z7SqNAbn4FIS+//Ro52xDju7msPHyZ7ROqiAshU9jK4Y7aGL/uVsmlHj+mCKCQJ1FjjF8YKsa3JWtcCUeJrQeTK0QMtoW24VuZIPwsVVr/6NJnU9rC5nVKu1QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770059909; c=relaxed/simple;
-	bh=Q3LoyfPdhRQAidDgdHgX2bZHTePKPYpe9jGdoexiaQA=;
+	s=arc-20240116; t=1770060265; c=relaxed/simple;
+	bh=KjjypYr07hodW+zKu/2j29Z0tRM22FT24oJr3cZAM5o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vD5cXIAJmb4GPrA1UfQZUQLenLH52g7aIQkIvUScOGq1Pc+0O/D+Mh/v4rsLyJXnuTjr+FTL+qRa0c/bT02YQ4BUQMKY3GZIafGFZpzC2Ihz9Hge1Ez8z5l4dip84ZuoAi3Ant5uFmsHwT0xFCBbpcWko6vuWUYnVd751vJkny0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lZEvELF5; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=trJc/m7+BQpw0GC6HlUbGl8HYBKFANeOZ9k9OCumlTX+I9bUa7tx0bD7HUBG02vpBYrMgaSHdzEAJ5C7x4q6TRpkmIaxxr47C42yM/rii01MvqvStXcBN1UD6xeryjO5cnx9QV5LPxygf04x2ih3Q4kH8UEqXl6LoRr/qli2spo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XOuDm3p+; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (unknown [20.236.11.102])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 3ACE720B7168;
-	Mon,  2 Feb 2026 11:18:27 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3ACE720B7168
+Received: from skinsburskii.localdomain (unknown [20.236.11.69])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 692B120B7168;
+	Mon,  2 Feb 2026 11:24:23 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 692B120B7168
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1770059907;
-	bh=lLlvee2vpjdahbMgB3Zb34zPIV1nm/k+ndPK8aOiZN4=;
+	s=default; t=1770060263;
+	bh=ZouMXpBu9/Rv7zTIc6W/3ObWiltbO2z3P5j+Q6XS+4k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lZEvELF51/dyBb8dBxVRddf6n60TBudSOGbyBHI0yO+51KWdh5RSutvX6k+tH7DJn
-	 tBBEi+v719HXdv7iv/dlopUxTtyOoeD1h6124FlPZDazGcG+GN0WK4SiVGh+b/Ve+b
-	 NBHp0zAfHDo018or/q9gAna3PHZ85ErthiPOWZhI=
-Date: Mon, 2 Feb 2026 11:18:27 -0800
+	b=XOuDm3p+lnFj727BCn0NBLmtnyv9bcOpdZ1TgyjPo5B++2dV4+ZgLh9TaPKkypVRW
+	 UBRxDsCNnhPIerrakmkzaO2r4TGTBBIDLp1GQ6LQx0ScWPARH4rYoMlygDR+VckDEJ
+	 /+wYEKQFh+V4YINdeT5Ui61GYNJQ8iMLO0ZXvSl8=
+Date: Mon, 2 Feb 2026 11:24:23 -0800
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: Anirudh Rayabharam <anirudh@anirudhrb.com>
 Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
 	decui@microsoft.com, longli@microsoft.com,
 	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mshv: Make MSHV mutually exclusive with KEXEC
-Message-ID: <aYD4gw-1qKYHcnXI@skinsburskii.localdomain>
-References: <176920684805.250171.6817228088359793537.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <xyzkeqng3767mlpzu7xbmgobjr6ob2wp2brocmjczbbl4dypxh@wkibga46f33c>
- <aXfStKqKiSSHEmXj@skinsburskii.localdomain>
- <aXo2X4mRioTa3sBl@anirudh-surface.localdomain>
- <aXqXkhhl1xuvjm3P@skinsburskii.localdomain>
- <aXzmMInsNSvFvBF1@anirudh-surface.localdomain>
- <aXz8ldAeoWwGIxdu@skinsburskii.localdomain>
- <aX0Vbfocwa4WgXUw@anirudh-surface.localdomain>
- <aYDaaIK0J4SjvnCe@skinsburskii.localdomain>
- <aYD0bafU3UYuSvDW@anirudh-surface.localdomain>
+Subject: Re: [PATCH v3] mshv: Add support for integrated scheduler
+Message-ID: <aYD553BXAyyeNV6M@skinsburskii.localdomain>
+References: <176978905128.18763.15996443783319253336.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <aXzuxHwLofHaW-Xe@anirudh-surface.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -70,17 +62,17 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aYD0bafU3UYuSvDW@anirudh-surface.localdomain>
+In-Reply-To: <aXzuxHwLofHaW-Xe@anirudh-surface.localdomain>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8661-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8662-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -88,7 +80,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
@@ -97,157 +89,273 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[skinsburskii.localdomain:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: E7378D0744
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,skinsburskii.localdomain:mid,linux.microsoft.com:dkim]
+X-Rspamd-Queue-Id: 15D45D084F
 X-Rspamd-Action: no action
 
-On Mon, Feb 02, 2026 at 07:01:01PM +0000, Anirudh Rayabharam wrote:
-> On Mon, Feb 02, 2026 at 09:10:00AM -0800, Stanislav Kinsburskii wrote:
-> > On Fri, Jan 30, 2026 at 08:32:45PM +0000, Anirudh Rayabharam wrote:
-> > > On Fri, Jan 30, 2026 at 10:46:45AM -0800, Stanislav Kinsburskii wrote:
-> > > > On Fri, Jan 30, 2026 at 05:11:12PM +0000, Anirudh Rayabharam wrote:
-> > > > > On Wed, Jan 28, 2026 at 03:11:14PM -0800, Stanislav Kinsburskii wrote:
-> > > > > > On Wed, Jan 28, 2026 at 04:16:31PM +0000, Anirudh Rayabharam wrote:
-> > > > > > > On Mon, Jan 26, 2026 at 12:46:44PM -0800, Stanislav Kinsburskii wrote:
-> > > > > > > > On Tue, Jan 27, 2026 at 12:19:24AM +0530, Anirudh Rayabharam wrote:
-> > > > > > > > > On Fri, Jan 23, 2026 at 10:20:53PM +0000, Stanislav Kinsburskii wrote:
-> > > > > > > > > > The MSHV driver deposits kernel-allocated pages to the hypervisor during
-> > > > > > > > > > runtime and never withdraws them. This creates a fundamental incompatibility
-> > > > > > > > > > with KEXEC, as these deposited pages remain unavailable to the new kernel
-> > > > > > > > > > loaded via KEXEC, leading to potential system crashes upon kernel accessing
-> > > > > > > > > > hypervisor deposited pages.
-> > > > > > > > > > 
-> > > > > > > > > > Make MSHV mutually exclusive with KEXEC until proper page lifecycle
-> > > > > > > > > > management is implemented.
-> > > > > > > > > 
-> > > > > > > > > Someone might want to stop all guest VMs and do a kexec. Which is valid
-> > > > > > > > > and would work without any issue for L1VH.
-> > > > > > > > > 
-> > > > > > > > 
-> > > > > > > > No, it won't work and hypervsisor depostied pages won't be withdrawn.
-> > > > > > > 
-> > > > > > > All pages that were deposited in the context of a guest partition (i.e.
-> > > > > > > with the guest partition ID), would be withdrawn when you kill the VMs,
-> > > > > > > right? What other deposited pages would be left?
-> > > > > > > 
-> > > > > > 
-> > > > > > The driver deposits two types of pages: one for the guests (withdrawn
-> > > > > > upon gust shutdown) and the other - for the host itself (never
-> > > > > > withdrawn).
-> > > > > > See hv_call_create_partition, for example: it deposits pages for the
-> > > > > > host partition.
-> > > > > 
-> > > > > Hmm.. I see. Is it not possible to reclaim this memory in module_exit?
-> > > > > Also, can't we forcefully kill all running partitions in module_exit and
-> > > > > then reclaim memory? Would this help with kernel consistency
-> > > > > irrespective of userspace behavior?
-> > > > > 
-> > > > 
-> > > > It would, but this is sloppy and cannot be a long-term solution.
-> > > > 
-> > > > It is also not reliable. We have no hook to prevent kexec. So if we fail
-> > > > to kill the guest or reclaim the memory for any reason, the new kernel
-> > > > may still crash.
-> > > 
-> > > Actually guests won't be running by the time we reach our module_exit
-> > > function during a kexec. Userspace processes would've been killed by
-> > > then.
-> > > 
+On Fri, Jan 30, 2026 at 05:47:48PM +0000, Anirudh Rayabharam wrote:
+> On Fri, Jan 30, 2026 at 04:04:14PM +0000, Stanislav Kinsburskii wrote:
+> > Query the hypervisor for integrated scheduler support and use it if
+> > configured.
 > > 
-> > No, they will not: "kexec -e" doesn't kill user processes.
-> > We must not rely on OS to do graceful shutdown before doing
-> > kexec.
+> > Microsoft Hypervisor originally provided two schedulers: root and core. The
+> > root scheduler allows the root partition to schedule guest vCPUs across
+> > physical cores, supporting both time slicing and CPU affinity (e.g., via
+> > cgroups). In contrast, the core scheduler delegates vCPU-to-physical-core
+> > scheduling entirely to the hypervisor.
+> > 
+> > Direct virtualization introduces a new privileged guest partition type - L1
+> > Virtual Host (L1VH) — which can create child partitions from its own
+> > resources. These child partitions are effectively siblings, scheduled by
+> > the hypervisor's core scheduler. This prevents the L1VH parent from setting
+> > affinity or time slicing for its own processes or guest VPs. While cgroups,
+> > CFS, and cpuset controllers can still be used, their effectiveness is
+> > unpredictable, as the core scheduler swaps vCPUs according to its own logic
+> > (typically round-robin across all allocated physical CPUs). As a result,
+> > the system may appear to "steal" time from the L1VH and its children.
+> > 
+> > To address this, Microsoft Hypervisor introduces the integrated scheduler.
+> > This allows an L1VH partition to schedule its own vCPUs and those of its
 > 
-> I see kexec -e is too brutal. Something like systemctl kexec is
-> more graceful and is probably used more commonly. In this case at least
-> we could register a reboot notifier and attempt to clean things up.
-> 
-> I think it is better to support kexec to this extent rather than
-> disabling it entirely.
+> How could an L1VH partition schedule its own vCPUs?
 > 
 
-You do understand that once our kernel is released to third parties, we
-can’t control how they will use kexec, right?
+By the mean of the integrated scheduler. Or,  from another perspective,
+the same way like any other root partition does: by placing load on a
+particular code and halting when there is nothing to do.
 
-This is a valid and existing option. We have to account for it. Yet
-again, L1VH will be used by arbitrary third parties out there, not just
-by us.
+> > guests across its "physical" cores, effectively emulating root scheduler
+> > behavior within the L1VH, while retaining core scheduler behavior for the
+> > rest of the system.
+> > 
+> > The integrated scheduler is controlled by the root partition and gated by
+> > the vmm_enable_integrated_scheduler capability bit. If set, the hypervisor
+> > supports the integrated scheduler. The L1VH partition must then check if it
+> > is enabled by querying the corresponding extended partition property. If
+> > this property is true, the L1VH partition must use the root scheduler
+> > logic; otherwise, it must use the core scheduler. This requirement makes
+> > reading VMM capabilities in L1VH partition a requirement too.
+> > 
+> > Signed-off-by: Andreea Pintilie <anpintil@microsoft.com>
+> > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+> > ---
+> >  drivers/hv/mshv_root_main.c |   85 +++++++++++++++++++++++++++----------------
+> >  include/hyperv/hvhdk_mini.h |    7 +++-
+> >  2 files changed, 59 insertions(+), 33 deletions(-)
+> > 
+> > diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> > index 1134a82c7881..6a6bf641b352 100644
+> > --- a/drivers/hv/mshv_root_main.c
+> > +++ b/drivers/hv/mshv_root_main.c
+> > @@ -2053,6 +2053,32 @@ static const char *scheduler_type_to_string(enum hv_scheduler_type type)
+> >  	};
+> >  }
+> >  
+> > +static int __init l1vh_retrive_scheduler_type(enum hv_scheduler_type *out)
+> 
+> typo: retrieve*
+> 
 
-We can’t say the kernel supports MSHV until we close these gaps. We must
-not depend on user space to keep the kernel safe.
+Thanks, will fix.
 
-Do you agree?
+> > +{
+> > +	u64 integrated_sched_enabled;
+> > +	int ret;
+> > +
+> > +	*out = HV_SCHEDULER_TYPE_CORE_SMT;
+> > +
+> > +	if (!mshv_root.vmm_caps.vmm_enable_integrated_scheduler)
+> > +		return 0;
+> > +
+> > +	ret = hv_call_get_partition_property_ex(HV_PARTITION_ID_SELF,
+> > +						HV_PARTITION_PROPERTY_INTEGRATED_SCHEDULER_ENABLED,
+> > +						0, &integrated_sched_enabled,
+> > +						sizeof(integrated_sched_enabled));
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (integrated_sched_enabled)
+> > +		*out = HV_SCHEDULER_TYPE_ROOT;
+> > +
+> > +	pr_debug("%s: integrated scheduler property read: ret=%d value=%llu\n",
+> > +		 __func__, ret, integrated_sched_enabled);
+> 
+> ret is always 0 here, right? We don't need to bother printing then.
+> 
+
+Oh yes, good point. Will fix.
+
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  /* TODO move this to hv_common.c when needed outside */
+> >  static int __init hv_retrieve_scheduler_type(enum hv_scheduler_type *out)
+> >  {
+> > @@ -2085,13 +2111,12 @@ static int __init hv_retrieve_scheduler_type(enum hv_scheduler_type *out)
+> >  /* Retrieve and stash the supported scheduler type */
+> >  static int __init mshv_retrieve_scheduler_type(struct device *dev)
+> >  {
+> > -	int ret = 0;
+> > +	int ret;
+> >  
+> >  	if (hv_l1vh_partition())
+> > -		hv_scheduler_type = HV_SCHEDULER_TYPE_CORE_SMT;
+> > +		ret = l1vh_retrive_scheduler_type(&hv_scheduler_type);
+> >  	else
+> >  		ret = hv_retrieve_scheduler_type(&hv_scheduler_type);
+> > -
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > @@ -2211,42 +2236,29 @@ struct notifier_block mshv_reboot_nb = {
+> >  static void mshv_root_partition_exit(void)
+> >  {
+> >  	unregister_reboot_notifier(&mshv_reboot_nb);
+> > -	root_scheduler_deinit();
+> >  }
+> >  
+> >  static int __init mshv_root_partition_init(struct device *dev)
+> >  {
+> > -	int err;
+> > -
+> > -	err = root_scheduler_init(dev);
+> > -	if (err)
+> > -		return err;
+> > -
+> > -	err = register_reboot_notifier(&mshv_reboot_nb);
+> > -	if (err)
+> > -		goto root_sched_deinit;
+> > -
+> > -	return 0;
+> > -
+> > -root_sched_deinit:
+> > -	root_scheduler_deinit();
+> > -	return err;
+> > +	return register_reboot_notifier(&mshv_reboot_nb);
+> >  }
+> >  
+> > -static void mshv_init_vmm_caps(struct device *dev)
+> > +static int __init mshv_init_vmm_caps(struct device *dev)
+> >  {
+> > -	/*
+> > -	 * This can only fail here if HVCALL_GET_PARTITION_PROPERTY_EX or
+> > -	 * HV_PARTITION_PROPERTY_VMM_CAPABILITIES are not supported. In that
+> > -	 * case it's valid to proceed as if all vmm_caps are disabled (zero).
+> > -	 */
+> > -	if (hv_call_get_partition_property_ex(HV_PARTITION_ID_SELF,
+> > -					      HV_PARTITION_PROPERTY_VMM_CAPABILITIES,
+> > -					      0, &mshv_root.vmm_caps,
+> > -					      sizeof(mshv_root.vmm_caps)))
+> > -		dev_warn(dev, "Unable to get VMM capabilities\n");
+> > +	int ret;
+> > +
+> > +	ret = hv_call_get_partition_property_ex(HV_PARTITION_ID_SELF,
+> > +						HV_PARTITION_PROPERTY_VMM_CAPABILITIES,
+> > +						0, &mshv_root.vmm_caps,
+> > +						sizeof(mshv_root.vmm_caps));
+> > +	if (ret && hv_l1vh_partition()) {
+> > +		dev_err(dev, "Failed to get VMM capabilities: %d\n", ret);
+> > +		return ret;
+> 
+> I don't think we need to fail here. If there are not VMM caps available,
+> that means integrated scheduler is not supported by the hypervisor, so
+> fall back to core scheduler.
+> 
+
+I believe we discussed this in a personal conversation earlier.
+Let me know, is we need to discuss it further.
 
 Thanks,
 Stanislav
 
-> > 
-> > > Also, why is this sloppy? Isn't this what module_exit should be
-> > > doing anyway? If someone unloads our module we should be trying to
-> > > clean everything up (including killing guests) and reclaim memory.
-> > > 
-> > 
-> > Kexec does not unload modules, but it doesn't really matter even if it
-> > would.
-> > There are other means to plug into the reboot flow, but neither of them
-> > is robust or reliable.
-> > 
-> > > In any case, we can BUG() out if we fail to reclaim the memory. That would
-> > > stop the kexec.
-> > > 
-> > 
-> > By killing the whole system? This is not a good user experience and I
-> > don't see how can this be justified.
-> 
-> It is justified because, as you said, once we reach that failure we can
-> no longer guarantee integrity. So BUG() makes sense. This BUG() would
-> cause the system to go for a full reboot and restore integrity.
-> 
-> > 
-> > > This is a better solution since instead of disabling KEXEC outright: our
-> > > driver made the best possible efforts to make kexec work.
-> > > 
-> > 
-> > How an unrealiable feature leading to potential system crashes is better
-> > that disabling kexec outright?
-> 
-> Because there are ways of using the feature reliably. What if someone
-> has MSHV_ROOT enabled but never start a VM? (Just because someone has our
-> driver enabled in the kernel doesn't mean they're using it.) What about crash
-> dump?
-> 
-> It is far better to support some of these scenarios and be unreliable in
-> some corner cases rather than disabling the feature completely.
-> 
-> Also, I'm curious if any other driver in the kernel has ever done this
-> (force disable KEXEC).
-> 
-> > 
-> > It's a complete opposite story for me: the latter provides a limited,
-> > but robust functionality, while the former provides an unreliable and
-> > unpredictable behavior.
-> > 
-> > > > 
-> > > > There are two long-term solutions:
-> > > >  1. Add a way to prevent kexec when there is shared state between the hypervisor and the kernel.
-> > > 
-> > > I honestly think we should focus efforts on making kexec work rather
-> > > than finding ways to prevent it.
-> > > 
-> > 
-> > There is no argument about it. But until we have it fixed properly, we
-> > have two options: either disable kexec or stop claiming we have our
-> > driver up and ready for external customers. Giving the importance of
-> > this driver for current projects, I believe the better way would be to
-> > explicitly limit the functionality instead of postponing the
-> > productization of the driver.
-> 
-> It is okay to claim our driver as ready even if it doesn't support all
-> kexec cases. If we can support the common cases such as crash dump and
-> maybe kexec based servicing (pretty sure people do systemctl kexec and
-> not kexec -e for this with proper teardown) we can claim that our driver
-> is ready for general use.
-> 
 > Thanks,
-> Anirudh.
+> Anirudh
+> 
+> > +	}
+> >  
+> >  	dev_dbg(dev, "vmm_caps = %#llx\n", mshv_root.vmm_caps.as_uint64[0]);
+> > +
+> > +	return 0;
+> >  }
+> >  
+> >  static int __init mshv_parent_partition_init(void)
+> > @@ -2292,6 +2304,10 @@ static int __init mshv_parent_partition_init(void)
+> >  
+> >  	mshv_cpuhp_online = ret;
+> >  
+> > +	ret = mshv_init_vmm_caps(dev);
+> > +	if (ret)
+> > +		goto remove_cpu_state;
+> > +
+> >  	ret = mshv_retrieve_scheduler_type(dev);
+> >  	if (ret)
+> >  		goto remove_cpu_state;
+> > @@ -2301,11 +2317,13 @@ static int __init mshv_parent_partition_init(void)
+> >  	if (ret)
+> >  		goto remove_cpu_state;
+> >  
+> > -	mshv_init_vmm_caps(dev);
+> > +	ret = root_scheduler_init(dev);
+> > +	if (ret)
+> > +		goto exit_partition;
+> >  
+> >  	ret = mshv_irqfd_wq_init();
+> >  	if (ret)
+> > -		goto exit_partition;
+> > +		goto deinit_root_scheduler;
+> >  
+> >  	spin_lock_init(&mshv_root.pt_ht_lock);
+> >  	hash_init(mshv_root.pt_htable);
+> > @@ -2314,6 +2332,8 @@ static int __init mshv_parent_partition_init(void)
+> >  
+> >  	return 0;
+> >  
+> > +deinit_root_scheduler:
+> > +	root_scheduler_deinit();
+> >  exit_partition:
+> >  	if (hv_root_partition())
+> >  		mshv_root_partition_exit();
+> > @@ -2332,6 +2352,7 @@ static void __exit mshv_parent_partition_exit(void)
+> >  	mshv_port_table_fini();
+> >  	misc_deregister(&mshv_dev);
+> >  	mshv_irqfd_wq_cleanup();
+> > +	root_scheduler_deinit();
+> >  	if (hv_root_partition())
+> >  		mshv_root_partition_exit();
+> >  	cpuhp_remove_state(mshv_cpuhp_online);
+> > diff --git a/include/hyperv/hvhdk_mini.h b/include/hyperv/hvhdk_mini.h
+> > index 41a29bf8ec14..c0300910808b 100644
+> > --- a/include/hyperv/hvhdk_mini.h
+> > +++ b/include/hyperv/hvhdk_mini.h
+> > @@ -87,6 +87,9 @@ enum hv_partition_property_code {
+> >  	HV_PARTITION_PROPERTY_PRIVILEGE_FLAGS			= 0x00010000,
+> >  	HV_PARTITION_PROPERTY_SYNTHETIC_PROC_FEATURES		= 0x00010001,
+> >  
+> > +	/* Integrated scheduling properties */
+> > +	HV_PARTITION_PROPERTY_INTEGRATED_SCHEDULER_ENABLED	= 0x00020005,
+> > +
+> >  	/* Resource properties */
+> >  	HV_PARTITION_PROPERTY_GPA_PAGE_ACCESS_TRACKING		= 0x00050005,
+> >  	HV_PARTITION_PROPERTY_UNIMPLEMENTED_MSR_ACTION		= 0x00050017,
+> > @@ -102,7 +105,7 @@ enum hv_partition_property_code {
+> >  };
+> >  
+> >  #define HV_PARTITION_VMM_CAPABILITIES_BANK_COUNT		1
+> > -#define HV_PARTITION_VMM_CAPABILITIES_RESERVED_BITFIELD_COUNT	59
+> > +#define HV_PARTITION_VMM_CAPABILITIES_RESERVED_BITFIELD_COUNT	57
+> >  
+> >  struct hv_partition_property_vmm_capabilities {
+> >  	u16 bank_count;
+> > @@ -119,6 +122,8 @@ struct hv_partition_property_vmm_capabilities {
+> >  			u64 reservedbit3: 1;
+> >  #endif
+> >  			u64 assignable_synthetic_proc_features: 1;
+> > +			u64 reservedbit5: 1;
+> > +			u64 vmm_enable_integrated_scheduler : 1;
+> >  			u64 reserved0: HV_PARTITION_VMM_CAPABILITIES_RESERVED_BITFIELD_COUNT;
+> >  		} __packed;
+> >  	};
+> > 
+> > 
 
