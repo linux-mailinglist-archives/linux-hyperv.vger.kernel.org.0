@@ -1,198 +1,246 @@
-Return-Path: <linux-hyperv+bounces-8657-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8658-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ELMuLFjzgGkgDQMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8657-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Feb 2026 19:56:24 +0100
+	id CAlCOYb0gGkgDQMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8658-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Feb 2026 20:01:26 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE188D05A3
-	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Feb 2026 19:56:23 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61A77D05F7
+	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Feb 2026 20:01:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id BAF94301389D
-	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Feb 2026 18:56:22 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4143E302C376
+	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Feb 2026 19:01:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30E6826D4E5;
-	Mon,  2 Feb 2026 18:56:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D6794964F;
+	Mon,  2 Feb 2026 19:01:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dXYSgksU"
+	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="l2QiAFbC"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CED8F21C9F9;
-	Mon,  2 Feb 2026 18:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770058581; cv=none; b=CnsAAUC9N33goFfK+kdDx0iWhMv2uBLbGS3Vn6POrtIgOtpQvgjv2ZhLQefE3wtxVUS1lldzFTYgmNyQvY2WPmiyW6issENFP/aIgWi/jEQDZcSW2vgPAuTGDqgjOKi3t+pQa1IlZeDMSgcTp818MKgnYc7SdKt+Ir2Qoe5k6eI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770058581; c=relaxed/simple;
-	bh=s8fVuDMmEeT+gdO9s+1IyI+jIHr0ndWNLfG6zv+mnGI=;
+Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6D93A1D2;
+	Mon,  2 Feb 2026 19:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770058883; cv=pass; b=TidCg8GOvprwm6aiLJ1e4hefMJ2RylutmF9npFxoPYzohG//RIyfctWp0qSVyMsT6N9XAR36q96bGMAi37Ez4sB11WqaKNmdW78USNvglRQFBsf8unQB6/1wQn1ZzGCBAUk2+sF0DOIUAHbx3kZkvRJGlDc1EhZccgcVtg6cj+Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770058883; c=relaxed/simple;
+	bh=O1Uny3kK7GK3u78vosBKKU8T56Cm0HtbKRINT1zWCiQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LiWF2Ezav7Y3MPqjC/bLWlLTuX0E5aleBBIkFbaJAD0YAzE7YrYXngdo5MzJ6EJ3v8L5WUn/tyAm1STwssYPwwC9OSrzNr0IwFrTxsiC1kWObh2ISc5qLSCMzrjqFLznrfZXqwGrk2rx7uqAmF/6TX992XbXX8pB/Y7B4wQ5oZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=dXYSgksU; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (unknown [20.236.11.102])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 30D5B20B7168;
-	Mon,  2 Feb 2026 10:56:19 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 30D5B20B7168
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1770058579;
-	bh=kT8OHwpDJ7QbFcQG0Z8UFavdpvpWWLNXseYFuXRJeK0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dXYSgksUdj2Ow5C9BjwWK3bRZLDJ004C/TcceY79mtF96qP6OTxa5pCdmix3q9YsD
-	 7ADEcRjRgFLr2EpM3OXSiPic+G3y2N9YCVame+YCss6L14DGgGKufPMCQOy+X4qi2D
-	 TeAwoiMubwkqHaZfkCCJMzLcMKuQLybK0KYdsDq4=
-Date: Mon, 2 Feb 2026 10:56:19 -0800
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "mhkelley58@gmail.com" <mhkelley58@gmail.com>,
-	"kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"longli@microsoft.com" <longli@microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] mshv: Add comment about huge page mappings in guest
- physical address space
-Message-ID: <aYDzU5ujoBlzWaa6@skinsburskii.localdomain>
-References: <20260202165101.1750-1-mhklinux@outlook.com>
- <aYDcLRhxx9wXRXBG@skinsburskii.localdomain>
- <SN6PR02MB41570BBE17C50675E94789FDD49AA@SN6PR02MB4157.namprd02.prod.outlook.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zxy21pAhzOMgxAYx3w1smVJ6Sw/RZLfsH2CYxnzUcPr3AvmWrre5l7dqKFl/BT96k9hMDCsvRL+i6wKUpwneo2XB5v3nqJvybZVJUYyGfIsVHlpPBbYewSg/HztMUPvVkbGjOf3uP/YeIVFPfYpTMGJMVIvDTl4/lwtFwl74p5Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=l2QiAFbC; arc=pass smtp.client-ip=136.143.188.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
+ARC-Seal: i=1; a=rsa-sha256; t=1770058869; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ZPYdiRxGsKm9rZ8onqNko1J+cRcAxhM1GvmijEX/xz6v6zZODEftpMaeDpb70KdhTrfjoU5D4t+k/s5HAFXkugInyS5KQTe7z9+y48jMwOKFSFB76/93f0mE3qNotzr7T+KnxAeuqbNjB9h9igQ2uwjG+6GcI66cvP6DpAq4qlo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1770058869; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ZzAmkQNQk3KsoRt7JL5Tfq1tVe7+I+Ec5oVk3KAmbP8=; 
+	b=GIwqkty04syh+HKyB1Mks5WkDE7zxzLiwi9u4SeCFZb91SQqVFaaWKpQyW7T59q+CSJQ/Crsz0gIrfyLd4cBXtrt0ydLfQSRWVu2e8tV36SPHhy862caEynpYzjkg11YK4PTkcaJ4+Tf1ixseWjdtVGeMbj1q9XJv2jTd76UymM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=anirudhrb.com;
+	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
+	dmarc=pass header.from=<anirudh@anirudhrb.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770058869;
+	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=ZzAmkQNQk3KsoRt7JL5Tfq1tVe7+I+Ec5oVk3KAmbP8=;
+	b=l2QiAFbCb+HY4QVfzhuY/RpExDvtKj0NnfkaK5Fg+a1Wj26422MvNqtjIOYV5zhx
+	BS28ldLV2JaD+iU0CZJD6cAzLEpEyH9hOFiNW9Q/D6fsXY/rOoMSqce7ZOhpnGc9mmL
+	dzLYxxFHtBbHCKDrIbkzSf5SiTn4cgzzPQQ3ulTY=
+Received: by mx.zohomail.com with SMTPS id 1770058867491934.0626709421043;
+	Mon, 2 Feb 2026 11:01:07 -0800 (PST)
+Date: Mon, 2 Feb 2026 19:01:01 +0000
+From: Anirudh Rayabharam <anirudh@anirudhrb.com>
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mshv: Make MSHV mutually exclusive with KEXEC
+Message-ID: <aYD0bafU3UYuSvDW@anirudh-surface.localdomain>
+References: <176920684805.250171.6817228088359793537.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <xyzkeqng3767mlpzu7xbmgobjr6ob2wp2brocmjczbbl4dypxh@wkibga46f33c>
+ <aXfStKqKiSSHEmXj@skinsburskii.localdomain>
+ <aXo2X4mRioTa3sBl@anirudh-surface.localdomain>
+ <aXqXkhhl1xuvjm3P@skinsburskii.localdomain>
+ <aXzmMInsNSvFvBF1@anirudh-surface.localdomain>
+ <aXz8ldAeoWwGIxdu@skinsburskii.localdomain>
+ <aX0Vbfocwa4WgXUw@anirudh-surface.localdomain>
+ <aYDaaIK0J4SjvnCe@skinsburskii.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <SN6PR02MB41570BBE17C50675E94789FDD49AA@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <aYDaaIK0J4SjvnCe@skinsburskii.localdomain>
+X-ZohoMailClient: External
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+X-Spamd-Result: default: False [-1.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8657-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[outlook.com];
-	FREEMAIL_CC(0.00)[gmail.com,microsoft.com,kernel.org,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DMARC_NA(0.00)[anirudhrb.com];
+	TAGGED_FROM(0.00)[bounces-8658-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[anirudhrb.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	MISSING_XM_UA(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[anirudh@anirudhrb.com,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: DE188D05A3
+	RCPT_COUNT_SEVEN(0.00)[8];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[anirudhrb.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 61A77D05F7
 X-Rspamd-Action: no action
 
-On Mon, Feb 02, 2026 at 06:26:42PM +0000, Michael Kelley wrote:
-> From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Monday, February 2, 2026 9:18 AM
+On Mon, Feb 02, 2026 at 09:10:00AM -0800, Stanislav Kinsburskii wrote:
+> On Fri, Jan 30, 2026 at 08:32:45PM +0000, Anirudh Rayabharam wrote:
+> > On Fri, Jan 30, 2026 at 10:46:45AM -0800, Stanislav Kinsburskii wrote:
+> > > On Fri, Jan 30, 2026 at 05:11:12PM +0000, Anirudh Rayabharam wrote:
+> > > > On Wed, Jan 28, 2026 at 03:11:14PM -0800, Stanislav Kinsburskii wrote:
+> > > > > On Wed, Jan 28, 2026 at 04:16:31PM +0000, Anirudh Rayabharam wrote:
+> > > > > > On Mon, Jan 26, 2026 at 12:46:44PM -0800, Stanislav Kinsburskii wrote:
+> > > > > > > On Tue, Jan 27, 2026 at 12:19:24AM +0530, Anirudh Rayabharam wrote:
+> > > > > > > > On Fri, Jan 23, 2026 at 10:20:53PM +0000, Stanislav Kinsburskii wrote:
+> > > > > > > > > The MSHV driver deposits kernel-allocated pages to the hypervisor during
+> > > > > > > > > runtime and never withdraws them. This creates a fundamental incompatibility
+> > > > > > > > > with KEXEC, as these deposited pages remain unavailable to the new kernel
+> > > > > > > > > loaded via KEXEC, leading to potential system crashes upon kernel accessing
+> > > > > > > > > hypervisor deposited pages.
+> > > > > > > > > 
+> > > > > > > > > Make MSHV mutually exclusive with KEXEC until proper page lifecycle
+> > > > > > > > > management is implemented.
+> > > > > > > > 
+> > > > > > > > Someone might want to stop all guest VMs and do a kexec. Which is valid
+> > > > > > > > and would work without any issue for L1VH.
+> > > > > > > > 
+> > > > > > > 
+> > > > > > > No, it won't work and hypervsisor depostied pages won't be withdrawn.
+> > > > > > 
+> > > > > > All pages that were deposited in the context of a guest partition (i.e.
+> > > > > > with the guest partition ID), would be withdrawn when you kill the VMs,
+> > > > > > right? What other deposited pages would be left?
+> > > > > > 
+> > > > > 
+> > > > > The driver deposits two types of pages: one for the guests (withdrawn
+> > > > > upon gust shutdown) and the other - for the host itself (never
+> > > > > withdrawn).
+> > > > > See hv_call_create_partition, for example: it deposits pages for the
+> > > > > host partition.
+> > > > 
+> > > > Hmm.. I see. Is it not possible to reclaim this memory in module_exit?
+> > > > Also, can't we forcefully kill all running partitions in module_exit and
+> > > > then reclaim memory? Would this help with kernel consistency
+> > > > irrespective of userspace behavior?
+> > > > 
+> > > 
+> > > It would, but this is sloppy and cannot be a long-term solution.
+> > > 
+> > > It is also not reliable. We have no hook to prevent kexec. So if we fail
+> > > to kill the guest or reclaim the memory for any reason, the new kernel
+> > > may still crash.
 > > 
-> > On Mon, Feb 02, 2026 at 08:51:01AM -0800, mhkelley58@gmail.com wrote:
-> > > From: Michael Kelley <mhklinux@outlook.com>
-> > >
-> > > Huge page mappings in the guest physical address space depend on having
-> > > matching alignment of the userspace address in the parent partition and
-> > > of the guest physical address. Add a comment that captures this
-> > > information. See the link to the mailing list thread.
-> > >
-> > > No code or functional change.
-> > >
-> > > Link: https://lore.kernel.org/linux-hyperv/aUrC94YvscoqBzh3@skinsburskii.localdomain/T/#m0871d2cae9b297fd397ddb8459e534981307c7dc
-> > > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-> > > ---
-> > >  drivers/hv/mshv_root_main.c | 14 ++++++++++++++
-> > >  1 file changed, 14 insertions(+)
-> > >
-> > > diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-> > > index 681b58154d5e..bc738ff4508e 100644
-> > > --- a/drivers/hv/mshv_root_main.c
-> > > +++ b/drivers/hv/mshv_root_main.c
-> > > @@ -1389,6 +1389,20 @@ mshv_partition_ioctl_set_memory(struct mshv_partition *partition,
-> > >  	if (mem.flags & BIT(MSHV_SET_MEM_BIT_UNMAP))
-> > >  		return mshv_unmap_user_memory(partition, mem);
-> > >
-> > > +	/*
-> > > +	 * If the userspace_addr and the guest physical address (as derived
-> > > +	 * from the guest_pfn) have the same alignment modulo PMD huge page
-> > > +	 * size, the MSHV driver can map any PMD huge pages to the guest
-> > > +	 * physical address space as PMD huge pages. If the alignments do
-> > > +	 * not match, PMD huge pages must be mapped as single pages in the
-> > > +	 * guest physical address space. The MSHV driver does not enforce
-> > > +	 * that the alignments match, and it invokes the hypervisor to set
-> > > +	 * up correct functional mappings either way. See mshv_chunk_stride().
-> > > +	 * The caller of the ioctl is responsible for providing userspace_addr
-> > > +	 * and guest_pfn values with matching alignments if it wants the guest
-> > > +	 * to get the performance benefits of PMD huge page mappings of its
-> > > +	 * physical address space to real system memory.
-> > > +	 */
+> > Actually guests won't be running by the time we reach our module_exit
+> > function during a kexec. Userspace processes would've been killed by
+> > then.
 > > 
-> > Thanks. However, I'd suggest to reduce this commet a lot and put the
-> > details into the commit message instead. Also, why this place? Why not a
-> > part of the function description instead, for example?
 > 
-> In general, I'm very much an advocate of putting a bit more detail into code
-> comments, so that someone new reading the code has a chance of figuring
-> out what's going on without having to search through the commit history
-> and read commit messages. The commit history is certainly useful for the
-> historical record, and especially how things have changed over time. But for
-> "how non-obvious things work now", I like to see that in the code comments.
+> No, they will not: "kexec -e" doesn't kill user processes.
+> We must not rely on OS to do graceful shutdown before doing
+> kexec.
+
+I see kexec -e is too brutal. Something like systemctl kexec is
+more graceful and is probably used more commonly. In this case at least
+we could register a reboot notifier and attempt to clean things up.
+
+I think it is better to support kexec to this extent rather than
+disabling it entirely.
+
 > 
-
-This approach is not well aligned with the existing kernel coding style.
-It is common to answer the “why” question in the commit message.
-Code comments should focus on “what” the code does.
-
-https://www.kernel.org/doc/html/latest/process/coding-style.html
-
-For more details, it is common to use `git blame` to learn the context
-of a change when needed.
-
-> As for where to put the comment, I'm flexible. I thought about placing it
-> outside the function as a "header" (which is what I think you mean by the
-> "function description"), but the function handles both "map" and "unmap"
-> operations, and this comment applies only to "map".  Hence I put it after
-> the test for whether we're doing "map" vs. "unmap".  But I wouldn't object
-> to it being placed as a function description, though the text would need to be
-> enhanced to more broadly be a function description instead of just a comment
-> about a specific aspect of "map" behavior.
+> > Also, why is this sloppy? Isn't this what module_exit should be
+> > doing anyway? If someone unloads our module we should be trying to
+> > clean everything up (including killing guests) and reclaim memory.
+> > 
 > 
+> Kexec does not unload modules, but it doesn't really matter even if it
+> would.
+> There are other means to plug into the reboot flow, but neither of them
+> is robust or reliable.
+> 
+> > In any case, we can BUG() out if we fail to reclaim the memory. That would
+> > stop the kexec.
+> > 
+> 
+> By killing the whole system? This is not a good user experience and I
+> don't see how can this be justified.
 
-As for the location, since this documents the userspace API, I would
-rather place it above the function as part of the function description.
-Even though the function handles both map and unmap, unmap also deals
-with huge pages.
+It is justified because, as you said, once we reach that failure we can
+no longer guarantee integrity. So BUG() makes sense. This BUG() would
+cause the system to go for a full reboot and restore integrity.
+
+> 
+> > This is a better solution since instead of disabling KEXEC outright: our
+> > driver made the best possible efforts to make kexec work.
+> > 
+> 
+> How an unrealiable feature leading to potential system crashes is better
+> that disabling kexec outright?
+
+Because there are ways of using the feature reliably. What if someone
+has MSHV_ROOT enabled but never start a VM? (Just because someone has our
+driver enabled in the kernel doesn't mean they're using it.) What about crash
+dump?
+
+It is far better to support some of these scenarios and be unreliable in
+some corner cases rather than disabling the feature completely.
+
+Also, I'm curious if any other driver in the kernel has ever done this
+(force disable KEXEC).
+
+> 
+> It's a complete opposite story for me: the latter provides a limited,
+> but robust functionality, while the former provides an unreliable and
+> unpredictable behavior.
+> 
+> > > 
+> > > There are two long-term solutions:
+> > >  1. Add a way to prevent kexec when there is shared state between the hypervisor and the kernel.
+> > 
+> > I honestly think we should focus efforts on making kexec work rather
+> > than finding ways to prevent it.
+> > 
+> 
+> There is no argument about it. But until we have it fixed properly, we
+> have two options: either disable kexec or stop claiming we have our
+> driver up and ready for external customers. Giving the importance of
+> this driver for current projects, I believe the better way would be to
+> explicitly limit the functionality instead of postponing the
+> productization of the driver.
+
+It is okay to claim our driver as ready even if it doesn't support all
+kexec cases. If we can support the common cases such as crash dump and
+maybe kexec based servicing (pretty sure people do systemctl kexec and
+not kexec -e for this with proper teardown) we can claim that our driver
+is ready for general use.
 
 Thanks,
-Stanislav
+Anirudh.
 
-> Michael
-> 
-> > 
-> > Thanks,
-> > Stanislav
-> > 
-> > >  	return mshv_map_user_memory(partition, mem);
-> > >  }
-> > >
-> > > --
-> > > 2.25.1
 
