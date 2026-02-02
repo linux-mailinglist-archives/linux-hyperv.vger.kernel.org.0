@@ -1,76 +1,58 @@
-Return-Path: <linux-hyperv+bounces-8658-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8659-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CAlCOYb0gGkgDQMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8658-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Feb 2026 20:01:26 +0100
+	id F5iYAOv1gGmnDQMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8659-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Feb 2026 20:07:23 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61A77D05F7
-	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Feb 2026 20:01:26 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43E6BD0639
+	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Feb 2026 20:07:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4143E302C376
-	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Feb 2026 19:01:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B7D4F301455D
+	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Feb 2026 19:07:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D6794964F;
-	Mon,  2 Feb 2026 19:01:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3608E2DB7AD;
+	Mon,  2 Feb 2026 19:07:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="l2QiAFbC"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XAJzEMhH"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6D93A1D2;
-	Mon,  2 Feb 2026 19:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770058883; cv=pass; b=TidCg8GOvprwm6aiLJ1e4hefMJ2RylutmF9npFxoPYzohG//RIyfctWp0qSVyMsT6N9XAR36q96bGMAi37Ez4sB11WqaKNmdW78USNvglRQFBsf8unQB6/1wQn1ZzGCBAUk2+sF0DOIUAHbx3kZkvRJGlDc1EhZccgcVtg6cj+Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770058883; c=relaxed/simple;
-	bh=O1Uny3kK7GK3u78vosBKKU8T56Cm0HtbKRINT1zWCiQ=;
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A93561494C3;
+	Mon,  2 Feb 2026 19:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770059240; cv=none; b=AMdEItcfDACLnc+Iw7xY2Er1l1xkYwaJXaGF4J0j8GYxwIlSpxDnfcMNWrZmlhH6HSMxy5X3aJ8BeIYRMqA0Jl+kOGstoF4uxGxw4Jw7e1eUzKU80pwkP3+juSySlwqieH0HPghwXyfMZDMAWQ/rqy1z4Q+Z6OFMsh4tI8NjWXI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770059240; c=relaxed/simple;
+	bh=cj9KaWKGQdWs3VNBg+cbiAXQfnyxFWT6h/jh62z4syA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zxy21pAhzOMgxAYx3w1smVJ6Sw/RZLfsH2CYxnzUcPr3AvmWrre5l7dqKFl/BT96k9hMDCsvRL+i6wKUpwneo2XB5v3nqJvybZVJUYyGfIsVHlpPBbYewSg/HztMUPvVkbGjOf3uP/YeIVFPfYpTMGJMVIvDTl4/lwtFwl74p5Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=l2QiAFbC; arc=pass smtp.client-ip=136.143.188.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1770058869; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ZPYdiRxGsKm9rZ8onqNko1J+cRcAxhM1GvmijEX/xz6v6zZODEftpMaeDpb70KdhTrfjoU5D4t+k/s5HAFXkugInyS5KQTe7z9+y48jMwOKFSFB76/93f0mE3qNotzr7T+KnxAeuqbNjB9h9igQ2uwjG+6GcI66cvP6DpAq4qlo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1770058869; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ZzAmkQNQk3KsoRt7JL5Tfq1tVe7+I+Ec5oVk3KAmbP8=; 
-	b=GIwqkty04syh+HKyB1Mks5WkDE7zxzLiwi9u4SeCFZb91SQqVFaaWKpQyW7T59q+CSJQ/Crsz0gIrfyLd4cBXtrt0ydLfQSRWVu2e8tV36SPHhy862caEynpYzjkg11YK4PTkcaJ4+Tf1ixseWjdtVGeMbj1q9XJv2jTd76UymM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=anirudhrb.com;
-	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
-	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770058869;
-	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=ZzAmkQNQk3KsoRt7JL5Tfq1tVe7+I+Ec5oVk3KAmbP8=;
-	b=l2QiAFbCb+HY4QVfzhuY/RpExDvtKj0NnfkaK5Fg+a1Wj26422MvNqtjIOYV5zhx
-	BS28ldLV2JaD+iU0CZJD6cAzLEpEyH9hOFiNW9Q/D6fsXY/rOoMSqce7ZOhpnGc9mmL
-	dzLYxxFHtBbHCKDrIbkzSf5SiTn4cgzzPQQ3ulTY=
-Received: by mx.zohomail.com with SMTPS id 1770058867491934.0626709421043;
-	Mon, 2 Feb 2026 11:01:07 -0800 (PST)
-Date: Mon, 2 Feb 2026 19:01:01 +0000
-From: Anirudh Rayabharam <anirudh@anirudhrb.com>
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZzQKRGXx2bVvqQXDvqr1Yb9kPgVQpdisdvcWeaSPSeQNJFT4NeYgyn7u9RbwmeLOVg6mr4LJp3ymcNjnHKLAOR+QDMg3o82BH+dRoASahMXK/pBtxRXygi2kcx9NP+gvZ+iOd8IzT7P+nZ7vv6DHg7VxKVNnW+4HnOFm71/ei3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XAJzEMhH; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from skinsburskii.localdomain (unknown [20.236.11.69])
+	by linux.microsoft.com (Postfix) with ESMTPSA id DB7A120B7168;
+	Mon,  2 Feb 2026 11:07:17 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DB7A120B7168
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1770059238;
+	bh=imVODAf+13zGwQOBh8NbN/KGSuwEVmm7mPD1mnazMrE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XAJzEMhHK5GEeJEM8WliQMy8+pCkacmuC9AV8RHbldE05jZnuzpE45FFw9+I0gDzh
+	 Q5+ooGPcsRIY+CVtUahIwok5KIBlXOK6gGpim0OybFQFjE3wBgs1t0Y6EdQB6A9dW7
+	 mNBYy9WS3qWjIxu4sgqoBMvaq2eunTUS1U0+LGgY=
+Date: Mon, 2 Feb 2026 11:07:17 -0800
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Anirudh Rayabharam <anirudh@anirudhrb.com>
 Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
 	decui@microsoft.com, longli@microsoft.com,
 	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mshv: Make MSHV mutually exclusive with KEXEC
-Message-ID: <aYD0bafU3UYuSvDW@anirudh-surface.localdomain>
-References: <176920684805.250171.6817228088359793537.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <xyzkeqng3767mlpzu7xbmgobjr6ob2wp2brocmjczbbl4dypxh@wkibga46f33c>
- <aXfStKqKiSSHEmXj@skinsburskii.localdomain>
- <aXo2X4mRioTa3sBl@anirudh-surface.localdomain>
- <aXqXkhhl1xuvjm3P@skinsburskii.localdomain>
- <aXzmMInsNSvFvBF1@anirudh-surface.localdomain>
- <aXz8ldAeoWwGIxdu@skinsburskii.localdomain>
- <aX0Vbfocwa4WgXUw@anirudh-surface.localdomain>
- <aYDaaIK0J4SjvnCe@skinsburskii.localdomain>
+Subject: Re: [PATCH v2 1/2] mshv: refactor synic init and cleanup
+Message-ID: <aYD15RxUIoGDJCv5@skinsburskii.localdomain>
+References: <20260202182706.648192-1-anirudh@anirudhrb.com>
+ <20260202182706.648192-2-anirudh@anirudhrb.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -79,168 +61,355 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aYDaaIK0J4SjvnCe@skinsburskii.localdomain>
-X-ZohoMailClient: External
+In-Reply-To: <20260202182706.648192-2-anirudh@anirudhrb.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-8659-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	DMARC_NA(0.00)[anirudhrb.com];
-	TAGGED_FROM(0.00)[bounces-8658-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[anirudhrb.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[anirudh@anirudhrb.com,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	RCPT_COUNT_SEVEN(0.00)[8];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[anirudhrb.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 61A77D05F7
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,skinsburskii.localdomain:mid,anirudhrb.com:email]
+X-Rspamd-Queue-Id: 43E6BD0639
 X-Rspamd-Action: no action
 
-On Mon, Feb 02, 2026 at 09:10:00AM -0800, Stanislav Kinsburskii wrote:
-> On Fri, Jan 30, 2026 at 08:32:45PM +0000, Anirudh Rayabharam wrote:
-> > On Fri, Jan 30, 2026 at 10:46:45AM -0800, Stanislav Kinsburskii wrote:
-> > > On Fri, Jan 30, 2026 at 05:11:12PM +0000, Anirudh Rayabharam wrote:
-> > > > On Wed, Jan 28, 2026 at 03:11:14PM -0800, Stanislav Kinsburskii wrote:
-> > > > > On Wed, Jan 28, 2026 at 04:16:31PM +0000, Anirudh Rayabharam wrote:
-> > > > > > On Mon, Jan 26, 2026 at 12:46:44PM -0800, Stanislav Kinsburskii wrote:
-> > > > > > > On Tue, Jan 27, 2026 at 12:19:24AM +0530, Anirudh Rayabharam wrote:
-> > > > > > > > On Fri, Jan 23, 2026 at 10:20:53PM +0000, Stanislav Kinsburskii wrote:
-> > > > > > > > > The MSHV driver deposits kernel-allocated pages to the hypervisor during
-> > > > > > > > > runtime and never withdraws them. This creates a fundamental incompatibility
-> > > > > > > > > with KEXEC, as these deposited pages remain unavailable to the new kernel
-> > > > > > > > > loaded via KEXEC, leading to potential system crashes upon kernel accessing
-> > > > > > > > > hypervisor deposited pages.
-> > > > > > > > > 
-> > > > > > > > > Make MSHV mutually exclusive with KEXEC until proper page lifecycle
-> > > > > > > > > management is implemented.
-> > > > > > > > 
-> > > > > > > > Someone might want to stop all guest VMs and do a kexec. Which is valid
-> > > > > > > > and would work without any issue for L1VH.
-> > > > > > > > 
-> > > > > > > 
-> > > > > > > No, it won't work and hypervsisor depostied pages won't be withdrawn.
-> > > > > > 
-> > > > > > All pages that were deposited in the context of a guest partition (i.e.
-> > > > > > with the guest partition ID), would be withdrawn when you kill the VMs,
-> > > > > > right? What other deposited pages would be left?
-> > > > > > 
-> > > > > 
-> > > > > The driver deposits two types of pages: one for the guests (withdrawn
-> > > > > upon gust shutdown) and the other - for the host itself (never
-> > > > > withdrawn).
-> > > > > See hv_call_create_partition, for example: it deposits pages for the
-> > > > > host partition.
-> > > > 
-> > > > Hmm.. I see. Is it not possible to reclaim this memory in module_exit?
-> > > > Also, can't we forcefully kill all running partitions in module_exit and
-> > > > then reclaim memory? Would this help with kernel consistency
-> > > > irrespective of userspace behavior?
-> > > > 
-> > > 
-> > > It would, but this is sloppy and cannot be a long-term solution.
-> > > 
-> > > It is also not reliable. We have no hook to prevent kexec. So if we fail
-> > > to kill the guest or reclaim the memory for any reason, the new kernel
-> > > may still crash.
-> > 
-> > Actually guests won't be running by the time we reach our module_exit
-> > function during a kexec. Userspace processes would've been killed by
-> > then.
-> > 
+On Mon, Feb 02, 2026 at 06:27:05PM +0000, Anirudh Rayabharam wrote:
+> From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
 > 
-> No, they will not: "kexec -e" doesn't kill user processes.
-> We must not rely on OS to do graceful shutdown before doing
-> kexec.
-
-I see kexec -e is too brutal. Something like systemctl kexec is
-more graceful and is probably used more commonly. In this case at least
-we could register a reboot notifier and attempt to clean things up.
-
-I think it is better to support kexec to this extent rather than
-disabling it entirely.
-
+> Rename mshv_synic_init() to mshv_synic_cpu_init() and
+> mshv_synic_cleanup() to mshv_synic_cpu_exit() to better reflect that
+> these functions handle per-cpu synic setup and teardown.
 > 
-> > Also, why is this sloppy? Isn't this what module_exit should be
-> > doing anyway? If someone unloads our module we should be trying to
-> > clean everything up (including killing guests) and reclaim memory.
-> > 
+> Use mshv_synic_init/cleanup() to perform init/cleanup that is not per-cpu.
+> Move all the synic related setup from mshv_parent_partition_init.
 > 
-> Kexec does not unload modules, but it doesn't really matter even if it
-> would.
-> There are other means to plug into the reboot flow, but neither of them
-> is robust or reliable.
+> Move the reboot notifier to mshv_synic.c because it currently only
+> operates on the synic cpuhp state.
 > 
-> > In any case, we can BUG() out if we fail to reclaim the memory. That would
-> > stop the kexec.
-> > 
+> Move out synic_pages from the global mshv_root since it's use is now
+> completely local to mshv_synic.c.
 > 
-> By killing the whole system? This is not a good user experience and I
-> don't see how can this be justified.
-
-It is justified because, as you said, once we reach that failure we can
-no longer guarantee integrity. So BUG() makes sense. This BUG() would
-cause the system to go for a full reboot and restore integrity.
-
+> This is in preparation for the next patch which will add more stuff to
+> mshv_synic_init().
 > 
-> > This is a better solution since instead of disabling KEXEC outright: our
-> > driver made the best possible efforts to make kexec work.
-> > 
+> No functional change.
 > 
-> How an unrealiable feature leading to potential system crashes is better
-> that disabling kexec outright?
-
-Because there are ways of using the feature reliably. What if someone
-has MSHV_ROOT enabled but never start a VM? (Just because someone has our
-driver enabled in the kernel doesn't mean they're using it.) What about crash
-dump?
-
-It is far better to support some of these scenarios and be unreliable in
-some corner cases rather than disabling the feature completely.
-
-Also, I'm curious if any other driver in the kernel has ever done this
-(force disable KEXEC).
-
+> Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> ---
+>  drivers/hv/mshv_root.h      |  5 ++-
+>  drivers/hv/mshv_root_main.c | 59 +++++-------------------------
+>  drivers/hv/mshv_synic.c     | 71 +++++++++++++++++++++++++++++++++----
+>  3 files changed, 75 insertions(+), 60 deletions(-)
 > 
-> It's a complete opposite story for me: the latter provides a limited,
-> but robust functionality, while the former provides an unreliable and
-> unpredictable behavior.
+> diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
+> index 3c1d88b36741..26e0320c8097 100644
+> --- a/drivers/hv/mshv_root.h
+> +++ b/drivers/hv/mshv_root.h
+> @@ -183,7 +183,6 @@ struct hv_synic_pages {
+>  };
+>  
+>  struct mshv_root {
+> -	struct hv_synic_pages __percpu *synic_pages;
+>  	spinlock_t pt_ht_lock;
+>  	DECLARE_HASHTABLE(pt_htable, MSHV_PARTITIONS_HASH_BITS);
+>  	struct hv_partition_property_vmm_capabilities vmm_caps;
+> @@ -242,8 +241,8 @@ int mshv_register_doorbell(u64 partition_id, doorbell_cb_t doorbell_cb,
+>  void mshv_unregister_doorbell(u64 partition_id, int doorbell_portid);
+>  
+>  void mshv_isr(void);
+> -int mshv_synic_init(unsigned int cpu);
+> -int mshv_synic_cleanup(unsigned int cpu);
+> +int mshv_synic_init(struct device *dev);
+> +void mshv_synic_cleanup(void);
+>  
+>  static inline bool mshv_partition_encrypted(struct mshv_partition *partition)
+>  {
+> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> index 681b58154d5e..7c1666456e78 100644
+> --- a/drivers/hv/mshv_root_main.c
+> +++ b/drivers/hv/mshv_root_main.c
+> @@ -2035,7 +2035,6 @@ mshv_dev_release(struct inode *inode, struct file *filp)
+>  	return 0;
+>  }
+>  
+> -static int mshv_cpuhp_online;
+>  static int mshv_root_sched_online;
+>  
+>  static const char *scheduler_type_to_string(enum hv_scheduler_type type)
+> @@ -2198,40 +2197,14 @@ root_scheduler_deinit(void)
+>  	free_percpu(root_scheduler_output);
+>  }
+>  
+> -static int mshv_reboot_notify(struct notifier_block *nb,
+> -			      unsigned long code, void *unused)
+> -{
+> -	cpuhp_remove_state(mshv_cpuhp_online);
+> -	return 0;
+> -}
+> -
+
+Unrelated to the change, but it would be great to get rid of this
+notifier altogether and just do the cleanup in the device shutdown hook.
+This is a cleaner approach as this is a device driver and we do have the
+device in hands.
+Do you think you could make this change a part of this series?
+
+> -struct notifier_block mshv_reboot_nb = {
+> -	.notifier_call = mshv_reboot_notify,
+> -};
+> -
+>  static void mshv_root_partition_exit(void)
+>  {
+> -	unregister_reboot_notifier(&mshv_reboot_nb);
+>  	root_scheduler_deinit();
+>  }
+>  
+>  static int __init mshv_root_partition_init(struct device *dev)
+>  {
+> -	int err;
+> -
+> -	err = root_scheduler_init(dev);
+> -	if (err)
+> -		return err;
+> -
+> -	err = register_reboot_notifier(&mshv_reboot_nb);
+> -	if (err)
+> -		goto root_sched_deinit;
+> -
+> -	return 0;
+> -
+> -root_sched_deinit:
+> -	root_scheduler_deinit();
+> -	return err;
+> +	return root_scheduler_init(dev);
+>  }
+>  
+
+This conflicts with the "mshv: Add support for integrated scheduler"
+patch out there.
+Perhaps we should ask Wei to merge that change first.
+
+>  static void mshv_init_vmm_caps(struct device *dev)
+> @@ -2276,31 +2249,18 @@ static int __init mshv_parent_partition_init(void)
+>  			MSHV_HV_MAX_VERSION);
+>  	}
+>  
+> -	mshv_root.synic_pages = alloc_percpu(struct hv_synic_pages);
+> -	if (!mshv_root.synic_pages) {
+> -		dev_err(dev, "Failed to allocate percpu synic page\n");
+> -		ret = -ENOMEM;
+> +	ret = mshv_synic_init(dev);
+> +	if (ret)
+>  		goto device_deregister;
+> -	}
+> -
+> -	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "mshv_synic",
+> -				mshv_synic_init,
+> -				mshv_synic_cleanup);
+> -	if (ret < 0) {
+> -		dev_err(dev, "Failed to setup cpu hotplug state: %i\n", ret);
+> -		goto free_synic_pages;
+> -	}
+> -
+> -	mshv_cpuhp_online = ret;
+>  
+>  	ret = mshv_retrieve_scheduler_type(dev);
+>  	if (ret)
+> -		goto remove_cpu_state;
+> +		goto synic_cleanup;
+>  
+>  	if (hv_root_partition())
+>  		ret = mshv_root_partition_init(dev);
+>  	if (ret)
+> -		goto remove_cpu_state;
+> +		goto synic_cleanup;
+>  
+>  	mshv_init_vmm_caps(dev);
+>  
+> @@ -2318,10 +2278,8 @@ static int __init mshv_parent_partition_init(void)
+>  exit_partition:
+>  	if (hv_root_partition())
+>  		mshv_root_partition_exit();
+> -remove_cpu_state:
+> -	cpuhp_remove_state(mshv_cpuhp_online);
+> -free_synic_pages:
+> -	free_percpu(mshv_root.synic_pages);
+> +synic_cleanup:
+> +	mshv_synic_cleanup();
+>  device_deregister:
+>  	misc_deregister(&mshv_dev);
+>  	return ret;
+> @@ -2335,8 +2293,7 @@ static void __exit mshv_parent_partition_exit(void)
+>  	mshv_irqfd_wq_cleanup();
+>  	if (hv_root_partition())
+>  		mshv_root_partition_exit();
+> -	cpuhp_remove_state(mshv_cpuhp_online);
+> -	free_percpu(mshv_root.synic_pages);
+> +	mshv_synic_cleanup();
+>  }
+>  
+>  module_init(mshv_parent_partition_init);
+> diff --git a/drivers/hv/mshv_synic.c b/drivers/hv/mshv_synic.c
+> index f8b0337cdc82..98c58755846d 100644
+> --- a/drivers/hv/mshv_synic.c
+> +++ b/drivers/hv/mshv_synic.c
+> @@ -12,11 +12,16 @@
+>  #include <linux/mm.h>
+>  #include <linux/io.h>
+>  #include <linux/random.h>
+> +#include <linux/cpuhotplug.h>
+> +#include <linux/reboot.h>
+>  #include <asm/mshyperv.h>
+>  
+>  #include "mshv_eventfd.h"
+>  #include "mshv.h"
+>  
+> +static int synic_cpuhp_online;
+> +static struct hv_synic_pages __percpu *synic_pages;
+> +
+>  static u32 synic_event_ring_get_queued_port(u32 sint_index)
+>  {
+>  	struct hv_synic_event_ring_page **event_ring_page;
+> @@ -26,7 +31,7 @@ static u32 synic_event_ring_get_queued_port(u32 sint_index)
+>  	u32 message;
+>  	u8 tail;
+>  
+> -	spages = this_cpu_ptr(mshv_root.synic_pages);
+> +	spages = this_cpu_ptr(synic_pages);
+>  	event_ring_page = &spages->synic_event_ring_page;
+>  	synic_eventring_tail = (u8 **)this_cpu_ptr(hv_synic_eventring_tail);
+>  
+> @@ -393,7 +398,7 @@ mshv_intercept_isr(struct hv_message *msg)
+>  
+>  void mshv_isr(void)
+>  {
+> -	struct hv_synic_pages *spages = this_cpu_ptr(mshv_root.synic_pages);
+> +	struct hv_synic_pages *spages = this_cpu_ptr(synic_pages);
+>  	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
+>  	struct hv_message *msg;
+>  	bool handled;
+> @@ -446,7 +451,7 @@ void mshv_isr(void)
+>  	}
+>  }
+>  
+> -int mshv_synic_init(unsigned int cpu)
+> +static int mshv_synic_cpu_init(unsigned int cpu)
+>  {
+>  	union hv_synic_simp simp;
+>  	union hv_synic_siefp siefp;
+> @@ -455,7 +460,7 @@ int mshv_synic_init(unsigned int cpu)
+>  	union hv_synic_sint sint;
+>  #endif
+>  	union hv_synic_scontrol sctrl;
+> -	struct hv_synic_pages *spages = this_cpu_ptr(mshv_root.synic_pages);
+> +	struct hv_synic_pages *spages = this_cpu_ptr(synic_pages);
+>  	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
+>  	struct hv_synic_event_flags_page **event_flags_page =
+>  			&spages->synic_event_flags_page;
+> @@ -542,14 +547,14 @@ int mshv_synic_init(unsigned int cpu)
+>  	return -EFAULT;
+>  }
+>  
+> -int mshv_synic_cleanup(unsigned int cpu)
+> +static int mshv_synic_cpu_exit(unsigned int cpu)
+>  {
+>  	union hv_synic_sint sint;
+>  	union hv_synic_simp simp;
+>  	union hv_synic_siefp siefp;
+>  	union hv_synic_sirbp sirbp;
+>  	union hv_synic_scontrol sctrl;
+> -	struct hv_synic_pages *spages = this_cpu_ptr(mshv_root.synic_pages);
+> +	struct hv_synic_pages *spages = this_cpu_ptr(synic_pages);
+>  	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
+>  	struct hv_synic_event_flags_page **event_flags_page =
+>  		&spages->synic_event_flags_page;
+> @@ -663,3 +668,57 @@ mshv_unregister_doorbell(u64 partition_id, int doorbell_portid)
+>  
+>  	mshv_portid_free(doorbell_portid);
+>  }
+> +
+> +static int mshv_synic_reboot_notify(struct notifier_block *nb,
+> +			      unsigned long code, void *unused)
+> +{
+> +	cpuhp_remove_state(synic_cpuhp_online);
+> +	return 0;
+> +}
+> +
+> +static struct notifier_block mshv_synic_reboot_nb = {
+> +	.notifier_call = mshv_synic_reboot_notify,
+> +};
+> +
+> +int __init mshv_synic_init(struct device *dev)
+> +{
+> +	int ret = 0;
+> +
+> +	synic_pages = alloc_percpu(struct hv_synic_pages);
+> +	if (!synic_pages) {
+> +		dev_err(dev, "Failed to allocate percpu synic page\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "mshv_synic",
+> +				mshv_synic_cpu_init,
+> +				mshv_synic_cpu_exit);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to setup cpu hotplug state: %i\n", ret);
+> +		goto free_synic_pages;
+> +	}
+> +
+> +	synic_cpuhp_online = ret;
+> +
+> +	if (hv_root_partition()) {
+
+Nit: it's probably better to branch in the notifier itself.
+It will introduce an additional object, but the branching will be in one
+palce instead of two and it will also make to code simpler and easier to
+read.
+
+Thanks
+Stanislav.
+
+> +		ret = register_reboot_notifier(&mshv_synic_reboot_nb);
+> +		if (ret)
+> +			goto remove_cpuhp_state;
+> +	}
+> +
+> +	return 0;
+> +
+> +remove_cpuhp_state:
+> +	cpuhp_remove_state(synic_cpuhp_online);
+> +free_synic_pages:
+> +	free_percpu(synic_pages);
+> +	return ret;
+> +}
+> +
+> +void mshv_synic_cleanup(void)
+> +{
+> +	if (hv_root_partition())
+> +		unregister_reboot_notifier(&mshv_synic_reboot_nb);
+> +	cpuhp_remove_state(synic_cpuhp_online);
+> +	free_percpu(synic_pages);
+> +}
+> -- 
+> 2.34.1
 > 
-> > > 
-> > > There are two long-term solutions:
-> > >  1. Add a way to prevent kexec when there is shared state between the hypervisor and the kernel.
-> > 
-> > I honestly think we should focus efforts on making kexec work rather
-> > than finding ways to prevent it.
-> > 
-> 
-> There is no argument about it. But until we have it fixed properly, we
-> have two options: either disable kexec or stop claiming we have our
-> driver up and ready for external customers. Giving the importance of
-> this driver for current projects, I believe the better way would be to
-> explicitly limit the functionality instead of postponing the
-> productization of the driver.
-
-It is okay to claim our driver as ready even if it doesn't support all
-kexec cases. If we can support the common cases such as crash dump and
-maybe kexec based servicing (pretty sure people do systemctl kexec and
-not kexec -e for this with proper teardown) we can claim that our driver
-is ready for general use.
-
-Thanks,
-Anirudh.
-
 
