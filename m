@@ -1,101 +1,72 @@
-Return-Path: <linux-hyperv+bounces-8637-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8638-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mFaVF56/gGl3AgMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8637-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Feb 2026 16:15:42 +0100
+	id 2GL/MxzRgGlBBwMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8638-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Feb 2026 17:30:20 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAC27CE093
-	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Feb 2026 16:15:41 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EF7FCEFF3
+	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Feb 2026 17:30:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E166D301A177
-	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Feb 2026 15:03:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 415BD3071232
+	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Feb 2026 16:20:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4DE9376BD6;
-	Mon,  2 Feb 2026 15:03:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 781CA2798E5;
+	Mon,  2 Feb 2026 16:20:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jKJj06CP"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KRfw5N8/"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903FE374725;
-	Mon,  2 Feb 2026 15:03:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DA7426E6FA;
+	Mon,  2 Feb 2026 16:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770044588; cv=none; b=QHS0Sl5AAPNEJLe+kzYW9IV4sXIK3yGUWFUScDP7AN/HbQOmrxyX8My8zqYWFi9p2InCQGtXjPOq/FML2xhy/XW6i29bC3Rwgez2KxUAsG2RDjywgW0pyju9R7rS1DYkGWR1mEEXvW8FjLI5vEqSSbtBKNuK+3mAOnorIGKS7No=
+	t=1770049240; cv=none; b=BQxXkzc33C0fYRBqEyJxuOQP3miqpWB5ZuD5/w5Geu0oPGcDulVPiKHSvJho040iCA+Jd7owEc8vWj1nVDsQyIEtSSZsQrArhvHkdd2j5hrKus8c5Pr/YKkR2eQWVd59oUEt4RWvFEMKHGq0Oc/sW6P2CVCM/fNoZKCvHmX+vzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770044588; c=relaxed/simple;
-	bh=f4jiSWaAUMy80OsaVE6o84JI4KEEK5M17ot8dH2cPts=;
+	s=arc-20240116; t=1770049240; c=relaxed/simple;
+	bh=bUuCyUPTcAsCcUf0UxDuRNkkh7lksoj1hSCzT0+E6HU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FbxqSpD74TuTT79G0gqTREfbyPFqeDll8Z8nrJP20KjcbMm5k0FxqdcU1EIlnuDi2rHmGq0BYC1iht0sKMJUTR+67RKlRhfc2JTqeDvaIK2cYiSXdTDslW/8+fxsxelnDSHwHtFdDRaR67mqtndv7eqMHEmTn9XdENgxgEIVEDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jKJj06CP; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770044587; x=1801580587;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=f4jiSWaAUMy80OsaVE6o84JI4KEEK5M17ot8dH2cPts=;
-  b=jKJj06CPv+ezALh2mBlTbMnJoPB1sy3SbWh8JCRhDhurYymgQUePITGV
-   h8GQx/Qf0FR8z1RWlEA5oElZ4B/HYCyBINzP4myqR4g+E1Gce4PEmum5M
-   FSzRL5PbwG6cot3ECjtklMaoukzc4uvYq6G9LHMg8gW33YkSrmZ8iNz8O
-   h3cacoszZR/hWHUv2pgWFOpn3S8Z/0l5sM/IfoPoS9dXNfRMx+eNhmM1w
-   hT6vR6AqGuotCmm4TRpMXdva3rqayH6bfXTfsRpfTTUFgMyL26/QRp6Dw
-   fIUjmylWvU9fVc7J7qaKdmBRwieOrP+pucZwa0zFPYM7YGGSUFb627awN
-   w==;
-X-CSE-ConnectionGUID: cY6TY4gPQB6gnOqrCjJ3Tg==
-X-CSE-MsgGUID: dN4VzvijSPS5G1Hdkdld6g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11690"; a="71099598"
-X-IronPort-AV: E=Sophos;i="6.21,269,1763452800"; 
-   d="scan'208";a="71099598"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2026 07:03:06 -0800
-X-CSE-ConnectionGUID: 1Sm55USrTViCYi6oLwwXlg==
-X-CSE-MsgGUID: ZhozEz8UQCq9wlrljDbqsQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,269,1763452800"; 
-   d="scan'208";a="209698373"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 02 Feb 2026 07:03:00 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vmvS4-00000000ffw-49bj;
-	Mon, 02 Feb 2026 15:02:56 +0000
-Date: Mon, 2 Feb 2026 23:02:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Shashank Balaji <shashank.mahadasyam@sony.com>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Suresh Siddha <suresh.b.siddha@intel.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Juergen Gross <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-	jailhouse-dev@googlegroups.com, kvm@vger.kernel.org,
-	xen-devel@lists.xenproject.org, Rahul Bukte <rahul.bukte@sony.com>,
-	Shashank Balaji <shashank.mahadasyam@sony.com>,
-	Daniel Palmer <daniel.palmer@sony.com>,
-	Tim Bird <tim.bird@sony.com>
-Subject: Re: [PATCH 1/3] x86/x2apic: disable x2apic on resume if the kernel
- expects so
-Message-ID: <202602022242.iSdFHMDI-lkp@intel.com>
-References: <20260202-x2apic-fix-v1-1-71c8f488a88b@sony.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gbp1XhXO+hHBYxkXmlzklpBKoF+Yjs56Md1qlVhWmVki9rmvBYvqV7ws15mINu3rqMvUp//CrdOVYKGsR8/0/257pmVTr0XylA/4hVywn9UkP7ap+dpjQPGjAI/qhUQog1YAsS6yjiMCCzdQ7qSmNj0OX7yLzIyVLFsfj3k1E/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KRfw5N8/; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from skinsburskii.localdomain (c-98-225-44-182.hsd1.wa.comcast.net [98.225.44.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D5C9020B7167;
+	Mon,  2 Feb 2026 08:20:37 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D5C9020B7167
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1770049238;
+	bh=kmJOTjW25jCERLEzVtuof6EFwFlGRPjslBeg6kwpqRI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KRfw5N8/WMl6FFewcvTfzhNLYXNyvLXm25xMe3oAUvNxPHExpL8Tva4eg5lOd+m6E
+	 6cFaoQ/UM+s0Sd2GUAy4NyH/DKG4PeieMvps0dPNHSkjgiJtrr9F8R3jV4bdLHFiar
+	 P9iGy28LlNBvpyXYkdyh3To9yaUoeO7yH6QtHT+A=
+Date: Mon, 2 Feb 2026 08:20:37 -0800
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Mukesh R <mrathor@linux.microsoft.com>
+Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com, catalin.marinas@arm.com,
+	will@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, joro@8bytes.org,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
+	nunodasneves@linux.microsoft.com, mhklinux@outlook.com,
+	romank@linux.microsoft.com
+Subject: Re: [PATCH v0 12/15] x86/hyperv: Implement hyperv virtual iommu
+Message-ID: <aYDO1S3DdUSHNkEY@skinsburskii.localdomain>
+References: <20260120064230.3602565-1-mrathor@linux.microsoft.com>
+ <20260120064230.3602565-13-mrathor@linux.microsoft.com>
+ <aXAZ-r1PeUBAHwaK@skinsburskii.localdomain>
+ <54fd73b9-ade6-f1bb-08fc-17571aeadb20@linux.microsoft.com>
+ <aXeO7wh7bpacJ1Sk@skinsburskii.localdomain>
+ <c40e6dc8-8e42-b0f3-f8e5-3c637adb7f13@linux.microsoft.com>
+ <aXkIGfos4l0kv_lF@skinsburskii.localdomain>
+ <8298de1d-648c-bbc6-b3c9-1cbc9b5d7e72@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -104,146 +75,163 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260202-x2apic-fix-v1-1-71c8f488a88b@sony.com>
+In-Reply-To: <8298de1d-648c-bbc6-b3c9-1cbc9b5d7e72@linux.microsoft.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.16 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8637-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8638-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[32];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,microsoft.com,kernel.org,arm.com,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,8bytes.org,google.com,arndb.de,linux.microsoft.com,outlook.com];
+	RCPT_COUNT_TWELVE(0.00)[29];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[intel.com:+];
+	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	TAGGED_RCPT(0.00)[linux-hyperv];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[01.org:url,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,intel.com:email,intel.com:dkim,intel.com:mid]
-X-Rspamd-Queue-Id: CAC27CE093
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[skinsburskii.localdomain:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:dkim]
+X-Rspamd-Queue-Id: 2EF7FCEFF3
 X-Rspamd-Action: no action
 
-Hi Shashank,
+On Fri, Jan 30, 2026 at 02:51:19PM -0800, Mukesh R wrote:
+> On 1/27/26 10:46, Stanislav Kinsburskii wrote:
+> > On Mon, Jan 26, 2026 at 07:02:29PM -0800, Mukesh R wrote:
+> > > On 1/26/26 07:57, Stanislav Kinsburskii wrote:
+> > > > On Fri, Jan 23, 2026 at 05:26:19PM -0800, Mukesh R wrote:
+> > > > > On 1/20/26 16:12, Stanislav Kinsburskii wrote:
+> > > > > > On Mon, Jan 19, 2026 at 10:42:27PM -0800, Mukesh R wrote:
+> > > > > > > From: Mukesh Rathor <mrathor@linux.microsoft.com>
+> > > > > > > 
+> > > > > > > Add a new file to implement management of device domains, mapping and
+> > > > > > > unmapping of iommu memory, and other iommu_ops to fit within the VFIO
+> > > > > > > framework for PCI passthru on Hyper-V running Linux as root or L1VH
+> > > > > > > parent. This also implements direct attach mechanism for PCI passthru,
+> > > > > > > and it is also made to work within the VFIO framework.
+> > > > > > > 
+> > > > > > > At a high level, during boot the hypervisor creates a default identity
+> > > > > > > domain and attaches all devices to it. This nicely maps to Linux iommu
+> > > > > > > subsystem IOMMU_DOMAIN_IDENTITY domain. As a result, Linux does not
+> > > > > > > need to explicitly ask Hyper-V to attach devices and do maps/unmaps
+> > > > > > > during boot. As mentioned previously, Hyper-V supports two ways to do
+> > > > > > > PCI passthru:
+> > > > > > > 
+> > > > > > >      1. Device Domain: root must create a device domain in the hypervisor,
+> > > > > > >         and do map/unmap hypercalls for mapping and unmapping guest RAM.
+> > > > > > >         All hypervisor communications use device id of type PCI for
+> > > > > > >         identifying and referencing the device.
+> > > > > > > 
+> > > > > > >      2. Direct Attach: the hypervisor will simply use the guest's HW
+> > > > > > >         page table for mappings, thus the host need not do map/unmap
+> > > > > > >         device memory hypercalls. As such, direct attach passthru setup
+> > > > > > >         during guest boot is extremely fast. A direct attached device
+> > > > > > >         must be referenced via logical device id and not via the PCI
+> > > > > > >         device id.
+> > > > > > > 
+> > > > > > > At present, L1VH root/parent only supports direct attaches. Also direct
+> > > > > > > attach is default in non-L1VH cases because there are some significant
+> > > > > > > performance issues with device domain implementation currently for guests
+> > > > > > > with higher RAM (say more than 8GB), and that unfortunately cannot be
+> > > > > > > addressed in the short term.
+> > > > > > > 
+> > > > > > 
+> > > > > > <snip>
+> > > > > > 
+> > > > 
+> > > > <snip>
+> > > > 
+> > > > > > > +static void hv_iommu_detach_dev(struct iommu_domain *immdom, struct device *dev)
+> > > > > > > +{
+> > > > > > > +	struct pci_dev *pdev;
+> > > > > > > +	struct hv_domain *hvdom = to_hv_domain(immdom);
+> > > > > > > +
+> > > > > > > +	/* See the attach function, only PCI devices for now */
+> > > > > > > +	if (!dev_is_pci(dev))
+> > > > > > > +		return;
+> > > > > > > +
+> > > > > > > +	if (hvdom->num_attchd == 0)
+> > > > > > > +		pr_warn("Hyper-V: num_attchd is zero (%s)\n", dev_name(dev));
+> > > > > > > +
+> > > > > > > +	pdev = to_pci_dev(dev);
+> > > > > > > +
+> > > > > > > +	if (hvdom->attached_dom) {
+> > > > > > > +		hv_iommu_det_dev_from_guest(hvdom, pdev);
+> > > > > > > +
+> > > > > > > +		/* Do not reset attached_dom, hv_iommu_unmap_pages happens
+> > > > > > > +		 * next.
+> > > > > > > +		 */
+> > > > > > > +	} else {
+> > > > > > > +		hv_iommu_det_dev_from_dom(hvdom, pdev);
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	hvdom->num_attchd--;
+> > > > > > 
+> > > > > > Shouldn't this be modified iff the detach succeeded?
+> > > > > 
+> > > > > We want to still free the domain and not let it get stuck. The purpose
+> > > > > is more to make sure detach was called before domain free.
+> > > > > 
+> > > > 
+> > > > How can one debug subseqent errors if num_attchd is decremented
+> > > > unconditionally? In reality the device is left attached, but the related
+> > > > kernel metadata is gone.
+> > > 
+> > > Error is printed in case of failed detach. If there is panic, at least
+> > > you can get some info about the device. Metadata in hypervisor is
+> > > around if failed.
+> > > 
+> > 
+> > With this approach the only thing left is a kernel message.
+> > But if the state is kept intact, one could collect a kernel core and
+> > analyze it.
+> 
+> Again, most of linux stuff is cleaned up, the only state is in
+> hypervisor, and hypervisor can totally protect itself and devices.
+> So there is not much in kernel core as it got cleaned up already.
+> Think of this as additional check, we can remove in future after
+> it stands the test of time, until then, every debugging bit helps.
+> 
 
-kernel test robot noticed the following build errors:
+Again, the hypervisor state is not accessible from the kernel core in
+L1VH.
 
-[auto build test ERROR on 18f7fcd5e69a04df57b563360b88be72471d6b62]
+> > And note, that there won't be a hypervisor core by default: our main
+> > context with the usptreamed version of the driver is L1VH and a kernel
+> > core is the only thing a third party customer can provide for our
+> > analysis.
+> 
+> Wei can correct me, but we are not only l1vh focused here. There is
+> work going on on all fronts.
+> 
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Shashank-Balaji/x86-x2apic-disable-x2apic-on-resume-if-the-kernel-expects-so/20260202-181147
-base:   18f7fcd5e69a04df57b563360b88be72471d6b62
-patch link:    https://lore.kernel.org/r/20260202-x2apic-fix-v1-1-71c8f488a88b%40sony.com
-patch subject: [PATCH 1/3] x86/x2apic: disable x2apic on resume if the kernel expects so
-config: x86_64-buildonly-randconfig-001-20260202 (https://download.01.org/0day-ci/archive/20260202/202602022242.iSdFHMDI-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260202/202602022242.iSdFHMDI-lkp@intel.com/reproduce)
+In upstream, it does not matter what the work is focused on. The only
+thing that matters is that the functionality is merged and available.
+Once the code is merged upstream, it becomes available to third-party
+customers. They can use it in any way they see fit.
+The only product we support with upstream code is L1VH. We should keep
+it crisp, clear, and easy to debug.
+This change does not help debugging. It only sweeps the issue under the
+carpet, with no justification.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202602022242.iSdFHMDI-lkp@intel.com/
+Thanks,
+Stanislav
 
-All errors (new ones prefixed by >>):
-
-   arch/x86/kernel/apic/apic.c: In function 'lapic_resume':
->> arch/x86/kernel/apic/apic.c:2463:17: error: implicit declaration of function '__x2apic_disable'; did you mean '__x2apic_enable'? [-Wimplicit-function-declaration]
-    2463 |                 __x2apic_disable();
-         |                 ^~~~~~~~~~~~~~~~
-         |                 __x2apic_enable
-
-
-vim +2463 arch/x86/kernel/apic/apic.c
-
-  2435	
-  2436	static void lapic_resume(void *data)
-  2437	{
-  2438		unsigned int l, h;
-  2439		unsigned long flags;
-  2440		int maxlvt;
-  2441	
-  2442		if (!apic_pm_state.active)
-  2443			return;
-  2444	
-  2445		local_irq_save(flags);
-  2446	
-  2447		/*
-  2448		 * IO-APIC and PIC have their own resume routines.
-  2449		 * We just mask them here to make sure the interrupt
-  2450		 * subsystem is completely quiet while we enable x2apic
-  2451		 * and interrupt-remapping.
-  2452		 */
-  2453		mask_ioapic_entries();
-  2454		legacy_pic->mask_all();
-  2455	
-  2456		if (x2apic_mode) {
-  2457			__x2apic_enable();
-  2458		} else {
-  2459			/*
-  2460			 * x2apic may have been re-enabled by the
-  2461			 * firmware on resuming from s2ram
-  2462			 */
-> 2463			__x2apic_disable();
-  2464	
-  2465			/*
-  2466			 * Make sure the APICBASE points to the right address
-  2467			 *
-  2468			 * FIXME! This will be wrong if we ever support suspend on
-  2469			 * SMP! We'll need to do this as part of the CPU restore!
-  2470			 */
-  2471			if (boot_cpu_data.x86 >= 6) {
-  2472				rdmsr(MSR_IA32_APICBASE, l, h);
-  2473				l &= ~MSR_IA32_APICBASE_BASE;
-  2474				l |= MSR_IA32_APICBASE_ENABLE | mp_lapic_addr;
-  2475				wrmsr(MSR_IA32_APICBASE, l, h);
-  2476			}
-  2477		}
-  2478	
-  2479		maxlvt = lapic_get_maxlvt();
-  2480		apic_write(APIC_LVTERR, ERROR_APIC_VECTOR | APIC_LVT_MASKED);
-  2481		apic_write(APIC_ID, apic_pm_state.apic_id);
-  2482		apic_write(APIC_DFR, apic_pm_state.apic_dfr);
-  2483		apic_write(APIC_LDR, apic_pm_state.apic_ldr);
-  2484		apic_write(APIC_TASKPRI, apic_pm_state.apic_taskpri);
-  2485		apic_write(APIC_SPIV, apic_pm_state.apic_spiv);
-  2486		apic_write(APIC_LVT0, apic_pm_state.apic_lvt0);
-  2487		apic_write(APIC_LVT1, apic_pm_state.apic_lvt1);
-  2488	#ifdef CONFIG_X86_THERMAL_VECTOR
-  2489		if (maxlvt >= 5)
-  2490			apic_write(APIC_LVTTHMR, apic_pm_state.apic_thmr);
-  2491	#endif
-  2492	#ifdef CONFIG_X86_MCE_INTEL
-  2493		if (maxlvt >= 6)
-  2494			apic_write(APIC_LVTCMCI, apic_pm_state.apic_cmci);
-  2495	#endif
-  2496		if (maxlvt >= 4)
-  2497			apic_write(APIC_LVTPC, apic_pm_state.apic_lvtpc);
-  2498		apic_write(APIC_LVTT, apic_pm_state.apic_lvtt);
-  2499		apic_write(APIC_TDCR, apic_pm_state.apic_tdcr);
-  2500		apic_write(APIC_TMICT, apic_pm_state.apic_tmict);
-  2501		apic_write(APIC_ESR, 0);
-  2502		apic_read(APIC_ESR);
-  2503		apic_write(APIC_LVTERR, apic_pm_state.apic_lvterr);
-  2504		apic_write(APIC_ESR, 0);
-  2505		apic_read(APIC_ESR);
-  2506	
-  2507		irq_remapping_reenable(x2apic_mode);
-  2508	
-  2509		local_irq_restore(flags);
-  2510	}
-  2511	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Thanks,
+> -Mukesh
+> 
+> > Thanks,
+> > Stanislav
 
