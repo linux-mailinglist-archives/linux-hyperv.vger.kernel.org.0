@@ -1,171 +1,163 @@
-Return-Path: <linux-hyperv+bounces-8667-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8668-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iHtwInlAgWl6FAMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8667-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 03 Feb 2026 01:25:29 +0100
+	id CPKRFMpKgWkPFgMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8668-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 03 Feb 2026 02:09:30 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C334AD2F26
-	for <lists+linux-hyperv@lfdr.de>; Tue, 03 Feb 2026 01:25:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C21B2D33CA
+	for <lists+linux-hyperv@lfdr.de>; Tue, 03 Feb 2026 02:09:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9BF7A301915B
-	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Feb 2026 00:25:06 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B5438301469D
+	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Feb 2026 01:09:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8348F1A3160;
-	Tue,  3 Feb 2026 00:25:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF5541CDFD5;
+	Tue,  3 Feb 2026 01:09:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="fHO3w0XQ"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TLOhY6kN"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from jpms-ob02.noc.sony.co.jp (jpms-ob02.noc.sony.co.jp [211.125.140.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CF62F872;
-	Tue,  3 Feb 2026 00:25:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.140.165
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82DCDE55C;
+	Tue,  3 Feb 2026 01:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770078305; cv=none; b=nR7nuBhlWuwns7ERxDwuz5/6CNdRctCfiYXvyXidHQxvXeQk6ReMAujGc/sK2Xdb/Qze+Pijn2spSSzmuCkswUtRlErwvP0KQiwqmjpamRyCPHXdD6DVhXhSla9YUPjZseO0szeSnK7BndgjKhCO5+qcbApF0rh5xxJeYI4LyFY=
+	t=1770080966; cv=none; b=qNrfFItqJ/CnSttPziSdALOslDG31OdQqTno25xiBMlx+r+SWdpF1UcFKnYogcxbxvKJoYZQAzM+kf5uVPrBDlPQVwolhjV9gS845pqdAYZcDUAnSX48x/7bt5WBSPFd6Cx/OXf7pm15uvPDmfJmKCpSXPj7K8hagPubkNWVfuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770078305; c=relaxed/simple;
-	bh=BntylBVVgecoypzFquKfaO5D5v56DcVhmxm/iNQxf4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S/nIazeC5S1C/XDvdisLDZLExqNgtBiiJbuf6Kk1JO7H1jQkm9kp4KpuxJjFUzSUjOdKS0HK2kZbfch6IfvwjbYKPijqR1muG6n3Jbkf86jJECgnxmAoGyFnomJ7/pleWrMDveT1fyfpwyhyR9W4SlaeH0ngWWmJ0NgWQfmwDo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=fHO3w0XQ; arc=none smtp.client-ip=211.125.140.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=sony.com; s=s1jp; t=1770078304; x=1801614304;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+mESz147mY99AmYLlTyE/1U+z38Cj71ObLjn1oYbbso=;
-  b=fHO3w0XQoI2WqF5YgUqMWB6VZaa9/Q4IyTO664iYoU3Wv6rkTfcG/qph
-   7KHt9QrDJHUAQyH1CscG11pVElrEWVAQY2swJNooFFtOQmu3PYDsd/c7M
-   XYpNsXh+CHmYy2mQ3N+SqtbQlim7rXCCIMvKVHxDv35QALZjG3HgUBhYd
-   RjAD/tcdq9Tb07xnD1ocB9HvUkZAh+KMYFPrN5d2v22vOBVZyasbsDH3N
-   7tdXESbiPT4ikX34kGM+9T7tV2GnqxIlw07DJ3NBJX90rQx+b/nBKkvTQ
-   ugUnPryVOIizL6CNWWCZWToWLu62aprcG7U2xO/BE+3IfYmGfGR6XR/mh
-   g==;
-Received: from unknown (HELO jpmta-ob1.noc.sony.co.jp) ([IPv6:2001:cf8:0:6e7::6])
-  by jpms-ob02.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 09:25:02 +0900
-X-IronPort-AV: E=Sophos;i="6.21,269,1763391600"; 
-   d="scan'208";a="607577797"
-Received: from unknown (HELO JPC00244420) ([IPv6:2001:cf8:1:573:0:dddd:6b3e:119e])
-  by jpmta-ob1.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 09:25:02 +0900
-Date: Tue, 3 Feb 2026 09:24:56 +0900
-From: Shashank Balaji <shashank.mahadasyam@sony.com>
-To: kernel test robot <lkp@intel.com>
-Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Suresh Siddha <suresh.b.siddha@intel.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Juergen Gross <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>, llvm@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-	jailhouse-dev@googlegroups.com, kvm@vger.kernel.org,
-	xen-devel@lists.xenproject.org, Rahul Bukte <rahul.bukte@sony.com>,
-	Daniel Palmer <daniel.palmer@sony.com>,
-	Tim Bird <tim.bird@sony.com>
-Subject: Re: [PATCH 1/3] x86/x2apic: disable x2apic on resume if the kernel
- expects so
-Message-ID: <aYFAWPRTx7RqZn32@JPC00244420>
-References: <20260202-x2apic-fix-v1-1-71c8f488a88b@sony.com>
- <202602030600.jFhsJyEC-lkp@intel.com>
+	s=arc-20240116; t=1770080966; c=relaxed/simple;
+	bh=rVoqY8w0KdII+Hl4TBJCfia0mji3VGvtYi+D9AvfzhY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GReurVVhs0eWKkl6PQCie6XQ72fuek+xL3Fx24pUjWenG6FQ48zoQzARFm0FD01ucwNA52SIO5ypY7ENH9OicsA/RtO9V42Y7QcQyXuo/jpJjmxwDQeUg0mu1cAixJZlbuhy4/w4hP1FKmxyEtrF/8GfKrO0ZaL0mQpVzcvPXI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TLOhY6kN; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id BE84920B7169;
+	Mon,  2 Feb 2026 17:09:24 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BE84920B7169
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1770080965;
+	bh=ZEAEHiAm6IHJRHwaSyp3f2EMczOctMM1r1LqwEK06eo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TLOhY6kNF7ogkJVYPxMszyEl8lnVMvt/ExfwxWFbNuhWE7aZQ/Ii3fJhit6LPOm6J
+	 kVjqYAB8GDTDzL8Ua7KzvFOx8XBtIeDO4VUoYDB4BvM7HDWhICUVI3BZ/mDy8pP1ho
+	 6Nz0iUfrQ17IS32/9xLs4Tkdt5cZMHV3A8dRtE74=
+Message-ID: <206e8499-9d7f-3ff4-f2cf-976a310525b1@linux.microsoft.com>
+Date: Mon, 2 Feb 2026 17:09:23 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202602030600.jFhsJyEC-lkp@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH 1/1] mshv: Add comment about huge page mappings in guest
+ physical address space
+Content-Language: en-US
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+ mhkelley58@gmail.com
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, longli@microsoft.com, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260202165101.1750-1-mhklinux@outlook.com>
+ <aYDcLRhxx9wXRXBG@skinsburskii.localdomain>
+From: Mukesh R <mrathor@linux.microsoft.com>
+In-Reply-To: <aYDcLRhxx9wXRXBG@skinsburskii.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[sony.com,none];
-	R_DKIM_ALLOW(-0.20)[sony.com:s=s1jp];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-8668-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8667-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[linux.microsoft.com,gmail.com];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[32];
-	DKIM_TRACE(0.00)[sony.com:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[shashank.mahadasyam@sony.com,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mrathor@linux.microsoft.com,linux-hyperv@vger.kernel.org];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,01.org:url,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,sony.com:dkim]
-X-Rspamd-Queue-Id: C334AD2F26
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: C21B2D33CA
 X-Rspamd-Action: no action
 
-On Tue, Feb 03, 2026 at 06:31:40AM +0800, kernel test robot wrote:
-> Hi Shashank,
+On 2/2/26 09:17, Stanislav Kinsburskii wrote:
+> On Mon, Feb 02, 2026 at 08:51:01AM -0800, mhkelley58@gmail.com wrote:
+>> From: Michael Kelley <mhklinux@outlook.com>
+>>
+>> Huge page mappings in the guest physical address space depend on having
+>> matching alignment of the userspace address in the parent partition and
+>> of the guest physical address. Add a comment that captures this
+>> information. See the link to the mailing list thread.
+>>
+>> No code or functional change.
+>>
+>> Link: https://lore.kernel.org/linux-hyperv/aUrC94YvscoqBzh3@skinsburskii.localdomain/T/#m0871d2cae9b297fd397ddb8459e534981307c7dc
+>> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+>> ---
+>>   drivers/hv/mshv_root_main.c | 14 ++++++++++++++
+>>   1 file changed, 14 insertions(+)
+>>
+>> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+>> index 681b58154d5e..bc738ff4508e 100644
+>> --- a/drivers/hv/mshv_root_main.c
+>> +++ b/drivers/hv/mshv_root_main.c
+>> @@ -1389,6 +1389,20 @@ mshv_partition_ioctl_set_memory(struct mshv_partition *partition,
+>>   	if (mem.flags & BIT(MSHV_SET_MEM_BIT_UNMAP))
+>>   		return mshv_unmap_user_memory(partition, mem);
+>>   
+>> +	/*
+>> +	 * If the userspace_addr and the guest physical address (as derived
+>> +	 * from the guest_pfn) have the same alignment modulo PMD huge page
+>> +	 * size, the MSHV driver can map any PMD huge pages to the guest
+>> +	 * physical address space as PMD huge pages. If the alignments do
+>> +	 * not match, PMD huge pages must be mapped as single pages in the
+>> +	 * guest physical address space. The MSHV driver does not enforce
+>> +	 * that the alignments match, and it invokes the hypervisor to set
+>> +	 * up correct functional mappings either way. See mshv_chunk_stride().
+>> +	 * The caller of the ioctl is responsible for providing userspace_addr
+>> +	 * and guest_pfn values with matching alignments if it wants the guest
+>> +	 * to get the performance benefits of PMD huge page mappings of its
+>> +	 * physical address space to real system memory.
+>> +	 */
 > 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on 18f7fcd5e69a04df57b563360b88be72471d6b62]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Shashank-Balaji/x86-x2apic-disable-x2apic-on-resume-if-the-kernel-expects-so/20260202-181147
-> base:   18f7fcd5e69a04df57b563360b88be72471d6b62
-> patch link:    https://lore.kernel.org/r/20260202-x2apic-fix-v1-1-71c8f488a88b%40sony.com
-> patch subject: [PATCH 1/3] x86/x2apic: disable x2apic on resume if the kernel expects so
-> config: i386-randconfig-001-20260202 (https://download.01.org/0day-ci/archive/20260203/202602030600.jFhsJyEC-lkp@intel.com/config)
-> compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260203/202602030600.jFhsJyEC-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202602030600.jFhsJyEC-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
-> >> arch/x86/kernel/apic/apic.c:2463:3: error: call to undeclared function '__x2apic_disable'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
->     2463 |                 __x2apic_disable();
->          |                 ^
->    arch/x86/kernel/apic/apic.c:2463:3: note: did you mean '__x2apic_enable'?
->    arch/x86/kernel/apic/apic.c:1896:20: note: '__x2apic_enable' declared here
->     1896 | static inline void __x2apic_enable(void) { }
->          |                    ^
->    1 error generated.
+> Thanks. However, I'd suggest to reduce this commet a lot and put the
+> details into the commit message instead. Also, why this place? Why not a
+> part of the function description instead, for example?
 
-This happens when CONFIG_X86_X2APIC is disabled. This patch fixes it,
-which I'll include in v2:
+Fwiw, I also prefer this in the function prologue. IMO, larger comments
+belong outside the function rather than inside, unless of course cases
+where it has to be that way. This makes functions easier to study.
 
-diff --git i/arch/x86/kernel/apic/apic.c w/arch/x86/kernel/apic/apic.c
-index 8820b631f8a2..06cce23b89c1 100644
---- i/arch/x86/kernel/apic/apic.c
-+++ w/arch/x86/kernel/apic/apic.c
-@@ -1894,6 +1894,7 @@ void __init check_x2apic(void)
+Thanks,
+-Mukesh
 
- static inline void try_to_enable_x2apic(int remap_mode) { }
- static inline void __x2apic_enable(void) { }
-+static inline void __x2apic_disable(void) {}
- #endif /* !CONFIG_X86_X2APIC */
 
- void __init enable_IR_x2apic(void)
+
+> Thanks,
+> Stanislav
+> 
+>>   	return mshv_map_user_memory(partition, mem);
+>>   }
+>>   
+>> -- 
+>> 2.25.1
+
 
