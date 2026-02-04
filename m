@@ -1,130 +1,169 @@
-Return-Path: <linux-hyperv+bounces-8701-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8702-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kOWKHW3ngmlTegMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8701-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Feb 2026 07:30:05 +0100
+	id yD7wK7LqgmnqewMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8702-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Feb 2026 07:44:02 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E23B4E2558
-	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Feb 2026 07:30:04 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31AEAE2610
+	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Feb 2026 07:44:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C52C7300D932
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Feb 2026 06:30:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4377F302DF45
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Feb 2026 06:44:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A871C366802;
-	Wed,  4 Feb 2026 06:30:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 843B33816F8;
+	Wed,  4 Feb 2026 06:43:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CXEuDQOJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YxjoYlIo"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854A92264B0;
-	Wed,  4 Feb 2026 06:30:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C813806D7;
+	Wed,  4 Feb 2026 06:43:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770186602; cv=none; b=oD1TFTAGEJFQgTHEIOenK4+9pdJW1Q5EzTax/z/ey+WsoKgMSldk3dn14VRLYNy1wRDBIxJWod4rdut5mJ81dmD121fyZHhx6TGi3xUre8KEvpPNSNFm1nV2oENsBS8zd1zWzS0+92sk8QzErkjdxnwA70+KjfFYBvI2bS8Ei8I=
+	t=1770187439; cv=none; b=SmpGWBQSxs9nJwM8zjXbDukVMZDir8T5vZaHWEXVWUbCzD2gh5PKbBvAGc1pU0OocSelCbmll1nW7i2llGJo1v2Iixte2SKs3tv0xyYUliph+3c+4C5Q52TXopiGTdcTRXGKx4inozulrYNMzzorlR9ui2Djjpu4obowklK5n9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770186602; c=relaxed/simple;
-	bh=W6obNCQykAG10M15SMmvYCUFjcyCCfNa8V6CIY2hFuc=;
+	s=arc-20240116; t=1770187439; c=relaxed/simple;
+	bh=4VpQFex8bzq5hKWM9W44OMFdMgrds5btT7Yy0N2cwu8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gszRNfkMJBIAbZkrwSGMyDzArIzFzkEwxVzqrdUNV/bWMkiOqTDTxwUonKOX3e8MOe4JJfx8q18MHk9vpstSQypoLXSS7/NNQm7ELRWpo3UKTNSKZCE1AWALUIYuddkJA2Gu8hh1yxecDuaxmz97OlCxYmaDQmoevk2MWuYCYsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CXEuDQOJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10CA8C4CEF7;
-	Wed,  4 Feb 2026 06:30:02 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=PTZTzR/sURr/MYUtvNt3/pyjBbHWpJJHwhDPGoR55sO7ZyH26QAClK2BBtuqb3y8fWe5YtBYyqRZfJhn681WUSEaB92hsXvM3OrNGHnDkZ4lCsxFv1ATNbNVeMr9LOGIRvWD5vmKaN+JmmKmMe9MdHFAzoNayDHW8S+7MpCUTrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YxjoYlIo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEF7CC4CEF7;
+	Wed,  4 Feb 2026 06:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770186602;
-	bh=W6obNCQykAG10M15SMmvYCUFjcyCCfNa8V6CIY2hFuc=;
+	s=k20201202; t=1770187438;
+	bh=4VpQFex8bzq5hKWM9W44OMFdMgrds5btT7Yy0N2cwu8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CXEuDQOJgBjiRWjjNe8Hdgt14QSmjuLgVtCZxNsLfLLO9JMah8FbZf4jX5piIM8OI
-	 35rQXNHgNtK7HiUmpuXumQJ7SJG1PUpJK+cyP/l5ez0K3VoRiIDZ5gbaGU7dMUO7wu
-	 4Ol6vHJvMdqn7Bl0a1GxPrLgFyMJRjI7joD493pTUrnR/HfmjmPWYZ3KbihrIIF/aM
-	 HegLWQZveFVP3fmLAGpx5Gs4LddUhZH3Ag6CYq/V8iqj0ALUVQYb1mCd5MCljpWs7a
-	 YcONaJ0T+y7VcrftLyf/gwso1KbFyQfDZgrthmSZ3mP4SCeX7WVZjxw3dB58hAnnLE
-	 dWEkXPlFncF6w==
-Date: Wed, 4 Feb 2026 06:30:00 +0000
+	b=YxjoYlIoUNCqcOZDxuxdvf5E7X4UhCKo/RYjyMBR5Rl4egl8bTuM7OBKLygbm8U63
+	 05Tye3cI404IxL+Z0D8eRrwjXa4bfwvf7phR07hQrm0RgQBV2xL42503PuuVdxw1So
+	 XPLwKZCJtyJeAFXZHP3ZKvAK+DU296B3Jt1o0cqLZl6c9WvcrKALbTgUJ79RuApPCU
+	 CaosGhjtNi3LPu4UKaMcdNLoZ4LwpCp4dDBJWBbonjWxzgPU9HazFnarAxxJRfYHMt
+	 YMwlabaqLhnennLeKsnhceNmsas33AzG04jBK/hYoUVZagtAjJXjxHqQ6mzQEr3Kgx
+	 mqA4z3BtOYDWw==
+Date: Wed, 4 Feb 2026 06:43:57 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: mhklinux@outlook.com
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] x86/hyperv: Use memremap()/memunmap() instead of
- ioremap_cache()/iounmap()
-Message-ID: <20260204063000.GJ79272@liuwe-devbox-debian-v2.local>
-References: <20260119155937.46203-1-mhklinux@outlook.com>
+To: Carlos =?iso-8859-1?Q?L=F3pez?= <clopez@suse.de>
+Cc: linux-hyperv@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	skinsburskii@linux.microsoft.com, mrathor@linux.microsoft.com,
+	anirudh@anirudhrb.com, schakrabarti@linux.microsoft.com
+Subject: Re: [PATCH] mshv: clear eventfd counter on irqfd shutdown
+Message-ID: <20260204064357.GK79272@liuwe-devbox-debian-v2.local>
+References: <20260122114130.92860-2-clopez@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20260119155937.46203-1-mhklinux@outlook.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260122114130.92860-2-clopez@suse.de>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8701-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8702-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[outlook.com];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
-	TO_DN_NONE(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[wei.liu@kernel.org,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[liuwe-devbox-debian-v2.local:mid,outlook.com:email,intel.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: E23B4E2558
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,liuwe-devbox-debian-v2.local:mid,suse.de:email]
+X-Rspamd-Queue-Id: 31AEAE2610
 X-Rspamd-Action: no action
 
-On Mon, Jan 19, 2026 at 07:59:37AM -0800, mhkelley58@gmail.com wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
+On Thu, Jan 22, 2026 at 12:41:31PM +0100, Carlos López wrote:
+> While unhooking from the irqfd waitqueue, clear the internal eventfd
+> counter by using eventfd_ctx_remove_wait_queue() instead of
+> remove_wait_queue(), preventing potential spurious interrupts. This
+> removes the need to store a pointer into the workqueue, as the eventfd
+> already keeps track of it.
 > 
-> When running with a paravisor and SEV-SNP, the GHCB page is provided
-> by the paravisor instead of being allocated by Linux. The provided page
-> is normal memory, but is outside of the physical address space seen by
-> Linux. As such it cannot be accessed via the kernel's direct map, and
-> must be explicitly mapped to a kernel virtual address.
+> This mimicks what other similar subsystems do on their equivalent paths
+> with their irqfds (KVM, Xen, ACRN support, etc).
 > 
-> Current code uses ioremap_cache() and iounmap() to map and unmap the page.
-> These functions are for use on I/O address space that may not behave as
-> normal memory, so they generate or expect addresses with the __iomem
-> attribute. For normal memory, the preferred functions are memremap() and
-> memunmap(), which operate similarly but without __iomem.
-> 
-> At the time of the original work on CoCo VMs on Hyper-V, memremap() did not
-> support creating a decrypted mapping, so ioremap_cache() was used instead,
-> since I/O address space is always mapped decrypted. memremap() has since
-> been enhanced to allow decrypted mappings, so replace ioremap_cache() with
-> memremap() when mapping the GHCB page. Similarly, replace iounmap() with
-> memunmap(). As a side benefit, the replacement cleans up 'sparse' warnings
-> about __iomem mismatches.
-> 
-> The replacement is done to use the correct functions as long-term goodness
-> and to clean up the sparse warnings. No runtime bugs are fixed.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202311111925.iPGGJik4-lkp@intel.com/
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> Signed-off-by: Carlos López <clopez@suse.de>
 
-Applied to hyperv-next. Thanks.
+This looks like a good change to me. I've queued it to hyperv-next.
+Thanks!
+
+Also CC our kernel folks just in case I missed something.
+
+Wei
+
+> ---
+>  drivers/hv/mshv_eventfd.c | 5 ++---
+>  drivers/hv/mshv_eventfd.h | 1 -
+>  2 files changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/hv/mshv_eventfd.c b/drivers/hv/mshv_eventfd.c
+> index d93a18f09c76..4432063e963d 100644
+> --- a/drivers/hv/mshv_eventfd.c
+> +++ b/drivers/hv/mshv_eventfd.c
+> @@ -247,12 +247,13 @@ static void mshv_irqfd_shutdown(struct work_struct *work)
+>  {
+>  	struct mshv_irqfd *irqfd =
+>  			container_of(work, struct mshv_irqfd, irqfd_shutdown);
+> +	u64 cnt;
+>  
+>  	/*
+>  	 * Synchronize with the wait-queue and unhook ourselves to prevent
+>  	 * further events.
+>  	 */
+> -	remove_wait_queue(irqfd->irqfd_wqh, &irqfd->irqfd_wait);
+> +	eventfd_ctx_remove_wait_queue(irqfd->irqfd_eventfd_ctx, &irqfd->irqfd_wait, &cnt);
+>  
+>  	if (irqfd->irqfd_resampler) {
+>  		mshv_irqfd_resampler_shutdown(irqfd);
+> @@ -371,8 +372,6 @@ static void mshv_irqfd_queue_proc(struct file *file, wait_queue_head_t *wqh,
+>  	struct mshv_irqfd *irqfd =
+>  			container_of(polltbl, struct mshv_irqfd, irqfd_polltbl);
+>  
+> -	irqfd->irqfd_wqh = wqh;
+> -
+>  	/*
+>  	 * TODO: Ensure there isn't already an exclusive, priority waiter, e.g.
+>  	 * that the irqfd isn't already bound to another partition.  Only the
+> diff --git a/drivers/hv/mshv_eventfd.h b/drivers/hv/mshv_eventfd.h
+> index 332e7670a344..464c6b81ab33 100644
+> --- a/drivers/hv/mshv_eventfd.h
+> +++ b/drivers/hv/mshv_eventfd.h
+> @@ -32,7 +32,6 @@ struct mshv_irqfd {
+>  	struct mshv_lapic_irq		     irqfd_lapic_irq;
+>  	struct hlist_node		     irqfd_hnode;
+>  	poll_table			     irqfd_polltbl;
+> -	wait_queue_head_t		    *irqfd_wqh;
+>  	wait_queue_entry_t		     irqfd_wait;
+>  	struct work_struct		     irqfd_shutdown;
+>  	struct mshv_irqfd_resampler	    *irqfd_resampler;
+> 
+> base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+> -- 
+> 2.51.0
+> 
 
