@@ -1,306 +1,134 @@
-Return-Path: <linux-hyperv+bounces-8691-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8692-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kM+3JLLagmnkcwMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8691-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Feb 2026 06:35:46 +0100
+	id +NDeBw7hgmnhdwMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8692-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Feb 2026 07:02:54 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6298E203B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Feb 2026 06:35:45 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 734FCE22B5
+	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Feb 2026 07:02:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3E33030675BF
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Feb 2026 05:33:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 28D0E3018BF8
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Feb 2026 06:02:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D97203164BB;
-	Wed,  4 Feb 2026 05:33:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D143361661;
+	Wed,  4 Feb 2026 06:02:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="MkCIB++B"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AwV3onC0"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8557E3093CD;
-	Wed,  4 Feb 2026 05:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770183226; cv=pass; b=udN2bVA0O/riFgYjWRQovJIpDvxfBSBMnIy8B+9cB+gx9Ea7sM6J6UpifUiHbmaCnb7uqkA7g6W7CPsdgDQ1fk8AIDYvhXF0dp54zB29DDbia6pnU1kPgLtqVN+5hAWx9Dau/6Nldjg06FeQLiUarbsrPD4qaRpS1gkar5wRGSg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770183226; c=relaxed/simple;
-	bh=9hJ8zpExHL5Ea4sobP4tH7ephpPCkCBmM9MSHK9d6q8=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D27361DDF;
+	Wed,  4 Feb 2026 06:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770184937; cv=none; b=ujlAAiVyLg/ushCeiuXDPAXq93KObgPZQFdj/7JLQ7In0/ynFiK19MBjduFyhBtGm2XxrhQeRVMOTn0lufFoPi4PaI7iutNwz4iYJQsyzDKdi9J4NaThaTw1GVYdmnzCzX9MMwyVzcI17RvAqtiPcwpTPCRtLKfv6yifuOyyH3s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770184937; c=relaxed/simple;
+	bh=xRXMA/dDbdrJX3BOcLGYpGpKjEdBlU3OgbLJdZwIERQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SwfJElF5eg/G5ncd3aEc+2icO/8ngQMpK5ln+/N+Zt7JLX4Hq038g8DiHTUhEPytFII+cX0cInw3CNZBm2QA/8itl6xa0yMadIRE392YjOlo5JT4egKdUhP/9v10Ijb82DGd3yhn0qd65ymrIS09uhowXPy5v7kzwLGvzeXm0dI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=MkCIB++B; arc=pass smtp.client-ip=136.143.188.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1770183217; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=fqYSyjypN/JYxEQIK+9+50P63wCi6EyhbmRpExlaRs5Wa1Rj+iuy3uPN87cxNwmnefO5X9cnrXg/mIb/Ouy0f0BUyaRWEX0kowLXmyoVXy7Mszer4yXJ6dUWL9onYA2kvskYrdcU12+2d4VIdQ9RuTUcmZdjnXC2WDiadU3AKQ8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1770183217; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=N6XDbrYwfkbmtjS5P1Vd8eAwNUvNInOSFCG6Jr39KFM=; 
-	b=cDRS7LLi/UV96c2qDFJ9BEBgvBrqPRPjXNkS+gFoTWSe/rgC05iBT7/pbejz45CSGGzc/cz1hbHt0m5IFKz8eoI6FRAmmfAPp67TUKxOQ+rXi5WOdUEhWbm0OWj6JU75X3I6gk51uyM4rdIETpLYP/eDLwzAngc/w0pETPmNDCg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=anirudhrb.com;
-	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
-	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770183217;
-	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:Message-Id:Reply-To;
-	bh=N6XDbrYwfkbmtjS5P1Vd8eAwNUvNInOSFCG6Jr39KFM=;
-	b=MkCIB++BTW9a37+j6ShK7fO1+g4HE/BTunxhMvDhFeKKungllzlhBwWka0WtnKKs
-	XgoOVoZQ6iqxAPkhMrAEaAnPKJd8uqKYXKl5hFCRN51KUTj/ZybRSY4MaHSVwYXcjBI
-	wBaPlJjlnqnA02fIgZRVNJTjRDvVEHWZKoxVUHp8=
-Received: by mx.zohomail.com with SMTPS id 1770183214757587.7422477671423;
-	Tue, 3 Feb 2026 21:33:34 -0800 (PST)
-Date: Wed, 4 Feb 2026 05:33:29 +0000
-From: Anirudh Rayabharam <anirudh@anirudhrb.com>
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=V97OJupcqSNrkc9wmCFK7hT9BY77Tgl4fG1ynQnn5/FtQ3x6tQY5bj1z7B3xXSrE93y0qsodpM0ZUyjz/RG4l22+FoYr9NNVEKEG/I+i+lgj1+KBkumF7YVINNoKAFx/7w3VhsAOQGCb65RnGnZYqDjfZwvszNlNsgjuWXKpkHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AwV3onC0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96398C4CEF7;
+	Wed,  4 Feb 2026 06:02:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770184936;
+	bh=xRXMA/dDbdrJX3BOcLGYpGpKjEdBlU3OgbLJdZwIERQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AwV3onC0nhBoKL2RjKnCnjflornaH3TLeEbrbLHWboIQFoS3E+kw99G60f8+3vbLH
+	 helaHdfOFdYhY/r+oXmjEpBwihpAJReqITdcU9k0Wfdsz4s+4aQOTuWBcWG1SYrPg7
+	 QuQG/6y+1hMRatXqzwYOi1pLDpVurfTBeiXBddvfCeiA8sXqIS0Hb+rKEwQ7LPLL4v
+	 PpYOFILtDdRE2YdcjJoh003fBx3BzEHah6EMAH56+Vff4z0JiKe1QaA5Ik2PPaBiQa
+	 nbWZj9mbSLjLteiHbKLFW37ZGc3yCCjV6dgZ6yOvHKSxeUa1joUKoI7LOZd8memrlJ
+	 EEiK07ms3saCQ==
+Date: Wed, 4 Feb 2026 06:02:15 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: mhklinux@outlook.com
 Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mshv: Make MSHV mutually exclusive with KEXEC
-Message-ID: <aYLaKUEp23n2gxLU@anirudh-surface.localdomain>
-References: <aXzmMInsNSvFvBF1@anirudh-surface.localdomain>
- <aXz8ldAeoWwGIxdu@skinsburskii.localdomain>
- <aX0Vbfocwa4WgXUw@anirudh-surface.localdomain>
- <aYDaaIK0J4SjvnCe@skinsburskii.localdomain>
- <aYD0bafU3UYuSvDW@anirudh-surface.localdomain>
- <aYD4gw-1qKYHcnXI@skinsburskii.localdomain>
- <wnh3ghsxxml32sldkm4qzlzre7nebor3oqtj6i7mlhqj2gwzys@o5w5rpzrhhc4>
- <aYIW9PhzqmyET8IL@skinsburskii.localdomain>
- <aYImS_vEdR-kxBuQ@anirudh-surface.localdomain>
- <aYJPwp2i47P33xuz@skinsburskii.localdomain>
+	decui@microsoft.com, longli@microsoft.com, lpieralisi@kernel.org,
+	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI: hv: Remove unused field pci_bus in struct
+ hv_pcibus_device
+Message-ID: <20260204060215.GA79272@liuwe-devbox-debian-v2.local>
+References: <20260111170034.67558-1-mhklinux@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aYJPwp2i47P33xuz@skinsburskii.localdomain>
-X-ZohoMailClient: External
+In-Reply-To: <20260111170034.67558-1-mhklinux@outlook.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-8692-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	DMARC_NA(0.00)[anirudhrb.com];
-	TAGGED_FROM(0.00)[bounces-8691-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[anirudhrb.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FREEMAIL_TO(0.00)[outlook.com];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MISSING_XM_UA(0.00)[];
+	TO_DN_NONE(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[anirudh@anirudhrb.com,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[wei.liu@kernel.org,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,anirudhrb.com:dkim]
-X-Rspamd-Queue-Id: E6298E203B
+	RCPT_COUNT_TWELVE(0.00)[14];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 734FCE22B5
 X-Rspamd-Action: no action
 
-On Tue, Feb 03, 2026 at 11:42:58AM -0800, Stanislav Kinsburskii wrote:
-> On Tue, Feb 03, 2026 at 04:46:03PM +0000, Anirudh Rayabharam wrote:
-> > On Tue, Feb 03, 2026 at 07:40:36AM -0800, Stanislav Kinsburskii wrote:
-> > > On Tue, Feb 03, 2026 at 10:34:28AM +0530, Anirudh Rayabharam wrote:
-> > > > On Mon, Feb 02, 2026 at 11:18:27AM -0800, Stanislav Kinsburskii wrote:
-> > > > > On Mon, Feb 02, 2026 at 07:01:01PM +0000, Anirudh Rayabharam wrote:
-> > > > > > On Mon, Feb 02, 2026 at 09:10:00AM -0800, Stanislav Kinsburskii wrote:
-> > > > > > > On Fri, Jan 30, 2026 at 08:32:45PM +0000, Anirudh Rayabharam wrote:
-> > > > > > > > On Fri, Jan 30, 2026 at 10:46:45AM -0800, Stanislav Kinsburskii wrote:
-> > > > > > > > > On Fri, Jan 30, 2026 at 05:11:12PM +0000, Anirudh Rayabharam wrote:
-> > > > > > > > > > On Wed, Jan 28, 2026 at 03:11:14PM -0800, Stanislav Kinsburskii wrote:
-> > > > > > > > > > > On Wed, Jan 28, 2026 at 04:16:31PM +0000, Anirudh Rayabharam wrote:
-> > > > > > > > > > > > On Mon, Jan 26, 2026 at 12:46:44PM -0800, Stanislav Kinsburskii wrote:
-> > > > > > > > > > > > > On Tue, Jan 27, 2026 at 12:19:24AM +0530, Anirudh Rayabharam wrote:
-> > > > > > > > > > > > > > On Fri, Jan 23, 2026 at 10:20:53PM +0000, Stanislav Kinsburskii wrote:
-> > > > > > > > > > > > > > > The MSHV driver deposits kernel-allocated pages to the hypervisor during
-> > > > > > > > > > > > > > > runtime and never withdraws them. This creates a fundamental incompatibility
-> > > > > > > > > > > > > > > with KEXEC, as these deposited pages remain unavailable to the new kernel
-> > > > > > > > > > > > > > > loaded via KEXEC, leading to potential system crashes upon kernel accessing
-> > > > > > > > > > > > > > > hypervisor deposited pages.
-> > > > > > > > > > > > > > > 
-> > > > > > > > > > > > > > > Make MSHV mutually exclusive with KEXEC until proper page lifecycle
-> > > > > > > > > > > > > > > management is implemented.
-> > > > > > > > > > > > > > 
-> > > > > > > > > > > > > > Someone might want to stop all guest VMs and do a kexec. Which is valid
-> > > > > > > > > > > > > > and would work without any issue for L1VH.
-> > > > > > > > > > > > > > 
-> > > > > > > > > > > > > 
-> > > > > > > > > > > > > No, it won't work and hypervsisor depostied pages won't be withdrawn.
-> > > > > > > > > > > > 
-> > > > > > > > > > > > All pages that were deposited in the context of a guest partition (i.e.
-> > > > > > > > > > > > with the guest partition ID), would be withdrawn when you kill the VMs,
-> > > > > > > > > > > > right? What other deposited pages would be left?
-> > > > > > > > > > > > 
-> > > > > > > > > > > 
-> > > > > > > > > > > The driver deposits two types of pages: one for the guests (withdrawn
-> > > > > > > > > > > upon gust shutdown) and the other - for the host itself (never
-> > > > > > > > > > > withdrawn).
-> > > > > > > > > > > See hv_call_create_partition, for example: it deposits pages for the
-> > > > > > > > > > > host partition.
-> > > > > > > > > > 
-> > > > > > > > > > Hmm.. I see. Is it not possible to reclaim this memory in module_exit?
-> > > > > > > > > > Also, can't we forcefully kill all running partitions in module_exit and
-> > > > > > > > > > then reclaim memory? Would this help with kernel consistency
-> > > > > > > > > > irrespective of userspace behavior?
-> > > > > > > > > > 
-> > > > > > > > > 
-> > > > > > > > > It would, but this is sloppy and cannot be a long-term solution.
-> > > > > > > > > 
-> > > > > > > > > It is also not reliable. We have no hook to prevent kexec. So if we fail
-> > > > > > > > > to kill the guest or reclaim the memory for any reason, the new kernel
-> > > > > > > > > may still crash.
-> > > > > > > > 
-> > > > > > > > Actually guests won't be running by the time we reach our module_exit
-> > > > > > > > function during a kexec. Userspace processes would've been killed by
-> > > > > > > > then.
-> > > > > > > > 
-> > > > > > > 
-> > > > > > > No, they will not: "kexec -e" doesn't kill user processes.
-> > > > > > > We must not rely on OS to do graceful shutdown before doing
-> > > > > > > kexec.
-> > > > > > 
-> > > > > > I see kexec -e is too brutal. Something like systemctl kexec is
-> > > > > > more graceful and is probably used more commonly. In this case at least
-> > > > > > we could register a reboot notifier and attempt to clean things up.
-> > > > > > 
-> > > > > > I think it is better to support kexec to this extent rather than
-> > > > > > disabling it entirely.
-> > > > > > 
-> > > > > 
-> > > > > You do understand that once our kernel is released to third parties, we
-> > > > > can’t control how they will use kexec, right?
-> > > > 
-> > > > Yes, we can't. But that's okay. It is fine for us to say that only some
-> > > > kexec scenarios are supported and some aren't (iff you're creating VMs
-> > > > using MSHV; if you're not creating VMs all of kexec is supported).
-> > > > 
-> > > 
-> > > Well, I disagree here. If we say the kernel supports MSHV, we must
-> > > provide a robust solution. A partially working solution is not
-> > > acceptable. It makes us look careless and can damage our reputation as a
-> > > team (and as a company).
-> > 
-> > It won't if we call out upfront what is supported and what is not.
-> > 
-> > > 
-> > > > > 
-> > > > > This is a valid and existing option. We have to account for it. Yet
-> > > > > again, L1VH will be used by arbitrary third parties out there, not just
-> > > > > by us.
-> > > > > 
-> > > > > We can’t say the kernel supports MSHV until we close these gaps. We must
-> > > > 
-> > > > We can. It is okay say some scenarios are supported and some aren't.
-> > > > 
-> > > > All kexecs are supported if they never create VMs using MSHV. If they do
-> > > > create VMs using MSHV and we implement cleanup in a reboot notifier at
-> > > > least systemctl kexec and crashdump kexec would which are probably the
-> > > > most common uses of kexec. It's okay to say that this is all we support
-> > > > as of now.
-> > > > 
-> > > 
-> > > I'm repeating myself, but I'll try to put it differently.
-> > > There won't be any kernel core collected if a page was deposited. You're
-> > > arguing for a lost cause here. Once a page is allocated and deposited,
-> > > the crash kernel will try to write it into the core.
-> > 
-> > That's why we have to implement something where we attempt to destroy
-> > partitions and reclaim memory (and BUG() out if that fails; which
-> > hopefully should happen very rarely if at all). This should be *the*
-> > solution we work towards. We don't need a temporary disable kexec
-> > solution.
-> > 
+On Sun, Jan 11, 2026 at 09:00:34AM -0800, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
 > 
-> No, the solution is to preserve the shared state and pass it over via KHO.
-
-Okay, then work towards it without doing temporary KEXEC disable. We can
-call out that kexec is not supported until then. Disabling KEXEC is too
-intrusive.
-
-Is there any precedent for this? Do you know if any driver ever disabled
-KEXEC this way?
-
+> Field pci_bus in struct hv_pcibus_device is unused since
+> commit 418cb6c8e051 ("PCI: hv: Generify PCI probing"). Remove it.
 > 
-> > > 
-> > > > Also, what makes you think customers would even be interested in enabling
-> > > > our module in their kernel configs if it takes away kexec?
-> > > > 
-> > > 
-> > > It's simple: L1VH isn't a host, so I can spin up new VMs instead of
-> > > servicing the existing ones.
-> > 
-> > And what about the L2 VM state then? They might not be throwaway in all
-> > cases.
-> > 
+> No functional change.
 > 
-> L2 guest can (and likely will) be migrated fromt he old L1VH to the new
-> one.
-> And this is most likely the current scenario customers are using.
-> 
-> > > 
-> > > Why do you think there won’t be customers interested in using MSHV in
-> > > L1VH without kexec support?
-> > 
-> > Because they could already be using kexec for their servicing needs or
-> > whatever. And no we can't just say "don't service these VMs just spin up
-> > new ones".
-> > 
-> 
-> Are you speculating or know for sure?
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 
-It's a reasonable assumption that people are using kexec for servicing.
-
-> 
-> > Also, keep in mind that once L1VH is available in Azure, the distros
-> > that run on it would be the same distros that run on all other Azure
-> > VMs. There won't be special distros with a kernel specifically built for
-> > L1VH. And KEXEC is generally enabled in distros. Distro vendors won't be
-> > happy that they would need to publish a separate version of their image with
-> > MSHV_ROOT enabled and KEXEC disabled because they wouldn't want KEXEC to
-> > be disabled for all Azure VMs. Also, the customers will be confused why
-> > the same distro doesn't work on L1VH.
-> > 
-> 
-> I don't think distro happiness is our concern. They already build custom
-
-If distros are not happy they won't package this and consequently
-nobody will use it.
-
-> versions for Azure. They can build another custom version for L1VH if
-> needed.
-
-We should at least check if they are ready to do this.
+It looks like this trivial patch is not yet picked up. I've queued it
+up.
 
 Thanks,
-Anirudh.
+Wei
 
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> Anyway, I don't see the point in continuing this discussion. All points
-> have been made, and solutions have been proposed.
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 1e237d3538f9..7fcba05cec30 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -501,7 +501,6 @@ struct hv_pcibus_device {
+>  	struct resource *low_mmio_res;
+>  	struct resource *high_mmio_res;
+>  	struct completion *survey_event;
+> -	struct pci_bus *pci_bus;
+>  	spinlock_t config_lock;	/* Avoid two threads writing index page */
+>  	spinlock_t device_list_lock;	/* Protect lists below */
+>  	void __iomem *cfg_addr;
+> -- 
+> 2.25.1
 > 
-> If you can come up with something better in the next few days, so we at
-> least have a chance to get it merged in the next merge window, great. If
-> not, we should explicitly forbid the unsupported feature and move on.
-> 
-> Thanks,
-> Thanks,
-> Stanislav
-> 
-> > Thanks,
-> > Anirudh.
 
