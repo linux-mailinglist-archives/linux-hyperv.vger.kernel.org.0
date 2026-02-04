@@ -1,330 +1,306 @@
-Return-Path: <linux-hyperv+bounces-8690-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8691-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qB0FCAizgmn/YAMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8690-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Feb 2026 03:46:32 +0100
+	id kM+3JLLagmnkcwMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8691-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Feb 2026 06:35:46 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82BEFE0FA6
-	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Feb 2026 03:46:31 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6298E203B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Feb 2026 06:35:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id CE03B3001476
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Feb 2026 02:46:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3E33030675BF
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Feb 2026 05:33:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 987AF7082D;
-	Wed,  4 Feb 2026 02:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D97203164BB;
+	Wed,  4 Feb 2026 05:33:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="arN1LHLY"
+	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="MkCIB++B"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13F081E86E;
-	Wed,  4 Feb 2026 02:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770173189; cv=none; b=VFwnIDbHR1q6CjKbzBQliMc06rIj6Mqmn94+701EltFuUki/aDdK6z+y7tYDTTdT1jtnhy7RkPgrL2jw0Dqip+OtCB1mGYILSKi/pKKicE3m17CrLqLnFa7INpDxWX6MP/AaDJwNejsp3TsSckGMj6TNnz7OxkxqJfDem/vJ+Mk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770173189; c=relaxed/simple;
-	bh=xZKTJbQZmtAv3qfeDempZ23od/8475V7G5f4EaOv5h8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=VnlvfI+sVO8mQSHhkEnOAEyjGERjdc65PKpfMbGhTlUiM4t0kdzU02khKsYIyTsiNi5FXrtbGsQ9o97inUX3EeeQ0Rs/Wplo/d9neKaw59fBvxgbFeDpm4AmilsZKQ9W9EJBAbOWrWUY5SbYfNH6JoGGOMA1Y91FgAd5haNxkp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=arN1LHLY; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 41DA220B7168;
-	Tue,  3 Feb 2026 18:46:27 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 41DA220B7168
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1770173187;
-	bh=QYq0SXbmmpdzd833FKg4urQqftvbbHvHb81ah/8XDz0=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=arN1LHLYZg+IteZP0w0rvA5KU+KH5/pC82hKFYXtfZlp3xt7ZjUxmyKj043Vepu5Y
-	 ibcBjuyFExKMrVcwjmaDaAPAZciQDUIJ1+gDrXlAL8xSqxAxZ/aQXbiY17F5w75m7s
-	 snuBGFdeuOhbU+a4Vt09KMhVJrs/3tdNP3hlwEaM=
-Message-ID: <33bbe4ac-a471-7153-a6b1-8619b4f25fde@linux.microsoft.com>
-Date: Tue, 3 Feb 2026 18:46:26 -0800
+Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8557E3093CD;
+	Wed,  4 Feb 2026 05:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770183226; cv=pass; b=udN2bVA0O/riFgYjWRQovJIpDvxfBSBMnIy8B+9cB+gx9Ea7sM6J6UpifUiHbmaCnb7uqkA7g6W7CPsdgDQ1fk8AIDYvhXF0dp54zB29DDbia6pnU1kPgLtqVN+5hAWx9Dau/6Nldjg06FeQLiUarbsrPD4qaRpS1gkar5wRGSg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770183226; c=relaxed/simple;
+	bh=9hJ8zpExHL5Ea4sobP4tH7ephpPCkCBmM9MSHK9d6q8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SwfJElF5eg/G5ncd3aEc+2icO/8ngQMpK5ln+/N+Zt7JLX4Hq038g8DiHTUhEPytFII+cX0cInw3CNZBm2QA/8itl6xa0yMadIRE392YjOlo5JT4egKdUhP/9v10Ijb82DGd3yhn0qd65ymrIS09uhowXPy5v7kzwLGvzeXm0dI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=MkCIB++B; arc=pass smtp.client-ip=136.143.188.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
+ARC-Seal: i=1; a=rsa-sha256; t=1770183217; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=fqYSyjypN/JYxEQIK+9+50P63wCi6EyhbmRpExlaRs5Wa1Rj+iuy3uPN87cxNwmnefO5X9cnrXg/mIb/Ouy0f0BUyaRWEX0kowLXmyoVXy7Mszer4yXJ6dUWL9onYA2kvskYrdcU12+2d4VIdQ9RuTUcmZdjnXC2WDiadU3AKQ8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1770183217; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=N6XDbrYwfkbmtjS5P1Vd8eAwNUvNInOSFCG6Jr39KFM=; 
+	b=cDRS7LLi/UV96c2qDFJ9BEBgvBrqPRPjXNkS+gFoTWSe/rgC05iBT7/pbejz45CSGGzc/cz1hbHt0m5IFKz8eoI6FRAmmfAPp67TUKxOQ+rXi5WOdUEhWbm0OWj6JU75X3I6gk51uyM4rdIETpLYP/eDLwzAngc/w0pETPmNDCg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=anirudhrb.com;
+	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
+	dmarc=pass header.from=<anirudh@anirudhrb.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770183217;
+	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:Message-Id:Reply-To;
+	bh=N6XDbrYwfkbmtjS5P1Vd8eAwNUvNInOSFCG6Jr39KFM=;
+	b=MkCIB++BTW9a37+j6ShK7fO1+g4HE/BTunxhMvDhFeKKungllzlhBwWka0WtnKKs
+	XgoOVoZQ6iqxAPkhMrAEaAnPKJd8uqKYXKl5hFCRN51KUTj/ZybRSY4MaHSVwYXcjBI
+	wBaPlJjlnqnA02fIgZRVNJTjRDvVEHWZKoxVUHp8=
+Received: by mx.zohomail.com with SMTPS id 1770183214757587.7422477671423;
+	Tue, 3 Feb 2026 21:33:34 -0800 (PST)
+Date: Wed, 4 Feb 2026 05:33:29 +0000
+From: Anirudh Rayabharam <anirudh@anirudhrb.com>
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mshv: Make MSHV mutually exclusive with KEXEC
+Message-ID: <aYLaKUEp23n2gxLU@anirudh-surface.localdomain>
+References: <aXzmMInsNSvFvBF1@anirudh-surface.localdomain>
+ <aXz8ldAeoWwGIxdu@skinsburskii.localdomain>
+ <aX0Vbfocwa4WgXUw@anirudh-surface.localdomain>
+ <aYDaaIK0J4SjvnCe@skinsburskii.localdomain>
+ <aYD0bafU3UYuSvDW@anirudh-surface.localdomain>
+ <aYD4gw-1qKYHcnXI@skinsburskii.localdomain>
+ <wnh3ghsxxml32sldkm4qzlzre7nebor3oqtj6i7mlhqj2gwzys@o5w5rpzrhhc4>
+ <aYIW9PhzqmyET8IL@skinsburskii.localdomain>
+ <aYImS_vEdR-kxBuQ@anirudh-surface.localdomain>
+ <aYJPwp2i47P33xuz@skinsburskii.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH] mshv: Make MSHV mutually exclusive with KEXEC
-Content-Language: en-US
-From: Mukesh R <mrathor@linux.microsoft.com>
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Cc: Anirudh Rayabharam <anirudh@anirudhrb.com>, kys@microsoft.com,
- haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
- longli@microsoft.com, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <2b42997d-7cc0-56ba-e1ca-a8640ce71ea9@linux.microsoft.com>
- <aXgFFz7YuJJQabyp@skinsburskii.localdomain>
- <257ad7f1-5dc0-2644-41c3-960c396caa38@linux.microsoft.com>
- <aXj6FXahxZU8QFq0@skinsburskii.localdomain>
- <4bcd7b66-6e3b-8f53-b688-ce0272123839@linux.microsoft.com>
- <aXqW7v-lnAT_gr0s@skinsburskii.localdomain>
- <919446c3-e02f-d532-3ea8-74d0cee38d33@linux.microsoft.com>
- <aXznwGcuP9rdffYf@anirudh-surface.localdomain>
- <aXz7Y7As4XC9rNeL@skinsburskii.localdomain>
- <2efb7fc8-994f-7cbf-6b7c-a1e645bdf638@linux.microsoft.com>
- <aYDUOeXIoOV4qtRk@skinsburskii.localdomain>
- <e03cea10-0970-88b6-ae44-7cb9759f2683@linux.microsoft.com>
-In-Reply-To: <e03cea10-0970-88b6-ae44-7cb9759f2683@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aYJPwp2i47P33xuz@skinsburskii.localdomain>
+X-ZohoMailClient: External
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+X-Spamd-Result: default: False [-1.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8690-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	DMARC_NA(0.00)[anirudhrb.com];
+	TAGGED_FROM(0.00)[bounces-8691-lists,linux-hyperv=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[anirudhrb.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mrathor@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[anirudh@anirudhrb.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.microsoft.com:mid,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: 82BEFE0FA6
+	RCPT_COUNT_SEVEN(0.00)[8];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,anirudhrb.com:dkim]
+X-Rspamd-Queue-Id: E6298E203B
 X-Rspamd-Action: no action
 
-On 2/2/26 12:15, Mukesh R wrote:
-> On 2/2/26 08:43, Stanislav Kinsburskii wrote:
->> On Fri, Jan 30, 2026 at 11:47:48AM -0800, Mukesh R wrote:
->>> On 1/30/26 10:41, Stanislav Kinsburskii wrote:
->>>> On Fri, Jan 30, 2026 at 05:17:52PM +0000, Anirudh Rayabharam wrote:
->>>>> On Thu, Jan 29, 2026 at 06:59:31PM -0800, Mukesh R wrote:
->>>>>> On 1/28/26 15:08, Stanislav Kinsburskii wrote:
->>>>>>> On Tue, Jan 27, 2026 at 11:56:02AM -0800, Mukesh R wrote:
->>>>>>>> On 1/27/26 09:47, Stanislav Kinsburskii wrote:
->>>>>>>>> On Mon, Jan 26, 2026 at 05:39:49PM -0800, Mukesh R wrote:
->>>>>>>>>> On 1/26/26 16:21, Stanislav Kinsburskii wrote:
->>>>>>>>>>> On Mon, Jan 26, 2026 at 03:07:18PM -0800, Mukesh R wrote:
->>>>>>>>>>>> On 1/26/26 12:43, Stanislav Kinsburskii wrote:
->>>>>>>>>>>>> On Mon, Jan 26, 2026 at 12:20:09PM -0800, Mukesh R wrote:
->>>>>>>>>>>>>> On 1/25/26 14:39, Stanislav Kinsburskii wrote:
->>>>>>>>>>>>>>> On Fri, Jan 23, 2026 at 04:16:33PM -0800, Mukesh R wrote:
->>>>>>>>>>>>>>>> On 1/23/26 14:20, Stanislav Kinsburskii wrote:
->>>>>>>>>>>>>>>>> The MSHV driver deposits kernel-allocated pages to the hypervisor during
->>>>>>>>>>>>>>>>> runtime and never withdraws them. This creates a fundamental incompatibility
->>>>>>>>>>>>>>>>> with KEXEC, as these deposited pages remain unavailable to the new kernel
->>>>>>>>>>>>>>>>> loaded via KEXEC, leading to potential system crashes upon kernel accessing
->>>>>>>>>>>>>>>>> hypervisor deposited pages.
->>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>> Make MSHV mutually exclusive with KEXEC until proper page lifecycle
->>>>>>>>>>>>>>>>> management is implemented.
->>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
->>>>>>>>>>>>>>>>> ---
->>>>>>>>>>>>>>>>>          drivers/hv/Kconfig |    1 +
->>>>>>>>>>>>>>>>>          1 file changed, 1 insertion(+)
->>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
->>>>>>>>>>>>>>>>> index 7937ac0cbd0f..cfd4501db0fa 100644
->>>>>>>>>>>>>>>>> --- a/drivers/hv/Kconfig
->>>>>>>>>>>>>>>>> +++ b/drivers/hv/Kconfig
->>>>>>>>>>>>>>>>> @@ -74,6 +74,7 @@ config MSHV_ROOT
->>>>>>>>>>>>>>>>>              # e.g. When withdrawing memory, the hypervisor gives back 4k pages in
->>>>>>>>>>>>>>>>>              # no particular order, making it impossible to reassemble larger pages
->>>>>>>>>>>>>>>>>              depends on PAGE_SIZE_4KB
->>>>>>>>>>>>>>>>> +    depends on !KEXEC
->>>>>>>>>>>>>>>>>              select EVENTFD
->>>>>>>>>>>>>>>>>              select VIRT_XFER_TO_GUEST_WORK
->>>>>>>>>>>>>>>>>              select HMM_MIRROR
->>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> Will this affect CRASH kexec? I see few CONFIG_CRASH_DUMP in kexec.c
->>>>>>>>>>>>>>>> implying that crash dump might be involved. Or did you test kdump
->>>>>>>>>>>>>>>> and it was fine?
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> Yes, it will. Crash kexec depends on normal kexec functionality, so it
->>>>>>>>>>>>>>> will be affected as well.
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> So not sure I understand the reason for this patch. We can just block
->>>>>>>>>>>>>> kexec if there are any VMs running, right? Doing this would mean any
->>>>>>>>>>>>>> further developement would be without a ver important and major feature,
->>>>>>>>>>>>>> right?
->>>>>>>>>>>>>
->>>>>>>>>>>>> This is an option. But until it's implemented and merged, a user mshv
->>>>>>>>>>>>> driver gets into a situation where kexec is broken in a non-obvious way.
->>>>>>>>>>>>> The system may crash at any time after kexec, depending on whether the
->>>>>>>>>>>>> new kernel touches the pages deposited to hypervisor or not. This is a
->>>>>>>>>>>>> bad user experience.
->>>>>>>>>>>>
->>>>>>>>>>>> I understand that. But with this we cannot collect core and debug any
->>>>>>>>>>>> crashes. I was thinking there would be a quick way to prohibit kexec
->>>>>>>>>>>> for update via notifier or some other quick hack. Did you already
->>>>>>>>>>>> explore that and didn't find anything, hence this?
->>>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> This quick hack you mention isn't quick in the upstream kernel as there
->>>>>>>>>>> is no hook to interrupt kexec process except the live update one.
->>>>>>>>>>
->>>>>>>>>> That's the one we want to interrupt and block right? crash kexec
->>>>>>>>>> is ok and should be allowed. We can document we don't support kexec
->>>>>>>>>> for update for now.
->>>>>>>>>>
->>>>>>>>>>> I sent an RFC for that one but given todays conversation details is
->>>>>>>>>>> won't be accepted as is.
->>>>>>>>>>
->>>>>>>>>> Are you taking about this?
->>>>>>>>>>
->>>>>>>>>>             "mshv: Add kexec safety for deposited pages"
->>>>>>>>>>
->>>>>>>>>
->>>>>>>>> Yes.
->>>>>>>>>
->>>>>>>>>>> Making mshv mutually exclusive with kexec is the only viable option for
->>>>>>>>>>> now given time constraints.
->>>>>>>>>>> It is intended to be replaced with proper page lifecycle management in
->>>>>>>>>>> the future.
->>>>>>>>>>
->>>>>>>>>> Yeah, that could take a long time and imo we cannot just disable KEXEC
->>>>>>>>>> completely. What we want is just block kexec for updates from some
->>>>>>>>>> mshv file for now, we an print during boot that kexec for updates is
->>>>>>>>>> not supported on mshv. Hope that makes sense.
->>>>>>>>>>
->>>>>>>>>
->>>>>>>>> The trade-off here is between disabling kexec support and having the
->>>>>>>>> kernel crash after kexec in a non-obvious way. This affects both regular
->>>>>>>>> kexec and crash kexec.
->>>>>>>>
->>>>>>>> crash kexec on baremetal is not affected, hence disabling that
->>>>>>>> doesn't make sense as we can't debug crashes then on bm.
->>>>>>>>
->>>>>>>
->>>>>>> Bare metal support is not currently relevant, as it is not available.
->>>>>>> This is the upstream kernel, and this driver will be accessible to
->>>>>>> third-party customers beginning with kernel 6.19 for running their
->>>>>>> kernels in Azure L1VH, so consistency is required.
->>>>>>
->>>>>> Well, without crashdump support, customers will not be running anything
->>>>>> anywhere.
->>>>>
->>>>> This is my concern too. I don't think customers will be particularly
->>>>> happy that kexec doesn't work with our driver.
->>>>>
->>>>
->>>> I wasn?t clear earlier, so let me restate it. Today, kexec is not
->>>> supported in L1VH. This is a bug we have not fixed yet. Disabling kexec
->>>> is not a long-term solution. But it is better to disable it explicitly
->>>> than to have kernel crashes after kexec.
->>>
->>> I don't think there is disagreement on this. The undesired part is turning
->>> off KEXEC config completely.
->>>
->>
->> There is no disagreement on this either. If you have a better solution
->> that can be implemented and merged before next kernel merge window,
->> please propose it. Otherwise, this patch will remain as is for now.
+On Tue, Feb 03, 2026 at 11:42:58AM -0800, Stanislav Kinsburskii wrote:
+> On Tue, Feb 03, 2026 at 04:46:03PM +0000, Anirudh Rayabharam wrote:
+> > On Tue, Feb 03, 2026 at 07:40:36AM -0800, Stanislav Kinsburskii wrote:
+> > > On Tue, Feb 03, 2026 at 10:34:28AM +0530, Anirudh Rayabharam wrote:
+> > > > On Mon, Feb 02, 2026 at 11:18:27AM -0800, Stanislav Kinsburskii wrote:
+> > > > > On Mon, Feb 02, 2026 at 07:01:01PM +0000, Anirudh Rayabharam wrote:
+> > > > > > On Mon, Feb 02, 2026 at 09:10:00AM -0800, Stanislav Kinsburskii wrote:
+> > > > > > > On Fri, Jan 30, 2026 at 08:32:45PM +0000, Anirudh Rayabharam wrote:
+> > > > > > > > On Fri, Jan 30, 2026 at 10:46:45AM -0800, Stanislav Kinsburskii wrote:
+> > > > > > > > > On Fri, Jan 30, 2026 at 05:11:12PM +0000, Anirudh Rayabharam wrote:
+> > > > > > > > > > On Wed, Jan 28, 2026 at 03:11:14PM -0800, Stanislav Kinsburskii wrote:
+> > > > > > > > > > > On Wed, Jan 28, 2026 at 04:16:31PM +0000, Anirudh Rayabharam wrote:
+> > > > > > > > > > > > On Mon, Jan 26, 2026 at 12:46:44PM -0800, Stanislav Kinsburskii wrote:
+> > > > > > > > > > > > > On Tue, Jan 27, 2026 at 12:19:24AM +0530, Anirudh Rayabharam wrote:
+> > > > > > > > > > > > > > On Fri, Jan 23, 2026 at 10:20:53PM +0000, Stanislav Kinsburskii wrote:
+> > > > > > > > > > > > > > > The MSHV driver deposits kernel-allocated pages to the hypervisor during
+> > > > > > > > > > > > > > > runtime and never withdraws them. This creates a fundamental incompatibility
+> > > > > > > > > > > > > > > with KEXEC, as these deposited pages remain unavailable to the new kernel
+> > > > > > > > > > > > > > > loaded via KEXEC, leading to potential system crashes upon kernel accessing
+> > > > > > > > > > > > > > > hypervisor deposited pages.
+> > > > > > > > > > > > > > > 
+> > > > > > > > > > > > > > > Make MSHV mutually exclusive with KEXEC until proper page lifecycle
+> > > > > > > > > > > > > > > management is implemented.
+> > > > > > > > > > > > > > 
+> > > > > > > > > > > > > > Someone might want to stop all guest VMs and do a kexec. Which is valid
+> > > > > > > > > > > > > > and would work without any issue for L1VH.
+> > > > > > > > > > > > > > 
+> > > > > > > > > > > > > 
+> > > > > > > > > > > > > No, it won't work and hypervsisor depostied pages won't be withdrawn.
+> > > > > > > > > > > > 
+> > > > > > > > > > > > All pages that were deposited in the context of a guest partition (i.e.
+> > > > > > > > > > > > with the guest partition ID), would be withdrawn when you kill the VMs,
+> > > > > > > > > > > > right? What other deposited pages would be left?
+> > > > > > > > > > > > 
+> > > > > > > > > > > 
+> > > > > > > > > > > The driver deposits two types of pages: one for the guests (withdrawn
+> > > > > > > > > > > upon gust shutdown) and the other - for the host itself (never
+> > > > > > > > > > > withdrawn).
+> > > > > > > > > > > See hv_call_create_partition, for example: it deposits pages for the
+> > > > > > > > > > > host partition.
+> > > > > > > > > > 
+> > > > > > > > > > Hmm.. I see. Is it not possible to reclaim this memory in module_exit?
+> > > > > > > > > > Also, can't we forcefully kill all running partitions in module_exit and
+> > > > > > > > > > then reclaim memory? Would this help with kernel consistency
+> > > > > > > > > > irrespective of userspace behavior?
+> > > > > > > > > > 
+> > > > > > > > > 
+> > > > > > > > > It would, but this is sloppy and cannot be a long-term solution.
+> > > > > > > > > 
+> > > > > > > > > It is also not reliable. We have no hook to prevent kexec. So if we fail
+> > > > > > > > > to kill the guest or reclaim the memory for any reason, the new kernel
+> > > > > > > > > may still crash.
+> > > > > > > > 
+> > > > > > > > Actually guests won't be running by the time we reach our module_exit
+> > > > > > > > function during a kexec. Userspace processes would've been killed by
+> > > > > > > > then.
+> > > > > > > > 
+> > > > > > > 
+> > > > > > > No, they will not: "kexec -e" doesn't kill user processes.
+> > > > > > > We must not rely on OS to do graceful shutdown before doing
+> > > > > > > kexec.
+> > > > > > 
+> > > > > > I see kexec -e is too brutal. Something like systemctl kexec is
+> > > > > > more graceful and is probably used more commonly. In this case at least
+> > > > > > we could register a reboot notifier and attempt to clean things up.
+> > > > > > 
+> > > > > > I think it is better to support kexec to this extent rather than
+> > > > > > disabling it entirely.
+> > > > > > 
+> > > > > 
+> > > > > You do understand that once our kernel is released to third parties, we
+> > > > > can’t control how they will use kexec, right?
+> > > > 
+> > > > Yes, we can't. But that's okay. It is fine for us to say that only some
+> > > > kexec scenarios are supported and some aren't (iff you're creating VMs
+> > > > using MSHV; if you're not creating VMs all of kexec is supported).
+> > > > 
+> > > 
+> > > Well, I disagree here. If we say the kernel supports MSHV, we must
+> > > provide a robust solution. A partially working solution is not
+> > > acceptable. It makes us look careless and can damage our reputation as a
+> > > team (and as a company).
+> > 
+> > It won't if we call out upfront what is supported and what is not.
+> > 
+> > > 
+> > > > > 
+> > > > > This is a valid and existing option. We have to account for it. Yet
+> > > > > again, L1VH will be used by arbitrary third parties out there, not just
+> > > > > by us.
+> > > > > 
+> > > > > We can’t say the kernel supports MSHV until we close these gaps. We must
+> > > > 
+> > > > We can. It is okay say some scenarios are supported and some aren't.
+> > > > 
+> > > > All kexecs are supported if they never create VMs using MSHV. If they do
+> > > > create VMs using MSHV and we implement cleanup in a reboot notifier at
+> > > > least systemctl kexec and crashdump kexec would which are probably the
+> > > > most common uses of kexec. It's okay to say that this is all we support
+> > > > as of now.
+> > > > 
+> > > 
+> > > I'm repeating myself, but I'll try to put it differently.
+> > > There won't be any kernel core collected if a page was deposited. You're
+> > > arguing for a lost cause here. Once a page is allocated and deposited,
+> > > the crash kernel will try to write it into the core.
+> > 
+> > That's why we have to implement something where we attempt to destroy
+> > partitions and reclaim memory (and BUG() out if that fails; which
+> > hopefully should happen very rarely if at all). This should be *the*
+> > solution we work towards. We don't need a temporary disable kexec
+> > solution.
+> > 
 > 
-> Like I said previously, I'll explore a bit. I think I found something,
-> but need to test it a bit and get second opinion on it. For me, I am
+> No, the solution is to preserve the shared state and pass it over via KHO.
 
-Nah, it works, but is too intrusive and no chance of being accepted. So
-giving up on it. Hopefully a cleaner way can be achieved working with
-kexec folks.
+Okay, then work towards it without doing temporary KEXEC disable. We can
+call out that kexec is not supported until then. Disabling KEXEC is too
+intrusive.
+
+Is there any precedent for this? Do you know if any driver ever disabled
+KEXEC this way?
+
+> 
+> > > 
+> > > > Also, what makes you think customers would even be interested in enabling
+> > > > our module in their kernel configs if it takes away kexec?
+> > > > 
+> > > 
+> > > It's simple: L1VH isn't a host, so I can spin up new VMs instead of
+> > > servicing the existing ones.
+> > 
+> > And what about the L2 VM state then? They might not be throwaway in all
+> > cases.
+> > 
+> 
+> L2 guest can (and likely will) be migrated fromt he old L1VH to the new
+> one.
+> And this is most likely the current scenario customers are using.
+> 
+> > > 
+> > > Why do you think there won’t be customers interested in using MSHV in
+> > > L1VH without kexec support?
+> > 
+> > Because they could already be using kexec for their servicing needs or
+> > whatever. And no we can't just say "don't service these VMs just spin up
+> > new ones".
+> > 
+> 
+> Are you speculating or know for sure?
+
+It's a reasonable assumption that people are using kexec for servicing.
+
+> 
+> > Also, keep in mind that once L1VH is available in Azure, the distros
+> > that run on it would be the same distros that run on all other Azure
+> > VMs. There won't be special distros with a kernel specifically built for
+> > L1VH. And KEXEC is generally enabled in distros. Distro vendors won't be
+> > happy that they would need to publish a separate version of their image with
+> > MSHV_ROOT enabled and KEXEC disabled because they wouldn't want KEXEC to
+> > be disabled for all Azure VMs. Also, the customers will be confused why
+> > the same distro doesn't work on L1VH.
+> > 
+> 
+> I don't think distro happiness is our concern. They already build custom
+
+If distros are not happy they won't package this and consequently
+nobody will use it.
+
+> versions for Azure. They can build another custom version for L1VH if
+> needed.
+
+We should at least check if they are ready to do this.
 
 Thanks,
--Mukesh
+Anirudh.
 
-
-> not convinced this absolutely has to be in this merge window as it only
-> involves MSHV for l1vh and has been like this all this time. Moreover,
-> other things like makedumpfile are broken on l1vh. But Wei can make
-> final decision.
+> 
+> Anyway, I don't see the point in continuing this discussion. All points
+> have been made, and solutions have been proposed.
+> 
+> If you can come up with something better in the next few days, so we at
+> least have a chance to get it merged in the next merge window, great. If
+> not, we should explicitly forbid the unsupported feature and move on.
 > 
 > Thanks,
-> -Mukesh
+> Thanks,
+> Stanislav
 > 
->> Thanks,
->> Stanislav
->>
->>> Thanks,
->>> -Mukesh
->>>
->>>
->>>> This does not mean the bug should not be fixed. But the upstream kernel
->>>> has its own policies and merge windows. For kernel 6.19, it is better to
->>>> have a clear kexec error than random crashes after kexec.
->>>>
->>>> Thanks,
->>>> Stanislav
->>>>
->>>>> Thanks,
->>>>> Anirudh
->>>>>
->>>>>>
->>>>>> Thanks,
->>>>>> -Mukesh
->>>>>>
->>>>>>> Thanks,
->>>>>>> Stanislav
->>>>>>>
->>>>>>>> Let me think and explore a bit, and if I come up with something, I'll
->>>>>>>> send a patch here. If nothing, then we can do this as last resort.
->>>>>>>>
->>>>>>>> Thanks,
->>>>>>>> -Mukesh
->>>>>>>>
->>>>>>>>
->>>>>>>>> It?s a pity we can?t apply a quick hack to disable only regular kexec.
->>>>>>>>> However, since crash kexec would hit the same issues, until we have a
->>>>>>>>> proper state transition for deposted pages, the best workaround for now
->>>>>>>>> is to reset the hypervisor state on every kexec, which needs design,
->>>>>>>>> work, and testing.
->>>>>>>>>
->>>>>>>>> Disabling kexec is the only consistent way to handle this in the
->>>>>>>>> upstream kernel at the moment.
->>>>>>>>>
->>>>>>>>> Thanks, Stanislav
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>> Thanks,
->>>>>>>>>> -Mukesh
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>>> Thanks,
->>>>>>>>>>> Stanislav
->>>>>>>>>>>
->>>>>>>>>>>> Thanks,
->>>>>>>>>>>> -Mukesh
->>>>>>>>>>>>
->>>>>>>>>>>>> Therefor it should be explicitly forbidden as it's essentially not
->>>>>>>>>>>>> supported yet.
->>>>>>>>>>>>>
->>>>>>>>>>>>> Thanks,
->>>>>>>>>>>>> Stanislav
->>>>>>>>>>>>>
->>>>>>>>>>>>>>
->>>>>>>>>>>>>>> Thanks,
->>>>>>>>>>>>>>> Stanislav
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> Thanks,
->>>>>>>>>>>>>>>> -Mukesh
->>>>>>
->>>
-> 
-
+> > Thanks,
+> > Anirudh.
 
