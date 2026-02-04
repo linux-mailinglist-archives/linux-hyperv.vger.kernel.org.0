@@ -1,182 +1,151 @@
-Return-Path: <linux-hyperv+bounces-8711-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8712-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6PKND78Og2kBhQMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8711-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Feb 2026 10:17:51 +0100
+	id iEdDJKA9g2kPkQMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8712-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Feb 2026 13:37:52 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC968E3B61
-	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Feb 2026 10:17:50 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FC16E5E20
+	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Feb 2026 13:37:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 1CAA53006781
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Feb 2026 09:17:50 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0A8C73007536
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Feb 2026 12:37:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A295E3A1E86;
-	Wed,  4 Feb 2026 09:17:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B1ED330B28;
+	Wed,  4 Feb 2026 12:37:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="wGdUrGti"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K2jf+8k8"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from jpms-ob02.noc.sony.co.jp (jpms-ob02.noc.sony.co.jp [211.125.140.165])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B56221FAC;
-	Wed,  4 Feb 2026 09:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.140.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FA124DFF3;
+	Wed,  4 Feb 2026 12:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770196666; cv=none; b=tdeobr/s9pEsfKlJz/uZXtKH6vV0so/UxgUKvC5wj8+nNqH8bGIvpQGisVfnIkN1HpBpHDDTR9F9dDl4gl8NDPhEhk/z7FE/Xjii7PlNuXv+bQErdMRLYtktIYHTL2vBA558fv/ah9aTTtcix79AVrj9DzM+iOMybTDdI6v4xpM=
+	t=1770208642; cv=none; b=FbNJJaTTBbeUne948Y2nC0s844sOi134iAKkrWqvu/PEvkPdzje797R43fC7iRqXo86JORHteBgHWqjFrLeOW98+eE3ZRgm1ghtLTPuv1xVq4TTWZm/RyvCj821QToDtUa5f8/m4ATncELXDX8mQpOutc9lCtLeB6ubz9snAL5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770196666; c=relaxed/simple;
-	bh=rTjzOHeWG9eHm33rQDOPGTZZySKoFz1aHEHitCndjIc=;
+	s=arc-20240116; t=1770208642; c=relaxed/simple;
+	bh=Lfgz74GJBh4i45yr3gf/Dl4spcDUF4yt2tlV2Md+WfE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h10BqJxe1xVjNI7J4mmAdJT8j767N5d15sbzUBvp1WYUhAZ9v3fSx7C2skkkf0OeZXZzLzMDmF7HKC6hwsxvnYY6kIMxMyqgjQSM/Y5TG7jAcBZfJrER+W0xRw7nsvRF7BKf0EBnttb5WhTq+yd5nz+7DJshhr3Pcelhg+9nnF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=wGdUrGti; arc=none smtp.client-ip=211.125.140.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=sony.com; s=s1jp; t=1770196666; x=1801732666;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gSpoUwnGMiw8Hd9rxHOb3HRj7lon6L0Wu64wAWcD0ZA=;
-  b=wGdUrGtij/1vJJHOHvHifJnnQT/Mqo8Mv1OcrGQfdnucIZ2OUraYOxXB
-   i00Wkq7A7tcQ+v8CnaQ1hHWFZKiAYZ6jRO/J/2A9MQWnnxiIdg5okicub
-   m14Sxr9yKkH3D2BNMxCrVGGAOw3WXx2QT92x2mprGiTgtyXyy1eVyK+hV
-   Tc6J8NK4vAL3dy8MMj+qaOTlWK+t3WL4vVnFqsC5FpcIb0aeVQSmkZYXp
-   DOobgdaM+s/Q06ZSXn86C/2ngj7p1OOF8Ne6K5Ze+/zbYAwyCaIm2XzRx
-   6OZ9aoSCMze5TUm9HDUJuvidckZ4JzM0cb8iHzGH7+wZbP4S0eIIT1VMW
-   g==;
-Received: from unknown (HELO jpmta-ob1.noc.sony.co.jp) ([IPv6:2001:cf8:0:6e7::6])
-  by jpms-ob02.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 18:17:39 +0900
-X-IronPort-AV: E=Sophos;i="6.21,272,1763391600"; 
-   d="scan'208";a="608110368"
-Received: from unknown (HELO JPC00244420) ([IPv6:2001:cf8:1:573:0:dddd:6b3e:119e])
-  by jpmta-ob1.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 18:17:38 +0900
-Date: Wed, 4 Feb 2026 18:17:29 +0900
-From: Shashank Balaji <shashank.mahadasyam@sony.com>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Suresh Siddha <suresh.b.siddha@intel.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Juergen Gross <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Ingo Molnar <mingo@elte.hu>, linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-	jailhouse-dev@googlegroups.com, kvm@vger.kernel.org,
-	xen-devel@lists.xenproject.org, Rahul Bukte <rahul.bukte@sony.com>,
-	Daniel Palmer <daniel.palmer@sony.com>,
-	Tim Bird <tim.bird@sony.com>, stable@vger.kernel.org
-Subject: Re: [PATCH 1/3] x86/x2apic: disable x2apic on resume if the kernel
- expects so
-Message-ID: <aYMOqXTYMJ_IlEFA@JPC00244420>
-References: <20260202-x2apic-fix-v1-0-71c8f488a88b@sony.com>
- <20260202-x2apic-fix-v1-1-71c8f488a88b@sony.com>
- <0149c37d-7065-4c72-ab56-4cea1a6c15d0@intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=r1K5XxEnNh8Bkd23aN23JxO3JJ+n9cNJEcr+aey49zSwwgStsXj3NgUw6UD4XTifXNp/IrADLi0yPK6E2OA1+R2ox59kDnAtixvBzwSgKYlRJ4zh3i6yiRDk579PF8UiErbmWlCJw5Dfa11xaBdmUsC216QIT/LZwrnBFhg4vtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K2jf+8k8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BDC4C4CEF7;
+	Wed,  4 Feb 2026 12:37:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770208642;
+	bh=Lfgz74GJBh4i45yr3gf/Dl4spcDUF4yt2tlV2Md+WfE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K2jf+8k8tcXxUA7YJYZEDqsCxnprbeRB+aJJuJ9HR7+qYJ7VDGPbJ1RzacSbXgIi6
+	 uD1o5tnn4HE95PzIhiIp5mO+Sozrs9HlzcHy2rSxbTET7HZfLcbG9hE2uugx6rDP1g
+	 SHvfXC4pixyC7ABhyZ0HXc9quCPy+R/Uttw4f8BA9zbK63AeixkVW8jez324J/7/Q1
+	 3CLQaUb2oyY/+eHLPN0GXHWuvcexcg8su2qYbwEJGBXhPp9QZuFrOEg/uXfEZaQ0Du
+	 swWsYwBfJSgbFWoS52t8/VUff34terAi/vBX9DVAMBH2pY64Y0jo+oacXsu4XGidyI
+	 CaQxJCNGY4mwQ==
+Date: Wed, 4 Feb 2026 18:07:08 +0530
+From: "mani@kernel.org" <mani@kernel.org>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
+	"kwilczynski@kernel.org" <kwilczynski@kernel.org>, "robh@kernel.org" <robh@kernel.org>, 
+	"bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
+	"kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>, 
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>, 
+	"longli@microsoft.com" <longli@microsoft.com>
+Subject: Re: [PATCH 1/1] PCI: hv: Remove unused field pci_bus in struct
+ hv_pcibus_device
+Message-ID: <lorhokiggjgxr7ghisdijmn5n2d27ezgxckr6m4yfbx2j3egro@ak3ikbgapaf5>
+References: <20260111170034.67558-1-mhklinux@outlook.com>
+ <SN6PR02MB41575DE702FAF2BCE5FD38CFD49EA@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <0149c37d-7065-4c72-ab56-4cea1a6c15d0@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <SN6PR02MB41575DE702FAF2BCE5FD38CFD49EA@SN6PR02MB4157.namprd02.prod.outlook.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	FROM_DN_EQ_ADDR(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[sony.com,none];
-	R_DKIM_ALLOW(-0.20)[sony.com:s=s1jp];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8711-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[outlook.com];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8712-lists,linux-hyperv=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[32];
-	DKIM_TRACE(0.00)[sony.com:+];
 	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[shashank.mahadasyam@sony.com,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-hyperv];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,sony.com:dkim]
-X-Rspamd-Queue-Id: CC968E3B61
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mani@kernel.org,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 5FC16E5E20
 X-Rspamd-Action: no action
 
-Hi Sohil,
-
-On Tue, Feb 03, 2026 at 01:08:39PM -0800, Sohil Mehta wrote:
-> > diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-> > index d93f87f29d03..cc64d61f82cf 100644
-> > --- a/arch/x86/kernel/apic/apic.c
-> > +++ b/arch/x86/kernel/apic/apic.c
-> > @@ -2456,6 +2456,12 @@ static void lapic_resume(void *data)
-> >  	if (x2apic_mode) {
-> >  		__x2apic_enable();
-> >  	} else {
-> > +		/*
-> > +		 * x2apic may have been re-enabled by the
-> > +		 * firmware on resuming from s2ram
-> > +		 */
-> > +		__x2apic_disable();
-> > +
+On Thu, Jan 29, 2026 at 04:35:29AM +0000, Michael Kelley wrote:
+> From: mhkelley58@gmail.com <mhkelley58@gmail.com> Sent: Sunday, January 11, 2026 9:01 AM
+> > 
+> > From: Michael Kelley <mhklinux@outlook.com>
+> > 
+> > Field pci_bus in struct hv_pcibus_device is unused since
+> > commit 418cb6c8e051 ("PCI: hv: Generify PCI probing"). Remove it.
+> > 
+> > No functional change.
+> > 
+> > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 > 
-> We should likely only disable x2apic on platforms that support it and
-> need the disabling. How about?
+> Could a PCI maintainer give an Ack for this trivial patch?
 > 
-> ...
-> } else {
-> 	/*
-> 	 *
-> 	 */
-> 	if (x2apic_enabled())
-> 		__x2apic_disable();
 
-__x2apic_disable disables x2apic only if boot_cpu_has(X86_FEATURE_APIC)
-and x2apic is already enabled. x2apic_enabled also does the same checks,
-the only difference being, it uses rdmsrq_safe instead of just rdmsrq,
-which is what __x2apic_disable uses. The safe version is because of
-Boris' suggestion [1]. If that's applicable here as well, then rdmsrq in
-__x2apic_disable should be changed to rdmsrq_safe.
+I see this got queued by Wei Liu, but FWIW:
 
-> I considered if an error message should be printed along with this. But,
-> I am not sure if it can really be called a firmware issue. It's probably
-> just that newer CPUs might have started defaulting to x2apic on.
+Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+
+- Mani
+
+> Thx, Michael
 > 
-> Can you specify what platform you are encountering this?
+> > ---
+> >  drivers/pci/controller/pci-hyperv.c | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> > index 1e237d3538f9..7fcba05cec30 100644
+> > --- a/drivers/pci/controller/pci-hyperv.c
+> > +++ b/drivers/pci/controller/pci-hyperv.c
+> > @@ -501,7 +501,6 @@ struct hv_pcibus_device {
+> >  	struct resource *low_mmio_res;
+> >  	struct resource *high_mmio_res;
+> >  	struct completion *survey_event;
+> > -	struct pci_bus *pci_bus;
+> >  	spinlock_t config_lock;	/* Avoid two threads writing index page */
+> >  	spinlock_t device_list_lock;	/* Protect lists below */
+> >  	void __iomem *cfg_addr;
+> > --
+> > 2.25.1
+> > 
+> 
 
-
-I'm not sure it's the CPU defaulting to x2apic on. As per Section
-12.12.5.1 of the Intel SDM:
-
-	On coming out of reset, the local APIC unit is enabled and is in
-	the xAPIC mode: IA32_APIC_BASE[EN]=1 and IA32_APIC_BASE[EXTD]=0.
-
-So, the CPU should be turning on in xapic mode. In fact, when x2apic is
-disabled in the firmware, this problem doesn't happen.
-
-Either way, a pr_warn maybe helpful. How about "x2apic re-enabled by the
-firmware during resume. Disabling\n"?
-
-[1] https://lore.kernel.org/all/20150116095927.GA18880@pd.tnic/
+-- 
+மணிவண்ணன் சதாசிவம்
 
