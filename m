@@ -1,390 +1,385 @@
-Return-Path: <linux-hyperv+bounces-8730-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8731-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SIJxBSvFhGk45QMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8730-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Feb 2026 17:28:27 +0100
+	id AA0cNo7PhGk45QMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8731-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Feb 2026 18:12:46 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8056CF5395
-	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Feb 2026 17:28:26 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2F3CF5B6B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Feb 2026 18:12:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E90BE301C10B
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Feb 2026 16:28:24 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 381F73004414
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Feb 2026 17:12:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58507438FE4;
-	Thu,  5 Feb 2026 16:28:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7362B43C04A;
+	Thu,  5 Feb 2026 17:12:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="H0SyIUB8"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WHLBe+Jq"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F52D1A9FBA;
-	Thu,  5 Feb 2026 16:28:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 415B42D8390;
+	Thu,  5 Feb 2026 17:12:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770308903; cv=none; b=HlUsD2bEQMyh8BNoegxPzOuvLoPTYCgjUrdN0JNg+xGyT3jeXEjRRuPiBlZzxAtK6OUfZZdYz9zoOnhupRUBwhJcoF3696uAkLgLPkBropCucT9EM4dF+of99GodBmMdmH2UBdph5BEEPOnBXMCT+4sQjVd6lbnB4jImGMh8nZo=
+	t=1770311561; cv=none; b=oy7ONRByUcXG8UeXdkXy1lqkZb7rqmRmKqrcX+WQTjWLuQtmMs6/en8ZEwAA1l8OYww7Gf9UtdRYHhEDyG8yuuRZSSO+hDKjjcbE8a0Yux8g+DaJeaTTGGLkkmpCfxz5heRh2vlMqSkgJUe7y9Sgu/ihgAPB5ChA1+tzc73ndaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770308903; c=relaxed/simple;
-	bh=W8VlNfO2JHo/bnCgKOOJvg7DmWY2z2lpGn5jTY2Nj30=;
+	s=arc-20240116; t=1770311561; c=relaxed/simple;
+	bh=BgE0L0a8b6Zz+B+pLfLGireP56c83VM1I1PSdVzHfsM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XNGmXqY08gXPoDtyovDQYadIWaSXKoGAE4nkU6wamU0bZHWZ4XwwWDxndQ4pR3Y42Ku7Kx1DRSbQMd1fN69Fyfc2zOYv9lJ5UCk4SWtZXgTzXzpo8EBuTWNYyi9q40wOd4wwz+PXfReYijrRxVNsEw7gYJCiFosGyU2qTsvOSok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=H0SyIUB8; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=swMdXfxwl2NfmyfqQsGdeQFChpDXUr8j6+Vn4Qqkr08cNAXZRj6GkGI62HLSmLls0dRBNUG92W6vArUpJfm4VuD7wY/AfCqQv4jlnqdaqV9+c17dn5U3sp0JBY221zZDoalMyFiJCU7hPEojAnhjb+7i9vPot3OTaAlHsJtk/iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=WHLBe+Jq; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (unknown [52.148.138.235])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 3899820B7168;
-	Thu,  5 Feb 2026 08:28:21 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3899820B7168
+Received: from skinsburskii.localdomain (unknown [52.148.140.42])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5B15C20B7168;
+	Thu,  5 Feb 2026 09:12:40 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5B15C20B7168
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1770308902;
-	bh=hEKNI4pc8JGeBxj0hB9EVA+YavUvMccFeARgB1ErhQ8=;
+	s=default; t=1770311560;
+	bh=yoryT/z8rc3FFwmB6O7jcMzO9vnu1F8xqlqJ2UCmm90=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H0SyIUB8WvuLjuLyMvCF5pJe/r3PpXQFAtQ4RP+Y9O1+KKvMLZLZKhF1o3XchbQAu
-	 FMtriiJF20YerGvVCKXLbgTG14HA1BwdWo6N9LN20iEqQr9zRBh+odMGZXCucIqMYO
-	 HdIxlXCrX9Yk/MCa5HO0J6hHgIZtHLKC3vPhnFiI=
-Date: Thu, 5 Feb 2026 08:28:20 -0800
+	b=WHLBe+Jq54wULEKySfr+kuT5T7qdg5s8RqM0aKWCcILVvIJu18NTdUVNhFAQpuquc
+	 VrjsohsGoQpInWC/pJ72Ob+SdzL27kkyw05npt38rZ77gzijFC/9rm+zmZ5MmYgIDY
+	 OaofI9tv+rKdndu6u8haBTgNXJnEElkQ4PEVgB5s=
+Date: Thu, 5 Feb 2026 09:12:39 -0800
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Mukesh R <mrathor@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com, catalin.marinas@arm.com,
-	will@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com, joro@8bytes.org,
-	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
-	robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
-	nunodasneves@linux.microsoft.com, mhklinux@outlook.com
-Subject: Re: [PATCH v0 15/15] mshv: Populate mmio mappings for PCI passthru
-Message-ID: <aYTFJB4UcRkL2NwG@skinsburskii.localdomain>
-References: <20260120064230.3602565-1-mrathor@linux.microsoft.com>
- <20260120064230.3602565-16-mrathor@linux.microsoft.com>
- <aXAxmYm4zbOzGztz@skinsburskii.localdomain>
- <45e7a4c0-f1d8-b8b4-8c03-56d06845323b@linux.microsoft.com>
- <aXevWXolgNrrLltF@skinsburskii.localdomain>
- <f39a501e-478f-66ff-26c8-229ca3991f4f@linux.microsoft.com>
- <aXkKhGvpaHUGclI-@skinsburskii.localdomain>
- <8d798da6-1720-ceea-f1b0-62ca675085c8@linux.microsoft.com>
- <aYDROXpR5kvlylGG@skinsburskii.localdomain>
- <596c9549-9edc-91f3-7473-e206ddc68e76@linux.microsoft.com>
+To: Anirudh Rayabharam <anirudh@anirudhrb.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mshv: Make MSHV mutually exclusive with KEXEC
+Message-ID: <aYTPh5oUBu-OWPlx@skinsburskii.localdomain>
+References: <aYDaaIK0J4SjvnCe@skinsburskii.localdomain>
+ <aYD0bafU3UYuSvDW@anirudh-surface.localdomain>
+ <aYD4gw-1qKYHcnXI@skinsburskii.localdomain>
+ <wnh3ghsxxml32sldkm4qzlzre7nebor3oqtj6i7mlhqj2gwzys@o5w5rpzrhhc4>
+ <aYIW9PhzqmyET8IL@skinsburskii.localdomain>
+ <aYImS_vEdR-kxBuQ@anirudh-surface.localdomain>
+ <aYJPwp2i47P33xuz@skinsburskii.localdomain>
+ <aYLaKUEp23n2gxLU@anirudh-surface.localdomain>
+ <aYOQ5-yHp_FrsTBF@skinsburskii.localdomain>
+ <aYQjt1FF_v-fNZFj@anirudh-surface.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <596c9549-9edc-91f3-7473-e206ddc68e76@linux.microsoft.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aYQjt1FF_v-fNZFj@anirudh-surface.localdomain>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8730-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8731-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,microsoft.com,kernel.org,arm.com,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,8bytes.org,google.com,arndb.de,linux.microsoft.com,outlook.com];
-	RCPT_COUNT_TWELVE(0.00)[28];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	MISSING_XM_UA(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8056CF5395
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: F2F3CF5B6B
 X-Rspamd-Action: no action
 
-On Wed, Feb 04, 2026 at 02:52:54PM -0800, Mukesh R wrote:
-> On 2/2/26 08:30, Stanislav Kinsburskii wrote:
-> > On Fri, Jan 30, 2026 at 02:17:24PM -0800, Mukesh R wrote:
-> > > On 1/27/26 10:57, Stanislav Kinsburskii wrote:
-> > > > On Mon, Jan 26, 2026 at 07:07:22PM -0800, Mukesh R wrote:
-> > > > > On 1/26/26 10:15, Stanislav Kinsburskii wrote:
-> > > > > > On Fri, Jan 23, 2026 at 06:19:15PM -0800, Mukesh R wrote:
-> > > > > > > On 1/20/26 17:53, Stanislav Kinsburskii wrote:
-> > > > > > > > On Mon, Jan 19, 2026 at 10:42:30PM -0800, Mukesh R wrote:
-> > > > > > > > > From: Mukesh Rathor <mrathor@linux.microsoft.com>
+On Thu, Feb 05, 2026 at 04:59:35AM +0000, Anirudh Rayabharam wrote:
+> On Wed, Feb 04, 2026 at 10:33:11AM -0800, Stanislav Kinsburskii wrote:
+> > On Wed, Feb 04, 2026 at 05:33:29AM +0000, Anirudh Rayabharam wrote:
+> > > On Tue, Feb 03, 2026 at 11:42:58AM -0800, Stanislav Kinsburskii wrote:
+> > > > On Tue, Feb 03, 2026 at 04:46:03PM +0000, Anirudh Rayabharam wrote:
+> > > > > On Tue, Feb 03, 2026 at 07:40:36AM -0800, Stanislav Kinsburskii wrote:
+> > > > > > On Tue, Feb 03, 2026 at 10:34:28AM +0530, Anirudh Rayabharam wrote:
+> > > > > > > On Mon, Feb 02, 2026 at 11:18:27AM -0800, Stanislav Kinsburskii wrote:
+> > > > > > > > On Mon, Feb 02, 2026 at 07:01:01PM +0000, Anirudh Rayabharam wrote:
+> > > > > > > > > On Mon, Feb 02, 2026 at 09:10:00AM -0800, Stanislav Kinsburskii wrote:
+> > > > > > > > > > On Fri, Jan 30, 2026 at 08:32:45PM +0000, Anirudh Rayabharam wrote:
+> > > > > > > > > > > On Fri, Jan 30, 2026 at 10:46:45AM -0800, Stanislav Kinsburskii wrote:
+> > > > > > > > > > > > On Fri, Jan 30, 2026 at 05:11:12PM +0000, Anirudh Rayabharam wrote:
+> > > > > > > > > > > > > On Wed, Jan 28, 2026 at 03:11:14PM -0800, Stanislav Kinsburskii wrote:
+> > > > > > > > > > > > > > On Wed, Jan 28, 2026 at 04:16:31PM +0000, Anirudh Rayabharam wrote:
+> > > > > > > > > > > > > > > On Mon, Jan 26, 2026 at 12:46:44PM -0800, Stanislav Kinsburskii wrote:
+> > > > > > > > > > > > > > > > On Tue, Jan 27, 2026 at 12:19:24AM +0530, Anirudh Rayabharam wrote:
+> > > > > > > > > > > > > > > > > On Fri, Jan 23, 2026 at 10:20:53PM +0000, Stanislav Kinsburskii wrote:
+> > > > > > > > > > > > > > > > > > The MSHV driver deposits kernel-allocated pages to the hypervisor during
+> > > > > > > > > > > > > > > > > > runtime and never withdraws them. This creates a fundamental incompatibility
+> > > > > > > > > > > > > > > > > > with KEXEC, as these deposited pages remain unavailable to the new kernel
+> > > > > > > > > > > > > > > > > > loaded via KEXEC, leading to potential system crashes upon kernel accessing
+> > > > > > > > > > > > > > > > > > hypervisor deposited pages.
+> > > > > > > > > > > > > > > > > > 
+> > > > > > > > > > > > > > > > > > Make MSHV mutually exclusive with KEXEC until proper page lifecycle
+> > > > > > > > > > > > > > > > > > management is implemented.
+> > > > > > > > > > > > > > > > > 
+> > > > > > > > > > > > > > > > > Someone might want to stop all guest VMs and do a kexec. Which is valid
+> > > > > > > > > > > > > > > > > and would work without any issue for L1VH.
+> > > > > > > > > > > > > > > > > 
+> > > > > > > > > > > > > > > > 
+> > > > > > > > > > > > > > > > No, it won't work and hypervsisor depostied pages won't be withdrawn.
+> > > > > > > > > > > > > > > 
+> > > > > > > > > > > > > > > All pages that were deposited in the context of a guest partition (i.e.
+> > > > > > > > > > > > > > > with the guest partition ID), would be withdrawn when you kill the VMs,
+> > > > > > > > > > > > > > > right? What other deposited pages would be left?
+> > > > > > > > > > > > > > > 
+> > > > > > > > > > > > > > 
+> > > > > > > > > > > > > > The driver deposits two types of pages: one for the guests (withdrawn
+> > > > > > > > > > > > > > upon gust shutdown) and the other - for the host itself (never
+> > > > > > > > > > > > > > withdrawn).
+> > > > > > > > > > > > > > See hv_call_create_partition, for example: it deposits pages for the
+> > > > > > > > > > > > > > host partition.
+> > > > > > > > > > > > > 
+> > > > > > > > > > > > > Hmm.. I see. Is it not possible to reclaim this memory in module_exit?
+> > > > > > > > > > > > > Also, can't we forcefully kill all running partitions in module_exit and
+> > > > > > > > > > > > > then reclaim memory? Would this help with kernel consistency
+> > > > > > > > > > > > > irrespective of userspace behavior?
+> > > > > > > > > > > > > 
+> > > > > > > > > > > > 
+> > > > > > > > > > > > It would, but this is sloppy and cannot be a long-term solution.
+> > > > > > > > > > > > 
+> > > > > > > > > > > > It is also not reliable. We have no hook to prevent kexec. So if we fail
+> > > > > > > > > > > > to kill the guest or reclaim the memory for any reason, the new kernel
+> > > > > > > > > > > > may still crash.
+> > > > > > > > > > > 
+> > > > > > > > > > > Actually guests won't be running by the time we reach our module_exit
+> > > > > > > > > > > function during a kexec. Userspace processes would've been killed by
+> > > > > > > > > > > then.
+> > > > > > > > > > > 
+> > > > > > > > > > 
+> > > > > > > > > > No, they will not: "kexec -e" doesn't kill user processes.
+> > > > > > > > > > We must not rely on OS to do graceful shutdown before doing
+> > > > > > > > > > kexec.
 > > > > > > > > > 
-> > > > > > > > > Upon guest access, in case of missing mmio mapping, the hypervisor
-> > > > > > > > > generates an unmapped gpa intercept. In this path, lookup the PCI
-> > > > > > > > > resource pfn for the guest gpa, and ask the hypervisor to map it
-> > > > > > > > > via hypercall. The PCI resource pfn is maintained by the VFIO driver,
-> > > > > > > > > and obtained via fixup_user_fault call (similar to KVM).
+> > > > > > > > > I see kexec -e is too brutal. Something like systemctl kexec is
+> > > > > > > > > more graceful and is probably used more commonly. In this case at least
+> > > > > > > > > we could register a reboot notifier and attempt to clean things up.
 > > > > > > > > > 
-> > > > > > > > > Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
-> > > > > > > > > ---
-> > > > > > > > >      drivers/hv/mshv_root_main.c | 115 ++++++++++++++++++++++++++++++++++++
-> > > > > > > > >      1 file changed, 115 insertions(+)
+> > > > > > > > > I think it is better to support kexec to this extent rather than
+> > > > > > > > > disabling it entirely.
 > > > > > > > > > 
-> > > > > > > > > diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-> > > > > > > > > index 03f3aa9f5541..4c8bc7cd0888 100644
-> > > > > > > > > --- a/drivers/hv/mshv_root_main.c
-> > > > > > > > > +++ b/drivers/hv/mshv_root_main.c
-> > > > > > > > > @@ -56,6 +56,14 @@ struct hv_stats_page {
-> > > > > > > > >      	};
-> > > > > > > > >      } __packed;
-> > > > > > > > > +bool hv_nofull_mmio;   /* don't map entire mmio region upon fault */
-> > > > > > > > > +static int __init setup_hv_full_mmio(char *str)
-> > > > > > > > > +{
-> > > > > > > > > +	hv_nofull_mmio = true;
-> > > > > > > > > +	return 0;
-> > > > > > > > > +}
-> > > > > > > > > +__setup("hv_nofull_mmio", setup_hv_full_mmio);
-> > > > > > > > > +
-> > > > > > > > >      struct mshv_root mshv_root;
-> > > > > > > > >      enum hv_scheduler_type hv_scheduler_type;
-> > > > > > > > > @@ -612,6 +620,109 @@ mshv_partition_region_by_gfn(struct mshv_partition *partition, u64 gfn)
-> > > > > > > > >      }
-> > > > > > > > >      #ifdef CONFIG_X86_64
-> > > > > > > > > +
-> > > > > > > > > +/*
-> > > > > > > > > + * Check if uaddr is for mmio range. If yes, return 0 with mmio_pfn filled in
-> > > > > > > > > + * else just return -errno.
-> > > > > > > > > + */
-> > > > > > > > > +static int mshv_chk_get_mmio_start_pfn(struct mshv_partition *pt, u64 gfn,
-> > > > > > > > > +				       u64 *mmio_pfnp)
-> > > > > > > > > +{
-> > > > > > > > > +	struct vm_area_struct *vma;
-> > > > > > > > > +	bool is_mmio;
-> > > > > > > > > +	u64 uaddr;
-> > > > > > > > > +	struct mshv_mem_region *mreg;
-> > > > > > > > > +	struct follow_pfnmap_args pfnmap_args;
-> > > > > > > > > +	int rc = -EINVAL;
-> > > > > > > > > +
-> > > > > > > > > +	/*
-> > > > > > > > > +	 * Do not allow mem region to be deleted beneath us. VFIO uses
-> > > > > > > > > +	 * useraddr vma to lookup pci bar pfn.
-> > > > > > > > > +	 */
-> > > > > > > > > +	spin_lock(&pt->pt_mem_regions_lock);
-> > > > > > > > > +
-> > > > > > > > > +	/* Get the region again under the lock */
-> > > > > > > > > +	mreg = mshv_partition_region_by_gfn(pt, gfn);
-> > > > > > > > > +	if (mreg == NULL || mreg->type != MSHV_REGION_TYPE_MMIO)
-> > > > > > > > > +		goto unlock_pt_out;
-> > > > > > > > > +
-> > > > > > > > > +	uaddr = mreg->start_uaddr +
-> > > > > > > > > +		((gfn - mreg->start_gfn) << HV_HYP_PAGE_SHIFT);
-> > > > > > > > > +
-> > > > > > > > > +	mmap_read_lock(current->mm);
 > > > > > > > > 
-> > > > > > > > Semaphore can't be taken under spinlock.
-> > > > > > 
+> > > > > > > > You do understand that once our kernel is released to third parties, we
+> > > > > > > > can’t control how they will use kexec, right?
 > > > > > > > 
-> > > > > > > Yeah, something didn't feel right here and I meant to recheck, now regret
-> > > > > > > rushing to submit the patch.
-> > > > > > > 
-> > > > > > > Rethinking, I think the pt_mem_regions_lock is not needed to protect
-> > > > > > > the uaddr because unmap will properly serialize via the mm lock.
-> > > > > > > 
-> > > > > > > 
-> > > > > > > > > +	vma = vma_lookup(current->mm, uaddr);
-> > > > > > > > > +	is_mmio = vma ? !!(vma->vm_flags & (VM_IO | VM_PFNMAP)) : 0;
-> > > > > > > > 
-> > > > > > > > Why this check is needed again?
-> > > > > > > 
-> > > > > > > To make sure region did not change. This check is under lock.
+> > > > > > > Yes, we can't. But that's okay. It is fine for us to say that only some
+> > > > > > > kexec scenarios are supported and some aren't (iff you're creating VMs
+> > > > > > > using MSHV; if you're not creating VMs all of kexec is supported).
 > > > > > > > 
 > > > > > > 
-> > > > > > How can this happen? One can't change VMA type without unmapping it
-> > > > > > first. And unmapping it leads to a kernel MMIO region state dangling
-> > > > > > around without corresponding user space mapping.
+> > > > > > Well, I disagree here. If we say the kernel supports MSHV, we must
+> > > > > > provide a robust solution. A partially working solution is not
+> > > > > > acceptable. It makes us look careless and can damage our reputation as a
+> > > > > > team (and as a company).
 > > > > > 
-> > > > > Right, and vm_flags would not be mmio expected then.
+> > > > > It won't if we call out upfront what is supported and what is not.
 > > > > > 
-> > > > > > This is similar to dangling pinned regions and should likely be
-> > > > > > addressed the same way by utilizing MMU notifiers to destpoy memoty
-> > > > > > regions is VMA is detached.
+> > > > > > 
+> > > > > > > > 
+> > > > > > > > This is a valid and existing option. We have to account for it. Yet
+> > > > > > > > again, L1VH will be used by arbitrary third parties out there, not just
+> > > > > > > > by us.
+> > > > > > > > 
+> > > > > > > > We can’t say the kernel supports MSHV until we close these gaps. We must
+> > > > > > > 
+> > > > > > > We can. It is okay say some scenarios are supported and some aren't.
+> > > > > > > 
+> > > > > > > All kexecs are supported if they never create VMs using MSHV. If they do
+> > > > > > > create VMs using MSHV and we implement cleanup in a reboot notifier at
+> > > > > > > least systemctl kexec and crashdump kexec would which are probably the
+> > > > > > > most common uses of kexec. It's okay to say that this is all we support
+> > > > > > > as of now.
+> > > > > > > 
+> > > > > > 
+> > > > > > I'm repeating myself, but I'll try to put it differently.
+> > > > > > There won't be any kernel core collected if a page was deposited. You're
+> > > > > > arguing for a lost cause here. Once a page is allocated and deposited,
+> > > > > > the crash kernel will try to write it into the core.
 > > > > > 
-> > > > > I don't think we need that. Either it succeeds if the region did not
-> > > > > change at all, or just fails.
+> > > > > That's why we have to implement something where we attempt to destroy
+> > > > > partitions and reclaim memory (and BUG() out if that fails; which
+> > > > > hopefully should happen very rarely if at all). This should be *the*
+> > > > > solution we work towards. We don't need a temporary disable kexec
+> > > > > solution.
 > > > > > 
 > > > > 
-> > > > I'm afraid we do, as if the driver mapped a page with the previous
-> > > > memory region, and then the region is unmapped, the page will stay
-> > > > mapped in the hypervisor, but will be considered free by kernel, which
-> > > > in turn will lead to GPF upn next allocation.
+> > > > No, the solution is to preserve the shared state and pass it over via KHO.
 > > > 
-> > > There are no ram pages for mmio regions. Also, we don't do much with
-> > > mmio regions other than tell the hyp about it.
+> > > Okay, then work towards it without doing temporary KEXEC disable. We can
+> > > call out that kexec is not supported until then. Disabling KEXEC is too
+> > > intrusive.
 > > > 
 > > 
-> > So, are you saying that the hypervisor does not use these pages and only
-> > tracks them? That would make things easier.
-> > However, if we later try to map a GPA that is already mapped, will the
-> > hypervisor return an error?
+> > What do you mean by "too intrusive"? The change if local to driver's
+> > Kconfig. There are no verbal "callouts" in upstream Linux - that's
+> > exactly what Kconfig is used for. Once the proper solution is
+> > implemented, we can remove the restriction.
+> > 
+> > > Is there any precedent for this? Do you know if any driver ever disabled
+> > > KEXEC this way?
+> > > 
+> > 
+> > No, but there is no other similar driver like this one.
 > 
-> Hypervisor does not return an error.
+> Doesn't have to be like this one. There could be issues with device
+> states during kexec state.
+> 
+> > Why does it matter though?
+> 
+> To learn from past precedents.
+> 
+> > 
+> > > > 
+> > > > > > 
+> > > > > > > Also, what makes you think customers would even be interested in enabling
+> > > > > > > our module in their kernel configs if it takes away kexec?
+> > > > > > > 
+> > > > > > 
+> > > > > > It's simple: L1VH isn't a host, so I can spin up new VMs instead of
+> > > > > > servicing the existing ones.
+> > > > > 
+> > > > > And what about the L2 VM state then? They might not be throwaway in all
+> > > > > cases.
+> > > > > 
+> > > > 
+> > > > L2 guest can (and likely will) be migrated fromt he old L1VH to the new
+> > > > one.
+> > > > And this is most likely the current scenario customers are using.
+> > > > 
+> > > > > > 
+> > > > > > Why do you think there won’t be customers interested in using MSHV in
+> > > > > > L1VH without kexec support?
+> > > > > 
+> > > > > Because they could already be using kexec for their servicing needs or
+> > > > > whatever. And no we can't just say "don't service these VMs just spin up
+> > > > > new ones".
+> > > > > 
+> > > > 
+> > > > Are you speculating or know for sure?
+> > > 
+> > > It's a reasonable assumption that people are using kexec for servicing.
+> > > 
+> > 
+> > Again, using kexec for servicing is not supported: why pretending it is?
+> 
+> What this patch effectively asserts is that kexec is unsupported whenever the
+> MSHV driver is enabled. But that is not accurate. Enabling MSHV does not
+> necessarily imply that it is being used. The correct statement is that kexec is
+> unsupported only when MSHV is *in use*, i.e. when one or more VMs are
+> running.
+> 
+> By disabling kexec unconditionally, the patch prevents a valid workflow in
+> situations where no VMs exist and kexec would work without issue. This imposes a
+> blanket restriction instead of enforcing the actual requirement.
+> 
+> And sure, I understand there is no way to enforce that actual
+> requirement. So this is what I propose:
+> 
+> The statement "kexec is not supported when the MSHV driver is used" can be
+> documented on docs.microsoft.com once direct virtualization becomes broadly
+> available. The documentation can also provide operational guidance, such as
+> shutting down all VMs before invoking kexec for servicing. This preserves a
+> practical path for users who rely on kexec. If kexec is disabled entirely, that
+> flexibility is lost.
+> 
+> The stricter approach ensures users cannot accidentally make a mistake, which
+> has its merits. However, my approach gives more power and discretion to
+> the user. In parallel, we of course continue to work on making it
+> robust.
 > 
 
-So, what happenes if we map a GPA that is already mapped? Does it just
-remap it to the new PFN?
+The flexibility is much smaller than you described. The host can’t kexec
+if a VM was ever created, because we don’t withdraw the host pages.
+
+Even if we try to withdraw pages during kexec, it won’t help with crash
+collection. Those pages will be in use and won’t be available to
+withdraw.
+
+So the trade-off is between being able to kexec safely only before any
+VM has been launched, or blocking it completely.
+
+> > 
+> > > > 
+> > > > > Also, keep in mind that once L1VH is available in Azure, the distros
+> > > > > that run on it would be the same distros that run on all other Azure
+> > > > > VMs. There won't be special distros with a kernel specifically built for
+> > > > > L1VH. And KEXEC is generally enabled in distros. Distro vendors won't be
+> > > > > happy that they would need to publish a separate version of their image with
+> > > > > MSHV_ROOT enabled and KEXEC disabled because they wouldn't want KEXEC to
+> > > > > be disabled for all Azure VMs. Also, the customers will be confused why
+> > > > > the same distro doesn't work on L1VH.
+> > > > > 
+> > > > 
+> > > > I don't think distro happiness is our concern. They already build custom
+> > > 
+> > > If distros are not happy they won't package this and consequently
+> > > nobody will use it.
+> > > 
+> > 
+> > Could you provide an example of such issues in the past?
+> > 
+> > > > versions for Azure. They can build another custom version for L1VH if
+> > > > needed.
+> > > 
+> > > We should at least check if they are ready to do this.
+> > > 
+> > 
+> > This is a labor intrusive and long-term check. Unless there is a solid
+> > evidence that they won't do it, I don't see the point in doing this.
+> 
+> It is reasonable to assume that maintaining an additional flavor of a
+> distro is an overhead (maintain new package(s), maintain Azure
+> marketplace images etc etc). This should be enough reason to check. Not
+> everything needs a solid evidence. Often times a reasonable suspiscion
+> will do.
+> 
+
+There will be a new kernel flavor anyway. That means a new kernel
+package. If we also need a separate distro image for MSHV on Azure VMs,
+it will be needed regardless of kexec support. There won’t be a generic
+Ubuntu build that works both for regular guest VMs and for L1VH VMs any
+time soon.
 
 Thanks,
 Stanislav
 
+> Thanks,
+> Anirudh.
 > 
-> 
+> > 
 > > Thanks,
 > > Stanislav
 > > 
 > > > Thanks,
-> > > -Mukesh
+> > > Anirudh.
 > > > 
-> > > 
-> > > > With pinned regions we issue is similar but less impacting: pages can't
-> > > > be released by user space unmapping and thus will be simply leaked, but
-> > > > the system stays intact.
 > > > > 
-> > > > MMIO regions are simila to movable region in this regard: they don't
-> > > > reference the user pages, and thus this guest region replaement is a
-> > > > stright wat to kernel panic.
+> > > > Anyway, I don't see the point in continuing this discussion. All points
+> > > > have been made, and solutions have been proposed.
 > > > > 
-> > > > > 
-> > > > > > > > The region type is stored on the region itself.
-> > > > > > > > And the type is checked on the caller side.
-> > > > > > > > 
-> > > > > > > > > +	if (!is_mmio)
-> > > > > > > > > +		goto unlock_mmap_out;
-> > > > > > > > > +
-> > > > > > > > > +	pfnmap_args.vma = vma;
-> > > > > > > > > +	pfnmap_args.address = uaddr;
-> > > > > > > > > +
-> > > > > > > > > +	rc = follow_pfnmap_start(&pfnmap_args);
-> > > > > > > > > +	if (rc) {
-> > > > > > > > > +		rc = fixup_user_fault(current->mm, uaddr, FAULT_FLAG_WRITE,
-> > > > > > > > > +				      NULL);
-> > > > > > > > > +		if (rc)
-> > > > > > > > > +			goto unlock_mmap_out;
-> > > > > > > > > +
-> > > > > > > > > +		rc = follow_pfnmap_start(&pfnmap_args);
-> > > > > > > > > +		if (rc)
-> > > > > > > > > +			goto unlock_mmap_out;
-> > > > > > > > > +	}
-> > > > > > > > > +
-> > > > > > > > > +	*mmio_pfnp = pfnmap_args.pfn;
-> > > > > > > > > +	follow_pfnmap_end(&pfnmap_args);
-> > > > > > > > > +d
-> > > > > > > > > +unlock_mmap_out:
-> > > > > > > > > +	mmap_read_unlock(current->mm);
-> > > > > > > > > +unlock_pt_out:
-> > > > > > > > > +	spin_unlock(&pt->pt_mem_regions_lock);
-> > > > > > > > > +	return rc;
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > > +/*
-> > > > > > > > > + * At present, the only unmapped gpa is mmio space. Verify if it's mmio
-> > > > > > > > > + * and resolve if possible.
-> > > > > > > > > + * Returns: True if valid mmio intercept and it was handled, else false
-> > > > > > > > > + */
-> > > > > > > > > +static bool mshv_handle_unmapped_gpa(struct mshv_vp *vp)
-> > > > > > > > > +{
-> > > > > > > > > +	struct hv_message *hvmsg = vp->vp_intercept_msg_page;
-> > > > > > > > > +	struct hv_x64_memory_intercept_message *msg;
-> > > > > > > > > +	union hv_x64_memory_access_info accinfo;
-> > > > > > > > > +	u64 gfn, mmio_spa, numpgs;
-> > > > > > > > > +	struct mshv_mem_region *mreg;
-> > > > > > > > > +	int rc;
-> > > > > > > > > +	struct mshv_partition *pt = vp->vp_partition;
-> > > > > > > > > +
-> > > > > > > > > +	msg = (struct hv_x64_memory_intercept_message *)hvmsg->u.payload;
-> > > > > > > > > +	accinfo = msg->memory_access_info;
-> > > > > > > > > +
-> > > > > > > > > +	if (!accinfo.gva_gpa_valid)
-> > > > > > > > > +		return false;
-> > > > > > > > > +
-> > > > > > > > > +	/* Do a fast check and bail if non mmio intercept */
-> > > > > > > > > +	gfn = msg->guest_physical_address >> HV_HYP_PAGE_SHIFT;
-> > > > > > > > > +	mreg = mshv_partition_region_by_gfn(pt, gfn);
-> > > > > > > > 
-> > > > > > > > This call needs to be protected by the spinlock.
-> > > > > > > 
-> > > > > > > This is sorta fast path to bail. We recheck under partition lock above.
-> > > > > > > 
-> > > > > > 
-> > > > > > Accessing the list of regions without lock is unsafe.
-> > > > > 
-> > > > > I am not sure why? This check is done by a vcpu thread, so regions
-> > > > > will not have just gone away.
-> > > > > 
+> > > > If you can come up with something better in the next few days, so we at
+> > > > least have a chance to get it merged in the next merge window, great. If
+> > > > not, we should explicitly forbid the unsupported feature and move on.
 > > > > 
-> > > > This is shared resources. Multiple VP thread get into this function
-> > > > simultaneously, so there is a race already. But this one we can live
-> > > > with without locking as they don't mutate the list of the regions.
-> > > > 
-> > > > The issue happens when VMM adds or removed another region as it mutates
-> > > > the list and races with VP threads doing this lookup.
-> > > > 
+> > > > Thanks,
 > > > > Thanks,
 > > > > Stanislav
 > > > > 
-> > > > 
 > > > > > Thanks,
-> > > > > -Mukesh
-> > > > > 
-> > > > > 
-> > > > > > Thanks,
-> > > > > > Stanislav
-> > > > > > 
-> > > > > > > Thanks,
-> > > > > > > -Mukesh
-> > > > > > > 
-> > > > > > > 
-> > > > > > > > Thanks,
-> > > > > > > > Stanislav
-> > > > > > > > 
-> > > > > > > > > +	if (mreg == NULL || mreg->type != MSHV_REGION_TYPE_MMIO)
-> > > > > > > > > +		return false;
-> > > > > > > > > +
-> > > > > > > > > +	rc = mshv_chk_get_mmio_start_pfn(pt, gfn, &mmio_spa);
-> > > > > > > > > +	if (rc)
-> > > > > > > > > +		return false;
-> > > > > > > > > +
-> > > > > > > > > +	if (!hv_nofull_mmio) {		/* default case */
-> > > > > > > > > +		gfn = mreg->start_gfn;
-> > > > > > > > > +		mmio_spa = mmio_spa - (gfn - mreg->start_gfn);
-> > > > > > > > > +		numpgs = mreg->nr_pages;
-> > > > > > > > > +	} else
-> > > > > > > > > +		numpgs = 1;
-> > > > > > > > > +
-> > > > > > > > > +	rc = hv_call_map_mmio_pages(pt->pt_id, gfn, mmio_spa, numpgs);
-> > > > > > > > > +
-> > > > > > > > > +	return rc == 0;
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > >      static struct mshv_mem_region *
-> > > > > > > > >      mshv_partition_region_by_gfn_get(struct mshv_partition *p, u64 gfn)
-> > > > > > > > >      {
-> > > > > > > > > @@ -666,13 +777,17 @@ static bool mshv_handle_gpa_intercept(struct mshv_vp *vp)
-> > > > > > > > >      	return ret;
-> > > > > > > > >      }
-> > > > > > > > > +
-> > > > > > > > >      #else  /* CONFIG_X86_64 */
-> > > > > > > > > +static bool mshv_handle_unmapped_gpa(struct mshv_vp *vp) { return false; }
-> > > > > > > > >      static bool mshv_handle_gpa_intercept(struct mshv_vp *vp) { return false; }
-> > > > > > > > >      #endif /* CONFIG_X86_64 */
-> > > > > > > > >      static bool mshv_vp_handle_intercept(struct mshv_vp *vp)
-> > > > > > > > >      {
-> > > > > > > > >      	switch (vp->vp_intercept_msg_page->header.message_type) {
-> > > > > > > > > +	case HVMSG_UNMAPPED_GPA:
-> > > > > > > > > +		return mshv_handle_unmapped_gpa(vp);
-> > > > > > > > >      	case HVMSG_GPA_INTERCEPT:
-> > > > > > > > >      		return mshv_handle_gpa_intercept(vp);
-> > > > > > > > >      	}
-> > > > > > > > > -- 
-> > > > > > > > > 2.51.2.vfs.0.1
-> > > > > > > > > 
+> > > > > Anirudh.
 
