@@ -1,70 +1,73 @@
-Return-Path: <linux-hyperv+bounces-8738-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8739-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4Ke4GY7chGkV6AMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8738-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Feb 2026 19:08:14 +0100
+	id UN6kGCLihGkE6QMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8739-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Feb 2026 19:32:02 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id C522EF652B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Feb 2026 19:08:13 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDC1AF6723
+	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Feb 2026 19:32:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 838CA300DA6F
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Feb 2026 18:08:12 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 25BFA3011791
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Feb 2026 18:32:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6EC7306B11;
-	Thu,  5 Feb 2026 18:08:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 614112ED844;
+	Thu,  5 Feb 2026 18:31:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="VPkg89oG"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="haHqLw8e"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E24E303A07;
-	Thu,  5 Feb 2026 18:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770314891; cv=pass; b=sGXxazA3/c3Qv1b3ddrxR11FktpRc8aQk6bErgqmhUS7TTg9sRB7LUbe9wi92ZhSyFTH4xwQxU0J1r9N8drBNGc9RuwDj1S7ajdXdXcrPy8ryxEQBJByv5/gWt2BOupwWW0HwPIaNrgAhTOdLx1hbV6ZibBLOzsQilln1IlVojw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770314891; c=relaxed/simple;
-	bh=OWegzoO8Xkk1Tn/dtNmnkWvXBIj6WuICzCz/rOdfXsE=;
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DFCE23F417;
+	Thu,  5 Feb 2026 18:31:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770316318; cv=none; b=mFXOzSIsf5ZvKoU3xn/JpN+R/R2EiG+yA0fL2Hs/Vm6nk+CiI6G9/l/vNZt3XJqK+KyjhBj8UrRDYnMo6a9LDTJso5q71gpMorS5frf2Jji6v8NV1t+ClNkV9I9ZrI1Yq3NqWp6BH1WH/cQgsNY0c/1+o76ku/C/lXyPxd/K4Ew=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770316318; c=relaxed/simple;
+	bh=heEgSRf28KWo9o/PocJuupwzkVeF/gjG+BN2+SWSIa0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HhqjJX7P7KOi/Yxi1aU50Sog5ELwmMXO7kXzix3YXOQ7QMhncwS+9BNdNieKFh8t8l/y5WvJ4no077Jgg8CHmxwsLvM9/RBbl+dtnH1fMMS0MR0bt3g5ou+hS1Vc4cBlb0xO8NJbQw/KVLtTTZKaVUscl0v8a7L7Fa/krqSdEN8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=VPkg89oG; arc=pass smtp.client-ip=136.143.188.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1770314879; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Uyzv4ji217X+AfclqRZzFUPcCg4Q5nVjSJf6cQXmYfDh6PZm6dQHFZ+h6cuRxrblEQuH0QpVfAHbVOxaM0k85nRJt5g4OACeI3XZ3oqXd3antTtm3hxj8ykYsnqvrlqElGZC6JJhLvjWuTI8liIDHntGir21GvCEmMNGfjqRGtI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1770314879; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=EyeMWjJod5F9aKCrCk+lcFcJzxdYrOX9zdwVEezZM1M=; 
-	b=GrpoR+muIHxcwojrVxeOw2tn2pmtK/sOLDpkusN7PE1IgVV3KBTJcp2kvOAZQJUQs3K3HN65B8YXgXL4bNiODWFYgpMPflxFbgZb7BLqD9aGMtAqZ3EGBl9VAqBNAXw+cQetM8WiA3k2LwyyOyYon05M/WYaBg3M+hIBTwkvKIM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=anirudhrb.com;
-	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
-	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770314879;
-	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=EyeMWjJod5F9aKCrCk+lcFcJzxdYrOX9zdwVEezZM1M=;
-	b=VPkg89oGx6ogiyCsEC8uoEbwjJCyk/qR0e/U+E6PRTuGULcH9JyYlckUAGPOJXN/
-	m2EjyMh+yO+c/p4peU5xMsJyahpjrssa1BdmudB1scxkIYslD0ieQpBM3CSYLHk1A/2
-	czIVsBVt8fiu6oGyAmxtAozJYdrPOYhW4CqKoVD8=
-Received: by mx.zohomail.com with SMTPS id 1770314877039341.2095739986323;
-	Thu, 5 Feb 2026 10:07:57 -0800 (PST)
-Date: Thu, 5 Feb 2026 23:37:49 +0530
-From: Anirudh Rayabharam <anirudh@anirudhrb.com>
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, 
-	decui@microsoft.com, longli@microsoft.com, linux-hyperv@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] mshv: Handle insufficient root memory hypervisor
- statuses
-Message-ID: <s6orh5waw2djyiv5w6yzwiaxv7rcja6iua6kbzldthsmceelqv@dnf2zr2m74we>
-References: <177005499596.120041.5908089206606113719.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <177005515446.120041.8169777750859263202.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+	 Content-Type:Content-Disposition:In-Reply-To; b=TrZU90zCqyvOvi6w+atNRxmxtlaFaV94HR79t/XSV5Aoq+3b2QD1XxNe1uwyjeykWVVsZQcIsatJIWyH/LoClc06mQAnIRS0inr+axoF4Qr3cZPloYQptASCpBNZr9ygaRy8Gg0i0JJZpEn0AFTkOQ3BEHyWpghGBMRjed905yA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=haHqLw8e; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from skinsburskii.localdomain (unknown [52.148.138.235])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8470B20B7169;
+	Thu,  5 Feb 2026 10:31:56 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8470B20B7169
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1770316317;
+	bh=KXMwG6BGnk12d8Zak18LbzOy5UoGxhY+Vill2gcYoVg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=haHqLw8eQdW/e0hQhTM7GUUYD4UFFfmsptLs2aj+o9czuyMPa2Hye3N5zWxc5/Jmo
+	 CveCbGUldDoRIW2W6rZOT6a2axryt/n2mHxDIVcRSzaKcebDW30mvqB9wOSqXjOjPQ
+	 TnqHkIyI2/rgvUlCuyMo9mYsHDJKSgJWtJw2FEMQ=
+Date: Thu, 5 Feb 2026 10:31:54 -0800
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Mukesh R <mrathor@linux.microsoft.com>
+Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com, catalin.marinas@arm.com,
+	will@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, joro@8bytes.org,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
+	nunodasneves@linux.microsoft.com, mhklinux@outlook.com
+Subject: Re: [PATCH v0 15/15] mshv: Populate mmio mappings for PCI passthru
+Message-ID: <aYTiGhDwJqoyWqRT@skinsburskii.localdomain>
+References: <aXAxmYm4zbOzGztz@skinsburskii.localdomain>
+ <45e7a4c0-f1d8-b8b4-8c03-56d06845323b@linux.microsoft.com>
+ <aXevWXolgNrrLltF@skinsburskii.localdomain>
+ <f39a501e-478f-66ff-26c8-229ca3991f4f@linux.microsoft.com>
+ <aXkKhGvpaHUGclI-@skinsburskii.localdomain>
+ <8d798da6-1720-ceea-f1b0-62ca675085c8@linux.microsoft.com>
+ <aYDROXpR5kvlylGG@skinsburskii.localdomain>
+ <596c9549-9edc-91f3-7473-e206ddc68e76@linux.microsoft.com>
+ <aYTFJB4UcRkL2NwG@skinsburskii.localdomain>
+ <4a7c63fc-b96a-9841-7745-adbc41190c36@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -73,172 +76,326 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <177005515446.120041.8169777750859263202.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-X-ZohoMailClient: External
+In-Reply-To: <4a7c63fc-b96a-9841-7745-adbc41190c36@linux.microsoft.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-8739-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	DMARC_NA(0.00)[anirudhrb.com];
-	TAGGED_FROM(0.00)[bounces-8738-lists,linux-hyperv=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[anirudhrb.com:+];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,microsoft.com,kernel.org,arm.com,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,8bytes.org,google.com,arndb.de,linux.microsoft.com,outlook.com];
+	RCPT_COUNT_TWELVE(0.00)[28];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[anirudh@anirudhrb.com,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[anirudhrb.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: C522EF652B
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: BDC1AF6723
 X-Rspamd-Action: no action
 
-On Mon, Feb 02, 2026 at 05:59:14PM +0000, Stanislav Kinsburskii wrote:
-> When creating guest partition objects, the hypervisor may fail to
-> allocate root partition pages and return an insufficient memory status.
-> In this case, deposit memory using the root partition ID instead.
+On Thu, Feb 05, 2026 at 09:57:20AM -0800, Mukesh R wrote:
+> On 2/5/26 08:28, Stanislav Kinsburskii wrote:
+> > On Wed, Feb 04, 2026 at 02:52:54PM -0800, Mukesh R wrote:
+> > > On 2/2/26 08:30, Stanislav Kinsburskii wrote:
+> > > > On Fri, Jan 30, 2026 at 02:17:24PM -0800, Mukesh R wrote:
+> > > > > On 1/27/26 10:57, Stanislav Kinsburskii wrote:
+> > > > > > On Mon, Jan 26, 2026 at 07:07:22PM -0800, Mukesh R wrote:
+> > > > > > > On 1/26/26 10:15, Stanislav Kinsburskii wrote:
+> > > > > > > > On Fri, Jan 23, 2026 at 06:19:15PM -0800, Mukesh R wrote:
+> > > > > > > > > On 1/20/26 17:53, Stanislav Kinsburskii wrote:
+> > > > > > > > > > On Mon, Jan 19, 2026 at 10:42:30PM -0800, Mukesh R wrote:
+> > > > > > > > > > > From: Mukesh Rathor <mrathor@linux.microsoft.com>
+> > > > > > > > > > > 
+> > > > > > > > > > > Upon guest access, in case of missing mmio mapping, the hypervisor
+> > > > > > > > > > > generates an unmapped gpa intercept. In this path, lookup the PCI
+> > > > > > > > > > > resource pfn for the guest gpa, and ask the hypervisor to map it
+> > > > > > > > > > > via hypercall. The PCI resource pfn is maintained by the VFIO driver,
+> > > > > > > > > > > and obtained via fixup_user_fault call (similar to KVM).
+> > > > > > > > > > > 
+> > > > > > > > > > > Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+> > > > > > > > > > > ---
+> > > > > > > > > > >       drivers/hv/mshv_root_main.c | 115 ++++++++++++++++++++++++++++++++++++
+> > > > > > > > > > >       1 file changed, 115 insertions(+)
+> > > > > > > > > > > 
+> > > > > > > > > > > diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> > > > > > > > > > > index 03f3aa9f5541..4c8bc7cd0888 100644
+> > > > > > > > > > > --- a/drivers/hv/mshv_root_main.c
+> > > > > > > > > > > +++ b/drivers/hv/mshv_root_main.c
+> > > > > > > > > > > @@ -56,6 +56,14 @@ struct hv_stats_page {
+> > > > > > > > > > >       	};
+> > > > > > > > > > >       } __packed;
+> > > > > > > > > > > +bool hv_nofull_mmio;   /* don't map entire mmio region upon fault */
+> > > > > > > > > > > +static int __init setup_hv_full_mmio(char *str)
+> > > > > > > > > > > +{
+> > > > > > > > > > > +	hv_nofull_mmio = true;
+> > > > > > > > > > > +	return 0;
+> > > > > > > > > > > +}
+> > > > > > > > > > > +__setup("hv_nofull_mmio", setup_hv_full_mmio);
+> > > > > > > > > > > +
+> > > > > > > > > > >       struct mshv_root mshv_root;
+> > > > > > > > > > >       enum hv_scheduler_type hv_scheduler_type;
+> > > > > > > > > > > @@ -612,6 +620,109 @@ mshv_partition_region_by_gfn(struct mshv_partition *partition, u64 gfn)
+> > > > > > > > > > >       }
+> > > > > > > > > > >       #ifdef CONFIG_X86_64
+> > > > > > > > > > > +
+> > > > > > > > > > > +/*
+> > > > > > > > > > > + * Check if uaddr is for mmio range. If yes, return 0 with mmio_pfn filled in
+> > > > > > > > > > > + * else just return -errno.
+> > > > > > > > > > > + */
+> > > > > > > > > > > +static int mshv_chk_get_mmio_start_pfn(struct mshv_partition *pt, u64 gfn,
+> > > > > > > > > > > +				       u64 *mmio_pfnp)
+> > > > > > > > > > > +{
+> > > > > > > > > > > +	struct vm_area_struct *vma;
+> > > > > > > > > > > +	bool is_mmio;
+> > > > > > > > > > > +	u64 uaddr;
+> > > > > > > > > > > +	struct mshv_mem_region *mreg;
+> > > > > > > > > > > +	struct follow_pfnmap_args pfnmap_args;
+> > > > > > > > > > > +	int rc = -EINVAL;
+> > > > > > > > > > > +
+> > > > > > > > > > > +	/*
+> > > > > > > > > > > +	 * Do not allow mem region to be deleted beneath us. VFIO uses
+> > > > > > > > > > > +	 * useraddr vma to lookup pci bar pfn.
+> > > > > > > > > > > +	 */
+> > > > > > > > > > > +	spin_lock(&pt->pt_mem_regions_lock);
+> > > > > > > > > > > +
+> > > > > > > > > > > +	/* Get the region again under the lock */
+> > > > > > > > > > > +	mreg = mshv_partition_region_by_gfn(pt, gfn);
+> > > > > > > > > > > +	if (mreg == NULL || mreg->type != MSHV_REGION_TYPE_MMIO)
+> > > > > > > > > > > +		goto unlock_pt_out;
+> > > > > > > > > > > +
+> > > > > > > > > > > +	uaddr = mreg->start_uaddr +
+> > > > > > > > > > > +		((gfn - mreg->start_gfn) << HV_HYP_PAGE_SHIFT);
+> > > > > > > > > > > +
+> > > > > > > > > > > +	mmap_read_lock(current->mm);
+> > > > > > > > > > 
+> > > > > > > > > > Semaphore can't be taken under spinlock.
+> > > > > > > > 
+> > > > > > > > > 
+> > > > > > > > > Yeah, something didn't feel right here and I meant to recheck, now regret
+> > > > > > > > > rushing to submit the patch.
+> > > > > > > > > 
+> > > > > > > > > Rethinking, I think the pt_mem_regions_lock is not needed to protect
+> > > > > > > > > the uaddr because unmap will properly serialize via the mm lock.
+> > > > > > > > > 
+> > > > > > > > > 
+> > > > > > > > > > > +	vma = vma_lookup(current->mm, uaddr);
+> > > > > > > > > > > +	is_mmio = vma ? !!(vma->vm_flags & (VM_IO | VM_PFNMAP)) : 0;
+> > > > > > > > > > 
+> > > > > > > > > > Why this check is needed again?
+> > > > > > > > > 
+> > > > > > > > > To make sure region did not change. This check is under lock.
+> > > > > > > > > 
+> > > > > > > > 
+> > > > > > > > How can this happen? One can't change VMA type without unmapping it
+> > > > > > > > first. And unmapping it leads to a kernel MMIO region state dangling
+> > > > > > > > around without corresponding user space mapping.
+> > > > > > > 
+> > > > > > > Right, and vm_flags would not be mmio expected then.
+> > > > > > > 
+> > > > > > > > This is similar to dangling pinned regions and should likely be
+> > > > > > > > addressed the same way by utilizing MMU notifiers to destpoy memoty
+> > > > > > > > regions is VMA is detached.
+> > > > > > > 
+> > > > > > > I don't think we need that. Either it succeeds if the region did not
+> > > > > > > change at all, or just fails.
+> > > > > > > 
+> > > > > > 
+> > > > > > I'm afraid we do, as if the driver mapped a page with the previous
+> > > > > > memory region, and then the region is unmapped, the page will stay
+> > > > > > mapped in the hypervisor, but will be considered free by kernel, which
+> > > > > > in turn will lead to GPF upn next allocation.
+> > > > > 
+> > > > > There are no ram pages for mmio regions. Also, we don't do much with
+> > > > > mmio regions other than tell the hyp about it.
+> > > > > 
+> > > > 
+> > > > So, are you saying that the hypervisor does not use these pages and only
+> > > > tracks them? That would make things easier.
+> > > > However, if we later try to map a GPA that is already mapped, will the
+> > > > hypervisor return an error?
+> > > 
+> > > Hypervisor does not return an error.
+> > > 
+> > 
+> > So, what happenes if we map a GPA that is already mapped? Does it just
+> > remap it to the new PFN?
 > 
-> Note: This error should never occur in a guest of L1VH partition context.
+> yes, otherwise it would return error, right?
 > 
-> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> ---
->  drivers/hv/hv_common.c      |    2 +
->  drivers/hv/hv_proc.c        |   14 ++++++++++
->  include/hyperv/hvgdk_mini.h |   58 ++++++++++++++++++++++---------------------
->  3 files changed, 46 insertions(+), 28 deletions(-)
-> 
-> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> index c7f63c9de503..cab0d1733607 100644
-> --- a/drivers/hv/hv_common.c
-> +++ b/drivers/hv/hv_common.c
-> @@ -792,6 +792,8 @@ static const struct hv_status_info hv_status_infos[] = {
->  	_STATUS_INFO(HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE,	-EIO),
->  	_STATUS_INFO(HV_STATUS_INSUFFICIENT_MEMORY,		-ENOMEM),
->  	_STATUS_INFO(HV_STATUS_INSUFFICIENT_CONTIGUOUS_MEMORY,	-ENOMEM),
-> +	_STATUS_INFO(HV_STATUS_INSUFFICIENT_ROOT_MEMORY,	-ENOMEM),
-> +	_STATUS_INFO(HV_STATUS_INSUFFICIENT_CONTIGUOUS_ROOT_MEMORY,	-ENOMEM),
->  	_STATUS_INFO(HV_STATUS_INVALID_PARTITION_ID,		-EINVAL),
->  	_STATUS_INFO(HV_STATUS_INVALID_VP_INDEX,		-EINVAL),
->  	_STATUS_INFO(HV_STATUS_NOT_FOUND,			-EIO),
-> diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
-> index dfa27be66ff7..935129e0b39d 100644
-> --- a/drivers/hv/hv_proc.c
-> +++ b/drivers/hv/hv_proc.c
-> @@ -122,6 +122,18 @@ int hv_deposit_memory_node(int node, u64 partition_id,
->  	case HV_STATUS_INSUFFICIENT_CONTIGUOUS_MEMORY:
->  		num_pages = HV_MAX_CONTIGUOUS_ALLOCATION_PAGES;
->  		break;
-> +
-> +	case HV_STATUS_INSUFFICIENT_CONTIGUOUS_ROOT_MEMORY:
-> +		num_pages = HV_MAX_CONTIGUOUS_ALLOCATION_PAGES;
-> +		fallthrough;
-> +	case HV_STATUS_INSUFFICIENT_ROOT_MEMORY:
 
-Is num_pages uninitialized when we reach this case directly?
+I see.
+Please summarize and document this behaviour in the commit message.
 
 Thanks,
-Anirudh.
+Stanislav
 
-> +		if (!hv_root_partition()) {
-> +			hv_status_err(hv_status, "Unexpected root memory deposit\n");
-> +			return -ENOMEM;
-> +		}
-> +		partition_id = HV_PARTITION_ID_SELF;
-> +		break;
-> +
->  	default:
->  		hv_status_err(hv_status, "Unexpected!\n");
->  		return -ENOMEM;
-> @@ -135,6 +147,8 @@ bool hv_result_needs_memory(u64 status)
->  	switch (hv_result(status)) {
->  	case HV_STATUS_INSUFFICIENT_MEMORY:
->  	case HV_STATUS_INSUFFICIENT_CONTIGUOUS_MEMORY:
-> +	case HV_STATUS_INSUFFICIENT_ROOT_MEMORY:
-> +	case HV_STATUS_INSUFFICIENT_CONTIGUOUS_ROOT_MEMORY:
->  		return true;
->  	}
->  	return false;
-> diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
-> index 70f22ef44948..5b74a857ef43 100644
-> --- a/include/hyperv/hvgdk_mini.h
-> +++ b/include/hyperv/hvgdk_mini.h
-> @@ -14,34 +14,36 @@ struct hv_u128 {
->  } __packed;
->  
->  /* NOTE: when adding below, update hv_result_to_string() */
-> -#define HV_STATUS_SUCCESS			    0x0
-> -#define HV_STATUS_INVALID_HYPERCALL_CODE	    0x2
-> -#define HV_STATUS_INVALID_HYPERCALL_INPUT	    0x3
-> -#define HV_STATUS_INVALID_ALIGNMENT		    0x4
-> -#define HV_STATUS_INVALID_PARAMETER		    0x5
-> -#define HV_STATUS_ACCESS_DENIED			    0x6
-> -#define HV_STATUS_INVALID_PARTITION_STATE	    0x7
-> -#define HV_STATUS_OPERATION_DENIED		    0x8
-> -#define HV_STATUS_UNKNOWN_PROPERTY		    0x9
-> -#define HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE	    0xA
-> -#define HV_STATUS_INSUFFICIENT_MEMORY		    0xB
-> -#define HV_STATUS_INVALID_PARTITION_ID		    0xD
-> -#define HV_STATUS_INVALID_VP_INDEX		    0xE
-> -#define HV_STATUS_NOT_FOUND			    0x10
-> -#define HV_STATUS_INVALID_PORT_ID		    0x11
-> -#define HV_STATUS_INVALID_CONNECTION_ID		    0x12
-> -#define HV_STATUS_INSUFFICIENT_BUFFERS		    0x13
-> -#define HV_STATUS_NOT_ACKNOWLEDGED		    0x14
-> -#define HV_STATUS_INVALID_VP_STATE		    0x15
-> -#define HV_STATUS_NO_RESOURCES			    0x1D
-> -#define HV_STATUS_PROCESSOR_FEATURE_NOT_SUPPORTED   0x20
-> -#define HV_STATUS_INVALID_LP_INDEX		    0x41
-> -#define HV_STATUS_INVALID_REGISTER_VALUE	    0x50
-> -#define HV_STATUS_OPERATION_FAILED		    0x71
-> -#define HV_STATUS_INSUFFICIENT_CONTIGUOUS_MEMORY    0x75
-> -#define HV_STATUS_TIME_OUT			    0x78
-> -#define HV_STATUS_CALL_PENDING			    0x79
-> -#define HV_STATUS_VTL_ALREADY_ENABLED		    0x86
-> +#define HV_STATUS_SUCCESS				0x0
-> +#define HV_STATUS_INVALID_HYPERCALL_CODE		0x2
-> +#define HV_STATUS_INVALID_HYPERCALL_INPUT		0x3
-> +#define HV_STATUS_INVALID_ALIGNMENT			0x4
-> +#define HV_STATUS_INVALID_PARAMETER			0x5
-> +#define HV_STATUS_ACCESS_DENIED				0x6
-> +#define HV_STATUS_INVALID_PARTITION_STATE		0x7
-> +#define HV_STATUS_OPERATION_DENIED			0x8
-> +#define HV_STATUS_UNKNOWN_PROPERTY			0x9
-> +#define HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE		0xA
-> +#define HV_STATUS_INSUFFICIENT_MEMORY			0xB
-> +#define HV_STATUS_INVALID_PARTITION_ID			0xD
-> +#define HV_STATUS_INVALID_VP_INDEX			0xE
-> +#define HV_STATUS_NOT_FOUND				0x10
-> +#define HV_STATUS_INVALID_PORT_ID			0x11
-> +#define HV_STATUS_INVALID_CONNECTION_ID			0x12
-> +#define HV_STATUS_INSUFFICIENT_BUFFERS			0x13
-> +#define HV_STATUS_NOT_ACKNOWLEDGED			0x14
-> +#define HV_STATUS_INVALID_VP_STATE			0x15
-> +#define HV_STATUS_NO_RESOURCES				0x1D
-> +#define HV_STATUS_PROCESSOR_FEATURE_NOT_SUPPORTED	0x20
-> +#define HV_STATUS_INVALID_LP_INDEX			0x41
-> +#define HV_STATUS_INVALID_REGISTER_VALUE		0x50
-> +#define HV_STATUS_OPERATION_FAILED			0x71
-> +#define HV_STATUS_INSUFFICIENT_ROOT_MEMORY		0x73
-> +#define HV_STATUS_INSUFFICIENT_CONTIGUOUS_MEMORY	0x75
-> +#define HV_STATUS_TIME_OUT				0x78
-> +#define HV_STATUS_CALL_PENDING				0x79
-> +#define HV_STATUS_INSUFFICIENT_CONTIGUOUS_ROOT_MEMORY	0x83
-> +#define HV_STATUS_VTL_ALREADY_ENABLED			0x86
->  
->  /*
->   * The Hyper-V TimeRefCount register and the TSC
-> 
-> 
+> > Thanks,
+> > Stanislav
+> > 
+> > > 
+> > > 
+> > > > Thanks,
+> > > > Stanislav
+> > > > 
+> > > > > Thanks,
+> > > > > -Mukesh
+> > > > > 
+> > > > > 
+> > > > > > With pinned regions we issue is similar but less impacting: pages can't
+> > > > > > be released by user space unmapping and thus will be simply leaked, but
+> > > > > > the system stays intact.
+> > > > > > 
+> > > > > > MMIO regions are simila to movable region in this regard: they don't
+> > > > > > reference the user pages, and thus this guest region replaement is a
+> > > > > > stright wat to kernel panic.
+> > > > > > 
+> > > > > > > 
+> > > > > > > > > > The region type is stored on the region itself.
+> > > > > > > > > > And the type is checked on the caller side.
+> > > > > > > > > > 
+> > > > > > > > > > > +	if (!is_mmio)
+> > > > > > > > > > > +		goto unlock_mmap_out;
+> > > > > > > > > > > +
+> > > > > > > > > > > +	pfnmap_args.vma = vma;
+> > > > > > > > > > > +	pfnmap_args.address = uaddr;
+> > > > > > > > > > > +
+> > > > > > > > > > > +	rc = follow_pfnmap_start(&pfnmap_args);
+> > > > > > > > > > > +	if (rc) {
+> > > > > > > > > > > +		rc = fixup_user_fault(current->mm, uaddr, FAULT_FLAG_WRITE,
+> > > > > > > > > > > +				      NULL);
+> > > > > > > > > > > +		if (rc)
+> > > > > > > > > > > +			goto unlock_mmap_out;
+> > > > > > > > > > > +
+> > > > > > > > > > > +		rc = follow_pfnmap_start(&pfnmap_args);
+> > > > > > > > > > > +		if (rc)
+> > > > > > > > > > > +			goto unlock_mmap_out;
+> > > > > > > > > > > +	}
+> > > > > > > > > > > +
+> > > > > > > > > > > +	*mmio_pfnp = pfnmap_args.pfn;
+> > > > > > > > > > > +	follow_pfnmap_end(&pfnmap_args);
+> > > > > > > > > > > +d
+> > > > > > > > > > > +unlock_mmap_out:
+> > > > > > > > > > > +	mmap_read_unlock(current->mm);
+> > > > > > > > > > > +unlock_pt_out:
+> > > > > > > > > > > +	spin_unlock(&pt->pt_mem_regions_lock);
+> > > > > > > > > > > +	return rc;
+> > > > > > > > > > > +}
+> > > > > > > > > > > +
+> > > > > > > > > > > +/*
+> > > > > > > > > > > + * At present, the only unmapped gpa is mmio space. Verify if it's mmio
+> > > > > > > > > > > + * and resolve if possible.
+> > > > > > > > > > > + * Returns: True if valid mmio intercept and it was handled, else false
+> > > > > > > > > > > + */
+> > > > > > > > > > > +static bool mshv_handle_unmapped_gpa(struct mshv_vp *vp)
+> > > > > > > > > > > +{
+> > > > > > > > > > > +	struct hv_message *hvmsg = vp->vp_intercept_msg_page;
+> > > > > > > > > > > +	struct hv_x64_memory_intercept_message *msg;
+> > > > > > > > > > > +	union hv_x64_memory_access_info accinfo;
+> > > > > > > > > > > +	u64 gfn, mmio_spa, numpgs;
+> > > > > > > > > > > +	struct mshv_mem_region *mreg;
+> > > > > > > > > > > +	int rc;
+> > > > > > > > > > > +	struct mshv_partition *pt = vp->vp_partition;
+> > > > > > > > > > > +
+> > > > > > > > > > > +	msg = (struct hv_x64_memory_intercept_message *)hvmsg->u.payload;
+> > > > > > > > > > > +	accinfo = msg->memory_access_info;
+> > > > > > > > > > > +
+> > > > > > > > > > > +	if (!accinfo.gva_gpa_valid)
+> > > > > > > > > > > +		return false;
+> > > > > > > > > > > +
+> > > > > > > > > > > +	/* Do a fast check and bail if non mmio intercept */
+> > > > > > > > > > > +	gfn = msg->guest_physical_address >> HV_HYP_PAGE_SHIFT;
+> > > > > > > > > > > +	mreg = mshv_partition_region_by_gfn(pt, gfn);
+> > > > > > > > > > 
+> > > > > > > > > > This call needs to be protected by the spinlock.
+> > > > > > > > > 
+> > > > > > > > > This is sorta fast path to bail. We recheck under partition lock above.
+> > > > > > > > > 
+> > > > > > > > 
+> > > > > > > > Accessing the list of regions without lock is unsafe.
+> > > > > > > 
+> > > > > > > I am not sure why? This check is done by a vcpu thread, so regions
+> > > > > > > will not have just gone away.
+> > > > > > > 
+> > > > > > 
+> > > > > > This is shared resources. Multiple VP thread get into this function
+> > > > > > simultaneously, so there is a race already. But this one we can live
+> > > > > > with without locking as they don't mutate the list of the regions.
+> > > > > > 
+> > > > > > The issue happens when VMM adds or removed another region as it mutates
+> > > > > > the list and races with VP threads doing this lookup.
+> > > > > > 
+> > > > > > Thanks,
+> > > > > > Stanislav
+> > > > > > 
+> > > > > > 
+> > > > > > > Thanks,
+> > > > > > > -Mukesh
+> > > > > > > 
+> > > > > > > 
+> > > > > > > > Thanks,
+> > > > > > > > Stanislav
+> > > > > > > > 
+> > > > > > > > > Thanks,
+> > > > > > > > > -Mukesh
+> > > > > > > > > 
+> > > > > > > > > 
+> > > > > > > > > > Thanks,
+> > > > > > > > > > Stanislav
+> > > > > > > > > > 
+> > > > > > > > > > > +	if (mreg == NULL || mreg->type != MSHV_REGION_TYPE_MMIO)
+> > > > > > > > > > > +		return false;
+> > > > > > > > > > > +
+> > > > > > > > > > > +	rc = mshv_chk_get_mmio_start_pfn(pt, gfn, &mmio_spa);
+> > > > > > > > > > > +	if (rc)
+> > > > > > > > > > > +		return false;
+> > > > > > > > > > > +
+> > > > > > > > > > > +	if (!hv_nofull_mmio) {		/* default case */
+> > > > > > > > > > > +		gfn = mreg->start_gfn;
+> > > > > > > > > > > +		mmio_spa = mmio_spa - (gfn - mreg->start_gfn);
+> > > > > > > > > > > +		numpgs = mreg->nr_pages;
+> > > > > > > > > > > +	} else
+> > > > > > > > > > > +		numpgs = 1;
+> > > > > > > > > > > +
+> > > > > > > > > > > +	rc = hv_call_map_mmio_pages(pt->pt_id, gfn, mmio_spa, numpgs);
+> > > > > > > > > > > +
+> > > > > > > > > > > +	return rc == 0;
+> > > > > > > > > > > +}
+> > > > > > > > > > > +
+> > > > > > > > > > >       static struct mshv_mem_region *
+> > > > > > > > > > >       mshv_partition_region_by_gfn_get(struct mshv_partition *p, u64 gfn)
+> > > > > > > > > > >       {
+> > > > > > > > > > > @@ -666,13 +777,17 @@ static bool mshv_handle_gpa_intercept(struct mshv_vp *vp)
+> > > > > > > > > > >       	return ret;
+> > > > > > > > > > >       }
+> > > > > > > > > > > +
+> > > > > > > > > > >       #else  /* CONFIG_X86_64 */
+> > > > > > > > > > > +static bool mshv_handle_unmapped_gpa(struct mshv_vp *vp) { return false; }
+> > > > > > > > > > >       static bool mshv_handle_gpa_intercept(struct mshv_vp *vp) { return false; }
+> > > > > > > > > > >       #endif /* CONFIG_X86_64 */
+> > > > > > > > > > >       static bool mshv_vp_handle_intercept(struct mshv_vp *vp)
+> > > > > > > > > > >       {
+> > > > > > > > > > >       	switch (vp->vp_intercept_msg_page->header.message_type) {
+> > > > > > > > > > > +	case HVMSG_UNMAPPED_GPA:
+> > > > > > > > > > > +		return mshv_handle_unmapped_gpa(vp);
+> > > > > > > > > > >       	case HVMSG_GPA_INTERCEPT:
+> > > > > > > > > > >       		return mshv_handle_gpa_intercept(vp);
+> > > > > > > > > > >       	}
+> > > > > > > > > > > -- 
+> > > > > > > > > > > 2.51.2.vfs.0.1
+> > > > > > > > > > > 
 
