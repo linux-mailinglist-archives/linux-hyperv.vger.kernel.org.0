@@ -1,236 +1,200 @@
-Return-Path: <linux-hyperv+bounces-8724-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8725-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ZbBhErAthGkA0gMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8724-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Feb 2026 06:42:08 +0100
+	id uMq4HpIzhGll0wMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8725-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Feb 2026 07:07:14 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B8A4EEC68
-	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Feb 2026 06:42:07 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B8B7EEE56
+	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Feb 2026 07:07:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CDDA83008206
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Feb 2026 05:42:05 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 695A93006465
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Feb 2026 06:07:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60BF8322B74;
-	Thu,  5 Feb 2026 05:42:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 611C13346AB;
+	Thu,  5 Feb 2026 06:07:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="jNnYdnbv"
+	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="VFWUOk52"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azolkn19012045.outbound.protection.outlook.com [52.103.23.45])
+Received: from jpms-ob01.noc.sony.co.jp (jpms-ob01.noc.sony.co.jp [211.125.140.164])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D7F13B284;
-	Thu,  5 Feb 2026 05:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.23.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770270125; cv=fail; b=TTwTiXDN0+wF+GVMjonHp5sVV1zy60RNl4JAoOseU2B+4emRSSRRj7ZKpXOcN5S042xMBsdG0AW5YAtr8RfxMMFzCwupuNF133ZGtf2vq9f75N8u1UpFqMQLj+Rd9X8gMZ0hihrvXgHQzMdBVLI+FgqI0x/Y/WJianUi6k6We68=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770270125; c=relaxed/simple;
-	bh=i+Vd/ZNRwcb5oSlC1RxIIzZ3thRHirUgD1AbREiIOrA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=uE6toW+FZMztBUNvIXJCWvoYz54NZjn++sH/5z5GFsJjbD+LyVPtj9xD8TKoM+5qSrf3TK1/U6aW7vaX5uRbYs6X/qSXimE8nXDPzWoVnhAqUriEV/fSNo4BON+iBoauGxNWdnayLNDy6GaKGz578nGctPPln0hQSwVrVGH5DPM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=jNnYdnbv; arc=fail smtp.client-ip=52.103.23.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rck52cGdSR4qSWFiZcSAhDYiTk8bIFpplWo8lAdm4rNP/+Nd+r4mYvsmExIowO7m0l3zP3ROhtggmIKMPsumJT/KmilglLiyXXJIClNMFhv6oJhH+hvrOfwY1GbqKmxldwobNfTB4bPjaSONRVHcvWhCB2Yv5UdEpWlgJw6OLZAtm5DJnjovuDeQ+WnrhRNF+NjrItA4FXVqMMPntapHSB8suS+4JVOqHpsY9SQPJs7STBbfgHhcVv2G2nm+63TFo0uBOvDrlenk+4y6lkmDaYjMtaWaOKCgdRnL4oVOYBMzXbnIpRvQ/efPi4hAW9O/aPEWV77vPeSA3RNBah+XEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0NdN4asqwMp+Qmk79o5em1OIXHvuz46ECWDctnAo8aI=;
- b=VQ0YPPe5jlt2ou6u8dfR1BKbpl7PNT/VXac6ewFCNtP+iE111Mg08biGHV6fFQenb47CHReEg8v0Zyjb49qubf6Pn3OxCjzx/7HnqW54Xwmje+b/UAegRm+3Brc1wp2Zz1oXXsUlyqsuVWZmFU8OYJ1WxxSW+30YoTzlTZ0XdFYkjnz+/H7+YpEYzuixjUDtEvD6Xw/lhYUGRb9xN91qTMaNQiXISt8BxFngbM3t1sHmmAuskU8ofUL99JEiBlH+GzPScPPDWPcJjnF/3Tje2C2TvFAzf92OnCBo2fe36T3OmMWI/snBL2CVn4xdUHRx24/po494a38cq7k7esqhWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0NdN4asqwMp+Qmk79o5em1OIXHvuz46ECWDctnAo8aI=;
- b=jNnYdnbvSXhDCP/TlFDrKBkd+mAQfpwS3kf8mXlZxndkGxm++aH2qfkwGWAP5p/z4gzy9D4iMrSF/HozeeIgYs4ds3bcGaNxKIMM9QAvheDc82GmacL4tZ57D0LabbUWBKVRY37SGC55yg/a+2I3RS+ElpvK2whpvyp/wUQZcq1UtEh2sI0+hq/CE2OVtFYq8l4Vr+pbPlDP2lW6UKYT+4oQHSi6S2UwMzeEnnSQs/G8lEYVloKEdSeguA7xkNlC09St9dTlK69Z5NSV2C9w4IeQRWjwAiYYV0YmfMLFcjj2AiNNkHlgCG9i9RyFEkT26qhDYUNCBLho92O07OknyQ==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by CH0PR02MB8090.namprd02.prod.outlook.com (2603:10b6:610:10a::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9587.15; Thu, 5 Feb
- 2026 05:42:03 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%6]) with mapi id 15.20.9587.010; Thu, 5 Feb 2026
- 05:42:03 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Jan Kiszka <jan.kiszka@siemens.com>, Long Li <longli@microsoft.com>, KY
- Srinivasan <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei
- Liu <wei.liu@kernel.org>, Dexuan Cui <DECUI@microsoft.com>, "James E.J.
- Bottomley" <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
-	<martin.petersen@oracle.com>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>
-CC: "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, Linux Kernel
- Mailing List <linux-kernel@vger.kernel.org>, Florian Bezdeka
-	<florian.bezdeka@siemens.com>, RT <linux-rt-users@vger.kernel.org>, Mitchell
- Levy <levymitchell0@gmail.com>
-Subject: RE: [EXTERNAL] [PATCH] scsi: storvsc: Fix scheduling while atomic on
- PREEMPT_RT
-Thread-Topic: [EXTERNAL] [PATCH] scsi: storvsc: Fix scheduling while atomic on
- PREEMPT_RT
-Thread-Index: AQHckSxbvhmgYaIv+0OErRpLCnikxbVwGj6AgABncwCAArlB4A==
-Date: Thu, 5 Feb 2026 05:42:02 +0000
-Message-ID:
- <SN6PR02MB41572C9E3650A6E581AA32C2D499A@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <0c7fb5cd-fb21-4760-8593-e04bade84744@siemens.com>
- <DS3PR21MB5735CBC7D843174F9CA9039CCE9AA@DS3PR21MB5735.namprd21.prod.outlook.com>
- <6b4933df-6af2-449c-922b-30ef8fd4c8b8@siemens.com>
-In-Reply-To: <6b4933df-6af2-449c-922b-30ef8fd4c8b8@siemens.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CH0PR02MB8090:EE_
-x-ms-office365-filtering-correlation-id: 4c4a9649-1eca-40ed-59b7-08de64794a18
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199028|8062599012|15080799012|8060799015|13091999003|31061999003|19110799012|3412199025|440099028|102099032|52005399003|40105399003;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?HEfMMNgtVD2XOHCVx2IfNw8vW3PWp+LnSTcElMcUF4G8NAqjVQiSBhaoU+80?=
- =?us-ascii?Q?G27wsYhY5RPWRcXFTwZ7p35vrmT6BazZzgZ1/oOcj3b8Pbk2ZjPhp7D14Cjo?=
- =?us-ascii?Q?97VJbmTjYLIY8kM2EAuK1KNHmTfKwwYMuRCN4zBD2cdOIxDakQFlyXakvAxU?=
- =?us-ascii?Q?rxs44x7lMQ+nGPMgJvWsGNBZagOITq/WJ4ICa1pjeYCc61OEaRQE6Xj6ygTU?=
- =?us-ascii?Q?WejvOTuoMT0DHiMbVQXDuQB4+pke1OxlPvJwESuvWpLqAlSG+okh5deJ8UzD?=
- =?us-ascii?Q?M71/nxDW7R4FM+eZx5vOOA99i1jnhAFD535ojJ+9W4ukIolL7xzNUglnV/Cp?=
- =?us-ascii?Q?DwxQqQ/W+kMPmv2vfzLYwWwyb1wYVuUOL4/gSrnVmtmpv4PGd6ZGJ4taCNQ3?=
- =?us-ascii?Q?4EbjEtoiTc7s2vCgnUOoAw+SLIMKywoDNhn+4whVoL/LT8Imi4fYVKYZHUn2?=
- =?us-ascii?Q?PudwdcO7gptgPTNt6gWVwImMJZf3GpYKij+VozJdpzNM5ofHloY81pU3nShq?=
- =?us-ascii?Q?JrHrQhIvCSri+e0eHk8R64qjpLWXTP+mQZtT/YQD6xL7RYOpu51g31BYfiRv?=
- =?us-ascii?Q?rUM0ahCyKfrzXXzA73jVASWMtB0Ygd5fCdIgs9vuSbcESZt/DoA73ETtXW+d?=
- =?us-ascii?Q?ChCYmu4U86KQoWRxx8oTkZBUHYJE+jBe2q75ze4y6uhapq8BKiAtxVeibLDN?=
- =?us-ascii?Q?zHFc6VFa0WAmGtSuiE9rglgh9q3weKC8EvmOxeny12saBOEOGOZsurJKcL/p?=
- =?us-ascii?Q?3DykEtSiqbMUSUbExK2inzqmNP58BXPVp2T6sVj6RffaqFeKC0xC9ZbVER4p?=
- =?us-ascii?Q?RlWHwqX1KmanRHXUEssjFiMvrUvb/x5j007dCJecuxDY/tUk76Cs7hE4Xxx2?=
- =?us-ascii?Q?QXEnTBPgbOpYrrncHc9fXyplczGudfcVGi5L7SvT/RZLJVxRddP4TJcRGoLC?=
- =?us-ascii?Q?kzWa9bspoQPNHOp7ywvx20VEPY0v5/ZBWyVHlMcq9NYh9xmsIc58esLpa42W?=
- =?us-ascii?Q?HnLITecIaxQW0AmbM9Q70kLQ1O2z6EBDVQWmFWrArO8X0gvZ6UqkCMDUlE6q?=
- =?us-ascii?Q?Q4j2fafVNaMuUQbv4TU/kElvxomX88J+/Ag5lEimInnOcPKGrcSgKX8E7oBe?=
- =?us-ascii?Q?MTVQXprAvijxrycxtJ4EbCqR0k6dUKqG2vtv/TXed7Kt30qRvJTjqCytBUDY?=
- =?us-ascii?Q?yDVak2SXQrXgdgVSYOjv3V79ZXTlevUBXzWKMQ=3D=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?T3HEdnFKKCd5YK+wkDZ/tyKbZTFt27t+CDD0nCoip48NJOXm9e4lno9+qEKN?=
- =?us-ascii?Q?dE8ZaZCwO7qs4SWyH7P/m4Js6ZjZpe6l+GjU18AD2rDDjrKjaIDfD5RPD09x?=
- =?us-ascii?Q?jlrEM0yne6pMborUbGYFbeJeX9GWjT2jmWHOt81qkaVRsuuhHrUTOuvGyUFf?=
- =?us-ascii?Q?kcStHrY1RyS7I+4dKPZaWGGXlpvfLgI8Zp5bOQieTzHD6zEzTwQTa7PwaxDN?=
- =?us-ascii?Q?3Bmd1f5hg0eVaEp+ROeTXxWc1p9h/ExraIVihUr6ggHKbZWBCFyaw3rpCDRd?=
- =?us-ascii?Q?THFSllQV0cwQi66ydREBQ5h9N7NdfjTmkrp6QKp5h+qlu9IMRLEeZnKonPT8?=
- =?us-ascii?Q?l2gK7Ps5Ye1CBZSKmT+p7swvbnYmyPcwLeUuRvgVMk4pKMG8/0VBz/ggnL0Q?=
- =?us-ascii?Q?fZBYk0QOD0hsi57pFfqND1yaUDrclZj14Tu57YR6FJd0uFgoSfRA71i1br9B?=
- =?us-ascii?Q?BsjA9qdqqMsEGc9MRnSOQ0A9yTsK7ALOMsd+Uc2IugB8U43RsC0TEosHw6I6?=
- =?us-ascii?Q?zWXjx9uTf1U9bp956b/9pzQtOnE91xmIB3DtNuRe5yBhN4mYJUqnuD8FbGbb?=
- =?us-ascii?Q?6JCaIIhqZay2En7OKEYhjG0eWctjw8pYPHXgyEhh7FYKT5aGeaSlZs0x2ImS?=
- =?us-ascii?Q?Kl3u1PHIo4xsqlU/Ozd8WL/N7mX/0TwTHReIn7RRV3+iQRlmQcbq2wb68RLy?=
- =?us-ascii?Q?V0oAooac55KZ+W9NKygshPk6KAEYEmh3A0iESfaSq0fwf1M+ANvK1fHjWRgn?=
- =?us-ascii?Q?fzZR2IB2yeb+Cg/Fm0EaDc7ICUAZntEC67FJmYmH8UYERb1ZhhCCuUFEc1QF?=
- =?us-ascii?Q?gIIbkSiHmP8jLXtDYs0vd09/dbHuoxSoiCy/XQH3PYjlHQlCgyhZxqDHQCrs?=
- =?us-ascii?Q?USMkZ8BXdwP95PnaE/3n5DP5iXM0tVIQuF4YdwtuSx/uocTN3nLLXhjXGxqO?=
- =?us-ascii?Q?06iYAvgidlblrXWoPpAwv2b8nWzMGucRxFE0hdmlvJ4uGDA8O+SSERi8TnzF?=
- =?us-ascii?Q?+PldjhAxL3YeWtIoS3K/5BKLdl6ZW+tdxJ1Q+58PqUgGCBcrLJM5b6gQUawl?=
- =?us-ascii?Q?XxTdlGDFBXleZabUJSPuS063qYRdIaojZFF3VDq0ewwo5VEv8jMVn0CoTBNd?=
- =?us-ascii?Q?DEb/ve8ra8ayKyn1nbRhLteysZM8oeUK/iJETxlXdkC6Wy/UJ4r6d7AJGsYj?=
- =?us-ascii?Q?UXlMkSQVKeslEu5qSZyA1+djTM1kafnUSAIvzAOMWfobCjyQyAll71acXO3B?=
- =?us-ascii?Q?3TZMvJcc3DWL0OWxilqosAuWQIBS/YHUGsvOahrViKEoc9WyTnC2Dst1Jp4x?=
- =?us-ascii?Q?laIYTlOrMRAJjBJBSuDXgXYJBmsM37Xj6dfENqpdLotN3ZziDR1rSD72s0AA?=
- =?us-ascii?Q?U3GTZns9VA0fJTTEjLRvAjUsHmqL9HuPP4P00yeRdY+wmQqQx0rpV1jTTFk5?=
- =?us-ascii?Q?Di/1CnCcMYFiQqZ450vrgnwtyg+1bvZn?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F452D46D6;
+	Thu,  5 Feb 2026 06:07:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.140.164
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770271632; cv=none; b=GZMrULGyuqXbDaH46069PtGCqquNBb/eOfvQZpow/nb9ZvBQvkUWZIwFnObhhdQn0vRqBrJ/7yO72+Zr7I3KqxkDdJrS90ZwQGpCnakfCqMgtuwRvUTcVUYUwlUIJowlm88t4gIflMFoX8b5brhl/+x6lrN+Wy4wraXU0z1jKkQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770271632; c=relaxed/simple;
+	bh=iLAKRWnJ4xFV61YkHX327DOOGbae/giyWkllC2m/aVI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nO7ShXBu/5ePJzH/+xRREevGC780se4RMaHrIMafcog/Yjn5uewH19MaGDTHm1QIRlEKE6gwPCUQca0GP1s31Ic+0Uh+uBq986SGI7jkXoSzMMdKfyuW94WPOp3kjrnuW1YFBSIxDqVp97gd4674p+s/K386Oe0KF0oYPomW8/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=VFWUOk52; arc=none smtp.client-ip=211.125.140.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=sony.com; s=s1jp; t=1770271632; x=1801807632;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UBawYbMlXUOKgrz6LV1oJhX/gsrHRCKMioT7xEbWP+c=;
+  b=VFWUOk52jOWcGi8pj9k9yr/ikYHOdIKZqb2K1uWGipADY1SE3PQwOTAd
+   L1fLtNarakqJrl3BQYWs+6W4oyyUdZ+0FIs0dyOj6CQ+MfqzHxh2KAdIH
+   KGWt31+gP6+/qFc0RaScONa/Iscq8V+bJRGQChyS1VjkFs/6uNL0Klj4V
+   F3dZo4x3hIQEWk2FM2k9w1/kJjQDxg9fIL1jKGEn8vhCi5zUeIAZOAEps
+   yaLH9WYQl9P3XdFxUeL/srUNydMF/rc/fmyYMC55dStmlEPivS0aHwUhs
+   mv9q4sb+M1E35Nwfj+vY5pbcasXXbcmYpXwcqGxmNsm8oUL3mj/HMM43P
+   A==;
+Received: from unknown (HELO jpmta-ob1.noc.sony.co.jp) ([IPv6:2001:cf8:0:6e7::6])
+  by jpms-ob01.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2026 15:07:03 +0900
+X-IronPort-AV: E=Sophos;i="6.21,274,1763391600"; 
+   d="scan'208";a="608419792"
+Received: from unknown (HELO JPC00244420) ([IPv6:2001:cf8:1:573:0:dddd:6b3e:119e])
+  by jpmta-ob1.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2026 15:07:03 +0900
+Date: Thu, 5 Feb 2026 15:07:01 +0900
+From: Shashank Balaji <shashank.mahadasyam@sony.com>
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Suresh Siddha <suresh.b.siddha@intel.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Juergen Gross <jgross@suse.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Ingo Molnar <mingo@elte.hu>, linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+	jailhouse-dev@googlegroups.com, kvm@vger.kernel.org,
+	xen-devel@lists.xenproject.org, Rahul Bukte <rahul.bukte@sony.com>,
+	Daniel Palmer <daniel.palmer@sony.com>,
+	Tim Bird <tim.bird@sony.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 1/3] x86/x2apic: disable x2apic on resume if the kernel
+ expects so
+Message-ID: <aYQzhRN83rJx6DSb@JPC00244420>
+References: <20260202-x2apic-fix-v1-0-71c8f488a88b@sony.com>
+ <20260202-x2apic-fix-v1-1-71c8f488a88b@sony.com>
+ <0149c37d-7065-4c72-ab56-4cea1a6c15d0@intel.com>
+ <aYMOqXTYMJ_IlEFA@JPC00244420>
+ <722b53a7-7560-4a1b-ab26-73eeed3dffa5@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c4a9649-1eca-40ed-59b7-08de64794a18
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Feb 2026 05:42:02.9601
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR02MB8090
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <722b53a7-7560-4a1b-ab26-73eeed3dffa5@intel.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
+X-Spamd-Result: default: False [-1.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[sony.com,none];
+	R_DKIM_ALLOW(-0.20)[sony.com:s=s1jp];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8724-lists,linux-hyperv=lfdr.de];
-	FREEMAIL_CC(0.00)[vger.kernel.org,siemens.com,gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8725-lists,linux-hyperv=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_FROM(0.00)[outlook.com];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	DKIM_TRACE(0.00)[outlook.com:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[32];
+	DKIM_TRACE(0.00)[sony.com:+];
 	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[shashank.mahadasyam@sony.com,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,siemens.com:email]
-X-Rspamd-Queue-Id: 8B8A4EEC68
+	NEURAL_HAM(-0.00)[-0.999];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,sony.com:dkim]
+X-Rspamd-Queue-Id: 1B8B7EEE56
 X-Rspamd-Action: no action
 
-From: Jan Kiszka <jan.kiszka@siemens.com> Sent: Monday, February 2, 2026 9:=
-58 PM
->=20
-> On 03.02.26 00:47, Long Li wrote:
-> >> From: Jan Kiszka <jan.kiszka@siemens.com>
+On Wed, Feb 04, 2026 at 10:53:28AM -0800, Sohil Mehta wrote:
+> On 2/4/2026 1:17 AM, Shashank Balaji wrote:
+> 
+> > __x2apic_disable disables x2apic only if boot_cpu_has(X86_FEATURE_APIC)
+> > and x2apic is already enabled. 
+> 
+> I meant the X86_FEATURE_X2APIC and not X86_FEATURE_APIC.
+
+My bad, I got that wrong. __x2apic_disable checks for X86_FEATURE_APIC,
+while x2apic_enabled checks for X86_FEATURE_X2APIC.
+
+> But, thinking about it more, checking that the CPU is really in X2APIC mode
+> by reading the MSR is good enough.
+
+But yes, I agree.
+
+> > x2apic_enabled also does the same checks,
+> > the only difference being, it uses rdmsrq_safe instead of just rdmsrq,
+> > which is what __x2apic_disable uses. The safe version is because of
+> > Boris' suggestion [1]. If that's applicable here as well, then rdmsrq in
+> > __x2apic_disable should be changed to rdmsrq_safe.
+> 
+> I don't know if there is a strong justification for changing to
+> rdmsrq_safe() over here. Also, that would be beyond the scope of this
+> patch. In general, it's better to avoid such changes unless an actual
+> issue pops up.
+
+Makes sense.
+
+> >> I considered if an error message should be printed along with this. But,
+> >> I am not sure if it can really be called a firmware issue. It's probably
+> >> just that newer CPUs might have started defaulting to x2apic on.
 > >>
-> >> This resolves the follow splat and lock-up when running with PREEMPT_R=
-T
-> >> enabled on Hyper-V:
-> >
-> > Hi Jan,
-> >
-> > It's interesting to know the use-case of running a RT kernel over Hyper=
--V.
-> >
-> > Can you give an example?
-> >
->=20
-> - functional testing of an RT base image over Hyper-V
-> - re-use of a common RT base image, without exploiting RT properties
->=20
-> > As far as I know, Hyper-V makes no RT guarantees of scheduling VPs for =
-a VM.
->=20
-> This is well understood and not our goal. We only need the kernel to run
-> correctly over Hyper-V with PREEMPT-RT enabled, and that is not the case
-> right now.
->=20
-> Thanks,
-> Jan
->=20
-> PS: Who had to idea to drop a virtual UART from Gen 2 VMs? Early boot
-> guest debugging is true fun now...
->=20
+> >> Can you specify what platform you are encountering this?
+> > 
+> > 
+> > I'm not sure it's the CPU defaulting to x2apic on. As per Section
+> > 12.12.5.1 of the Intel SDM:
+> > 
+> > 	On coming out of reset, the local APIC unit is enabled and is in
+> > 	the xAPIC mode: IA32_APIC_BASE[EN]=1 and IA32_APIC_BASE[EXTD]=0.
+> > 
+> > So, the CPU should be turning on in xapic mode. In fact, when x2apic is
+> > disabled in the firmware, this problem doesn't happen.
+> > 
+> 
+> It's a bit odd then that the firmware chooses to enable x2apic without
+> the OS requesting it.
 
-Hmmm. I often do printk()-based debugging via a virtual UART in a Gen 2
-VM. The Linux serial console outputs to that virtual UART and I see the
-printk() output in PuTTY on the Windows host. What specifically are you
-trying to do?  I'm trying to remember if there's any unique setup required
-on a Gen 2 VM vs. a Gen 1 VM, and nothing immediately comes to mind.
-Though maybe it's just so baked into my process that I don't remember it!
+Well, the firmware has a setting saying "Enable x2apic", which was
+enabled. So it did what the setting says
 
-Michael
+> Linux maintains a concept of X2APIC_ON_LOCKED in x2apic_state which is
+> based on the hardware preference to keep the apic in X2APIC mode.
+> 
+> When you have x2apic enabled in firmware, but the system is in XAPIC
+> mode, can you read the values in MSR_IA32_ARCH_CAPABILITIES and
+> MSR_IA32_XAPIC_DISABLE_STATUS?
+> 
+> XAPIC shouldn't be disabled because you are running in that mode. But,
+> it would be good to confirm.
+
+With x2apic enabled by the firmware, and after kernel switches to xapic
+(because no interrupt remapping support), bit 21 (XAPIC_DISABLE_STATUS)
+of MSR_IA32_ARCH_CAPABILITIES is 0, and MSR_IA32_XAPIC_DISABLE_STATUS
+MSR is not available.
+ 
+> > Either way, a pr_warn maybe helpful. How about "x2apic re-enabled by the
+> > firmware during resume. Disabling\n"?
+> 
+> I mainly want to make sure the firmware is really at fault before we add
+> such a print. But it seems likely now that the firmware messed up.
 
