@@ -1,178 +1,187 @@
-Return-Path: <linux-hyperv+bounces-8760-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8761-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GOu7MTKZhWmUDwQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8760-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 06 Feb 2026 08:33:06 +0100
+	id GI9BOnathWkRFAQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8761-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 06 Feb 2026 09:59:34 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 454BCFB059
-	for <lists+linux-hyperv@lfdr.de>; Fri, 06 Feb 2026 08:33:06 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 511EDFBBC6
+	for <lists+linux-hyperv@lfdr.de>; Fri, 06 Feb 2026 09:59:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3AC87301A7C4
-	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Feb 2026 07:33:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7809B303A6DA
+	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Feb 2026 08:57:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C59E31283C;
-	Fri,  6 Feb 2026 07:33:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15E7B34EF12;
+	Fri,  6 Feb 2026 08:57:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CfqSoJ8U"
+	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="uEMIYC1R"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D81173101D8;
-	Fri,  6 Feb 2026 07:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from jpms-ob02.noc.sony.co.jp (jpms-ob02.noc.sony.co.jp [211.125.140.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D55834EEF8;
+	Fri,  6 Feb 2026 08:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.140.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770363183; cv=none; b=shhgPlrDxq7B11vNN8vVgBxDzSKY81VA/i11dvuvmiJacCfyiG77hDG02S/Lh3GkxeayQajyjoUETU5J05qH2svxpuKmT+I3QfYiu/PcaAnODY5yDJ4dgC0AYtTCJE9CHn3w7Ddey9wHe6h1fLl65YVBVInXwBRp1/RUAuv8n7I=
+	t=1770368260; cv=none; b=ku+SgHw8SvUBUa4KIwwhwgF4NONEW4hfnLkvks4KVi7nbwP7bsM/JiRwgE5/q0ikE9qt9T7vkPeE2BjM0ogmuYg457CoTJvmxBtOMpBnkP4/8Y3sveXxwW6vLWDua2I2GZ8BxJoeC0kU8vexy5t6mNaEdaDzoKYMN5t4e3KZpSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770363183; c=relaxed/simple;
-	bh=OZRRqQ9EfucDYWsTtIOflSfSOiOC3B974b6H7plpHp0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J6T18eQtWTPpOvbaTWA+QvOhxrobT5yNJHaDP2RdU6bJOITxzTysxv+A6wlyMb9hDwa3ZrHsk7UgJqETE1vReT4KyL+HprA5gsjydo9pUJK1n1lDhnAZOd4Kz9iqNknQT4aSW94orbd1+gEp/OoUNHpQZ8p18thnzFFfVI2CUh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=CfqSoJ8U; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [100.67.96.222] (unknown [52.163.67.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 732E320B7168;
-	Thu,  5 Feb 2026 23:32:56 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 732E320B7168
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1770363182;
-	bh=4SGW3YwPxqqxGNqC6P5CHOeKcEhWll027SxxiPevSCg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CfqSoJ8Us5fyp1MXEtz+C3vKmqhfx1xBtqX8Du9o8s97zRRLrkC+vWQM7u+H/e+Zw
-	 PazFbzE74YL5W7fjqVw7ZYK9ADJZd7coItbgjRv6VYjUzQ3M2nkM5MxaxE13SqcnZr
-	 EdWp70ubTgIF+0MNyAtW5oyAYZhgTcnvKZWXIzYg=
-Message-ID: <76e8cfd8-f48d-4129-bb9d-ca58c24b29a4@linux.microsoft.com>
-Date: Fri, 6 Feb 2026 13:02:52 +0530
+	s=arc-20240116; t=1770368260; c=relaxed/simple;
+	bh=vrOFC/HRC3Ie5qc3U5lHi8XBQUfAXuurChWS05yIt2s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dXo2BkPkqhoM0FymUR5N7ImJ1M5B/k0nBoqUrsaf06VC5eQhQFFl1cn8QkwNB/dXEUxg37LhgyACKZCL3ngJ27HFWwd1yMIuu8giPX8/hIrqHlKYEJtmRCTcjEwumWF5wsfUvPR9k5gHTTfHWcaAivpH6ND9VLDyNoXZxJgnCKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=uEMIYC1R; arc=none smtp.client-ip=211.125.140.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=sony.com; s=s1jp; t=1770368259; x=1801904259;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pC/nHVWjvFbxMPwxtThf4k2nFuf59ielNHdSV23cY9U=;
+  b=uEMIYC1RfNigzWhXRFhPYZ4U07jE2eVeQPcHfoJSWvtbspbiospcwrKQ
+   JPlk2uOI+a3kC742ugj6KzpdL4U0YKVX4nRBaN7Jbg/GSuju5t+oJ/TT5
+   v1fqEkEbvzr++PJJAaQHy3DF+ofqKUlpmEZY/sMQHWQmTkUiqS45ouLfA
+   YuPBAjHprVcfR0bMOvdMRJijy4KQRs7DcSv430CjXS0UAG6ifeJYVmLDN
+   Q8YXHAbKO7GdjSSZCqiFALa0FX1gr23Oc6uiWncE8njpnPN6+blYjZvLo
+   t7UQFnAeaIM3O7fpQ/m5wzgCtWINfIhmuUyV1gHwkBaZGEmlmrnOuwjeW
+   w==;
+Received: from unknown (HELO jpmta-ob02.noc.sony.co.jp) ([IPv6:2001:cf8:0:6e7::7])
+  by jpms-ob02.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2026 17:57:37 +0900
+X-IronPort-AV: E=Sophos;i="6.21,276,1763391600"; 
+   d="scan'208";a="578880254"
+Received: from unknown (HELO JPC00244420) ([IPv6:2001:cf8:1:573:0:dddd:6b3e:119e])
+  by jpmta-ob02.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2026 17:57:36 +0900
+Date: Fri, 6 Feb 2026 17:57:31 +0900
+From: Shashank Balaji <shashank.mahadasyam@sony.com>
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Suresh Siddha <suresh.b.siddha@intel.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Juergen Gross <jgross@suse.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Ingo Molnar <mingo@elte.hu>, linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+	jailhouse-dev@googlegroups.com, kvm@vger.kernel.org,
+	xen-devel@lists.xenproject.org, Rahul Bukte <rahul.bukte@sony.com>,
+	Daniel Palmer <daniel.palmer@sony.com>,
+	Tim Bird <tim.bird@sony.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 1/3] x86/x2apic: disable x2apic on resume if the kernel
+ expects so
+Message-ID: <aYWs-wvDuS53BHMe@JPC00244420>
+References: <20260202-x2apic-fix-v1-0-71c8f488a88b@sony.com>
+ <20260202-x2apic-fix-v1-1-71c8f488a88b@sony.com>
+ <0149c37d-7065-4c72-ab56-4cea1a6c15d0@intel.com>
+ <aYMOqXTYMJ_IlEFA@JPC00244420>
+ <722b53a7-7560-4a1b-ab26-73eeed3dffa5@intel.com>
+ <aYQzhRN83rJx6DSb@JPC00244420>
+ <e5ac3272-795b-488c-b767-290fd50f2105@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86: mshyperv: Use kthread for vmbus interrupts on
- PREEMPT_RT
-To: Wei Liu <wei.liu@kernel.org>, Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Magnus Kulke <magnuskulke@linux.microsoft.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Dexuan Cui <decui@microsoft.com>,
- Long Li <longli@microsoft.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- Florian Bezdeka <florian.bezdeka@siemens.com>,
- RT <linux-rt-users@vger.kernel.org>, Mitchell Levy
- <levymitchell0@gmail.com>, skinsburskii@linux.microsoft.com,
- mrathor@linux.microsoft.com, anirudh@anirudhrb.com,
- schakrabarti@linux.microsoft.com, ssengar@linux.microsoft.com
-References: <133a95d9-8148-40ea-9acc-edfd8e3ceef4@siemens.com>
- <20260204070004.GM79272@liuwe-devbox-debian-v2.local>
- <c377fab9-54f1-4eb9-8810-013a8bfb340e@siemens.com>
- <10ec70f2-27a5-477f-b6e9-164f7b7545d9@siemens.com>
- <20260204072930.GO79272@liuwe-devbox-debian-v2.local>
- <d1dded05-a47f-4be2-94c4-913104c758e2@siemens.com>
- <20260204073629.GP79272@liuwe-devbox-debian-v2.local>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <20260204073629.GP79272@liuwe-devbox-debian-v2.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e5ac3272-795b-488c-b767-290fd50f2105@intel.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[sony.com,none];
+	R_DKIM_ALLOW(-0.20)[sony.com:s=s1jp];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8760-lists,linux-hyperv=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[linux.microsoft.com,microsoft.com,kernel.org,redhat.com,alien8.de,linux.intel.com,vger.kernel.org,siemens.com,gmail.com,anirudhrb.com];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-8761-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[namjain@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[32];
+	DKIM_TRACE(0.00)[sony.com:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,siemens.com:email]
-X-Rspamd-Queue-Id: 454BCFB059
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[shashank.mahadasyam@sony.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sony.com:dkim,uefi.org:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 511EDFBBC6
 X-Rspamd-Action: no action
 
-
-
-On 2/4/2026 1:06 PM, Wei Liu wrote:
-> On Wed, Feb 04, 2026 at 08:32:04AM +0100, Jan Kiszka wrote:
->> On 04.02.26 08:29, Wei Liu wrote:
->>> On Wed, Feb 04, 2026 at 08:26:48AM +0100, Jan Kiszka wrote:
->>>> On 04.02.26 08:19, Jan Kiszka wrote:
->>>>> On 04.02.26 08:00, Wei Liu wrote:
->>>>>> On Tue, Feb 03, 2026 at 05:01:30PM +0100, Jan Kiszka wrote:
->>>>>>> From: Jan Kiszka <jan.kiszka@siemens.com>
->>>>>>>
->>>>>>> Resolves the following lockdep report when booting PREEMPT_RT on Hyper-V
->>>>>>> with related guest support enabled:
->>>>>>
->>>>>> So all it takes to reproduce this is to enabled PREEMPT_RT?
->>>>>>
->>>>>
->>>>> ...and enable CONFIG_PROVE_LOCKING so that you do not have to wait for
->>>>> your system to actually run into the bug. Lockdep already triggers
->>>>> during bootup.
->>>>>
->>>>>> Asking because ...
->>>>>>
->>>>>>>   	struct pt_regs *old_regs = set_irq_regs(regs);
->>>>>>> @@ -158,8 +196,12 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_hyperv_callback)
->>>>>>>   	if (mshv_handler)
->>>>>>>   		mshv_handler();
->>>>>>
->>>>>> ... to err on the safe side we should probably do the same for
->>>>>> mshv_handler as well.
->>>>>>
->>>>>
->>>>> Valid question. We so far worked based on lockdep reports, and the
->>>>> mshv_handler didn't trigger yet. Either it is not run in our setup, or
->>>>> it is actually already fine. But I have a code review on my agenda
->>>>> regarding potential remaining issues in mshv.
->>>>>
->>>>> Is there something needed to trigger the mshv_handler so that we can
->>>>> test it?
->>>>>
->>>>
->>>> Ah, that depends on CONFIG_MSHV_ROOT. Is that related to the accelerator
->>>> mode that Magnus presented in [1]? We briefly chatted about it and also
->>>> my problems with the drivers after his talk on Saturday.
->>>
->>> Yes. That is the driver. If PROVE_LOCKING triggers the warning without
->>> running the code, perhaps turning on MSHV_ROOT is enough.
->>>
->>
->> But if my VM is not a root partition, I wouldn't use that driver, would I?
+On Thu, Feb 05, 2026 at 03:18:58PM -0800, Sohil Mehta wrote:
+> On 2/4/2026 10:07 PM, Shashank Balaji wrote:
+> > On Wed, Feb 04, 2026 at 10:53:28AM -0800, Sohil Mehta wrote:
 > 
-> No, you wouldn't.  You cannot do that until later this year. If you
-> cannot test that, so be it. I'm fine with applying your patch and then
-> move the mshv_handler logic later ourselves.
+> >> It's a bit odd then that the firmware chooses to enable x2apic without
+> >> the OS requesting it.
+> > 
+> > Well, the firmware has a setting saying "Enable x2apic", which was
+> > enabled. So it did what the setting says
+> > 
 > 
-> I've CC'ed a few folks from Microsoft.
+> The expectation would be that firmware would restore to the same state
+> before lapic_suspend().
+
+I'm a bit out of my depth here, but I went looking around, and this is from the
+latest ACPI spec (v6.6) [1]:
+
+	When executing from the power-on reset vector as a result of waking
+	from an S2 or S3 sleep state, the platform firmware performs only the
+	hardware initialization required to restore the system to either the
+	state the platform was in prior to the initial operating system boot,
+	or to the pre-sleep configuration state. In multiprocessor systems,
+	non-boot processors should be placed in the same state as prior to the
+	initial operating system boot.
+
+	(further ahead)
+
+	 If this is an S2 or S3 wake, then the platform runtime firmware
+	 restores minimum context of the system before jumping to the waking
+	 vector. This includes:
+
+	 	CPU configuration. Platform runtime firmware restores the
+		pre-sleep configuration or initial boot configuration of each
+		CPU (MSR, MTRR, firmware update, SMBase, and so on). Interrupts
+		must be disabled (for IA-32 processors, disabled by CLI
+		instruction).
+
+		(and other things)
+
+I suppose, in my case, the firmware is restoring initial boot
+configuration on S3 resume. And initial boot configuration of x2apic is
+set from the firmware's UI "Enable x2apic".
+
+> Maybe a warning would be useful to encourage firmware to fix this going
+> forward. I don't have a strong preference on the wording, but how about?
 > 
-> Saurabh, Long, and Dexuan, can you review and test this patch for VMBus?
+> pr_warn_once("x2apic unexpectedly re-enabled by the firmware during
+> resume.\n");
 
+At least as per the spec, it's not something the firmware needs to fix,
+and it's not unexpected re-enablement.
 
-I tested this and didn't see any issues with OpenHCL/mshv_vtl.
+Am I missing something?
 
-Regards,
-Naman
+But it _is_ surprising that this bug went unnoticed for so long :)
 
+[1] https://uefi.org/specs/ACPI/6.6/16_Waking_and_Sleeping.html#initialization
 
