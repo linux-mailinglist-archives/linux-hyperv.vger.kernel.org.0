@@ -1,88 +1,60 @@
-Return-Path: <linux-hyperv+bounces-8762-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8763-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OClrOOuzhWmbFQQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8762-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 06 Feb 2026 10:27:07 +0100
+	id OLu5IMgehmm/JwQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8763-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 06 Feb 2026 18:03:04 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 537EAFC028
-	for <lists+linux-hyperv@lfdr.de>; Fri, 06 Feb 2026 10:27:07 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1169100AEE
+	for <lists+linux-hyperv@lfdr.de>; Fri, 06 Feb 2026 18:03:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DC47A303D2ED
-	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Feb 2026 09:24:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 52D67300CE54
+	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Feb 2026 17:02:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30EED35B64E;
-	Fri,  6 Feb 2026 09:24:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D167435EDBB;
+	Fri,  6 Feb 2026 17:02:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="AUhgQUQy"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YY5f8n77"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from jpms-ob01.noc.sony.co.jp (jpms-ob01.noc.sony.co.jp [211.125.140.164])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A5E34F278;
-	Fri,  6 Feb 2026 09:24:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.140.164
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CE0E35DCEF;
+	Fri,  6 Feb 2026 17:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770369848; cv=none; b=m+wbqv9Au4I1vR4HJI/QkP1PLkCViAtEBW5K74aq2K1Sb7RxY1QhLf+u3xvQrjuaoS0G2YDtESPlBcECiMHlphVhHm/0KLHKKuHIoUOHjJNwvH3O77+Clu1wmP8ME0ZQW/7XwGClX3JW9G8SRr431ggMKEjivqy2mMIIX3wHSng=
+	t=1770397355; cv=none; b=FUVY7XuM7Hh8ZUZnyZrOJxVz4GGOIa/V8mdLcnT/SNV9eSU3X6Gjzp7Ecr96cqT/IRZ/azEsE5dosdGLTYdRRRHkvNGW6xi1BQNCvd80dsCenOqfcSBMFhKgt/sq8GxYgNKrsA9Pua5UYdF8Npc7Lz1ustHw/N6+UVVtOCuiN/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770369848; c=relaxed/simple;
-	bh=/fkg3oWtZbf+Ill12UaORFsm14SxpgtZUZX+OeaDvMo=;
+	s=arc-20240116; t=1770397355; c=relaxed/simple;
+	bh=WfyxGl0bChzfohIuRcdxFN0vzJoCZpB3UmyirWYB8UE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TVNem7nVNbDSdKyFBo1zaxIPZlxwl65soFpVfDL3JAuJ254HUh6bSw8WNa0dDva31A9Sf6+fgZ0vdRe/WVdPHzNyExchpjVqCu9XLTlj8fe9tkwANWqXfkmQJ7TFwmHAgXt9tgNVEmm2IpAIZX3jKL/rLQTtGVNXq1AgEJ5X/R0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=AUhgQUQy; arc=none smtp.client-ip=211.125.140.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=sony.com; s=s1jp; t=1770369848; x=1801905848;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wPZfRdP+k5tHXCWNK6Ygu9GCntNiGeUU6L8G+KPNkCQ=;
-  b=AUhgQUQyf4pm4205vXIxckQ4hLvBg+zxDBVgOiXBQTsbLBPuLVcYm6oz
-   eTG/2X+LnqZUhG5qsC9SZyR2o5mri0w7F637E3KpkXkIEren+lU9i9yyh
-   71D5+MRg3FeaYpzV91W8vqESSFKMr6V1BU6Qr/OHRXWv9xi8gaWhDWpko
-   Js9YXR/ER8GaKnOffQMjBuaji3Nu7VAxd2RvasylrKJXEh47mUKR5DDZk
-   p+KOgC4BE6XnoYeEeAscbmGSP4zrlOItV11zfffMRzgCfDlmuRO46d58Y
-   Q01jH+2zLy9wXrg/GK0+nVsaBSP35c98ja214rsvVgOaGH+OlOCShI398
-   A==;
-Received: from unknown (HELO jpmta-ob02.noc.sony.co.jp) ([IPv6:2001:cf8:0:6e7::7])
-  by jpms-ob01.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2026 18:23:59 +0900
-X-IronPort-AV: E=Sophos;i="6.21,276,1763391600"; 
-   d="scan'208";a="578889420"
-Received: from unknown (HELO JPC00244420) ([IPv6:2001:cf8:1:573:0:dddd:6b3e:119e])
-  by jpmta-ob02.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2026 18:23:56 +0900
-Date: Fri, 6 Feb 2026 18:23:53 +0900
-From: Shashank Balaji <shashank.mahadasyam@sony.com>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Juergen Gross <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	virtualization@lists.linux.dev, jailhouse-dev@googlegroups.com,
-	kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-	Rahul Bukte <rahul.bukte@sony.com>,
-	Daniel Palmer <daniel.palmer@sony.com>,
-	Tim Bird <tim.bird@sony.com>
-Subject: Re: [PATCH 3/3] x86/virt: rename x2apic_available to
- x2apic_without_ir_available
-Message-ID: <aYWzKQQTyTZpMAme@JPC00244420>
-References: <20260202-x2apic-fix-v1-0-71c8f488a88b@sony.com>
- <20260202-x2apic-fix-v1-3-71c8f488a88b@sony.com>
- <ab7f5935-fd5e-4ba5-a97d-5433f241a089@intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uy5RC5gQdhlyQqBPWExumiTAWoYaioW7mktIxf4J42X1OFsLTi+GEP3Yv2oV2/fclRIn/oeZ6xp5F6YnJ4cj20jfMsJxmfFu/Q/TKoe4TkeEf8bg/R3EYK0fHO4vfvqtK8Ek7lijGTBLW9kJqPUOGces6kyl1hidydIGsaWjdvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=YY5f8n77; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from skinsburskii.localdomain (c-98-225-44-182.hsd1.wa.comcast.net [98.225.44.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A8F9F20B7165;
+	Fri,  6 Feb 2026 09:02:34 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A8F9F20B7165
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1770397355;
+	bh=Y72LWLItji/TYX3xkirCgWbzCbqoPvITuFB23XhFY94=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YY5f8n77AR5O8WTBcTjO4Gw8h5DkdAb/ZEau9u4uJ8WCAGQZEHHISgvKlFjE/o9uL
+	 DCc5fQ+K8WeY1n+8KQIqQJL4ZLerlpxW8F6RwLZM+1ME1s3d0qyGhcPQMX3mE9g3Cs
+	 KkswyQdQXjQ+fFQ2GGIMetu+75VPkSPU0Q9Q0NY8=
+Date: Fri, 6 Feb 2026 09:02:33 -0800
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Anirudh Rayabharam <anirudh@anirudhrb.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] mshv: Handle insufficient root memory hypervisor
+ statuses
+Message-ID: <aYYeqazAk0_aT_B1@skinsburskii.localdomain>
+References: <177031674698.186911.179832109354647364.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <177031694699.186911.12873334535011325477.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <aYWCmVxnO8R3vsc-@anirudh-surface.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -91,124 +63,187 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ab7f5935-fd5e-4ba5-a97d-5433f241a089@intel.com>
+In-Reply-To: <aYWCmVxnO8R3vsc-@anirudh-surface.localdomain>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[sony.com,none];
-	R_DKIM_ALLOW(-0.20)[sony.com:s=s1jp];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-8763-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8762-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[29];
-	DKIM_TRACE(0.00)[sony.com:+];
-	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[shashank.mahadasyam@sony.com,linux-hyperv@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	NEURAL_HAM(-0.00)[-0.996];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	NEURAL_HAM(-0.00)[-0.999];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sony.com:dkim]
-X-Rspamd-Queue-Id: 537EAFC028
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:dkim]
+X-Rspamd-Queue-Id: D1169100AEE
 X-Rspamd-Action: no action
 
-On Thu, Feb 05, 2026 at 04:10:37PM -0800, Sohil Mehta wrote:
-> On 2/2/2026 1:51 AM, Shashank Balaji wrote:
-> > No functional change.
+On Fri, Feb 06, 2026 at 05:56:41AM +0000, Anirudh Rayabharam wrote:
+> On Thu, Feb 05, 2026 at 06:42:27PM +0000, Stanislav Kinsburskii wrote:
+> > When creating guest partition objects, the hypervisor may fail to
+> > allocate root partition pages and return an insufficient memory status.
+> > In this case, deposit memory using the root partition ID instead.
 > > 
-> > x86_init.hyper.x2apic_available is used only in try_to_enable_x2apic to check if
-> > x2apic needs to be disabled if interrupt remapping support isn't present. But
-> > the name x2apic_available doesn't reflect that usage.
-> > 
+> > Note: This error should never occur in a guest of L1VH partition context.
 > 
-> I don't understand the premise of this patch. Shouldn't the variable
-> name reflect what is stored rather than how it is used?
-
-Sorry about the confusion, I should have used '()'.
-x86_init.hyper.x2apic_available() is called only in
-try_to_enable_x2apic(). Here's the relevant snippet:
-
-	static __init void try_to_enable_x2apic(int remap_mode)
-	{
-		if (x2apic_state == X2APIC_DISABLED)
-			return;
-
-		if (remap_mode != IRQ_REMAP_X2APIC_MODE) {
-			u32 apic_limit = 255;
-
-			/*
-			 * Using X2APIC without IR is not architecturally supported
-			 * on bare metal but may be supported in guests.
-			 */
-			if (!x86_init.hyper.x2apic_available()) {
-				pr_info("x2apic: IRQ remapping doesn't support X2APIC mode\n");
-				x2apic_disable();
-				return;
-			}
-
-So the question being asked is, "can x2apic be used without IR?", but
-the name "x2apic_available" signals "is x2apic available?". I found this
-confusing while going through the source.
-
-Most hypervisors set their x2apic_available() implementation to
-essentially return if the CPU supports x2apic or not, which is valid
-given the name "x2apic_available", but x2apic availability is not what's in
-question at the callsite.
-
-> > This is what x2apic_available is set to for various hypervisors:
-> > 
-> > 	acrn		boot_cpu_has(X86_FEATURE_X2APIC)
-> > 	mshyperv	boot_cpu_has(X86_FEATURE_X2APIC)
-> > 	xen		boot_cpu_has(X86_FEATURE_X2APIC) or false
-> > 	vmware		vmware_legacy_x2apic_available
-> > 	kvm		kvm_cpuid_base() != 0
-> > 	jailhouse	x2apic_enabled()
-> > 	bhyve		true
-> > 	default		false
-> > 
+> I think you should rephrse this to:
 > 
-> If both interrupt remapping and x2apic are enabled, what would the name
-> x2apic_without_ir_available signify?
-
-If IR is enabled, then the branch to call x2apic_available() wouldn't be taken :)
-So the meaning of x2apic_without_ir_available wouldn't be relevant
-anymore.
-
-> A value of "true" would mean x2apic is available without IR. But that
-> would be inaccurate for most hypervisors. A value of "false" could be
-> interpreted as x2apic is not available, which is also inaccurate.
+> "... should never occur in an L1VH partition"
 > 
-> To me, x2apic_available makes more sense than
-> x2apic_without_ir_available based on the values being set by the
-> hypervisors.
- 
-I agree with you, and I think therein lies the problem. Most hypervisors
-are answering the broader question "is x2apic available?", so the name
-"x2apic_available" makes sense.
-
-I think further work is required to check if various implementations of
-x2apic_available() also need to be changed to reflect the "x2apic
-without IR?" semantic, but I don't know enough to do that myself. Maybe
-I should have added TODOs above the implementations.
-
-I would like the feedback of the virt folks too on all this, maybe I'm
-misinterpreting what's going on here.
-
-> > Bare metal and vmware correctly check if x2apic is available without interrupt
-> > remapping. The rest of them check if x2apic is enabled/supported, and kvm just
-> > checks if the kernel is running on kvm. The other hypervisors may have to have
-> > their checks audited.
+> because none of the errors in this patch series occur inside a guest. They
+> either occur in L1VH or root or both.
+> 
 > > 
-> AFAIU, the value on bare metal is set to false because this is a
-> hypervisor specific variable. Perhaps I have misunderstood something?
+> > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+> > ---
+> >  drivers/hv/hv_common.c      |    2 +
+> >  drivers/hv/hv_proc.c        |   14 ++++++++++
+> >  include/hyperv/hvgdk_mini.h |   58 ++++++++++++++++++++++---------------------
+> >  3 files changed, 46 insertions(+), 28 deletions(-)
+> > 
+> > diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+> > index f20596276662..6b67ac616789 100644
+> > --- a/drivers/hv/hv_common.c
+> > +++ b/drivers/hv/hv_common.c
+> > @@ -794,6 +794,8 @@ static const struct hv_status_info hv_status_infos[] = {
+> >  	_STATUS_INFO(HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE,	-EIO),
+> >  	_STATUS_INFO(HV_STATUS_INSUFFICIENT_MEMORY,		-ENOMEM),
+> >  	_STATUS_INFO(HV_STATUS_INSUFFICIENT_CONTIGUOUS_MEMORY,	-ENOMEM),
+> > +	_STATUS_INFO(HV_STATUS_INSUFFICIENT_ROOT_MEMORY,	-ENOMEM),
+> > +	_STATUS_INFO(HV_STATUS_INSUFFICIENT_CONTIGUOUS_ROOT_MEMORY,	-ENOMEM),
+> >  	_STATUS_INFO(HV_STATUS_INVALID_PARTITION_ID,		-EINVAL),
+> >  	_STATUS_INFO(HV_STATUS_INVALID_VP_INDEX,		-EINVAL),
+> >  	_STATUS_INFO(HV_STATUS_NOT_FOUND,			-EIO),
+> > diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
+> > index 181f6d02bce3..5f4fd9c3231c 100644
+> > --- a/drivers/hv/hv_proc.c
+> > +++ b/drivers/hv/hv_proc.c
+> > @@ -121,6 +121,18 @@ int hv_deposit_memory_node(int node, u64 partition_id,
+> >  	case HV_STATUS_INSUFFICIENT_CONTIGUOUS_MEMORY:
+> >  		num_pages = HV_MAX_CONTIGUOUS_ALLOCATION_PAGES;
+> >  		break;
+> > +
+> > +	case HV_STATUS_INSUFFICIENT_CONTIGUOUS_ROOT_MEMORY:
+> > +		num_pages = HV_MAX_CONTIGUOUS_ALLOCATION_PAGES;
+> > +		fallthrough;
+> > +	case HV_STATUS_INSUFFICIENT_ROOT_MEMORY:
+> 
+> I have the same comment as on v2 about num_pages being uninitialized when we
+> reach this case directly.
+> 
+
+It is initialized to 1 on top of the function.
+
+Thanks,
+Stanislav.
+
+> Thanks,
+> Anirudh.
+> 
+> > +		if (!hv_root_partition()) {
+> > +			hv_status_err(hv_status, "Unexpected root memory deposit\n");
+> > +			return -ENOMEM;
+> > +		}
+> > +		partition_id = HV_PARTITION_ID_SELF;
+> > +		break;
+> > +
+> >  	default:
+> >  		hv_status_err(hv_status, "Unexpected!\n");
+> >  		return -ENOMEM;
+> > @@ -134,6 +146,8 @@ bool hv_result_needs_memory(u64 status)
+> >  	switch (hv_result(status)) {
+> >  	case HV_STATUS_INSUFFICIENT_MEMORY:
+> >  	case HV_STATUS_INSUFFICIENT_CONTIGUOUS_MEMORY:
+> > +	case HV_STATUS_INSUFFICIENT_ROOT_MEMORY:
+> > +	case HV_STATUS_INSUFFICIENT_CONTIGUOUS_ROOT_MEMORY:
+> >  		return true;
+> >  	}
+> >  	return false;
+> > diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
+> > index 99ea0d03e657..50f5a1419052 100644
+> > --- a/include/hyperv/hvgdk_mini.h
+> > +++ b/include/hyperv/hvgdk_mini.h
+> > @@ -14,34 +14,36 @@ struct hv_u128 {
+> >  } __packed;
+> >  
+> >  /* NOTE: when adding below, update hv_result_to_string() */
+> > -#define HV_STATUS_SUCCESS			    0x0
+> > -#define HV_STATUS_INVALID_HYPERCALL_CODE	    0x2
+> > -#define HV_STATUS_INVALID_HYPERCALL_INPUT	    0x3
+> > -#define HV_STATUS_INVALID_ALIGNMENT		    0x4
+> > -#define HV_STATUS_INVALID_PARAMETER		    0x5
+> > -#define HV_STATUS_ACCESS_DENIED			    0x6
+> > -#define HV_STATUS_INVALID_PARTITION_STATE	    0x7
+> > -#define HV_STATUS_OPERATION_DENIED		    0x8
+> > -#define HV_STATUS_UNKNOWN_PROPERTY		    0x9
+> > -#define HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE	    0xA
+> > -#define HV_STATUS_INSUFFICIENT_MEMORY		    0xB
+> > -#define HV_STATUS_INVALID_PARTITION_ID		    0xD
+> > -#define HV_STATUS_INVALID_VP_INDEX		    0xE
+> > -#define HV_STATUS_NOT_FOUND			    0x10
+> > -#define HV_STATUS_INVALID_PORT_ID		    0x11
+> > -#define HV_STATUS_INVALID_CONNECTION_ID		    0x12
+> > -#define HV_STATUS_INSUFFICIENT_BUFFERS		    0x13
+> > -#define HV_STATUS_NOT_ACKNOWLEDGED		    0x14
+> > -#define HV_STATUS_INVALID_VP_STATE		    0x15
+> > -#define HV_STATUS_NO_RESOURCES			    0x1D
+> > -#define HV_STATUS_PROCESSOR_FEATURE_NOT_SUPPORTED   0x20
+> > -#define HV_STATUS_INVALID_LP_INDEX		    0x41
+> > -#define HV_STATUS_INVALID_REGISTER_VALUE	    0x50
+> > -#define HV_STATUS_OPERATION_FAILED		    0x71
+> > -#define HV_STATUS_INSUFFICIENT_CONTIGUOUS_MEMORY    0x75
+> > -#define HV_STATUS_TIME_OUT			    0x78
+> > -#define HV_STATUS_CALL_PENDING			    0x79
+> > -#define HV_STATUS_VTL_ALREADY_ENABLED		    0x86
+> > +#define HV_STATUS_SUCCESS				0x0
+> > +#define HV_STATUS_INVALID_HYPERCALL_CODE		0x2
+> > +#define HV_STATUS_INVALID_HYPERCALL_INPUT		0x3
+> > +#define HV_STATUS_INVALID_ALIGNMENT			0x4
+> > +#define HV_STATUS_INVALID_PARAMETER			0x5
+> > +#define HV_STATUS_ACCESS_DENIED				0x6
+> > +#define HV_STATUS_INVALID_PARTITION_STATE		0x7
+> > +#define HV_STATUS_OPERATION_DENIED			0x8
+> > +#define HV_STATUS_UNKNOWN_PROPERTY			0x9
+> > +#define HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE		0xA
+> > +#define HV_STATUS_INSUFFICIENT_MEMORY			0xB
+> > +#define HV_STATUS_INVALID_PARTITION_ID			0xD
+> > +#define HV_STATUS_INVALID_VP_INDEX			0xE
+> > +#define HV_STATUS_NOT_FOUND				0x10
+> > +#define HV_STATUS_INVALID_PORT_ID			0x11
+> > +#define HV_STATUS_INVALID_CONNECTION_ID			0x12
+> > +#define HV_STATUS_INSUFFICIENT_BUFFERS			0x13
+> > +#define HV_STATUS_NOT_ACKNOWLEDGED			0x14
+> > +#define HV_STATUS_INVALID_VP_STATE			0x15
+> > +#define HV_STATUS_NO_RESOURCES				0x1D
+> > +#define HV_STATUS_PROCESSOR_FEATURE_NOT_SUPPORTED	0x20
+> > +#define HV_STATUS_INVALID_LP_INDEX			0x41
+> > +#define HV_STATUS_INVALID_REGISTER_VALUE		0x50
+> > +#define HV_STATUS_OPERATION_FAILED			0x71
+> > +#define HV_STATUS_INSUFFICIENT_ROOT_MEMORY		0x73
+> > +#define HV_STATUS_INSUFFICIENT_CONTIGUOUS_MEMORY	0x75
+> > +#define HV_STATUS_TIME_OUT				0x78
+> > +#define HV_STATUS_CALL_PENDING				0x79
+> > +#define HV_STATUS_INSUFFICIENT_CONTIGUOUS_ROOT_MEMORY	0x83
+> > +#define HV_STATUS_VTL_ALREADY_ENABLED			0x86
+> >  
+> >  /*
+> >   * The Hyper-V TimeRefCount register and the TSC
+> > 
+> > 
 
