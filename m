@@ -1,144 +1,178 @@
-Return-Path: <linux-hyperv+bounces-8759-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8760-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4Mg+IkeThWm3DgQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8759-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 06 Feb 2026 08:07:51 +0100
+	id GOu7MTKZhWmUDwQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8760-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 06 Feb 2026 08:33:06 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 093EBFAD4C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 06 Feb 2026 08:07:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 454BCFB059
+	for <lists+linux-hyperv@lfdr.de>; Fri, 06 Feb 2026 08:33:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E2FB5304BC2D
-	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Feb 2026 07:06:16 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3AC87301A7C4
+	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Feb 2026 07:33:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF32E30BBB8;
-	Fri,  6 Feb 2026 07:06:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C59E31283C;
+	Fri,  6 Feb 2026 07:33:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QtiETBFd"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CfqSoJ8U"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CDFD30AD06;
-	Fri,  6 Feb 2026 07:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D81173101D8;
+	Fri,  6 Feb 2026 07:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770361575; cv=none; b=bXyCMImlRnWrgE3A1n+s/CP1k45vuJtDeiq+2Kojqro4Uat/AakemcJvdY2E8kA1imCc5qJMz6UlMgPCKou+PVm/F24ALd3DlW5CNRG9/+/RPt5uvzmD1YYsfldb13uDwNjEmnbIQly2apvuYIT30HAw+K64NJ3xL87YTt5F+lM=
+	t=1770363183; cv=none; b=shhgPlrDxq7B11vNN8vVgBxDzSKY81VA/i11dvuvmiJacCfyiG77hDG02S/Lh3GkxeayQajyjoUETU5J05qH2svxpuKmT+I3QfYiu/PcaAnODY5yDJ4dgC0AYtTCJE9CHn3w7Ddey9wHe6h1fLl65YVBVInXwBRp1/RUAuv8n7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770361575; c=relaxed/simple;
-	bh=9MREmfRKgXOB0rR/neOcsI+SDmg3AvOh0poaMMQePqg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V98LgpkaYh0+NIDsGi66BuT2UldcNx2CU3bsbIFfPhh8P0MCZ67+PtSpw58NCMEhKoLd3HIEdCaoqKUg49PJxhD2Sq5VDEDhx/p3l6ynKILikrwVyEtgClvtMwxeExeCdslTSMC7DczjmCkUGKY19960LA9YQpkzQY1AVBa4lnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QtiETBFd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C541C2BC9E;
-	Fri,  6 Feb 2026 07:06:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770361575;
-	bh=9MREmfRKgXOB0rR/neOcsI+SDmg3AvOh0poaMMQePqg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QtiETBFd32z8V0oYRw6wla9e/+iwp5pi7VuMEMZcY3+JCJ5WwtC+RHkPARpAA0y+/
-	 nvSptxPvUZMMmZPnD4ewLVz8wT8uqk3FUxzEHAe46u/hwX7iCU+qhaC7746ZdE1fzx
-	 F2djCuwuXDHflEtIR/EUYDJ6E+EswbpY4h4WWFiWfZhmKf2HDI2t3HhTUAvYAiaey8
-	 QNm76yzJvJrSbuDi8kmDmQRVaqyPrmqQVvl7wA3tG2vyCTqmaOuXuRmSzOhY7H6xly
-	 ikVVukiITNrBMmvyCL5CnXELf1teReVomwPPsEdDhM2sTljkc8EsGpmv9fexDv9eDb
-	 a50WgGiHV1k+w==
-Date: Fri, 6 Feb 2026 07:06:13 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: lirongqing <lirongqing@baidu.com>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mshv: fix SRCU protection in irqfd resampler ack handler
-Message-ID: <20260206070613.GB691451@liuwe-devbox-debian-v2.local>
-References: <20260205094010.4301-1-lirongqing@baidu.com>
+	s=arc-20240116; t=1770363183; c=relaxed/simple;
+	bh=OZRRqQ9EfucDYWsTtIOflSfSOiOC3B974b6H7plpHp0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J6T18eQtWTPpOvbaTWA+QvOhxrobT5yNJHaDP2RdU6bJOITxzTysxv+A6wlyMb9hDwa3ZrHsk7UgJqETE1vReT4KyL+HprA5gsjydo9pUJK1n1lDhnAZOd4Kz9iqNknQT4aSW94orbd1+gEp/OoUNHpQZ8p18thnzFFfVI2CUh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=CfqSoJ8U; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.67.96.222] (unknown [52.163.67.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 732E320B7168;
+	Thu,  5 Feb 2026 23:32:56 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 732E320B7168
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1770363182;
+	bh=4SGW3YwPxqqxGNqC6P5CHOeKcEhWll027SxxiPevSCg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CfqSoJ8Us5fyp1MXEtz+C3vKmqhfx1xBtqX8Du9o8s97zRRLrkC+vWQM7u+H/e+Zw
+	 PazFbzE74YL5W7fjqVw7ZYK9ADJZd7coItbgjRv6VYjUzQ3M2nkM5MxaxE13SqcnZr
+	 EdWp70ubTgIF+0MNyAtW5oyAYZhgTcnvKZWXIzYg=
+Message-ID: <76e8cfd8-f48d-4129-bb9d-ca58c24b29a4@linux.microsoft.com>
+Date: Fri, 6 Feb 2026 13:02:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260205094010.4301-1-lirongqing@baidu.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86: mshyperv: Use kthread for vmbus interrupts on
+ PREEMPT_RT
+To: Wei Liu <wei.liu@kernel.org>, Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Magnus Kulke <magnuskulke@linux.microsoft.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Dexuan Cui <decui@microsoft.com>,
+ Long Li <longli@microsoft.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Florian Bezdeka <florian.bezdeka@siemens.com>,
+ RT <linux-rt-users@vger.kernel.org>, Mitchell Levy
+ <levymitchell0@gmail.com>, skinsburskii@linux.microsoft.com,
+ mrathor@linux.microsoft.com, anirudh@anirudhrb.com,
+ schakrabarti@linux.microsoft.com, ssengar@linux.microsoft.com
+References: <133a95d9-8148-40ea-9acc-edfd8e3ceef4@siemens.com>
+ <20260204070004.GM79272@liuwe-devbox-debian-v2.local>
+ <c377fab9-54f1-4eb9-8810-013a8bfb340e@siemens.com>
+ <10ec70f2-27a5-477f-b6e9-164f7b7545d9@siemens.com>
+ <20260204072930.GO79272@liuwe-devbox-debian-v2.local>
+ <d1dded05-a47f-4be2-94c4-913104c758e2@siemens.com>
+ <20260204073629.GP79272@liuwe-devbox-debian-v2.local>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <20260204073629.GP79272@liuwe-devbox-debian-v2.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8759-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8760-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[linux.microsoft.com,microsoft.com,kernel.org,redhat.com,alien8.de,linux.intel.com,vger.kernel.org,siemens.com,gmail.com,anirudhrb.com];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wei.liu@kernel.org,linux-hyperv@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[namjain@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,liuwe-devbox-debian-v2.local:mid]
-X-Rspamd-Queue-Id: 093EBFAD4C
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,siemens.com:email]
+X-Rspamd-Queue-Id: 454BCFB059
 X-Rspamd-Action: no action
 
-On Thu, Feb 05, 2026 at 04:40:10AM -0500, lirongqing wrote:
-> From: Li RongQing <lirongqing@baidu.com>
-> 
-> Replace hlist_for_each_entry_rcu() with hlist_for_each_entry_srcu()
-> in mshv_irqfd_resampler_ack() to correctly handle SRCU-protected
-> linked list traversal.
-> 
-> The function uses SRCU (sleepable RCU) synchronization via
-> partition->pt_irq_srcu, but was incorrectly using the RCU variant
-> for list iteration. This could lead to race conditions when the
-> list is modified concurrently.
-> 
-> Also add srcu_read_lock_held() assertion as required by
-> hlist_for_each_entry_srcu() to ensure we're in the proper
-> read-side critical section.
-> 
-> Signed-off-by: Li RongQing <lirongqing@baidu.com>
 
-Thank you for the patch. Applied.
 
-I also added a Fixes tag to the commit message.
-
-Fixes: 621191d709b14 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
-
-> ---
->  drivers/hv/mshv_eventfd.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+On 2/4/2026 1:06 PM, Wei Liu wrote:
+> On Wed, Feb 04, 2026 at 08:32:04AM +0100, Jan Kiszka wrote:
+>> On 04.02.26 08:29, Wei Liu wrote:
+>>> On Wed, Feb 04, 2026 at 08:26:48AM +0100, Jan Kiszka wrote:
+>>>> On 04.02.26 08:19, Jan Kiszka wrote:
+>>>>> On 04.02.26 08:00, Wei Liu wrote:
+>>>>>> On Tue, Feb 03, 2026 at 05:01:30PM +0100, Jan Kiszka wrote:
+>>>>>>> From: Jan Kiszka <jan.kiszka@siemens.com>
+>>>>>>>
+>>>>>>> Resolves the following lockdep report when booting PREEMPT_RT on Hyper-V
+>>>>>>> with related guest support enabled:
+>>>>>>
+>>>>>> So all it takes to reproduce this is to enabled PREEMPT_RT?
+>>>>>>
+>>>>>
+>>>>> ...and enable CONFIG_PROVE_LOCKING so that you do not have to wait for
+>>>>> your system to actually run into the bug. Lockdep already triggers
+>>>>> during bootup.
+>>>>>
+>>>>>> Asking because ...
+>>>>>>
+>>>>>>>   	struct pt_regs *old_regs = set_irq_regs(regs);
+>>>>>>> @@ -158,8 +196,12 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_hyperv_callback)
+>>>>>>>   	if (mshv_handler)
+>>>>>>>   		mshv_handler();
+>>>>>>
+>>>>>> ... to err on the safe side we should probably do the same for
+>>>>>> mshv_handler as well.
+>>>>>>
+>>>>>
+>>>>> Valid question. We so far worked based on lockdep reports, and the
+>>>>> mshv_handler didn't trigger yet. Either it is not run in our setup, or
+>>>>> it is actually already fine. But I have a code review on my agenda
+>>>>> regarding potential remaining issues in mshv.
+>>>>>
+>>>>> Is there something needed to trigger the mshv_handler so that we can
+>>>>> test it?
+>>>>>
+>>>>
+>>>> Ah, that depends on CONFIG_MSHV_ROOT. Is that related to the accelerator
+>>>> mode that Magnus presented in [1]? We briefly chatted about it and also
+>>>> my problems with the drivers after his talk on Saturday.
+>>>
+>>> Yes. That is the driver. If PROVE_LOCKING triggers the warning without
+>>> running the code, perhaps turning on MSHV_ROOT is enough.
+>>>
+>>
+>> But if my VM is not a root partition, I wouldn't use that driver, would I?
 > 
-> diff --git a/drivers/hv/mshv_eventfd.c b/drivers/hv/mshv_eventfd.c
-> index 0b75ff1..6d176ed 100644
-> --- a/drivers/hv/mshv_eventfd.c
-> +++ b/drivers/hv/mshv_eventfd.c
-> @@ -87,8 +87,9 @@ static void mshv_irqfd_resampler_ack(struct mshv_irq_ack_notifier *mian)
->  
->  	idx = srcu_read_lock(&partition->pt_irq_srcu);
->  
-> -	hlist_for_each_entry_rcu(irqfd, &resampler->rsmplr_irqfd_list,
-> -				 irqfd_resampler_hnode) {
-> +	hlist_for_each_entry_srcu(irqfd, &resampler->rsmplr_irqfd_list,
-> +				 irqfd_resampler_hnode,
-> +				 srcu_read_lock_held(&partition->pt_irq_srcu)) {
->  		if (hv_should_clear_interrupt(irqfd->irqfd_lapic_irq.lapic_control.interrupt_type))
->  			hv_call_clear_virtual_interrupt(partition->pt_id);
->  
-> -- 
-> 2.9.4
+> No, you wouldn't.  You cannot do that until later this year. If you
+> cannot test that, so be it. I'm fine with applying your patch and then
+> move the mshv_handler logic later ourselves.
 > 
+> I've CC'ed a few folks from Microsoft.
+> 
+> Saurabh, Long, and Dexuan, can you review and test this patch for VMBus?
+
+
+I tested this and didn't see any issues with OpenHCL/mshv_vtl.
+
+Regards,
+Naman
+
 
