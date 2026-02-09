@@ -1,189 +1,266 @@
-Return-Path: <linux-hyperv+bounces-8767-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8768-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EECFOaqYhmmnPAQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8767-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 07 Feb 2026 02:43:06 +0100
+	id 6OhOI4aGiWkn+gQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8768-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 09 Feb 2026 08:02:30 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 185281048B7
-	for <lists+linux-hyperv@lfdr.de>; Sat, 07 Feb 2026 02:43:06 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D083910C4A4
+	for <lists+linux-hyperv@lfdr.de>; Mon, 09 Feb 2026 08:02:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 4AC0E300BE0E
-	for <lists+linux-hyperv@lfdr.de>; Sat,  7 Feb 2026 01:43:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5145F300679D
+	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Feb 2026 07:02:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2976315D49;
-	Sat,  7 Feb 2026 01:43:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE650258EC3;
+	Mon,  9 Feb 2026 07:02:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="jAMr3by3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i4L4Gdck"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f193.google.com (mail-dy1-f193.google.com [74.125.82.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD37D315D3B
-	for <linux-hyperv@vger.kernel.org>; Sat,  7 Feb 2026 01:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913C12AD2C
+	for <linux-hyperv@vger.kernel.org>; Mon,  9 Feb 2026 07:02:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770428582; cv=none; b=rt2xy8H13Fm/tfqtHddr4m1PLD2rsadi0ylqbMm41N6IHKl+7PWO9Isvd+4VXDhjhaFlH/Ui0SEIXHHigOXBZtIqCfWfYKREHj+MbgULlkJ2N4H0T0bqA3oc5NZtg5EkVQ0cwTMMJe/aycHia54wtYRLg8mBHBVPyyprH1gnf/8=
+	t=1770620546; cv=none; b=cZThjZ9v8M1rWmeUq/5tBVEs6RTfms8C+vkcKeh5wl4ZeRK71W1JveJppYctkD6qp9v9aeUcGdKFGQEbM8dBXNJG4fexP0iztCuB0BDsERi4VF7SThgem95vKtJGFX9jLnRqgg0jrZKuhMwiX6ICJUime2+RdhurJli6eDE+/TM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770428582; c=relaxed/simple;
-	bh=nM4TD51nEBf9Es1Jv5dwYF+TQVv1NWVTHW6DIlxuT+U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uZQ74vdm/SVutR2NyAwamZNVSofhhW9qFX1163cSzE+lg5hNuLpTvUly+UyNJPXR1H1Fn8Ay0K68ygjV9JsLC3ctUk1ENJC3O847ZA5XRO/LHN/uyCc8IjUQsq9qRPiVH208mE1zXJVq8/i/9O66u0IgV0x5+j35ga6WG6cTiZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=jAMr3by3; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=templeofstupid.com
-Date: Fri, 6 Feb 2026 17:42:52 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
-	s=key1; t=1770428580;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ou9hbR74SGxtKKIfWKPL/WEcI3zRLMFpkLgLFcBQ8WM=;
-	b=jAMr3by3JeHTHRSWKFUyWYAaxfafIDQFWmxMOKFPSWTcw7pSnEXrrZvMO7NE3KITl8WCIp
-	DMvSySHVxlMQeGlNRLw71YfuvE/oUIBkYj/Q97g6ZfGpPXqguxcm6ZoQYRR6VlTHNnBjWa
-	8dGi53yw1epYaFB0NtRJ76XBOekuHlbq7mci4FvX6QCtCMWcaCF1v9JY/mzpSsrTXJagcR
-	8MXHuCk8dZ3uaoly2YvokbfIt3WAeWsXYzsD9GW9tPNqSbkqXpQ2TneZEuQ2y5+XFzC6+4
-	JFXewfkRTy2Oonrjr7ISuX7bjr+CuluHXjsXRdK0pttFYdmzfj2R33y0DPOeAA==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Krister Johansen <kjlx@templeofstupid.com>
-To: Matthew Ruffell <matthew.ruffell@canonical.com>,
-	Michael Kelley <mhklinux@outlook.com>
-Cc: "DECUI@microsoft.com" <DECUI@microsoft.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"jakeo@microsoft.com" <jakeo@microsoft.com>,
-	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
-	"kys@microsoft.com" <kys@microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"longli@microsoft.com" <longli@microsoft.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"mani@kernel.org" <mani@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>
-Subject: Re: [PATCH] PCI: hv: Allocate MMIO from above 4GB for the config
- window
-Message-ID: <aYaYnMYik3SC45bb@templeofstupid.com>
-References: <SN6PR02MB4157545DAFDCCE0028439DB2D497A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20260123053909.95584-1-matthew.ruffell@canonical.com>
- <SN6PR02MB41573CD2EA6CD82A0C238F66D494A@SN6PR02MB4157.namprd02.prod.outlook.com>
+	s=arc-20240116; t=1770620546; c=relaxed/simple;
+	bh=IOtBl8MKHrgNuRhXhPZVlOsJtxt9RN8qVWDNq6+9ARQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cp1M1h0Z87Oo0FoDQB6BI1/n5ANIHI5vln+kLKX96NxckI/k0qUC+IG54mPHfhDjPL+A7aP3FoD1KuZtLlUXmuZoEJaXG7jdicV+oFs415AXAzCf5FgNBNIVZIs4Ax/Fv6Vqtu+Q5ofbrsOAFF3JR+Z5/+BTEc9eiy+CsVVpKDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i4L4Gdck; arc=none smtp.client-ip=74.125.82.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-dy1-f193.google.com with SMTP id 5a478bee46e88-2b8675d4f93so1243019eec.0
+        for <linux-hyperv@vger.kernel.org>; Sun, 08 Feb 2026 23:02:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770620546; x=1771225346; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QTQsukcOvGgA1IOwGu0V6U/4Hj9O7nggXaNLrVfcPCU=;
+        b=i4L4Gdck2pRYyWTfLd+BwWzgMD2mp3jybKtsiMskNmG3ALh/dTzi9aRyKkaLvO94Ab
+         375+tTtGA9afCyIz9YUNE4e6FkVJhjjItpsLd1NK7Z4pEfRrPWACT8/k7HHbfZUg1GpK
+         LfTAyA00vEigr4C3otMrmZJEDI+X4yRU/1fn//SwipRqYbqc11yREZzBGornsvWUqKDf
+         NQvPrV9zF2JswziCuDIy1U2u6hXm3MgJgveBYecahRN3FPdJzn/A82JvXw6Y3H9N7w6C
+         2rsD45f/kL6no+wNwCsPhsOyUqafaoJr2sSLuCtsQdzUjO0AMVbQbDht9IXsr4vAPreg
+         g3Yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770620546; x=1771225346;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QTQsukcOvGgA1IOwGu0V6U/4Hj9O7nggXaNLrVfcPCU=;
+        b=gw6n00HX0DyxrlZ4m4eCcxHQslxPb7KH+25LsQ4TMidlAFhnedWGtETd6iiRlYiZp8
+         ry9eNVbK7kwQEDWQ4O5knd0zn56R/gTjRXNvWBKCde25KueYa0D0XiZ8xExvaEfa79k3
+         cH+EcrQpJspaUVqG1SmmMsU1H6C4tSUcIc1B36f9npzs1HXD1zeJp0Fri6VDoKRRdswv
+         2hRuoWWK6lTNMlm2KRRw8lATKVABHmsl79B+ZUXrTKDLbkFRWzmZKnu6xV08m6xtLMA+
+         X2HTYBHnVIbOuWJbCeF2VkZex/PtgQl65TJTsMoTTBr2vs1H91ij6jafh56eAp9qinIj
+         8wNw==
+X-Forwarded-Encrypted: i=1; AJvYcCXA8FICgQwIi2txQndaSLfd1HPFGaRCa4We63vb5D/pBi7ovUMrzn9BzHPBbgJrq3xUD++As4uSm5A9Z7w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKj8/9z8gYzL+XsZT4MO2XsR3pjFGXSl2wfXcRoLnIca1Kv7Lb
+	kWZeAWO5W5k2in8OB5cC1tDbHZBUHzvvx9cqJG0vd4kxHirfU9IX2nzV
+X-Gm-Gg: AZuq6aJUe6QdO/KpNOrXweGVaNSPAVydZYsIs5qqCzg+9an+duCTxs/tj/Zd10Brp0T
+	5XJKv2V43B53qWu8O9XtdCST27+5triUIJPnijiDfW6AGm82AbRY1SHcRcnzRo9VulT8CBB5NIA
+	rdnPtOWK2DY/h6E4eq6xYEv5gjrKWGaDUPGGIVxQfNAgvrsp4rg79CEbB2KhUfttSG3R4muRW3u
+	IkisutswtSHM6e7FP4TlP0qWvQ4/PwtNF16g4jkPNLrn/EQnwAoDPaXc+PzStwSQ4AfeXnD1dga
+	K7exl+b+810klc/E3zS/6aLJkLcmbHc6G8Ww47I3HUTc3X3gbVlDAnQmex4sGCQnhatFy0Dj2Kc
+	x7VzKBKmv2RCLZdsrgYUBkwgpn/2ZiiB7vLx+tcnV7GRsdC7KUWtgeQS3vIQtE+WcTHW7VNLp+K
+	eQ2D8kER0rL4VAuplIjxty9NNQrTSEag==
+X-Received: by 2002:a05:7301:38a6:b0:2b8:31e5:918 with SMTP id 5a478bee46e88-2b856a4c311mr3244690eec.37.1770620545505;
+        Sun, 08 Feb 2026 23:02:25 -0800 (PST)
+Received: from mhkubun.search.charter.net ([66.91.163.55])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12706faa047sm6966305c88.14.2026.02.08.23.02.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Feb 2026 23:02:25 -0800 (PST)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: drawat.floss@gmail.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	longli@microsoft.com,
+	ryasuoka@redhat.com,
+	jfalempe@redhat.com
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH 1/2] Drivers: hv: vmbus: Provide option to skip VMBus unload on panic
+Date: Sun,  8 Feb 2026 23:02:00 -0800
+Message-Id: <20260209070201.1492-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR02MB41573CD2EA6CD82A0C238F66D494A@SN6PR02MB4157.namprd02.prod.outlook.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [2.84 / 15.00];
+	FREEMAIL_REPLYTO_NEQ_FROM_DOM(3.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[templeofstupid.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[templeofstupid.com:s=key1];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8767-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8768-lists,linux-hyperv=lfdr.de];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[canonical.com,outlook.com];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
 	RCPT_COUNT_TWELVE(0.00)[17];
+	FREEMAIL_TO(0.00)[gmail.com,linux.intel.com,kernel.org,suse.de,ffwll.ch,microsoft.com,redhat.com];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FREEMAIL_REPLYTO(0.00)[outlook.com];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[templeofstupid.com:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	TO_DN_NONE(0.00)[];
+	NEURAL_HAM(-0.00)[-0.925];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[mhkelley58@gmail.com,linux-hyperv@vger.kernel.org];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[kjlx@templeofstupid.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.997];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[templeofstupid.com:email,templeofstupid.com:dkim,templeofstupid.com:mid]
-X-Rspamd-Queue-Id: 185281048B7
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	HAS_REPLYTO(0.00)[mhklinux@outlook.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NO_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:replyto,outlook.com:email,outlook.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: D083910C4A4
 X-Rspamd-Action: no action
 
-Hi Matthew and Michael,
+From: Michael Kelley <mhklinux@outlook.com>
 
-On Fri, Jan 23, 2026 at 06:39:24AM +0000, Michael Kelley wrote:
-> From: Matthew Ruffell <matthew.ruffell@canonical.com> Sent: Thursday, January 22, 2026 9:39 PM
-> > > > There's a parameter to the kexec() command that governs whether it uses the
-> > > > kexec_file_load() system call or the kexec_load() system call.
-> > > > I wonder if that parameter makes a difference in the problem described for this
-> > > > patch.
-> > 
-> > Yes, it does indeed make a difference. I have been debugging this the past few
-> > days, and my colleague Melissa noticed that the problem reproduces when secure
-> > boot is disabled, but it does not reproduce when secure boot is enabled.
-> > Additionally, it reproduces on jammy, but not noble. It turns out that
-> > kexec-tools on jammy defaults to kexec_load() when secure boot is disabled,
-> > and when enabled, it instead uses kexec_file_load(). On noble, it defaults to
-> > first trying kexec_file_load() before falling back to kexec_load(), so the
-> > issue does not reproduce.
-> 
-> This is good info, and definitely a clue. So to be clear, the problem repros
-> only when kexec_load() is used. With kexec_file_load(), it does not repro. Is that
-> right? I saw a similar distinction when working on commit 304386373007,
-> though in the opposite direction!
+Currently, VMBus code initiates a VMBus unload in the panic path so
+that if a kdump kernel is loaded, it can start fresh in setting up its
+own VMBus connection. However, a driver for the VMBus virtual frame
+buffer may need to flush dirty portions of the frame buffer back to
+the Hyper-V host so that panic information is visible in the graphics
+console. To support such flushing, provide exported functions for the
+frame buffer driver to specify that the VMBus unload should not be
+done by the VMBus driver, and to initiate the VMBus unload itself.
+Together these allow a frame buffer driver to delay the VMBus unload
+until after it has completed the flush.
 
-Just to muddy the waters here, I have a team on the Noble 6.8 kernel
-train that's running into this issue on Standard_D#pds_v6 with secure
-boot disabled. I've validated via strace(8) that kexec(8) is calling
-kexec_file_load(2), but in this case the problem Dexuan describes in the
-cover letter occurs but affects NIC attachment instead of the NVMe
-storage device. (e.g. pci_hyperv attach of the NIC reports the
-pass-through error instead of successfully attaching).
+Ideally, the VMBus driver could use its own panic-path callback to do
+the unload after all frame buffer drivers have finished. But DRM frame
+buffer drivers use the kmsg dump callback, and there are no callbacks
+after that in the panic path. Hence this somewhat messy approach to
+properly sequencing the frame buffer flush and the VMBus unload.
 
+Fixes: 3671f3777758 ("drm/hyperv: Add support for drm_panic")
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+---
+ drivers/hv/channel_mgmt.c |  1 +
+ drivers/hv/hyperv_vmbus.h |  1 -
+ drivers/hv/vmbus_drv.c    | 25 ++++++++++++++++++-------
+ include/linux/hyperv.h    |  3 +++
+ 4 files changed, 22 insertions(+), 8 deletions(-)
 
-> > > > >  	/*
-> > > > >  	 * Set up a region of MMIO space to use for accessing configuration
-> > > > > -	 * space.
-> > > > > +	 * space. Use the high MMIO range to not conflict with the hyperv_drm
-> > > > > +	 * driver (which normally gets MMIO from the low MMIO range) in the
-> > > > > +	 * kdump kernel of a Gen2 VM, which fails to reserve the framebuffer
-> > > > > +	 * MMIO range in vmbus_reserve_fb() due to screen_info.lfb_base being
-> > > > > +	 * zero in the kdump kernel.
-> > > > >  	 */
-> > > > > -	ret = vmbus_allocate_mmio(&hbus->mem_config, hbus->hdev, 0, -1,
-> > > > > +	ret = vmbus_allocate_mmio(&hbus->mem_config, hbus->hdev, SZ_4G, -1,
-> > > > >  				  PCI_CONFIG_MMIO_LENGTH, 0x1000, false);
-> > > > >  	if (ret)
-> > > > >  		return ret;
-> > > > > --
-> > 
-> > Thank you for the patch Dexuan.
-> > 
-> > This patch fixes the problem on Ubuntu 5.15, and 6.8 based kernels
-> > booting V6 instance types on Azure with Gen 2 images.
-> 
-> Are you seeing the problem on x86/64 or arm64 instances in Azure?
-> "V6 instance types" could be either, I think, but I'm guessing you
-> are on x86/64.
-> 
-> And just to confirm: are you seeing the problem with the
-> Hyper-V DRM driver, or the Hyper-V FB driver? This patch mentions
-> the DRM driver, so I assume that's the problematic config.
+diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+index 74fed2c073d4..5de83676dbad 100644
+--- a/drivers/hv/channel_mgmt.c
++++ b/drivers/hv/channel_mgmt.c
+@@ -944,6 +944,7 @@ void vmbus_initiate_unload(bool crash)
+ 	else
+ 		vmbus_wait_for_unload();
+ }
++EXPORT_SYMBOL_GPL(vmbus_initiate_unload);
+ 
+ static void vmbus_setup_channel_state(struct vmbus_channel *channel,
+ 				      struct vmbus_channel_offer_channel *offer)
+diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+index cdbc5f5c3215..5d3944fc93ae 100644
+--- a/drivers/hv/hyperv_vmbus.h
++++ b/drivers/hv/hyperv_vmbus.h
+@@ -440,7 +440,6 @@ void hv_vss_deinit(void);
+ int hv_vss_pre_suspend(void);
+ int hv_vss_pre_resume(void);
+ void hv_vss_onchannelcallback(void *context);
+-void vmbus_initiate_unload(bool crash);
+ 
+ static inline void hv_poll_channel(struct vmbus_channel *channel,
+ 				   void (*cb)(void *))
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 6785ad63a9cb..97dfa529d250 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -69,19 +69,29 @@ bool vmbus_is_confidential(void)
+ }
+ EXPORT_SYMBOL_GPL(vmbus_is_confidential);
+ 
++static bool skip_vmbus_unload;
++
++/*
++ * Allow a VMBus framebuffer driver to specify that in the case of a panic,
++ * it will do the VMbus unload operation once it has flushed any dirty
++ * portions of the framebuffer to the Hyper-V host.
++ */
++void vmbus_set_skip_unload(bool skip)
++{
++	skip_vmbus_unload = skip;
++}
++EXPORT_SYMBOL_GPL(vmbus_set_skip_unload);
++
+ /*
+  * The panic notifier below is responsible solely for unloading the
+  * vmbus connection, which is necessary in a panic event.
+- *
+- * Notice an intrincate relation of this notifier with Hyper-V
+- * framebuffer panic notifier exists - we need vmbus connection alive
+- * there in order to succeed, so we need to order both with each other
+- * [see hvfb_on_panic()] - this is done using notifiers' priorities.
+  */
+ static int hv_panic_vmbus_unload(struct notifier_block *nb, unsigned long val,
+ 			      void *args)
+ {
+-	vmbus_initiate_unload(true);
++	if (!skip_vmbus_unload)
++		vmbus_initiate_unload(true);
++
+ 	return NOTIFY_DONE;
+ }
+ static struct notifier_block hyperv_panic_vmbus_unload_block = {
+@@ -2848,7 +2858,8 @@ static void hv_crash_handler(struct pt_regs *regs)
+ {
+ 	int cpu;
+ 
+-	vmbus_initiate_unload(true);
++	if (!skip_vmbus_unload)
++		vmbus_initiate_unload(true);
+ 	/*
+ 	 * In crash handler we can't schedule synic cleanup for all CPUs,
+ 	 * doing the cleanup for current CPU only. This should be sufficient
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index dfc516c1c719..b0502a336eb3 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -1334,6 +1334,9 @@ int vmbus_allocate_mmio(struct resource **new, struct hv_device *device_obj,
+ 			bool fb_overlap_ok);
+ void vmbus_free_mmio(resource_size_t start, resource_size_t size);
+ 
++void vmbus_initiate_unload(bool crash);
++void vmbus_set_skip_unload(bool skip);
++
+ /*
+  * GUID definitions of various offer types - services offered to the guest.
+  */
+-- 
+2.25.1
 
-It's been arm64 and not x86 for the case I've seen.  They're currently
-running with the hyperv_drm driver, but they've also tried swapping to
-the fb driver without any change in results.
-
-> > Tested-by: Matthew Ruffell <matthew.ruffell@canonical.com>
-
-All of the above said, I also tested Dexuan's fix on these instances and
-found that with the patch applied kdump did work again.
-
-Tested-by: Krister Johansen <johansen@templeofstupid.com>
-
--K
 
