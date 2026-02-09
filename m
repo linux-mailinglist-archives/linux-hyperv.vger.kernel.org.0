@@ -1,237 +1,217 @@
-Return-Path: <linux-hyperv+bounces-8769-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8770-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OAoVIZ6GiWkn+gQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8769-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 09 Feb 2026 08:02:54 +0100
+	id CHkNHIG4iWnoBAUAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8770-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 09 Feb 2026 11:35:45 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D51FE10C4D4
-	for <lists+linux-hyperv@lfdr.de>; Mon, 09 Feb 2026 08:02:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C72C910E31B
+	for <lists+linux-hyperv@lfdr.de>; Mon, 09 Feb 2026 11:35:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 69EC530071F8
-	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Feb 2026 07:02:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1DDB5301C59C
+	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Feb 2026 10:35:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1A922FF16F;
-	Mon,  9 Feb 2026 07:02:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55FB1366046;
+	Mon,  9 Feb 2026 10:35:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SKLkCP04"
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b="cKHuk6xQ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-dl1-f66.google.com (mail-dl1-f66.google.com [74.125.82.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mta-64-226.siemens.flowmailer.net (mta-64-226.siemens.flowmailer.net [185.136.64.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB002FD66D
-	for <linux-hyperv@vger.kernel.org>; Mon,  9 Feb 2026 07:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E063367F4D
+	for <linux-hyperv@vger.kernel.org>; Mon,  9 Feb 2026 10:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770620548; cv=none; b=mcJSWXgMYOR4heFVxADIXetxDn+F7qAp15eIETgpq+Y+vioXNVIDIsF1ECdZi2u9DRrilG2DH28mNbBQhEEXFQYi/nTZ0orfUxzhi2LzSnFMXWyxNNpIFB+RlzAtZAGdsYEhDNDtj9+IAytCwmNPpxAXI/y82pIDIFQa3jub7Kk=
+	t=1770633320; cv=none; b=oSoxigwvGdWvv4MkOjbOcjzOmU3OTXbZ9kT94Bt8xt8D4skVUEEBSpIYKiEEWXIntQ2Ckq2gF4LKIQzsPp8cll2cH6biDglO2PjXa8aJAjyz4lYvaH5sV3zjP/Po6o3hs8r3UM0yHOToZbw1UEnwkKcE6dG3y6q5CPMU2G53puk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770620548; c=relaxed/simple;
-	bh=0U9KcwIjyOYkXhdi8jwJRDF3PFzQKfnn0/XIDK7rvfo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VkOJmWQceBGubILeaN+lww465TMRD4emgIW1O+ZdxwW3DozUsb2RQem4Azw/+CXmBCHU5hifu8bTdx18qJLLf/4fxUDr+kIMd4v9JmrjlRlkmUQ+iY5PfW+HN6iGm4oNK3UgU2B+c1K7Itb+2x2Ey143myU/SS+hlrzHMvLAxBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SKLkCP04; arc=none smtp.client-ip=74.125.82.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-dl1-f66.google.com with SMTP id a92af1059eb24-1270adc5121so2302914c88.0
-        for <linux-hyperv@vger.kernel.org>; Sun, 08 Feb 2026 23:02:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770620547; x=1771225347; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=XaEjjnb5CXUgt55Cq6lrOTPEGYspEf0Y+Ywm9+lE9sY=;
-        b=SKLkCP043KM+9MXaSMpbJWF0og+fGMysAIL87EH7UXvqoaCqGOL2uGTxvH0j26oQJN
-         CbSdZK8e+uPwbBWAA9ffeoxAXdZzvdzozuJAkXX1TihiGQzarDCyODDUZE5HVgC7QaLm
-         Uhh3tsff7oC9K8FTndCZSvG+ZIYJcZq4YSJztLIIGzMv3m8OBRDOjr35IqwTbdVebY4h
-         gg0xKo8hdglTogo8BztUPvQoSH/LxjeksNhLNH3iBoEXQOxFbsHQgNmbDxsjVlycQWUd
-         mrEy4K+/toq+ODe/h6nUX103LlGx/vpAdw/BSoTBe8BZJOpcBb76ssEyryKzNciADmKc
-         8x1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770620547; x=1771225347;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XaEjjnb5CXUgt55Cq6lrOTPEGYspEf0Y+Ywm9+lE9sY=;
-        b=orru+WXHDGf+WxFUZtuVw/iR+MNOjtnNjKd7vWBlDDXNfTSk36m/flzAmiGB1VGAJS
-         2jFZhqKW99ap5pHOGBQ15pLXLYnXOuzlnypAkT8S5vw7VZ7UPxbTpotsu9PkRoefvqtX
-         bFNT51QlkvGo398cqLSnsyYCvgdNrJ5KAL+40GJaNm5wJ2fECv5BgPcXM08TJSh+SIzG
-         hZTs3cHWG4Gkl1KdB3SB8RpZN67bo8cP2l3qJUSb8mRVWH0gaEbUsJVN2kybqWUUqJTK
-         x1KHBfFjslkZ1vhyNUDdc3wb/F0A3loe5n/0K9UJ4PSO0P9k5YMC6TKepei6l6VWMp3P
-         3PPw==
-X-Forwarded-Encrypted: i=1; AJvYcCWAz3BGTyUqQE56frChEUoP5u/MY13yr20Uiiey+hbJpnwgqWqSFGgXTrM5z81mxcAKKE7bzPfGb3hJHGA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZmXYud6OZesnHEUFUy+PX0CO7YhRBzoVa88kQ6hsCKifu0lfr
-	U7H4rcO/4LKwNnr3pYK1+wzur5c/oDRq3nuzIiHhF77T+W/HvoH7wdKu
-X-Gm-Gg: AZuq6aIXHWre9EJuIUKLKpqcKjeRZBCpUWNeOTIt56OmZJ/lNAMEz9ExYJlNM2TG08j
-	E24ZIt96bmk/bxrK1k5Ab6JPLzw+4YiYV9uIDEJwlWQuRMLDJNtqphv1yWyKgzRmOZaYFX5XfyR
-	ItJFXS4ubARMszfiuPZQ+8xu7yb7Wo9GoQMYw6bH4Y2kAMCz5j/64cpgpQE1YiJ702g7/PcRKbd
-	2Uo7RhLkT58BP5IUMznZ8Q33XJyJg80ySVo44z7RpoTZXKDYe8p1Pgz5PNEKtnH/uF0QZiRMO+c
-	hA6ymw0ijQYlCzM6FOE8qnRiERMZCCzYdkAKnHey1ZpwXDBHw95RqFP7dcHi/N1StsFi/QDpLJq
-	tqNDNiBJhyLQv+wu6UcOSb3JKgUbFWm5flLdOD21rKujz23seqRY5u6lrznNb5VwngbsgH146oQ
-	Ui610NSaQfu4LOmem+nOyBUls1QtKl1Q==
-X-Received: by 2002:a05:7022:6293:b0:11a:335d:80d2 with SMTP id a92af1059eb24-1270405aa57mr5370472c88.35.1770620547355;
-        Sun, 08 Feb 2026 23:02:27 -0800 (PST)
-Received: from mhkubun.search.charter.net ([66.91.163.55])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12706faa047sm6966305c88.14.2026.02.08.23.02.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Feb 2026 23:02:27 -0800 (PST)
-From: mhkelley58@gmail.com
-X-Google-Original-From: mhklinux@outlook.com
-To: drawat.floss@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	ryasuoka@redhat.com,
-	jfalempe@redhat.com
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH 2/2] drm/hyperv: During panic do VMBus unload after frame buffer is flushed
-Date: Sun,  8 Feb 2026 23:02:01 -0800
-Message-Id: <20260209070201.1492-2-mhklinux@outlook.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20260209070201.1492-1-mhklinux@outlook.com>
-References: <20260209070201.1492-1-mhklinux@outlook.com>
-Reply-To: mhklinux@outlook.com
+	s=arc-20240116; t=1770633320; c=relaxed/simple;
+	bh=7hMHm0iRtxr04qDK/tz0DPUluRPXuol7JIrOSavW5h8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dfiYLZx3OiBUnM4tg4cN7LU33DVInzmo/hdZhd5teZ6xEkf43XDd2Xs+HGRik5bb4CPcs1/YlPX4symS/9Ry+fLZNCVRxwoj+89mqpFfD2V8EUSFTtdAUzatJIdHlebGL4OQd5f7bHWibxKuo/HJODJvCcR9O2UOPA5u7zxiwMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b=cKHuk6xQ; arc=none smtp.client-ip=185.136.64.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+Received: by mta-64-226.siemens.flowmailer.net with ESMTPSA id 20260209103515d311369f6d000207d7
+        for <linux-hyperv@vger.kernel.org>;
+        Mon, 09 Feb 2026 11:35:15 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=florian.bezdeka@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=Sbmxn3u6Ho878rqkPnilMh7wbXv7sRc1stsqyjvumbk=;
+ b=cKHuk6xQKgpHMc33oEHowDxp2hlVSfWGH8GRcW0bMfjC+Yz6ysEQTj6JFeXnKJnBCVIXxP
+ gD2N6eIwfu2lF0/DZzLSlsiScgf2WrmvuVQYaT1BCfzi9x7dXHi3dm9zh+DELMWapkjfSxbz
+ NVoeVJc5oCLQF2Ty5v9/wZxKk14yQxlDXPYfaMVQR34WE+CQbsnhq/6pPVTWngGcuUhhEr6K
+ 91RjCGoNzQIqX18t1an1GUMuLWUuH22IREks18BBJfJnxkT3SM1TP1FK9Imb/mxUW6vHpqWQ
+ xkq5FdmLxx+XOduPvPEZx1VY9LR7fFglUmt6gGLkCRhxKfW+G+rF2sPg==;
+Message-ID: <1b569fcf3d096066aeb011e21f9c1fe21f7df9b5.camel@siemens.com>
+Subject: Re: [PATCH] x86: mshyperv: Use kthread for vmbus interrupts on
+ PREEMPT_RT
+From: Florian Bezdeka <florian.bezdeka@siemens.com>
+To: Michael Kelley <mhklinux@outlook.com>, Jan Kiszka
+ <jan.kiszka@siemens.com>,  "K. Y. Srinivasan"	 <kys@microsoft.com>, Haiyang
+ Zhang <haiyangz@microsoft.com>, Wei Liu	 <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, Long Li	 <longli@microsoft.com>, Thomas Gleixner
+ <tglx@kernel.org>, Ingo Molnar	 <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen	 <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>
+Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
+ "linux-kernel@vger.kernel.org"	 <linux-kernel@vger.kernel.org>, RT
+ <linux-rt-users@vger.kernel.org>,  Mitchell Levy <levymitchell0@gmail.com>,
+ "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>, 
+ "mrathor@linux.microsoft.com"	 <mrathor@linux.microsoft.com>,
+ "anirudh@anirudhrb.com" <anirudh@anirudhrb.com>, 
+ "schakrabarti@linux.microsoft.com"	 <schakrabarti@linux.microsoft.com>,
+ "ssengar@linux.microsoft.com"	 <ssengar@linux.microsoft.com>
+Date: Mon, 09 Feb 2026 11:35:14 +0100
+In-Reply-To: <SN6PR02MB41579F60E39CA2A3CA8A5A75D467A@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <133a95d9-8148-40ea-9acc-edfd8e3ceef4@siemens.com>
+	 <SN6PR02MB4157B6A9C8BEFA312F0D9D68D499A@SN6PR02MB4157.namprd02.prod.outlook.com>
+	 <eb5debe8-b7d6-4076-b295-9a02271c2ee6@siemens.com>
+	 <SN6PR02MB41579F60E39CA2A3CA8A5A75D467A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-68982:519-21489:flowmailer
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [2.84 / 15.00];
-	FREEMAIL_REPLYTO_NEQ_FROM_DOM(3.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	DMARC_POLICY_ALLOW(-0.50)[siemens.com,reject];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[siemens.com:s=fm2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-8770-lists,linux-hyperv=lfdr.de];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,linux.microsoft.com,anirudhrb.com];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8769-lists,linux-hyperv=lfdr.de];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,linux.intel.com,kernel.org,suse.de,ffwll.ch,microsoft.com,redhat.com];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	FREEMAIL_REPLYTO(0.00)[outlook.com];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_FROM(0.00)[gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	TO_DN_NONE(0.00)[];
-	NEURAL_HAM(-0.00)[-0.927];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[mhkelley58@gmail.com,linux-hyperv@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[outlook.com,siemens.com,microsoft.com,kernel.org,redhat.com,alien8.de,linux.intel.com];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[siemens.com:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	HAS_REPLYTO(0.00)[mhklinux@outlook.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[florian.bezdeka@siemens.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_NO_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:replyto,outlook.com:email,outlook.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: D51FE10C4D4
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,siemens.com:mid,siemens.com:dkim]
+X-Rspamd-Queue-Id: C72C910E31B
 X-Rspamd-Action: no action
 
-From: Michael Kelley <mhklinux@outlook.com>
+On Sat, 2026-02-07 at 01:30 +0000, Michael Kelley wrote:
 
-In a VM, Linux panic information (reason for the panic, stack trace,
-etc.) may be written to a serial console and/or a virtual frame buffer
-for a graphics console. The latter may need to be flushed back to the
-host hypervisor for display.
+[snip]
+>=20
+> I've run your suggested experiment on an arm64 VM in the Azure cloud. My
+> kernel was linux-next 20260128. I set CONFIG_PREEMPT_RT=3Dy and
+> CONFIG_PROVE_LOCKING=3Dy, but did not add either of your two patches
+> (neither the storvsc driver patch nor the x86 VMBus interrupt handling pa=
+tch).
+> The VM comes up and runs, but with this warning during boot:
+>=20
+> [    3.075604] hv_utils: Registering HyperV Utility Driver
+> [    3.075636] hv_vmbus: registering driver hv_utils
+> [    3.085920] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> [    3.088128] hv_vmbus: registering driver hv_netvsc
+> [    3.091180] [ BUG: Invalid wait context ]
+> [    3.093544] 6.19.0-rc7-next-20260128+ #3 Tainted: G            E
+> [    3.097582] -----------------------------
+> [    3.099899] systemd-udevd/284 is trying to lock:
+> [    3.102568] ffff000100e24490 (&channel->sched_lock){....}-{3:3}, at: v=
+mbus_chan_sched+0x128/0x3b8 [hv_vmbus]
+> [    3.108208] other info that might help us debug this:
+> [    3.111454] context-{2:2}
+> [    3.112987] 1 lock held by systemd-udevd/284:
+> [    3.115626]  #0: ffffd5cfc20bcc80 (rcu_read_lock){....}-{1:3}, at: vmb=
+us_chan_sched+0xcc/0x3b8 [hv_vmbus]
+> [    3.121224] stack backtrace:
+> [    3.122897] CPU: 0 UID: 0 PID: 284 Comm: systemd-udevd Tainted: G     =
+       E       6.19.0-rc7-next-20260128+ #3 PREEMPT_RT
+> [    3.129631] Tainted: [E]=3DUNSIGNED_MODULE
+> [    3.131946] Hardware name: Microsoft Corporation Virtual Machine/Virtu=
+al Machine, BIOS Hyper-V UEFI Release v4.1 06/10/2025
+> [    3.138553] Call trace:
+> [    3.140015]  show_stack+0x20/0x38 (C)
+> [    3.142137]  dump_stack_lvl+0x9c/0x158
+> [    3.144340]  dump_stack+0x18/0x28
+> [    3.146290]  __lock_acquire+0x488/0x1e20
+> [    3.148569]  lock_acquire+0x11c/0x388
+> [    3.150703]  rt_spin_lock+0x54/0x230
+> [    3.152785]  vmbus_chan_sched+0x128/0x3b8 [hv_vmbus]
+> [    3.155611]  vmbus_isr+0x34/0x80 [hv_vmbus]
+> [    3.158093]  vmbus_percpu_isr+0x18/0x30 [hv_vmbus]
+> [    3.160848]  handle_percpu_devid_irq+0xdc/0x348
+> [    3.163495]  handle_irq_desc+0x48/0x68
+> [    3.165851]  generic_handle_domain_irq+0x20/0x38
+> [    3.168664]  gic_handle_irq+0x1dc/0x430
+> [    3.170868]  call_on_irq_stack+0x30/0x70
+> [    3.173161]  do_interrupt_handler+0x88/0xa0
+> [    3.175724]  el1_interrupt+0x4c/0xb0
+> [    3.177855]  el1h_64_irq_handler+0x18/0x28
+> [    3.180332]  el1h_64_irq+0x84/0x88
+> [    3.182378]  _raw_spin_unlock_irqrestore+0x4c/0xb0 (P)
+> [    3.185493]  rt_mutex_slowunlock+0x404/0x440
+> [    3.187951]  rt_spin_unlock+0xb8/0x178
+> [    3.190394]  kmem_cache_alloc_noprof+0xf0/0x4f8
+> [    3.193100]  alloc_empty_file+0x64/0x148
+> [    3.195461]  path_openat+0x58/0xaa0
+> [    3.197658]  do_file_open+0xa0/0x140
+> [    3.199752]  do_sys_openat2+0x190/0x278
+> [    3.202124]  do_sys_open+0x60/0xb8
+> [    3.204047]  __arm64_sys_openat+0x2c/0x48
+> [    3.206433]  invoke_syscall+0x6c/0xf8
+> [    3.208519]  el0_svc_common.constprop.0+0x48/0xf0
+> [    3.211050]  do_el0_svc+0x24/0x38
+> [    3.212990]  el0_svc+0x164/0x3c8
+> [    3.214842]  el0t_64_sync_handler+0xd0/0xe8
+> [    3.217251]  el0t_64_sync+0x1b0/0x1b8
+> [    3.219450] hv_utils: Heartbeat IC version 3.0
+> [    3.219471] hv_utils: Shutdown IC version 3.2
+> [    3.219844] hv_utils: TimeSync IC version 4.0=20
 
-The current Hyper-V DRM driver for the frame buffer does the flushing
-*after* the VMBus connection has been unloaded, such that panic messages
-are not displayed on the graphics console. A user with a Hyper-V graphics
-console is left with just a hung empty screen after a panic. The enhanced
-control that DRM provides over the panic display in the graphics console
-is similarly non-functional.
+That matches with my expectation that the same problem exists on arm64.
+The patch from Jan addresses that issue for x86 (only, so far) as we do
+not have a working test environment for arm64 yet.
 
-Commit 3671f3777758 ("drm/hyperv: Add support for drm_panic") added
-the Hyper-V DRM driver support to flush the virtual frame buffer. It
-provided necessary functionality but did not handle the sequencing
-problem with VMBus unload.
+>=20
+> I don't see an indication that vmbus_isr() has been offloaded from
+> interrupt level onto a thread.  The stack starting with el1h_64_irq()
+> and going forward is the stack for normal per-cpu interrupt handling.
+> Maybe arm64 with PREEMPT_RT does the offload to a thread only
+> for SPIs and LPIs, but not for PPIs? I haven't looked at the source code
+> for how PREEMPT_RT affects arm64 interrupt handling.
+>=20
+> Also, I had expected to see a problem with storvsc because I did
+> not apply your storvsc patch. But there was no such problem, even
+> with some disk I/O load (read only). arm64 VMs in Azure use exactly
+> the same virtual SCSI devices that are used with x86 VMs in Azure or
+> on local Hyper-V. I don't have an explanation. Will think about it.
+>=20
 
-Fix the full problem by using VMBus functions to suppress the VMBus
-unload that is normally done by the VMBus driver in the panic path. Then
-after the frame buffer has been flushed, do the VMBus unload so that a
-kdump kernel can start cleanly. As expected, CONFIG_DRM_PANIC must be
-selected for these changes to have effect. As a side benefit, the
-enhanced features of the DRM panic path are also functional.
+Running the --iomix stressor provided by stress-ng was able to trigger
+the SCSI problem within 2 minutes. The result was a completely frozen
+system. For completeness the complete stress-ng command line:
 
-Fixes: 3671f3777758 ("drm/hyperv: Add support for drm_panic")
-Signed-off-by: Michael Kelley <mhklinux@outlook.com>
----
- drivers/gpu/drm/hyperv/hyperv_drm_drv.c     |  4 ++++
- drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 15 ++++++++-------
- 2 files changed, 12 insertions(+), 7 deletions(-)
+# stress-ng --cpu 2 --iomix 8 --vm 2 --vm-bytes 128M --fork 4
 
-diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-index 06b5d96e6eaf..79e51643be67 100644
---- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-+++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-@@ -150,6 +150,9 @@ static int hyperv_vmbus_probe(struct hv_device *hdev,
- 		goto err_free_mmio;
- 	}
- 
-+	/* If DRM panic path is stubbed out VMBus code must do the unload */
-+	if (IS_ENABLED(CONFIG_DRM_PANIC) && IS_ENABLED(CONFIG_PRINTK))
-+		vmbus_set_skip_unload(true);
- 	drm_client_setup(dev, NULL);
- 
- 	return 0;
-@@ -169,6 +172,7 @@ static void hyperv_vmbus_remove(struct hv_device *hdev)
- 	struct drm_device *dev = hv_get_drvdata(hdev);
- 	struct hyperv_drm_device *hv = to_hv(dev);
- 
-+	vmbus_set_skip_unload(false);
- 	drm_dev_unplug(dev);
- 	drm_atomic_helper_shutdown(dev);
- 	vmbus_close(hdev->channel);
-diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-index 7978f8c8108c..d48ca6c23b7c 100644
---- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-+++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-@@ -212,15 +212,16 @@ static void hyperv_plane_panic_flush(struct drm_plane *plane)
- 	struct hyperv_drm_device *hv = to_hv(plane->dev);
- 	struct drm_rect rect;
- 
--	if (!plane->state || !plane->state->fb)
--		return;
-+	if (plane->state && plane->state->fb) {
-+		rect.x1 = 0;
-+		rect.y1 = 0;
-+		rect.x2 = plane->state->fb->width;
-+		rect.y2 = plane->state->fb->height;
- 
--	rect.x1 = 0;
--	rect.y1 = 0;
--	rect.x2 = plane->state->fb->width;
--	rect.y2 = plane->state->fb->height;
-+		hyperv_update_dirt(hv->hdev, &rect);
-+	}
- 
--	hyperv_update_dirt(hv->hdev, &rect);
-+	vmbus_initiate_unload(true);
- }
- 
- static const struct drm_plane_helper_funcs hyperv_plane_helper_funcs = {
--- 
-2.25.1
-
+Best regards,
+Florian
 
