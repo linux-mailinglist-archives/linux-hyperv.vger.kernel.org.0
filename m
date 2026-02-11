@@ -1,133 +1,110 @@
-Return-Path: <linux-hyperv+bounces-8777-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8778-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WJcDA/q2i2kKZAAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8777-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Feb 2026 23:53:46 +0100
+	id oJ+gC48RjGm7fwAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8778-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Feb 2026 06:20:15 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8380211FD84
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Feb 2026 23:53:45 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC27412150D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Feb 2026 06:20:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 095FE3045A9E
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Feb 2026 22:53:29 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 1A659301DC91
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Feb 2026 05:20:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E27430E0E4;
-	Tue, 10 Feb 2026 22:53:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A882330B00;
+	Wed, 11 Feb 2026 05:20:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="hAHwXVxF"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fD1jqLQA"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88092FE579;
-	Tue, 10 Feb 2026 22:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D3712E7657;
+	Wed, 11 Feb 2026 05:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770764008; cv=none; b=KsbN7bX3kF1pDK5Joi7h8jw8xBRQumQuTkNcoPGpx1YvQo6jF8+3l9g/LoMAzYqWR25HENA70CsWnEWWvnt7jBwocxbDrRFNJ/d/wn58u+D4bVHiROTU9HbwR5+5tiQRggKhQEZaCxOYijzePZS5zLGN+3rfloanraq8TqH3tEM=
+	t=1770787210; cv=none; b=YBoKa823nOMuGxF6UgYyyPdfCgPcJnfn0AymMUCgWWkZU9JTRs08QyeoCooumofj0+n3Cz5Sw/ZYnQjlBPknaXmpEt9X6Jfsq9ZJCcqz+ntzZLThWTWhnj+/v+WTj8LHN8CY4S53s8LXhuqun3brs0B7JLTciKoiDwDNdKpdsnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770764008; c=relaxed/simple;
-	bh=AHbiyaawWzFPubJS9zsKj1xRN7M0Og7yWqxxCClQNfw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DS1GSEYM344QRIKv24acMf0HsZXiOg8th/nc+JcQyinfZxaOEN6jiyDo2AhsDBPiENxijeyG/4BQPf11+t31bWro3nqGlBL4aa2w4qvIuzANwrbbZhp21tQyaJiWdFNIpOv6tDZgCvXbKXg1M08CrmDiZ5CztVTQefUi77Mpc1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=hAHwXVxF; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Received: from [172.27.2.41] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 61AMqfJn3574887
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 10 Feb 2026 14:52:49 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 61AMqfJn3574887
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2026012301; t=1770763970;
-	bh=/JVwO5GqZyRu4wslqfDAhOYGhuMqZ/no6z2KyqqMrrY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hAHwXVxFx5gqlfTFo0/gyNlXYQGyG16+cRGFk2IqI/h4lJycl1YZ97q4FTjUU+xYT
-	 mM31ROJYLaK8oqNutqeK/8rYNWOMrwXdeWEN3YBPWsbpFHa7sE8F01H+LtFzOQlpE/
-	 jI5VVFqpsAoAWAaMIJP7/DT38rlWrlTaJB1Bm5l5NhyVQg/7h+nBg6BzWvLr703GCm
-	 vGDbTM9zlHstq+R/V50AdmgbNmSJWxhrrCvyFkAfpR3WtV4IRtlS3aZkMhd+v5uJYv
-	 7QrhKD3s2RLTLzW5uZVULcw/UDch7w2sqHkafEjjMMPWrD4iJbGFj/e7eKxpQnFX4M
-	 5qNmAx2H0G24w==
-Message-ID: <90543b26-1e09-4a84-802e-aad737265b7a@zytor.com>
-Date: Tue, 10 Feb 2026 14:52:36 -0800
+	s=arc-20240116; t=1770787210; c=relaxed/simple;
+	bh=Vj8FSnOHIKKKA7z7j5V3sImfDEdojSJnMH8nghspUaw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qLYdi9rm0y/HSu4XLjuuua5xWIPUU4SsR4Of/sKy+brLQuLboLKe4uPK1LNFHPe2Bx6TUYman2oTql4f4M0WhIM1jMtn7WR4fDn9Wa2ZnI3t4x6tbCPXZH0zkj38htkIrA9oK/cejwu6RYTAMg+SXt7doWtTL99QKhZdA0RRtwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=fD1jqLQA; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 32F1220B7167; Tue, 10 Feb 2026 21:20:09 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 32F1220B7167
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1770787209;
+	bh=Vj8FSnOHIKKKA7z7j5V3sImfDEdojSJnMH8nghspUaw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fD1jqLQAVDFpW9PBvhkQX0AKkerZ8rgPFmuSvva/LP1S2MDzEam0ls6dRXkc7bHXL
+	 ogzTE5XMKL6ZNO/mCv/t53HiEA3tmnXEWlrcW7Jlsea/cDgHQcDqqnkbJ6kIlUneaE
+	 SF05BA6NrdwMOpraIkKHJpz38lIzdl/UaHHBFhGY=
+Date: Tue, 10 Feb 2026 21:20:09 -0800
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Jakub Kicinski <kuba@kernel.org>, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	longli@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, pabeni@redhat.com, kotaranov@microsoft.com,
+	shradhagupta@linux.microsoft.com, yury.norov@gmail.com,
+	dipayanroy@linux.microsoft.com, shirazsaleem@microsoft.com,
+	ssengar@linux.microsoft.com, gargaditya@linux.microsoft.com,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2] net: mana: Improve diagnostic logging for
+ better debuggability
+Message-ID: <aYwRifmi3eQFD5gm@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20260121065655.18249-1-ernis@linux.microsoft.com>
+ <20260121201412.179f9b37@kernel.org>
+ <aXJhzi58GqLKtui4@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20260122180745.3b5607cf@kernel.org>
+ <20260126195850.GO13967@unreal>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] x86/hyperv: Remove ASM_CALL_CONSTRAINT with
- VMMCALL insn
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: linux-hyperv@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
-        Michael Kelley <mhklinux@outlook.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-References: <20251121141437.205481-1-ubizjak@gmail.com>
- <20251121141437.205481-3-ubizjak@gmail.com>
- <8F5147DF-E0E2-4942-99D9-4242F3013635@zytor.com>
- <CAFULd4ZaRGENKVYXZiaPO0heT+1bpGrVBGzA+Wz9VS1NG6trAQ@mail.gmail.com>
-Content-Language: en-US, sv-SE
-From: "H. Peter Anvin" <hpa@zytor.com>
-In-Reply-To: <CAFULd4ZaRGENKVYXZiaPO0heT+1bpGrVBGzA+Wz9VS1NG6trAQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260126195850.GO13967@unreal>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[zytor.com,none];
-	R_DKIM_ALLOW(-0.20)[zytor.com:s=2026012301];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8777-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8778-lists,linux-hyperv=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[21];
 	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[13];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,outlook.com,microsoft.com,linutronix.de,redhat.com,alien8.de,linux.intel.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hpa@zytor.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[zytor.com:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,zytor.com:mid,zytor.com:dkim]
-X-Rspamd-Queue-Id: 8380211FD84
+	FROM_NEQ_ENVFROM(0.00)[ernis@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FREEMAIL_CC(0.00)[kernel.org,microsoft.com,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,gmail.com,vger.kernel.org];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: AC27412150D
 X-Rspamd-Action: no action
 
-On 2025-11-22 01:33, Uros Bizjak wrote:
->>
->> I think it would be good to have a comment at the point where ASM_CALL_CONSTRAINT is defined explaining its proper use.
->>
->> Specifically, instructions like syscall, vmcall, vmfunc, vmmcall, int xx and VM-specific escape instructions are not "calls" because they either don't modify the stack or create an exception frame (kernel) or signal frame (user space) which is completely special.
-> 
-> The existing comment already mentions CALL instruction only:
-> 
-> /*
->  * This output constraint should be used for any inline asm which has a "call"
->  * instruction.  Otherwise the asm may be inserted before the frame pointer
->  * gets set up by the containing function.  If you forget to do this, objtool
->  * may print a "call without frame pointer save/setup" warning.
->  */
-> 
+Hi Jakub, Leon,
 
-Yes. Some people seem to have misunderstood it to mean any instruction with
-"CALL" in the name.
-
-	-hpa
-
+Thankyou for your comments.
+I will be sending the next version with updated error logs only
+with MAC address reporting in Vport Config.
+Additional information will be added into debugfs in a different patch.
 
