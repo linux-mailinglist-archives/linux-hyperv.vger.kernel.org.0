@@ -1,103 +1,102 @@
-Return-Path: <linux-hyperv+bounces-8790-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8791-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GCt4A1iijWlh5gAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8790-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Feb 2026 10:50:16 +0100
+	id GEMeO8qnjWkK5wAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8791-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Feb 2026 11:13:30 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 639E412C05B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Feb 2026 10:50:15 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54B7B12C587
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Feb 2026 11:13:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2332F308BCC4
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Feb 2026 09:50:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 863F1303CE3C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Feb 2026 10:10:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B52B3284672;
-	Thu, 12 Feb 2026 09:50:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F10A2DFA54;
+	Thu, 12 Feb 2026 10:10:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CRCnp2Uw";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="UM1tzJ7u"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fCuZ5hRP";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="G8oDHDL+"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1575B79CD
-	for <linux-hyperv@vger.kernel.org>; Thu, 12 Feb 2026 09:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656F42DAFA8
+	for <linux-hyperv@vger.kernel.org>; Thu, 12 Feb 2026 10:10:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770889804; cv=none; b=tVv6a2brF0ZXNSrH4V/NexujylbxgkcwwKMV1ZnKDSYoidWazUKI5JZhecaaJcIS7ypvVw3iTAo+oXPA4/ZrlVzuTbcAnGeWJ0nhq3n/pQCjSirQ4DWKRF8pDUSsml/aTSWN89OY5lqfAJjNpdpLGGeLedo9h7HbFMs1clBxNd4=
+	t=1770891011; cv=none; b=G/On7Km62Hhb3RS5AReuZfgXY92hM0V4ee7NFC3Q0oYReK5PrQMhDR6QugugIA+nAjmriiSuhL1835HytDUCO6kRGTXHc34tIwzpczx30sTFOZESjEhy4Cj9W/10CHntRnDCvm1AJwOSAnMnTnnCJABmiLWYQVM1IPnhZCx89f0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770889804; c=relaxed/simple;
-	bh=ssiBpGwudSOhWWpXd6ltuV0trtgpSjINF3dITy6pg0s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=goRogSRc37fNW6WK3xNFqlFqGGhrb/P2WrCw+h58OjY4ttZavo3EQ7LwWOpSu0ztMYzIF383KnJPx1CwGGGvpDrK89g/yR03Llci/8iurI5K4o5uDwTiV2Pmde49O6KG16CPl8rxnPG9jXaToQpwh3JqOn/YzL9l901ex0RrR2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CRCnp2Uw; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=UM1tzJ7u; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1770891011; c=relaxed/simple;
+	bh=SGaCcfVfOD01Cl86Knz26tLX4aJ70u9hQYfrkP4z5FM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=nt0fizC5VOxONmKlDvy99P18++Y4NGB6T/a7MfWbkUCK8PA4lPDbMwsEdMSDGA5Q3ZwK2mzfQAXzjCspZtCA/Zb8IBAWBkHUvsDo4f0yHFfSeGLD4WjaLVceNbGghgFsad+DcfeDJ1XXxLHhfMmAV4wqo9488cxg33zk3bV99nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fCuZ5hRP; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=G8oDHDL+; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1770889802;
+	s=mimecast20190719; t=1770891009;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7izo/A5Ul08EXM2WpJ9NM5vTC0yA5lFDEQbyiP4NFcY=;
-	b=CRCnp2UwTvVzBCMIWlVfd4+IXB3P8x9g5GNV+WL6SeueerGzvkGLz/9sslIX0u5YeaN803
-	sKQMHYZ0xP+8mYmMi9QzZiuuK+kdHxuJvRtzNCB17Mxuxbx368ETnNcsQoSemHHjQIxvzV
-	V6yiKGl1XJ3E22Wg4gC8dP66IKjTO8M=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=MGtZzlI0afIe1oXYIL6I39556RNwafluFe5WLDNAu60=;
+	b=fCuZ5hRPPsi9frrPBgZr4n+Fj40n+pXi7ahjL3h4ICbhv9aR46ELDXQD5hg6DCg2G/6MQf
+	nnSpBW4YMFcH3rGG9uOlOaw/z1SzeKqy54fEoTO40rbyf97srihrqNoykLvWBLtGhac4FI
+	Pc7SNicQWOKb+sj5zC4ToIfWc9z35Sg=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-241-r_KYw4nNOVSrgE_Z2a1O5w-1; Thu, 12 Feb 2026 04:50:00 -0500
-X-MC-Unique: r_KYw4nNOVSrgE_Z2a1O5w-1
-X-Mimecast-MFC-AGG-ID: r_KYw4nNOVSrgE_Z2a1O5w_1770889800
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-480711d09f1so39711095e9.0
-        for <linux-hyperv@vger.kernel.org>; Thu, 12 Feb 2026 01:50:00 -0800 (PST)
+ us-mta-450-Qy79SW-3MWey6xcj1L7lyw-1; Thu, 12 Feb 2026 05:10:07 -0500
+X-MC-Unique: Qy79SW-3MWey6xcj1L7lyw-1
+X-Mimecast-MFC-AGG-ID: Qy79SW-3MWey6xcj1L7lyw_1770891006
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-4376c206493so3388969f8f.0
+        for <linux-hyperv@vger.kernel.org>; Thu, 12 Feb 2026 02:10:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1770889799; x=1771494599; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7izo/A5Ul08EXM2WpJ9NM5vTC0yA5lFDEQbyiP4NFcY=;
-        b=UM1tzJ7u887hU+Bo0jjFMc6ZolvP1/wL5b1+c4dpfRfi5cvyD2swHCSKQCQPbQSR0J
-         li8uh3p/z5tLWsEz+tIr3j6xPlt+rFU8uvnAvq5gJjNddkGXLLaHt7BFBDc3z3UDWalC
-         G9bcoJ5t+/pZroQHSPznmWPkdRLaH3GXjq1o17LiHeBto7wwy0Y5D4wlomqF8uv7OLpf
-         sE0jnRptuDbtMmXtHR+h0/2Jd2z8ZtDicQrQHTwwS3WpYMnrWCBurmjB6Lhvs+iePzFL
-         PkCiwqn0603bq+S68IsNBCthG30Y0al64X0cdp17vPlM8u6KJGniye3o1BtC3vwksFgI
-         pGIA==
+        d=redhat.com; s=google; t=1770891006; x=1771495806; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=MGtZzlI0afIe1oXYIL6I39556RNwafluFe5WLDNAu60=;
+        b=G8oDHDL+lGk9V1J+uwIuvYtRI0vcK8NFlpD8Yv/Hg+9H52Sqq7jpe+2v2hnNXwhPdJ
+         lY7EkkAKvnl3FreULZEFDFxLt8k6mpOOoexij1IRqMpiZsep5XoMo2sXWWnEPkuv0IN+
+         FNwtuOp6zIo1DFx0UFgw6oJR6qL68uK3QSkXPn6XgTTezMlNWHyQPo6nWQjlpy6+8wH4
+         kLGp2qYs53qzDvV5UVcYwK5G2l3HRhpDSDpvWEbIkXs/P16O2FUkqJT53vHHjyM2st7I
+         S+PnajoWNKbKXuix3l07m2p/JiroM3puD2eUEm0cBd6CyK51zQxaqtGUx8kmItg38+YM
+         oK6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770889799; x=1771494599;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7izo/A5Ul08EXM2WpJ9NM5vTC0yA5lFDEQbyiP4NFcY=;
-        b=k+lI7ZZA28OOW2LpJQkBxWgxFOhPI/VjyQD25w+r9osY1lsJwewfp6at/suR5IjaGM
-         vlIvwedC/NKJtSA9iHwjfnSDaIrPEc2MWKSzhJvZHKFmPs4mdxrL6bry8Po1sqWAiW37
-         SnNzGDbvsJpmiGSUrQr8egqCWnMCJ6Xi2dwowSd2PsEJjzWlp3woDNCI6rsrjw+qcWVS
-         p1Bg3K0BLX81ZLSOSI1DUNArM2deSVk8EshHTSpvriyz8B6/lS774RoABI94qtA21hv6
-         9ADnAxDRv4sBx/uyyv1wTFEJldu6CnD627z17wmO7CYSQGDqvNgyUuf7G58D2nJSomBt
-         DWIw==
-X-Forwarded-Encrypted: i=1; AJvYcCXXXscxT0gRKTelvBQCj0Ddsb+sSxyYMmOK7rQclqvoJUlHX+gVfiHwUIT9YsP37hI+On3LyPMEJ18PGCU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxX0jn91YDxBqaDqqTC8/B/O5YoZlYnU6oeEOqVWeqL9WK7ZIBC
-	xyYGYIArN/R0esOrVL4XtUEem+JRom2O5f+7vfskEcirek3eVFDH8ecd2aNCbB9GeRnjvyt259k
-	kT9JcxYodKuznGCbV5jF3jwCBIdtBLkjHhmVB6plfLyKq3O6Xd6Gd+YB14btTNlc/Xg==
-X-Gm-Gg: AZuq6aJK2pA30bZHgSrOFdfrk3h932HReKn1xNky4ocFGIlBJImXhYxYrFWhJ3HjehO
-	BOS3ZKRnMvnZ0PFINmMqHc8I2pxFCNNXRZa3KX19N8/SgDQa+tH1qxqqMT4gkT3Y80LVqkJd8iw
-	BAoniBbPnTaBDO5811QPMp83hv2IRawfOG2FSkvLP51KZbY2+LC17jbdOui9IxtICArwbmQr9Pk
-	+rx8KxZCleN/AgOjtiMeb+Xz43Mcl802zNU0pUXjpSXBiUEJocxzw01mR+WvULwb9k1ZTXr/8mL
-	v9OCmdPNbGfclTpd26x4bBhijQCNjFVWL6LsJFi2XJcAV0GySQGx4iYAJLl7w5jVdy0+1z7goKn
-	uro82Zz1VJ68c2t7UWMSrtQC21fPczatmSzp5ZaOjYR5KYY0LvnPWxd8CyIM8hw==
-X-Received: by 2002:a05:600c:c08f:b0:483:6e32:50d4 with SMTP id 5b1f17b1804b1-4836e3250ddmr2220455e9.18.1770889799509;
-        Thu, 12 Feb 2026 01:49:59 -0800 (PST)
-X-Received: by 2002:a05:600c:c08f:b0:483:6e32:50d4 with SMTP id 5b1f17b1804b1-4836e3250ddmr2220055e9.18.1770889799021;
-        Thu, 12 Feb 2026 01:49:59 -0800 (PST)
+        d=1e100.net; s=20230601; t=1770891006; x=1771495806;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MGtZzlI0afIe1oXYIL6I39556RNwafluFe5WLDNAu60=;
+        b=PGcgU0gJsGQv0JQWiKbKzZanWabP1w/xheWOaKBenuOYQaCBeS2XGd3Vo5kZbbH5hy
+         nwOZzrKKmTvg5tDYIJx1q0QoFnTo9kmkhWCHoJBMW+N3l185vxUi0KZs2WbfpubAY1tr
+         iX1VDMo1Y8oScZ88mcdcBhK8NRuyIScEfCJA98cnVIShPDxI83fzV3EDkfMeCmTvATV8
+         9BOpEK7cU1w4ELa5vwoQFHPY7OihupX8yt7SLvSBsfgC9OhXVrXunwoyfBwwx2GuYsul
+         YhG8D7azXIevtLVys325JuhQ6B61ZA1e7Js/TiFlASbV1sG4AKArVg0vwoaFSs7NnEuQ
+         fw6g==
+X-Forwarded-Encrypted: i=1; AJvYcCULwlKrJNE8zHK0ndtGGC0LvGgnA0gb4EprVIBWEagnsblB42tvmGYJKJAX+rAzucMU+KEA/JyAo/aRY4o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeiXr/Wxd0caOk5qNjlxmYK78lgKtYJxCo2+mTA7unHJwAdZBe
+	ibzsNFnwSPHYsQR7x27aL9CyubnAUStTSBOUYGWNiAtzJFxkuk56KCAvv9kVQP81QKtgH5tjhl9
+	WhHr4DA/tEchPHR79Zdop/ePDsW8d7zln4KyVJSWtidIJMZBc9dkgRIoYMYG/5slW8Q==
+X-Gm-Gg: AZuq6aJKzGees+NAJSiix2oqq2u7AzgdSIozXeDJnXLonoq3fN0+91FhiPG055ZlZxW
+	X/Z14FFrBeJoaTpHgTqMmmfr4IXQx+mSEV5anjpxFx0tf/Fmyg4Nqqbm1UprzBomqIpTEcUzIU9
+	ZUzIQhM+XvsCAvAcijxtaKRt1oIemYQvcfn/Rv0fqla6yL2l3oqv6gKMa2rd7jOdnvZXef8eIEk
+	0XcahtzCatJ/2r2jABTQxs0okdPbWed1P/Uj1LInhEB+JvZbEKnxiGb/AqGdNTRBgTZKwaaZQbT
+	53LTfsMqg/CAWAp7+wGQ4POJlX600c9MlUVjYTJIzeyJ3VyZfbluWKaAovA4L+XyCSlTU8zA3P0
+	/dmCUOR3hABqIaZZh7qXn02/E+aOr/M8/YAMD23b+MnvmkyMAkUCEBHxV1AB5Lw==
+X-Received: by 2002:a05:6000:4024:b0:436:1b1:6cbb with SMTP id ffacd0b85a97d-4378aa01106mr3209832f8f.7.1770891005914;
+        Thu, 12 Feb 2026 02:10:05 -0800 (PST)
+X-Received: by 2002:a05:6000:4024:b0:436:1b1:6cbb with SMTP id ffacd0b85a97d-4378aa01106mr3209788f8f.7.1770891005389;
+        Thu, 12 Feb 2026 02:10:05 -0800 (PST)
 Received: from ?IPV6:2a01:e0a:c:37e0:8998:e0cf:68cc:1b62? ([2a01:e0a:c:37e0:8998:e0cf:68cc:1b62])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4836aa0847asm29634535e9.3.2026.02.12.01.49.57
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43783d325f7sm11303724f8f.8.2026.02.12.02.10.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Feb 2026 01:49:58 -0800 (PST)
-Message-ID: <e9d35c78-1c4b-4a9c-8cf0-9531e972279f@redhat.com>
-Date: Thu, 12 Feb 2026 10:49:54 +0100
+        Thu, 12 Feb 2026 02:10:04 -0800 (PST)
+Message-ID: <7c6933fc-663d-4bf6-8594-c14c4be83c98@redhat.com>
+Date: Thu, 12 Feb 2026 11:10:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -107,6 +106,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 2/2] drm/hyperv: During panic do VMBus unload after frame
  buffer is flushed
+From: Jocelyn Falempe <jfalempe@redhat.com>
 To: mhklkml@zohomail.com, mhklinux@outlook.com, drawat.floss@gmail.com,
  maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
  airlied@gmail.com, simona@ffwll.ch, kys@microsoft.com,
@@ -118,17 +118,17 @@ References: <20260209070201.1492-1-mhklinux@outlook.com>
  <20260209070201.1492-2-mhklinux@outlook.com>
  <a5372b72-8dc0-4f2d-ad5c-086f3e75ee81@redhat.com>
  <002601dc9baa$517d8b40$f478a1c0$@zohomail.com>
+ <e9d35c78-1c4b-4a9c-8cf0-9531e972279f@redhat.com>
 Content-Language: en-US, fr
-From: Jocelyn Falempe <jfalempe@redhat.com>
-In-Reply-To: <002601dc9baa$517d8b40$f478a1c0$@zohomail.com>
+In-Reply-To: <e9d35c78-1c4b-4a9c-8cf0-9531e972279f@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -137,7 +137,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_TO(0.00)[zohomail.com,outlook.com,gmail.com,linux.intel.com,kernel.org,suse.de,ffwll.ch,microsoft.com,redhat.com];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8790-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8791-lists,linux-hyperv=lfdr.de];
 	DKIM_TRACE(0.00)[redhat.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
@@ -145,112 +145,50 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jfalempe@redhat.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,zohomail.com:email]
-X-Rspamd-Queue-Id: 639E412C05B
+	DBL_BLOCKED_OPENRESOLVER(0.00)[zohomail.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,patchwork.freedesktop.org:url]
+X-Rspamd-Queue-Id: 54B7B12C587
 X-Rspamd-Action: no action
 
-On 12/02/2026 00:01, mhklkml@zohomail.com wrote:
-> From: Jocelyn Falempe <jfalempe@redhat.com> Sent: Wednesday, February 11, 2026 1:54 PM
+On 12/02/2026 10:49, Jocelyn Falempe wrote:
+> On 12/02/2026 00:01, mhklkml@zohomail.com wrote:
+>> From: Jocelyn Falempe <jfalempe@redhat.com> Sent: Wednesday, February 
+>> 11, 2026 1:54 PM
 >>
->> On 09/02/2026 08:02, mhkelley58@gmail.com wrote:
->>> From: Michael Kelley <mhklinux@outlook.com>
->>>
->>> In a VM, Linux panic information (reason for the panic, stack trace,
->>> etc.) may be written to a serial console and/or a virtual frame buffer
->>> for a graphics console. The latter may need to be flushed back to the
->>> host hypervisor for display.
->>>
->>> The current Hyper-V DRM driver for the frame buffer does the flushing
->>> *after* the VMBus connection has been unloaded, such that panic messages
->>> are not displayed on the graphics console. A user with a Hyper-V graphics
->>> console is left with just a hung empty screen after a panic. The enhanced
->>> control that DRM provides over the panic display in the graphics console
->>> is similarly non-functional.
->>>
->>> Commit 3671f3777758 ("drm/hyperv: Add support for drm_panic") added
->>> the Hyper-V DRM driver support to flush the virtual frame buffer. It
->>> provided necessary functionality but did not handle the sequencing
->>> problem with VMBus unload.
->>>
->>> Fix the full problem by using VMBus functions to suppress the VMBus
->>> unload that is normally done by the VMBus driver in the panic path. Then
->>> after the frame buffer has been flushed, do the VMBus unload so that a
->>> kdump kernel can start cleanly. As expected, CONFIG_DRM_PANIC must be
->>> selected for these changes to have effect. As a side benefit, the
->>> enhanced features of the DRM panic path are also functional.
->>
->> Thanks for properly fixing this issue with DRM Panic on hyperv.
->>
->> I've a small comment below.
->>
->> With that fixed:
->> Reviewed-by: Jocelyn Falempe <jfalempe@redhat.com>
->>
->> The first patch looks good too, I can review it if no other step up, as
->> I'm not familiar with hyperv.
->>
->>>
->>> Fixes: 3671f3777758 ("drm/hyperv: Add support for drm_panic")
->>> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
->>> ---
->>>    drivers/gpu/drm/hyperv/hyperv_drm_drv.c     |  4 ++++
->>>    drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 15 ++++++++-------
->>>    2 files changed, 12 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
->> b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
->>> index 06b5d96e6eaf..79e51643be67 100644
->>> --- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
->>> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
->>> @@ -150,6 +150,9 @@ static int hyperv_vmbus_probe(struct hv_device *hdev,
->>>    		goto err_free_mmio;
->>>    	}
->>>
->>> +	/* If DRM panic path is stubbed out VMBus code must do the unload */
->>> +	if (IS_ENABLED(CONFIG_DRM_PANIC) && IS_ENABLED(CONFIG_PRINTK))
->>
->> I think drm_panic should still work without printk.
->> The "user" panic screen would be unaffected, but the "kmsg" screen might
->> be blank, and the "qr_code" would generate an empty qr code.
->> (Actually I never tried to build a kernel without printk).
+>> But for this patch, the issue is that drm_panic() never gets called if 
+>> CONFIG_PRINTK
+>> isn't set. In that case, kmsg_dump_register() is a stub that returns 
+>> an error.  So
+>> drm_panic_register() never registers the callback to drm_panic(). And if
+>> drm_panic() isn't going to run, responsibility for doing the VMBus unload
+>> must remain with the VMBus code. It's hard to actually test this case 
+>> because
+>> of depending on printk() for debugging output, so double-check my
+>> thinking.
 > 
-> Yeah, I had never built such a kernel either until recently when the kernel
-> test robot flagged an error in Hyper-V code when CONFIG_PRINTK is not set. :-)
+> Ok you're right. I changed from 
+> atomic_notifier_chain_register(&panic_notifier_list, ...) to 
+> kmsg_dump_register() in the v10 of drm_panic.
 > 
-> But for this patch, the issue is that drm_panic() never gets called if CONFIG_PRINTK
-> isn't set. In that case, kmsg_dump_register() is a stub that returns an error.  So
-> drm_panic_register() never registers the callback to drm_panic(). And if
-> drm_panic() isn't going to run, responsibility for doing the VMBus unload
-> must remain with the VMBus code. It's hard to actually test this case because
-> of depending on printk() for debugging output, so double-check my
-> thinking.
+> So I should either make DRM_PANIC depends on PRINTK, or call 
+> atomic_notifier_chain_register() if PRINTK is not defined.
+> 
+> As I think kernel without PRINTK are uncommon, I'll probably do the 
+> first solution.
+> 
 
-Ok you're right. I changed from 
-atomic_notifier_chain_register(&panic_notifier_list, ...) to 
-kmsg_dump_register() in the v10 of drm_panic.
+FYI, I just sent the corresponding change:
 
-So I should either make DRM_PANIC depends on PRINTK, or call 
-atomic_notifier_chain_register() if PRINTK is not defined.
+https://patchwork.freedesktop.org/series/161544/
 
-As I think kernel without PRINTK are uncommon, I'll probably do the 
-first solution.
+Best regards,
 
--- 
+--
 
 Jocelyn
-> 
-> Michael
-> 
->>
->>> +		vmbus_set_skip_unload(true);
->>>    	drm_client_setup(dev, NULL);
->>>
->>>    	return 0;
-> 
 
 
