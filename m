@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-8826-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8824-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yHUlM1UGj2ltHQEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8826-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:09:09 +0100
+	id SH7iFcQGj2ltHQEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8824-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:11:00 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 660B41357D4
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:09:09 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4C25135872
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:10:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B16DB3150D82
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 11:01:53 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1FB2730EA507
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 11:01:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD0FD35DD0F;
-	Fri, 13 Feb 2026 11:00:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 849C635CBA0;
+	Fri, 13 Feb 2026 11:00:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3MRYdf+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uMJrFKtV"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99434357A48;
-	Fri, 13 Feb 2026 11:00:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60952357A20;
+	Fri, 13 Feb 2026 11:00:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770980441; cv=none; b=e+zlhk46/PTqPwmtzpBSfDAhxzsrcCsEooc3OF92KfGpdu0r91/OUddBOnGv7W5raib5L/VidR4jeHGhPpblHzsZ4qWTbbYjXWPrSK5ygO4V871EOgtWxHufpu1r/QkWMw6gsWwYfYufiubg35A0H4WBZW8pejBETAwIRfxzGE0=
+	t=1770980434; cv=none; b=blrjHMre50gQSBYEGiPTIKPbbeVPJx9Ez1R2VHrYTfP9i2z/anfgcW6n4Yl1r8IMaUeIXp+Zq+9mHIRYEoKmf2u17XGmgRLirylHJ9eCGPiwYai+U6qXFp2C7M/uLfDPoIu5FYvhUGCg6YnapIfCZpFwScP6FSAvMsnsgdgU5rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770980441; c=relaxed/simple;
-	bh=1CctY2HBwLpkfQae2Bhsg6mecp9K8sByxfsXB098nls=;
+	s=arc-20240116; t=1770980434; c=relaxed/simple;
+	bh=CfrMYU/15f4o2XvVTfBv9vkCjczWWAriZsLMaye5SOY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kiGO4/y5fImZe93obSkHfjb3HH7PWx3B06v/tH12TXswjSayOd8w/dR8aBAr71U0PSbL34SqUfnxdREMkxioiKDrN3PKbRgxxX2oyuHV37LytTphUKhT0ybXvDNBgQEYwWW/7uqEjnD1bVPOlD8xkpXcjtK0t0pXluSrPHgDasI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h3MRYdf+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B04FAC116C6;
-	Fri, 13 Feb 2026 11:00:40 +0000 (UTC)
+	 MIME-Version:Content-Type; b=iQEL6gWArUfaYMs7Eug0Q4PTkkbseupKtoSdXD4IBQRt6QI3ewuCA4dWVR0mwTWU5AVQmBCs/oEWkhjLgScesoVFlcPmxdw6RiLkqYSj6sy6mORW/Ez/bT3mVzSRqe5IVx2OymNkZNhbUDQ8SCYta/WZGnkZbectbrHNtPhSG7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uMJrFKtV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70135C19424;
+	Fri, 13 Feb 2026 11:00:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770980441;
-	bh=1CctY2HBwLpkfQae2Bhsg6mecp9K8sByxfsXB098nls=;
+	s=k20201202; t=1770980434;
+	bh=CfrMYU/15f4o2XvVTfBv9vkCjczWWAriZsLMaye5SOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=h3MRYdf+fowSfICWWtLhL3Q+lVcefmx8y2DMYlv/emZejELGChqql3aGEuj6C9tWa
-	 lsLJ+junZEvuyxb74+DeR4AEPcDVuzrJsEZ5XKvMMoSWFv+egAjyJbNU246Z1H2hAW
-	 yYmTE1kG2TomNj63JnhHtsqtkgXxezQhy4b+lLzPc++pQfdUW/kyzMx6jZ9ni8C/uI
-	 hIuJ1ndut42HkNIiHBPHXFiUeUzjleC/1Yi/2rSjG7PLKXCkWSquRj/4s+q5F3yyNT
-	 6djUi+sRbKFbfbOZptvxBk+M3cw8WY7KdZMA5Xa5tupL0P7gUVtcAeI+SyAKV1jP5d
-	 gjIOu8PIm2yig==
+	b=uMJrFKtVI2JIyTWDjhNcZlNAmVSEOfnL0xM5gvfDvOgi5aZuD8TKA/I46F8goWd0u
+	 d7OSscH5aIrjU4dDy8WIFxb8KD3VENziaf0//CuZZKIcxV88+Sawjtsh4TSy1oTSPM
+	 kBVbGQjeFqhoKPal2m03tfaK+7OGBvqtOUzjkATQK5x7s6ng6sBmA8xWgcTByGE5m2
+	 McG1JsFno7R6KMYgdqEkqC80t378P4YtxUx5hzE/Hgmz+xky+obZYHzcM3ypROc18s
+	 cFhzkXyLrRs+Shm6AbdlvG8WPq7j297fRqOReegAcxNFnmcTliqe9XuMqEqVXiQ5ha
+	 yyARplxu5mhAQ==
 From: Leon Romanovsky <leon@kernel.org>
 To: Jason Gunthorpe <jgg@ziepe.ca>,
 	Leon Romanovsky <leon@kernel.org>,
@@ -76,9 +76,9 @@ To: Jason Gunthorpe <jgg@ziepe.ca>,
 Cc: linux-kernel@vger.kernel.org,
 	linux-rdma@vger.kernel.org,
 	linux-hyperv@vger.kernel.org
-Subject: [PATCH rdma-next 26/50] RDMA/erdma: Separate user and kernel CQ creation paths
-Date: Fri, 13 Feb 2026 12:58:02 +0200
-Message-ID: <20260213-refactor-umem-v1-26-f3be85847922@nvidia.com>
+Subject: [PATCH rdma-next 27/50] RDMA/rdmavt: Split user and kernel CQ creation paths
+Date: Fri, 13 Feb 2026 12:58:03 +0200
+Message-ID: <20260213-refactor-umem-v1-27-f3be85847922@nvidia.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260213-refactor-umem-v1-0-f3be85847922@nvidia.com>
 References: <20260213-refactor-umem-v1-0-f3be85847922@nvidia.com>
@@ -96,7 +96,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -107,239 +107,264 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FREEMAIL_TO(0.00)[ziepe.ca,kernel.org,broadcom.com,chelsio.com,amazon.com,linux.dev,linux.alibaba.com,huawei.com,hisilicon.com,amd.com,intel.com,microsoft.com,nvidia.com,marvell.com,cisco.com,cornelisnetworks.com,gmail.com];
 	RCPT_COUNT_TWELVE(0.00)[31];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-8826-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8824-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[leon@kernel.org,linux-hyperv@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:mid,nvidia.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 660B41357D4
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,nvidia.com:mid,nvidia.com:email]
+X-Rspamd-Queue-Id: C4C25135872
 X-Rspamd-Action: no action
 
 From: Leon Romanovsky <leonro@nvidia.com>
 
-Split CQ creation into distinct kernel and user flows. The hns driver,
-inherited from mlx4, uses a problematic pattern that shares and caches
-umem in hns_roce_db_map_user(). This design blocks the driver from
-supporting generic umem sources (VMA, dmabuf, memfd, and others).
-
-In addition, let's delete counter that counts CQ creation errors. There
-are multiple ways to debug kernel in modern kernel without need to rely
-on that debugfs counter.
+Separate the CQ creation logic into distinct kernel and user flows.
 
 Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 ---
- drivers/infiniband/hw/hns/hns_roce_cq.c      | 103 ++++++++++++++++++++-------
- drivers/infiniband/hw/hns/hns_roce_debugfs.c |   1 -
- drivers/infiniband/hw/hns/hns_roce_device.h  |   3 +-
- drivers/infiniband/hw/hns/hns_roce_main.c    |   1 +
- 4 files changed, 82 insertions(+), 26 deletions(-)
+ drivers/infiniband/sw/rdmavt/cq.c | 144 +++++++++++++++++++++++++++-----------
+ drivers/infiniband/sw/rdmavt/cq.h |   2 +
+ drivers/infiniband/sw/rdmavt/vt.c |   1 +
+ 3 files changed, 106 insertions(+), 41 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_cq.c b/drivers/infiniband/hw/hns/hns_roce_cq.c
-index 857a913326cd..0f24a916466b 100644
---- a/drivers/infiniband/hw/hns/hns_roce_cq.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_cq.c
-@@ -335,7 +335,10 @@ static int verify_cq_create_attr(struct hns_roce_dev *hr_dev,
- {
- 	struct ib_device *ibdev = &hr_dev->ib_dev;
+diff --git a/drivers/infiniband/sw/rdmavt/cq.c b/drivers/infiniband/sw/rdmavt/cq.c
+index e7835ca70e2b..db86eb026bb3 100644
+--- a/drivers/infiniband/sw/rdmavt/cq.c
++++ b/drivers/infiniband/sw/rdmavt/cq.c
+@@ -147,33 +147,32 @@ static void send_complete(struct work_struct *work)
+ }
  
--	if (!attr->cqe || attr->cqe > hr_dev->caps.max_cqes) {
+ /**
+- * rvt_create_cq - create a completion queue
++ * rvt_create_user_cq - create a completion queue for userspace
+  * @ibcq: Allocated CQ
+  * @attr: creation attributes
+  * @attrs: uverbs bundle
+  *
+- * Called by ib_create_cq() in the generic verbs code.
++ * Called by ib_create_cq() in the generic verbs code for userspace CQs.
+  *
+  * Return: 0 on success
+  */
+-int rvt_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+-		  struct uverbs_attr_bundle *attrs)
++int rvt_create_user_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
++		       struct uverbs_attr_bundle *attrs)
+ {
+ 	struct ib_udata *udata = &attrs->driver_udata;
+ 	struct ib_device *ibdev = ibcq->device;
+ 	struct rvt_dev_info *rdi = ib_to_rvt(ibdev);
+ 	struct rvt_cq *cq = ibcq_to_rvtcq(ibcq);
+-	struct rvt_cq_wc *u_wc = NULL;
+-	struct rvt_k_cq_wc *k_wc = NULL;
++	struct rvt_cq_wc *u_wc;
+ 	u32 sz;
+ 	unsigned int entries = attr->cqe;
+ 	int comp_vector = attr->comp_vector;
+ 	int err;
+ 
+-	if (attr->flags)
++	if (attr->flags || ibcq->umem)
+ 		return -EOPNOTSUPP;
+ 
+-	if (entries < 1 || entries > rdi->dparms.props.max_cqe)
++	if (entries > rdi->dparms.props.max_cqe)
+ 		return -EINVAL;
+ 
+ 	if (comp_vector < 0)
+@@ -188,37 +187,27 @@ int rvt_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 	 * We need to use vmalloc() in order to support mmap and large
+ 	 * numbers of entries.
+ 	 */
+-	if (udata && udata->outlen >= sizeof(__u64)) {
+-		sz = sizeof(struct ib_uverbs_wc) * (entries + 1);
+-		sz += sizeof(*u_wc);
+-		u_wc = vmalloc_user(sz);
+-		if (!u_wc)
+-			return -ENOMEM;
+-	} else {
+-		sz = sizeof(struct ib_wc) * (entries + 1);
+-		sz += sizeof(*k_wc);
+-		k_wc = vzalloc_node(sz, rdi->dparms.node);
+-		if (!k_wc)
+-			return -ENOMEM;
+-	}
++	sz = sizeof(struct ib_uverbs_wc) * (entries + 1);
++	sz += sizeof(*u_wc);
++	u_wc = vmalloc_user(sz);
++	if (!u_wc)
++		return -ENOMEM;
+ 
+ 	/*
+ 	 * Return the address of the WC as the offset to mmap.
+ 	 * See rvt_mmap() for details.
+ 	 */
+-	if (udata && udata->outlen >= sizeof(__u64)) {
+-		cq->ip = rvt_create_mmap_info(rdi, sz, udata, u_wc);
+-		if (IS_ERR(cq->ip)) {
+-			err = PTR_ERR(cq->ip);
+-			goto bail_wc;
+-		}
+-
+-		err = ib_copy_to_udata(udata, &cq->ip->offset,
+-				       sizeof(cq->ip->offset));
+-		if (err)
+-			goto bail_ip;
++	cq->ip = rvt_create_mmap_info(rdi, sz, udata, u_wc);
++	if (IS_ERR(cq->ip)) {
++		err = PTR_ERR(cq->ip);
++		goto bail_wc;
+ 	}
+ 
++	err = ib_copy_to_udata(udata, &cq->ip->offset,
++			       sizeof(cq->ip->offset));
++	if (err)
++		goto bail_ip;
++
+ 	spin_lock_irq(&rdi->n_cqs_lock);
+ 	if (rdi->n_cqs_allocated == rdi->dparms.props.max_cq) {
+ 		spin_unlock_irq(&rdi->n_cqs_lock);
+@@ -229,11 +218,9 @@ int rvt_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 	rdi->n_cqs_allocated++;
+ 	spin_unlock_irq(&rdi->n_cqs_lock);
+ 
+-	if (cq->ip) {
+-		spin_lock_irq(&rdi->pending_lock);
+-		list_add(&cq->ip->pending_mmaps, &rdi->pending_mmaps);
+-		spin_unlock_irq(&rdi->pending_lock);
+-	}
++	spin_lock_irq(&rdi->pending_lock);
++	list_add(&cq->ip->pending_mmaps, &rdi->pending_mmaps);
++	spin_unlock_irq(&rdi->pending_lock);
+ 
+ 	/*
+ 	 * ib_create_cq() will initialize cq->ibcq except for cq->ibcq.cqe.
+@@ -252,10 +239,7 @@ int rvt_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 	cq->notify = RVT_CQ_NONE;
+ 	spin_lock_init(&cq->lock);
+ 	INIT_WORK(&cq->comptask, send_complete);
+-	if (u_wc)
+-		cq->queue = u_wc;
+-	else
+-		cq->kqueue = k_wc;
++	cq->queue = u_wc;
+ 
+ 	trace_rvt_create_cq(cq, attr);
+ 	return 0;
+@@ -264,6 +248,84 @@ int rvt_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 	kfree(cq->ip);
+ bail_wc:
+ 	vfree(u_wc);
++	return err;
++}
++
++/**
++ * rvt_create_cq - create a completion queue for kernel
++ * @ibcq: Allocated CQ
++ * @attr: creation attributes
++ * @attrs: uverbs bundle
++ *
++ * Called by ib_create_cq() in the generic verbs code for kernel CQs.
++ *
++ * Return: 0 on success
++ */
++int rvt_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
++		  struct uverbs_attr_bundle *attrs)
++{
++	struct ib_device *ibdev = ibcq->device;
++	struct rvt_dev_info *rdi = ib_to_rvt(ibdev);
++	struct rvt_cq *cq = ibcq_to_rvtcq(ibcq);
++	struct rvt_k_cq_wc *k_wc;
++	u32 sz;
++	unsigned int entries = attr->cqe;
++	int comp_vector = attr->comp_vector;
++	int err;
++
 +	if (attr->flags)
 +		return -EOPNOTSUPP;
 +
-+	if (attr->cqe > hr_dev->caps.max_cqes) {
- 		ibdev_err(ibdev, "failed to check CQ count %u, max = %u.\n",
- 			  attr->cqe, hr_dev->caps.max_cqes);
- 		return -EINVAL;
-@@ -407,8 +410,8 @@ static int set_cqe_size(struct hns_roce_cq *hr_cq, struct ib_udata *udata,
- 	return 0;
- }
- 
--int hns_roce_create_cq(struct ib_cq *ib_cq, const struct ib_cq_init_attr *attr,
--		       struct uverbs_attr_bundle *attrs)
-+int hns_roce_create_user_cq(struct ib_cq *ib_cq, const struct ib_cq_init_attr *attr,
-+			    struct uverbs_attr_bundle *attrs)
- {
- 	struct hns_roce_dev *hr_dev = to_hr_dev(ib_cq->device);
- 	struct ib_udata *udata = &attrs->driver_udata;
-@@ -418,31 +421,27 @@ int hns_roce_create_cq(struct ib_cq *ib_cq, const struct ib_cq_init_attr *attr,
- 	struct hns_roce_ib_create_cq ucmd = {};
- 	int ret;
- 
--	if (attr->flags) {
--		ret = -EOPNOTSUPP;
--		goto err_out;
--	}
-+	if (ib_cq->umem)
-+		return -EOPNOTSUPP;
- 
- 	ret = verify_cq_create_attr(hr_dev, attr);
- 	if (ret)
--		goto err_out;
-+		return ret;
- 
--	if (udata) {
--		ret = get_cq_ucmd(hr_cq, udata, &ucmd);
--		if (ret)
--			goto err_out;
--	}
-+	ret = get_cq_ucmd(hr_cq, udata, &ucmd);
-+	if (ret)
-+		return ret;
- 
- 	set_cq_param(hr_cq, attr->cqe, attr->comp_vector, &ucmd);
- 
- 	ret = set_cqe_size(hr_cq, udata, &ucmd);
- 	if (ret)
--		goto err_out;
-+		return ret;
- 
- 	ret = alloc_cq_buf(hr_dev, hr_cq, udata, ucmd.buf_addr);
- 	if (ret) {
- 		ibdev_err(ibdev, "failed to alloc CQ buf, ret = %d.\n", ret);
--		goto err_out;
-+		return ret;
- 	}
- 
- 	ret = alloc_cq_db(hr_dev, hr_cq, udata, ucmd.db_addr, &resp);
-@@ -464,13 +463,11 @@ int hns_roce_create_cq(struct ib_cq *ib_cq, const struct ib_cq_init_attr *attr,
- 		goto err_cqn;
- 	}
- 
--	if (udata) {
--		resp.cqn = hr_cq->cqn;
--		ret = ib_copy_to_udata(udata, &resp,
--				       min(udata->outlen, sizeof(resp)));
--		if (ret)
--			goto err_cqc;
--	}
-+	resp.cqn = hr_cq->cqn;
-+	ret = ib_copy_to_udata(udata, &resp,
-+			       min(udata->outlen, sizeof(resp)));
-+	if (ret)
-+		goto err_cqc;
- 
- 	hr_cq->cons_index = 0;
- 	hr_cq->arm_sn = 1;
-@@ -487,9 +484,67 @@ int hns_roce_create_cq(struct ib_cq *ib_cq, const struct ib_cq_init_attr *attr,
- 	free_cq_db(hr_dev, hr_cq, udata);
- err_cq_buf:
- 	free_cq_buf(hr_dev, hr_cq);
--err_out:
--	atomic64_inc(&hr_dev->dfx_cnt[HNS_ROCE_DFX_CQ_CREATE_ERR_CNT]);
-+	return ret;
-+}
++	if (entries > rdi->dparms.props.max_cqe)
++		return -EINVAL;
 +
-+int hns_roce_create_cq(struct ib_cq *ib_cq, const struct ib_cq_init_attr *attr,
-+		       struct uverbs_attr_bundle *attrs)
-+{
-+	struct hns_roce_dev *hr_dev = to_hr_dev(ib_cq->device);
-+	struct hns_roce_ib_create_cq_resp resp = {};
-+	struct hns_roce_cq *hr_cq = to_hr_cq(ib_cq);
-+	struct ib_device *ibdev = &hr_dev->ib_dev;
-+	struct hns_roce_ib_create_cq ucmd = {};
-+	int ret;
++	if (comp_vector < 0)
++		comp_vector = 0;
 +
-+	ret = verify_cq_create_attr(hr_dev, attr);
-+	if (ret)
-+		return ret;
++	comp_vector = comp_vector % rdi->ibdev.num_comp_vectors;
 +
-+	set_cq_param(hr_cq, attr->cqe, attr->comp_vector, &ucmd);
++	/*
++	 * Allocate the completion queue entries and head/tail pointers.
++	 */
++	sz = sizeof(struct ib_wc) * (entries + 1);
++	sz += sizeof(*k_wc);
++	k_wc = vzalloc_node(sz, rdi->dparms.node);
++	if (!k_wc)
++		return -ENOMEM;
 +
-+	ret = set_cqe_size(hr_cq, NULL, &ucmd);
-+	if (ret)
-+		return ret;
- 
-+	ret = alloc_cq_buf(hr_dev, hr_cq, NULL, 0);
-+	if (ret) {
-+		ibdev_err(ibdev, "failed to alloc CQ buf, ret = %d.\n", ret);
-+		return ret;
++	spin_lock_irq(&rdi->n_cqs_lock);
++	if (rdi->n_cqs_allocated == rdi->dparms.props.max_cq) {
++		spin_unlock_irq(&rdi->n_cqs_lock);
++		err = -ENOMEM;
++		goto bail_wc;
 +	}
 +
-+	ret = alloc_cq_db(hr_dev, hr_cq, NULL, 0, &resp);
-+	if (ret) {
-+		ibdev_err(ibdev, "failed to alloc CQ db, ret = %d.\n", ret);
-+		goto err_cq_buf;
-+	}
++	rdi->n_cqs_allocated++;
++	spin_unlock_irq(&rdi->n_cqs_lock);
 +
-+	ret = alloc_cqn(hr_dev, hr_cq, NULL);
-+	if (ret) {
-+		ibdev_err(ibdev, "failed to alloc CQN, ret = %d.\n", ret);
-+		goto err_cq_db;
-+	}
++	/*
++	 * ib_create_cq() will initialize cq->ibcq except for cq->ibcq.cqe.
++	 * The number of entries should be >= the number requested or return
++	 * an error.
++	 */
++	cq->rdi = rdi;
++	if (rdi->driver_f.comp_vect_cpu_lookup)
++		cq->comp_vector_cpu =
++			rdi->driver_f.comp_vect_cpu_lookup(rdi, comp_vector);
++	else
++		cq->comp_vector_cpu =
++			cpumask_first(cpumask_of_node(rdi->dparms.node));
 +
-+	ret = alloc_cqc(hr_dev, hr_cq);
-+	if (ret) {
-+		ibdev_err(ibdev,
-+			  "failed to alloc CQ context, ret = %d.\n", ret);
-+		goto err_cqn;
-+	}
++	cq->ibcq.cqe = entries;
++	cq->notify = RVT_CQ_NONE;
++	spin_lock_init(&cq->lock);
++	INIT_WORK(&cq->comptask, send_complete);
++	cq->kqueue = k_wc;
 +
-+	hr_cq->cons_index = 0;
-+	hr_cq->arm_sn = 1;
-+	refcount_set(&hr_cq->refcount, 1);
-+	init_completion(&hr_cq->free);
-+
++	trace_rvt_create_cq(cq, attr);
 +	return 0;
 +
-+err_cqn:
-+	free_cqn(hr_dev, hr_cq->cqn);
-+err_cq_db:
-+	free_cq_db(hr_dev, hr_cq, NULL);
-+err_cq_buf:
-+	free_cq_buf(hr_dev, hr_cq);
- 	return ret;
++bail_wc:
+ 	vfree(k_wc);
+ 	return err;
  }
+diff --git a/drivers/infiniband/sw/rdmavt/cq.h b/drivers/infiniband/sw/rdmavt/cq.h
+index 4028702a7b2f..14ee2705c443 100644
+--- a/drivers/infiniband/sw/rdmavt/cq.h
++++ b/drivers/infiniband/sw/rdmavt/cq.h
+@@ -11,6 +11,8 @@
  
-diff --git a/drivers/infiniband/hw/hns/hns_roce_debugfs.c b/drivers/infiniband/hw/hns/hns_roce_debugfs.c
-index b869cdc54118..481b30f2f5b5 100644
---- a/drivers/infiniband/hw/hns/hns_roce_debugfs.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_debugfs.c
-@@ -47,7 +47,6 @@ static const char * const sw_stat_info[] = {
- 	[HNS_ROCE_DFX_MBX_EVENT_CNT] = "mbx_event",
- 	[HNS_ROCE_DFX_QP_CREATE_ERR_CNT] = "qp_create_err",
- 	[HNS_ROCE_DFX_QP_MODIFY_ERR_CNT] = "qp_modify_err",
--	[HNS_ROCE_DFX_CQ_CREATE_ERR_CNT] = "cq_create_err",
- 	[HNS_ROCE_DFX_CQ_MODIFY_ERR_CNT] = "cq_modify_err",
- 	[HNS_ROCE_DFX_SRQ_CREATE_ERR_CNT] = "srq_create_err",
- 	[HNS_ROCE_DFX_SRQ_MODIFY_ERR_CNT] = "srq_modify_err",
-diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
-index 3f032b8038af..fdc5f487d7a3 100644
---- a/drivers/infiniband/hw/hns/hns_roce_device.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_device.h
-@@ -902,7 +902,6 @@ enum hns_roce_sw_dfx_stat_index {
- 	HNS_ROCE_DFX_MBX_EVENT_CNT,
- 	HNS_ROCE_DFX_QP_CREATE_ERR_CNT,
- 	HNS_ROCE_DFX_QP_MODIFY_ERR_CNT,
--	HNS_ROCE_DFX_CQ_CREATE_ERR_CNT,
- 	HNS_ROCE_DFX_CQ_MODIFY_ERR_CNT,
- 	HNS_ROCE_DFX_SRQ_CREATE_ERR_CNT,
- 	HNS_ROCE_DFX_SRQ_MODIFY_ERR_CNT,
-@@ -1295,6 +1294,8 @@ int to_hr_qp_type(int qp_type);
- 
- int hns_roce_create_cq(struct ib_cq *ib_cq, const struct ib_cq_init_attr *attr,
- 		       struct uverbs_attr_bundle *attrs);
-+int hns_roce_create_user_cq(struct ib_cq *ib_cq, const struct ib_cq_init_attr *attr,
-+			    struct uverbs_attr_bundle *attrs);
- 
- int hns_roce_destroy_cq(struct ib_cq *ib_cq, struct ib_udata *udata);
- int hns_roce_db_map_user(struct hns_roce_ucontext *context, unsigned long virt,
-diff --git a/drivers/infiniband/hw/hns/hns_roce_main.c b/drivers/infiniband/hw/hns/hns_roce_main.c
-index a3490bab297a..64de49bf8df7 100644
---- a/drivers/infiniband/hw/hns/hns_roce_main.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_main.c
-@@ -727,6 +727,7 @@ static const struct ib_device_ops hns_roce_dev_ops = {
- 	.create_ah = hns_roce_create_ah,
- 	.create_user_ah = hns_roce_create_ah,
- 	.create_cq = hns_roce_create_cq,
-+	.create_user_cq = hns_roce_create_user_cq,
- 	.create_qp = hns_roce_create_qp,
- 	.dealloc_pd = hns_roce_dealloc_pd,
- 	.dealloc_ucontext = hns_roce_dealloc_ucontext,
+ int rvt_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 		  struct uverbs_attr_bundle *attrs);
++int rvt_create_user_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
++		       struct uverbs_attr_bundle *attrs);
+ int rvt_destroy_cq(struct ib_cq *ibcq, struct ib_udata *udata);
+ int rvt_req_notify_cq(struct ib_cq *ibcq, enum ib_cq_notify_flags notify_flags);
+ int rvt_resize_cq(struct ib_cq *ibcq, int cqe, struct ib_udata *udata);
+diff --git a/drivers/infiniband/sw/rdmavt/vt.c b/drivers/infiniband/sw/rdmavt/vt.c
+index d22d610c2696..15964400b8d3 100644
+--- a/drivers/infiniband/sw/rdmavt/vt.c
++++ b/drivers/infiniband/sw/rdmavt/vt.c
+@@ -333,6 +333,7 @@ static const struct ib_device_ops rvt_dev_ops = {
+ 	.attach_mcast = rvt_attach_mcast,
+ 	.create_ah = rvt_create_ah,
+ 	.create_cq = rvt_create_cq,
++	.create_user_cq = rvt_create_user_cq,
+ 	.create_qp = rvt_create_qp,
+ 	.create_srq = rvt_create_srq,
+ 	.create_user_ah = rvt_create_ah,
 
 -- 
 2.52.0
