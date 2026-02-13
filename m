@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-8813-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8814-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sI9wGOsEj2ltHQEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8813-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:03:07 +0100
+	id yDD+MGEFj2ltHQEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8814-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:05:05 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id D65461355F8
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:03:06 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 481EE135697
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:05:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4339330AA529
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 10:59:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1862531DBA41
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 11:00:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8135B3563C7;
-	Fri, 13 Feb 2026 10:59:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65E7D3570B6;
+	Fri, 13 Feb 2026 10:59:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EXoNAZfl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hbc+73oB"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA193542C3;
-	Fri, 13 Feb 2026 10:59:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41267356A1F;
+	Fri, 13 Feb 2026 10:59:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770980392; cv=none; b=hiD7RzV6Bi9LRSXy6RUFnRBnj4nYaXVv7CQekrpkFpelcIR8oK/DB+fDebs6b9YXfIS4/Hx6HQfSGyl9LO4YCkc/c6DuoTIeDqQdUQWBWoowhdqYlXEBpooQYwUJmLr7jOQHPABUD8TapJAvrns9VSV9YFTzcridDdgmcG02/to=
+	t=1770980396; cv=none; b=S6wxp1wRiyCr93Wdw8MfolOiFcZYpheBHMfOlZxX28GNnJbwTgU+/hAhvbNIBGREZboJz+j7irgwlU2EMkqp6KjzBMWmwG+EJ0rrJQ3yXEcd0gsr0106kcScfj5pZcworU6EwA0WVLigmZEzLwU3cjvTOt8tzPuHT7CW+7E/dVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770980392; c=relaxed/simple;
-	bh=ZborabYXJjoUYEGPeI/iufICv6OuWGf8T6x7aVLTvRw=;
+	s=arc-20240116; t=1770980396; c=relaxed/simple;
+	bh=uCqkDM6MRpkhJ5KrDUZXo/iZqDu91ZV3NReLY1r+Hh0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sWrhUV+OodYHz8OQrY2tqIBTY8ZIFZJCFUD/13HZhNVdi6JsWTIXLUZ5BdKG2Y5evX4g1SHsUG/jdOWn2sO1cmipQJLFAjrSGqr0BYQbbbIFfJDw09K8qnM77l0Tv0OePVR6ltmZOtJUWQwa3qMJ+SGxIylCZoLkKwNmwqioxTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EXoNAZfl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F307C116C6;
-	Fri, 13 Feb 2026 10:59:51 +0000 (UTC)
+	 MIME-Version:Content-Type; b=K17zeVUUxk2L5kryLU9nuJznHmhHJCz9tgygOjMVgaisFlDvj/lZ0dcz26u2FViz7Y0sHYa4F/erk1umIL1mG834zbTbssYJDNJGO4WOgEiysXDGOZXsm3MRYLy5YYIMP+3/TNztkrWDDteumAyXeyk6gudiz2D+4C7YrYn3Xg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hbc+73oB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AB3AC19423;
+	Fri, 13 Feb 2026 10:59:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770980392;
-	bh=ZborabYXJjoUYEGPeI/iufICv6OuWGf8T6x7aVLTvRw=;
+	s=k20201202; t=1770980395;
+	bh=uCqkDM6MRpkhJ5KrDUZXo/iZqDu91ZV3NReLY1r+Hh0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EXoNAZfl47tvar57MNO96L49geh3mELr/AR1xtxBTN4faHv84M3uHCXipxcfEvG/0
-	 CdFyJtywtaGyzS3Jc5VZAr22CHfA14KRmkyWyGY+bKmdHcFGwl/DruIyORxUcG1KJr
-	 UroayRN9ypjZ/62ww8NPzcFRSDadeKpOIRhLEyVWDX4eMc1VC+asGipiTR0acuRcIz
-	 Hza/znWMTnxEM8yynVzBmzVbT3t6/jwg1BrdByZPBnfbjDiiuGARx2hpVD7CgE65/Q
-	 0a/SAW+D7X5T6shUxZpgBU/AC8JtzyC2L7/hlhLlY38P1JRnk1XY1mjTSpORpk26rg
-	 7AcByv5nDRzVg==
+	b=Hbc+73oB3BKQQD9ONRcDM9VW1dC7YNTfBBmMnZpdWy4m5sUJP0BJlAmpvtCOKRko5
+	 wJSn7fjBP6POSnlInNlDo0D0+t7TFQeYkWiTCRe4wtsJHfYECDOu+B0NBWTyz4cO1r
+	 Ooq04DLiXDtZ7BPPdwblJhqOZEi0cBL1xkg+nsX5E7gIyOw0/VbLwR/+llqH+Y2LSU
+	 j7GxnEYxiC7Omg5iuhuUPVWwANh6YjuSh8eB88euVgV44XfXJka69sFwiXhn5jnc3U
+	 BpoFO5oRijYhBOK1mF9jItB0sOxA+lI8Os5gMu5/H7KWJDxvqHGhwXWExHtkksA3jU
+	 kfQRG1jIKBr+w==
 From: Leon Romanovsky <leon@kernel.org>
 To: Jason Gunthorpe <jgg@ziepe.ca>,
 	Leon Romanovsky <leon@kernel.org>,
@@ -76,9 +76,9 @@ To: Jason Gunthorpe <jgg@ziepe.ca>,
 Cc: linux-kernel@vger.kernel.org,
 	linux-rdma@vger.kernel.org,
 	linux-hyperv@vger.kernel.org
-Subject: [PATCH rdma-next 15/50] RDMA/bnxt_re: Convert to modern CQ interface
-Date: Fri, 13 Feb 2026 12:57:51 +0200
-Message-ID: <20260213-refactor-umem-v1-15-f3be85847922@nvidia.com>
+Subject: [PATCH rdma-next 16/50] RDMA/cxgb4: Separate kernel and user CQ creation paths
+Date: Fri, 13 Feb 2026 12:57:52 +0200
+Message-ID: <20260213-refactor-umem-v1-16-f3be85847922@nvidia.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260213-refactor-umem-v1-0-f3be85847922@nvidia.com>
 References: <20260213-refactor-umem-v1-0-f3be85847922@nvidia.com>
@@ -96,7 +96,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -107,305 +107,336 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FREEMAIL_TO(0.00)[ziepe.ca,kernel.org,broadcom.com,chelsio.com,amazon.com,linux.dev,linux.alibaba.com,huawei.com,hisilicon.com,amd.com,intel.com,microsoft.com,nvidia.com,marvell.com,cisco.com,cornelisnetworks.com,gmail.com];
 	RCPT_COUNT_TWELVE(0.00)[31];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-8813-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8814-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[leon@kernel.org,linux-hyperv@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:mid,nvidia.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: D65461355F8
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:mid,nvidia.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 481EE135697
 X-Rspamd-Action: no action
 
 From: Leon Romanovsky <leonro@nvidia.com>
 
-Allow users to supply their own umem.
+Split the create CQ logic to clearly distinguish kernel and user flows.
 
 Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 ---
- drivers/infiniband/hw/bnxt_re/ib_verbs.c | 172 ++++++++++++++++++++-----------
- drivers/infiniband/hw/bnxt_re/ib_verbs.h |   4 +-
- drivers/infiniband/hw/bnxt_re/main.c     |   1 +
- 3 files changed, 113 insertions(+), 64 deletions(-)
+ drivers/infiniband/hw/cxgb4/cq.c       | 218 ++++++++++++++++++++++-----------
+ drivers/infiniband/hw/cxgb4/iw_cxgb4.h |   2 +
+ drivers/infiniband/hw/cxgb4/provider.c |   1 +
+ 3 files changed, 152 insertions(+), 69 deletions(-)
 
-diff --git a/drivers/infiniband/hw/bnxt_re/ib_verbs.c b/drivers/infiniband/hw/bnxt_re/ib_verbs.c
-index c146f43ae875..b8516d8b8426 100644
---- a/drivers/infiniband/hw/bnxt_re/ib_verbs.c
-+++ b/drivers/infiniband/hw/bnxt_re/ib_verbs.c
-@@ -3134,22 +3134,20 @@ int bnxt_re_destroy_cq(struct ib_cq *ib_cq, struct ib_udata *udata)
- 	nq = cq->qplib_cq.nq;
- 	cctx = rdev->chip_ctx;
- 
--	if (cctx->modes.toggle_bits & BNXT_QPLIB_CQ_TOGGLE_BIT) {
--		free_page((unsigned long)cq->uctx_cq_page);
-+	free_page((unsigned long)cq->uctx_cq_page);
-+	if (cctx->modes.toggle_bits & BNXT_QPLIB_CQ_TOGGLE_BIT)
- 		hash_del(&cq->hash_entry);
--	}
--	bnxt_qplib_destroy_cq(&rdev->qplib_res, &cq->qplib_cq);
- 
-+	bnxt_qplib_destroy_cq(&rdev->qplib_res, &cq->qplib_cq);
- 	bnxt_re_put_nq(rdev, nq);
--	ib_umem_release(cq->umem);
--
- 	atomic_dec(&rdev->stats.res.cq_count);
- 	kfree(cq->cql);
+diff --git a/drivers/infiniband/hw/cxgb4/cq.c b/drivers/infiniband/hw/cxgb4/cq.c
+index 14ced7b667fa..d263cca47432 100644
+--- a/drivers/infiniband/hw/cxgb4/cq.c
++++ b/drivers/infiniband/hw/cxgb4/cq.c
+@@ -994,8 +994,8 @@ int c4iw_destroy_cq(struct ib_cq *ib_cq, struct ib_udata *udata)
  	return 0;
  }
  
--int bnxt_re_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
--		      struct uverbs_attr_bundle *attrs)
-+int bnxt_re_create_user_cq(struct ib_cq *ibcq,
-+			   const struct ib_cq_init_attr *attr,
-+			   struct uverbs_attr_bundle *attrs)
+-int c4iw_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+-		   struct uverbs_attr_bundle *attrs)
++int c4iw_create_user_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
++			struct uverbs_attr_bundle *attrs)
  {
- 	struct bnxt_re_cq *cq = container_of(ibcq, struct bnxt_re_cq, ib_cq);
- 	struct bnxt_re_dev *rdev = to_bnxt_re_dev(ibcq->device, ibdev);
-@@ -3158,6 +3156,8 @@ int bnxt_re_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 		rdma_udata_to_drv_context(udata, struct bnxt_re_ucontext, ib_uctx);
- 	struct bnxt_qplib_dev_attr *dev_attr = rdev->dev_attr;
- 	struct bnxt_qplib_chip_ctx *cctx;
-+	struct bnxt_re_cq_resp resp = {};
-+	struct bnxt_re_cq_req req;
- 	int cqe = attr->cqe;
- 	int rc, entries;
- 	u32 active_cqs;
-@@ -3166,7 +3166,7 @@ int bnxt_re_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 	struct ib_udata *udata = &attrs->driver_udata;
+ 	struct ib_device *ibdev = ibcq->device;
+@@ -1012,25 +1012,21 @@ int c4iw_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 		udata, struct c4iw_ucontext, ibucontext);
+ 
+ 	pr_debug("ib_dev %p entries %d\n", ibdev, entries);
+-	if (attr->flags)
++	if (attr->flags || ibcq->umem)
  		return -EOPNOTSUPP;
  
- 	/* Validate CQ fields */
--	if (cqe < 1 || cqe > dev_attr->max_cq_wqes) {
-+	if (attr->cqe > dev_attr->max_cq_wqes) {
- 		ibdev_err(&rdev->ibdev, "Failed to create CQ -max exceeded");
+-	if (entries < 1 || entries > ibdev->attrs.max_cqe)
++	if (attr->cqe > ibdev->attrs.max_cqe)
  		return -EINVAL;
- 	}
-@@ -3181,33 +3181,107 @@ int bnxt_re_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
  
- 	cq->qplib_cq.sg_info.pgsize = PAGE_SIZE;
- 	cq->qplib_cq.sg_info.pgshft = PAGE_SHIFT;
+ 	if (vector >= rhp->rdev.lldi.nciq)
+ 		return -EINVAL;
+ 
 -	if (udata) {
--		struct bnxt_re_cq_req req;
--		if (ib_copy_from_udata(&req, udata, sizeof(req))) {
--			rc = -EFAULT;
--			goto fail;
--		}
+-		if (udata->inlen < sizeof(ucmd))
+-			ucontext->is_32b_cqe = 1;
+-	}
++	if (udata->inlen < sizeof(ucmd))
++		ucontext->is_32b_cqe = 1;
  
--		cq->umem = ib_umem_get(&rdev->ibdev, req.cq_va,
--				       entries * sizeof(struct cq_base),
--				       IB_ACCESS_LOCAL_WRITE);
--		if (IS_ERR(cq->umem)) {
--			rc = PTR_ERR(cq->umem);
--			goto fail;
--		}
--		cq->qplib_cq.sg_info.umem = cq->umem;
--		cq->qplib_cq.dpi = &uctx->dpi;
--	} else {
--		cq->max_cql = min_t(u32, entries, MAX_CQL_PER_POLL);
--		cq->cql = kcalloc(cq->max_cql, sizeof(struct bnxt_qplib_cqe),
--				  GFP_KERNEL);
--		if (!cq->cql) {
-+	if (ib_copy_from_udata(&req, udata, sizeof(req)))
-+		return -EFAULT;
-+
-+	if (!ibcq->umem)
-+		ibcq->umem = ib_umem_get(&rdev->ibdev, req.cq_va,
-+					 entries * sizeof(struct cq_base),
-+					 IB_ACCESS_LOCAL_WRITE);
-+	if (IS_ERR(ibcq->umem))
-+		return PTR_ERR(ibcq->umem);
-+
-+	cq->qplib_cq.sg_info.umem = cq->ib_cq.umem;
-+	cq->qplib_cq.dpi = &uctx->dpi;
-+
-+	cq->qplib_cq.max_wqe = entries;
-+	cq->qplib_cq.coalescing = &rdev->cq_coalescing;
-+	cq->qplib_cq.nq = bnxt_re_get_nq(rdev);
-+	cq->qplib_cq.cnq_hw_ring_id = cq->qplib_cq.nq->ring_id;
-+
-+	rc = bnxt_qplib_create_cq(&rdev->qplib_res, &cq->qplib_cq);
-+	if (rc)
-+		goto create_cq;
-+
-+	cq->ib_cq.cqe = entries;
-+	cq->cq_period = cq->qplib_cq.period;
-+
-+	active_cqs = atomic_inc_return(&rdev->stats.res.cq_count);
-+	if (active_cqs > rdev->stats.res.cq_watermark)
-+		rdev->stats.res.cq_watermark = active_cqs;
-+	spin_lock_init(&cq->cq_lock);
-+
-+	if (cctx->modes.toggle_bits & BNXT_QPLIB_CQ_TOGGLE_BIT) {
-+		/* Allocate a page */
-+		cq->uctx_cq_page = (void *)get_zeroed_page(GFP_KERNEL);
-+		if (!cq->uctx_cq_page) {
- 			rc = -ENOMEM;
--			goto fail;
-+			goto c2fail;
- 		}
-+		hash_add(rdev->cq_hash, &cq->hash_entry, cq->qplib_cq.id);
-+		resp.comp_mask |= BNXT_RE_CQ_TOGGLE_PAGE_SUPPORT;
-+	}
-+	resp.cqid = cq->qplib_cq.id;
-+	resp.tail = cq->qplib_cq.hwq.cons;
-+	resp.phase = cq->qplib_cq.period;
-+	rc = ib_copy_to_udata(udata, &resp, min(sizeof(resp), udata->outlen));
-+	if (rc) {
-+		ibdev_err(&rdev->ibdev, "Failed to copy CQ udata");
-+		goto free_mem;
-+	}
+ 	chp->wr_waitp = c4iw_alloc_wr_wait(GFP_KERNEL);
+-	if (!chp->wr_waitp) {
+-		ret = -ENOMEM;
+-		goto err_free_chp;
+-	}
++	if (!chp->wr_waitp)
++		return -ENOMEM;
+ 	c4iw_init_wr_wait(chp->wr_waitp);
  
--		cq->qplib_cq.dpi = &rdev->dpi_privileged;
-+	return 0;
+ 	wr_len = sizeof(struct fw_ri_res_wr) + sizeof(struct fw_ri_res);
+@@ -1063,22 +1059,19 @@ int c4iw_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 	if (hwentries < 64)
+ 		hwentries = 64;
+ 
+-	memsize = hwentries * ((ucontext && ucontext->is_32b_cqe) ?
++	memsize = hwentries * (ucontext->is_32b_cqe ?
+ 			(sizeof(*chp->cq.queue) / 2) : sizeof(*chp->cq.queue));
+ 
+ 	/*
+ 	 * memsize must be a multiple of the page size if its a user cq.
+ 	 */
+-	if (udata)
+-		memsize = roundup(memsize, PAGE_SIZE);
++	memsize = roundup(memsize, PAGE_SIZE);
+ 
+ 	chp->cq.size = hwentries;
+ 	chp->cq.memsize = memsize;
+ 	chp->cq.vector = vector;
+ 
+-	ret = create_cq(&rhp->rdev, &chp->cq,
+-			ucontext ? &ucontext->uctx : &rhp->rdev.uctx,
+-			chp->wr_waitp);
++	ret = create_cq(&rhp->rdev, &chp->cq, &ucontext->uctx, chp->wr_waitp);
+ 	if (ret)
+ 		goto err_free_skb;
+ 
+@@ -1093,54 +1086,52 @@ int c4iw_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 	if (ret)
+ 		goto err_destroy_cq;
+ 
+-	if (ucontext) {
+-		ret = -ENOMEM;
+-		mm = kmalloc(sizeof(*mm), GFP_KERNEL);
+-		if (!mm)
+-			goto err_remove_handle;
+-		mm2 = kmalloc(sizeof(*mm2), GFP_KERNEL);
+-		if (!mm2)
+-			goto err_free_mm;
+-
+-		memset(&uresp, 0, sizeof(uresp));
+-		uresp.qid_mask = rhp->rdev.cqmask;
+-		uresp.cqid = chp->cq.cqid;
+-		uresp.size = chp->cq.size;
+-		uresp.memsize = chp->cq.memsize;
+-		spin_lock(&ucontext->mmap_lock);
+-		uresp.key = ucontext->key;
+-		ucontext->key += PAGE_SIZE;
+-		uresp.gts_key = ucontext->key;
+-		ucontext->key += PAGE_SIZE;
+-		/* communicate to the userspace that
+-		 * kernel driver supports 64B CQE
+-		 */
+-		uresp.flags |= C4IW_64B_CQE;
+-
+-		spin_unlock(&ucontext->mmap_lock);
+-		ret = ib_copy_to_udata(udata, &uresp,
+-				       ucontext->is_32b_cqe ?
+-				       sizeof(uresp) - sizeof(uresp.flags) :
+-				       sizeof(uresp));
+-		if (ret)
+-			goto err_free_mm2;
+-
+-		mm->key = uresp.key;
+-		mm->addr = 0;
+-		mm->vaddr = chp->cq.queue;
+-		mm->dma_addr = chp->cq.dma_addr;
+-		mm->len = chp->cq.memsize;
+-		insert_flag_to_mmap(&rhp->rdev, mm, mm->addr);
+-		insert_mmap(ucontext, mm);
+-
+-		mm2->key = uresp.gts_key;
+-		mm2->addr = chp->cq.bar2_pa;
+-		mm2->len = PAGE_SIZE;
+-		mm2->vaddr = NULL;
+-		mm2->dma_addr = 0;
+-		insert_flag_to_mmap(&rhp->rdev, mm2, mm2->addr);
+-		insert_mmap(ucontext, mm2);
+-	}
++	ret = -ENOMEM;
++	mm = kmalloc(sizeof(*mm), GFP_KERNEL);
++	if (!mm)
++		goto err_remove_handle;
++	mm2 = kmalloc(sizeof(*mm2), GFP_KERNEL);
++	if (!mm2)
++		goto err_free_mm;
 +
-+free_mem:
-+	if (cctx->modes.toggle_bits & BNXT_QPLIB_CQ_TOGGLE_BIT)
-+		hash_del(&cq->hash_entry);
-+	free_page((unsigned long)cq->uctx_cq_page);
-+c2fail:
-+	atomic_dec(&rdev->stats.res.cq_count);
-+	bnxt_qplib_destroy_cq(&rdev->qplib_res, &cq->qplib_cq);
-+	/* UMEM is released by ib_core */
-+create_cq:
-+	bnxt_re_put_nq(rdev, cq->qplib_cq.nq);
-+	return rc;
++	memset(&uresp, 0, sizeof(uresp));
++	uresp.qid_mask = rhp->rdev.cqmask;
++	uresp.cqid = chp->cq.cqid;
++	uresp.size = chp->cq.size;
++	uresp.memsize = chp->cq.memsize;
++	spin_lock(&ucontext->mmap_lock);
++	uresp.key = ucontext->key;
++	ucontext->key += PAGE_SIZE;
++	uresp.gts_key = ucontext->key;
++	ucontext->key += PAGE_SIZE;
++	/* communicate to the userspace that
++	 * kernel driver supports 64B CQE
++	 */
++	uresp.flags |= C4IW_64B_CQE;
++
++	spin_unlock(&ucontext->mmap_lock);
++	ret = ib_copy_to_udata(udata, &uresp,
++			       ucontext->is_32b_cqe ?
++			       sizeof(uresp) - sizeof(uresp.flags) :
++			       sizeof(uresp));
++	if (ret)
++		goto err_free_mm2;
++
++	mm->key = uresp.key;
++	mm->addr = 0;
++	mm->vaddr = chp->cq.queue;
++	mm->dma_addr = chp->cq.dma_addr;
++	mm->len = chp->cq.memsize;
++	insert_flag_to_mmap(&rhp->rdev, mm, mm->addr);
++	insert_mmap(ucontext, mm);
++
++	mm2->key = uresp.gts_key;
++	mm2->addr = chp->cq.bar2_pa;
++	mm2->len = PAGE_SIZE;
++	mm2->vaddr = NULL;
++	mm2->dma_addr = 0;
++	insert_flag_to_mmap(&rhp->rdev, mm2, mm2->addr);
++	insert_mmap(ucontext, mm2);
+ 
+ 	pr_debug("cqid 0x%0x chp %p size %u memsize %zu, dma_addr %pad\n",
+ 		 chp->cq.cqid, chp, chp->cq.size, chp->cq.memsize,
+@@ -1153,14 +1144,103 @@ int c4iw_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ err_remove_handle:
+ 	xa_erase_irq(&rhp->cqs, chp->cq.cqid);
+ err_destroy_cq:
+-	destroy_cq(&chp->rhp->rdev, &chp->cq,
+-		   ucontext ? &ucontext->uctx : &rhp->rdev.uctx,
++	destroy_cq(&chp->rhp->rdev, &chp->cq, &ucontext->uctx,
++		   chp->destroy_skb, chp->wr_waitp);
++err_free_skb:
++	kfree_skb(chp->destroy_skb);
++err_free_wr_wait:
++	c4iw_put_wr_wait(chp->wr_waitp);
++	return ret;
 +}
 +
-+int bnxt_re_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
-+		      struct uverbs_attr_bundle *attrs)
++int c4iw_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
++		   struct uverbs_attr_bundle *attrs)
 +{
-+	struct bnxt_re_cq *cq = container_of(ibcq, struct bnxt_re_cq, ib_cq);
-+	struct bnxt_re_dev *rdev = to_bnxt_re_dev(ibcq->device, ibdev);
-+	struct bnxt_qplib_dev_attr *dev_attr = rdev->dev_attr;
-+	int cqe = attr->cqe;
-+	int rc, entries;
-+	u32 active_cqs;
++	struct ib_device *ibdev = ibcq->device;
++	int entries = attr->cqe;
++	int vector = attr->comp_vector;
++	struct c4iw_dev *rhp = to_c4iw_dev(ibcq->device);
++	struct c4iw_cq *chp = to_c4iw_cq(ibcq);
++	int ret, wr_len;
++	size_t memsize, hwentries;
 +
++	pr_debug("ib_dev %p entries %d\n", ibdev, entries);
 +	if (attr->flags)
 +		return -EOPNOTSUPP;
 +
-+	/* Validate CQ fields */
-+	if (attr->cqe > dev_attr->max_cq_wqes) {
-+		ibdev_err(&rdev->ibdev, "Failed to create CQ -max exceeded");
++	if (attr->cqe > ibdev->attrs.max_cqe)
 +		return -EINVAL;
- 	}
 +
-+	cq->rdev = rdev;
-+	cq->qplib_cq.cq_handle = (u64)(unsigned long)(&cq->qplib_cq);
++	if (vector >= rhp->rdev.lldi.nciq)
++		return -EINVAL;
 +
-+	entries = bnxt_re_init_depth(cqe + 1, NULL);
-+	if (entries > dev_attr->max_cq_wqes + 1)
-+		entries = dev_attr->max_cq_wqes + 1;
-+
-+	cq->qplib_cq.sg_info.pgsize = PAGE_SIZE;
-+	cq->qplib_cq.sg_info.pgshft = PAGE_SHIFT;
-+
-+	cq->max_cql = min_t(u32, entries, MAX_CQL_PER_POLL);
-+	cq->cql = kcalloc(cq->max_cql, sizeof(struct bnxt_qplib_cqe),
-+			  GFP_KERNEL);
-+	if (!cq->cql)
++	chp->wr_waitp = c4iw_alloc_wr_wait(GFP_KERNEL);
++	if (!chp->wr_waitp)
 +		return -ENOMEM;
++	c4iw_init_wr_wait(chp->wr_waitp);
 +
-+	cq->qplib_cq.dpi = &rdev->dpi_privileged;
- 	cq->qplib_cq.max_wqe = entries;
- 	cq->qplib_cq.coalescing = &rdev->cq_coalescing;
- 	cq->qplib_cq.nq = bnxt_re_get_nq(rdev);
-@@ -3227,38 +3301,10 @@ int bnxt_re_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 		rdev->stats.res.cq_watermark = active_cqs;
- 	spin_lock_init(&cq->cq_lock);
- 
--	if (udata) {
--		struct bnxt_re_cq_resp resp = {};
--
--		if (cctx->modes.toggle_bits & BNXT_QPLIB_CQ_TOGGLE_BIT) {
--			hash_add(rdev->cq_hash, &cq->hash_entry, cq->qplib_cq.id);
--			/* Allocate a page */
--			cq->uctx_cq_page = (void *)get_zeroed_page(GFP_KERNEL);
--			if (!cq->uctx_cq_page) {
--				rc = -ENOMEM;
--				goto c2fail;
--			}
--			resp.comp_mask |= BNXT_RE_CQ_TOGGLE_PAGE_SUPPORT;
--		}
--		resp.cqid = cq->qplib_cq.id;
--		resp.tail = cq->qplib_cq.hwq.cons;
--		resp.phase = cq->qplib_cq.period;
--		resp.rsvd = 0;
--		rc = ib_copy_to_udata(udata, &resp, min(sizeof(resp), udata->outlen));
--		if (rc) {
--			ibdev_err(&rdev->ibdev, "Failed to copy CQ udata");
--			bnxt_qplib_destroy_cq(&rdev->qplib_res, &cq->qplib_cq);
--			goto free_mem;
--		}
--	}
--
- 	return 0;
- 
--free_mem:
--	free_page((unsigned long)cq->uctx_cq_page);
--c2fail:
--	ib_umem_release(cq->umem);
- fail:
-+	bnxt_re_put_nq(rdev, cq->qplib_cq.nq);
- 	kfree(cq->cql);
- 	return rc;
++	wr_len = sizeof(struct fw_ri_res_wr) + sizeof(struct fw_ri_res);
++	chp->destroy_skb = alloc_skb(wr_len, GFP_KERNEL);
++	if (!chp->destroy_skb) {
++		ret = -ENOMEM;
++		goto err_free_wr_wait;
++	}
++
++	/* account for the status page. */
++	entries++;
++
++	/* IQ needs one extra entry to differentiate full vs empty. */
++	entries++;
++
++	/*
++	 * entries must be multiple of 16 for HW.
++	 */
++	entries = roundup(entries, 16);
++
++	/*
++	 * Make actual HW queue 2x to avoid cdix_inc overflows.
++	 */
++	hwentries = min(entries * 2, rhp->rdev.hw_queue.t4_max_iq_size);
++
++	/*
++	 * Make HW queue at least 64 entries so GTS updates aren't too
++	 * frequent.
++	 */
++	if (hwentries < 64)
++		hwentries = 64;
++
++	memsize = hwentries * sizeof(*chp->cq.queue);
++
++	chp->cq.size = hwentries;
++	chp->cq.memsize = memsize;
++	chp->cq.vector = vector;
++
++	ret = create_cq(&rhp->rdev, &chp->cq, &rhp->rdev.uctx, chp->wr_waitp);
++	if (ret)
++		goto err_free_skb;
++
++	chp->rhp = rhp;
++	chp->cq.size--;				/* status page */
++	chp->ibcq.cqe = entries - 2;
++	spin_lock_init(&chp->lock);
++	spin_lock_init(&chp->comp_handler_lock);
++	refcount_set(&chp->refcnt, 1);
++	init_completion(&chp->cq_rel_comp);
++	ret = xa_insert_irq(&rhp->cqs, chp->cq.cqid, chp, GFP_KERNEL);
++	if (ret)
++		goto err_destroy_cq;
++
++	pr_debug("cqid 0x%0x chp %p size %u memsize %zu, dma_addr %pad\n",
++		 chp->cq.cqid, chp, chp->cq.size, chp->cq.memsize,
++		 &chp->cq.dma_addr);
++	return 0;
++err_destroy_cq:
++	destroy_cq(&chp->rhp->rdev, &chp->cq, &rhp->rdev.uctx,
+ 		   chp->destroy_skb, chp->wr_waitp);
+ err_free_skb:
+ 	kfree_skb(chp->destroy_skb);
+ err_free_wr_wait:
+ 	c4iw_put_wr_wait(chp->wr_waitp);
+-err_free_chp:
+ 	return ret;
  }
-@@ -3271,8 +3317,8 @@ static void bnxt_re_resize_cq_complete(struct bnxt_re_cq *cq)
  
- 	cq->qplib_cq.max_wqe = cq->resize_cqe;
- 	if (cq->resize_umem) {
--		ib_umem_release(cq->umem);
--		cq->umem = cq->resize_umem;
-+		ib_umem_release(cq->ib_cq.umem);
-+		cq->ib_cq.umem = cq->resize_umem;
- 		cq->resize_umem = NULL;
- 		cq->resize_cqe = 0;
- 	}
-@@ -3872,7 +3918,7 @@ int bnxt_re_poll_cq(struct ib_cq *ib_cq, int num_entries, struct ib_wc *wc)
- 	/* User CQ; the only processing we do is to
- 	 * complete any pending CQ resize operation.
- 	 */
--	if (cq->umem) {
-+	if (cq->ib_cq.umem) {
- 		if (cq->resize_umem)
- 			bnxt_re_resize_cq_complete(cq);
- 		return 0;
-diff --git a/drivers/infiniband/hw/bnxt_re/ib_verbs.h b/drivers/infiniband/hw/bnxt_re/ib_verbs.h
-index 76ba9ab04d5c..cac3e10b73f6 100644
---- a/drivers/infiniband/hw/bnxt_re/ib_verbs.h
-+++ b/drivers/infiniband/hw/bnxt_re/ib_verbs.h
-@@ -108,7 +108,6 @@ struct bnxt_re_cq {
- 	struct bnxt_qplib_cqe	*cql;
- #define MAX_CQL_PER_POLL	1024
- 	u32			max_cql;
--	struct ib_umem		*umem;
- 	struct ib_umem		*resize_umem;
- 	int			resize_cqe;
- 	void			*uctx_cq_page;
-@@ -247,6 +246,9 @@ int bnxt_re_post_recv(struct ib_qp *qp, const struct ib_recv_wr *recv_wr,
- 		      const struct ib_recv_wr **bad_recv_wr);
- int bnxt_re_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 		      struct uverbs_attr_bundle *attrs);
-+int bnxt_re_create_user_cq(struct ib_cq *ibcq,
-+			   const struct ib_cq_init_attr *attr,
-+			   struct uverbs_attr_bundle *attrs);
- int bnxt_re_resize_cq(struct ib_cq *ibcq, int cqe, struct ib_udata *udata);
- int bnxt_re_destroy_cq(struct ib_cq *cq, struct ib_udata *udata);
- int bnxt_re_poll_cq(struct ib_cq *cq, int num_entries, struct ib_wc *wc);
-diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
-index 73003ad25ee8..368c1fd8172e 100644
---- a/drivers/infiniband/hw/bnxt_re/main.c
-+++ b/drivers/infiniband/hw/bnxt_re/main.c
-@@ -1334,6 +1334,7 @@ static const struct ib_device_ops bnxt_re_dev_ops = {
- 	.alloc_ucontext = bnxt_re_alloc_ucontext,
- 	.create_ah = bnxt_re_create_ah,
- 	.create_cq = bnxt_re_create_cq,
-+	.create_user_cq = bnxt_re_create_user_cq,
- 	.create_qp = bnxt_re_create_qp,
- 	.create_srq = bnxt_re_create_srq,
- 	.create_user_ah = bnxt_re_create_ah,
+diff --git a/drivers/infiniband/hw/cxgb4/iw_cxgb4.h b/drivers/infiniband/hw/cxgb4/iw_cxgb4.h
+index e17c1252536b..b8e3ee2a0c84 100644
+--- a/drivers/infiniband/hw/cxgb4/iw_cxgb4.h
++++ b/drivers/infiniband/hw/cxgb4/iw_cxgb4.h
+@@ -1014,6 +1014,8 @@ int c4iw_destroy_cq(struct ib_cq *ib_cq, struct ib_udata *udata);
+ void c4iw_cq_rem_ref(struct c4iw_cq *chp);
+ int c4iw_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 		   struct uverbs_attr_bundle *attrs);
++int c4iw_create_user_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
++			struct uverbs_attr_bundle *attrs);
+ int c4iw_arm_cq(struct ib_cq *ibcq, enum ib_cq_notify_flags flags);
+ int c4iw_modify_srq(struct ib_srq *ib_srq, struct ib_srq_attr *attr,
+ 		    enum ib_srq_attr_mask srq_attr_mask,
+diff --git a/drivers/infiniband/hw/cxgb4/provider.c b/drivers/infiniband/hw/cxgb4/provider.c
+index e059f92d90fd..b9c183d1389d 100644
+--- a/drivers/infiniband/hw/cxgb4/provider.c
++++ b/drivers/infiniband/hw/cxgb4/provider.c
+@@ -461,6 +461,7 @@ static const struct ib_device_ops c4iw_dev_ops = {
+ 	.alloc_pd = c4iw_allocate_pd,
+ 	.alloc_ucontext = c4iw_alloc_ucontext,
+ 	.create_cq = c4iw_create_cq,
++	.create_user_cq = c4iw_create_user_cq,
+ 	.create_qp = c4iw_create_qp,
+ 	.create_srq = c4iw_create_srq,
+ 	.dealloc_pd = c4iw_deallocate_pd,
 
 -- 
 2.52.0
