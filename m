@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-8800-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8801-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4BMMHh0Ej2lJHQEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8800-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 11:59:41 +0100
+	id iHVyDUYEj2lJHQEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8801-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:00:22 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D39EC1354D7
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 11:59:40 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A62F135513
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:00:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AE9E93053774
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 10:59:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 57CD8305849F
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 10:59:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B9173542C3;
-	Fri, 13 Feb 2026 10:59:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8208534D3A4;
+	Fri, 13 Feb 2026 10:59:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dXcK581z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHLgrs38"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687AF3375AE;
-	Fri, 13 Feb 2026 10:59:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2153375AE;
+	Fri, 13 Feb 2026 10:59:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770980343; cv=none; b=Y676nQODG9491N1GuGHYg5kyHHlmVOtiS0DFsj0ys+Z6CHQMCClUz8YPnozdhiSL0vAzc1fK1ebT4cF2miUPi7AtUJgiq2pgtrVeKl0N9d6OKgmkVjsYCdA75m4mq2uLqO5aqb7mPDww5seEiebLlOUALdyW3KW0An10pm9hMHY=
+	t=1770980347; cv=none; b=DhY8nrwkZiB9etwarnk2JljI6kAkc8o5bMrNeSZYNK/Mr7PC1q6q9L2kx3GpW8H7Ffb8yVOg8DAhzHAh5VX4Zy2i+0TSZdGR8D4RRLvYXrakR5QaR2ZDtIiEajOGQN+u4ds/I1Ubk/X3ZKdzh4h7CgQBNyunXd0+IPI6PLTKqHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770980343; c=relaxed/simple;
-	bh=jz3JOuJAEdlHIXpm9EsHibnx92bVzq0Q6O7Dk1LpG8w=;
+	s=arc-20240116; t=1770980347; c=relaxed/simple;
+	bh=Q1DCh8dQ1KaQLj3VPpwNYcjh0I8nlT+pOmgUCPDsk1w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HTAzDCmGEgF/ujxeWiOQJaU09CUwxWlv23sHPp2nzuMjcufA0qe5G1+QufKkZWNBQXKnY++9lQoY4PyG6rlGraqdXkY3d9zGDfRI5AyA+eAHVuZnOspsBZ9pdiMSgeVUxRbYDeSkrX9rbYr1Bljvz3BExLWGPm2zgVf7O9K8sGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dXcK581z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4544BC116C6;
-	Fri, 13 Feb 2026 10:59:02 +0000 (UTC)
+	 MIME-Version:Content-Type; b=Q6mPAvIWTBb7z6k2c8hWpB1r2nNm/D1BYhwW7oqsD2M7aMowvVBNncwmjZpUnSv68YGJMfpvE7k4Dun7vS6Y+1DT1d4ULyQYY5l1krZD2fTzCC2m3jRW/IS4UJOxaRVmHpc3w69N7pgEnqR1dmRWRH+ZebcmBVZV9jva/GbgREA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHLgrs38; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDB99C116C6;
+	Fri, 13 Feb 2026 10:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770980343;
-	bh=jz3JOuJAEdlHIXpm9EsHibnx92bVzq0Q6O7Dk1LpG8w=;
+	s=k20201202; t=1770980346;
+	bh=Q1DCh8dQ1KaQLj3VPpwNYcjh0I8nlT+pOmgUCPDsk1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dXcK581z65PbPgTSohJwqEMUC31igLBa03AIE6Ian+zoGOfSMZANlchpyIiT89l3x
-	 ApJwW2h8Zf52A7hPh4hChvnAVkTxY9jYo5W8t43cqUZNuxZ9vSSDXfW5f/1SW41pqh
-	 35Mvzh6tClsjpP88ymnCbjRu8DnsQLAFLqjoulJzCGjBwsjbQTiXSfz3XHABbCObXi
-	 ZGr9665mD/9wLWL0rhdodOl24mKyVy6arIwLks+45/LahLdSYRpl9Eit+uzF3SkMSU
-	 XU0ea5QRPG/sZEIayaptGPeiXty9Zyd8ICrV+TkWO2VT85G7772UUIm8bufGSg7ITr
-	 8zC/cG95/gYjw==
+	b=cHLgrs38oixAD3ic9buWodMVj07v8CwmVWlUK9xzVRuUPIpYvwMMeqQDl5CgzgAmG
+	 3ibdWoHX0zaGiBKDD5umv+vV4dXytxow6NugqIPLha24Ii8jdUL0kl2tXIbHlBfXCm
+	 X7IxmuH5AGtKECjBkV8RaPhN6b5hrEj/2t+AwxKYLKu8vciX848vKp3idF3WPBMz9U
+	 8xa0oCUFXoP+idAYuDwbSdKE5ZjQbv3IwqCV0lvRrze4vJ2euQkf1Rj1hzD4CeIdKP
+	 WG1MPYlMEOiUNjtuPxCZ8hxTn6LoUji8BzMN/sAPYvAC/Nk9FBnvvviOpULTNcQu5F
+	 7B7AONF+e7u/w==
 From: Leon Romanovsky <leon@kernel.org>
 To: Jason Gunthorpe <jgg@ziepe.ca>,
 	Leon Romanovsky <leon@kernel.org>,
@@ -76,9 +76,9 @@ To: Jason Gunthorpe <jgg@ziepe.ca>,
 Cc: linux-kernel@vger.kernel.org,
 	linux-rdma@vger.kernel.org,
 	linux-hyperv@vger.kernel.org
-Subject: [PATCH rdma-next 03/50] RDMA/umem: Remove unnecessary includes and defines from ib_umem header
-Date: Fri, 13 Feb 2026 12:57:39 +0200
-Message-ID: <20260213-refactor-umem-v1-3-f3be85847922@nvidia.com>
+Subject: [PATCH rdma-next 04/50] RDMA/core: Promote UMEM to a core component
+Date: Fri, 13 Feb 2026 12:57:40 +0200
+Message-ID: <20260213-refactor-umem-v1-4-f3be85847922@nvidia.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260213-refactor-umem-v1-0-f3be85847922@nvidia.com>
 References: <20260213-refactor-umem-v1-0-f3be85847922@nvidia.com>
@@ -96,7 +96,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -107,47 +107,54 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FREEMAIL_TO(0.00)[ziepe.ca,kernel.org,broadcom.com,chelsio.com,amazon.com,linux.dev,linux.alibaba.com,huawei.com,hisilicon.com,amd.com,intel.com,microsoft.com,nvidia.com,marvell.com,cisco.com,cornelisnetworks.com,gmail.com];
 	RCPT_COUNT_TWELVE(0.00)[31];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-8800-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8801-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[leon@kernel.org,linux-hyperv@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nvidia.com:mid,nvidia.com:email]
-X-Rspamd-Queue-Id: D39EC1354D7
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 8A62F135513
 X-Rspamd-Action: no action
 
 From: Leon Romanovsky <leonro@nvidia.com>
 
-The ib_umem header no longer requires the removed includes or forward
-declarations, so drop them to reduce clutter.
+To manage UMEM objects at the core level and reuse the existing
+ib_destroy_cq*() flow, move the UMEM files to be built together with
+ib_core. Attempting to call ib_umem_release() from verbs.c currently
+results in the following error:
+
+    depmod: ERROR: Cycle detected: ib_core -> ib_uverbs -> ib_core
+    depmod: ERROR: Found 2 modules in dependency cycles!
+    verbs.c:(.text+0x250c): undefined reference to `ib_umem_release'
 
 Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 ---
- include/rdma/ib_umem.h | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/infiniband/core/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/rdma/ib_umem.h b/include/rdma/ib_umem.h
-index 084a1d9a66f3..c3ab11e6879f 100644
---- a/include/rdma/ib_umem.h
-+++ b/include/rdma/ib_umem.h
-@@ -7,13 +7,9 @@
- #ifndef IB_UMEM_H
- #define IB_UMEM_H
+diff --git a/drivers/infiniband/core/Makefile b/drivers/infiniband/core/Makefile
+index 48922e0ede56..ada9877d02df 100644
+--- a/drivers/infiniband/core/Makefile
++++ b/drivers/infiniband/core/Makefile
+@@ -16,6 +16,8 @@ ib_core-y :=			packer.o ud_header.o verbs.o cq.o rw.o sysfs.o \
  
--#include <linux/list.h>
- #include <linux/scatterlist.h>
--#include <linux/workqueue.h>
+ ib_core-$(CONFIG_SECURITY_INFINIBAND) += security.o
+ ib_core-$(CONFIG_CGROUP_RDMA) += cgroup.o
++ib_core-$(CONFIG_INFINIBAND_USER_MEM) += umem.o umem_dmabuf.o
++ib_core-$(CONFIG_INFINIBAND_ON_DEMAND_PAGING) += umem_odp.o
  
- struct ib_device;
--struct ib_ucontext;
--struct ib_umem_odp;
- struct dma_buf_attach_ops;
+ ib_cm-y :=			cm.o cm_trace.o
  
- struct ib_umem {
+@@ -42,5 +44,3 @@ ib_uverbs-y :=			uverbs_main.o uverbs_cmd.o uverbs_marshall.o \
+ 				uverbs_std_types_wq.o \
+ 				uverbs_std_types_qp.o \
+ 				ucaps.o
+-ib_uverbs-$(CONFIG_INFINIBAND_USER_MEM) += umem.o umem_dmabuf.o
+-ib_uverbs-$(CONFIG_INFINIBAND_ON_DEMAND_PAGING) += umem_odp.o
 
 -- 
 2.52.0
