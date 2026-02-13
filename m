@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-8816-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8819-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EAf3MoIEj2lJHQEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8816-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:01:22 +0100
+	id 0CdALJwFj2ltHQEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8819-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:06:04 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01C06135565
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:01:21 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33E151356D8
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:06:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id BE74930409EE
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 11:00:17 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 185F1312F4D7
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 11:00:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FB983563E5;
-	Fri, 13 Feb 2026 11:00:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 653BF359718;
+	Fri, 13 Feb 2026 11:00:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FUFtQUL9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KHRERZpq"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C08F3559F8;
-	Fri, 13 Feb 2026 11:00:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D2234B661;
+	Fri, 13 Feb 2026 11:00:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770980404; cv=none; b=jxFDZ66bTNz69Kd+28stA8ZPpjn2L4vdZ/JMHaWWeQ+SlSiyZgYFrvKX65XSvdxyjmPk9YlXvkNGwNGvMTLV3KfFStgLml7qIRyH7oTzm7n5yto3EcnDNUpR6RUrU6dNg/lG9NEn0XlVQltmVxhwIAcl8HwzDWQFxNx9wgZk4v4=
+	t=1770980415; cv=none; b=mnTbH0NMrRr9Sf1CNsqsgrtwDvRNByaxyXmKT9JgrfXaYPDUUT0n1xLnpm/DSb55i3Npy2gGzzQtu3hIUOxnJX5lTKgPUZeAcyJOaCUqQoFCB6xMFAlk3bo2OoRWh2nB9q3Hjvcz/yAuZHggZEhhf3CpgwfhpEdZcqc20oUnxv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770980404; c=relaxed/simple;
-	bh=hn7YzjvK8jxXt9+ur6KEPT/X9OAdVySLRDWe9dlWIoU=;
+	s=arc-20240116; t=1770980415; c=relaxed/simple;
+	bh=a19PQ2D2C2DCb3hfZ+sOatc/4oV1zbjy3TOeGnf+Dj8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uSZiw0/6Lj8yKrfwz2tAxyIYf/E1DAlm31fgs7v/L0hrrJo7QrLMHZgICAHldqVaO+XtSuTngChAUs+IZr3wMUvPb8cBqnkwr1qIpmM7/0zbMCM0TqrmebmLMFYUIVrzErbyJNUDflaEWga6ysNWAgJtezV2ToD3+6EjSd2u2HU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FUFtQUL9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D54CC19423;
-	Fri, 13 Feb 2026 11:00:03 +0000 (UTC)
+	 MIME-Version:Content-Type; b=ZB5PzdrQpMRjLpT69Hk5QM92T6ETHQNzqPH451SmezN0LMpheK2rl0wOodRTd4C9+slx0LvlFr6/R770vK5W5EGmaEk4XG1CwSZ4Chx51VE+Ld/sJg+kFuoEcQjvcmmy68RVxNqGWLGDkAeoiJNrKiFAdyChqiPWmIcPQwJ8+wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KHRERZpq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DC9CC16AAE;
+	Fri, 13 Feb 2026 11:00:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770980404;
-	bh=hn7YzjvK8jxXt9+ur6KEPT/X9OAdVySLRDWe9dlWIoU=;
+	s=k20201202; t=1770980415;
+	bh=a19PQ2D2C2DCb3hfZ+sOatc/4oV1zbjy3TOeGnf+Dj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FUFtQUL9JdM3h8II8cr+oS/z4A3tqdTDCJQg9NkOOBhopVK1gyJOFlNPMRUAx99lq
-	 mBkEuUBhinWZcAUITdRxLb9jvbW2D/RdyUNskf/H5u3Fcxe+H9ErtrhkqoWT/Nzcqj
-	 MKHuQUkz+kOxu5SD3xiTvVBNtTpkknBNqJyD2pBB6iMxY9CgsA9sesktV8XZp/x5W8
-	 37U3HqWnHjd7/YtOWvHbcIkbxmqZjJcopIrBu8TV2C91uxLk3h9I+O6Gqe0cIEHkrr
-	 fyzug4yNYCJrwTK75XV464doH3PK2gdITx/ObI04grdqx5/QvOiO8rkxPQk6Xyd3I9
-	 CsdggKu1iR+Pg==
+	b=KHRERZpq/kwOnJlNAtMLy4ABMFIGwIy5tc67If7UpWtDkSgv5sTONi3R4nhmT2JIK
+	 iEmzfC47O8p/WdQGQzKSuBGmuLoLNGe32yGqNXuWZHsqCjfLROaUWepxVXv9aJ0IjM
+	 u7ZbgPgUM3gSo8wZCpU+j7SmP+2BVJGdKLDbQCv1AVFiz8GhMcN71K2fUEu+VfODk/
+	 Ry7cdQ3wthFxhPZh2BlaiYjanhFqlDTu8PMl51sRjtzI1ctNS0qx5eW/GPFJkpHnAk
+	 0XV3jq633YSL8kRZ0UFRB/5ftBEhglJimbAoXP15VmvYmGaoKPn7TFCL57h725n8Gi
+	 oz9535P/Opeqg==
 From: Leon Romanovsky <leon@kernel.org>
 To: Jason Gunthorpe <jgg@ziepe.ca>,
 	Leon Romanovsky <leon@kernel.org>,
@@ -76,9 +76,9 @@ To: Jason Gunthorpe <jgg@ziepe.ca>,
 Cc: linux-kernel@vger.kernel.org,
 	linux-rdma@vger.kernel.org,
 	linux-hyperv@vger.kernel.org
-Subject: [PATCH rdma-next 18/50] RDMA/erdma: Separate user and kernel CQ creation paths
-Date: Fri, 13 Feb 2026 12:57:54 +0200
-Message-ID: <20260213-refactor-umem-v1-18-f3be85847922@nvidia.com>
+Subject: [PATCH rdma-next 19/50] RDMA/ionic: Split user and kernel CQ creation paths
+Date: Fri, 13 Feb 2026 12:57:55 +0200
+Message-ID: <20260213-refactor-umem-v1-19-f3be85847922@nvidia.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260213-refactor-umem-v1-0-f3be85847922@nvidia.com>
 References: <20260213-refactor-umem-v1-0-f3be85847922@nvidia.com>
@@ -96,7 +96,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -107,194 +107,198 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FREEMAIL_TO(0.00)[ziepe.ca,kernel.org,broadcom.com,chelsio.com,amazon.com,linux.dev,linux.alibaba.com,huawei.com,hisilicon.com,amd.com,intel.com,microsoft.com,nvidia.com,marvell.com,cisco.com,cornelisnetworks.com,gmail.com];
 	RCPT_COUNT_TWELVE(0.00)[31];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-8816-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8819-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[leon@kernel.org,linux-hyperv@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,nvidia.com:mid,nvidia.com:email]
-X-Rspamd-Queue-Id: 01C06135565
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:mid,nvidia.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 33E151356D8
 X-Rspamd-Action: no action
 
 From: Leon Romanovsky <leonro@nvidia.com>
 
-Split CQ creation into distinct kernel and user flows. The erdma driver,
-inherited from mlx4, uses a problematic pattern that shares and caches
-umem in erdma_map_user_dbrecords(). This design blocks the driver from
+Separate the CQ creation logic into distinct kernel and user flows. The ionic
+driver may allocate two umems per CQ, and the current layout prevents it from
 supporting generic umem sources (VMA, dmabuf, memfd, and others).
 
 Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 ---
- drivers/infiniband/hw/erdma/erdma_main.c  |  1 +
- drivers/infiniband/hw/erdma/erdma_verbs.c | 97 ++++++++++++++++++++-----------
- drivers/infiniband/hw/erdma/erdma_verbs.h |  2 +
- 3 files changed, 67 insertions(+), 33 deletions(-)
+ drivers/infiniband/hw/ionic/ionic_controlpath.c | 88 +++++++++++++++++--------
+ drivers/infiniband/hw/ionic/ionic_ibdev.c       |  1 +
+ drivers/infiniband/hw/ionic/ionic_ibdev.h       |  2 +
+ 3 files changed, 64 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/infiniband/hw/erdma/erdma_main.c b/drivers/infiniband/hw/erdma/erdma_main.c
-index f35b30235018..1b6426e89d80 100644
---- a/drivers/infiniband/hw/erdma/erdma_main.c
-+++ b/drivers/infiniband/hw/erdma/erdma_main.c
-@@ -505,6 +505,7 @@ static const struct ib_device_ops erdma_device_ops = {
- 	.alloc_pd = erdma_alloc_pd,
- 	.alloc_ucontext = erdma_alloc_ucontext,
- 	.create_cq = erdma_create_cq,
-+	.create_user_cq = erdma_create_user_cq,
- 	.create_qp = erdma_create_qp,
- 	.dealloc_pd = erdma_dealloc_pd,
- 	.dealloc_ucontext = erdma_dealloc_ucontext,
-diff --git a/drivers/infiniband/hw/erdma/erdma_verbs.c b/drivers/infiniband/hw/erdma/erdma_verbs.c
-index 058edc42de58..6f809907fec5 100644
---- a/drivers/infiniband/hw/erdma/erdma_verbs.c
-+++ b/drivers/infiniband/hw/erdma/erdma_verbs.c
-@@ -1952,8 +1952,8 @@ static int erdma_init_kernel_cq(struct erdma_cq *cq)
- 	return -ENOMEM;
+diff --git a/drivers/infiniband/hw/ionic/ionic_controlpath.c b/drivers/infiniband/hw/ionic/ionic_controlpath.c
+index ea12d9b8e125..5b8b6baaf5d4 100644
+--- a/drivers/infiniband/hw/ionic/ionic_controlpath.c
++++ b/drivers/infiniband/hw/ionic/ionic_controlpath.c
+@@ -89,7 +89,7 @@ int ionic_create_cq_common(struct ionic_vcq *vcq,
+ 
+ 	cq->vcq = vcq;
+ 
+-	if (attr->cqe < 1 || attr->cqe + IONIC_CQ_GRACE > 0xffff) {
++	if (attr->cqe > 0xffff - IONIC_CQ_GRACE) {
+ 		rc = -EINVAL;
+ 		goto err_args;
+ 	}
+@@ -1209,8 +1209,8 @@ static int ionic_destroy_cq_cmd(struct ionic_ibdev *dev, u32 cqid)
+ 	return ionic_admin_wait(dev, &wr, IONIC_ADMIN_F_TEARDOWN);
  }
  
--int erdma_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+-int ionic_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
 -		    struct uverbs_attr_bundle *attrs)
-+int erdma_create_user_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
++int ionic_create_user_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
 +			 struct uverbs_attr_bundle *attrs)
  {
+ 	struct ionic_ibdev *dev = to_ionic_ibdev(ibcq->device);
  	struct ib_udata *udata = &attrs->driver_udata;
- 	struct erdma_cq *cq = to_ecq(ibcq);
-@@ -1962,6 +1962,11 @@ int erdma_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 	int ret;
- 	struct erdma_ucontext *ctx = rdma_udata_to_drv_context(
- 		udata, struct erdma_ucontext, ibucontext);
-+	struct erdma_ureq_create_cq ureq;
-+	struct erdma_uresp_create_cq uresp;
-+
+@@ -1222,21 +1222,18 @@ int ionic_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 	struct ionic_cq_req req;
+ 	int udma_idx = 0, rc;
+ 
+-	if (udata) {
+-		rc = ib_copy_from_udata(&req, udata, sizeof(req));
+-		if (rc)
+-			return rc;
+-	}
 +	if (ibcq->umem)
 +		return -EOPNOTSUPP;
  
- 	if (depth > dev->attrs.max_cqe)
- 		return -EINVAL;
-@@ -1977,31 +1982,22 @@ int erdma_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 	if (ret < 0)
- 		return ret;
+-	vcq->udma_mask = BIT(dev->lif_cfg.udma_count) - 1;
++	rc = ib_copy_from_udata(&req, udata, sizeof(req));
++	if (rc)
++		return rc;
  
--	if (!rdma_is_kernel_res(&ibcq->res)) {
--		struct erdma_ureq_create_cq ureq;
--		struct erdma_uresp_create_cq uresp;
--
--		ret = ib_copy_from_udata(&ureq, udata,
--					 min(udata->inlen, sizeof(ureq)));
--		if (ret)
--			goto err_out_xa;
-+	ret = ib_copy_from_udata(&ureq, udata,
-+				 min(udata->inlen, sizeof(ureq)));
-+	if (ret)
-+		goto err_out_xa;
+-	if (udata)
+-		vcq->udma_mask &= req.udma_mask;
++	vcq->udma_mask = BIT(dev->lif_cfg.udma_count) - 1;
++	vcq->udma_mask &= req.udma_mask;
  
--		ret = erdma_init_user_cq(ctx, cq, &ureq);
--		if (ret)
--			goto err_out_xa;
-+	ret = erdma_init_user_cq(ctx, cq, &ureq);
-+	if (ret)
-+		goto err_out_xa;
- 
--		uresp.cq_id = cq->cqn;
--		uresp.num_cqe = depth;
-+	uresp.cq_id = cq->cqn;
-+	uresp.num_cqe = depth;
- 
--		ret = ib_copy_to_udata(udata, &uresp,
--				       min(sizeof(uresp), udata->outlen));
--		if (ret)
--			goto err_free_res;
--	} else {
--		ret = erdma_init_kernel_cq(cq);
--		if (ret)
--			goto err_out_xa;
+-	if (!vcq->udma_mask) {
+-		rc = -EINVAL;
+-		goto err_init;
 -	}
-+	ret = ib_copy_to_udata(udata, &uresp,
-+			       min(sizeof(uresp), udata->outlen));
-+	if (ret)
-+		goto err_free_res;
- 
- 	ret = create_cq_cmd(ctx, cq);
- 	if (ret)
-@@ -2010,19 +2006,54 @@ int erdma_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 	return 0;
- 
- err_free_res:
--	if (!rdma_is_kernel_res(&ibcq->res)) {
--		erdma_unmap_user_dbrecords(ctx, &cq->user_cq.user_dbr_page);
--		put_mtt_entries(dev, &cq->user_cq.qbuf_mem);
--	} else {
--		dma_free_coherent(&dev->pdev->dev, depth << CQE_SHIFT,
--				  cq->kern_cq.qbuf, cq->kern_cq.qbuf_dma_addr);
--		dma_pool_free(dev->db_pool, cq->kern_cq.dbrec,
--			      cq->kern_cq.dbrec_dma);
--	}
-+	erdma_unmap_user_dbrecords(ctx, &cq->user_cq.user_dbr_page);
-+	put_mtt_entries(dev, &cq->user_cq.qbuf_mem);
- 
- err_out_xa:
- 	xa_erase(&dev->cq_xa, cq->cqn);
-+	return ret;
-+}
-+
-+int erdma_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
-+		    struct uverbs_attr_bundle *attrs)
-+{
-+	struct erdma_cq *cq = to_ecq(ibcq);
-+	struct erdma_dev *dev = to_edev(ibcq->device);
-+	unsigned int depth = attr->cqe;
-+	int ret;
-+
-+	if (depth > dev->attrs.max_cqe)
++	if (!vcq->udma_mask)
 +		return -EINVAL;
  
-+	depth = roundup_pow_of_two(depth);
-+	cq->ibcq.cqe = depth;
-+	cq->depth = depth;
-+	cq->assoc_eqn = attr->comp_vector + 1;
+ 	for (; udma_idx < dev->lif_cfg.udma_count; ++udma_idx) {
+ 		if (!(vcq->udma_mask & BIT(udma_idx)))
+@@ -1247,24 +1244,25 @@ int ionic_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 					    &resp.cqid[udma_idx],
+ 					    udma_idx);
+ 		if (rc)
+-			goto err_init;
++			goto err_resp;
+ 
+ 		rc = ionic_create_cq_cmd(dev, ctx, &vcq->cq[udma_idx], &buf);
+-		if (rc)
+-			goto err_cmd;
++		if (rc) {
++			ionic_pgtbl_unbuf(dev, &buf);
++			ionic_destroy_cq_common(dev, &vcq->cq[udma_idx]);
++			goto err_resp;
++		}
+ 
+ 		ionic_pgtbl_unbuf(dev, &buf);
+ 	}
+ 
+ 	vcq->ibcq.cqe = attr->cqe;
+ 
+-	if (udata) {
+-		resp.udma_mask = vcq->udma_mask;
++	resp.udma_mask = vcq->udma_mask;
+ 
+-		rc = ib_copy_to_udata(udata, &resp, sizeof(resp));
+-		if (rc)
+-			goto err_resp;
+-	}
++	rc = ib_copy_to_udata(udata, &resp, sizeof(resp));
++	if (rc)
++		goto err_resp;
+ 
+ 	return 0;
+ 
+@@ -1274,11 +1272,47 @@ int ionic_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 		if (!(vcq->udma_mask & BIT(udma_idx)))
+ 			continue;
+ 		ionic_destroy_cq_cmd(dev, vcq->cq[udma_idx].cqid);
+-err_cmd:
+ 		ionic_pgtbl_unbuf(dev, &buf);
+ 		ionic_destroy_cq_common(dev, &vcq->cq[udma_idx]);
+-err_init:
+-		;
++	}
 +
-+	ret = xa_alloc_cyclic(&dev->cq_xa, &cq->cqn, cq,
-+			      XA_LIMIT(1, dev->attrs.max_cq - 1),
-+			      &dev->next_alloc_cqn, GFP_KERNEL);
-+	if (ret < 0)
-+		return ret;
++	return rc;
++}
 +
-+	ret = erdma_init_kernel_cq(cq);
-+	if (ret)
-+		goto err_out_xa;
++int ionic_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
++		    struct uverbs_attr_bundle *attrs)
++{
++	struct ionic_ibdev *dev = to_ionic_ibdev(ibcq->device);
++	struct ionic_vcq *vcq = to_ionic_vcq(ibcq);
++	struct ionic_tbl_buf buf = {};
++	int udma_idx = 0, rc;
 +
-+	ret = create_cq_cmd(NULL, cq);
-+	if (ret)
-+		goto err_free_res;
++	vcq->udma_mask = BIT(dev->lif_cfg.udma_count) - 1;
++	for (; udma_idx < dev->lif_cfg.udma_count; ++udma_idx) {
++		rc = ionic_create_cq_common(vcq, &buf, attr, NULL, NULL, NULL,
++					    NULL, udma_idx);
++		if (rc)
++			goto err_resp;
++
++		rc = ionic_create_cq_cmd(dev, NULL, &vcq->cq[udma_idx], &buf);
++		if (rc) {
++			ionic_pgtbl_unbuf(dev, &buf);
++			ionic_destroy_cq_common(dev, &vcq->cq[udma_idx]);
++			goto err_resp;
++		}
++
++		ionic_pgtbl_unbuf(dev, &buf);
++	}
++
++	vcq->ibcq.cqe = attr->cqe;
 +
 +	return 0;
 +
-+err_free_res:
-+	dma_free_coherent(&dev->pdev->dev, depth << CQE_SHIFT,
-+			  cq->kern_cq.qbuf, cq->kern_cq.qbuf_dma_addr);
-+	dma_pool_free(dev->db_pool, cq->kern_cq.dbrec,
-+		      cq->kern_cq.dbrec_dma);
-+
-+err_out_xa:
-+	xa_erase(&dev->cq_xa, cq->cqn);
- 	return ret;
- }
++err_resp:
++	while (udma_idx--) {
++		ionic_destroy_cq_cmd(dev, vcq->cq[udma_idx].cqid);
++		ionic_pgtbl_unbuf(dev, &buf);
++		ionic_destroy_cq_common(dev, &vcq->cq[udma_idx]);
+ 	}
  
-diff --git a/drivers/infiniband/hw/erdma/erdma_verbs.h b/drivers/infiniband/hw/erdma/erdma_verbs.h
-index 7d8d3fe501d5..21a4fb404806 100644
---- a/drivers/infiniband/hw/erdma/erdma_verbs.h
-+++ b/drivers/infiniband/hw/erdma/erdma_verbs.h
-@@ -435,6 +435,8 @@ int erdma_get_port_immutable(struct ib_device *dev, u32 port,
- 			     struct ib_port_immutable *ib_port_immutable);
- int erdma_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 	return rc;
+diff --git a/drivers/infiniband/hw/ionic/ionic_ibdev.c b/drivers/infiniband/hw/ionic/ionic_ibdev.c
+index 164046d00e5d..32321a8996d6 100644
+--- a/drivers/infiniband/hw/ionic/ionic_ibdev.c
++++ b/drivers/infiniband/hw/ionic/ionic_ibdev.c
+@@ -229,6 +229,7 @@ static const struct ib_device_ops ionic_dev_ops = {
+ 	.alloc_mw = ionic_alloc_mw,
+ 	.dealloc_mw = ionic_dealloc_mw,
+ 	.create_cq = ionic_create_cq,
++	.create_user_cq = ionic_create_user_cq,
+ 	.destroy_cq = ionic_destroy_cq,
+ 	.create_qp = ionic_create_qp,
+ 	.modify_qp = ionic_modify_qp,
+diff --git a/drivers/infiniband/hw/ionic/ionic_ibdev.h b/drivers/infiniband/hw/ionic/ionic_ibdev.h
+index 63828240d659..0bcb8be6fb62 100644
+--- a/drivers/infiniband/hw/ionic/ionic_ibdev.h
++++ b/drivers/infiniband/hw/ionic/ionic_ibdev.h
+@@ -482,6 +482,8 @@ int ionic_alloc_mw(struct ib_mw *ibmw, struct ib_udata *udata);
+ int ionic_dealloc_mw(struct ib_mw *ibmw);
+ int ionic_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
  		    struct uverbs_attr_bundle *attrs);
-+int erdma_create_user_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
++int ionic_create_user_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
 +			 struct uverbs_attr_bundle *attrs);
- int erdma_query_port(struct ib_device *dev, u32 port,
- 		     struct ib_port_attr *attr);
- int erdma_query_gid(struct ib_device *dev, u32 port, int idx,
+ int ionic_destroy_cq(struct ib_cq *ibcq, struct ib_udata *udata);
+ int ionic_create_qp(struct ib_qp *ibqp, struct ib_qp_init_attr *attr,
+ 		    struct ib_udata *udata);
 
 -- 
 2.52.0
