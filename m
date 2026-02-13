@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-8846-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8847-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KHXeM+oHj2ltHQEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8846-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:15:54 +0100
+	id CH+WBfIHj2ltHQEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8847-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:16:02 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3311D1359E8
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:15:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A1D681359F6
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:16:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5F82D310ED85
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 11:05:06 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 53651310ACB2
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 11:05:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 970A135DD11;
-	Fri, 13 Feb 2026 11:01:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CC37364E81;
+	Fri, 13 Feb 2026 11:02:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rsk1ivq2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mFbKbfqu"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726841F03EF;
-	Fri, 13 Feb 2026 11:01:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6921E3596E4;
+	Fri, 13 Feb 2026 11:02:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770980517; cv=none; b=OabCeXlSs6HeadUhFaAoQfZ944OOGhFSoCt0Xzn5tkt3M63Y4NwOKFQjXxB8FfOX6oBwWN4rVUuXpRSunR2bC1Wscg7QNp9/rVhZf66XUhMVYkeTpPJytkOrz873t05UPd/TU7AzB6xpvu+bxxZKbfyB9bPBahl3a/WpdjmBp0U=
+	t=1770980521; cv=none; b=X2IWbTQWBeeER8Nq5rETZN3TG+skYoM+zP4etYcp+9hawUmPkiVw3grGmPS6XTbSYwLIaqq9cED1eLivnbUeTzq7zMQr4agU7j0QLBdmqtW8aoj6sDeWEq2r6teeAKeohC/KrZMRIYtrz9DqijAJ5k5dTu/MmUG4Dd4fZMwUG+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770980517; c=relaxed/simple;
-	bh=fNGUs5AQ9nFbUrFwGoGxWr1OmLlcSEue3DXaKTPPRPk=;
+	s=arc-20240116; t=1770980521; c=relaxed/simple;
+	bh=46FOhXy82s7WTWz6+l85BPMRthsUy90zX4MlVpe3m6w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=txlYzhtRPnIrezTOucUUE4BP1qeesmf+qUZ/6ul0TpwLhBOXkZ7dFm351aGTdws8Z/OJAElpjz4RgczqRXCPlyaXOHx8HW8pVlbLd7CcSyK1IsN2nOoGuqCOG50YLXWcgHe//a9v1AhT1OxMJTGZwQa0wCzklBBFQu70LsrZBQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rsk1ivq2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 128FAC116C6;
-	Fri, 13 Feb 2026 11:01:56 +0000 (UTC)
+	 MIME-Version:Content-Type; b=Cne7TwDsO/PcFPcTirSsxcYwZ8y+90dc4kBD5h5VLeS6FL6CAXb808B+HarxY3sh5neJvkLbsU3CYpbf4pisdwqROn/oiZsjHYLytvaX0mJYJIz7tzxf5t/Rgkt8VMeB32XUMOCSaDp1osc6X/K/JQ7tssapJiXiQLi+BEq6k+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mFbKbfqu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FA60C116C6;
+	Fri, 13 Feb 2026 11:02:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770980517;
-	bh=fNGUs5AQ9nFbUrFwGoGxWr1OmLlcSEue3DXaKTPPRPk=;
+	s=k20201202; t=1770980521;
+	bh=46FOhXy82s7WTWz6+l85BPMRthsUy90zX4MlVpe3m6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rsk1ivq24d8TYk4UHjpwCHlqD31mwB7ASM9n0clduY4Zji/wYQ9eFiS7t9WmezbPG
-	 FJ54S2ojCM/lw4qqX5Ep1QIKruMUTz9V9GRa+1rnqh2OqwVAKETBVvYsqEdWTtQzNf
-	 ahdkZany5kNDlNXkf+WT9aOE4AD/+QCsGHYn08icjUVfM/txKOUpFyO5cOLOKM9O6t
-	 FPp2oncY193CPGUA+4k1Gl8ZLFniOzPtKZPFSAVBWbKs8lQxBMxQSJygwOnchutPoy
-	 oUB78fzdDPWMPzqYtNYii+RNVqX054Hr0mXPskQxFuzxcf+AvsmU6PfquC2oUSXXow
-	 eQGHUGguxz9oA==
+	b=mFbKbfqudf4zer/t7PIEGz2aaHZV/Rfc7eXOFwMRdcf5T243TjgDF6GAKPJNx2DQx
+	 mbdU8jSd+n2nLYbqzOt1vi/+NuWS6MY2PI0vG0rm5fhM3mq7Q3uTvoRFX29OeFqI2e
+	 Dq7uOZRHqAwrC+7oaeCIqDF6wcbr8sMhfiwBzQF+rW5L/b4vNQY78iPvw2yFRHrBbw
+	 kVtuKgwFot52fCK8DF+k3q3iAbRz8bL0//Ucp6sCKVq06Ba/nX1lI6CNM8ChReYcNi
+	 LAxNRUOLuXadHun8HBVM0M2S3i+Ph3DTCs2ApGBKWZweeT1gdp4HqwXdPAP9RV99tB
+	 tjAiuscfqHbLA==
 From: Leon Romanovsky <leon@kernel.org>
 To: Jason Gunthorpe <jgg@ziepe.ca>,
 	Leon Romanovsky <leon@kernel.org>,
@@ -76,9 +76,9 @@ To: Jason Gunthorpe <jgg@ziepe.ca>,
 Cc: linux-kernel@vger.kernel.org,
 	linux-rdma@vger.kernel.org,
 	linux-hyperv@vger.kernel.org
-Subject: [PATCH rdma-next 49/50] RDMA/mlx5: Reduce CQ memory footprint
-Date: Fri, 13 Feb 2026 12:58:25 +0200
-Message-ID: <20260213-refactor-umem-v1-49-f3be85847922@nvidia.com>
+Subject: [PATCH rdma-next 50/50] RDMA/mthca: Use generic resize-CQ lock
+Date: Fri, 13 Feb 2026 12:58:26 +0200
+Message-ID: <20260213-refactor-umem-v1-50-f3be85847922@nvidia.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260213-refactor-umem-v1-0-f3be85847922@nvidia.com>
 References: <20260213-refactor-umem-v1-0-f3be85847922@nvidia.com>
@@ -107,7 +107,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FREEMAIL_TO(0.00)[ziepe.ca,kernel.org,broadcom.com,chelsio.com,amazon.com,linux.dev,linux.alibaba.com,huawei.com,hisilicon.com,amd.com,intel.com,microsoft.com,nvidia.com,marvell.com,cisco.com,cornelisnetworks.com,gmail.com];
 	RCPT_COUNT_TWELVE(0.00)[31];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-8846-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8847-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
@@ -117,164 +117,84 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,nvidia.com:mid,nvidia.com:email]
-X-Rspamd-Queue-Id: 3311D1359E8
+X-Rspamd-Queue-Id: A1D681359F6
 X-Rspamd-Action: no action
 
 From: Leon Romanovsky <leonro@nvidia.com>
 
-There is no need to store a temporary umem pointer in the generic CQ
-object. Use an on‑stack variable instead.
+Replace the open‑coded resize‑CQ lock with the standard core
+implementation for better consistency and maintainability.
 
 Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 ---
- drivers/infiniband/hw/mlx5/cq.c      | 64 ++++++++++++------------------------
- drivers/infiniband/hw/mlx5/mlx5_ib.h |  1 -
- 2 files changed, 21 insertions(+), 44 deletions(-)
+ drivers/infiniband/hw/mthca/mthca_cq.c       |  1 -
+ drivers/infiniband/hw/mthca/mthca_provider.c | 20 ++++++--------------
+ drivers/infiniband/hw/mthca/mthca_provider.h |  1 -
+ 3 files changed, 6 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/cq.c b/drivers/infiniband/hw/mlx5/cq.c
-index 88f0f5e2944f..6d9b62742674 100644
---- a/drivers/infiniband/hw/mlx5/cq.c
-+++ b/drivers/infiniband/hw/mlx5/cq.c
-@@ -1218,44 +1218,13 @@ int mlx5_ib_modify_cq(struct ib_cq *cq, u16 cq_count, u16 cq_period)
- 	return err;
- }
+diff --git a/drivers/infiniband/hw/mthca/mthca_cq.c b/drivers/infiniband/hw/mthca/mthca_cq.c
+index 26c3408dcaca..9c15e9b886d1 100644
+--- a/drivers/infiniband/hw/mthca/mthca_cq.c
++++ b/drivers/infiniband/hw/mthca/mthca_cq.c
+@@ -819,7 +819,6 @@ int mthca_init_cq(struct mthca_dev *dev, int nent,
+ 	spin_lock_init(&cq->lock);
+ 	cq->refcount = 1;
+ 	init_waitqueue_head(&cq->wait);
+-	mutex_init(&cq->mutex);
  
--static int resize_user(struct mlx5_ib_dev *dev, struct mlx5_ib_cq *cq,
--		       int entries, struct ib_udata *udata,
--		       int *cqe_size)
--{
--	struct mlx5_ib_resize_cq ucmd;
--	struct ib_umem *umem;
--	int err;
--
--	err = ib_copy_from_udata(&ucmd, udata, sizeof(ucmd));
--	if (err)
--		return err;
--
--	if (ucmd.reserved0 || ucmd.reserved1)
--		return -EINVAL;
--
--	/* check multiplication overflow */
--	if (ucmd.cqe_size && SIZE_MAX / ucmd.cqe_size <= entries - 1)
--		return -EINVAL;
--
--	umem = ib_umem_get(&dev->ib_dev, ucmd.buf_addr,
--			   (size_t)ucmd.cqe_size * entries,
--			   IB_ACCESS_LOCAL_WRITE);
--	if (IS_ERR(umem)) {
--		err = PTR_ERR(umem);
--		return err;
--	}
--
--	cq->resize_umem = umem;
--	*cqe_size = ucmd.cqe_size;
--
--	return 0;
--}
--
- int mlx5_ib_resize_cq(struct ib_cq *ibcq, unsigned int entries,
- 		      struct ib_udata *udata)
- {
- 	struct mlx5_ib_dev *dev = to_mdev(ibcq->device);
- 	struct mlx5_ib_cq *cq = to_mcq(ibcq);
-+	struct mlx5_ib_resize_cq ucmd;
-+	struct ib_umem *umem;
- 	unsigned long page_size;
- 	void *cqc;
- 	u32 *in;
-@@ -1264,8 +1233,8 @@ int mlx5_ib_resize_cq(struct ib_cq *ibcq, unsigned int entries,
- 	__be64 *pas;
- 	unsigned int page_offset_quantized = 0;
- 	unsigned int page_shift;
-+	size_t umem_size;
- 	int inlen;
--	int cqe_size;
- 
- 	if (entries > (1 << MLX5_CAP_GEN(dev->mdev, log_max_cq_sz)))
+ 	memset(cq_context, 0, sizeof *cq_context);
+ 	cq_context->flags           = cpu_to_be32(MTHCA_CQ_STATUS_OK      |
+diff --git a/drivers/infiniband/hw/mthca/mthca_provider.c b/drivers/infiniband/hw/mthca/mthca_provider.c
+index 85de004547ab..cb94d73e89d6 100644
+--- a/drivers/infiniband/hw/mthca/mthca_provider.c
++++ b/drivers/infiniband/hw/mthca/mthca_provider.c
+@@ -680,28 +680,20 @@ static int mthca_resize_cq(struct ib_cq *ibcq, unsigned int entries,
+ 	if (entries > dev->limits.max_cqes)
  		return -EINVAL;
-@@ -1277,18 +1246,29 @@ int mlx5_ib_resize_cq(struct ib_cq *ibcq, unsigned int entries,
- 	if (entries == ibcq->cqe + 1)
- 		return 0;
  
--	err = resize_user(dev, cq, entries, udata, &cqe_size);
-+	err = ib_copy_from_udata(&ucmd, udata, sizeof(ucmd));
- 	if (err)
- 		return err;
+-	mutex_lock(&cq->mutex);
+-
+ 	entries = roundup_pow_of_two(entries + 1);
+-	if (entries == ibcq->cqe + 1) {
+-		ret = 0;
+-		goto out;
+-	}
++	if (entries == ibcq->cqe + 1)
++		return 0;
  
-+	if (ucmd.reserved0 || ucmd.reserved1)
-+		return -EINVAL;
-+
-+	if (check_mul_overflow(ucmd.cqe_size, entries, &umem_size))
-+		return -EINVAL;
-+
-+	umem = ib_umem_get(&dev->ib_dev, ucmd.buf_addr, umem_size,
-+			   IB_ACCESS_LOCAL_WRITE);
-+	if (IS_ERR(umem))
-+		return PTR_ERR(umem);
-+
- 	page_size = mlx5_umem_find_best_cq_quantized_pgoff(
--		cq->resize_umem, cqc, log_page_size, MLX5_ADAPTER_PAGE_SHIFT,
-+		umem, cqc, log_page_size, MLX5_ADAPTER_PAGE_SHIFT,
- 		page_offset, 64, &page_offset_quantized);
- 	if (!page_size) {
- 		err = -EINVAL;
- 		goto ex_resize;
- 	}
--	npas = ib_umem_num_dma_blocks(cq->resize_umem, page_size);
-+	npas = ib_umem_num_dma_blocks(umem, page_size);
- 	page_shift = order_base_2(page_size);
+-	if (ib_copy_from_udata(&ucmd, udata, sizeof ucmd)) {
+-		ret = -EFAULT;
+-		goto out;
+-	}
++	if (ib_copy_from_udata(&ucmd, udata, sizeof(ucmd)))
++		return -EFAULT;
+ 	lkey = ucmd.lkey;
  
- 	inlen = MLX5_ST_SZ_BYTES(modify_cq_in) +
-@@ -1301,7 +1281,7 @@ int mlx5_ib_resize_cq(struct ib_cq *ibcq, unsigned int entries,
- 	}
+ 	ret = mthca_RESIZE_CQ(dev, cq->cqn, lkey, ilog2(entries));
+ 	if (ret)
+-		goto out;
++		return ret;
  
- 	pas = (__be64 *)MLX5_ADDR_OF(modify_cq_in, in, pas);
--	mlx5_ib_populate_pas(cq->resize_umem, 1UL << page_shift, pas, 0);
-+	mlx5_ib_populate_pas(umem, 1UL << page_shift, pas, 0);
- 
- 	MLX5_SET(modify_cq_in, in,
- 		 modify_field_select_resize_field_select.resize_field_select.resize_field_select,
-@@ -1315,7 +1295,7 @@ int mlx5_ib_resize_cq(struct ib_cq *ibcq, unsigned int entries,
- 		 page_shift - MLX5_ADAPTER_PAGE_SHIFT);
- 	MLX5_SET(cqc, cqc, page_offset, page_offset_quantized);
- 	MLX5_SET(cqc, cqc, cqe_sz,
--		 cqe_sz_to_mlx_sz(cqe_size,
-+		 cqe_sz_to_mlx_sz(ucmd.cqe_size,
- 				  cq->private_flags &
- 				  MLX5_IB_CQ_PR_FLAGS_CQE_128_PAD));
- 	MLX5_SET(cqc, cqc, log_cq_size, ilog2(entries));
-@@ -1329,8 +1309,7 @@ int mlx5_ib_resize_cq(struct ib_cq *ibcq, unsigned int entries,
- 
- 	cq->ibcq.cqe = entries - 1;
- 	ib_umem_release(cq->ibcq.umem);
--	cq->ibcq.umem = cq->resize_umem;
--	cq->resize_umem = NULL;
-+	cq->ibcq.umem = umem;
- 
- 	kvfree(in);
- 	return 0;
-@@ -1339,8 +1318,7 @@ int mlx5_ib_resize_cq(struct ib_cq *ibcq, unsigned int entries,
- 	kvfree(in);
- 
- ex_resize:
--	ib_umem_release(cq->resize_umem);
--	cq->resize_umem = NULL;
-+	ib_umem_release(umem);
- 	return err;
+ 	ibcq->cqe = entries - 1;
+-out:
+-	mutex_unlock(&cq->mutex);
+-	return ret;
++	return 0;
  }
  
-diff --git a/drivers/infiniband/hw/mlx5/mlx5_ib.h b/drivers/infiniband/hw/mlx5/mlx5_ib.h
-index 7b34f32b5ecb..11e4b2ae0469 100644
---- a/drivers/infiniband/hw/mlx5/mlx5_ib.h
-+++ b/drivers/infiniband/hw/mlx5/mlx5_ib.h
-@@ -575,7 +575,6 @@ struct mlx5_ib_cq {
- 	spinlock_t		lock;
+ static int mthca_destroy_cq(struct ib_cq *cq, struct ib_udata *udata)
+diff --git a/drivers/infiniband/hw/mthca/mthca_provider.h b/drivers/infiniband/hw/mthca/mthca_provider.h
+index 8a77483bb33c..7797d76fb93d 100644
+--- a/drivers/infiniband/hw/mthca/mthca_provider.h
++++ b/drivers/infiniband/hw/mthca/mthca_provider.h
+@@ -198,7 +198,6 @@ struct mthca_cq {
+ 	int			arm_sn;
  
- 	struct mlx5_ib_cq_buf  *resize_buf;
--	struct ib_umem	       *resize_umem;
- 	int			cqe_size;
- 	struct list_head	list_send_qp;
- 	struct list_head	list_recv_qp;
+ 	wait_queue_head_t	wait;
+-	struct mutex		mutex;
+ };
+ 
+ struct mthca_srq {
 
 -- 
 2.52.0
