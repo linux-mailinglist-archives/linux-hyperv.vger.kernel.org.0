@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-8803-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8800-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qF6cL58Ej2lJHQEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8803-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:01:51 +0100
+	id 4BMMHh0Ej2lJHQEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8800-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 11:59:41 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B84813557C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:01:51 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D39EC1354D7
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 11:59:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D283331501FA
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 10:59:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AE9E93053774
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 10:59:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F2AD3559D3;
-	Fri, 13 Feb 2026 10:59:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B9173542C3;
+	Fri, 13 Feb 2026 10:59:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XvWniCXs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dXcK581z"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00E5354AF1;
-	Fri, 13 Feb 2026 10:59:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687AF3375AE;
+	Fri, 13 Feb 2026 10:59:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770980357; cv=none; b=XflSNcBNDMEYEAtZd/crhie17cN2hfd7oukJQC5j5mciN2uCfywqRkZblrYm0YC6Arq+4VcOkJqeEQCnn06Xi3V/M1rzyUolsQ0IRJ5C1AfikYvkF0z2td+9KSnrvPyVIgGpYzy3A6i+DnPU9V3x5JpvTKjtDjPLwHfr8UUFpwQ=
+	t=1770980343; cv=none; b=Y676nQODG9491N1GuGHYg5kyHHlmVOtiS0DFsj0ys+Z6CHQMCClUz8YPnozdhiSL0vAzc1fK1ebT4cF2miUPi7AtUJgiq2pgtrVeKl0N9d6OKgmkVjsYCdA75m4mq2uLqO5aqb7mPDww5seEiebLlOUALdyW3KW0An10pm9hMHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770980357; c=relaxed/simple;
-	bh=Nw1nfs0JxfKQuNIGR98010MtHYruPmZR1Tu88LU5ocY=;
+	s=arc-20240116; t=1770980343; c=relaxed/simple;
+	bh=jz3JOuJAEdlHIXpm9EsHibnx92bVzq0Q6O7Dk1LpG8w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W8MaEREziBn2YzMqRhFXRS1jZWpFh6Q8EPEHwCS7+hf4rHpGP/HqBl3NN5xZXXE57NC13wu30fDU8zExkvwnF034DR98+rgjJ+QchUTqRwr8VvEzAhIEn2nD+kcI8KWAIItvylTsePO6MbsaLn8iKMjx3hwhLXfntzbUk2jpoz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XvWniCXs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4550C2BC87;
-	Fri, 13 Feb 2026 10:59:13 +0000 (UTC)
+	 MIME-Version:Content-Type; b=HTAzDCmGEgF/ujxeWiOQJaU09CUwxWlv23sHPp2nzuMjcufA0qe5G1+QufKkZWNBQXKnY++9lQoY4PyG6rlGraqdXkY3d9zGDfRI5AyA+eAHVuZnOspsBZ9pdiMSgeVUxRbYDeSkrX9rbYr1Bljvz3BExLWGPm2zgVf7O9K8sGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dXcK581z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4544BC116C6;
+	Fri, 13 Feb 2026 10:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770980354;
-	bh=Nw1nfs0JxfKQuNIGR98010MtHYruPmZR1Tu88LU5ocY=;
+	s=k20201202; t=1770980343;
+	bh=jz3JOuJAEdlHIXpm9EsHibnx92bVzq0Q6O7Dk1LpG8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XvWniCXsC1Tq/J6MQwYtCaxC2AOUAJdOs6Ix8vqCzkTSm2jUt3oBI5PDXxyqvYK6+
-	 RAGzFK4TBxPELdB5/FXe+cSOFypCg7PgMuviEYhJKpyitAKKKRbQXJy9zsXXoKWRFB
-	 SM+qAPmalJMA7rcPeTq5gmlew1U7XibLHunEvCch4R+b4GW2Qtwp8+6YBQwuSNDalu
-	 13jCv6KhdfOGLWQjcUiV0/XzAz0RbWEvfGmyBhohLjcjg/64j7fs+SPRwposScXlcH
-	 pUksLU6STRFsfQR4V3H2bl9TuoaKExA1OXstK8/PlWvSMxd69MyV0S12J0v+rtWcb0
-	 /Vb8va1tQe9SA==
+	b=dXcK581z65PbPgTSohJwqEMUC31igLBa03AIE6Ian+zoGOfSMZANlchpyIiT89l3x
+	 ApJwW2h8Zf52A7hPh4hChvnAVkTxY9jYo5W8t43cqUZNuxZ9vSSDXfW5f/1SW41pqh
+	 35Mvzh6tClsjpP88ymnCbjRu8DnsQLAFLqjoulJzCGjBwsjbQTiXSfz3XHABbCObXi
+	 ZGr9665mD/9wLWL0rhdodOl24mKyVy6arIwLks+45/LahLdSYRpl9Eit+uzF3SkMSU
+	 XU0ea5QRPG/sZEIayaptGPeiXty9Zyd8ICrV+TkWO2VT85G7772UUIm8bufGSg7ITr
+	 8zC/cG95/gYjw==
 From: Leon Romanovsky <leon@kernel.org>
 To: Jason Gunthorpe <jgg@ziepe.ca>,
 	Leon Romanovsky <leon@kernel.org>,
@@ -76,9 +76,9 @@ To: Jason Gunthorpe <jgg@ziepe.ca>,
 Cc: linux-kernel@vger.kernel.org,
 	linux-rdma@vger.kernel.org,
 	linux-hyperv@vger.kernel.org
-Subject: [PATCH rdma-next 02/50] RDMA/umem: Allow including ib_umem header from any location
-Date: Fri, 13 Feb 2026 12:57:38 +0200
-Message-ID: <20260213-refactor-umem-v1-2-f3be85847922@nvidia.com>
+Subject: [PATCH rdma-next 03/50] RDMA/umem: Remove unnecessary includes and defines from ib_umem header
+Date: Fri, 13 Feb 2026 12:57:39 +0200
+Message-ID: <20260213-refactor-umem-v1-3-f3be85847922@nvidia.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260213-refactor-umem-v1-0-f3be85847922@nvidia.com>
 References: <20260213-refactor-umem-v1-0-f3be85847922@nvidia.com>
@@ -96,7 +96,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -107,54 +107,47 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FREEMAIL_TO(0.00)[ziepe.ca,kernel.org,broadcom.com,chelsio.com,amazon.com,linux.dev,linux.alibaba.com,huawei.com,hisilicon.com,amd.com,intel.com,microsoft.com,nvidia.com,marvell.com,cisco.com,cornelisnetworks.com,gmail.com];
 	RCPT_COUNT_TWELVE(0.00)[31];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-8803-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8800-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[leon@kernel.org,linux-hyperv@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nvidia.com:mid,nvidia.com:email]
-X-Rspamd-Queue-Id: 1B84813557C
+X-Rspamd-Queue-Id: D39EC1354D7
 X-Rspamd-Action: no action
 
 From: Leon Romanovsky <leonro@nvidia.com>
 
-Including ib_umem.h currently triggers circular dependency errors.
-These issues can be resolved by removing the include of ib_verbs.h,
-which was only needed to resolve the struct ib_device pointer.
-
->> depmod: ERROR: Cycle detected: ib_core -> ib_uverbs -> ib_core
->> depmod: ERROR: Found 2 modules in dependency cycles!
-  make[3]: *** [scripts/Makefile.modinst:132: depmod] Error 1
-  make[3]: Target '__modinst' not remade because of errors.
-  make[2]: *** [Makefile:1960: modules_install] Error 2
-  make[1]: *** [Makefile:248: __sub-make] Error 2
-  make[1]: Target 'modules_install' not remade because of errors.
-  make: *** [Makefile:248: __sub-make] Error 2
-  make: Target 'modules_install' not remade because of errors.
+The ib_umem header no longer requires the removed includes or forward
+declarations, so drop them to reduce clutter.
 
 Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 ---
- include/rdma/ib_umem.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/rdma/ib_umem.h | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/include/rdma/ib_umem.h b/include/rdma/ib_umem.h
-index ce47688dd003..084a1d9a66f3 100644
+index 084a1d9a66f3..c3ab11e6879f 100644
 --- a/include/rdma/ib_umem.h
 +++ b/include/rdma/ib_umem.h
-@@ -10,8 +10,8 @@
- #include <linux/list.h>
- #include <linux/scatterlist.h>
- #include <linux/workqueue.h>
--#include <rdma/ib_verbs.h>
+@@ -7,13 +7,9 @@
+ #ifndef IB_UMEM_H
+ #define IB_UMEM_H
  
-+struct ib_device;
- struct ib_ucontext;
- struct ib_umem_odp;
+-#include <linux/list.h>
+ #include <linux/scatterlist.h>
+-#include <linux/workqueue.h>
+ 
+ struct ib_device;
+-struct ib_ucontext;
+-struct ib_umem_odp;
  struct dma_buf_attach_ops;
+ 
+ struct ib_umem {
 
 -- 
 2.52.0
