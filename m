@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-8814-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8815-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yDD+MGEFj2ltHQEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8814-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:05:05 +0100
+	id QCACETAFj2ltHQEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8815-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:04:16 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 481EE135697
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:05:05 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id E71E8135662
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 12:04:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1862531DBA41
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 11:00:01 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3EAE23150EAC
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Feb 2026 11:00:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65E7D3570B6;
-	Fri, 13 Feb 2026 10:59:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D10D035772B;
+	Fri, 13 Feb 2026 10:59:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hbc+73oB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iVe7uFUX"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41267356A1F;
-	Fri, 13 Feb 2026 10:59:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFF03570DF;
+	Fri, 13 Feb 2026 10:59:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770980396; cv=none; b=S6wxp1wRiyCr93Wdw8MfolOiFcZYpheBHMfOlZxX28GNnJbwTgU+/hAhvbNIBGREZboJz+j7irgwlU2EMkqp6KjzBMWmwG+EJ0rrJQ3yXEcd0gsr0106kcScfj5pZcworU6EwA0WVLigmZEzLwU3cjvTOt8tzPuHT7CW+7E/dVQ=
+	t=1770980399; cv=none; b=Pjwm9FTjBcvs1rMJ8N22Fov4f7lW25gh3tcqhsdxhq56LawaKrSV7aLggCzOZ2sQCZ6Thqoax+k4hwErQSeMqsglyK7olkeQc8wZSJUlM2DbMVLaedOdaNVD0jbOGEAIdsYBLn1b31IbQSu4uRW3Lkbv8OOhGdbvpVLRRtfSMHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770980396; c=relaxed/simple;
-	bh=uCqkDM6MRpkhJ5KrDUZXo/iZqDu91ZV3NReLY1r+Hh0=;
+	s=arc-20240116; t=1770980399; c=relaxed/simple;
+	bh=7fFZ6JJEIyaVScCFaDNjSIxSR73zFnfTIaDDncJUwpQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K17zeVUUxk2L5kryLU9nuJznHmhHJCz9tgygOjMVgaisFlDvj/lZ0dcz26u2FViz7Y0sHYa4F/erk1umIL1mG834zbTbssYJDNJGO4WOgEiysXDGOZXsm3MRYLy5YYIMP+3/TNztkrWDDteumAyXeyk6gudiz2D+4C7YrYn3Xg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hbc+73oB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AB3AC19423;
-	Fri, 13 Feb 2026 10:59:55 +0000 (UTC)
+	 MIME-Version:Content-Type; b=XUKclqHHPNZe9NRQIeCpHoeOxqzfgMHKAnMnKumdU5RrlakqSZQc8RFy9JD2loshIaV+64AcadKuMXYadYFT4huabD6KpLJ7LC8dCo8XyJF+Xm6V5KKDX8qYeUZseV/9NR+PvX1iqZS5cZW8fqZyk0Ww0VdFnROk75LIxwtV4ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iVe7uFUX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7176C19424;
+	Fri, 13 Feb 2026 10:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770980395;
-	bh=uCqkDM6MRpkhJ5KrDUZXo/iZqDu91ZV3NReLY1r+Hh0=;
+	s=k20201202; t=1770980399;
+	bh=7fFZ6JJEIyaVScCFaDNjSIxSR73zFnfTIaDDncJUwpQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Hbc+73oB3BKQQD9ONRcDM9VW1dC7YNTfBBmMnZpdWy4m5sUJP0BJlAmpvtCOKRko5
-	 wJSn7fjBP6POSnlInNlDo0D0+t7TFQeYkWiTCRe4wtsJHfYECDOu+B0NBWTyz4cO1r
-	 Ooq04DLiXDtZ7BPPdwblJhqOZEi0cBL1xkg+nsX5E7gIyOw0/VbLwR/+llqH+Y2LSU
-	 j7GxnEYxiC7Omg5iuhuUPVWwANh6YjuSh8eB88euVgV44XfXJka69sFwiXhn5jnc3U
-	 BpoFO5oRijYhBOK1mF9jItB0sOxA+lI8Os5gMu5/H7KWJDxvqHGhwXWExHtkksA3jU
-	 kfQRG1jIKBr+w==
+	b=iVe7uFUXrW3mJp3+JO5L26ZW5PE4SHXRB2eV4j1ZkpFXckh9dE4IE97lf7vKYcbLg
+	 mNFFEjOJR5R3XIQdKApgLb2A7XIyaq1pZ9VW+XLW/y+kzdJ4DgSdnYWNT5s5BDE/ct
+	 piFZuQv0JKmJPEOZHOtPpUqiGGnubxolnxdGZ4g/cPOEhMhx56VuDPnovadS1B3p4Y
+	 93Yc0MQYw5TptU/WFqKab2VR4Be+o666fDsiJtR/XGEJg67wWQ/XmqhEIKSQmtu+rm
+	 TQ42dA3/SDGY0zoEI0N/p25hYRjhiTxg9FOR9IYh8qY6/+cYYt8f8Z3eTUOFOAyTK+
+	 J/14cimagEmeg==
 From: Leon Romanovsky <leon@kernel.org>
 To: Jason Gunthorpe <jgg@ziepe.ca>,
 	Leon Romanovsky <leon@kernel.org>,
@@ -76,9 +76,9 @@ To: Jason Gunthorpe <jgg@ziepe.ca>,
 Cc: linux-kernel@vger.kernel.org,
 	linux-rdma@vger.kernel.org,
 	linux-hyperv@vger.kernel.org
-Subject: [PATCH rdma-next 16/50] RDMA/cxgb4: Separate kernel and user CQ creation paths
-Date: Fri, 13 Feb 2026 12:57:52 +0200
-Message-ID: <20260213-refactor-umem-v1-16-f3be85847922@nvidia.com>
+Subject: [PATCH rdma-next 17/50] RDMA/mthca: Split user and kernel CQ creation paths
+Date: Fri, 13 Feb 2026 12:57:53 +0200
+Message-ID: <20260213-refactor-umem-v1-17-f3be85847922@nvidia.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260213-refactor-umem-v1-0-f3be85847922@nvidia.com>
 References: <20260213-refactor-umem-v1-0-f3be85847922@nvidia.com>
@@ -96,7 +96,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -107,336 +107,175 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FREEMAIL_TO(0.00)[ziepe.ca,kernel.org,broadcom.com,chelsio.com,amazon.com,linux.dev,linux.alibaba.com,huawei.com,hisilicon.com,amd.com,intel.com,microsoft.com,nvidia.com,marvell.com,cisco.com,cornelisnetworks.com,gmail.com];
 	RCPT_COUNT_TWELVE(0.00)[31];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-8814-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8815-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[leon@kernel.org,linux-hyperv@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:mid,nvidia.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 481EE135697
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:mid,nvidia.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: E71E8135662
 X-Rspamd-Action: no action
 
 From: Leon Romanovsky <leonro@nvidia.com>
 
-Split the create CQ logic to clearly distinguish kernel and user flows.
+Separate the create‑CQ logic into distinct user and kernel
+code paths.
 
 Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 ---
- drivers/infiniband/hw/cxgb4/cq.c       | 218 ++++++++++++++++++++++-----------
- drivers/infiniband/hw/cxgb4/iw_cxgb4.h |   2 +
- drivers/infiniband/hw/cxgb4/provider.c |   1 +
- 3 files changed, 152 insertions(+), 69 deletions(-)
+ drivers/infiniband/hw/mthca/mthca_provider.c | 92 ++++++++++++++++++----------
+ 1 file changed, 58 insertions(+), 34 deletions(-)
 
-diff --git a/drivers/infiniband/hw/cxgb4/cq.c b/drivers/infiniband/hw/cxgb4/cq.c
-index 14ced7b667fa..d263cca47432 100644
---- a/drivers/infiniband/hw/cxgb4/cq.c
-+++ b/drivers/infiniband/hw/cxgb4/cq.c
-@@ -994,8 +994,8 @@ int c4iw_destroy_cq(struct ib_cq *ib_cq, struct ib_udata *udata)
+diff --git a/drivers/infiniband/hw/mthca/mthca_provider.c b/drivers/infiniband/hw/mthca/mthca_provider.c
+index aa5ca5c4ff77..6bf825978846 100644
+--- a/drivers/infiniband/hw/mthca/mthca_provider.c
++++ b/drivers/infiniband/hw/mthca/mthca_provider.c
+@@ -572,9 +572,9 @@ static int mthca_destroy_qp(struct ib_qp *qp, struct ib_udata *udata)
  	return 0;
  }
  
--int c4iw_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
--		   struct uverbs_attr_bundle *attrs)
-+int c4iw_create_user_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
-+			struct uverbs_attr_bundle *attrs)
+-static int mthca_create_cq(struct ib_cq *ibcq,
+-			   const struct ib_cq_init_attr *attr,
+-			   struct uverbs_attr_bundle *attrs)
++static int mthca_create_user_cq(struct ib_cq *ibcq,
++				const struct ib_cq_init_attr *attr,
++				struct uverbs_attr_bundle *attrs)
  {
  	struct ib_udata *udata = &attrs->driver_udata;
  	struct ib_device *ibdev = ibcq->device;
-@@ -1012,25 +1012,21 @@ int c4iw_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 		udata, struct c4iw_ucontext, ibucontext);
+@@ -586,47 +586,41 @@ static int mthca_create_cq(struct ib_cq *ibcq,
+ 	struct mthca_ucontext *context = rdma_udata_to_drv_context(
+ 		udata, struct mthca_ucontext, ibucontext);
  
- 	pr_debug("ib_dev %p entries %d\n", ibdev, entries);
 -	if (attr->flags)
 +	if (attr->flags || ibcq->umem)
  		return -EOPNOTSUPP;
  
--	if (entries < 1 || entries > ibdev->attrs.max_cqe)
-+	if (attr->cqe > ibdev->attrs.max_cqe)
- 		return -EINVAL;
- 
- 	if (vector >= rhp->rdev.lldi.nciq)
+-	if (entries < 1 || entries > to_mdev(ibdev)->limits.max_cqes)
++	if (attr->cqe > to_mdev(ibdev)->limits.max_cqes)
  		return -EINVAL;
  
 -	if (udata) {
--		if (udata->inlen < sizeof(ucmd))
--			ucontext->is_32b_cqe = 1;
+-		if (ib_copy_from_udata(&ucmd, udata, sizeof(ucmd)))
+-			return -EFAULT;
++	if (ib_copy_from_udata(&ucmd, udata, sizeof(ucmd)))
++		return -EFAULT;
+ 
+-		err = mthca_map_user_db(to_mdev(ibdev), &context->uar,
+-					context->db_tab, ucmd.set_db_index,
+-					ucmd.set_db_page);
+-		if (err)
+-			return err;
++	err = mthca_map_user_db(to_mdev(ibdev), &context->uar,
++				context->db_tab, ucmd.set_db_index,
++				ucmd.set_db_page);
++	if (err)
++		return err;
+ 
+-		err = mthca_map_user_db(to_mdev(ibdev), &context->uar,
+-					context->db_tab, ucmd.arm_db_index,
+-					ucmd.arm_db_page);
+-		if (err)
+-			goto err_unmap_set;
 -	}
-+	if (udata->inlen < sizeof(ucmd))
-+		ucontext->is_32b_cqe = 1;
++	err = mthca_map_user_db(to_mdev(ibdev), &context->uar,
++				context->db_tab, ucmd.arm_db_index,
++				ucmd.arm_db_page);
++	if (err)
++		goto err_unmap_set;
  
- 	chp->wr_waitp = c4iw_alloc_wr_wait(GFP_KERNEL);
--	if (!chp->wr_waitp) {
--		ret = -ENOMEM;
--		goto err_free_chp;
+ 	cq = to_mcq(ibcq);
+ 
+-	if (udata) {
+-		cq->buf.mr.ibmr.lkey = ucmd.lkey;
+-		cq->set_ci_db_index  = ucmd.set_db_index;
+-		cq->arm_db_index     = ucmd.arm_db_index;
 -	}
-+	if (!chp->wr_waitp)
-+		return -ENOMEM;
- 	c4iw_init_wr_wait(chp->wr_waitp);
++	cq->buf.mr.ibmr.lkey = ucmd.lkey;
++	cq->set_ci_db_index  = ucmd.set_db_index;
++	cq->arm_db_index     = ucmd.arm_db_index;
  
- 	wr_len = sizeof(struct fw_ri_res_wr) + sizeof(struct fw_ri_res);
-@@ -1063,22 +1059,19 @@ int c4iw_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 	if (hwentries < 64)
- 		hwentries = 64;
+ 	for (nent = 1; nent <= entries; nent <<= 1)
+ 		; /* nothing */
  
--	memsize = hwentries * ((ucontext && ucontext->is_32b_cqe) ?
-+	memsize = hwentries * (ucontext->is_32b_cqe ?
- 			(sizeof(*chp->cq.queue) / 2) : sizeof(*chp->cq.queue));
+-	err = mthca_init_cq(to_mdev(ibdev), nent, context,
+-			    udata ? ucmd.pdn : to_mdev(ibdev)->driver_pd.pd_num,
+-			    cq);
++	err = mthca_init_cq(to_mdev(ibdev), nent, context, ucmd.pdn, cq);
+ 	if (err)
+ 		goto err_unmap_arm;
  
- 	/*
- 	 * memsize must be a multiple of the page size if its a user cq.
- 	 */
+-	if (udata && ib_copy_to_udata(udata, &cq->cqn, sizeof(__u32))) {
++	if (ib_copy_to_udata(udata, &cq->cqn, sizeof(__u32))) {
+ 		mthca_free_cq(to_mdev(ibdev), cq);
+ 		err = -EFAULT;
+ 		goto err_unmap_arm;
+@@ -637,18 +631,47 @@ static int mthca_create_cq(struct ib_cq *ibcq,
+ 	return 0;
+ 
+ err_unmap_arm:
 -	if (udata)
--		memsize = roundup(memsize, PAGE_SIZE);
-+	memsize = roundup(memsize, PAGE_SIZE);
+-		mthca_unmap_user_db(to_mdev(ibdev), &context->uar,
+-				    context->db_tab, ucmd.arm_db_index);
++	mthca_unmap_user_db(to_mdev(ibdev), &context->uar,
++			    context->db_tab, ucmd.arm_db_index);
  
- 	chp->cq.size = hwentries;
- 	chp->cq.memsize = memsize;
- 	chp->cq.vector = vector;
+ err_unmap_set:
+-	if (udata)
+-		mthca_unmap_user_db(to_mdev(ibdev), &context->uar,
+-				    context->db_tab, ucmd.set_db_index);
++	mthca_unmap_user_db(to_mdev(ibdev), &context->uar,
++			    context->db_tab, ucmd.set_db_index);
  
--	ret = create_cq(&rhp->rdev, &chp->cq,
--			ucontext ? &ucontext->uctx : &rhp->rdev.uctx,
--			chp->wr_waitp);
-+	ret = create_cq(&rhp->rdev, &chp->cq, &ucontext->uctx, chp->wr_waitp);
- 	if (ret)
- 		goto err_free_skb;
+ 	return err;
+ }
  
-@@ -1093,54 +1086,52 @@ int c4iw_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 	if (ret)
- 		goto err_destroy_cq;
- 
--	if (ucontext) {
--		ret = -ENOMEM;
--		mm = kmalloc(sizeof(*mm), GFP_KERNEL);
--		if (!mm)
--			goto err_remove_handle;
--		mm2 = kmalloc(sizeof(*mm2), GFP_KERNEL);
--		if (!mm2)
--			goto err_free_mm;
--
--		memset(&uresp, 0, sizeof(uresp));
--		uresp.qid_mask = rhp->rdev.cqmask;
--		uresp.cqid = chp->cq.cqid;
--		uresp.size = chp->cq.size;
--		uresp.memsize = chp->cq.memsize;
--		spin_lock(&ucontext->mmap_lock);
--		uresp.key = ucontext->key;
--		ucontext->key += PAGE_SIZE;
--		uresp.gts_key = ucontext->key;
--		ucontext->key += PAGE_SIZE;
--		/* communicate to the userspace that
--		 * kernel driver supports 64B CQE
--		 */
--		uresp.flags |= C4IW_64B_CQE;
--
--		spin_unlock(&ucontext->mmap_lock);
--		ret = ib_copy_to_udata(udata, &uresp,
--				       ucontext->is_32b_cqe ?
--				       sizeof(uresp) - sizeof(uresp.flags) :
--				       sizeof(uresp));
--		if (ret)
--			goto err_free_mm2;
--
--		mm->key = uresp.key;
--		mm->addr = 0;
--		mm->vaddr = chp->cq.queue;
--		mm->dma_addr = chp->cq.dma_addr;
--		mm->len = chp->cq.memsize;
--		insert_flag_to_mmap(&rhp->rdev, mm, mm->addr);
--		insert_mmap(ucontext, mm);
--
--		mm2->key = uresp.gts_key;
--		mm2->addr = chp->cq.bar2_pa;
--		mm2->len = PAGE_SIZE;
--		mm2->vaddr = NULL;
--		mm2->dma_addr = 0;
--		insert_flag_to_mmap(&rhp->rdev, mm2, mm2->addr);
--		insert_mmap(ucontext, mm2);
--	}
-+	ret = -ENOMEM;
-+	mm = kmalloc(sizeof(*mm), GFP_KERNEL);
-+	if (!mm)
-+		goto err_remove_handle;
-+	mm2 = kmalloc(sizeof(*mm2), GFP_KERNEL);
-+	if (!mm2)
-+		goto err_free_mm;
-+
-+	memset(&uresp, 0, sizeof(uresp));
-+	uresp.qid_mask = rhp->rdev.cqmask;
-+	uresp.cqid = chp->cq.cqid;
-+	uresp.size = chp->cq.size;
-+	uresp.memsize = chp->cq.memsize;
-+	spin_lock(&ucontext->mmap_lock);
-+	uresp.key = ucontext->key;
-+	ucontext->key += PAGE_SIZE;
-+	uresp.gts_key = ucontext->key;
-+	ucontext->key += PAGE_SIZE;
-+	/* communicate to the userspace that
-+	 * kernel driver supports 64B CQE
-+	 */
-+	uresp.flags |= C4IW_64B_CQE;
-+
-+	spin_unlock(&ucontext->mmap_lock);
-+	ret = ib_copy_to_udata(udata, &uresp,
-+			       ucontext->is_32b_cqe ?
-+			       sizeof(uresp) - sizeof(uresp.flags) :
-+			       sizeof(uresp));
-+	if (ret)
-+		goto err_free_mm2;
-+
-+	mm->key = uresp.key;
-+	mm->addr = 0;
-+	mm->vaddr = chp->cq.queue;
-+	mm->dma_addr = chp->cq.dma_addr;
-+	mm->len = chp->cq.memsize;
-+	insert_flag_to_mmap(&rhp->rdev, mm, mm->addr);
-+	insert_mmap(ucontext, mm);
-+
-+	mm2->key = uresp.gts_key;
-+	mm2->addr = chp->cq.bar2_pa;
-+	mm2->len = PAGE_SIZE;
-+	mm2->vaddr = NULL;
-+	mm2->dma_addr = 0;
-+	insert_flag_to_mmap(&rhp->rdev, mm2, mm2->addr);
-+	insert_mmap(ucontext, mm2);
- 
- 	pr_debug("cqid 0x%0x chp %p size %u memsize %zu, dma_addr %pad\n",
- 		 chp->cq.cqid, chp, chp->cq.size, chp->cq.memsize,
-@@ -1153,14 +1144,103 @@ int c4iw_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- err_remove_handle:
- 	xa_erase_irq(&rhp->cqs, chp->cq.cqid);
- err_destroy_cq:
--	destroy_cq(&chp->rhp->rdev, &chp->cq,
--		   ucontext ? &ucontext->uctx : &rhp->rdev.uctx,
-+	destroy_cq(&chp->rhp->rdev, &chp->cq, &ucontext->uctx,
-+		   chp->destroy_skb, chp->wr_waitp);
-+err_free_skb:
-+	kfree_skb(chp->destroy_skb);
-+err_free_wr_wait:
-+	c4iw_put_wr_wait(chp->wr_waitp);
-+	return ret;
-+}
-+
-+int c4iw_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
-+		   struct uverbs_attr_bundle *attrs)
++static int mthca_create_cq(struct ib_cq *ibcq,
++			   const struct ib_cq_init_attr *attr,
++			   struct uverbs_attr_bundle *attrs)
 +{
 +	struct ib_device *ibdev = ibcq->device;
 +	int entries = attr->cqe;
-+	int vector = attr->comp_vector;
-+	struct c4iw_dev *rhp = to_c4iw_dev(ibcq->device);
-+	struct c4iw_cq *chp = to_c4iw_cq(ibcq);
-+	int ret, wr_len;
-+	size_t memsize, hwentries;
++	struct mthca_cq *cq;
++	int nent;
++	int err;
 +
-+	pr_debug("ib_dev %p entries %d\n", ibdev, entries);
 +	if (attr->flags)
 +		return -EOPNOTSUPP;
 +
-+	if (attr->cqe > ibdev->attrs.max_cqe)
++	if (attr->cqe > to_mdev(ibdev)->limits.max_cqes)
 +		return -EINVAL;
 +
-+	if (vector >= rhp->rdev.lldi.nciq)
-+		return -EINVAL;
++	cq = to_mcq(ibcq);
 +
-+	chp->wr_waitp = c4iw_alloc_wr_wait(GFP_KERNEL);
-+	if (!chp->wr_waitp)
-+		return -ENOMEM;
-+	c4iw_init_wr_wait(chp->wr_waitp);
++	for (nent = 1; nent <= entries; nent <<= 1)
++		; /* nothing */
 +
-+	wr_len = sizeof(struct fw_ri_res_wr) + sizeof(struct fw_ri_res);
-+	chp->destroy_skb = alloc_skb(wr_len, GFP_KERNEL);
-+	if (!chp->destroy_skb) {
-+		ret = -ENOMEM;
-+		goto err_free_wr_wait;
-+	}
++	err = mthca_init_cq(to_mdev(ibdev), nent, NULL,
++			    to_mdev(ibdev)->driver_pd.pd_num, cq);
++	if (err)
++		return err;
 +
-+	/* account for the status page. */
-+	entries++;
++	cq->resize_buf = NULL;
 +
-+	/* IQ needs one extra entry to differentiate full vs empty. */
-+	entries++;
-+
-+	/*
-+	 * entries must be multiple of 16 for HW.
-+	 */
-+	entries = roundup(entries, 16);
-+
-+	/*
-+	 * Make actual HW queue 2x to avoid cdix_inc overflows.
-+	 */
-+	hwentries = min(entries * 2, rhp->rdev.hw_queue.t4_max_iq_size);
-+
-+	/*
-+	 * Make HW queue at least 64 entries so GTS updates aren't too
-+	 * frequent.
-+	 */
-+	if (hwentries < 64)
-+		hwentries = 64;
-+
-+	memsize = hwentries * sizeof(*chp->cq.queue);
-+
-+	chp->cq.size = hwentries;
-+	chp->cq.memsize = memsize;
-+	chp->cq.vector = vector;
-+
-+	ret = create_cq(&rhp->rdev, &chp->cq, &rhp->rdev.uctx, chp->wr_waitp);
-+	if (ret)
-+		goto err_free_skb;
-+
-+	chp->rhp = rhp;
-+	chp->cq.size--;				/* status page */
-+	chp->ibcq.cqe = entries - 2;
-+	spin_lock_init(&chp->lock);
-+	spin_lock_init(&chp->comp_handler_lock);
-+	refcount_set(&chp->refcnt, 1);
-+	init_completion(&chp->cq_rel_comp);
-+	ret = xa_insert_irq(&rhp->cqs, chp->cq.cqid, chp, GFP_KERNEL);
-+	if (ret)
-+		goto err_destroy_cq;
-+
-+	pr_debug("cqid 0x%0x chp %p size %u memsize %zu, dma_addr %pad\n",
-+		 chp->cq.cqid, chp, chp->cq.size, chp->cq.memsize,
-+		 &chp->cq.dma_addr);
 +	return 0;
-+err_destroy_cq:
-+	destroy_cq(&chp->rhp->rdev, &chp->cq, &rhp->rdev.uctx,
- 		   chp->destroy_skb, chp->wr_waitp);
- err_free_skb:
- 	kfree_skb(chp->destroy_skb);
- err_free_wr_wait:
- 	c4iw_put_wr_wait(chp->wr_waitp);
--err_free_chp:
- 	return ret;
- }
- 
-diff --git a/drivers/infiniband/hw/cxgb4/iw_cxgb4.h b/drivers/infiniband/hw/cxgb4/iw_cxgb4.h
-index e17c1252536b..b8e3ee2a0c84 100644
---- a/drivers/infiniband/hw/cxgb4/iw_cxgb4.h
-+++ b/drivers/infiniband/hw/cxgb4/iw_cxgb4.h
-@@ -1014,6 +1014,8 @@ int c4iw_destroy_cq(struct ib_cq *ib_cq, struct ib_udata *udata);
- void c4iw_cq_rem_ref(struct c4iw_cq *chp);
- int c4iw_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 		   struct uverbs_attr_bundle *attrs);
-+int c4iw_create_user_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
-+			struct uverbs_attr_bundle *attrs);
- int c4iw_arm_cq(struct ib_cq *ibcq, enum ib_cq_notify_flags flags);
- int c4iw_modify_srq(struct ib_srq *ib_srq, struct ib_srq_attr *attr,
- 		    enum ib_srq_attr_mask srq_attr_mask,
-diff --git a/drivers/infiniband/hw/cxgb4/provider.c b/drivers/infiniband/hw/cxgb4/provider.c
-index e059f92d90fd..b9c183d1389d 100644
---- a/drivers/infiniband/hw/cxgb4/provider.c
-+++ b/drivers/infiniband/hw/cxgb4/provider.c
-@@ -461,6 +461,7 @@ static const struct ib_device_ops c4iw_dev_ops = {
- 	.alloc_pd = c4iw_allocate_pd,
- 	.alloc_ucontext = c4iw_alloc_ucontext,
- 	.create_cq = c4iw_create_cq,
-+	.create_user_cq = c4iw_create_user_cq,
- 	.create_qp = c4iw_create_qp,
- 	.create_srq = c4iw_create_srq,
- 	.dealloc_pd = c4iw_deallocate_pd,
++}
++
+ static int mthca_alloc_resize_buf(struct mthca_dev *dev, struct mthca_cq *cq,
+ 				  int entries)
+ {
+@@ -1070,6 +1093,7 @@ static const struct ib_device_ops mthca_dev_ops = {
+ 	.attach_mcast = mthca_multicast_attach,
+ 	.create_ah = mthca_ah_create,
+ 	.create_cq = mthca_create_cq,
++	.create_user_cq = mthca_create_user_cq,
+ 	.create_qp = mthca_create_qp,
+ 	.dealloc_pd = mthca_dealloc_pd,
+ 	.dealloc_ucontext = mthca_dealloc_ucontext,
 
 -- 
 2.52.0
