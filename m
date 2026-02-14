@@ -1,274 +1,271 @@
-Return-Path: <linux-hyperv+bounces-8853-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8854-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sJAHJtrKj2nMTgEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8853-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 14 Feb 2026 02:07:38 +0100
+	id nGuKIRz4j2nAUgEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8854-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 14 Feb 2026 05:20:44 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C53513A7E8
-	for <lists+linux-hyperv@lfdr.de>; Sat, 14 Feb 2026 02:07:38 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD8F813AFC8
+	for <lists+linux-hyperv@lfdr.de>; Sat, 14 Feb 2026 05:20:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C368C30D3124
-	for <lists+linux-hyperv@lfdr.de>; Sat, 14 Feb 2026 01:05:00 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 6A7DC300F18A
+	for <lists+linux-hyperv@lfdr.de>; Sat, 14 Feb 2026 04:20:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5F25221F24;
-	Sat, 14 Feb 2026 01:04:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41B981A9F83;
+	Sat, 14 Feb 2026 04:20:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cDtqghO5"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="pwtLpla6"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19CA1DE8AE;
-	Sat, 14 Feb 2026 01:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3E8B7404E;
+	Sat, 14 Feb 2026 04:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771031098; cv=none; b=RH4gm9b3IianVWbCBrA7tJQFqCNwAOIIY+EaSNGIRkiHhz6n6b5Oy34exSyTYSn2RUTMbFcxGBef6XgOYL5OiAjxhOJKl4JGRX315e8JCjWQOFVHIsXfkhmDyqg9xcI4SfvpXvfIGR1jtBSJaHySK60eSj2VLN5o0BAwNehRhVU=
+	t=1771042839; cv=none; b=LBjXKyR2S/vZ4sY6ho+D9QNnI8M7X5wVfACg4rHCMXzOW15R+ts29wfEqAp3Lwoyy+lIy3Jpti7gFzM4CyNd32Bvy/6z1vwlEuwVRQu/2WEqtHQkSpYMkr9QiuIPq6cPLPmKGJrhJMxgb5UEf4El0aY8S2PmAzz6q7GaNPurSAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771031098; c=relaxed/simple;
-	bh=kfGiNrANRnBYtgOBeJSOMxXO363Ln0ivOKg4cDzVqTc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c6DNeBco0Z6zRopDDLG9Tpijs32X/VfeTXnMlyn/IDLe55FqXRRfHA/rq2ooMwxLf8VP6pc1NCl6PSEaNJJ+1HB2Wae8FaNeBNGd4cJRWSEBzALJFsSMUtKhpXx7WrJ0poM8uEb1/1lpR3FPH+a+B4lYqVzW39/YIqHem8OSfNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cDtqghO5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1799FC19424;
-	Sat, 14 Feb 2026 01:04:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771031098;
-	bh=kfGiNrANRnBYtgOBeJSOMxXO363Ln0ivOKg4cDzVqTc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cDtqghO5vxu1i1bPRzm20R2oZYY/QRRSMwxa+olkuX0y4VIG4nDLgN9lFXGPqOpHL
-	 KPOzBz5wNn0cmCwy2/nlKN3fHXWWQ/TmCtxCmjeByEtw8MR4UeaFak4ib+0VqMdMX1
-	 acuOYtHsBSaGeKeDRBU2awDVjhP/ngBnQfPKxm/SsMEF6tJxolW2vczeed8cQsywpX
-	 PEakKzhZO7K+Qn/V4yW/i4j0b1ii1miRuGvfCD7VEcVL3RCxvFOdZ7DMcVGgRlprO1
-	 /9fG/EhB0tyK4AA5sTV2qAyd8s78IiBpMab5D70OaFVTv3fB/RD17OKJNHAW0fpYex
-	 xobtURPGx6e4Q==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	kernel test robot <lkp@intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	"Wei Liu (Microsoft)" <wei.liu@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	kys@microsoft.com,
-	haiyangz@microsoft.com,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.19-5.10] hyper-v: Mark inner union in hv_kvp_exchg_msg_value as packed
-Date: Fri, 13 Feb 2026 19:59:01 -0500
-Message-ID: <20260214010245.3671907-61-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260214010245.3671907-1-sashal@kernel.org>
-References: <20260214010245.3671907-1-sashal@kernel.org>
+	s=arc-20240116; t=1771042839; c=relaxed/simple;
+	bh=vbZPXHEIbaeYf+uNDqTHtOtanbVLITH9uqI//cTf8g4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Da1IyrfiKCfWHymiaJ7n9IZC9w34c8kLjf/hgXspUcXARyFlcAxuMIY8pULfXbH5m9Yt2fZLAgfQvlaTrXm3ak1DA5gqc3x30/5z3wmHPDetoXEgblTJnIqOIHpDnrdL5wIyw2J+V3txN90nwOY9JYAvvW4DDRGOwmyclYGvmNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=pwtLpla6; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id D428E20B7165; Fri, 13 Feb 2026 20:20:31 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D428E20B7165
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1771042831;
+	bh=RaW2vb+rgvWwAfyCr/kgXU+67UJKyz/Fo0LKfWqOF+w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pwtLpla6BwucSYYOOhsHz4Eiduh1ASYRzdCBTX2ItAiAW02/0vq+Tr4MpbA3WWDQL
+	 gtwF7du70QGmZbcvx+ub0XkhHAmRmAR6K1DgsI21ZI8kyOV0aciD7PCyIuohahIawq
+	 H/TnJdBbsQN4m2NefgIjk8aq7Lezum0ykP1D6WNE=
+Date: Fri, 13 Feb 2026 20:20:31 -0800
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Florian Bezdeka <florian.bezdeka@siemens.com>,
+	RT <linux-rt-users@vger.kernel.org>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	Michael Kelley <mhklinux@outlook.com>
+Subject: Re: [PATCH v2] x86: mshyperv: Use kthread for vmbus interrupts on
+ PREEMPT_RT
+Message-ID: <aY/4D/JVu7TjNOku@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <514e068c-1b85-4e39-8388-c1d2b106b4e9@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.19
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <514e068c-1b85-4e39-8388-c1d2b106b4e9@siemens.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8853-lists,linux-hyperv=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8854-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,redhat.com,alien8.de,linux.intel.com,vger.kernel.org,siemens.com,gmail.com,outlook.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashal@kernel.org,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[ssengar@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[arndb.de:email,intel.com:email,msgid.link:url,linuxfoundation.org:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linutronix.de:email]
-X-Rspamd-Queue-Id: 3C53513A7E8
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,siemens.com:email,linux.microsoft.com:dkim,linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid]
+X-Rspamd-Queue-Id: DD8F813AFC8
 X-Rspamd-Action: no action
 
-From: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+On Fri, Feb 06, 2026 at 07:47:54AM +0100, Jan Kiszka wrote:
+> From: Jan Kiszka <jan.kiszka@siemens.com>
+> 
+> Resolves the following lockdep report when booting PREEMPT_RT on Hyper-V
+> with related guest support enabled:
+> 
+> [    1.127941] hv_vmbus: registering driver hyperv_drm
+> 
+> [    1.132518] =============================
+> [    1.132519] [ BUG: Invalid wait context ]
+> [    1.132521] 6.19.0-rc8+ #9 Not tainted
+> [    1.132524] -----------------------------
+> [    1.132525] swapper/0/0 is trying to lock:
+> [    1.132526] ffff8b9381bb3c90 (&channel->sched_lock){....}-{3:3}, at: vmbus_chan_sched+0xc4/0x2b0
+> [    1.132543] other info that might help us debug this:
+> [    1.132544] context-{2:2}
+> [    1.132545] 1 lock held by swapper/0/0:
+> [    1.132547]  #0: ffffffffa010c4c0 (rcu_read_lock){....}-{1:3}, at: vmbus_chan_sched+0x31/0x2b0
+> [    1.132557] stack backtrace:
+> [    1.132560] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.19.0-rc8+ #9 PREEMPT_{RT,(lazy)}
+> [    1.132565] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.1 09/25/2025
+> [    1.132567] Call Trace:
+> [    1.132570]  <IRQ>
+> [    1.132573]  dump_stack_lvl+0x6e/0xa0
+> [    1.132581]  __lock_acquire+0xee0/0x21b0
+> [    1.132592]  lock_acquire+0xd5/0x2d0
+> [    1.132598]  ? vmbus_chan_sched+0xc4/0x2b0
+> [    1.132606]  ? lock_acquire+0xd5/0x2d0
+> [    1.132613]  ? vmbus_chan_sched+0x31/0x2b0
+> [    1.132619]  rt_spin_lock+0x3f/0x1f0
+> [    1.132623]  ? vmbus_chan_sched+0xc4/0x2b0
+> [    1.132629]  ? vmbus_chan_sched+0x31/0x2b0
+> [    1.132634]  vmbus_chan_sched+0xc4/0x2b0
+> [    1.132641]  vmbus_isr+0x2c/0x150
+> [    1.132648]  __sysvec_hyperv_callback+0x5f/0xa0
+> [    1.132654]  sysvec_hyperv_callback+0x88/0xb0
+> [    1.132658]  </IRQ>
+> [    1.132659]  <TASK>
+> [    1.132660]  asm_sysvec_hyperv_callback+0x1a/0x20
+> 
+> As code paths that handle vmbus IRQs use sleepy locks under PREEMPT_RT,
+> the complete vmbus_handler execution needs to be moved into thread
+> context. Open-coding this allows to skip the IPI that irq_work would
+> additionally bring and which we do not need, being an IRQ, never an NMI.
+> 
+> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
 
-[ Upstream commit 1e5271393d777f6159d896943b4c44c4f3ecff52 ]
+First I would like to share my opinion that, although support for the
+RT kernel is not on the near-term roadmap, we should welcome RT Linux
+patches.
 
-The unpacked union within a packed struct generates alignment warnings
-on clang for 32-bit ARM:
+Coming back to this patch I can reproduce the stack trace referenced
+in the commit when running with PREEMPT_RT enabled, and I have verified
+that this patch resolves the issue. Next, I observed the storage-related
+stack trace mentioned in Jan’s other patch; applying the storvsc patch
+fixed that as well.
 
-./usr/include/linux/hyperv.h:361:2: error: field  within 'struct hv_kvp_exchg_msg_value'
-  is less aligned than 'union hv_kvp_exchg_msg_value::(anonymous at ./usr/include/linux/hyperv.h:361:2)'
-  and is usually due to 'struct hv_kvp_exchg_msg_value' being packed,
-  which can lead to unaligned accesses [-Werror,-Wunaligned-access]
-     361 |         union {
-         |         ^
+However, when testing without PREEMPT_RT enabled, I see a another lockdep
+warning below (both with and without Jan’s patches). IWanted to check if
+is it possible to address this issue as part of the same fix ?
+Doing so would make the change more useful beyond PREEMPT_RT.
 
-With the recent changes to compile-test the UAPI headers in more cases,
-this warning in combination with CONFIG_WERROR breaks the build.
 
-Fix the warning.
+> ---
+> 
+> Changes in v2:
+>  - reorder vmbus_irq_pending clearing to fix a race condition
+> 
+>  arch/x86/kernel/cpu/mshyperv.c | 52 ++++++++++++++++++++++++++++++++--
+>  1 file changed, 50 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> index 579fb2c64cfd..b39cb983326a 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/irq.h>
+>  #include <linux/kexec.h>
+>  #include <linux/random.h>
+> +#include <linux/smpboot.h>
+>  #include <asm/processor.h>
+>  #include <asm/hypervisor.h>
+>  #include <hyperv/hvhdk.h>
+> @@ -150,6 +151,43 @@ static void (*hv_stimer0_handler)(void);
+>  static void (*hv_kexec_handler)(void);
+>  static void (*hv_crash_handler)(struct pt_regs *regs);
+>  
+> +static DEFINE_PER_CPU(bool, vmbus_irq_pending);
+> +static DEFINE_PER_CPU(struct task_struct *, vmbus_irqd);
+> +
+> +static void vmbus_irqd_wake(void)
+> +{
+> +	struct task_struct *tsk = __this_cpu_read(vmbus_irqd);
+> +
+> +	__this_cpu_write(vmbus_irq_pending, true);
+> +	wake_up_process(tsk);
+> +}
+> +
+> +static void vmbus_irqd_setup(unsigned int cpu)
+> +{
+> +	sched_set_fifo(current);
+> +}
+> +
+> +static int vmbus_irqd_should_run(unsigned int cpu)
+> +{
+> +	return __this_cpu_read(vmbus_irq_pending);
+> +}
+> +
+> +static void run_vmbus_irqd(unsigned int cpu)
+> +{
+> +	__this_cpu_write(vmbus_irq_pending, false);
+> +	vmbus_handler();
+> +}
+> +
+> +static bool vmbus_irq_initialized;
+> +
+> +static struct smp_hotplug_thread vmbus_irq_threads = {
+> +	.store                  = &vmbus_irqd,
+> +	.setup			= vmbus_irqd_setup,
+> +	.thread_should_run      = vmbus_irqd_should_run,
+> +	.thread_fn              = run_vmbus_irqd,
+> +	.thread_comm            = "vmbus_irq/%u",
+> +};
+> +
+>  DEFINE_IDTENTRY_SYSVEC(sysvec_hyperv_callback)
+>  {
+>  	struct pt_regs *old_regs = set_irq_regs(regs);
+> @@ -158,8 +196,12 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_hyperv_callback)
+>  	if (mshv_handler)
+>  		mshv_handler();
+>  
+> -	if (vmbus_handler)
+> -		vmbus_handler();
+> +	if (vmbus_handler) {
+> +		if (IS_ENABLED(CONFIG_PREEMPT_RT))
+> +			vmbus_irqd_wake();
+> +		else
+> +			vmbus_handler();
+> +	}
+>  
+>  	if (ms_hyperv.hints & HV_DEPRECATING_AEOI_RECOMMENDED)
+>  		apic_eoi();
+> @@ -174,6 +216,10 @@ void hv_setup_mshv_handler(void (*handler)(void))
+>  
+>  void hv_setup_vmbus_handler(void (*handler)(void))
+>  {
+> +	if (IS_ENABLED(CONFIG_PREEMPT_RT) && !vmbus_irq_initialized) {
+> +		BUG_ON(smpboot_register_percpu_thread(&vmbus_irq_threads));
+> +		vmbus_irq_initialized = true;
+> +	}
+>  	vmbus_handler = handler;
+>  }
+>  
+> @@ -181,6 +227,8 @@ void hv_remove_vmbus_handler(void)
+>  {
+>  	/* We have no way to deallocate the interrupt gate */
+>  	vmbus_handler = NULL;
+> +	smpboot_unregister_percpu_thread(&vmbus_irq_threads);
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202512140314.DzDxpIVn-lkp@intel.com/
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Closes: https://lore.kernel.org/linux-kbuild/20260110-uapi-test-disable-headers-arm-clang-unaligned-access-v1-1-b7b0fa541daa@kernel.org/
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/linux-kbuild/29b2e736-d462-45b7-a0a9-85f8d8a3de56@app.fastmail.com/
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Acked-by: Wei Liu (Microsoft) <wei.liu@kernel.org>
-Tested-by: Nicolas Schier <nsc@kernel.org>
-Reviewed-by: Nicolas Schier <nsc@kernel.org>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Link: https://patch.msgid.link/20260115-kbuild-alignment-vbox-v1-1-076aed1623ff@linutronix.de
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
+Do we want to safeguard this call only when vmbus_irq_initialized=true ?
 
-LLM Generated explanations, may be completely bogus:
+- Saurabh
 
-## Analysis
-
-### Commit Message Analysis
-
-This commit fixes a build error caused by an unpacked union within a
-packed struct in a UAPI header (`include/uapi/linux/hyperv.h`). The
-issue manifests as a `-Werror,-Wunaligned-access` error on clang for
-32-bit ARM, which **breaks the build** when `CONFIG_WERROR` is enabled.
-
-Key signals:
-- **Two separate "Reported-by:" tags** — kernel test robot and Nathan
-  Chancellor (a prominent kernel build/clang developer)
-- **Multiple "Closes:" links** to actual build failure reports
-- **Tested-by** and **Reviewed-by** from Nicolas Schier
-- **Acked-by** from subsystem maintainer (Wei Liu) and Greg Kroah-
-  Hartman himself
-- Commit message explicitly says "breaks the build"
-
-### Code Change Analysis
-
-The change is a single-line modification:
-
-```c
-- };
-+       } __attribute__((packed));
-```
-
-This adds the `packed` attribute to an anonymous union inside the
-already-packed struct `hv_kvp_exchg_msg_value`. The outer struct is
-already `__attribute__((packed))`, so adding `packed` to the inner union
-aligns it with the containing struct's packing requirement, silencing
-the clang warning.
-
-**Functional impact**: This union contains `__u8 value[...]`, `__u32
-value_u32`, and `__u64 value_u64`. Since the union is inside a packed
-struct, the compiler should already be treating accesses as potentially
-unaligned. Adding `packed` to the union itself makes this explicit and
-resolves the inconsistency that triggers the warning. There is **no
-change to the actual memory layout** — the struct was already packed,
-and the union within it was already at whatever offset the packing
-dictated. This just makes the annotation consistent.
-
-### Classification
-
-This is a **build fix** — one of the explicitly allowed categories for
-stable backporting. It prevents compilation failure on a specific (and
-common) configuration: clang + 32-bit ARM + CONFIG_WERROR.
-
-### Scope and Risk Assessment
-
-- **Lines changed**: 1 (literally changing `};` to `}
-  __attribute__((packed));`)
-- **Files changed**: 1 UAPI header
-- **Risk**: Extremely low. The packed attribute on the inner union is
-  semantically correct (the outer struct is already packed), and this
-  doesn't change the ABI or memory layout
-- **Subsystem**: Hyper-V UAPI header, but the fix is really about build
-  correctness
-
-### User Impact
-
-- **Who is affected**: Anyone building the kernel with clang on 32-bit
-  ARM (or potentially other architectures in the future) with
-  `CONFIG_WERROR=y`
-- **Severity**: Build breakage — users literally cannot compile the
-  kernel in this configuration
-- **Frequency**: 100% reproducible in the affected configuration
-
-### Stability Indicators
-
-- Acked by Greg Kroah-Hartman (stable tree maintainer)
-- Acked by Wei Liu (Hyper-V maintainer)
-- Tested and reviewed by Nicolas Schier
-- The fix is trivially correct — adding packed to a union inside a
-  packed struct
-
-### Dependency Check
-
-This commit is self-contained. It references "recent changes to compile-
-test the UAPI headers in more cases" as the trigger that exposed this
-warning, but the fix itself (adding packed to the union) is valid
-regardless of whether those compile-test changes are present. The
-underlying warning condition exists in any version of this header
-compiled with clang on ARM.
-
-However, I should check if the struct in question exists in older stable
-trees.
-
-The struct `hv_kvp_exchg_msg_value` with this union has been in
-`include/uapi/linux/hyperv.h` for a very long time (it's part of the
-Hyper-V KVP userspace interface). The fix would apply cleanly to any
-stable tree that has this header.
-
-### Conclusion
-
-This is a textbook stable backport candidate:
-- **Fixes a real build breakage** (not just a warning — it errors out
-  with CONFIG_WERROR)
-- **Trivially small and obviously correct** — one attribute addition
-- **Zero risk of regression** — no behavioral change, no ABI change
-- **Well-reviewed** — acked by GKH, subsystem maintainer, tested and
-  reviewed
-- **Multiple reporters** — real-world problem encountered by kernel test
-  infrastructure and developers
-- Build fixes are explicitly listed as appropriate stable material
-
-**YES**
-
- include/uapi/linux/hyperv.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/uapi/linux/hyperv.h b/include/uapi/linux/hyperv.h
-index aaa502a7bff46..1749b35ab2c21 100644
---- a/include/uapi/linux/hyperv.h
-+++ b/include/uapi/linux/hyperv.h
-@@ -362,7 +362,7 @@ struct hv_kvp_exchg_msg_value {
- 		__u8 value[HV_KVP_EXCHANGE_MAX_VALUE_SIZE];
- 		__u32 value_u32;
- 		__u64 value_u64;
--	};
-+	} __attribute__((packed));
- } __attribute__((packed));
- 
- struct hv_kvp_msg_enumerate {
--- 
-2.51.0
-
+> +	vmbus_irq_initialized = false;
+>  }
+>  
+>  /*
+> -- 
+> 2.51.0
 
