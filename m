@@ -1,317 +1,252 @@
-Return-Path: <linux-hyperv+bounces-8902-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8903-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kBbUDAkPlmmNZQIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8902-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 20:12:09 +0100
+	id QLcyKxYnlmnxbQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8903-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 21:54:46 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 872A8158F45
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 20:12:08 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55F8A159983
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 21:54:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7C6EB301413E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 19:11:43 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B597B30067BA
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 20:54:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 986BC2F6907;
-	Wed, 18 Feb 2026 19:11:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C9F134846C;
+	Wed, 18 Feb 2026 20:54:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qvC28ej5"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="txRKTC99"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 342341C3C1F;
-	Wed, 18 Feb 2026 19:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53F4311972;
+	Wed, 18 Feb 2026 20:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771441902; cv=none; b=Z7aFKAlI31+noEDiPJ5zTQYlhFPCDm6mj7tOkvvut/n4jU4+jtYNgoYMlC0LY6xsz/ZS3ylcu3wdUgYuKgYyToCv4GJUIi7CCUnv/FhqYlUH0YopTIyhud8EmTW+Ix/d6ZFbpHdp0M+Z2jJa2DttJx4ZhEKfASXQKzcKeN7yA+A=
+	t=1771448084; cv=none; b=uZQrUEEbW+ZdhuDy4kjvQJmuCMYPQt4Xop3fUa0UQVFSRYIVZBi0dzW6UAQtajhnhJkfA+HHlu6twLDY6uS8fl3M+Aj2njcnlgGcNX3vL0msku08+DNFgDqoWsPTiA5YNKvVM8gwPAQ5zEcVCaubP7oN4sMQqoRgszTqxYdjgSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771441902; c=relaxed/simple;
-	bh=Aa2e+fx/fDMeYZ/pWfa2H7eGxDa70KRppUxlEVCwYeI=;
-	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=a7rPYwWyyXzt5dsq/KIPW2ecTNa951lXsq4GvBvsud5J99SJ0CdZrWfSlQlSE3z/4TnSYazV1raahDIWKhgpwtpKIBUTjsLc2FIDgnz4+w8vx015EecNqw9tMhf79u/Y4z/7NGoTI8lqeDgaSrV8JbyXcX692I+ivslmwS5nZAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qvC28ej5; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 355C620B6F02;
-	Wed, 18 Feb 2026 11:11:40 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 355C620B6F02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1771441900;
-	bh=1TBHkhaIW/d2SprmMIPjyIog36wKhwoK/lA/9Y7T4N8=;
-	h=Subject:From:To:Cc:Date:From;
-	b=qvC28ej5RuvgW7dYlirKSqMvhYAbWJ5CrN7B78/uKrB09JUDECq6gNREUXjGWOWpT
-	 gtUbGVn92WTwKPNbQxIoK4/wQoo+bg6pIA9AgE2exzeSXCvZQQV7YJaEO/jj6YFMCE
-	 zc/L/SbJfezEj6EirFjecwf1ogNGh9FSKZaOJqj8=
-Subject: [PATCH v5] mshv: Add support for integrated scheduler
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, longli@microsoft.com
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 18 Feb 2026 19:11:40 +0000
-Message-ID: 
- <177144189787.43429.7425661016523660268.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-User-Agent: StGit/0.19
+	s=arc-20240116; t=1771448084; c=relaxed/simple;
+	bh=NSU5ZxTFZs+vcgV4zbWJc+O5FYAL+ah44/3CcMJAvog=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=ffnhUSA+7uyQtoMwtFBviBh2yKgGdztRKwXZFdvbcJSBUsd0RjddiQKMHWM7lFyRmdda+u/xSmsTTKmeUa0wn5ko+1lOiryOUR4CTj30B46VW3tKRxfU46+jLYaC9jurfaEjmOQjrWRVEGLb/7doQEXXDpFS/QB5EHjOh4J1i/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=txRKTC99; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Received: from ehlo.thunderbird.net (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 61IKbu3I2307125
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 18 Feb 2026 12:37:56 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 61IKbu3I2307125
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2026012301; t=1771447078;
+	bh=/4gUyx2Ogqc4pykP2NXlf3ww6HtU65MDbCy+ciTKta0=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=txRKTC99yxQoQhaycyi7tJEOgs9h1U2j5kNLU2/1fwUwtmdQCUwUeEffkAabj72/F
+	 ukff8fZVPMHYRTwmPLaZZGgZSRPefZOtaglDoqq/xRMxcmW0y0HbctJr8LQsjWYLQK
+	 O6BowOLQ73YDd32xR02o7iliOviwQfGShMkbSfNL1NNO3hDb124q5coP7LtTukCrv8
+	 eFIsqBvQBtd8mP5roCm/HLGwm3E5AbDDDTSL/htD5wmZD5oyabOgyU4N/H2+l29yfi
+	 tegGzouqXoi0lCfrG4Cfb4XcWEQvgvnEJNiY8Xg+H/e8oJU5xeLp+CxABvSA1teX2D
+	 ggrrWY1MeeKrQ==
+Date: Wed, 18 Feb 2026 12:37:50 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-coco@lists.linux.dev, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+        llvm@lists.linux.dev
+CC: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Kiryl Shutsemau <kas@kernel.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        xen-devel@lists.xenproject.org, Ajay Kaher <ajay.kaher@broadcom.com>,
+        Alexey Makhalov <alexey.makhalov@broadcom.com>,
+        Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, Xin Li <xin@zytor.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+        Bill Wendling <morbo@google.com>,
+        Justin Stitt <justinstitt@google.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>, andy.cooper@citrix.com
+Subject: Re: [PATCH v3 00/16] x86/msr: Inline rdmsr/wrmsr instructions
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20260218082133.400602-1-jgross@suse.com>
+References: <20260218082133.400602-1-jgross@suse.com>
+Message-ID: <3D1FE2A7-F237-4232-9E39-6AFC75F3A4F0@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	DMARC_POLICY_ALLOW(-0.50)[zytor.com,none];
+	R_DKIM_ALLOW(-0.20)[zytor.com:s=2026012301];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_FROM(0.00)[bounces-8902-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-8903-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,redhat.com,alien8.de,linux.intel.com,intel.com,google.com,microsoft.com,oracle.com,lists.xenproject.org,broadcom.com,infradead.org,zytor.com,gmail.com,citrix.com];
+	RCPT_COUNT_TWELVE(0.00)[36];
 	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_NONE(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	NEURAL_HAM(-0.00)[-0.999];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,outlook.com:email]
-X-Rspamd-Queue-Id: 872A8158F45
+	FROM_NEQ_ENVFROM(0.00)[hpa@zytor.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[zytor.com:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv,lkml];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[zytor.com:mid,zytor.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,suse.com:email]
+X-Rspamd-Queue-Id: 55F8A159983
 X-Rspamd-Action: no action
 
-Query the hypervisor for integrated scheduler support and use it if
-configured.
+On February 18, 2026 12:21:17 AM PST, Juergen Gross <jgross@suse=2Ecom> wro=
+te:
+>When building a kernel with CONFIG_PARAVIRT_XXL the paravirt
+>infrastructure will always use functions for reading or writing MSRs,
+>even when running on bare metal=2E
+>
+>Switch to inline RDMSR/WRMSR instructions in this case, reducing the
+>paravirt overhead=2E
+>
+>The first patch is a prerequisite fix for alternative patching=2E Its
+>is needed due to the initial indirect call needs to be padded with
+>NOPs in some cases with the following patches=2E
+>
+>In order to make this less intrusive, some further reorganization of
+>the MSR access helpers is done in the patches 1-6=2E
+>
+>The next 4 patches are converting the non-paravirt case to use direct
+>inlining of the MSR access instructions, including the WRMSRNS
+>instruction and the immediate variants of RDMSR and WRMSR if possible=2E
+>
+>Patches 11-13 are some further preparations for making the real switch
+>to directly patch in the native MSR instructions easier=2E
+>
+>Patch 14 is switching the paravirt MSR function interface from normal
+>call ABI to one more similar to the native MSR instructions=2E
+>
+>Patch 15 is a little cleanup patch=2E
+>
+>Patch 16 is the final step for patching in the native MSR instructions
+>when not running as a Xen PV guest=2E
+>
+>This series has been tested to work with Xen PV and on bare metal=2E
+>
+>Note that there is more room for improvement=2E This series is sent out
+>to get a first impression how the code will basically look like=2E
 
-Microsoft Hypervisor originally provided two schedulers: root and core. The
-root scheduler allows the root partition to schedule guest vCPUs across
-physical cores, supporting both time slicing and CPU affinity (e.g., via
-cgroups). In contrast, the core scheduler delegates vCPU-to-physical-core
-scheduling entirely to the hypervisor.
+Does that mean you are considering this patchset an RFC? If so, you should=
+ put that in the subject header=2E=20
 
-Direct virtualization introduces a new privileged guest partition type - L1
-Virtual Host (L1VH) — which can create child partitions from its own
-resources. These child partitions are effectively siblings, scheduled by
-the hypervisor's core scheduler. This prevents the L1VH parent from setting
-affinity or time slicing for its own processes or guest VPs. While cgroups,
-CFS, and cpuset controllers can still be used, their effectiveness is
-unpredictable, as the core scheduler swaps vCPUs according to its own logic
-(typically round-robin across all allocated physical CPUs). As a result,
-the system may appear to "steal" time from the L1VH and its children.
+>Right now the same problem is solved differently for the paravirt and
+>the non-paravirt cases=2E In case this is not desired, there are two
+>possibilities to merge the two implementations=2E Both solutions have
+>the common idea to have rather similar code for paravirt and
+>non-paravirt variants, but just use a different main macro for
+>generating the respective code=2E For making the code of both possible
+>scenarios more similar, the following variants are possible:
+>
+>1=2E Remove the micro-optimizations of the non-paravirt case, making
+>   it similar to the paravirt code in my series=2E This has the
+>   advantage of being more simple, but might have a very small
+>   negative performance impact (probably not really detectable)=2E
+>
+>2=2E Add the same micro-optimizations to the paravirt case, requiring
+>   to enhance paravirt patching to support a to be patched indirect
+>   call in the middle of the initial code snipplet=2E
+>
+>In both cases the native MSR function variants would no longer be
+>usable in the paravirt case, but this would mostly affect Xen, as it
+>would need to open code the WRMSR/RDMSR instructions to be used
+>instead the native_*msr*() functions=2E
+>
+>Changes since V2:
+>- switch back to the paravirt approach
+>
+>Changes since V1:
+>- Use Xin Li's approach for inlining
+>- Several new patches
+>
+>Juergen Gross (16):
+>  x86/alternative: Support alt_replace_call() with instructions after
+>    call
+>  coco/tdx: Rename MSR access helpers
+>  x86/sev: Replace call of native_wrmsr() with native_wrmsrq()
+>  KVM: x86: Remove the KVM private read_msr() function
+>  x86/msr: Minimize usage of native_*() msr access functions
+>  x86/msr: Move MSR trace calls one function level up
+>  x86/opcode: Add immediate form MSR instructions
+>  x86/extable: Add support for immediate form MSR instructions
+>  x86/msr: Use the alternatives mechanism for WRMSR
+>  x86/msr: Use the alternatives mechanism for RDMSR
+>  x86/alternatives: Add ALTERNATIVE_4()
+>  x86/paravirt: Split off MSR related hooks into new header
+>  x86/paravirt: Prepare support of MSR instruction interfaces
+>  x86/paravirt: Switch MSR access pv_ops functions to instruction
+>    interfaces
+>  x86/msr: Reduce number of low level MSR access helpers
+>  x86/paravirt: Use alternatives for MSR access with paravirt
+>
+> arch/x86/coco/sev/internal=2Eh              |   7 +-
+> arch/x86/coco/tdx/tdx=2Ec                   |   8 +-
+> arch/x86/hyperv/ivm=2Ec                     |   2 +-
+> arch/x86/include/asm/alternative=2Eh        |   6 +
+> arch/x86/include/asm/fred=2Eh               |   2 +-
+> arch/x86/include/asm/kvm_host=2Eh           |  10 -
+> arch/x86/include/asm/msr=2Eh                | 345 ++++++++++++++++------
+> arch/x86/include/asm/paravirt-msr=2Eh       | 148 ++++++++++
+> arch/x86/include/asm/paravirt=2Eh           |  67 -----
+> arch/x86/include/asm/paravirt_types=2Eh     |  57 ++--
+> arch/x86/include/asm/qspinlock_paravirt=2Eh |   4 +-
+> arch/x86/kernel/alternative=2Ec             |   5 +-
+> arch/x86/kernel/cpu/mshyperv=2Ec            |   7 +-
+> arch/x86/kernel/kvmclock=2Ec                |   2 +-
+> arch/x86/kernel/paravirt=2Ec                |  42 ++-
+> arch/x86/kvm/svm/svm=2Ec                    |  16 +-
+> arch/x86/kvm/vmx/tdx=2Ec                    |   2 +-
+> arch/x86/kvm/vmx/vmx=2Ec                    |   8 +-
+> arch/x86/lib/x86-opcode-map=2Etxt           |   5 +-
+> arch/x86/mm/extable=2Ec                     |  35 ++-
+> arch/x86/xen/enlighten_pv=2Ec               |  52 +++-
+> arch/x86/xen/pmu=2Ec                        |   4 +-
+> tools/arch/x86/lib/x86-opcode-map=2Etxt     |   5 +-
+> tools/objtool/check=2Ec                     |   1 +
+> 24 files changed, 576 insertions(+), 264 deletions(-)
+> create mode 100644 arch/x86/include/asm/paravirt-msr=2Eh
+>
 
-To address this, Microsoft Hypervisor introduces the integrated scheduler.
-This allows an L1VH partition to schedule its own vCPUs and those of its
-guests across its "physical" cores, effectively emulating root scheduler
-behavior within the L1VH, while retaining core scheduler behavior for the
-rest of the system.
+Could you clarify *on the high design level* what "go back to the paravirt=
+ approach" means, and the motivation for that?
 
-The integrated scheduler is controlled by the root partition and gated by
-the vmm_enable_integrated_scheduler capability bit. If set, the hypervisor
-supports the integrated scheduler. The L1VH partition must then check if it
-is enabled by querying the corresponding extended partition property. If
-this property is true, the L1VH partition must use the root scheduler
-logic; otherwise, it must use the core scheduler. This requirement makes
-reading VMM capabilities in L1VH partition a requirement too.
+Note that for Xen *most* MSRs fall in one of two categories: those that ar=
+e dropped entirely and those that are just passed straight on to the hardwa=
+re=2E
 
-Signed-off-by: Andreea Pintilie <anpintil@microsoft.com>
-Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
----
- drivers/hv/mshv_root_main.c |   82 ++++++++++++++++++++++++++-----------------
- include/hyperv/hvhdk_mini.h |    7 +++-
- 2 files changed, 56 insertions(+), 33 deletions(-)
-
-diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index 431aebf95bc7..c6ec88884728 100644
---- a/drivers/hv/mshv_root_main.c
-+++ b/drivers/hv/mshv_root_main.c
-@@ -2079,6 +2079,29 @@ static const char *scheduler_type_to_string(enum hv_scheduler_type type)
- 	};
- }
- 
-+static int __init l1vh_retrieve_scheduler_type(enum hv_scheduler_type *out)
-+{
-+	u64 integrated_sched_enabled;
-+	int ret;
-+
-+	*out = HV_SCHEDULER_TYPE_CORE_SMT;
-+
-+	if (!mshv_root.vmm_caps.vmm_enable_integrated_scheduler)
-+		return 0;
-+
-+	ret = hv_call_get_partition_property_ex(HV_PARTITION_ID_SELF,
-+						HV_PARTITION_PROPERTY_INTEGRATED_SCHEDULER_ENABLED,
-+						0, &integrated_sched_enabled,
-+						sizeof(integrated_sched_enabled));
-+	if (ret)
-+		return ret;
-+
-+	if (integrated_sched_enabled)
-+		*out = HV_SCHEDULER_TYPE_ROOT;
-+
-+	return 0;
-+}
-+
- /* TODO move this to hv_common.c when needed outside */
- static int __init hv_retrieve_scheduler_type(enum hv_scheduler_type *out)
- {
-@@ -2111,13 +2134,12 @@ static int __init hv_retrieve_scheduler_type(enum hv_scheduler_type *out)
- /* Retrieve and stash the supported scheduler type */
- static int __init mshv_retrieve_scheduler_type(struct device *dev)
- {
--	int ret = 0;
-+	int ret;
- 
- 	if (hv_l1vh_partition())
--		hv_scheduler_type = HV_SCHEDULER_TYPE_CORE_SMT;
-+		ret = l1vh_retrieve_scheduler_type(&hv_scheduler_type);
- 	else
- 		ret = hv_retrieve_scheduler_type(&hv_scheduler_type);
--
- 	if (ret)
- 		return ret;
- 
-@@ -2237,42 +2259,29 @@ struct notifier_block mshv_reboot_nb = {
- static void mshv_root_partition_exit(void)
- {
- 	unregister_reboot_notifier(&mshv_reboot_nb);
--	root_scheduler_deinit();
- }
- 
- static int __init mshv_root_partition_init(struct device *dev)
- {
--	int err;
--
--	err = root_scheduler_init(dev);
--	if (err)
--		return err;
--
--	err = register_reboot_notifier(&mshv_reboot_nb);
--	if (err)
--		goto root_sched_deinit;
--
--	return 0;
--
--root_sched_deinit:
--	root_scheduler_deinit();
--	return err;
-+	return register_reboot_notifier(&mshv_reboot_nb);
- }
- 
--static void mshv_init_vmm_caps(struct device *dev)
-+static int __init mshv_init_vmm_caps(struct device *dev)
- {
--	/*
--	 * This can only fail here if HVCALL_GET_PARTITION_PROPERTY_EX or
--	 * HV_PARTITION_PROPERTY_VMM_CAPABILITIES are not supported. In that
--	 * case it's valid to proceed as if all vmm_caps are disabled (zero).
--	 */
--	if (hv_call_get_partition_property_ex(HV_PARTITION_ID_SELF,
--					      HV_PARTITION_PROPERTY_VMM_CAPABILITIES,
--					      0, &mshv_root.vmm_caps,
--					      sizeof(mshv_root.vmm_caps)))
--		dev_warn(dev, "Unable to get VMM capabilities\n");
-+	int ret;
-+
-+	ret = hv_call_get_partition_property_ex(HV_PARTITION_ID_SELF,
-+						HV_PARTITION_PROPERTY_VMM_CAPABILITIES,
-+						0, &mshv_root.vmm_caps,
-+						sizeof(mshv_root.vmm_caps));
-+	if (ret && hv_l1vh_partition()) {
-+		dev_err(dev, "Failed to get VMM capabilities: %d\n", ret);
-+		return ret;
-+	}
- 
- 	dev_dbg(dev, "vmm_caps = %#llx\n", mshv_root.vmm_caps.as_uint64[0]);
-+
-+	return 0;
- }
- 
- static int __init mshv_parent_partition_init(void)
-@@ -2318,6 +2327,10 @@ static int __init mshv_parent_partition_init(void)
- 
- 	mshv_cpuhp_online = ret;
- 
-+	ret = mshv_init_vmm_caps(dev);
-+	if (ret)
-+		goto remove_cpu_state;
-+
- 	ret = mshv_retrieve_scheduler_type(dev);
- 	if (ret)
- 		goto remove_cpu_state;
-@@ -2327,11 +2340,13 @@ static int __init mshv_parent_partition_init(void)
- 	if (ret)
- 		goto remove_cpu_state;
- 
--	mshv_init_vmm_caps(dev);
-+	ret = root_scheduler_init(dev);
-+	if (ret)
-+		goto exit_partition;
- 
- 	ret = mshv_debugfs_init();
- 	if (ret)
--		goto exit_partition;
-+		goto deinit_root_scheduler;
- 
- 	ret = mshv_irqfd_wq_init();
- 	if (ret)
-@@ -2346,6 +2361,8 @@ static int __init mshv_parent_partition_init(void)
- 
- exit_debugfs:
- 	mshv_debugfs_exit();
-+deinit_root_scheduler:
-+	root_scheduler_deinit();
- exit_partition:
- 	if (hv_root_partition())
- 		mshv_root_partition_exit();
-@@ -2365,6 +2382,7 @@ static void __exit mshv_parent_partition_exit(void)
- 	mshv_debugfs_exit();
- 	misc_deregister(&mshv_dev);
- 	mshv_irqfd_wq_cleanup();
-+	root_scheduler_deinit();
- 	if (hv_root_partition())
- 		mshv_root_partition_exit();
- 	cpuhp_remove_state(mshv_cpuhp_online);
-diff --git a/include/hyperv/hvhdk_mini.h b/include/hyperv/hvhdk_mini.h
-index 41a29bf8ec14..c0300910808b 100644
---- a/include/hyperv/hvhdk_mini.h
-+++ b/include/hyperv/hvhdk_mini.h
-@@ -87,6 +87,9 @@ enum hv_partition_property_code {
- 	HV_PARTITION_PROPERTY_PRIVILEGE_FLAGS			= 0x00010000,
- 	HV_PARTITION_PROPERTY_SYNTHETIC_PROC_FEATURES		= 0x00010001,
- 
-+	/* Integrated scheduling properties */
-+	HV_PARTITION_PROPERTY_INTEGRATED_SCHEDULER_ENABLED	= 0x00020005,
-+
- 	/* Resource properties */
- 	HV_PARTITION_PROPERTY_GPA_PAGE_ACCESS_TRACKING		= 0x00050005,
- 	HV_PARTITION_PROPERTY_UNIMPLEMENTED_MSR_ACTION		= 0x00050017,
-@@ -102,7 +105,7 @@ enum hv_partition_property_code {
- };
- 
- #define HV_PARTITION_VMM_CAPABILITIES_BANK_COUNT		1
--#define HV_PARTITION_VMM_CAPABILITIES_RESERVED_BITFIELD_COUNT	59
-+#define HV_PARTITION_VMM_CAPABILITIES_RESERVED_BITFIELD_COUNT	57
- 
- struct hv_partition_property_vmm_capabilities {
- 	u16 bank_count;
-@@ -119,6 +122,8 @@ struct hv_partition_property_vmm_capabilities {
- 			u64 reservedbit3: 1;
- #endif
- 			u64 assignable_synthetic_proc_features: 1;
-+			u64 reservedbit5: 1;
-+			u64 vmm_enable_integrated_scheduler : 1;
- 			u64 reserved0: HV_PARTITION_VMM_CAPABILITIES_RESERVED_BITFIELD_COUNT;
- 		} __packed;
- 	};
-
-
+I don't know if anyone cares about optimizing PV Xen anymore, but at least=
+ in theory Xen can un-paravirtualize most sites=2E
 
