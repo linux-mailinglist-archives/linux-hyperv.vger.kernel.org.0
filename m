@@ -1,60 +1,54 @@
-Return-Path: <linux-hyperv+bounces-8893-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8894-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IKFgBnvKlWlfUwIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8893-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 15:19:39 +0100
+	id eO9+CivRlWlEVAIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8894-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 15:48:11 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 651E715700B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 15:19:38 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AA50157250
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 15:48:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 248DC3016EE6
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 14:19:37 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 860B83002915
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 14:48:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FE04330D36;
-	Wed, 18 Feb 2026 14:19:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 825E433375A;
+	Wed, 18 Feb 2026 14:48:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="LsUkIxIj"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Jr6kSd82"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6659E22D4DC;
-	Wed, 18 Feb 2026 14:19:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71EA2330670
+	for <linux-hyperv@vger.kernel.org>; Wed, 18 Feb 2026 14:48:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771424376; cv=none; b=JMgv0F+WfyIi9wjhdCVNAtJN33vHm8jHFQTYRe4FzBw/5CYGJc7yxmkP7kvgsslq85qD/kxZARyH9LshYhtqt+IsJVt2qrkqFMdGBydI7F10vgVA1oYjHGyuRSsg8QZajDtptwMTciPLvmW2gxuMh3TTpEVxrYwxmaQrx1gZHbc=
+	t=1771426084; cv=none; b=sZLXOSU92QlIdde5QM5UhymaNcbAhdcsLLvuZCmjUDgfSSCsk9TL7wK81ttdKT3acj5cXmcz2mvGI7nIFraH40goG5YD6tzxpxOFUrHqhW6ry6v2bWRwTrUJa3GIv6DIqYiZZibncKLIs6dLnpJ2Q4a56mk6VQU1l0nEdq9IEAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771424376; c=relaxed/simple;
-	bh=S6h2Z6sUOywlDn7IJuN9Y5s0WcCM6im/R9HDxeq7vqk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qSYUuANIeHXpLqJUtILaSVxSTt8e+OmTeUMmHH0OBVjpISSCWUzTRlsmowLkFtTuP5j1vopGc03xbgjyURF7LJT9mEw7hBappwLgM9r7BrGCVtZ9xdpgOZj/ACyN96O7z2cu/eGkxZiL0iQGGnBXsDoFnTWFxcOJvxusP0irQqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=LsUkIxIj; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1771426084; c=relaxed/simple;
+	bh=mZtB2FrTAh16xTy5vj3HWm5ON2AtyBQPYq0pTyGDMFE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VAy+dwtnc6pFDk/oMPBQl++M32OLanFgA0h703NunzaqAJ+t3ZjqHk6LdkM/oDBE4gsEJqLOocJe+zDuWuWn1DJTt+DxHoFCnIJFg3X1ZpsQyOBNZYf9Yq/3HEy3KA3kbIxG9bb/2NnMLItl4mGF5hLhLOEy1dESZ5iza7rEl9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Jr6kSd82; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from DESKTOP-TUU1E5L.localdomain (unknown [167.220.208.56])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 06A4D20B6F00;
-	Wed, 18 Feb 2026 06:19:32 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 06A4D20B6F00
+Received: from anbelski-virt-work-5.irsgb21fvobu5fvmalxug44hib.xx.internal.cloudapp.net (unknown [172.171.99.74])
+	by linux.microsoft.com (Postfix) with ESMTPSA id E97F120B6F00;
+	Wed, 18 Feb 2026 06:48:02 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E97F120B6F00
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1771424374;
-	bh=EwcGjp87EUVkv+YxE50a+yvbnnXMcjBmV8/MsL4EDp8=;
+	s=default; t=1771426083;
+	bh=m6qQ4akgrOGD9wXWi3kr/xiHK1y1l+7d7NeibrsBi/U=;
 	h=From:To:Cc:Subject:Date:From;
-	b=LsUkIxIjqFbreiybDZRoPdcsgH2rXcD/431VVuZRKmlzKi3k9bpBuXg+BlItzA0T/
-	 WrZsQvhY9KP+sKYBv+pEN+VDRj/gZD0onK5Fc4RnSuDaQV4NJLqi/+TKvzXqmlh2pG
-	 jw8re7flIbmfMRoZ+5re+nx7w7GPzG2vye4uS3W8=
-From: Magnus Kulke <magnuskulke@linux.microsoft.com>
-To: wei.liu@kernel.org,
-	haiyangz@microsoft.com,
-	kys@microsoft.com,
-	decui@microsoft.com,
-	linux-hyperv@vger.kernel.org
-Cc: skinsburskii@linux.microsoft.com,
-	magnuskulke@microsoft.com,
-	linux-kernel@vger.kernel.org,
-	Magnus Kulke <magnuskulke@linux.microsoft.com>
-Subject: [PATCH] mshv: expose hv_call_scrub_partition
-Date: Wed, 18 Feb 2026 15:19:11 +0100
-Message-Id: <20260218141911.555592-1-magnuskulke@linux.microsoft.com>
+	b=Jr6kSd82plAKtfAekCqjsFauNucHLjUNj3QZUvjPSGUy7+kLHiYewqBRwV3R0uIfJ
+	 dKM3wKuFx9U3cTk3quzWfD3VoS3ij1wi6Te4C8rvr1JS43P5lzbeNUDYJfdpDzgyLb
+	 C9CfJsQo01RXDp8wBc1jRTEnZ980T2j9VDoO/xRY=
+From: Anatol Belski <anbelski@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org
+Cc: wei.liu@kernel.org,
+	muislam@microsoft.com
+Subject: [PATCH 1/4] mshv: Add nested virtualization creation flag
+Date: Wed, 18 Feb 2026 14:47:59 +0000
+Message-Id: <20260218144802.1962513-1-anbelski@linux.microsoft.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -69,64 +63,56 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-8893-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[magnuskulke@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8894-lists,linux-hyperv=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	FROM_NEQ_ENVFROM(0.00)[anbelski@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
 	PRECEDENCE_BULK(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	TO_DN_NONE(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:mid,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: 651E715700B
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linux.microsoft.com:mid,linux.microsoft.com:dkim]
+X-Rspamd-Queue-Id: 1AA50157250
 X-Rspamd-Action: no action
 
-This hv call needs to be exposed for VMMs to be able to soft-reboot
-guests. It will reset APIC and state of para-virtualized devices like
-SynIC.
+From: Muminul Islam <muislam@microsoft.com>
 
-Signed-off-by: Magnus Kulke <magnuskulke@linux.microsoft.com>
+Introduce HV_PARTITION_CREATION_FLAG_NESTED_VIRTUALIZATION_CAPABLE to
+indicate support for nested virtualization during partition creation.
+
+This enables clearer configuration and capability checks for nested
+virtualization scenarios.
+
+Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Signed-off-by: Muminul Islam <muislam@microsoft.com>
 ---
- drivers/hv/mshv_root_main.c | 1 +
- include/hyperv/hvgdk_mini.h | 1 +
- 2 files changed, 2 insertions(+)
+ include/hyperv/hvhdk.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index cb2729f99e2c5..7c13d5f36437c 100644
---- a/drivers/hv/mshv_root_main.c
-+++ b/drivers/hv/mshv_root_main.c
-@@ -143,6 +143,7 @@ static u16 mshv_passthru_hvcalls[] = {
- 	HVCALL_READ_GPA,
- 	HVCALL_WRITE_GPA,
- 	HVCALL_CLEAR_VIRTUAL_INTERRUPT,
-+	HVCALL_SCRUB_PARTITION,
- 	HVCALL_REGISTER_INTERCEPT_RESULT,
- 	HVCALL_ASSERT_VIRTUAL_INTERRUPT,
- 	HVCALL_GET_GPA_PAGES_ACCESS_STATES,
-diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
-index f98eb41342d40..9120fcf0161a4 100644
---- a/include/hyperv/hvgdk_mini.h
-+++ b/include/hyperv/hvgdk_mini.h
-@@ -501,6 +501,7 @@ union hv_vp_assist_msr_contents {	 /* HV_REGISTER_VP_ASSIST_PAGE */
- #define HVCALL_ENTER_SLEEP_STATE			0x0084
- #define HVCALL_NOTIFY_PARTITION_EVENT			0x0087
- #define HVCALL_NOTIFY_PORT_RING_EMPTY			0x008b
-+#define HVCALL_SCRUB_PARTITION				0x008d
- #define HVCALL_REGISTER_INTERCEPT_RESULT		0x0091
- #define HVCALL_ASSERT_VIRTUAL_INTERRUPT			0x0094
- #define HVCALL_CREATE_PORT				0x0095
+diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
+index 08965970c17d..03afb7d0412b 100644
+--- a/include/hyperv/hvhdk.h
++++ b/include/hyperv/hvhdk.h
+@@ -328,6 +328,7 @@ union hv_partition_isolation_properties {
+ #define HV_PARTITION_ISOLATION_HOST_TYPE_RESERVED   0x2
+ 
+ /* Note: Exo partition is enabled by default */
++#define HV_PARTITION_CREATION_FLAG_NESTED_VIRTUALIZATION_CAPABLE	BIT(1)
+ #define HV_PARTITION_CREATION_FLAG_GPA_SUPER_PAGES_ENABLED		BIT(4)
+ #define HV_PARTITION_CREATION_FLAG_EXO_PARTITION			BIT(8)
+ #define HV_PARTITION_CREATION_FLAG_LAPIC_ENABLED			BIT(13)
 -- 
 2.34.1
 
