@@ -1,201 +1,178 @@
-Return-Path: <linux-hyperv+bounces-8891-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8892-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +BQ4GvKblWmsSgIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8891-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 12:01:06 +0100
+	id MJxaJDGylWkHUAIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8892-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 13:36:01 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15515155BE4
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 12:01:01 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8C4D156604
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 13:36:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A8A45300C012
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 11:00:58 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 235F63008477
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 12:35:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 910873043DC;
-	Wed, 18 Feb 2026 11:00:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C7983161A1;
+	Wed, 18 Feb 2026 12:35:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mFNdk2JA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zk/deMNN"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD742F83B7
-	for <linux-hyperv@vger.kernel.org>; Wed, 18 Feb 2026 11:00:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD5A314D2D;
+	Wed, 18 Feb 2026 12:35:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771412457; cv=none; b=DbWLED4LDtD2Xw9vh/RPXei/KI1MkkK4epnCUw7GJ1hm2l47jKdW8FGl8WY4o4Io0mOXb0rmiQipqTthgwsrZUHcbijrduTA0OBZ9D5u8f/aAv5WYEeHhCOy85ZCEKC3p5bxi3mWzOYj+R0zLOgVHf3oz2fBto3ALlvHJkZ5bgc=
+	t=1771418157; cv=none; b=Y/R9radv9QN7p7yLuunNijcxxpMycMYKDQeWEX811JwFO8/P+CKmVb2OD9wzhzSD71/whMHCTVsOinX1h+IGf4+kkIT1fAGHG3O819VupLfYWYpWE7OpICC4Gl9qSZj2vlfjrbhK+SzO91qFrSVsLTMj+TnGEBEcuoUooZtVG1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771412457; c=relaxed/simple;
-	bh=jut32K0qD5zIBVpRTNRvCDkT9o6H9Ok5g7HL5cpHO9Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EZUI3S1wQikIqTC6XjW6JKP6BIq/Y/mq2kCocEOqG5P/yMhsIl1HEPAKWU7ZouRGy+D/eK7sKl0AEY/loNRf+XXJ6SiQItjCL6rcXuNtc8m/Ooj4WO0VzuXG3PQEpn8vhH27JbOUWLPNHscK5EPCsNiCTCejRpnOrloxURAzOcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mFNdk2JA; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-436317c80f7so480031f8f.1
-        for <linux-hyperv@vger.kernel.org>; Wed, 18 Feb 2026 03:00:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771412454; x=1772017254; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qthjmaZatp2uaj2R40wSdI4uEfUCjCNWJ8jI4UcjTZM=;
-        b=mFNdk2JAUyWNjqFDJ04UbR48jtVHACrlNROeDzS8/XiyOSt6BwamqqlVno6JZ0Kq6c
-         RVn45/ZNlHwjYAso64XVwtjXpPTX8hqqUP4Pa13kl51TMc09gsAq9VEpYdp4WciOU7Zu
-         0sk0Q7ZuL/iERODCQ+s8y/oQluvIAzJGxS3D5EZr3f/OtdVZ9uNzdEE/zJizojhQ9U2V
-         LL3ke8CQxEKjDk54j/dp9GTHvbEKdRA4yFArXEVvHCmcfKTMl2FGy1WLtSXquuH31cMM
-         TBE4CfRBNu1oE8IvUAsZ7aAIIGjvgHQ2gfuzX6XdFDR88A8+s77Nj70TQzjGoIRBpePR
-         APNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771412454; x=1772017254;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=qthjmaZatp2uaj2R40wSdI4uEfUCjCNWJ8jI4UcjTZM=;
-        b=ncC/kPZzPMOBcGMbjtM0EM2E08v9B12sQy25/vPwlUDfqGYyeD+VZgX01RzkXGCCuL
-         9OoofkeYxlVR24HcSPM7hbUO/HdOMFivazcU9swaOd6/TK9nP4+THZW/t1DbdEmhrYTq
-         iH3P9sUSnTa0sD1l6NGnVoMKqKoENCi8jimWRrx9xCUMfoDkDuOmKebMJedvQXfnPTmj
-         PwLTnuldQy562+QZcmSwqGzPlbT4+rmzYgxxe5icTNKdM84DYSck7Glwp64R75HAb0Z7
-         eZGauX7LzyxffETJQ+J5c1PM3c4Z/f4/ju7YfFRyXtZRgbd6QatTNZisS5b9adyVX2o3
-         Wqdw==
-X-Gm-Message-State: AOJu0Yz+CbA862ICKiOp6+bU7/nl4jd4/6vFirnGnUmk9nKqrK35wiYX
-	oasUByNQpt4N1vs9ou84QHLDNVe7whKdnInMseJp1bzAX2UCiLmozMci33rDJjaD
-X-Gm-Gg: AZuq6aKv/VwvP/fLLw6dd4bwkmEfzr9yw+SDZM8ionchooQb7tXVDlKJrPQTk1QuSe2
-	3GB3ZObOQ78ek1UKREoItxPNBi1hlfZoauD3wayNbydVku3s5I7eaPM5DFizLI6RF0pjKhKdf3i
-	+smXdTOaZltku6qrpEzkiZNmGGyH6U9PQbFrxSvwrG8lLDgN7qEOU3zFzYWQoLh/IBWXRjSkltY
-	yoBMdyYqQf7w47ObsWMHrhTSPmfTFcmeE0dMhPwo4+FaAA5V9uD65ytDbJ5jNKdZEsd1/7NcOaZ
-	oVnYoxc41UzPBXPnluys1xjLIlneQvpfriF79MH2TNZKY0WJ5HkAKGSGovDAMx0FQUAXqnftfo9
-	T1I2LwdnVFC2Uiu4zeMq9dL7/CVwe98tLFrZF/FspUFiY9eZ5LbO3tsQxRlEIpqFl+X0WeMJ/OA
-	RbfuzZQVC4CRNBQ0QIUW0qoeAD44gFffQJmm5VcZAjXABhYsNKBiNf2lvCuBwD49lfMOjTYf/cK
-	8YHImYBDDQRAxRC3QRx5vLQHAJQkZMw/lhr31tiFr1o
-X-Received: by 2002:a05:600c:c1c8:20b0:47e:e0b3:2437 with SMTP id 5b1f17b1804b1-48398c667edmr17184675e9.5.1771412453875;
-        Wed, 18 Feb 2026 03:00:53 -0800 (PST)
-Received: from fedora ([193.77.86.199])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4839712580esm26652285e9.1.2026.02.18.03.00.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Feb 2026 03:00:53 -0800 (PST)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: linux-hyperv@vger.kernel.org,
+	s=arc-20240116; t=1771418157; c=relaxed/simple;
+	bh=o0SwT6PYBpYEzsFfqbHKWMYYtkEGcaEQ+KeM+TT+0OY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K8l4GWwGdy+Q8Ck/1OoOjRIJ5SIuppGTWG469Vxuv07tHzTu5QTvOSXKGOXoVqiqLTkOJP51y/0whgf/8pCEGHXjVov56uWfL2UhQDIGiftOXcCqrx4PChmB+Vd+mLafPjMjyBTZSfFCbOfv33XtOhIiNeJawrv7yMferi84SHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zk/deMNN; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771418155; x=1802954155;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=o0SwT6PYBpYEzsFfqbHKWMYYtkEGcaEQ+KeM+TT+0OY=;
+  b=Zk/deMNNjxfPrfhWoJfkO+q/qnd3ywWwb4bMZu7wQmOYYdRN348iDoVv
+   I4XbljsuSBQHCmJRggrMAcoQRgaM/8BJMoTNfj2ElDn54ItIEjityMUkQ
+   e6iHZcYyLuQFdVTdxThIJ0bYMDSH5kHZatHUJxazW05xJhobmhrj/eLbY
+   VTjdOFhDEOAX4Xgyapdgme0SY3iOvgvai2UXOWRU/BCc4wz/ml2JjMmfE
+   SdT8oxUMV1nAkGuITK1P3pAJGFDYJPWlTD4fL4EGpky+Xo9dFoltbEGl6
+   svmSO+aUZqe+e+xiLMoomJ9y1A/+VKWmcW6E3qXpc0x6IfHW0kHqEEjFf
+   w==;
+X-CSE-ConnectionGUID: aHhLjZ5lSsWDlC9vyzipdg==
+X-CSE-MsgGUID: MDRxuwcBTj2F81iSodk0KQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11704"; a="71512364"
+X-IronPort-AV: E=Sophos;i="6.21,298,1763452800"; 
+   d="scan'208";a="71512364"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2026 04:35:54 -0800
+X-CSE-ConnectionGUID: vmHA2hqBRh+qBrhoJ0n5Tg==
+X-CSE-MsgGUID: sUEnwvBkSaSlIaNd1mGyOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,298,1763452800"; 
+   d="scan'208";a="213424457"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 18 Feb 2026 04:35:51 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vsgmS-000000012L2-308U;
+	Wed, 18 Feb 2026 12:35:48 +0000
+Date: Wed, 18 Feb 2026 20:35:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mukesh R <mrathor@linux.microsoft.com>, linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>
-Subject: [PATCH RESEND] mshv: Use try_cmpxchg() instead of cmpxchg()
-Date: Wed, 18 Feb 2026 12:00:18 +0100
-Message-ID: <20260218110041.179949-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260218102604.178561-1-ubizjak@gmail.com>
-References: <20260218102604.178561-1-ubizjak@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	longli@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com
+Subject: Re: [PATCH v2] x86/hyperv: Reserve 3 interrupt vectors used
+ exclusively by mshv
+Message-ID: <202602182000.O5dSFVVd-lkp@intel.com>
+References: <20260217231158.1184736-1-mrathor@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260217231158.1184736-1-mrathor@linux.microsoft.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,microsoft.com,kernel.org];
-	TAGGED_FROM(0.00)[bounces-8891-lists,linux-hyperv=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RSPAMD_EMAILBL_FAIL(0.00)[ubizjak.gmail.com:query timed out,decui.microsoft.com:query timed out];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ubizjak@gmail.com,linux-hyperv@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-8892-lists,linux-hyperv=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 15515155BE4
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:mid,intel.com:dkim,intel.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,01.org:url]
+X-Rspamd-Queue-Id: B8C4D156604
 X-Rspamd-Action: no action
 
-Use !try_cmpxchg() instead of cmpxchg (*ptr, old, new) != old.
-x86 CMPXCHG instruction returns success in ZF flag, so this
-change saves a compare after CMPXCHG.
+Hi Mukesh,
 
-The generated assembly code improves from e.g.:
+kernel test robot noticed the following build warnings:
 
-     415:	48 8b 44 24 30       	mov    0x30(%rsp),%rax
-     41a:	48 8b 54 24 38       	mov    0x38(%rsp),%rdx
-     41f:	f0 49 0f b1 91 a8 02 	lock cmpxchg %rdx,0x2a8(%r9)
-     426:	00 00
-     428:	48 3b 44 24 30       	cmp    0x30(%rsp),%rax
-     42d:	0f 84 09 ff ff ff    	je     33c <...>
+[auto build test WARNING on tip/x86/core]
+[also build test WARNING on linus/master v6.19 next-20260217]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-to:
+url:    https://github.com/intel-lab-lkp/linux/commits/Mukesh-R/x86-hyperv-Reserve-3-interrupt-vectors-used-exclusively-by-mshv/20260218-071406
+base:   tip/x86/core
+patch link:    https://lore.kernel.org/r/20260217231158.1184736-1-mrathor%40linux.microsoft.com
+patch subject: [PATCH v2] x86/hyperv: Reserve 3 interrupt vectors used exclusively by mshv
+config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20260218/202602182000.O5dSFVVd-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260218/202602182000.O5dSFVVd-lkp@intel.com/reproduce)
 
-     415:	48 8b 44 24 30       	mov    0x30(%rsp),%rax
-     41a:	48 8b 54 24 38       	mov    0x38(%rsp),%rdx
-     41f:	f0 49 0f b1 91 a8 02 	lock cmpxchg %rdx,0x2a8(%r9)
-     426:	00 00
-     428:	0f 84 0e ff ff ff    	je     33c <...>
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202602182000.O5dSFVVd-lkp@intel.com/
 
-No functional change intended.
+All warnings (new ones prefixed by >>):
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Wei Liu <wei.liu@kernel.org>
-Cc: Dexuan Cui <decui@microsoft.com>
-Cc: Long Li <longli@microsoft.com>
----
- drivers/hv/hyperv_vmbus.h | 4 ++--
- drivers/hv/mshv_eventfd.c | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+>> arch/x86/kernel/cpu/mshyperv.c:485:13: warning: 'hv_reserve_irq_vectors' defined but not used [-Wunused-function]
+     485 | static void hv_reserve_irq_vectors(void)
+         |             ^~~~~~~~~~~~~~~~~~~~~~
 
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index cdbc5f5c3215..7bd8f8486e85 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -370,8 +370,8 @@ static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
- 	 * CHANNELMSG_UNLOAD_RESPONSE and we don't care about other messages
- 	 * on crash.
- 	 */
--	if (cmpxchg(&msg->header.message_type, old_msg_type,
--		    HVMSG_NONE) != old_msg_type)
-+	if (!try_cmpxchg(&msg->header.message_type,
-+			 &old_msg_type, HVMSG_NONE))
- 		return;
- 
- 	/*
-diff --git a/drivers/hv/mshv_eventfd.c b/drivers/hv/mshv_eventfd.c
-index 0b75ff1edb73..525e002758e4 100644
---- a/drivers/hv/mshv_eventfd.c
-+++ b/drivers/hv/mshv_eventfd.c
-@@ -128,8 +128,8 @@ static int mshv_vp_irq_try_set_vector(struct mshv_vp *vp, u32 vector)
- 
- 	new_iv.vector[new_iv.vector_count++] = vector;
- 
--	if (cmpxchg(&vp->vp_register_page->interrupt_vectors.as_uint64,
--		    iv.as_uint64, new_iv.as_uint64) != iv.as_uint64)
-+	if (!try_cmpxchg(&vp->vp_register_page->interrupt_vectors.as_uint64,
-+			 &iv.as_uint64, new_iv.as_uint64))
- 		return -EAGAIN;
- 
- 	return 0;
+
+vim +/hv_reserve_irq_vectors +485 arch/x86/kernel/cpu/mshyperv.c
+
+   480	
+   481	/*
+   482	 * Reserve vectors hard coded in the hypervisor. If used outside, the hypervisor
+   483	 * will either crash or hang or attempt to break into debugger.
+   484	 */
+ > 485	static void hv_reserve_irq_vectors(void)
+   486	{
+   487		#define HYPERV_DBG_FASTFAIL_VECTOR	0x29
+   488		#define HYPERV_DBG_ASSERT_VECTOR	0x2C
+   489		#define HYPERV_DBG_SERVICE_VECTOR	0x2D
+   490	
+   491		if (cpu_feature_enabled(X86_FEATURE_FRED))
+   492			return;
+   493	
+   494		if (test_and_set_bit(HYPERV_DBG_ASSERT_VECTOR, system_vectors) ||
+   495		    test_and_set_bit(HYPERV_DBG_SERVICE_VECTOR, system_vectors) ||
+   496		    test_and_set_bit(HYPERV_DBG_FASTFAIL_VECTOR, system_vectors))
+   497			BUG();
+   498	
+   499		pr_info("Hyper-V:reserve vectors: %d %d %d\n", HYPERV_DBG_ASSERT_VECTOR,
+   500			HYPERV_DBG_SERVICE_VECTOR, HYPERV_DBG_FASTFAIL_VECTOR);
+   501	}
+   502	
+
 -- 
-2.53.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
