@@ -1,214 +1,264 @@
-Return-Path: <linux-hyperv+bounces-8887-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8888-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aPk9EBF1lWnDRgIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8887-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 09:15:13 +0100
+	id blf2JZh2lWlwRwIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8888-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 09:21:44 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D042153EC1
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 09:15:12 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CD59153F3D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 09:21:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1E8EC3018BE2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 08:14:36 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C4217301E7C1
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 08:21:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8D5126B777;
-	Wed, 18 Feb 2026 08:14:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 954FA318B94;
+	Wed, 18 Feb 2026 08:21:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xs1jYMqH"
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="mumQ2dSr";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="mumQ2dSr"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D1F487BE;
-	Wed, 18 Feb 2026 08:14:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE6830F94E
+	for <linux-hyperv@vger.kernel.org>; Wed, 18 Feb 2026 08:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771402474; cv=none; b=tUv2E5t4UAx01aQK37+GT7QnHv6YXlHpklE6ESgAWhWhLjBRn35MDL7r+dFSisw4ig3kG7DGkJNRTz0OgpSsmRNsuYqocS8d3KkZcC+gBIxeQwnD/0MvVrMUZiq4BrEFEddlO/ADRhWzF01dHrhXH5CWI3BpbfBWx8j4A2OWMhs=
+	t=1771402899; cv=none; b=G6gajfRUCZRtrZCYaaNknbKUpy8/fjCEAJ4vfFfwRfliBsJ0Hg/F3iKnlA4abzEx2zB/7SkQlYqB8KCj2S3Qqf41+js9Vpz3dJSBglshNssTknjU+OlRO+ESjDtxgrLrV7zuBrvxH4brtqgElPV85ftSdhUdEi9CfwpCVC8rRyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771402474; c=relaxed/simple;
-	bh=4jbu7KDwDe1/tD6r+TDAO9K/lxjskYIk/blBqfSgAWI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CHluGqcLQvSY8wOg3w9+L4PELnRLgCbmTqAWolJpu6DhTh1gxBy9ReYE+5Hzg+m+6EgBVDhYY1ISNY47gQ7oVjYYVeOpHw63n8lc/w5VAGmjzF48GSik2LNEdC1qw7aj8krjqV917nJDr/afwIf46/10KJk5lMLBtPZoBRmURSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xs1jYMqH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10272C19421;
-	Wed, 18 Feb 2026 08:14:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771402474;
-	bh=4jbu7KDwDe1/tD6r+TDAO9K/lxjskYIk/blBqfSgAWI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xs1jYMqHrefB3a2AVvqZiA5aiU5Zst0Hre4yCPcMG4XhcB4zCC9+fZNwv4AkwAEXQ
-	 aqIIFd6RK2YyViWjbM56BdTIghQ/MxTe1ccKmfnMWaeXWZkDCzQmwd69MPjuWOODzv
-	 Ml+mDEUnPRjdI9mOMhmpltee8dZgwwAYb3hqYZgZ1+o3GCL6pBOJqNtOBKjcxsfN7v
-	 Ggqwc/C3wj/fsDHkmcuZAH4pI443+nkVcPy5ok/+QRAzCriIOL2S8IRnPE24vAkqn6
-	 rzMgdgkjXs9XZ8MNq+lOZdb9XmHGDkR8y5YgkaVoTA26ND+CrhWR3Y68fmCKfo5ETM
-	 xiq1alRc4b46g==
-Date: Wed, 18 Feb 2026 08:14:32 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Mukesh R <mrathor@linux.microsoft.com>
-Cc: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	rppt@kernel.org, akpm@linux-foundation.org, bhe@redhat.com,
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com,
-	kexec@lists.infradead.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] mshv: Add kexec blocking support
-Message-ID: <20260218081432.GI2236050@liuwe-devbox-debian-v2.local>
-References: <176962149772.85424.9395505307198316093.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <176962212724.85424.5690118672585914211.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <32c4bc2a-5dd1-c54d-a089-45bfad6eec94@linux.microsoft.com>
+	s=arc-20240116; t=1771402899; c=relaxed/simple;
+	bh=7UHy5f1T56MQ+JimHqC6iTJ7VajkraClBQb0A4F7qpk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jNi9xYqXBZ1RGwmpBLEyJ73V6vdTKVg/KqMNPAvGlCLMYpTse++V7ecf1jyjXXMXKlXkw0ZsCJLGmEXRxYGpFfzOXZet//ogyWbPmQtty6pubWSkmyYd4k5fP/Xv9t0JAxhHzeSWs+Fven2eg9X5j2F7jqTeab/b5Iyk3WMiLfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=mumQ2dSr; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=mumQ2dSr; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 5925B3E6D0;
+	Wed, 18 Feb 2026 08:21:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1771402896; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=OYoDmUH9lbkTBURMFRYZYYI6iouhuBtpfCapQgEqDZ8=;
+	b=mumQ2dSroxqx6zt+Ap8HTM0DwIHDjYg5G2rkTfGqr0XF50J9oS7P1iax3mkDWYDGIX05mq
+	VX/pMUcA0pFYr7ZTj5XfgBOOOEBabHE1Wg4S0+rOQYd/osFxFh8Tnl1dVhywbfaL5k3mSq
+	YTambJKAYcAGVGpkGonRfwPP/SogtlM=
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1771402896; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=OYoDmUH9lbkTBURMFRYZYYI6iouhuBtpfCapQgEqDZ8=;
+	b=mumQ2dSroxqx6zt+Ap8HTM0DwIHDjYg5G2rkTfGqr0XF50J9oS7P1iax3mkDWYDGIX05mq
+	VX/pMUcA0pFYr7ZTj5XfgBOOOEBabHE1Wg4S0+rOQYd/osFxFh8Tnl1dVhywbfaL5k3mSq
+	YTambJKAYcAGVGpkGonRfwPP/SogtlM=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 893403EA65;
+	Wed, 18 Feb 2026 08:21:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id HcFZII92lWkvHQAAD6G6ig
+	(envelope-from <jgross@suse.com>); Wed, 18 Feb 2026 08:21:35 +0000
+From: Juergen Gross <jgross@suse.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	linux-coco@lists.linux.dev,
+	kvm@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	llvm@lists.linux.dev
+Cc: Juergen Gross <jgross@suse.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Kiryl Shutsemau <kas@kernel.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	xen-devel@lists.xenproject.org,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Xin Li <xin@zytor.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>
+Subject: [PATCH v3 00/16] x86/msr: Inline rdmsr/wrmsr instructions
+Date: Wed, 18 Feb 2026 09:21:17 +0100
+Message-ID: <20260218082133.400602-1-jgross@suse.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <32c4bc2a-5dd1-c54d-a089-45bfad6eec94@linux.microsoft.com>
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -1.30
+X-Spam-Level: 
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wei.liu@kernel.org,linux-hyperv@vger.kernel.org];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[suse.com,kernel.org,redhat.com,alien8.de,linux.intel.com,zytor.com,intel.com,google.com,microsoft.com,oracle.com,lists.xenproject.org,broadcom.com,infradead.org,gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8887-lists,linux-hyperv=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[kernel.org:+]
-X-Rspamd-Queue-Id: 9D042153EC1
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[36];
+	TAGGED_FROM(0.00)[bounces-8888-lists,linux-hyperv=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jgross@suse.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[suse.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv,lkml];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: 1CD59153F3D
 X-Rspamd-Action: no action
 
-On Thu, Feb 12, 2026 at 02:11:13PM -0800, Mukesh R wrote:
-> On 1/28/26 09:42, Stanislav Kinsburskii wrote:
-> > Add kexec notifier to prevent kexec when VMs are active or memory
-> > is deposited. The notifier blocks kexec operations if:
-> > - Active VMs exist in the partition table
-> > - Pages are still deposited to the hypervisor
-> > 
-> > The kernel cannot access hypervisor deposited pages: any access
-> > triggers a GPF. Until the deposited page state can be handed over
-> > to the next kernel, kexec must be blocked if there is any shared
-> > state between kernel and hypervisor.
-> > 
-> > For L1 host virtualization, attempt to withdraw all deposited memory before
-> > allowing kexec to proceed. If withdrawal fails or pages remain deposited
-> > block the kexec operation.
-> > 
-> > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> > ---
-> >   drivers/hv/Makefile            |    1 +
-> >   drivers/hv/hv_proc.c           |    4 ++
-> >   drivers/hv/mshv_kexec.c        |   66 ++++++++++++++++++++++++++++++++++++++++
-> >   drivers/hv/mshv_root.h         |   14 ++++++++
-> >   drivers/hv/mshv_root_hv_call.c |    2 +
-> >   drivers/hv/mshv_root_main.c    |    7 ++++
-> >   6 files changed, 94 insertions(+)
-> >   create mode 100644 drivers/hv/mshv_kexec.c
-> > 
-> > diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
-> > index a49f93c2d245..bb72be5cc525 100644
-> > --- a/drivers/hv/Makefile
-> > +++ b/drivers/hv/Makefile
-> > @@ -15,6 +15,7 @@ hv_vmbus-$(CONFIG_HYPERV_TESTING)	+= hv_debugfs.o
-> >   hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_utils_transport.o
-> >   mshv_root-y := mshv_root_main.o mshv_synic.o mshv_eventfd.o mshv_irq.o \
-> >   	       mshv_root_hv_call.o mshv_portid_table.o mshv_regions.o
-> > +mshv_root-$(CONFIG_KEXEC) += mshv_kexec.o
-> >   mshv_vtl-y := mshv_vtl_main.o
-> >   # Code that must be built-in
-> > diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
-> > index 89870c1b0087..39bbbedb0340 100644
-> > --- a/drivers/hv/hv_proc.c
-> > +++ b/drivers/hv/hv_proc.c
-> > @@ -15,6 +15,8 @@
-> >    */
-> >   #define HV_DEPOSIT_MAX (HV_HYP_PAGE_SIZE / sizeof(u64) - 1)
-> > +atomic_t hv_pages_deposited;
-> > +
-> >   /* Deposits exact number of pages. Must be called with interrupts enabled.  */
-> >   int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
-> >   {
-> > @@ -93,6 +95,8 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
-> >   		goto err_free_allocations;
-> >   	}
-> > +	atomic_add(page_count, &hv_pages_deposited);
-> > +
-> >   	ret = 0;
-> >   	goto free_buf;
-> > diff --git a/drivers/hv/mshv_kexec.c b/drivers/hv/mshv_kexec.c
-> > new file mode 100644
-> > index 000000000000..5222b2e4ff97
-> > --- /dev/null
-> > +++ b/drivers/hv/mshv_kexec.c
-> > @@ -0,0 +1,66 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright (c) 2026, Microsoft Corporation.
-> > + *
-> > + * Live update orchestration management for mshv_root module.
-> > + *
-> > + * Author: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> > + */
-> > +
-> > +#include <linux/kexec.h>
-> > +#include <linux/notifier.h>
-> > +#include <asm/mshyperv.h>
-> > +#include "mshv_root.h"
-> > +
-> > +static BLOCKING_NOTIFIER_HEAD(overlay_notify_chain);
-> > +
-> > +static int mshv_block_kexec_notify(struct notifier_block *nb,
-> > +				   unsigned long action, void *arg)
-> > +{
-> > +	if (!hash_empty(mshv_root.pt_htable)) {
-> > +		pr_warn("mshv: Cannot perform kexec while VMs are active\n");
-> > +		return -EBUSY;
-> > +	}
-> > +
-> > +	if (hv_l1vh_partition()) {
-> > +		int err;
-> > +
-> > +		/* Attempt to withdraw all the deposited pages */
-> > +		err = hv_call_withdraw_memory(U64_MAX, NUMA_NO_NODE,
-> > +					      hv_current_partition_id);
-> > +		if (err) {
-> > +			pr_err("mshv: Failed to withdraw memory from L1 virtualization: %d\n",
-> > +			       err);
-> > +			return err;
-> > +		}
-> > +	}
-> > +
-> > +	if (atomic_read(&hv_pages_deposited)) {
-> > +		pr_warn("mshv: Cannot perform kexec while pages are deposited\n");
-> > +		return -EBUSY;
-> > +	}
-> > +	return 0;
-> > +}
-> > +
-> 
-> What guarantees another deposit won't happen after this. Are all cpus
-> "locked" in kexec path and not doing anything at this point?
-> 
+When building a kernel with CONFIG_PARAVIRT_XXL the paravirt
+infrastructure will always use functions for reading or writing MSRs,
+even when running on bare metal.
 
-An alternative is to block kexec if any pages have ever been deposited.
-This is a very heavy-handed approach.
+Switch to inline RDMSR/WRMSR instructions in this case, reducing the
+paravirt overhead.
 
-Wei
+The first patch is a prerequisite fix for alternative patching. Its
+is needed due to the initial indirect call needs to be padded with
+NOPs in some cases with the following patches.
+
+In order to make this less intrusive, some further reorganization of
+the MSR access helpers is done in the patches 1-6.
+
+The next 4 patches are converting the non-paravirt case to use direct
+inlining of the MSR access instructions, including the WRMSRNS
+instruction and the immediate variants of RDMSR and WRMSR if possible.
+
+Patches 11-13 are some further preparations for making the real switch
+to directly patch in the native MSR instructions easier.
+
+Patch 14 is switching the paravirt MSR function interface from normal
+call ABI to one more similar to the native MSR instructions.
+
+Patch 15 is a little cleanup patch.
+
+Patch 16 is the final step for patching in the native MSR instructions
+when not running as a Xen PV guest.
+
+This series has been tested to work with Xen PV and on bare metal.
+
+Note that there is more room for improvement. This series is sent out
+to get a first impression how the code will basically look like.
+
+Right now the same problem is solved differently for the paravirt and
+the non-paravirt cases. In case this is not desired, there are two
+possibilities to merge the two implementations. Both solutions have
+the common idea to have rather similar code for paravirt and
+non-paravirt variants, but just use a different main macro for
+generating the respective code. For making the code of both possible
+scenarios more similar, the following variants are possible:
+
+1. Remove the micro-optimizations of the non-paravirt case, making
+   it similar to the paravirt code in my series. This has the
+   advantage of being more simple, but might have a very small
+   negative performance impact (probably not really detectable).
+
+2. Add the same micro-optimizations to the paravirt case, requiring
+   to enhance paravirt patching to support a to be patched indirect
+   call in the middle of the initial code snipplet.
+
+In both cases the native MSR function variants would no longer be
+usable in the paravirt case, but this would mostly affect Xen, as it
+would need to open code the WRMSR/RDMSR instructions to be used
+instead the native_*msr*() functions.
+
+Changes since V2:
+- switch back to the paravirt approach
+
+Changes since V1:
+- Use Xin Li's approach for inlining
+- Several new patches
+
+Juergen Gross (16):
+  x86/alternative: Support alt_replace_call() with instructions after
+    call
+  coco/tdx: Rename MSR access helpers
+  x86/sev: Replace call of native_wrmsr() with native_wrmsrq()
+  KVM: x86: Remove the KVM private read_msr() function
+  x86/msr: Minimize usage of native_*() msr access functions
+  x86/msr: Move MSR trace calls one function level up
+  x86/opcode: Add immediate form MSR instructions
+  x86/extable: Add support for immediate form MSR instructions
+  x86/msr: Use the alternatives mechanism for WRMSR
+  x86/msr: Use the alternatives mechanism for RDMSR
+  x86/alternatives: Add ALTERNATIVE_4()
+  x86/paravirt: Split off MSR related hooks into new header
+  x86/paravirt: Prepare support of MSR instruction interfaces
+  x86/paravirt: Switch MSR access pv_ops functions to instruction
+    interfaces
+  x86/msr: Reduce number of low level MSR access helpers
+  x86/paravirt: Use alternatives for MSR access with paravirt
+
+ arch/x86/coco/sev/internal.h              |   7 +-
+ arch/x86/coco/tdx/tdx.c                   |   8 +-
+ arch/x86/hyperv/ivm.c                     |   2 +-
+ arch/x86/include/asm/alternative.h        |   6 +
+ arch/x86/include/asm/fred.h               |   2 +-
+ arch/x86/include/asm/kvm_host.h           |  10 -
+ arch/x86/include/asm/msr.h                | 345 ++++++++++++++++------
+ arch/x86/include/asm/paravirt-msr.h       | 148 ++++++++++
+ arch/x86/include/asm/paravirt.h           |  67 -----
+ arch/x86/include/asm/paravirt_types.h     |  57 ++--
+ arch/x86/include/asm/qspinlock_paravirt.h |   4 +-
+ arch/x86/kernel/alternative.c             |   5 +-
+ arch/x86/kernel/cpu/mshyperv.c            |   7 +-
+ arch/x86/kernel/kvmclock.c                |   2 +-
+ arch/x86/kernel/paravirt.c                |  42 ++-
+ arch/x86/kvm/svm/svm.c                    |  16 +-
+ arch/x86/kvm/vmx/tdx.c                    |   2 +-
+ arch/x86/kvm/vmx/vmx.c                    |   8 +-
+ arch/x86/lib/x86-opcode-map.txt           |   5 +-
+ arch/x86/mm/extable.c                     |  35 ++-
+ arch/x86/xen/enlighten_pv.c               |  52 +++-
+ arch/x86/xen/pmu.c                        |   4 +-
+ tools/arch/x86/lib/x86-opcode-map.txt     |   5 +-
+ tools/objtool/check.c                     |   1 +
+ 24 files changed, 576 insertions(+), 264 deletions(-)
+ create mode 100644 arch/x86/include/asm/paravirt-msr.h
+
+-- 
+2.53.0
+
 
