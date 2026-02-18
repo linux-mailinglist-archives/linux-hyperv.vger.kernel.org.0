@@ -1,103 +1,92 @@
-Return-Path: <linux-hyperv+bounces-8889-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8890-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QFdVE/Z2lWlwRwIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8889-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 09:23:18 +0100
+	id 6OMoAe2TlWk1SgIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8890-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 11:26:53 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01C1B153FBF
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 09:23:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7652F15567A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 11:26:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 16AD03070FEC
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 08:22:16 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id AB752302DE2E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Feb 2026 10:26:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78F8A318EEA;
-	Wed, 18 Feb 2026 08:22:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 535EA2D949F;
+	Wed, 18 Feb 2026 10:26:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="gPtQAbrJ";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="gPtQAbrJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HiZmceBv"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF018318EC4
-	for <linux-hyperv@vger.kernel.org>; Wed, 18 Feb 2026 08:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4C3266581
+	for <linux-hyperv@vger.kernel.org>; Wed, 18 Feb 2026 10:26:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771402927; cv=none; b=JsWFh36NKkXY5DQpXO8LBl21kSZy58xZDhdQs8Lr+wnCKMdRIhYM7NPymwuheZw5emMQIRaR/ADf1QEIcdoYSehC/hUM1o+WpYcL/UtekSNWPvdetHbbC9PYzgONtwaXC96d19KpJZRSqZ0Lry4st7/wuwFKZjfkFoaBO7zXh+8=
+	t=1771410391; cv=none; b=XohjkfT8yWmid3lp7mIDlSZwhyPnSOnbwMtuAAggkwsMNqBTS88uVaOfeFqPihY8QvQcolQY6lYkm4ugihIepzOwzgbG1JJilYSUNlISqKECC3iWNrz7X2dtJlBgXymPZN0zRHlv3f5JHRfZAv1pwMJfG0qdyyuhXSz1vu27kXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771402927; c=relaxed/simple;
-	bh=zMut8iBVnBcAiKUC2vBczATXxO8eAy7i5IbQo0E3fwQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ut0i6yCLLplD6sSI/6RjNyVovG3ukuEarBaTaQZa2neeVWqMfzhtlvZM7vxUSbSIkM7lCpf6juVUe0pV2oDPUor5Azhq511StjCpXUSrTSmIajyhsxg5kE0EvhYamLEC8xNHuKRf+3plSkjE9dq/LoOx5+d3z7A0ZMXd566sgDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=gPtQAbrJ; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=gPtQAbrJ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 591283E6F6;
-	Wed, 18 Feb 2026 08:22:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1771402924; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nmkFHBBGmW1gFmVNGJrsFCQB+9CCXKUbJdAXWGghiNM=;
-	b=gPtQAbrJ0W7jHHybeb0/Ufmin0ifKbAt6AzDrXFVFWbzpGlMPQ513v+jLWpWyygbuuKCBW
-	zvWvrj/Au4wcSx6zt5y3JgpiB1DHq5jfCdDlc598xegpKWZY05VaShPPyaNUEujUBe8Aoi
-	gqO7WjvpxpLP4DNzZVL0nxAEg1zRuAM=
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1771402924; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nmkFHBBGmW1gFmVNGJrsFCQB+9CCXKUbJdAXWGghiNM=;
-	b=gPtQAbrJ0W7jHHybeb0/Ufmin0ifKbAt6AzDrXFVFWbzpGlMPQ513v+jLWpWyygbuuKCBW
-	zvWvrj/Au4wcSx6zt5y3JgpiB1DHq5jfCdDlc598xegpKWZY05VaShPPyaNUEujUBe8Aoi
-	gqO7WjvpxpLP4DNzZVL0nxAEg1zRuAM=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D6A893EA65;
-	Wed, 18 Feb 2026 08:22:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id nCpFM6t2lWllHgAAD6G6ig
-	(envelope-from <jgross@suse.com>); Wed, 18 Feb 2026 08:22:03 +0000
-From: Juergen Gross <jgross@suse.com>
-To: linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	linux-hyperv@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: Juergen Gross <jgross@suse.com>,
+	s=arc-20240116; t=1771410391; c=relaxed/simple;
+	bh=5JcgXZrgOrM6do+BK1JI3r1U2blIESuaxyCRVIaOUh0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XkzV4vz0DYZS8CbDtrFjYmRZjHMQkI/j3mA3Y45CvvON1/0v7CEt8eT6gHxhiw9CYb6usmcTLqXp8mqpVkZYzra6g50ZywQp+DY3Fxs1bP96ZLO6809WodzBMlTs9NtqM3Qt+gkLSDwSaCPt9/sY8dV+9YYH8JeaiH8ICHrSLFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HiZmceBv; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4836d4c26d3so36991185e9.2
+        for <linux-hyperv@vger.kernel.org>; Wed, 18 Feb 2026 02:26:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771410388; x=1772015188; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7gvcifprQLUEgZOpsRUHwX7m6i+hMM96dVdgLDV6HiQ=;
+        b=HiZmceBvW8yrDll2ym7cY8EwgbRoaAWSCCFa90mU+iM/HU1tircVIjELDY0QovKNQr
+         YFlF9NN29PqwbuL5X+spNoFujDWqAL5ikAF6i5PKqEEuv54wmptAUGsFMOB0wKj+EeB+
+         8YHx/RBCnaRplDAg25UjsjOfKOtuuWZ0Z/kab9dA2XYAdzQ+3mPlczl1/cxdBpL9z5aS
+         o+32DgkVB3vhEupwZ0ogvC8Zo9ILBpwZQ+DaSbbuVl8xVRoifsv8Zs7qfsFXkO9H2Ft3
+         Dvi7/D9xjdYJ98fpxLXn0vjKyQKGdWMW4YAR5cQ6szNlgLUZoJzvKUYqTNSsBsm3oZjb
+         pSrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771410388; x=1772015188;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7gvcifprQLUEgZOpsRUHwX7m6i+hMM96dVdgLDV6HiQ=;
+        b=wF10DROA39dk+y9AWG8Db3GeJasdYDGjTwNq4mu2GeHyy9acDzp+o6t/czNxv3Ys54
+         qgeRINs7R94K05RsitU7pEPk6Et5VUnClCaWn8l+N3Vch2yaKLyTSHYet2bReKqF5hy/
+         2VvsLd2098CqBviOfsYhvDg5ZKzCVKqU9XoEkBtLfW4jWgs1GPGHrZMVrK+15tx5nBF+
+         0VDXm+V+ZJFsIXspgaOebUKonXO0FCpVZou+v+Q+g/PdhCzaPzWE4khMyILyOR/fXBjJ
+         KbeAdO8Iku8TWx9tFKGA7xkhip+8W3XUmqcEpAfpen6bz/vB10FLkVsgH/SF0oUnrECF
+         N+wQ==
+X-Gm-Message-State: AOJu0YzCc5zPjd6XsVTfWpvy4EoUYCPZJriKXuZ1VIhNrm3m8nnmqjw3
+	uroWjAIlmADIyekGKLYmz3zX2D7ihwV5dgxslV88lShaZpFgDDufh6IJYoacIWCF
+X-Gm-Gg: AZuq6aL5QZI9B6woqc8/g3B84EJ2pZjlzO989snEd/HfWPM4gr61AzqgFquAMA0csZL
+	COyUt90StZ4njGWpO5NODbIw/GSvbNyLgi8i4oZrigorbDAZiaHF257Itogelqk4YgMHLnJ7jmf
+	I9/8n6eMWPJqS/+9ng58qxsiaId5tkDSEHsPtnUrU1s3gSpMFtN/UpeW38gCgX/TP2bVCZYG4rk
+	GNrh5v1uG5X63+bfKiyWdKrfuUTb75ibqRCea7oyJ11VQd/UCuHed6CJq0KSBY1gdAuzAvvepJJ
+	SDKEZGCluyVkcjrBimGYYNAsXWyb32ox4kXIYu5v6LyVZieVC7zdTuKQe5LwRFuEpZQCwHGMOB1
+	0fbPaA3QSLO/JkvSn+NJHl2ijTYy+u7QNYEuAFT8kan7qnIcUS2yRnoZQg3mq3MBXJTXIPdMv+K
+	yXK6EX24COoh+ziIpHKOEkgDVdSN/1KrY3TvYwFQYFkSR9HFMZR+4YMOJnjrd8aApUUsNGTDuwa
+	pRiCiENIhbe9xx3Fb5MGkOTLI3GLSPE/+Mr+oOSL6Y23NHLpkl14aQ=
+X-Received: by 2002:a05:600c:c04b:10b0:483:7eea:b172 with SMTP id 5b1f17b1804b1-4837eeab900mr168690775e9.23.1771410387217;
+        Wed, 18 Feb 2026 02:26:27 -0800 (PST)
+Received: from fedora ([193.77.86.199])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4835d994670sm463007875e9.4.2026.02.18.02.26.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Feb 2026 02:26:26 -0800 (PST)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
 	"K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
 	Wei Liu <wei.liu@kernel.org>,
 	Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	xen-devel@lists.xenproject.org
-Subject: [PATCH v3 05/16] x86/msr: Minimize usage of native_*() msr access functions
-Date: Wed, 18 Feb 2026 09:21:22 +0100
-Message-ID: <20260218082133.400602-6-jgross@suse.com>
+	Long Li <longli@microsoft.com>
+Subject: [PATCH] mshv: Use try_cmpxchg() instead of cmpxchg()
+Date: Wed, 18 Feb 2026 11:25:37 +0100
+Message-ID: <20260218102604.178561-1-ubizjak@gmail.com>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260218082133.400602-1-jgross@suse.com>
-References: <20260218082133.400602-1-jgross@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -105,197 +94,102 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -6.80
-X-Spam-Level: 
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8889-lists,linux-hyperv=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jgross@suse.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[suse.com:+];
-	RCVD_COUNT_FIVE(0.00)[6];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
 	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 01C1B153FBF
+	FREEMAIL_CC(0.00)[gmail.com,microsoft.com,kernel.org];
+	TAGGED_FROM(0.00)[bounces-8890-lists,linux-hyperv=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ubizjak@gmail.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 7652F15567A
 X-Rspamd-Action: no action
 
-In order to prepare for some MSR access function reorg work, switch
-most users of native_{read|write}_msr[_safe]() to the more generic
-rdmsr*()/wrmsr*() variants.
+Use !try_cmpxchg() instead of cmpxchg (*ptr, old, new) != old.
+x86 CMPXCHG instruction returns success in ZF flag, so this
+change saves a compare after cmpxchg().
 
-For now this will have some intermediate performance impact with
-paravirtualization configured when running on bare metal, but this
-is a prereq change for the planned direct inlining of the rdmsr/wrmsr
-instructions with this configuration.
+The generated assembly code improves from e.g.:
 
-The main reason for this switch is the planned move of the MSR trace
-function invocation from the native_*() functions to the generic
-rdmsr*()/wrmsr*() variants. Without this switch the users of the
-native_*() functions would lose the related tracing entries.
+     415:	48 8b 44 24 30       	mov    0x30(%rsp),%rax
+     41a:	48 8b 54 24 38       	mov    0x38(%rsp),%rdx
+     41f:	f0 49 0f b1 91 a8 02 	lock cmpxchg %rdx,0x2a8(%r9)
+     426:	00 00
+     428:	48 3b 44 24 30       	cmp    0x30(%rsp),%rax
+     42d:	0f 84 09 ff ff ff    	je     33c <...>
 
-Note that the Xen related MSR access functions will not be switched,
-as these will be handled after the move of the trace hooks.
+to:
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Acked-by: Sean Christopherson <seanjc@google.com>
-Acked-by: Wei Liu <wei.liu@kernel.org>
-Reviewed-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+     415:	48 8b 44 24 30       	mov    0x30(%rsp),%rax
+     41a:	48 8b 54 24 38       	mov    0x38(%rsp),%rdx
+     41f:	f0 49 0f b1 91 a8 02 	lock cmpxchg %rdx,0x2a8(%r9)
+     426:	00 00
+     428:	0f 84 0e ff ff ff    	je     33c <...>
+
+No functional change intended.
+
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Dexuan Cui <decui@microsoft.com>
+Cc: Long Li <longli@microsoft.com>
 ---
- arch/x86/hyperv/ivm.c          |  2 +-
- arch/x86/kernel/cpu/mshyperv.c |  7 +++++--
- arch/x86/kernel/kvmclock.c     |  2 +-
- arch/x86/kvm/svm/svm.c         | 16 ++++++++--------
- arch/x86/xen/pmu.c             |  4 ++--
- 5 files changed, 17 insertions(+), 14 deletions(-)
+ drivers/hv/hyperv_vmbus.h | 4 ++--
+ drivers/hv/mshv_eventfd.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-index 651771534cae..1b2222036a0b 100644
---- a/arch/x86/hyperv/ivm.c
-+++ b/arch/x86/hyperv/ivm.c
-@@ -327,7 +327,7 @@ int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip, unsigned int cpu)
- 	asm volatile("movl %%ds, %%eax;" : "=a" (vmsa->ds.selector));
- 	hv_populate_vmcb_seg(vmsa->ds, vmsa->gdtr.base);
- 
--	vmsa->efer = native_read_msr(MSR_EFER);
-+	rdmsrq(MSR_EFER, vmsa->efer);
- 
- 	vmsa->cr4 = native_read_cr4();
- 	vmsa->cr3 = __native_read_cr3();
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 579fb2c64cfd..9bebb1a1ebee 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -111,9 +111,12 @@ void hv_para_set_sint_proxy(bool enable)
-  */
- u64 hv_para_get_synic_register(unsigned int reg)
- {
-+	u64 val;
-+
- 	if (WARN_ON(!ms_hyperv.paravisor_present || !hv_is_synic_msr(reg)))
- 		return ~0ULL;
--	return native_read_msr(reg);
-+	rdmsrq(reg, val);
-+	return val;
- }
- 
- /*
-@@ -123,7 +126,7 @@ void hv_para_set_synic_register(unsigned int reg, u64 val)
- {
- 	if (WARN_ON(!ms_hyperv.paravisor_present || !hv_is_synic_msr(reg)))
- 		return;
--	native_write_msr(reg, val);
-+	wrmsrq(reg, val);
- }
- 
- u64 hv_get_msr(unsigned int reg)
-diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
-index b5991d53fc0e..1002bdd45c0f 100644
---- a/arch/x86/kernel/kvmclock.c
-+++ b/arch/x86/kernel/kvmclock.c
-@@ -197,7 +197,7 @@ static void kvm_setup_secondary_clock(void)
- void kvmclock_disable(void)
- {
- 	if (msr_kvm_system_time)
--		native_write_msr(msr_kvm_system_time, 0);
-+		wrmsrq(msr_kvm_system_time, 0);
- }
- 
- static void __init kvmclock_init_mem(void)
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 8f8bc863e214..1c0e7cae9e49 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -389,12 +389,12 @@ static void svm_init_erratum_383(void)
+diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+index cdbc5f5c3215..7bd8f8486e85 100644
+--- a/drivers/hv/hyperv_vmbus.h
++++ b/drivers/hv/hyperv_vmbus.h
+@@ -370,8 +370,8 @@ static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
+ 	 * CHANNELMSG_UNLOAD_RESPONSE and we don't care about other messages
+ 	 * on crash.
+ 	 */
+-	if (cmpxchg(&msg->header.message_type, old_msg_type,
+-		    HVMSG_NONE) != old_msg_type)
++	if (!try_cmpxchg(&msg->header.message_type,
++			 &old_msg_type, HVMSG_NONE))
  		return;
  
- 	/* Use _safe variants to not break nested virtualization */
--	if (native_read_msr_safe(MSR_AMD64_DC_CFG, &val))
-+	if (rdmsrq_safe(MSR_AMD64_DC_CFG, &val))
- 		return;
+ 	/*
+diff --git a/drivers/hv/mshv_eventfd.c b/drivers/hv/mshv_eventfd.c
+index 0b75ff1edb73..525e002758e4 100644
+--- a/drivers/hv/mshv_eventfd.c
++++ b/drivers/hv/mshv_eventfd.c
+@@ -128,8 +128,8 @@ static int mshv_vp_irq_try_set_vector(struct mshv_vp *vp, u32 vector)
  
- 	val |= (1ULL << 47);
+ 	new_iv.vector[new_iv.vector_count++] = vector;
  
--	native_write_msr_safe(MSR_AMD64_DC_CFG, val);
-+	wrmsrq_safe(MSR_AMD64_DC_CFG, val);
+-	if (cmpxchg(&vp->vp_register_page->interrupt_vectors.as_uint64,
+-		    iv.as_uint64, new_iv.as_uint64) != iv.as_uint64)
++	if (!try_cmpxchg(&vp->vp_register_page->interrupt_vectors.as_uint64,
++			 &iv.as_uint64, new_iv.as_uint64))
+ 		return -EAGAIN;
  
- 	erratum_383_found = true;
- }
-@@ -554,9 +554,9 @@ static int svm_enable_virtualization_cpu(void)
- 		u64 len, status = 0;
- 		int err;
- 
--		err = native_read_msr_safe(MSR_AMD64_OSVW_ID_LENGTH, &len);
-+		err = rdmsrq_safe(MSR_AMD64_OSVW_ID_LENGTH, &len);
- 		if (!err)
--			err = native_read_msr_safe(MSR_AMD64_OSVW_STATUS, &status);
-+			err = rdmsrq_safe(MSR_AMD64_OSVW_STATUS, &status);
- 
- 		if (err)
- 			osvw_status = osvw_len = 0;
-@@ -2029,7 +2029,7 @@ static bool is_erratum_383(void)
- 	if (!erratum_383_found)
- 		return false;
- 
--	if (native_read_msr_safe(MSR_IA32_MC0_STATUS, &value))
-+	if (rdmsrq_safe(MSR_IA32_MC0_STATUS, &value))
- 		return false;
- 
- 	/* Bit 62 may or may not be set for this mce */
-@@ -2040,11 +2040,11 @@ static bool is_erratum_383(void)
- 
- 	/* Clear MCi_STATUS registers */
- 	for (i = 0; i < 6; ++i)
--		native_write_msr_safe(MSR_IA32_MCx_STATUS(i), 0);
-+		wrmsrq_safe(MSR_IA32_MCx_STATUS(i), 0);
- 
--	if (!native_read_msr_safe(MSR_IA32_MCG_STATUS, &value)) {
-+	if (!rdmsrq_safe(MSR_IA32_MCG_STATUS, &value)) {
- 		value &= ~(1ULL << 2);
--		native_write_msr_safe(MSR_IA32_MCG_STATUS, value);
-+		wrmsrq_safe(MSR_IA32_MCG_STATUS, value);
- 	}
- 
- 	/* Flush tlb to evict multi-match entries */
-diff --git a/arch/x86/xen/pmu.c b/arch/x86/xen/pmu.c
-index 8f89ce0b67e3..d49a3bdc448b 100644
---- a/arch/x86/xen/pmu.c
-+++ b/arch/x86/xen/pmu.c
-@@ -323,7 +323,7 @@ static u64 xen_amd_read_pmc(int counter)
- 		u64 val;
- 
- 		msr = amd_counters_base + (counter * amd_msr_step);
--		native_read_msr_safe(msr, &val);
-+		rdmsrq_safe(msr, &val);
- 		return val;
- 	}
- 
-@@ -349,7 +349,7 @@ static u64 xen_intel_read_pmc(int counter)
- 		else
- 			msr = MSR_IA32_PERFCTR0 + counter;
- 
--		native_read_msr_safe(msr, &val);
-+		rdmsrq_safe(msr, &val);
- 		return val;
- 	}
- 
+ 	return 0;
 -- 
 2.53.0
 
