@@ -1,136 +1,207 @@
-Return-Path: <linux-hyperv+bounces-8919-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8920-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id RNWvGyKKl2m60AIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8919-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Feb 2026 23:09:38 +0100
+	id TYa8DRiLl2n/0AIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8920-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Feb 2026 23:13:44 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3FA316307E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Feb 2026 23:09:37 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id B188F1630C6
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Feb 2026 23:13:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1C2613015A69
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Feb 2026 22:09:36 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id E12F63007B8C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Feb 2026 22:13:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12D6E2F5A06;
-	Thu, 19 Feb 2026 22:09:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C98BE2DB79E;
+	Thu, 19 Feb 2026 22:13:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="avhT3IgD"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VUYs7JSP"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E84662673AA;
-	Thu, 19 Feb 2026 22:09:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DEAB1DE3B5;
+	Thu, 19 Feb 2026 22:13:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771538974; cv=none; b=azI0+ZkoVrqyM6hosBFpIiU1fCi8cnquLLBrbw7DqbRgF7JzhhmqITdXiaTBZyHpNaJ2N9XwwqQWfjKRTm9bPxwI7ICFpEbXATNOcL4HqPIH4ofQh7H4RYLJgEAFVmqKraNG//CFr+WA5Q4Sdt2uPWQBf92eITqMqbEmWAifKYI=
+	t=1771539221; cv=none; b=QXyRzu3i6/2s08yo4qLFTxzkFlpQm4yQyXiK6JRXiE//k4+OqllBC7ztNHKOK2Q0waitlKDhCQEcAVTUtWvkQKaHfhB9kOThcWWSGd7LdSf4bfsinKJfkAsFtTXdWv4lqPDJxasD0QFdw77/sVHeQeDJRZQHx5vVrOOUViuOXF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771538974; c=relaxed/simple;
-	bh=KVgAUjwz8KnqJkBrLKb59hokg/g+2mmeBRO4n4pWxBE=;
-	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=WeCAWnykA2VpMf5C7agYU+mxYEOfdEDoggcGveMTNhbDdTQoUI1T02Gv3aDoS5R4QkiA2jnxVwo5YZdxfJ5bIPA5jHGZKWDRImdCuN6XHsp8GxAXsmmvEkvsWrzTnn8xpdQSf+Vyl5L/jk7XxlKe3pB9G+06b9VRBGPbKlUkxhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=avhT3IgD; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1771539221; c=relaxed/simple;
+	bh=nRYEQTF5vOMcDcP+/k8TMMaUvzFxWiLcQmmzlYDa3Jo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VbYg3aFDgaXYqtdeSsH0cA8LKdQSSOjrTsNLZ0mvIwRA5EqoskiIeRvzqorrxKIBSgpxsdZcJO5tfaBicMuhNtnObQHNkIkw94opC8QVtGRANYjs24LZJBlCLF2WreW4r1r7/M6ejk5vmfxV1lrTY5Vk3cPAujqEeQRgsK312KU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=VUYs7JSP; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 0689620B6F00;
-	Thu, 19 Feb 2026 14:09:33 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0689620B6F00
+Received: from skinsburskii.localdomain (unknown [20.29.225.195])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A537B20B6F00;
+	Thu, 19 Feb 2026 14:13:39 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A537B20B6F00
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1771538973;
-	bh=YjFO2+/Mqpr/SXRWbAMo4u5S9VcPxAaolKhssx45XHY=;
-	h=Subject:From:To:Cc:Date:From;
-	b=avhT3IgDW/vwArNVc2RADOlndhrYT8caZabO6veeZvFYzbAXpTUF51XLoGyfc/Wvw
-	 iQ5xnt6JEnzQVFG9f+6QdCGMIUaN9GGg9BnAGAfU1zFfl0EuhQ4Mgyo3Qw1QjQrt6b
-	 Wwr3md8wxpQGAVTl0Xxw5IpB3m/otPOdtHEl7xRw=
-Subject: [PATCH] mshv: Replace fixed memory deposit with status driven helper
+	s=default; t=1771539220;
+	bh=alc86/6tZez+jJ4pB8akwxTAsV8UqLXdKg2TaieKjWU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VUYs7JSPF4TPiElOtjdBVx6EpHxPNorxgQOJUCDSAN94GWrSaf7YiiIrXSlG15BPU
+	 3Ikn6YUKufJsRrwYGAZvbVAVTwHjSMgglU+b8AVsCbqOYL1iy4QU0NpAF2wH7FDZtP
+	 3AjLaHQIXa0/vmmbAEm80MycYWhs0MVn7Fmi7kak=
+Date: Thu, 19 Feb 2026 14:13:37 -0800
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, longli@microsoft.com
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 19 Feb 2026 22:09:32 +0000
-Message-ID: 
- <177153896491.48883.14285093878498416061.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-User-Agent: StGit/0.19
+To: Mukesh R <mrathor@linux.microsoft.com>
+Cc: rppt@kernel.org, akpm@linux-foundation.org, bhe@redhat.com,
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com,
+	kexec@lists.infradead.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] kexec: Add permission notifier chain for kexec
+ operations
+Message-ID: <aZeLEZ3SlLmf9aS-@skinsburskii.localdomain>
+References: <176962149772.85424.9395505307198316093.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <176962212169.85424.4683391728440118017.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <fb651abf-0546-3bef-bf8f-597f35ddc0d6@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fb651abf-0546-3bef-bf8f-597f35ddc0d6@linux.microsoft.com>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_FROM(0.00)[bounces-8919-lists,linux-hyperv=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8920-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TO_DN_NONE(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-0.999];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: C3FA316307E
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: B188F1630C6
 X-Rspamd-Action: no action
 
-Replace hardcoded HV_MAP_GPA_DEPOSIT_PAGES usage with
-hv_deposit_memory() which derives the deposit size from
-the hypercall status, and remove the now-unused constant.
+On Thu, Feb 12, 2026 at 02:12:29PM -0800, Mukesh R wrote:
+> On 1/28/26 09:42, Stanislav Kinsburskii wrote:
+> > Add a blocking notifier chain to allow subsystems to be notified
+> > before kexec execution. This enables modules to perform necessary
+> > cleanup or validation before the system transitions to a new kernel or
+> > block kexec if not possible under current conditions.
+> > 
+> > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+> > ---
+> >   include/linux/kexec.h |    6 ++++++
+> >   kernel/kexec_core.c   |   24 ++++++++++++++++++++++++
+> >   2 files changed, 30 insertions(+)
+> > 
+> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> > index ff7e231b0485..311037d30f9e 100644
+> > --- a/include/linux/kexec.h
+> > +++ b/include/linux/kexec.h
+> > @@ -35,6 +35,7 @@ extern note_buf_t __percpu *crash_notes;
+> >   #include <linux/ioport.h>
+> >   #include <linux/module.h>
+> >   #include <linux/highmem.h>
+> > +#include <linux/notifier.h>
+> >   #include <asm/kexec.h>
+> >   #include <linux/crash_core.h>
+> > @@ -532,10 +533,13 @@ extern bool kexec_file_dbg_print;
+> >   extern void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size);
+> >   extern void kimage_unmap_segment(void *buffer);
+> > +extern int kexec_block_notifier_register(struct notifier_block *nb);
+> > +extern int kexec_block_notifier_unregister(struct notifier_block *nb);
+> >   #else /* !CONFIG_KEXEC_CORE */
+> >   struct pt_regs;
+> >   struct task_struct;
+> >   struct kimage;
+> > +struct notifier_block;
+> >   static inline void __crash_kexec(struct pt_regs *regs) { }
+> >   static inline void crash_kexec(struct pt_regs *regs) { }
+> >   static inline int kexec_should_crash(struct task_struct *p) { return 0; }
+> > @@ -543,6 +547,8 @@ static inline int kexec_crash_loaded(void) { return 0; }
+> >   static inline void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size)
+> >   { return NULL; }
+> >   static inline void kimage_unmap_segment(void *buffer) { }
+> > +static inline int kexec_block_notifier_register(struct notifier_block *nb) { }
+> > +static inline int kexec_block_notifier_unregister(struct notifier_block *nb) { }
+> >   #define kexec_in_progress false
+> >   #endif /* CONFIG_KEXEC_CORE */
+> > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> > index 0f92acdd354d..1e86a6f175f0 100644
+> > --- a/kernel/kexec_core.c
+> > +++ b/kernel/kexec_core.c
+> > @@ -57,6 +57,20 @@ bool kexec_in_progress = false;
+> >   bool kexec_file_dbg_print;
+> > +static BLOCKING_NOTIFIER_HEAD(kexec_block_list);
+> > +
+> > +int kexec_block_notifier_register(struct notifier_block *nb)
+> > +{
+> > +	return blocking_notifier_chain_register(&kexec_block_list, nb);
+> > +}
+> > +EXPORT_SYMBOL_GPL(kexec_block_notifier_register);
+> > +
+> > +int kexec_block_notifier_unregister(struct notifier_block *nb)
+> > +{
+> > +	return blocking_notifier_chain_unregister(&kexec_block_list, nb);
+> > +}
+> > +EXPORT_SYMBOL_GPL(kexec_block_notifier_unregister);
+> > +
+> >   /*
+> >    * When kexec transitions to the new kernel there is a one-to-one
+> >    * mapping between physical and virtual addresses.  On processors
+> > @@ -1124,6 +1138,12 @@ bool kexec_load_permitted(int kexec_image_type)
+> >   	return true;
+> >   }
+> > +static int kexec_check_blockers(void)
+> > +{
+> > +	/* Notify subsystems of impending kexec */
+> > +	return blocking_notifier_call_chain(&kexec_block_list, 0, NULL);
+> > +}
+> > +
+> >   /*
+> >    * Move into place and start executing a preloaded standalone
+> >    * executable.  If nothing was preloaded return an error.
+> > @@ -1139,6 +1159,10 @@ int kernel_kexec(void)
+> >   		goto Unlock;
+> >   	}
+> > +	error = kexec_check_blockers();
+> 
+> This could take a long time, and I am not sure if it's a good idea
+> to stall kexec with such dependencies.
+> 
 
-The previous code always deposited a fixed 256 pages on
-insufficient memory, ignoring the actual demand reported
-by the hypervisor. hv_deposit_memory() handles different
-deposit statuses, aligning map-GPA retries with the rest
-of the codebase.
+Whether the call takes time should not matter. liveudpate_reboot()
+already introduced the same semantics below.
 
-This approach may require more allocation and deposit
-hypercall iterations, but avoids over-depositing large
-fixed chunks when fewer pages would suffice. Until any
-performance impact is measured, the more frugal and
-consistent behavior is preferred.
+Thanks,
+Stanislav
 
-Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
----
- drivers/hv/mshv_root_hv_call.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
-index 7f91096f95a8..317191462b63 100644
---- a/drivers/hv/mshv_root_hv_call.c
-+++ b/drivers/hv/mshv_root_hv_call.c
-@@ -16,7 +16,6 @@
- 
- /* Determined empirically */
- #define HV_INIT_PARTITION_DEPOSIT_PAGES 208
--#define HV_MAP_GPA_DEPOSIT_PAGES	256
- #define HV_UMAP_GPA_PAGES		512
- 
- #define HV_PAGE_COUNT_2M_ALIGNED(pg_count) (!((pg_count) & (0x200 - 1)))
-@@ -239,8 +238,7 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
- 		completed = hv_repcomp(status);
- 
- 		if (hv_result_needs_memory(status)) {
--			ret = hv_call_deposit_pages(NUMA_NO_NODE, partition_id,
--						    HV_MAP_GPA_DEPOSIT_PAGES);
-+			ret = hv_deposit_memory(partition_id, status);
- 			if (ret)
- 				break;
- 
-
-
+> Thanks,
+> -Mukesh
+> 
+> 
+> > +	if (error)
+> > +		goto Unlock;
+> > +
+> >   	error = liveupdate_reboot();
+> >   	if (error)
+> >   		goto Unlock;
+> > 
+> > 
+> 
 
