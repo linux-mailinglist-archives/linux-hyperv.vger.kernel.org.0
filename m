@@ -1,193 +1,136 @@
-Return-Path: <linux-hyperv+bounces-8918-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8919-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EGpoE7iEl2mUzgIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8918-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Feb 2026 22:46:32 +0100
+	id RNWvGyKKl2m60AIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8919-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Feb 2026 23:09:38 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 940BC162EE5
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Feb 2026 22:46:31 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3FA316307E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Feb 2026 23:09:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3E7B83018772
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Feb 2026 21:46:16 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1C2613015A69
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Feb 2026 22:09:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 979683064A0;
-	Thu, 19 Feb 2026 21:46:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12D6E2F5A06;
+	Thu, 19 Feb 2026 22:09:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZRU6XyWJ"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="avhT3IgD"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B2DE2D9EC2;
-	Thu, 19 Feb 2026 21:46:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E84662673AA;
+	Thu, 19 Feb 2026 22:09:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771537575; cv=none; b=p1eaeK7iFOlXzuFr6srarw0aE8I2DIJ44ds/hJIvE2DQhmWQOKGycRSBQ3nZUuXHCMC/gI3yehC2VncJqVIydUdb1TcxiW2wSjn6Pa5VDKN2L5SNVfBp3ykgoD4QQRMboyB+0yWrnfnKL8KwQz2FxtdCCqjme64sV9FonVn/po4=
+	t=1771538974; cv=none; b=azI0+ZkoVrqyM6hosBFpIiU1fCi8cnquLLBrbw7DqbRgF7JzhhmqITdXiaTBZyHpNaJ2N9XwwqQWfjKRTm9bPxwI7ICFpEbXATNOcL4HqPIH4ofQh7H4RYLJgEAFVmqKraNG//CFr+WA5Q4Sdt2uPWQBf92eITqMqbEmWAifKYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771537575; c=relaxed/simple;
-	bh=chAvArdb7zpbFw83ywWlGpMZQLSe7yffb2J8O93YzZ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YsgWm258dRd3Jm526ZD3Rn7xYXf95egpUxf1kVjv7JGlK7bd6maaOSFt04F1gat4/K1n2xdjh93y+cl5dJNebM/pLpeTs/HfFBmVTDI6SDguJyU/noJhF9RecAcX5AK6upH1Vu+/rkhcsNPxaBXY32NRC2FRrJgeVekLXHYP7Js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ZRU6XyWJ; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1771538974; c=relaxed/simple;
+	bh=KVgAUjwz8KnqJkBrLKb59hokg/g+2mmeBRO4n4pWxBE=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=WeCAWnykA2VpMf5C7agYU+mxYEOfdEDoggcGveMTNhbDdTQoUI1T02Gv3aDoS5R4QkiA2jnxVwo5YZdxfJ5bIPA5jHGZKWDRImdCuN6XHsp8GxAXsmmvEkvsWrzTnn8xpdQSf+Vyl5L/jk7XxlKe3pB9G+06b9VRBGPbKlUkxhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=avhT3IgD; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (unknown [52.148.140.42])
-	by linux.microsoft.com (Postfix) with ESMTPSA id E762420B6F00;
-	Thu, 19 Feb 2026 13:46:07 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E762420B6F00
+Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 0689620B6F00;
+	Thu, 19 Feb 2026 14:09:33 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0689620B6F00
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1771537568;
-	bh=aiuSqVkPHKzz0DSvSp7aacmsoZM2HA5BICGuqa562Wk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZRU6XyWJyHS3N0enA/8yyAp7k4D4JyIsLDdzlCobDzr32i6Z0hhs46zD0FIPXrV2u
-	 pC4hY20UmRkkb2TErTyLcC1T3ezwXsOvJpXm15/J7ydUDY25jN09ucR4PfYtJcg7ED
-	 n+13usEHr0tE29Zotj/6eeJkWScshdcx24sLOpNU=
-Date: Thu, 19 Feb 2026 13:46:05 -0800
+	s=default; t=1771538973;
+	bh=YjFO2+/Mqpr/SXRWbAMo4u5S9VcPxAaolKhssx45XHY=;
+	h=Subject:From:To:Cc:Date:From;
+	b=avhT3IgDW/vwArNVc2RADOlndhrYT8caZabO6veeZvFYzbAXpTUF51XLoGyfc/Wvw
+	 iQ5xnt6JEnzQVFG9f+6QdCGMIUaN9GGg9BnAGAfU1zFfl0EuhQ4Mgyo3Qw1QjQrt6b
+	 Wwr3md8wxpQGAVTl0Xxw5IpB3m/otPOdtHEl7xRw=
+Subject: [PATCH] mshv: Replace fixed memory deposit with status driven helper
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Wei Liu <wei.liu@kernel.org>
-Cc: Michael Kelley <mhklinux@outlook.com>,
-	"kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"longli@microsoft.com" <longli@microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 4/4] mshv: Handle insufficient root memory hypervisor
- statuses
-Message-ID: <aZeEnc1wZ6ipC8G8@skinsburskii.localdomain>
-References: <177031674698.186911.179832109354647364.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <177031694699.186911.12873334535011325477.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <SN6PR02MB4157F28C4F4CEFB886CF949ED466A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20260219064701.GQ2236050@liuwe-devbox-debian-v2.local>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, longli@microsoft.com
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 19 Feb 2026 22:09:32 +0000
+Message-ID: 
+ <177153896491.48883.14285093878498416061.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260219064701.GQ2236050@liuwe-devbox-debian-v2.local>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[outlook.com,microsoft.com,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-8918-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TO_DN_SOME(0.00)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8919-lists,linux-hyperv=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TO_DN_NONE(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 940BC162EE5
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim]
+X-Rspamd-Queue-Id: C3FA316307E
 X-Rspamd-Action: no action
 
-On Thu, Feb 19, 2026 at 06:47:01AM +0000, Wei Liu wrote:
-> On Fri, Feb 06, 2026 at 06:54:55PM +0000, Michael Kelley wrote:
-> > From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Thursday, February 5, 2026 10:42 AM
-> > > To: kys@microsoft.com; haiyangz@microsoft.com; wei.liu@kernel.org;
-> > > decui@microsoft.com; longli@microsoft.com
-> > > Cc: linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org
-> > > Subject: [PATCH v3 4/4] mshv: Handle insufficient root memory hypervisor statuses
-> > > 
-> > > When creating guest partition objects, the hypervisor may fail to
-> > > allocate root partition pages and return an insufficient memory status.
-> > > In this case, deposit memory using the root partition ID instead.
-> > > 
-> > > Note: This error should never occur in a guest of L1VH partition context.
-> > > 
-> > > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> > > ---
-> > >  drivers/hv/hv_common.c      |    2 +
-> > >  drivers/hv/hv_proc.c        |   14 ++++++++++
-> > >  include/hyperv/hvgdk_mini.h |   58 ++++++++++++++++++++++---------------------
-> > >  3 files changed, 46 insertions(+), 28 deletions(-)
-> > > 
-> > > diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> > > index f20596276662..6b67ac616789 100644
-> > > --- a/drivers/hv/hv_common.c
-> > > +++ b/drivers/hv/hv_common.c
-> > > @@ -794,6 +794,8 @@ static const struct hv_status_info hv_status_infos[] = {
-> > >  	_STATUS_INFO(HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE,	-EIO),
-> > >  	_STATUS_INFO(HV_STATUS_INSUFFICIENT_MEMORY,		-ENOMEM),
-> > >  	_STATUS_INFO(HV_STATUS_INSUFFICIENT_CONTIGUOUS_MEMORY,	-ENOMEM),
-> > > +	_STATUS_INFO(HV_STATUS_INSUFFICIENT_ROOT_MEMORY,	-ENOMEM),
-> > > +	_STATUS_INFO(HV_STATUS_INSUFFICIENT_CONTIGUOUS_ROOT_MEMORY, 	-ENOMEM),
-> > >  	_STATUS_INFO(HV_STATUS_INVALID_PARTITION_ID,		-EINVAL),
-> > >  	_STATUS_INFO(HV_STATUS_INVALID_VP_INDEX,		-EINVAL),
-> > >  	_STATUS_INFO(HV_STATUS_NOT_FOUND,			-EIO),
-> > > diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
-> > > index 181f6d02bce3..5f4fd9c3231c 100644
-> > > --- a/drivers/hv/hv_proc.c
-> > > +++ b/drivers/hv/hv_proc.c
-> > > @@ -121,6 +121,18 @@ int hv_deposit_memory_node(int node, u64 partition_id,
-> > >  	case HV_STATUS_INSUFFICIENT_CONTIGUOUS_MEMORY:
-> > >  		num_pages = HV_MAX_CONTIGUOUS_ALLOCATION_PAGES;
-> > >  		break;
-> > > +
-> > > +	case HV_STATUS_INSUFFICIENT_CONTIGUOUS_ROOT_MEMORY:
-> > > +		num_pages = HV_MAX_CONTIGUOUS_ALLOCATION_PAGES;
-> > > +		fallthrough;
-> > > +	case HV_STATUS_INSUFFICIENT_ROOT_MEMORY:
-> > > +		if (!hv_root_partition()) {
-> > > +			hv_status_err(hv_status, "Unexpected root memory deposit\n");
-> > > +			return -ENOMEM;
-> > > +		}
-> > > +		partition_id = HV_PARTITION_ID_SELF;
-> > > +		break;
-> > > +
-> > 
-> > Per the discussion in v1 of this patch set, if the number of pages that should be
-> > deposited in a particular situation is different from what this function provides,
-> > the fallback is to use hv_call_deposit_pages() directly. From what I see, there's
-> > only one such fallback case after a hypercall failure -- in hv_do_map_gpa_hcall().
-> > The other uses of hv_call_deposit_pages() are initial deposits when creating a
-> > VP or partition.
-> > 
-> > But if hv_call_deposit_pages() is used directly, the logic added here to detect
-> > insufficient root memory and deposit to HV_PARTITION_ID_SELF isn't applied.
-> > So if the hypercall in hv_do_map_gpa_hcall() fails with insufficient root
-> > memory, the deposit is done to the wrong partition ID. If that case can
-> > actually happen, then some additional logic is needed in
-> > hv_do_map_gpa_hcall() to handle it. Or there needs to be a fallback
-> > function that contains the logic.
-> 
-> Stanislav, how about this comment? Please submit a follow-up patch if
-> necessary.
-> 
+Replace hardcoded HV_MAP_GPA_DEPOSIT_PAGES usage with
+hv_deposit_memory() which derives the deposit size from
+the hypercall status, and remove the now-unused constant.
 
-I'll sumbit a follow-up patch.
+The previous code always deposited a fixed 256 pages on
+insufficient memory, ignoring the actual demand reported
+by the hypervisor. hv_deposit_memory() handles different
+deposit statuses, aligning map-GPA retries with the rest
+of the codebase.
 
-Thanks,
-Stanislav
+This approach may require more allocation and deposit
+hypercall iterations, but avoids over-depositing large
+fixed chunks when fewer pages would suffice. Until any
+performance impact is measured, the more frugal and
+consistent behavior is preferred.
 
-> Wei
-> 
-> > 
-> > Other than that, everything else in this patch set looks good to me.
-> > 
-> > Michael
-> > 
-> > >  	default:
-> > >  		hv_status_err(hv_status, "Unexpected!\n");
-> > >  		return -ENOMEM;
+Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+---
+ drivers/hv/mshv_root_hv_call.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
+index 7f91096f95a8..317191462b63 100644
+--- a/drivers/hv/mshv_root_hv_call.c
++++ b/drivers/hv/mshv_root_hv_call.c
+@@ -16,7 +16,6 @@
+ 
+ /* Determined empirically */
+ #define HV_INIT_PARTITION_DEPOSIT_PAGES 208
+-#define HV_MAP_GPA_DEPOSIT_PAGES	256
+ #define HV_UMAP_GPA_PAGES		512
+ 
+ #define HV_PAGE_COUNT_2M_ALIGNED(pg_count) (!((pg_count) & (0x200 - 1)))
+@@ -239,8 +238,7 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
+ 		completed = hv_repcomp(status);
+ 
+ 		if (hv_result_needs_memory(status)) {
+-			ret = hv_call_deposit_pages(NUMA_NO_NODE, partition_id,
+-						    HV_MAP_GPA_DEPOSIT_PAGES);
++			ret = hv_deposit_memory(partition_id, status);
+ 			if (ret)
+ 				break;
+ 
+
+
 
