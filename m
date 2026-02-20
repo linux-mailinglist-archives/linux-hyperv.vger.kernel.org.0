@@ -1,52 +1,52 @@
-Return-Path: <linux-hyperv+bounces-8924-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8925-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SG+aF1jfl2ne9gIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8924-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Feb 2026 05:13:12 +0100
+	id cOsMBnDfl2ne9gIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8925-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Feb 2026 05:13:36 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id B738016492D
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Feb 2026 05:13:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 45A4316495A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Feb 2026 05:13:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 2CB963024BFA
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Feb 2026 04:11:35 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 96D0B30148A5
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Feb 2026 04:11:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B0AD315D35;
-	Fri, 20 Feb 2026 04:10:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33B0A3191D2;
+	Fri, 20 Feb 2026 04:10:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZfEN0rlH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kr71DRur"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F032F691D;
-	Fri, 20 Feb 2026 04:10:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10247318EE4;
+	Fri, 20 Feb 2026 04:10:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771560644; cv=none; b=p2lc9+vxNDOgs02ihBPOVpJhepg+htbVfodv3rC0IlFbnzN9rRJDx7Mdcwn3xsbvVChy2Xo2bIpKb8Cl5fqR986R5hq6PVMKv18unq2JLJmjGAU2sZMQMIr7DFUMH4zIc7RAw2fmJiiTHIZhLTRHta7Mep0keyuwloCuj1l8Azo=
+	t=1771560646; cv=none; b=f40DQUDMWPTl3gpaOj8cV3FnnBlHLoKqHaGSVqOSXOcvVetrjkuV7owHI492B7HfU14E8lhS1eceJOSxUv1QGIJeUSLlKGmWQkZOHO7nL47IHA6kcbBs9aXdXpqIVc30bH22I9DFGrzp46eKIADaL4EKSXIVTtuBpau6wAHyqSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771560644; c=relaxed/simple;
-	bh=g09K8+pt8nUze9Hd/5SkOGsluvmQyHLde4mLYIq1BN8=;
+	s=arc-20240116; t=1771560646; c=relaxed/simple;
+	bh=Db/wdfVcXsniMHB7ine8YIWTDXSl11tG9gQ8k5IjjLI=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=YDPZZ1ZQuyNS8V3V1G1sQFwcdJHmrSVxdJbX/TDoC3VzeJedHKnXciZ8QuybAh0VGJNFsvn4b6L2PWIKJQmgUVAgULnMWX/5v4XBzHZtFQGGxUikEUHHC8nim38pySkyBa9d/exkwx7UHHGJlrEGuX+gtWmGg1CkbILNxF1ot8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZfEN0rlH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B2E2C2BC87;
-	Fri, 20 Feb 2026 04:10:44 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=oC0AiIANVApZnnv5/ZnhhpPkO+UBzBVWCC1Lkj1+JWH1OxPUdj4pIsrefn1HA0+fy5GM7j4A1DioPQj3W5/lmJsr9+Uzt5jxLYalJT1Iplcww9hWsrib9W+prZqMHRx7qXi4HlDqteACtTiCwMSPyCq8J2qigOsjJSSnRI1cfR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kr71DRur; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 986B9C2BCB0;
+	Fri, 20 Feb 2026 04:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771560644;
-	bh=g09K8+pt8nUze9Hd/5SkOGsluvmQyHLde4mLYIq1BN8=;
+	s=k20201202; t=1771560645;
+	bh=Db/wdfVcXsniMHB7ine8YIWTDXSl11tG9gQ8k5IjjLI=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ZfEN0rlHPk8mdiuu5VESUrjU/twd6VLsvz/4HRiuTXOLUA0QGdTKOnAWZijQbEGko
-	 JR6DJZ5WjmduRBYlCbFS4CxEfJWD19QQfEQQpy6HFbLPFRtsNfpzlrmaR46thV1I8j
-	 UdOoZFKthavVmxK7uqAy28sD9HMEMXCOdjPqDiPDEx3Y3X7Xj44bEXYx6JH+HlQzKv
-	 c9UK4fwkutBwaCFIjgaZ8E5+sihv5O9Fp/qjCPWPvTIQXqqT7LYjC1vCZaTEPqeA4q
-	 zE5QjdDoR5nj4iQSqf1O55yvD9BqvZaCRV0Q8Zi2oM2S6KoYe0NZrJkPstgPyQYwoQ
-	 Yme0l22kE7D7w==
+	b=kr71DRurREHYrZUr3Iu8kBF3sP8Kd84HBgPzOFQul6k/zdt4cn+xGkSwn0Z2bqTfV
+	 tf5GWnU3xbuMF1mRY2zfCfhwSJ3szrnd4MwQID7TlG/ObeeVfWOZaUAUN9KDzPtFXq
+	 uy1Y74jNH9hfglIFadwb8ipRoBqsN6Uzgj+8SQxzFAonkiWY1FDYL7wgISg0RrCqCf
+	 Ea0jKMmyz8PSk9M1AEvK0cx4T9JGn1EjDLxRkWlV1jl+wC4Rkuzikre+XGx59kvCUa
+	 0nl4J1xMm2mAntv2sFs93qKoael3Itii9ExFq0zMW3WuUeG439WsT4vH4KO58AiK6B
+	 bv8XfesBgFH7g==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B9FE13809A88;
-	Fri, 20 Feb 2026 04:10:53 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3FD8A3809A88;
+	Fri, 20 Feb 2026 04:10:55 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -55,13 +55,13 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 00/14] paravirt: cleanup and reorg
+Subject: Re: [PATCH v2 00/21] paravirt: cleanup and reorg
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <177156065229.189817.8309653371345159867.git-patchwork-notify@kernel.org>
-Date: Fri, 20 Feb 2026 04:10:52 +0000
-References: <20250911063433.13783-1-jgross@suse.com>
-In-Reply-To: <20250911063433.13783-1-jgross@suse.com>
+ <177156065379.189817.4828097381020781784.git-patchwork-notify@kernel.org>
+Date: Fri, 20 Feb 2026 04:10:53 +0000
+References: <20250917145220.31064-1-jgross@suse.com>
+In-Reply-To: <20250917145220.31064-1-jgross@suse.com>
 To: =?utf-8?b?SsO8cmdlbiBHcm/DnyA8amdyb3NzQHN1c2UuY29tPg==?=@codeaurora.org
 Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
  x86@kernel.org, linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
@@ -82,7 +82,7 @@ Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
  rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
  vschneid@redhat.com, linux-arm-kernel@lists.infradead.org,
  pbonzini@redhat.com, vkuznets@redhat.com, sstabellini@kernel.org,
- oleksandr_tyshchenko@epam.com, daniel.lezcano@linaro.org
+ oleksandr_tyshchenko@epam.com, daniel.lezcano@linaro.org, oleg@redhat.com
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [1.54 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -97,14 +97,14 @@ X-Spamd-Result: default: False [1.54 / 15.00];
 	R_DKIM_REJECT(0.00)[kernel.org:s=k20201202];
 	FREEMAIL_CC(0.00)[lists.infradead.org,vger.kernel.org,kernel.org,lists.linux.dev,lists.ozlabs.org,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,microsoft.com,infradead.org,gmail.com,oracle.com,lists.xenproject.org,broadcom.com,armlinux.org.uk,arm.com,xen0n.name,linux.ibm.com,ellerman.id.au,csgroup.eu,sifive.com,dabbelt.com,eecs.berkeley.edu,ghiti.fr,linaro.org,goodmis.org,google.com,suse.de,epam.com];
 	FROM_NEQ_ENVFROM(0.00)[patchwork-bot@kernel.org,linux-hyperv@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-8924-lists,linux-hyperv=lfdr.de,linux-riscv];
-	NEURAL_SPAM(0.00)[0.386];
+	TAGGED_FROM(0.00)[bounces-8925-lists,linux-hyperv=lfdr.de,linux-riscv];
+	NEURAL_SPAM(0.00)[0.384];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	FROM_NO_DN(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[56];
+	RCPT_COUNT_GT_50(0.00)[57];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -113,8 +113,8 @@ X-Spamd-Result: default: False [1.54 / 15.00];
 	TO_DN_NONE(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[alien8.de:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B738016492D
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,alien8.de:email]
+X-Rspamd-Queue-Id: 45A4316495A
 X-Rspamd-Action: no action
 
 Hello:
@@ -122,7 +122,7 @@ Hello:
 This series was applied to riscv/linux.git (fixes)
 by Borislav Petkov (AMD) <bp@alien8.de>:
 
-On Thu, 11 Sep 2025 08:34:19 +0200 you wrote:
+On Wed, 17 Sep 2025 16:51:59 +0200 you wrote:
 > Some cleanups and reorg of paravirt code and headers:
 > 
 > - The first 2 patches should be not controversial at all, as they
@@ -137,11 +137,11 @@ On Thu, 11 Sep 2025 08:34:19 +0200 you wrote:
 > [...]
 
 Here is the summary with links:
-  - [05/14] paravirt: remove asm/paravirt_api_clock.h
+  - [v2,05/21] paravirt: Remove asm/paravirt_api_clock.h
     https://git.kernel.org/riscv/c/68b10fd40d49
-  - [06/14] sched: move clock related paravirt code to kernel/sched
+  - [v2,06/21] sched: Move clock related paravirt code to kernel/sched
     (no matching commit)
-  - [10/14] riscv/paravirt: use common code for paravirt_steal_clock()
+  - [v2,10/21] riscv/paravirt: Use common code for paravirt_steal_clock()
     https://git.kernel.org/riscv/c/ee9ffcf99f07
 
 You are awesome, thank you!
