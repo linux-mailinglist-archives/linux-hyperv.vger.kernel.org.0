@@ -1,52 +1,52 @@
-Return-Path: <linux-hyperv+bounces-8922-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8923-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sMENNf3el2ne9gIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8922-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Feb 2026 05:11:41 +0100
+	id KHIFOGzfl2ne9gIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8923-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Feb 2026 05:13:32 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CD761648B1
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Feb 2026 05:11:41 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57BC1164953
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Feb 2026 05:13:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 7151B3024912
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Feb 2026 04:11:10 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C4E263069DFD
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Feb 2026 04:11:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 981CF30C368;
-	Fri, 20 Feb 2026 04:10:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90BE831280D;
+	Fri, 20 Feb 2026 04:10:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VlSJ+SBe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oMaFyqG2"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735EC2F531F;
-	Fri, 20 Feb 2026 04:10:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C88A2F691D;
+	Fri, 20 Feb 2026 04:10:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771560638; cv=none; b=UV6QMMmDcmxBNwmecy7y2pV4WKybOlnpJgdzdpaebmyqyzZFu9O15b2gYKWHlXA+0c9gg0w+T9Py8ytyKKm9cfG/08wGY1XJp9sahFtoaS6PMp6HSryznAvSCKcD9lpyRnQdmtaFquMuuugoaxGI/XRh3J4IkVlxgxgRX7rGRV8=
+	t=1771560641; cv=none; b=LRlKMBesv//lzc8Dhuq8ukyJyXp4+0aMWPfxxwmRZrr5xrDWbHQbDaDGp1Yfu5xAXXsaY/SjUNTc3srgUWGt8uGRhRAP12PxTlHyuP6a50TO37PnhKCkPegQ3g5rnd3RTVh1RpIy5IhsZk4lx6hUqrGsukHT3iCzzrFI2xd9Vxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771560638; c=relaxed/simple;
-	bh=GmIn9ZeGRzlEikXjbn7PLITSKNkbNMHLY/Yf0fqF/IU=;
+	s=arc-20240116; t=1771560641; c=relaxed/simple;
+	bh=fHDGQg8Y8I31uG+H3itYMHO1lNQuNdbaHv3s+w2VA9E=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=k761jAF1F8YlMD+HCDhnCPHkFhFZISAAKgZi8fjFqHLJhcpV6aya1cY/m6tWF9DAXcQ4O4vfu67dSb2HOVCWFSyhYg0lXUbr62rwxuz6I1Fwtev5Kw8vwNbP5xFaZhaCQHrAeSrVEAwzfTLIoZuBNb0CI3UZKSj8lw+Utx+KAlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VlSJ+SBe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2047BC116D0;
-	Fri, 20 Feb 2026 04:10:38 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=fuUXnQ3m/mXXhicl7LSDcwrZX7poUGBiTAYTTvJKyaeHu8+lr4s1PqwX0Bqm5cuniZIaF+Tuywgy9hMtmQL9qCt0i4A2v8/e8I8uoDnwU6XwbcO0ya5vzNfura39Y3HRsIh6BhkSBtjW2QVOyFXrt1jjEcv/GDx4lq0PiBfDQso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oMaFyqG2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D7E0C19424;
+	Fri, 20 Feb 2026 04:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771560638;
-	bh=GmIn9ZeGRzlEikXjbn7PLITSKNkbNMHLY/Yf0fqF/IU=;
+	s=k20201202; t=1771560641;
+	bh=fHDGQg8Y8I31uG+H3itYMHO1lNQuNdbaHv3s+w2VA9E=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=VlSJ+SBeeAPfhnON1ZyXqzphBgx4V3bgTvauvu85YeiI5mlTREBkb61m+04o3wIWh
-	 6Pno9LXCnhI8nC/hRuhMd+fgshIq0F1mAH/DEcZO4aKOqExOeYtnuKxBzsIJIvpQze
-	 kdL6hhYvFuStENEHeFVIsSx0Au5ENsZWIX8atJWOiOnN2444grbOsGlgPysnVsmu9E
-	 V8116kPklhvS6giKFOfwBSN9DJyoDX0edjy80ThUYXR7VyxfB9IkYX0z/CHc2Wnpsg
-	 m5FnCTC63lZ+rp27A0NoXGnjEIsJQjZpptu6p3QNXtBcuAzBXZ7aD+CXrcMpktT189
-	 t7CzKaZ1g1AUA==
+	b=oMaFyqG2bTps/8USOYgV6sHoWWaZWkyD8fr7yLmY5l7usrVYWzQZzpzEhFrj5oIso
+	 JsHHbdcmGWZfgObZBMrrGYnYu32BPlMnnVgwwSDA1ys0qiJ1qOLadxN3JSuLSdLeIV
+	 tnZk2pdJNKsAWT931GvGXNP4fol0h+61TmknQ8GSGiCMQCV6UL7UDupsNR66mU84jY
+	 Uf0+Fkd9Pj07dGm9AzWla0qfC5/ONLfwGajcUnLXdYT+BVuNcuJZmO6sBygjchoA7g
+	 hhSIJI8pnZDmIXMjKC9Jz5/fJyymINQf46MMxuBF/t5nZ792GREhqQxlQeEORgXYm7
+	 E3Z2SpOIzWr4w==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B9FD93809A88;
-	Fri, 20 Feb 2026 04:10:47 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id BA0853809A88;
+	Fri, 20 Feb 2026 04:10:50 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -55,88 +55,95 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3 0/9] arch,sysfb,efi: Support EDID on non-x86 EFI
- systems
+Subject: Re: [PATCH v5 00/21] paravirt: cleanup and reorg
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <177156064628.189817.770597310770698604.git-patchwork-notify@kernel.org>
-Date: Fri, 20 Feb 2026 04:10:46 +0000
-References: <20251126160854.553077-1-tzimmermann@suse.de>
-In-Reply-To: <20251126160854.553077-1-tzimmermann@suse.de>
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: linux-riscv@lists.infradead.org, ardb@kernel.org, javierm@redhat.com,
- arnd@arndb.de, richard.lyu@suse.com, helgaas@kernel.org, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-efi@vger.kernel.org, loongarch@lists.linux.dev,
- dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-fbdev@vger.kernel.org
+ <177156064929.189817.13253801870624912064.git-patchwork-notify@kernel.org>
+Date: Fri, 20 Feb 2026 04:10:49 +0000
+References: <20260105110520.21356-1-jgross@suse.com>
+In-Reply-To: <20260105110520.21356-1-jgross@suse.com>
+To: =?utf-8?b?SsO8cmdlbiBHcm/DnyA8amdyb3NzQHN1c2UuY29tPg==?=@codeaurora.org
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+ loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+ kvm@vger.kernel.org, luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, kys@microsoft.com,
+ haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+ longli@microsoft.com, peterz@infradead.org, will@kernel.org,
+ boqun.feng@gmail.com, longman@redhat.com, jikos@kernel.org,
+ jpoimboe@kernel.org, pawan.kumar.gupta@linux.intel.com,
+ boris.ostrovsky@oracle.com, xen-devel@lists.xenproject.org,
+ ajay.kaher@broadcom.com, alexey.makhalov@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, linux@armlinux.org.uk,
+ catalin.marinas@arm.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+ chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, alex@ghiti.fr, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+ linux-arm-kernel@lists.infradead.org, pbonzini@redhat.com,
+ vkuznets@redhat.com, sstabellini@kernel.org, oleksandr_tyshchenko@epam.com,
+ daniel.lezcano@linaro.org, oleg@redhat.com
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+X-Spamd-Result: default: False [1.54 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[signature check failed: fail, {[1] = sig:subspace.kernel.org:reject}];
+	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8922-lists,linux-hyperv=lfdr.de,linux-riscv];
-	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:-];
+	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
+	R_DKIM_REJECT(0.00)[kernel.org:s=k20201202];
+	FREEMAIL_CC(0.00)[lists.infradead.org,vger.kernel.org,kernel.org,lists.linux.dev,lists.ozlabs.org,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,microsoft.com,infradead.org,gmail.com,oracle.com,lists.xenproject.org,broadcom.com,armlinux.org.uk,arm.com,xen0n.name,linux.ibm.com,ellerman.id.au,dabbelt.com,eecs.berkeley.edu,ghiti.fr,linaro.org,goodmis.org,google.com,suse.de,epam.com];
 	FROM_NEQ_ENVFROM(0.00)[patchwork-bot@kernel.org,linux-hyperv@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-8923-lists,linux-hyperv=lfdr.de,linux-riscv];
+	NEURAL_SPAM(0.00)[0.383];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
 	FROM_NO_DN(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	RCPT_COUNT_GT_50(0.00)[58];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 7CD761648B1
+	TO_DN_NONE(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,alien8.de:email]
+X-Rspamd-Queue-Id: 57BC1164953
 X-Rspamd-Action: no action
 
 Hello:
 
 This series was applied to riscv/linux.git (fixes)
-by Ard Biesheuvel <ardb@kernel.org>:
+by Borislav Petkov (AMD) <bp@alien8.de>:
 
-On Wed, 26 Nov 2025 17:03:17 +0100 you wrote:
-> Replace screen_info and edid_info with sysfb_primary_device of type
-> struct sysfb_display_info. Update all users. Then implement EDID support
-> in the kernel EFI code.
+On Mon,  5 Jan 2026 12:04:59 +0100 you wrote:
+> Some cleanups and reorg of paravirt code and headers:
 > 
-> Sysfb DRM drivers currently fetch the global edid_info directly, when
-> they should get that information together with the screen_info from their
-> device. Wrapping screen_info and edid_info in sysfb_primary_display and
-> passing this to drivers enables this.
+> - The first 2 patches should be not controversial at all, as they
+>   remove just some no longer needed #include and struct forward
+>   declarations.
+> 
+> - The 3rd patch is removing CONFIG_PARAVIRT_DEBUG, which IMO has
+>   no real value, as it just changes a crash to a BUG() (the stack
+>   trace will basically be the same). As the maintainer of the main
+>   paravirt user (Xen) I have never seen this crash/BUG() to happen.
 > 
 > [...]
 
 Here is the summary with links:
-  - [v3,1/9] efi: earlycon: Reduce number of references to global screen_info
-    https://git.kernel.org/riscv/c/b868070fbc02
-  - [v3,2/9] efi: sysfb_efi: Reduce number of references to global screen_info
-    (no matching commit)
-  - [v3,3/9] sysfb: Add struct sysfb_display_info
-    https://git.kernel.org/riscv/c/b945922619b7
-  - [v3,4/9] sysfb: Replace screen_info with sysfb_primary_display
-    (no matching commit)
-  - [v3,5/9] sysfb: Pass sysfb_primary_display to devices
-    https://git.kernel.org/riscv/c/08e583ad6857
-  - [v3,6/9] sysfb: Move edid_info into sysfb_primary_display
-    https://git.kernel.org/riscv/c/4fcae6358871
-  - [v3,7/9] efi: Refactor init_primary_display() helpers
-    (no matching commit)
-  - [v3,8/9] efi: Support EDID information
-    (no matching commit)
-  - [v3,9/9] efi: libstub: Simplify interfaces for primary_display
-    (no matching commit)
+  - [v5,05/21] paravirt: Remove asm/paravirt_api_clock.h
+    https://git.kernel.org/riscv/c/68b10fd40d49
+  - [v5,06/21] sched: Move clock related paravirt code to kernel/sched
+    https://git.kernel.org/riscv/c/e6b2aa6d4004
+  - [v5,10/21] riscv/paravirt: Use common code for paravirt_steal_clock()
+    https://git.kernel.org/riscv/c/ee9ffcf99f07
 
 You are awesome, thank you!
 -- 
