@@ -1,281 +1,324 @@
-Return-Path: <linux-hyperv+bounces-8936-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8937-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +6f1LLEemWk6RAMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8936-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 21 Feb 2026 03:55:45 +0100
+	id mAk/JCfCmWlhWgMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8937-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 21 Feb 2026 15:33:11 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B99016BFCD
-	for <lists+linux-hyperv@lfdr.de>; Sat, 21 Feb 2026 03:55:44 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51A9516D07F
+	for <lists+linux-hyperv@lfdr.de>; Sat, 21 Feb 2026 15:33:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A1921300373A
-	for <lists+linux-hyperv@lfdr.de>; Sat, 21 Feb 2026 02:55:39 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 32059300B9A6
+	for <lists+linux-hyperv@lfdr.de>; Sat, 21 Feb 2026 14:33:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB5F431A551;
-	Sat, 21 Feb 2026 02:55:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A31A51F192E;
+	Sat, 21 Feb 2026 14:33:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=mhklkml@zohomail.com header.b="fkFcMFMa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nR9WV1+x"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from sender4-pp-o95.zoho.com (sender4-pp-o95.zoho.com [136.143.188.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9E07E792;
-	Sat, 21 Feb 2026 02:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA48262BD
+	for <linux-hyperv@vger.kernel.org>; Sat, 21 Feb 2026 14:32:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771642537; cv=pass; b=d+bgkAmTIZcNKAJ3xSwNiwPR9POser6/WJwMQVYmQIq+A77CebY/+Hky6jX1kn2I+b1TOQLR9jzJ915+2FwpsqT+Epa4mq+S/N0sc6c4frtId83wn9TsBB/JH0Hg2m8tm/ZMDxQZfuEmSq3dEZEqXYhalXPFTvTvWEc+AAuX++g=
+	t=1771684382; cv=pass; b=nx4DEMMeT+kUmA7EnyNB6FSKuuKj+X4Ogc4e/7pduDVLE/agcDKl9d4i46x3YmxtYFCdh9FIwo65KhKuNVGrgGGVY6RmbpeBlii/7QY6oWLJUi2WFnOWUtEreEwwvDYPCLcevpKfCUxtVerAY9A60rs46mr0C5kOISQCMDYgt1o=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771642537; c=relaxed/simple;
-	bh=8QsW+8QWvMTYnv8gC8jwAiKkcxVXZ7vSrC80UZy/QwI=;
-	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type; b=plPDuMbMVXEu/oj5zquazuN2L+bajQxRsT8o8sVboAuwHgcY0D+EyCmyqPJISt+R/zhh3R6UBBp2qOEqdZF/haLwuKxIzylpariK4pCJnI8lXTraPIguJcRFlPD9c1gbsJ69egbkAqJWFe9eNQ2EAmAndv0elMP/w5qE+cecFTc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=mhklkml@zohomail.com header.b=fkFcMFMa; arc=pass smtp.client-ip=136.143.188.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-ARC-Seal: i=1; a=rsa-sha256; t=1771642520; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Q3BDp+4gu2dFXmXc1OI1x+i6Q9tHl0qu+dK9PX7g8XWZR0sLiIs3qfdr7WXQT5ZCLmq2/tfQuHn9jisRYeoN3bKJ1gLG1zF83Q9dcrenGYPYvOOiqfpHozExyLRbPc26KxGpNRplwwEPwQeqiZjmwtztwqM4sprk91HbwdXE1rE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1771642520; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=kAj1wuwyAAs08zW23cak0NopjszksiabwPLO2bTKHyc=; 
-	b=J8qp0ekD8utKB0pfUHbtmj2oVCzfXzI4bCNoR2TM0tAbj3MWvHQovKnS/CoFrZkhAXpcKz2VguUxMdbbYshuRq5IjdzDCc4yPsyqV7OIY83sVB7U6NcBl4S6NcL1o7AzC3k4SQUYOriz0CnGoFgOqzwMsw2fVe4Vh7YDTCII6as=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=mhklkml@zohomail.com;
-	dmarc=pass header.from=<mhklkml@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1771642519;
-	s=zm2022; d=zohomail.com; i=mhklkml@zohomail.com;
-	h=From:From:To:To:Cc:Cc:References:In-Reply-To:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=kAj1wuwyAAs08zW23cak0NopjszksiabwPLO2bTKHyc=;
-	b=fkFcMFMaogjuDaHJpdwKlneK4vJBDLPcPU2vMfoI29xJxUoxzs+anm+/01Gm6UMj
-	zZGCV37c5p9JcrSqzDI3LDBVR5w2PjuMXm189n5x4IS5+71KDI+l/ZdKiLhE1oJKCr8
-	YJGW7/gIf/O8esSt5ZMcfRfti9B65boaOZCpOnEw=
-Received: by mx.zohomail.com with SMTPS id 1771642518922720.5191555832141;
-	Fri, 20 Feb 2026 18:55:18 -0800 (PST)
-From: <mhklkml@zohomail.com>
-To: <vdso@mailbox.org>,
-	<mhklinux@outlook.com>
-Cc: <linux-kernel@vger.kernel.org>,
-	<kys@microsoft.com>,
-	<wei.liu@kernel.org>,
-	<haiyangz@microsoft.com>,
-	<longli@microsoft.com>,
-	<decui@microsoft.com>,
-	<linux-hyperv@vger.kernel.org>
-References: <20260220164045.1670-1-mhklkml@zohomail.com> <1554036576.472972.1771638469213@app.mailbox.org>
-In-Reply-To: <1554036576.472972.1771638469213@app.mailbox.org>
-Subject: RE: [PATCH 1/1] Drivers: hv: vmbus: Limit channel interrupt scan to relid high water mark
-Date: Fri, 20 Feb 2026 18:55:17 -0800
-Message-ID: <01bb01dca2dd$833a4b20$89aee160$@zohomail.com>
+	s=arc-20240116; t=1771684382; c=relaxed/simple;
+	bh=ccR8tiRXpGRTKvvJya8IzIwifwN8+p89MmZZl18KP1s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AU4y06EbhVDGZGcS2cnjy7SuFtq5VaaSC9mk8bthQ85iJatS8h+bH+GV/ox9i9/mVxPof2KJBOvD6ZkSSlT2xoFRO3TH3i6Fm/e/1JXEAUt94tpaZCgwGwR5s0fg10NsQ9jiY9X/bKV66yVx6DCo96Y0tSA1cZYNXeeIlqPNcxo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nR9WV1+x; arc=pass smtp.client-ip=74.125.82.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-1274204434bso2821728c88.1
+        for <linux-hyperv@vger.kernel.org>; Sat, 21 Feb 2026 06:32:59 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771684379; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Ikq5jvo5FPems8giQSjZlJiPdEysizvYQT+Isnm7UAaZ2BmQC8DcK7+OqxYV9GvIQv
+         X0sEOrQBu1J+7o/wkDSegm/6NBx5F1MjtO/ot94+HoWVxH+p262R6ffD1IBALyHyejic
+         1rZS8ltBWgZfiiz9NDWDlx6moqiwQZEoIkw4FqnPWAz3a+wwF/v2ddoQrHouCTL7v27C
+         Xe5NqREG6D+ZptzNz0k25fYn9gE0Z6sSAxAKavMMX8u+zjRYsr1H+hPdv3bg++/oJ3Yn
+         sNm2I16V2IvU/GgjoPkvSiB5XsPYgaEAvua334Q2VVw2onzLwYKuyApEzodvf9MB4DXe
+         Vy9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=IpQICzSBKHlKr1t9q1Yhh1BRovtTm1uKBd4aHFj8Hjk=;
+        fh=05Own2+PJX863Zj0p8exf5IW944Z5TJcCSNKgDkizFo=;
+        b=kU1oKcfw88UUOqVrt4pPdygOi/9EWnrah4uwr0+dVfd6xAslZUnBtVuyto8Twzl8LY
+         mSp8KvqSM0wNhnuEYvjc3Sgow2LMm44d4bEi2KaEv6pKNmb0qm+rjjM9vCvqjluxg91/
+         1w0k5E1JS6CBeqBpRo6sljLQtVciS4yRw0skNUqw2txaKdfbroENzCpxLmK+nPnAiddA
+         ybDZNR2FUfOJXip5vqbFKGdeAKuozJP4yTEzT2ynETS8yHBhrYM37IgHkZj/EgYIogf5
+         5IZjs1UfIcAHnPFIPTMmmMaf8V+BYsbfCQ74xcC7o5caDNpPWr/4XFNum5lBycC8vKCH
+         r8QQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771684379; x=1772289179; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IpQICzSBKHlKr1t9q1Yhh1BRovtTm1uKBd4aHFj8Hjk=;
+        b=nR9WV1+x5BFo8PW8VuoQzoMcYmSN53l/dAP06f3oNRKo5KumsYgOAoKacuKQrThYsY
+         2XI5sds4QIDz1j2yWONOteboNMyz9NIFjWwi41LwajrW3+IY1/DV0Cc9JUbRuXJMFL7k
+         69HqP8G3UGPEeO2f7As8BVevrRN7AM4ftErgk5azftiWNnxwgLpmMW45GuDbXAXiUBz0
+         OBHnBCc9N1qqw4Di1lRAFFjwO4jkimkM0L2Fs2k+uxf/hZ9ITrkosCZHJD8zxqrZ4+pB
+         2o7apVKSfQnvQSqZVm5ym+lONXDfQWmvBo5nSpZsxuqPW8sLIYEn8b5n9T/xTdzWOOfS
+         JeMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771684379; x=1772289179;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=IpQICzSBKHlKr1t9q1Yhh1BRovtTm1uKBd4aHFj8Hjk=;
+        b=cSfRH8t8ftwtDV2kAGP4leQU7qeP7BoHNpMr7NvuFYGK6GQxTnBPxMpafIuVXorHvl
+         i30N4pqUrQPliax0IcjCBK5YPlHpugOMPm8+uiMyrFIN53F5vKOaTm/C1nB/zSyPY/gi
+         nRcDIdYVw/lzWo8//ACKoI0h8T7DdVdBqFNXOikpd/KnWhc/YFmDxuvFmL4OEAlPamAi
+         i5yD4kUePxnxLjmY/xbZUXaXOk5Ftli2WQWVSDRFT/5k+ket5ksIU9cs2F79f0eVxy3i
+         7rqz2cBgEzJGvuJw0MdxibAOja2+KLdjiClhEfGG5So5v5fhiu0jDgD93QCqTjEJKETL
+         AIhg==
+X-Forwarded-Encrypted: i=1; AJvYcCUSoegIQaXnGInT2m/BweLRkn7dCHEv56zqWXSfKdr9aGSZw/EY2JTr3qV+DKCqp4/nbp8hZwwh8VaHDM8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7QtXsirey8VktLTJQxMU05AsOiPikdr0TqJuel4jnw3FhRpFC
+	g4AdIacD8hHGSPWpYNB3yDW3wk14Tq41glwKJhDR1uUJsIIzectKivi691Yyffaf67d8iWIKmwf
+	BIZkH8tJOf+sGIbQqQ9CJKgWOCausC/UKDY7v
+X-Gm-Gg: AZuq6aLV/wybpaxdDE5GYR9ohuOvMli/cFnI2O+hqVElfwvqtICVKEhFx6yBOoYO0xg
+	CS2JtfpsYrShVagTecLcP2LpcraeOj37pBDkhpyAdLFgKq8mMLULvBAX6Qj2SxjngttHYflGy+9
+	L/LVuK6uqAja6zZNQ5ACcMsdx+pfE3aTDhH6TBVyavC09Fc7apXcQC0AplZ2rG+nZtuTIVCkNOc
+	746VJCx0VYjPK2nBhra5bGytOlaf58ROvS8DYbfbyzYla1vTV2AorApff3VB5fxPTUUd7Wg5+ZJ
+	FzDQrIU=
+X-Received: by 2002:a05:7300:cd92:b0:2ba:974c:4954 with SMTP id
+ 5a478bee46e88-2bd7b881869mr1388014eec.11.1771684378590; Sat, 21 Feb 2026
+ 06:32:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="UTF-8"
+References: <20260210162107.2270823-1-ltykernel@gmail.com> <SN6PR02MB41577FB84EC73E48ABAC7D18D463A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <cc4dc4a6-2d74-49c1-bbb0-cfa44802a66b@arm.com> <yq5a5x7xq997.fsf@kernel.org>
+In-Reply-To: <yq5a5x7xq997.fsf@kernel.org>
+From: Tianyu Lan <ltykernel@gmail.com>
+Date: Sat, 21 Feb 2026 22:32:39 +0800
+X-Gm-Features: AaiRm50E_ESGVbiltZLXK5zgxnpO_9NduCkDEaa772nqMwo8MU7PE3h6Mm6IHnE
+Message-ID: <CAMvTesASofn8HO90Uf1Xcbc+k69R+95ZYRtVJMT0NFrzM6W2wA@mail.gmail.com>
+Subject: Re: [RFC PATCH V2] x86/VMBus: Confidential VMBus for dynamic DMA
+ buffer transition
+To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, Michael Kelley <mhklinux@outlook.com>, 
+	"kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>, 
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>, 
+	"longli@microsoft.com" <longli@microsoft.com>, Tianyu Lan <tiala@microsoft.com>, 
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "hch@infradead.org" <hch@infradead.org>, 
+	"vdso@hexbites.dev" <vdso@hexbites.dev>, Suzuki K Poulose <suzuki.poulose@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-us
-Thread-Index: AQLVHRIVvggES5zdtATCDTfbK2PZhwHsbUM8s4wbCnA=
-Feedback-ID: rr080112270a182d0abe0e1bfab48e7c250000145244e8dc250ddf3a3c1a9b40526d0dd46c687a91ee36da58:zu080112277a5b151368440073ea8ff277000004ee3148fae7ca5e85246d557eb94e2ca6af760b5b2a2c61fa:rf0801122668a2a89b93484be1d0a304f40000ee6e77b5ceb8656f009904f680d537533f531be78f93c86d:ZohoMail
-X-ZohoMailClient: External
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[zohomail.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64];
-	R_DKIM_ALLOW(-0.20)[zohomail.com:s=zm2022];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8936-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mhklkml@zohomail.com,linux-hyperv@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-8937-lists,linux-hyperv=lfdr.de];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[arm.com,outlook.com,microsoft.com,kernel.org,vger.kernel.org,infradead.org,hexbites.dev];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[zohomail.com:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[mailbox.org,outlook.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_NONE(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NO_DN(0.00)[];
-	NEURAL_HAM(-0.00)[-0.998];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ltykernel@gmail.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mailbox.org:email,zohomail.com:mid,zohomail.com:dkim,zohomail.com:email]
-X-Rspamd-Queue-Id: 4B99016BFCD
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[arm.com:email,mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 51A9516D07F
 X-Rspamd-Action: no action
 
-From: vdso@mailbox.org <vdso@mailbox.org> Sent: Friday, February 20, =
-2026 5:48 PM
+On Mon, Feb 16, 2026 at 6:21=E2=80=AFPM Aneesh Kumar K.V
+<aneesh.kumar@kernel.org> wrote:
 >
-> Hi Michael,
->=20
-> Boots for me on an x86_64 machine. Got a typo fix and a question for =
-you.
-> Tagging as reviewed and tested regardless :)
->=20
-> > On 02/20/2026 8:40 AM  Michael Kelley <mhklkml@zohomail.com> wrote:
+> Robin Murphy <robin.murphy@arm.com> writes:
+>
+> > On 2026-02-11 6:00 pm, Michael Kelley wrote:
+> >> From: Tianyu Lan <ltykernel@gmail.com> Sent: Tuesday, February 10, 202=
+6 8:21 AM
+> >>>
+> >>> Hyper-V provides Confidential VMBus to communicate between
+> >>> device model and device guest driver via encrypted/private
+> >>> memory in Confidential VM. The device model is in OpenHCL
+> >>> (https://openvmm.dev/guide/user_guide/openhcl.html) that
+> >>> plays the paravisor rule.
+> >>>
+> >>> For a VMBUS device, there are two communication methods to
+> >>
+> >> s/VMBUS/VMBus/
+> >>
+> >>> talk with Host/Hypervisor. 1) VMBus Ring buffer 2) dynamic
+> >>> DMA transition.
+> >>
+> >> I'm not sure what "dynamic DMA transition" is. Maybe just
+> >> "DMA transfers"?  Also, do the same substitution further
+> >> down in this commit message.
+> >>
+> >>> The Confidential VMBus Ring buffer has been
+> >>> upstreamed by Roman Kisel(commit 6802d8af).
+> >>
+> >> It's customary to use 12 character commit IDs, which would be
+> >> 6802d8af47d1 in this case.
+> >>
+> >>>
+> >>> The dynamic DMA transition of VMBus device normally goes
+> >>> through DMA core and it uses SWIOTLB as bounce buffer in
+> >>> CVM
+> >>
+> >> "CVM" is Microsoft-speak. The Linux terminology is "a CoCo VM".
+> >>
+> >>> to communicate with Host/Hypervisor. The Confidential
+> >>> VMBus device may use private/encrypted memory to do DMA
+> >>> and so the device swiotlb(bounce buffer) isn't necessary.
+> >>
+> >> The phrase "isn't necessary" does not capture the real issue
+> >> here. Saying "isn't necessary" makes it sound like this patch is
+> >> just avoids unnecessary work, so that it is a performance
+> >> improvement. But that's not the case.
+> >>
+> >> The real issue is that swiotlb memory is decrypted. So bouncing
+> >> through the swiotlb exposes to the host what is supposed to be
+> >> confidential data passed on the Confidential VMBus. Disabling
+> >> the swiotlb bouncing in this case is a hard requirement to preserve
+> >> confidentially.
 > >
+> > Yeah, this really isn't a Hyper-V problem. Indeed as things stand,
+> > "swiotlb=3Dforce" could potentially break confidentiality for any
+> > environment trying to invent a notion of private DMA, and perhaps we
+> > could throw a big warning about that, but really the answer there is
+> > "Don't run your confidential workload with 'swiotlb=3Dforce'. Why would
+> > you even do that? Debug your drivers in a regular VM or bare-metal with
+> > full debug visibility like a normal person..."
 > >
-> > From: Michael Kelley <mhklinux@outlook.com>
+> > The fact is we do not have a proper notion of trusted/private DMA yet,
+> > and this is not the way to add it. The current assumption is very much
+> > that all DMA is untrusted in the CoCo sense, because initially it was
+> > only virtual devices emulated by a hypervisor, thus had to be bounced
+> > through shared memory anyway. AMD SEV with a stage 1 IOMMU in the guest
+> > can allow an assigned physical device to access a suitably-aligned
+> > encrypted buffer directly, but that's still effectively just putting th=
+e
+> > buffer into a temporarily shared state for that device, it merely skips
+> > sharing it with the rest of the system. !force_dma_unencrypted() doesn'=
+t
+> > mean "we trust this device's DMA", it just means "we don't have to use
+> > explicitly-decrypted pages to accommodate untrusted/shared DMA here",
+> > plus it also serves double-duty for host encryption which doesn't share
+> > the same trust model anyway.
 > >
-> > When checking for VMBus channel interrutps, current code always =
-scans the
->=20
-> /s/interrutps/interrupts
->=20
-> > full SynIC receive interrupt bit array to get the relid of the
-> > interrupting channels. The array has HV_EVENT_FLAGS_COUNT (2048) =
-bits.
-> > But VMs rarely have more than 100 channels, and the relid is =
-typically
-> > a small integer that is densely assigned by the Hyper-V host. It's
-> > wasteful to scan 2048 bits when it is highly unlikely that anything =
-will
-> > be found past bit 100. The waste is double with Confidential VMBus =
-because
-> > there are two receive interrupt arrays that must be scanned: one for =
-the
-> > hypervisor SynIC and one for the paravisor SynIC.
+> > I assumed this would follow the TDISP stuff, but if Hyper-V has an
+> > alternative device-trusting mechanism already then there's no need to
+> > wait. We want some common device property (likely consolidating the
+> > current PCI external-facing port notion of trustedness plus whatever
+> > TDISP wants), with which we can then make proper decisions in all the
+> > right DMA API paths - and if it can end up replacing the horrible
+> > force_dma_unencrypted() as well then all the better! I'd totally
+> > forgotten about the previous discussion that Michael referred to (which
+> > I had to track down[1]), but it looks like all the main points were
+> > already covered there and we were approaching a consensus, so really I
+> > guess someone just needs to give it a go.
 > >
-> > Improve the scanning by tracking the largest relid that has been =
-offered
-> > by the Hyper-V host. Then when checking for VMBus channel =
-interrupts, only
-> > scan up to this high water mark.
-> >
-> > When channels are rescinded, it's not worth the complexity to =
-recalculate
-> > the high water mark. Hyper-V tends to reuse the rescinded relids for =
-any
-> > new channels that are subsequently added, and the performance =
-benefit of
-> > exactly tracking the high water mark would be minimal.
-> >
-> > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
->=20
-> Tested-by: Roman Kisel <vdso@mailbox.org>
-> Reviewed-by: Roman Kisel <vdso@mailbox.org>
+>
+> With my device-assignment=E2=80=93related changes, I have made the follow=
+ing
+> update. It may be a slightly stronger requirement to enforce that
+> trusted device cannot use SWIOTLB, but it simplifies the overall design.
+> I also have a prototype, that added two default swiotlb, ie,
+>
+> static struct io_tlb_mem io_tlb_default_mem;
+> static struct io_tlb_mem io_tlb_default_shared_mem;
+>
+> Looking at that change, I would suggest we avoid doing this unless we
+> are certain that there is a requirement for a trusted device to use
+> SWIOTLB bouncing.
+>
 
-Thanks!
+Hi Robin & Aneesh:
+     Thanks for your suggestion and draft patch. Later response due to
+holiday. We may combine the Aneesh's change with Michael's suggestion
+that DMA core exposes DMA core API of disabling swiotlb allocation and forc=
+e
+using swiotlb and latform or subsystem(e.g, TSM module) maycall them
+according to user case.
 
->=20
-> > ---
-> >  drivers/hv/channel_mgmt.c | 16 ++++++++++++----
-> >  drivers/hv/hyperv_vmbus.h |  3 ++-
-> >  drivers/hv/vmbus_drv.c    |  7 +------
-> >  3 files changed, 15 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-> > index 74fed2c073d4..61f7dffd0f50 100644
-> > --- a/drivers/hv/channel_mgmt.c
-> > +++ b/drivers/hv/channel_mgmt.c
-> > @@ -384,8 +384,18 @@ static void free_channel(struct vmbus_channel =
-*channel)
-> >
-> >  void vmbus_channel_map_relid(struct vmbus_channel *channel)
-> >  {
-> > -	if (WARN_ON(channel->offermsg.child_relid >=3D =
-MAX_CHANNEL_RELIDS))
-> > +	u32 new_relid =3D channel->offermsg.child_relid;
-> > +
-> > +	if (WARN_ON(new_relid >=3D MAX_CHANNEL_RELIDS))
-> >  		return;
-> > +
-> > +	/*
-> > +	 * This function is always called in the tasklet for the connect =
-CPU.
-> > +	 * So updating the relid hiwater mark does not need to be atomic.
-> > +	 */
-> > +	if (new_relid > READ_ONCE(vmbus_connection.relid_hiwater))
-> > +		WRITE_ONCE(vmbus_connection.relid_hiwater, new_relid);
-> > +
-> >  	/*
-> >  	 * The mapping of the channel's relid is visible from the CPUs =
-that
-> >  	 * execute vmbus_chan_sched() by the time that vmbus_chan_sched() =
-will
-> > @@ -411,9 +421,7 @@ void vmbus_channel_map_relid(struct =
-vmbus_channel *channel)
-> >  	 *      of the VMBus driver and vmbus_chan_sched() can not run =
-before
-> >  	 *      vmbus_bus_resume() has completed execution (cf. =
-resume_noirq).
-> >  	 */
-> > -	virt_store_mb(
-> > -		vmbus_connection.channels[channel->offermsg.child_relid],
-> > -		channel);
-> > +	virt_store_mb(vmbus_connection.channels[new_relid], channel);
-> >  }
-> >
-> >  void vmbus_channel_unmap_relid(struct vmbus_channel *channel)
-> > diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-> > index 7bd8f8486e85..2c90c81a3b0f 100644
-> > --- a/drivers/hv/hyperv_vmbus.h
-> > +++ b/drivers/hv/hyperv_vmbus.h
-> > @@ -276,8 +276,9 @@ struct vmbus_connection {
-> >  	struct list_head chn_list;
-> >  	struct mutex channel_mutex;
-> >
-> > -	/* Array of channels */
-> > +	/* Array of channel pointers, indexed by relid */
-> >  	struct vmbus_channel **channels;
-> > +	u32 relid_hiwater;
-> >
-> >  	/*
-> >  	 * An offer message is handled first on the work_queue, and then
-> > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> > index 3e7a52918ce0..a96da105b593 100644
-> > --- a/drivers/hv/vmbus_drv.c
-> > +++ b/drivers/hv/vmbus_drv.c
-> > @@ -1258,17 +1258,12 @@ static void vmbus_chan_sched(void =
-*event_page_addr)
-> >  		return;
-> >  	event =3D (union hv_synic_event_flags *)event_page_addr + =
-VMBUS_MESSAGE_SINT;
-> >
-> > -	maxbits =3D HV_EVENT_FLAGS_COUNT;
-> > +	maxbits =3D READ_ONCE(vmbus_connection.relid_hiwater) + 1;
->=20
-> Worth checking that "maxbits <=3D HV_EVENT_FLAGS_COUNT" to protect =
-from
-> corruptions, etc. or would be too paranoidal?
-
-We definitely want to validate what Hyper-V returns to the guest as a =
-relid,
-and drop any values that are "too big", so we don't go indexing off into
-bogus memory. But that validation is done in vmbus_channel_map_relid()
-with a WARN_ON() before setting relid_hiwater.  So there's no way for
-relid_hiwater to be bogus, and additional validation here in
-vmbus_chan_sched() really isn't necessary.
-
-Michael
-
->=20
-> >  	recv_int_page =3D event->flags;
-> >
-> >  	if (unlikely(!recv_int_page))
-> >  		return;
-> >
-> > -	/*
-> > -	 * Suggested-by: Michael Kelley <mhklinux@outlook.com>
-> > -	 * One possible optimization would be to keep track of the largest =
-relID that's in use,
-> > -	 * and only scan up to that relID.
-> > -	 */
-> >  	for_each_set_bit(relid, recv_int_page, maxbits) {
-> >  		void (*callback_fn)(void *context);
-> >  		struct vmbus_channel *channel;
-> > --
-> > 2.25.1
+> diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
+> index b27de03f2466..07ef149bd9fc 100644
+> --- a/include/linux/swiotlb.h
+> +++ b/include/linux/swiotlb.h
+> @@ -292,6 +292,9 @@ bool swiotlb_free(struct device *dev, struct page *pa=
+ge, size_t size);
+>
+>  static inline bool is_swiotlb_for_alloc(struct device *dev)
+>  {
+> +       if (device_cc_accepted(dev))
+> +               return false;
+> +
+>         return dev->dma_io_tlb_mem->for_alloc;
+>  }
+>  #else
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index 34fe14b987f0..a89a7ac07499 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -159,6 +159,14 @@ static struct page *__dma_direct_alloc_pages(struct =
+device *dev, size_t size,
+>   */
+>  static bool dma_direct_use_pool(struct device *dev, gfp_t gfp)
+>  {
+> +       /*
+> +        * Atomic pools are marked decrypted and are used if we require r=
+equire
+> +        * updation of pfn mem encryption attributes or for DMA non-coher=
+ent
+> +        * device allocation. Both is not true for trusted device.
+> +        */
+> +       if (device_cc_accepted(dev))
+> +               return false;
+> +
+>         return !gfpflags_allow_blocking(gfp) && !is_swiotlb_for_alloc(dev=
+);
+>  }
+>
+> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+> index a862712f4dc6..6d9f0c869c6f 100644
+> --- a/kernel/dma/swiotlb.c
+> +++ b/kernel/dma/swiotlb.c
+> @@ -1643,6 +1643,9 @@ bool is_swiotlb_active(struct device *dev)
+>  {
+>         struct io_tlb_mem *mem =3D dev->dma_io_tlb_mem;
+>
+> +       if (device_cc_accepted(dev))
+> +               return false;
+> +
+>         return mem && mem->nslabs;
+>  }
 
 
+
+--
+Thanks
+Tianyu Lan
 
