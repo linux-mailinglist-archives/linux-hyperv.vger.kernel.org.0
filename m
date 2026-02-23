@@ -1,59 +1,59 @@
-Return-Path: <linux-hyperv+bounces-8952-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8953-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aMxCBgBfnGkUFQQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8952-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 15:06:56 +0100
+	id 6JXVEA9fnGkUFQQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8953-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 15:07:11 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C5C9177BC6
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 15:06:55 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCFD1177BD4
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 15:07:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0E8FD310B912
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 14:02:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ACC433120AE8
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 14:02:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B89C727466A;
-	Mon, 23 Feb 2026 14:02:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DB5C279DAF;
+	Mon, 23 Feb 2026 14:02:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="PXXcOnMc"
+	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="z4JOygdL"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC772405EB;
-	Mon, 23 Feb 2026 14:02:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE96127FD54;
+	Mon, 23 Feb 2026 14:02:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771855343; cv=pass; b=k/WcRCGsQOgSavStul8fC1VviDhTPNNXkyHATFSoquSghp6QkseaFfpgYobeveYAP1me95mZNLMQPW/8jPTi+tSdZ5qtpj62vyY8kntDRzkz4Y5ObBTM8Zk4mRl7E4TU2wpBk3rDp1qGKtBgKETe0NXnPJLunTaMw40yjJY2Zh8=
+	t=1771855351; cv=pass; b=lAxaCC+Xc6xmaWQ9Am6Y9MDzBv6faOSsBqxwmHKsRgISlRzuLbbkqyuO3NWyVZbD2xvbwW7aP9SdqlW904DTuAhmHrRNKLb6VBHi6XQg0I7j00JCo0FFztfbk3SPjzSTYRjo2UXYvt0ZjHibdAoDyUfBnrHj3nBCip/Z6oCzfwQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771855343; c=relaxed/simple;
-	bh=PfVQh8qwTx+WEgrRONCEHMj6w4WutNitOIfjTgyabiU=;
+	s=arc-20240116; t=1771855351; c=relaxed/simple;
+	bh=eXK5b6tlhNvFcASCsk3Q9owPHdEEC6TiclVhR7ofk/o=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RS2u923hKoXE0ra3buBmSw6Ln1IrsttzouQAV0YZZmopL3rpv+SjJbh1dFkk82WEBJUngoCXNGt5hJusgy1pRfSwIc/u80d2AMmaWiHmrxsmOsG70WIFxCiRWOeBNEmxkOugpGB9j7muKUCvnzS/8+4GeQYtV8nVKgvMrTJ69dw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=PXXcOnMc; arc=pass smtp.client-ip=136.143.188.52
+	 MIME-Version; b=euxekctTSasnR55qTevB5glFsV0vP/tjJd/Iyp5UOWwcIp7nW54gZZC168C79hncC6h46/zPgEWmWJRLHB708KUIklqFNxGY0neVqt2HKeGZhUFQXwzvMsZKvEDKqh9wFv7p2NBJQ/4oH8mYd31leT85tgL8QGmPNEL8GmqmwpM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=z4JOygdL; arc=pass smtp.client-ip=136.143.188.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1771855335; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1771855339; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=bQFwwODVC9Z3Kd+6Rq6Nis9A0L4Q779YgRZLEArxwwJ+jp2nJzlRc/o+Xwi7A6SfBHZIMQZKSZ6F0ZWCXSjT3NUdU7g6dSLmr9OK325JnrrBWntxTdFnEzxprbvpyogrpJAadr+Wrq5ssfDDvdTm7vX2IOEGqbvAH0U9QN9fdoo=
+	b=kV6DIBB3+MTi9lbWRzguJekFEDgHjq8uJBrYSoaYHJ1wJhum+heYJDahVhjeJBpZFTtXy6V57VD2XEdWugHl2VTbh2lZq+DGj3houBmGtwdpnwJWULvJTOhiTiIo9x1wbdb4Bam1vWi48W3Zbz6l569Ow3obro1N2M4Zrdf9iss=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1771855335; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=deeX6morUC+BIva+MNAMLZhL6WxkX+ImbvTw+Xk2h/c=; 
-	b=eAxAXNMvHF+6QCKYceiVC5VfSIXtvYTzD3z0b37XvgNbQgn7BdkZ9x2X3m2I0IG+aosX9xbLvnnbKsq/2QLtiIfOy/ZpVLTJeQ2QZ8K0uxLd33Zq4b706gxYaw6QR2VaiDJVMpmF6tgR5Rc1vF5Ai1OQ+zjlmDeJiOE1etsIU44=
+	t=1771855339; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=oBr/nGVNWdTHox3iiS6/ofi2P5mwBIXcrilS2jmVN4U=; 
+	b=P/3343/P/c5jdVv5GTaqo9o9qRWGj1gzR2kKIGJad991af436oP1jB4lzRNhIG5vCdFp+FxY2nPEjwnZFcwyhTXjMyHDwVz5TcUbh1PRfkYrymAy1ZWDlpPiqEHiHo8RhfnRBKJM3KzqM7/I/F0ldVB8mYMlEdMlxHtOXJMn5VM=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=anirudhrb.com;
 	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
 	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1771855335;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1771855339;
 	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=deeX6morUC+BIva+MNAMLZhL6WxkX+ImbvTw+Xk2h/c=;
-	b=PXXcOnMcByiYTgOyR2PxnSr8r1kK4eYEXx1s0N9tkheEl5tjxluQ5yTIMTb85qDX
-	/xeFTw1QzE6B9AC7pOT6lX39En/9Fut4KdfEI7cl/VbGgYrzekefYGg/Y8TwHKx/rGZ
-	sM2taEjl9j7pcqyqvVsbMOq+81ew4ejYgcM2oUpU=
-Received: by mx.zohomail.com with SMTPS id 1771855332478262.1783900932768;
-	Mon, 23 Feb 2026 06:02:12 -0800 (PST)
+	bh=oBr/nGVNWdTHox3iiS6/ofi2P5mwBIXcrilS2jmVN4U=;
+	b=z4JOygdL6ZzdUzeBZucN20u9VWWDDEpCAcnHhQfian0f03POnBMJQcolY25+fM27
+	6epkshoNJMLfz5Gg12zVtAOv83Je0ONjlg82/OfZCC4RJfd7pEFlqkRPeMwhyUDt0eE
+	QPPh7hEvFU+1TEDetNG7qEVlEJlKsxQyAgUn1xU0=
+Received: by mx.zohomail.com with SMTPS id 1771855337105922.117586139604;
+	Mon, 23 Feb 2026 06:02:17 -0800 (PST)
 From: Anirudh Rayabharam <anirudh@anirudhrb.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -63,9 +63,9 @@ To: kys@microsoft.com,
 	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: anirudh@anirudhrb.com
-Subject: [PATCH v5 1/2] mshv: refactor synic init and cleanup
-Date: Mon, 23 Feb 2026 14:01:58 +0000
-Message-Id: <20260223140159.1627229-2-anirudh@anirudhrb.com>
+Subject: [PATCH v5 2/2] mshv: add arm64 support for doorbell & intercept SINTs
+Date: Mon, 23 Feb 2026 14:01:59 +0000
+Message-Id: <20260223140159.1627229-3-anirudh@anirudhrb.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260223140159.1627229-1-anirudh@anirudhrb.com>
 References: <20260223140159.1627229-1-anirudh@anirudhrb.com>
@@ -83,13 +83,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[anirudhrb.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8952-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8953-lists,linux-hyperv=lfdr.de];
 	TO_DN_NONE(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -101,307 +101,256 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-0.999];
 	DKIM_TRACE(0.00)[anirudhrb.com:+];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MIME_TRACE(0.00)[0:+];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,anirudhrb.com:mid,anirudhrb.com:dkim,anirudhrb.com:email]
-X-Rspamd-Queue-Id: 5C5C9177BC6
+X-Rspamd-Queue-Id: BCFD1177BD4
 X-Rspamd-Action: no action
 
 From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
 
-Rename mshv_synic_init() to mshv_synic_cpu_init() and
-mshv_synic_cleanup() to mshv_synic_cpu_exit() to better reflect that
-these functions handle per-cpu synic setup and teardown.
+On x86, the HYPERVISOR_CALLBACK_VECTOR is used to receive synthetic
+interrupts (SINTs) from the hypervisor for doorbells and intercepts.
+There is no such vector reserved for arm64.
 
-Use mshv_synic_init/cleanup() to perform init/cleanup that is not per-cpu.
-Move all the synic related setup from mshv_parent_partition_init.
+On arm64, the hypervisor exposes a synthetic register that can be read
+to find the INTID that should be used for SINTs. This INTID is in the
+PPI range.
 
-Move the reboot notifier to mshv_synic.c because it currently only
-operates on the synic cpuhp state.
-
-Move out synic_pages from the global mshv_root since its use is now
-completely local to mshv_synic.c.
-
-This is in preparation for the next patch which will add more stuff to
-mshv_synic_init().
-
-No functional change.
+To better unify the code paths, introduce mshv_sint_vector_init() that
+either reads the synthetic register and obtains the INTID (arm64) or
+just uses HYPERVISOR_CALLBACK_VECTOR as the interrupt vector (x86).
 
 Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
 ---
- drivers/hv/mshv_root.h      |  5 ++-
- drivers/hv/mshv_root_main.c | 59 +++++-------------------------
- drivers/hv/mshv_synic.c     | 71 +++++++++++++++++++++++++++++++++----
- 3 files changed, 75 insertions(+), 60 deletions(-)
+ drivers/hv/mshv_synic.c     | 120 +++++++++++++++++++++++++++++++++---
+ include/hyperv/hvgdk_mini.h |   2 +
+ 2 files changed, 112 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
-index 3c1d88b36741..26e0320c8097 100644
---- a/drivers/hv/mshv_root.h
-+++ b/drivers/hv/mshv_root.h
-@@ -183,7 +183,6 @@ struct hv_synic_pages {
- };
- 
- struct mshv_root {
--	struct hv_synic_pages __percpu *synic_pages;
- 	spinlock_t pt_ht_lock;
- 	DECLARE_HASHTABLE(pt_htable, MSHV_PARTITIONS_HASH_BITS);
- 	struct hv_partition_property_vmm_capabilities vmm_caps;
-@@ -242,8 +241,8 @@ int mshv_register_doorbell(u64 partition_id, doorbell_cb_t doorbell_cb,
- void mshv_unregister_doorbell(u64 partition_id, int doorbell_portid);
- 
- void mshv_isr(void);
--int mshv_synic_init(unsigned int cpu);
--int mshv_synic_cleanup(unsigned int cpu);
-+int mshv_synic_init(struct device *dev);
-+void mshv_synic_cleanup(void);
- 
- static inline bool mshv_partition_encrypted(struct mshv_partition *partition)
- {
-diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index 681b58154d5e..7c1666456e78 100644
---- a/drivers/hv/mshv_root_main.c
-+++ b/drivers/hv/mshv_root_main.c
-@@ -2035,7 +2035,6 @@ mshv_dev_release(struct inode *inode, struct file *filp)
- 	return 0;
- }
- 
--static int mshv_cpuhp_online;
- static int mshv_root_sched_online;
- 
- static const char *scheduler_type_to_string(enum hv_scheduler_type type)
-@@ -2198,40 +2197,14 @@ root_scheduler_deinit(void)
- 	free_percpu(root_scheduler_output);
- }
- 
--static int mshv_reboot_notify(struct notifier_block *nb,
--			      unsigned long code, void *unused)
--{
--	cpuhp_remove_state(mshv_cpuhp_online);
--	return 0;
--}
--
--struct notifier_block mshv_reboot_nb = {
--	.notifier_call = mshv_reboot_notify,
--};
--
- static void mshv_root_partition_exit(void)
- {
--	unregister_reboot_notifier(&mshv_reboot_nb);
- 	root_scheduler_deinit();
- }
- 
- static int __init mshv_root_partition_init(struct device *dev)
- {
--	int err;
--
--	err = root_scheduler_init(dev);
--	if (err)
--		return err;
--
--	err = register_reboot_notifier(&mshv_reboot_nb);
--	if (err)
--		goto root_sched_deinit;
--
--	return 0;
--
--root_sched_deinit:
--	root_scheduler_deinit();
--	return err;
-+	return root_scheduler_init(dev);
- }
- 
- static void mshv_init_vmm_caps(struct device *dev)
-@@ -2276,31 +2249,18 @@ static int __init mshv_parent_partition_init(void)
- 			MSHV_HV_MAX_VERSION);
- 	}
- 
--	mshv_root.synic_pages = alloc_percpu(struct hv_synic_pages);
--	if (!mshv_root.synic_pages) {
--		dev_err(dev, "Failed to allocate percpu synic page\n");
--		ret = -ENOMEM;
-+	ret = mshv_synic_init(dev);
-+	if (ret)
- 		goto device_deregister;
--	}
--
--	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "mshv_synic",
--				mshv_synic_init,
--				mshv_synic_cleanup);
--	if (ret < 0) {
--		dev_err(dev, "Failed to setup cpu hotplug state: %i\n", ret);
--		goto free_synic_pages;
--	}
--
--	mshv_cpuhp_online = ret;
- 
- 	ret = mshv_retrieve_scheduler_type(dev);
- 	if (ret)
--		goto remove_cpu_state;
-+		goto synic_cleanup;
- 
- 	if (hv_root_partition())
- 		ret = mshv_root_partition_init(dev);
- 	if (ret)
--		goto remove_cpu_state;
-+		goto synic_cleanup;
- 
- 	mshv_init_vmm_caps(dev);
- 
-@@ -2318,10 +2278,8 @@ static int __init mshv_parent_partition_init(void)
- exit_partition:
- 	if (hv_root_partition())
- 		mshv_root_partition_exit();
--remove_cpu_state:
--	cpuhp_remove_state(mshv_cpuhp_online);
--free_synic_pages:
--	free_percpu(mshv_root.synic_pages);
-+synic_cleanup:
-+	mshv_synic_cleanup();
- device_deregister:
- 	misc_deregister(&mshv_dev);
- 	return ret;
-@@ -2335,8 +2293,7 @@ static void __exit mshv_parent_partition_exit(void)
- 	mshv_irqfd_wq_cleanup();
- 	if (hv_root_partition())
- 		mshv_root_partition_exit();
--	cpuhp_remove_state(mshv_cpuhp_online);
--	free_percpu(mshv_root.synic_pages);
-+	mshv_synic_cleanup();
- }
- 
- module_init(mshv_parent_partition_init);
 diff --git a/drivers/hv/mshv_synic.c b/drivers/hv/mshv_synic.c
-index f8b0337cdc82..074e37c48876 100644
+index 074e37c48876..75ef2160b3e0 100644
 --- a/drivers/hv/mshv_synic.c
 +++ b/drivers/hv/mshv_synic.c
-@@ -12,11 +12,16 @@
+@@ -10,17 +10,22 @@
+ #include <linux/kernel.h>
+ #include <linux/slab.h>
  #include <linux/mm.h>
++#include <linux/interrupt.h>
  #include <linux/io.h>
  #include <linux/random.h>
-+#include <linux/cpuhotplug.h>
-+#include <linux/reboot.h>
+ #include <linux/cpuhotplug.h>
+ #include <linux/reboot.h>
  #include <asm/mshyperv.h>
++#include <linux/platform_device.h>
++#include <linux/acpi.h>
  
  #include "mshv_eventfd.h"
  #include "mshv.h"
  
-+static int synic_cpuhp_online;
-+static struct hv_synic_pages __percpu *synic_pages;
-+
+ static int synic_cpuhp_online;
+ static struct hv_synic_pages __percpu *synic_pages;
++static int mshv_sint_vector = -1; /* hwirq for the SynIC SINTs */
++static int mshv_sint_irq = -1; /* Linux IRQ for mshv_sint_vector */
+ 
  static u32 synic_event_ring_get_queued_port(u32 sint_index)
  {
- 	struct hv_synic_event_ring_page **event_ring_page;
-@@ -26,7 +31,7 @@ static u32 synic_event_ring_get_queued_port(u32 sint_index)
- 	u32 message;
- 	u8 tail;
+@@ -442,9 +447,7 @@ void mshv_isr(void)
+ 		if (msg->header.message_flags.msg_pending)
+ 			hv_set_non_nested_msr(HV_MSR_EOM, 0);
  
--	spages = this_cpu_ptr(mshv_root.synic_pages);
-+	spages = this_cpu_ptr(synic_pages);
- 	event_ring_page = &spages->synic_event_ring_page;
- 	synic_eventring_tail = (u8 **)this_cpu_ptr(hv_synic_eventring_tail);
- 
-@@ -393,7 +398,7 @@ mshv_intercept_isr(struct hv_message *msg)
- 
- void mshv_isr(void)
- {
--	struct hv_synic_pages *spages = this_cpu_ptr(mshv_root.synic_pages);
-+	struct hv_synic_pages *spages = this_cpu_ptr(synic_pages);
- 	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
- 	struct hv_message *msg;
- 	bool handled;
-@@ -446,7 +451,7 @@ void mshv_isr(void)
- 	}
- }
- 
--int mshv_synic_init(unsigned int cpu)
-+static int mshv_synic_cpu_init(unsigned int cpu)
- {
- 	union hv_synic_simp simp;
- 	union hv_synic_siefp siefp;
-@@ -455,7 +460,7 @@ int mshv_synic_init(unsigned int cpu)
- 	union hv_synic_sint sint;
- #endif
- 	union hv_synic_scontrol sctrl;
--	struct hv_synic_pages *spages = this_cpu_ptr(mshv_root.synic_pages);
-+	struct hv_synic_pages *spages = this_cpu_ptr(synic_pages);
- 	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
- 	struct hv_synic_event_flags_page **event_flags_page =
- 			&spages->synic_event_flags_page;
-@@ -542,14 +547,14 @@ int mshv_synic_init(unsigned int cpu)
- 	return -EFAULT;
- }
- 
--int mshv_synic_cleanup(unsigned int cpu)
-+static int mshv_synic_cpu_exit(unsigned int cpu)
- {
- 	union hv_synic_sint sint;
+-#ifdef HYPERVISOR_CALLBACK_VECTOR
+-		add_interrupt_randomness(HYPERVISOR_CALLBACK_VECTOR);
+-#endif
++		add_interrupt_randomness(mshv_sint_vector);
+ 	} else {
+ 		pr_warn_once("%s: unknown message type 0x%x\n", __func__,
+ 			     msg->header.message_type);
+@@ -456,9 +459,7 @@ static int mshv_synic_cpu_init(unsigned int cpu)
  	union hv_synic_simp simp;
  	union hv_synic_siefp siefp;
  	union hv_synic_sirbp sirbp;
+-#ifdef HYPERVISOR_CALLBACK_VECTOR
+ 	union hv_synic_sint sint;
+-#endif
  	union hv_synic_scontrol sctrl;
--	struct hv_synic_pages *spages = this_cpu_ptr(mshv_root.synic_pages);
-+	struct hv_synic_pages *spages = this_cpu_ptr(synic_pages);
+ 	struct hv_synic_pages *spages = this_cpu_ptr(synic_pages);
  	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
- 	struct hv_synic_event_flags_page **event_flags_page =
- 		&spages->synic_event_flags_page;
-@@ -663,3 +668,57 @@ mshv_unregister_doorbell(u64 partition_id, int doorbell_portid)
+@@ -501,10 +502,12 @@ static int mshv_synic_cpu_init(unsigned int cpu)
  
- 	mshv_portid_free(doorbell_portid);
- }
+ 	hv_set_non_nested_msr(HV_MSR_SIRBP, sirbp.as_uint64);
+ 
+-#ifdef HYPERVISOR_CALLBACK_VECTOR
++	if (mshv_sint_irq != -1)
++		enable_percpu_irq(mshv_sint_irq, 0);
 +
-+static int mshv_synic_reboot_notify(struct notifier_block *nb,
-+			      unsigned long code, void *unused)
+ 	/* Enable intercepts */
+ 	sint.as_uint64 = 0;
+-	sint.vector = HYPERVISOR_CALLBACK_VECTOR;
++	sint.vector = mshv_sint_vector;
+ 	sint.masked = false;
+ 	sint.auto_eoi = hv_recommend_using_aeoi();
+ 	hv_set_non_nested_msr(HV_MSR_SINT0 + HV_SYNIC_INTERCEPTION_SINT_INDEX,
+@@ -512,13 +515,12 @@ static int mshv_synic_cpu_init(unsigned int cpu)
+ 
+ 	/* Doorbell SINT */
+ 	sint.as_uint64 = 0;
+-	sint.vector = HYPERVISOR_CALLBACK_VECTOR;
++	sint.vector = mshv_sint_vector;
+ 	sint.masked = false;
+ 	sint.as_intercept = 1;
+ 	sint.auto_eoi = hv_recommend_using_aeoi();
+ 	hv_set_non_nested_msr(HV_MSR_SINT0 + HV_SYNIC_DOORBELL_SINT_INDEX,
+ 			      sint.as_uint64);
+-#endif
+ 
+ 	/* Enable global synic bit */
+ 	sctrl.as_uint64 = hv_get_non_nested_msr(HV_MSR_SCONTROL);
+@@ -573,6 +575,9 @@ static int mshv_synic_cpu_exit(unsigned int cpu)
+ 	hv_set_non_nested_msr(HV_MSR_SINT0 + HV_SYNIC_DOORBELL_SINT_INDEX,
+ 			      sint.as_uint64);
+ 
++	if (mshv_sint_irq != -1)
++		disable_percpu_irq(mshv_sint_irq);
++
+ 	/* Disable Synic's event ring page */
+ 	sirbp.as_uint64 = hv_get_non_nested_msr(HV_MSR_SIRBP);
+ 	sirbp.sirbp_enabled = false;
+@@ -683,14 +688,106 @@ static struct notifier_block mshv_synic_reboot_nb = {
+ 	.notifier_call = mshv_synic_reboot_notify,
+ };
+ 
++#ifndef HYPERVISOR_CALLBACK_VECTOR
++static DEFINE_PER_CPU(long, mshv_evt);
++
++static irqreturn_t mshv_percpu_isr(int irq, void *dev_id)
 +{
-+	if (!hv_root_partition())
-+		return 0;
-+
-+	cpuhp_remove_state(synic_cpuhp_online);
-+	return 0;
++	mshv_isr();
++	return IRQ_HANDLED;
 +}
 +
-+static struct notifier_block mshv_synic_reboot_nb = {
-+	.notifier_call = mshv_synic_reboot_notify,
-+};
-+
-+int __init mshv_synic_init(struct device *dev)
++#ifdef CONFIG_ACPI
++static int __init mshv_acpi_setup_sint_irq(void)
 +{
-+	int ret = 0;
++	return acpi_register_gsi(NULL, mshv_sint_vector, ACPI_EDGE_SENSITIVE,
++					ACPI_ACTIVE_HIGH);
++}
 +
-+	synic_pages = alloc_percpu(struct hv_synic_pages);
-+	if (!synic_pages) {
-+		dev_err(dev, "Failed to allocate percpu synic page\n");
-+		return -ENOMEM;
++static void mshv_acpi_cleanup_sint_irq(void)
++{
++	acpi_unregister_gsi(mshv_sint_vector);
++}
++#else
++static int __init mshv_acpi_setup_sint_irq(void)
++{
++	return -ENODEV;
++}
++
++static void mshv_acpi_cleanup_sint_irq(void)
++{
++}
++#endif
++
++static int __init mshv_sint_vector_init(void)
++{
++	int ret;
++	struct hv_register_assoc reg = {
++		.name = HV_ARM64_REGISTER_SINT_RESERVED_INTERRUPT_ID,
++	};
++	union hv_input_vtl input_vtl = { 0 };
++
++	if (acpi_disabled)
++		return -ENODEV;
++
++	ret = hv_call_get_vp_registers(HV_VP_INDEX_SELF, HV_PARTITION_ID_SELF,
++				1, input_vtl, &reg);
++	if (ret || !reg.value.reg64)
++		return -ENODEV;
++
++	mshv_sint_vector = reg.value.reg64;
++	ret = mshv_acpi_setup_sint_irq();
++	if (ret <= 0) {
++		pr_err("Failed to setup IRQ for MSHV SINT vector %d: %d\n",
++			mshv_sint_vector, ret);
++		goto out_fail;
 +	}
 +
-+	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "mshv_synic",
-+				mshv_synic_cpu_init,
-+				mshv_synic_cpu_exit);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to setup cpu hotplug state: %i\n", ret);
-+		goto free_synic_pages;
-+	}
++	mshv_sint_irq = ret;
 +
-+	synic_cpuhp_online = ret;
-+
-+	ret = register_reboot_notifier(&mshv_synic_reboot_nb);
++	ret = request_percpu_irq(mshv_sint_irq, mshv_percpu_isr, "MSHV",
++		&mshv_evt);
 +	if (ret)
-+		goto remove_cpuhp_state;
++		goto out_unregister;
 +
 +	return 0;
 +
-+remove_cpuhp_state:
-+	cpuhp_remove_state(synic_cpuhp_online);
-+free_synic_pages:
-+	free_percpu(synic_pages);
++out_unregister:
++	mshv_acpi_cleanup_sint_irq();
++out_fail:
 +	return ret;
 +}
 +
-+void mshv_synic_cleanup(void)
++static void mshv_sint_vector_cleanup(void)
 +{
-+	unregister_reboot_notifier(&mshv_synic_reboot_nb);
-+	cpuhp_remove_state(synic_cpuhp_online);
-+	free_percpu(synic_pages);
++	free_percpu_irq(mshv_sint_irq, &mshv_evt);
++	mshv_acpi_cleanup_sint_irq();
 +}
++#else /* !HYPERVISOR_CALLBACK_VECTOR */
++static int __init mshv_sint_vector_init(void)
++{
++	mshv_sint_vector = HYPERVISOR_CALLBACK_VECTOR;
++	return 0;
++}
++
++static void mshv_sint_vector_cleanup(void)
++{
++}
++#endif /* HYPERVISOR_CALLBACK_VECTOR */
++
+ int __init mshv_synic_init(struct device *dev)
+ {
+ 	int ret = 0;
+ 
++	ret = mshv_sint_vector_init();
++	if (ret)
++		return ret;
++
+ 	synic_pages = alloc_percpu(struct hv_synic_pages);
+ 	if (!synic_pages) {
+ 		dev_err(dev, "Failed to allocate percpu synic page\n");
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto sint_vector_cleanup;
+ 	}
+ 
+ 	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "mshv_synic",
+@@ -713,6 +810,8 @@ int __init mshv_synic_init(struct device *dev)
+ 	cpuhp_remove_state(synic_cpuhp_online);
+ free_synic_pages:
+ 	free_percpu(synic_pages);
++sint_vector_cleanup:
++	mshv_sint_vector_cleanup();
+ 	return ret;
+ }
+ 
+@@ -721,4 +820,5 @@ void mshv_synic_cleanup(void)
+ 	unregister_reboot_notifier(&mshv_synic_reboot_nb);
+ 	cpuhp_remove_state(synic_cpuhp_online);
+ 	free_percpu(synic_pages);
++	mshv_sint_vector_cleanup();
+ }
+diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
+index 30fbbde81c5c..7676f78e0766 100644
+--- a/include/hyperv/hvgdk_mini.h
++++ b/include/hyperv/hvgdk_mini.h
+@@ -1117,6 +1117,8 @@ enum hv_register_name {
+ 	HV_X64_REGISTER_MSR_MTRR_FIX4KF8000	= 0x0008007A,
+ 
+ 	HV_X64_REGISTER_REG_PAGE	= 0x0009001C,
++#elif defined(CONFIG_ARM64)
++	HV_ARM64_REGISTER_SINT_RESERVED_INTERRUPT_ID	= 0x00070001,
+ #endif
+ };
+ 
 -- 
 2.34.1
 
