@@ -1,58 +1,59 @@
-Return-Path: <linux-hyperv+bounces-8951-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8952-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6Kl5A+lenGkUFQQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8951-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 15:06:33 +0100
+	id aMxCBgBfnGkUFQQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8952-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 15:06:56 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F63F177BA9
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 15:06:32 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C5C9177BC6
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 15:06:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1C1F43021E72
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 14:02:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0E8FD310B912
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 14:02:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B45DC277029;
-	Mon, 23 Feb 2026 14:02:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B89C727466A;
+	Mon, 23 Feb 2026 14:02:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="hdFxmx6D"
+	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="PXXcOnMc"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13DB26E6F2;
-	Mon, 23 Feb 2026 14:02:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC772405EB;
+	Mon, 23 Feb 2026 14:02:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771855337; cv=pass; b=GvbjLOunocvtFChNZwP6nJHUfrdE5DXkT+kxxQAk1I45T+k9G5BwSf6xVxAtmirsTbvetT/kCg82TMxoIlEtGG3uoEtG0zZ9iUPMKomgyOCJ17l1Ksi6ZRe7DQp1l0vUM8oykYSNXJ2mWiIbQ0JVQvluoYGSR3bFshEJadvXdRQ=
+	t=1771855343; cv=pass; b=k/WcRCGsQOgSavStul8fC1VviDhTPNNXkyHATFSoquSghp6QkseaFfpgYobeveYAP1me95mZNLMQPW/8jPTi+tSdZ5qtpj62vyY8kntDRzkz4Y5ObBTM8Zk4mRl7E4TU2wpBk3rDp1qGKtBgKETe0NXnPJLunTaMw40yjJY2Zh8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771855337; c=relaxed/simple;
-	bh=SzNjSlKOgUQZLOg/hBEmuU6ov6JB/Ri1R+qtlZbH72Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ktt1twvYDhkQcE71yxK91M+xnBfP6NTGHU8xPJBTiXEkSQ1u0gVnkBdrjDvaLUqhM8TIaBGief9aZIpadwM7Ba6dlPWpSZ76AGItV3rBFn581/ym1jqztY7vu5FXQpVeeggEqMy5XnnKx6FM28KoieAPfhKP5T+KsGeyacE+3Mc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=hdFxmx6D; arc=pass smtp.client-ip=136.143.188.52
+	s=arc-20240116; t=1771855343; c=relaxed/simple;
+	bh=PfVQh8qwTx+WEgrRONCEHMj6w4WutNitOIfjTgyabiU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RS2u923hKoXE0ra3buBmSw6Ln1IrsttzouQAV0YZZmopL3rpv+SjJbh1dFkk82WEBJUngoCXNGt5hJusgy1pRfSwIc/u80d2AMmaWiHmrxsmOsG70WIFxCiRWOeBNEmxkOugpGB9j7muKUCvnzS/8+4GeQYtV8nVKgvMrTJ69dw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=PXXcOnMc; arc=pass smtp.client-ip=136.143.188.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1771855329; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1771855335; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=N+J4li4eK7i4gn9phYxZJkpjyG6GMBLT3oizTZWIddjkLjzq+f9WzdDdKHkLVf2V4gAlVGNbqwVSDlIyl85b3B1NgZPW3284WWqTX2eBW4ty51Oet2Lc7L1LGYLBkzH+YrU/YblgIDhzbiXrVgmtSh0la5u/wgVHEZz67DCGDl0=
+	b=bQFwwODVC9Z3Kd+6Rq6Nis9A0L4Q779YgRZLEArxwwJ+jp2nJzlRc/o+Xwi7A6SfBHZIMQZKSZ6F0ZWCXSjT3NUdU7g6dSLmr9OK325JnrrBWntxTdFnEzxprbvpyogrpJAadr+Wrq5ssfDDvdTm7vX2IOEGqbvAH0U9QN9fdoo=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1771855329; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=tu5x9whB/DLOkNOxE3OZo/8olqk5MmoZIRHVY3kDhGw=; 
-	b=aAmC7OhDEA7SlxgJrBQFiCXOAressDCtdRGLo7EqIoyrFKm947EAO6wj40symhvdkN4UijSJJzXW+ZQ1JffH/Rq65Zr5sa8fK9uykt5CIbE8RouCrr9NC1sAGh7hY+IEuOZK+6BoJz8degF0cxfqv/L2I8EfWQ2ybDTwjCNwO/I=
+	t=1771855335; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=deeX6morUC+BIva+MNAMLZhL6WxkX+ImbvTw+Xk2h/c=; 
+	b=eAxAXNMvHF+6QCKYceiVC5VfSIXtvYTzD3z0b37XvgNbQgn7BdkZ9x2X3m2I0IG+aosX9xbLvnnbKsq/2QLtiIfOy/ZpVLTJeQ2QZ8K0uxLd33Zq4b706gxYaw6QR2VaiDJVMpmF6tgR5Rc1vF5Ai1OQ+zjlmDeJiOE1etsIU44=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=anirudhrb.com;
 	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
 	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1771855329;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1771855335;
 	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=tu5x9whB/DLOkNOxE3OZo/8olqk5MmoZIRHVY3kDhGw=;
-	b=hdFxmx6DYAZrjYDgTFFr2aESKBP8/QWekbM519w2tTGCuz6yCDSsPdgEkQFMsG6C
-	kZEcq5y+vSgZA1ZaqcnESXuFevUOwCWqjVPzwjWctMOhsr3D/Vf39sjNFZrkUz9ushV
-	9c3+G6NFBqKqWALSqp7MqcEWkqYQ4JaQYB2Q0UG4=
-Received: by mx.zohomail.com with SMTPS id 1771855327418775.6402218655211;
-	Mon, 23 Feb 2026 06:02:07 -0800 (PST)
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To;
+	bh=deeX6morUC+BIva+MNAMLZhL6WxkX+ImbvTw+Xk2h/c=;
+	b=PXXcOnMcByiYTgOyR2PxnSr8r1kK4eYEXx1s0N9tkheEl5tjxluQ5yTIMTb85qDX
+	/xeFTw1QzE6B9AC7pOT6lX39En/9Fut4KdfEI7cl/VbGgYrzekefYGg/Y8TwHKx/rGZ
+	sM2taEjl9j7pcqyqvVsbMOq+81ew4ejYgcM2oUpU=
+Received: by mx.zohomail.com with SMTPS id 1771855332478262.1783900932768;
+	Mon, 23 Feb 2026 06:02:12 -0800 (PST)
 From: Anirudh Rayabharam <anirudh@anirudhrb.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -62,10 +63,12 @@ To: kys@microsoft.com,
 	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: anirudh@anirudhrb.com
-Subject: [PATCH v5 0/2] ARM64 support for doorbell and intercept SINTs
-Date: Mon, 23 Feb 2026 14:01:57 +0000
-Message-Id: <20260223140159.1627229-1-anirudh@anirudhrb.com>
+Subject: [PATCH v5 1/2] mshv: refactor synic init and cleanup
+Date: Mon, 23 Feb 2026 14:01:58 +0000
+Message-Id: <20260223140159.1627229-2-anirudh@anirudhrb.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260223140159.1627229-1-anirudh@anirudhrb.com>
+References: <20260223140159.1627229-1-anirudh@anirudhrb.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -80,13 +83,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[anirudhrb.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8951-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8952-lists,linux-hyperv=lfdr.de];
 	TO_DN_NONE(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -98,52 +101,307 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-0.999];
 	DKIM_TRACE(0.00)[anirudhrb.com:+];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 5F63F177BA9
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,anirudhrb.com:mid,anirudhrb.com:dkim,anirudhrb.com:email]
+X-Rspamd-Queue-Id: 5C5C9177BC6
 X-Rspamd-Action: no action
 
-From: "Anirudh Rayabharam (Microsoft)" <anirudh@anirudhrb.com>
+From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
 
-On x86, the HYPERVISOR_CALLBACK_VECTOR is used to receive synthetic
-interrupts (SINTs) from the hypervisor for doorbells and intercepts.
-There is no such vector reserved for arm64.
+Rename mshv_synic_init() to mshv_synic_cpu_init() and
+mshv_synic_cleanup() to mshv_synic_cpu_exit() to better reflect that
+these functions handle per-cpu synic setup and teardown.
 
-On arm64, the hypervisor exposes a synthetic register that can be read
-to find the INTID that should be used for SINTs. This INTID is in the
-PPI range.
+Use mshv_synic_init/cleanup() to perform init/cleanup that is not per-cpu.
+Move all the synic related setup from mshv_parent_partition_init.
 
-Changes in v5:
-  - Better align with coding-style.rst guidelines.
+Move the reboot notifier to mshv_synic.c because it currently only
+operates on the synic cpuhp state.
 
-Changes in v4:
-  - Hypervisor now exposes a synthetic register to read the SINT vector
-    instead of using an ACPI platform device. So make changes to accomodate that.
+Move out synic_pages from the global mshv_root since its use is now
+completely local to mshv_synic.c.
 
-Changes in v3:
-  - Moved the hv_root_partition() check into the reboot notifier
-    to avoid doing it multiple times.
+This is in preparation for the next patch which will add more stuff to
+mshv_synic_init().
 
-v2: https://lore.kernel.org/linux-hyperv/20260202182706.648192-1-anirudh@anirudhrb.com/
-Changes in v2:
-Addressed review comments:
-  - Moved more stuff into mshv_synic.c
-  - Code simplifications
-  - Removed unnecessary debug prints
+No functional change.
 
-v1: https://lore.kernel.org/linux-hyperv/20260128160437.3342167-1-anirudh@anirudhrb.com/
+Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+---
+ drivers/hv/mshv_root.h      |  5 ++-
+ drivers/hv/mshv_root_main.c | 59 +++++-------------------------
+ drivers/hv/mshv_synic.c     | 71 +++++++++++++++++++++++++++++++++----
+ 3 files changed, 75 insertions(+), 60 deletions(-)
 
-Anirudh Rayabharam (Microsoft) (2):
-  mshv: refactor synic init and cleanup
-  mshv: add arm64 support for doorbell & intercept SINTs
-
- drivers/hv/mshv_root.h      |   5 +-
- drivers/hv/mshv_root_main.c |  59 ++---------
- drivers/hv/mshv_synic.c     | 189 +++++++++++++++++++++++++++++++++---
- include/hyperv/hvgdk_mini.h |   2 +
- 4 files changed, 186 insertions(+), 69 deletions(-)
-
+diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
+index 3c1d88b36741..26e0320c8097 100644
+--- a/drivers/hv/mshv_root.h
++++ b/drivers/hv/mshv_root.h
+@@ -183,7 +183,6 @@ struct hv_synic_pages {
+ };
+ 
+ struct mshv_root {
+-	struct hv_synic_pages __percpu *synic_pages;
+ 	spinlock_t pt_ht_lock;
+ 	DECLARE_HASHTABLE(pt_htable, MSHV_PARTITIONS_HASH_BITS);
+ 	struct hv_partition_property_vmm_capabilities vmm_caps;
+@@ -242,8 +241,8 @@ int mshv_register_doorbell(u64 partition_id, doorbell_cb_t doorbell_cb,
+ void mshv_unregister_doorbell(u64 partition_id, int doorbell_portid);
+ 
+ void mshv_isr(void);
+-int mshv_synic_init(unsigned int cpu);
+-int mshv_synic_cleanup(unsigned int cpu);
++int mshv_synic_init(struct device *dev);
++void mshv_synic_cleanup(void);
+ 
+ static inline bool mshv_partition_encrypted(struct mshv_partition *partition)
+ {
+diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+index 681b58154d5e..7c1666456e78 100644
+--- a/drivers/hv/mshv_root_main.c
++++ b/drivers/hv/mshv_root_main.c
+@@ -2035,7 +2035,6 @@ mshv_dev_release(struct inode *inode, struct file *filp)
+ 	return 0;
+ }
+ 
+-static int mshv_cpuhp_online;
+ static int mshv_root_sched_online;
+ 
+ static const char *scheduler_type_to_string(enum hv_scheduler_type type)
+@@ -2198,40 +2197,14 @@ root_scheduler_deinit(void)
+ 	free_percpu(root_scheduler_output);
+ }
+ 
+-static int mshv_reboot_notify(struct notifier_block *nb,
+-			      unsigned long code, void *unused)
+-{
+-	cpuhp_remove_state(mshv_cpuhp_online);
+-	return 0;
+-}
+-
+-struct notifier_block mshv_reboot_nb = {
+-	.notifier_call = mshv_reboot_notify,
+-};
+-
+ static void mshv_root_partition_exit(void)
+ {
+-	unregister_reboot_notifier(&mshv_reboot_nb);
+ 	root_scheduler_deinit();
+ }
+ 
+ static int __init mshv_root_partition_init(struct device *dev)
+ {
+-	int err;
+-
+-	err = root_scheduler_init(dev);
+-	if (err)
+-		return err;
+-
+-	err = register_reboot_notifier(&mshv_reboot_nb);
+-	if (err)
+-		goto root_sched_deinit;
+-
+-	return 0;
+-
+-root_sched_deinit:
+-	root_scheduler_deinit();
+-	return err;
++	return root_scheduler_init(dev);
+ }
+ 
+ static void mshv_init_vmm_caps(struct device *dev)
+@@ -2276,31 +2249,18 @@ static int __init mshv_parent_partition_init(void)
+ 			MSHV_HV_MAX_VERSION);
+ 	}
+ 
+-	mshv_root.synic_pages = alloc_percpu(struct hv_synic_pages);
+-	if (!mshv_root.synic_pages) {
+-		dev_err(dev, "Failed to allocate percpu synic page\n");
+-		ret = -ENOMEM;
++	ret = mshv_synic_init(dev);
++	if (ret)
+ 		goto device_deregister;
+-	}
+-
+-	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "mshv_synic",
+-				mshv_synic_init,
+-				mshv_synic_cleanup);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to setup cpu hotplug state: %i\n", ret);
+-		goto free_synic_pages;
+-	}
+-
+-	mshv_cpuhp_online = ret;
+ 
+ 	ret = mshv_retrieve_scheduler_type(dev);
+ 	if (ret)
+-		goto remove_cpu_state;
++		goto synic_cleanup;
+ 
+ 	if (hv_root_partition())
+ 		ret = mshv_root_partition_init(dev);
+ 	if (ret)
+-		goto remove_cpu_state;
++		goto synic_cleanup;
+ 
+ 	mshv_init_vmm_caps(dev);
+ 
+@@ -2318,10 +2278,8 @@ static int __init mshv_parent_partition_init(void)
+ exit_partition:
+ 	if (hv_root_partition())
+ 		mshv_root_partition_exit();
+-remove_cpu_state:
+-	cpuhp_remove_state(mshv_cpuhp_online);
+-free_synic_pages:
+-	free_percpu(mshv_root.synic_pages);
++synic_cleanup:
++	mshv_synic_cleanup();
+ device_deregister:
+ 	misc_deregister(&mshv_dev);
+ 	return ret;
+@@ -2335,8 +2293,7 @@ static void __exit mshv_parent_partition_exit(void)
+ 	mshv_irqfd_wq_cleanup();
+ 	if (hv_root_partition())
+ 		mshv_root_partition_exit();
+-	cpuhp_remove_state(mshv_cpuhp_online);
+-	free_percpu(mshv_root.synic_pages);
++	mshv_synic_cleanup();
+ }
+ 
+ module_init(mshv_parent_partition_init);
+diff --git a/drivers/hv/mshv_synic.c b/drivers/hv/mshv_synic.c
+index f8b0337cdc82..074e37c48876 100644
+--- a/drivers/hv/mshv_synic.c
++++ b/drivers/hv/mshv_synic.c
+@@ -12,11 +12,16 @@
+ #include <linux/mm.h>
+ #include <linux/io.h>
+ #include <linux/random.h>
++#include <linux/cpuhotplug.h>
++#include <linux/reboot.h>
+ #include <asm/mshyperv.h>
+ 
+ #include "mshv_eventfd.h"
+ #include "mshv.h"
+ 
++static int synic_cpuhp_online;
++static struct hv_synic_pages __percpu *synic_pages;
++
+ static u32 synic_event_ring_get_queued_port(u32 sint_index)
+ {
+ 	struct hv_synic_event_ring_page **event_ring_page;
+@@ -26,7 +31,7 @@ static u32 synic_event_ring_get_queued_port(u32 sint_index)
+ 	u32 message;
+ 	u8 tail;
+ 
+-	spages = this_cpu_ptr(mshv_root.synic_pages);
++	spages = this_cpu_ptr(synic_pages);
+ 	event_ring_page = &spages->synic_event_ring_page;
+ 	synic_eventring_tail = (u8 **)this_cpu_ptr(hv_synic_eventring_tail);
+ 
+@@ -393,7 +398,7 @@ mshv_intercept_isr(struct hv_message *msg)
+ 
+ void mshv_isr(void)
+ {
+-	struct hv_synic_pages *spages = this_cpu_ptr(mshv_root.synic_pages);
++	struct hv_synic_pages *spages = this_cpu_ptr(synic_pages);
+ 	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
+ 	struct hv_message *msg;
+ 	bool handled;
+@@ -446,7 +451,7 @@ void mshv_isr(void)
+ 	}
+ }
+ 
+-int mshv_synic_init(unsigned int cpu)
++static int mshv_synic_cpu_init(unsigned int cpu)
+ {
+ 	union hv_synic_simp simp;
+ 	union hv_synic_siefp siefp;
+@@ -455,7 +460,7 @@ int mshv_synic_init(unsigned int cpu)
+ 	union hv_synic_sint sint;
+ #endif
+ 	union hv_synic_scontrol sctrl;
+-	struct hv_synic_pages *spages = this_cpu_ptr(mshv_root.synic_pages);
++	struct hv_synic_pages *spages = this_cpu_ptr(synic_pages);
+ 	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
+ 	struct hv_synic_event_flags_page **event_flags_page =
+ 			&spages->synic_event_flags_page;
+@@ -542,14 +547,14 @@ int mshv_synic_init(unsigned int cpu)
+ 	return -EFAULT;
+ }
+ 
+-int mshv_synic_cleanup(unsigned int cpu)
++static int mshv_synic_cpu_exit(unsigned int cpu)
+ {
+ 	union hv_synic_sint sint;
+ 	union hv_synic_simp simp;
+ 	union hv_synic_siefp siefp;
+ 	union hv_synic_sirbp sirbp;
+ 	union hv_synic_scontrol sctrl;
+-	struct hv_synic_pages *spages = this_cpu_ptr(mshv_root.synic_pages);
++	struct hv_synic_pages *spages = this_cpu_ptr(synic_pages);
+ 	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
+ 	struct hv_synic_event_flags_page **event_flags_page =
+ 		&spages->synic_event_flags_page;
+@@ -663,3 +668,57 @@ mshv_unregister_doorbell(u64 partition_id, int doorbell_portid)
+ 
+ 	mshv_portid_free(doorbell_portid);
+ }
++
++static int mshv_synic_reboot_notify(struct notifier_block *nb,
++			      unsigned long code, void *unused)
++{
++	if (!hv_root_partition())
++		return 0;
++
++	cpuhp_remove_state(synic_cpuhp_online);
++	return 0;
++}
++
++static struct notifier_block mshv_synic_reboot_nb = {
++	.notifier_call = mshv_synic_reboot_notify,
++};
++
++int __init mshv_synic_init(struct device *dev)
++{
++	int ret = 0;
++
++	synic_pages = alloc_percpu(struct hv_synic_pages);
++	if (!synic_pages) {
++		dev_err(dev, "Failed to allocate percpu synic page\n");
++		return -ENOMEM;
++	}
++
++	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "mshv_synic",
++				mshv_synic_cpu_init,
++				mshv_synic_cpu_exit);
++	if (ret < 0) {
++		dev_err(dev, "Failed to setup cpu hotplug state: %i\n", ret);
++		goto free_synic_pages;
++	}
++
++	synic_cpuhp_online = ret;
++
++	ret = register_reboot_notifier(&mshv_synic_reboot_nb);
++	if (ret)
++		goto remove_cpuhp_state;
++
++	return 0;
++
++remove_cpuhp_state:
++	cpuhp_remove_state(synic_cpuhp_online);
++free_synic_pages:
++	free_percpu(synic_pages);
++	return ret;
++}
++
++void mshv_synic_cleanup(void)
++{
++	unregister_reboot_notifier(&mshv_synic_reboot_nb);
++	cpuhp_remove_state(synic_cpuhp_online);
++	free_percpu(synic_pages);
++}
 -- 
 2.34.1
 
