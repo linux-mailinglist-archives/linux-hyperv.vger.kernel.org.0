@@ -1,390 +1,432 @@
-Return-Path: <linux-hyperv+bounces-8947-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8948-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6K86N1RLnGmODAQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8947-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 13:43:00 +0100
+	id MH0zGppVnGkAEQQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8948-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 14:26:50 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DE89176542
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 13:43:00 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 882CD176D1F
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 14:26:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 1156A304466A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 12:39:42 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 1E232303540C
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 13:24:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D16936A01A;
-	Mon, 23 Feb 2026 12:38:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAC8E3A1D2;
+	Mon, 23 Feb 2026 13:24:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dk/5p8Lp"
+	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="mCqQaHjF"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4AB36604B;
-	Mon, 23 Feb 2026 12:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771850302; cv=none; b=CMxyB+gtzk2ador7SJ7Y8V/AaBhCunBXLoSvCEzLirgicZFFX3x+ykxZRRC4vQB/ab18pYUSgDdYRq3oJma/ObB45qL+pAxNbBnE7V2YPPyFllTN3g1l4ngLOFFTero7Dt9vrhwbO1kmujTZJgIrsLzVF0oODddRkD5wgT2/Arw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771850302; c=relaxed/simple;
-	bh=hihk3XLBB3Pr3L1pcvUaP+sd8F9YMPpj1VEc3fSYSFg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ADUBT4nx96ZFYlWIfG1tOOL2zxOtXchW1+7/sGiEyaMd9FGZTiGB9mxSULQ3dDmXdt2Al+4Z64O0sQ5S8buQQ6ECfQklRWLEvmBvIbm173akwWDbiLB7ER36ulLJgOxdX7B+w2nhEcTVNysb1WUEE237izr4FuFC+90Ll4Hlozk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dk/5p8Lp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94F1BC2BC87;
-	Mon, 23 Feb 2026 12:38:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771850301;
-	bh=hihk3XLBB3Pr3L1pcvUaP+sd8F9YMPpj1VEc3fSYSFg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Dk/5p8LpTnZEGlZhgtlLRzvw69oPqElv1V7CslAHQSM2U/9pcBCt6AhHceBQXzDV7
-	 fDPx1lLzYQ1uRkEA1gQoKZJZPZJaaTeyu1Z/LuqiWrYkA86PxJs2yBHXa1Yfnkydtw
-	 PM1ADljfcpBxQL6t3dksS1s6JI63LNQTIbH4a6H0Avvnfoxej2g2RHpwM2l1Hct3WH
-	 fIV9tGVFnin9CNHFJs9d+CKA027YPkGdI20BgEOBZogXe31hLUBhl9yrn6TUPwuARq
-	 9NbBYUihBxQSFNixfh8ewrq0NnRYQsXFV98g9Q2FOyTDt91Fh6SqDbawoGNQt73cE8
-	 ta7lvCmE2KjMg==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Jan Kiszka <jan.kiszka@siemens.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	kys@microsoft.com,
-	haiyangz@microsoft.com,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.19] Drivers: hv: vmbus: Use kthread for vmbus interrupts on PREEMPT_RT
-Date: Mon, 23 Feb 2026 07:37:33 -0500
-Message-ID: <20260223123738.1532940-28-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260223123738.1532940-1-sashal@kernel.org>
-References: <20260223123738.1532940-1-sashal@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D1719E968;
+	Mon, 23 Feb 2026 13:24:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771853069; cv=pass; b=TMT3OFEBQkzxMs2rLEI+hjNVJw37pRRWaVMtXnakyanPhqKupvUNtJ/M3rfMTbu8RvKE1zcEyYbQ03jX9/N07WGhb9k6s21YsDuOyofgmpli6DPMmzCnii4iPQlC3W3Esz0JCXXKmrISLDMMrn9QvK0fvv0IDidJ1USEni3dllU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771853069; c=relaxed/simple;
+	bh=esZINqTyB2VwriPwo1LnCOSiTyrdj3PcCQ28DVxt9HE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DPBp/YdVp7NPoyzc+XzkmCG0rfzlbfer8mvMQIRPQ4hVbrGHG0eETOcQC6pFNN+h8Uq/HKUOFhoGGL1AZzUaojtqNp3Yd7PfFrFHAUyOzav2ql0vAJ9le2UqZHtOg6Yx6z2bbuOzvk98hJmr/citb1/wRxAzzKzCZT4JfP7miqY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=mCqQaHjF; arc=pass smtp.client-ip=136.143.188.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
+ARC-Seal: i=1; a=rsa-sha256; t=1771853061; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Nu/6MjBirPcUwSOFSEQyMAUoM1igHjuORQtJW1fDJ+zy4cdHPZ6+tR2+X3h5HYYMF8Znf+fD/lWeX/i3vyZ69QN1xPzrVxBmyVzRCCPpis1cNpIencuM60z7j7VJ90d/RmYK5X5hGXdsJPVNDEZR85YItlW0rAIq0w3yk7JtC8Y=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1771853061; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ByyiEgWdwUlP7EeNAlCEAi0moDSm6poi227momZI43w=; 
+	b=iEw2TXCrHa2tbtSozspiThX24zm6AiRK8oMVAiU5T52HdeQ383FwRZTmf4FdwCUse4EuuIJwa/GreuUgEjMGwiBVyYcBdHChnZi5RztPW/awwqTtZ8CNJKr90FV/AZFX53wEYSnVe1dkiTu8PcbX9ck56bcLPVvaYgmOE9+dHJA=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=anirudhrb.com;
+	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
+	dmarc=pass header.from=<anirudh@anirudhrb.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1771853061;
+	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=ByyiEgWdwUlP7EeNAlCEAi0moDSm6poi227momZI43w=;
+	b=mCqQaHjFpp1m7M7eC2u/qAat+CdUag+r0mu4Y5p1lNCvuLQnDd2ioVo8ie9Zz4zq
+	Md+aZYmDru8u1/kBBYHYf3DYh94atoNXBFk0oU7oZ4y4hWcaXFh1UHP/Yvc4BK7lhAT
+	S2qZcWGIkiOQ1dVHPre2wOe9lJaYUWaB00vt/5Ww=
+Received: by mx.zohomail.com with SMTPS id 1771853058699519.5229812750937;
+	Mon, 23 Feb 2026 05:24:18 -0800 (PST)
+Date: Mon, 23 Feb 2026 13:24:14 +0000
+From: Anirudh Rayabharam <anirudh@anirudhrb.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"longli@microsoft.com" <longli@microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 1/2] mshv: refactor synic init and cleanup
+Message-ID: <aZxU_k84fmrWoRsH@anirudh-surface.localdomain>
+References: <20260211170728.3056226-1-anirudh@anirudhrb.com>
+ <20260211170728.3056226-2-anirudh@anirudhrb.com>
+ <SN6PR02MB415781511D0B2A10FB9BB365D46AA@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.19.3
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB415781511D0B2A10FB9BB365D46AA@SN6PR02MB4157.namprd02.prod.outlook.com>
+X-ZohoMailClient: External
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[anirudhrb.com,none];
+	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[siemens.com,outlook.com,kernel.org,microsoft.com,vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-8947-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[outlook.com];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8948-lists,linux-hyperv=lfdr.de];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashal@kernel.org,linux-hyperv@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.998];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[anirudh@anirudhrb.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[anirudhrb.com:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,siemens.com:email]
-X-Rspamd-Queue-Id: 6DE89176542
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,anirudhrb.com:email,anirudhrb.com:dkim]
+X-Rspamd-Queue-Id: 882CD176D1F
 X-Rspamd-Action: no action
 
-From: Jan Kiszka <jan.kiszka@siemens.com>
+On Wed, Feb 18, 2026 at 04:17:23AM +0000, Michael Kelley wrote:
+> From: Anirudh Rayabharam <anirudh@anirudhrb.com> Sent: Wednesday, February 11, 2026 9:07 AM
+> > 
+> > Rename mshv_synic_init() to mshv_synic_cpu_init() and
+> > mshv_synic_cleanup() to mshv_synic_cpu_exit() to better reflect that
+> > these functions handle per-cpu synic setup and teardown.
+> > 
+> > Use mshv_synic_init/cleanup() to perform init/cleanup that is not per-cpu.
+> > Move all the synic related setup from mshv_parent_partition_init.
+> > 
+> > Move the reboot notifier to mshv_synic.c because it currently only
+> > operates on the synic cpuhp state.
+> > 
+> > Move out synic_pages from the global mshv_root since it's use is now
+> 
+> s/it's/its/
+> 
+> > completely local to mshv_synic.c.
+> > 
+> > This is in preparation for the next patch which will add more stuff to
+> > mshv_synic_init().
+> > 
+> > No functional change.
+> > 
+> > Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> > ---
+> >  drivers/hv/mshv_root.h      |  5 ++-
+> >  drivers/hv/mshv_root_main.c | 59 +++++-------------------------
+> >  drivers/hv/mshv_synic.c     | 71 +++++++++++++++++++++++++++++++++----
+> >  3 files changed, 75 insertions(+), 60 deletions(-)
+> > 
+> > diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
+> > index 3c1d88b36741..26e0320c8097 100644
+> > --- a/drivers/hv/mshv_root.h
+> > +++ b/drivers/hv/mshv_root.h
+> > @@ -183,7 +183,6 @@ struct hv_synic_pages {
+> >  };
+> > 
+> >  struct mshv_root {
+> > -	struct hv_synic_pages __percpu *synic_pages;
+> >  	spinlock_t pt_ht_lock;
+> >  	DECLARE_HASHTABLE(pt_htable, MSHV_PARTITIONS_HASH_BITS);
+> >  	struct hv_partition_property_vmm_capabilities vmm_caps;
+> > @@ -242,8 +241,8 @@ int mshv_register_doorbell(u64 partition_id, doorbell_cb_t doorbell_cb,
+> >  void mshv_unregister_doorbell(u64 partition_id, int doorbell_portid);
+> > 
+> >  void mshv_isr(void);
+> > -int mshv_synic_init(unsigned int cpu);
+> > -int mshv_synic_cleanup(unsigned int cpu);
+> > +int mshv_synic_init(struct device *dev);
+> > +void mshv_synic_cleanup(void);
+> > 
+> >  static inline bool mshv_partition_encrypted(struct mshv_partition *partition)
+> >  {
+> > diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> > index 681b58154d5e..7c1666456e78 100644
+> > --- a/drivers/hv/mshv_root_main.c
+> > +++ b/drivers/hv/mshv_root_main.c
+> > @@ -2035,7 +2035,6 @@ mshv_dev_release(struct inode *inode, struct file *filp)
+> >  	return 0;
+> >  }
+> > 
+> > -static int mshv_cpuhp_online;
+> >  static int mshv_root_sched_online;
+> > 
+> >  static const char *scheduler_type_to_string(enum hv_scheduler_type type)
+> > @@ -2198,40 +2197,14 @@ root_scheduler_deinit(void)
+> >  	free_percpu(root_scheduler_output);
+> >  }
+> > 
+> > -static int mshv_reboot_notify(struct notifier_block *nb,
+> > -			      unsigned long code, void *unused)
+> > -{
+> > -	cpuhp_remove_state(mshv_cpuhp_online);
+> > -	return 0;
+> > -}
+> > -
+> > -struct notifier_block mshv_reboot_nb = {
+> > -	.notifier_call = mshv_reboot_notify,
+> > -};
+> > -
+> >  static void mshv_root_partition_exit(void)
+> >  {
+> > -	unregister_reboot_notifier(&mshv_reboot_nb);
+> >  	root_scheduler_deinit();
+> >  }
+> > 
+> >  static int __init mshv_root_partition_init(struct device *dev)
+> >  {
+> > -	int err;
+> > -
+> > -	err = root_scheduler_init(dev);
+> > -	if (err)
+> > -		return err;
+> > -
+> > -	err = register_reboot_notifier(&mshv_reboot_nb);
+> > -	if (err)
+> > -		goto root_sched_deinit;
+> > -
+> > -	return 0;
+> > -
+> > -root_sched_deinit:
+> > -	root_scheduler_deinit();
+> > -	return err;
+> > +	return root_scheduler_init(dev);
+> >  }
+> > 
+> >  static void mshv_init_vmm_caps(struct device *dev)
+> > @@ -2276,31 +2249,18 @@ static int __init mshv_parent_partition_init(void)
+> >  			MSHV_HV_MAX_VERSION);
+> >  	}
+> > 
+> > -	mshv_root.synic_pages = alloc_percpu(struct hv_synic_pages);
+> > -	if (!mshv_root.synic_pages) {
+> > -		dev_err(dev, "Failed to allocate percpu synic page\n");
+> > -		ret = -ENOMEM;
+> > +	ret = mshv_synic_init(dev);
+> > +	if (ret)
+> >  		goto device_deregister;
+> > -	}
+> > -
+> > -	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "mshv_synic",
+> > -				mshv_synic_init,
+> > -				mshv_synic_cleanup);
+> > -	if (ret < 0) {
+> > -		dev_err(dev, "Failed to setup cpu hotplug state: %i\n", ret);
+> > -		goto free_synic_pages;
+> > -	}
+> > -
+> > -	mshv_cpuhp_online = ret;
+> > 
+> >  	ret = mshv_retrieve_scheduler_type(dev);
+> >  	if (ret)
+> > -		goto remove_cpu_state;
+> > +		goto synic_cleanup;
+> > 
+> >  	if (hv_root_partition())
+> >  		ret = mshv_root_partition_init(dev);
+> >  	if (ret)
+> > -		goto remove_cpu_state;
+> > +		goto synic_cleanup;
+> > 
+> >  	mshv_init_vmm_caps(dev);
+> > 
+> > @@ -2318,10 +2278,8 @@ static int __init mshv_parent_partition_init(void)
+> >  exit_partition:
+> >  	if (hv_root_partition())
+> >  		mshv_root_partition_exit();
+> > -remove_cpu_state:
+> > -	cpuhp_remove_state(mshv_cpuhp_online);
+> > -free_synic_pages:
+> > -	free_percpu(mshv_root.synic_pages);
+> > +synic_cleanup:
+> > +	mshv_synic_cleanup();
+> >  device_deregister:
+> >  	misc_deregister(&mshv_dev);
+> >  	return ret;
+> > @@ -2335,8 +2293,7 @@ static void __exit mshv_parent_partition_exit(void)
+> >  	mshv_irqfd_wq_cleanup();
+> >  	if (hv_root_partition())
+> >  		mshv_root_partition_exit();
+> > -	cpuhp_remove_state(mshv_cpuhp_online);
+> > -	free_percpu(mshv_root.synic_pages);
+> > +	mshv_synic_cleanup();
+> >  }
+> > 
+> >  module_init(mshv_parent_partition_init);
+> > diff --git a/drivers/hv/mshv_synic.c b/drivers/hv/mshv_synic.c
+> > index f8b0337cdc82..074e37c48876 100644
+> > --- a/drivers/hv/mshv_synic.c
+> > +++ b/drivers/hv/mshv_synic.c
+> > @@ -12,11 +12,16 @@
+> >  #include <linux/mm.h>
+> >  #include <linux/io.h>
+> >  #include <linux/random.h>
+> > +#include <linux/cpuhotplug.h>
+> > +#include <linux/reboot.h>
+> >  #include <asm/mshyperv.h>
+> > 
+> >  #include "mshv_eventfd.h"
+> >  #include "mshv.h"
+> > 
+> > +static int synic_cpuhp_online;
+> > +static struct hv_synic_pages __percpu *synic_pages;
+> > +
+> >  static u32 synic_event_ring_get_queued_port(u32 sint_index)
+> >  {
+> >  	struct hv_synic_event_ring_page **event_ring_page;
+> > @@ -26,7 +31,7 @@ static u32 synic_event_ring_get_queued_port(u32 sint_index)
+> >  	u32 message;
+> >  	u8 tail;
+> > 
+> > -	spages = this_cpu_ptr(mshv_root.synic_pages);
+> > +	spages = this_cpu_ptr(synic_pages);
+> >  	event_ring_page = &spages->synic_event_ring_page;
+> >  	synic_eventring_tail = (u8 **)this_cpu_ptr(hv_synic_eventring_tail);
+> > 
+> > @@ -393,7 +398,7 @@ mshv_intercept_isr(struct hv_message *msg)
+> > 
+> >  void mshv_isr(void)
+> >  {
+> > -	struct hv_synic_pages *spages = this_cpu_ptr(mshv_root.synic_pages);
+> > +	struct hv_synic_pages *spages = this_cpu_ptr(synic_pages);
+> >  	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
+> >  	struct hv_message *msg;
+> >  	bool handled;
+> > @@ -446,7 +451,7 @@ void mshv_isr(void)
+> >  	}
+> >  }
+> > 
+> > -int mshv_synic_init(unsigned int cpu)
+> > +static int mshv_synic_cpu_init(unsigned int cpu)
+> >  {
+> >  	union hv_synic_simp simp;
+> >  	union hv_synic_siefp siefp;
+> > @@ -455,7 +460,7 @@ int mshv_synic_init(unsigned int cpu)
+> >  	union hv_synic_sint sint;
+> >  #endif
+> >  	union hv_synic_scontrol sctrl;
+> > -	struct hv_synic_pages *spages = this_cpu_ptr(mshv_root.synic_pages);
+> > +	struct hv_synic_pages *spages = this_cpu_ptr(synic_pages);
+> >  	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
+> >  	struct hv_synic_event_flags_page **event_flags_page =
+> >  			&spages->synic_event_flags_page;
+> > @@ -542,14 +547,14 @@ int mshv_synic_init(unsigned int cpu)
+> >  	return -EFAULT;
+> >  }
+> > 
+> > -int mshv_synic_cleanup(unsigned int cpu)
+> > +static int mshv_synic_cpu_exit(unsigned int cpu)
+> >  {
+> >  	union hv_synic_sint sint;
+> >  	union hv_synic_simp simp;
+> >  	union hv_synic_siefp siefp;
+> >  	union hv_synic_sirbp sirbp;
+> >  	union hv_synic_scontrol sctrl;
+> > -	struct hv_synic_pages *spages = this_cpu_ptr(mshv_root.synic_pages);
+> > +	struct hv_synic_pages *spages = this_cpu_ptr(synic_pages);
+> >  	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
+> >  	struct hv_synic_event_flags_page **event_flags_page =
+> >  		&spages->synic_event_flags_page;
+> > @@ -663,3 +668,57 @@ mshv_unregister_doorbell(u64 partition_id, int doorbell_portid)
+> > 
+> >  	mshv_portid_free(doorbell_portid);
+> >  }
+> > +
+> > +static int mshv_synic_reboot_notify(struct notifier_block *nb,
+> > +			      unsigned long code, void *unused)
+> > +{
+> > +	if (!hv_root_partition())
+> > +		return 0;
+> 
+> I'm curious as to why the synic is cleaned up only for the root partition,
+> but not for L1VH parents. L1VH parents *do* cleanup their synic in
+> mshv_parent_partition_exit(). I probably don't understand all the
+> vagaries of L1VH parents ....
 
-[ Upstream commit f8e6343b7a89c7c649db5a9e309ba7aa20401813 ]
+I will check this. This cleanup matters mainly for kexec. I will do some
+tests to see if L1VH needs it too.
 
-Resolves the following lockdep report when booting PREEMPT_RT on Hyper-V
-with related guest support enabled:
+If required, I will fix it in a separate patch. For this series I would
+prefer to keep the "No function changes" claim intact.
 
-[    1.127941] hv_vmbus: registering driver hyperv_drm
+Thanks,
+Anirudh.
 
-[    1.132518] =============================
-[    1.132519] [ BUG: Invalid wait context ]
-[    1.132521] 6.19.0-rc8+ #9 Not tainted
-[    1.132524] -----------------------------
-[    1.132525] swapper/0/0 is trying to lock:
-[    1.132526] ffff8b9381bb3c90 (&channel->sched_lock){....}-{3:3}, at: vmbus_chan_sched+0xc4/0x2b0
-[    1.132543] other info that might help us debug this:
-[    1.132544] context-{2:2}
-[    1.132545] 1 lock held by swapper/0/0:
-[    1.132547]  #0: ffffffffa010c4c0 (rcu_read_lock){....}-{1:3}, at: vmbus_chan_sched+0x31/0x2b0
-[    1.132557] stack backtrace:
-[    1.132560] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.19.0-rc8+ #9 PREEMPT_{RT,(lazy)}
-[    1.132565] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.1 09/25/2025
-[    1.132567] Call Trace:
-[    1.132570]  <IRQ>
-[    1.132573]  dump_stack_lvl+0x6e/0xa0
-[    1.132581]  __lock_acquire+0xee0/0x21b0
-[    1.132592]  lock_acquire+0xd5/0x2d0
-[    1.132598]  ? vmbus_chan_sched+0xc4/0x2b0
-[    1.132606]  ? lock_acquire+0xd5/0x2d0
-[    1.132613]  ? vmbus_chan_sched+0x31/0x2b0
-[    1.132619]  rt_spin_lock+0x3f/0x1f0
-[    1.132623]  ? vmbus_chan_sched+0xc4/0x2b0
-[    1.132629]  ? vmbus_chan_sched+0x31/0x2b0
-[    1.132634]  vmbus_chan_sched+0xc4/0x2b0
-[    1.132641]  vmbus_isr+0x2c/0x150
-[    1.132648]  __sysvec_hyperv_callback+0x5f/0xa0
-[    1.132654]  sysvec_hyperv_callback+0x88/0xb0
-[    1.132658]  </IRQ>
-[    1.132659]  <TASK>
-[    1.132660]  asm_sysvec_hyperv_callback+0x1a/0x20
-
-As code paths that handle vmbus IRQs use sleepy locks under PREEMPT_RT,
-the vmbus_isr execution needs to be moved into thread context. Open-
-coding this allows to skip the IPI that irq_work would additionally
-bring and which we do not need, being an IRQ, never an NMI.
-
-This affects both x86 and arm64, therefore hook into the common driver
-logic.
-
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-Reviewed-by: Florian Bezdeka <florian.bezdeka@siemens.com>
-Tested-by: Florian Bezdeka <florian.bezdeka@siemens.com>
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-Tested-by: Michael Kelley <mhklinux@outlook.com>
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
-
-LLM Generated explanations, may be completely bogus:
-
-The bug exists in all stable trees that have PREEMPT_RT support.
-However, the patch would need significant adaptation to apply to them
-due to the 6.19-specific refactoring of `vmbus_isr` and
-`vmbus_chan_sched`.
-
-## Analysis
-
-### What the commit fixes
-
-This commit fixes a **sleeping-in-atomic-context bug** on PREEMPT_RT
-kernels running on Hyper-V. The issue is that `vmbus_isr()` runs in hard
-IRQ context (called from `sysvec_hyperv_callback` on x86) and acquires
-`spin_lock(&channel->sched_lock)` via `vmbus_chan_sched()`. Under
-PREEMPT_RT, spinlocks are converted to `rt_spin_lock` (sleeping locks),
-which cannot be acquired from hard IRQ context. This triggers a lockdep
-"BUG: Invalid wait context" and represents a real correctness issue (not
-just a warning).
-
-### Does it fix a real bug?
-
-**Yes.** This is a legitimate bug that makes Hyper-V VMs with PREEMPT_RT
-unusable or unstable. The lockdep trace is from real testing (6.19-rc8).
-The issue affects all PREEMPT_RT Hyper-V guests.
-
-### Stable kernel rule assessment
-
-1. **Obviously correct and tested**: Yes - reviewed by Michael Kelley
-   (Hyper-V maintainer) and Florian Bezdeka, tested by both.
-2. **Fixes a real bug**: Yes - sleeping in hardirq context is a real bug
-   on PREEMPT_RT.
-3. **Important issue**: Moderate - affects PREEMPT_RT on Hyper-V, which
-   is a meaningful but somewhat niche combination.
-4. **Small and contained**: Borderline - ~80 lines in one file, but adds
-   new per-CPU thread infrastructure.
-5. **No new features**: The kthread is a mechanism to fix the bug, not a
-   feature.
-
-### Risk vs benefit
-
-- **Benefit**: Fixes a real bug that makes PREEMPT_RT on Hyper-V broken.
-- **Risk**: Low for non-RT kernels (everything is behind
-  `IS_ENABLED(CONFIG_PREEMPT_RT)`, which is compile-time). Moderate for
-  RT kernels (new kthread infrastructure, though using well-established
-  `smpboot` API).
-
-### Backport concerns
-
-**Critical issue: Dependencies.** This patch was written against the
-6.19 codebase which has undergone significant refactoring:
-- `vmbus_isr()` changed from `static` to exported
-  (`EXPORT_SYMBOL_FOR_MODULES`) in 6.19 via commit `cffe9f58de1eb`
-- `vmbus_chan_sched()` signature changed from `vmbus_chan_sched(hv_cpu)`
-  to `vmbus_chan_sched(event_page_addr)` in 6.19 via commit
-  `163224c189e8b`
-- The `vmbus_message_sched()` helper was factored out in 6.19
-
-The patch **will not apply cleanly** to any existing stable tree
-(6.12.y, 6.6.y, 6.1.y). A manual backport would be needed, adapting the
-fix to the older `vmbus_isr` structure. While the core concept (use
-kthread for RT) would work, the adaptation is non-trivial.
-
-### Verification
-
-- **git show v6.12, v6.6, v6.1 kernel/Kconfig.preempt**: Confirmed
-  PREEMPT_RT config option exists in all these stable trees
-- **git show v6.1 include/linux/smpboot.h**: Confirmed
-  `smpboot_register_percpu_thread` API available since at least 6.1
-- **git show v6.18 drivers/hv/vmbus_drv.c**: Confirmed `vmbus_isr` is
-  `static` in v6.18, only exported in 6.19
-- **git show v6.12, v6.6 drivers/hv/vmbus_drv.c**: Confirmed
-  `vmbus_chan_sched()` takes `hv_cpu` (not `event_page_addr`) in older
-  kernels
-- **git log v6.18..v6.19 drivers/hv/vmbus_drv.c**: Identified
-  prerequisite commits (163224c189e8b, cffe9f58de1eb) that refactored
-  the code
-- **Read arch/x86/kernel/cpu/mshyperv.c lines 153-168**: Confirmed
-  `vmbus_handler()` is called from `sysvec_hyperv_callback` IDTENTRY
-  (hard IRQ context)
-- **Read drivers/hv/vmbus_drv.c lines 1305**: Confirmed
-  `spin_lock(&channel->sched_lock)` is the sleeping lock in the IRQ path
-- **git show v6.12, v6.6**: Confirmed the `sched_lock` spin_lock exists
-  in stable trees' vmbus_chan_sched, confirming the bug exists there too
-
-### Decision
-
-This is a legitimate bug fix for PREEMPT_RT on Hyper-V. The bug is real
-and affects all stable trees with PREEMPT_RT. However, the patch:
-
-1. Is moderate in size, adding new per-CPU thread infrastructure (~80
-   lines)
-2. Has significant dependencies on 6.19-specific refactoring and won't
-   apply cleanly to any stable tree
-3. Targets a somewhat niche combination (PREEMPT_RT + Hyper-V)
-4. Would require careful manual adaptation for each stable tree
-
-The fix is well-reviewed and technically sound, and it fixes a real bug.
-Despite the backport complexity, the bug is severe enough (sleeping-in-
-atomic-context breaks PREEMPT_RT on Hyper-V) that it warrants
-backporting with appropriate adaptation. The
-`IS_ENABLED(CONFIG_PREEMPT_RT)` guard ensures zero risk to non-RT users.
-
-**YES**
-
- drivers/hv/vmbus_drv.c | 66 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 65 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index a53af6fe81a65..1d5cba142828e 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -25,6 +25,7 @@
- #include <linux/cpu.h>
- #include <linux/sched/isolation.h>
- #include <linux/sched/task_stack.h>
-+#include <linux/smpboot.h>
- 
- #include <linux/delay.h>
- #include <linux/panic_notifier.h>
-@@ -1350,7 +1351,7 @@ static void vmbus_message_sched(struct hv_per_cpu_context *hv_cpu, void *message
- 	}
- }
- 
--void vmbus_isr(void)
-+static void __vmbus_isr(void)
- {
- 	struct hv_per_cpu_context *hv_cpu
- 		= this_cpu_ptr(hv_context.cpu_context);
-@@ -1363,6 +1364,53 @@ void vmbus_isr(void)
- 
- 	add_interrupt_randomness(vmbus_interrupt);
- }
-+
-+static DEFINE_PER_CPU(bool, vmbus_irq_pending);
-+static DEFINE_PER_CPU(struct task_struct *, vmbus_irqd);
-+
-+static void vmbus_irqd_wake(void)
-+{
-+	struct task_struct *tsk = __this_cpu_read(vmbus_irqd);
-+
-+	__this_cpu_write(vmbus_irq_pending, true);
-+	wake_up_process(tsk);
-+}
-+
-+static void vmbus_irqd_setup(unsigned int cpu)
-+{
-+	sched_set_fifo(current);
-+}
-+
-+static int vmbus_irqd_should_run(unsigned int cpu)
-+{
-+	return __this_cpu_read(vmbus_irq_pending);
-+}
-+
-+static void run_vmbus_irqd(unsigned int cpu)
-+{
-+	__this_cpu_write(vmbus_irq_pending, false);
-+	__vmbus_isr();
-+}
-+
-+static bool vmbus_irq_initialized;
-+
-+static struct smp_hotplug_thread vmbus_irq_threads = {
-+	.store                  = &vmbus_irqd,
-+	.setup			= vmbus_irqd_setup,
-+	.thread_should_run      = vmbus_irqd_should_run,
-+	.thread_fn              = run_vmbus_irqd,
-+	.thread_comm            = "vmbus_irq/%u",
-+};
-+
-+void vmbus_isr(void)
-+{
-+	if (IS_ENABLED(CONFIG_PREEMPT_RT)) {
-+		vmbus_irqd_wake();
-+	} else {
-+		lockdep_hardirq_threaded();
-+		__vmbus_isr();
-+	}
-+}
- EXPORT_SYMBOL_FOR_MODULES(vmbus_isr, "mshv_vtl");
- 
- static irqreturn_t vmbus_percpu_isr(int irq, void *dev_id)
-@@ -1462,6 +1510,13 @@ static int vmbus_bus_init(void)
- 	 * the VMbus interrupt handler.
- 	 */
- 
-+	if (IS_ENABLED(CONFIG_PREEMPT_RT) && !vmbus_irq_initialized) {
-+		ret = smpboot_register_percpu_thread(&vmbus_irq_threads);
-+		if (ret)
-+			goto err_kthread;
-+		vmbus_irq_initialized = true;
-+	}
-+
- 	if (vmbus_irq == -1) {
- 		hv_setup_vmbus_handler(vmbus_isr);
- 	} else {
-@@ -1507,6 +1562,11 @@ static int vmbus_bus_init(void)
- 		free_percpu(vmbus_evt);
- 	}
- err_setup:
-+	if (IS_ENABLED(CONFIG_PREEMPT_RT) && vmbus_irq_initialized) {
-+		smpboot_unregister_percpu_thread(&vmbus_irq_threads);
-+		vmbus_irq_initialized = false;
-+	}
-+err_kthread:
- 	bus_unregister(&hv_bus);
- 	return ret;
- }
-@@ -2976,6 +3036,10 @@ static void __exit vmbus_exit(void)
- 		free_percpu_irq(vmbus_irq, vmbus_evt);
- 		free_percpu(vmbus_evt);
- 	}
-+	if (IS_ENABLED(CONFIG_PREEMPT_RT) && vmbus_irq_initialized) {
-+		smpboot_unregister_percpu_thread(&vmbus_irq_threads);
-+		vmbus_irq_initialized = false;
-+	}
- 	for_each_online_cpu(cpu) {
- 		struct hv_per_cpu_context *hv_cpu
- 			= per_cpu_ptr(hv_context.cpu_context, cpu);
--- 
-2.51.0
-
+> 
+> > +
+> > +	cpuhp_remove_state(synic_cpuhp_online);
+> > +	return 0;
+> > +}
+> > +
+> > +static struct notifier_block mshv_synic_reboot_nb = {
+> > +	.notifier_call = mshv_synic_reboot_notify,
+> > +};
+> > +
+> > +int __init mshv_synic_init(struct device *dev)
+> > +{
+> > +	int ret = 0;
+> > +
+> > +	synic_pages = alloc_percpu(struct hv_synic_pages);
+> > +	if (!synic_pages) {
+> > +		dev_err(dev, "Failed to allocate percpu synic page\n");
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "mshv_synic",
+> > +				mshv_synic_cpu_init,
+> > +				mshv_synic_cpu_exit);
+> > +	if (ret < 0) {
+> > +		dev_err(dev, "Failed to setup cpu hotplug state: %i\n", ret);
+> > +		goto free_synic_pages;
+> > +	}
+> > +
+> > +	synic_cpuhp_online = ret;
+> > +
+> > +	ret = register_reboot_notifier(&mshv_synic_reboot_nb);
+> > +	if (ret)
+> > +		goto remove_cpuhp_state;
+> > +
+> > +	return 0;
+> > +
+> > +remove_cpuhp_state:
+> > +	cpuhp_remove_state(synic_cpuhp_online);
+> > +free_synic_pages:
+> > +	free_percpu(synic_pages);
+> > +	return ret;
+> > +}
+> > +
+> > +void mshv_synic_cleanup(void)
+> > +{
+> > +	unregister_reboot_notifier(&mshv_synic_reboot_nb);
+> > +	cpuhp_remove_state(synic_cpuhp_online);
+> > +	free_percpu(synic_pages);
+> > +}
+> > --
+> > 2.34.1
+> > 
+> 
 
