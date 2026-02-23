@@ -1,60 +1,60 @@
-Return-Path: <linux-hyperv+bounces-8948-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8949-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MH0zGppVnGkAEQQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8948-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 14:26:50 +0100
+	id 0GQFBz9anGmzEgQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8949-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 14:46:39 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 882CD176D1F
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 14:26:49 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 443B317734F
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 14:46:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 1E232303540C
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 13:24:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EE5FC307CE9F
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Feb 2026 13:41:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAC8E3A1D2;
-	Mon, 23 Feb 2026 13:24:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20BE12222A9;
+	Mon, 23 Feb 2026 13:41:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="mCqQaHjF"
+	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="i000c0pb"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D1719E968;
-	Mon, 23 Feb 2026 13:24:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD0B21CC51;
+	Mon, 23 Feb 2026 13:41:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771853069; cv=pass; b=TMT3OFEBQkzxMs2rLEI+hjNVJw37pRRWaVMtXnakyanPhqKupvUNtJ/M3rfMTbu8RvKE1zcEyYbQ03jX9/N07WGhb9k6s21YsDuOyofgmpli6DPMmzCnii4iPQlC3W3Esz0JCXXKmrISLDMMrn9QvK0fvv0IDidJ1USEni3dllU=
+	t=1771854080; cv=pass; b=FYaQXXGKKZHn2W0egjWxGaNmhEkCh5Xge3SziDPnrqjnuYlqjnNrjGnxnkFsiNTndtRiiF8lNx734GPhYVxrDWSnkSUogsGc+DOK2W0DlY91ptitRELg6u8vTKVNEKaAZdDa80vIfX+LwE68p63bEiXvdfFBYQPXpOq688uZgss=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771853069; c=relaxed/simple;
-	bh=esZINqTyB2VwriPwo1LnCOSiTyrdj3PcCQ28DVxt9HE=;
+	s=arc-20240116; t=1771854080; c=relaxed/simple;
+	bh=ixmWJy+ku7enF/ISdHMrZ4wESkRwadlOFl252uY/uvI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DPBp/YdVp7NPoyzc+XzkmCG0rfzlbfer8mvMQIRPQ4hVbrGHG0eETOcQC6pFNN+h8Uq/HKUOFhoGGL1AZzUaojtqNp3Yd7PfFrFHAUyOzav2ql0vAJ9le2UqZHtOg6Yx6z2bbuOzvk98hJmr/citb1/wRxAzzKzCZT4JfP7miqY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=mCqQaHjF; arc=pass smtp.client-ip=136.143.188.52
+	 Content-Type:Content-Disposition:In-Reply-To; b=UfLsvUzS47LV4MJcMVXICnPh/kItwbUdpt9TJTr9ClY5vWpCTjSOu/QMZUafJ9IBaqRt0uxbNiD2aulLimEjlSyxN/+CPdyU8fMItrug/iTCUvKpW15raqhQi+PZyp1pxEY6pBGCQCDzgjhj5rC0oYKPAR0D+y8+KHm/U6IZAJA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=i000c0pb; arc=pass smtp.client-ip=136.143.188.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1771853061; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1771854069; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=Nu/6MjBirPcUwSOFSEQyMAUoM1igHjuORQtJW1fDJ+zy4cdHPZ6+tR2+X3h5HYYMF8Znf+fD/lWeX/i3vyZ69QN1xPzrVxBmyVzRCCPpis1cNpIencuM60z7j7VJ90d/RmYK5X5hGXdsJPVNDEZR85YItlW0rAIq0w3yk7JtC8Y=
+	b=c+UPvEF6G+ch2Qy2wseoli99rtP9xCtBt30v9NiCzCh+6nyoeBmEwrflikQz2y8CrIvBdRd9X+GTg2xXfolH/01Qix6vPieOu0o7TDPBp5rx18ElgQ2LrzgO4u3vY7vi4axSB2S7XEr5LNQkxBkC+hP9E7wah81PHHsgCgNPFu4=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1771853061; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ByyiEgWdwUlP7EeNAlCEAi0moDSm6poi227momZI43w=; 
-	b=iEw2TXCrHa2tbtSozspiThX24zm6AiRK8oMVAiU5T52HdeQ383FwRZTmf4FdwCUse4EuuIJwa/GreuUgEjMGwiBVyYcBdHChnZi5RztPW/awwqTtZ8CNJKr90FV/AZFX53wEYSnVe1dkiTu8PcbX9ck56bcLPVvaYgmOE9+dHJA=
+	t=1771854069; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=EWEhCqHeWfo30yaEuLKb8B54mAM1iTWEBfaeVj/QuZw=; 
+	b=mc3ay8RryHXuBYuwvGDh5h0RuMU//lc/ODpC65sLUOlORDqWYBBdgBukMcPcNK42MrknyaCC4uzaLjSnq7Q7gZKJzGKXqIvBd814Kde1JO4jJBHNDT+u1FsmRvGD2m9MDCIQctDTsGO91cAMCf4ceP3NqBMwdBDwQeU/aKxVgK0=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=anirudhrb.com;
 	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
 	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1771853061;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1771854069;
 	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
 	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=ByyiEgWdwUlP7EeNAlCEAi0moDSm6poi227momZI43w=;
-	b=mCqQaHjFpp1m7M7eC2u/qAat+CdUag+r0mu4Y5p1lNCvuLQnDd2ioVo8ie9Zz4zq
-	Md+aZYmDru8u1/kBBYHYf3DYh94atoNXBFk0oU7oZ4y4hWcaXFh1UHP/Yvc4BK7lhAT
-	S2qZcWGIkiOQ1dVHPre2wOe9lJaYUWaB00vt/5Ww=
-Received: by mx.zohomail.com with SMTPS id 1771853058699519.5229812750937;
-	Mon, 23 Feb 2026 05:24:18 -0800 (PST)
-Date: Mon, 23 Feb 2026 13:24:14 +0000
+	bh=EWEhCqHeWfo30yaEuLKb8B54mAM1iTWEBfaeVj/QuZw=;
+	b=i000c0pb623rkIyyPPajA2g1ovIMXI89Lg207d45G9gkkn0IFGeCdu7I5UYcyJ1J
+	z9DE21sqfP7/bxf+D08R6S/uyjKoThcjFaAr7Ldby14RMZTONufFnoyi/aoAhfZN/vh
+	J5eTMr7TpJJKr02NCtu/zDhHXlzflzcbmFc8SBXk=
+Received: by mx.zohomail.com with SMTPS id 1771854066752873.5767670355301;
+	Mon, 23 Feb 2026 05:41:06 -0800 (PST)
+Date: Mon, 23 Feb 2026 13:41:02 +0000
 From: Anirudh Rayabharam <anirudh@anirudhrb.com>
 To: Michael Kelley <mhklinux@outlook.com>
 Cc: "kys@microsoft.com" <kys@microsoft.com>,
@@ -64,11 +64,12 @@ Cc: "kys@microsoft.com" <kys@microsoft.com>,
 	"longli@microsoft.com" <longli@microsoft.com>,
 	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 1/2] mshv: refactor synic init and cleanup
-Message-ID: <aZxU_k84fmrWoRsH@anirudh-surface.localdomain>
+Subject: Re: [PATCH v4 2/2] mshv: add arm64 support for doorbell & intercept
+ SINTs
+Message-ID: <aZxY7nYU8POomw-t@anirudh-surface.localdomain>
 References: <20260211170728.3056226-1-anirudh@anirudhrb.com>
- <20260211170728.3056226-2-anirudh@anirudhrb.com>
- <SN6PR02MB415781511D0B2A10FB9BB365D46AA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20260211170728.3056226-3-anirudh@anirudhrb.com>
+ <SN6PR02MB4157B6F44266C4E813D3CF74D46AA@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -77,14 +78,14 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SN6PR02MB415781511D0B2A10FB9BB365D46AA@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <SN6PR02MB4157B6F44266C4E813D3CF74D46AA@SN6PR02MB4157.namprd02.prod.outlook.com>
 X-ZohoMailClient: External
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[anirudhrb.com,none];
 	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -92,7 +93,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[outlook.com];
 	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8948-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8949-lists,linux-hyperv=lfdr.de];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
@@ -103,330 +104,283 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[anirudh@anirudhrb.com,linux-hyperv@vger.kernel.org];
 	DKIM_TRACE(0.00)[anirudhrb.com:+];
 	RCPT_COUNT_SEVEN(0.00)[8];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,anirudhrb.com:email,anirudhrb.com:dkim]
-X-Rspamd-Queue-Id: 882CD176D1F
+	DBL_BLOCKED_OPENRESOLVER(0.00)[anirudhrb.com:email,anirudhrb.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,anirudh-surface.localdomain:mid]
+X-Rspamd-Queue-Id: 443B317734F
 X-Rspamd-Action: no action
 
-On Wed, Feb 18, 2026 at 04:17:23AM +0000, Michael Kelley wrote:
+On Wed, Feb 18, 2026 at 04:17:29AM +0000, Michael Kelley wrote:
 > From: Anirudh Rayabharam <anirudh@anirudhrb.com> Sent: Wednesday, February 11, 2026 9:07 AM
 > > 
-> > Rename mshv_synic_init() to mshv_synic_cpu_init() and
-> > mshv_synic_cleanup() to mshv_synic_cpu_exit() to better reflect that
-> > these functions handle per-cpu synic setup and teardown.
+> > On x86, the HYPERVISOR_CALLBACK_VECTOR is used to receive synthetic
+> > interrupts (SINTs) from the hypervisor for doorbells and intercepts.
+> > There is no such vector reserved for arm64.
 > > 
-> > Use mshv_synic_init/cleanup() to perform init/cleanup that is not per-cpu.
-> > Move all the synic related setup from mshv_parent_partition_init.
+> > On arm64, the hypervisor exposes a synthetic register that can be read
+> > to find the INTID that should be used for SINTs. This INTID is in the
+> > PPI range.
 > > 
-> > Move the reboot notifier to mshv_synic.c because it currently only
-> > operates on the synic cpuhp state.
-> > 
-> > Move out synic_pages from the global mshv_root since it's use is now
-> 
-> s/it's/its/
-> 
-> > completely local to mshv_synic.c.
-> > 
-> > This is in preparation for the next patch which will add more stuff to
-> > mshv_synic_init().
-> > 
-> > No functional change.
+> > To better unify the code paths, introduce mshv_sint_vector_init() that
+> > either reads the synthetic register and obtains the INTID (arm64) or
+> > just uses HYPERVISOR_CALLBACK_VECTOR as the interrupt vector (x86).
 > > 
 > > Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
 > > ---
-> >  drivers/hv/mshv_root.h      |  5 ++-
-> >  drivers/hv/mshv_root_main.c | 59 +++++-------------------------
-> >  drivers/hv/mshv_synic.c     | 71 +++++++++++++++++++++++++++++++++----
-> >  3 files changed, 75 insertions(+), 60 deletions(-)
+> >  drivers/hv/mshv_synic.c     | 112 +++++++++++++++++++++++++++++++++---
+> >  include/hyperv/hvgdk_mini.h |   2 +
+> >  2 files changed, 107 insertions(+), 7 deletions(-)
 > > 
-> > diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
-> > index 3c1d88b36741..26e0320c8097 100644
-> > --- a/drivers/hv/mshv_root.h
-> > +++ b/drivers/hv/mshv_root.h
-> > @@ -183,7 +183,6 @@ struct hv_synic_pages {
-> >  };
-> > 
-> >  struct mshv_root {
-> > -	struct hv_synic_pages __percpu *synic_pages;
-> >  	spinlock_t pt_ht_lock;
-> >  	DECLARE_HASHTABLE(pt_htable, MSHV_PARTITIONS_HASH_BITS);
-> >  	struct hv_partition_property_vmm_capabilities vmm_caps;
-> > @@ -242,8 +241,8 @@ int mshv_register_doorbell(u64 partition_id, doorbell_cb_t doorbell_cb,
-> >  void mshv_unregister_doorbell(u64 partition_id, int doorbell_portid);
-> > 
-> >  void mshv_isr(void);
-> > -int mshv_synic_init(unsigned int cpu);
-> > -int mshv_synic_cleanup(unsigned int cpu);
-> > +int mshv_synic_init(struct device *dev);
-> > +void mshv_synic_cleanup(void);
-> > 
-> >  static inline bool mshv_partition_encrypted(struct mshv_partition *partition)
-> >  {
-> > diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-> > index 681b58154d5e..7c1666456e78 100644
-> > --- a/drivers/hv/mshv_root_main.c
-> > +++ b/drivers/hv/mshv_root_main.c
-> > @@ -2035,7 +2035,6 @@ mshv_dev_release(struct inode *inode, struct file *filp)
-> >  	return 0;
-> >  }
-> > 
-> > -static int mshv_cpuhp_online;
-> >  static int mshv_root_sched_online;
-> > 
-> >  static const char *scheduler_type_to_string(enum hv_scheduler_type type)
-> > @@ -2198,40 +2197,14 @@ root_scheduler_deinit(void)
-> >  	free_percpu(root_scheduler_output);
-> >  }
-> > 
-> > -static int mshv_reboot_notify(struct notifier_block *nb,
-> > -			      unsigned long code, void *unused)
-> > -{
-> > -	cpuhp_remove_state(mshv_cpuhp_online);
-> > -	return 0;
-> > -}
-> > -
-> > -struct notifier_block mshv_reboot_nb = {
-> > -	.notifier_call = mshv_reboot_notify,
-> > -};
-> > -
-> >  static void mshv_root_partition_exit(void)
-> >  {
-> > -	unregister_reboot_notifier(&mshv_reboot_nb);
-> >  	root_scheduler_deinit();
-> >  }
-> > 
-> >  static int __init mshv_root_partition_init(struct device *dev)
-> >  {
-> > -	int err;
-> > -
-> > -	err = root_scheduler_init(dev);
-> > -	if (err)
-> > -		return err;
-> > -
-> > -	err = register_reboot_notifier(&mshv_reboot_nb);
-> > -	if (err)
-> > -		goto root_sched_deinit;
-> > -
-> > -	return 0;
-> > -
-> > -root_sched_deinit:
-> > -	root_scheduler_deinit();
-> > -	return err;
-> > +	return root_scheduler_init(dev);
-> >  }
-> > 
-> >  static void mshv_init_vmm_caps(struct device *dev)
-> > @@ -2276,31 +2249,18 @@ static int __init mshv_parent_partition_init(void)
-> >  			MSHV_HV_MAX_VERSION);
-> >  	}
-> > 
-> > -	mshv_root.synic_pages = alloc_percpu(struct hv_synic_pages);
-> > -	if (!mshv_root.synic_pages) {
-> > -		dev_err(dev, "Failed to allocate percpu synic page\n");
-> > -		ret = -ENOMEM;
-> > +	ret = mshv_synic_init(dev);
-> > +	if (ret)
-> >  		goto device_deregister;
-> > -	}
-> > -
-> > -	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "mshv_synic",
-> > -				mshv_synic_init,
-> > -				mshv_synic_cleanup);
-> > -	if (ret < 0) {
-> > -		dev_err(dev, "Failed to setup cpu hotplug state: %i\n", ret);
-> > -		goto free_synic_pages;
-> > -	}
-> > -
-> > -	mshv_cpuhp_online = ret;
-> > 
-> >  	ret = mshv_retrieve_scheduler_type(dev);
-> >  	if (ret)
-> > -		goto remove_cpu_state;
-> > +		goto synic_cleanup;
-> > 
-> >  	if (hv_root_partition())
-> >  		ret = mshv_root_partition_init(dev);
-> >  	if (ret)
-> > -		goto remove_cpu_state;
-> > +		goto synic_cleanup;
-> > 
-> >  	mshv_init_vmm_caps(dev);
-> > 
-> > @@ -2318,10 +2278,8 @@ static int __init mshv_parent_partition_init(void)
-> >  exit_partition:
-> >  	if (hv_root_partition())
-> >  		mshv_root_partition_exit();
-> > -remove_cpu_state:
-> > -	cpuhp_remove_state(mshv_cpuhp_online);
-> > -free_synic_pages:
-> > -	free_percpu(mshv_root.synic_pages);
-> > +synic_cleanup:
-> > +	mshv_synic_cleanup();
-> >  device_deregister:
-> >  	misc_deregister(&mshv_dev);
-> >  	return ret;
-> > @@ -2335,8 +2293,7 @@ static void __exit mshv_parent_partition_exit(void)
-> >  	mshv_irqfd_wq_cleanup();
-> >  	if (hv_root_partition())
-> >  		mshv_root_partition_exit();
-> > -	cpuhp_remove_state(mshv_cpuhp_online);
-> > -	free_percpu(mshv_root.synic_pages);
-> > +	mshv_synic_cleanup();
-> >  }
-> > 
-> >  module_init(mshv_parent_partition_init);
 > > diff --git a/drivers/hv/mshv_synic.c b/drivers/hv/mshv_synic.c
-> > index f8b0337cdc82..074e37c48876 100644
+> > index 074e37c48876..7957ad0328dd 100644
 > > --- a/drivers/hv/mshv_synic.c
 > > +++ b/drivers/hv/mshv_synic.c
-> > @@ -12,11 +12,16 @@
+> > @@ -10,17 +10,24 @@
+> >  #include <linux/kernel.h>
+> >  #include <linux/slab.h>
 > >  #include <linux/mm.h>
+> > +#include <linux/interrupt.h>
 > >  #include <linux/io.h>
 > >  #include <linux/random.h>
-> > +#include <linux/cpuhotplug.h>
-> > +#include <linux/reboot.h>
+> >  #include <linux/cpuhotplug.h>
+> >  #include <linux/reboot.h>
 > >  #include <asm/mshyperv.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/acpi.h>
 > > 
 > >  #include "mshv_eventfd.h"
 > >  #include "mshv.h"
 > > 
-> > +static int synic_cpuhp_online;
-> > +static struct hv_synic_pages __percpu *synic_pages;
-> > +
+> >  static int synic_cpuhp_online;
+> >  static struct hv_synic_pages __percpu *synic_pages;
+> > +static int mshv_sint_vector = -1; /* hwirq for the SynIC SINTs */
+> 
+> With the introduction of this variable, the call to add_interrupt_randomness()
+> in mshv_isr() should be updated to pass mshv_sint_vector as the argument,
+> and the #ifdef HYPERVISOR_CALLBACK_VECTOR can be dropped (yea!).  My
+> previous comment about the generic Linux IRQ handling doing the call
+> to add_interrupt_randomness() is true for "normal" IRQs but not for per-CPU
+> IRQs like these. So the call to add_interrupt_randomness() in mshv_isr() is
+> needed on both x86 and ARM64.
+> 
+> > +#ifndef HYPERVISOR_CALLBACK_VECTOR
+> > +static int mshv_sint_irq = -1; /* Linux IRQ for mshv_sint_vector */
+> > +#endif
+> 
+> Documentation/process/coding-style.rst says the following in Section 21:
+> 
+> If you have a function or variable which may potentially go unused in a
+> particular configuration, and the compiler would warn about its definition
+> going unused, mark the definition as __maybe_unused rather than wrapping it in
+> a preprocessor conditional.
+> 
+> You could tag mshv_sint_irq with "__maybe_unused" and avoid the #ifndef. But
+> see further comments below.
+> 
+> > 
 > >  static u32 synic_event_ring_get_queued_port(u32 sint_index)
 > >  {
-> >  	struct hv_synic_event_ring_page **event_ring_page;
-> > @@ -26,7 +31,7 @@ static u32 synic_event_ring_get_queued_port(u32 sint_index)
-> >  	u32 message;
-> >  	u8 tail;
-> > 
-> > -	spages = this_cpu_ptr(mshv_root.synic_pages);
-> > +	spages = this_cpu_ptr(synic_pages);
-> >  	event_ring_page = &spages->synic_event_ring_page;
-> >  	synic_eventring_tail = (u8 **)this_cpu_ptr(hv_synic_eventring_tail);
-> > 
-> > @@ -393,7 +398,7 @@ mshv_intercept_isr(struct hv_message *msg)
-> > 
-> >  void mshv_isr(void)
-> >  {
-> > -	struct hv_synic_pages *spages = this_cpu_ptr(mshv_root.synic_pages);
-> > +	struct hv_synic_pages *spages = this_cpu_ptr(synic_pages);
-> >  	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
-> >  	struct hv_message *msg;
-> >  	bool handled;
-> > @@ -446,7 +451,7 @@ void mshv_isr(void)
-> >  	}
-> >  }
-> > 
-> > -int mshv_synic_init(unsigned int cpu)
-> > +static int mshv_synic_cpu_init(unsigned int cpu)
-> >  {
-> >  	union hv_synic_simp simp;
-> >  	union hv_synic_siefp siefp;
-> > @@ -455,7 +460,7 @@ int mshv_synic_init(unsigned int cpu)
-> >  	union hv_synic_sint sint;
-> >  #endif
-> >  	union hv_synic_scontrol sctrl;
-> > -	struct hv_synic_pages *spages = this_cpu_ptr(mshv_root.synic_pages);
-> > +	struct hv_synic_pages *spages = this_cpu_ptr(synic_pages);
-> >  	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
-> >  	struct hv_synic_event_flags_page **event_flags_page =
-> >  			&spages->synic_event_flags_page;
-> > @@ -542,14 +547,14 @@ int mshv_synic_init(unsigned int cpu)
-> >  	return -EFAULT;
-> >  }
-> > 
-> > -int mshv_synic_cleanup(unsigned int cpu)
-> > +static int mshv_synic_cpu_exit(unsigned int cpu)
-> >  {
-> >  	union hv_synic_sint sint;
+> > @@ -456,9 +463,7 @@ static int mshv_synic_cpu_init(unsigned int cpu)
 > >  	union hv_synic_simp simp;
 > >  	union hv_synic_siefp siefp;
 > >  	union hv_synic_sirbp sirbp;
+> > -#ifdef HYPERVISOR_CALLBACK_VECTOR
+> >  	union hv_synic_sint sint;
+> > -#endif
 > >  	union hv_synic_scontrol sctrl;
-> > -	struct hv_synic_pages *spages = this_cpu_ptr(mshv_root.synic_pages);
-> > +	struct hv_synic_pages *spages = this_cpu_ptr(synic_pages);
+> >  	struct hv_synic_pages *spages = this_cpu_ptr(synic_pages);
 > >  	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
-> >  	struct hv_synic_event_flags_page **event_flags_page =
-> >  		&spages->synic_event_flags_page;
-> > @@ -663,3 +668,57 @@ mshv_unregister_doorbell(u64 partition_id, int doorbell_portid)
+> > @@ -501,10 +506,13 @@ static int mshv_synic_cpu_init(unsigned int cpu)
 > > 
-> >  	mshv_portid_free(doorbell_portid);
-> >  }
+> >  	hv_set_non_nested_msr(HV_MSR_SIRBP, sirbp.as_uint64);
+> > 
+> > -#ifdef HYPERVISOR_CALLBACK_VECTOR
+> > +#ifndef HYPERVISOR_CALLBACK_VECTOR
+> > +	enable_percpu_irq(mshv_sint_irq, 0);
+> > +#endif
 > > +
-> > +static int mshv_synic_reboot_notify(struct notifier_block *nb,
-> > +			      unsigned long code, void *unused)
-> > +{
-> > +	if (!hv_root_partition())
-> > +		return 0;
 > 
-> I'm curious as to why the synic is cleaned up only for the root partition,
-> but not for L1VH parents. L1VH parents *do* cleanup their synic in
-> mshv_parent_partition_exit(). I probably don't understand all the
-> vagaries of L1VH parents ....
+> Using IS_ENABLED() would be better than the #ifndef. (See Section 21
+> of coding-style.rst about this as well.) You would need to drop the #ifndef
+> around mshv_sint_irq, which is fine.
+> 
+> 	if (!IS_ENABLED(HYPERVISOR_CALLBACK_VECTOR))
+> 		enable_percpu_irq(mshv_sint_irq, 0);
+> 
+> That said, I prefer the approach in v1 of your series where basically
+> the code says "if we have a sint irq, enable it". This links the enablement
+> most closely to what it directly depends on.
+> 
+> 	if (mshv_sint_irq != -1)
+> 		enable_percpu_irq(mshv_sint_irq, 0);
+> 
+> But I realize the approach is somewhat a matter of personal preference so either
+> way is acceptable.
+> 
+> >  	/* Enable intercepts */
+> >  	sint.as_uint64 = 0;
+> > -	sint.vector = HYPERVISOR_CALLBACK_VECTOR;
+> > +	sint.vector = mshv_sint_vector;
+> >  	sint.masked = false;
+> >  	sint.auto_eoi = hv_recommend_using_aeoi();
+> >  	hv_set_non_nested_msr(HV_MSR_SINT0 + HV_SYNIC_INTERCEPTION_SINT_INDEX,
+> > @@ -512,13 +520,12 @@ static int mshv_synic_cpu_init(unsigned int cpu)
+> > 
+> >  	/* Doorbell SINT */
+> >  	sint.as_uint64 = 0;
+> > -	sint.vector = HYPERVISOR_CALLBACK_VECTOR;
+> > +	sint.vector = mshv_sint_vector;
+> >  	sint.masked = false;
+> >  	sint.as_intercept = 1;
+> >  	sint.auto_eoi = hv_recommend_using_aeoi();
+> >  	hv_set_non_nested_msr(HV_MSR_SINT0 + HV_SYNIC_DOORBELL_SINT_INDEX,
+> >  			      sint.as_uint64);
+> > -#endif
+> > 
+> >  	/* Enable global synic bit */
+> >  	sctrl.as_uint64 = hv_get_non_nested_msr(HV_MSR_SCONTROL);
+> > @@ -573,6 +580,10 @@ static int mshv_synic_cpu_exit(unsigned int cpu)
+> >  	hv_set_non_nested_msr(HV_MSR_SINT0 + HV_SYNIC_DOORBELL_SINT_INDEX,
+> >  			      sint.as_uint64);
+> > 
+> > +#ifndef HYPERVISOR_CALLBACK_VECTOR
+> > +	disable_percpu_irq(mshv_sint_irq);
+> > +#endif
+> > +
+> 
+> Same here.
+> 
+> >  	/* Disable Synic's event ring page */
+> >  	sirbp.as_uint64 = hv_get_non_nested_msr(HV_MSR_SIRBP);
+> >  	sirbp.sirbp_enabled = false;
+> > @@ -683,14 +694,98 @@ static struct notifier_block mshv_synic_reboot_nb = {
+> >  	.notifier_call = mshv_synic_reboot_notify,
+> >  };
+> > 
+> > +#ifndef HYPERVISOR_CALLBACK_VECTOR
+> > +#ifdef CONFIG_ACPI
+> > +static long __percpu *mshv_evt;
+> > +#endif
+> 
+> Same comment here about the coding-style.rst guidelines.
+> 
+> Furthermore, mshv_evt could be directly defined here as a per-cpu "long",
+> rather than a pointer to a long. Then you don't need to do a runtime
+> per-cpu allocation with all the attendant error checking and cleanup, which
+> saves about 10 lines of code. So
+> 
+> static DEFINE_PER_CPU(long, mshv_evt);
+> 
+> drivers/clocksource/hyperv_timer.c does the definition for stimer0_evt this
+> way. I looked through all kernel code and found several other places doing
+> the direct definition. I don't remember why I didn't do the direct method for
+> vmbus_evt, but I'm planning to submit a patch to change it, which will drop
+> a few lines of code.
+> 
+> > +
+> > +static irqreturn_t mshv_percpu_isr(int irq, void *dev_id)
+> > +{
+> > +	mshv_isr();
+> > +	return IRQ_HANDLED;
+> > +}
+> 
+> This function generates a warning about being unused when !CONFIG_ACPI.
+> But see further comments below.
+> 
+> > +
+> > +static int __init mshv_sint_vector_init(void)
+> > +{
+> > +#ifdef CONFIG_ACPI
+> > +	int ret;
+> > +	struct hv_register_assoc reg = {
+> > +		.name = HV_ARM64_REGISTER_SINT_RESERVED_INTERRUPT_ID,
+> > +	};
+> > +	union hv_input_vtl input_vtl = { 0 };
+> > +
+> > +	ret = hv_call_get_vp_registers(HV_VP_INDEX_SELF, HV_PARTITION_ID_SELF,
+> > +				1, input_vtl, &reg);
+> > +	if (ret || !reg.value.reg64)
+> > +		return -ENODEV;
+> > +
+> > +	mshv_sint_vector = reg.value.reg64;
+> > +	ret  = acpi_register_gsi(NULL, mshv_sint_vector, ACPI_EDGE_SENSITIVE,
+> > +					ACPI_ACTIVE_HIGH);
+> > +	if (ret < 0)
+> > +		goto out_fail;
+> > +
+> > +	mshv_sint_irq = ret;
+> > +
+> > +	mshv_evt = alloc_percpu(long);
+> > +	if (!mshv_evt) {
+> > +		ret = -ENOMEM;
+> > +		goto out_unregister;
+> > +	}
+> > +
+> > +	ret = request_percpu_irq(mshv_sint_irq, mshv_percpu_isr, "MSHV",
+> > +		mshv_evt);
+> > +	if (ret)
+> > +		goto free_evt;
+> > +
+> > +	return 0;
+> > +
+> > +free_evt:
+> > +	free_percpu(mshv_evt);
+> > +out_unregister:
+> > +	acpi_unregister_gsi(mshv_sint_vector);
+> > +out_fail:
+> > +	return ret;
+> > +#else
+> > +	return -ENODEV;
+> > +#endif
+> > +}
+> 
+> I have several thoughts about the #ifdef CONFIG_ACPI.
+> 
+> The coding-style.rst guidelines in Section 21 also say:
+> 
+> Prefer to compile out entire functions, rather than portions of functions or
+> portions of expressions.  Rather than putting an ifdef in an expression, factor
+> out part or all of the expression into a separate helper function and apply the
+> conditional to that function.
+> 
+> But more fundamentally, it looks like the #ifdef CONFIG_ACPI is there
+> solely because acpi_register_gsi() exists only when CONFIG_ACPI is set.
+> The rest of the code doesn't depend on ACPI. In the !CONFIG_ACPI case,
+> your stub code returns -ENODEV, so doorbell & intercept SINTs just don't
+> work, and pretty much everything is non-functional.
+> 
+> This patch doesn't allude to any future DeviceTree case that parallels ACPI,
+> so I'm unsure what's expected in the future.  If such a future DT case is
+> murky, perhaps drivers/hv/Kconfig should give MSHV_ROOT a dependency
+> on ACPI. Then the #ifdef CONFIG_ACPI could be dropped, along with the
+> #else stub code. When/if the DT use case comes along, the dependency
+> can be removed and the code structured to handle both ACPI and DT.
+> The code to fetch the INTID via the hypervisor synthetic register, and the
+> request_percpu_irq() would be applicable to both. It's only the GSI
+> registration that would be different, and that could be pulled out into a
+> helper function that handles the difference in ACPI and DT. I haven't looked
+> to see how DT does the equivalent of GSI registration.
 
-I will check this. This cleanup matters mainly for kexec. I will do some
-tests to see if L1VH needs it too.
+The DT case will materialize in the future. Making MSHV_ROOT depend on
+ACPI seems a bit drastic to me when all we want to do is follow the
+coding style guideline that says "prefer to compile out entire
+functions...".
 
-If required, I will fix it in a separate patch. For this series I would
-prefer to keep the "No function changes" claim intact.
+> 
+> Another approach would be to add stubs for acpi_register_gsi() and
+> acpi_unregister_gsi() in include/linux/acpi.h.  A number of such stubs
+> have been added over the years. Saurabh got one added in 2023
+> (commit 1f6277bf716cc). Then the above code would compile even
+> with !CONFIG_ACPI.  acpi_register_gsi() would fail, and you would get
+> an error return. This approach produces cleaner code and is consistent
+> with similar use cases that depend on stubs provided by include/linux/acpi.h
+> rather than #ifdefs.
+
+I'll send out a v5 which takes a simpler approach to conform to the
+coding guidelines. I'll also address all the other comments from above.
 
 Thanks,
 Anirudh.
 
-> 
-> > +
-> > +	cpuhp_remove_state(synic_cpuhp_online);
-> > +	return 0;
-> > +}
-> > +
-> > +static struct notifier_block mshv_synic_reboot_nb = {
-> > +	.notifier_call = mshv_synic_reboot_notify,
-> > +};
-> > +
-> > +int __init mshv_synic_init(struct device *dev)
-> > +{
-> > +	int ret = 0;
-> > +
-> > +	synic_pages = alloc_percpu(struct hv_synic_pages);
-> > +	if (!synic_pages) {
-> > +		dev_err(dev, "Failed to allocate percpu synic page\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "mshv_synic",
-> > +				mshv_synic_cpu_init,
-> > +				mshv_synic_cpu_exit);
-> > +	if (ret < 0) {
-> > +		dev_err(dev, "Failed to setup cpu hotplug state: %i\n", ret);
-> > +		goto free_synic_pages;
-> > +	}
-> > +
-> > +	synic_cpuhp_online = ret;
-> > +
-> > +	ret = register_reboot_notifier(&mshv_synic_reboot_nb);
-> > +	if (ret)
-> > +		goto remove_cpuhp_state;
-> > +
-> > +	return 0;
-> > +
-> > +remove_cpuhp_state:
-> > +	cpuhp_remove_state(synic_cpuhp_online);
-> > +free_synic_pages:
-> > +	free_percpu(synic_pages);
-> > +	return ret;
-> > +}
-> > +
-> > +void mshv_synic_cleanup(void)
-> > +{
-> > +	unregister_reboot_notifier(&mshv_synic_reboot_nb);
-> > +	cpuhp_remove_state(synic_cpuhp_online);
-> > +	free_percpu(synic_pages);
-> > +}
-> > --
-> > 2.34.1
-> > 
-> 
 
