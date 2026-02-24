@@ -1,323 +1,154 @@
-Return-Path: <linux-hyperv+bounces-8969-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8966-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CNUyNimTnWlKQgQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8969-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Feb 2026 13:01:45 +0100
+	id SFFFJgeCnWlsQQQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8966-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Feb 2026 11:48:39 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90A1C186B22
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Feb 2026 13:01:39 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3351D185A1F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Feb 2026 11:48:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9A43B302EE86
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Feb 2026 12:01:34 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E8E523008E23
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Feb 2026 10:46:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6406C37996D;
-	Tue, 24 Feb 2026 12:01:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 790423783C7;
+	Tue, 24 Feb 2026 10:46:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I4YlLsYD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LOub5Huj"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A671C156F45
-	for <linux-hyperv@vger.kernel.org>; Tue, 24 Feb 2026 12:01:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55345371047;
+	Tue, 24 Feb 2026 10:46:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771934493; cv=none; b=bXveUCmHPxfCotm2nxVi21IDtkhVFgGVfT0Ss1zj+v7+jmcp3kFCnqQ2FzMD1eExxIep82nlEjIKWR31PJ8B62QregmhR80S/Pz0ADuyPKPVgF5N4ycvszW/MLZRku1A+VqVCIg+EvQVCvvz9Bjbg9VQUXqEV0eMs3i1/0UlUsU=
+	t=1771929983; cv=none; b=d0FHGimnbKl/cDJ5rxtM7hrzCjs1RBS0iNLFX23o64AEylJhsOl7T4z04vrxbTguyiROFVboZ8449F5PV12owbJEJKhAqllHvERdHmgXv5zw6vmxhBgDwle9PfVbgBFN4MUsTZOCc3NJzxgx+w5UEyeDMzw+wj9NQkRYqGyvjsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771934493; c=relaxed/simple;
-	bh=qVcOp5MnvlONbLG06msjRU6TJXzRsaX/t8tfbP70eys=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YlZ/e9dEnU/ro8jkbH7E7cJgHLUu2HE6E3Mbx/6nvx9imt+taZ8/xQ3zI0VmprOPmA228lFy/gEPa0LjIjAIpG/3eZikZtMP7oWyf4Dqp7tKMmXWLep7YtGF1fd9OVUQ6NAsCv1RY8e9HSyNPQFaavZmBehg0U1JKIa16iKNYTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I4YlLsYD; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b8fbb24a9a9so925721766b.0
-        for <linux-hyperv@vger.kernel.org>; Tue, 24 Feb 2026 04:01:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771934490; x=1772539290; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bZ4fv5w72iR4alZnfS3RK7xFl8sWnyZEZWYM2yXruBI=;
-        b=I4YlLsYD+ULwXxaAN/TuLC3cw1aZVB1RzMfspIr3KDxN6eFuOQ/2T6UR2/IEU4CK4y
-         tCtjRfMzLR1s8t2+AtbyQ23UoYq/NYZuLtNkYJYwtlvVC8j/Vp41yz3Q6b2eUuULBnaL
-         eH1/e2m69eIrAxKan2k+53YsMO6sgUimgwBYEAtUpj5eeGA1kfM/oHr5f7iOfkti1wsj
-         GFpHZPOBdZRcTVc4IiaOOqNmpotROj2tgmvfpmrWR34bd0t7DMalY6vPjHNX2GWVCGPg
-         +7lDyuwzB0wMxbcBgfM82i+cLJwegFjMucbWQ9fdG/eeS/BQmeEyvRkKoksnV95+oTux
-         z85g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771934490; x=1772539290;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bZ4fv5w72iR4alZnfS3RK7xFl8sWnyZEZWYM2yXruBI=;
-        b=dvp0+OcLhfkZRYixLlsSzljmLrhBdeNeS6/KcBG4VOzonaY36ApGjkbtMIWbhoZ3pL
-         fUzG/1X8MbuY9oDqOiuRKsZEALd7EC+jOrzuEWhOQKKvKtED7qQQK5aALTLe64W9Ezis
-         /TO5v4VbpbaNzGl/+DoaHqpk3gpV8uWI44VSp3i1/kpOGwQOCcf5xGPnZn/bKWb4VBL/
-         Ns/hIrxnSgEt9ItHYU0a8vryp9g9JnDBLyEQXLk1aDpJ67uxyKWonAm1uGTWqARMRWTm
-         cMG9LLCDYFEAWW6JJmnIHLLvcLtRLMIAxkdn+GfnttIMDTSWA12tm22tN2jKlul2Vhen
-         GZjg==
-X-Forwarded-Encrypted: i=1; AJvYcCWbk3+m0s2nAwxzKVSWrNYU+4tgB8LsZFGOtTIEOr9xgGdcyS+1MI8VCpVDGIxomWNMi8ddxeHob5BrPFQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQOBKbo+ZaI646EbQIVgbmeEnVUCQlS/Buo148gEyMbw7Ega8K
-	Je6gmXF7xRjWdf3eIgLbuvAaKQ53v9L7J6/r1YmYbeo3F+HhtRfUiC3Ktaa+7g==
-X-Gm-Gg: ATEYQzz1jA6sftKU6R5/ZCh6dFEX9NxFJ6bOppwxnu7Q18tkLr4VOi2dhoSHLRloHxB
-	tJgcgf0qGbzvdW82xNx6cwDZ0ar7lPao1PhbxOiFlx6RrLhspkLlDpCq5DUQ9zi5JHOxoJt3j3C
-	z/WLfQhy3qHUZwlwMARtnQbqJecc3F6mJx7HVNWi6rHUeemPZd3BvcSbf2tDX1/sF6k0bkIwR2B
-	Vj4wug49dLEQxMRTn3Ceih/zXFZ/N0MY2LaOqo+dXC3r3CesmTIJO4KrOQpCtJmQ6Zi4xmmH8XS
-	Glfy2GrXsN2eT2pz0+wF8Nd0QNRT1DY6eE4sJEMp/nm4L4Z4esHh7+Rog0qbPgytx9rhUD+6ZmY
-	b9ZUkr1cDrKKsUxs+lQdovqnMykIp5bkD3wC1pII3bZadWuP5TsbYAkz8xiq7GDPT6Mt066Sttz
-	Ti+0FGy8kkzQhkFHYmdRh9Qg4bpbGk3D+W8eZN4eT89hLnakg=
-X-Received: by 2002:adf:e3c3:0:b0:439:8bb9:db03 with SMTP id ffacd0b85a97d-4398bb9dedemr632589f8f.3.1771928510821;
-        Tue, 24 Feb 2026 02:21:50 -0800 (PST)
-Received: from [10.221.199.249] ([165.85.126.46])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43970c09897sm26186806f8f.17.2026.02.24.02.21.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Feb 2026 02:21:49 -0800 (PST)
-Message-ID: <9ed3ade5-717d-4f03-ac13-40614a0f093c@gmail.com>
-Date: Tue, 24 Feb 2026 12:21:47 +0200
+	s=arc-20240116; t=1771929983; c=relaxed/simple;
+	bh=HoP5fJAicR6teMJFt4DKkW+JkP5LbKRJWcf04vaykBU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=awaKuXBvTLPSF3qnRANIacI/Prn8lagzyIKDg+Ui6RJQ8sOzd5Ypiraa+p7n5g7XnTXGMLjBn9BxXJGLle8tZqg0kMaNlSy1eL8O9lIBq9JXOUC+lX/G0Z/3OUMfd9aWkn8mPERcJ8ffyMTiGBjEfpPA3QqMU6uxC5G8XXyXlTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LOub5Huj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D193C116D0;
+	Tue, 24 Feb 2026 10:46:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771929982;
+	bh=HoP5fJAicR6teMJFt4DKkW+JkP5LbKRJWcf04vaykBU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LOub5HujeTkXdANgJ55GUZ5CYwGpn2k6ytz5eG7oFwOuY7hbxHQRh5j4zzQU+/XG0
+	 MDhfvnwuUX5ANryHzTdI3QRXTrmpXCOQyDFUnGyDcgBBvHwUTQ8SB//MuzKNs0Bo1r
+	 DX5s8CRkfujyb8ugANRopZsCZgoDtyHb1M2gxFPKy/7Cf7hK7/1D+JaqkfT8bGc4T/
+	 2eX9/kXpiY+bewCwWcrAOJMQFLePCShCHOOLMHpTiq71UARwAsEDrostlO/lQFamNr
+	 DhtzbsItntd6hU4j4uwpdNMkM3Wom9tQsD8TWWx6zICSrrL7HCRB4opAGVRSUMzVZC
+	 LI2Lvo6eSpIUw==
+Date: Tue, 24 Feb 2026 12:46:18 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Cheng Xu <chengyou@linux.alibaba.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>,
+	Selvin Xavier <selvin.xavier@broadcom.com>,
+	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
+	Potnuri Bharat Teja <bharat@chelsio.com>,
+	Michael Margolin <mrgolin@amazon.com>,
+	Gal Pressman <gal.pressman@linux.dev>,
+	Yossi Leybovich <sleybo@amazon.com>,
+	Kai Shen <kaishen@linux.alibaba.com>,
+	Chengchang Tang <tangchengchang@huawei.com>,
+	Junxian Huang <huangjunxian6@hisilicon.com>,
+	Abhijit Gangurde <abhijit.gangurde@amd.com>,
+	Allen Hubbe <allen.hubbe@amd.com>,
+	Krzysztof Czurylo <krzysztof.czurylo@intel.com>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Long Li <longli@microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Michal Kalderon <mkalderon@marvell.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Christian Benvenuti <benve@cisco.com>,
+	Nelson Escobar <neescoba@cisco.com>,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Bernard Metzler <bernard.metzler@linux.dev>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH rdma-next 26/50] RDMA/erdma: Separate user and kernel CQ
+ creation paths
+Message-ID: <20260224104618.GJ10607@unreal>
+References: <20260213-refactor-umem-v1-0-f3be85847922@nvidia.com>
+ <20260213-refactor-umem-v1-26-f3be85847922@nvidia.com>
+ <b1070bb3-5963-2e2b-288c-ac5912b6c22e@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] net: ethtool: add COALESCE_RX_CQE_FRAMES/NSECS
- parameters
-To: Haiyang Zhang <haiyangz@linux.microsoft.com>,
- linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
- Donald Hunter <donald.hunter@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>,
- Gal Pressman <gal@nvidia.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
- Vadim Fedorenko <vadim.fedorenko@linux.dev>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-Cc: haiyangz@microsoft.com, paulros@microsoft.com
-References: <20260222212328.736628-1-haiyangz@linux.microsoft.com>
-Content-Language: en-US
-From: Tariq Toukan <ttoukan.linux@gmail.com>
-In-Reply-To: <20260222212328.736628-1-haiyangz@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b1070bb3-5963-2e2b-288c-ac5912b6c22e@linux.alibaba.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8969-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8966-lists,linux-hyperv=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[ziepe.ca,broadcom.com,chelsio.com,amazon.com,linux.dev,linux.alibaba.com,huawei.com,hisilicon.com,amd.com,intel.com,microsoft.com,nvidia.com,marvell.com,cisco.com,cornelisnetworks.com,gmail.com,vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[30];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[linux.microsoft.com,vger.kernel.org,lunn.ch,kernel.org,gmail.com,davemloft.net,google.com,redhat.com,lwn.net,linuxfoundation.org,bootlin.com,nvidia.com,pengutronix.de,linux.dev];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[20];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ttoukanlinux@gmail.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	MID_RHS_MATCH_FROM(0.00)[];
 	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[leon@kernel.org,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 90A1C186B22
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 3351D185A1F
 X-Rspamd-Action: no action
 
-
-
-On 22/02/2026 23:23, Haiyang Zhang wrote:
-> From: Haiyang Zhang <haiyangz@microsoft.com>
+On Tue, Feb 24, 2026 at 10:20:39AM +0800, Cheng Xu wrote:
 > 
-> Add two parameters for drivers supporting Rx CQE Coalescing.
 > 
-> ETHTOOL_A_COALESCE_RX_CQE_FRAMES:
-> Maximum number of frames that can be coalesced into a CQE.
+> On 2/13/26 6:58 PM, Leon Romanovsky wrote:
+> > From: Leon Romanovsky <leonro@nvidia.com>
+> > 
+> > Split CQ creation into distinct kernel and user flows. The hns driver,
+> > inherited from mlx4, uses a problematic pattern that shares and caches
+> > umem in hns_roce_db_map_user(). This design blocks the driver from
+> > supporting generic umem sources (VMA, dmabuf, memfd, and others).
+> > 
+> > In addition, let's delete counter that counts CQ creation errors. There
+> > are multiple ways to debug kernel in modern kernel without need to rely
+> > on that debugfs counter.
+> > 
+> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> > ---
+> >  drivers/infiniband/hw/hns/hns_roce_cq.c      | 103 ++++++++++++++++++++-------
+> >  drivers/infiniband/hw/hns/hns_roce_debugfs.c |   1 -
+> >  drivers/infiniband/hw/hns/hns_roce_device.h  |   3 +-
+> >  drivers/infiniband/hw/hns/hns_roce_main.c    |   1 +
+> >  4 files changed, 82 insertions(+), 26 deletions(-)
+> > 
 > 
-> ETHTOOL_A_COALESCE_RX_CQE_NSECS:
-> Time out value in nanoseconds after the first packet arrival in a
-> coalesced CQE to be sent.
+> Hi Leon,
 > 
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
->   Documentation/netlink/specs/ethtool.yaml       |  8 ++++++++
->   Documentation/networking/ethtool-netlink.rst   | 10 ++++++++++
->   include/linux/ethtool.h                        |  6 +++++-
->   include/uapi/linux/ethtool_netlink_generated.h |  2 ++
->   net/ethtool/coalesce.c                         | 14 +++++++++++++-
->   5 files changed, 38 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
-> index 0a2d2343f79a..951d98f6bb12 100644
-> --- a/Documentation/netlink/specs/ethtool.yaml
-> +++ b/Documentation/netlink/specs/ethtool.yaml
-> @@ -861,6 +861,12 @@ attribute-sets:
->           name: tx-profile
->           type: nest
->           nested-attributes: profile
-> +      -
-> +        name: rx-cqe-frames
-> +        type: u32
-> +      -
-> +        name: rx-cqe-nsecs
-> +        type: u32
->   
->     -
->       name: pause-stat
-> @@ -2244,6 +2250,8 @@ operations:
->               - tx-aggr-time-usecs
->               - rx-profile
->               - tx-profile
-> +            - rx-cqe-frames
-> +            - rx-cqe-nsecs
->         dump: *coalesce-get-op
->       -
->         name: coalesce-set
-> diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
-> index af56c304cef4..a3e78b69fd07 100644
-> --- a/Documentation/networking/ethtool-netlink.rst
-> +++ b/Documentation/networking/ethtool-netlink.rst
-> @@ -1072,6 +1072,8 @@ Kernel response contents:
->     ``ETHTOOL_A_COALESCE_TX_AGGR_TIME_USECS``    u32     time (us), aggr, Tx
->     ``ETHTOOL_A_COALESCE_RX_PROFILE``            nested  profile of DIM, Rx
->     ``ETHTOOL_A_COALESCE_TX_PROFILE``            nested  profile of DIM, Tx
-> +  ``ETHTOOL_A_COALESCE_RX_CQE_FRAMES``         u32     max packets, Rx CQE
-> +  ``ETHTOOL_A_COALESCE_RX_CQE_NSECS``          u32     delay (ns), Rx CQE
->     ===========================================  ======  =======================
->   
->   Attributes are only included in reply if their value is not zero or the
-> @@ -1105,6 +1107,12 @@ well with frequent small-sized URBs transmissions.
->   to DIM parameters, see `Generic Network Dynamic Interrupt Moderation (Net DIM)
->   <https://www.kernel.org/doc/Documentation/networking/net_dim.rst>`_.
->   
-> +Rx CQE coalescing allows multiple received packets to be coalesced into a single
-> +Completion Queue Entry (CQE). ``ETHTOOL_A_COALESCE_RX_CQE_FRAMES`` describes the
-> +maximum number of frames that can be coalesced into a CQE.
-> +``ETHTOOL_A_COALESCE_RX_CQE_NSECS`` describes max time in nanoseconds after the
-> +first packet arrival in a coalesced CQE to be sent.
-> +
+> The driver name in this patch's title should be "RDMA/hns".
 
-I am trying to understand how generic this feature/API is.
-Can you please elaborate on the feature you want to configure here?
-
-A single CQE to describe several packets?
-What is the price? What per-packet information/hw offloads do you lose 
-in the process?
-
-For comparison, in mlx5 we have RX CQE compression, which can be applied 
-on multiple near-identical completions that share/match several fields. 
-Still, there is a per-packet mini-cqe with distinctive per-packet fields 
-like csum.
-
->   COALESCE_SET
->   ============
->   
-> @@ -1143,6 +1151,8 @@ Request contents:
->     ``ETHTOOL_A_COALESCE_TX_AGGR_TIME_USECS``    u32     time (us), aggr, Tx
->     ``ETHTOOL_A_COALESCE_RX_PROFILE``            nested  profile of DIM, Rx
->     ``ETHTOOL_A_COALESCE_TX_PROFILE``            nested  profile of DIM, Tx
-> +  ``ETHTOOL_A_COALESCE_RX_CQE_FRAMES``         u32     max packets, Rx CQE
-> +  ``ETHTOOL_A_COALESCE_RX_CQE_NSECS``          u32     delay (ns), Rx CQE
->     ===========================================  ======  =======================
->   
->   Request is rejected if it attributes declared as unsupported by driver (i.e.
-> diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
-> index 798abec67a1b..25ccd2d5d4dc 100644
-> --- a/include/linux/ethtool.h
-> +++ b/include/linux/ethtool.h
-> @@ -332,6 +332,8 @@ struct kernel_ethtool_coalesce {
->   	u32 tx_aggr_max_bytes;
->   	u32 tx_aggr_max_frames;
->   	u32 tx_aggr_time_usecs;
-> +	u32 rx_cqe_frames;
-> +	u32 rx_cqe_nsecs;
->   };
->   
->   /**
-> @@ -380,7 +382,9 @@ bool ethtool_convert_link_mode_to_legacy_u32(u32 *legacy_u32,
->   #define ETHTOOL_COALESCE_TX_AGGR_TIME_USECS	BIT(26)
->   #define ETHTOOL_COALESCE_RX_PROFILE		BIT(27)
->   #define ETHTOOL_COALESCE_TX_PROFILE		BIT(28)
-> -#define ETHTOOL_COALESCE_ALL_PARAMS		GENMASK(28, 0)
-> +#define ETHTOOL_COALESCE_RX_CQE_FRAMES		BIT(29)
-> +#define ETHTOOL_COALESCE_RX_CQE_NSECS		BIT(30)
-> +#define ETHTOOL_COALESCE_ALL_PARAMS		GENMASK(30, 0)
->   
->   #define ETHTOOL_COALESCE_USECS						\
->   	(ETHTOOL_COALESCE_RX_USECS | ETHTOOL_COALESCE_TX_USECS)
-> diff --git a/include/uapi/linux/ethtool_netlink_generated.h b/include/uapi/linux/ethtool_netlink_generated.h
-> index 556a0c834df5..efc6e4ade77b 100644
-> --- a/include/uapi/linux/ethtool_netlink_generated.h
-> +++ b/include/uapi/linux/ethtool_netlink_generated.h
-> @@ -371,6 +371,8 @@ enum {
->   	ETHTOOL_A_COALESCE_TX_AGGR_TIME_USECS,
->   	ETHTOOL_A_COALESCE_RX_PROFILE,
->   	ETHTOOL_A_COALESCE_TX_PROFILE,
-> +	ETHTOOL_A_COALESCE_RX_CQE_FRAMES,
-> +	ETHTOOL_A_COALESCE_RX_CQE_NSECS,
->   
->   	__ETHTOOL_A_COALESCE_CNT,
->   	ETHTOOL_A_COALESCE_MAX = (__ETHTOOL_A_COALESCE_CNT - 1)
-> diff --git a/net/ethtool/coalesce.c b/net/ethtool/coalesce.c
-> index 3e18ca1ccc5e..349bb02c517a 100644
-> --- a/net/ethtool/coalesce.c
-> +++ b/net/ethtool/coalesce.c
-> @@ -118,6 +118,8 @@ static int coalesce_reply_size(const struct ethnl_req_info *req_base,
->   	       nla_total_size(sizeof(u32)) +	/* _TX_AGGR_MAX_BYTES */
->   	       nla_total_size(sizeof(u32)) +	/* _TX_AGGR_MAX_FRAMES */
->   	       nla_total_size(sizeof(u32)) +	/* _TX_AGGR_TIME_USECS */
-> +	       nla_total_size(sizeof(u32)) +	/* _RX_CQE_FRAMES */
-> +	       nla_total_size(sizeof(u32)) +	/* _RX_CQE_NSECS */
->   	       total_modersz * 2;		/* _{R,T}X_PROFILE */
->   }
->   
-> @@ -269,7 +271,11 @@ static int coalesce_fill_reply(struct sk_buff *skb,
->   	    coalesce_put_u32(skb, ETHTOOL_A_COALESCE_TX_AGGR_MAX_FRAMES,
->   			     kcoal->tx_aggr_max_frames, supported) ||
->   	    coalesce_put_u32(skb, ETHTOOL_A_COALESCE_TX_AGGR_TIME_USECS,
-> -			     kcoal->tx_aggr_time_usecs, supported))
-> +			     kcoal->tx_aggr_time_usecs, supported) ||
-> +	    coalesce_put_u32(skb, ETHTOOL_A_COALESCE_RX_CQE_FRAMES,
-> +			     kcoal->rx_cqe_frames, supported) ||
-> +	    coalesce_put_u32(skb, ETHTOOL_A_COALESCE_RX_CQE_NSECS,
-> +			     kcoal->rx_cqe_nsecs, supported))
->   		return -EMSGSIZE;
->   
->   	if (!req_base->dev || !req_base->dev->irq_moder)
-> @@ -338,6 +344,8 @@ const struct nla_policy ethnl_coalesce_set_policy[] = {
->   	[ETHTOOL_A_COALESCE_TX_AGGR_MAX_BYTES] = { .type = NLA_U32 },
->   	[ETHTOOL_A_COALESCE_TX_AGGR_MAX_FRAMES] = { .type = NLA_U32 },
->   	[ETHTOOL_A_COALESCE_TX_AGGR_TIME_USECS] = { .type = NLA_U32 },
-> +	[ETHTOOL_A_COALESCE_RX_CQE_FRAMES] = { .type = NLA_U32 },
-> +	[ETHTOOL_A_COALESCE_RX_CQE_NSECS] = { .type = NLA_U32 },
->   	[ETHTOOL_A_COALESCE_RX_PROFILE] =
->   		NLA_POLICY_NESTED(coalesce_profile_policy),
->   	[ETHTOOL_A_COALESCE_TX_PROFILE] =
-> @@ -570,6 +578,10 @@ __ethnl_set_coalesce(struct ethnl_req_info *req_info, struct genl_info *info,
->   			 tb[ETHTOOL_A_COALESCE_TX_AGGR_MAX_FRAMES], &mod);
->   	ethnl_update_u32(&kernel_coalesce.tx_aggr_time_usecs,
->   			 tb[ETHTOOL_A_COALESCE_TX_AGGR_TIME_USECS], &mod);
-> +	ethnl_update_u32(&kernel_coalesce.rx_cqe_frames,
-> +			 tb[ETHTOOL_A_COALESCE_RX_CQE_FRAMES], &mod);
-> +	ethnl_update_u32(&kernel_coalesce.rx_cqe_nsecs,
-> +			 tb[ETHTOOL_A_COALESCE_RX_CQE_NSECS], &mod);
->   
->   	if (dev->irq_moder && dev->irq_moder->profile_flags & DIM_PROFILE_RX) {
->   		ret = ethnl_update_profile(dev, &dev->irq_moder->rx_profile,
-
+Right, thanks
 
