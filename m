@@ -1,223 +1,319 @@
-Return-Path: <linux-hyperv+bounces-8973-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8974-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MGDhJObWnWk0SQQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8973-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Feb 2026 17:50:46 +0100
+	id 1iPwJ2UanmntTQQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8974-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Feb 2026 22:38:45 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44B5C18A109
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Feb 2026 17:50:44 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id F145018CCF6
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Feb 2026 22:38:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4B34030783D9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Feb 2026 16:48:21 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A6F6B301700A
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Feb 2026 21:38:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E5D23A963A;
-	Tue, 24 Feb 2026 16:48:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5653133DEDD;
+	Tue, 24 Feb 2026 21:38:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NfdNWTgd"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="isG/p/sq"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11021072.outbound.protection.outlook.com [40.93.194.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F0593A9608;
-	Tue, 24 Feb 2026 16:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771951689; cv=none; b=ZFNlQTMGIo3NP5neFFkqR6+fyoSzLyKPzjJsUHWeKTcsruVR3GR8bFsXMDYG64g/B63YaxFydI+nlhAorxnRY/Yv4p2gAVVzQgbnRLjHa9Qfcyq3LU3wwDGpY9rOlypjUNHFDum4dS3YJQXVCniYUV/hF1uDEn5T2Uwc0LSCaYk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771951689; c=relaxed/simple;
-	bh=Km7QkPtERY4epjZbg1vsK01k19uyb1rrFrZwY6IhXtQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CoAM05BOs0t8TIcqSF5jEvBbydkBOdLFDkJr22m11aBPF0QBfYa9jYkjmh1DwhjOg/WNzjXdiW/wz5Kua/1TMe3wv64jRqEzCICHGfCcEEI5jXKRsZOLf9Wp0GnvCU7T1DDf9ICktIR5VVtJMzXfRWATsfEmKp/0uwuyj5rsxdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=NfdNWTgd; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61OEMsNB4097467;
-	Tue, 24 Feb 2026 16:47:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=M0JFcjHxAD5akGRsgzhTJgIJz9EnGFa8rf/jMw3K4Rk=; b=
-	NfdNWTgd/yWrB1MlWLv2wc2TEIyf2SGTHb8vRXJQpjVz3vgNbQ6KzMVwosfTaeWT
-	a4oNCY/3ee0/ieWrHLMLO91MOBJCVV12lU+qHujRyubbaR9LECJvJOxO/J8FCk3v
-	56WLRj31KS/PFoDwvQrk6LBFzSG+lAejnYaS19bNBrivWL6sXtbW838dPEPOX3Q/
-	2afU7xWWOwU+g2tpdNie3qgKR2E1xHEaaee2WkHIMqSXKA2dtQaxFVHCwNiXdcZ5
-	wR0pvnUMv09iiexjfDrzVyjg0FYOIStYTH5BCfde/Ej+hOkxnbco5kAZEU8E9MZ9
-	2ai69meCcuHzA50t+4+LMg==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4cf4k5vhh6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 24 Feb 2026 16:47:59 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 61OFeBU3015577;
-	Tue, 24 Feb 2026 16:47:58 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4cf35a6kn4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 24 Feb 2026 16:47:58 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 61OGlt4h012936;
-	Tue, 24 Feb 2026 16:47:58 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 4cf35a6kjb-3;
-	Tue, 24 Feb 2026 16:47:58 +0000
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-To: "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        linux-hyperv@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Florian Bezdeka <florian.bezdeka@siemens.com>,
-        RT <linux-rt-users@vger.kernel.org>,
-        Mitchell Levy <levymitchell0@gmail.com>
-Subject: Re: [PATCH] scsi: storvsc: Fix scheduling while atomic on PREEMPT_RT
-Date: Tue, 24 Feb 2026 11:47:42 -0500
-Message-ID: <177195161164.1154639.10246495163151300179.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <0c7fb5cd-fb21-4760-8593-e04bade84744@siemens.com>
-References: <0c7fb5cd-fb21-4760-8593-e04bade84744@siemens.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78FA4317D;
+	Tue, 24 Feb 2026 21:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.72
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771969123; cv=fail; b=hF9n2n+8BQyhIlYZU69NFdorEAyvjkze3nEyvGjWgFX1s3BIyqmLHIqKS0XjcE3CJLUqy3Qj6yMdeStj+xA9CSaGCHnxUqUsNrmWXM8LpPOPnyLIxc4xvFLwrc7OKsoFBAigD2btUgnD0fgieoSz4m9gKrf+LB1wVRoV5IIiKtE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771969123; c=relaxed/simple;
+	bh=+lnR9Ey38wCdP48my0KLfjEdU2KZ9uNxli2AXEl3Y1I=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=opA1Quj0PmD4EOQdCQ7kqFiGOOKEbnZCn47isJSk+De7KOm1oOv1nB4IJS7VpVXui8sknEzH1e9NiRhIwnmp7jxi4Au4GD1rZZ9W/+VxGlJIDhuD7TDs48Bs6eS8v/36pzy54+mP+OwXOY2oQ3PWWcg18jK0lpV7SEZndyEVMBU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=isG/p/sq; arc=fail smtp.client-ip=40.93.194.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OtnG+qNrVs2BdUuehreCbyt67UP255mnlbx149JteX8r8qS+p2p/ntAE7R2zTXir0T/gkGPYYjVvDQvmoBDoanWF16aV/RoRpqrIV5LynmMzBdZoZRayovrsrXV8As/J1wlZQR8G+yidKxg5dLGknY/87YOqZuX9bnnYIuht/WaAWOUXr+Ij4q7eHMc3TCBZW9axMz0ZD+qHUYEKtCb8a+fNL5pUv/sao9lM9WbGbpCiM2/OYn3XTkUULWNMT3upSJ+eHFdGkWUTv/dwIrhBPpBWljP2f/I7tczMQUx4YHrxTWJwbiMItwcIGRGSoyMxYZ95EzBL6KSF5TTuoC4uvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Oss7tezs9fYkG3fyAwMxmzItGgSY6HAd14hGKIrxuBI=;
+ b=HnhefzmNiT4pd9ux4CB535CrsjFR4+0SKM5XiD3e1JNBBTD2Y1HN8Bpes/MK6jeJq1smBjA8qZu8nDaS9hMpkEEZCq9y8+w8dwZRiIsdbOnpdGlZwOytRHyY89+i4Or5jd5aOVhnGqnJe9VfEaJpqGlTji6/vdEBARBJeHtne2oS1rIZDdbrAMsyYWtzINSJLwVQWHIqBV5XuEbmsnnaE68PVBbMSpNv7JMdFHXyhu2B137SmNbd3JtQYa4zhWlE7K1+9nzTnfqnSMqfwz3pO/+8rk1rsz0VyZP5Q7bkHJdVgPEZ5IJ7qjJn33Ei6G1Ii7Wix8MTSHwZ866KX8MlHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Oss7tezs9fYkG3fyAwMxmzItGgSY6HAd14hGKIrxuBI=;
+ b=isG/p/sqgmjtRJ+bPU+ZkbxgPcczbh5am8UBG1+jCGjpgdQ8/jZRoV+6DGsRYfb+uZUDY8hRq65zK3mVhiyzYIc5b9kBnX+zgx5lcYL5AZUTyurfz2S/MuMf27iMxZRLEMdaM8M5d1o2nt61NKRTOJZ4+yalfQso2ARaaTMVaS0=
+Received: from SA3PR21MB3867.namprd21.prod.outlook.com (2603:10b6:806:2fc::15)
+ by SA1PR21MB6872.namprd21.prod.outlook.com (2603:10b6:806:4aa::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.6; Tue, 24 Feb
+ 2026 21:38:38 +0000
+Received: from SA3PR21MB3867.namprd21.prod.outlook.com
+ ([fe80::70ff:4d3:2cb6:92a3]) by SA3PR21MB3867.namprd21.prod.outlook.com
+ ([fe80::70ff:4d3:2cb6:92a3%6]) with mapi id 15.20.9678.006; Tue, 24 Feb 2026
+ 21:38:38 +0000
+From: Haiyang Zhang <haiyangz@microsoft.com>
+To: Tariq Toukan <ttoukan.linux@gmail.com>, Haiyang Zhang
+	<haiyangz@linux.microsoft.com>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+	<kuba@kernel.org>, Donald Hunter <donald.hunter@gmail.com>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Jonathan Corbet
+	<corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, "Kory Maincent
+ (Dent Project)" <kory.maincent@bootlin.com>, Gal Pressman <gal@nvidia.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>, Vadim Fedorenko
+	<vadim.fedorenko@linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>
+CC: Paul Rosswurm <paulros@microsoft.com>
+Subject: RE: [EXTERNAL] Re: [PATCH net-next] net: ethtool: add
+ COALESCE_RX_CQE_FRAMES/NSECS parameters
+Thread-Topic: [EXTERNAL] Re: [PATCH net-next] net: ethtool: add
+ COALESCE_RX_CQE_FRAMES/NSECS parameters
+Thread-Index: AQHcpEGiDcItgSgzW0KbKcdvetQIAbWRpj+AgAC2DwA=
+Date: Tue, 24 Feb 2026 21:38:38 +0000
+Message-ID:
+ <SA3PR21MB3867AD2D324796921228C568CA74A@SA3PR21MB3867.namprd21.prod.outlook.com>
+References: <20260222212328.736628-1-haiyangz@linux.microsoft.com>
+ <9ed3ade5-717d-4f03-ac13-40614a0f093c@gmail.com>
+In-Reply-To: <9ed3ade5-717d-4f03-ac13-40614a0f093c@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=50bced2e-7f3c-41d2-98e1-7fabf3868558;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-02-24T21:13:23Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA3PR21MB3867:EE_|SA1PR21MB6872:EE_
+x-ms-office365-filtering-correlation-id: 58eb7307-8ed2-4d79-3719-08de73ed1263
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700021|921020|7053199007|7142099003;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?AXQ+3KJ2ZUoC6kwCMZ8clhTxnbFJFPaNMkVKciULi1fIsX3VcURB7zrkHF9e?=
+ =?us-ascii?Q?4yMBJHZv8t7HhwNU25zjgSk/VPmY/acgBt42dawHhOCPAc5bTHJYAjuer8OW?=
+ =?us-ascii?Q?iJN2qWvNYvhmEu6TI6Hlw9ID0zc9YNNsDILg4LE8c9EpBOiYlTZbPJyONeFj?=
+ =?us-ascii?Q?Sa16zHtv+EoxM8OowjRqGlThq6GsF665ZpMe+IFrSYLMfKYHdzoWw5hjRq7o?=
+ =?us-ascii?Q?HIlrmSl5IBNyAeIF296BagwUuxR5Zs6uytIDk0rvUVOWy3eKO3qd3XnENThh?=
+ =?us-ascii?Q?9XoWpIRrJAoGm17OQ90eVNVkkqb/NJooA8sqcfmPezsRx446PZxFWoplbBNP?=
+ =?us-ascii?Q?prdDqByssmdikroLQvTVoo5OUaxUtDf/j0HMk7K3zRgbwUvzhE4uBSGTRPM6?=
+ =?us-ascii?Q?Yfg81iK/wBt0tVjN5GBbZiZf/0OXcBQFk2/FA83rOBsiTYt27bL9GwwBEUIk?=
+ =?us-ascii?Q?5tTdZXIX8kroCYtPNPlSVpkU1ZW8L3hlm1LMQuBqrJLTY4lm/e9DD+P3Oq/U?=
+ =?us-ascii?Q?xjvQlZ8IS5dIGp5R+qd/EcFtjENwrYIeUte+I1p88WXPATEi86QMUCkuXOaK?=
+ =?us-ascii?Q?8q0qBrqDKBYFPadN33wc50i0xA4ASH17bD4nrEgh0iomlExeO3O3o5O7NslV?=
+ =?us-ascii?Q?Gikp3qKfY5mWw9o0PVv7mwMvfRF5oIUE+aTnIAv4x1h4BJtUFQXpluQPisKR?=
+ =?us-ascii?Q?dqhHhqbldNRO53B+56KU17m4yeASZH45PdBrumMQZ4jXmw9xJtq8MUpbHjZq?=
+ =?us-ascii?Q?osMZlXOguUFrbNeRt3Wea+bp6xCHVhouhH5AlJWTz9gJivdPL65w2AexKXrN?=
+ =?us-ascii?Q?rb/reGKqtbogRvPy6/NtUqZlczeogO+Wmwv9If55hAzyUtoOIvTN4JkqHyA7?=
+ =?us-ascii?Q?/lpTA+0lDbaImF3nCbaPIgvuQyXybeeGsSVSLz4RwxBddP/E029TZd8EyHmQ?=
+ =?us-ascii?Q?4BZ1zSpj+xpHaiO+9Q8zGWIRSQJ260v6sjeF9EAjcw/EdZmMc5MIzxCWWNNU?=
+ =?us-ascii?Q?e4//wJPXxqUOYVnIguxjO8wq21obYICtmXgiSG4WbazPSagVSnjkOJm6VRfZ?=
+ =?us-ascii?Q?/YrEHTh0ydi9n7F080SEgbhq/Y2azy/kMd9o1Tn6ms8iImNavkUeXc5j7Mrr?=
+ =?us-ascii?Q?GYuAki76J5MIfGsafnNxbV7Rg8SrOl03YTjI2T7Y6mPlLX/UMZKZuxxUyAuQ?=
+ =?us-ascii?Q?RnofizFhi47/aMr+mvoWUcSfz/rjaTfoH6nRhLt0fEo3JxKPx2fjx6ZLbFjJ?=
+ =?us-ascii?Q?pa5TPcrWELahMNSbbIVcxvXsDr5ExP9FhFVpxg3JTCuxBlQksaa1MGkOgK7S?=
+ =?us-ascii?Q?gt/trryqHqJfoCWhEh8h3FQu16QV1LvXIOJDzYoVsrO8v2k1ZwsQFv2bK99A?=
+ =?us-ascii?Q?ekFIQc7VIMx6uBiTcw5eKPnt9+1gZjxfKyIVUMRlOyf2d6/XP1uTZbnGEBRp?=
+ =?us-ascii?Q?c2Axv3AVD+n3UAyqp73vWJnDC2kM79hnAGzI57rOsJSayX2J0axt9+31Nv21?=
+ =?us-ascii?Q?ZbOrdJYIGYclwomO1ivqWOA11B+wSTcI6zmmqC0T5MMKYv8QBMzu8HlpkGoJ?=
+ =?us-ascii?Q?4ux7OvfmMj5F/1slK8aIr5p8i2IHPg/FtNX5rAGvZq2FrWyzBZvrvMiYE7JQ?=
+ =?us-ascii?Q?jltXi+dGweAfY6ixwadY1VnSzFCeOe9ZNG/KsQdbip5t?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR21MB3867.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700021)(921020)(7053199007)(7142099003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?k6uTK0L6UrpHbovJA0h9YzF4zZWbHLcAWTMv3D9GKDuRTwFhWsKCVbsA1rTr?=
+ =?us-ascii?Q?nmWOOT241kUMI1pgHJZhDMBdGeIAOpkSFcDb9EG7n5JbLLbSMYMadIN4y8bP?=
+ =?us-ascii?Q?L0kXSzs2gC/pfUhoYpQJpmHdZL+uTJjbrj1UnBNhVFqnUsWZ269RCDQZd5XU?=
+ =?us-ascii?Q?yBzA8j0YIE0OCkPxp3qWe94B2QcH0NqZY+P68NmRl9dcJKWJaUNPhlVI58wL?=
+ =?us-ascii?Q?XSC6FI+VbBNCPFiWi6XRZ7nm9dcANwv+R2hhodJYUgBKwKRfkB9ZG1hkG/Tu?=
+ =?us-ascii?Q?Uq3LoIBfxGiS16DHbXPmvYPIPuSPUjxv53E+VsvQPzNXeKrxJPfXrM4APFYP?=
+ =?us-ascii?Q?kA8MREsvf8RK1tNP5ccn5r6rCCnIcwMM6FxG2ttGRaSumpvcoBtZERFvjg5B?=
+ =?us-ascii?Q?/NL/9kkl7MGrqdelxC35lVjdNvAx2psB0YsYvnK6ImWSb5cwnfpfLlU0mbXz?=
+ =?us-ascii?Q?zvWmA+be0X4b/3L6OibyZz3el8ShCJiKdpcXXYjr9/+8MoIofcN9W7UakFBO?=
+ =?us-ascii?Q?vXZ4JwxqAvwmy4QXIBnazDMDafqX5piNjBZPmHU64/eqw5qEHBzeaf888nys?=
+ =?us-ascii?Q?CZiBDP3bSxkb2dhg1B1oVmoztzy/a4HecdGCaIRXJdr14j5j6GPyZN0m6wXe?=
+ =?us-ascii?Q?CvWXYVvQepFe+E3zNDdgnmW8kS6/TL3TmurWmucrT7b2wtg9A7ON8A1/HPxf?=
+ =?us-ascii?Q?0d26vSB1+BglgmDZLeLxU1H9SkMxqX3J6r1SvVRFcCor1r8dTA/2ry+2GTrh?=
+ =?us-ascii?Q?iw2DOxlg7Oz/RNPPmFh/d2UBwAiJT7L7ktVii3z8yllNFhghHAsZfBWhcgPr?=
+ =?us-ascii?Q?s1ZIPBslaT6m45ZA5IJEsX3BJ9koRIzqgvT+Rqtg84jp0ITybSUbYsIWZ3zS?=
+ =?us-ascii?Q?Va8SK/o1dhRgCCYaBJJ+iPv2xJaQ4yJaLVdgK0XVoUA9GNb6aVwUlY0uq5N2?=
+ =?us-ascii?Q?hyISk6eQeD+YMhiCHOnnKN+8H2qJzOfeGpaHXZoKZtEeARsEFGGphwcXpjvm?=
+ =?us-ascii?Q?kjCcM/cQSPFQ1Dxf3kPdEZLZhwG8sTceOYw/U3ZhqAMHlRD84K4YBzUGSORc?=
+ =?us-ascii?Q?w61gZ23rY8jHZ3M9T7baczVZDOlQsRZxPGUrlE70N0Smnnd7E+KUdR4osmEH?=
+ =?us-ascii?Q?yBGlMS7itj1TTzX87RfLP/Z0b4h+q1RTHgUnZoJ5hW0UgTsfhy9U8G5PRGZ6?=
+ =?us-ascii?Q?3O4OStI4ISMnttjkZefnmG62l7S1SkhMtY/AoGPN3b+4fvrMzLhPiYXlKe8t?=
+ =?us-ascii?Q?UBO/OspAoVGLjyOvGZi8SZxjASDanE071vfFURWEd88X1wac6vSvVK0L2pJU?=
+ =?us-ascii?Q?Th1foj4a2C0d82efxR+WsMfwsAViX7OcS/Usi1rutBT+qOQYSTpEVPYcyElG?=
+ =?us-ascii?Q?eQ2BWN7xIJWCIyo0+Wgo2KNnOU16XXAeCIfTaUvBufIc5gWRvUlmS0LieRrb?=
+ =?us-ascii?Q?NARx+7gnS5dsjzdM+i31/wlSGKLk8Hedq1VnSXnjk+EOQAODyQ6HF3AmGC7/?=
+ =?us-ascii?Q?ePRFsaJUbfMt9DVBGGpnXcy6L47BWaixzgzuOarCpqDU/bam0oQ4nNKlClq5?=
+ =?us-ascii?Q?8TwqsM2PeoiJB7XGRK3EQTWLspnY+4MYd7fzdMp/UkdhdBqXTz7M5L3TOEt7?=
+ =?us-ascii?Q?tSjYwieUBi0L0eMmsZNwo+iV2+zxcbLmZyALfaGdJydsWhJyNDc4CJz02WSi?=
+ =?us-ascii?Q?3eJzozDfciX+MxV73fVMQpz22PCMExsKkShUvDsgO6I5XKZmomPI6cXZu74F?=
+ =?us-ascii?Q?C7C/Wc0gzw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-24_02,2026-02-23_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
- spamscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2602130000
- definitions=main-2602240139
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjI0MDEzOSBTYWx0ZWRfX7f0z1vOaXp0o
- W3bxmk36ZKTRpJeyMLWUru2PJ6StauwHHIeVWyUO1wydzrqLyWKHxbPe6tq/dVBrZsOWeZSWw0w
- 6z9NIeEr2dBYI0ooxmwdH57o7WgihjV6FI7v7oE7CJycBqUyAXPod7w/39ea14II6LGvkk23tC+
- GCYQvK4c3MMIGA7kpO9i8ga96HICmbUIC2tUsjLG20shKfQ1E4dhfQ5ICIIzXPQS9y9cuq7ym4Y
- Wz7xt7Y0dgQ94kPF8bNI5tGEbRic2QVz/od7frXUy/zzlNTjDXRof/QMaXrxXFAlquAx+5wV3/z
- gJYVyv8Jl6K5xbP0WZ/r0yemJyoiwXeEDIJEL+79L0TNo+af4RigKi1Apzo+WuoKrzlZInsP6XH
- j/6y8PGn6PMyAHGERRbnArsbZVrslH7ioM6LrAbZPqbrI/r3ALICdHnZFmsUfvGJmylWY9Hnwcr
- TC8tsgybLl9WvhtbTKQ==
-X-Proofpoint-GUID: cB_m9Oi4IYJcIV1-XuyNVHya0Dso12ru
-X-Authority-Analysis: v=2.4 cv=b9C/I9Gx c=1 sm=1 tr=0 ts=699dd63f cx=c_pps
- a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
- a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=VwQbUJbxAAAA:8
- a=H9g4kcow5iyJM_3d0YAA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: cB_m9Oi4IYJcIV1-XuyNVHya0Dso12ru
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA3PR21MB3867.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 58eb7307-8ed2-4d79-3719-08de73ed1263
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Feb 2026 21:38:38.5502
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8WdespFdb/NPprMcTcaPI6M0NlwlJozTvdBj/e1Eu3864iWud4iwGrAtUf1H09fztRj4DgzhnzHnlbBazIAyKA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR21MB6872
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[oracle.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[oracle.com:s=corp-2025-04-25];
+X-Spamd-Result: default: False [1.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[microsoft.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[microsoft.com:s=selector2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[oracle.com,vger.kernel.org,siemens.com,gmail.com];
-	TAGGED_FROM(0.00)[bounces-8973-lists,linux-hyperv=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,oracle.com:mid,oracle.com:dkim];
+	TAGGED_FROM(0.00)[bounces-8974-lists,linux-hyperv=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,linux.microsoft.com,vger.kernel.org,lunn.ch,kernel.org,davemloft.net,google.com,redhat.com,lwn.net,linuxfoundation.org,bootlin.com,nvidia.com,pengutronix.de,linux.dev];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[oracle.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[martin.petersen@oracle.com,linux-hyperv@vger.kernel.org];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	DKIM_TRACE(0.00)[microsoft.com:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[haiyangz@microsoft.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCVD_COUNT_SEVEN(0.00)[9]
-X-Rspamd-Queue-Id: 44B5C18A109
+	NEURAL_HAM(-0.00)[-0.996];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	REDIRECTOR_URL(0.00)[aka.ms];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: F145018CCF6
 X-Rspamd-Action: no action
 
-On Thu, 29 Jan 2026 15:30:39 +0100, Jan Kiszka wrote:
 
-> This resolves the follow splat and lock-up when running with PREEMPT_RT
-> enabled on Hyper-V:
-> 
-> [  415.140818] BUG: scheduling while atomic: stress-ng-iomix/1048/0x00000002
-> [  415.140822] INFO: lockdep is turned off.
-> [  415.140823] Modules linked in: intel_rapl_msr intel_rapl_common intel_uncore_frequency_common intel_pmc_core pmt_telemetry pmt_discovery pmt_class intel_pmc_ssram_telemetry intel_vsec ghash_clmulni_intel aesni_intel rapl binfmt_misc nls_ascii nls_cp437 vfat fat snd_pcm hyperv_drm snd_timer drm_client_lib drm_shmem_helper snd sg soundcore drm_kms_helper pcspkr hv_balloon hv_utils evdev joydev drm configfs efi_pstore nfnetlink vsock_loopback vmw_vsock_virtio_transport_common hv_sock vmw_vsock_vmci_transport vsock vmw_vmci efivarfs autofs4 ext4 crc16 mbcache jbd2 sr_mod sd_mod cdrom hv_storvsc serio_raw hid_generic scsi_transport_fc hid_hyperv scsi_mod hid hv_netvsc hyperv_keyboard scsi_common
-> [  415.140846] Preemption disabled at:
-> [  415.140847] [<ffffffffc0656171>] storvsc_queuecommand+0x2e1/0xbe0 [hv_storvsc]
-> [  415.140854] CPU: 8 UID: 0 PID: 1048 Comm: stress-ng-iomix Not tainted 6.19.0-rc7 #30 PREEMPT_{RT,(full)}
-> [  415.140856] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.1 09/04/2024
-> [  415.140857] Call Trace:
-> [  415.140861]  <TASK>
-> [  415.140861]  ? storvsc_queuecommand+0x2e1/0xbe0 [hv_storvsc]
-> [  415.140863]  dump_stack_lvl+0x91/0xb0
-> [  415.140870]  __schedule_bug+0x9c/0xc0
-> [  415.140875]  __schedule+0xdf6/0x1300
-> [  415.140877]  ? rtlock_slowlock_locked+0x56c/0x1980
-> [  415.140879]  ? rcu_is_watching+0x12/0x60
-> [  415.140883]  schedule_rtlock+0x21/0x40
-> [  415.140885]  rtlock_slowlock_locked+0x502/0x1980
-> [  415.140891]  rt_spin_lock+0x89/0x1e0
-> [  415.140893]  hv_ringbuffer_write+0x87/0x2a0
-> [  415.140899]  vmbus_sendpacket_mpb_desc+0xb6/0xe0
-> [  415.140900]  ? rcu_is_watching+0x12/0x60
-> [  415.140902]  storvsc_queuecommand+0x669/0xbe0 [hv_storvsc]
-> [  415.140904]  ? HARDIRQ_verbose+0x10/0x10
-> [  415.140908]  ? __rq_qos_issue+0x28/0x40
-> [  415.140911]  scsi_queue_rq+0x760/0xd80 [scsi_mod]
-> [  415.140926]  __blk_mq_issue_directly+0x4a/0xc0
-> [  415.140928]  blk_mq_issue_direct+0x87/0x2b0
-> [  415.140931]  blk_mq_dispatch_queue_requests+0x120/0x440
-> [  415.140933]  blk_mq_flush_plug_list+0x7a/0x1a0
-> [  415.140935]  __blk_flush_plug+0xf4/0x150
-> [  415.140940]  __submit_bio+0x2b2/0x5c0
-> [  415.140944]  ? submit_bio_noacct_nocheck+0x272/0x360
-> [  415.140946]  submit_bio_noacct_nocheck+0x272/0x360
-> [  415.140951]  ext4_read_bh_lock+0x3e/0x60 [ext4]
-> [  415.140995]  ext4_block_write_begin+0x396/0x650 [ext4]
-> [  415.141018]  ? __pfx_ext4_da_get_block_prep+0x10/0x10 [ext4]
-> [  415.141038]  ext4_da_write_begin+0x1c4/0x350 [ext4]
-> [  415.141060]  generic_perform_write+0x14e/0x2c0
-> [  415.141065]  ext4_buffered_write_iter+0x6b/0x120 [ext4]
-> [  415.141083]  vfs_write+0x2ca/0x570
-> [  415.141087]  ksys_write+0x76/0xf0
-> [  415.141089]  do_syscall_64+0x99/0x1490
-> [  415.141093]  ? rcu_is_watching+0x12/0x60
-> [  415.141095]  ? finish_task_switch.isra.0+0xdf/0x3d0
-> [  415.141097]  ? rcu_is_watching+0x12/0x60
-> [  415.141098]  ? lock_release+0x1f0/0x2a0
-> [  415.141100]  ? rcu_is_watching+0x12/0x60
-> [  415.141101]  ? finish_task_switch.isra.0+0xe4/0x3d0
-> [  415.141103]  ? rcu_is_watching+0x12/0x60
-> [  415.141104]  ? __schedule+0xb34/0x1300
-> [  415.141106]  ? hrtimer_try_to_cancel+0x1d/0x170
-> [  415.141109]  ? do_nanosleep+0x8b/0x160
-> [  415.141111]  ? hrtimer_nanosleep+0x89/0x100
-> [  415.141114]  ? __pfx_hrtimer_wakeup+0x10/0x10
-> [  415.141116]  ? xfd_validate_state+0x26/0x90
-> [  415.141118]  ? rcu_is_watching+0x12/0x60
-> [  415.141120]  ? do_syscall_64+0x1e0/0x1490
-> [  415.141121]  ? do_syscall_64+0x1e0/0x1490
-> [  415.141123]  ? rcu_is_watching+0x12/0x60
-> [  415.141124]  ? do_syscall_64+0x1e0/0x1490
-> [  415.141125]  ? do_syscall_64+0x1e0/0x1490
-> [  415.141127]  ? irqentry_exit+0x140/0x7e0
-> [  415.141129]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> 
-> [...]
 
-Applied to 7.0/scsi-fixes, thanks!
+> -----Original Message-----
+> From: Tariq Toukan <ttoukan.linux@gmail.com>
+> Sent: Tuesday, February 24, 2026 5:22 AM
+> To: Haiyang Zhang <haiyangz@linux.microsoft.com>; linux-
+> hyperv@vger.kernel.org; netdev@vger.kernel.org; Andrew Lunn
+> <andrew@lunn.ch>; Jakub Kicinski <kuba@kernel.org>; Donald Hunter
+> <donald.hunter@gmail.com>; David S. Miller <davem@davemloft.net>; Eric
+> Dumazet <edumazet@google.com>; Paolo Abeni <pabeni@redhat.com>; Simon
+> Horman <horms@kernel.org>; Jonathan Corbet <corbet@lwn.net>; Shuah Khan
+> <skhan@linuxfoundation.org>; Kory Maincent (Dent Project)
+> <kory.maincent@bootlin.com>; Gal Pressman <gal@nvidia.com>; Oleksij Rempe=
+l
+> <o.rempel@pengutronix.de>; Vadim Fedorenko <vadim.fedorenko@linux.dev>;
+> linux-kernel@vger.kernel.org; linux-doc@vger.kernel.org
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>; Paul Rosswurm
+> <paulros@microsoft.com>
+> Subject: [EXTERNAL] Re: [PATCH net-next] net: ethtool: add
+> COALESCE_RX_CQE_FRAMES/NSECS parameters
+>=20
+> [You don't often get email from ttoukan.linux@gmail.com. Learn why this i=
+s
+> important at https://aka.ms/LearnAboutSenderIdentification ]
 
-[1/1] scsi: storvsc: Fix scheduling while atomic on PREEMPT_RT
-      https://git.kernel.org/mkp/scsi/c/57297736c082
+> >
+> > +Rx CQE coalescing allows multiple received packets to be coalesced int=
+o
+> a single
+> > +Completion Queue Entry (CQE). ``ETHTOOL_A_COALESCE_RX_CQE_FRAMES``
+> describes the
+> > +maximum number of frames that can be coalesced into a CQE.
+> > +``ETHTOOL_A_COALESCE_RX_CQE_NSECS`` describes max time in nanoseconds
+> after the
+> > +first packet arrival in a coalesced CQE to be sent.
+> > +
+>=20
+> I am trying to understand how generic this feature/API is.
+> Can you please elaborate on the feature you want to configure here?
+It's the similar feature as MLX's "RX CQE compression", which merges=20
+"multiple near-identical completions that share/match several fields."=20
+I'm adding this kAPI for any drivers that support this feature.
 
--- 
-Martin K. Petersen
+You may find driver details in my previous submission:
+ [V2,net-next,1/2] net: mana: Add support for coalesced RX packets on CQE
+ https://patchwork.kernel.org/project/netdevbpf/patch/1767732407-12389-2-gi=
+t-send-email-haiyangz@linux.microsoft.com/
+
+> A single CQE to describe several packets?
+Yes, up to 4 for our MANA driver.
+
+> What is the price?=20
+The price is the latency can increase a bit.
+
+> What per-packet information/hw offloads do you lose
+> in the process?
+For example, the vlan_id is shared among up to 4 pkts.
+But, the pkt len & hash are per-pkt.
+
+struct mana_rxcomp_perpkt_info {
+        u32 pkt_len     : 16;
+        u32 reserved1   : 16;
+        u32 reserved2;
+        u32 pkt_hash;
+}; /* HW DATA */
+
+/* Receive completion OOB */
+struct mana_rxcomp_oob {
+        struct mana_cqe_header cqe_hdr;
+
+        u32 rx_vlan_id                  : 12;
+        u32 rx_vlantag_present          : 1;
+        u32 rx_outer_iphdr_csum_succeed : 1;
+        u32 rx_outer_iphdr_csum_fail    : 1;
+        u32 reserved1                   : 1;
+        u32 rx_hashtype                 : 9;
+        u32 rx_iphdr_csum_succeed       : 1;
+        u32 rx_iphdr_csum_fail          : 1;
+        u32 rx_tcp_csum_succeed         : 1;
+        u32 rx_tcp_csum_fail            : 1;
+        u32 rx_udp_csum_succeed         : 1;
+        u32 rx_udp_csum_fail            : 1;
+        u32 reserved2                   : 1;
+
+        struct mana_rxcomp_perpkt_info ppi[MANA_RXCOMP_OOB_NUM_PPI];  // MA=
+NA_RXCOMP_OOB_NUM_PPI=3D4
+
+        u32 rx_wqe_offset;
+}; /* HW DATA */
+
+
+> For comparison, in mlx5 we have RX CQE compression, which can be applied
+> on multiple near-identical completions that share/match several fields.
+> Still, there is a per-packet mini-cqe with distinctive per-packet fields
+> like csum.
+
+As said above, we have similar "per-packet mini-cqe":
+struct mana_rxcomp_perpkt_info, which has pkt len & hash.
+
+Thanks,
+- Haiyang
+
 
