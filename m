@@ -1,69 +1,88 @@
-Return-Path: <linux-hyperv+bounces-8976-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-8977-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qDV3HqqGnmnRVwQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-8976-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Feb 2026 06:20:42 +0100
+	id UIq5AhGynmlxWwQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-8977-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Feb 2026 09:25:53 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3F4D191F9A
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Feb 2026 06:20:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9222B194299
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Feb 2026 09:25:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C1971303A8C5
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Feb 2026 05:20:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 79EE43041BCF
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Feb 2026 08:24:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E59C1D95A3;
-	Wed, 25 Feb 2026 05:20:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B36C03101C2;
+	Wed, 25 Feb 2026 08:24:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="eRrodiiP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJCsM6N2"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF432D249B;
-	Wed, 25 Feb 2026 05:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771996826; cv=pass; b=rrwhWyJR97jZ4Xma3f2ZUmTtJkJ+hzHAH9+yB0NQIirolLfP8tLv5qp4ulW9KNxswSJgA3nAzbiWnv01vDjxQZj3vTCTExq7VF0+8vhi00hHchK/Kw2dLkqOYqXx5+0CjirL8IXLXiCuA8T6DYF+Y2et/3PF5+5SZuE1zLbs5hc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771996826; c=relaxed/simple;
-	bh=NY+b7G0wWPdKty6t8Rfk6StNdEgRQSilCBLDbNiNslA=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9072B2D063E;
+	Wed, 25 Feb 2026 08:24:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772007864; cv=none; b=MOBRbNnUphsA7U2OgdohIqC41eBHFmztuBHK3gwwb9bqPlB0zkbNdLg03940+13r/4JWS8yigCbTragdy/L955hz/Tr0EEsqFVUy1gbG0csPUMVsYO9TBpv0tKIym5gG8Na9QfD5HVOmbNK9BAbf/KbotBFlRmyOco7pNfuFgsE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772007864; c=relaxed/simple;
+	bh=ppwLBv+bRl0MuIG9o64/1GBk8qLUMoGaYaQBPTNIgpc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QwyM3yjFGLhemH6WoHQyP5F/MYVK0OGb6r99xJbQhZ0YOm/FIaauEnfWzV042CNz+v0pSqAx6mDIe45pB0IDd49fDvQiIYrikI9Y46kwD4n9fSRb+rK9hP6UndpAj3og7KbAJYalhm0ynDlBPzwUNCHmeycl5Ga25yIUBzTZCkw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=eRrodiiP; arc=pass smtp.client-ip=136.143.188.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1771996817; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Y43AVEj7TN09+DIFPao02Dlk8C+h1gANpLo/RIv7+cPDMHs03Qk9f9qc51h7RcC7VdFbmvijl3U6SWGF9WcX2aC59+Z8t2COX2hWdK8zMFtPiYGud4O3fW+yW+LteC7pPzN/WjVW1ZQleAZPLScx7LVWN8c3uOsdwFJcoFEXl9o=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1771996817; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=oFw66RFaz/pdJjZ4Feq8VPD50BeRGi3P8V16cCb3PW8=; 
-	b=mkFFDKB9jpc8+UhzmGNxkygRqyUzO+QnoVDZHlXaik42lF1JEOlZVy79FSO0E+r+SIp1REfXjJZj18zYwqgr3Zi4o4Jq8tahOCT8DuHJvrCngnRMpmlerHILsd8jqGxTHwoV+SY8fW5Lm4PHeJv9Af0GExsrNb0cRm8hlMlvo2I=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=anirudhrb.com;
-	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
-	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1771996817;
-	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=oFw66RFaz/pdJjZ4Feq8VPD50BeRGi3P8V16cCb3PW8=;
-	b=eRrodiiPUVojtXFEi96USVHOHvpYGcjpUZmSWcDrspi6uO5RZpqYCK8FJmUKV8vP
-	e3loyiSH82lQtG1RNHfhiNRhEGYpqQLSuNIyC2+yg7XzvEX+OE2Kd7nY38VHuQVcEpG
-	OFlZS6HQQV8KJw+Ii8hCDnqA5/q9aoFpwMGrnTcc=
-Received: by mx.zohomail.com with SMTPS id 1771996814739592.2486828810191;
-	Tue, 24 Feb 2026 21:20:14 -0800 (PST)
-Date: Wed, 25 Feb 2026 05:20:08 +0000
-From: Anirudh Rayabharam <anirudh@anirudhrb.com>
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mshv: Replace fixed memory deposit with status driven
- helper
-Message-ID: <aZ6GiMAoacfHX-9H@anirudh-surface.localdomain>
-References: <177153896491.48883.14285093878498416061.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+	 Content-Type:Content-Disposition:In-Reply-To; b=TIh1sXFEh5O47jhbfkSmMCn2ETMXzvPfdMF+aGawgEoHUdUL1Cx56Hx+dBHIQ5dO1EBidivHyOWw6+hYkmcsNQMicYxlsP6hIAs36yRof5qLnwgiSaH3GycPrwzAhD75W/7W46XWMZnH2uHmtR6s88rfOgTlG9HdO2aGggf8aVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJCsM6N2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93DDAC116D0;
+	Wed, 25 Feb 2026 08:24:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772007864;
+	bh=ppwLBv+bRl0MuIG9o64/1GBk8qLUMoGaYaQBPTNIgpc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oJCsM6N2igmDWi88bXhKigzKvixKJkf5S43Dzt1Jer2wbhMGf13Qdpr5n04g4N6uB
+	 FiBCIRp6zt8zlfKoMyVKoj9/NCsrcGWHN4KfdzteUkaxidhwhVjbFvGH2HiCWtThYq
+	 Ga6zG0hKJZ2KMuFYMuWrwFKVuL38yFsF4s8jFrFaWtg/F2mlOQZlzkZ26xfVJW8Dru
+	 E8pmf1L7LnzqpZlWYwk9Mt1DXALl7J+wmEAuZDr7ns+YxxCqirU9Ds1Il4aHXHAfUe
+	 mB+MBDxG+cwkLIItubB08DVNZljtGfyJ+VJI0/w4ZEnRhyRNJjSr4uujLik4r0rEKR
+	 B7bB8v4pjyYfQ==
+Date: Wed, 25 Feb 2026 10:24:21 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Long Li <longli@microsoft.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>,
+	Selvin Xavier <selvin.xavier@broadcom.com>,
+	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
+	Potnuri Bharat Teja <bharat@chelsio.com>,
+	Michael Margolin <mrgolin@amazon.com>,
+	Gal Pressman <gal.pressman@linux.dev>,
+	Yossi Leybovich <sleybo@amazon.com>,
+	Cheng Xu <chengyou@linux.alibaba.com>,
+	Kai Shen <kaishen@linux.alibaba.com>,
+	Chengchang Tang <tangchengchang@huawei.com>,
+	Junxian Huang <huangjunxian6@hisilicon.com>,
+	Abhijit Gangurde <abhijit.gangurde@amd.com>,
+	Allen Hubbe <allen.hubbe@amd.com>,
+	Krzysztof Czurylo <krzysztof.czurylo@intel.com>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Michal Kalderon <mkalderon@marvell.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Christian Benvenuti <benve@cisco.com>,
+	Nelson Escobar <neescoba@cisco.com>,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Bernard Metzler <bernard.metzler@linux.dev>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Shiraz Saleem <shirazsaleem@microsoft.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: Re: [EXTERNAL] [PATCH rdma-next 25/50] RDMA/mana: Provide a modern
+ CQ creation interface
+Message-ID: <20260225082421.GC9541@unreal>
+References: <20260213-refactor-umem-v1-0-f3be85847922@nvidia.com>
+ <20260213-refactor-umem-v1-25-f3be85847922@nvidia.com>
+ <DS3PR21MB5735C22704C2AA25C5037EA5CE74A@DS3PR21MB5735.namprd21.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -72,84 +91,168 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <177153896491.48883.14285093878498416061.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-X-ZohoMailClient: External
+In-Reply-To: <DS3PR21MB5735C22704C2AA25C5037EA5CE74A@DS3PR21MB5735.namprd21.prod.outlook.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[anirudhrb.com,none];
+X-Spamd-Result: default: False [-1.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8976-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8977-lists,linux-hyperv=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[ziepe.ca,broadcom.com,chelsio.com,amazon.com,linux.dev,linux.alibaba.com,huawei.com,hisilicon.com,amd.com,intel.com,microsoft.com,nvidia.com,marvell.com,cisco.com,cornelisnetworks.com,gmail.com,vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[31];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[anirudhrb.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[anirudh@anirudhrb.com,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[leon@kernel.org,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[8];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,anirudh-surface.localdomain:mid]
-X-Rspamd-Queue-Id: E3F4D191F9A
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 9222B194299
 X-Rspamd-Action: no action
 
-On Thu, Feb 19, 2026 at 10:09:32PM +0000, Stanislav Kinsburskii wrote:
-> Replace hardcoded HV_MAP_GPA_DEPOSIT_PAGES usage with
-> hv_deposit_memory() which derives the deposit size from
-> the hypercall status, and remove the now-unused constant.
+On Tue, Feb 24, 2026 at 10:30:37PM +0000, Long Li wrote:
+> > diff --git a/drivers/infiniband/hw/mana/cq.c b/drivers/infiniband/hw/mana/cq.c
+> > index 2dce1b677115..605122ecf9f9 100644
+> > --- a/drivers/infiniband/hw/mana/cq.c
+> > +++ b/drivers/infiniband/hw/mana/cq.c
+> > @@ -5,8 +5,8 @@
+> > 
+> >  #include "mana_ib.h"
+> > 
+> > -int mana_ib_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+> > -		      struct uverbs_attr_bundle *attrs)
+> > +int mana_ib_create_user_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr
+> > *attr,
+> > +			   struct uverbs_attr_bundle *attrs)
+> >  {
+> >  	struct ib_udata *udata = &attrs->driver_udata;
+> >  	struct mana_ib_cq *cq = container_of(ibcq, struct mana_ib_cq, ibcq);
+> > @@ -17,7 +17,6 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct
+> > ib_cq_init_attr *attr,
+> >  	struct mana_ib_dev *mdev;
+> >  	bool is_rnic_cq;
+> >  	u32 doorbell;
+> > -	u32 buf_size;
+> >  	int err;
+> > 
+> >  	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev); @@ -26,44
+> > +25,100 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct
+> > ib_cq_init_attr *attr,
+> >  	cq->cq_handle = INVALID_MANA_HANDLE;
+> >  	is_rnic_cq = mana_ib_is_rnic(mdev);
+> > 
+> > -	if (udata) {
+> > -		if (udata->inlen < offsetof(struct mana_ib_create_cq, flags))
+> > -			return -EINVAL;
+> > +	if (udata->inlen < offsetof(struct mana_ib_create_cq, flags))
+> > +		return -EINVAL;
+> > 
+> > -		err = ib_copy_from_udata(&ucmd, udata, min(sizeof(ucmd),
+> > udata->inlen));
+> > -		if (err) {
+> > -			ibdev_dbg(ibdev, "Failed to copy from udata for create
+> > cq, %d\n", err);
+> > -			return err;
+> > -		}
+> > +	err = ib_copy_from_udata(&ucmd, udata, min(sizeof(ucmd), udata-
+> > >inlen));
+> > +	if (err) {
+> > +		ibdev_dbg(ibdev, "Failed to copy from udata for create
+> > cq, %d\n", err);
+> > +		return err;
+> > +	}
+> > 
+> > -		if ((!is_rnic_cq && attr->cqe > mdev-
+> > >adapter_caps.max_qp_wr) ||
+> > -		    attr->cqe > U32_MAX / COMP_ENTRY_SIZE) {
+> > -			ibdev_dbg(ibdev, "CQE %d exceeding limit\n", attr-
+> > >cqe);
+> > -			return -EINVAL;
+> > -		}
+> > +	if ((!is_rnic_cq && attr->cqe > mdev->adapter_caps.max_qp_wr) ||
+> > +	    attr->cqe > U32_MAX / COMP_ENTRY_SIZE) {
+> > +		ibdev_dbg(ibdev, "CQE %d exceeding limit\n", attr->cqe);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	cq->cqe = attr->cqe;
+> > +	if (!ibcq->umem)
+> > +		ibcq->umem = ib_umem_get(ibdev, ucmd.buf_addr,
+> > +				     cq->cqe * COMP_ENTRY_SIZE,
+> > +				     IB_ACCESS_LOCAL_WRITE);
+> > +	if (IS_ERR(ibcq->umem))
+> > +		return PTR_ERR(ibcq->umem);
+> > +	cq->queue.umem = ibcq->umem;
+> > +
+> > +	err = mana_ib_create_queue(mdev, &cq->queue);
+> > +	if (err)
+> > +		return err;
 > 
-> The previous code always deposited a fixed 256 pages on
-> insufficient memory, ignoring the actual demand reported
-> by the hypervisor. hv_deposit_memory() handles different
-> deposit statuses, aligning map-GPA retries with the rest
-> of the codebase.
-> 
-> This approach may require more allocation and deposit
-> hypercall iterations, but avoids over-depositing large
-> fixed chunks when fewer pages would suffice. Until any
-> performance impact is measured, the more frugal and
-> consistent behavior is preferred.
-> 
-> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> ---
->  drivers/hv/mshv_root_hv_call.c |    4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
-> index 7f91096f95a8..317191462b63 100644
-> --- a/drivers/hv/mshv_root_hv_call.c
-> +++ b/drivers/hv/mshv_root_hv_call.c
-> @@ -16,7 +16,6 @@
->  
->  /* Determined empirically */
->  #define HV_INIT_PARTITION_DEPOSIT_PAGES 208
-> -#define HV_MAP_GPA_DEPOSIT_PAGES	256
->  #define HV_UMAP_GPA_PAGES		512
->  
->  #define HV_PAGE_COUNT_2M_ALIGNED(pg_count) (!((pg_count) & (0x200 - 1)))
-> @@ -239,8 +238,7 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
->  		completed = hv_repcomp(status);
->  
->  		if (hv_result_needs_memory(status)) {
-> -			ret = hv_call_deposit_pages(NUMA_NO_NODE, partition_id,
-> -						    HV_MAP_GPA_DEPOSIT_PAGES);
-> +			ret = hv_deposit_memory(partition_id, status);
->  			if (ret)
->  				break;
->  
-> 
-> 
+> Should we call ib_umem_release() on this err?
 
-Reviewed-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+<...>
 
+> >  err_destroy_queue:
+> >  	mana_ib_destroy_queue(mdev, &qp->raw_sq);
+> > +	return err;
+> 
+> Should remove this "return err", the error handling code should fall through.
+
+The main idea of this series is to allocate/release umem in the core logic.
+See patch #5 https://lore.kernel.org/linux-rdma/20260213-refactor-umem-v1-5-f3be85847922@nvidia.com/
+
+> 
+> > +
+> > +err_release_umem:
+> > +	ib_umem_release(qp->raw_sq.umem);
+> > 
+> >  err_free_vport:
+> >  	mana_ib_uncfg_vport(mdev, pd, port);
+> > @@ -553,13 +566,25 @@ static int mana_ib_create_rc_qp(struct ib_qp *ibqp,
+> > struct ib_pd *ibpd,
+> >  		if (i == MANA_RC_SEND_QUEUE_FMR) {
+> >  			qp->rc_qp.queues[i].id = INVALID_QUEUE_ID;
+> >  			qp->rc_qp.queues[i].gdma_region =
+> > GDMA_INVALID_DMA_REGION;
+> > +			qp->rc_qp.queues[i].umem = NULL;
+> >  			continue;
+> >  		}
+> > -		err = mana_ib_create_queue(mdev, ucmd.queue_buf[j],
+> > ucmd.queue_size[j],
+> > -					   &qp->rc_qp.queues[i]);
+> > +		qp->rc_qp.queues[i].umem = ib_umem_get(&mdev->ib_dev,
+> > +						       ucmd.queue_buf[j],
+> > +						       ucmd.queue_size[j],
+> > +
+> > IB_ACCESS_LOCAL_WRITE);
+> > +		if (IS_ERR(qp->rc_qp.queues[i].umem)) {
+> > +			err = PTR_ERR(qp->rc_qp.queues[i].umem);
+> > +			ibdev_err(&mdev->ib_dev, "Failed to get umem for
+> > queue %d, err %d\n",
+> > +				  i, err);
+> > +			goto release_umems;
+> 
+> mana_ib_create_queue() may already have created some queues, need to clean them up or we have a leak. 
+> 
+> Maybe use destroy_queues: to call ib_umem_release()?
+
+We should remove mana_ib_create_rc_qp() hunk, it came from my future
+work where I removed umem from QPs as well.
+
+Thanks
 
