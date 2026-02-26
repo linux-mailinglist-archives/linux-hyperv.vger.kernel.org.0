@@ -1,173 +1,186 @@
-Return-Path: <linux-hyperv+bounces-9011-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9012-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AGxYGPBdoGlZiwQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9011-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Feb 2026 15:51:28 +0100
+	id 0E5tGRmToGllkwQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9012-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Feb 2026 19:38:17 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 719001A7F51
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Feb 2026 15:51:27 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBE141ADC99
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Feb 2026 19:38:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 19FA930C78F5
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Feb 2026 14:29:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9C6AF30382AF
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Feb 2026 17:34:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 994073D6469;
-	Thu, 26 Feb 2026 14:28:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37AFB332632;
+	Thu, 26 Feb 2026 17:34:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kcinII8x"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lEz4PawU"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E053C197A
-	for <linux-hyperv@vger.kernel.org>; Thu, 26 Feb 2026 14:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1283B332611;
+	Thu, 26 Feb 2026 17:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772116132; cv=none; b=UfdKW746hrFMa3zDOEv/v1q+0ZQ6Jpv9RwbKp/KDfwyTi1hOu9k7UcXmqc5suaZXDN96ad1/R+N2uOun4e0hArw6rjQVLPrg/296SL45HzgQBqesY0VY+PI7fnY1QkD0qkqTqWyc93ym3wTQhDYDKX/zCU6rVlg4EVJD8eeFwGs=
+	t=1772127273; cv=none; b=YRjGZoXFKAvCY0Q2xKg6og0PuXysXaf0hzo/EPNefDHpOvx2VhUCFg3lHajd+ybm7RRwzn7C+GsCoAp9YSYjPlEs1JvQLTqp+y7qf5zAyoQwX6d8ouIK1wvourpe2kITBXZwSFxhG5RQjpBhBRwvuSRcj+8+inO4Ed04U26mZaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772116132; c=relaxed/simple;
-	bh=7rpVZ+fxTUQLAz/MsXS+ABz6b8FDyA1NowiHxW15/zs=;
+	s=arc-20240116; t=1772127273; c=relaxed/simple;
+	bh=7ckD0akXKp5yLmXPxmzZt9zqQrhBl/9sTG74HrNfedw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oxUvzNT72iaTNeGvdMAHVRK/caZo9FfjUi5DhXA4sS1TXubyB+UY1sr+RsOhfq4tHCwHhVsErtDYDiTdQUiema4lK+jeCLr96w1nA/MFzNtTv1Ihr3jKtLN5sOGXNEebFnjeEF03VGt3wkH4sfyHxgaVvx/NzhVvGNmXA61ibSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kcinII8x; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Message-ID: <46896339-b3a3-4109-a2e2-324446be5aeb@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1772116126;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AQnoxdPqvcrup1Ns5bia3RQkVtFv3JRAv6rhmjfIRe8=;
-	b=kcinII8xvQi7dPe8qWMA8eJ00twW2kq2qUuuzP5isI8+GdlUewOyrXS/yYsgPHegxfwFe6
-	HkLZ4ODOTRfHBnyjLMAG8nSjEAHrl2Smjoj/C2aAm2lr5siJtku1vYQqi8YoG4ildrVywS
-	ZgsODQbTI1YUgV5/dIkmUR+U5pi8Yhw=
-Date: Thu, 26 Feb 2026 14:28:14 +0000
+	 In-Reply-To:Content-Type; b=gsxiOZePbVb3dgxuHAvgWv1ZhqE2wMyZ+3TJ6MbA166E26AK86QGLmLgR/mCcCxhy3GS3nieL9BnJS1cBjoY9ywJnqmeR9oEImBmAUdGSy25uCwiPTP0MMs/OVnj5FMTUnr8mJXBCD89Gl0A/3d/ajgYrJLKM/4D6/0RxkhOYew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lEz4PawU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 853D4C116C6;
+	Thu, 26 Feb 2026 17:34:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772127272;
+	bh=7ckD0akXKp5yLmXPxmzZt9zqQrhBl/9sTG74HrNfedw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lEz4PawUesO+34+SHQ759Xpjio4FLMXg7qsEvPAXt0ZKKZO4I2kQ4PaZLARMQwY70
+	 JBoK73NyWHncOGYZ3P5a+JchaTsq+1o+F2nmWq5n/qkXET0OEvENaTorD+3bKRxj4J
+	 W2cCZ+JQ6QuDmIaBB7mjSZuybtAsvMYYfL6T3HKRnsFe3L4t97d+NhK22On8HhnKI2
+	 xAZ9VnipVJ0oVMnjy5SoQpUwtB/d5YUqm5ZqCyzhCldmx6Tek7RbEu0WgT3nj7utjh
+	 xgyFFPgywESchdOad4i81oO7pQWx6DpteJKQ9Bdk3l6dMrQjApdOtHkTbWO9tKVzf/
+	 K7EUEwl/iLaBw==
+Message-ID: <baca70a2-53cc-445b-a14e-ed926e615952@kernel.org>
+Date: Thu, 26 Feb 2026 18:34:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net] net: mana: Ring doorbell at 4 CQ wraparounds
-To: Long Li <longli@microsoft.com>, "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
- Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
- linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20260225184948.941599-1-longli@microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] hv_balloon: Change default page reporting order
+To: Yuvraj Sakshith <yuvraj.sakshith@oss.qualcomm.com>,
+ akpm@linux-foundation.org, mst@redhat.com
+Cc: vbabka@suse.cz, surenb@google.com, mhocko@suse.com, jackmanb@google.com,
+ hannes@cmpxchg.org, ziy@nvidia.com, linux-mm@kvack.org, jasowang@redhat.com,
+ xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
+ virtualization@lists.linux.dev, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, longli@microsoft.com,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260226070125.3732265-1-yuvraj.sakshith@oss.qualcomm.com>
+ <20260226070125.3732265-3-yuvraj.sakshith@oss.qualcomm.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20260225184948.941599-1-longli@microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260226070125.3732265-3-yuvraj.sakshith@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.dev,none];
-	R_DKIM_ALLOW(-0.20)[linux.dev:s=key1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9011-lists,linux-hyperv=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[3];
+	TAGGED_FROM(0.00)[bounces-9012-lists,linux-hyperv=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[vadim.fedorenko@linux.dev,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.dev:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linux.dev:mid,linux.dev:dkim]
-X-Rspamd-Queue-Id: 719001A7F51
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[david@kernel.org,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,pr_dev_info.report:url]
+X-Rspamd-Queue-Id: BBE141ADC99
 X-Rspamd-Action: no action
 
-On 25/02/2026 18:49, Long Li wrote:
-> MANA hardware requires at least one doorbell ring every 8 wraparounds
-> of the CQ. The driver rings the doorbell as a form of flow control to
-> inform hardware that CQEs have been consumed.
+On 2/26/26 08:01, Yuvraj Sakshith wrote:
+> page_reporting_order used to fall back to default
+> value (passed as parameter or MAX_PAGE_ORDER) if
+> the driver wishes to not provide it.
 > 
-> The NAPI poll functions mana_poll_tx_cq() and mana_poll_rx_cq() can
-> poll up to CQE_POLLING_BUFFER (512) completions per call. If the CQ
-> has fewer than 512 entries, a single poll call can process more than
-> 4 wraparounds without ringing the doorbell. The doorbell threshold
-> check also uses ">" instead of ">=", delaying the ring by one extra
-> CQE beyond 4 wraparounds. Combined, these issues can cause the driver
-> to exceed the 8-wraparound hardware limit, leading to missed
-> completions and stalled queues.
+> The way the driver used to do this was by passing
+> the order as zero.
 > 
-> Fix this by capping the number of CQEs polled per call to 4 wraparounds
-> of the CQ in both TX and RX paths. Also change the doorbell threshold
-> from ">" to ">=" so the doorbell is rung as soon as 4 wraparounds are
-> reached.
+> Now that zero is a valid order that can be passed by
+> a driver to page reporting, we use -1 to signal
+> default value to be used.
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: 58a63729c957 ("net: mana: Fix doorbell out of order violation and avoid unnecessary doorbell rings")
-> Signed-off-by: Long Li <longli@microsoft.com>
+> Signed-off-by: Yuvraj Sakshith <yuvraj.sakshith@oss.qualcomm.com>
 > ---
->   drivers/net/ethernet/microsoft/mana/mana_en.c | 23 +++++++++++++++----
->   1 file changed, 18 insertions(+), 5 deletions(-)
+>  drivers/hv/hv_balloon.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index 9919183ad39e..fe667e0d930d 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> @@ -1770,8 +1770,14 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
->   	ndev = txq->ndev;
->   	apc = netdev_priv(ndev);
->   
-> +	/* Limit CQEs polled to 4 wraparounds of the CQ to ensure the
-> +	 * doorbell can be rung in time for the hardware's requirement
-> +	 * of at least one doorbell ring every 8 wraparounds.
-> +	 */
->   	comp_read = mana_gd_poll_cq(cq->gdma_cq, completions,
-> -				    CQE_POLLING_BUFFER);
-> +				    min_t(u32, (cq->gdma_cq->queue_size /
+> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> index 2b4080e51..e33d6e3b2 100644
+> --- a/drivers/hv/hv_balloon.c
+> +++ b/drivers/hv/hv_balloon.c
+> @@ -1663,7 +1663,7 @@ static void enable_page_reporting(void)
+>  	 * We let the page_reporting_order parameter decide the order
+>  	 * in the page_reporting code
+>  	 */
+> -	dm_device.pr_dev_info.order = 0;
+> +	dm_device.pr_dev_info.order = -1;
+>  	ret = page_reporting_register(&dm_device.pr_dev_info);
+>  	if (ret < 0) {
+>  		dm_device.pr_dev_info.report = NULL;
 
-no need for min_t, simple min() can be used, queue_size is already u32
+Logically, that patch must come before #1. And the patch description
+should be rephrased to clarify that we want to change that behavior.
 
-> +					   COMP_ENTRY_SIZE) * 4,
-> +					  CQE_POLLING_BUFFER));
->   
->   	if (comp_read < 1)
->   		return;
-> @@ -2156,7 +2162,14 @@ static void mana_poll_rx_cq(struct mana_cq *cq)
->   	struct mana_rxq *rxq = cq->rxq;
->   	int comp_read, i;
->   
-> -	comp_read = mana_gd_poll_cq(cq->gdma_cq, comp, CQE_POLLING_BUFFER);
-> +	/* Limit CQEs polled to 4 wraparounds of the CQ to ensure the
-> +	 * doorbell can be rung in time for the hardware's requirement
-> +	 * of at least one doorbell ring every 8 wraparounds.
-> +	 */
-> +	comp_read = mana_gd_poll_cq(cq->gdma_cq, comp,
-> +				    min_t(u32, (cq->gdma_cq->queue_size /
+Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
 
-same here
+-- 
+Cheers,
 
-> +					   COMP_ENTRY_SIZE) * 4,
-> +					  CQE_POLLING_BUFFER));
->   	WARN_ON_ONCE(comp_read > CQE_POLLING_BUFFER);
->   
->   	rxq->xdp_flush = false;
+David
 
