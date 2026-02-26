@@ -1,51 +1,51 @@
-Return-Path: <linux-hyperv+bounces-9012-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9013-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0E5tGRmToGllkwQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9012-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Feb 2026 19:38:17 +0100
+	id mEBoLQySoGllkwQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9013-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Feb 2026 19:33:48 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBE141ADC99
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Feb 2026 19:38:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 16C661ADB8A
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Feb 2026 19:33:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9C6AF30382AF
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Feb 2026 17:34:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 16CD1302BE19
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Feb 2026 17:43:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37AFB332632;
-	Thu, 26 Feb 2026 17:34:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6913355F27;
+	Thu, 26 Feb 2026 17:43:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lEz4PawU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQHN6d70"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1283B332611;
-	Thu, 26 Feb 2026 17:34:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28FB3290A6;
+	Thu, 26 Feb 2026 17:43:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772127273; cv=none; b=YRjGZoXFKAvCY0Q2xKg6og0PuXysXaf0hzo/EPNefDHpOvx2VhUCFg3lHajd+ybm7RRwzn7C+GsCoAp9YSYjPlEs1JvQLTqp+y7qf5zAyoQwX6d8ouIK1wvourpe2kITBXZwSFxhG5RQjpBhBRwvuSRcj+8+inO4Ed04U26mZaY=
+	t=1772127830; cv=none; b=nBDVv8hqgjl9DI9ef3sFzbCoAL6l4mbhlits2AHvmkWKD+fgB4sUg1aks3Q7od9StAMzhecBo6xsDsnAy02WbWysujI1LDv7seQ10i3O8pajOK0/eNPLvubVug01tQJAFJuWY7CRuONa1JNjblMjTmvARNjM5o42TeoJ3jqT+Sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772127273; c=relaxed/simple;
-	bh=7ckD0akXKp5yLmXPxmzZt9zqQrhBl/9sTG74HrNfedw=;
+	s=arc-20240116; t=1772127830; c=relaxed/simple;
+	bh=P8ldSxwfLZVjMH586whroUmxuPZFLnNzibkezo9KuFQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gsxiOZePbVb3dgxuHAvgWv1ZhqE2wMyZ+3TJ6MbA166E26AK86QGLmLgR/mCcCxhy3GS3nieL9BnJS1cBjoY9ywJnqmeR9oEImBmAUdGSy25uCwiPTP0MMs/OVnj5FMTUnr8mJXBCD89Gl0A/3d/ajgYrJLKM/4D6/0RxkhOYew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lEz4PawU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 853D4C116C6;
-	Thu, 26 Feb 2026 17:34:27 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=iGonUrQZOEVsp58APLKh/TDkB+/NnwsE7Z8jjX9HLPddDXurpotgisfwaKtvd2ylQtOA8Cl9ABD4BsIyb3l2sS1+xIxkVwWuV5pNT+72wS6WSPTm+Gn6acEuPrXk1KLnRHY6F8Nqhc4uDqTwCpLJhX/tlsUQ6SGl3fqym0kCK68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQHN6d70; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68B34C116C6;
+	Thu, 26 Feb 2026 17:43:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772127272;
-	bh=7ckD0akXKp5yLmXPxmzZt9zqQrhBl/9sTG74HrNfedw=;
+	s=k20201202; t=1772127830;
+	bh=P8ldSxwfLZVjMH586whroUmxuPZFLnNzibkezo9KuFQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lEz4PawUesO+34+SHQ759Xpjio4FLMXg7qsEvPAXt0ZKKZO4I2kQ4PaZLARMQwY70
-	 JBoK73NyWHncOGYZ3P5a+JchaTsq+1o+F2nmWq5n/qkXET0OEvENaTorD+3bKRxj4J
-	 W2cCZ+JQ6QuDmIaBB7mjSZuybtAsvMYYfL6T3HKRnsFe3L4t97d+NhK22On8HhnKI2
-	 xAZ9VnipVJ0oVMnjy5SoQpUwtB/d5YUqm5ZqCyzhCldmx6Tek7RbEu0WgT3nj7utjh
-	 xgyFFPgywESchdOad4i81oO7pQWx6DpteJKQ9Bdk3l6dMrQjApdOtHkTbWO9tKVzf/
-	 K7EUEwl/iLaBw==
-Message-ID: <baca70a2-53cc-445b-a14e-ed926e615952@kernel.org>
-Date: Thu, 26 Feb 2026 18:34:24 +0100
+	b=PQHN6d70ELrN3toH2TcI45DI/G35aRETlgWeripiFftg7n1f3wItLYTdAiL6XcdU7
+	 bIou2KquSsNFB2kkrZvgJJ5bO0EA7BJTLiLrTWCZJXtTdB97Nu3YrDBfjyYz7RP3GL
+	 gH3aOyXxcR5Cb+IgAMaHDHCT4bSCL5i217xbDQK3cA25va6um9p5upgf3kRawBu87R
+	 6HwwWYNR8B00JgePqDy6EYgpf6tbu2PcxH3Y0bEPXz4FbUS9jokKvAPEuV+khMvKRw
+	 l5PFM2D5oKdE/hpJEj2xylh05fzWWStMNiUv5f3y5fjDfWVAreM1ylu2dXMg7ngL40
+	 sjp9XBzoYXw5w==
+Message-ID: <d9294aae-b91d-42b4-9e8c-cc63245a3f43@kernel.org>
+Date: Thu, 26 Feb 2026 18:43:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] hv_balloon: Change default page reporting order
+Subject: Re: [PATCH 3/3] virtio_balloon: Set pr_dev.order to new default
 To: Yuvraj Sakshith <yuvraj.sakshith@oss.qualcomm.com>,
  akpm@linux-foundation.org, mst@redhat.com
 Cc: vbabka@suse.cz, surenb@google.com, mhocko@suse.com, jackmanb@google.com,
@@ -63,7 +63,7 @@ Cc: vbabka@suse.cz, surenb@google.com, mhocko@suse.com, jackmanb@google.com,
  wei.liu@kernel.org, decui@microsoft.com, longli@microsoft.com,
  linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20260226070125.3732265-1-yuvraj.sakshith@oss.qualcomm.com>
- <20260226070125.3732265-3-yuvraj.sakshith@oss.qualcomm.com>
+ <20260226070125.3732265-4-yuvraj.sakshith@oss.qualcomm.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -110,7 +110,7 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260226070125.3732265-3-yuvraj.sakshith@oss.qualcomm.com>
+In-Reply-To: <20260226070125.3732265-4-yuvraj.sakshith@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
@@ -123,7 +123,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9012-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9013-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -139,45 +139,92 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,pr_dev_info.report:url]
-X-Rspamd-Queue-Id: BBE141ADC99
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 16C661ADB8A
 X-Rspamd-Action: no action
 
 On 2/26/26 08:01, Yuvraj Sakshith wrote:
-> page_reporting_order used to fall back to default
-> value (passed as parameter or MAX_PAGE_ORDER) if
-> the driver wishes to not provide it.
+> Drivers registering with page reporting used zero
+> as a way to signal page_reporting_order to be set
+> as a default value (either passed as a param or
+> MAX_PAGE_ORDER).
 > 
-> The way the driver used to do this was by passing
-> the order as zero.
-> 
-> Now that zero is a valid order that can be passed by
-> a driver to page reporting, we use -1 to signal
-> default value to be used.
+> Since page_reporting_order can now have zero as
+> valid order, default fallback value send by drivers
+> to page reporting is now -1.
 > 
 > Signed-off-by: Yuvraj Sakshith <yuvraj.sakshith@oss.qualcomm.com>
 > ---
->  drivers/hv/hv_balloon.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/virtio/virtio_balloon.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 > 
-> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> index 2b4080e51..e33d6e3b2 100644
-> --- a/drivers/hv/hv_balloon.c
-> +++ b/drivers/hv/hv_balloon.c
-> @@ -1663,7 +1663,7 @@ static void enable_page_reporting(void)
->  	 * We let the page_reporting_order parameter decide the order
->  	 * in the page_reporting code
->  	 */
-> -	dm_device.pr_dev_info.order = 0;
-> +	dm_device.pr_dev_info.order = -1;
->  	ret = page_reporting_register(&dm_device.pr_dev_info);
->  	if (ret < 0) {
->  		dm_device.pr_dev_info.report = NULL;
+> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> index 74fe59f5a..3cc3dc28a 100644
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -1044,6 +1044,20 @@ static int virtballoon_probe(struct virtio_device *vdev)
+>  			goto out_unregister_oom;
+>  		}
+>  
+> +		/*
+> +		 * page_reporting_register() takes the order either
+> +		 * from the driver or the commandline. If neither
+> +		 * are provided, it falls back to MAX_PAGE_ORDER.
+> +		 *
+> +		 * Order given by the driver is required to be in the
+> +		 * range [0, MAX_PAGE_ORDER].
+> +		 *
+> +		 * One way for the driver to not provide any order
+> +		 * is by setting it to -1.
+> +		 */
+> +
+> +		vb->pr_dev_info.order = -1;
 
-Logically, that patch must come before #1. And the patch description
-should be rephrased to clarify that we want to change that behavior.
+That overly-long comment indicates that we can do better.
 
-Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
+
+What about the following:
+
+Patch #1: Introduce PAGE_REPORTING_DEFAULT_ORDER
+
+diff --git a/include/linux/page_reporting.h b/include/linux/page_reporting.h
+index fe648dfa3a7c..3e21bfbb49a4 100644
+--- a/include/linux/page_reporting.h
++++ b/include/linux/page_reporting.h
+@@ -8,6 +8,9 @@
+ /* This value should always be a power of 2, see page_reporting_cycle() */
+ #define PAGE_REPORTING_CAPACITY                32
+ 
++/* Specifying this value as minimal reporting order selects the default. */
++#define PAGE_REPORTING_DEFAULT_ORDER   0
++
+ struct page_reporting_dev_info {
+        /* function that alters pages to make them "reported" */
+        int (*report)(struct page_reporting_dev_info *prdev,
+diff --git a/mm/page_reporting.c b/mm/page_reporting.c
+index f0042d5743af..d5191cb6b31c 100644
+--- a/mm/page_reporting.c
++++ b/mm/page_reporting.c
+@@ -370,7 +370,8 @@ int page_reporting_register(struct page_reporting_dev_info *prdev)
+         */
+ 
+        if (page_reporting_order == -1) {
+-               if (prdev->order > 0 && prdev->order <= MAX_PAGE_ORDER)
++               if (prdev->order != PAGE_REPORTING_DEFAULT_ORDER &&
++                   prdev->order <= MAX_PAGE_ORDER)
+                        page_reporting_order = prdev->order;
+                else
+                        page_reporting_order = pageblock_order;
+
+
+Patch #2: Use the define in hyperv
+
+Patch #3: Use the define in virtio-balloon
+
+Patch #4: Change PAGE_REPORTING_DEFAULT_ORDER to "MAX_PAGE_ORDER + 1" or sth. like that.
+
+
+Then I think you can just drop the comment in virtballoon_probe() completely.
 
 -- 
 Cheers,
