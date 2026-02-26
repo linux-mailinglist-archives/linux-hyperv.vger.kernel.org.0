@@ -1,233 +1,282 @@
-Return-Path: <linux-hyperv+bounces-9001-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9002-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iAL/EWD6n2n3fAQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9001-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Feb 2026 08:46:40 +0100
+	id sBeyOo0XoGmzfgQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9002-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Feb 2026 10:51:09 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA7991A2061
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Feb 2026 08:46:39 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17C2E1A3C12
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Feb 2026 10:51:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 101033037190
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Feb 2026 07:46:18 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id C78EF300844D
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Feb 2026 09:51:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF582311599;
-	Thu, 26 Feb 2026 07:46:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1BF8314B94;
+	Thu, 26 Feb 2026 09:51:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AGL7b/7k"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y32nwXxT"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A759C3921C9;
-	Thu, 26 Feb 2026 07:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B021885A5
+	for <linux-hyperv@vger.kernel.org>; Thu, 26 Feb 2026 09:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772091972; cv=none; b=IE9v9GjRdVPVPej3vqe2BTrD14ow/BiYZ5fita+fzK+Tw+6PRgG1CaetfA03OS2tbJPtTMXP6mUhy8yrGcGWMq+PAYN4jj02sq2JaqCihE99tlfVm5kdOrFH6ebbjW9Gc8wnArMBnz/DSWQvcPR4zFmj9n9fnQUGeqsocVP7CEM=
+	t=1772099463; cv=none; b=L+54DN0SZDlpKrVAOyfBFmC9v+3YUYdMIb68W8pZWSW9KEdagLt2QZob3mwGz8tgNCM8SsoSaxK/Cep++Uiuu2ojMw+vYxRheSSmQMFNgiYViU9Q5Nxh/THv+lpafthitqUHe+09dLjoGdrfVDiV1xSmN7sgftN7mt7BA/ICbQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772091972; c=relaxed/simple;
-	bh=8rF5K/Ao47rfUmEx+Ps1mmhI+24bcrG8/kevhQmsoCQ=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Z+H96GjTJzgumegt2gkjmr20CYQBUB75tWrpoL3yEb++jSv2VyGI4WYsUtLQMAJlkfYwT6dB92z3fcn0JdcPQWFMIrghsisBDFB1n6EbDMLJP2THeVO23BHj+VU32rOb0tQM+/oIYezEIt7hHf061+BB0KNJWQpluGXXUmRPtrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AGL7b/7k; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A28CFC2BCB4;
-	Thu, 26 Feb 2026 07:46:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772091972;
-	bh=8rF5K/Ao47rfUmEx+Ps1mmhI+24bcrG8/kevhQmsoCQ=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=AGL7b/7kINL5ceVMZ24rdnFoEWEZgN1vnLo5XexSO9uhdKH1gawSIJ/tUd2pCpXxe
-	 x0LTdxTuZoaWAHzNt9/uvxSFNV7HkyKuGKTppjSjS6T12/gRbq8cjzmDzBbPoWTUti
-	 /1favtqMRKOg1CZHIQ9TuTIXn93Nbb/DA8n0fhltpC5k8zGj0ldZLgnhJVKxFrncvr
-	 8rJLg9+j8n1yCulVNb+osym+9M12nWf6Pi7+yqyX3sRbvX+1ura6RDtwJlL+fjpBIJ
-	 yz5HzhrGr+JhvKGWuGAcILlQz4ZSeO4OA80/GI5+rMkZUBgzxZFaXMHeNzW0qkR8iC
-	 BglmHDzCZXS+g==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id A70B1F40068;
-	Thu, 26 Feb 2026 02:46:10 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-01.internal (MEProxy); Thu, 26 Feb 2026 02:46:10 -0500
-X-ME-Sender: <xms:QvqfaS45-LhO2YbNoD7td_Nn691d95J7SBwiMbbciR9wuG6AqWEviw>
-    <xme:QvqfaWuABjsraTQBU_wyKrBtiA88f4lYMiDvwkJ5GYwyCavNS37TKEGSJ-Xmc7SMu
-    flosps_UZrYS2eWaJO8wLxao5w6yINGVk5klXLQwlvjNpLWueYzZec>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvgeehgeeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrugcu
-    uehivghshhgvuhhvvghlfdcuoegrrhgusgeskhgvrhhnvghlrdhorhhgqeenucggtffrrg
-    htthgvrhhnpedvueehiedtvedtleekuddutefgffdtleetfeetveejveejieehfefhjeei
-    jeefudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieejtdehtddtjeel
-    qdeffedvudeigeduhedqrghruggspeepkhgvrhhnvghlrdhorhhgseifohhrkhhofhgrrh
-    gurdgtohhmpdhnsggprhgtphhtthhopeduhedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohepsghpsegrlhhivghnkedruggvpdhrtghpthhtoheprghrnhgusegrrhhnuggsrd
-    guvgdprhgtphhtthhopeifvghirdhlihhusehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    peigkeeisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtghhlgieslhhinhhuthhroh
-    hnihigrdguvgdprhgtphhtthhopegurghvvgdrhhgrnhhsvghnsehlihhnuhigrdhinhht
-    vghlrdgtohhmpdhrtghpthhtohepmhhrrghthhhorheslhhinhhugidrmhhitghrohhsoh
-    hfthdrtghomhdprhgtphhtthhopeguvggtuhhisehmihgtrhhoshhofhhtrdgtohhmpdhr
-    tghpthhtohephhgrihihrghnghiisehmihgtrhhoshhofhhtrdgtohhm
-X-ME-Proxy: <xmx:QvqfaV-Z0iBB23v2e2fCaiJc3ZT-wbl4ttw4hx3MD2EB9a160UKQmw>
-    <xmx:QvqfafQGvqh2MZ-rxCiWZnOF9ZEl2G6aaaeHFMInEB3x-q_Vz88MCw>
-    <xmx:Qvqfacm1aagKmmFjlPabdKL8Tycqf-nyfJIYFcv3q5syNu-bdC4aug>
-    <xmx:QvqfaaU6J3G5DONCluueCLczj4YwlaHzdMPKSmMhmdxVnC2goHj3Eg>
-    <xmx:QvqfaRdSfAgHuPZx5LtO0DSBBnqylFkLT-AI2O1gUTR1EfKtKvTu2mrj>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 76112700065; Thu, 26 Feb 2026 02:46:10 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1772099463; c=relaxed/simple;
+	bh=uxteyQ3fL17gew0uasQskuQXwAnlJW6j4RzRyg/Wkfw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=DupZK4ykGuxCMsuM5aZdXRLoHJ1kes38KSfVPXxs20hdXMi8NJGPa7iP9/7Az4vm3j/kYqQsQD7eF2nBOkpU2OIhSp1mNB956rfUwjcgIjFk8HERj7MfARAr6oTztHJjiZJeHotGEnerguCncthRmKrNTXshlMkGVhLs2pdK7w0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y32nwXxT; arc=none smtp.client-ip=209.85.208.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-65faa6716b4so917103a12.2
+        for <linux-hyperv@vger.kernel.org>; Thu, 26 Feb 2026 01:51:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1772099460; x=1772704260; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=r9siQRAI82XGd/XT7KGSnYfEQ1ezHfSjxlnQISpmf08=;
+        b=Y32nwXxTUza9y17nVfFPdp3G8TzTZNSEJyLQlzdxN8CC8ieGGQscVkb0SiGPhoEpIn
+         OacudqyFXkSwjv+pG1FJGZS56zg2n9zgcIkQTn348ErCbeymIcRBCThDlFNtV5mQxWRv
+         6TortUQryen5UxAcsBY/W2rQE1GevbCgkdGy7V9OGi3+UPLxmuC8//Dcs++aEQa8k4n4
+         oeCuY2POTw+75ygdS7j0vWIQaKkbqki5uxSe3ytC59ezqQCZ20SwDFoNdhbQefMagDLS
+         6n5V4qF7xQLltM5qAw7dfN9RfAUBUr5xCY5MayWpi49hfqGGzU4ZgQ/oPVUaWILJ55+I
+         ScOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772099460; x=1772704260;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=r9siQRAI82XGd/XT7KGSnYfEQ1ezHfSjxlnQISpmf08=;
+        b=EnrTFL3dLfYewHsfmWVqs0oKMkblsEY+L1Dg2EWgZfh9rJd5ZlliDOfk0HcZXJpdTU
+         ViczE1SICQAq2nDxtqxRNxXmK9iJzyAU535n3Z66CL7A92kEYRhncina9j8oFumV/EKM
+         NkZgeQlOEwc5ZGgye4mSsxGVRJh5N3Kwu+vBwK94mJXqg9Lm23zSDghxf/lmEJu+j5cn
+         H1EtCEHc0cSZYlvC374fVwwdcSfv+fIzzsTrU0g1i1aMVDOuORe1vd1NjBSwHhKG5iPQ
+         FTmoUlPR5dSkSgHOVLiELICZU460FHbfbxa7OLK6Milfbj2cJDH7kvPxKYu/UYwqlVpY
+         /tnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWKQFPl/SzwVfX2kFtquTfrnoUsoFixAs0xKUJHkjbOAmPK8MVDNrT4qa00Kq9Wr0ULZgobnXcJvH6xl48=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT8QrMef7KJrVGplBpBMivdPdotUOEPJehtMAVkWPij8JmKv0k
+	EUEocRmaD3g1Qe025yEql9sgsKGwJl35bELM8WJJqcl7Rw04wM62uA3CKIO6ohReNG4z8fHQHQ=
+	=
+X-Received: from edtn17.prod.google.com ([2002:aa7:db51:0:b0:658:31e3:4242])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:510f:b0:65f:7f90:fb89
+ with SMTP id 4fb4d7f45d1cf-65fb6c6ea8dmr913495a12.17.1772099460068; Thu, 26
+ Feb 2026 01:51:00 -0800 (PST)
+Date: Thu, 26 Feb 2026 10:50:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Date: Thu, 26 Feb 2026 08:44:39 +0100
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Mukesh Rathor" <mrathor@linux.microsoft.com>,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, "Thomas Gleixner" <tglx@linutronix.de>,
- "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
- dave.hansen@linux.intel.com, x86@kernel.org,
- "H . Peter Anvin" <hpa@zytor.com>, "Arnd Bergmann" <arnd@arndb.de>
-Message-Id: <eb1c44d7-2664-4269-8824-e90e5a8494b2@app.fastmail.com>
-In-Reply-To: <f8199494-0c42-5eb0-f99e-cc6f6e304d40@linux.microsoft.com>
-References: <20250910001009.2651481-1-mrathor@linux.microsoft.com>
- <20250910001009.2651481-6-mrathor@linux.microsoft.com>
- <38cdec03-889e-43dd-9dad-e621aba9dc8d@app.fastmail.com>
- <f8199494-0c42-5eb0-f99e-cc6f6e304d40@linux.microsoft.com>
-Subject: Re: [PATCH v1 5/6] x86/hyperv: Implement hypervisor ram collection into vmcore
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5779; i=ardb@kernel.org;
+ h=from:subject; bh=sPCEU5F7szViGGqi8+aB6tyXk98FodC657hmbHdoY/0=;
+ b=owGbwMvMwCVmkMcZplerG8N4Wi2JIXOBeGOn6XeFsKeSUza7VTw7Zlk3pUm006MqvMQy2Gz35
+ S1Bhm87SlkYxLgYZMUUWQRm/3238/REqVrnWbIwc1iZQIYwcHEKwEQaXzP8s3NdqDtf46uXrl9D
+ 6Zwj9frMNyT3a+5fwsKfzM70yz5HipHh4+lsnjoWXilOlXkebgyPtnWFnz/9xWiWZOd9MyHOw16 MAA==
+X-Mailer: git-send-email 2.53.0.414.gf7e9f6c205-goog
+Message-ID: <20260226095056.46410-2-ardb+git@google.com>
+Subject: [RFT PATCH] x86/hyperv: Use __naked attribute to fix stackless C function
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Ard Biesheuvel <ardb@kernel.org>, Mukesh Rathor <mrathor@linux.microsoft.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Uros Bizjak <ubizjak@gmail.com>, linux-hyperv@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.15 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	MV_CASE(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[google.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9001-lists,linux-hyperv=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,app.fastmail.com:mid];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-9002-lists,linux-hyperv=lfdr.de,git];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,linux.microsoft.com,microsoft.com,redhat.com,alien8.de,linux.intel.com,zytor.com,gmail.com,vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWELVE(0.00)[15];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ardb@kernel.org,linux-hyperv@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ardb@google.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[google.com:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: EA7991A2061
+	NEURAL_HAM(-0.00)[-0.996];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,hv_crash_ctxt.es:url,alien8.de:email,hv_crash_ctxt.ss:url]
+X-Rspamd-Queue-Id: 17C2E1A3C12
 X-Rspamd-Action: no action
 
+From: Ard Biesheuvel <ardb@kernel.org>
 
-On Wed, 25 Feb 2026, at 23:27, Mukesh R wrote:
-> On 2/21/26 08:43, Ard Biesheuvel wrote:
->> Just spotted this code in v7.0-rc
->> 
->> On Wed, 10 Sep 2025, at 02:10, Mukesh Rathor wrote:
->> ...
->> 
->>> +static asmlinkage void __noreturn hv_crash_c_entry(void)
->> 
->> 'asmlinkage' means that the function may be called from another compilation unit written in assembler, but it doesn't actually evaluate to anything in most cases. Combining it with 'static' makes no sense whatsoever.
->
-> 'static' means scope is limited to the file. Common in cases where function
-> pointers are used, like here in this file way below.
->
-> Like the comment says:
->      "This is the C entry point from the asm glue code after...."
->
-> IOW, called from assembly function (asm == assembly).
->
+hv_crash_c_entry() is a C function that is entered without a stack,
+and this is only allowed for functions that have the __naked attribute,
+which informs the compiler that it must not emit the usual prologue and
+epilogue or emit any other kind of instrumentation that relies on a
+stack frame.
 
-I wasn't asking you to explain what 'static' means. I was explaining to you that asmlinkage means 'external linkage' whereas 'static' means the opposite, and so combining them makes no sense.
+So split up the function, and set the __naked attribute on the initial
+part that sets up the stack, GDT, IDT and other pieces that are needed
+for ordinary C execution. Given that function calls are not permitted
+either, use the existing long return coded in an asm() block to call the
+second part of the function, which is an ordinary function that is
+permitted to call other functions as usual.
 
+Fixes: 94212d34618c ("x86/hyperv: Implement hypervisor RAM collection into vmcore")
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+Build tested only.
 
->> 
->>> +{
->>> +	struct hv_crash_ctxt *ctxt = &hv_crash_ctxt;
->>> +
->>> +	/* first thing, restore kernel gdt */
->>> +	native_load_gdt(&ctxt->gdtr);
->>> +
->>> +	asm volatile("movw %%ax, %%ss" : : "a"(ctxt->ss));
->>> +	asm volatile("movq %0, %%rsp" : : "m"(ctxt->rsp));
->>> +
->> 
->> This code is truly very broken. You cannot enter a C function without a stack, and assign RSP half way down the function. Especially after allocating local variables and/or calling other functions - it may happen to work in most cases, but it is very fragile. (Other architectures have the concept of 'naked' functions for this purpose but x86 does not)
->
-> Local variable refers to static bss struct. IOW,
->
->        asm volatile("movq %0, %%rsp" : : "m"(ctxt->rsp));
->
-> same as:
->        asm volatile("movq %0, %%rsp" : : "m"(&hv_crash_ctxt.rsp));
->
->
+Cc: Mukesh Rathor <mrathor@linux.microsoft.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Dexuan Cui <decui@microsoft.com>
+Cc: Long Li <longli@microsoft.com>
+Cc: Thomas Gleixner <tglx@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Uros Bizjak <ubizjak@gmail.com>
+Cc: linux-hyperv@vger.kernel.org
 
-No, it is *not* the same. In practice, the compiler might perform this substitution, but there is no guarantee that this happens.
+ arch/x86/hyperv/hv_crash.c | 80 ++++++++++----------
+ 1 file changed, 42 insertions(+), 38 deletions(-)
 
-
->> IOW, this whole function should be written in asm.
->>> +	asm volatile("movw %%ax, %%ds" : : "a"(ctxt->ds));
->>> +	asm volatile("movw %%ax, %%es" : : "a"(ctxt->es));
->>> +	asm volatile("movw %%ax, %%fs" : : "a"(ctxt->fs));
->>> +	asm volatile("movw %%ax, %%gs" : : "a"(ctxt->gs));
->>> +
->>> +	native_wrmsrq(MSR_IA32_CR_PAT, ctxt->pat);
->>> +	asm volatile("movq %0, %%cr0" : : "r"(ctxt->cr0));
->>> +
->>> +	asm volatile("movq %0, %%cr8" : : "r"(ctxt->cr8));
->>> +	asm volatile("movq %0, %%cr4" : : "r"(ctxt->cr4));
->>> +	asm volatile("movq %0, %%cr2" : : "r"(ctxt->cr4));
->>> +
->>> +	native_load_idt(&ctxt->idtr);
->>> +	native_wrmsrq(MSR_GS_BASE, ctxt->gsbase);
->>> +	native_wrmsrq(MSR_EFER, ctxt->efer);
->>> +
->>> +	/* restore the original kernel CS now via far return */
->>> +	asm volatile("movzwq %0, %%rax\n\t"
->>> +		     "pushq %%rax\n\t"
->>> +		     "pushq $1f\n\t"
->>> +		     "lretq\n\t"
->>> +		     "1:nop\n\t" : : "m"(ctxt->cs) : "rax");
->>> +
->>> +	/* We are in asmlinkage without stack frame,
->> 
->> You just switched to __KERNEL_CS via the stack.
->
-> compiler doesn't know that.
->
-
-So? But does it means to 'be in asmlinkage' in your interpretation? Did you check what 'asmlinkage' actually evaluates to?
-
-I am not asking you to justify why this broken code works in practice, I am asking you to fix it.
-
->>> hence make a C function
->>> +	 * call which will buy stack frame to restore the tss or clear PT
->>> entry.
->>> +	 */
->> 
->> Where does one buy a stack frame?
->
-> A stack market :).  Callee will create stack frame now that rsp is
-> setup.
->
-
-This code is beyond broken. Please propose fixes rather than try to argue why carrying broken code like this is acceptable.
+diff --git a/arch/x86/hyperv/hv_crash.c b/arch/x86/hyperv/hv_crash.c
+index a78e4fed5720..d77766e8d37e 100644
+--- a/arch/x86/hyperv/hv_crash.c
++++ b/arch/x86/hyperv/hv_crash.c
+@@ -107,14 +107,12 @@ static void __noreturn hv_panic_timeout_reboot(void)
+ 		cpu_relax();
+ }
+ 
+-/* This cannot be inlined as it needs stack */
+-static noinline __noclone void hv_crash_restore_tss(void)
++static void hv_crash_restore_tss(void)
+ {
+ 	load_TR_desc();
+ }
+ 
+-/* This cannot be inlined as it needs stack */
+-static noinline void hv_crash_clear_kernpt(void)
++static void hv_crash_clear_kernpt(void)
+ {
+ 	pgd_t *pgd;
+ 	p4d_t *p4d;
+@@ -125,6 +123,25 @@ static noinline void hv_crash_clear_kernpt(void)
+ 	native_p4d_clear(p4d);
+ }
+ 
++
++static void __noreturn hv_crash_handle(void)
++{
++	hv_crash_restore_tss();
++	hv_crash_clear_kernpt();
++
++	/* we are now fully in devirtualized normal kernel mode */
++	__crash_kexec(NULL);
++
++	hv_panic_timeout_reboot();
++}
++
++/*
++ * __naked functions do not permit function calls, not even to __always_inline
++ * functions that only contain asm() blocks themselves. So use a macro instead.
++ */
++#define hv_wrmsr(msr, val) \
++	asm("wrmsr" :: "c"(msr), "a"((u32)val), "d"((u32)(val >> 32)) : "memory")
++
+ /*
+  * This is the C entry point from the asm glue code after the disable hypercall.
+  * We enter here in IA32-e long mode, ie, full 64bit mode running on kernel
+@@ -133,49 +150,36 @@ static noinline void hv_crash_clear_kernpt(void)
+  * available. We restore kernel GDT, and rest of the context, and continue
+  * to kexec.
+  */
+-static asmlinkage void __noreturn hv_crash_c_entry(void)
++static void __naked hv_crash_c_entry(void)
+ {
+-	struct hv_crash_ctxt *ctxt = &hv_crash_ctxt;
+-
+ 	/* first thing, restore kernel gdt */
+-	native_load_gdt(&ctxt->gdtr);
++	asm volatile("lgdt %0" : : "m" (hv_crash_ctxt.gdtr));
+ 
+-	asm volatile("movw %%ax, %%ss" : : "a"(ctxt->ss));
+-	asm volatile("movq %0, %%rsp" : : "m"(ctxt->rsp));
++	asm volatile("movw %%ax, %%ss" : : "a"(hv_crash_ctxt.ss));
++	asm volatile("movq %0, %%rsp" : : "m"(hv_crash_ctxt.rsp));
+ 
+-	asm volatile("movw %%ax, %%ds" : : "a"(ctxt->ds));
+-	asm volatile("movw %%ax, %%es" : : "a"(ctxt->es));
+-	asm volatile("movw %%ax, %%fs" : : "a"(ctxt->fs));
+-	asm volatile("movw %%ax, %%gs" : : "a"(ctxt->gs));
++	asm volatile("movw %%ax, %%ds" : : "a"(hv_crash_ctxt.ds));
++	asm volatile("movw %%ax, %%es" : : "a"(hv_crash_ctxt.es));
++	asm volatile("movw %%ax, %%fs" : : "a"(hv_crash_ctxt.fs));
++	asm volatile("movw %%ax, %%gs" : : "a"(hv_crash_ctxt.gs));
+ 
+-	native_wrmsrq(MSR_IA32_CR_PAT, ctxt->pat);
+-	asm volatile("movq %0, %%cr0" : : "r"(ctxt->cr0));
++	hv_wrmsr(MSR_IA32_CR_PAT, hv_crash_ctxt.pat);
++	asm volatile("movq %0, %%cr0" : : "r"(hv_crash_ctxt.cr0));
+ 
+-	asm volatile("movq %0, %%cr8" : : "r"(ctxt->cr8));
+-	asm volatile("movq %0, %%cr4" : : "r"(ctxt->cr4));
+-	asm volatile("movq %0, %%cr2" : : "r"(ctxt->cr4));
++	asm volatile("movq %0, %%cr8" : : "r"(hv_crash_ctxt.cr8));
++	asm volatile("movq %0, %%cr4" : : "r"(hv_crash_ctxt.cr4));
++	asm volatile("movq %0, %%cr2" : : "r"(hv_crash_ctxt.cr4));
+ 
+-	native_load_idt(&ctxt->idtr);
+-	native_wrmsrq(MSR_GS_BASE, ctxt->gsbase);
+-	native_wrmsrq(MSR_EFER, ctxt->efer);
++	asm volatile("lidt %0" : : "m" (hv_crash_ctxt.idtr));
++	hv_wrmsr(MSR_GS_BASE, hv_crash_ctxt.gsbase);
++	hv_wrmsr(MSR_EFER, hv_crash_ctxt.efer);
+ 
+ 	/* restore the original kernel CS now via far return */
+-	asm volatile("movzwq %0, %%rax\n\t"
+-		     "pushq %%rax\n\t"
+-		     "pushq $1f\n\t"
+-		     "lretq\n\t"
+-		     "1:nop\n\t" : : "m"(ctxt->cs) : "rax");
+-
+-	/* We are in asmlinkage without stack frame, hence make C function
+-	 * calls which will buy stack frames.
+-	 */
+-	hv_crash_restore_tss();
+-	hv_crash_clear_kernpt();
+-
+-	/* we are now fully in devirtualized normal kernel mode */
+-	__crash_kexec(NULL);
+-
+-	hv_panic_timeout_reboot();
++	asm volatile("pushq	%q0		\n\t"
++		     "leaq	%c1(%%rip), %q0	\n\t"
++		     "pushq	%q0		\n\t"
++		     "lretq			\n\t"
++		     :: "a"(hv_crash_ctxt.cs), "i"(hv_crash_handle));
+ }
+ /* Tell gcc we are using lretq long jump in the above function intentionally */
+ STACK_FRAME_NON_STANDARD(hv_crash_c_entry);
+-- 
+2.53.0.414.gf7e9f6c205-goog
 
 
