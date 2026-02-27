@@ -1,181 +1,244 @@
-Return-Path: <linux-hyperv+bounces-9046-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9047-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uPgXAOgXomnFzAQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9046-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Feb 2026 23:17:12 +0100
+	id OBcRCWsdomlMzgQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9047-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Feb 2026 23:40:43 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D6211BE9C4
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Feb 2026 23:17:11 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 774A91BEBFA
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Feb 2026 23:40:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0E67131BFFE4
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Feb 2026 22:11:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 16A12307E855
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Feb 2026 22:40:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6535A47AF46;
-	Fri, 27 Feb 2026 22:11:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7DF83603EC;
+	Fri, 27 Feb 2026 22:40:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YS6i0NkH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q67Z6G2f"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F65E47AF4B;
-	Fri, 27 Feb 2026 22:11:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C332C237E;
+	Fri, 27 Feb 2026 22:40:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772230273; cv=none; b=Yp7CE2FYlVEJ6UPkyBPwv0526MXOQN0N3n4xzEaUYA9p9TkniISboR4JxlUpwwYCOYhP1pSCclYpnxiZLYahfrqqp0ILNsva1ltExn+xVIfcjyc6BQn3BN5gnuoJM6Lym/fezYbBhyXNcvr1qyWiZC6DDv5KgzcLrESOC2w7FYw=
+	t=1772232040; cv=none; b=KYatm5wny4TON3kIQvri2m0ID2y/orlwJ/ZkAtqvwuZTaPxLMFE4+X2dGjzk6MfUdHq9vNeo6NtaS5fyTR/fe6JTpgql5obTQeq1wsAgK71qT4IjsHxjbqYwgWcfQZvfaXdeYDkiHmXqEYR9svo+7wanb9sPpZexmJ63Ctesl5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772230273; c=relaxed/simple;
-	bh=xBkQMPHPSs/zMDHS8KArKPdBlnLGvJX0MzKYRKJH4JE=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=cGqGS9Gk8yufh3Sva6RBBvaUflzyZ14HDpuqpfLsDninZj8GgWHsTCbSBXXEcBeXMPKbtdslE0iHhCN53dwHdrers1N4i8cfwAtMTubfk7iKiD0LIdRPLJm9cg/dQ+EygCscwtLeooClfvgPFKrtE7a9DRmJySuqduKaGGWCR7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YS6i0NkH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52FC7C4AF0B;
-	Fri, 27 Feb 2026 22:11:12 +0000 (UTC)
+	s=arc-20240116; t=1772232040; c=relaxed/simple;
+	bh=M9wddYcn54W71GpFvHOQNiwkejJ7pXehVbPN08manXI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dhtvRms9pD4BM41+aCSjaDqrV+fwXGFj/PtsLcXPTL18nIGMhISxu3pv/5iT/bRcYSKemxvx+k4ICiKW5SaLwcksD5S11hrAVsJ8huF8DoJe4ungtnfWqIopm/kvBogRXRwma9r5vxVc10FrfNY8hvzIyTbB6Rdx9XmpELY4B84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q67Z6G2f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88B37C116C6;
+	Fri, 27 Feb 2026 22:40:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772230272;
-	bh=xBkQMPHPSs/zMDHS8KArKPdBlnLGvJX0MzKYRKJH4JE=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=YS6i0NkHhU3rmbAGdEl7XkIdlOzzFqfAt2iuGpNE9oLz9A2vqg6m9QF20JQA3YVFU
-	 iZ/WutRQVJKFB34ziHeyUZJA61S53iP3GmDY27ppwtvW5bqU5Vl0Q4F0CxZONKJVmm
-	 LhPqCR5+LOZiftbvIXgkZ4KImwRs7JM0+bDApf4mXr8arYYSOflbKkVMr4HnrlBgGd
-	 1U21M7gz0magpM7vBeb7YQhLdig+JSu1Eg7xuGaZcbrkeNGGbvTO8m0wXyWN7xHzKk
-	 ByvNNA5DyIuuxHZ6/yvPrGfAHy5hl7FXWn8nwKSqmSNygm+8uYL8+FskPgLagGULzR
-	 7RisLylfhmf1w==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 313BEF40068;
-	Fri, 27 Feb 2026 17:11:11 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-01.internal (MEProxy); Fri, 27 Feb 2026 17:11:11 -0500
-X-ME-Sender: <xms:fxaiaSN8uccu8dDqA0AUgLxRpsrGobv_Qv9pMfKfsQ9gaXJx_p_APg>
-    <xme:fxaiabwgVFW9UU61h81Q5fXzHdubvm0TZ4W6hzcv-ZSOjL-FOEPYEjDFAZzQVncHj
-    BZfnXxHa4HO0ymX2Yj52x-EPhs2cEeXwVT_hWBqAnjrPw7I0iCh6yU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvhedtudejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrugcu
-    uehivghshhgvuhhvvghlfdcuoegrrhgusgeskhgvrhhnvghlrdhorhhgqeenucggtffrrg
-    htthgvrhhnpedvueehiedtvedtleekuddutefgffdtleetfeetveejveejieehfefhjeei
-    jeefudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieejtdehtddtjeel
-    qdeffedvudeigeduhedqrghruggspeepkhgvrhhnvghlrdhorhhgseifohhrkhhofhgrrh
-    gurdgtohhmpdhnsggprhgtphhtthhopeduhedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohepsghpsegrlhhivghnkedruggvpdhrtghpthhtoheprghrnhgusegrrhhnuggsrd
-    guvgdprhgtphhtthhopeifvghirdhlihhusehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    peigkeeisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtghhlgieslhhinhhuthhroh
-    hnihigrdguvgdprhgtphhtthhopegurghvvgdrhhgrnhhsvghnsehlihhnuhigrdhinhht
-    vghlrdgtohhmpdhrtghpthhtohepmhhrrghthhhorheslhhinhhugidrmhhitghrohhsoh
-    hfthdrtghomhdprhgtphhtthhopeguvggtuhhisehmihgtrhhoshhofhhtrdgtohhmpdhr
-    tghpthhtohephhgrihihrghnghiisehmihgtrhhoshhofhhtrdgtohhm
-X-ME-Proxy: <xmx:fxaiaSxMu2ZGgzPSuLKnBUXBkhJtK_u-0KWeCeJEoIU3zMBYVml3Og>
-    <xmx:fxaiaT1Wchjzcwq8n8PocsyGqvQSoVwcf_NWNUQODIyIxXvGSz9Mnw>
-    <xmx:fxaiad4Nt5yZSwnWrrOMV4voRvU2Cl_te4jvr10TzfotVdNnskwrgA>
-    <xmx:fxaiaZaZlFyTr8u-DSiO4ZGR3eCBgZfl-EHTKU1z_kshFeWLmlTx-Q>
-    <xmx:fxaiabREhg14ER5TqoRSspkOuymxccAn2lVXUXpXDeQ1iO27_A8VFcuV>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 0EE39700065; Fri, 27 Feb 2026 17:11:11 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1772232040;
+	bh=M9wddYcn54W71GpFvHOQNiwkejJ7pXehVbPN08manXI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=q67Z6G2fvQoqgtiVpcU8YNLjEuUzpVEqyHyFhzfBUSiit7DGgh5fj1qDcCNFXU9nr
+	 zX1Lh9QLn+cSaglnfT5NLzOyYNVwH3wURQdeciDsehrCEqEJRkgZmy2YQpRRIvCR9u
+	 xJJFvLMkX8x2e1/Kwdtqy7yVayyhyCDOH8Q/OotjKDbt7IOFcV8wMkGiO6hJQ0pnit
+	 4Ak/aQFYWY+o3AX8gPnOF34/yT65jGH9MmMm4NSJr9etnIWTBS9f30YrbxRrdJPxBB
+	 Tq3UZ+LdGefY4EzpGnthWkqKdOuv2Y8EismANQ/NaVxxF49PZy1X1CVI65UFiJlEt+
+	 CSDWKcJediFvQ==
+From: Ard Biesheuvel <ardb@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Mukesh Rathor <mrathor@linux.microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	linux-hyperv@vger.kernel.org
+Subject: [PATCH v2] x86/hyperv: Use __naked attribute to fix stackless C function
+Date: Fri, 27 Feb 2026 23:40:31 +0100
+Message-ID: <20260227224030.299993-2-ardb@kernel.org>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: ABHypM1vLXn-
-Date: Fri, 27 Feb 2026 23:10:25 +0100
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Wei Liu" <wei.liu@kernel.org>,
- "Mukesh Rathor" <mrathor@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
- decui@microsoft.com, "Thomas Gleixner" <tglx@linutronix.de>,
- "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
- dave.hansen@linux.intel.com, x86@kernel.org,
- "H . Peter Anvin" <hpa@zytor.com>, "Arnd Bergmann" <arnd@arndb.de>
-Message-Id: <6fa1df5a-b4cf-4f70-9d46-7d82bedfb01c@app.fastmail.com>
-In-Reply-To: <20260227213733.GA976651@liuwe-devbox-debian-v2.local>
-References: <20250910001009.2651481-1-mrathor@linux.microsoft.com>
- <20250910001009.2651481-6-mrathor@linux.microsoft.com>
- <38cdec03-889e-43dd-9dad-e621aba9dc8d@app.fastmail.com>
- <f8199494-0c42-5eb0-f99e-cc6f6e304d40@linux.microsoft.com>
- <eb1c44d7-2664-4269-8824-e90e5a8494b2@app.fastmail.com>
- <6a601546-a26f-79f6-a3b0-be145dfa7781@linux.microsoft.com>
- <20260227213733.GA976651@liuwe-devbox-debian-v2.local>
-Subject: Re: [PATCH v1 5/6] x86/hyperv: Implement hypervisor ram collection into vmcore
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.15 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9046-lists,linux-hyperv=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,app.fastmail.com:mid];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[kernel.org,linux.microsoft.com,gmail.com,citrix.com,vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9047-lists,linux-hyperv=lfdr.de];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[ardb@kernel.org,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
 	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 5D6211BE9C4
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,hv_crash_ctxt.gs:url,hv_crash_ctxt.es:url,hv_crash_ctxt.ss:url]
+X-Rspamd-Queue-Id: 774A91BEBFA
 X-Rspamd-Action: no action
 
+hv_crash_c_entry() is a C function that is entered without a stack,
+and this is only allowed for functions that have the __naked attribute,
+which informs the compiler that it must not emit the usual prologue and
+epilogue or emit any other kind of instrumentation that relies on a
+stack frame.
 
+So split up the function, and set the __naked attribute on the initial
+part that sets up the stack, GDT, IDT and other pieces that are needed
+for ordinary C execution. Given that function calls are not permitted
+either, use the existing long return coded in an asm() block to call the
+second part of the function, which is an ordinary function that is
+permitted to call other functions as usual.
 
-On Fri, 27 Feb 2026, at 22:37, Wei Liu wrote:
-> On Fri, Feb 27, 2026 at 12:05:13PM -0800, Mukesh R wrote:
-> [...]
->> > 
->> > So? But does it means to 'be in asmlinkage' in your interpretation? Did you check what 'asmlinkage' actually evaluates to?
->> > 
->> > I am not asking you to justify why this broken code works in practice, I am asking you to fix it.
->> 
->> 
->> STOP bossing me! I am not your servant nor your slave. And you are not the
->> only genius around here.
->> 
->> Now, many people looked at this code before it was merged and no one really
->> thought any self respecting compiler in modern times would create an issue
->> here. Still, I see the remote possibility of that happening. All you had
->> to do was to show your concern and suggest using __naked here (which looks
->> like we all missed, or maybe it came after the code was written), and it
->> would have been addressed. This is x64 specific code for very special case
->> of hyperv or kernel-on-hyperv crashing.
->> 
->> In future if you choose to correspond, watch your tone!
->
-> Mukesh, there is no need to be so emotional and defensive.
->
-> I don't think anyone, no matter how good he or she is, knows all the
-> intricacies in the kernel. We're lucky to have other people look at our
-> code and point out potential issues. Regardless of your opinion on the
-> discussion, we should be thankful for the time and effort people put
-> into even sending an email, let alone a patch.
->
-> Let's keep the discussion civil and constructive, and focus on the
-> technical aspects of the code.
->
-> Ard, I want to let you know that I appreciate you raising this issue
-> with us.
->
+Cc: Mukesh Rathor <mrathor@linux.microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Uros Bizjak <ubizjak@gmail.com>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: linux-hyperv@vger.kernel.org
+Fixes: 94212d34618c ("x86/hyperv: Implement hypervisor RAM collection into vmcore")
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+v2: apply some asm tweaks suggested by Uros and Andrew
 
-Much appreciated. And apologies to Mukesh for my harsh tone - I should have been more diplomatic in my response.
+ arch/x86/hyperv/hv_crash.c | 79 ++++++++++----------
+ 1 file changed, 41 insertions(+), 38 deletions(-)
+
+diff --git a/arch/x86/hyperv/hv_crash.c b/arch/x86/hyperv/hv_crash.c
+index 92da1b4f2e73..1c0965eb346e 100644
+--- a/arch/x86/hyperv/hv_crash.c
++++ b/arch/x86/hyperv/hv_crash.c
+@@ -107,14 +107,12 @@ static void __noreturn hv_panic_timeout_reboot(void)
+ 		cpu_relax();
+ }
+ 
+-/* This cannot be inlined as it needs stack */
+-static noinline __noclone void hv_crash_restore_tss(void)
++static void hv_crash_restore_tss(void)
+ {
+ 	load_TR_desc();
+ }
+ 
+-/* This cannot be inlined as it needs stack */
+-static noinline void hv_crash_clear_kernpt(void)
++static void hv_crash_clear_kernpt(void)
+ {
+ 	pgd_t *pgd;
+ 	p4d_t *p4d;
+@@ -125,6 +123,25 @@ static noinline void hv_crash_clear_kernpt(void)
+ 	native_p4d_clear(p4d);
+ }
+ 
++
++static void __noreturn hv_crash_handle(void)
++{
++	hv_crash_restore_tss();
++	hv_crash_clear_kernpt();
++
++	/* we are now fully in devirtualized normal kernel mode */
++	__crash_kexec(NULL);
++
++	hv_panic_timeout_reboot();
++}
++
++/*
++ * __naked functions do not permit function calls, not even to __always_inline
++ * functions that only contain asm() blocks themselves. So use a macro instead.
++ */
++#define hv_wrmsr(msr, val) \
++	asm("wrmsr" :: "c"(msr), "a"((u32)val), "d"((u32)(val >> 32)) : "memory")
++
+ /*
+  * This is the C entry point from the asm glue code after the disable hypercall.
+  * We enter here in IA32-e long mode, ie, full 64bit mode running on kernel
+@@ -133,49 +150,35 @@ static noinline void hv_crash_clear_kernpt(void)
+  * available. We restore kernel GDT, and rest of the context, and continue
+  * to kexec.
+  */
+-static asmlinkage void __noreturn hv_crash_c_entry(void)
++static void __naked hv_crash_c_entry(void)
+ {
+-	struct hv_crash_ctxt *ctxt = &hv_crash_ctxt;
+-
+ 	/* first thing, restore kernel gdt */
+-	native_load_gdt(&ctxt->gdtr);
++	asm volatile("lgdt %0" : : "m" (hv_crash_ctxt.gdtr));
+ 
+-	asm volatile("movw %%ax, %%ss" : : "a"(ctxt->ss));
+-	asm volatile("movq %0, %%rsp" : : "m"(ctxt->rsp));
++	asm volatile("movw %0, %%ss" : : "m"(hv_crash_ctxt.ss));
++	asm volatile("movq %0, %%rsp" : : "m"(hv_crash_ctxt.rsp));
+ 
+-	asm volatile("movw %%ax, %%ds" : : "a"(ctxt->ds));
+-	asm volatile("movw %%ax, %%es" : : "a"(ctxt->es));
+-	asm volatile("movw %%ax, %%fs" : : "a"(ctxt->fs));
+-	asm volatile("movw %%ax, %%gs" : : "a"(ctxt->gs));
++	asm volatile("movw %0, %%ds" : : "m"(hv_crash_ctxt.ds));
++	asm volatile("movw %0, %%es" : : "m"(hv_crash_ctxt.es));
++	asm volatile("movw %0, %%fs" : : "m"(hv_crash_ctxt.fs));
++	asm volatile("movw %0, %%gs" : : "m"(hv_crash_ctxt.gs));
+ 
+-	native_wrmsrq(MSR_IA32_CR_PAT, ctxt->pat);
+-	asm volatile("movq %0, %%cr0" : : "r"(ctxt->cr0));
++	hv_wrmsr(MSR_IA32_CR_PAT, hv_crash_ctxt.pat);
++	asm volatile("movq %0, %%cr0" : : "r"(hv_crash_ctxt.cr0));
+ 
+-	asm volatile("movq %0, %%cr8" : : "r"(ctxt->cr8));
+-	asm volatile("movq %0, %%cr4" : : "r"(ctxt->cr4));
+-	asm volatile("movq %0, %%cr2" : : "r"(ctxt->cr4));
++	asm volatile("movq %0, %%cr8" : : "r"(hv_crash_ctxt.cr8));
++	asm volatile("movq %0, %%cr4" : : "r"(hv_crash_ctxt.cr4));
++	asm volatile("movq %0, %%cr2" : : "r"(hv_crash_ctxt.cr4));
+ 
+-	native_load_idt(&ctxt->idtr);
+-	native_wrmsrq(MSR_GS_BASE, ctxt->gsbase);
+-	native_wrmsrq(MSR_EFER, ctxt->efer);
++	asm volatile("lidt %0" : : "m" (hv_crash_ctxt.idtr));
++	hv_wrmsr(MSR_GS_BASE, hv_crash_ctxt.gsbase);
++	hv_wrmsr(MSR_EFER, hv_crash_ctxt.efer);
+ 
+ 	/* restore the original kernel CS now via far return */
+-	asm volatile("movzwq %0, %%rax\n\t"
+-		     "pushq %%rax\n\t"
+-		     "pushq $1f\n\t"
+-		     "lretq\n\t"
+-		     "1:nop\n\t" : : "m"(ctxt->cs) : "rax");
+-
+-	/* We are in asmlinkage without stack frame, hence make C function
+-	 * calls which will buy stack frames.
+-	 */
+-	hv_crash_restore_tss();
+-	hv_crash_clear_kernpt();
+-
+-	/* we are now fully in devirtualized normal kernel mode */
+-	__crash_kexec(NULL);
+-
+-	hv_panic_timeout_reboot();
++	asm volatile("pushq %q0\n\t"
++		     "pushq %q1\n\t"
++		     "lretq"
++		     :: "r"(hv_crash_ctxt.cs), "r"(hv_crash_handle));
+ }
+ /* Tell gcc we are using lretq long jump in the above function intentionally */
+ STACK_FRAME_NON_STANDARD(hv_crash_c_entry);
+-- 
+2.47.3
 
 
