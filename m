@@ -1,174 +1,219 @@
-Return-Path: <linux-hyperv+bounces-9037-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9038-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8A3nGmLxoWnYxQQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9037-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Feb 2026 20:32:50 +0100
+	id SDXwLQj5oWknyAQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9038-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Feb 2026 21:05:28 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7E191BCD69
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Feb 2026 20:32:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EA3A21BD305
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Feb 2026 21:05:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9BCE030B2C8B
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Feb 2026 19:30:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CBDCD304604E
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Feb 2026 20:05:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D094C36EA82;
-	Fri, 27 Feb 2026 19:30:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DB1642EEC1;
+	Fri, 27 Feb 2026 20:05:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="qYFS1EiG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BSzjpY3l"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Mu+n3C5j"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978AF35B654;
-	Fri, 27 Feb 2026 19:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DC9B3346BF;
+	Fri, 27 Feb 2026 20:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772220605; cv=none; b=X8mCw6E+u/u5ERbrDWHpX+RwNX+w90cwEwp9hZ+hUjUPLdfDjhWH1+uPVW0zH6J5OisHHiGfN0CVjU6qFo3nlqOnqHKmen7DDyP4eloXf1GkmVBNtrPkffd/d4iV0m7ARdrb4eMdRjJMZX3seLwSb6yr+X9iN3GgUC6ldpOpZGg=
+	t=1772222721; cv=none; b=F3LTT8iWD3ou3+dqNNkj1ylDL843Z/VmkSCKNFvC4xr3+R1hRkMWZsDolKoViIy8Hoilzeu1oLlMqJX8BuaZ9u8b2Mrf/YahmOg2Vy4nqsM2vFKuZjenoggqA+T2nO4UtL/P89TPEHRaSAsIJHMmrDDJMkmdEbnTg0HYERsCzsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772220605; c=relaxed/simple;
-	bh=s1gTp1jZw16CUyo8V+a1DUpGAcUwBfdcaAPRIjUBVnE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o1TIfgN4aHyqv3DwOS2yW41fUpKwSj9d2CG4HO6lMCuaFoUpDTY9FgdNfVAkH+9P3kUma18Bddo4HbzcW+aN1LFNTd7r9aMi89S4hG1YQ5e63icTULxQtnn0oUCafUQS8MVtNSysktrvRiHdx7Qa1a3OGNYm8K2OXG0WoGIY5d4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=qYFS1EiG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=BSzjpY3l; arc=none smtp.client-ip=202.12.124.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 29E9E7A011E;
-	Fri, 27 Feb 2026 14:30:01 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Fri, 27 Feb 2026 14:30:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1772220600;
-	 x=1772307000; bh=hghdzLvxEFhVmI/9kLmg5WuFIjmbso+tE5FO2QLH96g=; b=
-	qYFS1EiG6A7MpOu0Bt5e15wUtQamtscyW+iDYZmWVwLfkx5QxzEj3zuOAvES26KZ
-	Yo4pFUymf2xmR0kqLSIMpKCg+8CdjNg8hOReEnaiZUYx8XizJWrDX+/RBU8C2NO4
-	bZ+/kcQxBUhXemclADgrKfnGKZTGPzgf5QJh53mcQ5BSXIfuBtx0V9PAvnXeMgNU
-	zqWltYuzvRcy75MFyQKky5P30sh8fZ9brG9csnmjV7ecxw8XEJRM5lZ4IqT4woGi
-	XIt0/Wr2FJZdH429j/W2Txx0yCzPt58HB6lO2/Y2gk62VkQiu4mlkxjqb9cj2J02
-	do08CPonRVCPDetj/pgYJg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1772220600; x=
-	1772307000; bh=hghdzLvxEFhVmI/9kLmg5WuFIjmbso+tE5FO2QLH96g=; b=B
-	SzjpY3l4iZRKLMGzZjIJgLDkjdPmyTQHSxFu9VkgRV5x3hUE0u5JsZ6NIaha4GSk
-	PIBiVXWCTnYkoRi2TIfGhCBLbA1lnltCQkXk8sEyQ6GZwfpRuGI+MJjjbw3sANvp
-	yJMIz1VoUiKxTVLzmMUHnQ4MFZ+bVkLfgAhkWUJ8NjSFa+NNfex1PqFo4aPjYJUn
-	eX8wGfI2Wj/Up0TLdAj/RnFS1SMDP/q5CHuRy5Wc4t6kzHUBPjKIYOycvAM9/nzm
-	Fklt9gzClkp84bYnsAiJ3YRbbFl1LBBb68kpm1SOGWsTkTZ0F0hWANWgMmFMwbTr
-	1K5gRc5mH6PN7LlgDtvUw==
-X-ME-Sender: <xms:uPChaZqvicvOZ66pdHjGOSTMzWRXNWBNAYCRCHpmsMpzpZRbGTVKTg>
-    <xme:uPChaUl6WM_y-cjA-sDBXpHDqUCV7Yjajsmx8B02sGwgkaqrUcWjvcDHB5CAOqUXr
-    y4aNpo49Y5ZeDD8paAykHFnTR7dJqqavpsiJ4R03i_We5kM0gfHJQ>
-X-ME-Received: <xmr:uPChaRzvDibvDe94R6uEdGYs4pmBDnuwuUxS53KC-ekIfDbhCQ2NQg327J8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvgeelkeegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucenucfjughrpeffhffvvefukfgjfhfogggtgfesthejre
-    dtredtvdenucfhrhhomheptehlvgigucghihhllhhirghmshhonhcuoegrlhgvgiesshhh
-    rgiisghothdrohhrgheqnecuggftrfgrthhtvghrnhepvdekfeejkedvudfhudfhteekud
-    fgudeiteetvdeukedvheetvdekgfdugeevueeunecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomheprghlvgigsehshhgriigsohhtrdhorhhgpdhnsg
-    gprhgtphhtthhopeehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehmrhgrthhh
-    ohhrsehlihhnuhigrdhmihgtrhhoshhofhhtrdgtohhmpdhrtghpthhtohepkhhvmhesvh
-    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeifvghirdhlihhusehkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopehlihhnuhigqdhhhihpvghrvhesvhhgvghrrdhkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopegrlhgvgiesshhhrgiisghothdrohhrgh
-X-ME-Proxy: <xmx:uPChaU84cEwcYPU4jB-qBOADuKUzCkKtIjDWIJA1Ejf9dnR1jpR_tQ>
-    <xmx:uPChaVJO9hGcCrep2P89mN9DzFEHr845ziZRN-1vkJ5zleIPq_b4gg>
-    <xmx:uPChaad0wiOWE4dQMYlbspGyd-790pnnawdf_rdTC_a35f-0KSZqPA>
-    <xmx:uPChaU-EA7HHmMAwMvD6jwXGFh46wX0b8V0jEN9UIJwWKLy91_uBuw>
-    <xmx:uPChaXZz631LLdH7Y3rrGIRiXg6DJ3M5ywMcZQT0gm_O4pu0Htte7v4b>
-Feedback-ID: i03f14258:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 27 Feb 2026 14:29:59 -0500 (EST)
-Date: Fri, 27 Feb 2026 12:29:57 -0700
-From: Alex Williamson <alex@shazbot.org>
-To: Mukesh R <mrathor@linux.microsoft.com>
-Cc: kvm@vger.kernel.org, "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- alex@shazbot.org
-Subject: Re: VFIO support on hyperv (vfio_pci_core_ioctl())
-Message-ID: <20260227122957.1e555024@shazbot.org>
-In-Reply-To: <1f50dae2-ec4a-7914-a14f-2ada803eb0e3@linux.microsoft.com>
-References: <1f50dae2-ec4a-7914-a14f-2ada803eb0e3@linux.microsoft.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1772222721; c=relaxed/simple;
+	bh=x+FlnG5H4yl5wGmOO7WJQCAu+SW4m5eZ9juEuYScfCk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k/vjvqR55Onz5EYyEcDe/HJ0yQTF/7uN4UabRp1Zw524y2VQqC5DUvUXW24V86HohP68lQ3XWlY8zFQe3z/uKSDmxefNkcGBI3WpRdAT3l8Rtic3wkiXoaOK+kV/VsMAuIrM3AqinuTuQHQ4uWwvEpVC8QFwlLVtD86Mx3Rwc58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Mu+n3C5j; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 9A53120B6F02;
+	Fri, 27 Feb 2026 12:05:13 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9A53120B6F02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1772222714;
+	bh=nFiRovFu19+kkoV1gMds6L93LGxU81m2ma5KAoPRXcc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Mu+n3C5j4pRnvV/FG92q+gcHqryz3HRSSQcf4KEVAtL1FPtnVkR9Pe1fgdIBQIQcy
+	 59MbIc2oxE3YE7u+Qm5cNbV5GyUakjZA6WpgV0aMsh7NXEc4xRlTBH66msJkmoP9oJ
+	 0x7/WeIaqlNNARqifmpKfaVZBxs5Zfj4ji0K4O1M=
+Message-ID: <6a601546-a26f-79f6-a3b0-be145dfa7781@linux.microsoft.com>
+Date: Fri, 27 Feb 2026 12:05:13 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v1 5/6] x86/hyperv: Implement hypervisor ram collection
+ into vmcore
+Content-Language: en-US
+To: Ard Biesheuvel <ardb@kernel.org>, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ dave.hansen@linux.intel.com, x86@kernel.org, "H . Peter Anvin"
+ <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>
+References: <20250910001009.2651481-1-mrathor@linux.microsoft.com>
+ <20250910001009.2651481-6-mrathor@linux.microsoft.com>
+ <38cdec03-889e-43dd-9dad-e621aba9dc8d@app.fastmail.com>
+ <f8199494-0c42-5eb0-f99e-cc6f6e304d40@linux.microsoft.com>
+ <eb1c44d7-2664-4269-8824-e90e5a8494b2@app.fastmail.com>
+From: Mukesh R <mrathor@linux.microsoft.com>
+In-Reply-To: <eb1c44d7-2664-4269-8824-e90e5a8494b2@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[shazbot.org,none];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[shazbot.org:s=fm3,messagingengine.com:s=fm3];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9037-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[shazbot.org:+,messagingengine.com:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9038-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alex@shazbot.org,linux-hyperv@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mrathor@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[shazbot.org:mid,shazbot.org:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,messagingengine.com:dkim]
-X-Rspamd-Queue-Id: D7E191BCD69
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: EA3A21BD305
 X-Rspamd-Action: no action
 
-On Wed, 25 Feb 2026 14:04:49 -0800
-Mukesh R <mrathor@linux.microsoft.com> wrote:
-
-> Hi Alex et al:
+On 2/25/26 23:44, Ard Biesheuvel wrote:
 > 
-> I've been looking at making pci passthru irq setup/remap work on hyperv
-> for the latest (6.19) version using vfio core. Unfortunately, it's just
-> not fitting well because in case of hyperv the irq remap is done by
-> the hypervisor. Specifically, for a robust and proper solution, we need
-> to override vfio_pci_set_msi_trigger(). As such, for the best way forward
-> I am trying to figure how much flexibility there is to modify
-> vfio_pci_intrs.c with "if (running_on_hyperv())" branches (putting hyperv
-> code in separate file).
+> On Wed, 25 Feb 2026, at 23:27, Mukesh R wrote:
+>> On 2/21/26 08:43, Ard Biesheuvel wrote:
+>>> Just spotted this code in v7.0-rc
+>>>
+>>> On Wed, 10 Sep 2025, at 02:10, Mukesh Rathor wrote:
+>>> ...
+>>>
+>>>> +static asmlinkage void __noreturn hv_crash_c_entry(void)
+>>>
+>>> 'asmlinkage' means that the function may be called from another compilation unit written in assembler, but it doesn't actually evaluate to anything in most cases. Combining it with 'static' makes no sense whatsoever.
+>>
+>> 'static' means scope is limited to the file. Common in cases where function
+>> pointers are used, like here in this file way below.
+>>
+>> Like the comment says:
+>>       "This is the C entry point from the asm glue code after...."
+>>
+>> IOW, called from assembly function (asm == assembly).
+>>
 > 
-> If none, then the alternative would be to create vfio-hyperv.c with
-> vfio_device_ops.ioctl = hyperv_vfio_pci_core_ioctl(). But, then I'd
-> be replicating code for other sub ioctls like vfio_pci_ioctl_get_info(),
-> vfio_pci_ioctl_get_irq_info(), etc. Would it be acceptable to make them
-> non static in this case?
+> I wasn't asking you to explain what 'static' means. I was explaining to you that asmlinkage means 'external linkage' whereas 'static' means the opposite, and so combining them makes no sense.
 > 
-> Please let me know your thoughts or if you have other suggestions.
+> 
+>>>
+>>>> +{
+>>>> +	struct hv_crash_ctxt *ctxt = &hv_crash_ctxt;
+>>>> +
+>>>> +	/* first thing, restore kernel gdt */
+>>>> +	native_load_gdt(&ctxt->gdtr);
+>>>> +
+>>>> +	asm volatile("movw %%ax, %%ss" : : "a"(ctxt->ss));
+>>>> +	asm volatile("movq %0, %%rsp" : : "m"(ctxt->rsp));
+>>>> +
+>>>
+>>> This code is truly very broken. You cannot enter a C function without a stack, and assign RSP half way down the function. Especially after allocating local variables and/or calling other functions - it may happen to work in most cases, but it is very fragile. (Other architectures have the concept of 'naked' functions for this purpose but x86 does not)
+>>
+>> Local variable refers to static bss struct. IOW,
+>>
+>>         asm volatile("movq %0, %%rsp" : : "m"(ctxt->rsp));
+>>
+>> same as:
+>>         asm volatile("movq %0, %%rsp" : : "m"(&hv_crash_ctxt.rsp));
+>>
+>>
+> 
+> No, it is *not* the same. In practice, the compiler might perform this substitution, but there is no guarantee that this happens.
+> 
+> 
+>>> IOW, this whole function should be written in asm.
+>>>> +	asm volatile("movw %%ax, %%ds" : : "a"(ctxt->ds));
+>>>> +	asm volatile("movw %%ax, %%es" : : "a"(ctxt->es));
+>>>> +	asm volatile("movw %%ax, %%fs" : : "a"(ctxt->fs));
+>>>> +	asm volatile("movw %%ax, %%gs" : : "a"(ctxt->gs));
+>>>> +
+>>>> +	native_wrmsrq(MSR_IA32_CR_PAT, ctxt->pat);
+>>>> +	asm volatile("movq %0, %%cr0" : : "r"(ctxt->cr0));
+>>>> +
+>>>> +	asm volatile("movq %0, %%cr8" : : "r"(ctxt->cr8));
+>>>> +	asm volatile("movq %0, %%cr4" : : "r"(ctxt->cr4));
+>>>> +	asm volatile("movq %0, %%cr2" : : "r"(ctxt->cr4));
+>>>> +
+>>>> +	native_load_idt(&ctxt->idtr);
+>>>> +	native_wrmsrq(MSR_GS_BASE, ctxt->gsbase);
+>>>> +	native_wrmsrq(MSR_EFER, ctxt->efer);
+>>>> +
+>>>> +	/* restore the original kernel CS now via far return */
+>>>> +	asm volatile("movzwq %0, %%rax\n\t"
+>>>> +		     "pushq %%rax\n\t"
+>>>> +		     "pushq $1f\n\t"
+>>>> +		     "lretq\n\t"
+>>>> +		     "1:nop\n\t" : : "m"(ctxt->cs) : "rax");
+>>>> +
+>>>> +	/* We are in asmlinkage without stack frame,
+>>>
+>>> You just switched to __KERNEL_CS via the stack.
+>>
+>> compiler doesn't know that.
+>>
+> 
+> So? But does it means to 'be in asmlinkage' in your interpretation? Did you check what 'asmlinkage' actually evaluates to?
+> 
+> I am not asking you to justify why this broken code works in practice, I am asking you to fix it.
 
-Hi Mukesh,
 
-In general, littering the code with running_on_hyperv() tests is not
-acceptable, but the presented alternative isn't really accurate either.
-If you want to substitute in your own ioctl callback, you can still
-call vfio_pci_core_ioctl() for all the unhandled ioctls, without extra
-exports.  We can also look at whether vfio_pci_device_ops could have a
-callback specifically addressing an alternative set_msi_trigger
-handler.  Thanks,
+STOP bossing me! I am not your servant nor your slave. And you are not the
+only genius around here.
 
-Alex
+Now, many people looked at this code before it was merged and no one really
+thought any self respecting compiler in modern times would create an issue
+here. Still, I see the remote possibility of that happening. All you had
+to do was to show your concern and suggest using __naked here (which looks
+like we all missed, or maybe it came after the code was written), and it
+would have been addressed. This is x64 specific code for very special case
+of hyperv or kernel-on-hyperv crashing.
+
+In future if you choose to correspond, watch your tone!
+
+
+
+>>>> hence make a C function
+>>>> +	 * call which will buy stack frame to restore the tss or clear PT
+>>>> entry.
+>>>> +	 */
+>>>
+>>> Where does one buy a stack frame?
+>>
+>> A stack market :).  Callee will create stack frame now that rsp is
+>> setup.
+>>
+> 
+> This code is beyond broken. Please propose fixes rather than try to argue why carrying broken code like this is acceptable.
+
 
