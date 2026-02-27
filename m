@@ -1,51 +1,51 @@
-Return-Path: <linux-hyperv+bounces-9040-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9041-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2G3SFB8ComnPyAQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9040-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Feb 2026 21:44:15 +0100
+	id +NNAAmAComnPyAQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9041-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Feb 2026 21:45:20 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCAB71BDE48
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Feb 2026 21:44:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 700231BDE70
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Feb 2026 21:45:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7962C306C123
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Feb 2026 20:44:13 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8F28F30832E0
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Feb 2026 20:45:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D55B738F920;
-	Fri, 27 Feb 2026 20:44:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A680636D4E2;
+	Fri, 27 Feb 2026 20:45:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oOAuOjkU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hMTGAwtP"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DD431B131;
-	Fri, 27 Feb 2026 20:44:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8347833A9EF;
+	Fri, 27 Feb 2026 20:45:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772225052; cv=none; b=Hcskgky182Qid/C35hFvyoUYdi3Y4nzAd52MUJWjxDf/Ho7ZRqJqlCgY0CCe+rREWw2BfHCnjI+V8VcdGMk4qYpSg15WwtKcM4iVwYHo6zi2okYY42YxXCNJDTt8bJ/yYKyI7n1AfYvnGIRix/8XVSu5LXudxAEMZ+UhyPME/uM=
+	t=1772225116; cv=none; b=mUCKYsgsNQrWv8SKOBB2wvjsCMO5ZZhAtEKCh0nXS7658EaNVCbEn21m/GngDdJit2/PNjvP7ft/Hj3qX68Ls8IWYrADKxaXa/O0JHtYL5T6U55ycH5h+/nejDH3Bz5y1KGWO0H5+6mRZAd5mdR09VO1tbEZs7ocGxLsI49hzhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772225052; c=relaxed/simple;
-	bh=RlLz8Nf4AkH8nV2nxyW0Rxk/9bF52X89NSCa8ZhU4q8=;
+	s=arc-20240116; t=1772225116; c=relaxed/simple;
+	bh=pYQSUC5jATh6DNwnolOOAOo17Nig2BgeHN6u2v19K7U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o4i0foNHWS5N/i5wvvmjmpv3b3AmzEEYfsOuhPBa5Q0+W2COxlVFMv8kkNkftjeFNdUAA9qvsG+iEj8pz6aeskcuKE/dsCcN7KvDzNtgGaT0foULH2M7AgiHphfJxl/UadJnZVm5NOEWAXfzX8kP09VKleHhXW63y77bKtCkGd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oOAuOjkU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AC9FC116C6;
-	Fri, 27 Feb 2026 20:44:06 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Ra7L0mtRv+fqPRy+Scaxxbr+Qv+hCNJKVvo7aiyrfj0r0XMz8i2baxLltgvT77xI+LDpTM1gUm/5mQ5bzFGlsa90jghKVcI+v1b+QcE5OmzKIYO8rmThxpTm0Cbd1ylsGcuG2hqobHyVF9VrKJlG9ofkFoVaH2+OxqG06dIMTxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hMTGAwtP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E94C8C116C6;
+	Fri, 27 Feb 2026 20:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772225052;
-	bh=RlLz8Nf4AkH8nV2nxyW0Rxk/9bF52X89NSCa8ZhU4q8=;
+	s=k20201202; t=1772225116;
+	bh=pYQSUC5jATh6DNwnolOOAOo17Nig2BgeHN6u2v19K7U=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oOAuOjkUW7IMZGQo1i21CTSIVY4JFqKbBBVzBQHEfOB6DW4g3pTxKqT0HrN3xBcST
-	 I4yLuWrb/S+kyiwhNBguxN0eQmLjX3Z/9TNeSMmlOAe/9CT2SN+BGGPsFkpm78GRAW
-	 wRVFvUOsebWDu+QoYzJqdD5JWZ+35Lix/699e/L9UhApjIJEeWpTbgRc07cXtoVUx2
-	 hgH4I1XJ86b2WoKkXKQOLU203ANhQzMxQU9ktGQFvP0tVqpyPonzdfBMbQnZtsnVW3
-	 G4B64tPdKNSB/D3YARx208WO6SfNSzQ4NWEpyFscgTKv/F5QL4mVmkqe1OTvWIaRih
-	 f0rswjD7njamg==
-Message-ID: <dc86d6ea-ec74-4071-ae88-1fd8c3313ee8@kernel.org>
-Date: Fri, 27 Feb 2026 21:44:05 +0100
+	b=hMTGAwtPBNfebE/Z+l5VugFscaEc9S9I2bu5ydzPY/uWCWI9MSBPqjQEhQHfFmgs0
+	 LxMIdmM5vycoWY6/euBpDzv94By6NVToYu7ziitEzxbRukpSI2TMHTCrwpIhC7ZpQr
+	 jI8XZA9Yi4g9PvzeaEVhK1Xk8ky0FTDZ3J5jKRR3niPQuJrVAHK25OEX7urtGK25s6
+	 jfu/yAA+yLOA9sYGO0BOkpYsiclYBqfOhGUgmVk7frmqB8JQK4eXXOiF5LlP2Hx9Sb
+	 LEPvlo9zKZqZYMFSoDPVDCvHQFL8qlL+tJiQ1m+7fTr8TKf89HH3QHS+KZtZ3x8r0k
+	 mV7pQWXpxt6Og==
+Message-ID: <22faedef-99ab-40ff-aa8d-c3627beb0b3a@kernel.org>
+Date: Fri, 27 Feb 2026 21:45:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/4] Allow order zero pages in page reporting
+Subject: Re: [PATCH v1 1/4] page_reporting: add PAGE_REPORTING_DEFAULT_ORDER
 To: Yuvraj Sakshith <yuvraj.sakshith@oss.qualcomm.com>,
  akpm@linux-foundation.org
 Cc: mst@redhat.com, kys@microsoft.com, haiyangz@microsoft.com,
@@ -65,6 +65,7 @@ Cc: mst@redhat.com, kys@microsoft.com, haiyangz@microsoft.com,
  virtualization@lists.linux.dev, linux-mm@kvack.org,
  linux-kernel@vger.kernel.org
 References: <20260227140655.360696-1-yuvraj.sakshith@oss.qualcomm.com>
+ <20260227140655.360696-2-yuvraj.sakshith@oss.qualcomm.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -111,7 +112,7 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260227140655.360696-1-yuvraj.sakshith@oss.qualcomm.com>
+In-Reply-To: <20260227140655.360696-2-yuvraj.sakshith@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
@@ -124,7 +125,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9040-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9041-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -141,45 +142,23 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: BCAB71BDE48
+X-Rspamd-Queue-Id: 700231BDE70
 X-Rspamd-Action: no action
 
 On 2/27/26 15:06, Yuvraj Sakshith wrote:
-> Today, page reporting sets page_reporting_order in two ways:
+> Drivers can pass order of pages to be reported while
+> registering itself. Today, this is a magic number, 0.
 > 
-> (1) page_reporting.page_reporting_order cmdline parameter
-> (2) Driver can pass order while registering itself.
-> 
-> In both cases, order zero is ignored by free page reporting
-> because it is used to set page_reporting_order to a default
-> value, like MAX_PAGE_ORDER.
-> 
-> In some cases we might want page_reporting_order to be zero.
-> 
-> For instance, when virtio-balloon runs inside a guest with
-> tiny memory (say, 16MB), it might not be able to find a order 1 page
-> (or in the worst case order MAX_PAGE_ORDER page) after some uptime.
-> Page reporting should be able to return order zero pages back for
-> optimal memory relinquishment.
-> 
-> This patch changes the default fallback value from '0' to '-1' in
-> all possible clients of free page reporting (hv_balloon and
-> virtio-balloon) together with allowing '0' as a valid order in
-> page_reporting_register().
-> 
-> Changes in v1:
-> - Introduce PAGE_REPORTING_DEFAULT_ORDER macro (initially set to 0).
-> - Make use of new macro in drivers (hv_balloon and virtio-balloon)
-> 	working with page reporting.
-> - Change PAGE_REPORTING_DEFAULT_ORDER to -1 as zero is a valid
-> 	page order that can be requested.
-> 
-> Yuvraj Sakshith (3):
->   mm/page_reporting: Allow zero page_reporting_order
->   hv_balloon: Change default page reporting order
->   virtio_balloon: Set pr_dev.order to new default
+> Label this with PAGE_REPORTING_DEFAULT_ORDER and
+> check for it when the driver is being registered.
 
-These look like old stats :)
+Patch subject: "mm/page_reporting:"
+
+Might want to add "We'll make explicit use of this define in relevant
+drivers next."
+
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+
 
 -- 
 Cheers,
