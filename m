@@ -1,127 +1,141 @@
-Return-Path: <linux-hyperv+bounces-9050-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9051-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mBrJEFA8ommB1AQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9050-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Feb 2026 01:52:32 +0100
+	id yEoGKOxOomk/1wQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9051-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Feb 2026 03:11:56 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCB831BF7F9
-	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Feb 2026 01:52:31 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D4181BFE1C
+	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Feb 2026 03:11:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 269ED30630D4
-	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Feb 2026 00:52:31 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 06E7B305EE72
+	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Feb 2026 02:11:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37AB526A0DD;
-	Sat, 28 Feb 2026 00:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vFJX9w/a"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 551A5308F30;
+	Sat, 28 Feb 2026 02:11:51 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DF725A659;
-	Sat, 28 Feb 2026 00:52:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 362C5306496;
+	Sat, 28 Feb 2026 02:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772239948; cv=none; b=Nbl3myXs/Eejs2uMIolfMCw7KXTvGOBI1lA7vt0BNDRbtp2bKo9o7dFsFnqY4/ACho09oaQxI51kXfl2jOojG0uImtjNmmp8iv3dXa4FbVel46pLt/V0gwGn5mFPO4yzu/46z5tgHAWX5DDomug+hoxg8FqE9UsS1KiaR2AamkA=
+	t=1772244711; cv=none; b=He9xah17HqqmgnD2n3oloCaFlT7v9N/YEUf5AmJFzEIixWKBcKpOj7U9HNzILB65qrCBZY2/q1Z11powTgIiYHYTMgc85reCfMLeSGND+RG/GYhZlf4LGvGW4qAkgW7+g1PEsizvPVGtwcSo6EPpe6JsFZqm0KmVKB7K/fN1teU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772239948; c=relaxed/simple;
-	bh=HbIaXmlTQV8BcoyoLbcvKjegmAiJziZwViXNHyzXJrU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZWZWGc2XcbpejkKP803/0BLXgJQKezFRpcaZI2gwEam0PiZ2yk15iAok9nfNFokRu+ltzMB+4jOAXUb8O1eGi7c4fRcDal/boq/PnMrOqrTfoqz7EStWPJup5pPchN1Gu4q+W5JQAyDOqeGwJhrYrcSTvOpr5QnwddooApGYcEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vFJX9w/a; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCB78C19425;
-	Sat, 28 Feb 2026 00:52:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772239947;
-	bh=HbIaXmlTQV8BcoyoLbcvKjegmAiJziZwViXNHyzXJrU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=vFJX9w/ahjIUCmxx7noxqX7LuQwN41vQQiizcVgzycPBxQcx9BV3+4G+QbPI9hRR2
-	 7CgjF/pUT3mfsgKpi78ZFylhJ7HyGcY2VzSrABnMi1bUP6yixtDb4dEgQWzH3aDyxC
-	 k6e530dHoFXLlzw9t5QTcZ/bqFG2B6K1OssRT6GVmHCXKs3o23EV6VOthPyyr2o4rL
-	 0wQ8W+C06KsXd4UgsK9PEX6cS57kQ/nDGaIyEU80CdqIzR+WFC2/B6dgTQ1k9CEhl8
-	 tUSwoVqDyZHQYo8qZFAc/qm7wxYkaEf+6UACWEDhrMFv++IIZhZMTLUEEHh+mjZb8O
-	 BhADpuQL7QQSg==
-Date: Fri, 27 Feb 2026 16:52:26 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, longli@microsoft.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
- dipayanroy@linux.microsoft.com, shirazsaleem@microsoft.com,
- ssengar@linux.microsoft.com, shradhagupta@linux.microsoft.com,
- gargaditya@linux.microsoft.com, linux-hyperv@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v4] net: mana: Add MAC address to vPort logs
- and clarify error messages
-Message-ID: <20260227165226.07efbefd@kernel.org>
-In-Reply-To: <aaHrN+spIIaswoX6@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20260225192252.943534-1-ernis@linux.microsoft.com>
-	<aaHrN+spIIaswoX6@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+	s=arc-20240116; t=1772244711; c=relaxed/simple;
+	bh=uUvD8+nYvhQhsga+shOqjDkaGO4xW0NmG36Y8ASpn5Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NJ0261zGYv3SIxD9CUyP9AkZH0cEviALhgaoJ5zVk4J3jcbzGzL83DmYNfixsYBnf2R87YKw31L+2dwPqFZf/1TS262FkTop9k262ZvKoVfiaYUkOrJn3AhN8/gEykJtYvlIxkvpuG+RaMszDIgt6CH26ltOwDDuLeTk1i9JcWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1202)
+	id D181620B6F02; Fri, 27 Feb 2026 18:11:49 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D181620B6F02
+From: Long Li <longli@microsoft.com>
+To: Long Li <longli@microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K . Y . Srinivasan" <kys@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>
+Cc: Simon Horman <horms@kernel.org>,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 0/6] net: mana: Per-vPort EQ and MSI-X interrupt management
+Date: Fri, 27 Feb 2026 18:11:38 -0800
+Message-ID: <20260228021144.85054-1-longli@microsoft.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [3.54 / 15.00];
+	DMARC_POLICY_REJECT(2.00)[microsoft.com : SPF not aligned (relaxed), No valid DKIM,reject];
 	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9050-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-9051-lists,linux-hyperv=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[kuba@kernel.org,linux-hyperv@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
 	RCPT_COUNT_TWELVE(0.00)[18];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: DCB831BF7F9
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	R_DKIM_NA(0.00)[];
+	NEURAL_HAM(-0.00)[-0.121];
+	FROM_NEQ_ENVFROM(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 3D4181BFE1C
 X-Rspamd-Action: no action
 
-On Fri, 27 Feb 2026 11:06:31 -0800 Erni Sri Satya Vennela wrote:
-> On Wed, Feb 25, 2026 at 11:22:41AM -0800, Erni Sri Satya Vennela wrote:
-> > Add MAC address to vPort configuration success message and update error
-> > message to be more specific about HWC message errors in
-> > mana_send_request.
-> >=20
-> > Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com> =20
->=20
-> Gentle ping =E2=80=94 I sent this patch on 25/02/2026 and would appreciat=
-e any
-> feedback when you have time. =20
-> Happy to rebase or add more details if needed, thanks for your review.
+This series adds per-vPort Event Queue (EQ) allocation and MSI-X interrupt
+management for the MANA driver. Previously, all vPorts shared a single set
+of EQs. This change enables dedicated EQs per vPort with support for both
+dedicated and shared MSI-X vector allocation modes.
 
-What are you trying to achieve with this ping? Just look at patchwork,
-there are 61 patches ahead of you in the queue.
+Patch 1 moves EQ ownership from mana_context to per-vPort mana_port_context
+and exports create/destroy functions for the RDMA driver.
 
-These are Microsoft review contribution scores:
-  Author score negative (-42)
-  Company score negative (-1118)
-so you expecting that someone in the community will jump onto reviewing
-your patches is... odd. How about you review something?
+Patch 2 adds device capability queries to determine whether MSI-X vectors
+should be dedicated per-vPort or shared. When the number of available MSI-X
+vectors is insufficient for dedicated allocation, the driver enables sharing
+mode with bitmap-based vector assignment.
 
-Read the process documentation, and please have some basic
-understanding of what is consider good manners when communicating
-upstream.
+Patch 3 introduces the GIC (GDMA IRQ Context) abstraction with reference
+counting, allowing multiple EQs to safely share a single MSI-X vector.
+
+Patch 4 converts the global EQ allocation in probe/resume to use the new
+GIC functions.
+
+Patch 5 adds per-vPort GIC lifecycle management, calling get/put on each
+EQ creation and destruction during vPort open/close.
+
+Patch 6 extends the same GIC lifecycle management to the RDMA driver's EQ
+allocation path.
+
+Long Li (6):
+  net: mana: Create separate EQs for each vPort
+  net: mana: Query device capabilities and configure MSI-X sharing for
+    EQs
+  net: mana: Introduce GIC context with refcounting for interrupt
+    management
+  net: mana: Use GIC functions to allocate global EQs
+  net: mana: Allocate interrupt context for each EQ when creating vPort
+  RDMA/mana_ib: Allocate interrupt contexts on EQs
+
+ drivers/infiniband/hw/mana/main.c             |  47 ++-
+ drivers/infiniband/hw/mana/qp.c               |   4 +-
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 309 +++++++++++++-----
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 164 ++++++----
+ include/net/mana/gdma.h                       |  29 +-
+ include/net/mana/mana.h                       |   7 +-
+ 6 files changed, 402 insertions(+), 158 deletions(-)
+
+-- 
+2.43.0
+
 
