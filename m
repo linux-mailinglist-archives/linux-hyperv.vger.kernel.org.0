@@ -1,218 +1,265 @@
-Return-Path: <linux-hyperv+bounces-9057-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9058-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sOEcAcVPomk/1wQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9057-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Feb 2026 03:15:33 +0100
+	id NMYmD8tiommk2gQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9058-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Feb 2026 04:36:43 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BD6D1BFEC6
-	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Feb 2026 03:15:32 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C2B51C024A
+	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Feb 2026 04:36:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C2B3C30F7035
-	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Feb 2026 02:13:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 99C7B3063629
+	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Feb 2026 03:36:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62EAA326944;
-	Sat, 28 Feb 2026 02:11:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4771E2BEC2B;
+	Sat, 28 Feb 2026 03:36:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="pAT1gw9h"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B01431771E;
-	Sat, 28 Feb 2026 02:11:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64F752C3244;
+	Sat, 28 Feb 2026 03:36:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772244719; cv=none; b=ESo/+Q+d3dVIWNumGzdEJu2l+cTJUe6Jh+y4KANSmbPbEq0+bf1Vx6BxBdqv1LUGIn5V9oGnzFFUYnSCwSMzFjhZOuU0OEO+2DB2NnR/GXm9sw+9qAevuT1C4nJ8Ltxe0wrwYDZ9vgnqoUDyf1/B5QB/Jj2X+ROjYxBbEHvfWTE=
+	t=1772249800; cv=none; b=UJ1Zeyb3iuQqA7ZKgQyoI9kAyL57JvI73AFI/c2jF0L6dodLBxy24PxDfYTW5xDbDBvmVU2Pl4wTANgGxstkmCFP3L08CPG6WuWjY5uVNVVCbdyiAeD3T7C3lL4FiJKTcNl1QVAp9A+vCmxAxI2wCkghEXWryKBH0795DvMcrC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772244719; c=relaxed/simple;
-	bh=Kv2Wpv6sNKUBlOMyDWFKKxyQsjyD8eSCM1sIZj9ddDA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cPl42HQPR5xmwZuS9nsrFjQf4fcluWuPMYGS9XKKAz0b5QgIK7ea+5vb3CxeOTcNAgoqm2PNBKIFq8lSc6Suu5x9iibsSG5aXoKCNufMz2BF5bqpG+iK4FXUL8HqxmMRu1ZVMY3MlIr5wiRWlqdm9DJx0Yj764Ghk/qBrHiQw7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+	s=arc-20240116; t=1772249800; c=relaxed/simple;
+	bh=wwptzavZJWx1DXwOGQ5FJHjszEqEkv6DvgAauYOCJ2Q=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=aaGDPQREc/vIlaedaKfxkVET1Kocc20WhPe9Dd7uOjjNbbjtycbHdW48lp3jGXfbFajSkbDbIAt2KryerKzAFqm8IldkAJln0nprdBNzsOXpj1u+Dxi3OcNTVi5tjxy79onD/OOfhSoa6px0cpbEeUW9Rj788FfXB99+u5Yt4t0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=pAT1gw9h; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1202)
-	id 7203E20B6F07; Fri, 27 Feb 2026 18:11:57 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7203E20B6F07
-From: Long Li <longli@microsoft.com>
-To: Long Li <longli@microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K . Y . Srinivasan" <kys@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>
-Cc: Simon Horman <horms@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 6/6] RDMA/mana_ib: Allocate interrupt contexts on EQs
-Date: Fri, 27 Feb 2026 18:11:44 -0800
-Message-ID: <20260228021144.85054-7-longli@microsoft.com>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <20260228021144.85054-1-longli@microsoft.com>
-References: <20260228021144.85054-1-longli@microsoft.com>
+Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 488A220B6F02;
+	Fri, 27 Feb 2026 19:36:37 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 488A220B6F02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1772249797;
+	bh=6YjsEJ5H7xy4c47iT4MHkZheIcBgy/N0DbxwzSF8/3Q=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=pAT1gw9huZ/u1B/vuSvoWimzQ2NByKfEZ0cHGP0if+y8PNHoK+rWpdkdvzPURixZ+
+	 NY9vFWdXtNcZe4tGdRLJEVq9Sbu2MEslIxkfadyaoS+AIZDZDnMs5VsJqaSaCTOLD1
+	 PFM5dEijXcIMDJLeToFO50DjWyTbee8fRQCx8sWY=
+Message-ID: <0b508e16-6461-24d8-8f34-55e9add5d29c@linux.microsoft.com>
+Date: Fri, 27 Feb 2026 19:36:36 -0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v2] x86/hyperv: Use __naked attribute to fix stackless C
+ function
+Content-Language: en-US
+From: Mukesh R <mrathor@linux.microsoft.com>
+To: Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Wei Liu <wei.liu@kernel.org>,
+ Uros Bizjak <ubizjak@gmail.com>, Andrew Cooper <andrew.cooper3@citrix.com>,
+ linux-hyperv@vger.kernel.org
+References: <20260227224030.299993-2-ardb@kernel.org>
+ <3cd719bb-334a-d05a-d44a-f68982a76a9d@linux.microsoft.com>
+In-Reply-To: <3cd719bb-334a-d05a-d44a-f68982a76a9d@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [3.54 / 15.00];
-	DMARC_POLICY_REJECT(2.00)[microsoft.com : SPF not aligned (relaxed), No valid DKIM,reject];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-9057-lists,linux-hyperv=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,citrix.com,vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-9058-lists,linux-hyperv=lfdr.de];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.004];
-	FROM_NEQ_ENVFROM(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 6BD6D1BFEC6
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mrathor@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,hv_crash_ctxt.gs:url,hv_crash_ctxt.es:url,hv_crash_ctxt.ss:url,linux.microsoft.com:mid,linux.microsoft.com:dkim]
+X-Rspamd-Queue-Id: 5C2B51C024A
 X-Rspamd-Action: no action
 
-Use the GIC functions to allocate interrupt contexts for RDMA EQs. These
-interrupt contexts may be shared with Ethernet EQs when MSI-X vectors
-are limited.
+On 2/27/26 15:03, Mukesh R wrote:
+> On 2/27/26 14:40, Ard Biesheuvel wrote:
+>> hv_crash_c_entry() is a C function that is entered without a stack,
+>> and this is only allowed for functions that have the __naked attribute,
+>> which informs the compiler that it must not emit the usual prologue and
+>> epilogue or emit any other kind of instrumentation that relies on a
+>> stack frame.
+>>
+>> So split up the function, and set the __naked attribute on the initial
+>> part that sets up the stack, GDT, IDT and other pieces that are needed
+>> for ordinary C execution. Given that function calls are not permitted
+>> either, use the existing long return coded in an asm() block to call the
+>> second part of the function, which is an ordinary function that is
+>> permitted to call other functions as usual.
+> 
+> Thank you for the patch. I'll start a build on the side and test it
+> out and let you know.
 
-The driver now supports allocating dedicated MSI-X for each EQ. Indicate
-this capability through driver capability bits.
+Well, never that simple. I am able to generate cores, both before and
+after the patch, but the crash command hangs on the vmcore (with correct
+vmlinux). But, since the kexec happened, I think it is fair to say that
+the patch works. With that:
 
-Signed-off-by: Long Li <longli@microsoft.com>
----
- drivers/infiniband/hw/mana/main.c | 33 ++++++++++++++++++++++++++-----
- include/net/mana/gdma.h           |  5 ++++-
- 2 files changed, 32 insertions(+), 6 deletions(-)
+Reviewed-by: Mukesh R <mrathor@linux.microsoft.com>
 
-diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
-index cfa954460585..029609fb91c5 100644
---- a/drivers/infiniband/hw/mana/main.c
-+++ b/drivers/infiniband/hw/mana/main.c
-@@ -787,6 +787,7 @@ int mana_ib_create_eqs(struct mana_ib_dev *mdev)
- {
- 	struct gdma_context *gc = mdev_to_gc(mdev);
- 	struct gdma_queue_spec spec = {};
-+	struct gdma_irq_context *gic;
- 	int err, i;
- 
- 	spec.type = GDMA_EQ;
-@@ -797,9 +798,15 @@ int mana_ib_create_eqs(struct mana_ib_dev *mdev)
- 	spec.eq.log2_throttle_limit = LOG2_EQ_THROTTLE;
- 	spec.eq.msix_index = 0;
- 
-+	gic = mana_gd_get_gic(gc, false, &spec.eq.msix_index);
-+	if (!gic)
-+		return -ENOMEM;
-+
- 	err = mana_gd_create_mana_eq(mdev->gdma_dev, &spec, &mdev->fatal_err_eq);
--	if (err)
-+	if (err) {
-+		mana_gd_put_gic(gc, false, 0);
- 		return err;
-+	}
- 
- 	mdev->eqs = kcalloc(mdev->ib_dev.num_comp_vectors, sizeof(struct gdma_queue *),
- 			    GFP_KERNEL);
-@@ -810,31 +817,47 @@ int mana_ib_create_eqs(struct mana_ib_dev *mdev)
- 	spec.eq.callback = NULL;
- 	for (i = 0; i < mdev->ib_dev.num_comp_vectors; i++) {
- 		spec.eq.msix_index = (i + 1) % gc->num_msix_usable;
-+
-+		gic = mana_gd_get_gic(gc, false, &spec.eq.msix_index);
-+		if (!gic) {
-+			err = -ENOMEM;
-+			goto destroy_eqs;
-+		}
-+
- 		err = mana_gd_create_mana_eq(mdev->gdma_dev, &spec, &mdev->eqs[i]);
--		if (err)
-+		if (err) {
-+			mana_gd_put_gic(gc, false, spec.eq.msix_index);
- 			goto destroy_eqs;
-+		}
- 	}
- 
- 	return 0;
- 
- destroy_eqs:
--	while (i-- > 0)
-+	while (i-- > 0) {
- 		mana_gd_destroy_queue(gc, mdev->eqs[i]);
-+		mana_gd_put_gic(gc, false, (i + 1) % gc->num_msix_usable);
-+	}
- 	kfree(mdev->eqs);
- destroy_fatal_eq:
- 	mana_gd_destroy_queue(gc, mdev->fatal_err_eq);
-+	mana_gd_put_gic(gc, false, 0);
- 	return err;
- }
- 
- void mana_ib_destroy_eqs(struct mana_ib_dev *mdev)
- {
- 	struct gdma_context *gc = mdev_to_gc(mdev);
--	int i;
-+	int i, msi;
- 
- 	mana_gd_destroy_queue(gc, mdev->fatal_err_eq);
-+	mana_gd_put_gic(gc, false, 0);
- 
--	for (i = 0; i < mdev->ib_dev.num_comp_vectors; i++)
-+	for (i = 0; i < mdev->ib_dev.num_comp_vectors; i++) {
- 		mana_gd_destroy_queue(gc, mdev->eqs[i]);
-+		msi = (i + 1) % gc->num_msix_usable;
-+		mana_gd_put_gic(gc, false, msi);
-+	}
- 
- 	kfree(mdev->eqs);
- }
-diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index 4eb94d1df439..f0d5c873f856 100644
---- a/include/net/mana/gdma.h
-+++ b/include/net/mana/gdma.h
-@@ -610,6 +610,8 @@ enum {
- 
- /* Driver supports dynamic MSI-X vector allocation */
- #define GDMA_DRV_CAP_FLAG_1_DYNAMIC_IRQ_ALLOC_SUPPORT BIT(13)
-+/* Driver supports separate EQ/MSIs for each vPort */
-+#define GDMA_DRV_CAP_FLAG_1_EQ_MSI_UNSHARE_MULTI_VPORT BIT(19)
- 
- /* Driver can self reset on EQE notification */
- #define GDMA_DRV_CAP_FLAG_1_SELF_RESET_ON_EQE BIT(14)
-@@ -644,7 +646,8 @@ enum {
- 	 GDMA_DRV_CAP_FLAG_1_PERIODIC_STATS_QUERY | \
- 	 GDMA_DRV_CAP_FLAG_1_SKB_LINEARIZE | \
- 	 GDMA_DRV_CAP_FLAG_1_PROBE_RECOVERY | \
--	 GDMA_DRV_CAP_FLAG_1_HANDLE_STALL_SQ_RECOVERY)
-+	 GDMA_DRV_CAP_FLAG_1_HANDLE_STALL_SQ_RECOVERY | \
-+	 GDMA_DRV_CAP_FLAG_1_EQ_MSI_UNSHARE_MULTI_VPORT)
- 
- #define GDMA_DRV_CAP_FLAGS2 0
- 
--- 
-2.43.0
+However, I did notice a pre-exising cut-n-paste oopsie:
+
+   asm volatile("movq %0, %%cr2" : : "r"(hv_crash_ctxt.cr4)); <== cr2, not cr4
+
+
+So, if you happen to do another churn, feel free to fix it. Otherwise,
+no worries, I'll submit another patch.
+
+Thanks for all your help.
+-Mukesh
+
+
+> Thanks,
+> -Mukesh
+> 
+> 
+> 
+>> Cc: Mukesh Rathor <mrathor@linux.microsoft.com>
+>> Cc: Wei Liu <wei.liu@kernel.org>
+>> Cc: Uros Bizjak <ubizjak@gmail.com>
+>> Cc: Andrew Cooper <andrew.cooper3@citrix.com>
+>> Cc: linux-hyperv@vger.kernel.org
+>> Fixes: 94212d34618c ("x86/hyperv: Implement hypervisor RAM collection into vmcore")
+>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+>> ---
+>> v2: apply some asm tweaks suggested by Uros and Andrew
+>>
+>>   arch/x86/hyperv/hv_crash.c | 79 ++++++++++----------
+>>   1 file changed, 41 insertions(+), 38 deletions(-)
+>>
+>> diff --git a/arch/x86/hyperv/hv_crash.c b/arch/x86/hyperv/hv_crash.c
+>> index 92da1b4f2e73..1c0965eb346e 100644
+>> --- a/arch/x86/hyperv/hv_crash.c
+>> +++ b/arch/x86/hyperv/hv_crash.c
+>> @@ -107,14 +107,12 @@ static void __noreturn hv_panic_timeout_reboot(void)
+>>           cpu_relax();
+>>   }
+>> -/* This cannot be inlined as it needs stack */
+>> -static noinline __noclone void hv_crash_restore_tss(void)
+>> +static void hv_crash_restore_tss(void)
+>>   {
+>>       load_TR_desc();
+>>   }
+>> -/* This cannot be inlined as it needs stack */
+>> -static noinline void hv_crash_clear_kernpt(void)
+>> +static void hv_crash_clear_kernpt(void)
+>>   {
+>>       pgd_t *pgd;
+>>       p4d_t *p4d;
+>> @@ -125,6 +123,25 @@ static noinline void hv_crash_clear_kernpt(void)
+>>       native_p4d_clear(p4d);
+>>   }
+>> +
+>> +static void __noreturn hv_crash_handle(void)
+>> +{
+>> +    hv_crash_restore_tss();
+>> +    hv_crash_clear_kernpt();
+>> +
+>> +    /* we are now fully in devirtualized normal kernel mode */
+>> +    __crash_kexec(NULL);
+>> +
+>> +    hv_panic_timeout_reboot();
+>> +}
+>> +
+>> +/*
+>> + * __naked functions do not permit function calls, not even to __always_inline
+>> + * functions that only contain asm() blocks themselves. So use a macro instead.
+>> + */
+>> +#define hv_wrmsr(msr, val) \
+>> +    asm("wrmsr" :: "c"(msr), "a"((u32)val), "d"((u32)(val >> 32)) : "memory")
+>> +
+>>   /*
+>>    * This is the C entry point from the asm glue code after the disable hypercall.
+>>    * We enter here in IA32-e long mode, ie, full 64bit mode running on kernel
+>> @@ -133,49 +150,35 @@ static noinline void hv_crash_clear_kernpt(void)
+>>    * available. We restore kernel GDT, and rest of the context, and continue
+>>    * to kexec.
+>>    */
+>> -static asmlinkage void __noreturn hv_crash_c_entry(void)
+>> +static void __naked hv_crash_c_entry(void)
+>>   {
+>> -    struct hv_crash_ctxt *ctxt = &hv_crash_ctxt;
+>> -
+>>       /* first thing, restore kernel gdt */
+>> -    native_load_gdt(&ctxt->gdtr);
+>> +    asm volatile("lgdt %0" : : "m" (hv_crash_ctxt.gdtr));
+>> -    asm volatile("movw %%ax, %%ss" : : "a"(ctxt->ss));
+>> -    asm volatile("movq %0, %%rsp" : : "m"(ctxt->rsp));
+>> +    asm volatile("movw %0, %%ss" : : "m"(hv_crash_ctxt.ss));
+>> +    asm volatile("movq %0, %%rsp" : : "m"(hv_crash_ctxt.rsp));
+>> -    asm volatile("movw %%ax, %%ds" : : "a"(ctxt->ds));
+>> -    asm volatile("movw %%ax, %%es" : : "a"(ctxt->es));
+>> -    asm volatile("movw %%ax, %%fs" : : "a"(ctxt->fs));
+>> -    asm volatile("movw %%ax, %%gs" : : "a"(ctxt->gs));
+>> +    asm volatile("movw %0, %%ds" : : "m"(hv_crash_ctxt.ds));
+>> +    asm volatile("movw %0, %%es" : : "m"(hv_crash_ctxt.es));
+>> +    asm volatile("movw %0, %%fs" : : "m"(hv_crash_ctxt.fs));
+>> +    asm volatile("movw %0, %%gs" : : "m"(hv_crash_ctxt.gs));
+>> -    native_wrmsrq(MSR_IA32_CR_PAT, ctxt->pat);
+>> -    asm volatile("movq %0, %%cr0" : : "r"(ctxt->cr0));
+>> +    hv_wrmsr(MSR_IA32_CR_PAT, hv_crash_ctxt.pat);
+>> +    asm volatile("movq %0, %%cr0" : : "r"(hv_crash_ctxt.cr0));
+>> -    asm volatile("movq %0, %%cr8" : : "r"(ctxt->cr8));
+>> -    asm volatile("movq %0, %%cr4" : : "r"(ctxt->cr4));
+>> -    asm volatile("movq %0, %%cr2" : : "r"(ctxt->cr4));
+>> +    asm volatile("movq %0, %%cr8" : : "r"(hv_crash_ctxt.cr8));
+>> +    asm volatile("movq %0, %%cr4" : : "r"(hv_crash_ctxt.cr4));
+>> +    asm volatile("movq %0, %%cr2" : : "r"(hv_crash_ctxt.cr4));
+>> -    native_load_idt(&ctxt->idtr);
+>> -    native_wrmsrq(MSR_GS_BASE, ctxt->gsbase);
+>> -    native_wrmsrq(MSR_EFER, ctxt->efer);
+>> +    asm volatile("lidt %0" : : "m" (hv_crash_ctxt.idtr));
+>> +    hv_wrmsr(MSR_GS_BASE, hv_crash_ctxt.gsbase);
+>> +    hv_wrmsr(MSR_EFER, hv_crash_ctxt.efer);
+>>       /* restore the original kernel CS now via far return */
+>> -    asm volatile("movzwq %0, %%rax\n\t"
+>> -             "pushq %%rax\n\t"
+>> -             "pushq $1f\n\t"
+>> -             "lretq\n\t"
+>> -             "1:nop\n\t" : : "m"(ctxt->cs) : "rax");
+>> -
+>> -    /* We are in asmlinkage without stack frame, hence make C function
+>> -     * calls which will buy stack frames.
+>> -     */
+>> -    hv_crash_restore_tss();
+>> -    hv_crash_clear_kernpt();
+>> -
+>> -    /* we are now fully in devirtualized normal kernel mode */
+>> -    __crash_kexec(NULL);
+>> -
+>> -    hv_panic_timeout_reboot();
+>> +    asm volatile("pushq %q0\n\t"
+>> +             "pushq %q1\n\t"
+>> +             "lretq"
+>> +             :: "r"(hv_crash_ctxt.cs), "r"(hv_crash_handle));
+>>   }
+>>   /* Tell gcc we are using lretq long jump in the above function intentionally */
+>>   STACK_FRAME_NON_STANDARD(hv_crash_c_entry);
+> 
 
 
