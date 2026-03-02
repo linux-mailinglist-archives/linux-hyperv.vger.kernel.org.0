@@ -1,51 +1,51 @@
-Return-Path: <linux-hyperv+bounces-9089-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9090-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EEYDEEumpWngCwAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9089-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Mar 2026 16:01:31 +0100
+	id qKcELnampWngCwAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9090-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Mar 2026 16:02:14 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BDC51DB537
-	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Mar 2026 16:01:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 695501DB587
+	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Mar 2026 16:02:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 049103029260
-	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Mar 2026 15:00:36 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 17F483035F4E
+	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Mar 2026 15:00:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A1B841160C;
-	Mon,  2 Mar 2026 15:00:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36E60410D2F;
+	Mon,  2 Mar 2026 15:00:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pt3vbSqY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pjqz1Pt7"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7527C411601;
-	Mon,  2 Mar 2026 15:00:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1211140FDA9;
+	Mon,  2 Mar 2026 15:00:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772463617; cv=none; b=do2MmDf3bK+FYVN2StO/4ZBixdaeWgkIL+dTCy7KpD63+xcpiZhUYTc2YV41MaLIEEiKn1k9ZSgPKIsaNeTNl0Uim9orqDMNeCrIcBJZIw3hi74mWZKJ0jmzO4Y9mmO5A9qjIwhiCSvi7qZDxqvARDOAUAdMTXuSaFflilCCgK8=
+	t=1772463623; cv=none; b=bnOaekhnvmjoaCxkJ8W8sZgNJ2dxyct60KPDRqMaejH3z8FsJBbUc0LOZ2QHklOUgFjyLLnwfb2w7Ui5N0PaAzyd5o7CGuqrOyAmA/kgsyO+fR6EsPefxZHGi4aNhMyCUS8MmgkkFLLv++q95HYt98kM05J3CbrCZsg4gI1YiHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772463617; c=relaxed/simple;
-	bh=AZagH7nOGcK0d4ShsTJ7OBfKpbvr94+ayZUnVTTTTc0=;
+	s=arc-20240116; t=1772463623; c=relaxed/simple;
+	bh=FJrfEomTCPEbX6pYpVuRyP6uRh1ciBrKEA6HVw8rwRM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JQkY9ANmdCuiiEttXw/Q57QilyJu8zOYDbEcsdRWRlYXS/MqdDknkFWLaJ+p5WIL9F+nuTr+s7GB0cr+X/Mlt4tqlekWn9DlDdKTBuG01jnH7ysqEzqmjW8WUVNjyZiU8RxawcBNXJfvNNOosC62oR3RCyJ46OIYxvxWSASTJ/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pt3vbSqY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADDDEC19423;
-	Mon,  2 Mar 2026 15:00:10 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=QThZ7tQTR0XzfHQSsL8CgivBa7TlC7XYhKbpXxNkf0rAuh2NCjcFHGQg5kIurWshdiPnQeQeOlmImDmori4kX4AbGHOK2D1mfAmyEFC3zJN9njJmZVpipp3p4dktE13+QnkjXHTdEfz29k0gIBmMqoibqwv/api/fR+6Xtqr850=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pjqz1Pt7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56B8BC2BC86;
+	Mon,  2 Mar 2026 15:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772463616;
-	bh=AZagH7nOGcK0d4ShsTJ7OBfKpbvr94+ayZUnVTTTTc0=;
+	s=k20201202; t=1772463622;
+	bh=FJrfEomTCPEbX6pYpVuRyP6uRh1ciBrKEA6HVw8rwRM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Pt3vbSqYgqJtBE8LVSLVc9xKdVb2R2waCtHBeN33it0fB0T+YzNhtCpNHvhjIdbLi
-	 ZVX9nUT+5BEOn33jKP3UZOhVITSUr1LaPVMgB3FJIoGryq3fqqmQeK8vJnt8FbHOJ+
-	 uMgqpbzLzljVqKwldIvAskUVqntG55PgY49ED7cFXP4F/uZLC5c3Tz1Fq9WE96QM2m
-	 GUnYlQFPrVI2u31TP3JhweTHuDIwZCMCiMZNuGgycMsNHqgZJNvKmVg6XA99NVkcDu
-	 LU1CegvMVrm5M5+uSGvfKsqGYGZsj3Pw/+7YQJ2WJBI2Dxxn8GxvaVLhcZmG0XB1kw
-	 0SsgIKFtCRHyA==
-Message-ID: <3ff1e458-7e13-4dbc-85e4-0ee0e7b0f250@kernel.org>
-Date: Mon, 2 Mar 2026 16:00:08 +0100
+	b=pjqz1Pt7KOQNJWbPfUWTxKlJ6WG9y3JkvBJ4JiRh6boUz8fOfN8tjPI61CyR9A+uy
+	 G4IGFfo72Cs5pQs78PAdkM63S8AaY2SM7xWvgGMaTKPB7ILa+6lW5P3Z3+D4BDCHbf
+	 FkwA97dJVEPf68XPURr+PBk5+OXUtcHh50d1h0QOG/zLkypHQx0vvUlxXHbV3ikYj3
+	 81k1YeAT7FzR3TXZpZgQ3UEZ6oJWRsi64pgMsCdjk+Zi+XBARDoPos1X2c+i1AUAex
+	 5V1CU7nrgbQkGmK9ta/mSL5+DDe+apFefPYr/GDAgXnqSWNk6N8dV3Zw1MFjhHhmPC
+	 67UUFjiPoiYkQ==
+Message-ID: <6ad9abab-3241-4f5b-9116-7f4bd880b117@kernel.org>
+Date: Mon, 2 Mar 2026 16:00:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -53,8 +53,7 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] virtio_balloon: set unspecified page reporting
- order
+Subject: Re: [PATCH v2 3/4] hv_balloon: set unspecified page reporting order
 To: Yuvraj Sakshith <yuvraj.sakshith@oss.qualcomm.com>,
  akpm@linux-foundation.org, mst@redhat.com, jasowang@redhat.com,
  kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
@@ -65,7 +64,7 @@ Cc: linux-mm@kvack.org, virtualization@lists.linux.dev,
  Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
  mhocko@suse.com, jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com
 References: <20260302111757.2191056-1-yuvraj.sakshith@oss.qualcomm.com>
- <20260302111757.2191056-3-yuvraj.sakshith@oss.qualcomm.com>
+ <20260302111757.2191056-4-yuvraj.sakshith@oss.qualcomm.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -112,10 +111,10 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260302111757.2191056-3-yuvraj.sakshith@oss.qualcomm.com>
+In-Reply-To: <20260302111757.2191056-4-yuvraj.sakshith@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 2BDC51DB537
+X-Rspamd-Queue-Id: 695501DB587
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -126,7 +125,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9089-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9090-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -146,14 +145,13 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 X-Rspamd-Action: no action
 
 On 3/2/26 12:17, Yuvraj Sakshith wrote:
-> virtio_balloon page reporting order is set to MAX_PAGE_ORDER implicitly
-> as vb->prdev.order is never initialised and is auto-set to zero.
-> 
-> Explicitly mention usage of default page order by making use of
-> PAGE_REPORTING_ORDER_UNSPECIFIED fallback value.
+> Explicitly mention page reporting order to be set to
+> default value using PAGE_REPORTING_ORDER_UNSPECIFIED fallback
+> value.
 > 
 > Signed-off-by: Yuvraj Sakshith <yuvraj.sakshith@oss.qualcomm.com>
 > ---
+
 Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
 -- 
