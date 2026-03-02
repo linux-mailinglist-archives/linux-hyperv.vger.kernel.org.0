@@ -1,161 +1,236 @@
-Return-Path: <linux-hyperv+bounces-9090-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9091-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qKcELnampWngCwAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9090-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Mar 2026 16:02:14 +0100
+	id CAwDOWu9pWn8FQAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9091-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Mar 2026 17:40:11 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 695501DB587
-	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Mar 2026 16:02:14 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 888BE1DD0D8
+	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Mar 2026 17:40:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 17F483035F4E
-	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Mar 2026 15:00:54 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 096843032043
+	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Mar 2026 16:38:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36E60410D2F;
-	Mon,  2 Mar 2026 15:00:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 355C74219F1;
+	Mon,  2 Mar 2026 16:38:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pjqz1Pt7"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="h1IdLLjh"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11020073.outbound.protection.outlook.com [52.101.56.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1211140FDA9;
-	Mon,  2 Mar 2026 15:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772463623; cv=none; b=bnOaekhnvmjoaCxkJ8W8sZgNJ2dxyct60KPDRqMaejH3z8FsJBbUc0LOZ2QHklOUgFjyLLnwfb2w7Ui5N0PaAzyd5o7CGuqrOyAmA/kgsyO+fR6EsPefxZHGi4aNhMyCUS8MmgkkFLLv++q95HYt98kM05J3CbrCZsg4gI1YiHE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772463623; c=relaxed/simple;
-	bh=FJrfEomTCPEbX6pYpVuRyP6uRh1ciBrKEA6HVw8rwRM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QThZ7tQTR0XzfHQSsL8CgivBa7TlC7XYhKbpXxNkf0rAuh2NCjcFHGQg5kIurWshdiPnQeQeOlmImDmori4kX4AbGHOK2D1mfAmyEFC3zJN9njJmZVpipp3p4dktE13+QnkjXHTdEfz29k0gIBmMqoibqwv/api/fR+6Xtqr850=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pjqz1Pt7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56B8BC2BC86;
-	Mon,  2 Mar 2026 15:00:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772463622;
-	bh=FJrfEomTCPEbX6pYpVuRyP6uRh1ciBrKEA6HVw8rwRM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pjqz1Pt7KOQNJWbPfUWTxKlJ6WG9y3JkvBJ4JiRh6boUz8fOfN8tjPI61CyR9A+uy
-	 G4IGFfo72Cs5pQs78PAdkM63S8AaY2SM7xWvgGMaTKPB7ILa+6lW5P3Z3+D4BDCHbf
-	 FkwA97dJVEPf68XPURr+PBk5+OXUtcHh50d1h0QOG/zLkypHQx0vvUlxXHbV3ikYj3
-	 81k1YeAT7FzR3TXZpZgQ3UEZ6oJWRsi64pgMsCdjk+Zi+XBARDoPos1X2c+i1AUAex
-	 5V1CU7nrgbQkGmK9ta/mSL5+DDe+apFefPYr/GDAgXnqSWNk6N8dV3Zw1MFjhHhmPC
-	 67UUFjiPoiYkQ==
-Message-ID: <6ad9abab-3241-4f5b-9116-7f4bd880b117@kernel.org>
-Date: Mon, 2 Mar 2026 16:00:14 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE1712B94;
+	Mon,  2 Mar 2026 16:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772469515; cv=fail; b=RMouayb9WiU3ur5+RxpJv58pPYbAmF/1Z70l//9TWNcwbZPwGayNUOkBoJKW3+FXDGX80KLdeS/N+5aPe4PkE0Y4FLserIfFoMDF8RAJNMdhRsnlm0CqgssV3F2g2iMObshO1/PJQ0DBNYMvWkKJmapzv2R1UzKSWHDZrZ1GhlM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772469515; c=relaxed/simple;
+	bh=6RokbGdvWpa+YTRLO7TVz0weCH9yp0EW3sWonBnuEAo=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=lfE5qmSbMB5wAmaG+HhY6tN8h0CR2jlhFBIkVoXgTVJsSp/2Hq90ePEDcxueWdKeUTx9qkOmGmcfsSxywea7ymjlxcd5Mjp9yLvDUJIxu53JDbf/8djU7SjZrI5MtXwl6GKqKmuGDqe1bqm0deTRObhsq93rIvTKl++HugTvgdg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=h1IdLLjh; arc=fail smtp.client-ip=52.101.56.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RZc7vMDtbHkcZVenXgu/3g4eNMkuOEPjcDHFedeFWjMqIS3XSVqThwHUfwTm/goleoblRMaB/6LeYvVkerjSYjKptuqbWV2aFXmuCkaWDIzSYdkztGrvggjPRvR+HTr6uyzyz9yVP7SnXN6KVWCRljqvjXItFzRVt4lRc4+SXn99HXU6QrtVTvsgG9hdU86gYjvja6nXgueuPeOTacTRuNkDjgyvWspPr19dfGocoO0JL99/5kOvsyAU/+cKa9K04RL6YyzE6nNeQP00vQJfYEkl5/YUYer6791byJoUVXT+wY7GSgnj3EFYjLZO44hl6PJuEODvvr41CGXKg38cFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jT9jxC9Eu71JqOjnCNMnfti3qhP8k7faMWbLPEvfNrw=;
+ b=ad7vSrHR4Xt8wICGSqky7QqHDHEWwL2azp2IualeCwTEmVWMYgdIUObQ9LSb1YmfTP9bLytsCMsAafQID/J7m/KJu1mXW1UxO56zMvIleOLQm+QeCilzcdzMUaTelTOVRlDQl4uPoOtSeBlrAFNc9NALXFjSYKigksdPT6c8H3cD1ZW6ILeOrSZqG46yujUmK8LSoMDGV9RYzj31oL6R0A09c0Rk2dlWKQp4+FeSnLcT+/RwXUsybX3gtBp1f2SYauOYHiHu94khYT9guV7Jz5EBE3JHBwnWOgX28RbXgtGT80wHLutF2j8HbyuCRVnoHN9kG5IKOkmnIWI3yf9mnQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jT9jxC9Eu71JqOjnCNMnfti3qhP8k7faMWbLPEvfNrw=;
+ b=h1IdLLjhKdSK7STI8NKBcCN12LWeV9gKU1HwJP7TUNDwM9wOaHpotEMglCEgzEO04MTat5CB0dGaPYy+jU5UwA8dq8OJ+tkABZQdCKAd7oxdNFXp92U0nbEoIgWXHMlUYCCCG3JNU+zAw2t55cK6tg41j2tnXFdXCI8SbvTPPCs=
+Received: from SA3PR21MB3867.namprd21.prod.outlook.com (2603:10b6:806:2fc::15)
+ by LV0PR21MB6597.namprd21.prod.outlook.com (2603:10b6:408:338::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9678.9; Mon, 2 Mar
+ 2026 16:38:30 +0000
+Received: from SA3PR21MB3867.namprd21.prod.outlook.com
+ ([fe80::70ff:4d3:2cb6:92a3]) by SA3PR21MB3867.namprd21.prod.outlook.com
+ ([fe80::70ff:4d3:2cb6:92a3%6]) with mapi id 15.20.9678.009; Mon, 2 Mar 2026
+ 16:38:30 +0000
+From: Haiyang Zhang <haiyangz@microsoft.com>
+To: Dipayaan Roy <dipayanroy@linux.microsoft.com>, KY Srinivasan
+	<kys@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan Cui
+	<DECUI@microsoft.com>, "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
+	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, "leon@kernel.org" <leon@kernel.org>,
+	Long Li <longli@microsoft.com>, Konstantin Taranov <kotaranov@microsoft.com>,
+	"horms@kernel.org" <horms@kernel.org>, "shradhagupta@linux.microsoft.com"
+	<shradhagupta@linux.microsoft.com>, "ssengar@linux.microsoft.com"
+	<ssengar@linux.microsoft.com>, "ernis@linux.microsoft.com"
+	<ernis@linux.microsoft.com>, Shiraz Saleem <shirazsaleem@microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>, Dipayaan Roy
+	<dipayanroy@microsoft.com>
+Subject: RE: [PATCH net-next] net: mana: Force full-page RX buffers for 4K
+ page size on specific systems.
+Thread-Topic: [PATCH net-next] net: mana: Force full-page RX buffers for 4K
+ page size on specific systems.
+Thread-Index: AQHcp9H4wCTe+Gu2bUGZgZ0a5XoGnLWbdgnw
+Date: Mon, 2 Mar 2026 16:38:30 +0000
+Message-ID:
+ <SA3PR21MB3867F70563A30975A6CB5FDACA7EA@SA3PR21MB3867.namprd21.prod.outlook.com>
+References:
+ <aaFusIxdbVkUqIpd@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+In-Reply-To:
+ <aaFusIxdbVkUqIpd@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=52b16135-4a6a-4a8f-9985-b7a647e444f7;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-03-02T16:37:19Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA3PR21MB3867:EE_|LV0PR21MB6597:EE_
+x-ms-office365-filtering-correlation-id: 289aca05-331f-44b3-9c9f-08de787a2319
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007|921020|38070700021;
+x-microsoft-antispam-message-info:
+ LUBjasQ8Jd5Ftx/JJpPumaNGtNp1hajoJyuXkxEmnDkbnIVs0jJOkPzZWuy5MkVNmjpMT46iKtRR21GKClacwG/XyK57LWImaga56l+XO9e7zBbJcXsTESf+XjPhIpYekA6k4Thmcge7AUR8MDwF+J6Vh4z2i0LrmgSaNUP+nFmd8QWavN99fOm8DCPrW8AOKY2qm6vgQg9igYRooA48ymh+K/ozWB01uVbC3ivvFjKNI8b13XMsNYtstRjO7DsmkkghEz3BD1nzQfxDYtORqdZlCzHFGom8pJjOqjtLpA4ECgWUlLEjwsUS7uj9TfUjardfhmzvUg1m1t0wVN3c2bYnFgYHRuywgxOfWNVpQ1td8p+HShdk5/JfGIjwW0NK3adkbL9MEvcEe4+4V3CJ9ebaGNPYReV2E9ofrsS68n0Je8+8cKT2fdMYX1o8N+wt6kJ499D66TIuqCTkm9fwP6PMne3wSI5MFSb52PMBoY5NY0Mu0+6SZZLFHoVlfAhJOt/E99o7c5YJjV76xS8oaryrktC+978tvNU0dZ9zcQvcqc7eutzplCjbHTGru5fyYTzHv44SXLMfou662tOyLR4mkX3WBw4o9CVdm5CaaKy3uNSNZBpYyzIU4DwzX3MhXl0vHZSrNKFtXnFzXZh3INTkayku3SvOMjEJzK+CU5Ee9uWC+PIAnyVK7EZeWk8Tu3XELnJ73ZF+MRYCgItFQA9g1TzDVcGdY4I0t1Co1bMFn/WlsGlaqDE3yecEtwPUND6NaX53ZHgBPuXp5MnCCGXmmOvq7JwhHDQVA0JNua1QedFWCp9RPRxOIKoUckdc
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR21MB3867.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007)(921020)(38070700021);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?bxtQbgX7uX65MnyREqFCsov6+ZFXo27JuhVqocXe2t0paCXkr/kZWiYxbyH+?=
+ =?us-ascii?Q?Ht/eej8Ay7wbBku3Vqt089FZs8xQhxdq6Hvke3Di32lW3n+A6ovmuNGjenvW?=
+ =?us-ascii?Q?JgGKTl0mpjacGHGKjtUjn931DxhNGLBJUUjGvFCUdg7Bzkhd/3RpDJql4NJD?=
+ =?us-ascii?Q?T+iRQ/eiHsLe8/67hWtt4qDAfHfqM4Fc5wHofTMi6wNxO7rAyY/E7MwCoodA?=
+ =?us-ascii?Q?wU9kyVRweO5S12okFEJ4HE8NuGomwlEqmYCM5e00e8rSrhnBktAy7yaqsUB6?=
+ =?us-ascii?Q?LEWnIjnkpdYMf7hT5NGlfMAS/gHCtbrXpLGSd86wp+tgBKWl7jTncRpmV2cI?=
+ =?us-ascii?Q?na4QaTlFQbXb+XMLgOmpMjExqGOddkXUWzeSVJT3cVd0KP6ZK+wjAFEatOM0?=
+ =?us-ascii?Q?H375g9XMAboQEj658w6qxClCgc5fniVzwM5zzi/z8kD8nRL3K82iQ+R5BmLb?=
+ =?us-ascii?Q?QsTjZOBnmVtqqIO8EHHa9fthhLcfAzT2Wr/qjdM0y3SFet78lsOIhDjXYaYM?=
+ =?us-ascii?Q?pDAK+p+4NTpfx3TCd1KHWbiudCr8LlvDwHl9bZ2bGNsQJdrP8CfsO6J3TrRS?=
+ =?us-ascii?Q?f2vYwHR4vWc1/l9/j0unv/YLn4HzGGZWQbckambmuSZJSDCyez1sZ9n1SU9s?=
+ =?us-ascii?Q?ObGNRusbsv3jawNo5Kf+U5L4hG4g6uCoStlwY+L7xXoV8XogIK9+yXVFwfyY?=
+ =?us-ascii?Q?zgkb0oFmvKlvl67zONnCZ3Nj54imjdgwEzOMGEmbfWsiO9UvBSAj25RC1xlK?=
+ =?us-ascii?Q?xxSp7GlnkOCRln8+ZIKQ5cG1MEAVJugHX1ddDJ7Uq6GiSxuqrXbElGqRNhqD?=
+ =?us-ascii?Q?MZGTI0Y0QBrDEMx/QAevhxlbIwnC2+n5ir6SNGntZlD4pUxmMcgFshyHeIlZ?=
+ =?us-ascii?Q?2oYgRxvoAF4IBdOwWO3ed23g1w2gdo55GPTB8/7lT1dwh4xktbXELeuJZK4P?=
+ =?us-ascii?Q?8kRWbZow9HmzOpM/BZEmtmduCUeuI0HPX7CHvZMt1I4uQsKaJCbiIpv5ZZJU?=
+ =?us-ascii?Q?aGWGkGQq2BFnIOflXHJCcJkkQPEhoMLgeatLO75Ad2kITjcbmXTDoSsh6YCy?=
+ =?us-ascii?Q?kn1juXbB5Vtu5g1qxyl9lJLkM6yK99G+erSY4a6IWY6m3ig3NWQxUFRmIJJ8?=
+ =?us-ascii?Q?ZsAPys4ZxYw3vkt6q+W65qTdD2hRGnBhdenow7x1g0TxZAfV1SqjmrG6T25Z?=
+ =?us-ascii?Q?15+siUs9EsKaeIVYUWB4kLALawReTSSAvP/4/0nLd5z6Cqz7HneN5G7CY9cd?=
+ =?us-ascii?Q?XZbUiI62nIN9ie2z5E+bAGXtOvVXdEGsc/Obf8uOabT/tD0wjxO2Ozd1gBma?=
+ =?us-ascii?Q?W5obWQUbVYq8byOsf6vHEz/NMp847qxxnUTYWUKLUXwJBd9Q8Z21PfOBtYZJ?=
+ =?us-ascii?Q?yPZvkGwgYjs1vAfZGK6KyuV9LBCqflv12fqVgaj0QMb9cTGclKrFhL/52qOj?=
+ =?us-ascii?Q?3PEaPKUAFI3yiMOYdLic7k6BBLSbbK897pwJXUPfeeodzgzxPajvX7BEj8eS?=
+ =?us-ascii?Q?g9AtdG0cy6UJz0LJ3zmFUw+XshCIOby/DqkIIBnd9lHfJ4IeCQmEW4kmFofR?=
+ =?us-ascii?Q?ywJ6JhuXVNkQ/noHHaxLQbvX8yrI/KgVUMNoTFdu7F67+nXxo/a9AwAgTQLG?=
+ =?us-ascii?Q?mkb84Ek7GN+0RTPZmihhlLwIBFxE70l4oua+faaUz2PIg/y/YzPVOOLgDk1+?=
+ =?us-ascii?Q?cpOm5pcoU85uokNoGZW7kgaEbA2tey7NljY7qe3SjRZqI5VOm2BOZCrnXgDA?=
+ =?us-ascii?Q?YI5BKFPGAQ=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] hv_balloon: set unspecified page reporting order
-To: Yuvraj Sakshith <yuvraj.sakshith@oss.qualcomm.com>,
- akpm@linux-foundation.org, mst@redhat.com, jasowang@redhat.com,
- kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com
-Cc: linux-mm@kvack.org, virtualization@lists.linux.dev,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- xuanzhuo@linux.alibaba.com, eperezma@redhat.com, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
- mhocko@suse.com, jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com
-References: <20260302111757.2191056-1-yuvraj.sakshith@oss.qualcomm.com>
- <20260302111757.2191056-4-yuvraj.sakshith@oss.qualcomm.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260302111757.2191056-4-yuvraj.sakshith@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 695501DB587
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA3PR21MB3867.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 289aca05-331f-44b3-9c9f-08de787a2319
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2026 16:38:30.2792
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pJVUAjyrfMSHgegCMXtqDocmn33ffpmJrydsxysvmAqyksn1/K7yAJOWdXT6jDP7+tDgB8M7Zjj9Y33rL80XvQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV0PR21MB6597
+X-Rspamd-Queue-Id: 888BE1DD0D8
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+X-Spamd-Result: default: False [1.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[microsoft.com,reject];
+	R_DKIM_ALLOW(-0.20)[microsoft.com:s=selector2];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9090-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-9091-lists,linux-hyperv=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[microsoft.com:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[22];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[david@kernel.org,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[haiyangz@microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Action: no action
 
-On 3/2/26 12:17, Yuvraj Sakshith wrote:
-> Explicitly mention page reporting order to be set to
-> default value using PAGE_REPORTING_ORDER_UNSPECIFIED fallback
-> value.
-> 
-> Signed-off-by: Yuvraj Sakshith <yuvraj.sakshith@oss.qualcomm.com>
-> ---
 
-Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
--- 
-Cheers,
+> -----Original Message-----
+> From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+> Sent: Friday, February 27, 2026 5:15 AM
+> To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; wei.liu@kernel.org; Dexuan Cui
+> <DECUI@microsoft.com>; andrew+netdev@lunn.ch; davem@davemloft.net;
+> edumazet@google.com; kuba@kernel.org; pabeni@redhat.com; leon@kernel.org;
+> Long Li <longli@microsoft.com>; Konstantin Taranov
+> <kotaranov@microsoft.com>; horms@kernel.org;
+> shradhagupta@linux.microsoft.com; ssengar@linux.microsoft.com;
+> ernis@linux.microsoft.com; Shiraz Saleem <shirazsaleem@microsoft.com>;
+> linux-hyperv@vger.kernel.org; netdev@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linux-rdma@vger.kernel.org; Dipayaan Roy
+> <dipayanroy@microsoft.com>
+> Subject: [PATCH net-next] net: mana: Force full-page RX buffers for 4K
+> page size on specific systems.
+>=20
+> On certain systems configured with 4K PAGE_SIZE, utilizing page_pool
+> fragments for RX buffers results in a significant throughput regression.
+> Profiling reveals that this regression correlates with high overhead in
+> the
+> fragment allocation and reference counting paths on these specific
+> platforms, rendering the multi-buffer-per-page strategy counterproductive=
+.
+>=20
+> To mitigate this, bypass the page_pool fragment path and force a single R=
+X
+> packet per page allocation when all the following conditions are met:
+>   1. The system is configured with a 4K PAGE_SIZE.
+>   2. A processor-specific quirk is detected via SMBIOS Type 4 data.
+>=20
+> This approach restores expected line-rate performance by ensuring
+> predictable RX refill behavior on affected hardware.
+>=20
+> There is no behavioral change for systems using larger page sizes
+> (16K/64K), or platforms where this processor-specific quirk do not
+> apply.
+>=20
+> Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
 
-David
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Thanks.
+
 
