@@ -1,50 +1,50 @@
-Return-Path: <linux-hyperv+bounces-9086-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9087-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QAUKBmp1pWkNBgYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9086-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Mar 2026 12:32:58 +0100
+	id YNoSNY+YpWnXEgYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9087-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Mar 2026 15:02:55 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88C531D78A4
-	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Mar 2026 12:32:57 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77C2F1DA4BE
+	for <lists+linux-hyperv@lfdr.de>; Mon, 02 Mar 2026 15:02:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 48A8F3062962
-	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Mar 2026 11:27:36 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A04B4301F3AB
+	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Mar 2026 14:02:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80B81363083;
-	Mon,  2 Mar 2026 11:27:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CF803FB05E;
+	Mon,  2 Mar 2026 14:02:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DVdvvYDR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T9hY9JNG"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E2F3603ED;
-	Mon,  2 Mar 2026 11:27:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499D43D4133;
+	Mon,  2 Mar 2026 14:02:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772450853; cv=none; b=Hy3radr/dHkaZPHKVhYpfeYwLcXvqVzAPDztztEK5tPDF5cZdrQLyOpXRJL2HDZKMAZqQkZDWU98y2rn58HNs40tQqt+KR2N2/fq/cYFO/cP59Bw0uFlrUlTFrhttdzQpDGU0IE4Ek7oi0mAgSCvKXk5BYVDFrkJo33lSKJKmOQ=
+	t=1772460139; cv=none; b=i/tzEE2NPYWcG5OJSq1MXTyMifVG3ScWqXe46S5bdn2qROvgFEzwnUWAn6mpOCs1efjJGVPmD6kGvFbgj7h1sABa2coYHXA7/WCqyjA+XwzKoqqeszM8KwSfUsx1vCcwnhe51syzHETez+El/Edi9xtqRC9z+zZ+bd/K16kyZx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772450853; c=relaxed/simple;
-	bh=PcZrUmBxaOJWLfbNq25KRwrbFeSf8ocdRGC8n8mWYnQ=;
+	s=arc-20240116; t=1772460139; c=relaxed/simple;
+	bh=vS7JKHydz7PX7gecBPBnpNdobodFV4i0rWhwWuR0+7I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C08kKQ2axiJw1wA/HQxNvKN/HbeSnZQ8TR0NHULzmipVB5PO+QUVG0mBR2zOpxV+yt5F13tyoEKVt72OEC6URrjNeDq78f90UtoGNkv4XelJpKOf8avw+9R8WxEqf2P1ZZH2XW/Ah5Pa9KMukvQ2PxP97qOcRWlvcZ9yVTq63jE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DVdvvYDR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0032C2BC86;
-	Mon,  2 Mar 2026 11:27:28 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=C8tyQjlF1M4EmdwgB9vs2H2LwpqQA/7PtThazEfD6ugQogy2BbQSdyUP+FXyUVfrBY3ghVlHqd8xF2Tr5QDmbZo01sJpaguSiVA2FzCI5IX4yutZPFVSjtlUJnt6worot0ntAhRQJb60VfnznIb0BUU/r2n6KFVcN4EPLBg/7Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T9hY9JNG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2966BC19423;
+	Mon,  2 Mar 2026 14:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772450853;
-	bh=PcZrUmBxaOJWLfbNq25KRwrbFeSf8ocdRGC8n8mWYnQ=;
+	s=k20201202; t=1772460139;
+	bh=vS7JKHydz7PX7gecBPBnpNdobodFV4i0rWhwWuR0+7I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DVdvvYDR/dVFCkkP2v1Tvr78ZDyVd8cyfzcjKMbzVvZ3XI4OFwZ5heRq+XHhFaebM
-	 j/TZxUvU5TDsIU2cIpobXK1JX85Mhfylzvww3S05Sd3DKZ4Qwfox2JFk0UjAli5I0i
-	 gv2aZm02ASB300NBchxaE/fNx6ESkWc6GL56TmyIcRlkdK5D4IBvJtGVxwy/izIYU/
-	 0PqYoPyI7kLmGTd8SYT+FabANtrAkw4VhLD88gw88065YqqqyRpxORIG9TS7bMsVSN
-	 4NM8fLVYGGUdHLxjuJzs9h8GyNe2R/fPluwcRvY8JPpxo/e7lAMXZBo+kvSduyVSeb
-	 1c/0vvbw52DUg==
-Date: Mon, 2 Mar 2026 11:27:26 +0000
+	b=T9hY9JNGCjpkeiHDRUeo95vcKHBVptO7U/4bPCLFbsrsa+cRjITbyIiD5DaKiq/p2
+	 P0xZk6qcxMAd8kebSEFQN8VL48BDN1Q5b3MR+SL9+QvtHYSzuKX9+UlDFrDhvAZfv4
+	 flRiymWam0e/Iy0KDg9S7Cc/6TC10BXo8MQaJJon645Zd8PMXZVvkd2axIJnhodC11
+	 TNtucIc6RAkaUzRlEdmCFLzZyje3S7IwtL8bRqsqAQwHJzx5oVfc2XiNv4VpfnkXe+
+	 BOGybke+gWc22aqvKS9PyZsOAK4ZJX9UVrC5bdUWYlIXVKlgIX/3/Nu1gbWREM0doU
+	 i45+wv5xrNrBQ==
+Date: Mon, 2 Mar 2026 14:02:11 +0000
 From: Simon Horman <horms@kernel.org>
 To: Dipayaan Roy <dipayanroy@linux.microsoft.com>
 Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
@@ -56,10 +56,10 @@ Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
 	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
 	dipayanroy@microsoft.com
-Subject: Re: [PATCH net-next, v2] net: mana: Trigger VF reset/recovery on
- health check failure due to HWC timeout
-Message-ID: <aaV0HvxQneKM8p-c@horms.kernel.org>
-References: <aaFShvKnwR5FY8dH@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Subject: Re: [PATCH net-next] net: mana: Force full-page RX buffers for 4K
+ page size on specific systems.
+Message-ID: <aaWYYxyJN6QqTwME@horms.kernel.org>
+References: <aaFusIxdbVkUqIpd@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -68,19 +68,19 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aaFShvKnwR5FY8dH@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+In-Reply-To: <aaFusIxdbVkUqIpd@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9086-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9087-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -96,38 +96,32 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 88C531D78A4
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 77C2F1DA4BE
 X-Rspamd-Action: no action
 
-On Fri, Feb 27, 2026 at 12:15:02AM -0800, Dipayaan Roy wrote:
-> The GF stats periodic query is used as mechanism to monitor HWC health
-> check. If this HWC command times out, it is a strong indication that
-> the device/SoC is in a faulty state and requires recovery.
+On Fri, Feb 27, 2026 at 02:15:12AM -0800, Dipayaan Roy wrote:
+> On certain systems configured with 4K PAGE_SIZE, utilizing page_pool
+> fragments for RX buffers results in a significant throughput regression.
+> Profiling reveals that this regression correlates with high overhead in the
+> fragment allocation and reference counting paths on these specific
+> platforms, rendering the multi-buffer-per-page strategy counterproductive.
 > 
-> Today, when a timeout is detected, the driver marks
-> hwc_timeout_occurred, clears cached stats, and stops rescheduling the
-> periodic work. However, the device itself is left in the same failing
-> state.
+> To mitigate this, bypass the page_pool fragment path and force a single RX
+> packet per page allocation when all the following conditions are met:
+>   1. The system is configured with a 4K PAGE_SIZE.
+>   2. A processor-specific quirk is detected via SMBIOS Type 4 data.
 > 
-> Extend the timeout handling path to trigger the existing MANA VF
-> recovery service by queueing a GDMA_EQE_HWC_RESET_REQUEST work item.
-> This is expected to initiate the appropriate recovery flow by suspende
-> resume first and if it fails then trigger a bus rescan.
+> This approach restores expected line-rate performance by ensuring
+> predictable RX refill behavior on affected hardware.
 > 
-> This change is intentionally limited to HWC command timeouts and does
-> not trigger recovery for errors reported by the SoC as a normal command
-> response.
+> There is no behavioral change for systems using larger page sizes
+> (16K/64K), or platforms where this processor-specific quirk do not
+> apply.
 > 
 > Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-> ---
-> Changes in v2:
->   - Added common helper, proper clearing of gc flags.
-
-Thanks for the update.
 
 Reviewed-by: Simon Horman <horms@kernel.org>
 
-...
 
