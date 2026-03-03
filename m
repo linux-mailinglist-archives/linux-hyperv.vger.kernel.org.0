@@ -1,51 +1,51 @@
-Return-Path: <linux-hyperv+bounces-9103-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9104-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WGQxHI2ypmkqTAAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9103-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	id sMZvKI2ypmn9SgAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9104-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
 	for <lists+linux-hyperv@lfdr.de>; Tue, 03 Mar 2026 11:06:05 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE2CA1EC53F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 03 Mar 2026 11:06:04 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A42A1EC540
+	for <lists+linux-hyperv@lfdr.de>; Tue, 03 Mar 2026 11:06:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 0078F308C5A0
-	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Mar 2026 10:04:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BE1D43004C72
+	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Mar 2026 10:04:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AEA339021D;
-	Tue,  3 Mar 2026 10:04:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4594C38F65B;
+	Tue,  3 Mar 2026 10:04:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DXbN4s/A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mx2DtyDJ"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0411A390218;
-	Tue,  3 Mar 2026 10:04:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21CFB1A6811;
+	Tue,  3 Mar 2026 10:04:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772532261; cv=none; b=VTLRD4uVTTfD0C6rG5Z/87N83YfLjMwd8FuA4hyC5buW/xKX8ENYIYfN6zj6k7UIn3OPRdAHuRK3O4gzEr2mnkFPsA2OXZQsTnopzeJc3Wt4YeHtN5gSvc2baMM16vzhaqW0HsDEp3mff7u100kL2IpuJZJQWNIZ7nQvBbuIIsw=
+	t=1772532279; cv=none; b=SXynBsTvGLx/3H6bxwaM/C39Yl8/RUEBMv9yR7OEcgyTW6n90b4pS8+13NlGjkL9uakQm+dn5iNLhCT95qD79pBkG8Ihl3aLRxIa9/dNVeyEYwTKCVoGigMIJ/K/Fr6rtJyvPkmjAkys9rDQIo9eH+pzUjvpycbPmreXCp0Umkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772532261; c=relaxed/simple;
-	bh=LybxXzhrFhgaGAXY4fuW1jh4p0ek/7wtaX3PsXxtmhM=;
+	s=arc-20240116; t=1772532279; c=relaxed/simple;
+	bh=nBHk/k5yZiF4QDZtLRFyMKhnqvy9lUM7CbMD3M0dOaE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LZE+mzmGZVhl74i8zH3fnIoekSOeTEVZFOewdjz3/X1P7RHj3kLUiCc3PeyzCOyP3VJ3BD3jJ3my8WUqWcRPmsfalWETw446yRPY/TFGd60KE4G9RctD0eWallyhRS7NpgFIhPGopvIp9aCcpaiCypUCfmnW39y3ves/uiCQ2LA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DXbN4s/A; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48089C2BCB2;
-	Tue,  3 Mar 2026 10:04:15 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=FovHzHhi4FnKg6Dl9j811xqKyeqOLGBIP9lJBMVAwQ0hk47x6X74K4bIFxlRys+j/IR2DGVR3Lbp5Mz+JeVAluz+1CjPcWEKFG60QL1qbRs5VOru7MHKj+nY/GutAU4B0Ht+2MOGl8bVIsOzqY8l/73T1ZggXm9v1PYTlb4R0Nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mx2DtyDJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BB44C2BC9E;
+	Tue,  3 Mar 2026 10:04:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772532260;
-	bh=LybxXzhrFhgaGAXY4fuW1jh4p0ek/7wtaX3PsXxtmhM=;
+	s=k20201202; t=1772532278;
+	bh=nBHk/k5yZiF4QDZtLRFyMKhnqvy9lUM7CbMD3M0dOaE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DXbN4s/A/bmKVh59PKyRzmKRa4GL5DqbyVMCByOsv5ya+SBVMcVBFf7iJYdu/rqTR
-	 WHZlwIbsdc1LEQ8ajTd0xOZdLIWyAkcvSoQk2M3Jb8TQQi0Y46LTv6oxHhNnoX5k5k
-	 jCTSX0GcBNVA2/6V8yLYN8vlczzHbm5vN3k3fYnh9mMHi2oIw1Hz5DFl+u0dXPxXkw
-	 fKVitj6D6sK+1XIrrKNbYqyy6qLfpmfjJggcziQM6O4fw5+cHPGDBV7qySv7wDL8UX
-	 jV/FOGsHzt+q+hoGubqdK/3m7iXm78GHbBvGIZ4zx5nBOzOp80I/vInVVyBDrbnPPA
-	 HXrkAGxyTbfIw==
-Message-ID: <1c6a148b-ca52-497c-9b7e-07a0aed186b3@kernel.org>
-Date: Tue, 3 Mar 2026 11:04:13 +0100
+	b=mx2DtyDJxOxcvJtkTJ14WZx+n43p0eMn2oSshRNuNg6xwLQVfmgPttBACZ9PwVrH0
+	 +0LeBAbi+mclNpvLi78y5IAI2qQ7SPxlrfe9YCx9K/SdDivgyIyZX7BoMfQzpZcjYl
+	 mAysBAWJUiT3Ecf4vSaLx2I04WFhFPLMT/akz67y5gXR7QFLPKSFXBIfzXBeJ47rUJ
+	 vfFiPqltsncVw0olAEdOkoQWp7CLijdZJ40iSlwTA5ON+P3VV0s/pJVsY1DCWgIMuE
+	 bo/MYkqphL7BjK2EMT5ojcNjMMZnmU5kKII1gwJMXmE3xqjvN+gddFEEjGbn9c+hHb
+	 bXVzVyHiDdM4w==
+Message-ID: <2d11be07-c142-4cc7-9fa9-f6f3243b5c72@kernel.org>
+Date: Tue, 3 Mar 2026 11:04:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -53,8 +53,8 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/5] mm/page_reporting: add
- PAGE_REPORTING_ORDER_UNSPECIFIED
+Subject: Re: [PATCH v3 4/5] mm/page_reporting: change
+ PAGE_REPORTING_ORDER_UNSPECIFIED to -1
 To: Yuvraj Sakshith <yuvraj.sakshith@oss.qualcomm.com>, mst@redhat.com
 Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, longli@microsoft.com, jasowang@redhat.com,
@@ -65,7 +65,7 @@ Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
  linux-mm@kvack.org
 References: <20260303093341.2927482-1-yuvraj.sakshith@oss.qualcomm.com>
- <20260303093341.2927482-2-yuvraj.sakshith@oss.qualcomm.com>
+ <20260303093341.2927482-5-yuvraj.sakshith@oss.qualcomm.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -112,28 +112,28 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260303093341.2927482-2-yuvraj.sakshith@oss.qualcomm.com>
+In-Reply-To: <20260303093341.2927482-5-yuvraj.sakshith@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: DE2CA1EC53F
+X-Rspamd-Queue-Id: 0A42A1EC540
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9103-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9104-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[24];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[david@kernel.org,linux-hyperv@vger.kernel.org];
@@ -142,56 +142,22 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,qualcomm.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,qualcomm.com:email]
 X-Rspamd-Action: no action
 
 On 3/3/26 10:33, Yuvraj Sakshith wrote:
-> Drivers can pass order of pages to be reported while
-> registering itself. Today, this is a magic number, 0.
+> PAGE_REPORTING_ORDER_UNSPECIFIED is now set to zero. This means,
+> pages of order zero cannot be reported to a client/driver -- as zero
+> is used to signal a fallback to MAX_PAGE_ORDER.
 > 
-> Label this with PAGE_REPORTING_ORDER_UNSPECIFIED and
-> check for it when the driver is being registered.
-> 
-> This macro will be used in relevant drivers next.
+> Change PAGE_REPORTING_ORDER_UNSPECIFIED to (-1),
+> so that zero can be used as a valid order with which pages can
+> be reported.
 > 
 > Signed-off-by: Yuvraj Sakshith <yuvraj.sakshith@oss.qualcomm.com>
 > ---
->  include/linux/page_reporting.h | 1 +
->  mm/page_reporting.c            | 5 +++--
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/page_reporting.h b/include/linux/page_reporting.h
-> index fe648dfa3..d1886c657 100644
-> --- a/include/linux/page_reporting.h
-> +++ b/include/linux/page_reporting.h
-> @@ -7,6 +7,7 @@
->  
->  /* This value should always be a power of 2, see page_reporting_cycle() */
->  #define PAGE_REPORTING_CAPACITY		32
-> +#define PAGE_REPORTING_ORDER_UNSPECIFIED	0
->  
->  struct page_reporting_dev_info {
->  	/* function that alters pages to make them "reported" */
-> diff --git a/mm/page_reporting.c b/mm/page_reporting.c
-> index e4c428e61..40a756b60 100644
-> --- a/mm/page_reporting.c
-> +++ b/mm/page_reporting.c
-> @@ -369,8 +369,9 @@ int page_reporting_register(struct page_reporting_dev_info *prdev)
->  	 * pageblock_order.
->  	 */
->  
-> -	if (page_reporting_order == -1) {
-> -		if (prdev->order > 0 && prdev->order <= MAX_PAGE_ORDER)
-> +	if (page_reporting_order == PAGE_REPORTING_ORDER_UNSPECIFIED) {
 
-This change must also go to #5.
-
-> +		if (prdev->order != PAGE_REPORTING_ORDER_UNSPECIFIED &&
-> +			prdev->order <= MAX_PAGE_ORDER)
->  			page_reporting_order = prdev->order;
->  		else
->  			page_reporting_order = pageblock_order;
-
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
 -- 
 Cheers,
