@@ -1,286 +1,312 @@
-Return-Path: <linux-hyperv+bounces-9136-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9137-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YPCSJg1+qGluvAAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9136-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Mar 2026 19:46:37 +0100
+	id CPhBNmrDqGk0xAAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9137-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Mar 2026 00:42:34 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1600D206976
-	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Mar 2026 19:46:37 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B5F8209044
+	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Mar 2026 00:42:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 578B6300F7BD
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Mar 2026 18:45:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3441F304EAB1
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Mar 2026 23:42:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5879F3D75C4;
-	Wed,  4 Mar 2026 18:45:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A676375F93;
+	Wed,  4 Mar 2026 23:42:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="kj6e3H40"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RG170y/+"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azolkn19010004.outbound.protection.outlook.com [52.103.12.4])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD223D75B5;
-	Wed,  4 Mar 2026 18:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.12.4
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772649920; cv=fail; b=b/dWLF1Z5ncGdFNlgWPZPsvS8qeF9I8hNBeYMNPYIqEDVUIhdTZYHPNLKHb2y12xb7yHGwH0ye4Laz5W7eH5IZXG+P+AylAE/QIPKKUSSdJ06dlNyBjq0xv/C8GZf+TuSgOdutq0b1d35IkcB7/oiEWC2cG5F9MseUQ9H5f7LvY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772649920; c=relaxed/simple;
-	bh=EkzaaHX/AHxY896u0/lUfTkgeuyM8MyLOfqkUEWizZc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=u0azKxGJ+sIoDxsJ9zeHbzHTpI07X7CjptlF2Zr9JAcTU8nWRgBIX9QHCLhAQ7tTJOiMfiRxSrGZN9y5VSx62GfmcLzbt82B0n1cf8cPeHhdGhBf9hHqzw6Jvi/uOqyKwPVUK428CPZ1UT2tP4Z8D8L7NmjIcTBtMWCQoEy/g3s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=kj6e3H40; arc=fail smtp.client-ip=52.103.12.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gBL9kZFe9v/ERATgMcWpJoWIZSI5mhwCsmJ2f521AoNhwH/MMPhNsM2r2Gkj4s6KcWRcfPxGA02A8zCOWg4pXcJohRfT90GPd1eZVz4bPyeup2EPPOkw4PncobZQEuLr2blOkJ2rQio1gDyP35vab4xfX7cN6Fp9Ls/dr3nILwuNIfhGxqRBPjdNKCB7gKg1EK0dVqQsJPi+Y9BV9e53rahX7ND1SrhQd+aC/OEElKY/eVH7DepR59hDqouTAq6/9s1LzvQhIW2ml4+nG42oj6RNvIK1R2uJt3vG1T2nfPicFUalQ+DhV4qeDOoEFVwPHBD6yt5+TwZh4wrGvBpKiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DXMi0OsjSHVzgpNtDr9lHhNyAtguHT56MqHkSVE6buw=;
- b=XE94xISwQFh3DuKnqrzhiwaV2EyO4B4vLKeouh65OndifnV76Hse7oMA50DKe6TXkyrMVLUzSUNxGlW3HK1TaNeb/E9+IWx5f2bY/lDqCWeOBgG2QjnIjbGojJ8EVrR9anEb6BWVOnYVvWx2T7k02gWep3x1FbGLJKDc3oyIqFo3+saqcMgondNQ2Zrd8a4KgX31XE0kNy3uYUJFhY7XX6m+NH6on6B9ReOOLdbnvq+QwshdYkFUV4LC2SEF+sKPZGaVURpn6K8aNesAIBgwkY9obNNMQf/h0mPOE8k+QC7ihp/+MvwGjHnQ0rAdmGKyho+FfrRNXi74MIp+lvFTww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DXMi0OsjSHVzgpNtDr9lHhNyAtguHT56MqHkSVE6buw=;
- b=kj6e3H40wDjwLncloiKYltVqZ7NdEg4I5isQgcA45kjQNE3s7lI+BWut+e9qKNJ/644oDoB46EXppoKQVWZKjtntcRfDNiQcO8yKwv9THZQCexwTEU4Us/3YlxAntHch8XnTmeh7t3+nBR0di7/rPRFoV183ivIrq8uFr/zt2utQaRV4FNPQUdhAvv15+OAubowPAiT6onofRU3G1mS8tOZVV+AyiREAo6mKPXDY+zcURXeynkk370DZlJHPj6NqFaywptMQFxmqObaLMg2Bo7cqI2MNVXV4eI9cmb6Q2mNzDd45e8R0Q1pRxEsnkK8SDDVlab28WMT5MuLP2fG1QA==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by LV3PR02MB10209.namprd02.prod.outlook.com (2603:10b6:408:21e::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.22; Wed, 4 Mar
- 2026 18:45:12 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%6]) with mapi id 15.20.9654.022; Wed, 4 Mar 2026
- 18:45:12 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Mukesh R <mrathor@linux.microsoft.com>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-CC: "wei.liu@kernel.org" <wei.liu@kernel.org>
-Subject: RE: [PATCH V0] mshv: pass struct mshv_user_mem_region by reference
-Thread-Topic: [PATCH V0] mshv: pass struct mshv_user_mem_region by reference
-Thread-Index: AQMByg9D4osO/ttNVfoyFp/nxg6l4bNUeYoQ
-Date: Wed, 4 Mar 2026 18:45:12 +0000
-Message-ID:
- <SN6PR02MB4157FBAE767E7563898DA0BDD47CA@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20260304000251.2625375-1-mrathor@linux.microsoft.com>
-In-Reply-To: <20260304000251.2625375-1-mrathor@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|LV3PR02MB10209:EE_
-x-ms-office365-filtering-correlation-id: 9134f9fd-8fe0-4000-8e3c-08de7a1e2b29
-x-ms-exchange-slblob-mailprops:
- 5fu/r660v9OFyJ+CxyO6ueseEO2yHaMVQvc9jkqSN7cFkqYKyooJZui0ge4ZlLfsMD6kzd0gpZVtXTnerBKgqyY7ofIvCBfX2Of+GoYxuL6h1j5KRtM88sSKXsNm1b21byLAGS1CF3EZpbnO4uiixiLgN2Tl0XDgtInrN75U3DLb6Y/2Czkx28nVnFehljlDZdIIzeEkPuqioPmiAYHP7kcqTP1yu9LRfzfPm41hwPas95CYygo+BLXvaK+2xQ6fDblionYBqNbgH9PPUDusLuGT47L5/1VNO/v/pR8t6PnpU9JY3yC1FbFw5y/EL8fnpFCupDzm+MyCGQwbOJpjZGzvQRRBcgevHzpjVso3VWQ0COO1ahthrgggZ3dQ5tGvx0DftLVQlb/+ftnnjaiQ/KR/Bm6/oveWGYCS5XNeJ0OpgQpsAB+8ZiX6/31nutbwrqoH5ZWJ6xhodPqnp30KZZ1ZPP5VPf4N/uhcBQPhVqixfXuBZke4yAEnk0fW76XPU3kDi38dN5Ra1up5JIG68NBl/2inuapoy85hqJhSVPZbrtaqPUGlwwMA0LlMXkHUSvjSEHpnWEyIYphDFXU7vTFUX9fQJG/BwXYkZbSImwetbF+yOeZlcNmimh7iHIO5VU4vSIgkACF9EApyCKDiJYTXD+mfq43zYYtCHjVBWitLuypQ1LNiq7s/sRKrXeheCkRYElnqtEGye/OxZ8vUWqMwxig7YHVAyeHGPTgvk8U=
-x-microsoft-antispam:
- BCL:0;ARA:14566002|31061999003|461199028|51005399006|12121999013|8062599012|8060799015|19110799012|13091999003|15080799012|41001999006|19061999003|40105399003|440099028|3412199025|102099032;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?epQK4I+96D/KOptE++sTRdCCMizOfngI928wQSppTzNV+Iym5uU1n3Iwtdcm?=
- =?us-ascii?Q?h9OU7ZeMknXWSVQbXGWU37ywmpwx5fyyj6LtWjAep4UYqSsfO7azTRXsx9HI?=
- =?us-ascii?Q?VvEutxiZZFr1mwTQugXRr3EVj3nPGMB5JrdVfqxSzUaVYi920Xwt8X/vTAdS?=
- =?us-ascii?Q?Zk4GXvsyMAMEIwJTxuEORAufoNatGxt1pcxDME2kxJNaDBUieS3pA25j9rzH?=
- =?us-ascii?Q?mmGa/cUQu93/B+nJUQOVMBv2U9/XbqcndXqNQyyTI7gO4Yt4sU3hF1l6kB7v?=
- =?us-ascii?Q?SlHQXqXZo0hL6lJGQW0EncL77yxP/kUJwktpHgzlrgKBfZficq3UK0sPxd8I?=
- =?us-ascii?Q?WZZJgoho0fnWPh8MKJBcXpg20Xr2sOxTpUxHIZYn0eQTpO7f7C53sFx9IRjP?=
- =?us-ascii?Q?GVH9OLTLh/RXrkPtRrvvthCRBhBdOz2t+gJzf/z9dAxF0Goois6qOzKT61JZ?=
- =?us-ascii?Q?EHzdtyvZNjYyC5b4z4M4NHnYfuhFlOaDzW8wgZju5vBmrRjD0ixAbGwjn5cq?=
- =?us-ascii?Q?Exxp4T+loqCLIuAEygbjQWZpYyGnDdSdoWPh5krIcKKd1TE7nvU/gKwTRJqz?=
- =?us-ascii?Q?iukAk/FZnUTB3ufKlpDSgAUcj8aDO5Tdss5mwRrBcsU6PgA8VT0INfgkx5x9?=
- =?us-ascii?Q?QeSn6h/r1LSa44ZMTtQYoOYc+UgXY9ZPa/SuOYwPVSBPHqfabx94LDecmsLI?=
- =?us-ascii?Q?4aDmL0n8tF9yPQNeF2lSPLD7EuTUNXGiQJF4rsmMrB0KeQICuVspyzVa6ziT?=
- =?us-ascii?Q?Skmt+v/myM+BuWLrGHsGrS9cSVU2MkjG6cT5rDpfM/IE0mghk1OUMlwNvLU7?=
- =?us-ascii?Q?YGrUAV2kx9ramm6DfMVUYGwOVhEOUZZwz1adpSQssokrM6TzC1t9yWIiDLRv?=
- =?us-ascii?Q?CAf8Mu0LrNRo7ZItpyou9VGoPVomD8u/EQMHn2TG/5Wm1dN3wju9H7W/UiX8?=
- =?us-ascii?Q?BqBSc4kpbnrJNCCZq7qm9Nuu0YRR7GU/fQhSoqa4uXMpT2r9CN6qhGi33N5/?=
- =?us-ascii?Q?cxXCQmTa0u++KbMe7xlyK2tyubUJpN8G2al8b8DInLBJ26E=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?1JWcbONctu9cofMYVkxdbUG6Xp3nbbb0cZwAuS/Z4l1GI0+CL5fUB3xcRjIc?=
- =?us-ascii?Q?XGFkcFCjhxq/lNi+Tdk8+r1byvSlQ0uUgvxfP56/vISTn3En9hGJEBW4gjYm?=
- =?us-ascii?Q?SRCmYMjiR0t5XhtVQbOBp6+bhv7xAsQ/1W9hrJqLEQ33+ay3gvqJSam8tcJx?=
- =?us-ascii?Q?227vSmcacT3FuCPC+v4S/N3h7zih9amRlwx7e0bQBS6Ly+uObtXfaPDedqhk?=
- =?us-ascii?Q?KS2ft0C0VvXTWdgOziE9d6y7JvtS8VuH7b9ywdowMpcmD+ro10Zi6tIHlJfy?=
- =?us-ascii?Q?0V5749F9o9KqwIeveIxu6Tcgztuy8EZPPHvzYX93R/ufPqLkWVMILSnOvms2?=
- =?us-ascii?Q?/7LWsJ+dZw9hKmDhetqAfq3ntXkyE1T6/hhqdPQvQCTZPi/uOZLQ6BcbNNv7?=
- =?us-ascii?Q?8guLB4oQcCaOU9abW4a9VRXClq0vI4v5a+in7qPOAbCknVNcu1n4cDrnAcOL?=
- =?us-ascii?Q?spXxKBZZnrJNaL5QJqsDOeu4SSf9dipM0lvnED2XCeX+J3EZY6HmBfMV8YpJ?=
- =?us-ascii?Q?mAv3Aq1REbjZqzHjoikCInamX0kRKJvQ2vWse5aIS4uMCX6fSDWk2CSN0n7S?=
- =?us-ascii?Q?dfdkXPlbQ3JqXKDtFjWm2iEzw9g4MNi1uHLrbmDNi6q70vKQHG+RKC2dHph7?=
- =?us-ascii?Q?61TNZQ4vtrtLPwEFzAkt9irWdZwfzJ+YxJNzNAid358YFt43vMmU5NIkEVE2?=
- =?us-ascii?Q?8sZUiZ3jIujXhA1Ys8pABAkVtBBdpDErAYdYypBCYAWOWRSI/F0zNiYALJrl?=
- =?us-ascii?Q?U4FcevWVdF5pFieZN4x/snyp/tH/0tjMWVq2pSVIi4xmlAQB2sU1NqUO4r01?=
- =?us-ascii?Q?QMKeziNS5D2aHwj5uei+FLk0dqp7ELSgbq/mW5680mqp5CMF5MLmZn6r4BAH?=
- =?us-ascii?Q?4TaAX9zt2a13opo3IPR8j6bS8hRw0ohY/Rv0YwXPYePCMjQ/CrrgBzlr6MXS?=
- =?us-ascii?Q?jxUiRFARQHXPbA42WFWZIlfh5d03rr+0FxFLHZ4EU5kjMVrzaqputlT30szT?=
- =?us-ascii?Q?DVlHAidnw8tAp/ODFQNorv1nmhNQoOb4F9pAovqnuInsUaxLmp63XqXPiApz?=
- =?us-ascii?Q?f62TqRdY9er2l25LlVHaYBhQH0TG9xWQhs3Xu9mCrhEyfvnkQmAoZbjUnxFC?=
- =?us-ascii?Q?+vJmNlnX2RqAf+92lSdwxSxr1GrGLosb/u4re8aNt+8U/G8Bh4hTQ1SHf8V1?=
- =?us-ascii?Q?oZAFi77PZVizFMOL8XAc6FqQmWeArtmFBsA/t7frLijO7wRW8P7rHLdbfMxF?=
- =?us-ascii?Q?htoctY3KptDE2IVWwsba39UNdI4NefL365CgwVlxn2IiRsQbDcmBCPzItmep?=
- =?us-ascii?Q?cqZ0iSPCyDFHeo6QnjL15TjMz74izrvJaX5PSguFI9Ym2tRaaryU/nadBqNk?=
- =?us-ascii?Q?QUX/si4=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10ED41F4C8C;
+	Wed,  4 Mar 2026 23:42:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772667751; cv=none; b=L5cwsAgDjFBtXQsP2d2hCwUxJsBu4QHrCpBVUceq3FQunr/58YOFB1te0SHyCdhFnFb3jcfJcZhN3SrrdZuoU6EmfYx5B50wdJv6KZcybl6Jdb9yfbqn/lkt+/clC2zFqYwOsTTPbEj5ZJ/Zk4yppWrVaMgaR/eZCmnGwHA1nCI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772667751; c=relaxed/simple;
+	bh=ED4e55hsxtWpBvsYR4WOPikeT4OEN2h24PkF2/4I8NY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=K/VxYPdVW94xuERXf8pv0gqkOmaY/K3c6uvdr5FKrnXTWSE2fcw3MdTGyNdkO5D+ih42hl1z3KozC3xHo0of4rZQnkIZhfTYK13SzvHB8QaHKXQ2AfATHh7kAqvz+PU4lsC1jSQAFFP+HyUn9D/vqIE1mGBadUp6C1fQsHLtwco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RG170y/+; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772667750; x=1804203750;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=ED4e55hsxtWpBvsYR4WOPikeT4OEN2h24PkF2/4I8NY=;
+  b=RG170y/+1XKqAiqm7J6crLbI3dY7kQvG67IHlKev9HIdcIN15bDVn28I
+   Mf1l9K8N5kZfDNoMZ1i0NCDH2AiGnCnjkNTflSos6CSCJNGA0C5kFsDAh
+   N7Qg3mxz10KWAOFZZc42nEGGP3wlF8kQQy7ZSU7+kWMuhobCbvifhgubL
+   0tb/HRSHzvisHFGaaBa3a3RoBI7ChWDx1Hm6EDuw3xfn1VvY583hXyeR0
+   x3fYslThdduEVkov4XMKvLvdwK3+H7aeQ8z067RAE/Jmkx6yndHjz+Pwq
+   0eMECFAjqgCcWzVCv0nGC3X6ScHl0RtNmJ2Oj7iUb9hd2KkB48RgTj2f7
+   A==;
+X-CSE-ConnectionGUID: vmRbopLIT8W0qixXeh/5Gg==
+X-CSE-MsgGUID: S4hEfxs0TM+P1jPs8xfZcg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11719"; a="96359355"
+X-IronPort-AV: E=Sophos;i="6.21,324,1763452800"; 
+   d="scan'208";a="96359355"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2026 15:42:29 -0800
+X-CSE-ConnectionGUID: Ty6GDMhyT0qHhqii3xAtJw==
+X-CSE-MsgGUID: DwRbFlrmQnKT5FTTh05NSg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,324,1763452800"; 
+   d="scan'208";a="215376889"
+Received: from unknown (HELO [172.25.112.21]) ([172.25.112.21])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2026 15:42:28 -0800
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Subject: [PATCH v9 00/10] x86/hyperv/hv_vtl: Use a wakeup mailbox to boot
+ secondary CPUs
+Date: Wed, 04 Mar 2026 15:41:11 -0800
+Message-Id: <20260304-rneri-wakeup-mailbox-v9-0-a5c6845e6251@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9134f9fd-8fe0-4000-8e3c-08de7a1e2b29
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2026 18:45:12.4883
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR02MB10209
-X-Rspamd-Queue-Id: 1600D206976
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABjDqGkC/3XPTW7DIBAF4KtErIsFg/lxV71H1QVgqFEdiLDju
+ op892JLaSrF3s1bzDdvbmhwObgBvZ5uKLspDCHFEpqXE7Kdjp8Oh7ZkBAQ4EQRwjmUBf+svd73
+ gsw69STNmoJx3EhRhHpXVS3Y+zBv7/lGyz+mMxy47/cA4YbShnPIKalJTTHEOVuc2VdsFq/vW5
+ RTf+hCvcxXi6PrKpvPKd2EYU/7ZSk/1euTej+33m2pMcMsZAwlGAoMndW058X8UyAOKr5TntTS
+ 0pY1w+5T4oyih4oAShSq/M+5Nwwg/oOSDovSolVwprYwCbaQFu0+pOyUIJUeUKhR4boRU3Jfhm
+ VqW5RcCFYlROQIAAA==
+To: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
+ "K. Y. Srinivasan" <kys@microsoft.com>, 
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+ Dexuan Cui <decui@microsoft.com>, Michael Kelley <mhklinux@outlook.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Saurabh Sengar <ssengar@linux.microsoft.com>, 
+ Chris Oo <cho@microsoft.com>, "Kirill A. Shutemov" <kas@kernel.org>, 
+ linux-hyperv@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Ricardo Neri <ricardo.neri@intel.com>, kernel test robot <lkp@intel.com>, 
+ Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, 
+ "Rafael J. Wysocki (Intel)" <rafael.j.wysocki@intel.com>, 
+ Yunhong Jiang <yunhong.jiang@linux.intel.com>, 
+ Thomas Gleixner <tglx@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1772667694; l=8711;
+ i=ricardo.neri-calderon@linux.intel.com; s=20250602;
+ h=from:subject:message-id; bh=ED4e55hsxtWpBvsYR4WOPikeT4OEN2h24PkF2/4I8NY=;
+ b=6euaeUYwkl9UIVm6JaZwSWQ08soJFbs0+xWUP76gdt02XmNg6+nooxWQZKjqbx62cjomIzCzu
+ j5sK8SymL9TBSn4i/iBNi+CtTDC/OyVrtLej9HVOBg/z+wyrgGVNW0b
+X-Developer-Key: i=ricardo.neri-calderon@linux.intel.com; a=ed25519;
+ pk=NfZw5SyQ2lxVfmNMaMR6KUj3+0OhcwDPyRzFDH9gY2w=
+X-Rspamd-Queue-Id: 1B5F8209044
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9136-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9137-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[kernel.org,microsoft.com,outlook.com];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[outlook.com];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[outlook.com:+];
+	FROM_NEQ_ENVFROM(0.00)[ricardo.neri-calderon@linux.intel.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
 	NEURAL_HAM(-0.00)[-0.999];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,outlook.com:dkim,outlook.com:email,SN6PR02MB4157.namprd02.prod.outlook.com:mid]
+	TAGGED_RCPT(0.00)[linux-hyperv,dt];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[openvmm.dev:url,intel.com:dkim,intel.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-From: Mukesh R <mrathor@linux.microsoft.com> Sent: Tuesday, March 3, 2026 4=
-:03 PM
->=20
-> For unstated reasons, function mshv_partition_ioctl_set_memory passes
-> struct mshv_user_mem_region by value instead of by reference. Change
-> it to pass by reference.
->=20
-> Signed-off-by: Mukesh R <mrathor@linux.microsoft.com>
+Hi x86 maintainers,
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+This is a new version of this patchset. The only change since the last
+version is a fix for a warning from `make dt_binding_check`. Since v7, I
+incorporated feedback from Boris. Also, the ACPI, DeviceTree and Hyper-V
+maintainers have reviewed the patches. Any chance it could be merged?
 
-> ---
->  drivers/hv/mshv_root_main.c | 26 +++++++++++++-------------
->  1 file changed, 13 insertions(+), 13 deletions(-)
->=20
-> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-> index e6509c980763..87c5ffd2528d 100644
-> --- a/drivers/hv/mshv_root_main.c
-> +++ b/drivers/hv/mshv_root_main.c
-> @@ -1289,7 +1289,7 @@ static int mshv_prepare_pinned_region(struct mshv_m=
-em_region *region)
->   */
->  static long
->  mshv_map_user_memory(struct mshv_partition *partition,
-> -		     struct mshv_user_mem_region mem)
-> +		     struct mshv_user_mem_region *mem)
->  {
->  	struct mshv_mem_region *region;
->  	struct vm_area_struct *vma;
-> @@ -1297,12 +1297,12 @@ mshv_map_user_memory(struct mshv_partition *parti=
-tion,
->  	ulong mmio_pfn;
->  	long ret;
->=20
-> -	if (mem.flags & BIT(MSHV_SET_MEM_BIT_UNMAP) ||
-> -	    !access_ok((const void __user *)mem.userspace_addr, mem.size))
-> +	if (mem->flags & BIT(MSHV_SET_MEM_BIT_UNMAP) ||
-> +	    !access_ok((const void __user *)mem->userspace_addr, mem->size))
->  		return -EINVAL;
->=20
->  	mmap_read_lock(current->mm);
-> -	vma =3D vma_lookup(current->mm, mem.userspace_addr);
-> +	vma =3D vma_lookup(current->mm, mem->userspace_addr);
->  	is_mmio =3D vma ? !!(vma->vm_flags & (VM_IO | VM_PFNMAP)) : 0;
->  	mmio_pfn =3D is_mmio ? vma->vm_pgoff : 0;
->  	mmap_read_unlock(current->mm);
-> @@ -1310,7 +1310,7 @@ mshv_map_user_memory(struct mshv_partition *partiti=
-on,
->  	if (!vma)
->  		return -EINVAL;
->=20
-> -	ret =3D mshv_partition_create_region(partition, &mem, &region,
-> +	ret =3D mshv_partition_create_region(partition, mem, &region,
->  					   is_mmio);
->  	if (ret)
->  		return ret;
-> @@ -1355,25 +1355,25 @@ mshv_map_user_memory(struct mshv_partition *parti=
-tion,
->  /* Called for unmapping both the guest ram and the mmio space */
->  static long
->  mshv_unmap_user_memory(struct mshv_partition *partition,
-> -		       struct mshv_user_mem_region mem)
-> +		       struct mshv_user_mem_region *mem)
->  {
->  	struct mshv_mem_region *region;
->=20
-> -	if (!(mem.flags & BIT(MSHV_SET_MEM_BIT_UNMAP)))
-> +	if (!(mem->flags & BIT(MSHV_SET_MEM_BIT_UNMAP)))
->  		return -EINVAL;
->=20
->  	spin_lock(&partition->pt_mem_regions_lock);
->=20
-> -	region =3D mshv_partition_region_by_gfn(partition, mem.guest_pfn);
-> +	region =3D mshv_partition_region_by_gfn(partition, mem->guest_pfn);
->  	if (!region) {
->  		spin_unlock(&partition->pt_mem_regions_lock);
->  		return -ENOENT;
->  	}
->=20
->  	/* Paranoia check */
-> -	if (region->start_uaddr !=3D mem.userspace_addr ||
-> -	    region->start_gfn !=3D mem.guest_pfn ||
-> -	    region->nr_pages !=3D HVPFN_DOWN(mem.size)) {
-> +	if (region->start_uaddr !=3D mem->userspace_addr ||
-> +	    region->start_gfn !=3D mem->guest_pfn ||
-> +	    region->nr_pages !=3D HVPFN_DOWN(mem->size)) {
->  		spin_unlock(&partition->pt_mem_regions_lock);
->  		return -EINVAL;
->  	}
-> @@ -1404,9 +1404,9 @@ mshv_partition_ioctl_set_memory(struct mshv_partiti=
-on *partition,
->  		return -EINVAL;
->=20
->  	if (mem.flags & BIT(MSHV_SET_MEM_BIT_UNMAP))
-> -		return mshv_unmap_user_memory(partition, mem);
-> +		return mshv_unmap_user_memory(partition, &mem);
->=20
-> -	return mshv_map_user_memory(partition, mem);
-> +	return mshv_map_user_memory(partition, &mem);
->  }
->=20
->  static long
-> --
-> 2.51.2.vfs.0.1
->=20
+I include the cover letter from the previous version for convenience.
+
+Thanks a lot to all those who have reviewed the series!
+
+...
+
+This patchset adds functionality to use the ACPI wakeup mailbox to boot
+secondary CPUs in Hyper-V VTL level 2 TDX guests with DeviceTree-based
+virtual firmware. Although this is the target use case, the use of the
+mailbox depends solely on it being enumerated in the DeviceTree graph.
+
+On x86 platforms, secondary CPUs are typically booted using INIT assert,
+de-assert followed by Start-Up IPI messages. Virtual machines can also use
+hypercalls to bring up secondary CPUs to a desired execution state. These
+two mechanisms require support from the hypervisor. Confidential computing
+VMs in a TDX environment cannot use this mechanism because the hypervisor
+is considered an untrusted entity.
+
+Linux already supports the ACPI Multiprocessor Wakeup Structure in which
+the guest platform firmware boots the secondary CPUs and transfers control
+to the kernel using a mailbox. This mechanism does not need involvement
+of the VMM. It can be used in a Hyper-V VTL level 2 TDX guest.
+
+Currently, this mechanism can only be used on x86 platforms with firmware
+that supports ACPI. There are platforms that use DeviceTree (e.g., OpenHCL
+[2]) instead of ACPI to describe the hardware.
+
+Provided that the wakeup mailbox enumerated in a DeviceTree-based platform
+firmware is implemented as described in the ACPI specification, the kernel
+can use the existing ACPI code for both DeviceTree and ACPI systems. The
+DeviceTree firmware does not need to use any ACPI table to enumerate the
+mailbox.
+
+This patchset is structured as follows:
+
+   * Add missing dependencies to arch/x86/include/asm/topology.h. (patch 1)
+   * Expose functions to reuse the code handling the ACPI Multiprocessor
+     Wakeup Structure outside of ACPI code. (patch 2)
+   * Define DeviceTree bindings to enumerate a mailbox as described in
+     the ACPI specification. (patch 3)
+   * Find and set up the wakeup mailbox if enumerated in the DeviceTree
+     graph. (patch 4)
+   * Prepare Hyper-V VTL2 TDX guests to use the Wakeup Mailbox to boot
+     secondary CPUs when available. (patches 5-10)
+
+I have tested this patchset on a Hyper-V host with VTL2 OpenHCL, QEMU, and
+physical hardware.
+
+Changes in v9:
+- Fixed a warning from `make dt_binding_check` reported by Rob's bot.
+- Link to v8: https://lore.kernel.org/r/20260107-rneri-wakeup-mailbox-v8-0-2f5b6785f2f5@linux.intel.com
+
+Changes in v8:
+- Fixed a build break. Same patch as [1].
+- Added two Acked-by tags from Rafael. Thanks!
+- Link to v7: https://lore.kernel.org/r/20251117-rneri-wakeup-mailbox-v7-0-4a8b82ab7c2c@linux.intel.com
+
+Changes in v7:
+- Dropped the patch that relocated the ACPI wakeup mailbox to an generic
+  location. (Boris)
+- Instead, added function declarations to use the wakeup mailbox from
+  outside ACPI code. Also added stubs for !CONFIG_ACPI.
+- Link to v6: https://lore.kernel.org/r/20251016-rneri-wakeup-mailbox-v6-0-40435fb9305e@linux.intel.com
+
+Changes in v6:
+- Fixed a build error with !CONFIG_X86_MAILBOX_WAKEUP and
+  CONFIG_HYPER_VTL_MODE.
+- Added Acked-by tags from Rafael. Thanks!
+- Added Reviewed-by tags from Dexuan and Rob. Thanks!
+- Corrected typos and function names in the changelog.
+- Link to v5: https://lore.kernel.org/r/20250627-rneri-wakeup-mailbox-v5-0-df547b1d196e@linux.intel.com
+
+Changes in v5:
+- Referred in the DeviceTree binding documentation the section and
+  section of the ACPI specification that defines the wakeup mailbox.
+- Moved the dependency on CONFIG_OF to patch 4, where the flattened
+  DeviceTree is parsed for the mailbox.
+- Fixed a warning from yamllint regarding line lengths.
+- Link to v4: https://lore.kernel.org/r/20250603-rneri-wakeup-mailbox-v4-0-d533272b7232@linux.intel.com
+
+Changes in v4:
+- Added Reviewed-by: tags from Michael Kelley. Thanks!
+- Relocated the common wakeup code from acpi/madt_wakeup.c to a new
+  smpwakeup.c to be used in DeviceTree- and ACPI-based systems.
+- Dropped the x86 CPU bindings as they are not a good fit to document
+  firmware features.
+- Dropped the code that parsed and validated of the `enable-method`
+  property for cpu@N nodes in x86. Instead, unconditionally parse and use
+  the wakeup mailbox when found.
+- Updated the wakeup mailbox schema to avoid redefing the structure and
+  operation of the mailbox. Instead, refer to the ACPI specification.
+  Also clarified that the enumeration of the mailbox is done separately.
+- Prefixed helper functions of wakeup code with acpi_.
+- Link to v3: https://lore.kernel.org/r/20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com
+
+Changes in v3:
+- Only move out of the acpi directory acpi_wakeup_cpu() and its
+  accessory variables. Use helper functions to access the mailbox as
+  needed. This also fixed the warnings about unused code with CONFIG_
+  ACPI=n that Michael reported.
+- Major rework of the DeviceTree bindings and schema. Now there is a
+  reserved-memory binding for the mailbox as well as a new x86 CPU
+  bindings. Both have `compatible` properties.
+- Rework of the code parsing the DeviceTree bindings for the mailbox.
+  Now configuring the mailbox depends solely on its enumeration in the
+  DeviceTree and not on Hyper-V VTL2 TDX guest.
+- Do not make reserving the first 1MB of memory optional. It is not
+  needed and may introduce bugs.
+- Prepare Hyper-V VTL2 guests to unconditionally use the mailbox in TDX
+  environments. If the mailbox is not available, booting secondary CPUs
+  will fail gracefully.
+- Link to v2: https://lore.kernel.org/r/20240823232327.2408869-1-yunhong.jiang@linux.intel.com
+
+Changes in v2:
+- Fix the cover letter's summary phrase.
+- Fix the DT binding document to pass validation.
+- Change the DT binding document to be ACPI independent.
+- Move ACPI-only functions into the #ifdef CONFIG_ACPI.
+- Change dtb_parse_mp_wake() to return mailbox physical address.
+- Rework the hv_is_private_mmio_tdx().
+- Remove unrelated real mode change from the patch that marks mailbox
+  page private.
+- Check hv_isolation_type_tdx() instead of wakeup_mailbox_addr in
+  hv_vtl_init_platform() because wakeup_mailbox_addr is not parsed yet.
+- Add memory range support to reserve_real_mode.
+- Remove realmode_reserve callback and use the memory range.
+- Move setting the real_mode_header to hv_vtl_init_platform.
+- Update comments and commit messages.
+- Minor style changes.
+- Link to v1: https://lore.kernel.org/r/20240806221237.1634126-1-yunhong.jiang@linux.intel.com
+
+[1]. https://lore.kernel.org/all/20251117-rneri-topology-cpuinfo-bug-v1-1-a905bb5f91e2@linux.intel.com/
+[2]. https://openvmm.dev/guide/user_guide/openhcl.html
+--
+2.43.0
+
+---
+Ricardo Neri (6):
+      x86/topology: Add missing struct declaration and attribute dependency
+      x86/acpi: Add functions to setup and access the wakeup mailbox
+      dt-bindings: reserved-memory: Wakeup Mailbox for Intel processors
+      x86/dt: Parse the Wakeup Mailbox for Intel processors
+      x86/acpi: Add a helper get the address of the wakeup mailbox
+      x86/hyperv/vtl: Use the wakeup mailbox to boot secondary CPUs
+
+Yunhong Jiang (4):
+      x86/hyperv/vtl: Set real_mode_header in hv_vtl_init_platform()
+      x86/realmode: Make the location of the trampoline configurable
+      x86/hyperv/vtl: Setup the 64-bit trampoline for TDX guests
+      x86/hyperv/vtl: Mark the wakeup mailbox page as private
+
+ .../reserved-memory/intel,wakeup-mailbox.yaml      | 49 ++++++++++++++++++++++
+ arch/x86/hyperv/hv_vtl.c                           | 38 +++++++++++++++--
+ arch/x86/include/asm/acpi.h                        | 16 +++++++
+ arch/x86/include/asm/topology.h                    |  3 ++
+ arch/x86/include/asm/x86_init.h                    |  3 ++
+ arch/x86/kernel/acpi/madt_wakeup.c                 | 16 +++++++
+ arch/x86/kernel/devicetree.c                       | 47 +++++++++++++++++++++
+ arch/x86/kernel/x86_init.c                         |  3 ++
+ arch/x86/realmode/init.c                           |  7 ++--
+ 9 files changed, 174 insertions(+), 8 deletions(-)
+---
+base-commit: 18a93ea5e0ae3e3e6918a6efc6a1d60a37be47b2
+change-id: 20250602-rneri-wakeup-mailbox-328efe72803f
+
+Best regards,
+-- 
+Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 
 
