@@ -1,70 +1,70 @@
-Return-Path: <linux-hyperv+bounces-9140-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9142-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oMtoIZHDqGk2xAAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9140-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Mar 2026 00:43:13 +0100
+	id sEYaF3vDqGk0xAAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9142-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Mar 2026 00:42:51 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E2CC2090D5
-	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Mar 2026 00:43:13 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0A66209082
+	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Mar 2026 00:42:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5DAF0308CE66
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Mar 2026 23:42:35 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 53CF23026510
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Mar 2026 23:42:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9520391825;
-	Wed,  4 Mar 2026 23:42:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4130339EF3C;
+	Wed,  4 Mar 2026 23:42:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TiQRHS59"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CT82jUBl"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7933845B3;
-	Wed,  4 Mar 2026 23:42:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0A83914EB;
+	Wed,  4 Mar 2026 23:42:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772667752; cv=none; b=YhmBbTb0bx2NJcIDQfBWLyaYnJxDLJ+sOLmgKmwnCv3rnqot5bu2MfBqXfLIP9o/w47SjpLZkr8yK/krjwUTuN1yyWkrhqCNiqf+i3dTnCrkLmZsOTHVGezplaiL40/sliZ8y3iHAMZX0T6nrOCApTzuxMyhJmtO2kS10WAQyd0=
+	t=1772667754; cv=none; b=ESJ+uS7t4KbPOLjODknqT3/ZCog1S5A+Eu7Zb15+TKP+aQxlHvMT9fvl5p/2KEQWO/RJo6+2BZMI35rLukJgxTyP2h0xypco7Ik+/5qogQhqVsUiLkatwELt3AgJTKg2vIxPNr7OsFURgONWI50uIl40+/ctRyuhBU6mPoUdDjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772667752; c=relaxed/simple;
-	bh=qXYoaEms0cS0wZC2ODKoxzgS7jq86FPFbDCJ0PJAAY8=;
+	s=arc-20240116; t=1772667754; c=relaxed/simple;
+	bh=JDBcIU3oLzy6nR7gCTw/cB7hCWrF8Ykxag6iBFuscOw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eCiFZsqraeNfoWOCIXU6gqnMyy/S5huuLfkNbFLFV95Jk/DkQL7MRn2YrYsETtOacPHk7VX5+iyL5dM+WmDeR5qyTFGtELkAK4dca/TemxHuRt7PO/uHix3qOF44RBVD6rhVupVmcBs4P8CfSn7qNTqLXoMoR4TmS2+LfAq7YA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TiQRHS59; arc=none smtp.client-ip=198.175.65.9
+	 In-Reply-To:To:Cc; b=PbrfJwYK2rZBhKF4mdMysCyyWSCpVVznvHVp1CDvLTY/cfOcVF0HOnGX5dt76cgMQdBW4s96S4qEnaAp3AGJ0r3/zuTdkN1roW8DJNPvpDG9Sk+Xeea0zXtD7qrtv9TbJb0KRdyLOIIgiAe3e3wM8FeYJ4tuquSdvV0/4RHKdF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CT82jUBl; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772667752; x=1804203752;
+  t=1772667753; x=1804203753;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=qXYoaEms0cS0wZC2ODKoxzgS7jq86FPFbDCJ0PJAAY8=;
-  b=TiQRHS59RL6M2CUPgLmHldNfKSLKuxdRagtxMG10youMLCGZqUEmwMFx
-   61yQN8nzI14QlXQr0AF2cdq7i1ke0eO9/vlYnx1kwvYLy3urTCNezdinQ
-   I/gaI7nyB9Sg4kCmSdFq6B8K7Lzm2zzJKuKzjFgY+/Y4T/3OxmSaiCA/t
-   +qa5FsMJdUNN0a/gDjJl6N4Bx1RfvGQNeSBZKWQZf/Juih0xs7D8UBvWB
-   y2kYNH0DQeEVNqog3YqYwEtomCGpL9rd2IZB1ujArDE6R37jSLXW9qszV
-   N0E1DUPsn71GhPZ08YUWsWvX3UKRiroCxzRRMK2FHWoLuFhemlp/eFazB
+  bh=JDBcIU3oLzy6nR7gCTw/cB7hCWrF8Ykxag6iBFuscOw=;
+  b=CT82jUBlZ+oCza2cm/hxPB1Qg8tAxqobgw8JdgNvZs1HpHZ2HnOE0Mbq
+   g1lclwszTvBeVAY+bq5pyyCj5NRYi0gx+uDgqrWQAmM4oPdHMGhuiyMK7
+   FDUmsPDlav8uwCVij3D3g4yHvsbpw2jPywsc7zhG2KH8guoH7ZsF/468w
+   lKA/jddXR+GVqB6jBPXYfTfclR8e4x9V+tokIkHISPpoNJxDizM1gBi/z
+   F0JdFbu9KNCJ8f/+TISkqpCCmwqjFLiANtkWtbxVtGHcuY7eocvvgT8A6
+   7LhySxHREnRImJUfJY5eiPYRmRLvPFFor/lWHLL3L2y6z+1zkfalgY7ja
    g==;
-X-CSE-ConnectionGUID: DmvOwcpUSxCm9wSy4g7foQ==
-X-CSE-MsgGUID: VpjcBPklTK6j0w7Dsn719w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11719"; a="96359379"
+X-CSE-ConnectionGUID: jnxZ87f5SYaVQHkkxbRCsA==
+X-CSE-MsgGUID: 6ap271UcTYSnuINyW51EaQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11719"; a="96359389"
 X-IronPort-AV: E=Sophos;i="6.21,324,1763452800"; 
-   d="scan'208";a="96359379"
+   d="scan'208";a="96359389"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
   by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2026 15:42:30 -0800
-X-CSE-ConnectionGUID: DpyxQfphQvKbvlEYc1Y6mw==
-X-CSE-MsgGUID: vvWKmyObRIO42J1Vpg/z9w==
+X-CSE-ConnectionGUID: bQI2OXMkRji1/NWcKKnL/Q==
+X-CSE-MsgGUID: l6aAjajfSzWu5KxBdIVl+Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,324,1763452800"; 
-   d="scan'208";a="215376902"
+   d="scan'208";a="215376906"
 Received: from unknown (HELO [172.25.112.21]) ([172.25.112.21])
   by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2026 15:42:28 -0800
 From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Date: Wed, 04 Mar 2026 15:41:15 -0800
-Subject: [PATCH v9 04/10] x86/dt: Parse the Wakeup Mailbox for Intel
- processors
+Date: Wed, 04 Mar 2026 15:41:16 -0800
+Subject: [PATCH v9 05/10] x86/hyperv/vtl: Set real_mode_header in
+ hv_vtl_init_platform()
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -73,7 +73,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260304-rneri-wakeup-mailbox-v9-4-a5c6845e6251@linux.intel.com>
+Message-Id: <20260304-rneri-wakeup-mailbox-v9-5-a5c6845e6251@linux.intel.com>
 References: <20260304-rneri-wakeup-mailbox-v9-0-a5c6845e6251@linux.intel.com>
 In-Reply-To: <20260304-rneri-wakeup-mailbox-v9-0-a5c6845e6251@linux.intel.com>
 To: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -88,34 +88,35 @@ Cc: Saurabh Sengar <ssengar@linux.microsoft.com>,
  linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Ricardo Neri <ricardo.neri@intel.com>, 
  Yunhong Jiang <yunhong.jiang@linux.intel.com>, 
- Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+ Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, 
+ Thomas Gleixner <tglx@kernel.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1772667694; l=4553;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1772667694; l=2364;
  i=ricardo.neri-calderon@linux.intel.com; s=20250602;
- h=from:subject:message-id; bh=qXYoaEms0cS0wZC2ODKoxzgS7jq86FPFbDCJ0PJAAY8=;
- b=a0g3m9Q5qiVTigofzAeeCBKtUdDx3rbqCjAs87qGUQ4NPFgf7qEh0lMxPnmPSC9TlUynsog64
- x3BjpM1/8q3CglVWda/ewap8tYkawwB5xPLM05Z1Nq/7GiSqJ6RkDiP
+ h=from:subject:message-id; bh=3I3YmnN/1McteB5oTgTUDd+p5JYa7dqLPq6/RX+ToAU=;
+ b=decoK6P5d5qSAFB2QaKNVFhE4bD6HhEyCOofVP3dBzQuDa2BSA9cP8meaZPCD7m1O48LrvItr
+ KEYRolCT//LBd8Z2Rr2e1EOibvhz6MvsEurHUwK2tv1DIhc/Qs+LrJA
 X-Developer-Key: i=ricardo.neri-calderon@linux.intel.com; a=ed25519;
  pk=NfZw5SyQ2lxVfmNMaMR6KUj3+0OhcwDPyRzFDH9gY2w=
-X-Rspamd-Queue-Id: 1E2CC2090D5
+X-Rspamd-Queue-Id: F0A66209082
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
 	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9140-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9142-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_TO(0.00)[kernel.org,microsoft.com,outlook.com];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
+	RCPT_COUNT_TWELVE(0.00)[21];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
@@ -125,30 +126,27 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.intel.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,intel.com:dkim,intel.com:email,n:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,intel.com:dkim,intel.com:email,outlook.com:email,linux.intel.com:mid]
 X-Rspamd-Action: no action
 
-The Wakeup Mailbox is a mechanism to boot secondary CPUs on systems that do
-not want or cannot use the INIT + StartUp IPI messages.
+From: Yunhong Jiang <yunhong.jiang@linux.intel.com>
 
-The platform firmware is expected to implement the mailbox as described in
-the Multiprocessor Wakeup Structure of the ACPI specification. It is also
-expected to publish the mailbox to the operating system as described in the
-corresponding DeviceTree schema that accompanies the documentation of the
-Linux kernel.
+Hyper-V VTL clears x86_platform.realmode_{init(), reserve()} in
+hv_vtl_init_platform() whereas it sets real_mode_header later in
+hv_vtl_early_init(). There is no need to deal with the settings of real
+mode memory in two places. Also, both functions are called much earlier
+than x86_platform.realmode_init() (via an early_initcall), where the
+real_mode_header is needed.
 
-Reuse the existing functionality to set the memory location of the mailbox
-and update the wakeup_secondary_cpu_64() APIC callback. Make this
-functionality available to DeviceTree-based systems by making CONFIG_X86_
-MAILBOX_WAKEUP depend on either CONFIG_OF or CONFIG_ACPI_MADT_WAKEUP.
-
-do_boot_cpu() uses wakeup_secondary_cpu_64() when set. It will be set if a
-wakeup mailbox is enumerated via an ACPI table or a DeviceTree node. For
-cases in which this behavior is not desired, this APIC callback can be
-updated later during boot using platform-specific hooks.
+Set real_mode_header in hv_vtl_init_platform() to keep all code dealing
+with memory for the real mode trampoline in one place. Besides making the
+code more readable, it prepares it for a subsequent changeset in which the
+behavior needs to change to support Hyper-V VTL guests in TDX a
+environment.
 
 Reviewed-by: Dexuan Cui <decui@microsoft.com>
-Co-developed-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
 Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 ---
@@ -159,111 +157,48 @@ Changes in v8:
  - None
 
 Changes in v7:
- - #included asm/acpi.h to reflect the updated declaration of the
-   needed functions.
- - (Kept Reviewed-by tag from Dexuan, as this single change is trivial.)
+ - None
 
 Changes in v6:
+ - Corrected reference to hv_vtl_init_platform() in the changelog.
+   (Dexuan)
  - Added Reviewed-by tag from Dexuan. Thanks!
 
 Changes in v5:
- - Made CONFIG_X86_MAILBOX_WAKEUP depend on CONFIG_OF or CONFIG_ACPI_
-   MADT_WAKEUP.
+ - None
 
 Changes in v4:
- - Look for the wakeup mailbox unconditionally, regardless of whether
-   cpu@N nodes have an `enable-method` property.
- - Add a reference to the ACPI specification. (Rafael)
+ - Added Reviewed-by tag from Michael. Thanks!
 
 Changes in v3:
- - Added extra sanity checks when parsing the mailbox node.
- - Probe the mailbox using its `compatible` property
- - Setup the Wakeup Mailbox if the `enable-method` is found in the CPU
-   nodes.
- - Cleaned up unneeded ifdeffery.
- - Clarified the mechanisms used to override the wakeup_secondary_64()
-   callback to not use the mailbox when not desired. (Michael)
  - Edited the commit message for clarity.
 
 Changes in v2:
- - Disabled CPU offlining.
- - Modified dtb_parse_mp_wake() to return the address of the mailbox.
+ - Introduced this patch.
 ---
- arch/x86/kernel/devicetree.c | 47 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ arch/x86/hyperv/hv_vtl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
-index dd8748c45529..318acaecb5ca 100644
---- a/arch/x86/kernel/devicetree.c
-+++ b/arch/x86/kernel/devicetree.c
-@@ -18,6 +18,7 @@
- #include <linux/of_pci.h>
- #include <linux/initrd.h>
+diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+index 9b6a9bc4ab76..e045bf3a2c59 100644
+--- a/arch/x86/hyperv/hv_vtl.c
++++ b/arch/x86/hyperv/hv_vtl.c
+@@ -70,6 +70,7 @@ void __init hv_vtl_init_platform(void)
  
-+#include <asm/acpi.h>
- #include <asm/irqdomain.h>
- #include <asm/hpet.h>
- #include <asm/apic.h>
-@@ -125,6 +126,51 @@ static void __init dtb_setup_hpet(void)
- #endif
- }
+ 	x86_platform.realmode_reserve = x86_init_noop;
+ 	x86_platform.realmode_init = x86_init_noop;
++	real_mode_header = &hv_vtl_real_mode_header;
+ 	x86_init.irqs.pre_vector_init = x86_init_noop;
+ 	x86_init.timers.timer_init = x86_init_noop;
+ 	x86_init.resources.probe_roms = x86_init_noop;
+@@ -251,7 +252,6 @@ int __init hv_vtl_early_init(void)
+ 		panic("XSAVE has to be disabled as it is not supported by this module.\n"
+ 			  "Please add 'noxsave' to the kernel command line.\n");
  
-+#if defined(CONFIG_X86_64) && defined(CONFIG_SMP)
-+
-+#define WAKEUP_MAILBOX_SIZE	0x1000
-+#define WAKEUP_MAILBOX_ALIGN	0x1000
-+
-+/** dtb_wakeup_mailbox_setup() - Parse the wakeup mailbox from the device tree
-+ *
-+ * Look for the presence of a wakeup mailbox in the DeviceTree. The mailbox is
-+ * expected to follow the structure and operation described in the Multiprocessor
-+ * Wakeup Structure of the ACPI specification.
-+ */
-+static void __init dtb_wakeup_mailbox_setup(void)
-+{
-+	struct device_node *node;
-+	struct resource res;
-+
-+	node = of_find_compatible_node(NULL, NULL, "intel,wakeup-mailbox");
-+	if (!node)
-+		return;
-+
-+	if (of_address_to_resource(node, 0, &res))
-+		goto done;
-+
-+	/* The mailbox is a 4KB-aligned region.*/
-+	if (res.start & (WAKEUP_MAILBOX_ALIGN - 1))
-+		goto done;
-+
-+	/* The mailbox has a size of 4KB. */
-+	if (res.end - res.start + 1 != WAKEUP_MAILBOX_SIZE)
-+		goto done;
-+
-+	/* Not supported when the mailbox is used. */
-+	cpu_hotplug_disable_offlining();
-+
-+	acpi_setup_mp_wakeup_mailbox(res.start);
-+done:
-+	of_node_put(node);
-+}
-+#else /* !CONFIG_X86_64 || !CONFIG_SMP */
-+static inline int dtb_wakeup_mailbox_setup(void)
-+{
-+	return -EOPNOTSUPP;
-+}
-+#endif /* CONFIG_X86_64 && CONFIG_SMP */
-+
- #ifdef CONFIG_X86_LOCAL_APIC
+-	real_mode_header = &hv_vtl_real_mode_header;
+ 	apic_update_callback(wakeup_secondary_cpu_64, hv_vtl_wakeup_secondary_cpu);
  
- static void __init dtb_cpu_setup(void)
-@@ -287,6 +333,7 @@ static void __init x86_dtb_parse_smp_config(void)
- 
- 	dtb_setup_hpet();
- 	dtb_apic_setup();
-+	dtb_wakeup_mailbox_setup();
- }
- 
- void __init x86_flattree_get_config(void)
+ 	return 0;
 
 -- 
 2.43.0
