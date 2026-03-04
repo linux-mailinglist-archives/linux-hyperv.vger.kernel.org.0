@@ -1,184 +1,136 @@
-Return-Path: <linux-hyperv+bounces-9126-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9127-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6JkUN4l3p2kchwAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9126-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Mar 2026 01:06:33 +0100
+	id yChPAYZ7p2kshwAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9127-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Mar 2026 01:23:34 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB4DD1F8B01
-	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Mar 2026 01:06:32 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C3E41F8DEB
+	for <lists+linux-hyperv@lfdr.de>; Wed, 04 Mar 2026 01:23:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 4D3E2303D7C6
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Mar 2026 00:03:23 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id BCABB303B91D
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Mar 2026 00:23:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9E161624D5;
-	Wed,  4 Mar 2026 00:03:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAA9929C339;
+	Wed,  4 Mar 2026 00:23:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RMIagKsP"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ciqV0cX1"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5FC138FA3;
-	Wed,  4 Mar 2026 00:03:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE0F52C028B;
+	Wed,  4 Mar 2026 00:23:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772582600; cv=none; b=XjiXvueZYzhaJHYcfwB7qt25YpQcFjURzpPXsErgYRM33QtNcso5/Je60WWF0vx9HQsxXi3lrcFHFOlKDweKCpR1WGTKimKmEH9Reag80IwdGSNm5pBuUblu+xUk/RDC2q36L1PF9hK7Yx4sTtkGICylw2cauugUuAcdcaYRWhE=
+	t=1772583810; cv=none; b=W7c3ffOXvPxf25MR3GBSBHVzFa9S0ATXVMamOobJRKejtFCpm8795bnt4adaZ7xzud3bB7eDqvsO8PqVtz2KboiRYg5PChb9Dj1qpRtRsFxMZcMKPn2ZkjUDxvVz5761zsk5jsS/2pHjD9H7P8awZIaoErbk2B61ZGwosfsfq14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772582600; c=relaxed/simple;
-	bh=6GaZuFhmftQHAUxdpC1gZIHlQULpClQG5SbDtHEGyFk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RTB29JkfF8jv1+fUJXMsTLXqulHSPqqKjE9UAXxgIqzTaNkZ6MArmR4cTyHrMgDoQ8hnrhrzoztjftG/sqPJv46MCnkWp6pey2EQvKTS30vlHimlK1UctokRzXGy3mYc9DtMIAIpaGuHAubLFIwzcLkN+w7eGQFP8BerATYqPAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RMIagKsP; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1772583810; c=relaxed/simple;
+	bh=EurKehYJRKavngli1rgvpeH+NozmmEiZanEGb/r+1Lk=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=WNYFcVJK/E9zkcZYWY3dr1tr4sOyvsltjXeeaweeOvUUl/fMsz82vtmcLEnSdQnd338QAfnKRsBCsQHDKWDIjSn9+LrTwsgTOAHs+v9SpHVm2XQ+xWG8CVpATkaTIXMhSESs8uon+74OXTMhpbMZvVROx3HF1rQCznkOAg4AY0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ciqV0cX1; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from mrdev.corp.microsoft.com (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
-	by linux.microsoft.com (Postfix) with ESMTPSA id F027620B6F03;
-	Tue,  3 Mar 2026 16:03:17 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F027620B6F03
+Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 17BE020B6F02;
+	Tue,  3 Mar 2026 16:23:29 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 17BE020B6F02
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1772582598;
-	bh=ZopeEBedtQG63vsneWr7udCfjJmgOUVeAC4qQFoqiyw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=RMIagKsPt/XSVkGgKnRSf37XAI2QFyUaiNQbvHexXg5hKCyLP0Y1pvm7KI58oAMR+
-	 bq29zu0f+xOQGzHWSYcvyeayaqrUqA30yPOpy19E6mQCGUN3mMVPy9AKCUiRE5L+f7
-	 bfRkqzEixn/Gc/CEpQxmsTuvdG/PAVqzBwlGtvxg=
-From: Mukesh R <mrathor@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: wei.liu@kernel.org
-Subject: [PATCH V0] mshv: pass struct mshv_user_mem_region by reference
-Date: Tue,  3 Mar 2026 16:02:51 -0800
-Message-ID: <20260304000251.2625375-1-mrathor@linux.microsoft.com>
-X-Mailer: git-send-email 2.51.2.vfs.0.1
+	s=default; t=1772583809;
+	bh=oWXccP+SABjA6e9hYGvaln7cscnLkuH0TF5mUBK4cdo=;
+	h=Subject:From:To:Cc:Date:From;
+	b=ciqV0cX1s7dvxPAU0EaGVSOnc8Jpukd5mB8SHZXD7S7vVM6Ss4eH+Dae+2NrnFGkb
+	 3i6XxUYEpN58NbmtIfO4//e7IhqRedc9oCFvTkCe0QE8NrqovV5PZsbq5TaivjTZaJ
+	 sc25yT4WUsjQo9l6sHpR/QpS4YHK+bM4pEGkZGJI=
+Subject: [PATCH 0/4] mshv: Fix and improve memory pre-depositing
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, longli@microsoft.com
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 04 Mar 2026 00:23:28 +0000
+Message-ID: 
+ <177258296744.229866.4926075663598294228.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: DB4DD1F8B01
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 9C3E41F8DEB
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-9126-lists,linux-hyperv=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	MIME_TRACE(0.00)[0:+];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mrathor@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_NONE(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_HAS_DN(0.00)[]
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	PRECEDENCE_BULK(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9127-lists,linux-hyperv=lfdr.de];
+	TO_DN_NONE(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+]
 X-Rspamd-Action: no action
 
-For unstated reasons, function mshv_partition_ioctl_set_memory passes
-struct mshv_user_mem_region by value instead of by reference. Change
-it to pass by reference.
+This series fixes and improves memory pre-depositing in the Microsoft
+Hypervisor (MSHV) driver to avoid partition and virtual processor
+creation failures due to insufficient deposited memory, and to speed
+up guest creation.
 
-Signed-off-by: Mukesh R <mrathor@linux.microsoft.com>
+The first patch converts hv_call_deposit_pages() into a wrapper that
+supports arbitrarily large deposit requests by splitting them into
+HV_DEPOSIT_MAX-sized chunks. It also doubles the deposit amount for
+L1 virtual hypervisor (L1VH) partitions to reserve memory for
+Hypervisor Hot Restart (HHR), since L1VH guests cannot request
+additional memory from the root partition during HHR.
+
+The second patch moves partition initialization page depositing from
+the hypercall wrapper to the partition initialization ioctl. The
+required number of pages is determined empirically. Partitions with
+nested virtualization capability require significantly more pages
+(20 MB) to accommodate the nested hypervisor. The partition creation
+flags are saved in the partition structure to allow selecting the
+correct deposit size at initialization time.
+
+The third patch moves virtual processor page depositing from
+hv_call_create_vp() to mshv_partition_ioctl_create_vp(). A fixed
+deposit of 1 MB per VP is used, which covers both regular and nested
+virtualization cases. Deposited memory is now properly withdrawn if
+VP creation fails.
+
+The fourth patch adds pre-depositing of pages for guest address space
+(SLAT) region creation. The deposit size is calculated based on the
+region size rounded up to 1 GB chunks, with 6 MB deposited per GB of
+address space. Deposited pages are withdrawn on failure.
+
 ---
- drivers/hv/mshv_root_main.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index e6509c980763..87c5ffd2528d 100644
---- a/drivers/hv/mshv_root_main.c
-+++ b/drivers/hv/mshv_root_main.c
-@@ -1289,7 +1289,7 @@ static int mshv_prepare_pinned_region(struct mshv_mem_region *region)
-  */
- static long
- mshv_map_user_memory(struct mshv_partition *partition,
--		     struct mshv_user_mem_region mem)
-+		     struct mshv_user_mem_region *mem)
- {
- 	struct mshv_mem_region *region;
- 	struct vm_area_struct *vma;
-@@ -1297,12 +1297,12 @@ mshv_map_user_memory(struct mshv_partition *partition,
- 	ulong mmio_pfn;
- 	long ret;
- 
--	if (mem.flags & BIT(MSHV_SET_MEM_BIT_UNMAP) ||
--	    !access_ok((const void __user *)mem.userspace_addr, mem.size))
-+	if (mem->flags & BIT(MSHV_SET_MEM_BIT_UNMAP) ||
-+	    !access_ok((const void __user *)mem->userspace_addr, mem->size))
- 		return -EINVAL;
- 
- 	mmap_read_lock(current->mm);
--	vma = vma_lookup(current->mm, mem.userspace_addr);
-+	vma = vma_lookup(current->mm, mem->userspace_addr);
- 	is_mmio = vma ? !!(vma->vm_flags & (VM_IO | VM_PFNMAP)) : 0;
- 	mmio_pfn = is_mmio ? vma->vm_pgoff : 0;
- 	mmap_read_unlock(current->mm);
-@@ -1310,7 +1310,7 @@ mshv_map_user_memory(struct mshv_partition *partition,
- 	if (!vma)
- 		return -EINVAL;
- 
--	ret = mshv_partition_create_region(partition, &mem, &region,
-+	ret = mshv_partition_create_region(partition, mem, &region,
- 					   is_mmio);
- 	if (ret)
- 		return ret;
-@@ -1355,25 +1355,25 @@ mshv_map_user_memory(struct mshv_partition *partition,
- /* Called for unmapping both the guest ram and the mmio space */
- static long
- mshv_unmap_user_memory(struct mshv_partition *partition,
--		       struct mshv_user_mem_region mem)
-+		       struct mshv_user_mem_region *mem)
- {
- 	struct mshv_mem_region *region;
- 
--	if (!(mem.flags & BIT(MSHV_SET_MEM_BIT_UNMAP)))
-+	if (!(mem->flags & BIT(MSHV_SET_MEM_BIT_UNMAP)))
- 		return -EINVAL;
- 
- 	spin_lock(&partition->pt_mem_regions_lock);
- 
--	region = mshv_partition_region_by_gfn(partition, mem.guest_pfn);
-+	region = mshv_partition_region_by_gfn(partition, mem->guest_pfn);
- 	if (!region) {
- 		spin_unlock(&partition->pt_mem_regions_lock);
- 		return -ENOENT;
- 	}
- 
- 	/* Paranoia check */
--	if (region->start_uaddr != mem.userspace_addr ||
--	    region->start_gfn != mem.guest_pfn ||
--	    region->nr_pages != HVPFN_DOWN(mem.size)) {
-+	if (region->start_uaddr != mem->userspace_addr ||
-+	    region->start_gfn != mem->guest_pfn ||
-+	    region->nr_pages != HVPFN_DOWN(mem->size)) {
- 		spin_unlock(&partition->pt_mem_regions_lock);
- 		return -EINVAL;
- 	}
-@@ -1404,9 +1404,9 @@ mshv_partition_ioctl_set_memory(struct mshv_partition *partition,
- 		return -EINVAL;
- 
- 	if (mem.flags & BIT(MSHV_SET_MEM_BIT_UNMAP))
--		return mshv_unmap_user_memory(partition, mem);
-+		return mshv_unmap_user_memory(partition, &mem);
- 
--	return mshv_map_user_memory(partition, mem);
-+	return mshv_map_user_memory(partition, &mem);
- }
- 
- static long
--- 
-2.51.2.vfs.0.1
+Stanislav Kinsburskii (4):
+      mshv: Support larger memory deposits
+      mshv: Fix pre-depositing of pages for partition initialization
+      mshv: Fix pre-depositing of pages for virtual processor initialization
+      mshv: Pre-deposit pages for SLAT creation
+
+
+ drivers/hv/hv_proc.c           |   58 +++++++++++++++++++++++++++++++++------
+ drivers/hv/mshv_root.h         |    1 +
+ drivers/hv/mshv_root_hv_call.c |    6 ----
+ drivers/hv/mshv_root_main.c    |   59 +++++++++++++++++++++++++++++++++++++---
+ 4 files changed, 104 insertions(+), 20 deletions(-)
 
 
