@@ -1,307 +1,297 @@
-Return-Path: <linux-hyperv+bounces-9150-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9151-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aNlxJFWnqWlSBwEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9150-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Mar 2026 16:55:01 +0100
+	id SNMpLvbcqWm4GgEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9151-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Mar 2026 20:43:50 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FB0E214ECD
-	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Mar 2026 16:55:00 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBED2217B10
+	for <lists+linux-hyperv@lfdr.de>; Thu, 05 Mar 2026 20:43:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id B950B3000091
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Mar 2026 15:38:14 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E2D57301A6A8
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Mar 2026 19:43:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEFAB3CE481;
-	Thu,  5 Mar 2026 15:37:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C53183E556A;
+	Thu,  5 Mar 2026 19:43:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bhfd7vYD"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="EV62gYOQ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazolkn19012009.outbound.protection.outlook.com [52.103.14.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3843CD8D2;
-	Thu,  5 Mar 2026 15:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772725040; cv=none; b=LnWQpXdO7Gm+Qf42ctTZdPGhY6d1ahCdQVH+czWKIFWlahZUseeEc7hVpzcwwmk+ekV18zY4xmJCbdBqbHj6F6H+EXzRAKQGP7JP0hoRz4AzLqW6+7gYZcr/exfodFpThOf1K3onH6AfGD89Gr4p2Q3szM0F/mhw1Pc7FcwfFcs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772725040; c=relaxed/simple;
-	bh=Yhl0gWZMiDd1Tqs4mW2XcYXwszy4vPsjwXrYC/z2oHQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oo0s1fn+OeuNg5wqtFz7ESotbS4gBkyWGyVSEGT5OxbI/U7KGYb/UWNLxLZYW9gdU1pFFhc5brGHXbaFeegge7mIf5TpIS5xk5vWGS5Gfk4/tbXUDW+93x7H8FyLuMpOcjVV9nWpfgsgFOFq44uwJt0EgjWHgrloYJDOXYP19Qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bhfd7vYD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECA5AC2BC9E;
-	Thu,  5 Mar 2026 15:37:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772725040;
-	bh=Yhl0gWZMiDd1Tqs4mW2XcYXwszy4vPsjwXrYC/z2oHQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Bhfd7vYDbZj+VJmQhKmtyFyGcODJGK0wyrht/H5hO7JcFBdZQANLPiyJ2opxoTfZM
-	 Ce2eAurzJsHVFQ9mim5tpUtk3yrtXltnsdokK6sgkRptIQKl1zMP0cugsWkJhbDJq6
-	 JeNCnZ4UsF9w3Gzkv3jpUH8pjDPtpJ3sPFrglV3IRvFcTGQqKRM61EvS0B1JC9ebrW
-	 ua9y0es3BCrly8cBpSIj/IRY74rkCG1eyX0YT2syXQIFvQ1NyJL4XvVoFURgxzCqo2
-	 oLpD+zA5EkYLBcLY7a9ddJCXNU/Von5DR8LYCxlsH38u8FkPApIgDQUAfOEEjreCEk
-	 3aR5NC6duRyaw==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Jan Kiszka <jan.kiszka@siemens.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Sasha Levin <sashal@kernel.org>,
-	kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	James.Bottomley@HansenPartnership.com,
-	linux-hyperv@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.19-5.10] scsi: storvsc: Fix scheduling while atomic on PREEMPT_RT
-Date: Thu,  5 Mar 2026 10:36:53 -0500
-Message-ID: <20260305153704.106918-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260305153704.106918-1-sashal@kernel.org>
-References: <20260305153704.106918-1-sashal@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D747303A26;
+	Thu,  5 Mar 2026 19:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.14.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772739798; cv=fail; b=AwS0I4ieFQC2uA42jADr49R/dhCVEW680+HZg+PQepJbnkhbIhK4nyM6XjSgTshAMObuKh1ypXvGsXE30w3NljVJ6e2PFhXlFvyM9Ay26z/g/Abv9lJNj/AgjDPdbQIewtcWaVJ64f+7QHx2GmmkqbpI8QssRPorD0zAtDU8Ogg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772739798; c=relaxed/simple;
+	bh=miyCs6/jA8ZazQEk1vNRHoPmh4xyQEeG4UwRrbLnnLQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=EFhzSr8ISNeC+tWp1sCbPk08lGFbTkmsCbIz414+YoylOYzTtHg/wWoFRm+33OsqmUhs8Ywdofm1UB6o/pOz7TjoFrTq9rljkrg9S4FRrJxF0h9xK81T6ovgAJkJYZfO0Pt2heGkx0ku+nwAr4KEi5tZxOUXjdOP1JUVhvgAxgE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=EV62gYOQ; arc=fail smtp.client-ip=52.103.14.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=zMlnTTdTFa+sB9JGu8nttEv6fJJDc08ebt9DOH7y9Qmtbp8lOgLpS4Q0n+YNeHtFCzaz75XANrIouti2znKBJMnFf9tzajidKDthh7/O/GPUjpV3yAZL5maT6igfWjX05cjd2GEUjzROSyxbZbX8yGRjdh3ygX6tw8NaV9TyF5qSNAhhp4341DA5aqvrW5Nnkvps9TXkcA8fXquuX/EyfZ4i2AfcGT3Tm0Lq/JcvNxvK5bOOW0MEoPZ0Wz6L+sDNsONeBhKU3WZkxt7+o3H02124vm91450ozMFXcdOy1lcOIjzKnsinw81ndPj8LJaUqTDwtKtRl1kXjdIBBsLtsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=j2BFSW8uXKGbemGoUzwQXwfkHO/WnuBShkI126K3Qeg=;
+ b=YZa8XTPZyq4RWZoDFJ4cKtepN7rpcn6JheFljcS8oYi91YokokOAVxvI2hRc3REUeYZbB/1SIE41J5vJgx6s7otAsKHzl64AZybHhNUwPcDQCAiigpnf/HJEbe79Osn6EyFSr7ru15+HftwMNvOHfHRpJ7Gn3sCV9IpMizo5C+DkorqdDYMZxG4bv0gmyn01B56hgWKD2hnp2ufxCFp+UthzASzPpfVcKjMxC+Zvz5kGRmmrpMoaEbrbtcHbC5xdYM/NgVfhic6i5znjkdZf5wMotuFMgY9ZtlgyMuaj+gIrOw5zHWHvggPQzrVLaBo1vNjxkHDxPt+ZRxKeh053xQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j2BFSW8uXKGbemGoUzwQXwfkHO/WnuBShkI126K3Qeg=;
+ b=EV62gYOQQt7Pey6Hm/afBNuZQF1zCvwpE6f+U7GCJ81qzDZ7+4lo6ATO4isO3k+ZEqttI+SCaLLmqIwRnev9mE1Pr4ThhbulwfRRrFphvpfciJgqWcPbBdZOjCnbJOsLrVcey0lXMF8QQzTyDtC4st7p1PbMhFiZDQInYl98cQg6N7kUgOUzBBEIIfstwuAIUTcU4UbxVZSOBR7L7jiNxNRq1vJ5+ghsuW7E8sxtI6JGh0QithkWjiAVOlqfRnGvF/TyqECAwu2/y3msHyhOxpFWi06L5ssoNvGZhZMIev6yBLwBQ1ggz2QwpV7KEVMx+A1mXywD78FH+pMQVJ7xDw==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by SN4PR0201MB8726.namprd02.prod.outlook.com (2603:10b6:806:1e9::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.22; Thu, 5 Mar
+ 2026 19:43:15 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6%6]) with mapi id 15.20.9678.017; Thu, 5 Mar 2026
+ 19:43:15 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	"kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>, "longli@microsoft.com"
+	<longli@microsoft.com>
+CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/4] mshv: Support larger memory deposits
+Thread-Topic: [PATCH 1/4] mshv: Support larger memory deposits
+Thread-Index: AQGf/CXhq+vihj2DXZ0/OE6Cmc0kFAKn37hBtgRqHTA=
+Date: Thu, 5 Mar 2026 19:43:14 +0000
+Message-ID:
+ <SN6PR02MB4157CB6A57E15E00E472AA64D47DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+References:
+ <177258296744.229866.4926075663598294228.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <177258381446.229866.108795434668770412.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+In-Reply-To:
+ <177258381446.229866.108795434668770412.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SN4PR0201MB8726:EE_
+x-ms-office365-filtering-correlation-id: 72bcd70b-aa4e-4888-aa02-08de7aef7159
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|41001999006|461199028|51005399006|13091999003|12121999013|15080799012|8062599012|19110799012|37011999003|31061999003|8060799015|40105399003|3412199025|440099028|102099032|18061999006;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?2DlsXdN0+bLdnn2b5/iks5cQuFdY+7WbnNlUVR6s1JFr3KNqKubdnUE0EdC+?=
+ =?us-ascii?Q?1IGfEh6jj27HFddGead5q+OQhgsHPYLJQJ4EJ1Fvln/u3hbL7NjAF4XClkPu?=
+ =?us-ascii?Q?YRiNiewanT38JkUZ4KlTTJqWAJZJ1l5FXTjcl2mJvzb7/wfzcJdAGYaLyl8L?=
+ =?us-ascii?Q?HnIBrrO5QkTTZfPeRsx5Vc3cqNjkW/6INDxwbDSc6fdJOIFCAHCcMxpdnWN5?=
+ =?us-ascii?Q?yIXP3kmwfbaFWp8xT6C91Ndqk9gonn4xBipQb7GYLqvTrtm7C5N+5SLJivVh?=
+ =?us-ascii?Q?VU+qSrHPb+daNCGuI7PNuqbq/azZbUsiEZwgDak2+tACgF+5+Zu+LFCPeTeD?=
+ =?us-ascii?Q?0JtrtW+lgYVBFNvLIcMCM9iC2z/9vrXmeDsDc4yNF9hFF1cJRRs3oiQf3t5t?=
+ =?us-ascii?Q?qCLnRo0nWX4KlSxurvUf+zuN/jX/UWfu45pex5P5iaVLZwlJ673DFNvYR9Vd?=
+ =?us-ascii?Q?bBwX41G6fZ6JQQCH1n4kF39B9K2d3Kde3hN0YjZtayy8jkts985CvR/eXAX7?=
+ =?us-ascii?Q?NdyoFf7kIu+24Nw17KlTyJBccZt52mqqTwJ3WlLWcGLpPLCJGY75iSV7BUY/?=
+ =?us-ascii?Q?N9CriQCI5evkguuECG9/ihvhq76JoiB8Mc6VPgpNFev9VEElm8xYMIyeg6ej?=
+ =?us-ascii?Q?X3q2AmBTP0ZUG6jutQ+zqZr+jx1DLKURfrwNNzRlThoBirn7HLJyxo5AvQHL?=
+ =?us-ascii?Q?nHGfG8MEkvXhe8TOEHrRdFUXcXO2aeUwGBfc1Cc0r6IEszPld0ou5mSubL2Q?=
+ =?us-ascii?Q?VOf8Cx1/CSVdmCQuszXD4k9LfmWceGXEt8wpUKf1mDulCxFL2rx4ttq9X5ne?=
+ =?us-ascii?Q?jWX5uu+ogUnqPEPzPXHirUvf73Dwl5ngPWIRQKQdOKXWPMK4ed1MHoNnMMy3?=
+ =?us-ascii?Q?y75389KMck5QhF1C0UujDMr5Wy6/c8El3amLiU6s1Pq8b1rhHbmOn5BhFjoE?=
+ =?us-ascii?Q?3GoUTRrqh+pFQXc4zEvBBLLLTxDExgiIQe+TVqa1/3Sn309YH0nauB0V9tKw?=
+ =?us-ascii?Q?mGy5d8iLOKgDkeusYHjRjGhzdfhZ6bAOhboSwYris+9UK9BPLTfgf6uL91lm?=
+ =?us-ascii?Q?zzQZfTDc?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?lmqTgG9SppY3ci9KFEk3uGxfQD0gtn2NijouBx3KNdyxGbhwjU1Nhg4iFchZ?=
+ =?us-ascii?Q?cX5mhh0NLsYygRwX6q5NqHO6/ngGfrZwhhliQ15lzzW+mQKVXtm2GJYjUWlF?=
+ =?us-ascii?Q?HSWnpjmIGeEM+PLEk9/Jo8XL3U8hZnWNAq0vuJIcEOMscAaSqjy2ZI4x8kT/?=
+ =?us-ascii?Q?4ugMkFpe4OuRNM9RDDcwkpn31l0Omz9lhcIM3AMy8wnMIw96ba1nhK1fdzQJ?=
+ =?us-ascii?Q?MzkiAe2NgtMpVZeNtd0mdkqMYlNEYmrDWFDj6ofeJWpH60TibRFPgVa/uQ9a?=
+ =?us-ascii?Q?/3s78b/nNDFIC9EcbTP0qAVJFyKQGWUzj+6JkZE+mloZnQ1of/I4aHHkq226?=
+ =?us-ascii?Q?g3i/kRkuKQ7QSduvB4S7db8t+17jMR8V7kAtgyIV9dzXYPR35vJVk4opA7bh?=
+ =?us-ascii?Q?fc6MHROnHMTQedZn+fd2MIoby3fFvO6rlnE4tILxk2HmEROtO8MUmQXQfQE8?=
+ =?us-ascii?Q?rGXBPLojn/ad06q9qwuxSrxaTxT8iGQjiUcPbkk4+ZvOnwd80Wx0Rfvftdom?=
+ =?us-ascii?Q?OJgZz6KvFhdYzEwEViUTZsoMEgG+lxrcb4tCO9VhOzjKpnE2f4ro2pkQ/bHN?=
+ =?us-ascii?Q?3DRMxh4Key1jZdE9O/EbY7MNUpr/BBJP97grTYPQHPztGy+S+HUjPkgBg1jp?=
+ =?us-ascii?Q?rQTtDRQTb5VpgN8+wuxtBiTJ82/ugyYnjg/p5KJcuXnF/6BbkfV9kzZ3cYaL?=
+ =?us-ascii?Q?tiBHHqEtlTC9ftsnmJvaC5ndPolENdlRdirPMPAdD+LAAH52dztrrojW7zgp?=
+ =?us-ascii?Q?TA4EZzH4SWCsnNQLdgPODTojNqx6mPu2WrS/96E20sh3crQ3BcjrgtyFqPJo?=
+ =?us-ascii?Q?s3ZLatkzT7zbsa4wnyWHTZ3w6es7mDbnb7d3SbQioUh9Hnv6R2xnZIjAzT/A?=
+ =?us-ascii?Q?sI2CAZ/GVXRRDaOp/08vKlFx8wI+t/68cDOywvc7crkEPcca8Ho6oORv6zSG?=
+ =?us-ascii?Q?UHRdEf3Xz+OP8yRsvb7AgP353yATRabbU4RTFXeCwWYqSjUmHWpfUySsfLPy?=
+ =?us-ascii?Q?lsAbx25U235Q1Z3veKu5WmQICDuwyCvQ9UHL3EDeKHxvC53LG3MY+dyoFf+c?=
+ =?us-ascii?Q?5p6mh7vERlZfaHebllq/9xucSZNGpBqg8hrvrFxwyEJ0EEScM24FpOR30HzC?=
+ =?us-ascii?Q?5ttvlRjnPB+Bog7uJtuocylYQgWEp6Q4rQCDOAQkJkabxXue0AUnkpoqulmP?=
+ =?us-ascii?Q?1evCHXYGRe8zCZctqvD4XYOHBuuJsXwB2/yZVzLxDKuOoQDS8EO53xdTbSep?=
+ =?us-ascii?Q?yiE+789cLazrxPcSZEKdK3gGveaqtyPLyo5eQpIxsZxfazfbQA6fyJSo/rF9?=
+ =?us-ascii?Q?BakFBaKN1n1uyi3GJjPFGPNbsXv/EUWFdI6+m7/cn0ikkmXxlk/cdcjEue24?=
+ =?us-ascii?Q?4t3oqQs=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.19.6
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 9FB0E214ECD
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72bcd70b-aa4e-4888-aa02-08de7aef7159
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2026 19:43:14.9660
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB8726
+X-Rspamd-Queue-Id: BBED2217B10
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[siemens.com,outlook.com,oracle.com,kernel.org,microsoft.com,HansenPartnership.com,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-9150-lists,linux-hyperv=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9151-lists,linux-hyperv=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
 	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_FROM(0.00)[outlook.com];
+	DKIM_TRACE(0.00)[outlook.com:+];
+	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashal@kernel.org,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,oracle.com:email,siemens.com:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,msgid.link:url]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,outlook.com:dkim,SN6PR02MB4157.namprd02.prod.outlook.com:mid]
 X-Rspamd-Action: no action
 
-From: Jan Kiszka <jan.kiszka@siemens.com>
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Tuesda=
+y, March 3, 2026 4:24 PM
+>=20
+> Convert hv_call_deposit_pages() into a wrapper supporting arbitrary numbe=
+r
+> of pages, and use it in the memory deposit code paths.
+>=20
+> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+> ---
+>  drivers/hv/hv_proc.c |   50
+> +++++++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 49 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
+> index 5f4fd9c3231c..0f84a70def30 100644
+> --- a/drivers/hv/hv_proc.c
+> +++ b/drivers/hv/hv_proc.c
+> @@ -16,7 +16,7 @@
+>  #define HV_DEPOSIT_MAX (HV_HYP_PAGE_SIZE / sizeof(u64) - 1)
+>=20
+>  /* Deposits exact number of pages. Must be called with interrupts enable=
+d.  */
+> -int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+> +static int __hv_call_deposit_pages(int node, u64 partition_id, u32 num_p=
+ages)
+>  {
+>  	struct page **pages, *page;
+>  	int *counts;
+> @@ -108,6 +108,54 @@ int hv_call_deposit_pages(int node, u64 partition_id=
+, u32 num_pages)
+>  	kfree(counts);
+>  	return ret;
+>  }
+> +
+> +/**
+> + * hv_call_deposit_pages - Deposit memory pages to a partition
+> + * @node        : NUMA node from which to allocate pages
+> + * @partition_id: Target partition ID to deposit pages to
+> + * @num_pages   : Number of pages to deposit
+> + *
+> + * Deposits memory pages to the specified partition. The deposit is
+> + * performed in chunks of HV_DEPOSIT_MAX pages to handle large requests
+> + * efficiently.
+> + *
+> + * Return: 0 on success, negative error code on failure
 
-[ Upstream commit 57297736c08233987e5d29ce6584c6ca2a831b12 ]
+For the failure case, a key fact seems to be that there's no attempt to
+withdraw any pages that might have been successfully deposited. In
+such failure case, the caller has no information about how many pages
+were, or were not, deposited. The 2x for L1VH further muddies the
+picture.
 
-This resolves the follow splat and lock-up when running with PREEMPT_RT
-enabled on Hyper-V:
+__hv_call_deposit_pages() apparently assumes that if the underlying
+hypercall fails, none of the pages were deposited.  So it frees all the
+allocated pages. But I wonder if that's really true. The hypercall is
+a rep hypercall, which can get partly through the list, return to the
+guest, then restart where it left off.  If there's a failure after a
+restart, I wonder if the hypercall goes back and withdraws any
+pages that were successfully deposited before the restart. The
+restart behaves like a new invocation of the hypercall.
 
-[  415.140818] BUG: scheduling while atomic: stress-ng-iomix/1048/0x00000002
-[  415.140822] INFO: lockdep is turned off.
-[  415.140823] Modules linked in: intel_rapl_msr intel_rapl_common intel_uncore_frequency_common intel_pmc_core pmt_telemetry pmt_discovery pmt_class intel_pmc_ssram_telemetry intel_vsec ghash_clmulni_intel aesni_intel rapl binfmt_misc nls_ascii nls_cp437 vfat fat snd_pcm hyperv_drm snd_timer drm_client_lib drm_shmem_helper snd sg soundcore drm_kms_helper pcspkr hv_balloon hv_utils evdev joydev drm configfs efi_pstore nfnetlink vsock_loopback vmw_vsock_virtio_transport_common hv_sock vmw_vsock_vmci_transport vsock vmw_vmci efivarfs autofs4 ext4 crc16 mbcache jbd2 sr_mod sd_mod cdrom hv_storvsc serio_raw hid_generic scsi_transport_fc hid_hyperv scsi_mod hid hv_netvsc hyperv_keyboard scsi_common
-[  415.140846] Preemption disabled at:
-[  415.140847] [<ffffffffc0656171>] storvsc_queuecommand+0x2e1/0xbe0 [hv_storvsc]
-[  415.140854] CPU: 8 UID: 0 PID: 1048 Comm: stress-ng-iomix Not tainted 6.19.0-rc7 #30 PREEMPT_{RT,(full)}
-[  415.140856] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.1 09/04/2024
-[  415.140857] Call Trace:
-[  415.140861]  <TASK>
-[  415.140861]  ? storvsc_queuecommand+0x2e1/0xbe0 [hv_storvsc]
-[  415.140863]  dump_stack_lvl+0x91/0xb0
-[  415.140870]  __schedule_bug+0x9c/0xc0
-[  415.140875]  __schedule+0xdf6/0x1300
-[  415.140877]  ? rtlock_slowlock_locked+0x56c/0x1980
-[  415.140879]  ? rcu_is_watching+0x12/0x60
-[  415.140883]  schedule_rtlock+0x21/0x40
-[  415.140885]  rtlock_slowlock_locked+0x502/0x1980
-[  415.140891]  rt_spin_lock+0x89/0x1e0
-[  415.140893]  hv_ringbuffer_write+0x87/0x2a0
-[  415.140899]  vmbus_sendpacket_mpb_desc+0xb6/0xe0
-[  415.140900]  ? rcu_is_watching+0x12/0x60
-[  415.140902]  storvsc_queuecommand+0x669/0xbe0 [hv_storvsc]
-[  415.140904]  ? HARDIRQ_verbose+0x10/0x10
-[  415.140908]  ? __rq_qos_issue+0x28/0x40
-[  415.140911]  scsi_queue_rq+0x760/0xd80 [scsi_mod]
-[  415.140926]  __blk_mq_issue_directly+0x4a/0xc0
-[  415.140928]  blk_mq_issue_direct+0x87/0x2b0
-[  415.140931]  blk_mq_dispatch_queue_requests+0x120/0x440
-[  415.140933]  blk_mq_flush_plug_list+0x7a/0x1a0
-[  415.140935]  __blk_flush_plug+0xf4/0x150
-[  415.140940]  __submit_bio+0x2b2/0x5c0
-[  415.140944]  ? submit_bio_noacct_nocheck+0x272/0x360
-[  415.140946]  submit_bio_noacct_nocheck+0x272/0x360
-[  415.140951]  ext4_read_bh_lock+0x3e/0x60 [ext4]
-[  415.140995]  ext4_block_write_begin+0x396/0x650 [ext4]
-[  415.141018]  ? __pfx_ext4_da_get_block_prep+0x10/0x10 [ext4]
-[  415.141038]  ext4_da_write_begin+0x1c4/0x350 [ext4]
-[  415.141060]  generic_perform_write+0x14e/0x2c0
-[  415.141065]  ext4_buffered_write_iter+0x6b/0x120 [ext4]
-[  415.141083]  vfs_write+0x2ca/0x570
-[  415.141087]  ksys_write+0x76/0xf0
-[  415.141089]  do_syscall_64+0x99/0x1490
-[  415.141093]  ? rcu_is_watching+0x12/0x60
-[  415.141095]  ? finish_task_switch.isra.0+0xdf/0x3d0
-[  415.141097]  ? rcu_is_watching+0x12/0x60
-[  415.141098]  ? lock_release+0x1f0/0x2a0
-[  415.141100]  ? rcu_is_watching+0x12/0x60
-[  415.141101]  ? finish_task_switch.isra.0+0xe4/0x3d0
-[  415.141103]  ? rcu_is_watching+0x12/0x60
-[  415.141104]  ? __schedule+0xb34/0x1300
-[  415.141106]  ? hrtimer_try_to_cancel+0x1d/0x170
-[  415.141109]  ? do_nanosleep+0x8b/0x160
-[  415.141111]  ? hrtimer_nanosleep+0x89/0x100
-[  415.141114]  ? __pfx_hrtimer_wakeup+0x10/0x10
-[  415.141116]  ? xfd_validate_state+0x26/0x90
-[  415.141118]  ? rcu_is_watching+0x12/0x60
-[  415.141120]  ? do_syscall_64+0x1e0/0x1490
-[  415.141121]  ? do_syscall_64+0x1e0/0x1490
-[  415.141123]  ? rcu_is_watching+0x12/0x60
-[  415.141124]  ? do_syscall_64+0x1e0/0x1490
-[  415.141125]  ? do_syscall_64+0x1e0/0x1490
-[  415.141127]  ? irqentry_exit+0x140/0x7e0
-[  415.141129]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> + */
+> +int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
 
-get_cpu() disables preemption while the spinlock hv_ringbuffer_write is
-using is converted to an rt-mutex under PREEMPT_RT.
+Perhaps the num_pages parameter should be a u64. The u32 imposes
+a limit of 8 Tbytes on the amount of memory that can be deposited
+(allowing for the 2x multiplier for L1VH partitions). Azure has VM sizes
+today with up to 30 Tbytes of memory, so it's certainly possible.
 
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-Tested-by: Florian Bezdeka <florian.bezdeka@siemens.com>
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-Tested-by: Michael Kelley <mhklinux@outlook.com>
-Link: https://patch.msgid.link/0c7fb5cd-fb21-4760-8593-e04bade84744@siemens.com
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
+> +{
+> +	u32 done;
 
-LLM Generated explanations, may be completely bogus:
+Same here. Use u64.
 
-Now I have enough context to analyze this commit thoroughly.
-
-## Analysis
-
-### 1. Problem Description
-The commit fixes a **"BUG: scheduling while atomic"** crash and
-**lockup** on Hyper-V VMs running with `PREEMPT_RT` enabled. The stack
-trace in the commit message clearly shows the issue:
-
-- `storvsc_queuecommand()` calls `get_cpu()` which disables preemption
-- It then calls `storvsc_do_io()` → `vmbus_sendpacket_mpb_desc()` →
-  `hv_ringbuffer_write()`
-- `hv_ringbuffer_write()` takes a spinlock that, under PREEMPT_RT, is
-  converted to an rt-mutex
-- rt-mutexes can sleep/schedule, but preemption is disabled →
-  **scheduling while atomic BUG**
-
-### 2. The Fix
-The fix replaces:
-```c
-ret = storvsc_do_io(dev, cmd_request, get_cpu());
-put_cpu();
-```
-with:
-```c
-migrate_disable();
-ret = storvsc_do_io(dev, cmd_request, smp_processor_id());
-migrate_enable();
-```
-
-The purpose of `get_cpu()` here was to get a stable CPU number to use as
-a channel index in `storvsc_do_io()`. The actual requirement is just to
-prevent migration (so the CPU number stays valid), not to disable
-preemption entirely. `migrate_disable()` achieves this while allowing
-scheduling under PREEMPT_RT.
-
-### 3. Correctness
-- `migrate_disable()` prevents the task from being migrated to another
-  CPU, so `smp_processor_id()` remains valid throughout the call
-- On non-PREEMPT_RT kernels, this is functionally equivalent
-  (migrate_disable maps to preempt_disable)
-- On PREEMPT_RT, it allows the rt-mutex in `hv_ringbuffer_write()` to
-  sleep as needed
-
-### 4. Scope and Risk
-- **3 lines changed** - extremely small and surgical
-- Only affects `storvsc_queuecommand()` in the Hyper-V storage driver
-- Well-understood transformation pattern
-  (`get_cpu()`→`migrate_disable()`+`smp_processor_id()`) used
-  extensively across the kernel for PREEMPT_RT fixes
-- Has been **Tested-by** two people and **Reviewed-by** the Hyper-V
-  subsystem expert (Michael Kelley)
-
-### 5. User Impact
-- **Hyper-V VMs with PREEMPT_RT**: This is a hard crash/lockup during
-  normal I/O operations (ext4 writes), making the system completely
-  unusable
-- PREEMPT_RT is increasingly used in enterprise and embedded
-  deployments, including on Hyper-V/Azure
-- Without this fix, PREEMPT_RT kernels on Hyper-V are effectively broken
-  for any storage I/O
-
-### 6. Stable Criteria Assessment
-- **Obviously correct**: Yes - standard PREEMPT_RT fix pattern
-- **Fixes a real bug**: Yes - kernel BUG + lockup
-- **Important issue**: Yes - system lockup during normal I/O
-- **Small and contained**: Yes - 3-line change in one file
-- **No new features**: Correct - pure bug fix
-- **Tested**: Yes - two Tested-by tags
-
-### Verification
-- Read `storvsc_drv.c:1858` confirming the old code uses
-  `get_cpu()`/`put_cpu()` (matches the diff)
-- Read `storvsc_do_io()` at line 1453: confirms `q_num` is used as a CPU
-  index into `stor_chns[]` array and passed to
-  `cpumask_of_node(cpu_to_node(q_num))` - only needs migration
-  stability, not preemption disabled
-- Confirmed the call chain: `storvsc_do_io()` →
-  `vmbus_sendpacket_mpb_desc()` (line 1547) → `hv_ringbuffer_write()`
-  which takes a spinlock (as shown in the stack trace)
-- The stack trace shows `rt_spin_lock` → `rtlock_slowlock_locked` →
-  `schedule_rtlock` confirming the spinlock-to-rt-mutex conversion is
-  the trigger
-- `git log` confirmed this is in a well-maintained driver with recent
-  activity
-
-**YES**
-
- drivers/scsi/storvsc_drv.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index b43d876747b76..68c837146b9ea 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -1855,8 +1855,9 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 	cmd_request->payload_sz = payload_sz;
- 
- 	/* Invokes the vsc to start an IO */
--	ret = storvsc_do_io(dev, cmd_request, get_cpu());
--	put_cpu();
-+	migrate_disable();
-+	ret = storvsc_do_io(dev, cmd_request, smp_processor_id());
-+	migrate_enable();
- 
- 	if (ret)
- 		scsi_dma_unmap(scmnd);
--- 
-2.51.0
+> +	int ret =3D 0;
+> +
+> +	/*
+> +	 * Do a double deposit for L1VH. This reserves enough memory for
+> +	 * Hypervisor Hot Restart (HHR).
+> +	 *
+> +	 * During HHR, every data structure must be recreated in the new
+> +	 * ("proto") hypervisor. Memory is required by the proto hypervisor
+> +	 * to do this work.
+> +	 *
+> +	 * For regular L1 partitions, more memory can be requested from the
+> +	 * root during HHR by sending an asynchronous message. But this is
+> +	 * not supported for L1VHs. A guest must not be allowed to block
+> +	 * HHR by refusing to deposit more memory.
+> +	 *
+> +	 * So for L1VH a deposit is always required for both current needs
+> +	 * and future HHR work.
+> +	 */
+> +	if (hv_l1vh_partition())
+> +		num_pages *=3D 2;
+> +
+> +	for (done =3D 0; done < num_pages; done +=3D HV_DEPOSIT_MAX) {
+> +		u32 to_deposit =3D min(num_pages - done, HV_DEPOSIT_MAX);
+> +
+> +		ret =3D __hv_call_deposit_pages(node, partition_id,
+> +					      to_deposit);
+> +		if (ret)
+> +			break;
+> +	}
+> +
+> +	return ret;
+> +}
+>  EXPORT_SYMBOL_GPL(hv_call_deposit_pages);
+>=20
+>  int hv_deposit_memory_node(int node, u64 partition_id,
+>=20
+>=20
 
 
