@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-9179-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9180-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +E5NB31hq2mmcgEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9179-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 07 Mar 2026 00:21:33 +0100
+	id 6DfLN4hhq2mmcgEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9180-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 07 Mar 2026 00:21:44 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EA7B22896E
-	for <lists+linux-hyperv@lfdr.de>; Sat, 07 Mar 2026 00:21:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DF4C228984
+	for <lists+linux-hyperv@lfdr.de>; Sat, 07 Mar 2026 00:21:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D42CD3037929
-	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Mar 2026 23:21:25 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 575793037C24
+	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Mar 2026 23:21:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6F5C371D0D;
-	Fri,  6 Mar 2026 23:21:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E15D7372B20;
+	Fri,  6 Mar 2026 23:21:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AQjcwHaE"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="JS6auZ8i"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CB182DE709;
-	Fri,  6 Mar 2026 23:21:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AADD335F8D1;
+	Fri,  6 Mar 2026 23:21:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772839284; cv=none; b=kL4zA8gYHxpcGxpP1XOhRC3guQfEcKbk7ZVdCE48/TzS44R9pz6hRr7mM4k31EjRaVvZrXTmsUdjMJjIGkcjN17S16eUUYTTXPz4JjXb7Hu1jwnoVvUbwxDSsGjPGwSs7LTcVX7l/waTvxZCLYs+BOkfNW/XUORGprY7F85O53Y=
+	t=1772839295; cv=none; b=eolJuUtNfQtth0qICUga3O447RI4/VNHqYNRG9Q1c5/UefJRQqszq5wMR0wdBbQsxYWpY547czWP6OEqcAXIiwK+O8ZnJ9QnWTt1nuoeyVKWxq1DgwoN8xpSQPgI8h4NZI4e2twD3lYOb3lue5cZBcQXRdA61yB759uehJh43A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772839284; c=relaxed/simple;
-	bh=GU6VUvAZ6ojyiNUYsdAm/fP8o5P8tUiDZylrLI9PQCs=;
+	s=arc-20240116; t=1772839295; c=relaxed/simple;
+	bh=lvQUW+PyK18JZuqCxlrRqa/m1Q9KOONbdgc+NIU47sc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a/XUDlDPaf9yWbN8r+8tKIShC6WO+s5XWYizAAHGEcOVmWUpez5g6j4sgXz6foLvGBodkrClFp3UTx1ykBDsjaM24es9W6Zo1GDLvfbTC+ui9L3BTQYrcdQf2rliOO7QznpZjmYGtfuJGsdbmxVp/zjl0LltNGsgkdPrgWlj4UU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=AQjcwHaE; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=Ij+wuCWXjxs865qkXDwHyasNylxv1lydK2wxK3WsddiPEHx41Ya5neTpBenHZA884WhH3fBEhPmDNBwyw+wbTkHbNtbcEuHNBLgu4RABIoMqe8z4w9oOPltV7LT8pkE8EZFQ8vpTV9jikNuL1D5ksxHXgCNriAnEDUORUqIg3XA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=JS6auZ8i; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1006)
-	id 52FB620B6F03; Fri,  6 Mar 2026 15:21:23 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 52FB620B6F03
+	id 8C37820B6F04; Fri,  6 Mar 2026 15:21:34 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8C37820B6F04
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1772839283;
-	bh=VzDREWF7Ctdo0x+coyfVJnKr+oa/gkmyXdLzLJYj2M0=;
+	s=default; t=1772839294;
+	bh=3/XsRpcYmpvhq1ikbTNjSxMJraaSEcj+53QhaLZ/+fI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AQjcwHaE6Uc0st14MWMPfjWsgW8gJLwXKV/JWweQ3Q2YSVHu/8qI/ndqu17CxUtFk
-	 ohb4/wHjUU/HzwzydJgZF2P+PVqUw2itoG/qZ5Abd2jIaigCghJNs66efg8aBS1ZYd
-	 60aeMJca7aPhi8L3siPGS9zGfxwAuhJGX1VO4qCo=
+	b=JS6auZ8iYsq/OY3aDJv4FDPFyj5Et7m6tbnbmvZapzbzC96yPZ95JX8w82sifsdwS
+	 6PSEgc0yKHBW00F7w4YE/it89H5QCrnJMfm5rYuwGMetMj8lDSboWnPu6vXKYNlJ2l
+	 w/rEWtJrSWF/+doie9wuIozDM1gRDC7pQ4yvx/DY=
 From: Haiyang Zhang <haiyangz@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org,
 	netdev@vger.kernel.org,
@@ -58,19 +58,19 @@ To: linux-hyperv@vger.kernel.org,
 	Konstantin Taranov <kotaranov@microsoft.com>,
 	Simon Horman <horms@kernel.org>,
 	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
 	Dipayaan Roy <dipayanroy@linux.microsoft.com>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
 	Shiraz Saleem <shirazsaleem@microsoft.com>,
 	Kees Cook <kees@kernel.org>,
 	Subbaraya Sundeep <sbhatta@marvell.com>,
-	Breno Leitao <leitao@debian.org>,
 	Aditya Garg <gargaditya@linux.microsoft.com>,
+	Breno Leitao <leitao@debian.org>,
 	linux-kernel@vger.kernel.org,
 	linux-rdma@vger.kernel.org
 Cc: paulros@microsoft.com
-Subject: [PATCH net-next,V3, 2/3] net: mana: Add support for RX CQE Coalescing
-Date: Fri,  6 Mar 2026 15:19:14 -0800
-Message-ID: <20260306231936.549499-3-haiyangz@linux.microsoft.com>
+Subject: [PATCH net-next,V3, 3/3] net: mana: Add ethtool counters for RX CQEs in coalesced type
+Date: Fri,  6 Mar 2026 15:19:15 -0800
+Message-ID: <20260306231936.549499-4-haiyangz@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260306231936.549499-1-haiyangz@linux.microsoft.com>
 References: <20260306231936.549499-1-haiyangz@linux.microsoft.com>
@@ -81,7 +81,7 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 8EA7B22896E
+X-Rspamd-Queue-Id: 7DF4C228984
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -95,7 +95,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[25];
-	TAGGED_FROM(0.00)[bounces-9179-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9180-lists,linux-hyperv=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -114,306 +114,158 @@ X-Rspamd-Action: no action
 
 From: Haiyang Zhang <haiyangz@microsoft.com>
 
-Our NIC can have up to 4 RX packets on 1 CQE. To support this feature,
-check and process the type CQE_RX_COALESCED_4. The default setting is
-disabled, to avoid possible regression on latency.
-
-And, add ethtool handler to switch this feature. To turn it on, run:
-  ethtool -C <nic> rx-cqe-frames 4
-To turn it off:
-  ethtool -C <nic> rx-cqe-frames 1
-
-The rx-cqe-nsec is the time out value in nanoseconds after the first
-packet arrival in a coalesced CQE to be sent. It's read-only for this
-NIC.
+For RX CQEs with type CQE_RX_COALESCED_4, to measure the coalescing
+efficiency, add counters to count how many contains 2, 3, 4 packets
+respectively.
+Also, add a counter for the error case of first packet with length == 0.
 
 Reviewed-by: Long Li <longli@microsoft.com>
 Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 ---
- drivers/net/ethernet/microsoft/mana/mana_en.c | 72 ++++++++++++-------
- .../ethernet/microsoft/mana/mana_ethtool.c    | 60 +++++++++++++++-
- include/net/mana/mana.h                       |  8 ++-
- 3 files changed, 111 insertions(+), 29 deletions(-)
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 21 ++++++++++++++++++-
+ .../ethernet/microsoft/mana/mana_ethtool.c    | 15 +++++++++++--
+ include/net/mana/mana.h                       |  9 +++++---
+ 3 files changed, 39 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index ea71de39f996..c06fec50e51f 100644
+index c06fec50e51f..11ea2b17502d 100644
 --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
 +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -1365,6 +1365,7 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
- 			     sizeof(resp));
+@@ -2146,11 +2146,23 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+ 	for (i = 0; i < MANA_RXCOMP_OOB_NUM_PPI; i++) {
+ 		pktlen = oob->ppi[i].pkt_len;
+ 		if (pktlen == 0) {
+-			if (i == 0)
++			/* Collect coalesced CQE count based on packets processed.
++			 * Coalesced CQEs have at least 2 packets, so index is i - 2.
++			 */
++			if (i > 1) {
++				u64_stats_update_begin(&rxq->stats.syncp);
++				rxq->stats.coalesced_cqe[i - 2]++;
++				u64_stats_update_end(&rxq->stats.syncp);
++			} else if (i == 0) {
++				/* Error case stat */
++				u64_stats_update_begin(&rxq->stats.syncp);
++				rxq->stats.pkt_len0_err++;
++				u64_stats_update_end(&rxq->stats.syncp);
+ 				netdev_err_once(
+ 					ndev,
+ 					"RX pkt len=0, rq=%u, cq=%u, rxobj=0x%llx\n",
+ 					rxq->gdma_id, cq->gdma_id, rxq->rxobj);
++			}
+ 			break;
+ 		}
  
- 	req->hdr.req.msg_version = GDMA_MESSAGE_V2;
-+	req->hdr.resp.msg_version = GDMA_MESSAGE_V2;
- 
- 	req->vport = apc->port_handle;
- 	req->num_indir_entries = apc->indir_table_sz;
-@@ -1376,7 +1377,9 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
- 	req->update_hashkey = update_key;
- 	req->update_indir_tab = update_tab;
- 	req->default_rxobj = apc->default_rxobj;
--	req->cqe_coalescing_enable = 0;
-+
-+	if (rx != TRI_STATE_FALSE)
-+		req->cqe_coalescing_enable = apc->cqe_coalescing_enable;
- 
- 	if (update_key)
- 		memcpy(&req->hashkey, apc->hashkey, MANA_HASH_KEY_SIZE);
-@@ -1407,6 +1410,10 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
- 		err = -EPROTO;
+@@ -2173,6 +2185,13 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+ 		if (!coalesced)
+ 			break;
  	}
- 
-+	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V2)
-+		apc->cqe_coalescing_timeout_ns =
-+			resp.cqe_coalescing_timeout_ns;
 +
- 	netdev_info(ndev, "Configured steering vPort %llu entries %u\n",
- 		    apc->port_handle, apc->indir_table_sz);
- out:
-@@ -1915,11 +1922,12 @@ static struct sk_buff *mana_build_skb(struct mana_rxq *rxq, void *buf_va,
- }
- 
- static void mana_rx_skb(void *buf_va, bool from_pool,
--			struct mana_rxcomp_oob *cqe, struct mana_rxq *rxq)
-+			struct mana_rxcomp_oob *cqe, struct mana_rxq *rxq,
-+			int i)
- {
- 	struct mana_stats_rx *rx_stats = &rxq->stats;
- 	struct net_device *ndev = rxq->ndev;
--	uint pkt_len = cqe->ppi[0].pkt_len;
-+	uint pkt_len = cqe->ppi[i].pkt_len;
- 	u16 rxq_idx = rxq->rxq_idx;
- 	struct napi_struct *napi;
- 	struct xdp_buff xdp = {};
-@@ -1963,7 +1971,7 @@ static void mana_rx_skb(void *buf_va, bool from_pool,
- 	}
- 
- 	if (cqe->rx_hashtype != 0 && (ndev->features & NETIF_F_RXHASH)) {
--		hash_value = cqe->ppi[0].pkt_hash;
-+		hash_value = cqe->ppi[i].pkt_hash;
- 
- 		if (cqe->rx_hashtype & MANA_HASH_L4)
- 			skb_set_hash(skb, hash_value, PKT_HASH_TYPE_L4);
-@@ -2098,9 +2106,11 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
- 	struct mana_recv_buf_oob *rxbuf_oob;
- 	struct mana_port_context *apc;
- 	struct device *dev = gc->dev;
-+	bool coalesced = false;
- 	void *old_buf = NULL;
- 	u32 curr, pktlen;
- 	bool old_fp;
-+	int i;
- 
- 	apc = netdev_priv(ndev);
- 
-@@ -2112,13 +2122,16 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
- 		++ndev->stats.rx_dropped;
- 		rxbuf_oob = &rxq->rx_oobs[rxq->buf_index];
- 		netdev_warn_once(ndev, "Dropped a truncated packet\n");
--		goto drop;
- 
--	case CQE_RX_COALESCED_4:
--		netdev_err(ndev, "RX coalescing is unsupported\n");
--		apc->eth_stats.rx_coalesced_err++;
-+		mana_move_wq_tail(rxq->gdma_rq,
-+				  rxbuf_oob->wqe_inf.wqe_size_in_bu);
-+		mana_post_pkt_rxq(rxq);
- 		return;
- 
-+	case CQE_RX_COALESCED_4:
-+		coalesced = true;
-+		break;
-+
- 	case CQE_RX_OBJECT_FENCE:
- 		complete(&rxq->fence_event);
- 		return;
-@@ -2130,30 +2143,36 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
- 		return;
- 	}
- 
--	pktlen = oob->ppi[0].pkt_len;
-+	for (i = 0; i < MANA_RXCOMP_OOB_NUM_PPI; i++) {
-+		pktlen = oob->ppi[i].pkt_len;
-+		if (pktlen == 0) {
-+			if (i == 0)
-+				netdev_err_once(
-+					ndev,
-+					"RX pkt len=0, rq=%u, cq=%u, rxobj=0x%llx\n",
-+					rxq->gdma_id, cq->gdma_id, rxq->rxobj);
-+			break;
-+		}
- 
--	if (pktlen == 0) {
--		/* data packets should never have packetlength of zero */
--		netdev_err(ndev, "RX pkt len=0, rq=%u, cq=%u, rxobj=0x%llx\n",
--			   rxq->gdma_id, cq->gdma_id, rxq->rxobj);
--		return;
--	}
-+		curr = rxq->buf_index;
-+		rxbuf_oob = &rxq->rx_oobs[curr];
-+		WARN_ON_ONCE(rxbuf_oob->wqe_inf.wqe_size_in_bu != 1);
- 
--	curr = rxq->buf_index;
--	rxbuf_oob = &rxq->rx_oobs[curr];
--	WARN_ON_ONCE(rxbuf_oob->wqe_inf.wqe_size_in_bu != 1);
-+		mana_refill_rx_oob(dev, rxq, rxbuf_oob, &old_buf, &old_fp);
- 
--	mana_refill_rx_oob(dev, rxq, rxbuf_oob, &old_buf, &old_fp);
-+		/* Unsuccessful refill will have old_buf == NULL.
-+		 * In this case, mana_rx_skb() will drop the packet.
-+		 */
-+		mana_rx_skb(old_buf, old_fp, oob, rxq, i);
- 
--	/* Unsuccessful refill will have old_buf == NULL.
--	 * In this case, mana_rx_skb() will drop the packet.
--	 */
--	mana_rx_skb(old_buf, old_fp, oob, rxq);
-+		mana_move_wq_tail(rxq->gdma_rq,
-+				  rxbuf_oob->wqe_inf.wqe_size_in_bu);
- 
--drop:
--	mana_move_wq_tail(rxq->gdma_rq, rxbuf_oob->wqe_inf.wqe_size_in_bu);
-+		mana_post_pkt_rxq(rxq);
- 
--	mana_post_pkt_rxq(rxq);
-+		if (!coalesced)
-+			break;
++	/* Coalesced CQE with all 4 packets */
++	if (coalesced && i == MANA_RXCOMP_OOB_NUM_PPI) {
++		u64_stats_update_begin(&rxq->stats.syncp);
++		rxq->stats.coalesced_cqe[MANA_RXCOMP_OOB_NUM_PPI - 2]++;
++		u64_stats_update_end(&rxq->stats.syncp);
 +	}
  }
  
  static void mana_poll_rx_cq(struct mana_cq *cq)
-@@ -3332,6 +3351,7 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
- 	apc->port_handle = INVALID_MANA_HANDLE;
- 	apc->pf_filter_handle = INVALID_MANA_HANDLE;
- 	apc->port_idx = port_idx;
-+	apc->cqe_coalescing_enable = 0;
- 
- 	mutex_init(&apc->vport_mutex);
- 	apc->vport_use_count = 0;
 diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-index f2d220b371b5..4b234b16e57a 100644
+index 4b234b16e57a..6a4b42fe0944 100644
 --- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
 +++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-@@ -20,8 +20,6 @@ static const struct mana_stats_desc mana_eth_stats[] = {
- 					tx_cqe_unknown_type)},
- 	{"tx_linear_pkt_cnt", offsetof(struct mana_ethtool_stats,
- 				       tx_linear_pkt_cnt)},
--	{"rx_coalesced_err", offsetof(struct mana_ethtool_stats,
--					rx_coalesced_err)},
- 	{"rx_cqe_unknown_type", offsetof(struct mana_ethtool_stats,
- 					rx_cqe_unknown_type)},
- };
-@@ -390,6 +388,61 @@ static void mana_get_channels(struct net_device *ndev,
- 	channel->combined_count = apc->num_queues;
- }
- 
-+#define MANA_RX_CQE_NSEC_DEF 2048
-+static int mana_get_coalesce(struct net_device *ndev,
-+			     struct ethtool_coalesce *ec,
-+			     struct kernel_ethtool_coalesce *kernel_coal,
-+			     struct netlink_ext_ack *extack)
-+{
-+	struct mana_port_context *apc = netdev_priv(ndev);
-+
-+	kernel_coal->rx_cqe_frames =
-+		apc->cqe_coalescing_enable ? MANA_RXCOMP_OOB_NUM_PPI : 1;
-+
-+	kernel_coal->rx_cqe_nsecs = apc->cqe_coalescing_timeout_ns;
-+
-+	/* Return the default timeout value for old FW not providing
-+	 * this value.
-+	 */
-+	if (apc->port_is_up && apc->cqe_coalescing_enable &&
-+	    !kernel_coal->rx_cqe_nsecs)
-+		kernel_coal->rx_cqe_nsecs = MANA_RX_CQE_NSEC_DEF;
-+
-+	return 0;
-+}
-+
-+static int mana_set_coalesce(struct net_device *ndev,
-+			     struct ethtool_coalesce *ec,
-+			     struct kernel_ethtool_coalesce *kernel_coal,
-+			     struct netlink_ext_ack *extack)
-+{
-+	struct mana_port_context *apc = netdev_priv(ndev);
-+	u8 saved_cqe_coalescing_enable;
-+	int err;
-+
-+	if (kernel_coal->rx_cqe_frames != 1 &&
-+	    kernel_coal->rx_cqe_frames != MANA_RXCOMP_OOB_NUM_PPI) {
-+		NL_SET_ERR_MSG_FMT(extack,
-+				   "rx-frames must be 1 or %u, got %u",
-+				   MANA_RXCOMP_OOB_NUM_PPI,
-+				   kernel_coal->rx_cqe_frames);
-+		return -EINVAL;
-+	}
-+
-+	saved_cqe_coalescing_enable = apc->cqe_coalescing_enable;
-+	apc->cqe_coalescing_enable =
-+		kernel_coal->rx_cqe_frames == MANA_RXCOMP_OOB_NUM_PPI;
-+
-+	if (!apc->port_is_up)
-+		return 0;
-+
-+	err = mana_config_rss(apc, TRI_STATE_TRUE, false, false);
-+	if (err)
-+		apc->cqe_coalescing_enable = saved_cqe_coalescing_enable;
-+
-+	return err;
-+}
-+
- static int mana_set_channels(struct net_device *ndev,
- 			     struct ethtool_channels *channels)
+@@ -149,7 +149,7 @@ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
  {
-@@ -510,6 +563,7 @@ static int mana_get_link_ksettings(struct net_device *ndev,
- }
+ 	struct mana_port_context *apc = netdev_priv(ndev);
+ 	unsigned int num_queues = apc->num_queues;
+-	int i;
++	int i, j;
  
- const struct ethtool_ops mana_ethtool_ops = {
-+	.supported_coalesce_params = ETHTOOL_COALESCE_RX_CQE_FRAMES,
- 	.get_ethtool_stats	= mana_get_ethtool_stats,
- 	.get_sset_count		= mana_get_sset_count,
- 	.get_strings		= mana_get_strings,
-@@ -520,6 +574,8 @@ const struct ethtool_ops mana_ethtool_ops = {
- 	.set_rxfh		= mana_set_rxfh,
- 	.get_channels		= mana_get_channels,
- 	.set_channels		= mana_set_channels,
-+	.get_coalesce		= mana_get_coalesce,
-+	.set_coalesce		= mana_set_coalesce,
- 	.get_ringparam          = mana_get_ringparam,
- 	.set_ringparam          = mana_set_ringparam,
- 	.get_link_ksettings	= mana_get_link_ksettings,
+ 	if (stringset != ETH_SS_STATS)
+ 		return;
+@@ -168,6 +168,9 @@ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
+ 		ethtool_sprintf(&data, "rx_%d_xdp_drop", i);
+ 		ethtool_sprintf(&data, "rx_%d_xdp_tx", i);
+ 		ethtool_sprintf(&data, "rx_%d_xdp_redirect", i);
++		ethtool_sprintf(&data, "rx_%d_pkt_len0_err", i);
++		for (j = 0; j < MANA_RXCOMP_OOB_NUM_PPI - 1; j++)
++			ethtool_sprintf(&data, "rx_%d_coalesced_cqe_%d", i, j + 2);
+ 	}
+ 
+ 	for (i = 0; i < num_queues; i++) {
+@@ -201,6 +204,8 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
+ 	u64 xdp_xmit;
+ 	u64 xdp_drop;
+ 	u64 xdp_tx;
++	u64 pkt_len0_err;
++	u64 coalesced_cqe[MANA_RXCOMP_OOB_NUM_PPI - 1];
+ 	u64 tso_packets;
+ 	u64 tso_bytes;
+ 	u64 tso_inner_packets;
+@@ -209,7 +214,7 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
+ 	u64 short_pkt_fmt;
+ 	u64 csum_partial;
+ 	u64 mana_map_err;
+-	int q, i = 0;
++	int q, i = 0, j;
+ 
+ 	if (!apc->port_is_up)
+ 		return;
+@@ -239,6 +244,9 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
+ 			xdp_drop = rx_stats->xdp_drop;
+ 			xdp_tx = rx_stats->xdp_tx;
+ 			xdp_redirect = rx_stats->xdp_redirect;
++			pkt_len0_err = rx_stats->pkt_len0_err;
++			for (j = 0; j < MANA_RXCOMP_OOB_NUM_PPI - 1; j++)
++				coalesced_cqe[j] = rx_stats->coalesced_cqe[j];
+ 		} while (u64_stats_fetch_retry(&rx_stats->syncp, start));
+ 
+ 		data[i++] = packets;
+@@ -246,6 +254,9 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
+ 		data[i++] = xdp_drop;
+ 		data[i++] = xdp_tx;
+ 		data[i++] = xdp_redirect;
++		data[i++] = pkt_len0_err;
++		for (j = 0; j < MANA_RXCOMP_OOB_NUM_PPI - 1; j++)
++			data[i++] = coalesced_cqe[j];
+ 	}
+ 
+ 	for (q = 0; q < num_queues; q++) {
 diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index a078af283bdd..a7f89e7ddc56 100644
+index a7f89e7ddc56..3336688fed5e 100644
 --- a/include/net/mana/mana.h
 +++ b/include/net/mana/mana.h
-@@ -378,7 +378,6 @@ struct mana_ethtool_stats {
- 	u64 tx_cqe_err;
- 	u64 tx_cqe_unknown_type;
- 	u64 tx_linear_pkt_cnt;
--	u64 rx_coalesced_err;
- 	u64 rx_cqe_unknown_type;
+@@ -61,8 +61,11 @@ enum TRI_STATE {
+ 
+ #define MAX_PORTS_IN_MANA_DEV 256
+ 
++/* Maximum number of packets per coalesced CQE */
++#define MANA_RXCOMP_OOB_NUM_PPI 4
++
+ /* Update this count whenever the respective structures are changed */
+-#define MANA_STATS_RX_COUNT 5
++#define MANA_STATS_RX_COUNT (6 + MANA_RXCOMP_OOB_NUM_PPI - 1)
+ #define MANA_STATS_TX_COUNT 11
+ 
+ #define MANA_RX_FRAG_ALIGNMENT 64
+@@ -73,6 +76,8 @@ struct mana_stats_rx {
+ 	u64 xdp_drop;
+ 	u64 xdp_tx;
+ 	u64 xdp_redirect;
++	u64 pkt_len0_err;
++	u64 coalesced_cqe[MANA_RXCOMP_OOB_NUM_PPI - 1];
+ 	struct u64_stats_sync syncp;
  };
  
-@@ -557,6 +556,9 @@ struct mana_port_context {
- 	bool port_is_up;
- 	bool port_st_save; /* Saved port state */
- 
-+	u8 cqe_coalescing_enable;
-+	u32 cqe_coalescing_timeout_ns;
-+
- 	struct mana_ethtool_stats eth_stats;
- 
- 	struct mana_ethtool_phy_stats phy_stats;
-@@ -902,6 +904,10 @@ struct mana_cfg_rx_steer_req_v2 {
- 
- struct mana_cfg_rx_steer_resp {
- 	struct gdma_resp_hdr hdr;
-+
-+	/* V2 */
-+	u32 cqe_coalescing_timeout_ns;
-+	u32 reserved1;
+@@ -227,8 +232,6 @@ struct mana_rxcomp_perpkt_info {
+ 	u32 pkt_hash;
  }; /* HW DATA */
  
- /* Register HW vPort */
+-#define MANA_RXCOMP_OOB_NUM_PPI 4
+-
+ /* Receive completion OOB */
+ struct mana_rxcomp_oob {
+ 	struct mana_cqe_header cqe_hdr;
 -- 
 2.34.1
 
