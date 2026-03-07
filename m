@@ -1,59 +1,59 @@
-Return-Path: <linux-hyperv+bounces-9181-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9182-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IMnIOf+Cq2n/dgEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9181-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 07 Mar 2026 02:44:31 +0100
+	id MLvaNLeDq2n/dgEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9182-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 07 Mar 2026 02:47:35 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 419932296D3
-	for <lists+linux-hyperv@lfdr.de>; Sat, 07 Mar 2026 02:44:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3596B229712
+	for <lists+linux-hyperv@lfdr.de>; Sat, 07 Mar 2026 02:47:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 72E4E301DAFF
-	for <lists+linux-hyperv@lfdr.de>; Sat,  7 Mar 2026 01:44:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9CE4C301FD41
+	for <lists+linux-hyperv@lfdr.de>; Sat,  7 Mar 2026 01:47:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E39BB2EC54A;
-	Sat,  7 Mar 2026 01:44:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BA8E318EF0;
+	Sat,  7 Mar 2026 01:47:32 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDF59270EC1;
-	Sat,  7 Mar 2026 01:44:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78258175A95;
+	Sat,  7 Mar 2026 01:47:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772847868; cv=none; b=WFhc4MabDOmEVybRkR66qqAXQ/WxL4rzBz65+jZGTLLJ758bl5rk7caPGhPlzglc9eyS2H5wolKGsgHwso/wqswOlDU1AfZ6g/irntDvRzs36KpyZVgdNFHYcqGyOp7VgrgI87AvHpGPkTZpFWolPd6Mrzx/N8Cg8t7tdsg/gs0=
+	t=1772848052; cv=none; b=Dj9eOj7XDP0PzejiDBsOO77rFe+f3VMbSaYIQAczQZgE8q5BDE+YkIoAlPWoNUVBN3ruS420iC+8Jr7a9//9f2VxMuWPLjuMAhvH7+I+g6adJl8JuucaeonCj9SiCowECO5RqmeG6pbz6SwhWkIKR1tXsQpR3+CF0A8PeeAo0yQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772847868; c=relaxed/simple;
+	s=arc-20240116; t=1772848052; c=relaxed/simple;
 	bh=QF81WmpxRrWYRBaun7KIn1uyg/V2x5q4tPvGnG722MQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EL9z3vo8F89b/1lgaUrH5Dkhlkvowv/390GujfcmQo1T4LmOgazB6NQZuJj9L966wA+5I4h4HcblgpYnYppK37LO5KAaMN11z3oipNl0VY5Y1DQLkckmqMY/R7hGbf+bLMSDHXqOi6K3lBuqT1C8EDV4R0wWiSnbST8BXepqplk=
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mJ027xag+6RtZ3ge0t86P7Rm+DByer/9TRiU6VQ5YtJFGSkSX2s0ExhuuCoIFvy8TIDqMxpfif/ko9a44hk/exeHGOGMF48VdYNY/JD62zejp7G5KbfELRY4/+NTI40L8rlFGJZpwx70s/HYG5I+qnoaU/5WXXLBP7VS9fs44ZY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1202)
-	id 8061A20B6F02; Fri,  6 Mar 2026 17:44:27 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8061A20B6F02
+	id 4415E20B6F02; Fri,  6 Mar 2026 17:47:31 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4415E20B6F02
 From: Long Li <longli@microsoft.com>
-To: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Simon Horman <horms@kernel.org>,
+To: Long Li <longli@microsoft.com>,
 	Konstantin Taranov <kotaranov@microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Erick Archer <erick.archer@outlook.com>,
-	linux-hyperv@vger.kernel.org,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K . Y . Srinivasan" <kys@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>
+Cc: Simon Horman <horms@kernel.org>,
 	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Cc: Long Li <longli@microsoft.com>
-Subject: [PATCH 0/8] RDMA/mana_ib: Handle service reset for RDMA resources
-Date: Fri,  6 Mar 2026 17:44:04 -0800
-Message-ID: <20260307014414.556256-1-longli@microsoft.com>
+	linux-rdma@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH rdma-next 0/8] RDMA/mana_ib: Handle service reset for RDMA resources
+Date: Fri,  6 Mar 2026 17:47:14 -0800
+Message-ID: <20260307014723.556523-1-longli@microsoft.com>
 X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -63,31 +63,31 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 419932296D3
+X-Rspamd-Queue-Id: 3596B229712
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.54 / 15.00];
+X-Spamd-Result: default: False [3.04 / 15.00];
 	DMARC_POLICY_REJECT(2.00)[microsoft.com : SPF not aligned (relaxed), No valid DKIM,reject];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	SUSPICIOUS_RECIPS(1.50)[];
 	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
 	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,davemloft.net,google.com,redhat.com,linux.microsoft.com,outlook.com,vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-9181-lists,linux-hyperv=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	NEURAL_SPAM(0.00)[0.105];
-	FROM_NEQ_ENVFROM(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-9182-lists,linux-hyperv=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[18];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
 	R_DKIM_NA(0.00)[];
+	NEURAL_HAM(-0.00)[-0.368];
+	FROM_NEQ_ENVFROM(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Action: no action
