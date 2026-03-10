@@ -1,396 +1,301 @@
-Return-Path: <linux-hyperv+bounces-9289-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9290-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +LaaGoxqsGmNjAIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9289-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Mar 2026 20:01:32 +0100
+	id UIkgHw9rsGmNjAIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9290-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Mar 2026 20:03:43 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9E79256C8B
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Mar 2026 20:01:31 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id F06A6256CF3
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Mar 2026 20:03:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 097BD3067850
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Mar 2026 19:00:45 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id ECDA1308889D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Mar 2026 19:03:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C47DD3A900B;
-	Tue, 10 Mar 2026 19:00:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E54203CC9F3;
+	Tue, 10 Mar 2026 19:03:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="F2twIcPf"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="QykTzaZ3"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D12933E347;
-	Tue, 10 Mar 2026 19:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773169242; cv=none; b=ja2nogVxaMdw91UUoGD7OxfuEvq9hGGO7P8Zn1foEukCbknKzj4Eh1WVrkYCzNvGvzYNt7rL3eNtYDQeSOSmBeuzgSCmZf0NOSb5pHQM2cgLWV2/+0nKjbRVibrqRoYJTZBTFX4+Bk+3hd4/3AY99Wn5SLxNE2LVXz/CUxtDuPg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773169242; c=relaxed/simple;
-	bh=SBUPDKhfoe92AV8XhVL64XB+MzmOh5ipIZ8UftiHfOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=axJ7vM3G9GIMLakg+/wOVjKIrojRBLafdBdXZjSyjDOzhpJTyWUTeZpDoQSYM4+W2MkZXQdFLNeTGKtD1cUG3LtikHyddQhJzFx4oteXC9PqWWxv3auZSjFSIsV6HTIpLQTLJxZ6gsv0pvGrMtoTJyx4te9pCfda8ib+kE6MKFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=F2twIcPf; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1204)
-	id 6CC2320B710C; Tue, 10 Mar 2026 12:00:35 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6CC2320B710C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1773169235;
-	bh=42q/Uk9o1ey7lZIUSzXosx8JjeQbx/EquCtqcvvex7A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F2twIcPf1UvS8pAo6PsSoN5H1K69rL6NIBwSwGV+xBZ68bhs+S3idntAfj9FmNEjU
-	 faUYgald+VR9BTzb0zplXEyVh42HCByFYKtXtaB72hQWoFleBofqMiqCaUMft0eybK
-	 MpGMQ3ZrWC8Gqm7m/B5oxT39LTNOmBMIMppy7Pdw=
-Date: Tue, 10 Mar 2026 12:00:35 -0700
-From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11022116.outbound.protection.outlook.com [52.101.43.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8D2175A7C;
+	Tue, 10 Mar 2026 19:03:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.116
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773169399; cv=fail; b=RWTbc9+3+WXyWZn5PEqqnPfg07tt3yQnTX9Rx4saHeicmk3J2/X8HYRBW2O1PCVc1TBahjXsu2lCOZLIwekQRkhIMqUUqhhHtgOBIkNFgtwXZa25JGB0WFHNYw3H4LZ+9tFuoMf2XIA87XmTeH8KRy7QR2pWAqUTMK/K/LScq5Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773169399; c=relaxed/simple;
+	bh=vNrnb3DuFVd9CNPWTV7dUTagJRprQ5xdCwm89V5ykOo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=qtfjMwLJk/aIYwGwC64IJlEZEl63YLEoGMwqFk+An3DSPrMX8njdadsOStd/CXxdhsLjbNHwONb31AiQdPgshdl4N3aJW0N4Fvr6M1B2U+ehyOAAuvfCByXAY7fLKUUbObXPmn8p8vhu0cppgstouldkfiJp1SP6XFO8q/3ugcY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=QykTzaZ3; arc=fail smtp.client-ip=52.101.43.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=k0pNFrKM02pZrv0OHOQCrgTxqhAExs0A68YCCWD0IjyOgsy8Vg4ETkYBMl3oroeNNcA7DpJL34bakniAdl785AKMksh3jHvGIzV9+oA85wN0ZKvc/UHo8ys7rMmVMcOmJFnMK3lr+uBJ7cRaCYCyoeOjCeZICnIs7v8zNU592G2DO0AoltYJY89eQDZkaNFPCug3Fv7Q8fGijA/1Qqxws8bV1BhJQV8gTy0j9E2UwTz1f6EUsnURLCVQUJIN0FlBztC2ZQWKDU+ClC63EqQJOJYLKKj9MGXRKGdBS4i4T/iZYBksAflbdj84FIucDBIdr39zjJYe7ND2PaR9wBQcxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eMNLXOlrNm5OG6I2u2/c+tv9vJAABSZW1WL7GcBJVno=;
+ b=aw3/OlWyNTaoZX5z3aSR3fm+ACI9N/SfV3vlytd48x4otYA2AVLreg1eWdpQncmluL1zkC7y6pUgpjMZ2bcDCu57PjiZX14XrNKm86gzCTvEsCf2ejmo0kInZYCUELduEs8k1qV75JMxjbBlwxOVt6PrRFEzCL8v+68XpWl6Joz2O2OTZCyXEfRrT9C2Y9nm+w2LmQ2KcYs08UDqueKFo8jerbNpJD9hCmHjZvqzbzbasyad3PX7hkEixAsXIiomaGsU7oB4MNhSfepXpcAcTSfCYzFcP85BCGgreR2G0NxKz98XyyVnancSpfawZPcGOULXUfoEc9/jlHb4GuP3Ng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eMNLXOlrNm5OG6I2u2/c+tv9vJAABSZW1WL7GcBJVno=;
+ b=QykTzaZ39jTZOjDcdBBROBbFSa8ReQtyzOPuOG6BIvuPmmFwTcSXxvhWOQziccIU10WhV7oUC1zJm9Pyhlg3zt1Hx0pE/6yM9iRi+Vt3uOBACTEC9giMzoMPf24Y90l7WVDYnB4hhlg/lQhjakRP+skjUDgc+LH0dWSKdvywdeM=
+Received: from SA1PR21MB6683.namprd21.prod.outlook.com (2603:10b6:806:4a4::6)
+ by SA1PR21MB6634.namprd21.prod.outlook.com (2603:10b6:806:4a9::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.8; Tue, 10 Mar
+ 2026 19:03:15 +0000
+Received: from SA1PR21MB6683.namprd21.prod.outlook.com
+ ([fe80::879f:eec1:ca0e:d219]) by SA1PR21MB6683.namprd21.prod.outlook.com
+ ([fe80::879f:eec1:ca0e:d219%3]) with mapi id 15.20.9723.000; Tue, 10 Mar 2026
+ 19:03:17 +0000
+From: Long Li <longli@microsoft.com>
 To: Paolo Abeni <pabeni@redhat.com>
-Cc: ernis@linux.microsoft.com, decui@microsoft.com,
-	shradhagupta@linux.microsoft.com, andrew+netdev@lunn.ch,
-	kys@microsoft.com, kuba@kernel.org, longli@microsoft.com,
-	kotaranov@microsoft.com, shirazsaleem@microsoft.com,
-	linux-hyperv@vger.kernel.org, edumazet@google.com,
-	wei.liu@kernel.org, horms@kernel.org, davem@davemloft.net,
-	linux-rdma@vger.kernel.org, ssengar@linux.microsoft.com,
-	leon@kernel.org, haiyangz@microsoft.com,
-	linux-kernel@vger.kernel.org, dipayanroy@microsoft.com,
-	netdev@vger.kernel.org
-Subject: Re: [net-next,v2] net: mana: Force full-page RX buffers for 4K page
- size on specific systems.
-Message-ID: <abBqUzO79pYQ3k2Z@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <aarXjJ+n2EoX2JvB@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20260310122127.200675-1-pabeni@redhat.com>
+CC: Konstantin Taranov <kotaranov@microsoft.com>, "erick.archer@outlook.com"
+	<erick.archer@outlook.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
+	"horms@kernel.org" <horms@kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Dexuan Cui <DECUI@microsoft.com>,
+	"schakrabarti@linux.microsoft.com" <schakrabarti@linux.microsoft.com>,
+	"kuba@kernel.org" <kuba@kernel.org>, "davem@davemloft.net"
+	<davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+Subject: RE: [EXTERNAL] Re: [net-next,v3,4/6] net: mana: Use GIC functions to
+ allocate global EQs
+Thread-Topic: [EXTERNAL] Re: [net-next,v3,4/6] net: mana: Use GIC functions to
+ allocate global EQs
+Thread-Index: AQHcsJpdtsf42A2UPEW1zRReJvQ4+rWoH1lQ
+Date: Tue, 10 Mar 2026 19:03:17 +0000
+Message-ID:
+ <SA1PR21MB66835CF1438075CCC68F9E4ACE46A@SA1PR21MB6683.namprd21.prod.outlook.com>
+References: <20260306213302.544681-5-longli@microsoft.com>
+ <20260310142931.237121-1-pabeni@redhat.com>
+In-Reply-To: <20260310142931.237121-1-pabeni@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=de43678c-cca3-42f3-a972-06318a0428c7;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-03-10T19:01:18Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR21MB6683:EE_|SA1PR21MB6634:EE_
+x-ms-office365-filtering-correlation-id: 6247d9e7-f623-4473-a2a0-08de7ed7b0a1
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700021|56012099003|18002099003|22082099003;
+x-microsoft-antispam-message-info:
+ 6vrBWyg0JqqOy+crD0leBVqDKe2SApKsLRRwFHyuxZUPVBdkTpK1E5OejgUP4fzvSUFkcp7BusreFu3RLMO1skTnxqeWkJr9NbmgapR3wGOL6ZJp4XDsvSXTGL0H8940RciXVBZUZ19wiKAqmD/uTGCbADDrGPzmvTN6yBCWGtDJ6yMwjF8O3+IPlolBMiR7whOJQBmdfDLzz48fR8P/mcenEFxRBKFDqUSW/CWhCbKoHo/X1UNS9Nc0JFdPcgYt5s9Ze6cUhDJlvzbz5DnSJPHcyllHroaSiyQnGMhdDKlW2QmQq/bwOwfIqsz0Dl/APFOXz50mOA8OG9PgdSdXVENHlaFTQh05UUC1rXh0AulJpIFAhh/A8dLmR5PYdg2U+vsEAgbwLogFCFNph8u08Sgc13zw/0y6J2WPufGozcnJdphtU4HyibZJBKeYVw/NrxKqtmVEU49gOKdbVD68bfsXkRaBwodMRT1I2PppWv9GVx7LmZ5/t2diA2MPMHnn4d/Qhf0s1hgfmQpccJGHOZGjEp1MJewz4yi493CafMCdlRXu0MoF3BhuPJJwK6JURJCD7qZDCniTAffNZ28nMu/RB9XuInJ2bfOIPJNvub6C6fK5976UNnl3ekJf5I4HkZDICv9GFO7Umy7+/F0yU3IW3o78eOtfuvW76XoBWFcs4UkIqip3JOyyvznXTsT4p1XnXtXk5tutsvXIEvGOMZFKU6OUBXXi54No4M3YlNfVsX83kyLw83Px05Hag6gwQpZyHga0ezOFa3CZFtzNOMbGAEhIwyRIxOeHaaNUmds=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB6683.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700021)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?9u+uNAgFcvL6xTsNKOqMzIs8uODTIr1qHtkf8B4OP+9buQZVKbCpsCKo7GJL?=
+ =?us-ascii?Q?lk0o0TqiNvc5toNnqTKu0cCux+w/+2QBHayO44oCnJXlyS5vgf99kCzODuC7?=
+ =?us-ascii?Q?kqSP0yqUFn6SPB8cdAyEfBG/A7eFknWj/f/tMeYzULZWWwe37JNkgEP+wMLK?=
+ =?us-ascii?Q?xk2jU+Ci+hBlxl0nNIo16/JgKR/T1QKfyCfdoPCk3ErvABx1wuOeLXcejzAD?=
+ =?us-ascii?Q?XT/Wl8oCBugpz6cc1jMtkXNC0mnoLbpFPx9JmAM0AIAmC+HAKKcCLvM9fZes?=
+ =?us-ascii?Q?jnXb4s+Cbzk0llzuhVNwPkgkr3zqAFff8b0b0EhHHpHx1ce+S7u0CH2tajXJ?=
+ =?us-ascii?Q?GKRyVw4N3zAqBE20JmP9XuYpFo3Ym6cJnGkkiy/Y0qzvS06/Rkt04wD7XZgI?=
+ =?us-ascii?Q?OQMI9WkjRjeJrwoct0luohl21FLDndK7reRVo2ahprZeKEFxVLwGxkC7phnf?=
+ =?us-ascii?Q?d5IaaJgStC+ciDSQrDUQV2sQ6bX46N2n1m4Ud1LJl76VTOt0ILezwO6gj9GX?=
+ =?us-ascii?Q?6vURmXvAh/Ki5GvdZgBDy9gLUuSIXzRoCUJ9xPjXQNPxExtVpT+v6wYgZKhQ?=
+ =?us-ascii?Q?AY2VBPgRMCACwf+aWj4phCOAtecU7c1MIRlAve6AsHX/urXs+nmYAv9UBoHF?=
+ =?us-ascii?Q?16T4GASCQF9/pTrFP4y5EIa7mKOwol6hawqbbjk0/79A/kPgOqqC3SXCD4z0?=
+ =?us-ascii?Q?I5y7B+me1WUnZ5xMebGqILdyhUxkeFYq8FlY/xVvL9uVeozePAUGPM6QNRKC?=
+ =?us-ascii?Q?b0S4ojzke7+6uyQQiIMamX+KRMtYG2fkrXe7GPE4CXQJPUNLLgV9me8rgZDa?=
+ =?us-ascii?Q?UNEQn+9R1snHNcSonlqrEEee5+x8fJ5bQbNN8o9j0Eprm/fF5HG3fbtbmUHx?=
+ =?us-ascii?Q?qUFPVr2YoBB5b2atjVqmcDouGFFFoy+6zk2ptKswF9A9AnLREMhy0tvinMr2?=
+ =?us-ascii?Q?U+imXhxeuZ4ywX54Ob5KcIWE4nD2Z0RgFLsXv8UrjFTD54lFJqnvoNvkfJ5H?=
+ =?us-ascii?Q?QjrMJd5g025J94NEjPVwVBKxuzYWuQlUdM1tqLIsNUIjjPga2+3pnpWieNQF?=
+ =?us-ascii?Q?PGLhvn5mKHlp7a7qkNvVxb3905fNy8DFzpict5NI+O60zfxrQJ4enIeKWnXQ?=
+ =?us-ascii?Q?0Q1E6EeS584vkkRWKoC9Z2IVLCI73ztMT/I5ZmDYI6sw+mU9eYVD6r3iP3RD?=
+ =?us-ascii?Q?MOhQQYWwvuZXaz3/FwV/qSZ1XkgYPrE/BMDnlrxWBwQ7bV5yXUk/iSHNaede?=
+ =?us-ascii?Q?rn4HZAKqyXVWNbCh+IED+O72i+Gsc5ckn7e1Gd09iSmA6KaPjNkfaYbXWcpK?=
+ =?us-ascii?Q?InRkvkeJB0Vre2ZzkD7GlwmzSLEdOdSUTPdh4jW5S1LGaK39LU6gH50p1FyX?=
+ =?us-ascii?Q?FMf08JGfiCbXj34RLx+7s5HiELzL/tUtkIRSalRKaK5VRR/Mz+C5jSzIUnrR?=
+ =?us-ascii?Q?6+jmNJC6aj6FvykbfOt7E393ZxJT6yso92SgzVMY3ShihTWfgyyEbSyXvCaJ?=
+ =?us-ascii?Q?cp82KO04KmWfwpithDe9CrPOYZqKraLjRtb4/bnRm0T61G7FSbZH6x3sCRFG?=
+ =?us-ascii?Q?8Hk4DO0uHdFW/x8tAgDKmxBKngI21E4R5KV1Phh82QEwenbZpCZmevudVEY8?=
+ =?us-ascii?Q?wMoqStK5mr7qukQEdL3uzKQ+Sb12e81BTOnQ3GOBBBAa80A7elzPHoEwpokg?=
+ =?us-ascii?Q?A9x9rfv+gYrIjTpHxArInwefaFt+2loVDyV1bHoLonZF8iCw?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260310122127.200675-1-pabeni@redhat.com>
-X-Rspamd-Queue-Id: D9E79256C8B
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB6683.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6247d9e7-f623-4473-a2a0-08de7ed7b0a1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2026 19:03:17.9088
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6QHSL7wFPVBIA9CBELdfhbERKmWCnCwHIdAdFuoRwFp/E4lXC0LR27x4Ubr3hzM1X8VHaO+Mpo5a13KEaCag6Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR21MB6634
+X-Rspamd-Queue-Id: F06A6256CF3
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[microsoft.com,reject];
+	R_DKIM_ALLOW(-0.20)[microsoft.com:s=selector2];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9289-lists,linux-hyperv=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[microsoft.com,outlook.com,kernel.org,vger.kernel.org,linux.microsoft.com,davemloft.net,google.com];
+	TAGGED_FROM(0.00)[bounces-9290-lists,linux-hyperv=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[microsoft.com:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	FROM_NEQ_ENVFROM(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-hyperv];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:url,linux.microsoft.com:dkim,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,outlook.com:url]
 X-Rspamd-Action: no action
 
-On Tue, Mar 10, 2026 at 01:21:27PM +0100, Paolo Abeni wrote:
-> This is an AI-generated review of your patch. The human sending this
-> email has considered the AI review valid, or at least plausible.
-> 
-> For local reproduction steps see https://netdev-ai.bots.linux.dev/ai-local.html
+> Subject: [EXTERNAL] Re: [net-next,v3,4/6] net: mana: Use GIC functions to
+> allocate global EQs
+>=20
+> This is an AI-generated review of your patch. The human sending this emai=
+l has
+> considered the AI review valid, or at least plausible.
+>=20
+> For local reproduction steps see
+> https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fnetde=
+v-
+> ai.bots.linux.dev%2Fai-
+> local.html&data=3D05%7C02%7Clongli%40microsoft.com%7Cb43e1b10bd564c760
+> a4d08de7eb17c82%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C6390
+> 87497958656662%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWU
+> sIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%
+> 7C0%7C%7C%7C&sdata=3Dr63AcJ7Cd3APZSSpl4SPBcGxSdosinxkIurfTp9yZmc%3D&
+> reserved=3D0
 > ---
-> net: mana: Force full-page RX buffers for 4K page size on specific systems.
-> 
-> This commit adds processor-specific optimization for ARM64 systems with
-> 4K pages where page_pool fragments cause throughput regression. It
-> detects affected processors via SMBIOS and forces one RX buffer per page.
->
-yes, I assume no action needed here. 
-> > diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > index aef8612b73cb..05fecc00a90c 100644
+> net: mana: Use GIC functions to allocate global EQs
+>=20
+> Replace the GDMA global interrupt setup code with the new GIC allocation =
+and
+> release functions for managing interrupt contexts.
+>=20
+> > diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > index c43fd8089e77..bdc9dc437fb7 100644
 > > --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
 > > +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> 
+>=20
 > [ ... ]
-> 
-> > @@ -1959,6 +1960,128 @@ static bool mana_is_pf(unsigned short dev_id)
-> >  	return dev_id == MANA_PF_DEVICE_ID;
-> >  }
+>=20
+> > @@ -2052,26 +1998,17 @@ static int mana_gd_setup_remaining_irqs(struct
+> > pci_dev *pdev)  static void mana_gd_remove_irqs(struct pci_dev *pdev)
+> > {
+> >  	struct gdma_context *gc =3D pci_get_drvdata(pdev);
+> > -	struct gdma_irq_context *gic;
+> >  	int irq, i;
 > >
-> > +/*
-> > + * Table for Processor Version strings found from SMBIOS Type 4 information,
-> > + * for processors that needs to force single RX buffer per page quirk for
-> > + * meeting line rate performance with ARM64 + 4K pages.
-> > + * Note: These strings are exactly matched with version fetched from SMBIOS.
-> > + */
-> > +static const char * const mana_single_rxbuf_per_page_quirk_tbl[] = {
-> > +	"Cobalt 200",
-> > +};
-> > +
-> > +/* On some systems with 4K PAGE_SIZE, page_pool RX fragments can
-> > + * trigger a throughput regression. Hence identify those processors
-> > + * from the extracted SMBIOS table and apply the quirk to forces one
-> > + * RX buffer per page to avoid the fragment allocation/refcounting
-> > + * overhead in the RX refill path for those processors only.
-> > + */
-> > +static bool mana_needs_single_rxbuf_per_page(struct gdma_context *gc)
-> > +{
-> > +	int i = 0;
-> > +	const char *ver = gc->processor_version;
-> > +
-> > +	if (!ver)
-> > +		return false;
-> > +
-> > +	if (PAGE_SIZE != SZ_4K)
-> > +		return false;
-> > +
-> > +	while (i < ARRAY_SIZE(mana_single_rxbuf_per_page_quirk_tbl)) {
-> > +		if (!strcmp(ver, mana_single_rxbuf_per_page_quirk_tbl[i]))
-> > +			return true;
-> > +		i++;
-> > +	}
-> > +
-> > +	return false;
-> > +}
-> > +
-> > +static void mana_get_proc_ver_strno(const struct dmi_header *hdr, void *data)
-> > +{
-> > +	struct gdma_context *gc = data;
-> > +	const u8 *d = (const u8 *)hdr;
-> > +
-> > +	/* We are only looking for Type 4: Processor Information */
-> > +	if (hdr->type != SMBIOS_TYPE_4_PROCESSOR_INFO)
-> > +		return;
-> > +
-> > +	/* Ensure the record is long enough to contain the Processor Version
-> > +	 * field
-> > +	 */
-> > +	if (hdr->length <= SMBIOS_TYPE4_PROC_VERSION_OFFSET)
-> > +		return;
-> > +
-> > +	/* The 'Processor Version' string is located at index pointed by
-> > +	 * SMBIOS_TYPE4_PROC_VERSION_OFFSET.  Make a copy of the index.
-> > +	 * There could be multiple Type 4 tables so read and store the
-> > +	 * processor version index found the first time.
-> > +	 */
-> > +	if (gc->proc_ver_strno)
-> > +		return;
-> > +
-> > +	gc->proc_ver_strno = d[SMBIOS_TYPE4_PROC_VERSION_OFFSET];
-> > +}
-> > +
-> > +static const char *mana_dmi_string_nosave(const struct dmi_header *hdr, u8 s)
-> > +{
-> > +	const char *bp = (const char *)hdr + hdr->length;
-> > +
-> > +	if (!s)
-> > +		return NULL;
-> > +
-> > +	/* String numbers start at 1 */
-> > +	while (--s > 0 && *bp)
-> > +		bp += strlen(bp) + 1;
-> > +
-> > +	if (!*bp)
-> > +		return NULL;
-> > +
-> > +	return bp;
-> > +}
-> > +
-> > +static void mana_fetch_proc_ver_string(const struct dmi_header *hdr,
-> > +				       void *data)
-> > +{
-> > +	struct gdma_context *gc = data;
-> > +	const char *ver;
-> > +
-> > +	/* We are only looking for Type 4: Processor Information */
-> > +	if (hdr->type != SMBIOS_TYPE_4_PROCESSOR_INFO)
-> > +		return;
-> > +
-> > +	/* Extract proc version found the first time only */
-> > +	if (!gc->proc_ver_strno || gc->processor_version)
-> > +		return;
-> > +
-> > +	ver = mana_dmi_string_nosave(hdr, gc->proc_ver_strno);
-> > +	if (ver)
-> > +		gc->processor_version = kstrdup(ver, GFP_KERNEL);
-> > +}
-> > +
-> > +/* Check and initialize all processor optimizations/quirks here */
-> > +static bool mana_init_processor_optimization(struct gdma_context *gc)
-> > +{
-> > +	bool opt_initialized = false;
-> > +
-> > +	gc->proc_ver_strno = 0;
-> > +	gc->processor_version = NULL;
-> > +
-> > +	dmi_walk(mana_get_proc_ver_strno, gc);
-> > +	if (!gc->proc_ver_strno)
-> > +		return false;
-> > +
-> > +	dmi_walk(mana_fetch_proc_ver_string, gc);
-> > +	if (!gc->processor_version)
-> > +		return false;
-> > +
-> > +	if (mana_needs_single_rxbuf_per_page(gc)) {
-> > +		gc->force_full_page_rx_buffer = true;
-> > +		opt_initialized = true;
-> > +	}
-> > +
-> > +	return opt_initialized;
-> > +}
-> > +
-> >  static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
-> >  {
-> >  	struct gdma_context *gc;
-> 
-> [ ... ]
-> 
-> > @@ -2013,6 +2136,11 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
-> >  		gc->mana_pci_debugfs = debugfs_create_dir(pci_slot_name(pdev->slot),
-> >  							  mana_debugfs_root);
+> >  	if (gc->max_num_msix < 1)
+> >  		return;
 > >
-> > +	if (mana_init_processor_optimization(gc))
-> > +		dev_info(&pdev->dev,
-> > +			 "Processor specific optimization initialized on: %s\n",
-> > +			gc->processor_version);
-> > +
-> >  	err = mana_gd_setup(pdev);
-> >  	if (err)
-> >  		goto unmap_bar;
-> 
-> [ ... ]
-> 
-> > @@ -2055,6 +2183,8 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
-> >  	pci_iounmap(pdev, bar0_va);
-> >  free_gc:
-> >  	pci_set_drvdata(pdev, NULL);
-> > +	kfree(gc->processor_version);
-> > +	gc->processor_version = NULL;
-> >  	vfree(gc);
-> >  release_region:
-> >  	pci_release_regions(pdev);
-> 
-> [ ... ]
-> 
-> > @@ -2110,6 +2240,9 @@ static void mana_gd_remove(struct pci_dev *pdev)
-> >
-> >  	pci_iounmap(pdev, gc->bar0_va);
-> >
-> > +	kfree(gc->processor_version);
-> > +	gc->processor_version = NULL;
-> > +
-> >  	vfree(gc);
-> >
-> >  	pci_release_regions(pdev);
-> 
-> [ ... ]
-> 
-> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > index ea71de39f996..f17cc2cc7dd9 100644
-> > --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> 
-> [ ... ]
-> 
-> > @@ -744,6 +744,26 @@ static void *mana_get_rxbuf_pre(struct mana_rxq *rxq, dma_addr_t *da)
-> >  	return va;
-> >  }
-> >
-> > +static bool
-> > +mana_use_single_rxbuf_per_page(struct mana_port_context *apc, u32 mtu)
-> > +{
-> > +	struct gdma_context *gc = apc->ac->gdma_dev->gdma_context;
-> > +
-> > +	/* On some systems with 4K PAGE_SIZE, page_pool RX fragments can
-> > +	 * trigger a throughput regression. Hence forces one RX buffer per page
-> > +	 * to avoid the fragment allocation/refcounting overhead in the RX
-> > +	 * refill path for those processors only.
-> > +	 */
-> > +	if (gc->force_full_page_rx_buffer)
-> > +		return true;
-> > +
-> > +	/* For xdp and jumbo frames make sure only one packet fits per page. */
-> > +	if (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2 || mana_xdp_get(apc))
-> > +		return true;
-> > +
-> > +	return false;
-> > +}
-> > +
-> >  /* Get RX buffer's data size, alloc size, XDP headroom based on MTU */
-> >  static void mana_get_rxbuf_cfg(struct mana_port_context *apc,
-> >  			       int mtu, u32 *datasize, u32 *alloc_size,
-> 
-> [ ... ]
-> 
-> > @@ -754,8 +774,7 @@ static void mana_get_rxbuf_cfg(struct mana_port_context *apc,
-> >  	/* Calculate datasize first (consistent across all cases) */
-> >  	*datasize = mtu + ETH_HLEN;
-> >
-> > -	/* For xdp and jumbo frames make sure only one packet fits per page */
-> > -	if (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2 || mana_xdp_get(apc)) {
-> > +	if (mana_use_single_rxbuf_per_page(apc, mtu)) {
-> >  		if (mana_xdp_get(apc)) {
-> >  			*headroom = XDP_PACKET_HEADROOM;
-> >  			*alloc_size = PAGE_SIZE;
-> 
-> [ ... ]
-> 
-> > diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-> > index ec17004b10c0..be56b347f3f6 100644
-> > --- a/include/net/mana/gdma.h
-> > +++ b/include/net/mana/gdma.h
-> 
-> [ ... ]
-> 
-> > @@ -9,6 +9,12 @@
-> >
-> >  #include "shm_channel.h"
-> >
-> > +/* SMBIOS Type 4: Processor Information table */
-> > +#define SMBIOS_TYPE_4_PROCESSOR_INFO 4
-> > +
-> > +/* Byte offset containing the Processor Version string number.*/
-> > +#define SMBIOS_TYPE4_PROC_VERSION_OFFSET 0x10
-> > +
-> >  #define GDMA_STATUS_MORE_ENTRIES	0x00000105
-> >  #define GDMA_STATUS_CMD_UNSUPPORTED	0xffffffff
-> >
-> 
-> [ ... ]
-> 
-> > @@ -444,6 +450,9 @@ struct gdma_context {
-> >  	struct workqueue_struct *service_wq;
-> >
-> >  	unsigned long		flags;
-> > +	u8			*processor_version;
-> > +	u8			proc_ver_strno;
-> > +	bool			force_full_page_rx_buffer;
-> >  };
-> >
-> >  static inline bool mana_gd_is_mana(struct gdma_dev *gd)
-> 
-> Should processor_version be declared as char * instead of u8 *?
-> 
-> The field is used as a string throughout the code: it's assigned from
-> kstrdup() in mana_fetch_proc_ver_string(), read as const char *ver
-> in mana_needs_single_rxbuf_per_page(), passed to strcmp(), and printed
-> with %s format in dev_info().
-> 
-> Using u8 * for string data can trigger compiler warnings with
-> -Wpointer-sign, since string functions expect char * types.
-> 
-Ack, I will send a v3 addressing this.
+> > -	for (i =3D 0; i < gc->max_num_msix; i++) {
+> > -		irq =3D pci_irq_vector(pdev, i);
+> > -		if (irq < 0)
+> > -			continue;
+> > -
+> > -		gic =3D xa_load(&gc->irq_contexts, i);
+> > -		if (WARN_ON(!gic))
+> > -			continue;
+> > -
+> > +	for (i =3D 0; i < (gc->msi_sharing ? gc->max_num_msix : 1); i++) {
+>                                                                ^^^ Does t=
+his loop condition leak GIC
+> references when msi_sharing is false?
+>=20
+> When msi_sharing is false, the loop only releases the GIC at index 0.
+> However, mana_gd_setup_dyn_irqs allocates GICs at indices 1 through nvec:
+>=20
+> drivers/net/ethernet/microsoft/mana/gdma_main.c:mana_gd_setup_dyn_irqs()
+> {
+>     for (i =3D 1; i <=3D nvec; i++) {
+>         gic =3D mana_gd_get_gic(gc, false, &i);
+>         ...
+>     }
+> }
+>=20
+> Each mana_gd_get_gic call initializes the GIC with refcount=3D1. These GI=
+Cs at
+> indices 1..nvec are never released because mana_gd_remove_irqs only proce=
+sses
+> index 0 when msi_sharing is false.
+>=20
+> The old code iterated over all gc->max_num_msix entries unconditionally:
+>=20
+>     for (i =3D 0; i < gc->max_num_msix; i++) {
+>         ...
+>         gic =3D xa_load(&gc->irq_contexts, i);
+>         ...
+>         free_irq(irq, gic);
+>         xa_erase(&gc->irq_contexts, i);
+>         kfree(gic);
+>     }
+>=20
+> This ensured every allocated GIC was freed. The new code with the conditi=
+onal
+> loop breaks this, resulting in:
+>=20
+> 1. Leaked IRQ handlers - request_irq without matching free_irq for indice=
+s
+>    1..nvec
+> 2. Leaked gdma_irq_context memory - the GIC structures are never freed 3.
+> Leaked xarray entries - the entries remain in gc->irq_contexts
+>=20
+> Additionally, pci_free_irq_vectors is called immediately after the loop, =
+which
+> attempts to tear down MSI-X vectors while IRQ handlers at indices 1..nvec=
+ are
+> still registered. Can this trigger warnings or use-after-free if an inter=
+rupt fires
+> during teardown?
+>=20
+> The next commit in the series (4475f13983ab "net: mana: Allocate interrup=
+t
+> context for each EQ when creating vPort") adds per-EQ get/put of GICs, bu=
+t the
+> EQ teardown only drops the EQ's reference (refcount goes from 2 to 1). Th=
+e base
+> reference from mana_gd_setup_dyn_irqs remains unreleased.
 
+Thank you, I'm sending v4 to fix this.
 
-Thanks Paolo,
-For the review comments I will address this warning in a v3.
+Long
 
-Regards
-Dipayaan Roy
 
