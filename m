@@ -1,300 +1,222 @@
-Return-Path: <linux-hyperv+bounces-9282-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9283-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CBjGLUk3sGkKhQIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9282-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Mar 2026 16:22:49 +0100
+	id CDO4OdQ3sGkKhQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9283-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Mar 2026 16:25:08 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F4BD25340C
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Mar 2026 16:22:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F1A7F253541
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Mar 2026 16:25:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6B2843005666
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Mar 2026 14:24:47 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id BA4013255F30
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Mar 2026 14:29:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E64B929D29D;
-	Tue, 10 Mar 2026 14:24:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E8582E11B8;
+	Tue, 10 Mar 2026 14:29:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="F6C5rtqO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fg0pn7ex"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2962C1593
-	for <linux-hyperv@vger.kernel.org>; Tue, 10 Mar 2026 14:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6402DCF58
+	for <linux-hyperv@vger.kernel.org>; Tue, 10 Mar 2026 14:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773152684; cv=none; b=AbpR9IYyFQcKpaLf/zvi5l5exN9EQ9h72xrDQcufWjVIYfaTNFYipz0xTr/fyECypDBcus/iOX61TgCw4s7X+0F/jKoseXxdRR2ac85IEvcODc8A3ogYZ5d/WisXb50dC8p49kZqpMXWYWlmw+0RUB9uhWlq/rWZ3OSdhObrnrQ=
+	t=1773152991; cv=none; b=Du9vfXzRE1nRCWoaNQaqrc5L6iiugn5rYe6clnr1fdQ/h+cH9QTdye8UzKw1Ewu736tvLiwa1CnBFoQMVNgpvDPhGO3X1p1bZmbHabOMNk99MaVn/lvq0pQBL3LNoTq39f4+6iyj76GSWOO9r2X5bgag942S2VySB/bfBDXp35M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773152684; c=relaxed/simple;
-	bh=XwidptKIhvR+UF4aaOLrgKMULsgr14IRJkHhby+ViXQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r+fFmrZJHqBmwuvkSs/XXP5zJbb18UfMOqBMBr0CGn13jwLy3/U7WSvqxsvcpTzVRXrEi0Pp7tDUNuQ7PM6WiEr/MqTBz/1X/dVm8Ge0mH2cB5nQOQiAyU6T0Pj/ucQgfNER7KlslH9mBftJzk6UstfUXsqlXTKvbS2K0qZB34k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=F6C5rtqO; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from macsyma.thunk.org (pool-173-48-117-133.bstnma.fios.verizon.net [173.48.117.133])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 62AENmx0023256
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Mar 2026 10:23:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1773152637; bh=4/p8AtxdJ3b4aYgpRIBgOOPVM9R5HZLzlaxPPsEZ2Q4=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=F6C5rtqODrQpEwdwVTgFCawAhLv3gwk1txjCpTf9qYEhws10oNToQIbXrBSiNnSGn
-	 HKzLPM0wlhbQz5hd3KNNbDsKNUIOcLP5D+4J1qJhv/m9AJCmBvmBntSwPXXBcrZ48c
-	 UG5I74ocwzVwmg9UHdT0hLejm00ahwJz4Tby2LgiJXvFIYDaYDAoayC1G2vaNRdttd
-	 dnaccWPVwGwuO0YYJTFV0/A1hSU2yI/onO0qlICZ11ISIKYrG0S38XY0XZ07wXHuQf
-	 SRLcsUXeYesD2NrtHf5Vg5nqM+e/voDzSfyx+6EAL02kYRxR5zwo7A3kwnstvVAN1a
-	 N4dmfF0o4YLWg==
-Received: by macsyma.thunk.org (Postfix, from userid 15806)
-	id 96A8A5C4FCED; Tue, 10 Mar 2026 10:23:48 -0400 (EDT)
-Date: Tue, 10 Mar 2026 10:23:48 -0400
-From: "Theodore Tso" <tytso@mit.edu>
-To: Philipp Hahn <phahn-oss@avm.de>
-Cc: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com,
-        bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr,
-        dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org,
-        gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org,
-        intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-mm@kvack.org,
-        linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        ntfs3@lists.linux.dev, samba-technical@lists.samba.org,
-        sched-ext@lists.linux.dev, target-devel@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev,
-        Julia Lawall <Julia.Lawall@inria.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>, Ilya Dryomov <idryomov@gmail.com>,
-        Alex Markuze <amarkuze@redhat.com>,
-        Viacheslav Dubeyko <slava@dubeyko.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>,
-        Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-        Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-        Bharath SM <bharathsm@microsoft.com>,
-        Eric Van Hensbergen <ericvh@kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-        Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Sandeep Dhavale <dhavale@google.com>,
-        Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>, Kees Cook <kees@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Jan Kara <jack@suse.com>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
-        Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>,
-        Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Valentin Schneider <vschneid@redhat.com>,
-        Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
-        Daniel Gomez <da.gomez@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Aaron Tomlin <atomlin@atomlin.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Max Filippov <jcmvbkbc@gmail.com>, Paolo Bonzini <pbonzini@redhat.com>,
-        John Johansen <john.johansen@canonical.com>,
-        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Benjamin Marzinski <bmarzins@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        David Ahern <dsahern@kernel.org>, Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-        Simon Horman <horms@kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Stanislav Fomichev <sdf@fomichev.me>,
-        Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>, Trond Myklebust <trondmy@kernel.org>,
-        Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
-        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@armlinux.org.uk>, John Crispin <john@phrozen.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Zhenyu Wang <zhenyuw.linux@gmail.com>,
-        Zhi Wang <zhi.wang.linux@gmail.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tursulin@ursulin.net>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Sandy Huang <hjc@rock-chips.com>,
-        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        Pavan Chebbi <pavan.chebbi@broadcom.com>,
-        Michael Chan <mchan@broadcom.com>,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Linus Walleij <linusw@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Eduardo Valentin <edubezval@gmail.com>, Keerthy <j-keerthy@ti.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        Alex Williamson <alex@shazbot.org>,
-        Mark Greer <mgreer@animalcreek.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, Lee Jones <lee@kernel.org>,
-        Pavel Machek <pavel@kernel.org>, Dave Penkler <dpenkler@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
-        Justin Sanders <justin@coraid.com>, Jens Axboe <axboe@kernel.dk>,
-        Georgi Djakov <djakov@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 00/61] treewide: Use IS_ERR_OR_NULL over manual NULL
- check - refactor
-Message-ID: <20260310142348.GA41218@macsyma-wired.lan>
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
+	s=arc-20240116; t=1773152991; c=relaxed/simple;
+	bh=iER+Hd4+IIHZJwtIpReHWAJBLrkOCj27Ep772FXakME=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FBhh5sF7a8hfWr8iNPXd62ybYc3gZANl+qW8qdkPXJxj10hcPXdip1dQA0XDwi0s3t5KiltN6tJJyv3WimDkQN5Ezz26Hoq6F7P/DBDAT9lxxCMFgXqgrfOKtmf2Nv3wanRlt9X4Ov6d4Z/nOHGkhxsIa7e6ZiBVgTwQVy6p19M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fg0pn7ex; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1773152989;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G9Kl/AJsyijdHET1vAK8UKCGDRuKVXFmJTFZ6ZiROck=;
+	b=fg0pn7exK0pdZLys4pE+CHEvQyllPJHAuczjdKM56NwotEHkWAe9AfCLwmQEvx7Sitcfrv
+	8A7NQn4dMFoMcg0jz7tELcLOeknyUzLqJ0jfEhu+hot1vCORFx9hqxCVIXvSBLHoh1gUNK
+	u+S4dkanH8l+X/CMzM6RRE6w5kIfaXk=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-617-68mKelE2NYKHcD6YgGEgEg-1; Tue,
+ 10 Mar 2026 10:29:44 -0400
+X-MC-Unique: 68mKelE2NYKHcD6YgGEgEg-1
+X-Mimecast-MFC-AGG-ID: 68mKelE2NYKHcD6YgGEgEg_1773152981
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 698581800359;
+	Tue, 10 Mar 2026 14:29:41 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.225.133])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 35D491800361;
+	Tue, 10 Mar 2026 14:29:35 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: longli@microsoft.com
+Cc: kotaranov@microsoft.com,
+	erick.archer@outlook.com,
+	wei.liu@kernel.org,
+	linux-hyperv@vger.kernel.org,
+	pabeni@redhat.com,
+	shradhagupta@linux.microsoft.com,
+	haiyangz@microsoft.com,
+	kys@microsoft.com,
+	horms@kernel.org,
+	linux-kernel@vger.kernel.org,
+	decui@microsoft.com,
+	schakrabarti@linux.microsoft.com,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: Re: [net-next,v3,4/6] net: mana: Use GIC functions to allocate global EQs
+Date: Tue, 10 Mar 2026 15:29:31 +0100
+Message-ID: <20260310142931.237121-1-pabeni@redhat.com>
+In-Reply-To: <20260306213302.544681-5-longli@microsoft.com>
+References: <20260306213302.544681-5-longli@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
-X-Rspamd-Queue-Id: 2F4BD25340C
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Rspamd-Queue-Id: F1A7F253541
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[mit.edu,none];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[mit.edu:s=outgoing];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[lists.freedesktop.org,lists.ubuntu.com,vger.kernel.org,inria.fr,lists.linux.dev,lists.osuosl.org,lists.infradead.org,lists.ozlabs.org,kvack.org,st-md-mailman.stormreply.com,lists.samba.org,lists.sourceforge.net,imag.fr,fb.com,suse.com,gmail.com,redhat.com,dubeyko.com,dilger.ca,samba.org,manguebit.org,microsoft.com,talpey.com,kernel.org,ionkov.net,codewreck.org,crudebyte.com,linux.alibaba.com,google.com,huawei.com,vivo.com,szeredi.hu,paragon-software.com,intel.com,igalia.com,squashfs.org.uk,zeniv.linux.org.uk,suse.cz,goodmis.org,efficios.com,manifault.com,nvidia.com,infradead.org,linaro.org,arm.com,suse.de,atomlin.com,samsung.com,perex.cz,canonical.com,paul-moore.com,namei.org,hallyn.com,linux-foundation.org,davemloft.net,holtmann.org,iogearbox.net,fomichev.me,mojatatu.com,resnulli.us,oracle.com,brown.name,sipsolutions.net,armlinux.org.uk,phrozen.org,alpha.franken.de,users.sourceforge.jp,libc.org,physik.fu-berlin.de,ideasonboard.com,kwiboo.se,linux.intel.com,ffwll.c
- h,ursulin.net,amd.com,rock-chips.com,sntech.de,marvell.com,lunn.ch,broadcom.com,chelsio.com,plvision.eu,foss.st.com,os.amperecomputing.com,bootlin.com,linux.ibm.com,ti.com,shazbot.org,animalcreek.com,nod.at,linuxfoundation.org,8bytes.org,coraid.com,kernel.dk,baylibre.com,pengutronix.de,alien8.de,zytor.com];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9282-lists,linux-hyperv=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[mit.edu:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[tytso@mit.edu,linux-hyperv@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[microsoft.com,outlook.com,kernel.org,vger.kernel.org,redhat.com,linux.microsoft.com,davemloft.net,google.com];
+	TAGGED_FROM(0.00)[bounces-9283-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[247];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[pabeni@redhat.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[macsyma-wired.lan:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	TO_DN_NONE(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,linux.dev:url]
 X-Rspamd-Action: no action
 
-On Tue, Mar 10, 2026 at 12:48:26PM +0100, Philipp Hahn wrote:
-> While doing some static code analysis I stumbled over a common pattern,
-> where IS_ERR() is combined with a NULL check. For that there is
-> IS_ERR_OR_NULL().
-> 
-> I've written a Coccinelle patch to find and patch those instances.
-> The patches follow grouped by subsystem.
+This is an AI-generated review of your patch. The human sending this
+email has considered the AI review valid, or at least plausible.
 
-I'm going to gently suggest that you *not* try to do this as a
-tree-wide change, since we don't need to change some interface
-requiring a global, flag day change.  This is instead a cleanup, which
-maybe makes the code slightly better, but which also has a the
-downside of breaking lots of inflight development patches by
-potentially causing merge or patch conflicts.
+For local reproduction steps see https://netdev-ai.bots.linux.dev/ai-local.html
+---
+net: mana: Use GIC functions to allocate global EQs
 
-So why don't you send it to each subsystem as a separate patch or
-small patch series, instead of spamming a dozen-plus mailing lists,
-are probably hundreds of developers, most of whom aren't going to
-care about changs in some far flung part of the kernel?
+Replace the GDMA global interrupt setup code with the new GIC allocation
+and release functions for managing interrupt contexts.
 
-Regards,
+> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> index c43fd8089e77..bdc9dc437fb7 100644
+> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
 
-						- Ted
+[ ... ]
+
+> @@ -2052,26 +1998,17 @@ static int mana_gd_setup_remaining_irqs(struct pci_dev *pdev)
+>  static void mana_gd_remove_irqs(struct pci_dev *pdev)
+>  {
+>  	struct gdma_context *gc = pci_get_drvdata(pdev);
+> -	struct gdma_irq_context *gic;
+>  	int irq, i;
+>
+>  	if (gc->max_num_msix < 1)
+>  		return;
+>
+> -	for (i = 0; i < gc->max_num_msix; i++) {
+> -		irq = pci_irq_vector(pdev, i);
+> -		if (irq < 0)
+> -			continue;
+> -
+> -		gic = xa_load(&gc->irq_contexts, i);
+> -		if (WARN_ON(!gic))
+> -			continue;
+> -
+> +	for (i = 0; i < (gc->msi_sharing ? gc->max_num_msix : 1); i++) {
+                                                               ^^^
+Does this loop condition leak GIC references when msi_sharing is false?
+
+When msi_sharing is false, the loop only releases the GIC at index 0.
+However, mana_gd_setup_dyn_irqs allocates GICs at indices 1 through nvec:
+
+drivers/net/ethernet/microsoft/mana/gdma_main.c:mana_gd_setup_dyn_irqs() {
+    for (i = 1; i <= nvec; i++) {
+        gic = mana_gd_get_gic(gc, false, &i);
+        ...
+    }
+}
+
+Each mana_gd_get_gic call initializes the GIC with refcount=1. These GICs
+at indices 1..nvec are never released because mana_gd_remove_irqs only
+processes index 0 when msi_sharing is false.
+
+The old code iterated over all gc->max_num_msix entries unconditionally:
+
+    for (i = 0; i < gc->max_num_msix; i++) {
+        ...
+        gic = xa_load(&gc->irq_contexts, i);
+        ...
+        free_irq(irq, gic);
+        xa_erase(&gc->irq_contexts, i);
+        kfree(gic);
+    }
+
+This ensured every allocated GIC was freed. The new code with the
+conditional loop breaks this, resulting in:
+
+1. Leaked IRQ handlers - request_irq without matching free_irq for indices
+   1..nvec
+2. Leaked gdma_irq_context memory - the GIC structures are never freed
+3. Leaked xarray entries - the entries remain in gc->irq_contexts
+
+Additionally, pci_free_irq_vectors is called immediately after the loop,
+which attempts to tear down MSI-X vectors while IRQ handlers at indices
+1..nvec are still registered. Can this trigger warnings or use-after-free
+if an interrupt fires during teardown?
+
+The next commit in the series (4475f13983ab "net: mana: Allocate interrupt
+context for each EQ when creating vPort") adds per-EQ get/put of GICs,
+but the EQ teardown only drops the EQ's reference (refcount goes from 2 to
+1). The base reference from mana_gd_setup_dyn_irqs remains unreleased.
+
+>  		/* Need to clear the hint before free_irq */
+> +		irq = pci_irq_vector(pdev, i);
+>  		irq_update_affinity_hint(irq, NULL);
+> -		free_irq(irq, gic);
+> -		xa_erase(&gc->irq_contexts, i);
+> -		kfree(gic);
+> +
+> +		mana_gd_put_gic(gc, false, i);
+>  	}
+>
+>  	pci_free_irq_vectors(pdev);
+
 
