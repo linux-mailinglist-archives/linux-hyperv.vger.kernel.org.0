@@ -1,245 +1,373 @@
-Return-Path: <linux-hyperv+bounces-9293-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9294-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IKicIn3OsGkKnQIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9293-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Mar 2026 03:07:57 +0100
+	id SP85OATpsGkSogIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9294-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Mar 2026 05:01:08 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id B180C25AA63
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Mar 2026 03:07:56 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46E1025BC6F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Mar 2026 05:01:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id D9645302F914
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Mar 2026 02:07:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 653F13061ACD
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Mar 2026 04:00:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65A5531F9BD;
-	Wed, 11 Mar 2026 02:07:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB13D30EF8B;
+	Wed, 11 Mar 2026 04:00:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SqpOgAb4"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="V1fIlkaD"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3355D31E842
-	for <linux-hyperv@vger.kernel.org>; Wed, 11 Mar 2026 02:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773194859; cv=pass; b=oAlpgl2N54vxWcHIyNwgc3GNtxcYeiRKxo+P5XLYW16FjTvfHCM9TSV07EeR75YL0qwaK3q64q67k2KitEaXczMbzl7vDHYeEakSEY9nNHziipYg1fAOfvYdlQb+ENHACnKHdXf0bOCS7GhVolltEKvVWTpToYZv1qhQ/9PA2Rc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773194859; c=relaxed/simple;
-	bh=8UJnLa/DDQ+b65RDSHa97nR/Rm6zetnRjswOkVb13wc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l2g2yzZ4Dybh6kuhvcBULVguDYhdrEOCm8tFVHG5HxZiMK4r1ieV3XC7DvFbBP/+LmMwsbfu65u9ArSpCtaVdbPZteok84/rVMReHCYXmpmbYEy9zrdrliUY8eD89Ecnaq3KiIRSp5NcaBqhT+HUD7Ww+h1VR8ou9i4C8J9QSO4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SqpOgAb4; arc=pass smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5a13d1c6f25so4703791e87.3
-        for <linux-hyperv@vger.kernel.org>; Tue, 10 Mar 2026 19:07:34 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773194852; cv=none;
-        d=google.com; s=arc-20240605;
-        b=jK7I/A/aDcDOlSv0B3Ahs6VTPNTdkFU5WTWImVzIxHPbKm6GVaC/LIGhmj54QHN5h6
-         kjCIMDBZ+0i/7nH8VBz+Be15JlUQVCT2cvUQUbJu6ycYVOnI27Hajo/j4uzGs9+pvLqQ
-         8HxUem8qTK+AL/nRXcQzsfgqrK6AJYw+s9/IoFTWzRcqb6af+SzLFh8u5mA+fBMbucXx
-         PWFVkojvBa73UnM2RECkQsjf1m0ZvAmOV399ejUzBXo8/nAVFvP9XqfrC4bdOW0ZktHi
-         99sDb0l4tY1SWsSjshbhdNqn/EaZqMaxevtS2499O2JdHNmZZhvSMdbaZwWqwegrPxON
-         NKxQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=+zLBLQzKjcztDlxJqoLP6w+B6xnZmfHibV4jlBQCebA=;
-        fh=Hbmaq6apz7PtOoD0GdeCOZjHQ4nqV2+v9LIG6xBg+NA=;
-        b=IvhXmxcCD0KjSvgGRdGTWVN8R6dzGhHlpzlKWygBMYHVm1J8r6Xv4aC2gHYTp9yOEv
-         YYtAqnVQ+CBx0UpNpyGNCmsgbVmYJB4JmU3S+jZIhzdyMwWHxJAeIyPUj2+IF+DQMSKT
-         7YJoK7gIReueWzdpBb09buRsOzz9OXAfeCLIcxGcZimuTeeFFrMidFPM950wr1Fy+Yxs
-         oE1NII2il40NWXs8NmTbufjrVYGQavMY0humupiEwnZ3Q7bI/uZGi0MZk8Hq5Q2y8fZL
-         Wvgmy6Cukc65urt8A5ZqKE1Wg4d9pORDca7EnI6alKX9xpdGepx7tT07o3dAWTN8n5Pg
-         vlzQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1773194852; x=1773799652; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+zLBLQzKjcztDlxJqoLP6w+B6xnZmfHibV4jlBQCebA=;
-        b=SqpOgAb4CQOCp6QT1IhDiJXNOENCCAthmmQiQ2Xm1LqdH6AuNnr9pWEOxoaM6J2EHp
-         TaZvrNsWvEAAdeAh3rGZCGLrxzU767HUy57VJt43+079ae3+2kuAr2+JBVbU8T9+l/BT
-         vjjO+GANIyds0bGFgUhdgNG0FnF3NJi/nWQH4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773194852; x=1773799652;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=+zLBLQzKjcztDlxJqoLP6w+B6xnZmfHibV4jlBQCebA=;
-        b=qJtj0Kq+ew+BCFwNH+GXuOmHg8QetitXji4SN9ZitjsusyJPcsTTmeMO9nrAigU4Xj
-         MN8NROCa80fQbS6GRAyynzbuAOf/StYQfsxKqTV1tJPQun92fJR+6kw8HWnvAmnhkREf
-         Taxe9/Gz+otKWv3kfW1wss0uIIB/lBdTMCPiBGAMvQjLN5x+UQSOHvQJxpkdHtnrXOxk
-         aXJm6+woX/+GIBmnPA5U4m8tcGiJplwCt70uycEmycV1HdkRN3JHKsudwfBVAxDnhntw
-         PiFxqW9m7zc5/cCPEKz0mNpJ3ko6R4qzDm9RvN6KE7DbujPXGzzPb4OIvHiGPBiHSEmr
-         NStQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWl8bGvDtPyCp6ZFCBlTxqWRJU8/73x2DpEZm8003FWUR1or8CUN8RUs9LaOfpZ2yiylA8YQCmls8XJah8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweCu+ewtJxXofCtoPwXRcW5yqNzqA0AZ80xV8Jsb8Rri0oXCej
-	vT/t0OKEZs+zzdZitWo8NFkW/f4Xmph2CHT+0Gu3VJ6iA5g91UC6OkkjXDG803fLuoVf+K8b3eX
-	OV6SdEO2g/4dNzj3vC1ov5i8uS9Htd0O5oFHhW7AX
-X-Gm-Gg: ATEYQzyl2PFRWIixTbQEdgAtIqCkfN6SbV4TUIf99ka5ZkmPeXuMZw4OzcUaTM31y4L
-	Wc3ZaHUP3E6deJKS/7F0ZjKowobFnkpS8agnkYS8Lu6Y8pSBc0K72CLhAcSZJKz94tbmVxSkgmG
-	ACjmYOHulY7RstFd9/E6v0jQ5OkMjLJ/S7CHZg8nrVZjLNYBtstS+4C5AeG1veUMIfz6OTXG/u0
-	BqhM+SwHoXaNHR1+wK14lazWILZwaOtuoiSiaVAotZVN+oNPKilmHJ+Cq3hRHnRHYKsIfrwavyT
-	u0oKUyUN2w==
-X-Received: by 2002:ac2:4427:0:b0:5a1:3134:9bac with SMTP id
- 2adb3069b0e04-5a156cbd1bbmr169453e87.28.1773194852284; Tue, 10 Mar 2026
- 19:07:32 -0700 (PDT)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46F222D9797;
+	Wed, 11 Mar 2026 04:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773201650; cv=none; b=cddz1Cu5W/Y+Pi7szRnumVz8/owVcbH2koQSJYPk/Q6rUAgkgMO/ibMJ/XOMI3+nk69tO6ma94TJWf72vNNh+t6Y15TxMxMn0u8X5ax4ls9sG/k0+brFb4UOTuIPqM56dRcfY7yeNAGOfqTzMR68DyTiKpB0qRjrTyhx4TCkpp8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773201650; c=relaxed/simple;
+	bh=Qa7PSVcm7eOlvFtoED+6v2A7Ex7SJdPPKUNSZ6a4fPw=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=MAF72eoCNknszhjxw8t5cI75Q7M2v6ujvwiitz5ujob7P3SulMa36ORSmXwxqisXZYhlF1Ex9j6Lhpf30L/6sowPxM4iJj9yjoDuH/GL5qlzacFw+Jsw+cnOzWrmaphWAiGcWJKUEbksdTfICZ8D5DTz4mJiEZq+J7aWWWFuXhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=V1fIlkaD; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1204)
+	id 1ACE920B710C; Tue, 10 Mar 2026 21:00:49 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1ACE920B710C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1773201649;
+	bh=ERfD+8JXeEaWUhsBuZr/9HU1O7uSchiA6MpaLnVBmgU=;
+	h=Date:From:To:Subject:From;
+	b=V1fIlkaDRvawnj2rZiej7mMs9iDk7jIAZQ6FsaE+8sn5NGbOPSmHJsnGAsqG+zynT
+	 sA0RlY4TpFeybP+apl8gFK9tzs3M9uIMSZMd47IaUmYopoUil1yEA7LpCdaP3sgnXA
+	 zplnAjGlKTK3b8gHmaiOhJg62+sCYkpsR8dVb5Eg=
+Date: Tue, 10 Mar 2026 21:00:49 -0700
+From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	leon@kernel.org, longli@microsoft.com, kotaranov@microsoft.com,
+	horms@kernel.org, shradhagupta@linux.microsoft.com,
+	ssengar@linux.microsoft.com, ernis@linux.microsoft.com,
+	shirazsaleem@microsoft.com, linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, dipayanroy@microsoft.com
+Subject: [PATCH net-next, v3] net: mana: Force full-page RX buffers for 4K
+ page size on specific systems.
+Message-ID: <abDo8XTu1EiQFC7T@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de> <20260310-b4-is_err_or_null-v1-56-bd63b656022d@avm.de>
-In-Reply-To: <20260310-b4-is_err_or_null-v1-56-bd63b656022d@avm.de>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Wed, 11 Mar 2026 11:07:21 +0900
-X-Gm-Features: AaiRm5028PWt8n-JnveiRgn8oYMksdR_-_nk4JOkvxMfplWs-GDr7RRk-OxICyw
-Message-ID: <CAGXv+5FQAVaJjqhv+Xq-ysOc4SHQn2mCNTgCAp8XocmWBWGGoA@mail.gmail.com>
-Subject: Re: [PATCH 56/61] clk: Prefer IS_ERR_OR_NULL over manual NULL check
-To: Philipp Hahn <phahn-oss@avm.de>
-Cc: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com, 
-	bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr, 
-	dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org, 
-	gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org, 
-	intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org, 
-	linux-bluetooth@vger.kernel.org, linux-btrfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-mips@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-pm@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, ntfs3@lists.linux.dev, 
-	samba-technical@lists.samba.org, sched-ext@lists.linux.dev, 
-	target-devel@vger.kernel.org, tipc-discussion@lists.sourceforge.net, 
-	v9fs@lists.linux.dev, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
-	Thomas Gleixner <tglx@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: B180C25AA63
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Rspamd-Queue-Id: 46E1025BC6F
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[chromium.org,none];
-	R_DKIM_ALLOW(-0.20)[chromium.org:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9293-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9294-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[chromium.org:+];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[22];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wenst@chromium.org,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[58];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	TO_DN_NONE(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,baylibre.com:email,avm.de:email,chromium.org:dkim,mail.gmail.com:mid]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,linux.microsoft.com:dkim,linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid]
 X-Rspamd-Action: no action
 
-On Tue, Mar 10, 2026 at 9:57=E2=80=AFPM Philipp Hahn <phahn-oss@avm.de> wro=
-te:
->
-> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
-> check.
->
-> Semantich change: Previously the code only printed the warning on error,
-> but not when the pointer was NULL. Now the warning is printed in both
-> cases!
->
-> Change found with coccinelle.
->
-> To: Michael Turquette <mturquette@baylibre.com>
-> To: Stephen Boyd <sboyd@kernel.org>
-> To: Daniel Lezcano <daniel.lezcano@kernel.org>
-> To: Thomas Gleixner <tglx@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
-> ---
->  drivers/clk/clk.c               | 4 ++--
->  drivers/clocksource/timer-pxa.c | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index 47093cda9df32223c1120c3710261296027c4cd3..35146e3869a7dd93741d10b72=
-23d4488a9216ed1 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -4558,7 +4558,7 @@ void clk_unregister(struct clk *clk)
->         unsigned long flags;
->         const struct clk_ops *ops;
->
-> -       if (!clk || WARN_ON_ONCE(IS_ERR(clk)))
-> +       if (WARN_ON_ONCE(IS_ERR_OR_NULL(clk)))
->                 return;
->
->         clk_debug_unregister(clk->core);
-> @@ -4744,7 +4744,7 @@ void __clk_put(struct clk *clk)
->  {
->         struct module *owner;
->
-> -       if (!clk || WARN_ON_ONCE(IS_ERR(clk)))
-> +       if (WARN_ON_ONCE(IS_ERR_OR_NULL(clk)))
+On certain systems configured with 4K PAGE_SIZE, utilizing page_pool
+fragments for RX buffers results in a significant throughput regression.
+Profiling reveals that this regression correlates with high overhead in the
+fragment allocation and reference counting paths on these specific
+platforms, rendering the multi-buffer-per-page strategy counterproductive.
 
-clk_get_optional() returns NULL if the clk isn't present.
+To mitigate this, bypass the page_pool fragment path and force a single RX
+packet per page allocation when all the following conditions are met:
+  1. The system is configured with a 4K PAGE_SIZE.
+  2. A processor-specific quirk is detected via SMBIOS Type 4 data.
 
-Drivers would just pass this to clk_put(). Your change here would cause
-this pattern to emit a very big warning.
+This approach restores expected line-rate performance by ensuring
+predictable RX refill behavior on affected hardware.
 
-I don't think this change should be landed.
+There is no behavioral change for systems using larger page sizes
+(16K/64K), or platforms where this processor-specific quirk do not
+apply.
 
+Reviewed-by: Simon Horman <horms@kernel.org>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+---
+Changes in v3:
+  - changed u8* to char*
+Changes in v2:
+  - separate reading string index and the string, remove inline.
+---
+---
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 133 ++++++++++++++++++
+ drivers/net/ethernet/microsoft/mana/mana_en.c |  23 ++-
+ include/net/mana/gdma.h                       |   9 ++
+ 3 files changed, 163 insertions(+), 2 deletions(-)
 
-ChenYu
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index aef8612b73cb..05fecc00a90c 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -9,6 +9,7 @@
+ #include <linux/msi.h>
+ #include <linux/irqdomain.h>
+ #include <linux/export.h>
++#include <linux/dmi.h>
+ 
+ #include <net/mana/mana.h>
+ #include <net/mana/hw_channel.h>
+@@ -1959,6 +1960,128 @@ static bool mana_is_pf(unsigned short dev_id)
+ 	return dev_id == MANA_PF_DEVICE_ID;
+ }
+ 
++/*
++ * Table for Processor Version strings found from SMBIOS Type 4 information,
++ * for processors that needs to force single RX buffer per page quirk for
++ * meeting line rate performance with ARM64 + 4K pages.
++ * Note: These strings are exactly matched with version fetched from SMBIOS.
++ */
++static const char * const mana_single_rxbuf_per_page_quirk_tbl[] = {
++	"Cobalt 200",
++};
++
++/* On some systems with 4K PAGE_SIZE, page_pool RX fragments can
++ * trigger a throughput regression. Hence identify those processors
++ * from the extracted SMBIOS table and apply the quirk to forces one
++ * RX buffer per page to avoid the fragment allocation/refcounting
++ * overhead in the RX refill path for those processors only.
++ */
++static bool mana_needs_single_rxbuf_per_page(struct gdma_context *gc)
++{
++	int i = 0;
++	const char *ver = gc->processor_version;
++
++	if (!ver)
++		return false;
++
++	if (PAGE_SIZE != SZ_4K)
++		return false;
++
++	while (i < ARRAY_SIZE(mana_single_rxbuf_per_page_quirk_tbl)) {
++		if (!strcmp(ver, mana_single_rxbuf_per_page_quirk_tbl[i]))
++			return true;
++		i++;
++	}
++
++	return false;
++}
++
++static void mana_get_proc_ver_strno(const struct dmi_header *hdr, void *data)
++{
++	struct gdma_context *gc = data;
++	const u8 *d = (const u8 *)hdr;
++
++	/* We are only looking for Type 4: Processor Information */
++	if (hdr->type != SMBIOS_TYPE_4_PROCESSOR_INFO)
++		return;
++
++	/* Ensure the record is long enough to contain the Processor Version
++	 * field
++	 */
++	if (hdr->length <= SMBIOS_TYPE4_PROC_VERSION_OFFSET)
++		return;
++
++	/* The 'Processor Version' string is located at index pointed by
++	 * SMBIOS_TYPE4_PROC_VERSION_OFFSET.  Make a copy of the index.
++	 * There could be multiple Type 4 tables so read and store the
++	 * processor version index found the first time.
++	 */
++	if (gc->proc_ver_strno)
++		return;
++
++	gc->proc_ver_strno = d[SMBIOS_TYPE4_PROC_VERSION_OFFSET];
++}
++
++static const char *mana_dmi_string_nosave(const struct dmi_header *hdr, u8 s)
++{
++	const char *bp = (const char *)hdr + hdr->length;
++
++	if (!s)
++		return NULL;
++
++	/* String numbers start at 1 */
++	while (--s > 0 && *bp)
++		bp += strlen(bp) + 1;
++
++	if (!*bp)
++		return NULL;
++
++	return bp;
++}
++
++static void mana_fetch_proc_ver_string(const struct dmi_header *hdr,
++				       void *data)
++{
++	struct gdma_context *gc = data;
++	const char *ver;
++
++	/* We are only looking for Type 4: Processor Information */
++	if (hdr->type != SMBIOS_TYPE_4_PROCESSOR_INFO)
++		return;
++
++	/* Extract proc version found the first time only */
++	if (!gc->proc_ver_strno || gc->processor_version)
++		return;
++
++	ver = mana_dmi_string_nosave(hdr, gc->proc_ver_strno);
++	if (ver)
++		gc->processor_version = kstrdup(ver, GFP_KERNEL);
++}
++
++/* Check and initialize all processor optimizations/quirks here */
++static bool mana_init_processor_optimization(struct gdma_context *gc)
++{
++	bool opt_initialized = false;
++
++	gc->proc_ver_strno = 0;
++	gc->processor_version = NULL;
++
++	dmi_walk(mana_get_proc_ver_strno, gc);
++	if (!gc->proc_ver_strno)
++		return false;
++
++	dmi_walk(mana_fetch_proc_ver_string, gc);
++	if (!gc->processor_version)
++		return false;
++
++	if (mana_needs_single_rxbuf_per_page(gc)) {
++		gc->force_full_page_rx_buffer = true;
++		opt_initialized = true;
++	}
++
++	return opt_initialized;
++}
++
+ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+ 	struct gdma_context *gc;
+@@ -2013,6 +2136,11 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		gc->mana_pci_debugfs = debugfs_create_dir(pci_slot_name(pdev->slot),
+ 							  mana_debugfs_root);
+ 
++	if (mana_init_processor_optimization(gc))
++		dev_info(&pdev->dev,
++			 "Processor specific optimization initialized on: %s\n",
++			gc->processor_version);
++
+ 	err = mana_gd_setup(pdev);
+ 	if (err)
+ 		goto unmap_bar;
+@@ -2055,6 +2183,8 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	pci_iounmap(pdev, bar0_va);
+ free_gc:
+ 	pci_set_drvdata(pdev, NULL);
++	kfree(gc->processor_version);
++	gc->processor_version = NULL;
+ 	vfree(gc);
+ release_region:
+ 	pci_release_regions(pdev);
+@@ -2110,6 +2240,9 @@ static void mana_gd_remove(struct pci_dev *pdev)
+ 
+ 	pci_iounmap(pdev, gc->bar0_va);
+ 
++	kfree(gc->processor_version);
++	gc->processor_version = NULL;
++
+ 	vfree(gc);
+ 
+ 	pci_release_regions(pdev);
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index a868c28c8280..38f94f7619ad 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -744,6 +744,26 @@ static void *mana_get_rxbuf_pre(struct mana_rxq *rxq, dma_addr_t *da)
+ 	return va;
+ }
+ 
++static bool
++mana_use_single_rxbuf_per_page(struct mana_port_context *apc, u32 mtu)
++{
++	struct gdma_context *gc = apc->ac->gdma_dev->gdma_context;
++
++	/* On some systems with 4K PAGE_SIZE, page_pool RX fragments can
++	 * trigger a throughput regression. Hence forces one RX buffer per page
++	 * to avoid the fragment allocation/refcounting overhead in the RX
++	 * refill path for those processors only.
++	 */
++	if (gc->force_full_page_rx_buffer)
++		return true;
++
++	/* For xdp and jumbo frames make sure only one packet fits per page. */
++	if (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2 || mana_xdp_get(apc))
++		return true;
++
++	return false;
++}
++
+ /* Get RX buffer's data size, alloc size, XDP headroom based on MTU */
+ static void mana_get_rxbuf_cfg(struct mana_port_context *apc,
+ 			       int mtu, u32 *datasize, u32 *alloc_size,
+@@ -754,8 +774,7 @@ static void mana_get_rxbuf_cfg(struct mana_port_context *apc,
+ 	/* Calculate datasize first (consistent across all cases) */
+ 	*datasize = mtu + ETH_HLEN;
+ 
+-	/* For xdp and jumbo frames make sure only one packet fits per page */
+-	if (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2 || mana_xdp_get(apc)) {
++	if (mana_use_single_rxbuf_per_page(apc, mtu)) {
+ 		if (mana_xdp_get(apc)) {
+ 			*headroom = XDP_PACKET_HEADROOM;
+ 			*alloc_size = PAGE_SIZE;
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index ec17004b10c0..03f01496fbbf 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -9,6 +9,12 @@
+ 
+ #include "shm_channel.h"
+ 
++/* SMBIOS Type 4: Processor Information table */
++#define SMBIOS_TYPE_4_PROCESSOR_INFO 4
++
++/* Byte offset containing the Processor Version string number.*/
++#define SMBIOS_TYPE4_PROC_VERSION_OFFSET 0x10
++
+ #define GDMA_STATUS_MORE_ENTRIES	0x00000105
+ #define GDMA_STATUS_CMD_UNSUPPORTED	0xffffffff
+ 
+@@ -444,6 +450,9 @@ struct gdma_context {
+ 	struct workqueue_struct *service_wq;
+ 
+ 	unsigned long		flags;
++	char			*processor_version;
++	u8			proc_ver_strno;
++	bool			force_full_page_rx_buffer;
+ };
+ 
+ static inline bool mana_gd_is_mana(struct gdma_dev *gd)
+-- 
+2.34.1
 
->                 return;
->
->         clk_prepare_lock();
-> diff --git a/drivers/clocksource/timer-pxa.c b/drivers/clocksource/timer-=
-pxa.c
-> index 7ad0e5adb2ffac4125c34710fc67f4b45f30331d..f65fb0b7fc318b766227e5e7a=
-4c0fb08ba11c8f9 100644
-> --- a/drivers/clocksource/timer-pxa.c
-> +++ b/drivers/clocksource/timer-pxa.c
-> @@ -218,7 +218,7 @@ void __init pxa_timer_nodt_init(int irq, void __iomem=
- *base)
->
->         timer_base =3D base;
->         clk =3D clk_get(NULL, "OSTIMER0");
-> -       if (clk && !IS_ERR(clk)) {
-> +       if (!IS_ERR_OR_NULL(clk)) {
->                 clk_prepare_enable(clk);
->                 pxa_timer_common_init(irq, clk_get_rate(clk));
->         } else {
->
-> --
-> 2.43.0
->
->
 
