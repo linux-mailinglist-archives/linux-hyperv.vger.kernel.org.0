@@ -1,124 +1,159 @@
-Return-Path: <linux-hyperv+bounces-9327-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9328-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UJm+IN3GsWnvFAAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9327-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Mar 2026 20:47:41 +0100
+	id oLETIt/0sWl7HQAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9328-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 00:03:59 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB8D12699A9
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Mar 2026 20:47:40 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80A9826B116
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 00:03:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C434A30185B7
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Mar 2026 19:47:39 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 6B49930138C8
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Mar 2026 23:03:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A58593090F4;
-	Wed, 11 Mar 2026 19:47:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC42139FCDC;
+	Wed, 11 Mar 2026 23:03:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="q+e9l8gM"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WxcdvAR4"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9484E20C029;
-	Wed, 11 Mar 2026 19:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969E039DBF5;
+	Wed, 11 Mar 2026 23:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773258457; cv=none; b=q4LQ8DJAPcyug6O1dc9QLnZFLFx5a0QzwoSluf5P+z0mZpvoGaUt8g5LTIsp/kT8aDGbT4rkRaDeRdFvIbqdoeeHG7ieuCSOD6cc2tDRijLOzp6akMmPv3WesZoDsDROQYx6fIZLnZnYxHaR9THshLxLfhzDrlXn+KFyGnFSal4=
+	t=1773270226; cv=none; b=AkA2Gnlxmrw7n8wlICODGs3io7QO9Oh/YDy07WP09JF/KFh9g5IxYQ17wt6vWQVzPCB+iYEQu7P3mBvtqRc+n31lnQN5NVwKohchMiBQHqmgSZE6jhjwc4hv3UUzJs1InFDBm/aIiY3ylNEkhCwq8TX0CYHFVkpY9m+PERgjhT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773258457; c=relaxed/simple;
-	bh=d0orctoNdQlyUbTNAhdFmQruWQlMOYeaidWzfI2MSt4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uc+3El8XQMIlV5EXqvGv4xh3TNivtmByZFPsbzZG7B5vKGKZMtI1TkaedfGrWlpJuF5URqeRSJeSw5glniNw1J3C805y/VCmu0/rApTcJmKlyJNs/WvK9V1h5k17NRWTwjaBsBiu19NSDQb9hsG7/HMBE4TqIx5RH3/9Jz59JqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=q+e9l8gM; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1204)
-	id 7A12A20B710C; Wed, 11 Mar 2026 12:47:36 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7A12A20B710C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1773258456;
-	bh=mEJGxu7RvDWY3J5WSSTMNmpjoOu+wgT9zajIpsYmza0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q+e9l8gMuh8mdjN6pDirPG/CcUHNkY7HAzwR62DHewMlm6faNDYIuZDYXA95xja6i
-	 RewoBbEB9SftKU+TrEv6nEay1ykQhNMIOrD2Nb9JGDt7IQ+ZJoCGmAsuIAWh1WMltx
-	 bOq4Gm7VS+/+yPbAAHyVVRSCF9/9tUUfnk/9PvGk=
-Date: Wed, 11 Mar 2026 12:47:36 -0700
-From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, pabeni@redhat.com, leon@kernel.org,
-	longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
-	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
-	ernis@linux.microsoft.com, shirazsaleem@microsoft.com,
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	dipayanroy@microsoft.com
-Subject: Re: [PATCH net-next] net: mana: Expose page_pool stats via ethtool
-Message-ID: <abHG2NdwVvTntLeJ@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <aaFmRqjjOuPIEo5x@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20260227092722.50a7e45f@kernel.org>
+	s=arc-20240116; t=1773270226; c=relaxed/simple;
+	bh=ATo3aRyKmYSXuSYD8x/NeBUp5LJcLKbzHVpozNXQJC0=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=riWYrESCcc9KNXqP13SZYyXzR58RrYMlS+b2xha5iOXuuIp+StTrVizqL6ketCeeYmMEMoyxUK8taVuLlBt+IYJOKFEOgMITJUBE5YxvJbFyx57ukqqJFBTg7MI8yXilCszhmCyW65ADzTthRqCB0cIhFeDkNxgzAb+Zf6dy7s0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=fail (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=WxcdvAR4 reason="signature verification failed"; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Received: from monstersaurus.ideasonboard.com (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id CD91E448;
+	Thu, 12 Mar 2026 00:02:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1773270149;
+	bh=ATo3aRyKmYSXuSYD8x/NeBUp5LJcLKbzHVpozNXQJC0=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=WxcdvAR4zphcUuTNTLXCbLGiiCOKCwemLRMbnRdmW3ARcBHAWQiYVeysDpnfCIDuk
+	 B8rMCjKjDjoWJdgj4Zp0scfHxrPnr5P3xl9hFANY/wyWKZBZYHzyf2qsFxVEe9S31Y
+	 m9r/HjFnopry9bsUUdk6/id/Q3d97jYK/FiMa+Qw=
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260227092722.50a7e45f@kernel.org>
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20260310-b4-is_err_or_null-v1-49-bd63b656022d@avm.de>
+References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de> <20260310-b4-is_err_or_null-v1-49-bd63b656022d@avm.de>
+Subject: Re: [PATCH 49/61] media: Prefer IS_ERR_OR_NULL over manual NULL check
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>
+To: Philipp Hahn <phahn-oss@avm.de>, amd-gfx@lists.freedesktop.org,
+	apparmor@lists.ubuntu.com, bpf@vger.kernel.org,
+	ceph-devel@vger.kernel.org, cocci@inria.fr, dm-devel@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, gfs2@lists.linux.dev,
+	intel-gfx@lists.freedesktop.org, intel-wired-lan@lists.osuosl.org,
+	iommu@lists.linux.dev, kvm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
+	linux-bluetooth@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-cifs@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+	linux-omap@vger.kernel.org, linux-phy@lists.infradead.org,
+	lin@web.codeaurora.org, ux-pm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
+	linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+	ntfs3@lists.linux.dev, samba-technical@lists.samba.org,
+	sched-ext@lists.linux.dev, target-devel@vger.kernel.org,
+	tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev
+Date: Wed, 11 Mar 2026 23:03:33 +0000
+Message-ID: <177327021364.3167621.11851238159935183684@ping.linuxembedded.co.uk>
+User-Agent: alot/0.9.1
+X-Spamd-Result: default: False [3.14 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	ARC_REJECT(1.00)[signature check failed: fail, {[1] = sig:subspace.kernel.org:reject}];
+	R_DKIM_REJECT(1.00)[ideasonboard.com:s=mail];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[ideasonboard.com : SPF not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9327-lists,linux-hyperv=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-9328-lists,linux-hyperv=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[57];
+	FROM_NEQ_ENVFROM(0.00)[kieran.bingham@ideasonboard.com,linux-hyperv@vger.kernel.org];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid]
-X-Rspamd-Queue-Id: CB8D12699A9
+	DKIM_TRACE(0.00)[ideasonboard.com:-];
+	NEURAL_HAM(-0.00)[-0.726];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,ideasonboard.com:email,avm.de:email,linuxfoundation.org:email,ping.linuxembedded.co.uk:mid]
+X-Rspamd-Queue-Id: 80A9826B116
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Feb 27, 2026 at 09:27:22AM -0800, Jakub Kicinski wrote:
-> On Fri, 27 Feb 2026 01:39:18 -0800 Dipayaan Roy wrote:
-> > MANA relies on page_pool for RX buffers, and the buffer refill paths
-> > can behave quite differently across architectures and configurations (e.g.
-> > base page size, fragment vs full-page usage). This makes it harder to
-> > understand and compare RX buffer behavior when investigating performance
-> > and memory differences across platforms.
-> 
-> Standard stats must not be duplicated in ethtool -S.
-> ynl and ynltool provide easy access to these stats
-> 
-> # ynltool page-pool stats 
->     eth0[2]	page pools: 44 (zombies: 0)
-> 		refs: 495680 bytes: 2030305280 (refs: 0 bytes: 0)
-> 		recycling: 100.0% (alloc: 7745:2097593009 recycle: 379301630:1717888312)
+Quoting Philipp Hahn (2026-03-10 11:49:15)
+> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
+> check.
+>=20
+> Change generated with coccinelle.
+>=20
+> To: Shuah Khan <skhan@linuxfoundation.org>
+> To: Kieran Bingham <kieran.bingham@ideasonboard.com>
+> To: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: linux-media@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
+> ---
+>  drivers/media/test-drivers/vimc/vimc-streamer.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/media/test-drivers/vimc/vimc-streamer.c b/drivers/me=
+dia/test-drivers/vimc/vimc-streamer.c
+> index 15d863f97cbf96b7ca7fbf3d7b6b6ec39fcc8ae3..da5aca50bcb4990c06f28e5a8=
+83eb398606991e9 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-streamer.c
+> +++ b/drivers/media/test-drivers/vimc/vimc-streamer.c
+> @@ -167,7 +167,7 @@ static int vimc_streamer_thread(void *data)
+>                 for (i =3D stream->pipe_size - 1; i >=3D 0; i--) {
+>                         frame =3D stream->ved_pipeline[i]->process_frame(
+>                                         stream->ved_pipeline[i], frame);
+> -                       if (!frame || IS_ERR(frame))
+> +                       if (IS_ERR_OR_NULL(frame))
 
-Thanks Jakub for the feedback, and understood the generic page pool
-stats should be combined with ethtool -S. I will drop this patch
-and use ynltool page-pool stats.
+Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
 
-
-Regards
-
-
+>                                 break;
+>                 }
+>                 //wait for 60hz
+>=20
+> --=20
+> 2.43.0
+>
 
