@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-9382-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9383-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gH0iA1gjs2mASgAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9382-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 21:34:32 +0100
+	id iOf5HTUis2m5SQAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9383-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 21:29:41 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69DEB279480
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 21:34:31 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C006279286
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 21:29:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E2F6631A58FC
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 20:28:57 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 73A013040132
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 20:29:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34CA239D6CF;
-	Thu, 12 Mar 2026 20:28:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01B973B47C1;
+	Thu, 12 Mar 2026 20:28:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sWsa4YCw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QS8U48b1"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3A139768A;
-	Thu, 12 Mar 2026 20:28:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF53D3B0AF5;
+	Thu, 12 Mar 2026 20:28:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773347294; cv=none; b=R7vLUdJJhmX2iQ5D02H2a2QDRrkw1vidF7tu9i0yKIYdw6EAAzor9sLAOi+aOc+oc1P1tKMH15G/LJ8Ds0bZdFQUiBF/YbIMz4UyEa04kTFs7XIpaAPyFFO5I/6HsaIy4OTDG2SwlAchLS0CWbcZJ0YT7spAeEm7tqnC3qu2cww=
+	t=1773347294; cv=none; b=phwz9iJuzsFxx3/fHwfqY+6gmP3tS86xMJL1XMUphlcl0F4nzVkvLpmiNYOKBKBMWaTfc9qdKuz1jP5MV/ELuIe+1VkZ24tkZ9njn0H4bKcW2nkSLTrl8z2EH5YQEi824OfkqKdNfSe2f7/d7mrlPOIyNp9NjSSEDnt+M/tDD5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1773347294; c=relaxed/simple;
-	bh=GSvvK91SQuAGo90FmVnYDSWYlOSBV2oGchryB/VUxUY=;
+	bh=2FQWrvwYCkzh7VnGyHG3FIB6cuWllzKv+ct94SBACcI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CFV7Hu/gmADpKFTDRjjGu07yq1KrdCpDCT6Rr9BzvgmxU5eEc15z5tl2bsu0l9ODk9yuyTP9CE0H21renhUvD5dwbkH/+LheroQmCXyiSPnP0zeoWb2/xN2jm0NHZiurO1kPSRk56gM8H7EUGVA5QleasAe1d7URqhfgQBTn8FI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sWsa4YCw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4CA5C2BC9E;
-	Thu, 12 Mar 2026 20:28:11 +0000 (UTC)
+	 MIME-Version; b=Tn6wkQzFdK7ut7lzmd41qw1F3wi7LQ37n8w9Tk6IN6L7stOZfkPO22g23hPedrgVJQsjl8ks6+9K+j/PvQEEUimlzCSojrFVOVDzSwrsYs9VWKY0tZfWt1mcL9DSqRZkF7iyWIbE16UcOory9oJrJ/Y1a8boEBqZyySavlt2GbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QS8U48b1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23EF6C2BC87;
+	Thu, 12 Mar 2026 20:28:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773347292;
-	bh=GSvvK91SQuAGo90FmVnYDSWYlOSBV2oGchryB/VUxUY=;
+	s=k20201202; t=1773347294;
+	bh=2FQWrvwYCkzh7VnGyHG3FIB6cuWllzKv+ct94SBACcI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sWsa4YCwUKUZ6NF6FYl+pCdBC1dxci2Ej9zB0JHhNByo+147eLDUQ5j+WO+JV3dDT
-	 HPGMlhtmjp1vUY8qrJhcezjYyDbT6t8kN73X+N7ASnDu1Gs0XVXr5JIkNghq2FJSJq
-	 fc0ghbJShYJ4L3gBRp0CQK4fCZfDK0VNeCKnfBCH7R80M78BVItR+Smim/TYIv3o/g
-	 j55D8qFvvK06ryl48cViDm7kPX92qwyVcSOZ6lejCdYpmzI6mgUU2UnRDcSu1cKuug
-	 ZzB2nNVwTFGi3cqApGKwXIWslumCVtZokUxr7PoiWbDx6tZD6MGmI2dCRDrE26/Mkn
-	 qjzCQqiUkRaSg==
+	b=QS8U48b1DoVfHUrxjsa4yUEmtMYEM6tYjFlL0tuUp3bSzoISAi+DJNvqgPtxF75/t
+	 iLI3yT7OBczdIeHc/AXP9F8kflIli7gwSkuPI0dCk31W/X2JMmLT1E8dEozgQcp5qg
+	 QvQxeP/+fEP/vaG03+5/e9Hv/Gu+/Ja0HBnPwOW9GtlwEtX+mpOJT/zenzj9YsNUJh
+	 UYChAElRQWE9ATCslkshyHg0OkPXrd1ziHJvXvZHTAdpK5VPQXBY52gJKfH3MPchjs
+	 ioYPcK9iOlgMq5FL1nC/c9F7TLm57EI4yP6WqMhKIggIQcBDCBwninGNjP9Veoe/xB
+	 CcueoPncYH0gg==
 From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jonathan Corbet <corbet@lwn.net>,
@@ -89,9 +89,9 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org,
 	Ryan Roberts <ryan.roberts@arm.com>
-Subject: [PATCH 10/15] stm: replace deprecated mmap hook with mmap_prepare
-Date: Thu, 12 Mar 2026 20:27:25 +0000
-Message-ID: <671403f4278a7c77ecbb7617e0bc762536ce25da.1773346620.git.ljs@kernel.org>
+Subject: [PATCH 11/15] staging: vme_user: replace deprecated mmap hook with mmap_prepare
+Date: Thu, 12 Mar 2026 20:27:26 +0000
+Message-ID: <9494da55a9156fc843fa7b48a7026d219959adf9.1773346620.git.ljs@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1773346620.git.ljs@kernel.org>
 References: <cover.1773346620.git.ljs@kernel.org>
@@ -109,14 +109,14 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_CC(0.00)[lwn.net,ladisch.de,arndb.de,linuxfoundation.org,microsoft.com,kernel.org,linux.intel.com,gmail.com,foss.st.com,bootlin.com,nod.at,ti.com,oracle.com,redhat.com,auristor.com,zeniv.linux.org.uk,suse.cz,google.com,suse.com,suse.de,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org,lists.linux.dev,kvack.org,arm.com];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWELVE(0.00)[44];
-	TAGGED_FROM(0.00)[bounces-9382-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9383-lists,linux-hyperv=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -129,9 +129,9 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 69DEB279480
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 3C006279286
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
@@ -141,93 +141,192 @@ successor, mmap_prepare.
 The driver previously used vm_iomap_memory(), so this change replaces it
 with its mmap_prepare equivalent, mmap_action_simple_ioremap().
 
-Also, in order to correctly maintain reference counting, add a
-vm_ops->mapped callback to increment the reference count when successfully
-mapped.
+Functions that wrap mmap() are also converted to wrap mmap_prepare()
+instead.
+
+Also update the documentation accordingly.
 
 Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
 ---
- drivers/hwtracing/stm/core.c | 31 +++++++++++++++++++++----------
- 1 file changed, 21 insertions(+), 10 deletions(-)
+ Documentation/driver-api/vme.rst    |  2 +-
+ drivers/staging/vme_user/vme.c      | 20 +++++------
+ drivers/staging/vme_user/vme.h      |  2 +-
+ drivers/staging/vme_user/vme_user.c | 51 +++++++++++++++++------------
+ 4 files changed, 42 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
-index 37584e786bb5..f48c6a8a0654 100644
---- a/drivers/hwtracing/stm/core.c
-+++ b/drivers/hwtracing/stm/core.c
-@@ -666,6 +666,16 @@ static ssize_t stm_char_write(struct file *file, const char __user *buf,
- 	return count;
- }
+diff --git a/Documentation/driver-api/vme.rst b/Documentation/driver-api/vme.rst
+index c0b475369de0..7111999abc14 100644
+--- a/Documentation/driver-api/vme.rst
++++ b/Documentation/driver-api/vme.rst
+@@ -107,7 +107,7 @@ The function :c:func:`vme_master_read` can be used to read from and
  
-+static int stm_mmap_mapped(unsigned long start, unsigned long end, pgoff_t pgoff,
-+			   const struct file *file, void **vm_private_data)
-+{
-+	struct stm_file *stmf = file->private_data;
-+	struct stm_device *stm = stmf->stm;
-+
-+	pm_runtime_get_sync(&stm->dev);
-+	return 0;
-+}
-+
- static void stm_mmap_open(struct vm_area_struct *vma)
+ In addition to simple reads and writes, :c:func:`vme_master_rmw` is provided to
+ do a read-modify-write transaction. Parts of a VME window can also be mapped
+-into user space memory using :c:func:`vme_master_mmap`.
++into user space memory using :c:func:`vme_master_mmap_prepare`.
+ 
+ 
+ Slave windows
+diff --git a/drivers/staging/vme_user/vme.c b/drivers/staging/vme_user/vme.c
+index f10a00c05f12..7220aba7b919 100644
+--- a/drivers/staging/vme_user/vme.c
++++ b/drivers/staging/vme_user/vme.c
+@@ -735,9 +735,9 @@ unsigned int vme_master_rmw(struct vme_resource *resource, unsigned int mask,
+ EXPORT_SYMBOL(vme_master_rmw);
+ 
+ /**
+- * vme_master_mmap - Mmap region of VME master window.
++ * vme_master_mmap_prepare - Mmap region of VME master window.
+  * @resource: Pointer to VME master resource.
+- * @vma: Pointer to definition of user mapping.
++ * @desc: Pointer to descriptor of user mapping.
+  *
+  * Memory map a region of the VME master window into user space.
+  *
+@@ -745,12 +745,13 @@ EXPORT_SYMBOL(vme_master_rmw);
+  *         resource or -EFAULT if map exceeds window size. Other generic mmap
+  *         errors may also be returned.
+  */
+-int vme_master_mmap(struct vme_resource *resource, struct vm_area_struct *vma)
++int vme_master_mmap_prepare(struct vme_resource *resource,
++			    struct vm_area_desc *desc)
  {
- 	struct stm_file *stmf = vma->vm_file->private_data;
-@@ -684,12 +694,14 @@ static void stm_mmap_close(struct vm_area_struct *vma)
- }
++	const unsigned long vma_size = vma_desc_size(desc);
+ 	struct vme_bridge *bridge = find_bridge(resource);
+ 	struct vme_master_resource *image;
+ 	phys_addr_t phys_addr;
+-	unsigned long vma_size;
  
- static const struct vm_operations_struct stm_mmap_vmops = {
-+	.mapped = stm_mmap_mapped,
- 	.open	= stm_mmap_open,
- 	.close	= stm_mmap_close,
- };
+ 	if (resource->type != VME_MASTER) {
+ 		dev_err(bridge->parent, "Not a master resource\n");
+@@ -758,19 +759,18 @@ int vme_master_mmap(struct vme_resource *resource, struct vm_area_struct *vma)
+ 	}
  
--static int stm_char_mmap(struct file *file, struct vm_area_struct *vma)
-+static int stm_char_mmap_prepare(struct vm_area_desc *desc)
- {
-+	struct file *file = desc->file;
- 	struct stm_file *stmf = file->private_data;
- 	struct stm_device *stm = stmf->stm;
- 	unsigned long size, phys;
-@@ -697,10 +709,10 @@ static int stm_char_mmap(struct file *file, struct vm_area_struct *vma)
- 	if (!stm->data->mmio_addr)
- 		return -EOPNOTSUPP;
+ 	image = list_entry(resource->entry, struct vme_master_resource, list);
+-	phys_addr = image->bus_resource.start + (vma->vm_pgoff << PAGE_SHIFT);
+-	vma_size = vma->vm_end - vma->vm_start;
++	phys_addr = image->bus_resource.start + (desc->pgoff << PAGE_SHIFT);
  
--	if (vma->vm_pgoff)
-+	if (desc->pgoff)
- 		return -EINVAL;
+ 	if (phys_addr + vma_size > image->bus_resource.end + 1) {
+ 		dev_err(bridge->parent, "Map size cannot exceed the window size\n");
+ 		return -EFAULT;
+ 	}
  
--	size = vma->vm_end - vma->vm_start;
-+	size = vma_desc_size(desc);
- 
- 	if (stmf->output.nr_chans * stm->data->sw_mmiosz != size)
- 		return -EINVAL;
-@@ -712,13 +724,12 @@ static int stm_char_mmap(struct file *file, struct vm_area_struct *vma)
- 	if (!phys)
- 		return -EINVAL;
- 
--	pm_runtime_get_sync(&stm->dev);
--
 -	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
--	vm_flags_set(vma, VM_IO | VM_DONTEXPAND | VM_DONTDUMP);
--	vma->vm_ops = &stm_mmap_vmops;
--	vm_iomap_memory(vma, phys, size);
+-
+-	return vm_iomap_memory(vma, phys_addr, vma->vm_end - vma->vm_start);
 +	desc->page_prot = pgprot_noncached(desc->page_prot);
-+	vma_desc_set_flags(desc, VMA_IO_BIT, VMA_DONTEXPAND_BIT,
-+			   VMA_DONTDUMP_BIT);
-+	desc->vm_ops = &stm_mmap_vmops;
++	mmap_action_simple_ioremap(desc, phys_addr, vma_size);
++	return 0;
+ }
+-EXPORT_SYMBOL(vme_master_mmap);
++EXPORT_SYMBOL(vme_master_mmap_prepare);
  
-+	mmap_action_simple_ioremap(desc, phys, size);
+ /**
+  * vme_master_free - Free VME master window
+diff --git a/drivers/staging/vme_user/vme.h b/drivers/staging/vme_user/vme.h
+index 797e9940fdd1..b6413605ea49 100644
+--- a/drivers/staging/vme_user/vme.h
++++ b/drivers/staging/vme_user/vme.h
+@@ -151,7 +151,7 @@ ssize_t vme_master_read(struct vme_resource *resource, void *buf, size_t count,
+ ssize_t vme_master_write(struct vme_resource *resource, void *buf, size_t count, loff_t offset);
+ unsigned int vme_master_rmw(struct vme_resource *resource, unsigned int mask, unsigned int compare,
+ 			    unsigned int swap, loff_t offset);
+-int vme_master_mmap(struct vme_resource *resource, struct vm_area_struct *vma);
++int vme_master_mmap_prepare(struct vme_resource *resource, struct vm_area_desc *desc);
+ void vme_master_free(struct vme_resource *resource);
+ 
+ struct vme_resource *vme_dma_request(struct vme_dev *vdev, u32 route);
+diff --git a/drivers/staging/vme_user/vme_user.c b/drivers/staging/vme_user/vme_user.c
+index d95dd7d9190a..11e25c2f6b0a 100644
+--- a/drivers/staging/vme_user/vme_user.c
++++ b/drivers/staging/vme_user/vme_user.c
+@@ -446,24 +446,14 @@ static void vme_user_vm_close(struct vm_area_struct *vma)
+ 	kfree(vma_priv);
+ }
+ 
+-static const struct vm_operations_struct vme_user_vm_ops = {
+-	.open = vme_user_vm_open,
+-	.close = vme_user_vm_close,
+-};
+-
+-static int vme_user_master_mmap(unsigned int minor, struct vm_area_struct *vma)
++static int vme_user_vm_mapped(unsigned long start, unsigned long end, pgoff_t pgoff,
++			      const struct file *file, void **vm_private_data)
+ {
+-	int err;
++	const unsigned int minor = iminor(file_inode(file));
+ 	struct vme_user_vma_priv *vma_priv;
+ 
+ 	mutex_lock(&image[minor].mutex);
+ 
+-	err = vme_master_mmap(image[minor].resource, vma);
+-	if (err) {
+-		mutex_unlock(&image[minor].mutex);
+-		return err;
+-	}
+-
+ 	vma_priv = kmalloc_obj(*vma_priv);
+ 	if (!vma_priv) {
+ 		mutex_unlock(&image[minor].mutex);
+@@ -472,22 +462,41 @@ static int vme_user_master_mmap(unsigned int minor, struct vm_area_struct *vma)
+ 
+ 	vma_priv->minor = minor;
+ 	refcount_set(&vma_priv->refcnt, 1);
+-	vma->vm_ops = &vme_user_vm_ops;
+-	vma->vm_private_data = vma_priv;
+-
++	*vm_private_data = vma_priv;
+ 	image[minor].mmap_count++;
+ 
+ 	mutex_unlock(&image[minor].mutex);
+-
  	return 0;
  }
  
-@@ -836,7 +847,7 @@ static const struct file_operations stm_fops = {
- 	.open		= stm_char_open,
- 	.release	= stm_char_release,
- 	.write		= stm_char_write,
--	.mmap		= stm_char_mmap,
-+	.mmap_prepare	= stm_char_mmap_prepare,
- 	.unlocked_ioctl	= stm_char_ioctl,
- 	.compat_ioctl	= compat_ptr_ioctl,
+-static int vme_user_mmap(struct file *file, struct vm_area_struct *vma)
++static const struct vm_operations_struct vme_user_vm_ops = {
++	.mapped = vme_user_vm_mapped,
++	.open = vme_user_vm_open,
++	.close = vme_user_vm_close,
++};
++
++static int vme_user_master_mmap_prepare(unsigned int minor,
++					struct vm_area_desc *desc)
++{
++	int err;
++
++	mutex_lock(&image[minor].mutex);
++
++	err = vme_master_mmap_prepare(image[minor].resource, desc);
++	if (!err)
++		desc->vm_ops = &vme_user_vm_ops;
++
++	mutex_unlock(&image[minor].mutex);
++	return err;
++}
++
++static int vme_user_mmap_prepare(struct vm_area_desc *desc)
+ {
+-	unsigned int minor = iminor(file_inode(file));
++	const struct file *file = desc->file;
++	const unsigned int minor = iminor(file_inode(file));
+ 
+ 	if (type[minor] == MASTER_MINOR)
+-		return vme_user_master_mmap(minor, vma);
++		return vme_user_master_mmap_prepare(minor, desc);
+ 
+ 	return -ENODEV;
+ }
+@@ -498,7 +507,7 @@ static const struct file_operations vme_user_fops = {
+ 	.llseek = vme_user_llseek,
+ 	.unlocked_ioctl = vme_user_unlocked_ioctl,
+ 	.compat_ioctl = compat_ptr_ioctl,
+-	.mmap = vme_user_mmap,
++	.mmap_prepare = vme_user_mmap_prepare,
  };
+ 
+ static int vme_user_match(struct vme_dev *vdev)
 -- 
 2.53.0
 
