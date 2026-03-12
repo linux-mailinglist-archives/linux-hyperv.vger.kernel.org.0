@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-9388-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9389-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AJuxNSMts2ksSwAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9388-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 22:16:19 +0100
+	id gNHjH80us2nYSwAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9389-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 22:23:25 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3998A279DB0
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 22:16:19 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C601279F6E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 22:23:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8E0A03037E6A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 21:14:31 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 7CEE0300B8EC
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 21:23:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB01D3B6C02;
-	Thu, 12 Mar 2026 21:14:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C9B93CCFBA;
+	Thu, 12 Mar 2026 21:23:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Duh+dhDj"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="EYhKsPwq"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535753B5832;
-	Thu, 12 Mar 2026 21:14:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E224F3C5DB3;
+	Thu, 12 Mar 2026 21:23:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773350069; cv=none; b=ClazzjrQcwGjPmHPlzQNoIvqLnqie62ti5ZhuBrlk3rYTrHtPIpgMv7+AgZeDVa07e++5wK2mtgppkW9ghlIUUrFoYc8kVv0X7w/vGE+4w+W9Nl0b67FMnlwEmCuYWxpDhZWRrYhkknLU8XbwIM/a552h0cdoh7bYCrFL0+cvM8=
+	t=1773350600; cv=none; b=J1TKLbEnR7f2+pzyHgqsTUcNPc+V9lCZ4ka5B54XXPVZZm4GXsy1Vf5WQCe2dQeNwpYQamzdvZHOHyAbUEb7AwXZ6bWy8z9vR7c9nibksCJ9id5/TIeeRIydKCVqm1AvW9R7NL1ZRlcGE/+l62KkyFt8L0A74GIEZfWLTQj1S7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773350069; c=relaxed/simple;
-	bh=BHIeqMCeZ08yvAl5YqqjtddRClVSOvGwSHug5GXzEz8=;
+	s=arc-20240116; t=1773350600; c=relaxed/simple;
+	bh=HZSrZjttw5gIUDbdiKoMciwBk/FMfdKMYI3liALwtx4=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=JWtcw6Wr/qHSOHghAHwLNXQ5H9EjpKf+6d4b8QTvHv3t6m+X0i9kFc+rom59saPj9FbLW4B0X2nakzINPbA9u6comct7v/EN6H/r+KVgeY9qEXp/dYImmq1/vk27JyLGmD6QWIgGtM1DUDhn0OCXNUp9JlLYKMhA2PDM/4IWjDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Duh+dhDj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3794C4CEF7;
-	Thu, 12 Mar 2026 21:14:26 +0000 (UTC)
+	 Mime-Version:Content-Type; b=hmD1xpX7+TF7pjPHVouCUZ3hMrbiCpFqZu+OK2n789aHVc0HsVocP+cV1XBCAHDp5IB3I6boqru9CdsdkHaEmRqdxFvvcoBcr456RuRros8qv9G6tcxGKi7LwnNVJbdxladA39wWmnyD/u0NHts5MNZnNl2Y8X2uAe5sR2CAErk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=EYhKsPwq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 740EDC4CEF7;
+	Thu, 12 Mar 2026 21:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1773350068;
-	bh=BHIeqMCeZ08yvAl5YqqjtddRClVSOvGwSHug5GXzEz8=;
+	s=korg; t=1773350599;
+	bh=HZSrZjttw5gIUDbdiKoMciwBk/FMfdKMYI3liALwtx4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Duh+dhDjn9i3oyIucNjLcpV7CKSwWMDBwP1nrAeCAWcyGXtDakHpRp+pm3kMEvL8y
-	 SEaAaWk5jP3gQGaz8kV5kaoD1HdJgTdnHuWBZE8KvOuDSG+7q7krHiTC3YYNdfGDfn
-	 Xpz6tLlo5tMrkq0Sz1LyxlbqOsozNn9yfZFUkN8M=
-Date: Thu, 12 Mar 2026 14:14:25 -0700
+	b=EYhKsPwqoBLREVvoZGgMgVZ6fu+bk+U2fKxToofPR2Up6V9uTgSYZfuyjhIb7C3ZE
+	 7oPxkujHeeUdd441hNsgqAm8c7M0uwByLtnOWXAMkXuUFJ05Rb/GBA1Y8B9jmAfc8h
+	 IikXAtFu3AD5I04crV7xx4fJQZ2Bm8TZEbEULr8U=
+Date: Thu, 12 Mar 2026 14:23:14 -0700
 From: Andrew Morton <akpm@linux-foundation.org>
 To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
 Cc: Jonathan Corbet <corbet@lwn.net>, Clemens Ladisch <clemens@ladisch.de>,
@@ -69,11 +69,10 @@ Cc: Jonathan Corbet <corbet@lwn.net>, Clemens Ladisch <clemens@ladisch.de>,
  target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
  linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, Ryan Roberts
  <ryan.roberts@arm.com>
-Subject: Re: [PATCH 01/15] mm: various small mmap_prepare cleanups
-Message-Id: <20260312141425.1837736829210f2d0b00cac6@linux-foundation.org>
-In-Reply-To: <56372fe273f775b26675a04652c1229e14680741.1773346620.git.ljs@kernel.org>
+Subject: Re: [PATCH 00/15] mm: expand mmap_prepare functionality and usage
+Message-Id: <20260312142314.0f7fc516c0ebaffa6ec9fa7c@linux-foundation.org>
+In-Reply-To: <cover.1773346620.git.ljs@kernel.org>
 References: <cover.1773346620.git.ljs@kernel.org>
-	<56372fe273f775b26675a04652c1229e14680741.1773346620.git.ljs@kernel.org>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -87,20 +86,20 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MV_CASE(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[linux-foundation.org:s=korg];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9388-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9389-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	DMARC_NA(0.00)[linux-foundation.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_CC(0.00)[lwn.net,ladisch.de,arndb.de,linuxfoundation.org,microsoft.com,kernel.org,linux.intel.com,gmail.com,foss.st.com,bootlin.com,nod.at,ti.com,oracle.com,redhat.com,auristor.com,zeniv.linux.org.uk,suse.cz,google.com,suse.com,suse.de,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org,lists.linux.dev,kvack.org,arm.com];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
@@ -111,50 +110,15 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	RCPT_COUNT_TWELVE(0.00)[44];
 	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 3998A279DB0
+X-Rspamd-Queue-Id: 7C601279F6E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, 12 Mar 2026 20:27:16 +0000 "Lorenzo Stoakes (Oracle)" <ljs@kernel.org> wrote:
+On Thu, 12 Mar 2026 20:27:15 +0000 "Lorenzo Stoakes (Oracle)" <ljs@kernel.org> wrote:
 
-> +int mmap_action_prepare(struct vm_area_desc *desc,
-> +			struct mmap_action *action)
-> +
->  {
->  	switch (action->type) {
->  	case MMAP_NOTHING:
-> -		break;
-> +		return 0;
->  	case MMAP_REMAP_PFN:
-> -		remap_pfn_range_prepare(desc, action->remap.start_pfn);
-> -		break;
-> +		return remap_pfn_range_prepare(desc, action);
->  	case MMAP_IO_REMAP_PFN:
-> -		io_remap_pfn_range_prepare(desc, action->remap.start_pfn,
-> -					   action->remap.size);
-> -		break;
-> +		return io_remap_pfn_range_prepare(desc, action);
->  	}
->  }
->  EXPORT_SYMBOL(mmap_action_prepare);
+> This series expands the mmap_prepare functionality, which is intended to
+> replace the deprecated f_op->mmap hook which has been the source of bugs
+> and security issues for some time.
 
-hm, was this the correct version?
-
-mm/util.c: In function 'mmap_action_prepare':
-mm/util.c:1451:1: error: control reaches end of non-void function [-Werror=return-type]
- 1451 | }
-
---- a/mm/util.c~mm-various-small-mmap_prepare-cleanups-fix
-+++ a/mm/util.c
-@@ -1356,6 +1356,8 @@ int mmap_action_prepare(struct vm_area_d
- 		return remap_pfn_range_prepare(desc, action);
- 	case MMAP_IO_REMAP_PFN:
- 		return io_remap_pfn_range_prepare(desc, action);
-+	default:
-+		BUG();
- 	}
- }
- EXPORT_SYMBOL(mmap_action_prepare);
-_
-
+Thanks, I've added this to mm.git's mm-new branch.
 
