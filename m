@@ -1,198 +1,186 @@
-Return-Path: <linux-hyperv+bounces-9362-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9363-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gBuJOh/xsmloRAAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9362-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 18:00:15 +0100
+	id 6P78EfXysmmLRAAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9363-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 18:08:05 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0D792763D3
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 18:00:15 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49C0127661E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 18:08:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 50940306BF1C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 16:55:45 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 6C1D23024BF6
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2026 17:07:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B779A3FD12A;
-	Thu, 12 Mar 2026 16:54:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CD363F880D;
+	Thu, 12 Mar 2026 17:07:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="TCUycPJz"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xmgE/dq5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DwCajENJ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3543FBEB1
-	for <linux-hyperv@vger.kernel.org>; Thu, 12 Mar 2026 16:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3983E5ED3;
+	Thu, 12 Mar 2026 17:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773334496; cv=none; b=Hu4jyRpKsT+u+pVJ8CxCmFFQHJ/Fbp5wHLhIc87+D8MV7AuX1hFctD3ZUm+/vsjUmmF5I3Q25uqDqKQ5zKZDP/kjk8ut37Ds5XfSVBrXeRHmUUHzKZ+Mr6yVCDt3qymdQjyVLrdnmdkMz278JQ7Zm6MAo/8AE5iMn4p/pDD+PJY=
+	t=1773335249; cv=none; b=arSsc8poOr0B/rGNrNDHEE6TgJFyyWjB7x+XzyOK/bGTkA0PZ7Ki+0y/5wTO7YF0inwRZrihAsEX1cUfjzM4irR5/zuwaD2zR94le5xtVXB6IbIydQJxegqa9t24OlVzqhZ6mVCcgHh4uXqwo/ZSJrMIUoD1emcJAXlplL3BKc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773334496; c=relaxed/simple;
-	bh=ENv0+4bH9YdpFLGeURNwJ3+rEUsnNn74RNCtOl26SEA=;
+	s=arc-20240116; t=1773335249; c=relaxed/simple;
+	bh=eZazRVC6d4oK6n6COPCIcrTG4yO6IkhYKg7U9Zroku4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uLHOY4o8TOr6v3YH2Gjig3gQY4nCW4XYMmvwi+87RTw4alCEUdnSFodDaEFpzbpvjuLPqmzdhhErFEZ9wLRRS/wijUkUzYd9wJToS75N40Akx9uWwrqOE5Vz+uriMs56cmMlhZprSvyiUR13uHoxVEylpNpxk+z4FCwB/0VCwL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=TCUycPJz; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-5094e1d17d3so7532921cf.3
-        for <linux-hyperv@vger.kernel.org>; Thu, 12 Mar 2026 09:54:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1773334491; x=1773939291; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VQXCfPVu6b6dIVECzm0C8AUD7IL7VvpSkD5+M4S95sw=;
-        b=TCUycPJzE2fI+UEqk7FktReSuNB+qmtoLxCPQIhObf2GoM3FGGUoUzmOL4EcJ8nqrV
-         31wLWw0iuRrm5q/A3vl9oGJab4nkcB5GgE9L87TaBE5zWVhGKUEWMOYZrC4hQkz7+K+y
-         MdSN9PZxg9+VlLOffdwRmQphGTW7UoGABbBRu3CtgROAhKqAusDMmmrNFgCXGsGgS+um
-         4b3n9KF8H9mgZuxtPx/c84lVtPd3kX8R2XT1vLZ+RjANCZT5FGS44RpBGA5cN1JRJXTn
-         oCOtB2FnqO56y3+c6Fos0prISIneHSMHrQ7vAs2p/teTVBOn2DfneDCxuRpkTU9D9cja
-         6IGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773334491; x=1773939291;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VQXCfPVu6b6dIVECzm0C8AUD7IL7VvpSkD5+M4S95sw=;
-        b=Si81ncBbFqK2EhKuciJ+vr3quBkvEVf8CHPJUnEdKfD0bSXI6rZZfTQzoCjqRpRG+T
-         5dvUTL38GeB7JK0oItcquCM+ubM8rnsQY90WB5/RgeiVaZp0tntbFAj4/JFpOhfw8ooH
-         dZfmBA1uXC6NxujmEjBcOAtQ53LnRQ1RcMlsPkIie04VzXxooYWOOUhB2iyoWfM9kQaW
-         31UCOYuzzrQS+SBkqHfpfHZcMHTe2W6iXQRyZPg16UPNLCBW+aaHOhcU2YLSHUDHNLZe
-         COWSFtgQta4vGGpMkFeUtAKXoyvtLCjyNCJvZuglt8FnF7yyS6Aiy0auYvrRKBo/dDO7
-         RLiw==
-X-Forwarded-Encrypted: i=1; AJvYcCVWf9chinhi+ILCceK0WzZL9h902/MVFqONH/3t0ywWO4PXwM3ZxYtjzMisyDNuhzcj3T6SvPYDDrw7InA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwK3QT0YXe1Mu+uwQ6dDxUytdaHXP+1+3jHu425L3Syw8QHdMWA
-	sfNgctlYo3uFnZzyxCUxf+d1Yp7IUH6KtF7cLiW8nZ4BU+XLfQDZNZMVSSE/B4LIPbw=
-X-Gm-Gg: ATEYQzyIC+dltrrEu/tcGR2GHiLM0hbg4FFpc0osmxSf0qkty7Pw2/7SU+lk3r8++6A
-	N3GIn1G0eAuN/5QvQ2E6Gh5BUckwHqNXvNYqW4Ylvm5A0NGY/V3vzWXTs+7LiJU4/I9Y9unVs+2
-	s559fbhLllA2Vj+Rqfv3iI91L6gf81jJzS0bf1i4GUSSO7S3vQIvZbhy8qbaGhdzZfD2xnFyPRh
-	z09MtdGrW0ySVM7a0szVGzPpLMdMkMXodNk+nxALn353ldQM0wRxqGJQACHDzhx/0zPXySlIUIX
-	iMZXU+QPnCKsvy332Jwo8KRVumDLaCSYzpru9qaVgncV8BRontiayYgccMOmtggO8/ZuFBgkJh3
-	2Sg+R+XSRDBYRjGelGLwfQqdHF4uEmVT1kQKcptfon3izN3/Xf4LFNL2WJoJHn6kV7Rjt5L0pF5
-	F5tbThir0Ku4/y75Irrq7JhBpVTb2zZWx1q7OjoYwdlO7YLN/58FEec1Ez9HPQ1srsoJW5GWKPP
-	mitbEDtTJDRToKyhds=
-X-Received: by 2002:a05:622a:289:b0:509:44c3:5ffa with SMTP id d75a77b69052e-50957e10673mr1403911cf.52.1773334490530;
-        Thu, 12 Mar 2026 09:54:50 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5093a119602sm36658181cf.28.2026.03.12.09.54.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2026 09:54:49 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1w0jJA-00000006i8N-40X9;
-	Thu, 12 Mar 2026 13:54:48 -0300
-Date: Thu, 12 Mar 2026 13:54:48 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Kuan-Wei Chiu <visitorckw@gmail.com>, Philipp Hahn <phahn-oss@avm.de>,
-	amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com,
-	bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr,
-	dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org,
-	intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev,
-	kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-	linux-clk@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org,
-	linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-phy@lists.infradead.org, linux-pm@vger.kernel.org,
-	linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
-	linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-	ntfs3@lists.linux.dev, samba-technical@lists.samba.org,
-	sched-ext@lists.linux.dev, target-devel@vger.kernel.org,
-	tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev
-Subject: Re: [PATCH 00/61] treewide: Use IS_ERR_OR_NULL over manual NULL
- check - refactor
-Message-ID: <20260312165448.GN1469476@ziepe.ca>
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
- <abBlpGKO842B3yl9@google.com>
- <20260312125730.GI1469476@ziepe.ca>
- <f5688b895eaebabae6545a0d9baf8f1404e8454e.camel@HansenPartnership.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=XOtmL4rHh10nBO6aMYjQWHwHxOC5jJGWcnQEtVXoVFMDptuguiEE7QA46xvBJIiY15M0AijpAWk1/hFa+7sapJ5LfvDZgwxhg5zIgRrwZYnrFWmv31QqHGp40hf2KNkx0CXcjdGwbU9NfC1chcYdfIS5x3BiO5A0DvikTIqVRsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xmgE/dq5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DwCajENJ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Date: Thu, 12 Mar 2026 18:07:15 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1773335237;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bBxTNXIXuY6/KegSzNP2na1HchD8Mkr04ufxqrO9lIM=;
+	b=xmgE/dq5gz1N5u22a/IZId/uaaFPPVTl1acjdd2j5SCqg9jelXlYe/f56GTQe5AyslM8UG
+	759rC6SYIJOcmgnVm3u9Sacaoo4zAP0zQBanwWagI7fRSJhnk0wTIinFZVtyXa48j4Ein2
+	mqjf/ljexh8Pym8X8jssVFQkxcbQqCRs5AbyKwSsau2EJLPwhi2HYuOHtThAcpidiONXN+
+	4ObJ/bE5VYR73wUJ/vpX5tueArbtYVtkOYBVuJh7l/woifUcA8Gf8q9ye53/SICi05tctb
+	WIC1zZqB5MezylHH5aCvilbuX/bH2pLIeLnLjRu+vJqHQYjh5oQqqmVWGxfgCw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1773335237;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bBxTNXIXuY6/KegSzNP2na1HchD8Mkr04ufxqrO9lIM=;
+	b=DwCajENJ2uoSdVO7yQZJZp7+ZbGw+P2UU4O7laCHPkBD+Pno4rb9FnG5DMsrSP4uoQE6o1
+	ciFLtWyldeiBXHCA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Florian Bezdeka <florian.bezdeka@siemens.com>,
+	RT <linux-rt-users@vger.kernel.org>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Saurabh Singh Sengar <ssengar@linux.microsoft.com>,
+	Naman Jain <namjain@linux.microsoft.com>
+Subject: Re: [PATCH v3] drivers: hv: vmbus: Use kthread for vmbus interrupts
+ on PREEMPT_RT
+Message-ID: <20260312170715.HA08BHiO@linutronix.de>
+References: <289d8e52-40f8-4b22-8aa9-d0bd3bd15aae@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <f5688b895eaebabae6545a0d9baf8f1404e8454e.camel@HansenPartnership.com>
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <289d8e52-40f8-4b22-8aa9-d0bd3bd15aae@siemens.com>
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[ziepe.ca:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[linutronix.de,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[linutronix.de:s=2020,linutronix.de:s=2020e];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[gmail.com,avm.de,lists.freedesktop.org,lists.ubuntu.com,vger.kernel.org,inria.fr,lists.linux.dev,lists.osuosl.org,lists.infradead.org,lists.ozlabs.org,kvack.org,st-md-mailman.stormreply.com,lists.samba.org,lists.sourceforge.net];
-	DKIM_TRACE(0.00)[ziepe.ca:+];
-	MIME_TRACE(0.00)[0:+];
-	DMARC_NA(0.00)[ziepe.ca];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9363-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9362-lists,linux-hyperv=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,redhat.com,alien8.de,linux.intel.com,vger.kernel.org,siemens.com,gmail.com,outlook.com,linux.microsoft.com];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jgg@ziepe.ca,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	RCPT_COUNT_GT_50(0.00)[56];
-	MID_RHS_MATCH_FROM(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[bigeasy@linutronix.de,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linutronix.de:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,ziepe.ca:dkim,ziepe.ca:mid]
-X-Rspamd-Queue-Id: A0D792763D3
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 49C0127661E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Mar 12, 2026 at 11:32:37AM -0400, James Bottomley wrote:
-> On Thu, 2026-03-12 at 09:57 -0300, Jason Gunthorpe wrote:
-> > On Wed, Mar 11, 2026 at 02:40:36AM +0800, Kuan-Wei Chiu wrote:
-> > 
-> > > IMHO, the necessity of IS_ERR_OR_NULL() often highlights a
-> > > confusing or flawed API design. It usually implies that the caller
-> > > is unsure whether a failure results in an error pointer or a NULL
-> > > pointer. 
-> > 
-> > +1
-> > 
-> > IS_ERR_OR_NULL() should always be looked on with suspicion. Very
-> > little should be returning some tri-state 'ERR' 'NULL' 'SUCCESS'
-> > pointer. What does the middle condition even mean? IS_ERR_OR_NULL()
-> > implies ERR and NULL are semanticly the same, so fix the things to
-> > always use ERR.
-> 
-> Not in any way supporting the original patch.  However, the pattern
-> ERR, NULL, PTR is used extensively in the dentry code of filesystems. 
-> See the try_lookup..() set of functions in fs/namei.c
-> 
-> The meaning is
-> 
-> PTR - I found it
-> NULL - It definitely doesn't exist
-> ERR - something went wrong during the lookup.
-> 
-> So I don't think you can blanket say this pattern is wrong.
+On 2026-02-16 17:24:56 [+0100], Jan Kiszka wrote:
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/cpu.h>
+>  #include <linux/sched/isolation.h>
+>  #include <linux/sched/task_stack.h>
+> +#include <linux/smpboot.h>
+> =20
+>  #include <linux/delay.h>
+>  #include <linux/panic_notifier.h>
+> @@ -1350,7 +1351,7 @@ static void vmbus_message_sched(struct hv_per_cpu_c=
+ontext *hv_cpu, void *message
+>  	}
+>  }
+> =20
+> -void vmbus_isr(void)
+> +static void __vmbus_isr(void)
+>  {
+>  	struct hv_per_cpu_context *hv_cpu
+>  		=3D this_cpu_ptr(hv_context.cpu_context);
+> @@ -1363,6 +1364,53 @@ void vmbus_isr(void)
+> =20
+>  	add_interrupt_randomness(vmbus_interrupt);
 
-Lots of places also would return ENOENT, I'd argue that is easier to
-use..
+This is feeding entropy and would like to see interrupt registers. But
+since this is invoked from a thread it won't.
 
-But yes, I did use the word "suspicion" not blanket wrong :)
+>  }
+> +
+=E2=80=A6
+> +void vmbus_isr(void)
+> +{
+> +	if (IS_ENABLED(CONFIG_PREEMPT_RT)) {
+> +		vmbus_irqd_wake();
+> +	} else {
+> +		lockdep_hardirq_threaded();
 
-Jason
+What clears this? This is wrongly placed. This should go to
+sysvec_hyperv_callback() instead with its matching canceling part. The
+add_interrupt_randomness() should also be there and not here.
+sysvec_hyperv_stimer0() managed to do so.
+
+Different question: What guarantees that there won't be another
+interrupt before this one is done? The handshake appears to be
+deprecated. The interrupt itself returns ACKing (or not) but the actual
+handler is delayed to this thread. Depending on the userland it could
+take some time and I don't know how impatient the host is.
+
+> +		__vmbus_isr();
+Moving on. This (trying very hard here) even schedules tasklets. Why?
+You need to disable BH before doing so. Otherwise it ends in ksoftirqd.
+You don't want that.
+
+Couldn't the whole logic be integrated into the IRQ code? Then we could
+have mask/ unmask if supported/ provided and threaded interrupts. Then
+sysvec_hyperv_reenlightenment() could use a proper threaded interrupt
+instead apic_eoi() + schedule_delayed_work().=20
+
+> +	}
+> +}
+>  EXPORT_SYMBOL_FOR_MODULES(vmbus_isr, "mshv_vtl");
+> =20
+>  static irqreturn_t vmbus_percpu_isr(int irq, void *dev_id)
+
+Sebastian
 
