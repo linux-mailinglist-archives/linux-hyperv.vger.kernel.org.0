@@ -1,54 +1,54 @@
-Return-Path: <linux-hyperv+bounces-9438-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9439-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GHOhD9YTuGk7YwEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9438-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 15:29:42 +0100
+	id 6EU8CUUUuGl/YwEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9439-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 15:31:33 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9923629B62A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 15:29:41 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7AF8E29B6AC
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 15:31:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 12D6F30036FB
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 14:29:17 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 6419D3005AB7
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 14:31:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A7C5282F1D;
-	Mon, 16 Mar 2026 14:29:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B93129A32D;
+	Mon, 16 Mar 2026 14:31:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZNArTqce"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X1MvHmFe"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3198F280330;
-	Mon, 16 Mar 2026 14:29:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A36277029;
+	Mon, 16 Mar 2026 14:31:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773671356; cv=none; b=h+L1X9DpyE3S73JdT6m29d8IUBTLn6QDc28H3oejTAKKf41M9+K8agOkK8Edx2bBYfBJfQiDQK5B/uC9xOt97EB3Jpd1lFDkYkZ0HHkQaS5iF3ppRAa1KXnUkCBDfVylww13VTsW+locBYu/FGuYvnOMj0o07W9hFhinlzTVc7o=
+	t=1773671488; cv=none; b=EFprvwqJfNh7sFhYJ0Jeoul5NVzImWOeYtT5nXY1eY1dADaFMBNXloVqY55l+C/B0266AmFHTPJHcV8lbBDmER77ZmJzWxdokko2kHWP2H9zyH6hpkSmOCXW6JCaFOaQ+p5LiHkbLGBLefPLYc/WIXISmEB14poWL5XhsnL3g8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773671356; c=relaxed/simple;
-	bh=PFUSnO/9ILgelOXbwjEIMdn/Aab1PlCJ0qMrqAnbvw4=;
+	s=arc-20240116; t=1773671488; c=relaxed/simple;
+	bh=wmwRlESgrnvepPbb1PirkwNJB9yCJFViHuseAPzZgTU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kRmLJJgqG+p0ZOnxyBW+ErBRLvRF4uzu5DHvEXpQ2mhIBcMNWsnyHshHybW4oNiohniuy8USKRjbUPIn+fCktcvYlWYomxXBMuJJrUP4Pq9h8T/IdFxoxNOIkH81IlvhOKlNDt8jViT5Zsf35tc37Mzj9dymmlsWngoG1isz/vE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZNArTqce; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 901EFC19421;
-	Mon, 16 Mar 2026 14:29:06 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=S8lvj6JZSYNsQRHR8W8Sc6LBAyls3N54lM/mJS3zaN3RkBKOAmprstpl4Elcuc+gRuZc8SPPqa2dHgeNtOtNa+DlpjRRmDTrpro+KzoC+RBELreYKxzbbdCczSfM6IkulaqYnok9KFlYJ5E7+DDxQwAOMGx9Sg5xcB+PZ34Dgpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X1MvHmFe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC85CC19421;
+	Mon, 16 Mar 2026 14:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773671355;
-	bh=PFUSnO/9ILgelOXbwjEIMdn/Aab1PlCJ0qMrqAnbvw4=;
+	s=k20201202; t=1773671488;
+	bh=wmwRlESgrnvepPbb1PirkwNJB9yCJFViHuseAPzZgTU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZNArTqce345KwAkB2/OySCnh6EME1XoJwR/oAl0lWq7Ylt9gkTfk6stvl4mVK9/3F
-	 KwYOcm79Ed4P16v4AgfrWxgeQ5kXFytmq8JtvKgeAJBHJni4gvkqoXRwSRojWkzMXW
-	 KjdJCy/qJzif6rc5Ha23V7TyHyiPTJueX/dmlebfwa3TllC3B8dzFJIvh09GNdM5hA
-	 U109OB4NNCj4y6zxKWnPMdODpWkf+W9tJkoIot699UjVOMo5rbg+oOW+XblrH75bPT
-	 2K9hfeg+fCNBKA/MiRSMUpOgDleW7qa6JeZtPbHw5YSqiNeQgyfmSpebEkCOjXVHFZ
-	 N7HDaEOyJ+00A==
-Date: Mon, 16 Mar 2026 14:29:04 +0000
+	b=X1MvHmFeTMXLS17UDbf4qKWdxfdfl1nIIM1Znjt/hB9Jrz7XpIjRGeKs/GgD5HbmT
+	 GJnoLBvTQBD3mLyiQNYu/uMaiNpDmAFyJZxaGwL4kth9NMa+7N8pWmipLI9MOUnNIm
+	 XZuQWf4hbnuJkGt5El0XdUQ+XGEEEj/ffydaRt0U7/71pqXpi7xrliHkFxDB3ruYpx
+	 nd8CvutsY0NcvbrtfRvTcx8uB1G0uZ0HoUdnCcCHmTSa8GQRX3yC4bOT9X7R/YGAmG
+	 CL3fSgSn9uu67vMXPRuf0GENu4YKm6u93U51R6SiQiRnK+y3zr8woWQTM2An6cXIJn
+	 BxJKdQaXB4REg==
+Date: Mon, 16 Mar 2026 14:31:17 +0000
 From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
 To: Suren Baghdasaryan <surenb@google.com>
-Cc: Usama Arif <usama.arif@linux.dev>, 
-	Andrew Morton <akpm@linux-foundation.org>, Clemens Ladisch <clemens@ladisch.de>, 
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Clemens Ladisch <clemens@ladisch.de>, 
 	Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
 	"K . Y . Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
 	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
@@ -66,13 +66,12 @@ Cc: Usama Arif <usama.arif@linux.dev>,
 	linux-mtd@lists.infradead.org, linux-staging@lists.linux.dev, linux-scsi@vger.kernel.org, 
 	target-devel@vger.kernel.org, linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
 	linux-mm@kvack.org, Ryan Roberts <ryan.roberts@arm.com>
-Subject: Re: [PATCH 05/15] fs: afs: correctly drop reference count on mapping
- failure
-Message-ID: <2536c05e-e228-404f-9916-906c0447b114@lucifer.local>
-References: <4a5fa45119220b9d99ed72a36308aed01a30d2c1.1773346620.git.ljs@kernel.org>
- <20260313110745.2573005-1-usama.arif@linux.dev>
- <c62305d7-22c4-4cf7-969b-fbe214c93b64@lucifer.local>
- <CAJuCfpFio6n-O-1NkPXrymV0o3UqvHYS8ZOyQtt=JXnZ5dTGhQ@mail.gmail.com>
+Subject: Re: [PATCH 03/15] mm: document vm_operations_struct->open the same
+ as close()
+Message-ID: <fdc193c6-483e-4e8e-8813-fa71d984bfb1@lucifer.local>
+References: <cover.1773346620.git.ljs@kernel.org>
+ <52a7b9a003ea51521ab3c0baf30337a7800a3af7.1773346620.git.ljs@kernel.org>
+ <CAJuCfpHVN66abFrJgorXKBsjv7Ut=CP-E4NpLMC4SW613tJwtw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -82,21 +81,21 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJuCfpFio6n-O-1NkPXrymV0o3UqvHYS8ZOyQtt=JXnZ5dTGhQ@mail.gmail.com>
+In-Reply-To: <CAJuCfpHVN66abFrJgorXKBsjv7Ut=CP-E4NpLMC4SW613tJwtw@mail.gmail.com>
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9438-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9439-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[linux.dev,linux-foundation.org,ladisch.de,arndb.de,linuxfoundation.org,microsoft.com,kernel.org,linux.intel.com,gmail.com,foss.st.com,bootlin.com,nod.at,ti.com,oracle.com,redhat.com,auristor.com,zeniv.linux.org.uk,suse.cz,suse.com,google.com,suse.de,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org,lists.linux.dev,kvack.org,arm.com];
+	FREEMAIL_CC(0.00)[linux-foundation.org,lwn.net,ladisch.de,arndb.de,linuxfoundation.org,microsoft.com,kernel.org,linux.intel.com,gmail.com,foss.st.com,bootlin.com,nod.at,ti.com,oracle.com,redhat.com,auristor.com,zeniv.linux.org.uk,suse.cz,suse.com,google.com,suse.de,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org,lists.linux.dev,kvack.org,arm.com];
 	RCPT_COUNT_TWELVE(0.00)[44];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
@@ -107,135 +106,75 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[ljs@kernel.org,linux-hyperv@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lucifer.local:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 9923629B62A
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lucifer.local:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 7AF8E29B6AC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Sun, Mar 15, 2026 at 07:32:54PM -0700, Suren Baghdasaryan wrote:
-> On Fri, Mar 13, 2026 at 5:00 AM Lorenzo Stoakes (Oracle) <ljs@kernel.org> wrote:
+On Sun, Mar 15, 2026 at 05:43:41PM -0700, Suren Baghdasaryan wrote:
+> On Thu, Mar 12, 2026 at 1:27 PM Lorenzo Stoakes (Oracle) <ljs@kernel.org> wrote:
 > >
-> > On Fri, Mar 13, 2026 at 04:07:43AM -0700, Usama Arif wrote:
-> > > On Thu, 12 Mar 2026 20:27:20 +0000 "Lorenzo Stoakes (Oracle)" <ljs@kernel.org> wrote:
-> > >
-> > > > Commit 9d5403b1036c ("fs: convert most other generic_file_*mmap() users to
-> > > > .mmap_prepare()") updated AFS to use the mmap_prepare callback in favour of
-> > > > the deprecated mmap callback.
-> > > >
-> > > > However, it did not account for the fact that mmap_prepare can fail to map
-> > > > due to an out of memory error, and thus should not be incrementing a
-> > > > reference count on mmap_prepare.
+> > Describe when the operation is invoked and the context in which it is
+> > invoked, matching the description already added for vm_op->close().
+> >
+> > While we're here, update all outdated references to an 'area' field for
+> > VMAs to the more consistent 'vma'.
+> >
+> > Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
+> > ---
+> >  include/linux/mm.h | 15 ++++++++++-----
+> >  1 file changed, 10 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > index cc5960a84382..12a0b4c63736 100644
+> > --- a/include/linux/mm.h
+> > +++ b/include/linux/mm.h
+> > @@ -748,15 +748,20 @@ struct vm_uffd_ops;
+> >   * to the functions called when a no-page or a wp-page exception occurs.
+> >   */
+> >  struct vm_operations_struct {
+> > -       void (*open)(struct vm_area_struct * area);
+> > +       /**
+> > +        * @open: Called when a VMA is remapped or split. Not called upon first
+> > +        * mapping a VMA.
 >
-> This is a bit confusing. I see the current implementation does
-> afs_add_open_mmap() and then if generic_file_mmap_prepare() fails it
-> does afs_drop_open_mmap(), therefore refcounting seems to be balanced.
-> Is there really a problem?
+> It's also called from dup_mmap() which is part of forking.
 
-Firstly, mmap_prepare is invoked before we try to merge, so the VMA could in
-theory get merged and then the refcounting will be wrong.
-
-Secondly, mmap_prepare occurs at such at time where it is _possible_ that
-allocation failures as described below could happen.
-
-I'll update the commit message to reflect the merge aspect actually.
+Ah yup :) will update thanks!
 
 >
-> > > >
-> > > > With the newly added vm_ops->mapped callback available, we can simply defer
-> > > > this operation to that callback which is only invoked once the mapping is
-> > > > successfully in place (but not yet visible to userspace as the mmap and VMA
-> > > > write locks are held).
-> > > >
-> > > > Therefore add afs_mapped() to implement this callback for AFS.
-> > > >
-> > > > In practice the mapping allocations are 'too small to fail' so this is
-> > > > something that realistically should never happen in practice (or would do
-> > > > so in a case where the process is about to die anyway), but we should still
-> > > > handle this.
->
-> nit: I would drop the above paragraph. If it's impossible why are you
-> handling it? If it's unlikely, then handling it is even more
-> important.
-
-Sure I can drop it, but it's an ongoing thing with these small allocations.
-
-I wish we could just move to a scenario where we can simpy assume allocations
-will always succeed :)
-
-Vlasta - thoughts?
+> > +        * Context: User context.  May sleep.  Caller holds mmap_lock.
+> > +        */
+> > +       void (*open)(struct vm_area_struct *vma);
+> >         /**
+> >          * @close: Called when the VMA is being removed from the MM.
+> >          * Context: User context.  May sleep.  Caller holds mmap_lock.
+> >          */
+> > -       void (*close)(struct vm_area_struct * area);
+> > +       void (*close)(struct vm_area_struct *vma);
+> >         /* Called any time before splitting to check if it's allowed */
+> > -       int (*may_split)(struct vm_area_struct *area, unsigned long addr);
+> > -       int (*mremap)(struct vm_area_struct *area);
+> > +       int (*may_split)(struct vm_area_struct *vma, unsigned long addr);
+> > +       int (*mremap)(struct vm_area_struct *vma);
+> >         /*
+> >          * Called by mprotect() to make driver-specific permission
+> >          * checks before mprotect() is finalised.   The VMA must not
+> > @@ -768,7 +773,7 @@ struct vm_operations_struct {
+> >         vm_fault_t (*huge_fault)(struct vm_fault *vmf, unsigned int order);
+> >         vm_fault_t (*map_pages)(struct vm_fault *vmf,
+> >                         pgoff_t start_pgoff, pgoff_t end_pgoff);
+> > -       unsigned long (*pagesize)(struct vm_area_struct * area);
+> > +       unsigned long (*pagesize)(struct vm_area_struct *vma);
+> >
+> >         /* notification that a previously read-only page is about to become
+> >          * writable, if an error is returned it will cause a SIGBUS */
+> > --
+> > 2.53.0
+> >
 
 Cheers, Lorenzo
-
->
-> > > >
-> > > > Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
-> > > > ---
-> > > >  fs/afs/file.c | 20 ++++++++++++++++----
-> > > >  1 file changed, 16 insertions(+), 4 deletions(-)
-> > > >
-> > > > diff --git a/fs/afs/file.c b/fs/afs/file.c
-> > > > index f609366fd2ac..69ef86f5e274 100644
-> > > > --- a/fs/afs/file.c
-> > > > +++ b/fs/afs/file.c
-> > > > @@ -28,6 +28,8 @@ static ssize_t afs_file_splice_read(struct file *in, loff_t *ppos,
-> > > >  static void afs_vm_open(struct vm_area_struct *area);
-> > > >  static void afs_vm_close(struct vm_area_struct *area);
-> > > >  static vm_fault_t afs_vm_map_pages(struct vm_fault *vmf, pgoff_t start_pgoff, pgoff_t end_pgoff);
-> > > > +static int afs_mapped(unsigned long start, unsigned long end, pgoff_t pgoff,
-> > > > +                 const struct file *file, void **vm_private_data);
-> > > >
-> > > >  const struct file_operations afs_file_operations = {
-> > > >     .open           = afs_open,
-> > > > @@ -61,6 +63,7 @@ const struct address_space_operations afs_file_aops = {
-> > > >  };
-> > > >
-> > > >  static const struct vm_operations_struct afs_vm_ops = {
-> > > > +   .mapped         = afs_mapped,
-> > > >     .open           = afs_vm_open,
-> > > >     .close          = afs_vm_close,
-> > > >     .fault          = filemap_fault,
-> > > > @@ -500,13 +503,22 @@ static int afs_file_mmap_prepare(struct vm_area_desc *desc)
-> > > >     afs_add_open_mmap(vnode);
-> > >
-> > > Is the above afs_add_open_mmap an additional one, which could cause a reference
-> > > leak? Does the above one need to be removed and only the one in afs_mapped()
-> > > needs to be kept?
-> >
-> > Ah yeah good spot, will fix thanks!
-> >
-> > >
-> > > >
-> > > >     ret = generic_file_mmap_prepare(desc);
-> > > > -   if (ret == 0)
-> > > > -           desc->vm_ops = &afs_vm_ops;
-> > > > -   else
-> > > > -           afs_drop_open_mmap(vnode);
-> > > > +   if (ret)
-> > > > +           return ret;
-> > > > +
-> > > > +   desc->vm_ops = &afs_vm_ops;
-> > > >     return ret;
-> > > >  }
-> > > >
-> > > > +static int afs_mapped(unsigned long start, unsigned long end, pgoff_t pgoff,
-> > > > +                 const struct file *file, void **vm_private_data)
-> > > > +{
-> > > > +   struct afs_vnode *vnode = AFS_FS_I(file_inode(file));
-> > > > +
-> > > > +   afs_add_open_mmap(vnode);
-> > > > +   return 0;
-> > > > +}
-> > > > +
-> > > >  static void afs_vm_open(struct vm_area_struct *vma)
-> > > >  {
-> > > >     afs_add_open_mmap(AFS_FS_I(file_inode(vma->vm_file)));
-> > > > --
-> > > > 2.53.0
-> > > >
-> > > >
-> >
-> > Cheers, Lorenzo
 
