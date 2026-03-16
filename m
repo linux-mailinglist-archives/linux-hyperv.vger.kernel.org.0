@@ -1,50 +1,50 @@
-Return-Path: <linux-hyperv+bounces-9442-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9443-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8HFBJaEauGn/YwEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9442-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 15:58:41 +0100
+	id 8A8zMfQauGlYZAEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9443-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 16:00:04 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3B7629BE38
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 15:58:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A08829BE8C
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 16:00:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0167A3038174
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 14:52:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C6C4E3004635
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 14:54:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 598362F5A12;
-	Mon, 16 Mar 2026 14:51:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21B943033FB;
+	Mon, 16 Mar 2026 14:54:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tSLnPF1F"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IiVlA9K5"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3436C2F290E;
-	Mon, 16 Mar 2026 14:51:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19C430148C;
+	Mon, 16 Mar 2026 14:54:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773672719; cv=none; b=DpRGbUpA31BMj6EiRgRykOwLju0Agfat0wmDFk+AK3Hvt0WMmJAS3ZnbE7pzFjamzc+U9ucuwSQp1W6Nh7vLCp9Obnp2aRzmu/F7c0iwTyBPwIr+V48T94uxEC2QSmvkzdPd/49OKg9iTgaiPFTXV5g+FKQLYcIxz0rSkUfD5gI=
+	t=1773672885; cv=none; b=DIbCa/Mj1F6wNzlFZCMONcQb7/EiWQPGCDa6YH+CmIpSyOBJ+7Njw8F9496DvrLnTjUtoRusyQ7JdcmkhI15S1ax6safc25kD5mEYei3NNWe4gLmp7Y2WM4VHGXZ5tlQ8NORapl7poX1N76CA8uJ9q5GQR9gVF9smihScgM8aWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773672719; c=relaxed/simple;
-	bh=KIRMkEs2ki4Q4dp6M/GOhb93ujwUaNLq8lzChwMmjn0=;
+	s=arc-20240116; t=1773672885; c=relaxed/simple;
+	bh=151f3cWiR6axiSpyETGy2809glU/p+Thfrb+WhG7his=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BEeEqURnIB2OsfWVPRcs0+sh4dYUmASciWgjx6No7c9SxDAx95eyhxnEMvAaUSl7IXTqWvCJHHplKSTLbeExTksHbgnavH0U6okBzWB6DXzOFcj0lzxWw7867aFQRLJviR867trKuD3uvunijSnwubIQLzmhuhl6V0OM+X4smXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tSLnPF1F; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EB72C19421;
-	Mon, 16 Mar 2026 14:51:49 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=GRECAOu6SaE0Y2Jfvx/zSMhAr02PoPB72X/wzSvxGDSJzRRAld3y77vzVwLcLeSs4Hy4NXIzEJf5ECfxOb4ydOjiPwY+pfTL98NQF33xMZJT9fZS6c/3Yp7tp4no6KTRPv8HyklkR7iBsoP8KedFOd/jvSTcTste+sFVIPgWfDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IiVlA9K5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6787C19421;
+	Mon, 16 Mar 2026 14:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773672718;
-	bh=KIRMkEs2ki4Q4dp6M/GOhb93ujwUaNLq8lzChwMmjn0=;
+	s=k20201202; t=1773672884;
+	bh=151f3cWiR6axiSpyETGy2809glU/p+Thfrb+WhG7his=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tSLnPF1FQGukX0jNpyUPpw39RNpf5reYLO7x3EfolXRfSyklFjmya7iBIUL9cYR6P
-	 03ZQOFOVkIRw02GeRSmaaZYbqDhPig/hYez6AG/QQcB6PIpP1NgYdwb2UyqLlLW8iw
-	 xUqt4NFyQEpDdvNYzd7D140Zjk7FrDTOTJkLe0vutUmzUAeVv2IEcNlfeMcAvkPVaM
-	 JQNf8HpqT3Lstxvxat/f9kXEENmcKZ8Ntab7TkVbAmfxGz8pl03oD9b+QUUc8+zciP
-	 F7uXVlaQGF7zb+pS6vO6CMdBKRn645sD50BB1GRswzWJvFb4E88gqDAtEdIxjhTHlA
-	 ZD/322/wk5nBA==
-Date: Mon, 16 Mar 2026 14:51:47 +0000
+	b=IiVlA9K5MR2pm/vVWcjl3jHa1ZLppG/xkVDg4LYhSHBo7tILA3oKU7/VyDtSsg2Kg
+	 kQqyeUnfpOlDxu6AfhX2DKeTc56qG3sgVr8cRvArcJDPpB7MtB8+8m/W1CGm4DXnWU
+	 /IAV35ajExH6TG7ujNjLHJy8C1NUnuOmNHMTs/CZoSJyL1gIEFWKuYKmUapF57E+52
+	 QtJhwAwyYFC0d6NKgO01Zvw7BDFPVjqf+FrFODQ4Cqwr/bAXtOkwM5wsRJqmso1ekz
+	 dUhxuwzJMFbfz9arxSyuA8RSwOjRWaOSv5ZVSyJ0pPvwE3EtZ56ZowEAdLjTcvuW1x
+	 yQ/B9jgOXn+mA==
+Date: Mon, 16 Mar 2026 14:54:33 +0000
 From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
 To: Randy Dunlap <rdunlap@infradead.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
@@ -66,12 +66,11 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, linux-staging@lists.linux.dev, 
 	linux-scsi@vger.kernel.org, target-devel@vger.kernel.org, linux-afs@lists.infradead.org, 
 	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, Ryan Roberts <ryan.roberts@arm.com>
-Subject: Re: [PATCH 02/15] mm: add documentation for the mmap_prepare file
- operation callback
-Message-ID: <0eeb2bcb-3ee1-47cf-a5ee-45eb0038ec67@lucifer.local>
+Subject: Re: [PATCH 15/15] mm: add mmap_action_map_kernel_pages[_full]()
+Message-ID: <b9474609-4c7e-4cbe-8e6c-d55baa689430@lucifer.local>
 References: <cover.1773346620.git.ljs@kernel.org>
- <c5bb61cf789df1ecb32facc29df9749987c7ddfc.1773346620.git.ljs@kernel.org>
- <f0e33b51-d465-462d-b0f6-98a1db66bb15@infradead.org>
+ <21d8899bb1f4db61203072fb3a56a6c98a61e23d.1773346620.git.ljs@kernel.org>
+ <4fd15134-ae1e-4233-8d5a-9d1e0b9f94dc@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -80,7 +79,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f0e33b51-d465-462d-b0f6-98a1db66bb15@infradead.org>
+In-Reply-To: <4fd15134-ae1e-4233-8d5a-9d1e0b9f94dc@infradead.org>
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -91,7 +90,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9442-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9443-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_CC(0.00)[linux-foundation.org,lwn.net,ladisch.de,arndb.de,linuxfoundation.org,microsoft.com,kernel.org,linux.intel.com,gmail.com,foss.st.com,bootlin.com,nod.at,ti.com,oracle.com,redhat.com,auristor.com,zeniv.linux.org.uk,suse.cz,google.com,suse.com,suse.de,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org,lists.linux.dev,kvack.org,arm.com];
@@ -109,215 +108,105 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lucifer.local:mid]
-X-Rspamd-Queue-Id: F3B7629BE38
+X-Rspamd-Queue-Id: 2A08829BE8C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Mar 12, 2026 at 05:12:04PM -0700, Randy Dunlap wrote:
-> (Andrew: patch attached)
->
+On Thu, Mar 12, 2026 at 04:15:26PM -0700, Randy Dunlap wrote:
 >
 > On 3/12/26 1:27 PM, Lorenzo Stoakes (Oracle) wrote:
 >
-> Documentation/filesystems/mmap_prepare.rst: WARNING: document isn't included in any toctree [toc.not_included]
+> > Finally, we update the VMA tests accordingly to reflect the changes.
 >
-> Should be in some index.rst file. In filesystems I suppose.
-
-Ack thanks.
-
+> IMO we could omit the word "we" 5 times above.
+> (but no change is required)
 >
-> > ---
-> >  Documentation/filesystems/mmap_prepare.rst | 131 +++++++++++++++++++++
-> >  1 file changed, 131 insertions(+)
-> >  create mode 100644 Documentation/filesystems/mmap_prepare.rst
-> >
-> > diff --git a/Documentation/filesystems/mmap_prepare.rst b/Documentation/filesystems/mmap_prepare.rst
-> > new file mode 100644
-> > index 000000000000..76908200f3a1
-> > --- /dev/null
-> > +++ b/Documentation/filesystems/mmap_prepare.rst
-> > @@ -0,0 +1,131 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +===========================
-> > +mmap_prepare callback HOWTO
-> > +===========================
-> > +
-> > +Introduction
-> > +############
+> > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > index 88f42faeb377..88ad5649c02d 100644
+> > --- a/include/linux/mm.h
+> > +++ b/include/linux/mm.h
 >
-> Kernel style is "=============" above instead of "############".
+> > +/**
+> > + * range_is_subset - Is the specified inner range a subset of the outer range?
+> > + * @outer_start: The start of the outer range.
+> > + * @outer_end: The exclusive end of the outer range.
+> > + * @inner_start: The start of the inner range.
+> > + * @inner_end: The exclusive end of the inner range.
+> > + *
+> > + * Returns %true if [inner_start, inner_end) is a subset of [outer_start,
+>
+>     * Returns:
+> (for kernel-doc)
 
 Ack
 
 >
+> > + * outer_end), otherwise %false.
+> > + */
+> > +static inline bool range_is_subset(unsigned long outer_start,
+> > +				   unsigned long outer_end,
+> > +				   unsigned long inner_start,
+> > +				   unsigned long inner_end)
+> > +{
+> > +	return outer_start <= inner_start && inner_end <= outer_end;
+> > +}
 > > +
-> > +The `struct file->f_op->mmap()` callback has been deprecated as it is both a
-> > +stability and security risk, and doesn't always permit the merging of adjacent
-> > +mappings resulting in unnecessary memory fragmentation.
-> > +
-> > +It has been replaced with the `file->f_op->mmap_prepare()` callback which solves
-> > +these problems.
-> > +
-> > +## How To Use
-> > +
-> > +In your driver's `struct file_operations` struct, specify an `mmap_prepare`
-> > +callback rather than an `mmap` one, e.g. for ext4:
-> > +
-> > +
-> > +.. code-block:: C
-> > +
-> > +    const struct file_operations ext4_file_operations = {
-> > +        ...
-> > +        .mmap_prepare    = ext4_file_mmap_prepare,
-> > +    };
-> > +
-> > +This has a signature of `int (*mmap_prepare)(struct vm_area_desc *)`.
-> > +
-> > +Examining the `struct vm_area_desc` type:
-> > +
-> > +.. code-block:: C
-> > +
-> > +    struct vm_area_desc {
-> > +        /* Immutable state. */
-> > +        const struct mm_struct *const mm;
-> > +        struct file *const file; /* May vary from vm_file in stacked callers. */
-> > +        unsigned long start;
-> > +        unsigned long end;
-> > +
-> > +        /* Mutable fields. Populated with initial state. */
-> > +        pgoff_t pgoff;
-> > +        struct file *vm_file;
-> > +        vma_flags_t vma_flags;
-> > +        pgprot_t page_prot;
-> > +
-> > +        /* Write-only fields. */
-> > +        const struct vm_operations_struct *vm_ops;
-> > +        void *private_data;
-> > +
-> > +        /* Take further action? */
-> > +        struct mmap_action action;
-> > +    };
-> > +
-> > +This is straightforward - you have all the fields you need to set up the
-> > +mapping, and you can update the mutable and writable fields, for instance:
-> > +
-> > +.. code-block:: Cw
+> > +/**
+> > + * range_in_vma - is the specified [@start, @end) range a subset of the VMA?
+> > + * @vma: The VMA against which we want to check [@start, @end).
+> > + * @start: The start of the range we wish to check.
+> > + * @end: The exclusive end of the range we wish to check.
+> > + *
+> > + * Returns %true if [@start, @end) is a subset of [@vma->vm_start,
 >
->    .. code-block:: C
->
-> Documentation/filesystems/mmap_prepare.rst:60: WARNING: Pygments lexer name 'Cw' is not known [misc.highlighting_failure]
->
-> Maybe a typo?
-
-Yeah is a typo thanks!
-
->
-> > +
-> > +    static int ext4_file_mmap_prepare(struct vm_area_desc *desc)
-> > +    {
-> > +        int ret;
-> > +        struct file *file = desc->file;
-> > +        struct inode *inode = file->f_mapping->host;
-> > +
-> > +        ...
-> > +
-> > +        file_accessed(file);
-> > +        if (IS_DAX(file_inode(file))) {
-> > +            desc->vm_ops = &ext4_dax_vm_ops;
-> > +            vma_desc_set_flags(desc, VMA_HUGEPAGE_BIT);
-> > +        } else {
-> > +            desc->vm_ops = &ext4_file_vm_ops;
-> > +        }
-> > +        return 0;
-> > +    }
-> > +
-> > +Importantly, you no longer have to dance around with reference counts or locks
-> > +when updating these fields - __you can simply go ahead and change them__.
-> > +
-> > +Everything is taken care of by the mapping code.
-> > +
-> > +VMA Flags
-> > +=========
->
-> and then use "---------------" here instead of "==============".
+>     * Returns:
 
 Ack
 
 >
-> (from Documentation/doc-guide/sphinx.rst)
+> > + * @vma->vm_end), %false otherwise.
+> > + */
+> >  static inline bool range_in_vma(const struct vm_area_struct *vma,
+> >  				unsigned long start, unsigned long end)
+> >  {
+> > -	return (vma && vma->vm_start <= start && end <= vma->vm_end);
+> > +	if (!vma)
+> > +		return false;
+> > +
+> > +	return range_is_subset(vma->vm_start, vma->vm_end, start, end);
+> > +}
+> > +
+> > +/**
+> > + * range_in_vma_desc - is the specified [@start, @end) range a subset of the VMA
+> > + * described by @desc, a VMA descriptor?
+> > + * @desc: The VMA descriptor against which we want to check [@start, @end).
+> > + * @start: The start of the range we wish to check.
+> > + * @end: The exclusive end of the range we wish to check.
+> > + *
+> > + * Returns %true if [@start, @end) is a subset of [@desc->start, @desc->end),
 >
-> > +
-> > +Along with `mmap_prepare`, VMA flags have undergone an overhaul. Where before
-> > +you would invoke one of `vm_flags_init()`, `vm_flags_reset()`, `vm_flags_set()`,
-> > +`vm_flags_clear()`, and `vm_flags_mod()` to modify flags (and to have the
-> > +locking done correctly for you, this is no longer necessary.
-> > +
-> > +Also, the legacy approach of specifying VMA flags via `VM_READ`, `VM_WRITE`,
-> > +etc. - i.e. using a `VM_xxx` macro has changed too.
-> > +
-> > +When implementing `mmap_prepare()`, reference flags by their bit number, defined
-> > +as a `VMA_xxx_BIT` macro, e.g. `VMA_READ_BIT`, `VMA_WRITE_BIT` etc., and use one
-> > +of (where `desc` is a pointer to `struct vma_area_desc`):
-> > +
-> > +* `vma_desc_test_flags(desc, ...)` - Specify a comma-separated list of flags you
-> > +  wish to test for (whether _any_ are set), e.g. - `vma_desc_test_flags(desc,
-> > +  VMA_WRITE_BIT, VMA_MAYWRITE_BIT)` - returns `true` if either are set,
-> > +  otherwise `false`.
-> > +* `vma_desc_set_flags(desc, ...)` - Update the VMA descriptor flags to set
-> > +  additional flags specified by a comma-separated list,
-> > +  e.g. - `vma_desc_set_flags(desc, VMA_PFNMAP_BIT, VMA_IO_BIT)`.
-> > +* `vma_desc_clear_flags(desc, ...)` - Update the VMA descriptor flags to clear
-> > +  flags specified by a comma-separated list, e.g. - `vma_desc_clear_flags(desc,
-> > +  VMA_WRITE_BIT, VMA_MAYWRITE_BIT)`.
-> > +
-> > +Actions
-> > +=======
-> > +
-> > +You can now very easily have actions be performed upon a mapping once set up by
-> > +utilising simple helper functions invoked upon the `struct vm_area_desc`
-> > +pointer. These are:
-> > +
-> > +* `mmap_action_remap()` - Remaps a range consisting only of PFNs for a specific
-> > +  range starting a virtual address and PFN number of a set size.
-> > +
-> > +* `mmap_action_remap_full()` - Same as `mmap_action_remap()`, only remaps the
-> > +  entire mapping from `start_pfn` onward.
-> > +
-> > +* `mmap_action_ioremap()` - Same as `mmap_action_remap()`, only performs an I/O
-> > +  remap.
-> > +
-> > +* `mmap_action_ioremap_full()` - Same as `mmap_action_ioremap()`, only remaps
-> > +  the entire mapping from `start_pfn` onward.
-> > +
-> > +**NOTE:** The 'action' field should never normally be manipulated directly,
-> > +rather you ought to use one of these helpers.
->
-> I also see this warning, but I don't know what it is referring to:
->
-> Documentation/filesystems/mmap_prepare.rst:132: ERROR: Anonymous hyperlink mismatch: 1 references but 0 targets.
-> See "backrefs" attribute for IDs. [docutils]
->
-> (OK, I found/fixed that also.)
->
-> There are also lots of single ` marks which mean italics. I thought those were
-> not what was intended, so I changed (most of) them to `` marks, which means
-> "code block / monospace". I can fix those if needed.
->
-> from the patch file:
-> @Lorenzo: ISTR that you prefer explicit quoting on structs and
-> functions. I didn't do that here since kernel automarkup does that,
-> but if you prefer, I can redo the patch with those changes.
+>     * Returns:
 
-The issue was in another document it didn't seem to properly recognise the types
-AFAICT (but I might have been mistaken anyway!) But I'm fine without.
+Ack, I think in general I've seen (or believe I've seen :) other cases without
+the colon, so was kinda imitating, but I may also be imagining that ;)
 
 >
-> HTH.
+> > + * %false otherwise.
+> > + */
+> > +static inline bool range_in_vma_desc(const struct vm_area_desc *desc,
+> > +				     unsigned long start, unsigned long end)
+> > +{
+> > +	if (!desc)
+> > +		return false;
+> > +
+> > +	return range_is_subset(desc->start, desc->end, start, end);
+> >  }
+>
 > --
 > ~Randy
+>
 
-Thanks for this, will fold the patch into the respin also!
+Will also fold these changes into the respin!
 
 Cheers, Lorenzo
 
