@@ -1,48 +1,48 @@
-Return-Path: <linux-hyperv+bounces-9432-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9433-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yF2PIlz0t2mfXQEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9432-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 13:15:24 +0100
+	id QD2aJHH0t2mfXQEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9433-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 13:15:45 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CDAF2994CB
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 13:15:24 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 367432994E8
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 13:15:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 2C459301513B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 12:14:13 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 247CE3028E84
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 12:14:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85C77396597;
-	Mon, 16 Mar 2026 12:13:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D660395240;
+	Mon, 16 Mar 2026 12:14:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Hj+uRwP4"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jDcEUB6i"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DB7839448D;
-	Mon, 16 Mar 2026 12:13:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 746D639479A;
+	Mon, 16 Mar 2026 12:14:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773663234; cv=none; b=p7TSJtbpUYbfroKSnLJlQGwqVtD8w8LtNlFN+mGjFWf4daILq/ZfD+X0N8oRt4+lDg1zrMXc31UxznD+Xi/0mOS86H4uTwdUtlbjqrFT0Y2I6MDEcwdKBj0ntoycgu0KRUTJutYzDlt/u6M47+fQTjtEVxD+5bV9gfh6uEgzcKo=
+	t=1773663241; cv=none; b=Ozr0/F4sWN8JwAQsL80NwbIz+XhRUBW2amFE45jH+2CI/iR5174eTB4bQW6GLqN2zUBJ/DX6B9BVawX53HaPV2nLiob3niO3YPHB9i7knQLPFz+B1kR8jJ3OLFpoPqhIy7BVYm7J04sUWGDPV6rd0N+x3AOUDD8y0DhJZRlr1GA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773663234; c=relaxed/simple;
-	bh=xObn5BR89Oo8C2UbIZEan/6TxA4L35AviXUECDEMVZU=;
+	s=arc-20240116; t=1773663241; c=relaxed/simple;
+	bh=M0gnb043UzXcLdzvO+Qbu8eo8j0rmJpeCSSsA5hB2MY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uRspL0megxmAlkg9ZDDy6CxirxkCQcNhmZwufWGUKBZaFpwLyHxwQ6AyafGLdwL+22pTIvb/GxWAT+eJ89cGHwomezMFsUNxHTnO/Qx9v0/0Iu/B9gccNljRiWhN4Al3tYUY7rr9KRhaxoBiZ2wr05jRtsrLcz8iC/g8S4pjuc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Hj+uRwP4; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=fajN/oyfnBoD01Bcexn9aeLYMgXCtLewRrSFRLNTGjMMn3gXYQ8CH5BPzZHCXZwMgT8vkt91/mXuD5w49ptaLMgkRwIR9Vu/Rcl6hywUZfTArFCcSPuUBnLpsouMxZWzoR3BMsqmMYFBHEKLp4XpR3mN3CXjB5CSWeuSG/cBeFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jDcEUB6i; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from CPC-namja-026ON.redmond.corp.microsoft.com (unknown [4.213.232.19])
-	by linux.microsoft.com (Postfix) with ESMTPSA id DFB7C20B6F08;
-	Mon, 16 Mar 2026 05:13:45 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DFB7C20B6F08
+	by linux.microsoft.com (Postfix) with ESMTPSA id 98A1E20B6F01;
+	Mon, 16 Mar 2026 05:13:53 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 98A1E20B6F01
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1773663232;
-	bh=brR9theQCqP7K9pyo73r1JXfQPBuayIYZqSB2HUPid4=;
+	s=default; t=1773663240;
+	bh=1tIeJ9SsYHVdstCDU1TnP5bpNkiYnZ9fn1VYje8AQcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Hj+uRwP4UTcKRFjAytMxjsCb5OQgvzAillEr6r8JYoXSqL83gJgbvUxTmaw//IEI4
-	 aLRPdgDzTT28clUSYxT5RwVDnYcP1HNo4j0vdaJCWiuS0mKk/VHRh4BVHu0q3XXHzF
-	 3agYTN2tB/AsoUCbiwtVkL6eomJxukXxrUFRYbes=
+	b=jDcEUB6im4iHNa8UvsB4S4VtwoaL8MA54GDurzLy2wS1TLb6GLd7swVaNI/GDOj3O
+	 DgRGqXyFlAmfNAeDLRqe/DAoy5Ya+8ntTJ1+stBVGLZAFrGKlkQUTRptJ2qkiwZjVv
+	 6HcItX5fK4bfExTmAX7cU7AX7sm8X1Uy4UYy1+1s=
 From: Naman Jain <namjain@linux.microsoft.com>
 To: "K . Y . Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
@@ -74,9 +74,9 @@ Cc: Marc Zyngier <maz@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-arch@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: [PATCH 08/11] Drivers: hv: mshv_vtl: Move register page config to arch-specific files
-Date: Mon, 16 Mar 2026 12:12:38 +0000
-Message-ID: <20260316121241.910764-9-namjain@linux.microsoft.com>
+Subject: [PATCH 09/11] Drivers: hv: mshv_vtl: Let userspace do VSM configuration
+Date: Mon, 16 Mar 2026 12:12:39 +0000
+Message-ID: <20260316121241.910764-10-namjain@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260316121241.910764-1-namjain@linux.microsoft.com>
 References: <20260316121241.910764-1-namjain@linux.microsoft.com>
@@ -94,14 +94,14 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_CC(0.00)[kernel.org,arm.com,gmail.com,linux.microsoft.com,outlook.com,vger.kernel.org,lists.infradead.org];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWELVE(0.00)[30];
-	TAGGED_FROM(0.00)[bounces-9432-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9433-lists,linux-hyperv=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -114,311 +114,74 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.microsoft.com:dkim,linux.microsoft.com:mid,reg_assoc.name:url]
-X-Rspamd-Queue-Id: 4CDAF2994CB
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,linux.microsoft.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,reg_assoc.name:url]
+X-Rspamd-Queue-Id: 367432994E8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Move mshv_vtl_configure_reg_page() implementation from
-drivers/hv/mshv_vtl_main.c to arch-specific files:
-- arch/x86/hyperv/hv_vtl.c: full implementation with register page setup
-- arch/arm64/hyperv/hv_vtl.c: stub implementation (unsupported)
+The kernel currently sets the VSM configuration register, thereby
+imposing certain VSM configuration on the userspace (OpenVMM).
 
-Move common type definitions to include/asm-generic/mshyperv.h:
-- struct mshv_vtl_per_cpu
-- union hv_synic_overlay_page_msr
+The userspace (OpenVMM) has the capability to configure this register,
+and it is already doing it using the generic hypercall interface.
+The configuration can vary based on the use case or architectures, so
+let userspace take care of configuring it and remove this logic in the
+kernel driver.
 
-Move hv_call_get_vp_registers() and hv_call_set_vp_registers()
-declarations to include/asm-generic/mshyperv.h since these functions
-are used by multiple modules.
-
-While at it, remove the unnecessary stub implementations in #else
-case for mshv_vtl_return* functions in arch/x86/include/asm/mshyperv.h.
-
-This is essential for adding support for ARM64 in MSHV_VTL.
-
+Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
 Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
 ---
- arch/arm64/hyperv/hv_vtl.c        |  8 +++++
- arch/arm64/include/asm/mshyperv.h |  3 ++
- arch/x86/hyperv/hv_vtl.c          | 32 ++++++++++++++++++++
- arch/x86/include/asm/mshyperv.h   |  7 ++---
- drivers/hv/mshv.h                 |  8 -----
- drivers/hv/mshv_vtl_main.c        | 49 +++----------------------------
- include/asm-generic/mshyperv.h    | 42 ++++++++++++++++++++++++++
- 7 files changed, 92 insertions(+), 57 deletions(-)
+ drivers/hv/mshv_vtl_main.c | 29 -----------------------------
+ 1 file changed, 29 deletions(-)
 
-diff --git a/arch/arm64/hyperv/hv_vtl.c b/arch/arm64/hyperv/hv_vtl.c
-index 66318672c242..d699138427c1 100644
---- a/arch/arm64/hyperv/hv_vtl.c
-+++ b/arch/arm64/hyperv/hv_vtl.c
-@@ -10,6 +10,7 @@
- #include <asm/boot.h>
- #include <asm/mshyperv.h>
- #include <asm/cpu_ops.h>
-+#include <linux/export.h>
- 
- void mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl0)
- {
-@@ -142,3 +143,10 @@ void mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl0)
- 		"v24", "v25", "v26", "v27", "v28", "v29", "v30", "v31");
- }
- EXPORT_SYMBOL(mshv_vtl_return_call);
-+
-+bool hv_vtl_configure_reg_page(struct mshv_vtl_per_cpu *per_cpu)
-+{
-+	pr_debug("Register page not supported on ARM64\n");
-+	return false;
-+}
-+EXPORT_SYMBOL_GPL(hv_vtl_configure_reg_page);
-diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/mshyperv.h
-index de7f3a41a8ea..36803f0386cc 100644
---- a/arch/arm64/include/asm/mshyperv.h
-+++ b/arch/arm64/include/asm/mshyperv.h
-@@ -61,6 +61,8 @@ static inline u64 hv_get_non_nested_msr(unsigned int reg)
- 				ARM_SMCCC_OWNER_VENDOR_HYP,	\
- 				HV_SMCCC_FUNC_NUMBER)
- 
-+struct mshv_vtl_per_cpu;
-+
- struct mshv_vtl_cpu_context {
- /*
-  * NOTE: x18 is managed by the hypervisor. It won't be reloaded from this array.
-@@ -82,6 +84,7 @@ static inline int hv_vtl_get_set_reg(struct hv_register_assoc *regs, bool set, u
- }
- 
- void mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl0);
-+bool hv_vtl_configure_reg_page(struct mshv_vtl_per_cpu *per_cpu);
- #endif
- 
- #include <asm-generic/mshyperv.h>
-diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-index 72a0bb4ae0c7..ede290985d41 100644
---- a/arch/x86/hyperv/hv_vtl.c
-+++ b/arch/x86/hyperv/hv_vtl.c
-@@ -20,6 +20,7 @@
- #include <uapi/asm/mtrr.h>
- #include <asm/debugreg.h>
- #include <linux/export.h>
-+#include <linux/hyperv.h>
- #include <../kernel/smpboot.h>
- #include "../../kernel/fpu/legacy.h"
- 
-@@ -259,6 +260,37 @@ int __init hv_vtl_early_init(void)
- 	return 0;
- }
- 
-+static const union hv_input_vtl input_vtl_zero;
-+
-+bool hv_vtl_configure_reg_page(struct mshv_vtl_per_cpu *per_cpu)
-+{
-+	struct hv_register_assoc reg_assoc = {};
-+	union hv_synic_overlay_page_msr overlay = {};
-+	struct page *reg_page;
-+
-+	reg_page = alloc_page(GFP_KERNEL | __GFP_ZERO | __GFP_RETRY_MAYFAIL);
-+	if (!reg_page) {
-+		WARN(1, "failed to allocate register page\n");
-+		return false;
-+	}
-+
-+	overlay.enabled = 1;
-+	overlay.pfn = page_to_hvpfn(reg_page);
-+	reg_assoc.name = HV_X64_REGISTER_REG_PAGE;
-+	reg_assoc.value.reg64 = overlay.as_uint64;
-+
-+	if (hv_call_set_vp_registers(HV_VP_INDEX_SELF, HV_PARTITION_ID_SELF,
-+				     1, input_vtl_zero, &reg_assoc)) {
-+		WARN(1, "failed to setup register page\n");
-+		__free_page(reg_page);
-+		return false;
-+	}
-+
-+	per_cpu->reg_page = reg_page;
-+	return true;
-+}
-+EXPORT_SYMBOL_GPL(hv_vtl_configure_reg_page);
-+
- DEFINE_STATIC_CALL_NULL(__mshv_vtl_return_hypercall, void (*)(void));
- 
- void mshv_vtl_return_call_init(u64 vtl_return_offset)
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index d5355a5b7517..d592fea49cdb 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -271,6 +271,8 @@ static inline u64 hv_get_non_nested_msr(unsigned int reg) { return 0; }
- static inline int hv_apicid_to_vp_index(u32 apic_id) { return -EINVAL; }
- #endif /* CONFIG_HYPERV */
- 
-+struct mshv_vtl_per_cpu;
-+
- struct mshv_vtl_cpu_context {
- 	union {
- 		struct {
-@@ -305,13 +307,10 @@ void mshv_vtl_return_call_init(u64 vtl_return_offset);
- void mshv_vtl_return_hypercall(void);
- void __mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl0);
- int hv_vtl_get_set_reg(struct hv_register_assoc *regs, bool set, u64 shared);
-+bool hv_vtl_configure_reg_page(struct mshv_vtl_per_cpu *per_cpu);
- #else
- static inline void __init hv_vtl_init_platform(void) {}
- static inline int __init hv_vtl_early_init(void) { return 0; }
--static inline void mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl0) {}
--static inline void mshv_vtl_return_call_init(u64 vtl_return_offset) {}
--static inline void mshv_vtl_return_hypercall(void) {}
--static inline void __mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl0) {}
- #endif
- 
- #include <asm-generic/mshyperv.h>
-diff --git a/drivers/hv/mshv.h b/drivers/hv/mshv.h
-index d4813df92b9c..0fcb7f9ba6a9 100644
---- a/drivers/hv/mshv.h
-+++ b/drivers/hv/mshv.h
-@@ -14,14 +14,6 @@
- 	memchr_inv(&((STRUCT).MEMBER), \
- 		   0, sizeof_field(typeof(STRUCT), MEMBER))
- 
--int hv_call_get_vp_registers(u32 vp_index, u64 partition_id, u16 count,
--			     union hv_input_vtl input_vtl,
--			     struct hv_register_assoc *registers);
--
--int hv_call_set_vp_registers(u32 vp_index, u64 partition_id, u16 count,
--			     union hv_input_vtl input_vtl,
--			     struct hv_register_assoc *registers);
--
- int hv_call_get_partition_property(u64 partition_id, u64 property_code,
- 				   u64 *property_value);
- 
 diff --git a/drivers/hv/mshv_vtl_main.c b/drivers/hv/mshv_vtl_main.c
-index 91517b45d526..c79d24317b8e 100644
+index c79d24317b8e..4c9ae65ad3e8 100644
 --- a/drivers/hv/mshv_vtl_main.c
 +++ b/drivers/hv/mshv_vtl_main.c
-@@ -78,21 +78,6 @@ struct mshv_vtl {
- 	u64 id;
- };
- 
--struct mshv_vtl_per_cpu {
--	struct mshv_vtl_run *run;
--	struct page *reg_page;
--};
--
--/* SYNIC_OVERLAY_PAGE_MSR - internal, identical to hv_synic_simp */
--union hv_synic_overlay_page_msr {
--	u64 as_uint64;
--	struct {
--		u64 enabled: 1;
--		u64 reserved: 11;
--		u64 pfn: 52;
--	} __packed;
--};
--
- static struct mutex mshv_vtl_poll_file_lock;
- static union hv_register_vsm_page_offsets mshv_vsm_page_offsets;
- static union hv_register_vsm_capabilities mshv_vsm_capabilities;
-@@ -201,34 +186,6 @@ static struct page *mshv_vtl_cpu_reg_page(int cpu)
- 	return *per_cpu_ptr(&mshv_vtl_per_cpu.reg_page, cpu);
+@@ -222,30 +222,6 @@ static int mshv_vtl_get_vsm_regs(void)
+ 	return ret;
  }
  
--static void mshv_vtl_configure_reg_page(struct mshv_vtl_per_cpu *per_cpu)
+-static int mshv_vtl_configure_vsm_partition(struct device *dev)
 -{
--	struct hv_register_assoc reg_assoc = {};
--	union hv_synic_overlay_page_msr overlay = {};
--	struct page *reg_page;
+-	union hv_register_vsm_partition_config config;
+-	struct hv_register_assoc reg_assoc;
 -
--	reg_page = alloc_page(GFP_KERNEL | __GFP_ZERO | __GFP_RETRY_MAYFAIL);
--	if (!reg_page) {
--		WARN(1, "failed to allocate register page\n");
--		return;
+-	config.as_uint64 = 0;
+-	config.default_vtl_protection_mask = HV_MAP_GPA_PERMISSIONS_MASK;
+-	config.enable_vtl_protection = 1;
+-	config.zero_memory_on_reset = 1;
+-	config.intercept_vp_startup = 1;
+-	config.intercept_cpuid_unimplemented = 1;
+-
+-	if (mshv_vsm_capabilities.intercept_page_available) {
+-		dev_dbg(dev, "using intercept page\n");
+-		config.intercept_page = 1;
 -	}
 -
--	overlay.enabled = 1;
--	overlay.pfn = page_to_hvpfn(reg_page);
--	reg_assoc.name = HV_X64_REGISTER_REG_PAGE;
--	reg_assoc.value.reg64 = overlay.as_uint64;
+-	reg_assoc.name = HV_REGISTER_VSM_PARTITION_CONFIG;
+-	reg_assoc.value.reg64 = config.as_uint64;
 -
--	if (hv_call_set_vp_registers(HV_VP_INDEX_SELF, HV_PARTITION_ID_SELF,
--				     1, input_vtl_zero, &reg_assoc)) {
--		WARN(1, "failed to setup register page\n");
--		__free_page(reg_page);
--		return;
--	}
--
--	per_cpu->reg_page = reg_page;
--	mshv_has_reg_page = true;
+-	return hv_call_set_vp_registers(HV_VP_INDEX_SELF, HV_PARTITION_ID_SELF,
+-				       1, input_vtl_zero, &reg_assoc);
 -}
 -
- static void mshv_vtl_synic_enable_regs(unsigned int cpu)
+ static void mshv_vtl_vmbus_isr(void)
  {
- 	union hv_synic_sint sint;
-@@ -329,8 +286,10 @@ static int mshv_vtl_alloc_context(unsigned int cpu)
- 	if (!per_cpu->run)
- 		return -ENOMEM;
+ 	struct hv_per_cpu_context *per_cpu;
+@@ -1168,11 +1144,6 @@ static int __init mshv_vtl_init(void)
+ 		ret = -ENODEV;
+ 		goto free_dev;
+ 	}
+-	if (mshv_vtl_configure_vsm_partition(dev)) {
+-		dev_emerg(dev, "VSM configuration failed !!\n");
+-		ret = -ENODEV;
+-		goto free_dev;
+-	}
  
--	if (mshv_vsm_capabilities.intercept_page_available)
--		mshv_vtl_configure_reg_page(per_cpu);
-+	if (mshv_vsm_capabilities.intercept_page_available) {
-+		if (hv_vtl_configure_reg_page(per_cpu))
-+			mshv_has_reg_page = true;
-+	}
- 
- 	mshv_vtl_synic_enable_regs(cpu);
- 
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index b147a12085e4..b53fcc071596 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -383,8 +383,50 @@ static inline int hv_deposit_memory(u64 partition_id, u64 status)
- 	return hv_deposit_memory_node(NUMA_NO_NODE, partition_id, status);
- }
- 
-+#if IS_ENABLED(CONFIG_MSHV_ROOT) || IS_ENABLED(CONFIG_MSHV_VTL)
-+int hv_call_get_vp_registers(u32 vp_index, u64 partition_id, u16 count,
-+			     union hv_input_vtl input_vtl,
-+			     struct hv_register_assoc *registers);
-+
-+int hv_call_set_vp_registers(u32 vp_index, u64 partition_id, u16 count,
-+			     union hv_input_vtl input_vtl,
-+			     struct hv_register_assoc *registers);
-+#else
-+static inline int hv_call_get_vp_registers(u32 vp_index, u64 partition_id,
-+					   u16 count,
-+					   union hv_input_vtl input_vtl,
-+					   struct hv_register_assoc *registers)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static inline int hv_call_set_vp_registers(u32 vp_index, u64 partition_id,
-+					   u16 count,
-+					   union hv_input_vtl input_vtl,
-+					   struct hv_register_assoc *registers)
-+{
-+	return -EOPNOTSUPP;
-+}
-+#endif /* CONFIG_MSHV_ROOT || CONFIG_MSHV_VTL */
-+
- #define HV_VP_ASSIST_PAGE_ADDRESS_SHIFT	12
-+
- #if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
-+struct mshv_vtl_per_cpu {
-+	struct mshv_vtl_run *run;
-+	struct page *reg_page;
-+};
-+
-+/* SYNIC_OVERLAY_PAGE_MSR - internal, identical to hv_synic_simp */
-+union hv_synic_overlay_page_msr {
-+	u64 as_uint64;
-+	struct {
-+		u64 enabled: 1;
-+		u64 reserved: 11;
-+		u64 pfn: 52;
-+	} __packed;
-+};
-+
- u8 __init get_vtl(void);
- #else
- static inline u8 get_vtl(void) { return 0; }
+ 	mshv_vtl_return_call_init(mshv_vsm_page_offsets.vtl_return_offset);
+ 	ret = hv_vtl_setup_synic();
 -- 
 2.43.0
 
