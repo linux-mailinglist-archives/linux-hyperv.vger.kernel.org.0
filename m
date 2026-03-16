@@ -1,287 +1,421 @@
-Return-Path: <linux-hyperv+bounces-9422-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9423-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SJT2GIBst2laRAEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9422-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 03:35:44 +0100
+	id eKd3Iqnot2mzWwEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9423-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 12:25:29 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23B93294285
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 03:35:44 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 923CC298A1B
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 12:25:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id DAB2E301DC2F
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 02:33:09 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 5744C300A26C
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2026 11:25:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 591A3146A66;
-	Mon, 16 Mar 2026 02:33:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5BB6338586;
+	Mon, 16 Mar 2026 11:25:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Os005hha"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AjT4mVDI"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF421C862F
-	for <linux-hyperv@vger.kernel.org>; Mon, 16 Mar 2026 02:33:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.177
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773628388; cv=pass; b=oRxYjmCxQSEIfvTLBPMzD01SH9pTKxBRDwh9DkOJz4qv6lyCnT9l8vm9sBqNbfMft4slUprLN9Jd6VDZGewPJWVzkWhwmt0Xl1YRrwB2PG6BTste0g3pAENtF381A+DTVB7u13yaLnQaYmhhyXzf/WBeEQxNMIvaAqNpF/cV8Hw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773628388; c=relaxed/simple;
-	bh=P8upWlYrnSKRURZkcwVOV+h6+eQ68h1jm6EnGvbVBq8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VWeBMN0bqY5AOvK2JaUy4FvL1WAM3qgJLXm3OHyZ6h524Mdi6jCDnqB7XbspD+GVsZnYGRvRKLzqPAs6HKAaSW1L4WFr4qij3IY2nBty2ZT5ANmBL6ZDjWS1mBuLU4YOOS4eFMWmVdPbcZXI3SAcKCzbnn22zNkilOAjx9g4bf0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Os005hha; arc=pass smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-509062d829dso708971cf.1
-        for <linux-hyperv@vger.kernel.org>; Sun, 15 Mar 2026 19:33:06 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773628385; cv=none;
-        d=google.com; s=arc-20240605;
-        b=JbZIpS1UtZ/ZYbMZsYnpRIBFaJ7bpbI8/lhFV8liwofqsryfftYI+nMGJDnxTOchKX
-         aByDuZx7q6JgoZJTZ9HrV/lRd72Afgy7spVrsJcv04yi7iCpZEEFmaiMG/F6G/W1dRvf
-         TA/ihX9CdSqM3kVC09sG7tLdUU1mDc7d9XSXQTDrA8HGZggnz+Cp1oHxW6KoArGLZct1
-         EvbO0MLN3GlaovaXuLYaTKkvewjhcorhqD11zg+GStQQmiEc5srraowRNixguGE2Qsm6
-         aKw5rp39xZu2oXynGKPsBnF80eUAkkvaSWeoe+CE212xEtFcnncR3hXvYS4z/tXkFQ7M
-         ad6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=SOxR7OMcrpIXquZYk6Fw42QRhAnf+JOcixO64waw3M8=;
-        fh=Y13Gvfp2jA9jinx5RERwYTLhqjYVbxV2snAYp9yPxww=;
-        b=Yu+mKAKkdq6lQ4S30AgPemPgcwFw7OthiY9oEG2Vuf/2RyFyB+14XFsQk+CDxejG7K
-         Xc6sJM6KC+e5rFGwv0LDKSjHmFOeiQYFt9SAdd+gFq4/jtD5NMp06dmQN+XtgKBhetvO
-         L3TAAsWpdTdMjdu/fcs1fFK1zd8KO5VXJZSWTvjz4e6h84tQQ2mdYaqkT3UywqU8fhoq
-         k7mHgUWg/xmKOfbki+R16iMEZpDNPA1/MyIkZa9bYfTA8XRFQi0CJRXOZELLx6ALj96p
-         ldSLUbBBKvOjSZqu95Rofbk+j5x3HcwphS2rcgsOAHTRu8GkdBdDkOSHKGXA2ZknaGzM
-         I7dg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773628385; x=1774233185; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SOxR7OMcrpIXquZYk6Fw42QRhAnf+JOcixO64waw3M8=;
-        b=Os005hha9utJ0zhLJOYe43DqwRJu1UsmQb6s+HI6U/vIkdMMHKNfni2DnM3UjY2ppG
-         Pgldse+NU/KSqsNIKnhLsbu3tV+y5WOf7u38Ae1jXCGJ+TALOgC7DlZBap+ebz4BPH5E
-         nRNEReY023lXBY4rnzTVP/LQogEO2pekM5ob8tnZjzH8wkHt+SD0VxbFEmVw/IXm5ykT
-         zenhaSk0a2HdP0Y9lApDdeu+NjIkaHvZvyqrN9+GDogwYjuU+8lnmWqykOgeBlgiP6JA
-         /7T3vubRR+T2OKrdyYplaKBWP4WvlYGo8Iw+KD28NlBJmyFbtK2bzcP1n+j5ThCSE+rA
-         UXZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773628385; x=1774233185;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=SOxR7OMcrpIXquZYk6Fw42QRhAnf+JOcixO64waw3M8=;
-        b=D5ULT5o7v1JzZTx472oJbYYhcElVrKQHCodWLg8Ebxp+joEQWyCdbr64XSzak+5mIL
-         11WOCbyVcZZ8uaEUyRVKpgOKaL+5PLDEygFRSDm30Knc3Ao5nY8FgiMZ6e99SIEQuKsl
-         4GOTSsITAkwZKTNeLvDpNM/CtXGSG+NZFXT5QwV9uoleJzpqOUr3oy02Cr1SA9vJHJii
-         u1cb17Bnv1v1jRvIB41nF8hrxeobBRnFKEDwuxei27e4W6mHMljtVIFUoLP7Pqa27DbG
-         dspF6KjMm8GBWcWcSP65WF2x03fDJqVrCZGbu/6V0bZhKmRjODM8sAwj8oIy9YexGhrP
-         j1fg==
-X-Forwarded-Encrypted: i=1; AJvYcCWFag8uSnvHwzMhQ+EGczBXIsfhtCrQ7Q7OP8eIdjTejEq3L6lJDoJhNe1p0l/alZoPB/lyfWq5StwKed0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNdAFKDPTtwY+qD2o0moDRskvhFCWaZP2CPbv52S5kdGswNGYr
-	8LlFjeJVOFaYS7lvQ6KIoZ9busWK93JRZB12jFUutMAUx3e/Srvt+T2xjorzx6ImPZ5D01tQE6K
-	UpumfT1aETgsz7oQ3kNqMnPiIMa/ocSNmy9MItqTB
-X-Gm-Gg: ATEYQzyc1aVHi/J2CTCQjRxMi8fNLf6JYM9y9MEy++7vTyUFdNJHNhoHqtkdRRGqhCe
-	LkmYl3yzQ71uMgS9WjVnJgnAGNFelVrmW937eDkM64K3eMdarwtSqVB/XywIvd48kaBNREaMcvP
-	ZevF3k7WCEHv2BzBN1cb+NutZ6PcHZJhTbvLqtSzC21a5kBhvqYNN+dzuJhZyaKkvYvPJMSwjtm
-	X8RMQil7SDuSgLoNNtlwOejxpF9SxBxS4hF+UwawnBja+uFeNZsWpv3F/0vs3mSruAukeyv9GsC
-	nwvohA==
-X-Received: by 2002:a05:622a:60c:b0:4fb:e3b0:aae6 with SMTP id
- d75a77b69052e-5096a92ebdbmr823271cf.1.1773628384887; Sun, 15 Mar 2026
- 19:33:04 -0700 (PDT)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AC6A28B4FD;
+	Mon, 16 Mar 2026 11:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773660323; cv=none; b=N5B70n99HzsvZoWVi/4CSQUXdetpuSgOwo8eaGOm8DCaxQA3L7sDYKmXsSO8IjTnsdgISoZjX85l8TDlQ8jneYqLO7HHMC6PgsngBgWK6TUzKSnCArF18zYKVFoul/kDr8M2yDHwHIrWK7HKDtZ3UrkzvM7vy2ZcFtiTk/9kjh4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773660323; c=relaxed/simple;
+	bh=FpbdmlFt+vohy+22OJXoMhDgdQGspq+e2GwxjeL+cl4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=ekNpRL64QbgoA+6sv6cS+35XH5QtDzru7nXMY61L1eYDSYM4MI72VbUbv0kSgZStxqohVK2zV8vyU5whDW7WnazGFK+W+q63Hurbbr3ZEq9djMQAJvdl8eVH2oEuGLkzg2vbqQCSHdgjouJ4GbvSszeoPwg0WZvjVlUvVm4xj28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=AjT4mVDI; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 6CE9D20B710C; Mon, 16 Mar 2026 04:25:16 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6CE9D20B710C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1773660316;
+	bh=uiIk9O4DnQlGJjCUlsecxsBWSKHWacv/bDOYe+d95sY=;
+	h=From:To:Subject:Date:From;
+	b=AjT4mVDIC/wEiZ47mdXvS0ixggNq7wEiiDT5xco4GIwDD7cURU9dkc2SswlDpRMOP
+	 FCvRU7kdQXz5IDd3kH04v/wSmhu707ZdAAzzwkfx9dh4/qXMHZiU5+lElutZmZ6Hl6
+	 ubXIT7ZAgiMGoLWBcAJLTOry+mH9JQ+fw0kOY3y4=
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	longli@microsoft.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	kotaranov@microsoft.com,
+	horms@kernel.org,
+	shradhagupta@linux.microsoft.com,
+	dipayanroy@linux.microsoft.com,
+	yury.norov@gmail.com,
+	kees@kernel.org,
+	ssengar@linux.microsoft.com,
+	ernis@linux.microsoft.com,
+	gargaditya@linux.microsoft.com,
+	shirazsaleem@microsoft.com,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: [PATCH net-next v3] net: mana: Expose hardware diagnostic info via debugfs
+Date: Mon, 16 Mar 2026 04:23:27 -0700
+Message-ID: <20260316112339.1208155-1-ernis@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <4a5fa45119220b9d99ed72a36308aed01a30d2c1.1773346620.git.ljs@kernel.org>
- <20260313110745.2573005-1-usama.arif@linux.dev> <c62305d7-22c4-4cf7-969b-fbe214c93b64@lucifer.local>
-In-Reply-To: <c62305d7-22c4-4cf7-969b-fbe214c93b64@lucifer.local>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Sun, 15 Mar 2026 19:32:54 -0700
-X-Gm-Features: AaiRm52_478_pqzpMaMH6nJQtQvcaF-xKuK5uDWZ-u00xGMYRYKMJPl6M-Q1q5E
-Message-ID: <CAJuCfpFio6n-O-1NkPXrymV0o3UqvHYS8ZOyQtt=JXnZ5dTGhQ@mail.gmail.com>
-Subject: Re: [PATCH 05/15] fs: afs: correctly drop reference count on mapping failure
-To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
-Cc: Usama Arif <usama.arif@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
-	Clemens Ladisch <clemens@ladisch.de>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "K . Y . Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Bodo Stroesser <bostroesser@gmail.com>, 
-	"Martin K . Petersen" <martin.petersen@oracle.com>, David Howells <dhowells@redhat.com>, 
-	Marc Dionne <marc.dionne@auristor.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, David Hildenbrand <david@kernel.org>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
-	Pedro Falcato <pfalcato@suse.de>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, 
-	linux-staging@lists.linux.dev, linux-scsi@vger.kernel.org, 
-	target-devel@vger.kernel.org, linux-afs@lists.infradead.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	Ryan Roberts <ryan.roberts@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9422-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9423-lists,linux-hyperv=lfdr.de];
+	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,gmail.com,vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[44];
-	FREEMAIL_CC(0.00)[linux.dev,linux-foundation.org,ladisch.de,arndb.de,linuxfoundation.org,microsoft.com,kernel.org,linux.intel.com,gmail.com,foss.st.com,bootlin.com,nod.at,ti.com,oracle.com,redhat.com,auristor.com,zeniv.linux.org.uk,suse.cz,suse.com,google.com,suse.de,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org,lists.linux.dev,kvack.org,arm.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[24];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[surenb@google.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[google.com:+];
+	FROM_NEQ_ENVFROM(0.00)[ernis@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	TO_DN_NONE(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 23B93294285
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 923CC298A1B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Mar 13, 2026 at 5:00=E2=80=AFAM Lorenzo Stoakes (Oracle) <ljs@kerne=
-l.org> wrote:
->
-> On Fri, Mar 13, 2026 at 04:07:43AM -0700, Usama Arif wrote:
-> > On Thu, 12 Mar 2026 20:27:20 +0000 "Lorenzo Stoakes (Oracle)" <ljs@kern=
-el.org> wrote:
-> >
-> > > Commit 9d5403b1036c ("fs: convert most other generic_file_*mmap() use=
-rs to
-> > > .mmap_prepare()") updated AFS to use the mmap_prepare callback in fav=
-our of
-> > > the deprecated mmap callback.
-> > >
-> > > However, it did not account for the fact that mmap_prepare can fail t=
-o map
-> > > due to an out of memory error, and thus should not be incrementing a
-> > > reference count on mmap_prepare.
+Add debugfs entries to expose hardware configuration and diagnostic
+information that aids in debugging driver initialization and runtime
+operations without adding noise to dmesg.
 
-This is a bit confusing. I see the current implementation does
-afs_add_open_mmap() and then if generic_file_mmap_prepare() fails it
-does afs_drop_open_mmap(), therefore refcounting seems to be balanced.
-Is there really a problem?
+The debugfs directory creation and removal for each PCI device is
+integrated into mana_gd_setup() and mana_gd_cleanup_device()
+respectively, so that all callers (probe, remove, suspend, resume,
+shutdown) share a single code path.
 
-> > >
-> > > With the newly added vm_ops->mapped callback available, we can simply=
- defer
-> > > this operation to that callback which is only invoked once the mappin=
-g is
-> > > successfully in place (but not yet visible to userspace as the mmap a=
-nd VMA
-> > > write locks are held).
-> > >
-> > > Therefore add afs_mapped() to implement this callback for AFS.
-> > >
-> > > In practice the mapping allocations are 'too small to fail' so this i=
-s
-> > > something that realistically should never happen in practice (or woul=
-d do
-> > > so in a case where the process is about to die anyway), but we should=
- still
-> > > handle this.
+Device-level entries (under /sys/kernel/debug/mana/<slot>/):
+  - num_msix_usable, max_num_queues: Max resources from hardware
+  - gdma_protocol_ver, pf_cap_flags1: VF version negotiation results
+  - num_vports, bm_hostmode: Device configuration
 
-nit: I would drop the above paragraph. If it's impossible why are you
-handling it? If it's unlikely, then handling it is even more
-important.
+Per-vPort entries (under /sys/kernel/debug/mana/<slot>/vportN/):
+  - port_handle: Hardware vPort handle
+  - max_sq, max_rq: Max queues from vPort config
+  - indir_table_sz: Indirection table size
+  - steer_rx, steer_rss, steer_update_tab, steer_cqe_coalescing:
+    Last applied steering configuration parameters
 
-> > >
-> > > Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
-> > > ---
-> > >  fs/afs/file.c | 20 ++++++++++++++++----
-> > >  1 file changed, 16 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/fs/afs/file.c b/fs/afs/file.c
-> > > index f609366fd2ac..69ef86f5e274 100644
-> > > --- a/fs/afs/file.c
-> > > +++ b/fs/afs/file.c
-> > > @@ -28,6 +28,8 @@ static ssize_t afs_file_splice_read(struct file *in=
-, loff_t *ppos,
-> > >  static void afs_vm_open(struct vm_area_struct *area);
-> > >  static void afs_vm_close(struct vm_area_struct *area);
-> > >  static vm_fault_t afs_vm_map_pages(struct vm_fault *vmf, pgoff_t sta=
-rt_pgoff, pgoff_t end_pgoff);
-> > > +static int afs_mapped(unsigned long start, unsigned long end, pgoff_=
-t pgoff,
-> > > +                 const struct file *file, void **vm_private_data);
-> > >
-> > >  const struct file_operations afs_file_operations =3D {
-> > >     .open           =3D afs_open,
-> > > @@ -61,6 +63,7 @@ const struct address_space_operations afs_file_aops=
- =3D {
-> > >  };
-> > >
-> > >  static const struct vm_operations_struct afs_vm_ops =3D {
-> > > +   .mapped         =3D afs_mapped,
-> > >     .open           =3D afs_vm_open,
-> > >     .close          =3D afs_vm_close,
-> > >     .fault          =3D filemap_fault,
-> > > @@ -500,13 +503,22 @@ static int afs_file_mmap_prepare(struct vm_area=
-_desc *desc)
-> > >     afs_add_open_mmap(vnode);
-> >
-> > Is the above afs_add_open_mmap an additional one, which could cause a r=
-eference
-> > leak? Does the above one need to be removed and only the one in afs_map=
-ped()
-> > needs to be kept?
->
-> Ah yeah good spot, will fix thanks!
->
-> >
-> > >
-> > >     ret =3D generic_file_mmap_prepare(desc);
-> > > -   if (ret =3D=3D 0)
-> > > -           desc->vm_ops =3D &afs_vm_ops;
-> > > -   else
-> > > -           afs_drop_open_mmap(vnode);
-> > > +   if (ret)
-> > > +           return ret;
-> > > +
-> > > +   desc->vm_ops =3D &afs_vm_ops;
-> > >     return ret;
-> > >  }
-> > >
-> > > +static int afs_mapped(unsigned long start, unsigned long end, pgoff_=
-t pgoff,
-> > > +                 const struct file *file, void **vm_private_data)
-> > > +{
-> > > +   struct afs_vnode *vnode =3D AFS_FS_I(file_inode(file));
-> > > +
-> > > +   afs_add_open_mmap(vnode);
-> > > +   return 0;
-> > > +}
-> > > +
-> > >  static void afs_vm_open(struct vm_area_struct *vma)
-> > >  {
-> > >     afs_add_open_mmap(AFS_FS_I(file_inode(vma->vm_file)));
-> > > --
-> > > 2.53.0
-> > >
-> > >
->
-> Cheers, Lorenzo
+Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+---
+Changes in v3:
+* Rename mana_gd_cleanup to mana_gd_cleanup_device.
+* Add creation of debugfs entries in mana_gd_setup.
+* Add removal of debugfs entries in mana_gd_cleanup_device.
+* Remove bm_hostmode and num_vports from debugfs in mana_remove itself,
+  because "ac" gets freed before debugfs_remove_recursive, to avoid
+  Use-After-Free error.
+* Add "goto out:" in mana_cfg_vport_steering to avoid populating apc
+  values when resp.hdr.status is not NULL.
+Changes in v2:
+* Add debugfs_remove_recursice for gc>mana_pci_debugfs in
+  mana_gd_suspend to handle multiple duplicates creation in
+  mana_gd_setup and mana_gd_resume path.
+* Move debugfs creation for num_vports and bm_hostmode out of
+  if(!resuming) condition since we have to create it again even for
+  resume.
+* Recreate mana_pci_debugfs in mana_gd_resume.
+---
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 65 ++++++++++---------
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 35 ++++++++++
+ include/net/mana/gdma.h                       |  1 +
+ include/net/mana/mana.h                       |  8 +++
+ 4 files changed, 79 insertions(+), 30 deletions(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index ef0dbfaac8f4..4d77e7fa565a 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -169,6 +169,11 @@ static int mana_gd_query_max_resources(struct pci_dev *pdev)
+ 	if (gc->max_num_queues > gc->num_msix_usable - 1)
+ 		gc->max_num_queues = gc->num_msix_usable - 1;
+ 
++	debugfs_create_u32("num_msix_usable", 0400, gc->mana_pci_debugfs,
++			   &gc->num_msix_usable);
++	debugfs_create_u32("max_num_queues", 0400, gc->mana_pci_debugfs,
++			   &gc->max_num_queues);
++
+ 	return 0;
+ }
+ 
+@@ -1239,6 +1244,13 @@ int mana_gd_verify_vf_version(struct pci_dev *pdev)
+ 		return err ? err : -EPROTO;
+ 	}
+ 	gc->pf_cap_flags1 = resp.pf_cap_flags1;
++	gc->gdma_protocol_ver = resp.gdma_protocol_ver;
++
++	debugfs_create_x64("gdma_protocol_ver", 0400, gc->mana_pci_debugfs,
++			   &gc->gdma_protocol_ver);
++	debugfs_create_x64("pf_cap_flags1", 0400, gc->mana_pci_debugfs,
++			   &gc->pf_cap_flags1);
++
+ 	if (resp.pf_cap_flags1 & GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG) {
+ 		err = mana_gd_query_hwc_timeout(pdev, &hwc->hwc_timeout);
+ 		if (err) {
+@@ -1918,15 +1930,23 @@ static int mana_gd_setup(struct pci_dev *pdev)
+ 	struct gdma_context *gc = pci_get_drvdata(pdev);
+ 	int err;
+ 
++	if (gc->is_pf)
++		gc->mana_pci_debugfs = debugfs_create_dir("0", mana_debugfs_root);
++	else
++		gc->mana_pci_debugfs = debugfs_create_dir(pci_slot_name(pdev->slot),
++							  mana_debugfs_root);
++
+ 	err = mana_gd_init_registers(pdev);
+ 	if (err)
+-		return err;
++		goto remove_debugfs;
+ 
+ 	mana_smc_init(&gc->shm_channel, gc->dev, gc->shm_base);
+ 
+ 	gc->service_wq = alloc_ordered_workqueue("gdma_service_wq", 0);
+-	if (!gc->service_wq)
+-		return -ENOMEM;
++	if (!gc->service_wq) {
++		err = -ENOMEM;
++		goto remove_debugfs;
++	}
+ 
+ 	err = mana_gd_setup_hwc_irqs(pdev);
+ 	if (err) {
+@@ -1966,11 +1986,14 @@ static int mana_gd_setup(struct pci_dev *pdev)
+ 	mana_gd_remove_irqs(pdev);
+ free_workqueue:
+ 	destroy_workqueue(gc->service_wq);
++remove_debugfs:
++	debugfs_remove_recursive(gc->mana_pci_debugfs);
++	gc->mana_pci_debugfs = NULL;
+ 	dev_err(&pdev->dev, "%s failed (error %d)\n", __func__, err);
+ 	return err;
+ }
+ 
+-static void mana_gd_cleanup(struct pci_dev *pdev)
++static void mana_gd_cleanup_device(struct pci_dev *pdev)
+ {
+ 	struct gdma_context *gc = pci_get_drvdata(pdev);
+ 
+@@ -1982,6 +2005,10 @@ static void mana_gd_cleanup(struct pci_dev *pdev)
+ 		destroy_workqueue(gc->service_wq);
+ 		gc->service_wq = NULL;
+ 	}
++
++	debugfs_remove_recursive(gc->mana_pci_debugfs);
++	gc->mana_pci_debugfs = NULL;
++
+ 	dev_dbg(&pdev->dev, "mana gdma cleanup successful\n");
+ }
+ 
+@@ -2039,12 +2066,6 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	gc->dev = &pdev->dev;
+ 	xa_init(&gc->irq_contexts);
+ 
+-	if (gc->is_pf)
+-		gc->mana_pci_debugfs = debugfs_create_dir("0", mana_debugfs_root);
+-	else
+-		gc->mana_pci_debugfs = debugfs_create_dir(pci_slot_name(pdev->slot),
+-							  mana_debugfs_root);
+-
+ 	err = mana_gd_setup(pdev);
+ 	if (err)
+ 		goto unmap_bar;
+@@ -2073,16 +2094,8 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ cleanup_mana:
+ 	mana_remove(&gc->mana, false);
+ cleanup_gd:
+-	mana_gd_cleanup(pdev);
++	mana_gd_cleanup_device(pdev);
+ unmap_bar:
+-	/*
+-	 * at this point we know that the other debugfs child dir/files
+-	 * are either not yet created or are already cleaned up.
+-	 * The pci debugfs folder clean-up now, will only be cleaning up
+-	 * adapter-MTU file and apc->mana_pci_debugfs folder.
+-	 */
+-	debugfs_remove_recursive(gc->mana_pci_debugfs);
+-	gc->mana_pci_debugfs = NULL;
+ 	xa_destroy(&gc->irq_contexts);
+ 	pci_iounmap(pdev, bar0_va);
+ free_gc:
+@@ -2132,11 +2145,7 @@ static void mana_gd_remove(struct pci_dev *pdev)
+ 	mana_rdma_remove(&gc->mana_ib);
+ 	mana_remove(&gc->mana, false);
+ 
+-	mana_gd_cleanup(pdev);
+-
+-	debugfs_remove_recursive(gc->mana_pci_debugfs);
+-
+-	gc->mana_pci_debugfs = NULL;
++	mana_gd_cleanup_device(pdev);
+ 
+ 	xa_destroy(&gc->irq_contexts);
+ 
+@@ -2158,7 +2167,7 @@ int mana_gd_suspend(struct pci_dev *pdev, pm_message_t state)
+ 	mana_rdma_remove(&gc->mana_ib);
+ 	mana_remove(&gc->mana, true);
+ 
+-	mana_gd_cleanup(pdev);
++	mana_gd_cleanup_device(pdev);
+ 
+ 	return 0;
+ }
+@@ -2197,11 +2206,7 @@ static void mana_gd_shutdown(struct pci_dev *pdev)
+ 	mana_rdma_remove(&gc->mana_ib);
+ 	mana_remove(&gc->mana, true);
+ 
+-	mana_gd_cleanup(pdev);
+-
+-	debugfs_remove_recursive(gc->mana_pci_debugfs);
+-
+-	gc->mana_pci_debugfs = NULL;
++	mana_gd_cleanup_device(pdev);
+ 
+ 	pci_disable_device(pdev);
+ }
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index ea71de39f996..3beaddb1d585 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -1263,6 +1263,9 @@ static int mana_query_vport_cfg(struct mana_port_context *apc, u32 vport_index,
+ 	apc->port_handle = resp.vport;
+ 	ether_addr_copy(apc->mac_addr, resp.mac_addr);
+ 
++	apc->vport_max_sq = *max_sq;
++	apc->vport_max_rq = *max_rq;
++
+ 	return 0;
+ }
+ 
+@@ -1405,10 +1408,16 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+ 		netdev_err(ndev, "vPort RX configuration failed: 0x%x\n",
+ 			   resp.hdr.status);
+ 		err = -EPROTO;
++		goto out;
+ 	}
+ 
+ 	netdev_info(ndev, "Configured steering vPort %llu entries %u\n",
+ 		    apc->port_handle, apc->indir_table_sz);
++
++	apc->steer_rx = rx;
++	apc->steer_rss = apc->rss_state;
++	apc->steer_update_tab = update_tab;
++	apc->steer_cqe_coalescing = req->cqe_coalescing_enable;
+ out:
+ 	kfree(req);
+ 	return err;
+@@ -3110,6 +3119,24 @@ static int mana_init_port(struct net_device *ndev)
+ 	eth_hw_addr_set(ndev, apc->mac_addr);
+ 	sprintf(vport, "vport%d", port_idx);
+ 	apc->mana_port_debugfs = debugfs_create_dir(vport, gc->mana_pci_debugfs);
++
++	debugfs_create_u64("port_handle", 0400, apc->mana_port_debugfs,
++			   &apc->port_handle);
++	debugfs_create_u32("max_sq", 0400, apc->mana_port_debugfs,
++			   &apc->vport_max_sq);
++	debugfs_create_u32("max_rq", 0400, apc->mana_port_debugfs,
++			   &apc->vport_max_rq);
++	debugfs_create_u32("indir_table_sz", 0400, apc->mana_port_debugfs,
++			   &apc->indir_table_sz);
++	debugfs_create_u32("steer_rx", 0400, apc->mana_port_debugfs,
++			   &apc->steer_rx);
++	debugfs_create_u32("steer_rss", 0400, apc->mana_port_debugfs,
++			   &apc->steer_rss);
++	debugfs_create_u32("steer_update_tab", 0400, apc->mana_port_debugfs,
++			   &apc->steer_update_tab);
++	debugfs_create_u32("steer_cqe_coalescing", 0400, apc->mana_port_debugfs,
++			   &apc->steer_cqe_coalescing);
++
+ 	return 0;
+ 
+ reset_apc:
+@@ -3598,6 +3625,11 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
+ 
+ 	ac->bm_hostmode = bm_hostmode;
+ 
++	debugfs_create_u16("num_vports", 0400, gc->mana_pci_debugfs,
++			   &ac->num_ports);
++	debugfs_create_u8("bm_hostmode", 0400, gc->mana_pci_debugfs,
++			  &ac->bm_hostmode);
++
+ 	if (!resuming) {
+ 		ac->num_ports = num_ports;
+ 
+@@ -3738,6 +3770,9 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+ 
+ 	mana_gd_deregister_device(gd);
+ 
++	debugfs_lookup_and_remove("num_vports", gc->mana_pci_debugfs);
++	debugfs_lookup_and_remove("bm_hostmode", gc->mana_pci_debugfs);
++
+ 	if (suspending)
+ 		return;
+ 
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index 7fe3a1b61b2d..c4e3ce5147f7 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -442,6 +442,7 @@ struct gdma_context {
+ 	struct gdma_dev		mana_ib;
+ 
+ 	u64 pf_cap_flags1;
++	u64 gdma_protocol_ver;
+ 
+ 	struct workqueue_struct *service_wq;
+ 
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index a078af283bdd..83f6de67c0cc 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -563,6 +563,14 @@ struct mana_port_context {
+ 
+ 	/* Debugfs */
+ 	struct dentry *mana_port_debugfs;
++
++	/* Cached vport/steering config for debugfs */
++	u32 vport_max_sq;
++	u32 vport_max_rq;
++	u32 steer_rx;
++	u32 steer_rss;
++	u32 steer_update_tab;
++	u32 steer_cqe_coalescing;
+ };
+ 
+ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev);
+-- 
+2.43.0
+
 
