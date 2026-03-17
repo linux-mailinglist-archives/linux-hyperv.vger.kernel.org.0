@@ -1,82 +1,75 @@
-Return-Path: <linux-hyperv+bounces-9487-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9488-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EGLNM6AcuWm8rAEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9487-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 10:19:28 +0100
+	id qMMZB0EkuWm1sQEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9488-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 10:52:01 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7335E2A6798
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 10:19:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CD322A7445
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 10:52:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A7A6230D55E2
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 09:14:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0ECE8316894A
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 09:44:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4247D359A82;
-	Tue, 17 Mar 2026 09:14:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA9893793CE;
+	Tue, 17 Mar 2026 09:44:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D2rc01gu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jFsrrK46"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD5E35CB7C;
-	Tue, 17 Mar 2026 09:14:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7213377018;
+	Tue, 17 Mar 2026 09:44:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773738857; cv=none; b=TeXRv+etojWGSqkWM5J3Zi+KIihLsMDtF+aHSlIeb3WNcY17xe2Ew97b/fVOleaqO1+4e6q5qYwGuDf0aq/V71LCRb22dSt+6Icr9eU348UlociuXgFZVv0jEh3ujTPpmI5HZVdnThQZlfeaOyUIH0k9wYyzC9gkXG3ZsS0hop4=
+	t=1773740654; cv=none; b=DgY1EByxt35aBfKpqM4526bSSeC9gk9T5GjBnnEcB5kF6MaizvmeLabpTDvjxuhlphPzIg1FSvjfhhFF05i6QsdIjKT/iHXVU/rkezf5j2xmQSMs1Z9Ng3NGWK20+JS70MEXnauYv+A/rjuypwYeavQd1y+9I18Rw0z/jnjjQ2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773738857; c=relaxed/simple;
-	bh=VqaxHKKej1VPNV8dxEaXOdj9pYOUPcwOgCKCVcNAmMk=;
+	s=arc-20240116; t=1773740654; c=relaxed/simple;
+	bh=DoUrnSKK60JGnRQpOdFQ2pdKSwEqK9naRaMWFQdjX9U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o+w9ywUJYisoJ+bQZEOhuvinjKlipVFntneZ8+CU+pfkXNMlpzRjn+ojEFMUT/3hbYyhoaAJwXAfVqs6/sSLVOfGKduiIrxZZ7rkzGbzb+mwkR0PLfVmdKoi4Vy1B8gu+4BfZZRUNyN7or2sMIoQ9Wd5+VeZMKZrYkc0PFrcj+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D2rc01gu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C69EEC4CEF7;
-	Tue, 17 Mar 2026 09:14:15 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z6bJUmINy7oXfvHS9m9SWlYDu0nfdeTEu2hLvsVgbQ15tU+keyTrD7ay1bhUyjdJZeAF2IiJoiCDOuuBwJZU1gzFQkNoEUnKhnAF4GPVa8gInXAzDCeSB1O1Qh5tgWLVVrHGtpts2DGt3zuGLUwOmLBol15OZt99gVYLK5Zeaiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jFsrrK46; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA83FC4CEF7;
+	Tue, 17 Mar 2026 09:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773738856;
-	bh=VqaxHKKej1VPNV8dxEaXOdj9pYOUPcwOgCKCVcNAmMk=;
+	s=k20201202; t=1773740654;
+	bh=DoUrnSKK60JGnRQpOdFQ2pdKSwEqK9naRaMWFQdjX9U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D2rc01guiw9Cpys9eOyvTfYMYhUXyqWFR22DiHTmUiGXY0YS9Z2+lIoJQzFsPuGYc
-	 6ssP+5IMaxl0RfuzBfH4ByEZVINpBQ2amGQu+pv3jPhUOjGgEHA6t/PNDhRPBH+kYd
-	 QheyiFU22YkTa24E3P/SZVbV8+zz+KPyqDx4Od6WnTYDcA6ZsLU+wka2TEZqle54iG
-	 V2Oa43NXgpUNu6F8Fap2EQVbCm17uGiW5pPfHjn/SORnHV4mHj5DTyT5HjHWzqfCoR
-	 EXxotjwvhj9jPx1jdoKv3QF6pn/kHi1GDuRFwb9E793qc14KYZv8aTVX6KzBXDJOp8
-	 w0Dy0QKxcnasQ==
-Date: Tue, 17 Mar 2026 11:14:11 +0200
+	b=jFsrrK46N0yQMKmGzxgPqupwLUxwcwWupv7otLOP7weascwHMNRnf8livg85qC5De
+	 PvWJ88I3YqAEZynzxaPIspjdHCDgGidXy4nidWhwp8jJcWaR6vEYqifjG7KKkxQWrU
+	 Tam0EBtwrBqYTwgW7ZKpxbs7USjkaJtnKqbPakGhL70qfF5UnKydpUnyKdkvixnlds
+	 JlmfHslWAg7xOtB+A7I2VnxYAwyoyWf+PzW1hSaGOiybGGYPzsMEpnsE3rAamcEIvo
+	 UF3ppjkZ45cUABKEcPNwJYwZYfPNcoJsimAMiVU2EngevYgpeIBgBYPGNqzJOx+OL+
+	 RW8rOvXxAMAzg==
+Date: Tue, 17 Mar 2026 11:44:08 +0200
 From: Leon Romanovsky <leon@kernel.org>
-To: Yury Norov <ynorov@nvidia.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Yury Norov <yury.norov@gmail.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Eric Biggers <ebiggers@kernel.org>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, linux-cifs@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Mark Brown <broonie@kernel.org>, Steve French <sfrench@samba.org>,
-	Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>
-Subject: Re: [PATCH] lib: count_zeros: fix 32/64-bit inconsistency in
- count_trailing_zeros()
-Message-ID: <20260317091411.GQ61385@unreal>
-References: <20260312230817.372878-1-ynorov@nvidia.com>
- <20260313171855.GA1744604@nvidia.com>
- <abRUGVW6ZuGioa4Z@yury>
+To: Long Li <longli@microsoft.com>
+Cc: Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXTERNAL] Re: [PATCH rdma-next v2] RDMA/mana_ib: hardening:
+ Clamp adapter capability values from MANA_IB_GET_ADAPTER_CAP
+Message-ID: <20260317094408.GR61385@unreal>
+References: <20260312181642.989735-1-ernis@linux.microsoft.com>
+ <20260316194929.GI61385@unreal>
+ <SA1PR21MB66832D25A93394735624F454CE40A@SA1PR21MB6683.namprd21.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <abRUGVW6ZuGioa4Z@yury>
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <SA1PR21MB66832D25A93394735624F454CE40A@SA1PR21MB6683.namprd21.prod.outlook.com>
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
@@ -85,69 +78,57 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9487-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9488-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[20];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[nvidia.com,gmail.com,linux.intel.com,rasmusvillemoes.dk,kernel.org,zx2c4.com,vger.kernel.org,lists.infradead.org,microsoft.com,samba.org,amazon.com,soleen.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[leon@kernel.org,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 7335E2A6798
+X-Rspamd-Queue-Id: 8CD322A7445
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Mar 13, 2026 at 02:14:49PM -0400, Yury Norov wrote:
-> On Fri, Mar 13, 2026 at 02:18:55PM -0300, Jason Gunthorpe wrote:
-> > On Thu, Mar 12, 2026 at 07:08:16PM -0400, Yury Norov wrote:
-> > > Based on 'sizeof(x) == 4' condition, in 32-bit case the function is wired
-> > > to ffs(), while in 64-bit case to __ffs(). The difference is substantial:
-> > > ffs(x) == __ffs(x) + 1. Also, ffs(0) == 0, while __ffs(0) is undefined.
-> > > 
-> > > The 32-bit behaviour is inconsistent with the function description, so it
-> > > needs to get fixed.
-> > > 
-> > > There are 9 individual users for the function in 6 different subsystems.
-> > > Some arches and drivers are 64-bit only:
-> > >  - arch/loongarch/kvm/intc/eiointc.c;
-> > >  - drivers/hv/mshv_vtl_main.c;
-> > >  - kernel/liveupdate/kexec_handover.c;
-> > > 
-> > > The others are:
-> > >  - ib_umem_find_best_pgsz(): as per comment, __ffs() should be correct;
+On Mon, Mar 16, 2026 at 08:50:39PM +0000, Long Li wrote:
+> > On Thu, Mar 12, 2026 at 11:16:41AM -0700, Erni Sri Satya Vennela wrote:
+> > > As part of MANA hardening for CVM, clamp hardware-reported adapter
+> > > capability values from the MANA_IB_GET_ADAPTER_CAP response before
+> > > they are used by the IB subsystem.
+> > >
+> > > The response fields (max_qp_count, max_cq_count, max_mr_count,
+> > > max_pd_count, max_inbound_read_limit, max_outbound_read_limit,
+> > > max_qp_wr, max_send_sge_count, max_recv_sge_count) are u32 but are
+> > > assigned to signed int members in struct ib_device_attr. If hardware
+> > > returns a value exceeding INT_MAX, the implicit u32-to-int conversion
+> > > produces a negative value, which can cause incorrect behavior in the
+> > > IB core and userspace applications.
 > > 
-> > So long as 32 bit works the same as 64 bit it is correct for ib
+> > This sentence does not make sense in the context of the Linux kernel.
+> > The fundamental assumption is that the underlying hardware behaves correctly,
+> > and driver code should not attempt to guard against purely hypothetical
+> > failures. The kernel only implements such self‑protection when there is a
+> > documented hardware issue accompanied by official errata.
+> > 
+> > Thanks
 > 
-> This is what the patch does, except that it doesn't account for the
-> word length. In you case, 'mask' is dma_addr_t, which is u32 or u64
-> depending ARCH_DMA_ADDR_T_64BIT.
+> The idea is that a malicious hardware can't corrupt and steal other data from the kernel.
 > 
-> This config is:
-> 
->         config ARCH_DMA_ADDR_T_64BIT
->                 def_bool 64BIT || PHYS_ADDR_T_64BIT
-> 
-> And PHYS_ADDR_T_64BIT is simply def_bool 64BIT. So, at least now
-> dma_addr_t simply follows unsigned long, and thus, the patch is
-> correct. But IDK what's the history behind this configurations.
-> 
-> Anyways, the patch aligns 32-bit count_trailing_zeros() with the
-> 64-bit one. If you OK with that, as you said, can you please send
-> an explicit ack?
+> The assumption is that in a public cloud environment, you can't trust the hardware 100%.
 
-I can do that, 32 bits architectures are rarely used in the IB world.
+You cannot separate functionality and claim that one line of code is trusted
+while another is not.
 
-Thanks,
-Acked-by: Leon Romanovsky <leon@kernel.org>
+Thanks
 
