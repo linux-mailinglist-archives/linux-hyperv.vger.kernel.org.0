@@ -1,275 +1,273 @@
-Return-Path: <linux-hyperv+bounces-9508-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9509-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uOaRAZSquWkhLwIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9508-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 20:25:08 +0100
+	id qItuK+K9uWnJMQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9509-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 21:47:30 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 707B42B1852
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 20:25:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5753D2B263A
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 21:47:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AD3913174877
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 19:20:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EC78F30D3405
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 20:46:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E834331F9B8;
-	Tue, 17 Mar 2026 19:20:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1607538A72D;
+	Tue, 17 Mar 2026 20:46:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WmTLXZYZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R7wwizPP"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AABD621772A;
-	Tue, 17 Mar 2026 19:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773775200; cv=none; b=b3vS1c7p/CEo5fkSEENDHimeSzeJ3GoGr/WxAZMzcgMY2BRsavKlDnA+C1RE9morI8aedcJVzw89xzL0FmLOAXe6NLrk0iaWBIxzxQ+NFw4hHf4b3McGlBCKRbTs4kGEskQx8SaKZzU7edcSCq7egTO6neR8PgCuEbJwo+S1j40=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773775200; c=relaxed/simple;
-	bh=0+l9O99i0d3GRyCU8WTd4BdfEun3zXuGATcIxQ4nYTg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gh+gVe8jRMSgxqUgy+f1URxosAtfw2EthLZ+D6G/iBhIy7F/6o1lqK11ODCUlHbynJHHBFmMjTXr6MTWpIPy6XpU8bKVBQksUrUXIZQeaK31eB3qTddqDf1pRSkKy7mw4r0psNOtAXSn7AYmCJw2NZLmUPdcglPj0OoRh5MiwDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=WmTLXZYZ; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1006)
-	id 9E12620B7001; Tue, 17 Mar 2026 12:19:59 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9E12620B7001
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1773775199;
-	bh=2Cb9Dg0S1shGdYbGN4o0uYJzPDq4gEGvE8yUpEn8c8o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WmTLXZYZwzy1sTOYpLaKrptctktt1aj5ew4MW7EZYhaJBMqeN2xr4Quu29K7V96zl
-	 lzYi1hFig0hIu5uGuTBG9akx2J/bos/arqdPJ/Qghw4HYP7Gpx1EEzEtiuARQTJ4k3
-	 t8bE43U3fg7QtIjxLHo0v88Zetq1PCWAJLPbVxII=
-From: Haiyang Zhang <haiyangz@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Dipayaan Roy <dipayanroy@linux.microsoft.com>,
-	Aditya Garg <gargaditya@linux.microsoft.com>,
-	Shiraz Saleem <shirazsaleem@microsoft.com>,
-	Kees Cook <kees@kernel.org>,
-	Subbaraya Sundeep <sbhatta@marvell.com>,
-	Breno Leitao <leitao@debian.org>,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Cc: paulros@microsoft.com
-Subject: [PATCH net-next v6 3/3] net: mana: Add ethtool counters for RX CQEs in coalesced type
-Date: Tue, 17 Mar 2026 12:18:07 -0700
-Message-ID: <20260317191826.1346111-4-haiyangz@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <20260317191826.1346111-1-haiyangz@linux.microsoft.com>
-References: <20260317191826.1346111-1-haiyangz@linux.microsoft.com>
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6D63254A9
+	for <linux-hyperv@vger.kernel.org>; Tue, 17 Mar 2026 20:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.172
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773780411; cv=pass; b=B+wx2QISpIjG90Q280RoGgivkuRyD25T/WaJb91YA3NfHkjiLf9nkkT1sRXrfZwtKgjK3D29XA8rtaGLBM6XF86c6UQNFwJ2RAfNlg0lBIQXBOY5puRuE1RgYL3+hvOBH78GfSUSvTJMLkWuvM6YbOVmOgrZOxMUhXk54Qa9NIE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773780411; c=relaxed/simple;
+	bh=RK/TCms+LvhqFMYFVVVIbiPX2SpvDGczeYFrHJlFfsM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CHGMz630c/cZKU2g+gFoZAMxgVwswysMcDc2nxNVFk/ETsL9QXWV14FF495TRqRwRjdXNXea8IBmetUl9/JkNaZTBh+VSySz1/sirv9Shd2OUEOgI3BeE7qqYYEnyJYmDhQZaNZGpYGNbvOW7pM3dQVnteppfUHxxVzJ9hwrQnY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R7wwizPP; arc=pass smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-5091ed02c54so60311cf.1
+        for <linux-hyperv@vger.kernel.org>; Tue, 17 Mar 2026 13:46:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773780407; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ZLr47VWV253avCm4a4BjJB9adLAGcghqg/UBhlKB2WA+WXcibNNR+/tIJvgrKjnwWX
+         kAuCHmJ2PAa/xgKNkY1diCGwoDGLsS3w6sT2GSSdGG32Fd0FMCugkxeOBtxjsVTG1uW7
+         2P0D0M+QtoXjTWT6agcddPRLZVT6kp8clJrvYs5U019V9WQch/zMpkh33c38AzMGhsgv
+         vqyH7QV9gaUq4WBaGG9ZB9GGelN7gMSWo/DmWF0hu85BTDnlmwX0EENH2Jsdr6xTmBFw
+         ORFzX70dZmw5smJDxFaFLW0arzb5NPDekw3TtJXzuYeFhBJlX/FDMu4LCfVC7+84rnhN
+         tHgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=puh87Pmz2QIedt98QmYFqHshzK8OJIco1FTLmkjNO+s=;
+        fh=U+wF+Y9Huk+D9wyYgXu1h/iee50yqyChnLTx7eeEKPg=;
+        b=jbsL8FKZd9l7vNd+fgcj5178yFqf03sP8AZYvB7r6GMg0yZH4bUDVJNTi2fcfmqjMs
+         cQW2RPBmGSndumvZYHCcxD4HwZjMEf3feyhcLIWgcHhb7U+ry0Ms0jFniV9z20AhYdft
+         ArXuVsmZggI5dy5YEtqvbn7AtytLIVVKVGPBKJHBoomVsk9EHKa54IAGWuDaSysE62Lr
+         NVCWZsA/jcm5YgtjwvrGFTAW+LK2VXC6wRtAhz1vJlG90j1r0OtPGg7AfsbFNUDN3ms8
+         SQ8a2vPjftyY1GNhsBlsxQ9znuUfX/6UBQ/YIGJ1t2FwCg55F5BUWRH3iqWh+W+2mrJC
+         AStw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1773780407; x=1774385207; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=puh87Pmz2QIedt98QmYFqHshzK8OJIco1FTLmkjNO+s=;
+        b=R7wwizPP7dIx2oPvncRf5HBKNPKyAaVPKVkYmDRMxz0B46r+fPFmPBqna9GPZ7ifl7
+         GOGmPQyLNsC2D+dHxvnj7L/nFYjMYOX/uN2un6bKHtLyQrbLVqro2DG8Ns+L/uuYldfE
+         gNofHLRtSGWY0uigMa2awoJOlXvX33szc5mINax+vPuq3Ur9RwutTYt236NNI2+CUi3X
+         E58UFuY+bM2rUL4cDdcWDsoQ0JMcMkNqMWLGvVCYMiyoT5pQQ8PhyXwZdT/Yu9SnPTWA
+         LWmqRfmCDhx+tlZKoAYQILEY1NepardJAzZxu3KxNP0moF+PWsxvbPQLNCg2f9UKMTCx
+         YrYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773780407; x=1774385207;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=puh87Pmz2QIedt98QmYFqHshzK8OJIco1FTLmkjNO+s=;
+        b=VZ/RsRAC58mu0go+uDIhlHHmpC4zjFtt4zx3rcl8FZ65wB010fl7tHSGv9QcuABAKh
+         iwX+I++fEH0Hu55iJd5YChl5tliiBuMKR+ZwtG5OTrOmmdM01RIU4LlA/kvNcvHZ3KxL
+         uW1DQmpT1MyuLqXRr2OnpR8UgLvUEmf0xq2u31nsom5gUH6zpZDW26oLHcl5AG1AJ2oH
+         ISTl+lGxpDC5m8mBNFac3RhqlBSGgrN/vFxrgSIv77mIKH/c7TTvJdhVxlzbHsdn2eOK
+         rbt4BZyw+swZZ025c6ndOBO3usowx53A1SIiWMFAiljPF8XB1RIHZEaJNgXIKasjiERi
+         EMpg==
+X-Forwarded-Encrypted: i=1; AJvYcCUfnbItSVg2okGRMUyVCZErt+w9ATp9Gpv+p/UrZ/OYg8ObgTvpCLJqmn7OrQOcQbqoQHz6TVdCYaf+NAM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0xH5ezTIyMDdFcGCRrFwLvrqxt7hIVXkGmkUAYekgwK7KRWQU
+	LinPH/fRb8+Z/8VUFL8I9KcxdryBtItNcPuQ423nw4/no1wcP/buXDJhqNQF+izr1cbEmoxbmwm
+	1Wp+yAJIdKY9cG+oq5HwXH8xphsp2rH4kKZlrBMnk
+X-Gm-Gg: ATEYQzzI55T6KVsudRp0xoVA4yptZH2dh9KbujiaHWqwFVOy7tiExU1c5t9VXKTvL7E
+	zlVAcuOlZ8SRcLk1mOIs+D0bSpJdR8kVQ9MXVDycbb3fGQgzBxCzXNsZR+P2i4Z9gqOAJipTdQ5
+	Wbz5sA7R4rqPQsSSk8J4mOxLlxQlHO5ZtAHKDkY8XT5GtwLLvKHhyQyM1y01M1ynCfcy3qE7L2z
+	hAmWTylmD17AMAcd1Hd6CQBHMnDSviuREtwniU/orfZnEGSF8kTgO7PzVzD/WAEwuuzRq4jd5E/
+	sAyQUZeVTEFwUeqfnYAOPW+512FO2c3BIuE/6A==
+X-Received: by 2002:a05:622a:130f:b0:509:371:f2ab with SMTP id
+ d75a77b69052e-50b14848d70mr3924821cf.16.1773780406374; Tue, 17 Mar 2026
+ 13:46:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [0.84 / 15.00];
+References: <cover.1773695307.git.ljs@kernel.org> <d34056a65bd387286f4e155d52449106ddc99f78.1773695307.git.ljs@kernel.org>
+In-Reply-To: <d34056a65bd387286f4e155d52449106ddc99f78.1773695307.git.ljs@kernel.org>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 17 Mar 2026 13:46:34 -0700
+X-Gm-Features: AaiRm50ZSv0JOBEsyaTpLpUZLAlSOUqng_UaLNmSO0lPuUbLHyEvRlv0uikpAUM
+Message-ID: <CAJuCfpH653zdE=mXArpx8BUszVVC1PoN+rvp+WxdM3aAUbpqRw@mail.gmail.com>
+Subject: Re: [PATCH v2 10/16] stm: replace deprecated mmap hook with mmap_prepare
+To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Clemens Ladisch <clemens@ladisch.de>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "K . Y . Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, Bodo Stroesser <bostroesser@gmail.com>, 
+	"Martin K . Petersen" <martin.petersen@oracle.com>, David Howells <dhowells@redhat.com>, 
+	Marc Dionne <marc.dionne@auristor.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, David Hildenbrand <david@kernel.org>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
+	Pedro Falcato <pfalcato@suse.de>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, 
+	linux-staging@lists.linux.dev, linux-scsi@vger.kernel.org, 
+	target-devel@vger.kernel.org, linux-afs@lists.infradead.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	Ryan Roberts <ryan.roberts@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	TAGGED_FROM(0.00)[bounces-9508-lists,linux-hyperv=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9509-lists,linux-hyperv=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[44];
+	FREEMAIL_CC(0.00)[linux-foundation.org,lwn.net,ladisch.de,arndb.de,linuxfoundation.org,microsoft.com,kernel.org,linux.intel.com,gmail.com,foss.st.com,bootlin.com,nod.at,ti.com,oracle.com,redhat.com,auristor.com,zeniv.linux.org.uk,suse.cz,suse.com,google.com,suse.de,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org,lists.linux.dev,kvack.org,arm.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[haiyangz@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	NEURAL_HAM(-0.00)[-0.999];
+	FROM_NEQ_ENVFROM(0.00)[surenb@google.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[google.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:dkim,linux.microsoft.com:mid]
-X-Rspamd-Queue-Id: 707B42B1852
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 5753D2B263A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+On Mon, Mar 16, 2026 at 2:14=E2=80=AFPM Lorenzo Stoakes (Oracle) <ljs@kerne=
+l.org> wrote:
+>
+> The f_op->mmap interface is deprecated, so update driver to use its
+> successor, mmap_prepare.
+>
+> The driver previously used vm_iomap_memory(), so this change replaces it
+> with its mmap_prepare equivalent, mmap_action_simple_ioremap().
+>
+> Also, in order to correctly maintain reference counting, add a
+> vm_ops->mapped callback to increment the reference count when successfull=
+y
+> mapped.
+>
+> Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
 
-For RX CQEs with type CQE_RX_COALESCED_4, to measure the coalescing
-efficiency, add counters to count how many contains 2, 3, 4 packets
-respectively.
-Also, add a counter for the error case of first packet with length == 0.
+Reviewed-by: Suren Baghdasaryan <surenb@google.com>
 
-Reviewed-by: Long Li <longli@microsoft.com>
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
----
-v5:
-  Combine the accounting logics as suggested by Simon Horman.
-
----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 24 +++++++++++++------
- .../ethernet/microsoft/mana/mana_ethtool.c    | 15 ++++++++++--
- include/net/mana/mana.h                       |  9 ++++---
- 3 files changed, 36 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index fa30046dcd3d..49c65cc1697c 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -2147,14 +2147,8 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
- 	for (i = 0; i < MANA_RXCOMP_OOB_NUM_PPI; i++) {
- 		old_buf = NULL;
- 		pktlen = oob->ppi[i].pkt_len;
--		if (pktlen == 0) {
--			if (i == 0)
--				netdev_err_once(
--					ndev,
--					"RX pkt len=0, rq=%u, cq=%u, rxobj=0x%llx\n",
--					rxq->gdma_id, cq->gdma_id, rxq->rxobj);
-+		if (pktlen == 0)
- 			break;
--		}
- 
- 		curr = rxq->buf_index;
- 		rxbuf_oob = &rxq->rx_oobs[curr];
-@@ -2175,6 +2169,22 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
- 		if (!coalesced)
- 			break;
- 	}
-+
-+	/* Collect coalesced CQE count based on packets processed.
-+	 * Coalesced CQEs have at least 2 packets, so index is i - 2.
-+	 */
-+	if (i > 1) {
-+		u64_stats_update_begin(&rxq->stats.syncp);
-+		rxq->stats.coalesced_cqe[i - 2]++;
-+		u64_stats_update_end(&rxq->stats.syncp);
-+	} else if (!i && !pktlen) {
-+		u64_stats_update_begin(&rxq->stats.syncp);
-+		rxq->stats.pkt_len0_err++;
-+		u64_stats_update_end(&rxq->stats.syncp);
-+		netdev_err_once(ndev,
-+				"RX pkt len=0, rq=%u, cq=%u, rxobj=0x%llx\n",
-+				rxq->gdma_id, cq->gdma_id, rxq->rxobj);
-+	}
- }
- 
- static void mana_poll_rx_cq(struct mana_cq *cq)
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-index 4b234b16e57a..6a4b42fe0944 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-@@ -149,7 +149,7 @@ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
- {
- 	struct mana_port_context *apc = netdev_priv(ndev);
- 	unsigned int num_queues = apc->num_queues;
--	int i;
-+	int i, j;
- 
- 	if (stringset != ETH_SS_STATS)
- 		return;
-@@ -168,6 +168,9 @@ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
- 		ethtool_sprintf(&data, "rx_%d_xdp_drop", i);
- 		ethtool_sprintf(&data, "rx_%d_xdp_tx", i);
- 		ethtool_sprintf(&data, "rx_%d_xdp_redirect", i);
-+		ethtool_sprintf(&data, "rx_%d_pkt_len0_err", i);
-+		for (j = 0; j < MANA_RXCOMP_OOB_NUM_PPI - 1; j++)
-+			ethtool_sprintf(&data, "rx_%d_coalesced_cqe_%d", i, j + 2);
- 	}
- 
- 	for (i = 0; i < num_queues; i++) {
-@@ -201,6 +204,8 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
- 	u64 xdp_xmit;
- 	u64 xdp_drop;
- 	u64 xdp_tx;
-+	u64 pkt_len0_err;
-+	u64 coalesced_cqe[MANA_RXCOMP_OOB_NUM_PPI - 1];
- 	u64 tso_packets;
- 	u64 tso_bytes;
- 	u64 tso_inner_packets;
-@@ -209,7 +214,7 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
- 	u64 short_pkt_fmt;
- 	u64 csum_partial;
- 	u64 mana_map_err;
--	int q, i = 0;
-+	int q, i = 0, j;
- 
- 	if (!apc->port_is_up)
- 		return;
-@@ -239,6 +244,9 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
- 			xdp_drop = rx_stats->xdp_drop;
- 			xdp_tx = rx_stats->xdp_tx;
- 			xdp_redirect = rx_stats->xdp_redirect;
-+			pkt_len0_err = rx_stats->pkt_len0_err;
-+			for (j = 0; j < MANA_RXCOMP_OOB_NUM_PPI - 1; j++)
-+				coalesced_cqe[j] = rx_stats->coalesced_cqe[j];
- 		} while (u64_stats_fetch_retry(&rx_stats->syncp, start));
- 
- 		data[i++] = packets;
-@@ -246,6 +254,9 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
- 		data[i++] = xdp_drop;
- 		data[i++] = xdp_tx;
- 		data[i++] = xdp_redirect;
-+		data[i++] = pkt_len0_err;
-+		for (j = 0; j < MANA_RXCOMP_OOB_NUM_PPI - 1; j++)
-+			data[i++] = coalesced_cqe[j];
- 	}
- 
- 	for (q = 0; q < num_queues; q++) {
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index a7f89e7ddc56..3336688fed5e 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -61,8 +61,11 @@ enum TRI_STATE {
- 
- #define MAX_PORTS_IN_MANA_DEV 256
- 
-+/* Maximum number of packets per coalesced CQE */
-+#define MANA_RXCOMP_OOB_NUM_PPI 4
-+
- /* Update this count whenever the respective structures are changed */
--#define MANA_STATS_RX_COUNT 5
-+#define MANA_STATS_RX_COUNT (6 + MANA_RXCOMP_OOB_NUM_PPI - 1)
- #define MANA_STATS_TX_COUNT 11
- 
- #define MANA_RX_FRAG_ALIGNMENT 64
-@@ -73,6 +76,8 @@ struct mana_stats_rx {
- 	u64 xdp_drop;
- 	u64 xdp_tx;
- 	u64 xdp_redirect;
-+	u64 pkt_len0_err;
-+	u64 coalesced_cqe[MANA_RXCOMP_OOB_NUM_PPI - 1];
- 	struct u64_stats_sync syncp;
- };
- 
-@@ -227,8 +232,6 @@ struct mana_rxcomp_perpkt_info {
- 	u32 pkt_hash;
- }; /* HW DATA */
- 
--#define MANA_RXCOMP_OOB_NUM_PPI 4
--
- /* Receive completion OOB */
- struct mana_rxcomp_oob {
- 	struct mana_cqe_header cqe_hdr;
--- 
-2.34.1
-
+> ---
+>  drivers/hwtracing/stm/core.c | 31 +++++++++++++++++++++----------
+>  1 file changed, 21 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
+> index 37584e786bb5..f48c6a8a0654 100644
+> --- a/drivers/hwtracing/stm/core.c
+> +++ b/drivers/hwtracing/stm/core.c
+> @@ -666,6 +666,16 @@ static ssize_t stm_char_write(struct file *file, con=
+st char __user *buf,
+>         return count;
+>  }
+>
+> +static int stm_mmap_mapped(unsigned long start, unsigned long end, pgoff=
+_t pgoff,
+> +                          const struct file *file, void **vm_private_dat=
+a)
+> +{
+> +       struct stm_file *stmf =3D file->private_data;
+> +       struct stm_device *stm =3D stmf->stm;
+> +
+> +       pm_runtime_get_sync(&stm->dev);
+> +       return 0;
+> +}
+> +
+>  static void stm_mmap_open(struct vm_area_struct *vma)
+>  {
+>         struct stm_file *stmf =3D vma->vm_file->private_data;
+> @@ -684,12 +694,14 @@ static void stm_mmap_close(struct vm_area_struct *v=
+ma)
+>  }
+>
+>  static const struct vm_operations_struct stm_mmap_vmops =3D {
+> +       .mapped =3D stm_mmap_mapped,
+>         .open   =3D stm_mmap_open,
+>         .close  =3D stm_mmap_close,
+>  };
+>
+> -static int stm_char_mmap(struct file *file, struct vm_area_struct *vma)
+> +static int stm_char_mmap_prepare(struct vm_area_desc *desc)
+>  {
+> +       struct file *file =3D desc->file;
+>         struct stm_file *stmf =3D file->private_data;
+>         struct stm_device *stm =3D stmf->stm;
+>         unsigned long size, phys;
+> @@ -697,10 +709,10 @@ static int stm_char_mmap(struct file *file, struct =
+vm_area_struct *vma)
+>         if (!stm->data->mmio_addr)
+>                 return -EOPNOTSUPP;
+>
+> -       if (vma->vm_pgoff)
+> +       if (desc->pgoff)
+>                 return -EINVAL;
+>
+> -       size =3D vma->vm_end - vma->vm_start;
+> +       size =3D vma_desc_size(desc);
+>
+>         if (stmf->output.nr_chans * stm->data->sw_mmiosz !=3D size)
+>                 return -EINVAL;
+> @@ -712,13 +724,12 @@ static int stm_char_mmap(struct file *file, struct =
+vm_area_struct *vma)
+>         if (!phys)
+>                 return -EINVAL;
+>
+> -       pm_runtime_get_sync(&stm->dev);
+> -
+> -       vma->vm_page_prot =3D pgprot_noncached(vma->vm_page_prot);
+> -       vm_flags_set(vma, VM_IO | VM_DONTEXPAND | VM_DONTDUMP);
+> -       vma->vm_ops =3D &stm_mmap_vmops;
+> -       vm_iomap_memory(vma, phys, size);
+> +       desc->page_prot =3D pgprot_noncached(desc->page_prot);
+> +       vma_desc_set_flags(desc, VMA_IO_BIT, VMA_DONTEXPAND_BIT,
+> +                          VMA_DONTDUMP_BIT);
+> +       desc->vm_ops =3D &stm_mmap_vmops;
+>
+> +       mmap_action_simple_ioremap(desc, phys, size);
+>         return 0;
+>  }
+>
+> @@ -836,7 +847,7 @@ static const struct file_operations stm_fops =3D {
+>         .open           =3D stm_char_open,
+>         .release        =3D stm_char_release,
+>         .write          =3D stm_char_write,
+> -       .mmap           =3D stm_char_mmap,
+> +       .mmap_prepare   =3D stm_char_mmap_prepare,
+>         .unlocked_ioctl =3D stm_char_ioctl,
+>         .compat_ioctl   =3D compat_ptr_ioctl,
+>  };
+> --
+> 2.53.0
+>
 
