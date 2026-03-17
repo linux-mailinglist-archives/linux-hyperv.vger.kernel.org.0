@@ -1,70 +1,76 @@
-Return-Path: <linux-hyperv+bounces-9506-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9507-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UOYfJ0ipuWkhLwIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9506-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 20:19:36 +0100
+	id oORyMJSpuWkhLwIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9507-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 20:20:52 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3664D2B1776
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 20:19:36 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAED42B17BA
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 20:20:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 939B0303C3B0
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 19:19:35 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 524833014F60
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 19:19:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64F1F2C11CF;
-	Tue, 17 Mar 2026 19:19:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48B0333688C;
+	Tue, 17 Mar 2026 19:19:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="l5vf9uNm"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="okViS1pG"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A8F42571DD;
-	Tue, 17 Mar 2026 19:19:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3CE6329E46;
+	Tue, 17 Mar 2026 19:19:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773775174; cv=none; b=Z18RQ/60WcZ+fpx0VAdV4BxvvEhZOis1GdRvEekHWjKvdSgC0EBtcwB4ZE9nAfuR9vn0o7BsydH9oyVoxO3DdQDd5UC1ExZCegrn4URbJXuG4S3yV/NJTc8LXrEPOTELWMLJsshk4RyQNRdeUYcz04vQdF4vKtbk/9T7r/v9Ovo=
+	t=1773775190; cv=none; b=laZu1HbfspLN3JzkjIGPHJ7M9BOeBOmBFCXB7w3YzlIEWivJnvSa8dFddjolYh8SpgtjPY8ZYWrtV1fptEeiapjtLm2tCDWjuaUpbR8hDrRbE/9/LVzAIFLTNg7UiDKBPBPaRAwGTdXiFIBAusGW4F6uuUazDsTAMthIG5FD+kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773775174; c=relaxed/simple;
-	bh=TFo22aGplbtR46QdaIyCtv2VtkFSJvTUahPpjHS2zZg=;
+	s=arc-20240116; t=1773775190; c=relaxed/simple;
+	bh=EvjWsgJvYJR4Yz3xG6ztAjH7/7pq5XcLqQvC6UFEoUM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iUHG3EfBdYLpxKvdGTMFXipws5sgs/TjQIXo0VZ6nJ5PW9L4s/B/gRajPjN1M6I3Z2TwsKc54IwJfx8tyokV4D9cDzDppMRPgR01zN8KSV1C7IxCMdx3fcm06yqeLE8DObZlPB33a2S1joACnQ9+4iUq4v/v3f5/lyijzwMYQto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=l5vf9uNm; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=kGv2rNwisGaSUWWyA3N21te2Qw/6UaT9wifuK321nSoV2rQ/PseIDZFRiaCrArlmMXFTvyoT4Wh8AB7sxbcGkTZH8hXJqkyqEXijIqePl/qd4IHiSTMiOtOCbmnTdup7h1VOMr5z7ED7FS7AgTg19Wh8d75P4vVP0+U+bNMhpx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=okViS1pG; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1006)
-	id 02F4E20B7001; Tue, 17 Mar 2026 12:19:33 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 02F4E20B7001
+	id DDAF420B700D; Tue, 17 Mar 2026 12:19:48 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DDAF420B700D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1773775173;
-	bh=zzzbwMAjnhHe/9YS1njvHlAblDYEX5wWnIcoYR8YKtU=;
+	s=default; t=1773775188;
+	bh=PTdeUu95rwEL0GS6KYC2FbLnowAy6Z+wQ0DQDk3NdmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=l5vf9uNmFobldfunvByt6dVZtpV2HP0jEElT7VkS2wl/mYqxg+ap6znSd3Cl8vtIf
-	 0G4b1TaoTycWxXrYKHl7DnkD2strdIhat6YYQPm/Cp+M+8BbEWkzWggA32Z4OGuBJn
-	 EPEA+KKZRQJ6fFoJY5SnzUpOa85FqW8V0i7aGTXs=
+	b=okViS1pGZIJ9RcQZJXtZWa700O/c7Azgipmu8/ZB7etLL8ePcDD8gK3HqI/iHfB27
+	 tSXPb+7saA44ONgewTT4Gsy2MXUkOR1Nf6MKbxVsjd9it4uUp/Y+EEPEFU7Z4pM3+q
+	 SiGP9s2OQZRqEUm/WrAOTCwuWk2BPOB1KKGcP7pM=
 From: Haiyang Zhang <haiyangz@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org,
 	netdev@vger.kernel.org,
-	Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
 	Simon Horman <horms@kernel.org>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	"Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>,
-	Gal Pressman <gal@nvidia.com>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Dipayaan Roy <dipayanroy@linux.microsoft.com>,
+	Aditya Garg <gargaditya@linux.microsoft.com>,
+	Shiraz Saleem <shirazsaleem@microsoft.com>,
+	Kees Cook <kees@kernel.org>,
+	Subbaraya Sundeep <sbhatta@marvell.com>,
+	Breno Leitao <leitao@debian.org>,
 	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Cc: haiyangz@microsoft.com,
-	paulros@microsoft.com
-Subject: [PATCH net-next v6 1/3] net: ethtool: add ethtool COALESCE_RX_CQE_FRAMES/NSECS
-Date: Tue, 17 Mar 2026 12:18:05 -0700
-Message-ID: <20260317191826.1346111-2-haiyangz@linux.microsoft.com>
+	linux-rdma@vger.kernel.org
+Cc: paulros@microsoft.com
+Subject: [PATCH net-next v6 2/3] net: mana: Add support for RX CQE Coalescing
+Date: Tue, 17 Mar 2026 12:18:06 -0700
+Message-ID: <20260317191826.1346111-3-haiyangz@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260317191826.1346111-1-haiyangz@linux.microsoft.com>
 References: <20260317191826.1346111-1-haiyangz@linux.microsoft.com>
@@ -81,204 +87,341 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9506-lists,linux-hyperv=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	TAGGED_FROM(0.00)[bounces-9507-lists,linux-hyperv=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[vger.kernel.org,lunn.ch,kernel.org,davemloft.net,google.com,redhat.com,gmail.com,lwn.net,linuxfoundation.org,bootlin.com,nvidia.com,pengutronix.de,linux.dev];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[haiyangz@linux.microsoft.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.microsoft.com:dkim,linux.microsoft.com:mid]
-X-Rspamd-Queue-Id: 3664D2B1776
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	NEURAL_HAM(-0.00)[-0.999];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,linux.microsoft.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: CAED42B17BA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Haiyang Zhang <haiyangz@microsoft.com>
 
-Add two parameters for drivers supporting Rx CQE coalescing /
-descriptor writeback.
+Our NIC can have up to 4 RX packets on 1 CQE. To support this feature,
+check and process the type CQE_RX_COALESCED_4. The default setting is
+disabled, to avoid possible regression on latency.
 
-ETHTOOL_A_COALESCE_RX_CQE_FRAMES:
-Maximum number of frames that can be coalesced into a CQE or
-writeback.
+And, add ethtool handler to switch this feature. To turn it on, run:
+  ethtool -C <nic> rx-cqe-frames 4
+To turn it off:
+  ethtool -C <nic> rx-cqe-frames 1
 
-ETHTOOL_A_COALESCE_RX_CQE_NSECS:
-Max time in nanoseconds after the first packet arrival in a
-coalesced CQE or writeback to be sent.
+The rx-cqe-nsec is the time out value in nanoseconds after the first
+packet arrival in a coalesced CQE to be sent. It's read-only for this
+NIC.
 
+Reviewed-by: Long Li <longli@microsoft.com>
 Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 ---
-v6:
-  Updated comment to include "descriptor writeback", as suggested by
-  Jakub Kicinski
+v4:
+  Fixed the old_buf issue found by AI.
 
 ---
- Documentation/netlink/specs/ethtool.yaml       |  8 ++++++++
- Documentation/networking/ethtool-netlink.rst   | 11 +++++++++++
- include/linux/ethtool.h                        |  6 +++++-
- include/uapi/linux/ethtool_netlink_generated.h |  2 ++
- net/ethtool/coalesce.c                         | 14 +++++++++++++-
- 5 files changed, 39 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 74 ++++++++++++-------
+ .../ethernet/microsoft/mana/mana_ethtool.c    | 60 ++++++++++++++-
+ include/net/mana/mana.h                       |  8 +-
+ 3 files changed, 113 insertions(+), 29 deletions(-)
 
-diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
-index 4707063af3b4..d254e26c014c 100644
---- a/Documentation/netlink/specs/ethtool.yaml
-+++ b/Documentation/netlink/specs/ethtool.yaml
-@@ -861,6 +861,12 @@ attribute-sets:
-         name: tx-profile
-         type: nest
-         nested-attributes: profile
-+      -
-+        name: rx-cqe-frames
-+        type: u32
-+      -
-+        name: rx-cqe-nsecs
-+        type: u32
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index ea71de39f996..fa30046dcd3d 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -1365,6 +1365,7 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+ 			     sizeof(resp));
  
-   -
-     name: pause-stat
-@@ -2257,6 +2263,8 @@ operations:
-             - tx-aggr-time-usecs
-             - rx-profile
-             - tx-profile
-+            - rx-cqe-frames
-+            - rx-cqe-nsecs
-       dump: *coalesce-get-op
-     -
-       name: coalesce-set
-diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
-index 32179168eb73..e92abf45faf5 100644
---- a/Documentation/networking/ethtool-netlink.rst
-+++ b/Documentation/networking/ethtool-netlink.rst
-@@ -1076,6 +1076,8 @@ Kernel response contents:
-   ``ETHTOOL_A_COALESCE_TX_AGGR_TIME_USECS``    u32     time (us), aggr, Tx
-   ``ETHTOOL_A_COALESCE_RX_PROFILE``            nested  profile of DIM, Rx
-   ``ETHTOOL_A_COALESCE_TX_PROFILE``            nested  profile of DIM, Tx
-+  ``ETHTOOL_A_COALESCE_RX_CQE_FRAMES``         u32     max packets, Rx CQE
-+  ``ETHTOOL_A_COALESCE_RX_CQE_NSECS``          u32     delay (ns), Rx CQE
-   ===========================================  ======  =======================
+ 	req->hdr.req.msg_version = GDMA_MESSAGE_V2;
++	req->hdr.resp.msg_version = GDMA_MESSAGE_V2;
  
- Attributes are only included in reply if their value is not zero or the
-@@ -1109,6 +1111,13 @@ well with frequent small-sized URBs transmissions.
- to DIM parameters, see `Generic Network Dynamic Interrupt Moderation (Net DIM)
- <https://www.kernel.org/doc/Documentation/networking/net_dim.rst>`_.
- 
-+Rx CQE coalescing allows multiple received packets to be coalesced into a
-+single Completion Queue Entry (CQE) or descriptor writeback.
-+``ETHTOOL_A_COALESCE_RX_CQE_FRAMES`` describes the maximum number of
-+frames that can be coalesced into a CQE or writeback.
-+``ETHTOOL_A_COALESCE_RX_CQE_NSECS`` describes max time in nanoseconds after
-+the first packet arrival in a coalesced CQE or writeback to be sent.
+ 	req->vport = apc->port_handle;
+ 	req->num_indir_entries = apc->indir_table_sz;
+@@ -1376,7 +1377,9 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+ 	req->update_hashkey = update_key;
+ 	req->update_indir_tab = update_tab;
+ 	req->default_rxobj = apc->default_rxobj;
+-	req->cqe_coalescing_enable = 0;
 +
- COALESCE_SET
- ============
++	if (rx != TRI_STATE_FALSE)
++		req->cqe_coalescing_enable = apc->cqe_coalescing_enable;
  
-@@ -1147,6 +1156,8 @@ Request contents:
-   ``ETHTOOL_A_COALESCE_TX_AGGR_TIME_USECS``    u32     time (us), aggr, Tx
-   ``ETHTOOL_A_COALESCE_RX_PROFILE``            nested  profile of DIM, Rx
-   ``ETHTOOL_A_COALESCE_TX_PROFILE``            nested  profile of DIM, Tx
-+  ``ETHTOOL_A_COALESCE_RX_CQE_FRAMES``         u32     max packets, Rx CQE
-+  ``ETHTOOL_A_COALESCE_RX_CQE_NSECS``          u32     delay (ns), Rx CQE
-   ===========================================  ======  =======================
+ 	if (update_key)
+ 		memcpy(&req->hashkey, apc->hashkey, MANA_HASH_KEY_SIZE);
+@@ -1405,8 +1408,13 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+ 		netdev_err(ndev, "vPort RX configuration failed: 0x%x\n",
+ 			   resp.hdr.status);
+ 		err = -EPROTO;
++		goto out;
+ 	}
  
- Request is rejected if it attributes declared as unsupported by driver (i.e.
-diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
-index 83c375840835..656d465bcd06 100644
---- a/include/linux/ethtool.h
-+++ b/include/linux/ethtool.h
-@@ -332,6 +332,8 @@ struct kernel_ethtool_coalesce {
- 	u32 tx_aggr_max_bytes;
- 	u32 tx_aggr_max_frames;
- 	u32 tx_aggr_time_usecs;
-+	u32 rx_cqe_frames;
-+	u32 rx_cqe_nsecs;
- };
- 
- /**
-@@ -380,7 +382,9 @@ bool ethtool_convert_link_mode_to_legacy_u32(u32 *legacy_u32,
- #define ETHTOOL_COALESCE_TX_AGGR_TIME_USECS	BIT(26)
- #define ETHTOOL_COALESCE_RX_PROFILE		BIT(27)
- #define ETHTOOL_COALESCE_TX_PROFILE		BIT(28)
--#define ETHTOOL_COALESCE_ALL_PARAMS		GENMASK(28, 0)
-+#define ETHTOOL_COALESCE_RX_CQE_FRAMES		BIT(29)
-+#define ETHTOOL_COALESCE_RX_CQE_NSECS		BIT(30)
-+#define ETHTOOL_COALESCE_ALL_PARAMS		GENMASK(30, 0)
- 
- #define ETHTOOL_COALESCE_USECS						\
- 	(ETHTOOL_COALESCE_RX_USECS | ETHTOOL_COALESCE_TX_USECS)
-diff --git a/include/uapi/linux/ethtool_netlink_generated.h b/include/uapi/linux/ethtool_netlink_generated.h
-index 114b83017297..8134baf7860f 100644
---- a/include/uapi/linux/ethtool_netlink_generated.h
-+++ b/include/uapi/linux/ethtool_netlink_generated.h
-@@ -371,6 +371,8 @@ enum {
- 	ETHTOOL_A_COALESCE_TX_AGGR_TIME_USECS,
- 	ETHTOOL_A_COALESCE_RX_PROFILE,
- 	ETHTOOL_A_COALESCE_TX_PROFILE,
-+	ETHTOOL_A_COALESCE_RX_CQE_FRAMES,
-+	ETHTOOL_A_COALESCE_RX_CQE_NSECS,
- 
- 	__ETHTOOL_A_COALESCE_CNT,
- 	ETHTOOL_A_COALESCE_MAX = (__ETHTOOL_A_COALESCE_CNT - 1)
-diff --git a/net/ethtool/coalesce.c b/net/ethtool/coalesce.c
-index 3e18ca1ccc5e..349bb02c517a 100644
---- a/net/ethtool/coalesce.c
-+++ b/net/ethtool/coalesce.c
-@@ -118,6 +118,8 @@ static int coalesce_reply_size(const struct ethnl_req_info *req_base,
- 	       nla_total_size(sizeof(u32)) +	/* _TX_AGGR_MAX_BYTES */
- 	       nla_total_size(sizeof(u32)) +	/* _TX_AGGR_MAX_FRAMES */
- 	       nla_total_size(sizeof(u32)) +	/* _TX_AGGR_TIME_USECS */
-+	       nla_total_size(sizeof(u32)) +	/* _RX_CQE_FRAMES */
-+	       nla_total_size(sizeof(u32)) +	/* _RX_CQE_NSECS */
- 	       total_modersz * 2;		/* _{R,T}X_PROFILE */
++	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V2)
++		apc->cqe_coalescing_timeout_ns =
++			resp.cqe_coalescing_timeout_ns;
++
+ 	netdev_info(ndev, "Configured steering vPort %llu entries %u\n",
+ 		    apc->port_handle, apc->indir_table_sz);
+ out:
+@@ -1915,11 +1923,12 @@ static struct sk_buff *mana_build_skb(struct mana_rxq *rxq, void *buf_va,
  }
  
-@@ -269,7 +271,11 @@ static int coalesce_fill_reply(struct sk_buff *skb,
- 	    coalesce_put_u32(skb, ETHTOOL_A_COALESCE_TX_AGGR_MAX_FRAMES,
- 			     kcoal->tx_aggr_max_frames, supported) ||
- 	    coalesce_put_u32(skb, ETHTOOL_A_COALESCE_TX_AGGR_TIME_USECS,
--			     kcoal->tx_aggr_time_usecs, supported))
-+			     kcoal->tx_aggr_time_usecs, supported) ||
-+	    coalesce_put_u32(skb, ETHTOOL_A_COALESCE_RX_CQE_FRAMES,
-+			     kcoal->rx_cqe_frames, supported) ||
-+	    coalesce_put_u32(skb, ETHTOOL_A_COALESCE_RX_CQE_NSECS,
-+			     kcoal->rx_cqe_nsecs, supported))
- 		return -EMSGSIZE;
+ static void mana_rx_skb(void *buf_va, bool from_pool,
+-			struct mana_rxcomp_oob *cqe, struct mana_rxq *rxq)
++			struct mana_rxcomp_oob *cqe, struct mana_rxq *rxq,
++			int i)
+ {
+ 	struct mana_stats_rx *rx_stats = &rxq->stats;
+ 	struct net_device *ndev = rxq->ndev;
+-	uint pkt_len = cqe->ppi[0].pkt_len;
++	uint pkt_len = cqe->ppi[i].pkt_len;
+ 	u16 rxq_idx = rxq->rxq_idx;
+ 	struct napi_struct *napi;
+ 	struct xdp_buff xdp = {};
+@@ -1963,7 +1972,7 @@ static void mana_rx_skb(void *buf_va, bool from_pool,
+ 	}
  
- 	if (!req_base->dev || !req_base->dev->irq_moder)
-@@ -338,6 +344,8 @@ const struct nla_policy ethnl_coalesce_set_policy[] = {
- 	[ETHTOOL_A_COALESCE_TX_AGGR_MAX_BYTES] = { .type = NLA_U32 },
- 	[ETHTOOL_A_COALESCE_TX_AGGR_MAX_FRAMES] = { .type = NLA_U32 },
- 	[ETHTOOL_A_COALESCE_TX_AGGR_TIME_USECS] = { .type = NLA_U32 },
-+	[ETHTOOL_A_COALESCE_RX_CQE_FRAMES] = { .type = NLA_U32 },
-+	[ETHTOOL_A_COALESCE_RX_CQE_NSECS] = { .type = NLA_U32 },
- 	[ETHTOOL_A_COALESCE_RX_PROFILE] =
- 		NLA_POLICY_NESTED(coalesce_profile_policy),
- 	[ETHTOOL_A_COALESCE_TX_PROFILE] =
-@@ -570,6 +578,10 @@ __ethnl_set_coalesce(struct ethnl_req_info *req_info, struct genl_info *info,
- 			 tb[ETHTOOL_A_COALESCE_TX_AGGR_MAX_FRAMES], &mod);
- 	ethnl_update_u32(&kernel_coalesce.tx_aggr_time_usecs,
- 			 tb[ETHTOOL_A_COALESCE_TX_AGGR_TIME_USECS], &mod);
-+	ethnl_update_u32(&kernel_coalesce.rx_cqe_frames,
-+			 tb[ETHTOOL_A_COALESCE_RX_CQE_FRAMES], &mod);
-+	ethnl_update_u32(&kernel_coalesce.rx_cqe_nsecs,
-+			 tb[ETHTOOL_A_COALESCE_RX_CQE_NSECS], &mod);
+ 	if (cqe->rx_hashtype != 0 && (ndev->features & NETIF_F_RXHASH)) {
+-		hash_value = cqe->ppi[0].pkt_hash;
++		hash_value = cqe->ppi[i].pkt_hash;
  
- 	if (dev->irq_moder && dev->irq_moder->profile_flags & DIM_PROFILE_RX) {
- 		ret = ethnl_update_profile(dev, &dev->irq_moder->rx_profile,
+ 		if (cqe->rx_hashtype & MANA_HASH_L4)
+ 			skb_set_hash(skb, hash_value, PKT_HASH_TYPE_L4);
+@@ -2098,9 +2107,11 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+ 	struct mana_recv_buf_oob *rxbuf_oob;
+ 	struct mana_port_context *apc;
+ 	struct device *dev = gc->dev;
++	bool coalesced = false;
+ 	void *old_buf = NULL;
+ 	u32 curr, pktlen;
+ 	bool old_fp;
++	int i;
+ 
+ 	apc = netdev_priv(ndev);
+ 
+@@ -2112,13 +2123,16 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+ 		++ndev->stats.rx_dropped;
+ 		rxbuf_oob = &rxq->rx_oobs[rxq->buf_index];
+ 		netdev_warn_once(ndev, "Dropped a truncated packet\n");
+-		goto drop;
+ 
+-	case CQE_RX_COALESCED_4:
+-		netdev_err(ndev, "RX coalescing is unsupported\n");
+-		apc->eth_stats.rx_coalesced_err++;
++		mana_move_wq_tail(rxq->gdma_rq,
++				  rxbuf_oob->wqe_inf.wqe_size_in_bu);
++		mana_post_pkt_rxq(rxq);
+ 		return;
+ 
++	case CQE_RX_COALESCED_4:
++		coalesced = true;
++		break;
++
+ 	case CQE_RX_OBJECT_FENCE:
+ 		complete(&rxq->fence_event);
+ 		return;
+@@ -2130,30 +2144,37 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+ 		return;
+ 	}
+ 
+-	pktlen = oob->ppi[0].pkt_len;
++	for (i = 0; i < MANA_RXCOMP_OOB_NUM_PPI; i++) {
++		old_buf = NULL;
++		pktlen = oob->ppi[i].pkt_len;
++		if (pktlen == 0) {
++			if (i == 0)
++				netdev_err_once(
++					ndev,
++					"RX pkt len=0, rq=%u, cq=%u, rxobj=0x%llx\n",
++					rxq->gdma_id, cq->gdma_id, rxq->rxobj);
++			break;
++		}
+ 
+-	if (pktlen == 0) {
+-		/* data packets should never have packetlength of zero */
+-		netdev_err(ndev, "RX pkt len=0, rq=%u, cq=%u, rxobj=0x%llx\n",
+-			   rxq->gdma_id, cq->gdma_id, rxq->rxobj);
+-		return;
+-	}
++		curr = rxq->buf_index;
++		rxbuf_oob = &rxq->rx_oobs[curr];
++		WARN_ON_ONCE(rxbuf_oob->wqe_inf.wqe_size_in_bu != 1);
+ 
+-	curr = rxq->buf_index;
+-	rxbuf_oob = &rxq->rx_oobs[curr];
+-	WARN_ON_ONCE(rxbuf_oob->wqe_inf.wqe_size_in_bu != 1);
++		mana_refill_rx_oob(dev, rxq, rxbuf_oob, &old_buf, &old_fp);
+ 
+-	mana_refill_rx_oob(dev, rxq, rxbuf_oob, &old_buf, &old_fp);
++		/* Unsuccessful refill will have old_buf == NULL.
++		 * In this case, mana_rx_skb() will drop the packet.
++		 */
++		mana_rx_skb(old_buf, old_fp, oob, rxq, i);
+ 
+-	/* Unsuccessful refill will have old_buf == NULL.
+-	 * In this case, mana_rx_skb() will drop the packet.
+-	 */
+-	mana_rx_skb(old_buf, old_fp, oob, rxq);
++		mana_move_wq_tail(rxq->gdma_rq,
++				  rxbuf_oob->wqe_inf.wqe_size_in_bu);
+ 
+-drop:
+-	mana_move_wq_tail(rxq->gdma_rq, rxbuf_oob->wqe_inf.wqe_size_in_bu);
++		mana_post_pkt_rxq(rxq);
+ 
+-	mana_post_pkt_rxq(rxq);
++		if (!coalesced)
++			break;
++	}
+ }
+ 
+ static void mana_poll_rx_cq(struct mana_cq *cq)
+@@ -3332,6 +3353,7 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
+ 	apc->port_handle = INVALID_MANA_HANDLE;
+ 	apc->pf_filter_handle = INVALID_MANA_HANDLE;
+ 	apc->port_idx = port_idx;
++	apc->cqe_coalescing_enable = 0;
+ 
+ 	mutex_init(&apc->vport_mutex);
+ 	apc->vport_use_count = 0;
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+index f2d220b371b5..4b234b16e57a 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+@@ -20,8 +20,6 @@ static const struct mana_stats_desc mana_eth_stats[] = {
+ 					tx_cqe_unknown_type)},
+ 	{"tx_linear_pkt_cnt", offsetof(struct mana_ethtool_stats,
+ 				       tx_linear_pkt_cnt)},
+-	{"rx_coalesced_err", offsetof(struct mana_ethtool_stats,
+-					rx_coalesced_err)},
+ 	{"rx_cqe_unknown_type", offsetof(struct mana_ethtool_stats,
+ 					rx_cqe_unknown_type)},
+ };
+@@ -390,6 +388,61 @@ static void mana_get_channels(struct net_device *ndev,
+ 	channel->combined_count = apc->num_queues;
+ }
+ 
++#define MANA_RX_CQE_NSEC_DEF 2048
++static int mana_get_coalesce(struct net_device *ndev,
++			     struct ethtool_coalesce *ec,
++			     struct kernel_ethtool_coalesce *kernel_coal,
++			     struct netlink_ext_ack *extack)
++{
++	struct mana_port_context *apc = netdev_priv(ndev);
++
++	kernel_coal->rx_cqe_frames =
++		apc->cqe_coalescing_enable ? MANA_RXCOMP_OOB_NUM_PPI : 1;
++
++	kernel_coal->rx_cqe_nsecs = apc->cqe_coalescing_timeout_ns;
++
++	/* Return the default timeout value for old FW not providing
++	 * this value.
++	 */
++	if (apc->port_is_up && apc->cqe_coalescing_enable &&
++	    !kernel_coal->rx_cqe_nsecs)
++		kernel_coal->rx_cqe_nsecs = MANA_RX_CQE_NSEC_DEF;
++
++	return 0;
++}
++
++static int mana_set_coalesce(struct net_device *ndev,
++			     struct ethtool_coalesce *ec,
++			     struct kernel_ethtool_coalesce *kernel_coal,
++			     struct netlink_ext_ack *extack)
++{
++	struct mana_port_context *apc = netdev_priv(ndev);
++	u8 saved_cqe_coalescing_enable;
++	int err;
++
++	if (kernel_coal->rx_cqe_frames != 1 &&
++	    kernel_coal->rx_cqe_frames != MANA_RXCOMP_OOB_NUM_PPI) {
++		NL_SET_ERR_MSG_FMT(extack,
++				   "rx-frames must be 1 or %u, got %u",
++				   MANA_RXCOMP_OOB_NUM_PPI,
++				   kernel_coal->rx_cqe_frames);
++		return -EINVAL;
++	}
++
++	saved_cqe_coalescing_enable = apc->cqe_coalescing_enable;
++	apc->cqe_coalescing_enable =
++		kernel_coal->rx_cqe_frames == MANA_RXCOMP_OOB_NUM_PPI;
++
++	if (!apc->port_is_up)
++		return 0;
++
++	err = mana_config_rss(apc, TRI_STATE_TRUE, false, false);
++	if (err)
++		apc->cqe_coalescing_enable = saved_cqe_coalescing_enable;
++
++	return err;
++}
++
+ static int mana_set_channels(struct net_device *ndev,
+ 			     struct ethtool_channels *channels)
+ {
+@@ -510,6 +563,7 @@ static int mana_get_link_ksettings(struct net_device *ndev,
+ }
+ 
+ const struct ethtool_ops mana_ethtool_ops = {
++	.supported_coalesce_params = ETHTOOL_COALESCE_RX_CQE_FRAMES,
+ 	.get_ethtool_stats	= mana_get_ethtool_stats,
+ 	.get_sset_count		= mana_get_sset_count,
+ 	.get_strings		= mana_get_strings,
+@@ -520,6 +574,8 @@ const struct ethtool_ops mana_ethtool_ops = {
+ 	.set_rxfh		= mana_set_rxfh,
+ 	.get_channels		= mana_get_channels,
+ 	.set_channels		= mana_set_channels,
++	.get_coalesce		= mana_get_coalesce,
++	.set_coalesce		= mana_set_coalesce,
+ 	.get_ringparam          = mana_get_ringparam,
+ 	.set_ringparam          = mana_set_ringparam,
+ 	.get_link_ksettings	= mana_get_link_ksettings,
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index a078af283bdd..a7f89e7ddc56 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -378,7 +378,6 @@ struct mana_ethtool_stats {
+ 	u64 tx_cqe_err;
+ 	u64 tx_cqe_unknown_type;
+ 	u64 tx_linear_pkt_cnt;
+-	u64 rx_coalesced_err;
+ 	u64 rx_cqe_unknown_type;
+ };
+ 
+@@ -557,6 +556,9 @@ struct mana_port_context {
+ 	bool port_is_up;
+ 	bool port_st_save; /* Saved port state */
+ 
++	u8 cqe_coalescing_enable;
++	u32 cqe_coalescing_timeout_ns;
++
+ 	struct mana_ethtool_stats eth_stats;
+ 
+ 	struct mana_ethtool_phy_stats phy_stats;
+@@ -902,6 +904,10 @@ struct mana_cfg_rx_steer_req_v2 {
+ 
+ struct mana_cfg_rx_steer_resp {
+ 	struct gdma_resp_hdr hdr;
++
++	/* V2 */
++	u32 cqe_coalescing_timeout_ns;
++	u32 reserved1;
+ }; /* HW DATA */
+ 
+ /* Register HW vPort */
 -- 
 2.34.1
 
