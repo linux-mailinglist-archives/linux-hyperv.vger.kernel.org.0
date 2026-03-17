@@ -1,134 +1,151 @@
-Return-Path: <linux-hyperv+bounces-9488-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9489-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qMMZB0EkuWm1sQEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9488-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 10:52:01 +0100
+	id iHJ2Ao0luWm1sQEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9489-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 10:57:33 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CD322A7445
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 10:52:00 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EDBE2A75E3
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 10:57:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0ECE8316894A
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 09:44:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CD39E31221F0
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2026 09:52:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA9893793CE;
-	Tue, 17 Mar 2026 09:44:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 283C13A0B2D;
+	Tue, 17 Mar 2026 09:51:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jFsrrK46"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TlHV8gse"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7213377018;
-	Tue, 17 Mar 2026 09:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64CC13A1A38;
+	Tue, 17 Mar 2026 09:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773740654; cv=none; b=DgY1EByxt35aBfKpqM4526bSSeC9gk9T5GjBnnEcB5kF6MaizvmeLabpTDvjxuhlphPzIg1FSvjfhhFF05i6QsdIjKT/iHXVU/rkezf5j2xmQSMs1Z9Ng3NGWK20+JS70MEXnauYv+A/rjuypwYeavQd1y+9I18Rw0z/jnjjQ2M=
+	t=1773741115; cv=none; b=iV9kY8mmo5CIycRmVQ/YouYEdRSTSxBB5d3E7z6NHRGB5AHu50lBHhTMgjtu7IAJ3PZzTxH1F5qxLw6qtfACVkxf8Uy2GTJhy/Z2yqhLteZF+hZpAC9aAh3aUNCFiuSUMOPdyqiOkTDXKPpPrp65Yw6gCnYi1FtXjShae8lOku8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773740654; c=relaxed/simple;
-	bh=DoUrnSKK60JGnRQpOdFQ2pdKSwEqK9naRaMWFQdjX9U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z6bJUmINy7oXfvHS9m9SWlYDu0nfdeTEu2hLvsVgbQ15tU+keyTrD7ay1bhUyjdJZeAF2IiJoiCDOuuBwJZU1gzFQkNoEUnKhnAF4GPVa8gInXAzDCeSB1O1Qh5tgWLVVrHGtpts2DGt3zuGLUwOmLBol15OZt99gVYLK5Zeaiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jFsrrK46; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA83FC4CEF7;
-	Tue, 17 Mar 2026 09:44:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773740654;
-	bh=DoUrnSKK60JGnRQpOdFQ2pdKSwEqK9naRaMWFQdjX9U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jFsrrK46N0yQMKmGzxgPqupwLUxwcwWupv7otLOP7weascwHMNRnf8livg85qC5De
-	 PvWJ88I3YqAEZynzxaPIspjdHCDgGidXy4nidWhwp8jJcWaR6vEYqifjG7KKkxQWrU
-	 Tam0EBtwrBqYTwgW7ZKpxbs7USjkaJtnKqbPakGhL70qfF5UnKydpUnyKdkvixnlds
-	 JlmfHslWAg7xOtB+A7I2VnxYAwyoyWf+PzW1hSaGOiybGGYPzsMEpnsE3rAamcEIvo
-	 UF3ppjkZ45cUABKEcPNwJYwZYfPNcoJsimAMiVU2EngevYgpeIBgBYPGNqzJOx+OL+
-	 RW8rOvXxAMAzg==
-Date: Tue, 17 Mar 2026 11:44:08 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Long Li <longli@microsoft.com>
-Cc: Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXTERNAL] Re: [PATCH rdma-next v2] RDMA/mana_ib: hardening:
- Clamp adapter capability values from MANA_IB_GET_ADAPTER_CAP
-Message-ID: <20260317094408.GR61385@unreal>
-References: <20260312181642.989735-1-ernis@linux.microsoft.com>
- <20260316194929.GI61385@unreal>
- <SA1PR21MB66832D25A93394735624F454CE40A@SA1PR21MB6683.namprd21.prod.outlook.com>
+	s=arc-20240116; t=1773741115; c=relaxed/simple;
+	bh=ZfbAAGzHolQDpcCwIaogk9iC5IdaRXUEYFw8UIUKTrU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b5shh+3AQ2UtvI9nYGkHCyvDnvTl3+MHisyxXQMA4sqcV2e9LqSe1iBHejve/jgL5uPAYaqy62tMnGBu7y67mrHw8LM4mUtcB0jRTFhOHktj2EPx1X7hV+GtU8GF0ezWIc8y2KQDBoHYlgqKodAwmmnWZ8nfRfhGdtVSU6bGuJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TlHV8gse; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.18.143.174] (unknown [167.220.238.206])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 189EA20B7128;
+	Tue, 17 Mar 2026 02:51:45 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 189EA20B7128
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1773741112;
+	bh=xbh6eljYGdIRxffTU4mBqSyhNeDzEqtJalkt9/WqCMY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TlHV8gseTBNNxGEDRkCzVMCSmd3juWFaVPdWxwkFVsF6tEp6RFYQ9PhNIvO8/4zhO
+	 CwxZjNSs888nrrnCbWD+v1KrGqmach6lg7YTIFingtscICit44Aty6Ge9XFBSArwze
+	 0OX07pJe6ypUTXqx3/qSvI1tzRxdT46HbinGl2G0=
+Message-ID: <2b1c444c-7545-4ce7-90b0-208aee31904a@linux.microsoft.com>
+Date: Tue, 17 Mar 2026 15:21:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <SA1PR21MB66832D25A93394735624F454CE40A@SA1PR21MB6683.namprd21.prod.outlook.com>
-X-Spamd-Result: default: False [-1.66 / 15.00];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/11] Drivers: hv: Add ARM64 support in mshv_vtl
+To: vdso@mailbox.org, ssengar@linux.microsoft.com
+Cc: Marc Zyngier <maz@kernel.org>, Timothy Hayes <timothy.hayes@arm.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ mrigendrachaubey <mrigendra.chaubey@gmail.com>,
+ Michael Kelley <mhklinux@outlook.com>, linux-hyperv@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-riscv@lists.infradead.org,
+ "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
+ Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>
+References: <20260316121241.910764-1-namjain@linux.microsoft.com>
+ <1755043210.33472.1773718457301@app.mailbox.org>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <1755043210.33472.1773718457301@app.mailbox.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9488-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9489-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
 	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,arm.com,gmail.com,outlook.com,vger.kernel.org,lists.infradead.org,microsoft.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,dabbelt.com,eecs.berkeley.edu,ghiti.fr];
+	RCPT_COUNT_TWELVE(0.00)[30];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[leon@kernel.org,linux-hyperv@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[namjain@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8CD322A7445
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,linux.microsoft.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mailbox.org:email]
+X-Rspamd-Queue-Id: 5EDBE2A75E3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Mar 16, 2026 at 08:50:39PM +0000, Long Li wrote:
-> > On Thu, Mar 12, 2026 at 11:16:41AM -0700, Erni Sri Satya Vennela wrote:
-> > > As part of MANA hardening for CVM, clamp hardware-reported adapter
-> > > capability values from the MANA_IB_GET_ADAPTER_CAP response before
-> > > they are used by the IB subsystem.
-> > >
-> > > The response fields (max_qp_count, max_cq_count, max_mr_count,
-> > > max_pd_count, max_inbound_read_limit, max_outbound_read_limit,
-> > > max_qp_wr, max_send_sge_count, max_recv_sge_count) are u32 but are
-> > > assigned to signed int members in struct ib_device_attr. If hardware
-> > > returns a value exceeding INT_MAX, the implicit u32-to-int conversion
-> > > produces a negative value, which can cause incorrect behavior in the
-> > > IB core and userspace applications.
-> > 
-> > This sentence does not make sense in the context of the Linux kernel.
-> > The fundamental assumption is that the underlying hardware behaves correctly,
-> > and driver code should not attempt to guard against purely hypothetical
-> > failures. The kernel only implements such self‑protection when there is a
-> > documented hardware issue accompanied by official errata.
-> > 
-> > Thanks
-> 
-> The idea is that a malicious hardware can't corrupt and steal other data from the kernel.
-> 
-> The assumption is that in a public cloud environment, you can't trust the hardware 100%.
 
-You cannot separate functionality and claim that one line of code is trusted
-while another is not.
 
-Thanks
+On 3/17/2026 9:04 AM, vdso@mailbox.org wrote:
+> 
+>> On 03/16/2026 5:12 AM  Naman Jain <namjain@linux.microsoft.com> wrote:
+>>
+>>   
+>> The series intends to add support for ARM64 to mshv_vtl driver.
+>> For this, common Hyper-V code is refactored, necessary support is added,
+>> mshv_vtl_main.c is refactored and then finally support is added in
+>> Kconfig.
+> 
+> Hi Naman, Saurabh,
+> 
+> So awesome to see the ARM64 support for the VSM being upstreamed!!
+> 
+> Few of the patches carry my old Microsoft "Signed-off-by" tag,
+> and I really appreciate you folks very much kindly adding it
+> although the code appears to be a far more evolved and crisper
+> version of what it was back then!
+> 
+> Do feel free to drop my SOB from these few patches so the below SRB
+> doesn't look weird or as a conflict of interest - that is if you see
+> adding my below SRB to these few patches as a good option. It's been
+> 2 years, and after 2 years who can really remember their code :D
+> 
+> For the series,
+> Reviewed-by: Roman Kisel <vdso@mailbox.org>
+
+
+
+Thank you so much Roman for reviewing the changes. I think we can retain 
+both the tags from you. I'll let the maintainers decide.
+
+Regards,
+Naman
+
+
 
