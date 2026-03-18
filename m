@@ -1,183 +1,169 @@
-Return-Path: <linux-hyperv+bounces-9517-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9518-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aNuyJxdEumlTTgIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9517-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Mar 2026 07:20:07 +0100
+	id 6I4xLwFsumnRWQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9518-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Mar 2026 10:10:25 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1238F2B648E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Mar 2026 07:20:07 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 232972B8B10
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Mar 2026 10:10:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D9B8A301413D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Mar 2026 06:20:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 96CC4301D69A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Mar 2026 09:08:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B341D1DDE5;
-	Wed, 18 Mar 2026 06:20:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C50139903B;
+	Wed, 18 Mar 2026 09:08:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NfcHNFjt"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LIdQQewl";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DzbzjRU1"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE5D8462;
-	Wed, 18 Mar 2026 06:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327EA24A07C;
+	Wed, 18 Mar 2026 09:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773814803; cv=none; b=rmrOM/4id6xOv9hSB4NghQ6wWAamUcG4WNpVnOo29fmqps50m6hpF6TEnxDezCuYrjrnJ4zAPck7ebUtFdSTadFVd7qx077BTVxJTwFRGD/1bXweMd8JnutzknQR4jbocP1l3bGH3yfJ7Zn2LDLvPzHxv3uQJX9xdt28/ZPjOto=
+	t=1773824902; cv=none; b=lsKc3p1wdFgHPqhIS47/qw09Aag3BGC83yk5gqYRLrfw0xKP0yyl0z019EK3uOT3QsnnlqVtZEDyPb4CVBgXFxiLuMarzY6tK365uHdHg1MjGd/mo0ZMAWxDAddSZwQ+PVxPAVcoENVD396oNcXai9yol47ghyGA8484pV7h3oA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773814803; c=relaxed/simple;
-	bh=Otg8U0t9Pg2RatZJTfnqggDC6QK4tWZyvisQ8K9CWQ8=;
+	s=arc-20240116; t=1773824902; c=relaxed/simple;
+	bh=TTM80qBZlbJsOX7dyYwA6eGP+26BFr/GJlY0kcXEKk0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oKIW65Wi0BULM5MdHGoHYlDgBzsMfgJ9/6ZtRRTQMyHD/vzJOTEMgMQHbIWvtk/eIPlPlM0JXa7pjtJf0kct/9WuPed4LM4HcgWHP2oIRsJpnzMlcFFurTJcPGcwdrL1Rebc+Qlvw4gaqu5Goo4eC6u5A+Lky914ajskjtMBKLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NfcHNFjt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4377C19421;
-	Wed, 18 Mar 2026 06:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773814803;
-	bh=Otg8U0t9Pg2RatZJTfnqggDC6QK4tWZyvisQ8K9CWQ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NfcHNFjt9fsFP2+TLR1r0SVMsEKOcVzNXp7i44nfbubkmcf92gFmCSur8Q0FY+K2p
-	 Kw54Do54niR706mJ62t95qSwRbRM9aPouLTwPlVpnRY0APHIL8xfq7eXG2cIOeFku/
-	 wBnxYLKPUgNefR4G+hmRWkJgnAeHkSakjvJ+pyLKv+6vn4/osRjCAKtPQUVbPVSKqK
-	 LB7IGj6lwPQ5Ghj+TZNXoSnBnf+CK2jU9aFl1sVx5H0r1Wh8CieP0ye6SBPj6wCNwa
-	 UpSOlHGmW+S3qOKvDcvIz8Qj/Vu0zqvY6ig2Rk8qVN+9dzka+KVWX0MgaNpKMQABxf
-	 +Nat0l/i7rzrw==
-Date: Wed, 18 Mar 2026 06:20:01 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	"kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"longli@microsoft.com" <longli@microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mshv: Fix error handling in mshv_region_populate_pages
-Message-ID: <20260318062001.GA262287@liuwe-devbox-debian-v2.local>
-References: <177375989324.25621.6532741522672582851.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <SN6PR02MB4157D2316EC9E5B0BAE656C0D441A@SN6PR02MB4157.namprd02.prod.outlook.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=cAyxQWKPmU8Pfx1VVaotF7LAuBlhkRa/B7QMH4UkdGjsn+6bxsjvfd3rpqzakxiSUgHraLqk8FLHpljMfLD7S3c44wAgeo/tRvif7LBh/nkdweIF7lDxOstN5VUScdEvmFVkfss9x0omMDsWNKqePolVtZmOZ26fdK0HnpJcbYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LIdQQewl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DzbzjRU1; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Date: Wed, 18 Mar 2026 10:08:17 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1773824899;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5NKnrM9bEizZzuiKKQeMVZLwhn/sPHNezLV+bgsaZ6U=;
+	b=LIdQQewlHVmZriX+qKz7+nDCuo21a8knzcinPgkb8vggwyZsYBq5Bvk+uBgGG3T+1HOvlr
+	yaiO6wJvR6g864bV0e53uslgs8PnrCp/ZN2AernZesmlPGBs7n54/PEf80NfTyFZ/eYoek
+	o7/QcC1wQIcAm5vpe/bx4/6cT/JQ4wd3U9Qdr4V1+7AypgQdtBfGR9pcWqXVL8gQTOD4Ym
+	rkaWvafsnOpXlHQr+WsT4/0SQEBPyBRZmtAqiIkdHLsomt5gVnkqMyiNI8gw3C0y3f8ux3
+	87X9nFHUQ8+AdRdwXmp0oNzxdcDXAqVkBNzngNNQcDivOWn0xcSXEXdml6aZwQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1773824899;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5NKnrM9bEizZzuiKKQeMVZLwhn/sPHNezLV+bgsaZ6U=;
+	b=DzbzjRU1fvICnNk6kspYNzW4KyFfJBewiVkuhwqOp3uYotbrOEWytkE0Ol8ooh3n/PTwua
+	KxhNShO9w2WUo3Ag==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Florian Bezdeka <florian.bezdeka@siemens.com>,
+	RT <linux-rt-users@vger.kernel.org>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Saurabh Singh Sengar <ssengar@linux.microsoft.com>,
+	Naman Jain <namjain@linux.microsoft.com>
+Subject: Re: [PATCH v3] drivers: hv: vmbus: Use kthread for vmbus interrupts
+ on PREEMPT_RT
+Message-ID: <20260318090817.zuFUjrxd@linutronix.de>
+References: <289d8e52-40f8-4b22-8aa9-d0bd3bd15aae@siemens.com>
+ <20260312170715.HA08BHiO@linutronix.de>
+ <b0359046-3c58-47a6-b503-8a2b52cb1448@siemens.com>
+ <20260317110128.k59TflVp@linutronix.de>
+ <1e15ac0d-9835-487c-9a16-c55203f01a3d@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <SN6PR02MB4157D2316EC9E5B0BAE656C0D441A@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <1e15ac0d-9835-487c-9a16-c55203f01a3d@siemens.com>
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[linutronix.de,none];
+	R_DKIM_ALLOW(-0.20)[linutronix.de:s=2020,linutronix.de:s=2020e];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9517-lists,linux-hyperv=lfdr.de];
+	FREEMAIL_CC(0.00)[infradead.org,microsoft.com,kernel.org,redhat.com,alien8.de,linux.intel.com,vger.kernel.org,siemens.com,gmail.com,outlook.com,linux.microsoft.com];
+	TAGGED_FROM(0.00)[bounces-9518-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[outlook.com];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[linutronix.de:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wei.liu@kernel.org,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[bigeasy@linutronix.de,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,outlook.com:email,liuwe-devbox-debian-v2.local:mid]
-X-Rspamd-Queue-Id: 1238F2B648E
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 232972B8B10
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Mar 17, 2026 at 09:56:07PM +0000, Michael Kelley wrote:
-> From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Tuesday, March 17, 2026 8:05 AM
-> > 
-> > The current error handling has two issues:
-> > 
-> > First, pin_user_pages_fast() can return a short pin count (less than
-> > requested but greater than zero) when it cannot pin all requested pages.
-> > This is treated as success, leading to partially pinned regions being
-> > used, which causes memory corruption.
-> > 
-> > Second, when an error occurs mid-loop, already pinned pages from the
-> > current batch are not released before calling mshv_region_evict_pages(),
-> > causing a page reference leak.
-> 
-> There's now an online LLM-based tool that is automatically reviewing
-> kernel patches.  For this patch, the results are here:
-> 
-> https://sashiko.dev/#/patchset/177375989324.25621.6532741522672582851.stgit%40skinsburskii-cloud-desktop.internal.cloudapp.net
-> 
-> It has flagged the commit message as incorrectly referencing the
-> function mshv_region_evict_pages(), which doesn't exist.
-> 
-> FWIW, the announcement about sashiko.dev is here:
-> 
-> https://lore.kernel.org/lkml/7ia4o6kmpj5s.fsf@castle.c.googlers.com/
-> 
-> Other than the commit message reference, this looks good to me.
-> 
-> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+On 2026-03-17 12:55:15 [+0100], Jan Kiszka wrote:
+> Point is that a task that was interrupted by a potentially threaded
+> interrupt keeps this flag longer that it needs it. And that is
+> apparently harmless, but fairly confusing.
 
-The second point is written as if the code here should release the
-already pinned pages before calling mshv_region_invalidate_pages(), but
-the code actually relies on mshv_mem_region_invalidate_pages() to
-release the pages. The change here fixes the accounting.
+correct. My only concern would be a shared handler where the second is
+not threaded.
 
- Second, when an error occurs mid-loop, already pinned pages from the
- current batch are not accounted for before calling
- mshv_region_invalidate_pages(), causing a page reference leak.
-
-And queued up the patch to hyperv-fixes.
-
-Wei
-
+> >> With that in mind, the new logic here is no different from the one the
+> >> kernel used before. If both are not doing what they should, we likely
+> >> want to add a generic reset of hardirq_threaded to the IRQ exit path(s).
+> > 
+> > The difference is that you expect that _everyone_ calling this driver
+> > has everything else threaded. This might not be the case. That is why
+> > this should be in core knowing what is called if threaded, use in driver
+> > after explicit killing that flag afterwards since you don't know what
+> > can follow or add a generic threaded infrastructure here. 
 > 
+> This driver is different, unfortunately. I'm not sure if we can / want
+> to thread everything that the platform interrupt does on x86. So far,
+> only the last part of it - vmbus handling - is threaded. On arm64, the
+> irq is exclusive (see vmbus_percpu_isr), thus everything can be and is
+> threaded.
+
+No, it is a percpu interrupt which are not forced-threaded.
+
+> >>> Couldn't the whole logic be integrated into the IRQ code? Then we could
+> >>> have mask/ unmask if supported/ provided and threaded interrupts. Then
+> >>> sysvec_hyperv_reenlightenment() could use a proper threaded interrupt
+> >>> instead apic_eoi() + schedule_delayed_work(). 
+> >>>
+> >>
+> >> Again, you are thinking x86-only. We need a portable solution.
 > > 
-> > Fix by treating short pins as errors and explicitly unpinning the
-> > partial batch before cleanup.
-> > 
-> > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> > ---
-> >  drivers/hv/mshv_regions.c |    6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
-> > index c28aac0726de..fdffd4f002f6 100644
-> > --- a/drivers/hv/mshv_regions.c
-> > +++ b/drivers/hv/mshv_regions.c
-> > @@ -314,15 +314,17 @@ int mshv_region_pin(struct mshv_mem_region *region)
-> >  		ret = pin_user_pages_fast(userspace_addr, nr_pages,
-> >  					  FOLL_WRITE | FOLL_LONGTERM,
-> >  					  pages);
-> > -		if (ret < 0)
-> > +		if (ret != nr_pages)
-> >  			goto release_pages;
-> >  	}
-> > 
-> >  	return 0;
-> > 
-> >  release_pages:
-> > +	if (ret > 0)
-> > +		done_count += ret;
-> >  	mshv_region_invalidate_pages(region, 0, done_count);
-> > -	return ret;
-> > +	return ret < 0 ? ret : -ENOMEM;
-> >  }
-> > 
-> >  static int mshv_region_chunk_unmap(struct mshv_mem_region *region,
-> > 
-> > 
+> > well, ARM could use a threaded interrupt, too.
 > 
+> For a reason we didn't explore in details, per-CPU interrupts aren't
+> threaded. See older version of this patch
+> (https://lore.kernel.org/lkml/005a01dc9d30$a40515e0$ec0f41a0$@zohomail.com/)
+> where I thought I only had to fix x86, but arm64 was needing care as well.
+
+Per-CPU are usually timers or other things which are not threaded and
+have their own thing for the "second" port and I only remember MCE using
+a workqueue for notification.
+
+> Jan
+
+Sebastian
 
