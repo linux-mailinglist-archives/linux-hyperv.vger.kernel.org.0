@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-9557-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9558-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cPLQNVc/vGlzvwIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9557-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 19:24:23 +0100
+	id WE0yGYU/vGlzvwIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9558-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 19:25:09 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6C3B2D0CD6
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 19:24:23 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BFBB2D0D49
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 19:25:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4A8FD301A2D5
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 18:24:14 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id CC0EE3041D7C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 18:24:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A485D3F7E9F;
-	Thu, 19 Mar 2026 18:23:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A2883F8DF0;
+	Thu, 19 Mar 2026 18:23:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KTAHkHO2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MaZTObag"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B02A3F7E87;
-	Thu, 19 Mar 2026 18:23:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734B93F8DE6;
+	Thu, 19 Mar 2026 18:23:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773944631; cv=none; b=XL1ik6WM32QztziLN7w/M7BTbaY1IAOAXGKlkailhivElKnxMn4Oa7R//BXajbI3kBiYfaa72ArtZizfhU1eP6beFUsET63twviMY9gUYDckJ6iZavoPzt2DUOOYPJLmDmfjG/stBVwnpnUGoSjN2s5qRwuNUGc5VcOWl7TDGMk=
+	t=1773944634; cv=none; b=pcKdg+F4nbEm31D6jtrH3sTDjWL4M/TTx8ld/RhBrxyiIlNWGiSGUucexnxg+hZ9j81bnvgwZ03/3pS5cLEHyMtzuL+awL1dVVFugvsiPmyAe+5vqZL+y4DjDavllfMXwSKU9b6wEuWTFiMbdkRAbOAXG80393olXffbK/jHPKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773944631; c=relaxed/simple;
-	bh=c79hrhz049PrCZP30n1FB+VqjpxYYCRXbHq0tZQIBj0=;
+	s=arc-20240116; t=1773944634; c=relaxed/simple;
+	bh=5Tw+CvMJ/jv/meNwzLAY6fkMGHWjyuoE3XwxJ8B9LXw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Qu/NFt+e3ZTZwtamnO8ic3WFLPesnJj26n67ejjCO0N6c96FpukSGO81rhhsGZTVLvO00Pg/Ndra/Lg9E2nw5082IKaUX0YKs/CiQ6ol1H9kCs6bnNDx/vI7ai0iP8wBT29KGKZJwYFd+8DcSHvrU+SpfoA0SxOkdCcz1nZ47G8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KTAHkHO2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF8FCC2BCAF;
-	Thu, 19 Mar 2026 18:23:50 +0000 (UTC)
+	 MIME-Version; b=sW0C7o0JkwAfQeVz70OiVv//IqCz8RvJhP8v7FLgSxCl81VOQ9kYxvyrkwDtZ1LKvRvQmPZqIQQriZAIWMkLT/tdOZBdcK6S8BBjD3vO2e5tmY3afMZ3gykeXlm0AcvONDBM3ZFcVBpchLA2lp/qB412eil3GCExnQ91rwem94Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MaZTObag; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5BA5C19425;
+	Thu, 19 Mar 2026 18:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773944631;
-	bh=c79hrhz049PrCZP30n1FB+VqjpxYYCRXbHq0tZQIBj0=;
+	s=k20201202; t=1773944634;
+	bh=5Tw+CvMJ/jv/meNwzLAY6fkMGHWjyuoE3XwxJ8B9LXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KTAHkHO20jjzi2OQuuW19egzNH0jizGlK1Dc5LTVHZDVvNxkl6mXM0dgp6uLF2iuq
-	 m3VvfYIj4LoeZKCD+q7y1A8+hXs1UlKUGMsz3tRSC2MlyPFmzs/kHE2gC+071pEuIy
-	 kedaK6rDmGJjVNN+kuXbe7dIzP32bLhrTWp7wqVQnXLLE0i+tU/3rFCxJ9fN6UyZE0
-	 MQSAtc0RHgIIbPCDvUToxfgES0OhUezL7vDYfZ36jPiDZvIDRicT3FFwNOUPYSbBtf
-	 u0Dj1Nbzj9wt6ASZjk8ia+eQ6lRE1QhAvmBqDp7Z6LtPfZS36DSnpklDd3j4+9Xs6P
-	 813RLiiOkALwQ==
+	b=MaZTObagrzlF+hl3XbFw2JtTCmbKnqNi3t6CqzD4hNYU680kO24lq7WshtcPMpAP6
+	 cGDai0fDa2TxZ/S3NYHCSIDdRQgJwU764FLz2pC3hsYA6qrB4ZLj94bm20zPZB2UMW
+	 OIBte6f4yK3FFp1Pbn/yYxzVbJghQ4dKcWdYCmz4YqRPsUANonIGgeK5MlXjU+Qadw
+	 fUSTxxHimR5oBfPieF/xOzVBgFliUSyS4RXAmbLVPQcRhkUVpE81E03R7REeUr9uts
+	 QKBmKC/eHcHVm4TCrshN/g8dlToiHs5ShnSaxrLTtjTqCJ9MGOHHGL+NbcehLC0Ppn
+	 EmMKuze7Z5fCg==
 From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jonathan Corbet <corbet@lwn.net>,
@@ -89,9 +89,9 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org,
 	Ryan Roberts <ryan.roberts@arm.com>
-Subject: [PATCH v3 02/16] mm: add documentation for the mmap_prepare file operation callback
-Date: Thu, 19 Mar 2026 18:23:26 +0000
-Message-ID: <172ef809d9976b067bba4cd9d2b78410c6c6d03d.1773944114.git.ljs@kernel.org>
+Subject: [PATCH v3 03/16] mm: document vm_operations_struct->open the same as close()
+Date: Thu, 19 Mar 2026 18:23:27 +0000
+Message-ID: <808919eaae0b682ec631301b3c06d85c62ba428d.1773944114.git.ljs@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1773944114.git.ljs@kernel.org>
 References: <cover.1773944114.git.ljs@kernel.org>
@@ -109,14 +109,14 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_CC(0.00)[lwn.net,ladisch.de,arndb.de,linuxfoundation.org,microsoft.com,kernel.org,linux.intel.com,gmail.com,foss.st.com,bootlin.com,nod.at,ti.com,oracle.com,redhat.com,auristor.com,zeniv.linux.org.uk,suse.cz,google.com,suse.com,suse.de,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org,lists.linux.dev,kvack.org,arm.com];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWELVE(0.00)[44];
-	TAGGED_FROM(0.00)[bounces-9557-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9558-lists,linux-hyperv=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -126,192 +126,103 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[ljs@kernel.org,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-0.966];
+	NEURAL_HAM(-0.00)[-0.969];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B6C3B2D0CD6
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 1BFBB2D0D49
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-This documentation makes it easier for a driver/file system implementer to
-correctly use this callback.
+Describe when the operation is invoked and the context in which it is
+invoked, matching the description already added for vm_op->close().
 
-It covers the fundamentals, whilst intentionally leaving the less lovely
-possible actions one might take undocumented (for instance - the
-success_hook, error_hook fields in mmap_action).
-
-The document also covers the new VMA flags implementation which is the
-only one which will work correctly with mmap_prepare.
+While we're here, update all outdated references to an 'area' field for
+VMAs to the more consistent 'vma'.
 
 Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
 ---
- Documentation/filesystems/index.rst        |   1 +
- Documentation/filesystems/mmap_prepare.rst | 142 +++++++++++++++++++++
- 2 files changed, 143 insertions(+)
- create mode 100644 Documentation/filesystems/mmap_prepare.rst
+ include/linux/mm.h              | 15 ++++++++++-----
+ tools/testing/vma/include/dup.h | 15 ++++++++++-----
+ 2 files changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index f4873197587d..6cbc3e0292ae 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -29,6 +29,7 @@ algorithms work.
-    fiemap
-    files
-    locks
-+   mmap_prepare
-    multigrain-ts
-    mount_api
-    quota
-diff --git a/Documentation/filesystems/mmap_prepare.rst b/Documentation/filesystems/mmap_prepare.rst
-new file mode 100644
-index 000000000000..65a1f094e469
---- /dev/null
-+++ b/Documentation/filesystems/mmap_prepare.rst
-@@ -0,0 +1,142 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===========================
-+mmap_prepare callback HOWTO
-+===========================
-+
-+Introduction
-+============
-+
-+The ``struct file->f_op->mmap()`` callback has been deprecated as it is both a
-+stability and security risk, and doesn't always permit the merging of adjacent
-+mappings resulting in unnecessary memory fragmentation.
-+
-+It has been replaced with the ``file->f_op->mmap_prepare()`` callback which
-+solves these problems.
-+
-+This hook is called right at the beginning of setting up the mapping, and
-+importantly it is invoked *before* any merging of adjacent mappings has taken
-+place.
-+
-+If an error arises upon mapping, it might arise after this callback has been
-+invoked, therefore it should be treated as effectively stateless.
-+
-+That is - no resources should be allocated nor state updated to reflect that a
-+mapping has been established, as the mapping may either be merged, or fail to be
-+mapped after the callback is complete.
-+
-+How To Use
-+==========
-+
-+In your driver's struct file_operations struct, specify an ``mmap_prepare``
-+callback rather than an ``mmap`` one, e.g. for ext4:
-+
-+.. code-block:: C
-+
-+    const struct file_operations ext4_file_operations = {
-+        ...
-+        .mmap_prepare    = ext4_file_mmap_prepare,
-+    };
-+
-+This has a signature of ``int (*mmap_prepare)(struct vm_area_desc *)``.
-+
-+Examining the struct vm_area_desc type:
-+
-+.. code-block:: C
-+
-+    struct vm_area_desc {
-+        /* Immutable state. */
-+        const struct mm_struct *const mm;
-+        struct file *const file; /* May vary from vm_file in stacked callers. */
-+        unsigned long start;
-+        unsigned long end;
-+
-+        /* Mutable fields. Populated with initial state. */
-+        pgoff_t pgoff;
-+        struct file *vm_file;
-+        vma_flags_t vma_flags;
-+        pgprot_t page_prot;
-+
-+        /* Write-only fields. */
-+        const struct vm_operations_struct *vm_ops;
-+        void *private_data;
-+
-+        /* Take further action? */
-+        struct mmap_action action;
-+    };
-+
-+This is straightforward - you have all the fields you need to set up the
-+mapping, and you can update the mutable and writable fields, for instance:
-+
-+.. code-block:: C
-+
-+    static int ext4_file_mmap_prepare(struct vm_area_desc *desc)
-+    {
-+        int ret;
-+        struct file *file = desc->file;
-+        struct inode *inode = file->f_mapping->host;
-+
-+        ...
-+
-+        file_accessed(file);
-+        if (IS_DAX(file_inode(file))) {
-+            desc->vm_ops = &ext4_dax_vm_ops;
-+            vma_desc_set_flags(desc, VMA_HUGEPAGE_BIT);
-+        } else {
-+            desc->vm_ops = &ext4_file_vm_ops;
-+        }
-+        return 0;
-+    }
-+
-+Importantly, you no longer have to dance around with reference counts or locks
-+when updating these fields - **you can simply go ahead and change them**.
-+
-+Everything is taken care of by the mapping code.
-+
-+VMA Flags
-+---------
-+
-+Along with ``mmap_prepare``, VMA flags have undergone an overhaul. Where before
-+you would invoke one of vm_flags_init(), vm_flags_reset(), vm_flags_set(),
-+vm_flags_clear(), and vm_flags_mod() to modify flags (and to have the
-+locking done correctly for you, this is no longer necessary.
-+
-+Also, the legacy approach of specifying VMA flags via ``VM_READ``, ``VM_WRITE``,
-+etc. - i.e. using a ``-VM_xxx``- macro has changed too.
-+
-+When implementing mmap_prepare(), reference flags by their bit number, defined
-+as a ``VMA_xxx_BIT`` macro, e.g. ``VMA_READ_BIT``, ``VMA_WRITE_BIT`` etc.,
-+and use one of (where ``desc`` is a pointer to struct vm_area_desc):
-+
-+* ``vma_desc_test_flags(desc, ...)`` - Specify a comma-separated list of flags
-+  you wish to test for (whether _any_ are set), e.g. - ``vma_desc_test_flags(
-+  desc, VMA_WRITE_BIT, VMA_MAYWRITE_BIT)`` - returns ``true`` if either are set,
-+  otherwise ``false``.
-+* ``vma_desc_set_flags(desc, ...)`` - Update the VMA descriptor flags to set
-+  additional flags specified by a comma-separated list,
-+  e.g. - ``vma_desc_set_flags(desc, VMA_PFNMAP_BIT, VMA_IO_BIT)``.
-+* ``vma_desc_clear_flags(desc, ...)`` - Update the VMA descriptor flags to clear
-+  flags specified by a comma-separated list, e.g. - ``vma_desc_clear_flags(
-+  desc, VMA_WRITE_BIT, VMA_MAYWRITE_BIT)``.
-+
-+Actions
-+=======
-+
-+You can now very easily have actions be performed upon a mapping once set up by
-+utilising simple helper functions invoked upon the struct vm_area_desc
-+pointer. These are:
-+
-+* mmap_action_remap() - Remaps a range consisting only of PFNs for a specific
-+  range starting a virtual address and PFN number of a set size.
-+
-+* mmap_action_remap_full() - Same as mmap_action_remap(), only remaps the
-+  entire mapping from ``start_pfn`` onward.
-+
-+* mmap_action_ioremap() - Same as mmap_action_remap(), only performs an I/O
-+  remap.
-+
-+* mmap_action_ioremap_full() - Same as mmap_action_ioremap(), only remaps
-+  the entire mapping from ``start_pfn`` onward.
-+
-+**NOTE:** The ``action`` field should never normally be manipulated directly,
-+rather you ought to use one of these helpers.
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 1e63b3a44a47..da94edb287cd 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -766,15 +766,20 @@ struct vm_uffd_ops;
+  * to the functions called when a no-page or a wp-page exception occurs.
+  */
+ struct vm_operations_struct {
+-	void (*open)(struct vm_area_struct * area);
++	/**
++	 * @open: Called when a VMA is remapped, split or forked. Not called
++	 * upon first mapping a VMA.
++	 * Context: User context.  May sleep.  Caller holds mmap_lock.
++	 */
++	void (*open)(struct vm_area_struct *vma);
+ 	/**
+ 	 * @close: Called when the VMA is being removed from the MM.
+ 	 * Context: User context.  May sleep.  Caller holds mmap_lock.
+ 	 */
+-	void (*close)(struct vm_area_struct * area);
++	void (*close)(struct vm_area_struct *vma);
+ 	/* Called any time before splitting to check if it's allowed */
+-	int (*may_split)(struct vm_area_struct *area, unsigned long addr);
+-	int (*mremap)(struct vm_area_struct *area);
++	int (*may_split)(struct vm_area_struct *vma, unsigned long addr);
++	int (*mremap)(struct vm_area_struct *vma);
+ 	/*
+ 	 * Called by mprotect() to make driver-specific permission
+ 	 * checks before mprotect() is finalised.   The VMA must not
+@@ -786,7 +791,7 @@ struct vm_operations_struct {
+ 	vm_fault_t (*huge_fault)(struct vm_fault *vmf, unsigned int order);
+ 	vm_fault_t (*map_pages)(struct vm_fault *vmf,
+ 			pgoff_t start_pgoff, pgoff_t end_pgoff);
+-	unsigned long (*pagesize)(struct vm_area_struct * area);
++	unsigned long (*pagesize)(struct vm_area_struct *vma);
+ 
+ 	/* notification that a previously read-only page is about to become
+ 	 * writable, if an error is returned it will cause a SIGBUS */
+diff --git a/tools/testing/vma/include/dup.h b/tools/testing/vma/include/dup.h
+index 9eada1e0949c..8ae525ed1738 100644
+--- a/tools/testing/vma/include/dup.h
++++ b/tools/testing/vma/include/dup.h
+@@ -632,15 +632,20 @@ struct vm_area_struct {
+ } __randomize_layout;
+ 
+ struct vm_operations_struct {
+-	void (*open)(struct vm_area_struct * area);
++	/**
++	 * @open: Called when a VMA is remapped, split or forked. Not called
++	 * upon first mapping a VMA.
++	 * Context: User context.  May sleep.  Caller holds mmap_lock.
++	 */
++	void (*open)(struct vm_area_struct *vma);
+ 	/**
+ 	 * @close: Called when the VMA is being removed from the MM.
+ 	 * Context: User context.  May sleep.  Caller holds mmap_lock.
+ 	 */
+-	void (*close)(struct vm_area_struct * area);
++	void (*close)(struct vm_area_struct *vma);
+ 	/* Called any time before splitting to check if it's allowed */
+-	int (*may_split)(struct vm_area_struct *area, unsigned long addr);
+-	int (*mremap)(struct vm_area_struct *area);
++	int (*may_split)(struct vm_area_struct *vma, unsigned long addr);
++	int (*mremap)(struct vm_area_struct *vma);
+ 	/*
+ 	 * Called by mprotect() to make driver-specific permission
+ 	 * checks before mprotect() is finalised.   The VMA must not
+@@ -652,7 +657,7 @@ struct vm_operations_struct {
+ 	vm_fault_t (*huge_fault)(struct vm_fault *vmf, unsigned int order);
+ 	vm_fault_t (*map_pages)(struct vm_fault *vmf,
+ 			pgoff_t start_pgoff, pgoff_t end_pgoff);
+-	unsigned long (*pagesize)(struct vm_area_struct * area);
++	unsigned long (*pagesize)(struct vm_area_struct *vma);
+ 
+ 	/* notification that a previously read-only page is about to become
+ 	 * writable, if an error is returned it will cause a SIGBUS */
 -- 
 2.53.0
 
