@@ -1,80 +1,80 @@
-Return-Path: <linux-hyperv+bounces-9611-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9617-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cMUpHj1fvGlxxQIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9611-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:40:29 +0100
+	id YClGElpfvGlxxQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9617-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:40:58 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3EB62D24BD
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:40:28 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB6DB2D24EB
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:40:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4402B32B5927
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 20:28:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D0E3432CC938
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 20:28:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2CB03FFAD8;
-	Thu, 19 Mar 2026 20:26:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ABD43FFADE;
+	Thu, 19 Mar 2026 20:26:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H7ACAmSK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z1omyZ3+"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE5F3FEB34
-	for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 20:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBDA3FF897
+	for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 20:26:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773951965; cv=none; b=EB95F1LZVFUQ+foKLP9QxYWtj/PVFkAqO0hNR1NL/YwkfjGtPXj9FoiSrDq6xJsPltRQu+8uf7BI1iRRauUyX/Y1a2TEutqIIir6+cr7SCkA4YmOls2y8lOyIvFsxE/D2Hw99m7/kcI9mczWjSbxqP9GXAkFW1BRdwh5RZeu+4k=
+	t=1773951968; cv=none; b=TV568RTaXLzow9xOr8TS+Zleye/bKdt8Bx2MZBePvZPualx61zljBnY1s5HAcmQt1olpxlYJUdiyLAEcO/y6Z1NAJQpAo2DwPtjC0jMZyXZjh8n118QtDzWLw9MMNTgWPrR9P1mrmJ5WCZP/T794beFpxKb15lqrLlV9bSUhEjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773951965; c=relaxed/simple;
-	bh=nGQEUYXMbIpENLhAOSk8xQWfjI3kmrYM3QvmNVStmhg=;
+	s=arc-20240116; t=1773951968; c=relaxed/simple;
+	bh=5GYgyHAPPb/c4TuOt/FovFbs4KdkJcctdoNSZgSBCI0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iM0FSMkgbWy5/J/WZmgJb/phcyRSuPc2OSZdddGL524Kb5vO5eIfd1LV2oEZS1a94Oc5CyhRdMW6CWWsTcVieKXXmJS1aSyevalOZBCjRWf3UK8bRE3328AdEX/FXcxj/huRWQHNVoEkPsGKVJOBJhBQmHQnfZNFSYGB8J4Lauc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H7ACAmSK; arc=none smtp.client-ip=209.85.221.51
+	 MIME-Version; b=ZW0x5JezjA/X3MvHpwQ5QwCZW3i7T/t4lwJIMHG5dCbQ7KISsy8hg2GjBaXoVOlkLjEMqTibwOjOU5rCmFkQG5QforBpwfpNiErtnbNALFsBbiP4Msc98ry5l15YE0Y0fFiqpF1NL4TslVmDDNcuvkAVOK/lw6QV5XHDC2sEuX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z1omyZ3+; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-43b4d73463dso946468f8f.3
-        for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 13:26:00 -0700 (PDT)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-4327790c4e9so776664f8f.2
+        for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 13:26:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773951959; x=1774556759; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773951960; x=1774556760; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SjOW9NEQVjgaApfYoWy4DLUz7WyMSSyTvWEPSEVJm70=;
-        b=H7ACAmSKstFHJYV+ediGGpf6r7+EVQTrlLBnQOvNrSy5FJG8uFzrBoaxwocmg3mWq3
-         +fydPRz4GXaQXCnVZAyWKjHH93JC0TvKRBq5m75B1t6WjgcieNO/0aNBzbtbuycI2bnr
-         X3u85blQ7HbymCggcWGwxUD9kwuVNslcb5IYpoI7830wdQIcfKDpFXSCMPU4ZXhsryTM
-         3DbnovfyC8QkNqLutwRfykmJT23QXFxvRGEpuXGpkpxYix/VTxa5vehOus8S2Pu1Zaop
-         R6nybt3EFiMSjUom/zX2BfSCQy9NWmMVucr7ilU4OCXGCPFh5nqdds3HMAr7jNredX1i
-         dWRQ==
+        bh=GxByceTa1YltExdfah9Lq3qXbpogAji5TptAgxuELUc=;
+        b=Z1omyZ3+dWSDCnB+sTdM6BZTxwibX42H8JzDqMs7LXfbqsp0B2Wu4w96T8E86UbxYN
+         CzNEjbfUykgrrf7Uk//pw1pY6bG+m0KgBbXHCeNcsGu0RwsAtYfI+V1YVQtN4gRIB3U/
+         ymNWouJlWSAqsYYU3ThkecLlhZI2dI2iR94eeLpayt5U3b3d7uCf98y7wLOSbcGRRY3s
+         SXpnt398S1qyU1WKcWGDJLMzdhm0i/hwfFgGyLJh4D2aXa21brzrIH2dTfJpYiqg8A+P
+         SPEORwPG4/970YzcPgMpynSMAJ5bNiJ0WcMvl+N46iqHTyi59TpCg11IiJDq17QXOVt4
+         CCig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773951959; x=1774556759;
+        d=1e100.net; s=20251104; t=1773951960; x=1774556760;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=SjOW9NEQVjgaApfYoWy4DLUz7WyMSSyTvWEPSEVJm70=;
-        b=M7EeSj8jNmrBnccn4rqwOVci3F6oj+GySbbd0rW9jsq/wQaka7H4Ghm4xiZwiTdbrz
-         G0QieA4YphHxicx7JlJ0GFoKSAneM/XR+rWw+yoQPcUMk24mn3CVhwaFSe7V9GU3G+Ps
-         8BC6zcADVQVB4LuQXis1/uGvN0ZnSeWhT96gmthgedch9wBeqOpAvDA0W7kDKDC2JNZH
-         i1RXCcyYAxkGhLbrV77VWVRp+iKWYsbZF+DnYlbSAi7HHOWbf8oxg0K1lBi+TDddiD2p
-         rNVGW13w5af2gvcd5trn49wmhWiaFBBOxJtAtGSuoFzCIVl2k/nobgN4FTN9tEA6W7j2
-         XJfQ==
-X-Gm-Message-State: AOJu0YywrSb70tNcs2wMkTHxHYq9Ayj9+r2ZQJMoFLp3oMfgEmx/nBvl
-	FFZ9MmhERDbM+MgRJxc9IBLpwxa3IbavmiQRmNvzjbOphCXEXruXYIaQRgOvz6RkoSw=
-X-Gm-Gg: ATEYQzwByFkhDa6Aii1tfeSC9nXRu5gdNKHoV8HFCZUULSHQSX/R8OZ9qPrkuL+1xAF
-	tuacyYEXoVw2FJ0y2YP3f8Ms7pNwxFQ7oCwxSGMFKpF5ccZqfUIAM0w1S7gZxnpHGj+MN4Fwuzd
-	WxQ+CLZWxgHUe47gJUdcKoxJomdK8kP9iTWbW6K9l/UoOUNcIFojamZv5EHPHD2gYOjD7CGkxC4
-	jexTbpdRLXfjoDaa1YvzUJGWGve+ZBdPo8hj8OY0xJNLh9jGA34pg2RBAo3dkhWr8ImqonWOs+7
-	htoXhoY8a0+7s3fFB0GiCWBd6EhByXLQs12CCYr6hvo+eRo6kBhw+2uC9RnoRAFz4ZwTm6QgdJc
-	pa1IXzYsxEh9DnZOUXwH0x0jGvpWRzJb+HdxgiOC7VT+zp9q25h4hbFluFfYTAr97KkFJM6NI5Q
-	JqyIFqVhKAC+/LSJXkryGRQoNAzfOX9R2tNuMZ37v2rwTmIw51
-X-Received: by 2002:a5d:5d86:0:b0:43b:3e0b:721e with SMTP id ffacd0b85a97d-43b64281744mr1116157f8f.40.1773951958654;
-        Thu, 19 Mar 2026 13:25:58 -0700 (PDT)
+        bh=GxByceTa1YltExdfah9Lq3qXbpogAji5TptAgxuELUc=;
+        b=nDJRzhh3kYvtdrvubo1qvWnykHfEBFtjXAsvyeMxSG0VnXHz6TzeCmXHpQvf/In1t/
+         S2aiMdw1bt49v0/aunRVqIwAICL8GV2Jcq3aES/obhNMpHv6IhL+eA0YVYt6CDVcEZmV
+         8a3DcfNpJjPtD523/vE9WNPr6rELvKUoh+cN3KcWaWqn88AzfHRvpJ3r69GJe25Nu55y
+         3q3XS0/ATpxq3Xg4MRwIxqNWNI8rvYNLBCu9R0082ocG5eOnl0B1CxnzJFefOvQNW25/
+         lVHV4AY++oblY1gROsYr/GGAP54MPBw+0VcBpGHIwGxb1SHvhXorsdQXulpqM13Ml8Se
+         kkEw==
+X-Gm-Message-State: AOJu0YzRjkJqbMBmydLBH1fNSaXKOan/2we191KW1n3icT74mkHYfhL4
+	5dT/h3cGGvmy9Trvei+1p9ACz0BggPEsB83y8l+xH2GltlHzsrYhH1/eLO6wklLiJzE=
+X-Gm-Gg: ATEYQzy3SVps/kkj1/mSqZzTDxCzADY4ABhFDrj9nakeWhnYTblmeUNxxrRsx3dlaxV
+	woRoOsf9qTWalZJ2Vjn02vmcGDb8ODgWd3ZgWT92dlh9zEyjiL3yF5TIWHt+27ha0du8fbLVjtP
+	/AhWvZJsJb8lhYNJc48j/9zkUYdzN9RyM2n4V2Ic/LBEz1WAVglggsXFMql+Zv5eHxyjVB/CcKS
+	NkhwKSt6RmkCtoRX5YmvgD7eTislUcmmoZe2QiJx/th7vBRwoDsGU4++0olpaI5kLmXRpE0xAOt
+	/LQ1bzzpBoMnNyz2+Ot91aHKrS8n5Ba6IyBgIQ4V7vk6gLn8vrAHLqV7yyeoeunQeyRQ9Gbmh+V
+	FZrenxzbM6DpIcRCzXs1IeT6/UnoiWoRRdlS2UwvIpbEbJ5ipqzfGlOKDeqddrZTBAVbpMd8IJb
+	wx3+pZq7f1SCxI4ITMcY9Ui8e/wk0xTm43U4zZ3LGCxS9q5DxX
+X-Received: by 2002:a05:6000:40c7:b0:439:bcc2:bf0a with SMTP id ffacd0b85a97d-43b6424f867mr1134796f8f.23.1773951959951;
+        Thu, 19 Mar 2026 13:25:59 -0700 (PDT)
 Received: from LQ5W56KC4T ([2001:8a0:672f:7800:e0e1:55cd:f0b:b1e5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b644ae16fsm1347544f8f.8.2026.03.19.13.25.57
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b644ae16fsm1347544f8f.8.2026.03.19.13.25.58
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 19 Mar 2026 13:25:58 -0700 (PDT)
+        Thu, 19 Mar 2026 13:25:59 -0700 (PDT)
 From: Eric Curtin <ericcurtin17@gmail.com>
 X-Google-Original-From: Eric Curtin <eric.curtin@docker.com>
 To: linux-hyperv@vger.kernel.org
@@ -83,9 +83,9 @@ Cc: linux-kernel@vger.kernel.org,
 	wei.liu@kernel.org,
 	decui@microsoft.com,
 	haiyangz@microsoft.com
-Subject: [PATCH 40/55] drivers: hv: dxgkrnl: Added implementation for D3DKMTInvalidateCache
-Date: Thu, 19 Mar 2026 20:24:54 +0000
-Message-ID: <20260319202509.63802-41-eric.curtin@docker.com>
+Subject: [PATCH 41/55] drivers: hv: dxgkrnl: Handle process ID in D3DKMTQueryStatistics
+Date: Thu, 19 Mar 2026 20:24:55 +0000
+Message-ID: <20260319202509.63802-42-eric.curtin@docker.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260319202509.63802-1-eric.curtin@docker.com>
 References: <20260319202509.63802-1-eric.curtin@docker.com>
@@ -100,7 +100,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -110,228 +110,787 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9611-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9617-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[ericcurtin17@gmail.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_COUNT_FIVE(0.00)[5];
-	NEURAL_HAM(-0.00)[-0.980];
+	NEURAL_HAM(-0.00)[-0.981];
 	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,docker.com:mid]
-X-Rspamd-Queue-Id: D3EB62D24BD
+	DBL_BLOCKED_OPENRESOLVER(0.00)[docker.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: DB6DB2D24EB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Iouri Tarassov <iourit@linux.microsoft.com>
 
-D3DKMTInvalidateCache is called by user mode drivers when the device
-doesn't support cache coherent access to compute device allocations.
-It needs to be called after an allocation was accessed by CPU and now
-needs to be accessed by the device. And vice versa.
+When D3DKMTQueryStatistics specifies a non-zero process ID, it needs to be
+translated to the host process handle before sending a message to the host.
 
 Signed-off-by: Iouri Tarassov <iourit@linux.microsoft.com>
 [kms: forward port to 6.6 from 6.1. No code changes made.]
 Signed-off-by: Kelsey Steele <kelseysteele@microsoft.com>
 ---
- drivers/hv/dxgkrnl/dxgkrnl.h  |  3 +++
- drivers/hv/dxgkrnl/dxgvmbus.c | 27 +++++++++++++++++++
- drivers/hv/dxgkrnl/dxgvmbus.h | 11 ++++++++
- drivers/hv/dxgkrnl/ioctl.c    | 49 +++++++++++++++++++++++++++++++++--
- include/uapi/misc/d3dkmthk.h  |  9 +++++++
- 5 files changed, 97 insertions(+), 2 deletions(-)
+ drivers/hv/dxgkrnl/dxgkrnl.h    |   3 +-
+ drivers/hv/dxgkrnl/dxgprocess.c |   2 +
+ drivers/hv/dxgkrnl/dxgvmbus.c   | 140 ++++++++++++++++----------------
+ drivers/hv/dxgkrnl/ioctl.c      |  39 ++++++++-
+ 4 files changed, 111 insertions(+), 73 deletions(-)
 
 diff --git a/drivers/hv/dxgkrnl/dxgkrnl.h b/drivers/hv/dxgkrnl/dxgkrnl.h
-index d20489317c0b..e7d8919b3c01 100644
+index e7d8919b3c01..6af1e59b0a31 100644
 --- a/drivers/hv/dxgkrnl/dxgkrnl.h
 +++ b/drivers/hv/dxgkrnl/dxgkrnl.h
-@@ -989,6 +989,9 @@ int dxgvmb_send_async_msg(struct dxgvmbuschannel *channel,
- 			  u32 cmd_size);
- int dxgvmb_send_share_object_with_host(struct dxgprocess *process,
- 				struct d3dkmt_shareobjectwithhost *args);
-+int dxgvmb_send_invalidate_cache(struct dxgprocess *process,
-+				struct dxgadapter *adapter,
-+				struct d3dkmt_invalidatecache *args);
+@@ -386,6 +386,7 @@ struct dxgprocess {
+ 	struct list_head	plistentry;
+ 	pid_t			pid;
+ 	pid_t			tgid;
++	pid_t			vpid; /* pdi from the current namespace */
+ 	/* how many time the process was opened */
+ 	struct kref		process_kref;
+ 	/* protects the object memory */
+@@ -981,7 +982,7 @@ int dxgvmb_send_get_stdalloc_data(struct dxgdevice *device,
+ 				  void *prive_alloc_data,
+ 				  u32 *res_priv_data_size,
+ 				  void *priv_res_data);
+-int dxgvmb_send_query_statistics(struct dxgprocess *process,
++int dxgvmb_send_query_statistics(struct d3dkmthandle host_process_handle,
+ 				 struct dxgadapter *adapter,
+ 				 struct d3dkmt_querystatistics *args);
+ int dxgvmb_send_async_msg(struct dxgvmbuschannel *channel,
+diff --git a/drivers/hv/dxgkrnl/dxgprocess.c b/drivers/hv/dxgkrnl/dxgprocess.c
+index fd51fd968049..5a4c4cb0c2e8 100644
+--- a/drivers/hv/dxgkrnl/dxgprocess.c
++++ b/drivers/hv/dxgkrnl/dxgprocess.c
+@@ -12,6 +12,7 @@
+  */
  
- void signal_host_cpu_event(struct dxghostevent *eventhdr);
- int ntstatus2int(struct ntstatus status);
+ #include "dxgkrnl.h"
++#include "linux/sched.h"
+ 
+ #undef dev_fmt
+ #define dev_fmt(fmt)	"dxgk: " fmt
+@@ -31,6 +32,7 @@ struct dxgprocess *dxgprocess_create(void)
+ 		DXG_TRACE("new dxgprocess created");
+ 		process->pid = current->pid;
+ 		process->tgid = current->tgid;
++		process->vpid = task_pid_vnr(current);
+ 		ret = dxgvmb_send_create_process(process);
+ 		if (ret < 0) {
+ 			DXG_TRACE("send_create_process failed");
 diff --git a/drivers/hv/dxgkrnl/dxgvmbus.c b/drivers/hv/dxgkrnl/dxgvmbus.c
-index 5f17efc937c3..487804ca731a 100644
+index 487804ca731a..916ed9071656 100644
 --- a/drivers/hv/dxgkrnl/dxgvmbus.c
 +++ b/drivers/hv/dxgkrnl/dxgvmbus.c
-@@ -2021,6 +2021,33 @@ int dxgvmb_send_flush_heap_transitions(struct dxgprocess *process,
+@@ -22,6 +22,8 @@
+ #include "dxgkrnl.h"
+ #include "dxgvmbus.h"
+ 
++#pragma GCC diagnostic ignored "-Warray-bounds"
++
+ #undef dev_fmt
+ #define dev_fmt(fmt)	"dxgk: " fmt
+ 
+@@ -113,7 +115,6 @@ static int init_message(struct dxgvmbusmsg *msg, struct dxgadapter *adapter,
+ 
+ static int init_message_res(struct dxgvmbusmsgres *msg,
+ 			    struct dxgadapter *adapter,
+-			    struct dxgprocess *process,
+ 			    u32 size,
+ 			    u32 result_size)
+ {
+@@ -146,7 +147,7 @@ static int init_message_res(struct dxgvmbusmsgres *msg,
+ 	return 0;
+ }
+ 
+-static void free_message(struct dxgvmbusmsg *msg, struct dxgprocess *process)
++static void free_message(struct dxgvmbusmsg *msg)
+ {
+ 	if (msg->hdr && (char *)msg->hdr != msg->msg_on_stack)
+ 		vfree(msg->hdr);
+@@ -646,7 +647,7 @@ int dxgvmb_send_set_iospace_region(u64 start, u64 len)
+ 
+ 	dxgglobal_release_channel_lock();
+ cleanup:
+-	free_message(&msg, NULL);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("Error: %d", ret);
+ 	return ret;
+@@ -699,7 +700,7 @@ int dxgvmb_send_create_process(struct dxgprocess *process)
+ 	dxgglobal_release_channel_lock();
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -727,7 +728,7 @@ int dxgvmb_send_destroy_process(struct d3dkmthandle process)
+ 	dxgglobal_release_channel_lock();
+ 
+ cleanup:
+-	free_message(&msg, NULL);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -790,7 +791,7 @@ int dxgvmb_send_open_sync_object_nt(struct dxgprocess *process,
+ 	}
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -839,7 +840,7 @@ int dxgvmb_send_open_sync_object(struct dxgprocess *process,
+ 	*syncobj = result.sync_object;
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -881,7 +882,7 @@ int dxgvmb_send_create_nt_shared_object(struct dxgprocess *process,
+ 	}
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -912,7 +913,7 @@ int dxgvmb_send_destroy_nt_shared_object(struct d3dkmthandle shared_handle)
+ 	dxgglobal_release_channel_lock();
+ 
+ cleanup:
+-	free_message(&msg, NULL);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -945,7 +946,7 @@ int dxgvmb_send_destroy_sync_object(struct dxgprocess *process,
+ 	dxgglobal_release_channel_lock();
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -989,7 +990,7 @@ int dxgvmb_send_share_object_with_host(struct dxgprocess *process,
+ 	args->object_vail_nt_handle = result.vail_nt_handle;
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_ERR("err: %d", ret);
+ 	return ret;
+@@ -1026,7 +1027,7 @@ int dxgvmb_send_open_adapter(struct dxgadapter *adapter)
+ 	adapter->host_handle = result.host_adapter_handle;
+ 
+ cleanup:
+-	free_message(&msg, NULL);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_ERR("Failed to open adapter: %d", ret);
+ 	return ret;
+@@ -1048,7 +1049,7 @@ int dxgvmb_send_close_adapter(struct dxgadapter *adapter)
+ 
+ 	ret = dxgvmb_send_sync_msg(msg.channel, msg.hdr, msg.size,
+ 				   NULL, 0);
+-	free_message(&msg, NULL);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_ERR("Failed to close adapter: %d", ret);
+ 	return ret;
+@@ -1084,7 +1085,7 @@ int dxgvmb_send_get_internal_adapter_info(struct dxgadapter *adapter)
+ 			sizeof(adapter->device_instance_id) / sizeof(u16));
+ 		dxgglobal->async_msg_enabled = result.async_msg_enabled != 0;
+ 	}
+-	free_message(&msg, NULL);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_ERR("Failed to get adapter info: %d", ret);
+ 	return ret;
+@@ -1114,7 +1115,7 @@ struct d3dkmthandle dxgvmb_send_create_device(struct dxgadapter *adapter,
+ 				   &result, sizeof(result));
+ 	if (ret < 0)
+ 		result.device.v = 0;
+-	free_message(&msg, process);
++	free_message(&msg);
+ cleanup:
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+@@ -1140,7 +1141,7 @@ int dxgvmb_send_destroy_device(struct dxgadapter *adapter,
+ 
+ 	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -1167,7 +1168,7 @@ int dxgvmb_send_flush_device(struct dxgdevice *device,
+ 	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -1239,7 +1240,7 @@ dxgvmb_send_create_context(struct dxgadapter *adapter,
+ 	}
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return context;
+@@ -1265,7 +1266,7 @@ int dxgvmb_send_destroy_context(struct dxgadapter *adapter,
+ 
+ 	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -1312,7 +1313,7 @@ int dxgvmb_send_create_paging_queue(struct dxgprocess *process,
+ 	pqueue->handle = args->paging_queue;
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -1339,7 +1340,7 @@ int dxgvmb_send_destroy_paging_queue(struct dxgprocess *process,
+ 	ret = dxgvmb_send_sync_msg(msg.channel, msg.hdr, msg.size, NULL, 0);
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -1550,7 +1551,7 @@ int create_existing_sysmem(struct dxgdevice *device,
+ cleanup:
+ 	if (kmem)
+ 		vunmap(kmem);
+-	free_message(&msg, device->process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -1783,7 +1784,7 @@ create_local_allocations(struct dxgprocess *process,
+ 		dxgdevice_release_alloc_list_lock(device);
+ 	}
+ 
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -1908,7 +1909,7 @@ int dxgvmb_send_create_allocation(struct dxgprocess *process,
+ 
+ 	if (result)
+ 		vfree(result);
+-	free_message(&msg, process);
++	free_message(&msg);
+ 
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+@@ -1950,7 +1951,7 @@ int dxgvmb_send_destroy_allocation(struct dxgprocess *process,
+ 
+ cleanup:
+ 
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -1992,7 +1993,7 @@ int dxgvmb_send_query_clock_calibration(struct dxgprocess *process,
+ 	ret = ntstatus2int(result.status);
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -2015,7 +2016,7 @@ int dxgvmb_send_flush_heap_transitions(struct dxgprocess *process,
+ 				   process->host_handle);
+ 	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -2042,7 +2043,7 @@ int dxgvmb_send_invalidate_cache(struct dxgprocess *process,
+ 	command->length = args->length;
+ 	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -2078,7 +2079,7 @@ int dxgvmb_send_query_alloc_residency(struct dxgprocess *process,
+ 	}
+ 	result_size += result_allocation_size;
+ 
+-	ret = init_message_res(&msg, adapter, process, cmd_size, result_size);
++	ret = init_message_res(&msg, adapter, cmd_size, result_size);
+ 	if (ret)
+ 		goto cleanup;
+ 	command = (void *)msg.msg;
+@@ -2115,7 +2116,7 @@ int dxgvmb_send_query_alloc_residency(struct dxgprocess *process,
+ 	}
+ 
+ cleanup:
+-	free_message((struct dxgvmbusmsg *)&msg, process);
++	free_message((struct dxgvmbusmsg *)&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -2179,7 +2180,7 @@ int dxgvmb_send_escape(struct dxgprocess *process,
+ 	}
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -2243,7 +2244,7 @@ int dxgvmb_send_query_vidmem_info(struct dxgprocess *process,
+ 	}
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -2288,7 +2289,7 @@ int dxgvmb_send_get_device_state(struct dxgprocess *process,
+ 		args->execution_state = result.args.execution_state;
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -2312,8 +2313,7 @@ int dxgvmb_send_open_resource(struct dxgprocess *process,
+ 			   sizeof(*result);
+ 	struct dxgvmbusmsgres msg = {.hdr = NULL};
+ 
+-	ret = init_message_res(&msg, adapter, process, sizeof(*command),
+-			       result_size);
++	ret = init_message_res(&msg, adapter,  sizeof(*command), result_size);
+ 	if (ret)
+ 		goto cleanup;
+ 	command = msg.msg;
+@@ -2342,7 +2342,7 @@ int dxgvmb_send_open_resource(struct dxgprocess *process,
+ 		alloc_handles[i] = handles[i];
+ 
+ cleanup:
+-	free_message((struct dxgvmbusmsg *)&msg, process);
++	free_message((struct dxgvmbusmsg *)&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -2367,7 +2367,7 @@ int dxgvmb_send_get_stdalloc_data(struct dxgdevice *device,
+ 		result_size += *alloc_priv_driver_size;
+ 	if (priv_res_data)
+ 		result_size += *res_priv_data_size;
+-	ret = init_message_res(&msg, device->adapter, device->process,
++	ret = init_message_res(&msg, device->adapter,
+ 			       sizeof(*command), result_size);
+ 	if (ret)
+ 		goto cleanup;
+@@ -2427,7 +2427,7 @@ int dxgvmb_send_get_stdalloc_data(struct dxgdevice *device,
+ 
+ cleanup:
+ 
+-	free_message((struct dxgvmbusmsg *)&msg, device->process);
++	free_message((struct dxgvmbusmsg *)&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -2479,7 +2479,7 @@ int dxgvmb_send_make_resident(struct dxgprocess *process,
+ 
+ cleanup:
+ 
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -2525,7 +2525,7 @@ int dxgvmb_send_evict(struct dxgprocess *process,
+ 
+ cleanup:
+ 
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -2580,7 +2580,7 @@ int dxgvmb_send_submit_command(struct dxgprocess *process,
+ 
+ cleanup:
+ 
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -2617,7 +2617,7 @@ int dxgvmb_send_map_gpu_va(struct dxgprocess *process,
+ 
+ cleanup:
+ 
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -2647,7 +2647,7 @@ int dxgvmb_send_reserve_gpu_va(struct dxgprocess *process,
+ 	args->virtual_address = result.virtual_address;
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -2674,7 +2674,7 @@ int dxgvmb_send_free_gpu_va(struct dxgprocess *process,
+ 	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -2730,7 +2730,7 @@ int dxgvmb_send_update_gpu_va(struct dxgprocess *process,
+ 	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -2816,7 +2816,7 @@ dxgvmb_send_create_sync_object(struct dxgprocess *process,
+ 	}
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -2910,7 +2910,7 @@ int dxgvmb_send_signal_sync_object(struct dxgprocess *process,
+ 	}
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -2970,7 +2970,7 @@ int dxgvmb_send_wait_sync_object_cpu(struct dxgprocess *process,
+ 	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -3023,7 +3023,7 @@ int dxgvmb_send_wait_sync_object_gpu(struct dxgprocess *process,
+ 	}
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -3103,7 +3103,7 @@ int dxgvmb_send_lock2(struct dxgprocess *process,
+ 	hmgrtable_unlock(&process->handle_table, DXGLOCK_EXCL);
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -3130,7 +3130,7 @@ int dxgvmb_send_unlock2(struct dxgprocess *process,
+ 	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -3175,7 +3175,7 @@ int dxgvmb_send_update_alloc_property(struct dxgprocess *process,
+ 		}
+ 	}
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -3200,7 +3200,7 @@ int dxgvmb_send_mark_device_as_error(struct dxgprocess *process,
+ 	command->args = *args;
+ 	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -3270,7 +3270,7 @@ int dxgvmb_send_set_allocation_priority(struct dxgprocess *process,
+ 	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -3312,7 +3312,7 @@ int dxgvmb_send_get_allocation_priority(struct dxgprocess *process,
+ 	}
+ 	result_size = sizeof(*result) + priority_size;
+ 
+-	ret = init_message_res(&msg, adapter, process, cmd_size, result_size);
++	ret = init_message_res(&msg, adapter, cmd_size, result_size);
+ 	if (ret)
+ 		goto cleanup;
+ 	command = (void *)msg.msg;
+@@ -3352,7 +3352,7 @@ int dxgvmb_send_get_allocation_priority(struct dxgprocess *process,
+ 	}
+ 
+ cleanup:
+-	free_message((struct dxgvmbusmsg *)&msg, process);
++	free_message((struct dxgvmbusmsg *)&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -3381,7 +3381,7 @@ int dxgvmb_send_set_context_sch_priority(struct dxgprocess *process,
+ 	command->in_process = in_process;
+ 	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -3415,7 +3415,7 @@ int dxgvmb_send_get_context_sch_priority(struct dxgprocess *process,
+ 		*priority = result.priority;
+ 	}
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -3461,7 +3461,7 @@ int dxgvmb_send_offer_allocations(struct dxgprocess *process,
+ 	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -3486,7 +3486,7 @@ int dxgvmb_send_reclaim_allocations(struct dxgprocess *process,
+ 		result_size += (args->allocation_count - 1) *
+ 				sizeof(enum d3dddi_reclaim_result);
+ 
+-	ret = init_message_res(&msg, adapter, process, cmd_size, result_size);
++	ret = init_message_res(&msg, adapter, cmd_size, result_size);
+ 	if (ret)
+ 		goto cleanup;
+ 	command = (void *)msg.msg;
+@@ -3537,7 +3537,7 @@ int dxgvmb_send_reclaim_allocations(struct dxgprocess *process,
+ 	}
+ 
+ cleanup:
+-	free_message((struct dxgvmbusmsg *)&msg, process);
++	free_message((struct dxgvmbusmsg *)&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -3567,7 +3567,7 @@ int dxgvmb_send_change_vidmem_reservation(struct dxgprocess *process,
+ 
+ 	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -3706,7 +3706,7 @@ int dxgvmb_send_create_hwqueue(struct dxgprocess *process,
+ 			dxgvmb_send_destroy_hwqueue(process, adapter,
+ 						    command->hwqueue);
+ 	}
+-	free_message(&msg, process);
++	free_message(&msg);
  	return ret;
  }
  
-+int dxgvmb_send_invalidate_cache(struct dxgprocess *process,
-+				struct dxgadapter *adapter,
-+				struct d3dkmt_invalidatecache *args)
-+{
-+	struct dxgkvmb_command_invalidatecache *command;
-+	int ret;
-+	struct dxgvmbusmsg msg = {.hdr = NULL};
-+
-+	ret = init_message(&msg, adapter, process, sizeof(*command));
-+	if (ret)
-+		goto cleanup;
-+	command = (void *)msg.msg;
-+	command_vgpu_to_host_init2(&command->hdr,
-+				   DXGK_VMBCOMMAND_INVALIDATECACHE,
-+				   process->host_handle);
-+	command->device = args->device;
-+	command->allocation = args->allocation;
-+	command->offset = args->offset;
-+	command->length = args->length;
-+	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
-+cleanup:
-+	free_message(&msg, process);
-+	if (ret)
-+		DXG_TRACE("err: %d", ret);
-+	return ret;
-+}
-+
- int dxgvmb_send_query_alloc_residency(struct dxgprocess *process,
- 				      struct dxgadapter *adapter,
- 				      struct d3dkmt_queryallocationresidency
-diff --git a/drivers/hv/dxgkrnl/dxgvmbus.h b/drivers/hv/dxgkrnl/dxgvmbus.h
-index b4a98f7c2522..20c562b485de 100644
---- a/drivers/hv/dxgkrnl/dxgvmbus.h
-+++ b/drivers/hv/dxgkrnl/dxgvmbus.h
-@@ -125,6 +125,7 @@ enum dxgkvmb_commandtype {
- 	DXGK_VMBCOMMAND_QUERYRESOURCEINFO	= 64,
- 	DXGK_VMBCOMMAND_LOGEVENT		= 65,
- 	DXGK_VMBCOMMAND_SETEXISTINGSYSMEMPAGES	= 66,
-+	DXGK_VMBCOMMAND_INVALIDATECACHE		= 67,
- 	DXGK_VMBCOMMAND_INVALID
- };
+@@ -3731,7 +3731,7 @@ int dxgvmb_send_destroy_hwqueue(struct dxgprocess *process,
+ 	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
  
-@@ -428,6 +429,16 @@ struct dxgkvmb_command_flushheaptransitions {
- 	struct dxgkvmb_command_vgpu_to_host hdr;
- };
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -3815,7 +3815,7 @@ int dxgvmb_send_query_adapter_info(struct dxgprocess *process,
+ 	}
  
-+/* Returns  ntstatus */
-+struct dxgkvmb_command_invalidatecache {
-+	struct dxgkvmb_command_vgpu_to_host hdr;
-+	struct d3dkmthandle device;
-+	struct d3dkmthandle allocation;
-+	u64 offset;
-+	u64 length;
-+	u64 reserved;
-+};
-+
- struct dxgkvmb_command_freegpuvirtualaddress {
- 	struct dxgkvmb_command_vgpu_to_host hdr;
- 	struct d3dkmt_freegpuvirtualaddress args;
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+@@ -3873,13 +3873,13 @@ int dxgvmb_send_submit_command_hwqueue(struct dxgprocess *process,
+ 	}
+ 
+ cleanup:
+-	free_message(&msg, process);
++	free_message(&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
+ }
+ 
+-int dxgvmb_send_query_statistics(struct dxgprocess *process,
++int dxgvmb_send_query_statistics(struct d3dkmthandle host_process_handle,
+ 				 struct dxgadapter *adapter,
+ 				 struct d3dkmt_querystatistics *args)
+ {
+@@ -3888,7 +3888,7 @@ int dxgvmb_send_query_statistics(struct dxgprocess *process,
+ 	int ret;
+ 	struct dxgvmbusmsgres msg = {.hdr = NULL};
+ 
+-	ret = init_message_res(&msg, adapter, process, sizeof(*command),
++	ret = init_message_res(&msg, adapter, sizeof(*command),
+ 			       sizeof(*result));
+ 	if (ret)
+ 		goto cleanup;
+@@ -3897,7 +3897,7 @@ int dxgvmb_send_query_statistics(struct dxgprocess *process,
+ 
+ 	command_vgpu_to_host_init2(&command->hdr,
+ 				   DXGK_VMBCOMMAND_QUERYSTATISTICS,
+-				   process->host_handle);
++				   host_process_handle);
+ 	command->args = *args;
+ 
+ 	ret = dxgvmb_send_sync_msg(msg.channel, msg.hdr, msg.size,
+@@ -3909,7 +3909,7 @@ int dxgvmb_send_query_statistics(struct dxgprocess *process,
+ 	ret = ntstatus2int(result->status);
+ 
+ cleanup:
+-	free_message((struct dxgvmbusmsg *)&msg, process);
++	free_message((struct dxgvmbusmsg *)&msg);
+ 	if (ret)
+ 		DXG_TRACE("err: %d", ret);
+ 	return ret;
 diff --git a/drivers/hv/dxgkrnl/ioctl.c b/drivers/hv/dxgkrnl/ioctl.c
-index f735b18fcc14..56b838a87f09 100644
+index 56b838a87f09..466bef6c14b3 100644
 --- a/drivers/hv/dxgkrnl/ioctl.c
 +++ b/drivers/hv/dxgkrnl/ioctl.c
-@@ -4286,6 +4286,8 @@ dxgkio_query_clock_calibration(struct dxgprocess *process, void *__user inargs)
- 		dxgadapter_release_lock_shared(adapter);
- 	if (adapter)
- 		kref_put(&adapter->adapter_kref, dxgadapter_release);
-+
-+	DXG_TRACE_IOCTL_END(ret);
+@@ -147,6 +147,23 @@ static int dxgkio_open_adapter_from_luid(struct dxgprocess *process,
  	return ret;
  }
  
-@@ -4333,6 +4335,49 @@ dxgkio_flush_heap_transitions(struct dxgprocess *process, void *__user inargs)
- 		dxgadapter_release_lock_shared(adapter);
- 	if (adapter)
- 		kref_put(&adapter->adapter_kref, dxgadapter_release);
++static struct d3dkmthandle find_dxgprocess_handle(u64 pid)
++{
++	struct dxgglobal *dxgglobal = dxggbl();
++	struct dxgprocess *entry;
++	struct d3dkmthandle host_handle = {};
 +
-+	DXG_TRACE_IOCTL_END(ret);
-+	return ret;
++	mutex_lock(&dxgglobal->plistmutex);
++	list_for_each_entry(entry, &dxgglobal->plisthead, plistentry) {
++		if (entry->vpid == pid) {
++			host_handle.v = entry->host_handle.v;
++			break;
++		}
++	}
++	mutex_unlock(&dxgglobal->plistmutex);
++	return host_handle;
 +}
 +
-+static int
-+dxgkio_invalidate_cache(struct dxgprocess *process, void *__user inargs)
-+{
-+	struct d3dkmt_invalidatecache args;
-+	int ret;
-+	struct dxgdevice *device = NULL;
-+
-+	ret = copy_from_user(&args, inargs, sizeof(args));
-+	if (ret) {
-+		DXG_ERR("failed to copy input args");
-+		ret = -EFAULT;
-+		goto cleanup;
-+	}
-+
-+	device = dxgprocess_device_by_handle(process, args.device);
-+	if (device == NULL) {
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	ret = dxgdevice_acquire_lock_shared(device);
-+	if (ret < 0) {
-+		kref_put(&device->device_kref, dxgdevice_release);
-+		device = NULL;
-+		goto cleanup;
-+	}
-+
-+	ret = dxgvmb_send_invalidate_cache(process, device->adapter,
-+		&args);
-+
-+cleanup:
-+
-+	if (device) {
-+		dxgdevice_release_lock_shared(device);
-+		kref_put(&device->device_kref, dxgdevice_release);
-+	}
-+
-+	DXG_TRACE_IOCTL_END(ret);
- 	return ret;
- }
+ static int dxgkio_query_statistics(struct dxgprocess *process,
+ 				void __user *inargs)
+ {
+@@ -156,6 +173,8 @@ static int dxgkio_query_statistics(struct dxgprocess *process,
+ 	struct dxgadapter *adapter = NULL;
+ 	struct winluid tmp;
+ 	struct dxgglobal *dxgglobal = dxggbl();
++	struct d3dkmthandle host_process_handle = process->host_handle;
++	u64 pid;
  
-@@ -5198,7 +5243,7 @@ static struct ioctl_desc ioctls[] = {
- /* 0x22 */	{dxgkio_get_context_scheduling_priority,
- 		 LX_DXGETCONTEXTSCHEDULINGPRIORITY},
- /* 0x23 */	{},
--/* 0x24 */	{},
-+/* 0x24 */	{dxgkio_invalidate_cache, LX_DXINVALIDATECACHE},
- /* 0x25 */	{dxgkio_lock2, LX_DXLOCK2},
- /* 0x26 */	{dxgkio_mark_device_as_error, LX_DXMARKDEVICEASERROR},
- /* 0x27 */	{dxgkio_offer_allocations, LX_DXOFFERALLOCATIONS},
-@@ -5243,7 +5288,7 @@ static struct ioctl_desc ioctls[] = {
- /* 0x44 */	{dxgkio_share_object_with_host, LX_DXSHAREOBJECTWITHHOST},
- /* 0x45 */	{dxgkio_create_sync_file, LX_DXCREATESYNCFILE},
- /* 0x46 */	{dxgkio_wait_sync_file, LX_DXWAITSYNCFILE},
--/* 0x46 */	{dxgkio_open_syncobj_from_syncfile,
-+/* 0x47 */	{dxgkio_open_syncobj_from_syncfile,
- 		 LX_DXOPENSYNCOBJECTFROMSYNCFILE},
- };
+ 	args = vzalloc(sizeof(struct d3dkmt_querystatistics));
+ 	if (args == NULL) {
+@@ -170,6 +189,18 @@ static int dxgkio_query_statistics(struct dxgprocess *process,
+ 		goto cleanup;
+ 	}
  
-diff --git a/include/uapi/misc/d3dkmthk.h b/include/uapi/misc/d3dkmthk.h
-index 1eaa3f038322..84fa07a46d3c 100644
---- a/include/uapi/misc/d3dkmthk.h
-+++ b/include/uapi/misc/d3dkmthk.h
-@@ -1580,6 +1580,13 @@ struct d3dkmt_opensyncobjectfromsyncfile {
- 	__u64			fence_value_gpu_va;	/* out */
- };
- 
-+struct d3dkmt_invalidatecache {
-+	struct d3dkmthandle	device;
-+	struct d3dkmthandle	allocation;
-+	__u64			offset;
-+	__u64			length;
-+};
++	/* Find the host process handle when needed */
++	pid = args->process;
++	if (pid) {
++		host_process_handle = find_dxgprocess_handle(pid);
++		if (host_process_handle.v == 0) {
++			DXG_ERR("Invalid process ID is specified: %lld", pid);
++			ret = -EINVAL;
++			goto cleanup;
++		}
++		args->process = 0;
++	}
 +
- /*
-  * Dxgkrnl Graphics Port Driver ioctl definitions
-  *
-@@ -1647,6 +1654,8 @@ struct d3dkmt_opensyncobjectfromsyncfile {
- 	_IOWR(0x47, 0x21, struct d3dkmt_getcontextinprocessschedulingpriority)
- #define LX_DXGETCONTEXTSCHEDULINGPRIORITY \
- 	_IOWR(0x47, 0x22, struct d3dkmt_getcontextschedulingpriority)
-+#define LX_DXINVALIDATECACHE \
-+	_IOWR(0x47, 0x24, struct d3dkmt_invalidatecache)
- #define LX_DXLOCK2			\
- 	_IOWR(0x47, 0x25, struct d3dkmt_lock2)
- #define LX_DXMARKDEVICEASERROR		\
+ 	dxgglobal_acquire_adapter_list_lock(DXGLOCK_SHARED);
+ 	list_for_each_entry(entry, &dxgglobal->adapter_list_head,
+ 			    adapter_list_entry) {
+@@ -186,7 +217,8 @@ static int dxgkio_query_statistics(struct dxgprocess *process,
+ 	if (adapter) {
+ 		tmp = args->adapter_luid;
+ 		args->adapter_luid = adapter->host_adapter_luid;
+-		ret = dxgvmb_send_query_statistics(process, adapter, args);
++		ret = dxgvmb_send_query_statistics(host_process_handle, adapter,
++						   args);
+ 		if (ret >= 0) {
+ 			args->adapter_luid = tmp;
+ 			ret = copy_to_user(inargs, args, sizeof(*args));
+@@ -280,7 +312,10 @@ dxgkp_enum_adapters(struct dxgprocess *process,
+ 	dxgglobal_release_adapter_list_lock(DXGLOCK_SHARED);
+ 
+ 	if (adapter_count > adapter_count_max) {
+-		ret = STATUS_BUFFER_TOO_SMALL;
++		struct ntstatus status;
++
++		status.v = STATUS_BUFFER_TOO_SMALL;
++		ret = ntstatus2int(status);
+ 		DXG_TRACE("Too many adapters");
+ 		ret = copy_to_user(adapter_count_out,
+ 				   &dxgglobal->num_adapters, sizeof(u32));
 
