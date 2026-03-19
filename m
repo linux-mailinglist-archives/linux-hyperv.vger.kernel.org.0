@@ -1,80 +1,80 @@
-Return-Path: <linux-hyperv+bounces-9586-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9587-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4XafJwFcvGmCxgIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9586-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:26:41 +0100
+	id WJg5NYhcvGlxxQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9587-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:28:56 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32E8E2D2141
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:26:41 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EFA32D2203
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:28:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D315A303C595
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 20:26:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2A1023211215
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 20:26:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC1AD3F9F4D;
-	Thu, 19 Mar 2026 20:25:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4A8E3FA5D2;
+	Thu, 19 Mar 2026 20:25:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mjJlVyHo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lFiZAwEV"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583223F9F29
-	for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 20:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB2A3F8E04
+	for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 20:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773951935; cv=none; b=kkT4k8LJw3r+6cxXxPSxelWFGHCpeims6MVJREy2ZuAuDASkAxvAbpzp4Dpuo9Uy+/44Dyr1W1AncftD3aP0ydHv4v3EQPgPDZUSSgEhg8P1aXfEREiljBAInitmsIK/iDQyWsZbCaN/guSrfc4DVB2o6zlGgwjP2YpzDo/BRJE=
+	t=1773951937; cv=none; b=a5BV4XIC9iPT7Bkkn2y79Ck/pfDD9O/7A7Qnr8tcy013fc/k9jYScJZkNDsADeh8UvlXfiq3I1c3u/sS8RyhPaaozgTKlDXcb2rVnj+DGw1CjdnJpjtKFM8aeTixxNE2tAgQSohwBXL+JCQtLU1r4iGQfAVkx0mJTrys50xQ6Yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773951935; c=relaxed/simple;
-	bh=TMxyYWgJby8NjV+ACi3/fTP8NXqHjx5+hMYaldGQVB4=;
+	s=arc-20240116; t=1773951937; c=relaxed/simple;
+	bh=XYXh9hWNCjjaYxIFWsgzSpcYNdUPkATphGgllc+kOiE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d0FM2OUCCXtPaFZGb2E+xt3aLRMLZ7bpkziZZAhP3YRhIWdGt26O1GyE6NLrMSDcwaHS+oFB54gkH8SWBRcVPLeAMa8jBFFWMlIuRclXi2tkFh2SjitRvFksx+2P11hCZXkKRWad0pCpESL/YSA++zv8yud2wkKZrI0tl2GmfyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mjJlVyHo; arc=none smtp.client-ip=209.85.221.45
+	 MIME-Version; b=OGW3uLnh40qcZx3avdBCgVHWFbrJfBd0VZ2zQOjQ6kH81/xno15zpzYJenBKHLsusxQlMQ6Nu/eMWxOb9i/UlritDdbHwNl2hRTxw/4Iu0rEvZ2E9mFEFBs1yjEEofNDi1LtjG3Rf72QY/a6ajrcntU6toPjNVW4fWMzYZRubM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lFiZAwEV; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-439d8df7620so784459f8f.0
-        for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 13:25:32 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4838c15e3cbso10082535e9.3
+        for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 13:25:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773951930; x=1774556730; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773951931; x=1774556731; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4JDaklel034pI9Ckf4R38N/JQ5KooPNwXq3IvAAseYE=;
-        b=mjJlVyHo7q6ogQFhGLW+051Y3SH33mEAEmCPUNJ/yO84B6Jo0FJFg9Axh4C48bODis
-         Yp0Lk8bTxANfm1K3gC5yv2cKLkSuUkue82LvjgkjMCAI5CwOah4v3vUJU/0QG1JeEPhd
-         tLuERuqSZXVefdgoWnUO5GlX12ySGP7tyvgUCcXxO64YjO8o2/C0UekBnDXq31rpPvbm
-         h5wy+aIPWIPHz6Xq8ogGYGxlFj3B8dXkd8+cCa4m9Yt+ElIG5tbqJ6ubpZu6FQVsvZTf
-         WCagpphjPJ9LWrYJRRCMpUAMW+jNe7C35P4KsHmwRIbgNUajeJ6xAFzXmIaH+4/dsg1U
-         RD6w==
+        bh=IfwWxdi0huZ+o5QErDeADcsmeHgqSR0aJcBxkGUgmUc=;
+        b=lFiZAwEV2mQH2cRU2fS6EmzCi6rISVLe6QcO7cLDyubLtp1uaUNqR3ZuuGssjsI6vJ
+         GyR1stFWt12C8tVR2x6V2AOkge+n/ufNtkqOb8o3AxduGD3Fzx/kTw2P+Svemfl4kn5V
+         dDhN7tfMCpzJFc3VLcXAvhw+Li1WRFOD+l+M6Yca43DnNjbsQ8jCCXrWtuQ8ISM349/7
+         qTHIHBF15VxmfJdjMeAO8zW8kXUt2hhPeDVm/NDEVBvmJn73w1x3rj5ud2MdGMQcx/Nc
+         Tse8cZrYhlpy1GAGW3Xolel6/2OjSYk4IiQU5BuW8AGTJVurCf0qOZPCafEsGcyISZGv
+         HYlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773951930; x=1774556730;
+        d=1e100.net; s=20251104; t=1773951931; x=1774556731;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=4JDaklel034pI9Ckf4R38N/JQ5KooPNwXq3IvAAseYE=;
-        b=O7Gq9ThSB5osYwvsqJZJAG1hC2aFpaJzdnaSLRey0Ssw9r74VKC2yb0WLKH95g0ZrG
-         rc4FEfvgeuT1o/n1mLAy/djl/y1679g0UwXK8K7DtTdHlMt1DbYkzwQO6rnb1EO+Dfuv
-         NaokA1Fr6XmtNSXERiiroChpJWGo/eYuulCqCQakY+IhfWYS8HJwMdymWDZ3gcwmHfCY
-         UnkHchZp8ph88fQcKkvoin7mx8hSqRQeUtci3KRIkZaRuwcyixCR6yuXtDp3gAQUhPFC
-         pCE49u5ZESJKsrofk/7E2xk5QSBIJHJ68iSwGh3192eRCh3xpQt63jyB3/IRWpCjTMlj
-         kM3g==
-X-Gm-Message-State: AOJu0YycM/tIIhU51MYo1iida+7wFF44Np8FwFXiCXAWCj0/JzmAx8YT
-	RH7QGP7Tq9e3CPQcG+XG1fSyPw+OjBeXdIYxcpQfXPh+yyGp7ZiLet63aNOmOvI7evY=
-X-Gm-Gg: ATEYQzyq4jiPiguXoyejWKxBV05BQd/6OPUOtC4M3e31vb2HukkTx6qf/ZQloRgigTF
-	Oqd1UOMcPZ7YFXaGebsxut0w5Sn21pqPDv9ztooGnC+VNZl6b+iOekIHf8SKjMvZlsm/jngwsQX
-	XDAX9H5PIOLoCDr6ob5Xnf9yDojPMSCRh0IT7CuhfgC1siH99gMIGytEYahwWsz3wtQRm+w+KOk
-	F52CHfJV+sY+AtQZpBmKFl4fpiLmGGva9Jtcxfd/dMEPh01ijnzwHe73TXPjRBb4xlR8L9KjIYU
-	wsfmzFQAJA5Zx4Sdo1x1KVS0InOfKn/oYi5iv0Dq60Uc6trbRJngKgHv8P1zBaW2t+EEphRM6qb
-	WUHTCBnakKKIeSvV+n6FCJXe0nhQrIdtlKpreU2x3Wjmj/DgsKCqus6XKy7bP4P3UEFwRZdz5dk
-	XGaSPo/oRShTBOsihr7ZsqC+dg913vKXjCoBDbgHpg2wCg6S5y
-X-Received: by 2002:a05:6000:40c7:b0:439:bcc2:bf0a with SMTP id ffacd0b85a97d-43b6424f867mr1132863f8f.23.1773951930328;
-        Thu, 19 Mar 2026 13:25:30 -0700 (PDT)
+        bh=IfwWxdi0huZ+o5QErDeADcsmeHgqSR0aJcBxkGUgmUc=;
+        b=OwIj/qXWLrcuHRhj2GVFnu/rNhAejWkq/+Ct3hOZkmfaD3QI1ooWobOv3QQMBIws3z
+         L42HP0LGS7Tve4LDr3xm0iaz5LOEuL+89MJtYQkgEPZ0AmAmopyPVVuvbxZnG4AA6dJe
+         bs3iIEN91qZjS1VPw4URvr+EnWQ0RsA9Q0wWowQgdj0RbGI+gv6OL4m97rzvxNd0JUY4
+         ziqDsHleAa1ME1mXz9tONt0jhQT3fHMSwjcpdUzU8/z7BuqlUhYGUeysNr326nrvHo7G
+         BhJI8h2YpOUe4pVRNzfhWwD06TynvKU8EG04R0rYAC7fpoUVI7cuU0qZCjPjSTdK93S9
+         0q7w==
+X-Gm-Message-State: AOJu0YxMiPex/40Q7HPj3ECERX/S4Q1HB1Kzk/2E2f7tAAuMUAlw6CB/
+	3vtZVLQvc0cVxchq71+2k3pAjddEdHz7y7x50FKU2EKbyrtJlEMfoFpDJxVkM50hwlo=
+X-Gm-Gg: ATEYQzzeFXAQQsp9mmrzzlQqXhqP1XmigQo2MyjX9JONwj5v0HSu8ZxSrJwqcpB5HJu
+	+1XOys0gn2l8ZTuLi4QEM3U9zdQz/IWvThF+aAHC+EkHkNpZQD4PtQr1n2enn2PUIkHAuR4DvOM
+	U4go0SGSmafQvwalL2E/sTVEjGyr/vMzdRKmgRMDtLZwQEQf14scDxnG+xIK0oSp5Wz9tRKmX8a
+	5lm9G39VDEIeqSf135o7V/PB9a5pG7X1TdfL5d2y3pUZYzS7ivcZSlDar7ESKaC/cCk5g3i9jF9
+	XC9Bqd2NA3c0dQSJ0HNsqpuRzMpmSRyhGf8znJ6BYP9PC8NXEiPirl/py1EPqBOIHHn2Rsv15ft
+	9y1i4hjjGwAsaH21S1zIadZ3pHVqUtdlUrrzUNeRHUcGHQb0Y1dsqZyHSZtq4rZ4k++Wr6GoXCd
+	rbshYuLhYvpMJxjaUe999UwsoMwtF/PgCj2xXosX6aS/Necp/M
+X-Received: by 2002:a05:6000:2012:b0:43b:3c49:c393 with SMTP id ffacd0b85a97d-43b6424432dmr1211203f8f.18.1773951931428;
+        Thu, 19 Mar 2026 13:25:31 -0700 (PDT)
 Received: from LQ5W56KC4T ([2001:8a0:672f:7800:e0e1:55cd:f0b:b1e5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b644ae16fsm1347544f8f.8.2026.03.19.13.25.29
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b644ae16fsm1347544f8f.8.2026.03.19.13.25.30
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 19 Mar 2026 13:25:29 -0700 (PDT)
+        Thu, 19 Mar 2026 13:25:30 -0700 (PDT)
 From: Eric Curtin <ericcurtin17@gmail.com>
 X-Google-Original-From: Eric Curtin <eric.curtin@docker.com>
 To: linux-hyperv@vger.kernel.org
@@ -83,9 +83,9 @@ Cc: linux-kernel@vger.kernel.org,
 	wei.liu@kernel.org,
 	decui@microsoft.com,
 	haiyangz@microsoft.com
-Subject: [PATCH 14/55] drivers: hv: dxgkrnl: Submit execution commands to the compute device
-Date: Thu, 19 Mar 2026 20:24:28 +0000
-Message-ID: <20260319202509.63802-15-eric.curtin@docker.com>
+Subject: [PATCH 15/55] drivers: hv: dxgkrnl: Share objects with the host
+Date: Thu, 19 Mar 2026 20:24:29 +0000
+Message-ID: <20260319202509.63802-16-eric.curtin@docker.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260319202509.63802-1-eric.curtin@docker.com>
 References: <20260319202509.63802-1-eric.curtin@docker.com>
@@ -100,7 +100,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -110,240 +110,224 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9586-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9587-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[ericcurtin17@gmail.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_COUNT_FIVE(0.00)[5];
-	NEURAL_HAM(-0.00)[-0.979];
+	NEURAL_HAM(-0.00)[-0.980];
 	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,docker.com:mid]
-X-Rspamd-Queue-Id: 32E8E2D2141
+	DBL_BLOCKED_OPENRESOLVER(0.00)[docker.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 4EFA32D2203
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Iouri Tarassov <iourit@linux.microsoft.com>
 
-Implements ioctls for submission of compute device buffers for execution:
-  - LX_DXSUBMITCOMMAND
-    The ioctl is used to submit a command buffer to the device,
-    working in the "packet scheduling" mode.
+Implement the LX_DXSHAREOBJECTWITHHOST ioctl.
+This ioctl is used to create a Windows NT handle on the host
+for the given shared object (resource or sync object). The NT
+handle is returned to the caller. The caller could share the NT
+handle with a host application, which needs to access the object.
+The host application can open the shared resource using the NT
+handle. This way the guest and the host have access to the same
+object.
 
-  - LX_DXSUBMITCOMMANDTOHWQUEUE
-  The ioctl is used to submit a command buffer to the device,
-  working in the "hardware scheduling" mode.
-
-To improve performance both ioctls use asynchronous VM bus messages
-to communicate with the host as these are high frequency operations.
+Fix incorrect handling of error results from copy_from_user().
 
 Signed-off-by: Iouri Tarassov <iourit@linux.microsoft.com>
 [kms: forward port to 6.6 from 6.1. No code changes made.]
 Signed-off-by: Kelsey Steele <kelseysteele@microsoft.com>
 ---
- drivers/hv/dxgkrnl/dxgkrnl.h  |   6 ++
- drivers/hv/dxgkrnl/dxgvmbus.c | 113 ++++++++++++++++++++++++++++++
- drivers/hv/dxgkrnl/dxgvmbus.h |  14 ++++
- drivers/hv/dxgkrnl/ioctl.c    | 127 +++++++++++++++++++++++++++++++++-
- include/uapi/misc/d3dkmthk.h  |  58 ++++++++++++++++
- 5 files changed, 316 insertions(+), 2 deletions(-)
+ drivers/hv/dxgkrnl/dxgkrnl.h  |  2 ++
+ drivers/hv/dxgkrnl/dxgvmbus.c | 60 ++++++++++++++++++++++++++++++++---
+ drivers/hv/dxgkrnl/dxgvmbus.h | 18 +++++++++++
+ drivers/hv/dxgkrnl/ioctl.c    | 38 ++++++++++++++++++++--
+ include/uapi/misc/d3dkmthk.h  |  9 ++++++
+ 5 files changed, 120 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/hv/dxgkrnl/dxgkrnl.h b/drivers/hv/dxgkrnl/dxgkrnl.h
-index 440d1f9b8882..ab97bc53b124 100644
+index ab97bc53b124..a39d11d76e41 100644
 --- a/drivers/hv/dxgkrnl/dxgkrnl.h
 +++ b/drivers/hv/dxgkrnl/dxgkrnl.h
-@@ -796,6 +796,9 @@ int dxgvmb_send_create_allocation(struct dxgprocess *pr, struct dxgdevice *dev,
- int dxgvmb_send_destroy_allocation(struct dxgprocess *pr, struct dxgdevice *dev,
- 				   struct d3dkmt_destroyallocation2 *args,
- 				   struct d3dkmthandle *alloc_handles);
-+int dxgvmb_send_submit_command(struct dxgprocess *pr,
-+			       struct dxgadapter *adapter,
-+			       struct d3dkmt_submitcommand *args);
- int dxgvmb_send_create_sync_object(struct dxgprocess *pr,
- 				   struct dxgadapter *adapter,
- 				   struct d3dkmt_createsynchronizationobject2
-@@ -838,6 +841,9 @@ int dxgvmb_send_destroy_hwqueue(struct dxgprocess *process,
- int dxgvmb_send_query_adapter_info(struct dxgprocess *process,
- 				   struct dxgadapter *adapter,
- 				   struct d3dkmt_queryadapterinfo *args);
-+int dxgvmb_send_submit_command_hwqueue(struct dxgprocess *process,
-+				       struct dxgadapter *adapter,
-+				       struct d3dkmt_submitcommandtohwqueue *a);
- int dxgvmb_send_open_sync_object_nt(struct dxgprocess *process,
- 				    struct dxgvmbuschannel *channel,
- 				    struct d3dkmt_opensyncobjectfromnthandle2
+@@ -872,6 +872,8 @@ int dxgvmb_send_get_stdalloc_data(struct dxgdevice *device,
+ int dxgvmb_send_async_msg(struct dxgvmbuschannel *channel,
+ 			  void *command,
+ 			  u32 cmd_size);
++int dxgvmb_send_share_object_with_host(struct dxgprocess *process,
++				struct d3dkmt_shareobjectwithhost *args);
+ 
+ void signal_host_cpu_event(struct dxghostevent *eventhdr);
+ int ntstatus2int(struct ntstatus status);
 diff --git a/drivers/hv/dxgkrnl/dxgvmbus.c b/drivers/hv/dxgkrnl/dxgvmbus.c
-index c9c00b288ae0..7cb04fec217e 100644
+index 7cb04fec217e..67a16de622e0 100644
 --- a/drivers/hv/dxgkrnl/dxgvmbus.c
 +++ b/drivers/hv/dxgkrnl/dxgvmbus.c
-@@ -1901,6 +1901,61 @@ int dxgvmb_send_get_stdalloc_data(struct dxgdevice *device,
+@@ -881,6 +881,50 @@ int dxgvmb_send_destroy_sync_object(struct dxgprocess *process,
  	return ret;
  }
  
-+int dxgvmb_send_submit_command(struct dxgprocess *process,
-+			       struct dxgadapter *adapter,
-+			       struct d3dkmt_submitcommand *args)
++int dxgvmb_send_share_object_with_host(struct dxgprocess *process,
++				struct d3dkmt_shareobjectwithhost *args)
 +{
++	struct dxgkvmb_command_shareobjectwithhost *command;
++	struct dxgkvmb_command_shareobjectwithhost_return result = {};
 +	int ret;
-+	u32 cmd_size;
-+	struct dxgkvmb_command_submitcommand *command;
-+	u32 hbufsize = args->num_history_buffers * sizeof(struct d3dkmthandle);
 +	struct dxgvmbusmsg msg = {.hdr = NULL};
-+	struct dxgglobal *dxgglobal = dxggbl();
 +
-+	cmd_size = sizeof(struct dxgkvmb_command_submitcommand) +
-+	    hbufsize + args->priv_drv_data_size;
-+
-+	ret = init_message(&msg, adapter, process, cmd_size);
++	ret = init_message(&msg, NULL, process, sizeof(*command));
 +	if (ret)
-+		goto cleanup;
++		return ret;
 +	command = (void *)msg.msg;
 +
-+	ret = copy_from_user(&command[1], args->history_buffer_array,
-+			     hbufsize);
-+	if (ret) {
-+		DXG_ERR(" failed to copy history buffer");
-+		ret = -EINVAL;
++	ret = dxgglobal_acquire_channel_lock();
++	if (ret < 0)
++		goto cleanup;
++
++	command_vm_to_host_init2(&command->hdr,
++				 DXGK_VMBCOMMAND_SHAREOBJECTWITHHOST,
++				 process->host_handle);
++	command->device_handle = args->device_handle;
++	command->object_handle = args->object_handle;
++
++	ret = dxgvmb_send_sync_msg(dxgglobal_get_dxgvmbuschannel(),
++				   msg.hdr, msg.size, &result, sizeof(result));
++
++	dxgglobal_release_channel_lock();
++
++	if (ret || !NT_SUCCESS(result.status)) {
++		if (ret == 0)
++			ret = ntstatus2int(result.status);
++		DXG_ERR("Host failed to share object with host: %d %x",
++			ret, result.status.v);
 +		goto cleanup;
 +	}
-+	ret = copy_from_user((u8 *) &command[1] + hbufsize,
-+			     args->priv_drv_data, args->priv_drv_data_size);
-+	if (ret) {
-+		DXG_ERR("failed to copy history priv data");
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	command_vgpu_to_host_init2(&command->hdr,
-+				   DXGK_VMBCOMMAND_SUBMITCOMMAND,
-+				   process->host_handle);
-+	command->args = *args;
-+
-+	if (dxgglobal->async_msg_enabled) {
-+		command->hdr.async_msg = 1;
-+		ret = dxgvmb_send_async_msg(msg.channel, msg.hdr, msg.size);
-+	} else {
-+		ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr,
-+						    msg.size);
-+	}
-+
-+cleanup:
-+
-+	free_message(&msg, process);
-+	if (ret)
-+		DXG_TRACE("err: %d", ret);
-+	return ret;
-+}
-+
- static void set_result(struct d3dkmt_createsynchronizationobject2 *args,
- 		       u64 fence_gpu_va, u8 *va)
- {
-@@ -2427,3 +2482,61 @@ int dxgvmb_send_query_adapter_info(struct dxgprocess *process,
- 		DXG_TRACE("err: %d", ret);
- 	return ret;
- }
-+
-+int dxgvmb_send_submit_command_hwqueue(struct dxgprocess *process,
-+				       struct dxgadapter *adapter,
-+				       struct d3dkmt_submitcommandtohwqueue
-+				       *args)
-+{
-+	int ret = -EINVAL;
-+	u32 cmd_size;
-+	struct dxgkvmb_command_submitcommandtohwqueue *command;
-+	u32 primaries_size = args->num_primaries * sizeof(struct d3dkmthandle);
-+	struct dxgvmbusmsg msg = {.hdr = NULL};
-+	struct dxgglobal *dxgglobal = dxggbl();
-+
-+	cmd_size = sizeof(*command) + args->priv_drv_data_size + primaries_size;
-+	ret = init_message(&msg, adapter, process, cmd_size);
-+	if (ret)
-+		goto cleanup;
-+	command = (void *)msg.msg;
-+
-+	if (primaries_size) {
-+		ret = copy_from_user(&command[1], args->written_primaries,
-+					 primaries_size);
-+		if (ret) {
-+			DXG_ERR("failed to copy primaries handles");
-+			ret = -EINVAL;
-+			goto cleanup;
-+		}
-+	}
-+	if (args->priv_drv_data_size) {
-+		ret = copy_from_user((char *)&command[1] + primaries_size,
-+				      args->priv_drv_data,
-+				      args->priv_drv_data_size);
-+		if (ret) {
-+			DXG_ERR("failed to copy primaries data");
-+			ret = -EINVAL;
-+			goto cleanup;
-+		}
-+	}
-+
-+	command_vgpu_to_host_init2(&command->hdr,
-+				   DXGK_VMBCOMMAND_SUBMITCOMMANDTOHWQUEUE,
-+				   process->host_handle);
-+	command->args = *args;
-+
-+	if (dxgglobal->async_msg_enabled) {
-+		command->hdr.async_msg = 1;
-+		ret = dxgvmb_send_async_msg(msg.channel, msg.hdr, msg.size);
-+	} else {
-+		ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr,
-+						    msg.size);
-+	}
++	args->object_vail_nt_handle = result.vail_nt_handle;
 +
 +cleanup:
 +	free_message(&msg, process);
 +	if (ret)
-+		DXG_TRACE("err: %d", ret);
++		DXG_ERR("err: %d", ret);
 +	return ret;
 +}
++
+ /*
+  * Virtual GPU messages to the host
+  */
+@@ -2323,37 +2367,43 @@ int dxgvmb_send_create_hwqueue(struct dxgprocess *process,
+ 
+ 	ret = copy_to_user(&inargs->queue, &command->hwqueue,
+ 			   sizeof(struct d3dkmthandle));
+-	if (ret < 0) {
++	if (ret) {
+ 		DXG_ERR("failed to copy hwqueue handle");
++		ret = -EINVAL;
+ 		goto cleanup;
+ 	}
+ 	ret = copy_to_user(&inargs->queue_progress_fence,
+ 			   &command->hwqueue_progress_fence,
+ 			   sizeof(struct d3dkmthandle));
+-	if (ret < 0) {
++	if (ret) {
+ 		DXG_ERR("failed to progress fence");
++		ret = -EINVAL;
+ 		goto cleanup;
+ 	}
+ 	ret = copy_to_user(&inargs->queue_progress_fence_cpu_va,
+ 			   &hwqueue->progress_fence_mapped_address,
+ 			   sizeof(inargs->queue_progress_fence_cpu_va));
+-	if (ret < 0) {
++	if (ret) {
+ 		DXG_ERR("failed to copy fence cpu va");
++		ret = -EINVAL;
+ 		goto cleanup;
+ 	}
+ 	ret = copy_to_user(&inargs->queue_progress_fence_gpu_va,
+ 			   &command->hwqueue_progress_fence_gpuva,
+ 			   sizeof(u64));
+-	if (ret < 0) {
++	if (ret) {
+ 		DXG_ERR("failed to copy fence gpu va");
++		ret = -EINVAL;
+ 		goto cleanup;
+ 	}
+ 	if (args->priv_drv_data_size) {
+ 		ret = copy_to_user(args->priv_drv_data,
+ 				   command->priv_drv_data,
+ 				   args->priv_drv_data_size);
+-		if (ret < 0)
++		if (ret) {
+ 			DXG_ERR("failed to copy private data");
++			ret = -EINVAL;
++		}
+ 	}
+ 
+ cleanup:
 diff --git a/drivers/hv/dxgkrnl/dxgvmbus.h b/drivers/hv/dxgkrnl/dxgvmbus.h
-index aba075d374c9..acfdbde09e82 100644
+index acfdbde09e82..c1f693917d99 100644
 --- a/drivers/hv/dxgkrnl/dxgvmbus.h
 +++ b/drivers/hv/dxgkrnl/dxgvmbus.h
-@@ -314,6 +314,20 @@ struct dxgkvmb_command_flushdevice {
- 	enum dxgdevice_flushschedulerreason	reason;
+@@ -574,4 +574,22 @@ struct dxgkvmb_command_destroyhwqueue {
+ 	struct d3dkmthandle		hwqueue;
  };
  
-+struct dxgkvmb_command_submitcommand {
-+	struct dxgkvmb_command_vgpu_to_host hdr;
-+	struct d3dkmt_submitcommand	args;
-+	/* HistoryBufferHandles */
-+	/* PrivateDriverData    */
++struct dxgkvmb_command_shareobjectwithhost {
++	struct dxgkvmb_command_vm_to_host hdr;
++	struct d3dkmthandle	device_handle;
++	struct d3dkmthandle	object_handle;
++	u64			reserved;
 +};
 +
-+struct dxgkvmb_command_submitcommandtohwqueue {
-+	struct dxgkvmb_command_vgpu_to_host hdr;
-+	struct d3dkmt_submitcommandtohwqueue args;
-+	/* Written primaries */
-+	/* PrivateDriverData */
++struct dxgkvmb_command_shareobjectwithhost_return {
++	struct ntstatus	status;
++	u32		alignment;
++	u64		vail_nt_handle;
 +};
 +
- struct dxgkvmb_command_createallocation_allocinfo {
- 	u32				flags;
- 	u32				priv_drv_data_size;
++int
++dxgvmb_send_sync_msg(struct dxgvmbuschannel *channel,
++		     void *command, u32 command_size, void *result,
++		     u32 result_size);
++
+ #endif /* _DXGVMBUS_H */
 diff --git a/drivers/hv/dxgkrnl/ioctl.c b/drivers/hv/dxgkrnl/ioctl.c
-index a2d236f5eff5..9128694c8e78 100644
+index 9128694c8e78..ac052836ce27 100644
 --- a/drivers/hv/dxgkrnl/ioctl.c
 +++ b/drivers/hv/dxgkrnl/ioctl.c
-@@ -1902,6 +1902,129 @@ dxgkio_destroy_allocation(struct dxgprocess *process, void *__user inargs)
+@@ -2460,6 +2460,7 @@ dxgkio_open_sync_object_nt(struct dxgprocess *process, void *__user inargs)
+ 	if (ret == 0)
+ 		goto success;
+ 	DXG_ERR("failed to copy output args");
++	ret = -EINVAL;
+ 
+ cleanup:
+ 
+@@ -3364,8 +3365,10 @@ dxgkio_share_objects(struct dxgprocess *process, void *__user inargs)
+ 	tmp = (u64) object_fd;
+ 
+ 	ret = copy_to_user(args.shared_handle, &tmp, sizeof(u64));
+-	if (ret < 0)
++	if (ret) {
+ 		DXG_ERR("failed to copy shared handle");
++		ret = -EINVAL;
++	}
+ 
+ cleanup:
+ 	if (ret < 0) {
+@@ -3773,6 +3776,37 @@ dxgkio_open_resource_nt(struct dxgprocess *process,
  	return ret;
  }
  
 +static int
-+dxgkio_submit_command(struct dxgprocess *process, void *__user inargs)
++dxgkio_share_object_with_host(struct dxgprocess *process, void *__user inargs)
 +{
++	struct d3dkmt_shareobjectwithhost args;
 +	int ret;
-+	struct d3dkmt_submitcommand args;
-+	struct dxgdevice *device = NULL;
-+	struct dxgadapter *adapter = NULL;
 +
 +	ret = copy_from_user(&args, inargs, sizeof(args));
 +	if (ret) {
@@ -352,223 +336,60 @@ index a2d236f5eff5..9128694c8e78 100644
 +		goto cleanup;
 +	}
 +
-+	if (args.broadcast_context_count > D3DDDI_MAX_BROADCAST_CONTEXT ||
-+	    args.broadcast_context_count == 0) {
-+		DXG_ERR("invalid number of contexts");
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	if (args.priv_drv_data_size > DXG_MAX_VM_BUS_PACKET_SIZE) {
-+		DXG_ERR("invalid private data size");
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	if (args.num_history_buffers > 1024) {
-+		DXG_ERR("invalid number of history buffers");
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	if (args.num_primaries > DXG_MAX_VM_BUS_PACKET_SIZE) {
-+		DXG_ERR("invalid number of primaries");
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	device = dxgprocess_device_by_object_handle(process,
-+						    HMGRENTRY_TYPE_DXGCONTEXT,
-+						    args.broadcast_context[0]);
-+	if (device == NULL) {
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	adapter = device->adapter;
-+	ret = dxgadapter_acquire_lock_shared(adapter);
-+	if (ret < 0) {
-+		adapter = NULL;
-+		goto cleanup;
-+	}
-+
-+	ret = dxgvmb_send_submit_command(process, adapter, &args);
-+
-+cleanup:
-+
-+	if (adapter)
-+		dxgadapter_release_lock_shared(adapter);
-+	if (device)
-+		kref_put(&device->device_kref, dxgdevice_release);
-+
-+	DXG_TRACE("ioctl:%s %d", errorstr(ret), ret);
-+	return ret;
-+}
-+
-+static int
-+dxgkio_submit_command_to_hwqueue(struct dxgprocess *process, void *__user inargs)
-+{
-+	int ret;
-+	struct d3dkmt_submitcommandtohwqueue args;
-+	struct dxgdevice *device = NULL;
-+	struct dxgadapter *adapter = NULL;
-+
-+	ret = copy_from_user(&args, inargs, sizeof(args));
++	ret = dxgvmb_send_share_object_with_host(process, &args);
 +	if (ret) {
-+		DXG_ERR("failed to copy input args");
++		DXG_ERR("dxgvmb_send_share_object_with_host dailed");
++		goto cleanup;
++	}
++
++	ret = copy_to_user(inargs, &args, sizeof(args));
++	if (ret) {
++		DXG_ERR("failed to copy data to user");
 +		ret = -EINVAL;
-+		goto cleanup;
 +	}
-+
-+	if (args.priv_drv_data_size > DXG_MAX_VM_BUS_PACKET_SIZE) {
-+		DXG_ERR("invalid private data size");
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	if (args.num_primaries > DXG_MAX_VM_BUS_PACKET_SIZE) {
-+		DXG_ERR("invalid number of primaries");
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	device = dxgprocess_device_by_object_handle(process,
-+						    HMGRENTRY_TYPE_DXGHWQUEUE,
-+						    args.hwqueue);
-+	if (device == NULL) {
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	adapter = device->adapter;
-+	ret = dxgadapter_acquire_lock_shared(adapter);
-+	if (ret < 0) {
-+		adapter = NULL;
-+		goto cleanup;
-+	}
-+
-+	ret = dxgvmb_send_submit_command_hwqueue(process, adapter, &args);
 +
 +cleanup:
-+
-+	if (adapter)
-+		dxgadapter_release_lock_shared(adapter);
-+	if (device)
-+		kref_put(&device->device_kref, dxgdevice_release);
 +
 +	DXG_TRACE("ioctl:%s %d", errorstr(ret), ret);
 +	return ret;
 +}
 +
- static int
- dxgkio_submit_signal_to_hwqueue(struct dxgprocess *process, void *__user inargs)
- {
-@@ -3666,7 +3789,7 @@ static struct ioctl_desc ioctls[] = {
- /* 0x0c */	{},
- /* 0x0d */	{},
- /* 0x0e */	{},
--/* 0x0f */	{},
-+/* 0x0f */	{dxgkio_submit_command, LX_DXSUBMITCOMMAND},
- /* 0x10 */	{dxgkio_create_sync_object, LX_DXCREATESYNCHRONIZATIONOBJECT},
- /* 0x11 */	{dxgkio_signal_sync_object, LX_DXSIGNALSYNCHRONIZATIONOBJECT},
- /* 0x12 */	{dxgkio_wait_sync_object, LX_DXWAITFORSYNCHRONIZATIONOBJECT},
-@@ -3706,7 +3829,7 @@ static struct ioctl_desc ioctls[] = {
- 		 LX_DXSIGNALSYNCHRONIZATIONOBJECTFROMGPU},
- /* 0x33 */	{dxgkio_signal_sync_object_gpu2,
- 		 LX_DXSIGNALSYNCHRONIZATIONOBJECTFROMGPU2},
--/* 0x34 */	{},
-+/* 0x34 */	{dxgkio_submit_command_to_hwqueue, LX_DXSUBMITCOMMANDTOHWQUEUE},
- /* 0x35 */	{dxgkio_submit_signal_to_hwqueue,
- 		  LX_DXSUBMITSIGNALSYNCOBJECTSTOHWQUEUE},
- /* 0x36 */	{dxgkio_submit_wait_to_hwqueue,
+ static struct ioctl_desc ioctls[] = {
+ /* 0x00 */	{},
+ /* 0x01 */	{dxgkio_open_adapter_from_luid, LX_DXOPENADAPTERFROMLUID},
+@@ -3850,7 +3884,7 @@ static struct ioctl_desc ioctls[] = {
+ 		 LX_DXQUERYRESOURCEINFOFROMNTHANDLE},
+ /* 0x42 */	{dxgkio_open_resource_nt, LX_DXOPENRESOURCEFROMNTHANDLE},
+ /* 0x43 */	{},
+-/* 0x44 */	{},
++/* 0x44 */	{dxgkio_share_object_with_host, LX_DXSHAREOBJECTWITHHOST},
+ /* 0x45 */	{},
+ };
+ 
 diff --git a/include/uapi/misc/d3dkmthk.h b/include/uapi/misc/d3dkmthk.h
-index 6ec70852de6e..9238115d165d 100644
+index 9238115d165d..895861505e6e 100644
 --- a/include/uapi/misc/d3dkmthk.h
 +++ b/include/uapi/misc/d3dkmthk.h
-@@ -58,6 +58,8 @@ struct winluid {
- 	__u32 b;
+@@ -952,6 +952,13 @@ struct d3dkmt_enumadapters3 {
+ #endif
  };
  
-+#define D3DDDI_MAX_WRITTEN_PRIMARIES		16
++struct d3dkmt_shareobjectwithhost {
++	struct d3dkmthandle	device_handle;
++	struct d3dkmthandle	object_handle;
++	__u64			reserved;
++	__u64			object_vail_nt_handle;
++};
 +
- #define D3DKMT_CREATEALLOCATION_MAX		1024
- #define D3DKMT_ADAPTERS_MAX			64
- #define D3DDDI_MAX_BROADCAST_CONTEXT		64
-@@ -525,6 +527,58 @@ struct d3dkmt_destroysynchronizationobject {
- 	struct d3dkmthandle	sync_object;
- };
+ /*
+  * Dxgkrnl Graphics Port Driver ioctl definitions
+  *
+@@ -1021,5 +1028,7 @@ struct d3dkmt_enumadapters3 {
+ 	_IOWR(0x47, 0x41, struct d3dkmt_queryresourceinfofromnthandle)
+ #define LX_DXOPENRESOURCEFROMNTHANDLE	\
+ 	_IOWR(0x47, 0x42, struct d3dkmt_openresourcefromnthandle)
++#define LX_DXSHAREOBJECTWITHHOST	\
++	_IOWR(0x47, 0x44, struct d3dkmt_shareobjectwithhost)
  
-+struct d3dkmt_submitcommandflags {
-+	__u32					null_rendering:1;
-+	__u32					present_redirected:1;
-+	__u32					reserved:30;
-+};
-+
-+struct d3dkmt_submitcommand {
-+	__u64					command_buffer;
-+	__u32					command_length;
-+	struct d3dkmt_submitcommandflags	flags;
-+	__u64					present_history_token;
-+	__u32					broadcast_context_count;
-+	struct d3dkmthandle	broadcast_context[D3DDDI_MAX_BROADCAST_CONTEXT];
-+	__u32					reserved;
-+#ifdef __KERNEL__
-+	void					*priv_drv_data;
-+#else
-+	__u64					priv_drv_data;
-+#endif
-+	__u32					priv_drv_data_size;
-+	__u32					num_primaries;
-+	struct d3dkmthandle	written_primaries[D3DDDI_MAX_WRITTEN_PRIMARIES];
-+	__u32					num_history_buffers;
-+	__u32					reserved1;
-+#ifdef __KERNEL__
-+	struct d3dkmthandle			*history_buffer_array;
-+#else
-+	__u64					history_buffer_array;
-+#endif
-+};
-+
-+struct d3dkmt_submitcommandtohwqueue {
-+	struct d3dkmthandle	hwqueue;
-+	__u32			reserved;
-+	__u64			hwqueue_progress_fence_id;
-+	__u64			command_buffer;
-+	__u32			command_length;
-+	__u32			priv_drv_data_size;
-+#ifdef __KERNEL__
-+	void			*priv_drv_data;
-+#else
-+	__u64			priv_drv_data;
-+#endif
-+	__u32			num_primaries;
-+	__u32			reserved1;
-+#ifdef __KERNEL__
-+	struct d3dkmthandle	*written_primaries;
-+#else
-+	__u64			written_primaries;
-+#endif
-+};
-+
- enum d3dkmt_standardallocationtype {
- 	_D3DKMT_STANDARDALLOCATIONTYPE_EXISTINGHEAP	= 1,
- 	_D3DKMT_STANDARDALLOCATIONTYPE_CROSSADAPTER	= 2,
-@@ -917,6 +971,8 @@ struct d3dkmt_enumadapters3 {
- 	_IOWR(0x47, 0x07, struct d3dkmt_createpagingqueue)
- #define LX_DXQUERYADAPTERINFO		\
- 	_IOWR(0x47, 0x09, struct d3dkmt_queryadapterinfo)
-+#define LX_DXSUBMITCOMMAND		\
-+	_IOWR(0x47, 0x0f, struct d3dkmt_submitcommand)
- #define LX_DXCREATESYNCHRONIZATIONOBJECT \
- 	_IOWR(0x47, 0x10, struct d3dkmt_createsynchronizationobject2)
- #define LX_DXSIGNALSYNCHRONIZATIONOBJECT \
-@@ -945,6 +1001,8 @@ struct d3dkmt_enumadapters3 {
- 	_IOWR(0x47, 0x32, struct d3dkmt_signalsynchronizationobjectfromgpu)
- #define LX_DXSIGNALSYNCHRONIZATIONOBJECTFROMGPU2 \
- 	_IOWR(0x47, 0x33, struct d3dkmt_signalsynchronizationobjectfromgpu2)
-+#define LX_DXSUBMITCOMMANDTOHWQUEUE	\
-+	_IOWR(0x47, 0x34, struct d3dkmt_submitcommandtohwqueue)
- #define LX_DXSUBMITSIGNALSYNCOBJECTSTOHWQUEUE \
- 	_IOWR(0x47, 0x35, struct d3dkmt_submitsignalsyncobjectstohwqueue)
- #define LX_DXSUBMITWAITFORSYNCOBJECTSTOHWQUEUE \
+ #endif /* _D3DKMTHK_H */
 
