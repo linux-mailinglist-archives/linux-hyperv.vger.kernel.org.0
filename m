@@ -1,80 +1,80 @@
-Return-Path: <linux-hyperv+bounces-9602-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9603-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WHMbALxcvGlxxQIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9602-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:29:48 +0100
+	id +FVxJ+BcvGlxxQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9603-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:30:24 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id A967D2D2240
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:29:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FDAE2D2257
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:30:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id EC6D2304AA3A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 20:27:17 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C1D0A308642E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 20:27:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2B653FD143;
-	Thu, 19 Mar 2026 20:25:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6E0B3F786C;
+	Thu, 19 Mar 2026 20:25:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e3aOeCss"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQCLFGJh"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE20B3FCB04
-	for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 20:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6B63FCB1F
+	for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 20:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773951953; cv=none; b=jASoyuSM5v3C9aQklwKW9uqjtvmptRL+Le+5voh82sEvUoQdeK1xbNs955p5zISmZvE7xK7ydVVCNj0zsTdLodKy9N9ebl2IGkeF6vPciajbvKPgtPOvZafRedogqTqMwQMsPuOhv7YpMtqxVUOs49aNgUHpPYKdww4DbrCFeqE=
+	t=1773951955; cv=none; b=q4eFPq9eY9di/USx7J5YL3P29otc/cbiTEiBUB5mfFfA88vCxiHNtUjmKpAFSubaNB+sYJfYMpXXyUf+Z8lKVPzyXqDu3HLsfdgWSfYZx/8QscJm0Rw7rpYC6Dbjucz96SG4fG6OqcKSTSS6HBCMwWn8Yk02Q4Ru4kahuyEagjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773951953; c=relaxed/simple;
-	bh=oKy7K50U4xod7H9n2WA1hO9ZTdC4HWwRfYzOW8vTIGw=;
+	s=arc-20240116; t=1773951955; c=relaxed/simple;
+	bh=lbJJqathQ0RsrVpKR+Bj4fX/ytc5wlKUMv0nb6CZSto=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FtCKp++fRdEqXKEJkic89iS/VTnkf/lbpipuU7chk2C1eYOCq5Va03TTb4MW7d8Sx/v558nba4IGgbcFN5hoF5Bbl3GkDtHKKBCvlLGmpEeobOcqvBPlsej1nyjGNwLUlUNOB7Rh7eCaXQ78NZkqx971hBQnDdzxlj5zWR726Tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e3aOeCss; arc=none smtp.client-ip=209.85.128.45
+	 MIME-Version; b=HznOQQ0lmhQjE9UKvjwGiJ1zGct6gH2S+lYhi7mjFnnBHsaX3DKyP6HpBX19K2HPMYD8pV6GSWx7d+H3A7Dr1+SAwPRp/A5t66mtB+1lbToKnnhgs/xBBRPViE41JRRr8SYbiYPFPEsMtXNpjtHG6QVzARbxy8Q3C7dL/8pAVnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gQCLFGJh; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4852afd42ceso9939445e9.2
-        for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 13:25:49 -0700 (PDT)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-486ff3a0fc1so267375e9.2
+        for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 13:25:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773951948; x=1774556748; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773951949; x=1774556749; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ckjfDHMjepp0Dv0WHHzgU1DF+dSRdE5LwZWVFCBJz5A=;
-        b=e3aOeCssjX2RslYT1X0q3iwAMw2Un/xTG6FAEragbdFJfsTE/1VLHz6woCCMKHw1bn
-         ytDCI3AUpgAyp+ZZ7/t6o4336pfP8aBjtjxM4ZwHE9GDIv7qAfRUfq7NwzCe2+tHGerD
-         cLEmIDYnE0TjN+zz4Lu8y9a5VgZHCoSH1khT+EmDWhIRU2P2QRRHg2mwvK7t+DHMl4qk
-         8XvrxdUfDDkq2VRABmkRACXbbeQmkH4aZnjWMYdYu6JJwGaqzR+6YNhJsiTUHJPNxIKz
-         PoH012wIwcJQxN0ZBumEO7BhmTdXO0Xn6B5N16aZ/XUp9OJt2fPIEUMxd0ES8mhjSzjH
-         lF1g==
+        bh=yfPgBA+Pl94DE98AaTxzZlc8zjDbPiM5ZxN+Lw61xBc=;
+        b=gQCLFGJhUnFinELTygYYEzWUR+/WXM5Kz28y76QDI0MCPbKQd8fJCuLDKum6b7KvQf
+         bL93M/B2C519lWOr5ehriWuYbPGwRwUObN80JE0WM4s9VtPYIpW23VUNVESmIShBwJAd
+         N93bpGYT8iehtNGN/dJkMi/5W0q0SQk4TqyPWKlBkJF5mwfMYLv+lHB/xMWm6LCySIg9
+         3m7iwtw7NMdYzDZJpmfOFMRTleuJiOB3lpnk/p86x820hFTIk6DLY44gXJ4yP6QL4g08
+         98jO26vtonKsQcyyskIuNtZznzTI+MNkznhWl8n9tpF6JmDnuqKAihqFxhQN6HPiqV+h
+         bWNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773951948; x=1774556748;
+        d=1e100.net; s=20251104; t=1773951949; x=1774556749;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=ckjfDHMjepp0Dv0WHHzgU1DF+dSRdE5LwZWVFCBJz5A=;
-        b=FovgxiHvfMiZY8PzY+pvk42FlvijdD4nuUBKR/zAX/HubuSYw3mZam6exdnWNh3jNX
-         R+pqjmZ9xiYSDXKLQOWuaQXAiNOU24md7opXkWOBLt8jfzsvbzGIYEQgSxLJteoAK7GS
-         NTrGdNUjGiNM21jsHKnhl7XHotPrhktevAw6ROIIg5tSCmYJ0/bZhepKmdEYhy+1q9E1
-         ICl7E2jb2FOm7f2ExXy68hSmO9Lv0gUlp2g6aPev9VcRL9DVsaC+OurOvz/G53/XoiZS
-         7dcDd35+o3VO1x3PvmMSbuc03wUM9GwiCelcvfAE4gQor4kp8QRk+uIy03K+oegz+Iho
-         LuRQ==
-X-Gm-Message-State: AOJu0YwsRoBamvsw6NA/FCAiff0hrjJ5H5lmMQNWZ63sBTmlSOyc4Tna
-	we4YCV6+rm2Lo1mrC2C0Xxj1vJpBLmUZBO4NY0akKDqsZ1Lr8KZPrQ7S7gKhdtHUY/Q=
-X-Gm-Gg: ATEYQzywQ5qbQeR7KQhJhx2L3g+VSzeZtDvjYMKP1YaHtf/yd7qaSPmwcS10Z9QIijb
-	V/iygdMeMn1qSkzOpT4tDy+DX4kT9ROy+ZnogalwmZDqkGcCRraAnQziJi/3sOtdQueUAQ0CuIR
-	JgrZH6O3Yn/QVhjjwJhOM5dYYEy80DAULR0nwnVjc2T98i08Aa9Iqqtc4+iJVOXfbA6MeUMdmm3
-	IRvWuNssJ0h5vlRL/tGfr0KNqdLqd8xbcq4DJerZhP5ubAzZP+EMMp/LnpcJJQ5960HrtZxuyH2
-	TuQwpcQTjnt74rgLoC35u9yJ7GraTODb9wzwADJsY8J6/1/mRNp5hnOKYKNNWcnqt1DP1yU+EB8
-	ZP08dWodIGAFjmr0mxYug0KpSevcFm4HIt4014C9gjDf90BFfHsqfJh2mErxe+Wnwc9Vbob1xyt
-	rIUUvHfu/kPHts0v+Peurl+AmG37wXiw5keEBJ+SNostzVx6MEEGANsToj8/M=
-X-Received: by 2002:a05:600c:8508:b0:485:3b00:f92e with SMTP id 5b1f17b1804b1-486fedab7dbmr7342275e9.2.1773951947822;
-        Thu, 19 Mar 2026 13:25:47 -0700 (PDT)
+        bh=yfPgBA+Pl94DE98AaTxzZlc8zjDbPiM5ZxN+Lw61xBc=;
+        b=HfMjNNm3uAt6hAD2zjhghr2RULTjeQG5yBfGH+00nSUYtV7uLsqGFRZ7SZoELu1CWO
+         Fy2tBftRAy40A1u/k5UNas4b1GIkpFfbZQYDj0WR8oDhR3cLysn1Zc5t0Htl2z+gDhnY
+         GgDs21UFU3zCwf1aRuShfii8Xcg5LcCk1BrT0grA+WmwD/gE2V/lt7vwSya5ppm4+cJS
+         8ViXF9bq+jUMa55E0+kkqh7BpQwHFrPGvXQNBIJlHnQJQT0jrnd66O9GLvBKcVoQkNNZ
+         23J1dC0zSMkuVo6AbpTJd2F27ADROXKlsc/wVhxMfRxEmXbGTrQT1pGq+y6czAmLd2zn
+         CfsA==
+X-Gm-Message-State: AOJu0YxSCrai/TuNbXjVP5DmUrna6PysBVtaa9FsqowLnqDsG7T6Pbvy
+	y8FwrpULPf5ieGgJKThUVu48EumzN16vPxr7K/vwyTUx4wc8NX6ytHsGOgI11fTITlY=
+X-Gm-Gg: ATEYQzzFXuG8W3vPXuqFZQnvFbZx7qiB+p7VLKcws/eg/Skep9+ACIU9gjP1WY/qwJH
+	qx46j4t5hb569Qcfim+YBNcSuDxYP71zO8WyJn0I51ZnANB2PwFiFDP/5rUjfaZsP/kZgwTzmkd
+	2g5/Jw8LY8MPOJ5tC0fACcJLtcfwLNvqgJ98xtnF04TN9SiWDeoFsOyFza2nZ/jMO1dCqVvDncy
+	IC0vg5btTDm+GDxcAfxBZJfRDfKprby67z3akHFrw3sBJPbA4BJe5w/61c5IzIg+AWqWftwtz1Z
+	G6bYXku9dPJtdBKcRyLAgsIcfjRSpUgpBYxubBPQUWRXKOOMaQzU5FZM6IF4FEqOpkZ8i1VuobC
+	3tNzdCVtjuu+CQZHvelp/0D2LV7f51p01heWk66GQaD/bo0XJbbV5XJVA5FDG9VEGJrAJmbQwah
+	796Q7De0/lNpUXXX/27mDOFN7c/U4zBBgBDGUXOkMPbraZWovJ
+X-Received: by 2002:a05:6000:420c:b0:43b:460a:b13 with SMTP id ffacd0b85a97d-43b64281506mr1176416f8f.44.1773951948875;
+        Thu, 19 Mar 2026 13:25:48 -0700 (PDT)
 Received: from LQ5W56KC4T ([2001:8a0:672f:7800:e0e1:55cd:f0b:b1e5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b644ae16fsm1347544f8f.8.2026.03.19.13.25.46
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b644ae16fsm1347544f8f.8.2026.03.19.13.25.47
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 19 Mar 2026 13:25:47 -0700 (PDT)
+        Thu, 19 Mar 2026 13:25:48 -0700 (PDT)
 From: Eric Curtin <ericcurtin17@gmail.com>
 X-Google-Original-From: Eric Curtin <eric.curtin@docker.com>
 To: linux-hyperv@vger.kernel.org
@@ -83,9 +83,9 @@ Cc: linux-kernel@vger.kernel.org,
 	wei.liu@kernel.org,
 	decui@microsoft.com,
 	haiyangz@microsoft.com
-Subject: [PATCH 30/55] drivers: hv: dxgkrnl: Remove dxgk_init_ioctls
-Date: Thu, 19 Mar 2026 20:24:44 +0000
-Message-ID: <20260319202509.63802-31-eric.curtin@docker.com>
+Subject: [PATCH 31/55] drivers: hv: dxgkrnl: Creation of dxgsyncfile objects
+Date: Thu, 19 Mar 2026 20:24:45 +0000
+Message-ID: <20260319202509.63802-32-eric.curtin@docker.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260319202509.63802-1-eric.curtin@docker.com>
 References: <20260319202509.63802-1-eric.curtin@docker.com>
@@ -110,7 +110,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9602-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9603-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6];
@@ -123,102 +123,486 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[docker.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: A967D2D2240
+X-Rspamd-Queue-Id: 2FDAE2D2257
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Iouri Tarassov <iourit@linux.microsoft.com>
 
-The array of ioctls is initialized statically to remove the unnecessary
-function.
+Implement the ioctl to create a dxgsyncfile object
+(LX_DXCREATESYNCFILE). This object is a wrapper around a monitored
+fence sync object and a fence value.
+
+dxgsyncfile is built on top of the Linux sync_file object and
+provides a way for the user mode to synchronize with the execution
+of the device DMA packets.
+
+The ioctl creates a dxgsyncfile object for the given GPU synchronization
+object and a fence value. A file descriptor of the sync_file object
+is returned to the caller. The caller could wait for the object by using
+poll(). When the underlying GPU synchronization object is signaled on
+the host, the host sends a message to the virtual machine and the
+sync_file object is signaled.
 
 Signed-off-by: Iouri Tarassov <iourit@linux.microsoft.com>
 [kms: forward port to 6.6 from 6.1. No code changes made.]
 Signed-off-by: Kelsey Steele <kelseysteele@microsoft.com>
 ---
- drivers/hv/dxgkrnl/dxgmodule.c |  2 +-
- drivers/hv/dxgkrnl/ioctl.c     | 15 +++++++--------
- 2 files changed, 8 insertions(+), 9 deletions(-)
+ drivers/hv/dxgkrnl/Kconfig       |   2 +
+ drivers/hv/dxgkrnl/Makefile      |   2 +-
+ drivers/hv/dxgkrnl/dxgkrnl.h     |   2 +
+ drivers/hv/dxgkrnl/dxgmodule.c   |  12 ++
+ drivers/hv/dxgkrnl/dxgsyncfile.c | 215 +++++++++++++++++++++++++++++++
+ drivers/hv/dxgkrnl/dxgsyncfile.h |  30 +++++
+ drivers/hv/dxgkrnl/dxgvmbus.c    |  33 +++--
+ drivers/hv/dxgkrnl/ioctl.c       |   5 +-
+ include/uapi/misc/d3dkmthk.h     |   9 ++
+ 9 files changed, 294 insertions(+), 16 deletions(-)
+ create mode 100644 drivers/hv/dxgkrnl/dxgsyncfile.c
+ create mode 100644 drivers/hv/dxgkrnl/dxgsyncfile.h
 
+diff --git a/drivers/hv/dxgkrnl/Kconfig b/drivers/hv/dxgkrnl/Kconfig
+index bcd92bbff939..782692610887 100644
+--- a/drivers/hv/dxgkrnl/Kconfig
++++ b/drivers/hv/dxgkrnl/Kconfig
+@@ -6,6 +6,8 @@ config DXGKRNL
+ 	tristate "Microsoft Paravirtualized GPU support"
+ 	depends on HYPERV
+ 	depends on 64BIT || COMPILE_TEST
++	select DMA_SHARED_BUFFER
++	select SYNC_FILE
+ 	help
+ 	  This driver supports paravirtualized virtual compute devices, exposed
+ 	  by Microsoft Hyper-V when Linux is running inside of a virtual machine
+diff --git a/drivers/hv/dxgkrnl/Makefile b/drivers/hv/dxgkrnl/Makefile
+index fc85a47a6ad5..89824cda670a 100644
+--- a/drivers/hv/dxgkrnl/Makefile
++++ b/drivers/hv/dxgkrnl/Makefile
+@@ -2,4 +2,4 @@
+ # Makefile for the hyper-v compute device driver (dxgkrnl).
+ 
+ obj-$(CONFIG_DXGKRNL)	+= dxgkrnl.o
+-dxgkrnl-y := dxgmodule.o hmgr.o misc.o dxgadapter.o ioctl.o dxgvmbus.o dxgprocess.o
++dxgkrnl-y := dxgmodule.o hmgr.o misc.o dxgadapter.o ioctl.o dxgvmbus.o dxgprocess.o  dxgsyncfile.o
+diff --git a/drivers/hv/dxgkrnl/dxgkrnl.h b/drivers/hv/dxgkrnl/dxgkrnl.h
+index 091dbe999d33..3a69e3b34e1c 100644
+--- a/drivers/hv/dxgkrnl/dxgkrnl.h
++++ b/drivers/hv/dxgkrnl/dxgkrnl.h
+@@ -120,6 +120,7 @@ struct dxgpagingqueue {
+  */
+ enum dxghosteventtype {
+ 	dxghostevent_cpu_event = 1,
++	dxghostevent_dma_fence = 2,
+ };
+ 
+ struct dxghostevent {
+@@ -858,6 +859,7 @@ int dxgvmb_send_wait_sync_object_cpu(struct dxgprocess *process,
+ 				     struct
+ 				     d3dkmt_waitforsynchronizationobjectfromcpu
+ 				     *args,
++				     bool user_address,
+ 				     u64 cpu_event);
+ int dxgvmb_send_lock2(struct dxgprocess *process,
+ 		      struct dxgadapter *adapter,
 diff --git a/drivers/hv/dxgkrnl/dxgmodule.c b/drivers/hv/dxgkrnl/dxgmodule.c
-index b1b612b90fc1..f1245a9d8826 100644
+index f1245a9d8826..af51fcd35697 100644
 --- a/drivers/hv/dxgkrnl/dxgmodule.c
 +++ b/drivers/hv/dxgkrnl/dxgmodule.c
-@@ -300,7 +300,7 @@ static void dxgglobal_start_adapters(void)
+@@ -16,6 +16,7 @@
+ #include <linux/hyperv.h>
+ #include <linux/pci.h>
+ #include "dxgkrnl.h"
++#include "dxgsyncfile.h"
+ 
+ #define PCI_VENDOR_ID_MICROSOFT		0x1414
+ #define PCI_DEVICE_ID_VIRTUAL_RENDER	0x008E
+@@ -145,6 +146,15 @@ void dxgglobal_remove_host_event(struct dxghostevent *event)
+ 	spin_unlock_irq(&dxgglobal->host_event_list_mutex);
  }
  
- /*
-- * Stopsthe active dxgadapter objects.
-+ * Stop the active dxgadapter objects.
-  */
- static void dxgglobal_stop_adapters(void)
++static void signal_dma_fence(struct dxghostevent *eventhdr)
++{
++	struct dxgsyncpoint *event = (struct dxgsyncpoint *)eventhdr;
++
++	event->fence_value++;
++	list_del(&eventhdr->host_event_list_entry);
++	dma_fence_signal(&event->base);
++}
++
+ void signal_host_cpu_event(struct dxghostevent *eventhdr)
  {
+ 	struct dxghosteventcpu *event = (struct dxghosteventcpu *)eventhdr;
+@@ -184,6 +194,8 @@ void dxgglobal_signal_host_event(u64 event_id)
+ 			DXG_TRACE("found event to signal");
+ 			if (event->event_type == dxghostevent_cpu_event)
+ 				signal_host_cpu_event(event);
++			else if (event->event_type == dxghostevent_dma_fence)
++				signal_dma_fence(event);
+ 			else
+ 				DXG_ERR("Unknown host event type");
+ 			break;
+diff --git a/drivers/hv/dxgkrnl/dxgsyncfile.c b/drivers/hv/dxgkrnl/dxgsyncfile.c
+new file mode 100644
+index 000000000000..88fd78f08fbe
+--- /dev/null
++++ b/drivers/hv/dxgkrnl/dxgsyncfile.c
+@@ -0,0 +1,215 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * Copyright (c) 2022, Microsoft Corporation.
++ *
++ * Author:
++ *   Iouri Tarassov <iourit@linux.microsoft.com>
++ *
++ * Dxgkrnl Graphics Driver
++ * Ioctl implementation
++ *
++ */
++
++#include <linux/eventfd.h>
++#include <linux/file.h>
++#include <linux/fs.h>
++#include <linux/anon_inodes.h>
++#include <linux/mman.h>
++
++#include "dxgkrnl.h"
++#include "dxgvmbus.h"
++#include "dxgsyncfile.h"
++
++#undef dev_fmt
++#define dev_fmt(fmt)	"dxgk: " fmt
++
++#ifdef DEBUG
++static char *errorstr(int ret)
++{
++	return ret < 0 ? "err" : "";
++}
++#endif
++
++static const struct dma_fence_ops dxgdmafence_ops;
++
++static struct dxgsyncpoint *to_syncpoint(struct dma_fence *fence)
++{
++	if (fence->ops != &dxgdmafence_ops)
++		return NULL;
++	return container_of(fence, struct dxgsyncpoint, base);
++}
++
++int dxgkio_create_sync_file(struct dxgprocess *process, void *__user inargs)
++{
++	struct d3dkmt_createsyncfile args;
++	struct dxgsyncpoint *pt = NULL;
++	int ret = 0;
++	int fd = get_unused_fd_flags(O_CLOEXEC);
++	struct sync_file *sync_file = NULL;
++	struct dxgdevice *device = NULL;
++	struct dxgadapter *adapter = NULL;
++	struct d3dkmt_waitforsynchronizationobjectfromcpu waitargs = {};
++
++	if (fd < 0) {
++		DXG_ERR("get_unused_fd_flags failed: %d", fd);
++		ret = fd;
++		goto cleanup;
++	}
++
++	ret = copy_from_user(&args, inargs, sizeof(args));
++	if (ret) {
++		DXG_ERR("failed to copy input args");
++		ret = -EFAULT;
++		goto cleanup;
++	}
++
++	device = dxgprocess_device_by_handle(process, args.device);
++	if (device == NULL) {
++		DXG_ERR("dxgprocess_device_by_handle failed");
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	ret = dxgdevice_acquire_lock_shared(device);
++	if (ret < 0) {
++		DXG_ERR("dxgdevice_acquire_lock_shared failed");
++		device = NULL;
++		goto cleanup;
++	}
++
++	adapter = device->adapter;
++	ret = dxgadapter_acquire_lock_shared(adapter);
++	if (ret < 0) {
++		DXG_ERR("dxgadapter_acquire_lock_shared failed");
++		adapter = NULL;
++		goto cleanup;
++	}
++
++	pt = kzalloc(sizeof(*pt), GFP_KERNEL);
++	if (!pt) {
++		ret = -ENOMEM;
++		goto cleanup;
++	}
++	spin_lock_init(&pt->lock);
++	pt->fence_value = args.fence_value;
++	pt->context = dma_fence_context_alloc(1);
++	pt->hdr.event_id = dxgglobal_new_host_event_id();
++	pt->hdr.event_type = dxghostevent_dma_fence;
++	dxgglobal_add_host_event(&pt->hdr);
++
++	dma_fence_init(&pt->base, &dxgdmafence_ops, &pt->lock,
++		       pt->context, args.fence_value);
++
++	sync_file = sync_file_create(&pt->base);
++	if (sync_file == NULL) {
++		DXG_ERR("sync_file_create failed");
++		ret = -ENOMEM;
++		goto cleanup;
++	}
++	dma_fence_put(&pt->base);
++
++	waitargs.device = args.device;
++	waitargs.object_count = 1;
++	waitargs.objects = &args.monitored_fence;
++	waitargs.fence_values = &args.fence_value;
++	ret = dxgvmb_send_wait_sync_object_cpu(process, adapter,
++					       &waitargs, false,
++					       pt->hdr.event_id);
++	if (ret < 0) {
++		DXG_ERR("dxgvmb_send_wait_sync_object_cpu failed");
++		goto cleanup;
++	}
++
++	args.sync_file_handle = (u64)fd;
++	ret = copy_to_user(inargs, &args, sizeof(args));
++	if (ret) {
++		DXG_ERR("failed to copy output args");
++		ret = -EFAULT;
++		goto cleanup;
++	}
++
++	fd_install(fd, sync_file->file);
++
++cleanup:
++	if (adapter)
++		dxgadapter_release_lock_shared(adapter);
++	if (device)
++		dxgdevice_release_lock_shared(device);
++	if (ret) {
++		if (sync_file) {
++			fput(sync_file->file);
++			/* sync_file_release will destroy dma_fence */
++			pt = NULL;
++		}
++		if (pt)
++			dma_fence_put(&pt->base);
++		if (fd >= 0)
++			put_unused_fd(fd);
++	}
++	DXG_TRACE("ioctl:%s %d", errorstr(ret), ret);
++	return ret;
++}
++
++static const char *dxgdmafence_get_driver_name(struct dma_fence *fence)
++{
++	return "dxgkrnl";
++}
++
++static const char *dxgdmafence_get_timeline_name(struct dma_fence *fence)
++{
++	return "no_timeline";
++}
++
++static void dxgdmafence_release(struct dma_fence *fence)
++{
++	struct dxgsyncpoint *syncpoint;
++
++	syncpoint = to_syncpoint(fence);
++	if (syncpoint) {
++		if (syncpoint->hdr.event_id)
++			dxgglobal_get_host_event(syncpoint->hdr.event_id);
++		kfree(syncpoint);
++	}
++}
++
++static bool dxgdmafence_signaled(struct dma_fence *fence)
++{
++	struct dxgsyncpoint *syncpoint;
++
++	syncpoint = to_syncpoint(fence);
++	if (syncpoint == 0)
++		return true;
++	return __dma_fence_is_later(syncpoint->fence_value, fence->seqno,
++				    fence->ops);
++}
++
++static bool dxgdmafence_enable_signaling(struct dma_fence *fence)
++{
++	return true;
++}
++
++static void dxgdmafence_value_str(struct dma_fence *fence,
++				  char *str, int size)
++{
++	snprintf(str, size, "%lld", fence->seqno);
++}
++
++static void dxgdmafence_timeline_value_str(struct dma_fence *fence,
++					   char *str, int size)
++{
++	struct dxgsyncpoint *syncpoint;
++
++	syncpoint = to_syncpoint(fence);
++	snprintf(str, size, "%lld", syncpoint->fence_value);
++}
++
++static const struct dma_fence_ops dxgdmafence_ops = {
++	.get_driver_name = dxgdmafence_get_driver_name,
++	.get_timeline_name = dxgdmafence_get_timeline_name,
++	.enable_signaling = dxgdmafence_enable_signaling,
++	.signaled = dxgdmafence_signaled,
++	.release = dxgdmafence_release,
++	.fence_value_str = dxgdmafence_value_str,
++	.timeline_value_str = dxgdmafence_timeline_value_str,
++};
+diff --git a/drivers/hv/dxgkrnl/dxgsyncfile.h b/drivers/hv/dxgkrnl/dxgsyncfile.h
+new file mode 100644
+index 000000000000..207ef9b30f67
+--- /dev/null
++++ b/drivers/hv/dxgkrnl/dxgsyncfile.h
+@@ -0,0 +1,30 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/*
++ * Copyright (c) 2022, Microsoft Corporation.
++ *
++ * Author:
++ *   Iouri Tarassov <iourit@linux.microsoft.com>
++ *
++ * Dxgkrnl Graphics Driver
++ * Headers for sync file objects
++ *
++ */
++
++#ifndef _DXGSYNCFILE_H
++#define _DXGSYNCFILE_H
++
++#include <linux/sync_file.h>
++
++int dxgkio_create_sync_file(struct dxgprocess *process, void *__user inargs);
++
++struct dxgsyncpoint {
++	struct dxghostevent	hdr;
++	struct dma_fence	base;
++	u64			fence_value;
++	u64			context;
++	spinlock_t		lock;
++	u64			u64;
++};
++
++#endif	 /* _DXGSYNCFILE_H */
+diff --git a/drivers/hv/dxgkrnl/dxgvmbus.c b/drivers/hv/dxgkrnl/dxgvmbus.c
+index 4d7807909284..913ea3cabb31 100644
+--- a/drivers/hv/dxgkrnl/dxgvmbus.c
++++ b/drivers/hv/dxgkrnl/dxgvmbus.c
+@@ -2820,6 +2820,7 @@ int dxgvmb_send_wait_sync_object_cpu(struct dxgprocess *process,
+ 				     struct
+ 				     d3dkmt_waitforsynchronizationobjectfromcpu
+ 				     *args,
++				     bool user_address,
+ 				     u64 cpu_event)
+ {
+ 	int ret = -EINVAL;
+@@ -2844,19 +2845,25 @@ int dxgvmb_send_wait_sync_object_cpu(struct dxgprocess *process,
+ 	command->guest_event_pointer = (u64) cpu_event;
+ 	current_pos = (u8 *) &command[1];
+ 
+-	ret = copy_from_user(current_pos, args->objects, object_size);
+-	if (ret) {
+-		DXG_ERR("failed to copy objects");
+-		ret = -EINVAL;
+-		goto cleanup;
+-	}
+-	current_pos += object_size;
+-	ret = copy_from_user(current_pos, args->fence_values,
+-				fence_size);
+-	if (ret) {
+-		DXG_ERR("failed to copy fences");
+-		ret = -EINVAL;
+-		goto cleanup;
++	if (user_address) {
++		ret = copy_from_user(current_pos, args->objects, object_size);
++		if (ret) {
++			DXG_ERR("failed to copy objects");
++			ret = -EINVAL;
++			goto cleanup;
++		}
++		current_pos += object_size;
++		ret = copy_from_user(current_pos, args->fence_values,
++					fence_size);
++		if (ret) {
++			DXG_ERR("failed to copy fences");
++			ret = -EINVAL;
++			goto cleanup;
++		}
++	} else {
++		memcpy(current_pos, args->objects, object_size);
++		current_pos += object_size;
++		memcpy(current_pos, args->fence_values, fence_size);
+ 	}
+ 
+ 	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
 diff --git a/drivers/hv/dxgkrnl/ioctl.c b/drivers/hv/dxgkrnl/ioctl.c
-index f6700e974f25..8732a66040a0 100644
+index 8732a66040a0..6c26aafb0619 100644
 --- a/drivers/hv/dxgkrnl/ioctl.c
 +++ b/drivers/hv/dxgkrnl/ioctl.c
-@@ -26,7 +26,6 @@
- struct ioctl_desc {
- 	int (*ioctl_callback)(struct dxgprocess *p, void __user *arg);
- 	u32 ioctl;
--	u32 arg_size;
+@@ -19,6 +19,7 @@
+ 
+ #include "dxgkrnl.h"
+ #include "dxgvmbus.h"
++#include "dxgsyncfile.h"
+ 
+ #undef pr_fmt
+ #define pr_fmt(fmt)	"dxgk: " fmt
+@@ -3488,7 +3489,7 @@ dxgkio_wait_sync_object_cpu(struct dxgprocess *process, void *__user inargs)
+ 	}
+ 
+ 	ret = dxgvmb_send_wait_sync_object_cpu(process, adapter,
+-					       &args, event_id);
++					       &args, true, event_id);
+ 	if (ret < 0)
+ 		goto cleanup;
+ 
+@@ -5224,7 +5225,7 @@ static struct ioctl_desc ioctls[] = {
+ /* 0x42 */	{dxgkio_open_resource_nt, LX_DXOPENRESOURCEFROMNTHANDLE},
+ /* 0x43 */	{dxgkio_query_statistics, LX_DXQUERYSTATISTICS},
+ /* 0x44 */	{dxgkio_share_object_with_host, LX_DXSHAREOBJECTWITHHOST},
+-/* 0x45 */	{},
++/* 0x45 */	{dxgkio_create_sync_file, LX_DXCREATESYNCFILE},
  };
  
- #ifdef DEBUG
-@@ -91,7 +90,7 @@ static const struct file_operations dxg_resource_fops = {
+ /*
+diff --git a/include/uapi/misc/d3dkmthk.h b/include/uapi/misc/d3dkmthk.h
+index 1f60f5120e1d..c7f168425dc7 100644
+--- a/include/uapi/misc/d3dkmthk.h
++++ b/include/uapi/misc/d3dkmthk.h
+@@ -1554,6 +1554,13 @@ struct d3dkmt_shareobjectwithhost {
+ 	__u64			object_vail_nt_handle;
  };
  
- static int dxgkio_open_adapter_from_luid(struct dxgprocess *process,
--						   void *__user inargs)
-+					void *__user inargs)
- {
- 	struct d3dkmt_openadapterfromluid args;
- 	int ret;
-@@ -1002,7 +1001,7 @@ dxgkio_create_hwqueue(struct dxgprocess *process, void *__user inargs)
- }
++struct d3dkmt_createsyncfile {
++	struct d3dkmthandle	device;
++	struct d3dkmthandle	monitored_fence;
++	__u64			fence_value;
++	__u64			sync_file_handle;	/* out */
++};
++
+ /*
+  * Dxgkrnl Graphics Port Driver ioctl definitions
+  *
+@@ -1677,5 +1684,7 @@ struct d3dkmt_shareobjectwithhost {
+ 	_IOWR(0x47, 0x43, struct d3dkmt_querystatistics)
+ #define LX_DXSHAREOBJECTWITHHOST	\
+ 	_IOWR(0x47, 0x44, struct d3dkmt_shareobjectwithhost)
++#define LX_DXCREATESYNCFILE	\
++	_IOWR(0x47, 0x45, struct d3dkmt_createsyncfile)
  
- static int dxgkio_destroy_hwqueue(struct dxgprocess *process,
--					    void *__user inargs)
-+				void *__user inargs)
- {
- 	struct d3dkmt_destroyhwqueue args;
- 	int ret;
-@@ -2280,7 +2279,8 @@ dxgkio_submit_command(struct dxgprocess *process, void *__user inargs)
- }
- 
- static int
--dxgkio_submit_command_to_hwqueue(struct dxgprocess *process, void *__user inargs)
-+dxgkio_submit_command_to_hwqueue(struct dxgprocess *process,
-+				void *__user inargs)
- {
- 	int ret;
- 	struct d3dkmt_submitcommandtohwqueue args;
-@@ -5087,8 +5087,7 @@ open_resource(struct dxgprocess *process,
- }
- 
- static int
--dxgkio_open_resource_nt(struct dxgprocess *process,
--				      void *__user inargs)
-+dxgkio_open_resource_nt(struct dxgprocess *process, void *__user inargs)
- {
- 	struct d3dkmt_openresourcefromnthandle args;
- 	struct d3dkmt_openresourcefromnthandle *__user args_user = inargs;
-@@ -5166,7 +5165,7 @@ static struct ioctl_desc ioctls[] = {
- /* 0x14 */	{dxgkio_enum_adapters, LX_DXENUMADAPTERS2},
- /* 0x15 */	{dxgkio_close_adapter, LX_DXCLOSEADAPTER},
- /* 0x16 */	{dxgkio_change_vidmem_reservation,
--		  LX_DXCHANGEVIDEOMEMORYRESERVATION},
-+		 LX_DXCHANGEVIDEOMEMORYRESERVATION},
- /* 0x17 */	{},
- /* 0x18 */	{dxgkio_create_hwqueue, LX_DXCREATEHWQUEUE},
- /* 0x19 */	{dxgkio_destroy_device, LX_DXDESTROYDEVICE},
-@@ -5205,7 +5204,7 @@ static struct ioctl_desc ioctls[] = {
- 		 LX_DXSIGNALSYNCHRONIZATIONOBJECTFROMGPU2},
- /* 0x34 */	{dxgkio_submit_command_to_hwqueue, LX_DXSUBMITCOMMANDTOHWQUEUE},
- /* 0x35 */	{dxgkio_submit_signal_to_hwqueue,
--		  LX_DXSUBMITSIGNALSYNCOBJECTSTOHWQUEUE},
-+		 LX_DXSUBMITSIGNALSYNCOBJECTSTOHWQUEUE},
- /* 0x36 */	{dxgkio_submit_wait_to_hwqueue,
- 		 LX_DXSUBMITWAITFORSYNCOBJECTSTOHWQUEUE},
- /* 0x37 */	{dxgkio_unlock2, LX_DXUNLOCK2},
+ #endif /* _D3DKMTHK_H */
 
