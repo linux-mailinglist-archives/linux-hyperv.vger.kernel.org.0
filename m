@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-9561-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9562-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YEBXEpg/vGlzvwIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9561-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 19:25:28 +0100
+	id iD9zOEBAvGlzvwIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9562-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 19:28:16 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC2192D0D7F
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 19:25:27 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF6EF2D0EBD
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 19:28:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 1463530266CF
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 18:25:14 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id DAD983039A5B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 18:25:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E369E3F9F44;
-	Thu, 19 Mar 2026 18:24:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 062D33FA5C4;
+	Thu, 19 Mar 2026 18:24:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PUlhN8ha"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dvwse2TY"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8653F54C4;
-	Thu, 19 Mar 2026 18:24:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23933F7E76;
+	Thu, 19 Mar 2026 18:24:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773944642; cv=none; b=XCLZ/wW57WMJHtLWHyOGoYBHENKqpUE92UMIDQtjEjBwm2SEuWD5nkhod//hAEc4DFrLMlYwHZ8N3VpQbzp+fI0IfHFK3SzEt4pUnTqn0M52synoP77SC9RBmqoYQ4nf1vLKXgzNPg6DNpyEMxFsVesP35KmrRAEBRxbw4LJFmI=
+	t=1773944645; cv=none; b=HH+mx1XrLK+tJXCfQ/tsvaPnQ7/Z6fELb3ffAM3KXve8a21/Iwa6hhVTR+NTdhFCLy5t+5c4pWfTfNXd/+BO6vc+BJFCvzkD/4FlQXIc18f/ARQm+JnhJHMEKHwmbuOt9PsJ6tUTpilYrAgmbhlAB1JaWK7VwnSveicEDOgalN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773944642; c=relaxed/simple;
-	bh=6Gs389cDcfbWp+CxLW+X4AJWAHdnJe2WbDq0Ac8c1Ks=;
+	s=arc-20240116; t=1773944645; c=relaxed/simple;
+	bh=zxWNAJj7O8GtoZ6ysYQIGq3mbn9MaN35AkA3dod/SuI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DKDeWshKQZVoSHNnQ4hdZo6GWXLsvKfxP9MjJ8LlJ+IQLA6X2uThRdNf2+zYi2cqfzCvP3jZbtHni4AJbyKyKEdbtPYdwCdZp2FqskurG2E2Og8KA9mTRP98IdpqHtZikDF/sezKd3WrWeOsTQsTfE66XdqXW/6z0cy19iHYFqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PUlhN8ha; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10260C19424;
-	Thu, 19 Mar 2026 18:24:02 +0000 (UTC)
+	 MIME-Version; b=hoIpXt9BqOpEnZIbY8lHHLwNkjFNCkwKLFS/2M/t6WoZ8Ekzz9s+ZxvEShcVGgjDjchOFY6rXnWEjH+GJ3GjH4HvvG0t90fd+ggGbH0LGMaslaHRPskl+FW4Sk1l4gnI786NorYxhNuqurWcPWKbtCg/PsQ7FBLCSZc6ZaMCW58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dvwse2TY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAFBEC2BCAF;
+	Thu, 19 Mar 2026 18:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773944642;
-	bh=6Gs389cDcfbWp+CxLW+X4AJWAHdnJe2WbDq0Ac8c1Ks=;
+	s=k20201202; t=1773944645;
+	bh=zxWNAJj7O8GtoZ6ysYQIGq3mbn9MaN35AkA3dod/SuI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PUlhN8haks8iHpDvH0wIqg5gSdCrrEldNyOlgD9TsNyj0dXbYG6fnWoWpEQUFWx5q
-	 rTg1zx8L0sjbLEazEVdBi75GgyRFBkBC/PQzEl0CH9VAX0X/HeLOi28lekyh4tHlHL
-	 yuuNnNAEv1380wGAIGx5hEKAO+j9nXu9ijB5DcWoplNfM+EvpT/cTrZb222pK+KhBD
-	 sH7f+F/tco8dLn58XHzoh2T+tXJPX17exc73Ql4kyWYH7IKG89vuFHwbo1UQdXVEmk
-	 22QXHLGub2U1S3Qa+c31qYqQwJohwzKf9NScIGmL9qFhYUaRju6YRw+2gcVSMSbXqp
-	 tHS2OmWhECtEw==
+	b=dvwse2TYXUyFSEEHXSYnuuMx/6EtWicIHQiNBtjzi9BMylWZnkZolWGYbY1Dm8dG+
+	 iZEMNApPU9MiUIMHpNkl/dbTN6gvv/L5XR7vAeSUfPQbNgGc0qi4PAIw+LoNeFQTY7
+	 ETXtpSK7lClP5bOuhcNyWpLEH7mMQSWw+sIGyY0cfgoAewXRRByojGGsFCR26P16+3
+	 AsVf61sZnPetqHYg9LmjGvD35RA33pP88xZaLa1mVutFMFphplkO2Ast/BoDGGgJku
+	 7pPiqFXnb9yA9xPORUBYg0AaceYQVG4OVbOfd5gvitBw3kYujc0gpf7sK4qwnesfiH
+	 BbuNePHI8EsiQ==
 From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jonathan Corbet <corbet@lwn.net>,
@@ -89,9 +89,9 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org,
 	Ryan Roberts <ryan.roberts@arm.com>
-Subject: [PATCH v3 06/16] mm: add mmap_action_simple_ioremap()
-Date: Thu, 19 Mar 2026 18:23:30 +0000
-Message-ID: <cd8492e65adc48ab75596293c821efd21fea1283.1773944114.git.ljs@kernel.org>
+Subject: [PATCH v3 07/16] misc: open-dice: replace deprecated mmap hook with mmap_prepare
+Date: Thu, 19 Mar 2026 18:23:31 +0000
+Message-ID: <eca64f8c12ea145c9667ab7059ce16c50d919b44.1773944114.git.ljs@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1773944114.git.ljs@kernel.org>
 References: <cover.1773944114.git.ljs@kernel.org>
@@ -109,14 +109,14 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_CC(0.00)[lwn.net,ladisch.de,arndb.de,linuxfoundation.org,microsoft.com,kernel.org,linux.intel.com,gmail.com,foss.st.com,bootlin.com,nod.at,ti.com,oracle.com,redhat.com,auristor.com,zeniv.linux.org.uk,suse.cz,google.com,suse.com,suse.de,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org,lists.linux.dev,kvack.org,arm.com];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWELVE(0.00)[44];
-	TAGGED_FROM(0.00)[bounces-9561-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9562-lists,linux-hyperv=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -126,313 +126,72 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[ljs@kernel.org,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-0.968];
+	NEURAL_HAM(-0.00)[-0.970];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: DC2192D0D7F
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: EF6EF2D0EBD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Currently drivers use vm_iomap_memory() as a simple helper function for
-I/O remapping memory over a range starting at a specified physical address
-over a specified length.
+The f_op->mmap interface is deprecated, so update driver to use its
+successor, mmap_prepare.
 
-In order to utilise this from mmap_prepare, separate out the core logic
-into __simple_ioremap_prep(), update vm_iomap_memory() to use it, and add
-simple_ioremap_prepare() to do the same with a VMA descriptor object.
-
-We also add MMAP_SIMPLE_IO_REMAP and relevant fields to the struct
-mmap_action type to permit this operation also.
-
-We use mmap_action_ioremap() to set up the actual I/O remap operation once
-we have checked and figured out the parameters, which makes
-simple_ioremap_prepare() easy to implement.
-
-We then add mmap_action_simple_ioremap() to allow drivers to make use of
-this mode.
-
-We update the mmap_prepare documentation to describe this mode.  Finally,
-we update the VMA tests to reflect this change.
+The driver previously used vm_iomap_memory(), so this change replaces it
+with its mmap_prepare equivalent, mmap_action_simple_ioremap().
 
 Reviewed-by: Suren Baghdasaryan <surenb@google.com>
 Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
 ---
- Documentation/filesystems/mmap_prepare.rst |  3 +
- include/linux/mm.h                         | 24 +++++-
- include/linux/mm_types.h                   |  6 +-
- mm/internal.h                              |  1 +
- mm/memory.c                                | 85 +++++++++++++++-------
- mm/util.c                                  |  5 ++
- tools/testing/vma/include/dup.h            |  6 +-
- 7 files changed, 102 insertions(+), 28 deletions(-)
+ drivers/misc/open-dice.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/filesystems/mmap_prepare.rst b/Documentation/filesystems/mmap_prepare.rst
-index 20db474915da..be76ae475b9c 100644
---- a/Documentation/filesystems/mmap_prepare.rst
-+++ b/Documentation/filesystems/mmap_prepare.rst
-@@ -153,5 +153,8 @@ pointer. These are:
- * mmap_action_ioremap_full() - Same as mmap_action_ioremap(), only remaps
-   the entire mapping from ``start_pfn`` onward.
- 
-+* mmap_action_simple_ioremap() - Sets up an I/O remap from a specified
-+  physical address and over a specified length.
-+
- **NOTE:** The ``action`` field should never normally be manipulated directly,
- rather you ought to use one of these helpers.
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 68dee1101313..ef2e4dccfe8e 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -4337,11 +4337,33 @@ static inline void mmap_action_ioremap(struct vm_area_desc *desc,
-  * @start_pfn: The first PFN in the range to remap.
-  */
- static inline void mmap_action_ioremap_full(struct vm_area_desc *desc,
--					  unsigned long start_pfn)
-+					    unsigned long start_pfn)
- {
- 	mmap_action_ioremap(desc, desc->start, start_pfn, vma_desc_size(desc));
- }
- 
-+/**
-+ * mmap_action_simple_ioremap - helper for mmap_prepare hook to specify that the
-+ * physical range in [start_phys_addr, start_phys_addr + size) should be I/O
-+ * remapped.
-+ * @desc: The VMA descriptor for the VMA requiring remap.
-+ * @start_phys_addr: Start of the physical memory to be mapped.
-+ * @size: Size of the area to map.
-+ *
-+ * NOTE: Some drivers might want to tweak desc->page_prot for purposes of
-+ * write-combine or similar.
-+ */
-+static inline void mmap_action_simple_ioremap(struct vm_area_desc *desc,
-+					      phys_addr_t start_phys_addr,
-+					      unsigned long size)
-+{
-+	struct mmap_action *action = &desc->action;
-+
-+	action->simple_ioremap.start_phys_addr = start_phys_addr;
-+	action->simple_ioremap.size = size;
-+	action->type = MMAP_SIMPLE_IO_REMAP;
-+}
-+
- int mmap_action_prepare(struct vm_area_desc *desc);
- int mmap_action_complete(struct vm_area_struct *vma,
- 			 struct mmap_action *action,
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 4a229cc0a06b..50685cf29792 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -814,6 +814,7 @@ enum mmap_action_type {
- 	MMAP_NOTHING,		/* Mapping is complete, no further action. */
- 	MMAP_REMAP_PFN,		/* Remap PFN range. */
- 	MMAP_IO_REMAP_PFN,	/* I/O remap PFN range. */
-+	MMAP_SIMPLE_IO_REMAP,	/* I/O remap with guardrails. */
- };
- 
+diff --git a/drivers/misc/open-dice.c b/drivers/misc/open-dice.c
+index 24c29e0f00ef..45060fb4ea27 100644
+--- a/drivers/misc/open-dice.c
++++ b/drivers/misc/open-dice.c
+@@ -86,29 +86,32 @@ static ssize_t open_dice_write(struct file *filp, const char __user *ptr,
  /*
-@@ -822,13 +823,16 @@ enum mmap_action_type {
+  * Creates a mapping of the reserved memory region in user address space.
   */
- struct mmap_action {
- 	union {
--		/* Remap range. */
- 		struct {
- 			unsigned long start;
- 			unsigned long start_pfn;
- 			unsigned long size;
- 			pgprot_t pgprot;
- 		} remap;
-+		struct {
-+			phys_addr_t start_phys_addr;
-+			unsigned long size;
-+		} simple_ioremap;
- 	};
- 	enum mmap_action_type type;
- 
-diff --git a/mm/internal.h b/mm/internal.h
-index e0f554178143..2aa04d87ac10 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1804,6 +1804,7 @@ int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm);
- int remap_pfn_range_prepare(struct vm_area_desc *desc);
- int remap_pfn_range_complete(struct vm_area_struct *vma,
- 			     struct mmap_action *action);
-+int simple_ioremap_prepare(struct vm_area_desc *desc);
- 
- static inline int io_remap_pfn_range_prepare(struct vm_area_desc *desc)
+-static int open_dice_mmap(struct file *filp, struct vm_area_struct *vma)
++static int open_dice_mmap_prepare(struct vm_area_desc *desc)
  {
-diff --git a/mm/memory.c b/mm/memory.c
-index 9dec67a18116..b3bcc21af20a 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3170,6 +3170,58 @@ int remap_pfn_range_complete(struct vm_area_struct *vma,
- 	return do_remap_pfn_range(vma, start, pfn, size, prot);
- }
++	struct file *filp = desc->file;
+ 	struct open_dice_drvdata *drvdata = to_open_dice_drvdata(filp);
  
-+static int __simple_ioremap_prep(unsigned long vm_len, pgoff_t vm_pgoff,
-+				 phys_addr_t start_phys, unsigned long size,
-+				 unsigned long *pfnp)
-+{
-+	unsigned long pfn, pages;
-+
-+	/* Check that the physical memory area passed in looks valid */
-+	if (start_phys + size < start_phys)
-+		return -EINVAL;
-+	/*
-+	 * You *really* shouldn't map things that aren't page-aligned,
-+	 * but we've historically allowed it because IO memory might
-+	 * just have smaller alignment.
-+	 */
-+	size += start_phys & ~PAGE_MASK;
-+	pfn = start_phys >> PAGE_SHIFT;
-+	pages = (size + ~PAGE_MASK) >> PAGE_SHIFT;
-+	if (pfn + pages < pfn)
-+		return -EINVAL;
-+
-+	/* We start the mapping 'vm_pgoff' pages into the area */
-+	if (vm_pgoff > pages)
-+		return -EINVAL;
-+	pfn += vm_pgoff;
-+	pages -= vm_pgoff;
-+
-+	/* Can we fit all of the mapping? */
-+	if ((vm_len >> PAGE_SHIFT) > pages)
-+		return -EINVAL;
-+
-+	*pfnp = pfn;
+-	if (vma->vm_flags & VM_MAYSHARE) {
++	if (vma_desc_test(desc, VMA_MAYSHARE_BIT)) {
+ 		/* Do not allow userspace to modify the underlying data. */
+-		if (vma->vm_flags & VM_WRITE)
++		if (vma_desc_test(desc, VMA_WRITE_BIT))
+ 			return -EPERM;
+ 		/* Ensure userspace cannot acquire VM_WRITE later. */
+-		vm_flags_clear(vma, VM_MAYWRITE);
++		vma_desc_clear_flags(desc, VMA_MAYWRITE_BIT);
+ 	}
+ 
+ 	/* Create write-combine mapping so all clients observe a wipe. */
+-	vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
+-	vm_flags_set(vma, VM_DONTCOPY | VM_DONTDUMP);
+-	return vm_iomap_memory(vma, drvdata->rmem->base, drvdata->rmem->size);
++	desc->page_prot = pgprot_writecombine(desc->page_prot);
++	vma_desc_set_flags(desc, VMA_DONTCOPY_BIT, VMA_DONTDUMP_BIT);
++	mmap_action_simple_ioremap(desc, drvdata->rmem->base,
++				   drvdata->rmem->size);
 +	return 0;
-+}
-+
-+int simple_ioremap_prepare(struct vm_area_desc *desc)
-+{
-+	struct mmap_action *action = &desc->action;
-+	const phys_addr_t start = action->simple_ioremap.start_phys_addr;
-+	const unsigned long size = action->simple_ioremap.size;
-+	unsigned long pfn;
-+	int err;
-+
-+	err = __simple_ioremap_prep(vma_desc_size(desc), desc->pgoff,
-+				    start, size, &pfn);
-+	if (err)
-+		return err;
-+
-+	/* The I/O remap logic does the heavy lifting. */
-+	mmap_action_ioremap_full(desc, pfn);
-+	return io_remap_pfn_range_prepare(desc);
-+}
-+
- /**
-  * vm_iomap_memory - remap memory to userspace
-  * @vma: user vma to map to
-@@ -3187,32 +3239,15 @@ int remap_pfn_range_complete(struct vm_area_struct *vma,
-  */
- int vm_iomap_memory(struct vm_area_struct *vma, phys_addr_t start, unsigned long len)
- {
--	unsigned long vm_len, pfn, pages;
--
--	/* Check that the physical memory area passed in looks valid */
--	if (start + len < start)
--		return -EINVAL;
--	/*
--	 * You *really* shouldn't map things that aren't page-aligned,
--	 * but we've historically allowed it because IO memory might
--	 * just have smaller alignment.
--	 */
--	len += start & ~PAGE_MASK;
--	pfn = start >> PAGE_SHIFT;
--	pages = (len + ~PAGE_MASK) >> PAGE_SHIFT;
--	if (pfn + pages < pfn)
--		return -EINVAL;
--
--	/* We start the mapping 'vm_pgoff' pages into the area */
--	if (vma->vm_pgoff > pages)
--		return -EINVAL;
--	pfn += vma->vm_pgoff;
--	pages -= vma->vm_pgoff;
-+	const unsigned long vm_start = vma->vm_start;
-+	const unsigned long vm_end = vma->vm_end;
-+	const unsigned long vm_len = vm_end - vm_start;
-+	unsigned long pfn;
-+	int err;
+ }
  
--	/* Can we fit all of the mapping? */
--	vm_len = vma->vm_end - vma->vm_start;
--	if (vm_len >> PAGE_SHIFT > pages)
--		return -EINVAL;
-+	err = __simple_ioremap_prep(vm_len, vma->vm_pgoff, start, len, &pfn);
-+	if (err)
-+		return err;
- 
- 	/* Ok, let it rip */
- 	return io_remap_pfn_range(vma, vma->vm_start, pfn, vm_len, vma->vm_page_prot);
-diff --git a/mm/util.c b/mm/util.c
-index fc1bd8a8f3ea..879ba62b5f0c 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -1392,6 +1392,8 @@ int mmap_action_prepare(struct vm_area_desc *desc)
- 		return remap_pfn_range_prepare(desc);
- 	case MMAP_IO_REMAP_PFN:
- 		return io_remap_pfn_range_prepare(desc);
-+	case MMAP_SIMPLE_IO_REMAP:
-+		return simple_ioremap_prepare(desc);
- 	}
- 
- 	WARN_ON_ONCE(1);
-@@ -1423,6 +1425,7 @@ int mmap_action_complete(struct vm_area_struct *vma,
- 		err = remap_pfn_range_complete(vma, action);
- 		break;
- 	case MMAP_IO_REMAP_PFN:
-+	case MMAP_SIMPLE_IO_REMAP:
- 		/* Should have been delegated. */
- 		WARN_ON_ONCE(1);
- 		err = -EINVAL;
-@@ -1441,6 +1444,7 @@ int mmap_action_prepare(struct vm_area_desc *desc)
- 		break;
- 	case MMAP_REMAP_PFN:
- 	case MMAP_IO_REMAP_PFN:
-+	case MMAP_SIMPLE_IO_REMAP:
- 		WARN_ON_ONCE(1); /* nommu cannot handle these. */
- 		break;
- 	}
-@@ -1460,6 +1464,7 @@ int mmap_action_complete(struct vm_area_struct *vma,
- 		break;
- 	case MMAP_REMAP_PFN:
- 	case MMAP_IO_REMAP_PFN:
-+	case MMAP_SIMPLE_IO_REMAP:
- 		WARN_ON_ONCE(1); /* nommu cannot handle this. */
- 
- 		err = -EINVAL;
-diff --git a/tools/testing/vma/include/dup.h b/tools/testing/vma/include/dup.h
-index aa34966cbc62..1b86c34e1158 100644
---- a/tools/testing/vma/include/dup.h
-+++ b/tools/testing/vma/include/dup.h
-@@ -453,6 +453,7 @@ enum mmap_action_type {
- 	MMAP_NOTHING,		/* Mapping is complete, no further action. */
- 	MMAP_REMAP_PFN,		/* Remap PFN range. */
- 	MMAP_IO_REMAP_PFN,	/* I/O remap PFN range. */
-+	MMAP_SIMPLE_IO_REMAP,	/* I/O remap with guardrails. */
+ static const struct file_operations open_dice_fops = {
+ 	.owner = THIS_MODULE,
+ 	.read = open_dice_read,
+ 	.write = open_dice_write,
+-	.mmap = open_dice_mmap,
++	.mmap_prepare = open_dice_mmap_prepare,
  };
  
- /*
-@@ -461,13 +462,16 @@ enum mmap_action_type {
-  */
- struct mmap_action {
- 	union {
--		/* Remap range. */
- 		struct {
- 			unsigned long start;
- 			unsigned long start_pfn;
- 			unsigned long size;
- 			pgprot_t pgprot;
- 		} remap;
-+		struct {
-+			phys_addr_t start_phys_addr;
-+			unsigned long size;
-+		} simple_ioremap;
- 	};
- 	enum mmap_action_type type;
- 
+ static int __init open_dice_probe(struct platform_device *pdev)
 -- 
 2.53.0
 
