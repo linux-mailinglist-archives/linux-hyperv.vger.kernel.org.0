@@ -1,80 +1,80 @@
-Return-Path: <linux-hyperv+bounces-9591-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9590-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0MXqLvBcvGlxxQIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9591-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:30:40 +0100
+	id wFtTDsRcvGlxxQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9590-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:29:56 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5105F2D2275
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:30:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EAD92D224E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:29:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1801B325762F
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 20:26:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BBF10323DB2F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 20:26:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 520BF3FAE12;
-	Thu, 19 Mar 2026 20:25:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E18F63FADEA;
+	Thu, 19 Mar 2026 20:25:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fQO0p6hQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dlx7kWLW"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924DD3F9F56
-	for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 20:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EFD3FA5CE
+	for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 20:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773951943; cv=none; b=LQJSKnkRRe8JQXHSVyvjT3ha2Z3z2zKgrUsndvSqfSKhvJXXR1I9GXxMEpYrIvVTqPRs+QXfu3W3oE02RQa+3yUMvx0BugLCWKqx2BhIc+op882M7VmB96wj5qJcRu0uxo+LxWlC+siutRyLeNh/tsibPqkakuqzQqaBBXOlFVU=
+	t=1773951940; cv=none; b=n5hXGoeTA3WGqpuy8/CfaBX1CXV+A+N9fP/bi3c9NKIkQHZVzwWhCdYbCXEP1RJ7wx9r9Q+a2HMGkLeGq4sbhIEElt8x4sGiE4VMWYfiZxTVPoTu4Mx3yjNili8aJpiV1W3trNHYfdSZTkNQ7fsq8u2BAyxXzTBABVjLvbeDL+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773951943; c=relaxed/simple;
-	bh=3j1wDPqQSZdr8k5MF2F6ulqP/7AQz9mW4yJoIeHwvak=;
+	s=arc-20240116; t=1773951940; c=relaxed/simple;
+	bh=ZZXM/wQLEF3Dlc1WRi+Ywkz6l4XsJGiFvg+NN8EbAPA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l1aJ4tKLoyws21IsHZiBrmLTMT9kBdtmHXYx9ybIW5+2CUF5r5uWEj+hhWXevy3e4LL3svGNOFl0q+pNOn4aCqtCiDCHyyhe9aQ6VY9p5+VorJqF6j3CyvEAzyp4F26oiyiYi2cpvC3FZRBMww+43+0iiaqRABb79+3TtmghTXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fQO0p6hQ; arc=none smtp.client-ip=209.85.128.52
+	 MIME-Version; b=P2p4b9Xwja1wx+6FZPxrYGzkQVLFxF4xqYUFNw7R3vaW7UZ+x4gxOJGenoHEHnPHdYD47poN+xYUyTJQVMJaZ8uU4QcxLBXrskDilo5Gqj1rPRwGTloWYf+ca2LFqAzxujQAN5IMt4exNUYrExs0Wm9wZs+7jVZGRS2YjUS7/6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dlx7kWLW; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4852e9ca034so12259985e9.2
-        for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 13:25:36 -0700 (PDT)
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-439c9bdc1eeso1085867f8f.3
+        for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 13:25:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773951935; x=1774556735; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773951936; x=1774556736; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+ZXgxsCauWvKSz1NA+qHkAzZKiqBTe7iEdmrrC0fzSs=;
-        b=fQO0p6hQ5wPIe4cnsobl2IPAVkwgAX7lXtRU3KB2m9FtPqRn7jFOF1De0S4eU9zFeu
-         NJ4bCzwTFeHPxDmqgF6p2/f5Hwz/5VawxP2Zz/T4PVZTBghTUhMv4a4pZvssgE6m/aRD
-         hfsx0Rgb3BFSvo0ziv897cDV+HE49QU4iRCwoa1wKdXY46BYc5MUtVDEAD10T14OKKtr
-         G8L936j2XL1c1ukMKUXcJlYloTSjZcB1fDNscpx0p79uVxkbW2BLa8zlk6ORYR23aLBt
-         nteJ2ItzqDJPyrg1z4kaBOl0lg8I5kQ2CviRb3bdPgfpgrcmlXvQQb4q0KMM+n3sEAIw
-         oumw==
+        bh=o+dl+0/EV/hQJnho7KuWFmDHSw/Nz/kLByx2i7vctfo=;
+        b=Dlx7kWLWagdirKqW1Z1JhgJuK1VZxHadmH9cOca0JO3OfNzUBL5y4w+1QSS2PDUf56
+         jMw21qW7q/x/QDC39CDM/6p/6vDcfnVw0kI7VxchXsPNingow5rXdxbdemMH3+8G0uz+
+         Bz5gn51xtPiQ83yVVMlNGB3zx77coqPyZR8fKS/e7+AcG7C2ykSMZCN7WDPl1369KCVv
+         NPr+xSoUWSP/aLuHdCpvAsZ+1x7Xb7ZMx61JnBuWj8q6G0i0nfo85gSFHZ3FzbuG5akb
+         y7P4H/C2eKhczGPBapKzqowxyoyVRynGSFiyOIno0rLXiADRCg4MdH4BCGnZDxQmzfG2
+         uPTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773951935; x=1774556735;
+        d=1e100.net; s=20251104; t=1773951936; x=1774556736;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=+ZXgxsCauWvKSz1NA+qHkAzZKiqBTe7iEdmrrC0fzSs=;
-        b=HVPvkIPee4P5v5baV7pqT3cyxaerMZyHZRPsgtziKO5H8aigVMDj1YXsASGHehWy3k
-         OvzcFLbPVZSiVNoeosWXXecOodMco0ETveUV7FAtpCp8aRypmvv0jwiWfKZgz1fEcJ7I
-         Ai1tnKq2G3qUnL1UUQqihhLlb3kU1GUOm4atmL2kCcyu43ylB7E7fFfMhJs5LZtr0Vf3
-         XWtvuNU//yQuc0cNNmQqUWp2NTWU9bdDxNJnxCud+qU/98oWR59hsSmo+mrdg8bbM+p+
-         LuNnaMdHf7VVQh3i+Sn3M7YsO0ITJD1YA3FIAdoQmTN3BH1iRnmsFhTGgUcAebdpw3jM
-         /2+w==
-X-Gm-Message-State: AOJu0YxoRfFkX3IpwawiEsUYlBdckpfeCPvo1t11AH3Nx8gmoqzyop8I
-	gMTbqleEp2kTP7zWH/qXCbZjAXEBKK1+oLijsTNuNYnWSjdpvqH3dQnC3ZU7ahxUfE4=
-X-Gm-Gg: ATEYQzxVoOcmw/lfWROwbAGaIch/Eej9LVqYfOwAN+7OFd59tpjXJ6ZH+WJvDBDpPT/
-	TWuAw3hgEi6MNsOpaFDe7oaf349s7U0k/8nkpHoxfSOryzbZl1lvKhv7SNHrngBqkYV/G+vlIRQ
-	iYMIQOMgqzI5H6/Xtfvmb34qQEsmnjLg7ghWdzlWTl3sVLepqgSJlosbuHPRVRnKijXEHg/c0NY
-	QA9YtlKMPvanG36VmdJohP2aFjI7UQ+16VR2LoAFPCGzdG2T/xE+WiUcmxzE4seoY92HDCQQ7yt
-	Ql7/ja2qk3UAI8T4xL7VgzTxR6jv/5mdKdMSPmtBNQDmLqLdHW0JOLGN4GSdUBHr7CBfIy5t864
-	fjVxhMiZsFiSvIzARpm82/Wg0+f7xi8e7TmucDWcNDDIHCrKfRT5/oGLhY7WmawUHnsloFxcit7
-	oQ2Xt+AZTzIa3LcOTE1gR3EMOdlTi7KLkCKCoKWGPhDYqowMY7
-X-Received: by 2002:a05:6000:2007:b0:43b:41df:705e with SMTP id ffacd0b85a97d-43b6428aa4fmr1299751f8f.49.1773951934625;
-        Thu, 19 Mar 2026 13:25:34 -0700 (PDT)
+        bh=o+dl+0/EV/hQJnho7KuWFmDHSw/Nz/kLByx2i7vctfo=;
+        b=MpJtaPg2Lwi0NkDhFNKoeSOGCxQ+ELFk/f36134CXhBjMdiB9w3t6EiF3zXMAFPpIo
+         2sv3Y+BCsnBH3QmewzAUBp1aeYYUOyfZpuSiBHUe+3Ge1w0y68WOB8sqMZ+BcQmBViNo
+         zRFGOsVSfwNK98gO9+98aEshT7PTVcSNAmLyep60dSh6754dwNVtKvZSFWFvXqyr9HQm
+         ZKzCVxjtb8qUEBm3cqby7e2DeZBjZX7fjpYfp1y8X5THl6bN+OyOYrg+PVs1L2X0/Oc2
+         Ng87935OxdM6eV+Qx+/Y6lJsxu00/ecAxDQd4fUeE26sn+sCRIkpgLeQIwKiGoI3A5/m
+         +tqA==
+X-Gm-Message-State: AOJu0YwP3fgCysWFVHfnRlmjXRgQMcaXFtE2a0bvXtNvVlSKzV/kK5I5
+	+QBp2bWKMQSxiZouAF+sig8TNRSYufK3PISxUvlPn84UGDyRg13d/gkmYf+fcv6dQr8=
+X-Gm-Gg: ATEYQzw+KOCWUBQ/KYdrk2qOQ1XbDyOyPAmWz/nP5gdAqX9/zLwVqdqryRQIsHOn3gU
+	n3NGjck4t/4fWJanJlvm1ujxNLum88Hr7piPrIjxYAr8MHRvzqzt6ZcmWLDYBBmJVnrIWi1VrMg
+	ORSUbC2TaeH6T/XRYv1ZFhboLh1v1yXrX4DhB8QJmlnTFp1KcsBmIxiusyg/gCKUM2eAgg7NJqE
+	yOPGy0eU5/T+Sc+E1QnxXMhra5NPnqxvp160nUS4HGeBr4oEF9mCMFLHplIjOF/9PPZX4gTAgba
+	2aRqVN8RsGU/rFPJGyF+k7mTxf04mnhKv7EhV5RAYWu2NATszqMowm5q6pLyJ+LQKWVh3yTIKwJ
+	jPNYVckF3DlEKTlDBDBFhgDu8rD5Lg/xjl2zN4zmSTIIP9HrBEYxyVDivrTWTtRRf38ABpuSj9/
+	IB3npOBGNss4opuBY3bEmRMlpBk1gvBlx4RDT2v34qp9Qje5UX
+X-Received: by 2002:a05:6000:420a:b0:43b:498f:dcec with SMTP id ffacd0b85a97d-43b6423287dmr1269710f8f.3.1773951935676;
+        Thu, 19 Mar 2026 13:25:35 -0700 (PDT)
 Received: from LQ5W56KC4T ([2001:8a0:672f:7800:e0e1:55cd:f0b:b1e5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b644ae16fsm1347544f8f.8.2026.03.19.13.25.33
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b644ae16fsm1347544f8f.8.2026.03.19.13.25.34
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 19 Mar 2026 13:25:34 -0700 (PDT)
+        Thu, 19 Mar 2026 13:25:35 -0700 (PDT)
 From: Eric Curtin <ericcurtin17@gmail.com>
 X-Google-Original-From: Eric Curtin <eric.curtin@docker.com>
 To: linux-hyperv@vger.kernel.org
@@ -83,9 +83,9 @@ Cc: linux-kernel@vger.kernel.org,
 	wei.liu@kernel.org,
 	decui@microsoft.com,
 	haiyangz@microsoft.com
-Subject: [PATCH 18/55] drivers: hv: dxgkrnl: Manage device allocation properties
-Date: Thu, 19 Mar 2026 20:24:32 +0000
-Message-ID: <20260319202509.63802-19-eric.curtin@docker.com>
+Subject: [PATCH 19/55] drivers: hv: dxgkrnl: Flush heap transitions
+Date: Thu, 19 Mar 2026 20:24:33 +0000
+Message-ID: <20260319202509.63802-20-eric.curtin@docker.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260319202509.63802-1-eric.curtin@docker.com>
 References: <20260319202509.63802-1-eric.curtin@docker.com>
@@ -110,7 +110,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9591-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9590-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6];
@@ -123,375 +123,70 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[docker.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 5105F2D2275
+X-Rspamd-Queue-Id: 8EAD92D224E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Iouri Tarassov <iourit@linux.microsoft.com>
 
-Implement ioctls to manage properties of a compute device allocation:
-  - LX_DXUPDATEALLOCPROPERTY,
-  - LX_DXSETALLOCATIONPRIORITY,
-  - LX_DXGETALLOCATIONPRIORITY,
-  - LX_DXQUERYALLOCATIONRESIDENCY.
-  - LX_DXCHANGEVIDEOMEMORYRESERVATION,
+Implement the ioctl to flush heap transitions
+(LX_DXFLUSHHEAPTRANSITIONS).
 
-The LX_DXUPDATEALLOCPROPERTY ioctl requests the host to update
-various properties of a compute devoce allocation.
-
-The LX_DXSETALLOCATIONPRIORITY and LX_DXGETALLOCATIONPRIORITY ioctls
-are used to set/get allocation priority, which defines the
-importance of the allocation to be in the local device memory.
-
-The LX_DXQUERYALLOCATIONRESIDENCY ioctl queries if the allocation
-is located in the compute device accessible memory.
-
-The LX_DXCHANGEVIDEOMEMORYRESERVATION ioctl changes compute device
-memory reservation of an allocation.
+The ioctl is used to ensure that the video memory manager on the host
+flushes all internal operations.
 
 Signed-off-by: Iouri Tarassov <iourit@linux.microsoft.com>
 [kms: forward port to 6.6 from 6.1. No code changes made.]
 Signed-off-by: Kelsey Steele <kelseysteele@microsoft.com>
 ---
- drivers/hv/dxgkrnl/dxgkrnl.h  |  21 +++
- drivers/hv/dxgkrnl/dxgvmbus.c | 300 ++++++++++++++++++++++++++++++++++
- drivers/hv/dxgkrnl/dxgvmbus.h |  50 ++++++
- drivers/hv/dxgkrnl/ioctl.c    | 217 +++++++++++++++++++++++-
- include/uapi/misc/d3dkmthk.h  | 127 ++++++++++++++
- 5 files changed, 708 insertions(+), 7 deletions(-)
+ drivers/hv/dxgkrnl/dxgadapter.c |  2 +-
+ drivers/hv/dxgkrnl/dxgkrnl.h    |  3 ++
+ drivers/hv/dxgkrnl/dxgvmbus.c   | 23 ++++++++++++++++
+ drivers/hv/dxgkrnl/dxgvmbus.h   |  5 ++++
+ drivers/hv/dxgkrnl/ioctl.c      | 49 ++++++++++++++++++++++++++++++++-
+ include/uapi/misc/d3dkmthk.h    |  6 ++++
+ 6 files changed, 86 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/hv/dxgkrnl/dxgadapter.c b/drivers/hv/dxgkrnl/dxgadapter.c
+index 23f00db7637e..6f763e326a65 100644
+--- a/drivers/hv/dxgkrnl/dxgadapter.c
++++ b/drivers/hv/dxgkrnl/dxgadapter.c
+@@ -942,7 +942,7 @@ else
+ 	if (alloc->priv_drv_data)
+ 		vfree(alloc->priv_drv_data);
+ 	if (alloc->cpu_address_mapped)
+-		pr_err("Alloc IO space is mapped: %p", alloc);
++		DXG_ERR("Alloc IO space is mapped: %p", alloc);
+ 	kfree(alloc);
+ }
+ 
 diff --git a/drivers/hv/dxgkrnl/dxgkrnl.h b/drivers/hv/dxgkrnl/dxgkrnl.h
-index 1d6b552f1c1a..7fefe4617488 100644
+index 7fefe4617488..ced9dd294f5f 100644
 --- a/drivers/hv/dxgkrnl/dxgkrnl.h
 +++ b/drivers/hv/dxgkrnl/dxgkrnl.h
-@@ -851,6 +851,23 @@ int dxgvmb_send_lock2(struct dxgprocess *process,
- int dxgvmb_send_unlock2(struct dxgprocess *process,
- 			struct dxgadapter *adapter,
- 			struct d3dkmt_unlock2 *args);
-+int dxgvmb_send_update_alloc_property(struct dxgprocess *process,
-+				      struct dxgadapter *adapter,
-+				      struct d3dddi_updateallocproperty *args,
-+				      struct d3dddi_updateallocproperty *__user
-+				      inargs);
-+int dxgvmb_send_set_allocation_priority(struct dxgprocess *process,
-+					struct dxgadapter *adapter,
-+					struct d3dkmt_setallocationpriority *a);
-+int dxgvmb_send_get_allocation_priority(struct dxgprocess *process,
-+					struct dxgadapter *adapter,
-+					struct d3dkmt_getallocationpriority *a);
-+int dxgvmb_send_change_vidmem_reservation(struct dxgprocess *process,
-+					  struct dxgadapter *adapter,
-+					  struct d3dkmthandle other_process,
-+					  struct
-+					  d3dkmt_changevideomemoryreservation
-+					  *args);
- int dxgvmb_send_create_hwqueue(struct dxgprocess *process,
- 			       struct dxgadapter *adapter,
- 			       struct d3dkmt_createhwqueue *args,
-@@ -870,6 +887,10 @@ int dxgvmb_send_open_sync_object_nt(struct dxgprocess *process,
+@@ -882,6 +882,9 @@ int dxgvmb_send_query_adapter_info(struct dxgprocess *process,
+ int dxgvmb_send_submit_command_hwqueue(struct dxgprocess *process,
+ 				       struct dxgadapter *adapter,
+ 				       struct d3dkmt_submitcommandtohwqueue *a);
++int dxgvmb_send_flush_heap_transitions(struct dxgprocess *process,
++				       struct dxgadapter *adapter,
++				       struct d3dkmt_flushheaptransitions *arg);
+ int dxgvmb_send_open_sync_object_nt(struct dxgprocess *process,
+ 				    struct dxgvmbuschannel *channel,
  				    struct d3dkmt_opensyncobjectfromnthandle2
- 				    *args,
- 				    struct dxgsyncobject *syncobj);
-+int dxgvmb_send_query_alloc_residency(struct dxgprocess *process,
-+				      struct dxgadapter *adapter,
-+				      struct d3dkmt_queryallocationresidency
-+				      *args);
- int dxgvmb_send_get_device_state(struct dxgprocess *process,
- 				 struct dxgadapter *adapter,
- 				 struct d3dkmt_getdevicestate *args,
 diff --git a/drivers/hv/dxgkrnl/dxgvmbus.c b/drivers/hv/dxgkrnl/dxgvmbus.c
-index a80f84d9065a..dd2c97fee27b 100644
+index dd2c97fee27b..928fad5f133b 100644
 --- a/drivers/hv/dxgkrnl/dxgvmbus.c
 +++ b/drivers/hv/dxgkrnl/dxgvmbus.c
-@@ -1829,6 +1829,79 @@ int dxgvmb_send_destroy_allocation(struct dxgprocess *process,
+@@ -1829,6 +1829,29 @@ int dxgvmb_send_destroy_allocation(struct dxgprocess *process,
  	return ret;
  }
  
-+int dxgvmb_send_query_alloc_residency(struct dxgprocess *process,
-+				      struct dxgadapter *adapter,
-+				      struct d3dkmt_queryallocationresidency
-+				      *args)
++int dxgvmb_send_flush_heap_transitions(struct dxgprocess *process,
++				       struct dxgadapter *adapter,
++				       struct d3dkmt_flushheaptransitions *args)
 +{
-+	int ret = -EINVAL;
-+	struct dxgkvmb_command_queryallocationresidency *command = NULL;
-+	u32 cmd_size = sizeof(*command);
-+	u32 alloc_size = 0;
-+	u32 result_allocation_size = 0;
-+	struct dxgkvmb_command_queryallocationresidency_return *result = NULL;
-+	u32 result_size = sizeof(*result);
-+	struct dxgvmbusmsgres msg = {.hdr = NULL};
-+
-+	if (args->allocation_count > DXG_MAX_VM_BUS_PACKET_SIZE) {
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	if (args->allocation_count) {
-+		alloc_size = args->allocation_count *
-+			     sizeof(struct d3dkmthandle);
-+		cmd_size += alloc_size;
-+		result_allocation_size = args->allocation_count *
-+		    sizeof(args->residency_status[0]);
-+	} else {
-+		result_allocation_size = sizeof(args->residency_status[0]);
-+	}
-+	result_size += result_allocation_size;
-+
-+	ret = init_message_res(&msg, adapter, process, cmd_size, result_size);
-+	if (ret)
-+		goto cleanup;
-+	command = (void *)msg.msg;
-+	result = msg.res;
-+
-+	command_vgpu_to_host_init2(&command->hdr,
-+				   DXGK_VMBCOMMAND_QUERYALLOCATIONRESIDENCY,
-+				   process->host_handle);
-+	command->args = *args;
-+	if (alloc_size) {
-+		ret = copy_from_user(&command[1], args->allocations,
-+				     alloc_size);
-+		if (ret) {
-+			DXG_ERR("failed to copy alloc handles");
-+			ret = -EINVAL;
-+			goto cleanup;
-+		}
-+	}
-+
-+	ret = dxgvmb_send_sync_msg(msg.channel, msg.hdr, msg.size,
-+				   result, msg.res_size);
-+	if (ret < 0)
-+		goto cleanup;
-+
-+	ret = ntstatus2int(result->status);
-+	if (ret < 0)
-+		goto cleanup;
-+
-+	ret = copy_to_user(args->residency_status, &result[1],
-+			   result_allocation_size);
-+	if (ret) {
-+		DXG_ERR("failed to copy residency status");
-+		ret = -EINVAL;
-+	}
-+
-+cleanup:
-+	free_message((struct dxgvmbusmsg *)&msg, process);
-+	if (ret)
-+		DXG_TRACE("err: %d", ret);
-+	return ret;
-+}
-+
- int dxgvmb_send_get_device_state(struct dxgprocess *process,
- 				 struct dxgadapter *adapter,
- 				 struct d3dkmt_getdevicestate *args,
-@@ -2461,6 +2534,233 @@ int dxgvmb_send_unlock2(struct dxgprocess *process,
- 	return ret;
- }
- 
-+int dxgvmb_send_update_alloc_property(struct dxgprocess *process,
-+				      struct dxgadapter *adapter,
-+				      struct d3dddi_updateallocproperty *args,
-+				      struct d3dddi_updateallocproperty *__user
-+				      inargs)
-+{
-+	int ret;
-+	int ret1;
-+	struct dxgkvmb_command_updateallocationproperty *command;
-+	struct dxgkvmb_command_updateallocationproperty_return result = { };
-+	struct dxgvmbusmsg msg = {.hdr = NULL};
-+
-+	ret = init_message(&msg, adapter, process, sizeof(*command));
-+	if (ret)
-+		goto cleanup;
-+	command = (void *)msg.msg;
-+
-+	command_vgpu_to_host_init2(&command->hdr,
-+				   DXGK_VMBCOMMAND_UPDATEALLOCATIONPROPERTY,
-+				   process->host_handle);
-+	command->args = *args;
-+
-+	ret = dxgvmb_send_sync_msg(msg.channel, msg.hdr, msg.size,
-+				   &result, sizeof(result));
-+
-+	if (ret < 0)
-+		goto cleanup;
-+	ret = ntstatus2int(result.status);
-+	/* STATUS_PENING is a success code > 0 */
-+	if (ret == STATUS_PENDING) {
-+		ret1 = copy_to_user(&inargs->paging_fence_value,
-+				    &result.paging_fence_value,
-+				    sizeof(u64));
-+		if (ret1) {
-+			DXG_ERR("failed to copy paging fence");
-+			ret = -EINVAL;
-+		}
-+	}
-+cleanup:
-+	free_message(&msg, process);
-+	if (ret)
-+		DXG_TRACE("err: %d", ret);
-+	return ret;
-+}
-+
-+int dxgvmb_send_set_allocation_priority(struct dxgprocess *process,
-+				struct dxgadapter *adapter,
-+				struct d3dkmt_setallocationpriority *args)
-+{
-+	u32 cmd_size = sizeof(struct dxgkvmb_command_setallocationpriority);
-+	u32 alloc_size = 0;
-+	u32 priority_size = 0;
-+	struct dxgkvmb_command_setallocationpriority *command;
-+	int ret;
-+	struct d3dkmthandle *allocations;
-+	struct dxgvmbusmsg msg = {.hdr = NULL};
-+
-+	if (args->allocation_count > DXG_MAX_VM_BUS_PACKET_SIZE) {
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+	if (args->resource.v) {
-+		priority_size = sizeof(u32);
-+		if (args->allocation_count != 0) {
-+			ret = -EINVAL;
-+			goto cleanup;
-+		}
-+	} else {
-+		if (args->allocation_count == 0) {
-+			ret = -EINVAL;
-+			goto cleanup;
-+		}
-+		alloc_size = args->allocation_count *
-+			     sizeof(struct d3dkmthandle);
-+		cmd_size += alloc_size;
-+		priority_size = sizeof(u32) * args->allocation_count;
-+	}
-+	cmd_size += priority_size;
-+
-+	ret = init_message(&msg, adapter, process, cmd_size);
-+	if (ret)
-+		goto cleanup;
-+	command = (void *)msg.msg;
-+
-+	command_vgpu_to_host_init2(&command->hdr,
-+				   DXGK_VMBCOMMAND_SETALLOCATIONPRIORITY,
-+				   process->host_handle);
-+	command->device = args->device;
-+	command->allocation_count = args->allocation_count;
-+	command->resource = args->resource;
-+	allocations = (struct d3dkmthandle *) &command[1];
-+	ret = copy_from_user(allocations, args->allocation_list,
-+			     alloc_size);
-+	if (ret) {
-+		DXG_ERR("failed to copy alloc handle");
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+	ret = copy_from_user((u8 *) allocations + alloc_size,
-+				args->priorities, priority_size);
-+	if (ret) {
-+		DXG_ERR("failed to copy alloc priority");
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
-+
-+cleanup:
-+	free_message(&msg, process);
-+	if (ret)
-+		DXG_TRACE("err: %d", ret);
-+	return ret;
-+}
-+
-+int dxgvmb_send_get_allocation_priority(struct dxgprocess *process,
-+				struct dxgadapter *adapter,
-+				struct d3dkmt_getallocationpriority *args)
-+{
-+	u32 cmd_size = sizeof(struct dxgkvmb_command_getallocationpriority);
-+	u32 result_size;
-+	u32 alloc_size = 0;
-+	u32 priority_size = 0;
-+	struct dxgkvmb_command_getallocationpriority *command;
-+	struct dxgkvmb_command_getallocationpriority_return *result;
-+	int ret;
-+	struct d3dkmthandle *allocations;
-+	struct dxgvmbusmsgres msg = {.hdr = NULL};
-+
-+	if (args->allocation_count > DXG_MAX_VM_BUS_PACKET_SIZE) {
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+	if (args->resource.v) {
-+		priority_size = sizeof(u32);
-+		if (args->allocation_count != 0) {
-+			ret = -EINVAL;
-+			goto cleanup;
-+		}
-+	} else {
-+		if (args->allocation_count == 0) {
-+			ret = -EINVAL;
-+			goto cleanup;
-+		}
-+		alloc_size = args->allocation_count *
-+			sizeof(struct d3dkmthandle);
-+		cmd_size += alloc_size;
-+		priority_size = sizeof(u32) * args->allocation_count;
-+	}
-+	result_size = sizeof(*result) + priority_size;
-+
-+	ret = init_message_res(&msg, adapter, process, cmd_size, result_size);
-+	if (ret)
-+		goto cleanup;
-+	command = (void *)msg.msg;
-+	result = msg.res;
-+
-+	command_vgpu_to_host_init2(&command->hdr,
-+				   DXGK_VMBCOMMAND_GETALLOCATIONPRIORITY,
-+				   process->host_handle);
-+	command->device = args->device;
-+	command->allocation_count = args->allocation_count;
-+	command->resource = args->resource;
-+	allocations = (struct d3dkmthandle *) &command[1];
-+	ret = copy_from_user(allocations, args->allocation_list,
-+			     alloc_size);
-+	if (ret) {
-+		DXG_ERR("failed to copy alloc handles");
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	ret = dxgvmb_send_sync_msg(msg.channel, msg.hdr,
-+				   msg.size + msg.res_size,
-+				   result, msg.res_size);
-+	if (ret < 0)
-+		goto cleanup;
-+
-+	ret = ntstatus2int(result->status);
-+	if (ret < 0)
-+		goto cleanup;
-+
-+	ret = copy_to_user(args->priorities,
-+			   (u8 *) result + sizeof(*result),
-+			   priority_size);
-+	if (ret) {
-+		DXG_ERR("failed to copy priorities");
-+		ret = -EINVAL;
-+	}
-+
-+cleanup:
-+	free_message((struct dxgvmbusmsg *)&msg, process);
-+	if (ret)
-+		DXG_TRACE("err: %d", ret);
-+	return ret;
-+}
-+
-+int dxgvmb_send_change_vidmem_reservation(struct dxgprocess *process,
-+					  struct dxgadapter *adapter,
-+					  struct d3dkmthandle other_process,
-+					  struct
-+					  d3dkmt_changevideomemoryreservation
-+					  *args)
-+{
-+	struct dxgkvmb_command_changevideomemoryreservation *command;
++	struct dxgkvmb_command_flushheaptransitions *command;
 +	int ret;
 +	struct dxgvmbusmsg msg = {.hdr = NULL};
 +
@@ -499,13 +194,9 @@ index a80f84d9065a..dd2c97fee27b 100644
 +	if (ret)
 +		goto cleanup;
 +	command = (void *)msg.msg;
-+
 +	command_vgpu_to_host_init2(&command->hdr,
-+				   DXGK_VMBCOMMAND_CHANGEVIDEOMEMORYRESERVATION,
++				   DXGK_VMBCOMMAND_FLUSHHEAPTRANSITIONS,
 +				   process->host_handle);
-+	command->args = *args;
-+	command->args.process = other_process.v;
-+
 +	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
 +cleanup:
 +	free_message(&msg, process);
@@ -514,264 +205,37 @@ index a80f84d9065a..dd2c97fee27b 100644
 +	return ret;
 +}
 +
- int dxgvmb_send_create_hwqueue(struct dxgprocess *process,
- 			       struct dxgadapter *adapter,
- 			       struct d3dkmt_createhwqueue *args,
+ int dxgvmb_send_query_alloc_residency(struct dxgprocess *process,
+ 				      struct dxgadapter *adapter,
+ 				      struct d3dkmt_queryallocationresidency
 diff --git a/drivers/hv/dxgkrnl/dxgvmbus.h b/drivers/hv/dxgkrnl/dxgvmbus.h
-index 447bb1ba391b..dbb01b9ab066 100644
+index dbb01b9ab066..d232eb234e2c 100644
 --- a/drivers/hv/dxgkrnl/dxgvmbus.h
 +++ b/drivers/hv/dxgkrnl/dxgvmbus.h
-@@ -308,6 +308,29 @@ struct dxgkvmb_command_queryadapterinfo_return {
- 	u8				private_data[1];
+@@ -367,6 +367,11 @@ struct dxgkvmb_command_submitcommandtohwqueue {
+ 	/* PrivateDriverData */
  };
  
-+/* Returns ntstatus */
-+struct dxgkvmb_command_setallocationpriority {
++/* Returns  ntstatus */
++struct dxgkvmb_command_flushheaptransitions {
 +	struct dxgkvmb_command_vgpu_to_host hdr;
-+	struct d3dkmthandle		device;
-+	struct d3dkmthandle		resource;
-+	u32				allocation_count;
-+	/* struct d3dkmthandle    allocations[allocation_count or 0]; */
-+	/* u32 priorities[allocation_count or 1]; */
 +};
 +
-+struct dxgkvmb_command_getallocationpriority {
-+	struct dxgkvmb_command_vgpu_to_host hdr;
-+	struct d3dkmthandle		device;
-+	struct d3dkmthandle		resource;
-+	u32				allocation_count;
-+	/* struct d3dkmthandle allocations[allocation_count or 0]; */
-+};
-+
-+struct dxgkvmb_command_getallocationpriority_return {
-+	struct ntstatus			status;
-+	/* u32 priorities[allocation_count or 1]; */
-+};
-+
- struct dxgkvmb_command_createdevice {
- 	struct dxgkvmb_command_vgpu_to_host hdr;
- 	struct d3dkmt_createdeviceflags	flags;
-@@ -589,6 +612,22 @@ struct dxgkvmb_command_unlock2 {
- 	bool				use_legacy_unlock;
- };
- 
-+struct dxgkvmb_command_updateallocationproperty {
-+	struct dxgkvmb_command_vgpu_to_host hdr;
-+	struct d3dddi_updateallocproperty args;
-+};
-+
-+struct dxgkvmb_command_updateallocationproperty_return {
-+	u64				paging_fence_value;
-+	struct ntstatus			status;
-+};
-+
-+/* Returns ntstatus */
-+struct dxgkvmb_command_changevideomemoryreservation {
-+	struct dxgkvmb_command_vgpu_to_host hdr;
-+	struct d3dkmt_changevideomemoryreservation args;
-+};
-+
- /* Returns the same structure */
- struct dxgkvmb_command_createhwqueue {
- 	struct dxgkvmb_command_vgpu_to_host hdr;
-@@ -609,6 +648,17 @@ struct dxgkvmb_command_destroyhwqueue {
- 	struct d3dkmthandle		hwqueue;
- };
- 
-+struct dxgkvmb_command_queryallocationresidency {
-+	struct dxgkvmb_command_vgpu_to_host hdr;
-+	struct d3dkmt_queryallocationresidency args;
-+	/* struct d3dkmthandle allocations[0 or number of allocations] */
-+};
-+
-+struct dxgkvmb_command_queryallocationresidency_return {
-+	struct ntstatus			status;
-+	/* d3dkmt_allocationresidencystatus[NumAllocations] */
-+};
-+
- struct dxgkvmb_command_getdevicestate {
- 	struct dxgkvmb_command_vgpu_to_host hdr;
- 	struct d3dkmt_getdevicestate	args;
+ struct dxgkvmb_command_createallocation_allocinfo {
+ 	u32				flags;
+ 	u32				priv_drv_data_size;
 diff --git a/drivers/hv/dxgkrnl/ioctl.c b/drivers/hv/dxgkrnl/ioctl.c
-index 37e218443310..b626e2518ff2 100644
+index b626e2518ff2..8b7d00e4c881 100644
 --- a/drivers/hv/dxgkrnl/ioctl.c
 +++ b/drivers/hv/dxgkrnl/ioctl.c
-@@ -3214,7 +3214,7 @@ dxgkio_lock2(struct dxgprocess *process, void *__user inargs)
- 		kref_put(&device->device_kref, dxgdevice_release);
- 
- success:
--	DXG_TRACE("ioctl:%s %s %d", errorstr(ret), __func__, ret);
-+	DXG_TRACE("ioctl:%s %d", errorstr(ret), ret);
+@@ -3500,6 +3500,53 @@ dxgkio_change_vidmem_reservation(struct dxgprocess *process, void *__user inargs
  	return ret;
  }
  
-@@ -3294,7 +3294,209 @@ dxgkio_unlock2(struct dxgprocess *process, void *__user inargs)
- 		kref_put(&device->device_kref, dxgdevice_release);
- 
- success:
--	DXG_TRACE("ioctl:%s %s %d", errorstr(ret), __func__, ret);
-+	DXG_TRACE("ioctl:%s %d", errorstr(ret), ret);
-+	return ret;
-+}
-+
 +static int
-+dxgkio_update_alloc_property(struct dxgprocess *process, void *__user inargs)
++dxgkio_flush_heap_transitions(struct dxgprocess *process, void *__user inargs)
 +{
-+	struct d3dddi_updateallocproperty args;
-+	int ret;
-+	struct dxgadapter *adapter = NULL;
-+	struct dxgdevice *device = NULL;
-+
-+	ret = copy_from_user(&args, inargs, sizeof(args));
-+	if (ret) {
-+		DXG_ERR("failed to copy input args");
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	device = dxgprocess_device_by_object_handle(process,
-+						HMGRENTRY_TYPE_DXGPAGINGQUEUE,
-+						args.paging_queue);
-+	if (device == NULL) {
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+	adapter = device->adapter;
-+	ret = dxgadapter_acquire_lock_shared(adapter);
-+	if (ret < 0) {
-+		adapter = NULL;
-+		goto cleanup;
-+	}
-+
-+	ret = dxgvmb_send_update_alloc_property(process, adapter,
-+						&args, inargs);
-+
-+cleanup:
-+	if (adapter)
-+		dxgadapter_release_lock_shared(adapter);
-+
-+	if (device)
-+		kref_put(&device->device_kref, dxgdevice_release);
-+
-+	DXG_TRACE("ioctl:%s %d", errorstr(ret), ret);
-+	return ret;
-+}
-+
-+static int
-+dxgkio_query_alloc_residency(struct dxgprocess *process, void *__user inargs)
-+{
-+	struct d3dkmt_queryallocationresidency args;
-+	struct dxgadapter *adapter = NULL;
-+	struct dxgdevice *device = NULL;
-+	int ret;
-+
-+	ret = copy_from_user(&args, inargs, sizeof(args));
-+	if (ret) {
-+		DXG_ERR("failed to copy input args");
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	if ((args.allocation_count == 0) == (args.resource.v == 0)) {
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	device = dxgprocess_device_by_handle(process, args.device);
-+	if (device == NULL) {
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+	adapter = device->adapter;
-+	ret = dxgadapter_acquire_lock_shared(adapter);
-+	if (ret < 0) {
-+		adapter = NULL;
-+		goto cleanup;
-+	}
-+	ret = dxgvmb_send_query_alloc_residency(process, adapter, &args);
-+cleanup:
-+	if (adapter)
-+		dxgadapter_release_lock_shared(adapter);
-+	if (device)
-+		kref_put(&device->device_kref, dxgdevice_release);
-+	DXG_TRACE("ioctl:%s %d", errorstr(ret), ret);
-+	return ret;
-+}
-+
-+static int
-+dxgkio_set_allocation_priority(struct dxgprocess *process, void *__user inargs)
-+{
-+	struct d3dkmt_setallocationpriority args;
-+	struct dxgadapter *adapter = NULL;
-+	struct dxgdevice *device = NULL;
-+	int ret;
-+
-+	ret = copy_from_user(&args, inargs, sizeof(args));
-+	if (ret) {
-+		DXG_ERR("failed to copy input args");
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+	device = dxgprocess_device_by_handle(process, args.device);
-+	if (device == NULL) {
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+	adapter = device->adapter;
-+	ret = dxgadapter_acquire_lock_shared(adapter);
-+	if (ret < 0) {
-+		adapter = NULL;
-+		goto cleanup;
-+	}
-+	ret = dxgvmb_send_set_allocation_priority(process, adapter, &args);
-+cleanup:
-+	if (adapter)
-+		dxgadapter_release_lock_shared(adapter);
-+	if (device)
-+		kref_put(&device->device_kref, dxgdevice_release);
-+	DXG_TRACE("ioctl:%s %d", errorstr(ret), ret);
-+	return ret;
-+}
-+
-+static int
-+dxgkio_get_allocation_priority(struct dxgprocess *process, void *__user inargs)
-+{
-+	struct d3dkmt_getallocationpriority args;
-+	struct dxgadapter *adapter = NULL;
-+	struct dxgdevice *device = NULL;
-+	int ret;
-+
-+	ret = copy_from_user(&args, inargs, sizeof(args));
-+	if (ret) {
-+		DXG_ERR("failed to copy input args");
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+	device = dxgprocess_device_by_handle(process, args.device);
-+	if (device == NULL) {
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+	adapter = device->adapter;
-+	ret = dxgadapter_acquire_lock_shared(adapter);
-+	if (ret < 0) {
-+		adapter = NULL;
-+		goto cleanup;
-+	}
-+	ret = dxgvmb_send_get_allocation_priority(process, adapter, &args);
-+cleanup:
-+	if (adapter)
-+		dxgadapter_release_lock_shared(adapter);
-+	if (device)
-+		kref_put(&device->device_kref, dxgdevice_release);
-+	DXG_TRACE("ioctl:%s %d", errorstr(ret), ret);
-+	return ret;
-+}
-+
-+static int
-+dxgkio_change_vidmem_reservation(struct dxgprocess *process, void *__user inargs)
-+{
-+	struct d3dkmt_changevideomemoryreservation args;
++	struct d3dkmt_flushheaptransitions args;
 +	int ret;
 +	struct dxgadapter *adapter = NULL;
 +	bool adapter_locked = false;
@@ -779,12 +243,6 @@ index 37e218443310..b626e2518ff2 100644
 +	ret = copy_from_user(&args, inargs, sizeof(args));
 +	if (ret) {
 +		DXG_ERR("failed to copy input args");
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	if (args.process != 0) {
-+		DXG_ERR("setting memory reservation for other process");
 +		ret = -EINVAL;
 +		goto cleanup;
 +	}
@@ -801,9 +259,16 @@ index 37e218443310..b626e2518ff2 100644
 +		goto cleanup;
 +	}
 +	adapter_locked = true;
-+	args.adapter.v = 0;
-+	ret = dxgvmb_send_change_vidmem_reservation(process, adapter,
-+						    zerohandle, &args);
++
++	args.adapter = adapter->host_handle;
++	ret = dxgvmb_send_flush_heap_transitions(process, adapter, &args);
++	if (ret < 0)
++		goto cleanup;
++	ret = copy_to_user(inargs, &args, sizeof(args));
++	if (ret) {
++		DXG_ERR("failed to copy output args");
++		ret = -EINVAL;
++	}
 +
 +cleanup:
 +
@@ -811,226 +276,43 @@ index 37e218443310..b626e2518ff2 100644
 +		dxgadapter_release_lock_shared(adapter);
 +	if (adapter)
 +		kref_put(&adapter->adapter_kref, dxgadapter_release);
++	return ret;
++}
 +
-+	DXG_TRACE("ioctl:%s %d", errorstr(ret), ret);
- 	return ret;
- }
- 
-@@ -4050,7 +4252,8 @@ static struct ioctl_desc ioctls[] = {
- /* 0x13 */	{dxgkio_destroy_allocation, LX_DXDESTROYALLOCATION2},
- /* 0x14 */	{dxgkio_enum_adapters, LX_DXENUMADAPTERS2},
- /* 0x15 */	{dxgkio_close_adapter, LX_DXCLOSEADAPTER},
--/* 0x16 */	{},
-+/* 0x16 */	{dxgkio_change_vidmem_reservation,
-+		  LX_DXCHANGEVIDEOMEMORYRESERVATION},
- /* 0x17 */	{},
- /* 0x18 */	{dxgkio_create_hwqueue, LX_DXCREATEHWQUEUE},
- /* 0x19 */	{dxgkio_destroy_device, LX_DXDESTROYDEVICE},
-@@ -4070,11 +4273,11 @@ static struct ioctl_desc ioctls[] = {
- /* 0x27 */	{},
- /* 0x28 */	{},
- /* 0x29 */	{},
--/* 0x2a */	{},
-+/* 0x2a */	{dxgkio_query_alloc_residency, LX_DXQUERYALLOCATIONRESIDENCY},
- /* 0x2b */	{},
- /* 0x2c */	{},
- /* 0x2d */	{},
--/* 0x2e */	{},
-+/* 0x2e */	{dxgkio_set_allocation_priority, LX_DXSETALLOCATIONPRIORITY},
- /* 0x2f */	{},
- /* 0x30 */	{},
- /* 0x31 */	{dxgkio_signal_sync_object_cpu,
-@@ -4089,13 +4292,13 @@ static struct ioctl_desc ioctls[] = {
- /* 0x36 */	{dxgkio_submit_wait_to_hwqueue,
- 		 LX_DXSUBMITWAITFORSYNCOBJECTSTOHWQUEUE},
- /* 0x37 */	{dxgkio_unlock2, LX_DXUNLOCK2},
--/* 0x38 */	{},
-+/* 0x38 */	{dxgkio_update_alloc_property, LX_DXUPDATEALLOCPROPERTY},
- /* 0x39 */	{},
- /* 0x3a */	{dxgkio_wait_sync_object_cpu,
- 		 LX_DXWAITFORSYNCHRONIZATIONOBJECTFROMCPU},
- /* 0x3b */	{dxgkio_wait_sync_object_gpu,
- 		 LX_DXWAITFORSYNCHRONIZATIONOBJECTFROMGPU},
--/* 0x3c */	{},
-+/* 0x3c */	{dxgkio_get_allocation_priority, LX_DXGETALLOCATIONPRIORITY},
- /* 0x3d */	{},
- /* 0x3e */	{dxgkio_enum_adapters3, LX_DXENUMADAPTERS3},
- /* 0x3f */	{dxgkio_share_objects, LX_DXSHAREOBJECTS},
+ static int
+ dxgkio_get_device_state(struct dxgprocess *process, void *__user inargs)
+ {
+@@ -4262,7 +4309,7 @@ static struct ioctl_desc ioctls[] = {
+ /* 0x1c */	{dxgkio_destroy_paging_queue, LX_DXDESTROYPAGINGQUEUE},
+ /* 0x1d */	{dxgkio_destroy_sync_object, LX_DXDESTROYSYNCHRONIZATIONOBJECT},
+ /* 0x1e */	{},
+-/* 0x1f */	{},
++/* 0x1f */	{dxgkio_flush_heap_transitions, LX_DXFLUSHHEAPTRANSITIONS},
+ /* 0x20 */	{},
+ /* 0x21 */	{},
+ /* 0x22 */	{},
 diff --git a/include/uapi/misc/d3dkmthk.h b/include/uapi/misc/d3dkmthk.h
-index b498f09e694d..af381101fd90 100644
+index af381101fd90..873feb951129 100644
 --- a/include/uapi/misc/d3dkmthk.h
 +++ b/include/uapi/misc/d3dkmthk.h
-@@ -668,6 +668,63 @@ struct d3dkmt_submitcommandtohwqueue {
- #endif
+@@ -936,6 +936,10 @@ struct d3dkmt_queryadapterinfo {
+ 	__u32				private_data_size;
  };
  
-+struct d3dkmt_setallocationpriority {
-+	struct d3dkmthandle		device;
-+	struct d3dkmthandle		resource;
-+#ifdef __KERNEL__
-+	const struct d3dkmthandle	*allocation_list;
-+#else
-+	__u64				allocation_list;
-+#endif
-+	__u32				allocation_count;
-+	__u32				reserved;
-+#ifdef __KERNEL__
-+	const __u32			*priorities;
-+#else
-+	__u64				priorities;
-+#endif
-+};
-+
-+struct d3dkmt_getallocationpriority {
-+	struct d3dkmthandle		device;
-+	struct d3dkmthandle		resource;
-+#ifdef __KERNEL__
-+	const struct d3dkmthandle	*allocation_list;
-+#else
-+	__u64				allocation_list;
-+#endif
-+	__u32				allocation_count;
-+	__u32				reserved;
-+#ifdef __KERNEL__
-+	__u32				*priorities;
-+#else
-+	__u64				priorities;
-+#endif
-+};
-+
-+enum d3dkmt_allocationresidencystatus {
-+	_D3DKMT_ALLOCATIONRESIDENCYSTATUS_RESIDENTINGPUMEMORY		= 1,
-+	_D3DKMT_ALLOCATIONRESIDENCYSTATUS_RESIDENTINSHAREDMEMORY	= 2,
-+	_D3DKMT_ALLOCATIONRESIDENCYSTATUS_NOTRESIDENT			= 3,
-+};
-+
-+struct d3dkmt_queryallocationresidency {
-+	struct d3dkmthandle			device;
-+	struct d3dkmthandle			resource;
-+#ifdef __KERNEL__
-+	struct d3dkmthandle			*allocations;
-+#else
-+	__u64					allocations;
-+#endif
-+	__u32					allocation_count;
-+	__u32					reserved;
-+#ifdef __KERNEL__
-+	enum d3dkmt_allocationresidencystatus	*residency_status;
-+#else
-+	__u64					residency_status;
-+#endif
-+};
-+
- struct d3dddicb_lock2flags {
- 	union {
- 		struct {
-@@ -835,6 +892,11 @@ struct d3dkmt_destroyallocation2 {
- 	struct d3dddicb_destroyallocation2flags flags;
- };
- 
-+enum d3dkmt_memory_segment_group {
-+	_D3DKMT_MEMORY_SEGMENT_GROUP_LOCAL	= 0,
-+	_D3DKMT_MEMORY_SEGMENT_GROUP_NON_LOCAL	= 1
-+};
-+
- struct d3dkmt_adaptertype {
- 	union {
- 		struct {
-@@ -886,6 +948,61 @@ struct d3dddi_openallocationinfo2 {
- 	__u64			reserved[6];
- };
- 
-+struct d3dddi_updateallocproperty_flags {
-+	union {
-+		struct {
-+			__u32			accessed_physically:1;
-+			__u32			reserved:31;
-+		};
-+		__u32				value;
-+	};
-+};
-+
-+struct d3dddi_segmentpreference {
-+	union {
-+		struct {
-+			__u32			segment_id0:5;
-+			__u32			direction0:1;
-+			__u32			segment_id1:5;
-+			__u32			direction1:1;
-+			__u32			segment_id2:5;
-+			__u32			direction2:1;
-+			__u32			segment_id3:5;
-+			__u32			direction3:1;
-+			__u32			segment_id4:5;
-+			__u32			direction4:1;
-+			__u32			reserved:2;
-+		};
-+		__u32				value;
-+	};
-+};
-+
-+struct d3dddi_updateallocproperty {
-+	struct d3dkmthandle			paging_queue;
-+	struct d3dkmthandle			allocation;
-+	__u32					supported_segment_set;
-+	struct d3dddi_segmentpreference		preferred_segment;
-+	struct d3dddi_updateallocproperty_flags	flags;
-+	__u64					paging_fence_value;
-+	union {
-+		struct {
-+			__u32			set_accessed_physically:1;
-+			__u32			set_supported_segmentSet:1;
-+			__u32			set_preferred_segment:1;
-+			__u32			reserved:29;
-+		};
-+		__u32				property_mask_value;
-+	};
-+};
-+
-+struct d3dkmt_changevideomemoryreservation {
-+	__u64			process;
++struct d3dkmt_flushheaptransitions {
 +	struct d3dkmthandle	adapter;
-+	enum d3dkmt_memory_segment_group memory_segment_group;
-+	__u64			reservation;
-+	__u32			physical_adapter_index;
 +};
 +
- struct d3dkmt_createhwqueue {
- 	struct d3dkmthandle	context;
- 	struct d3dddi_createhwqueueflags flags;
-@@ -1099,6 +1216,8 @@ struct d3dkmt_shareobjectwithhost {
- 	_IOWR(0x47, 0x14, struct d3dkmt_enumadapters2)
- #define LX_DXCLOSEADAPTER		\
- 	_IOWR(0x47, 0x15, struct d3dkmt_closeadapter)
-+#define LX_DXCHANGEVIDEOMEMORYRESERVATION \
-+	_IOWR(0x47, 0x16, struct d3dkmt_changevideomemoryreservation)
- #define LX_DXCREATEHWQUEUE		\
- 	_IOWR(0x47, 0x18, struct d3dkmt_createhwqueue)
- #define LX_DXDESTROYHWQUEUE		\
-@@ -1111,6 +1230,10 @@ struct d3dkmt_shareobjectwithhost {
+ struct d3dddi_openallocationinfo2 {
+ 	struct d3dkmthandle	allocation;
+ #ifdef __KERNEL__
+@@ -1228,6 +1232,8 @@ struct d3dkmt_shareobjectwithhost {
+ 	_IOWR(0x47, 0x19, struct d3dkmt_destroydevice)
+ #define LX_DXDESTROYSYNCHRONIZATIONOBJECT \
  	_IOWR(0x47, 0x1d, struct d3dkmt_destroysynchronizationobject)
++#define LX_DXFLUSHHEAPTRANSITIONS	\
++	_IOWR(0x47, 0x1f, struct d3dkmt_flushheaptransitions)
  #define LX_DXLOCK2			\
  	_IOWR(0x47, 0x25, struct d3dkmt_lock2)
-+#define LX_DXQUERYALLOCATIONRESIDENCY	\
-+	_IOWR(0x47, 0x2a, struct d3dkmt_queryallocationresidency)
-+#define LX_DXSETALLOCATIONPRIORITY	\
-+	_IOWR(0x47, 0x2e, struct d3dkmt_setallocationpriority)
- #define LX_DXSIGNALSYNCHRONIZATIONOBJECTFROMCPU \
- 	_IOWR(0x47, 0x31, struct d3dkmt_signalsynchronizationobjectfromcpu)
- #define LX_DXSIGNALSYNCHRONIZATIONOBJECTFROMGPU \
-@@ -1125,10 +1248,14 @@ struct d3dkmt_shareobjectwithhost {
- 	_IOWR(0x47, 0x36, struct d3dkmt_submitwaitforsyncobjectstohwqueue)
- #define LX_DXUNLOCK2			\
- 	_IOWR(0x47, 0x37, struct d3dkmt_unlock2)
-+#define LX_DXUPDATEALLOCPROPERTY	\
-+	_IOWR(0x47, 0x38, struct d3dddi_updateallocproperty)
- #define LX_DXWAITFORSYNCHRONIZATIONOBJECTFROMCPU \
- 	_IOWR(0x47, 0x3a, struct d3dkmt_waitforsynchronizationobjectfromcpu)
- #define LX_DXWAITFORSYNCHRONIZATIONOBJECTFROMGPU \
- 	_IOWR(0x47, 0x3b, struct d3dkmt_waitforsynchronizationobjectfromgpu)
-+#define LX_DXGETALLOCATIONPRIORITY	\
-+	_IOWR(0x47, 0x3c, struct d3dkmt_getallocationpriority)
- #define LX_DXENUMADAPTERS3		\
- 	_IOWR(0x47, 0x3e, struct d3dkmt_enumadapters3)
- #define LX_DXSHAREOBJECTS		\
+ #define LX_DXQUERYALLOCATIONRESIDENCY	\
 
