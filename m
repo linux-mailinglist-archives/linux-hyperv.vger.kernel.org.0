@@ -1,80 +1,80 @@
-Return-Path: <linux-hyperv+bounces-9607-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9608-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qLH8NRtfvGlxxQIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9607-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:39:55 +0100
+	id eDI/OUxdvGlxxQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9608-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:32:12 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CB162D24A0
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:39:55 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78CC62D22EF
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:32:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 06E4A31769D6
+	by tor.lore.kernel.org (Postfix) with ESMTP id 6B25130A24EA
 	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 20:28:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86F803FF89D;
-	Thu, 19 Mar 2026 20:26:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AF4A3FB06D;
+	Thu, 19 Mar 2026 20:26:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fH+DWh/D"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="es17dUGs"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553DC3FB06D
-	for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 20:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC8B3F7E63
+	for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 20:25:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773951962; cv=none; b=D0wJmXrlfDL14AIabJ59BvRBxkwAMUooDj6qoXwQU5TZeulIxYKXw8k9S+tUF684/Nl2C+Httxsnf7j0BY1VRvRKQCK/iSYOnJTgf2EeF11QReblH0qft0i4LxnEqnBrKVjpntP0Prt0+BQwnqVozF9qbAa7FS9/23IXNbSmCEY=
+	t=1773951962; cv=none; b=IWz7derySj2H1jDicwDMnPSbjO8dZ2OJd6feUFRaMv2L9yL09XADncMKSInbXLEXjncw3pM/NnATEL0EdKInJjMZscoxFbOMojhBMXRRh2yG4vNsecb9gJp0U6C4woNDsWYprTqwB6DjnoTY2mcTi/Zd6fIk6i8fT8fOaCf1+aM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1773951962; c=relaxed/simple;
-	bh=B3ORidiU2v9AzqT4cH2PTBIt+A1SulhfgRZFmSe97F4=;
+	bh=TZYhOsCGtU9mKXmRW4NBGD3j+TN7qU+aGKFvmIk5bt0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r6qb9yWSrey4NOMsUZj6uIvEsUgI12V72hU9z5BQvSesRKatkXvw/Ck2FqsS0GDvuHby+4uNryZApTGii+4s8hSG1RFyqc4w8EpUF4QaZwTsPO0GuVHvskBZFKT4QkooMr9362DQnGqRpTzCBpHv2bfnT3IK1Kv9jgxyXfBDa1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fH+DWh/D; arc=none smtp.client-ip=209.85.221.45
+	 MIME-Version; b=UETJF77pn6dmTEmtFF3UvgTTDM1NdvfXEsnT6t+x55wjNiLjWeKirLi6qt4MFoSg6vCF5SxUZSYS9jXzorcfzJIvylre9bQdESqTXJkf8N4oeo0MS8tavb5z3htqY+lWydl43Pixblp+vjMv1QDvoWdJXJnxE9ERRST8/qF6KqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=es17dUGs; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-439b611274bso598529f8f.3
-        for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 13:25:56 -0700 (PDT)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-439b94a19fdso1130111f8f.0
+        for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 13:25:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773951954; x=1774556754; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773951956; x=1774556756; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PMNmHW+JNOctOziyTOkJlkQy7QxdzykzDBZ9+fN3rRY=;
-        b=fH+DWh/DBuMLkSoiDiviPi0McnmyMgpFDF3r3IrBisy8fqn7EELbcInqgOD/Uy/4qp
-         HeM05e5VzMuArZAGqZtiO5QRRFX2fGz+bUz2MnNYC+0ceSdGWpqfcSxiA/zC9Y1qn0jO
-         kSUQzp6DLtbeIySXSWEhYPvtTJSmvxpwI49zD9U5+tIc9Q0oSdA0z5bHSfkLw1gPk/Vq
-         +OVzkjD2srYHPEAuK7ZyPtHGv6dTyG97op7WMccDh6cPyTjH/ULdMbz5/EVxT7d7+5gz
-         8a7B+6Iek/GDMu40aWE4tkObcNEWGdxBWqZpaZk56POzTP4pSIXZwf+HW30g+jLSsVMN
-         XNRQ==
+        bh=hZ5+je+LO/LQ72HVOLcGhJe+wJgOlQLSoEPyelVdyag=;
+        b=es17dUGsO8oBhP+TZQemsAsscu0nQSy5Y460KaXUA/GSmHd6AmXumeApSH+LJ5v1gb
+         cnbDbNnGWhpct/Ig37SrWfzdJFR4wEo1VQOAd+x0y8pBiGVPBhon5Ub15xtXGmiXsNW2
+         TWXegD76WsxLvChyyo5Bnb2tdZPEruliCbLeWlpWu7B4TuItou56sptyWgeu62gkPDBR
+         UHi5CYuTfh1VRyUZIwotZ9Aiyp+q1hC/siXqVVw417Pzpd58JBiTTfdI1XMZj1711upd
+         E8ETzAY1+4d7v+qDNqP2zYNZ5o1ub0b884nZ2k1+8xX7SwhXj8nG2b+j06p0KSkb2rO7
+         Qf+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773951954; x=1774556754;
+        d=1e100.net; s=20251104; t=1773951956; x=1774556756;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=PMNmHW+JNOctOziyTOkJlkQy7QxdzykzDBZ9+fN3rRY=;
-        b=AolUswJpbQM6qVu34197/L6lUSx5IrIk+8RIzZQfGh1X0WZGlRto0XA3wNA8/LevbY
-         q3IYy8p+bV/IVydfPV3L3I9io3LMUeeL2hhFgzFHxgcZxa7hy6XUGDyEueMwe+ZAfEOg
-         rlZ+KAXIhqe7nc0A74do2mRg/Sll0qxK+gRvKKTB2nxCnkIIzE0qRi7n7taBL6FlNrDx
-         Nd8XLdLJ9yDL52Z3kYnTOgcIYnva226SgUuKP/n0cbE4jvHuCSNZSG4jgF8/Gh8intMI
-         t9IGYUQ5jMqlHUsA5f+ZTUvhUj/uf/bPqu8MPNiiGTlk8WiNQWeUDbG2FgY2rdQ2uOEX
-         swdw==
-X-Gm-Message-State: AOJu0YzkulZvu/JXJRy2hixTq6auQvMqqYzEeR7OhyzbGMFXZLzI6mnp
-	jj/SK7jpGgevre4xFQ1BGlsGnugZhOal0nnE7ROrwBje3rqxZbaJ+zs4WjejRISUiXo=
-X-Gm-Gg: ATEYQzyWelSlLJPipfLGsY1j1haICKE/T3BiduDrWvGGM7PXEonaQZ0j7tVmy1X0Anm
-	TRp72/9iC1FY/lXci/W4fGk0sG0ZDyruDk0DSmP4MEpAdlME2S8X9YVLhJVhU6dRLARQw+UsoqS
-	9EBDXvUaTLjHU+NU2VYoCogYH5zaPxIzFZZfLGE8njQ5/2mbakq3zIQMkzZBsw+mXH/feuvriys
-	p7LAnS6PbRVffdc92kXEmGMEDsPnoCYt+OOqM+jlaembw8uWwHFanSz2lZMqHHzuAbx56rxaeki
-	gXjYTJGVEaFonNMlZs/dWPXYizt1DiiX4RtIhXSchjQV5zZVAf5YwF3B8vZheNctNZzsdY9IKvN
-	zPkzvXp25IvI/NuGAKcYaWNJU+MnsEcfsXxGETAVd0ikUoH55yGZlBed159uNtLvK8cKtQyIbfH
-	ndjMdPUd0xoomStn5Yy2J0N52xO/8OfRB2BKpxmym+6P6qUzjO
-X-Received: by 2002:a05:6000:18a6:b0:439:beee:43b5 with SMTP id ffacd0b85a97d-43b6423d90bmr1327203f8f.3.1773951954471;
-        Thu, 19 Mar 2026 13:25:54 -0700 (PDT)
+        bh=hZ5+je+LO/LQ72HVOLcGhJe+wJgOlQLSoEPyelVdyag=;
+        b=h/Cs3wL9TwoFNOfDLN+F6puQrPLLNsSt2gtR9TdLgOD/rcwZGoxn0RVZ1+0g2O/fS9
+         3e1MkDcqQDmu8jSpER+VJ/FGHvFvF9v1kFGLQ2Ry4fXNUhIitxkNj2T1WHVAZyJbuazC
+         /inxtmqYo9+LQ1igLwCcKX9Yx2hdOQlini4QR4l5Dd85V7et6uWNPkIAox/kWa/GyxdE
+         ScoqFrl8z7oPWYIGamyarLNEF6vPWri4nam+otyuipJSFhN86/mC/eFm6INvRVkq8BxS
+         J2B8sHNbg+YI8cglGJnq0DaDRKf1dVPRGtUqCdqVMioXToTG90RQI8SCIvO/4m0ICppU
+         6lXQ==
+X-Gm-Message-State: AOJu0YwGpuy5w09hzcO6OMcMfuJtHgnDscuj+RpVcwmrcAHQ5Cczf7iv
+	cSUvOjmsdqN+TMnkwEHCgnylYdGwHpTFwiM/wk3i++SRj2pT5X/cNOeuly4UzFmVhFM=
+X-Gm-Gg: ATEYQzzF/lzermy+a4TJoqa7oR9lSB0mvixvdBnke7Mmd6M1zTLSs0uhnUb0JZfVQU5
+	hJ4zl5WI6qt4HQ59gej6imOdx8miC5lP0w82OYbaVfShYRJHRwA6mAgSH9ZstF41JNPibYW3Iaw
+	Z4bfR3hgP+Quqm/bEZOPqmWF0h/PR0VDeB5pv32XiiXINIu9WES2o2u6ZXI9RrOLgD44wWoxB7M
+	+8H3N7fBO3ussKa0toPiGwesluv2oA7yzM51FvQf/CE2830vsdm9lQrBLbCYxXrExS1wtz51OK0
+	iiSGaFo1IbYzAI1cZa+hm1tQaicMkIxoTvtmHZUh4nxpVb2n3Kri372CDaMB3zx5F94jJzgrxJj
+	tg6CP0FXzWUmkTYO9q73j9Tq6/stwkPeeL3ARVCRSngdYq7RcNTgUUIH1TetQOAbRrW4OnafHTS
+	k8bi/eQll3NMKpibmuSTITc6UNGsCr/vzbQAQ0mLE6XwYvij5S
+X-Received: by 2002:a05:6000:2dc2:b0:43b:5094:a9bf with SMTP id ffacd0b85a97d-43b64263f98mr1152697f8f.29.1773951955459;
+        Thu, 19 Mar 2026 13:25:55 -0700 (PDT)
 Received: from LQ5W56KC4T ([2001:8a0:672f:7800:e0e1:55cd:f0b:b1e5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b644ae16fsm1347544f8f.8.2026.03.19.13.25.53
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b644ae16fsm1347544f8f.8.2026.03.19.13.25.54
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 19 Mar 2026 13:25:54 -0700 (PDT)
+        Thu, 19 Mar 2026 13:25:55 -0700 (PDT)
 From: Eric Curtin <ericcurtin17@gmail.com>
 X-Google-Original-From: Eric Curtin <eric.curtin@docker.com>
 To: linux-hyperv@vger.kernel.org
@@ -83,9 +83,9 @@ Cc: linux-kernel@vger.kernel.org,
 	wei.liu@kernel.org,
 	decui@microsoft.com,
 	haiyangz@microsoft.com
-Subject: [PATCH 36/55] drivers: hv: dxgkrnl: Close shared file objects in case of a failure
-Date: Thu, 19 Mar 2026 20:24:50 +0000
-Message-ID: <20260319202509.63802-37-eric.curtin@docker.com>
+Subject: [PATCH 37/55] drivers: hv: dxgkrnl: Added missed NULL check for resource object
+Date: Thu, 19 Mar 2026 20:24:51 +0000
+Message-ID: <20260319202509.63802-38-eric.curtin@docker.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260319202509.63802-1-eric.curtin@docker.com>
 References: <20260319202509.63802-1-eric.curtin@docker.com>
@@ -100,7 +100,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -110,20 +110,20 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9607-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9608-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[ericcurtin17@gmail.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_COUNT_FIVE(0.00)[5];
-	NEURAL_HAM(-0.00)[-0.981];
+	NEURAL_HAM(-0.00)[-0.983];
 	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[docker.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 3CB162D24A0
+	DBL_BLOCKED_OPENRESOLVER(0.00)[docker.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 78CC62D22EF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
@@ -133,72 +133,43 @@ Signed-off-by: Iouri Tarassov <iourit@linux.microsoft.com>
 [kms: forward port to 6.6 from 6.1. No code changes made.]
 Signed-off-by: Kelsey Steele <kelseysteele@microsoft.com>
 ---
- drivers/hv/dxgkrnl/ioctl.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/hv/dxgkrnl/ioctl.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/hv/dxgkrnl/ioctl.c b/drivers/hv/dxgkrnl/ioctl.c
-index 7c72790f917f..69324510c9e2 100644
+index 69324510c9e2..98350583943e 100644
 --- a/drivers/hv/dxgkrnl/ioctl.c
 +++ b/drivers/hv/dxgkrnl/ioctl.c
-@@ -4536,7 +4536,7 @@ enum dxg_sharedobject_type {
- };
+@@ -1589,7 +1589,8 @@ dxgkio_create_allocation(struct dxgprocess *process, void *__user inargs)
+ 				&process->handle_table,
+ 				HMGRENTRY_TYPE_DXGRESOURCE,
+ 				args.resource);
+-			kref_get(&resource->resource_kref);
++			if (resource != NULL)
++				kref_get(&resource->resource_kref);
+ 			dxgprocess_ht_lock_shared_up(process);
  
- static int get_object_fd(enum dxg_sharedobject_type type,
--				     void *object, int *fdout)
-+			void *object, int *fdout, struct file **filp)
- {
- 	struct file *file;
- 	int fd;
-@@ -4565,8 +4565,8 @@ static int get_object_fd(enum dxg_sharedobject_type type,
- 		return -ENOTRECOVERABLE;
- 	}
- 
--	fd_install(fd, file);
- 	*fdout = fd;
-+	*filp = file;
- 	return 0;
- }
- 
-@@ -4581,6 +4581,7 @@ dxgkio_share_objects(struct dxgprocess *process, void *__user inargs)
- 	struct dxgsharedresource *shared_resource = NULL;
- 	struct d3dkmthandle *handles = NULL;
- 	int object_fd = -1;
-+	struct file *filp = NULL;
- 	void *obj = NULL;
- 	u32 handle_size;
- 	int ret;
-@@ -4660,7 +4661,7 @@ dxgkio_share_objects(struct dxgprocess *process, void *__user inargs)
- 	switch (object_type) {
- 	case HMGRENTRY_TYPE_DXGSYNCOBJECT:
- 		ret = get_object_fd(DXG_SHARED_SYNCOBJECT, shared_syncobj,
--				    &object_fd);
-+				    &object_fd, &filp);
- 		if (ret < 0) {
- 			DXG_ERR("get_object_fd failed for sync object");
- 			goto cleanup;
-@@ -4675,7 +4676,7 @@ dxgkio_share_objects(struct dxgprocess *process, void *__user inargs)
- 		break;
- 	case HMGRENTRY_TYPE_DXGRESOURCE:
- 		ret = get_object_fd(DXG_SHARED_RESOURCE, shared_resource,
--				    &object_fd);
-+				    &object_fd, &filp);
- 		if (ret < 0) {
- 			DXG_ERR("get_object_fd failed for resource");
- 			goto cleanup;
-@@ -4708,10 +4709,15 @@ dxgkio_share_objects(struct dxgprocess *process, void *__user inargs)
- 	if (ret) {
- 		DXG_ERR("failed to copy shared handle");
- 		ret = -EFAULT;
-+		goto cleanup;
- 	}
- 
-+	fd_install(object_fd, filp);
-+
+ 			if (resource == NULL || resource->device != device) {
+@@ -1693,10 +1694,8 @@ dxgkio_create_allocation(struct dxgprocess *process, void *__user inargs)
+ 					    &standard_alloc);
  cleanup:
+ 
+-	if (resource_mutex_acquired) {
++	if (resource_mutex_acquired)
+ 		mutex_unlock(&resource->resource_mutex);
+-		kref_put(&resource->resource_kref, dxgresource_release);
+-	}
  	if (ret < 0) {
-+		if (filp)
-+			fput(filp);
- 		if (object_fd >= 0)
- 			put_unused_fd(object_fd);
- 	}
+ 		if (dxgalloc) {
+ 			for (i = 0; i < args.alloc_count; i++) {
+@@ -1727,6 +1726,9 @@ dxgkio_create_allocation(struct dxgprocess *process, void *__user inargs)
+ 	if (adapter)
+ 		dxgadapter_release_lock_shared(adapter);
+ 
++	if (resource && !args.flags.create_resource)
++		kref_put(&resource->resource_kref, dxgresource_release);
++
+ 	if (device) {
+ 		dxgdevice_release_lock_shared(device);
+ 		kref_put(&device->device_kref, dxgdevice_release);
 
