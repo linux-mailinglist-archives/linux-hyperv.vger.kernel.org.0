@@ -1,169 +1,249 @@
-Return-Path: <linux-hyperv+bounces-9542-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9543-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gEulNAHNu2mXogIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9542-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 11:16:33 +0100
+	id ODSoMTfzu2lOqgIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9543-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 13:59:35 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35D232C954D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 11:16:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BF9F2CB931
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 13:59:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A7E1A3013260
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 10:14:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5DB9D30E27E1
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 12:53:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 445B33B8BAE;
-	Thu, 19 Mar 2026 10:14:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40D543D34A4;
+	Thu, 19 Mar 2026 12:52:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a2m3ZHq9";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zRS/Yqqb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Udm/5szm"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66BF23505E;
-	Thu, 19 Mar 2026 10:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B7F3D3492;
+	Thu, 19 Mar 2026 12:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773915261; cv=none; b=EFbnBdTTeUCxqRUML7oiuerVqZF8M44NlH258iE6RP4l9wBX2nmNFLs3xgCP7SMarV2NrLgwiru/VYh/Lj13kWxNSaoxe0gxtctkB6LlsIgvQl4U33I/XeqabRaT1eNL6i82PT2l/O/Ho0t9KWZpx0diETw3TKqZqNZ+37Pligo=
+	t=1773924755; cv=none; b=jOIU9yTWT+GnpZT92iE3svYT1zk+AwO3exk7ah89EFBDoZM2AmBdMVxE0Ed+2ccHVV5U97RIEzUWjIiQTwWngk9fG/zhCjmE6V5TtjCaK7PXT5KE0z4Ltbby3F4iNTKs6CHjaUgXAQREf2owWuQ4XOAVrJkCJib+T1AQRUJajeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773915261; c=relaxed/simple;
-	bh=wGFiFEliROb2GTq8xhU2Xo5gA9vKJLiCTaG+74RMePA=;
+	s=arc-20240116; t=1773924755; c=relaxed/simple;
+	bh=jA7diFAaatzjClu0BNNjaXH84miUw/aL+tXzTcfiSyY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m5OWGYWeVEBhcAOWWvekEOoBCrPyY8q1nbH2dbrlKxSenkawrtC/pkaIElHxIu1u0LSJEmAIn1DDM5wsJWzaZEEu9i/uG98B6cOtZ7FFhmB4E3V6a0ewTijmbPc0IEAXSx4u+yEYsxnwvvXwrR2p5od+2gR+PT4AZrAij1++I7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=a2m3ZHq9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zRS/Yqqb; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Date: Thu, 19 Mar 2026 11:14:16 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1773915257;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y8eZg5XkEC5aXjIN/7Q4MRHPUl4W6f7iZ0kloIeJcZA=;
-	b=a2m3ZHq9gulwaXc2fBY0nR9dDqVo+kJQBfH8AEi5GkX2abCVrQD5NPHiwZPxquerpBEBEL
-	oqMBQxaYnt3tzk0lQBLF3joTUdgtwaw8Pq3Ws6iGRO3uZKwnITiSx3wP5zJdgD7ZjyLQuT
-	JB+nLR86d8H0LMb6G4nomhzsjup0wW+nLd4rLi1By+q/6YSYx3Mxv3um7HnmqtFGlgiYnf
-	wr7WYfXzjUUiQup4uIDjfHeAAa5YJVlUjkSZ1Y1S9L++MQTuYdHfScABgUJEiTNwsJIF2n
-	vcKzkaCHJWmUcrfa+brThrISzfLNxAK5/aI4Mg5Iw75NiDuLdb81sRqSaIWQiQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1773915257;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y8eZg5XkEC5aXjIN/7Q4MRHPUl4W6f7iZ0kloIeJcZA=;
-	b=zRS/Yqqb1dQTivYG8cE6NdhI+zA7Kg/TikjkGIS/oL0K/8rGxduuyr7pacgMJTQPpwDDvC
-	KVTmDEL3MpWfKBCg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Jan Kiszka <jan.kiszka@siemens.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>, Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>,
-	RT <linux-rt-users@vger.kernel.org>,
-	Mitchell Levy <levymitchell0@gmail.com>,
-	Saurabh Singh Sengar <ssengar@linux.microsoft.com>,
-	Naman Jain <namjain@linux.microsoft.com>
-Subject: Re: RE: RE: [PATCH v3] drivers: hv: vmbus: Use kthread for vmbus
- interrupts on PREEMPT_RT
-Message-ID: <20260319101416.d60J0GjO@linutronix.de>
-References: <289d8e52-40f8-4b22-8aa9-d0bd3bd15aae@siemens.com>
- <20260312170715.HA08BHiO@linutronix.de>
- <SN6PR02MB415753FDA0DEEA0B4A8B9994D441A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20260318100138.GimjldpV@linutronix.de>
- <SN6PR02MB4157EE20DCB90F955C12D2C0D44FA@SN6PR02MB4157.namprd02.prod.outlook.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=L+v+sUPhqp7WzQlVSkngWBHURtLdXi+iSALx8mCKy+c38B1z9U6vZK3MafCmB13WXSmzwfoHZhqTjhxtzf+OeVgYhkfOlwUVO/odjG0rVVJ3jBEY5AgvFs1KrcXhrmWtyGQNhCGXnYa1c55676688xZ3/wJE6yExDTQZqgCLYMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Udm/5szm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9282C19424;
+	Thu, 19 Mar 2026 12:52:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773924755;
+	bh=jA7diFAaatzjClu0BNNjaXH84miUw/aL+tXzTcfiSyY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Udm/5szmcmrn1FQPUv6e/j0SN6gP++q+sDVLk95f5h2PMysLxA/Z+vmQxnocUccUn
+	 NuBv89GwjGw+atxJn1J0so9qkU5Fz40p+PTENxR41hcO8d78y7WoL7d68u7RJwiVoU
+	 24b8F9r9Rglgs2jG81B2Ku5fqywDVKhnmPJe34SHQaQbe0jVM5wnV7X8Yl87k20mNN
+	 uLVYl3OTVyKbPcX2UWMxSpOwWjfeL17ZUhqEmwTrU9V9I6dAEZqrK0WhNYjr1Zk1rv
+	 FL2a3cllmUIkPZSTj7CNTbJNtleLxEuRoC6olnUM1WEiLl3YJslQyYkYq6xD3FW/z0
+	 rvKJyE92if+Dg==
+Date: Thu, 19 Mar 2026 12:52:22 +0000
+From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
+To: Joshua Hahn <joshua.hahnjy@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Clemens Ladisch <clemens@ladisch.de>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "K . Y . Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Long Li <longli@microsoft.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, Bodo Stroesser <bostroesser@gmail.com>, 
+	"Martin K . Petersen" <martin.petersen@oracle.com>, David Howells <dhowells@redhat.com>, 
+	Marc Dionne <marc.dionne@auristor.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, David Hildenbrand <david@kernel.org>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, 
+	linux-mtd@lists.infradead.org, linux-staging@lists.linux.dev, linux-scsi@vger.kernel.org, 
+	target-devel@vger.kernel.org, linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, Ryan Roberts <ryan.roberts@arm.com>
+Subject: Re: [PATCH v2 12/16] mm: allow handling of stacked mmap_prepare
+ hooks in more drivers
+Message-ID: <caf19e7e-e8dc-4409-8655-f734279b0c45@lucifer.local>
+References: <72750af6906fd96fb6f18e83ac3e694cf357a2c1.1773695307.git.ljs@kernel.org>
+ <20260318210845.2591228-1-joshua.hahnjy@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SN6PR02MB4157EE20DCB90F955C12D2C0D44FA@SN6PR02MB4157.namprd02.prod.outlook.com>
-X-Spamd-Result: default: False [-2.16 / 15.00];
+In-Reply-To: <20260318210845.2591228-1-joshua.hahnjy@gmail.com>
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linutronix.de,none];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[linutronix.de:s=2020,linutronix.de:s=2020e];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9542-lists,linux-hyperv=lfdr.de];
-	FREEMAIL_TO(0.00)[outlook.com];
-	FREEMAIL_CC(0.00)[siemens.com,microsoft.com,kernel.org,redhat.com,alien8.de,linux.intel.com,vger.kernel.org,gmail.com,linux.microsoft.com];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bigeasy@linutronix.de,linux-hyperv@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-9543-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linutronix.de:+];
-	NEURAL_HAM(-0.00)[-0.977];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[44];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,ladisch.de,arndb.de,linuxfoundation.org,microsoft.com,kernel.org,linux.intel.com,gmail.com,foss.st.com,bootlin.com,nod.at,ti.com,oracle.com,redhat.com,auristor.com,zeniv.linux.org.uk,suse.cz,google.com,suse.com,suse.de,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org,lists.linux.dev,kvack.org,arm.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-0.972];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ljs@kernel.org,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-hyperv];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linutronix.de:dkim,linutronix.de:mid]
-X-Rspamd-Queue-Id: 35D232C954D
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lucifer.local:mid]
+X-Rspamd-Queue-Id: 2BF9F2CB931
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 2026-03-19 03:43:12 [+0000], Michael Kelley wrote:
-> Indeed, yes, that would remove the need for all the per-CPU interrupt hackery
-> on x86/x64. I don't have any objection to someone pursuing that path, but it's
-> not something I can do. Full disclosure:  You'll see my name on Hyper-V and
-> VMBus stuff in the Linux kernel, with Microsoft as my employer. But I retired
-> from Microsoft 2.5 years ago, and my current involvement in Linux kernel work
-> is purely as a very part-time volunteer. I also lack access to hardware and the
-> test machinery needed to make more significant changes, particularly if multiple
-> versions of Hyper-V must be tested.
+On Wed, Mar 18, 2026 at 02:08:45PM -0700, Joshua Hahn wrote:
+> On Mon, 16 Mar 2026 21:12:08 +0000 "Lorenzo Stoakes (Oracle)" <ljs@kernel.org> wrote:
+>
+> > While the conversion of mmap hooks to mmap_prepare is underway, we wil
+> > encounter situations where mmap hooks need to invoke nested mmap_prepare
+> > hooks.
+> >
+> > The nesting of mmap hooks is termed 'stacking'.  In order to flexibly
+> > facilitate the conversion of custom mmap hooks in drivers which stack, we
+> > must split up the existing compat_vma_mapped() function into two separate
+> > functions:
+> >
+> > * compat_set_desc_from_vma() - This allows the setting of a vm_area_desc
+> >   object's fields to the relevant fields of a VMA.
+>
+> Hello Lorenzo, I hope you are doing well!
+>
+> Thank you for this patch. I was developing on top of mm-new today and had
+> an error that I think was caused by this patch. I want to preface this by
+> saying that I am not at all familiar with this area of the code, so please
+> do forgive me if I've misinterpreted the crash and mistakenly pointed
+> at this commit : -)
+>
+> Here is the crash:
+>
+> [    1.083795] kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
+> [    1.083883] BUG: unable to handle page fault for address: ffa00000048efbb8
+> [    1.083957] #PF: supervisor instruction fetch in kernel mode
+> [    1.084030] #PF: error_code(0x0011) - permissions violation
+> [    1.084086] PGD 100000067 P4D 10035f067 PUD 100364067 PMD 441ed9067 PTE 80000004466a3163
+> [    1.084162] Oops: Oops: 0011 [#1] SMP
+> [    1.084218] CPU: 0 UID: 0 PID: 305 Comm: mkdir Tainted: G        W   E       7.0.0-rc4-virtme-00442-ge53de5a0302f-dirty #85 PREEMPTLAZY
+>
+> As you can see, it's on a QEMU instance. I don't think this makes a difference
+> in the crash, though.
+>
+> [    1.084321] Tainted: [W]=WARN, [E]=UNSIGNED_MODULE
+> [    1.084369] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-5.el9 11/05/2023
+> [    1.084450] RIP: 0010:0xffa00000048efbb8
+> [    1.084489] Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <40> 12 0e 00 01 00 11 ff d0 fa 8e 04 00 00 a0 ff 80 33 51 02 01 00
+> [    1.084642] RSP: 0018:ffa00000048ef998 EFLAGS: 00010286
+> [    1.084692] RAX: ffa00000048efbb8 RBX: ff11000102512cc0 RCX: 000000000000000d
+> [    1.084766] RDX: ffffffffa06247d0 RSI: ffa00000048efa18 RDI: ff11000102512cc0
+> [    1.084826] RBP: ffa00000048ef9c8 R08: 0000000000000000 R09: 0000000000000007
+> [    1.084889] R10: ff110001047d1f08 R11: 00007effdc3d0fff R12: ff110001047d3b00
+> [    1.084954] R13: ff11000446cae600 R14: ff110001024efe00 R15: ff11000102510a80
+> [    1.085021] FS:  0000000000000000(0000) GS:ff110004aae72000(0000) knlGS:0000000000000000
+> [    1.085083] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    1.085136] CR2: ffa00000048efbb8 CR3: 0000000102667001 CR4: 0000000000771ef0
+> [    1.085201] PKRU: 55555554
+> [    1.085228] Call Trace:
+> [    1.085248]  <TASK>
+> [    1.085274]  ? __compat_vma_mmap+0x8e/0x130
+> [    1.085318]  ? compat_vma_mmap+0x76/0x80
+> [    1.085354]  ? mas_alloc_nodes+0xb2/0x110
+> [    1.085390]  ? backing_file_mmap+0xc3/0xf0
+> [    1.085426]  ? ovl_mmap+0x41/0x50
+> [    1.085463]  ? ovl_mmap+0x50/0x50
+> [    1.085499]  ? __mmap_region+0x7e8/0x1100
+> [    1.085539]  ? do_mmap+0x49f/0x5e0
+> [    1.085573]  ? vm_mmap_pgoff+0xef/0x1e0
+> [    1.085609]  ? ksys_mmap_pgoff+0x15c/0x1f0
+> [    1.085647]  ? do_syscall_64+0xab/0x980
+> [    1.085684]  ? entry_SYSCALL_64_after_hwframe+0x4b/0x53
+> [    1.085730]  </TASK>
+> [    1.085770] Modules linked in: virtio_mmio(E) 9pnet_virtio(E) 9p(E) 9pnet(E) netfs(E)
+> [    1.085838] CR2: ffa00000048efbb8
+> [    1.085874] ---[ end trace 0000000000000000 ]---
+> [    1.085875] kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
+> [    1.085918] RIP: 0010:0xffa00000048efbb8
+> [    1.085921] Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <40> 12 0e 00 01 00 11 ff d0 fa 8e 04 00 00 a0 ff 80 33 51 02 01 00
+> [    1.085988] BUG: unable to handle page fault for address: ffa00000048f7bb8
+> [    1.086026] RSP: 0018:ffa00000048ef998 EFLAGS: 00010286
+> [    1.086166] #PF: supervisor instruction fetch in kernel mode
+> [    1.086221]
+> [    1.086267] #PF: error_code(0x0011) - permissions violation
+> [    1.086321] RAX: ffa00000048efbb8 RBX: ff11000102512cc0 RCX: 000000000000000d
+> [    1.086348] PGD 100000067
+> [    1.086394] RDX: ffffffffa06247d0 RSI: ffa00000048efa18 RDI: ff11000102512cc0
+> [    1.086459] P4D 10035f067
+> [    1.086486] RBP: ffa00000048ef9c8 R08: 0000000000000000 R09: 0000000000000007
+> [    1.086550] PUD 100364067
+> [    1.086577] R10: ff110001047d1f08 R11: 00007effdc3d0fff R12: ff110001047d3b00
+> [    1.086641] PMD 441ed9067
+> [    1.086668] R13: ff11000446cae600 R14: ff110001024efe00 R15: ff11000102510a80
+> [    1.086731] PTE 80000004433d3163
+> [    1.086764] FS:  0000000000000000(0000) GS:ff110004aae72000(0000) knlGS:0000000000000000
+> [    1.086829]
+> [    1.086868] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    1.086931] Oops: Oops: 0011 [#2] SMP
+> [    1.086958] CR2: ffa00000048efbb8 CR3: 0000000102667001 CR4: 0000000000771ef0
+> [    1.087015] CPU: 29 UID: 0 PID: 306 Comm: mount Tainted: G      D W   E       7.0.0-rc4-virtme-00442-ge53de5a0302f-dirty #85 PREEMPTLAZY
+> [    1.087050] PKRU: 55555554
+> [    1.087115] Tainted: [D]=DIE, [W]=WARN, [E]=UNSIGNED_MODULE
+> [    1.087207] Kernel panic - not syncing: Fatal exception
+> [    2.158392] Shutting down cpus with NMI
+> [    2.158629] Kernel Offset: disabled
+> [    2.158668] ---[ end Kernel panic - not syncing: Fatal exception ]---
+>
+> It crashes at compat_vma_mmap, and here is what I think could be the
+> potential crash path:
+>
+> - compat_vma_mmap() creates struct vm_area_desc desc;
+>   - compat_set_desc_from_vma Doesn't initialize the struct, but instead
+>     modifies independent fields. I think this is where the behavior
+>     diverges, since before we would use the C initializer and uninitialized
 
-right. Then I would only ask for better annotation instead this current
-thingy.
+Ah yeah you're right I'll fix that up!
 
-> > I would be worried if the host would storming interrupts to the guest
-> > because it makes no progress.
-> 
-> No, that kind of storming won't happen. The Hyper-V host<->guest
-> interface is based on message queues. The host interrupts the guest
-> if it puts a message in the queue that transitions the queue from
-> "empty" to "not empty". Eventually the tasklet enabled in vmbus_isr()
-> and its subsidiaries gets around to emptying the queue, which effectively
-> re-arms the interrupt. The host may add more messages to the queue,
-> but it doesn't interrupt again for that queue until the queue is empty.
-> If the guest is delayed in doing that emptying, nothing bad happens.
+>     variables would be set to 0 (including ommitted ones, like
+>     action.success_hook or action.error_hook). But action.type = MMAP_NOTHING
+>   - desc.action.success_hook remains uninitialized in vfs_mmap_prepare
+>   - mmap_action_complete()
+>     - Here, We've set action.type to be MMAP_NOTHING, so we have err = 0
+>     - mmap_action_finish(action, vma, 0)
+>       - And here, since err == 0, we check action->success_hook (which has
+>         garbage, therefore it's nonzero) and call action->success_hook(vma)
+>
+> And I think action->success_hook(vma) where success_hook is uninitialized
+> stack garbage gets me to where I am.
+>
+> Again, I'm not too familiar with this area of the kernel, this is just
+> based on the quick digging that I did. And aplogies again if I'm missing
+> something ; -) I do think that the uninitialized members could be a problem
+> though.
+>
+> Thank you, I hope you have a great day Lorenzo!
+> Joshua
 
-Okay.
+Thanks for the report and analysis, much appreciated, hope you have a great
+day too :)
 
-> > > > Moving on. This (trying very hard here) even schedules tasklets. Why?
-> > > > You need to disable BH before doing so. Otherwise it ends in ksoftirqd.
-> > > > You don't want that.
-> > >
-> > > Again, Jan can comment on the impact of delays due to ending up
-> > > in ksoftirqd.
-> > 
-> > My point is that having this with threaded interrupt support would
-> > eliminate the usage of tasklets.
-> 
-> Agreed, probably. For the non-RT case, the latency in getting to the
-> tasklet code *does* matter. I'm not familiar with how tasklets compare
-> to threaded interrupts on latency.
-
-There shouldn't be much difference on level where it actually matters.
-
-Sebastian
+Cheers, Lorenzo
 
