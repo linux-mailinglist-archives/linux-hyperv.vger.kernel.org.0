@@ -1,80 +1,80 @@
-Return-Path: <linux-hyperv+bounces-9625-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9626-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IMa7HItevGlxxQIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9625-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:37:31 +0100
+	id qCU9NiJevGlxxQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9626-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:35:46 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7DEB2D2409
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:37:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5422C2D23C4
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:35:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B238730CF20A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 20:30:38 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 305363050435
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 20:30:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29FCB407101;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C012F407110;
 	Thu, 19 Mar 2026 20:26:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GLmUfEl5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jk7dGGM0"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4D2405AD1
-	for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 20:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83062406288
+	for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 20:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773951976; cv=none; b=tdw/elVk5jaq4XKazbqrBK0lp03tB3/5gtGU4my5JKH2sC9tuT7g7IE3AWzZkdrWeKzTH5QS8SiXSeSah4BHD0OTLTw94wuZYnHNVwM9WqLUsKii4qjJVBNYiotVFdnNWZQ5/uag1wMGB8b/tPW/yuRhKzOx0uuKvK8mOHfDy6c=
+	t=1773951977; cv=none; b=gyVUxJBRuW3fwGWUo0ioPtec640zNgPXQY9CA/6f4GyApzBSeBowuWg8/n1Ma8WQp+T3PmGhq6opNHBwtloIbXK8f+IzhSEjF+uBV+pwV8ZbMgG4OlUmPAjhlvcuPbziOtVs34qiAU07LwhlSMZZC9oitPC1KUni2w1QspqMlEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773951976; c=relaxed/simple;
-	bh=RXAKopPqswssMamyZTu+CjsystEpYm23+bEkJx/MHsI=;
+	s=arc-20240116; t=1773951977; c=relaxed/simple;
+	bh=64Yjo7ZvmJXvIMfS8hCbiomKgwsOGgRqkHQNG224eB0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YB1YBEDfGPkDbHcMLEFxtQe4iRp6g4USCym1Mj+KSXkAKtgeLmr3lR++RMrb0/FE2Cy8MzojDB7MExyiIfiLXW+jUbbInhvaL/HYU20m45KzsMBM/EaNVuagGrwOpOPyo+wA/cliQfD30ImwJqA+owsJ2KsH/4XCsZ38vuy1q/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GLmUfEl5; arc=none smtp.client-ip=209.85.221.46
+	 MIME-Version; b=fwxqcCQ3OiIjs9VuWti1AtxzhhN3vQ/u5kShjLprgZFhhPHBGH52bK+qlJRKKEbWF+iarqGKm8Pzqbi7QEJN5XZXVl/CxI5iDjZPlSkngC+Eo8qRPZcjMwN4qZNuMUi+mT/VVYEynDS6/uRr0yhSuhtN339c9Tg/Se5YU7jW1J0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jk7dGGM0; arc=none smtp.client-ip=209.85.221.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-43b4d734678so1373514f8f.1
-        for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 13:26:14 -0700 (PDT)
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-43b527ac5d0so668938f8f.2
+        for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 13:26:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773951973; x=1774556773; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773951974; x=1774556774; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=M4Vjw28unlG5YFFVDdPo2EpwlOdhnBXqMUOBR/+aRX8=;
-        b=GLmUfEl5ZOQ5OmLilT5g++YYTXVwY+1G1fWh1b+3/oQrJ/NfII4uWETBFgbR73+uUq
-         3kRegHl1f4G552JQxOM7S3eDSOjc753b8oPSgoWwIxt4cCN6xjjOP/A9JMQGG/5a0uGP
-         EhCyiHNOPx3xO9zTwFcWLJU2jycLUcAiqMprIgwRqujsmJKPLt9C9idxWsrZz9gkOFDh
-         EX2KWHoHeOwccx4xeeaLnNYoOClfyPtVo9pfMj91JzlVBT1o0GAx80pBS2k0MXUp3lKr
-         UGY3SH+z/ex8JHtIYuZa5cybxI0Y2fJsNdLV+YBatU5tF8WLgf3ovp4cBg11FDnj3VgJ
-         IhfA==
+        bh=sq7pLRQgbUoZPtACF262weOXRDH8/ti4RFZhN9vDeZQ=;
+        b=jk7dGGM0o+auPryu6y4fotHKDslBd69DwCXT4qoksDq1zB75d0QIQUN39b14jyjrrv
+         9OXoiblg5WDuyRDzlLWcB23M/qyJeKZDAbrsB0TsA9M94nbjAHPl7s63jezdrltQ1VNR
+         5p/C668x8w/9bJTRx27veww9HUMVpJ+DAahZ9XfaUeAW87fAnRaBSHRSSVtibnlJIcdm
+         BcBSOuuIthTGSbccV8+f9ku9+tEg5fR8NOVSROopivfqjcm2efbyVkkEB8mFzTkGFRtp
+         spaWfkkVSsfRAoFuf7j8PNb8dbKyJYmjXwBJNSS/p4V+LTr17fDInRuHw6ineZjCYNKl
+         +dIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773951973; x=1774556773;
+        d=1e100.net; s=20251104; t=1773951974; x=1774556774;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=M4Vjw28unlG5YFFVDdPo2EpwlOdhnBXqMUOBR/+aRX8=;
-        b=TpRqUDh76WpBsxE/H1S1BOBl/t/mu40sQchjoHbqRJ1gva5KYZYFj2mLikfpDYUa+K
-         B8/66XnDDGnyMf9mZiJtOi0JgpZl0zY52VQy/k8HNgu4WEjEswIAy7x0ag2rlANmpZUQ
-         VWypcfEFPFS386fHgiCnAFAa+FN+XqN0pmjR/IhIzmalvDr1/igOAVIsIvv4rP7PkoQG
-         VwRCZ90B0aiWQa59gxkwNwyapg0142ZhaOnaGdIRRRB1MFno5DtwKInEer2GQz0344MK
-         WpXc8Vq9i87u5U5amthIMYCZrJA6SLy3mmJPM1yk2NeUUJOyxPNR6vGVf+q/sdcyO3g7
-         dhvQ==
-X-Gm-Message-State: AOJu0YwJ1VfWvH5VUuu1p2PwBu+Srhbj/nbv/fyI1drimk/LOhFI0Fwe
-	3DwoobiR40/0NDPRGy1jkV4kzbfXv8FjBpuV7QuxqkwO5ob/b1JfUCaCpnqeWyswmu8=
-X-Gm-Gg: ATEYQzzL7HATS8eNWSa791DbOexoSVEDzaWlPNS/E3Yi6xijeCSN4LRfniqf2bEWrVk
-	W7jIWc1rmO59cRtSmJOXf4rWlZk5gJ/RnsnYy5BCPeA2b7ybqBqSQ9bliDKvDQn+shShxRt5tzt
-	Oz5MmpOTAK91q802DwoR99SQvODqeXTvjc6gFf1C3JxoQiR4Nv8npo30P/s4xXFRj+gs1TRIeC5
-	XKQl1RzK0wB98JjFek05AsJMSPGibHeGSoXBCuV8qYwm7wAFRn/LFon9Y42MSGeFBwMAv6hD2dy
-	wf7FkOeNYpnpa4QLmBbV1iYN8AawyVsUxKLN1NWmeHrxlbar2Nw4X6J1u5jAFs1CN5Cq1PHOpv+
-	0zQ7c3lqKsiVgo7eGePoHxOra0uIfMXgvjq+2W/w2013ergWCFWIWJKDJW4xY2iCUUdfwnoqjr7
-	fZJSg0+Ec3H8qly8Uan/3y5hn0M97tBdXxgTSaAEZf1HJZeaFn
-X-Received: by 2002:a05:6000:26c3:b0:43b:45d1:f438 with SMTP id ffacd0b85a97d-43b64234722mr1195366f8f.3.1773951972545;
-        Thu, 19 Mar 2026 13:26:12 -0700 (PDT)
+        bh=sq7pLRQgbUoZPtACF262weOXRDH8/ti4RFZhN9vDeZQ=;
+        b=aoQjVAbOX1/Wr4pX3zEUOSMT+ym84/PlhgiUits8CVc4UU4WDCJAbOqpiUIWRrMt/Y
+         2FIg7AJF8n3dqr6K0TNIxAK5V5O5Fo7ujs8szFPDwXVx1PLlHwlvAoFKhmbYzfq4fL+V
+         dW30cErZKMkXbgG2njgnwnEE0rahhpN60EC0NL7NRZd1KlhKdn4UaFilHPKjy8pMSi88
+         VIWfSH/d5aCPoLYe+Wi6wajloieieLkBZ7wF0d3midlNfP1ivuq5/hTQpTiZDiBlwIuJ
+         +IKLewSLxK1zCrLHa64KW0nhhGfw58e7bZJ+a+6k0wWrwcwO0vO09bx4tH0Nj4Vf522o
+         MUUA==
+X-Gm-Message-State: AOJu0YzhiXXrHMxz5gAN6rujakCwRo/irH4lLRjI+U8TpTnBuGAcmYMq
+	TA5/rdgO/NgU/Vy1f7/a0avZtkdXQktUCHNWH9tQzmwMSPafuDTOn/Z5IDcxu49ekqs=
+X-Gm-Gg: ATEYQzxrEBBfXxIz3p8HMv+jDkSdFyj7TDc7vuIU075/A8p+SojbulBKwmcOOQk2DOt
+	FeNFWUDK3TTLPY8JUCZTLJbY2rabxCDWzYXz/WfiMUvaRHCc3jPGwX1cuKjt+oC4AaoIW2amZhF
+	kCldAwX0j91AiYdWPI08o7XtvILo+n9KF34lSt1nSkGEOHTIEf3Anan8fznuUJcymIYKyZuHkoN
+	NKbwGT7TBw7/YrASmRXp3uKKvPCcJv2cxIce7gCNTcJNYqZUswNY8xxbzl3oWk7jjiuWImdGqKi
+	DtqV3P2oymxpXnUUYgQsw5y/L7lsQXtDpwLkAWJvrCBkZsWKPZ+5a/4yOxl9ESAZodj7FdtgbZh
+	19QUBNhbY4H4YZ8nRuT+F00Des/lTUCXJdCA5F3zgvIBSUISnbk3F0gBNxQ+Z+vqZvZ4RLEU6L8
+	Y89H7p85czprmHvrOO0xV3HOn0Mu4Wq/VY0MTYpKfP71LBtXJC
+X-Received: by 2002:a05:6000:310b:b0:439:f605:afde with SMTP id ffacd0b85a97d-43b6428ae11mr1251408f8f.51.1773951973717;
+        Thu, 19 Mar 2026 13:26:13 -0700 (PDT)
 Received: from LQ5W56KC4T ([2001:8a0:672f:7800:e0e1:55cd:f0b:b1e5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b644ae16fsm1347544f8f.8.2026.03.19.13.26.11
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b644ae16fsm1347544f8f.8.2026.03.19.13.26.12
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 19 Mar 2026 13:26:12 -0700 (PDT)
+        Thu, 19 Mar 2026 13:26:13 -0700 (PDT)
 From: Eric Curtin <ericcurtin17@gmail.com>
 X-Google-Original-From: Eric Curtin <eric.curtin@docker.com>
 To: linux-hyperv@vger.kernel.org
@@ -83,9 +83,9 @@ Cc: linux-kernel@vger.kernel.org,
 	wei.liu@kernel.org,
 	decui@microsoft.com,
 	haiyangz@microsoft.com
-Subject: [PATCH 53/55] drivers: hv: dxgkrnl: Do not print error messages when virtual GPU is not present
-Date: Thu, 19 Mar 2026 20:25:07 +0000
-Message-ID: <20260319202509.63802-54-eric.curtin@docker.com>
+Subject: [PATCH 54/55] drivers: hv: dxgkrnl: Fix crash at hmgrtable_free_handle
+Date: Thu, 19 Mar 2026 20:25:08 +0000
+Message-ID: <20260319202509.63802-55-eric.curtin@docker.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260319202509.63802-1-eric.curtin@docker.com>
 References: <20260319202509.63802-1-eric.curtin@docker.com>
@@ -110,7 +110,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9625-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9626-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6];
@@ -119,60 +119,44 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	FROM_HAS_DN(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_COUNT_FIVE(0.00)[5];
-	NEURAL_HAM(-0.00)[-0.983];
+	NEURAL_HAM(-0.00)[-0.982];
 	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,docker.com:mid]
-X-Rspamd-Queue-Id: E7DEB2D2409
+	DBL_BLOCKED_OPENRESOLVER(0.00)[docker.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 5422C2D23C4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Iouri Tarassov <iourit@linux.microsoft.com>
+From: Hideyuki Nagase <hideyukn@microsoft.com>
 
-Dxgkrnl prints the error message "Failed to acquire global channel lock"
-when a process tries to open the /dev/dxg device and there is no
-virtual GPU. This message should not be printed in this scenario.
+Fix a potential NULL pointer crash in hmgrtable_free_handle() when
+free_handle_list_tail is HMGRTABLE_INVALID_INDEX. Guard the entry
+dereference with a bounds check before writing the next_free_index.
 
-Signed-off-by: Iouri Tarassov <iourit@linux.microsoft.com>
+Signed-off-by: Hideyuki Nagase <hideyukn@microsoft.com>
 ---
- drivers/hv/dxgkrnl/dxgadapter.c | 2 +-
- drivers/hv/dxgkrnl/dxgmodule.c  | 4 ++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/hv/dxgkrnl/hmgr.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hv/dxgkrnl/dxgadapter.c b/drivers/hv/dxgkrnl/dxgadapter.c
-index c94283b09fa1..6d3cabb24e6f 100644
---- a/drivers/hv/dxgkrnl/dxgadapter.c
-+++ b/drivers/hv/dxgkrnl/dxgadapter.c
-@@ -78,12 +78,12 @@ void dxgadapter_start(struct dxgadapter *adapter)
- 
- 	/* The global channel is initialized when the first adapter starts */
- 	if (!dxgglobal->global_channel_initialized) {
-+		dxgglobal->global_channel_initialized = true;
- 		ret = dxgglobal_init_global_channel();
- 		if (ret) {
- 			dxgglobal_destroy_global_channel();
- 			return;
- 		}
--		dxgglobal->global_channel_initialized = true;
- 	}
- 
- 	/* Initialize vGPU vm bus channel */
-diff --git a/drivers/hv/dxgkrnl/dxgmodule.c b/drivers/hv/dxgkrnl/dxgmodule.c
-index 8f5d6db256a3..c2a4a2a2136f 100644
---- a/drivers/hv/dxgkrnl/dxgmodule.c
-+++ b/drivers/hv/dxgkrnl/dxgmodule.c
-@@ -46,9 +46,13 @@ int dxgglobal_acquire_channel_lock(void)
- {
- 	struct dxgglobal *dxgglobal = dxggbl();
- 
-+	if (!dxgglobal->global_channel_initialized)
-+		return -ENODEV;
-+
- 	down_read(&dxgglobal->channel_lock);
- 	if (dxgglobal->channel.channel == NULL) {
- 		DXG_ERR("Failed to acquire global channel lock");
-+		up_read(&dxgglobal->channel_lock);
- 		return -ENODEV;
+diff --git a/drivers/hv/dxgkrnl/hmgr.c b/drivers/hv/dxgkrnl/hmgr.c
+index 24101d0091ab..059f94307a0e 100644
+--- a/drivers/hv/dxgkrnl/hmgr.c
++++ b/drivers/hv/dxgkrnl/hmgr.c
+@@ -462,9 +462,14 @@ void hmgrtable_free_handle(struct hmgrtable *table, enum hmgrentry_type t,
+ 		 */
+ 		entry->next_free_index = HMGRTABLE_INVALID_INDEX;
+ 		entry->prev_free_index = table->free_handle_list_tail;
+-		entry = &table->entry_table[table->free_handle_list_tail];
+-		entry->next_free_index = i;
++		if (table->free_handle_list_tail != HMGRTABLE_INVALID_INDEX) {
++			entry = &table->entry_table[table->free_handle_list_tail];
++			entry->next_free_index = i;
++		}
+ 		table->free_handle_list_tail = i;
++		if (table->free_handle_list_head == HMGRTABLE_INVALID_INDEX) {
++			table->free_handle_list_head = i;
++		}
  	} else {
- 		return 0;
+ 		DXG_ERR("Invalid handle to free: %d %x", i, h.v);
+ 	}
 
