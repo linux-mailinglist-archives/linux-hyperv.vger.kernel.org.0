@@ -1,81 +1,85 @@
-Return-Path: <linux-hyperv+bounces-9541-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9542-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0JiJNcXKu2leoQIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9541-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 11:07:01 +0100
+	id gEulNAHNu2mXogIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9542-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 11:16:33 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 563EC2C93B1
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 11:07:01 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35D232C954D
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 11:16:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C52A6311C427
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 09:57:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A7E1A3013260
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 10:14:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A1E635E927;
-	Thu, 19 Mar 2026 09:57:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 445B33B8BAE;
+	Thu, 19 Mar 2026 10:14:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DDa9Zohr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ulZcdgfX"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a2m3ZHq9";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zRS/Yqqb"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E15833F8DE;
-	Thu, 19 Mar 2026 09:57:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66BF23505E;
+	Thu, 19 Mar 2026 10:14:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773914248; cv=none; b=HrZBZFpqKxYXZI3KDruC6YphaHdoWEApCaLgD35R/akRmSTE2QUnCdaGvV/TvgJauIebSwYnWVDPdiINyUauci120zepJ+fTio8TPWjq2ReHYeOZAIkmiDNahlOyTavo31Q15mzQFF3CcGfHeeCaXY1OGvnzrnl1f2Owe9ZazqM=
+	t=1773915261; cv=none; b=EFbnBdTTeUCxqRUML7oiuerVqZF8M44NlH258iE6RP4l9wBX2nmNFLs3xgCP7SMarV2NrLgwiru/VYh/Lj13kWxNSaoxe0gxtctkB6LlsIgvQl4U33I/XeqabRaT1eNL6i82PT2l/O/Ho0t9KWZpx0diETw3TKqZqNZ+37Pligo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773914248; c=relaxed/simple;
-	bh=q/fAGM1WlZtKgF1+4yom1XPC0q0gpF/vGIT7LLSp/ZA=;
+	s=arc-20240116; t=1773915261; c=relaxed/simple;
+	bh=wGFiFEliROb2GTq8xhU2Xo5gA9vKJLiCTaG+74RMePA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K2EDUEnQIX56HFiSO0kEwKViSF/ypSPP+v08Ztrl1xXuqHNzBUOt3/evvgcGye+1pmtnVh8a6i1i5gJ2RTmfGMhpBBH8hVn60+c+8205uxXdqMgK7UqjmvXfJlpdeyCFmSg5SDx63kM2KrmeVoo6PRUfUD2C9rMV8rrzsT9DOLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DDa9Zohr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ulZcdgfX; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Content-Disposition:In-Reply-To; b=m5OWGYWeVEBhcAOWWvekEOoBCrPyY8q1nbH2dbrlKxSenkawrtC/pkaIElHxIu1u0LSJEmAIn1DDM5wsJWzaZEEu9i/uG98B6cOtZ7FFhmB4E3V6a0ewTijmbPc0IEAXSx4u+yEYsxnwvvXwrR2p5od+2gR+PT4AZrAij1++I7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=a2m3ZHq9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zRS/Yqqb; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Date: Thu, 19 Mar 2026 10:57:19 +0100
+Date: Thu, 19 Mar 2026 11:14:16 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1773914240;
+	s=2020; t=1773915257;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bCSakhZ22tRYlTFSu2lqYAW8ApUF+2qtxpRzx345s3o=;
-	b=DDa9ZohrxpgyNrKbFynVKEwlyx37ihedjVIue/fWtS21zA1FmTG4xmqJsqww4ZPs057WAG
-	jKHv1UsdO1MN1lGR+ZiKJ7UU9bouwPz10IB8JKYQR+0xjhraMaYWRRUAFio7Q+Rdb44H7T
-	3vDUwiUjqaEFew7i0yd6f/Q7DwG+NT46wXa+4BDOCIpmmXm7f5YyyBjeO6waChF8DpR92N
-	f38AChd9Bwe9L2F8UOknWtjwB5AwRlEGplplhX6hxCUFoM1+HKoZaf//rGDH9xysmRWLvS
-	ujydg4AwKNcP621bg8MUl7IKXKHsz2kG3Aor8u0IJSBvlzGLYW6CSAK85GWUvw==
+	bh=y8eZg5XkEC5aXjIN/7Q4MRHPUl4W6f7iZ0kloIeJcZA=;
+	b=a2m3ZHq9gulwaXc2fBY0nR9dDqVo+kJQBfH8AEi5GkX2abCVrQD5NPHiwZPxquerpBEBEL
+	oqMBQxaYnt3tzk0lQBLF3joTUdgtwaw8Pq3Ws6iGRO3uZKwnITiSx3wP5zJdgD7ZjyLQuT
+	JB+nLR86d8H0LMb6G4nomhzsjup0wW+nLd4rLi1By+q/6YSYx3Mxv3um7HnmqtFGlgiYnf
+	wr7WYfXzjUUiQup4uIDjfHeAAa5YJVlUjkSZ1Y1S9L++MQTuYdHfScABgUJEiTNwsJIF2n
+	vcKzkaCHJWmUcrfa+brThrISzfLNxAK5/aI4Mg5Iw75NiDuLdb81sRqSaIWQiQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1773914240;
+	s=2020e; t=1773915257;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bCSakhZ22tRYlTFSu2lqYAW8ApUF+2qtxpRzx345s3o=;
-	b=ulZcdgfXSxCsjHh9MhJAXrKcpDZCCfuVdLmAO1oANiESaxXmAC1bz5lgMTLiil9wWeEQnb
-	4BY9KQeDXU31rOCA==
+	bh=y8eZg5XkEC5aXjIN/7Q4MRHPUl4W6f7iZ0kloIeJcZA=;
+	b=zRS/Yqqb1dQTivYG8cE6NdhI+zA7Kg/TikjkGIS/oL0K/8rGxduuyr7pacgMJTQPpwDDvC
+	KVTmDEL3MpWfKBCg==
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To: Michael Kelley <mhklinux@outlook.com>
 Cc: Jan Kiszka <jan.kiszka@siemens.com>,
 	"K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
 	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
+	Long Li <longli@microsoft.com>, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>,
 	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>
-Subject: Re: RE: RE: [PATCH] Drivers: hv: vmbus: Move
- add_interrupt_randomness back to real interrupt
-Message-ID: <20260319095719.7cPrV_6A@linutronix.de>
-References: <1b53653a-98a5-402a-a224-996b26edaa97@siemens.com>
- <20260317110535.Smn9viQ7@linutronix.de>
- <f718a22c-bbf2-4206-ba7d-391243c84f60@siemens.com>
- <20260317132252.AJlwEyMh@linutronix.de>
- <5262eafa-7f94-41c8-85d7-a2b8d7f27c5a@siemens.com>
- <SN6PR02MB41573332BF202DAE0AF79ED1D441A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20260318101042.-QHDXjlS@linutronix.de>
- <SN6PR02MB4157392A02838453BAFBA807D44FA@SN6PR02MB4157.namprd02.prod.outlook.com>
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Florian Bezdeka <florian.bezdeka@siemens.com>,
+	RT <linux-rt-users@vger.kernel.org>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	Saurabh Singh Sengar <ssengar@linux.microsoft.com>,
+	Naman Jain <namjain@linux.microsoft.com>
+Subject: Re: RE: RE: [PATCH v3] drivers: hv: vmbus: Use kthread for vmbus
+ interrupts on PREEMPT_RT
+Message-ID: <20260319101416.d60J0GjO@linutronix.de>
+References: <289d8e52-40f8-4b22-8aa9-d0bd3bd15aae@siemens.com>
+ <20260312170715.HA08BHiO@linutronix.de>
+ <SN6PR02MB415753FDA0DEEA0B4A8B9994D441A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20260318100138.GimjldpV@linutronix.de>
+ <SN6PR02MB4157EE20DCB90F955C12D2C0D44FA@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -84,77 +88,82 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <SN6PR02MB4157392A02838453BAFBA807D44FA@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <SN6PR02MB4157EE20DCB90F955C12D2C0D44FA@SN6PR02MB4157.namprd02.prod.outlook.com>
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linutronix.de,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[linutronix.de:s=2020,linutronix.de:s=2020e];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9541-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9542-lists,linux-hyperv=lfdr.de];
 	FREEMAIL_TO(0.00)[outlook.com];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[siemens.com,microsoft.com,kernel.org,redhat.com,alien8.de,linux.intel.com,vger.kernel.org,gmail.com,linux.microsoft.com];
+	RCPT_COUNT_TWELVE(0.00)[19];
 	RCVD_COUNT_THREE(0.00)[3];
-	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[linutronix.de:+];
-	MISSING_XM_UA(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.996];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[bigeasy@linutronix.de,linux-hyperv@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[linutronix.de:+];
+	NEURAL_HAM(-0.00)[-0.977];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linutronix.de:dkim,linutronix.de:mid]
-X-Rspamd-Queue-Id: 563EC2C93B1
+X-Rspamd-Queue-Id: 35D232C954D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 2026-03-19 03:39:12 [+0000], Michael Kelley wrote:
-> I'll raise the topic with ARM maintainers and IRQ subsystem maintainers
-> to see if there's any reason one way or the other. I would not be surprised
+On 2026-03-19 03:43:12 [+0000], Michael Kelley wrote:
+> Indeed, yes, that would remove the need for all the per-CPU interrupt hackery
+> on x86/x64. I don't have any objection to someone pursuing that path, but it's
+> not something I can do. Full disclosure:  You'll see my name on Hyper-V and
+> VMBus stuff in the Linux kernel, with Microsoft as my employer. But I retired
+> from Microsoft 2.5 years ago, and my current involvement in Linux kernel work
+> is purely as a very part-time volunteer. I also lack access to hardware and the
+> test machinery needed to make more significant changes, particularly if multiple
+> versions of Hyper-V must be tested.
 
-Thank you.
+right. Then I would only ask for better annotation instead this current
+thingy.
 
-> if adding interrupt randomness is intentionally excluded because these
-> per-CPU interrupts were historically used for IPIs and timers only. What's
-> changed is that ARM64 is now used significantly in data centers, and
-> support for VMs is super important. The per-CPU interrupts are now used
-> for more that IPIs and timers, such as in the Hyper-V case, and
-> handle_percpu_devid_irq() was never reconsidered in that light. I would
-> expect a reluctance to burden the IPI and timer interrupt paths with the
-> overhead of add_interrupt_randomness(). But the Hyper-V VMBus case
-> still needs it because that's the primary source of interrupt entropy in the
-> VM. There aren't necessarily other devices generating non-per-CPU interrupts
-> like in a physical machine. To me, it is perfectly valid for the IPI & timer
-> interrupt paths to want to skip interrupt randomness, while the
-> Hyper-V VMBus interrupt path needs it, and we will be back where we
-> are now.
-
-But if that is your concern, don't you have or should have something
-similar to virtio-rng where you can feed high quality random data to the
-guest?
-
-> Related, *not* doing add_interrupt_randomness() on the ARM64 Hyper-V
-> synthetic timer path is consistent with the ARM64 architectural timer, since
-> it also uses handle_percpu_devid_irq(). I did the original work to get the
-> Hyper-V synthetic timers working on ARM64 back in 2019 (?), but I don't
-> recall if that consistency with the ARM64 architectural timer was
-> intentional or accidental.
+> > I would be worried if the host would storming interrupts to the guest
+> > because it makes no progress.
 > 
-> Again, I'll raise this with the appropriate maintainers and see what the
-> feedback is.
+> No, that kind of storming won't happen. The Hyper-V host<->guest
+> interface is based on message queues. The host interrupts the guest
+> if it puts a message in the queue that transitions the queue from
+> "empty" to "not empty". Eventually the tasklet enabled in vmbus_isr()
+> and its subsidiaries gets around to emptying the queue, which effectively
+> re-arms the interrupt. The host may add more messages to the queue,
+> but it doesn't interrupt again for that queue until the queue is empty.
+> If the guest is delayed in doing that emptying, nothing bad happens.
 
-Again, thank you.
+Okay.
 
-> Michael
+> > > > Moving on. This (trying very hard here) even schedules tasklets. Why?
+> > > > You need to disable BH before doing so. Otherwise it ends in ksoftirqd.
+> > > > You don't want that.
+> > >
+> > > Again, Jan can comment on the impact of delays due to ending up
+> > > in ksoftirqd.
+> > 
+> > My point is that having this with threaded interrupt support would
+> > eliminate the usage of tasklets.
+> 
+> Agreed, probably. For the non-RT case, the latency in getting to the
+> tasklet code *does* matter. I'm not familiar with how tasklets compare
+> to threaded interrupts on latency.
+
+There shouldn't be much difference on level where it actually matters.
 
 Sebastian
 
