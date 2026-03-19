@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-9564-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9565-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ELZuAtE/vGlzvwIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9564-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 19:26:25 +0100
+	id kJeiMJtAvGm7vwIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9565-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 19:29:47 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D9A02D0E02
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 19:26:24 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C758E2D0F82
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 19:29:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 136BD302CEA1
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 18:25:49 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 77E8130216C0
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 18:26:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FBA73FADED;
-	Thu, 19 Mar 2026 18:24:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6E8F3FADF4;
+	Thu, 19 Mar 2026 18:24:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LB2MowTg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c8MZA6Bb"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99F93FADEC;
-	Thu, 19 Mar 2026 18:24:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25013FAE13;
+	Thu, 19 Mar 2026 18:24:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773944651; cv=none; b=IDze2k3m8tDLeZjHzu55yF7haY1BjNr53bif9Mo18dp2ADF80tkSP01lOuRauyQVbxh/0KyweuEzmM1ma528XVoS+BnBJ/MrnC/tkHttZbCGd0Z8OH2lUfK2tvL3mBIm0/9WL6oYpk3Ui6fQJkh9u8bLTJZQ+RrHNY0KgfzIVOY=
+	t=1773944654; cv=none; b=d0EbG7KlyQz+cJfoMDt5z+awisa4bkkro+sb61av5OoiO98Pd4lQhySuWbDCQeWdl7Ccc0wiC2ByzBN8PMpSuYrEVGkTRdv2kX8ruyfpZNTjFF8nSCHw6r3o9wRw2pP+oTqvOQrUgHsBx58FZZEhuuqlvZcFiLDUrU+slsGc2Uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773944651; c=relaxed/simple;
-	bh=sJsnVE59stSeWATG7qlVuZYBseXJSjXjZYGmtSdmRzo=;
+	s=arc-20240116; t=1773944654; c=relaxed/simple;
+	bh=rC8UhPo2hXOr5FxBAlmEyrOxvDFCNwpWMS0HCPMZ5xQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MykqplcSD/uitE6uMEBqfx07oJbxf7TRaRwxJec0B8bowZXL8+v/bQgwrbUhb4xLryxtK4AtYuLIAH2rY6sLIYQELkhqWTvuWClBUq3S73yNnOKCv4XTHXoqcH9/Nh/6Z0ohNBlosWciO0Yue9+E0KzkCWZsXiosLWS/hpCEbA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LB2MowTg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3758C2BCB1;
-	Thu, 19 Mar 2026 18:24:10 +0000 (UTC)
+	 MIME-Version; b=aISuzpk/rXXCyWDie2xo2TvBaljSK09O6YmYSiF3wE/12xLmSek2fg5rgEQ0oo2NtMEYutDikrTNMthQcujudkhngzqmYynfDPwkQlrbW8LfRAMx9++RVzDW/GHsznCWCORxLO2d2Ex67mZ3ovrmAh/MER/nojEnIcgszKaXUR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c8MZA6Bb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1D35C19425;
+	Thu, 19 Mar 2026 18:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773944651;
-	bh=sJsnVE59stSeWATG7qlVuZYBseXJSjXjZYGmtSdmRzo=;
+	s=k20201202; t=1773944654;
+	bh=rC8UhPo2hXOr5FxBAlmEyrOxvDFCNwpWMS0HCPMZ5xQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LB2MowTg1QHbA22I0rbpNVF25MKxoRRYtAKlPHLN4dbu9KIcNEYeX7hrui1Yo60sA
-	 41POtaNmYUU93Is2iZo9VE8J3c28cODjtUaq643u93jXEsa3c9um3tn7IpGoK45+bi
-	 EDglmM3mgleEfyaKfli7dh+jwqRJarhb7LjGbgo8/j4TFO/7rEDjog0+k8I4eQOGLi
-	 DuvPNX4rSLYYSYDL8iqd2dW1o5zTfkd/slsn3TuxA1rg7kOfQFIgXhnUCzhSUXu/L0
-	 36imA2VexFto5Uac6adE5+bzC8u+yRTcsjpndkaN8rY2ajP+gpEjnqeWljn+O9UEVq
-	 4Ts4pfrM9ZIEA==
+	b=c8MZA6BbVpovPBpcDjikiDEKExVRyvFJ1VDdXmorpYbEnFCGlAEoGNfwsBpIITKU/
+	 6LPZyq0TxRfFN2m9fuAuDjSaAkbZmwuW0zW9jELmCdtCs6/5y3VVTOhhPrK3vk9sZW
+	 xIAwwrNC9rIffajpSStQsB0IRY92EN6ZYJ1YRX+0A39w62Q8aqI/sR48/YP8u6H/QK
+	 Y5AQgl+QHTautUDpepeCkBtTsdspYZNm7aah5g+mK7IxublL/6KRC61vi40Jx0LMhp
+	 AS3R3HbpjRFmtOeQjR0Pc6mnL+K9k7knc+ijyJK+V0ijCLjONmtEoHRQOBDDTqj7bd
+	 lRHO1eTRT6GeA==
 From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jonathan Corbet <corbet@lwn.net>,
@@ -89,9 +89,9 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org,
 	Ryan Roberts <ryan.roberts@arm.com>
-Subject: [PATCH v3 09/16] mtdchar: replace deprecated mmap hook with mmap_prepare, clean up
-Date: Thu, 19 Mar 2026 18:23:33 +0000
-Message-ID: <d439d6941f4b1a3f598e6a6a95630d215152961f.1773944114.git.ljs@kernel.org>
+Subject: [PATCH v3 10/16] stm: replace deprecated mmap hook with mmap_prepare
+Date: Thu, 19 Mar 2026 18:23:34 +0000
+Message-ID: <f549353e1705dd885de4041e8facf18866c7f7bd.1773944114.git.ljs@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1773944114.git.ljs@kernel.org>
 References: <cover.1773944114.git.ljs@kernel.org>
@@ -109,14 +109,14 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_CC(0.00)[lwn.net,ladisch.de,arndb.de,linuxfoundation.org,microsoft.com,kernel.org,linux.intel.com,gmail.com,foss.st.com,bootlin.com,nod.at,ti.com,oracle.com,redhat.com,auristor.com,zeniv.linux.org.uk,suse.cz,google.com,suse.com,suse.de,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org,lists.linux.dev,kvack.org,arm.com];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWELVE(0.00)[44];
-	TAGGED_FROM(0.00)[bounces-9564-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9565-lists,linux-hyperv=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -126,71 +126,109 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[ljs@kernel.org,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-0.971];
+	NEURAL_HAM(-0.00)[-0.972];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 9D9A02D0E02
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: C758E2D0F82
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Replace the deprecated mmap callback with mmap_prepare.
+The f_op->mmap interface is deprecated, so update driver to use its
+successor, mmap_prepare.
 
-Commit f5cf8f07423b ("mtd: Disable mtdchar mmap on MMU systems") commented
-out the CONFIG_MMU part of this function back in 2012, so after ~14 years
-it's probably reasonable to remove this altogether rather than updating
-dead code.
+The driver previously used vm_iomap_memory(), so this change replaces it
+with its mmap_prepare equivalent, mmap_action_simple_ioremap().
 
-Acked-by: Richard Weinberger <richard@nod.at>
+Also, in order to correctly maintain reference counting, add a
+vm_ops->mapped callback to increment the reference count when successfully
+mapped.
+
+Reviewed-by: Suren Baghdasaryan <surenb@google.com>
 Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
 ---
- drivers/mtd/mtdchar.c | 21 +++------------------
- 1 file changed, 3 insertions(+), 18 deletions(-)
+ drivers/hwtracing/stm/core.c | 31 +++++++++++++++++++++----------
+ 1 file changed, 21 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/mtd/mtdchar.c b/drivers/mtd/mtdchar.c
-index 55a43682c567..bf01e6ac7293 100644
---- a/drivers/mtd/mtdchar.c
-+++ b/drivers/mtd/mtdchar.c
-@@ -1376,27 +1376,12 @@ static unsigned mtdchar_mmap_capabilities(struct file *file)
- /*
-  * set up a mapping for shared memory segments
-  */
--static int mtdchar_mmap(struct file *file, struct vm_area_struct *vma)
-+static int mtdchar_mmap_prepare(struct vm_area_desc *desc)
- {
- #ifdef CONFIG_MMU
--	struct mtd_file_info *mfi = file->private_data;
--	struct mtd_info *mtd = mfi->mtd;
--	struct map_info *map = mtd->priv;
--
--        /* This is broken because it assumes the MTD device is map-based
--	   and that mtd->priv is a valid struct map_info.  It should be
--	   replaced with something that uses the mtd_get_unmapped_area()
--	   operation properly. */
--	if (0 /*mtd->type == MTD_RAM || mtd->type == MTD_ROM*/) {
--#ifdef pgprot_noncached
--		if (file->f_flags & O_DSYNC || map->phys >= __pa(high_memory))
--			vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
--#endif
--		return vm_iomap_memory(vma, map->phys, map->size);
--	}
- 	return -ENODEV;
- #else
--	return vma->vm_flags & VM_SHARED ? 0 : -EACCES;
-+	return vma_desc_test(desc, VMA_SHARED_BIT) ? 0 : -EACCES;
- #endif
+diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
+index 37584e786bb5..f48c6a8a0654 100644
+--- a/drivers/hwtracing/stm/core.c
++++ b/drivers/hwtracing/stm/core.c
+@@ -666,6 +666,16 @@ static ssize_t stm_char_write(struct file *file, const char __user *buf,
+ 	return count;
  }
  
-@@ -1411,7 +1396,7 @@ static const struct file_operations mtd_fops = {
- #endif
- 	.open		= mtdchar_open,
- 	.release	= mtdchar_close,
--	.mmap		= mtdchar_mmap,
-+	.mmap_prepare	= mtdchar_mmap_prepare,
- #ifndef CONFIG_MMU
- 	.get_unmapped_area = mtdchar_get_unmapped_area,
- 	.mmap_capabilities = mtdchar_mmap_capabilities,
++static int stm_mmap_mapped(unsigned long start, unsigned long end, pgoff_t pgoff,
++			   const struct file *file, void **vm_private_data)
++{
++	struct stm_file *stmf = file->private_data;
++	struct stm_device *stm = stmf->stm;
++
++	pm_runtime_get_sync(&stm->dev);
++	return 0;
++}
++
+ static void stm_mmap_open(struct vm_area_struct *vma)
+ {
+ 	struct stm_file *stmf = vma->vm_file->private_data;
+@@ -684,12 +694,14 @@ static void stm_mmap_close(struct vm_area_struct *vma)
+ }
+ 
+ static const struct vm_operations_struct stm_mmap_vmops = {
++	.mapped = stm_mmap_mapped,
+ 	.open	= stm_mmap_open,
+ 	.close	= stm_mmap_close,
+ };
+ 
+-static int stm_char_mmap(struct file *file, struct vm_area_struct *vma)
++static int stm_char_mmap_prepare(struct vm_area_desc *desc)
+ {
++	struct file *file = desc->file;
+ 	struct stm_file *stmf = file->private_data;
+ 	struct stm_device *stm = stmf->stm;
+ 	unsigned long size, phys;
+@@ -697,10 +709,10 @@ static int stm_char_mmap(struct file *file, struct vm_area_struct *vma)
+ 	if (!stm->data->mmio_addr)
+ 		return -EOPNOTSUPP;
+ 
+-	if (vma->vm_pgoff)
++	if (desc->pgoff)
+ 		return -EINVAL;
+ 
+-	size = vma->vm_end - vma->vm_start;
++	size = vma_desc_size(desc);
+ 
+ 	if (stmf->output.nr_chans * stm->data->sw_mmiosz != size)
+ 		return -EINVAL;
+@@ -712,13 +724,12 @@ static int stm_char_mmap(struct file *file, struct vm_area_struct *vma)
+ 	if (!phys)
+ 		return -EINVAL;
+ 
+-	pm_runtime_get_sync(&stm->dev);
+-
+-	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+-	vm_flags_set(vma, VM_IO | VM_DONTEXPAND | VM_DONTDUMP);
+-	vma->vm_ops = &stm_mmap_vmops;
+-	vm_iomap_memory(vma, phys, size);
++	desc->page_prot = pgprot_noncached(desc->page_prot);
++	vma_desc_set_flags(desc, VMA_IO_BIT, VMA_DONTEXPAND_BIT,
++			   VMA_DONTDUMP_BIT);
++	desc->vm_ops = &stm_mmap_vmops;
+ 
++	mmap_action_simple_ioremap(desc, phys, size);
+ 	return 0;
+ }
+ 
+@@ -836,7 +847,7 @@ static const struct file_operations stm_fops = {
+ 	.open		= stm_char_open,
+ 	.release	= stm_char_release,
+ 	.write		= stm_char_write,
+-	.mmap		= stm_char_mmap,
++	.mmap_prepare	= stm_char_mmap_prepare,
+ 	.unlocked_ioctl	= stm_char_ioctl,
+ 	.compat_ioctl	= compat_ptr_ioctl,
+ };
 -- 
 2.53.0
 
