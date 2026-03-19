@@ -1,80 +1,80 @@
-Return-Path: <linux-hyperv+bounces-9577-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9576-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0GuaKfJbvGlxxQIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9577-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:26:26 +0100
+	id sJNXI+lbvGlxxQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9576-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:26:17 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D58CB2D212B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:26:25 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7FB32D211C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:26:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0A6043187A1C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 20:25:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 47ED9317C756
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 20:25:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C22073F87F3;
-	Thu, 19 Mar 2026 20:25:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E47323F7E8B;
+	Thu, 19 Mar 2026 20:25:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e2WYGxAp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bxxTcgZt"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A5E3F7E8F
-	for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 20:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CC5387368
+	for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 20:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773951923; cv=none; b=HNtDUb1Ee/234YtAQlUv93CzaTfo1LEvBPz9bdH9/K52ZYbe8XySfaL7U+xn28nrYT5I3GucM+fOV+POn+1uis9PXjI+Fhg9t1pqJ0jIM/cSR9f2DqA0BauUY64rq4Cn2vrGKlr8WJrGAWAAjD8XiaUTRK9snDMAp69MLhwKNVs=
+	t=1773951922; cv=none; b=duorW7OQx33ZVLRu7UjATWfOhInlFYPtNMRDW0Kck3mGVnxlBuRUAQeyhuWuiDnvY9VN1KB5eVjmZkMZzAiByxm8JsW4y6GCb9egjLdYbgLh6wgf+tvbGyxrZSR9xkuRDRq3kHiUoygT478fgG6FJ8C5AwgKRQ5gT+mI9vdLRnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773951923; c=relaxed/simple;
-	bh=mpxogzttqGY2RdWi+DEFWY0TBddMViPrUSqcjrOXYUg=;
+	s=arc-20240116; t=1773951922; c=relaxed/simple;
+	bh=qGghHzSatalMogZ7g0RJU9cqxZSAkZm+ZhQKC+AJAtA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=moSuxQPDEBsD87j9iRrVvC39semsQnxMrCZaOVK26jU99m/a8Bw64sVBvu07SMP2tj1LrJnCOHxsmj7i1/DWmFN9PgCvZwOzPoDbnyFsIHpdTemlGSPxMjJQfENwmDyKyTY6BBb6Vm6jc07bQABuQlRcsLc0pS0SehRHvM0svHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e2WYGxAp; arc=none smtp.client-ip=209.85.128.50
+	 MIME-Version; b=j5B7Uo4dV8hORt+B7VxOT5nZBC/0AabGYw+dIQoy9q4HVPVzuz+z8OGpY9wB42C6RpvaashfyPDgnT3tCyYb/LQBNBl/t80Unrb9O4lS8KbJHuOrEbKmjDBZvEpWZPAMOR3nU5d1JlbxEwTTyf+b2+OsFCJt2wAJPDGh8rAz8RY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bxxTcgZt; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4856cd3f1ffso14093705e9.3
-        for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 13:25:19 -0700 (PDT)
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-43b3d9d0695so1071421f8f.0
+        for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 13:25:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773951918; x=1774556718; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773951919; x=1774556719; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aQmUt8PE03Mo2YFvmbyVRyjPor6QZPpPG2GHlQ6KxFI=;
-        b=e2WYGxApfteDMeNfmsoOPnZ440Q+TkwOcpPjksgxI/9o2GNHVvVJKbNJW5v4obkNd4
-         pHYDXmtAB9AGQdSv37Ckzi5gx70OSVKiLmjHmbKYJaSD8B4NzANv09G/3V2cxiBiLOuv
-         4eqw24cLMjpKc0bRiKzV9AXxjQ2ULEzTdtcXFS4CgZJCjkjNgCMFogcMtLdAdpXwa6+9
-         mzMCVqE0D2qVuWLvRZTJeViwwBDcR9cUPyZLE+kXHi1YooVZOx2Wa1k7o+tPbtnWocAY
-         Jp+McMVKlwmIbc+v52wFodDgoGSry4a8bAzxmo65PAcNRfkFBeF4OVCJTroxxb//aOZ4
-         AhLg==
+        bh=3RvrOs3oIfDFuvp3whx4JprpZOSJFy7Rydge9ZS5yPI=;
+        b=bxxTcgZtX3Y0+iAAeqIzz1b7En2aM2NixnGmS3ILcrrM93Hc+T/wDJO7Sn8ROJiW/f
+         rT3uvL8LUzeGp8Mh5qRblPDt2xM6GcYd45Utg5n6hObU++cJAYTp4QCYG03SG9rG0pNw
+         8sYSgdzynOYVpR5YdYiDM9qQ8ABahmbgF36KPLCG6XeAmnv+q34dOw91EXctHg+KNZpf
+         fAjwys6HQ4eBHuxeHRzKG74L0VNSI1v6CEb/YpGHG7hcJLDM7WG8G+s4LqhTF7uqxUge
+         7bxraZN48p2Zdnd3IfExRKAcCD28o7QPjCAVlcCimW2oWnqgmZU6+bKRKncGQRtTXG1+
+         EQmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773951918; x=1774556718;
+        d=1e100.net; s=20251104; t=1773951919; x=1774556719;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=aQmUt8PE03Mo2YFvmbyVRyjPor6QZPpPG2GHlQ6KxFI=;
-        b=oVipJ+IvTSH9OqHMOzwWXt7CESwqwvjvbEb7jxNpA5XWDBH2yTUPhmjeeF8AjerBnE
-         iqZRcCsQo3muhCDWz80z57vmHwFTZEbtfwcLbhoV/GALR6jGPyIcDMhFC5DSx+3U3Nyg
-         TdHxc53Btskes7t312ekQjHPPj/gEu/ewP8oYx3K5zvIWCxm5qA7EHb+Kn2XkJfLNy4H
-         btbYbF1T4JwbMIZu5bN8XEAZ3YDpmAUCEEzKJcL94I/8f0HCBVOBPoXPQCx4ZQ2Cbz7E
-         7fzOe/VuTWgWwjXhx26l4ccneSZk8PFGEBOph+wK+BDSbGT5YYLDVM1S8Do5i77OH/93
-         j7SQ==
-X-Gm-Message-State: AOJu0YzHIqDfnZvJOqF7onYGOiXpdxvIMN0ajIbOOBWk9P9iFZsTr3IR
-	V7FsBiWh6CYZf15Edhiy/KFQ6CzXn/dDaYlRj/VfPuq7kVJPriqkmokE4s68M055b/U=
-X-Gm-Gg: ATEYQzxo1RnNgkxfNFQvPWK5scHUoYu6ZoRlyRa5dwGJZCaPBBtUMsZHQSV9w4/H1pm
-	HrU9jdSJu8TRUtd1J7lji4E/v6O+wMHMOuOo3qZ5h7PTJNKILMqC7fsQb+5W7SjJB/TlAjHe8LW
-	4ujE8Ke5x2Uaklxy/B6m1uqdfhYWPzDtovdb7sPBo7s/DuxNhQGwKBxWqKYT0PvA/pQmn8ctp4I
-	XPoUCv3mNvy8UsZrY3Q2TgHVFmdFTgfUJhwuXJ0oJuzH/taCguynKLqwIGgSsbgJAx2R1ViQ8P4
-	nT2H8Bl+3Mpk2sUjB0DXYVXLYpNtrAEHeWNjI+amMEUGDwYf0ok6NkYPsiOFkH9JCMjxCu5BJ7h
-	NMC1I23h4mSUJJpqcu0rdQikI1gEnZ6SLF4R61Vq9F1k8EvMf5f47K4C24dPwx3fX+an9hY0xy/
-	GAdYuEAGVuXBe1SKjBLWuC8QHqPpFNroTvRw7nPCLA544xfa4K
-X-Received: by 2002:a05:600c:3112:b0:485:3f72:323f with SMTP id 5b1f17b1804b1-486fedb8c6emr7194075e9.11.1773951917225;
-        Thu, 19 Mar 2026 13:25:17 -0700 (PDT)
+        bh=3RvrOs3oIfDFuvp3whx4JprpZOSJFy7Rydge9ZS5yPI=;
+        b=sKcwUljEE+V4X3akcH3Jywj+LavyMceP1D0G7U2hgH6RuTBTmYDJojXDYKGbchK/LE
+         dkN9vf7H8LxPUvgCl63eog1HtHGQ9O6LbRZXAbD0z5EIRdAntcrvDpo08KWRgGfo83Cm
+         oiRDPcJ4iIq8S2pO6YWf0O12FSNNEnZu5OPge7lirBx/TSY0eFZ8IVmyjkbllXQPkD5l
+         p2CWVCrQgWnrxquoOEfB/SocCEfA8KjhA1EUIjmC8LV9AQcBrIUwP73vZpPsRNFWuNt7
+         Qn7PftAjTq9RGoAtkrFBi4DKmWJMmcoGdNcEc3EvF1oKcepCl9KEa8zR7C868w5qOhfe
+         qfcg==
+X-Gm-Message-State: AOJu0YwZ60m1DLixdk2o0l+i93h6aoz4apfF8PpT14ip7ziS+LJmLj9G
+	iBUNVobqAy7xXe9x/71h9fimDKKezZrYBZT1FrgMOj5pYYzrOYq2E3U0yC9OFPjdWJU=
+X-Gm-Gg: ATEYQzyVgOWKiy7308k5+KyV6Lmd8yRLjElkxvQa/ZQt1iR5mHRtHnJvQR9Y9wWRlWX
+	Dt5D/45g9TtRPLaYDicPYI/ZCCSDp4L9BZReOlJeY9pi4iqsnmnryyWIa7Ti/oocEMFzE/Lf6VI
+	u7QGBlElCNV3inZjW4eOOp8PdCmKMFhvcDAYIeyzZW0WrgqzhosATHmU5aDm6cnf7mTZTZZ6DLU
+	aFB4sPsnlVp5wAPdj4quCy6DF7437F8NA/3Zix7gCDBfDi56kf7mFGw4vLJRFOjpVyBZNPLNqfM
+	GKpNod1Vn7Hm17ma8dVAjqpcfkZYJu9lsE5J0TQBELxBs2zl6Q6DjQwLkRfSOpaSjRN1nT5af/L
+	1GbY6uomyz/045QJpsbRk3ooxzmexL+vFWWZFrVB85SzsgNvfO+i1cupxIJdNV/vTKEc3GvTZ7j
+	+47SppUdgeiaLdux7yuMzPT9Ml0GtAvX98n1N4rwphhyC0qWA/MM87ENvnTOQ=
+X-Received: by 2002:a05:6000:2409:b0:439:c078:9a57 with SMTP id ffacd0b85a97d-43b6428769cmr1354629f8f.25.1773951918685;
+        Thu, 19 Mar 2026 13:25:18 -0700 (PDT)
 Received: from LQ5W56KC4T ([2001:8a0:672f:7800:e0e1:55cd:f0b:b1e5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b644ae16fsm1347544f8f.8.2026.03.19.13.25.16
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b644ae16fsm1347544f8f.8.2026.03.19.13.25.17
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 19 Mar 2026 13:25:16 -0700 (PDT)
+        Thu, 19 Mar 2026 13:25:17 -0700 (PDT)
 From: Eric Curtin <ericcurtin17@gmail.com>
 X-Google-Original-From: Eric Curtin <eric.curtin@docker.com>
 To: linux-hyperv@vger.kernel.org
@@ -83,9 +83,9 @@ Cc: linux-kernel@vger.kernel.org,
 	wei.liu@kernel.org,
 	decui@microsoft.com,
 	haiyangz@microsoft.com
-Subject: [PATCH 04/55] drivers: hv: dxgkrnl: Opening of /dev/dxg device and dxgprocess creation
-Date: Thu, 19 Mar 2026 20:24:18 +0000
-Message-ID: <20260319202509.63802-5-eric.curtin@docker.com>
+Subject: [PATCH 05/55] drivers: hv: dxgkrnl: Enumerate and open dxgadapter objects
+Date: Thu, 19 Mar 2026 20:24:19 +0000
+Message-ID: <20260319202509.63802-6-eric.curtin@docker.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260319202509.63802-1-eric.curtin@docker.com>
 References: <20260319202509.63802-1-eric.curtin@docker.com>
@@ -100,7 +100,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -110,1864 +110,569 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9577-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9576-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[ericcurtin17@gmail.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_COUNT_FIVE(0.00)[5];
-	NEURAL_HAM(-0.00)[-0.976];
+	NEURAL_HAM(-0.00)[-0.968];
 	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[docker.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: D58CB2D212B
+X-Rspamd-Queue-Id: E7FB32D211C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Iouri Tarassov <iourit@linux.microsoft.com>
 
-- Implement opening of the device (/dev/dxg) file object and creation of
-dxgprocess objects.
+Implement ioctls to enumerate dxgadapter objects:
+  - The LX_DXENUMADAPTERS2 ioctl
+  - The LX_DXENUMADAPTERS3 ioctl.
 
-- Add VM bus messages to create and destroy the host side of a dxgprocess
-object.
+Implement ioctls to open adapter by LUID and to close adapter
+handle:
+  - The LX_DXOPENADAPTERFROMLUID ioctl
+  - the LX_DXCLOSEADAPTER ioctl
 
-- Implement the handle manager, which manages d3dkmthandle handles
-for the internal process objects. The handles are used by a user mode
-client to reference dxgkrnl objects.
+Impllement the ioctl to query dxgadapter information:
+  - The LX_DXQUERYADAPTERINFO ioctl
 
-dxgprocess is created for each process, which opens /dev/dxg.
-dxgprocess is ref counted, so the existing dxgprocess objects is used
-for a process, which opens the device object multiple time.
-dxgprocess is destroyed when the file object is released.
+When a dxgadapter is enumerated, it is implicitely opened and
+a handle (d3dkmthandle) is created in the current process handle
+table. The handle is returned to the caller and can be used
+by user mode to reference the VGPU adapter in other ioctls.
 
-A corresponding dxgprocess object is created on the host for every
-dxgprocess object in the guest.
+The caller is responsible to close the adapter when it is not
+longer used by sending the LX_DXCLOSEADAPTER ioctl.
 
-When a dxgkrnl object is created, in most cases the corresponding
-object is created in the host. The VM references the host objects by
-handles (d3dkmthandle). d3dkmthandle values for a host object and
-the corresponding VM object are the same. A host handle is allocated
-first and its value is assigned to the guest object.
+A dxgprocess has a list of opened dxgadapter objects
+(dxgprocess_adapter is used to represent the entry in the list).
+A dxgadapter also has a list of dxgprocess_adapter objects.
+This is needed for cleanup because either a process or an adapter
+could be destroyed first.
 
 Signed-off-by: Iouri Tarassov <iourit@linux.microsoft.com>
 [kms: forward port to 6.6 from 6.1. No code changes made.]
 Signed-off-by: Kelsey Steele <kelseysteele@microsoft.com>
 ---
- drivers/hv/dxgkrnl/Makefile     |   2 +-
- drivers/hv/dxgkrnl/dxgadapter.c |  72 ++++
- drivers/hv/dxgkrnl/dxgkrnl.h    |  95 +++++-
- drivers/hv/dxgkrnl/dxgmodule.c  |  97 ++++++
- drivers/hv/dxgkrnl/dxgprocess.c | 262 +++++++++++++++
- drivers/hv/dxgkrnl/dxgvmbus.c   | 164 ++++++++++
- drivers/hv/dxgkrnl/dxgvmbus.h   |  36 ++
- drivers/hv/dxgkrnl/hmgr.c       | 563 ++++++++++++++++++++++++++++++++
- drivers/hv/dxgkrnl/hmgr.h       | 112 +++++++
- drivers/hv/dxgkrnl/ioctl.c      |  60 ++++
- drivers/hv/dxgkrnl/misc.h       |   9 +-
- include/uapi/misc/d3dkmthk.h    | 103 ++++++
- 12 files changed, 1569 insertions(+), 6 deletions(-)
- create mode 100644 drivers/hv/dxgkrnl/dxgprocess.c
- create mode 100644 drivers/hv/dxgkrnl/hmgr.c
- create mode 100644 drivers/hv/dxgkrnl/hmgr.h
+ drivers/hv/dxgkrnl/dxgmodule.c |   3 +
+ drivers/hv/dxgkrnl/ioctl.c     | 482 ++++++++++++++++++++++++++++++++-
+ 2 files changed, 484 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hv/dxgkrnl/Makefile b/drivers/hv/dxgkrnl/Makefile
-index 2ed07d877c91..9d821e83448a 100644
---- a/drivers/hv/dxgkrnl/Makefile
-+++ b/drivers/hv/dxgkrnl/Makefile
-@@ -2,4 +2,4 @@
- # Makefile for the hyper-v compute device driver (dxgkrnl).
- 
- obj-$(CONFIG_DXGKRNL)	+= dxgkrnl.o
--dxgkrnl-y		:= dxgmodule.o misc.o dxgadapter.o ioctl.o dxgvmbus.o
-+dxgkrnl-y		:= dxgmodule.o hmgr.o misc.o dxgadapter.o ioctl.o dxgvmbus.o dxgprocess.o
-diff --git a/drivers/hv/dxgkrnl/dxgadapter.c b/drivers/hv/dxgkrnl/dxgadapter.c
-index 07d47699d255..fa0d6beca157 100644
---- a/drivers/hv/dxgkrnl/dxgadapter.c
-+++ b/drivers/hv/dxgkrnl/dxgadapter.c
-@@ -100,6 +100,7 @@ void dxgadapter_start(struct dxgadapter *adapter)
- 
- void dxgadapter_stop(struct dxgadapter *adapter)
- {
-+	struct dxgprocess_adapter *entry;
- 	bool adapter_stopped = false;
- 
- 	down_write(&adapter->core_lock);
-@@ -112,6 +113,15 @@ void dxgadapter_stop(struct dxgadapter *adapter)
- 	if (adapter_stopped)
- 		return;
- 
-+	dxgglobal_acquire_process_adapter_lock();
-+
-+	list_for_each_entry(entry, &adapter->adapter_process_list_head,
-+			    adapter_process_list_entry) {
-+		dxgprocess_adapter_stop(entry);
-+	}
-+
-+	dxgglobal_release_process_adapter_lock();
-+
- 	if (dxgadapter_acquire_lock_exclusive(adapter) == 0) {
- 		dxgvmb_send_close_adapter(adapter);
- 		dxgadapter_release_lock_exclusive(adapter);
-@@ -135,6 +145,21 @@ bool dxgadapter_is_active(struct dxgadapter *adapter)
- 	return adapter->adapter_state == DXGADAPTER_STATE_ACTIVE;
- }
- 
-+/* Protected by dxgglobal_acquire_process_adapter_lock */
-+void dxgadapter_add_process(struct dxgadapter *adapter,
-+			    struct dxgprocess_adapter *process_info)
-+{
-+	DXG_TRACE("%p %p", adapter, process_info);
-+	list_add_tail(&process_info->adapter_process_list_entry,
-+		      &adapter->adapter_process_list_head);
-+}
-+
-+void dxgadapter_remove_process(struct dxgprocess_adapter *process_info)
-+{
-+	DXG_TRACE("%p %p", process_info->adapter, process_info);
-+	list_del(&process_info->adapter_process_list_entry);
-+}
-+
- int dxgadapter_acquire_lock_exclusive(struct dxgadapter *adapter)
- {
- 	down_write(&adapter->core_lock);
-@@ -168,3 +193,50 @@ void dxgadapter_release_lock_shared(struct dxgadapter *adapter)
- {
- 	up_read(&adapter->core_lock);
- }
-+
-+struct dxgprocess_adapter *dxgprocess_adapter_create(struct dxgprocess *process,
-+						     struct dxgadapter *adapter)
-+{
-+	struct dxgprocess_adapter *adapter_info;
-+
-+	adapter_info = kzalloc(sizeof(*adapter_info), GFP_KERNEL);
-+	if (adapter_info) {
-+		if (kref_get_unless_zero(&adapter->adapter_kref) == 0) {
-+			DXG_ERR("failed to acquire adapter reference");
-+			goto cleanup;
-+		}
-+		adapter_info->adapter = adapter;
-+		adapter_info->process = process;
-+		adapter_info->refcount = 1;
-+		list_add_tail(&adapter_info->process_adapter_list_entry,
-+			      &process->process_adapter_list_head);
-+		dxgadapter_add_process(adapter, adapter_info);
-+	}
-+	return adapter_info;
-+cleanup:
-+	if (adapter_info)
-+		kfree(adapter_info);
-+	return NULL;
-+}
-+
-+void dxgprocess_adapter_stop(struct dxgprocess_adapter *adapter_info)
-+{
-+}
-+
-+void dxgprocess_adapter_destroy(struct dxgprocess_adapter *adapter_info)
-+{
-+	dxgadapter_remove_process(adapter_info);
-+	kref_put(&adapter_info->adapter->adapter_kref, dxgadapter_release);
-+	list_del(&adapter_info->process_adapter_list_entry);
-+	kfree(adapter_info);
-+}
-+
-+/*
-+ * Must be called when dxgglobal::process_adapter_mutex is held
-+ */
-+void dxgprocess_adapter_release(struct dxgprocess_adapter *adapter_info)
-+{
-+	adapter_info->refcount--;
-+	if (adapter_info->refcount == 0)
-+		dxgprocess_adapter_destroy(adapter_info);
-+}
-diff --git a/drivers/hv/dxgkrnl/dxgkrnl.h b/drivers/hv/dxgkrnl/dxgkrnl.h
-index ba2a7c6001aa..b089d126f801 100644
---- a/drivers/hv/dxgkrnl/dxgkrnl.h
-+++ b/drivers/hv/dxgkrnl/dxgkrnl.h
-@@ -29,8 +29,10 @@
- #include <uapi/misc/d3dkmthk.h>
- #include <linux/version.h>
- #include "misc.h"
-+#include "hmgr.h"
- #include <uapi/misc/d3dkmthk.h>
- 
-+struct dxgprocess;
- struct dxgadapter;
- 
- /*
-@@ -111,6 +113,10 @@ struct dxgglobal {
- 	struct miscdevice	dxgdevice;
- 	struct mutex		device_mutex;
- 
-+	/*  list of created  processes */
-+	struct list_head	plisthead;
-+	struct mutex		plistmutex;
-+
- 	/* list of created adapters */
- 	struct list_head	adapter_list_head;
- 	struct rw_semaphore	adapter_list_lock;
-@@ -124,6 +130,9 @@ struct dxgglobal {
- 	/* protects acces to the global VM bus channel */
- 	struct rw_semaphore	channel_lock;
- 
-+	/* protects the dxgprocess_adapter lists */
-+	struct mutex		process_adapter_mutex;
-+
- 	bool			global_channel_initialized;
- 	bool			async_msg_enabled;
- 	bool			misc_registered;
-@@ -144,13 +153,84 @@ int dxgglobal_init_global_channel(void);
- void dxgglobal_destroy_global_channel(void);
- struct vmbus_channel *dxgglobal_get_vmbus(void);
- struct dxgvmbuschannel *dxgglobal_get_dxgvmbuschannel(void);
-+void dxgglobal_acquire_process_adapter_lock(void);
-+void dxgglobal_release_process_adapter_lock(void);
- int dxgglobal_acquire_channel_lock(void);
- void dxgglobal_release_channel_lock(void);
- 
-+/*
-+ * Describes adapter information for each process
-+ */
-+struct dxgprocess_adapter {
-+	/* Entry in dxgadapter::adapter_process_list_head */
-+	struct list_head	adapter_process_list_entry;
-+	/* Entry in dxgprocess::process_adapter_list_head */
-+	struct list_head	process_adapter_list_entry;
-+	struct dxgadapter	*adapter;
-+	struct dxgprocess	*process;
-+	int			refcount;
-+};
-+
-+struct dxgprocess_adapter *dxgprocess_adapter_create(struct dxgprocess *process,
-+						     struct dxgadapter
-+						     *adapter);
-+void dxgprocess_adapter_release(struct dxgprocess_adapter *adapter);
-+void dxgprocess_adapter_stop(struct dxgprocess_adapter *adapter_info);
-+void dxgprocess_adapter_destroy(struct dxgprocess_adapter *adapter_info);
-+
-+/*
-+ * The structure represents a process, which opened the /dev/dxg device.
-+ * A corresponding object is created on the host.
-+ */
- struct dxgprocess {
--	/* Placeholder */
-+	/*
-+	 * Process list entry in dxgglobal.
-+	 * Protected by the dxgglobal->plistmutex.
-+	 */
-+	struct list_head	plistentry;
-+	pid_t			pid;
-+	pid_t			tgid;
-+	/* how many time the process was opened */
-+	struct kref		process_kref;
-+	/*
-+	 * This handle table is used for all objects except dxgadapter
-+	 * The handle table lock order is higher than the local_handle_table
-+	 * lock
-+	 */
-+	struct hmgrtable	handle_table;
-+	/*
-+	 * This handle table is used for dxgadapter objects.
-+	 * The handle table lock order is lowest.
-+	 */
-+	struct hmgrtable	local_handle_table;
-+	/* Handle of the corresponding objec on the host */
-+	struct d3dkmthandle	host_handle;
-+
-+	/* List of opened adapters (dxgprocess_adapter) */
-+	struct list_head	process_adapter_list_head;
- };
- 
-+struct dxgprocess *dxgprocess_create(void);
-+void dxgprocess_destroy(struct dxgprocess *process);
-+void dxgprocess_release(struct kref *refcount);
-+int dxgprocess_open_adapter(struct dxgprocess *process,
-+					struct dxgadapter *adapter,
-+					struct d3dkmthandle *handle);
-+int dxgprocess_close_adapter(struct dxgprocess *process,
-+					 struct d3dkmthandle handle);
-+struct dxgadapter *dxgprocess_get_adapter(struct dxgprocess *process,
-+					  struct d3dkmthandle handle);
-+struct dxgadapter *dxgprocess_adapter_by_handle(struct dxgprocess *process,
-+						struct d3dkmthandle handle);
-+void dxgprocess_ht_lock_shared_down(struct dxgprocess *process);
-+void dxgprocess_ht_lock_shared_up(struct dxgprocess *process);
-+void dxgprocess_ht_lock_exclusive_down(struct dxgprocess *process);
-+void dxgprocess_ht_lock_exclusive_up(struct dxgprocess *process);
-+struct dxgprocess_adapter *dxgprocess_get_adapter_info(struct dxgprocess
-+						       *process,
-+						       struct dxgadapter
-+						       *adapter);
-+
- enum dxgadapter_state {
- 	DXGADAPTER_STATE_ACTIVE		= 0,
- 	DXGADAPTER_STATE_STOPPED	= 1,
-@@ -168,6 +248,8 @@ struct dxgadapter {
- 	struct kref		adapter_kref;
- 	/* Entry in the list of adapters in dxgglobal */
- 	struct list_head	adapter_list_entry;
-+	/* The list of dxgprocess_adapter entries */
-+	struct list_head	adapter_process_list_head;
- 	struct pci_dev		*pci_dev;
- 	struct hv_device	*hv_dev;
- 	struct dxgvmbuschannel	channel;
-@@ -191,6 +273,12 @@ void dxgadapter_release_lock_shared(struct dxgadapter *adapter);
- int dxgadapter_acquire_lock_exclusive(struct dxgadapter *adapter);
- void dxgadapter_acquire_lock_forced(struct dxgadapter *adapter);
- void dxgadapter_release_lock_exclusive(struct dxgadapter *adapter);
-+void dxgadapter_add_process(struct dxgadapter *adapter,
-+			    struct dxgprocess_adapter *process_info);
-+void dxgadapter_remove_process(struct dxgprocess_adapter *process_info);
-+
-+long dxgk_compat_ioctl(struct file *f, unsigned int p1, unsigned long p2);
-+long dxgk_unlocked_ioctl(struct file *f, unsigned int p1, unsigned long p2);
- 
- /*
-  * The convention is that VNBus instance id is a GUID, but the host sets
-@@ -220,9 +308,14 @@ static inline void guid_to_luid(guid_t *guid, struct winluid *luid)
- 
- void dxgvmb_initialize(void);
- int dxgvmb_send_set_iospace_region(u64 start, u64 len);
-+int dxgvmb_send_create_process(struct dxgprocess *process);
-+int dxgvmb_send_destroy_process(struct d3dkmthandle process);
- int dxgvmb_send_open_adapter(struct dxgadapter *adapter);
- int dxgvmb_send_close_adapter(struct dxgadapter *adapter);
- int dxgvmb_send_get_internal_adapter_info(struct dxgadapter *adapter);
-+int dxgvmb_send_query_adapter_info(struct dxgprocess *process,
-+				   struct dxgadapter *adapter,
-+				   struct d3dkmt_queryadapterinfo *args);
- int dxgvmb_send_async_msg(struct dxgvmbuschannel *channel,
- 			  void *command,
- 			  u32 cmd_size);
 diff --git a/drivers/hv/dxgkrnl/dxgmodule.c b/drivers/hv/dxgkrnl/dxgmodule.c
-index ef80b920f010..17c22001ca6c 100644
+index 17c22001ca6c..fbe1c58ecb46 100644
 --- a/drivers/hv/dxgkrnl/dxgmodule.c
 +++ b/drivers/hv/dxgkrnl/dxgmodule.c
-@@ -123,6 +123,20 @@ static struct dxgadapter *find_adapter(struct winluid *luid)
- 	return adapter;
- }
+@@ -721,6 +721,9 @@ static struct dxgglobal *dxgglobal_create(void)
  
-+void dxgglobal_acquire_process_adapter_lock(void)
-+{
-+	struct dxgglobal *dxgglobal = dxggbl();
-+
-+	mutex_lock(&dxgglobal->process_adapter_mutex);
-+}
-+
-+void dxgglobal_release_process_adapter_lock(void)
-+{
-+	struct dxgglobal *dxgglobal = dxggbl();
-+
-+	mutex_unlock(&dxgglobal->process_adapter_mutex);
-+}
-+
- /*
-  * Creates a new dxgadapter object, which represents a virtual GPU, projected
-  * by the host.
-@@ -147,6 +161,7 @@ int dxgglobal_create_adapter(struct pci_dev *dev, guid_t *guid,
- 	kref_init(&adapter->adapter_kref);
- 	init_rwsem(&adapter->core_lock);
+ 	init_rwsem(&dxgglobal->channel_lock);
  
-+	INIT_LIST_HEAD(&adapter->adapter_process_list_head);
- 	adapter->pci_dev = dev;
- 	guid_to_luid(guid, &adapter->luid);
- 
-@@ -205,8 +220,87 @@ static void dxgglobal_stop_adapters(void)
- 	dxgglobal_release_adapter_list_lock(DXGLOCK_EXCL);
- }
- 
-+/*
-+ * Returns dxgprocess for the current executing process.
-+ * Creates dxgprocess if it doesn't exist.
-+ */
-+static struct dxgprocess *dxgglobal_get_current_process(void)
-+{
-+	/*
-+	 * Find the DXG process for the current process.
-+	 * A new process is created if necessary.
-+	 */
-+	struct dxgprocess *process = NULL;
-+	struct dxgprocess *entry = NULL;
-+	struct dxgglobal *dxgglobal = dxggbl();
-+
-+	mutex_lock(&dxgglobal->plistmutex);
-+	list_for_each_entry(entry, &dxgglobal->plisthead, plistentry) {
-+		/* All threads of a process have the same thread group ID */
-+		if (entry->tgid == current->tgid) {
-+			if (kref_get_unless_zero(&entry->process_kref)) {
-+				process = entry;
-+				DXG_TRACE("found dxgprocess");
-+			} else {
-+				DXG_TRACE("process is destroyed");
-+			}
-+			break;
-+		}
-+	}
-+	mutex_unlock(&dxgglobal->plistmutex);
-+
-+	if (process == NULL)
-+		process = dxgprocess_create();
-+
-+	return process;
-+}
-+
-+/*
-+ * File operations for the /dev/dxg device
-+ */
-+
-+static int dxgk_open(struct inode *n, struct file *f)
-+{
-+	int ret = 0;
-+	struct dxgprocess *process;
-+
-+	DXG_TRACE("%p %d %d", f, current->pid, current->tgid);
-+
-+	/* Find/create a dxgprocess structure for this process */
-+	process = dxgglobal_get_current_process();
-+
-+	if (process) {
-+		f->private_data = process;
-+	} else {
-+		DXG_TRACE("cannot create dxgprocess");
-+		ret = -EBADF;
-+	}
-+
-+	return ret;
-+}
-+
-+static int dxgk_release(struct inode *n, struct file *f)
-+{
-+	struct dxgprocess *process;
-+
-+	process = (struct dxgprocess *)f->private_data;
-+	DXG_TRACE("%p, %p", f, process);
-+
-+	if (process == NULL)
-+		return -EINVAL;
-+
-+	kref_put(&process->process_kref, dxgprocess_release);
-+
-+	f->private_data = NULL;
-+	return 0;
-+}
-+
- const struct file_operations dxgk_fops = {
- 	.owner = THIS_MODULE,
-+	.open = dxgk_open,
-+	.release = dxgk_release,
-+	.compat_ioctl = dxgk_compat_ioctl,
-+	.unlocked_ioctl = dxgk_unlocked_ioctl,
- };
- 
- /*
-@@ -616,7 +710,10 @@ static struct dxgglobal *dxgglobal_create(void)
- 	if (!dxgglobal)
- 		return NULL;
- 
-+	INIT_LIST_HEAD(&dxgglobal->plisthead);
-+	mutex_init(&dxgglobal->plistmutex);
- 	mutex_init(&dxgglobal->device_mutex);
-+	mutex_init(&dxgglobal->process_adapter_mutex);
- 
- 	INIT_LIST_HEAD(&dxgglobal->vgpu_ch_list_head);
- 	INIT_LIST_HEAD(&dxgglobal->adapter_list_head);
-diff --git a/drivers/hv/dxgkrnl/dxgprocess.c b/drivers/hv/dxgkrnl/dxgprocess.c
-new file mode 100644
-index 000000000000..ab9a01e3c8c8
---- /dev/null
-+++ b/drivers/hv/dxgkrnl/dxgprocess.c
-@@ -0,0 +1,262 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/*
-+ * Copyright (c) 2022, Microsoft Corporation.
-+ *
-+ * Author:
-+ *   Iouri Tarassov <iourit@linux.microsoft.com>
-+ *
-+ * Dxgkrnl Graphics Driver
-+ * DXGPROCESS implementation
-+ *
-+ */
-+
-+#include "dxgkrnl.h"
-+
-+#undef pr_fmt
-+#define pr_fmt(fmt)	"dxgk: " fmt
-+
-+/*
-+ * Creates a new dxgprocess object
-+ * Must be called when dxgglobal->plistmutex is held
-+ */
-+struct dxgprocess *dxgprocess_create(void)
-+{
-+	struct dxgprocess *process;
-+	int ret;
-+	struct dxgglobal *dxgglobal = dxggbl();
-+
-+	process = kzalloc(sizeof(struct dxgprocess), GFP_KERNEL);
-+	if (process != NULL) {
-+		DXG_TRACE("new dxgprocess created");
-+		process->pid = current->pid;
-+		process->tgid = current->tgid;
-+		ret = dxgvmb_send_create_process(process);
-+		if (ret < 0) {
-+			DXG_TRACE("send_create_process failed");
-+			kfree(process);
-+			process = NULL;
-+		} else {
-+			INIT_LIST_HEAD(&process->plistentry);
-+			kref_init(&process->process_kref);
-+
-+			mutex_lock(&dxgglobal->plistmutex);
-+			list_add_tail(&process->plistentry,
-+				      &dxgglobal->plisthead);
-+			mutex_unlock(&dxgglobal->plistmutex);
-+
-+			hmgrtable_init(&process->handle_table, process);
-+			hmgrtable_init(&process->local_handle_table, process);
-+			INIT_LIST_HEAD(&process->process_adapter_list_head);
-+		}
-+	}
-+	return process;
-+}
-+
-+void dxgprocess_destroy(struct dxgprocess *process)
-+{
-+	int i;
-+	enum hmgrentry_type t;
-+	struct d3dkmthandle h;
-+	void *o;
-+	struct dxgprocess_adapter *entry;
-+	struct dxgprocess_adapter *tmp;
-+
-+	/* Destroy all adapter state */
-+	dxgglobal_acquire_process_adapter_lock();
-+	list_for_each_entry_safe(entry, tmp,
-+				 &process->process_adapter_list_head,
-+				 process_adapter_list_entry) {
-+		dxgprocess_adapter_destroy(entry);
-+	}
-+	dxgglobal_release_process_adapter_lock();
-+
-+	i = 0;
-+	while (hmgrtable_next_entry(&process->local_handle_table,
-+				    &i, &t, &h, &o)) {
-+		switch (t) {
-+		case HMGRENTRY_TYPE_DXGADAPTER:
-+			dxgprocess_close_adapter(process, h);
-+			break;
-+		default:
-+			DXG_ERR("invalid entry in handle table %d", t);
-+			break;
-+		}
-+	}
-+
-+	hmgrtable_destroy(&process->handle_table);
-+	hmgrtable_destroy(&process->local_handle_table);
-+}
-+
-+void dxgprocess_release(struct kref *refcount)
-+{
-+	struct dxgprocess *process;
-+	struct dxgglobal *dxgglobal = dxggbl();
-+
-+	process = container_of(refcount, struct dxgprocess, process_kref);
-+
-+	mutex_lock(&dxgglobal->plistmutex);
-+	list_del(&process->plistentry);
-+	mutex_unlock(&dxgglobal->plistmutex);
-+
-+	dxgprocess_destroy(process);
-+
-+	if (process->host_handle.v)
-+		dxgvmb_send_destroy_process(process->host_handle);
-+	kfree(process);
-+}
-+
-+struct dxgprocess_adapter *dxgprocess_get_adapter_info(struct dxgprocess
-+						       *process,
-+						       struct dxgadapter
-+						       *adapter)
-+{
-+	struct dxgprocess_adapter *entry;
-+
-+	list_for_each_entry(entry, &process->process_adapter_list_head,
-+			    process_adapter_list_entry) {
-+		if (adapter == entry->adapter) {
-+			DXG_TRACE("Found process info %p", entry);
-+			return entry;
-+		}
-+	}
-+	return NULL;
-+}
-+
-+/*
-+ * Dxgprocess takes references on dxgadapter and dxgprocess_adapter.
-+ *
-+ * The process_adapter lock is held.
-+ *
-+ */
-+int dxgprocess_open_adapter(struct dxgprocess *process,
-+					struct dxgadapter *adapter,
-+					struct d3dkmthandle *h)
-+{
-+	int ret = 0;
-+	struct dxgprocess_adapter *adapter_info;
-+	struct d3dkmthandle handle;
-+
-+	h->v = 0;
-+	adapter_info = dxgprocess_get_adapter_info(process, adapter);
-+	if (adapter_info == NULL) {
-+		DXG_TRACE("creating new process adapter info");
-+		adapter_info = dxgprocess_adapter_create(process, adapter);
-+		if (adapter_info == NULL) {
-+			ret = -ENOMEM;
-+			goto cleanup;
-+		}
-+	} else {
-+		adapter_info->refcount++;
-+	}
-+
-+	handle = hmgrtable_alloc_handle_safe(&process->local_handle_table,
-+					     adapter, HMGRENTRY_TYPE_DXGADAPTER,
-+					     true);
-+	if (handle.v) {
-+		*h = handle;
-+	} else {
-+		DXG_ERR("failed to create adapter handle");
-+		ret = -ENOMEM;
-+	}
-+
-+cleanup:
-+
-+	if (ret < 0) {
-+		if (adapter_info)
-+			dxgprocess_adapter_release(adapter_info);
-+	}
-+
-+	return ret;
-+}
-+
-+int dxgprocess_close_adapter(struct dxgprocess *process,
-+			     struct d3dkmthandle handle)
-+{
-+	struct dxgadapter *adapter;
-+	struct dxgprocess_adapter *adapter_info;
-+	int ret = 0;
-+
-+	if (handle.v == 0)
-+		return 0;
-+
-+	hmgrtable_lock(&process->local_handle_table, DXGLOCK_EXCL);
-+	adapter = dxgprocess_get_adapter(process, handle);
-+	if (adapter)
-+		hmgrtable_free_handle(&process->local_handle_table,
-+				      HMGRENTRY_TYPE_DXGADAPTER, handle);
-+	hmgrtable_unlock(&process->local_handle_table, DXGLOCK_EXCL);
-+
-+	if (adapter) {
-+		adapter_info = dxgprocess_get_adapter_info(process, adapter);
-+		if (adapter_info) {
-+			dxgglobal_acquire_process_adapter_lock();
-+			dxgprocess_adapter_release(adapter_info);
-+			dxgglobal_release_process_adapter_lock();
-+		} else {
-+			ret = -EINVAL;
-+		}
-+	} else {
-+		DXG_ERR("Adapter not found %x", handle.v);
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+struct dxgadapter *dxgprocess_get_adapter(struct dxgprocess *process,
-+					  struct d3dkmthandle handle)
-+{
-+	struct dxgadapter *adapter;
-+
-+	adapter = hmgrtable_get_object_by_type(&process->local_handle_table,
-+					       HMGRENTRY_TYPE_DXGADAPTER,
-+					       handle);
-+	if (adapter == NULL)
-+		DXG_ERR("Adapter not found %x", handle.v);
-+	return adapter;
-+}
-+
-+/*
-+ * Gets the adapter object from the process handle table.
-+ * The adapter object is referenced.
-+ * The function acquired the handle table lock shared.
-+ */
-+struct dxgadapter *dxgprocess_adapter_by_handle(struct dxgprocess *process,
-+						struct d3dkmthandle handle)
-+{
-+	struct dxgadapter *adapter;
-+
-+	hmgrtable_lock(&process->local_handle_table, DXGLOCK_SHARED);
-+	adapter = hmgrtable_get_object_by_type(&process->local_handle_table,
-+					       HMGRENTRY_TYPE_DXGADAPTER,
-+					       handle);
-+	if (adapter == NULL)
-+		DXG_ERR("adapter_by_handle failed %x", handle.v);
-+	else if (kref_get_unless_zero(&adapter->adapter_kref) == 0) {
-+		DXG_ERR("failed to acquire adapter reference");
-+		adapter = NULL;
-+	}
-+	hmgrtable_unlock(&process->local_handle_table, DXGLOCK_SHARED);
-+	return adapter;
-+}
-+
-+void dxgprocess_ht_lock_shared_down(struct dxgprocess *process)
-+{
-+	hmgrtable_lock(&process->handle_table, DXGLOCK_SHARED);
-+}
-+
-+void dxgprocess_ht_lock_shared_up(struct dxgprocess *process)
-+{
-+	hmgrtable_unlock(&process->handle_table, DXGLOCK_SHARED);
-+}
-+
-+void dxgprocess_ht_lock_exclusive_down(struct dxgprocess *process)
-+{
-+	hmgrtable_lock(&process->handle_table, DXGLOCK_EXCL);
-+}
-+
-+void dxgprocess_ht_lock_exclusive_up(struct dxgprocess *process)
-+{
-+	hmgrtable_unlock(&process->handle_table, DXGLOCK_EXCL);
-+}
-diff --git a/drivers/hv/dxgkrnl/dxgvmbus.c b/drivers/hv/dxgkrnl/dxgvmbus.c
-index 6d4b8d9d8d07..0abf45d0d3f7 100644
---- a/drivers/hv/dxgkrnl/dxgvmbus.c
-+++ b/drivers/hv/dxgkrnl/dxgvmbus.c
-@@ -497,6 +497,87 @@ int dxgvmb_send_set_iospace_region(u64 start, u64 len)
- 	return ret;
- }
- 
-+int dxgvmb_send_create_process(struct dxgprocess *process)
-+{
-+	int ret;
-+	struct dxgkvmb_command_createprocess *command;
-+	struct dxgkvmb_command_createprocess_return result = { 0 };
-+	struct dxgvmbusmsg msg;
-+	char s[WIN_MAX_PATH];
-+	int i;
-+	struct dxgglobal *dxgglobal = dxggbl();
-+
-+	ret = init_message(&msg, NULL, process, sizeof(*command));
-+	if (ret)
-+		return ret;
-+	command = (void *)msg.msg;
-+
-+	ret = dxgglobal_acquire_channel_lock();
-+	if (ret < 0)
-+		goto cleanup;
-+
-+	command_vm_to_host_init1(&command->hdr, DXGK_VMBCOMMAND_CREATEPROCESS);
-+	command->process = process;
-+	command->process_id = process->pid;
-+	command->linux_process = 1;
-+	s[0] = 0;
-+	__get_task_comm(s, WIN_MAX_PATH, current);
-+	for (i = 0; i < WIN_MAX_PATH; i++) {
-+		command->process_name[i] = s[i];
-+		if (s[i] == 0)
-+			break;
-+	}
-+
-+	ret = dxgvmb_send_sync_msg(&dxgglobal->channel, msg.hdr, msg.size,
-+				   &result, sizeof(result));
-+	if (ret < 0) {
-+		DXG_ERR("create_process failed %d", ret);
-+	} else if (result.hprocess.v == 0) {
-+		DXG_ERR("create_process returned 0 handle");
-+		ret = -ENOTRECOVERABLE;
-+	} else {
-+		process->host_handle = result.hprocess;
-+		DXG_TRACE("create_process returned %x",
-+			process->host_handle.v);
-+	}
-+
-+	dxgglobal_release_channel_lock();
-+
-+cleanup:
-+	free_message(&msg, process);
-+	if (ret)
-+		DXG_TRACE("err: %d", ret);
-+	return ret;
-+}
-+
-+int dxgvmb_send_destroy_process(struct d3dkmthandle process)
-+{
-+	int ret;
-+	struct dxgkvmb_command_destroyprocess *command;
-+	struct dxgvmbusmsg msg;
-+	struct dxgglobal *dxgglobal = dxggbl();
-+
-+	ret = init_message(&msg, NULL, NULL, sizeof(*command));
-+	if (ret)
-+		return ret;
-+	command = (void *)msg.msg;
-+
-+	ret = dxgglobal_acquire_channel_lock();
-+	if (ret < 0)
-+		goto cleanup;
-+	command_vm_to_host_init2(&command->hdr, DXGK_VMBCOMMAND_DESTROYPROCESS,
-+				 process);
-+	ret = dxgvmb_send_sync_msg_ntstatus(&dxgglobal->channel,
-+					    msg.hdr, msg.size);
-+	dxgglobal_release_channel_lock();
-+
-+cleanup:
-+	free_message(&msg, NULL);
-+	if (ret)
-+		DXG_TRACE("err: %d", ret);
-+	return ret;
-+}
-+
- /*
-  * Virtual GPU messages to the host
-  */
-@@ -591,3 +672,86 @@ int dxgvmb_send_get_internal_adapter_info(struct dxgadapter *adapter)
- 		DXG_ERR("Failed to get adapter info: %d", ret);
- 	return ret;
- }
-+
-+int dxgvmb_send_query_adapter_info(struct dxgprocess *process,
-+				   struct dxgadapter *adapter,
-+				   struct d3dkmt_queryadapterinfo *args)
-+{
-+	struct dxgkvmb_command_queryadapterinfo *command;
-+	u32 cmd_size = sizeof(*command) + args->private_data_size - 1;
-+	int ret;
-+	u32 private_data_size;
-+	void *private_data;
-+	struct dxgvmbusmsg msg = {.hdr = NULL};
-+	struct dxgglobal *dxgglobal = dxggbl();
-+
-+	ret = init_message(&msg, adapter, process, cmd_size);
-+	if (ret)
-+		goto cleanup;
-+	command = (void *)msg.msg;
-+
-+	ret = copy_from_user(command->private_data,
-+			     args->private_data, args->private_data_size);
-+	if (ret) {
-+		DXG_ERR("Faled to copy private data");
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	command_vgpu_to_host_init2(&command->hdr,
-+				   DXGK_VMBCOMMAND_QUERYADAPTERINFO,
-+				   process->host_handle);
-+	command->private_data_size = args->private_data_size;
-+	command->query_type = args->type;
-+
-+	if (dxgglobal->vmbus_ver >= DXGK_VMBUS_INTERFACE_VERSION) {
-+		private_data = msg.msg;
-+		private_data_size = command->private_data_size +
-+				    sizeof(struct ntstatus);
-+	} else {
-+		private_data = command->private_data;
-+		private_data_size = command->private_data_size;
-+	}
-+
-+	ret = dxgvmb_send_sync_msg(msg.channel, msg.hdr, msg.size,
-+				   private_data, private_data_size);
-+	if (ret < 0)
-+		goto cleanup;
-+
-+	if (dxgglobal->vmbus_ver >= DXGK_VMBUS_INTERFACE_VERSION) {
-+		ret = ntstatus2int(*(struct ntstatus *)private_data);
-+		if (ret < 0)
-+			goto cleanup;
-+		private_data = (char *)private_data + sizeof(struct ntstatus);
-+	}
-+
-+	switch (args->type) {
-+	case _KMTQAITYPE_ADAPTERTYPE:
-+	case _KMTQAITYPE_ADAPTERTYPE_RENDER:
-+		{
-+			struct d3dkmt_adaptertype *adapter_type =
-+			    (void *)private_data;
-+			adapter_type->paravirtualized = 1;
-+			adapter_type->display_supported = 0;
-+			adapter_type->post_device = 0;
-+			adapter_type->indirect_display_device = 0;
-+			adapter_type->acg_supported = 0;
-+			adapter_type->support_set_timings_from_vidpn = 0;
-+			break;
-+		}
-+	default:
-+		break;
-+	}
-+	ret = copy_to_user(args->private_data, private_data,
-+			   args->private_data_size);
-+	if (ret) {
-+		DXG_ERR("Faled to copy private data to user");
-+		ret = -EINVAL;
-+	}
-+
-+cleanup:
-+	free_message(&msg, process);
-+	if (ret)
-+		DXG_TRACE("err: %d", ret);
-+	return ret;
-+}
-diff --git a/drivers/hv/dxgkrnl/dxgvmbus.h b/drivers/hv/dxgkrnl/dxgvmbus.h
-index 584cdd3db6c0..a805a396e083 100644
---- a/drivers/hv/dxgkrnl/dxgvmbus.h
-+++ b/drivers/hv/dxgkrnl/dxgvmbus.h
-@@ -14,7 +14,11 @@
- #ifndef _DXGVMBUS_H
- #define _DXGVMBUS_H
- 
-+struct dxgprocess;
-+struct dxgadapter;
-+
- #define DXG_MAX_VM_BUS_PACKET_SIZE	(1024 * 128)
-+#define DXG_VM_PROCESS_NAME_LENGTH	260
- 
- enum dxgkvmb_commandchanneltype {
- 	DXGKVMB_VGPU_TO_HOST,
-@@ -169,6 +173,26 @@ struct dxgkvmb_command_setiospaceregion {
- 	u32				shared_page_gpadl;
- };
- 
-+struct dxgkvmb_command_createprocess {
-+	struct dxgkvmb_command_vm_to_host hdr;
-+	void			*process;
-+	u64			process_id;
-+	u16			process_name[DXG_VM_PROCESS_NAME_LENGTH + 1];
-+	u8			csrss_process:1;
-+	u8			dwm_process:1;
-+	u8			wow64_process:1;
-+	u8			linux_process:1;
-+};
-+
-+struct dxgkvmb_command_createprocess_return {
-+	struct d3dkmthandle	hprocess;
-+};
-+
-+// The command returns ntstatus
-+struct dxgkvmb_command_destroyprocess {
-+	struct dxgkvmb_command_vm_to_host hdr;
-+};
-+
- struct dxgkvmb_command_openadapter {
- 	struct dxgkvmb_command_vgpu_to_host hdr;
- 	u32				vmbus_interface_version;
-@@ -211,4 +235,16 @@ struct dxgkvmb_command_getinternaladapterinfo_return {
- 	struct winluid			host_vgpu_luid;
- };
- 
-+struct dxgkvmb_command_queryadapterinfo {
-+	struct dxgkvmb_command_vgpu_to_host hdr;
-+	enum kmtqueryadapterinfotype	query_type;
-+	u32				private_data_size;
-+	u8				private_data[1];
-+};
-+
-+struct dxgkvmb_command_queryadapterinfo_return {
-+	struct ntstatus			status;
-+	u8				private_data[1];
-+};
-+
- #endif /* _DXGVMBUS_H */
-diff --git a/drivers/hv/dxgkrnl/hmgr.c b/drivers/hv/dxgkrnl/hmgr.c
-new file mode 100644
-index 000000000000..526b50f46d96
---- /dev/null
-+++ b/drivers/hv/dxgkrnl/hmgr.c
-@@ -0,0 +1,563 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/*
-+ * Copyright (c) 2022, Microsoft Corporation.
-+ *
-+ * Author:
-+ *   Iouri Tarassov <iourit@linux.microsoft.com>
-+ *
-+ * Dxgkrnl Graphics Driver
-+ * Handle manager implementation
-+ *
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/mutex.h>
-+#include <linux/rwsem.h>
-+
-+#include "misc.h"
-+#include "dxgkrnl.h"
-+#include "hmgr.h"
-+
-+#undef pr_fmt
-+#define pr_fmt(fmt)	"dxgk: " fmt
-+
-+const struct d3dkmthandle zerohandle;
-+
-+/*
-+ * Handle parameters
-+ */
-+#define HMGRHANDLE_INSTANCE_BITS	6
-+#define HMGRHANDLE_INDEX_BITS		24
-+#define HMGRHANDLE_UNIQUE_BITS		2
-+
-+#define HMGRHANDLE_INSTANCE_SHIFT	0
-+#define HMGRHANDLE_INDEX_SHIFT	\
-+	(HMGRHANDLE_INSTANCE_BITS + HMGRHANDLE_INSTANCE_SHIFT)
-+#define HMGRHANDLE_UNIQUE_SHIFT	\
-+	(HMGRHANDLE_INDEX_BITS + HMGRHANDLE_INDEX_SHIFT)
-+
-+#define HMGRHANDLE_INSTANCE_MASK \
-+	(((1 << HMGRHANDLE_INSTANCE_BITS) - 1) << HMGRHANDLE_INSTANCE_SHIFT)
-+#define HMGRHANDLE_INDEX_MASK      \
-+	(((1 << HMGRHANDLE_INDEX_BITS)    - 1) << HMGRHANDLE_INDEX_SHIFT)
-+#define HMGRHANDLE_UNIQUE_MASK     \
-+	(((1 << HMGRHANDLE_UNIQUE_BITS)   - 1) << HMGRHANDLE_UNIQUE_SHIFT)
-+
-+#define HMGRHANDLE_INSTANCE_MAX	((1 << HMGRHANDLE_INSTANCE_BITS) - 1)
-+#define HMGRHANDLE_INDEX_MAX	((1 << HMGRHANDLE_INDEX_BITS) - 1)
-+#define HMGRHANDLE_UNIQUE_MAX	((1 << HMGRHANDLE_UNIQUE_BITS) - 1)
-+
-+/*
-+ * Handle entry
-+ */
-+struct hmgrentry {
-+	union {
-+		void *object;
-+		struct {
-+			u32 prev_free_index;
-+			u32 next_free_index;
-+		};
-+	};
-+	u32 type:HMGRENTRY_TYPE_BITS + 1;
-+	u32 unique:HMGRHANDLE_UNIQUE_BITS;
-+	u32 instance:HMGRHANDLE_INSTANCE_BITS;
-+	u32 destroyed:1;
-+};
-+
-+#define HMGRTABLE_SIZE_INCREMENT	1024
-+#define HMGRTABLE_MIN_FREE_ENTRIES 128
-+#define HMGRTABLE_INVALID_INDEX (~((1 << HMGRHANDLE_INDEX_BITS) - 1))
-+#define HMGRTABLE_SIZE_MAX		0xFFFFFFF
-+
-+static u32 table_size_increment = HMGRTABLE_SIZE_INCREMENT;
-+
-+static u32 get_unique(struct d3dkmthandle h)
-+{
-+	return (h.v & HMGRHANDLE_UNIQUE_MASK) >> HMGRHANDLE_UNIQUE_SHIFT;
-+}
-+
-+static u32 get_index(struct d3dkmthandle h)
-+{
-+	return (h.v & HMGRHANDLE_INDEX_MASK) >> HMGRHANDLE_INDEX_SHIFT;
-+}
-+
-+static bool is_handle_valid(struct hmgrtable *table, struct d3dkmthandle h,
-+			    bool ignore_destroyed, enum hmgrentry_type t)
-+{
-+	u32 index = get_index(h);
-+	u32 unique = get_unique(h);
-+	struct hmgrentry *entry;
-+
-+	if (index >= table->table_size) {
-+		DXG_ERR("Invalid index %x %d", h.v, index);
-+		return false;
-+	}
-+
-+	entry = &table->entry_table[index];
-+	if (unique != entry->unique) {
-+		DXG_ERR("Invalid unique %x %d %d %d %p",
-+			h.v, unique, entry->unique, index, entry->object);
-+		return false;
-+	}
-+
-+	if (entry->destroyed && !ignore_destroyed) {
-+		DXG_ERR("Invalid destroyed value");
-+		return false;
-+	}
-+
-+	if (entry->type == HMGRENTRY_TYPE_FREE) {
-+		DXG_ERR("Entry is freed %x %d", h.v, index);
-+		return false;
-+	}
-+
-+	if (t != HMGRENTRY_TYPE_FREE && t != entry->type) {
-+		DXG_ERR("type mismatch %x %d %d", h.v, t, entry->type);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+static struct d3dkmthandle build_handle(u32 index, u32 unique, u32 instance)
-+{
-+	struct d3dkmthandle handle;
-+
-+	handle.v = (index << HMGRHANDLE_INDEX_SHIFT) & HMGRHANDLE_INDEX_MASK;
-+	handle.v |= (unique << HMGRHANDLE_UNIQUE_SHIFT) &
-+	    HMGRHANDLE_UNIQUE_MASK;
-+	handle.v |= (instance << HMGRHANDLE_INSTANCE_SHIFT) &
-+	    HMGRHANDLE_INSTANCE_MASK;
-+
-+	return handle;
-+}
-+
-+inline u32 hmgrtable_get_used_entry_count(struct hmgrtable *table)
-+{
-+	DXGKRNL_ASSERT(table->table_size >= table->free_count);
-+	return (table->table_size - table->free_count);
-+}
-+
-+bool hmgrtable_mark_destroyed(struct hmgrtable *table, struct d3dkmthandle h)
-+{
-+	if (!is_handle_valid(table, h, false, HMGRENTRY_TYPE_FREE))
-+		return false;
-+
-+	table->entry_table[get_index(h)].destroyed = true;
-+	return true;
-+}
-+
-+bool hmgrtable_unmark_destroyed(struct hmgrtable *table, struct d3dkmthandle h)
-+{
-+	if (!is_handle_valid(table, h, true, HMGRENTRY_TYPE_FREE))
-+		return true;
-+
-+	DXGKRNL_ASSERT(table->entry_table[get_index(h)].destroyed);
-+	table->entry_table[get_index(h)].destroyed = 0;
-+	return true;
-+}
-+
-+static bool expand_table(struct hmgrtable *table, u32 NumEntries)
-+{
-+	u32 new_table_size;
-+	struct hmgrentry *new_entry;
-+	u32 table_index;
-+	u32 new_free_count;
-+	u32 prev_free_index;
-+	u32 tail_index = table->free_handle_list_tail;
-+
-+	/* The tail should point to the last free element in the list */
-+	if (table->free_count != 0) {
-+		if (tail_index >= table->table_size ||
-+		    table->entry_table[tail_index].next_free_index !=
-+		    HMGRTABLE_INVALID_INDEX) {
-+			DXG_ERR("corruption");
-+			DXG_ERR("tail_index: %x", tail_index);
-+			DXG_ERR("table size: %x", table->table_size);
-+			DXG_ERR("free_count: %d", table->free_count);
-+			DXG_ERR("NumEntries: %x", NumEntries);
-+			return false;
-+		}
-+	}
-+
-+	new_free_count = table_size_increment + table->free_count;
-+	new_table_size = table->table_size + table_size_increment;
-+	if (new_table_size < NumEntries) {
-+		new_free_count += NumEntries - new_table_size;
-+		new_table_size = NumEntries;
-+	}
-+
-+	if (new_table_size > HMGRHANDLE_INDEX_MAX) {
-+		DXG_ERR("Invalid new table size");
-+		return false;
-+	}
-+
-+	new_entry = (struct hmgrentry *)
-+	    vzalloc(new_table_size * sizeof(struct hmgrentry));
-+	if (new_entry == NULL) {
-+		DXG_ERR("allocation failed");
-+		return false;
-+	}
-+
-+	if (table->entry_table) {
-+		memcpy(new_entry, table->entry_table,
-+		       table->table_size * sizeof(struct hmgrentry));
-+		vfree(table->entry_table);
-+	} else {
-+		table->free_handle_list_head = 0;
-+	}
-+
-+	table->entry_table = new_entry;
-+
-+	/* Initialize new table entries and add to the free list */
-+	table_index = table->table_size;
-+
-+	prev_free_index = table->free_handle_list_tail;
-+
-+	while (table_index < new_table_size) {
-+		struct hmgrentry *entry = &table->entry_table[table_index];
-+
-+		entry->prev_free_index = prev_free_index;
-+		entry->next_free_index = table_index + 1;
-+		entry->type = HMGRENTRY_TYPE_FREE;
-+		entry->unique = 1;
-+		entry->instance = 0;
-+		prev_free_index = table_index;
-+
-+		table_index++;
-+	}
-+
-+	table->entry_table[table_index - 1].next_free_index =
-+	    (u32) HMGRTABLE_INVALID_INDEX;
-+
-+	if (table->free_count != 0) {
-+		/* Link the current free list with the new entries */
-+		struct hmgrentry *entry;
-+
-+		entry = &table->entry_table[table->free_handle_list_tail];
-+		entry->next_free_index = table->table_size;
-+	}
-+	table->free_handle_list_tail = new_table_size - 1;
-+	if (table->free_handle_list_head == HMGRTABLE_INVALID_INDEX)
-+		table->free_handle_list_head = table->table_size;
-+
-+	table->table_size = new_table_size;
-+	table->free_count = new_free_count;
-+
-+	return true;
-+}
-+
-+void hmgrtable_init(struct hmgrtable *table, struct dxgprocess *process)
-+{
-+	table->process = process;
-+	table->entry_table = NULL;
-+	table->table_size = 0;
-+	table->free_handle_list_head = HMGRTABLE_INVALID_INDEX;
-+	table->free_handle_list_tail = HMGRTABLE_INVALID_INDEX;
-+	table->free_count = 0;
-+	init_rwsem(&table->table_lock);
-+}
-+
-+void hmgrtable_destroy(struct hmgrtable *table)
-+{
-+	if (table->entry_table) {
-+		vfree(table->entry_table);
-+		table->entry_table = NULL;
-+	}
-+}
-+
-+void hmgrtable_lock(struct hmgrtable *table, enum dxglockstate state)
-+{
-+	if (state == DXGLOCK_EXCL)
-+		down_write(&table->table_lock);
-+	else
-+		down_read(&table->table_lock);
-+}
-+
-+void hmgrtable_unlock(struct hmgrtable *table, enum dxglockstate state)
-+{
-+	if (state == DXGLOCK_EXCL)
-+		up_write(&table->table_lock);
-+	else
-+		up_read(&table->table_lock);
-+}
-+
-+struct d3dkmthandle hmgrtable_alloc_handle(struct hmgrtable *table,
-+					   void *object,
-+					   enum hmgrentry_type type,
-+					   bool make_valid)
-+{
-+	u32 index;
-+	struct hmgrentry *entry;
-+	u32 unique;
-+
-+	DXGKRNL_ASSERT(type <= HMGRENTRY_TYPE_LIMIT);
-+	DXGKRNL_ASSERT(type > HMGRENTRY_TYPE_FREE);
-+
-+	if (table->free_count <= HMGRTABLE_MIN_FREE_ENTRIES) {
-+		if (!expand_table(table, 0)) {
-+			DXG_ERR("hmgrtable expand_table failed");
-+			return zerohandle;
-+		}
-+	}
-+
-+	if (table->free_handle_list_head >= table->table_size) {
-+		DXG_ERR("hmgrtable corrupted handle table head");
-+		return zerohandle;
-+	}
-+
-+	index = table->free_handle_list_head;
-+	entry = &table->entry_table[index];
-+
-+	if (entry->type != HMGRENTRY_TYPE_FREE) {
-+		DXG_ERR("hmgrtable expected free handle");
-+		return zerohandle;
-+	}
-+
-+	table->free_handle_list_head = entry->next_free_index;
-+
-+	if (entry->next_free_index != table->free_handle_list_tail) {
-+		if (entry->next_free_index >= table->table_size) {
-+			DXG_ERR("hmgrtable invalid next free index");
-+			return zerohandle;
-+		}
-+		table->entry_table[entry->next_free_index].prev_free_index =
-+		    HMGRTABLE_INVALID_INDEX;
-+	}
-+
-+	unique = table->entry_table[index].unique;
-+
-+	table->entry_table[index].object = object;
-+	table->entry_table[index].type = type;
-+	table->entry_table[index].instance = 0;
-+	table->entry_table[index].destroyed = !make_valid;
-+	table->free_count--;
-+	DXGKRNL_ASSERT(table->free_count <= table->table_size);
-+
-+	return build_handle(index, unique, table->entry_table[index].instance);
-+}
-+
-+int hmgrtable_assign_handle_safe(struct hmgrtable *table,
-+				 void *object,
-+				 enum hmgrentry_type type,
-+				 struct d3dkmthandle h)
-+{
-+	int ret;
-+
-+	hmgrtable_lock(table, DXGLOCK_EXCL);
-+	ret = hmgrtable_assign_handle(table, object, type, h);
-+	hmgrtable_unlock(table, DXGLOCK_EXCL);
-+	return ret;
-+}
-+
-+int hmgrtable_assign_handle(struct hmgrtable *table, void *object,
-+			    enum hmgrentry_type type, struct d3dkmthandle h)
-+{
-+	u32 index = get_index(h);
-+	u32 unique = get_unique(h);
-+	struct hmgrentry *entry = NULL;
-+
-+	DXG_TRACE("%x, %d %p, %p", h.v, index, object, table);
-+
-+	if (index >= HMGRHANDLE_INDEX_MAX) {
-+		DXG_ERR("handle index is too big: %x %d", h.v, index);
-+		return -EINVAL;
-+	}
-+
-+	if (index >= table->table_size) {
-+		u32 new_size = index + table_size_increment;
-+
-+		if (new_size > HMGRHANDLE_INDEX_MAX)
-+			new_size = HMGRHANDLE_INDEX_MAX;
-+		if (!expand_table(table, new_size)) {
-+			DXG_ERR("failed to expand handle table %d",
-+				new_size);
-+			return -ENOMEM;
-+		}
-+	}
-+
-+	entry = &table->entry_table[index];
-+
-+	if (entry->type != HMGRENTRY_TYPE_FREE) {
-+		DXG_ERR("the entry is not free: %d %x", entry->type,
-+			hmgrtable_build_entry_handle(table, index).v);
-+		return -EINVAL;
-+	}
-+
-+	if (index != table->free_handle_list_tail) {
-+		if (entry->next_free_index >= table->table_size) {
-+			DXG_ERR("hmgr: invalid next free index %d",
-+				entry->next_free_index);
-+			return -EINVAL;
-+		}
-+		table->entry_table[entry->next_free_index].prev_free_index =
-+		    entry->prev_free_index;
-+	} else {
-+		table->free_handle_list_tail = entry->prev_free_index;
-+	}
-+
-+	if (index != table->free_handle_list_head) {
-+		if (entry->prev_free_index >= table->table_size) {
-+			DXG_ERR("hmgr: invalid next prev index %d",
-+				entry->prev_free_index);
-+			return -EINVAL;
-+		}
-+		table->entry_table[entry->prev_free_index].next_free_index =
-+		    entry->next_free_index;
-+	} else {
-+		table->free_handle_list_head = entry->next_free_index;
-+	}
-+
-+	entry->prev_free_index = HMGRTABLE_INVALID_INDEX;
-+	entry->next_free_index = HMGRTABLE_INVALID_INDEX;
-+	entry->object = object;
-+	entry->type = type;
-+	entry->instance = 0;
-+	entry->unique = unique;
-+	entry->destroyed = false;
-+
-+	table->free_count--;
-+	DXGKRNL_ASSERT(table->free_count <= table->table_size);
-+	return 0;
-+}
-+
-+struct d3dkmthandle hmgrtable_alloc_handle_safe(struct hmgrtable *table,
-+						void *obj,
-+						enum hmgrentry_type type,
-+						bool make_valid)
-+{
-+	struct d3dkmthandle h;
-+
-+	hmgrtable_lock(table, DXGLOCK_EXCL);
-+	h = hmgrtable_alloc_handle(table, obj, type, make_valid);
-+	hmgrtable_unlock(table, DXGLOCK_EXCL);
-+	return h;
-+}
-+
-+void hmgrtable_free_handle(struct hmgrtable *table, enum hmgrentry_type t,
-+			   struct d3dkmthandle h)
-+{
-+	struct hmgrentry *entry;
-+	u32 i = get_index(h);
-+
-+	DXG_TRACE("%p %x", table, h.v);
-+
-+	/* Ignore the destroyed flag when checking the handle */
-+	if (is_handle_valid(table, h, true, t)) {
-+		DXGKRNL_ASSERT(table->free_count < table->table_size);
-+		entry = &table->entry_table[i];
-+		entry->unique = 1;
-+		entry->type = HMGRENTRY_TYPE_FREE;
-+		entry->destroyed = 0;
-+		if (entry->unique != HMGRHANDLE_UNIQUE_MAX)
-+			entry->unique += 1;
-+		else
-+			entry->unique = 1;
-+
-+		table->free_count++;
-+		DXGKRNL_ASSERT(table->free_count <= table->table_size);
-+
-+		/*
-+		 * Insert the index to the free list at the tail.
-+		 */
-+		entry->next_free_index = HMGRTABLE_INVALID_INDEX;
-+		entry->prev_free_index = table->free_handle_list_tail;
-+		entry = &table->entry_table[table->free_handle_list_tail];
-+		entry->next_free_index = i;
-+		table->free_handle_list_tail = i;
-+	} else {
-+		DXG_ERR("Invalid handle to free: %d %x", i, h.v);
-+	}
-+}
-+
-+void hmgrtable_free_handle_safe(struct hmgrtable *table, enum hmgrentry_type t,
-+				struct d3dkmthandle h)
-+{
-+	hmgrtable_lock(table, DXGLOCK_EXCL);
-+	hmgrtable_free_handle(table, t, h);
-+	hmgrtable_unlock(table, DXGLOCK_EXCL);
-+}
-+
-+struct d3dkmthandle hmgrtable_build_entry_handle(struct hmgrtable *table,
-+						 u32 index)
-+{
-+	DXGKRNL_ASSERT(index < table->table_size);
-+
-+	return build_handle(index, table->entry_table[index].unique,
-+			    table->entry_table[index].instance);
-+}
-+
-+void *hmgrtable_get_object(struct hmgrtable *table, struct d3dkmthandle h)
-+{
-+	if (!is_handle_valid(table, h, false, HMGRENTRY_TYPE_FREE))
-+		return NULL;
-+
-+	return table->entry_table[get_index(h)].object;
-+}
-+
-+void *hmgrtable_get_object_by_type(struct hmgrtable *table,
-+				   enum hmgrentry_type type,
-+				   struct d3dkmthandle h)
-+{
-+	if (!is_handle_valid(table, h, false, type)) {
-+		DXG_ERR("Invalid handle %x", h.v);
-+		return NULL;
-+	}
-+	return table->entry_table[get_index(h)].object;
-+}
-+
-+void *hmgrtable_get_entry_object(struct hmgrtable *table, u32 index)
-+{
-+	DXGKRNL_ASSERT(index < table->table_size);
-+	DXGKRNL_ASSERT(table->entry_table[index].type != HMGRENTRY_TYPE_FREE);
-+
-+	return table->entry_table[index].object;
-+}
-+
-+static enum hmgrentry_type hmgrtable_get_entry_type(struct hmgrtable *table,
-+						    u32 index)
-+{
-+	DXGKRNL_ASSERT(index < table->table_size);
-+	return (enum hmgrentry_type)table->entry_table[index].type;
-+}
-+
-+enum hmgrentry_type hmgrtable_get_object_type(struct hmgrtable *table,
-+					      struct d3dkmthandle h)
-+{
-+	if (!is_handle_valid(table, h, false, HMGRENTRY_TYPE_FREE))
-+		return HMGRENTRY_TYPE_FREE;
-+
-+	return hmgrtable_get_entry_type(table, get_index(h));
-+}
-+
-+void *hmgrtable_get_object_ignore_destroyed(struct hmgrtable *table,
-+					    struct d3dkmthandle h,
-+					    enum hmgrentry_type type)
-+{
-+	if (!is_handle_valid(table, h, true, type))
-+		return NULL;
-+	return table->entry_table[get_index(h)].object;
-+}
-+
-+bool hmgrtable_next_entry(struct hmgrtable *tbl,
-+			  u32 *index,
-+			  enum hmgrentry_type *type,
-+			  struct d3dkmthandle *handle,
-+			  void **object)
-+{
-+	u32 i;
-+	struct hmgrentry *entry;
-+
-+	for (i = *index; i < tbl->table_size; i++) {
-+		entry = &tbl->entry_table[i];
-+		if (entry->type != HMGRENTRY_TYPE_FREE) {
-+			*index = i + 1;
-+			*object = entry->object;
-+			*handle = build_handle(i, entry->unique,
-+					       entry->instance);
-+			*type = entry->type;
-+			return true;
-+		}
-+	}
-+	return false;
-+}
-diff --git a/drivers/hv/dxgkrnl/hmgr.h b/drivers/hv/dxgkrnl/hmgr.h
-new file mode 100644
-index 000000000000..23eec301137f
---- /dev/null
-+++ b/drivers/hv/dxgkrnl/hmgr.h
-@@ -0,0 +1,112 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Copyright (c) 2022, Microsoft Corporation.
-+ *
-+ * Author:
-+ *   Iouri Tarassov <iourit@linux.microsoft.com>
-+ *
-+ * Dxgkrnl Graphics Driver
-+ * Handle manager definitions
-+ *
-+ */
-+
-+#ifndef _HMGR_H_
-+#define _HMGR_H_
-+
-+#include "misc.h"
-+
-+struct hmgrentry;
-+
-+/*
-+ * Handle manager table.
-+ *
-+ * Implementation notes:
-+ *   A list of free handles is built on top of the array of table entries.
-+ *   free_handle_list_head is the index of the first entry in the list.
-+ *   m_FreeHandleListTail is the index of an entry in the list, which is
-+ *   HMGRTABLE_MIN_FREE_ENTRIES from the head. It means that when a handle is
-+ *   freed, the next time the handle can be re-used is after allocating
-+ *   HMGRTABLE_MIN_FREE_ENTRIES number of handles.
-+ *   Handles are allocated from the start of the list and free handles are
-+ *   inserted after the tail of the list.
-+ *
-+ */
-+struct hmgrtable {
-+	struct dxgprocess	*process;
-+	struct hmgrentry	*entry_table;
-+	u32			free_handle_list_head;
-+	u32			free_handle_list_tail;
-+	u32			table_size;
-+	u32			free_count;
-+	struct rw_semaphore	table_lock;
-+};
-+
-+/*
-+ * Handle entry data types.
-+ */
-+#define HMGRENTRY_TYPE_BITS 5
-+
-+enum hmgrentry_type {
-+	HMGRENTRY_TYPE_FREE				= 0,
-+	HMGRENTRY_TYPE_DXGADAPTER			= 1,
-+	HMGRENTRY_TYPE_DXGSHAREDRESOURCE		= 2,
-+	HMGRENTRY_TYPE_DXGDEVICE			= 3,
-+	HMGRENTRY_TYPE_DXGRESOURCE			= 4,
-+	HMGRENTRY_TYPE_DXGALLOCATION			= 5,
-+	HMGRENTRY_TYPE_DXGOVERLAY			= 6,
-+	HMGRENTRY_TYPE_DXGCONTEXT			= 7,
-+	HMGRENTRY_TYPE_DXGSYNCOBJECT			= 8,
-+	HMGRENTRY_TYPE_DXGKEYEDMUTEX			= 9,
-+	HMGRENTRY_TYPE_DXGPAGINGQUEUE			= 10,
-+	HMGRENTRY_TYPE_DXGDEVICESYNCOBJECT		= 11,
-+	HMGRENTRY_TYPE_DXGPROCESS			= 12,
-+	HMGRENTRY_TYPE_DXGSHAREDVMOBJECT		= 13,
-+	HMGRENTRY_TYPE_DXGPROTECTEDSESSION		= 14,
-+	HMGRENTRY_TYPE_DXGHWQUEUE			= 15,
-+	HMGRENTRY_TYPE_DXGREMOTEBUNDLEOBJECT		= 16,
-+	HMGRENTRY_TYPE_DXGCOMPOSITIONSURFACEOBJECT	= 17,
-+	HMGRENTRY_TYPE_DXGCOMPOSITIONSURFACEPROXY	= 18,
-+	HMGRENTRY_TYPE_DXGTRACKEDWORKLOAD		= 19,
-+	HMGRENTRY_TYPE_LIMIT		= ((1 << HMGRENTRY_TYPE_BITS) - 1),
-+	HMGRENTRY_TYPE_MONITOREDFENCE	= HMGRENTRY_TYPE_LIMIT + 1,
-+};
-+
-+void hmgrtable_init(struct hmgrtable *tbl, struct dxgprocess *process);
-+void hmgrtable_destroy(struct hmgrtable *tbl);
-+void hmgrtable_lock(struct hmgrtable *tbl, enum dxglockstate state);
-+void hmgrtable_unlock(struct hmgrtable *tbl, enum dxglockstate state);
-+struct d3dkmthandle hmgrtable_alloc_handle(struct hmgrtable *tbl, void *object,
-+				     enum hmgrentry_type t, bool make_valid);
-+struct d3dkmthandle hmgrtable_alloc_handle_safe(struct hmgrtable *tbl,
-+						void *obj,
-+						enum hmgrentry_type t,
-+						bool reserve);
-+int hmgrtable_assign_handle(struct hmgrtable *tbl, void *obj,
-+			    enum hmgrentry_type, struct d3dkmthandle h);
-+int hmgrtable_assign_handle_safe(struct hmgrtable *tbl, void *obj,
-+				 enum hmgrentry_type t, struct d3dkmthandle h);
-+void hmgrtable_free_handle(struct hmgrtable *tbl, enum hmgrentry_type t,
-+			   struct d3dkmthandle h);
-+void hmgrtable_free_handle_safe(struct hmgrtable *tbl, enum hmgrentry_type t,
-+				struct d3dkmthandle h);
-+struct d3dkmthandle hmgrtable_build_entry_handle(struct hmgrtable *tbl,
-+						 u32 index);
-+enum hmgrentry_type hmgrtable_get_object_type(struct hmgrtable *tbl,
-+					      struct d3dkmthandle h);
-+void *hmgrtable_get_object(struct hmgrtable *tbl, struct d3dkmthandle h);
-+void *hmgrtable_get_object_by_type(struct hmgrtable *tbl, enum hmgrentry_type t,
-+				   struct d3dkmthandle h);
-+void *hmgrtable_get_object_ignore_destroyed(struct hmgrtable *tbl,
-+					    struct d3dkmthandle h,
-+					    enum hmgrentry_type t);
-+bool hmgrtable_mark_destroyed(struct hmgrtable *tbl, struct d3dkmthandle h);
-+bool hmgrtable_unmark_destroyed(struct hmgrtable *tbl, struct d3dkmthandle h);
-+void *hmgrtable_get_entry_object(struct hmgrtable *tbl, u32 index);
-+bool hmgrtable_next_entry(struct hmgrtable *tbl,
-+			  u32 *start_index,
-+			  enum hmgrentry_type *type,
-+			  struct d3dkmthandle *handle,
-+			  void **object);
-+
++#ifdef DEBUG
++	dxgk_validate_ioctls();
 +#endif
+ 	return dxgglobal;
+ }
+ 
 diff --git a/drivers/hv/dxgkrnl/ioctl.c b/drivers/hv/dxgkrnl/ioctl.c
-index 23ecd15b0cd7..60e38d104517 100644
+index 60e38d104517..b08ea9430093 100644
 --- a/drivers/hv/dxgkrnl/ioctl.c
 +++ b/drivers/hv/dxgkrnl/ioctl.c
-@@ -22,3 +22,63 @@
- 
- #undef pr_fmt
- #define pr_fmt(fmt)	"dxgk: " fmt
-+
-+struct ioctl_desc {
-+	int (*ioctl_callback)(struct dxgprocess *p, void __user *arg);
-+	u32 ioctl;
-+	u32 arg_size;
-+};
-+
-+static struct ioctl_desc ioctls[] = {
-+
-+};
-+
-+/*
-+ * IOCTL processing
-+ * The driver IOCTLs return
-+ * - 0 in case of success
-+ * - positive values, which are Windows NTSTATUS (for example, STATUS_PENDING).
-+ *   Positive values are success codes.
-+ * - Linux negative error codes
-+ */
-+static int dxgk_ioctl(struct file *f, unsigned int p1, unsigned long p2)
-+{
-+	int code = _IOC_NR(p1);
-+	int status;
-+	struct dxgprocess *process;
-+
-+	if (code < 1 ||  code >= ARRAY_SIZE(ioctls)) {
-+		DXG_ERR("bad ioctl %x %x %x %x",
-+			code, _IOC_TYPE(p1), _IOC_SIZE(p1), _IOC_DIR(p1));
-+		return -ENOTTY;
-+	}
-+	if (ioctls[code].ioctl_callback == NULL) {
-+		DXG_ERR("ioctl callback is NULL %x", code);
-+		return -ENOTTY;
-+	}
-+	if (ioctls[code].ioctl != p1) {
-+		DXG_ERR("ioctl mismatch. Code: %x User: %x Kernel: %x",
-+			code, p1, ioctls[code].ioctl);
-+		return -ENOTTY;
-+	}
-+	process = (struct dxgprocess *)f->private_data;
-+	if (process->tgid != current->tgid) {
-+		DXG_ERR("Call from a wrong process: %d %d",
-+			process->tgid, current->tgid);
-+		return -ENOTTY;
-+	}
-+	status = ioctls[code].ioctl_callback(process, (void *__user)p2);
-+	return status;
-+}
-+
-+long dxgk_compat_ioctl(struct file *f, unsigned int p1, unsigned long p2)
-+{
-+	DXG_TRACE("compat ioctl %x", p1);
-+	return dxgk_ioctl(f, p1, p2);
-+}
-+
-+long dxgk_unlocked_ioctl(struct file *f, unsigned int p1, unsigned long p2)
-+{
-+	DXG_TRACE("unlocked ioctl %x Code:%d", p1, _IOC_NR(p1));
-+	return dxgk_ioctl(f, p1, p2);
-+}
-diff --git a/drivers/hv/dxgkrnl/misc.h b/drivers/hv/dxgkrnl/misc.h
-index d292e9a9bb7f..dc849a8ed3f2 100644
---- a/drivers/hv/dxgkrnl/misc.h
-+++ b/drivers/hv/dxgkrnl/misc.h
-@@ -27,10 +27,11 @@ extern const struct d3dkmthandle zerohandle;
-  *
-  * channel_lock (VMBus channel lock)
-  * fd_mutex
-- * plistmutex (process list mutex)
-- * table_lock (handle table lock)
-- * core_lock (dxgadapter lock)
-- * device_lock (dxgdevice lock)
-+ * plistmutex
-+ * table_lock
-+ * core_lock
-+ * device_lock
-+ * process_adapter_mutex
-  * adapter_list_lock
-  * device_mutex (dxgglobal mutex)
-  */
-diff --git a/include/uapi/misc/d3dkmthk.h b/include/uapi/misc/d3dkmthk.h
-index 2ea04cc02a1f..c675d5827ed5 100644
---- a/include/uapi/misc/d3dkmthk.h
-+++ b/include/uapi/misc/d3dkmthk.h
-@@ -58,4 +58,107 @@ struct winluid {
- 	__u32 b;
+@@ -29,8 +29,472 @@ struct ioctl_desc {
+ 	u32 arg_size;
  };
  
-+#define D3DKMT_ADAPTERS_MAX			64
-+
-+struct d3dkmt_adapterinfo {
-+	struct d3dkmthandle		adapter_handle;
-+	struct winluid			adapter_luid;
-+	__u32				num_sources;
-+	__u32				present_move_regions_preferred;
-+};
-+
-+struct d3dkmt_enumadapters2 {
-+	__u32				num_adapters;
-+	__u32				reserved;
-+#ifdef __KERNEL__
-+	struct d3dkmt_adapterinfo	*adapters;
-+#else
-+	__u64				*adapters;
+-static struct ioctl_desc ioctls[] = {
++#ifdef DEBUG
++static char *errorstr(int ret)
++{
++	return ret < 0 ? "err" : "";
++}
 +#endif
-+};
 +
-+struct d3dkmt_closeadapter {
-+	struct d3dkmthandle		adapter_handle;
-+};
++static int dxgkio_open_adapter_from_luid(struct dxgprocess *process,
++					void *__user inargs)
++{
++	struct d3dkmt_openadapterfromluid args;
++	int ret;
++	struct dxgadapter *entry;
++	struct dxgadapter *adapter = NULL;
++	struct d3dkmt_openadapterfromluid *__user result = inargs;
++	struct dxgglobal *dxgglobal = dxggbl();
 +
-+struct d3dkmt_openadapterfromluid {
-+	struct winluid			adapter_luid;
-+	struct d3dkmthandle		adapter_handle;
-+};
++	ret = copy_from_user(&args, inargs, sizeof(args));
++	if (ret) {
++		DXG_ERR("Faled to copy input args");
++		ret = -EINVAL;
++		goto cleanup;
++	}
 +
-+struct d3dkmt_adaptertype {
-+	union {
-+		struct {
-+			__u32		render_supported:1;
-+			__u32		display_supported:1;
-+			__u32		software_device:1;
-+			__u32		post_device:1;
-+			__u32		hybrid_discrete:1;
-+			__u32		hybrid_integrated:1;
-+			__u32		indirect_display_device:1;
-+			__u32		paravirtualized:1;
-+			__u32		acg_supported:1;
-+			__u32		support_set_timings_from_vidpn:1;
-+			__u32		detachable:1;
-+			__u32		compute_only:1;
-+			__u32		prototype:1;
-+			__u32		reserved:19;
-+		};
-+		__u32			value;
-+	};
-+};
++	dxgglobal_acquire_adapter_list_lock(DXGLOCK_SHARED);
++	dxgglobal_acquire_process_adapter_lock();
 +
-+enum kmtqueryadapterinfotype {
-+	_KMTQAITYPE_UMDRIVERPRIVATE	= 0,
-+	_KMTQAITYPE_ADAPTERTYPE		= 15,
-+	_KMTQAITYPE_ADAPTERTYPE_RENDER	= 57
-+};
++	list_for_each_entry(entry, &dxgglobal->adapter_list_head,
++			    adapter_list_entry) {
++		if (dxgadapter_acquire_lock_shared(entry) == 0) {
++			if (*(u64 *) &entry->luid ==
++			    *(u64 *) &args.adapter_luid) {
++				ret = dxgprocess_open_adapter(process, entry,
++						&args.adapter_handle);
 +
-+struct d3dkmt_queryadapterinfo {
-+	struct d3dkmthandle		adapter;
-+	enum kmtqueryadapterinfotype	type;
-+#ifdef __KERNEL__
-+	void				*private_data;
-+#else
-+	__u64				private_data;
++				if (ret >= 0) {
++					ret = copy_to_user(
++						&result->adapter_handle,
++						&args.adapter_handle,
++						sizeof(struct d3dkmthandle));
++					if (ret)
++						ret = -EINVAL;
++				}
++				adapter = entry;
++			}
++			dxgadapter_release_lock_shared(entry);
++			if (adapter)
++				break;
++		}
++	}
++
++	dxgglobal_release_process_adapter_lock();
++	dxgglobal_release_adapter_list_lock(DXGLOCK_SHARED);
++
++	if (args.adapter_handle.v == 0)
++		ret = -EINVAL;
++
++cleanup:
++
++	if (ret < 0)
++		dxgprocess_close_adapter(process, args.adapter_handle);
++
++	DXG_TRACE("ioctl:%s %d", errorstr(ret), ret);
++	return ret;
++}
++
++static int
++dxgkp_enum_adapters(struct dxgprocess *process,
++		    union d3dkmt_enumadapters_filter filter,
++		    u32 adapter_count_max,
++		    struct d3dkmt_adapterinfo *__user info_out,
++		    u32 * __user adapter_count_out)
++{
++	int ret = 0;
++	struct dxgadapter *entry;
++	struct d3dkmt_adapterinfo *info = NULL;
++	struct dxgadapter **adapters = NULL;
++	int adapter_count = 0;
++	int i;
++	struct dxgglobal *dxgglobal = dxggbl();
++
++	if (info_out == NULL || adapter_count_max == 0) {
++		ret = copy_to_user(adapter_count_out,
++				   &dxgglobal->num_adapters, sizeof(u32));
++		if (ret) {
++			DXG_ERR("copy_to_user faled");
++			ret = -EINVAL;
++		}
++		goto cleanup;
++	}
++
++	if (adapter_count_max > 0xFFFF) {
++		DXG_ERR("too many adapters");
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	info = vzalloc(sizeof(struct d3dkmt_adapterinfo) * adapter_count_max);
++	if (info == NULL) {
++		ret = -ENOMEM;
++		goto cleanup;
++	}
++
++	adapters = vzalloc(sizeof(struct dxgadapter *) * adapter_count_max);
++	if (adapters == NULL) {
++		ret = -ENOMEM;
++		goto cleanup;
++	}
++
++	dxgglobal_acquire_adapter_list_lock(DXGLOCK_SHARED);
++	dxgglobal_acquire_process_adapter_lock();
+ 
++	list_for_each_entry(entry, &dxgglobal->adapter_list_head,
++			    adapter_list_entry) {
++		if (dxgadapter_acquire_lock_shared(entry) == 0) {
++			struct d3dkmt_adapterinfo *inf = &info[adapter_count];
++
++			ret = dxgprocess_open_adapter(process, entry,
++						      &inf->adapter_handle);
++			if (ret >= 0) {
++				inf->adapter_luid = entry->luid;
++				adapters[adapter_count] = entry;
++				DXG_TRACE("adapter: %x %x:%x",
++					inf->adapter_handle.v,
++					inf->adapter_luid.b,
++					inf->adapter_luid.a);
++				adapter_count++;
++			}
++			dxgadapter_release_lock_shared(entry);
++		}
++		if (ret < 0)
++			break;
++	}
++
++	dxgglobal_release_process_adapter_lock();
++	dxgglobal_release_adapter_list_lock(DXGLOCK_SHARED);
++
++	if (adapter_count > adapter_count_max) {
++		ret = STATUS_BUFFER_TOO_SMALL;
++		DXG_TRACE("Too many adapters");
++		ret = copy_to_user(adapter_count_out,
++				   &dxgglobal->num_adapters, sizeof(u32));
++		if (ret) {
++			DXG_ERR("copy_to_user failed");
++			ret = -EINVAL;
++		}
++		goto cleanup;
++	}
++
++	ret = copy_to_user(adapter_count_out, &adapter_count,
++			   sizeof(adapter_count));
++	if (ret) {
++		DXG_ERR("failed to copy adapter_count");
++		ret = -EINVAL;
++		goto cleanup;
++	}
++	ret = copy_to_user(info_out, info, sizeof(info[0]) * adapter_count);
++	if (ret) {
++		DXG_ERR("failed to copy adapter info");
++		ret = -EINVAL;
++	}
++
++cleanup:
++
++	if (ret >= 0) {
++		DXG_TRACE("found %d adapters", adapter_count);
++		goto success;
++	}
++	if (info) {
++		for (i = 0; i < adapter_count; i++)
++			dxgprocess_close_adapter(process,
++						 info[i].adapter_handle);
++	}
++success:
++	if (info)
++		vfree(info);
++	if (adapters)
++		vfree(adapters);
++
++	DXG_TRACE("ioctl:%s %d", errorstr(ret), ret);
++	return ret;
++}
++
++static int
++dxgkio_enum_adapters(struct dxgprocess *process, void *__user inargs)
++{
++	struct d3dkmt_enumadapters2 args;
++	int ret;
++	struct dxgadapter *entry;
++	struct d3dkmt_adapterinfo *info = NULL;
++	struct dxgadapter **adapters = NULL;
++	int adapter_count = 0;
++	int i;
++	struct dxgglobal *dxgglobal = dxggbl();
++
++	ret = copy_from_user(&args, inargs, sizeof(args));
++	if (ret) {
++		DXG_ERR("failed to copy input args");
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	if (args.adapters == NULL) {
++		DXG_TRACE("buffer is NULL");
++		args.num_adapters = dxgglobal->num_adapters;
++		ret = copy_to_user(inargs, &args, sizeof(args));
++		if (ret) {
++			DXG_ERR("failed to copy args to user");
++			ret = -EINVAL;
++		}
++		goto cleanup;
++	}
++	if (args.num_adapters < dxgglobal->num_adapters) {
++		args.num_adapters = dxgglobal->num_adapters;
++		DXG_TRACE("buffer is too small");
++		ret = -EOVERFLOW;
++		goto cleanup;
++	}
++
++	if (args.num_adapters > D3DKMT_ADAPTERS_MAX) {
++		DXG_TRACE("too many adapters");
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	info = vzalloc(sizeof(struct d3dkmt_adapterinfo) * args.num_adapters);
++	if (info == NULL) {
++		ret = -ENOMEM;
++		goto cleanup;
++	}
++
++	adapters = vzalloc(sizeof(struct dxgadapter *) * args.num_adapters);
++	if (adapters == NULL) {
++		ret = -ENOMEM;
++		goto cleanup;
++	}
++
++	dxgglobal_acquire_adapter_list_lock(DXGLOCK_SHARED);
++	dxgglobal_acquire_process_adapter_lock();
++
++	list_for_each_entry(entry, &dxgglobal->adapter_list_head,
++			    adapter_list_entry) {
++		if (dxgadapter_acquire_lock_shared(entry) == 0) {
++			struct d3dkmt_adapterinfo *inf = &info[adapter_count];
++
++			ret = dxgprocess_open_adapter(process, entry,
++						      &inf->adapter_handle);
++			if (ret >= 0) {
++				inf->adapter_luid = entry->luid;
++				adapters[adapter_count] = entry;
++				DXG_TRACE("adapter: %x %llx",
++					inf->adapter_handle.v,
++					*(u64 *) &inf->adapter_luid);
++				adapter_count++;
++			}
++			dxgadapter_release_lock_shared(entry);
++		}
++		if (ret < 0)
++			break;
++	}
++
++	dxgglobal_release_process_adapter_lock();
++	dxgglobal_release_adapter_list_lock(DXGLOCK_SHARED);
++
++	args.num_adapters = adapter_count;
++
++	ret = copy_to_user(inargs, &args, sizeof(args));
++	if (ret) {
++		DXG_ERR("failed to copy args to user");
++		ret = -EINVAL;
++		goto cleanup;
++	}
++	ret = copy_to_user(args.adapters, info,
++			   sizeof(info[0]) * args.num_adapters);
++	if (ret) {
++		DXG_ERR("failed to copy adapter info to user");
++		ret = -EINVAL;
++	}
++
++cleanup:
++
++	if (ret < 0) {
++		if (info) {
++			for (i = 0; i < args.num_adapters; i++) {
++				dxgprocess_close_adapter(process,
++							info[i].adapter_handle);
++			}
++		}
++	} else {
++		DXG_TRACE("found %d adapters", args.num_adapters);
++	}
++
++	if (info)
++		vfree(info);
++	if (adapters)
++		vfree(adapters);
++
++	DXG_TRACE("ioctl:%s %d", errorstr(ret), ret);
++	return ret;
++}
++
++static int
++dxgkio_enum_adapters3(struct dxgprocess *process, void *__user inargs)
++{
++	struct d3dkmt_enumadapters3 args;
++	int ret;
++
++	ret = copy_from_user(&args, inargs, sizeof(args));
++	if (ret) {
++		DXG_ERR("failed to copy input args");
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	ret = dxgkp_enum_adapters(process, args.filter,
++				  args.adapter_count,
++				  args.adapters,
++				  &((struct d3dkmt_enumadapters3 *)inargs)->
++				  adapter_count);
++
++cleanup:
++
++	DXG_TRACE("ioctl: %s %d", errorstr(ret), ret);
++	return ret;
++}
++
++static int
++dxgkio_close_adapter(struct dxgprocess *process, void *__user inargs)
++{
++	struct d3dkmthandle args;
++	int ret;
++
++	ret = copy_from_user(&args, inargs, sizeof(args));
++	if (ret) {
++		DXG_ERR("failed to copy input args");
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	ret = dxgprocess_close_adapter(process, args);
++	if (ret < 0)
++		DXG_ERR("failed to close adapter: %d", ret);
++
++cleanup:
++
++	DXG_TRACE("ioctl: %s %d", errorstr(ret), ret);
++	return ret;
++}
++
++static int
++dxgkio_query_adapter_info(struct dxgprocess *process, void *__user inargs)
++{
++	struct d3dkmt_queryadapterinfo args;
++	int ret;
++	struct dxgadapter *adapter = NULL;
++
++	ret = copy_from_user(&args, inargs, sizeof(args));
++	if (ret) {
++		DXG_ERR("failed to copy input args");
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	if (args.private_data_size > DXG_MAX_VM_BUS_PACKET_SIZE ||
++	    args.private_data_size == 0) {
++		DXG_ERR("invalid private data size");
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	DXG_TRACE("Type: %d Size: %x", args.type, args.private_data_size);
++
++	adapter = dxgprocess_adapter_by_handle(process, args.adapter);
++	if (adapter == NULL) {
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	ret = dxgadapter_acquire_lock_shared(adapter);
++	if (ret < 0)
++		goto cleanup;
++
++	ret = dxgvmb_send_query_adapter_info(process, adapter, &args);
++
++	dxgadapter_release_lock_shared(adapter);
++
++cleanup:
++
++	if (adapter)
++		kref_put(&adapter->adapter_kref, dxgadapter_release);
++
++	DXG_TRACE("ioctl:%s %d", errorstr(ret), ret);
++	return ret;
++}
++
++static struct ioctl_desc ioctls[] = {
++/* 0x00 */	{},
++/* 0x01 */	{dxgkio_open_adapter_from_luid, LX_DXOPENADAPTERFROMLUID},
++/* 0x02 */	{},
++/* 0x03 */	{},
++/* 0x04 */	{},
++/* 0x05 */	{},
++/* 0x06 */	{},
++/* 0x07 */	{},
++/* 0x08 */	{},
++/* 0x09 */	{dxgkio_query_adapter_info, LX_DXQUERYADAPTERINFO},
++/* 0x0a */	{},
++/* 0x0b */	{},
++/* 0x0c */	{},
++/* 0x0d */	{},
++/* 0x0e */	{},
++/* 0x0f */	{},
++/* 0x10 */	{},
++/* 0x11 */	{},
++/* 0x12 */	{},
++/* 0x13 */	{},
++/* 0x14 */	{dxgkio_enum_adapters, LX_DXENUMADAPTERS2},
++/* 0x15 */	{dxgkio_close_adapter, LX_DXCLOSEADAPTER},
++/* 0x16 */	{},
++/* 0x17 */	{},
++/* 0x18 */	{},
++/* 0x19 */	{},
++/* 0x1a */	{},
++/* 0x1b */	{},
++/* 0x1c */	{},
++/* 0x1d */	{},
++/* 0x1e */	{},
++/* 0x1f */	{},
++/* 0x20 */	{},
++/* 0x21 */	{},
++/* 0x22 */	{},
++/* 0x23 */	{},
++/* 0x24 */	{},
++/* 0x25 */	{},
++/* 0x26 */	{},
++/* 0x27 */	{},
++/* 0x28 */	{},
++/* 0x29 */	{},
++/* 0x2a */	{},
++/* 0x2b */	{},
++/* 0x2c */	{},
++/* 0x2d */	{},
++/* 0x2e */	{},
++/* 0x2f */	{},
++/* 0x30 */	{},
++/* 0x31 */	{},
++/* 0x32 */	{},
++/* 0x33 */	{},
++/* 0x34 */	{},
++/* 0x35 */	{},
++/* 0x36 */	{},
++/* 0x37 */	{},
++/* 0x38 */	{},
++/* 0x39 */	{},
++/* 0x3a */	{},
++/* 0x3b */	{},
++/* 0x3c */	{},
++/* 0x3d */	{},
++/* 0x3e */	{dxgkio_enum_adapters3, LX_DXENUMADAPTERS3},
++/* 0x3f */	{},
++/* 0x40 */	{},
++/* 0x41 */	{},
++/* 0x42 */	{},
++/* 0x43 */	{},
++/* 0x44 */	{},
++/* 0x45 */	{},
+ };
+ 
+ /*
+@@ -82,3 +546,19 @@ long dxgk_unlocked_ioctl(struct file *f, unsigned int p1, unsigned long p2)
+ 	DXG_TRACE("unlocked ioctl %x Code:%d", p1, _IOC_NR(p1));
+ 	return dxgk_ioctl(f, p1, p2);
+ }
++
++#ifdef DEBUG
++void dxgk_validate_ioctls(void)
++{
++	int i;
++
++	for (i=0; i < ARRAY_SIZE(ioctls); i++)
++	{
++		if (ioctls[i].ioctl && _IOC_NR(ioctls[i].ioctl) != i)
++		{
++			DXG_ERR("Invalid ioctl");
++			DXGKRNL_ASSERT(0);
++		}
++	}
++}
 +#endif
-+	__u32				private_data_size;
-+};
-+
-+union d3dkmt_enumadapters_filter {
-+	struct {
-+		__u64	include_compute_only:1;
-+		__u64	include_display_only:1;
-+		__u64	reserved:62;
-+	};
-+	__u64		value;
-+};
-+
-+struct d3dkmt_enumadapters3 {
-+	union d3dkmt_enumadapters_filter	filter;
-+	__u32					adapter_count;
-+	__u32					reserved;
-+#ifdef __KERNEL__
-+	struct d3dkmt_adapterinfo		*adapters;
-+#else
-+	__u64					adapters;
-+#endif
-+};
-+
-+/*
-+ * Dxgkrnl Graphics Port Driver ioctl definitions
-+ *
-+ */
-+
-+#define LX_DXOPENADAPTERFROMLUID	\
-+	_IOWR(0x47, 0x01, struct d3dkmt_openadapterfromluid)
-+#define LX_DXQUERYADAPTERINFO		\
-+	_IOWR(0x47, 0x09, struct d3dkmt_queryadapterinfo)
-+#define LX_DXENUMADAPTERS2		\
-+	_IOWR(0x47, 0x14, struct d3dkmt_enumadapters2)
-+#define LX_DXCLOSEADAPTER		\
-+	_IOWR(0x47, 0x15, struct d3dkmt_closeadapter)
-+#define LX_DXENUMADAPTERS3		\
-+	_IOWR(0x47, 0x3e, struct d3dkmt_enumadapters3)
-+
- #endif /* _D3DKMTHK_H */
 
