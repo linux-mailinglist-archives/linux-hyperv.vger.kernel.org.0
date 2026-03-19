@@ -1,80 +1,80 @@
-Return-Path: <linux-hyperv+bounces-9622-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9623-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +McRH1hevGlxxQIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9622-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:36:40 +0100
+	id kA2QIqJfvGlxxQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9623-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:42:10 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9C152D23DB
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:36:39 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E044F2D2517
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 21:42:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 54A1B30C1925
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 20:29:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2640932F473D
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2026 20:30:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0DA7405AB1;
-	Thu, 19 Mar 2026 20:26:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8E77406269;
+	Thu, 19 Mar 2026 20:26:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CT91zqyN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RcgHMAuy"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD6E401A0D
-	for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 20:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC0F4035BB
+	for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 20:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773951973; cv=none; b=X9dSO0CwgJ7R3Zkw7l5sbR2AXChswF5j1FTrpvmXEDyinNQFP/lNg0a0QQK0hn6HnRdcm0dckAaDhpyyXqL0RtoVypFh6OOO+pgvsjQIM3PbKMMix44hxyyAFoS7F5CHMtJou2UJs+8kinF7iHy1rNFTkGoTe1eArlcB0ZppnA0=
+	t=1773951974; cv=none; b=LM57PR9R2yHeuLB1DljNwxZECTEr3vpvmN4bcy6Kcr6Vwx0OTc1xaKUoOdmqCNfoCh8N/tDmlSMdzB03I63icgWDdmeAJQLMN4+ZPulnYpVvm9YJa++LSAJhQODDrxYLdTrPWBIx20sdMXngsuErKwpa51miH9dA8ot6PeV+wNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773951973; c=relaxed/simple;
-	bh=CYzAd6S2tuDyMt904iUrjc5QlAl/T5Oy/hTKXGVuzUA=;
+	s=arc-20240116; t=1773951974; c=relaxed/simple;
+	bh=outTnRIBQAyg28okb66wf80x45Mq14FYSPhGHqeYDkw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mHBM4t6ipmb18QZQjw0Mav7oWbMjt1P18dPK/22ZuA902LUyzZaavJYJpfHU8lVnIGrLmqbSHyE1TUHO9NwG+0aDtr7x5c+DyQ/1tkc4djCjyiBwz9MK/4k6TBSQpXpx7VrA2LefkValyeL9SaPP7OdYvPc37VJENavJQViuCDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CT91zqyN; arc=none smtp.client-ip=209.85.221.46
+	 MIME-Version; b=bCVdMMKlSIkT2kInR/TupEBqTh6D7LCmiFj5TPc+qD6wu4ZIOboYAdJSbiFc7UcSsF43iywBtSnqhtIlRccBkCg4k7Waux09Kws4pGwhYftv5QCsXv1h35omadNvrb9jNmhDHa64/n2bMQyBhc8hipovb94wP55ezcnzwZ0eoLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RcgHMAuy; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-43b4d73463dso946558f8f.3
-        for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 13:26:11 -0700 (PDT)
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-43b41b545d9so1478201f8f.2
+        for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2026 13:26:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773951970; x=1774556770; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773951971; x=1774556771; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8T94hCUBCgJxRtV1K3dOdspjWMVTTyxiqKQc25Q0XT4=;
-        b=CT91zqyN+dvLLJVIzAYSXQRh+f9gqVxqHrzBoio7Sz8GXzlZZXUpBv5IJnxGrJerhI
-         4tuv0wrW5LR+JfjTHAFYAkvpEOzsqlPfUSk0W8Lf0GoxoGxvWBKewkcDkSuOyiRG7YvL
-         Y1/+v7+ZrM02ZKp0VzSfkec519gJgMZdCviDBfg4M7jgMWZ8FrkCf7ft/SgOHoVsYQNM
-         broSmvavT/A0FC8LLkKV77yTCoU+8e9xx7apHrnaYV5aiDOFl1YeHd7rxCCXT5qYTExY
-         1geUP050xKB3CR11DLFFNtelr+ZTAC3gJ7uQfQRSzD/h80PbymvKRLOchIGKhVlSwGaG
-         1Udw==
+        bh=XZHA0FJqnrMUZiDF+/x51qEC2Ygiwx2MeXeyqpq00vs=;
+        b=RcgHMAuyJ8YvIZIq+2P28HVdGFD6nmf2vvZ5VMckttp9d38qdL6LB8t+UVJc5kYSS3
+         CTaX6ph9Po40Kou7I4kEEN7DeDjEclynwT3wgQ6LZD9pUGuoa9H8jJq8re2v7nDxEby6
+         pBsXdg14a1kaut+xfe8xiVHW7DFaiUOwhusg0D/vkqPZPve8oX+EmH1oPDjngo527RlM
+         YLfEW2eemq7fqGmBMmdcPULngCrKhmvAQGltpMwoRDmQqrw4W3YLVvA6rx+mrP9/HUa5
+         eF5KHeUacMz9wphgA0zqI8YUjWGFFs9LLsAW5vPuZvZIQi37DPoD16vB0R7k3gOiK+Ym
+         JHlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773951970; x=1774556770;
+        d=1e100.net; s=20251104; t=1773951971; x=1774556771;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=8T94hCUBCgJxRtV1K3dOdspjWMVTTyxiqKQc25Q0XT4=;
-        b=oIUY+P9Iek32sLCS9+sn9q7nyWrpkkxA1abmImF1wGl4zD9OxD9/i9dFdPL0OF7O2Q
-         Ioc7DoB2aG6A8gXIrX+8frah7nJ6G8DHyeRXPzj9n4ZP+ZwWsn+vTjeL8FXUYSuy7eO4
-         EsfGnH6qWw9bKoEvO2kM+xjJjXm8HCAolz7sp/aVIQWl2jA1mHZdatoJ+Hmg5uswIzYm
-         8IBPPxgyMsJGgnEdPZsbtOwejv62BNt0CAgB4cC1x2BleROyG82oi6rG46WUBBuaX9fL
-         f2oKd9VuI20Czv1gXiws7EkYzracrIpToXQIOhrrwFNhL8DwV1o+rKTOFVwNF3pL9VuT
-         gnJg==
-X-Gm-Message-State: AOJu0YwQzYhbzdxgAzPRpuu/XFKrqJEF6PYFMrszQC9ClSesDlfU/Eke
-	NRDLVS0DMHWm/oZ7M22OzUegFtnuJKZ3T/R6QUEMAVzAcCYA0SF1dGrmAuEIymVqZ2I=
-X-Gm-Gg: ATEYQzyspvH37NZ2SWvh6JrnRxLeVCceqFdDIJsWZ0hw7F/9cffgIhoKY2obXJ0GcAK
-	vDQTwzSjafv+gwZWlftuS6dE97n8aGs0/dPE7jNQKzTmjaP5O+n2VwawgwAdFsBpU7awdNplgW8
-	XoFTrKnl5eWpXR6bO8QnH1x+odrPLbLz3Aal7KaPSfbgk4vQ7vxW83BCMLUe/Z5KOFVMHmr30tm
-	k1dnRIOp21E/bMCcqyJW/Eb/ac6BuX0rU2OyMrFPgOPGbULyfXM2xWeHkrJAltJa7xp8PXo6Z5P
-	jhZNUjEyAVkghTiFtjk03KPSU3nX2ciIAgyPzAcgeePHIf2wou9uJO826iB1tOtJ9fRTeF26nqa
-	65pt8eFnvmbkxa9s5q3XpFFbvDjUrZZr8QlJaiwyPVwZ0mG5yHwk6ha2iwemudnRCxkGUF1XTxV
-	pP4Taf7XfoxOIX8OsiBNINBcZeO0fJC5FXT0cNkLa+X/tBCb8J
-X-Received: by 2002:a05:6000:2203:b0:43b:46b6:87aa with SMTP id ffacd0b85a97d-43b64277e1amr1210039f8f.27.1773951969551;
-        Thu, 19 Mar 2026 13:26:09 -0700 (PDT)
+        bh=XZHA0FJqnrMUZiDF+/x51qEC2Ygiwx2MeXeyqpq00vs=;
+        b=oD+UAVaaTScQ11yZVK3nO3EfXpO0OwCbzdAt3jMyrcvnGujsoATgdBTW2N7bMMAn/0
+         5MAOVdDqo960SiAbmY92bGCI3XgeMxORDk/Rrn4H4muTzNYhTNocvXGB/2MlC3p+kp0L
+         EUOoIk48u16nHfnAkXawUAE38CMWMBOXlipgPCngA/G2gQN2m0VNBN8MRNgoEGyB6GaU
+         5+E7cxaQuOq/xoz4X/Eyk7365Aqx7PcuMPgZqs3qU/hIdouUkOEVk7c3/H2zlsUD7Hc1
+         fkPMKy4COGA6pj6RUI7h8SeeMG1IFyEofeD5A2wAFATeUEe0UTY00Ti/AgPZ6JElmC8U
+         dikg==
+X-Gm-Message-State: AOJu0Yyz1jB1vWwfAI37bUa3j7vm0e1NVy2a4xV9+XAl7h8ZyjQnjJmI
+	yFLUOSdew5JePBoMvq/JFRlZgIbG2DMMy9yUcj43/yVvURycM9KRTqS39W5LsS2FoB4=
+X-Gm-Gg: ATEYQzxLz0JxwAij7v8XPIAFdGNVxD6kB17nu4BbO+lH5EO9Yd5u4xMdIIpAezvVpAW
+	l/x0r2K7RXaMoDWMxkvAGr1N964tDSyChk7QAKpaxtWPA1DMmheOHmF5GNJw4yrLHwKFjxWjqf+
+	xf3d7VuNvVHsTaAhsO7N6GrxT32Ep3x4irBXegSls48VwlifHhYo+hVSH+HTt/b3eJAr1ZACB/h
+	iNVx4uV7eqZSMq9K74ZBE0EdmRWqY+/OD3SScHk+3FKoZXuZUpq9n83dUP7Pebnr3BjKQA8WRSl
+	tyIOjHvdjsGtzkqYlOBh7dsbJVvyBvQ7499xjWe9aK6QOZfT74wIzIsHecY9O2ulVnhiiuXjaRQ
+	OUkkQILSAYCKNriXHZ7+h3Y1VIFVULOaYpRmNqr3isN+KmKfOAs3NqyFxJ9ZZzaGjmTyQndycs3
+	MoG6gFBjkxBPq+RWbKYWMRfvoH7VyNMWvjZMaVSopM2vhguTz8
+X-Received: by 2002:a05:6000:24c4:b0:43b:45d1:f449 with SMTP id ffacd0b85a97d-43b6427cde9mr1224789f8f.51.1773951970522;
+        Thu, 19 Mar 2026 13:26:10 -0700 (PDT)
 Received: from LQ5W56KC4T ([2001:8a0:672f:7800:e0e1:55cd:f0b:b1e5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b644ae16fsm1347544f8f.8.2026.03.19.13.26.08
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b644ae16fsm1347544f8f.8.2026.03.19.13.26.09
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 19 Mar 2026 13:26:09 -0700 (PDT)
+        Thu, 19 Mar 2026 13:26:10 -0700 (PDT)
 From: Eric Curtin <ericcurtin17@gmail.com>
 X-Google-Original-From: Eric Curtin <eric.curtin@docker.com>
 To: linux-hyperv@vger.kernel.org
@@ -83,9 +83,9 @@ Cc: linux-kernel@vger.kernel.org,
 	wei.liu@kernel.org,
 	decui@microsoft.com,
 	haiyangz@microsoft.com
-Subject: [PATCH 50/55] drivers: hv: dxgkrnl: Fix build breaks when switching to 6.6 kernel due to removed uuid_le_cmp
-Date: Thu, 19 Mar 2026 20:25:04 +0000
-Message-ID: <20260319202509.63802-51-eric.curtin@docker.com>
+Subject: [PATCH 51/55] drivers: hv: dxgkrnl: Implement D3DKMTEnumProcesses to match the Windows implementation
+Date: Thu, 19 Mar 2026 20:25:05 +0000
+Message-ID: <20260319202509.63802-52-eric.curtin@docker.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260319202509.63802-1-eric.curtin@docker.com>
 References: <20260319202509.63802-1-eric.curtin@docker.com>
@@ -100,7 +100,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -110,76 +110,104 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9622-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9623-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[ericcurtin17@gmail.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_COUNT_FIVE(0.00)[5];
-	NEURAL_HAM(-0.00)[-0.982];
+	NEURAL_HAM(-0.00)[-0.981];
 	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,docker.com:mid]
-X-Rspamd-Queue-Id: E9C152D23DB
+	DBL_BLOCKED_OPENRESOLVER(0.00)[docker.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: E044F2D2517
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Iouri Tarassov <iourit@linux.microsoft.com>
 
-uuid_le_cmp was removed and needs to be replaced by guid_equal. The
-relevant upstream commits are:
-1fb1ea0d9cb8 "mei: Move uuid.h to the MEI namespace"
-f5b3c341a46e "mei: Move uuid_le_cmp() to its only user"
-5e6a51787fef "uuid: Decouple guid_t and uuid_le types and respective macros"
+The behavior of D3DKMTEnumProcesses on Windows is that when buffer_count is 0 or
+input buffer is NULL, the number of active processes is returned. The Linux implemenation
+is updated to match this.
 
 Signed-off-by: Iouri Tarassov <iourit@linux.microsoft.com>
 ---
- drivers/hv/dxgkrnl/dxgmodule.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/hv/dxgkrnl/dxgmodule.c |  2 +-
+ drivers/hv/dxgkrnl/ioctl.c     | 29 ++++++++++++++++++-----------
+ 2 files changed, 19 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/hv/dxgkrnl/dxgmodule.c b/drivers/hv/dxgkrnl/dxgmodule.c
-index 5459bd9b82fb..e3ac70df1b6f 100644
+index e3ac70df1b6f..8f5d6db256a3 100644
 --- a/drivers/hv/dxgkrnl/dxgmodule.c
 +++ b/drivers/hv/dxgkrnl/dxgmodule.c
-@@ -762,7 +762,7 @@ static int dxg_probe_vmbus(struct hv_device *hdev,
+@@ -965,4 +965,4 @@ module_exit(dxg_drv_exit);
  
- 	mutex_lock(&dxgglobal->device_mutex);
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("Microsoft Dxgkrnl virtual compute device Driver");
+-MODULE_VERSION("2.0.2");
++MODULE_VERSION("2.0.3");
+diff --git a/drivers/hv/dxgkrnl/ioctl.c b/drivers/hv/dxgkrnl/ioctl.c
+index f8f116a7f87f..42f3de31a63c 100644
+--- a/drivers/hv/dxgkrnl/ioctl.c
++++ b/drivers/hv/dxgkrnl/ioctl.c
+@@ -5373,7 +5373,7 @@ dxgkio_enum_processes(struct dxgprocess *process, void *__user inargs)
+ 	struct dxgprocess_adapter *pentry;
+ 	int nump = 0;	/* Current number of processes*/
+ 	struct ntstatus status;
+-	int ret;
++	int ret, ret1;
  
--	if (uuid_le_cmp(hdev->dev_type, dxg_vmbus_id_table[0].guid) == 0) {
-+	if (guid_equal(&hdev->dev_type, &dxg_vmbus_id_table[0].guid)) {
- 		/* This is a new virtual GPU channel */
- 		guid_to_luid(&hdev->channel->offermsg.offer.if_instance, &luid);
- 		DXG_TRACE("vGPU channel: %pUb",
-@@ -777,8 +777,7 @@ static int dxg_probe_vmbus(struct hv_device *hdev,
- 		list_add_tail(&vgpuch->vgpu_ch_list_entry,
- 			      &dxgglobal->vgpu_ch_list_head);
- 		dxgglobal_start_adapters();
--	} else if (uuid_le_cmp(hdev->dev_type,
--		   dxg_vmbus_id_table[1].guid) == 0) {
-+	} else if (guid_equal(&hdev->dev_type, &dxg_vmbus_id_table[1].guid)) {
- 		/* This is the global Dxgkgnl channel */
- 		DXG_TRACE("Global channel: %pUb",
- 			 &hdev->channel->offermsg.offer.if_instance);
-@@ -810,7 +809,7 @@ static void dxg_remove_vmbus(struct hv_device *hdev)
+ 	ret = copy_from_user(&args, inargs, sizeof(args));
+ 	if (ret) {
+@@ -5382,12 +5382,6 @@ dxgkio_enum_processes(struct dxgprocess *process, void *__user inargs)
+ 		goto cleanup;
+ 	}
  
- 	mutex_lock(&dxgglobal->device_mutex);
+-	if (args.buffer_count == 0) {
+-		DXG_ERR("Invalid buffer count");
+-		ret = -EINVAL;
+-		goto cleanup;
+-	}
+-
+ 	dxgglobal_acquire_adapter_list_lock(DXGLOCK_SHARED);
+ 	dxgglobal_acquire_process_adapter_lock();
  
--	if (uuid_le_cmp(hdev->dev_type, dxg_vmbus_id_table[0].guid) == 0) {
-+	if (guid_equal(&hdev->dev_type, &dxg_vmbus_id_table[0].guid)) {
- 		DXG_TRACE("Remove virtual GPU channel");
- 		dxgglobal_stop_adapter_vmbus(hdev);
- 		list_for_each_entry(vgpu_channel,
-@@ -822,8 +821,7 @@ static void dxg_remove_vmbus(struct hv_device *hdev)
- 				break;
- 			}
- 		}
--	} else if (uuid_le_cmp(hdev->dev_type,
--		   dxg_vmbus_id_table[1].guid) == 0) {
-+	} else if (guid_equal(&hdev->dev_type, &dxg_vmbus_id_table[1].guid)) {
- 		DXG_TRACE("Remove global channel device");
- 		dxgglobal_destroy_global_channel();
- 	} else {
+@@ -5405,6 +5399,19 @@ dxgkio_enum_processes(struct dxgprocess *process, void *__user inargs)
+ 		goto cleanup_locks;
+ 	}
+ 
++	list_for_each_entry(pentry, &adapter->adapter_process_list_head,
++			    adapter_process_list_entry) {
++		if (pentry->process->nspid == task_active_pid_ns(current))
++			nump++;
++	}
++
++	if (nump > args.buffer_count || args.buffer == NULL) {
++		status.v = STATUS_BUFFER_TOO_SMALL;
++		ret = ntstatus2int(status);
++		goto cleanup_locks;
++	}
++
++	nump = 0;
+ 	list_for_each_entry(pentry, &adapter->adapter_process_list_head,
+ 			    adapter_process_list_entry) {
+ 		if (pentry->process->nspid != task_active_pid_ns(current))
+@@ -5429,10 +5436,10 @@ dxgkio_enum_processes(struct dxgprocess *process, void *__user inargs)
+ 	dxgglobal_release_process_adapter_lock();
+ 	dxgglobal_release_adapter_list_lock(DXGLOCK_SHARED);
+ 
+-	if (ret == 0) {
+-		ret = copy_to_user(&input->buffer_count, &nump, sizeof(u32));
+-		if (ret)
+-			DXG_ERR("failed to copy buffer count to user");
++	ret1 = copy_to_user(&input->buffer_count, &nump, sizeof(u32));
++	if (ret1) {
++		DXG_ERR("failed to copy buffer count to user");
++		ret = -EFAULT;
+ 	}
+ 
+ cleanup:
 
