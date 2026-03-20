@@ -1,146 +1,165 @@
-Return-Path: <linux-hyperv+bounces-9631-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9632-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4F73FPQZvWnG6QIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9631-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 10:57:08 +0100
+	id yP0WD+s8vWkH8AIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9632-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 13:26:19 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 005732D85A2
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 10:57:07 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4466F2DA2AA
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 13:26:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D50B230734D9
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 09:56:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BE552306FCEE
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 12:21:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6FDF29ACC5;
-	Fri, 20 Mar 2026 09:56:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B4FE3AC0EE;
+	Fri, 20 Mar 2026 12:21:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cUbg/8NX"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KOXWIuGk"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741991B3925;
-	Fri, 20 Mar 2026 09:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C66D73ACA6F;
+	Fri, 20 Mar 2026 12:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774000560; cv=none; b=TPMqb5W3QOZ5oVe4Bq/ive9GgzxBSz80vgHGYgmJAO6fC7fXyRgc05Y17y/oHrI5/qdncU6+vBMUPKEsMGmnI0OQ2epFOsk2PalfPpzxTiCcR5moR8AoChBFHbKiwXjliSCPwyYhmmwZqIAT4Fsoy673TOW6aykBwirXZAl4oNE=
+	t=1774009279; cv=none; b=gIKCheWJ/1qtmBEtfEbp7MRnTU10GSA6iIdRJujTEZngIDNCKL4Rx250ZPDnS/FzKYB6fgg8L8VOy+d86ktcUCwIYeww+DCXfOrNltegR9mfKr3095AMwJCswKItE2Y/yOvrYmfj76vNnMSjNmUNkVqTULVm1lMAdW1/l6z4ZJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774000560; c=relaxed/simple;
-	bh=623iNHEo9Lx3CTyFj1XQ3Tb8dZwfqVZ4nDlwLICOGOQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gNH0ddx1JDIE0ZFW9M83uXSS5PFuT+eHr4tviSE5gEjbPSu+/f9//aBJNbdjY0KgxMzn9gkwJQE+IB2B1zLTMd+y1FjcNoc2yLPDKiZDo42RtCe1KiMK6HgXHWs3qZpqZZ5fMKV2CTB6MeYPuvJ+RmS2pABkAvAAdrPtfi3c5Ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cUbg/8NX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1273C4CEF7;
-	Fri, 20 Mar 2026 09:55:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774000559;
-	bh=623iNHEo9Lx3CTyFj1XQ3Tb8dZwfqVZ4nDlwLICOGOQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cUbg/8NXG3OZ3aqDbbu0ZF7Xlgg/mMa1uVvBe0VVF9qJu14G6q5weqLBn/KJ0hXZl
-	 fyhOqLwQvgE4h2q2K8SO9VdZCUZ2X6BOHS19VnEPmMPPJH8AgnOiN/qVJPwXODDOeA
-	 J5n8etfF55U+uF7YWjon2CNadkoKWL/EGsGhL3swqeUyDXWwpvPiD+55O7EKsOFrAj
-	 bxlOJlgB/wt6E6ICwceWIE/DykLmAhywBNAlxqePAA4F64y0VoJFvYqTZM4kaLrHva
-	 H63o6SYyJdAELw7SVHMcAa1EVm8hVeMw0DNDTBHtnyjtQqwkpv4hC/owWgJcT2wsG/
-	 L66DckitYpcKw==
-Date: Fri, 20 Mar 2026 09:55:53 +0000
-From: Simon Horman <horms@kernel.org>
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, kotaranov@microsoft.com,
-	shradhagupta@linux.microsoft.com, shirazsaleem@microsoft.com,
-	dipayanroy@linux.microsoft.com, yury.norov@gmail.com,
-	kees@kernel.org, ssengar@linux.microsoft.com,
-	gargaditya@linux.microsoft.com, linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: Re: [PATCH net-next v4] net: mana: Expose hardware diagnostic info
- via debugfs
-Message-ID: <20260320095553.GD1753385@horms.kernel.org>
-References: <20260319070926.1459515-1-ernis@linux.microsoft.com>
+	s=arc-20240116; t=1774009279; c=relaxed/simple;
+	bh=4j5D3JUKWrkjypiioycjRrgazfW4eGjtyd7+18VftzU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gz23nRrpT93ieG7JBioENiY1SxYxrj9K5nDPiipp5Xw0xiAbIhDABnuyGfX5R2d31Dr78Rzaklc+vjVvyExuaCQHhNh82rn4qguE3d5HeUewlLVtZWfF3rYAjSQ+XypNwXNCNUryHr/F40X2a+LmUsaM9SsJK9RVJMgQP21dZfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KOXWIuGk; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 954FD20B710C; Fri, 20 Mar 2026 05:21:17 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 954FD20B710C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1774009277;
+	bh=HHWlJ0UaeVgkTh4f4inG7ulP8ZOO5aEjTyrrRmJDfqM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KOXWIuGkDQIW+S4tuTvWIqkQsytmkIefTt3Jl7ARcF9DD5sg2doPfrfPAwyPG7wZS
+	 u1aAslAJJqjbGV/IhxnYRNt1VDedyonmepnlb5Ye/n4QadbjWo8ByMLZNn3jlxNz0Y
+	 w99rETnkLtMjMqoGnvvPfaneUuQ58KMh+cPgYOMo=
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	longli@microsoft.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	shradhagupta@linux.microsoft.com,
+	dipayanroy@linux.microsoft.com,
+	shirazsaleem@microsoft.com,
+	kotaranov@microsoft.com,
+	yury.norov@gmail.com,
+	kees@kernel.org,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Subject: [PATCH net-next] net: mana: Use at least SZ_4K in doorbell ID range check
+Date: Fri, 20 Mar 2026 05:21:01 -0700
+Message-ID: <20260320122107.1560839-1-ernis@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260319070926.1459515-1-ernis@linux.microsoft.com>
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9631-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9632-lists,linux-hyperv=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[21];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,gmail.com,vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[23];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,gmail.com,vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.967];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[horms@kernel.org,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	FROM_NEQ_ENVFROM(0.00)[ernis@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[horms.kernel.org:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 005732D85A2
+	PRECEDENCE_BULK(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	NEURAL_HAM(-0.00)[-0.945];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,linux.microsoft.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 4466F2DA2AA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Mar 19, 2026 at 12:09:13AM -0700, Erni Sri Satya Vennela wrote:
-> Add debugfs entries to expose hardware configuration and diagnostic
-> information that aids in debugging driver initialization and runtime
-> operations without adding noise to dmesg.
-> 
-> The debugfs directory creation and removal for each PCI device is
-> integrated into mana_gd_setup() and mana_gd_cleanup_device()
-> respectively, so that all callers (probe, remove, suspend, resume,
-> shutdown) share a single code path.
-> 
-> Device-level entries (under /sys/kernel/debug/mana/<slot>/):
->   - num_msix_usable, max_num_queues: Max resources from hardware
->   - gdma_protocol_ver, pf_cap_flags1: VF version negotiation results
->   - num_vports, bm_hostmode: Device configuration
-> 
-> Per-vPort entries (under /sys/kernel/debug/mana/<slot>/vportN/):
->   - port_handle: Hardware vPort handle
->   - max_sq, max_rq: Max queues from vPort config
->   - indir_table_sz: Indirection table size
->   - steer_rx, steer_rss, steer_update_tab, steer_cqe_coalescing:
->     Last applied steering configuration parameters
-> 
-> Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-> ---
-> Changes in v4:
-> * Rebase and fix conflicts.
-> Changes in v3:
-> * Rename mana_gd_cleanup to mana_gd_cleanup_device.
-> * Add creation of debugfs entries in mana_gd_setup.
-> * Add removal of debugfs entries in mana_gd_cleanup_device.
-> * Remove bm_hostmode and num_vports from debugfs in mana_remove itself,
->   because "ac" gets freed before debugfs_remove_recursive, to avoid
->   Use-After-Free error.
-> * Add "goto out:" in mana_cfg_vport_steering to avoid populating apc
->   values when resp.hdr.status is not NULL.
+mana_gd_ring_doorbell() accesses doorbell offsets up to 0xFF8 + 8 = 4KB
+within a doorbell page. When db_page_size is zero, the validation check
+in mana_gd_register_device() reduces to:
+  db_page_off + 0 > bar0_size
+which passes, even though mana_gd_ring_doorbell() will access
+[db_page_off, db_page_off + 4KB) and may go beyond BAR0.
 
-Thanks for the updates.
+Use max(SZ_4K, db_page_size) in the range check so that a zero or
+unexpectedly small db_page_size still results in a rejection when the
+doorbell page would fall outside BAR0.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Fixes: 89fe91c65992 ("net: mana: hardening: Validate doorbell ID from GDMA_REGISTER_DEVICE response")
+Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+---
+ drivers/net/ethernet/microsoft/mana/gdma_main.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index 2ba1fa3336f9..49ea3dcbf74a 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -4,6 +4,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
++#include <linux/sizes.h>
+ #include <linux/utsname.h>
+ #include <linux/version.h>
+ #include <linux/msi.h>
+@@ -1255,6 +1256,7 @@ int mana_gd_register_device(struct gdma_dev *gd)
+ 	struct gdma_context *gc = gd->gdma_context;
+ 	struct gdma_register_device_resp resp = {};
+ 	struct gdma_general_req req = {};
++	u64 db_page_sz;
+ 	int err;
+ 
+ 	gd->pdid = INVALID_PDID;
+@@ -1278,8 +1280,14 @@ int mana_gd_register_device(struct gdma_dev *gd)
+ 	 *   addr = db_page_base + db_page_size * db_id
+ 	 *        = (bar0_va + db_page_off) + (db_page_size * db_id)
+ 	 * So we need: db_page_off + db_page_size * (db_id + 1) <= bar0_size
++	 *
++	 * mana_gd_ring_doorbell() always accesses [offset, offset + 4KB),
++	 * so use at least SZ_4K to catch a zero or small db_page_size.
+ 	 */
+-	if (gc->db_page_off + gc->db_page_size * ((u64)resp.db_id + 1) > gc->bar0_size) {
++	db_page_sz = max_t(u64, SZ_4K, gc->db_page_size);
++
++	if (gc->db_page_off + db_page_sz * ((u64)resp.db_id + 1) >
++	    gc->bar0_size) {
+ 		dev_err(gc->dev, "Doorbell ID %u out of range\n", resp.db_id);
+ 		return -EPROTO;
+ 	}
+-- 
+2.34.1
 
 
