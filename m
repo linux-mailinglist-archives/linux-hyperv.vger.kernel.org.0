@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-9665-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9666-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SGxFBv7OvWneCAMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9665-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 23:49:34 +0100
+	id kMO+OFTOvWneCAMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9666-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 23:46:44 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E9242E21B7
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 23:49:33 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61A4D2E20FD
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 23:46:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 009F530B1978
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 22:42:03 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3C741308E4AE
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 22:42:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 398F23F99ED;
-	Fri, 20 Mar 2026 22:41:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CB9F3F9F57;
+	Fri, 20 Mar 2026 22:41:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E9KiFrke"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LB/UaFWL"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10AC23CCFAB;
-	Fri, 20 Mar 2026 22:40:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754063F9F4C;
+	Fri, 20 Mar 2026 22:41:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774046460; cv=none; b=js0ickGltBdWu2patEHhNAWLtjLWzBIzhfcb/GIGSkFiZTBnmjf7Bx+V7U0rniJsJYCCVBbF/jPx7+FhxIExzmBONjfHPhQseMsUJf5Ox4U6XnymLZ/VGK/xfdGp9+UAeZmjvyUnZb9tx36sCHE//3bl9N25GjNTWTYKqmYHmwc=
+	t=1774046462; cv=none; b=ljmIg6QXoA/gylFe3Clk3ICXPk8uevCHZuEhZSFK/dWeRzxQxgHvNwQAUpHI+1qPr7JyQfDmQRGlGY8XgO4RQPrpwltG9PraZnXZiPtiaiGLNqIZN4ZlrtlsBaZmQmYw9pQYfI6kr224LWeDzYy9/c3tXAPGk64rJ5FAlNyCdTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774046460; c=relaxed/simple;
-	bh=RbmL9EYUSm+5mPpVtsO49vrMj2KZeRXZE1ebFppsMFI=;
+	s=arc-20240116; t=1774046462; c=relaxed/simple;
+	bh=PC8UT5FrOE7raPDJyXK5xkA7GADphHu1Lkj1dxP3k+o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bmgHFgk6iqOCRysydshzQM9+K2kEnM+hfpqlTjI/Eeb35hsXoKFpCRUXzmzN/Ra1v/MqZLLqcucFfvMYxGKgqjacBZK51PZ1L3bfKIPSxUjKQ8SFznh0HFmsIuMXK/LGScfdCA0GtY8vuZPQU10UdWyHMN2oYEYQeDmKL6hHksk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E9KiFrke; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5D17C2BC9E;
-	Fri, 20 Mar 2026 22:40:58 +0000 (UTC)
+	 MIME-Version; b=tHBNNY4rC8NHtulzHnJX4YyeqaJWWBN421D5Sn4T1z8903Yk9WpVGu2ckwhVSO0uFpTSw2hj7eCxcmcIA4/Bqs5XZ39gSfqXxf7NK4iy0eNWHAo8otr/k1e/YlbOMVv5M575hMQeKw5efnh62+Aw6tc3C05kY6ipOA2lFDE6f8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LB/UaFWL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEFDFC2BCB1;
+	Fri, 20 Mar 2026 22:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774046459;
-	bh=RbmL9EYUSm+5mPpVtsO49vrMj2KZeRXZE1ebFppsMFI=;
+	s=k20201202; t=1774046462;
+	bh=PC8UT5FrOE7raPDJyXK5xkA7GADphHu1Lkj1dxP3k+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E9KiFrke6/pWAK9+oFWd7P9eAYjZDzF870vM+tWk724Ryw4Olx0yNweK87TZ70mz1
-	 WyOmWBl28Snml/0ZjgQ3MTDeN7jmfaylo1ES4KeSCQKcJqnD/JoyZdvv5Vyam7SA4s
-	 Kmz+ogGB5QCjFjeOkqt4UUNDpHvbUTEmg+OONpPr1XQpNBCfI24BXG0ah+cLWMz7xi
-	 BugY6CF2cXfB3GwMfbyce9XHA+WMXsW/t7kVNcyfonju4ZoR40+4/+W3aL/iNiDTRp
-	 38FjMrd8mvmNwW7IkW7tGGMljFTpkO6nTKfpE/nmlF4xR3zSVTWbJd17n5Dr64LmUw
-	 Lmt7Jo3FLLiSg==
+	b=LB/UaFWL0AckuWEpPx7qUcJo2w+95GJiPatq+AYNCm6c8XPlZnnCIZJXl1wxJFezK
+	 3zxcUT7cyOGO99x76SslEh2hUby34dCvo8MvuZWkr5lcIJ3v/5wVebGpGDDRKm7o7X
+	 kPRmOCx1iZ70VUf6k3bHoideWAt8MWrhaAi4MHAeF4s8dUupO6LPLC7/3pdRRcmMBw
+	 y0xIz1koeyTRyvVzEhda9hxPIet5JrGAN+B87pO/xCRFsFwMX5rkzJA9jAX8Tc+m1q
+	 8/DTtyvunjD3f5i+k8Y9xDzFlwwFJKw3EcUHLvXdfjsYFA4H2o66RqUp08jopTGG2k
+	 wBawkzh53K7Dg==
 From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jonathan Corbet <corbet@lwn.net>,
@@ -89,9 +89,9 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org,
 	Ryan Roberts <ryan.roberts@arm.com>
-Subject: [PATCH v4 19/21] uio: replace deprecated mmap hook with mmap_prepare in uio_info
-Date: Fri, 20 Mar 2026 22:39:45 +0000
-Message-ID: <157583e4477705b496896c7acd4ac88a937b8fa6.1774045440.git.ljs@kernel.org>
+Subject: [PATCH v4 20/21] mm: add mmap_action_map_kernel_pages[_full]()
+Date: Fri, 20 Mar 2026 22:39:46 +0000
+Message-ID: <926ac961690d856e67ec847bee2370ab3c6b9046.1774045440.git.ljs@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1774045440.git.ljs@kernel.org>
 References: <cover.1774045440.git.ljs@kernel.org>
@@ -109,14 +109,14 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_CC(0.00)[lwn.net,ladisch.de,arndb.de,linuxfoundation.org,microsoft.com,kernel.org,linux.intel.com,gmail.com,foss.st.com,bootlin.com,nod.at,ti.com,oracle.com,redhat.com,auristor.com,zeniv.linux.org.uk,suse.cz,google.com,suse.com,suse.de,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org,lists.linux.dev,kvack.org,arm.com];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWELVE(0.00)[44];
-	TAGGED_FROM(0.00)[bounces-9665-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9666-lists,linux-hyperv=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -129,138 +129,345 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8E9242E21B7
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 61A4D2E20FD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The f_op->mmap interface is deprecated, so update uio_info to use its
-successor, mmap_prepare.
+A user can invoke mmap_action_map_kernel_pages() to specify that the
+mapping should map kernel pages starting from desc->start of a specified
+number of pages specified in an array.
 
-Therefore, replace the uio_info->mmap hook with a new
-uio_info->mmap_prepare hook, and update its one user, target_core_user,
-to both specify this new mmap_prepare hook and also to use the new
-vm_ops->mapped() hook to continue to maintain a correct udev->kref
-refcount.
+In order to implement this, adjust mmap_action_prepare() to be able to
+return an error code, as it makes sense to assert that the specified
+parameters are valid as quickly as possible as well as updating the VMA
+flags to include VMA_MIXEDMAP_BIT as necessary.
 
-Then update uio_mmap() to utilise the mmap_prepare compatibility layer to
-invoke this callback from the uio mmap invocation.
+This provides an mmap_prepare equivalent of vm_insert_pages().  We
+additionally update the existing vm_insert_pages() code to use
+range_in_vma() and add a new range_in_vma_desc() helper function for the
+mmap_prepare case, sharing the code between the two in range_is_subset().
 
+We add both mmap_action_map_kernel_pages() and
+mmap_action_map_kernel_pages_full() to allow for both partial and full VMA
+mappings.
+
+We update the documentation to reflect the new features.
+
+Finally, we update the VMA tests accordingly to reflect the changes.
+
+Reviewed-by: Suren Baghdasaryan <surenb@google.com>
 Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
 ---
- drivers/target/target_core_user.c | 26 ++++++++++++++++++--------
- drivers/uio/uio.c                 | 10 ++++++++--
- include/linux/uio_driver.h        |  4 ++--
- 3 files changed, 28 insertions(+), 12 deletions(-)
+ Documentation/filesystems/mmap_prepare.rst |  8 ++
+ include/linux/mm.h                         | 95 +++++++++++++++++++++-
+ include/linux/mm_types.h                   |  7 ++
+ mm/memory.c                                | 42 +++++++++-
+ mm/util.c                                  |  7 ++
+ tools/testing/vma/include/dup.h            |  7 ++
+ 6 files changed, 160 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
-index af95531ddd35..edc2afd5f4ee 100644
---- a/drivers/target/target_core_user.c
-+++ b/drivers/target/target_core_user.c
-@@ -1860,6 +1860,17 @@ static struct page *tcmu_try_get_data_page(struct tcmu_dev *udev, uint32_t dpi)
- 	return NULL;
+diff --git a/Documentation/filesystems/mmap_prepare.rst b/Documentation/filesystems/mmap_prepare.rst
+index 14bb057be564..82c99c95ad85 100644
+--- a/Documentation/filesystems/mmap_prepare.rst
++++ b/Documentation/filesystems/mmap_prepare.rst
+@@ -156,5 +156,13 @@ pointer. These are:
+ * mmap_action_simple_ioremap() - Sets up an I/O remap from a specified
+   physical address and over a specified length.
+ 
++* mmap_action_map_kernel_pages() - Maps a specified array of `struct page`
++  pointers in the VMA from a specific offset.
++
++* mmap_action_map_kernel_pages_full() - Maps a specified array of `struct
++  page` pointers over the entire VMA. The caller must ensure there are
++  sufficient entries in the page array to cover the entire range of the
++  described VMA.
++
+ **NOTE:** The ``action`` field should never normally be manipulated directly,
+ rather you ought to use one of these helpers.
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index df8fa6e6402b..6f0a3edb24e1 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2912,7 +2912,7 @@ static inline bool folio_maybe_mapped_shared(struct folio *folio)
+  * The caller must add any reference (e.g., from folio_try_get()) it might be
+  * holding itself to the result.
+  *
+- * Returns the expected folio refcount.
++ * Returns: the expected folio refcount.
+  */
+ static inline int folio_expected_ref_count(const struct folio *folio)
+ {
+@@ -4364,6 +4364,45 @@ static inline void mmap_action_simple_ioremap(struct vm_area_desc *desc,
+ 	action->type = MMAP_SIMPLE_IO_REMAP;
  }
  
-+static int tcmu_vma_mapped(unsigned long start, unsigned long end, pgoff_t pgoff,
-+			   const struct file *file, void **vm_private_data)
++/**
++ * mmap_action_map_kernel_pages - helper for mmap_prepare hook to specify that
++ * @num kernel pages contained in the @pages array should be mapped to userland
++ * starting at virtual address @start.
++ * @desc: The VMA descriptor for the VMA requiring kernel pags to be mapped.
++ * @start: The virtual address from which to map them.
++ * @pages: An array of struct page pointers describing the memory to map.
++ * @nr_pages: The number of entries in the @pages aray.
++ */
++static inline void mmap_action_map_kernel_pages(struct vm_area_desc *desc,
++		unsigned long start, struct page **pages,
++		unsigned long nr_pages)
 +{
-+	struct tcmu_dev *udev = *vm_private_data;
++	struct mmap_action *action = &desc->action;
 +
-+	pr_debug("vma_mapped\n");
-+
-+	kref_get(&udev->kref);
-+	return 0;
++	action->type = MMAP_MAP_KERNEL_PAGES;
++	action->map_kernel.start = start;
++	action->map_kernel.pages = pages;
++	action->map_kernel.nr_pages = nr_pages;
++	action->map_kernel.pgoff = desc->pgoff;
 +}
 +
- static void tcmu_vma_open(struct vm_area_struct *vma)
- {
- 	struct tcmu_dev *udev = vma->vm_private_data;
-@@ -1919,26 +1930,25 @@ static vm_fault_t tcmu_vma_fault(struct vm_fault *vmf)
++/**
++ * mmap_action_map_kernel_pages_full - helper for mmap_prepare hook to specify that
++ * kernel pages contained in the @pages array should be mapped to userland
++ * from @desc->start to @desc->end.
++ * @desc: The VMA descriptor for the VMA requiring kernel pags to be mapped.
++ * @pages: An array of struct page pointers describing the memory to map.
++ *
++ * The caller must ensure that @pages contains sufficient entries to cover the
++ * entire range described by @desc.
++ */
++static inline void mmap_action_map_kernel_pages_full(struct vm_area_desc *desc,
++		struct page **pages)
++{
++	mmap_action_map_kernel_pages(desc, desc->start, pages,
++				     vma_desc_pages(desc));
++}
++
+ int mmap_action_prepare(struct vm_area_desc *desc);
+ int mmap_action_complete(struct vm_area_struct *vma,
+ 			 struct mmap_action *action);
+@@ -4380,10 +4419,59 @@ static inline struct vm_area_struct *find_exact_vma(struct mm_struct *mm,
+ 	return vma;
  }
  
- static const struct vm_operations_struct tcmu_vm_ops = {
-+	.mapped = tcmu_vma_mapped,
- 	.open = tcmu_vma_open,
- 	.close = tcmu_vma_close,
- 	.fault = tcmu_vma_fault,
++/**
++ * range_is_subset - Is the specified inner range a subset of the outer range?
++ * @outer_start: The start of the outer range.
++ * @outer_end: The exclusive end of the outer range.
++ * @inner_start: The start of the inner range.
++ * @inner_end: The exclusive end of the inner range.
++ *
++ * Returns: %true if [inner_start, inner_end) is a subset of [outer_start,
++ * outer_end), otherwise %false.
++ */
++static inline bool range_is_subset(unsigned long outer_start,
++				   unsigned long outer_end,
++				   unsigned long inner_start,
++				   unsigned long inner_end)
++{
++	return outer_start <= inner_start && inner_end <= outer_end;
++}
++
++/**
++ * range_in_vma - is the specified [@start, @end) range a subset of the VMA?
++ * @vma: The VMA against which we want to check [@start, @end).
++ * @start: The start of the range we wish to check.
++ * @end: The exclusive end of the range we wish to check.
++ *
++ * Returns: %true if [@start, @end) is a subset of [@vma->vm_start,
++ * @vma->vm_end), %false otherwise.
++ */
+ static inline bool range_in_vma(const struct vm_area_struct *vma,
+ 				unsigned long start, unsigned long end)
+ {
+-	return (vma && vma->vm_start <= start && end <= vma->vm_end);
++	if (!vma)
++		return false;
++
++	return range_is_subset(vma->vm_start, vma->vm_end, start, end);
++}
++
++/**
++ * range_in_vma_desc - is the specified [@start, @end) range a subset of the VMA
++ * described by @desc, a VMA descriptor?
++ * @desc: The VMA descriptor against which we want to check [@start, @end).
++ * @start: The start of the range we wish to check.
++ * @end: The exclusive end of the range we wish to check.
++ *
++ * Returns: %true if [@start, @end) is a subset of [@desc->start, @desc->end),
++ * %false otherwise.
++ */
++static inline bool range_in_vma_desc(const struct vm_area_desc *desc,
++				     unsigned long start, unsigned long end)
++{
++	if (!desc)
++		return false;
++
++	return range_is_subset(desc->start, desc->end, start, end);
+ }
+ 
+ #ifdef CONFIG_MMU
+@@ -4427,6 +4515,9 @@ int remap_pfn_range(struct vm_area_struct *vma, unsigned long addr,
+ int vm_insert_page(struct vm_area_struct *, unsigned long addr, struct page *);
+ int vm_insert_pages(struct vm_area_struct *vma, unsigned long addr,
+ 			struct page **pages, unsigned long *num);
++int map_kernel_pages_prepare(struct vm_area_desc *desc);
++int map_kernel_pages_complete(struct vm_area_struct *vma,
++			      struct mmap_action *action);
+ int vm_map_pages(struct vm_area_struct *vma, struct page **pages,
+ 				unsigned long num);
+ int vm_map_pages_zero(struct vm_area_struct *vma, struct page **pages,
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index d60eefde1db8..f9face579072 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -815,6 +815,7 @@ enum mmap_action_type {
+ 	MMAP_REMAP_PFN,		/* Remap PFN range. */
+ 	MMAP_IO_REMAP_PFN,	/* I/O remap PFN range. */
+ 	MMAP_SIMPLE_IO_REMAP,	/* I/O remap with guardrails. */
++	MMAP_MAP_KERNEL_PAGES,	/* Map kernel page range from array. */
  };
  
--static int tcmu_mmap(struct uio_info *info, struct vm_area_struct *vma)
-+static int tcmu_mmap_prepare(struct uio_info *info, struct vm_area_desc *desc)
+ /*
+@@ -833,6 +834,12 @@ struct mmap_action {
+ 			phys_addr_t start_phys_addr;
+ 			unsigned long size;
+ 		} simple_ioremap;
++		struct {
++			unsigned long start;
++			struct page **pages;
++			unsigned long nr_pages;
++			pgoff_t pgoff;
++		} map_kernel;
+ 	};
+ 	enum mmap_action_type type;
+ 
+diff --git a/mm/memory.c b/mm/memory.c
+index b3bcc21af20a..53ef8ef3d04a 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -2484,13 +2484,14 @@ static int insert_pages(struct vm_area_struct *vma, unsigned long addr,
+ int vm_insert_pages(struct vm_area_struct *vma, unsigned long addr,
+ 			struct page **pages, unsigned long *num)
  {
- 	struct tcmu_dev *udev = container_of(info, struct tcmu_dev, uio_info);
+-	const unsigned long end_addr = addr + (*num * PAGE_SIZE) - 1;
++	const unsigned long nr_pages = *num;
++	const unsigned long end = addr + PAGE_SIZE * nr_pages;
  
--	vm_flags_set(vma, VM_DONTEXPAND | VM_DONTDUMP);
--	vma->vm_ops = &tcmu_vm_ops;
-+	vma_desc_set_flags(desc, VMA_DONTEXPAND_BIT, VMA_DONTDUMP_BIT);
-+	desc->vm_ops = &tcmu_vm_ops;
- 
--	vma->vm_private_data = udev;
-+	desc->private_data = udev;
- 
- 	/* Ensure the mmap is exactly the right size */
--	if (vma_pages(vma) != udev->mmap_pages)
-+	if (vma_desc_pages(desc) != udev->mmap_pages)
- 		return -EINVAL;
- 
--	tcmu_vma_open(vma);
--
- 	return 0;
+-	if (addr < vma->vm_start || end_addr >= vma->vm_end)
++	if (!range_in_vma(vma, addr, end))
+ 		return -EFAULT;
+ 	if (!(vma->vm_flags & VM_MIXEDMAP)) {
+-		BUG_ON(mmap_read_trylock(vma->vm_mm));
+-		BUG_ON(vma->vm_flags & VM_PFNMAP);
++		VM_WARN_ON_ONCE(mmap_read_trylock(vma->vm_mm));
++		VM_WARN_ON_ONCE(vma->vm_flags & VM_PFNMAP);
+ 		vm_flags_set(vma, VM_MIXEDMAP);
+ 	}
+ 	/* Defer page refcount checking till we're about to map that page. */
+@@ -2498,6 +2499,39 @@ int vm_insert_pages(struct vm_area_struct *vma, unsigned long addr,
  }
+ EXPORT_SYMBOL(vm_insert_pages);
  
-@@ -2253,7 +2263,7 @@ static int tcmu_configure_device(struct se_device *dev)
- 	info->irqcontrol = tcmu_irqcontrol;
- 	info->irq = UIO_IRQ_CUSTOM;
- 
--	info->mmap = tcmu_mmap;
-+	info->mmap_prepare = tcmu_mmap_prepare;
- 	info->open = tcmu_open;
- 	info->release = tcmu_release;
- 
-diff --git a/drivers/uio/uio.c b/drivers/uio/uio.c
-index 5a4998e2caf8..1e4ade78ed84 100644
---- a/drivers/uio/uio.c
-+++ b/drivers/uio/uio.c
-@@ -850,8 +850,14 @@ static int uio_mmap(struct file *filep, struct vm_area_struct *vma)
- 		goto out;
- 	}
- 
--	if (idev->info->mmap) {
--		ret = idev->info->mmap(idev->info, vma);
-+	if (idev->info->mmap_prepare) {
-+		struct vm_area_desc desc;
++int map_kernel_pages_prepare(struct vm_area_desc *desc)
++{
++	const struct mmap_action *action = &desc->action;
++	const unsigned long addr = action->map_kernel.start;
++	unsigned long nr_pages, end;
 +
-+		compat_set_desc_from_vma(&desc, filep, vma);
-+		ret = idev->info->mmap_prepare(idev->info, &desc);
-+		if (ret)
-+			goto out;
-+		ret = __compat_vma_mmap(&desc, vma);
- 		goto out;
++	if (!vma_desc_test(desc, VMA_MIXEDMAP_BIT)) {
++		VM_WARN_ON_ONCE(mmap_read_trylock(desc->mm));
++		VM_WARN_ON_ONCE(vma_desc_test(desc, VMA_PFNMAP_BIT));
++		vma_desc_set_flags(desc, VMA_MIXEDMAP_BIT);
++	}
++
++	nr_pages = action->map_kernel.nr_pages;
++	end = addr + PAGE_SIZE * nr_pages;
++	if (!range_in_vma_desc(desc, addr, end))
++		return -EFAULT;
++
++	return 0;
++}
++EXPORT_SYMBOL(map_kernel_pages_prepare);
++
++int map_kernel_pages_complete(struct vm_area_struct *vma,
++			      struct mmap_action *action)
++{
++	unsigned long nr_pages;
++
++	nr_pages = action->map_kernel.nr_pages;
++	return insert_pages(vma, action->map_kernel.start,
++			    action->map_kernel.pages,
++			    &nr_pages, vma->vm_page_prot);
++}
++EXPORT_SYMBOL(map_kernel_pages_complete);
++
+ /**
+  * vm_insert_page - insert single page into user vma
+  * @vma: user vma to map to
+diff --git a/mm/util.c b/mm/util.c
+index 5ae20876ef2c..f063fd4de1e8 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -1448,6 +1448,8 @@ int mmap_action_prepare(struct vm_area_desc *desc)
+ 		return io_remap_pfn_range_prepare(desc);
+ 	case MMAP_SIMPLE_IO_REMAP:
+ 		return simple_ioremap_prepare(desc);
++	case MMAP_MAP_KERNEL_PAGES:
++		return map_kernel_pages_prepare(desc);
  	}
  
-diff --git a/include/linux/uio_driver.h b/include/linux/uio_driver.h
-index 334641e20fb1..02eaac47ac44 100644
---- a/include/linux/uio_driver.h
-+++ b/include/linux/uio_driver.h
-@@ -97,7 +97,7 @@ struct uio_device {
-  * @irq_flags:		flags for request_irq()
-  * @priv:		optional private data
-  * @handler:		the device's irq handler
-- * @mmap:		mmap operation for this uio device
-+ * @mmap_prepare:	mmap_prepare operation for this uio device
-  * @open:		open operation for this uio device
-  * @release:		release operation for this uio device
-  * @irqcontrol:		disable/enable irqs when 0/1 is written to /dev/uioX
-@@ -112,7 +112,7 @@ struct uio_info {
- 	unsigned long		irq_flags;
- 	void			*priv;
- 	irqreturn_t (*handler)(int irq, struct uio_info *dev_info);
--	int (*mmap)(struct uio_info *info, struct vm_area_struct *vma);
-+	int (*mmap_prepare)(struct uio_info *info, struct vm_area_desc *desc);
- 	int (*open)(struct uio_info *info, struct inode *inode);
- 	int (*release)(struct uio_info *info, struct inode *inode);
- 	int (*irqcontrol)(struct uio_info *info, s32 irq_on);
+ 	WARN_ON_ONCE(1);
+@@ -1475,6 +1477,9 @@ int mmap_action_complete(struct vm_area_struct *vma,
+ 	case MMAP_REMAP_PFN:
+ 		err = remap_pfn_range_complete(vma, action);
+ 		break;
++	case MMAP_MAP_KERNEL_PAGES:
++		err = map_kernel_pages_complete(vma, action);
++		break;
+ 	case MMAP_IO_REMAP_PFN:
+ 	case MMAP_SIMPLE_IO_REMAP:
+ 		/* Should have been delegated. */
+@@ -1495,6 +1500,7 @@ int mmap_action_prepare(struct vm_area_desc *desc)
+ 	case MMAP_REMAP_PFN:
+ 	case MMAP_IO_REMAP_PFN:
+ 	case MMAP_SIMPLE_IO_REMAP:
++	case MMAP_MAP_KERNEL_PAGES:
+ 		WARN_ON_ONCE(1); /* nommu cannot handle these. */
+ 		break;
+ 	}
+@@ -1514,6 +1520,7 @@ int mmap_action_complete(struct vm_area_struct *vma,
+ 	case MMAP_REMAP_PFN:
+ 	case MMAP_IO_REMAP_PFN:
+ 	case MMAP_SIMPLE_IO_REMAP:
++	case MMAP_MAP_KERNEL_PAGES:
+ 		WARN_ON_ONCE(1); /* nommu cannot handle this. */
+ 
+ 		err = -EINVAL;
+diff --git a/tools/testing/vma/include/dup.h b/tools/testing/vma/include/dup.h
+index f5f7c45f1808..60f0b15638d0 100644
+--- a/tools/testing/vma/include/dup.h
++++ b/tools/testing/vma/include/dup.h
+@@ -454,6 +454,7 @@ enum mmap_action_type {
+ 	MMAP_REMAP_PFN,		/* Remap PFN range. */
+ 	MMAP_IO_REMAP_PFN,	/* I/O remap PFN range. */
+ 	MMAP_SIMPLE_IO_REMAP,	/* I/O remap with guardrails. */
++	MMAP_MAP_KERNEL_PAGES,	/* Map kernel page range from an array. */
+ };
+ 
+ /*
+@@ -472,6 +473,12 @@ struct mmap_action {
+ 			phys_addr_t start_phys_addr;
+ 			unsigned long size;
+ 		} simple_ioremap;
++		struct {
++			unsigned long start;
++			struct page **pages;
++			unsigned long nr_pages;
++			pgoff_t pgoff;
++		} map_kernel;
+ 	};
+ 	enum mmap_action_type type;
+ 
 -- 
 2.53.0
 
