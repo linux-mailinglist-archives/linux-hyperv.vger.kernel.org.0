@@ -1,143 +1,133 @@
-Return-Path: <linux-hyperv+bounces-9668-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9669-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AJBqFJDQvWlOCQMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9668-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 23:56:16 +0100
+	id oB8lKrXYvWkiCwMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9669-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 21 Mar 2026 00:31:01 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D2242E2288
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 23:56:15 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EE9B2E2418
+	for <lists+linux-hyperv@lfdr.de>; Sat, 21 Mar 2026 00:31:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 00D9030374B3
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 22:56:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 48384306D8CA
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 23:30:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 119D737AA86;
-	Fri, 20 Mar 2026 22:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gf38N31f"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01131284693;
+	Fri, 20 Mar 2026 23:30:43 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F45358382;
-	Fri, 20 Mar 2026 22:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC385846F;
+	Fri, 20 Mar 2026 23:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774047373; cv=none; b=k5T51eMyyO7HEYQg21PeooUuED37TpAMhlT8EIio1xaN5suHMd6W0qEm7g9b2QK5RWKv1UJLNTxkWeYuaMAaA6bi38/91X/+huWDcdP3QB7bF63YTkk4YyuzmMVdkpDo7nTQUBDqrevnydDPCc2Eqi5dH6VeGp3xcQ6NGdzLBM8=
+	t=1774049442; cv=none; b=kRSkVs+ZRKl0MPGn5C3VP0BvPdtbyIWGhGJNWfH0Z8jMzumizTJyMxXTn1CN0ew8yh364EIk1inNgGCvCT56+nGLdnh54TAeysgPerYPWvkJzSzXMnpE0pRzHOi10nDTRF0Wa9SzrrE+r4Yu8CkVRQCvdxPYQh47TlymC76uwHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774047373; c=relaxed/simple;
-	bh=0SSVuwpq3GSKbcBxi7YA4+TEwdkv6PE+svVUsxApjpQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IJ97e5RVy4GmzfCn3ysTS8zvXuz+t/WTyDmCKev9TSeQAqn6yRqDDRcmpHT76Itwmyd48vVb3SHKu3TtmPAAuYmK0mHOM/JMUoS7cQnX3ODUpChCpvOWxS1OfgKEMIInd0cQTNqPOZKPXaTVzfQECXQI1JiHFCaua7T6mRjQzi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gf38N31f; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774047372; x=1805583372;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0SSVuwpq3GSKbcBxi7YA4+TEwdkv6PE+svVUsxApjpQ=;
-  b=gf38N31ftvsyKVoucoIXtO8OK1lM2tl0rrxBt2PzBPrYJQi5tOdUDqCy
-   EaUBddVUYaoOY8p4Cc8U6umEwxYyJqtC8JE1diduo7Iyyo81XKr9MAREB
-   J0bzipFCLpA2RR1AsHnOyGkGkKyKVXgMYJyqxDYoon2cdoZ5wA5UshfAU
-   /je51EE37yfylACAcyDR9QcsEANBFamOF0ghEg81IZG5UbLSE5cOj9wt4
-   1W9HTNln9e9haImmI9s24kD7nbQllU72biQhRZdZMucKB9pecVmU20UaO
-   ROMwdRY+k3WRjbjRB1bcewv4foRk8Xh706czHX5YCbl43Sw6uSF/2ZvsW
-   Q==;
-X-CSE-ConnectionGUID: D3HrGr+LS7+6hYWcxT5SDg==
-X-CSE-MsgGUID: eVEuKT/PQ3OpxkAb1t77jw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11735"; a="75169421"
-X-IronPort-AV: E=Sophos;i="6.23,132,1770624000"; 
-   d="scan'208";a="75169421"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2026 15:56:11 -0700
-X-CSE-ConnectionGUID: kq9PfVflQsWIohQI8Q0ISw==
-X-CSE-MsgGUID: 8JtmPvhoQe+rUaQHGS2BMw==
-X-ExtLoop1: 1
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2026 15:56:10 -0700
-Date: Fri, 20 Mar 2026 16:01:47 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: Wei Liu <wei.liu@kernel.org>
-Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
+	s=arc-20240116; t=1774049442; c=relaxed/simple;
+	bh=55x65rcI3Xy68ox8Qxvc+GJMDplJ+mxBUGukF8cGD7g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sXFA7VuGH5IY6up/IA3xdyKKLX9k5iGxgr5r4n9v/kLSq0MNVpxw1ROSPy51RYs9AX8fwlpchQjjAZ3OqsM8/0voW7CIMB3aJ5CKHehUG9UluG18koYlBXpgQ56SG7But9ECzAyP9XVkvDFdnHUemAYJ+yHQ/De9zC4vdyzezzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1202)
+	id D9EBE20B710C; Fri, 20 Mar 2026 16:30:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D9EBE20B710C
+From: Long Li <longli@microsoft.com>
+To: Long Li <longli@microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>, "Kirill A. Shutemov" <kas@kernel.org>,
-	linux-hyperv@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ricardo Neri <ricardo.neri@intel.com>,
-	Yunhong Jiang <yunhong.jiang@linux.intel.com>
-Subject: Re: [PATCH v8 09/10] x86/hyperv/vtl: Mark the wakeup mailbox page as
- private
-Message-ID: <20260320230147.GA31320@ranerica-svr.sc.intel.com>
-References: <20260107-rneri-wakeup-mailbox-v8-0-2f5b6785f2f5@linux.intel.com>
- <20260107-rneri-wakeup-mailbox-v8-9-2f5b6785f2f5@linux.intel.com>
- <20260309175733.GA3083831@liuwe-devbox-debian-v2.local>
+	"K . Y . Srinivasan" <kys@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>
+Cc: Simon Horman <horms@kernel.org>,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] net: mana: Set default number of queues to 16
+Date: Fri, 20 Mar 2026 16:30:27 -0700
+Message-ID: <20260320233027.1603495-1-longli@microsoft.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260309175733.GA3083831@liuwe-devbox-debian-v2.local>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [3.54 / 15.00];
+	DMARC_POLICY_REJECT(2.00)[microsoft.com : SPF not aligned (relaxed), No valid DKIM,reject];
 	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9668-lists,linux-hyperv=lfdr.de];
-	FREEMAIL_CC(0.00)[kernel.org,microsoft.com,outlook.com,linux.microsoft.com,vger.kernel.org,intel.com,linux.intel.com];
+	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-9669-lists,linux-hyperv=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[18];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ricardo.neri-calderon@linux.intel.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-hyperv,dt];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	R_DKIM_NA(0.00)[];
+	NEURAL_HAM(-0.00)[-0.997];
+	FROM_NEQ_ENVFROM(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,intel.com:dkim,ranerica-svr.sc.intel.com:mid]
-X-Rspamd-Queue-Id: 0D2242E2288
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 2EE9B2E2418
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Mar 09, 2026 at 05:57:33PM +0000, Wei Liu wrote:
-> Dexuan, are you happy with the patch? You can also delegate to Saurabh
-> if you think it's more appropriate. Thanks!
+Set the default number of queues per vPort to MANA_DEF_NUM_QUEUES (16),
+as 16 queues can achieve optimal throughput for typical workloads. Users
+can increase the number of queues up to max_queues via ethtool if needed.
 
-Hi Wei,
+Signed-off-by: Long Li <longli@microsoft.com>
+---
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 2 +-
+ include/net/mana/mana.h                       | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-I just realized you replied to an older version of the patch. Here is the
-most recent version:
-
-https://lore.kernel.org/all/20260304-rneri-wakeup-mailbox-v9-9-a5c6845e6251@linux.intel.com/
-
-The whole series:
-
-https://lore.kernel.org/all/20260304-rneri-wakeup-mailbox-v9-0-a5c6845e6251@linux.intel.com/
-
-Thanks and BR,
-Ricardo
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 49c65cc1697c..7cae8a7b9f31 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -3357,7 +3357,7 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
+ 	apc->ac = ac;
+ 	apc->ndev = ndev;
+ 	apc->max_queues = gc->max_num_queues;
+-	apc->num_queues = gc->max_num_queues;
++	apc->num_queues = min(gc->max_num_queues, MANA_DEF_NUM_QUEUES);
+ 	apc->tx_queue_size = DEF_TX_BUFFERS_PER_QUEUE;
+ 	apc->rx_queue_size = DEF_RX_BUFFERS_PER_QUEUE;
+ 	apc->port_handle = INVALID_MANA_HANDLE;
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 3336688fed5e..96d21cbbdee2 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -1007,6 +1007,7 @@ struct mana_deregister_filter_resp {
+ #define STATISTICS_FLAGS_TX_ERRORS_GDMA_ERROR		0x0000000004000000
+ 
+ #define MANA_MAX_NUM_QUEUES 64
++#define MANA_DEF_NUM_QUEUES 16
+ 
+ #define MANA_SHORT_VPORT_OFFSET_MAX ((1U << 8) - 1)
+ 
+-- 
+2.43.0
 
 
