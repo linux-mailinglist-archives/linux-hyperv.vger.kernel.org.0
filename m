@@ -1,182 +1,234 @@
-Return-Path: <linux-hyperv+bounces-9638-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9639-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cHOtLfWTvWnY+wIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9638-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 19:37:41 +0100
+	id sFIFL72YvWmR/QIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9639-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 19:58:05 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D85A2DF87E
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 19:37:41 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F4712DF9BB
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 19:58:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 87772300A333
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 18:37:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2E7393041A7B
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2026 18:57:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B64D3E317D;
-	Fri, 20 Mar 2026 18:37:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 754DB3E8664;
+	Fri, 20 Mar 2026 18:57:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="JR3mMW/3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d1UmBx/K"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C39502D0C62;
-	Fri, 20 Mar 2026 18:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7773D3319;
+	Fri, 20 Mar 2026 18:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774031857; cv=none; b=cYRFkIS9BCcFyyleD0jCB5/a7nCKEQg1Cx/eYjI7d5xvxMh+C0IGByNqwBf9miJRGdzfWlynYYdMGiHGH5yNqMmf1cpCKRd8KSJmK4oAtiay0dFxXJpegLdjcMDKOubiI2IUfOOHEAeLEne+n2tWFaWmvkjzC7fLaos1toP0wWY=
+	t=1774033060; cv=none; b=nS16dggtj8mNCctU3Xj9FqIPy45t97Xa3P8NC6/n2M/RvhjsppqF8wkjhG8YFZ/dTz3eUr+7XNDFvOBto0XrjxPBegcs/ueJEdYRn8XNWp04PoKxCWuF6BkAp+Hv4AMl60fm/+A6eYGfG2fVyyNY8qcrsiYcc42p05qNjsp3sl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774031857; c=relaxed/simple;
-	bh=ndUmG6D4N/t76wmcE/rj0yYFZUJjdZW7OKDiXnUnTKo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DFrd1uUJaf/g5cZl08HPFW3KwrDkvnvCeh4UwitnHHR+r2SctRF3Ck0XM2sDxsC3sGkAY900QCPr9ig4Y9+rxRyHM7lZRO2suni2hvkdMSTurtrUSSpcYzEiTlZ546u3p9J+hsjvqfxwz8RMgBlqtG/T/QUgEd2Wqb34TmEGGWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=JR3mMW/3; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1204)
-	id A29FB20B710C; Fri, 20 Mar 2026 11:37:36 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A29FB20B710C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1774031856;
-	bh=8jpPXr+y+3KENB6W41376ggBj6+74FClsqh2tUuZIug=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JR3mMW/3XjE+RSv1SuWsuNxVuWjbiFNQX3JEuSEoPj0eeUVtlHh4wYrAzU05/StIp
-	 Ak32D828kLEtVhySGqhpLcmQLZkQt2EnsCYVgZyB8X11m3M2IUTqdn7j8u1XkY1GC/
-	 VaRnxXufFAuziD1myFZ6o16h1RgUN+bwAGZxXuKM=
-Date: Fri, 20 Mar 2026 11:37:36 -0700
-From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, pabeni@redhat.com, leon@kernel.org,
-	longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
-	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
-	ernis@linux.microsoft.com, shirazsaleem@microsoft.com,
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	dipayanroy@microsoft.com
-Subject: Re: [PATCH net-next, v3] net: mana: Force full-page RX buffers for
- 4K page size on specific systems.
-Message-ID: <ab2T8LgRiDHDIUHV@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <abDo8XTu1EiQFC7T@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20260314125053.41d6221b@kernel.org>
+	s=arc-20240116; t=1774033060; c=relaxed/simple;
+	bh=a8ys166E/M77dCSrucnKwE5heGp6aoVZbHs9H3pgrKI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WrrQ1lesZE8m4/kji9IOPsuGzZTIInsW014Ix3vci3fWAQvRNe9jT3/2qlzm11FWmRk8FK9oYLlmQ1k/BESHJ2+Vfzh7cdTod9yyb0el2XhbFFT9IMs0ZxtdezL7FaqajHZgKrPwENW+ulEyKDV+yPTq6g3JoqZwM5+39Boztak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d1UmBx/K; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1C94C4CEF7;
+	Fri, 20 Mar 2026 18:57:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774033060;
+	bh=a8ys166E/M77dCSrucnKwE5heGp6aoVZbHs9H3pgrKI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=d1UmBx/KAU+ZajRc0Utu3iGMoA6qXkfpo2A3GmQu8VB00T2ciUsv0bUxBPTN6cpTm
+	 m3xxfTtoFLkqoxFN2UkxrqdyEtIRum9BSaNPu6j+994kGaQQ67cuDJi2oDwvWgDmKh
+	 6PWVHSUzCXkNdeUl6lKfFgj/jcJTsJl9L7GIzzLjsbklBRc7rOGYW4Fn923e39Uvvr
+	 ttgPeY3wAum2TPoqAT48arege0caAn/E8yJkUN7Up2QA4ZleyQSJbDwORXj7psDga2
+	 /GC2DRXLDgEDvmGPPLRO944+KOeHvwAeZxrk9FTglWfQhRpZGclw4Gn1hTFIShfbwA
+	 AZE7RKjyLC7dQ==
+Message-ID: <608ba54c-f19e-4e27-8142-0870f91d6514@kernel.org>
+Date: Fri, 20 Mar 2026 19:57:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260314125053.41d6221b@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/16] fs: afs: correctly drop reference count on
+ mapping failure
+Content-Language: en-US
+To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Clemens Ladisch <clemens@ladisch.de>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Bodo Stroesser <bostroesser@gmail.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>,
+ David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ David Hildenbrand <david@kernel.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ linux-mtd@lists.infradead.org, linux-staging@lists.linux.dev,
+ linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+ linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, Ryan Roberts <ryan.roberts@arm.com>
+References: <cover.1773944114.git.ljs@kernel.org>
+ <018cd0d8b2dae44de6d3952527e754e52ef02da8.1773944114.git.ljs@kernel.org>
+From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+In-Reply-To: <018cd0d8b2dae44de6d3952527e754e52ef02da8.1773944114.git.ljs@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9638-lists,linux-hyperv=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[lwn.net,ladisch.de,arndb.de,linuxfoundation.org,microsoft.com,kernel.org,linux.intel.com,gmail.com,foss.st.com,bootlin.com,nod.at,ti.com,oracle.com,redhat.com,auristor.com,zeniv.linux.org.uk,suse.cz,google.com,suse.com,suse.de,vger.kernel.org,lists.infradead.org,lists.linux.dev,kvack.org,arm.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-9639-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-0.993];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	NEURAL_HAM(-0.00)[-0.917];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid]
-X-Rspamd-Queue-Id: 5D85A2DF87E
+	FROM_NEQ_ENVFROM(0.00)[vbabka@kernel.org,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	RCPT_COUNT_TWELVE(0.00)[42];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 5F4712DF9BB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Sat, Mar 14, 2026 at 12:50:53PM -0700, Jakub Kicinski wrote:
-> On Tue, 10 Mar 2026 21:00:49 -0700 Dipayaan Roy wrote:
-> > On certain systems configured with 4K PAGE_SIZE, utilizing page_pool
-> > fragments for RX buffers results in a significant throughput regression.
-> > Profiling reveals that this regression correlates with high overhead in the
-> > fragment allocation and reference counting paths on these specific
-> > platforms, rendering the multi-buffer-per-page strategy counterproductive.
+On 3/19/26 19:23, Lorenzo Stoakes (Oracle) wrote:
+> Commit 9d5403b1036c ("fs: convert most other generic_file_*mmap() users to
+> .mmap_prepare()") updated AFS to use the mmap_prepare callback in favour
+> of the deprecated mmap callback.
 > 
-> Can you say more ? We could technically take two references on the page
-> right away if MTU is small and avoid some of the cost.
+> However, it did not account for the fact that mmap_prepare is called
+> pre-merge, and may then be merged, nor that mmap_prepare can fail to map
+> due to an out of memory error.
 
-There is a 15-20% shortfall in achieving line rate for MANA (180+ Gbps)
-on a particular ARM64 SKU. The issue is only specific to this processor SKU —
-not seen on other ARM64 SKUs (e.g., GB200) or x86 SKUs. Critically, the
-regression only manifests beyond 16 TCP connections, which strongly indicates
-seen when there is  high contention and traffic.
+So that means a file can become pinned forever? OOM is probably only a
+problem with fault injection in practice, but the merge case can happen. And
+9d5403b1036c is pre-6.18 LTS. Are we going to need Fixes: and Cc: stable then?
 
-  no. of     | rx buf backed       | rx buf backed
- connections | with page fragments | with full page
--------------+---------------------+---------------
-           4 |         139 Gbps    |     138 Gbps
-           8 |         140 Gbps    |     162 Gbps
-          16 |         186 Gbps    |     186 Gbps
-          32 |         136 Gbps    |     183 Gbps
-          48 |         159 Gbps    |     185 Gbps
-          64 |         165 Gbps    |     184 Gbps
-         128 |         170 Gbps    |     180 Gbps
- 
-HW team is still working to RCA this hw behaviour.
-
-Regarding "We could technically take two references on the page right
-away", are you suggesting having page reference counting logic to driver
-instead of relying on page pool?
-
+> Both of those are cases in which we should not be incrementing a reference
+> count.
 > 
-> The driver doesn't seem to set skb->truesize accordingly after this
-> change. So you're lying to the stack about how much memory each packet
-> consumes. This is a blocker for the change.
+> With the newly added vm_ops->mapped callback available, we can simply
+> defer this operation to that callback which is only invoked once the
+> mapping is successfully in place (but not yet visible to userspace as the
+> mmap and VMA write locks are held).
 > 
-ACK. I will send out a separate patch with fixes tag to fix the skb true
-size.
-
-> > To mitigate this, bypass the page_pool fragment path and force a single RX
-> > packet per page allocation when all the following conditions are met:
-> >   1. The system is configured with a 4K PAGE_SIZE.
-> >   2. A processor-specific quirk is detected via SMBIOS Type 4 data.
+> Therefore add afs_mapped() to implement this callback for AFS, and remove
+> the code doing so in afs_mmap_prepare().
 > 
-> I don't think we want the kernel to be in the business of carrying
-> matching on platform names and providing optimal config by default.
-> This sort of logic needs to live in user space or the hypervisor 
-> (which can then pass a single bit to the driver to enable the behavior)
+> Also update afs_vm_open(), afs_vm_close() and afs_vm_map_pages() to be
+> consistent in how the vnode is accessed.
 > 
-As per our internal discussion the hypervisor cannot provide the CPU
-version info(in vm as well as in bare metal offerings).
-
-On handling it from user side are you suggesting it to introduce a new
-ethtool Private Flags and have udev rules for the driver to set the private
-flag and switch to full page rx buffers? Given that the wide number of distro
-support this might be harder to maintain/backport. 
-
-Also the dmi parsing design was influenced by other net wireleass
-drivers as /wireless/ath/ath10k/core.c. If this approach is not
-acceptable for MANA driver then will have to take a alternate route
-based on the dsicussion right above it.
-
-> > This approach restores expected line-rate performance by ensuring
-> > predictable RX refill behavior on affected hardware.
-> > 
-> > There is no behavioral change for systems using larger page sizes
-> > (16K/64K), or platforms where this processor-specific quirk do not
-> > apply.
-> -- 
-> pw-bot: cr
-
-Thank you for your comments Jakub, and also pointing out the skb true
-size issue. I am sending out a separate to fix the skb true size issue.
-
-Regards
-Dipayaan Roy
+> Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
+> ---
+>  fs/afs/file.c | 36 ++++++++++++++++++++++++++----------
+>  1 file changed, 26 insertions(+), 10 deletions(-)
+> 
+> diff --git a/fs/afs/file.c b/fs/afs/file.c
+> index f609366fd2ac..85696ac984cc 100644
+> --- a/fs/afs/file.c
+> +++ b/fs/afs/file.c
+> @@ -28,6 +28,8 @@ static ssize_t afs_file_splice_read(struct file *in, loff_t *ppos,
+>  static void afs_vm_open(struct vm_area_struct *area);
+>  static void afs_vm_close(struct vm_area_struct *area);
+>  static vm_fault_t afs_vm_map_pages(struct vm_fault *vmf, pgoff_t start_pgoff, pgoff_t end_pgoff);
+> +static int afs_mapped(unsigned long start, unsigned long end, pgoff_t pgoff,
+> +		      const struct file *file, void **vm_private_data);
+>  
+>  const struct file_operations afs_file_operations = {
+>  	.open		= afs_open,
+> @@ -61,6 +63,7 @@ const struct address_space_operations afs_file_aops = {
+>  };
+>  
+>  static const struct vm_operations_struct afs_vm_ops = {
+> +	.mapped		= afs_mapped,
+>  	.open		= afs_vm_open,
+>  	.close		= afs_vm_close,
+>  	.fault		= filemap_fault,
+> @@ -494,32 +497,45 @@ static void afs_drop_open_mmap(struct afs_vnode *vnode)
+>   */
+>  static int afs_file_mmap_prepare(struct vm_area_desc *desc)
+>  {
+> -	struct afs_vnode *vnode = AFS_FS_I(file_inode(desc->file));
+>  	int ret;
+>  
+> -	afs_add_open_mmap(vnode);
+> -
+>  	ret = generic_file_mmap_prepare(desc);
+> -	if (ret == 0)
+> -		desc->vm_ops = &afs_vm_ops;
+> -	else
+> -		afs_drop_open_mmap(vnode);
+> +	if (ret)
+> +		return ret;
+> +
+> +	desc->vm_ops = &afs_vm_ops;
+>  	return ret;
+>  }
+>  
+> +static int afs_mapped(unsigned long start, unsigned long end, pgoff_t pgoff,
+> +		      const struct file *file, void **vm_private_data)
+> +{
+> +	struct afs_vnode *vnode = AFS_FS_I(file_inode(file));
+> +
+> +	afs_add_open_mmap(vnode);
+> +	return 0;
+> +}
+> +
+>  static void afs_vm_open(struct vm_area_struct *vma)
+>  {
+> -	afs_add_open_mmap(AFS_FS_I(file_inode(vma->vm_file)));
+> +	struct file *file = vma->vm_file;
+> +	struct afs_vnode *vnode = AFS_FS_I(file_inode(file));
+> +
+> +	afs_add_open_mmap(vnode);
+>  }
+>  
+>  static void afs_vm_close(struct vm_area_struct *vma)
+>  {
+> -	afs_drop_open_mmap(AFS_FS_I(file_inode(vma->vm_file)));
+> +	struct file *file = vma->vm_file;
+> +	struct afs_vnode *vnode = AFS_FS_I(file_inode(file));
+> +
+> +	afs_drop_open_mmap(vnode);
+>  }
+>  
+>  static vm_fault_t afs_vm_map_pages(struct vm_fault *vmf, pgoff_t start_pgoff, pgoff_t end_pgoff)
+>  {
+> -	struct afs_vnode *vnode = AFS_FS_I(file_inode(vmf->vma->vm_file));
+> +	struct file *file = vmf->vma->vm_file;
+> +	struct afs_vnode *vnode = AFS_FS_I(file_inode(file));
+>  
+>  	if (afs_check_validity(vnode))
+>  		return filemap_map_pages(vmf, start_pgoff, end_pgoff);
 
 
