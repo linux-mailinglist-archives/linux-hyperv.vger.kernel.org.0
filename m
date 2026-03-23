@@ -1,66 +1,72 @@
-Return-Path: <linux-hyperv+bounces-9692-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9694-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wItKI5FQwWnLSAQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9692-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2026 15:39:13 +0100
+	id eEEWNRJQwWnLSAQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9694-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2026 15:37:06 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3BB32F4EE0
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2026 15:39:12 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09FFA2F4DD5
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2026 15:37:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9CA3630E89AE
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2026 14:01:03 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id ACF6E301C5AF
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2026 14:27:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A5F73B5825;
-	Mon, 23 Mar 2026 13:58:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A32DC3AA4FD;
+	Mon, 23 Mar 2026 14:27:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rv0Nbj3R"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OWNs/yi7"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F8D3AEF44;
-	Mon, 23 Mar 2026 13:58:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9C2324B16;
+	Mon, 23 Mar 2026 14:27:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774274334; cv=none; b=bHliIB+Jm2f+9VgIZMBpBGFWCoDcJf/3NDH1rgcqqv4YkO2BloFigwzF9O1cAjUg/gsn/ncPZf4Se+3piQ7UEp7VcaeSgopCJnSQjb/zMIlePncJU0jTedcUjClC2CisK4F1KNmbm5ZWno0tv3bwoycEwp2Zj/GcyQMHwKFspQ8=
+	t=1774276022; cv=none; b=cWlmA5E39594Wfz9q9v8tg3oImPWWpdTFUIfxVHezfWkERNfEEeV0mJNb75DF22FWjSWsMl/5ih9rQA0ZlzxzSa5506CZu094WaV0akWJUI31B7bwQY5nEyDM8WXiE0uJ9+5BlqcN7C5uTQ+e2Gdrv031nAcHzmLA4Ul0PT5paI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774274334; c=relaxed/simple;
-	bh=AKIGrahRS6MqycY/IVQEkczZoNB5oHx2vuV+286zxtU=;
+	s=arc-20240116; t=1774276022; c=relaxed/simple;
+	bh=8KRLhH33i2FNLApu94OPmDw6j0N213zWBF9kRptSPlk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=goxWkrklG8VppiXTUNbZ8Prutby6AZ945qhn4Ng8qIabJE4ZEhpDr4WucxOajB8E6KjqvHyVEZmsGJXTud59GnRxPyaA+HUk1Mtz6vHnzz6kQknFj0UOMxjhNiC/wWol0JlhtGieOdKT+G/KcvBxZxfoZThTf9uW7kRhfiqjwmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rv0Nbj3R; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7643C4CEF7;
-	Mon, 23 Mar 2026 13:58:50 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=r1+hztIhT4htDyyN7+HVFyaCaO+o1+qAxupuhJmBkf6VQwtRY+PSQ9+zojhKuotCrXlyh3ltcxSh2sY7BFC3CGer4VwORy+W1DsPr+Cp8n8a1lK4U8A89UP1Pc8axY0WRkeDWS/uUS199KhAUzGhm3z2YbmOYlpsrluMZGp/LDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OWNs/yi7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DDDCC4CEF7;
+	Mon, 23 Mar 2026 14:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774274333;
-	bh=AKIGrahRS6MqycY/IVQEkczZoNB5oHx2vuV+286zxtU=;
+	s=k20201202; t=1774276022;
+	bh=8KRLhH33i2FNLApu94OPmDw6j0N213zWBF9kRptSPlk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rv0Nbj3RvQ3r6yIk7CDQKc+CBtzkVG91FT7R8KseLJwfwkKYLmF6/3lZvpE3laLDU
-	 vKAlbmlepiou3Ef91Z8QXs5+1se6ZteTaYke/SkqVULJLzUCxg8vvX/9rpe4SWYm9W
-	 Svof0b01MEnsCvUn5VVggSgIsDLGOrcxghOiG+dQZawXRNa7qRUeiDYGZJMYSFyQDS
-	 P3ICritRi51nAR93v0pfCbpTdzblITK6BcOYN0fljR1WYgkFAcKehNbuQhsjjQ96J/
-	 tYAt/xQLytiwhGJ/VEqJy5S2dgxRfQmGK6h+0o6zxpFPUzx+DlLgXbQxWudKEIyn8X
-	 frcv6Cd3F/2PQ==
-Date: Mon, 23 Mar 2026 13:58:48 +0000
+	b=OWNs/yi7fQcGCIlhgUN5CL2LsU+TSRm7mvw2/H1hy6QIU5I/a18pSN+Bcj7UvGDab
+	 Lt/j72orxmdQOzoiv911AZXrYCDzQLuYYwOWA60UKDFWiJeR/b1iSjtErtRFwYsmX7
+	 GubbSzwrngbKJYKrfHaz/dn6s9cENPdO6N8ej15gojnXeymkkfgc6zMFySVtx4hyo0
+	 /s4IKXZ4m89h3CUoGo0OZnC71PVuNC9eKQctdKiHF7frYK5KMqAE6/G7NOAzPRJGNO
+	 Zbqd3m9dz1PTWNeyOebbJMUEJl4ui2nCqzQj8bFHeAqCA62+OLXO++jU1Jqqor8mcl
+	 Hl/YpXRiYZFoQ==
+Date: Mon, 23 Mar 2026 14:26:55 +0000
 From: Simon Horman <horms@kernel.org>
-To: Long Li <longli@microsoft.com>
-Cc: Konstantin Taranov <kotaranov@microsoft.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
+To: Guangshuo Li <lgs201920130244@gmail.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K . Y . Srinivasan" <kys@microsoft.com>,
 	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: mana: Set default number of queues to 16
-Message-ID: <20260323135848.GA81558@horms.kernel.org>
-References: <20260320233027.1603495-1-longli@microsoft.com>
+	Long Li <longli@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Aditya Garg <gargaditya@linux.microsoft.com>,
+	Dipayaan Roy <dipayanroy@linux.microsoft.com>,
+	Shiraz Saleem <shirazsaleem@microsoft.com>,
+	Leon Romanovsky <leon@kernel.org>, linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH net v2] net: mana: fix use-after-free in add_adev() error
+ path
+Message-ID: <20260323142655.GA85922@horms.kernel.org>
+References: <20260321053918.791068-1-lgs201920130244@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -69,25 +75,26 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260320233027.1603495-1-longli@microsoft.com>
+In-Reply-To: <20260321053918.791068-1-lgs201920130244@gmail.com>
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9692-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-9694-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[22];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[horms@kernel.org,linux-hyperv@vger.kernel.org];
@@ -95,46 +102,42 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	RCPT_COUNT_TWELVE(0.00)[17];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: E3BB32F4EE0
+X-Rspamd-Queue-Id: 09FFA2F4DD5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Mar 20, 2026 at 04:30:27PM -0700, Long Li wrote:
-> Set the default number of queues per vPort to MANA_DEF_NUM_QUEUES (16),
-> as 16 queues can achieve optimal throughput for typical workloads. Users
-> can increase the number of queues up to max_queues via ethtool if needed.
+On Sat, Mar 21, 2026 at 01:39:18PM +0800, Guangshuo Li wrote:
+> If auxiliary_device_add() fails, add_adev() jumps to add_fail and calls
+> auxiliary_device_uninit(adev).
 > 
-> Signed-off-by: Long Li <longli@microsoft.com>
+> The auxiliary device has its release callback set to adev_release(),
+> which frees the containing struct mana_adev. Since adev is embedded in
+> struct mana_adev, the subsequent fall-through to init_fail and access
+> to adev->id may result in a use-after-free.
+> 
+> Fix this by saving the allocated auxiliary device id in a local
+> variable before calling auxiliary_device_add(), and use that saved id
+> in the cleanup path after auxiliary_device_uninit().
+> 
+> Fixes: a69839d4327d ("net: mana: Add support for auxiliary device")
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Long Li <longli@microsoft.com>
+> Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
 > ---
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 2 +-
->  include/net/mana/mana.h                       | 1 +
->  2 files changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index 49c65cc1697c..7cae8a7b9f31 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> @@ -3357,7 +3357,7 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
->  	apc->ac = ac;
->  	apc->ndev = ndev;
->  	apc->max_queues = gc->max_num_queues;
-> -	apc->num_queues = gc->max_num_queues;
-> +	apc->num_queues = min(gc->max_num_queues, MANA_DEF_NUM_QUEUES);
+> v2:
+>   - explain the UAF in more detail
+>   - retarget to net
+>   - preserve reverse xmas tree order for local variables
 
-Hi Long Li,
+Thanks for the update.
 
-Maybe I am misunderstanding things.  But it seems to me that this patch
-sets a ceiling on the default number of queues. Which is subtly different
-to setting the default. Even if not in practice if max_num_queues is never
-less than MANA_DEF_NUM_QUEUES.
+Unfortunately the patch doesn't apply cleanly against net,
+which breaks our CI.
 
-If so I'm wondering if you could tweak the commit message accordingly.
+Please rebase and repost.
 
->  	apc->tx_queue_size = DEF_TX_BUFFERS_PER_QUEUE;
->  	apc->rx_queue_size = DEF_RX_BUFFERS_PER_QUEUE;
->  	apc->port_handle = INVALID_MANA_HANDLE;
-
-...
+-- 
+pw-bot: changes-requested
 
