@@ -1,209 +1,205 @@
-Return-Path: <linux-hyperv+bounces-9696-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9697-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IG0xMux6wWkQTQQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9696-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2026 18:39:56 +0100
+	id uIBIEGx2wWkQTQQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9697-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2026 18:20:44 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27B802FA253
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2026 18:39:56 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC8C52F9BFB
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2026 18:20:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CF53E3158A36
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2026 16:09:51 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 6FE3230C2568
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2026 16:58:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 489A22773FF;
-	Mon, 23 Mar 2026 16:09:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08F4C3C2798;
+	Mon, 23 Mar 2026 16:57:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gmLkvnkz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W6gMHxuI"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECC00279DB1;
-	Mon, 23 Mar 2026 16:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870D53BD22E
+	for <linux-hyperv@vger.kernel.org>; Mon, 23 Mar 2026 16:57:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774282191; cv=none; b=K3p3UCs2ptkLf3w+q8/mvAyz3QkTNtLvKkBQWXK/3Ilpl9j6lWEvNn7UWx4i/2jqDBRl5bE9tSA4OV61egUWmcHY1D1Gp33njgc1KQLB1482pZkJ0ACN8N5R5Yc9s7tn+d3o86ZO3XhDhkokAfMHzQMEyHrQG+NpEsMfDWNa55Q=
+	t=1774285072; cv=none; b=JK4Yc3pWh7M+p2hors4rekKUGTruyJQen/JaLAGiVKFlKoqxe/5G1H27sqhIDqgoHS3VFUYZ/3ZeDGE2JCTD56qWTae1T5TEuREftfHlVJDfM8Grz62nV1edCh/gonGEUQUfXein335pcGgabnDVmRb/T4/RLB/hrswamd6Rs9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774282191; c=relaxed/simple;
-	bh=FUVt5UvnJbOL9tTuKZDHMYTuOxOjCPlH58Q13F3yVWs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R0c8mLc/GZ2p0caXFFkk0D2BxLN1SJIsbBVmxeCBLrfWzw7FGFovjfkbt2+3PbprawDGDT+KU03VUqed1mWilqiZ/rRUGYSSAwh8d7Dxod7NwKync6pOPyQo0XgZI24FF4cyhB43S8QOFyi5snndKodUHtjisuCPW1w4WX+rnyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gmLkvnkz; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (c-98-225-44-182.hsd1.wa.comcast.net [98.225.44.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5573D20B7128;
-	Mon, 23 Mar 2026 09:09:49 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5573D20B7128
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1774282189;
-	bh=L9o56crdaqIOhEkyoETyoQuCWYloRd/PEXLIpGyEqUE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gmLkvnkzfnfsC5deNnW1FVWef5HXQMrn+thX5NklANZ2qdCc0bGaQufNWEVU4m7FQ
-	 uh4zmXk+PFQgdiKHlQS+w8fKlV0IYcQKQs6P+8+ClxkcexzSWYxb3aPfOWKYIHhjlB
-	 6XZ+455MVbkLdVXfGHD6jcTRLzvL0kakFSuhZcTc=
-Date: Mon, 23 Mar 2026 09:09:46 -0700
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Wei Liu <wei.liu@kernel.org>
-Cc: Michael Kelley <mhklinux@outlook.com>,
-	"kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"longli@microsoft.com" <longli@microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mshv: Fix error handling in mshv_region_populate_pages
-Message-ID: <acFlytv9opukKHW2@skinsburskii.localdomain>
-References: <177375989324.25621.6532741522672582851.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <SN6PR02MB4157D2316EC9E5B0BAE656C0D441A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20260318062001.GA262287@liuwe-devbox-debian-v2.local>
- <SN6PR02MB4157A6D37C19379C74C88ACCD44EA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20260318162003.GB262287@liuwe-devbox-debian-v2.local>
+	s=arc-20240116; t=1774285072; c=relaxed/simple;
+	bh=HaKS3N/t/8+2h/Pc8TJ2Vb22p+n4if8KpkCVDIHQAXY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rxyru+ndD/403O3+JYejviqsugAhIUJXk9rxJws0tfKnqIHe+gnMCkh40esJfDxEIQ+Canq/u7O92hmGcNRkIXw8MYUlmnuXxXUtsHYYFnVhax8bCjHT+s1AxZUdCRpXDdYntPfx4LFMsJc1QNvtQU6WVuuCBQj/pcbu4geedh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W6gMHxuI; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-358ed696623so1437769a91.0
+        for <linux-hyperv@vger.kernel.org>; Mon, 23 Mar 2026 09:57:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1774285070; x=1774889870; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sZEofwQC58MPpqn9prf+xK4zUFx1LJf9Y6fgKZotzZc=;
+        b=W6gMHxuINpmkk1y+5VslwAOuEjlg+NwOK1UUVjsCllKPuEMXqzhUzVruKjme8dM2Yo
+         rFgEl2mCNsCHA2Uu0Dvi61vuKaxQvI9GPgWi8LuCBIAZMcYlkHOdZPuSGXVlUkX3xgjp
+         7qAwF0/jUACCQ98tU/HRb0UFLOtLxCIWg4M/0Ucxw5IqrJtXpniZB+fT/Ja/SssbIGRB
+         b5RZF6Cay1HyKNELdvYQfR40MWxHwKzSAojPTAla6XvZBL0a3Ob7HFMJ0nRE688UF8T/
+         s6uLlt8ccaK4fvxjGxBpRkcs2ILreI6mzv34nBNMNMUxKy7dATRVq2w8MsZsxr3f4gp0
+         ShdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774285070; x=1774889870;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sZEofwQC58MPpqn9prf+xK4zUFx1LJf9Y6fgKZotzZc=;
+        b=LoxX6rNYixX5/NkTRunfMvwWVwwFH8GyzphYOvMsh/U8wKu57oH4eI1pnhUq0dxcZk
+         MZfZk8aQk/u1PRXGVrTG7qPjEw2mCJWYXplbuFzIp7JAaoJrFLGsXxWMvbSfsvqfki5l
+         Sv1SPfQTvpRU1YpY5fPN4kEaF45x1hb0/Xa+vH+CfZoaVHV0DlKyKbbngFAOea2xTYrR
+         pOCYiRjkBHGDtRfp3+hRGKAl3Qro5RJpqWWhPI9yEojdgx8ftC5XdE/Jrvf4J1G5AnCY
+         h3xYPKI5cUE7G0AU3uZZo/CYP0ckz6LPqwbTyuXyb+0b+WR4H/w9KdxRoQsqgjIviHin
+         m4zg==
+X-Forwarded-Encrypted: i=1; AJvYcCWjjjKYmfOE9GfeueClcOdQRgAGsMESuJCGuE+9WAX6UaIn3/3kVG9uGQ/i0ftOgkZTnpvpadPj57sUsKU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmiPUwykgpZuTVwEVnyqoJWNgpCstiHCx7bMuFmdUhQPfHMF+3
+	XvO/MPnVcubujH4XQjEelt/m+7mtScBH9gbVVj2o8hgsYqP0v3xNaFjQ
+X-Gm-Gg: ATEYQzwoOu3AR6teOHnd2/dreBbboSDfegMg1MjZbzTVcSzOKSleWLv2zz1qkKlvGbQ
+	eQtOLWLKYRHHUzIzvsG7ijZ2Lf72a4B97dceWC8ECLdk0SU6uclR+l5W/q/4FoF55azTdjh6M0A
+	UIufn80X7RhKPQBRUaGeATTKq9aasVTAGfKx9aNHx9meYNg1Qe9SAQOl5/khZIhy9ec3fMousns
+	XiCgPvjUMJC7UM42wvLeyczqm9864kwOwg9EvGM5XyVeciv9sRiI4IDYjGgYh8W2OGs3AYmOxnY
+	3vDbXp5J5TOC++1Le9zdkwYGIB+igigWFZc165Ds/2YqilwKBSjfR5vRqhMGzC/BVyUHCkz1XxL
+	+8Bu5VbfkY+GW57aT96L0gZwWsPf6fr2pzFlvTmRII0k1uKAshASo89uEJT8r9Gl4dQ41D8bAjt
+	uG/9xpW0S6fH1Q5Dw=
+X-Received: by 2002:a17:90b:4a50:b0:359:fc88:fa99 with SMTP id 98e67ed59e1d1-35bd2d39c11mr10734530a91.26.1774285069752;
+        Mon, 23 Mar 2026 09:57:49 -0700 (PDT)
+Received: from lgs.. ([199.182.234.55])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35bd4109c3bsm10185767a91.13.2026.03.23.09.57.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2026 09:57:49 -0700 (PDT)
+From: Guangshuo Li <lgs201920130244@gmail.com>
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Dipayaan Roy <dipayanroy@linux.microsoft.com>,
+	Aditya Garg <gargaditya@linux.microsoft.com>,
+	Shiraz Saleem <shirazsaleem@microsoft.com>,
+	Kees Cook <kees@kernel.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Guangshuo Li <lgs201920130244@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PPATCH net v3] net: mana: fix use-after-free in add_adev() error path
+Date: Tue, 24 Mar 2026 00:57:30 +0800
+Message-ID: <20260323165730.945365-1-lgs201920130244@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260318162003.GB262287@liuwe-devbox-debian-v2.local>
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[outlook.com,microsoft.com,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-9696-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	MISSING_XM_UA(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-9697-lists,linux-hyperv=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lgs201920130244@gmail.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sashiko.dev:url,outlook.com:email,skinsburskii.localdomain:mid]
-X-Rspamd-Queue-Id: 27B802FA253
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: DC8C52F9BFB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, Mar 18, 2026 at 04:20:03PM +0000, Wei Liu wrote:
-> On Wed, Mar 18, 2026 at 02:38:49PM +0000, Michael Kelley wrote:
-> > From: Wei Liu <wei.liu@kernel.org> Sent: Tuesday, March 17, 2026 11:20 PM
-> > > 
-> > > On Tue, Mar 17, 2026 at 09:56:07PM +0000, Michael Kelley wrote:
-> > > > From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Tuesday, March 17, 2026 8:05 AM
-> > > > >
-> > > > > The current error handling has two issues:
-> > > > >
-> > > > > First, pin_user_pages_fast() can return a short pin count (less than
-> > > > > requested but greater than zero) when it cannot pin all requested pages.
-> > > > > This is treated as success, leading to partially pinned regions being
-> > > > > used, which causes memory corruption.
-> > > > >
-> > > > > Second, when an error occurs mid-loop, already pinned pages from the
-> > > > > current batch are not released before calling mshv_region_evict_pages(),
-> > > > > causing a page reference leak.
-> > > >
-> > > > There's now an online LLM-based tool that is automatically reviewing
-> > > > kernel patches.  For this patch, the results are here:
-> > > >
-> > > >
-> > > https://sashiko.dev/#/patchset/177375989324.25621.6532741522672582851.stgit
-> > > %40skinsburskii-cloud-desktop.internal.cloudapp.net
-> > > >
-> > > > It has flagged the commit message as incorrectly referencing the
-> > > > function mshv_region_evict_pages(), which doesn't exist.
-> > > >
-> > > > FWIW, the announcement about sashiko.dev is here:
-> > > >
-> > > > https://lore.kernel.org/lkml/7ia4o6kmpj5s.fsf@castle.c.googlers.com/
-> > > >
-> > > > Other than the commit message reference, this looks good to me.
-> > > >
-> > > > Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-> > > 
-> > > The second point is written as if the code here should release the
-> > > already pinned pages before calling mshv_region_invalidate_pages(), but
-> > > the code actually relies on mshv_mem_region_invalidate_pages() to
-> > > release the pages. The change here fixes the accounting.
-> > > 
-> > >  Second, when an error occurs mid-loop, already pinned pages from the
-> > >  current batch are not accounted for before calling
-> > >  mshv_region_invalidate_pages(), causing a page reference leak.
-> > > 
-> > > And queued up the patch to hyperv-fixes.
-> > 
-> > One other thing I noticed:  The "Subject" of the patch is wrong. It
-> > mentions mshv_region_populate_pages(), but the function being
-> > modified is actually mshv_region_pin().
-> 
-> Good catch. I have updated the subject line and pushed to hyperv-fixes.
-> 
+If auxiliary_device_add() fails, add_adev() jumps to add_fail and calls
+auxiliary_device_uninit(adev).
 
-Thank you Michael and Wei.
+The auxiliary device has its release callback set to adev_release(),
+which frees the containing struct mana_adev. Since adev is embedded in
+struct mana_adev, the subsequent fall-through to init_fail and access
+to adev->id may result in a use-after-free.
 
-Thanks,
-Stanislav
+Fix this by saving the allocated auxiliary device id in a local
+variable before calling auxiliary_device_add(), and use that saved id
+in the cleanup path after auxiliary_device_uninit().
 
-> Wei
-> 
-> > 
-> > Michael
-> > 
-> > > 
-> > > Wei
-> > > 
-> > > >
-> > > > >
-> > > > > Fix by treating short pins as errors and explicitly unpinning the
-> > > > > partial batch before cleanup.
-> > > > >
-> > > > > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> > > > > ---
-> > > > >  drivers/hv/mshv_regions.c |    6 ++++--
-> > > > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
-> > > > > index c28aac0726de..fdffd4f002f6 100644
-> > > > > --- a/drivers/hv/mshv_regions.c
-> > > > > +++ b/drivers/hv/mshv_regions.c
-> > > > > @@ -314,15 +314,17 @@ int mshv_region_pin(struct mshv_mem_region *region)
-> > > > >  		ret = pin_user_pages_fast(userspace_addr, nr_pages,
-> > > > >  					  FOLL_WRITE | FOLL_LONGTERM,
-> > > > >  					  pages);
-> > > > > -		if (ret < 0)
-> > > > > +		if (ret != nr_pages)
-> > > > >  			goto release_pages;
-> > > > >  	}
-> > > > >
-> > > > >  	return 0;
-> > > > >
-> > > > >  release_pages:
-> > > > > +	if (ret > 0)
-> > > > > +		done_count += ret;
-> > > > >  	mshv_region_invalidate_pages(region, 0, done_count);
-> > > > > -	return ret;
-> > > > > +	return ret < 0 ? ret : -ENOMEM;
-> > > > >  }
-> > > > >
-> > > > >  static int mshv_region_chunk_unmap(struct mshv_mem_region *region,
-> > > > >
-> > > > >
-> > > >
-> > 
+Fixes: a69839d4327d ("net: mana: Add support for auxiliary device")
+Cc: stable@vger.kernel.org
+Reviewed-by: Long Li <longli@microsoft.com>
+Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
+---
+v2:
+  - explain the UAF in more detail
+  - retarget to net
+  - preserve reverse xmas tree order for local variables
+
+v3:
+  - rebase onto the current net tree
+
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 9017e806ecda..d03f42245ab8 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -3424,6 +3424,7 @@ static int add_adev(struct gdma_dev *gd, const char *name)
+ {
+ 	struct auxiliary_device *adev;
+ 	struct mana_adev *madev;
++	int id;
+ 	int ret;
+ 
+ 	madev = kzalloc_obj(*madev);
+@@ -3434,7 +3435,8 @@ static int add_adev(struct gdma_dev *gd, const char *name)
+ 	ret = mana_adev_idx_alloc();
+ 	if (ret < 0)
+ 		goto idx_fail;
+-	adev->id = ret;
++	id = ret;
++	adev->id = id;
+ 
+ 	adev->name = name;
+ 	adev->dev.parent = gd->gdma_context->dev;
+@@ -3460,7 +3462,7 @@ static int add_adev(struct gdma_dev *gd, const char *name)
+ 	auxiliary_device_uninit(adev);
+ 
+ init_fail:
+-	mana_adev_idx_free(adev->id);
++	mana_adev_idx_free(id);
+ 
+ idx_fail:
+ 	kfree(madev);
+-- 
+2.43.0
+
 
