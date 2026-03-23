@@ -1,63 +1,65 @@
-Return-Path: <linux-hyperv+bounces-9695-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9696-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cHiSIHNgwWmaSgQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9695-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2026 16:46:59 +0100
+	id IG0xMux6wWkQTQQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9696-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2026 18:39:56 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2F512F6E51
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2026 16:46:58 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27B802FA253
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2026 18:39:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 34B1231774B4
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2026 15:36:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CF53E3158A36
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2026 16:09:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEC2F3AE1A1;
-	Mon, 23 Mar 2026 15:26:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 489A22773FF;
+	Mon, 23 Mar 2026 16:09:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hh/bhj38"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gmLkvnkz"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894F8271468;
-	Mon, 23 Mar 2026 15:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECC00279DB1;
+	Mon, 23 Mar 2026 16:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774279583; cv=none; b=SPNyssdTD2/TU5OI4XopE81wCANdnCGU/c4Ntsj9GzmYmNeavEB39LC5l5mDnjAvTi183zKdHR3SBnik16gP1Lpi/POhtoajtdf7a6cXnaBp4MxoNagYrkDENAe15T6naZche73j6hVjQETJFWjo76sH9pkfRbRkmHs1Vfj0L+E=
+	t=1774282191; cv=none; b=K3p3UCs2ptkLf3w+q8/mvAyz3QkTNtLvKkBQWXK/3Ilpl9j6lWEvNn7UWx4i/2jqDBRl5bE9tSA4OV61egUWmcHY1D1Gp33njgc1KQLB1482pZkJ0ACN8N5R5Yc9s7tn+d3o86ZO3XhDhkokAfMHzQMEyHrQG+NpEsMfDWNa55Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774279583; c=relaxed/simple;
-	bh=ANcbfjF03b/lmDqKI8A0U8r4MSNANuwX81x/VEjwFLc=;
+	s=arc-20240116; t=1774282191; c=relaxed/simple;
+	bh=FUVt5UvnJbOL9tTuKZDHMYTuOxOjCPlH58Q13F3yVWs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JYZd+ZYss21lPN+c6hAKAauZR+s2gR1bEbD4NPl13kBiGpm55oGyxjuK9Qw4CU/ik3kfGRnpiItoZVziIUJAtCG8R/nXtmj8wNaLKfkfAmD4CCDmL+g248Rradolq/rggw55SAS0aYrYN/iyUkrySBNkUsJVr6UYX/p1XMiq+jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hh/bhj38; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB7A9C4CEF7;
-	Mon, 23 Mar 2026 15:26:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774279583;
-	bh=ANcbfjF03b/lmDqKI8A0U8r4MSNANuwX81x/VEjwFLc=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=R0c8mLc/GZ2p0caXFFkk0D2BxLN1SJIsbBVmxeCBLrfWzw7FGFovjfkbt2+3PbprawDGDT+KU03VUqed1mWilqiZ/rRUGYSSAwh8d7Dxod7NwKync6pOPyQo0XgZI24FF4cyhB43S8QOFyi5snndKodUHtjisuCPW1w4WX+rnyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gmLkvnkz; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from skinsburskii.localdomain (c-98-225-44-182.hsd1.wa.comcast.net [98.225.44.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5573D20B7128;
+	Mon, 23 Mar 2026 09:09:49 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5573D20B7128
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1774282189;
+	bh=L9o56crdaqIOhEkyoETyoQuCWYloRd/PEXLIpGyEqUE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hh/bhj38USKevvX95jRTc3M6qr5235NguDX/NIA/JbZ19lDw1C/YLnANCTX3Cp6A0
-	 paha+3iU02vir2Dsukdb4/Pgvi0tIlIiCd07H9rh6z2D9SHaj7KiOMi1INYvQEwsGj
-	 QVwrjCDl9Ur3A02PvCNJy29wb9w193R4HdbC+pVnCY4hgIJCtrGQ5yt6ErL3zS1i+l
-	 Z4oAw3RbmPZpGmObX8X33T3ALEpYrkgVy5ooEmzUH0znszAttsw0a2m2w92t5zKB06
-	 EDRR0YEa89fgF8Lx7eSRFc3z+F+Cqi3M2q6evGBmpt/kxcfVR2q8T4qCe9I3wtBwlR
-	 Hbim0GlTq8g2g==
-Date: Mon, 23 Mar 2026 15:26:17 +0000
-From: Simon Horman <horms@kernel.org>
-To: Kexin Sun <kexinsun@smail.nju.edu.cn>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com, sgarzare@redhat.com,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, linux-hyperv@vger.kernel.org,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, julia.lawall@inria.fr,
-	xutong.ma@inria.fr, yunbolyu@smu.edu.sg, ratnadiraw@smu.edu.sg
-Subject: Re: [PATCH] hv_sock: update outdated comment for renamed
- vsock_stream_recvmsg()
-Message-ID: <20260323152617.GA112574@horms.kernel.org>
-References: <20260321105753.6751-1-kexinsun@smail.nju.edu.cn>
+	b=gmLkvnkzfnfsC5deNnW1FVWef5HXQMrn+thX5NklANZ2qdCc0bGaQufNWEVU4m7FQ
+	 uh4zmXk+PFQgdiKHlQS+w8fKlV0IYcQKQs6P+8+ClxkcexzSWYxb3aPfOWKYIHhjlB
+	 6XZ+455MVbkLdVXfGHD6jcTRLzvL0kakFSuhZcTc=
+Date: Mon, 23 Mar 2026 09:09:46 -0700
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Wei Liu <wei.liu@kernel.org>
+Cc: Michael Kelley <mhklinux@outlook.com>,
+	"kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"longli@microsoft.com" <longli@microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mshv: Fix error handling in mshv_region_populate_pages
+Message-ID: <acFlytv9opukKHW2@skinsburskii.localdomain>
+References: <177375989324.25621.6532741522672582851.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <SN6PR02MB4157D2316EC9E5B0BAE656C0D441A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20260318062001.GA262287@liuwe-devbox-debian-v2.local>
+ <SN6PR02MB4157A6D37C19379C74C88ACCD44EA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20260318162003.GB262287@liuwe-devbox-debian-v2.local>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -66,47 +68,142 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260321105753.6751-1-kexinsun@smail.nju.edu.cn>
+In-Reply-To: <20260318162003.GB262287@liuwe-devbox-debian-v2.local>
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9695-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[outlook.com,microsoft.com,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-9696-lists,linux-hyperv=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[horms@kernel.org,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[horms.kernel.org:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: E2F512F6E51
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sashiko.dev:url,outlook.com:email,skinsburskii.localdomain:mid]
+X-Rspamd-Queue-Id: 27B802FA253
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Sat, Mar 21, 2026 at 06:57:53PM +0800, Kexin Sun wrote:
-> The function vsock_stream_recvmsg() was renamed to
-> vsock_connectible_recvmsg() by commit a9e29e5511b9 ("af_vsock:
-> update functions for connectible socket").  Update the comment
-> accordingly.
+On Wed, Mar 18, 2026 at 04:20:03PM +0000, Wei Liu wrote:
+> On Wed, Mar 18, 2026 at 02:38:49PM +0000, Michael Kelley wrote:
+> > From: Wei Liu <wei.liu@kernel.org> Sent: Tuesday, March 17, 2026 11:20 PM
+> > > 
+> > > On Tue, Mar 17, 2026 at 09:56:07PM +0000, Michael Kelley wrote:
+> > > > From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Tuesday, March 17, 2026 8:05 AM
+> > > > >
+> > > > > The current error handling has two issues:
+> > > > >
+> > > > > First, pin_user_pages_fast() can return a short pin count (less than
+> > > > > requested but greater than zero) when it cannot pin all requested pages.
+> > > > > This is treated as success, leading to partially pinned regions being
+> > > > > used, which causes memory corruption.
+> > > > >
+> > > > > Second, when an error occurs mid-loop, already pinned pages from the
+> > > > > current batch are not released before calling mshv_region_evict_pages(),
+> > > > > causing a page reference leak.
+> > > >
+> > > > There's now an online LLM-based tool that is automatically reviewing
+> > > > kernel patches.  For this patch, the results are here:
+> > > >
+> > > >
+> > > https://sashiko.dev/#/patchset/177375989324.25621.6532741522672582851.stgit
+> > > %40skinsburskii-cloud-desktop.internal.cloudapp.net
+> > > >
+> > > > It has flagged the commit message as incorrectly referencing the
+> > > > function mshv_region_evict_pages(), which doesn't exist.
+> > > >
+> > > > FWIW, the announcement about sashiko.dev is here:
+> > > >
+> > > > https://lore.kernel.org/lkml/7ia4o6kmpj5s.fsf@castle.c.googlers.com/
+> > > >
+> > > > Other than the commit message reference, this looks good to me.
+> > > >
+> > > > Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+> > > 
+> > > The second point is written as if the code here should release the
+> > > already pinned pages before calling mshv_region_invalidate_pages(), but
+> > > the code actually relies on mshv_mem_region_invalidate_pages() to
+> > > release the pages. The change here fixes the accounting.
+> > > 
+> > >  Second, when an error occurs mid-loop, already pinned pages from the
+> > >  current batch are not accounted for before calling
+> > >  mshv_region_invalidate_pages(), causing a page reference leak.
+> > > 
+> > > And queued up the patch to hyperv-fixes.
+> > 
+> > One other thing I noticed:  The "Subject" of the patch is wrong. It
+> > mentions mshv_region_populate_pages(), but the function being
+> > modified is actually mshv_region_pin().
 > 
-> Assisted-by: unnamed:deepseek-v3.2 coccinelle
-> Signed-off-by: Kexin Sun <kexinsun@smail.nju.edu.cn>
+> Good catch. I have updated the subject line and pushed to hyperv-fixes.
+> 
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Thank you Michael and Wei.
 
+Thanks,
+Stanislav
+
+> Wei
+> 
+> > 
+> > Michael
+> > 
+> > > 
+> > > Wei
+> > > 
+> > > >
+> > > > >
+> > > > > Fix by treating short pins as errors and explicitly unpinning the
+> > > > > partial batch before cleanup.
+> > > > >
+> > > > > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+> > > > > ---
+> > > > >  drivers/hv/mshv_regions.c |    6 ++++--
+> > > > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
+> > > > > index c28aac0726de..fdffd4f002f6 100644
+> > > > > --- a/drivers/hv/mshv_regions.c
+> > > > > +++ b/drivers/hv/mshv_regions.c
+> > > > > @@ -314,15 +314,17 @@ int mshv_region_pin(struct mshv_mem_region *region)
+> > > > >  		ret = pin_user_pages_fast(userspace_addr, nr_pages,
+> > > > >  					  FOLL_WRITE | FOLL_LONGTERM,
+> > > > >  					  pages);
+> > > > > -		if (ret < 0)
+> > > > > +		if (ret != nr_pages)
+> > > > >  			goto release_pages;
+> > > > >  	}
+> > > > >
+> > > > >  	return 0;
+> > > > >
+> > > > >  release_pages:
+> > > > > +	if (ret > 0)
+> > > > > +		done_count += ret;
+> > > > >  	mshv_region_invalidate_pages(region, 0, done_count);
+> > > > > -	return ret;
+> > > > > +	return ret < 0 ? ret : -ENOMEM;
+> > > > >  }
+> > > > >
+> > > > >  static int mshv_region_chunk_unmap(struct mshv_mem_region *region,
+> > > > >
+> > > > >
+> > > >
+> > 
 
