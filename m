@@ -1,180 +1,137 @@
-Return-Path: <linux-hyperv+bounces-9742-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9736-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CFtwNrHrwmkdnQQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9742-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Mar 2026 20:53:21 +0100
+	id YIUkI/GnwmkyggQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9736-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Mar 2026 16:04:17 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25CDC31BE2C
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Mar 2026 20:53:21 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E8A5317A4B
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Mar 2026 16:04:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 813A730308B2
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Mar 2026 19:45:37 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 449C930604FB
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Mar 2026 15:03:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F27E37B017;
-	Tue, 24 Mar 2026 19:44:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59EFC402BA7;
+	Tue, 24 Mar 2026 15:03:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BI/PyKSY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g9ko0FWQ"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F8830FC0F;
-	Tue, 24 Mar 2026 19:44:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3630A402B8B;
+	Tue, 24 Mar 2026 15:03:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774381491; cv=none; b=mtXEhXnWVSMZX2PGYgfHIdmbFOgRvn86vPDkldoUYeV1fwLZ/VvcPxqyimSYSdC9j/Uev8GqoO+huslebf6SWhYYXxSn7P8nZEizcYG/xApApkogRfrJZdgYZRj2h5s1IuhqgqmC+cSEbppaXgubDOEagcCXAhEsyREM5yls2nk=
+	t=1774364621; cv=none; b=QwC6h9WQ/a0rYK7IHYw/GgURtWqzIhxQt14xXgDXjGQExf4tLsl+HzEcuhEnlhtC3GWiacUhyh00hsMLhNN6zFAIU7r0M8wnIw/OL7qTGr0bHm6x/lAvQlSS9uHSm1EhgZWfLTJUICJQK2DBBzXSrC0U+bJtgJWH1MyNvqvkOL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774381491; c=relaxed/simple;
-	bh=WRF/0A79XI/IfrPujL8sWiRG4jtPsIHG8/HKlYhxfwg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=NGqVbPo8WKAGLL+OqD+s4OvjyUPaAE/OAUYZQ7T+tRf1S/uSvIuIjKCNBcFQcVSz6V08EFN6FakTUSo4VHhdiUPQXFVRFcK3zsuDRumc5D7eU1JpCkGI4G08/E73XLuWdIMeoLP1JrHw0htY8AsFlg7v5fCje9ISWg2Z9T730Kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BI/PyKSY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF553C19424;
-	Tue, 24 Mar 2026 19:44:42 +0000 (UTC)
+	s=arc-20240116; t=1774364621; c=relaxed/simple;
+	bh=bSVMovbLuqaeoj7Ubp0zwn6i9A99iQBP0uuV/uQEZwM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e1NLTBZpvN2FHWzQjFKX4pJgWkSaumYKPqMIQaHG1iigvDMhshG8sTxaNWHwcahDJZ3hHgG5rY50IVNcqZQuuiGb0qKWTr100PcpXgEp8dRIorcPZWT2sSRrRbBvNvfiy4vBOgxuyaUeQQ+6UQZTVqLjH5RxgqcI3+YL0kZzw+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g9ko0FWQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E806C19424;
+	Tue, 24 Mar 2026 15:03:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774381490;
-	bh=WRF/0A79XI/IfrPujL8sWiRG4jtPsIHG8/HKlYhxfwg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=BI/PyKSYvjLJXWbEpQrc+czH+55hhTQfVKT55Uu1wKsITHQaRklHZhshTVjzHQFZN
-	 XI99w4CrCK+yRfm2877TM5yV4pPdvKaG1DWbUoq9X2UMljaiVAeNppp3zNtFe6VQcR
-	 Nbxio4BzKuKvbSdbHpiqyp9b0V4Wi4iBFmRLBu0AraFrnoul9PN3a4ntDRFnw+1WBV
-	 6VOLh/84HoNWnxFvJA4p13awciT/KZz8A8WdIkArI2aCUbV0ZkSk5h4r/JYUTPRIIT
-	 T8Jt8zQSnSc69wMDv4JXXRT2onYDSQlxz5UqGBDTvOp1c1OxGFbD7+EZxoeS8MPSTJ
-	 8n38/skizDzlQ==
-From: Mark Brown <broonie@kernel.org>
-To: Russell King <linux@armlinux.org.uk>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Ioana Ciornei <ioana.ciornei@nxp.com>, Nipun Gupta <nipun.gupta@amd.com>, 
- Nikhil Agarwal <nikhil.agarwal@amd.com>, 
- "K. Y. Srinivasan" <kys@microsoft.com>, 
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
- Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
- Bjorn Helgaas <bhelgaas@google.com>, Armin Wolf <W_Armin@gmx.de>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Mathieu Poirier <mathieu.poirier@linaro.org>, 
- Vineeth Vijayan <vneethv@linux.ibm.com>, 
- Peter Oberparleiter <oberpar@linux.ibm.com>, 
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, 
- Harald Freudenberger <freude@linux.ibm.com>, 
- Holger Dengler <dengler@linux.ibm.com>, 
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
- Alex Williamson <alex@shazbot.org>, Juergen Gross <jgross@suse.com>, 
- Stefano Stabellini <sstabellini@kernel.org>, 
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, 
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
- Danilo Krummrich <dakr@kernel.org>
-Cc: linux-kernel@vger.kernel.org, driver-core@lists.linux.dev, 
- linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org, 
- linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
- linux-s390@vger.kernel.org, linux-spi@vger.kernel.org, 
- virtualization@lists.linux.dev, kvm@vger.kernel.org, 
- xen-devel@lists.xenproject.org, linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20260324005919.2408620-1-dakr@kernel.org>
-References: <20260324005919.2408620-1-dakr@kernel.org>
-Subject: Re: (subset) [PATCH 00/12] treewide: Convert buses to use generic
- driver_override
-Message-Id: <177436441990.98682.12977271865531185229.b4-ty@b4>
-Date: Tue, 24 Mar 2026 15:00:19 +0000
+	s=k20201202; t=1774364620;
+	bh=bSVMovbLuqaeoj7Ubp0zwn6i9A99iQBP0uuV/uQEZwM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g9ko0FWQ/ckfWTdGSV7BTtIzcTfjCXmHyo0Pe+fOud2vlEM5uvi0rkOda06uVu1qi
+	 NFt5nhGQRgjb8LSo19nSx8EKCO8XPqIoHbyODKZLMdL5LBxsckX8cGRiKwcBVASTFw
+	 RjzGV0irm7GKKZYNPvwCqhBBGEBWMNZ45aD20hg+wrvO7GTI+TCZZBsv83rY7rxh3R
+	 nTnM/ayIcZrykrw4mpiho7NvC2RZqukHE+lJf+G3S7Nfspks2uBartwyH8tMMaanMa
+	 kiGbpN+7Bn95FDkX714u84OR41IgDQEULxDal6Hv3WnaMU4BWoBICP1K5nbA17S8HV
+	 6lQbg0LARa6tg==
+Date: Tue, 24 Mar 2026 15:03:39 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc: Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Dexuan Cui <decui@microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Chris Oo <cho@microsoft.com>, "Kirill A. Shutemov" <kas@kernel.org>,
+	linux-hyperv@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ricardo Neri <ricardo.neri@intel.com>,
+	Yunhong Jiang <yunhong.jiang@linux.intel.com>
+Subject: Re: [PATCH v8 09/10] x86/hyperv/vtl: Mark the wakeup mailbox page as
+ private
+Message-ID: <20260324150339.GA1701749@liuwe-devbox-debian-v2.local>
+References: <20260107-rneri-wakeup-mailbox-v8-0-2f5b6785f2f5@linux.intel.com>
+ <20260107-rneri-wakeup-mailbox-v8-9-2f5b6785f2f5@linux.intel.com>
+ <20260309175733.GA3083831@liuwe-devbox-debian-v2.local>
+ <20260320230147.GA31320@ranerica-svr.sc.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.16-dev-6cc06
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1523; i=broonie@kernel.org;
- h=from:subject:message-id; bh=WRF/0A79XI/IfrPujL8sWiRG4jtPsIHG8/HKlYhxfwg=;
- b=kA0DAAoBJNaLcl1Uh9AByyZiAGnC6amgudhaUXvPlk+pDm3GoyUp8H0DzJj7P23jodGH3vgaM
- YkBMwQAAQoAHRYhBK3maKpnVxi1n+Kf6iTWi3JdVIfQBQJpwumpAAoJECTWi3JdVIfQ7W4H/0HK
- bnLD6QxQOBC+fzyIxZ6G6kEKZPO4GVW3Pfn4yfAzX5qrdKQRkDgps7IYWut/u33hS3f+Z04EmOJ
- lYrLIJIM422nR6nge6hF8EhqNBiTq/w9q7cGC48hH540F15d0sLd2//XCIGupIA1RXpBqVdzq5x
- OT6qjdHSfs8FyZ+oeQmp08Rcg1XfVc+MneH1PzidJufZ+tJUtayZw29OlGfNk6vGZ389vkRi+Ec
- XFn5qSzIYh78B0Z0zXzPv2/IjG8frEcheWdi3dJbD2bUS4h2S1US62r3HG8U3Au0lRz8ggXRMML
- 03vuVW3IP0egShhpeZHJhBzFqhYb6LFlY+k9hXc=
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
-X-Spamd-Result: default: False [-1.66 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260320230147.GA31320@ranerica-svr.sc.intel.com>
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[armlinux.org.uk,linuxfoundation.org,kernel.org,nxp.com,amd.com,microsoft.com,google.com,gmx.de,linaro.org,linux.ibm.com,redhat.com,linux.alibaba.com,shazbot.org,suse.com,epam.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9736-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[48];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,microsoft.com,outlook.com,linux.microsoft.com,vger.kernel.org,intel.com,linux.intel.com];
+	RCPT_COUNT_TWELVE(0.00)[20];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-9742-lists,linux-hyperv=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[broonie@kernel.org,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[wei.liu@kernel.org,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-hyperv,dt];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 25CDC31BE2C
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 2E8A5317A4B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, 24 Mar 2026 01:59:04 +0100, Danilo Krummrich wrote:
-> treewide: Convert buses to use generic driver_override
+On Fri, Mar 20, 2026 at 04:01:47PM -0700, Ricardo Neri wrote:
+> On Mon, Mar 09, 2026 at 05:57:33PM +0000, Wei Liu wrote:
+> > Dexuan, are you happy with the patch? You can also delegate to Saurabh
+> > if you think it's more appropriate. Thanks!
 > 
-> This is the follow-up of the driver_override generalization in [1], converting
-> the remaining 11 busses and removing the now-unused driver_set_override()
-> helper.
+> Hi Wei,
 > 
-> All of them (except AP, which has a different race condition) are prone to the
-> potential UAF described in [2], caused by accessing the driver_override field
-> from their corresponding match() callback.
+> I just realized you replied to an older version of the patch. Here is the
+> most recent version:
 > 
-> [...]
+> https://lore.kernel.org/all/20260304-rneri-wakeup-mailbox-v9-9-a5c6845e6251@linux.intel.com/
+> 
+> The whole series:
+> 
+> https://lore.kernel.org/all/20260304-rneri-wakeup-mailbox-v9-0-a5c6845e6251@linux.intel.com/
+> 
 
-Applied to
+No worries. I saw the new series after that reply.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-7.0
+Wei
 
-Thanks!
-
-[11/12] spi: use generic driver_override infrastructure
-        https://git.kernel.org/broonie/spi/c/cc34d77dd487
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+> Thanks and BR,
+> Ricardo
+> 
+> 
 
