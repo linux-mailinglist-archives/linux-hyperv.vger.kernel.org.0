@@ -1,51 +1,51 @@
-Return-Path: <linux-hyperv+bounces-9726-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9727-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MFE/NSptwmmncwQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9726-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Mar 2026 11:53:30 +0100
+	id wJMYOSluwmmncwQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9727-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Mar 2026 11:57:45 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EA51306C96
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Mar 2026 11:53:30 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB77A306DEB
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Mar 2026 11:57:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id C147F3010200
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Mar 2026 10:46:38 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id C81393046CD2
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Mar 2026 10:56:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64C993E559C;
-	Tue, 24 Mar 2026 10:46:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A107A3E5EC3;
+	Tue, 24 Mar 2026 10:55:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sRYV/SsW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fMEcgbbG"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8424368263;
-	Tue, 24 Mar 2026 10:46:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7806B3DEAC9;
+	Tue, 24 Mar 2026 10:55:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774349193; cv=none; b=MOFdGsNsTXXSVK/EXs48VGIes0En8P3BJMYJEd7qxX18ipVglD9LagtZHHAU7ZzRC35JNjqMmFjLpJx/jfqYp80A0AfyXjDFuAm8lr/o+y0mXM09651OodF7mYYr9bzqbN16KSBmJb5t2j7/e4Rlrx+s2Kqig4w4A9kCzA83jjk=
+	t=1774349751; cv=none; b=B7Z9UVwmDn/dqqJGccA5RsPQnncUptq6TMnA4zBCA1BoZMiR3cucZJDBHRgoYH6b9/jQCMZeYe0EKf3rqkTJDZTIJZQjiSlJMSfSUTPEhUiKr5C0iN5W2GrQNB7UVzj0DuX+YX0aXxFSEnPwrdnMNOIkDLVh4Ghu/n+5pbTAo78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774349193; c=relaxed/simple;
-	bh=WMEerWakA31QDIRRh1QiXx8aw7EYn+862Ive463FIxg=;
+	s=arc-20240116; t=1774349751; c=relaxed/simple;
+	bh=PKmRQSmpQcoJaB3C8EeGp80u+1D+x7QmhnNQbCSeB8o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IqeO+6wQgm5kkZK7smQUR3aOZQ8P9y3UKo7GLXYk+9eO2TXUlmQzP0MKua2200z8Q2XZgB8rE1j1GY8/LqRMw2IrjzOrntDIJ9uT1OfKax/TZZOPLEFtApONdh53Fa1pw99R3+Tk4LXvYMXQtvwXCIz4NMK6tyG5o6m5z/JDvSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sRYV/SsW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E725AC19424;
-	Tue, 24 Mar 2026 10:46:24 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=VUso9PBHIwKWlpTaQpb2hCvT80JMX/Iyng+s/RmV3DJGG1f2WzlgjdQ97PVx9oILgp6AiLh5QE77ZGE0JdpZimRb6H3BsQ77/8GwGl4Rmk5yllaM8pfFGNM/j+JjHWoZt+a1gzirFCEki9uG3vRnfwTPeWbFFCsm5nEgHGchqsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fMEcgbbG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12D7FC19424;
+	Tue, 24 Mar 2026 10:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774349192;
-	bh=WMEerWakA31QDIRRh1QiXx8aw7EYn+862Ive463FIxg=;
+	s=k20201202; t=1774349751;
+	bh=PKmRQSmpQcoJaB3C8EeGp80u+1D+x7QmhnNQbCSeB8o=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sRYV/SsWeoCU4rAac48A/OHspAXPDQk8BSViRS/suRAnoU18SJsr6hr0c+5iuVxG9
-	 eXHcAhdTBXsvusq4VOTea51g9RrRMxvmD/TWcRcqz4BrYpF0gGRYZANGEgFkzTzMEE
-	 eB2MIMTCAoTBk/UKXYpTur9vulG+EP40W619rAh3viXt3Y1UnqorcKkeyeACDr8zZR
-	 IzXjhAKe95RbXpf6iBaCEmpIYeqVFXbcBgKvmEoaxlN+h3r+B4gL0YMNRWgZLYJ3yu
-	 6KTAOXFNdOqESMXeyxke3FeW9AoW1DTJYifGbrjLStiXcREPMM8ZoQvCqx+u5OeJEK
-	 WIgEyQ51/Ee/w==
-Message-ID: <899470f6-8b22-42a3-9dca-1a11e246147d@kernel.org>
-Date: Tue, 24 Mar 2026 11:46:22 +0100
+	b=fMEcgbbGgPyzprrfIXmnWzFQVASvL51viSIEUIGq0ULM2FvF4mbfhFjh/HfjosHht
+	 cgW+/u9gxB9fYbahyMGnurb7qoARj2GLGX6Ra96W/IHys+NfiTnIL/mImcGXUmlDjh
+	 NebVgjLehpGJwqkV4cVX7lDDhnYo58udnTxoI3ZrFyMQMHtl4DswqW26b/zG06s1sO
+	 T1KpDuiaLK8G1+W+b214NZfc+rI3YgT9zrIPw8TCw1KOpmEjvUWFSZAmeubTl2MSkT
+	 fUye6Vy/rI8+HkSs58CRHJoldtPx4J8kBNNWCqvbMR5Ikppaz5prA9TA7BNpQhgvcl
+	 Af6e9o0yrXfiQ==
+Message-ID: <a9ac9f4b-9b25-43f3-a2c1-da7157a95ab9@kernel.org>
+Date: Tue, 24 Mar 2026 11:55:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -53,7 +53,8 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/21] mm: various small mmap_prepare cleanups
+Subject: Re: [PATCH v4 04/21] mm: avoid deadlock when holding rmap on
+ mmap_prepare error
 Content-Language: en-US
 To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>
@@ -86,9 +87,9 @@ Cc: Jonathan Corbet <corbet@lwn.net>, Clemens Ladisch <clemens@ladisch.de>,
  linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
  Ryan Roberts <ryan.roberts@arm.com>
 References: <cover.1774045440.git.ljs@kernel.org>
- <99f408e4694f44ab12bdc55fe0bd9685d3bd1117.1774045440.git.ljs@kernel.org>
+ <d44248be9da68258b07c2c59d4e73485ee0ca943.1774045440.git.ljs@kernel.org>
 From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-In-Reply-To: <99f408e4694f44ab12bdc55fe0bd9685d3bd1117.1774045440.git.ljs@kernel.org>
+In-Reply-To: <d44248be9da68258b07c2c59d4e73485ee0ca943.1774045440.git.ljs@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -96,11 +97,11 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9726-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9727-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -117,43 +118,51 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 2EA51306C96
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: AB77A306DEB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 On 3/20/26 23:39, Lorenzo Stoakes (Oracle) wrote:
-> Rather than passing arbitrary fields, pass a vm_area_desc pointer to mmap
-> prepare functions to mmap prepare, and an action and vma pointer to mmap
-> complete in order to put all the action-specific logic in the function
-> actually doing the work.
+> Commit ac0a3fc9c07d ("mm: add ability to take further action in
+> vm_area_desc") added the ability for drivers to instruct mm to take actions
+> after the .mmap_prepare callback is complete.
 > 
-> Additionally, allow mmap prepare functions to return an error so we can
-> error out as soon as possible if there is something logically incorrect in
-> the input.
+> To make life simpler and safer, this is done before the VMA/mmap write lock
+> is dropped but when the VMA is completely established.
 > 
-> Update remap_pfn_range_prepare() to properly check the input range for the
-> CoW case.
+> So on error, we simply munmap() the VMA.
 > 
-> Also remove io_remap_pfn_range_complete(), as we can simply set up the
-> fields correctly in io_remap_pfn_range_prepare() and use
-> remap_pfn_range_complete() for this.
+> As part of this implementation, unfortunately a horrible hack had to be
+> implemented to support some questionable behaviour hugetlb relies upon -
+> that is that the file rmap lock is held until the operation is complete.
 > 
-> While we're here, make remap_pfn_range_prepare_vma() a little neater, and
-> pass mmap_action directly to call_action_complete().
+> The implementation, for convenience, did this in mmap_action_finish() so
+> both the VMA and mmap_prepare compatibility layer paths would have this
+> correctly handled.
 > 
-> Then, update compat_vma_mmap() to perform its logic directly, as
-> __compat_vma_map() is not used by anything so we don't need to export it.
+> However, it turns out there is a mistake here - the rmap lock cannot be
+> held on munmap, as free_pgtables() -> unlink_file_vma_batch_add() ->
+> unlink_file_vma_batch_process() takes the file rmap lock.
 > 
-> Also update compat_vma_mmap() to use vfs_mmap_prepare() rather than
-> calling the mmap_prepare op directly.
+> We therefore currently have a deadlock issue that might arise.
 > 
-> Finally, update the VMA userland tests to reflect the changes.
+> Resolve this by leaving it to callers to handle the unmap.
 > 
+> The compatibility layer does not support this rmap behaviour, so we simply
+> have it unmap on error after calling mmap_action_complete().
+> 
+> In the VMA implementation, we only perform the unmap after the rmap lock is
+> dropped.
+> 
+> This resolves the issue by ensuring the rmap lock is always dropped when
+> the unmap occurs.
+> 
+> Fixes: ac0a3fc9c07d ("mm: add ability to take further action in vm_area_desc")
+> Cc: <stable@vger.kernel.org>
 > Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
 
 Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
-
 
 
