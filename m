@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-9715-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9716-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QMdhABrkwWnLXgQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9715-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Mar 2026 02:08:42 +0100
+	id CHIqBh/iwWlhXgQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9716-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Mar 2026 02:00:15 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08FC430046C
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Mar 2026 02:08:40 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D89B33001D5
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Mar 2026 02:00:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id DF82C3028F5E
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Mar 2026 01:00:02 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 2EAF03019C88
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Mar 2026 01:00:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E01234E74D;
-	Tue, 24 Mar 2026 01:00:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F033355F44;
+	Tue, 24 Mar 2026 01:00:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nl46bkNw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UaBbnH6K"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5659523EAB0;
-	Tue, 24 Mar 2026 01:00:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E761A6813;
+	Tue, 24 Mar 2026 01:00:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774314001; cv=none; b=GkUotZ/jfwRGrIUVj15Gusfl6MnULIwTATvsCp7qdkYEUwPE6iRBnqRRfxl5+ZI4WUu+FFLjJPHBLE9QZUDqACKbfm3gSAlC7W9NmrN5/dXJXn9o4JoJ5RqrMW6RmHhttbt0jBajzjy9AfQwUuCazGW9jXVNv6XGv7AGpSbwcZ4=
+	t=1774314011; cv=none; b=r+EOUq7uQbOsUzPJ+r4mPUipU1HmcPIOwNaq5RDFmapykApzsX18ybG3pT4y5V6bkOH0tupk0Nh0CUEItZg9Dc8vk+a7gz0RVo8PZQEl+3LUiZq7cIQHuiwnybmGhwuiM/NKwzwcl9vdUoT9cSSh8lcsy/t17wOYTAU6hRdFdfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774314001; c=relaxed/simple;
-	bh=ZtCCSi+uF2o4qnuVascTL67uA5Os6ojvzLmO/D5h2Mg=;
+	s=arc-20240116; t=1774314011; c=relaxed/simple;
+	bh=n8Np19d6r8hZP3UfKo2xpfAW6SzD3g4bxMFuAspv2o0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qA19bzx1yfcB2E2hpKpjuq1OxKnkPin/s6bt3QoD9WzfOudczi+SRZkcs3DEHNWfBpEiygDTl78bhWy21q2adp4DUdsn5/Zykke9yBwGEyEcc33kUTv+EY9HkYdGrfZnqUEe0RfS9/rnEcgVJSQTFndJUtE7WNiypWum7pnBTsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nl46bkNw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8531C2BCB3;
-	Tue, 24 Mar 2026 00:59:51 +0000 (UTC)
+	 MIME-Version; b=I47evUoeKybiw8OLEmSrA26mFzVnuIIDz1+08L3RYb7jGvj5CpcPq5DW9Wr/N143oZtyHRAlLsU7aY1qDs+VuK0E5lOMPTsepLecUqUK+2VH5VdAY0LHTUQFRbn4jlImJF1rbLySdOvvCqXIF5TwM4WGqIs8unCr5lax1QzboJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UaBbnH6K; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98196C4CEF7;
+	Tue, 24 Mar 2026 01:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774314001;
-	bh=ZtCCSi+uF2o4qnuVascTL67uA5Os6ojvzLmO/D5h2Mg=;
+	s=k20201202; t=1774314011;
+	bh=n8Np19d6r8hZP3UfKo2xpfAW6SzD3g4bxMFuAspv2o0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Nl46bkNw7Fjecz/RMBLSWyx70dmK5O28lDsQW1GskyDDaiScC60RT6k4U32whSdqG
-	 vvTqf2D5QJuwkZfMIHhePdCU3vg54I+asysdiy/HM6VLVikFmJCB5Rg5z3VC4yK/OU
-	 tiset58fZbTtl2ttAsLp2cIrn8qWITtMGEZoCLr2TNkcCKmmEyAhCl7fs1cLqq3NtF
-	 4mix3uDvddCgkLlNrSUBtMqBA8rF7s9Io0nEBzEdxR7hO0qdfUKsjfrKBksqiZ2aw1
-	 v8gaiSPh0Qq/Pna5QKorppQaSfrb9lZ12oswLvR4sVUrPpIna0omN319f9Veo9VvTv
-	 453J11YKXvWrw==
+	b=UaBbnH6K5PmlHRTAv2QpnB7L6Oek7DpdNRyO3DZniaipx3T4OH8aQr0MWP23mO+nu
+	 bfEd7aSy90OVPMONjSRlDR+BhJep8zQkJXj3EuTj+FdEJ7Qnz1bGziLI/rD717BPhk
+	 b0qHoXuzvssQYxYxewY0RImhKrTnweUaP7b/G+xvgY86M3nL9h5A6viQlAO4cSYSa+
+	 cTGrxdvuLF6cPLHkd8IEp6jriRalhcgoEWJdpC8TUtaMkApKMmASLxQKpBLi0FdDUk
+	 0+jAHYnaXmU5F6R+YbNbusudC4hG0VrqpKsYsYuN7LhJINQFVJ9EqYYng4Ywg7RJ8h
+	 GAjkf9mQ3//og==
 From: Danilo Krummrich <dakr@kernel.org>
 To: Russell King <linux@armlinux.org.uk>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -95,9 +95,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	Danilo Krummrich <dakr@kernel.org>,
 	Gui-Dong Han <hanguidong02@gmail.com>
-Subject: [PATCH 03/12] cdx: use generic driver_override infrastructure
-Date: Tue, 24 Mar 2026 01:59:07 +0100
-Message-ID: <20260324005919.2408620-4-dakr@kernel.org>
+Subject: [PATCH 04/12] hv: vmbus: use generic driver_override infrastructure
+Date: Tue, 24 Mar 2026 01:59:08 +0100
+Message-ID: <20260324005919.2408620-5-dakr@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260324005919.2408620-1-dakr@kernel.org>
 References: <20260324005919.2408620-1-dakr@kernel.org>
@@ -114,7 +114,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -123,9 +123,9 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-9715-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9716-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-hyperv@vger.kernel.org];
@@ -136,8 +136,8 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 08FC430046C
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: D89B33001D5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
@@ -154,68 +154,29 @@ held is intentional. [1]
 Link: https://lore.kernel.org/driver-core/DGRGTIRHA62X.3RY09D9SOK77P@kernel.org/ [1]
 Reported-by: Gui-Dong Han <hanguidong02@gmail.com>
 Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220789
-Fixes: 2959ab247061 ("cdx: add the cdx bus driver")
+Fixes: d765edbb301c ("vmbus: add driver_override support")
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- drivers/cdx/cdx.c           | 40 +++++--------------------------------
- include/linux/cdx/cdx_bus.h |  4 ----
- 2 files changed, 5 insertions(+), 39 deletions(-)
+ drivers/hv/vmbus_drv.c | 36 +++++-------------------------------
+ include/linux/hyperv.h |  5 -----
+ 2 files changed, 5 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/cdx/cdx.c b/drivers/cdx/cdx.c
-index 9196dc50a48d..d3d230247262 100644
---- a/drivers/cdx/cdx.c
-+++ b/drivers/cdx/cdx.c
-@@ -156,8 +156,6 @@ static int cdx_unregister_device(struct device *dev,
- 	} else {
- 		cdx_destroy_res_attr(cdx_dev, MAX_CDX_DEV_RESOURCES);
- 		debugfs_remove_recursive(cdx_dev->debugfs_dir);
--		kfree(cdx_dev->driver_override);
--		cdx_dev->driver_override = NULL;
- 	}
- 
- 	/*
-@@ -268,6 +266,7 @@ static int cdx_bus_match(struct device *dev, const struct device_driver *drv)
- 	const struct cdx_driver *cdx_drv = to_cdx_driver(drv);
- 	const struct cdx_device_id *found_id = NULL;
- 	const struct cdx_device_id *ids;
-+	int ret;
- 
- 	if (cdx_dev->is_bus)
- 		return false;
-@@ -275,7 +274,8 @@ static int cdx_bus_match(struct device *dev, const struct device_driver *drv)
- 	ids = cdx_drv->match_id_table;
- 
- 	/* When driver_override is set, only bind to the matching driver */
--	if (cdx_dev->driver_override && strcmp(cdx_dev->driver_override, drv->name))
-+	ret = device_match_driver_override(dev, drv);
-+	if (ret == 0)
- 		return false;
- 
- 	found_id = cdx_match_id(ids, cdx_dev);
-@@ -289,7 +289,7 @@ static int cdx_bus_match(struct device *dev, const struct device_driver *drv)
- 		 */
- 		if (!found_id->override_only)
- 			return true;
--		if (cdx_dev->driver_override)
-+		if (ret > 0)
- 			return true;
- 
- 		ids = found_id + 1;
-@@ -453,36 +453,6 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index bc4fc1951ae1..bc8dfd136f3c 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -541,34 +541,6 @@ static ssize_t device_show(struct device *dev,
  }
- static DEVICE_ATTR_RO(modalias);
+ static DEVICE_ATTR_RO(device);
  
 -static ssize_t driver_override_store(struct device *dev,
 -				     struct device_attribute *attr,
 -				     const char *buf, size_t count)
 -{
--	struct cdx_device *cdx_dev = to_cdx_device(dev);
+-	struct hv_device *hv_dev = device_to_hv_device(dev);
 -	int ret;
 -
--	if (WARN_ON(dev->bus != &cdx_bus_type))
--		return -EINVAL;
--
--	ret = driver_set_override(dev, &cdx_dev->driver_override, buf, count);
+-	ret = driver_set_override(dev, &hv_dev->driver_override, buf, count);
 -	if (ret)
 -		return ret;
 -
@@ -225,57 +186,74 @@ index 9196dc50a48d..d3d230247262 100644
 -static ssize_t driver_override_show(struct device *dev,
 -				    struct device_attribute *attr, char *buf)
 -{
--	struct cdx_device *cdx_dev = to_cdx_device(dev);
+-	struct hv_device *hv_dev = device_to_hv_device(dev);
 -	ssize_t len;
 -
 -	device_lock(dev);
--	len = sysfs_emit(buf, "%s\n", cdx_dev->driver_override);
+-	len = sysfs_emit(buf, "%s\n", hv_dev->driver_override);
 -	device_unlock(dev);
+-
 -	return len;
 -}
 -static DEVICE_ATTR_RW(driver_override);
 -
- static ssize_t enable_store(struct device *dev, struct device_attribute *attr,
- 			    const char *buf, size_t count)
- {
-@@ -552,7 +522,6 @@ static struct attribute *cdx_dev_attrs[] = {
- 	&dev_attr_class.attr,
- 	&dev_attr_revision.attr,
- 	&dev_attr_modalias.attr,
+ /* Set up per device attributes in /sys/bus/vmbus/devices/<bus device> */
+ static struct attribute *vmbus_dev_attrs[] = {
+ 	&dev_attr_id.attr,
+@@ -599,7 +571,6 @@ static struct attribute *vmbus_dev_attrs[] = {
+ 	&dev_attr_channel_vp_mapping.attr,
+ 	&dev_attr_vendor.attr,
+ 	&dev_attr_device.attr,
 -	&dev_attr_driver_override.attr,
  	NULL,
  };
  
-@@ -646,6 +615,7 @@ ATTRIBUTE_GROUPS(cdx_bus);
+@@ -711,9 +682,11 @@ static const struct hv_vmbus_device_id *hv_vmbus_get_id(const struct hv_driver *
+ {
+ 	const guid_t *guid = &dev->dev_type;
+ 	const struct hv_vmbus_device_id *id;
++	int ret;
  
- const struct bus_type cdx_bus_type = {
- 	.name		= "cdx",
-+	.driver_override = true,
- 	.match		= cdx_bus_match,
- 	.probe		= cdx_probe,
- 	.remove		= cdx_remove,
-diff --git a/include/linux/cdx/cdx_bus.h b/include/linux/cdx/cdx_bus.h
-index b1ba97f6c9ad..f54770f110bc 100644
---- a/include/linux/cdx/cdx_bus.h
-+++ b/include/linux/cdx/cdx_bus.h
-@@ -137,9 +137,6 @@ struct cdx_controller {
-  * @enabled: is this bus enabled
-  * @msi_dev_id: MSI Device ID associated with CDX device
-  * @num_msi: Number of MSI's supported by the device
-- * @driver_override: driver name to force a match; do not set directly,
-- *                   because core frees it; use driver_set_override() to
-- *                   set or clear it.
-  * @irqchip_lock: lock to synchronize irq/msi configuration
-  * @msi_write_pending: MSI write pending for this device
-  */
-@@ -165,7 +162,6 @@ struct cdx_device {
- 	bool enabled;
- 	u32 msi_dev_id;
- 	u32 num_msi;
+ 	/* When driver_override is set, only bind to the matching driver */
+-	if (dev->driver_override && strcmp(dev->driver_override, drv->name))
++	ret = device_match_driver_override(&dev->device, &drv->driver);
++	if (ret == 0)
+ 		return NULL;
+ 
+ 	/* Look at the dynamic ids first, before the static ones */
+@@ -722,7 +695,7 @@ static const struct hv_vmbus_device_id *hv_vmbus_get_id(const struct hv_driver *
+ 		id = hv_vmbus_dev_match(drv->id_table, guid);
+ 
+ 	/* driver_override will always match, send a dummy id */
+-	if (!id && dev->driver_override)
++	if (!id && ret > 0)
+ 		id = &vmbus_device_null;
+ 
+ 	return id;
+@@ -1024,6 +997,7 @@ static const struct dev_pm_ops vmbus_pm = {
+ /* The one and only one */
+ static const struct bus_type  hv_bus = {
+ 	.name =		"vmbus",
++	.driver_override =	true,
+ 	.match =		vmbus_match,
+ 	.shutdown =		vmbus_shutdown,
+ 	.remove =		vmbus_remove,
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index dfc516c1c719..bf689d07d750 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -1272,11 +1272,6 @@ struct hv_device {
+ 	u16 device_id;
+ 
+ 	struct device device;
+-	/*
+-	 * Driver name to force a match.  Do not set directly, because core
+-	 * frees it.  Use driver_set_override() to set or clear it.
+-	 */
 -	const char *driver_override;
- 	struct mutex irqchip_lock;
- 	bool msi_write_pending;
- };
+ 
+ 	struct vmbus_channel *channel;
+ 	struct kset	     *channels_kset;
 -- 
 2.53.0
 
