@@ -1,211 +1,191 @@
-Return-Path: <linux-hyperv+bounces-9749-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9750-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SPKmAI6Vw2ncrgQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9749-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 08:58:06 +0100
+	id KPPcG+2lw2lssQQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9750-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 10:07:57 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FB8A320FBD
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 08:58:05 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D06C3321E30
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 10:07:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B9CB83047011
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 07:57:02 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 410BE3034325
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 09:06:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED022390999;
-	Wed, 25 Mar 2026 07:57:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF81F322B7B;
+	Wed, 25 Mar 2026 09:06:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKQYQ3Iy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B/pXGWqx"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8FDB3537D6
-	for <linux-hyperv@vger.kernel.org>; Wed, 25 Mar 2026 07:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A517211A05;
+	Wed, 25 Mar 2026 09:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774425420; cv=none; b=N57ZbqZkF+8fQdS4J97aZK/sQ3WLenSaDdFXweOHjQ1W7vYteAJdCk2G7QqCLzYxB0T/oVfiZzArzv9OiwGZQqVfw4iLYiVfUbDjk888jAF4RDZ10c8RLZfTvUCRqxnYGBAcPtbgO3S65K1VHPMRtn2hZPMoRmI3IYzXN2N5aLs=
+	t=1774429585; cv=none; b=S/BiS1TXupxlalNNs1axY1yMUh/PFxpB4BgcQ0sYQt8NhqMzonhia/qkONPEzX6A1gUBWZr1FkQ1brPOy3mztHpp5ztckfMWMX7Vrkbce5KuUR8sE6rGGVn6hvtyPSkkboRV10JwwlEe0uEuRlYCYPJsBshWeX9I2YgjauF+oSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774425420; c=relaxed/simple;
-	bh=Nlk2krWXigXedYIVbGLe3NHoVJ85MDZPNxBmyiex99U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bY33CfEqrIOmlzMgd8niLjDlIb0rDOS8D3b5zHixkMvcmvmqsS1VSJmlodLyPdS2HJTVB/pd22B0XoUzvAHd6kFumwxGNLcZ3aiDewiXHE0Ew+wjuE6Id/+worepWw+2aH0IJB7sMv8DNtfvXrvmxVJ6UJx3EAKEnMaxHl/UG+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MKQYQ3Iy; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-35c124d2613so146090a91.2
-        for <linux-hyperv@vger.kernel.org>; Wed, 25 Mar 2026 00:56:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774425415; x=1775030215; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kdEHDzLyvba5udnwz8c2vdy7nbbUB2Sw/8exS3LVD2c=;
-        b=MKQYQ3IyqsZjThYDBeRWLtpl6yJ8coH0kS/vw9KZ47IV/SFf8Yu9fxWR09oeAe/EnE
-         dtoI5rMIXDJ3ksWArbKVLeHg52UYFo2OZ9FIoDH+XjoToAXLFMGtIY5oV6eojKUDuoyL
-         Q+yIaGYiZCLEMqHw6HYC7fIsyqnesi6obYlaud2F/3nVwc68BmQ4YBX89eLWVB2F0BKL
-         vFddS+mRCpUGGdgEdTcWBhffjxa+oyFCEXgHFjuV4urwgg3vH9P9GeB+8ZDF+rfHkZxO
-         BYXWnPiF7h7oOywv2usOOdTYRfkQN1qycABVcjt+qTN+9N0q168mxY0xhjDHsme3gbse
-         i7MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774425415; x=1775030215;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kdEHDzLyvba5udnwz8c2vdy7nbbUB2Sw/8exS3LVD2c=;
-        b=K7S3ZXXT3kgHVtgNtlfeqWkE2IPWWkA/QLXDAYmv6ojes4gFYaR+Qf/zd5pVLuedT0
-         1/o5yD/qkGZ9DnSRqebdLm1E8FdrvhG+mFAr214WCn9HCDLaqPBK4KttSCL0FOZNY3WP
-         uOUyELDtBo8dZYWp7+mLwgcQ4+ns1v8lSmU1QZR91bqsN55ZHkhLuFUQH3rpQkVzSN4Y
-         H4+cROa3muMCE0hWkOd52VWHzY6kIRyHAa+zVd9lARkAQHQOXZkmWN1OY+BjGi2S+SIG
-         s3DvbQjH+CPgV9KQ4sdENHVs1OTKJG4UGBOJv3lqde7xrPMdymEcOvELL+12t7O2raJa
-         g4JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXi/4aiwyQR2ui6vNYb0Otc9kFP+K7Q+x1nFU9tv3UJoxAVHivs1ajE4nL4U8kLpnVDuLLQwOm3Hh5dskA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfOi4TfKBMrGZdvuC+LDWUPGais50ZlafU09CIm/00ZzkjNqaz
-	9rC8LnYUrvxzSgw4uKRoe/GoU+ORWZ9MMsqFjKTn4gk1mAKOj8azt9iW
-X-Gm-Gg: ATEYQzyjfXQuknCNz3HPlYFzah9qIKNHO9+jcWOFBmUy7XgL/tjHni9DJi+SwF3wisk
-	jeN5n51cwFBXSqtE+8XhbiCFsteQtSrAaTDvwvwELdqdVAclGIvTCpXErLhtffMmQoNZReLaiWl
-	HwEFyzsYU+9BTNN5iGblel4UwZbJ9hliN/wI8Jif5JP20FgyNSoBBi6in/Juy72wdJFApaw+I2/
-	i3LtMHkalZleQ24BsXw8CCJuxCLGjZiiWmpQ8pCgKl+Y3/loIRrxgymCpOXrZoJj8zRGQoyZGpw
-	1nl3niPJHtsA9P65Eg5UJX0RshDONA/Au4H4/03ocXz/5cih0iooAHnBd38Ddhqq87U5jqO9Cp+
-	J5Bq8Omgt4deiRoTx2wUfiVq/5tUp8F0V0fK5QHybPobQXcrTdlyUejk5vobhcAIzthd4YdW7Bm
-	WHs/TjpMFoWpFg16qStJziwd6DPc5avBNglqiIC1PtbFbsfVgS+mHOSk0p4w==
-X-Received: by 2002:a17:90b:17c8:b0:35b:e591:99d1 with SMTP id 98e67ed59e1d1-35c0ddc4118mr2246370a91.29.1774425415489;
-        Wed, 25 Mar 2026 00:56:55 -0700 (PDT)
-Received: from ubuntu-Virtual-Machine.mshome.net ([104.43.2.14])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35c0ac5b287sm2769966a91.4.2026.03.25.00.56.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2026 00:56:55 -0700 (PDT)
-From: Tianyu Lan <ltykernel@gmail.com>
-X-Google-Original-From: Tianyu Lan <tiala@microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	m.szyprowski@samsung.com,
-	robin.murphy@arm.com
-Cc: Tianyu Lan <tiala@microsoft.com>,
-	iommu@lists.linux.dev,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	hch@infradead.org,
-	vdso@hexbites.dev,
-	Michael Kelley <mhklinux@outlook.com>
-Subject: [RFC PATCH V3] x86/VMBus: Confidential VMBus for dynamic DMA transfers
-Date: Wed, 25 Mar 2026 03:56:49 -0400
-Message-Id: <20260325075649.248241-1-tiala@microsoft.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1774429585; c=relaxed/simple;
+	bh=TGeHJllmZaOU480qUtXeb/jUm42/azepnhJdaLl9P5A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F9h5GRnOS7N2DXbJ51rWO67AuAs8sqG8R4t4HJtTAFq7Cm+yrcwI2Jb80u4tHsUt43GrrrhlqY2LZvLkCpbAvd8P+2+y35TQhhRfimLv4Gk0hLp1WPbb9n97SFr0/TEOuNcWUevxpVX/rXoY49NbCXV3JKd1yZTtWUMLUE2WcLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B/pXGWqx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F5A1C4CEF7;
+	Wed, 25 Mar 2026 09:06:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774429585;
+	bh=TGeHJllmZaOU480qUtXeb/jUm42/azepnhJdaLl9P5A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=B/pXGWqxkc77H/QNjcNN4hXFs+1yWtOO/K6ZlFDqfhgwHp4yHtUXBY1gINF1N/v7H
+	 Swoeh/4pl25iEnor6XcK93/xaSpBQCXea/x0tJWaU2vmaO0gQrTCNvrvDCRgFprVKV
+	 1KqlwKP+22aqYID5Rc4LF4kA7w+kAFXYTzDiwCQpdMmDJrHF9HDz+HIU9m1OkF3LTb
+	 /jwCEhab+UIAPA9vKX7zWI8lclKZJMoZ3e82DcRkAVWva3ZfDqkkW0tKKWs9g8wCY/
+	 xPGCmHA6G5g4E8Zs8WC6hluY2t54Kvjz8OpvZWbU1RkOlOvI5O2Nk6MOymHovUB97F
+	 cRXNnffbCU5+g==
+Message-ID: <e9e9c3a3-26fb-4ca5-af27-158f4860a810@kernel.org>
+Date: Wed, 25 Mar 2026 10:06:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 09/21] fs: afs: revert mmap_prepare() change
+Content-Language: en-US
+To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Clemens Ladisch <clemens@ladisch.de>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Bodo Stroesser <bostroesser@gmail.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>,
+ David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ David Hildenbrand <david@kernel.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org,
+ linux-staging@lists.linux.dev, linux-scsi@vger.kernel.org,
+ target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ Ryan Roberts <ryan.roberts@arm.com>
+References: <cover.1774045440.git.ljs@kernel.org>
+ <08804c94e39d9102a3a8fbd12385e8aa079ba1d3.1774045440.git.ljs@kernel.org>
+From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+In-Reply-To: <08804c94e39d9102a3a8fbd12385e8aa079ba1d3.1774045440.git.ljs@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_MATCH_TO(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[microsoft.com,lists.linux.dev,vger.kernel.org,infradead.org,hexbites.dev,outlook.com];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TAGGED_FROM(0.00)[bounces-9749-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9750-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ltykernel@gmail.com,linux-hyperv@vger.kernel.org];
+	FREEMAIL_CC(0.00)[lwn.net,ladisch.de,arndb.de,linuxfoundation.org,microsoft.com,kernel.org,linux.intel.com,gmail.com,foss.st.com,bootlin.com,nod.at,ti.com,oracle.com,redhat.com,auristor.com,zeniv.linux.org.uk,suse.cz,google.com,suse.com,suse.de,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org,lists.linux.dev,kvack.org,arm.com];
+	RCPT_COUNT_TWELVE(0.00)[44];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[vbabka@kernel.org,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,outlook.com:email]
-X-Rspamd-Queue-Id: 9FB8A320FBD
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: D06C3321E30
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hyper-V provides Confidential VMBus to communicate between
-device model and device guest driver via encrypted/private
-memory in Confidential VM. The device model is in OpenHCL
-(https://openvmm.dev/guide/user_guide/openhcl.html) that
-plays the paravisor role.
+On 3/20/26 23:39, Lorenzo Stoakes (Oracle) wrote:
+> Partially reverts commit 9d5403b1036c ("fs: convert most other
+> generic_file_*mmap() users to .mmap_prepare()").
+> 
+> This is because the .mmap invocation establishes a refcount, but
+> .mmap_prepare is called at a point where a merge or an allocation failure
+> might happen after the call, which would leak the refcount increment.
+> 
+> Functionality is being added to permit the use of .mmap_prepare in this
+> case, but in the interim, we need to fix this.
+> 
+> Fixes: 9d5403b1036c ("fs: convert most other generic_file_*mmap() users to .mmap_prepare()")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
 
-For a VMBus device, there are two communication methods to
-talk with Host/Hypervisor. 1) VMBUS Ring buffer 2) Dynamic
-DMA transfer.
+Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
 
-The Confidential VMBus Ring buffer has been upstreamed by
-Roman Kisel(commit 6802d8af47d1).
-
-The dynamic DMA transition of VMBus device normally goes
-through DMA core and it uses SWIOTLB as bounce buffer in
-a CoCo VM.
-
-The Confidential VMBus device can do DMA directly to
-private/encrypted memory. Because the swiotlb is decrypted
-memory, the DMA transfer must not be bounced through the
-swiotlb, so as to preserve confidentiality. This is different
-from the default for Linux CoCo VMs, so disable the VMBus
-device's use of swiotlb.
-
-Expose swiotlb_dev_disable() from DMA Core to disable
-bounce buffer for device.
-
-Suggested-by: Michael Kelley <mhklinux@outlook.com>
-Signed-off-by: Tianyu Lan <tiala@microsoft.com>
----
- drivers/hv/vmbus_drv.c  | 6 +++++-
- include/linux/swiotlb.h | 5 +++++
- 2 files changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 3d1a58b667db..84e6971fc90f 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -2184,11 +2184,15 @@ int vmbus_device_register(struct hv_device *child_device_obj)
- 	child_device_obj->device.dma_mask = &child_device_obj->dma_mask;
- 	dma_set_mask(&child_device_obj->device, DMA_BIT_MASK(64));
- 
-+	device_initialize(&child_device_obj->device);
-+	if (child_device_obj->channel->co_external_memory)
-+		swiotlb_dev_disable(&child_device_obj->device);
-+
- 	/*
- 	 * Register with the LDM. This will kick off the driver/device
- 	 * binding...which will eventually call vmbus_match() and vmbus_probe()
- 	 */
--	ret = device_register(&child_device_obj->device);
-+	ret = device_add(&child_device_obj->device);
- 	if (ret) {
- 		pr_err("Unable to register child device\n");
- 		put_device(&child_device_obj->device);
-diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
-index 3dae0f592063..7c572570d5d9 100644
---- a/include/linux/swiotlb.h
-+++ b/include/linux/swiotlb.h
-@@ -169,6 +169,11 @@ static inline struct io_tlb_pool *swiotlb_find_pool(struct device *dev,
- 	return NULL;
- }
- 
-+static inline bool swiotlb_dev_disable(struct device *dev)
-+{
-+	return dev->dma_io_tlb_mem == NULL;
-+}
-+
- static inline bool is_swiotlb_force_bounce(struct device *dev)
- {
- 	struct io_tlb_mem *mem = dev->dma_io_tlb_mem;
--- 
-2.50.1
+> ---
+>  fs/afs/file.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/afs/file.c b/fs/afs/file.c
+> index f609366fd2ac..74d04af51ff4 100644
+> --- a/fs/afs/file.c
+> +++ b/fs/afs/file.c
+> @@ -19,7 +19,7 @@
+>  #include <trace/events/netfs.h>
+>  #include "internal.h"
+>  
+> -static int afs_file_mmap_prepare(struct vm_area_desc *desc);
+> +static int afs_file_mmap(struct file *file, struct vm_area_struct *vma);
+>  
+>  static ssize_t afs_file_read_iter(struct kiocb *iocb, struct iov_iter *iter);
+>  static ssize_t afs_file_splice_read(struct file *in, loff_t *ppos,
+> @@ -35,7 +35,7 @@ const struct file_operations afs_file_operations = {
+>  	.llseek		= generic_file_llseek,
+>  	.read_iter	= afs_file_read_iter,
+>  	.write_iter	= netfs_file_write_iter,
+> -	.mmap_prepare	= afs_file_mmap_prepare,
+> +	.mmap		= afs_file_mmap,
+>  	.splice_read	= afs_file_splice_read,
+>  	.splice_write	= iter_file_splice_write,
+>  	.fsync		= afs_fsync,
+> @@ -492,16 +492,16 @@ static void afs_drop_open_mmap(struct afs_vnode *vnode)
+>  /*
+>   * Handle setting up a memory mapping on an AFS file.
+>   */
+> -static int afs_file_mmap_prepare(struct vm_area_desc *desc)
+> +static int afs_file_mmap(struct file *file, struct vm_area_struct *vma)
+>  {
+> -	struct afs_vnode *vnode = AFS_FS_I(file_inode(desc->file));
+> +	struct afs_vnode *vnode = AFS_FS_I(file_inode(file));
+>  	int ret;
+>  
+>  	afs_add_open_mmap(vnode);
+>  
+> -	ret = generic_file_mmap_prepare(desc);
+> +	ret = generic_file_mmap(file, vma);
+>  	if (ret == 0)
+> -		desc->vm_ops = &afs_vm_ops;
+> +		vma->vm_ops = &afs_vm_ops;
+>  	else
+>  		afs_drop_open_mmap(vnode);
+>  	return ret;
 
 
