@@ -1,279 +1,265 @@
-Return-Path: <linux-hyperv+bounces-9753-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9754-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YPKxBbysw2nAtAQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9753-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 10:37:00 +0100
+	id gAQ+Gpqvw2nAtAQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9754-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 10:49:14 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4C653224FA
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 10:36:59 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C316B3226F7
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 10:49:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8800F300B9F3
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 09:29:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 77E9E301AF65
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 09:47:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E762B3563EF;
-	Wed, 25 Mar 2026 09:29:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EA2638E5C8;
+	Wed, 25 Mar 2026 09:47:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UIIwNU+n";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="JhpeRjpQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h7rjxRys"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4819832FA14
-	for <linux-hyperv@vger.kernel.org>; Wed, 25 Mar 2026 09:29:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603D523D281;
+	Wed, 25 Mar 2026 09:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774430998; cv=none; b=U0Tlo4Z3TRqVEcJZ+VnqEmqrKeX2mhlHNKhWUvyVNuQ8DTjEawGMXxfuVFph9fZ2aAuYXZB1rCsAz6VjZxKefp6qbtRSFRXI3Kz8iEMGoDLH4/0Gz6+CjPQ5NXh1MOm6+D2oSGp+NWdXD0tsUST4uxSx50AjDTyRZ3K0gnFHSjE=
+	t=1774432051; cv=none; b=Q6VVoyDu4oDBiezXkcjTmsJC/IEBsyyeFurc4qDAMK5fpvF+5WmfQhFKmI6K465hELUYjogonhMROIs/VtZblubQ5Jx50Xq1erb7eiEXIgyRBuL4Kr+QpNy0u9uyXVFfCkbPZcsJEU8kOknGx1qSNB+onzpXCYXLGAfDkmr2GO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774430998; c=relaxed/simple;
-	bh=hzAY3ZoPFk3ktxoVDsUh6drVK7glBEle7ZgqK1lKcjk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cb9VW17x3uu9wKf7biP2npOSm7O81HANd9hQgdLNUxzpVVyl5XcyQUCGuFwPwYYKr09zUlt85cekN9xlNo9G6QlPhLB+ijv9m4q3PiR0nFhelvZNt7Cm+k8MyMkARsXlkT0lIEy0C32ZMu9YInsGRQhGdhLPyLGTXJE7+c+YUmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UIIwNU+n; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=JhpeRjpQ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1774430996;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/X6OQFIMMVlzQpHVcxvz5zk00vazKEddYu1a8TXBALA=;
-	b=UIIwNU+nPUJJvHBBie22wcCjzDVg3JpRuHuXBHiy0rjpN6rDxNAzNlOeQY2QG9m8DWuxEm
-	iaNmUUXhpXPFoYwUfpFYc/GchGtfpCQlnmZs/FYSLP7O1jEI3zV30Rr3AOr8Y9H0wsXSVL
-	jcPPi+BUVu4IYinrziQaqTXzZ8OPLkY=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-12-Z1IAJlvLODybwYCWjWVNrw-1; Wed, 25 Mar 2026 05:29:55 -0400
-X-MC-Unique: Z1IAJlvLODybwYCWjWVNrw-1
-X-Mimecast-MFC-AGG-ID: Z1IAJlvLODybwYCWjWVNrw_1774430994
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-4362197d1easo1868179f8f.2
-        for <linux-hyperv@vger.kernel.org>; Wed, 25 Mar 2026 02:29:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1774430994; x=1775035794; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/X6OQFIMMVlzQpHVcxvz5zk00vazKEddYu1a8TXBALA=;
-        b=JhpeRjpQEerF7GJ3cEBXJfXL4JOri2U0d5RqtfvHTpgkh71sO3rKFhA//EvtsgVwti
-         rfnOwsNQ4rTslJ40Fzk9I0TbeYYUZ5Xv+zq7TaUjVgRwEsyfKg8s9Pq15BcpYJETUtzy
-         GjGQegUGrxeQbyDwEtvCmuJ/etjn2Bc4A2bLwFUIE5xQiMyNNgnAbKrvUtZPa+3AgtlT
-         YSrq90f+jFYACy0hlMqgRYq76+qOcsEKLNZTY0NUghWrYxq5yY9PNJVoNX0sjXNzPxo2
-         M/ehcd6FIcjjB2W43nFQqKbujTW9hL8QGwdrnKMudE6yCBqYGN/Cv3ygswIH8iM7CfKC
-         7oDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774430994; x=1775035794;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/X6OQFIMMVlzQpHVcxvz5zk00vazKEddYu1a8TXBALA=;
-        b=jFhYqiXNtqMXm+tNJZZ0qWWTwDQs9NlFM7l2iFXfRvTfi8/NgJfq74r9BsnV4oiFnw
-         X/lA+7io17ujDl9N2GhHrBxMhzGv5VqW4+eyBZFl1xmH2nizaKBQxGBZiGcNt8+NtwIS
-         MhujCsMXTL6/sLjRKB+IxU2LqCcM2QoyNTPNJFOtPOR8y+alv7AVG5vkztzKf5s2g2s5
-         yFPgqS7UyQ+3026WDIvL7zjJecOarYYszrQ/bvfswxIqqcef8X+WN4o43vVMmqO0Ih/n
-         4cubElauLctybyrEemZmM5Q+QeFjqU2zwpR/PIpJQNi7GvsM8hT9qzowuDTqs1SRujTR
-         wQGw==
-X-Forwarded-Encrypted: i=1; AJvYcCVwSxNpx2pexN18RlLWexus0BDysTKNoNZznuNCetch/aEGY8qnEhzRftwk94dVD58y6Slzm2J7exjIIno=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSs18ye8bhG6zXe/fPBnJqEQwdSgsHCylIYl1DJpyQ/ZRbn0s8
-	xqm3CfxOc18zJ1WXfsYxxXlKnAhZOmUcw+mMFuZLImiE4g1E8N5h5EbThTWNfTKklCuO0shFAru
-	ksBVUUJX4d20lkMz1Ah3q+LGxiThXd+1M6T9IUodzmk7k8RhSBUjYSz+6G/jM1P9jCA==
-X-Gm-Gg: ATEYQzyeGD7xKinuc4MouVdpCGRu9Zn5ALlxSgm4gBjfIFMCnNHQ303Gmc1xrSbA5co
-	qIyM8myj+PXKQVS6M8fNQWcmOvHM/fNw5TiIiHZNA52ueaKvOAsdk7uM6d17Dn1e/5wASsyF4ad
-	jhOvIuYYlgDR3b+mGPCLQPFgo9QcS29BNgPEaNzC741ejfLfKiX1nvOQgzt/IiTM/fnNLdsWd2b
-	FJHpFiCfbKie6z0CcB1UG1C3KRi8PBxeDQYZbKfBNWQrAsdPsUqBUTy14QaAjZpQOKcNAZ9KejT
-	GXb07vNWYSBWH2UIeI6z24BgeW4Opuzdjqud7d+EqlbAEy8aJHH5LB6Rp8XceKCtIlN3OxBupvg
-	zmlcfRhd3UYVR1bhy
-X-Received: by 2002:a05:6000:400c:b0:439:be78:e1e9 with SMTP id ffacd0b85a97d-43b88a3d3cdmr3692792f8f.14.1774430993555;
-        Wed, 25 Mar 2026 02:29:53 -0700 (PDT)
-X-Received: by 2002:a05:6000:400c:b0:439:be78:e1e9 with SMTP id ffacd0b85a97d-43b88a3d3cdmr3692727f8f.14.1774430992928;
-        Wed, 25 Mar 2026 02:29:52 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1525:da00:3ac2:1a22:72ff:4256])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b6470380asm44280922f8f.24.2026.03.25.02.29.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2026 02:29:52 -0700 (PDT)
-Date: Wed, 25 Mar 2026 05:29:45 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ioana Ciornei <ioana.ciornei@nxp.com>,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Nikhil Agarwal <nikhil.agarwal@amd.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>, Bjorn Helgaas <bhelgaas@google.com>,
-	Armin Wolf <W_Armin@gmx.de>, Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Vineeth Vijayan <vneethv@linux.ibm.com>,
-	Peter Oberparleiter <oberpar@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Harald Freudenberger <freude@linux.ibm.com>,
-	Holger Dengler <dengler@linux.ibm.com>,
-	Mark Brown <broonie@kernel.org>, Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Alex Williamson <alex@shazbot.org>, Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	linux-kernel@vger.kernel.org, driver-core@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-	linux-s390@vger.kernel.org, linux-spi@vger.kernel.org,
-	virtualization@lists.linux.dev, kvm@vger.kernel.org,
-	xen-devel@lists.xenproject.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 00/12] treewide: Convert buses to use generic
- driver_override
-Message-ID: <20260325052919-mutt-send-email-mst@kernel.org>
-References: <20260324005919.2408620-1-dakr@kernel.org>
+	s=arc-20240116; t=1774432051; c=relaxed/simple;
+	bh=vUFrcOFz84OveU1pgKHoD1qwpdPZX9ciji33h3siGaE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aZnLNvsIizDm7i/tjj711gyDkHHekYIrWSYjBxt4p4odXKxXZX7PAroLFJnlMdA1PJKWxgwGZ8VoSPDoqTWBQ1LMJIywleZ0FcrU4MbQbcvCN5rIFRl9Rsw23gWvJ2ovMscSn0MjudMJMqJNhsYTKoeRMs2ZsOoJCl2P+W/HgtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h7rjxRys; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44F83C2BC9E;
+	Wed, 25 Mar 2026 09:47:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774432051;
+	bh=vUFrcOFz84OveU1pgKHoD1qwpdPZX9ciji33h3siGaE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=h7rjxRys800WY0i8LFUswSR3PcQtVI+WfcvFbM55iwz1ZH6sEQagzhf2LyOreVOSW
+	 R1lGyQTKbfLllWJzdn5W8eaoKRVYpL0edcGcr6SCeDfoN1NRmrSZOCLjsPkGst2Vue
+	 whTAV+F4IJb7xm4J+qcGoX5SFmIZFB+fhBwrR2605pUGNgx0fg/E3JSQRqS9sFkabZ
+	 CtbaFD/j2jHu/4k19QPOkOOINFcC55JlaP/BKzrZDZAQkiiAvQh9vim4ubQ9CkIKj9
+	 xhp7ke2Xf5zs7lnOYxqAky/AVcczwO5PeQU9qs8vfUKFRe22DcZ0GFLqD7cqpncinF
+	 7/z8KNyW3nyVA==
+Message-ID: <2bf17da7-fb46-4503-8de9-9368a73d8487@kernel.org>
+Date: Wed, 25 Mar 2026 10:47:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260324005919.2408620-1-dakr@kernel.org>
-X-Spamd-Result: default: False [-1.16 / 15.00];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 10/21] fs: afs: restore mmap_prepare implementation
+Content-Language: en-US
+To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Clemens Ladisch <clemens@ladisch.de>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Bodo Stroesser <bostroesser@gmail.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>,
+ David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ David Hildenbrand <david@kernel.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org,
+ linux-staging@lists.linux.dev, linux-scsi@vger.kernel.org,
+ target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ Ryan Roberts <ryan.roberts@arm.com>
+References: <cover.1774045440.git.ljs@kernel.org>
+ <ad9a94350a9c7d2bdab79fc397ef0f64d3412d71.1774045440.git.ljs@kernel.org>
+From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+In-Reply-To: <ad9a94350a9c7d2bdab79fc397ef0f64d3412d71.1774045440.git.ljs@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_MATCH_TO(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9753-lists,linux-hyperv=lfdr.de];
-	FREEMAIL_CC(0.00)[armlinux.org.uk,linuxfoundation.org,kernel.org,nxp.com,amd.com,microsoft.com,google.com,gmx.de,linaro.org,linux.ibm.com,redhat.com,linux.alibaba.com,shazbot.org,suse.com,epam.com,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,lists.xenproject.org,lists.infradead.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9754-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[48];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[lwn.net,ladisch.de,arndb.de,linuxfoundation.org,microsoft.com,kernel.org,linux.intel.com,gmail.com,foss.st.com,bootlin.com,nod.at,ti.com,oracle.com,redhat.com,auristor.com,zeniv.linux.org.uk,suse.cz,google.com,suse.com,suse.de,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org,lists.linux.dev,kvack.org,arm.com];
+	RCPT_COUNT_TWELVE(0.00)[44];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mst@redhat.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[vbabka@kernel.org,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,gitlab.com:url]
-X-Rspamd-Queue-Id: B4C653224FA
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: C316B3226F7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Mar 24, 2026 at 01:59:04AM +0100, Danilo Krummrich wrote:
-> This is the follow-up of the driver_override generalization in [1], converting
-> the remaining 11 busses and removing the now-unused driver_set_override()
-> helper.
+On 3/20/26 23:39, Lorenzo Stoakes (Oracle) wrote:
+> Commit 9d5403b1036c ("fs: convert most other generic_file_*mmap() users to
+> .mmap_prepare()") updated AFS to use the mmap_prepare callback in favour
+> of the deprecated mmap callback.
 > 
-> All of them (except AP, which has a different race condition) are prone to the
-> potential UAF described in [2], caused by accessing the driver_override field
-> from their corresponding match() callback.
+> However, it did not account for the fact that mmap_prepare is called
+> pre-merge, and may then be merged, nor that mmap_prepare can fail to map
+> due to an out of memory error.
 > 
-> In order to address this, the generalized driver_override field in struct device
-> is protected with a spinlock. The driver-core provides accessors, such as
-> device_match_driver_override(), device_has_driver_override() and
-> device_set_driver_override(), which all ensure proper locking internally.
+> This change was therefore since reverted.
 > 
-> Additionally, the driver-core provides a driver_override flag in struct
-> bus_type, which, once enabled, automatically registers generic sysfs callbacks,
-> allowing userspace to modify the driver_override field.
+> Both of those are cases in which we should not be incrementing a reference
+> count.
 > 
-> SPI and AP are a bit special; both print "\n" when driver_override is not set,
-> whereas all other buses (and thus the driver-core) produce "(null)\n" in this
-> case.
+> With the newly added vm_ops->mapped callback available, we can simply
+> defer this operation to that callback which is only invoked once the
+> mapping is successfully in place (but not yet visible to userspace as the
+> mmap and VMA write locks are held).
 > 
-> Hence, SPI and AP do not take advantage of the driver_override flag in struct
-> bus_type; AP additionally maintains a counter in its custom sysfs store().
+> This allows us to once again reimplement the .mmap_prepare implementation
+> for this file system.
 > 
-> Technically, we could support a custom fallback string when driver_override is
-> unset in struct bus_type, but only SPI would benefit from this, since AP has
-> additional custom logic in store() anyways.
+> Therefore add afs_mapped() to implement this callback for AFS, and remove
+> the code doing so in afs_mmap_prepare().
 > 
-> (I'm not sure if there are userspace programs that strictly rely on this;
-> driverctl seems to check for both, but I rather not break some userspace tool
-> I'm not aware of. :)
+> Also update afs_vm_open(), afs_vm_close() and afs_vm_map_pages() to be
+> consistent in how the vnode is accessed.
 > 
-> This series is based on v7.0-rc5 with no additional dependencies, hence those
-> patches can be picked up by subsystems individually.
-> 
-> [1] https://lore.kernel.org/driver-core/20260303115720.48783-1-dakr@kernel.org/
-> [2] https://bugzilla.kernel.org/show_bug.cgi?id=220789
-> [3] https://gitlab.com/driverctl/driverctl/-/blob/0.121/driverctl?ref_type=tags#L99
+> Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
 
-vdpa bits:
+Yep that should take care of that reference count problem.
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
 
-I assume it'll all be merged together?
-
-> Danilo Krummrich (12):
->   amba: use generic driver_override infrastructure
->   bus: fsl-mc: use generic driver_override infrastructure
->   cdx: use generic driver_override infrastructure
->   hv: vmbus: use generic driver_override infrastructure
->   PCI: use generic driver_override infrastructure
->   platform/wmi: use generic driver_override infrastructure
->   rpmsg: use generic driver_override infrastructure
->   vdpa: use generic driver_override infrastructure
->   s390/cio: use generic driver_override infrastructure
->   s390/ap: use generic driver_override infrastructure
->   spi: use generic driver_override infrastructure
->   driver core: remove driver_set_override()
+> ---
+>  fs/afs/file.c | 42 +++++++++++++++++++++++++++++-------------
+>  1 file changed, 29 insertions(+), 13 deletions(-)
 > 
->  drivers/amba/bus.c                 | 37 +++------------
->  drivers/base/driver.c              | 75 ------------------------------
->  drivers/bus/fsl-mc/fsl-mc-bus.c    | 43 +++--------------
->  drivers/cdx/cdx.c                  | 40 ++--------------
->  drivers/hv/vmbus_drv.c             | 36 ++------------
->  drivers/pci/pci-driver.c           | 11 +++--
->  drivers/pci/pci-sysfs.c            | 28 -----------
->  drivers/pci/probe.c                |  1 -
->  drivers/platform/wmi/core.c        | 36 ++------------
->  drivers/rpmsg/qcom_glink_native.c  |  2 -
->  drivers/rpmsg/rpmsg_core.c         | 43 +++--------------
->  drivers/rpmsg/virtio_rpmsg_bus.c   |  1 -
->  drivers/s390/cio/cio.h             |  5 --
->  drivers/s390/cio/css.c             | 34 ++------------
->  drivers/s390/crypto/ap_bus.c       | 34 +++++++-------
->  drivers/s390/crypto/ap_bus.h       |  1 -
->  drivers/s390/crypto/ap_queue.c     | 24 +++-------
->  drivers/spi/spi.c                  | 19 +++-----
->  drivers/vdpa/vdpa.c                | 48 ++-----------------
->  drivers/vfio/fsl-mc/vfio_fsl_mc.c  |  4 +-
->  drivers/vfio/pci/vfio_pci_core.c   |  5 +-
->  drivers/xen/xen-pciback/pci_stub.c |  6 ++-
->  include/linux/amba/bus.h           |  5 --
->  include/linux/cdx/cdx_bus.h        |  4 --
->  include/linux/device/driver.h      |  2 -
->  include/linux/fsl/mc.h             |  4 --
->  include/linux/hyperv.h             |  5 --
->  include/linux/pci.h                |  6 ---
->  include/linux/rpmsg.h              |  4 --
->  include/linux/spi/spi.h            |  5 --
->  include/linux/vdpa.h               |  4 --
->  include/linux/wmi.h                |  4 --
->  32 files changed, 88 insertions(+), 488 deletions(-)
+> diff --git a/fs/afs/file.c b/fs/afs/file.c
+> index 74d04af51ff4..85696ac984cc 100644
+> --- a/fs/afs/file.c
+> +++ b/fs/afs/file.c
+> @@ -19,7 +19,7 @@
+>  #include <trace/events/netfs.h>
+>  #include "internal.h"
 > 
+> -static int afs_file_mmap(struct file *file, struct vm_area_struct *vma);
+> +static int afs_file_mmap_prepare(struct vm_area_desc *desc);
 > 
-> base-commit: c369299895a591d96745d6492d4888259b004a9e
-> -- 
+>  static ssize_t afs_file_read_iter(struct kiocb *iocb, struct iov_iter *iter);
+>  static ssize_t afs_file_splice_read(struct file *in, loff_t *ppos,
+> @@ -28,6 +28,8 @@ static ssize_t afs_file_splice_read(struct file *in, loff_t *ppos,
+>  static void afs_vm_open(struct vm_area_struct *area);
+>  static void afs_vm_close(struct vm_area_struct *area);
+>  static vm_fault_t afs_vm_map_pages(struct vm_fault *vmf, pgoff_t start_pgoff, pgoff_t end_pgoff);
+> +static int afs_mapped(unsigned long start, unsigned long end, pgoff_t pgoff,
+> +		      const struct file *file, void **vm_private_data);
+> 
+>  const struct file_operations afs_file_operations = {
+>  	.open		= afs_open,
+> @@ -35,7 +37,7 @@ const struct file_operations afs_file_operations = {
+>  	.llseek		= generic_file_llseek,
+>  	.read_iter	= afs_file_read_iter,
+>  	.write_iter	= netfs_file_write_iter,
+> -	.mmap		= afs_file_mmap,
+> +	.mmap_prepare	= afs_file_mmap_prepare,
+>  	.splice_read	= afs_file_splice_read,
+>  	.splice_write	= iter_file_splice_write,
+>  	.fsync		= afs_fsync,
+> @@ -61,6 +63,7 @@ const struct address_space_operations afs_file_aops = {
+>  };
+> 
+>  static const struct vm_operations_struct afs_vm_ops = {
+> +	.mapped		= afs_mapped,
+>  	.open		= afs_vm_open,
+>  	.close		= afs_vm_close,
+>  	.fault		= filemap_fault,
+> @@ -492,34 +495,47 @@ static void afs_drop_open_mmap(struct afs_vnode *vnode)
+>  /*
+>   * Handle setting up a memory mapping on an AFS file.
+>   */
+> -static int afs_file_mmap(struct file *file, struct vm_area_struct *vma)
+> +static int afs_file_mmap_prepare(struct vm_area_desc *desc)
+>  {
+> -	struct afs_vnode *vnode = AFS_FS_I(file_inode(file));
+>  	int ret;
+> 
+> -	afs_add_open_mmap(vnode);
+> +	ret = generic_file_mmap_prepare(desc);
+> +	if (ret)
+> +		return ret;
+> 
+> -	ret = generic_file_mmap(file, vma);
+> -	if (ret == 0)
+> -		vma->vm_ops = &afs_vm_ops;
+> -	else
+> -		afs_drop_open_mmap(vnode);
+> +	desc->vm_ops = &afs_vm_ops;
+>  	return ret;
+>  }
+> 
+> +static int afs_mapped(unsigned long start, unsigned long end, pgoff_t pgoff,
+> +		      const struct file *file, void **vm_private_data)
+> +{
+> +	struct afs_vnode *vnode = AFS_FS_I(file_inode(file));
+> +
+> +	afs_add_open_mmap(vnode);
+> +	return 0;
+> +}
+> +
+>  static void afs_vm_open(struct vm_area_struct *vma)
+>  {
+> -	afs_add_open_mmap(AFS_FS_I(file_inode(vma->vm_file)));
+> +	struct file *file = vma->vm_file;
+> +	struct afs_vnode *vnode = AFS_FS_I(file_inode(file));
+> +
+> +	afs_add_open_mmap(vnode);
+>  }
+> 
+>  static void afs_vm_close(struct vm_area_struct *vma)
+>  {
+> -	afs_drop_open_mmap(AFS_FS_I(file_inode(vma->vm_file)));
+> +	struct file *file = vma->vm_file;
+> +	struct afs_vnode *vnode = AFS_FS_I(file_inode(file));
+> +
+> +	afs_drop_open_mmap(vnode);
+>  }
+> 
+>  static vm_fault_t afs_vm_map_pages(struct vm_fault *vmf, pgoff_t start_pgoff, pgoff_t end_pgoff)
+>  {
+> -	struct afs_vnode *vnode = AFS_FS_I(file_inode(vmf->vma->vm_file));
+> +	struct file *file = vmf->vma->vm_file;
+> +	struct afs_vnode *vnode = AFS_FS_I(file_inode(file));
+> 
+>  	if (afs_check_validity(vnode))
+>  		return filemap_map_pages(vmf, start_pgoff, end_pgoff);
+> --
 > 2.53.0
 
 
