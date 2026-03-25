@@ -1,67 +1,62 @@
-Return-Path: <linux-hyperv+bounces-9751-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9752-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UK9sNLaow2nAtAQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9751-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 10:19:50 +0100
+	id kHL5Jj+pw2nAtAQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9752-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 10:22:07 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A6EA3220AE
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 10:19:50 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FB10322161
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 10:22:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AE124303B7DB
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 09:14:03 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A7118301A9CF
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 09:22:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51F0F350A1B;
-	Wed, 25 Mar 2026 09:14:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4D713115BC;
+	Wed, 25 Mar 2026 09:22:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="plX75fj6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NO8wt1yf"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9B8347BC1;
-	Wed, 25 Mar 2026 09:14:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06582F3C18;
+	Wed, 25 Mar 2026 09:22:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774430043; cv=none; b=p69hyiCNsZ2JR4rRDBgvVsIfwcAer9GJQOdAj0Lfs/CwC/HDrOYj3mzObNUd5nb90kGT4lBf7FIs6aqvVXbrBCyBcpphrZbFHYSl+T3RhjUiLN5klDIStVtk/APmKto2ZKClpxaDGmMMwqD7O+2aAt5ZWwxKCHRdF3G2DnEUzCY=
+	t=1774430525; cv=none; b=A1neDcSwIWlGTjtqMudhOK0DOUX8cz17dPxDE6QqaX1NF/cWVaVVH0M5oRAQPNbft8j5cwlaC3YAhjriIbZL0YgN+6QFwjOYlmDpT2u6TbjF23/Zv5Prd6O7cfPO/Twwj9f0LTC6irZ/xVqA0KjHw+MFViXt+mamKIyAb7TI4zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774430043; c=relaxed/simple;
-	bh=78pyxin5qndZKSJzDXsFFmZnhzDT7LLyrqA2VFYSpPo=;
+	s=arc-20240116; t=1774430525; c=relaxed/simple;
+	bh=Ak+Y2Irbt9Vy7emvnxV1c3MbwGabTZfucRgopnZqMck=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=upkUNpIsg+06/j0pVK744setFYNMOqu13OtPvWqwnUVhb4PeXxSN3cAwyS4YMm5lAXPvutUpP3oF2pd/Z3v03HYQt/VSIba/ieiSYtdTo08P3qR2GZIOvXHHqBR0nqVvFBxFO0Wa/YEXxzz8p/9Qcue0xpofdhyI+6/dJlm8xwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=plX75fj6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32EFCC4CEF7;
-	Wed, 25 Mar 2026 09:14:01 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=dBufS5m4GeWGF1o8v0mxQshPqba5Kefnmo2Ez+EXzh0ZpDkmX5Ul/cljEqrydpNfyzJCeM/h/br+mX3m6ifLWS+04kBQZDyf8+muwGhnTb1i2QkLL6eEpb+yEB3PmTb8bi3DU/hjPiRx04l31ZzF0Mm3oHUMN/5LerPoJ9gzpi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NO8wt1yf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68E6AC4CEF7;
+	Wed, 25 Mar 2026 09:22:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774430043;
-	bh=78pyxin5qndZKSJzDXsFFmZnhzDT7LLyrqA2VFYSpPo=;
+	s=k20201202; t=1774430525;
+	bh=Ak+Y2Irbt9Vy7emvnxV1c3MbwGabTZfucRgopnZqMck=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=plX75fj6Fi/CInEUCv8w5cHIDsad+uaIJX11gWXQZPLJJfOjxOosFJurvATwdmzyf
-	 XM1fLbDydsi7l/I4rpFP1BhjUzFOQ6/hjYw54HGBxNQsrwyEtfT2GI0a4cA2FlfiHb
-	 Sov+e/lBVY+RfSyA0pCltMc0T/7xgv642U1NGI0MXjy8jQyo/dCKntQ7HYnpgUgil6
-	 50NrK30hAVvx6h94jAhu8o0u0oOb2WcEjPIS4o6//SY9KR923JbehewO+oIH9PAMhT
-	 stADXCjZPDMiqTzvvHa2LGYvmbBAg6lKE7Lk6gOOGIJPio4X+XTCnZWFF3z1ULGLKk
-	 TlxBWeUuqn+DQ==
-Date: Wed, 25 Mar 2026 11:13:57 +0200
+	b=NO8wt1yfpnT9fh76npBs2P2IAamaEGlYCxXIjQMCoM89o3YFtC5iLVkVlE4Qs1IYj
+	 OCBMXNnpXCdkW/vRnnS6hqLzlPRzgPxIRswguYbWXC6V4Aj8hwqPQ99AJm3JZnvED7
+	 tRZrHROPnumyjAUV9jgpHngj+762dqUt/S58m8TaNaWLxONbMZoOUEbJIH7wYh8Y/5
+	 LECLRTsfN9NNxslRFqVgOZh2gpovrkqXQuR+7SbC1tXUJqgW0QTWDUUPt5RD6C8doR
+	 5o1wanARdfGXQJI7ncu2x2q3Rked/Lp+TAMyMVxi+SsYGp9+CZs+O4A5g/ETNEHWqq
+	 y2GY+EDGZIa9Q==
+Date: Wed, 25 Mar 2026 11:22:00 +0200
 From: Leon Romanovsky <leon@kernel.org>
-To: Long Li <longli@microsoft.com>
-Cc: Konstantin Taranov <kotaranov@microsoft.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K . Y . Srinivasan" <kys@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH rdma v2] RDMA/mana_ib: Disable RX steering on RSS QP
- destroy
-Message-ID: <20260325091357.GP814676@unreal>
-References: <20260323201106.1768705-1-longli@microsoft.com>
+To: Tianyu Lan <ltykernel@gmail.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com, m.szyprowski@samsung.com,
+	robin.murphy@arm.com, Tianyu Lan <tiala@microsoft.com>,
+	iommu@lists.linux.dev, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, hch@infradead.org, vdso@hexbites.dev,
+	Michael Kelley <mhklinux@outlook.com>
+Subject: Re: [RFC PATCH V3] x86/VMBus: Confidential VMBus for dynamic DMA
+ transfers
+Message-ID: <20260325092200.GQ814676@unreal>
+References: <20260325075649.248241-1-tiala@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -70,107 +65,120 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260323201106.1768705-1-longli@microsoft.com>
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+In-Reply-To: <20260325075649.248241-1-tiala@microsoft.com>
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9751-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9752-lists,linux-hyperv=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[15];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,samsung.com,arm.com,lists.linux.dev,vger.kernel.org,infradead.org,hexbites.dev,outlook.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[leon@kernel.org,linux-hyperv@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[msgid.link:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 3A6EA3220AE
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,outlook.com:email]
+X-Rspamd-Queue-Id: 3FB10322161
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Mar 23, 2026 at 01:10:56PM -0700, Long Li wrote:
-> When an RSS QP is destroyed (e.g. DPDK exit), mana_ib_destroy_qp_rss()
-> destroys the RX WQ objects but does not disable vPort RX steering in
-> firmware. This leaves stale steering configuration that still points to
-> the destroyed RX objects.
+On Wed, Mar 25, 2026 at 03:56:49AM -0400, Tianyu Lan wrote:
+> Hyper-V provides Confidential VMBus to communicate between
+> device model and device guest driver via encrypted/private
+> memory in Confidential VM. The device model is in OpenHCL
+> (https://openvmm.dev/guide/user_guide/openhcl.html) that
+> plays the paravisor role.
 > 
-> If traffic continues to arrive (e.g. peer VM is still transmitting) and
-> the VF interface is subsequently brought up (mana_open), the firmware
-> may deliver completions using stale CQ IDs from the old RX objects.
-> These CQ IDs can be reused by the ethernet driver for new TX CQs,
-> causing RX completions to land on TX CQs:
+> For a VMBus device, there are two communication methods to
+> talk with Host/Hypervisor. 1) VMBUS Ring buffer 2) Dynamic
+> DMA transfer.
 > 
->   WARNING: mana_poll_tx_cq+0x1b8/0x220 [mana]  (is_sq == false)
->   WARNING: mana_gd_process_eq_events+0x209/0x290 (cq_table lookup fails)
+> The Confidential VMBus Ring buffer has been upstreamed by
+> Roman Kisel(commit 6802d8af47d1).
 > 
-> Fix this by disabling vPort RX steering before destroying RX WQ objects.
-> Note that mana_fence_rqs() cannot be used here because the fence
-> completion is delivered on the CQ, which is polled by user-mode (e.g.
-> DPDK) and not visible to the kernel driver.
+> The dynamic DMA transition of VMBus device normally goes
+> through DMA core and it uses SWIOTLB as bounce buffer in
+> a CoCo VM.
 > 
-> Refactor the disable logic into a shared mana_disable_vport_rx() in
-> mana_en, exported for use by mana_ib, replacing the duplicate code.
-> The ethernet driver's mana_dealloc_queues() is also updated to call
-> this common function.
+> The Confidential VMBus device can do DMA directly to
+> private/encrypted memory. Because the swiotlb is decrypted
+> memory, the DMA transfer must not be bounced through the
+> swiotlb, so as to preserve confidentiality. This is different
+> from the default for Linux CoCo VMs, so disable the VMBus
+> device's use of swiotlb.
 > 
-> Fixes: 0266a177631d ("RDMA/mana_ib: Add a driver for Microsoft Azure Network Adapter")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Long Li <longli@microsoft.com>
-> ---
-> v2:
->   - Removed redundant ibdev_err on mana_disable_vport_rx() failure as
->     mana_cfg_vport_steering() already logs all failure scenarios.
->   - Added comment clarifying this is best effort.
->  drivers/infiniband/hw/mana/qp.c               | 15 +++++++++++++++
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 11 ++++++++++-
->  include/net/mana/mana.h                       |  1 +
->  3 files changed, 26 insertions(+), 1 deletion(-)
+> Expose swiotlb_dev_disable() from DMA Core to disable
+> bounce buffer for device.
 
-
-It doesn't apply to rdma-rc.
-
-Looking up https://lore.kernel.org/all/20260323201106.1768705-1-longli@microsoft.com/
-Grabbing thread from lore.kernel.org/all/20260323201106.1768705-1-longli@microsoft.com/t.mbox.gz
-Checking for newer revisions
-Grabbing search results from lore.kernel.org
-Analyzing 3 messages in the thread
-Looking for additional code-review trailers on lore.kernel.org
-Analyzing 0 code-review messages
-Checking attestation on all messages, may take a moment...
----
-  [PATCH v2] RDMA/mana_ib: Disable RX steering on RSS QP destroy
-    + Link: https://patch.msgid.link/20260323201106.1768705-1-longli@microsoft.com
-    + Signed-off-by: Leon Romanovsky <leon@kernel.org>
-  ---
-  NOTE: install dkimpy for DKIM signature verification
----
-Total patches: 1
----
-Applying: RDMA/mana_ib: Disable RX steering on RSS QP destroy
-Patch failed at 0001 RDMA/mana_ib: Disable RX steering on RSS QP destroy
-error: patch failed: drivers/net/ethernet/microsoft/mana/mana_en.c:3339
-error: drivers/net/ethernet/microsoft/mana/mana_en.c: patch does not apply
-hint: Use 'git am --show-current-patch=diff' to see the failed patch
-hint: When you have resolved this problem, run "git am --continue".
-hint: If you prefer to skip this patch, run "git am --skip" instead.
-hint: To restore the original branch and stop patching, run "git am --abort".
-hint: Disable this message with "git config set advice.mergeConflict false"
-Press any key to continue...
+It feels awkward and like a layering violation to let arbitrary kernel
+drivers manipulate SWIOTLB, which sits beneath the DMA core.
 
 Thanks
+
+> 
+> Suggested-by: Michael Kelley <mhklinux@outlook.com>
+> Signed-off-by: Tianyu Lan <tiala@microsoft.com>
+> ---
+>  drivers/hv/vmbus_drv.c  | 6 +++++-
+>  include/linux/swiotlb.h | 5 +++++
+>  2 files changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 3d1a58b667db..84e6971fc90f 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -2184,11 +2184,15 @@ int vmbus_device_register(struct hv_device *child_device_obj)
+>  	child_device_obj->device.dma_mask = &child_device_obj->dma_mask;
+>  	dma_set_mask(&child_device_obj->device, DMA_BIT_MASK(64));
+>  
+> +	device_initialize(&child_device_obj->device);
+> +	if (child_device_obj->channel->co_external_memory)
+> +		swiotlb_dev_disable(&child_device_obj->device);
+> +
+>  	/*
+>  	 * Register with the LDM. This will kick off the driver/device
+>  	 * binding...which will eventually call vmbus_match() and vmbus_probe()
+>  	 */
+> -	ret = device_register(&child_device_obj->device);
+> +	ret = device_add(&child_device_obj->device);
+>  	if (ret) {
+>  		pr_err("Unable to register child device\n");
+>  		put_device(&child_device_obj->device);
+> diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
+> index 3dae0f592063..7c572570d5d9 100644
+> --- a/include/linux/swiotlb.h
+> +++ b/include/linux/swiotlb.h
+> @@ -169,6 +169,11 @@ static inline struct io_tlb_pool *swiotlb_find_pool(struct device *dev,
+>  	return NULL;
+>  }
+>  
+> +static inline bool swiotlb_dev_disable(struct device *dev)
+> +{
+> +	return dev->dma_io_tlb_mem == NULL;
+> +}
+> +
+>  static inline bool is_swiotlb_force_bounce(struct device *dev)
+>  {
+>  	struct io_tlb_mem *mem = dev->dma_io_tlb_mem;
+> -- 
+> 2.50.1
+> 
+> 
 
