@@ -1,191 +1,176 @@
-Return-Path: <linux-hyperv+bounces-9750-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9751-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KPPcG+2lw2lssQQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9750-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 10:07:57 +0100
+	id UK9sNLaow2nAtAQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9751-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 10:19:50 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D06C3321E30
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 10:07:56 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A6EA3220AE
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 10:19:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 410BE3034325
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 09:06:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AE124303B7DB
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 09:14:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF81F322B7B;
-	Wed, 25 Mar 2026 09:06:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51F0F350A1B;
+	Wed, 25 Mar 2026 09:14:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B/pXGWqx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="plX75fj6"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A517211A05;
-	Wed, 25 Mar 2026 09:06:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9B8347BC1;
+	Wed, 25 Mar 2026 09:14:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774429585; cv=none; b=S/BiS1TXupxlalNNs1axY1yMUh/PFxpB4BgcQ0sYQt8NhqMzonhia/qkONPEzX6A1gUBWZr1FkQ1brPOy3mztHpp5ztckfMWMX7Vrkbce5KuUR8sE6rGGVn6hvtyPSkkboRV10JwwlEe0uEuRlYCYPJsBshWeX9I2YgjauF+oSE=
+	t=1774430043; cv=none; b=p69hyiCNsZ2JR4rRDBgvVsIfwcAer9GJQOdAj0Lfs/CwC/HDrOYj3mzObNUd5nb90kGT4lBf7FIs6aqvVXbrBCyBcpphrZbFHYSl+T3RhjUiLN5klDIStVtk/APmKto2ZKClpxaDGmMMwqD7O+2aAt5ZWwxKCHRdF3G2DnEUzCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774429585; c=relaxed/simple;
-	bh=TGeHJllmZaOU480qUtXeb/jUm42/azepnhJdaLl9P5A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F9h5GRnOS7N2DXbJ51rWO67AuAs8sqG8R4t4HJtTAFq7Cm+yrcwI2Jb80u4tHsUt43GrrrhlqY2LZvLkCpbAvd8P+2+y35TQhhRfimLv4Gk0hLp1WPbb9n97SFr0/TEOuNcWUevxpVX/rXoY49NbCXV3JKd1yZTtWUMLUE2WcLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B/pXGWqx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F5A1C4CEF7;
-	Wed, 25 Mar 2026 09:06:16 +0000 (UTC)
+	s=arc-20240116; t=1774430043; c=relaxed/simple;
+	bh=78pyxin5qndZKSJzDXsFFmZnhzDT7LLyrqA2VFYSpPo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=upkUNpIsg+06/j0pVK744setFYNMOqu13OtPvWqwnUVhb4PeXxSN3cAwyS4YMm5lAXPvutUpP3oF2pd/Z3v03HYQt/VSIba/ieiSYtdTo08P3qR2GZIOvXHHqBR0nqVvFBxFO0Wa/YEXxzz8p/9Qcue0xpofdhyI+6/dJlm8xwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=plX75fj6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32EFCC4CEF7;
+	Wed, 25 Mar 2026 09:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774429585;
-	bh=TGeHJllmZaOU480qUtXeb/jUm42/azepnhJdaLl9P5A=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=B/pXGWqxkc77H/QNjcNN4hXFs+1yWtOO/K6ZlFDqfhgwHp4yHtUXBY1gINF1N/v7H
-	 Swoeh/4pl25iEnor6XcK93/xaSpBQCXea/x0tJWaU2vmaO0gQrTCNvrvDCRgFprVKV
-	 1KqlwKP+22aqYID5Rc4LF4kA7w+kAFXYTzDiwCQpdMmDJrHF9HDz+HIU9m1OkF3LTb
-	 /jwCEhab+UIAPA9vKX7zWI8lclKZJMoZ3e82DcRkAVWva3ZfDqkkW0tKKWs9g8wCY/
-	 xPGCmHA6G5g4E8Zs8WC6hluY2t54Kvjz8OpvZWbU1RkOlOvI5O2Nk6MOymHovUB97F
-	 cRXNnffbCU5+g==
-Message-ID: <e9e9c3a3-26fb-4ca5-af27-158f4860a810@kernel.org>
-Date: Wed, 25 Mar 2026 10:06:15 +0100
+	s=k20201202; t=1774430043;
+	bh=78pyxin5qndZKSJzDXsFFmZnhzDT7LLyrqA2VFYSpPo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=plX75fj6Fi/CInEUCv8w5cHIDsad+uaIJX11gWXQZPLJJfOjxOosFJurvATwdmzyf
+	 XM1fLbDydsi7l/I4rpFP1BhjUzFOQ6/hjYw54HGBxNQsrwyEtfT2GI0a4cA2FlfiHb
+	 Sov+e/lBVY+RfSyA0pCltMc0T/7xgv642U1NGI0MXjy8jQyo/dCKntQ7HYnpgUgil6
+	 50NrK30hAVvx6h94jAhu8o0u0oOb2WcEjPIS4o6//SY9KR923JbehewO+oIH9PAMhT
+	 stADXCjZPDMiqTzvvHa2LGYvmbBAg6lKE7Lk6gOOGIJPio4X+XTCnZWFF3z1ULGLKk
+	 TlxBWeUuqn+DQ==
+Date: Wed, 25 Mar 2026 11:13:57 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Long Li <longli@microsoft.com>
+Cc: Konstantin Taranov <kotaranov@microsoft.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K . Y . Srinivasan" <kys@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH rdma v2] RDMA/mana_ib: Disable RX steering on RSS QP
+ destroy
+Message-ID: <20260325091357.GP814676@unreal>
+References: <20260323201106.1768705-1-longli@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 09/21] fs: afs: revert mmap_prepare() change
-Content-Language: en-US
-To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Clemens Ladisch <clemens@ladisch.de>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Bodo Stroesser <bostroesser@gmail.com>,
- "Martin K . Petersen" <martin.petersen@oracle.com>,
- David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- David Hildenbrand <david@kernel.org>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org,
- linux-staging@lists.linux.dev, linux-scsi@vger.kernel.org,
- target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- Ryan Roberts <ryan.roberts@arm.com>
-References: <cover.1774045440.git.ljs@kernel.org>
- <08804c94e39d9102a3a8fbd12385e8aa079ba1d3.1774045440.git.ljs@kernel.org>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-In-Reply-To: <08804c94e39d9102a3a8fbd12385e8aa079ba1d3.1774045440.git.ljs@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260323201106.1768705-1-longli@microsoft.com>
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9750-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9751-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[lwn.net,ladisch.de,arndb.de,linuxfoundation.org,microsoft.com,kernel.org,linux.intel.com,gmail.com,foss.st.com,bootlin.com,nod.at,ti.com,oracle.com,redhat.com,auristor.com,zeniv.linux.org.uk,suse.cz,google.com,suse.com,suse.de,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org,lists.linux.dev,kvack.org,arm.com];
-	RCPT_COUNT_TWELVE(0.00)[44];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[18];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[vbabka@kernel.org,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[leon@kernel.org,linux-hyperv@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: D06C3321E30
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[msgid.link:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 3A6EA3220AE
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 3/20/26 23:39, Lorenzo Stoakes (Oracle) wrote:
-> Partially reverts commit 9d5403b1036c ("fs: convert most other
-> generic_file_*mmap() users to .mmap_prepare()").
+On Mon, Mar 23, 2026 at 01:10:56PM -0700, Long Li wrote:
+> When an RSS QP is destroyed (e.g. DPDK exit), mana_ib_destroy_qp_rss()
+> destroys the RX WQ objects but does not disable vPort RX steering in
+> firmware. This leaves stale steering configuration that still points to
+> the destroyed RX objects.
 > 
-> This is because the .mmap invocation establishes a refcount, but
-> .mmap_prepare is called at a point where a merge or an allocation failure
-> might happen after the call, which would leak the refcount increment.
+> If traffic continues to arrive (e.g. peer VM is still transmitting) and
+> the VF interface is subsequently brought up (mana_open), the firmware
+> may deliver completions using stale CQ IDs from the old RX objects.
+> These CQ IDs can be reused by the ethernet driver for new TX CQs,
+> causing RX completions to land on TX CQs:
 > 
-> Functionality is being added to permit the use of .mmap_prepare in this
-> case, but in the interim, we need to fix this.
+>   WARNING: mana_poll_tx_cq+0x1b8/0x220 [mana]  (is_sq == false)
+>   WARNING: mana_gd_process_eq_events+0x209/0x290 (cq_table lookup fails)
 > 
-> Fixes: 9d5403b1036c ("fs: convert most other generic_file_*mmap() users to .mmap_prepare()")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
-
-Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
-
+> Fix this by disabling vPort RX steering before destroying RX WQ objects.
+> Note that mana_fence_rqs() cannot be used here because the fence
+> completion is delivered on the CQ, which is polled by user-mode (e.g.
+> DPDK) and not visible to the kernel driver.
+> 
+> Refactor the disable logic into a shared mana_disable_vport_rx() in
+> mana_en, exported for use by mana_ib, replacing the duplicate code.
+> The ethernet driver's mana_dealloc_queues() is also updated to call
+> this common function.
+> 
+> Fixes: 0266a177631d ("RDMA/mana_ib: Add a driver for Microsoft Azure Network Adapter")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Long Li <longli@microsoft.com>
 > ---
->  fs/afs/file.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/afs/file.c b/fs/afs/file.c
-> index f609366fd2ac..74d04af51ff4 100644
-> --- a/fs/afs/file.c
-> +++ b/fs/afs/file.c
-> @@ -19,7 +19,7 @@
->  #include <trace/events/netfs.h>
->  #include "internal.h"
->  
-> -static int afs_file_mmap_prepare(struct vm_area_desc *desc);
-> +static int afs_file_mmap(struct file *file, struct vm_area_struct *vma);
->  
->  static ssize_t afs_file_read_iter(struct kiocb *iocb, struct iov_iter *iter);
->  static ssize_t afs_file_splice_read(struct file *in, loff_t *ppos,
-> @@ -35,7 +35,7 @@ const struct file_operations afs_file_operations = {
->  	.llseek		= generic_file_llseek,
->  	.read_iter	= afs_file_read_iter,
->  	.write_iter	= netfs_file_write_iter,
-> -	.mmap_prepare	= afs_file_mmap_prepare,
-> +	.mmap		= afs_file_mmap,
->  	.splice_read	= afs_file_splice_read,
->  	.splice_write	= iter_file_splice_write,
->  	.fsync		= afs_fsync,
-> @@ -492,16 +492,16 @@ static void afs_drop_open_mmap(struct afs_vnode *vnode)
->  /*
->   * Handle setting up a memory mapping on an AFS file.
->   */
-> -static int afs_file_mmap_prepare(struct vm_area_desc *desc)
-> +static int afs_file_mmap(struct file *file, struct vm_area_struct *vma)
->  {
-> -	struct afs_vnode *vnode = AFS_FS_I(file_inode(desc->file));
-> +	struct afs_vnode *vnode = AFS_FS_I(file_inode(file));
->  	int ret;
->  
->  	afs_add_open_mmap(vnode);
->  
-> -	ret = generic_file_mmap_prepare(desc);
-> +	ret = generic_file_mmap(file, vma);
->  	if (ret == 0)
-> -		desc->vm_ops = &afs_vm_ops;
-> +		vma->vm_ops = &afs_vm_ops;
->  	else
->  		afs_drop_open_mmap(vnode);
->  	return ret;
+> v2:
+>   - Removed redundant ibdev_err on mana_disable_vport_rx() failure as
+>     mana_cfg_vport_steering() already logs all failure scenarios.
+>   - Added comment clarifying this is best effort.
+>  drivers/infiniband/hw/mana/qp.c               | 15 +++++++++++++++
+>  drivers/net/ethernet/microsoft/mana/mana_en.c | 11 ++++++++++-
+>  include/net/mana/mana.h                       |  1 +
+>  3 files changed, 26 insertions(+), 1 deletion(-)
 
+
+It doesn't apply to rdma-rc.
+
+Looking up https://lore.kernel.org/all/20260323201106.1768705-1-longli@microsoft.com/
+Grabbing thread from lore.kernel.org/all/20260323201106.1768705-1-longli@microsoft.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Looking for additional code-review trailers on lore.kernel.org
+Analyzing 0 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+  [PATCH v2] RDMA/mana_ib: Disable RX steering on RSS QP destroy
+    + Link: https://patch.msgid.link/20260323201106.1768705-1-longli@microsoft.com
+    + Signed-off-by: Leon Romanovsky <leon@kernel.org>
+  ---
+  NOTE: install dkimpy for DKIM signature verification
+---
+Total patches: 1
+---
+Applying: RDMA/mana_ib: Disable RX steering on RSS QP destroy
+Patch failed at 0001 RDMA/mana_ib: Disable RX steering on RSS QP destroy
+error: patch failed: drivers/net/ethernet/microsoft/mana/mana_en.c:3339
+error: drivers/net/ethernet/microsoft/mana/mana_en.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
+Press any key to continue...
+
+Thanks
 
