@@ -1,402 +1,261 @@
-Return-Path: <linux-hyperv+bounces-9745-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9746-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eKesLr9Rw2mIqAQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9745-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 04:08:47 +0100
+	id gJQfMMhhw2m1qQQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9746-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 05:17:12 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 669EA31F0C4
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 04:08:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3041D31F951
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 05:17:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 980B53034B02
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 03:08:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 762D93069010
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 04:07:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A71C2BEC41;
-	Wed, 25 Mar 2026 03:08:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2777F2ED843;
+	Wed, 25 Mar 2026 04:07:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QsG2jCun"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="nkzheWyY"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from MEUPR01CU001.outbound.protection.outlook.com (mail-australiasoutheastazolkn19010008.outbound.protection.outlook.com [52.103.73.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B918229D28F
-	for <linux-hyperv@vger.kernel.org>; Wed, 25 Mar 2026 03:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F0C2ED866;
+	Wed, 25 Mar 2026 04:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.73.8
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774408104; cv=pass; b=HTa5X65mZ0Bnw01drM79m2Svfm4y5IAzZYdToIAhcIWcuoKXX4Vq4smnptN7QXNKsR0+ahauEBoELDyt2TnpO+PZfcwFGH4S3AqH7I/eCzIXBSPZzhZKpqAmxwP0DNj4bGNKV497/yQ0Z7TGC6YBJI0fN03T/5oijuOXsEXlJog=
+	t=1774411628; cv=fail; b=mBaezcbPSd8WBulZGYgzrWWvXsrpaqjE8KCm49LfbfiJUTFO5bU6V21m2AWFIDUxhywhmgnE6TRvVcHPQU6CpWiz48x3CchsQlO5nlf1qpAQSwL2oSPoFtoXS2ua1NqHlKAz63JpYV1DspWTOg5tpa+gL9POwSRivuF05SnotzQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774408104; c=relaxed/simple;
-	bh=hJdcGCQ3mHxI4qcvqZp/CCaqOJ76l13MZ1DRKNMUyZA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WQMI/qsl9Kl+4iQIr9yOoBswi5q2jmCZVWhFZVOTNmdGrWvxveciPbTarwSabYJbK3fl6er1IZGPDaPqyTN03u7foLnv3JRYXS4wido09tMRj98ontOgxxqm4zIZenRU9B9aY7NCwpV9GxmYVrSrdYHvbXbKJXWERb8Mt/0i9uk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QsG2jCun; arc=pass smtp.client-ip=209.85.161.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-67bbea1e090so3378285eaf.3
-        for <linux-hyperv@vger.kernel.org>; Tue, 24 Mar 2026 20:08:22 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774408102; cv=none;
-        d=google.com; s=arc-20240605;
-        b=PSqHcYQl2Rjg6UU53np9k0hxbzYbS9LYXhCBcMW6KVzyJWXCVlJgs+AD3BgBs79aaY
-         6Ve8efh5w7RO6MFaFWfzush/jLixrAL3DPp7nvDXpbJPGBASDDBzfjoogJeDh8G+A5H4
-         f6as6fApzhzW8JdXkvBfAyBgxx2fkOYXTDxrJbouSBe4wF6DYDHkM7+ARfXbuZ69Zg8J
-         YOBU18xouUjBooporTOJkro0KwimG9Yu9fitBG57YTuyuzMJFpnKa7cOR5LQXCVyaZoK
-         5NcSYupxhKMZGvGaA8Lk2ltT9858plrQF5JzlrinWixHKE8JsmdWYJAW4/zFCU7l37BP
-         gsmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=L1agqMYRVyCUyftxunjR/Gctujg8X1gDCx6TflvnIV4=;
-        fh=67uCbkHIUpOnFYT1cBgjWpNlT58MTUWDAjKBqupj1Lk=;
-        b=CxyLAUVCeIgUoJt8G9gu4WRk1yZAuE6X7ZzdOgh6SQe7syK8yf07UwOiAHgedOntrx
-         N3lcwwonOmd/wrSKA+CIKRQwVkm9oPPIknaDm4yeG0RgS1TBdxTFGFfrh+ULHWAdzJqY
-         dC999nXTMc22/FUTSJzONjoTZP3gm/TaB007t3ohAsbrRyxxUVFgGdBzW4Rpz0C/dH3w
-         QTZ7po9V/vkTMNIiLYbE3bELFulW/9SlYZcwS4on8YyuQEKqX6y44fi9vJNzjX3mkkEB
-         lkkIkUwJypYGckQBhtcUGloPvbKpE25XXedKSbaURPcC0EOt8k4IY9O2qhK1X4CHgO2E
-         rwWw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774408102; x=1775012902; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L1agqMYRVyCUyftxunjR/Gctujg8X1gDCx6TflvnIV4=;
-        b=QsG2jCunF6U9HFdPFtYk1Fvt12375/QhCCqZnpk7qBrUJDtwoPwbZG00Jxz3BLNAhH
-         6yC6bntNmHyq7x7cP0+N6/uwrnu4b91f6kk14zUUgBqddni3wPt6K7GfK3VBO9vnm3J1
-         z+WYSyue1n99gDpMq448CDF5siFzxJf5yHSUwcyJx6VhvxvHBUVIoZCA8J8lRlFVzyE+
-         VVj1VO6NGN1ab9PiGjH0rUmDjcUZDFcwiB5b34LaaumYSy57XOpRmbzP5Qhozw3636yE
-         ih5IVdoV+6OvYilULBnmHxgj0HuKO1k2K64kakQdkM8JMyQ6HNVTAAeXTM51wOpVMwzo
-         g5Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774408102; x=1775012902;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=L1agqMYRVyCUyftxunjR/Gctujg8X1gDCx6TflvnIV4=;
-        b=SaCc6m8Roh55TYf6LuXb0gspJlXGA/RwedWyOgKYJgsXgqlpQWCgxRRJGi7ju8f2Yf
-         Hvf8uVtUB7uJGaSGmpRK9Y1ucWusLaY45BpjH1bt7VG/f1uIs3DHDnHJTPDAzHSI1qGV
-         erBzuCRo9cTeiuCpZBraTwihGiIWAGk11jhIW7uKgZKgV2VbmB2fENndSMs8rbn+gwtm
-         CvOsAzg2gucz/g/DND0irIKFzUHhfRvbzeA0cMsrL7U7lCvyBHwclMIX+e41/kitrYcR
-         io+MEgSeUKzEi0eLh31tXao4eAaKZ5N+QIIXGD9BK4wIw4xAX/UXzbz8Y/d0LepCAfOv
-         0fIA==
-X-Forwarded-Encrypted: i=1; AJvYcCUmB425ybEqXaTJsDy6vPy8r7ryEdRtprKxMtJkDJBDe8ffYsKX2HsiMMzt+DJ8gznbsDMk+n0dlekl1WU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaAFTy0FN5rkdRs6EomhUUHICyjD+/cPmTPaRgmT4UWt8gz6Zt
-	Xh/GNitE/BcaDcwzcVpyHZMmijFZ6NPs2jTHKsvD0HsXkl+HdcdURp/v8pLegyAhqbwQv5wn8za
-	KXuTNSS1d6HfhYKM+VnySQVwSnGoGCWU=
-X-Gm-Gg: ATEYQzwWLD+fWBOWZsnNDz9qqULWVEEahCt8Bw34AvRlV/f6YiSlFNXEIKhmz2cpesD
-	DpDnZdZgU2Li9me0Uiu0bAEF6CJUW4hcgWttqWDtkDbizONvBlLYoDTmb5qiArTVpS2sSCK2zm2
-	x96SYWsAPEmJzZKjELxJl/xawdP/sY1K1cqLu6UHeJ9Bbmg0NZY3AehhqYrJyDBXvvtRroGyzh0
-	mr9uysgbshYcckgCHQndzqQDDVKfVs8Vnbpyf0uPINSjspRLGhB/CTsgOlLTBF6CQ6VdeHqGzQz
-	VsJSbQpI5D6bu7x2KStKZ/zKYJZomjmsQ1wSux8iZwQrziu5mRACXFVjq9g7qHLNlRAYavJueML
-	e5X3tQ1A=
-X-Received: by 2002:a05:6820:1787:b0:67b:e203:6c8d with SMTP id
- 006d021491bc7-67dff53efc8mr1216692eaf.52.1774408101668; Tue, 24 Mar 2026
- 20:08:21 -0700 (PDT)
+	s=arc-20240116; t=1774411628; c=relaxed/simple;
+	bh=HFhz8eH72cknzZ9gBLWLxIWS+7HezrKDfGBWNoIpBPI=;
+	h=From:Date:Subject:Content-Type:Message-ID:To:Cc:MIME-Version; b=stbsZYN3SUWUhBM1UpheX/g4kyJXB/n5UNl9o52gUJ6fhvOJVR+ffy25fe7Mq1wA104fOMGjhIm2lXYKW++6Z9V3vuK1KdusEZ0dnbVExk4hL4HxNR1fexYkIYrLm35cdxGF3yNXQvb56M01Pk2GcoOcBBETNUkY+fBGlXjASvM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=nkzheWyY; arc=fail smtp.client-ip=52.103.73.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xtEHYjJKWMMVsgBPHsCOP/Bc9CbrLj7aFMBT67Oy8V1DeRQS/0k/+d+ep90PWtdnFbQRP8TdEam+RVMiKpDCorI54Guo2i11CpMNqiFxZc64h22NnMtcJer3+U/2v8L4Txb1UUYZOsciKOxBYtLooOcUzPJbGsqzcRMiLKmxTsh6N7E4BJv8kX7+AB/wVbvXWren4Zawzp3tC6ziJPSi7nAIxQPd5DuMUORGSFKREMj4w2K1ZvxjQ1t9T+M8l7YfNladtKREGjUppfzgenP5RKCbhn3tSzgWAbCDUOEnxVzQ8xi0hMJ0UH2KkJCsGq63GjFuwD0tOck40gkiF0jsVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QzPZoemA5QbH1L+VbIrmeOWIM+zQzCTEtumroxaDsTc=;
+ b=lnXpU4tLG6kEFdIXmaszz0Dv4jUStksAnCGH6sm01g4oCRdEHsMzr9QwvQscC52ZXQ9l6qxCW+LiJl4jxqzhTO7dqRnP87N/Dmcqm6d1eDz2K8z6yCokEVpBAGFdnY1bBD15xgNli4nrtAFX7V7y57q2qoHa5kncyBJe/EpQ2crbvpNe+vYxsgDdLmmH01AEa8hM3YRAkWUzgp3uct/byPG47KlJC5rY9NfeJGKhjgAqOricp/P0X0FyUAYEta/C0UCAC6jHCXRkGo7X9uUtwuL8bFAV0/sWZ83h9vtjK2vLDTkRg0MZKVJYPkmclUpuBPdEgvoBl3BJ8U3XnrHoPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QzPZoemA5QbH1L+VbIrmeOWIM+zQzCTEtumroxaDsTc=;
+ b=nkzheWyYPbQV9mJRYLRbYTuLDyT694EFY66X3oswS/IQbujE60VJhhzM1Ivi0VJrqCaMSLtMBNPTFHcFdl+qcTCL8LucT9qO2yxg8HwIueZRvO42wDbN6zl6G7U8pHKg3F92m5DZX3Susg2XMlTYTiNIOcw+YZZDH5GBFHsTLGCXijb6bDbo29XitvmHCmM40L0PdjRDDs0qCCjm4HG8cXb6uUMRN7qFHoqQs8Yv6gU1pD0nKNd20VbSPXXd6DNJD1SlWwaT0Qwh7E4o9WXzmttslUOs4XLXjvPFY8q0timR/4fIqohBuYYi6PitrBgK1UGQP8NPnoMj6qViXe8wHA==
+Received: from SYBPR01MB7881.ausprd01.prod.outlook.com (2603:10c6:10:1b0::5)
+ by SY7PR01MB9778.ausprd01.prod.outlook.com (2603:10c6:10:305::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.20; Wed, 25 Mar
+ 2026 04:06:55 +0000
+Received: from SYBPR01MB7881.ausprd01.prod.outlook.com
+ ([fe80::7cd2:d6e8:3fa0:5f0c]) by SYBPR01MB7881.ausprd01.prod.outlook.com
+ ([fe80::7cd2:d6e8:3fa0:5f0c%5]) with mapi id 15.20.9745.019; Wed, 25 Mar 2026
+ 04:06:55 +0000
+From: Junrui Luo <moonafterrain@outlook.com>
+Date: Wed, 25 Mar 2026 12:05:52 +0800
+Subject: [PATCH] Drivers: hv: mshv: fix integer overflow in memory region
+ overlap check
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID:
+ <SYBPR01MB7881689C0F58149DD986A6D1AF49A@SYBPR01MB7881.ausprd01.prod.outlook.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIzMDYyNT3bTMitRiXctEUwsLS9PE1ERTUyWg2oKiVLAEUGl0bG0tALnIkkJ
+ XAAAA
+X-Change-ID: 20260325-fixes-9a58895aea55
+To: "K. Y. Srinivasan" <kys@microsoft.com>, 
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
+ Mukesh Rathor <mrathor@linux.microsoft.com>, 
+ Nuno Das Neves <nunodasneves@linux.microsoft.com>, 
+ Roman Kisel <romank@linux.microsoft.com>, 
+ Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc: Muminul Islam <muislam@microsoft.com>, 
+ Praveen K Paladugu <prapal@linux.microsoft.com>, 
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Yuhao Jiang <danisjiang@gmail.com>, stable@vger.kernel.org, 
+ Junrui Luo <moonafterrain@outlook.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1758;
+ i=moonafterrain@outlook.com; h=from:subject:message-id;
+ bh=HFhz8eH72cknzZ9gBLWLxIWS+7HezrKDfGBWNoIpBPI=;
+ b=owGbwMvMwCVW+MIioLvvgwPjabUkhszD8fLCH1wWGD6+kLX+c+7SQ+ubXsTVubv5zJznLXxOY
+ cLuOYu9O0pZGMS4GGTFFFmOF1z6ZuG7RXeLz5ZkmDmsTCBDGLg4BWAiYaaMDI/mPLogmH66R22p
+ YkNf30mFDS8ELhsVCJYGsViKWK9bncPwV/Alx7JK1uCy+duUlkl/vZRfdrzLl2Hqnnv9OW1B4jb
+ 6HAA=
+X-Developer-Key: i=moonafterrain@outlook.com; a=openpgp;
+ fpr=C770D2F6384DB42DB44CB46371E838508B8EF040
+X-ClientProxiedBy: TYCP286CA0371.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:79::7) To SYBPR01MB7881.ausprd01.prod.outlook.com
+ (2603:10c6:10:1b0::5)
+X-Microsoft-Original-Message-ID:
+ <20260325-fixes-v1-1-c6de9b4e1c3b@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260324005919.2408620-1-dakr@kernel.org> <20260324005919.2408620-6-dakr@kernel.org>
-In-Reply-To: <20260324005919.2408620-6-dakr@kernel.org>
-From: Gui-Dong Han <hanguidong02@gmail.com>
-Date: Wed, 25 Mar 2026 11:08:11 +0800
-X-Gm-Features: AQROBzD64p8E8k4KuR51RUiYotZVMtC9NAESBq-7RvJsmuQyKbQ4KJC_uWmm37s
-Message-ID: <CALbr=La3gV5VmoXauF-fkmXveoJGtTvef1d1nrLtUZNHx2eF+w@mail.gmail.com>
-Subject: Re: [PATCH 05/12] PCI: use generic driver_override infrastructure
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Ioana Ciornei <ioana.ciornei@nxp.com>, 
-	Nipun Gupta <nipun.gupta@amd.com>, Nikhil Agarwal <nikhil.agarwal@amd.com>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Armin Wolf <W_Armin@gmx.de>, 
-	Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
-	Vineeth Vijayan <vneethv@linux.ibm.com>, Peter Oberparleiter <oberpar@linux.ibm.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Harald Freudenberger <freude@linux.ibm.com>, 
-	Holger Dengler <dengler@linux.ibm.com>, Mark Brown <broonie@kernel.org>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Alex Williamson <alex@shazbot.org>, Juergen Gross <jgross@suse.com>, 
-	Stefano Stabellini <sstabellini@kernel.org>, 
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, linux-kernel@vger.kernel.org, 
-	driver-core@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org, 
-	linux-spi@vger.kernel.org, virtualization@lists.linux.dev, 
-	kvm@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	linux-arm-kernel@lists.infradead.org, Wang Jiayue <akaieurus@gmail.com>, 
-	Yao Zi <me@ziyao.cc>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SYBPR01MB7881:EE_|SY7PR01MB9778:EE_
+X-MS-Office365-Filtering-Correlation-Id: 624b1710-af16-4ee2-05f3-08de8a23f349
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|6090799003|19110799012|5062599005|8060799015|41001999006|12121999013|15080799012|39105399006|461199028|23021999003|22091999003|24121999003|5072599009|41105399003|40105399003|440099028|3412199025|1710799026;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aEQ0S2ZJaVZLNWpwRHRmeVJGTUdMTlZRODJ3d2M0NURyZEEvZnY4Vy9qSzFD?=
+ =?utf-8?B?QnRwK0VseW54bFFKbXg1UVljVWJ3NE1Qc1lrSXhkUkxFTVJCUGtUYjRNSFlH?=
+ =?utf-8?B?S2lDWU82cW1Rc0cwYVlsRi9BRXgyMzJOcVhoa0VMUGVFOUFaT0F2Y2w3dW8y?=
+ =?utf-8?B?NmpYZSs2bjFtM2VWWU1OT0Q3YjVjdGNTZkRHLzgvb1I1VHhIL2ZNZXA5akUv?=
+ =?utf-8?B?SXlmN1d4S2xBUkVpb0lsUTE5YWZZcVZkUmt5aFoyaHhRZFg2UzlZUzNIVlY2?=
+ =?utf-8?B?Y1craXovZnhxUldKNDAwcmQ3RVNEejZISlg1cjVlbjhVdkM5Q1d4Z1RJanZx?=
+ =?utf-8?B?d3hqMDFTdGVacjBaNXBNalZvQmFrL1NHRkx1TGsxL0Y5WjJHTmJZSzYzcm80?=
+ =?utf-8?B?aXIwYXp2TTFlSzNXSE8zcHNnQ0tPVDFpcFRkNUVCejNoYitzVWdGNnFVczMy?=
+ =?utf-8?B?TXlPOEx0TitBVEdVbW1ZY21tekR1WFNFQnF0dk9PQTB6bGJzbG9scEhsczNk?=
+ =?utf-8?B?RlJqV0Z0RU40WUM2UTgwUEpPZ1IrK0hlS29xdEJ3ZWFlK2MydXVmbXZuSmhS?=
+ =?utf-8?B?UktOM1dpTWg5WFFEcDJVSS8vQ3g5ZjhrWEZ0Z1U1TDhzQ0dsWnlHM1B4MlZZ?=
+ =?utf-8?B?R1JST0ppd00vaDNYazBNZ1MvNkozcVFMMWVUQ0kzUEROelFyU0VQSUZOdVBQ?=
+ =?utf-8?B?b05rWjBwTEljRGR5cU5idEptdVZXZHoyZjlhU1A0ck1Fcy80VE5SbFAyeDdu?=
+ =?utf-8?B?Tkt5TjFKN0Fad0ZjaGtzSmZtbWpsVFkzWFdXN1BWUmFqTUtZUmNxTXIxS09j?=
+ =?utf-8?B?OVdqSDlXRmxVS1djRmhlUkVONE1kaTAyZEh2T0E3RDEvVXcyeitHcjZHREhJ?=
+ =?utf-8?B?Wjg2aFFPSE1hSUNqbkc5RFFSQ09sSUJVTXFCeXBYS2lXY1JEaURvc3ArMzZt?=
+ =?utf-8?B?ZXI0SXpZaHVsNkxiTi93VVhwKzB3ckxpTW1JRHdKcUNaMjZDTXk0YlpBWWVa?=
+ =?utf-8?B?bU5KcTFqeDdNWWI5OElpNDhmczAvejRmUVltNitIeEhpM1ZiU1JjWWhWM2xw?=
+ =?utf-8?B?OE1STmphaHhlendwU0RlYWFHZGphL2cxenlzQTJZd29wR0NOczZCRmJvT3I3?=
+ =?utf-8?B?RzJPUlZuNjgvZFkyZEQzU3U4QklEbXZ1TUMwVGlQMStpWjA5eXE3bjJiR1Ft?=
+ =?utf-8?B?SFlvUXlWV3U3T2c5Z1pLN3h0YVB0dkpUM3BmRzR5NkFvNGMwMEswZjQ5ZFNX?=
+ =?utf-8?B?RVNlSVluaFh4OHAxUEZ5Q01BWDZRTSt1VlRIaVRXL1dvZy9uNXpvTDhzKys1?=
+ =?utf-8?B?eitJS0dGVGZmbWtFeHAyOEM0TVdpMzYrdHM0azlHdis3cm5WTi9JSjBtR0tG?=
+ =?utf-8?B?QlFYMjJyczYvTEw5QlEwMHNXVG14SXE2ZjM0MUVOcVpSWDkrQ2JrakhxUFlw?=
+ =?utf-8?B?Ui9EbHg3Vk0wSXhickNJU0NDd25Cb2g3ME9kd25YcGtRZ2RUUENlRjNsaEZ2?=
+ =?utf-8?B?TERNdFVtTnBwWGgwQkp5TzdjOU83bzBGVUFlL010RGxzY2FMdnBwUDRuU1Ba?=
+ =?utf-8?B?bFA3QT09?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZnUyOWw5T1hxOFU3WFJQTEZwbkx2WVFMU3dvSFRRVXlYdmdtWFdhNFFZNTBW?=
+ =?utf-8?B?THpka0hRWUg3aUFjTElxdGxqOXVic291NkFLQWtrVHJsVUpKbzdUSm1yLzhD?=
+ =?utf-8?B?eFBXTERvS2RLem9tNGRvcHFqbjVKZlg0TUl5MFIzMG9nOTZMZzFyQUFUZHFk?=
+ =?utf-8?B?Q1A0bjJ4RXZLdDhIdjNZdTRHT00yMktXMmxUYjZUTFNrVE8xdEV5SDFmMDdX?=
+ =?utf-8?B?Y3JpcVpWOEJXb2JmNjZaQ2YzME03bUdQZjRuUmRGK1FPZGZUd0UzeW9zRm9H?=
+ =?utf-8?B?cGtiMFYvRWpFTlJmdjlMWTgxN0l3MDFTLzE3UWE2MWpxZE91aG1zUGlDTlBJ?=
+ =?utf-8?B?STE2d2ZaY01YWEdla2RiNGlhdEoxYUsxVkg5L3hmc3BBazN3Y1ByRFVTOEZY?=
+ =?utf-8?B?MDVVQmdkVlMxai82VW4vUFFtSXhMT3hyZmFkQm9pYzFoWUQwWHE1eHhhMUFn?=
+ =?utf-8?B?b242MGtnU1JJejJqUHc2aUFjM1hDdFZoQ2VScHZJTW1nM1I2S201dWdOUkRZ?=
+ =?utf-8?B?ZThrRzVhY0ZQK3prK29wSXgzY1JJM0R0bTBwckdaVmcvajVxdWVQWkRhSjJE?=
+ =?utf-8?B?eS90WEFVYnRrRU5YWlRjaUNlVnNKVFF2TXhIVUw2K0haTzgwYkdvR3ZubXNu?=
+ =?utf-8?B?S0ZMTWVxUjRVcHNqcHA2R2g1K2x4QXdzWGRNOGtWTFk1L243RFVkUlllaExF?=
+ =?utf-8?B?SXBGZklTWTZNZ1ZST0tXWlZRcDVPRElleWZMbllUMEN5cC9WUVZWYTdKTFB0?=
+ =?utf-8?B?Z2lTR01DbnBaNytaNU9SU3hPOWtWY1c1Zko1Z2xaZnlaU3htTDdqMTRLQVN3?=
+ =?utf-8?B?VUt3NkRCckY5THZYaTduZEYya0s2NzVPNlFDZDI1TXhDdEVEaktkcG5BSjB3?=
+ =?utf-8?B?WC9hUHlLbFNxT21FdzhWbkF3Mzc4TXgvY0xnQ2s1WlNTejU2OWZrQ1FZU0xn?=
+ =?utf-8?B?VUxCSk40ZWFjTkpNTmZmNk45WTZmdDU3MjZqazRLSDYwcEFRaFlVN05sMlgy?=
+ =?utf-8?B?bWI2SVRWWmdBamt4K092Vm5wMWdacDFlRW9yY2o1Ni9zK2R3c1VHeGZneWFh?=
+ =?utf-8?B?MmE3TVlKc0doS2Vkd1ZCUmtTRGgrVHQzVC9SU3lzeG53UGgzUHNYTENwdWRn?=
+ =?utf-8?B?amhDYnV2UnNXMnRYYmd0bXpVVjVKcjd1RVM3WHJ1VnNPTXJndmgrR2FLYmRx?=
+ =?utf-8?B?cUMzTUM3R3hZYlNMTlA2K3YwMGgxOThyVk84ZGphTTZrcEtmbU90M3dlNVVC?=
+ =?utf-8?B?cXhzeElNVEVQUzMzdGl1QzI3ZDF0a3B1ZDhoQ3p3cjdCdXU5WlN6RHRYaGRv?=
+ =?utf-8?B?MlBZa080aVU5Vk5kWjJTTnYxbXdPYWxjNXVGaDBlU3BBMkpLM2lzUlhBTTRo?=
+ =?utf-8?B?dWV6cUk4Nk4rSFNDWXM0dVJteUVSTW9STUVUdVE1eUt3VzU0SThVR2xrUVZ0?=
+ =?utf-8?B?dzF1V1dVM3k3aENTRkxmZmJWdHB5RmorTURwdHdxMkZjTzJ1QkhYb0pJMUds?=
+ =?utf-8?B?KzA3TWdhbVZKWVJtajBGUUhSSGUwWGw0VnlPWkF5WVFpL3k5TWU5bGkrTk1Z?=
+ =?utf-8?B?eTYyM0ZFVHRZUHF5Ympac09Jdms4M0p3WnV1S01Kai9oTi9tZklYRnFkekFl?=
+ =?utf-8?B?RTBLNVorTnVCTklKaFdRei9iSTdBTGUxd2hCcVoxWStnbUdCcEtEaFlhMnF4?=
+ =?utf-8?B?MUp5MTVNc1BSWDF3eXdXU3Mxck9BekE1aktNeC9KR2l1ZGtmbzM2enNLOFhz?=
+ =?utf-8?B?Q3BmOTZtUHdhOElXeUliTml3MTRBVXpTaHBjL3lybjFlbGsvT202bW1tODc0?=
+ =?utf-8?B?QTExaWxuV3RLeGRNV2RyTC81T0xHNXczSTB2dGN1VWlQUnRoaU1xNE9yMzVw?=
+ =?utf-8?B?WGhSNldzcC9Ra1RQa1NvZUlNTVUvR3RrSFNubHh2RkI5UVE9PQ==?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 624b1710-af16-4ee2-05f3-08de8a23f349
+X-MS-Exchange-CrossTenant-AuthSource: SYBPR01MB7881.ausprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2026 04:06:55.4117
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SY7PR01MB9778
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[armlinux.org.uk,linuxfoundation.org,kernel.org,nxp.com,amd.com,microsoft.com,google.com,gmx.de,linaro.org,linux.ibm.com,redhat.com,linux.alibaba.com,shazbot.org,suse.com,epam.com,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,lists.xenproject.org,lists.infradead.org,gmail.com,ziyao.cc];
-	TAGGED_FROM(0.00)[bounces-9745-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9746-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCPT_COUNT_GT_50(0.00)[51];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hanguidong02@gmail.com,linux-hyperv@vger.kernel.org];
+	FREEMAIL_CC(0.00)[microsoft.com,linux.microsoft.com,vger.kernel.org,gmail.com,outlook.com];
+	FREEMAIL_FROM(0.00)[outlook.com];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[moonafterrain@outlook.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[outlook.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 669EA31F0C4
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,outlook.com:dkim,outlook.com:email,SYBPR01MB7881.ausprd01.prod.outlook.com:mid]
+X-Rspamd-Queue-Id: 3041D31F951
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Mar 24, 2026 at 9:00=E2=80=AFAM Danilo Krummrich <dakr@kernel.org> =
-wrote:
->
-> When a driver is probed through __driver_attach(), the bus' match()
-> callback is called without the device lock held, thus accessing the
-> driver_override field without a lock, which can cause a UAF.
->
-> Fix this by using the driver-core driver_override infrastructure taking
-> care of proper locking internally.
->
-> Note that calling match() from __driver_attach() without the device lock
-> held is intentional. [1]
->
-> Link: https://lore.kernel.org/driver-core/DGRGTIRHA62X.3RY09D9SOK77P@kern=
-el.org/ [1]
-> Reported-by: Gui-Dong Han <hanguidong02@gmail.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D220789
-> Fixes: 782a985d7af2 ("PCI: Introduce new device binding path using pci_de=
-v.driver_override")
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+mshv_partition_create_region() computes mem->guest_pfn + nr_pages to
+check for overlapping regions without verifying u64 wraparound. A
+sufficiently large guest_pfn can cause the addition to overflow,
+bypassing the overlap check and allowing creation of regions that wrap
+around the address space.
 
-Tested on QEMU PCI with multiple debug configs enabled. The original
-PoCs run cleanly without triggering the issue.
+Fix by using check_add_overflow() to reject such regions.
 
-Thanks Danilo.
+Fixes: 621191d709b1 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
+Reported-by: Yuhao Jiang <danisjiang@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Junrui Luo <moonafterrain@outlook.com>
+---
+ drivers/hv/mshv_root_main.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Tested-by: Gui-Dong Han <hanguidong02@gmail.com>
-Reviewed-by: Gui-Dong Han <hanguidong02@gmail.com>
+diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+index 6f42423f7faa..6ddb315fc2c2 100644
+--- a/drivers/hv/mshv_root_main.c
++++ b/drivers/hv/mshv_root_main.c
+@@ -1174,11 +1174,16 @@ static int mshv_partition_create_region(struct mshv_partition *partition,
+ {
+ 	struct mshv_mem_region *rg;
+ 	u64 nr_pages = HVPFN_DOWN(mem->size);
++	u64 new_region_end;
++
++	/* Reject regions whose end address would wrap around */
++	if (check_add_overflow(mem->guest_pfn, nr_pages, &new_region_end))
++		return -EOVERFLOW;
+ 
+ 	/* Reject overlapping regions */
+ 	spin_lock(&partition->pt_mem_regions_lock);
+ 	hlist_for_each_entry(rg, &partition->pt_mem_regions, hnode) {
+-		if (mem->guest_pfn + nr_pages <= rg->start_gfn ||
++		if (new_region_end <= rg->start_gfn ||
+ 		    rg->start_gfn + rg->nr_pages <= mem->guest_pfn)
+ 			continue;
+ 		spin_unlock(&partition->pt_mem_regions_lock);
 
-> ---
->  drivers/pci/pci-driver.c           | 11 +++++++----
->  drivers/pci/pci-sysfs.c            | 28 ----------------------------
->  drivers/pci/probe.c                |  1 -
->  drivers/vfio/pci/vfio_pci_core.c   |  5 ++---
->  drivers/xen/xen-pciback/pci_stub.c |  6 ++++--
->  include/linux/pci.h                |  6 ------
->  6 files changed, 13 insertions(+), 44 deletions(-)
->
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index dd9075403987..d10ece0889f0 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -138,9 +138,11 @@ static const struct pci_device_id *pci_match_device(=
-struct pci_driver *drv,
->  {
->         struct pci_dynid *dynid;
->         const struct pci_device_id *found_id =3D NULL, *ids;
-> +       int ret;
->
->         /* When driver_override is set, only bind to the matching driver =
-*/
-> -       if (dev->driver_override && strcmp(dev->driver_override, drv->nam=
-e))
-> +       ret =3D device_match_driver_override(&dev->dev, &drv->driver);
-> +       if (ret =3D=3D 0)
->                 return NULL;
->
->         /* Look at the dynamic ids first, before the static ones */
-> @@ -164,7 +166,7 @@ static const struct pci_device_id *pci_match_device(s=
-truct pci_driver *drv,
->                  * matching.
->                  */
->                 if (found_id->override_only) {
-> -                       if (dev->driver_override)
-> +                       if (ret > 0)
->                                 return found_id;
->                 } else {
->                         return found_id;
-> @@ -172,7 +174,7 @@ static const struct pci_device_id *pci_match_device(s=
-truct pci_driver *drv,
->         }
->
->         /* driver_override will always match, send a dummy id */
-> -       if (dev->driver_override)
-> +       if (ret > 0)
->                 return &pci_device_id_any;
->         return NULL;
->  }
-> @@ -452,7 +454,7 @@ static int __pci_device_probe(struct pci_driver *drv,=
- struct pci_dev *pci_dev)
->  static inline bool pci_device_can_probe(struct pci_dev *pdev)
->  {
->         return (!pdev->is_virtfn || pdev->physfn->sriov->drivers_autoprob=
-e ||
-> -               pdev->driver_override);
-> +               device_has_driver_override(&pdev->dev));
->  }
->  #else
->  static inline bool pci_device_can_probe(struct pci_dev *pdev)
-> @@ -1722,6 +1724,7 @@ static const struct cpumask *pci_device_irq_get_aff=
-inity(struct device *dev,
->
->  const struct bus_type pci_bus_type =3D {
->         .name           =3D "pci",
-> +       .driver_override =3D true,
->         .match          =3D pci_bus_match,
->         .uevent         =3D pci_uevent,
->         .probe          =3D pci_device_probe,
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 16eaaf749ba9..a9006cf4e9c8 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -615,33 +615,6 @@ static ssize_t devspec_show(struct device *dev,
->  static DEVICE_ATTR_RO(devspec);
->  #endif
->
-> -static ssize_t driver_override_store(struct device *dev,
-> -                                    struct device_attribute *attr,
-> -                                    const char *buf, size_t count)
-> -{
-> -       struct pci_dev *pdev =3D to_pci_dev(dev);
-> -       int ret;
-> -
-> -       ret =3D driver_set_override(dev, &pdev->driver_override, buf, cou=
-nt);
-> -       if (ret)
-> -               return ret;
-> -
-> -       return count;
-> -}
-> -
-> -static ssize_t driver_override_show(struct device *dev,
-> -                                   struct device_attribute *attr, char *=
-buf)
-> -{
-> -       struct pci_dev *pdev =3D to_pci_dev(dev);
-> -       ssize_t len;
-> -
-> -       device_lock(dev);
-> -       len =3D sysfs_emit(buf, "%s\n", pdev->driver_override);
-> -       device_unlock(dev);
-> -       return len;
-> -}
-> -static DEVICE_ATTR_RW(driver_override);
-> -
->  static struct attribute *pci_dev_attrs[] =3D {
->         &dev_attr_power_state.attr,
->         &dev_attr_resource.attr,
-> @@ -669,7 +642,6 @@ static struct attribute *pci_dev_attrs[] =3D {
->  #ifdef CONFIG_OF
->         &dev_attr_devspec.attr,
->  #endif
-> -       &dev_attr_driver_override.attr,
->         &dev_attr_ari_enabled.attr,
->         NULL,
->  };
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index bccc7a4bdd79..b4707640e102 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2488,7 +2488,6 @@ static void pci_release_dev(struct device *dev)
->         pci_release_of_node(pci_dev);
->         pcibios_release_device(pci_dev);
->         pci_bus_put(pci_dev->bus);
-> -       kfree(pci_dev->driver_override);
->         bitmap_free(pci_dev->dma_alias_mask);
->         dev_dbg(dev, "device released\n");
->         kfree(pci_dev);
-> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci=
-_core.c
-> index d43745fe4c84..460852f79f29 100644
-> --- a/drivers/vfio/pci/vfio_pci_core.c
-> +++ b/drivers/vfio/pci/vfio_pci_core.c
-> @@ -1987,9 +1987,8 @@ static int vfio_pci_bus_notifier(struct notifier_bl=
-ock *nb,
->             pdev->is_virtfn && physfn =3D=3D vdev->pdev) {
->                 pci_info(vdev->pdev, "Captured SR-IOV VF %s driver_overri=
-de\n",
->                          pci_name(pdev));
-> -               pdev->driver_override =3D kasprintf(GFP_KERNEL, "%s",
-> -                                                 vdev->vdev.ops->name);
-> -               WARN_ON(!pdev->driver_override);
-> +               WARN_ON(device_set_driver_override(&pdev->dev,
-> +                                                  vdev->vdev.ops->name))=
-;
->         } else if (action =3D=3D BUS_NOTIFY_BOUND_DRIVER &&
->                    pdev->is_virtfn && physfn =3D=3D vdev->pdev) {
->                 struct pci_driver *drv =3D pci_dev_driver(pdev);
-> diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback=
-/pci_stub.c
-> index e4b27aecbf05..79a2b5dfd694 100644
-> --- a/drivers/xen/xen-pciback/pci_stub.c
-> +++ b/drivers/xen/xen-pciback/pci_stub.c
-> @@ -598,6 +598,8 @@ static int pcistub_seize(struct pci_dev *dev,
->         return err;
->  }
->
-> +static struct pci_driver xen_pcibk_pci_driver;
-> +
->  /* Called when 'bind'. This means we must _NOT_ call pci_reset_function =
-or
->   * other functions that take the sysfs lock. */
->  static int pcistub_probe(struct pci_dev *dev, const struct pci_device_id=
- *id)
-> @@ -609,8 +611,8 @@ static int pcistub_probe(struct pci_dev *dev, const s=
-truct pci_device_id *id)
->
->         match =3D pcistub_match(dev);
->
-> -       if ((dev->driver_override &&
-> -            !strcmp(dev->driver_override, PCISTUB_DRIVER_NAME)) ||
-> +       if (device_match_driver_override(&dev->dev,
-> +                                        &xen_pcibk_pci_driver.driver) > =
-0 ||
->             match) {
->
->                 if (dev->hdr_type !=3D PCI_HEADER_TYPE_NORMAL
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 1c270f1d5123..57e9463e4347 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -575,12 +575,6 @@ struct pci_dev {
->         u8              supported_speeds; /* Supported Link Speeds Vector=
- */
->         phys_addr_t     rom;            /* Physical address if not from B=
-AR */
->         size_t          romlen;         /* Length if not from BAR */
-> -       /*
-> -        * Driver name to force a match.  Do not set directly, because co=
-re
-> -        * frees it.  Use driver_set_override() to set or clear it.
-> -        */
-> -       const char      *driver_override;
-> -
->         unsigned long   priv_flags;     /* Private flags for the PCI driv=
-er */
->
->         /* These methods index pci_reset_fn_methods[] */
-> --
-> 2.53.0
->
+---
+base-commit: c369299895a591d96745d6492d4888259b004a9e
+change-id: 20260325-fixes-9a58895aea55
+
+Best regards,
+-- 
+Junrui Luo <moonafterrain@outlook.com>
+
 
