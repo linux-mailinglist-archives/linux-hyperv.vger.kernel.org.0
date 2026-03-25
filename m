@@ -1,53 +1,81 @@
-Return-Path: <linux-hyperv+bounces-9747-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9748-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EA6gKL1hw2m1qQQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9747-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 05:17:01 +0100
+	id 6PKdNpNpw2kFqwQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9748-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 05:50:27 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 050F431F943
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 05:17:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 870BF31FBE2
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 05:50:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B25E5311D870
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 04:10:26 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7F1FA3034B26
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2026 04:50:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F3122F690F;
-	Wed, 25 Mar 2026 04:10:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD903222582;
+	Wed, 25 Mar 2026 04:50:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N0YbeHNv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aDrGqfSv"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5731D2F12D4;
-	Wed, 25 Mar 2026 04:10:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576D5182D0
+	for <linux-hyperv@vger.kernel.org>; Wed, 25 Mar 2026 04:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774411821; cv=none; b=SXqeUKmbHSAvr8bMvZabssqLjpujpMLCoZmmagfZaQLkQwLGKFKjH6U73HQXAxOyfQzV/K777xmosH4jaW4aHlrvjGnQCcXfA3FLdv0+HIeMu9UiuKvkhp1kdOACV+gTccLaoP8xpPFpV9uFiSYEZKoupuGlw/BLFOLafzutXEQ=
+	t=1774414224; cv=none; b=f0h7ZWIgR5c3l8+NQ2FpqFIloZ5tst05d9NwU2O5OEaUJYDbYQ/LDrhZ1gbBtvIR7oi/1QFofRxLAE1SHJkWvnZHmO9D4nPjiNY85ApFHL1CjRR3XhgIA3z9lQYqOKmzpE3u3BzmvOTlEjOJjL6U3ZXkrYpoHl3+tQAD/dQ7vaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774411821; c=relaxed/simple;
-	bh=csrBj4PEHhkzLj9KLOtGYFT5RYKttSLGF60SAsZJgc8=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Dp0evh9uoywOir0/dz1t339rzerg131M7j868FjkGyQysmHsjPzWw4LnpW1M1wtqwY0ysNmNgKEKvC8TynEa8frJCOgMmF+HwAE/OrnUVuNPraQZWS2ULgq1jdQHSIiNxsCU7XjhnV2Lv/pWHfWssAkulPDlAyV9wmfwgzGysYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N0YbeHNv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01A64C4CEF7;
-	Wed, 25 Mar 2026 04:10:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774411821;
-	bh=csrBj4PEHhkzLj9KLOtGYFT5RYKttSLGF60SAsZJgc8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=N0YbeHNvorPvE5GPJWNwSp3lDkDVHDhsMrhfAe99kHZAwO7OSKeTVRIObRqE11YRZ
-	 UOaKcScCnBHgnn5FFaDkStpAlXq8djRoX9B0hdz2n/wtktpdxCCt2GY7m64pZaNw1o
-	 ZArzlK0LMYmSwgfWp1umlJ/S+olET5zMO470gUCeXQeUvLjNoBgm6oYsv2tBqihqJ3
-	 opGMR+SlK8guShg38AERweut+u0An/t2i++umCe3d4iu2lxZqAytVby2eIaxxXh0ku
-	 LYkqQF0NVxYUHRxLgHimZ4lccNKnDBujKHLc1Le9ZWItSf3aAfb+9+2dwoW7poBF3g
-	 g3qgh9wd8FQkg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B9FE93808203;
-	Wed, 25 Mar 2026 04:10:09 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1774414224; c=relaxed/simple;
+	bh=NOnb5W0LQimumxs5VACbGVyOcdX2vuC/C5pyx+AnOMU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XuBXfO5/f0UUhtBaDrN8OnOpUZiXwO+jh6PgKt4EQb3MT1jVLKHNX/fLku/P1OfVDTtunbGN8aqH2iPGisneNVCDPDDBwRJLLHb/qH5UV7LbuE1nBxwlEQIhyduCa7zQCfKxj3snE0lPgby0tQOBtNarRZNpW1IIJOxXCnevB/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aDrGqfSv; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1774414222;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=pJnh0qeblB7QuhQfb4FwZ71GL5PXvoes3ViBRQuiUG0=;
+	b=aDrGqfSvtoTmeGs6XSPD1uoEdWhXdG8TyKgQVJKUZPZECsZjtvBJY2b7Hfus0TR4CsyIq7
+	j1AbdLPR54PAd8AIZYCSMrjk9C/o9DzG52ggpxdyor9t42YOC6gMMl0FxG3miPra8y3R3v
+	nwlqz8YIrtDqvnv6STnNNcxjYhVwoeI=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-597-xM6s-7JXM86MTFsko1JMMA-1; Wed,
+ 25 Mar 2026 00:50:18 -0400
+X-MC-Unique: xM6s-7JXM86MTFsko1JMMA-1
+X-Mimecast-MFC-AGG-ID: xM6s-7JXM86MTFsko1JMMA_1774414216
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8BA80195608B;
+	Wed, 25 Mar 2026 04:50:16 +0000 (UTC)
+Received: from localhost.redhat.com (unknown [10.72.112.30])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 51C301800361;
+	Wed, 25 Mar 2026 04:50:09 +0000 (UTC)
+From: Li Tian <litian@redhat.com>
+To: netdev@vger.kernel.org,
+	linux-hyperv@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jason Wang <jasowang@redhat.com>,
+	Li Tian <litian@redhat.com>
+Subject: [PATCH net] netvsc: transfer lower device max tso size during VF transition
+Date: Wed, 25 Mar 2026 12:50:06 +0800
+Message-ID: <20260325045006.18607-1-litian@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -55,79 +83,73 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PPATCH net v3] net: mana: fix use-after-free in add_adev() error
- path
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <177441180853.1422230.5922345720060434501.git-patchwork-notify@kernel.org>
-Date: Wed, 25 Mar 2026 04:10:08 +0000
-References: <20260323165730.945365-1-lgs201920130244@gmail.com>
-In-Reply-To: <20260323165730.945365-1-lgs201920130244@gmail.com>
-To: Guangshuo Li <lgs201920130244@gmail.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, longli@microsoft.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- ernis@linux.microsoft.com, dipayanroy@linux.microsoft.com,
- gargaditya@linux.microsoft.com, shirazsaleem@microsoft.com, kees@kernel.org,
- leon@kernel.org, linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_NEQ_ENVFROM(0.00)[patchwork-bot@kernel.org,linux-hyperv@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-9747-lists,linux-hyperv=lfdr.de,netdevbpf];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FROM_NO_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9748-lists,linux-hyperv=lfdr.de];
+	DKIM_TRACE(0.00)[redhat.com:+];
 	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
 	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[litian@redhat.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	NEURAL_HAM(-0.00)[-1.000];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 050F431F943
+X-Rspamd-Queue-Id: 870BF31FBE2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hello:
+When netvsc is accelerated by the lower device, we can advertise the
+lower device max tso size in order to get better performance.
+While a long-term migration to user-space bonding is planned, current
+users on RHEL 10 / Azure are experiencing significant performance
+regressions in 802.3ad environments. This patch provides a localized,
+safe fix within netvsc without introducing new core networking helpers.
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Signed-off-by: Li Tian <litian@redhat.com>
+---
+ drivers/net/hyperv/netvsc_drv.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-On Tue, 24 Mar 2026 00:57:30 +0800 you wrote:
-> If auxiliary_device_add() fails, add_adev() jumps to add_fail and calls
-> auxiliary_device_uninit(adev).
-> 
-> The auxiliary device has its release callback set to adev_release(),
-> which frees the containing struct mana_adev. Since adev is embedded in
-> struct mana_adev, the subsequent fall-through to init_fail and access
-> to adev->id may result in a use-after-free.
-> 
-> [...]
-
-Here is the summary with links:
-  - [PPATCH,net,v3] net: mana: fix use-after-free in add_adev() error path
-    https://git.kernel.org/netdev/net/c/c4ea7d8907cf
-
-You are awesome, thank you!
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index ee5ab5ceb2be..971607c7406f 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -2428,10 +2428,14 @@ static int netvsc_vf_changed(struct net_device *vf_netdev, unsigned long event)
+ 		 * This value is only increased for netvsc NIC when datapath is
+ 		 * switched over to the VF
+ 		 */
+-		if (vf_is_up)
++		if (vf_is_up) {
+ 			netif_set_tso_max_size(ndev, vf_netdev->tso_max_size);
+-		else
++			WRITE_ONCE(ndev->gso_max_size, READ_ONCE(vf_netdev->gso_max_size));
++			WRITE_ONCE(ndev->gso_ipv4_max_size,
++				   READ_ONCE(vf_netdev->gso_ipv4_max_size));
++		} else {
+ 			netif_set_tso_max_size(ndev, netvsc_dev->netvsc_gso_max_size);
++		}
+ 	}
+ 
+ 	return NOTIFY_OK;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.53.0
 
 
