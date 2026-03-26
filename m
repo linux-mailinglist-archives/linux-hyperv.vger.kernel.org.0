@@ -1,149 +1,135 @@
-Return-Path: <linux-hyperv+bounces-9804-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9805-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QKcdKBluxWl1+AQAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9804-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Mar 2026 18:34:17 +0100
+	id kNmNCKBxxWkU+QQAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9805-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Mar 2026 18:49:20 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48271339325
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Mar 2026 18:34:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 02191339748
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Mar 2026 18:49:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id D85A2306B159
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Mar 2026 17:32:05 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id AAFE43104151
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Mar 2026 17:40:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2BE5423162;
-	Thu, 26 Mar 2026 17:31:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 613983EBF36;
+	Thu, 26 Mar 2026 17:38:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MHKva2tI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ArEAbT+s"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7097421EE5;
-	Thu, 26 Mar 2026 17:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A9329ACDB;
+	Thu, 26 Mar 2026 17:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774546270; cv=none; b=M/iIu/agwBan15lEV5QqUI9T+nX77R1+S7ThnDhC60ac2amSydxoaHhkVILbaX+2ou7hGHQJ5w/TsRwaoOMnY0BwCdOYw4doDXvsGNZ4jexnTHDA5RW+y6HCTJ2UW/2k2AoETE8Em+ceignWC3SvKPWIaTs3MsPCRsKMmEbpWi0=
+	t=1774546726; cv=none; b=liLgENEAE/l8BkfUuZm2eDH4WFrZRq+Eku8Osw9fN3/m8MoHGxEXFRdL5S6UvAJMXqDDmvCU/Ru0ifW4ziHzfK6tT/KS+3Obgkr7BS3gX1LUP07uRq1a6xq+emogMkEUY88aR7ujjRD6fb17BEGMjAcoDogTsbuZlq6P+HU5zdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774546270; c=relaxed/simple;
-	bh=UGjIEZbjcXuAUyCk/TZyfTyRY2/0pBcB6DD8go4Uaa0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=SHqtV/+gxe+g9SzcubYRfix0wKXlREaeE8Jbcqu7upgSEZiQinKLErdDFyBqwae8zaiJhqiYLO/5BmvxO21bX8bxJpy5PbCGSFJsyM6Z3G3e1Fy5Jl0PO9Ong86wNqWqjRKeav0SEcSuj7g9aXntBrdcMV870aSVz1cZwB3gAZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MHKva2tI; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id 3C32C20B7128; Thu, 26 Mar 2026 10:31:05 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3C32C20B7128
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1774546265;
-	bh=WgiY0Cr10/koC/gjn73ozCFl/yXO3PvbCI7F7cJ9NW8=;
-	h=From:To:Subject:Date:From;
-	b=MHKva2tIvwvqngWORA+HxUMEuM62SYE27K7EFzkjSp8iDv6QuIlfyMgvuKmgI3Kz7
-	 odRtNRc0K5wK5QXZNUGIJ4qU3mo8F72PUYFbreGByM7S1kEm7PoJMViLjZuLpl8efS
-	 +B83cSfTIAUn69lrdM/L5y/7Phy9zWZbx91TSD8A=
-From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	ernis@linux.microsoft.com,
-	ssengar@linux.microsoft.com,
-	dipayanroy@linux.microsoft.com,
-	gargaditya@linux.microsoft.com,
-	shirazsaleem@microsoft.com,
-	kees@kernel.org,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] net: mana: hardening: Validate adapter_mtu from MANA_QUERY_DEV_CONFIG
-Date: Thu, 26 Mar 2026 10:30:56 -0700
-Message-ID: <20260326173101.2010514-1-ernis@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.7
+	s=arc-20240116; t=1774546726; c=relaxed/simple;
+	bh=hAAiF8xSgL3z4E5G5/XmRxGLgvCy/D0+zQfYgHI39gw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
+	 References:In-Reply-To; b=IFxkvGTbEJ0T/UTVgRt9Bp2fvNusBmVhr3bEdRFBHnWbIavF2ABHatZSrw5TcXpU4z716hR8uxZcZNKMWUMfOKX4esWlUobSA5O1qzL3oJO1x5Q6L1hn7qKO+fhI4rfFnFwzBX5OESMzKajmksfNixdku8LlsU+HHXH2jfXBoRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ArEAbT+s; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64CF3C116C6;
+	Thu, 26 Mar 2026 17:38:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774546725;
+	bh=hAAiF8xSgL3z4E5G5/XmRxGLgvCy/D0+zQfYgHI39gw=;
+	h=Date:Cc:To:From:Subject:References:In-Reply-To:From;
+	b=ArEAbT+s3n7x1zNm2qUyfultheclQsMn7Cylk1mxfVokFRrNp3WpcDfI8mmayZ+0h
+	 m2cGLs0n6Sh6ZCu8EvHXqLDxmAX8LMqlZoRnQEfHReuoiYU3xPG1brRn0xv/B7nG91
+	 dfctDdAzWRRIBz5wDeTdWGKHbyzznewMhiup0tTEhLqFpUABWkXccnP5fkKD1V8bqG
+	 AQrp8yU+1knEeWB4pCRAjqoVJNKbnXs/r4tup9fByZXD5EgZfswwbwv0q7Wo741gye
+	 MvHPzW2Tb0nrON4/+fHRtWe9N46CjKkZ5ux8WM6YRAe6n1JfA4kFbYnKDRvMa6t1Pa
+	 3vRMCPXPpyakA==
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [0.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 26 Mar 2026 18:38:35 +0100
+Message-Id: <DHCWB6YQ7B8E.1I9WCHXJ6FBPH@kernel.org>
+Cc: "Russell King" <linux@armlinux.org.uk>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Ioana Ciornei" <ioana.ciornei@nxp.com>, "Nipun Gupta"
+ <nipun.gupta@amd.com>, "Nikhil Agarwal" <nikhil.agarwal@amd.com>, "K. Y.
+ Srinivasan" <kys@microsoft.com>, "Haiyang Zhang" <haiyangz@microsoft.com>,
+ "Wei Liu" <wei.liu@kernel.org>, "Dexuan Cui" <decui@microsoft.com>, "Long
+ Li" <longli@microsoft.com>, "Bjorn Helgaas" <bhelgaas@google.com>, "Armin
+ Wolf" <W_Armin@gmx.de>, "Bjorn Andersson" <andersson@kernel.org>, "Mathieu
+ Poirier" <mathieu.poirier@linaro.org>, "Vineeth Vijayan"
+ <vneethv@linux.ibm.com>, "Peter Oberparleiter" <oberpar@linux.ibm.com>,
+ "Heiko Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>,
+ "Alexander Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger"
+ <borntraeger@linux.ibm.com>, "Sven Schnelle" <svens@linux.ibm.com>, "Harald
+ Freudenberger" <freude@linux.ibm.com>, "Holger Dengler"
+ <dengler@linux.ibm.com>, "Mark Brown" <broonie@kernel.org>, "Jason Wang"
+ <jasowang@redhat.com>, "Xuan Zhuo" <xuanzhuo@linux.alibaba.com>,
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, "Alex Williamson"
+ <alex@shazbot.org>, "Juergen Gross" <jgross@suse.com>, "Stefano Stabellini"
+ <sstabellini@kernel.org>, "Oleksandr Tyshchenko"
+ <oleksandr_tyshchenko@epam.com>, "Christophe Leroy (CS GROUP)"
+ <chleroy@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <driver-core@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+ <linux-hyperv@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+ <platform-driver-x86@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+ <linux-remoteproc@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+ <linux-spi@vger.kernel.org>, <virtualization@lists.linux.dev>,
+ <kvm@vger.kernel.org>, <xen-devel@lists.xenproject.org>,
+ <linux-arm-kernel@lists.infradead.org>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
+Subject: Re: [PATCH 00/12] treewide: Convert buses to use generic
+ driver_override
+References: <20260324005919.2408620-1-dakr@kernel.org>
+ <20260325052919-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20260325052919-mutt-send-email-mst@kernel.org>
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	MV_CASE(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[armlinux.org.uk,linuxfoundation.org,kernel.org,nxp.com,amd.com,microsoft.com,google.com,gmx.de,linaro.org,linux.ibm.com,redhat.com,linux.alibaba.com,shazbot.org,suse.com,epam.com,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,lists.xenproject.org,lists.infradead.org];
+	TAGGED_FROM(0.00)[bounces-9805-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9804-lists,linux-hyperv=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[48];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ernis@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TO_DN_NONE(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_TWELVE(0.00)[19];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 48271339325
+X-Rspamd-Queue-Id: 02191339748
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-As a part of MANA hardening for CVM, validate the adapter_mtu value
-returned from the MANA_QUERY_DEV_CONFIG HWC command.
+On Wed Mar 25, 2026 at 10:29 AM CET, Michael S. Tsirkin wrote:
+> vdpa bits:
+>
+> Acked-by: Michael S. Tsirkin <mst@redhat.com>
+>
+> I assume it'll all be merged together?
 
-The adapter_mtu value is used to compute ndev->max_mtu via:
-gc->adapter_mtu - ETH_HLEN. If hardware returns a bogus adapter_mtu
-smaller than ETH_HLEN (e.g. 0), the unsigned subtraction wraps to a
-huge value, silently allowing oversized MTU settings.
-
-Add a validation check to reject adapter_mtu values below
-ETH_MIN_MTU + ETH_HLEN, returning -EPROTO to fail the device
-configuration early with a clear error message.
-
-Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index b39e8b920791..bd07d17a6017 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -1207,10 +1207,16 @@ static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
- 
- 	*max_num_vports = resp.max_num_vports;
- 
--	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V2)
-+	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V2) {
-+		if (resp.adapter_mtu < ETH_MIN_MTU + ETH_HLEN) {
-+			dev_err(dev, "Adapter MTU too small: %u\n",
-+				resp.adapter_mtu);
-+			return -EPROTO;
-+		}
- 		gc->adapter_mtu = resp.adapter_mtu;
--	else
-+	} else {
- 		gc->adapter_mtu = ETH_FRAME_LEN;
-+	}
- 
- 	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V3)
- 		*bm_hostmode = resp.bm_hostmode;
--- 
-2.34.1
-
+I can take it through the driver-core tree if you prefer, but you can also =
+pick
+it up yourself.
 
