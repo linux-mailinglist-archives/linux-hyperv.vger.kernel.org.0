@@ -1,112 +1,112 @@
-Return-Path: <linux-hyperv+bounces-9812-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9813-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6Gk2CbFPxmk2IgUAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9812-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Mar 2026 10:36:49 +0100
+	id OFTxHYJQxmk2IgUAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9813-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Mar 2026 10:40:18 +0100
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 830C0341CF1
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Mar 2026 10:36:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CEA14341E26
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Mar 2026 10:40:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D760930FF3CF
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Mar 2026 09:28:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 68EF43020D57
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Mar 2026 09:32:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E1863D5255;
-	Fri, 27 Mar 2026 09:28:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E125634D912;
+	Fri, 27 Mar 2026 09:32:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bcAh2KPY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XS8GwsVK"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
+Received: from mail-dl1-f54.google.com (mail-dl1-f54.google.com [74.125.82.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025AF2FDC30
-	for <linux-hyperv@vger.kernel.org>; Fri, 27 Mar 2026 09:28:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EBBD30DEA3
+	for <linux-hyperv@vger.kernel.org>; Fri, 27 Mar 2026 09:32:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774603724; cv=pass; b=Lm4bEh0Q7nviKsaNXSmHHyG3amgYqmDdfPSvDK9IrVdDFXFyMkTXF3WTheclbWPKyPr+aOBO1E7vTq6xRuEyo7ET6MCeMKrKY/17ZqnYExQDeG6/By/EbC8Xa4gzDTyGYpm2CJRa7AxDimxeTLGc+TpKjBg2X5eTIUwkpz2jghY=
+	t=1774603940; cv=pass; b=B+Wq01kz4C9ntcH6pVt5xQufXUldjE3YkRMTtSdzM6zdC5yJXky3D3blD2U7VN0QfnbmiKihDvaIPJzJLgsbryZuPu0dxoipwDLZUnRj6vfqyG6E7i46wE2NLAMUSNLIJNUGCg7ghMOjZHWew0e1vDP5IoQazGoQ+BWqx2x49fU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774603724; c=relaxed/simple;
-	bh=7oLMUuPupb+L1Op6HEPLrQmwMosRD4AdfgnjTNss654=;
+	s=arc-20240116; t=1774603940; c=relaxed/simple;
+	bh=06LMva7nNAzRB3uoqIeOQbagXCiMFxIYnmMe8xGCgvg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=foUAVkxerx+d+LslrdsbuyXjo1NYtrlAiUxRUbZyrbh6tmkp0Ug/vKQA6w4/dUqGi2XvV9KRRiXSkLkcww4ORpCE4KAuXvHP1L/meR0AmuH3nq3OJtAfZZ97z1NpPnL1d+iuQ7TMUv3QGhjrWmKr5Mk48cvJZewGQ4AKQGxlVEM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bcAh2KPY; arc=pass smtp.client-ip=74.125.82.49
+	 To:Cc:Content-Type; b=QztH1R2xxLigTfwnu3adm0okGY28djLdEU/JhgpeRqrdujts7jAdoiKpc7AzS9Ur7UCNQUU5YI5bVggJORdg6AO6ak1ky11NZId1sGL512Uxy6hhh3Oz6jixOnaYQ1YIia+gcAmGE/lzJmw3Zxoae/poS2MunSvf1uL4ixg/UCM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XS8GwsVK; arc=pass smtp.client-ip=74.125.82.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-126ea4b77adso2631768c88.1
-        for <linux-hyperv@vger.kernel.org>; Fri, 27 Mar 2026 02:28:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774603722; cv=none;
+Received: by mail-dl1-f54.google.com with SMTP id a92af1059eb24-126ea4b77adso2636498c88.1
+        for <linux-hyperv@vger.kernel.org>; Fri, 27 Mar 2026 02:32:19 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774603939; cv=none;
         d=google.com; s=arc-20240605;
-        b=IfwbWEALQRrGpa3esgowMq9NfYD/ZW6kKXf9OmZOyvTYlae6MD8fiBqV6/D4s8Zf9p
-         KH+0saVHldNg7IkvZMD3BBgbCJp98tL253Vasw1OPsBS40BlYVTI/Rpgyvadin8+KIYn
-         X3ibOpzh7W7z0Io2FUHNGjrRCvcEQUzH5if3f2YFg3kUyRFv7vryq+Dqd1FVR/Mrg22l
-         PKiB2MSdpOlzebSPR1pyjjoMNJwLftwtHJQHWhBdfvuyzeH6f2gz1U6x2VPXEPkt8yl1
-         QPNfGZwX5k9mtnCsu3eSI3v9uwtsJHl0gyvQUe8UHEHusO6718OoaKeAa3lCd66GVU93
-         DotQ==
+        b=YhthoguYhLDsh4BsQwVfb9AL9cwNGkULsb85U3d7ZqRIZ9BUf1rMgCWZORf1Ge8bN3
+         XlIlnA7xNP8ud2mRFPqp9cfCKjIt8gmXw0rSvLJ6fvm2m1IqsE0a6a6OmRZDHpA+8cLI
+         QKProql+v3yEN2oHpXC0G0jkcEVCkUL0zV6bnl+GiCJGM2GmhISvTL70lXVt4OWbkTeS
+         1sgJxiac4kRJ8OkTzB6xoVwtZXwx0IrVLiXHibezyh5w3KTO0bryKsvVGVAO9edDrH4+
+         8CpvZSoOOpLFX3h452dqgB421chf4b1E3bTJ9Qoc2vWbZ8hdLPvQova4PdwwNDefsS8J
+         B+Kg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=bTqiO629e4vaqODkR007sl1mWS+CoRfkjGQNvwUfTFI=;
-        fh=2o9ucVQChWp/RwluEe+1gw6tPoipKrj6GaIBT87NnZg=;
-        b=Cd0lzAwI/p7zHe9w664/tjgKTgiKTW3YNbdGHlKmddvTiMhg525rEhS3PQNugBI4xy
-         /CMmKO0YRIIoJIRsrWBv7KewgRiwdrDa1qYAdV7g26SiSY6JSHnSeVHwStCDaCfFJttI
-         5mVhiXLFM6F9xFkEUhztZlFG3wle1Q+U+xnPTM5EgQIOtnxp6wi1+nGOArAAZ3p7K1uv
-         SNL6oMPO1EpPv4HeKVB5xMUFr3irUmPhKftOZQVgcfLGcBoa4P6Wyod/agXTz+Qpbw0H
-         bDHkkjh08PUzDQ7OtRSD9aqSs4vAqjrBB/8ux4dJaPzEaZheVDrYU3VMufOLI3QiU3nr
-         RJJw==;
+        bh=yTj0lmErHFiNvY1kZ2HPnPSiJy+pFJAQ9CrdVdJE+0w=;
+        fh=rXVAL0sbfQrZRcXHs5bpimzcK/6Za+wMqU8IsiBcdmM=;
+        b=VhmoCuiwa+DuUx2EgsDIIQeIENtWx2SNXRJhq9rxsSrGyiAZ/8g8dT/kw2Yoq7XiKY
+         KFPO1EVdnGPIiT5P//5GGJUv0+z72PV/iYMAFSBIncOH81NBJUPnaq6bKVR9zUYsxb/9
+         uhc7WhW/vgvbIuV3cgh2gce+Um+PomoylG2exGLFo4AyOiw6VqbDDfqmzArMW9tK3QUD
+         QzQEuquF8U6gvr5COLDaJwrb2roImes//OtGeIiY7ZdGE7R/zKWbI6SnvXD4xVBIDQT2
+         NAi+jiBiMSeLaLOS3FGIBNycdvd7ZbH9l3A7JeRsfB2UFPt42zcjsg46aZe+7pTpRl8O
+         wuhA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774603722; x=1775208522; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1774603939; x=1775208739; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bTqiO629e4vaqODkR007sl1mWS+CoRfkjGQNvwUfTFI=;
-        b=bcAh2KPY7DVV53wrCWqbstN8Nm2lG55KlGyecFWRjygDEIUDAqrJvw/RZhyacvPDdQ
-         CLnzDFsSjzaFb6V9FObVIZQ1INNNKrNv5iGQgFHeEfIOr4C+hOqn61e2q722t3xFzIw5
-         rUQmuMZ9mahU7nfvdttJpy/ms2DbFegySeJXDo/6bI1H7WD4oYXJehvpV7G0jkP5eF6R
-         hl3qUzqd+KheJ+5FHUX655rzUT4yxp37mvEwIWjsRehpTekCp0gt6fysDbkMN062kr+h
-         KVTL94nYl+3OqrR5vgJtl2dL8cEiYtz0asy6ar9a4n9t0LppmU9MeuaMse+msuApepzC
-         j0Gg==
+        bh=yTj0lmErHFiNvY1kZ2HPnPSiJy+pFJAQ9CrdVdJE+0w=;
+        b=XS8GwsVKLV9xwO0pWloMalz0PuW9sWEWcKZERjpmoEwJlSGkVkbEh5m02U0EGmRYYI
+         lNI43DPHmK92PyWGAl8ua4qbwuCkB+MK/Zgz9q0oGOeGA9kKQJmgfXGdY9uPPJU4yNmA
+         NAExc5F0qTlZRBN08GrUkdsra+PnF+nt5fnsgxTiVQmid8T7zGK7NuZeaEeHNsi6wqDY
+         uSMyLdqv/irjCYYIvmRZhOXyh7x5dNvNEQdbnASNOONwNIdYIVQwOb2iCvUtdptdGtRQ
+         fK5Dm/GWjuhQjS3vbNrmbJw+NHWqlPKTVOnssbaBTi9T8VbWdANIkvGD3OzHjrkVUFQo
+         u73w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774603722; x=1775208522;
+        d=1e100.net; s=20251104; t=1774603939; x=1775208739;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=bTqiO629e4vaqODkR007sl1mWS+CoRfkjGQNvwUfTFI=;
-        b=RBErIj/hEXHnXs0RKSfdlQbB0NtQrBcbtx/YlDnb8Yh+Wu0NK6ynuNGf4lOV0jDX9Q
-         09mAeAQj3Ry0MZCFRzYRg7IRG0HjiNnBU65rucDoilX5IOH/P38taxRYnMTJ/jAKj/bo
-         EVJfi/qUCi3AF9Nl9iBTbB8rhOF8w3WHCcMU6bBamxRiAHUbePK+u/SzOk1131nrT+U7
-         K+UIqDvi3LPuGcHZ+r/091LUj5AQoUobGAb9WpfLeB7mnrkfBFPd1IT5dYf3hkbascfn
-         EfzYEYXl6p/xiQO1LaHeVNgWdG2klCgFLpiNxd7m30smrL1w81ppbik0alhMJMy1sVYZ
-         RbcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXTfY4trxLrxzkdd2PEBmqYalOUuA7J5aMY0mI1UdKJ6SM0DXZrjA6B2mrJfniaG+noBP8W1CpfEsfJAV0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJdxbAyD1IvUvDkadBk7ZL2BvP14fhk6HNO60RbdfZlnLRbFcH
-	Dn1pKGGAeLZMnccPRhT78Venwhy3/cP/5R9aF5IjBjdAktpD0bRrKq+IWNV+wOxA2x9OKimFhZS
-	A4yHgm4OUdA/wjyG3/xQwA1CNogSghO0=
-X-Gm-Gg: ATEYQzxdm5iQ+T2PwTmlwpCibhM0Re/NlFFFK9mKUou1PNZ0CNngE79Z1rtJKYXPkn7
-	I9VqoJ1CY6AVirX5SfGNBslKBRKgLFW+ivajUk2wf+qyVAJOezaD2d712JVrwwY7QvPMSrTm4M8
-	XVRvEx24A/KvwWjKeFZNEHCm/pERsRHUci2+uQ8WbuByoLtdEiqJlR0wg9MiWhu85H8Yv5RR4HA
-	m73sg1238FC14GjpFw8xz3X4tu0eZ8G3/CtOaVEN2GUodbj7f9SihqG0MuWpLqJoEVux3o8FT2W
-	uNaPbKI=
-X-Received: by 2002:a05:7022:4582:b0:128:bf8d:44d2 with SMTP id
- a92af1059eb24-12ab2857b7fmr889191c88.2.1774603722002; Fri, 27 Mar 2026
- 02:28:42 -0700 (PDT)
+        bh=yTj0lmErHFiNvY1kZ2HPnPSiJy+pFJAQ9CrdVdJE+0w=;
+        b=i2YZtxGLqqKqKTtcUbBIMAMGzAG8emrLYqF9Mdp3IR8mluzqI7utsbJPOxPP8Km2aa
+         NBAYZUlk6BaO6V+JMWDCSJyWtqD8Oj6P5pDbkagc4TxnZfbjPv3iBs8UjMYvUsNDSXvo
+         OqANTzKVfUbqeSFf7oLAj3u43/WC7kVb6r16R/CCzFCAQVxt5vLPZjIRsSqKrwQzriUa
+         Us1+9ZPCauMezpaDp5e8qCUMJgoOxcPs1QHLDzkIkMMCoVa4+eDRtX2vWgWx2OTmtkrJ
+         Xodv0ILpYw+hRGBmvYjcYRBzZJQmmYln2XrnO+KeLl8hR408GBf5PeOdwBxIMvzJf53b
+         qAuw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDYXHMZugXixXF7yAN2RbugibHlLcHpxs+KCtkMv5THsa4GfT7C/bTr4bWjlMZX4YwuPpYAeZQQtmjwbs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyx6JmKGCNTjxI1JMSyn3PVotTqZJaOPPYZU6qtkDxbNflTrqQX
+	AueShnmwbXRj11Dd27RPPf3a67SpNoYCocjjtDN7av5IAG2niZv7wDs2IwnVEnXiq8QUGaG+BIv
+	bqFGTTyKXGe53OI4BlUCKcFgDGOU2Qdo=
+X-Gm-Gg: ATEYQzxuNT7WoH2MY4tzsnoDIS/qXHiLsdg4EehRrXFKHkt3ojq4M3CPoM4MSGrWnze
+	ZCTAzZX3vB8/YSOLLp6Dui0GI7e5ObDssFYHCG84tQBCW1dtinRGr5kwduKJ/Qbby3pd5pXi25h
+	tJUAKQCclpWqUBn2MLCMpHtS8EquuDrSJTny3CVSLk7nAa14A4nmYkt89fgJglKWP92NAgtEoyb
+	V0PB2R1FkjJ1Eqb35kdX0qv5/DuRzVnI/lMffTbBLEiIjpwULpfVS5Ys2uPZtK1lw/uCEB8dFU5
+	8y9Oung=
+X-Received: by 2002:a05:693c:2b13:b0:2c0:ca48:3112 with SMTP id
+ 5a478bee46e88-2c185d2392dmr925089eec.10.1774603938602; Fri, 27 Mar 2026
+ 02:32:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260325075649.248241-1-tiala@microsoft.com> <20260325092200.GQ814676@unreal>
-In-Reply-To: <20260325092200.GQ814676@unreal>
+References: <20260325075649.248241-1-tiala@microsoft.com> <75c6dd78-bbae-4f5a-94ef-9de299720d38@linux.microsoft.com>
+In-Reply-To: <75c6dd78-bbae-4f5a-94ef-9de299720d38@linux.microsoft.com>
 From: Tianyu Lan <ltykernel@gmail.com>
-Date: Fri, 27 Mar 2026 17:28:23 +0800
-X-Gm-Features: AQROBzBLnwHEzC-aBHT7vCI91pnunWW4V0hYH-fhfBRc9lS9WxOctI5Y8moHTkE
-Message-ID: <CAMvTesCoRHcKip51j9H_WdyL0ggHMDaHUtwyEGo_w5n4=54_VQ@mail.gmail.com>
+Date: Fri, 27 Mar 2026 17:32:00 +0800
+X-Gm-Features: AQROBzBhr93zaAmvsFTclkLSepBZXUTqoKBV-eRXJ6Wqy7QysN56WXF-MYhEV2Q
+Message-ID: <CAMvTesD2ix==vObgAC=LLxM2Jn4MnuvnjfL72Z=zfs--gq4M+Q@mail.gmail.com>
 Subject: Re: [RFC PATCH V3] x86/VMBus: Confidential VMBus for dynamic DMA transfers
-To: Leon Romanovsky <leon@kernel.org>
+To: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
 Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, 
 	decui@microsoft.com, longli@microsoft.com, m.szyprowski@samsung.com, 
 	robin.murphy@arm.com, Tianyu Lan <tiala@microsoft.com>, iommu@lists.linux.dev, 
@@ -122,7 +122,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9812-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9813-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,samsung.com,arm.com,lists.linux.dev,vger.kernel.org,infradead.org,hexbites.dev,outlook.com];
@@ -133,7 +133,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	NEURAL_HAM(-0.00)[-0.999];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[ltykernel@gmail.com,linux-hyperv@vger.kernel.org];
 	DKIM_TRACE(0.00)[gmail.com:+];
@@ -141,15 +141,15 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 830C0341CF1
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,outlook.com:email,openvmm.dev:url]
+X-Rspamd-Queue-Id: CEA14341E26
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, Mar 25, 2026 at 5:22=E2=80=AFPM Leon Romanovsky <leon@kernel.org> w=
-rote:
+On Fri, Mar 27, 2026 at 1:05=E2=80=AFAM Easwar Hariharan
+<easwar.hariharan@linux.microsoft.com> wrote:
 >
-> On Wed, Mar 25, 2026 at 03:56:49AM -0400, Tianyu Lan wrote:
+> On 3/25/2026 12:56 AM, Tianyu Lan wrote:
 > > Hyper-V provides Confidential VMBus to communicate between
 > > device model and device guest driver via encrypted/private
 > > memory in Confidential VM. The device model is in OpenHCL
@@ -176,15 +176,59 @@ rote:
 > >
 > > Expose swiotlb_dev_disable() from DMA Core to disable
 > > bounce buffer for device.
+> >
+> > Suggested-by: Michael Kelley <mhklinux@outlook.com>
+> > Signed-off-by: Tianyu Lan <tiala@microsoft.com>
+> > ---
+> >  drivers/hv/vmbus_drv.c  | 6 +++++-
+> >  include/linux/swiotlb.h | 5 +++++
+> >  2 files changed, 10 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> > index 3d1a58b667db..84e6971fc90f 100644
+> > --- a/drivers/hv/vmbus_drv.c
+> > +++ b/drivers/hv/vmbus_drv.c
+> > @@ -2184,11 +2184,15 @@ int vmbus_device_register(struct hv_device *chi=
+ld_device_obj)
+> >       child_device_obj->device.dma_mask =3D &child_device_obj->dma_mask=
+;
+> >       dma_set_mask(&child_device_obj->device, DMA_BIT_MASK(64));
+> >
+> > +     device_initialize(&child_device_obj->device);
+> > +     if (child_device_obj->channel->co_external_memory)
+> > +             swiotlb_dev_disable(&child_device_obj->device);
+> > +
+> >       /*
+> >        * Register with the LDM. This will kick off the driver/device
+> >        * binding...which will eventually call vmbus_match() and vmbus_p=
+robe()
+> >        */
+> > -     ret =3D device_register(&child_device_obj->device);
+> > +     ret =3D device_add(&child_device_obj->device);
+> >       if (ret) {
+> >               pr_err("Unable to register child device\n");
+> >               put_device(&child_device_obj->device);
+> > diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
+> > index 3dae0f592063..7c572570d5d9 100644
+> > --- a/include/linux/swiotlb.h
+> > +++ b/include/linux/swiotlb.h
+> > @@ -169,6 +169,11 @@ static inline struct io_tlb_pool *swiotlb_find_poo=
+l(struct device *dev,
+> >       return NULL;
+> >  }
+> >
+> > +static inline bool swiotlb_dev_disable(struct device *dev)
+> > +{
+> > +     return dev->dma_io_tlb_mem =3D=3D NULL;
 >
-> It feels awkward and like a layering violation to let arbitrary kernel
-> drivers manipulate SWIOTLB, which sits beneath the DMA core.
+> Is there an extra =3D here?
 >
+> - Easwar (he/him)
 
-Hi Leon:
-     Thanks for your review. I will try other way since now DMA core has
-not stand way to disable device swiotlb.
-
+Hi Easwar:
+     Thanks for your review. Nice catch. Oops. Will try other way to disabl=
+e
+device bounce buffer in the next version.
 --=20
 Thanks
 Tianyu Lan
