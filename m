@@ -1,211 +1,154 @@
-Return-Path: <linux-hyperv+bounces-9832-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9833-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YIieGU/SymmsAQYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9832-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2026 21:43:11 +0200
+	id 0DxpL8bXymk1AgYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9833-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2026 22:06:30 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id F178736094B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2026 21:43:10 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14023360CCE
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2026 22:06:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 24BCC304B375
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2026 19:41:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 46BE0301496A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2026 20:04:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E04139B97D;
-	Mon, 30 Mar 2026 19:41:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E72C0395272;
+	Mon, 30 Mar 2026 20:04:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EiV/FnMy"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="U5qUMwOI"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2862239B4A9;
-	Mon, 30 Mar 2026 19:41:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA690391E65;
+	Mon, 30 Mar 2026 20:04:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774899698; cv=none; b=WF01tgtEBAEf2/tX0jsRE+A/yo3FY5FnmlbpVIs8okfyCevx0IIXDVg0i8n7N0qMlec9U3TMejXVdCD7PI2fHvhWp1x6aZm3j9Bk6ePrIbWadIqCjJ98rcBjBTh8FgHq95NFPOsQkxeF29/7p0ZAmQymEpKPUaDCqLsr95F1YaM=
+	t=1774901053; cv=none; b=rtZ0hsJjnpZIC/lOxXWVgdMWKWE6pdZba5/Fwd6dtp9RUdZTDk5IX+Y455rOXbGowiV8h/77VL2oFvm/PiJL7LlY6lJGvb7UX1eG0vxPaM62Ww7BnoznwAg4w4hr+C284zqwJ76bPvFTZWRRSuuz83x+M+EkwvZcNwB6P93LCKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774899698; c=relaxed/simple;
-	bh=2jzANB6Jpn7vyxL68LyAGHdLW1A45Ea8LNVNsMorZqo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=seShLyaTsReCUZhptYZp80a+ZYr4dRYOvCky2YrZfmqyQM8j702HJ5HuyHZYK8dm0DC0NNoTExLw8SzXJZRGBYFuavg24NlSXYYDgiXs1gh4C7y/MAOiR7vXNd2z7OvRZ+VDXUg5hWkJxebJEblyqbsrDZTZDkWjSNFLenBPsVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=EiV/FnMy; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1774901053; c=relaxed/simple;
+	bh=8g2LhLxRs/yBNMARJIFxJ2laJOAOcreJO7V60frQ3mg=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=UcbVKAzunzaXLXJBQ3UgobyAWzN9Z28SVk0SzcSs07kZiiS9l0aeqTchMT0/W3d5VCQCSSjCRMtDy6oTTfBYGOoyNz7cBhDnNkTi8ogERy5GqiPtewfEOAKpZgzKYrSszxHQX5b/BI88DiCMNLTzQloW3zR3/g8ei11nHNhAd4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=U5qUMwOI; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1204)
-	id 488B920B712B; Mon, 30 Mar 2026 12:41:37 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 488B920B712B
+Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 98C3120B7001;
+	Mon, 30 Mar 2026 13:04:12 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 98C3120B7001
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1774899697;
-	bh=uk7R0f7m1KNvPxqL1ALcZ6sp+sNRZBUIYD6HuBJP0Ek=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EiV/FnMyauGCISrcSrJXLqykf5bMDOVmqCQMXOqW5jKZvcTfRWRw76fpfCO1CCQ/c
-	 ducucJLSS6Xz5tSpfmHrNAO93xJ6TW6n8mCycCbiju/riYwDnLH3xHx2FCd0FjZ4d9
-	 I1cTHGAhB1TUK4ZlYToM6N7KrQjhhniVcwf1fNcQ=
-Date: Mon, 30 Mar 2026 12:41:37 -0700
-From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, pabeni@redhat.com, leon@kernel.org,
-	longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
-	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
-	ernis@linux.microsoft.com, shirazsaleem@microsoft.com,
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	dipayanroy@microsoft.com
-Subject: Re: [PATCH net-next, v3] net: mana: Force full-page RX buffers for
- 4K page size on specific systems.
-Message-ID: <acrR8fLQsIUkKRz7@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <abDo8XTu1EiQFC7T@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20260314125053.41d6221b@kernel.org>
- <ab2T8LgRiDHDIUHV@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20260320172908.1840229d@kernel.org>
+	s=default; t=1774901052;
+	bh=nuaa1MKtIM/TxUwZfypKIVv0cOkJp9091UYiNN1blzI=;
+	h=Subject:From:To:Cc:Date:From;
+	b=U5qUMwOIJjwUoBktYBNTxeJmJzqsjIdDeOqU8kcqssn+3ZspIUeoh4oL7l6N6X9cj
+	 TC0IVYbgPEIVgl+7IN9MhEYw6/ijHkOOv2+j1PwRu9FkXz88GWQ7h48qMnqScD+5rt
+	 tt2kror7x+7ZuGuSymm5trwtbZQRLi2uv6oY22DM=
+Subject: [PATCH 0/7] mshv: Refactor memory region management and map pages at
+ creation
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, longli@microsoft.com
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 30 Mar 2026 20:04:12 +0000
+Message-ID: 
+ <177490099488.81669.3758562641675983608.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260320172908.1840229d@kernel.org>
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9832-lists,linux-hyperv=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: F178736094B
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	PRECEDENCE_BULK(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9833-lists,linux-hyperv=lfdr.de];
+	TO_DN_NONE(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+]
+X-Rspamd-Queue-Id: 14023360CCE
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Mar 20, 2026 at 05:29:08PM -0700, Jakub Kicinski wrote:
-> On Fri, 20 Mar 2026 11:37:36 -0700 Dipayaan Roy wrote:
-> > On Sat, Mar 14, 2026 at 12:50:53PM -0700, Jakub Kicinski wrote:
-> > > On Tue, 10 Mar 2026 21:00:49 -0700 Dipayaan Roy wrote:  
-> > > > On certain systems configured with 4K PAGE_SIZE, utilizing page_pool
-> > > > fragments for RX buffers results in a significant throughput regression.
-> > > > Profiling reveals that this regression correlates with high overhead in the
-> > > > fragment allocation and reference counting paths on these specific
-> > > > platforms, rendering the multi-buffer-per-page strategy counterproductive.  
-> > > 
-> > > Can you say more ? We could technically take two references on the page
-> > > right away if MTU is small and avoid some of the cost.  
-> > 
-> > There is a 15-20% shortfall in achieving line rate for MANA (180+ Gbps)
-> > on a particular ARM64 SKU. The issue is only specific to this processor SKU —
-> > not seen on other ARM64 SKUs (e.g., GB200) or x86 SKUs. Critically, the
-> > regression only manifests beyond 16 TCP connections, which strongly indicates
-> > seen when there is  high contention and traffic.
-> > 
-> >   no. of     | rx buf backed       | rx buf backed
-> >  connections | with page fragments | with full page
-> > -------------+---------------------+---------------
-> >            4 |         139 Gbps    |     138 Gbps
-> >            8 |         140 Gbps    |     162 Gbps
-> >           16 |         186 Gbps    |     186 Gbps
-> 
-> These results look at bit odd, 4 and 16 streams have the same perf,
-> while all other cases indeed show a delta. What I was hoping for was
-> a more precise attribution of the performance issue. Like perf top
-> showing that its indeed the atomic ops on the refcount that stall.
-> 
-> >           32 |         136 Gbps    |     183 Gbps
-> >           48 |         159 Gbps    |     185 Gbps
-> >           64 |         165 Gbps    |     184 Gbps
-> >          128 |         170 Gbps    |     180 Gbps
-> >  
-> > HW team is still working to RCA this hw behaviour.
-> > 
-> > Regarding "We could technically take two references on the page right
-> > away", are you suggesting having page reference counting logic to driver
-> > instead of relying on page pool?
-> 
-> Yes, either that or adjust the page pool APIs. 
-> page_pool_alloc_frag_netmem() currently sets the refcount to BIAS
-> which it then has to subtract later. So we get:
-> 
->   set(BIAS)
->   .. driver allocates chunks ..
->   sub(BIAS_MAX - pool->frag_users)
-> 
-> Instead of using BIAS we could make the page pool guess that the caller
-> will keep asking for the same frame size. So initially take
-> (PAGE_SIZE/size) references.
-> 
-Ok I will be doing some expeimentation with this approach to see if it
-helps the current scenario.
+This series refactors the mshv memory region subsystem in preparation
+for mapping populated pages into the hypervisor at movable region
+creation time, rather than relying solely on demand faulting.
 
-> > > The driver doesn't seem to set skb->truesize accordingly after this
-> > > change. So you're lying to the stack about how much memory each packet
-> > > consumes. This is a blocker for the change.
-> > >   
-> > ACK. I will send out a separate patch with fixes tag to fix the skb true
-> > size.
-> > 
-> > > > To mitigate this, bypass the page_pool fragment path and force a single RX
-> > > > packet per page allocation when all the following conditions are met:
-> > > >   1. The system is configured with a 4K PAGE_SIZE.
-> > > >   2. A processor-specific quirk is detected via SMBIOS Type 4 data.  
-> > > 
-> > > I don't think we want the kernel to be in the business of carrying
-> > > matching on platform names and providing optimal config by default.
-> > > This sort of logic needs to live in user space or the hypervisor 
-> > > (which can then pass a single bit to the driver to enable the behavior)
-> > >   
-> > As per our internal discussion the hypervisor cannot provide the CPU
-> > version info(in vm as well as in bare metal offerings).
-> 
-> Why? I suppose it's much more effort for you but it's much more effort
-> for the community to carry the workaround. So..
->
-As per the hypervisor team it is not solving the issue in the case of
-bare metal offering, hence will work ahead with an alternate soultion
-as suggested by you: "This sort of logic needs to live in user space..,
-which can then pass a single bit to the driver to enable the behavior"
+The primary motivation is to ensure that when userspace passes a
+pre-populated mapping for a movable memory region, those pages are
+immediately visible to the hypervisor. Previously, all movable regions
+were created with HV_MAP_GPA_NO_ACCESS on every page regardless of
+whether the backing pages were already present, deferring all mapping
+to the fault handler. This added unnecessary fault overhead and
+complicated the initial setup of child partitions with pre-populated
+memory.
 
-> > On handling it from user side are you suggesting it to introduce a new
-> > ethtool Private Flags and have udev rules for the driver to set the private
-> > flag and switch to full page rx buffers? Given that the wide number of distro
-> > support this might be harder to maintain/backport. 
-> > 
-> > Also the dmi parsing design was influenced by other net wireleass
-> > drivers as /wireless/ath/ath10k/core.c. If this approach is not
-> > acceptable for MANA driver then will have to take a alternate route
-> > based on the dsicussion right above it.
-> 
-> Plenty of ugly hacks in the kernel, it's no excuse.
+The series takes a bottom-up approach:
 
-Hi Jakub,
+- Patches 1-2 lay the groundwork by converting internal data structures
+from page pointers to PFNs and teaching the range processing
+infrastructure to handle holes (invalid PFNs) uniformly. The PFN
+conversion eliminates redundant page_to_pfn()/pfn_to_page() conversions
+between the HMM interface (which returns PFNs) and the hypervisor
+hypercalls (which consume PFNs). The hole handling enables mapping
+regions that contain a mix of present and absent pages, remapping holes
+with no-access permissions to preserve hypervisor dirty page tracking
+for precopy live migration.
 
-As we are still working on root causing the actual issue with HW team,
-we would want the user a option to achieve the line rate by a tuneable
-option to run with full page rx buffers. I will be sending out a next
-version that would introduce an ethtool private flag for mana that
-allows the user to force one RX buffer per page.
+- Patch 3 extends HMM fault handling to support memory regions that span
+multiple VMAs with different protection flags, which is required for
+flexible guest memory layouts.
+
+- Patch 4 consolidates region setup by moving pinned region preparation
+into mshv_regions.c, making five helper functions static, and fixing
+a pre-existing bug where mshv_region_map() failures on non-encrypted
+partitions were silently ignored.
+
+- Patch 5 is the core functional change: movable regions now collect
+already-present PFNs from userspace at creation time and map them
+into the hypervisor immediately. A new do_fault parameter controls
+whether hmm_range_fault() should fault in missing pages or only
+collect those already present.
+
+- Patches 6-7 are cleanups: extracting the MMIO mapping path into its
+own function for consistency with the pinned and movable paths, and
+adding a tracepoint for GPA mapping hypercalls to aid debugging.
+
+---
+
+Stanislav Kinsburskii (7):
+      mshv: Convert from page pointers to PFNs
+      mshv: Add support to address range holes remapping
+      mshv: Support regions with different VMAs
+      mshv: Move pinned region setup to mshv_regions.c
+      mshv: Map populated pages on movable region creation
+      mshv: Extract MMIO region mapping into separate function
+      mshv: Add tracepoint for map GPA hypercall
 
 
-Regards
+ drivers/hv/mshv_regions.c      |  580 +++++++++++++++++++++++++++++-----------
+ drivers/hv/mshv_root.h         |   29 +-
+ drivers/hv/mshv_root_hv_call.c |   53 ++--
+ drivers/hv/mshv_root_main.c    |   99 +------
+ drivers/hv/mshv_trace.h        |   36 ++
+ 5 files changed, 503 insertions(+), 294 deletions(-)
+
 
