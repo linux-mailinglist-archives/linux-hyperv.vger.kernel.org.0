@@ -1,249 +1,406 @@
-Return-Path: <linux-hyperv+bounces-9841-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9842-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mJoYI9fYymmWAgYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9841-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2026 22:11:03 +0200
+	id WPsVGcfkymloBAYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9842-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2026 23:01:59 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id B726C360D75
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2026 22:11:02 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 092F83613B0
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2026 23:01:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B29A13016D00
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2026 20:11:01 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 65B64300D1CA
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2026 21:01:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF019399346;
-	Mon, 30 Mar 2026 20:10:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 091683939BC;
+	Mon, 30 Mar 2026 21:01:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="p3Q7z9HD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CAP30Hzc"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Zr5494co"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from flow-a6-smtp.messagingengine.com (flow-a6-smtp.messagingengine.com [103.168.172.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2035B377023;
-	Mon, 30 Mar 2026 20:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.141
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81D202E8DEC;
+	Mon, 30 Mar 2026 21:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774901459; cv=none; b=LCPETV2n5/rjlrwqONXv261RW3EwDFyEWnflEdGWillT7Q8uwGyYN2SNAgIQska92mUPzu2WCZhgOiB2ie0gM2GZmhXuqqSnWwQcOnJMeE8TyNpvnZQNJAt88FvpHVpU07/t2C+XeOiTsJQC67067qatBjEQ2Q6KkLr0xXcP9U8=
+	t=1774904515; cv=none; b=gap7FRV6OG8nmwFvef1XzsFJf/e9Yrw63i4kgnlmgDdzSCdHGzpoHeB+MyqqaTE0KNOlQD/ds+Xyqrtkkc4SFCK2jDR3yuHZuAnZpNMrNNjFlFO6CTexRT9NaACzoAHsWybBvEUWaxUhY0qw5aM2THfBz6xnWbHeL6vTQf9Q+OE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774901459; c=relaxed/simple;
-	bh=HVnPKL4GDfzYYaqgylKaMGdGqe750h3OqeetAX+ZooI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PoaEIn0DzqB0t7yHe2UAlQtSucETMbF9FA330BOLAVdxbcpdb7PWKudtV25Y3SLTrkMJR+X0IGwZ0UtLWWyBkl+uZ9hlVLA/md0TLQ7u0MYCPhsVEZD8a/2+bOSeWHb3xFlyoB2H8An+498MY4uCWhIdUYKwrNQWzNM/pRqOvRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=p3Q7z9HD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CAP30Hzc; arc=none smtp.client-ip=103.168.172.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailflow.phl.internal (Postfix) with ESMTP id 32B1F1380404;
-	Mon, 30 Mar 2026 16:10:56 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Mon, 30 Mar 2026 16:10:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1774901456;
-	 x=1774908656; bh=l6vFZymkQIpCjGyZZ0waTIjtR5dYu9l/RauB0EHs2cg=; b=
-	p3Q7z9HDaMO9l49KzGyd6QCozBDRkYMrNAMT016WX/fHIPodDvJbWxfN7o7Rq7vD
-	ssq4dL3KEVXFE49rB8recUd5fVpSerRill0EPB9eG2k4c2akGO+Qp/G8D31RmPbX
-	7TlkrNox2UjWyTlfcttMC7E71kdY+trnef5Hm61drgcfUPakTcCNL6kKwNKjRSBV
-	U1uiNaG+fKZAZmTv0+H0872Gvi06OSqLLzx0vsDX2qjVrQBFMlsZacR2mbGsDkc/
-	gT6xVnpGv8MRHmzJBZo58FBd6w5IU+6ogcmojJLtPY3KydD8fWurT3VIXthGtQVM
-	kQSao6bXLTSzYllu1/tldQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1774901456; x=
-	1774908656; bh=l6vFZymkQIpCjGyZZ0waTIjtR5dYu9l/RauB0EHs2cg=; b=C
-	AP30HzcjqUcGAYtq0Vy0npz+WQZ0xoM+V3KrqPMrmRQ5BSmU53GGUiyx5E4wI6yA
-	FyTr5/p4paazsu/Iipz8yYZU+1phMDKI7hagtD986FHeu0o1F4zYmBZsEakuW92m
-	weI9ASAX8aFEL8Rs0Uec3ctb/HnJ1MgKC92d8MBdvS6OH7G3ewGRc0+tfGddZ4Gk
-	WxhrjWBcLoGs93zMy/odTXwHEJHh5W5FS+Et9LrpEfOcBRgJ0bBAStrIpl6DkWE0
-	Q7ETKFm9iu5onjWSvKFXn0ELTMMUBd/OPVAOOtwXaNWNshQ6cuB1Amc/2nwRZfpT
-	eHg87urYI5Ec6Lkq0sXvA==
-X-ME-Sender: <xms:z9jKafG3C1ppH9T_m6ALHXE4Xg8LRK7hBmf8rBxsDTwjV0YmtGN7zQ>
-    <xme:z9jKafRfVIq8DMXZsvpeUjwD446zuGALRlY6oTA_zptsdyXkE-2d-NbNcA082cKf0
-    ss8FY21mgRpxHw-PTPA5PC2K5vCU9145ou0r7AQwqll0ampOmU>
-X-ME-Received: <xmr:z9jKaX5EMTRV_NaboCc_h79atFYxCsQIiTsRvvS3id2SmTFWS4FBTgmuiO8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeffeelledtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevuffkjghfofggtgfgsehtjeertdertddvnecuhfhrohhmpeetlhgvgicu
-    hghilhhlihgrmhhsohhnuceorghlvgigsehshhgriigsohhtrdhorhhgqeenucggtffrrg
-    htthgvrhhnpeekheejieetffefueeiteejtdejffdvleelvdeuvdffvdefteeghfevkeeu
-    vdefvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghlvgigsehshhgriigsohhtrdhorhhg
-    pdhnsggprhgtphhtthhopeehuddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepug
-    grkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjghhgseiiihgvphgvrdgtrgdp
-    rhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtoh
-    epghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohep
-    rhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehiohgrnhgrrdgtihhorh
-    hnvghisehngihprdgtohhmpdhrtghpthhtohepnhhiphhunhdrghhuphhtrgesrghmugdr
-    tghomhdprhgtphhtthhopehnihhkhhhilhdrrghgrghrfigrlhesrghmugdrtghomhdprh
-    gtphhtthhopehkhihssehmihgtrhhoshhofhhtrdgtohhm
-X-ME-Proxy: <xmx:z9jKaXPahdSu6NAxzDLCWHFq0SjTPnbaOV6q1JEVDN1n0TGZgvSOLg>
-    <xmx:z9jKaYs_pZi1AKnrgY4kd6IlWW19DwfnZAklgCAjMJf5o-edI-wG2g>
-    <xmx:z9jKaebkSHmk2-FfV3M99S1E_Kbm3scLKfLmyO_zzcLIBxoGL3vJxQ>
-    <xmx:z9jKacg_NAD9M03CgHB8mak7EEebVzjqapJHxaBa4zGAHu1ISFIb7w>
-    <xmx:0NjKafrBqSu7i3ficH69WDNrAzczvh4pW1jhPhZmK7WHcIBXnovlo-fr>
-Feedback-ID: i03f14258:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 30 Mar 2026 16:10:52 -0400 (EDT)
-Date: Mon, 30 Mar 2026 14:10:50 -0600
-From: Alex Williamson <alex@shazbot.org>
-To: "Danilo Krummrich" <dakr@kernel.org>
-Cc: "Jason Gunthorpe" <jgg@ziepe.ca>, "Russell King" <linux@armlinux.org.uk>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- "Ioana Ciornei" <ioana.ciornei@nxp.com>,
- "Nipun Gupta" <nipun.gupta@amd.com>,
- "Nikhil Agarwal" <nikhil.agarwal@amd.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- "Haiyang Zhang" <haiyangz@microsoft.com>, "Wei Liu" <wei.liu@kernel.org>,
- "Dexuan Cui" <decui@microsoft.com>, "Long Li" <longli@microsoft.com>,
- "Bjorn Helgaas" <bhelgaas@google.com>, "Armin Wolf" <W_Armin@gmx.de>,
- "Bjorn Andersson" <andersson@kernel.org>,
- "Mathieu Poirier" <mathieu.poirier@linaro.org>,
- "Vineeth Vijayan" <vneethv@linux.ibm.com>,
- "Peter Oberparleiter" <oberpar@linux.ibm.com>,
- "Heiko Carstens" <hca@linux.ibm.com>,
- "Vasily Gorbik" <gor@linux.ibm.com>,
- "Alexander Gordeev" <agordeev@linux.ibm.com>,
- "Christian Borntraeger" <borntraeger@linux.ibm.com>,
- "Sven Schnelle" <svens@linux.ibm.com>,
- "Harald Freudenberger" <freude@linux.ibm.com>,
- "Holger Dengler" <dengler@linux.ibm.com>,
- "Mark Brown" <broonie@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>,
- "Jason Wang" <jasowang@redhat.com>,
- "Xuan Zhuo" <xuanzhuo@linux.alibaba.com>,
- Eugenio =?UTF-8?B?UMOpcmV6?= <eperezma@redhat.com>,
- "Juergen Gross" <jgross@suse.com>,
- "Stefano Stabellini" <sstabellini@kernel.org>,
- "Oleksandr Tyshchenko" <oleksandr_tyshchenko@epam.com>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- <linux-kernel@vger.kernel.org>, <driver-core@lists.linux.dev>,
- <linuxppc-dev@lists.ozlabs.org>, <linux-hyperv@vger.kernel.org>,
- <linux-pci@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
- <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
- <linux-s390@vger.kernel.org>, <linux-spi@vger.kernel.org>,
- <virtualization@lists.linux.dev>, <kvm@vger.kernel.org>,
- <xen-devel@lists.xenproject.org>, <linux-arm-kernel@lists.infradead.org>,
- "Gui-Dong Han" <hanguidong02@gmail.com>, alex@shazbot.org
-Subject: Re: [PATCH 05/12] PCI: use generic driver_override infrastructure
-Message-ID: <20260330141050.2cb47bd9@shazbot.org>
-In-Reply-To: <DHGATG6LJOM1.2AI7BYQ2O4DFU@kernel.org>
-References: <20260324005919.2408620-1-dakr@kernel.org>
-	<20260324005919.2408620-6-dakr@kernel.org>
-	<DHGATG6LJOM1.2AI7BYQ2O4DFU@kernel.org>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1774904515; c=relaxed/simple;
+	bh=Myg6RvnrA2lKGV9E/Sj9f6JZA1BPGV06mKLtz0JvppI=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=N0hcAgY+Zhn7ROej6SPeBrxdlJotYAW7PULHYEjL9zsX36fb0KpCBXjITJxqEtfU81+Wnr34mLCFYTt3nLHdNjOdtTOQMxhHQwR6G8b1/Yp6F1f+kew1ucQ+W5ybhe3KeObjZpGGj2IANww6Psy0BD6XXu+/gsoUAgiEsyTENNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Zr5494co; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1204)
+	id 9A21520B712B; Mon, 30 Mar 2026 14:01:54 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9A21520B712B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1774904514;
+	bh=PwD1baE5NNBJbAVxluuoN8bb+aV+IrsTHoXHhz+QU5E=;
+	h=Date:From:To:Subject:From;
+	b=Zr5494coujDL2l2g+ePoNRVQ0QREvmfixw0UX+hBPWizuUcbwJBr/ZNIJL/8xjm35
+	 27jnO6V/glyy4Lk4S8N8aGQGNW4U3Lr1WrYgp1OqUkj3ALKi+LN4mg4vd7/F/HvjLP
+	 roP7w1goEB5HgIy33FcrvXzZ3dflBSpYL6Zwa2L0=
+Date: Mon, 30 Mar 2026 14:01:54 -0700
+From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	leon@kernel.org, longli@microsoft.com, kotaranov@microsoft.com,
+	horms@kernel.org, shradhagupta@linux.microsoft.com,
+	ssengar@linux.microsoft.com, ernis@linux.microsoft.com,
+	shirazsaleem@microsoft.com, linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, stephen@networkplumber.org,
+	jacob.e.keller@intel.com, leitao@debian.org, kees@kernel.org,
+	dipayanroy@microsoft.com
+Subject: [PATCH net-next,v4] net: mana: Force full-page RX buffers via
+ ethtool private flag
+Message-ID: <acrkwuIFyBXhwICF@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[shazbot.org,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[shazbot.org:s=fm1,messagingengine.com:s=fm1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[ziepe.ca,armlinux.org.uk,linuxfoundation.org,kernel.org,nxp.com,amd.com,microsoft.com,google.com,gmx.de,linaro.org,linux.ibm.com,redhat.com,linux.alibaba.com,suse.com,epam.com,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,lists.xenproject.org,lists.infradead.org,gmail.com,shazbot.org];
-	URIBL_MULTI_FAIL(0.00)[messagingengine.com:server fail,tor.lore.kernel.org:server fail,shazbot.org:server fail];
-	DKIM_TRACE(0.00)[shazbot.org:+,messagingengine.com:+];
-	TAGGED_FROM(0.00)[bounces-9841-lists,linux-hyperv=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9842-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[26];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alex@shazbot.org,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCPT_COUNT_GT_50(0.00)[51];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_NONE(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[messagingengine.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B726C360D75
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.microsoft.com:dkim,linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid]
+X-Rspamd-Queue-Id: 092F83613B0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, 30 Mar 2026 19:38:41 +0200
-"Danilo Krummrich" <dakr@kernel.org> wrote:
+On some ARM64 platforms with 4K PAGE_SIZE, page_pool fragment
+allocation in the RX refill path can cause 15-20% throughput
+regression under high connection counts (>16 TCP streams).
 
-> (Cc: Jason)
-> 
-> On Tue Mar 24, 2026 at 1:59 AM CET, Danilo Krummrich wrote:
-> > diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-> > index d43745fe4c84..460852f79f29 100644
-> > --- a/drivers/vfio/pci/vfio_pci_core.c
-> > +++ b/drivers/vfio/pci/vfio_pci_core.c
-> > @@ -1987,9 +1987,8 @@ static int vfio_pci_bus_notifier(struct notifier_block *nb,
-> >  	    pdev->is_virtfn && physfn == vdev->pdev) {
-> >  		pci_info(vdev->pdev, "Captured SR-IOV VF %s driver_override\n",
-> >  			 pci_name(pdev));
-> > -		pdev->driver_override = kasprintf(GFP_KERNEL, "%s",
-> > -						  vdev->vdev.ops->name);
-> > -		WARN_ON(!pdev->driver_override);
-> > +		WARN_ON(device_set_driver_override(&pdev->dev,
-> > +						   vdev->vdev.ops->name));  
-> 
-> Technically, this is a change in behavior. If vdev->vdev.ops->name is NULL, it
-> will trigger the WARN_ON(), whereas before it would have just written "(null)"
-> into driver_override.
+Add an ethtool private flag "full-page-rx" that allows the user to
+force one RX buffer per page, bypassing the page_pool fragment path.
+This restores line-rate(180+ Gbps) performance on affected platforms.
 
-It's worse than that.  Looking at the implementation in [1], we have:
+Usage:
+  ethtool --set-priv-flags eth0 full-page-rx on
 
-+static inline int device_set_driver_override(struct device *dev, const char *s)
-+{
-+	return __device_set_driver_override(dev, s, strlen(s));
-+}
+There is no behavioral change by default. The flag must be explicitly
+enabled by the user or udev rule.
 
-So if name is NULL, we oops in strlen() before we even hit the -EINVAL
-and WARN_ON().
+The existing single-buffer-per-page logic for XDP and jumbo frames is
+consolidated into a new helper mana_use_single_rxbuf_per_page().
 
-I don't believe we have any vfio-pci variant drivers where the name is
-NULL, but kasprintf() handling NULL as "(null)" was a consideration in
-this design, that even if there is no name the device is sequestered
-with a driver_override that won't match an actual driver.
+Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+---
+Changes in v4:
+  - Dropping the smbios string parsing and add ethtool priv flag
+    to reconfigure the queues with full page rx buffers.
+Changes in v3:
+  - changed u8* to char*
+Changes in v2:
+  - separate reading string index and the string, remove inline.
+---
+ drivers/net/ethernet/microsoft/mana/mana_en.c |  22 ++-
+ .../ethernet/microsoft/mana/mana_ethtool.c    | 159 +++++++++++++++---
+ include/net/mana/mana.h                       |   8 +
+ 3 files changed, 159 insertions(+), 30 deletions(-)
 
-> I assume that vfio_pci_core drivers are expected to set the name in struct
-> vfio_device_ops in the first place and this code (silently) relies on this
-> invariant?
-
-We do expect that, but it was previously safe either way to make sure
-VFs are only bound to the same ops driver or barring that, at least
-don't perform a standard driver match.  The last thing we want to
-happen automatically is for a user owned PF to create SR-IOV VFs that
-automatically bind to native kernel drivers.
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 49c65cc1697c..59a1626c2be1 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -744,6 +744,25 @@ static void *mana_get_rxbuf_pre(struct mana_rxq *rxq, dma_addr_t *da)
+ 	return va;
+ }
  
-> Alex, Jason: Should we keep this hunk above as is and check for a proper name in
-> struct vfio_device_ops in vfio_pci_core_register_device() with a subsequent
-> patch?
-
-Given the oops, my preference would be to roll it in here.  This change
-is what makes it a requirement that name cannot be NULL, where this was
-safely handled with kasprintf().  Thanks,
-
-Alex
-
-
-[1] https://lore.kernel.org/all/20260302002729.19438-2-dakr@kernel.org/
-
-> 
-> >  	} else if (action == BUS_NOTIFY_BOUND_DRIVER &&
-> >  		   pdev->is_virtfn && physfn == vdev->pdev) {
-> >  		struct pci_driver *drv = pci_dev_driver(pdev);  
++static bool
++mana_use_single_rxbuf_per_page(struct mana_port_context *apc, u32 mtu)
++{
++	/* On some platforms with 4K PAGE_SIZE, page_pool fragment allocation
++	 * in the RX refill path (~2kB buffer) can cause significant throughput
++	 * regression under high connection counts. Allow user to force one RX
++	 * buffer per page via ethtool private flag to bypass the fragment
++	 * path.
++	 */
++	if (apc->priv_flags & BIT(MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF))
++		return true;
++
++	/* For xdp and jumbo frames make sure only one packet fits per page. */
++	if (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2 || mana_xdp_get(apc))
++		return true;
++
++	return false;
++}
++
+ /* Get RX buffer's data size, alloc size, XDP headroom based on MTU */
+ static void mana_get_rxbuf_cfg(struct mana_port_context *apc,
+ 			       int mtu, u32 *datasize, u32 *alloc_size,
+@@ -754,8 +773,7 @@ static void mana_get_rxbuf_cfg(struct mana_port_context *apc,
+ 	/* Calculate datasize first (consistent across all cases) */
+ 	*datasize = mtu + ETH_HLEN;
+ 
+-	/* For xdp and jumbo frames make sure only one packet fits per page */
+-	if (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2 || mana_xdp_get(apc)) {
++	if (mana_use_single_rxbuf_per_page(apc, mtu)) {
+ 		if (mana_xdp_get(apc)) {
+ 			*headroom = XDP_PACKET_HEADROOM;
+ 			*alloc_size = PAGE_SIZE;
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+index 6a4b42fe0944..9f7393b71a34 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+@@ -133,58 +133,91 @@ static const struct mana_stats_desc mana_phy_stats[] = {
+ 	{ "hc_tc7_tx_pause_phy", offsetof(struct mana_ethtool_phy_stats, tx_pause_tc7_phy) },
+ };
+ 
++static const char mana_priv_flags[MANA_PRIV_FLAG_MAX][ETH_GSTRING_LEN] = {
++	[MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF] = "full-page-rx"
++};
++
+ static int mana_get_sset_count(struct net_device *ndev, int stringset)
+ {
+ 	struct mana_port_context *apc = netdev_priv(ndev);
+ 	unsigned int num_queues = apc->num_queues;
+ 
+-	if (stringset != ETH_SS_STATS)
++	switch (stringset) {
++	case ETH_SS_STATS:
++		return ARRAY_SIZE(mana_eth_stats) +
++		       ARRAY_SIZE(mana_phy_stats) +
++		       ARRAY_SIZE(mana_hc_stats)  +
++		       num_queues * (MANA_STATS_RX_COUNT + MANA_STATS_TX_COUNT);
++	case ETH_SS_PRIV_FLAGS:
++		return MANA_PRIV_FLAG_MAX;
++	default:
+ 		return -EINVAL;
++	}
++}
++
++static void mana_get_strings_priv_flags(u8 **data)
++{
++	int i;
+ 
+-	return ARRAY_SIZE(mana_eth_stats) + ARRAY_SIZE(mana_phy_stats) + ARRAY_SIZE(mana_hc_stats) +
+-			num_queues * (MANA_STATS_RX_COUNT + MANA_STATS_TX_COUNT);
++	for (i = 0; i < MANA_PRIV_FLAG_MAX; i++)
++		ethtool_puts(data, mana_priv_flags[i]);
+ }
+ 
+-static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
++static void mana_get_strings_stats(struct mana_port_context *apc, u8 **data)
+ {
+-	struct mana_port_context *apc = netdev_priv(ndev);
+ 	unsigned int num_queues = apc->num_queues;
+ 	int i, j;
+ 
+-	if (stringset != ETH_SS_STATS)
+-		return;
+ 	for (i = 0; i < ARRAY_SIZE(mana_eth_stats); i++)
+-		ethtool_puts(&data, mana_eth_stats[i].name);
++		ethtool_puts(data, mana_eth_stats[i].name);
+ 
+ 	for (i = 0; i < ARRAY_SIZE(mana_hc_stats); i++)
+-		ethtool_puts(&data, mana_hc_stats[i].name);
++		ethtool_puts(data, mana_hc_stats[i].name);
+ 
+ 	for (i = 0; i < ARRAY_SIZE(mana_phy_stats); i++)
+-		ethtool_puts(&data, mana_phy_stats[i].name);
++		ethtool_puts(data, mana_phy_stats[i].name);
+ 
+ 	for (i = 0; i < num_queues; i++) {
+-		ethtool_sprintf(&data, "rx_%d_packets", i);
+-		ethtool_sprintf(&data, "rx_%d_bytes", i);
+-		ethtool_sprintf(&data, "rx_%d_xdp_drop", i);
+-		ethtool_sprintf(&data, "rx_%d_xdp_tx", i);
+-		ethtool_sprintf(&data, "rx_%d_xdp_redirect", i);
+-		ethtool_sprintf(&data, "rx_%d_pkt_len0_err", i);
++		ethtool_sprintf(data, "rx_%d_packets", i);
++		ethtool_sprintf(data, "rx_%d_bytes", i);
++		ethtool_sprintf(data, "rx_%d_xdp_drop", i);
++		ethtool_sprintf(data, "rx_%d_xdp_tx", i);
++		ethtool_sprintf(data, "rx_%d_xdp_redirect", i);
++		ethtool_sprintf(data, "rx_%d_pkt_len0_err", i);
+ 		for (j = 0; j < MANA_RXCOMP_OOB_NUM_PPI - 1; j++)
+-			ethtool_sprintf(&data, "rx_%d_coalesced_cqe_%d", i, j + 2);
++			ethtool_sprintf(data,
++					"rx_%d_coalesced_cqe_%d",
++					i,
++					j + 2);
+ 	}
+ 
+ 	for (i = 0; i < num_queues; i++) {
+-		ethtool_sprintf(&data, "tx_%d_packets", i);
+-		ethtool_sprintf(&data, "tx_%d_bytes", i);
+-		ethtool_sprintf(&data, "tx_%d_xdp_xmit", i);
+-		ethtool_sprintf(&data, "tx_%d_tso_packets", i);
+-		ethtool_sprintf(&data, "tx_%d_tso_bytes", i);
+-		ethtool_sprintf(&data, "tx_%d_tso_inner_packets", i);
+-		ethtool_sprintf(&data, "tx_%d_tso_inner_bytes", i);
+-		ethtool_sprintf(&data, "tx_%d_long_pkt_fmt", i);
+-		ethtool_sprintf(&data, "tx_%d_short_pkt_fmt", i);
+-		ethtool_sprintf(&data, "tx_%d_csum_partial", i);
+-		ethtool_sprintf(&data, "tx_%d_mana_map_err", i);
++		ethtool_sprintf(data, "tx_%d_packets", i);
++		ethtool_sprintf(data, "tx_%d_bytes", i);
++		ethtool_sprintf(data, "tx_%d_xdp_xmit", i);
++		ethtool_sprintf(data, "tx_%d_tso_packets", i);
++		ethtool_sprintf(data, "tx_%d_tso_bytes", i);
++		ethtool_sprintf(data, "tx_%d_tso_inner_packets", i);
++		ethtool_sprintf(data, "tx_%d_tso_inner_bytes", i);
++		ethtool_sprintf(data, "tx_%d_long_pkt_fmt", i);
++		ethtool_sprintf(data, "tx_%d_short_pkt_fmt", i);
++		ethtool_sprintf(data, "tx_%d_csum_partial", i);
++		ethtool_sprintf(data, "tx_%d_mana_map_err", i);
++	}
++}
++
++static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
++{
++	struct mana_port_context *apc = netdev_priv(ndev);
++
++	switch (stringset) {
++	case ETH_SS_PRIV_FLAGS:
++		mana_get_strings_priv_flags(&data);
++		break;
++
++	case ETH_SS_STATS:
++		mana_get_strings_stats(apc, &data);
++		break;
+ 	}
+ }
+ 
+@@ -573,6 +606,74 @@ static int mana_get_link_ksettings(struct net_device *ndev,
+ 	return 0;
+ }
+ 
++static u32 mana_get_priv_flags(struct net_device *ndev)
++{
++	struct mana_port_context *apc = netdev_priv(ndev);
++
++	return apc->priv_flags;
++}
++
++static int mana_set_priv_flags(struct net_device *ndev, u32 priv_flags)
++{
++	struct mana_port_context *apc = netdev_priv(ndev);
++	u32 changed = apc->priv_flags ^ priv_flags;
++	u32 old_priv_flags = apc->priv_flags;
++	bool schedule_port_reset = false;
++	int err = 0;
++
++	if (!changed)
++		return 0;
++
++	/* Reject unknown bits */
++	if (priv_flags & ~GENMASK(MANA_PRIV_FLAG_MAX - 1, 0))
++		return -EINVAL;
++
++	if (changed & BIT(MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF)) {
++		apc->priv_flags = priv_flags;
++
++		if (!apc->port_is_up) {
++			/* Port is down, flag updated to apply on next up
++			 * so just return.
++			 */
++			return 0;
++		}
++
++		/* Pre-allocate buffers to prevent failure in mana_attach
++		 * later
++		 */
++		err = mana_pre_alloc_rxbufs(apc, ndev->mtu, apc->num_queues);
++		if (err) {
++			netdev_err(ndev,
++				   "Insufficient memory for new allocations\n");
++			apc->priv_flags = old_priv_flags;
++			return err;
++		}
++
++		err = mana_detach(ndev, false);
++		if (err) {
++			netdev_err(ndev, "mana_detach failed: %d\n", err);
++			apc->priv_flags = old_priv_flags;
++			goto out;
++		}
++
++		err = mana_attach(ndev);
++		if (err) {
++			netdev_err(ndev, "mana_attach failed: %d\n", err);
++			apc->priv_flags = old_priv_flags;
++			schedule_port_reset = true;
++		}
++	}
++
++out:
++	mana_pre_dealloc_rxbufs(apc);
++
++	if (err && schedule_port_reset)
++		queue_work(apc->ac->per_port_queue_reset_wq,
++			   &apc->queue_reset_work);
++
++	return err;
++}
++
+ const struct ethtool_ops mana_ethtool_ops = {
+ 	.supported_coalesce_params = ETHTOOL_COALESCE_RX_CQE_FRAMES,
+ 	.get_ethtool_stats	= mana_get_ethtool_stats,
+@@ -591,4 +692,6 @@ const struct ethtool_ops mana_ethtool_ops = {
+ 	.set_ringparam          = mana_set_ringparam,
+ 	.get_link_ksettings	= mana_get_link_ksettings,
+ 	.get_link		= ethtool_op_get_link,
++	.get_priv_flags		= mana_get_priv_flags,
++	.set_priv_flags		= mana_set_priv_flags,
+ };
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 3336688fed5e..fd87e3d6c1f4 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -30,6 +30,12 @@ enum TRI_STATE {
+ 	TRI_STATE_TRUE = 1
+ };
+ 
++/* MANA ethtool private flag bit positions */
++enum mana_priv_flag_bits {
++	MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF = 0,
++	MANA_PRIV_FLAG_MAX,
++};
++
+ /* Number of entries for hardware indirection table must be in power of 2 */
+ #define MANA_INDIRECT_TABLE_MAX_SIZE 512
+ #define MANA_INDIRECT_TABLE_DEF_SIZE 64
+@@ -531,6 +537,8 @@ struct mana_port_context {
+ 	u32 rxbpre_headroom;
+ 	u32 rxbpre_frag_count;
+ 
++	u32 priv_flags;
++
+ 	struct bpf_prog *bpf_prog;
+ 
+ 	/* Create num_queues EQs, SQs, SQ-CQs, RQs and RQ-CQs, respectively. */
+-- 
+2.43.0
 
 
