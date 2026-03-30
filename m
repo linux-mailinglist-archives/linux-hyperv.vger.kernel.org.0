@@ -1,56 +1,56 @@
-Return-Path: <linux-hyperv+bounces-9837-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9838-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EObPL2jYymmWAgYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9837-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2026 22:09:12 +0200
+	id OGuXGpzYymmWAgYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9838-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2026 22:10:04 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D832360D19
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2026 22:09:12 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7A8C360D46
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2026 22:10:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DCD803063A1B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2026 20:04:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ED26A3064E39
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2026 20:04:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82B8B395DB4;
-	Mon, 30 Mar 2026 20:04:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A7E7393DC1;
+	Mon, 30 Mar 2026 20:04:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="STShVf81"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Wwm8aIav"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BA5F391E65;
-	Mon, 30 Mar 2026 20:04:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8C9527B32C;
+	Mon, 30 Mar 2026 20:04:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774901077; cv=none; b=E1l5L70J0sXEXCXWiBITMYe6HUDij9G22yLcuIoxgtRxxiCoW67B1dXDuIgxl1kzucyFc/K6d9iKOWGTJ6radVK/WuS2W0pBTSm6T4K7LdewXnW6wG/sxvNXeHFmdyFRKT4LPXT2VXQucA+FBh2hULL7oin8vAY+0TPADcjnXsI=
+	t=1774901083; cv=none; b=m8ELrs7mME+RCrMxmOyErm4NFOoYExH61ji5175t3G6ywYk5jMWxmsrbS1TRxqOMwHpz27d1k0aT45d0tKHQH7StTdS9Yy8oiMKHAR6ZuRaO3/R0kv1zxkGZ3xcPXLq0fR1K6MwlFLTB294mypilWpvXcUO/JXmHSU25t4E3UD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774901077; c=relaxed/simple;
-	bh=lyPo0yce3M5jhFVhgciLjV6VfgAI7nL1qylJJZ8glH4=;
+	s=arc-20240116; t=1774901083; c=relaxed/simple;
+	bh=vLZpci9oeiXgUTQAhIo8HYW4B9fnzr1f20ukh0P+ouA=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eZdSxR8mtbjKWRVHekx+9Kw4DzxXxJ7lg0WQ7IF5oCWe+sQz4WrcjNQQVBuNk7Y5UayB2pM4UTHRJFbnb5T2oU+Gzb0f4eUOti5wwOsXBKVcxkIy4E2rbnMZi+P6zbtcY+CIls3qBvFhk2NW2+Cz6zg/0tkPWrVigc5dNaamv+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=STShVf81; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version:Content-Type; b=eMUGFvb/tU4C6ysKDB6XC3HltO4xczjnr4fCfxGxSTZWmQS8Q2DMoCHNl+qln2hwijJQakwoSmzJBm6XtA4JlBTOgvz4KUbiMdNntwwn8Ns3qYO1gYzInlmMhxzgP9/DhBHyQIC9K3kqbNGlBtIrvJ7mivGedNrcxzu7/VxZzkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Wwm8aIav; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id C73EF20B6F08;
-	Mon, 30 Mar 2026 13:04:35 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C73EF20B6F08
+	by linux.microsoft.com (Postfix) with ESMTPSA id 89FE520B6F01;
+	Mon, 30 Mar 2026 13:04:41 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 89FE520B6F01
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1774901075;
-	bh=IXub7nFfNpUI5z8JNvwoBRdSeZzDGs6zuHzc7VWuBNg=;
+	s=default; t=1774901081;
+	bh=JYR/73s6gG7IEI8/7KUJ2X6wAmzDsN7FrF7CvcFkx+4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=STShVf81hye1Gylx1FRhkhKbV27IpygGW7jaFkH0fF2Icb4UTWsz2szJMsue4I5fe
-	 RUvmzKG9sup9quxqzu5c2inFKWCqF5Z/2TA4ijK2ozpczGbI+bgdoONmuhlGgQ1RCN
-	 Ai7OZNDw21lEMoAM3Etx9vKNQuWwN9dPhERaOJN0=
-Subject: [PATCH 4/7] mshv: Move pinned region setup to mshv_regions.c
+	b=Wwm8aIavnAhpXap0Ksgoe0cCJ1irGJef1845Mrk8iR9Oyap89+ty+zPRKy0faIsVJ
+	 YMTZ0UgjrJqi94Pe7DC19xSazQ2Pjn2BavjEwMr3fBZl/bebEj705VV1rC6oWH5iH6
+	 MCIHNAKuqyV4mznvrL7kulgpTSTGFPUQk6H7OQVU=
+Subject: [PATCH 5/7] mshv: Map populated pages on movable region creation
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, longli@microsoft.com
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 30 Mar 2026 20:04:35 +0000
+Date: Mon, 30 Mar 2026 20:04:41 +0000
 Message-ID: 
- <177490107527.81669.7369876794303521630.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <177490108104.81669.2129535961068627665.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 In-Reply-To: 
  <177490099488.81669.3758562641675983608.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 References: 
@@ -67,280 +67,201 @@ Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_FROM(0.00)[bounces-9837-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	URIBL_MULTI_FAIL(0.00)[sea.lore.kernel.org:server fail,linux.microsoft.com:server fail,skinsburskii-cloud-desktop.internal.cloudapp.net:server fail];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9838-lists,linux-hyperv=lfdr.de];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	TO_DN_NONE(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_NONE(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,skinsburskii-cloud-desktop.internal.cloudapp.net:mid,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: 1D832360D19
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:dkim,skinsburskii-cloud-desktop.internal.cloudapp.net:mid]
+X-Rspamd-Queue-Id: B7A8C360D46
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Move mshv_prepare_pinned_region() from mshv_root_main.c to
-mshv_regions.c and rename it to mshv_map_pinned_region(). This
-co-locates the pinned region logic with the rest of the memory region
-operations.
+Map any populated pages into the hypervisor upfront when creating a
+movable region, rather than waiting for faults. Previously, movable
+regions were created with all pages marked as HV_MAP_GPA_NO_ACCESS
+regardless of whether the userspace mapping contained populated pages.
 
-Make mshv_region_pin(), mshv_region_map(), mshv_region_share(),
-mshv_region_unshare(), and mshv_region_invalidate() static, as they are
-no longer called outside of mshv_regions.c.
-
-Also fix a bug in the error handling where a mshv_region_map() failure
-on a non-encrypted partition would be silently ignored, returning
-success instead of propagating the error code.
+This guarantees that if the caller passes a populated mapping, those
+present pages will be mapped into the hypervisor immediately during
+region creation instead of being faulted in later.
 
 Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 ---
- drivers/hv/mshv_regions.c   |   79 ++++++++++++++++++++++++++++++++++++++++---
- drivers/hv/mshv_root.h      |    6 +--
- drivers/hv/mshv_root_main.c |   70 +-------------------------------------
- 3 files changed, 76 insertions(+), 79 deletions(-)
+ drivers/hv/mshv_regions.c   |   65 ++++++++++++++++++++++++++++++++-----------
+ drivers/hv/mshv_root.h      |    1 +
+ drivers/hv/mshv_root_main.c |   10 +------
+ 3 files changed, 50 insertions(+), 26 deletions(-)
 
 diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
-index 1bb1bfe177e2..133ec7771812 100644
+index 133ec7771812..28d3f488d89f 100644
 --- a/drivers/hv/mshv_regions.c
 +++ b/drivers/hv/mshv_regions.c
-@@ -287,7 +287,7 @@ static int mshv_region_chunk_share(struct mshv_mem_region *region,
- 					      flags, true);
- }
- 
--int mshv_region_share(struct mshv_mem_region *region)
-+static int mshv_region_share(struct mshv_mem_region *region)
+@@ -519,7 +519,8 @@ int mshv_region_get(struct mshv_mem_region *region)
+ static int mshv_region_hmm_fault_and_lock(struct mshv_mem_region *region,
+ 					  unsigned long start,
+ 					  unsigned long end,
+-					  unsigned long *pfns)
++					  unsigned long *pfns,
++					  bool do_fault)
  {
- 	u32 flags = HV_MODIFY_SPA_PAGE_HOST_ACCESS_MAKE_SHARED;
- 
-@@ -313,7 +313,7 @@ static int mshv_region_chunk_unshare(struct mshv_mem_region *region,
- 					      flags, false);
- }
- 
--int mshv_region_unshare(struct mshv_mem_region *region)
-+static int mshv_region_unshare(struct mshv_mem_region *region)
- {
- 	u32 flags = HV_MODIFY_SPA_PAGE_HOST_ACCESS_MAKE_EXCLUSIVE;
- 
-@@ -353,7 +353,7 @@ static int mshv_region_remap_pfns(struct mshv_mem_region *region,
- 					 mshv_region_chunk_remap);
- }
- 
--int mshv_region_map(struct mshv_mem_region *region)
-+static int mshv_region_map(struct mshv_mem_region *region)
- {
- 	u32 map_flags = region->hv_map_flags;
- 
-@@ -377,12 +377,12 @@ static void mshv_region_invalidate_pfns(struct mshv_mem_region *region,
- 	}
- }
- 
--void mshv_region_invalidate(struct mshv_mem_region *region)
-+static void mshv_region_invalidate(struct mshv_mem_region *region)
- {
- 	mshv_region_invalidate_pfns(region, 0, region->nr_pfns);
- }
- 
--int mshv_region_pin(struct mshv_mem_region *region)
-+static int mshv_region_pin(struct mshv_mem_region *region)
- {
- 	u64 done_count, nr_pfns, i;
- 	unsigned long *pfns;
-@@ -731,3 +731,72 @@ bool mshv_region_movable_init(struct mshv_mem_region *region)
- 
- 	return true;
- }
-+
-+/**
-+ * mshv_map_pinned_region - Pin and map memory regions
-+ * @region: Pointer to the memory region structure
-+ *
-+ * This function processes memory regions that are explicitly marked as pinned.
-+ * Pinned regions are preallocated, mapped upfront, and do not rely on fault-based
-+ * population. The function ensures the region is properly populated, handles
-+ * encryption requirements for SNP partitions if applicable, maps the region,
-+ * and performs necessary sharing or eviction operations based on the mapping
-+ * result.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int mshv_map_pinned_region(struct mshv_mem_region *region)
-+{
-+	struct mshv_partition *partition = region->partition;
-+	int ret;
-+
-+	ret = mshv_region_pin(region);
-+	if (ret) {
-+		pt_err(partition, "Failed to pin memory region: %d\n",
-+		       ret);
-+		goto err_out;
-+	}
-+
-+	/*
-+	 * For an SNP partition it is a requirement that for every memory region
-+	 * that we are going to map for this partition we should make sure that
-+	 * host access to that region is released. This is ensured by doing an
-+	 * additional hypercall which will update the SLAT to release host
-+	 * access to guest memory regions.
-+	 */
-+	if (mshv_partition_encrypted(partition)) {
-+		ret = mshv_region_unshare(region);
-+		if (ret) {
-+			pt_err(partition,
-+			       "Failed to unshare memory region (guest_pfn: %llu): %d\n",
-+			       region->start_gfn, ret);
-+			goto invalidate_region;
+ 	struct hmm_range range = {
+ 		.notifier = &region->mreg_mni,
+@@ -540,9 +541,12 @@ static int mshv_region_hmm_fault_and_lock(struct mshv_mem_region *region,
+ 		range.hmm_pfns = pfns;
+ 		range.start = start;
+ 		range.end = min(vma->vm_end, end);
+-		range.default_flags = HMM_PFN_REQ_FAULT;
+-		if (vma->vm_flags & VM_WRITE)
+-			range.default_flags |= HMM_PFN_REQ_WRITE;
++		range.default_flags = 0;
++		if (do_fault) {
++			range.default_flags = HMM_PFN_REQ_FAULT;
++			if (vma->vm_flags & VM_WRITE)
++				range.default_flags |= HMM_PFN_REQ_WRITE;
 +		}
-+	}
+ 
+ 		ret = hmm_range_fault(&range);
+ 		if (ret)
+@@ -567,26 +571,40 @@ static int mshv_region_hmm_fault_and_lock(struct mshv_mem_region *region,
+ }
+ 
+ /**
+- * mshv_region_range_fault - Handle memory range faults for a given region.
+- * @region: Pointer to the memory region structure.
+- * @pfn_offset: Offset of the page within the region.
+- * @pfn_count: Number of pages to handle.
++ * mshv_region_collect_and_map - Collect PFNs for a user range and map them
++ * @region    : memory region being processed
++ * @pfn_offset: PFNs offset within the region
++ * @pfn_count : number of PFNs to process
++ * @do_fault  : if true, fault in missing pages;
++ *              if false, collect only present pages
+  *
+- * This function resolves memory faults for a specified range of pages
+- * within a memory region. It uses HMM (Heterogeneous Memory Management)
+- * to fault in the required pages and updates the region's page array.
++ * Collects PFNs for the specified portion of @region from the
++ * corresponding userspace VMA and maps them into the hypervisor. The
++ * behavior depends on @do_fault:
+  *
+- * Return: 0 on success, negative error code on failure.
++ * - true: Fault in missing pages from userspace, ensuring all pages in the
++ *   range are present. Used for on-demand page population.
++ * - false: Collect PFNs only for pages already present in userspace,
++ *   leaving missing pages as invalid PFN markers.
++ *   Used for initial region setup.
++ *
++ * Collected PFNs are stored in region->mreg_pfns[] with HMM bookkeeping
++ * flags cleared, then the range is mapped into the hypervisor. Present
++ * PFNs get mapped with region access permissions; missing PFNs (zero
++ * entries) get mapped with no-access permissions.
++ *
++ * Return: 0 on success, negative errno on failure.
+  */
+-static int mshv_region_range_fault(struct mshv_mem_region *region,
+-				   u64 pfn_offset, u64 pfn_count)
++static int mshv_region_collect_and_map(struct mshv_mem_region *region,
++				       u64 pfn_offset, u64 pfn_count,
++				       bool do_fault)
+ {
+ 	unsigned long start, end;
+ 	unsigned long *pfns;
+ 	int ret;
+ 	u64 i;
+ 
+-	pfns = kmalloc_array(pfn_count, sizeof(*pfns), GFP_KERNEL);
++	pfns = vmalloc_array(pfn_count, sizeof(unsigned long));
+ 	if (!pfns)
+ 		return -ENOMEM;
+ 
+@@ -595,7 +613,7 @@ static int mshv_region_range_fault(struct mshv_mem_region *region,
+ 
+ 	do {
+ 		ret = mshv_region_hmm_fault_and_lock(region, start, end,
+-						     pfns);
++						     pfns, do_fault);
+ 	} while (ret == -EBUSY);
+ 
+ 	if (ret)
+@@ -613,10 +631,17 @@ static int mshv_region_range_fault(struct mshv_mem_region *region,
+ 
+ 	mutex_unlock(&region->mreg_mutex);
+ out:
+-	kfree(pfns);
++	vfree(pfns);
+ 	return ret;
+ }
+ 
++static int mshv_region_range_fault(struct mshv_mem_region *region,
++				   u64 pfn_offset, u64 pfn_count)
++{
++	return mshv_region_collect_and_map(region, pfn_offset, pfn_count,
++					   true);
++}
 +
-+	ret = mshv_region_map(region);
-+	if (!ret)
-+		return 0;
+ bool mshv_region_handle_gfn_fault(struct mshv_mem_region *region, u64 gfn)
+ {
+ 	u64 pfn_offset, pfn_count;
+@@ -800,3 +825,9 @@ int mshv_map_pinned_region(struct mshv_mem_region *region)
+ err_out:
+ 	return ret;
+ }
 +
-+	if (mshv_partition_encrypted(partition)) {
-+		int shrc;
-+
-+		shrc = mshv_region_share(region);
-+		if (!shrc)
-+			goto invalidate_region;
-+
-+		pt_err(partition,
-+		       "Failed to share memory region (guest_pfn: %llu): %d\n",
-+		       region->start_gfn, shrc);
-+		/*
-+		 * Don't unpin if marking shared failed because pages are no
-+		 * longer mapped in the host, ie root, anymore.
-+		 */
-+		goto err_out;
-+	}
-+
-+invalidate_region:
-+	mshv_region_invalidate(region);
-+err_out:
-+	return ret;
++int mshv_map_movable_region(struct mshv_mem_region *region)
++{
++	return mshv_region_collect_and_map(region, 0, region->nr_pfns,
++					   false);
 +}
 diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
-index f1d4bee97a3f..d2e65a137bf4 100644
+index d2e65a137bf4..02c1c11f701c 100644
 --- a/drivers/hv/mshv_root.h
 +++ b/drivers/hv/mshv_root.h
-@@ -368,15 +368,11 @@ extern u8 * __percpu *hv_synic_eventring_tail;
- 
- struct mshv_mem_region *mshv_region_create(u64 guest_pfn, u64 nr_pages,
- 					   u64 uaddr, u32 flags);
--int mshv_region_share(struct mshv_mem_region *region);
--int mshv_region_unshare(struct mshv_mem_region *region);
--int mshv_region_map(struct mshv_mem_region *region);
--void mshv_region_invalidate(struct mshv_mem_region *region);
--int mshv_region_pin(struct mshv_mem_region *region);
- void mshv_region_put(struct mshv_mem_region *region);
- int mshv_region_get(struct mshv_mem_region *region);
- bool mshv_region_handle_gfn_fault(struct mshv_mem_region *region, u64 gfn);
+@@ -374,5 +374,6 @@ bool mshv_region_handle_gfn_fault(struct mshv_mem_region *region, u64 gfn);
  void mshv_region_movable_fini(struct mshv_mem_region *region);
  bool mshv_region_movable_init(struct mshv_mem_region *region);
-+int mshv_map_pinned_region(struct mshv_mem_region *region);
+ int mshv_map_pinned_region(struct mshv_mem_region *region);
++int mshv_map_movable_region(struct mshv_mem_region *region);
  
  #endif /* _MSHV_ROOT_H_ */
 diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index 685e4b562186..c393b5144e0b 100644
+index c393b5144e0b..91dab2a3bc92 100644
 --- a/drivers/hv/mshv_root_main.c
 +++ b/drivers/hv/mshv_root_main.c
-@@ -1254,74 +1254,6 @@ static int mshv_partition_create_region(struct mshv_partition *partition,
- 	return 0;
- }
- 
--/**
-- * mshv_prepare_pinned_region - Pin and map memory regions
-- * @region: Pointer to the memory region structure
-- *
-- * This function processes memory regions that are explicitly marked as pinned.
-- * Pinned regions are preallocated, mapped upfront, and do not rely on fault-based
-- * population. The function ensures the region is properly populated, handles
-- * encryption requirements for SNP partitions if applicable, maps the region,
-- * and performs necessary sharing or eviction operations based on the mapping
-- * result.
-- *
-- * Return: 0 on success, negative error code on failure.
-- */
--static int mshv_prepare_pinned_region(struct mshv_mem_region *region)
--{
--	struct mshv_partition *partition = region->partition;
--	int ret;
--
--	ret = mshv_region_pin(region);
--	if (ret) {
--		pt_err(partition, "Failed to pin memory region: %d\n",
--		       ret);
--		goto err_out;
--	}
--
--	/*
--	 * For an SNP partition it is a requirement that for every memory region
--	 * that we are going to map for this partition we should make sure that
--	 * host access to that region is released. This is ensured by doing an
--	 * additional hypercall which will update the SLAT to release host
--	 * access to guest memory regions.
--	 */
--	if (mshv_partition_encrypted(partition)) {
--		ret = mshv_region_unshare(region);
--		if (ret) {
--			pt_err(partition,
--			       "Failed to unshare memory region (guest_pfn: %llu): %d\n",
--			       region->start_gfn, ret);
--			goto invalidate_region;
--		}
--	}
--
--	ret = mshv_region_map(region);
--	if (ret && mshv_partition_encrypted(partition)) {
--		int shrc;
--
--		shrc = mshv_region_share(region);
--		if (!shrc)
--			goto invalidate_region;
--
--		pt_err(partition,
--		       "Failed to share memory region (guest_pfn: %llu): %d\n",
--		       region->start_gfn, shrc);
--		/*
--		 * Don't unpin if marking shared failed because pages are no
--		 * longer mapped in the host, ie root, anymore.
--		 */
--		goto err_out;
--	}
--
--	return 0;
--
--invalidate_region:
--	mshv_region_invalidate(region);
--err_out:
--	return ret;
--}
--
- /*
-  * This maps two things: guest RAM and for pci passthru mmio space.
-  *
-@@ -1364,7 +1296,7 @@ mshv_map_user_memory(struct mshv_partition *partition,
- 
- 	switch (region->mreg_type) {
- 	case MSHV_REGION_TYPE_MEM_PINNED:
--		ret = mshv_prepare_pinned_region(region);
-+		ret = mshv_map_pinned_region(region);
+@@ -1299,15 +1299,7 @@ mshv_map_user_memory(struct mshv_partition *partition,
+ 		ret = mshv_map_pinned_region(region);
  		break;
  	case MSHV_REGION_TYPE_MEM_MOVABLE:
- 		/*
+-		/*
+-		 * For movable memory regions, remap with no access to let
+-		 * the hypervisor track dirty pages, enabling pre-copy live
+-		 * migration.
+-		 */
+-		ret = hv_call_map_ram_pfns(partition->pt_id,
+-					   region->start_gfn,
+-					   region->nr_pfns,
+-					   HV_MAP_GPA_NO_ACCESS, NULL);
++		ret = mshv_map_movable_region(region);
+ 		break;
+ 	case MSHV_REGION_TYPE_MMIO:
+ 		ret = hv_call_map_mmio_pfns(partition->pt_id,
 
 
 
