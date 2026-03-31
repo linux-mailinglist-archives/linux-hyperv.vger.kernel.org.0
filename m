@@ -1,233 +1,272 @@
-Return-Path: <linux-hyperv+bounces-9856-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9857-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MIbJINqUy2nMJAYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9856-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 31 Mar 2026 11:33:14 +0200
+	id ILxBAJHjy2n0MAYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9857-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 31 Mar 2026 17:09:05 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E89A367209
-	for <lists+linux-hyperv@lfdr.de>; Tue, 31 Mar 2026 11:33:13 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0447636B73D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 31 Mar 2026 17:09:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 5618F301E98C
-	for <lists+linux-hyperv@lfdr.de>; Tue, 31 Mar 2026 09:33:13 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B335B305F055
+	for <lists+linux-hyperv@lfdr.de>; Tue, 31 Mar 2026 15:03:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66A803EC2E7;
-	Tue, 31 Mar 2026 09:33:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB0A4401A0E;
+	Tue, 31 Mar 2026 15:02:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Eq4rtvjw";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="sLy73V32"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KglO/3Mo"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073513CF034
-	for <linux-hyperv@vger.kernel.org>; Tue, 31 Mar 2026 09:33:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E603FFADE;
+	Tue, 31 Mar 2026 15:02:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774949592; cv=none; b=dzv/0cuNYA2YDwmj5JwSHDRp9LeMKdboEwwMtpOP2lycN+LjmffwD+oKT+VhzO0OzJ6iB1L8L4OLRn/afc5fSxM9gZVkHmVJsPizFT64fuu09T2tAxJlI3FswB1MQonqmw7/ECCIMI2GSNteaxyXBb8Qz45oa/jdPATsxr90Wmo=
+	t=1774969379; cv=none; b=gKFKM2U7cL0wVfHr1VACyM8vJXJeBNWR0ZQFXbxzdKMMf4Iopv/ZMJ5yVIOuB08tonWaEWbuX82OHvbDOiVb8VwqKh/pE0eaSnNAnxl/URo2y9b4Fj6S0IrN+v5Mf7oikXyxdlVFZeJrWhNCu10NVwWo+3JzZS3SbgUE/QFDENQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774949592; c=relaxed/simple;
-	bh=UXqsQ0BBG7/4O3Wp7zNRvbriuKMnrUyPn6h4dz9TOok=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=DJ/KMEAmnXo8cdSfskAFuoIvXYGd3Kh3eDZaYo0egpTJXUL0vg0uLszlhf03QP0XTH7bCt5WuhWEY+TmmmAlDbD3I/RtIohskvb8JA8mN4PP0MkgXTdKqdJgzPpobKePUpBMNk5p6+xzhY7hHlmZjFIaJezEU/6sF3jfqSZxlpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Eq4rtvjw; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=sLy73V32; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1774949590;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vp9JL+N08mDhUd7pdtaI366A6NgeulMET6+HShC94Iw=;
-	b=Eq4rtvjwsIbMgmUjPdBUabeP3FuYuQFEusALEhTw9thRwHWrPXrXpHORNh5hS2wYre6Hi1
-	wHuUaqX8IENoMPVdUR9PTE9bAhc+UcH1Hj901zkrgzMblygcwqXNkBAvoM2hTtnOHx7CrH
-	ipKnQYzPxwwpaiID2JV0cubXdjRjJFI=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-232-iPNwlj3SNnKdxWHI7v2B6g-1; Tue, 31 Mar 2026 05:33:08 -0400
-X-MC-Unique: iPNwlj3SNnKdxWHI7v2B6g-1
-X-Mimecast-MFC-AGG-ID: iPNwlj3SNnKdxWHI7v2B6g_1774949587
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-48542d5aa9eso48735665e9.0
-        for <linux-hyperv@vger.kernel.org>; Tue, 31 Mar 2026 02:33:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1774949587; x=1775554387; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=vp9JL+N08mDhUd7pdtaI366A6NgeulMET6+HShC94Iw=;
-        b=sLy73V32vZB27HWug4g9fBQvdSoTej8qtkeyQEJYT9UVudnWnsu8hX7LMDICrJ/YbA
-         efkFxQ1UWB+T4LS5ovHR6rMgRjRqL+RYhD29Q1JJ1zqljkqAUTDgnLFYpF7okP6ymfxW
-         dSo8xbf7CDqYwYH9hmGyJS7Ig4zL4hVx4eYv2ZZhkD+J/3W1wEHZrgyugEahzjVPQKDX
-         hiCb3VhKdFRkglb5ypAj8XSjxIjixJqNOx3QOu+Txt7d3Yl52CuU/EldLhgJwR6cw7kg
-         tQXMI9pNeUeOtJfjveQd4whNKbxi2L18OiYCPtM0WTp9jShiLlpWEOREjkvjhuXgHd1L
-         smzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774949587; x=1775554387;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vp9JL+N08mDhUd7pdtaI366A6NgeulMET6+HShC94Iw=;
-        b=UerjCNXcuDP15x9ciD+s6Rv7TixHcTQfn/pw0aawdu0WSlgzsGyTC25o0UikU+LDy1
-         Axe4gttnwUyCJJ/PvxM97a98adOTa/8Y8eNrORMwH6tj+r85CAlKEY6xlVF8ki9AhYBF
-         tjIjfVrJjGDlnzim+gTYJX46e5nl9y+gK+hE2laPiF0Wo644TzowZ4FNe66Q8iH4eYWi
-         NRdS9x5lq4QEa0LLdVmFRhE0LIK3BM/iY2pSpLZYjooaFXwlbkuSzTQN2LyMLnw4Lsxg
-         5YrxXGu5hzlNMWQG2Ew1BNgkeCzAzMt7OASZCjHJ/UOydQEBVLn8X5IqmCtgdr5rfn5S
-         jlUA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8eqq8hhSHC/CPf+8uoRBOXRREwMekyMWyJCIhOdfQwN8jHDaOHer2RbR4wkD6b9cdqUGvDmMROJRLMaI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyd/d4GVGneRiUauXszUKuDwTG1hBw7n7ZNK28qB+km+AD78uPM
-	8f1HpkB5DmRjF06Py5F84s8Am4cBqcYAzx9zl7+KjwDq7hdqJKj+mK/0JTTDvFfd/DOTbYVVO9B
-	HgMqiXvrYQxVYF0ZIedBeTUOpFy0NDT7uo20L9hkNo+C1V9z3p/+T4S+13f85jOH6rg==
-X-Gm-Gg: ATEYQzyKqv7YVCfl4L7Mm8pUj3J+VU2Gu6gBxvxKWzNTebP8RZo6JH3o+rT5xSos3jI
-	+e5c58iURgW3NpKBkasOdBz5OFmxlTgs9hHuCHT3TMSLaZlRFk8ZZHcWa08j4+vjzaEbaoga4Pp
-	6vKQ9OWj25GG/ZiddiK+7IuyNJgnaXlUFZrnY9XXiS9SDiU84+8A5yTgkRHOfOe9DOU1QOaZvaB
-	UpSTYH8d9Vd85G+JsNy5t0tx9FEy3FO97RDeyhnfsZ7pSXwFRGsHFTsDb67e7quYCqLm52kFsfp
-	4UL4QUvpxAbxKxkYFnjPIxZ2/zf82bOmnOhu0cFfGexjhzhugqODoEuWTZZvlK8I88qf2xeYvVv
-	J/AEtMogrxHJg8DcmwYKk4eS8I8gcazlnZ+6A9ZxZKAWPlUD79q6T7e/b
-X-Received: by 2002:a05:600c:8489:b0:486:fbdb:b718 with SMTP id 5b1f17b1804b1-4872807483cmr267366065e9.25.1774949587055;
-        Tue, 31 Mar 2026 02:33:07 -0700 (PDT)
-X-Received: by 2002:a05:600c:8489:b0:486:fbdb:b718 with SMTP id 5b1f17b1804b1-4872807483cmr267365375e9.25.1774949586546;
-        Tue, 31 Mar 2026 02:33:06 -0700 (PDT)
-Received: from [192.168.88.32] ([212.105.155.58])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4887e83682fsm23911365e9.7.2026.03.31.02.33.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2026 02:33:05 -0700 (PDT)
-Message-ID: <f0bc585f-b1d2-46e6-b0eb-801881862692@redhat.com>
-Date: Tue, 31 Mar 2026 11:33:04 +0200
+	s=arc-20240116; t=1774969379; c=relaxed/simple;
+	bh=lKc0nR0+3UMuWZyWz6l9MjXgdkdLagd8O+NJe9KaxV4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Lx/7ecs92D1hikmR3vFhX7VxOxmrB/fyYBABeF61Dyom9t4LoeVm0IC4wiQKz+lkFIAV+lo9+FQQ68yAzj1rzFFDc6dVcWjM9+NxK7go1pQ0AeFjepxtkCARijy/qLXP5exlskO9v/DkEjleguXHfVQRUPnNGpXqA3kwykWBzaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KglO/3Mo; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774969378; x=1806505378;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=lKc0nR0+3UMuWZyWz6l9MjXgdkdLagd8O+NJe9KaxV4=;
+  b=KglO/3MoKB03HCMY9nz1ITGz+Qa37xd8SnZOvQMODqf0t8PNlmVMg/tp
+   QHBLVF698m5kmyc4YsjSCJpM0zmzjqFET/6ucwoyhUGqtoxAGxL0CWpug
+   DZNg95KYp69URRRBJxX5PN+iPe44nv0wCkh+AtZc0SeY7atamrggNfKBS
+   we35ntCa8D8eT48w1TOuvPHzKmMY7J/9lpAlEbYdUYYHXpEcniUTfk8Lw
+   zZvCqmTAbmHxLG1uAAb6nCdkFFyHk/zMWLKOZyRLS4oNfMAmUUQ7sX8UU
+   luF3N0D/ouUGbSvHlmWfS4QOt6bdhmrlIQ9+fBTUCoZQWGmXuDZ3j/dYa
+   w==;
+X-CSE-ConnectionGUID: lI8GtGyzTBCrHEwicmhDjg==
+X-CSE-MsgGUID: DJRoOitSTMCDj6sHxM/BrQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11745"; a="86682260"
+X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
+   d="scan'208";a="86682260"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 08:02:53 -0700
+X-CSE-ConnectionGUID: JHiKH3CWRemnPBHhcWS24A==
+X-CSE-MsgGUID: Gcx1iYgWQJaJHg3SKbkrBg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
+   d="scan'208";a="221527611"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.6])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 08:02:37 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 31 Mar 2026 18:02:33 +0300 (EEST)
+To: Danilo Krummrich <dakr@kernel.org>
+cc: Russell King <linux@armlinux.org.uk>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, 
+    Ioana Ciornei <ioana.ciornei@nxp.com>, Nipun Gupta <nipun.gupta@amd.com>, 
+    Nikhil Agarwal <nikhil.agarwal@amd.com>, 
+    "K. Y. Srinivasan" <kys@microsoft.com>, 
+    Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+    Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
+    Bjorn Helgaas <bhelgaas@google.com>, Armin Wolf <W_Armin@gmx.de>, 
+    Bjorn Andersson <andersson@kernel.org>, 
+    Mathieu Poirier <mathieu.poirier@linaro.org>, 
+    Vineeth Vijayan <vneethv@linux.ibm.com>, 
+    Peter Oberparleiter <oberpar@linux.ibm.com>, 
+    Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+    Alexander Gordeev <agordeev@linux.ibm.com>, 
+    Christian Borntraeger <borntraeger@linux.ibm.com>, 
+    Sven Schnelle <svens@linux.ibm.com>, 
+    Harald Freudenberger <freude@linux.ibm.com>, 
+    Holger Dengler <dengler@linux.ibm.com>, Mark Brown <broonie@kernel.org>, 
+    "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+    Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+    =?ISO-8859-15?Q?Eugenio_P=E9rez?= <eperezma@redhat.com>, 
+    Alex Williamson <alex@shazbot.org>, Juergen Gross <jgross@suse.com>, 
+    Stefano Stabellini <sstabellini@kernel.org>, 
+    Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, 
+    "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, driver-core@lists.linux.dev, 
+    linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org, 
+    linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+    linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+    linux-s390@vger.kernel.org, linux-spi@vger.kernel.org, 
+    virtualization@lists.linux.dev, kvm@vger.kernel.org, 
+    xen-devel@lists.xenproject.org, linux-arm-kernel@lists.infradead.org, 
+    Gui-Dong Han <hanguidong02@gmail.com>
+Subject: Re: [PATCH 06/12] platform/wmi: use generic driver_override
+ infrastructure
+In-Reply-To: <20260324005919.2408620-7-dakr@kernel.org>
+Message-ID: <f15629e4-ef8f-b1b6-0158-064f40f111da@linux.intel.com>
+References: <20260324005919.2408620-1-dakr@kernel.org> <20260324005919.2408620-7-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] net: mana: hardening: Reject zero max_num_queues
- from MANA_QUERY_VPORT_CONFIG
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>, kys@microsoft.com,
- haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
- longli@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, ssengar@linux.microsoft.com,
- dipayanroy@linux.microsoft.com, gargaditya@linux.microsoft.com,
- shirazsaleem@microsoft.com, kees@kernel.org, linux-hyperv@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260326174815.2012137-1-ernis@linux.microsoft.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20260326174815.2012137-1-ernis@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Type: text/plain; charset=US-ASCII
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[redhat.com:+];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9856-lists,linux-hyperv=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[intel.com:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[armlinux.org.uk,linuxfoundation.org,kernel.org,nxp.com,amd.com,microsoft.com,google.com,gmx.de,linaro.org,linux.ibm.com,redhat.com,linux.alibaba.com,shazbot.org,suse.com,epam.com,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,lists.xenproject.org,lists.infradead.org,gmail.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9857-lists,linux-hyperv=lfdr.de];
+	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	RCVD_COUNT_FIVE(0.00)[6];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[pabeni@redhat.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	FROM_NEQ_ENVFROM(0.00)[ilpo.jarvinen@linux.intel.com,linux-hyperv@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCPT_COUNT_GT_50(0.00)[50];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 1E89A367209
+	NEURAL_HAM(-0.00)[-0.999];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linux.intel.com:mid,intel.com:dkim]
+X-Rspamd-Queue-Id: 0447636B73D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 3/26/26 6:48 PM, Erni Sri Satya Vennela wrote:
-> As a part of MANA hardening for CVM, validate that max_num_sq and
-> max_num_rq returned by MANA_QUERY_VPORT_CONFIG are not zero. These
-> values flow into apc->num_queues, which is used as an allocation count
-> and loop bound. A zero value would result in zero-size allocations and
-> incorrect driver behavior.
+On Tue, 24 Mar 2026, Danilo Krummrich wrote:
+
+> When a driver is probed through __driver_attach(), the bus' match()
+> callback is called without the device lock held, thus accessing the
+> driver_override field without a lock, which can cause a UAF.
 > 
-> Return -EPROTO if either value is zero.
+> Fix this by using the driver-core driver_override infrastructure taking
+> care of proper locking internally.
 > 
-> Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+> Note that calling match() from __driver_attach() without the device lock
+> held is intentional. [1]
+> 
+> Link: https://lore.kernel.org/driver-core/DGRGTIRHA62X.3RY09D9SOK77P@kernel.org/ [1]
+> Reported-by: Gui-Dong Han <hanguidong02@gmail.com>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220789
+> Fixes: 12046f8c77e0 ("platform/x86: wmi: Add driver_override support")
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 > ---
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  drivers/platform/wmi/core.c | 36 +++++-------------------------------
+>  include/linux/wmi.h         |  4 ----
+>  2 files changed, 5 insertions(+), 35 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index b39e8b920791..a4197b4b0597 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> @@ -1249,6 +1249,12 @@ static int mana_query_vport_cfg(struct mana_port_context *apc, u32 vport_index,
+> diff --git a/drivers/platform/wmi/core.c b/drivers/platform/wmi/core.c
+> index b8e6b9a421c6..750e3619724e 100644
+> --- a/drivers/platform/wmi/core.c
+> +++ b/drivers/platform/wmi/core.c
+> @@ -842,39 +842,11 @@ static ssize_t expensive_show(struct device *dev,
+>  }
+>  static DEVICE_ATTR_RO(expensive);
 >  
->  	*max_sq = resp.max_num_sq;
->  	*max_rq = resp.max_num_rq;
-> +
-> +	if (*max_sq == 0 || *max_rq == 0) {
-> +		netdev_err(apc->ndev, "Invalid max queues from vPort config\n");
-> +		return -EPROTO;
+> -static ssize_t driver_override_show(struct device *dev, struct device_attribute *attr,
+> -				    char *buf)
+> -{
+> -	struct wmi_device *wdev = to_wmi_device(dev);
+> -	ssize_t ret;
+> -
+> -	device_lock(dev);
+> -	ret = sysfs_emit(buf, "%s\n", wdev->driver_override);
+> -	device_unlock(dev);
+> -
+> -	return ret;
+> -}
+> -
+> -static ssize_t driver_override_store(struct device *dev, struct device_attribute *attr,
+> -				     const char *buf, size_t count)
+> -{
+> -	struct wmi_device *wdev = to_wmi_device(dev);
+> -	int ret;
+> -
+> -	ret = driver_set_override(dev, &wdev->driver_override, buf, count);
+> -	if (ret < 0)
+> -		return ret;
+> -
+> -	return count;
+> -}
+> -static DEVICE_ATTR_RW(driver_override);
+> -
+>  static struct attribute *wmi_attrs[] = {
+>  	&dev_attr_modalias.attr,
+>  	&dev_attr_guid.attr,
+>  	&dev_attr_instance_count.attr,
+>  	&dev_attr_expensive.attr,
+> -	&dev_attr_driver_override.attr,
+>  	NULL
+>  };
+>  ATTRIBUTE_GROUPS(wmi);
+> @@ -943,7 +915,6 @@ static void wmi_dev_release(struct device *dev)
+>  {
+>  	struct wmi_block *wblock = dev_to_wblock(dev);
+>  
+> -	kfree(wblock->dev.driver_override);
+>  	kfree(wblock);
+>  }
+>  
+> @@ -952,10 +923,12 @@ static int wmi_dev_match(struct device *dev, const struct device_driver *driver)
+>  	const struct wmi_driver *wmi_driver = to_wmi_driver(driver);
+>  	struct wmi_block *wblock = dev_to_wblock(dev);
+>  	const struct wmi_device_id *id = wmi_driver->id_table;
+> +	int ret;
+>  
+>  	/* When driver_override is set, only bind to the matching driver */
+> -	if (wblock->dev.driver_override)
+> -		return !strcmp(wblock->dev.driver_override, driver->name);
+> +	ret = device_match_driver_override(dev, driver);
+> +	if (ret >= 0)
+> +		return ret;
+>  
+>  	if (id == NULL)
+>  		return 0;
+> @@ -1076,6 +1049,7 @@ static struct class wmi_bus_class = {
+>  static const struct bus_type wmi_bus_type = {
+>  	.name = "wmi",
+>  	.dev_groups = wmi_groups,
+> +	.driver_override = true,
+>  	.match = wmi_dev_match,
+>  	.uevent = wmi_dev_uevent,
+>  	.probe = wmi_dev_probe,
+> diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+> index 75cb0c7cfe57..14fb644e1701 100644
+> --- a/include/linux/wmi.h
+> +++ b/include/linux/wmi.h
+> @@ -18,16 +18,12 @@
+>   * struct wmi_device - WMI device structure
+>   * @dev: Device associated with this WMI device
+>   * @setable: True for devices implementing the Set Control Method
+> - * @driver_override: Driver name to force a match; do not set directly,
+> - *		     because core frees it; use driver_set_override() to
+> - *		     set or clear it.
+>   *
+>   * This represents WMI devices discovered by the WMI driver core.
+>   */
+>  struct wmi_device {
+>  	struct device dev;
+>  	bool setable;
+> -	const char *driver_override;
+>  };
+>  
+>  /**
+> 
 
-AI review says:
+Hi,
 
-Will returning -EPROTO here expose a pre-existing resource leak in the
-driver's teardown path?
-If mana_query_vport_cfg() returns an error, mana_init_port() fails and
-mana_probe_port() frees the ndev, leaving ac->ports[i] as NULL. In
-mana_probe(), the port initialization loop breaks upon this error, but
-the err variable is then overwritten:
+I tried applying this to platform-drivers tree but it failed to compile so 
+I ended up dropping the changed.
 
-mana_probe() {
-    ...
-    for (i = 0; i < ac->num_ports; i++) {
-        err = mana_probe_port(ac, i, &ac->ports[i]);
-        if (err) {
-            dev_err(dev, "Probe Failed for port %d\n", i);
-            break;
-        }
-    }
-
-    err = add_adev(gd, "eth");
-    ...
-}
-
-If add_adev() succeeds, mana_probe() completes successfully instead of
-failing, masking the earlier error while leaving ac->ports[0] as NULL.
-Later, when the driver is unloaded or if add_adev() fails and triggers
-immediate cleanup, mana_remove() is called. It iterates over ac->ports
-and, upon encountering the NULL device, immediately executes goto out:
-
-mana_remove() {
-    ...
-    for (i = 0; i < ac->num_ports; i++) {
-        ndev = ac->ports[i];
-        if (!ndev) {
-            if (i == 0)
-                ...
-            goto out;
-        }
-        ...
-    }
-
-    mana_destroy_eq(ac);
-out:
-    ...
-}
-
-Because the out label in mana_remove() is located after the
-mana_destroy_eq(ac) call, jumping there completely skips destroying the
-event queues allocated earlier by mana_create_eq(ac).
-In a Confidential Virtual Machine context, could an untrusted hypervisor
-repeatedly return invalid configs to continuously leak guest memory and
-hardware queues?
+-- 
+ i.
 
 
