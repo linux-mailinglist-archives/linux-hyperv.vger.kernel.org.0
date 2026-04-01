@@ -1,62 +1,62 @@
-Return-Path: <linux-hyperv+bounces-9871-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9872-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eDZcO3FOzWkWbwYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9871-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Apr 2026 18:57:21 +0200
+	id WAdQD3ZOzWkWbwYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9872-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Apr 2026 18:57:26 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A918A37E452
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Apr 2026 18:57:21 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7D2137E460
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Apr 2026 18:57:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id ED972301E7B8
-	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Apr 2026 16:55:04 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9E43E300E271
+	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Apr 2026 16:55:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F15303DEFE0;
-	Wed,  1 Apr 2026 16:55:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A46524779BF;
+	Wed,  1 Apr 2026 16:55:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="QlwvUqv7"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="dCstXDuN"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazolkn19012080.outbound.protection.outlook.com [52.103.20.80])
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azolkn19010017.outbound.protection.outlook.com [52.103.12.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76B63264CB;
-	Wed,  1 Apr 2026 16:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C96347A0AB;
+	Wed,  1 Apr 2026 16:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.12.17
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775062503; cv=fail; b=pRdgsAeToPA5tNbd4rpXDSxlQDAH9+QLA7HuSsjQibg00tJgqBv+t1RCP3YysDj5bc6w4Yi4wjgNsGd+5kTfHvC4kYwN9ZnPanqIYXsaQwtY2wYiI2zkC7FkKNWIG0s4Y33Z4n/AtfZ59nWStflZ2fKMajo0nUc8RCSOgAmiL8s=
+	t=1775062537; cv=fail; b=EhjvPTb6UhulPmI0LeGoObeXS1F+BDRvnzTbqFnANgrZ2xFuOAlMSkfqL8EcstAjoaH60M7zAKeQ5cHK0OQ1abPo6fjZFdBbbQS08HwXP1q1N/WNBnkI2nam+USCl6701i5vnRWoKYiGhAoGu1il1rom5aB2aCP02qbBdmznSJM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775062503; c=relaxed/simple;
-	bh=1HO4eevxWkc3qfaRQ4rpK6ENiijgM93ejP/WW4FJg5o=;
+	s=arc-20240116; t=1775062537; c=relaxed/simple;
+	bh=BMqs6n0ugTE4dtBv7zo/wrZv1y70okh/p2h8dr0gvWw=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=LyK6B1k5G7t/zaZO54XSKTfFIJy/VHdxFmiwLTp9+VJyPvgQkdNxe5qViCKRlDojbY3Tc2AqE/VtmiAdcQiFaPLPLbUH0KnwJ0g9bNS/9dBM3DG5jhmWn29NrHTrTnZZrmjvhd+ezbSFDQrHcXAI9wLCQ/Qg4B4zbitP9nNUUAA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=QlwvUqv7; arc=fail smtp.client-ip=52.103.20.80
+	 Content-Type:MIME-Version; b=K/HlgSofw5gHuOvccd1DCIIFBoY3u5WO9vsRE3yfJteCHdrHphvkaIydYlVpB/viigCcWnvjYARzmZzQt1BtkZSpAg+0cQ2GUceb9hkVvcyDcTZBFHMQexKqHcaRbVGKkBjcvIOkSPLe02cLN1KqHUpGyad4XWmVtWY3cvr5Bzg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=dCstXDuN; arc=fail smtp.client-ip=52.103.12.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bl/SmAOACCAx2H5eJCeViZrMRV8e+EhQQMi0bm3NfE6xM0B1JBfIwsteD5/dYYZ6CsIDzJkD0SyERv5uiTFQy6TcBqynRGTVGGlaLpaMoyX/AAjGfVFz1d0kSOcZy5ymuCV0EC9V2nh5ZS9+vk1kUFCDEvCUp9PK8TYBJUM9GpkhNomWrr+3xnM7meQaeurRxqrV0GArkB1bNaXC5E9ZZJ3apremjgZsFICT9AQh+UCZvIHNAottiAsPT6DBMDaR+wdkCiGyEf0Gg95FfFfXB0ZlZvaxeXtdDIugKqDnjPCnLvU6ORsKg0pcF6wXd/YcaQLcfqGl8MNoCIemEZsukQ==
+ b=YWo4hqChnA65tsIrdsFX1V871NHeBf6r7+7q2sU1CGXfUIysMRAn5WHGMGQZvC6JT0XuV6TQL3L1HBaLE4kZ620t6ndA26XVK3CdGNYkl+drtljmkKbSsZgG4oSsBBfNiSi2Ryu3sLoM60MQ2fRJ4d24Ck/1pC0ONAwfqxpSXkC2VbBmchteqmmL6jjZqEhS4Gp6NV8IeMwhNqqBCdT4grL+FQ71gvf8CP7GQvT2WTvR/pj9pSCoeSSEa/dYCDEwK7gYkkTVH9uW4dPYDetEvWBsboi0nPk8AOPUNsFlP3tuFtzIBbGsvHztbpWoJB+/llf6D4G+iDv3GaMk6SjGuw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ritCHsA/eLYR3EGweodEJnzJadd/QkugcIkMpQry5Bk=;
- b=xTfmFJ60tgentXAfUC9sxS7B54pOABO/OB1kDUQgm+kKcf13Mx640WQQW/ASW2jMo7QEys8Lc1ot2gxM8IGNpo27bYnrotMIZF8gYqu7jHeojuKrlc4VkTSrg7FaXHDDBsjaM0Y5DVyB2EJDllnZQaawy/v40SKYhLv4D4sThR2/liACDI/FLxIAho59NjhoQGL942ZWw4ajFrci7UPOUROzKLYhDI7kEfyFesWh4Kzqtl8t0dM19jZ5pTp61SPI/uigfBR0WuTIPEZw4FA2z3vPLxIIz8Gsfl3xI1hpXWpbW4dOGZTw00/8cmz7PH3XKvfweQ6T4FUSXDbq0UEIAQ==
+ bh=YPjY2lEhtVrlabGQcdKI2gpfkFsE1t0LGrbTsbtG9VA=;
+ b=g03x35+Fv/dBL8WNbgPgHKs2KQNfiglblG4U8MM53CpqdGlpDjG+urZPUahtXX0ErBPv0t87xW/UfWnxZ8IgO8giuXP9i7FRs6ZsJI6LTmiFKi1TflgJYiARv7M7yyL3Urz/xbIMlNjHtQNfkHg5+AtWsFQ5VdrnNETZMrOXLsFEhd6q4IdMR49W2/MU84ID4D4Av6/BY5LlfngAbxDa0q+8kKh2XYRv7UYA0cMzxywTBnO0VLbaaTd51adcm727sM1v/s7V2TWHIM/hQiXzrsobGDOzZLmpQuLTp3TwwgyQp4E66QQbb1R5xZtJlPK8XhF24b/zJfWvUkSGPLmNWA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ritCHsA/eLYR3EGweodEJnzJadd/QkugcIkMpQry5Bk=;
- b=QlwvUqv7NJ9jH/1vKMSpEs41Mvs/OOa2FTg7QK++tnphOOvlXaQMEPRXnR6uVQ6dEZxvUUhDi/oLoyZcuGKHINF+9muSKaMfzxEwoyQui3lToRh6KJnvJENXgSkVDn5qVajlPxQTY1wF9GBoaz0zkhlQKfux1ZV8RhQH1I3KScSnhnBCa+8/CltteuAmuvurLUKiQifyCWBsXjuIVPzooqUUvO5FrXRddc5g0WeBHMPckA3XgjF7SvWO8xsUlW+vRqb+VeA5vkMxjWeib7IWTuUulsXg4ZjHEcOhB6T4rtLXJY0k8gUELNpnsQpyWO1uvLCS8USS5ukCapbz3hx7DQ==
+ bh=YPjY2lEhtVrlabGQcdKI2gpfkFsE1t0LGrbTsbtG9VA=;
+ b=dCstXDuNVfYhLT/7eukuNDs7h8YQDDEljIisLxHNjnXSq32OUXhZ9snB3ghYmvWSuDZE9/N+zRyPCtIVJ4uKDGtzrB6E7SeKycDU/4PJUiyQyBBu8CO4Ei4IzOFeHHd/m/tTuz9zsVnSgM7fQ7XFLFERpLqGtTIyhHSNj39Feri7YtiqJwN2/hyaPG4IzC2kTl0KDTAkk9G4PTkXhdUP61fVUegC05EVT+CWkX2eCKAIOD6MJKkdRZJc68NfhwpyN28XDVUHvD8rUww9ZgGA6H5YAR+HB7TlBKts0W9UkZlUGfpqEUr1QEaJ+JHbUBVLG/D8z9Z8Dg5rUPxWG2AACQ==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
  by MN2PR02MB6701.namprd02.prod.outlook.com (2603:10b6:208:1d3::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.28; Wed, 1 Apr
- 2026 16:54:59 +0000
+ 2026 16:55:32 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::900:1ccf:2b1e:52b6%6]) with mapi id 15.20.9769.014; Wed, 1 Apr 2026
- 16:54:59 +0000
+ 16:55:32 +0000
 From: Michael Kelley <mhklinux@outlook.com>
 To: Naman Jain <namjain@linux.microsoft.com>, "K . Y . Srinivasan"
 	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
@@ -78,74 +78,74 @@ CC: Marc Zyngier <maz@kernel.org>, Timothy Hayes <timothy.hayes@arm.com>,
 	<linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org"
 	<linux-arch@vger.kernel.org>, "linux-riscv@lists.infradead.org"
 	<linux-riscv@lists.infradead.org>
-Subject: RE: [PATCH 01/11] arch: arm64: Export arch_smp_send_reschedule for
- mshv_vtl module
-Thread-Topic: [PATCH 01/11] arch: arm64: Export arch_smp_send_reschedule for
- mshv_vtl module
-Thread-Index: AQHctT5EbNtOyKWv/EOiHTab61OuerXKhg5A
-Date: Wed, 1 Apr 2026 16:54:59 +0000
+Subject: RE: [PATCH 02/11] Drivers: hv: Move hv_vp_assist_page to common files
+Thread-Topic: [PATCH 02/11] Drivers: hv: Move hv_vp_assist_page to common
+ files
+Thread-Index: AQHctT5GdtuSbrKWekGbXgFiXJ2l57XKhjXA
+Date: Wed, 1 Apr 2026 16:55:32 +0000
 Message-ID:
- <SN6PR02MB41570A9050B3EB6A905DFF56D450A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB415790977DA40BAD0822DA54D450A@SN6PR02MB4157.namprd02.prod.outlook.com>
 References: <20260316121241.910764-1-namjain@linux.microsoft.com>
- <20260316121241.910764-2-namjain@linux.microsoft.com>
-In-Reply-To: <20260316121241.910764-2-namjain@linux.microsoft.com>
+ <20260316121241.910764-3-namjain@linux.microsoft.com>
+In-Reply-To: <20260316121241.910764-3-namjain@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|MN2PR02MB6701:EE_
-x-ms-office365-filtering-correlation-id: 0441daff-219a-43bd-5eb0-08de900f690b
+x-ms-office365-filtering-correlation-id: 59ae2e1d-584f-4a6f-0909-08de900f7c7c
 x-ms-exchange-slblob-mailprops:
- Vs63Iqe4sQmnDmlsl/vneQbmorDq9Hf2UGMXAmyq6JbocoBh7E6vmXsoAzvGNPbipTcETE3dUY9RcTaxTpvxRyUJEOlYQm+LYOSLBgVt5+GjVelHCZ6ksityk6n+GcVIcHWgvnz+lk4Cli3WKy4JJfF/cCjFtq+zNkqu34t2CH1AZkyfjKexkj2HZ9ls/j/La7GA8o7OQKy5fzcUq24R41e+FL4ewUDPKiq60r81lCsBZ66YIHnf/aN7TYfGN6JgI+JhfmpUrTF80Lf4+gmdTo3q9gbj57tLrCg8IsW7UYpDBOJ2GDHKLltzgfg6kEV1SHsXLRMWJziFXuP63OVg7ZofOIT3z75cHnTyt0L1nVCkYh6BqgW3Fn8d5JEBgyCV8ln/sII3XTHWzTWc4UBTrAAYSFO4XS33M47xNG0zbMNdN/0vCJZPS/glUL6PYRfpr35bGDSzthdFDHQxQw4v2i3HrcR/ETSyOrjlGSmqPLuU7kryqopuQj/mJzeGdDvqOM1upbj91jdm+cHDHQqMxsifBAZ+5pGs7hB5n4YurpzdYcIF30UkP1zbyR7DCB/QKrs17rtQ1zzcqSGQKNDkoBixHiOKYao76vBYcY+whfjEARy54POUxuFEx7IOJIW1Z3xoUBiSLe2vmJFn833yCOOEvhz9hQVKGbTRXulRIAD3nKOmZ3wFwaDSWzctFfbWgNw+G6PxJ2ayLwi1FdQ7Ws+R6WDyM1cFWPQt0dhfYw0=
+ znQPCv1HvwXZ5XHxNrJCjRnjimRBgM6SjBVx3vdOE4EFMiMMFD19QGZ4BlAZ7zzl6pq5oBQbIYpBrt542dCCKBRctiJY5+p1+H8FMLKXt7Y1FO37apaX4zmIsDSpeaggPII45fNzU+U0jw+j1ILpk/E3LL0euzMCTOfMjfv0XaRoy9nuBHsyAh6zWG1JkEF9HaH6pNDYDM36t8bShg61+IEKnGH7nJg2PPUrbCdFKp2SZr+fPWMEx80X3JQYK9XVSL3uVU5d18nrcN1/SWkfrtcxoGimVXvh9tkw7BZqwncmBMn4/oI3D5eO7JLcdqtkvpyUxAc9m1ldCIQXVsi6Rk4YbrEM8/FJAHE4mxrVvv+SdcfytLavublMF4WCFaSxtawDRNwXcqmVdI4AC9tG7a03MQGTOm0GvAa4xviaJWyZDoum72/fFsDqkgulxk/kjZ5qGjawKs/zblcaKfg+WGd0ijtLDRFnbOarnNljvMi7EZJdLZ7Ee1gKnBITBwCD2KzCLrqKtxVwia++wB+BkblbTv0NoPsrLqBoj7TcFPoOq5eBRMt1f37wUjEOf8ltEVtsYRxIha3kBKF5QYVa32rCto0s52Dc59ddnsRAUvzD21F1KfrTQsZKYdpQFE98k8f0rT8lBtSRs9JSTmSwsfftB6FtFnOaRqutHqZzY9FjPvOnedyklMJt3VuXeiuL4D5sajPp3YA8zHemPmO1b6LJwLOfjICGf1pqjY7qJXLv0eXU9LZdGFWpeYwM/GbHkm5OlKJw5b8=
 x-microsoft-antispam:
- BCL:0;ARA:14566002|8060799015|8062599012|19110799012|37011999003|31061999003|461199028|41001999006|51005399006|15080799012|13091999003|440099028|3412199025|26121999003|102099032|13041999003|40105399003|1710799026;
+ BCL:0;ARA:14566002|8060799015|8062599012|19110799012|12121999013|37011999003|31061999003|461199028|41001999006|51005399006|15080799012|13091999003|440099028|3412199025|12091999003|26121999003|102099032|19061999003|40105399003|1710799026;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?oWz92/C1edlgqAYLHz+IYSqz+C2H1Vb6jhArZBeiMhkwiloyt7slKI4qZ4zl?=
- =?us-ascii?Q?FpkMSRCbhM6ZpdsLC9J7mQGpoI4IS/zNDhvpX7IqO+IXqlHykSqCMSN1NtjS?=
- =?us-ascii?Q?nW7wwZ1PzlpQQhncgW2LSIhKUXhLJ7HyoTrbkjAjmdcE4skCKNPVAUJ9kgkb?=
- =?us-ascii?Q?2JIf6Go3RlBylIEGPEcHgZF6j8VeOUsVno/H5o6C5Khe6xR1MujC98QeyFt1?=
- =?us-ascii?Q?ubYoshyJDQuB48kvwTaSv8owQCM22fG0azEqa3RwEfIFsJeFWre7ea95CUaF?=
- =?us-ascii?Q?HdjpZl9N59AR6/Ui8TfO3EoDpelNQZMf32uyQiGw3NEduvZMIOYeLl+i5tha?=
- =?us-ascii?Q?hZBZPpYiK74XLCbFnrrhIyYy4ynYqrwBPm2QXb7ztNToYxTdNvh85NT/g+Nb?=
- =?us-ascii?Q?q5vx3+2X1BKKjeTTILRyNxdFUKwmWaGamYAeu5Lfv0RnrAZfTQ82ReCOPIxa?=
- =?us-ascii?Q?kbtDOLNSYWWJXYU3VpzhVS7xdGOjoLMhIrARHuuqnjaNWPNZs5u+B/py1i97?=
- =?us-ascii?Q?KsFRTXZdXdrtiITxCuuXJIIzmB76xSIEai6vPX0yWaPpuon+BY5ySFxE6+ti?=
- =?us-ascii?Q?B377/96TYEdK34/XC3wwJFzBRRkIEIwkXpcAdXKYe1Scd4bCFkxliysKmC0K?=
- =?us-ascii?Q?AIxv5LlcDBNw9cCOxU4Qyhdmi+f0/GzM4fOCmZBnaswGoNH0Jx8f9q6fkRlT?=
- =?us-ascii?Q?H4NUWnMjRSXdaZBZQbAa5bn9mi+R2A+C2DSNIL9LfueFr16SoFoEa8G2Xnjf?=
- =?us-ascii?Q?TjAs2b352uTsillwM5y+9fJCszDZFyL0ANgbx7H+1S5dSuW+moV62d4jvM5P?=
- =?us-ascii?Q?o872Pluio3uYA+oAx3Zoq4xDAUJEm/jaYpvNvn5T33Hcnql9aJUEaVbFjR6M?=
- =?us-ascii?Q?yFyYyyyR2y7HaXI5J+xteBYA/v3UOxfWi2SSzOwCniosELQ1zV6Noc3nwRq0?=
- =?us-ascii?Q?GkDHZwowFv4ajt0pkrWn5LgQP9JOOcbdp7rz4m7jso9bCgpmspZrhhhV1odQ?=
- =?us-ascii?Q?ySeCMWa2V2Vg7DlWhxvAt8VV9gDRNt8WhP1L9w/wDhvIFwZKECxE231u4IK7?=
- =?us-ascii?Q?3CWTLV0lBvkPJTXNF1wdiQSO50R14IweCo/zOGAK2DRtOBP3lTo=3D?=
+ =?us-ascii?Q?KpirCX3LUUW1Y652LMf+znyNp4CxjQqjZnzS3R58jiNj5k867wpJlEHe6ENy?=
+ =?us-ascii?Q?t1Zfe0/M0tv3NKt9pwBuOG8ojxIw5ogzDLRASM3obpSAAbNZwWEILFHuokKk?=
+ =?us-ascii?Q?RfIni57hVPzN3CT8kgbFtbbnYy5UnVYSblMCpZsaQk+gxd590w58mexLl8gT?=
+ =?us-ascii?Q?4rtwC6srMD5kTyrn5Hjfj/9vo4YcAhsMj+JE1fuCBvlmGAa25BPo3Na4hgn/?=
+ =?us-ascii?Q?1tq19KZzzE3A73nETgU5xvbyIp1KklO4u1kWjWl6khqgweCGXuZuuMoDxNT9?=
+ =?us-ascii?Q?ZaiXWrELMIvLHhsJBWcfZCCXsTmL624Iz3dmWeNcVkySd/3Y+ceNfNOZssA1?=
+ =?us-ascii?Q?2KkbcLCGKz7ig01ypgb1a1rcjzhi3nheNIzOQCGP+jnrYg+bE267ude3Y2uK?=
+ =?us-ascii?Q?WZlGCk5rbpVgypZNNIbVfXKIJOJQcbB/5DAlLfAZcev/qS1CBCRZO2rLTppK?=
+ =?us-ascii?Q?+2NeoAHiqCE4CPsCT4ZZdNn2bP2JpuY/MJUQvIbp7qD6epVf2yEOWMIltHfg?=
+ =?us-ascii?Q?ZnbFp1lMWQYsSJZ23k2gwO+LKPP+zSWbRmJW8laREI2bT675r10MbqOmHpnQ?=
+ =?us-ascii?Q?fcutzF1tBP+OsDW38LTnzd41H2tSvWRVwGS5L1T/184wmB3+aFn3XDCZF/tY?=
+ =?us-ascii?Q?OinDVzyZ7168o6VhmqRITUYoyxrRyhWlwV3D6fKQa7X1okcaxovuIn69vNQt?=
+ =?us-ascii?Q?mLn61MUeRPMozCf/CxW1txrPXUFG9BDzkVv71Im2nE/wOzT1MlOeWWr5LLEj?=
+ =?us-ascii?Q?MtHM/Zhi8gb4WvpaMV0DHUHkK2LECqb+sp3CBX2gxq5CbUEM03AJ9yl7taIV?=
+ =?us-ascii?Q?5+DY8q9jU8HaI/sRimWbXF2Elbbj/3G0PfUIhxWJdDDpEgL5WSc5UEXZDX6g?=
+ =?us-ascii?Q?meC5GdUJEEq/67o2n9SIAZgYmW1eH71CPIZ7KoZ7Pp3bPEk/PFFTWDw4BtLk?=
+ =?us-ascii?Q?r71WDkigMxX5PXPFvC2bLPBlj0KyFE69cPb+CfnquIZVPzQAjs8iYvgUhLZu?=
+ =?us-ascii?Q?hXIEQrdpfjRiqtymN29nwP6EWV93/u7XwQ1D1EabQljd7FqJy8iceFSo072F?=
+ =?us-ascii?Q?NJL6d2O+kia1e3/Uvr7Gc34pN6GI06FNBqoEEOZVCAaq10gLoKU0AvtaMQS9?=
+ =?us-ascii?Q?b3Ocx5/KkjgoJzBpTp8Dvw/v5ntTbLkAeSill8e3069R0bsE7RMhCek=3D?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?VPaXk+dmcfXbBvL3Dl6sIkWtF5EdF0tyG9aOyR1+bjf7QmTD5cIf6Gu2WWJz?=
- =?us-ascii?Q?IRMPiTyaEolPTTwHINp90QBmGZW4LSwpR0f1DiBtfpHrhRcugSjGhwMzxu8z?=
- =?us-ascii?Q?VhUrLwjxZEO9e87NFuttFQoFQKt6hRNR7kjz3WN88GDwOwFALZg840AmVhTM?=
- =?us-ascii?Q?J99zFeLy6Fi0TffR18yvjLGtbS8b0pNvTZ7VCzsrprYw/tBZxeCDgcGPXB82?=
- =?us-ascii?Q?cuaaZEqHO2UJm54AQ9nnrv708WuPGKfvzvluGhv0h9KORHWBWwC5wNKU60NV?=
- =?us-ascii?Q?nwhqmFxeaiNG4tgjKGiCQxRp9JQzWIpRWK6ThmK3oB1ScxpWQdusyyE3rKcf?=
- =?us-ascii?Q?m5d0S/6IJ42FrsV9NthFTn/lsxchxynkR+lNpi8euBSgW4SrPhisIXHRZnPD?=
- =?us-ascii?Q?Gexo1gEvHmbrTyV9T/ko+/++cBr+J+C1siNEAHiYOFyxMxZmCOUuc0QkgRWb?=
- =?us-ascii?Q?h8KY8BcqbVuM+s5BckGhLxomZOvq5NFfirzfybXgSqO/hvzibEpOHhKYuJzu?=
- =?us-ascii?Q?kunAHPM7z2W8gZo/GwcNw1viB384X2nexAU9AiwckR7IMs2UqDwQC0UKWspW?=
- =?us-ascii?Q?aYzAtQnhcxCxuHyEVzqM8tXHkH+3EbJhkwFFjY5JXbV1wt5cv/vWze1OB3gJ?=
- =?us-ascii?Q?97iaUoRTEtThozM+nYRnV1qV3s0RzalXRnCN4Kq5RfoGK3wxMY60aRe3bFmi?=
- =?us-ascii?Q?4Iuqph3v9Lv4SHKfafA8R3HP4lGPd1tiw07LA79vcy5PQpou4++arRGmNYrN?=
- =?us-ascii?Q?xNweQhk/Tx9iNLDojKxbwSNndggZ0/dSOateUxHmMjO3zl6oTCWm+Voh7jUR?=
- =?us-ascii?Q?ps+TlgnrmePNHaMc2I7Pf7F7A2aC+CPrIlblB0F9SQe7ZtZomei2oIdgWI3S?=
- =?us-ascii?Q?7OnK5NG3DvIWvtMQvlOMZrtCEmxJRuKC4VLmFpVv3gk3f60aNakTjjkq/U8Q?=
- =?us-ascii?Q?auUC8bQeFkbtX+V3llz3ZISc0hfzcEtOC2NBqhTo3KOvuAyIuadZBPOpclcF?=
- =?us-ascii?Q?uhvfWVyJw4Gx0ggJeYvgo1xxmmmoDeHJvQzq8eX0v3/QcpW/bPdPzKnAGMFT?=
- =?us-ascii?Q?gvhrkpLjfboy8ufmBpHvSya1VcunpQSOkPC/HFN9HfcIunujgV0Bq5PbWHE3?=
- =?us-ascii?Q?DXto75Q9k5cHnFybeeDiwbNUeZHQ6Phs1qSJmn8uQcNWBnAlb0PpmVIn4xrE?=
- =?us-ascii?Q?hQZu/jiJdj0FUtSniEqk/wBHwdt3/8/UeuvGSjFUn5d/+neDFFJC7lwsLZ1c?=
- =?us-ascii?Q?RbINc3ifTfhuTqWTeMXJWw8V1LUh5tbHQP1YeIA2TXIDj6U45a14WCJDl9lX?=
- =?us-ascii?Q?QKRNXVSkQubm6b3TctkRIetBgQuMYtdMwS0gEcsZ3YFPqQFsSWbiobWKdiYm?=
- =?us-ascii?Q?pBl21r4=3D?=
+ =?us-ascii?Q?XjiPKQc+9/S3HpJJE+KASQDRDJ01B8NttqL2WdiinBaERePjRwz2lNeCeiJE?=
+ =?us-ascii?Q?Ml68BzkEttJuYL2MgDZLWKSSdvUTMxN0JH/ZhyP4E/JSoPdstXYRxClArHHz?=
+ =?us-ascii?Q?+1ymlAmn/ZHgP7fRt4UydSWabmtUDLTovTveAZo3HQCBdj2tn7PysZkpUOdO?=
+ =?us-ascii?Q?j0etVr9LLFG7zw87n5XFVCuxRfe6XtIbxmV17q3Dx5k1ixJg9ZYSgG5+ftyG?=
+ =?us-ascii?Q?eYgEW2MNecjEzA5jfvr2whB+3NAzNwjaThDEApfJp3zm/BM3Goj3X26vrUA5?=
+ =?us-ascii?Q?x4i29ftpwbrHiqT42fvuTnsMbKdaZc38FGtpZbGxOZKowgMFUa756VFhiKd4?=
+ =?us-ascii?Q?vJFdwkzbN/SiwIx5rKtFK4gOhawkuqqsN7nic+RIDWu+EDubzvitNLRrjEOO?=
+ =?us-ascii?Q?+XiogcQGrALH1PdDiMlm13ZXPpg8tdnqrbhUKvfq45mSvzptwVAuFzSm1x+b?=
+ =?us-ascii?Q?tR+Q41JB0t6S1QWu7GvOxsRDzGhR1iJNIRUvHz5RnlycAmS3htHBHDevFteJ?=
+ =?us-ascii?Q?E+sYHKuxizkw+9KMxrJ4zspPpMoOFVXbVNIm9GPzC9w2sUhyfRlU+So9e7G9?=
+ =?us-ascii?Q?g6s9e6s3tl1ToWgwhTQurK/Jqh7AU/wKfjcvwPSSmJ0Vx+CVeKh+MAuoa0bR?=
+ =?us-ascii?Q?jvU9+M0ijd5x0hpV2S45es3eiosyrgOMxFul9OLXe2sZUtdsjFGCZT+fiaOW?=
+ =?us-ascii?Q?n9sv7w92zS+XTDizwa84eLE3tQOhtuOF1n5U05NwmD74x7eBih+4n3B90E3j?=
+ =?us-ascii?Q?7y+dZvFbIXStNko3J7EB7zGGpRg+E+cFdWCdJzepn/KoY2A/oiQidY8ETjga?=
+ =?us-ascii?Q?/SAIuBT2IaMR/x12meWprGCpvFaztNOISHu5YMLVm3tyKmhmtCBXYksuWur6?=
+ =?us-ascii?Q?TWB02qkGm5UawFJ6jgRCEySoO38EyjutWDKWAfJ2XGkDHxSij2Z0XCJzfSiZ?=
+ =?us-ascii?Q?aKoqvnxsuBPceHOycrYG/IZTZ6nwdxm3TOw2ib6zSVA8wtnXuLDGotDMGhlp?=
+ =?us-ascii?Q?MUMt73jbWG9Thw2aTV8ovf45Dz2hXfRIxdcZvQ7CmYgdcQ8Rkw9LzAIjUsE4?=
+ =?us-ascii?Q?t+rdP+GOGNrc/bFQuHQY5IN1WhONzbLNtppH+yjGPR1hRVCBUJqiJ7LJp1yi?=
+ =?us-ascii?Q?yNOYlfQQddoqYgPV/Y5IQwh64uiGTXzw8B6XMmD3Gm8BLgQmi6w7yrchQIdf?=
+ =?us-ascii?Q?lYPn/pJG8zPkfa3GQEPQcod4xzC8nw/P7H/hR12jut+abjtY5wTwXPk5ibde?=
+ =?us-ascii?Q?cGdM7fKXlJNKJQ8W3ivDwhnYSmA9NYhnBivPLtWmW4TOs/FdeDqdKu1XXvhi?=
+ =?us-ascii?Q?w4FGf2+Ya1EZ6xuCpgas4Uh9DkN2sWcvM4FQcLuqVTnnR7yV1SVbd3HJ3Jui?=
+ =?us-ascii?Q?x+Ry2nI=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -158,8 +158,8 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0441daff-219a-43bd-5eb0-08de900f690b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2026 16:54:59.3844
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59ae2e1d-584f-4a6f-0909-08de900f7c7c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2026 16:55:32.0430
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -169,7 +169,7 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -177,7 +177,7 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_FROM(0.00)[outlook.com];
 	RCPT_COUNT_TWELVE(0.00)[30];
-	TAGGED_FROM(0.00)[bounces-9871-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9872-lists,linux-hyperv=lfdr.de];
 	TO_DN_EQ_ADDR_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_CC(0.00)[kernel.org,arm.com,gmail.com,linux.microsoft.com,outlook.com,vger.kernel.org,lists.infradead.org];
@@ -193,59 +193,446 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,outlook.com:dkim,outlook.com:email]
-X-Rspamd-Queue-Id: A918A37E452
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,outlook.com:dkim]
+X-Rspamd-Queue-Id: A7D2137E460
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Naman Jain <namjain@linux.microsoft.com> Sent: Monday, March 16, 2026=
  5:13 AM
 >=20
-
-Nit: For the patch "Subject", the most common prefix for the file
-arch/arm64/kernel/smp.c is "arm64: smp:".  I'd suggest using that
-prefix for historical consistency.
-
-> mshv_vtl_main.c calls smp_send_reschedule() which expands to
-> arch_smp_send_reschedule(). When CONFIG_MSHV_VTL=3Dm, the module cannot
-> access this symbol since it is not exported on arm64.
+> Move the logic to initialize and export hv_vp_assist_page from x86
+> architecture code to Hyper-V common code to allow it to be used for
+> upcoming arm64 support in MSHV_VTL driver.
+> Note: This change also improves error handling - if VP assist page
+> allocation fails, hyperv_init() now returns early instead of
+> continuing with partial initialization.
 >=20
-> smp_send_reschedule() is used in mshv_vtl_cancel() to interrupt a vCPU
-> thread running on another CPU. When a vCPU is looping in
-> mshv_vtl_ioctl_return_to_lower_vtl(), it checks a per-CPU cancel flag
-> before each VTL0 entry. Setting cancel=3D1 alone is not enough if the
-> target CPU thread is sleeping - the IPI from smp_send_reschedule() kicks
-> the remote CPU out of idle/sleep so it re-checks the cancel flag and
-> exits the loop promptly.
->=20
-> Other architectures (riscv, loongarch, powerpc) already export this
-> symbol. Add the same EXPORT_SYMBOL_GPL for arm64. This is required
-> for adding arm64 support in MSHV_VTL.
->=20
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
 > Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
 > ---
->  arch/arm64/kernel/smp.c | 1 +
->  1 file changed, 1 insertion(+)
+>  arch/x86/hyperv/hv_init.c      | 88 +---------------------------------
+>  drivers/hv/hv_common.c         | 88 ++++++++++++++++++++++++++++++++++
+>  include/asm-generic/mshyperv.h |  4 ++
+>  include/hyperv/hvgdk_mini.h    |  2 +
+>  4 files changed, 95 insertions(+), 87 deletions(-)
 >=20
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index 1aa324104afb..26b1a4456ceb 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -1152,6 +1152,7 @@ void arch_smp_send_reschedule(int cpu)
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index 323adc93f2dc..75a98b5e451b 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -81,9 +81,6 @@ union hv_ghcb * __percpu *hv_ghcb_pg;
+>  /* Storage to save the hypercall page temporarily for hibernation */
+>  static void *hv_hypercall_pg_saved;
+>=20
+> -struct hv_vp_assist_page **hv_vp_assist_page;
+> -EXPORT_SYMBOL_GPL(hv_vp_assist_page);
+> -
+>  static int hyperv_init_ghcb(void)
 >  {
->  	smp_cross_call(cpumask_of(cpu), IPI_RESCHEDULE);
->  }
-> +EXPORT_SYMBOL_GPL(arch_smp_send_reschedule);
+>  	u64 ghcb_gpa;
+> @@ -117,59 +114,12 @@ static int hyperv_init_ghcb(void)
 >=20
->  #ifdef CONFIG_ARM64_ACPI_PARKING_PROTOCOL
->  void arch_send_wakeup_ipi(unsigned int cpu)
+>  static int hv_cpu_init(unsigned int cpu)
+>  {
+> -	union hv_vp_assist_msr_contents msr =3D { 0 };
+> -	struct hv_vp_assist_page **hvp;
+>  	int ret;
+>=20
+>  	ret =3D hv_common_cpu_init(cpu);
+>  	if (ret)
+>  		return ret;
+>=20
+> -	if (!hv_vp_assist_page)
+> -		return 0;
+> -
+> -	hvp =3D &hv_vp_assist_page[cpu];
+> -	if (hv_root_partition()) {
+> -		/*
+> -		 * For root partition we get the hypervisor provided VP assist
+> -		 * page, instead of allocating a new page.
+> -		 */
+> -		rdmsrq(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
+> -		*hvp =3D memremap(msr.pfn << HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT,
+> -				PAGE_SIZE, MEMREMAP_WB);
+> -	} else {
+> -		/*
+> -		 * The VP assist page is an "overlay" page (see Hyper-V TLFS's
+> -		 * Section 5.2.1 "GPA Overlay Pages"). Here it must be zeroed
+> -		 * out to make sure we always write the EOI MSR in
+> -		 * hv_apic_eoi_write() *after* the EOI optimization is disabled
+> -		 * in hv_cpu_die(), otherwise a CPU may not be stopped in the
+> -		 * case of CPU offlining and the VM will hang.
+> -		 */
+> -		if (!*hvp) {
+> -			*hvp =3D __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO);
+> -
+> -			/*
+> -			 * Hyper-V should never specify a VM that is a Confidential
+> -			 * VM and also running in the root partition. Root partition
+> -			 * is blocked to run in Confidential VM. So only decrypt assist
+> -			 * page in non-root partition here.
+> -			 */
+> -			if (*hvp && !ms_hyperv.paravisor_present && hv_isolation_type_snp()) =
+{
+> -				WARN_ON_ONCE(set_memory_decrypted((unsigned long)(*hvp), 1));
+> -				memset(*hvp, 0, PAGE_SIZE);
+> -			}
+> -		}
+> -
+> -		if (*hvp)
+> -			msr.pfn =3D vmalloc_to_pfn(*hvp);
+> -
+> -	}
+> -	if (!WARN_ON(!(*hvp))) {
+> -		msr.enable =3D 1;
+> -		wrmsrq(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
+> -	}
+> -
+>  	/* Allow Hyper-V stimer vector to be injected from Hypervisor. */
+>  	if (ms_hyperv.misc_features & HV_STIMER_DIRECT_MODE_AVAILABLE)
+>  		apic_update_vector(cpu, HYPERV_STIMER0_VECTOR, true);
+> @@ -286,23 +236,6 @@ static int hv_cpu_die(unsigned int cpu)
+>=20
+>  	hv_common_cpu_die(cpu);
+>=20
+> -	if (hv_vp_assist_page && hv_vp_assist_page[cpu]) {
+> -		union hv_vp_assist_msr_contents msr =3D { 0 };
+> -		if (hv_root_partition()) {
+> -			/*
+> -			 * For root partition the VP assist page is mapped to
+> -			 * hypervisor provided page, and thus we unmap the
+> -			 * page here and nullify it, so that in future we have
+> -			 * correct page address mapped in hv_cpu_init.
+> -			 */
+> -			memunmap(hv_vp_assist_page[cpu]);
+> -			hv_vp_assist_page[cpu] =3D NULL;
+> -			rdmsrq(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
+> -			msr.enable =3D 0;
+> -		}
+> -		wrmsrq(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
+> -	}
+> -
+>  	if (hv_reenlightenment_cb =3D=3D NULL)
+>  		return 0;
+>=20
+> @@ -460,21 +393,6 @@ void __init hyperv_init(void)
+>  	if (hv_common_init())
+>  		return;
+>=20
+> -	/*
+> -	 * The VP assist page is useless to a TDX guest: the only use we
+> -	 * would have for it is lazy EOI, which can not be used with TDX.
+> -	 */
+> -	if (hv_isolation_type_tdx())
+> -		hv_vp_assist_page =3D NULL;
+> -	else
+> -		hv_vp_assist_page =3D kzalloc_objs(*hv_vp_assist_page, nr_cpu_ids);
+> -	if (!hv_vp_assist_page) {
+> -		ms_hyperv.hints &=3D ~HV_X64_ENLIGHTENED_VMCS_RECOMMENDED;
+> -
+> -		if (!hv_isolation_type_tdx())
+> -			goto common_free;
+> -	}
+> -
+>  	if (ms_hyperv.paravisor_present && hv_isolation_type_snp()) {
+>  		/* Negotiate GHCB Version. */
+>  		if (!hv_ghcb_negotiate_protocol())
+> @@ -483,7 +401,7 @@ void __init hyperv_init(void)
+>=20
+>  		hv_ghcb_pg =3D alloc_percpu(union hv_ghcb *);
+>  		if (!hv_ghcb_pg)
+> -			goto free_vp_assist_page;
+> +			goto free_ghcb_page;
+>  	}
+>=20
+>  	cpuhp =3D cpuhp_setup_state(CPUHP_AP_HYPERV_ONLINE, "x86/hyperv_init:on=
+line",
+> @@ -613,10 +531,6 @@ void __init hyperv_init(void)
+>  	cpuhp_remove_state(CPUHP_AP_HYPERV_ONLINE);
+>  free_ghcb_page:
+>  	free_percpu(hv_ghcb_pg);
+> -free_vp_assist_page:
+> -	kfree(hv_vp_assist_page);
+> -	hv_vp_assist_page =3D NULL;
+> -common_free:
+>  	hv_common_free();
+>  }
+>=20
+> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+> index 6b67ac616789..d1ebc0ebd08f 100644
+> --- a/drivers/hv/hv_common.c
+> +++ b/drivers/hv/hv_common.c
+> @@ -28,7 +28,9 @@
+>  #include <linux/slab.h>
+>  #include <linux/dma-map-ops.h>
+>  #include <linux/set_memory.h>
+> +#include <linux/vmalloc.h>
+>  #include <hyperv/hvhdk.h>
+> +#include <hyperv/hvgdk.h>
+>  #include <asm/mshyperv.h>
+
+Need to add
+
+#include <linux/io.h>
+
+because of the memremap() and related calls that have been added.
+io.h is probably being #include'd indirectly, but it is better to #include
+it directly.
+
+>=20
+>  u64 hv_current_partition_id =3D HV_PARTITION_ID_SELF;
+> @@ -78,6 +80,8 @@ static struct ctl_table_header *hv_ctl_table_hdr;
+>  u8 * __percpu *hv_synic_eventring_tail;
+>  EXPORT_SYMBOL_GPL(hv_synic_eventring_tail);
+>=20
+> +struct hv_vp_assist_page **hv_vp_assist_page;
+> +EXPORT_SYMBOL_GPL(hv_vp_assist_page);
+>  /*
+>   * Hyper-V specific initialization and shutdown code that is
+>   * common across all architectures.  Called from architecture
+> @@ -92,6 +96,9 @@ void __init hv_common_free(void)
+>  	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE)
+>  		hv_kmsg_dump_unregister();
+>=20
+> +	kfree(hv_vp_assist_page);
+> +	hv_vp_assist_page =3D NULL;
+> +
+>  	kfree(hv_vp_index);
+>  	hv_vp_index =3D NULL;
+>=20
+> @@ -394,6 +401,23 @@ int __init hv_common_init(void)
+>  	for (i =3D 0; i < nr_cpu_ids; i++)
+>  		hv_vp_index[i] =3D VP_INVAL;
+>=20
+> +	/*
+> +	 * The VP assist page is useless to a TDX guest: the only use we
+> +	 * would have for it is lazy EOI, which can not be used with TDX.
+> +	 */
+> +	if (hv_isolation_type_tdx()) {
+> +		hv_vp_assist_page =3D NULL;
+> +	} else {
+> +		hv_vp_assist_page =3D kzalloc_objs(*hv_vp_assist_page, nr_cpu_ids);
+> +		if (!hv_vp_assist_page) {
+> +#ifdef CONFIG_X86_64
+> +			ms_hyperv.hints &=3D ~HV_X64_ENLIGHTENED_VMCS_RECOMMENDED;
+> +#endif
+> +			hv_common_free();
+> +			return -ENOMEM;
+
+Given that "failure to allocate memory" now returns an error that is
+essentially fatal to hyperv_init(), is it still necessary to clear the flag=
+ in
+ms_hyperv.hints?  I'd love to see that #ifdef go away. It's the only
+#ifdef in hv_common.c, and I had worked hard in the past to avoid
+such #ifdef's. :-)
+
+> +		}
+> +	}
+> +
+>  	return 0;
+>  }
+>=20
+> @@ -471,6 +495,8 @@ void __init ms_hyperv_late_init(void)
+>=20
+>  int hv_common_cpu_init(unsigned int cpu)
+>  {
+> +	union hv_vp_assist_msr_contents msr =3D { 0 };
+> +	struct hv_vp_assist_page **hvp;
+>  	void **inputarg, **outputarg;
+>  	u8 **synic_eventring_tail;
+>  	u64 msr_vp_index;
+> @@ -542,6 +568,50 @@ int hv_common_cpu_init(unsigned int cpu)
+>  			ret =3D -ENOMEM;
+
+The Sashiko AI comment here about a bug when ret is set to -ENOMEM
+seems valid to me.
+
+>  	}
+>=20
+> +	if (!hv_vp_assist_page)
+> +		return ret;
+> +
+> +	hvp =3D &hv_vp_assist_page[cpu];
+> +	if (hv_root_partition()) {
+> +		/*
+> +		 * For root partition we get the hypervisor provided VP assist
+> +		 * page, instead of allocating a new page.
+> +		 */
+> +		msr.as_uint64 =3D hv_get_msr(HV_SYN_REG_VP_ASSIST_PAGE);
+> +		*hvp =3D memremap(msr.pfn << HV_VP_ASSIST_PAGE_ADDRESS_SHIFT,
+> +				PAGE_SIZE, MEMREMAP_WB);
+
+The Sashiko AI comment about potentially memremap'ing 64K instead of 4K can
+be ignored. We know that the root partition can only run with a 4K page siz=
+e,
+and that is enforced in drivers/hv/Kconfig.
+
+HV_VP_ASSIST_PAGE_ADDRESS_SHIFT is defined in asm-generic/mshyperv.h.
+But there is also HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT in hvgdk_mini.h.
+Is there a clean way to eliminate the duplication?
+
+> +	} else {
+> +		/*
+> +		 * The VP assist page is an "overlay" page (see Hyper-V TLFS's
+> +		 * Section 5.2.1 "GPA Overlay Pages"). Here it must be zeroed
+> +		 * out to make sure we always write the EOI MSR in
+> +		 * hv_apic_eoi_write() *after* the EOI optimization is disabled
+> +		 * in hv_cpu_die(), otherwise a CPU may not be stopped in the
+> +		 * case of CPU offlining and the VM will hang.
+> +		 */
+
+Somewhere in the comment above, I'd suggest adding a short "on x86/x64"
+qualifier, as the comment doesn't apply on arm64 since it doesn't support
+the AutoEOI optimization.  Maybe "Here it must be zeroed out to make sure
+that on x86/x64 we always write the EOI MSR in ....".  =20
+
+> +		if (!*hvp) {
+> +			*hvp =3D __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO);
+
+The Sashiko AI comment about using "flags" instead of GFP_KERNEL seems vali=
+d.
+
+> +
+> +			/*
+> +			 * Hyper-V should never specify a VM that is a Confidential
+> +			 * VM and also running in the root partition. Root partition
+> +			 * is blocked to run in Confidential VM. So only decrypt assist
+> +			 * page in non-root partition here.
+> +			 */
+> +			if (*hvp && !ms_hyperv.paravisor_present && hv_isolation_type_snp()) =
+{
+> +				WARN_ON_ONCE(set_memory_decrypted((unsigned long)(*hvp), 1));
+> +				memset(*hvp, 0, PAGE_SIZE);
+> +			}
+> +		}
+> +
+> +		if (*hvp)
+> +			msr.pfn =3D vmalloc_to_pfn(*hvp);
+
+The Sashiko AI comment about page size here seems valid. But what are the r=
+ules
+about arm64 page sizes that are supported for VTL2, and how does they relat=
+e
+to VTL0 allowing 4K, 16K, and 64K page size? What combinations are allowed?
+For example, can a VTL2 built with 4K page size run with a VTL0 built with
+64K page size? It would be nice to have the rules recorded somewhere in a
+code comment, but I'm not sure of the best place.
+
+But regardless of the rules, I'd suggest future-proofing by using
+"page_to_hvpfn(vmalloc_to_page(*hvp))" so that the PFN generated is always
+in terms of 4K page size as the Hyper-V host expects.
+
+> +	}
+> +	if (!WARN_ON(!(*hvp))) {
+> +		msr.enable =3D 1;
+> +		hv_set_msr(HV_SYN_REG_VP_ASSIST_PAGE, msr.as_uint64);
+> +	}
+> +
+>  	return ret;
+>  }
+>=20
+> @@ -566,6 +636,24 @@ int hv_common_cpu_die(unsigned int cpu)
+>  		*synic_eventring_tail =3D NULL;
+>  	}
+>=20
+> +	if (hv_vp_assist_page && hv_vp_assist_page[cpu]) {
+> +		union hv_vp_assist_msr_contents msr =3D { 0 };
+> +
+> +		if (hv_root_partition()) {
+> +			/*
+> +			 * For root partition the VP assist page is mapped to
+> +			 * hypervisor provided page, and thus we unmap the
+> +			 * page here and nullify it, so that in future we have
+> +			 * correct page address mapped in hv_cpu_init.
+> +			 */
+> +			memunmap(hv_vp_assist_page[cpu]);
+> +			hv_vp_assist_page[cpu] =3D NULL;
+> +			msr.as_uint64 =3D hv_get_msr(HV_SYN_REG_VP_ASSIST_PAGE);
+> +			msr.enable =3D 0;
+> +		}
+> +		hv_set_msr(HV_SYN_REG_VP_ASSIST_PAGE, msr.as_uint64);
+> +	}
+> +
+>  	return 0;
+>  }
+>=20
+> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyper=
+v.h
+> index d37b68238c97..108f135d4fd9 100644
+> --- a/include/asm-generic/mshyperv.h
+> +++ b/include/asm-generic/mshyperv.h
+> @@ -25,6 +25,7 @@
+>  #include <linux/nmi.h>
+>  #include <asm/ptrace.h>
+>  #include <hyperv/hvhdk.h>
+> +#include <hyperv/hvgdk.h>
+>=20
+>  #define VTPM_BASE_ADDRESS 0xfed40000
+>=20
+> @@ -299,6 +300,8 @@ do { \
+>  #define hv_status_debug(status, fmt, ...) \
+>  	hv_status_printk(debug, status, fmt, ##__VA_ARGS__)
+>=20
+> +extern struct hv_vp_assist_page **hv_vp_assist_page;
+
+This "extern" statement is added here so it is visible to both x86/x64 and =
+arm64.
+And that's correct.
+
+But there is still some VP assist page stuff that has been left in the arch=
+/x86
+version of mshyperv.h.  That other stuff, including the inline function
+hv_get_vp_assist_page(), should also be moved to asm-generic/mshyperv.h.
+Given that the VP assist page support is now fully generic and not x86/x64
+specific, it shouldn't occur anywhere in the arch/x86 version of mshyperv.h=
+.
+
+> +
+>  const char *hv_result_to_string(u64 hv_status);
+>  int hv_result_to_errno(u64 status);
+>  void hyperv_report_panic(struct pt_regs *regs, long err, bool in_die);
+> @@ -377,6 +380,7 @@ static inline int hv_deposit_memory(u64 partition_id,=
+ u64 status)
+>  	return hv_deposit_memory_node(NUMA_NO_NODE, partition_id, status);
+>  }
+>=20
+> +#define HV_VP_ASSIST_PAGE_ADDRESS_SHIFT	12
+>  #if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
+>  u8 __init get_vtl(void);
+>  #else
+> diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
+> index 056ef7b6b360..be697ddb211a 100644
+> --- a/include/hyperv/hvgdk_mini.h
+> +++ b/include/hyperv/hvgdk_mini.h
+> @@ -149,6 +149,7 @@ struct hv_u128 {
+>  #define HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT	12
+>  #define HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_MASK	\
+>  		(~((1ull << HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT) - 1))
+> +#define HV_SYN_REG_VP_ASSIST_PAGE              (HV_X64_MSR_VP_ASSIST_PAG=
+E)
+>=20
+>  /* Hyper-V Enlightened VMCS version mask in nested features CPUID */
+>  #define HV_X64_ENLIGHTENED_VMCS_VERSION		0xff
+> @@ -1185,6 +1186,7 @@ enum hv_register_name {
+>=20
+>  #define HV_MSR_STIMER0_CONFIG	(HV_REGISTER_STIMER0_CONFIG)
+>  #define HV_MSR_STIMER0_COUNT	(HV_REGISTER_STIMER0_COUNT)
+> +#define HV_SYN_REG_VP_ASSIST_PAGE    (HV_REGISTER_VP_ASSIST_PAGE)
+
+This defines a new register name prefix "HV_SYN_REG_" that isn't used
+anywhere else. The prefixes for Hyper-V register names are already complex
+to account to x86/x64 and arm64 differences, and the fact the x86/x64 has
+synthetic MSRs, while arm64 does not. So introducing another prefix is
+undesirable. Couldn't this just be HV_MSR_VP_ASSIST_PAGE using the
+same structure as HV_MSR_STIMER0_COUNT (for example)?
+
+>=20
+>  #endif /* CONFIG_ARM64 */
+>=20
 > --
 > 2.43.0
 >=20
-
-The "Subject" nit notwithstanding,
-
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 
 
