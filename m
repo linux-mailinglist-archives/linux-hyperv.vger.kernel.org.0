@@ -1,38 +1,38 @@
-Return-Path: <linux-hyperv+bounces-9868-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9867-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id II7hM688zWn5awYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9868-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Apr 2026 17:41:35 +0200
+	id eHeQNDM5zWnfawYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9867-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Apr 2026 17:26:43 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3BB237D538
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Apr 2026 17:41:34 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4839237D0C2
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Apr 2026 17:26:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 81AC130FA36F
-	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Apr 2026 15:15:54 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2AFC5301485B
+	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Apr 2026 15:15:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D68DA35F164;
-	Wed,  1 Apr 2026 15:15:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E47BB3FA5ED;
+	Wed,  1 Apr 2026 15:15:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mTfgFF4/";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GQk+ztFp"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hReNgqji";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+/++yGdb"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453653E0234
-	for <linux-hyperv@vger.kernel.org>; Wed,  1 Apr 2026 15:15:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8043603C2
+	for <linux-hyperv@vger.kernel.org>; Wed,  1 Apr 2026 15:15:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775056528; cv=none; b=NfVb9+WI2Z3qdcH8JPGUkUX16pvqdib0zn+y5g454le1gguQv5WyvZ51x8Ju+ACFCOrW75dfRhQ6B8tFqEkyzzsea12PsWL0b07VF0yev7ouftcwdkfe8n48tKdObqV6AHulfgqPYcsRaMB8o2ljlb5Ph1/kS53a+B7pIfWxFf0=
+	t=1775056527; cv=none; b=hfapLwG0+B392W51MwrQx5s+sPG6zNmPvvYYiQD/kOi36A/j1i1GFDyu8iT+5mE9OkCGtDd/+rDp6XqiV7FeRR76r3AZpuUw63Hfo8hhsUesYMmEnabfO/th8jGoUvkBXpbXRcUou3A4wKKOOA/Yc/g4BFzbv4iETsqDU9s3njw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775056528; c=relaxed/simple;
-	bh=1PO9+f/JaaLvBzd0obmI11vNj8Jtv2SG/hdWDZNu+XM=;
+	s=arc-20240116; t=1775056527; c=relaxed/simple;
+	bh=P1gP3Uilw7VoauyiFRHNGwT/F08wPcfvhNwZ/NEz8ns=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kP83EdNTnBjllEBZ9GsmtJn0s7yKN9FGqCdkJ5JI08g6GGKU6J7fvZ4x+XarFagJ0Yq3QGizs708YWq/mQEQISBziHZTlLodF7ynYphKTUm3yfa3iJvAo2WhTQvSg/LIKBJC+7T9ckIzWLjvAEsmcG7iLdB2RefR2Goumc/PMqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mTfgFF4/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GQk+ztFp; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=LCxx8De030asqXcbfVRmspfN/1KZMYlA+sQn8jOWyGYOPxzIxqqV+l880Po4ovO4Pi5yK+SyR9GjGKTWE56AZSy2abSANsJwzPxPnk3q62nZ1mGKe4DO/eWkEqCUywB2LaE2D+rZ+FDz2lqvKyUA/oxP0nZGZ8cXP7Jl7Q5LIYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hReNgqji; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+/++yGdb; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
@@ -42,21 +42,21 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8zYJBFqymGlmMHzyNG+66TI38Sy9QpYJHrKB5IS6AO4=;
-	b=mTfgFF4/UrrFhqGHy+C+rIE4r+PgvwrNXDvtpLraF/ZVxZlZ3bRcHhbMH1TvjYzufZn7Qj
-	XPCdPBqLquOVNJFlz0rU/4GZeoKsO+4x04qjORmLGjJ3K3+HvFyO6wSKixwdXAwoYoTIj/
-	Ez7spqfRc2eMAqm5PpQujyWZ24nc7HvdByxzVkgbycMDyRIJ1ZaMq8EEgqmCCvhCZkSliC
-	/DLVOWwZu4HWiS0Aj3rfDCBwbddnu3XYzNVYzaCdCa58IPDK8k/YgAzrXbhH9S695OAKa1
-	JqCQ7L6VZ41JupfUXA7eUlWejSNF3Y9mQr0q1alyCHlyacmVUDy0Pmr/XJAsTg==
+	bh=0PE3yGuxBE8fZWkDlxjkheUUb9DSy2R9+OrZvzc+cxw=;
+	b=hReNgqjiog5Jqlqt27XfooCk4vHW2073EJrsZkN6YURRD7VIM0ivXzobK9HyUGxi5E/ldd
+	Rx7EUsIkH13muq4cIRj284zfudfev6sKvqQz+BN/xJgKD16M+qq0eVc3vQbfUM1S9AwJDo
+	7xxqHjM5/6KA1nXXCUHwmYMz8MPLd+wEoZk2EVpRxpZ5r9WV3L2RhuL6VdUbEbjrelvcGt
+	6Bwns/wCGpX+LS8iu1u3AVBKpPIlMV92AVhMuSu7MhZPO2zbjotFRKP5Acnoo84P/IA2Ic
+	U3aexrGVTbExuYTJEp2KXZirM4RVkM4nCcBzRcJDujWzHTPPvn3d1+/fD9+vJQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1775056520;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8zYJBFqymGlmMHzyNG+66TI38Sy9QpYJHrKB5IS6AO4=;
-	b=GQk+ztFp5+yPg59A1ROffmzANqF2Yobv/ZB1WMPq3l8GAFVfT2wLI6NhkD/nbxgg7FB5i3
-	YwYWzOVT9cmmsiCQ==
+	bh=0PE3yGuxBE8fZWkDlxjkheUUb9DSy2R9+OrZvzc+cxw=;
+	b=+/++yGdbcnTxfABiYR23EuiqsIU0mFujQ0ad3914Itil9KgipeyiLn0XE2WtqIx4XIezaC
+	nykc7yyUQLcebYBA==
 To: linux-hyperv@vger.kernel.org,
 	linux-rt-devel@lists.linux.dev
 Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
@@ -67,9 +67,9 @@ Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
 	Michael Kelley <mhklinux@outlook.com>,
 	Wei Liu <wei.liu@kernel.org>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 1/2] hv: vmbus: Replace lockdep_hardirq_threaded() with lockdep annotation
-Date: Wed,  1 Apr 2026 17:15:16 +0200
-Message-ID: <20260401151517.1743555-2-bigeasy@linutronix.de>
+Subject: [PATCH 2/2] hv: vmbus: Remove vmbus_irq_initialized
+Date: Wed,  1 Apr 2026 17:15:17 +0200
+Message-ID: <20260401151517.1743555-3-bigeasy@linutronix.de>
 In-Reply-To: <20260401151517.1743555-1-bigeasy@linutronix.de>
 References: <20260401151517.1743555-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -84,7 +84,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linutronix.de,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[linutronix.de:s=2020,linutronix.de:s=2020e];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -94,7 +94,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[3];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9868-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9867-lists,linux-hyperv=lfdr.de];
 	DKIM_TRACE(0.00)[linutronix.de:+];
 	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
@@ -105,44 +105,74 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	RCPT_COUNT_SEVEN(0.00)[10];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linutronix.de:dkim,linutronix.de:email,linutronix.de:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: D3BB237D538
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linutronix.de:dkim,linutronix.de:email,linutronix.de:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 4839237D0C2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-lockdep_hardirq_threaded() is supposed to be used within IRQ core code
-and not within drivers. It is not obvious from within the driver, that
-this is the only interrupt service routing and that it is not shared
-handler.
+vmbus_irq_initialized is only true if the registration of the per-CPU
+threads succeeded. If it failed, the whole registration aborts and the
+vmbus_exit() path is never called.
 
-Replace lockdep_hardirq_threaded() with a lockdep annotation limiting
-threaded context on PREEMPT_RT to __vmbus_isr().
+Remove vmbus_irq_initialized.
 
-Fixes: f8e6343b7a89c ("Drivers: hv: vmbus: Use kthread for vmbus interrupts=
- on PREEMPT_RT")
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- drivers/hv/vmbus_drv.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/hv/vmbus_drv.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index bc4fc1951ae1c..e44275370ac2a 100644
+index e44275370ac2a..7417841cd1f70 100644
 --- a/drivers/hv/vmbus_drv.c
 +++ b/drivers/hv/vmbus_drv.c
-@@ -1407,8 +1407,11 @@ void vmbus_isr(void)
- 	if (IS_ENABLED(CONFIG_PREEMPT_RT)) {
- 		vmbus_irqd_wake();
- 	} else {
--		lockdep_hardirq_threaded();
-+		static DEFINE_WAIT_OVERRIDE_MAP(vmbus_map, LD_WAIT_CONFIG);
-+
-+		lock_map_acquire_try(&vmbus_map);
- 		__vmbus_isr();
-+		lock_map_release(&vmbus_map);
- 	}
+@@ -1392,8 +1392,6 @@ static void run_vmbus_irqd(unsigned int cpu)
+ 	__vmbus_isr();
  }
- EXPORT_SYMBOL_FOR_MODULES(vmbus_isr, "mshv_vtl");
+=20
+-static bool vmbus_irq_initialized;
+-
+ static struct smp_hotplug_thread vmbus_irq_threads =3D {
+ 	.store                  =3D &vmbus_irqd,
+ 	.setup			=3D vmbus_irqd_setup,
+@@ -1513,11 +1511,10 @@ static int vmbus_bus_init(void)
+ 	 * the VMbus interrupt handler.
+ 	 */
+=20
+-	if (IS_ENABLED(CONFIG_PREEMPT_RT) && !vmbus_irq_initialized) {
++	if (IS_ENABLED(CONFIG_PREEMPT_RT)) {
+ 		ret =3D smpboot_register_percpu_thread(&vmbus_irq_threads);
+ 		if (ret)
+ 			goto err_kthread;
+-		vmbus_irq_initialized =3D true;
+ 	}
+=20
+ 	if (vmbus_irq =3D=3D -1) {
+@@ -1561,10 +1558,8 @@ static int vmbus_bus_init(void)
+ 	else
+ 		free_percpu_irq(vmbus_irq, &vmbus_evt);
+ err_setup:
+-	if (IS_ENABLED(CONFIG_PREEMPT_RT) && vmbus_irq_initialized) {
++	if (IS_ENABLED(CONFIG_PREEMPT_RT))
+ 		smpboot_unregister_percpu_thread(&vmbus_irq_threads);
+-		vmbus_irq_initialized =3D false;
+-	}
+ err_kthread:
+ 	bus_unregister(&hv_bus);
+ 	return ret;
+@@ -3033,10 +3028,9 @@ static void __exit vmbus_exit(void)
+ 		hv_remove_vmbus_handler();
+ 	else
+ 		free_percpu_irq(vmbus_irq, &vmbus_evt);
+-	if (IS_ENABLED(CONFIG_PREEMPT_RT) && vmbus_irq_initialized) {
++	if (IS_ENABLED(CONFIG_PREEMPT_RT))
+ 		smpboot_unregister_percpu_thread(&vmbus_irq_threads);
+-		vmbus_irq_initialized =3D false;
+-	}
++
+ 	for_each_online_cpu(cpu) {
+ 		struct hv_per_cpu_context *hv_cpu
+ 			=3D per_cpu_ptr(hv_context.cpu_context, cpu);
 --=20
 2.53.0
 
