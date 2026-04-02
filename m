@@ -1,279 +1,181 @@
-Return-Path: <linux-hyperv+bounces-9891-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9892-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kMHLKK+azWkrfQYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9891-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Apr 2026 00:22:39 +0200
+	id 8HqzMVzqzWkLjAYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9892-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Apr 2026 06:02:36 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id F23FD380E8A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Apr 2026 00:22:38 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B12E38357D
+	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Apr 2026 06:02:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B1C963033D24
-	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Apr 2026 22:13:14 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 9A3033058DF9
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Apr 2026 04:01:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF0F532C316;
-	Wed,  1 Apr 2026 22:13:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4C0930E84B;
+	Thu,  2 Apr 2026 04:01:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="E9oVamny"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="eAnUARNl"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ABF335DA5B;
-	Wed,  1 Apr 2026 22:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76EDC279334;
+	Thu,  2 Apr 2026 04:01:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775081584; cv=none; b=HDOFPhRtg4VtmGKumnjK52dE9B9cedFfT0yXAn2kl15gBRLzhb36l2IkkwFMaHDEvXjeopui7IEHrGruq7PtvnvXuaTMMFcMke/n6snurUyE3Z9q/6ziD/GMFUTqHlHTK6uEoy0gzh6/QCJflB+8BgZxyUXFhNr2BkRuP5H3U5o=
+	t=1775102498; cv=none; b=I9AYs/rNRUjm8G7SQGdfGyyYD8mKpCeJ/oX3Yo3Q3374smYPTYYksq12CbIPAN/19DMSabZw5ZcxcaBLZtQkqq/tdAkig5Y9t+07ZjLsJJ4HkvLmlUsutSphA7Knp2mbxYEMOeTFNa9b3uUq9+MsSCRLxEJMZlIyugy/uxB8Uzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775081584; c=relaxed/simple;
-	bh=MhHK0Qvjm3yTZy+VDWDKZiZELod5hFzSNwNwo4ThYC0=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QgD8peyupLKdEloJTmhEtc2+aArxTKRZCER/w6E0b2AJDaH+fl+LYCWIlP27Wy3YhFCM6/6vkE+sxYm8kNjTuWI8eIcpP2na+PDJ0df1vM/dS7JytisiWI/T88Q2JBipFNUVesdofa4FjY4afo94X3l+TaRtn6xmIMYbeQGUVdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=E9oVamny; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1775102498; c=relaxed/simple;
+	bh=tY3WvR4R/zrWI1MsWDPbn78x2fJshokN5D05V5yxYaM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Kyq6IC5Meo7T4wB5s1PJidd54ECq/UK/hKgZzw0YdmV70xR6svfAlZrsRJUMbkrR4oIiXzn0DLFBSpcWOxp+icB3D68keIV5Xf9YDk7exngxGWG3Jm6cYn/dre5Ca+2rvgxNwVDRAsSMwtLtsbOE2/53iPbcqgHl2ZP3QKa5FEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=eAnUARNl; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 7193920B710C;
-	Wed,  1 Apr 2026 15:13:03 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7193920B710C
+Received: from [10.95.66.83] (unknown [167.220.238.19])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A6ED220B710C;
+	Wed,  1 Apr 2026 21:01:24 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A6ED220B710C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1775081583;
-	bh=M+sXaCRj3rHUCpb535RsWEPZ9ckFUzWPDLWtLJNFCLk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=E9oVamnyyABYwTYqSSb+FGXHcIuPjOXboRiwFFDgrodem6LXs1JHlnWBVPLyqCSNj
-	 vJ6947j11nu07BADIbWfQTK41Nzc7KSTUlaS5OmSI8eNLrztdroNDBXBOksypNmKHX
-	 qUPWQOv2HffpPioJKuzIVEdKseyJiLH7xH+caMF0=
-Subject: [PATCH 7/7] mshv: Allocate pfns array only for pinned regions
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, longli@microsoft.com
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 01 Apr 2026 22:13:02 +0000
-Message-ID: 
- <177508158289.215674.17408340412804558615.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-In-Reply-To: 
- <177508151446.215674.7844504277869257435.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-References: 
- <177508151446.215674.7844504277869257435.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-User-Agent: StGit/0.19
+	s=default; t=1775102490;
+	bh=T6sBwsFb445Pp7249L79ufDRpJqZshHczUisxFI3JEo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=eAnUARNlHoU7VXFylRE5DLFJrHd/bTFZfsva8Frd/0OaQNP+H5HBfDGUsKXcWK4j9
+	 DCORtz3WkyAFjVZSBnLcBSqP1locZaGVeOkTYl3BxmW0xAd4W4kkTI8UTh5/aLonrY
+	 7Rk51EmzcAbubl0WKZf4Ni57dSE1fX82drzW4uFo=
+Message-ID: <b093e70f-1ee2-4ba1-a934-581326a7abe8@linux.microsoft.com>
+Date: Thu, 2 Apr 2026 09:31:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/11] Drivers: hv: Add ARM64 support in mshv_vtl
+To: Michael Kelley <mhklinux@outlook.com>,
+ "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
+ Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>
+Cc: Marc Zyngier <maz@kernel.org>, Timothy Hayes <timothy.hayes@arm.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ mrigendrachaubey <mrigendra.chaubey@gmail.com>,
+ "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+References: <20260316121241.910764-1-namjain@linux.microsoft.com>
+ <SN6PR02MB4157DFC7B7CE94500C89664BD441A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <a8f856a0-49a8-4041-9036-4e9ade79532b@linux.microsoft.com>
+ <SN6PR02MB4157E4E088F39106979BE4EDD450A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB4157E4E088F39106979BE4EDD450A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_FROM(0.00)[bounces-9891-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-9892-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[outlook.com,microsoft.com,kernel.org,arm.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,dabbelt.com,eecs.berkeley.edu,ghiti.fr];
+	RCPT_COUNT_TWELVE(0.00)[29];
+	FREEMAIL_CC(0.00)[kernel.org,arm.com,gmail.com,linux.microsoft.com,vger.kernel.org,lists.infradead.org];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_NONE(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	NEURAL_HAM(-0.00)[-1.000];
+	FROM_NEQ_ENVFROM(0.00)[namjain@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	NEURAL_HAM(-0.00)[-0.985];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[skinsburskii-cloud-desktop.internal.cloudapp.net:mid,linux.microsoft.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: F23FD380E8A
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.microsoft.com:dkim,linux.microsoft.com:mid]
+X-Rspamd-Queue-Id: 6B12E38357D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Convert pfns to a pointer allocated only for pinned regions that
-actually need it for share/unshare/evict operations. Unpinned
-regions use NULL since HMM handles their mappings dynamically.
-
-The pfns array was previously a flexible array member, forcing
-allocation for all regions regardless of memory type. This wastes
-significant memory for unpinned HMM-managed regions which don't
-need persistent PFN tracking - a 1GB region wastes 2MB for an
-unused array.
-
-This also allows using kzalloc for the main structure instead of
-vzalloc, improving allocation efficiency and cache locality.
-
-Simplify unpinned region invalidation by calling the hypervisor
-directly rather than tracking PFNs. The tradeoff of skipping huge
-page optimization is acceptable since invalidation ranges are
-typically small and not performance-critical.
-
-Add NULL checks where pfns array is required and update cleanup
-to handle conditional allocation.
-
-Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
----
- drivers/hv/mshv_regions.c |   50 ++++++++++++++++++++++++++-------------------
- drivers/hv/mshv_root.h    |    6 ++++-
- 2 files changed, 33 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
-index 3c2a35f3bc31..e3a6ade4919e 100644
---- a/drivers/hv/mshv_regions.c
-+++ b/drivers/hv/mshv_regions.c
-@@ -243,7 +243,7 @@ struct mshv_region *mshv_region_create(enum mshv_region_type type,
- 	int ret = 0;
- 	u64 i;
- 
--	region = vzalloc(sizeof(*region) + sizeof(unsigned long) * nr_pfns);
-+	region = kzalloc_obj(*region);
- 	if (!region)
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -255,6 +255,13 @@ struct mshv_region *mshv_region_create(enum mshv_region_type type,
- 						   &mshv_region_mni_ops);
- 		break;
- 	case MSHV_REGION_TYPE_MEM_PINNED:
-+		region->mreg_pfns = vzalloc(sizeof(unsigned long) * nr_pfns);
-+		if (!region->mreg_pfns) {
-+			ret = -ENOMEM;
-+			break;
-+		}
-+		for (i = 0; i < nr_pfns; i++)
-+			region->mreg_pfns[i] = MSHV_INVALID_PFN;
- 		break;
- 	case MSHV_REGION_TYPE_MMIO:
- 		region->mreg_mmio_pfn = mmio_pfn;
-@@ -276,16 +283,13 @@ struct mshv_region *mshv_region_create(enum mshv_region_type type,
- 	if (flags & BIT(MSHV_SET_MEM_BIT_EXECUTABLE))
- 		region->hv_map_flags |= HV_MAP_GPA_EXECUTABLE;
- 
--	for (i = 0; i < nr_pfns; i++)
--		region->mreg_pfns[i] = MSHV_INVALID_PFN;
--
- 	mutex_init(&region->mreg_mutex);
- 	kref_init(&region->mreg_refcount);
- 
- 	return region;
- 
- free_region:
--	vfree(region);
-+	kfree(region);
- 	return ERR_PTR(ret);
- }
- 
-@@ -312,6 +316,9 @@ static int mshv_region_share(struct mshv_region *region)
- {
- 	u32 flags = HV_MODIFY_SPA_PAGE_HOST_ACCESS_MAKE_SHARED;
- 
-+	if (!region->mreg_pfns)
-+		return -EINVAL;
-+
- 	return mshv_region_process_range(region, flags,
- 					 0, region->nr_pfns,
- 					 region->mreg_pfns,
-@@ -340,6 +347,9 @@ static int mshv_region_unshare(struct mshv_region *region)
- {
- 	u32 flags = HV_MODIFY_SPA_PAGE_HOST_ACCESS_MAKE_EXCLUSIVE;
- 
-+	if (!region->mreg_pfns)
-+		return -EINVAL;
-+
- 	return mshv_region_process_range(region, flags,
- 					 0, region->nr_pfns,
- 					 region->mreg_pfns,
-@@ -394,13 +404,11 @@ static void mshv_region_invalidate_pfns(struct mshv_region *region,
- {
- 	u64 i;
- 
--	for (i = pfn_offset; i < pfn_offset + pfn_count; i++) {
--		if (!pfn_valid(region->mreg_pfns[i]))
--			continue;
--
--		if (region->mreg_type == MSHV_REGION_TYPE_MEM_PINNED)
--			unpin_user_page(pfn_to_page(region->mreg_pfns[i]));
-+	if (region->mreg_type != MSHV_REGION_TYPE_MEM_PINNED)
-+		return;
- 
-+	for (i = pfn_offset; i < pfn_offset + pfn_count; i++) {
-+		unpin_user_page(pfn_to_page(region->mreg_pfns[i]));
- 		region->mreg_pfns[i] = MSHV_INVALID_PFN;
- 	}
- }
-@@ -506,7 +514,8 @@ static void mshv_region_destroy(struct kref *ref)
- 
- 	mshv_region_invalidate(region);
- 
--	vfree(region);
-+	vfree(region->mreg_pfns);
-+	kfree(region);
- }
- 
- void mshv_region_put(struct mshv_region *region)
-@@ -616,10 +625,9 @@ static int mshv_region_hmm_fault_and_lock(struct mshv_region *region,
-  *   leaving missing pages as invalid PFN markers.
-  *   Used for initial region setup.
-  *
-- * Collected PFNs are stored in region->mreg_pfns[] with HMM bookkeeping
-- * flags cleared, then the range is mapped into the hypervisor. Present
-- * PFNs get mapped with region access permissions; missing PFNs (zero
-- * entries) get mapped with no-access permissions.
-+ * HMM bookkeeping flags are stripped from collected PFNs before mapping.
-+ * Present PFNs get mapped with region access permissions; missing PFNs
-+ * (marked as MSHV_INVALID_PFN) get mapped with no-access permissions.
-  *
-  * Return: 0 on success, negative errno on failure.
-  */
-@@ -648,15 +656,17 @@ static int mshv_region_collect_and_map(struct mshv_region *region,
- 		goto out;
- 
- 	for (i = 0; i < pfn_count; i++) {
--		if (!(pfns[i] & HMM_PFN_VALID))
-+		if (!(pfns[i] & HMM_PFN_VALID)) {
-+			pfns[i] = MSHV_INVALID_PFN;
- 			continue;
-+		}
- 		/* Drop HMM_PFN_* flags to ensure PFNs are valid. */
--		region->mreg_pfns[pfn_offset + i] = pfns[i] & ~HMM_PFN_FLAGS;
-+		pfns[i] &= ~HMM_PFN_FLAGS;
- 	}
- 
- 	ret = mshv_region_remap_pfns(region, region->hv_map_flags,
- 				     pfn_offset, pfn_count,
--				     region->mreg_pfns + pfn_offset);
-+				     pfns);
- 
- 	mutex_unlock(&region->mreg_mutex);
- out:
-@@ -770,8 +780,6 @@ static bool mshv_region_interval_invalidate(struct mmu_interval_notifier *mni,
- 	if (ret)
- 		goto out_unlock;
- 
--	mshv_region_invalidate_pfns(region, pfn_offset, pfn_count);
--
- 	mutex_unlock(&region->mreg_mutex);
- 
- 	return true;
-diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
-index 97659ba55418..e43bdbf1ada8 100644
---- a/drivers/hv/mshv_root.h
-+++ b/drivers/hv/mshv_root.h
-@@ -92,8 +92,10 @@ struct mshv_region {
- 	enum mshv_region_type mreg_type;
- 	struct mmu_interval_notifier mreg_mni;
- 	struct mutex mreg_mutex;	/* protects region PFNs remapping */
--	u64 mreg_mmio_pfn;
--	unsigned long mreg_pfns[];
-+	union {
-+		unsigned long *mreg_pfns;
-+		u64 mreg_mmio_pfn;
-+	};
- };
- 
- struct mshv_irq_ack_notifier {
 
 
+On 4/1/2026 10:24 PM, Michael Kelley wrote:
+> From: Naman Jain <namjain@linux.microsoft.com> Sent: Tuesday, March 17, 2026 9:23 PM
+>>
+>> On 3/18/2026 3:33 AM, Michael Kelley wrote:
+>>> From: Naman Jain <namjain@linux.microsoft.com> Sent: Monday, March 16, 2026 5:13 AM
+>>>>
+>>>> The series intends to add support for ARM64 to mshv_vtl driver.
+> 
+> No need to be tentative. :-)  Just write as:
+> 
+> "The series adds support for ARM64 to the mshv_vtl driver."
+> 
+>>>> For this, common Hyper-V code is refactored, necessary support is added,
+>>>> mshv_vtl_main.c is refactored and then finally support is added in
+>>>> Kconfig.
+>>>>
+>>>> Based on commit 1f318b96cc84 ("Linux 7.0-rc3")
+>>>
+>>> There's now an online LLM-based tool that is automatically reviewing
+>>> kernel patches. For this patch set, the results are here:
+>>>
+>>> https://sashiko.dev/#/patchset/20260316121241.910764-1-namjain%40linux.microsoft.com
+>>>
+>>> It has flagged several things that are worth checking, but I haven't
+>>> reviewed them to see if they are actually valid.
+>>>
+>>> FWIW, the announcement about sashiko.dev is here:
+>>>
+>>> https://lore.kernel.org/lkml/7ia4o6kmpj5s.fsf@castle.c.googlers.com/
+>>>
+>>> Michael
+>>
+>>
+>> Thanks for sharing Michael,
+>> I'll check it out and do the needful.
+>>
+> 
+> I've done a full review of this patch set and provided comments in the
+> individual patches. Some of my comments reference the Sashiko AI
+> comments, but there are still some Sashiko AI comments to consider
+> that I haven't referenced.
+> 
+> FWIW, the Sashiko AI comments are quite good -- it found some things
+> here that I missed on my own, and in my earlier reviews of the original VTL
+> code. :-(
+> 
+> Michael
+
+
+Thank you so much Michael for reviewing these. I was also trying to 
+address review comments from Sashiko, and noticed some of them were 
+false positives in the sense that these were existing issues and not 
+introduced by arm64 changes. I thought of keeping them separate from the 
+scope of this series for future.
+
+I'll review your comments and address them.
+
+Regards,
+Naman
 
