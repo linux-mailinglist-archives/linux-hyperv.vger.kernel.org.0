@@ -1,58 +1,59 @@
-Return-Path: <linux-hyperv+bounces-9934-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9935-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CJ57GnzRzmmUqQYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9934-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Apr 2026 22:28:44 +0200
+	id SO4XEa3QzmmUqQYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9935-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Apr 2026 22:25:17 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8F2D38DF7A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Apr 2026 22:28:43 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C89D38DF11
+	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Apr 2026 22:25:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6E8853021D29
-	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Apr 2026 20:24:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DF155300917D
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Apr 2026 20:25:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81D9438A28F;
-	Thu,  2 Apr 2026 20:24:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A523538AC97;
+	Thu,  2 Apr 2026 20:25:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=mhklkml@zohomail.com header.b="LxRjB6ge"
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=mhklkml@zohomail.com header.b="aeuLq9tG"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC4338B130;
-	Thu,  2 Apr 2026 20:24:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7698338A28F;
+	Thu,  2 Apr 2026 20:25:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775161493; cv=pass; b=NMa5ikLzDWi7WS5XaNxmlOTS48/5WapQsb2Mw1+tC5UHomMi7L8t4BXDP+inHBVwuE7krTlSDg0V40A4TIFXQXkNo4vSRWv4bSNVtpdp6Vwh6DcyaJ7tC9RN6nKhtv/yCWxX9ivTrKHIPUuBsCZLvPDTQIjKmE0/dBcHVhpabAQ=
+	t=1775161513; cv=pass; b=Ms3epxQnP90rSxDQn5Gcl0+m+1MxWXFZSNh9k6vP6qIEO2rKMfuH3f4mH6Ly2kBjTSguTeDxW8xUpLvtquJXxpDxx9VNcoavjGaYf4YqDNsH9MB6fH128j2MiMbXPXyXdkbXYH49+jCp1PNNfJMl0JFY/IEqNlSYOw0hBYxSEYU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775161493; c=relaxed/simple;
-	bh=03RF4KeQ/xnblDJhLUZtHEu4Op7r7ubllEHEOV5X2Yg=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=QSM+UDcVDEgpwNviQ84x5iQfVO8cfoRs3CDC969wZOujMR+tu5nJ+3F2xT00q5B/NaNg+6Xi2KMJkVQXjQKIYWhKnudWJUsln3ddwIVsoCHoW4njwXQOqbs7p8bDI+I03SFRFLAYUdB6pq/mQs023HOeVefj9Xl+BiB8blSXFnM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=mhklkml@zohomail.com header.b=LxRjB6ge; arc=pass smtp.client-ip=136.143.188.94
+	s=arc-20240116; t=1775161513; c=relaxed/simple;
+	bh=F4LgDRq2v/rbUOmDnv6Whmnrku4Rr/JGT33GpNEor9I=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iyPA6lwa4JN/gKO+L8I96nyVSAiBZgQQmvsDHSp/nmUTEWCQAdYvoeAk8QYsWzlLeAWMyvmZ9SbKLR2uMx5PHX0ymhmJXoQ0GOS9mTSqlvlqk73ZujTrRKl7yM1knBB44pFRy+OXnogqVqvIyKRB0kI/PwrRDF7FPTUrEFoFTow=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=mhklkml@zohomail.com header.b=aeuLq9tG; arc=pass smtp.client-ip=136.143.188.94
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-ARC-Seal: i=1; a=rsa-sha256; t=1775161456; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1775161457; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=fmPEdTfYum23L4/XMkr7ny63aE1Wy/qZav2TyP5A55r5QSSqDPCRNrwxyQL8C0qSytkTXJqfARcUFzmXiDKKJNlwWiBoyPABGZ6ZDKgeFhZ+q7f5C233byOCv1OPilnoflfUqcOAxEdsCYD5mQDlrWYevrVT/IoZXpiENRHVHGU=
+	b=ERoBfHhaVO73gC+GrXCMMwodBVwt9BHfp2CmcehDqy9Pq/EnaYMslycMLg9/1yuj4bFQluMtD4Fj/qr7O548AU71Y3WIzyHTW+t8/uHI92Lyu+0o0roS7NAIqzn2O4jZvm4VQ036ipQdoYsruGD+vAgnpqXfpXncohJ5La1bf7E=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1775161456; h=Content-Transfer-Encoding:Date:Date:From:From:MIME-Version:Message-ID:Reply-To:Reply-To:Subject:Subject:To:To:Message-Id:Cc; 
-	bh=Yx2LAQiBJWfTpQIDMVRndHir67rfUq+ingH4MsENbpo=; 
-	b=I+QeEeo/7z+xcjRT0XzVBH77B3CXarJ+nAezeev92WALRjXTfjrmmrsjrPaF8FSxPxi9FXCliOp0mX44f7h22h0obwTYUKwQ08s0qrZt/akhDZE/JBbSzzUpJzirQNX/71oBoTKJZvjiULh2ywFLstXGx9xtGSVhFGxxApaHVuM=
+	t=1775161457; h=Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:Reply-To:References:Subject:Subject:To:To:Message-Id:Cc; 
+	bh=eyQFAmheBIp6QuU8rjyhHusND7EN1rSqPmCqpBGxAiI=; 
+	b=CcyoTdU9mciqNlX9NXVYFl4LuMV01UN1nDYHqaoCCUpJeNmRX1D8xjZSrP8mXkubJKkO5ArV12ZbVqYijvWVObY8m438E/SjMUtSL2uXv2fbTlTjv3k/a8+OiN3zx+OJKX1lxuUylunZJiRpi2PzX8pwS0lrTnLSVXjpm1r3l9c=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=mhklkml@zohomail.com;
 	dmarc=pass header.from=<mhklkml@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1775161456;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1775161457;
 	s=zm2022; d=zohomail.com; i=mhklkml@zohomail.com;
-	h=From:From:To:To:Subject:Subject:Date:Date:Message-Id:Message-Id:Reply-To:Reply-To:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Cc;
-	bh=Yx2LAQiBJWfTpQIDMVRndHir67rfUq+ingH4MsENbpo=;
-	b=LxRjB6gem/VcajRwacErUqSH25C/zy+gOcaO28a39AyelR14l9KOUNzTw8G41P5k
-	g34TsoEOfNUQZ0Njzhlq220bGvQ9kWNreRsTrU1ap4JvmqEZGn/9n3g1MMBVHwq15NU
-	4na7lB/pCu88Rf+BzICiQfpYeMOrKFXnZgKw4v9w=
-Received: by mx.zohomail.com with SMTPS id 1775161452619292.11831640902676;
-	Thu, 2 Apr 2026 13:24:12 -0700 (PDT)
+	h=From:From:To:To:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:Reply-To:Reply-To:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Cc;
+	bh=eyQFAmheBIp6QuU8rjyhHusND7EN1rSqPmCqpBGxAiI=;
+	b=aeuLq9tGYcyoQFimEZd9v1/eZmDOk8rvHYssCpWpaIc9Ei73nZ2dXaJpMTBDMkpa
+	8IEg4ujaZvQ3FOoVeoY8o8gggwBP+Tbj/Yom9rdtgK+fAqhaCjYl9/cx0o1CjdApSdD
+	OvJC/JOrQpZt7HPJCwMjzJ1SU3xvmf3MXIZSoOXU=
+Received: by mx.zohomail.com with SMTPS id 1775161454230532.5382218817623;
+	Thu, 2 Apr 2026 13:24:14 -0700 (PDT)
 From: Michael Kelley <mhklkml@zohomail.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -69,10 +70,12 @@ To: kys@microsoft.com,
 	x86@kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hyperv@vger.kernel.org
-Subject: [PATCH 0/2] genirq and Hyper-V: Clean up handling of add_interrupt_randomness()
-Date: Thu,  2 Apr 2026 13:23:58 -0700
-Message-Id: <20260402202400.1707-1-mhklkml@zohomail.com>
+Subject: [PATCH 1/2] genirq/chip: Do add_interrupt_randomness() in handle_percpu_devid_irq()
+Date: Thu,  2 Apr 2026 13:23:59 -0700
+Message-Id: <20260402202400.1707-2-mhklkml@zohomail.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20260402202400.1707-1-mhklkml@zohomail.com>
+References: <20260402202400.1707-1-mhklkml@zohomail.com>
 Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -81,7 +84,7 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr08011227f0e4149f05ef255093bd9abd0000cda5f05ce408d220dc3aa07a3ebf9ee3a8f1c86421a775dddf:zu08011227cedaeabdc532e74d7eb828e200000241a25521f4c979cc514025ff92cf8bd0a6089f278edaa249:rf0801122ca11b5ffb0b618a82f410ddd0000024137e52f1015226ed8d011ee68d38769903caac4c558d8876b45cc508e7:ZohoMail
+Feedback-ID: rr0801122759ff960247f20993572a473200007be8766086786e1ecdf5c45700d67505177c79872009088d78:zu08011227f004be260bb709d241c038eb0000a02eb8d58dfa55092f99dd1202c863e9e067f0d9c1e2860267:rf0801122c2e093a47bde57cdde0f18709000025de50774f2780eb3956e3f29cf25058116fd88fd82dae08ae48bb1e5426:ZohoMail
 X-ZohoMailClient: External
 X-Spamd-Result: default: False [1.34 / 15.00];
 	FREEMAIL_REPLYTO_NEQ_FROM(2.00)[];
@@ -89,12 +92,12 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[zohomail.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[zohomail.com:s=zm2022];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9934-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9935-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWELVE(0.00)[15];
@@ -109,54 +112,50 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	FROM_HAS_DN(0.00)[];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	HAS_REPLYTO(0.00)[mhklinux@outlook.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,outlook.com:replyto,zohomail.com:dkim,zohomail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B8F2D38DF7A
+	DBL_BLOCKED_OPENRESOLVER(0.00)[zohomail.com:dkim,zohomail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,outlook.com:email,outlook.com:replyto]
+X-Rspamd-Queue-Id: 8C89D38DF11
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Michael Kelley <mhklinux@outlook.com>
 
-The Hyper-V ISRs are calling add_interrupt_randomness() as a
-primary source of entropy in VMs, since the VMs don't have another
-good source. The call is currently in the ISRs as a common place to
-handle both x86/x64 and arm64. On x86/x64, hypervisor interrupts come
-through a custom sysvec entry, and on arm64 they come through an
-emulated GICv3. GICv3 uses the generic handler handle_percpu_devid_irq(),
-which does not do add_interrupt_randomness(), unlike its counterpart
-handle_percpu_irq().
+handle_percpu_devid_irq() is a version of handle_percpu_irq() but with
+the addition of a pointer to a per-cpu devid. However, handle_percpu_irq()
+does add_interrupt_randomness(), while handle_percpu_devid_irq() currently
+does not. Add the missing add_interrupt_randomness(), as it is needed
+when per-cpu interrupts with devid's are used in VMs for interrupts
+from the hypervisor.
 
-Cleanup this somewhat confusing situation by doing the
-add_interrupt_randomness() in handle_percpu_devid_irq(), and remove
-it from the Hyper-V ISRs. Then only the Hyper-V custom sysvec path,
-which plays the role of a generic interrupt handler, needs to do
-add_interrupt_randomness(). As a result of this change, no
-device drivers are calling add_interrupt_randomness(), which is
-appropriate.
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+---
+ kernel/irq/chip.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-The change is broken into two patches since it spans generic
-interrupt handling code and Hyper-V specific code. But the two
-patches should be taken together through the same tree. It's
-OK to have a bisect window where add_interrupt_randomness() is
-done in both places, but taking the Hyper-V patch first could leave
-a bisect window where add_interrupt_randomness() is not done in
-either place.
-
-Michael Kelley (2):
-  genirq/chip: Do add_interrupt_randomness() in
-    handle_percpu_devid_irq()
-  Drivers: hv: Move add_interrupt_randomness() to hypervisor callback
-    sysvec
-
- arch/x86/kernel/cpu/mshyperv.c | 2 ++
- drivers/hv/mshv_synic.c        | 3 ---
- drivers/hv/vmbus_drv.c         | 3 ---
- kernel/irq/chip.c              | 3 +++
- 4 files changed, 5 insertions(+), 6 deletions(-)
-
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 6147a07d0127..6c9b1dc4e7d4 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -14,6 +14,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/kernel_stat.h>
+ #include <linux/irqdomain.h>
++#include <linux/random.h>
+ 
+ #include <trace/events/irq.h>
+ 
+@@ -929,6 +930,8 @@ void handle_percpu_devid_irq(struct irq_desc *desc)
+ 			    enabled ? " and unmasked" : "", irq, cpu);
+ 	}
+ 
++	add_interrupt_randomness(irq);
++
+ 	if (chip->irq_eoi)
+ 		chip->irq_eoi(&desc->irq_data);
+ }
 -- 
 2.25.1
 
