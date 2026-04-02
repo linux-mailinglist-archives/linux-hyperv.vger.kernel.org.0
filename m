@@ -1,57 +1,56 @@
-Return-Path: <linux-hyperv+bounces-9925-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9926-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MP5KHXawzml+pQYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9925-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Apr 2026 20:07:50 +0200
+	id 0O/pLY6wzml+pQYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9926-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Apr 2026 20:08:14 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F7FD38CE2D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Apr 2026 20:07:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C0E8A38CE44
+	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Apr 2026 20:08:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id D2230302FF05
-	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Apr 2026 18:04:41 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 8DF733025F1A
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Apr 2026 18:04:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B64C6370D75;
-	Thu,  2 Apr 2026 18:04:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6C3436F40D;
+	Thu,  2 Apr 2026 18:04:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VatxAZYR"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="V307Y82j"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42EA5336897;
-	Thu,  2 Apr 2026 18:04:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97EB2370D48;
+	Thu,  2 Apr 2026 18:04:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775153078; cv=none; b=nNOxWWG6/34VIsQLW+Sm+TgKvMb9PgAN5H1lzj2DcTnyFPnI1jazyOwmODzRLhztIsua43nCcRDmfX09MDyKSkloCsU6bbGaxONuk6GZoetqsgytTHND4hpXSyK0QRjENsUfdIscqu9HDNCZkltBEvPQx4TiF7v9V9U6R0IcQIo=
+	t=1775153083; cv=none; b=sMUaReKOKlhsg+IO2z7glbSIFlFoYpGocp+I1mscPp18LkXX7rH2z5U+93MXpwKCShWtvt05kSfyrTDZ8IyfajSmpXz8fGAO2MnusT3UdJfmvAI1wGbnin52X1EoFuQF7jSrCUbtFgUDV8nizTlotUxsSB0To+TLa0IY1Nm0DjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775153078; c=relaxed/simple;
-	bh=r0yy+k/tcXJeYf/4ZZMTV+jf6f7hsIl3hDOKRmSk9Ek=;
+	s=arc-20240116; t=1775153083; c=relaxed/simple;
+	bh=CzxXAuMe0S+7sWyJZq4isDZy9CwLZUMt1gTI0R5Slhw=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ize43cMezdR6I/+6YP5hdGmrHX752LzJvBI4C2ulCIgCbhzFZDbpHAAcYJkqkzPEpK1p2pwZJyYvtKEOZA5Rhmct9XBFZJ9uVZvUvJsz1fAgDS3SljEJh8lSlOYCBMsCq0EI/Q9rEk1FnDvR98hRLOfk+xywHfJLJcdGuZfoJxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=VatxAZYR; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version:Content-Type; b=dgFvJl33eOhc024Jy8juU25hWZVcAqkaSyzcI03KmB7QcuSTeXnltLc9EylSqxad3gWpeMJ4pxyCgnpgWNvMtEzWG6VkHgUoQK1Wob0NrzO1LSJNPIOzqaZFf/VMDahZOPp7NfVBvUdEG45Nn1V6qshg3RJAkUzWjcoNqyFmH7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=V307Y82j; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id A8B8020B6F08;
-	Thu,  2 Apr 2026 11:04:36 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A8B8020B6F08
+	by linux.microsoft.com (Postfix) with ESMTPSA id 9EF6B20B6F0C;
+	Thu,  2 Apr 2026 11:04:42 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9EF6B20B6F0C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1775153076;
-	bh=sQ2eYzb2cLjkYhJquZ4ji3LJgIEXX0VAa63NWlb5cTA=;
+	s=default; t=1775153082;
+	bh=qUdKR/mGxmnhqsAY1UCig/542TiQEFn+AYhQmXVR4mE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=VatxAZYR67OucsCKBL92s9dew9LRuxcN1HFNhq10iD/YwGYhefsiqi8crq6NYbnI2
-	 xj7o5c90a6N8X04fWQAUS+us4b/mBbUbdpGkJf1d8rucO9BmU1p/p4i6jVQfWLU3BC
-	 /tSLjfAGv0rbwbRBTICg9Vp7jN/VN72dAgenpce4=
-Subject: [PATCH v2 5/7] mshv: Pass pfns array explicitly through processing
- chain
+	b=V307Y82jvNZJS3jjahJkTR6MhcjYamnTVDpbIvd9/Am2az98tm3/ajAENlIHNgtu/
+	 oOlH71pgoU39Dfy8OdcV577sDqR+GSmRZxmJs5paMTVX++s8T3AIfYZ3adDY/qc9K5
+	 BnMSpABnh/aBCWZJv06NRRiEaVpJNua5wU5FCEdA=
+Subject: [PATCH v2 6/7] mshv: Simplify pfn array handling in region processing
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, longli@microsoft.com
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 02 Apr 2026 18:04:36 +0000
+Date: Thu, 02 Apr 2026 18:04:42 +0000
 Message-ID: 
- <177515307609.119822.2673027709755055401.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <177515308205.119822.13763900629031291081.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 In-Reply-To: 
  <177515251087.119822.1940529498624181326.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 References: 
@@ -74,7 +73,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_FROM(0.00)[bounces-9925-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9926-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
@@ -89,273 +88,161 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[skinsburskii-cloud-desktop.internal.cloudapp.net:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: 6F7FD38CE2D
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,skinsburskii-cloud-desktop.internal.cloudapp.net:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: C0E8A38CE44
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The current implementation relies on accessing region->pfns directly
-within the pfn processing chain, making it difficult to use these
-handlers with alternative pfn sources. This tight coupling limits
-flexibility when processing pfns from different locations, such as
-temporary arrays or external sources.
+The current code requires passing both the full pfn array and an offset
+parameter to region processing functions, forcing callees to manually
+index into arrays. This approach is inflexible and makes it difficult
+to work with different sources of pfn arrays.
 
-By threading the pfns pointer through the entire processing chain
-(mshv_region_process_range, mshv_region_process_chunk, and all
-handlers), we decouple the processing logic from the storage location.
-This enables future enhancements like processing pfns from multiple
-sources or implementing more sophisticated memory management strategies
-without duplicating the core processing logic.
+Upcoming changes will need to pass pfn arrays obtained from the HMM
+framework directly to these functions. The HMM framework returns arrays
+that represent specific ranges rather than full region arrays with
+offsets, making the current offset-based indexing pattern incompatible.
+
+Refactor by having callers pass pre-offset pointers to pfn arrays and
+removing offset-based indexing from callees. This allows functions to
+work with any pfn array starting at index 0, regardless of its source,
+and prepares the code for HMM integration.
 
 No functional change intended.
 
 Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 ---
- drivers/hv/mshv_regions.c |   61 +++++++++++++++++++++++++++------------------
- 1 file changed, 37 insertions(+), 24 deletions(-)
+ drivers/hv/mshv_regions.c |   38 ++++++++++++++++++--------------------
+ 1 file changed, 18 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
-index a92381219758..120ce2588501 100644
+index 120ce2588501..3c2a35f3bc31 100644
 --- a/drivers/hv/mshv_regions.c
 +++ b/drivers/hv/mshv_regions.c
-@@ -22,7 +22,7 @@
- 
- typedef int (*pfn_handler_t)(struct mshv_region *region, u32 flags,
- 			     u64 pfn_offset, u64 pfn_count,
--			     bool huge_page);
-+			     unsigned long *pfns, bool huge_page);
- 
- static const struct mmu_interval_notifier_ops mshv_region_mni_ops;
- 
-@@ -84,6 +84,7 @@ static int mshv_chunk_stride(struct page *page,
- static long mshv_region_process_pfns(struct mshv_region *region,
- 				     u32 flags,
- 				     u64 pfn_offset, u64 pfn_count,
-+				     unsigned long *pfns,
- 				     pfn_handler_t handler)
- {
- 	u64 gfn = region->start_gfn + pfn_offset;
-@@ -91,7 +92,7 @@ static long mshv_region_process_pfns(struct mshv_region *region,
+@@ -92,7 +92,7 @@ static long mshv_region_process_pfns(struct mshv_region *region,
  	unsigned long pfn;
  	int stride, ret;
  
--	pfn = region->mreg_pfns[pfn_offset];
-+	pfn = pfns[pfn_offset];
+-	pfn = pfns[pfn_offset];
++	pfn = pfns[0];
  	if (!pfn_valid(pfn))
  		return -EINVAL;
  
-@@ -101,7 +102,7 @@ static long mshv_region_process_pfns(struct mshv_region *region,
+@@ -102,7 +102,7 @@ static long mshv_region_process_pfns(struct mshv_region *region,
  
  	/* Start at stride since the first stride is validated */
  	for (count = stride; count < pfn_count ; count += stride) {
--		pfn = region->mreg_pfns[pfn_offset + count];
-+		pfn = pfns[pfn_offset + count];
+-		pfn = pfns[pfn_offset + count];
++		pfn = pfns[count];
  
  		/* Break if current pfn is invalid */
  		if (!pfn_valid(pfn))
-@@ -114,7 +115,7 @@ static long mshv_region_process_pfns(struct mshv_region *region,
- 			break;
- 	}
- 
--	ret = handler(region, flags, pfn_offset, count, stride > 1);
-+	ret = handler(region, flags, pfn_offset, count, pfns, stride > 1);
- 	if (ret)
- 		return ret;
- 
-@@ -138,11 +139,12 @@ static long mshv_region_process_pfns(struct mshv_region *region,
- static long mshv_region_process_hole(struct mshv_region *region,
- 				     u32 flags,
- 				     u64 pfn_offset, u64 pfn_count,
-+				     unsigned long *pfns,
- 				     pfn_handler_t handler)
- {
- 	long ret;
- 
--	ret = handler(region, flags, pfn_offset, pfn_count, 0);
-+	ret = handler(region, flags, pfn_offset, pfn_count, pfns, 0);
- 	if (ret)
- 		return ret;
- 
-@@ -152,15 +154,16 @@ static long mshv_region_process_hole(struct mshv_region *region,
- static long mshv_region_process_chunk(struct mshv_region *region,
- 				      u32 flags,
- 				      u64 pfn_offset, u64 pfn_count,
-+				      unsigned long *pfns,
+@@ -157,7 +157,7 @@ static long mshv_region_process_chunk(struct mshv_region *region,
+ 				      unsigned long *pfns,
  				      pfn_handler_t handler)
  {
--	if (pfn_valid(region->mreg_pfns[pfn_offset]))
-+	if (pfn_valid(pfns[pfn_offset]))
+-	if (pfn_valid(pfns[pfn_offset]))
++	if (pfn_valid(pfns[0]))
  		return mshv_region_process_pfns(region, flags,
--				pfn_offset, pfn_count,
-+				pfn_offset, pfn_count, pfns,
+ 				pfn_offset, pfn_count, pfns,
  				handler);
- 	else
- 		return mshv_region_process_hole(region, flags,
--				pfn_offset, pfn_count,
-+				pfn_offset, pfn_count, pfns,
- 				handler);
- }
+@@ -204,10 +204,7 @@ static int mshv_region_process_range(struct mshv_region *region,
+ 	if (end > region->nr_pfns)
+ 		return -EINVAL;
  
-@@ -170,12 +173,13 @@ static long mshv_region_process_chunk(struct mshv_region *region,
-  * @flags     : Flags to pass to the handler.
-  * @pfn_offset: Offset into the region's PFNs array to start processing.
-  * @pfn_count : Number of PFNs to process.
-+ * @pfns      : Pointer to an array of PFNs corresponding to the region.
-  * @handler   : Callback function to handle each chunk of contiguous
-  *              valid PFNs.
-  *
-- * Iterates over the specified range of PFNs in @region, skipping
-- * invalid PFNs. For each contiguous chunk of valid PFNS, invokes
-- * @handler via mshv_region_process_pfns.
-+ * Iterates over the specified range of PFNs, skipping invalid PFNs.
-+ * For each contiguous chunk of valid PFNS, invokes @handler via
-+ * mshv_region_process_pfns.
-  *
-  * Note: The @handler callback must be able to handle PFNs backed by both
-  * normal and huge pages.
-@@ -185,6 +189,7 @@ static long mshv_region_process_chunk(struct mshv_region *region,
- static int mshv_region_process_range(struct mshv_region *region,
- 				     u32 flags,
- 				     u64 pfn_offset, u64 pfn_count,
-+				     unsigned long *pfns,
- 				     pfn_handler_t handler)
- {
- 	u64 start, end;
-@@ -207,15 +212,14 @@ static int mshv_region_process_range(struct mshv_region *region,
+-	start = pfn_offset;
+-	end = pfn_offset + 1;
+-
+-	while (end < pfn_offset + pfn_count) {
++	for (start = 0, end = 1; end < pfn_count; ) {
+ 		/*
  		 * Accumulate contiguous pfns with the same validity
  		 * (valid or not).
- 		 */
--		if (pfn_valid(region->mreg_pfns[start]) ==
--		    pfn_valid(region->mreg_pfns[end])) {
-+		if (pfn_valid(pfns[start]) == pfn_valid(pfns[end])) {
- 			end++;
- 			continue;
+@@ -218,8 +215,9 @@ static int mshv_region_process_range(struct mshv_region *region,
  		}
  
  		ret = mshv_region_process_chunk(region, flags,
- 						start, end - start,
--						handler);
-+						pfns, handler);
+-						start, end - start,
+-						pfns, handler);
++						pfn_offset + start,
++						end - start,
++						pfns + start, handler);
  		if (ret < 0)
  			return ret;
  
-@@ -224,7 +228,7 @@ static int mshv_region_process_range(struct mshv_region *region,
+@@ -227,8 +225,9 @@ static int mshv_region_process_range(struct mshv_region *region,
+ 	}
  
  	ret = mshv_region_process_chunk(region, flags,
- 					start, end - start,
--					handler);
-+					pfns, handler);
+-					start, end - start,
+-					pfns, handler);
++					pfn_offset + start,
++					end - start,
++					pfns + start, handler);
  	if (ret < 0)
  		return ret;
  
-@@ -289,16 +293,17 @@ struct mshv_region *mshv_region_create(enum mshv_region_type type,
- static int mshv_region_chunk_share(struct mshv_region *region,
- 				   u32 flags,
- 				   u64 pfn_offset, u64 pfn_count,
-+				   unsigned long *pfns,
+@@ -296,15 +295,14 @@ static int mshv_region_chunk_share(struct mshv_region *region,
+ 				   unsigned long *pfns,
  				   bool huge_page)
  {
--	if (!pfn_valid(region->mreg_pfns[pfn_offset]))
-+	if (!pfn_valid(pfns[pfn_offset]))
+-	if (!pfn_valid(pfns[pfn_offset]))
++	if (!pfn_valid(pfns[0]))
  		return -EINVAL;
  
  	if (huge_page)
  		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
  
  	return hv_call_modify_spa_host_access(region->partition->pt_id,
--					      region->mreg_pfns + pfn_offset,
-+					      pfns + pfn_offset,
- 					      pfn_count,
+-					      pfns + pfn_offset,
+-					      pfn_count,
++					      pfns, pfn_count,
  					      HV_MAP_GPA_READABLE |
  					      HV_MAP_GPA_WRITABLE,
-@@ -311,22 +316,24 @@ static int mshv_region_share(struct mshv_region *region)
- 
- 	return mshv_region_process_range(region, flags,
- 					 0, region->nr_pfns,
-+					 region->mreg_pfns,
- 					 mshv_region_chunk_share);
- }
- 
- static int mshv_region_chunk_unshare(struct mshv_region *region,
- 				     u32 flags,
- 				     u64 pfn_offset, u64 pfn_count,
-+				     unsigned long *pfns,
+ 					      flags, true);
+@@ -326,15 +324,15 @@ static int mshv_region_chunk_unshare(struct mshv_region *region,
+ 				     unsigned long *pfns,
  				     bool huge_page)
  {
--	if (!pfn_valid(region->mreg_pfns[pfn_offset]))
-+	if (!pfn_valid(pfns[pfn_offset]))
+-	if (!pfn_valid(pfns[pfn_offset]))
++	if (!pfn_valid(pfns[0]))
  		return -EINVAL;
  
  	if (huge_page)
  		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
  
  	return hv_call_modify_spa_host_access(region->partition->pt_id,
--					      region->mreg_pfns + pfn_offset,
-+					      pfns + pfn_offset,
- 					      pfn_count, 0,
+-					      pfns + pfn_offset,
+-					      pfn_count, 0,
++					      pfns, pfn_count,
++					      0,
  					      flags, false);
  }
-@@ -337,12 +344,14 @@ static int mshv_region_unshare(struct mshv_region *region)
  
- 	return mshv_region_process_range(region, flags,
- 					 0, region->nr_pfns,
-+					 region->mreg_pfns,
- 					 mshv_region_chunk_unshare);
- }
- 
- static int mshv_region_chunk_remap(struct mshv_region *region,
- 				   u32 flags,
- 				   u64 pfn_offset, u64 pfn_count,
-+				   unsigned long *pfns,
- 				   bool huge_page)
- {
- 	/*
-@@ -350,7 +359,7 @@ static int mshv_region_chunk_remap(struct mshv_region *region,
+@@ -359,7 +357,7 @@ static int mshv_region_chunk_remap(struct mshv_region *region,
  	 * hypervisor track dirty pages, enabling precopy live
  	 * migration.
  	 */
--	if (!pfn_valid(region->mreg_pfns[pfn_offset]))
-+	if (!pfn_valid(pfns[pfn_offset]))
+-	if (!pfn_valid(pfns[pfn_offset]))
++	if (!pfn_valid(pfns[0]))
  		flags = HV_MAP_GPA_NO_ACCESS;
  
  	if (huge_page)
-@@ -359,15 +368,17 @@ static int mshv_region_chunk_remap(struct mshv_region *region,
+@@ -368,7 +366,7 @@ static int mshv_region_chunk_remap(struct mshv_region *region,
  	return hv_call_map_ram_pfns(region->partition->pt_id,
  				    region->start_gfn + pfn_offset,
  				    pfn_count, flags,
--				    region->mreg_pfns + pfn_offset);
-+				    pfns + pfn_offset);
+-				    pfns + pfn_offset);
++				    pfns);
  }
  
  static int mshv_region_remap_pfns(struct mshv_region *region,
- 				  u32 map_flags,
--				  u64 pfn_offset, u64 pfn_count)
-+				  u64 pfn_offset, u64 pfn_count,
-+				  unsigned long *pfns)
- {
- 	return mshv_region_process_range(region, map_flags,
- 					 pfn_offset, pfn_count,
-+					 pfns,
- 					 mshv_region_chunk_remap);
- }
- 
-@@ -376,7 +387,8 @@ static int mshv_region_map(struct mshv_region *region)
- 	u32 map_flags = region->hv_map_flags;
- 
- 	return mshv_region_remap_pfns(region, map_flags,
--				      0, region->nr_pfns);
-+				      0, region->nr_pfns,
-+				      region->mreg_pfns);
- }
- 
- static void mshv_region_invalidate_pfns(struct mshv_region *region,
-@@ -645,7 +657,8 @@ static int mshv_region_collect_and_map(struct mshv_region *region,
- 	}
+@@ -658,7 +656,7 @@ static int mshv_region_collect_and_map(struct mshv_region *region,
  
  	ret = mshv_region_remap_pfns(region, region->hv_map_flags,
--				     pfn_offset, pfn_count);
-+				     pfn_offset, pfn_count,
-+				     region->mreg_pfns);
+ 				     pfn_offset, pfn_count,
+-				     region->mreg_pfns);
++				     region->mreg_pfns + pfn_offset);
  
  	mutex_unlock(&region->mreg_mutex);
  out:
