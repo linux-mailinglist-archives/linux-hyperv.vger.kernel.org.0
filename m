@@ -1,120 +1,154 @@
-Return-Path: <linux-hyperv+bounces-9964-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9965-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8BT6KBzsz2lp1wYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9964-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 03 Apr 2026 18:34:36 +0200
+	id sGZJMdr2z2lT2AYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9965-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 03 Apr 2026 19:20:26 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDB69396764
-	for <lists+linux-hyperv@lfdr.de>; Fri, 03 Apr 2026 18:34:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0ADCA396EF7
+	for <lists+linux-hyperv@lfdr.de>; Fri, 03 Apr 2026 19:20:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B8A5631F4534
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Apr 2026 16:16:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ADBF730692F2
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Apr 2026 17:17:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AD503CCA1A;
-	Fri,  3 Apr 2026 16:15:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD0E73D3CEA;
+	Fri,  3 Apr 2026 17:17:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="iBdy/s0i"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KSHb6Glr"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A193CC9EA;
-	Fri,  3 Apr 2026 16:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36D0B313298;
+	Fri,  3 Apr 2026 17:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775232945; cv=none; b=UxUdZ1lWxFT8cDFyLxgzQW0rd32QT7hOxYpaBa1zXsgqpPCdjVJ7WqrcXSgV+N1RvuVl+P8x2LELS05o77LO9jOD3sXVmQUv9O9bE1wdfwhjrhjmf8BboTklKnVzLhjMR2C4fedgRK933NPq7ZUb6AQW+PATWKEEcNd3Ald1QWU=
+	t=1775236621; cv=none; b=TLa4mECPw9232PahxM+CWOjZhVMBMbJa1cwVSztReuJoGytQwtlG7bakGuZElm57XvAEj11CyxKmozHpvgLe8rx4IZfO0kzyc6jpo2ZVwc6vN2hqmWZi5YGriMh2mfba7jtFFUMm7OmcIJI0zsIm67Rwzd75+DzOHvkmnp1prrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775232945; c=relaxed/simple;
-	bh=j9p4nn3sUrBeAOZ2qtLv/38plEowvM4AfGlGd0sDgz8=;
+	s=arc-20240116; t=1775236621; c=relaxed/simple;
+	bh=By9EQpNCDpp6s2NYHjtZqT1nhJ8CR8Y2CKPeiQPRZwI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QMZ/frSCjERyo14dENGM7EKgHyZGItFjadoRLTAVcFiwsoNjzPyYGYGuoNcQkkEIIqQcCFJDaLNO7U6loddwJNheRTdrjIH/+z6YHxs2+eVsfoWrhNbhw9dBfZeywestaFsZO6xT+0Z37he+Akz8p+YwJ9iBZv4l3HxHnQwdnAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=iBdy/s0i; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1775232935;
-	bh=j9p4nn3sUrBeAOZ2qtLv/38plEowvM4AfGlGd0sDgz8=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=YzwuI3YiQVx1LJZDwocccvUhzqFcd9siI/2iub2p63cqQvfi5Q/9Oe3xUWG9i8g7z570b1DmlGWXeiHPW8x/XBhQ7wOZuSWenTF2R2lJUGaGbrL9AtGve3LOfBLUpqlAwZKKxBdhdBcPXZn2VVsyoNCWtszYkrTDuy7t4JK2h+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KSHb6Glr; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id C975720B6F01; Fri,  3 Apr 2026 10:16:59 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C975720B6F01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1775236619;
+	bh=kh5ou9R6vorVFKGIjYV/L1uLTk5ZwMi2N5RzFqNbU74=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iBdy/s0id8EwmLJVXzkVnXmA1TLK6Ol/Kuo7vRGAx8+0qnfku53ihahHi0E5tsN/C
-	 qRC4GpdT+h/1NhTt2R2MV8xzG2aOxrRHkMB71TPDglxFWl56bTtDMOme16g9hEhKRc
-	 5ISstTkVQiu5xmao40AoUlLjdAxYl5A+3avUi3X4=
-Date: Fri, 3 Apr 2026 18:15:35 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
-	Long Li <longli@microsoft.com>, "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/4] drivers: hv: mark channel attributes as const
-Message-ID: <8d8fdf46-5374-4e23-9c79-140117724441@t-8ch.de>
-References: <20260403-sysfs-const-hv-v2-0-8932ab8d41db@weissschuh.net>
- <20260403-sysfs-const-hv-v2-4-8932ab8d41db@weissschuh.net>
- <SN6PR02MB4157D5F04608E4E3C21AB56ED45EA@SN6PR02MB4157.namprd02.prod.outlook.com>
+	b=KSHb6GlrE+oMlnijn2yddWJvQl4JlPLJPvGgrzNN9VpDP8m8olNJC1Ze0Q2l7fMAL
+	 2phDY5wnNto5r5I7PxwqYV2sRrc6nKhAeAhNclPw/n4fmIS6oDQ8Mex6D5j9WY29U/
+	 naca6YQjgLNdFhb+sC39IFbdc1TmOU3KQVoIfsWM=
+Date: Fri, 3 Apr 2026 10:16:59 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Sahil Chandna <sahilchandna@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com, lpieralisi@kernel.org,
+	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
+	bhelgaas@google.com, dan.j.williams@intel.com, mhklinux@outlook.com,
+	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: hv: Fix double ida_free in hv_pci_probe error path
+Message-ID: <ac/2CyhuZhWa8ctW@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20260403120933.466259-1-sahilchandna@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <SN6PR02MB4157D5F04608E4E3C21AB56ED45EA@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <20260403120933.466259-1-sahilchandna@linux.microsoft.com>
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[weissschuh.net,quarantine];
-	R_DKIM_ALLOW(-0.20)[weissschuh.net:s=mail];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-9965-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_TO(0.00)[outlook.com];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9964-lists,linux-hyperv=lfdr.de];
-	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,google.com,intel.com,outlook.com,vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linux@weissschuh.net,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[weissschuh.net:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	FROM_NEQ_ENVFROM(0.00)[ssengar@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,weissschuh.net:dkim,weissschuh.net:email,outlook.com:email,t-8ch.de:mid]
-X-Rspamd-Queue-Id: EDB69396764
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 0ADCA396EF7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 2026-04-03 15:56:54+0000, Michael Kelley wrote:
-> From: Thomas Weißschuh <linux@weissschuh.net> Sent: Friday, April 3, 2026 1:29 AM
-> > 
-> > These attributes are never modified, mark them as const.
-> > 
-> > Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-> > Tested-by: Michael Kelley <mhklinux@outlook.com>
+On Fri, Apr 03, 2026 at 05:09:29AM -0700, Sahil Chandna wrote:
+> If hv_pci_probe() fails after storing the domain number in
+> hbus->bridge->domain_nr, there is a call to free this domain_nr via
+> pci_bus_release_emul_domain_nr(), however, during cleanup, the bridge
+> release callback pci_release_host_bridge_dev() also frees the domain_nr
+> causing ida_free to be called on same ID twice and triggering following
+> warning:
 > 
-> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-
-Thanks.
-
-> But take a look at this analysis from Sashiko AI:
-> https://sashiko.dev/#/patchset/20260403-sysfs-const-hv-v2-0-8932ab8d41db%40weissschuh.net
+>   ida_free called for id=28971 which is not allocated.
+>   WARNING: lib/idr.c:594 at ida_free+0xdf/0x160, CPU#0: kworker/0:2/198
+>   Call Trace:
+>    pci_bus_release_emul_domain_nr+0x17/0x20
+>    pci_release_host_bridge_dev+0x4b/0x60
+>    device_release+0x3b/0xa0
+>    kobject_put+0x8e/0x220
+>    devm_pci_alloc_host_bridge_release+0xe/0x20
+>    devres_release_all+0x9a/0xd0
+>    device_unbind_cleanup+0x12/0xa0
+>    really_probe+0x1c5/0x3f0
+>    vmbus_add_channel_work+0x135/0x1a0
 > 
-> This seems to be a valid concern with your earlier commit 7dd9fdb4939b9
-> "sysfs: attribute_group: enable const variants of is_visible()".
+> Fix this by letting pci core handle the free domain_nr and remove
+> the explicit free called in pci-hyperv driver.
+> 
+> Fixes: bcce8c74f1ce ("PCI: Enable host bridge emulation for PCI_DOMAINS_GENERIC platforms")
+> Signed-off-by: Sahil Chandna <sahilchandna@linux.microsoft.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 2c7a406b4ba8..5616ad5d2a8f 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -3778,7 +3778,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  					   hbus->bridge->domain_nr);
+>  	if (!hbus->wq) {
+>  		ret = -ENOMEM;
+> -		goto free_dom;
+> +		goto free_bus;
+>  	}
+> 
+>  	hdev->channel->next_request_id_callback = vmbus_next_request_id;
+> @@ -3874,8 +3874,6 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	vmbus_close(hdev->channel);
+>  destroy_wq:
+>  	destroy_workqueue(hbus->wq);
+> -free_dom:
+> -	pci_bus_release_emul_domain_nr(hbus->bridge->domain_nr);
+>  free_bus:
+>  	kfree(hbus);
+>  	return ret;
+> --
+> 2.53.0
+> 
 
-Indeed, I missed this user of ->is_visible.
-I'll send a fix for that, but it shouldn't affect this series.
-
-
-Thomas
+LGTM,
+Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
 
