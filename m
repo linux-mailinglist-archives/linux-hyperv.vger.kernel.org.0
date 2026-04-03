@@ -1,61 +1,58 @@
-Return-Path: <linux-hyperv+bounces-9963-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9964-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id zYyGMQfpz2kZ1wYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9963-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 03 Apr 2026 18:21:27 +0200
+	id 8BT6KBzsz2lp1wYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9964-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 03 Apr 2026 18:34:36 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2FC239646A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 03 Apr 2026 18:21:26 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDB69396764
+	for <lists+linux-hyperv@lfdr.de>; Fri, 03 Apr 2026 18:34:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 3F8AE308299A
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Apr 2026 16:11:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B8A5631F4534
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Apr 2026 16:16:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF1A93CF02A;
-	Fri,  3 Apr 2026 16:09:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AD503CCA1A;
+	Fri,  3 Apr 2026 16:15:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hpDpctkb"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="iBdy/s0i"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BAF53CEBA6;
-	Fri,  3 Apr 2026 16:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A193CC9EA;
+	Fri,  3 Apr 2026 16:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775232589; cv=none; b=AtpZycqSsfkI58RU0Jll/9ckzm840lcMq2suhHV9TIsTVEFF9qUq5J/v9bOU6i5lExHfmeBarF7sG0e62YkmG1uHyHjl8xGbdSwMy47opjTcLthVXj7ox/fdRxQmjKVEtJZXzfb26xRTumVQpTnE8SXpZ4KWByUV19RTZsRBpZI=
+	t=1775232945; cv=none; b=UxUdZ1lWxFT8cDFyLxgzQW0rd32QT7hOxYpaBa1zXsgqpPCdjVJ7WqrcXSgV+N1RvuVl+P8x2LELS05o77LO9jOD3sXVmQUv9O9bE1wdfwhjrhjmf8BboTklKnVzLhjMR2C4fedgRK933NPq7ZUb6AQW+PATWKEEcNd3Ald1QWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775232589; c=relaxed/simple;
-	bh=rM2i24uWsCksKPfZB6f6+pAgYWSaeaMhVg21cj4V1Bs=;
+	s=arc-20240116; t=1775232945; c=relaxed/simple;
+	bh=j9p4nn3sUrBeAOZ2qtLv/38plEowvM4AfGlGd0sDgz8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A2dCK9FNe+uuwaKq/YVsiH3gO0DghRbUF1VvYMOkUd+z8NyJ/wKpeRaUnsqxnvKnqWONZFKTJ7WL3K+I+YvdpkuWwxxJM48BpwO7vzViRiJON7uLE/GKXeg8wLob8b3bQ6lOS5s9OA88dAa+7uUa2WgTlkjx+3uOO+YKaLNaS3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hpDpctkb; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (c-98-225-44-182.hsd1.wa.comcast.net [98.225.44.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 9DF3520B6F08;
-	Fri,  3 Apr 2026 09:09:47 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9DF3520B6F08
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1775232587;
-	bh=NA/XwvlJ/WLuuyPh3ecrOKU/y2iruzVhRi1YIUFCc34=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=QMZ/frSCjERyo14dENGM7EKgHyZGItFjadoRLTAVcFiwsoNjzPyYGYGuoNcQkkEIIqQcCFJDaLNO7U6loddwJNheRTdrjIH/+z6YHxs2+eVsfoWrhNbhw9dBfZeywestaFsZO6xT+0Z37he+Akz8p+YwJ9iBZv4l3HxHnQwdnAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=iBdy/s0i; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1775232935;
+	bh=j9p4nn3sUrBeAOZ2qtLv/38plEowvM4AfGlGd0sDgz8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hpDpctkbQFQBOBktz6BvrWzH8Z5hKrvWKB4t9zdUK8l3nMrbA1a0QqMbydMSl0Y6b
-	 pLL5HzlaWS7jHF/7WE1D1MjU84OVfdC+CJSarJ3ScWVTtMB/+azlXZwY2I/0TmyMNk
-	 7KzVdwSVWMq+52dk4YKmbYKshsy7mV1td/8eVzVU=
-Date: Fri, 3 Apr 2026 09:09:45 -0700
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Anirudh Rayabharam <anirudh@anirudhrb.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/7] mshv: Rename mshv_mem_region to mshv_region
-Message-ID: <ac_mSSU3uRaAewE7@skinsburskii.localdomain>
-References: <177508151446.215674.7844504277869257435.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <177508156067.215674.12361225930217655159.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <20260402-fervent-thick-boobook-45dba9@anirudhrb>
- <ac6t9d2CIvL469_t@skinsburskii.localdomain>
- <20260403-gainful-cerulean-asp-5a1a2d@anirudhrb>
+	b=iBdy/s0id8EwmLJVXzkVnXmA1TLK6Ol/Kuo7vRGAx8+0qnfku53ihahHi0E5tsN/C
+	 qRC4GpdT+h/1NhTt2R2MV8xzG2aOxrRHkMB71TPDglxFWl56bTtDMOme16g9hEhKRc
+	 5ISstTkVQiu5xmao40AoUlLjdAxYl5A+3avUi3X4=
+Date: Fri, 3 Apr 2026 18:15:35 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Long Li <longli@microsoft.com>, "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/4] drivers: hv: mark channel attributes as const
+Message-ID: <8d8fdf46-5374-4e23-9c79-140117724441@t-8ch.de>
+References: <20260403-sysfs-const-hv-v2-0-8932ab8d41db@weissschuh.net>
+ <20260403-sysfs-const-hv-v2-4-8932ab8d41db@weissschuh.net>
+ <SN6PR02MB4157D5F04608E4E3C21AB56ED45EA@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -65,95 +62,59 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260403-gainful-cerulean-asp-5a1a2d@anirudhrb>
+In-Reply-To: <SN6PR02MB4157D5F04608E4E3C21AB56ED45EA@SN6PR02MB4157.namprd02.prod.outlook.com>
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[weissschuh.net,quarantine];
+	R_DKIM_ALLOW(-0.20)[weissschuh.net:s=mail];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9963-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_TO(0.00)[outlook.com];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9964-lists,linux-hyperv=lfdr.de];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linux@weissschuh.net,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[weissschuh.net:+];
 	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: C2FC239646A
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,weissschuh.net:dkim,weissschuh.net:email,outlook.com:email,t-8ch.de:mid]
+X-Rspamd-Queue-Id: EDB69396764
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Apr 03, 2026 at 03:54:52AM +0000, Anirudh Rayabharam wrote:
-> On Thu, Apr 02, 2026 at 10:57:09AM -0700, Stanislav Kinsburskii wrote:
-> > On Thu, Apr 02, 2026 at 04:33:24PM +0000, Anirudh Rayabharam wrote:
-> > > On Wed, Apr 01, 2026 at 10:12:40PM +0000, Stanislav Kinsburskii wrote:
-> > > > The mshv_mem_region structure represents guest address space regions,
-> > > > which can be either RAM-backed memory or memory-mapped IO regions
-> > > > without physical backing. The "mem_" prefix incorrectly suggests the
-> > > > structure only handles memory regions, creating confusion about its
-> > > > actual purpose.
-> > > > 
-> > > > Remove the "mem_" prefix to align with existing function naming
-> > > > (mshv_region_map, mshv_region_pin, etc.) and accurately reflect that
-> > > > this structure manages arbitrary guest address space mappings
-> > > > regardless of their backing type.
-> > > 
-> > > I don't think the "mem_" prefix automatically suggested the backing
-> > > type.
-> > > 
+On 2026-04-03 15:56:54+0000, Michael Kelley wrote:
+> From: Thomas Weißschuh <linux@weissschuh.net> Sent: Friday, April 3, 2026 1:29 AM
 > > 
-> > What else can it suggest?
-> 
-> To me it just suggested that the struct contained info or properties of
-> a guest memory region. The name itself didn't suggest what backing type
-> the memory has.
-> 
-
-Right, that’s what the old name suggested to me too. And that’s the
-problem. It’s inaccurate for MMIO regions. They have nothing to do with
-memory. They are never backed by it.
-
+> > These attributes are never modified, mark them as const.
 > > 
-> > > Isn't mshv_region too vague now? Region of what?
-> > > 
-> > 
-> > The region of address space, which can or can not be backed by memory.
+> > Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> > Tested-by: Michael Kelley <mhklinux@outlook.com>
 > 
-> Yeah but that's not obvious just from the new name. The new name just
-> says mshv_region and doesn't what the region is of.
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+
+Thanks.
+
+> But take a look at this analysis from Sashiko AI:
+> https://sashiko.dev/#/patchset/20260403-sysfs-const-hv-v2-0-8932ab8d41db%40weissschuh.net
 > 
+> This seems to be a valid concern with your earlier commit 7dd9fdb4939b9
+> "sysfs: attribute_group: enable const variants of is_visible()".
 
-I hear you, but what else can we do? Keeping mshv_mem_region isn’t good
-for the reasons above. Renaming it to `mshv_gpa_region` also feels
-redundant detailization.
+Indeed, I missed this user of ->is_visible.
+I'll send a fix for that, but it shouldn't affect this series.
 
-To me, this is a good tradeoff. Yes, it’s a bit too generic. But it’s
-concise, and we don’t have any other regions in the codebase. So I don’t
-think it will cause confusion.
 
-Thanks,
-Stanislav
-
-> Thanks,
-> Anirudh.
-> 
-> > 
-> > Thanks,
-> > Stanislav
-> > 
-> > > Thanks,
-> > > Anirudh.
+Thomas
 
