@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-9970-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9971-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QKUfBboP0GlQ2wYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9970-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 03 Apr 2026 21:06:34 +0200
+	id 0IIEMP4P0GlQ2wYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9971-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 03 Apr 2026 21:07:42 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA89B39781C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 03 Apr 2026 21:06:33 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58A7D39785B
+	for <lists+linux-hyperv@lfdr.de>; Fri, 03 Apr 2026 21:07:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 7FABA300B9F8
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Apr 2026 19:06:30 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 976CF30758B7
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Apr 2026 19:06:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 705093D564D;
-	Fri,  3 Apr 2026 19:06:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B6403D6489;
+	Fri,  3 Apr 2026 19:06:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ooPUfoBf"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Bg2PvURR"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C5553D4102;
-	Fri,  3 Apr 2026 19:06:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48B223D5640;
+	Fri,  3 Apr 2026 19:06:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775243181; cv=none; b=J9pFqGu66+A60vNT4mSWOk1oIEIBNxFC+rSBC3MeGtkCu8XvGXOiX5IPWlFkTvRsAS6XPZigmBx37RCBgxgtlYgSOuqGFHauBjoGskXcbOAaeqhRYth8Sz6ayLvKHYIt0O7HA/UCQkRM8TW+cgbla2i5iJ4zxHARmh20vV7ia3o=
+	t=1775243182; cv=none; b=agNj9jEqZtQyAY+NYtpIOkormoX/BjxJCOI13+uAqjUrL6mD5eGteoLWAE+1ln0rGcfr018/o6chxrnskpi2x5PS/cJanJmnFxpQlmF2t/6dXL2Qevb6aAa37IIPGhsmSW2dIPuKSEs74NXUopFEACQal9VW/azpShX3mRwVBtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775243181; c=relaxed/simple;
-	bh=TGgnAFzlIDIivrxTgxPOdYRWjFMaQLSOV3k1ZpfrgAc=;
+	s=arc-20240116; t=1775243182; c=relaxed/simple;
+	bh=hNIiNuDPxuZnaMtc1ARblwqwK4xYSWqQw5KM4tx3lJs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YaBX9AUedhVWKmq97Gl6frFqnjbPg0SvOvezad+GGOzz9dmhKAg6oP7ifqU6ApsXU+pEyLAhY0/Vy0tQEwNRPNel62WPw6KYkfyxV32VTD90VtSMvtPj7Tuviefu7NgrjdSCrxP9SaXv2hrbMjVHyEuXuA72JeuYu16aZo0KXR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ooPUfoBf; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=nLRg+ADKEG9s4NA9fhhvvgBIi580iDl5QH4XWKmQMMfWfcF/QxDAvkwoqF2dIyfLTsbCxBRjODubjKr2v9RE3iDwB7ELy1kJPm+GEQ61EzdltZclg+MIKdTkimo+zYUzKYKkpPlGibSsslQlpFm4cExXtO5O/gMjq9dzR30QbN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Bg2PvURR; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1241)
-	id 25DD620B6F0C; Fri,  3 Apr 2026 12:06:20 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 25DD620B6F0C
+	id 2141F20B6F15; Fri,  3 Apr 2026 12:06:21 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2141F20B6F15
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1775243180;
-	bh=oe8/Pqe4w3M//1TBoCPONOMHSy0PBbB0t+C6t5dQLKM=;
+	s=default; t=1775243181;
+	bh=6pzpu/gJFjinb2P2J9+XytwM6zcdOj6YIrKwdbxm5Zs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ooPUfoBf8oQCRKP9t9HHfupwRCMUHvaOL7HtM4MgrGi3ramxYKPMQk/iQM7Feb3rv
-	 goeUxYijM+NqXzK3XAafEJyH1DHh3SY1ty23/FKKz8KLSPpEC25iUUbAZQHPNWvuCH
-	 iQ5h9Y8hBRLZtmeJDXcafzAhxay2FOBsKi7nha40=
+	b=Bg2PvURRiJE3pPwhcLClMXyqRhkiSHWEps/NqQcxncpw213FqrQy6iaXhp9pk+eMA
+	 N6DGnQeQAlm59wLPKYLmNAI8wG1I7M6Uc67ZUxMz/Ho+MlZUnYlu9ABz6koywBzQxP
+	 yOb+oWEqfoig4RznbXnpq0jgNKX2Zsns9HUWvFtk=
 From: Jork Loeser <jloeser@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org
 Cc: x86@kernel.org,
@@ -60,10 +60,12 @@ Cc: x86@kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-arch@vger.kernel.org,
 	Jork Loeser <jloeser@linux.microsoft.com>,
-	Anirudh Rayabharam <anrayabh@linux.microsoft.com>
-Subject: [PATCH v2 2/6] x86/hyperv: move stimer cleanup to hv_machine_shutdown()
-Date: Fri,  3 Apr 2026 12:06:08 -0700
-Message-ID: <20260403190613.47026-3-jloeser@linux.microsoft.com>
+	Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+	Stanislav Kinsburskii <stanislav.kinsburski@gmail.com>,
+	Mukesh Rathor <mukeshrathor@microsoft.com>
+Subject: [PATCH v2 3/6] x86/hyperv: Skip LP/VP creation on kexec
+Date: Fri,  3 Apr 2026 12:06:09 -0700
+Message-ID: <20260403190613.47026-4-jloeser@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260403190613.47026-1-jloeser@linux.microsoft.com>
 References: <20260403190613.47026-1-jloeser@linux.microsoft.com>
@@ -74,81 +76,217 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,microsoft.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,outlook.com,vger.kernel.org,linux.microsoft.com];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-9970-lists,linux-hyperv=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
 	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9971-lists,linux-hyperv=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,microsoft.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,outlook.com,vger.kernel.org,linux.microsoft.com,gmail.com];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jloeser@linux.microsoft.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: DA89B39781C
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,linux.microsoft.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 58A7D39785B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Move hv_stimer_global_cleanup() from vmbus's hv_kexec_handler() to
-hv_machine_shutdown() in the platform code. This ensures stimer cleanup
-happens before the vmbus unload, which is required for root partition
-kexec to work correctly.
+After a kexec the logical processors and virtual processors already
+exist in the hypervisor because they were created by the previous
+kernel. Attempting to add them again causes either a BUG_ON or
+corrupted VP state leading to MCEs in the new kernel.
+
+Add hv_lp_exists() to probe whether an LP is already present by
+calling HVCALL_GET_LOGICAL_PROCESSOR_RUN_TIME. When it succeeds the
+LP exists and we skip the add-LP and create-VP loops entirely.
+
+Also add hv_call_notify_all_processors_started() which informs the
+hypervisor that all processors are online. This is required after
+adding LPs (fresh boot) and is a no-op on kexec since we skip that
+path.
 
 Co-developed-by: Anirudh Rayabharam <anrayabh@linux.microsoft.com>
 Signed-off-by: Anirudh Rayabharam <anrayabh@linux.microsoft.com>
+Co-developed-by: Stanislav Kinsburskii <stanislav.kinsburski@gmail.com>
+Signed-off-by: Stanislav Kinsburskii <stanislav.kinsburski@gmail.com>
+Co-developed-by: Mukesh Rathor <mukeshrathor@microsoft.com>
+Signed-off-by: Mukesh Rathor <mukeshrathor@microsoft.com>
 Signed-off-by: Jork Loeser <jloeser@linux.microsoft.com>
 ---
- arch/x86/kernel/cpu/mshyperv.c | 8 ++++++--
- drivers/hv/vmbus_drv.c         | 1 -
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/mshyperv.c |  7 +++++
+ drivers/hv/hv_proc.c           | 47 ++++++++++++++++++++++++++++++++++
+ include/asm-generic/mshyperv.h | 10 ++++++++
+ include/hyperv/hvgdk_mini.h    |  1 +
+ include/hyperv/hvhdk_mini.h    | 12 +++++++++
+ 5 files changed, 77 insertions(+)
 
 diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 89a2eb8a0722..235087456bdf 100644
+index 235087456bdf..f653feea880b 100644
 --- a/arch/x86/kernel/cpu/mshyperv.c
 +++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -235,8 +235,12 @@ void hv_remove_crash_handler(void)
- #ifdef CONFIG_KEXEC_CORE
- static void hv_machine_shutdown(void)
- {
--	if (kexec_in_progress && hv_kexec_handler)
--		hv_kexec_handler();
-+	if (kexec_in_progress) {
-+		hv_stimer_global_cleanup();
+@@ -429,6 +429,10 @@ static void __init hv_smp_prepare_cpus(unsigned int max_cpus)
+ 	}
+ 
+ #ifdef CONFIG_X86_64
++	/* If AP LPs exist, we are in a kexec'd kernel and VPs already exist */
++	if (num_present_cpus() == 1 || hv_lp_exists(1))
++		return;
 +
-+		if (hv_kexec_handler)
-+			hv_kexec_handler();
+ 	for_each_present_cpu(i) {
+ 		if (i == 0)
+ 			continue;
+@@ -436,6 +440,9 @@ static void __init hv_smp_prepare_cpus(unsigned int max_cpus)
+ 		BUG_ON(ret);
+ 	}
+ 
++	ret = hv_call_notify_all_processors_started();
++	WARN_ON(ret);
++
+ 	for_each_present_cpu(i) {
+ 		if (i == 0)
+ 			continue;
+diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
+index 5f4fd9c3231c..63a48e5a02c5 100644
+--- a/drivers/hv/hv_proc.c
++++ b/drivers/hv/hv_proc.c
+@@ -239,3 +239,50 @@ int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags)
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(hv_call_create_vp);
++
++int hv_call_notify_all_processors_started(void)
++{
++	struct hv_input_notify_partition_event *input;
++	u64 status;
++	unsigned long irq_flags;
++	int ret = 0;
++
++	local_irq_save(irq_flags);
++	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
++	memset(input, 0, sizeof(*input));
++	input->event = HV_PARTITION_ALL_LOGICAL_PROCESSORS_STARTED;
++	status = hv_do_hypercall(HVCALL_NOTIFY_PARTITION_EVENT,
++				 input, NULL);
++	local_irq_restore(irq_flags);
++
++	if (!hv_result_success(status)) {
++		hv_status_err(status, "\n");
++		ret = hv_result_to_errno(status);
 +	}
++	return ret;
++}
++
++bool hv_lp_exists(u32 lp_index)
++{
++	struct hv_input_get_logical_processor_run_time *input;
++	struct hv_output_get_logical_processor_run_time *output;
++	unsigned long flags;
++	u64 status;
++
++	local_irq_save(flags);
++	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
++	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
++
++	input->lp_index = lp_index;
++	status = hv_do_hypercall(HVCALL_GET_LOGICAL_PROCESSOR_RUN_TIME,
++				 input, output);
++	local_irq_restore(flags);
++
++	if (!hv_result_success(status) &&
++	    hv_result(status) != HV_STATUS_INVALID_LP_INDEX) {
++		hv_status_err(status, "\n");
++		BUG();
++	}
++
++	return hv_result_success(status);
++}
+diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+index d37b68238c97..bf601d67cecb 100644
+--- a/include/asm-generic/mshyperv.h
++++ b/include/asm-generic/mshyperv.h
+@@ -347,6 +347,8 @@ bool hv_result_needs_memory(u64 status);
+ int hv_deposit_memory_node(int node, u64 partition_id, u64 status);
+ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages);
+ int hv_call_add_logical_proc(int node, u32 lp_index, u32 acpi_id);
++int hv_call_notify_all_processors_started(void);
++bool hv_lp_exists(u32 lp_index);
+ int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags);
  
- 	/*
- 	 * Call hv_cpu_die() on all the CPUs, otherwise later the hypervisor
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 301273d61892..5d1449f8c6ea 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -2892,7 +2892,6 @@ static struct platform_driver vmbus_platform_driver = {
- 
- static void hv_kexec_handler(void)
+ #else /* CONFIG_MSHV_ROOT */
+@@ -366,6 +368,14 @@ static inline int hv_call_add_logical_proc(int node, u32 lp_index, u32 acpi_id)
  {
--	hv_stimer_global_cleanup();
- 	vmbus_initiate_unload(false);
- 	/* Make sure conn_state is set as hv_synic_cleanup checks for it */
- 	mb();
+ 	return -EOPNOTSUPP;
+ }
++static inline int hv_call_notify_all_processors_started(void)
++{
++	return -EOPNOTSUPP;
++}
++static inline bool hv_lp_exists(u32 lp_index)
++{
++	return false;
++}
+ static inline int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags)
+ {
+ 	return -EOPNOTSUPP;
+diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
+index 056ef7b6b360..f2598e186550 100644
+--- a/include/hyperv/hvgdk_mini.h
++++ b/include/hyperv/hvgdk_mini.h
+@@ -435,6 +435,7 @@ union hv_vp_assist_msr_contents {	 /* HV_REGISTER_VP_ASSIST_PAGE */
+ /* HV_CALL_CODE */
+ #define HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE		0x0002
+ #define HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST		0x0003
++#define HVCALL_GET_LOGICAL_PROCESSOR_RUN_TIME		0x0004
+ #define HVCALL_NOTIFY_LONG_SPIN_WAIT			0x0008
+ #define HVCALL_SEND_IPI					0x000b
+ #define HVCALL_ENABLE_VP_VTL				0x000f
+diff --git a/include/hyperv/hvhdk_mini.h b/include/hyperv/hvhdk_mini.h
+index 091c03e26046..b4cb2fa26e9b 100644
+--- a/include/hyperv/hvhdk_mini.h
++++ b/include/hyperv/hvhdk_mini.h
+@@ -362,6 +362,7 @@ union hv_partition_event_input {
+ 
+ enum hv_partition_event {
+ 	HV_PARTITION_EVENT_ROOT_CRASHDUMP = 2,
++	HV_PARTITION_ALL_LOGICAL_PROCESSORS_STARTED = 4,
+ };
+ 
+ struct hv_input_notify_partition_event {
+@@ -369,6 +370,17 @@ struct hv_input_notify_partition_event {
+ 	union hv_partition_event_input input;
+ } __packed;
+ 
++struct hv_input_get_logical_processor_run_time {
++	u32 lp_index;
++} __packed;
++
++struct hv_output_get_logical_processor_run_time {
++	u64 global_time;
++	u64 local_run_time;
++	u64 rsvdz0;
++	u64 hypervisor_time;
++} __packed;
++
+ struct hv_lp_startup_status {
+ 	u64 hv_status;
+ 	u64 substatus1;
 -- 
 2.43.0
 
