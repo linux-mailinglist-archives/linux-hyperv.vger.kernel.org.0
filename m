@@ -1,327 +1,301 @@
-Return-Path: <linux-hyperv+bounces-9996-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-9997-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wBqoE17b0WnJPQcAu9opvQ
-	(envelope-from <linux-hyperv+bounces-9996-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sun, 05 Apr 2026 05:47:42 +0200
+	id uAlLOc7d0mmAbwcAu9opvQ
+	(envelope-from <linux-hyperv+bounces-9997-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 06 Apr 2026 00:10:22 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1FAB39D43B
-	for <lists+linux-hyperv@lfdr.de>; Sun, 05 Apr 2026 05:47:41 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48A3B39FF49
+	for <lists+linux-hyperv@lfdr.de>; Mon, 06 Apr 2026 00:10:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3F077300998E
-	for <lists+linux-hyperv@lfdr.de>; Sun,  5 Apr 2026 03:47:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A55623006942
+	for <lists+linux-hyperv@lfdr.de>; Sun,  5 Apr 2026 22:10:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FB8E1A073F;
-	Sun,  5 Apr 2026 03:47:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BA7B382F02;
+	Sun,  5 Apr 2026 22:10:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kAgMqVx1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iP1YSvBt"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED32340DFD6;
-	Sun,  5 Apr 2026 03:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775360858; cv=none; b=V7IqxPFF2YazPPW3gskyo5d039bbMbWtRPFTRSUJQiLr0SCKCO4AvAzO9N/ED9rQysaZAiVfJAV7cC3dy2P+y6HbUl3me7egJJArVoKb7jnubLugD9Vbneikpjm00AXuD0+us5w65lNo7cBC0pUaUVDzqjhGmPxE6yneeng7baI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775360858; c=relaxed/simple;
-	bh=GE6Xqp35Q4safSXDXCWd6QGGmtmNjvwlFxfUS+p/2HE=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=p/+Lxmp1uQpq9ymjyAMd1uIo+rvC5dBa/m0sMKZlQFb7nSx9Tb95b1LxcK2waluSJ0zfQTHBaSfroZ5HdK0xG6hbUx9Q86v+F1/uDTtxe/t9cnr3xjK/6LQEElDosaND2Q77S3PvtVZ6Gc2DnmNdLNYFEwNP3PWb13n+QEOkYxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=kAgMqVx1; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1204)
-	id A98DE20B6F01; Sat,  4 Apr 2026 20:47:36 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A98DE20B6F01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1775360856;
-	bh=QYs8uZsCpDirbEisT0uHXS5U6nK+4UiJEvZ1Irrd4YE=;
-	h=Date:From:To:Subject:From;
-	b=kAgMqVx1fTNdmGaILPmZPvgYnMVrSC5zxvsXvu1RZ8tXxi/MctqVQ0HerOvtgQziZ
-	 Qyj8reiY7s+sLvLUXnt+tT4nvE9lFMzu34Z7y2vcwCevCicoIRMDgCa3SOlSA/7XQU
-	 MeBJuGugqEiL9HfNdiXoaLSq7TH0M5UTa5i//7CI=
-Date: Sat, 4 Apr 2026 20:47:36 -0700
-From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	leon@kernel.org, longli@microsoft.com, kotaranov@microsoft.com,
-	horms@kernel.org, shradhagupta@linux.microsoft.com,
-	ssengar@linux.microsoft.com, ernis@linux.microsoft.com,
-	shirazsaleem@microsoft.com, linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, stephen@networkplumber.org,
-	jacob.e.keller@intel.com, dipayanroy@microsoft.com,
-	leitao@debian.org, kees@kernel.org
-Subject: [PATCH net-next v5 2/2] net: mana: force full-page RX buffers via
- ethtool private flag
-Message-ID: <adHbWGh3DE0L2glq@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE192F1FC9
+	for <linux-hyperv@vger.kernel.org>; Sun,  5 Apr 2026 22:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.215.177
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775427020; cv=pass; b=RTagne+q+jX9VukxgP33EfzU8WY9eAI1G7R0DjjJekiz+6BJM8q0hX8lIqT+T6p+veEZ2ZYeRea8oB61DM3Rs+VU1AHj/+Vc1OFmCEAkQHUtWkWZEAu4+gW0xegqnz8uFABlGxHFbM7GWGGPBTZVrXBrs6uNIGuHJsTQA0FdTEY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775427020; c=relaxed/simple;
+	bh=ABUjEWGDZYHREqnQ0FoQ2NGfgCH18iC9mDSHCs7Bdws=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=cHLUHg5qErQbsZE1zFwAzP3R15/dTeDm+HUGbDmksQANMvoZFDGHO5fsU5FqqLjNgedWX42ZZTbHLi8YKaFq1nbe/cbVOyT6bj5f0I+VZ18hJh7AVlJVsTIJbRM+sPfCcUAvMvbovgeQ1HBR312lwuZGcSgXqMYMdhm+rE2I0y8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iP1YSvBt; arc=pass smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b6ce6d1d3dcso1117322a12.3
+        for <linux-hyperv@vger.kernel.org>; Sun, 05 Apr 2026 15:10:18 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775427018; cv=none;
+        d=google.com; s=arc-20240605;
+        b=VA5Bdk/28xEuiZ3/y/g3jzucNn37Y4eLYkUXXhTwCG5vIYMlDRTNPZ0zrL88H9sB49
+         N6hcEjI6WzoEkGIZJcfPTk7dzjQcqj05V2iVuM/qOQ23xtOAGKozIR7wkYV3AURyGfSV
+         urOqRsnat8NGPyKIYy73Y6WFvWM6Jl3VthxNGBZrC9qi0dk5Gc1X8o5ay2ZVnP+ruGZx
+         94/F+tKGTqmskYt4M0B1UI1X2BiM/VxMqaLOK3RCIiH3OhDv1LE8x+REGIUNF3/ZkOD0
+         LF+9e6jfdKVImQ6cLdD/wdgy+0zWMUF/2rqmwc+TjXDnf4VI3ozYA+WTL3bz9f4rGFww
+         IVCA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=e9u+QzC2aJqKtNe3/rtmBsCiYMsv2LB2s8cYUNUD6G0=;
+        fh=JZoITFd5uHibZ6ssBBHktwK8alAZTzDXbDxXh5gMVrQ=;
+        b=kC7f0F0cJ4x72E2OZszRcNIcqCrYb5yrAXTW/er09GH/JeClgv7LH54wAZ0y+AAsHL
+         ozg05A1p8FJ4uW6dZxxw1p2TspFR7Gmdtw/Zr7rajW+03XK1BbDK19pcyoB4JuWv2hOS
+         bVyMwY6buTWYJTJwK7BD9SSot09207qIho+B2zZoNQgP8UhmtUAgMtNLUDcXCL3eSCqQ
+         KWp2ek1bS9G4OpoTitEr691bGB7qNzuFNRfKHhOw3n77fHHfNmqnltL7cdbdNGYbqOeZ
+         ENgLCjzqnCzxlAHZczVb+5EwGAjutl2TZ2nUXJWzUC5ga5yXFArzAWPxXrGfPMexlr9P
+         q92g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775427018; x=1776031818; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=e9u+QzC2aJqKtNe3/rtmBsCiYMsv2LB2s8cYUNUD6G0=;
+        b=iP1YSvBtoOu9bqPRdP3j8rrFjtR46+1xrjNJyNNgsJK/ZaJ4Rnvf7uAciI35pHPhpE
+         1AyGVy/XOlndXLfMtKF9OC9TLQpcDE9w7MV5dnUbv8cdJ8dcQA6shl2S02uGwm4WwMdV
+         /aTpPh8WZDNfiIRxVhdzO3EUYUazWVE1MMrEUHvGI4KWU11GeDsVehSBlatcTUbzssMI
+         TvPgsW93MzJf/uD+ObD3lwYwC6NL2JgzPUtN6mBuXBoGzlOmyKdMfDL67wF1w8Ihh3/m
+         d98Pz89ldzmzE1cXw9jMtWKAOyatyXFwRGrn3UOMXFNvy+tBTftXmmTjnBEPZzrC8vL6
+         sMvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775427018; x=1776031818;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=e9u+QzC2aJqKtNe3/rtmBsCiYMsv2LB2s8cYUNUD6G0=;
+        b=Ka68W9BRtvk/KEfzmeMtg4TCqKeGXWCXvZQqhxo6SIYCMOIVwqmDwGBruCHfiP49Iz
+         bfjRPvAcTOiFb5lBQ2ad6+69dr8KPJWjDn1ASP8KiDwRd5T88NTFs+NcjQimZSEInUYb
+         K2IbGRr/YXh6feD/dflnXtHSpaKauSLgurnxce8DSOQeZy3OWjKnKnnmvRrOyN87t9/N
+         FM3sVK50EFmkEZOcXj2VmZE7mPSpZ6E7MncG52FMvikO1c1wVHwPU1n0faX6GH1Q7EeQ
+         l6nQuwHbiClfZ0efmCMWjOWlSmsTG96Rv24nG2oVh4JvaswUMNUs0FRKWIlUqVCu1zui
+         yrRg==
+X-Forwarded-Encrypted: i=1; AJvYcCXhEvg5qChumNe+BkzYfIMboI/eP+so+iGnIOEw5hj61pGOlmgw33nzuqeQbBpMD444QlEWKm291IhQ4nc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywh03LcE9jo4heG04x9YBb2cv2fVSif1B3MSkBAA8JCvU9rcZ0a
+	/In9iidCb9JDK0vN1vR4qeVK4kl0Wr9WgMmnrlG8KYPFqlpmzQv7bRdc/7kPsmtWU4LcY762GTt
+	1HdWqN5TFDIXJWDS18dHPZ+c78ckZLcM=
+X-Gm-Gg: AeBDiev1PrgAPpUBfMjcpo+sJcSmoo3XJiEt/mFNGZ506fsG2cCiGe18+tg0eiI0dAp
+	sDXTZzlHYQfMy1TwSceJyfnxFKQsGv2btozpR9ikZeu3y/iDEqquXcC/Cp5NoA6PhRoCzbw3Dop
+	sbcyqhbmj9DuzQe+l23BcB7x1fh05nC0jtzrYfmQiDJaZjh9qrSKynP/PtBjTKuYck1inUsvnEv
+	H+mr7eoYPf7vuUdUhlB6MKR3VNRwaEziuPlTHZeSim4k1fuFGbcXg4qjw1X2lRjDFoEy1VYYkY0
+	XR/bHQWOnd8qVHkMSIQ5aoL8W7P2zSSBdeyUcCVdwkogpS7aAsc=
+X-Received: by 2002:a05:6a20:12c5:b0:39c:4af6:4305 with SMTP id
+ adf61e73a8af0-39f2ef776f8mr10913190637.10.1775427018045; Sun, 05 Apr 2026
+ 15:10:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+From: Thomas Lefebvre <thomas.lefebvre3@gmail.com>
+Date: Sun, 5 Apr 2026 15:10:07 -0700
+X-Gm-Features: AQROBzBRYTfs3R9pignNAUl0z7_W9YKD9Yw5QkOdj1ny5dpfRahj1Q-2xMfYdFA
+Message-ID: <CAKdXbaV1PTwetd4zs6+6Rp7h0dwHU1ygMoof5eAcfL6XYZF1xA@mail.gmail.com>
+Subject: [BUG] KVM: x86: kvmclock jumps ~253 years on Hyper-V nested virt due
+ to cross-CPU raw TSC inconsistency
+To: seanjc@google.com, pbonzini@redhat.com
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, vkuznets@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9996-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-9997-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_NONE(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[thomaslefebvre3@gmail.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid]
-X-Rspamd-Queue-Id: B1FAB39D43B
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 48A3B39FF49
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On some ARM64 platforms with 4K PAGE_SIZE, page_pool fragment
-allocation in the RX refill path can cause 15-20% throughput
-regression under high connection counts (>16 TCP streams).
+Hi,
 
-Add an ethtool private flag "full-page-rx" that allows the user to
-force one RX buffer per page, bypassing the page_pool fragment path.
-This restores line-rate (180+ Gbps) performance on affected platforms.
+I'm seeing KVM_GET_CLOCK return values ~253 years in the future when
+running KVM inside a Hyper-V VM (nested virtualization).  I tracked
+it down to an unsigned wraparound in __get_kvmclock() and have
+bpftrace data showing the exact failure.
 
-Usage:
-  ethtool --set-priv-flags ethx full-page-rx on
+Setup:
+  - Intel i7-11800H laptop running Windows with Hyper-V
+  - L1 guest: Ubuntu 24.04, kernel 6.8.0, 4 vCPUs
+  - Clocksource: hyperv_clocksource_tsc_page (VDSO_CLOCKMODE_HVCLOCK)
+  - KVM running inside L1, hosting L2 guests
 
-There is no behavioral change by default. The flag must be explicitly
-enabled by the user or udev rule.
+Root cause:
 
-The existing single-buffer-per-page logic for XDP and jumbo frames is
-consolidated into a new helper mana_use_single_rxbuf_per_page() which
-is now the single decision point for both the automatic and
-user-controlled paths.
+__get_kvmclock() does:
 
-Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 22 ++++-
- .../ethernet/microsoft/mana/mana_ethtool.c    | 89 +++++++++++++++++++
- include/net/mana/mana.h                       |  8 ++
- 3 files changed, 117 insertions(+), 2 deletions(-)
+    hv_clock.tsc_timestamp = ka->master_cycle_now;
+    hv_clock.system_time = ka->master_kernel_ns + ka->kvmclock_offset;
+    ...
+    data->clock = __pvclock_read_cycles(&hv_clock, data->host_tsc);
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 49c65cc1697c..59a1626c2be1 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -744,6 +744,25 @@ static void *mana_get_rxbuf_pre(struct mana_rxq *rxq, dma_addr_t *da)
- 	return va;
- }
- 
-+static bool
-+mana_use_single_rxbuf_per_page(struct mana_port_context *apc, u32 mtu)
-+{
-+	/* On some platforms with 4K PAGE_SIZE, page_pool fragment allocation
-+	 * in the RX refill path (~2kB buffer) can cause significant throughput
-+	 * regression under high connection counts. Allow user to force one RX
-+	 * buffer per page via ethtool private flag to bypass the fragment
-+	 * path.
-+	 */
-+	if (apc->priv_flags & BIT(MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF))
-+		return true;
-+
-+	/* For xdp and jumbo frames make sure only one packet fits per page. */
-+	if (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2 || mana_xdp_get(apc))
-+		return true;
-+
-+	return false;
-+}
-+
- /* Get RX buffer's data size, alloc size, XDP headroom based on MTU */
- static void mana_get_rxbuf_cfg(struct mana_port_context *apc,
- 			       int mtu, u32 *datasize, u32 *alloc_size,
-@@ -754,8 +773,7 @@ static void mana_get_rxbuf_cfg(struct mana_port_context *apc,
- 	/* Calculate datasize first (consistent across all cases) */
- 	*datasize = mtu + ETH_HLEN;
- 
--	/* For xdp and jumbo frames make sure only one packet fits per page */
--	if (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2 || mana_xdp_get(apc)) {
-+	if (mana_use_single_rxbuf_per_page(apc, mtu)) {
- 		if (mana_xdp_get(apc)) {
- 			*headroom = XDP_PACKET_HEADROOM;
- 			*alloc_size = PAGE_SIZE;
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-index a28ca461c135..0547c903f613 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-@@ -133,6 +133,10 @@ static const struct mana_stats_desc mana_phy_stats[] = {
- 	{ "hc_tc7_tx_pause_phy", offsetof(struct mana_ethtool_phy_stats, tx_pause_tc7_phy) },
- };
- 
-+static const char mana_priv_flags[MANA_PRIV_FLAG_MAX][ETH_GSTRING_LEN] = {
-+	[MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF] = "full-page-rx"
-+};
-+
- static int mana_get_sset_count(struct net_device *ndev, int stringset)
- {
- 	struct mana_port_context *apc = netdev_priv(ndev);
-@@ -144,6 +148,10 @@ static int mana_get_sset_count(struct net_device *ndev, int stringset)
- 		       ARRAY_SIZE(mana_phy_stats) +
- 		       ARRAY_SIZE(mana_hc_stats)  +
- 		       num_queues * (MANA_STATS_RX_COUNT + MANA_STATS_TX_COUNT);
-+
-+	case ETH_SS_PRIV_FLAGS:
-+		return MANA_PRIV_FLAG_MAX;
-+
- 	default:
- 		return -EINVAL;
- 	}
-@@ -192,6 +200,14 @@ static void mana_get_strings_stats(struct mana_port_context *apc, u8 **data)
- 	}
- }
- 
-+static void mana_get_strings_priv_flags(u8 **data)
-+{
-+	int i;
-+
-+	for (i = 0; i < MANA_PRIV_FLAG_MAX; i++)
-+		ethtool_puts(data, mana_priv_flags[i]);
-+}
-+
- static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
- {
- 	struct mana_port_context *apc = netdev_priv(ndev);
-@@ -200,6 +216,9 @@ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
- 	case ETH_SS_STATS:
- 		mana_get_strings_stats(apc, &data);
- 		break;
-+	case ETH_SS_PRIV_FLAGS:
-+		mana_get_strings_priv_flags(&data);
-+		break;
- 	default:
- 		break;
- 	}
-@@ -590,6 +609,74 @@ static int mana_get_link_ksettings(struct net_device *ndev,
- 	return 0;
- }
- 
-+static u32 mana_get_priv_flags(struct net_device *ndev)
-+{
-+	struct mana_port_context *apc = netdev_priv(ndev);
-+
-+	return apc->priv_flags;
-+}
-+
-+static int mana_set_priv_flags(struct net_device *ndev, u32 priv_flags)
-+{
-+	struct mana_port_context *apc = netdev_priv(ndev);
-+	u32 changed = apc->priv_flags ^ priv_flags;
-+	u32 old_priv_flags = apc->priv_flags;
-+	bool schedule_port_reset = false;
-+	int err = 0;
-+
-+	if (!changed)
-+		return 0;
-+
-+	/* Reject unknown bits */
-+	if (priv_flags & ~GENMASK(MANA_PRIV_FLAG_MAX - 1, 0))
-+		return -EINVAL;
-+
-+	if (changed & BIT(MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF)) {
-+		apc->priv_flags = priv_flags;
-+
-+		if (!apc->port_is_up) {
-+			/* Port is down, flag updated to apply on next up
-+			 * so just return.
-+			 */
-+			return 0;
-+		}
-+
-+		/* Pre-allocate buffers to prevent failure in mana_attach
-+		 * later
-+		 */
-+		err = mana_pre_alloc_rxbufs(apc, ndev->mtu, apc->num_queues);
-+		if (err) {
-+			netdev_err(ndev,
-+				   "Insufficient memory for new allocations\n");
-+			apc->priv_flags = old_priv_flags;
-+			return err;
-+		}
-+
-+		err = mana_detach(ndev, false);
-+		if (err) {
-+			netdev_err(ndev, "mana_detach failed: %d\n", err);
-+			apc->priv_flags = old_priv_flags;
-+			goto out;
-+		}
-+
-+		err = mana_attach(ndev);
-+		if (err) {
-+			netdev_err(ndev, "mana_attach failed: %d\n", err);
-+			apc->priv_flags = old_priv_flags;
-+			schedule_port_reset = true;
-+		}
-+	}
-+
-+out:
-+	mana_pre_dealloc_rxbufs(apc);
-+
-+	if (err && schedule_port_reset)
-+		queue_work(apc->ac->per_port_queue_reset_wq,
-+			   &apc->queue_reset_work);
-+
-+	return err;
-+}
-+
- const struct ethtool_ops mana_ethtool_ops = {
- 	.supported_coalesce_params = ETHTOOL_COALESCE_RX_CQE_FRAMES,
- 	.get_ethtool_stats	= mana_get_ethtool_stats,
-@@ -608,4 +695,6 @@ const struct ethtool_ops mana_ethtool_ops = {
- 	.set_ringparam          = mana_set_ringparam,
- 	.get_link_ksettings	= mana_get_link_ksettings,
- 	.get_link		= ethtool_op_get_link,
-+	.get_priv_flags		= mana_get_priv_flags,
-+	.set_priv_flags		= mana_set_priv_flags,
- };
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 3336688fed5e..fd87e3d6c1f4 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -30,6 +30,12 @@ enum TRI_STATE {
- 	TRI_STATE_TRUE = 1
- };
- 
-+/* MANA ethtool private flag bit positions */
-+enum mana_priv_flag_bits {
-+	MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF = 0,
-+	MANA_PRIV_FLAG_MAX,
-+};
-+
- /* Number of entries for hardware indirection table must be in power of 2 */
- #define MANA_INDIRECT_TABLE_MAX_SIZE 512
- #define MANA_INDIRECT_TABLE_DEF_SIZE 64
-@@ -531,6 +537,8 @@ struct mana_port_context {
- 	u32 rxbpre_headroom;
- 	u32 rxbpre_frag_count;
- 
-+	u32 priv_flags;
-+
- 	struct bpf_prog *bpf_prog;
- 
- 	/* Create num_queues EQs, SQs, SQ-CQs, RQs and RQ-CQs, respectively. */
--- 
-2.43.0
+and __pvclock_read_cycles() does:
 
+    delta = tsc - src->tsc_timestamp;    /* unsigned */
+
+master_cycle_now is a raw RDTSC captured by
+pvclock_update_vm_gtod_copy().  host_tsc is a raw RDTSC read by
+__get_kvmclock() on the current CPU.  Both go through the vgettsc()
+HVCLOCK path which calls hv_read_tsc_page_tsc() -- this computes a
+cross-CPU-consistent reference counter via scale/offset, but stores
+the *raw* RDTSC in tsc_timestamp as a side effect.
+
+Under Hyper-V, raw RDTSC values are not consistent across vCPUs.
+The hypervisor corrects them only through the TSC page scale/offset.
+If pvclock_update_vm_gtod_copy() runs on CPU 0 and __get_kvmclock()
+later runs on CPU 1 where the raw TSC is lower, the unsigned
+subtraction wraps.
+
+I wrote a bpftrace tracer (included below) to instrument both
+functions and captured two corruption events:
+
+  Event 1:
+
+    [GTOD_COPY] pid=2117649 cpu=0->0 use_master=1
+                mcn=598992030530137 mkn=259977082393200
+
+    [GET_CLOCK] pid=2117649 entry_cpu=1 exit_cpu=1 use_master=1
+      clock=8006399342167092479 host_tsc=598991848289183
+      master_cycle_now=598992030530137
+      system_time(mkn+off)=5175860260
+      TSC DEFICIT: 182240954 cycles
+
+    master_cycle_now captured on CPU 0, host_tsc read on CPU 1.
+    CPU 1's raw RDTSC was 182M cycles lower.
+
+      598991848289183 - 598992030530137 = 18446744073527310662 (u64)
+
+    Returned clock: 8,006,399,342,167,092,479 ns (~253.7 years)
+    Correct system_time: 5,175,860,260 ns (~5.2 seconds)
+
+  Event 2:
+
+    [GTOD_COPY] pid=2117953 cpu=0->0 use_master=1
+                mcn=599040238416510
+
+    [GET_CLOCK] pid=2117953 entry_cpu=3 exit_cpu=3 use_master=1
+      clock=8006399342464295526 host_tsc=599040211994220
+      master_cycle_now=599040238416510
+      TSC DEFICIT: 26422290 cycles
+
+    Same pattern, CPU 0 vs CPU 3, 26M cycle deficit.
+
+kvm_get_wall_clock_epoch() has the same pattern -- fresh host_tsc
+vs stale master_cycle_now passed to __pvclock_read_cycles().
+
+The simplest fix I can think of is guarding the __pvclock_read_cycles
+call in __get_kvmclock():
+
+    if (data->host_tsc >= hv_clock.tsc_timestamp)
+        data->clock = __pvclock_read_cycles(&hv_clock, data->host_tsc);
+    else
+        data->clock = hv_clock.system_time;
+
+system_time (= master_kernel_ns + kvmclock_offset) was computed from
+the TSC page's corrected reference counter and is accurate regardless
+of CPU.  The fallback loses sub-us interpolation but avoids a 253-year
+jump.  On systems with consistent cross-CPU TSC, the branch is never
+taken.
+
+One thing I wasn't sure about: when the fallback triggers,
+KVM_CLOCK_TSC_STABLE is still set in data->flags.  I left it alone
+since the returned value is still correct (just less precise), but
+I could see an argument for clearing it.
+
+Disabling master clock entirely for HVCLOCK would also work but
+seemed heavy -- it sacrifices PVCLOCK_TSC_STABLE_BIT, forces the
+guest pvclock read into the atomic64_cmpxchg monotonicity guard,
+and triggers KVM_REQ_GLOBAL_CLOCK_UPDATE on vCPU migration.
+
+Reproducer bpftrace script (run while exercising KVM on a Hyper-V
+host):
+
+  #!/usr/bin/env bpftrace
+  /*
+   * Detect host_tsc < master_cycle_now in __get_kvmclock.
+   *
+   * struct kvm_clock_data layout (for raw offset reads):
+   *   offset 0:  u64 clock
+   *   offset 24: u64 host_tsc
+   */
+
+  kprobe:__get_kvmclock
+  {
+      $kvm = (struct kvm *)arg0;
+      @get_data[tid] = (uint64)arg1;
+      @get_use_master[tid] = (uint64)$kvm->arch.use_master_clock;
+      @get_mcn[tid] = (uint64)$kvm->arch.master_cycle_now;
+      @get_cpu[tid] = cpu;
+  }
+
+  kretprobe:__get_kvmclock
+  {
+      $data_ptr = @get_data[tid];
+      if ($data_ptr != 0) {
+          $clock = *(uint64 *)($data_ptr);
+          $host_tsc = *(uint64 *)($data_ptr + 24);
+          $use_master = @get_use_master[tid];
+          $mcn = @get_mcn[tid];
+
+          if ($use_master && $host_tsc != 0 && $host_tsc < $mcn) {
+              printf("BUG: pid=%d cpu=%d->%d host_tsc=%lu mcn=%lu "
+                     "deficit=%lu clock=%lu\n",
+                     pid, @get_cpu[tid], cpu, $host_tsc,
+                     $mcn, $mcn - $host_tsc, $clock);
+          }
+      }
+      delete(@get_data[tid]);
+      delete(@get_use_master[tid]);
+      delete(@get_mcn[tid]);
+      delete(@get_cpu[tid]);
+  }
+
+  kprobe:pvclock_update_vm_gtod_copy {
+      @gtod_kvm[tid] = (uint64)arg0;
+      @gtod_cpu[tid] = cpu;
+  }
+  kretprobe:pvclock_update_vm_gtod_copy
+  {
+      $kvm = (struct kvm *)@gtod_kvm[tid];
+      if ($kvm != 0) {
+          printf("GTOD: pid=%d cpu=%d->%d mcn=%lu use_master=%d\n",
+                 pid, @gtod_cpu[tid], cpu,
+                 $kvm->arch.master_cycle_now,
+                 $kvm->arch.use_master_clock);
+      }
+      delete(@gtod_kvm[tid]);
+      delete(@gtod_cpu[tid]);
+  }
+
+Thanks,
+Thomas
 
