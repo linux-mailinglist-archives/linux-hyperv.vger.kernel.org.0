@@ -1,181 +1,160 @@
-Return-Path: <linux-hyperv+bounces-10045-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10046-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gPlkOvAL1WlQzwcAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10045-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 07 Apr 2026 15:51:44 +0200
+	id wBtYCNsN1WlQzwcAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10046-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 07 Apr 2026 15:59:55 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 423683AF7B6
-	for <lists+linux-hyperv@lfdr.de>; Tue, 07 Apr 2026 15:51:44 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67DA83AF9A6
+	for <lists+linux-hyperv@lfdr.de>; Tue, 07 Apr 2026 15:59:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7CE91307E04B
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Apr 2026 13:40:16 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AC4573009F9B
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Apr 2026 13:54:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED8243AF662;
-	Tue,  7 Apr 2026 13:40:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C677F3B8959;
+	Tue,  7 Apr 2026 13:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="At3ZclNL"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from canpmsgout11.his.huawei.com (canpmsgout11.his.huawei.com [113.46.200.226])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10903391E45;
-	Tue,  7 Apr 2026 13:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.226
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3BF63B8958;
+	Tue,  7 Apr 2026 13:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775569211; cv=none; b=PE5lrXKoPGosqievZZiQIQtGHGE7YKdN5ZHzVctsaxghmaMHrmvx39CEtYBpxrb9zIxJ+XsfMjZI1suS94Roq+boj/dg95epHZiv1GYX1MU2/jd91UlgFILWhQrImCFliZrx/Tdo4n+JejyF++040ivsdIREwtl/ZBD7cYhLdtM=
+	t=1775570080; cv=none; b=bjOMTrkJZQSsfDvQ5m2X27reXXpxw8qvIlDCKsU8JgNXoKtLzDA1H5IpDluXZfzuta+/kRF0wto4+X0XF0qgqVMpCYCEdsQjQr2VzvUC4aWwJ0OeFWjL5BiyDnQvl/c0Uz4BMy0DBB+TOiqNy6FiD78mRV1jEjpXLWKU+iA3MN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775569211; c=relaxed/simple;
-	bh=kO8Uuq9O6IKOaTr577VpJyzMgs5/XyDIgTjNQwkon/0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bissRgomXOowQ9HXNupGoKkgMwPWVIGrr7Guo/SmnBw6+6ScY7DpcJvqQK/7mlmfEurkySmDYcB0MCPKCMUniI8LkE6NfAugQyegr4p0OE7oZHfmmgtQZ7LeWj1akXjjlUYbPqr43ZhV7gglHiRyKfzW2aYN2RkX2DIMUk3Jd4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=hisilicon.com; arc=none smtp.client-ip=113.46.200.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hisilicon.com
-Received: from mail.maildlp.com (unknown [172.19.163.127])
-	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4fqnGM6lY5zKm4c;
-	Tue,  7 Apr 2026 21:33:47 +0800 (CST)
-Received: from kwepemf100018.china.huawei.com (unknown [7.202.181.17])
-	by mail.maildlp.com (Postfix) with ESMTPS id 594A340572;
-	Tue,  7 Apr 2026 21:40:03 +0800 (CST)
-Received: from [10.67.120.168] (10.67.120.168) by
- kwepemf100018.china.huawei.com (7.202.181.17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Tue, 7 Apr 2026 21:39:53 +0800
-Message-ID: <f1fb94fe-c86b-7866-d606-088343a56fab@hisilicon.com>
-Date: Tue, 7 Apr 2026 21:39:52 +0800
+	s=arc-20240116; t=1775570080; c=relaxed/simple;
+	bh=O1PydtrZmxFy8rB689FjQ1ywOSEusWCJPTtvtLeKIaU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pVGr7vES5kPDoS95GxhFRzdwaGkW8yanLzoB1dhFVgIH14Hc8XJUBuiQ78gXXuuEHiIHxqNr5unyyI0xsTz6dcbko7xzmWUfYvBpQWuClbQXKqw7zOu+imWs0oRy1rSJKHPxMuWs8A5/w5o54579S/F9QJrTPj6dhNAMY9FQpVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=At3ZclNL; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1204)
+	id 45BA520B710C; Tue,  7 Apr 2026 06:54:37 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 45BA520B710C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1775570077;
+	bh=olc/L9k1GWNZLE0TYLsQ/fNujwydX/8pxnCvYO6B1zY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=At3ZclNLRsBqpFzVIwcKB95e83TsP95E/4TYosQBjXa8rPnw9ct+InVgvdx4hlB9T
+	 0L1YtB5Xemq8qADi5/M4BhIL1S4UK2nWJQJ2LecdnXf12cVWqwQiObDUcuQ1buiH3H
+	 h5tT/gSzEbkVVxqLJkAVrWafd3TUKR/6vnSormag=
+Date: Tue, 7 Apr 2026 06:54:37 -0700
+From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	leon@kernel.org, longli@microsoft.com, kotaranov@microsoft.com,
+	horms@kernel.org, shradhagupta@linux.microsoft.com,
+	ssengar@linux.microsoft.com, ernis@linux.microsoft.com,
+	shirazsaleem@microsoft.com, linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, stephen@networkplumber.org,
+	jacob.e.keller@intel.com, dipayanroy@microsoft.com,
+	leitao@debian.org, kees@kernel.org
+Subject: Re: [PATCH net-next v5 0/2] net: mana: add ethtool private flag for
+ full-page RX buffers
+Message-ID: <adUMnWHybqX+4aG5@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <adHaF6DloRthctRb@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <e80b603d-8be0-4aee-8a31-c9cbb4a8ab00@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 06/16] RDMA/hns: Fix xarray race in
- hns_roce_create_srq()
-To: Jason Gunthorpe <jgg@nvidia.com>, Abhijit Gangurde
-	<abhijit.gangurde@amd.com>, Allen Hubbe <allen.hubbe@amd.com>, Broadcom
- internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Bernard
- Metzler <bernard.metzler@linux.dev>, Potnuri Bharat Teja
-	<bharat@chelsio.com>, Bryan Tan <bryan-bt.tan@broadcom.com>, Cheng Xu
-	<chengyou@linux.alibaba.com>, Dennis Dalessandro
-	<dennis.dalessandro@cornelisnetworks.com>, Gal Pressman
-	<gal.pressman@linux.dev>, Kai Shen <kaishen@linux.alibaba.com>, Kalesh AP
-	<kalesh-anakkur.purayil@broadcom.com>, Konstantin Taranov
-	<kotaranov@microsoft.com>, Krzysztof Czurylo <krzysztof.czurylo@intel.com>,
-	Leon Romanovsky <leon@kernel.org>, <linux-hyperv@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, Long Li <longli@microsoft.com>, Michal Kalderon
-	<mkalderon@marvell.com>, Michael Margolin <mrgolin@amazon.com>, Nelson
- Escobar <neescoba@cisco.com>, Satish Kharat <satishkh@cisco.com>, Selvin
- Xavier <selvin.xavier@broadcom.com>, Yossi Leybovich <sleybo@amazon.com>,
-	Chengchang Tang <tangchengchang@huawei.com>, Tatyana Nikolova
-	<tatyana.e.nikolova@intel.com>, Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Yishai Hadas <yishaih@nvidia.com>
-CC: Adit Ranadive <aditr@vmware.com>, Aditya Sarwade <asarwade@vmware.com>,
-	Bryan Tan <bryantan@vmware.com>, Dexuan Cui <decui@microsoft.com>, Doug
- Ledford <dledford@redhat.com>, George Zhang <georgezhang@vmware.com>, Jorgen
- Hansen <jhansen@vmware.com>, Leon Romanovsky <leonro@mellanox.com>, Parav
- Pandit <parav.pandit@emulex.com>, <patches@lists.linux.dev>, Roland Dreier
-	<roland@purestorage.com>, Roland Dreier <rolandd@cisco.com>, Ajay Sharma
-	<sharmaajay@microsoft.com>, <stable@vger.kernel.org>
-References: <6-v2-1c49eeb88c48+91-rdma_udata_rep_jgg@nvidia.com>
-Content-Language: en-US
-From: Junxian Huang <huangjunxian6@hisilicon.com>
-In-Reply-To: <6-v2-1c49eeb88c48+91-rdma_udata_rep_jgg@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemf100018.china.huawei.com (7.202.181.17)
-X-Spamd-Result: default: False [0.04 / 15.00];
-	DMARC_POLICY_QUARANTINE(1.50)[hisilicon.com : SPF not aligned (relaxed), No valid DKIM,quarantine];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e80b603d-8be0-4aee-8a31-c9cbb4a8ab00@intel.com>
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[42];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[huangjunxian6@hisilicon.com,linux-hyperv@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10045-lists,linux-hyperv=lfdr.de];
-	NEURAL_HAM(-0.00)[-0.970];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sashiko.dev:url,hisilicon.com:mid,nvidia.com:email]
-X-Rspamd-Queue-Id: 423683AF7B6
+	TAGGED_FROM(0.00)[bounces-10046-lists,linux-hyperv=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[27];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 67DA83AF9A6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-
-
-On 2026/4/7 1:40, Jason Gunthorpe wrote:
-> Sashiko points out that once the srq memory is stored into the xarray by
-> alloc_srqc() it can immediately be looked up by:
+On Tue, Apr 07, 2026 at 03:10:45PM +0200, Alexander Lobakin wrote:
+> From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+> Date: Sat, 4 Apr 2026 20:42:15 -0700
 > 
-> 	xa_lock(&srq_table->xa);
-> 	srq = xa_load(&srq_table->xa, srqn & (hr_dev->caps.num_srqs - 1));
-> 	if (srq)
-> 		refcount_inc(&srq->refcount);
-> 	xa_unlock(&srq_table->xa);
+> > On some ARM64 platforms with 4K PAGE_SIZE, utilizing page_pool 
+> > fragments for allocation in the RX refill path (~2kB buffer per fragment)
+> > causes 15-20% throughput regression under high connection counts
+> > (>16 TCP streams at 180+ Gbps). Using full-page buffers on these
+> > platforms shows no regression and restores line-rate performance.
+> > 
+> > This behavior is observed on a single platform; other platforms
+> > perform better with page_pool fragments, indicating this is not a
+> > page_pool issue but platform-specific.
+> > 
+> > This series adds an ethtool private flag "full-page-rx" to let the
+> > user opt in to one RX buffer per page:
+> > 
+> >   ethtool --set-priv-flags eth0 full-page-rx on
 > 
-> Which will fail refcount debug because the refcount is 0 and then crash:
+> Sorry I may've missed the previous threads.
 > 
-> 	srq->event(srq, event_type);
+> Has this approach been discussed here? Private flags are generally
+> discouraged.
 > 
-> Because event is NULL.
-
-I don't think this will actually happen because HW won't report an SRQ
-event before the SRQ is fully ready and actually used.
-
-From the perspective of coding, I'm fine with this change, but since
-there is similar logic for QP event, could you also apply this change
-to QP?
-
-Junxian
-
+> Alternatively, you can provide Ethtool ops to change the Rx buffer size,
+> so that you'd be able to set it to PAGE_SIZE on affected platforms and
+> the result would be the same.
+>
+Hi Alex, 
+This was discussed here:
+https://lore.kernel.org/all/adHTm2SvjDrezEdv@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net/ 
+> > 
+> > There is no behavioral change by default. The flag can be persisted
+> > via udev rule for affected platforms.
+> > 
+> > Changes in v5:
+> >   - Split prep refactor into separate patch (patch 1/2)
+> > Changes in v4:
+> >   - Dropping the smbios string parsing and add ethtool priv flag
+> >     to reconfigure the queues with full page rx buffers.
+> > Changes in v3:
+> >   - changed u8* to char*
+> > Changes in v2:
+> >   - separate reading string index and the string, remove inline.
+> > 
+> > Dipayaan Roy (2):
+> >   net: mana: refactor mana_get_strings() and mana_get_sset_count() to
+> >     use switch
+> >   net: mana: force full-page RX buffers via ethtool private flag
+> > 
+> >  drivers/net/ethernet/microsoft/mana/mana_en.c |  22 ++-
+> >  .../ethernet/microsoft/mana/mana_ethtool.c    | 164 ++++++++++++++----
+> >  include/net/mana/mana.h                       |   8 +
+> >  3 files changed, 163 insertions(+), 31 deletions(-)
 > 
-> Use refcount_inc_not_zero() instead to ensure a partially prepared srq is
-> never retrieved from the event handler and fix the ordering of the
-> initialization so refcount becomes 1 only after it is fully ready.
-> 
-> Link: https://sashiko.dev/#/patchset/0-v1-e911b76a94d1%2B65d95-rdma_udata_rep_jgg%40nvidia.com?part=3
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> ---
->  drivers/infiniband/hw/hns/hns_roce_srq.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/infiniband/hw/hns/hns_roce_srq.c b/drivers/infiniband/hw/hns/hns_roce_srq.c
-> index cb848e8e6bbd76..d6201ddde0292a 100644
-> --- a/drivers/infiniband/hw/hns/hns_roce_srq.c
-> +++ b/drivers/infiniband/hw/hns/hns_roce_srq.c
-> @@ -16,8 +16,8 @@ void hns_roce_srq_event(struct hns_roce_dev *hr_dev, u32 srqn, int event_type)
->  
->  	xa_lock(&srq_table->xa);
->  	srq = xa_load(&srq_table->xa, srqn & (hr_dev->caps.num_srqs - 1));
-> -	if (srq)
-> -		refcount_inc(&srq->refcount);
-> +	if (srq && !refcount_inc_not_zero(&srq->refcount))
-> +		srq = NULL;
->  	xa_unlock(&srq_table->xa);
->  
->  	if (!srq) {
-> @@ -481,8 +481,8 @@ int hns_roce_create_srq(struct ib_srq *ib_srq,
->  	}
->  
->  	srq->event = hns_roce_ib_srq_event;
-> -	refcount_set(&srq->refcount, 1);
->  	init_completion(&srq->free);
-> +	refcount_set(&srq->refcount, 1);
->  
->  	return 0;
->  
+> Thanks,
+> Olek
 
