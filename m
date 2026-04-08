@@ -1,227 +1,221 @@
-Return-Path: <linux-hyperv+bounces-10072-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10073-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id jnNCGhDW1WkD+gcAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10072-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Apr 2026 06:14:08 +0200
+	id SqaFBITy1WnL/gcAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10073-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Apr 2026 08:15:32 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8D223B6B73
-	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Apr 2026 06:14:03 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66E4D3B77B8
+	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Apr 2026 08:15:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7CAC63007E08
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Apr 2026 04:13:32 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id BF472301DC0F
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Apr 2026 06:15:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA95834DCD7;
-	Wed,  8 Apr 2026 04:13:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 064B435CB81;
+	Wed,  8 Apr 2026 06:15:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rlOPUBf8"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="EBhFyA+d"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11020115.outbound.protection.outlook.com [52.101.85.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB6B34D39B
-	for <linux-hyperv@vger.kernel.org>; Wed,  8 Apr 2026 04:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC95229B38;
+	Wed,  8 Apr 2026 06:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.115
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775621610; cv=pass; b=h4TdCnqT5QByW7Rcq6Oo1/Ch3vjWH3n3UXedOXeNHGRgXWadkJbsHvhKjb5/QOhkwmpV8GZ81mzhc00Ca+7jnVE4cQ4fCMOxYR//gVoidtqhKxypZqDdoY3qxCw0dA+Ti1iwVaDFj/Eilt6VJGW2JAa8rhiTonJfbPG9tF86WnY=
+	t=1775628927; cv=fail; b=oFlLimxRSRRgkTEpC0UYLPvVBFUxJZOYGUKu2SQ7p7h/PCXTIn7kiCUvic65YHWYFBjq4BpG+4Clcrydj9KMz/6gCUL6dZvjFc5XCPU/UNdNM7x3Ir5Lrnb5mNN578ep/czA83xbfDhsX+tgJxSCJdSyt1effYvcC38hbPNfZX8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775621610; c=relaxed/simple;
-	bh=mSu21n7FtXaiXm7xUkvFg5Z4GAfXF9LADkpKmy8CBU4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OwLWbFYfJs0fLChJmaOQt1jefyQA9dL1BAUzniydymKi/kEKmNlsfM96v1WZ3zz9KPsZwok7sTi+CzdgaBlR95gvIe38NM3p+y+68GpdrQ1RljyBlGPILDQzdQkV/fRZuVdGPnChkWtZ4LVffNIbYj6BtXLMZLEcjEFZEgaNwXk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rlOPUBf8; arc=pass smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-35d9923eec5so3409222a91.2
-        for <linux-hyperv@vger.kernel.org>; Tue, 07 Apr 2026 21:13:29 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775621609; cv=none;
-        d=google.com; s=arc-20240605;
-        b=jLx11G2yvR9Cpb/lh9yxDAYXSW8/ihQxelwu3xCiiZk6FN1xrZxvP/DYXE2e+h/I4m
-         HgnN5c+Y/Y8QVMKK58l0rImszMWhxNGVaRPv172XPpFfUc/ze5kN+YWvtLsMO4Nd8pTK
-         m7exUtV+u8gygJ5jYdDMIMlgDBuS+O2ry3bCrksCFXiQoqGx06GS8Nn9GxpJeAOUNud7
-         dz6MpWante2xcBq9pUoiJ187h2zu88Rsh0iMXAux3JU2qQRskAq76a2xpWuwjxTIMRZc
-         zhH+k78Lf+8+sxtDOapVIJdH3dtoqQIOZ0kFd7Y+LCq8grv6DMr3bmM3ujteSIzYHT1l
-         F4jA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=mSu21n7FtXaiXm7xUkvFg5Z4GAfXF9LADkpKmy8CBU4=;
-        fh=/9Odbb4id7M0CnjzpBWtbI5Tn39LV5tqpMNG+aiyx/0=;
-        b=jOunNfLnNgKkZlFL4yH6zQku374A+eSLyeOIPbh0v1L1f8tJgpG8a4UaDTvd1JWsnC
-         HSTkjCvaMZbt/kgUe8AY70+dAu2iN+x9Tibp3yEHBykHuok2QXecsezBqptK9Z2QoD9W
-         x1BmdoFmbMvml3U/Foqst617UchWvNSbqe/GoH/Br+75RV/24PR2W6JnjtGLjpZlsqwW
-         CIllxhRWP7G1doIg0h5FnAFbFg+9ERRKWEY2Uayn3V5ajybxGfu7UHKw747Sbs6MIQu3
-         hiDPn7HWQEGLVfG+g73HVxqdtX3vHKsNR0ywVqIAoaovaFOmUCMjNFY57cpK40L/CScc
-         PHgw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775621609; x=1776226409; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mSu21n7FtXaiXm7xUkvFg5Z4GAfXF9LADkpKmy8CBU4=;
-        b=rlOPUBf85DMmPWFiVD05kriRJmZiH71jVCY1+hYVkqkQopganQI6uoiEQirJDaD6Gn
-         OfptHV78/3ABCAGrWTTv2usfwW2JRfqku+iqhDEbhPdFixgfKATHmg1wVOu3Dn/EQUZp
-         jR4zPkqQoeWvk8QDfy31mWxPvtaaE1iZ5Lr4l5EuHuTRleJ6Aa/MekLO9tdkPLin3eny
-         Kdof7R0oUc3xXLwqlfJXjBQqgLmLTH6y7Df1o3YfKteGV/b5jTHrbzkwqsrYgLmHdAhD
-         R59jrXgiDyroTVnjNQzg1vGaMHBsaNTTW/QrpZzM9GFi0B1XEhv82Pw2ftuoJ4ZPJP0b
-         AYxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775621609; x=1776226409;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=mSu21n7FtXaiXm7xUkvFg5Z4GAfXF9LADkpKmy8CBU4=;
-        b=WBAhwmDHjZDyVPpfBEU94JPQojLcYY2gVN/a0bo04B4ytjus98hdbDakCyZ4ItacZO
-         BRyos3ZDeN5Vr00nmk6lVwe4b8rAxl5fmge+Q8sa4d448Q843xm4uCGoTdPtQnUTLtqz
-         rzrZYmdhjqqOfC/sCIrC4PDHqmBkogpHsWtnGnSsCSFNCwqZzcuziNOkqwoWxjEMWUEn
-         +BmBg7U2NhoHwoX9vJc3MnMxUYYB3gG0XF+wJzMrel7w0lTnj68tDCdMYeR+/gjdoej7
-         umAlUB47KN0PxLP/1GJIn5XjXFpeHhhSi/+V6/ya2xxKy1UcEKjeetdDbWzbiSrlLrRn
-         e97w==
-X-Forwarded-Encrypted: i=1; AJvYcCWXBxaHCGL8Ei+XVf1eLMrJ17DjseQgVDrshS5p68PvMHBggzug2fwahAnAtiJaHwnYQUII7HJx+4bDOb8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnpEHpzFbgeWi1X/IlgVw/B1IeboR3thHoUfqWtW7vjHp7WNgD
-	Cqab2Bowwz0tDZij6an/rJqg4PgwWjq3rFwthqe/ep2f69jnRfGkCJT4oEbBL3EI1UuH36fQyDT
-	Nt3cG6OozMkEoYwZKXBwkoh1Z9BeFpT8=
-X-Gm-Gg: AeBDievcSvl3y+F5rCsbzfD6L/hIeAanDMHY7SrRCe5wd3seoQHHJI5HNbpw37UylC/
-	0/h6GETeMsMg5BezlaISfa4Af768YuHeq6fbg8Ejn2cQI2KROyutvpqHe8yECbZ8BrNXyHrcuGH
-	gWj4e0kr1nA6fJlH5xWVD1PULyWFvW8ninP0nd1jJ0EuDNTPJfqe0DjvSGRWY/uGCiQcUVtuN5Q
-	OiErBmSzyFu/WivztCyOfAsg2C98NtTSMB/zvj0B7NUCx05WGWbLyCP4tzJHMcPL5yI8UkIdcFG
-	U957rdqBDVggq4gVoEM9glDF4l6OxNitolV+3VQk
-X-Received: by 2002:a17:90a:dfc3:b0:35b:e529:2d60 with SMTP id
- 98e67ed59e1d1-35de68712b0mr18352058a91.8.1775621608929; Tue, 07 Apr 2026
- 21:13:28 -0700 (PDT)
+	s=arc-20240116; t=1775628927; c=relaxed/simple;
+	bh=NC6fUV8NFdrryI6L1lc7sgHRhl8vAXgpXfdnFtQ6RrQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Uz1Wa6yG5FwuX9G8uLCbzXbQCQJcAM8x46+6LryRtLKcNqmM9afV6ceU5FitnvDDweioVwCIDMJ6JA5j1UxkNJ9AtuZnc3TMXa9gUSsCyhoHGYSdpf07ACbm6J3gVyfWUNQFhOf+qZ/ULwiKmED2VpqZTL9iDhy5DI6zNAHCATc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=EBhFyA+d; arc=fail smtp.client-ip=52.101.85.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nWMoMUL0Ef1WFDM9I3BkgTnH5E7Ihb6CX+BCgdVYZEbHD5EaEhLOxXdJhS2NNMuJDALE468AQ5xFALIdAR3BB7SNcFhlc0tCZ/FwK6vBJDjK104VHJuaIUhQB53Qd73qn5OpJNq5cA4ZJYP3MTavig+twcq+fFg7pRvojhKhtz5isSxdegaLF4I+QSV/tqeQ7yh8AlqUXEdFQ6XOD7l4RD7OEh06GjCTVz3es7/w7Kd4b4kOqNzD1ZYsi9Yk3W6nbdvTH+pSR4FXHI+PXZ2IrqC4P0yYuNmahITqTA81zAFGNcM4FejTB0uvAzXR8j6R7yf6T8FKG0iWanDCkdzvmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4ty3OlZym7ovnn01lILFNvkL2Agcl886hOVrL9YudJY=;
+ b=NMAuR3+HI4kfRi4pmeshH7P14vHpcyf54CZmThJTL+IJ+GhmJMFpWSAQ5UqxBqysY8Bf6y/b8y1GUAONJ5qMq9bqkX71sBspYh+hw9ZiLtZeynqJxrFjkQwnpsFErFcLXv86Ms3B5GwCEFiKK6X+9MISb3OQleUxrGHX9H5jIKglEsseAhFZSNsOmljDsLoQBaxTZNESBFkJUJ+8yxLyrgjvaXauyCHgSkK/KmcUONztA1tsRUY/0oWO+Rf9fIxK/rQbqw3f4+ofXGn1hY83bzcGdalaNp4AYt0I4fbgO/iZ3GS/n0dZ8Gm+0J/qJnczrj2nMj75ehgurSDJuG/L6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4ty3OlZym7ovnn01lILFNvkL2Agcl886hOVrL9YudJY=;
+ b=EBhFyA+d3kvflhNudygGg1SGGIpOZOjpzRmC2xzr+n8X0tDdeZehXGY43u3eNen2158nSKdcq6kI6kwN+4XQVf9Zo8xxEOY3knlJxCWbhtb9U+hjUEgn/MMV+Jfb4FcZyymSMw++QZwFJ3mKShdfSglWBSco6K6EgeuhWx5+I6U=
+Received: from SA1PR21MB6921.namprd21.prod.outlook.com (2603:10b6:806:4a7::11)
+ by SA3PR21MB5744.namprd21.prod.outlook.com (2603:10b6:806:499::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.9; Wed, 8 Apr
+ 2026 06:15:22 +0000
+Received: from SA1PR21MB6921.namprd21.prod.outlook.com
+ ([fe80::51cf:497c:e5df:f6d]) by SA1PR21MB6921.namprd21.prod.outlook.com
+ ([fe80::51cf:497c:e5df:f6d%2]) with mapi id 15.20.9769.014; Wed, 8 Apr 2026
+ 06:15:22 +0000
+From: Dexuan Cui <DECUI@microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>, KY Srinivasan <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>, "wei.liu@kernel.org"
+	<wei.liu@kernel.org>, Long Li <longli@microsoft.com>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+	"mani@kernel.org" <mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, Jake Oshins
+	<jakeo@microsoft.com>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+CC: "stable@vger.kernel.org" <stable@vger.kernel.org>, Matthew Ruffell
+	<matthew.ruffell@canonical.com>, Krister Johansen <kjlx@templeofstupid.com>
+Subject: RE: [PATCH] PCI: hv: Allocate MMIO from above 4GB for the config
+ window
+Thread-Topic: [PATCH] PCI: hv: Allocate MMIO from above 4GB for the config
+ window
+Thread-Index: AQHci0NePIGSa/9NGkCUvIR93cd3gLVdwUXwgG35paCABdGbsIADk5AA
+Date: Wed, 8 Apr 2026 06:15:22 +0000
+Message-ID:
+ <SA1PR21MB692186FEE8E890A8CBE4C74FBF5BA@SA1PR21MB6921.namprd21.prod.outlook.com>
+References: <20260122020337.94967-1-decui@microsoft.com>
+ <BN7PR02MB41486A6DBF839D5BC5D5BC2ED497A@BN7PR02MB4148.namprd02.prod.outlook.com>
+ <SA1PR21MB692176C1BC53BFC9EAE5CF8EBF51A@SA1PR21MB6921.namprd21.prod.outlook.com>
+ <SN6PR02MB415726C7758C985528ACB912D45CA@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To:
+ <SN6PR02MB415726C7758C985528ACB912D45CA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e5cb3d60-cfa7-4cd5-968a-6b2312d12ef6;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-04-08T05:48:20Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR21MB6921:EE_|SA3PR21MB5744:EE_
+x-ms-office365-filtering-correlation-id: bb96f1c8-5153-4dc0-077d-08de9536378d
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700021|921020|18002099003|22082099003|56012099003;
+x-microsoft-antispam-message-info:
+ Ly+UyACHTwogh4D2/4+XywnTQHsc0xyZ4Ele5Nsssq9YZZqVwLTAeNZlF1JzeqC7Z4GN6y/1/bXmbLuEqooKAvLEsJMfXTxRyT+khKLVLj0fOG4BkP87H8E5tse9PQc5xm3SO2Jis+1I1Xjz/ZcFWIkkrkhAzxvWNgodIef0HW9AbHzPB22M64QaDHoguLaw7HXCsahSA+hhGb5uL9D+o7bWzxfdDWVuODEwjfSmcJcALKztqC2vk6YQB/9Nt3m0TW51L/v9UUlQS3qUhjETigPNvVnLuOvXkgW9bBKF6h+1NkmL87ijg+jacO3faqNCUWhDidzoiPZostO8zkR6N8laIe1Q1wU7woCxAVGLFclsVA+UQtCk1X2Gz8Jm6A24lALtTrYtL2rQGSOWaqZMUN1hB86zzOCc/fH2NmxlR69Z9jfLnkIEgiThWQjiHlBEjV18gU6HpfcAKp8SeVfnatin5SUiuTK7f4VRP3cxfCjIdtSPxZw2KSGbuvEVIL/0qaqtuFGFttti48T8htu6ipbRucbnvel7/iNcI+5gal5SCBjbCp0Ch9aVl4k9LTwLSMUWUwDd1CkJ02ox/ZIFkGzirmfEKkSOsLeOLiLI5YOgcfOceWX30qGSBUQcf8TxGZtsh4jFc/92FNn0B5NaT9AsmXIWKcaD+QT2fJ8w494tlZjLW+C9jj8j2SsC7DkrsB39Esdm/jfPTLGnOemIjx51IOvnJCMzXtP5Nf+KLunZuGJzhJE+NHdw7ZCBQGS8Wbp1TYLw+NaQpvdofcONso3Nugt9aTsKM/mu4Z9bsgo2cYmWv0y1xXUpcYH2iIK/
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB6921.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700021)(921020)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?DmDALcgSf/ZMdN6jDgofcjQH7cDP9uVkeIvLW2CvkTXe/4IH4lgo2twguhWI?=
+ =?us-ascii?Q?iC2fv9U6AH0HgBWxKAyHXq3GbHH9zt2JGw84e8aZqu7fRJwvWcoMlD/TQe8s?=
+ =?us-ascii?Q?wqgo7FoEsUs6EoXJP7r9NySGO04+c9XRfVFu962ZUbBHkxEs2NKwxTQ6tbjS?=
+ =?us-ascii?Q?LPmnMqX8rxodGVI+mSG3/MaidW5yVXO9QIvcBkqyZidJ5Smr9r379xaqOXsC?=
+ =?us-ascii?Q?fLlq9o8wYnhw08TneUfzdHvQGFlUAws6/lf21TRWj/PpkCr/vWN6J4ju3s3I?=
+ =?us-ascii?Q?lq3snNKZFN0+vt9c5xLRQUI0r5ioPWyWtMd/68fzYpl/Nqjm4Nc9nszimPFu?=
+ =?us-ascii?Q?2ChU4WBMeAGAvtRT5xN5BMGJevqmO66I9oi9bcUt8JS6K+jGCShVJpAHkeVI?=
+ =?us-ascii?Q?wjOGueJbYKXlNlY+ow2Kcwst30krH3YXt5q7/8ZPhrWjdBU9l3QaGKawifry?=
+ =?us-ascii?Q?65ytaR9djfNjrrdqlPsFOOcylfoes4J/WXrghgvYWsDhBD6LL2J+Pk9u2l9A?=
+ =?us-ascii?Q?7py4g0kx6CbGF9gFEJb/pwGX+VFVa1uDWy8qO0UO4QvmjvopC7myO8/G3aSo?=
+ =?us-ascii?Q?ZxwjhBoZmImXCBhKYMPiDRMb5UjurAMUUSc4YUxjLZzQhm6XdSap+dNNok9e?=
+ =?us-ascii?Q?mjnisaum7yUdoQjqyx1swMdWtKodw1tND068jVJ5DYBtpW+D2x9zqGfDeYJn?=
+ =?us-ascii?Q?sqFG5TpLPD9Y41EbdGN/5R25VaJY3rIo5glkYrOcrAVKpmf1CSF+SPpm186l?=
+ =?us-ascii?Q?EY9Np1GZO44LJkeZoDnkTpKVB/p8QdXlyTeAxCi+yf4W5f77Ps3fXzW0zQnc?=
+ =?us-ascii?Q?hm7A+fN2qRqXYWXi3rQBkUeEt7SF5y/9w7OZDsH6ZGPDhlFDF93Adu1FxxdM?=
+ =?us-ascii?Q?DC7+/ErTbBXBVT+hXSv4ndRjJu4O95g5VgxeFhpMGSSEtnPW9xFBkH2xwoAd?=
+ =?us-ascii?Q?Mpx5llNbEWGpshAPTkRZ5NVam1NTnrVPXP6qnJ45ElQHjbrchvjEoifPCOXL?=
+ =?us-ascii?Q?8NLhN4k+/nq2uDNb6UjrDuQFQgiOGRIzd4Zd3K8tzc8nZbHAOfJljpRAGtCA?=
+ =?us-ascii?Q?Wm+Al1PpL+tFexbv9hZTOIFSxGkpv1jnY+QTx+KaUyJ5q3FSf6t9i/Fk8W2x?=
+ =?us-ascii?Q?tafW/fDex3YudDufLKveEDNGxaDVbjbW1qToXIErppG1/wV6e9oUWrGcQyyv?=
+ =?us-ascii?Q?/HI36Pk3QwpKJb6++Fu8HyCDz1r9H8sfhUfU6ZEM4PjK11g8BLNconKj4b7d?=
+ =?us-ascii?Q?n/Nw9SzZd5dxM6VZbXoy13JrdtGgc7ELI+Hmp3RQicEMuCUcE7pFgONSoimI?=
+ =?us-ascii?Q?cJnp+brELaD76oyUQ5dmLGFrVTiU1QxUopFIhINYfTtH9g9VbvO3178VqbY/?=
+ =?us-ascii?Q?VU/mFWw+DXIMYEQac1Hr3LuawZ381+MmOr0I1tavMPBxQFdaAloPvevTUwSP?=
+ =?us-ascii?Q?R/afSXryl7zZ7nGzVgC5FTIWp/cZK6CRUWsQ4biZ9ZAYWjbBb7/Bl1x862Sm?=
+ =?us-ascii?Q?8KeulEqyY02+StyGTxLZYcPEoxXxV3WBWk/uRHnKEAfDA3lrumjSLbfTxVd/?=
+ =?us-ascii?Q?+YyiNgvJh0IB/HlgC8bw+uLB1LMvEcyPdmRUSJ7wXqfBbgHm9RB6mAP3pPze?=
+ =?us-ascii?Q?vNaIKiE+NEvWFMeBaywDE/gDlqKm0qaZe06kqMq87ozGdXaBTfMnKMe0CO3K?=
+ =?us-ascii?Q?JfnwQecSwUugAamYe+aQa8tghLx/qXcFgDxAgjkpqVXFEYMJ?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAKdXbaV1PTwetd4zs6+6Rp7h0dwHU1ygMoof5eAcfL6XYZF1xA@mail.gmail.com>
- <87v7e3mbgj.fsf@redhat.com> <adU0LAW1h8q9HsGu@google.com> <SN6PR02MB4157F82E4907C1B3305E86D5D45AA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <CAKdXbaXdSWq-NYk8z6_OtSgb6xsp+GJxrnF2iBMRdk0nfYne=A@mail.gmail.com> <SN6PR02MB4157A58DA24233B77829B59FD45AA@SN6PR02MB4157.namprd02.prod.outlook.com>
-In-Reply-To: <SN6PR02MB4157A58DA24233B77829B59FD45AA@SN6PR02MB4157.namprd02.prod.outlook.com>
-From: Thomas Lefebvre <thomas.lefebvre3@gmail.com>
-Date: Tue, 7 Apr 2026 21:13:18 -0700
-X-Gm-Features: AQROBzD8Y_tEgQIjbAiFXo2wngetYtmxuzapG1FgBs4QKYX1TeAbwm6u_umXi_c
-Message-ID: <CAKdXbaUwVuvnC3L38bOp-EZqf+=PjAi7tCeJJRTTnUFTja6a8A@mail.gmail.com>
-Subject: Re: [BUG] KVM: x86: kvmclock jumps ~253 years on Hyper-V nested virt
- due to cross-CPU raw TSC inconsistency
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Sean Christopherson <seanjc@google.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB6921.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb96f1c8-5153-4dc0-077d-08de9536378d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2026 06:15:22.5528
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2JbKeQVmbdSbXAsDoDMTW91dE5zmVHcZcYg5ECfibM/mcwoU4sGmdqyqrgbyl0HAiUwidJMDwUjh+v9sL5eM/w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR21MB5744
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[microsoft.com,reject];
+	R_DKIM_ALLOW(-0.20)[microsoft.com:s=selector2];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-10073-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10072-lists,linux-hyperv=lfdr.de];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FREEMAIL_TO(0.00)[outlook.com];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[thomaslefebvre3@gmail.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[7];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,outlook.com:email,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: B8D223B6B73
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[outlook.com,microsoft.com,kernel.org,google.com,vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[microsoft.com:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[DECUI@microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,outlook.com:email,SA1PR21MB6921.namprd21.prod.outlook.com:mid]
+X-Rspamd-Queue-Id: 66E4D3B77B8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Thanks, that's very useful information.
+> From: Michael Kelley <mhklinux@outlook.com>
+> Sent: Sunday, April 5, 2026 4:11 PM
+> > ...
+> > Unluckily, setup_linux_vesafb() only recognizes the vesafb
+> > driver in Linux kernel ("VESA VGA") and the efifb driver ("EFI VGA").
+> > It looks like normally arch_options.reuse_video_type is always 0.
+> >
+> > This means the kdump kernel's screen_info.lfb_base is 0, if
+> > hyperv_fb or hyperv_drm loads. In the past,  for a Ubuntu kernel
+> > with CONFIG_FB_EFI=3Dy, our workaround is blacklisting
+> > hyperv_fb or hyperv_drm, so /dev/fb0 is backed by efifb, and
+> > the screen_info.lfb_base is correctly set for kdump.
+>=20
+> Hmmm. This worse than I thought for x86/x64. In fact, it means
+> a part of my commit message for 304386373007 is now wrong. I had
+> described everything as working when using the kexec_load() system
+> call because the FBIOGET_FSCREENINFO ioctl was returning a good
+> value for smem_start (at least with the hyperv_fb driver). But as you
+> point out further down, newer versions of the kexec user space program
+> are ignoring that smem_start value unless the driver is vesafb or efifb.
+>=20
+> Was blacklisting hyperv_fb or hyperv_drm in the kdump kernel
+> a workaround we had promulgated in the past? My recollection
+> is vague. But no matter.
 
-Unfortunately, I can't easily reproduce the issue; I can't seem to get
-pvclock_update_vm_gtod_copy() and __get_kvmclock() to run on different vCPU=
-s
-which was one of the two required conditions that triggered the
-unsigned subtraction wraparound
-(the second condition being inconsistent values between L1 vCPUs).
+Blacklisting hyperv_fb or hyperv_drm in the *first* kernel was an
+internal workaround, which no longer works since  CONFIG_FB_EFI
+is not set in the linux-azure kernels.
 
-I just upgraded to Windows 11 25H2 and my Hyper-V VM config from v9 to v12,
-I now see tsc_reliable and constant_tsc in the L1 Linux VM lscpu and
-/sys/devices/system/clocksource/clocksource0/current_clocksource is
-tsc.
-I'll report back if I still encounter the problem when spinning up L2
-Linux VMs with KVM.
+Thanks,
+Dexuan
 
-On Tue, Apr 7, 2026 at 1:40=E2=80=AFPM Michael Kelley <mhklinux@outlook.com=
-> wrote:
->
-> From: Thomas Lefebvre <thomas.lefebvre3@gmail.com> Sent: Tuesday, April 7=
-, 2026 12:13 PM
-> >
-> > Hi everyone, thank you for your attention to this bug report.
-> >
-> > Michael,
-> >
-> > 1. No, lscpu in the L1 guest does not show the flags "tsc_reliable"
-> > and "constant_tsc".
-> > $ lscpu | grep tsc_reliable
-> > $ lscpu | grep constant_tsc
-> > $ cat /sys/devices/system/clocksource/clocksource0/current_clocksource
-> > hyperv_clocksource_tsc_page
-> >
-> > 2. Windows 10
-> > Version 22H2 (OS Build 19045.6466)
-> >
-> > 3. Hyper-V: privilege flags low 0x2e7f, high 0x3b8030, ext 0x2, hints
-> > 0x24e24, misc 0xbed7b2
-> >
-> > 4. Yes, the laptop hibernates and then resumes.
-> > When the problem occurred, the laptop had gone through multiple
-> > hibernate and resume cycles.
-> > I haven't seen it happen after a full reboot before a hibernate/resume =
-cycle.
-> >
-> > Thomas
-> >
->
-> How easy is it for you to reproduce the problem? Would it be feasible
-> to get a definitive answer on whether the problem repros after a
-> full reboot, but before a hibernate/resume cycle?
->
-> There's a known bug Windows 10 Hyper-V where the hardware TSC
-> scaling gets messed up after a hibernate/resume cycle, causing the TSC
-> values read in the guest to drift from what the Hyper-V host thinks
-> the guest's TSC value is. A summary of the problem is here:
-> https://github.com/microsoft/WSL/issues/6982#issuecomment-2294892954
->
-> Of course, this doesn't sound like your symptom. And Hyper-V is not
-> telling your guest that it supports hardware TSC scaling, because the
-> HV_ACCESS_TSC_INVARIANT flag is *not* set and the clocksource
-> is hyperv_clocksource_tsc_page. But my understanding is that the code
-> changes to fix the Hyper-V problem weren't trivial, and I'm speculating
-> that maybe you are seeing some other symptom of whatever the
-> underlying Hyper-V issue was.
->
-> Of course, this is just speculation. If the problem can occur before
-> any hibernate/resume cycles are done, then my speculation is
-> wrong. But if the problem only happens after a hibernate/resume
-> cycle, then this known problem, or something related to it, becomes
-> a pretty good candidate. Unfortunately, I'm pretty sure there's no
-> fix for Windows 10 Hyper-V. You would need to upgrade to
-> Windows 11 22H2 or later.
->
-> Michael
 
