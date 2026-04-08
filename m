@@ -1,254 +1,257 @@
-Return-Path: <linux-hyperv+bounces-10074-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10075-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sM+ILpn31Wn4/gcAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10074-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Apr 2026 08:37:13 +0200
+	id mOzoBRUF1mkbAwgAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10075-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Apr 2026 09:34:45 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 425C73B79ED
-	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Apr 2026 08:37:09 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8EC93B85A9
+	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Apr 2026 09:34:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E87DD301D302
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Apr 2026 06:37:07 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A8D24302080A
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Apr 2026 07:31:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 907F5285050;
-	Wed,  8 Apr 2026 06:37:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D77B829992A;
+	Wed,  8 Apr 2026 07:31:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="BHPNsoQi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FfeVMJoV"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11021126.outbound.protection.outlook.com [40.93.194.126])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A0B13635E;
-	Wed,  8 Apr 2026 06:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.126
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775630227; cv=fail; b=osNFe3LUgrQaY6PaDPaxKuX0pkoi6JBp13twuAoxh23ZwCwknHU3Lg9FGglwsEMt0jrVCcnAqqQ9JL4h/NUhHHrFIFoUlqpsn1rZoZsZRFN7L511vyUgiuuDPUtSLIOYviP70wSkiFW93ewbHC3Sx+xhZuystQdl3WQr1UrZtMc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775630227; c=relaxed/simple;
-	bh=NZadV6yu4FKajW/hwofgEkn2K2u9oL8imPLolk1AOZA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=sz9+4riv/5j1qxJn8nRcZq7O+qI5A+DM/zW/2jRdXmqtRn10zTNSFNZskA37Lv///pCD4VNBkWWuJA91xyo2lQU21d/hDv0MrqlAHWLqjI8AbAM1EjAKoZFAqYUBBFgvAF/3SJG69mCjhSZ2j06eLsN7Oog486BC81m9yu3rYuM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=BHPNsoQi; arc=fail smtp.client-ip=40.93.194.126
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ekJfUSNmKS8MAx9Nx4GYTI4mcyH0P3hfyu+XHiWEl9zfWS91cKxYi5H0f7mxSRLTrPXVAP9mGy3XErO02yYPA6QnBtuZAzcsMmxB3c4y+wE/ultNmbYGbcSY+luB9rUZk91W6Vbx/iGIIJQB7/C5KWjkIsAKjz8LVXTgBYEoP56fS94oSr3Z4v0hk7T4Rb4ZRQOgPA+ClUAk/czwEUrgsWqkc4SGg+7aO/8dm35lbZbvJ5bxR/KEEOu0vq/NOjf9gi0Sh2pv2xUtMuW3IspmTDVRPi35vRblu6dv+61b8WXrN6zexSQ90kdPmFvAU/ik363A8M1tz/EkmAQKhMtPdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FpvcuKnBSKSU4mnOBCrRymVepKzYRkrVYw0l6MaCEE4=;
- b=OuLLVBdzsP6sF8VhkLEzoLUh/va1ScFksLfF7PrlQ/a1bsiY6z7YJgryVWCwW8A0juPb6s+8FYEyKh1I7pZnnHCEX58a78fTAqYQvL3JleiPGsQG6g8APJo6Q7uKNkc1sxw1vy33p0qhU86WqDqZHgUy/cld5oF02+QX2kBMV1jRA9dY9vbxvGR0iOsypeHeXPXqPoTc3Hnrl7MWg6/syqSN+IcBMLnTy+XpEJt5Mt9P3UD8UNQwI/qiUKwQZJ2vWOwGVcodBFP8uT4dFZ3dYVDT5ec+vFAWGwQcvGN5wvqBZYSD7ujLZXHwaqyOeJ+rnYp43omVNnJ1Xve5clXWaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FpvcuKnBSKSU4mnOBCrRymVepKzYRkrVYw0l6MaCEE4=;
- b=BHPNsoQiWiK9SRbdv8HqxXIfWzFKumYZ5GrCyBo8YGuq8jXRXOaTmjCta7KCPv9elvgXnpXzbI3aUGTdB20YAIHmiDcXWkFH0v3FoVUDtGRZvYOe/g593OQTvOh9PVh5f02RDFykmbq04uMFOW0anOtK0SnQB8rWNbZnUiSfIOI=
-Received: from SA1PR21MB6921.namprd21.prod.outlook.com (2603:10b6:806:4a7::11)
- by SA1PR21MB6201.namprd21.prod.outlook.com (2603:10b6:806:4a3::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9791.8; Wed, 8 Apr
- 2026 06:37:03 +0000
-Received: from SA1PR21MB6921.namprd21.prod.outlook.com
- ([fe80::51cf:497c:e5df:f6d]) by SA1PR21MB6921.namprd21.prod.outlook.com
- ([fe80::51cf:497c:e5df:f6d%2]) with mapi id 15.20.9769.014; Wed, 8 Apr 2026
- 06:37:03 +0000
-From: Dexuan Cui <DECUI@microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>, Matthew Ruffell
-	<matthew.ruffell@canonical.com>
-CC: "bhelgaas@google.com" <bhelgaas@google.com>, Haiyang Zhang
-	<haiyangz@microsoft.com>, Jake Oshins <jakeo@microsoft.com>,
-	"kwilczynski@kernel.org" <kwilczynski@kernel.org>, KY Srinivasan
-	<kys@microsoft.com>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, Long Li <longli@microsoft.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "mani@kernel.org"
-	<mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, "wei.liu@kernel.org"
-	<wei.liu@kernel.org>
-Subject: RE: [PATCH] PCI: hv: Allocate MMIO from above 4GB for the config
- window
-Thread-Topic: [PATCH] PCI: hv: Allocate MMIO from above 4GB for the config
- window
-Thread-Index:
- AQHci0NePIGSa/9NGkCUvIR93cd3gLVdwUXwgADOvQCAABBuYIAAnjqAgAALUwCAAMhuoIBsfVtQgAT9UMCAA5rD8A==
-Date: Wed, 8 Apr 2026 06:37:03 +0000
-Message-ID:
- <SA1PR21MB69216C00774F3AE9B306748ABF5BA@SA1PR21MB6921.namprd21.prod.outlook.com>
-References:
- <SN6PR02MB4157545DAFDCCE0028439DB2D497A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20260123053909.95584-1-matthew.ruffell@canonical.com>
- <SN6PR02MB41573CD2EA6CD82A0C238F66D494A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <SN6PR02MB415759DBA9428256D379841AD494A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <SA1PR21MB69213185A6FE899BD2D4BFC3BF51A@SA1PR21MB6921.namprd21.prod.outlook.com>
- <SN6PR02MB4157F48F3B37D74E3A9F1AFBD45CA@SN6PR02MB4157.namprd02.prod.outlook.com>
-In-Reply-To:
- <SN6PR02MB4157F48F3B37D74E3A9F1AFBD45CA@SN6PR02MB4157.namprd02.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d75cc511-7c8e-4c16-9c76-62720ea69a12;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-04-08T06:16:07Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR21MB6921:EE_|SA1PR21MB6201:EE_
-x-ms-office365-filtering-correlation-id: f27cffe2-ddb9-4e2f-898d-08de95393ebf
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700021|22082099003|56012099003|18002099003;
-x-microsoft-antispam-message-info:
- dS34Uu9HZQ49jZxBJsHoB2ry76o3EiyNtuLjZ8865GzHWK2E94IdDErywOhgKocilSKUs8Dx6zEMV9tsa4itS2SuytDoVljhkHb1L/nviNe9QMSXCDBqN8dGg/q3quG6LHoO28zm5P8DTLFL/CNQBl7bmHaoX5Htgsf2uGM+4fIEGgmIhW89oLKlgCpV0WgFVcJxvouV/VCfQQmEv4BjWtYXLBooRL6ZhNiuAYYBcHjzJ4BeLmShieCxnpL9OBWlmEggjxKOjiB2f5qX5tpkPTQkciOxV9EtFAhYzjwrD5dEpUjShMSM7kMdeZlB84XdjNd3putLyGLXIMiFHsIZywpzPQoUAx3sIAX4lUPYRjaTMTTFWX7pXOhk4zs9BELvOjQZ9F0O7qSzC1DpD056rbSxB1gJOwO91YwoKOf787vPSNYof8GVXsS4bKiyqo5g5mNkGF5UbjVzDmjTxlGaULs031EVXm9UoV2MMJR2lLEw9MT5rURff9GM4gjF88ykbphFuGgYJAAJS3JWcrerTEFTZuh2rWHVNZiMvWnKN5+tt7Rr6hfGsijvC1F100Dff1RpSYZI2NIcuOfR+yXkNiXw/rNvR1RgQKYEYtNJLhyNLci10ccIr/TuQ1IhKGjYbCaSOoz5x1J9a2l7BBwo+5Kfx27T+WUla9avuBo2kd3smjnkORhGzetViJrIS5/I9UhiFCKBhumbYamkd6qdjELxx2GO8knDdrsC2i4rqDnd0EEck+gF7VsPmI1r8+mGAzR+bqcalVfOgT4sKzCxbVnj/clZ/INlbhXywaoTYjQ=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB6921.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700021)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?8hw1SpEMFy31dSrQL7AK5Q70SzZMbmUfih33Hyxj2iZ74ySOZf13VLd3un4O?=
- =?us-ascii?Q?bJhqlmNLR0WT5dVyOA5KGH41rm+gr8rHnVdsPMC2HXPm4zdsiSp/WFXpmnMJ?=
- =?us-ascii?Q?Af9dOLgwYbw34RaJSfCyuZvTgs+2096Y3He9zFl9aXPtFrvyACCvDj/tGF4h?=
- =?us-ascii?Q?XsZwbsTrf6E4nYKBww7FpLNJeEdbEdfF8IzkF8aSkrTKkjMlzmU2noKdy+4j?=
- =?us-ascii?Q?x81kpFvdQ9MDSCMWei8aLRPxOZB82s8Ek3+0uy44daPbZr7HXV5HFS5VYQPd?=
- =?us-ascii?Q?/CYaOrZxTgO8TzeFQM33OuUuDsVlnYS/bxhddhUFai6BS6cSh7Jdv13DyAJu?=
- =?us-ascii?Q?osri1kfSJSXawao0Z5qbRKP6tSoqQK+mj1F6R8tywHI8gYJFZ2Vi7qW94AUz?=
- =?us-ascii?Q?YafHsTiIWA5Ln3mEBQGjqVsMLL/mdE1V7zR6XbeFR1a5GXl5kiiC9IgAr7k+?=
- =?us-ascii?Q?STanlR+QU3OfcLxcsWh/ua6m1lCsfxr+rMRf44ix9ocDfyHiVDcrBkxMY5Hw?=
- =?us-ascii?Q?Zk1YEiqcA5NaFh9wRdQFYUxen1oCE4U5ojC+xZtXIa+atLJ/Eyx0M3T0hDUR?=
- =?us-ascii?Q?sCfgyk2HPQCqSz0EMp8ULSjgB9kLs2G9k6WYXL2rpDUyzQYk1/9K2QqlCGjY?=
- =?us-ascii?Q?PFA7Y7AEN+OM2itRlbWQYa58ZAMjNMGVgpTUELYJ2ZMOh2J0d5fwlk4Cuwm/?=
- =?us-ascii?Q?g5mVxm25bSaD6y9x8kGy3sEtvnGdEea9i7fgNSyll6+29eCEo6LB5WmOFrYY?=
- =?us-ascii?Q?X+rVi1k5jDQ+956sWKgyK+fHW4Sfgy5bAUzr8vlcQbeGNJxwPmUvffYvvk1y?=
- =?us-ascii?Q?RSii7uncVC5/PhXgN5NaGiNPgjyvBKkPeg+IJEclwhmWHpHK0Fj9Q6jI0v0H?=
- =?us-ascii?Q?RUwU8it7WV5BeuotHbXK/Utd1yX/qL4TQjMaKeg2K2AzngMq+eLMD3pKJ+RM?=
- =?us-ascii?Q?/uuI/NB58WBu19FJ0aPp6DW71hQKuYTQkUFu9hymHyYZ8ND4By/EIJ5/2aYF?=
- =?us-ascii?Q?sC6QUTsO4NlH8IPN0mH4lWno5kwArtg2UUuEmcPxhMLenYKZ5rpsvbHZOzMx?=
- =?us-ascii?Q?6cttsfgvzjDhKm935mURSh6vuS1H+bofgjzwMLcHNXnQxcK9nBxzK6HO8tkF?=
- =?us-ascii?Q?z/kEBkhfDCKKKehhR3m9/AOkQvPGuXpBgXvwAL2xMzvQEmB0oSbRAkiecFvy?=
- =?us-ascii?Q?s/sn/RihkKHhy+6sm3z5ysn0x7bPdPqGl7CIlAhsh02Agfx/0HzQH9exE1sm?=
- =?us-ascii?Q?0wk1mgesv0BQhJHsXOQydnUWiHxQFjvyYYpDhZPfL3+lvdapdyZDBy1tX9Y2?=
- =?us-ascii?Q?+eETpi9tP3HuCXTImvAaJlB0fTDUp0/2qZeqypqcM2ABuL6xAL0g3wHspOx/?=
- =?us-ascii?Q?6ctpN7BBYY88TPf/dbHSS9CCDQ9zzwkjQcovXdZ49kOuERVS31qlHZHpZUmy?=
- =?us-ascii?Q?E4yPbXVG3oYOnw1xxeIFAif6VdrGX+SK5I29473iGZm2pScggekOaY2PKSEU?=
- =?us-ascii?Q?eKhDLAFaFI/CM/XEJWbuW0/9L3VGnIoknOYvayBwyQEy61edY0sEaWbMrHME?=
- =?us-ascii?Q?bAQ91g3tQ+P2h2OX+xEvYIbNjj2NfKj76UzsiNXw9uRKPWpNuNpgxGHAz6qX?=
- =?us-ascii?Q?VAUuPDLImwH7UA/13jnRHPU6BoSUx8S5RAIRsN+wrtvUx8757RZSPryQIi+A?=
- =?us-ascii?Q?JnJWOnBqHYUYYw76W7M3Cn7k9E4D03l5w0iM8IWwR9MtET63?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A80D352C5B
+	for <linux-hyperv@vger.kernel.org>; Wed,  8 Apr 2026 07:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775633474; cv=none; b=Oj92rFmH7S6uVfu1NUIwvehwmIE4FCwE62mh7STEhT8nQ27FKlAz+Fuhj2eZVxeGJr+0fKiOXVGEjPpvd0ucKZrfw6l1Ezz3utS0xlb6VdcKfp908v1ENYNvYaWSZHJpXtcNcC5w4g+Mu/BsYLCXpHq9r3Tw264hmZTsfCHHGI4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775633474; c=relaxed/simple;
+	bh=ytB53dNuSiSNA7KpLGzUUg37w5+LYWgYBJoL01WyyRo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RiVQFd3hg3KVAJAH35KltzXSiLq64GhPqhCjWR8x3cMsq1srv2xBoRq3npBUy4ZL4xQ8fAdyiLubpdv91soKp4ZqyWs7uBlKkvGKBdpXicqNowDXzd47V9u2yt/pPea0P/u0tyz2h8fZNFcmDCYcUIJh9QCamQ4kt8aNjlbT1ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FfeVMJoV; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-35d8e548a05so6378818a91.1
+        for <linux-hyperv@vger.kernel.org>; Wed, 08 Apr 2026 00:31:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775633473; x=1776238273; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MlstBpIKOzxoAPZSb6mPVzZ0DWzq15OlHmrRs8yLD0g=;
+        b=FfeVMJoVmXRXMd10eUsz9UGYLuRl6HB/Tzs+JPJUXLpoQHQToZ/0RrLoslvTL7SbD6
+         dzp8nivx7L0qElkCJOEFtNYGZ/t9Om+B/hBE0dcq+Ip9tRN36WcX1oGwiAV1+b9l9x7P
+         fF1QVrxD/QYlhHvAtLzUZ/B/LSh8dmf6DFSWWtTH/L5BzTeD99Ycb5EnvvWyFNbdLt5D
+         tg10V9FrYTY+kBhWs7Q2hz284hUfxJzqZQX0O06yqouFSe8rfSYndI4ZkzsR88P61LSp
+         5KFbaKyQrauKTfxl43/ZoAZNaHOi6iAEN4wGbEx7ioBxldhkpX9uA6LGFMsTL2deInN2
+         /U7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775633473; x=1776238273;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MlstBpIKOzxoAPZSb6mPVzZ0DWzq15OlHmrRs8yLD0g=;
+        b=gb7W1kL6skeYNPoh49aADrF438Ftzse2VeqxyG+JgAWaeylF7e85JpBJZ26zAiUDa8
+         OMoNcjr/PCmPQR+hx3rnTSmsbKJh1a68z91U612ScSkg6VF1aOc/vLMSOLFa3QKxU912
+         ziteRmS3by/BvUSyzePAGXAuZja/rxo9cqTy7zGB4YcKxvuxfX2Pun55tCprgBLWvH3N
+         iIUipkpP2mHm13S1KQI/ARV4l37c1Be0jHjTR3GGE3OQXrinAop9OyYFGTBZnbbpXllY
+         HTojK08hI7/Tr3puon14zwgZ5mudehFogNZ9P2Ly6hwU+T57x9OD0ojxNFARKRBXGt7w
+         d0Xw==
+X-Forwarded-Encrypted: i=1; AJvYcCVmBWQwIKVUnge9i+UYo0/LaRgfSGlYYppEChwXPhoBGEgLs69odO9oxqlE9OBj3shzLNse4LIpdG4ZY1A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFclCJMA5uRru2CxX+YTVpee0oEYjtYbRvLoSu7gXR400t9Bvd
+	zzUehqzYfsLfKcVaYfOreX2BSd0k6YzGKdwb9ModVRh836ytIQSXhLwX3NWbrg==
+X-Gm-Gg: AeBDiev4QIjjdG9U9jVw2IFzGPeoSUimvWXH6TnNgRKi7tLutbW3dfqlRrF3IDsnqow
+	OdTA1uJ7OCI0hb9kLsXJZ3ENWQtdqxFPk0szwiO4oTGsZvokPoZsDH8Kd7u6Ge8YgEGed8EI1Av
+	Su1mRau7WxCsUc2smdIr5FI66Jv2XXrrFFHY35aDvtozj2GP60elYCB4BZ7ysORMVG7gDM1u06k
+	/ZhcHokpyFGE9tBxbK2SBQ+PNdveEK5GUn1Ct5ewwOEg8OGfsuyDWYR9vlEYqnzkMui0tqsNEX2
+	GlsDxDFxiFYEyjKhh2JDBzpJy2crmrGA5Zfz1Qa2fLzCI+i+UQItwpQYU8aLFb2WoDXP4IY3K1a
+	sHO/Ii3RT3/6XKJRibkbyak2mly7UyP66HLWvDz7IITfLhv7YlsoWFMvh5EfwCcBOoeS6H2/ah6
+	73+vtbnXCy2gdiHFb2D6PVBSZ7FTjceGW9bpwaxxZ0/9l+7eQ=
+X-Received: by 2002:a17:903:1a28:b0:2b0:c90f:44b2 with SMTP id d9443c01a7336-2b28173548amr214128665ad.12.1775633472474;
+        Wed, 08 Apr 2026 00:31:12 -0700 (PDT)
+Received: from ubuntu-Virtual-Machine.mshome.net ([104.43.2.13])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b2ae05991bsm47105515ad.70.2026.04.08.00.31.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2026 00:31:12 -0700 (PDT)
+From: Tianyu Lan <ltykernel@gmail.com>
+X-Google-Original-From: Tianyu Lan <tiala@microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	longli@microsoft.com,
+	James.Bottomley@HansenPartnership.com,
+	martin.petersen@oracle.com,
+	apais@microsoft.com
+Cc: Tianyu Lan <tiala@microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	vdso@hexbites.dev,
+	mhklinux@outlook.com
+Subject: [PATCH] x86/VMBus: Confidential VMBus for dynamic DMA transfers
+Date: Wed,  8 Apr 2026 03:31:05 -0400
+Message-Id: <20260408073105.272255-1-tiala@microsoft.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB6921.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f27cffe2-ddb9-4e2f-898d-08de95393ebf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2026 06:37:03.1483
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ToqU4H+joWQA+frfpdnJHr7osf9+ZZTde4em2OEYm7l1L0mhcjzCYLC+u9gAdz8c4jibMpm8HHeiYO1rgJj3MA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR21MB6201
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[microsoft.com,reject];
-	R_DKIM_ALLOW(-0.20)[microsoft.com:s=selector2];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_RHS_MATCH_TO(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10074-lists,linux-hyperv=lfdr.de];
+	FREEMAIL_CC(0.00)[microsoft.com,vger.kernel.org,hexbites.dev,outlook.com];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-10075-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[outlook.com,canonical.com];
-	RCPT_COUNT_TWELVE(0.00)[16];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[microsoft.com:+];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[DECUI@microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[ltykernel@gmail.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,outlook.com:email]
-X-Rspamd-Queue-Id: 425C73B79ED
+	NEURAL_HAM(-0.00)[-0.999];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,openvmm.dev:url]
+X-Rspamd-Queue-Id: A8EC93B85A9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-> From: Michael Kelley <mhklinux@outlook.com>
-> Sent: Sunday, April 5, 2026 4:13 PM
-> > ...
-> > 96959283a58d adds "select SYSFB if !HYPERV_VTL_MODE", but we can
-> > still manually unset CONFIG_SYSFB (I happened to do this when debugging
-> > the kdump issue), and hv_pci won't work.
->=20
-> Just curious -- how would you manually unset CONFIG_SYSFB? The kernel
-> makefile always resync's .config against the Kconfig rules, which would a=
-dd
-> CONFIG_SYSFB back again. The Kconfig files essentially say that removing
-> CONFIG_SYSFB is an invalid configuration.
+Hyper-V provides Confidential VMBus to communicate between
+device model and device guest driver via encrypted/private
+memory in Confidential VM. The device model is in OpenHCL
+(https://openvmm.dev/guide/user_guide/openhcl.html) that
+plays the paravisor role.
 
-Sorry, my description above is wrong: on the mainline kernel that has
-96959283a58d ("Drivers: hv: Always select CONFIG_SYSFB for Hyper-V guests")=
-,
-I'm unable to unset CONFIG_SYSFB.
+For a VMBus device, there are two communication methods to
+talk with Host/Hypervisor. 1) VMBUS Ring buffer 2) Dynamic
+DMA transfer.
 
-When I was able to unset CONFIG_SYSFB, I was actually on Ubuntu 22.04
-(Ubuntu-azure-6.8-6.8.0-1049.55_22.04.1, released in Feb 2026). I thought t=
-he
-kernel has 96959283a58d, but actually it doesn't...
+The Confidential VMBus Ring buffer has been upstreamed by
+Roman Kisel(commit 6802d8af47d1).
 
-> > IMO vmbus_reserve_fb() should unconditionally reserve the frame buffer
-> > MMIO range. I'll post a patch like this:
-> >
-> > --- a/drivers/hv/vmbus_drv.c
-> > +++ b/drivers/hv/vmbus_drv.c
-> > @@ -2395,10 +2398,8 @@ static void __maybe_unused
-> vmbus_reserve_fb(void)
-> >
-> >         if (efi_enabled(EFI_BOOT)) {
-> >                 /* Gen2 VM: get FB base from EFI framebuffer */
-> > -               if (IS_ENABLED(CONFIG_SYSFB)) {
-> > -                       start =3D sysfb_primary_display.screen.lfb_base=
-;
-> > -                       size =3D max_t(__u32, sysfb_primary_display.scr=
-een.lfb_size,
-> 0x800000);
-> > -               }
-> > +               start =3D sysfb_primary_display.screen.lfb_base;
-> > +               size =3D max_t(__u32, sysfb_primary_display.screen.lfb_=
-size,
-> 0x800000);
+The dynamic DMA transition of VMBus device normally goes
+through DMA core and it uses SWIOTLB as bounce buffer in
+a CoCo VM.
 
-Please ignore the change above.
+The Confidential VMBus device can do DMA directly to
+private/encrypted memory. Because the swiotlb is decrypted
+memory, the DMA transfer must not be bounced through the
+swiotlb, so as to preserve confidentiality. This is different
+from the default for Linux CoCo VMs, so not use DMA(SWIOTLB)
+API in VMBus driver when confidential dynamic DMA transfers
+capability is present.
 
-> On arm64 the existence of sysfb_primary_display is conditional on
-> several config variables, including CONFIG_SYSFB and CONFIG_EFI_EARLYCON.
-> (see drivers/firmware/efi/efi-init.c) If you can take away CONFIG_SYSFB, =
-you
-> could also take away CONFIG_EFI_EARLYCON and end up with build error on
-> arm64. So I'm not clear how this approach would be more robust against
-> invalid .config changes.
+Signed-off-by: Tianyu Lan <tiala@microsoft.com>
+---
+ drivers/scsi/storvsc_drv.c | 28 +++++++++++++++++++++-------
+ include/linux/hyperv.h     |  1 +
+ 2 files changed, 22 insertions(+), 7 deletions(-)
 
-Agreed. Then let's keep vmbus_reserve_fb() as is.
-
-Thanks,
-Dexuan
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index ae1abab97835..79b7611518b7 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -1316,7 +1316,8 @@ static void storvsc_on_channel_callback(void *context)
+ 					continue;
+ 				}
+ 				request = (struct storvsc_cmd_request *)scsi_cmd_priv(scmnd);
+-				scsi_dma_unmap(scmnd);
++				if (!device->co_external_memory)
++					scsi_dma_unmap(scmnd);
+ 			}
+ 
+ 			storvsc_on_receive(stor_device, packet, request);
+@@ -1339,6 +1340,8 @@ static int storvsc_connect_to_vsp(struct hv_device *device, u32 ring_size,
+ 
+ 	device->channel->max_pkt_size = STORVSC_MAX_PKT_SIZE;
+ 	device->channel->next_request_id_callback = storvsc_next_request_id;
++	if (device->channel->co_external_memory)
++		device->co_external_memory = true;
+ 
+ 	ret = vmbus_open(device->channel,
+ 			 ring_size,
+@@ -1805,7 +1808,7 @@ static enum scsi_qc_status storvsc_queuecommand(struct Scsi_Host *host,
+ 		unsigned long offset_in_hvpg = offset_in_hvpage(sgl->offset);
+ 		unsigned int hvpg_count = HVPFN_UP(offset_in_hvpg + length);
+ 		struct scatterlist *sg;
+-		unsigned long hvpfn, hvpfns_to_add;
++		unsigned long hvpfn, hvpfns_to_add, hvpgoff;
+ 		int j, i = 0, sg_count;
+ 
+ 		payload_sz = (hvpg_count * sizeof(u64) +
+@@ -1821,7 +1824,11 @@ static enum scsi_qc_status storvsc_queuecommand(struct Scsi_Host *host,
+ 		payload->range.len = length;
+ 		payload->range.offset = offset_in_hvpg;
+ 
+-		sg_count = scsi_dma_map(scmnd);
++		if (dev->co_external_memory)
++			sg_count = scsi_sg_count(scmnd);
++		else
++			sg_count = scsi_dma_map(scmnd);
++
+ 		if (sg_count < 0) {
+ 			ret = SCSI_MLQUEUE_DEVICE_BUSY;
+ 			goto err_free_payload;
+@@ -1836,9 +1843,16 @@ static enum scsi_qc_status storvsc_queuecommand(struct Scsi_Host *host,
+ 			 * Such offsets are handled even on other than the first
+ 			 * sgl entry, provided they are a multiple of PAGE_SIZE.
+ 			 */
+-			hvpfn = HVPFN_DOWN(sg_dma_address(sg));
+-			hvpfns_to_add = HVPFN_UP(sg_dma_address(sg) +
+-						 sg_dma_len(sg)) - hvpfn;
++			if (dev->co_external_memory) {
++				hvpgoff = HVPFN_DOWN(sg->offset);
++				hvpfn = page_to_hvpfn(sg_page(sg)) + hvpgoff;
++				hvpfns_to_add =	HVPFN_UP(sg->offset + sg->length) -
++							hvpgoff;
++			} else {
++				hvpfn = HVPFN_DOWN(sg_dma_address(sg));
++				hvpfns_to_add = HVPFN_UP(sg_dma_address(sg) +
++							 sg_dma_len(sg)) - hvpfn;
++			}
+ 
+ 			/*
+ 			 * Fill the next portion of the PFN array with
+@@ -1860,7 +1874,7 @@ static enum scsi_qc_status storvsc_queuecommand(struct Scsi_Host *host,
+ 	ret = storvsc_do_io(dev, cmd_request, smp_processor_id());
+ 	migrate_enable();
+ 
+-	if (ret)
++	if (ret && (!dev->co_external_memory))
+ 		scsi_dma_unmap(scmnd);
+ 
+ 	if (ret == -EAGAIN) {
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index dfc516c1c719..bcb143766d6e 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -1285,6 +1285,7 @@ struct hv_device {
+ 
+ 	/* place holder to keep track of the dir for hv device in debugfs */
+ 	struct dentry *debug_dir;
++	bool co_external_memory;
+ 
+ };
+ 
+-- 
+2.50.1
 
 
