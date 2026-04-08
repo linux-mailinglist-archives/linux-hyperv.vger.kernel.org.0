@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-10066-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10067-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eBe0B4Ox1WlF8wcAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10066-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Apr 2026 03:38:11 +0200
+	id AIFoNJSx1WlF8wcAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10067-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Apr 2026 03:38:28 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A8BD3B5F8F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Apr 2026 03:38:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 746693B5FAC
+	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Apr 2026 03:38:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B8D4430414BF
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Apr 2026 01:37:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2DEF5304C97A
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Apr 2026 01:37:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBB2C363093;
-	Wed,  8 Apr 2026 01:37:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F17E346E58;
+	Wed,  8 Apr 2026 01:37:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZQg32MwE"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EIiVGlKZ"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D29D35E958;
-	Wed,  8 Apr 2026 01:37:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D1511448E0;
+	Wed,  8 Apr 2026 01:37:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775612227; cv=none; b=IBrd+ORL4+Dh1C8i6vNUUACsC4hQjsg/w7UWVfePj1A0IeaaI1+Xho24pd8K9Ylx9QYbTp5FYDkNFmzFkg5GWRhwLtCg8+Or8fJAQizHBRETDyBg7QnNUEKGkI7uZZGokHIn2YkBGjY46ld+rK9RqYFpJhrNgSEazhMb2oXNaWI=
+	t=1775612228; cv=none; b=AGQ55d7fcqE9+TszIWjE44eirqTMF2Q6lnEmID84aj15nLL2Qa3WAwfMIoafOU/iFHwqUGeQldpy1G+iA/PMtVsO8EO6Dk1nQ3lHBIXIsLceKxdn7dUuH0/iFSBRN7HwUqk51NZyLfH+ga57LGVrtoM6ZFrBizMI9drMJNKsOq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775612227; c=relaxed/simple;
-	bh=5vJHaq3eo4Y/hcgJmmq8UOBjqc/4Gj9YzufbwE8WrbE=;
+	s=arc-20240116; t=1775612228; c=relaxed/simple;
+	bh=1xwNPpWCJJHzAunNsCZ36KEBj++s0IvEH8fJ/QguJfU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Nvv9rbmEbszTHSZCjFAu29sa9qzuJE1CaEQaUsYMjeQFqvztnwN7+dbypAbHVrOllviWU3QUCRDAHlEY3SQOEUf63oEzHGgQd7A8vyNloAo48AeZumLgA94KzKu6tXb8rHKnILfEZmSY8U2NQpHkapJh/wjoU/RAQaTr3tkkGwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ZQg32MwE; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version:Content-Type; b=JaPgLMin7gdPCPBpzZaF1t2k9QoUW/WjNsZ+D0/ukx78jk4y/d5PErLGBRBmKTuiTeP3uBSo9kl0ed0PwHviRQuYrjLSxqlU9Rb2VIzmOxYDTdDc0Dkrec8A9g8EZa296o1CDX1Dn7ueqhrsd9CVpnuOsxv0nPi0DVfYjF7mbaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=EIiVGlKZ; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1241)
-	id 402BE20B6F15; Tue,  7 Apr 2026 18:37:06 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 402BE20B6F15
+	id 035A720B6F1F; Tue,  7 Apr 2026 18:37:07 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 035A720B6F1F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1775612226;
-	bh=nfTEGLuFUMN6pobJ916c4oa3BQ3jfNsFNHpUsQ5Xat8=;
+	s=default; t=1775612227;
+	bh=csyZ7K2c0JqRTNIFzxpMvEwiQQ941LLIyuYU3krJCrc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZQg32MwEyKraZJQCLnRqPK6HujYyiD9qmh3lImtGcATThtKIQegqnUMJXWFCKqpsF
-	 vEIrZVY1ZpmxwT2QPf7bmNHirNM4kwnHbyIJb4t/mIM3hyZGgrn+4EuoWKoV5mpKJt
-	 /F4Ax0Nn5sTvcFazUCCzPC2D4D1orMutE4v6DcuQ=
+	b=EIiVGlKZVuQVb5XrkLsCKG+kL8GkaQ3tQuJ/9V79ZeRy0bG4p3z/w5QGfpRKV0rKr
+	 fwyqdMwxjz+6SO1yHgvR4LfRrg/IbkRrbqlJKy5CDjNgStACoNw0usg/xYXTjyiKR+
+	 YLq7XKLRC8ytbfMvu0jOZ1iUE6BH+cxPSCOxdZm8=
 From: Jork Loeser <jloeser@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org
 Cc: x86@kernel.org,
@@ -59,13 +59,10 @@ Cc: x86@kernel.org,
 	Michael Kelley <mhklinux@outlook.com>,
 	linux-kernel@vger.kernel.org,
 	linux-arch@vger.kernel.org,
-	Jork Loeser <jloeser@linux.microsoft.com>,
-	Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
-	Stanislav Kinsburskii <stanislav.kinsburskii@gmail.com>,
-	Mukesh Rathor <mrathor@linux.microsoft.com>
-Subject: [PATCH v3 3/6] x86/hyperv: Skip LP/VP creation on kexec
-Date: Tue,  7 Apr 2026 18:36:40 -0700
-Message-ID: <20260408013645.286723-4-jloeser@linux.microsoft.com>
+	Jork Loeser <jloeser@linux.microsoft.com>
+Subject: [PATCH v3 4/6] mshv: limit SynIC management to MSHV-owned resources
+Date: Tue,  7 Apr 2026 18:36:41 -0700
+Message-ID: <20260408013645.286723-5-jloeser@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260408013645.286723-1-jloeser@linux.microsoft.com>
 References: <20260408013645.286723-1-jloeser@linux.microsoft.com>
@@ -75,218 +72,282 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [0.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_MISSING_CHARSET(0.50)[];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10067-lists,linux-hyperv=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10066-lists,linux-hyperv=lfdr.de];
-	FREEMAIL_CC(0.00)[kernel.org,microsoft.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,outlook.com,vger.kernel.org,linux.microsoft.com,gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FREEMAIL_CC(0.00)[kernel.org,microsoft.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,outlook.com,vger.kernel.org,linux.microsoft.com];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jloeser@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	NEURAL_HAM(-0.00)[-0.997];
+	FROM_NEQ_ENVFROM(0.00)[jloeser@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,linux.microsoft.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 7A8BD3B5F8F
+X-Rspamd-Queue-Id: 746693B5FAC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-After a kexec the logical processors and virtual processors already
-exist in the hypervisor because they were created by the previous
-kernel. Attempting to add them again causes either a BUG_ON or
-corrupted VP state leading to MCEs in the new kernel.
+The SynIC is shared between VMBus and MSHV. VMBus owns the message
+page (SIMP), event flags page (SIEFP), global enable (SCONTROL),
+and SINT2. MSHV adds SINT0, SINT5, and the event ring page (SIRBP).
 
-Add hv_lp_exists() to probe whether an LP is already present by
-calling HVCALL_GET_LOGICAL_PROCESSOR_RUN_TIME. When it succeeds the
-LP exists and we skip the add-LP and create-VP loops entirely.
+Currently mshv_synic_cpu_init() redundantly enables SIMP, SIEFP, and
+SCONTROL that VMBus already configured, and mshv_synic_cpu_exit()
+disables all of them. This is wrong because MSHV can be torn down
+while VMBus is still active. In particular, a kexec reboot notifier
+tears down MSHV first. Disabling SCONTROL, SIMP, and SIEFP out
+from under VMBus causes its later cleanup to write SynIC MSRs while
+SynIC is disabled, which the hypervisor does not tolerate.
 
-Also add hv_call_notify_all_processors_started() which informs the
-hypervisor that all processors are online. This is required after
-adding LPs (fresh boot) and is a no-op on kexec since we skip that
-path.
+Restrict MSHV to managing only the resources it owns:
+- SINT0, SINT5: mask on cleanup, unmask on init
+- SIRBP: enable/disable as before
+- SIMP, SIEFP, SCONTROL: leave to VMBus when it is active (L1VH
+  and nested root partition); on a non-nested root partition VMBus
+  doesn't run, so MSHV must enable/disable them
 
-Co-developed-by: Anirudh Rayabharam <anrayabh@linux.microsoft.com>
-Signed-off-by: Anirudh Rayabharam <anrayabh@linux.microsoft.com>
-Co-developed-by: Stanislav Kinsburskii <stanislav.kinsburskii@gmail.com>
-Signed-off-by: Stanislav Kinsburskii <stanislav.kinsburskii@gmail.com>
-Co-developed-by: Mukesh Rathor <mrathor@linux.microsoft.com>
-Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
 Signed-off-by: Jork Loeser <jloeser@linux.microsoft.com>
 ---
- arch/x86/kernel/cpu/mshyperv.c |  7 +++++
- drivers/hv/hv_proc.c           | 47 ++++++++++++++++++++++++++++++++++
- include/asm-generic/mshyperv.h | 10 ++++++++
- include/hyperv/hvgdk_mini.h    |  1 +
- include/hyperv/hvhdk_mini.h    | 12 +++++++++
- 5 files changed, 77 insertions(+)
+ drivers/hv/mshv_synic.c | 142 ++++++++++++++++++++++++++--------------
+ 1 file changed, 94 insertions(+), 48 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index e498b6b2ef19..b5b6a58b67b0 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -431,6 +431,10 @@ static void __init hv_smp_prepare_cpus(unsigned int max_cpus)
+diff --git a/drivers/hv/mshv_synic.c b/drivers/hv/mshv_synic.c
+index e2288a726fec..f71d5dfce1c1 100644
+--- a/drivers/hv/mshv_synic.c
++++ b/drivers/hv/mshv_synic.c
+@@ -456,46 +456,72 @@ static int mshv_synic_cpu_init(unsigned int cpu)
+ 	union hv_synic_siefp siefp;
+ 	union hv_synic_sirbp sirbp;
+ 	union hv_synic_sint sint;
+-	union hv_synic_scontrol sctrl;
+ 	struct hv_synic_pages *spages = this_cpu_ptr(synic_pages);
+ 	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
+ 	struct hv_synic_event_flags_page **event_flags_page =
+ 			&spages->synic_event_flags_page;
+ 	struct hv_synic_event_ring_page **event_ring_page =
+ 			&spages->synic_event_ring_page;
++	/* VMBus runs on L1VH and nested root; it owns SIMP/SIEFP/SCONTROL */
++	bool vmbus_active = !hv_root_partition() || hv_nested;
+ 
+-	/* Setup the Synic's message page */
++	/*
++	 * Map the SYNIC message page. When VMBus is not active the
++	 * hypervisor pre-provisions the SIMP GPA but may not set
++	 * simp_enabled — enable it here.
++	 */
+ 	simp.as_uint64 = hv_get_non_nested_msr(HV_MSR_SIMP);
+-	simp.simp_enabled = true;
++	if (!vmbus_active) {
++		simp.simp_enabled = true;
++		hv_set_non_nested_msr(HV_MSR_SIMP, simp.as_uint64);
++	}
+ 	*msg_page = memremap(simp.base_simp_gpa << HV_HYP_PAGE_SHIFT,
+ 			     HV_HYP_PAGE_SIZE,
+ 			     MEMREMAP_WB);
+ 
+ 	if (!(*msg_page))
+-		return -EFAULT;
++		goto cleanup_simp;
+ 
+-	hv_set_non_nested_msr(HV_MSR_SIMP, simp.as_uint64);
+-
+-	/* Setup the Synic's event flags page */
++	/*
++	 * Map the event flags page. Same as SIMP: enable when
++	 * VMBus is not active, already enabled by VMBus otherwise.
++	 */
+ 	siefp.as_uint64 = hv_get_non_nested_msr(HV_MSR_SIEFP);
+-	siefp.siefp_enabled = true;
++	if (!vmbus_active) {
++		siefp.siefp_enabled = true;
++		hv_set_non_nested_msr(HV_MSR_SIEFP, siefp.as_uint64);
++	}
+ 	*event_flags_page = memremap(siefp.base_siefp_gpa << PAGE_SHIFT,
+ 				     PAGE_SIZE, MEMREMAP_WB);
+ 
+ 	if (!(*event_flags_page))
+-		goto cleanup;
+-
+-	hv_set_non_nested_msr(HV_MSR_SIEFP, siefp.as_uint64);
++		goto cleanup_siefp;
+ 
+ 	/* Setup the Synic's event ring page */
+ 	sirbp.as_uint64 = hv_get_non_nested_msr(HV_MSR_SIRBP);
+-	sirbp.sirbp_enabled = true;
+-	*event_ring_page = memremap(sirbp.base_sirbp_gpa << PAGE_SHIFT,
+-				    PAGE_SIZE, MEMREMAP_WB);
+ 
+-	if (!(*event_ring_page))
+-		goto cleanup;
++	if (hv_root_partition()) {
++		*event_ring_page = memremap(sirbp.base_sirbp_gpa << PAGE_SHIFT,
++					    PAGE_SIZE, MEMREMAP_WB);
+ 
++		if (!(*event_ring_page))
++			goto cleanup_siefp;
++	} else {
++		/*
++		 * On L1VH the hypervisor does not provide a SIRBP page.
++		 * Allocate one and program its GPA into the MSR.
++		 */
++		*event_ring_page = (struct hv_synic_event_ring_page *)
++			get_zeroed_page(GFP_KERNEL);
++
++		if (!(*event_ring_page))
++			goto cleanup_siefp;
++
++		sirbp.base_sirbp_gpa = virt_to_phys(*event_ring_page)
++				>> PAGE_SHIFT;
++	}
++
++	sirbp.sirbp_enabled = true;
+ 	hv_set_non_nested_msr(HV_MSR_SIRBP, sirbp.as_uint64);
+ 
+ 	if (mshv_sint_irq != -1)
+@@ -518,28 +544,30 @@ static int mshv_synic_cpu_init(unsigned int cpu)
+ 	hv_set_non_nested_msr(HV_MSR_SINT0 + HV_SYNIC_DOORBELL_SINT_INDEX,
+ 			      sint.as_uint64);
+ 
+-	/* Enable global synic bit */
+-	sctrl.as_uint64 = hv_get_non_nested_msr(HV_MSR_SCONTROL);
+-	sctrl.enable = 1;
+-	hv_set_non_nested_msr(HV_MSR_SCONTROL, sctrl.as_uint64);
++	/* When VMBus is active it already enabled SCONTROL. */
++	if (!vmbus_active) {
++		union hv_synic_scontrol sctrl;
++
++		sctrl.as_uint64 = hv_get_non_nested_msr(HV_MSR_SCONTROL);
++		sctrl.enable = 1;
++		hv_set_non_nested_msr(HV_MSR_SCONTROL, sctrl.as_uint64);
++	}
+ 
+ 	return 0;
+ 
+-cleanup:
+-	if (*event_ring_page) {
+-		sirbp.sirbp_enabled = false;
+-		hv_set_non_nested_msr(HV_MSR_SIRBP, sirbp.as_uint64);
+-		memunmap(*event_ring_page);
+-	}
+-	if (*event_flags_page) {
++cleanup_siefp:
++	if (*event_flags_page)
++		memunmap(*event_flags_page);
++	if (!vmbus_active) {
+ 		siefp.siefp_enabled = false;
+ 		hv_set_non_nested_msr(HV_MSR_SIEFP, siefp.as_uint64);
+-		memunmap(*event_flags_page);
+ 	}
+-	if (*msg_page) {
++cleanup_simp:
++	if (*msg_page)
++		memunmap(*msg_page);
++	if (!vmbus_active) {
+ 		simp.simp_enabled = false;
+ 		hv_set_non_nested_msr(HV_MSR_SIMP, simp.as_uint64);
+-		memunmap(*msg_page);
  	}
  
- #ifdef CONFIG_X86_64
-+	/* If AP LPs exist, we are in a kexec'd kernel and VPs already exist */
-+	if (num_present_cpus() == 1 || hv_lp_exists(1))
-+		return;
-+
- 	for_each_present_cpu(i) {
- 		if (i == 0)
- 			continue;
-@@ -438,6 +442,9 @@ static void __init hv_smp_prepare_cpus(unsigned int max_cpus)
- 		BUG_ON(ret);
- 	}
+ 	return -EFAULT;
+@@ -548,16 +576,15 @@ static int mshv_synic_cpu_init(unsigned int cpu)
+ static int mshv_synic_cpu_exit(unsigned int cpu)
+ {
+ 	union hv_synic_sint sint;
+-	union hv_synic_simp simp;
+-	union hv_synic_siefp siefp;
+ 	union hv_synic_sirbp sirbp;
+-	union hv_synic_scontrol sctrl;
+ 	struct hv_synic_pages *spages = this_cpu_ptr(synic_pages);
+ 	struct hv_message_page **msg_page = &spages->hyp_synic_message_page;
+ 	struct hv_synic_event_flags_page **event_flags_page =
+ 		&spages->synic_event_flags_page;
+ 	struct hv_synic_event_ring_page **event_ring_page =
+ 		&spages->synic_event_ring_page;
++	/* VMBus runs on L1VH and nested root; it owns SIMP/SIEFP/SCONTROL */
++	bool vmbus_active = !hv_root_partition() || hv_nested;
  
-+	ret = hv_call_notify_all_processors_started();
-+	WARN_ON(ret);
-+
- 	for_each_present_cpu(i) {
- 		if (i == 0)
- 			continue;
-diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
-index 3cb4b2a3035c..57b2c64197cb 100644
---- a/drivers/hv/hv_proc.c
-+++ b/drivers/hv/hv_proc.c
-@@ -239,3 +239,50 @@ int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags)
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(hv_call_create_vp);
-+
-+int hv_call_notify_all_processors_started(void)
-+{
-+	struct hv_input_notify_partition_event *input;
-+	u64 status;
-+	unsigned long irq_flags;
-+	int ret = 0;
-+
-+	local_irq_save(irq_flags);
-+	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-+	memset(input, 0, sizeof(*input));
-+	input->event = HV_PARTITION_ALL_LOGICAL_PROCESSORS_STARTED;
-+	status = hv_do_hypercall(HVCALL_NOTIFY_PARTITION_EVENT,
-+				 input, NULL);
-+	local_irq_restore(irq_flags);
-+
-+	if (!hv_result_success(status)) {
-+		hv_status_err(status, "\n");
-+		ret = hv_result_to_errno(status);
-+	}
-+	return ret;
-+}
-+
-+bool hv_lp_exists(u32 lp_index)
-+{
-+	struct hv_input_get_logical_processor_run_time *input;
-+	struct hv_output_get_logical_processor_run_time *output;
-+	unsigned long flags;
-+	u64 status;
-+
-+	local_irq_save(flags);
-+	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-+	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
-+
-+	input->lp_index = lp_index;
-+	status = hv_do_hypercall(HVCALL_GET_LOGICAL_PROCESSOR_RUN_TIME,
-+				 input, output);
-+	local_irq_restore(flags);
-+
-+	if (!hv_result_success(status) &&
-+	    hv_result(status) != HV_STATUS_INVALID_LP_INDEX) {
-+		hv_status_err(status, "\n");
-+		BUG();
+ 	/* Disable the interrupt */
+ 	sint.as_uint64 = hv_get_non_nested_msr(HV_MSR_SINT0 + HV_SYNIC_INTERCEPTION_SINT_INDEX);
+@@ -574,28 +601,47 @@ static int mshv_synic_cpu_exit(unsigned int cpu)
+ 	if (mshv_sint_irq != -1)
+ 		disable_percpu_irq(mshv_sint_irq);
+ 
+-	/* Disable Synic's event ring page */
++	/* Disable SYNIC event ring page owned by MSHV */
+ 	sirbp.as_uint64 = hv_get_non_nested_msr(HV_MSR_SIRBP);
+ 	sirbp.sirbp_enabled = false;
+-	hv_set_non_nested_msr(HV_MSR_SIRBP, sirbp.as_uint64);
+-	memunmap(*event_ring_page);
+ 
+-	/* Disable Synic's event flags page */
+-	siefp.as_uint64 = hv_get_non_nested_msr(HV_MSR_SIEFP);
+-	siefp.siefp_enabled = false;
+-	hv_set_non_nested_msr(HV_MSR_SIEFP, siefp.as_uint64);
++	if (hv_root_partition()) {
++		hv_set_non_nested_msr(HV_MSR_SIRBP, sirbp.as_uint64);
++		memunmap(*event_ring_page);
++	} else {
++		sirbp.base_sirbp_gpa = 0;
++		hv_set_non_nested_msr(HV_MSR_SIRBP, sirbp.as_uint64);
++		free_page((unsigned long)*event_ring_page);
 +	}
 +
-+	return hv_result_success(status);
-+}
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index d37b68238c97..bf601d67cecb 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -347,6 +347,8 @@ bool hv_result_needs_memory(u64 status);
- int hv_deposit_memory_node(int node, u64 partition_id, u64 status);
- int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages);
- int hv_call_add_logical_proc(int node, u32 lp_index, u32 acpi_id);
-+int hv_call_notify_all_processors_started(void);
-+bool hv_lp_exists(u32 lp_index);
- int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags);
++	/*
++	 * Release our mappings of the message and event flags pages.
++	 * When VMBus is not active, we enabled SIMP/SIEFP — disable
++	 * them. Otherwise VMBus owns the MSRs — leave them.
++	 */
+ 	memunmap(*event_flags_page);
++	if (!vmbus_active) {
++		union hv_synic_simp simp;
++		union hv_synic_siefp siefp;
  
- #else /* CONFIG_MSHV_ROOT */
-@@ -366,6 +368,14 @@ static inline int hv_call_add_logical_proc(int node, u32 lp_index, u32 acpi_id)
- {
- 	return -EOPNOTSUPP;
+-	/* Disable Synic's message page */
+-	simp.as_uint64 = hv_get_non_nested_msr(HV_MSR_SIMP);
+-	simp.simp_enabled = false;
+-	hv_set_non_nested_msr(HV_MSR_SIMP, simp.as_uint64);
++		siefp.as_uint64 = hv_get_non_nested_msr(HV_MSR_SIEFP);
++		siefp.siefp_enabled = false;
++		hv_set_non_nested_msr(HV_MSR_SIEFP, siefp.as_uint64);
++
++		simp.as_uint64 = hv_get_non_nested_msr(HV_MSR_SIMP);
++		simp.simp_enabled = false;
++		hv_set_non_nested_msr(HV_MSR_SIMP, simp.as_uint64);
++	}
+ 	memunmap(*msg_page);
+ 
+-	/* Disable global synic bit */
+-	sctrl.as_uint64 = hv_get_non_nested_msr(HV_MSR_SCONTROL);
+-	sctrl.enable = 0;
+-	hv_set_non_nested_msr(HV_MSR_SCONTROL, sctrl.as_uint64);
++	/* When VMBus is active it owns SCONTROL — leave it. */
++	if (!vmbus_active) {
++		union hv_synic_scontrol sctrl;
++
++		sctrl.as_uint64 = hv_get_non_nested_msr(HV_MSR_SCONTROL);
++		sctrl.enable = 0;
++		hv_set_non_nested_msr(HV_MSR_SCONTROL, sctrl.as_uint64);
++	}
+ 
+ 	return 0;
  }
-+static inline int hv_call_notify_all_processors_started(void)
-+{
-+	return -EOPNOTSUPP;
-+}
-+static inline bool hv_lp_exists(u32 lp_index)
-+{
-+	return false;
-+}
- static inline int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags)
- {
- 	return -EOPNOTSUPP;
-diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
-index f9600f87186a..6a4e8b9d570f 100644
---- a/include/hyperv/hvgdk_mini.h
-+++ b/include/hyperv/hvgdk_mini.h
-@@ -435,6 +435,7 @@ union hv_vp_assist_msr_contents {	 /* HV_REGISTER_VP_ASSIST_PAGE */
- /* HV_CALL_CODE */
- #define HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE		0x0002
- #define HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST		0x0003
-+#define HVCALL_GET_LOGICAL_PROCESSOR_RUN_TIME		0x0004
- #define HVCALL_NOTIFY_LONG_SPIN_WAIT			0x0008
- #define HVCALL_SEND_IPI					0x000b
- #define HVCALL_ENABLE_VP_VTL				0x000f
-diff --git a/include/hyperv/hvhdk_mini.h b/include/hyperv/hvhdk_mini.h
-index 091c03e26046..b4cb2fa26e9b 100644
---- a/include/hyperv/hvhdk_mini.h
-+++ b/include/hyperv/hvhdk_mini.h
-@@ -362,6 +362,7 @@ union hv_partition_event_input {
- 
- enum hv_partition_event {
- 	HV_PARTITION_EVENT_ROOT_CRASHDUMP = 2,
-+	HV_PARTITION_ALL_LOGICAL_PROCESSORS_STARTED = 4,
- };
- 
- struct hv_input_notify_partition_event {
-@@ -369,6 +370,17 @@ struct hv_input_notify_partition_event {
- 	union hv_partition_event_input input;
- } __packed;
- 
-+struct hv_input_get_logical_processor_run_time {
-+	u32 lp_index;
-+} __packed;
-+
-+struct hv_output_get_logical_processor_run_time {
-+	u64 global_time;
-+	u64 local_run_time;
-+	u64 rsvdz0;
-+	u64 hypervisor_time;
-+} __packed;
-+
- struct hv_lp_startup_status {
- 	u64 hv_status;
- 	u64 substatus1;
 -- 
 2.43.0
 
