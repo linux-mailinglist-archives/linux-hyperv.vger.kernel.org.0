@@ -1,313 +1,239 @@
-Return-Path: <linux-hyperv+bounces-10089-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10090-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +G6PCb641mlxHggAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10089-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Apr 2026 22:21:18 +0200
+	id wB7jEKkG12mdKggAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10090-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 09 Apr 2026 03:53:45 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9020F3C3B7F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Apr 2026 22:21:17 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A4073C55C6
+	for <lists+linux-hyperv@lfdr.de>; Thu, 09 Apr 2026 03:53:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4BA243014759
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Apr 2026 20:21:16 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 025AC300F29E
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Apr 2026 01:53:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 155C038F94A;
-	Wed,  8 Apr 2026 20:21:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9565D35B657;
+	Thu,  9 Apr 2026 01:53:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VMmQlBqh"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lwQQT/St";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="oAbvddwe"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9065B355F43;
-	Wed,  8 Apr 2026 20:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775679676; cv=none; b=k/NWRfJfABXm6Ig+qNiwEi6gLXacNP7U/4dpVAUqd0MKccOanIKX48v3qyksQQLJ+PGnM9gD0EhdEd6AdnKBMtMH3LrqaBqpNyLwU9tE7zOxKNud20CR+vbwFp2Bv8FHtdq4RS0WYO9iulgL5WyICxNmUUtP67oTLBs7DKgzttg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775679676; c=relaxed/simple;
-	bh=vmgJA28U4oEYXCV1uPCwl7E69UiNhgMrVSZD1Icewes=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=fZXCmQ6OdYL6LsFXe1rUtmLF3RpjApr8xQRFvDNxhu+cYwyflF6fig6bK84BBPDBleM9+oNADwAiBJTrSGRMJKIS2hrf1QZt2mkRpkjnT5rKvBILNOu76ySrEyw4IJP3oC8ap0RKqzrazKb23hXo5nSgmqS+e/RnUyP2TTVvE2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=VMmQlBqh; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.17.145.186] (unknown [4.194.122.162])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 2CC5B20B710C;
-	Wed,  8 Apr 2026 13:21:02 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2CC5B20B710C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1775679672;
-	bh=eC6YQa1wGfGRjmh3YlDhhWauLUlilIwy3f2460KCSmU=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=VMmQlBqhlgIdTdlILC4Vgofeh7QQRbGCvBn0mjur9dm7GW8RBLZ/OT7jUbxrFcYIE
-	 BEeFlkHDYNNoG/nUmpPZDyyUg3KMFFklByalhC0jKsDuA4qetc3zSzgni9aFQ4L8hG
-	 hewNOv+SL7mfpgNv1JkLaT8SkuP/NclL3C3V6D4E=
-Message-ID: <2dabc1b8-0cf0-4fc8-9cd4-cce60adfc05e@linux.microsoft.com>
-Date: Wed, 8 Apr 2026 13:20:59 -0700
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDC435AC3B;
+	Thu,  9 Apr 2026 01:53:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775699620; cv=fail; b=bMTAHZjmpdS7xI5rbZcrDpNpWwvudOZMKCYZjrEpScASMwtk2kfEahJEo8bCwtqWFO/DRiIyliGM+QgGePrIEAVDIgykPzIHnLE+sorc3ADnujwsmvsdvnFHOurqiQ07hhpZjxvwEHCMBrAKeBFiFQ7PsCzMeaKRy5zS3sk8PAI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775699620; c=relaxed/simple;
+	bh=ZXOc4DXyBA8WyD5ynKYamvgbNwXWWUS8jFLSW40/sfk=;
+	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
+	 Content-Type:MIME-Version; b=YZz/2aQK6z2eltWZEci2qoUMWBee/hvsWaxJL+eRMnffm3rqHiP6XF8WqOenGLq0SsZjfLmLngBOzGxfAVL/t+s2Y7c0xW3StZGIUysERi1xUxgInvbqn73CuHRfwCf9hoIEWu993eoKBqWWg+1TetWs6gIbjnVwhZ1otP95L2g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=lwQQT/St; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=oAbvddwe; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 638NtfXt1191795;
+	Thu, 9 Apr 2026 01:53:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=7+cBjufu6c8xhv5GC+
+	ZHeO+tCwp3wz4puoC2NUnoHlk=; b=lwQQT/StDSDaPwrYl0UrNVPZqRd+WmqfWZ
+	YxgsP42Gwfbv29PW73QPxD+S1wrVqMNiQweI83EWXbBL6DPvqXQ4VCdgXGuh9Ja1
+	OvmP8pVinKxGXcKFxGhyZGYUzhuoyqjwasIM5bFtST40Xz1App/ISxTzAexa7pPF
+	0jhWIY6n8X3wzduwichEwLJWUDGPU29SNt44Ijk8mf0N6qQ45wt7SDkOd/+eCe+N
+	Y2fO1vsQOASHyR/1W5NxAJba0ZOeLIt8wLf+GO7ZzfjzF7j8xWpq1ceNvaPUnJzj
+	FeBKuWdbZ+H+mkXz6O7IP9YRo58xaAGJsQmAScGq3o61gkwBwItA==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4dcmqavv47-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 09 Apr 2026 01:53:32 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 6391PHlB006967;
+	Thu, 9 Apr 2026 01:53:31 GMT
+Received: from byapr05cu005.outbound.protection.outlook.com (mail-westusazon11010054.outbound.protection.outlook.com [52.101.85.54])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4dcmekjc84-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 09 Apr 2026 01:53:31 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Sm2gSMpE/8hWzHBktFgupfckPaXZR8eqfxNQVps3I8VkzawImVZKeR5SjlO3zb7d8ZwDmnwl4dSG9mvpbj4daCoACds1EUeYxLsMoHvmvO1kBDudjIsLEfHPY9hZyF51bRXVBuICYOzPPHiZtBoxzCFHuUKBFg0DJg7SHHX7BH2BaQrwspxpD/VEio5KzumFl8Q6qGqXhRmT+FmObCnGYg2pdh+72wDP/+Tgq5qbRA/husKzPxM2Po+tCMe80JzJrxWvnmUqYXWxfNc1H7C0UjFd/0goCQOU9Yu8U6y+GwC3eE+nCG+tSVq/2dxCnEGd50GQVc6Grl2rSdzHkjDH/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7+cBjufu6c8xhv5GC+ZHeO+tCwp3wz4puoC2NUnoHlk=;
+ b=k3LnrNPPcTDrQm+7Hs5+wfuYfAt6vARi3PQcR2hZHHsFkqVdDeaIwwiqvOW0R7LQmmGr/7h3U/t4eyRp8v5vxwNgKlAtrC4m5iiwdYK/FfPc82ZqNwBgUAOWn61bW4FoPsBQmvyvGDdSU0r+If/fC9FZqPKlCb89uJ8RDKVdfxUWx7NZJxQSPdeDNaEHUeH6EmbW9eaLS7yoMAyI9MilvdZa0zKv6STptxMoy04l83chN0ChyJhaJ4eG9fwgxSxUj0jqSq2Srx8uxvh8aEOIinPZvEsDXjE0F6/Bk+d8t4G0brkGNtuxiV379SnH3Al1Bs3en0ksoTdHk9mhXZ2s9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7+cBjufu6c8xhv5GC+ZHeO+tCwp3wz4puoC2NUnoHlk=;
+ b=oAbvddweKPnBNux066LYHuWp2d1HC2Oguxl+t4rIargLjX6k9usBZEctCIE4rHYHbySpQ7j7NUVXO3jl3GOGKUxQZdenJxyD6MepyFsmTP9BFzT9IXwbLU54cdUI7nwHB6y9vojGlUdAV/q3T9cx5QRoHPdbRDY/W0tcO+4/zUo=
+Received: from CH0PR10MB5338.namprd10.prod.outlook.com (2603:10b6:610:cb::8)
+ by SA2PR10MB4427.namprd10.prod.outlook.com (2603:10b6:806:114::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.17; Thu, 9 Apr
+ 2026 01:52:57 +0000
+Received: from CH0PR10MB5338.namprd10.prod.outlook.com
+ ([fe80::e525:dd71:b002:6ad5]) by CH0PR10MB5338.namprd10.prod.outlook.com
+ ([fe80::e525:dd71:b002:6ad5%6]) with mapi id 15.20.9769.018; Thu, 9 Apr 2026
+ 01:52:57 +0000
+To: Li Tian <litian@redhat.com>
+Cc: linux-scsi@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        "Martin
+ K. Petersen" <martin.petersen@oracle.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: storvsc: Handle PERSISTENT_RESERVE_IN truncation
+ for Hyper-V vFC
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+In-Reply-To: <20260406015344.12566-1-litian@redhat.com> (Li Tian's message of
+	"Mon, 6 Apr 2026 09:53:44 +0800")
+Organization: Oracle Corporation
+Message-ID: <yq1y0iwyk5v.fsf@ca-mkp.ca.oracle.com>
+References: <20260406015344.12566-1-litian@redhat.com>
+Date: Wed, 08 Apr 2026 21:52:55 -0400
+Content-Type: text/plain
+X-ClientProxiedBy: YT4PR01CA0302.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:10e::7) To CH0PR10MB5338.namprd10.prod.outlook.com
+ (2603:10b6:610:cb::8)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: easwar.hariharan@linux.microsoft.com,
- Yu Zhang <zhangyu1@linux.microsoft.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
- "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
- "mani@kernel.org" <mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
- "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de"
- <arnd@arndb.de>, "joro@8bytes.org" <joro@8bytes.org>,
- "will@kernel.org" <will@kernel.org>,
- "robin.murphy@arm.com" <robin.murphy@arm.com>,
- "jacob.pan@linux.microsoft.com" <jacob.pan@linux.microsoft.com>,
- "nunodasneves@linux.microsoft.com" <nunodasneves@linux.microsoft.com>,
- "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: Re: [RFC v1 1/5] PCI: hv: Create and export hv_build_logical_dev_id()
-To: Michael Kelley <mhklinux@outlook.com>
-References: <20251209051128.76913-1-zhangyu1@linux.microsoft.com>
- <20251209051128.76913-2-zhangyu1@linux.microsoft.com>
- <SN6PR02MB41570FC0D7EA1364FB48CD1ED485A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <162c901f-69a7-420a-9148-a469d5a8ca4f@linux.microsoft.com>
- <SN6PR02MB4157098A14BE63FCA8C0A70ED480A@SN6PR02MB4157.namprd02.prod.outlook.com>
-From: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
-Content-Language: en-US
-In-Reply-To: <SN6PR02MB4157098A14BE63FCA8C0A70ED480A@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH0PR10MB5338:EE_|SA2PR10MB4427:EE_
+X-MS-Office365-Filtering-Correlation-Id: 32ceaf2a-a06f-422f-3bd6-08de95dab8d3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|22082099003|18002099003|56012099003;
+X-Microsoft-Antispam-Message-Info:
+	/hy3Q/+VS6aFkSSkogdlsZ5DCXY0Qc41wFO/5LNSolO7DEQY3RwkJVp5WSxiRTWETNvBBEbzHlVKWaa9oHEZWibC7tIXHIiqinNI2O4OkHZvVj+4o9WMy6cKHXmxgNjkTXRkOLhh2IH6w1dg5zGg81Tf8pYcX9npVZJLeVGaqxtaBYwg/u/R/ERG7co65HBgFOdd+9trnsui+kk6EmwxqhJQVCVdxHWdKxd0WBlYhoxph4ZdWqZQWGvP+4l8qCWGei51OGVEI8fnSfAfizmMVkctpr+0d8EoormV4/SqXWe2PHnMiJk2DlNL21A4ZsZYXnxcgZ5RyROLeN86UmpToE0scYnQmpuvSZssp4VhkHUk3UMEo+qGjfzFrL+skmKzCeOFW08C+45avUjHj8AiK4wGrAW1hWMkC/hpeLo2haXDoxyzSo8x3kYBnKG2k66VM0gFvyLI68Ok91QKOpr/SDqZPz7iQxfTjMrPc82R1kKI3O9J66qcui4VRBzr0ut9REV/L/NwYCbqP93A/M4yR0YsCutk9Z/uKmr3Qzyt2X6vHPhIYVECSCCDHGOrJMm+sCq+8CLU8rvhYyHbjPk0HO8FhGBtErpqRdbLeo9BMU66BXcz2BeIoYN1FHiaHaevxrsDnTa7G51drIntLqrx/dTlq3OEFkmtiTse2Tu+Zo9WxWChBFJeZmV9cpKY5kEHNVh4qz8Kt+W12rYWwuxLEuWHeAf1kh2sBi0Rzu1PGg8=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5338.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?e3LGFJeumXipf9nnH6iu9Q6VPCXyCiJBX/+30+KUg5K9x5zj7yZRlLtPtIYo?=
+ =?us-ascii?Q?L1J7ReYLLaPcQxEwCnHIA64ZlfOBdkzx5lnj1qdKz+TQU4zUxdiLyExzlMYT?=
+ =?us-ascii?Q?Qb69y955i5WQV+33Pp/jKficm0ZV+loGBCccG2UXElJOoaM9KJIsKuuMZ6uS?=
+ =?us-ascii?Q?+9EF13+nVK3agIo7etTC97ppvTFQtmaAKhXd/tEQeElyigRHW01yXy/b4V2j?=
+ =?us-ascii?Q?dTlXD12FXZvESElDRO7vi3oIN7QrYQS/uR4WGxwbcdyqJ9F69L3OLPGECYNE?=
+ =?us-ascii?Q?E++cm0RTCZOsnzfEeDI6AnDeYMaFVsPEXVzODHflXwCo7Lq8yrnrMJs05LGO?=
+ =?us-ascii?Q?XZfTSyXO/Dahb7Uy7Os2+kO/BdJBLCNpiH1+/rN6McYBZsfaZ12WsNAlgz4e?=
+ =?us-ascii?Q?40zd13WB6DDJiKrygjBsrdNhEnbNvOh1fqq0WnQ6RXulvH3vPaOeYNSKKabr?=
+ =?us-ascii?Q?qfdogEhCtRlmMGALIADJtMwTJTp3B1zO6NGxzTgnFR36KTSZJstkhg59ieeU?=
+ =?us-ascii?Q?QGfm7ALCbUJcKUrsY6uqvOIvpELH1tQhsOt2B+wcoacamf8OlSW4aL87Dt2t?=
+ =?us-ascii?Q?m9OM99KvM2MsqgddLKVFA+dMbjwpTrHLPiCElaqv5vDiLuyUTxKo5H7wzeK8?=
+ =?us-ascii?Q?ouXwKL8P8NM8rvlvbh6UlbRt0cG8ziby2XidwxGwph10FCWm8xdj2BP9emVT?=
+ =?us-ascii?Q?ZDp3kKsc5Op5AJXdTS1rQlbOMyyEfKJbd7FAxR+Bak/8kfefVKdSiZsCBs9P?=
+ =?us-ascii?Q?lzxFe1Fi3crR0ympp3gTeEuovBa9B8n2iydJFdkizOkCTWYzfLa2HgCPVG3+?=
+ =?us-ascii?Q?ZM4A6uZZCSiFCiEy2vuScO6+kpj47/HaI93BRB8gbKUuzyMaM0Qrml8zlFQv?=
+ =?us-ascii?Q?hrbdoh0P4hTqzdM02c2Hl30NuO+bP02u3DwWTeS6wZxPyWtDW4QAHv+l4mHt?=
+ =?us-ascii?Q?DS95xzbvku2nx90iowI4MgITVFtz/ZDIQZRoD3KKuA910uxMMDBUKh0r15Il?=
+ =?us-ascii?Q?BXuKdZYZa97P83Q4Xi2tMQcVjpdYA9exdCIPGjJ9kHS27dDXWljHP4hho1tL?=
+ =?us-ascii?Q?rb4W/St1W+CF0AYED8LxCif0cmhzTAA9iyzPQ1HZ1V9e5va8VZalXJCKv1n+?=
+ =?us-ascii?Q?7D9wlPdtG0M27/r+tRWnrKiZdW+uloyFH8M/zYqWE0+dOeunPZIxyNOZphTu?=
+ =?us-ascii?Q?Q8rsaBEN+0/Ypqbm+MS4Gh+AtSZJ6fTnYDnUkgvmy/3StWo73ghEsov1QB0f?=
+ =?us-ascii?Q?USIm9qL3B1JhrKW0CQC/1VqBfq8SBi9zZgg24CVEAGPad7ChgCAKWQfs5TAo?=
+ =?us-ascii?Q?3B3enFZeOcB7+7F2uAZ6MFNn204DpjEXjw0lYG12Fic0RPjhzmmN36/C82XB?=
+ =?us-ascii?Q?EPC6NQAS62y0eDVfLiKUDawF2dbL7VbcE0rKPbneL+C+pA+DJ42zS4wfkqIi?=
+ =?us-ascii?Q?vz9XoC/Bf4VXBBCTwFJrmxG2bVXAYh+kVacDtaCtLDTK8o6T4W5p4T0cy9o2?=
+ =?us-ascii?Q?cCCZ60acNru0IDzgY1GVc4btUo7ibkNFw768GygAJxorM9pvi6F9F7E2pUNR?=
+ =?us-ascii?Q?9K9soOzidVWE4wWkvCVmtgX47lsdmnHYyom+C9BZh9/tQ5GnqD2PI+BQEJNx?=
+ =?us-ascii?Q?Qo0rfGc7tZQFkohIUjJx9rkvF+oqAgm2qiQMbl2nfEtW1pLDYEOej2tbTOzc?=
+ =?us-ascii?Q?9oYYG9Bq1ABjgvmOVLsKo/WLpZlwPKhtW1aqi8B2/0sSa2p+wtkR0idNl3qa?=
+ =?us-ascii?Q?VES/N+0BW+RZrBYmRVf5jTKqfgkgAdQ=3D?=
+X-Exchange-RoutingPolicyChecked:
+	R0L9gg1GQl1oEu1dzXHjKWYfNDRYI7tpvwCKbzapldq3XhNr9kzudPPt9ichiW9+GA9lx69ugFfYm9DrOILwEooTt6L/K7JmeMy/QLAasv844K/9xIjG8ObW07TuJot8Nqgv1gCTUeZI3zfImlft2lBjvb1Nnr/9KbCicEq0asr6QRU8f7xN2zGHmLvl+i3O63OaP7TsAWIS0Mn3woLgk822VNz5ElMRiD3XI2MaGGwu06eot5XmTlv7VMLmP+AouF97RaYX8Yl/bSls+q4xoW+UG/0Df2Fxp4F1VcUeGTUSitx94zDfyuzFosmbmEUo57rvZfnjXwxqbxUQ9e1EJg==
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	xgewHhZZonX38fR9qllAdJQhRn2YVUBLuDzYETmi5LqxDNfqdiycnlVL75AYxxDnn2TBwP1PoaunKCtUsa6P1+g7Howm9gIYl0xZX/MJb0fU2UoC/oXF2m/tLcAE226yR7xPIyiPltaFQzx8OprtZecJ89LdYPg+gH+5pAWx4mh8Lnpzqk4lnOimIUGbhLKlWgrLI11zhQp0kS/4nNi0j7wVNKPDAluGQyEfx1+PP27rmPbYzYoWmURlzwiyGnCifo++JMNPzcezMSMJCzn5OmSyfxB4pmjBsviZWlTmbGYdXJ7+376G2ecokoX19UZ4DwK+KFDsgUezzmslzwmXAPjSkorDlnxexctbFRd8O8oMNDIcg65Vo0JMTwCyGqwlQz+I0tP4PUQppp/b4AZuCScszgN6H9Wt+0InG5BVG4ZoBKByjPLfl7tmTU90JS3WwuZUOweFZx0SdNEPrReO4i/thmViinEqobYCzCTdWpjheabioxmJ+UVTcT/dBKmkeKupOWSaubCwr+5llE57eGLt1Hrpm8XNYjyNL8jUpb9Qv4BKn4YP2JoFeGNS28+GLPOULqP9rg5NTLOBx6JbJNcVh2ea4Ui2IigiJk6cgoI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 32ceaf2a-a06f-422f-3bd6-08de95dab8d3
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5338.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2026 01:52:57.1059
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: U3RIxkd9JbU1KZzOf2777fJ6NhiqXtvdlHvU4NOQSPVk+67EcCeTl2VsCtd8gV6En2P6kT4crg7zKZNKi3pkmzivrDGvK3La1IMpJ1wLk64=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4427
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-08_07,2026-04-08_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 phishscore=0
+ suspectscore=0 malwarescore=0 mlxscore=0 mlxlogscore=970 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2604010000
+ definitions=main-2604090015
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA5MDAxNCBTYWx0ZWRfX3kBR935E4AXN
+ bb12GktJt2oT85KqQ8Ep/JLxg/1I7PiuMgcCXMxYVAzMuv79GKU6fPCZEfQNt3N11DB0RdBD+kM
+ UIrE3kkCQ8zAZUq0B6y146VKNebxU+birwCkXb41eB14rh2QVOoavNmCcxiTgXqV+U7szaYPFpH
+ GIIZb2lc6M+KKi/eI16EQx9EIPam57mcwknzaTkM4d7Dy1k5LfrHC2Q3NM11UXdjnE5YUwO1h5W
+ eFNCM79rNj8Ao3+RQA15SVRZwGKM7b2GGBtZG9nXMGDzbehaqVItO35kYkpmJ85/rQy7x1wdj9z
+ ttyINSJBqcisnQOvag5GLfxWvj0Cf4X3VvpmPWtj/s0j0uOcFbMWEhBRpRLwlR/thlwd67GUNuf
+ InBk6AoRzU4quInj9whh7RTEd3X36+Ag+Ytw1pC9Mbbmg8i5HE+G9Wtt5CPAgSo3s4cPeVwsmA+
+ kJXpFwoqu3KwvPk+LQimFOpmGGQfM3ywHVuwDyfU=
+X-Proofpoint-GUID: qRnBdwgG-oBbO7BhHQbb1WxJCQGIpUWC
+X-Authority-Analysis: v=2.4 cv=Oux/DS/t c=1 sm=1 tr=0 ts=69d7069c b=1 cx=c_pps
+ a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=A5OVakUREuEA:10
+ a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22 a=jiCTI4zE5U7BLdzWsZGv:22
+ a=x0eKOSpe3m1H3M0S9YoZ:22 a=JBNebbC9HC7U5k7cQ9AA:9 cc=ntf awl=host:13825
+X-Proofpoint-ORIG-GUID: qRnBdwgG-oBbO7BhHQbb1WxJCQGIpUWC
+X-Spamd-Result: default: False [0.34 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[oracle.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[oracle.com:s=corp-2025-04-25,oracle.onmicrosoft.com:s=selector2-oracle-onmicrosoft-com];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10089-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[outlook.com];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TO_DN_SOME(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10090-lists,linux-hyperv=lfdr.de];
+	DKIM_TRACE(0.00)[oracle.com:+,oracle.onmicrosoft.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[25];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[easwar.hariharan@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[martin.petersen@oracle.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,oracle.onmicrosoft.com:dkim,oracle.com:dkim];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 9020F3C3B7F
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_COUNT_SEVEN(0.00)[9]
+X-Rspamd-Queue-Id: 3A4073C55C6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 1/11/2026 9:36 AM, Michael Kelley wrote:
-> From: Easwar Hariharan <easwar.hariharan@linux.microsoft.com> Sent: Friday, January 9, 2026 10:41 AM
->>
->> On 1/8/2026 10:46 AM, Michael Kelley wrote:
->>> From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Monday, December 8, 2025 9:11 PM
->>>>
->>>> From: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
->>>>
->>>> Hyper-V uses a logical device ID to identify a PCI endpoint device for
->>>> child partitions. This ID will also be required for future hypercalls
->>>> used by the Hyper-V IOMMU driver.
->>>>
->>>> Refactor the logic for building this logical device ID into a standalone
->>>> helper function and export the interface for wider use.
->>>>
->>>> Signed-off-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
->>>> Signed-off-by: Yu Zhang <zhangyu1@linux.microsoft.com>
->>>> ---
->>>>  drivers/pci/controller/pci-hyperv.c | 28 ++++++++++++++++++++--------
->>>>  include/asm-generic/mshyperv.h      |  2 ++
->>>>  2 files changed, 22 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
->>>> index 146b43981b27..4b82e06b5d93 100644
->>>> --- a/drivers/pci/controller/pci-hyperv.c
->>>> +++ b/drivers/pci/controller/pci-hyperv.c
->>>> @@ -598,15 +598,31 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
->>>>
->>>>  #define hv_msi_prepare		pci_msi_prepare
->>>>
->>>> +/**
->>>> + * Build a "Device Logical ID" out of this PCI bus's instance GUID and the
->>>> + * function number of the device.
->>>> + */
->>>> +u64 hv_build_logical_dev_id(struct pci_dev *pdev)
->>>> +{
->>>> +	struct pci_bus *pbus = pdev->bus;
->>>> +	struct hv_pcibus_device *hbus = container_of(pbus->sysdata,
->>>> +						struct hv_pcibus_device, sysdata);
->>>> +
->>>> +	return (u64)((hbus->hdev->dev_instance.b[5] << 24) |
->>>> +		     (hbus->hdev->dev_instance.b[4] << 16) |
->>>> +		     (hbus->hdev->dev_instance.b[7] << 8)  |
->>>> +		     (hbus->hdev->dev_instance.b[6] & 0xf8) |
->>>> +		     PCI_FUNC(pdev->devfn));
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(hv_build_logical_dev_id);
->>>
->>> This change is fine for hv_irq_retarget_interrupt(), it doesn't help for the
->>> new IOMMU driver because pci-hyperv.c can (and often is) built as a module.
->>> The new Hyper-V IOMMU driver in this patch series is built-in, and so it can't
->>> use this symbol in that case -- you'll get a link error on vmlinux when building
->>> the kernel. Requiring pci-hyperv.c to *not* be built as a module would also
->>> require that the VMBus driver not be built as a module, so I don't think that's
->>> the right solution.
->>>
->>> This is a messy problem. The new IOMMU driver needs to start with a generic
->>> "struct device" for the PCI device, and somehow find the corresponding VMBus
->>> PCI pass-thru device from which it can get the VMBus instance ID. I'm thinking
->>> about ways to do this that don't depend on code and data structures that are
->>> private to the pci-hyperv.c driver, and will follow-up if I have a good suggestion.
->>
->> Thank you, Michael. FWIW, I did try to pull out the device ID components out of
->> pci-hyperv into include/linux/hyperv.h and/or a new include/linux/pci-hyperv.h
->> but it was just too messy as you say.
-> 
-> Yes, the current approach for getting the device ID wanders through struct
-> hv_pcibus_device (which is private to the pci-hyperv driver), and through
-> struct hv_device (which is a VMBus data structure). That makes the linkage
-> between the PV IOMMU driver and the pci-hyperv and VMBus drivers rather
-> substantial, which is not good.
 
-Hi Michael,
+Li,
 
-I missed this, or made a mental note to follow up but forgot. Either way, Yu reminded
-me about this email chain and I started looking at it this week.
+> The storvsc driver has become stricter in handling SRB status codes
+> returned by the Hyper-V host. When using Virtual Fibre Channel (vFC)
+> passthrough, the host may return SRB_STATUS_DATA_OVERRUN for
+> PERSISTENT_RESERVE_IN commands if the allocation length in the CDB
+> does not match the host's expected response size.
 
-> 
-> But here's an idea for an alternate approach. The PV IOMMU driver doesn't
-> have to generate the logical device ID on-the-fly by going to the dev_instance
-> field of struct hv_device. Instead, the pci-hyperv driver can generate the logical
-> device ID in hv_pci_probe(), and put it somewhere that's easy for the IOMMU
-> driver to access. The logical device ID doesn't change while Linux is running, so
-> stashing another copy somewhere isn't a problem.
+Applied to 7.1/scsi-staging, thanks!
 
-In my exploration and consulting with Dexuan, I realized that one of the components of
-the logical device ID, the PCI function number is set only in pci_scan_device(), well into
-pci_scan_root_bus_bridge() that you call out as the point by which the communication must
-have occurred.
-
-But then, Dexuan also pointed me to hv_pci_assign_slots() with its call to wslot_to_devfn() and I'm
-honestly confused how these two interact. With the current approach, it looks like whatever
-devfn pci_scan_device() set is the correct function number to use for the logical device
-ID, in which case, the best I can do with your suggested approach below is to inform the
-pvIOMMU driver of the GUID, rather than the logical device ID itself.
-
-Perhaps with your history, you can clarify the interaction, and/or share your thoughts
-on the above?
-
-> 
-> So have the Hyper-V PV IOMMU driver provide an EXPORTed function to accept
-> a PCI domain ID and the related logical device ID. The PV IOMMU driver is
-> responsible for storing this data in a form that it can later search. hv_pci_probe()
-> calls this new function when it instantiates a new PCI pass-thru device. Then when
-> the IOMMU driver needs to attach a new device, it can get the PCI domain ID
-> from the struct pci_dev (or struct pci_bus), search for the related logical device
-> ID in its own data structure, and use it. The pci-hyperv driver has a dependency
-> on the IOMMU driver, but that's a dependency in the desired direction. The
-> PCI domain ID and logical device ID are just integers, so no data structures are
-> shared.
-
-In a previous reply on this thread, you raised the uniqueness issue of bytes 4 and 5
-of the GUID being used to create the domain number. I thought this approach could
-help with that too, but as I coded it up, I realized that using the domain number 
-(not guaranteed to be unique) to search for the bus instance GUID (guaranteed to be unique)
-is the wrong way around. It is unfortunately the only available key in the pci_dev
-handed to the pvIOMMU driver in this approach though...
-
-Do you think that's a fatal flaw?
-
-> 
-> Note that the pci-hyperv must inform the PV IOMMU driver of the logical
-> device ID *before* create_root_hv_pci_bus() calls pci_scan_root_bus_bridge().
-> The latter function eventually invokes hv_iommu_attach_dev(), which will
-> need the logical device ID. See example stack trace. [1]
-> 
-> I don't think the pci-hyperv driver even needs to tell the IOMMU driver to
-> remove the information if a PCI pass-thru device is unbound or removed, as
-> the logical device ID will be the same if the device ever comes back. At worst,
-> the IOMMU driver can simply replace an existing logical device ID if a new one
-> is provided for the same PCI domain ID.
-
-As above, replacing a unique GUID when a result is found for a non-unique
-key value may be prone to failure if it happens that the device that came "back"
-is not in fact the same device (or class of device) that went away and just happens
-to, either due to bytes 4 and 5 being identical, or due to collision in the
-pci_domain_nr_dynamic_ida, have the same domain number. 
-
-Thanks,
-Easwar (he/him)
-
-> 
-> An include file must provide a stub for the new function if
-> CONFIG_HYPERV_PVIOMMU is not defined, so that the pci-hyperv driver still
-> builds and works.
-> 
-> I haven't coded this up, but it seems like it should be pretty clean.
-> 
-> Michael
-> 
-> [1] Example stack trace, starting with vmbus_add_channel_work() as a
-> result of Hyper-V offering the PCI pass-thru device to the guest.
-> hv_pci_probe() runs, and ends up in the generic Linux code for adding
-> a PCI device, which in turn sets up the IOMMU.
-> 
-> [    1.731786]  hv_iommu_attach_dev+0xf0/0x1d0
-> [    1.731788]  __iommu_attach_device+0x21/0xb0
-> [    1.731790]  __iommu_device_set_domain+0x65/0xd0
-> [    1.731792]  __iommu_group_set_domain_internal+0x61/0x120
-> [    1.731795]  iommu_setup_default_domain+0x3a4/0x530
-> [    1.731796]  __iommu_probe_device.part.0+0x15d/0x1d0
-> [    1.731798]  iommu_probe_device+0x81/0xb0
-> [    1.731799]  iommu_bus_notifier+0x2c/0x80
-> [    1.731800]  notifier_call_chain+0x66/0xe0
-> [    1.731802]  blocking_notifier_call_chain+0x47/0x70
-> [    1.731804]  bus_notify+0x3b/0x50
-> [    1.731805]  device_add+0x631/0x850
-> [    1.731807]  pci_device_add+0x2db/0x670
-> [    1.731809]  pci_scan_single_device+0xc3/0x100
-> [    1.731810]  pci_scan_slot+0x97/0x230
-> [    1.731812]  pci_scan_child_bus_extend+0x3b/0x2f0
-> [    1.731814]  pci_scan_root_bus_bridge+0xc0/0xf0
-> [    1.731816]  hv_pci_probe+0x398/0x5f0
-> [    1.731817]  vmbus_probe+0x42/0xa0
-> [    1.731819]  really_probe+0xe5/0x3e0
-> [    1.731822]  __driver_probe_device+0x7e/0x170
-> [    1.731823]  driver_probe_device+0x23/0xa0
-> [    1.731824]  __device_attach_driver+0x92/0x130
-> [    1.731826]  bus_for_each_drv+0x8c/0xe0
-> [    1.731828]  __device_attach+0xc0/0x200
-> [    1.731830]  device_initial_probe+0x4c/0x50
-> [    1.731831]  bus_probe_device+0x32/0x90
-> [    1.731832]  device_add+0x65b/0x850
-> [    1.731836]  device_register+0x1f/0x30
-> [    1.731837]  vmbus_device_register+0x87/0x130
-> [    1.731840]  vmbus_add_channel_work+0x139/0x1a0
-> [    1.731841]  process_one_work+0x19f/0x3f0
-> [    1.731843]  worker_thread+0x188/0x2f0
-> [    1.731845]  kthread+0x119/0x230
-> [    1.731852]  ret_from_fork+0x1b4/0x1e0
-> [    1.731854]  ret_from_fork_asm+0x1a/0x30
-> 
->>
+-- 
+Martin K. Petersen
 
