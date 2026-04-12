@@ -1,50 +1,50 @@
-Return-Path: <linux-hyperv+bounces-10114-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10115-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kOA0KIyV22mxDgkAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10114-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sun, 12 Apr 2026 14:52:28 +0200
+	id 4D0vF7mV22mxDgkAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10115-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sun, 12 Apr 2026 14:53:13 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 024663E3DA3
-	for <lists+linux-hyperv@lfdr.de>; Sun, 12 Apr 2026 14:52:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A46713E3DBA
+	for <lists+linux-hyperv@lfdr.de>; Sun, 12 Apr 2026 14:53:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A6909300EAA6
-	for <lists+linux-hyperv@lfdr.de>; Sun, 12 Apr 2026 12:52:26 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E44FD300EF42
+	for <lists+linux-hyperv@lfdr.de>; Sun, 12 Apr 2026 12:52:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F091311968;
-	Sun, 12 Apr 2026 12:52:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94B6337AA6C;
+	Sun, 12 Apr 2026 12:52:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VAOyzisz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PKUPdAHP"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B64038D;
-	Sun, 12 Apr 2026 12:52:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BC430C60D;
+	Sun, 12 Apr 2026 12:52:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775998346; cv=none; b=OUxMcNohMnAG+5VNhp0naHNaopN0iQRkhgRfpP1uwotYiQnFMGaB9ZtxAEue7I0J+O/pldRqCyZoHQjsmIhzlgp3/zvQOqjrsOj9bq1mWUoY5bJwBofZnJz9y7Ui1fxrIwqqoZrwlibZagWyKDcDZghs8QmQ7ni/fuETMIOKvE4=
+	t=1775998360; cv=none; b=ILDyzbCIKcp77ZguQG1kS66WkCXHTWh1tWgZ3UfRDmHTN7Kmle+UJMH3Q+D9dxIbBUdnI7/FS5UmvqyhqhKlASqfDopnwaLiYcH5rV6uYszVb4qBHVE4kICx0mR7jseKC9BopeKS0X3t1GQtPuctbDQUFgHCxBeCxxOd85K88Ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775998346; c=relaxed/simple;
-	bh=B07c9IpAqwmdNh4stWbJRCwZXUhJsWch4tfxxAyVLMc=;
+	s=arc-20240116; t=1775998360; c=relaxed/simple;
+	bh=9o3Hq+Ry7zzts5Yree8zlYDr+AWyfx6JLoCAFtbLDaE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PWPK3qWsHjP4tvkBwU9g7MqxQwVK4MjyjCfdE+4wLp81wqepP9KR4v4eNBmeHp8zUdBRTsCgGZQL+EHGiUyxFM0NWv3RHkv2Wi0wY1o+pqt5KCsgd1RL38k9g/BnllXe5gIQvRL1n78lsUKFd0Hj4kv64yCz7HLolsRTpz8P1ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VAOyzisz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41037C19424;
-	Sun, 12 Apr 2026 12:52:22 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=TTs2RnEgw/Y1u9AO1Rxff0MHHaA72+OIJvWqTBw9aVKfF/MScLvhoUZriYWu69kJnmWoaAbiYqaqmg6FVoZnRVrax7zmG9K88fMqeV5b342JRH0mFObTDa/6TM7XbXHquwO2AOaF6YJNrJePIFyg3Q1UWc8HQNoWj1P7e8YL82Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PKUPdAHP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48D1BC19424;
+	Sun, 12 Apr 2026 12:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775998346;
-	bh=B07c9IpAqwmdNh4stWbJRCwZXUhJsWch4tfxxAyVLMc=;
+	s=k20201202; t=1775998360;
+	bh=9o3Hq+Ry7zzts5Yree8zlYDr+AWyfx6JLoCAFtbLDaE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VAOyziszs0Sk0fSw2Xxw16cc17NihM6n4WqZWxel+8U5awV3eLvFpcnahiG+jN+0C
-	 s07PA2M/+ciUjt2U7uKty8Ex2QiYTMrxYWi+rmiza3bBfM4umWktsEz8fJwt554qqR
-	 ZECdGjBFgSJWEVm7+SM6Ekcemo2nE2+Jzs1ZqKUiGl6E6B7BIY25c1a/RbzBJAUcCf
-	 InHXunXvsITd1Kaq8ISO+90zXNlZzFLYU7RP+vHLAkseTlGhGib5LdRCliaJBFnqJx
-	 VesETRe6oWD9a3591g+ArqamQeNtDkno/Zg/pwC63YP7KFDjbqCnuDjuatsTJxMQNl
-	 oVIDqbhHv7fIA==
-Date: Sun, 12 Apr 2026 13:52:19 +0100
+	b=PKUPdAHP+meFD/SmJIe8PLjCuo/N5Fj8UgmD4+tANFLOZ7/9ZaduQXw+ucFqkxrYv
+	 LPfkrCyEXYrdbQxvM0Xi0WuvsKuLt48lHPkA2VBIVTsqcjv8tQHLT40uVLDXLFJq/8
+	 QNasOgfhBpdjwLjoymOen4fMiTD1GsN6mucwqrRJvX4K4LHfiVeLsPjjeHpuhRb4HS
+	 /WbblF2DWL8FBbcZEHoP0F+7OIXg2kIRWI4rN3NqltIRGkHDgNUdiE+PgHcvkyWZJ2
+	 NC7E5H/y8iWCwcQ93xIDzKpw5kFdWW5NbvzDD548wbyv3lP77PI+LS4pIDcCllcQE6
+	 +JZ1EmxcMXuvw==
+Date: Sun, 12 Apr 2026 13:52:33 +0100
 From: Simon Horman <horms@kernel.org>
 To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
 Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
@@ -56,11 +56,11 @@ Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
 	kotaranov@microsoft.com, yury.norov@gmail.com,
 	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 1/2] net: mana: Use pci_name() for debugfs directory
- naming
-Message-ID: <20260412125219.GI469338@kernel.org>
+Subject: Re: [PATCH net 2/2] net: mana: Move current_speed debugfs file to
+ mana_init_port()
+Message-ID: <20260412125233.GJ469338@kernel.org>
 References: <20260408081224.302308-1-ernis@linux.microsoft.com>
- <20260408081224.302308-2-ernis@linux.microsoft.com>
+ <20260408081224.302308-3-ernis@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260408081224.302308-2-ernis@linux.microsoft.com>
+In-Reply-To: <20260408081224.302308-3-ernis@linux.microsoft.com>
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -79,7 +79,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10114-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10115-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -99,27 +99,19 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TO_DN_SOME(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 024663E3DA3
+X-Rspamd-Queue-Id: A46713E3DBA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, Apr 08, 2026 at 01:12:19AM -0700, Erni Sri Satya Vennela wrote:
-> Use pci_name(pdev) for the per-device debugfs directory instead of
-> hardcoded "0" for PFs and pci_slot_name(pdev->slot) for VFs. The
-> previous approach had two issues:
+On Wed, Apr 08, 2026 at 01:12:20AM -0700, Erni Sri Satya Vennela wrote:
+> Move the current_speed debugfs file creation from mana_probe_port() to
+> mana_init_port(). The file was previously created only during initial
+> probe, but mana_cleanup_port_context() removes the entire vPort debugfs
+> directory during detach/attach cycles. Since mana_init_port() recreates
+> the directory on re-attach, moving current_speed here ensures it survives
+> these cycles.
 > 
-> 1. pci_slot_name() dereferences pdev->slot, which can be NULL for VFs
->    in environments like generic VFIO passthrough or nested KVM,
->    causing a NULL pointer dereference.
-> 
-> 2. Multiple PFs would all use "0", and VFs across different PCI
->    domains or buses could share the same slot name, leading to
->    -EEXIST errors from debugfs_create_dir().
-> 
-> pci_name(pdev) returns the unique BDF address, is always valid, and is
-> unique across the system.
-> 
-> Fixes: 6607c17c6c5e ("net: mana: Enable debugfs files for MANA device")
+> Fixes: 75cabb46935b ("net: mana: Add support for net_shaper_ops")
 > Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
 
 Reviewed-by: Simon Horman <horms@kernel.org>
