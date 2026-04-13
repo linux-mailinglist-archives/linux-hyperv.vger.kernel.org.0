@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-10120-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10121-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qCDRGhR73Gn5RgkAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10120-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Apr 2026 07:11:48 +0200
+	id qKYxKhd73Gn5RgkAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10121-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Apr 2026 07:11:51 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 094E73E768B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Apr 2026 07:11:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 52B8A3E7693
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Apr 2026 07:11:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 988453032F6A
+	by sea.lore.kernel.org (Postfix) with ESMTP id C7DC430342A7
 	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Apr 2026 05:08:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A49538642E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55C4E386440;
 	Mon, 13 Apr 2026 05:08:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="f9uNMtf8"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="o42ksuLL"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A1A7381AE3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A233381B1C;
 	Mon, 13 Apr 2026 05:08:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776056933; cv=none; b=seIl5bFRU5RVMOL/hRjsXmghdBnOfHynUPY+vqjH/KsYBh/CtAyDA1ZFWgSY5n2a5s3ejFtbZUtvdrESgPD6KmWfqH0xTN441iqkaMB+2Ba0tfpIceedlpSEyJOL1a78GGOnFFIVakxpj2IyDMYsNWnyvUr9IQ1Ua15KCtfEb54=
+	t=1776056933; cv=none; b=TRFbu/+Zbb/uT2D/M6rhyQEo3mHYGGuBoXCPpnEB6HIYnlhfcj/fJy2HTBXScShVKfWJbOPCxEdkdo6t75fNwpO/Y/STXXXFxJY4MPmEarQxYbBSPucN9C36XPphD3m28GD6SB7MtKLM5DxMtSC6O9rOkA6cXSg5z3fNjiEsUys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1776056933; c=relaxed/simple;
-	bh=2/Sgiuf0i4Z6yaO92crvH0qtHa25YLDB6KSbbFFkCnA=;
+	bh=Omt7l2ZGmdQq9uYj4lHwHIPJUy2Ae/QbidRwwQnoo0w=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YAMPnoVTKSJLAq1u/7dSaMmNvA4csh6UQEMfupOR1ZYHC0KhuiobjnYLB+8sYTUUe2AqtJ4+hGVyD3kTRchNSVqq860sewKv3gEzUwCiWTmN48k7I3hfXHlP/cs3Ir7p/1D8j9E2WLL6li7YWYnxpUcUbzcjjcoYK0SjHbZEy+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=f9uNMtf8; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=CChEoTBoASm1GeM/nGkypJXIucaeBT8c7BSwXlPwX6qGaOGFGGs0wgF8z2ng0QGj/yqgWbX3MdL3O4RoyHL4KRCjjpgfX/s98V6eJeHsK6EEIzbRiqjaLPEfxXbZYbvPIxCK5VDhlR05Q5ydYJFkJbhOGVOUXl1imZYNNPYAI5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=o42ksuLL; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id 1931B20B7129; Sun, 12 Apr 2026 22:08:46 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1931B20B7129
+	id B312B20B713B; Sun, 12 Apr 2026 22:08:46 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B312B20B713B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1776056926;
-	bh=sb3m66RzCJPfglqdY/359rz5n0K9rwFOKlus0zCVaOk=;
+	bh=zMwewV+dOIBPAAf8NeLiYmX6NUc8wSZ3jkHLbt2qTSc=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=f9uNMtf8U3KeTSHwVdn4+WPHCIn/cqN0IBGAqyOJqxMVbju10236Y1f3BpwlGVNas
-	 FQK/aLD2wRpE9/aYe/6MCsxWawlp/34y3QqIVWqlLPSKwTE7kGC3RgU+YCvgr2z+AG
-	 3cA5VHLtK1EXCQ8+MP1T6FCVttAMp0YHe1jtA3/E=
+	b=o42ksuLL7qdzrhNGwe9oaUSBXlZQr8ZB74T14KOfGK3fbW/FV2g1gIgKwM9C3Jti/
+	 oiiUSUPv2vv1NKGV+9PoAU5rFipeMW85wilCWjFqXgi4efSUywRv8BpsCucpCosv0n
+	 zqpkXcleWmJqkPZ9YqREM/+ing2xkVhoSHbnbQEs=
 From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -66,9 +66,9 @@ To: kys@microsoft.com,
 	linux-hyperv@vger.kernel.org,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net v2 2/4] net: mana: Init gf_stats_work before potential error paths in probe
-Date: Sun, 12 Apr 2026 22:08:38 -0700
-Message-ID: <20260413050843.605789-3-ernis@linux.microsoft.com>
+Subject: [PATCH net v2 3/4] net: mana: Don't overwrite port probe error with add_adev result
+Date: Sun, 12 Apr 2026 22:08:39 -0700
+Message-ID: <20260413050843.605789-4-ernis@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260413050843.605789-1-ernis@linux.microsoft.com>
 References: <20260413050843.605789-1-ernis@linux.microsoft.com>
@@ -94,7 +94,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10120-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10121-lists,linux-hyperv=lfdr.de];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
@@ -106,49 +106,70 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCPT_COUNT_TWELVE(0.00)[23];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,linux.microsoft.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 094E73E768B
+X-Rspamd-Queue-Id: 52B8A3E7693
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Move INIT_DELAYED_WORK(gf_stats_work) to before mana_create_eq(),
-while keeping schedule_delayed_work() at its original location.
+In mana_probe(), if mana_probe_port() fails for any port, the error
+is stored in 'err' and the loop breaks. However, the subsequent
+unconditional 'err = add_adev(gd, "eth")' overwrites this error.
+If add_adev() succeeds, mana_probe() returns success despite ports
+being left in a partially initialized state (ac->ports[i] == NULL).
 
-Previously, if any function between mana_create_eq() and the
-INIT_DELAYED_WORK call failed, mana_probe() would call mana_remove()
-which unconditionally calls cancel_delayed_work_sync(gf_stats_work)
-in __flush_work() or debug object warnings with
-CONFIG_DEBUG_OBJECTS_WORK enabled.
+Only call add_adev() when there is no prior error, so the probe
+correctly fails and triggers mana_remove() cleanup.
 
-Fixes: be4f1d67ec56 ("net: mana: Add standard counter rx_missed_errors")
+Fixes: ced82fce77e9 ("net: mana: Probe rdma device in mana driver")
 Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
 ---
 Changes in v2:
 * Apply the patch in net instead of net-next.
 ---
- drivers/net/ethernet/microsoft/mana/mana_en.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 57f146ea6f66..f6ad46736418 100644
+index f6ad46736418..1a141c46ac27 100644
 --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
 +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -3635,6 +3635,8 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
- 		INIT_WORK(&ac->link_change_work, mana_link_state_handle);
+@@ -3680,10 +3680,9 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
+ 	if (!resuming) {
+ 		for (i = 0; i < ac->num_ports; i++) {
+ 			err = mana_probe_port(ac, i, &ac->ports[i]);
+-			/* we log the port for which the probe failed and stop
+-			 * probes for subsequent ports.
+-			 * Note that we keep running ports, for which the probes
+-			 * were successful, unless add_adev fails too
++			/* Log the port for which the probe failed, stop probing
++			 * subsequent ports, and skip add_adev.
++			 * Already-probed ports remain functional.
+ 			 */
+ 			if (err) {
+ 				dev_err(dev, "Probe Failed for port %d\n", i);
+@@ -3697,10 +3696,9 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
+ 			enable_work(&apc->queue_reset_work);
+ 			err = mana_attach(ac->ports[i]);
+ 			rtnl_unlock();
+-			/* we log the port for which the attach failed and stop
+-			 * attach for subsequent ports
+-			 * Note that we keep running ports, for which the attach
+-			 * were successful, unless add_adev fails too
++			/* Log the port for which the attach failed, stop
++			 * attaching subsequent ports, and skip add_adev.
++			 * Already-attached ports remain functional.
+ 			 */
+ 			if (err) {
+ 				dev_err(dev, "Attach Failed for port %d\n", i);
+@@ -3709,7 +3707,8 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
+ 		}
  	}
  
-+	INIT_DELAYED_WORK(&ac->gf_stats_work, mana_gf_stats_work_handler);
-+
- 	err = mana_create_eq(ac);
- 	if (err) {
- 		dev_err(dev, "Failed to create EQs: %d\n", err);
-@@ -3709,7 +3711,6 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
+-	err = add_adev(gd, "eth");
++	if (!err)
++		err = add_adev(gd, "eth");
  
- 	err = add_adev(gd, "eth");
- 
--	INIT_DELAYED_WORK(&ac->gf_stats_work, mana_gf_stats_work_handler);
  	schedule_delayed_work(&ac->gf_stats_work, MANA_GF_STATS_PERIOD);
  
- out:
 -- 
 2.34.1
 
