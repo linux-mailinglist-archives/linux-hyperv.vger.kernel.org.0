@@ -1,403 +1,231 @@
-Return-Path: <linux-hyperv+bounces-10137-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10138-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EK26ANMf3WnYaAkAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10137-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Apr 2026 18:54:43 +0200
+	id 2DnmINkw3Wn1aQkAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10138-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Apr 2026 20:07:21 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 931263F0311
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Apr 2026 18:54:42 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE96B3F1D06
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Apr 2026 20:07:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id AAFCE3044ED3
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Apr 2026 16:52:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A3B07300B110
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Apr 2026 18:00:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F0993195E4;
-	Mon, 13 Apr 2026 16:52:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FFE83E1D1C;
+	Mon, 13 Apr 2026 18:00:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BQ7kiNkZ"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="BBdOnT1M"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B06D6318B96;
-	Mon, 13 Apr 2026 16:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776099168; cv=none; b=PGJs2zh5gtQd+xssBPKzd66xwS3c0uW/WQHZxbxB+KK3j9IiCEWczyQjtIbTHN7EPYOQMSk4Yif3phvA7npO9NgUop0uexJKHfegMwzSSnB86yp47Gz38yHa3sy/3Jgpekw7+mb6sbk/1eu30O9POPt/mLNmBisKfTLKFvr9D4A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776099168; c=relaxed/simple;
-	bh=kBCODNhwDsAiQnIld7Shp4/5zOkis0XnuioiUYzL+gI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LxC1ciOYuTNTfp1SfyhZyrX7dn6sAH3DOLhbKNydAx6nacpIbNDqlVYyCmhlocfljBrd3lswsX3ojlR/DmkU2wF3bXOhZQL8Z2kjT9ZC4g4WRBQ2whJXBE6nmkhMptP6vmIAzBsxdBqMulg0awgHHPU6gMULsoER+Ew8rgrPS2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BQ7kiNkZ; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [192.168.0.106] (unknown [49.205.253.198])
-	by linux.microsoft.com (Postfix) with ESMTPSA id E3EA220B6F01;
-	Mon, 13 Apr 2026 09:52:38 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E3EA220B6F01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1776099166;
-	bh=rEWHzLuJu4zX+Y0HjonY8SyN6SoByDg0tpQoTVpx6X0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BQ7kiNkZOj9VWO9d91KpQVM2qP+HGmECvTedlMX7D+JxReubmmeIHpiy5c1qFL4zk
-	 H9O1BOFtbYJp2VdUAxKWSNfeOwcvPcqOA02iYlp6uyoE1GJ7VOxym4OkG1XlTfiYqP
-	 JPqNDGX28wy6sItqWGsGV7XLlO+OGY8vH5GYXcno=
-Message-ID: <90d8b888-e801-4751-8e7a-79d1ec9ed59b@linux.microsoft.com>
-Date: Mon, 13 Apr 2026 22:22:35 +0530
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11022089.outbound.protection.outlook.com [52.101.48.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A403E1D07;
+	Mon, 13 Apr 2026 18:00:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776103249; cv=fail; b=OwMBO0i5XQDsbfM9eViEKGL7WVdNZX1MoSSgOG8UIQV3KW1YqW5uS6CQpX0UD44+ctGLrLVRD4LCyqcNQN0SZcwfS59hpa0qGy+t8bmid3lvp66rSTEqBnFzcjFrXd1KdNw7mDCiwaTvGy41dfF8sgKzQ+XJnxGJ9oB68/QTK7w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776103249; c=relaxed/simple;
+	bh=pBtfl2zefEJCkUYF9uPIrzezM491W/tMsPR6urlmikg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=pwRyjPHgBxvN6ZOUunuCjvc4OA37ZfeYF4fXQ78MMYfWUKXiYXddET8WBUAwpyejmYyptlSfwDwO+yFBjQHPqQ2Txofn4PI5DxsmuIxUBI1a2P7L3J+SA96JgD9zv5sxxBSfLSntCO4atQUhqduL32jycNzVs3CMxDpVL/TS6QY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=BBdOnT1M; arc=fail smtp.client-ip=52.101.48.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mZ2TuDne4U3HYprKrQhp1BsBjnaof3edFQP0N4I/5TgZKYXecxR/hqqoe1mOlkQYy6KTfOZxRLc8izukNcFQH7VBb6XF/MA+AdCpCB48dj1pPS54o2QbPKzUQwoIIyxJf39uUWQnculep8A0hq4BeCkz1tz20GpiRZAa05ezMYh6IbTUj+vTFhA4t1Xq3Gll0CmVEOGXr1tR4r0FczV/vjtTJOWfIG/8HrRjLqpFUZz4gq1+IfMk0H9Bq50qmzSFRTLNhok6REHJlTXmaWvF33i91iRUh0Jjq8YF/XM2AHgf5N56UZIX5yd7V/mzZ07/xA77IUIltrVj5sWadEY3sQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pBtfl2zefEJCkUYF9uPIrzezM491W/tMsPR6urlmikg=;
+ b=nqmhpJI0eU4BdWiKCwTLhynfAXIF7csqef4GF0bq9dOAhuN45SLJ2wWrmYnxtfy2pEot3KM5QnP9OAOhPl2YxcSGzfl7JH46uhGCrJ6i1atclgE54xdmgs9RvYx1XuTkLJlVZsfiQ86L3WXvV4pYYTe7eA/S5mfNftndupVsNt8NAV30XkMNigslomeKoDT10UNGed7Xpe3jUzH2WZPy0SjV3t5Jc37T3zmzTs0d7V2SGWx7IjG6+kgL4u/cErWnKhZs1X/QAd/uxbP/C+a1BI/yQ/7SwVP1mfQ8pKBztCreiDuB/xE86y/C6FvqqqlpYCaX260Iaqxh1SIcj+ItUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pBtfl2zefEJCkUYF9uPIrzezM491W/tMsPR6urlmikg=;
+ b=BBdOnT1MmdngrNlw91N3zqQIzlOCLBFDU0MwEDoSIWG858eRTSpy5Ojs0Nm/dZWNR/UxEq5/6riuRWJOU3ri26sVnhFKbWlcJkBeHR3wfJj0euMfmieptwOrVWnVj1EPoUEKcvEWqHZPeCn7y93e7qjXSpkJnVroCRIqGA8Si4A=
+Received: from SA1PR21MB6683.namprd21.prod.outlook.com (2603:10b6:806:4a4::6)
+ by SA3PR21MB5678.namprd21.prod.outlook.com (2603:10b6:806:49a::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.20; Mon, 13 Apr
+ 2026 18:00:44 +0000
+Received: from SA1PR21MB6683.namprd21.prod.outlook.com
+ ([fe80::879f:eec1:ca0e:d219]) by SA1PR21MB6683.namprd21.prod.outlook.com
+ ([fe80::879f:eec1:ca0e:d219%3]) with mapi id 15.20.9818.017; Mon, 13 Apr 2026
+ 18:00:44 +0000
+From: Long Li <longli@microsoft.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+CC: Leon Romanovsky <leon@kernel.org>, Erni Sri Satya Vennela
+	<ernis@linux.microsoft.com>, Konstantin Taranov <kotaranov@microsoft.com>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXTERNAL] Re: [PATCH rdma-next v2] RDMA/mana_ib: hardening:
+ Clamp adapter capability values from MANA_IB_GET_ADAPTER_CAP
+Thread-Topic: [EXTERNAL] Re: [PATCH rdma-next v2] RDMA/mana_ib: hardening:
+ Clamp adapter capability values from MANA_IB_GET_ADAPTER_CAP
+Thread-Index:
+ AQHcskxp/rldcz8WSE6y5yrJ7Ov/rrWxl2eAgAAP7gCAANlFAIAFtXdAgCBm4YCAAHC7cIAEJXUAgABHFvA=
+Date: Mon, 13 Apr 2026 18:00:44 +0000
+Message-ID:
+ <SA1PR21MB6683609E2E86D0464697F4DCCE242@SA1PR21MB6683.namprd21.prod.outlook.com>
+References: <20260312181642.989735-1-ernis@linux.microsoft.com>
+ <20260316194929.GI61385@unreal>
+ <SA1PR21MB66832D25A93394735624F454CE40A@SA1PR21MB6683.namprd21.prod.outlook.com>
+ <20260317094408.GR61385@unreal>
+ <SA1PR21MB66833EBAF447BA0B102862FCCE4DA@SA1PR21MB6683.namprd21.prod.outlook.com>
+ <20260410154327.GA2551565@ziepe.ca>
+ <LV0PR21MB66700DC2FB827B93ED6A5714CE592@LV0PR21MB6670.namprd21.prod.outlook.com>
+ <20260413134602.GL3694781@ziepe.ca>
+In-Reply-To: <20260413134602.GL3694781@ziepe.ca>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9cde75c9-a55b-48b8-83a9-76b1640c171d;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-04-13T18:00:27Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR21MB6683:EE_|SA3PR21MB5678:EE_
+x-ms-office365-filtering-correlation-id: d525dc00-5720-4095-cf47-08de9986958b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|376014|22082099003|18002099003|56012099003|38070700021;
+x-microsoft-antispam-message-info:
+ dJ4fb+0BtU9RnXkvT35M5b6QKmmrpefR6xZqFj2Fw5RU+dpW1v8LIrTmc2VZuW31x5K2zc0QNn8itwCakXkVfxCehzv04RJLMl/J+DJgu15hCnUltmPuWqO5EAn9rtBecQDdrcXPRYA/8cPUwKqmgS2x4dL+bQ9VWrA3que0LAuo+yiJGFhwjOK+J/xFadbrFWAJJMxAdGWszRIWJsOHXBVZ6bTsE7XbsyUrsiPDYFLphP4gFe3HA7e2Uw2OT4Xr2Qs6N/APOuy+fS+Gjvrezw7lR+MPu0W8YMfYkMWip6qpKKhq7zJXUzhbQuAc6TvlaIYgJL21w/MEkPnLUd722mHIZzGVtGdMtLRvEt332zvK/14b/wHAkZ7Er1VrS73b+nLYiAIpI4jwe78v+zYfRiI2DuVF1dbVl3pIz7zKK0yLh5HD4aFiNaTOkLvNO+yW7QJaTGBk1+nkXgkZbPB/A69Vmo/3LmOjZjvPsUnazxdhq5hy1ArkHHU/zXzNPcd0GcjHBIiBFyGHk27R/rWBNWgusP/RNbW1olJ9zN9ekYqJNXzrczFE2EQuZmykhXEr35wsPj4Y5AuA7b3BzwP4w/3lFfCZDLRbM1ENNU6OW1klhX0SH5I4a+Dbx96YzacqJGcuWmMgvOTUnndn4vhYtgo3x6kOwYIRrHOkvVijXvWy2Tq2zJDuphoK3NgvYndq38ZNmhF4PuGyzzmywWiwkm+1Tn6LKrzuAzoNSwcKPPU=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB6683.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(22082099003)(18002099003)(56012099003)(38070700021);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?H+7NAGzHxQSR59sXVHfqIatr0bhOYpX4SJ2bysHvlfcWOVfE4o3tjJ0b7Bab?=
+ =?us-ascii?Q?PaSXRlH3GOvIXVGtFwChqW0zE2ynJijt+ngT8t/iXtsVDHs4OMWwgqBPbu2K?=
+ =?us-ascii?Q?fhOKorZitKYp1Ha+S6RoEsKjB8B3DgBV5EMLzv0s8rBSKLpVhAsRUwLhiDZI?=
+ =?us-ascii?Q?Z4IBWZZpE89XiURf9kPPZupF4he0mtiMEiq/i7RT83m/8CIsiBO8oiR+WqCR?=
+ =?us-ascii?Q?EDwb0FwGRUitthmXZ94tvLDEnLhQQRr9Qh1OakDg9bXFEsccSTZwIoK+Hlaj?=
+ =?us-ascii?Q?gDPA7v29WqSP+t8SMzFAUEvuk2bOTNzhmItWNLruTadly9DEgdzJc/ueiM87?=
+ =?us-ascii?Q?IYbo0urshlYX/Er9+tb5YQ+OooQuAVxH1MNEy8Sbqf6tyCvtLsL7Kp3ToR5I?=
+ =?us-ascii?Q?nXzFa+tjgeuVrTQ9eUskv4yEhSolp55LokbptZBSu/GN/gD67UiLe3yleBjZ?=
+ =?us-ascii?Q?+cy4LgTLBKwtsWanyJuWChaaJuxZRzF/0zRGh4O+sIbXO8g/nANsZBB5u4dJ?=
+ =?us-ascii?Q?/TWmKghT+eUUPpuLWeQskUDnUigiuIa12aNz7r9q+F1muYHIb3A29mWotqHK?=
+ =?us-ascii?Q?RiGbAfCkEScSvt7FFTIVHDediBFWdJOvhRa44tLo1zxhpCYxwReQaEOFliV+?=
+ =?us-ascii?Q?w6mtgMDtct1sN4csdPuCEszMvMXnps/nXKErA8P3acH1A0WysqISJNYDXqru?=
+ =?us-ascii?Q?6qvrHInD8rzE6FoJNo0H7e2lCZzwYiUYirDy0GXIlyjkfwMOW5KzJ1YW0cn/?=
+ =?us-ascii?Q?IC7QVXPuBsij5i3egvzeu2BokNe/To1ebqvXp6jdQnxmAVfeLCkCRIJJ9yJC?=
+ =?us-ascii?Q?MvrnOdhyfFgikriAZklAxHoTqkvCFXCZauc/AFyyIZ+wLxERtc3HDZX3QAbu?=
+ =?us-ascii?Q?rlFyPkeCry5ibGYVgXeAZcD9M2HsEZygOZrF3XXzj2h2XhH1VkRBEqr7jlhO?=
+ =?us-ascii?Q?DNXOiIs0sMo1Rx9oD1YNzzxUcej9/QG21hEfidOTyggfpY49p55kO5E5eoI1?=
+ =?us-ascii?Q?RaSCAfUy1Cp+tk+g6irng2pl8G/k1UZbAuodg7rkTO1u95S+j3pUoGidqpQY?=
+ =?us-ascii?Q?/bGeEG7rugEG9MulIzX9oK5kQo96DQOHPYipbW0AVxECuIxNiAznIkR/D52e?=
+ =?us-ascii?Q?uLdgq3xycjIcfHs0tjHrKKDaiCQWB2RPMhnjl2Va/BHLD+Hz2liBuRnS5p7k?=
+ =?us-ascii?Q?komZPJbvmx1AbEAm6Ag7fHge3CTkTcp9pSRc0mJJRXu3lNIxXmnm6zKvSjRd?=
+ =?us-ascii?Q?YUrcHvadNWzefp0TeCLYtAzrmSN1D2ak/XqSIl2m9N/eqiONuUumHeVSrt20?=
+ =?us-ascii?Q?JZNrSdIOZ5AKR5kgYQJeVrNIeFEE4bnBieKHr7GDRz7IWJ6oT7ZYLOv0qfcv?=
+ =?us-ascii?Q?xvDLqyLOq9lvFbAMRjOrbdg+s1+IQUyOlh1CupEGh4muG5Rpbh8Z0ArEwB6b?=
+ =?us-ascii?Q?Xn1rVDQHbW+V/a0P5v28HBwAhDgogeWBbb8eQ5ETvsq1F4Ckv1Deul13le6D?=
+ =?us-ascii?Q?I9qyCEaCp6WV4eb1PDXvrbFuHrPJbxrxSY+5je0izGuMfcU4/QBnWwjrSKjj?=
+ =?us-ascii?Q?Rp5KLRgrMnMTZzVUsHz2DRyw8/jCavbm2ZiIrialOtx8Nv1eBrf1pPty6Aqi?=
+ =?us-ascii?Q?9RWR7Bs9YXlx6qIw/wOWKfCmupfOddhhPKE8erUjEPDrhvr7UX/ETfA1txOA?=
+ =?us-ascii?Q?SKU0y78UQntS5Sx0hGVZ52IHDnP1AzTePvmkGDojty3yUcrw?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/11] arch: arm64: Add support for mshv_vtl_return_call
-To: Michael Kelley <mhklinux@outlook.com>,
- "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
- Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: Marc Zyngier <maz@kernel.org>, Timothy Hayes <timothy.hayes@arm.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- mrigendrachaubey <mrigendra.chaubey@gmail.com>,
- "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-References: <20260316121241.910764-1-namjain@linux.microsoft.com>
- <20260316121241.910764-8-namjain@linux.microsoft.com>
- <SN6PR02MB4157D3C4F6F376C8D6C3D234D450A@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB4157D3C4F6F376C8D6C3D234D450A@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB6683.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d525dc00-5720-4095-cf47-08de9986958b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Apr 2026 18:00:44.6518
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rGNCmUv9dJsS3ki8qeotNvYKxgn6qnfS+UIzAxWp6ei/WBtDchuhDSIBc6lLis3pR/UkOiO/W0szHNUd6eVi4Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR21MB5678
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[microsoft.com,reject];
+	R_DKIM_ALLOW(-0.20)[microsoft.com:s=selector2];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10137-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10138-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[outlook.com,microsoft.com,kernel.org,arm.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,dabbelt.com,eecs.berkeley.edu,ghiti.fr];
-	RCPT_COUNT_TWELVE(0.00)[29];
-	FREEMAIL_CC(0.00)[kernel.org,arm.com,gmail.com,linux.microsoft.com,vger.kernel.org,lists.infradead.org];
+	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[microsoft.com:+];
+	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[namjain@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	NEURAL_HAM(-0.00)[-0.999];
+	FROM_NEQ_ENVFROM(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.microsoft.com:dkim,linux.microsoft.com:mid]
-X-Rspamd-Queue-Id: 931263F0311
+	RCPT_COUNT_SEVEN(0.00)[7];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[SA1PR21MB6683.namprd21.prod.outlook.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: DE96B3F1D06
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+> On Fri, Apr 10, 2026 at 10:29:45PM +0000, Long Li wrote:
+> > > On Sat, Mar 21, 2026 at 12:56:39AM +0000, Long Li wrote:
+> > >
+> > > > How we rephrase this in this way: the driver should not corrupt or
+> > > > overflow other parts of the kernel if its device is misbehaving
+> > > > (or has a bug).
+> > >
+> > > If we are going to do this CC hardening stuff I think I want to see
+> > > a more comphrensive approach, like if we detect an attack then the
+> > > kernel instantly crashes or something. Or at least an approach in
+> > > general agreed to by the CC and kernel community.
+> > >
+> > > Igoring the issue and continuing seems just wrong.
+> > >
+> > > This sprinkling of random checks in this series doesn't feel
+> > > comprehensive or cohesive to me.
+> > >
+> > > Jason
+> >
+> > Can we follow the virtio BAD_RING()/vq->broken pattern in
+> >
+> https://git.kernel/
+> .org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ftorvalds%2Flinux.git%2Ftree%2
+> Fdrivers%2Fvirtio%2Fvirtio_ring.c%23n57&data=3D05%7C02%7Clongli%40microso=
+ft
+> .com%7C698adb98daa64e20184708de996302b5%7C72f988bf86f141af91ab2d7c
+> d011db47%7C1%7C0%7C639116847704528406%7CUnknown%7CTWFpbGZsb3d
+> 8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoi
+> TWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3DHkjUfCDysbQKTuiCsiQai
+> gySStd%2BI3VrHUnfMC%2FBORc%3D&reserved=3D0.
+> >
+> > Add a broken flag to mana_ib_dev. When any hardware response contains
+> > out-of-range values, mark the device broken and fail the operation -
+> > during probe this prevents device registration entirely, at runtime
+> > all subsequent operations return -EIO.
+>
+> If that's the plan I would think it should be struct device based, but ye=
+ah, I'm
+> more comfortable with this sort of direction as a CC hardening plan.
+>
+> Jason
 
+Will do, thank you.
 
-On 4/1/2026 10:27 PM, Michael Kelley wrote:
-> From: Naman Jain <namjain@linux.microsoft.com> Sent: Monday, March 16, 2026 5:13 AM
->>
-> 
-> Nit: For historical consistency, use "arm64: hyperv:" as the prefix in the patch Subject.
-
-Acked.
-
-> 
->> Add support for arm64 specific variant of mshv_vtl_return_call function
->> to be able to add support for arm64 in MSHV_VTL driver. This would
->> help enable the transition between Virtual Trust Levels (VTL) in
->> MSHV_VTL when the kernel acts as a paravisor.
-> 
-> This commit message has a fair number of "filler" words. Suggest simplifying to:
-> 
-> Add the arm64 variant of mshv_vtl_return_call() to support the MSHV_VTL
-> driver on arm64.  This function enables the transition between Virtual Trust
-> Levels (VTLs) in MSHV_VTL when the kernel acts as a paravisor.
-> 
-
-I can see the difference clearly :-) Will use this in commit message.
-
->>
->> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
->> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
->> ---
->>   arch/arm64/hyperv/Makefile        |   1 +
->>   arch/arm64/hyperv/hv_vtl.c        | 144 ++++++++++++++++++++++++++++++
->>   arch/arm64/include/asm/mshyperv.h |  13 +++
->>   3 files changed, 158 insertions(+)
->>   create mode 100644 arch/arm64/hyperv/hv_vtl.c
->>
->> diff --git a/arch/arm64/hyperv/Makefile b/arch/arm64/hyperv/Makefile
->> index 87c31c001da9..9701a837a6e1 100644
->> --- a/arch/arm64/hyperv/Makefile
->> +++ b/arch/arm64/hyperv/Makefile
->> @@ -1,2 +1,3 @@
->>   # SPDX-License-Identifier: GPL-2.0
->>   obj-y		:= hv_core.o mshyperv.o
->> +obj-$(CONFIG_HYPERV_VTL_MODE)	+= hv_vtl.o
->> diff --git a/arch/arm64/hyperv/hv_vtl.c b/arch/arm64/hyperv/hv_vtl.c
->> new file mode 100644
->> index 000000000000..66318672c242
->> --- /dev/null
->> +++ b/arch/arm64/hyperv/hv_vtl.c
->> @@ -0,0 +1,144 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (C) 2026, Microsoft, Inc.
->> + *
->> + * Authors:
->> + *     Roman Kisel <romank@linux.microsoft.com>
->> + *     Naman Jain <namjain@linux.microsoft.com>
->> + */
->> +
->> +#include <asm/boot.h>
->> +#include <asm/mshyperv.h>
->> +#include <asm/cpu_ops.h>
->> +
->> +void mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl0)
->> +{
->> +	u64 base_ptr = (u64)vtl0->x;
->> +
->> +	/*
->> +	 * VTL switch for ARM64 platform - managing VTL0's CPU context.
->> +	 * We explicitly use the stack to save the base pointer, and use x16
->> +	 * as our working register for accessing the context structure.
->> +	 *
->> +	 * Register Handling:
->> +	 * - X0-X17: Saved/restored (general-purpose, shared for VTL communication)
->> +	 * - X18: NOT touched - hypervisor-managed per-VTL (platform register)
->> +	 * - X19-X30: Saved/restored (part of VTL0's execution context)
->> +	 * - Q0-Q31: Saved/restored (128-bit NEON/floating-point registers, shared)
->> +	 * - SP: Not in structure, hypervisor-managed per-VTL
->> +	 *
->> +	 * Note: X29 (FP) and X30 (LR) are in the structure and must be saved/restored
->> +	 * as part of VTL0's complete execution state.
-> 
-> Could drop "Note:".  That's what comments are. :-)
-
-Acked.
-
-> 
-> 
->> +	 */
->> +	asm __volatile__ (
->> +		/* Save base pointer to stack explicitly, then load into x16 */
->> +		"str %0, [sp, #-16]!\n\t"     /* Push base pointer onto stack */
->> +		"mov x16, %0\n\t"             /* Load base pointer into x16 */
->> +		/* Volatile registers (Windows ARM64 ABI: x0-x15) */
->> +		"ldp x0, x1, [x16]\n\t"
->> +		"ldp x2, x3, [x16, #(2*8)]\n\t"
-> 
-> On the x86 side, there's machinery to generate a series of constants that are
-> the offsets of the individual fields in struct mshv_vtl_cpu_context. The x86
-> asm code then uses these constants. Here on the arm64 side, you've calculated
-> the offsets directly in the asm code. Any reason for the difference? I can see
-> it's fairly easy to eyeball the offsets here and compare against the registers
-> that are being loaded, where it's not so easy the way registers are named
-> on x86. So maybe the additional machinery that's helpful on the x86 side
-> is less necessary here. Just wondering ....
-
-There were complexities around static call etc. in x86 which led to that 
-redesign. Here things are much simpler and the offsets we see are 1-1 
-mapped to registers. But I still tried to prototype it, and it looked 
-more complex than it has to be. I think we can keep it in current form.
-
-> 
->> +		"ldp x4, x5, [x16, #(4*8)]\n\t"
->> +		"ldp x6, x7, [x16, #(6*8)]\n\t"
->> +		"ldp x8, x9, [x16, #(8*8)]\n\t"
->> +		"ldp x10, x11, [x16, #(10*8)]\n\t"
->> +		"ldp x12, x13, [x16, #(12*8)]\n\t"
->> +		"ldp x14, x15, [x16, #(14*8)]\n\t"
->> +		/* x16 will be loaded last, after saving base pointer */
->> +		"ldr x17, [x16, #(17*8)]\n\t"
->> +		/* x18 is hypervisor-managed per-VTL - DO NOT LOAD */
->> +
->> +		/* General-purpose registers: x19-x30 */
->> +		"ldp x19, x20, [x16, #(19*8)]\n\t"
->> +		"ldp x21, x22, [x16, #(21*8)]\n\t"
->> +		"ldp x23, x24, [x16, #(23*8)]\n\t"
->> +		"ldp x25, x26, [x16, #(25*8)]\n\t"
->> +		"ldp x27, x28, [x16, #(27*8)]\n\t"
->> +
->> +		/* Frame pointer and link register */
->> +		"ldp x29, x30, [x16, #(29*8)]\n\t"
->> +
->> +		/* Shared NEON/FP registers: Q0-Q31 (128-bit) */
->> +		"ldp q0, q1, [x16, #(32*8)]\n\t"
->> +		"ldp q2, q3, [x16, #(32*8 + 2*16)]\n\t"
->> +		"ldp q4, q5, [x16, #(32*8 + 4*16)]\n\t"
->> +		"ldp q6, q7, [x16, #(32*8 + 6*16)]\n\t"
->> +		"ldp q8, q9, [x16, #(32*8 + 8*16)]\n\t"
->> +		"ldp q10, q11, [x16, #(32*8 + 10*16)]\n\t"
->> +		"ldp q12, q13, [x16, #(32*8 + 12*16)]\n\t"
->> +		"ldp q14, q15, [x16, #(32*8 + 14*16)]\n\t"
->> +		"ldp q16, q17, [x16, #(32*8 + 16*16)]\n\t"
->> +		"ldp q18, q19, [x16, #(32*8 + 18*16)]\n\t"
->> +		"ldp q20, q21, [x16, #(32*8 + 20*16)]\n\t"
->> +		"ldp q22, q23, [x16, #(32*8 + 22*16)]\n\t"
->> +		"ldp q24, q25, [x16, #(32*8 + 24*16)]\n\t"
->> +		"ldp q26, q27, [x16, #(32*8 + 26*16)]\n\t"
->> +		"ldp q28, q29, [x16, #(32*8 + 28*16)]\n\t"
->> +		"ldp q30, q31, [x16, #(32*8 + 30*16)]\n\t"
->> +
->> +		/* Now load x16 itself */
->> +		"ldr x16, [x16, #(16*8)]\n\t"
->> +
->> +		/* Return to the lower VTL */
->> +		"hvc #3\n\t"
->> +
->> +		/* Save context after return - reload base pointer from stack */
->> +		"stp x16, x17, [sp, #-16]!\n\t" /* Save x16, x17 temporarily */
->> +		"ldr x16, [sp, #16]\n\t"        /* Reload base pointer (skip saved x16,x17) */
->> +
->> +		/* Volatile registers */
->> +		"stp x0, x1, [x16]\n\t"
->> +		"stp x2, x3, [x16, #(2*8)]\n\t"
->> +		"stp x4, x5, [x16, #(4*8)]\n\t"
->> +		"stp x6, x7, [x16, #(6*8)]\n\t"
->> +		"stp x8, x9, [x16, #(8*8)]\n\t"
->> +		"stp x10, x11, [x16, #(10*8)]\n\t"
->> +		"stp x12, x13, [x16, #(12*8)]\n\t"
->> +		"stp x14, x15, [x16, #(14*8)]\n\t"
->> +		"ldp x0, x1, [sp], #16\n\t"      /* Recover saved x16, x17 */
->> +		"stp x0, x1, [x16, #(16*8)]\n\t"
->> +		/* x18 is hypervisor-managed - DO NOT SAVE */
->> +
->> +		/* General-purpose registers: x19-x30 */
->> +		"stp x19, x20, [x16, #(19*8)]\n\t"
->> +		"stp x21, x22, [x16, #(21*8)]\n\t"
->> +		"stp x23, x24, [x16, #(23*8)]\n\t"
->> +		"stp x25, x26, [x16, #(25*8)]\n\t"
->> +		"stp x27, x28, [x16, #(27*8)]\n\t"
->> +		"stp x29, x30, [x16, #(29*8)]\n\t"  /* Frame pointer and link register */
->> +
->> +		/* Shared NEON/FP registers: Q0-Q31 (128-bit) */
->> +		"stp q0, q1, [x16, #(32*8)]\n\t"
->> +		"stp q2, q3, [x16, #(32*8 + 2*16)]\n\t"
->> +		"stp q4, q5, [x16, #(32*8 + 4*16)]\n\t"
->> +		"stp q6, q7, [x16, #(32*8 + 6*16)]\n\t"
->> +		"stp q8, q9, [x16, #(32*8 + 8*16)]\n\t"
->> +		"stp q10, q11, [x16, #(32*8 + 10*16)]\n\t"
->> +		"stp q12, q13, [x16, #(32*8 + 12*16)]\n\t"
->> +		"stp q14, q15, [x16, #(32*8 + 14*16)]\n\t"
->> +		"stp q16, q17, [x16, #(32*8 + 16*16)]\n\t"
->> +		"stp q18, q19, [x16, #(32*8 + 18*16)]\n\t"
->> +		"stp q20, q21, [x16, #(32*8 + 20*16)]\n\t"
->> +		"stp q22, q23, [x16, #(32*8 + 22*16)]\n\t"
->> +		"stp q24, q25, [x16, #(32*8 + 24*16)]\n\t"
->> +		"stp q26, q27, [x16, #(32*8 + 26*16)]\n\t"
->> +		"stp q28, q29, [x16, #(32*8 + 28*16)]\n\t"
->> +		"stp q30, q31, [x16, #(32*8 + 30*16)]\n\t"
->> +
->> +		/* Clean up stack - pop base pointer */
->> +		"add sp, sp, #16\n\t"
->> +
->> +		: /* No outputs */
->> +		: /* Input */ "r"(base_ptr)
->> +		: /* Clobber list - x16 used as base, x18 is hypervisor-managed (not touched) */
->> +		"memory", "cc",
->> +		"x0", "x1", "x2", "x3", "x4", "x5",
->> +		"x6", "x7", "x8", "x9", "x10", "x11", "x12", "x13",
->> +		"x14", "x15", "x16", "x17", "x19", "x20", "x21",
->> +		"x22", "x23", "x24", "x25", "x26", "x27", "x28",
->> +		"x29", "x30",
->> +		"v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7",
->> +		"v8", "v9", "v10", "v11", "v12", "v13", "v14", "v15",
->> +		"v16", "v17", "v18", "v19", "v20", "v21", "v22", "v23",
->> +		"v24", "v25", "v26", "v27", "v28", "v29", "v30", "v31");
->> +}
->> +EXPORT_SYMBOL(mshv_vtl_return_call);
->> diff --git a/arch/arm64/include/asm/mshyperv.h
->> b/arch/arm64/include/asm/mshyperv.h
->> index 804068e0941b..de7f3a41a8ea 100644
->> --- a/arch/arm64/include/asm/mshyperv.h
->> +++ b/arch/arm64/include/asm/mshyperv.h
->> @@ -60,6 +60,17 @@ static inline u64 hv_get_non_nested_msr(unsigned int reg)
->>   				ARM_SMCCC_SMC_64,		\
->>   				ARM_SMCCC_OWNER_VENDOR_HYP,	\
->>   				HV_SMCCC_FUNC_NUMBER)
->> +
->> +struct mshv_vtl_cpu_context {
->> +/*
->> + * NOTE: x18 is managed by the hypervisor. It won't be reloaded from this array.
->> + * It is included here for convenience in the common case.
-> 
-> I'm not getting your point in this last sentence. What is the "common case"?
-> 
-
-This was really odd :-) I should have spotted it. I'll change it to:
-It is included here for convenience in array indexing.
-
-> You could also drop the "NOTE: " prefix.
-
-Acked.
-
-> 
->> + */
->> +	__u64 x[31];
->> +	__u64 rsvd;
->> +	__uint128_t q[32];
->> +};
-> 
-> struct mshv_vtl_run reserves 1024 bytes for cpu_context. It would be nice to
-> have a compile-time check that the size of struct mshv_vtl_cpu_context fits in
-> that 1024 bytes. That check might be better added where struct mshv_vtl_run
-> is defined so that it works for both x86 and arm64.
-
-Acked, will add it.
-
-> 
->> +
->>   #ifdef CONFIG_HYPERV_VTL_MODE
->>   /*
->>    * Get/Set the register. If the function returns `1`, that must be done via
->> @@ -69,6 +80,8 @@ static inline int hv_vtl_get_set_reg(struct hv_register_assoc *regs, bool set, u
->>   {
->>   	return 1;
->>   }
->> +
->> +void mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl0);
-> 
-> This declaration now duplicated in mshyperv.h under arch/arm64 and under
-> arch/x86.  Instead, it should be added to asm-generic/mshyperv.h, and
-> removed from the arch/x86 mshyperv.h, so that there's only a single
-> instance of the declaration.
-
-Acked.
-
-> 
->>   #endif
->>
->>   #include <asm-generic/mshyperv.h>
->> --
->> 2.43.0
->>
-
-Regards,
-Naman
+Long
 
