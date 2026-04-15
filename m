@@ -1,70 +1,64 @@
-Return-Path: <linux-hyperv+bounces-10170-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10171-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YD4tIBko32nmPQAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10170-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Apr 2026 07:54:33 +0200
+	id GLtNG94332nAQQAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10171-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Apr 2026 09:01:50 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0081B400A11
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Apr 2026 07:54:32 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06B2740126C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Apr 2026 09:01:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4285230440B4
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Apr 2026 05:54:28 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 313F8302B954
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Apr 2026 07:01:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C78CB36DA1A;
-	Wed, 15 Apr 2026 05:54:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77C7739B4BE;
+	Wed, 15 Apr 2026 07:01:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nly8mcQl"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nRH1MbTw"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0282346ACE;
-	Wed, 15 Apr 2026 05:54:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAF2E396D16;
+	Wed, 15 Apr 2026 07:01:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776232466; cv=none; b=nUkwfKvy6HhM1Hu2zHsTsjz8ZBzVUTkfRaYnxiAGl1a+zdeHXDEnPFkGg1mRoDDAlnQeNKZfnmyAX7hAa8uYXz3Uy7lX1FnTCNCgr9hwMQLWqILanqiH2SW2BizT3jYDGnZYyMQtm3nAlBUtUPgFUmHLb6CBpQFFFqB3OFA0wWk=
+	t=1776236506; cv=none; b=RaUBCUd8jBD/qpYkTL2ngknA78ZVbnGlD8wfut4Th0BZayRwiRC9SL9xXFx146dYDnmKtkGWolZQOOQtrry55/pycQ9mj/TWcL8QM3NjIzx4GLEneTf7ejqXtN+8FUBglVffvY0YpT50fc2KGgLcQbTYZrJV4hNyMawWxi/GBTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776232466; c=relaxed/simple;
-	bh=krkPgIDXxYfHWT+4LVdBGwvnMdjxV2cofvgk8BCq050=;
+	s=arc-20240116; t=1776236506; c=relaxed/simple;
+	bh=yixouw+PE3HnvmPt62rovZ2YDMrpsEDDb8Exk4TZfGU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tKyCawQoifOGfOGzw4d6zNgC4Bt9+PGEnVhqJC4IeP3fv7pAs/XVwPMVN/7ACOZD+Zh0SPaBsrD+cC6xiyM7L40vpQvWkuyohodUBisian7ROfWxfKexv40WbYATt/QPYOnHCl+gmf5oivJcUeBCmtEElW2ZuYUgNpZwwHT8GAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nly8mcQl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00A63C19424;
-	Wed, 15 Apr 2026 05:54:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776232466;
-	bh=krkPgIDXxYfHWT+4LVdBGwvnMdjxV2cofvgk8BCq050=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qj/dOjhoTGBuBZU46fwRycD9clMemG07TzukWK3xvHRceazFqthYGHDyHukkvtvthXCLcxl7tpUH4/g+pPQKLyeJGF8fEaHXOa1fSfFHsDUsktOI+4BL7nDA07R4i0yqn2GOnfDZsMaeU2t0qpw916b5ICG1ZTfcd8KDxk0mNUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=nRH1MbTw; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 4812B20B7128; Wed, 15 Apr 2026 00:01:43 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4812B20B7128
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1776236503;
+	bh=wBnzRJWw2ok2q9mOVdLPwhr8M/J6EvOcNzU89WiZ5RA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nly8mcQlRKWi2EcTLtt7DynZUapEeyuFwPOrBoAj6ULbeiZ+3t84O+YWoUphRP6Kp
-	 fVC/ecS2iAT7522uu5P8sx2nOY90XW0Eokn/1PXaDcwjQQOV11yx8kGrUPzEZ8J6DK
-	 Dn5UiSMb4ZdxKrkgRNRLR4HasVBkUCIdEnCUuD0oBficNVhKo69KEHFCGD5EYJXoRY
-	 M0befqPK/TqUhTr+9yajT0n9fSU7vJr0VIq86uO0dqeiXvBp6JBHeIoyBpW+Yr9eCd
-	 /PWqvBKXXzIigAMnQ+C9SQmwV2M4NPLs+PBjtvDw6eoVsdjY4uTcsYLie3Gu1KbAip
-	 6f1P4Xb7vgS0A==
-Date: Wed, 15 Apr 2026 05:54:24 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Anirudh Rayabharam <anirudh@anirudhrb.com>
-Cc: Jork Loeser <jloeser@linux.microsoft.com>, linux-hyperv@vger.kernel.org,
-	x86@kernel.org, "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>, Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-	Michael Kelley <mhklinux@outlook.com>, linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org
-Subject: Re: [PATCH v2 4/6] mshv: limit SynIC management to MSHV-owned
- resources
-Message-ID: <20260415055424.GA3381607@liuwe-devbox-debian-v2.local>
-References: <20260403190613.47026-1-jloeser@linux.microsoft.com>
- <20260403190613.47026-5-jloeser@linux.microsoft.com>
- <20260406-ninja-civet-of-tornado-67ff54@anirudhrb>
- <134ce833-544-24eb-883-b190a888b31c@linux.microsoft.com>
- <20260414-successful-loyal-magpie-9b7faf@anirudhrb>
+	b=nRH1MbTwxVF3rbjW/qHocNrO3fl6lzbnyYXrkhVtAwsybulf4ZQg3OQwY/ywkQVQG
+	 WJ4DRn5gNrzW3JxoRHwuNyKl6nLS+6z3WR6SybNIMBQ+tNrPd9KT9otS72O3K0JW1l
+	 JKGehApjdxg5+CU3y6eb0fVx3TQqmO8gnDRYIEPs=
+Date: Wed, 15 Apr 2026 00:01:43 -0700
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: Simon Horman <horms@kernel.org>
+Cc: pabeni@redhat.com, edumazet@google.com, ssengar@linux.microsoft.com,
+	dipayanroy@linux.microsoft.com, gargaditya@linux.microsoft.com,
+	decui@microsoft.com, shacharr@microsoft.com,
+	linux-hyperv@vger.kernel.org, kotaranov@microsoft.com,
+	kys@microsoft.com, shirazsaleem@microsoft.com, longli@microsoft.com,
+	kuba@kernel.org, andrew+netdev@lunn.ch, wei.liu@kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	haiyangz@microsoft.com, kees@kernel.org, stephen@networkplumber.org,
+	leon@kernel.org, davem@davemloft.net
+Subject: Re: [PATCH net v2 4/4] net: mana: Fix EQ leak in mana_remove on NULL
+ port
+Message-ID: <ad8312IBxNWMk6f2@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20260413050843.605789-5-ernis@linux.microsoft.com>
+ <20260414154058.771241-1-horms@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -73,97 +67,69 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260414-successful-loyal-magpie-9b7faf@anirudhrb>
-X-Spamd-Result: default: False [-2.16 / 15.00];
+In-Reply-To: <20260414154058.771241-1-horms@kernel.org>
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10170-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10171-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[linux.microsoft.com,vger.kernel.org,kernel.org,microsoft.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,outlook.com];
-	RCPT_COUNT_TWELVE(0.00)[18];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[23];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wei.liu@kernel.org,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,liuwe-devbox-debian-v2.local:mid]
-X-Rspamd-Queue-Id: 0081B400A11
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ernis@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:url]
+X-Rspamd-Queue-Id: 06B2740126C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Apr 14, 2026 at 03:49:53PM +0000, Anirudh Rayabharam wrote:
-> On Tue, Apr 07, 2026 at 02:27:52PM -0700, Jork Loeser wrote:
-> > On Mon, 6 Apr 2026, Anirudh Rayabharam wrote:
-> > 
-> > > On Fri, Apr 03, 2026 at 12:06:10PM -0700, Jork Loeser wrote:
-> > > > The SynIC is shared between VMBus and MSHV. VMBus owns the message
-> > > > page (SIMP), event flags page (SIEFP), global enable (SCONTROL),
-> > > > and SINT2. MSHV adds SINT0, SINT5, and the event ring page (SIRBP).
-> > > > 
-> > > > Currently mshv_synic_init() redundantly enables SIMP, SIEFP, and
-> > > 
-> > > The redundant enable is probably a no-op from the hypervisor side so it
-> > > probably doesn't hurt us. The main problem is with the tear down.
-> > 
-> > It's an MSR intercept. If we can replace this by an "if()" we shave a few
-> > cycles.
-> > 
-> > > An alternative approach could be: check if SIMP/SIEFP/SCONTROL is
-> > > already enabled. If so, don't enable it again. If not enabled, enable it
-> > > and keep track of what all stuf we have enabled. Then disable all of
-> > > them during cleanup. This approach makes less assumptions about the
-> > > behavior of the VMBUS driver and what stuff it does or doesn't use.
-> > 
-> > It would, yes. Then again, we drag yet more state and make debugging more
-> > complicated / less clear to reason what happens dynamically. I had been
-> > debating this briefly myself, and ultimately decided against it for that
-> > very reason.
+On Tue, Apr 14, 2026 at 04:40:58PM +0100, Simon Horman wrote:
+> This is an AI-generated review of your patch. The human sending this
+> email has considered the AI review valid, or at least plausible.
 > 
-> Ultimately, both approaches are fragile in their own ways because the
-> contract that "VMBus owns SIMP, SIEFP, SCONTROL, SINT2 and MSHV owns
-> SIRBP and SINT0 and SINT5" are not enforced anywhere in code and are
-> just assumptions that everyone will play nice. To do that, we'll need to
-> refactor the code such that there is a common component that sort of
-> facilitates access to SynIC for both VMBus and MSHV.
+> For local reproduction steps see https://netdev-ai.bots.linux.dev/ai-local.html
+> ---
+> net: mana: Fix EQ leak in mana_remove on NULL port
 > 
-> I would say that checking the state dynamically and then deciding
-> whether or not to enable SIMP/SIEFP/SCONTROL would be less fragile
-> because we make lesser assumptions about what VMBus does or doesn't do.
+> In mana_remove(), when a NULL port is encountered in the port iteration
+> loop, 'goto out' skips the mana_destroy_eq(ac) call, leaking the event
+> queues allocated earlier by mana_create_eq(). This can happen when
+> mana_probe_port() fails for port 0, leaving ac->ports[0] as NULL. On
+> driver unload or error cleanup, mana_remove() hits the NULL entry and
+> jumps past mana_destroy_eq(). Change 'goto out' to 'break' so the
+> for-loop exits normally and mana_destroy_eq() is always reached.
 > 
-
-I think it is important to keep the changes as small as possible for
-ease of backporting.
-
-> Also, do you know of any cases where the VMBus stuff can get initialized
-> after MSHV? Maybe if VMBus is a module (if that is even possible)? That
-> would really mess up our logic here.
+> > Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure Network Adapter (MANA)")
 > 
-
-It is possible to configure Vmbus as a module today. We should think of
-a way to resolve what you say. Designing a new component is one way. The
-other way is to find a working build configuration and enforce it via
-Kconfig.
-
-Wei
-
-> Thanks,
-> Anirudh.
+> Does this Fixes tag point to the correct commit? Looking at the commit
+> history, the original driver commit ca9c54d2d6a5 did not have
+> mana_destroy_eq() in mana_remove() at all, so the 'goto out' pattern could
+> not have caused an EQ leak at that point.
 > 
-> > 
-> > Best,
-> > Jork
+> The bug appears to have been introduced by commit 1e2d0824a9c3 ("net: mana:
+> Add support for EQ sharing"), which added mana_destroy_eq(ac) to
+> mana_remove() and placed it after the 'out:' label, making it skippable by
+> the 'goto out' on NULL port.
+> 
+> Should the Fixes tag be:
+>   Fixes: 1e2d0824a9c3 ("net: mana: Add support for EQ sharing")
+Thankyou for the correction, Simon. 
+I will make this change in the next version of the patchset.
+
+- Vennela
 
