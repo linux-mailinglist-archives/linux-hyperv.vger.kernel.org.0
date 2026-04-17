@@ -1,154 +1,144 @@
-Return-Path: <linux-hyperv+bounces-10202-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10203-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GFgGNLhA4mmB3wAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10202-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Apr 2026 16:16:24 +0200
+	id KN9REBV64mnh6AAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10203-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Apr 2026 20:21:09 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 621C341BF37
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Apr 2026 16:16:20 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AC4941DEE0
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Apr 2026 20:21:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EFF373046EA0
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Apr 2026 14:10:30 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E6DFE3015FCC
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Apr 2026 18:20:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6178A3A7F47;
-	Fri, 17 Apr 2026 14:10:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D493E3C5DDD;
+	Fri, 17 Apr 2026 18:19:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oWuJdSIy"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XiUW6PfN"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF16371876;
-	Fri, 17 Apr 2026 14:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E3E33B5850;
+	Fri, 17 Apr 2026 18:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776435030; cv=none; b=PUzcHgki49kCNaPnhvefgotzMekch3lT1yW/G0eed1wM4upNugFkyD6cklMFciFxaPhQ2ZomBG+TMiVvFElOKsx4clim6QEljx8oiC0krXUfkgdawbLcEh40qYO8qas5tE0JRwPuIIhCA2a315/5Br9w6c8PdYqg9CcI2S5X+9c=
+	t=1776449996; cv=none; b=SOK79N4i8zvk84SWF52JAUCavQS/l7Rzg2Vt1JgTk91PZMyywNBNLdRVGazZal9XBWUP+RWZfG1AcQ7acES0owgRY95JQvQ4Ned1viD5LPM6epQ7ExWMu+OWbOOTK2rVh/BzkSw2FOEhR0kBL7ql1JkEY/vaTaQS9YVkDbln2LQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776435030; c=relaxed/simple;
-	bh=8SQMGs8IWZBtfCQwHQf5nFYIse/C/NhBhMykySPb1Pw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qzWhDkJhN+WcWCcSkYkKLNH2M5/qPGNpsWHOnGW8VCKubtSKAOh34Ge2FNYLiIVnAsyMkgeT6XVo9SjziooiOaadPnmKYGBYJ2XMnkrZ+RU7BkvfA3tPbEMzOUfahvBvyU5tEj5DH2Uu5IHAftqRDrDK/WvyRimlhFhw0wHiXZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oWuJdSIy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DDC2C2BCB0;
-	Fri, 17 Apr 2026 14:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776435029;
-	bh=8SQMGs8IWZBtfCQwHQf5nFYIse/C/NhBhMykySPb1Pw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oWuJdSIyOIMeesi/u0QxMeqg949poLCxbCiPwfj4Ja1juqgi0XzciaCep1oF/KVc1
-	 /gpoeScvEpAX52iIZnMvnnKE3aG1S6WOaSufG2+cjrLPtSBDL2PZmqW7/LmMTZShyb
-	 KNHOBDgRZEQ6NY06NOWYoHk9rr1lUOUUwpSx3k79QxEdqEVPSxSAzrj6CL/qUwBSSb
-	 1Ey1sLAyPKg/QZqw8gsEEX90HXQEVAKi8G7w9EYWo35gaUhreo6Dph8xLreeqO22JQ
-	 Vp5BN14i5y8bJy0ZmH6EaZ42SIPiOYEXL+ApbcHJdbsWHMM/X/3m/27POm/0Lzhq6X
-	 R9AlBweeL6+/Q==
-From: Simon Horman <horms@kernel.org>
-To: ernis@linux.microsoft.com
-Cc: Simon Horman <horms@kernel.org>,
-	haiyangz@microsoft.com,
-	davem@davemloft.net,
-	longli@microsoft.com,
-	ssengar@linux.microsoft.com,
-	linux-kernel@vger.kernel.org,
-	kuba@kernel.org,
-	kotaranov@microsoft.com,
-	stephen@networkplumber.org,
-	andrew+netdev@lunn.ch,
-	kys@microsoft.com,
-	wei.liu@kernel.org,
-	shirazsaleem@microsoft.com,
-	kees@kernel.org,
-	pabeni@redhat.com,
-	linux-hyperv@vger.kernel.org,
-	edumazet@google.com,
-	decui@microsoft.com,
-	leon@kernel.org,
-	gargaditya@linux.microsoft.com,
-	dipayanroy@linux.microsoft.com,
-	netdev@vger.kernel.org,
-	shacharr@microsoft.com
-Subject: Re: [PATCH net v3 4/5] net: mana: Don't overwrite port probe error with add_adev result
-Date: Fri, 17 Apr 2026 15:10:14 +0100
-Message-ID: <20260417141014.218936-1-horms@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260415080944.732901-5-ernis@linux.microsoft.com>
-References: <20260415080944.732901-5-ernis@linux.microsoft.com>
+	s=arc-20240116; t=1776449996; c=relaxed/simple;
+	bh=R12IDCIXkdZNXxjNCe8brPVjwHzFherskLs8R4dflXc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pr++Ox5QXSwbpB7Zlxjm0rdbpoY35iMnVovlL+jUZ83gO50uYpRDB34m5kcjqWTnzK1thswjIUqAXSG6fFcOM5nvx0YXw8VIeMcpGCtpASXbYf2ekYdrAhgqRz5cJPEr1ME4e0dtEk3mPPYmG+p0DPZ57IT3RC7+sU2wJekIbeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XiUW6PfN; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.64.217.73] (unknown [40.65.108.177])
+	by linux.microsoft.com (Postfix) with ESMTPSA id B43C520B7128;
+	Fri, 17 Apr 2026 11:19:49 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B43C520B7128
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1776449989;
+	bh=ZoMFv+0gVyZ0RDus1DOUZjij1UXc723wF7Hg48l76WY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XiUW6PfNclY3pUdKUMgy2O1e32rHEv47F4idLSAzn771ccErMtdYPnx2xQb7+eyg+
+	 ZzwtSV7KiTCMnc5BiIxaGka6u0xdDI8wgq3ADzCmCjuLUzH3JJIhpaDcemCHsw8S5/
+	 AGGzVI5JsOe5czDkN7mOepoos+1BBOBeZiGQvP0k=
+Message-ID: <075ca01b-cd3e-45bf-b6f3-e6d3d6865021@linux.microsoft.com>
+Date: Fri, 17 Apr 2026 11:19:48 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [0.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Drivers: hv: vmbus: Improve the logc of reserving fb_mmio
+ on Gen2 VMs
+To: Dexuan Cui <decui@microsoft.com>, kys@microsoft.com,
+ haiyangz@microsoft.com, wei.liu@kernel.org, longli@microsoft.com,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ mhklinux@outlook.com, matthew.ruffell@canonical.com,
+ johansen@templeofstupid.com
+Cc: stable@vger.kernel.org
+References: <20260416183529.838321-1-decui@microsoft.com>
+Content-Language: en-US
+From: Hardik Garg <hargar@linux.microsoft.com>
+In-Reply-To: <20260416183529.838321-1-decui@microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	TAGGED_FROM(0.00)[bounces-10202-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10203-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,vger.kernel.org,outlook.com,canonical.com,templeofstupid.com];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[horms@kernel.org,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-0.993];
+	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hargar@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 621C341BF37
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linux.microsoft.com:dkim,linux.microsoft.com:mid]
+X-Rspamd-Queue-Id: 6AC4941DEE0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-This is an AI-generated review of your patch. The human sending this
-email has considered the AI review valid, or at least plausible.
 
-For local reproduction steps see https://netdev-ai.bots.linux.dev/ai-local.html
----
-net: mana: Don't overwrite port probe error with add_adev result
 
-In mana_probe(), if mana_probe_port() fails for any port, the error
-is stored in 'err' and the loop breaks. However, the subsequent
-unconditional 'err = add_adev(gd, "eth")' overwrites this error.
-If add_adev() succeeds, mana_probe() returns success despite ports
-being left in a partially initialized state (ac->ports[i] == NULL).
-Only call add_adev() when there is no prior error, so the probe
-correctly fails and triggers mana_remove() cleanup.
+On 4/16/2026 11:35 AM, Dexuan Cui wrote:
+> If vmbus_reserve_fb() in the kdump kernel fails to properly reserve the
+> framebuffer MMIO range due to a Gen2 VM's screen.lfb_base being zero [1],
+> there is an MMIO conflict between the drivers hyperv_drm and pci-hyperv.
+> This is especially an issue if pci-hyperv is built-in and hyperv_drm is
+> built as a module. Consequently, the kdump kernel fails to detect PCI
+> devices via pci-hyperv, and may fail to mount the root file system,
+> which may reside in a NVMe disk.
+> 
+> On Gen2 VMs, if the screen.lfb_base is 0 in the kdump kernel, fall
+> back to the low MMIO base, which should be equal to the framebuffer
+> MMIO base (Tested on x64 Windows Server 2016, and on x64 and ARM64 Windows
+> Server 2025 and on Azure) [2]. In the first kernel, screen.lfb_base
+> is not 0; if the user specifies a high resolution, it's not enough to
+> only reserve 8MB: in this case, reserve half of the space below 4GB, but
+> cap the reservation to 128MB, which is the required framebuffer size of
+> the highest resolution 7680*4320 supported by Hyper-V.
+> 
+> Add the cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) check, because a CoCo
+> VM (i.e. Confidential VM) on Hyper-V doesn't have any framebuffer
+> device, so there is no need to reserve any MMIO for it.
+> 
+> While at it, fix the comparison "end > VTPM_BASE_ADDRESS" by changing
+> the > to >=. Here the 'end' is an inclusive end (typically, it's
+> 0xFFFF_FFFF).
+> 
+> [1] https://lore.kernel.org/all/SA1PR21MB692176C1BC53BFC9EAE5CF8EBF51A@SA1PR21MB6921.namprd21.prod.outlook.com/
+> [2] https://lore.kernel.org/all/SA1PR21MB69218F955B62DFF62E3E88D2BF222@SA1PR21MB6921.namprd21.prod.outlook.com/
+> 
+> Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
+> CC: stable@vger.kernel.org
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
+>  drivers/hv/vmbus_drv.c | 30 ++++++++++++++++++++++++++++--
+>  1 file changed, 28 insertions(+), 2 deletions(-)
+Reviewed-by: Hardik Garg <hargar@linux.microsoft.com>
 
-> In mana_probe(), if mana_probe_port() fails for any port, the error
-> is stored in 'err' and the loop breaks. However, the subsequent
-> unconditional 'err = add_adev(gd, "eth")' overwrites this error.
-> If add_adev() succeeds, mana_probe() returns success despite ports
-> being left in a partially initialized state (ac->ports[i] == NULL).
->
-> Only call add_adev() when there is no prior error, so the probe
-> correctly fails and triggers mana_remove() cleanup.
->
-> Fixes: ced82fce77e9 ("net: mana: Probe rdma device in mana driver")
 
-The existing Fixes: tag points to commit ced82fce77e9 ("net: mana: Probe
-rdma device in mana driver"), but was the bug actually introduced there?
 
-Looking at the commit history, commit a69839d4327d ("net: mana: Add support
-for auxiliary device") added the unconditional 'err = add_adev(gd);' call
-that overwrites the error from mana_probe_port(). Commit ced82fce77e9 only
-modified the add_adev signature from add_adev(gd) to add_adev(gd, "eth")
-but did not introduce the buggy pattern.
 
-Should the Fixes: tag be:
-    Fixes: a69839d4327d ("net: mana: Add support for auxiliary device")
+Thanks,
+Hardik
 
