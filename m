@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-10201-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10202-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6DWwBK1A4mmB3wAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10201-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Apr 2026 16:16:13 +0200
+	id GFgGNLhA4mmB3wAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10202-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Apr 2026 16:16:24 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 871B941BF30
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Apr 2026 16:16:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 621C341BF37
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Apr 2026 16:16:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 91763302975A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Apr 2026 14:10:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EFF373046EA0
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Apr 2026 14:10:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23DDE3B27F6;
-	Fri, 17 Apr 2026 14:10:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6178A3A7F47;
+	Fri, 17 Apr 2026 14:10:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WOzqyRdG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oWuJdSIy"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00ED03A7F47;
-	Fri, 17 Apr 2026 14:10:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF16371876;
+	Fri, 17 Apr 2026 14:10:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776435014; cv=none; b=QaeSfas9jHA2sUlo0silbgkMZZ8VszvhZQDEFW2xv5pgCWTAETikVwI5A2E/xYzf/phHqh4fsfyaw2GMvVsUTd6BSZqD/sBBudCK2uC7VnHQbhkuSrL/7zczy+E2iAwVtTjn/mLLdvc51MOk4mV+VaMHeEGHeq0AWDfsFThONwQ=
+	t=1776435030; cv=none; b=PUzcHgki49kCNaPnhvefgotzMekch3lT1yW/G0eed1wM4upNugFkyD6cklMFciFxaPhQ2ZomBG+TMiVvFElOKsx4clim6QEljx8oiC0krXUfkgdawbLcEh40qYO8qas5tE0JRwPuIIhCA2a315/5Br9w6c8PdYqg9CcI2S5X+9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776435014; c=relaxed/simple;
-	bh=LXyGjZr0glZIvidv/14NOUVA/CrZwTtxA1pXnsPk1hk=;
+	s=arc-20240116; t=1776435030; c=relaxed/simple;
+	bh=8SQMGs8IWZBtfCQwHQf5nFYIse/C/NhBhMykySPb1Pw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CdE3wy8JEjmQ1IDdrtVzaT7T6sg6n1GNX+r3SQfb1hPSvjHdOELt6xdCsrQ2HMyDtlhZ4OOctRoOiNGHynhvHF1tqZhVh5SAt0RwJcQlOXLHdqXj5WXG6eRsF1/H7a23v/fE7O+9n7UceimSh1ByQdCOu9zCJ5q5NZwmbVJP48o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WOzqyRdG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFA4BC2BCB0;
-	Fri, 17 Apr 2026 14:10:08 +0000 (UTC)
+	 MIME-Version; b=qzWhDkJhN+WcWCcSkYkKLNH2M5/qPGNpsWHOnGW8VCKubtSKAOh34Ge2FNYLiIVnAsyMkgeT6XVo9SjziooiOaadPnmKYGBYJ2XMnkrZ+RU7BkvfA3tPbEMzOUfahvBvyU5tEj5DH2Uu5IHAftqRDrDK/WvyRimlhFhw0wHiXZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oWuJdSIy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DDC2C2BCB0;
+	Fri, 17 Apr 2026 14:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776435013;
-	bh=LXyGjZr0glZIvidv/14NOUVA/CrZwTtxA1pXnsPk1hk=;
+	s=k20201202; t=1776435029;
+	bh=8SQMGs8IWZBtfCQwHQf5nFYIse/C/NhBhMykySPb1Pw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WOzqyRdGk+KNVIHeIWxQZQ2fVKGxMKguTl4twWZWHJm12/rC/e2yHYf3xbzzX/zek
-	 dkYUoKw+KeI1iFWNh/ho9u2jhRLvV3CQQ6SLQMq5vfX9Ayo/nWD1oqr7cNzbOB/jfb
-	 4fLZqmuczB0mrcoXm5Y3SWpzOT+JS9hHuu+fyHxXA4I/fVkNNhOqXZYBC6Du7ZYr/m
-	 GkWmbWx+iuQ6uNW26bJfPhNJTXEyqq4PQ07VB9GzF2EDYY1BhNPtWQJIALcupOPA66
-	 qYZR7T/EOrQzpo95cRMgtOPkyHbtTm7F6KzBDVULkF1/HGNz/9jurT0P+lIgswxtnS
-	 YWA9zZyUa/Wpw==
+	b=oWuJdSIyOIMeesi/u0QxMeqg949poLCxbCiPwfj4Ja1juqgi0XzciaCep1oF/KVc1
+	 /gpoeScvEpAX52iIZnMvnnKE3aG1S6WOaSufG2+cjrLPtSBDL2PZmqW7/LmMTZShyb
+	 KNHOBDgRZEQ6NY06NOWYoHk9rr1lUOUUwpSx3k79QxEdqEVPSxSAzrj6CL/qUwBSSb
+	 1Ey1sLAyPKg/QZqw8gsEEX90HXQEVAKi8G7w9EYWo35gaUhreo6Dph8xLreeqO22JQ
+	 Vp5BN14i5y8bJy0ZmH6EaZ42SIPiOYEXL+ApbcHJdbsWHMM/X/3m/27POm/0Lzhq6X
+	 R9AlBweeL6+/Q==
 From: Simon Horman <horms@kernel.org>
 To: ernis@linux.microsoft.com
 Cc: Simon Horman <horms@kernel.org>,
@@ -69,12 +69,12 @@ Cc: Simon Horman <horms@kernel.org>,
 	dipayanroy@linux.microsoft.com,
 	netdev@vger.kernel.org,
 	shacharr@microsoft.com
-Subject: Re: [PATCH net v3 3/5] net: mana: Guard mana_remove against double invocation
-Date: Fri, 17 Apr 2026 15:09:53 +0100
-Message-ID: <20260417140953.218832-1-horms@kernel.org>
+Subject: Re: [PATCH net v3 4/5] net: mana: Don't overwrite port probe error with add_adev result
+Date: Fri, 17 Apr 2026 15:10:14 +0100
+Message-ID: <20260417141014.218936-1-horms@kernel.org>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260415080944.732901-4-ernis@linux.microsoft.com>
-References: <20260415080944.732901-4-ernis@linux.microsoft.com>
+In-Reply-To: <20260415080944.732901-5-ernis@linux.microsoft.com>
+References: <20260415080944.732901-5-ernis@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -94,7 +94,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[24];
-	TAGGED_FROM(0.00)[bounces-10201-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10202-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -105,12 +105,12 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[horms@kernel.org,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-0.995];
+	NEURAL_HAM(-0.00)[-0.993];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 871B941BF30
+X-Rspamd-Queue-Id: 621C341BF37
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
@@ -119,48 +119,36 @@ email has considered the AI review valid, or at least plausible.
 
 For local reproduction steps see https://netdev-ai.bots.linux.dev/ai-local.html
 ---
-net: mana: Guard mana_remove against double invocation
+net: mana: Don't overwrite port probe error with add_adev result
 
-If PM resume fails (e.g., mana_attach() returns an error), mana_probe()
-calls mana_remove(), which tears down the device and sets
-gd->gdma_context = NULL and gd->driver_data = NULL. However, a failed
-resume callback does not automatically unbind the driver. When the device
-is eventually unbound, mana_remove() is invoked a second time. Without a
-NULL check, it dereferences gc->dev with gc == NULL, causing a kernel
-panic. Add an early return if gdma_context or driver_data is NULL so the
-second invocation is harmless.
+In mana_probe(), if mana_probe_port() fails for any port, the error
+is stored in 'err' and the loop breaks. However, the subsequent
+unconditional 'err = add_adev(gd, "eth")' overwrites this error.
+If add_adev() succeeds, mana_probe() returns success despite ports
+being left in a partially initialized state (ac->ports[i] == NULL).
+Only call add_adev() when there is no prior error, so the probe
+correctly fails and triggers mana_remove() cleanup.
 
-> Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure Network Adapter (MANA)")
+> In mana_probe(), if mana_probe_port() fails for any port, the error
+> is stored in 'err' and the loop breaks. However, the subsequent
+> unconditional 'err = add_adev(gd, "eth")' overwrites this error.
+> If add_adev() succeeds, mana_probe() returns success despite ports
+> being left in a partially initialized state (ac->ports[i] == NULL).
+>
+> Only call add_adev() when there is no prior error, so the probe
+> correctly fails and triggers mana_remove() cleanup.
+>
+> Fixes: ced82fce77e9 ("net: mana: Probe rdma device in mana driver")
 
-The Fixes: tag points to ca9c54d2d6a5, which introduced mana_remove()
-without NULL checks. However, the exploitable double invocation scenario
-was actually introduced by commit 635096a86edb ("net: mana: Support
-hibernation and kexec"), which added suspend/resume support and made
-mana_probe() call mana_remove() on error.
+The existing Fixes: tag points to commit ced82fce77e9 ("net: mana: Probe
+rdma device in mana driver"), but was the bug actually introduced there?
+
+Looking at the commit history, commit a69839d4327d ("net: mana: Add support
+for auxiliary device") added the unconditional 'err = add_adev(gd);' call
+that overwrites the error from mana_probe_port(). Commit ced82fce77e9 only
+modified the add_adev signature from add_adev(gd) to add_adev(gd, "eth")
+but did not introduce the buggy pattern.
 
 Should the Fixes: tag be:
-
-Fixes: 635096a86edb ("net: mana: Support hibernation and kexec")
-
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index 9d095a6fb56c..2ab7c89e2fed 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> @@ -3685,11 +3685,16 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
->  	struct gdma_context *gc = gd->gdma_context;
->  	struct mana_context *ac = gd->driver_data;
->  	struct mana_port_context *apc;
-> -	struct device *dev = gc->dev;
-> +	struct device *dev;
->  	struct net_device *ndev;
->  	int err;
->  	int i;
->
-> +	if (!gc || !ac)
-> +		return;
-> +
-> +	dev = gc->dev;
-> +
->  	disable_work_sync(&ac->link_change_work);
->  	cancel_delayed_work_sync(&ac->gf_stats_work);
+    Fixes: a69839d4327d ("net: mana: Add support for auxiliary device")
 
