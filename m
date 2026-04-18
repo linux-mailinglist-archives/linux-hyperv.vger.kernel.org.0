@@ -1,145 +1,287 @@
-Return-Path: <linux-hyperv+bounces-10204-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10205-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SNpkAHGX4mlS7wAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10204-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Apr 2026 22:26:25 +0200
+	id 8IcyGXHO4mm4+gAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10205-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Apr 2026 02:21:05 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 389AD41E7BA
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Apr 2026 22:26:24 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id D504A41F53A
+	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Apr 2026 02:21:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 93B54303204B
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Apr 2026 20:24:16 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D1D2430338A6
+	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Apr 2026 00:21:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDAFF2EFDA4;
-	Fri, 17 Apr 2026 20:24:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F39FF1A262D;
+	Sat, 18 Apr 2026 00:21:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="E9oCxsqk"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dYT9ZNDu"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32142DC77F
-	for <linux-hyperv@vger.kernel.org>; Fri, 17 Apr 2026 20:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1787175A97;
+	Sat, 18 Apr 2026 00:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776457455; cv=none; b=c++78ByE1duhS2K73+wVX/esjeue5NGPyjsolLuzP9tG/+8yqcAFpdCPOPCwbNNEhSPkNC2YEIC5RdLtYv4v6G7ALaY+TrfsKTvhjqAwr2C0xyfqsUA7RiDp6+pxOGUekxCw2CmnsBjLpmR0iHukCLu/8ZORylugdmghdxUPyww=
+	t=1776471661; cv=none; b=LrwcvbjKyTsmUGMkQHFhAYr2QM3BwVFTQmjbQq2IOtQboFRyJ+EZRBQEeOypHXDICSnMXDxNi4dEqrmjNPVCXT6yrPtkRp/d2UYpXjkVy62br+S38gvPwAsB0TpGcV1pu8myfXmJoaN9JLLXRYVIp6KDXlVR/RcBYd00Bff/NB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776457455; c=relaxed/simple;
-	bh=r+dgAylW4MBqoMdsspuP2/8KF3Es0vUNdRyadGUudIc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XIUaw3stH6VDnBCuoHjExlpC8qz0LxbdDUg00TJDPdrX9IxvjzMwIkrkp8+0cO9mI6zAr/8VJ2FbaOR4b4BR+SLgXPZurKHribsx3jHuPXNS67GX9PQOOZZes/xe+UJvKl7LIVIg5vhghapTpi4ncYw7L2miGfeudBfyg/XqJFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=E9oCxsqk; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=templeofstupid.com
-Date: Fri, 17 Apr 2026 13:24:00 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
-	s=key1; t=1776457450;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jSZ0x56idMTe5CHt/WVa/3C6qz89U2/0YVG7mwJSoeE=;
-	b=E9oCxsqkYWleeFWyQpnHXOOXavAM1aj4uTIyDuoE+8Xe5iIFQBR2vL6s/By/2FD8HEqgW1
-	hAIFtCr7rKRlqvwoM002198vvgoDIp5EM3tMV+qPFrxG65Vnbaz8qDibca84wNmLGcd0PD
-	1rTHolmyzHi351AB2r2+CE94GKQM7BGM7N83csjs8Y5QAaVbseWdm+/gkDfRokHB6en9BA
-	AtrSXQsKyGEWkp1jt215FkXO1LDg2SwufRgYwL28vgj0XMzD7L9J4nG6kBOFnmAj9LLiz0
-	O3WhQ23fvZw6Z8QhzyVeM0jVaR4IsN3MH4a4FjcvRHkOi8yEW/fMzZE/ADFp/Q==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Krister Johansen <kjlx@templeofstupid.com>
-To: Dexuan Cui <decui@microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	longli@microsoft.com, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mhklinux@outlook.com,
-	matthew.ruffell@canonical.com, stable@vger.kernel.org
-Subject: Re: [PATCH] Drivers: hv: vmbus: Improve the logc of reserving
- fb_mmio on Gen2 VMs
-Message-ID: <aeKW4ESwsoK5La-t@templeofstupid.com>
-References: <20260416183529.838321-1-decui@microsoft.com>
+	s=arc-20240116; t=1776471661; c=relaxed/simple;
+	bh=54HzNelDzBSSQvthwgLiprleLLldcu1fhR4OCJOh4bc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dd5sZJnLxfyw1Ny1Dz8wqh0vUmbJ1p61LOeM8ckL2+xttnat+kZOwBzAMX+wS12RY4NgjE5yUv0enqVUzQdJnmiB/TWM1DyDFfxhNXn4fVBz3uOwMnkAGgeuJU3PKDwAEEFwfOtU3OG7OfytdsuFSoPas/wblHkSTnG3GcRtsFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=dYT9ZNDu; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 3B96520B7128;
+	Fri, 17 Apr 2026 17:20:58 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3B96520B7128
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1776471659;
+	bh=GVHuT39vJFq3z9p9Y8P4lQnO5Ygvg1D3+qSvKG01gbY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dYT9ZNDuycE39Rmok1I6PkVn+1fRDnnVG7AQULHoh8ka9lRpuZZfVcN3GE476KHCm
+	 7q9IKowPidbuXTYdIZorG3mFjFlT9roQFkhQcwZt5HmGQogAfGL0LjONAQykbCKjkF
+	 8HrR1mr46rqVdmR18Z3suICKceYTvClPyPCcdPKY=
+Message-ID: <ffe33ce4-0a1b-44af-9e17-7f641fef9339@linux.microsoft.com>
+Date: Fri, 17 Apr 2026 17:20:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260416183529.838321-1-decui@microsoft.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v0 07/15] mshv: Add ioctl support for MSHV-VFIO bridge
+ device
+Content-Language: en-US
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+ linux-pci@vger.kernel.org, linux-arch@vger.kernel.org, kys@microsoft.com,
+ haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+ longli@microsoft.com, catalin.marinas@arm.com, will@kernel.org,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, joro@8bytes.org,
+ lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+ robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
+ nunodasneves@linux.microsoft.com, mhklinux@outlook.com,
+ romank@linux.microsoft.com
+References: <20260120064230.3602565-1-mrathor@linux.microsoft.com>
+ <20260120064230.3602565-8-mrathor@linux.microsoft.com>
+ <aW-pw7GlQdFv-lf5@skinsburskii.localdomain>
+From: Mukesh R <mrathor@linux.microsoft.com>
+In-Reply-To: <aW-pw7GlQdFv-lf5@skinsburskii.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[templeofstupid.com,none];
-	R_DKIM_ALLOW(-0.20)[templeofstupid.com:s=key1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,vger.kernel.org,outlook.com,canonical.com];
-	TAGGED_FROM(0.00)[bounces-10204-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-10205-lists,linux-hyperv=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[templeofstupid.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,microsoft.com,kernel.org,arm.com,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,8bytes.org,google.com,arndb.de,linux.microsoft.com,outlook.com];
+	RCPT_COUNT_TWELVE(0.00)[29];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[kjlx@templeofstupid.com,linux-hyperv@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mrathor@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[10];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,templeofstupid.com:email,templeofstupid.com:dkim,templeofstupid.com:mid]
-X-Rspamd-Queue-Id: 389AD41E7BA
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.microsoft.com:dkim,linux.microsoft.com:mid]
+X-Rspamd-Queue-Id: D504A41F53A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Apr 16, 2026 at 11:35:29AM -0700, Dexuan Cui wrote:
-> If vmbus_reserve_fb() in the kdump kernel fails to properly reserve the
-> framebuffer MMIO range due to a Gen2 VM's screen.lfb_base being zero [1],
-> there is an MMIO conflict between the drivers hyperv_drm and pci-hyperv.
-> This is especially an issue if pci-hyperv is built-in and hyperv_drm is
-> built as a module. Consequently, the kdump kernel fails to detect PCI
-> devices via pci-hyperv, and may fail to mount the root file system,
-> which may reside in a NVMe disk.
+On 1/20/26 08:13, Stanislav Kinsburskii wrote:
+> On Mon, Jan 19, 2026 at 10:42:22PM -0800, Mukesh R wrote:
+>> From: Mukesh Rathor <mrathor@linux.microsoft.com>
+>>
+>> Add ioctl support for creating MSHV devices for a paritition. At
+>> present only VFIO device types are supported, but more could be
+>> added. At a high level, a partition ioctl to create device verifies
+>> it is of type VFIO and does some setup for bridge code in mshv_vfio.c.
+>> Adapted from KVM device ioctls.
+>>
+>> Credits: Original author: Wei Liu <wei.liu@kernel.org>
+>> NB: Slightly modified from the original version.
+>>
+>> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+>> ---
+>>   drivers/hv/mshv_root_main.c | 126 ++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 126 insertions(+)
+>>
+>> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+>> index 83c7bad269a0..27313419828d 100644
+>> --- a/drivers/hv/mshv_root_main.c
+>> +++ b/drivers/hv/mshv_root_main.c
+>> @@ -1551,6 +1551,129 @@ mshv_partition_ioctl_initialize(struct mshv_partition *partition)
+>>   	return ret;
+>>   }
+>>   
+>> +static long mshv_device_attr_ioctl(struct mshv_device *mshv_dev, int cmd,
+>> +				   ulong uarg)
+>> +{
+>> +	struct mshv_device_attr attr;
+>> +	const struct mshv_device_ops *devops = mshv_dev->device_ops;
+>> +
+>> +	if (copy_from_user(&attr, (void __user *)uarg, sizeof(attr)))
+>> +		return -EFAULT;
+>> +
+>> +	switch (cmd) {
+>> +	case MSHV_SET_DEVICE_ATTR:
+>> +		if (devops->device_set_attr)
+>> +			return devops->device_set_attr(mshv_dev, &attr);
+>> +		break;
+>> +	case MSHV_HAS_DEVICE_ATTR:
+>> +		if (devops->device_has_attr)
+>> +			return devops->device_has_attr(mshv_dev, &attr);
+>> +		break;
+>> +	}
+>> +
+>> +	return -EPERM;
+>> +}
+>> +
+>> +static long mshv_device_fop_ioctl(struct file *filp, unsigned int cmd,
+>> +				  ulong uarg)
+>> +{
+>> +	struct mshv_device *mshv_dev = filp->private_data;
+>> +
+>> +	switch (cmd) {
+>> +	case MSHV_SET_DEVICE_ATTR:
+>> +	case MSHV_HAS_DEVICE_ATTR:
+>> +		return mshv_device_attr_ioctl(mshv_dev, cmd, uarg);
+>> +	}
+>> +
+>> +	return -ENOTTY;
+>> +}
+>> +
+>> +static int mshv_device_fop_release(struct inode *inode, struct file *filp)
+>> +{
+>> +	struct mshv_device *mshv_dev = filp->private_data;
+>> +	struct mshv_partition *partition = mshv_dev->device_pt;
+>> +
+>> +	if (mshv_dev->device_ops->device_release) {
+>> +		mutex_lock(&partition->pt_mutex);
+>> +		hlist_del(&mshv_dev->device_ptnode);
+>> +		mshv_dev->device_ops->device_release(mshv_dev);
+>> +		mutex_unlock(&partition->pt_mutex);
+>> +	}
+>> +
+>> +	mshv_partition_put(partition);
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct file_operations mshv_device_fops = {
+>> +	.owner = THIS_MODULE,
+>> +	.unlocked_ioctl = mshv_device_fop_ioctl,
+>> +	.release = mshv_device_fop_release,
+>> +};
+>> +
+>> +long mshv_partition_ioctl_create_device(struct mshv_partition *partition,
+>> +					void __user *uarg)
+>> +{
+>> +	long rc;
+>> +	struct mshv_create_device devargk;
+>> +	struct mshv_device *mshv_dev;
+>> +	const struct mshv_device_ops *vfio_ops;
+>> +	int type;
+>> +
+>> +	if (copy_from_user(&devargk, uarg, sizeof(devargk))) {
+>> +		rc = -EFAULT;
+>> +		goto out;
+>> +	}
+>> +
+>> +	/* At present, only VFIO is supported */
+>> +	if (devargk.type != MSHV_DEV_TYPE_VFIO) {
+>> +		rc = -ENODEV;
+>> +		goto out;
+>> +	}
+>> +
+>> +	if (devargk.flags & MSHV_CREATE_DEVICE_TEST) {
+>> +		rc = 0;
+>> +		goto out;
+>> +	}
+>> +
+>> +	mshv_dev = kzalloc(sizeof(*mshv_dev), GFP_KERNEL_ACCOUNT);
+>> +	if (mshv_dev == NULL) {
+>> +		rc = -ENOMEM;
+>> +		goto out;
+>> +	}
+>> +
+>> +	vfio_ops = &mshv_vfio_device_ops;
+>> +	mshv_dev->device_ops = vfio_ops;
+>> +	mshv_dev->device_pt = partition;
+>> +
+>> +	rc = vfio_ops->device_create(mshv_dev, type);
+>> +	if (rc < 0) {
+>> +		kfree(mshv_dev);
+>> +		goto out;
+>> +	}
+>> +
+>> +	hlist_add_head(&mshv_dev->device_ptnode, &partition->pt_devices);
+>> +
+>> +	mshv_partition_get(partition);
+>> +	rc = anon_inode_getfd(vfio_ops->device_name, &mshv_device_fops,
+>> +			      mshv_dev, O_RDWR | O_CLOEXEC);
+>> +	if (rc < 0) {
+>> +		mshv_partition_put(partition);
+>> +		hlist_del(&mshv_dev->device_ptnode);
+>> +		vfio_ops->device_release(mshv_dev);
+>> +		goto out;
+>> +	}
+>> +
+>> +	devargk.fd = rc;
+>> +	rc = 0;
+>> +
+>> +	if (copy_to_user(uarg, &devargk, sizeof(devargk))) {
 > 
-> On Gen2 VMs, if the screen.lfb_base is 0 in the kdump kernel, fall
-> back to the low MMIO base, which should be equal to the framebuffer
-> MMIO base (Tested on x64 Windows Server 2016, and on x64 and ARM64 Windows
-> Server 2025 and on Azure) [2]. In the first kernel, screen.lfb_base
-> is not 0; if the user specifies a high resolution, it's not enough to
-> only reserve 8MB: in this case, reserve half of the space below 4GB, but
-> cap the reservation to 128MB, which is the required framebuffer size of
-> the highest resolution 7680*4320 supported by Hyper-V.
-> 
-> Add the cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) check, because a CoCo
-> VM (i.e. Confidential VM) on Hyper-V doesn't have any framebuffer
-> device, so there is no need to reserve any MMIO for it.
-> 
-> While at it, fix the comparison "end > VTPM_BASE_ADDRESS" by changing
-> the > to >=. Here the 'end' is an inclusive end (typically, it's
-> 0xFFFF_FFFF).
-> 
-> [1] https://lore.kernel.org/all/SA1PR21MB692176C1BC53BFC9EAE5CF8EBF51A@SA1PR21MB6921.namprd21.prod.outlook.com/
-> [2] https://lore.kernel.org/all/SA1PR21MB69218F955B62DFF62E3E88D2BF222@SA1PR21MB6921.namprd21.prod.outlook.com/
-> 
-> Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
-> CC: stable@vger.kernel.org
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->  drivers/hv/vmbus_drv.c | 30 ++++++++++++++++++++++++++++--
->  1 file changed, 28 insertions(+), 2 deletions(-)
- 
-Thanks for the updated patch.  I tested this on the arm64 instances that
-had been failing and was able to confirm that without it present the
-failure still occurred, but with the new patch networking was able to
-attach correctly in the dump environment and kdumps were successful.
+> Shouldn't the partition be put here?
 
-Tested-by: Krister Johansen <kjlx@templeofstupid.com>
+No. anon_inode_getfd was successful and so it installed the fd already..
+As a result the cleanup will happen in the file op release.
 
--K
+Thanks,
+-Mukesh
+
+> Thanks,
+> Stanislav
+> 
+>> +		rc = -EFAULT;
+>> +		goto out;
+>> +	}
+>> +out:
+>> +	return rc;
+>> +}
+>> +
+>>   static long
+>>   mshv_partition_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
+>>   {
+>> @@ -1587,6 +1710,9 @@ mshv_partition_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
+>>   	case MSHV_ROOT_HVCALL:
+>>   		ret = mshv_ioctl_passthru_hvcall(partition, true, uarg);
+>>   		break;
+>> +	case MSHV_CREATE_DEVICE:
+>> +		ret = mshv_partition_ioctl_create_device(partition, uarg);
+>> +		break;
+>>   	default:
+>>   		ret = -ENOTTY;
+>>   	}
+>> -- 
+>> 2.51.2.vfs.0.1
+>>
+
 
