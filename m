@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-10210-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10211-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GNNsKnQg5mkMsAEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10210-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Apr 2026 14:47:48 +0200
+	id sPZ+ORMi5mnCsQEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10211-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Apr 2026 14:54:43 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FC1142AEB1
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Apr 2026 14:47:48 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61EDB42B050
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Apr 2026 14:54:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 757F0300BBA2
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Apr 2026 12:47:47 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 31879308C423
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Apr 2026 12:47:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A3F439FCA2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD0313A0B20;
 	Mon, 20 Apr 2026 12:47:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FSczLDXw"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cRInjWEJ"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE0B837F8A3;
-	Mon, 20 Apr 2026 12:47:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 908C739BFEF;
+	Mon, 20 Apr 2026 12:47:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776689265; cv=none; b=EeBHDxwE8jOrv8PcBBen+RcgNdhbz5KtO5KvPES/oP5A3Ub2f9UyPXLrBgNPm93A5I/WqZ+y/K4GhTN779Vl4He5k11+HNLRVI855wnHKNvUCrkxZLVLzB4EgrMhqHNnEKf+FepdRPY+wIu7Q15CEN0rNBzriimNqALHSSfxUxc=
+	t=1776689265; cv=none; b=UkRYvnoDZOKhroCub2VwRn/vGqK4wM7WQERStoa99Ytv3mzFlY+dWRR+m+1E4RpQab091Z3HXweyLNXWb7sXxrh3CV4w8wfQEaRFch7uecpdp6yahfixMd+h5s7Qf2dnDCO2dcpCKwaGs9rgZvdyOlnztaaOW/ULLhWUTAMUPwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1776689265; c=relaxed/simple;
-	bh=bvZfBidEQ5/CscPzRaY/LIy+hxk99bYXUJ9+3FRln4Q=;
+	bh=BbHisHAiZPuS3BJCinTzaZM6Zj98oF1WDvTozelDMnY=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BUU0+6BHSEfFI+ep06sOEy7UKMVQFPoan8PiIp1DgCcM1SFg958LB6hnEYpVSYEAu2jCW+79wr6xlJotKnij+v43NMDWQBwCZ9feGzfLZlh3rCNPr85IvjJzc89WQADvDtWz4X73nmxFc9YguVrexclBc1kwZcbC83NmnvDJ8UQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=FSczLDXw; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=GbRu8n9Bt+CvXZZ/bfYTgH790RF+m+bY9RbuMKLxpDjNE5IzVwlkJKVNTGnoZfS1CnK90HRGvjpCCQsQdJAh4rnY8AmI/eC7RuVkd41emtwTmlRL0OB7H18wc+BtAE5dU8h1IuOq5Z/fAllsAagDNeHHBG/imUfeQuGhPShJdtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=cRInjWEJ; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id 0ADA520B712D; Mon, 20 Apr 2026 05:47:44 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0ADA520B712D
+	id D8BCD20B7129; Mon, 20 Apr 2026 05:47:44 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D8BCD20B7129
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1776689264;
-	bh=2b+SdzBl2fLw0sHK6RRua/VTF4F59mZJmPHAHlWpzrI=;
+	bh=TO5DGqsb3Bk8K5yEpkaKIxhBRQ4TjEnpb6HMU0jAUb0=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=FSczLDXwZKDNkhf5RcN1NiC0mlJWATnL1Syqtnocn14ReFGU7ml6UNLtXQeh1M/b9
-	 mlbFfbkcRuBYpoWcr8+EvDYHf8rjXKYGC/HslpAnXiz2L9ZK2CNvqc1gvowATk3Ohw
-	 vtT0XvKO+9RTA7zlqX7LhNRmi88Vm+VdA/M2sVbk=
+	b=cRInjWEJ11OIN8DMsVqyRgfsnwzgIkzdz2tF/2p4LxLeE4GLs6FXCfR8SQO50YNUq
+	 rEdJWcQeOuQxI7QpzmCthOBkHbVehcVHxs2KOipxJeb0ce9TTdhrL9J0p5TzkfWjnf
+	 IywwOkPq324CZZDHRRLf3dwFl0cfFAeYJ1HJDHpU=
 From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -66,9 +66,9 @@ To: kys@microsoft.com,
 	linux-hyperv@vger.kernel.org,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net v4 1/5] net: mana: Init link_change_work before potential error paths in probe
-Date: Mon, 20 Apr 2026 05:47:35 -0700
-Message-ID: <20260420124741.1056179-2-ernis@linux.microsoft.com>
+Subject: [PATCH net v4 2/5] net: mana: Init gf_stats_work before potential error paths in probe
+Date: Mon, 20 Apr 2026 05:47:36 -0700
+Message-ID: <20260420124741.1056179-3-ernis@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260420124741.1056179-1-ernis@linux.microsoft.com>
 References: <20260420124741.1056179-1-ernis@linux.microsoft.com>
@@ -86,7 +86,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -94,8 +94,8 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10210-lists,linux-hyperv=lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TAGGED_FROM(0.00)[bounces-10211-lists,linux-hyperv=lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[ernis@linux.microsoft.com,linux-hyperv@vger.kernel.org];
@@ -103,23 +103,23 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	NEURAL_HAM(-0.00)[-0.995];
+	NEURAL_HAM(-0.00)[-0.996];
 	RCPT_COUNT_TWELVE(0.00)[23];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 4FC1142AEB1
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,linux.microsoft.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 61EDB42B050
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Move INIT_WORK(link_change_work) to right after the mana_context
-allocation, before any error path that could reach mana_remove().
+Move INIT_DELAYED_WORK(gf_stats_work) to before mana_create_eq(),
+while keeping schedule_delayed_work() at its original location.
 
-Previously, if mana_create_eq() or mana_query_device_cfg() failed,
-mana_probe() would jump to the error path which calls mana_remove().
-mana_remove() unconditionally calls disable_work_sync(link_change_work),
-but the work struct had not been initialized yet. This can trigger
+Previously, if any function between mana_create_eq() and the
+INIT_DELAYED_WORK call failed, mana_probe() would call mana_remove()
+which unconditionally calls cancel_delayed_work_sync(gf_stats_work)
+in __flush_work() or debug object warnings with
 CONFIG_DEBUG_OBJECTS_WORK enabled.
 
-Fixes: 54133f9b4b53 ("net: mana: Support HW link state events")
+Fixes: be4f1d67ec56 ("net: mana: Add standard counter rx_missed_errors")
 Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
 ---
 Changes in v3,v4:
@@ -127,31 +127,30 @@ Changes in v3,v4:
 Changes in v2:
 * Apply the patch in net instead of net-next.
 ---
- drivers/net/ethernet/microsoft/mana/mana_en.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 6302432b9bf6..e3e4b6de6668 100644
+index e3e4b6de6668..468ed60a8a00 100644
 --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
 +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -3631,6 +3631,8 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
- 
- 		ac->gdma_dev = gd;
- 		gd->driver_data = ac;
-+
-+		INIT_WORK(&ac->link_change_work, mana_link_state_handle);
+@@ -3635,6 +3635,8 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
+ 		INIT_WORK(&ac->link_change_work, mana_link_state_handle);
  	}
  
++	INIT_DELAYED_WORK(&ac->gf_stats_work, mana_gf_stats_work_handler);
++
  	err = mana_create_eq(ac);
-@@ -3648,8 +3650,6 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
+ 	if (err) {
+ 		dev_err(dev, "Failed to create EQs: %d\n", err);
+@@ -3709,7 +3711,6 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
  
- 	if (!resuming) {
- 		ac->num_ports = num_ports;
--
--		INIT_WORK(&ac->link_change_work, mana_link_state_handle);
- 	} else {
- 		if (ac->num_ports != num_ports) {
- 			dev_err(dev, "The number of vPorts changed: %d->%d\n",
+ 	err = add_adev(gd, "eth");
+ 
+-	INIT_DELAYED_WORK(&ac->gf_stats_work, mana_gf_stats_work_handler);
+ 	schedule_delayed_work(&ac->gf_stats_work, MANA_GF_STATS_PERIOD);
+ 
+ out:
 -- 
 2.34.1
 
