@@ -1,514 +1,1034 @@
-Return-Path: <linux-hyperv+bounces-10221-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10222-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GLyiMwtI5mkPuQEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10221-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Apr 2026 17:36:43 +0200
+	id gJVpNWVm5mlmvwEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10222-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Apr 2026 19:46:13 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75D0442E63B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Apr 2026 17:36:43 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD27E4320D4
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Apr 2026 19:46:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id EC5B33000FDE
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Apr 2026 15:31:02 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 742633004078
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Apr 2026 16:21:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA552329C54;
-	Mon, 20 Apr 2026 15:31:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 983AE33A9C4;
+	Mon, 20 Apr 2026 16:21:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jGg/M9k2"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kAx8Ujd1"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0C017A31C
-	for <linux-hyperv@vger.kernel.org>; Mon, 20 Apr 2026 15:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.180
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776699061; cv=pass; b=NpDfvh0ooSchQQ3mBrZT+OYMNBvtXTUoCYiUlTsKBmQyw6uaf3Z2E6lwQLm2BSLoTKi7HozMw7mG4JPQtoylZHUaTlQmRLxBiCucisqmhOI6m9hBgSt7NNr2eBQN5VR1Cc2iOyFPGecJCQfOEgkoHXP3Cy/XQdz5HVgbOwvfwSo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776699061; c=relaxed/simple;
-	bh=Uh5pfsYmCPhzRY/dWjPf4I3pFWo/VJ6Grq7f8Ql5qVQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LR8W1BIxj1sKJDruxODcdOjTw8xvVA75dX0n6Lo9zNmAMSAiZJQ6CFV/pVwWYMMMISRUdlDXp83ljYA13DG58C3xVQxh9xndd8PJ7lTonoP34GMcIx8urIhxokEqHbCslxPfylmu3ro9I8JGigF5/fdjopBg4toNVXxRdaUSbeU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jGg/M9k2; arc=pass smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-7a43424f861so31637437b3.1
-        for <linux-hyperv@vger.kernel.org>; Mon, 20 Apr 2026 08:30:59 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776699058; cv=none;
-        d=google.com; s=arc-20240605;
-        b=I3QPM3+jCAGzvHeOxKVLu9i6eKiHdMiNtw1Hf+BcvwXGu7VS8nuKGS+xNruGBGD00z
-         J7PODY2zdofRXehYRdO3FJZgqA7zWB3yq4QP06pugj8oZgoVqmVDfTXe4QmmIXvaAJhA
-         moBs3zVpBaBwI2sQtQO/TLYpI05w7U7+8bmFq4gc5Qj6tCpINEs6zettkncd7+rMTFt9
-         UHtXU0SWFLi5IPE0owf6YnUVQ7T/JB6JzRLcNYMvDbh8V3jmK9+i0rYtsfTIfTaZDqYj
-         6TjHi7AS5vNxb77m7GBmj7l2+h1Vmj9aFE3fjJ4J9p7WNKf5h8KpNvx2uZ9qn4sbJaK/
-         CIKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=9YI76BZ64U7Q7S2rYdBngk+FjiU3Qud+2ZNj6k+ePsY=;
-        fh=orvWg0WvDJbzOZaL+kXBN+AX/Xh608MHpPG2+y8/Vg4=;
-        b=UoTnSp0xtqFK2L0h9dX8SHCVaewWuqYTUXdjJDdUtLSfuiXCTvTNmJalbyJE1hzKUt
-         1W6Cj1Nes6EpwKGprw3Rme8iOx/MZuqFnG6DmSOhBTekV+ffVldW2pr5doxcXCCQfrTy
-         7+j+WcWSJ/DEkvp3fyBsGuU7Nh+wFOcFUYPOaXW2qznWSc04QCbWU0SVSPnLkjhobN0Z
-         0T72GPZx7Of5HRIdAl9HZ0NXmlmM+HJayPIhM910XsfPxt1Mv/uRAN+h3xiBZ7bi66L7
-         +xGg5MttYPNFBG0f7xUh6YyBh/r0e/mZT+FmnyJYCbfMd4cPY7g1PJv4CIMNwQ3lMR8G
-         ox5w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776699058; x=1777303858; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9YI76BZ64U7Q7S2rYdBngk+FjiU3Qud+2ZNj6k+ePsY=;
-        b=jGg/M9k2geT3qkv5Z4Y0eCHZQWJqiPQa6f+n+ZFuMTdHJEv0uIFEUUDM55AxZx9wmD
-         G2GaNNV6wZLhgMvkrle7PD88RHWljCrg72rfPxidE3LA6hU6fNleZgexn/TDuEckT6k3
-         5xsBKvlXmQQdD3EwHOB46faGZysIOxVbcKGx+lP4k9RHYVUHR20mCQpEmkYoHb03p8YD
-         qyO2sS927uQ+ESEwHIiKYSifcaNyUG39ebybTPvYSGObXsO8/kUzKMWT2KYnENhGbIZL
-         B2xV/tk3Y1OszIGuPbor6nt8mrB/sBB4UixsbYl/4Tczfd+Z1BwoRse2UcaTnnLgosG0
-         IUoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776699058; x=1777303858;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9YI76BZ64U7Q7S2rYdBngk+FjiU3Qud+2ZNj6k+ePsY=;
-        b=dJ9wr8t864qTsKqxdguCQaGYS4Ac2cOsm+1D3pAK0uMY5+PKrYVoKZtsXkYC+1KqXF
-         yplpvLUw6/tcFRHjPH3uVrCEF7t154TMc71UCt1vpv/FbwaCLV6BPQIB6Ptx+KfQCSN0
-         UHSdVkamqlcSGWknWPo8zb5H5QGXpJ57k3ehlkPXaGp75cNjoEcRanUJzUOWrEENbBQN
-         FCafZJZMjLCatgACQLpHeAypNxNsejWUcXpupSljg3trxQ7EKN7Q4PqgnOPIuwCfvh1c
-         7eOnHFN6Nc6PZoP8x8qm2aoircDPvY0Zy3j9qRKNRmq421G6z7jadYS923+WZOeB51BK
-         CX1g==
-X-Gm-Message-State: AOJu0YyLapik1zBitNFPRu77ilxAcVAC3fVvvBZGeFNUx8VM9UFTXaoS
-	xlDlp63XhRQqxg8GLiHUqqZcSa7XIG/LmP/eI0mUD1XgENuzy0g0yllh2dJTAAvNBlJgYrmSrnx
-	+H9bZjkUEd22tXrlJO6VFAs/mF8ptJ1BEnYC0
-X-Gm-Gg: AeBDietPCxhOYSH1+fLXTVM0iAOuodYyK3eakuAH5NE612GmoqbI9XSa/Ntp8log0Ay
-	bTtsqKrYOdq+KgnbQFe/yn2XVwfiPzH5KDRlpsy4cjdC7hqsTgsaZTvf+1T8pXV1ypeFxvsA4kY
-	EBKmawdrqjuHzL5ZErE+D6tRiMrlHlvueMiY+/MU1HIOZUFkyyJLYs6pEiGUmd0gqk8U6KLQd1Q
-	x0lOkdOZ6DZFcBVb1aprNM4eIeK2LFUVDAmdOueLbuBLwPWrApWKuFA7rDJKGm+JlGGZnUkZwhw
-	7FSsEbVaHttUBSaZdVY=
-X-Received: by 2002:a05:690c:7283:b0:7b3:edc7:9bb8 with SMTP id
- 00721157ae682-7b9eccb73a9mr148684657b3.0.1776699058122; Mon, 20 Apr 2026
- 08:30:58 -0700 (PDT)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3925E332916;
+	Mon, 20 Apr 2026 16:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776702117; cv=none; b=mNMLi0ABOr/XKOjMAJiQd3mo9WNhIWI6JcGDQeUlvi3+1Q1uQhRLZDGyKD8vGMfwNTZ41xQJ/E9l+r5xveOMWIrIWuHALNNqiMzdOYAMoSFlfHjG+274yRbM5HE8I6yV7btkrt/ocgqJfulVKbNoHo37EjRNKudoJNrdtgSW1ac=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776702117; c=relaxed/simple;
+	bh=K5rhHwHZipVd9Qkc4TLpP/hE/3lG+n6QuJCJZ48rRKM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YMGBfZyHRbZ2xPeJi56lMJnkvQxG7xPTFZEbngLbMYWSc1enFE1RYzzBJ5GJqZw9TT//YcFPC1OFGFVNFVtY56JUddvCco1uDWseb1IGW5fbtWOdSfaEppKGUIiVkwR9ET9caMmI5UGzYXImkoMOXbMO5lcBZCUZgJY2VneBU+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=kAx8Ujd1; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from skinsburskii.localdomain (unknown [20.236.10.129])
+	by linux.microsoft.com (Postfix) with ESMTPSA id C6FB420B6F01;
+	Mon, 20 Apr 2026 09:21:53 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C6FB420B6F01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1776702114;
+	bh=8JO7vBHit5ZOQI9/oJJXtT+JuQ5OOAnsEtZGVITKiPw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kAx8Ujd134thZ7rp/I81BHupV8E9fEV+iw7AzvOFKz9CNTmp0gnNWIRd87xeKRqs2
+	 ukkaZUZhQM6iZXv0vKBp0bYDcU3klMkz7plfCum86tIuz8sfP5ZUcIt7vIh+wl5buQ
+	 m0of5TuT43Wg77C75adF/VvD/fwN1CbnhHlfc3q4=
+Date: Mon, 20 Apr 2026 09:21:50 -0700
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"longli@microsoft.com" <longli@microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/7] mshv: Convert from page pointers to PFNs
+Message-ID: <aeZSnjgSkm7vJxhW@skinsburskii.localdomain>
+References: <177490099488.81669.3758562641675983608.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <177490105758.81669.969284388846280218.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <SN6PR02MB4157CD26728B2D4BFD171DB7D4242@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAPLehQ3cT+jEUkLnfBYFh3a=eCZcxzBeDvTX-B0MWdSJ_oEFuQ@mail.gmail.com>
-In-Reply-To: <CAPLehQ3cT+jEUkLnfBYFh3a=eCZcxzBeDvTX-B0MWdSJ_oEFuQ@mail.gmail.com>
-From: Boiler Plate <boilerplate4u@gmail.com>
-Date: Mon, 20 Apr 2026 17:30:46 +0200
-X-Gm-Features: AQROBzC75VOeiI6HVTYfyBivYNjB_NABcla4QmLtvqKT9N00HaUz8T0_RWBKnQw
-Message-ID: <CAPLehQ1P6T+PuC4=FNPPuwu8QrSeEjMP=fvNYYBKz_t3ckRocw@mail.gmail.com>
-Subject: [BUG/RFE] hv_balloon: hot-add not triggered under burst memory demand
-To: linux-hyperv@vger.kernel.org
-Cc: wei.liu@kernel.org, mhklinux@outlook.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <SN6PR02MB4157CD26728B2D4BFD171DB7D4242@SN6PR02MB4157.namprd02.prod.outlook.com>
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,outlook.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10221-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10222-lists,linux-hyperv=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[outlook.com];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	MISSING_XM_UA(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TO_DN_NONE(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[boilerplate4u@gmail.com,linux-hyperv@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[3];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,bootlin.com:url,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 75D0442E63B
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: CD27E4320D4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi !
-
-I'm experiencing a consistent failure of the hv_balloon driver to
-respond to burst memory demand on Alpine Linux, with VS Code Remote
-devcontainers as a
-representative workload.
-
-The issue has been thoroughly analyzed using PSI monitoring and kernel
-configuration verification. The root cause is the absence of burst
-demand support in the driver architecture, compounded by the 1-second
-polling loop latency.
-
-A detailed analysis with measurement data and proposed improvements down below.
---
-
-Bug Report / Request for Enhancement: hv_balloon Dynamic Memory
-Hot-Add Fails Under Burst Demand Workloads
-
-SUMMARY
-
-The Linux hv_balloon driver for Hyper-V Dynamic Memory is documented
-and architecturally designed to manage guest memory in both
-directions: increasing memory via hot-add when the guest needs more,
-and decreasing it via balloon inflation when the guest needs less. The
-original patch comment introducing the driver explicitly states this
-dual purpose, and the driver's state machine contains distinct states
-for DM_BALLOON_UP, DM_BALLOON_DOWN and DM_HOT_ADD.
-
-In practice, only the downward direction works reliably. This was
-demonstrated in a controlled test running Alpine Linux v3.23 (kernel
-6.18.20-lts) as a Hyper-V guest with Dynamic Memory configured
-(Startup RAM 1024 MB, Maximum 16384 MB). Under a representative burst
-demand workload using VS Code Remote SSH with devcontainer startup,
-the guest experienced 97% PSI memory stall, 176,000+ swap pages
-written, and near-OOM conditions over a sustained period exceeding 150
-seconds. During this entire period, MemTotal never increased by a
-single kilobyte and dmesg showed zero hot-add activity. The upward
-direction failed completely.
-
-The root cause is the complete absence of burst demand support in the
-driver architecture, compounded by a fixed-interval 1-second polling
-loop between guest and host, sequential hot-add protocol semantics,
-and a kernel default configuration (MHP_DEFAULT_ONLINE_TYPE_OFFLINE)
-that leaves hot-added memory sections offline even when they do
-arrive. Collectively these mean the driver cannot respond to burst
-memory demand fast enough to be useful.
-
-Proposed resolution: PSI-triggered hot-add requests independent of the
-1-second polling loop, documentation of required
-auto_online_blocks=online configuration, and improved diagnostics when
-hot-add is not initiated despite high memory pressure.
-
-
-1. VERIFIED PURPOSE AND DESIGN INTENT
-
-The original patch introducing hv_balloon into the Linux kernel states
-explicitly:
-
-"Windows hosts dynamically manage the guest memory allocation via a
-combination memory hot add and ballooning. Memory hot add is used to
-grow the guest memory up to the maximum memory that can be allocated
-to the guest. Ballooning is used to both shrink as well as expand up
-to the max memory."
-
-Source: K.Y. Srinivasan, [PATCH 2/2] Drivers: hv: Add Hyper-V balloon
-driver, lkml.iu.edu, 2012.
-
-The driver's state machine in the current kernel source at
-drivers/hv/hv_balloon.c confirms this with explicit states
-DM_BALLOON_UP, DM_BALLOON_DOWN and DM_HOT_ADD. Source:
-github.com/torvalds/linux/blob/master/drivers/hv/hv_balloon.c
-(verified April 2026).
-
-The upward direction is therefore not an optional or aspirational
-feature. It is the primary stated purpose of the hot-add component of
-the driver.
-
-
-2. SYSTEM CONFIGURATION
-
-Host: Windows Server 2022 with Hyper-V, Dynamic Memory enabled
-
-Guest OS: Alpine Linux v3.23, kernel 6.18.20-lts (x86_64)
-
-Kernel config relevant to this report:
-- CONFIG_MEMORY_HOTPLUG=y
-- CONFIG_MHP_DEFAULT_ONLINE_TYPE_OFFLINE=y (Alpine default)
-- CONFIG_PSI=y
-- CONFIG_PSI_DEFAULT_DISABLED=y
-
-Hyper-V Dynamic Memory settings:
-- Startup RAM: 1024 MB
-- Minimum RAM: 512 MB
-- Maximum RAM: 16384 MB
-
-auto_online_blocks: Set to online manually after discovering the
-default was offline
-
-PSI: Enabled via psi=1 kernel parameter after discovering
-CONFIG_PSI_DEFAULT_DISABLED=y
-
-Driver module parameters verified on test system:
-- /sys/module/hv_balloon/parameters/hot_add = Y (hot-add enabled)
-- /sys/module/hv_balloon/parameters/pressure_report_delay = 0 (no startup delay)
-
-
-3. USE CASE: VS CODE REMOTE SSH WITH DEVCONTAINER
-
-This use case is representative of a class of developer workloads with
-containerized development environments, that are increasingly common
-on Linux VMs hosted on Hyper-V.
-
-Workload profile:
-VS Code Remote SSH connects to the Alpine guest and starts a Home
-Assistant Add-on development container (ha-dev). The VS Code server
-process (node) expands from zero to approximately 240 MB RSS within 10
-seconds of connection. Multiple node processes spawn in rapid
-succession as extensions and language servers load.
-
-Expected behavior:
-Hyper-V Dynamic Memory detects guest memory pressure, initiates
-hot-add to expand MemTotal beyond the startup value, guest makes the
-new memory available via auto_online_blocks, workload proceeds
-normally.
-
-Observed behavior:
-MemTotal remained at 921764 kB (startup RAM) throughout the entire
-session. dmesg showed no hot-add activity whatsoever. The system
-responded by swapping aggressively and reaching PSI avg10 values of
-97% before becoming unresponsive.
-
-
-4. MEASUREMENT DATA
-
-All measurements were collected using a custom shell script sampling
-/proc/pressure/memory, /proc/vmstat and /proc/meminfo at 1-2 second
-intervals, with per-process RSS from /proc/PID/status.
-
-Timeline of VS Code startup of remote containers (elapsed time from connection)
-
-Time    Event                               PSI delta/s      Swap
-pages out   MemTotal
-+0s     Baseline, docker running            0 us             0
-       921764 kB
-+48s    VS Code server appears              0 us             0
-       921764 kB
-+50s    node 107 MB RSS                     152,837 us       3,748
-       921764 kB
-+55s    4 node processes, 348 MB RSS total  941,966 us       22,945
-       921764 kB
-+92s    PSI avg10 48%                       6,357,506 us     159,934
-       921764 kB
-+106s   PSI avg10 83%                       13,446,517 us    160,262
-       921764 kB
-+179s   PSI avg10 97%                       20,093,449 us    165,208
-       921764 kB
-
-Key observations:
-- MemTotal never changed from startup value
-- No hot-add lines appeared in dmesg at any point during or after the session
-- PSI cumulative stall since boot at session end: 804,383,983
-microseconds (804 seconds of accumulated memory stall)
-
-
-5. ROOT CAUSE ANALYSIS
-
-The fundamental design gap in hv_balloon is the complete absence of
-burst demand support. The driver was designed around a polling-based,
-fixed-interval model and has no mechanism to detect or respond to
-rapid memory transitions. All other issues described below are
-consequences or amplifications of this core architectural limitation.
-
-Issue 1: No burst demand support in the driver architecture
-
-The driver has no concept of burst demand, a rapid transition from low
-memory pressure to near-OOM within seconds. There is no fast path, no
-threshold trigger, and no priority escalation mechanism. The entire
-communication model between guest and host is based on periodic status
-reporting, which by design introduces latency that is structurally
-incompatible with burst workloads. A guest can transition from 0% to
-97% PSI memory stall and write 160,000 swap pages before the driver
-has sent more than a handful of status messages to the host.
-
-Modern workloads such as containerized development environments,
-Kubernetes pod scheduling, JVM heap initialization, Node.js extension
-loading, routinely demand hundreds of megabytes of memory within a
-5-10 second window. The driver architecture predates this workload
-class entirely.
-
-Issue 2: 1-second fixed-interval polling loop is too slow for burst workloads
-
-The hv_balloon thread reports memory pressure to the host once per
-second via post_status(). Source:
-elixir.bootlin.com/linux/v6.14.6/source/drivers/hv/hv_balloon.c#L1381
-(verified via Medium article by Shlomi Boutnaru, May 2025).
-
-VS Code expanded from 0 to 240 MB RSS in under 10 seconds. By the time
-the host received sufficient pressure signals to consider a hot-add
-response, the guest had already exhausted available memory and entered
-heavy swap. The polling cadence has no mechanism to accelerate or
-escalate regardless of how severe or rapid the memory pressure
-becomes.
-
-Issue 3: pressure_report_delay not a factor in this case
-
-The hv_balloon module parameter pressure_report_delay defaults to 30
-seconds per the original 2013 patch. Source: K.Y. Srinivasan, [PATCH
-1/2] Drivers: hv: balloon: Add a parameter to delay pressure
-reporting, lkml.indiana.edu, 2013. On the test system this parameter
-was verified to be 0
-(/sys/module/hv_balloon/parameters/pressure_report_delay = 0), meaning
-pressure reporting was not delayed. This eliminates
-pressure_report_delay as a contributing factor in this specific case
-and strengthens the conclusion that Issues 1 and 2 are solely
-responsible for the observed failure.
-
-Note: on systems where pressure_report_delay retains its default value
-of 30, the failure window would be significantly wider, as the host
-would receive no pressure data at all during the first 30 seconds
-after driver load.
-
-Issue 4: Sequential hot-add protocol prevents parallel responses
-
-Per the Hyper-V Dynamic Memory protocol specification: the host must
-not send a new hot-add request until the guest has responded to the
-previous one. Source: quoted in QEMU developer discussion,
-mail-archive.com, September 2020. Combined with the 128 MB minimum
-DIMM size for Linux hot-add (source: patchew.org, verified search
-result), each expansion step is large, slow and serialized.
-
-Issue 5: MHP_DEFAULT_ONLINE_TYPE_OFFLINE leaves hot-added memory unusable
-
-Alpine Linux ships with CONFIG_MHP_DEFAULT_ONLINE_TYPE_OFFLINE=y.
-Hot-added memory sections are registered in sysfs but remain in
-offline state until explicitly brought online. Without udev (Alpine
-uses mdev) there is no automatic mechanism to online new sections. The
-auto_online_blocks sysfs interface defaults to offline and must be
-manually set to online.
-
-This issue was identified and resolved in this specific environment by
-setting echo online > /sys/devices/system/memory/auto_online_blocks
-and making it persistent via /etc/local.d/memory-hotplug.start.
-However even with this fix applied, hot-add was never triggered by the
-host during the VS Code session. This confirms that Issues 1-4 are the
-primary blockers and Issue 5 is a prerequisite that was already
-satisfied.
-
-
-6. COMPARISON WITH KNOWN SIMILAR REPORTS AND RECENT PATCHES
-
-This failure mode is not new. A Kubernetes/minikube issue from 2017
-describes an identical pattern: memory demand increases, Hyper-V
-Manager shows warning status, assigned memory never increases, OOM
-killer activates. Source: github.com/kubernetes/minikube/issues/1403.
-The issue was closed as stale without resolution. The present report
-provides significantly more detailed measurement data and kernel
-configuration context than the prior report.
-
-The driver is actively maintained. Two recent patches are relevant as context:
-
-- A March 2024 patch by Michael Kelley fixes hot-add failures on
-systems with memblock sizes larger than 128 MB, where add_memory()
-would fail with error -22. Source: lore.kernel.org/lkml, March 2024.
-This is a separate correctness fix and does not address burst demand.
-- A January 2025 patch accepted into hyperv-next fixes an issue where
-the balloon driver's global page-onlining callback blocked hot-add of
-memory from GPU and vPCI device drivers. Source:
-mail-archive.com/linux-hyperv, January 2025. Again a separate
-correctness fix, but both patches confirm the driver is under active
-development and that the maintainers are responsive to bug reports.
-
-No open patches or RFC discussions on linux-hyperv@vger.kernel.org
-addressing burst demand or PSI integration in hv_balloon were
-identified as of April 2026.
-
-
-7. PROPOSED IMPROVEMENTS
-
-RFE 1: PSI-triggered hot-add requests to handle burst demand
-
-The driver's current architecture is built around fixed-interval
-polling: it reports memory pressure to the host once per second via
-post_status() and waits for the host to initiate a hot-add sequence.
-This design has no mechanism to accelerate or escalate outside the
-polling cadence regardless of how severe or rapid the memory pressure
-becomes.
-
-Modern workloads have fundamentally different memory characteristics.
-Containers, container runtimes (Docker, containerd, podman), JVM-based
-systems, Node.js applications, Kubernetes pods, and development
-environments such as VS Code devcontainers routinely exhibit burst
-demand patterns: a guest transitions from low memory pressure to
-near-OOM within seconds as processes spawn, images are pulled, or
-runtimes initialize their heaps. Kubernetes is a particularly
-illustrative case - the entire value proposition of dynamic memory
-allocation in a Kubernetes node depends on the hypervisor being able
-to supply memory fast enough to honor pod scheduling decisions. When a
-scheduler assigns a new pod to a node, it expects memory to be
-available within seconds, not after a multi-second feedback loop that
-may itself be preceded by a 30-second pressure_report_delay. This
-pattern is not an edge case - it is the normal startup behavior of a
-significant proportion of workloads running on Linux VMs today.
-
-The VS Code devcontainer use case presented in this report is
-representative but not exceptional. Any workload that combines a
-container runtime with a language server, a build system, a database
-startup sequence, or a Kubernetes pod scheduling event will exhibit
-similar burst demand characteristics. The 1-second fixed-interval
-polling loop is structurally incapable of protecting against this
-class of memory event regardless of host configuration.
-
-The infrastructure to solve this already exists in the Linux kernel.
-PSI threshold triggers via poll() on /proc/pressure/memory have been
-available since kernel 4.20 and are already used by systemd-oomd and
-Facebook's oomd to react to memory pressure faster than periodic
-polling allows. The driver should leverage this same mechanism to send
-an immediate out-of-band hot-add request to the host when burst demand
-is detected, specifically when memory.full exceeds a configurable
-threshold such as 10% over a 500ms window. This would allow the host
-to begin the hot-add sequence at the onset of burst demand rather than
-after the guest has already entered heavy swap.
-
-This improvement requires no protocol-level changes if the existing
-hot-add request message is used as the signal. A protocol extension
-adding an explicit "burst demand" flag to the status message would be
-preferable, allowing the host to prioritize the response and bypass
-any queuing of normal pressure-based adjustments.
-
-RFE 2: Document auto_online_blocks requirement
-
-The kernel documentation and Hyper-V guest integration documentation
-should explicitly state that auto_online_blocks must be set to online
-(or the kernel compiled with MHP_DEFAULT_ONLINE_TYPE_ONLINE_AUTO) for
-Dynamic Memory hot-add to function on distributions that do not use
-udev with a memory hotplug rule. Currently this is undocumented and
-discoverable only by reading kernel source or community bug reports.
-
-RFE 3: Diagnostics when hot-add is not triggered
-
-When PSI memory.full avg10 exceeds a significant threshold (e.g. 10%)
-without a hot-add request being sent or received, the driver should
-emit a pr_warn to dmesg. Currently the guest has no visibility into
-whether the host is aware of pressure, whether a hot-add request was
-sent, or whether it failed. This makes the failure mode completely
-silent from the guest's perspective.
-
-RFE 4: Consider proactive pressure signaling
-
-The driver could be extended to send an out-of-band high-priority
-pressure signal to the host when PSI crosses a critical threshold,
-rather than waiting for the next 1-second polling cycle. This would
-require a protocol-level change and coordination with the Hyper-V host
-implementation but would address the fundamental latency issue.
-
-
-8. WHAT IS UNKNOWN
-
-Why the host never sent a hot-add request despite the guest reaching
-near-OOM conditions is unknown. The host-side decision algorithm for
-when to initiate hot-add is proprietary and not publicly documented.
-It is possible the host's memory pressure thresholds were not met
-because guest-side pressure reporting was too slow to accumulate
-sufficient signal. It is also possible the host's algorithm is simply
-not designed for burst workloads of this type.
-
-The Hyper-V Dynamic Memory Buffer setting (configurable between 5% and
-200%, default 20%) controls how much headroom the host maintains above
-current demand. Whether increasing this value would provide sufficient
-buffer to absorb burst demand without requiring hot-add at all is
-unknown without testing. It would not address the architectural
-limitation but could serve as a partial operational mitigation.
---
+On Mon, Apr 13, 2026 at 09:08:16PM +0000, Michael Kelley wrote:
+> From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Monday, March 30, 2026 1:04 PM
+> > 
+> > The HMM interface returns PFNs from hmm_range_fault(), and the
+> > hypervisor hypercalls operate on PFNs. Storing page pointers in
+> > between these interfaces requires unnecessary conversions and
+> > temporary allocations.
+> > 
+> > Store PFNs directly in memory regions to match the natural data flow.
+> > This eliminates the temporary PFN array allocation in the HMM fault
+> > path and reduces page_to_pfn() conversions throughout the driver.
+> > Convert to page structs via pfn_to_page() only when operations like
+> > unpin_user_page() require them.
+> 
+> General comment for this series:  PFN fields are typed as "unsigned long".
+> But pfn_offset and pfn_count are "u64".  GFNs are also "u64".  Any
+> reason not to make PFNs also "u64"? I know that pfn_valid() takes
+> an "unsigned long" input, but see comment below about pfn_valid().
+> 
+
+The only reason is to keep the type consistent with the standard Linux
+kernel definition of PFN as unsigned long.
+
+> > 
+> > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+> > ---
+> >  drivers/hv/mshv_regions.c      |  297 ++++++++++++++++++++++------------------
+> >  drivers/hv/mshv_root.h         |   20 +--
+> >  drivers/hv/mshv_root_hv_call.c |   50 +++----
+> >  drivers/hv/mshv_root_main.c    |   30 ++--
+> >  4 files changed, 212 insertions(+), 185 deletions(-)
+> > 
+> > diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
+> > index fdffd4f002f6..b1a707d16c07 100644
+> > --- a/drivers/hv/mshv_regions.c
+> > +++ b/drivers/hv/mshv_regions.c
+> > @@ -18,12 +18,13 @@
+> >  #include "mshv_root.h"
+> > 
+> >  #define MSHV_MAP_FAULT_IN_PAGES				PTRS_PER_PMD
+> > +#define MSHV_INVALID_PFN				ULONG_MAX
+> > 
+> >  /**
+> >   * mshv_chunk_stride - Compute stride for mapping guest memory
+> >   * @page      : The page to check for huge page backing
+> >   * @gfn       : Guest frame number for the mapping
+> > - * @page_count: Total number of pages in the mapping
+> > + * @pfn_count: Total number of pages in the mapping
+> 
+> Nit: The colons are misaligned after this change.
+> 
+> >   *
+> >   * Determines the appropriate stride (in pages) for mapping guest memory.
+> >   * Uses huge page stride if the backing page is huge and the guest mapping
+> > @@ -32,18 +33,18 @@
+> >   * Return: Stride in pages, or -EINVAL if page order is unsupported.
+> >   */
+> >  static int mshv_chunk_stride(struct page *page,
+> > -			     u64 gfn, u64 page_count)
+> > +			     u64 gfn, u64 pfn_count)
+> >  {
+> >  	unsigned int page_order;
+> > 
+> >  	/*
+> >  	 * Use single page stride by default. For huge page stride, the
+> >  	 * page must be compound and point to the head of the compound
+> > -	 * page, and both gfn and page_count must be huge-page aligned.
+> > +	 * page, and both gfn and pfn_count must be huge-page aligned.
+> >  	 */
+> >  	if (!PageCompound(page) || !PageHead(page) ||
+> >  	    !IS_ALIGNED(gfn, PTRS_PER_PMD) ||
+> > -	    !IS_ALIGNED(page_count, PTRS_PER_PMD))
+> > +	    !IS_ALIGNED(pfn_count, PTRS_PER_PMD))
+> >  		return 1;
+> > 
+> >  	page_order = folio_order(page_folio(page));
+> > @@ -57,60 +58,61 @@ static int mshv_chunk_stride(struct page *page,
+> >  /**
+> >   * mshv_region_process_chunk - Processes a contiguous chunk of memory pages
+> >   *                             in a region.
+> > - * @region     : Pointer to the memory region structure.
+> > - * @flags      : Flags to pass to the handler.
+> > - * @page_offset: Offset into the region's pages array to start processing.
+> > - * @page_count : Number of pages to process.
+> > - * @handler    : Callback function to handle the chunk.
+> > + * @region    : Pointer to the memory region structure.
+> > + * @flags     : Flags to pass to the handler.
+> > + * @pfn_offset: Offset into the region's PFNs array to start processing.
+> > + * @pfn_count : Number of PFNs to process.
+> > + * @handler   : Callback function to handle the chunk.
+> >   *
+> > - * This function scans the region's pages starting from @page_offset,
+> > - * checking for contiguous present pages of the same size (normal or huge).
+> > - * It invokes @handler for the chunk of contiguous pages found. Returns the
+> > - * number of pages handled, or a negative error code if the first page is
+> > - * not present or the handler fails.
+> > + * This function scans the region's PFNs starting from @pfn_offset,
+> > + * checking for contiguous valid PFNs backed by pages of the same size
+> > + * (normal or huge). It invokes @handler for the chunk of contiguous valid
+> > + * PFNs found. Returns the number of PFNs handled, or a negative error code
+> > + * if the first PFN is invalid or the handler fails.
+> >   *
+> > - * Note: The @handler callback must be able to handle both normal and huge
+> > - * pages.
+> > + * Note: The @handler callback must be able to handle valid PFNs backed by
+> > + * both normal and huge pages.
+> >   *
+> >   * Return: Number of pages handled, or negative error code.
+> >   */
+> > -static long mshv_region_process_chunk(struct mshv_mem_region *region,
+> > -				      u32 flags,
+> > -				      u64 page_offset, u64 page_count,
+> > -				      int (*handler)(struct mshv_mem_region *region,
+> > -						     u32 flags,
+> > -						     u64 page_offset,
+> > -						     u64 page_count,
+> > -						     bool huge_page))
+> > +static long mshv_region_process_pfns(struct mshv_mem_region *region,
+> > +				     u32 flags,
+> > +				     u64 pfn_offset, u64 pfn_count,
+> > +				     int (*handler)(struct mshv_mem_region *region,
+> > +						    u32 flags,
+> > +						    u64 pfn_offset,
+> > +						    u64 pfn_count,
+> > +						    bool huge_page))
+> >  {
+> > -	u64 gfn = region->start_gfn + page_offset;
+> > +	u64 gfn = region->start_gfn + pfn_offset;
+> >  	u64 count;
+> > -	struct page *page;
+> > +	unsigned long pfn;
+> >  	int stride, ret;
+> > 
+> > -	page = region->mreg_pages[page_offset];
+> > -	if (!page)
+> > +	pfn = region->mreg_pfns[pfn_offset];
+> > +	if (!pfn_valid(pfn))
+> >  		return -EINVAL;
+> > 
+> > -	stride = mshv_chunk_stride(page, gfn, page_count);
+> > +	stride = mshv_chunk_stride(pfn_to_page(pfn), gfn, pfn_count);
+> >  	if (stride < 0)
+> >  		return stride;
+> > 
+> >  	/* Start at stride since the first stride is validated */
+> > -	for (count = stride; count < page_count; count += stride) {
+> > -		page = region->mreg_pages[page_offset + count];
+> > +	for (count = stride; count < pfn_count ; count += stride) {
+> > +		pfn = region->mreg_pfns[pfn_offset + count];
+> > 
+> > -		/* Break if current page is not present */
+> > -		if (!page)
+> > +		/* Break if current pfn is invalid */
+> > +		if (!pfn_valid(pfn))
+> 
+> pfn_valid() is a relatively expensive test to be doing in a loop
+> on what may be every single page. It does an RCU lock/unlock
+> and make other checks that aren't necessary here. Since
+> mreg_pfns[] is populated from mm calls, the only invalid PFNs
+> would be MSHV_INVALID_PFN that code in this module has
+> explicitly put there. Just testing against MSHV_INVALID_PFN
+> would be a lot faster here and elsewhere in this module. It's
+> really a "pfn set/not set" test. Defining a pfn_set() macro
+> here in this module that tests against MSHV_INVALID_PFN
+> would accomplish the same thing more efficiently.
+> 
+
+Yes, we could do it the way you suggest. For completeness, I should add
+that pfn_valid() is expensive only on 32-bit ARM and ARC, which we
+don’t care about.
+
+> >  			break;
+> > 
+> >  		/* Break if stride size changes */
+> > -		if (stride != mshv_chunk_stride(page, gfn + count,
+> > -						page_count - count))
+> > +		if (stride != mshv_chunk_stride(pfn_to_page(pfn),
+> > +						gfn + count,
+> > +						pfn_count - count))
+> >  			break;
+> >  	}
+> > 
+> > -	ret = handler(region, flags, page_offset, count, stride > 1);
+> > +	ret = handler(region, flags, pfn_offset, count, stride > 1);
+> >  	if (ret)
+> >  		return ret;
+> > 
+> > @@ -118,70 +120,73 @@ static long mshv_region_process_chunk(struct mshv_mem_region *region,
+> >  }
+> > 
+> >  /**
+> > - * mshv_region_process_range - Processes a range of memory pages in a
+> > - *                             region.
+> > - * @region     : Pointer to the memory region structure.
+> > - * @flags      : Flags to pass to the handler.
+> > - * @page_offset: Offset into the region's pages array to start processing.
+> > - * @page_count : Number of pages to process.
+> > - * @handler    : Callback function to handle each chunk of contiguous
+> > - *               pages.
+> > + * mshv_region_process_range - Processes a range of PFNs in a region.
+> > + * @region    : Pointer to the memory region structure.
+> > + * @flags     : Flags to pass to the handler.
+> > + * @pfn_offset: Offset into the region's PFNs array to start processing.
+> > + * @pfn_count : Number of PFNs to process.
+> > + * @handler   : Callback function to handle each chunk of contiguous
+> > + *              valid PFNs.
+> >   *
+> > - * Iterates over the specified range of pages in @region, skipping
+> > - * non-present pages. For each contiguous chunk of present pages, invokes
+> > - * @handler via mshv_region_process_chunk.
+> > + * Iterates over the specified range of PFNs in @region, skipping
+> > + * invalid PFNs. For each contiguous chunk of valid PFNS, invokes
+> > + * @handler via mshv_region_process_pfns.
+> >   *
+> > - * Note: The @handler callback must be able to handle both normal and huge
+> > - * pages.
+> > + * Note: The @handler callback must be able to handle PFNs backed by both
+> > + * normal and huge pages.
+> >   *
+> >   * Returns 0 on success, or a negative error code on failure.
+> >   */
+> >  static int mshv_region_process_range(struct mshv_mem_region *region,
+> >  				     u32 flags,
+> > -				     u64 page_offset, u64 page_count,
+> > +				     u64 pfn_offset, u64 pfn_count,
+> >  				     int (*handler)(struct mshv_mem_region *region,
+> >  						    u32 flags,
+> > -						    u64 page_offset,
+> > -						    u64 page_count,
+> > +						    u64 pfn_offset,
+> > +						    u64 pfn_count,
+> >  						    bool huge_page))
+> >  {
+> > +	u64 pfn_end;
+> 
+> In Patch 2 of this series, "pfn_end" is changed to just "end", and
+> the references are adjusted. Patch 2 could be a few lines smaller if it
+> was named "end" here and Patch 2 didn't have to change it.
+> 
+
+Sure, can do.
+
+> >  	long ret;
+> > 
+> > -	if (page_offset + page_count > region->nr_pages)
+> > +	if (check_add_overflow(pfn_offset, pfn_count, &pfn_end))
+> > +		return -EOVERFLOW;
+> > +
+> > +	if (pfn_end > region->nr_pfns)
+> >  		return -EINVAL;
+> > 
+> > -	while (page_count) {
+> > +	while (pfn_count) {
+> >  		/* Skip non-present pages */
+> > -		if (!region->mreg_pages[page_offset]) {
+> > -			page_offset++;
+> > -			page_count--;
+> > +		if (!pfn_valid(region->mreg_pfns[pfn_offset])) {
+> > +			pfn_offset++;
+> > +			pfn_count--;
+> >  			continue;
+> >  		}
+> > 
+> > -		ret = mshv_region_process_chunk(region, flags,
+> > -						page_offset,
+> > -						page_count,
+> > -						handler);
+> > +		ret = mshv_region_process_pfns(region, flags,
+> > +					       pfn_offset, pfn_count,
+> > +					       handler);
+> >  		if (ret < 0)
+> >  			return ret;
+> > 
+> > -		page_offset += ret;
+> > -		page_count -= ret;
+> > +		pfn_offset += ret;
+> > +		pfn_count -= ret;
+> >  	}
+> > 
+> >  	return 0;
+> >  }
+> > 
+> > -struct mshv_mem_region *mshv_region_create(u64 guest_pfn, u64 nr_pages,
+> > +struct mshv_mem_region *mshv_region_create(u64 guest_pfn, u64 nr_pfns,
+> >  					   u64 uaddr, u32 flags)
+> >  {
+> >  	struct mshv_mem_region *region;
+> > +	u64 i;
+> > 
+> > -	region = vzalloc(sizeof(*region) + sizeof(struct page *) * nr_pages);
+> > +	region = vzalloc(sizeof(*region) + sizeof(unsigned long) * nr_pfns);
+> 
+> Use struct_size(region, mreg_pfns, nr_pfns) instead of open coding the arithmetic?
+> 
+
+This is new to me. Sure, will do.
+
+Thanks,
+Stanislav
+
+> >  	if (!region)
+> >  		return ERR_PTR(-ENOMEM);
+> > 
+> > -	region->nr_pages = nr_pages;
+> > +	region->nr_pfns = nr_pfns;
+> >  	region->start_gfn = guest_pfn;
+> >  	region->start_uaddr = uaddr;
+> >  	region->hv_map_flags = HV_MAP_GPA_READABLE | HV_MAP_GPA_ADJUSTABLE;
+> > @@ -190,6 +195,9 @@ struct mshv_mem_region *mshv_region_create(u64 guest_pfn, u64 nr_pages,
+> >  	if (flags & BIT(MSHV_SET_MEM_BIT_EXECUTABLE))
+> >  		region->hv_map_flags |= HV_MAP_GPA_EXECUTABLE;
+> > 
+> > +	for (i = 0; i < nr_pfns; i++)
+> > +		region->mreg_pfns[i] = MSHV_INVALID_PFN;
+> > +
+> >  	kref_init(&region->mreg_refcount);
+> > 
+> >  	return region;
+> > @@ -197,15 +205,15 @@ struct mshv_mem_region *mshv_region_create(u64 guest_pfn, u64 nr_pages,
+> > 
+> >  static int mshv_region_chunk_share(struct mshv_mem_region *region,
+> >  				   u32 flags,
+> > -				   u64 page_offset, u64 page_count,
+> > +				   u64 pfn_offset, u64 pfn_count,
+> >  				   bool huge_page)
+> >  {
+> >  	if (huge_page)
+> >  		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
+> > 
+> >  	return hv_call_modify_spa_host_access(region->partition->pt_id,
+> > -					      region->mreg_pages + page_offset,
+> > -					      page_count,
+> > +					      region->mreg_pfns + pfn_offset,
+> > +					      pfn_count,
+> >  					      HV_MAP_GPA_READABLE |
+> >  					      HV_MAP_GPA_WRITABLE,
+> >  					      flags, true);
+> > @@ -216,21 +224,21 @@ int mshv_region_share(struct mshv_mem_region *region)
+> >  	u32 flags = HV_MODIFY_SPA_PAGE_HOST_ACCESS_MAKE_SHARED;
+> > 
+> >  	return mshv_region_process_range(region, flags,
+> > -					 0, region->nr_pages,
+> > +					 0, region->nr_pfns,
+> >  					 mshv_region_chunk_share);
+> >  }
+> > 
+> >  static int mshv_region_chunk_unshare(struct mshv_mem_region *region,
+> >  				     u32 flags,
+> > -				     u64 page_offset, u64 page_count,
+> > +				     u64 pfn_offset, u64 pfn_count,
+> >  				     bool huge_page)
+> >  {
+> >  	if (huge_page)
+> >  		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
+> > 
+> >  	return hv_call_modify_spa_host_access(region->partition->pt_id,
+> > -					      region->mreg_pages + page_offset,
+> > -					      page_count, 0,
+> > +					      region->mreg_pfns + pfn_offset,
+> > +					      pfn_count, 0,
+> >  					      flags, false);
+> >  }
+> > 
+> > @@ -239,30 +247,30 @@ int mshv_region_unshare(struct mshv_mem_region *region)
+> >  	u32 flags = HV_MODIFY_SPA_PAGE_HOST_ACCESS_MAKE_EXCLUSIVE;
+> > 
+> >  	return mshv_region_process_range(region, flags,
+> > -					 0, region->nr_pages,
+> > +					 0, region->nr_pfns,
+> >  					 mshv_region_chunk_unshare);
+> >  }
+> > 
+> >  static int mshv_region_chunk_remap(struct mshv_mem_region *region,
+> >  				   u32 flags,
+> > -				   u64 page_offset, u64 page_count,
+> > +				   u64 pfn_offset, u64 pfn_count,
+> >  				   bool huge_page)
+> >  {
+> >  	if (huge_page)
+> >  		flags |= HV_MAP_GPA_LARGE_PAGE;
+> > 
+> > -	return hv_call_map_gpa_pages(region->partition->pt_id,
+> > -				     region->start_gfn + page_offset,
+> > -				     page_count, flags,
+> > -				     region->mreg_pages + page_offset);
+> > +	return hv_call_map_ram_pfns(region->partition->pt_id,
+> > +				    region->start_gfn + pfn_offset,
+> > +				    pfn_count, flags,
+> > +				    region->mreg_pfns + pfn_offset);
+> >  }
+> > 
+> > -static int mshv_region_remap_pages(struct mshv_mem_region *region,
+> > -				   u32 map_flags,
+> > -				   u64 page_offset, u64 page_count)
+> > +static int mshv_region_remap_pfns(struct mshv_mem_region *region,
+> > +				  u32 map_flags,
+> > +				  u64 pfn_offset, u64 pfn_count)
+> >  {
+> >  	return mshv_region_process_range(region, map_flags,
+> > -					 page_offset, page_count,
+> > +					 pfn_offset, pfn_count,
+> >  					 mshv_region_chunk_remap);
+> >  }
+> > 
+> > @@ -270,38 +278,50 @@ int mshv_region_map(struct mshv_mem_region *region)
+> >  {
+> >  	u32 map_flags = region->hv_map_flags;
+> > 
+> > -	return mshv_region_remap_pages(region, map_flags,
+> > -				       0, region->nr_pages);
+> > +	return mshv_region_remap_pfns(region, map_flags,
+> > +				      0, region->nr_pfns);
+> >  }
+> > 
+> > -static void mshv_region_invalidate_pages(struct mshv_mem_region *region,
+> > -					 u64 page_offset, u64 page_count)
+> > +static void mshv_region_invalidate_pfns(struct mshv_mem_region *region,
+> > +					u64 pfn_offset, u64 pfn_count)
+> >  {
+> > -	if (region->mreg_type == MSHV_REGION_TYPE_MEM_PINNED)
+> > -		unpin_user_pages(region->mreg_pages + page_offset, page_count);
+> > +	u64 i;
+> > +
+> > +	for (i = pfn_offset; i < pfn_offset + pfn_count; i++) {
+> > +		if (!pfn_valid(region->mreg_pfns[i]))
+> > +			continue;
+> > +
+> > +		if (region->mreg_type == MSHV_REGION_TYPE_MEM_PINNED)
+> > +			unpin_user_page(pfn_to_page(region->mreg_pfns[i]));
+> > 
+> > -	memset(region->mreg_pages + page_offset, 0,
+> > -	       page_count * sizeof(struct page *));
+> > +		region->mreg_pfns[i] = MSHV_INVALID_PFN;
+> > +	}
+> >  }
+> > 
+> >  void mshv_region_invalidate(struct mshv_mem_region *region)
+> >  {
+> > -	mshv_region_invalidate_pages(region, 0, region->nr_pages);
+> > +	mshv_region_invalidate_pfns(region, 0, region->nr_pfns);
+> >  }
+> > 
+> >  int mshv_region_pin(struct mshv_mem_region *region)
+> >  {
+> > -	u64 done_count, nr_pages;
+> > +	u64 done_count, nr_pfns, i;
+> > +	unsigned long *pfns;
+> >  	struct page **pages;
+> >  	__u64 userspace_addr;
+> >  	int ret;
+> > 
+> > -	for (done_count = 0; done_count < region->nr_pages; done_count += ret) {
+> > -		pages = region->mreg_pages + done_count;
+> > +	pages = kmalloc_array(MSHV_PIN_PAGES_BATCH_SIZE,
+> > +			      sizeof(struct page *), GFP_KERNEL);
+> > +	if (!pages)
+> > +		return -ENOMEM;
+> > +
+> > +	for (done_count = 0; done_count < region->nr_pfns; done_count += ret) {
+> > +		pfns = region->mreg_pfns + done_count;
+> >  		userspace_addr = region->start_uaddr +
+> >  				 done_count * HV_HYP_PAGE_SIZE;
+> > -		nr_pages = min(region->nr_pages - done_count,
+> > -			       MSHV_PIN_PAGES_BATCH_SIZE);
+> > +		nr_pfns = min(region->nr_pfns - done_count,
+> > +			      MSHV_PIN_PAGES_BATCH_SIZE);
+> > 
+> >  		/*
+> >  		 * Pinning assuming 4k pages works for large pages too.
+> > @@ -311,39 +331,44 @@ int mshv_region_pin(struct mshv_mem_region *region)
+> >  		 * with the FOLL_LONGTERM flag does a large temporary
+> >  		 * allocation of contiguous memory.
+> >  		 */
+> > -		ret = pin_user_pages_fast(userspace_addr, nr_pages,
+> > +		ret = pin_user_pages_fast(userspace_addr, nr_pfns,
+> >  					  FOLL_WRITE | FOLL_LONGTERM,
+> >  					  pages);
+> > -		if (ret != nr_pages)
+> > +		if (ret != nr_pfns)
+> >  			goto release_pages;
+> > +
+> > +		for (i = 0; i < ret; i++)
+> > +			pfns[i] = page_to_pfn(pages[i]);
+> >  	}
+> > 
+> > +	kfree(pages);
+> >  	return 0;
+> > 
+> >  release_pages:
+> >  	if (ret > 0)
+> >  		done_count += ret;
+> > -	mshv_region_invalidate_pages(region, 0, done_count);
+> > +	mshv_region_invalidate_pfns(region, 0, done_count);
+> > +	kfree(pages);
+> >  	return ret < 0 ? ret : -ENOMEM;
+> >  }
+> > 
+> >  static int mshv_region_chunk_unmap(struct mshv_mem_region *region,
+> >  				   u32 flags,
+> > -				   u64 page_offset, u64 page_count,
+> > +				   u64 pfn_offset, u64 pfn_count,
+> >  				   bool huge_page)
+> >  {
+> >  	if (huge_page)
+> >  		flags |= HV_UNMAP_GPA_LARGE_PAGE;
+> > 
+> > -	return hv_call_unmap_gpa_pages(region->partition->pt_id,
+> > -				       region->start_gfn + page_offset,
+> > -				       page_count, flags);
+> > +	return hv_call_unmap_pfns(region->partition->pt_id,
+> > +				  region->start_gfn + pfn_offset,
+> > +				  pfn_count, flags);
+> >  }
+> > 
+> >  static int mshv_region_unmap(struct mshv_mem_region *region)
+> >  {
+> >  	return mshv_region_process_range(region, 0,
+> > -					 0, region->nr_pages,
+> > +					 0, region->nr_pfns,
+> >  					 mshv_region_chunk_unmap);
+> >  }
+> > 
+> > @@ -427,8 +452,8 @@ static int mshv_region_hmm_fault_and_lock(struct mshv_mem_region *region,
+> >  /**
+> >   * mshv_region_range_fault - Handle memory range faults for a given region.
+> >   * @region: Pointer to the memory region structure.
+> > - * @page_offset: Offset of the page within the region.
+> > - * @page_count: Number of pages to handle.
+> > + * @pfn_offset: Offset of the page within the region.
+> > + * @pfn_count: Number of pages to handle.
+> >   *
+> >   * This function resolves memory faults for a specified range of pages
+> >   * within a memory region. It uses HMM (Heterogeneous Memory Management)
+> > @@ -437,7 +462,7 @@ static int mshv_region_hmm_fault_and_lock(struct mshv_mem_region *region,
+> >   * Return: 0 on success, negative error code on failure.
+> >   */
+> >  static int mshv_region_range_fault(struct mshv_mem_region *region,
+> > -				   u64 page_offset, u64 page_count)
+> > +				   u64 pfn_offset, u64 pfn_count)
+> >  {
+> >  	struct hmm_range range = {
+> >  		.notifier = &region->mreg_mni,
+> > @@ -447,13 +472,13 @@ static int mshv_region_range_fault(struct mshv_mem_region *region,
+> >  	int ret;
+> >  	u64 i;
+> > 
+> > -	pfns = kmalloc_array(page_count, sizeof(*pfns), GFP_KERNEL);
+> > +	pfns = kmalloc_array(pfn_count, sizeof(*pfns), GFP_KERNEL);
+> >  	if (!pfns)
+> >  		return -ENOMEM;
+> > 
+> >  	range.hmm_pfns = pfns;
+> > -	range.start = region->start_uaddr + page_offset * HV_HYP_PAGE_SIZE;
+> > -	range.end = range.start + page_count * HV_HYP_PAGE_SIZE;
+> > +	range.start = region->start_uaddr + pfn_offset * HV_HYP_PAGE_SIZE;
+> > +	range.end = range.start + pfn_count * HV_HYP_PAGE_SIZE;
+> > 
+> >  	do {
+> >  		ret = mshv_region_hmm_fault_and_lock(region, &range);
+> > @@ -462,11 +487,15 @@ static int mshv_region_range_fault(struct mshv_mem_region *region,
+> >  	if (ret)
+> >  		goto out;
+> > 
+> > -	for (i = 0; i < page_count; i++)
+> > -		region->mreg_pages[page_offset + i] = hmm_pfn_to_page(pfns[i]);
+> > +	for (i = 0; i < pfn_count; i++) {
+> > +		if (!(pfns[i] & HMM_PFN_VALID))
+> > +			continue;
+> > +		/* Drop HMM_PFN_* flags to ensure PFNs are valid. */
+> > +		region->mreg_pfns[pfn_offset + i] = pfns[i] & ~HMM_PFN_FLAGS;
+> > +	}
+> > 
+> > -	ret = mshv_region_remap_pages(region, region->hv_map_flags,
+> > -				      page_offset, page_count);
+> > +	ret = mshv_region_remap_pfns(region, region->hv_map_flags,
+> > +				     pfn_offset, pfn_count);
+> > 
+> >  	mutex_unlock(&region->mreg_mutex);
+> >  out:
+> > @@ -476,24 +505,24 @@ static int mshv_region_range_fault(struct mshv_mem_region *region,
+> > 
+> >  bool mshv_region_handle_gfn_fault(struct mshv_mem_region *region, u64 gfn)
+> >  {
+> > -	u64 page_offset, page_count;
+> > +	u64 pfn_offset, pfn_count;
+> >  	int ret;
+> > 
+> >  	/* Align the page offset to the nearest MSHV_MAP_FAULT_IN_PAGES. */
+> > -	page_offset = ALIGN_DOWN(gfn - region->start_gfn,
+> > -				 MSHV_MAP_FAULT_IN_PAGES);
+> > +	pfn_offset = ALIGN_DOWN(gfn - region->start_gfn,
+> > +				MSHV_MAP_FAULT_IN_PAGES);
+> > 
+> >  	/* Map more pages than requested to reduce the number of faults. */
+> > -	page_count = min(region->nr_pages - page_offset,
+> > -			 MSHV_MAP_FAULT_IN_PAGES);
+> > +	pfn_count = min(region->nr_pfns - pfn_offset,
+> > +			MSHV_MAP_FAULT_IN_PAGES);
+> > 
+> > -	ret = mshv_region_range_fault(region, page_offset, page_count);
+> > +	ret = mshv_region_range_fault(region, pfn_offset, pfn_count);
+> > 
+> >  	WARN_ONCE(ret,
+> > -		  "p%llu: GPA intercept failed: region %#llx-%#llx, gfn %#llx, page_offset %llu, page_count %llu\n",
+> > +		  "p%llu: GPA intercept failed: region %#llx-%#llx, gfn %#llx, pfn_offset %llu, pfn_count %llu\n",
+> >  		  region->partition->pt_id, region->start_uaddr,
+> > -		  region->start_uaddr + (region->nr_pages << HV_HYP_PAGE_SHIFT),
+> > -		  gfn, page_offset, page_count);
+> > +		  region->start_uaddr + (region->nr_pfns << HV_HYP_PAGE_SHIFT),
+> > +		  gfn, pfn_offset, pfn_count);
+> > 
+> >  	return !ret;
+> >  }
+> > @@ -523,16 +552,16 @@ static bool mshv_region_interval_invalidate(struct mmu_interval_notifier *mni,
+> >  	struct mshv_mem_region *region = container_of(mni,
+> >  						      struct mshv_mem_region,
+> >  						      mreg_mni);
+> > -	u64 page_offset, page_count;
+> > +	u64 pfn_offset, pfn_count;
+> >  	unsigned long mstart, mend;
+> >  	int ret = -EPERM;
+> > 
+> >  	mstart = max(range->start, region->start_uaddr);
+> >  	mend = min(range->end, region->start_uaddr +
+> > -		   (region->nr_pages << HV_HYP_PAGE_SHIFT));
+> > +		   (region->nr_pfns << HV_HYP_PAGE_SHIFT));
+> > 
+> > -	page_offset = HVPFN_DOWN(mstart - region->start_uaddr);
+> > -	page_count = HVPFN_DOWN(mend - mstart);
+> > +	pfn_offset = HVPFN_DOWN(mstart - region->start_uaddr);
+> > +	pfn_count = HVPFN_DOWN(mend - mstart);
+> > 
+> >  	if (mmu_notifier_range_blockable(range))
+> >  		mutex_lock(&region->mreg_mutex);
+> > @@ -541,12 +570,12 @@ static bool mshv_region_interval_invalidate(struct mmu_interval_notifier *mni,
+> > 
+> >  	mmu_interval_set_seq(mni, cur_seq);
+> > 
+> > -	ret = mshv_region_remap_pages(region, HV_MAP_GPA_NO_ACCESS,
+> > -				      page_offset, page_count);
+> > +	ret = mshv_region_remap_pfns(region, HV_MAP_GPA_NO_ACCESS,
+> > +				     pfn_offset, pfn_count);
+> >  	if (ret)
+> >  		goto out_unlock;
+> > 
+> > -	mshv_region_invalidate_pages(region, page_offset, page_count);
+> > +	mshv_region_invalidate_pfns(region, pfn_offset, pfn_count);
+> > 
+> >  	mutex_unlock(&region->mreg_mutex);
+> > 
+> > @@ -558,9 +587,9 @@ static bool mshv_region_interval_invalidate(struct mmu_interval_notifier *mni,
+> >  	WARN_ONCE(ret,
+> >  		  "Failed to invalidate region %#llx-%#llx (range %#lx-%#lx, event: %u, pages %#llx-%#llx, mm: %#llx): %d\n",
+> >  		  region->start_uaddr,
+> > -		  region->start_uaddr + (region->nr_pages << HV_HYP_PAGE_SHIFT),
+> > +		  region->start_uaddr + (region->nr_pfns << HV_HYP_PAGE_SHIFT),
+> >  		  range->start, range->end, range->event,
+> > -		  page_offset, page_offset + page_count - 1, (u64)range->mm, ret);
+> > +		  pfn_offset, pfn_offset + pfn_count - 1, (u64)range->mm, ret);
+> >  	return false;
+> >  }
+> > 
+> > @@ -579,7 +608,7 @@ bool mshv_region_movable_init(struct mshv_mem_region *region)
+> > 
+> >  	ret = mmu_interval_notifier_insert(&region->mreg_mni, current->mm,
+> >  					   region->start_uaddr,
+> > -					   region->nr_pages << HV_HYP_PAGE_SHIFT,
+> > +					   region->nr_pfns << HV_HYP_PAGE_SHIFT,
+> >  					   &mshv_region_mni_ops);
+> >  	if (ret)
+> >  		return false;
+> > diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
+> > index 947dfb76bb19..f1d4bee97a3f 100644
+> > --- a/drivers/hv/mshv_root.h
+> > +++ b/drivers/hv/mshv_root.h
+> > @@ -84,15 +84,15 @@ enum mshv_region_type {
+> >  struct mshv_mem_region {
+> >  	struct hlist_node hnode;
+> >  	struct kref mreg_refcount;
+> > -	u64 nr_pages;
+> > +	u64 nr_pfns;
+> >  	u64 start_gfn;
+> >  	u64 start_uaddr;
+> >  	u32 hv_map_flags;
+> >  	struct mshv_partition *partition;
+> >  	enum mshv_region_type mreg_type;
+> >  	struct mmu_interval_notifier mreg_mni;
+> > -	struct mutex mreg_mutex;	/* protects region pages remapping */
+> > -	struct page *mreg_pages[];
+> > +	struct mutex mreg_mutex;	/* protects region PFNs remapping */
+> > +	unsigned long mreg_pfns[];
+> >  };
+> > 
+> >  struct mshv_irq_ack_notifier {
+> > @@ -282,11 +282,11 @@ int hv_call_create_partition(u64 flags,
+> >  int hv_call_initialize_partition(u64 partition_id);
+> >  int hv_call_finalize_partition(u64 partition_id);
+> >  int hv_call_delete_partition(u64 partition_id);
+> > -int hv_call_map_mmio_pages(u64 partition_id, u64 gfn, u64 mmio_spa, u64
+> > numpgs);
+> > -int hv_call_map_gpa_pages(u64 partition_id, u64 gpa_target, u64 page_count,
+> > -			  u32 flags, struct page **pages);
+> > -int hv_call_unmap_gpa_pages(u64 partition_id, u64 gpa_target, u64 page_count,
+> > -			    u32 flags);
+> > +int hv_call_map_mmio_pfns(u64 partition_id, u64 gfn, u64 mmio_spa, u64 numpgs);
+> > +int hv_call_map_ram_pfns(u64 partition_id, u64 gpa_target, u64 pfn_count,
+> > +			 u32 flags, unsigned long *pfns);
+> > +int hv_call_unmap_pfns(u64 partition_id, u64 gpa_target, u64 pfn_count,
+> > +		       u32 flags);
+> >  int hv_call_delete_vp(u64 partition_id, u32 vp_index);
+> >  int hv_call_assert_virtual_interrupt(u64 partition_id, u32 vector,
+> >  				     u64 dest_addr,
+> > @@ -329,8 +329,8 @@ int hv_map_stats_page(enum hv_stats_object_type type,
+> >  int hv_unmap_stats_page(enum hv_stats_object_type type,
+> >  			struct hv_stats_page *page_addr,
+> >  			const union hv_stats_object_identity *identity);
+> > -int hv_call_modify_spa_host_access(u64 partition_id, struct page **pages,
+> > -				   u64 page_struct_count, u32 host_access,
+> > +int hv_call_modify_spa_host_access(u64 partition_id, unsigned long *pfns,
+> > +				   u64 pfns_count, u32 host_access,
+> >  				   u32 flags, u8 acquire);
+> >  int hv_call_get_partition_property_ex(u64 partition_id, u64 property_code, u64 arg,
+> >  				      void *property_value, size_t property_value_sz);
+> > diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
+> > index cb55d4d4be2e..a95f2cfc5da5 100644
+> > --- a/drivers/hv/mshv_root_hv_call.c
+> > +++ b/drivers/hv/mshv_root_hv_call.c
+> > @@ -188,17 +188,16 @@ int hv_call_delete_partition(u64 partition_id)
+> >  	return hv_result_to_errno(status);
+> >  }
+> > 
+> > -/* Ask the hypervisor to map guest ram pages or the guest mmio space */
+> > -static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
+> > -			       u32 flags, struct page **pages, u64 mmio_spa)
+> > +static int hv_do_map_pfns(u64 partition_id, u64 gfn, u64 pfns_count,
+> > +			  u32 flags, unsigned long *pfns, u64 mmio_spa)
+> >  {
+> >  	struct hv_input_map_gpa_pages *input_page;
+> >  	u64 status, *pfnlist;
+> >  	unsigned long irq_flags, large_shift = 0;
+> >  	int ret = 0, done = 0;
+> > -	u64 page_count = page_struct_count;
+> > +	u64 page_count = pfns_count;
+> > 
+> > -	if (page_count == 0 || (pages && mmio_spa))
+> > +	if (page_count == 0 || (pfns && mmio_spa))
+> >  		return -EINVAL;
+> > 
+> >  	if (flags & HV_MAP_GPA_LARGE_PAGE) {
+> > @@ -227,14 +226,14 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
+> >  		for (i = 0; i < rep_count; i++)
+> >  			if (flags & HV_MAP_GPA_NO_ACCESS) {
+> >  				pfnlist[i] = 0;
+> > -			} else if (pages) {
+> > +			} else if (pfns) {
+> >  				u64 index = (done + i) << large_shift;
+> > 
+> > -				if (index >= page_struct_count) {
+> > +				if (index >= pfns_count) {
+> >  					ret = -EINVAL;
+> >  					break;
+> >  				}
+> > -				pfnlist[i] = page_to_pfn(pages[index]);
+> > +				pfnlist[i] = pfns[index];
+> >  			} else {
+> >  				pfnlist[i] = mmio_spa + done + i;
+> >  			}
+> > @@ -266,37 +265,37 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
+> > 
+> >  		if (flags & HV_MAP_GPA_LARGE_PAGE)
+> >  			unmap_flags |= HV_UNMAP_GPA_LARGE_PAGE;
+> > -		hv_call_unmap_gpa_pages(partition_id, gfn, done, unmap_flags);
+> > +		hv_call_unmap_pfns(partition_id, gfn, done, unmap_flags);
+> >  	}
+> > 
+> >  	return ret;
+> >  }
+> > 
+> >  /* Ask the hypervisor to map guest ram pages */
+> > -int hv_call_map_gpa_pages(u64 partition_id, u64 gpa_target, u64 page_count,
+> > -			  u32 flags, struct page **pages)
+> > +int hv_call_map_ram_pfns(u64 partition_id, u64 gfn, u64 pfn_count,
+> > +			 u32 flags, unsigned long *pfns)
+> >  {
+> > -	return hv_do_map_gpa_hcall(partition_id, gpa_target, page_count,
+> > -				   flags, pages, 0);
+> > +	return hv_do_map_pfns(partition_id, gfn, pfn_count, flags,
+> > +			      pfns, 0);
+> >  }
+> > 
+> > -/* Ask the hypervisor to map guest mmio space */
+> > -int hv_call_map_mmio_pages(u64 partition_id, u64 gfn, u64 mmio_spa, u64 numpgs)
+> > +int hv_call_map_mmio_pfns(u64 partition_id, u64 gfn, u64 mmio_spa,
+> > +			  u64 pfn_count)
+> >  {
+> >  	int i;
+> >  	u32 flags = HV_MAP_GPA_READABLE | HV_MAP_GPA_WRITABLE |
+> >  		    HV_MAP_GPA_NOT_CACHED;
+> > 
+> > -	for (i = 0; i < numpgs; i++)
+> > +	for (i = 0; i < pfn_count; i++)
+> >  		if (page_is_ram(mmio_spa + i))
+> >  			return -EINVAL;
+> > 
+> > -	return hv_do_map_gpa_hcall(partition_id, gfn, numpgs, flags, NULL,
+> > -				   mmio_spa);
+> > +	return hv_do_map_pfns(partition_id, gfn, pfn_count, flags,
+> > +			      NULL, mmio_spa);
+> >  }
+> > 
+> > -int hv_call_unmap_gpa_pages(u64 partition_id, u64 gfn, u64 page_count_4k,
+> > -			    u32 flags)
+> > +int hv_call_unmap_pfns(u64 partition_id, u64 gfn, u64 page_count_4k,
+> > +		       u32 flags)
+> >  {
+> >  	struct hv_input_unmap_gpa_pages *input_page;
+> >  	u64 status, page_count = page_count_4k;
+> > @@ -1009,15 +1008,15 @@ int hv_unmap_stats_page(enum hv_stats_object_type type,
+> >  	return ret;
+> >  }
+> > 
+> > -int hv_call_modify_spa_host_access(u64 partition_id, struct page **pages,
+> > -				   u64 page_struct_count, u32 host_access,
+> > +int hv_call_modify_spa_host_access(u64 partition_id, unsigned long *pfns,
+> > +				   u64 pfns_count, u32 host_access,
+> >  				   u32 flags, u8 acquire)
+> >  {
+> >  	struct hv_input_modify_sparse_spa_page_host_access *input_page;
+> >  	u64 status;
+> >  	int done = 0;
+> >  	unsigned long irq_flags, large_shift = 0;
+> > -	u64 page_count = page_struct_count;
+> > +	u64 page_count = pfns_count;
+> >  	u16 code = acquire ? HVCALL_ACQUIRE_SPARSE_SPA_PAGE_HOST_ACCESS :
+> >  			     HVCALL_RELEASE_SPARSE_SPA_PAGE_HOST_ACCESS;
+> > 
+> > @@ -1051,11 +1050,10 @@ int hv_call_modify_spa_host_access(u64 partition_id, struct page **pages,
+> >  		for (i = 0; i < rep_count; i++) {
+> >  			u64 index = (done + i) << large_shift;
+> > 
+> > -			if (index >= page_struct_count)
+> > +			if (index >= pfns_count)
+> >  				return -EINVAL;
+> > 
+> > -			input_page->spa_page_list[i] =
+> > -						page_to_pfn(pages[index]);
+> > +			input_page->spa_page_list[i] = pfns[index];
+> >  		}
+> > 
+> >  		status = hv_do_rep_hypercall(code, rep_count, 0, input_page,
+> > diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> > index f2d83d6c8c4f..685e4b562186 100644
+> > --- a/drivers/hv/mshv_root_main.c
+> > +++ b/drivers/hv/mshv_root_main.c
+> > @@ -619,7 +619,7 @@ mshv_partition_region_by_gfn(struct mshv_partition *partition, u64 gfn)
+> > 
+> >  	hlist_for_each_entry(region, &partition->pt_mem_regions, hnode) {
+> >  		if (gfn >= region->start_gfn &&
+> > -		    gfn < region->start_gfn + region->nr_pages)
+> > +		    gfn < region->start_gfn + region->nr_pfns)
+> >  			return region;
+> >  	}
+> > 
+> > @@ -1221,20 +1221,20 @@ static int mshv_partition_create_region(struct mshv_partition *partition,
+> >  					bool is_mmio)
+> >  {
+> >  	struct mshv_mem_region *rg;
+> > -	u64 nr_pages = HVPFN_DOWN(mem->size);
+> > +	u64 nr_pfns = HVPFN_DOWN(mem->size);
+> > 
+> >  	/* Reject overlapping regions */
+> >  	spin_lock(&partition->pt_mem_regions_lock);
+> >  	hlist_for_each_entry(rg, &partition->pt_mem_regions, hnode) {
+> > -		if (mem->guest_pfn + nr_pages <= rg->start_gfn ||
+> > -		    rg->start_gfn + rg->nr_pages <= mem->guest_pfn)
+> > +		if (mem->guest_pfn + nr_pfns <= rg->start_gfn ||
+> > +		    rg->start_gfn + rg->nr_pfns <= mem->guest_pfn)
+> >  			continue;
+> >  		spin_unlock(&partition->pt_mem_regions_lock);
+> >  		return -EEXIST;
+> >  	}
+> >  	spin_unlock(&partition->pt_mem_regions_lock);
+> > 
+> > -	rg = mshv_region_create(mem->guest_pfn, nr_pages,
+> > +	rg = mshv_region_create(mem->guest_pfn, nr_pfns,
+> >  				mem->userspace_addr, mem->flags);
+> >  	if (IS_ERR(rg))
+> >  		return PTR_ERR(rg);
+> > @@ -1372,21 +1372,21 @@ mshv_map_user_memory(struct mshv_partition *partition,
+> >  		 * the hypervisor track dirty pages, enabling pre-copy live
+> >  		 * migration.
+> >  		 */
+> > -		ret = hv_call_map_gpa_pages(partition->pt_id,
+> > -					    region->start_gfn,
+> > -					    region->nr_pages,
+> > -					    HV_MAP_GPA_NO_ACCESS, NULL);
+> > +		ret = hv_call_map_ram_pfns(partition->pt_id,
+> > +					   region->start_gfn,
+> > +					   region->nr_pfns,
+> > +					   HV_MAP_GPA_NO_ACCESS, NULL);
+> >  		break;
+> >  	case MSHV_REGION_TYPE_MMIO:
+> > -		ret = hv_call_map_mmio_pages(partition->pt_id,
+> > -					     region->start_gfn,
+> > -					     mmio_pfn,
+> > -					     region->nr_pages);
+> > +		ret = hv_call_map_mmio_pfns(partition->pt_id,
+> > +					    region->start_gfn,
+> > +					    mmio_pfn,
+> > +					    region->nr_pfns);
+> >  		break;
+> >  	}
+> > 
+> >  	trace_mshv_map_user_memory(partition->pt_id, region->start_uaddr,
+> > -				   region->start_gfn, region->nr_pages,
+> > +				   region->start_gfn, region->nr_pfns,
+> >  				   region->hv_map_flags, ret);
+> > 
+> >  	if (ret)
+> > @@ -1424,7 +1424,7 @@ mshv_unmap_user_memory(struct mshv_partition *partition,
+> >  	/* Paranoia check */
+> >  	if (region->start_uaddr != mem.userspace_addr ||
+> >  	    region->start_gfn != mem.guest_pfn ||
+> > -	    region->nr_pages != HVPFN_DOWN(mem.size)) {
+> > +	    region->nr_pfns != HVPFN_DOWN(mem.size)) {
+> >  		spin_unlock(&partition->pt_mem_regions_lock);
+> >  		return -EINVAL;
+> >  	}
+> > 
+> > 
+> 
 
