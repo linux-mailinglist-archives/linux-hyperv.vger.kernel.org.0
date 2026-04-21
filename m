@@ -1,189 +1,158 @@
-Return-Path: <linux-hyperv+bounces-10273-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10274-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aIXALhOK52lY9wEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10273-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 16:30:43 +0200
+	id MNoUJyqL52lY9wEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10274-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 16:35:22 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8381E43C0EA
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 16:30:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F51343C1C0
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 16:35:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 9C27B301E012
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 14:30:27 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 945BA300A33A
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 14:35:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D47E3C3BE0;
-	Tue, 21 Apr 2026 14:30:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A59003D88FB;
+	Tue, 21 Apr 2026 14:35:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dY8MYwPB"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KiPaz43L"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8F93D890E
-	for <linux-hyperv@vger.kernel.org>; Tue, 21 Apr 2026 14:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 569233D88F1;
+	Tue, 21 Apr 2026 14:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776781824; cv=none; b=JShl0WZs9eiCAuvHago7vhltK46BCfQN7ImDywnkI8QJV1jiXvhvqyjzkT6Gk8qhi4qD459eVsHqM1q5aDSPzE7YPiFWbT5ULYN40clXnOPnYOB5riNiwmwXg4jwWW3u7gUnriliObljuK8abhYgoKuXRewfaTqsUAY74R76GtU=
+	t=1776782120; cv=none; b=UclXNFTPvVPtWgjQ80L6W/e9dDsebExqjIg1l//cBDk94ORSsckPhSrgL0VGaeQhyDdDtrkimAKnrIe9nnWANcKE5Z7obeHJA2+4t9nKjDpwTsu8rx4EmK3XPYcHIPtm+0pytKG80LR+WbUWyyGhpGAw+HYW/HW79LjirPe3c70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776781824; c=relaxed/simple;
-	bh=wzm7TkfUtsdkCf+9WRD+mx0ZLEZab+prGzlMMBHO+zg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Md9rczAZo51RxR0dMOEEeDIDfCA5I2QyipzAJc3G/b7yEsGXM9WuvY40dNwbxPq/9hPSt2EIHOt8SLAIonplhwu+advBHDAyypvvCErFN95VxCVA5/lM7cePfjHeXd74WeHd5pEaozxjd2BZMaylAWGUf9e5jdp13SuwV6DVatg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dY8MYwPB; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1776781821;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TWylwziUJR6+djO988m8SXRnsaLXz4wU91J/b9HxTcg=;
-	b=dY8MYwPBdqcG08GXq9rfv45gDxZ8IOVfLMYlNQSQrQcjfGQimee+uMe2dH6DPR755PQx8E
-	/K6D9O33Q1ZoDdJEMxVMF+BSnP8faGXiRhr1Q1TAdGDFPXttIL9rmwhYUnKruaA7LNzNP3
-	8TxSKGWcx115V08SQVlsCm9IwpnvEz8=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-97-OuySZZZCNne9e9u0fHq2OQ-1; Tue,
- 21 Apr 2026 10:30:16 -0400
-X-MC-Unique: OuySZZZCNne9e9u0fHq2OQ-1
-X-Mimecast-MFC-AGG-ID: OuySZZZCNne9e9u0fHq2OQ_1776781809
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CE80619560AB;
-	Tue, 21 Apr 2026 14:30:08 +0000 (UTC)
-Received: from [10.22.81.187] (unknown [10.22.81.187])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3068C1800660;
-	Tue, 21 Apr 2026 14:30:00 +0000 (UTC)
-Message-ID: <46e1989c-d0a3-46c4-9a9f-3476789b9dc1@redhat.com>
-Date: Tue, 21 Apr 2026 10:29:59 -0400
+	s=arc-20240116; t=1776782120; c=relaxed/simple;
+	bh=/lAhXw4BOGfaAXHMykIl85TmtKzKWu68jcfrH2xi4Oc=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=uSDPU2Y/QN9xktP4Pid+hOzfZ78ufxfULTyKxksrRWE1hrfgrvDeLf26ISabr/E39tTb03J62s3Imeo/sNeJsK+gFEyKCTUi+y3AVH4vHNB1+APy2eRkk1CHksSz6ymIaCel1z5Q+qW42iN+p8CJO3EniZUgJl2qLLYNS52IyL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KiPaz43L; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 59A4E20B6F01;
+	Tue, 21 Apr 2026 07:35:13 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 59A4E20B6F01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1776782113;
+	bh=/1EqD5xH5q5yJIjXXXXrvLODffTJvLNrQJdl++fTi7w=;
+	h=Subject:From:To:Cc:Date:From;
+	b=KiPaz43LxiI49Li6oUhTLCw121Z/LHGAo4Ce6XVY58xbt8LWuL5gynUT1Zr91A/47
+	 Ja3JlUZ+7F0++agKKCfVQ+P6R5gqitMFEFc5FUkKSDOyllBdQn+89Sn0ufX1/frUz8
+	 q/JXSlXbTSQ/sF0WOqZ/+ExEvz19xQ9fsf+061Gc=
+Subject: [PATCH v2 0/7] mshv: Refactor memory region management and map pages
+ at creation
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, longli@microsoft.com
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 21 Apr 2026 14:35:12 +0000
+Message-ID: 
+ <177678175995.13344.10130389779290396174.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 16/23] genirq/cpuhotplug: Use RCU to protect access of
- HK_TYPE_MANAGED_IRQ cpumask
-To: Thomas Gleixner <tglx@kernel.org>, Tejun Heo <tj@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
- <mkoutny@suse.com>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
- Guenter Roeck <linux@roeck-us.net>, Frederic Weisbecker
- <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
- Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett
- <josh@joshtriplett.org>, Boqun Feng <boqun@kernel.org>,
- Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang@linux.dev>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>, Ingo Molnar
- <mingo@kernel.org>, Chen Ridong <chenridong@huaweicloud.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
- <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
- Valentin Schneider <vschneid@redhat.com>,
- K Prateek Nayak <kprateek.nayak@amd.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>
-Cc: cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-hyperv@vger.kernel.org, linux-hwmon@vger.kernel.org,
- rcu@vger.kernel.org, netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Costa Shulyupin <cshulyup@redhat.com>,
- Qiliang Yuan <realwujing@gmail.com>
-References: <20260421030351.281436-1-longman@redhat.com>
- <20260421030351.281436-17-longman@redhat.com> <87qzo8bs9m.ffs@tglx>
-Content-Language: en-US
-From: Waiman Long <longman@redhat.com>
-In-Reply-To: <87qzo8bs9m.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	FREEMAIL_TO(0.00)[kernel.org,cmpxchg.org,suse.com,lwn.net,linuxfoundation.org,arm.com,microsoft.com,roeck-us.net,nvidia.com,joshtriplett.org,gmail.com,goodmis.org,efficios.com,linux.dev,linutronix.de,huaweicloud.com,infradead.org,redhat.com,linaro.org,google.com,suse.de,amd.com,davemloft.net];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,redhat.com,gmail.com];
-	TAGGED_FROM(0.00)[bounces-10273-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[longman@redhat.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	RCPT_COUNT_GT_50(0.00)[52];
-	MID_RHS_MATCH_FROM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 8381E43C0EA
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	PRECEDENCE_BULK(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10274-lists,linux-hyperv=lfdr.de];
+	TO_DN_NONE(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+]
+X-Rspamd-Queue-Id: 2F51343C1C0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 4/21/26 5:02 AM, Thomas Gleixner wrote:
-> On Mon, Apr 20 2026 at 23:03, Waiman Long wrote:
->
->> As HK_TYPE_MANAGED_IRQ cpumask is going to be changeable at run time,
->> use RCU to protect access to the cpumask.
->>
->> To enable the new HK_TYPE_MANAGED_IRQ cpumask to take effect, the
->> following steps can be done.
-> Can be done?
->
->>   1) Update the HK_TYPE_MANAGED_IRQ cpumask to take out the newly isolated
->>      CPUs and add back the de-isolated CPUs.
->>   2) Tear down the affected CPUs to cause irq_migrate_all_off_this_cpu()
->>      to be called on the affected CPUs to migrate the irqs to other
->>      HK_TYPE_MANAGED_IRQ housekeeping CPUs.
->>   3) Bring up the previously offline CPUs to invoke
->>      irq_affinity_online_cpu() to allow the newly de-isolated CPUs to
->>      be used for managed irqs.
-> Which previously offline CPUs?
-This part should go into another patch.
->
->> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
->> index 2e8072437826..8270c4de260b 100644
->> --- a/kernel/irq/manage.c
->> +++ b/kernel/irq/manage.c
->> @@ -263,6 +263,7 @@ int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask, bool
->>   	    housekeeping_enabled(HK_TYPE_MANAGED_IRQ)) {
->>   		const struct cpumask *hk_mask;
->>   
->> +		guard(rcu)();
->>   		hk_mask = housekeeping_cpumask(HK_TYPE_MANAGED_IRQ);
->>   
->>   		cpumask_and(tmp_mask, mask, hk_mask);
-> How is this hunk related to $Subject?
+This series refactors the mshv memory region subsystem in preparation
+for mapping populated pages into the hypervisor at movable region
+creation time, rather than relying solely on demand faulting.
 
-The subject is actually about using RCU to protect access to 
-housekeeping cpumask. There are extra info in the commit  log that 
-should go to another patch.
+The primary motivation is to ensure that when userspace passes a
+pre-populated mapping for a movable memory region, those pages are
+immediately visible to the hypervisor. Previously, all movable regions
+were created with HV_MAP_GPA_NO_ACCESS on every page regardless of
+whether the backing pages were already present, deferring all mapping
+to the fault handler. This added unnecessary fault overhead and
+complicated the initial setup of child partitions with pre-populated
+memory.
 
-Cheers,
-Longman
+The series takes a bottom-up approach:
 
->
+- Patches 1-2 lay the groundwork by converting internal data structures
+from page pointers to PFNs and teaching the range processing
+infrastructure to handle holes (invalid PFNs) uniformly. The PFN
+conversion eliminates redundant page_to_pfn()/pfn_to_page() conversions
+between the HMM interface (which returns PFNs) and the hypervisor
+hypercalls (which consume PFNs). The hole handling enables mapping
+regions that contain a mix of present and absent pages, remapping holes
+with no-access permissions to preserve hypervisor dirty page tracking
+for precopy live migration.
+
+- Patch 3 extends HMM fault handling to support memory regions that span
+multiple VMAs with different protection flags, which is required for
+flexible guest memory layouts.
+
+- Patch 4 consolidates region setup by moving pinned region preparation
+into mshv_regions.c, making five helper functions static, and fixing
+a pre-existing bug where mshv_region_map() failures on non-encrypted
+partitions were silently ignored.
+
+- Patch 5 is the core functional change: movable regions now collect
+already-present PFNs from userspace at creation time and map them
+into the hypervisor immediately. A new do_fault parameter controls
+whether hmm_range_fault() should fault in missing pages or only
+collect those already present.
+
+- Patches 6-7 are cleanups: extracting the MMIO mapping path into its
+own function for consistency with the pinned and movable paths, and
+adding a tracepoint for GPA mapping hypercalls to aid debugging.
+
+v2:
+ - Rebased on top of latest mainline, simplified the check for valid PFNs,
+   added other minor cleanups and improvements.
+
+---
+
+Stanislav Kinsburskii (7):
+      mshv: Convert from page pointers to PFNs
+      mshv: Add support to address range holes remapping
+      mshv: Support regions with different VMAs
+      mshv: Move pinned region setup to mshv_regions.c
+      mshv: Map populated pages on movable region creation
+      mshv: Extract MMIO region mapping into separate function
+      mshv: Add tracepoint for map GPA hypercall
+
+
+ drivers/hv/mshv_regions.c      |  589 +++++++++++++++++++++++++++++-----------
+ drivers/hv/mshv_root.h         |   29 +-
+ drivers/hv/mshv_root_hv_call.c |   53 ++--
+ drivers/hv/mshv_root_main.c    |   99 +------
+ drivers/hv/mshv_trace.h        |   36 ++
+ 5 files changed, 508 insertions(+), 298 deletions(-)
 
 
