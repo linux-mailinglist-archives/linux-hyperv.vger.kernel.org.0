@@ -1,186 +1,126 @@
-Return-Path: <linux-hyperv+bounces-10268-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10269-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WHdsI9OG52m+9gEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10268-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 16:16:51 +0200
+	id GMCREyuI52kU9wEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10269-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 16:22:35 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC33343BDEE
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 16:16:50 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F51643BF09
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 16:22:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 9D4F2300BE90
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 14:14:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 701FE3036EDE
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 14:18:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C7253D7D88;
-	Tue, 21 Apr 2026 14:14:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 175213D75D4;
+	Tue, 21 Apr 2026 14:18:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g5dD4jyX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RyE+2kKa"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC4A25A2BB
-	for <linux-hyperv@vger.kernel.org>; Tue, 21 Apr 2026 14:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E804DEED8;
+	Tue, 21 Apr 2026 14:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776780875; cv=none; b=IEkFll9qzf4yJUhxxmuF7xS6vzH8F7r8vXzglW/tvp9Eaetp9MD3pMKREwwWKMrcbt7xqzp/5btColVkxc/DEodk5BteLrl06CNln0edT0ulFNuY8vnVx67F2h9WjwXCuUUM2RxszdwZ98GsrNU+1YiSIdm9bUeMcgt/Mw2yOUM=
+	t=1776781122; cv=none; b=WqKTvHMbdl+YmzRPou3y9qXLg8LsfxOTBJbWNfXx6kHDbhCCffUIklh2DQMJjxgISKqD5/cfkLfyl+myzZUAIc4VQhEV5KcGGmo8m1EfehhDssBk2Mk5ZAv3wePgfQol483+ZNp7djJqJ5YcIaTwVrN6bBmmHCmJUeOcC9Y8Ny4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776780875; c=relaxed/simple;
-	bh=9EVLxOxko56ykP0XKUiXqVA16ePSpExPWd0qgmq91lU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KZCVG83PsjWia5FQOXDqtgdW3URGu+7haGyF0afWFwnmGW16pyYtcL3mwAS/e2Larr+MfurNt62Mrx/yI3v6172vuy9WLL1XoW/aL9dMvOhOYj8YMfP3zLf9Okmyh+fRugheonuEmPcLbrhkPyg5NIH4jIbOmJjAOqBiQt04pzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g5dD4jyX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1776780871;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HkSs5q895BkMlUjroUvolg58w1rFDrf/FdQnm8MeJy4=;
-	b=g5dD4jyXlGLhDQNP7Wj4UoRcw4DKhRPcpJCFRhdChzVQDi8t2F9BkNPW7xOT5ROvcS+YFZ
-	NU+ZS4Rw/kt8fy44EZ+Hliz6lc8wVNks5JUERUvLD+L9iYv96XjcaGr96iKFhzRGZ3V4e8
-	fA+ZZJPBHmenvm3WlXKgqnjnvzS/rBs=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-307-g7Ym5ECUP9WJNDNti_MzuQ-1; Tue,
- 21 Apr 2026 10:14:28 -0400
-X-MC-Unique: g7Ym5ECUP9WJNDNti_MzuQ-1
-X-Mimecast-MFC-AGG-ID: g7Ym5ECUP9WJNDNti_MzuQ_1776780862
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1011E18002C0;
-	Tue, 21 Apr 2026 14:14:20 +0000 (UTC)
-Received: from [10.22.81.187] (unknown [10.22.81.187])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 67E2A19560AB;
-	Tue, 21 Apr 2026 14:14:10 +0000 (UTC)
-Message-ID: <3b796360-81e4-4f90-9b19-8a9f21cbac07@redhat.com>
-Date: Tue, 21 Apr 2026 10:14:09 -0400
+	s=arc-20240116; t=1776781122; c=relaxed/simple;
+	bh=3Ct/SPVIVJ2+EBRzhARfaZ8x6ntKDyeLe8hrRi9Fxd8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RsX5Mz3dB/Jtb8Lz12DLefWKKR2laFoqtwEwq7W3cD2gEz92CCIZavFrvkm+so37coP1XthxNKSp5i5CWw/eZ8t+TCPb7I4TAuyaZ3AVONKFW5oH7tEm/CzxWXl29IbyjYtJ9Gc1szubOjABGYU0dliZjzgSmYApYm7guokD69c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RyE+2kKa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07BDAC2BCB0;
+	Tue, 21 Apr 2026 14:18:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776781121;
+	bh=3Ct/SPVIVJ2+EBRzhARfaZ8x6ntKDyeLe8hrRi9Fxd8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RyE+2kKa3AXBCXD9eLv1BEVn3pPHTE6Bhhn0ZQ8hqgpujDTRUlUF8fDaF8M+bLFu+
+	 kbsxmPqMHi2eHDnqFXUJpMV4UE3yJ5Oig9vJcLL4HQAzI8sFzUk4pw3smjkLDLuX1H
+	 DLnwOVwny8NmJneBx+LOcTjyklGdHmNHO2se2NWQ0jYtj9f8oO24rjkIbV729U9/m8
+	 3LPqdB59mZyhmh0FAS2i16wI/6NDg74tUUEJGd121qxkDnJoAp5hh/TlfUoRglS8yu
+	 XN/sYN5ZOuDlCuFyKP9PnHOmiR1oRNR7TQm1Fcvz8rdtAKjUIT92kjHJ2GTRxRQ9QI
+	 Ritnpo5/GhytQ==
+Date: Tue, 21 Apr 2026 07:18:39 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Dexuan Cui <DECUI@microsoft.com>, "patchwork-bot+netdevbpf@kernel.org"
+ <patchwork-bot+netdevbpf@kernel.org>, KY Srinivasan <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, "wei.liu@kernel.org"
+ <wei.liu@kernel.org>, Long Li <longli@microsoft.com>, "davem@davemloft.net"
+ <davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>,
+ "pabeni@redhat.com" <pabeni@redhat.com>, "horms@kernel.org"
+ <horms@kernel.org>, "niuxuewei.nxw@antgroup.com"
+ <niuxuewei.nxw@antgroup.com>, "linux-hyperv@vger.kernel.org"
+ <linux-hyperv@vger.kernel.org>, "virtualization@lists.linux.dev"
+ <virtualization@lists.linux.dev>, "netdev@vger.kernel.org"
+ <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org"
+ <stable@vger.kernel.org>, Ben Hillis <Ben.Hillis@microsoft.com>,
+ "levymitchell0@gmail.com" <levymitchell0@gmail.com>
+Subject: Re: [EXTERNAL] Re: [PATCH net v2] hv_sock: Report EOF instead of
+ -EIO for FIN
+Message-ID: <20260421071839.30217a60@kernel.org>
+In-Reply-To: <CAGxU2F6DVcLDLg3dT5DsDmsaOuhOcD+4VSG5dqXcFRwsN1NZ+A@mail.gmail.com>
+References: <20260416191433.840637-1-decui@microsoft.com>
+	<177672238581.1802062.15838493180057695674.git-patchwork-notify@kernel.org>
+	<SA1PR21MB69214CABCA0DCD597040F849BF2C2@SA1PR21MB6921.namprd21.prod.outlook.com>
+	<CAGxU2F6DVcLDLg3dT5DsDmsaOuhOcD+4VSG5dqXcFRwsN1NZ+A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/23] tick/nohz: Make nohz_full parameter optional
-To: Thomas Gleixner <tglx@kernel.org>, Tejun Heo <tj@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
- <mkoutny@suse.com>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
- Guenter Roeck <linux@roeck-us.net>, Frederic Weisbecker
- <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
- Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett
- <josh@joshtriplett.org>, Boqun Feng <boqun@kernel.org>,
- Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang@linux.dev>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>, Ingo Molnar
- <mingo@kernel.org>, Chen Ridong <chenridong@huaweicloud.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
- <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
- Valentin Schneider <vschneid@redhat.com>,
- K Prateek Nayak <kprateek.nayak@amd.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>
-Cc: cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-hyperv@vger.kernel.org, linux-hwmon@vger.kernel.org,
- rcu@vger.kernel.org, netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Costa Shulyupin <cshulyup@redhat.com>,
- Qiliang Yuan <realwujing@gmail.com>
-References: <20260421030351.281436-1-longman@redhat.com>
- <20260421030351.281436-4-longman@redhat.com> <875x5kd88d.ffs@tglx>
-Content-Language: en-US
-From: Waiman Long <longman@redhat.com>
-In-Reply-To: <875x5kd88d.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,davemloft.net,google.com,redhat.com,antgroup.com,vger.kernel.org,lists.linux.dev,gmail.com];
+	TAGGED_FROM(0.00)[bounces-10269-lists,linux-hyperv=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	FREEMAIL_TO(0.00)[kernel.org,cmpxchg.org,suse.com,lwn.net,linuxfoundation.org,arm.com,microsoft.com,roeck-us.net,nvidia.com,joshtriplett.org,gmail.com,goodmis.org,efficios.com,linux.dev,linutronix.de,huaweicloud.com,infradead.org,redhat.com,linaro.org,google.com,suse.de,amd.com,davemloft.net];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,redhat.com,gmail.com];
-	TAGGED_FROM(0.00)[bounces-10268-lists,linux-hyperv=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_FIVE(0.00)[6];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[longman@redhat.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	RCPT_COUNT_GT_50(0.00)[52];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[kuba@kernel.org,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdevbpf];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: AC33343BDEE
+X-Rspamd-Queue-Id: 9F51643BF09
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 4/21/26 4:32 AM, Thomas Gleixner wrote:
-> On Mon, Apr 20 2026 at 23:03, Waiman Long wrote:
->> To provide nohz_full tick support, there is a set of tick dependency
->> masks that need to be evaluated on every IRQ and context switch.
-> s/IRQ/interrupt/
->
-> This is a changelog and not a SMS service.
->> Switching on nohz_full tick support at runtime will be problematic
->> as some of the tick dependency masks may not be properly set causing
->> problem down the road.
-> That's useless blurb with zero content.
->
->> Allow nohz_full boot option to be specified without any
->> parameter to force enable nohz_full tick support without any
->> CPU in the tick_nohz_full_mask yet. The context_tracking_key and
->> tick_nohz_full_running flag will be enabled in this case to make
->> tick_nohz_full_enabled() return true.
-> I kinda can crystal-ball what you are trying to say here, but that does
-> not make it qualified as a proper change log.
->
->> There is still a small performance overhead by force enable nohz_full
->> this way. So it should only be used if there is a chance that some
->> CPUs may become isolated later via the cpuset isolated partition
->> functionality and better CPU isolation closed to nohz_full is desired.
-> Why has this key to be enabled on boot if there are no CPUs in the
-> isolated mask?
->
-> If you want to manage this dynamically at runtime then enable the key
-> once CPUs are isolated. Yes, it's more work, but that avoids the "should
-> only be used" nonsense and makes this more robust down the road.
+On Tue, 21 Apr 2026 09:28:19 +0200 Stefano Garzarella wrote:
+> > I'm sorry -- I just posted v3
+> >     https://lore.kernel.org/linux-hyperv/20260421025950.1099495-1-decui@microsoft.com/T/#u
+> > and then I realized that the v2 had been merged into the main branch :-(
+> >
+> > Should I post a new delta patch(with a Fixes tag against the v2) based on the main branch?  
+> 
+> Ehm, I'm not sure about the process but if it's merged in net tree,
+> maybe we need a follow up patch.
+> 
+> Anyway, let's wait for Jakub's or other net maintainers' suggestions.
 
-OK, I will try to make it fully dynamic. Of course, it will be more work.
-
-Cheers,
-Longman
-
-> Thanks,
->
->          tglx
->
->
-
+Yes, you have to post an incremental fix
 
