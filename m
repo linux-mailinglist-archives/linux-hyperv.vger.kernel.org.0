@@ -1,200 +1,165 @@
-Return-Path: <linux-hyperv+bounces-10260-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10261-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KMxKKgwo52kf4wEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10260-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 09:32:28 +0200
+	id 0L5VDEw252mg5QEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10261-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 10:33:16 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4969B437A04
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 09:32:27 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3895443836B
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 10:33:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 17741300D4CF
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 07:28:39 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 17118300B521
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 08:32:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05458383C8C;
-	Tue, 21 Apr 2026 07:28:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6DC53803E4;
+	Tue, 21 Apr 2026 08:32:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KvHt2g/t";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="UVhqt+Lw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PfS7qPKo"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925A4175A6D
-	for <linux-hyperv@vger.kernel.org>; Tue, 21 Apr 2026 07:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=170.10.129.124
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776756516; cv=pass; b=ouTozbiNybBDsZqu+i2HY0b4lBu5Saqs/Y3Rkg67deW8kcFszlxYuZjoosffjqT/V6BzOtGqMudLj0M+iQzc5FKSDkMJDMq/bDnK7gEXP29xmtGJ5cvi6AXgCyfNBdlWgJlZeNeTfBVfKXaxLT0RdbeoY00479KZobYZlZOuwjE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776756516; c=relaxed/simple;
-	bh=wwmZXFfudo6vtD8Qyo2Fqwkv5D5eNldWMhPAPtQB018=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oRWbB9ULqmBCWKqj08yvyVi5AzvUWWEsDc6iMKVbF5hsStN5Qiq+JRnaXjbngxCR2JUC10pf2ErCv3pyNr/FcMR5ht1lHBysKWmfsw/M5BdLyJKSkSbB2pSTq7UdbjQOgwaJbmznHqtfFhbyG6w2U/vIUVaVF/hETwgR8zmyjkI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KvHt2g/t; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=UVhqt+Lw; arc=pass smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1776756514;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1NxogECpqiNsO+aGXAiC6wMG+jNg2PWSddJ9oGiQTNE=;
-	b=KvHt2g/tIVJh3J2mpQlP5ias2laAXuaEHgBAzD4o+/vj3v6EQ6+lNWxEN8EIGbmbjAvpte
-	I6Uhz7bZMrY5MZweV8wcyyV6uCqOa3/7LobyLG56SSFhi7jY77hL3BUlMOVrgYW4xIyh3h
-	o+w1mRA7v2Q0NIIAW9NH+sZC4IjH64o=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-653-YZj1R36JO0eRZ5ltIo1J-Q-1; Tue, 21 Apr 2026 03:28:32 -0400
-X-MC-Unique: YZj1R36JO0eRZ5ltIo1J-Q-1
-X-Mimecast-MFC-AGG-ID: YZj1R36JO0eRZ5ltIo1J-Q_1776756511
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-35fbc53b64bso4618456a91.1
-        for <linux-hyperv@vger.kernel.org>; Tue, 21 Apr 2026 00:28:32 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776756511; cv=none;
-        d=google.com; s=arc-20240605;
-        b=RiIB66lYDtTWUAf6ImKc0XalVdvm3TQ748vFZu788PYwj92/ERxwDxTwgZZEogER9b
-         Z4bm21DQ+24Lkz4sdnZ+EuA2zVGY8fVW3Pdpd/aGHU4uMeoMH/SRZA3HU/JF/EnLNh+0
-         ayfoMsZ3ktxdPEvZ3MCmg1CVQycmTsCCA6WgA4XMWyS6eg6SQfSLHgtlg5uBkvqiXW4B
-         8qtftR53sT7+STMrRYvODcyhZJnnbTxsRsvZR+Odq0Bjbv/DfbruEBNF5r7USLE68e8N
-         a7DtEU9QsrZnw3dFAubc3mCNtZWWWuYNoXHhMaYrev9ZpsCUnxFJzodyzG4hlL2+1W3k
-         Dqiw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=1NxogECpqiNsO+aGXAiC6wMG+jNg2PWSddJ9oGiQTNE=;
-        fh=3ZuTSyr07wCorxAcM6lHp0GoP8ZFDaOZRlLUm7gS3vw=;
-        b=FfCqHjSA+F1IC/TQx8QuidFZ5OBSUxyYJvw1RC7OCEFTiB9ccPfx7v10Jbm02UDvU2
-         EJQj82fJctw3FQXbliSKpB7SrEyvduQAVZ2cwb8lY8b8Vx3v5AH+Vi9wiQuxYbPBq1n4
-         8c1L5N9JEsuc0GLHeeVNnahf605H34xZD5wdDDpgg4LxbQ59NmGTl6jwdrpjUSU0lmE3
-         1ftBvhICN80qZYSZJ/J0X7mDK0YMx67vPnZbnyhz2fNYaSOiNO1tvsTApfOwX/G9TlYH
-         oNTFroqGxHXcpgQnTIWLQbgtxAoUNbhGgp3IYAv9YMZ7/la1crW1FQyF2jzNrzKXrxiU
-         I69w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1776756511; x=1777361311; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1NxogECpqiNsO+aGXAiC6wMG+jNg2PWSddJ9oGiQTNE=;
-        b=UVhqt+Lw4Baw/TvCDHMwBfj+G//AE5fZSaVch46WkQSV0EJ2vD14K+JTJrykSxPJQ2
-         E3fsjwrXJj6s01fnM/PNPCM0SdQ+mw3x4OQbr76RZl30XbA/OPFShjFr6r2vCSm7glW8
-         rCF+6sLQbURLm4mP7nv56qyzY8WbRY1zjjceMc2L1ZWrc7IdnRLiMAuT1Tb9PjvzlXOj
-         JzdIfAxMcXgJjoGXjKXRfY9Mg4uYN1vZ+UV2WrZQ7Q7D/2svRUwyTXXYLZUBZm0zB8HI
-         F1V8i6s9F74GroTnyEeVbT9RsL3ZlM8N90uMX0d04FBcyK8FX5UNB0eUwTShubuzQyVC
-         QVjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776756511; x=1777361311;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1NxogECpqiNsO+aGXAiC6wMG+jNg2PWSddJ9oGiQTNE=;
-        b=AxK2P8cLa5jA/5yRa8ao6x+yBSOK05GtKbRhDLn+zStODn/oskjoHK2UI2SN0TecpW
-         fvjkkAYex+5xtr45Loav10mr34FA7ceah/Ao7rXLReUIXFBoWAyAk6Es8tPQXRjfvd5D
-         CXi3Lwjx3rDUosa/wOmM3li0autre5hhJwt97bBBL4AAyi2pMJxlQ7RFUqB9UsxbvHzm
-         pppZZPifVIzeLjOX+pA9dU4TPeE4oLkS2i/PGx/4Yf3sfeMKWvufF35o3iA1GseHjke0
-         flIVSyScjMJW6Kwe7zONOa/hus99HDxwKmogFeexiIvRlM7jL1gYZkeEkP9Hcvhwpw+L
-         UBlA==
-X-Forwarded-Encrypted: i=1; AFNElJ+Q3QiDGkyA9X6L6QWfGx3U/2frVsS0Qfmvf4j+Ph3g3gXF4wlEQTEvn6CR337H5JoTuSjWbmGBYyLINCA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPJThCeNe+e60iGEu9aE+LF/c+9wUvKZvcmC1gnWDmhSb/ExRA
-	6U3DmyNVXvxyVEUGn7YipHadZ9+g9j4O4A88AUy+jmNSq1vb9xE8Ge/EtbxW32d3cq1DUtPdcA0
-	j1ElmNa6onlHdq4TAFmB7I3dSDjQ3K0Yn0ZLPaSkPuadZJ82r9DlyyFtznMp7grQj25uBITdUAO
-	o4EKEWtBilVpvzJAXxrt3Fb21eEvwYrn/7p1niFnJB
-X-Gm-Gg: AeBDiesv7IgzXgtRFbzATNuuvpoCDjWhRKTGYrTVJIb/e18n6iS29MW0gQEycTZCVxp
-	CCKXkXkUtUnNM8fWiI3TdBSQh1LgGn963e4HAQIMCaYdn/eiwltC0vdWMX7JVqVlbQg9OSRI4Al
-	agRMCP35CF91Zjwx3uOvj0iri67xv5i3Ka/Ppi5wMAbk3YVzypQ1OWPp06DyipJ66hqHGJEZExl
-	vnMzAi8yVC8XlI=
-X-Received: by 2002:a17:90b:4d0e:b0:35e:5ae3:298a with SMTP id 98e67ed59e1d1-36140462ad9mr17177841a91.18.1776756511197;
-        Tue, 21 Apr 2026 00:28:31 -0700 (PDT)
-X-Received: by 2002:a17:90b:4d0e:b0:35e:5ae3:298a with SMTP id
- 98e67ed59e1d1-36140462ad9mr17177809a91.18.1776756510684; Tue, 21 Apr 2026
- 00:28:30 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80FB432D7FA;
+	Tue, 21 Apr 2026 08:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776760344; cv=none; b=g6ew15eNpWA4kL8Ojz9YjIR+fclu6no+w1rCsVkPZAhgzDY2FGxGpqxnUQBhrLf7dZLaJKVzF9Zat45ydaGZgGodgUu3wG3R/DDVLmiDZkdjS3pztkmBGjHdNe0RASdrtP88LFd5IQT4nV3vgzTH9/f4xbcDDlwHYt9WecXAgqc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776760344; c=relaxed/simple;
+	bh=3AcEuu4rBoAM4PHRXKIwJtTm21PzPN71Sn/og8FiSjs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=I2buC8+P5Um3fBM3H1QmBw/WNzCWHO5zcR2K9OesTE39O0NspQ1w039vOT4TGplansGnshhzRi4wemmseO5e8tIpO+CJVP6Mny4u2jr8Ha9oZg4O7mB7ie9lrnfs44+93kAwDofJV1Q55Z+7ga+vEGPlgW27N7csmCwkb7DQ1rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PfS7qPKo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2555DC2BCB6;
+	Tue, 21 Apr 2026 08:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776760344;
+	bh=3AcEuu4rBoAM4PHRXKIwJtTm21PzPN71Sn/og8FiSjs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=PfS7qPKozeqAUB5Zl+iQ1lO9PY0zsrU6jMDx05jt62pS21tKlPO+joZxotJ/8wwMy
+	 klgJ3OKt3Zxt2/su+CMy+xAXgJySWhzXsLNJ+rreFdIFmdH2TiB+U6m0ckRtew7qeY
+	 iu+DBPVxYXmx7t+eFXiJCy19r9mWhbfRIZPdgaMVKJGlvNLFdRJGHJ93A5dIp8Nry1
+	 TkiFkUBMfjzQVt2uV6h/itwg2w8YlRvOe2XhljJzkrArkr5UFh3ZPUP/XFiZxGY8J5
+	 ohfT37dU3CgucSqG2Fb5q3IxMgIjOZD3sUpAWZC6Qe0RhpRH861xqLXTyBPYJz7Dap
+	 Uy3MffWfNb8hQ==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>, Johannes
+ Weiner <hannes@cmpxchg.org>, Michal =?utf-8?Q?Koutn=C3=BD?=
+ <mkoutny@suse.com>, Jonathan
+ Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Catalin
+ Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, "K. Y.
+ Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Long Li
+ <longli@microsoft.com>, Guenter Roeck <linux@roeck-us.net>, Frederic
+ Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes
+ <joelagnelf@nvidia.com>, Josh Triplett <josh@joshtriplett.org>, Boqun Feng
+ <boqun@kernel.org>, Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang@linux.dev>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, Ingo Molnar
+ <mingo@kernel.org>, Chen Ridong <chenridong@huaweicloud.com>, Peter
+ Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
+ <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman
+ <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, K Prateek
+ Nayak <kprateek.nayak@amd.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-hyperv@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ rcu@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Costa Shulyupin <cshulyup@redhat.com>,
+ Qiliang Yuan <realwujing@gmail.com>, Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH 03/23] tick/nohz: Make nohz_full parameter optional
+In-Reply-To: <20260421030351.281436-4-longman@redhat.com>
+References: <20260421030351.281436-1-longman@redhat.com>
+ <20260421030351.281436-4-longman@redhat.com>
+Date: Tue, 21 Apr 2026 10:32:18 +0200
+Message-ID: <875x5kd88d.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260416191433.840637-1-decui@microsoft.com> <177672238581.1802062.15838493180057695674.git-patchwork-notify@kernel.org>
- <SA1PR21MB69214CABCA0DCD597040F849BF2C2@SA1PR21MB6921.namprd21.prod.outlook.com>
-In-Reply-To: <SA1PR21MB69214CABCA0DCD597040F849BF2C2@SA1PR21MB6921.namprd21.prod.outlook.com>
-From: Stefano Garzarella <sgarzare@redhat.com>
-Date: Tue, 21 Apr 2026 09:28:19 +0200
-X-Gm-Features: AQROBzDJwpjJV5oYDv9Ov-Jk-nnVA6bAoKM78g-QgMrimqa9KxhcXRiVCwSyCjw
-Message-ID: <CAGxU2F6DVcLDLg3dT5DsDmsaOuhOcD+4VSG5dqXcFRwsN1NZ+A@mail.gmail.com>
-Subject: Re: [EXTERNAL] Re: [PATCH net v2] hv_sock: Report EOF instead of -EIO
- for FIN
-To: Dexuan Cui <DECUI@microsoft.com>
-Cc: "patchwork-bot+netdevbpf@kernel.org" <patchwork-bot+netdevbpf@kernel.org>, "kuba@kernel.org" <kuba@kernel.org>, 
-	KY Srinivasan <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, Long Li <longli@microsoft.com>, 
-	"davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>, 
-	"pabeni@redhat.com" <pabeni@redhat.com>, "horms@kernel.org" <horms@kernel.org>, 
-	"niuxuewei.nxw@antgroup.com" <niuxuewei.nxw@antgroup.com>, 
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>, 
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, Ben Hillis <Ben.Hillis@microsoft.com>, 
-	"levymitchell0@gmail.com" <levymitchell0@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+Content-Type: text/plain
+X-Spamd-Result: default: False [2.84 / 15.00];
+	MID_END_EQ_FROM_USER_PART(4.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_MISSING_CHARSET(0.50)[];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,microsoft.com,davemloft.net,google.com,redhat.com,antgroup.com,vger.kernel.org,lists.linux.dev,gmail.com];
-	TAGGED_FROM(0.00)[bounces-10260-lists,linux-hyperv=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-10261-lists,linux-hyperv=lfdr.de];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,redhat.com,gmail.com];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[redhat.com:+];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_TO(0.00)[redhat.com,kernel.org,cmpxchg.org,suse.com,lwn.net,linuxfoundation.org,arm.com,microsoft.com,roeck-us.net,nvidia.com,joshtriplett.org,gmail.com,goodmis.org,efficios.com,linux.dev,linutronix.de,huaweicloud.com,infradead.org,linaro.org,google.com,suse.de,amd.com,davemloft.net];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sgarzare@redhat.com,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[tglx@kernel.org,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdevbpf];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 4969B437A04
+	RCPT_COUNT_GT_50(0.00)[53];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	NEURAL_HAM(-0.00)[-0.998];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 3895443836B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, 21 Apr 2026 at 05:13, Dexuan Cui <DECUI@microsoft.com> wrote:
->
-> > From: patchwork-bot+netdevbpf@kernel.org <patchwork-
-> > bot+netdevbpf@kernel.org>
-> > Sent: Monday, April 20, 2026 3:00 PM
-> > > [...]
-> >
-> > Here is the summary with links:
-> >   - [net,v2] hv_sock: Report EOF instead of -EIO for FIN
-> >  https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=f63152958994
->
-> Hi Jakub, Stefano,
-> I'm sorry -- I just posted v3
->     https://lore.kernel.org/linux-hyperv/20260421025950.1099495-1-decui@microsoft.com/T/#u
-> and then I realized that the v2 had been merged into the main branch :-(
->
-> Should I post a new delta patch(with a Fixes tag against the v2) based on the main branch?
+On Mon, Apr 20 2026 at 23:03, Waiman Long wrote:
+> To provide nohz_full tick support, there is a set of tick dependency
+> masks that need to be evaluated on every IRQ and context switch.
 
-Ehm, I'm not sure about the process but if it's merged in net tree,
-maybe we need a follow up patch.
+s/IRQ/interrupt/
 
-Anyway, let's wait for Jakub's or other net maintainers' suggestions.
+This is a changelog and not a SMS service.
+
+> Switching on nohz_full tick support at runtime will be problematic
+> as some of the tick dependency masks may not be properly set causing
+> problem down the road.
+
+That's useless blurb with zero content.
+
+> Allow nohz_full boot option to be specified without any
+> parameter to force enable nohz_full tick support without any
+> CPU in the tick_nohz_full_mask yet. The context_tracking_key and
+> tick_nohz_full_running flag will be enabled in this case to make
+> tick_nohz_full_enabled() return true.
+
+I kinda can crystal-ball what you are trying to say here, but that does
+not make it qualified as a proper change log.
+
+> There is still a small performance overhead by force enable nohz_full
+> this way. So it should only be used if there is a chance that some
+> CPUs may become isolated later via the cpuset isolated partition
+> functionality and better CPU isolation closed to nohz_full is desired.
+
+Why has this key to be enabled on boot if there are no CPUs in the
+isolated mask?
+
+If you want to manage this dynamically at runtime then enable the key
+once CPUs are isolated. Yes, it's more work, but that avoids the "should
+only be used" nonsense and makes this more robust down the road.
 
 Thanks,
-Stefano
+
+        tglx
+
 
 
