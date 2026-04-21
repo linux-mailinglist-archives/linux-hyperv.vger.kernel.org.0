@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-10262-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10263-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0K5eBEQ652no5QEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10262-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 10:50:12 +0200
+	id +K+GIUk852no5QEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10263-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 10:58:49 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3C22438607
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 10:50:11 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 260464387E0
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 10:58:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 8BAB7300DF6F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 08:50:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AB109304E0FF
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2026 08:55:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1EE53876CC;
-	Tue, 21 Apr 2026 08:50:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 202A73A0EBB;
+	Tue, 21 Apr 2026 08:55:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pR8Z523t"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbpksxB6"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3E933F8C2;
-	Tue, 21 Apr 2026 08:50:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9873A0B26;
+	Tue, 21 Apr 2026 08:55:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776761405; cv=none; b=lOIGx6YXscpfqI0bLAOdsUshkLoHN1byaSH9z3pjDsR7p+jR1nZT7ZtPM8kLej4RadszpYD9vUwFVFDckxJlRp7tQAYkrsRk8mskvzxJsDa+ewGnqig3/6noJX949bsnLigGsUydoTNxoeR1DlazZJtsGYnSKScchMBVu4B/Coo=
+	t=1776761725; cv=none; b=Ktt6QSi8cX9iMazALWVVwxqE+fte193TaeGYWS56V6a1+khp0nkwMsqdYnIAzY73mJ6RQyIaR/ADTNxs8N9ctiaeKiu70umGDQaSudGT6qDMbqIQGghuUcdBypc6dXDBtDWfoxptn1/w6yAFE7YL0+P7Rca8YftAhVMEkp5T+Js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776761405; c=relaxed/simple;
-	bh=HaTQPXvOEJyusO788jGddOJOEFqrCuHs2/f3+g1Am18=;
+	s=arc-20240116; t=1776761725; c=relaxed/simple;
+	bh=l8GZGmmqBDH1qGsf6cYl9us7elj7guWOOnOWIKaH7fk=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=T2cuOIyS0I6Iac9j8mdgjq7OuJsnpFJaXsWPHLMIACAEkKMsDHbmuPJ3rNSEjRkXRsRtGjfZOvDtP0dBGJH1TdcmWW4GULNUSw1/qwaEWA/SfsIPVgWPA29H50DY7ISjnhdmdO5x7IaND3HFuhtNI4igdfDGoIQ5c3kNwdu3AZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pR8Z523t; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8BB7C2BCB5;
-	Tue, 21 Apr 2026 08:50:03 +0000 (UTC)
+	 MIME-Version:Content-Type; b=LQXUIn2KRcNjQ/HU8n3IJnikYGldYrolaecUwIogYuR22wWG7ihZ1INIcSBQs2U/SlCzjaXOYgTH8Hf/xwavn+nypIlwEw/yppGp2/VbzGLXCxopfe3qVE/VvJM6daeruIiRQh+KBBWqPPBnvvFBlIngVOD84XTTUeIkcFueIa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbpksxB6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85CDAC2BCB8;
+	Tue, 21 Apr 2026 08:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776761405;
-	bh=HaTQPXvOEJyusO788jGddOJOEFqrCuHs2/f3+g1Am18=;
+	s=k20201202; t=1776761724;
+	bh=l8GZGmmqBDH1qGsf6cYl9us7elj7guWOOnOWIKaH7fk=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=pR8Z523tl/pYJTgna0TzpDJ97VzUhuDGpfMXUMlZSvJUP88/Uf6wwLL6TZpPWR05u
-	 fD93UYvGK1Z22WuxegmEtlR4ePNUVX6G2eE2ADwU3KwsnRkrgv6KuslEMDj4RRqwRM
-	 14skmyaN7pOCw5z4aXywKO7WdmtNgjWIjQBE7KBokI+Z8nr8LT+UnHedRP0w1FkO7/
-	 PdygA/+aEmRmgNTyEpaQ4QOWy0df653T3ZV/1poX6L5HiEPSJxYDfp5OljRX0SkdFT
-	 tqfeD8TETWZix6tWtCS922YGEo3mzAzhVFRtMGSFWkbCfLN9whd61bgc0fioeZwxZd
-	 WIVg9roArtZ/w==
+	b=fbpksxB6uMfX5Z5L/PjhReWfZqK/gZWcUtb6VpyahD6lNkPwvC53AyuHNjTxumI8b
+	 duF/nj30nw15WGdGP4wWI4cZJCvOgrppPsKLO6W+438xfzolOxyCQLWWtiYuogohr7
+	 1GDeU1agc/WykWiBDwQk3/ghICVktpzs8vPBU7Tvr2uroNjLOAaVtsZ6e+UsS6+SR5
+	 95XzgmP+zGCzUnqFAOB6rIyVPGOklw1+f4w+gBdEsc12hGeD/BpK2xSmQq0Zb+Rnza
+	 sqCn0XnOQ9Fo3G6EZr6k66TGFrZQhFMgK4Uh4hpsPC1v1fOZ6Hq/roWwfxmW6uWky3
+	 HX57nFht2oNNw==
 From: Thomas Gleixner <tglx@kernel.org>
 To: Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>, Johannes
  Weiner <hannes@cmpxchg.org>, Michal =?utf-8?Q?Koutn=C3=BD?=
@@ -74,13 +74,13 @@ Cc: cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
  rcu@vger.kernel.org, netdev@vger.kernel.org,
  linux-kselftest@vger.kernel.org, Costa Shulyupin <cshulyup@redhat.com>,
  Qiliang Yuan <realwujing@gmail.com>, Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH 04/23] tick/nohz: Allow runtime changes in full dynticks
- CPUs
-In-Reply-To: <20260421030351.281436-5-longman@redhat.com>
+Subject: Re: [PATCH 05/23] tick: Pass timer tick job to an online HK CPU in
+ tick_cpu_dying()
+In-Reply-To: <20260421030351.281436-6-longman@redhat.com>
 References: <20260421030351.281436-1-longman@redhat.com>
- <20260421030351.281436-5-longman@redhat.com>
-Date: Tue, 21 Apr 2026 10:50:00 +0200
-Message-ID: <87340od7ev.ffs@tglx>
+ <20260421030351.281436-6-longman@redhat.com>
+Date: Tue, 21 Apr 2026 10:55:21 +0200
+Message-ID: <87zf2wbsli.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -95,19 +95,19 @@ X-Spamd-Result: default: False [2.84 / 15.00];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-10262-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10263-lists,linux-hyperv=lfdr.de];
 	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,redhat.com,gmail.com];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_TO(0.00)[redhat.com,kernel.org,cmpxchg.org,suse.com,lwn.net,linuxfoundation.org,arm.com,microsoft.com,roeck-us.net,nvidia.com,joshtriplett.org,gmail.com,goodmis.org,efficios.com,linux.dev,linutronix.de,huaweicloud.com,infradead.org,linaro.org,google.com,suse.de,amd.com,davemloft.net];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[tglx@kernel.org,linux-hyperv@vger.kernel.org];
@@ -115,135 +115,54 @@ X-Spamd-Result: default: False [2.84 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCPT_COUNT_GT_50(0.00)[53];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	NEURAL_HAM(-0.00)[-0.998];
+	NEURAL_HAM(-0.00)[-0.999];
 	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: A3C22438607
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 260464387E0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 On Mon, Apr 20 2026 at 23:03, Waiman Long wrote:
-> Full dynticks can only be enabled if "nohz_full" boot option has been
-> been specified with or without parameter. Any change in the list of
-> nohz_full CPUs have to be reflected in tick_nohz_full_mask. Introduce
-> a new tick_nohz_full_update_cpus() helper that can be called to update
-> the tick_nohz_full_mask at run time. The housekeeping_update() function
-> is modified to call the new helper when the HK_TYPE_KERNEL_NOSIE cpumask
-> is going to be changed.
+> In tick_cpu_dying(), if the dying CPU is the current timekeeper,
+> it has to pass the job over to another CPU. The current code passes
+> it to another online CPU. However, that CPU may not be a timer tick
+> housekeeping CPU.  If that happens, another CPU will have to manually
+> take it over again later. Avoid this unnecessary work by directly
+> assigning an online housekeeping CPU.
 >
-> We also need to enable CPU context tracking for those CPUs that
+> Use READ_ONCE/WRITE_ONCE() to access tick_do_timer_cpu in case the
+> non-HK CPUs may not be in stop machine in the future.
 
-We need nothing. Use passive voice for change logs as requested in
-documentation.
+'may not be in the future' is yet more handwaving without
+content. Please write your change logs in a way so that people who have
+not spent months on this can follow.
 
-> are in tick_nohz_full_mask. So remove __init from tick_nohz_init()
-> and ct_cpu_track_user() so that they be called later when an isolated
-> cpuset partition is being created. The __ro_after_init attribute is
-> taken away from context_tracking_key as well.
->
-> Also add a new ct_cpu_untrack_user() function to reverse the action of
-> ct_cpu_track_user() in case we need to disable the nohz_full mode of
-> a CPU.
->
-> With nohz_full enabled, the boot CPU (typically CPU 0) will be the
-> tick CPU which cannot be shut down easily. So the boot CPU should not
-> be used in an isolated cpuset partition.
->
-> With runtime modification of nohz_full CPUs, tick_do_timer_cpu can become
-> TICK_DO_TIMER_NONE. So remove the two TICK_DO_TIMER_NONE WARN_ON_ONCE()
-> checks in tick-sched.c to avoid unnecessary warnings.
-
-in tick-sched.c? Describe the functions which contain that.
-
->  static inline void tick_nohz_task_switch(void)
-> diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
-> index 925999de1a28..394e432630a3 100644
-> --- a/kernel/context_tracking.c
-> +++ b/kernel/context_tracking.c
-> @@ -411,7 +411,7 @@ static __always_inline void ct_kernel_enter(bool user, int offset) { }
->  #define CREATE_TRACE_POINTS
->  #include <trace/events/context_tracking.h>
->  
-> -DEFINE_STATIC_KEY_FALSE_RO(context_tracking_key);
-> +DEFINE_STATIC_KEY_FALSE(context_tracking_key);
->  EXPORT_SYMBOL_GPL(context_tracking_key);
->  
->  static noinstr bool context_tracking_recursion_enter(void)
-> @@ -674,9 +674,9 @@ void user_exit_callable(void)
->  }
->  NOKPROBE_SYMBOL(user_exit_callable);
->  
-> -void __init ct_cpu_track_user(int cpu)
-> +void ct_cpu_track_user(int cpu)
+> @@ -394,12 +395,19 @@ int tick_cpu_dying(unsigned int dying_cpu)
 >  {
-> -	static __initdata bool initialized = false;
-> +	static bool initialized;
->  
->  	if (cpu == CONTEXT_TRACKING_FORCE_ENABLE) {
->  		static_branch_inc(&context_tracking_key);
-> @@ -700,6 +700,15 @@ void __init ct_cpu_track_user(int cpu)
->  	initialized = true;
->  }
->  
-> +void ct_cpu_untrack_user(int cpu)
-> +{
-> +	if (!per_cpu(context_tracking.active, cpu))
-> +		return;
+>  	/*
+>  	 * If the current CPU is the timekeeper, it's the only one that can
+> -	 * safely hand over its duty. Also all online CPUs are in stop
+> -	 * machine, guaranteed not to be idle, therefore there is no
+> +	 * safely hand over its duty. Also all online housekeeping CPUs are
+> +	 * in stop machine, guaranteed not to be idle, therefore there is no
+>  	 * concurrency and it's safe to pick any online successor.
+>  	 */
+> -	if (tick_do_timer_cpu == dying_cpu)
+> -		tick_do_timer_cpu = cpumask_first(cpu_online_mask);
+> +	if (READ_ONCE(tick_do_timer_cpu) == dying_cpu) {
+> +		unsigned int new_cpu;
 > +
-> +	per_cpu(context_tracking.active, cpu) = false;
-> +	static_branch_dec(&context_tracking_key);
-> +}
-> +
+> +		guard(rcu)();
 
-Why is this in a patch which makes tick/nohz related changes? This is a
-preparatory change, so make it that way and do not bury it inside
-something else.
+What's this guard for?
 
-> +/* Get the new set of run-time nohz CPU list & update accordingly */
-> +void tick_nohz_full_update_cpus(struct cpumask *cpumask)
-> +{
-> +	int cpu;
-> +
-> +	if (!tick_nohz_full_running) {
-> +		pr_warn_once("Full dynticks cannot be enabled without the nohz_full kernel boot parameter!\n");
+> +		new_cpu = cpumask_first_and(cpu_online_mask, housekeeping_cpumask(HK_TYPE_TICK));
 
-That's the result of this enforced enable hackery. Make this work
-properly.
-
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * To properly enable/disable nohz_full dynticks for the affected CPUs,
-> +	 * the new nohz_full CPUs have to be copied to tick_nohz_full_mask and
-> +	 * ct_cpu_track_user/ct_cpu_untrack_user() will have to be called
-> +	 * for those CPUs that have their states changed. Those CPUs should be
-> +	 * in an offline state.
-> +	 */
-> +	for_each_cpu_andnot(cpu, cpumask, tick_nohz_full_mask) {
-> +		WARN_ON_ONCE(cpu_online(cpu));
-> +		ct_cpu_track_user(cpu);
-> +		cpumask_set_cpu(cpu, tick_nohz_full_mask);
-> +	}
-> +
-> +	for_each_cpu_andnot(cpu, tick_nohz_full_mask, cpumask) {
-> +		WARN_ON_ONCE(cpu_online(cpu));
-> +		ct_cpu_untrack_user(cpu);
-> +		cpumask_clear_cpu(cpu, tick_nohz_full_mask);
-> +	}
-> +}
-
-So this writes to tick_nohz_full_mask while other CPUs can access
-it. That's just wrong and I'm not at all interested in the resulting
-KCSAN warnings.
-
-tick_nohz_full_mask needs to become a RCU protected pointer, which is
-updated once the new mask is established in a separately allocated one.
+Why has this to use housekeeping_cpumask() and does not use
+tick_nohz_full_mask?
 
 Thanks,
 
         tglx
-
-
 
