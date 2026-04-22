@@ -1,162 +1,217 @@
-Return-Path: <linux-hyperv+bounces-10311-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10312-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uKgGDANw6GmbKQIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10311-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2026 08:51:47 +0200
+	id EOLuIyuX6GnVNAIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10312-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2026 11:38:51 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id B34A84429B3
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2026 08:51:46 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00AC544415D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2026 11:38:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 38EF03078AF8
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2026 06:48:28 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3D37A306D845
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2026 09:35:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E8C531E84F;
-	Wed, 22 Apr 2026 06:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BsPPxzDA"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 019923C345B;
+	Wed, 22 Apr 2026 09:35:07 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB6E295DA6;
-	Wed, 22 Apr 2026 06:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF3138839F;
+	Wed, 22 Apr 2026 09:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776840506; cv=none; b=s3amQJncwJC2UMx81d/d/CmDmoYeXndxPMe8NTgz6ooV6XOwC71uMUT/YykmloCRgO/TFp+p4ZLzYPyEoKxrUcLFXC8o+ZdzZT77+sNjhR1AEQViIITHXFsy122k1REkNissrwwiwjvXiGga5kz+/wsbfSkjuCRDrsYCtrQ8eaQ=
+	t=1776850506; cv=none; b=C1PBQwJ5BuIs+Ja24+S4JPWrSujpZ4J7Nl7Rfgb30TxVZRqQ0IOQIu48tqGQNf/QTERQWqEVe0MW5g76CaYbkJ+c4MRZfLCSEtxJbYLv6HPz0RrkwfKPtTkJsJeeiIcSKXhpiuDgOH1QMOXquQ8coYk4kMSv2twetUrZWN9T4OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776840506; c=relaxed/simple;
-	bh=aZHfvZ5EHLHt6AqTBMd/1n+jYeVmAE9mUGPzpWpqkH4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=BqzFl5N/0WovLYUq+NUEd/jyyj1fFOeo17CoumDQRicFYWf9A38AsO7nAXrNDoFBvZEmERbcjCY4LXLeNZmXRbZnMaTs4nLgpMUPobHK/LIwieSyw9jMgkJwKYLn3zAJ31MmlPXF/IcOFTyLu9kmzpszAQuChYwCF1ktbJEIw4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BsPPxzDA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6579C19425;
-	Wed, 22 Apr 2026 06:48:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776840505;
-	bh=aZHfvZ5EHLHt6AqTBMd/1n+jYeVmAE9mUGPzpWpqkH4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=BsPPxzDA4n9LbpZh5Kc2Pth9m0wH9jxLgkT/EQh2+RAQBRSUwIZJI+mWDK0wwnaoS
-	 42fEvVvu03JdsIspuyGLUNbQB+tdn0UD95ARaGufdlpO2bLtpsajkmSWJGg1OC0Upq
-	 Q+HcJXv6vwWwRQQXoxpTf972KHhVEQfbGNYECaDi0oGpGaSNpeqvgrLQlo1kEOZtnU
-	 eXmyOVXdDYrh2aBL4IM13xP46kc/TfVs0/yZLq9Iv3pPA/sumVN5+z3hQnfFe7J5kj
-	 YIEcBUu+vXUUF1rZGMvGGF0EXozo/HGYOicLVI66D6tgZreenP29I4TZBdABRjQsqY
-	 vENEna3n7jKvw==
-Date: Wed, 22 Apr 2026 06:48:24 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Wei Liu <wei.liu@kernel.org>,
-	Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-	Linux Kernel List <linux-kernel@vger.kernel.org>, kys@microsoft.com,
-	haiyangz@microsoft.com, decui@microsoft.com, longli@microsoft.com
-Subject: [GIT PULL] Hyper-V next for v7.1
-Message-ID: <20260422064824.GC805420@liuwe-devbox-debian-v2.local>
+	s=arc-20240116; t=1776850506; c=relaxed/simple;
+	bh=p7P8V6Ltow3mGw8KRZMBasw50nMRtXyR1TO6duHL6BA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mIw5WC2SJhrqZZNPSvmb/d+lSaY1KbySphunpRj8BXoB9ZKt7bD8Z8iO+9ItQNQT+82Hjp0SB3Hk47C7CSnfrQu06LxFzhTOlnOcWl33UtgoMVBPKNjuoSQNp4dhusPLMSRsTAa2Vb71E3bndj504qVAYIf48zxBWrddb757rPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4g0vFR72LmzKHMd7;
+	Wed, 22 Apr 2026 17:34:35 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 773F1405F2;
+	Wed, 22 Apr 2026 17:34:56 +0800 (CST)
+Received: from [10.67.111.176] (unknown [10.67.111.176])
+	by APP1 (Coremail) with SMTP id cCh0CgD3mwY+luhpInw6BQ--.28182S2;
+	Wed, 22 Apr 2026 17:34:55 +0800 (CST)
+Message-ID: <e37620c6-b198-48e1-a991-ad614058e882@huaweicloud.com>
+Date: Wed, 22 Apr 2026 17:34:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spamd-Result: default: False [-2.16 / 15.00];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 08/23] arm64: topology: Use RCU to protect access to
+ HK_TYPE_TICK cpumask
+To: Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
+ <mkoutny@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+ Shuah Khan <skhan@linuxfoundation.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+ Guenter Roeck <linux@roeck-us.net>, Frederic Weisbecker
+ <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+ Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett
+ <josh@joshtriplett.org>, Boqun Feng <boqun@kernel.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang@linux.dev>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, Ingo Molnar
+ <mingo@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
+ <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+ Valentin Schneider <vschneid@redhat.com>,
+ K Prateek Nayak <kprateek.nayak@amd.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>
+Cc: cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-hyperv@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ rcu@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Costa Shulyupin <cshulyup@redhat.com>,
+ Qiliang Yuan <realwujing@gmail.com>
+References: <20260421030351.281436-1-longman@redhat.com>
+ <20260421030351.281436-9-longman@redhat.com>
+Content-Language: en-US
+From: Chen Ridong <chenridong@huaweicloud.com>
+In-Reply-To: <20260421030351.281436-9-longman@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgD3mwY+luhpInw6BQ--.28182S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7AFyrurW5uryUCr4UKF1UGFg_yoW8tw18pr
+	45Gws0krWjgFnrA343X3ZF9r1F93s3Jwn0ka93CF1Fkw43CF18KFnYkr15Wr4xuw1Dur4I
+	yrZ5tFWSga47JFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26rWY6Fy7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8
+	Jr1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
+	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IU0EksDUUUUU==
+X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
+X-Spamd-Result: default: False [-1.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10311-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10312-lists,linux-hyperv=lfdr.de];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,redhat.com,gmail.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wei.liu@kernel.org,linux-hyperv@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	FREEMAIL_TO(0.00)[redhat.com,kernel.org,cmpxchg.org,suse.com,lwn.net,linuxfoundation.org,arm.com,microsoft.com,roeck-us.net,nvidia.com,joshtriplett.org,gmail.com,goodmis.org,efficios.com,linux.dev,linutronix.de,infradead.org,linaro.org,google.com,suse.de,amd.com,davemloft.net];
+	RCVD_TLS_LAST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	DMARC_NA(0.00)[huaweicloud.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[liuwe-devbox-debian-v2.local:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B34A84429B3
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[chenridong@huaweicloud.com,linux-hyperv@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[52];
+	R_DKIM_NA(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huaweicloud.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 00AC544415D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Linus,
 
-The following changes since commit 028ef9c96e96197026887c0f092424679298aae8:
 
-  Linux 7.0 (2026-04-12 13:48:06 -0700)
+On 2026/4/21 11:03, Waiman Long wrote:
+> As the HK_TYPE_TICK cpumask is going to be changeable at run time, we
+> need to use RCU to protect access to the cpumask to prevent it from
+> going away in the middle of the operation.
+> 
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>  arch/arm64/kernel/topology.c | 17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+> index b32f13358fbb..48f150801689 100644
+> --- a/arch/arm64/kernel/topology.c
+> +++ b/arch/arm64/kernel/topology.c
+> @@ -173,6 +173,7 @@ void arch_cpu_idle_enter(void)
+>  	if (!amu_fie_cpu_supported(cpu))
+>  		return;
+>  
+> +	guard(rcu)();
+>  	/* Kick in AMU update but only if one has not happened already */
+>  	if (housekeeping_cpu(cpu, HK_TYPE_TICK) &&
+>  	    time_is_before_jiffies(per_cpu(cpu_amu_samples.last_scale_update, cpu)))
+> @@ -187,11 +188,16 @@ int arch_freq_get_on_cpu(int cpu)
+>  	unsigned int start_cpu = cpu;
+>  	unsigned long last_update;
+>  	unsigned int freq = 0;
+> +	bool hk_cpu;
+>  	u64 scale;
+>  
+>  	if (!amu_fie_cpu_supported(cpu) || !arch_scale_freq_ref(cpu))
+>  		return -EOPNOTSUPP;
+>  
+> +	scoped_guard(rcu) {
+> +		hk_cpu = housekeeping_cpu(cpu, HK_TYPE_TICK);
+> +	}
+> +
 
-are available in the Git repository at:
+Should we put this into a while loop, since cpu might be changed to ref_cpu?
 
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20260421
+>  	while (1) {
+>  
+>  		amu_sample = per_cpu_ptr(&cpu_amu_samples, cpu);
+> @@ -204,16 +210,21 @@ int arch_freq_get_on_cpu(int cpu)
+>  		 * (and thus freq scale), if available, for given policy: this boils
+>  		 * down to identifying an active cpu within the same freq domain, if any.
+>  		 */
+> -		if (!housekeeping_cpu(cpu, HK_TYPE_TICK) ||
+> +		if (!hk_cpu ||
+>  		    time_is_before_jiffies(last_update + msecs_to_jiffies(AMU_SAMPLE_EXP_MS))) {
+>  			struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
+> +			bool hk_intersects;
+>  			int ref_cpu;
+>  
+>  			if (!policy)
+>  				return -EINVAL;
+>  
+> -			if (!cpumask_intersects(policy->related_cpus,
+> -						housekeeping_cpumask(HK_TYPE_TICK))) {
+> +			scoped_guard(rcu) {
+> +				hk_intersects = cpumask_intersects(policy->related_cpus,
+> +							housekeeping_cpumask(HK_TYPE_TICK));
+> +			}
+> +
+> +			if (!hk_intersects) {
+>  				cpufreq_cpu_put(policy);
+>  				return -EOPNOTSUPP;
+>  			}
 
-for you to fetch changes up to 5170a82e89211d876af17bf3d94a511fb2bb4921:
+-- 
+Best regards,
+Ridong
 
-  x86/hyperv: Skip LP/VP creation on kexec (2026-04-22 06:23:25 +0000)
-
-----------------------------------------------------------------
-hyperv-next for v7.1
- - Fix cross-compilation for hv tools (Aditya Garg)
- - Fix vmemmap_shift exceeding MAX_FOLIO_ORDER in mshv_vtl (Naman Jain)
- - Limit channel interrupt scan to relid high water mark (Michael Kelley)
- - Export hv_vmbus_exists() and use it in pci-hyperv (Dexuan Cui)
- - Fix cleanup and shutdown issues for MSHV (Jork Loeser)
- - Introduce more tracing support for MSHV (Stanislav Kinsburskii)
-----------------------------------------------------------------
-Aditya Garg (1):
-      tools: hv: Fix cross-compilation
-
-Dexuan Cui (1):
-      Drivers: hv: vmbus: Export hv_vmbus_exists() and use it in pci-hyperv
-
-Jork Loeser (3):
-      Drivers: hv: vmbus: fix hyperv_cpuhp_online variable shadowing
-      x86/hyperv: move stimer cleanup to hv_machine_shutdown()
-      x86/hyperv: Skip LP/VP creation on kexec
-
-Michael Kelley (1):
-      Drivers: hv: vmbus: Limit channel interrupt scan to relid high water mark
-
-Naman Jain (1):
-      mshv_vtl: Fix vmemmap_shift exceeding MAX_FOLIO_ORDER
-
-Stanislav Kinsburskii (2):
-      mshv: Introduce tracing support
-      mshv: Add tracepoint for GPA intercept handling
-
- arch/x86/kernel/cpu/mshyperv.c      |  15 +-
- drivers/hv/Makefile                 |   1 +
- drivers/hv/channel_mgmt.c           |  16 +-
- drivers/hv/hv_proc.c                |  47 ++++
- drivers/hv/hyperv_vmbus.h           |   3 +-
- drivers/hv/mshv_eventfd.c           |  14 +
- drivers/hv/mshv_irq.c               |   4 +
- drivers/hv/mshv_root.h              |   1 +
- drivers/hv/mshv_root_hv_call.c      |  22 +-
- drivers/hv/mshv_root_main.c         |  84 +++++-
- drivers/hv/mshv_trace.c             |   9 +
- drivers/hv/mshv_trace.h             | 544 ++++++++++++++++++++++++++++++++++++
- drivers/hv/mshv_vtl_main.c          |  12 +-
- drivers/hv/vmbus_drv.c              |  29 +-
- drivers/pci/controller/pci-hyperv.c |   2 +-
- include/asm-generic/mshyperv.h      |  10 +
- include/hyperv/hvgdk_mini.h         |   1 +
- include/hyperv/hvhdk_mini.h         |  12 +
- include/linux/hyperv.h              |   2 +
- include/uapi/linux/mshv.h           |   2 +-
- tools/hv/Makefile                   |   4 +-
- 21 files changed, 783 insertions(+), 51 deletions(-)
- create mode 100644 drivers/hv/mshv_trace.c
- create mode 100644 drivers/hv/mshv_trace.h
 
