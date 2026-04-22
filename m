@@ -1,48 +1,48 @@
-Return-Path: <linux-hyperv+bounces-10302-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10304-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MObFHuQ26GkbHAIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10302-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2026 04:48:04 +0200
+	id 8Lm5Dwk36GkbHAIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10304-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2026 04:48:41 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1CC844199F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2026 04:48:03 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D24BC4419BE
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2026 04:48:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2182B308F05C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2026 02:34:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B964B30AB45A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2026 02:35:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE83B389E04;
-	Wed, 22 Apr 2026 02:34:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3242138F92E;
+	Wed, 22 Apr 2026 02:34:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KSXqriht"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Ic1yo5q3"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17E2437F75B;
-	Wed, 22 Apr 2026 02:33:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFBC7383C78;
+	Wed, 22 Apr 2026 02:33:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776825243; cv=none; b=Zeu/kspUik3w7j9TidQSQPvibPFQ2ieXAAHPIRm46KiCuRpUTGgprwrZBH8vZ5sDHTFhLdaGRpvW+gvvsYnR5zrHZR2OjNPbb+ywcsp0Y1ebxOslTCLktX6KKC2Y+D87h3LnZwWNcudn7YSkd7spY2U+kFQcTVnzrXwqMqfhnNY=
+	t=1776825253; cv=none; b=oIlZFYsFIShaO5roZr5r6mhp16S+/hWb/fCRYXmZgYk8iuxRrtPFfQ5ZxvyExBmCBJoSo24YNcy4d3i3j4rWGnQAoYxrhstSoZVTZUS2TrZsMA/+qt6j9GVnkffUolVA5zI2JXkgaqtqPYDJSibSxlesuRtLg+UfxbvXwT2pA6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776825243; c=relaxed/simple;
-	bh=i0VTBJ+JnPrBDXBmboabc0DGz729xEaksDvoWqta6X8=;
+	s=arc-20240116; t=1776825253; c=relaxed/simple;
+	bh=/Lw+KcSgHoHzffRnhyMXmnV0XRzyqvf5vEVQCn2n6FQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IeEONEXlbnW4DUH5Ik1BKqxENGx5BcEeIXf9HpQmZmKExkb7I5uWMn5QcB3+LDP9JUZE0QYcCCWm5izcNKULlZ4lUQ579DUNZcRfwb/KkhES7VSeeFAi0OhHtDDKNyyTWp7lUF1qugb4tpo5i7i09SuMEIXIzt496+X2udcUbSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KSXqriht; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=WVC760ZKSE0i22YCsCDqrjzT8ZJpmQyPe0XFxWmVlsstHs9mLq2iZBvSIM3I2xkB0wi4ECROGJ5MvoLTtgWxXLpm9Nt/B9T7Kv9dCxGjyJi9niDEIyzj3WJonxIU8ohTft/D3fkMrtNi4G6MfEV3CN8wwWT94YlhAOV7E+KbEYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Ic1yo5q3; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from mrdev.corp.microsoft.com (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
-	by linux.microsoft.com (Postfix) with ESMTPSA id ED9A020B6F21;
-	Tue, 21 Apr 2026 19:33:48 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com ED9A020B6F21
+	by linux.microsoft.com (Postfix) with ESMTPSA id 4179320B6F22;
+	Tue, 21 Apr 2026 19:33:50 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4179320B6F22
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1776825229;
-	bh=0bjgMj0k5nPoMwets23GFJzSwvZMJJftuqSY4+V25iQ=;
+	s=default; t=1776825231;
+	bh=gW30GO/QQW7nzaJ7Yfwf+7LrHlL5wIbU4fBiOZJvGkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KSXqrihtAgVG9XWdFdwCwru9n3hQ4behZV7iMeZ+4xukeURssOqspE+157qhVzqtE
-	 FcWf0Kqa9z1IMmlXd0RXAk5UDgU6m+Krr21XJYtyiHUD3hPw94cm3d4ANawOaG/guA
-	 k8Sc0Ahq2V7Pyqtx95aCFFwz+95MqfwUe9gjoEwc=
+	b=Ic1yo5q3LYqOj6CnC5HptX8+MMhLYozrXi4UCdgjcq6buP3vSBaLinIDDMLVshfP6
+	 CvEOskA5omxJw3fPoBPqwFFgnaHHNWpdi/V0GU4w8DMm9dy88Dzw+z1L5QFx4h7vfS
+	 AKa7sd938DsJ/ipTBUDb9aIMj1Sr1zH2tafiVPNk=
 From: Mukesh R <mrathor@linux.microsoft.com>
 To: hpa@zytor.com,
 	robin.murphy@arm.com,
@@ -74,9 +74,9 @@ Cc: kys@microsoft.com,
 	kwilczynski@kernel.org,
 	bhelgaas@google.com,
 	arnd@arndb.de
-Subject: [PATCH V1 09/13] mshv: Import data structs around device passthru from hyperv headers
-Date: Tue, 21 Apr 2026 19:32:35 -0700
-Message-ID: <20260422023239.1171963-10-mrathor@linux.microsoft.com>
+Subject: [PATCH V1 10/13] PCI: hv: Build device id for a VMBus device, export PCI devid function
+Date: Tue, 21 Apr 2026 19:32:36 -0700
+Message-ID: <20260422023239.1171963-11-mrathor@linux.microsoft.com>
 X-Mailer: git-send-email 2.51.2.vfs.0.1
 In-Reply-To: <20260422023239.1171963-1-mrathor@linux.microsoft.com>
 References: <20260422023239.1171963-1-mrathor@linux.microsoft.com>
@@ -92,18 +92,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_TO(0.00)[zytor.com,arm.com,kernel.org,linux.microsoft.com,outlook.com,microsoft.com,vger.kernel.org,lists.linux.dev];
-	TAGGED_FROM(0.00)[bounces-10302-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10304-lists,linux-hyperv=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_NONE(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
@@ -114,187 +114,157 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	RCPT_COUNT_TWELVE(0.00)[30];
 	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: B1CC844199F
+X-Rspamd-Queue-Id: D24BC4419BE
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Copy/import from Hyper-V public headers, definitions and declarations that
-are related to attaching and detaching of device domains, and building
-device ids for those purposes.
+On Hyper-V, most hypercalls related to PCI passthru to map/unmap regions,
+interrupts, etc need a device id as a parameter. This device id refers
+to that specific device during the lifetime of passthru.
+
+An L1VH VM only contains VMBus based devices. A device id for a VMBus
+device is slightly different in that it uses the hv_pcibus_device info
+for building it to make sure it matches exactly what the hypervisor
+expects. This VMBus based device id is needed when attaching devices in
+an L1VH based guest VM. Before building it, a check is done to make sure
+the device is a valid VMBus device.
+
+In remaining cases, PCI device id is used. So, also make pci device
+id build function public.
 
 Signed-off-by: Mukesh R <mrathor@linux.microsoft.com>
 ---
- include/hyperv/hvgdk_mini.h |  11 ++++
- include/hyperv/hvhdk_mini.h | 112 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 123 insertions(+)
+ arch/x86/hyperv/irqdomain.c         |  9 +++++----
+ arch/x86/include/asm/mshyperv.h     |  4 ++++
+ drivers/pci/controller/pci-hyperv.c | 25 +++++++++++++++++++++++++
+ include/asm-generic/mshyperv.h      |  7 +++++++
+ 4 files changed, 41 insertions(+), 4 deletions(-)
 
-diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
-index 6a4e8b9d570f..da622fb06440 100644
---- a/include/hyperv/hvgdk_mini.h
-+++ b/include/hyperv/hvgdk_mini.h
-@@ -326,6 +326,9 @@ union hv_hypervisor_version_info {
- /* stimer Direct Mode is available */
- #define HV_STIMER_DIRECT_MODE_AVAILABLE			BIT(19)
+diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
+index 229f986e08ea..527835b99a70 100644
+--- a/arch/x86/hyperv/irqdomain.c
++++ b/arch/x86/hyperv/irqdomain.c
+@@ -137,7 +137,7 @@ static int get_rid_cb(struct pci_dev *pdev, u16 alias, void *data)
+ 	return 0;
+ }
  
-+#define HV_DEVICE_DOMAIN_AVAILABLE			BIT(24)
-+#define HV_S1_DEVICE_DOMAIN_AVAILABLE			BIT(25)
+-static union hv_device_id hv_build_devid_type_pci(struct pci_dev *pdev)
++u64 hv_build_devid_type_pci(struct pci_dev *pdev)
+ {
+ 	int pos;
+ 	union hv_device_id hv_devid;
+@@ -197,8 +197,9 @@ static union hv_device_id hv_build_devid_type_pci(struct pci_dev *pdev)
+ 	}
+ 
+ out:
+-	return hv_devid;
++	return hv_devid.as_uint64;
+ }
++EXPORT_SYMBOL_GPL(hv_build_devid_type_pci);
+ 
+ /*
+  * hv_map_msi_interrupt() - Map the MSI IRQ in the hypervisor.
+@@ -221,7 +222,7 @@ int hv_map_msi_interrupt(struct irq_data *data,
+ 
+ 	msidesc = irq_data_get_msi_desc(data);
+ 	pdev = msi_desc_to_pci_dev(msidesc);
+-	hv_devid = hv_build_devid_type_pci(pdev);
++	hv_devid.as_uint64 = hv_build_devid_type_pci(pdev);
+ 	cpu = cpumask_first(irq_data_get_effective_affinity_mask(data));
+ 
+ 	return hv_map_interrupt(hv_current_partition_id, hv_devid, false, cpu,
+@@ -296,7 +297,7 @@ static int hv_unmap_msi_interrupt(struct pci_dev *pdev,
+ {
+ 	union hv_device_id hv_devid;
+ 
+-	hv_devid = hv_build_devid_type_pci(pdev);
++	hv_devid.as_uint64 = hv_build_devid_type_pci(pdev);
+ 	return hv_unmap_interrupt(hv_devid.as_uint64, irq_entry);
+ }
+ 
+diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+index f64393e853ee..039e8a986be3 100644
+--- a/arch/x86/include/asm/mshyperv.h
++++ b/arch/x86/include/asm/mshyperv.h
+@@ -271,6 +271,10 @@ static inline u64 hv_get_non_nested_msr(unsigned int reg) { return 0; }
+ static inline int hv_apicid_to_vp_index(u32 apic_id) { return -EINVAL; }
+ #endif /* CONFIG_HYPERV */
+ 
++#if IS_ENABLED(CONFIG_HYPERV_IOMMU)
++u64 hv_build_devid_type_pci(struct pci_dev *pdev);
++#endif /* IS_ENABLED(CONFIG_HYPERV_IOMMU) */
++
+ struct mshv_vtl_cpu_context {
+ 	union {
+ 		struct {
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index ed6b399afc80..8f6b818ee09b 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -578,6 +578,8 @@ static void hv_pci_onchannelcallback(void *context);
+ #define DELIVERY_MODE		APIC_DELIVERY_MODE_FIXED
+ #define HV_MSI_CHIP_FLAGS	MSI_CHIP_FLAG_SET_ACK
+ 
++static bool hv_vmbus_pci_device(struct pci_bus *pbus);
++
+ static int hv_pci_irqchip_init(void)
+ {
+ 	return 0;
+@@ -1005,6 +1007,24 @@ static struct irq_domain *hv_pci_get_root_domain(void)
+ static void hv_arch_irq_unmask(struct irq_data *data) { }
+ #endif /* CONFIG_ARM64 */
+ 
++u64 hv_pci_vmbus_device_id(struct pci_dev *pdev)
++{
++	struct hv_pcibus_device *hbus;
++	struct pci_bus *pbus = pdev->bus;
++
++	if (!hv_vmbus_pci_device(pbus))
++		return 0;
++
++	hbus = container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
++
++	return	(hbus->hdev->dev_instance.b[5] << 24) |
++		(hbus->hdev->dev_instance.b[4] << 16) |
++		(hbus->hdev->dev_instance.b[7] << 8) |
++		(hbus->hdev->dev_instance.b[6] & 0xf8) |
++		PCI_FUNC(pdev->devfn);
++}
++EXPORT_SYMBOL_GPL(hv_pci_vmbus_device_id);
++
+ /**
+  * hv_pci_generic_compl() - Invoked for a completion packet
+  * @context:		Set up by the sender of the packet.
+@@ -1403,6 +1423,11 @@ static struct pci_ops hv_pcifront_ops = {
+ 	.write = hv_pcifront_write_config,
+ };
+ 
++static bool hv_vmbus_pci_device(struct pci_bus *pbus)
++{
++	return pbus->ops == &hv_pcifront_ops;
++}
 +
  /*
-  * Implementation recommendations. Indicates which behaviors the hypervisor
-  * recommends the OS implement for optimal performance.
-@@ -475,6 +478,8 @@ union hv_vp_assist_msr_contents {	 /* HV_REGISTER_VP_ASSIST_PAGE */
- #define HVCALL_MAP_DEVICE_INTERRUPT			0x007c
- #define HVCALL_UNMAP_DEVICE_INTERRUPT			0x007d
- #define HVCALL_RETARGET_INTERRUPT			0x007e
-+#define HVCALL_ATTACH_DEVICE                            0x0082
-+#define HVCALL_DETACH_DEVICE                            0x0083
- #define HVCALL_NOTIFY_PARTITION_EVENT                   0x0087
- #define HVCALL_ENTER_SLEEP_STATE			0x0084
- #define HVCALL_NOTIFY_PORT_RING_EMPTY			0x008b
-@@ -486,9 +491,15 @@ union hv_vp_assist_msr_contents {	 /* HV_REGISTER_VP_ASSIST_PAGE */
- #define HVCALL_GET_VP_INDEX_FROM_APIC_ID		0x009a
- #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE	0x00af
- #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST	0x00b0
-+#define HVCALL_CREATE_DEVICE_DOMAIN                     0x00b1
-+#define HVCALL_ATTACH_DEVICE_DOMAIN                     0x00b2
-+#define HVCALL_MAP_DEVICE_GPA_PAGES                     0x00b3
-+#define HVCALL_UNMAP_DEVICE_GPA_PAGES                   0x00b4
- #define HVCALL_SIGNAL_EVENT_DIRECT			0x00c0
- #define HVCALL_POST_MESSAGE_DIRECT			0x00c1
- #define HVCALL_DISPATCH_VP				0x00c2
-+#define HVCALL_DETACH_DEVICE_DOMAIN                     0x00c4
-+#define HVCALL_DELETE_DEVICE_DOMAIN                     0x00c5
- #define HVCALL_GET_GPA_PAGES_ACCESS_STATES		0x00c9
- #define HVCALL_ACQUIRE_SPARSE_SPA_PAGE_HOST_ACCESS	0x00d7
- #define HVCALL_RELEASE_SPARSE_SPA_PAGE_HOST_ACCESS	0x00d8
-diff --git a/include/hyperv/hvhdk_mini.h b/include/hyperv/hvhdk_mini.h
-index b4cb2fa26e9b..60425052a799 100644
---- a/include/hyperv/hvhdk_mini.h
-+++ b/include/hyperv/hvhdk_mini.h
-@@ -468,6 +468,32 @@ struct hv_send_ipi_ex { /* HV_INPUT_SEND_SYNTHETIC_CLUSTER_IPI_EX */
- 	struct hv_vpset vp_set;
- } __packed;
+  * Paravirtual backchannel
+  *
+diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+index e8cbc4e3f7ad..fe5ddd1c43ff 100644
+--- a/include/asm-generic/mshyperv.h
++++ b/include/asm-generic/mshyperv.h
+@@ -329,6 +329,13 @@ static inline enum hv_isolation_type hv_get_isolation_type(void)
+ }
+ #endif /* CONFIG_HYPERV */
  
-+union hv_attdev_flags {		/* HV_ATTACH_DEVICE_FLAGS */
-+	struct {
-+		u32 logical_id : 1;
-+		u32 resvd0 : 1;
-+		u32 ats_enabled : 1;
-+		u32 virt_func : 1;
-+		u32 shared_irq_child : 1;
-+		u32 virt_dev : 1;
-+		u32 ats_supported : 1;
-+		u32 small_irt : 1;
-+		u32 resvd : 24;
-+	} __packed;
-+	u32 as_uint32;
-+};
++#if IS_ENABLED(CONFIG_PCI_HYPERV)
++u64 hv_pci_vmbus_device_id(struct pci_dev *pdev);
++#else   /* IS_ENABLED(CONFIG_PCI_HYPERV) */
++static inline u64 hv_pci_vmbus_device_id(struct pci_dev *pdev)
++{ return 0; }
++#endif /* IS_ENABLED(CONFIG_PCI_HYPERV) */
 +
-+union hv_dev_pci_caps {		/* HV_DEVICE_PCI_CAPABILITIES */
-+	struct {
-+		u32 max_pasid_width : 5;
-+		u32 invalidate_qdepth : 5;
-+		u32 global_inval : 1;
-+		u32 prg_response_req : 1;
-+		u32 resvd : 20;
-+	} __packed;
-+	u32 as_uint32;
-+};
-+
- typedef u16 hv_pci_rid;		/* HV_PCI_RID */
- typedef u16 hv_pci_segment;	/* HV_PCI_SEGMENT */
- typedef u64 hv_logical_device_id;
-@@ -547,4 +573,90 @@ union hv_device_id {		/* HV_DEVICE_ID */
- 	} acpi;
- } __packed;
- 
-+struct hv_input_attach_device {         /* HV_INPUT_ATTACH_DEVICE */
-+	u64 partition_id;
-+	union hv_device_id device_id;
-+	union hv_attdev_flags attdev_flags;
-+	u8  attdev_vtl;
-+	u8  rsvd0;
-+	u16 rsvd1;
-+	u64 logical_devid;
-+	union hv_dev_pci_caps dev_pcicaps;
-+	u16 pf_pci_rid;
-+	u16 resvd2;
-+} __packed;
-+
-+struct hv_input_detach_device {		/* HV_INPUT_DETACH_DEVICE */
-+	u64 partition_id;
-+	u64 logical_devid;
-+} __packed;
-+
-+
-+/* 3 domain types: stage 1, stage 2, and SOC */
-+#define HV_DEVICE_DOMAIN_TYPE_S2  0 /* HV_DEVICE_DOMAIN_ID_TYPE_S2 */
-+#define HV_DEVICE_DOMAIN_TYPE_S1  1 /* HV_DEVICE_DOMAIN_ID_TYPE_S1 */
-+#define HV_DEVICE_DOMAIN_TYPE_SOC 2 /* HV_DEVICE_DOMAIN_ID_TYPE_SOC */
-+
-+/* ID for stage 2 default domain and NULL domain */
-+#define HV_DEVICE_DOMAIN_ID_S2_DEFAULT 0
-+#define HV_DEVICE_DOMAIN_ID_S2_NULL    0xFFFFFFFFULL
-+
-+union hv_device_domain_id {
-+	u64 as_uint64;
-+	struct {
-+		u32 type : 4;
-+		u32 reserved : 28;
-+		u32 id;
-+	};
-+} __packed;
-+
-+struct hv_input_device_domain { /* HV_INPUT_DEVICE_DOMAIN */
-+	u64 partition_id;
-+	union hv_input_vtl owner_vtl;
-+	u8 padding[7];
-+	union hv_device_domain_id domain_id;
-+} __packed;
-+
-+union hv_create_device_domain_flags {	/* HV_CREATE_DEVICE_DOMAIN_FLAGS */
-+	u32 as_uint32;
-+	struct {
-+		u32 forward_progress_required : 1;
-+		u32 inherit_owning_vtl : 1;
-+		u32 reserved : 30;
-+	} __packed;
-+} __packed;
-+
-+struct hv_input_create_device_domain {	/* HV_INPUT_CREATE_DEVICE_DOMAIN */
-+	struct hv_input_device_domain device_domain;
-+	union hv_create_device_domain_flags create_device_domain_flags;
-+} __packed;
-+
-+struct hv_input_delete_device_domain {	/* HV_INPUT_DELETE_DEVICE_DOMAIN */
-+	struct hv_input_device_domain device_domain;
-+} __packed;
-+
-+struct hv_input_attach_device_domain {	/* HV_INPUT_ATTACH_DEVICE_DOMAIN */
-+	struct hv_input_device_domain device_domain;
-+	union hv_device_id device_id;
-+} __packed;
-+
-+struct hv_input_detach_device_domain {	/* HV_INPUT_DETACH_DEVICE_DOMAIN */
-+	u64 partition_id;
-+	union hv_device_id device_id;
-+} __packed;
-+
-+struct hv_input_map_device_gpa_pages {	/* HV_INPUT_MAP_DEVICE_GPA_PAGES */
-+	struct hv_input_device_domain device_domain;
-+	union hv_input_vtl target_vtl;
-+	u8 padding[3];
-+	u32 map_flags;
-+	u64 target_device_va_base;
-+	u64 gpa_page_list[];
-+} __packed;
-+
-+struct hv_input_unmap_device_gpa_pages {  /* HV_INPUT_UNMAP_DEVICE_GPA_PAGES */
-+	struct hv_input_device_domain device_domain;
-+	u64 target_device_va_base;
-+} __packed;
-+
- #endif /* _HV_HVHDK_MINI_H */
+ #if IS_ENABLED(CONFIG_MSHV_ROOT)
+ static inline bool hv_root_partition(void)
+ {
 -- 
 2.51.2.vfs.0.1
 
