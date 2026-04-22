@@ -1,47 +1,48 @@
-Return-Path: <linux-hyperv+bounces-10294-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10296-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QJUbFFI16Gk6GwIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10294-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2026 04:41:22 +0200
+	id CDNJDQY06Gk6GwIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10296-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2026 04:35:50 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A66AC4418BC
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2026 04:41:21 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B662A4417B3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2026 04:35:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D93B430075CD
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2026 02:33:43 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 98AB630759A9
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2026 02:33:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7775C3806C3;
-	Wed, 22 Apr 2026 02:33:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54C64384229;
+	Wed, 22 Apr 2026 02:33:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lUQ+NBFU"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PNjDCwQb"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1611E3806D9;
-	Wed, 22 Apr 2026 02:33:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FCA3382384;
+	Wed, 22 Apr 2026 02:33:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776825220; cv=none; b=DGZkrvtIaGmjlszn2lj7/2Lu1Tdy9YqvUSynddtmQG+OeAABssPDya2OrSizXRnAupLBoY1kv/T5bBSZ2CwciEfENk0sP/Jjp7GkMOb4OUtRc9SQKw/2oVO7CISDnFUFuqXHdK8O8u/YmaTQs90wV20tcV05AbVUoP/q3Q50p8w=
+	t=1776825231; cv=none; b=Y4crd1MhzewoYMaHG/Ac28F1Mysv97yH4LOFPuk9BIM8jrw+X08+YIQwEBD82Rj+IE4AZlBtoQRirR7TOOkYsOar/ArhKSySkLiTxog/ssljLm4eO6SX3F87mIXADkLvlSnWsLR+BSV5xEcZiW6dSMhycFUqTzs+q0CRV7oOpbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776825220; c=relaxed/simple;
-	bh=GmhkLwfa6h6rSszM+OfJhO9L6pKs23/XT/lrbTGZNX8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=suHVzafvR38GbiJzykcBt+vLW/QJifciO2fdeAFN+Jg/D6mKPKeQncb8vRZqV2/hRkpfsarvbE1Rwa5PqPMk2eXSA+N9lt8gpxK+qzgzKBxbPqPW+HbBNuSLYFcf5rYoumBiHA61rq4S+8a5KAiG9bwKGkGJxqXRrhUwFt8+Uaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lUQ+NBFU; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1776825231; c=relaxed/simple;
+	bh=Yvgldd4nQGSF/LYqRa98GkHpoMtDyLqBf3EpIQNEdz4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Mk7FcC9BArgBX5pNI5UXlsrjtnuv3nowrkOJL09TVzyNr05sgThDeuDuVYyn2NOaOEps9qMSS8Ksf5F+CmUMkJtIm2xQhLHTZKCO+sjh9MaCITnpYCZ235akZkbOUpB88nUavj3OEVJgPk/T3wYDJ2FYDR490jtGMHq3oyk665Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PNjDCwQb; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from mrdev.corp.microsoft.com (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
-	by linux.microsoft.com (Postfix) with ESMTPSA id AB52020B6F01;
-	Tue, 21 Apr 2026 19:33:28 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AB52020B6F01
+	by linux.microsoft.com (Postfix) with ESMTPSA id A8D0A20B6F08;
+	Tue, 21 Apr 2026 19:33:37 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A8D0A20B6F08
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1776825209;
-	bh=O+mpjpLBLfXxNngTSPHR4JXlp5P2eN9Wrs/JOmLiTYs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=lUQ+NBFUMYhMiCKp5hJ4csDmWh7uDXFoFxm83NvWZ/IwJ9a5RxenB0Yd0zUaoi1pw
-	 3yv9M2bPsfObV813+Lm1OuK3i4jcBXSJHx2cUn1pSWMy43jtuQH42gb29McJePj3lT
-	 Ej8Q0Cx2NZEoOqbrcfAhwc/jLbsHBVnf65GmjuN0=
+	s=default; t=1776825218;
+	bh=DGshgrqxUKkRySd8JcGwdzb2ggF+IE9bbLNEuDjQN+E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PNjDCwQbtWZ1gGTne9Wx6233h1/7r/9UKDsA/e2YJdwxrF1V67ohC96DZiM6P8TF3
+	 Qwu8cP6MvQBodgNNu6f3V7L6cX2liQWK2Vz0bCrj6y1d+4fCBUdC+E9/y8pXojK9k0
+	 pIZQwzMMXCtp4s6VRy2+vFe3vLDuXk1pjGRRrAcw=
 From: Mukesh R <mrathor@linux.microsoft.com>
 To: hpa@zytor.com,
 	robin.murphy@arm.com,
@@ -73,10 +74,12 @@ Cc: kys@microsoft.com,
 	kwilczynski@kernel.org,
 	bhelgaas@google.com,
 	arnd@arndb.de
-Subject: [PATCH V1 00/13] PCI passthru on Hyper-V (Part I)
-Date: Tue, 21 Apr 2026 19:32:26 -0700
-Message-ID: <20260422023239.1171963-1-mrathor@linux.microsoft.com>
+Subject: [PATCH V1 01/13] iommu/hyperv: rename hyperv-iommu.c to hyperv-irq.c
+Date: Tue, 21 Apr 2026 19:32:27 -0700
+Message-ID: <20260422023239.1171963-2-mrathor@linux.microsoft.com>
 X-Mailer: git-send-email 2.51.2.vfs.0.1
+In-Reply-To: <20260422023239.1171963-1-mrathor@linux.microsoft.com>
+References: <20260422023239.1171963-1-mrathor@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -89,18 +92,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_TO(0.00)[zytor.com,arm.com,kernel.org,linux.microsoft.com,outlook.com,microsoft.com,vger.kernel.org,lists.linux.dev];
-	TAGGED_FROM(0.00)[bounces-10294-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10296-lists,linux-hyperv=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_NONE(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
@@ -111,108 +114,76 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	RCPT_COUNT_TWELVE(0.00)[30];
 	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: A66AC4418BC
+X-Rspamd-Queue-Id: B662A4417B3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Implement passthru of PCI devices to unprivileged virtual machines
-(VMs) when Linux is running as a privileged VM on Microsoft Hyper-V
-hypervisor. This support is made to fit within the workings of VFIO
-framework, and any VMM needing to use it must use the VFIO subsystem.
-This supports both full device passthru and SR-IOV based VFs.
+This file actually implements irq remapping, so rename to more appropriate
+hyperv-irq.c. A new file to implement hyperv iommu will be introduced
+later.  Also, it should not be tied to HYPERV_IOMMU, but to CONFIG_HYPERV
+and IRQ_REMAP. The file already has #ifdef CONFIG_IRQ_REMAP.
 
-At a high level, the hypervisor supports traditional mapped iommu domains
-that use explicit map and unmap hypercalls for mapping and unmapping guest
-RAM into the iommu subsystem. Hyper-V also has a concept of direct attach
-devices whereby the iommu subsystem simply uses the guest HW page table
-(ept/npt/..). This series adds support for both, and both are made to
-work with the VFIO subsystem.
-
-While this Part I focuses on memory mappings, upcoming Part II
-will focus on irq bypass along with some minor irq remapping 
-updates.
-
-Based on: cd9f2e7d6e5b (origin/hyperv-next)
-
-Testing:
- o Most testing done on hyperv-next:e733a9e28180 using Cloud Hypervisor (51).
- o Limited testing on : cd9f2e7d6e5b
- o Tested with impending Part II irq patches.
- o All tests involved PF passthru of devices using MSIx.
- o Following combinations were tested:
-    - L1VH(1): test 1: Mellanox ConnectX-6 Lx passthru
-               test 2: NVIDIA Tesla Tesla T4 GPU.
-               test 3: Both of above simultaneous passthru
-    - Baremetal dom0/root: All of above.
-
-(1) L1VH: this is a semi privileged VM that runs on Windows root on
-          Hyper-V, and allows users to create more child VMs.
-
-Pending: This to establish a baseline for further enhancements.
- o arm64 : some delta to make this work on arm64 (in progress).
- o device sleep/wakeup.
- o More stress testing 
- o CH reports it could not unbind vfio group upon guest shutdown. Need 
-   to reboot for now.
- o Qemu support (in progress).
-
-Changes in V1:
- o patch 1: Don't tie hyperv-irq.c to CONFIG_HYPERV_IOMMU.
- o patch 4: Redesigned to address security vulnerability found by copilot 
-            with passing tgid as a parameter.  Also, do tgid setting right 
-            after setting pt_id.
- o patch 5: Remove unused type parameter from mshv_device_ops.device_create
- o patch 7: mshv_partition_ioctl_create_device cleanup on copy_to_user.
- o patch 10: Add export of hv_build_devid_type_pci here to get rid of 
-             patch 11.
- o patch 12: Move functions to build device ids from patch 11 here for
-             the benefit of arm64. Rename file to: hyperv-iommu-root.c.
- o patch 13: removed to be made part of interrupt part II of this support.
- o patch 14: get rid of fast path to reduce review noise.
- o New (last) patch to pin ram regions if device passthru to a VM.
-
-Thanks,
--Mukesh
-
-Mukesh R (13):
-  iommu/hyperv: rename hyperv-iommu.c to hyperv-irq.c
-  x86/hyperv: cosmetic changes in irqdomain.c for readability
-  x86/hyperv: add insufficient memory support in irqdomain.c
-  mshv: Provide a way to get partition id if running in a VMM process
-  mshv: Declarations and definitions for VFIO-MSHV bridge device
-  mshv: Implement mshv bridge device for VFIO
-  mshv: Add ioctl support for MSHV-VFIO bridge device
-  PCI: hv: rename hv_compose_msi_msg to hv_vmbus_compose_msi_msg
-  mshv: Import data structs around device passthru from hyperv headers
-  PCI: hv: Build device id for a VMBus device, export PCI devid function
-  x86/hyperv: Implement hyperv virtual iommu
-  mshv: Populate mmio mappings for PCI passthru
-  mshv: pin all ram mem regions if partition has device passthru
-
- MAINTAINERS                                   |   3 +-
- arch/x86/hyperv/irqdomain.c                   | 229 +++--
- arch/x86/include/asm/mshyperv.h               |   4 +
- arch/x86/kernel/pci-dma.c                     |   2 +
- drivers/hv/Makefile                           |   3 +-
- drivers/hv/mshv_root.h                        |  26 +
- drivers/hv/mshv_root_main.c                   | 256 ++++-
- drivers/hv/mshv_vfio.c                        | 211 ++++
- drivers/iommu/Kconfig                         |   5 +-
- drivers/iommu/Makefile                        |   3 +-
- drivers/iommu/hyperv-iommu-root.c             | 899 ++++++++++++++++++
- .../iommu/{hyperv-iommu.c => hyperv-irq.c}    |   2 +-
- drivers/iommu/irq_remapping.c                 |   2 +-
- drivers/pci/controller/pci-hyperv.c           | 120 ++-
- include/asm-generic/mshyperv.h                |  34 +
- include/hyperv/hvgdk_mini.h                   |  11 +
- include/hyperv/hvhdk_mini.h                   | 112 +++
- include/linux/hyperv.h                        |   6 +
- include/uapi/linux/mshv.h                     |  31 +
- 19 files changed, 1790 insertions(+), 169 deletions(-)
- create mode 100644 drivers/hv/mshv_vfio.c
- create mode 100644 drivers/iommu/hyperv-iommu-root.c
+Signed-off-by: Mukesh R <mrathor@linux.microsoft.com>
+---
+ MAINTAINERS                                    | 2 +-
+ drivers/iommu/Makefile                         | 2 +-
+ drivers/iommu/{hyperv-iommu.c => hyperv-irq.c} | 2 +-
+ drivers/iommu/irq_remapping.c                  | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
  rename drivers/iommu/{hyperv-iommu.c => hyperv-irq.c} (99%)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d1cc0e12fe1f..f803a6a38fee 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11914,7 +11914,7 @@ F:	drivers/clocksource/hyperv_timer.c
+ F:	drivers/hid/hid-hyperv.c
+ F:	drivers/hv/
+ F:	drivers/input/serio/hyperv-keyboard.c
+-F:	drivers/iommu/hyperv-iommu.c
++F:	drivers/iommu/hyperv-irq.c
+ F:	drivers/net/ethernet/microsoft/
+ F:	drivers/net/hyperv/
+ F:	drivers/pci/controller/pci-hyperv-intf.c
+diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+index 0275821f4ef9..335ea77cced6 100644
+--- a/drivers/iommu/Makefile
++++ b/drivers/iommu/Makefile
+@@ -30,7 +30,7 @@ obj-$(CONFIG_TEGRA_IOMMU_SMMU) += tegra-smmu.o
+ obj-$(CONFIG_EXYNOS_IOMMU) += exynos-iommu.o
+ obj-$(CONFIG_FSL_PAMU) += fsl_pamu.o fsl_pamu_domain.o
+ obj-$(CONFIG_S390_IOMMU) += s390-iommu.o
+-obj-$(CONFIG_HYPERV_IOMMU) += hyperv-iommu.o
++obj-$(CONFIG_HYPERV) += hyperv-irq.o
+ obj-$(CONFIG_VIRTIO_IOMMU) += virtio-iommu.o
+ obj-$(CONFIG_IOMMU_SVA) += iommu-sva.o
+ obj-$(CONFIG_IOMMU_IOPF) += io-pgfault.o
+diff --git a/drivers/iommu/hyperv-iommu.c b/drivers/iommu/hyperv-irq.c
+similarity index 99%
+rename from drivers/iommu/hyperv-iommu.c
+rename to drivers/iommu/hyperv-irq.c
+index 479103261ae6..cc49c7cbc434 100644
+--- a/drivers/iommu/hyperv-iommu.c
++++ b/drivers/iommu/hyperv-irq.c
+@@ -331,4 +331,4 @@ static const struct irq_domain_ops hyperv_root_ir_domain_ops = {
+ 	.free = hyperv_root_irq_remapping_free,
+ };
+ 
+-#endif
++#endif  /* CONFIG_IRQ_REMAP */
+diff --git a/drivers/iommu/irq_remapping.c b/drivers/iommu/irq_remapping.c
+index c2443659812a..41bf65e4ea88 100644
+--- a/drivers/iommu/irq_remapping.c
++++ b/drivers/iommu/irq_remapping.c
+@@ -108,7 +108,7 @@ int __init irq_remapping_prepare(void)
+ 	else if (IS_ENABLED(CONFIG_AMD_IOMMU) &&
+ 		 amd_iommu_irq_ops.prepare() == 0)
+ 		remap_ops = &amd_iommu_irq_ops;
+-	else if (IS_ENABLED(CONFIG_HYPERV_IOMMU) &&
++	else if (IS_ENABLED(CONFIG_HYPERV) &&
+ 		 hyperv_irq_remap_ops.prepare() == 0)
+ 		remap_ops = &hyperv_irq_remap_ops;
+ 	else
 -- 
 2.51.2.vfs.0.1
 
