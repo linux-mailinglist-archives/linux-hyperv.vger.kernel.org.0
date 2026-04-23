@@ -1,48 +1,48 @@
-Return-Path: <linux-hyperv+bounces-10326-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10327-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oKwqBrsU6mmVtgIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10326-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 14:46:51 +0200
+	id yHMrOfMU6mmVtgIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10327-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 14:47:47 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 955484523F2
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 14:46:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 34EA745241F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 14:47:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E316430C60CA
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 12:42:45 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id AF5F830D6A42
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 12:42:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5301F3EE1DC;
-	Thu, 23 Apr 2026 12:42:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE4913EDAA6;
+	Thu, 23 Apr 2026 12:42:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gUlDmye2"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XxtnKmAZ"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD6243EDAD3;
-	Thu, 23 Apr 2026 12:42:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76BE13EDAD3;
+	Thu, 23 Apr 2026 12:42:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776948160; cv=none; b=aOyMAl5Q0PFdlL5HesnAUq5yDHaCXtIZ2Nk3iHRNPBzIETNnRMyrszJW+QTZCT1AvCYcPTSBSIU7uSuYhfiPMaj2ljwFx47AvO9MQEhvvRvZjv8EqDjEfVT15xiR+Gs1myQSb5xcH/Nw/rxMPoaM06FiXzKD0oyC82A6H95YLic=
+	t=1776948167; cv=none; b=HM9lCX/l407oehMWQ751gmvlyVR1OpJUqpLSKTa4TMu/5RogzaSQoEH8y1nJTCy5a++Adb+HSM6bD9d2mKnngcmxypNGJC28jjnXMGN4upcb8A+8GE6OaqrJ3sr03A5dFfDDyJtYIv+utr96lyMKyXT3OvD+tmzv627vxLGGUI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776948160; c=relaxed/simple;
-	bh=AwpLL0nVqMOd1fFjfITtLnfNhWNRGgzT/57tqpuFJcU=;
+	s=arc-20240116; t=1776948167; c=relaxed/simple;
+	bh=O/KxpLA9As2ClJGwVyI5h46bbQ5m3KVt+eTtzgD7ddI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Nbw2Ccg2PhIApQqeY5Ungp4K2SEvBkJxULJobK98I096pK+8uXyhmw+vD7EuQNUX9TVDHiJMQsWk/kOdDsFDVq5A6l1UUH1posXNXA6CaJVeSIPHr8+fPpZHYONEkZoKhXBiDu4ekGgZfPdQ5z961jiwERhbFiMhyEAQ1aBUCtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gUlDmye2; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=XvH9O+cFvjeJC6BHebye7qP0F4MpLbpFJNmOnxXlPwI3QD5TIll6KR6ysKpDvlbOJQOh3U3l70aYrwX5Qpk+2VCcYBSA2b2C2Os1HgJf3lpks1h72fdOYb15wxtDVOFaAZCMyQqpf8F877OAFW0QR1Fep7+qf4IVZXf4XJrNl0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XxtnKmAZ; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from CPC-namja-026ON.redmond.corp.microsoft.com (unknown [4.213.232.18])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 3897E20B7169;
-	Thu, 23 Apr 2026 05:42:27 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3897E20B7169
+	by linux.microsoft.com (Postfix) with ESMTPSA id 6A37520B716E;
+	Thu, 23 Apr 2026 05:42:38 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6A37520B716E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1776948154;
-	bh=zLzms2JDLRJRnvdbHRjSQjPRubfamtoDlwMUbgfve34=;
+	s=default; t=1776948165;
+	bh=RgOk9CuNiMb2ueZsexw1395h43OXuM/ZLDHAurB/vUw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gUlDmye22rkeSlONYLXTNUDycGTkKyaZAW9hKnGf/4dlX2h/INs0GEIPhuIU0A4Br
-	 Y/EzKEDkmn2j7HHcwARzseniD46X07CpcUXz+UTJzepzrklDfpFLTwH1Fi73l8V6z2
-	 3graOJdNxm6PWIjh1jCyDaWhrMiYI2ByxcFZCMEI=
+	b=XxtnKmAZkBsl1fo5vHmG1yFvwFiMsZTf0tpny7IxDVM9D9co5+6lVoSiRvy5ZEWXL
+	 m/QTC0zSPOY++7G88l5sW5gq6ud3jQim6h/EFnC2Hp3qNkNFTjTwp2dqZtRDLlCAfk
+	 FJuSJjmd4QdYK/ZdtpBJGsvpEESRR2oihG4xQh/I=
 From: Naman Jain <namjain@linux.microsoft.com>
 To: "K . Y . Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
@@ -76,9 +76,9 @@ Cc: Marc Zyngier <maz@kernel.org>,
 	linux-riscv@lists.infradead.org,
 	vdso@mailbox.org,
 	ssengar@linux.microsoft.com
-Subject: [PATCH v2 02/15] Drivers: hv: Move hv_vp_assist_page to common files
-Date: Thu, 23 Apr 2026 12:41:52 +0000
-Message-ID: <20260423124206.2410879-3-namjain@linux.microsoft.com>
+Subject: [PATCH v2 03/15] Drivers: hv: Move vmbus_handler to common code
+Date: Thu, 23 Apr 2026 12:41:53 +0000
+Message-ID: <20260423124206.2410879-4-namjain@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260423124206.2410879-1-namjain@linux.microsoft.com>
 References: <20260423124206.2410879-1-namjain@linux.microsoft.com>
@@ -91,456 +91,173 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,arm.com,gmail.com,linux.microsoft.com,vger.kernel.org,lists.infradead.org,mailbox.org];
-	RCPT_COUNT_TWELVE(0.00)[32];
-	TAGGED_FROM(0.00)[bounces-10326-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10327-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,arm.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,dabbelt.com,eecs.berkeley.edu,ghiti.fr,outlook.com];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,arm.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,dabbelt.com,eecs.berkeley.edu,ghiti.fr,outlook.com];
+	RCPT_COUNT_TWELVE(0.00)[32];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[kernel.org,arm.com,gmail.com,linux.microsoft.com,vger.kernel.org,lists.infradead.org,mailbox.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[namjain@linux.microsoft.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	MAILSPIKE_FAIL(0.00)[172.105.105.114:server fail];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-0.999];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mailbox.org:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.microsoft.com:dkim,linux.microsoft.com:mid]
-X-Rspamd-Queue-Id: 955484523F2
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.microsoft.com:dkim,linux.microsoft.com:mid]
+X-Rspamd-Queue-Id: 34EA745241F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Move the logic to initialize and export hv_vp_assist_page from x86
-architecture code to Hyper-V common code to allow it to be used for
-upcoming arm64 support in MSHV_VTL driver.
-Note: This change also improves error handling - if VP assist page
-allocation fails, hyperv_init() now returns early instead of
-continuing with partial initialization.
+Move the vmbus_handler global variable and hv_setup_vmbus_handler()/
+hv_remove_vmbus_handler() from arch/x86 to drivers/hv/hv_common.c.
 
-Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-Reviewed-by: Roman Kisel <vdso@mailbox.org>
+hv_setup_vmbus_handler() is called unconditionally in vmbus_bus_init()
+and works for both x86 (sysvec handler) and arm64 (vmbus_percpu_isr).
+
+This eliminates the need for separate percpu vmbus handler setup
+functions and __weak stubs, that are needed for adding ARM64 support
+in MSHV_VTL driver where we need to set a custom per-cpu vmbus handler.
+
 Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
 ---
- arch/x86/hyperv/hv_init.c       | 88 +-----------------------------
- arch/x86/include/asm/mshyperv.h | 14 -----
- drivers/hv/hv_common.c          | 94 ++++++++++++++++++++++++++++++++-
- include/asm-generic/mshyperv.h  | 16 ++++++
- include/hyperv/hvgdk_mini.h     |  6 ++-
- 5 files changed, 115 insertions(+), 103 deletions(-)
+ arch/x86/kernel/cpu/mshyperv.c | 12 ------------
+ drivers/hv/hv_common.c         |  9 +++++++--
+ drivers/hv/vmbus_drv.c         | 17 +++++++++--------
+ include/asm-generic/mshyperv.h |  1 +
+ 4 files changed, 17 insertions(+), 22 deletions(-)
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 323adc93f2dc..75a98b5e451b 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -81,9 +81,6 @@ union hv_ghcb * __percpu *hv_ghcb_pg;
- /* Storage to save the hypercall page temporarily for hibernation */
- static void *hv_hypercall_pg_saved;
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index 89a2eb8a0722..68706ff5880e 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -145,7 +145,6 @@ void hv_set_msr(unsigned int reg, u64 value)
+ EXPORT_SYMBOL_GPL(hv_set_msr);
  
--struct hv_vp_assist_page **hv_vp_assist_page;
--EXPORT_SYMBOL_GPL(hv_vp_assist_page);
--
- static int hyperv_init_ghcb(void)
- {
- 	u64 ghcb_gpa;
-@@ -117,59 +114,12 @@ static int hyperv_init_ghcb(void)
- 
- static int hv_cpu_init(unsigned int cpu)
- {
--	union hv_vp_assist_msr_contents msr = { 0 };
--	struct hv_vp_assist_page **hvp;
- 	int ret;
- 
- 	ret = hv_common_cpu_init(cpu);
- 	if (ret)
- 		return ret;
- 
--	if (!hv_vp_assist_page)
--		return 0;
--
--	hvp = &hv_vp_assist_page[cpu];
--	if (hv_root_partition()) {
--		/*
--		 * For root partition we get the hypervisor provided VP assist
--		 * page, instead of allocating a new page.
--		 */
--		rdmsrq(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
--		*hvp = memremap(msr.pfn << HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT,
--				PAGE_SIZE, MEMREMAP_WB);
--	} else {
--		/*
--		 * The VP assist page is an "overlay" page (see Hyper-V TLFS's
--		 * Section 5.2.1 "GPA Overlay Pages"). Here it must be zeroed
--		 * out to make sure we always write the EOI MSR in
--		 * hv_apic_eoi_write() *after* the EOI optimization is disabled
--		 * in hv_cpu_die(), otherwise a CPU may not be stopped in the
--		 * case of CPU offlining and the VM will hang.
--		 */
--		if (!*hvp) {
--			*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO);
--
--			/*
--			 * Hyper-V should never specify a VM that is a Confidential
--			 * VM and also running in the root partition. Root partition
--			 * is blocked to run in Confidential VM. So only decrypt assist
--			 * page in non-root partition here.
--			 */
--			if (*hvp && !ms_hyperv.paravisor_present && hv_isolation_type_snp()) {
--				WARN_ON_ONCE(set_memory_decrypted((unsigned long)(*hvp), 1));
--				memset(*hvp, 0, PAGE_SIZE);
--			}
--		}
--
--		if (*hvp)
--			msr.pfn = vmalloc_to_pfn(*hvp);
--
--	}
--	if (!WARN_ON(!(*hvp))) {
--		msr.enable = 1;
--		wrmsrq(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
--	}
--
- 	/* Allow Hyper-V stimer vector to be injected from Hypervisor. */
- 	if (ms_hyperv.misc_features & HV_STIMER_DIRECT_MODE_AVAILABLE)
- 		apic_update_vector(cpu, HYPERV_STIMER0_VECTOR, true);
-@@ -286,23 +236,6 @@ static int hv_cpu_die(unsigned int cpu)
- 
- 	hv_common_cpu_die(cpu);
- 
--	if (hv_vp_assist_page && hv_vp_assist_page[cpu]) {
--		union hv_vp_assist_msr_contents msr = { 0 };
--		if (hv_root_partition()) {
--			/*
--			 * For root partition the VP assist page is mapped to
--			 * hypervisor provided page, and thus we unmap the
--			 * page here and nullify it, so that in future we have
--			 * correct page address mapped in hv_cpu_init.
--			 */
--			memunmap(hv_vp_assist_page[cpu]);
--			hv_vp_assist_page[cpu] = NULL;
--			rdmsrq(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
--			msr.enable = 0;
--		}
--		wrmsrq(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
--	}
--
- 	if (hv_reenlightenment_cb == NULL)
- 		return 0;
- 
-@@ -460,21 +393,6 @@ void __init hyperv_init(void)
- 	if (hv_common_init())
- 		return;
- 
--	/*
--	 * The VP assist page is useless to a TDX guest: the only use we
--	 * would have for it is lazy EOI, which can not be used with TDX.
--	 */
--	if (hv_isolation_type_tdx())
--		hv_vp_assist_page = NULL;
--	else
--		hv_vp_assist_page = kzalloc_objs(*hv_vp_assist_page, nr_cpu_ids);
--	if (!hv_vp_assist_page) {
--		ms_hyperv.hints &= ~HV_X64_ENLIGHTENED_VMCS_RECOMMENDED;
--
--		if (!hv_isolation_type_tdx())
--			goto common_free;
--	}
--
- 	if (ms_hyperv.paravisor_present && hv_isolation_type_snp()) {
- 		/* Negotiate GHCB Version. */
- 		if (!hv_ghcb_negotiate_protocol())
-@@ -483,7 +401,7 @@ void __init hyperv_init(void)
- 
- 		hv_ghcb_pg = alloc_percpu(union hv_ghcb *);
- 		if (!hv_ghcb_pg)
--			goto free_vp_assist_page;
-+			goto free_ghcb_page;
- 	}
- 
- 	cpuhp = cpuhp_setup_state(CPUHP_AP_HYPERV_ONLINE, "x86/hyperv_init:online",
-@@ -613,10 +531,6 @@ void __init hyperv_init(void)
- 	cpuhp_remove_state(CPUHP_AP_HYPERV_ONLINE);
- free_ghcb_page:
- 	free_percpu(hv_ghcb_pg);
--free_vp_assist_page:
--	kfree(hv_vp_assist_page);
--	hv_vp_assist_page = NULL;
--common_free:
- 	hv_common_free();
+ static void (*mshv_handler)(void);
+-static void (*vmbus_handler)(void);
+ static void (*hv_stimer0_handler)(void);
+ static void (*hv_kexec_handler)(void);
+ static void (*hv_crash_handler)(struct pt_regs *regs);
+@@ -172,17 +171,6 @@ void hv_setup_mshv_handler(void (*handler)(void))
+ 	mshv_handler = handler;
  }
  
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index f64393e853ee..95b452387969 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -155,16 +155,6 @@ static inline u64 hv_do_fast_hypercall16(u16 code, u64 input1, u64 input2)
- 	return _hv_do_fast_hypercall16(control, input1, input2);
- }
- 
--extern struct hv_vp_assist_page **hv_vp_assist_page;
--
--static inline struct hv_vp_assist_page *hv_get_vp_assist_page(unsigned int cpu)
+-void hv_setup_vmbus_handler(void (*handler)(void))
 -{
--	if (!hv_vp_assist_page)
--		return NULL;
--
--	return hv_vp_assist_page[cpu];
+-	vmbus_handler = handler;
 -}
 -
- void __init hyperv_init(void);
- void hyperv_setup_mmu_ops(void);
- void set_hv_tscchange_cb(void (*cb)(void));
-@@ -254,10 +244,6 @@ static inline void hyperv_setup_mmu_ops(void) {}
- static inline void set_hv_tscchange_cb(void (*cb)(void)) {}
- static inline void clear_hv_tscchange_cb(void) {}
- static inline void hyperv_stop_tsc_emulation(void) {};
--static inline struct hv_vp_assist_page *hv_get_vp_assist_page(unsigned int cpu)
+-void hv_remove_vmbus_handler(void)
 -{
--	return NULL;
+-	/* We have no way to deallocate the interrupt gate */
+-	vmbus_handler = NULL;
 -}
- static inline int hyperv_flush_guest_mapping(u64 as) { return -1; }
- static inline int hyperv_flush_guest_mapping_range(u64 as,
- 		hyperv_fill_flush_list_func fill_func, void *data)
+-
+ /*
+  * Routines to do per-architecture handling of stimer0
+  * interrupts when in Direct Mode
 diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-index 6b67ac616789..e8633bc51d56 100644
+index e8633bc51d56..eb7b0028b45d 100644
 --- a/drivers/hv/hv_common.c
 +++ b/drivers/hv/hv_common.c
-@@ -28,7 +28,11 @@
- #include <linux/slab.h>
- #include <linux/dma-map-ops.h>
- #include <linux/set_memory.h>
-+#include <linux/vmalloc.h>
-+#include <linux/io.h>
-+#include <linux/hyperv.h>
- #include <hyperv/hvhdk.h>
-+#include <hyperv/hvgdk.h>
- #include <asm/mshyperv.h>
- 
- u64 hv_current_partition_id = HV_PARTITION_ID_SELF;
-@@ -78,6 +82,8 @@ static struct ctl_table_header *hv_ctl_table_hdr;
- u8 * __percpu *hv_synic_eventring_tail;
- EXPORT_SYMBOL_GPL(hv_synic_eventring_tail);
- 
-+struct hv_vp_assist_page **hv_vp_assist_page;
-+EXPORT_SYMBOL_GPL(hv_vp_assist_page);
- /*
-  * Hyper-V specific initialization and shutdown code that is
-  * common across all architectures.  Called from architecture
-@@ -92,6 +98,9 @@ void __init hv_common_free(void)
- 	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE)
- 		hv_kmsg_dump_unregister();
- 
-+	kfree(hv_vp_assist_page);
-+	hv_vp_assist_page = NULL;
-+
- 	kfree(hv_vp_index);
- 	hv_vp_index = NULL;
- 
-@@ -394,6 +403,23 @@ int __init hv_common_init(void)
- 	for (i = 0; i < nr_cpu_ids; i++)
- 		hv_vp_index[i] = VP_INVAL;
- 
-+	/*
-+	 * The VP assist page is useless to a TDX guest: the only use we
-+	 * would have for it is lazy EOI, which can not be used with TDX.
-+	 */
-+	if (hv_isolation_type_tdx()) {
-+		hv_vp_assist_page = NULL;
-+#ifdef CONFIG_X86_64
-+		ms_hyperv.hints &= ~HV_X64_ENLIGHTENED_VMCS_RECOMMENDED;
-+#endif
-+	} else {
-+		hv_vp_assist_page = kzalloc_objs(*hv_vp_assist_page, nr_cpu_ids);
-+		if (!hv_vp_assist_page) {
-+			hv_common_free();
-+			return -ENOMEM;
-+		}
-+	}
-+
- 	return 0;
+@@ -758,13 +758,18 @@ bool __weak hv_isolation_type_tdx(void)
  }
+ EXPORT_SYMBOL_GPL(hv_isolation_type_tdx);
  
-@@ -471,6 +497,8 @@ void __init ms_hyperv_late_init(void)
- 
- int hv_common_cpu_init(unsigned int cpu)
+-void __weak hv_setup_vmbus_handler(void (*handler)(void))
++void (*vmbus_handler)(void);
++EXPORT_SYMBOL_GPL(vmbus_handler);
++
++void hv_setup_vmbus_handler(void (*handler)(void))
  {
-+	union hv_vp_assist_msr_contents msr = { 0 };
-+	struct hv_vp_assist_page **hvp;
- 	void **inputarg, **outputarg;
- 	u8 **synic_eventring_tail;
- 	u64 msr_vp_index;
-@@ -539,7 +567,53 @@ int hv_common_cpu_init(unsigned int cpu)
- 						sizeof(u8), flags);
- 		/* No need to unwind any of the above on failure here */
- 		if (unlikely(!*synic_eventring_tail))
--			ret = -ENOMEM;
-+			return -ENOMEM;
-+	}
-+
-+	if (!hv_vp_assist_page)
-+		return ret;
-+
-+	hvp = &hv_vp_assist_page[cpu];
-+	if (hv_root_partition()) {
-+		/*
-+		 * For root partition we get the hypervisor provided VP assist
-+		 * page, instead of allocating a new page.
-+		 */
-+		msr.as_uint64 = hv_get_msr(HV_MSR_VP_ASSIST_PAGE);
-+		*hvp = memremap(msr.pfn << HV_VP_ASSIST_PAGE_ADDRESS_SHIFT,
-+				HV_HYP_PAGE_SIZE, MEMREMAP_WB);
-+	} else {
-+		/*
-+		 * The VP assist page is an "overlay" page (see Hyper-V TLFS's
-+		 * Section 5.2.1 "GPA Overlay Pages"). Here it must be zeroed
-+		 * out to make sure that on x86/x64, we always write the EOI MSR in
-+		 * hv_apic_eoi_write() *after* the EOI optimization is disabled
-+		 * in hv_cpu_die(), otherwise a CPU may not be stopped in the
-+		 * case of CPU offlining and the VM will hang.
-+		 */
-+		if (!*hvp) {
-+			*hvp = __vmalloc(HV_HYP_PAGE_SIZE, flags | __GFP_ZERO);
-+
-+			/*
-+			 * Hyper-V should never specify a VM that is a Confidential
-+			 * VM and also running in the root partition. Root partition
-+			 * is blocked to run in Confidential VM. So only decrypt assist
-+			 * page in non-root partition here.
-+			 */
-+			if (*hvp &&
-+			    !ms_hyperv.paravisor_present &&
-+			    hv_isolation_type_snp()) {
-+				WARN_ON_ONCE(set_memory_decrypted((unsigned long)(*hvp), 1));
-+				memset(*hvp, 0, HV_HYP_PAGE_SIZE);
-+			}
-+		}
-+
-+		if (*hvp)
-+			msr.pfn = page_to_hvpfn(vmalloc_to_page(*hvp));
-+	}
-+	if (!WARN_ON(!(*hvp))) {
-+		msr.enable = 1;
-+		hv_set_msr(HV_MSR_VP_ASSIST_PAGE, msr.as_uint64);
- 	}
++	vmbus_handler = handler;
+ }
+ EXPORT_SYMBOL_GPL(hv_setup_vmbus_handler);
  
- 	return ret;
-@@ -566,6 +640,24 @@ int hv_common_cpu_die(unsigned int cpu)
- 		*synic_eventring_tail = NULL;
- 	}
+-void __weak hv_remove_vmbus_handler(void)
++void hv_remove_vmbus_handler(void)
+ {
++	vmbus_handler = NULL;
+ }
+ EXPORT_SYMBOL_GPL(hv_remove_vmbus_handler);
  
-+	if (hv_vp_assist_page && hv_vp_assist_page[cpu]) {
-+		union hv_vp_assist_msr_contents msr = { 0 };
-+
-+		if (hv_root_partition()) {
-+			/*
-+			 * For root partition the VP assist page is mapped to
-+			 * hypervisor provided page, and thus we unmap the
-+			 * page here and nullify it, so that in future we have
-+			 * correct page address mapped in hv_cpu_init.
-+			 */
-+			memunmap(hv_vp_assist_page[cpu]);
-+			hv_vp_assist_page[cpu] = NULL;
-+			msr.as_uint64 = hv_get_msr(HV_MSR_VP_ASSIST_PAGE);
-+			msr.enable = 0;
-+		}
-+		hv_set_msr(HV_MSR_VP_ASSIST_PAGE, msr.as_uint64);
-+	}
-+
- 	return 0;
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index bc4fc1951ae1..052ca8b11cee 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1415,7 +1415,8 @@ EXPORT_SYMBOL_FOR_MODULES(vmbus_isr, "mshv_vtl");
+ 
+ static irqreturn_t vmbus_percpu_isr(int irq, void *dev_id)
+ {
+-	vmbus_isr();
++	if (vmbus_handler)
++		vmbus_handler();
+ 	return IRQ_HANDLED;
  }
  
+@@ -1517,8 +1518,10 @@ static int vmbus_bus_init(void)
+ 		vmbus_irq_initialized = true;
+ 	}
+ 
++	hv_setup_vmbus_handler(vmbus_isr);
++
+ 	if (vmbus_irq == -1) {
+-		hv_setup_vmbus_handler(vmbus_isr);
++		/* x86: sysvec handler uses vmbus_handler directly */
+ 	} else {
+ 		ret = request_percpu_irq(vmbus_irq, vmbus_percpu_isr,
+ 				"Hyper-V VMbus", &vmbus_evt);
+@@ -1553,9 +1556,8 @@ static int vmbus_bus_init(void)
+ 	return 0;
+ 
+ err_connect:
+-	if (vmbus_irq == -1)
+-		hv_remove_vmbus_handler();
+-	else
++	hv_remove_vmbus_handler();
++	if (vmbus_irq != -1)
+ 		free_percpu_irq(vmbus_irq, &vmbus_evt);
+ err_setup:
+ 	if (IS_ENABLED(CONFIG_PREEMPT_RT) && vmbus_irq_initialized) {
+@@ -3026,9 +3028,8 @@ static void __exit vmbus_exit(void)
+ 	vmbus_connection.conn_state = DISCONNECTED;
+ 	hv_stimer_global_cleanup();
+ 	vmbus_disconnect();
+-	if (vmbus_irq == -1)
+-		hv_remove_vmbus_handler();
+-	else
++	hv_remove_vmbus_handler();
++	if (vmbus_irq != -1)
+ 		free_percpu_irq(vmbus_irq, &vmbus_evt);
+ 	if (IS_ENABLED(CONFIG_PREEMPT_RT) && vmbus_irq_initialized) {
+ 		smpboot_unregister_percpu_thread(&vmbus_irq_threads);
 diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index d37b68238c97..2810aa05dc73 100644
+index 2810aa05dc73..db183c8cfb95 100644
 --- a/include/asm-generic/mshyperv.h
 +++ b/include/asm-generic/mshyperv.h
-@@ -25,6 +25,7 @@
- #include <linux/nmi.h>
- #include <asm/ptrace.h>
- #include <hyperv/hvhdk.h>
-+#include <hyperv/hvgdk.h>
+@@ -179,6 +179,7 @@ static inline u64 hv_generate_guest_id(u64 kernel_version)
  
- #define VTPM_BASE_ADDRESS 0xfed40000
+ int hv_get_hypervisor_version(union hv_hypervisor_version_info *info);
  
-@@ -299,6 +300,16 @@ do { \
- #define hv_status_debug(status, fmt, ...) \
- 	hv_status_printk(debug, status, fmt, ##__VA_ARGS__)
- 
-+extern struct hv_vp_assist_page **hv_vp_assist_page;
-+
-+static inline struct hv_vp_assist_page *hv_get_vp_assist_page(unsigned int cpu)
-+{
-+	if (!hv_vp_assist_page)
-+		return NULL;
-+
-+	return hv_vp_assist_page[cpu];
-+}
-+
- const char *hv_result_to_string(u64 hv_status);
- int hv_result_to_errno(u64 status);
- void hyperv_report_panic(struct pt_regs *regs, long err, bool in_die);
-@@ -327,6 +338,11 @@ static inline enum hv_isolation_type hv_get_isolation_type(void)
- {
- 	return HV_ISOLATION_TYPE_NONE;
- }
-+
-+static inline struct hv_vp_assist_page *hv_get_vp_assist_page(unsigned int cpu)
-+{
-+	return NULL;
-+}
- #endif /* CONFIG_HYPERV */
- 
- #if IS_ENABLED(CONFIG_MSHV_ROOT)
-diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
-index 056ef7b6b360..c72d04cd5ae4 100644
---- a/include/hyperv/hvgdk_mini.h
-+++ b/include/hyperv/hvgdk_mini.h
-@@ -149,6 +149,7 @@ struct hv_u128 {
- #define HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT	12
- #define HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_MASK	\
- 		(~((1ull << HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT) - 1))
-+#define HV_MSR_VP_ASSIST_PAGE              (HV_X64_MSR_VP_ASSIST_PAGE)
- 
- /* Hyper-V Enlightened VMCS version mask in nested features CPUID */
- #define HV_X64_ENLIGHTENED_VMCS_VERSION		0xff
-@@ -410,6 +411,7 @@ union hv_x64_msr_hypercall_contents {
- #if defined(CONFIG_ARM64)
- #define HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE	BIT(8)
- #define HV_STIMER_DIRECT_MODE_AVAILABLE		BIT(13)
-+#define HV_VP_ASSIST_PAGE_ADDRESS_SHIFT 12
- #endif /* CONFIG_ARM64 */
- 
- #if defined(CONFIG_X86)
-@@ -1163,6 +1165,8 @@ enum hv_register_name {
- #define HV_MSR_STIMER0_CONFIG	(HV_X64_MSR_STIMER0_CONFIG)
- #define HV_MSR_STIMER0_COUNT	(HV_X64_MSR_STIMER0_COUNT)
- 
-+#define HV_VP_ASSIST_PAGE_ADDRESS_SHIFT HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT
-+
- #elif defined(CONFIG_ARM64) /* CONFIG_X86 */
- 
- #define HV_MSR_CRASH_P0		(HV_REGISTER_GUEST_CRASH_P0)
-@@ -1185,7 +1189,7 @@ enum hv_register_name {
- 
- #define HV_MSR_STIMER0_CONFIG	(HV_REGISTER_STIMER0_CONFIG)
- #define HV_MSR_STIMER0_COUNT	(HV_REGISTER_STIMER0_COUNT)
--
-+#define HV_MSR_VP_ASSIST_PAGE    (HV_REGISTER_VP_ASSIST_PAGE)
- #endif /* CONFIG_ARM64 */
- 
- union hv_explicit_suspend_register {
++extern void (*vmbus_handler)(void);
+ void hv_setup_vmbus_handler(void (*handler)(void));
+ void hv_remove_vmbus_handler(void);
+ void hv_setup_stimer0_handler(void (*handler)(void));
 -- 
 2.43.0
 
