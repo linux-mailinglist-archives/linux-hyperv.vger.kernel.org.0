@@ -1,48 +1,48 @@
-Return-Path: <linux-hyperv+bounces-10337-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10338-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IDOJHqkV6mkatwIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10337-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 14:50:49 +0200
+	id mFwvE6IV6mkatwIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10338-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 14:50:42 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CA284524FE
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 14:50:47 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB8734524F0
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 14:50:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7A4FC308381C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 12:44:15 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 8B6DB300AD5C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 12:44:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0918E3EDAA4;
-	Thu, 23 Apr 2026 12:44:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5725C382281;
+	Thu, 23 Apr 2026 12:44:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Ex1bUyOf"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="o9WkEKDY"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFDBF3ED5DB;
-	Thu, 23 Apr 2026 12:44:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32C4B1D6DB5;
+	Thu, 23 Apr 2026 12:44:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776948248; cv=none; b=OXueiSZ35kihaQVSaRbF5u6IaDnxvo3EnY/75FwUBHmBC7q+2az+TIkZWpqWbrWenuHs+A/zyvIR1Sbnjpt+a9E8716zb3P3RRts1XdUEZ3ozFqtsWVh4WBZPK9FBuqdGx3TtiRnO9JY3V5Z2VKaUsngF0ThY+no/zI3PeuKFZQ=
+	t=1776948270; cv=none; b=JP6i1sNU6f1aPTriVjk8ECTntxTjSDwexGjR5CpzmlpKhzyt/rbSlmJWcLQeTPE7QB7wtw6xDz0l6PFFjyAxO+vMzOxWuC4AE3J0Vor7qQz9Zy+83HD6J1R4W2QFwa1ZlheSM7OOlO5HDkPtBfT0DUu/hs7G8IV1TXuENFneegc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776948248; c=relaxed/simple;
-	bh=QhwlyZLVHh3iKGvYP2jk7wpTpp9V2bihpmbro8Kp1gU=;
+	s=arc-20240116; t=1776948270; c=relaxed/simple;
+	bh=CoDvSCNn4jGrMUulDHPvfhhkBsriG7oP3HcJNSqjRng=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bElM705n4zEYJ3+WD3fVhMqa1qrEqEHHuMPLrGswUrflHxu8MZWLPC3I4WJMYLLvzL0DFI4JrtiQraqgYQEp2VxFLIbWRZ6IWYBE5Uf/lkASCe7l3ARsXYZZoP1pc20HwEpn51rR3mVTNlgPkZPDaCgsjLTszGBdY7MAQK9Osxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Ex1bUyOf; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=uSfG1UDbI2BJvP4C4M2JKLjEAQnqgXiqH7xf5DfsTOIGTJwgbJU3HIffakGkHtkDVyLykkopwoAmERkVoGm2KgTRecENMM8QP8zAjlcLSe8tx0+KfHSVxhDMR9B6O5BmNnB7jeuVXBYmHRRaA4bLkWu0bsOTHUUDyQbmFn0VMEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=o9WkEKDY; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from CPC-namja-026ON.redmond.corp.microsoft.com (unknown [4.213.232.18])
-	by linux.microsoft.com (Postfix) with ESMTPSA id BDFEE20B716F;
-	Thu, 23 Apr 2026 05:44:00 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BDFEE20B716F
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8D79720B716E;
+	Thu, 23 Apr 2026 05:44:08 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8D79720B716E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1776948247;
-	bh=1Si2vLE+zPB6prbMPE/cdtc4huvV7tWVF4D7BT4Ap7I=;
+	s=default; t=1776948255;
+	bh=WCqVD6YRGkVlS61nC58ZQHPJoEDu23OMTFcYIc3KK7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ex1bUyOfRJKCP+0lBVsUziVPVd+0d51ReTPSRmFbuc28vd3Nz4ptTcg4+AVNnYZM9
-	 RSunynWJvpI5uw7AKMyeGLw50tlZ95+Tlt6dvDrxSPQem9Esju+nJmcsQ/kGebKLqi
-	 HUTyiX+QXMF7vONKiTPx6RrGdBNVwqf9es11vYGs=
+	b=o9WkEKDY1+IjGA7KFzub4vgAD8r4TOVboRhyxRljZfT4Cn2GsJoqg7WNN9vIhuVXt
+	 H2Yf3Nkj2Wsq271fqrX1wrAYYyvoFn2o8S7p9TnmsSNSUq3XOrQ1dDRVtCcJFMQy3B
+	 QohTj61p/B/cM3PvJR+/k9oHkGlU7NBEhQoZ8ymM=
 From: Naman Jain <namjain@linux.microsoft.com>
 To: "K . Y . Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
@@ -76,9 +76,9 @@ Cc: Marc Zyngier <maz@kernel.org>,
 	linux-riscv@lists.infradead.org,
 	vdso@mailbox.org,
 	ssengar@linux.microsoft.com
-Subject: [PATCH v2 13/15] mshv_vtl: Add remaining support for arm64
-Date: Thu, 23 Apr 2026 12:42:03 +0000
-Message-ID: <20260423124206.2410879-14-namjain@linux.microsoft.com>
+Subject: [PATCH v2 14/15] Drivers: hv: Add 4K page dependency in MSHV_VTL
+Date: Thu, 23 Apr 2026 12:42:04 +0000
+Message-ID: <20260423124206.2410879-15-namjain@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260423124206.2410879-1-namjain@linux.microsoft.com>
 References: <20260423124206.2410879-1-namjain@linux.microsoft.com>
@@ -96,11 +96,11 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10337-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10338-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -117,66 +117,39 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.microsoft.com:dkim,linux.microsoft.com:mid]
-X-Rspamd-Queue-Id: 0CA284524FE
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,linux.microsoft.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: DB8734524F0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Add necessary support to make MSHV_VTL work for arm64 architecture.
-* Add stub implementation for mshv_vtl_return_call_init() as it's not
-  required for arm64
-* Handle hugepage functions by config checks, as it's x86 specific
-* fpu/legacy.h header inclusion was required when x86 assembly code
-  was present here, it got left when the code was moved to arch files.
-  Remove it now (unrelated to arm64)
+Add a dependency on 4K page size in Kconfig of MSHV_VTL
+to support any assumptions that may be present in the code.
+x86 anyways supports 4K page size only, and for arm64, higher
+page size support is not validated. Remove this dependency as
+and when this feature is supported.
 
-Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
 Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
 ---
- arch/arm64/include/asm/mshyperv.h | 2 ++
- drivers/hv/mshv_vtl_main.c        | 4 ++--
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/hv/Kconfig | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/mshyperv.h
-index 9eb0e5999f29..6f668ec68b2f 100644
---- a/arch/arm64/include/asm/mshyperv.h
-+++ b/arch/arm64/include/asm/mshyperv.h
-@@ -82,6 +82,8 @@ static inline int hv_vtl_get_set_reg(struct hv_register_assoc *regs, bool set, b
- 	return 1;
- }
- 
-+/* Stubbed for arm64 */
-+static inline int mshv_vtl_return_call_init(void) { return 0; }
- #endif
- 
- #include <asm-generic/mshyperv.h>
-diff --git a/drivers/hv/mshv_vtl_main.c b/drivers/hv/mshv_vtl_main.c
-index be498c9234fd..d5308956dfb6 100644
---- a/drivers/hv/mshv_vtl_main.c
-+++ b/drivers/hv/mshv_vtl_main.c
-@@ -23,8 +23,6 @@
- #include <trace/events/ipi.h>
- #include <uapi/linux/mshv.h>
- #include <hyperv/hvhdk.h>
--
--#include "../../kernel/fpu/legacy.h"
- #include "mshv.h"
- #include "mshv_vtl.h"
- #include "hyperv_vmbus.h"
-@@ -1077,10 +1075,12 @@ static vm_fault_t mshv_vtl_low_huge_fault(struct vm_fault *vmf, unsigned int ord
- 			ret = vmf_insert_pfn_pmd(vmf, pfn, vmf->flags & FAULT_FLAG_WRITE);
- 		return ret;
- 
-+#if defined(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)
- 	case PUD_ORDER:
- 		if (can_fault(vmf, PUD_SIZE, &pfn))
- 			ret = vmf_insert_pfn_pud(vmf, pfn, vmf->flags & FAULT_FLAG_WRITE);
- 		return ret;
-+#endif
- 
- 	default:
- 		return VM_FAULT_SIGBUS;
+diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+index 7937ac0cbd0f..115821cc535c 100644
+--- a/drivers/hv/Kconfig
++++ b/drivers/hv/Kconfig
+@@ -96,6 +96,11 @@ config MSHV_VTL
+ 	# MTRRs are controlled by VTL0, and are not specific to individual VTLs.
+ 	# Therefore, do not attempt to access or modify MTRRs here.
+ 	depends on !MTRR
++	# The hypervisor interface operates on 4k pages. Enforcing it here
++	# simplifies many assumptions in the mshv_vtl code.
++	# VTL0 VMs can still support higher page size in ARM64 and is not limited
++	# by this setting.
++	depends on PAGE_SIZE_4KB
+ 	select CPUMASK_OFFSTACK
+ 	select VIRT_XFER_TO_GUEST_WORK
+ 	default n
 -- 
 2.43.0
 
