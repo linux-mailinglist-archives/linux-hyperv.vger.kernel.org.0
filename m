@@ -1,132 +1,138 @@
-Return-Path: <linux-hyperv+bounces-10346-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10347-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eJWAIXBW6mkhxgIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10346-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 19:27:12 +0200
+	id kOaTGDlX6mkhxgIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10347-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 19:30:33 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F18B14557CD
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 19:27:11 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFE12455825
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 19:30:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 03913300BC90
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 17:26:59 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A86343013A51
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 17:30:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 268403A7859;
-	Thu, 23 Apr 2026 17:26:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE3E03A75A5;
+	Thu, 23 Apr 2026 17:30:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q5mEC6gB"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="tAg9crFX"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D411D3A75A2;
-	Thu, 23 Apr 2026 17:26:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA3BE307AF0;
+	Thu, 23 Apr 2026 17:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776965218; cv=none; b=jA2ut32fVzr6jDIq8zDNHbCdkj43r37lCgL9erJx0BDdGwofIXoURaxZS2TA3lXBMNpc2Yg1mVIdCg0187DTeqP3usvm8z24/2saQJWMqiefPQbUArYpd7nw0GvouNTwEQKjlPBWXIA5vyXN7S3dXdsm7p59tamepoQlP0w7g0c=
+	t=1776965401; cv=none; b=PUlYVIR948cx1ms6b6d99DaL9kx0vOZVyb9fYE8CrP/FHtoliPdu/Wwv/g+9JhjwAMnVWEhPrWp0UzJHYCzgmBZWnqaKF7fnoBIBXXTed+FIkoeoR8VPq6ODtwfUFwbcPy096kmFFEwgaDPoCKEw+jjXhm5O1WEZA4x3s1L/TgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776965218; c=relaxed/simple;
-	bh=4+ZpLISoNIRbHqDjv0MBVGx4X0awsHsYwas0EO6i6VM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OhnsbgZtjJDS1j8G5MyKyejVHMNyRHYCefm7ctoBbUvrySQbxKHBzAsky+oGWMxM8Y9+8cufFm08QdLl0ByKTl+t/W5UxuyG55JdZSOYFX0vV1Kkp/NlFHEUdXwPHkEf+X36XPYZavSQRIcKTFcfpCIC24Nh7SXuZqOm8Qr84wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q5mEC6gB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E1E5C2BCAF;
-	Thu, 23 Apr 2026 17:26:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776965218;
-	bh=4+ZpLISoNIRbHqDjv0MBVGx4X0awsHsYwas0EO6i6VM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Q5mEC6gBa70Isfvqtz1qcTZOvq6kqHsLgruTkEsJDH9NIzgVuotgTyq09m5a62bYt
-	 ExCI9GA5IMg1FJTOt1GS16k7FADizKpecoicfbdHJ50ix7rB5xf6WaxP4iHjTJNKgn
-	 qxwdGKZTm+ryVmcDxRaRCY9294F0VJDwF5IBnibBYunVFteyDmTewb8bhMPSBU5Mgy
-	 38HSLNnBZyA+1AkkmYvL56Iue2PJSEvebD83MBKKSrgXt8BMAkxjy9N4y9mrR+GiNi
-	 jKN8qvs4722IpQJeU/GpSVCNfupMcVPVSxGv86O+UGH4YIwLWWzn/Nq+0NXTLqFSQM
-	 +0iT2UxKB4sow==
-From: wei.liu@kernel.org
-To: Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
-Cc: Wei Liu <wei.liu@kernel.org>,
-	=?UTF-8?q?Doru=20Bl=C3=A2nzeanu?= <dblanzeanu@linux.microsoft.com>,
-	Magnus Kulke <magnuskulke@linux.microsoft.com>,
-	stable@kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	Roman Kisel <romank@linux.microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Easwar Hariharan <easwar.hariharan@linux.microsoft.com>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] mshv: add a missing padding field
-Date: Thu, 23 Apr 2026 17:26:26 +0000
-Message-ID: <20260423172625.1189669-2-wei.liu@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1776965401; c=relaxed/simple;
+	bh=s77qgGV6rEYpp74gWpITm83/Nu85AN92A+w1sB35naU=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=n4Q1yHxGsfqpeFvROcWAAhZwrOls3zYcN4z7N3ZCjwHfaLpqng9C8iJsT/wpps46z48cj/1hIQlkA8wFiZtIB7Hogl65LAbZomYOgZ+rQxt7ehF6I/5rdqtgWdEo3CLP5207VeP7iIYhYaAmeJGZjU0OyUIfXBE24bwDYx4b2Jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=tAg9crFX; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.201.246] (unknown [4.194.122.170])
+	by linux.microsoft.com (Postfix) with ESMTPSA id DBD0620B7165;
+	Thu, 23 Apr 2026 10:29:54 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DBD0620B7165
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1776965400;
+	bh=s9juGdNXSUt3Z8Nr9rfoPqObNvAJMZXoghUL9x3G65Q=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=tAg9crFXAhJgoPrOu4t230ot/9/VIDEg0AnYVUitmYq18g3qivfjhTSrcjLYiMck0
+	 DKwzjh6PU2bFgg5aW8V/LnIZxBzwV3KG02ImaI/00j0AF9fSkfX44jm+uNtJS7UHi4
+	 +6S95IrPqDBjcjCsCPgaR+uBkGfP2H5sHEO0TPYQ=
+Message-ID: <614f1e17-2dba-4529-b067-e1434b74cad8@linux.microsoft.com>
+Date: Thu, 23 Apr 2026 10:29:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+ easwar.hariharan@linux.microsoft.com,
+ =?UTF-8?Q?Doru_Bl=C3=A2nzeanu?= <dblanzeanu@linux.microsoft.com>,
+ Magnus Kulke <magnuskulke@linux.microsoft.com>, stable@kernel.org,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Dexuan Cui <decui@microsoft.com>,
+ Long Li <longli@microsoft.com>,
+ Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ Roman Kisel <romank@linux.microsoft.com>,
+ Michael Kelley <mhklinux@outlook.com>,
+ open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mshv: add a missing padding field
+To: wei.liu@kernel.org
+References: <20260423172625.1189669-2-wei.liu@kernel.org>
+From: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <20260423172625.1189669-2-wei.liu@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-10346-lists,linux-hyperv=lfdr.de];
-	FREEMAIL_CC(0.00)[kernel.org,linux.microsoft.com,microsoft.com,outlook.com,vger.kernel.org];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10347-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FROM_NEQ_ENVFROM(0.00)[wei.liu@kernel.org,linux-hyperv@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,linux.microsoft.com,kernel.org,microsoft.com,outlook.com];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[easwar.hariharan@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: F18B14557CD
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,linux.microsoft.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: CFE12455825
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Wei Liu <wei.liu@kernel.org>
+On 4/23/2026 10:26 AM, wei.liu@kernel.org wrote:
+> From: Wei Liu <wei.liu@kernel.org>
+> 
+> That was missed when importing the header.
+> 
+> Reported-by: Doru Blânzeanu <dblanzeanu@linux.microsoft.com>
+> Reported-by: Magnus Kulke <magnuskulke@linux.microsoft.com>
+> Fixes: e68bda71a2384 ("hyperv: Add new Hyper-V headers in include/hyperv")
+> Cc: stable@kernel.org
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> ---
+>  include/hyperv/hvhdk.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
+> index 5e83d3714966..ff7ca9ee1bd4 100644
+> --- a/include/hyperv/hvhdk.h
+> +++ b/include/hyperv/hvhdk.h
+> @@ -79,6 +79,7 @@ struct hv_vp_register_page {
+>  
+>  		u64 registers[18];
+>  	};
+> +	__u8 reserved[8];
+>  	/* Volatile XMM registers (HV_X64_REGISTER_CLASS_XMM) */
+>  	union {
+>  		struct {
 
-That was missed when importing the header.
 
-Reported-by: Doru Blânzeanu <dblanzeanu@linux.microsoft.com>
-Reported-by: Magnus Kulke <magnuskulke@linux.microsoft.com>
-Fixes: e68bda71a2384 ("hyperv: Add new Hyper-V headers in include/hyperv")
-Cc: stable@kernel.org
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
----
- include/hyperv/hvhdk.h | 1 +
- 1 file changed, 1 insertion(+)
+This is not a uapi, so why not just use u8 instead of __u8?
+Or since it's 8 u8s, a u64?
 
-diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
-index 5e83d3714966..ff7ca9ee1bd4 100644
---- a/include/hyperv/hvhdk.h
-+++ b/include/hyperv/hvhdk.h
-@@ -79,6 +79,7 @@ struct hv_vp_register_page {
- 
- 		u64 registers[18];
- 	};
-+	__u8 reserved[8];
- 	/* Volatile XMM registers (HV_X64_REGISTER_CLASS_XMM) */
- 	union {
- 		struct {
--- 
-2.43.0
-
+Thanks,
+Easwar (he/him)
 
