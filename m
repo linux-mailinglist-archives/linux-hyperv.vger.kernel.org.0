@@ -1,231 +1,161 @@
-Return-Path: <linux-hyperv+bounces-10318-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10319-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iKEMAb1x6WlhZwIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10318-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 03:11:25 +0200
+	id +NpHEvTA6WkXjQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10319-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 08:49:24 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A2C344C099
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 03:11:24 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A173F44DB8F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 08:49:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 8C15430038FD
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 01:11:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8E5EA3010145
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 06:48:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C395728136F;
-	Thu, 23 Apr 2026 01:11:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 833B53932EF;
+	Thu, 23 Apr 2026 06:48:31 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C78ECA4E;
-	Thu, 23 Apr 2026 01:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50EB134E763;
+	Thu, 23 Apr 2026 06:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776906676; cv=none; b=bJxtXhPF/aRmVHnDnmsNXEjRrF9L3DVByYLyfZjx3CApYaQCx+xkYZuOFw4ZWOURhkA3HqP3W9o+bk+2xMe2+OjbjcQUJPLBIx8ttK+sqclIOhjlhtblop6NN3XoU9t7nbP8HKFY8Y4Za1BTBJ270cmoE0QmGK+9BpqsSd/IFFY=
+	t=1776926911; cv=none; b=J7JHuP0QliSTDJWWcIQXl+C68PAteNasYxbdJHjV8L2VnWOLTrdi+mV8YHYJ+mZmip1pkTwF9/vXz2cMoWjgg8Kj542TwevLbC0NI+C2uqGxMvBd7k2UXVNzrG9FMiq+7io40leLUrqJBZdYCLeAdn8hE71vcSLHBBYskdIEHXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776906676; c=relaxed/simple;
-	bh=6IEjWa5Bp2HmWAT63DqZwaxugME+cvx69VMEGChpnTc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WVRejSmhhCgsxKtvPEj58Bj3JmWHQnjc2iachVRVjxev+oxqR+ZeQwazuZfDNjxSM9mBV/KwnyRB11mXfm+zcSxImBubeMqKL+uVwQe2Za2GMLYtKCSiaw7vnd6FaE8Xw61t+cNEL0fO965Kjc3CNVrVsAchaY6qqNJtaXLkdzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.170])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4g1J0p05thzYQtjP;
-	Thu, 23 Apr 2026 09:10:02 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id C684140561;
-	Thu, 23 Apr 2026 09:11:00 +0800 (CST)
-Received: from [10.67.111.176] (unknown [10.67.111.176])
-	by APP3 (Coremail) with SMTP id _Ch0CgAnHbehcelp3eGGBQ--.59173S2;
-	Thu, 23 Apr 2026 09:10:59 +0800 (CST)
-Message-ID: <e8824498-f8ec-496a-a21c-d1dc594f4c8e@huaweicloud.com>
-Date: Thu, 23 Apr 2026 09:10:57 +0800
+	s=arc-20240116; t=1776926911; c=relaxed/simple;
+	bh=ToaTXcmIVUSTWxVWGD+zkSMr0pWVWHXd5+bQHimR08I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YgrWMhMDvmNoyZl4vQr7IQpLW41Mj5hhGMiGdEHaolcinmk2Mh3RLJS6wkhOc7/Q+sORAc/u5LlL2B4Q+Hm83If8XH3SeSPzBJNRG4xzwXYBrlZsEj1R5sIzdlIn4ES560590LnEQ1STwHU4WR9Xkuk3xLzH4lBqe5usEohvTes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1009)
+	id 5FF3120B7165; Wed, 22 Apr 2026 23:48:30 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5FF3120B7165
+From: Dexuan Cui <decui@microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	longli@microsoft.com,
+	sgarzare@redhat.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	niuxuewei.nxw@antgroup.com,
+	linux-hyperv@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Subject: [PATCH net v2] hv_sock: Return -EIO for malformed/short packets
+Date: Wed, 22 Apr 2026 23:48:11 -0700
+Message-ID: <20260423064811.1371749-1-decui@microsoft.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 19/23] cgroup/cpuset: Improve check for calling
- housekeeping_update()
-To: Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
- <mkoutny@suse.com>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
- Guenter Roeck <linux@roeck-us.net>, Frederic Weisbecker
- <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
- Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett
- <josh@joshtriplett.org>, Boqun Feng <boqun@kernel.org>,
- Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang@linux.dev>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>, Ingo Molnar
- <mingo@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
- <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
- Valentin Schneider <vschneid@redhat.com>,
- K Prateek Nayak <kprateek.nayak@amd.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>
-Cc: cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-hyperv@vger.kernel.org, linux-hwmon@vger.kernel.org,
- rcu@vger.kernel.org, netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Costa Shulyupin <cshulyup@redhat.com>,
- Qiliang Yuan <realwujing@gmail.com>
-References: <20260421030351.281436-1-longman@redhat.com>
- <20260421030351.281436-20-longman@redhat.com>
-Content-Language: en-US
-From: Chen Ridong <chenridong@huaweicloud.com>
-In-Reply-To: <20260421030351.281436-20-longman@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_Ch0CgAnHbehcelp3eGGBQ--.59173S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxCw1UJF1UurW7urWktr13urg_yoW5AFy5pr
-	yUWrW3t345trs7u343Xwn7Wry0gw48GF17KasxG3WrGF9rZFn2yry0kFnxCry8uwnxGryU
-	ZF9rWws29a4UArDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26rWY6Fy7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8
-	Jr1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-	CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
-	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
-	xUVZ2-UUUUU
-X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
-X-Spamd-Result: default: False [-1.46 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [2.04 / 15.00];
+	DMARC_POLICY_REJECT(2.00)[microsoft.com : SPF not aligned (relaxed), No valid DKIM,reject];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10318-lists,linux-hyperv=lfdr.de];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,redhat.com,gmail.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[redhat.com,kernel.org,cmpxchg.org,suse.com,lwn.net,linuxfoundation.org,arm.com,microsoft.com,roeck-us.net,nvidia.com,joshtriplett.org,gmail.com,goodmis.org,efficios.com,linux.dev,linutronix.de,infradead.org,linaro.org,google.com,suse.de,amd.com,davemloft.net];
-	RCVD_TLS_LAST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	MIME_TRACE(0.00)[0:+];
-	DMARC_NA(0.00)[huaweicloud.com];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-10319-lists,linux-hyperv=lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[chenridong@huaweicloud.com,linux-hyperv@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[52];
 	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 2A2C344C099
+	FROM_NEQ_ENVFROM(0.00)[decui@microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	PRECEDENCE_BULK(0.00)[];
+	NEURAL_HAM(-0.00)[-0.998];
+	TO_DN_NONE(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: A173F44DB8F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Commit f63152958994 fixes a regression, however it fails to report an
+error for malformed/short packets -- normally we should never see such
+packets, but let's report an error for them just in case.
+
+Fixes: f63152958994 ("hv_sock: Report EOF instead of -EIO for FIN")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+
+Commit f63152958994 is currently only in net.git's master branch.
+
+Changes since v1:
+    Integrated comments from Stefano Garzarella:
+
+        1) access 'vsk' directly:
+           s/hvs->vsk->peer_shutdown/vsk->peer_shutdown/
+
+        2) test the error condition first and return -EIO for that.
+
+    NO other changes.
 
 
-On 2026/4/21 11:03, Waiman Long wrote:
-> By making sure that isolated_hk_cpus matches isolated_cpus at boot time,
-> we can more accurately determine if calling housekeeping_update()
-> is needed by comparing if the two cpumasks are equal. The
-> update_housekeeping flag still have a use in cpuset_handle_hotplug()
-> to determine if a work function should be queued to invoke
-> cpuset_update_sd_hk_unlock() as it is not supposed to look at
-> isolated_hk_cpus without holding cpuset_top_mutex.
-> 
+ net/vmw_vsock/hyperv_transport.c | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
-Currently, isolated_hk_cpus is updated within the cpuset_mutex critical section
-(before mutex_unlock(&cpuset_mutex)) in cpuset_update_sd_hk_unlock. Therefore, I
-think update_housekeeping can now be removed.
-
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> ---
->  kernel/cgroup/cpuset.c | 36 ++++++++++++++++++++----------------
->  1 file changed, 20 insertions(+), 16 deletions(-)
-> 
-> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-> index a4eccb0ec0d1..1b0c50b46a49 100644
-> --- a/kernel/cgroup/cpuset.c
-> +++ b/kernel/cgroup/cpuset.c
-> @@ -1339,26 +1339,29 @@ static void cpuset_update_sd_hk_unlock(void)
->  	__releases(&cpuset_mutex)
->  	__releases(&cpuset_top_mutex)
->  {
-> +	update_housekeeping = false;
-> +
->  	/* force_sd_rebuild will be cleared in rebuild_sched_domains_locked() */
->  	if (force_sd_rebuild)
->  		rebuild_sched_domains_locked();
->  
-> -	if (update_housekeeping) {
-> -		update_housekeeping = false;
-> -		cpumask_copy(isolated_hk_cpus, isolated_cpus);
-> -
-> -		/*
-> -		 * housekeeping_update() is now called without holding
-> -		 * cpus_read_lock and cpuset_mutex. Only cpuset_top_mutex
-> -		 * is still being held for mutual exclusion.
-> -		 */
-> -		mutex_unlock(&cpuset_mutex);
-> -		cpus_read_unlock();
-> -		WARN_ON_ONCE(housekeeping_update(isolated_hk_cpus, BIT(HK_TYPE_DOMAIN)));
-> -		mutex_unlock(&cpuset_top_mutex);
-> -	} else {
-> +	if (cpumask_equal(isolated_hk_cpus, isolated_cpus)) {
-> +		/* No housekeeping cpumask update needed */
->  		cpuset_full_unlock();
-> +		return;
->  	}
-> +
-> +	cpumask_copy(isolated_hk_cpus, isolated_cpus);
-> +
-> +	/*
-> +	 * housekeeping_update() is now called without holding
-> +	 * cpus_read_lock and cpuset_mutex. Only cpuset_top_mutex
-> +	 * is still being held for mutual exclusion.
-> +	 */
-> +	mutex_unlock(&cpuset_mutex);
-> +	cpus_read_unlock();
-> +	WARN_ON_ONCE(housekeeping_update(isolated_hk_cpus, BIT(HK_TYPE_DOMAIN)));
-> +	mutex_unlock(&cpuset_top_mutex);
->  }
->  
->  /*
-> @@ -3692,10 +3695,11 @@ int __init cpuset_init(void)
->  
->  	BUG_ON(!alloc_cpumask_var(&cpus_attach, GFP_KERNEL));
->  
-> -	if (housekeeping_enabled(HK_TYPE_DOMAIN_BOOT))
-> +	if (housekeeping_enabled(HK_TYPE_DOMAIN_BOOT)) {
->  		cpumask_andnot(isolated_cpus, cpu_possible_mask,
->  			       housekeeping_cpumask(HK_TYPE_DOMAIN_BOOT));
-> -
-> +		cpumask_copy(isolated_hk_cpus, isolated_cpus);
-> +	}
->  	return 0;
->  }
->  
-
+diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
+index 76e78c83fdbc..f862988c1e86 100644
+--- a/net/vmw_vsock/hyperv_transport.c
++++ b/net/vmw_vsock/hyperv_transport.c
+@@ -704,17 +704,26 @@ static s64 hvs_stream_has_data(struct vsock_sock *vsk)
+ 		if (hvs->recv_desc) {
+ 			/* Here hvs->recv_data_len is 0, so hvs->recv_desc must
+ 			 * be NULL unless it points to the 0-byte-payload FIN
+-			 * packet: see hvs_update_recv_data().
++			 * packet or a malformed/short packet: see
++			 * hvs_update_recv_data().
+ 			 *
+-			 * Here all the payload has been dequeued, but
+-			 * hvs_channel_readable_payload() still returns 1,
+-			 * because the VMBus ringbuffer's read_index is not
+-			 * updated for the FIN packet: hvs_stream_dequeue() ->
+-			 * hv_pkt_iter_next() updates the cached priv_read_index
+-			 * but has no opportunity to update the read_index in
+-			 * hv_pkt_iter_close() as hvs_stream_has_data() returns
+-			 * 0 for the FIN packet, so it won't get dequeued.
++			 * If hvs->recv_desc points to the FIN packet, here all
++			 * the payload has been dequeued and the peer_shutdown
++			 * flag is set, but hvs_channel_readable_payload() still
++			 * returns 1, because the VMBus ringbuffer's read_index
++			 * is not updated for the FIN packet:
++			 * hvs_stream_dequeue() -> hv_pkt_iter_next() updates
++			 * the cached priv_read_index but has no opportunity to
++			 * update the read_index in hv_pkt_iter_close() as
++			 * hvs_stream_has_data() returns 0 for the FIN packet,
++			 * so it won't get dequeued.
++			 *
++			 * In case hvs->recv_desc points to a malformed/short
++			 * packet, return -EIO.
+ 			 */
++			if (!(vsk->peer_shutdown & SEND_SHUTDOWN))
++				return -EIO;
++
+ 			return 0;
+ 		}
+ 
 -- 
-Best regards,
-Ridong
+2.49.0
 
 
