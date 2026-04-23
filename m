@@ -1,121 +1,143 @@
-Return-Path: <linux-hyperv+bounces-10341-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10342-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yF2+Ly4l6mnwvAIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10341-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 15:57:02 +0200
+	id ViuwMsUm6mnkvQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10342-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 16:03:49 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0256E45359B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 15:57:01 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CABA94536DB
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 16:03:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id EEB20300D4F4
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 13:57:00 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id EF4883001A45
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 14:00:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E83252D8DB5;
-	Thu, 23 Apr 2026 13:56:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36C242E3AF1;
+	Thu, 23 Apr 2026 14:00:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="rBflTTAD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Na8CI7bw"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E40DD126C03;
-	Thu, 23 Apr 2026 13:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F5F275AFB;
+	Thu, 23 Apr 2026 14:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776952618; cv=none; b=g2RwOgQHWmUquVH4j9UlCtsPEdlSRYnd8nvLlDJt10LWoF9pGQmEAkinIjj/aAeC8a/hHBPI3llgQDkUTPWMlIm5OJzRdA4W36EaCC95uadh8bCr7w1e4cTEBrvPl0xZFXxfUByFjrZaJ3KzrQyWOAIvPhOz4Y8WitH3nfCe4j4=
+	t=1776952838; cv=none; b=B/bFiHklRIlY7s6+hNaB3uOjO382qvZJ5A170VhekDZcIcqHNLTMxY0Cgi2HQzOJAnfyKdnh2x1B9GjD4Ci+QD0zmL1rEYbR5RrivX8Z5bAUda/LA+bnir5YHyU0mKLVk6TSz5aItJv4VpjKN0WOOzm+8Cj0b31cDz46r6rVkUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776952618; c=relaxed/simple;
-	bh=6LfUy7I1VMNamQxWSciFQf6jdTAWYyv2Ia/cLP4B6X4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rrvd/ZsZ4Im2AvCquMJA5CyBhywuLZ5I12b7DbJxVKKYvg4SJ4GOtYIEFyxJsxZ9bJnPCNlVSwJKKx5YeqMofcqMLQetEdf8JE7oFu8JlZHzVOtsGbu06edTeoCxBWwCZyv3Iv2KTDvGF8i/M310WR7bJ4SnjMbHh8Jo5uA0XAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=rBflTTAD; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 74CAB1BF7;
-	Thu, 23 Apr 2026 06:56:50 -0700 (PDT)
-Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EAD5A3F641;
-	Thu, 23 Apr 2026 06:56:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1776952615; bh=6LfUy7I1VMNamQxWSciFQf6jdTAWYyv2Ia/cLP4B6X4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rBflTTAD1Nx18ZIKce0DB9rGA61RgIzbWsTnQaMaNQevsXWb4YJJhzTVK+mi1B9WL
-	 d2rQAEWHeYRvbN0Ht4CDh4jY2GpWlPqjntX33LzvDdGBDahRo8Y4EieF31A8JyVGut
-	 4w7a0aEAoP5zijGVD9Bbjnm6gchimq3SzV4phl5Q=
-Date: Thu, 23 Apr 2026 14:56:47 +0100
-From: Mark Rutland <mark.rutland@arm.com>
+	s=arc-20240116; t=1776952838; c=relaxed/simple;
+	bh=mVrK0zXCEdJ6a40kh14ulfHCdH3uQpXGB2DGyceVQ9M=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qXSrJRhf/9aKl3v2Oh+9s5Y+7m44dk/3Vt+hZmJ3TNudbJ0dFa+0kKJnlNIeJ0xwIuRkNKr1Kw6TRe7SQ4AvGDvhSl7hhqENNlY4mZwnHmBPT8IB2RddyMZGR/exAFiNiTETouyAaZWNIrRm8RiP0tUD7bQTYCd06VlzPeSUL8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Na8CI7bw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C102C2BCB3;
+	Thu, 23 Apr 2026 14:00:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776952837;
+	bh=mVrK0zXCEdJ6a40kh14ulfHCdH3uQpXGB2DGyceVQ9M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Na8CI7bwOFFciWF152SK6VpvgW/0uJ9C/ab85EokcYjuHus/X7p5kdg3sgcvfaoT8
+	 qHtp6cimBCaiagvbYXjw2BModFBlKGaR7PB9ARWc01gap3WEdVSBIm+os8k2xnkOPu
+	 xlBzNX8FRqwIEDKREsGsUViWZfjeYfjGIMrkbuvIEutscXEFDBVc4YlhdVFs9SfT8B
+	 WrL3lV26hSmkoRSlYMtK1MQpod6CFooqGC4+WUs8b+cH8X9CS2SdUqsOGlbKAd/AAs
+	 SM789kC1D0hTDtVBhRTd6CAMJHrAPGcFthq786V4/J2nP4PQLEQE+epCfoxx3mKPcr
+	 Vco1wbe+h2pvQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1wFuba-0000000E4rW-3VD2;
+	Thu, 23 Apr 2026 14:00:34 +0000
+Date: Thu, 23 Apr 2026 15:00:34 +0100
+Message-ID: <864il122v1.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
 To: Naman Jain <namjain@linux.microsoft.com>
 Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
 	Long Li <longli@microsoft.com>,
 	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Will Deacon <will@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
 	Michael Kelley <mhklinux@outlook.com>,
-	Marc Zyngier <maz@kernel.org>,
 	Timothy Hayes <timothy.hayes@arm.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Sascha Bischoff <sascha.bischoff@arm.com>,
 	mrigendrachaubey <mrigendra.chaubey@gmail.com>,
-	linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-riscv@lists.infradead.org, vdso@mailbox.org,
+	linux-hyperv@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	vdso@mailbox.org,
 	ssengar@linux.microsoft.com
-Subject: Re: [PATCH v2 07/15] arm64: hyperv: Add support for
- mshv_vtl_return_call
-Message-ID: <aeolHwXHFH4AnX_n@J2N7QTR9R3.cambridge.arm.com>
+Subject: Re: [PATCH v2 07/15] arm64: hyperv: Add support for mshv_vtl_return_call
+In-Reply-To: <20260423124206.2410879-8-namjain@linux.microsoft.com>
 References: <20260423124206.2410879-1-namjain@linux.microsoft.com>
- <20260423124206.2410879-8-namjain@linux.microsoft.com>
+	<20260423124206.2410879-8-namjain@linux.microsoft.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260423124206.2410879-8-namjain@linux.microsoft.com>
-X-Spamd-Result: default: False [-0.66 / 15.00];
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: namjain@linux.microsoft.com, kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, longli@microsoft.com, catalin.marinas@arm.com, will@kernel.org, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, arnd@arndb.de, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, mhklinux@outlook.com, timothy.hayes@arm.com, lpieralisi@kernel.org, sascha.bischoff@arm.com, mrigendra.chaubey@gmail.com, linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, linux-riscv@lists.infradead.org, vdso@mailbox.org, ssengar@linux.microsoft.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spamd-Result: default: False [0.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[arm.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[arm.com:s=foss];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	RCPT_COUNT_TWELVE(0.00)[31];
 	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,arm.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,dabbelt.com,eecs.berkeley.edu,ghiti.fr,outlook.com,gmail.com,vger.kernel.org,lists.infradead.org,mailbox.org,linux.microsoft.com];
-	TAGGED_FROM(0.00)[bounces-10341-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-10342-lists,linux-hyperv=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[32];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[arm.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mark.rutland@arm.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	MAILSPIKE_FAIL(0.00)[2600:3c15:e001:75::12fc:5321:query timed out];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[maz@kernel.org,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[arm.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,mailbox.org:email,J2N7QTR9R3.cambridge.arm.com:mid]
-X-Rspamd-Queue-Id: 0256E45359B
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,mailbox.org:email]
+X-Rspamd-Queue-Id: CABA94536DB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Apr 23, 2026 at 12:41:57PM +0000, Naman Jain wrote:
+On Thu, 23 Apr 2026 13:41:57 +0100,
+Naman Jain <namjain@linux.microsoft.com> wrote:
+> 
 > Add the arm64 variant of mshv_vtl_return_call() to support the MSHV_VTL
 > driver on arm64. This function enables the transition between Virtual
 > Trust Levels (VTLs) in MSHV_VTL when the kernel acts as a paravisor.
@@ -203,7 +225,9 @@ On Thu, Apr 23, 2026 at 12:41:57PM +0000, Naman Jain wrote:
 > +		/* x16 will be loaded last, after saving base pointer */
 > +		"ldr x17, [x16, #(17*8)]\n\t"
 > +		/* x18 is hypervisor-managed per-VTL - DO NOT LOAD */
-> +
+
+Wut? Does it mean the kernel is not free to use x18?
+
 > +		/* General-purpose registers: x19-x30 */
 > +		"ldp x19, x20, [x16, #(19*8)]\n\t"
 > +		"ldp x21, x22, [x16, #(21*8)]\n\t"
@@ -238,21 +262,15 @@ On Thu, Apr 23, 2026 at 12:41:57PM +0000, Naman Jain wrote:
 > +		/* Return to the lower VTL */
 > +		"hvc #3\n\t"
 
-NAK to this.
+No. Absolutely not. If you need to do context switching, do it in the
+hypervisor. Entirely in the hypervisor. You don't even handle SVE, let
+alone SME. How is that going to work?
 
-* This is a non-SMCCC hypercall, which we have NAK'd in general in the
-  past for various reasons that I am not going to rehash here.
+And please use the SMCCC. Only that. Which mandates that the HVC
+immediate is 0, 0 or zero.
 
-* It's not clear how this is going to be extended with necessary
-  architecture state in future (e.g. SVE, SME). This is not
-  future-proof, and I don't believe this is maintainable.
+	M.
 
-* This breaks general requirements for reliable stacktracing by
-  clobbering state (e.g. x29) that we depend upon being valid AT ALL
-  TIMES outside of entry code.
-
-* IMO, if this needs to be saved/restored, that should happen in
-  whatever you are calling.
-
-Mark.
+-- 
+Without deviation from the norm, progress is not possible.
 
