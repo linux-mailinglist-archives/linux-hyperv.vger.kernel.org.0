@@ -1,48 +1,48 @@
-Return-Path: <linux-hyperv+bounces-10338-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10339-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mFwvE6IV6mkatwIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10338-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 14:50:42 +0200
+	id yBU7MtIV6mlHtwIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10339-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 14:51:30 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB8734524F0
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 14:50:40 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4A67452538
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 14:51:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 8B6DB300AD5C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 12:44:32 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4E9D4304B35C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 12:44:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5725C382281;
-	Thu, 23 Apr 2026 12:44:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87AD33EDAA5;
+	Thu, 23 Apr 2026 12:44:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="o9WkEKDY"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TZwi8EF3"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32C4B1D6DB5;
-	Thu, 23 Apr 2026 12:44:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 624EE1D6DB5;
+	Thu, 23 Apr 2026 12:44:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776948270; cv=none; b=JP6i1sNU6f1aPTriVjk8ECTntxTjSDwexGjR5CpzmlpKhzyt/rbSlmJWcLQeTPE7QB7wtw6xDz0l6PFFjyAxO+vMzOxWuC4AE3J0Vor7qQz9Zy+83HD6J1R4W2QFwa1ZlheSM7OOlO5HDkPtBfT0DUu/hs7G8IV1TXuENFneegc=
+	t=1776948288; cv=none; b=SgWkhGTs4tZsAbcVc5Me3K9wKZS4bUaPA6U+BNc1hmcI5+ieBs9nDSYNDZJE0GFgZPDv9r9mJ0mkeZ3kRJLGCAxHpy0gbcnEPZlB0SlN9MNx/h55kF7SgCy+4VLTtzzJ5xStvHO9oFfrqvgoSa/6oz8DFPvKJsBk7nddgwuPLg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776948270; c=relaxed/simple;
-	bh=CoDvSCNn4jGrMUulDHPvfhhkBsriG7oP3HcJNSqjRng=;
+	s=arc-20240116; t=1776948288; c=relaxed/simple;
+	bh=UJFdtsv+xUTxCdD902MCvqyrQbINo6D6Gc7EY3d+HRk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uSfG1UDbI2BJvP4C4M2JKLjEAQnqgXiqH7xf5DfsTOIGTJwgbJU3HIffakGkHtkDVyLykkopwoAmERkVoGm2KgTRecENMM8QP8zAjlcLSe8tx0+KfHSVxhDMR9B6O5BmNnB7jeuVXBYmHRRaA4bLkWu0bsOTHUUDyQbmFn0VMEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=o9WkEKDY; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=Joa8IXeLKJ9I9aR+8LmKzOE3ZhLOp9DkOcPp+TEEOAPyD7nUO68QQQkSmId7BfCbsaMz/jOYoloZA7qjgwb3lL3YTGzF43BqvJnezxF40NOcvKzdroQ2SySmJp4alc2VPuFHQdOezrLQnKYwTGwqkdW62VMyrA0oSzc+Ub16K6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TZwi8EF3; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from CPC-namja-026ON.redmond.corp.microsoft.com (unknown [4.213.232.18])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 8D79720B716E;
-	Thu, 23 Apr 2026 05:44:08 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8D79720B716E
+	by linux.microsoft.com (Postfix) with ESMTPSA id 070C020B7185;
+	Thu, 23 Apr 2026 05:44:29 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 070C020B7185
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1776948255;
-	bh=WCqVD6YRGkVlS61nC58ZQHPJoEDu23OMTFcYIc3KK7w=;
+	s=default; t=1776948277;
+	bh=R8uasiKJJqB0UypVXrQ/4MfR+9wKG2jPGAjkmO/egns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o9WkEKDY1+IjGA7KFzub4vgAD8r4TOVboRhyxRljZfT4Cn2GsJoqg7WNN9vIhuVXt
-	 H2Yf3Nkj2Wsq271fqrX1wrAYYyvoFn2o8S7p9TnmsSNSUq3XOrQ1dDRVtCcJFMQy3B
-	 QohTj61p/B/cM3PvJR+/k9oHkGlU7NBEhQoZ8ymM=
+	b=TZwi8EF3KFtKojnKql1YiP0AxnEytUmxPRo3tGXKd7KO+PMWGFiqKd6B2H0MhaQYM
+	 YGXvBpEzByzP3E7BIOFqlkvqdMymumuRVtYgejafE2X8vrjrWmk57c9IhZ4qd5vNc+
+	 GpA+cyWtUSQ/hPB3EXOg0C2B5OBUflbRhUenyRL4=
 From: Naman Jain <namjain@linux.microsoft.com>
 To: "K . Y . Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
@@ -76,9 +76,9 @@ Cc: Marc Zyngier <maz@kernel.org>,
 	linux-riscv@lists.infradead.org,
 	vdso@mailbox.org,
 	ssengar@linux.microsoft.com
-Subject: [PATCH v2 14/15] Drivers: hv: Add 4K page dependency in MSHV_VTL
-Date: Thu, 23 Apr 2026 12:42:04 +0000
-Message-ID: <20260423124206.2410879-15-namjain@linux.microsoft.com>
+Subject: [PATCH v2 15/15] Drivers: hv: Add ARM64 support for MSHV_VTL in Kconfig
+Date: Thu, 23 Apr 2026 12:42:05 +0000
+Message-ID: <20260423124206.2410879-16-namjain@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260423124206.2410879-1-namjain@linux.microsoft.com>
 References: <20260423124206.2410879-1-namjain@linux.microsoft.com>
@@ -96,11 +96,11 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10338-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10339-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -117,39 +117,36 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,linux.microsoft.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: DB8734524F0
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mailbox.org:email,outlook.com:email,linux.microsoft.com:dkim,linux.microsoft.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: E4A67452538
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Add a dependency on 4K page size in Kconfig of MSHV_VTL
-to support any assumptions that may be present in the code.
-x86 anyways supports 4K page size only, and for arm64, higher
-page size support is not validated. Remove this dependency as
-and when this feature is supported.
+Enable ARM64 support in MSHV_VTL Kconfig now that all the necessary
+support is present.
 
+Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+Reviewed-by: Roman Kisel <vdso@mailbox.org>
 Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
 ---
- drivers/hv/Kconfig | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/hv/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index 7937ac0cbd0f..115821cc535c 100644
+index 115821cc535c..0bec3bc81a1a 100644
 --- a/drivers/hv/Kconfig
 +++ b/drivers/hv/Kconfig
-@@ -96,6 +96,11 @@ config MSHV_VTL
- 	# MTRRs are controlled by VTL0, and are not specific to individual VTLs.
- 	# Therefore, do not attempt to access or modify MTRRs here.
- 	depends on !MTRR
-+	# The hypervisor interface operates on 4k pages. Enforcing it here
-+	# simplifies many assumptions in the mshv_vtl code.
-+	# VTL0 VMs can still support higher page size in ARM64 and is not limited
-+	# by this setting.
-+	depends on PAGE_SIZE_4KB
- 	select CPUMASK_OFFSTACK
- 	select VIRT_XFER_TO_GUEST_WORK
- 	default n
+@@ -87,7 +87,7 @@ config MSHV_ROOT
+ 
+ config MSHV_VTL
+ 	tristate "Microsoft Hyper-V VTL driver"
+-	depends on X86_64 && HYPERV_VTL_MODE
++	depends on (X86_64 || ARM64) && HYPERV_VTL_MODE
+ 	depends on HYPERV_VMBUS
+ 	# Mapping VTL0 memory to a userspace process in VTL2 is supported in OpenHCL.
+ 	# VTL2 for OpenHCL makes use of Huge Pages to improve performance on VMs,
 -- 
 2.43.0
 
