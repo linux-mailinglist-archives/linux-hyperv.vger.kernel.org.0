@@ -1,174 +1,203 @@
-Return-Path: <linux-hyperv+bounces-10321-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10322-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0Gr2MnTQ6Wm9kgIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10321-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 09:55:32 +0200
+	id YDrrOOb66WnkpwIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10322-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 12:56:38 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72E6244E368
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 09:55:32 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E57C9450F95
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 12:56:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B1A4530059BF
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 07:55:31 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 1A6BF3007B30
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2026 10:53:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2239F26ADC;
-	Thu, 23 Apr 2026 07:55:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E44A3E5EDD;
+	Thu, 23 Apr 2026 10:52:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J24/qVdm";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="no6V8h97"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W4kgi2vV";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="mOroCPqh"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F3D337699
-	for <linux-hyperv@vger.kernel.org>; Thu, 23 Apr 2026 07:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6D73E3DB7
+	for <linux-hyperv@vger.kernel.org>; Thu, 23 Apr 2026 10:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776930930; cv=none; b=iFPnLkh3y4b25iRdMBcMPboXzUoFd+b6F3YvtzkhePteot38aNtviGUXOJ6XkfYrTjI16uStQhHaZqv7CFXmES7uLrfes1MmceL8sZ9GiJ5LsdAF1OulQ/PdhvPIoKIyYeO3smefVA1/+/wmVxsXMJqqqw8BFi49h0wQQCa2XK8=
+	t=1776941575; cv=none; b=QxoGBr3CqerZF44iYP68KLlSIFvwHMYtoNjrtRJEDtJBVRB6A/fzfXDue3Noyx8mtMlTSq5W5EEOzs+ZbQPqg/QHvWWkbXXhUw88/vd1I34UpPtB+LECySeuqhBbybviXz0pHzF4wJK9q8WZsggv3Z3zFg/JR5IxEo1uG9ECVqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776930930; c=relaxed/simple;
-	bh=L2WN3Mdkt+PLvtN1w07nhMKHoYH38g1usozRivR3K9Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ri4VXiMhKCoWHQhlww14d6y9S49kBX6peXf4RZyGwz65aMvHMCvgQHvMLQgNdh/eaoeStbqKcunFVEX0leqSrKg4eFNgRSYpFLcdM6qIMjoMklSJrpxwqayT/FQHMbD5yoas21X393RsM5BpqwvnvP7vnBrXXSgGUXt6u/zcA9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J24/qVdm; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=no6V8h97; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1776941575; c=relaxed/simple;
+	bh=m101j43P5lzRFczyB45ahCNexSnh1DduvS39dTm8j24=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=KQTxFd+jbjZgv9DnWTN9oAYqnO+EL+1UlawjF/fzxkmnt9mKI3TFhn+8vTVAyi7E+enqIFnat8gbWpZuw84Pb7/pFUQ/r7y9LI4QLefya9JsLLCT01+stzjzZ/TryU/vApvRossM0E0SaYLGvGsxl4xTeuOxNFjldhmz6XTeC9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W4kgi2vV; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=mOroCPqh; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1776930927;
+	s=mimecast20190719; t=1776941573;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kw0NWAnxiHM/StsVSGBC26LNQSa2ifdysLtA6b6dLbI=;
-	b=J24/qVdmEajfwEEUTsN1YuwK1PjS/DGwTjnZMHaVJZqALULG8XkYk/nERa+F4ayy7faGZ1
-	IXv35KoItE2TCNsE4+EGGPkev7+wM3RoJ2zLtxJqVU6Bz+WNDmPU62pg5ogpZkiqbX9E5q
-	95w1VkvQeKZymTqR5S0ewKevymhfE1k=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=xC8tXl/B81gFeHZNp2utQBvI0XuSwkdb9RxGKsRnn8I=;
+	b=W4kgi2vVaYn5QzB854oQbytmq6lKYPbL4cgsRWCIcOcI9kLuOnUziO1wNMm+vwrViX8yrx
+	DuvcMCfhFCHMPsE49K1f61DzUgmmCK1ALj9aYmK9eXY97MUvnd9q4f8v0akaw5z4V1ITct
+	28BWH9PdAr9W47sKXYgVdDIBJ7oBD/Q=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-255-er6sJzVmMY-6k9sIU6Rtow-1; Thu, 23 Apr 2026 03:55:26 -0400
-X-MC-Unique: er6sJzVmMY-6k9sIU6Rtow-1
-X-Mimecast-MFC-AGG-ID: er6sJzVmMY-6k9sIU6Rtow_1776930925
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-440d0c4401aso3758096f8f.0
-        for <linux-hyperv@vger.kernel.org>; Thu, 23 Apr 2026 00:55:26 -0700 (PDT)
+ us-mta-644-vgXAO4e7PZ2NAtJf52mTNQ-1; Thu, 23 Apr 2026 06:52:50 -0400
+X-MC-Unique: vgXAO4e7PZ2NAtJf52mTNQ-1
+X-Mimecast-MFC-AGG-ID: vgXAO4e7PZ2NAtJf52mTNQ_1776941569
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2b2e06219cbso83614395ad.3
+        for <linux-hyperv@vger.kernel.org>; Thu, 23 Apr 2026 03:52:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1776930925; x=1777535725; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kw0NWAnxiHM/StsVSGBC26LNQSa2ifdysLtA6b6dLbI=;
-        b=no6V8h97ykgC6cpJgVuBQ/LRCYpO3tCbV/JSThKrn0vmzG6RWFJ9nmN8vP9Ma4LUvO
-         q12PgayYwC/MJAY8xE6rWNIzmKcXBt0fL6TtR2r/YeEtyO4P3w9lb49fxNWqxw5llugj
-         0K3fo8uJ4vL5ndRznkJII771++DWXv4GUQwVtZNHY/z3o5w9WIXOfug1EH44GSr9TT+Z
-         m5q3+4CxI7jLJkggcLp2lkQ2xWTbkvMpDg1r4qIVALZhUe0HS4UD6+GkhwwKD1mm5xsr
-         99uDof/2Fhve5z44DPsitcqqp7hFXBHPCIRNJp503T2aVF48D9dN+t4YUFoAeBk1g79n
-         O7ZA==
+        d=redhat.com; s=google; t=1776941569; x=1777546369; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=xC8tXl/B81gFeHZNp2utQBvI0XuSwkdb9RxGKsRnn8I=;
+        b=mOroCPqheaaqKJ5+iHKdrC2TUFvjdhj8u4L8JDh7nm2LqvVYa4JjbKsaeiJCdyguq6
+         w+yIazrrhxNxEAyo4nXD7tcNF+U/aYkpL+qfE5FodjLobeAqMV/X+L823nOrHdyB3sJo
+         NRFwqKdpMUKsCOSwmWe9Yys9GFXEA7Yb5B1M01j4VFQSrR0tzrAwsT8Zd+as6tYlPGZP
+         45W9U1V0cI9ZlDPmYDxR2XqmGdiNKe+DvocTJORUOzNn4qKyXOTvbIlN5L1ot8UC8guM
+         0xCBlbEwQkcneTHCRw5v0IPpt6xhQT1i4UC5qZrpb404RW+5rQE6nTcjU62bsFEVIAGY
+         ZVsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776930925; x=1777535725;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kw0NWAnxiHM/StsVSGBC26LNQSa2ifdysLtA6b6dLbI=;
-        b=LNJBiAyCMBCP9IsfAslAv7Z7CmQR4Rz1LaUmxPWWwD26FsptqZRpWz/4TSLC4i3ce1
-         eFErFnkX5oZ2i7IocKu7Zb65RykgMcIuud4I87hZwCa+uV50V0rTVTloCdbgO4k9jKtn
-         qAIOE34+1AOFl883ECV9q7xGVkRkfhTQGxEXQqxm2E/FLyPB4daM2i596KCeJ3LXPgts
-         NKd4jfQHX6+ObWeRvg7DrKaaDGg/8HqohgxZ9qew3cmNYqbP1OeyJ/C8FToOH2tknh41
-         pBpgQUvHBxTZRF8VRLkei8xnm5w12gH5tMU7nw+pi1DNxGtk63GY3axTvRcBVag/Occ5
-         5JSA==
-X-Forwarded-Encrypted: i=1; AFNElJ/x90E6tivjRi8/Mx7YP2cDefsFdYS8dYHmwQN7gzG1GuqQG1Iu9q8dMPsbm+z2jLd9rlk+WjNi86zJOUM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSuBHGGlLgrZiS7HtVHGN0zEH2d0UlCNxhKhhN/PU8jlVz5kdQ
-	wOZzaBfMv91NcjU2FHGQ9e1xW4k5p8Ukfwx8rJ/X+wKYhqwRI57a4y09vmnPJeIwLwHSXy9iwy9
-	Y72rL7qf0TcAO/ghFbZYa8FNcfLJSIkRdt2BxlIbH3N95aN8QbED5K9f20qqFMb1Zqg==
-X-Gm-Gg: AeBDieu3n6cnwU1AOHSyIL3lqbqTEgyKCSpT26Qxx5PB3zqscCGNW5JcwSLt82LBPco
-	A8AyL92PXJEerrKqxoA7s5ZwoxS2lKDFQCo50g9Wk/momTPvUmo1QaiDzPpLw5t4YJ6Y+ogZqn0
-	3uuJgT2WsFRmcVWJFgz6QtcIvW4NlsLBdmzAZ5YevbkQ17w7sfUo+HtsSO3rxSwk2/YaFxOqtDD
-	AJeakCaO3JcN/BxHAyjlq0w4CCTvug0YYWCnqX/ltep/0sBMNMGuAOtZvW1pS7+5bS6Zba3nvag
-	0GB1iV7FajPq5MULKtkWBXPdpQsURbRzd0wpkxiYp94COLs9iueN2vgTlGvkKvRmRtOcLfoCvWa
-	+viOlR+kWsNeesW3UfCgFIcpMJEuHAjCCqAOeIaqAs8H8Fp3WBuvIs2ojcMg8nAyh8w1gDV1Yxw
-	8zfA6J2Q==
-X-Received: by 2002:a05:6000:610:b0:43d:1c21:ead5 with SMTP id ffacd0b85a97d-43fe3e0b4d8mr40520281f8f.22.1776930925164;
-        Thu, 23 Apr 2026 00:55:25 -0700 (PDT)
-X-Received: by 2002:a05:6000:610:b0:43d:1c21:ead5 with SMTP id ffacd0b85a97d-43fe3e0b4d8mr40520207f8f.22.1776930924637;
-        Thu, 23 Apr 2026 00:55:24 -0700 (PDT)
-Received: from sgarzare-redhat (host-87-16-204-83.retail.telecomitalia.it. [87.16.204.83])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4412e36ff8bsm2933844f8f.26.2026.04.23.00.55.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2026 00:55:23 -0700 (PDT)
-Date: Thu, 23 Apr 2026 09:55:16 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Dexuan Cui <decui@microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org, 
-	longli@microsoft.com, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, horms@kernel.org, niuxuewei.nxw@antgroup.com, 
-	linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH net v2] hv_sock: Return -EIO for malformed/short packets
-Message-ID: <aenQQpYW6j0BoC69@sgarzare-redhat>
-References: <20260423064811.1371749-1-decui@microsoft.com>
+        d=1e100.net; s=20251104; t=1776941569; x=1777546369;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xC8tXl/B81gFeHZNp2utQBvI0XuSwkdb9RxGKsRnn8I=;
+        b=XkclGgJFztUe38TSIvtkIqrR0HDSVdJet3bs7iJxpMBTNZ8JEXXem7BFXqvXCtwmNc
+         5Hec4rn/+5xLZsHowMnnsRBG7Ye4oZM4DDvUWLnssU93r18/HtiddhZUxqSu9SHwsWzB
+         Lq85yaX6+hxZMvODzdbinL+vnU9Y9B/YouRINdUENhBsMmHzd3gLkMg3uR2ZzvYoIeii
+         QTOTaIhGMNJZs4VdaGGLakNEf/Gk4i39o7G4h/WQgjRN7lXlyv0RUlts40Pp17B0Vov+
+         BwpA8M1Zenm0TWszItqHsi/sKRloHJCogV11d+UYirPcLK8LG0XG5b6Y5hReaTpRV0Km
+         kt6g==
+X-Forwarded-Encrypted: i=1; AFNElJ9jU0gPC3oYdct9odzt2705e/7rFJWZ31sXDS3SqouCPW+J1fC0Wlykwpop1+x1E6toAMFW6V79Kfyt3ik=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTVWMt6mQbb2Vsl8vcebzp+dsDeHGyJ411XU6lqZI8GTP3b63J
+	0fR0aId5n6kD4Tin5ixsna+bKYwIgfa2/6LdGNZjvPgGgUoasVPp1HG6HEHJlZTc1g21tN/DrBU
+	yL2eg+e73yleQl778ewsMc0ubfnvq2Q1dPGZ2HBMiwJG3ShOS5vlDHaXkU0UwXn69yA==
+X-Gm-Gg: AeBDievKtop40LwkfhlI5hKef7x6mfKoDqX3ee3yp0Jxq9eU3WiQALtJxvqInh3yBij
+	UomINey2P5fe3FiOO2/KlffH0Vza7erz/DB3yw9+aRuj896TLCm0PwpEWSnb0N+aD71774S+g0v
+	XH2TIoLIynGtSvKlDPzP04eBfZGjJqqzLmi2Abyz60QbjUZHb5wU4tJ+kX0g+d+fGkZtc0e4N8y
+	5VI2dGYyjfEV3t2iNQUq2k6SdHgg/De7Rff8keBwo4Oi49GZtI4pM29XULRVoRuoerl1zQ1q58f
+	vL7/NTo+2PxEVggOpcTaDl9HWaRXzMW/JAQbl5eutpRfGWxH9KKVqZEFoTlEz4E1UIVYOH+QIrE
+	QpU0y6HOeIOtOhUd5KHOoY4UVhPb0rRR2ZYTq4rZ8cYMVsD9bnVSud9zkz0g4aEDPfyM=
+X-Received: by 2002:a17:903:2c5:b0:2b2:4697:4370 with SMTP id d9443c01a7336-2b5f9e8cac7mr273755045ad.3.1776941569011;
+        Thu, 23 Apr 2026 03:52:49 -0700 (PDT)
+X-Received: by 2002:a17:903:2c5:b0:2b2:4697:4370 with SMTP id d9443c01a7336-2b5f9e8cac7mr273754785ad.3.1776941568531;
+        Thu, 23 Apr 2026 03:52:48 -0700 (PDT)
+Received: from [192.168.88.32] ([150.228.93.216])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b5fa9ff71esm198582245ad.8.2026.04.23.03.52.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2026 03:52:48 -0700 (PDT)
+Message-ID: <d47894f2-4af2-47d5-9961-51ba07441212@redhat.com>
+Date: Thu, 23 Apr 2026 12:52:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20260423064811.1371749-1-decui@microsoft.com>
-X-Spamd-Result: default: False [-1.66 / 15.00];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v4 3/5] net: mana: Guard mana_remove against double
+ invocation
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>, kys@microsoft.com,
+ haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+ longli@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, ssengar@linux.microsoft.com,
+ dipayanroy@linux.microsoft.com, gargaditya@linux.microsoft.com,
+ shirazsaleem@microsoft.com, kees@kernel.org, kotaranov@microsoft.com,
+ leon@kernel.org, shacharr@microsoft.com, stephen@networkplumber.org,
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260420124741.1056179-1-ernis@linux.microsoft.com>
+ <20260420124741.1056179-4-ernis@linux.microsoft.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20260420124741.1056179-4-ernis@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64];
 	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10321-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[22];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
+	TAGGED_FROM(0.00)[bounces-10322-lists,linux-hyperv=lfdr.de];
 	DKIM_TRACE(0.00)[redhat.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sgarzare@redhat.com,linux-hyperv@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[pabeni@redhat.com,linux-hyperv@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 72E6244E368
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: E57C9450F95
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, Apr 22, 2026 at 11:48:11PM -0700, Dexuan Cui wrote:
->Commit f63152958994 fixes a regression, however it fails to report an
->error for malformed/short packets -- normally we should never see such
->packets, but let's report an error for them just in case.
->
->Fixes: f63152958994 ("hv_sock: Report EOF instead of -EIO for FIN")
->Cc: stable@vger.kernel.org
->Signed-off-by: Dexuan Cui <decui@microsoft.com>
->---
->
->Commit f63152958994 is currently only in net.git's master branch.
->
->Changes since v1:
->    Integrated comments from Stefano Garzarella:
->
->        1) access 'vsk' directly:
->           s/hvs->vsk->peer_shutdown/vsk->peer_shutdown/
->
->        2) test the error condition first and return -EIO for that.
->
->    NO other changes.
+On 4/20/26 2:47 PM, Erni Sri Satya Vennela wrote:
+> If PM resume fails (e.g., mana_attach() returns an error), mana_probe()
+> calls mana_remove(), which tears down the device and sets
+> gd->gdma_context = NULL and gd->driver_data = NULL.
+> 
+> However, a failed resume callback does not automatically unbind the
+> driver. When the device is eventually unbound, mana_remove() is invoked
+> a second time. Without a NULL check, it dereferences gc->dev with
+> gc == NULL, causing a kernel panic.
+> 
+> Add an early return if gdma_context or driver_data is NULL so the second
+> invocation is harmless. Move the dev = gc->dev assignment after the
+> guard so it cannot dereference NULL.
+> 
+> Fixes: 635096a86edb ("net: mana: Support hibernation and kexec")
+> Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+> ---
+> Changes in v4:
+> * Update Fixes tag to 635096a86edb
+> Changes in v3:
+> * Add this patch to the patchset
+> ---
+>  drivers/net/ethernet/microsoft/mana/mana_en.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> index 468ed60a8a00..ce1b7ec46a27 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> @@ -3731,11 +3731,16 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+>  	struct gdma_context *gc = gd->gdma_context;
+>  	struct mana_context *ac = gd->driver_data;
+>  	struct mana_port_context *apc;
+> -	struct device *dev = gc->dev;
+> +	struct device *dev;
+>  	struct net_device *ndev;
+>  	int err;
+>  	int i;
 
-Thanks, LGTM!
+The above breaks the reverse christmas tree order. I'll apply the patch
+as-is to avoid additional traffic for very little to no gain, but should
+you touch again this code in the future for other reasons, please
+restore the above.
 
-Acked-by: Stefano Garzarella <sgarzare@redhat.com>
+/P
 
 
