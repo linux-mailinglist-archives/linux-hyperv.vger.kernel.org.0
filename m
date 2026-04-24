@@ -1,134 +1,188 @@
-Return-Path: <linux-hyperv+bounces-10363-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10364-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uOe9C3GF62lBNwAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10363-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Apr 2026 17:00:01 +0200
+	id YIlYNv6S62lGOgAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10364-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Apr 2026 17:57:50 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D237460728
-	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Apr 2026 17:00:00 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5999B46110B
+	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Apr 2026 17:57:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6CC1830382AF
-	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Apr 2026 14:58:59 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2495E30082BF
+	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Apr 2026 15:57:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B3713E0C57;
-	Fri, 24 Apr 2026 14:58:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94E8A3D5238;
+	Fri, 24 Apr 2026 15:57:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="gk6Lx6B5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ajfozHwD"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67C83E0C63;
-	Fri, 24 Apr 2026 14:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777042738; cv=pass; b=LhPsHvvUzo1rJKky/bUHf+aqfz+Jpk6mPTzdRBzr1oXNHkhTeQkVLhThM4uUwVTLL640RH2VxFMaGJcTv4D5czEYJ/7rGvdnPetnpCMOdIm3xo3vRQCNOZnmqO5Esb1njCdGG3Zb84Eew8NVwOew1yINANRZf4p1604wNMtaZIM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777042738; c=relaxed/simple;
-	bh=FRr38I7cMflzCgQM25o0tQ3TLRcq4FZP6JuHF3oUnhM=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E24F1DED5B;
+	Fri, 24 Apr 2026 15:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777046267; cv=none; b=fHlddOl9rDzcTI3iweNdh2/A0a3gcyDUwndX0+yYkehoFwPlG394VWDZsxJ4oY79w9JUsx8zRpsJJfsqCF7KcTNfaaXfxByFk2H6jI8GFw5RPl5mswihr2Ei83UqmHgDOJWkKjF1QwNrU7wTw/cnLiIWfscyjU8t+9I3xc79edU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777046267; c=relaxed/simple;
+	bh=qO/MAUTAHfRFlyhPD2rItuN3QmG4P8rtxuTLbkxNwL0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=omxwy1Zs3aImbaA97DYS0w+0ub5T0FKbfEz0H7Z6UXPT0PfLfJ09uWKuYGUlhKdCSWxaA3/LVP+0Nw471I72vq7WKymiiJZL/3bVfpj7R1Bm4wMEHQyIzRNwlDVEVW3ShvS2aKKEM6/1Y7HwnQP/5x+th8guf1GtyBIvVx8N+Mw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=gk6Lx6B5; arc=pass smtp.client-ip=136.143.188.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1777042702; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=aycJMPuvWM130Y7GH4WCHuXEzOdY81F2d13LoCw6FQe39BJhkluSlFXnoz3KWswseKdnxwjSAhXshf/fONAlD2OUf5Hi+oJPsmqQVEHOGu3Kt2XC0lG/Eyi78fry6Z5F3Si8wQXYLtMZ0BvifMLt4150bxC/ZD1Vo04gxaQS80E=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1777042702; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Jc9dVVt1flEcC54ECMR2u7OzYKiCI+2ZnuPCR00/9xY=; 
-	b=VTubVyo7op48zoKbIfHn8xQwEmhPoOapyoRkdkMlIK6+2bgjtAO7gNYbK8FwjLqqYudu3zzdbjWzGnCO6RiPnIxuLTSjn3jjtFIKNu0Gun+I5m2UfXMrSKP5zwuA8Pr2Ff2LfYxo43k86dPG88jO52gQI8r4aB2xDAVi8kBw++o=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=anirudhrb.com;
-	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
-	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1777042702;
-	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=Jc9dVVt1flEcC54ECMR2u7OzYKiCI+2ZnuPCR00/9xY=;
-	b=gk6Lx6B5W04qq8YuuuvAEYtygTRaUHN/kjqs6YqGdQcuj6c1sZUvcj9xor1uKg24
-	NRZPE60lQc4z8+PrXWofcjPYFiUeilxJI0LSQvyuGySTDcTsymHNCWgEubH+LmrfGli
-	BeU3rzeRC/4mtdoBjV5xROL45u6aT3hR9MpltOis=
-Received: by mx.zohomail.com with SMTPS id 1777042699264442.63793575006525;
-	Fri, 24 Apr 2026 07:58:19 -0700 (PDT)
-Date: Fri, 24 Apr 2026 14:58:08 +0000
-From: Anirudh Rayabharam <anirudh@anirudhrb.com>
-To: Mukesh R <mrathor@linux.microsoft.com>
-Cc: hpa@zytor.com, robin.murphy@arm.com, robh@kernel.org,
-	wei.liu@kernel.org, mhklinux@outlook.com, muislam@microsoft.com,
-	namjain@linux.microsoft.com, magnuskulke@linux.microsoft.com,
-	anbelski@linux.microsoft.com, linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, iommu@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
-	longli@microsoft.com, tglx@kernel.org, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	joro@8bytes.org, will@kernel.org, lpieralisi@kernel.org,
-	kwilczynski@kernel.org, bhelgaas@google.com, arnd@arndb.de
-Subject: Re: [PATCH V1 01/13] iommu/hyperv: rename hyperv-iommu.c to
- hyperv-irq.c
-Message-ID: <20260424-furry-significant-slug-3fc0ba@anirudhrb>
-References: <20260422023239.1171963-1-mrathor@linux.microsoft.com>
- <20260422023239.1171963-2-mrathor@linux.microsoft.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=JmsT/jq26HBpxr2QofPWP7j6OCG74VoZYZYRz0K8pR7nNuSaHcDzA8ABv1ZVHOTwZO/ncQpwAIY0Ff1mUGMSWhXRFfVjSKN7Ihq+S0sZZAc4JslppF/gpgS3FR+4jIbnoJUYJY8lXWFUoS50mYdlf1xk0YCqPyMPcu308pk15dA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ajfozHwD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84C95C2BCB6;
+	Fri, 24 Apr 2026 15:57:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777046267;
+	bh=qO/MAUTAHfRFlyhPD2rItuN3QmG4P8rtxuTLbkxNwL0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ajfozHwD1fCyxVIfcezb1FBnsxwPft4s+SO1HNKvMY5sayIllGVwXOVtVSslBiMZF
+	 iBATPF8Gcw9+n7ropEBl/64VF34ptpNInOVsEsJkrETPnxJJKygFlN1VYMgsTk/aYJ
+	 gYUvbgp7JalTMlmRCPOXSELTijM0xY26ZJKLVNhvwHiNjYbLxtQV/g5iAlxMKVWK29
+	 RGgC4BQzNUj5QUpG0M5muBCkcgoXJy+cqEnzLKsOM+NOcQcatVhMlBI26zUciOzkDE
+	 k9Zm/lBjzIrlUV4Mjw8X3a4NKdoQ0/dEMltXuRb3fUxMSZ+xWpW5L0buiDsXXrS+bR
+	 AlN0XSo5XZv8Q==
+Date: Fri, 24 Apr 2026 17:57:43 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Waiman Long <longman@redhat.com>
+Cc: Thomas Gleixner <tglx@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>, Guenter Roeck <linux@roeck-us.net>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang@linux.dev>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Chen Ridong <chenridong@huaweicloud.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, cgroups@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, rcu@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	Costa Shulyupin <cshulyup@redhat.com>,
+	Qiliang Yuan <realwujing@gmail.com>
+Subject: Re: [PATCH 03/23] tick/nohz: Make nohz_full parameter optional
+Message-ID: <aeuS98a-u899PBmR@pavilion.home>
+References: <20260421030351.281436-1-longman@redhat.com>
+ <20260421030351.281436-4-longman@redhat.com>
+ <875x5kd88d.ffs@tglx>
+ <3b796360-81e4-4f90-9b19-8a9f21cbac07@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20260422023239.1171963-2-mrathor@linux.microsoft.com>
-X-ZohoMailClient: External
-X-Rspamd-Queue-Id: 7D237460728
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3b796360-81e4-4f90-9b19-8a9f21cbac07@redhat.com>
+X-Rspamd-Queue-Id: 5999B46110B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[anirudhrb.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
-	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10363-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,cmpxchg.org,suse.com,lwn.net,linuxfoundation.org,arm.com,microsoft.com,roeck-us.net,nvidia.com,joshtriplett.org,gmail.com,goodmis.org,efficios.com,linux.dev,linutronix.de,huaweicloud.com,infradead.org,redhat.com,linaro.org,google.com,suse.de,amd.com,davemloft.net,vger.kernel.org,lists.infradead.org];
+	TAGGED_FROM(0.00)[bounces-10364-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[30];
-	FREEMAIL_CC(0.00)[zytor.com,arm.com,kernel.org,outlook.com,microsoft.com,linux.microsoft.com,vger.kernel.org,lists.linux.dev,redhat.com,alien8.de,linux.intel.com,8bytes.org,google.com,arndb.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[anirudh@anirudhrb.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[anirudhrb.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,anirudhrb.com:dkim,anirudhrb.com:email]
+	RCPT_COUNT_GT_50(0.00)[52];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[frederic@kernel.org,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
-On Tue, Apr 21, 2026 at 07:32:27PM -0700, Mukesh R wrote:
-> This file actually implements irq remapping, so rename to more appropriate
-> hyperv-irq.c. A new file to implement hyperv iommu will be introduced
-> later.  Also, it should not be tied to HYPERV_IOMMU, but to CONFIG_HYPERV
-> and IRQ_REMAP. The file already has #ifdef CONFIG_IRQ_REMAP.
+Le Tue, Apr 21, 2026 at 10:14:09AM -0400, Waiman Long a écrit :
+11;rgb:2e2e/3434/3636> On 4/21/26 4:32 AM, Thomas Gleixner wrote:
+> > On Mon, Apr 20 2026 at 23:03, Waiman Long wrote:
+> > > To provide nohz_full tick support, there is a set of tick dependency
+> > > masks that need to be evaluated on every IRQ and context switch.
+> > s/IRQ/interrupt/
+> > 
+> > This is a changelog and not a SMS service.
+> > > Switching on nohz_full tick support at runtime will be problematic
+> > > as some of the tick dependency masks may not be properly set causing
+> > > problem down the road.
+> > That's useless blurb with zero content.
+> > 
+> > > Allow nohz_full boot option to be specified without any
+> > > parameter to force enable nohz_full tick support without any
+> > > CPU in the tick_nohz_full_mask yet. The context_tracking_key and
+> > > tick_nohz_full_running flag will be enabled in this case to make
+> > > tick_nohz_full_enabled() return true.
+> > I kinda can crystal-ball what you are trying to say here, but that does
+> > not make it qualified as a proper change log.
+> > 
+> > > There is still a small performance overhead by force enable nohz_full
+> > > this way. So it should only be used if there is a chance that some
+> > > CPUs may become isolated later via the cpuset isolated partition
+> > > functionality and better CPU isolation closed to nohz_full is desired.
+> > Why has this key to be enabled on boot if there are no CPUs in the
+> > isolated mask?
+> > 
+> > If you want to manage this dynamically at runtime then enable the key
+> > once CPUs are isolated. Yes, it's more work, but that avoids the "should
+> > only be used" nonsense and makes this more robust down the road.
 > 
-> Signed-off-by: Mukesh R <mrathor@linux.microsoft.com>
-> ---
->  MAINTAINERS                                    | 2 +-
->  drivers/iommu/Makefile                         | 2 +-
->  drivers/iommu/{hyperv-iommu.c => hyperv-irq.c} | 2 +-
->  drivers/iommu/irq_remapping.c                  | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
->  rename drivers/iommu/{hyperv-iommu.c => hyperv-irq.c} (99%)
+> OK, I will try to make it fully dynamic. Of course, it will be more work.
 
-Reviewed-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+Since the target CPUs will be offline, it should be fine to just enable/disable
+the static key and masks on runtime. The only issue I see right now is posix
+CPU timers because the tick dependency is per task/process group. And those
+tasks could migrate to nohz_full CPUs by careless users (even though that's
+nonsense) once the target become online. So the per task/process tick dependency
+must be set up unconditionally. I don't think this should bring much noticeable
+overhead though.
 
+Oh and the other way to go, that is removing TICK_DEP_BIT_POSIX_TIMER and forbid to
+run posix cpu timers on nohz_full CPUs, would be even more painful to implement
+so I don't have a better idea.
+
+Thanks.
+
+-- 
+Frederic Weisbecker
+SUSE Labs
 
