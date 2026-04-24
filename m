@@ -1,60 +1,60 @@
-Return-Path: <linux-hyperv+bounces-10362-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10363-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cJ+DF6eE62lBNwAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10362-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Apr 2026 16:56:39 +0200
+	id uOe9C3GF62lBNwAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10363-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Apr 2026 17:00:01 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id F22B246068C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Apr 2026 16:56:38 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D237460728
+	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Apr 2026 17:00:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4915A300616A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Apr 2026 14:56:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6CC1830382AF
+	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Apr 2026 14:58:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA44C3DDDBC;
-	Fri, 24 Apr 2026 14:56:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B3713E0C57;
+	Fri, 24 Apr 2026 14:58:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="EIdv0C+K"
+	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="gk6Lx6B5"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27063CF66B;
-	Fri, 24 Apr 2026 14:56:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67C83E0C63;
+	Fri, 24 Apr 2026 14:58:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777042596; cv=pass; b=HN/XjiGGoDKefoC3BPKpwXSK22CYM9yyLFa0bL7Oq5/HunnXG0ZcOfwarKYdeKziETZQEYd8mjvtVrinzTcjNRyYCsfGlMhfKB212ccPCi63elKi2FTheM0tME50BLjNM2HYJF0yAGwgNZyCMB6kQQEToqvHgwN0ytQpdgzVtJ0=
+	t=1777042738; cv=pass; b=LhPsHvvUzo1rJKky/bUHf+aqfz+Jpk6mPTzdRBzr1oXNHkhTeQkVLhThM4uUwVTLL640RH2VxFMaGJcTv4D5czEYJ/7rGvdnPetnpCMOdIm3xo3vRQCNOZnmqO5Esb1njCdGG3Zb84Eew8NVwOew1yINANRZf4p1604wNMtaZIM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777042596; c=relaxed/simple;
-	bh=XIboCUOqX1MwJvT44BSQ1l5Up9lRA42iFhJuzcHppPY=;
+	s=arc-20240116; t=1777042738; c=relaxed/simple;
+	bh=FRr38I7cMflzCgQM25o0tQ3TLRcq4FZP6JuHF3oUnhM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U0Mwn70Vi39U4zwK1qyykLvGpYUB1BadFcNzyv8tlScOyeu4+FMzi7e+cfFeZmGANdzSRO+YcmqjfU9/74MosSaU4w95iSwzDGTi/aM/SuJ/6v5/lC0R7c+ta4MhvbiAWX8Ea2wE+fzk1CQIahqENeAhBq7Iy2T5PSj29vmK5M4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=EIdv0C+K; arc=pass smtp.client-ip=136.143.188.54
+	 Content-Type:Content-Disposition:In-Reply-To; b=omxwy1Zs3aImbaA97DYS0w+0ub5T0FKbfEz0H7Z6UXPT0PfLfJ09uWKuYGUlhKdCSWxaA3/LVP+0Nw471I72vq7WKymiiJZL/3bVfpj7R1Bm4wMEHQyIzRNwlDVEVW3ShvS2aKKEM6/1Y7HwnQP/5x+th8guf1GtyBIvVx8N+Mw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=gk6Lx6B5; arc=pass smtp.client-ip=136.143.188.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1777042558; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1777042702; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=BrFFf85hehGdw2XKPFeZwPMDURVfheQs4dC8bMyuEX7QxGvl5fCjqXy2UwSOmr6LonD1iNGZdBC3JOAbZQKLjv05LvFiBpqzWI5+5QAFkhl9j+rWxcdl33L/c49qdX21U00TdhxQt1hJ3uGPMfNFZ3MMKTcdy2BMy3SKXHSaJ88=
+	b=aycJMPuvWM130Y7GH4WCHuXEzOdY81F2d13LoCw6FQe39BJhkluSlFXnoz3KWswseKdnxwjSAhXshf/fONAlD2OUf5Hi+oJPsmqQVEHOGu3Kt2XC0lG/Eyi78fry6Z5F3Si8wQXYLtMZ0BvifMLt4150bxC/ZD1Vo04gxaQS80E=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1777042558; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=mfqSqPUoxMBVCRtDCy7Ii6TvpUSj01bGGYteC+Ygh9E=; 
-	b=ADVpA/7oVFkkBtSGxszzWREq64J4eVWtyArwzLB87KAQXf57jDz96Qlby4+Dhbxv+S9xZqg1p6cXuuZLjAOelkdjTEh4r0raX8CZDHqrp3rWeN5ZpwiXiFwIAnhkzdx2ZUHPEWEJ0zXygATrbDtLn/RTahEZ9l38GPeQI3R3HZg=
+	t=1777042702; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Jc9dVVt1flEcC54ECMR2u7OzYKiCI+2ZnuPCR00/9xY=; 
+	b=VTubVyo7op48zoKbIfHn8xQwEmhPoOapyoRkdkMlIK6+2bgjtAO7gNYbK8FwjLqqYudu3zzdbjWzGnCO6RiPnIxuLTSjn3jjtFIKNu0Gun+I5m2UfXMrSKP5zwuA8Pr2Ff2LfYxo43k86dPG88jO52gQI8r4aB2xDAVi8kBw++o=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=anirudhrb.com;
 	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
 	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1777042558;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1777042702;
 	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
 	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=mfqSqPUoxMBVCRtDCy7Ii6TvpUSj01bGGYteC+Ygh9E=;
-	b=EIdv0C+KkNTvVzxTnYNobl+h7f4xSxWTUGe3v8fCVtdPbV5MVNJRSuvzhraXGbz3
-	y8+53IW+Wd5s6h8h1uhP/5JwQlO3YjFU36oQa/XCUGmdIbt40hUxOx0+utpX5/InHhA
-	LQu+oM9NLO6gRXTgfLCXwsA31lwrhpYR//e38VzE=
-Received: by mx.zohomail.com with SMTPS id 1777042554688308.8891839177646;
-	Fri, 24 Apr 2026 07:55:54 -0700 (PDT)
-Date: Fri, 24 Apr 2026 14:55:43 +0000
+	bh=Jc9dVVt1flEcC54ECMR2u7OzYKiCI+2ZnuPCR00/9xY=;
+	b=gk6Lx6B5W04qq8YuuuvAEYtygTRaUHN/kjqs6YqGdQcuj6c1sZUvcj9xor1uKg24
+	NRZPE60lQc4z8+PrXWofcjPYFiUeilxJI0LSQvyuGySTDcTsymHNCWgEubH+LmrfGli
+	BeU3rzeRC/4mtdoBjV5xROL45u6aT3hR9MpltOis=
+Received: by mx.zohomail.com with SMTPS id 1777042699264442.63793575006525;
+	Fri, 24 Apr 2026 07:58:19 -0700 (PDT)
+Date: Fri, 24 Apr 2026 14:58:08 +0000
 From: Anirudh Rayabharam <anirudh@anirudhrb.com>
 To: Mukesh R <mrathor@linux.microsoft.com>
 Cc: hpa@zytor.com, robin.murphy@arm.com, robh@kernel.org,
@@ -68,11 +68,11 @@ Cc: hpa@zytor.com, robin.murphy@arm.com, robh@kernel.org,
 	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
 	joro@8bytes.org, will@kernel.org, lpieralisi@kernel.org,
 	kwilczynski@kernel.org, bhelgaas@google.com, arnd@arndb.de
-Subject: Re: [PATCH V1 03/13] x86/hyperv: add insufficient memory support in
- irqdomain.c
-Message-ID: <20260424-inquisitive-versatile-cuckoo-6bc36b@anirudhrb>
+Subject: Re: [PATCH V1 01/13] iommu/hyperv: rename hyperv-iommu.c to
+ hyperv-irq.c
+Message-ID: <20260424-furry-significant-slug-3fc0ba@anirudhrb>
 References: <20260422023239.1171963-1-mrathor@linux.microsoft.com>
- <20260422023239.1171963-4-mrathor@linux.microsoft.com>
+ <20260422023239.1171963-2-mrathor@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -81,21 +81,21 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260422023239.1171963-4-mrathor@linux.microsoft.com>
+In-Reply-To: <20260422023239.1171963-2-mrathor@linux.microsoft.com>
 X-ZohoMailClient: External
-X-Rspamd-Queue-Id: F22B246068C
+X-Rspamd-Queue-Id: 7D237460728
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[anirudhrb.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10362-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10363-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -109,78 +109,26 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[anirudh@anirudhrb.com,linux-hyperv@vger.kernel.org];
 	DKIM_TRACE(0.00)[anirudhrb.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[anirudhrb.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,anirudhrb.com:dkim,anirudhrb.com:email]
 
-On Tue, Apr 21, 2026 at 07:32:29PM -0700, Mukesh R wrote:
-> Intermittent insufficient memory hypercall failure have been observed in
-> the current map device interrupt hypercall. In case of such a failure,
-> we must deposit more memory and redo the hypercall. Add support for
-> that. Deposit memory needs partition id, make that a parameter to the
-> map interrupt function.
+On Tue, Apr 21, 2026 at 07:32:27PM -0700, Mukesh R wrote:
+> This file actually implements irq remapping, so rename to more appropriate
+> hyperv-irq.c. A new file to implement hyperv iommu will be introduced
+> later.  Also, it should not be tied to HYPERV_IOMMU, but to CONFIG_HYPERV
+> and IRQ_REMAP. The file already has #ifdef CONFIG_IRQ_REMAP.
 > 
 > Signed-off-by: Mukesh R <mrathor@linux.microsoft.com>
 > ---
->  arch/x86/hyperv/irqdomain.c | 38 +++++++++++++++++++++++++++++++------
->  1 file changed, 32 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
-> index b3ad50a874dc..229f986e08ea 100644
-> --- a/arch/x86/hyperv/irqdomain.c
-> +++ b/arch/x86/hyperv/irqdomain.c
-> @@ -13,8 +13,9 @@
->  #include <linux/irqchip/irq-msi-lib.h>
->  #include <asm/mshyperv.h>
->  
-> -static int hv_map_interrupt(union hv_device_id hv_devid, bool level,
-> -		int cpu, int vector, struct hv_interrupt_entry *ret_entry)
-> +static u64 hv_map_interrupt_hcall(u64 ptid, union hv_device_id hv_devid,
-> +				  bool level, int cpu, int vector,
-> +				  struct hv_interrupt_entry *ret_entry)
->  {
->  	struct hv_input_map_device_interrupt *input;
->  	struct hv_output_map_device_interrupt *output;
-> @@ -30,8 +31,10 @@ static int hv_map_interrupt(union hv_device_id hv_devid, bool level,
->  
->  	intr_desc = &input->interrupt_descriptor;
->  	memset(input, 0, sizeof(*input));
-> -	input->partition_id = hv_current_partition_id;
-> +
-> +	input->partition_id = ptid;
->  	input->device_id = hv_devid.as_uint64;
-> +
->  	intr_desc->interrupt_type = HV_X64_INTERRUPT_TYPE_FIXED;
->  	intr_desc->vector_count = 1;
->  	intr_desc->target.vector = vector;
-> @@ -64,6 +67,28 @@ static int hv_map_interrupt(union hv_device_id hv_devid, bool level,
->  
->  	local_irq_restore(flags);
->  
-> +	return status;
-> +}
-> +
-> +static int hv_map_interrupt(u64 ptid, union hv_device_id device_id, bool level,
-> +			    int cpu, int vector,
-> +			    struct hv_interrupt_entry *ret_entry)
-> +{
-> +	u64 status;
-> +	int rc, deposit_pgs = 16;		/* don't loop forever */
-> +
-> +	while (deposit_pgs--) {
-> +		status = hv_map_interrupt_hcall(ptid, device_id, level, cpu,
-> +						vector, ret_entry);
-> +
-> +		if (hv_result(status) != HV_STATUS_INSUFFICIENT_MEMORY)
-> +			break;
-> +
-> +		rc = hv_call_deposit_pages(NUMA_NO_NODE, ptid, 1);
+>  MAINTAINERS                                    | 2 +-
+>  drivers/iommu/Makefile                         | 2 +-
+>  drivers/iommu/{hyperv-iommu.c => hyperv-irq.c} | 2 +-
+>  drivers/iommu/irq_remapping.c                  | 2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
+>  rename drivers/iommu/{hyperv-iommu.c => hyperv-irq.c} (99%)
 
-This code should use the hv_result_needs_memory() and hv_deposit_memory()
-helpers instead.
-
-Thanks,
-Anirudh
+Reviewed-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
 
 
