@@ -1,300 +1,191 @@
-Return-Path: <linux-hyperv+bounces-10373-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10374-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gLaEOrmM7GkZZwAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10373-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 25 Apr 2026 11:43:21 +0200
+	id KKo4J92o7Gk6bQAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10374-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 25 Apr 2026 13:43:25 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48515465C07
-	for <lists+linux-hyperv@lfdr.de>; Sat, 25 Apr 2026 11:43:20 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0461F46628C
+	for <lists+linux-hyperv@lfdr.de>; Sat, 25 Apr 2026 13:43:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A2BBB300AB12
-	for <lists+linux-hyperv@lfdr.de>; Sat, 25 Apr 2026 09:43:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D495D300B453
+	for <lists+linux-hyperv@lfdr.de>; Sat, 25 Apr 2026 11:36:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BA4B38B14C;
-	Sat, 25 Apr 2026 09:43:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE4D8364EAB;
+	Sat, 25 Apr 2026 11:36:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="COQ8Vb4x"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=unknownbbqr.xyz header.i=@unknownbbqr.xyz header.b="AtfL5OdB"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C503B3148CF;
-	Sat, 25 Apr 2026 09:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from gz.d.sender-sib.com (gz.d.sender-sib.com [77.32.148.26])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D5135BDC9
+	for <linux-hyperv@vger.kernel.org>; Sat, 25 Apr 2026 11:36:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.32.148.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777110199; cv=none; b=Ne3JZIJDNPhB0CSL1buTongU5PnAm/YQ4kASNSyFZEyb3MZtJeBjDBM9kf2g3p8xYWfi3d9pgNjx7kami3doZAj91yJIP7zc651hXbGJsDMEnzer9WbVC3U5OkN/Rf9OEu7Fm3WLt0w25vH25p7arFKW8YtrmnQ+rsvuQ5tvn98=
+	t=1777116966; cv=none; b=K6XDF3LrhR8VEqJklQmlRleGSYIfuuicyw3q8iCwk5CX3tUtt3EeYex/Kmrgh7W6XszZhbZmLhFQg/nRDuGuEQOisi3qYi6XzC7ejejYnKem8mtP3zvkqTTcsLJI0U39wsNObEIS66l06nQfJdVpHwzeVuuCWeP7rmWfO5e6U6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777110199; c=relaxed/simple;
-	bh=xWExRBWGiSg89PIoXIzgNVBK5mo8goNenJQu94NqUlI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YQRCeKMxwvmvXYIXya5qIqbwRcIo1VtIB/B1VIuxS37Ho1FWcBTTBJTYJXWkh1/wTPBgDsy6tVW9L0ITivHds/0fMB+nDAqwF+XKYUbAvfLpRfZ0SE0BKMRsZ81N82MlMc6nYvwx0lGJ6iP3Woc2byYLwX8O6yqvu7YkwXPDS2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=COQ8Vb4x; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1204)
-	id D761E20B7165; Sat, 25 Apr 2026 02:43:17 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D761E20B7165
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1777110197;
-	bh=56kY4zhB2kbTcm49x83ndv/Cjm7dZSaqJXayNMXKDN4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=COQ8Vb4xfzr/ehAVYsqHywIQ9mbpB8y53eUYY5D2R+vXzmK3eESO9qzZfaoi+ekJE
-	 ndENlCZsjFOh/j7G/eEgqWFaGZ5jGU/QBpK0TOjIBlnVeP7nvYu6ZNEtlevVEOHPMt
-	 /FURdOYrK7h4iFgnQjd6BWaa5wABBEYpRDsRvjXw=
-Date: Sat, 25 Apr 2026 02:43:17 -0700
-From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Shiraz Saleem <shirazsaleem@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Long Li <longli@microsoft.com>, Yury Norov <yury.norov@gmail.com>,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>,
-	Saurabh Singh Sengar <ssengar@microsoft.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH net] net: mana: Optimize irq affinity for low vcpu configs
-Message-ID: <aeyMtcAi6B7DfAx+@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20260424061702.1442618-1-shradhagupta@linux.microsoft.com>
- <aetgQ1gCYlGJjiKk@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <aexcDgNJw4Nr/uMU@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+	s=arc-20240116; t=1777116966; c=relaxed/simple;
+	bh=IAaSj4SfLIkqiX3UnNBImFwrNYOrqN+38fZ8sLznuwk=;
+	h=Date:Subject:From:To:Cc:Message-Id:Mime-Version; b=dsD6nexx9Q9frplJHrLNgk1HDAU0loCWTUiQx1RXxXGQuGPwRvqIRar7k7qIamL1c/rkbIngdrObs8oN3ELaUUx9BrM8mHgnfJJ1fuIXK2CVuOhJmou+YAhwxcbff+g4FhjOapASiHvsywWRuh27FJbqNJjZCsJiv2/qdIYWL74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=unknownbbqr.xyz; spf=pass smtp.mailfrom=gz.d.sender-sib.com; dkim=pass (2048-bit key) header.d=unknownbbqr.xyz header.i=@unknownbbqr.xyz header.b=AtfL5OdB; arc=none smtp.client-ip=77.32.148.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=unknownbbqr.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gz.d.sender-sib.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=unknownbbqr.xyz;
+ q=dns/txt; s=brevo1; bh=/hXgqbb1wNZcOkd3OODeRU80ZxvWKg+F3Ac9OA3Rfl4=;
+ h=from:subject:date:to:cc:mime-version:content-transfer-encoding:list-unsubscribe:x-csa-complaints:list-unsubscribe-post:message-id:x-sib-id:feedback-id;
+        b=AtfL5OdB6o2fwukeYdLfibVMb0U5cYHRkg3V03GbXhuSZNodYGt6uhaobCIIuedIL/zWIRotT3hv
+        6tOyw1ix1SF21hzOqSsKkr4822W22mWQU9i5BcsSd2PBeBJKhkUavm+U6B+VguSLDxy7jOARPaGe
+        SyHgXjhL5jHnD7g9kHUaBQNpjmiJUMxrPYy9bUIU6/BywliqLx/SWDFZKio/Z1f2oahMjZRj5TMT
+        OZKXykuHuGgStCzbAX43n2ZzVD5IyNrUg94XM2HCv8e67ZwAm++xgS2SiZmn3j7U4K4iwiIo3LR5
+        Mu0VEnaAh147cL3pXkyqJQMczapWj9Xmddzt2Q==
+X-Mailin-EID: NDQzNzMzMzgyfmxpbnV4LWh5cGVydkB2Z2VyLmtlcm5lbC5vcmd%2BPDIwMjYwNDI1MTEzNTU3LjI0LTEtZGV2QHVua25vd25iYnFyLnh5ej5%2BZ3ouZC5zZW5kZXItc2liLmNvbQ%3D%3D
+Date: Sat, 25 Apr 2026 14:35:57 +0300
+Subject: [PATCH v2] tools/hv: fix parse_ip_val_buffer out-of-bounds write
+Origin-messageId: <20260425113557.24-1-dev@unknownbbqr.xyz>
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+From: "Ali Ahmet MEMIS" <dev@unknownbbqr.xyz>
+X-CSA-Complaints: csa-complaints@eco.de
+To: <kys@microsoft.com>,<haiyangz@microsoft.com>,<wei.liu@kernel.org>,<decui@microsoft.com>,<longli@microsoft.com>
+X-sib-id: PAIABg6xAO1tuERNOywQf3c0256A6mtbTkEZp7Fja_wZc_vC4az_Qq9eHDO90wkXeVvkTTfRo2-M5FlezQq9VOg_uvW6JYPNc7dfbXlbEONJp146PvQAo7Nsu8Xxtv7f6hDkrES5B7lhaRUZBQwTDjC-qaJaGwsOtoamgFjwVlwOXBkhB2tvN-SmQg
+Cc: <linux-hyperv@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,  "Ali Ahmet MEMIS" <dev@unknownbbqr.xyz>
+Message-Id: <ea7d7850-fdb8-49a7-90fd-89432dfe555a@smtp-relay.sendinblue.com>
+Feedback-ID: 77.32.148.26:10473219_-1:10473219:Sendinblue
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aexcDgNJw4Nr/uMU@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-X-Rspamd-Queue-Id: 48515465C07
-X-Rspamd-Action: no action
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 0461F46628C
+X-Rspamd-Action: add header
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+X-Spamd-Result: default: False [9.44 / 15.00];
+	URIBL_BLACK(7.50)[unknownbbqr.xyz:email];
+	R_DKIM_REJECT(1.00)[unknownbbqr.xyz:s=brevo1];
+	R_MISSING_CHARSET(0.50)[];
+	MV_CASE(0.50)[];
 	MAILLIST(-0.15)[generic];
+	BAD_REP_POLICIES(0.10)[];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[unknownbbqr.xyz : SPF not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10373-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-10374-lists,linux-hyperv=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,outlook.com,gmail.com,vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	GREYLIST(0.00)[pass,body];
+	DKIM_TRACE(0.00)[unknownbbqr.xyz:-];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dev@unknownbbqr.xyz,linux-hyperv@vger.kernel.org];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:dkim]
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	R_SPF_ALLOW(0.00)[+ip6:2600:3c0a:e001:db::/64:c];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	ARC_ALLOW(0.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	NEURAL_HAM(-0.00)[-0.993];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[unknownbbqr.xyz:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,smtp-relay.sendinblue.com:mid]
+X-Spam: Yes
 
-On Fri, Apr 24, 2026 at 11:15:42PM -0700, Shradha Gupta wrote:
-> On Fri, Apr 24, 2026 at 05:21:23AM -0700, Dipayaan Roy wrote:
-> > On Thu, Apr 23, 2026 at 11:17:00PM -0700, Shradha Gupta wrote:
-> > > In mana driver, the number of IRQs allocated are capped by the
-> > > min(num_cpu + 1, queue count). In cases, where the IRQ count is greater
-> > > than the vcpu count, we want to utilize all the vcpus, irrespective of
-> > > their NUMA/core bindings.
-> > > 
-> > > This is important, especially in the envs where number of vcpus are so
-> > > few that the softIRQ handling overhead on two IRQs on the same vcpu is
-> > > much more than their overheads if they were spread across sibling vcpus
-> > > 
-> > > This behaviour is more evident with dynamic IRQ allocation. Since MANA
-> > > IRQs are assigned at a later stage compared to static allocation, other
-> > > device IRQs may already be affinitized to the vCPUs. As a result, IRQ
-> > > weights become imbalanced, causing multiple MANA IRQs to land on the
-> > > same vCPU.
-> > > 
-> > > In such cases when many parallel TCP connections are tested, the
-> > > throughput drops significantly
-> > > 
-> > > Test envs:
-> > > =======================================================
-> > > Case 1: without this patch
-> > > =======================================================
-> > > 4 vcpu(2 cores), 5 MANA IRQs (1 HWC + 4 Queue)
-> > > 
-> > > 	TYPE		effective vCPU aff
-> > > =======================================================
-> > > IRQ0:	HWC		0
-> > > IRQ1:	mana_q1		0
-> > > IRQ2:	mana_q2		2
-> > > IRQ3:	mana_q3		0
-> > > IRQ4:	mana_q4		3
-> > > 
-> > > %soft on each vCPU(mpstat -P ALL 1) on receiver
-> > > vCPU		0	1	2	3
-> > > =======================================================
-> > > pass 1:		38.85	0.03	24.89	24.65
-> > > pass 2:		39.15	0.03	24.57	25.28
-> > > pass 3:		40.36	0.03	23.20	23.17
-> > > 
-> > > =======================================================
-> > > Case 2: with this patch
-> > > =======================================================
-> > > 4 vcpu(2 cores), 5 MANA IRQs (1 HWC + 4 Queue)
-> > > 
-> > >         TYPE            effective vCPU aff
-> > > =======================================================
-> > > IRQ0:   HWC             0
-> > > IRQ1:   mana_q1         0
-> > > IRQ2:   mana_q2         1
-> > > IRQ3:   mana_q3         2
-> > > IRQ4:   mana_q4         3
-> > > 
-> > > %soft on each vCPU(mpstat -P ALL 1) on receiver
-> > > vCPU            0       1       2       3
-> > > =======================================================
-> > > pass 1:         15.42	15.85	14.99	14.51
-> > > pass 2:         15.53	15.94	15.81	15.93
-> > > pass 3:         16.41	16.35	16.40	16.36
-> > > 
-> > > =======================================================
-> > > Throughput Impact(in Gbps, same env)
-> > > =======================================================
-> > > TCP conn	with patch	w/o patch
-> > > 20480		15.65		7.73
-> > > 10240		15.63		8.93
-> > > 8192		15.64		9.69
-> > > 6144		15.64		13.16
-> > > 4096		15.69		15.75
-> > > 2048		15.69		15.83
-> > > 1024		15.71		15.28
-> > > 
-> > > Fixes: 755391121038 ("net: mana: Allocate MSI-X vectors dynamically")
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > > Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-> > > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > > ---
-> > >  .../net/ethernet/microsoft/mana/gdma_main.c   | 35 +++++++++++++++++--
-> > >  1 file changed, 33 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > > index 098fbda0d128..433c044d53c6 100644
-> > > --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > > +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > > @@ -1672,6 +1672,23 @@ static int irq_setup(unsigned int *irqs, unsigned int len, int node,
-> > >  	return 0;
-> > >  }
-> > >  
-> > > +static int irq_setup_linear(unsigned int *irqs, unsigned int len)
-> > > +{
-> > > +	int cpu;
-> > > +
-> > > +	rcu_read_lock();
-> > We do not need to call rcu_read_lock here, as the caller of this
-> > function has already acquired cpus_read_lock.
-> 
-> Thanks for your comments Dipayaan, I think this is still needed for the
-> irq_set_affinity_and_hint(), to protect the pointer returned by
-> irq_to_desc(). You can also see the same in the original function
-> irq_setup() for the same reason.
-Hi Shradha,
 
-The original irq_setup() function uses rcu_read_lock() because it relies
-on for_each_numa_hop_mask(), which explicitly mandates that RCU be held.
-You have not used it in irq_setup_linear(), hence the requirement does not apply
-here.
-https://elixir.bootlin.com/linux/v7.0.1/source/include/linux/topology.h#L314
-/**
- * for_each_numa_hop_mask - iterate over cpumasks of increasing NUMA
- * distance
- *                          from a given node.
- * @mask: the iteration variable.
- * @node: the NUMA node to start the search from.
- *
- * Requires rcu_lock to be held.
- *
-.....
-Regarding irq_set_affinity_and_hint it also garbs rcu locks internally:
-irq_set_affinity_and_hint ->__irq_apply_affinity_hint() -> irq_to_desc() -> mtree_load().
-Also see how irq_set_affinity_and_hint is called in mana_gd_setup_irqs.
-IMO we should drop the nesting when not needed, even though it appears
-harmless.
+parse_ip_val_buffer() validates the parsed token length against out_len, bu=
+t several callers passed MAX_IP_ADDR_SIZE * 2 while the destination buffers=
+ are much smaller stack arrays (e.g. INET6_ADDRSTRLEN).
 
-Thanks and Regards
-Dipayaan Roy
+This can lead to out-of-bounds writes via strcpy() when a long token is par=
+sed from host-provided IP/subnet strings.
 
-> 
-> > > +	for_each_online_cpu(cpu) {
-> > > +		if (len <= 0)
-> > len is unsigned here so <= doesnot makes sense. PLease change it to int
-> > or better use if(!len)
-> 
-> sure, I think I will change it to explicitly exit when len == 0
-> Thanks.
-> 
-> > > +			break;
-> > > +
-> > > +		irq_set_affinity_and_hint(*irqs++, cpumask_of(cpu));
-> > > +		len--;
-> > > +	}
-> > > +	rcu_read_unlock();
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  static int mana_gd_setup_dyn_irqs(struct pci_dev *pdev, int nvec)
-> > >  {
-> > >  	struct gdma_context *gc = pci_get_drvdata(pdev);
-> > > @@ -1722,10 +1739,24 @@ static int mana_gd_setup_dyn_irqs(struct pci_dev *pdev, int nvec)
-> > >  	 * first CPU sibling group since they are already affinitized to HWC IRQ
-> > >  	 */
-> > >  	cpus_read_lock();
-> > > -	if (gc->num_msix_usable <= num_online_cpus())
-> > > +	if (gc->num_msix_usable <= num_online_cpus()) {
-> > >  		skip_first_cpu = true;
-> > > +		err = irq_setup(irqs, nvec, gc->numa_node, skip_first_cpu);
-> > > +	} else {
-> > > +		/*
-> > > +		 * In case our IRQs are more than num_online_cpus, we try to
-> > > +		 * make sure we are using all vcpus. In such a case NUMA or
-> > > +		 * CPU core affinity does not matter.
-> > > +		 * Note that in this case the total mana IRQ should always be
-> > > +		 * num_online_cpu + 1. The first HWC IRQ is already handled
-> > > +		 * in HWC setup calls
-> > > +		 * So, the nvec value in this path should always be equal to
-> > > +		 * num_online_cpu
-> > nit: typo: should be num_online_cpus
-> 
-> noted
-> 
-> > > +		 */
-> > > +		WARN_ON(nvec > num_online_cpus());
-> > > +		err = irq_setup_linear(irqs, nvec);
-> > > +	}
-> > >  
-> > > -	err = irq_setup(irqs, nvec, gc->numa_node, skip_first_cpu);
-> > >  	if (err) {
-> > >  		cpus_read_unlock();
-> > >  		goto free_irq;
-> > > 
-> > > base-commit: e728258debd553c95d2e70f9cd97c9fde27c7130
-> > > -- 
-> > > 2.34.1
-> > > 
-> > Regards
-> > Dipayaan Roy
+Use size_t for out_len, switch to bounded copy with memcpy() + explicit NUL=
+ termination, and pass the actual destination buffer sizes at all call site=
+s.
+
+Signed-off-by: Ali Ahmet MEMIS <dev@unknownbbqr.xyz>
+---
+ tools/hv/hv_kvp_daemon.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
+
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index 1f64c680b..bb31ba9e9 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -1162,10 +1162,11 @@ static int is_ipv4(char *addr)
+ }
+=20
+ static int parse_ip_val_buffer(char *in_buf, int *offset,
+-				char *out_buf, int out_len)
++				char *out_buf, size_t out_len)
+ {
+ 	char *x;
+ 	char *start;
++	size_t copy_len;
+=20
+ 	/*
+ 	 * in_buf has sequence of characters that are separated by
+@@ -1188,8 +1189,10 @@ static int parse_ip_val_buffer(char *in_buf, int *of=
+fset,
+ 		while (start[i] =3D=3D ' ')
+ 			i++;
+=20
+-		if ((x - start) <=3D out_len) {
+-			strcpy(out_buf, (start + i));
++		copy_len =3D x - (start + i);
++		if (copy_len < out_len) {
++			memcpy(out_buf, start + i, copy_len);
++			out_buf[copy_len] =3D '\0';
+ 			*offset +=3D (x - start) + 1;
+ 			return 1;
+ 		}
+@@ -1223,7 +1226,7 @@ static int process_ip_string(FILE *f, char *ip_string=
+, int type)
+ 	memset(addr, 0, sizeof(addr));
+=20
+ 	while (parse_ip_val_buffer(ip_string, &offset, addr,
+-					(MAX_IP_ADDR_SIZE * 2))) {
++					sizeof(addr))) {
+=20
+ 		sub_str[0] =3D 0;
+ 		if (is_ipv4(addr)) {
+@@ -1348,7 +1351,7 @@ static int process_dns_gateway_nm(FILE *f, char *ip_s=
+tring, int type,
+ 		memset(addr, 0, sizeof(addr));
+=20
+ 		if (!parse_ip_val_buffer(ip_string, &ip_offset, addr,
+-					 (MAX_IP_ADDR_SIZE * 2)))
++					 sizeof(addr)))
+ 			break;
+=20
+ 		ip_ver =3D ip_version_check(addr);
+@@ -1400,12 +1403,11 @@ static int process_ip_string_nm(FILE *f, char *ip_s=
+tring, char *subnet,
+ 	memset(subnet_addr, 0, sizeof(subnet_addr));
+=20
+ 	while (parse_ip_val_buffer(ip_string, &ip_offset, addr,
+-				   (MAX_IP_ADDR_SIZE * 2)) &&
++				   sizeof(addr)) &&
+ 				   parse_ip_val_buffer(subnet,
+-						       &subnet_offset,
+-						       subnet_addr,
+-						       (MAX_IP_ADDR_SIZE *
+-							2))) {
++					       &subnet_offset,
++					       subnet_addr,
++					       sizeof(subnet_addr))) {
+ 		ip_ver =3D ip_version_check(addr);
+ 		if (ip_ver < 0)
+ 			continue;
+
+base-commit: 2e68039281932e6dc37718a1ea7cbb8e2cda42e6
+--=20
+2.53.0
+
+
+
 
