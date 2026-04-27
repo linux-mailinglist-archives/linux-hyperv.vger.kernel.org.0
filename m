@@ -1,62 +1,62 @@
-Return-Path: <linux-hyperv+bounces-10384-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10385-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id APHqN9r27mnS2AAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10384-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 07:40:42 +0200
+	id +DvWCe327mnS2AAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10385-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 07:41:01 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 463E346D46A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 07:40:41 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C41F46D482
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 07:40:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B86883009B02
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 05:40:40 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 577D43002B34
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 05:40:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEA5734E75A;
-	Mon, 27 Apr 2026 05:40:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A198034F241;
+	Mon, 27 Apr 2026 05:40:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ZQ83An0s"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="cuUIpWIH"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazolkn19010003.outbound.protection.outlook.com [52.103.20.3])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazolkn19011008.outbound.protection.outlook.com [52.103.1.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0D3223708;
-	Mon, 27 Apr 2026 05:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFCC431AAAA;
+	Mon, 27 Apr 2026 05:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.1.8
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777268439; cv=fail; b=Cw9Mgzkji+PREGFBJP5dzB0NajFwJigYOhLoi9NBvBYxtJ3ZXiEtsSscO4wAjfnXDxSqVeFzV2DkEIOQ4jXDLMZ3iyjhxgYNmgKxoW+QMRlEpUPrSG5r0Mrsi/b5t8c8fqj0+GNbIOz0fPorIn5iVRrRss+4oIunXHfkyz1qRuM=
+	t=1777268457; cv=fail; b=M2nE4I9THzD4XjzrilHjA2XBzAOSXdSXoGoARTAgSOvh3gg4n9DllDORapYAvzuoq/Ioe6ERXUWjBf7X0ryKU93ZKv2jpMx7orJC+mj7YEaCT4y19xslWJyLqFKSWqy6QczdQj9m5Urtd39MgRVzIC7x4tMv16OPfbYRJvDSF/4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777268439; c=relaxed/simple;
-	bh=4+tg069iYj8T/3KGPUn3WlAfB1xTIpkXdJwvXi2ybaA=;
+	s=arc-20240116; t=1777268457; c=relaxed/simple;
+	bh=hENXaIKAj7JUwz4/RSXRU1vyxsfWfcd2p4WIhfubHLY=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=nX4WzOUSFs2YTst9Ph6utwVW0RFZet4/eFABmNEZ1V8I4vrVfjff2LJSUmoQg3BgLkATjkRytVSgbBps13YU/BQUEGiSyNnGteqbi/D6t2C6AlJZPjAzOmyoQlsGBO+wJyDxa2zBxe08Wkd5svgbO0mFE7y38T3ko4+BoKWrqsI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ZQ83An0s; arc=fail smtp.client-ip=52.103.20.3
+	 Content-Type:MIME-Version; b=D9Ua+57780SmH9dPnCB1Sow73/D/CJLhcfPn5BasW4gJ9LhGysW/K7oZ6G/vT/wYdKtsToeCnYdWiNiUQdhGQOHzyqp4SVKLoXKmrrRlnbXl9hdPkqBh1BAMRExtKZHwIeGxxYV+4kyIwNiamuHH/SYqivJa6G+nGlfH+L0jqYg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=cuUIpWIH; arc=fail smtp.client-ip=52.103.1.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rWDci0pO8ET0A2YlQUttamFAAiT4wjiFpZI3E6pRbwLu+7bHDGv6PZ473CP92cgCh8/n9dq/BIdhWfOiNwEFYatFIZmj619tSIfTgrnx6ArU3Ex54TO6oPfwZToon6SPpcK6VyrV/RtMSlJq25icRT9Tn2j45nZzCIbWAviHrTyrL+fkd34szJ7N+JWwkygKcFwuivFJZbut/sc/b2qUYenuyZiMkx2JdOsZ9rwk92aOfcRkULqrBmwGSHlNBDKgUiBv/lm3tmXsJkKw5pGcCf0ot+K/JtHb/pimgjKZAxdWdfqc5eiJnIt79F8quubP3+SVhaGYjuWx2WqCE4d0vg==
+ b=Veu21Ec1ksh5PnRMniiAjIjUfe5VNLwXgkA2mU2TCUS6cjkxNL7mjB/xgv6uv6pyYP7HVmNV6fT7/fSxkkILge8ykbvZsvKSzy9w5s2JCXV2H4FjeykIxFbJFfCoDbtAbNhzSDgdWRf43OnUvdzJ0esI4o63VBbBhfR34edqAal20MnZI3gJI90bfYI9iLVeMYWoKeY4B8wF0TwkKS8GabXdZFt/oIB7idirMKWn2PNfkRoLHBF5zcrNu98nzDf5kXNGLtqHSPnkh5iexbPT6V6DfArXbO36Lkj1+X2KhZEPLfinYWqAskZl7VyzAYPVHYKnldhvld6/lfuP8JJIzw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dT+z93y9Cx/sUn1qPXeDCaz74u0OsQiX9nCyVqCiBG4=;
- b=mfWYIAF3GcwBy22ewvEWt2FlTY+jCAUH0QFl4WcD9ljhn4fheHEQNcarem9gDC7yyOYIivI1VXdhfOFh1tnb8mJhhLPj8XNppQ7geael11L3V2LOMREMtjenjC8Sx3NhW0rYzRiJL26ijoGjAmK4GWxNp6X8ARw+0WDEUSvJW6CbzyXvjZEvJA5OfKjSH75nF2oe8wPkURAzz3KOPZ8AZ2KHZ7BaHpuwlURygQWFKcaIXJsZuutln+xTde3zl28FmZwPVLgs1VBqkjQNFqAqw6FjkZj+q0zeEdbA+Bk+15NARyTfqxbmNvg0USQR3A0Re23MUwsZK2SjVYGXcTysVA==
+ bh=lAWuHYP5PjwxCYpcv50N32lDLH65mOubH0uDSpPgD90=;
+ b=WXjWqljH4jPGG8beCrN3rRGaN7ePs0zMB7vZaxHnPVE0w5fXwspXnlVS6YsYi5A8fUlhvWWk51zsaA6/96DqljDZaSIcVXeZBqvulhd3DoowpgLqDGI3Sydb4tNLd7Cdzplmel/Q/LTiJBCCnEKTTM6Z6NQSScERnS7bibbiFJsyCZsh8jWeAxj8Ip+EfoW6LkRqT8u1wTyBmp9cEkD/hmq4JYoOHuT4TD9Pm4ettk0728S/PO7eGmvNWFnuFHJEI3OeY5G1JcdsvxlvNDfFosZ6u/B7Kw2zun+1tCadDw/sOyZ9IPCAXx0dUy2bH1dX+P0n3rVzT8APIOlNk10i7g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dT+z93y9Cx/sUn1qPXeDCaz74u0OsQiX9nCyVqCiBG4=;
- b=ZQ83An0suaQCL+37ueSyjXANctCHgOr+0Nyi3sgYREJE8/oSMiQEi4EhAXwDOW47sascVwcXaAUldJE7F1Su5xbsSgRCbuivLX4wK8baCXhmitJcWDSzY+JgZJmNsAMFG50uwta+YCpDS3sTj3jW2LnzQ50GctA8sks4sW4seA0iqCiMC3eI9a1Sl5q4q0oazDDYaT0ukMn800F2oPNBdP6KGyfX2hyvD1c2pO8u9RtBlmMErBkIzOhRDUnK9N9fOQDhP1+gCkYzazxdEIdPJdpLhBn2I3l6SVKBdyDTzx6kAGR8axDFe8jCwS+sjCph13YOjBcTvWG3gmlXDZRFtw==
+ bh=lAWuHYP5PjwxCYpcv50N32lDLH65mOubH0uDSpPgD90=;
+ b=cuUIpWIHHYmiMLrRvj2nkCL8e8lS7Zu2+uynJWe/Xdvu/MK11kS+Lk9UPEaF9i4stTv2w1PoAA1GUFYyzAy/p4ZWaNTEFhtLQhOI/sliVpdmOkVt4+JusDU8BRRagjDQ8WsjIkfzBlxdVIphDN0jOBcWhpHgsOApsltCwU3l8wBuYBWjEOJE11kGad7+0N+lPat6UiSS6VRIDkBIRq4ROyMZgNeYsOidOKg0S4/Yns/TeUA+1FlosCCEVz7CMoV6NSvKrVZZndzxQ0qFNKtjb8BjN8dCLcNRofy/LRLs+fh/fDF+AIUfb7DDMTZUk4TvyhRSqMn2g+DAsERhmwbllQ==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
  by CO6PR02MB7809.namprd02.prod.outlook.com (2603:10b6:303:a2::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.26; Mon, 27 Apr
- 2026 05:40:34 +0000
+ 2026 05:40:52 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::900:1ccf:2b1e:52b6%6]) with mapi id 15.20.9846.025; Mon, 27 Apr 2026
- 05:40:34 +0000
+ 05:40:52 +0000
 From: Michael Kelley <mhklinux@outlook.com>
 To: Naman Jain <namjain@linux.microsoft.com>, "K . Y . Srinivasan"
 	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
@@ -79,75 +79,75 @@ CC: Marc Zyngier <maz@kernel.org>, Timothy Hayes <timothy.hayes@arm.com>,
 	<linux-arch@vger.kernel.org>, "linux-riscv@lists.infradead.org"
 	<linux-riscv@lists.infradead.org>, "vdso@mailbox.org" <vdso@mailbox.org>,
 	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>
-Subject: RE: [PATCH v2 09/15] Drivers: hv: mshv_vtl: Move
- hv_vtl_configure_reg_page() to x86
-Thread-Topic: [PATCH v2 09/15] Drivers: hv: mshv_vtl: Move
- hv_vtl_configure_reg_page() to x86
-Thread-Index: AQHc0x7PKig5dZReokG7sAarwbgXxbXyan2Q
-Date: Mon, 27 Apr 2026 05:40:34 +0000
+Subject: RE: [PATCH v2 12/15] mshv_vtl: Move VSM code page offset logic to x86
+ files
+Thread-Topic: [PATCH v2 12/15] mshv_vtl: Move VSM code page offset logic to
+ x86 files
+Thread-Index: AQHc0x7dvoxTT1xj6U+jCn0YEoiRorXyapGw
+Date: Mon, 27 Apr 2026 05:40:52 +0000
 Message-ID:
- <SN6PR02MB4157467FDBC0203C67A67042D4362@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB4157E0525DDDD153888F5AFBD4362@SN6PR02MB4157.namprd02.prod.outlook.com>
 References: <20260423124206.2410879-1-namjain@linux.microsoft.com>
- <20260423124206.2410879-10-namjain@linux.microsoft.com>
-In-Reply-To: <20260423124206.2410879-10-namjain@linux.microsoft.com>
+ <20260423124206.2410879-13-namjain@linux.microsoft.com>
+In-Reply-To: <20260423124206.2410879-13-namjain@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CO6PR02MB7809:EE_
-x-ms-office365-filtering-correlation-id: 37aeab86-ff90-4135-4a9d-08dea41f80ba
+x-ms-office365-filtering-correlation-id: f0cb2edb-9040-438f-696c-08dea41f8b42
 x-microsoft-antispam:
  BCL:0;ARA:14566002|2604032031799003|704163111799003|51005399006|55001999006|16051099003|37011999003|13091999003|19101099003|461199028|41001999006|31061999003|19110799012|15080799012|8062599012|8060799015|40105399003|440099028|3412199025|102099032|12091999003|1710799026;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?AKL/g+f4vGVwEPDTueqs/0pGD5sdTrnsk+5xb88LvCiK5B80QBCyULhHWD/F?=
- =?us-ascii?Q?EaoU+pVHbC96tRteibtjuceS8/bKikSY9cRxCFKZFbVMJ0BfQyGOLENKcOuP?=
- =?us-ascii?Q?nIoWdrpWT7f1Z4zHRNJ8+IQgXrX/3HM7bvkUNLttDVDK5ssL61F54smtcb/e?=
- =?us-ascii?Q?uQKw8qe81sUcYck/+3JSCmGPqmLlyu+WP2aUq+xVmBwgT8aCRWCjPKZMgolG?=
- =?us-ascii?Q?Cprgapyr0w0NA/WtcoBY5nRrDYZsfiwAj5dgdKaB+K3A7ZQ1D6V5+8Tdsa3s?=
- =?us-ascii?Q?6E5iyfoUah+lWZSblJtx58LFudW07ovP08vsPbknTq6mQPt9KMaRUQ1IWbja?=
- =?us-ascii?Q?Um5f0lUFU2Vb6GtYRFQVz6U91bIbApT55bI6dZ0CgTid1RcI9syBUhhhY839?=
- =?us-ascii?Q?nyrewVgqkaB91A2g6SyvvipVIu3tOYM99l+2/GOlEbMvCIzFeO5ABATYL5V2?=
- =?us-ascii?Q?/Ck0zqxK+jG8G8mUoOimVcC7zDBaE5hkGJqmSSS0mBbae3vYneJ3uZ7dXAbx?=
- =?us-ascii?Q?8HNJuDuRl6+5W4tpjsBfa/uj4f9xnTiiqhUviJyxqdRz51nLghuL+97Zrhkc?=
- =?us-ascii?Q?LqOnbUKMv11aAWULHIcW33UGktSXDgGXpiFwMfNcjL3on1GlRq/cV+0HnmHR?=
- =?us-ascii?Q?ghm4FSaiDgqGIGghauvISbeN+Nq42lj1N9WZqX0CzAC6QpSLOYgAPf82c1z1?=
- =?us-ascii?Q?Aa3OHmJdSvuXVk2r+W5DcCcyp8uFKMPR1QM8NYz8Tltj3uNTAcbKPE/VElDY?=
- =?us-ascii?Q?PaHAUieYeRPjrF14jpqDA+jCuX2y57Ul8vDEJcu8jpW8s0Thfg2DIvK8iopv?=
- =?us-ascii?Q?xIVPVonymyGi77PZ6CNWpDlt9E4ugq60NdSXGMr4uFGEPv8aeFfFUmxOpTbu?=
- =?us-ascii?Q?lnIO3PhpPlMVKaP0csn+c6olLfAQj31bThUf1DQKA3e8nbrZJleF756vIMkx?=
- =?us-ascii?Q?7E0RTtLCM42DYh6qydPXn3WADkJlV3d8RqfRDcISmizdJhPWrlYRFrL0btiK?=
- =?us-ascii?Q?iWD3sJMnP0CIyQIUbPbr574CKOOVH0Swkggx0dtS1mtu1HziGm6xeg8hql6u?=
- =?us-ascii?Q?rTY/z1oAwn7ENV3FYqWM27UBPC13EKxDMWevaAfcCzO9Zr6PYcbYuVc4qeCL?=
- =?us-ascii?Q?zk9T3ShH/psbYHFYY39WUQNvNlbd3GzGyVT6lUpgAHVZa42p09Sc/CTKf7CS?=
- =?us-ascii?Q?yv58L1Ho3S0IPECwZ1S1NbstydeWlpWqYUzy/MkqMDUTGtm747kN2Uugdxw?=
+ =?us-ascii?Q?MvvVeg8fXOA63QZFLtb2auJdqql//zfHx5rk55KGa8Hc32fuZe1AzaZpJYP5?=
+ =?us-ascii?Q?eJ+xEsLdTg8Varg+14aUGfCpYwV+NQKi7N1DNBepAq/XUkld138vL3/a3UDg?=
+ =?us-ascii?Q?fCK03zC2IrqW5l+UIOzszsGIxOaDePtql2A0mNV8G8jZxuVbmdBPW5e9wI6P?=
+ =?us-ascii?Q?j7y5UAno5y1mPFN4IyNghTbdXiXNqzUfSEK/3aXBFmqVVqJbHtHpPyOWjwQH?=
+ =?us-ascii?Q?6bvMDXBvEQoZQ5RbYzLjM4GapXEWH+gG9AguJ30qBT6dmJCTXDBnVfWBdIo/?=
+ =?us-ascii?Q?sT1DimPymh/mgWEOc4BuXJ3bsHZuK2SvyjRJMbPM4dbV4ELZyLTE+13daebv?=
+ =?us-ascii?Q?nFIYtSG3D8vgIJiCZnyChsEWM7C37j2m268kDHh8CIj2EIU138Ohe656yBZv?=
+ =?us-ascii?Q?pZaSlrSsLBHNlzN73/xifzROqlfBt1Of+CzzQfPrp3MItaK+B/UQCOE9MXKb?=
+ =?us-ascii?Q?0K+oVJNJrWQJGC9KzvU0Yrq33uCZmPozPaUfmcGQqvGQPxl5JN4vDVSpy/Tq?=
+ =?us-ascii?Q?Kvs9dbM084Yq1ocMEepCmDR9fweFqVO/nLqN+wQzft4FCw+mLHQXnpud+2J9?=
+ =?us-ascii?Q?8UcuRVuC7XoXwsyM18YHOJxC33NJ6dqRuzYJhTbSASmVPtyWbB5hKz7NmaQR?=
+ =?us-ascii?Q?pVhsyEtp81D6/x8k59dhAunwB3xA5LjZpFTU/8LPY+r9WnHcJnlRUL0VPkfN?=
+ =?us-ascii?Q?9AwHV0eAUSUfAHZYt2Valut5CkznyL8A6TpxS/eeWSQN4jIHu2R3rTkoabmJ?=
+ =?us-ascii?Q?JfMAQNGrVAqKZtUDRYS9oFSqULV+1JoW1s+qHtijfHa4+ZEVD8e4vXe97K7p?=
+ =?us-ascii?Q?Dmz1eegU5hremRHTtteRtj2PKvOqmdhRucN1KEbS7ljxZ10QmQ7cpJp9p5D3?=
+ =?us-ascii?Q?wHPH2uDmMZcJdgj69nUUh1fkk+ANRiUqB21djv49KWinAPQki3CWAbz4n/jh?=
+ =?us-ascii?Q?zZSNmNs+umu8j+tue/tpF/3NRWqYDkvgToH0iqfuyQck/X7skd36OjtPMh6Q?=
+ =?us-ascii?Q?RTVESkGDs2ccaVDlMJLoOCIam7FlxNpgdxLwnG/aZzDqLlDBwZmhrNhYsDzL?=
+ =?us-ascii?Q?xYYHm588aXi1QlvSiL6c88OvgujFcKEjXOneENc5Cgt0u8jPA/jV6t9bOWwI?=
+ =?us-ascii?Q?AS2tCrtHg0rASRS5IVZZG5Ajj0lCFj2y3grtbwibGTkJxz/RHCBardV1jzba?=
+ =?us-ascii?Q?ECX7QtOEgYOO9RzhySh8556/GBRLz7xFF547Hahonoxvv3CNKNDuk/kFNrM?=
  =?us-ascii?Q?=3D?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?kGQuidTo/ftXD6Na41g1hdy/k/qIgjSfw37YAvg9wq17XZRVenDh8laVwap1?=
- =?us-ascii?Q?XKS7mnidFMSIwadHSZGCoVgka+EdhuyeMrmRg7/x0iEzRa0UreCUwZCSa6P0?=
- =?us-ascii?Q?RtGzMQHn/ir7KX+vM0Pd2bCCl0Nm/7orbLcpSa96h/kRvVk5Y1DPo9U4CGx7?=
- =?us-ascii?Q?HT/6LvmIyvC5u80FIq7CBw9k6GI41QNnsHSmOGbPgd2bBj/NyG6cV+v6/epg?=
- =?us-ascii?Q?g9Wki1cmEfrn93JVeUA0V5MC/oGKYIrA3IXpMeVpxQwg/m0vYo+rWoVfmZ1c?=
- =?us-ascii?Q?KCejlCNN4gA8UvjhAFPi6V1zCL9lJ05rZwHXktW1cnL6VJEyHRWVr8xl0xY6?=
- =?us-ascii?Q?pghjFmhJ0j0qGuLLim6qgYuykP9XIcekG/XVxXhgjffzKjhHCKakWwedM49M?=
- =?us-ascii?Q?tU/fXesV3liwwPIqS2VQ1MsYTF5yqlVWEynk/9qZpygyX4OyKzMWPqS8WCpx?=
- =?us-ascii?Q?eNdhEH+m8HsaLr27uGKpO7JVinh//QB4AVvwtJIdHGKuIlPlAH+q8IrxBQVF?=
- =?us-ascii?Q?YyzUXW+lUq8VZkSKJW0EoqlxkHpiJDbKbHotMqlmmomCGNtrWFmxxsm8PpK0?=
- =?us-ascii?Q?3NeYWNQPQjYw4pgMSibpn+rkII8A4V6tcOHibAbEBCDEDGCgnWVTBMZvqlCN?=
- =?us-ascii?Q?22gm9i5mJmZWZ3m5qQOmuIM9EXThW+QBit+mxqtKEWBoiDmwK1lgcD9oboSn?=
- =?us-ascii?Q?oLuG0FqURGLE/p5LWUYKD4x+CjxEGE9FbeWop+6QQEV2BIoHlNPGcLtVQHcu?=
- =?us-ascii?Q?k7saBOzcgvtGeBWDiW9pPV/hHnqiIkf93qegnHYcwaBijD0bJsTzHEW3Eax1?=
- =?us-ascii?Q?GR8pzdW4j1Yays1GyxT6vvur6CG/99KIrH/+PZlM5E9DBYuk+AaeVV1lXRWP?=
- =?us-ascii?Q?ZuQuzSVp7B0iJ0DU7DvIk+bZhJWhgR7DNKFhqyzJqIxHlkncHKlO/l5/2pJr?=
- =?us-ascii?Q?keMU/k50bZJc5kpu/GO5fYRjRFQ5vdKZB2ZRj5SNR+U8cU8J/gHBlYG7QUDF?=
- =?us-ascii?Q?MWRjCMqiU3S/RpF05GStEWYturPj3eBMtV/Y+T5+4+/vlK/lhcuF22DU//9c?=
- =?us-ascii?Q?ehV0rFIxbFsEUGpsKlxmFssgJcVaBrn1tWvljxNrrlHh3kahbPgtEm/U+i/S?=
- =?us-ascii?Q?j5vDZK/iICnb39doDARebHXqJLVMUpD5Lb+/hCpwk1fry4ICmQ3VGFLvnmXr?=
- =?us-ascii?Q?IgL2uNSZuwEfF3b9M8USuSBO+/dD3zORU/bBb6n1xQqRCn4nn+UiPDBf9IdD?=
- =?us-ascii?Q?ggky0QU/AddpRditPrah52AAip1pgjq/261atDuSU462nvokwVNm1+HvbsjP?=
- =?us-ascii?Q?SEL7bSx3U+/FHFXudIcARsEl6X4sSbwRKmsUgYvbDqzzNRiEl+csQq31dKMK?=
- =?us-ascii?Q?07tPWRk=3D?=
+ =?us-ascii?Q?FSPrHNDWBeXk48Y5c1xCbr+s16Z5DhDdq7vHNvN4sTarryI7tPZzPzJxp3eQ?=
+ =?us-ascii?Q?7Clnv/pNyoKzu75aQScUkhOr4ygmYikCLTV50grzV6rSN+d++6sQvMuJ1bCo?=
+ =?us-ascii?Q?BL5bvvzYijE9MDlagnoS4+VT1VEB0yY9zZqZRApzU+3drZ9ELCu1s845vdux?=
+ =?us-ascii?Q?oA67NNXvV79mfWweFt5XIs5tqUEbVQ6ErlDoxUuDcV0KLTmqwhaEDgANckuZ?=
+ =?us-ascii?Q?b/MleIamJhEoSWbmIpVFYqeBBhn+EG+0+Ez+j78ZtStPMhIgXPPCC++RJOq+?=
+ =?us-ascii?Q?xikua/Lzskd94mSEd5cupBRYudETIhn3KbPNTcieetwNLXHaXDfnbt+9cyIe?=
+ =?us-ascii?Q?MYxOZFG1zXxuYxCtOkDHf8KSMGoAbtAx4kS71fCnAOhbUPQ+pDpNmPNn5vRL?=
+ =?us-ascii?Q?6dV9JF/r5aXdbJauon/pUOIewaYmQjUKfR4VntgjucyO1QgdFMjwGoLwBUtl?=
+ =?us-ascii?Q?bg/J9cs72eNGx0fcg5TSjFebzrnAaFkAABbxJcd85nyUMCl37UngkRAZxOSv?=
+ =?us-ascii?Q?9n2YJjRlRrJtEt6OjG+gEkUTVKSFUAfcz/qvneXQwjO5nfwAwY4Dq2kMPGxR?=
+ =?us-ascii?Q?a6um63f3xSYi7Y2x2yqDPl/8A7+VwX9THb3Q4abR55+0RnrITP5TXQYcNQjA?=
+ =?us-ascii?Q?4WszQCa82JOiiEm0ydkUUQuEAR9frWZIWEKH0Y6g+/qtC/Foe7lBjD4MXvmz?=
+ =?us-ascii?Q?hgeeyIxRDyI5a8aDqFB4cRZovttB1NYve1wAdMdP1Qf4rEQjaYUqmL5pFDv4?=
+ =?us-ascii?Q?6GcNgLZB0+XU5wpYow6LcGVcA49LbD/bJtWdrfj/7XTUGKS2jnu8cZnwozyj?=
+ =?us-ascii?Q?8bmrpzIQX+U0p/VLzbRGWrzB2OdAD5mKC4BaerpHTzEhUUt/YiEpYUVm2Zav?=
+ =?us-ascii?Q?M+915+ajkO+VAkxKnfVmPxSznv9b9AuNO9nGsghPVhnyCwkCb5b7UcBvZXoG?=
+ =?us-ascii?Q?5ZqIajoJz8W4mP72Jy+Xtjn7EhvKyX/JadLkbU5GXbOjhD5EMQ5HvFSuwJvr?=
+ =?us-ascii?Q?EsFhlkLoWuVbUN6ePmrTPLFHqccQqy/qHZNaZvzQYBBsgq61eWWYQ9ktKgon?=
+ =?us-ascii?Q?N+qXvSPhKov3g9vtmW5sgYuqeuyea9Z8WBA4e1QOxX6ts7E7c2YmxMMdh5Fz?=
+ =?us-ascii?Q?yNiEhkMZXh2+ygsjNp/1BBvcOX5Hhw7ummGy1+fQCkm2ZNflDEaEgUC0OqgY?=
+ =?us-ascii?Q?mrmsHkP1iKvCvhWFcpsL5Qo3aAz0MErHLdCylfSrGVmpsPY7WigWcb/CSJ/2?=
+ =?us-ascii?Q?Yu0M/h6Fe9Q5yVigfK8rqSYOK2WZXmZZDwb7mfJXH+8aYif5md/PAAuHm/vH?=
+ =?us-ascii?Q?sarzSjfJE9iGzwtGltQ7onbljckNSpNaOAEuBtxOBI/j/mGwL6WdDzya+uzY?=
+ =?us-ascii?Q?BwxMi4Q=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -160,26 +160,26 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 37aeab86-ff90-4135-4a9d-08dea41f80ba
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2026 05:40:34.3525
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0cb2edb-9040-438f-696c-08dea41f8b42
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2026 05:40:52.0419
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR02MB7809
-X-Rspamd-Queue-Id: 463E346D46A
+X-Rspamd-Queue-Id: 4C41F46D482
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [1.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10384-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10385-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_TO(0.00)[linux.microsoft.com,microsoft.com,kernel.org,arm.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,dabbelt.com,eecs.berkeley.edu,ghiti.fr,outlook.com];
 	TO_DN_EQ_ADDR_SOME(0.00)[];
@@ -199,209 +199,161 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:dkim,SN6PR02MB4157.namprd02.prod.outlook.com:mid,reg_assoc.name:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,outlook.com:dkim,SN6PR02MB4157.namprd02.prod.outlook.com:mid,vsm_pg_offset_reg.name:url]
 
 From: Naman Jain <namjain@linux.microsoft.com> Sent: Thursday, April 23, 20=
 26 5:42 AM
 >=20
-> Move hv_vtl_configure_reg_page() from drivers/hv/mshv_vtl_main.c to
-> arch/x86/hyperv/hv_vtl.c. The register page overlay is an x86-specific
-> feature that uses HV_X64_REGISTER_REG_PAGE, so its configuration belongs
-> in architecture-specific code.
+> The VSM code page offset register (HV_REGISTER_VSM_CODE_PAGE_OFFSETS)
+> is x86 specific, its value configures the static call used to return
+> to VTL0 via the hypercall page. Move the register read from the common
+> mshv_vtl_get_vsm_regs() into the x86 mshv_vtl_return_call_init(),
+> which is the sole consumer of the offset.
 >=20
-> Move struct mshv_vtl_per_cpu and union hv_synic_overlay_page_msr to
-> include/asm-generic/mshyperv.h so they are visible to both arch and
-> driver code.
+> Change mshv_vtl_return_call_init() from taking a u64 parameter
+> to taking no arguments, and rename mshv_vtl_get_vsm_regs() to
+> mshv_vtl_get_vsm_cap_reg() since it now only fetches
+> HV_REGISTER_VSM_CAPABILITIES.
 >=20
-> Change the return type from void to bool so the caller can determine
-> whether the register page was successfully configured and set
-> mshv_has_reg_page accordingly.
+> No functional change on x86. This prepares the common driver code for
+> ARM64 where VSM code page offsets do not apply.
 >=20
 > Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
 > ---
->  arch/x86/hyperv/hv_vtl.c       | 32 ++++++++++++++++++++++
->  drivers/hv/mshv_vtl_main.c     | 49 +++-------------------------------
->  include/asm-generic/mshyperv.h | 17 ++++++++++++
->  3 files changed, 53 insertions(+), 45 deletions(-)
+>  arch/x86/hyperv/hv_vtl.c        | 19 +++++++++++++++++--
+>  arch/x86/include/asm/mshyperv.h |  4 ++--
+>  drivers/hv/mshv_vtl_main.c      | 24 +++++++++++++-----------
+>  3 files changed, 32 insertions(+), 15 deletions(-)
 >=20
 > diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-> index 09d81f9b853c..f3ffb6a7cb2d 100644
+> index f3ffb6a7cb2d..7c10b34cf8a4 100644
 > --- a/arch/x86/hyperv/hv_vtl.c
 > +++ b/arch/x86/hyperv/hv_vtl.c
-> @@ -20,6 +20,7 @@
->  #include <uapi/asm/mtrr.h>
->  #include <asm/debugreg.h>
->  #include <linux/export.h>
-> +#include <linux/hyperv.h>
->  #include <../kernel/smpboot.h>
->  #include "../../kernel/fpu/legacy.h"
+> @@ -293,10 +293,25 @@ EXPORT_SYMBOL_GPL(hv_vtl_configure_reg_page);
 >=20
-> @@ -259,6 +260,37 @@ int __init hv_vtl_early_init(void)
->  	return 0;
->  }
->=20
-> +static const union hv_input_vtl input_vtl_zero;
-> +
-> +bool hv_vtl_configure_reg_page(struct mshv_vtl_per_cpu *per_cpu)
-> +{
-> +	struct hv_register_assoc reg_assoc =3D {};
-> +	union hv_synic_overlay_page_msr overlay =3D {};
-> +	struct page *reg_page;
-> +
-> +	reg_page =3D alloc_page(GFP_KERNEL | __GFP_ZERO | __GFP_RETRY_MAYFAIL);
-> +	if (!reg_page) {
-> +		WARN(1, "failed to allocate register page\n");
-> +		return false;
-> +	}
-> +
-> +	overlay.enabled =3D 1;
-> +	overlay.pfn =3D page_to_hvpfn(reg_page);
-> +	reg_assoc.name =3D HV_X64_REGISTER_REG_PAGE;
-> +	reg_assoc.value.reg64 =3D overlay.as_uint64;
-> +
-> +	if (hv_call_set_vp_registers(HV_VP_INDEX_SELF, HV_PARTITION_ID_SELF,
-> +				     1, input_vtl_zero, &reg_assoc)) {
-> +		WARN(1, "failed to setup register page\n");
-> +		__free_page(reg_page);
-> +		return false;
-> +	}
-> +
-> +	per_cpu->reg_page =3D reg_page;
-> +	return true;
-> +}
-> +EXPORT_SYMBOL_GPL(hv_vtl_configure_reg_page);
-> +
 >  DEFINE_STATIC_CALL_NULL(__mshv_vtl_return_hypercall, void (*)(void));
 >=20
->  void mshv_vtl_return_call_init(u64 vtl_return_offset)
+> -void mshv_vtl_return_call_init(u64 vtl_return_offset)
+> +int mshv_vtl_return_call_init(void)
+>  {
+> +	struct hv_register_assoc vsm_pg_offset_reg;
+> +	union hv_register_vsm_page_offsets offsets;
+> +	int ret;
+> +
+> +	vsm_pg_offset_reg.name =3D HV_REGISTER_VSM_CODE_PAGE_OFFSETS;
+> +
+> +	ret =3D hv_call_get_vp_registers(HV_VP_INDEX_SELF, HV_PARTITION_ID_SELF=
+,
+> +				       1, input_vtl_zero, &vsm_pg_offset_reg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	offsets.as_uint64 =3D vsm_pg_offset_reg.value.reg64;
+> +
+>  	static_call_update(__mshv_vtl_return_hypercall,
+> -			   (void *)((u8 *)hv_hypercall_pg + vtl_return_offset));
+> +			   (void *)((u8 *)hv_hypercall_pg + offsets.vtl_return_offset));
+> +
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL(mshv_vtl_return_call_init);
+>=20
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyp=
+erv.h
+> index b4d80c9a673a..b48f115c1292 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -286,14 +286,14 @@ struct mshv_vtl_cpu_context {
+>  #ifdef CONFIG_HYPERV_VTL_MODE
+>  void __init hv_vtl_init_platform(void);
+>  int __init hv_vtl_early_init(void);
+> -void mshv_vtl_return_call_init(u64 vtl_return_offset);
+> +int mshv_vtl_return_call_init(void);
+>  void mshv_vtl_return_hypercall(void);
+>  void __mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl0);
+>  int hv_vtl_get_set_reg(struct hv_register_assoc *regs, bool set, bool sh=
+ared);
+>  #else
+>  static inline void __init hv_vtl_init_platform(void) {}
+>  static inline int __init hv_vtl_early_init(void) { return 0; }
+> -static inline void mshv_vtl_return_call_init(u64 vtl_return_offset) {}
+> +static inline int mshv_vtl_return_call_init(void) { return 0; }
+>  static inline void mshv_vtl_return_hypercall(void) {}
+>  static inline void __mshv_vtl_return_call(struct mshv_vtl_cpu_context *v=
+tl0) {}
+>  #endif
 > diff --git a/drivers/hv/mshv_vtl_main.c b/drivers/hv/mshv_vtl_main.c
-> index 91517b45d526..c79d24317b8e 100644
+> index 4c9ae65ad3e8..be498c9234fd 100644
 > --- a/drivers/hv/mshv_vtl_main.c
 > +++ b/drivers/hv/mshv_vtl_main.c
-> @@ -78,21 +78,6 @@ struct mshv_vtl {
->  	u64 id;
+> @@ -79,7 +79,6 @@ struct mshv_vtl {
 >  };
 >=20
-> -struct mshv_vtl_per_cpu {
-> -	struct mshv_vtl_run *run;
-> -	struct page *reg_page;
-> -};
-> -
-> -/* SYNIC_OVERLAY_PAGE_MSR - internal, identical to hv_synic_simp */
-> -union hv_synic_overlay_page_msr {
-> -	u64 as_uint64;
-> -	struct {
-> -		u64 enabled: 1;
-> -		u64 reserved: 11;
-> -		u64 pfn: 52;
-> -	} __packed;
-> -};
-> -
 >  static struct mutex mshv_vtl_poll_file_lock;
->  static union hv_register_vsm_page_offsets mshv_vsm_page_offsets;
+> -static union hv_register_vsm_page_offsets mshv_vsm_page_offsets;
 >  static union hv_register_vsm_capabilities mshv_vsm_capabilities;
-> @@ -201,34 +186,6 @@ static struct page *mshv_vtl_cpu_reg_page(int cpu)
->  	return *per_cpu_ptr(&mshv_vtl_per_cpu.reg_page, cpu);
+>=20
+>  static DEFINE_PER_CPU(struct mshv_vtl_poll_file, mshv_vtl_poll_file);
+> @@ -203,21 +202,19 @@ static void mshv_vtl_synic_enable_regs(unsigned int=
+ cpu)
+>  	/* VTL2 Host VSP SINT is (un)masked when the user mode requests that */
 >  }
 >=20
-> -static void mshv_vtl_configure_reg_page(struct mshv_vtl_per_cpu *per_cpu=
-)
-> -{
-> -	struct hv_register_assoc reg_assoc =3D {};
-> -	union hv_synic_overlay_page_msr overlay =3D {};
-> -	struct page *reg_page;
-> -
-> -	reg_page =3D alloc_page(GFP_KERNEL | __GFP_ZERO | __GFP_RETRY_MAYFAIL);
-> -	if (!reg_page) {
-> -		WARN(1, "failed to allocate register page\n");
-> -		return;
-> -	}
-> -
-> -	overlay.enabled =3D 1;
-> -	overlay.pfn =3D page_to_hvpfn(reg_page);
-> -	reg_assoc.name =3D HV_X64_REGISTER_REG_PAGE;
-> -	reg_assoc.value.reg64 =3D overlay.as_uint64;
-> -
-> -	if (hv_call_set_vp_registers(HV_VP_INDEX_SELF, HV_PARTITION_ID_SELF,
-> -				     1, input_vtl_zero, &reg_assoc)) {
-> -		WARN(1, "failed to setup register page\n");
-> -		__free_page(reg_page);
-> -		return;
-> -	}
-> -
-> -	per_cpu->reg_page =3D reg_page;
-> -	mshv_has_reg_page =3D true;
-> -}
-> -
->  static void mshv_vtl_synic_enable_regs(unsigned int cpu)
+> -static int mshv_vtl_get_vsm_regs(void)
+> +static int mshv_vtl_get_vsm_cap_reg(void)
 >  {
->  	union hv_synic_sint sint;
-> @@ -329,8 +286,10 @@ static int mshv_vtl_alloc_context(unsigned int cpu)
->  	if (!per_cpu->run)
->  		return -ENOMEM;
+> -	struct hv_register_assoc registers[2];
+> -	int ret, count =3D 2;
+> +	struct hv_register_assoc vsm_capability_reg;
+> +	int ret;
 >=20
-> -	if (mshv_vsm_capabilities.intercept_page_available)
-> -		mshv_vtl_configure_reg_page(per_cpu);
-> +	if (mshv_vsm_capabilities.intercept_page_available) {
-> +		if (hv_vtl_configure_reg_page(per_cpu))
-> +			mshv_has_reg_page =3D true;
-> +	}
+> -	registers[0].name =3D HV_REGISTER_VSM_CODE_PAGE_OFFSETS;
+> -	registers[1].name =3D HV_REGISTER_VSM_CAPABILITIES;
+> +	vsm_capability_reg.name =3D HV_REGISTER_VSM_CAPABILITIES;
 >=20
->  	mshv_vtl_synic_enable_regs(cpu);
+>  	ret =3D hv_call_get_vp_registers(HV_VP_INDEX_SELF, HV_PARTITION_ID_SELF=
+,
+> -				       count, input_vtl_zero, registers);
+> +				       1, input_vtl_zero, &vsm_capability_reg);
+>  	if (ret)
+>  		return ret;
 >=20
-> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyper=
-v.h
-> index ef0b9466808c..9e86178c182e 100644
-> --- a/include/asm-generic/mshyperv.h
-> +++ b/include/asm-generic/mshyperv.h
-> @@ -420,12 +420,29 @@ static inline int hv_call_set_vp_registers(u32 vp_i=
-ndex, u64
-> partition_id,
+> -	mshv_vsm_page_offsets.as_uint64 =3D registers[0].value.reg64;
+> -	mshv_vsm_capabilities.as_uint64 =3D registers[1].value.reg64;
+> +	mshv_vsm_capabilities.as_uint64 =3D vsm_capability_reg.value.reg64;
+>=20
+>  	return ret;
+
+Nit: This could be just "return 0".
+
 >  }
->  #endif /* CONFIG_MSHV_ROOT || CONFIG_MSHV_VTL */
+> @@ -1139,13 +1136,18 @@ static int __init mshv_vtl_init(void)
+>  	tasklet_init(&msg_dpc, mshv_vtl_sint_on_msg_dpc, 0);
+>  	init_waitqueue_head(&fd_wait_queue);
 >=20
-> +struct mshv_vtl_per_cpu {
-> +	struct mshv_vtl_run *run;
-> +	struct page *reg_page;
-> +};
-> +
->  #if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
-> +/* SYNIC_OVERLAY_PAGE_MSR - internal, identical to hv_synic_simp */
+> -	if (mshv_vtl_get_vsm_regs()) {
+> +	if (mshv_vtl_get_vsm_cap_reg()) {
+>  		dev_emerg(dev, "Unable to get VSM capabilities !!\n");
 
-This comment pre-dates your patch, but I don't understand the point
-it is trying to make. The comment is factually true, but I don't know
-why calling that out is relevant. The REG_PAGE MSR seems to be
-conceptually separate and distinct from the SIMP MSR, so the fact
-that the layouts are the same is just a coincidence. Or is there some
-relationship between the two MSRs that I'm not aware of, and the
-comment is trying (and failing?) to point out?
+Why is this failure an emergency message, while the other failures
+here in mshv_vtl_init() are just error messages? When there's lack
+of consistency, I always wonder if there is a reason ..... :-)
 
-> +union hv_synic_overlay_page_msr {
-> +	u64 as_uint64;
-> +	struct {
-> +		u64 enabled: 1;
-> +		u64 reserved: 11;
-> +		u64 pfn: 52;
-> +	} __packed;
-> +};
-> +
->  u8 __init get_vtl(void);
->  void mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl0);
-> +bool hv_vtl_configure_reg_page(struct mshv_vtl_per_cpu *per_cpu);
->  #else
->  static inline u8 get_vtl(void) { return 0; }
->  static inline void mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl=
-0) {}
-> +static inline bool hv_vtl_configure_reg_page(struct mshv_vtl_per_cpu *pe=
-r_cpu) { return false; }
-
-As with Patch 8, if CONFIG_HYPERV_VTL_MODE caused mshv_common.o
-to be built, this stub wouldn't be needed.
-
->  #endif
+>  		ret =3D -ENODEV;
+>  		goto free_dev;
+>  	}
 >=20
->  #endif
+> -	mshv_vtl_return_call_init(mshv_vsm_page_offsets.vtl_return_offset);
+> +	ret =3D mshv_vtl_return_call_init();
+> +	if (ret) {
+> +		dev_err(dev, "mshv_vtl_return_call_init failed: %d\n", ret);
+> +		goto free_dev;
+> +	}
+> +
+>  	ret =3D hv_vtl_setup_synic();
+>  	if (ret)
+>  		goto free_dev;
 > --
 > 2.43.0
 >=20
