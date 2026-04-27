@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-10389-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10388-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MJxnDWZm72kIBAEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10389-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 15:36:38 +0200
+	id iPahDK9m72kIBAEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10388-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 15:37:51 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9409F4738AC
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 15:36:37 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB2904738FD
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 15:37:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5453D3020102
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 13:35:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6568E300FEE0
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 13:35:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 742653CCFC3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C4FD3CBE61;
 	Mon, 27 Apr 2026 13:35:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ctkeeax3"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OvoJEIid"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE3CB3C945B;
-	Mon, 27 Apr 2026 13:35:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 240B93CA481;
+	Mon, 27 Apr 2026 13:35:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777296927; cv=none; b=lvOkuLRT2DjOf4OzsHKvmV+tR9s01/ddkOtspCj+Wj4fjNtsHRddAB/T3wThD6oEI+PyGQOH/yAqV7fri1nC9S28X4ms5+0ZMJuZs4eT7cTWdIfCCek2xwwo4+oEhcC113RE80skhHk4CCaOJj3xHxofLykr/hy8ZJLQBhLqJcg=
+	t=1777296927; cv=none; b=cw5KGXvrDKlkQmtSmwmzlz7KD9hdBM5/Qvoj1RLoVQw2Y+VaHWSWCk/9br1Gy70mgNvO5v70I5aJARvGgx+DbAnJ2FvqA7g+FK+9CABnf+TsVKwl7Hx8VqRwEIIiz2g8PCkpZEb1ekPPLN5OZiHr8ULbklIoteQUW5mE0V4CfWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1777296927; c=relaxed/simple;
-	bh=HouUOri904NMOp6S620izooVjSzSuTHhNCYD29MbSGY=;
+	bh=6UnbY4DrqGtksJ4MzzZtojHfq0UuwCW7gM2ovAeSmYg=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YpTOWR98YPTAqJveynlc1GAcjBbpxwB8HFbwJeLlx23MU++EeZDg9oxybRtsaW18VMBgMm0lPZLqCrZwRHUKfscs0rgCj2T1bOtTO4O2VOmkq+Whf46LpqoR55mPCRR+3YQdaxysA+cFCUQDa0Ip0acSB2x+UAGsfB9t7tjQ34U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ctkeeax3; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=SpXJYuE1Kxp9By95LHSTAE5tcu4gyw4Ps8+RB3Okd+2fQF8cXllml0wInrsWd8SZoz2juGDVZ4PNoYTuIv4+Pg/GxN7O+UkGLEjy01sSYqJvJAN2jxN8XEWh6jjWTxNm7pybgiamd6hgUFuAvTD1bD3OeAbi0/I/Lqh2gHPQGMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OvoJEIid; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1231)
-	id 3862A20B716B; Mon, 27 Apr 2026 06:35:26 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3862A20B716B
+	id 460C420B716E; Mon, 27 Apr 2026 06:35:26 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 460C420B716E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1777296926;
-	bh=IPauBJl23XVTTPHaHpwNSZN2cNKdTVqw7x6BxTnQO4Q=;
+	bh=K/dQLWpvtfHpW7x2/2gVgixuqfIkLb/3dZkP2GDm5KU=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=ctkeeax3vKtmqtgXr/zJESmIkK6ID5xfdp8+IQptA0TvlARoTji6esIreySxCjO4R
-	 yyisnmiqDj7skdAogWB+Nxdk4Va5x6yLhkdzUKuoLszrxAi9I7QpN2SQz4x9+clTF8
-	 2iKQm9N++4Dhg2rbYyfCYQiJw6Wnd6QDuuISDbGM=
+	b=OvoJEIidR5awQYT90mrlCmhY4HAlsh3WlvMkUWHSGMMurZxtSecu67XyqKVtIvA40
+	 KaRp1QMqSPHxxgeis+1TExCMq8PlFs0b+xv9zHoR8QzFfgUJOEU8lS6R9n+NFH28uV
+	 6yNOPRPBUWAqgPb0bGo/rMVIfJGf6iGY+FH8ynco=
 From: Aditya Garg <gargaditya@linux.microsoft.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -70,9 +70,9 @@ To: kys@microsoft.com,
 	bpf@vger.kernel.org,
 	gargaditya@microsoft.com,
 	gargaditya@linux.microsoft.com
-Subject: [PATCH net-next v2 1/2] net: mana: Use per-queue allocation for tx_qp to reduce allocation size
-Date: Mon, 27 Apr 2026 06:23:34 -0700
-Message-ID: <20260427132807.1642290-2-gargaditya@linux.microsoft.com>
+Subject: [PATCH net-next v2 2/2] net: mana: Use kvmalloc for large RX queue and buffer allocations
+Date: Mon, 27 Apr 2026 06:23:35 -0700
+Message-ID: <20260427132807.1642290-3-gargaditya@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260427132807.1642290-1-gargaditya@linux.microsoft.com>
 References: <20260427132807.1642290-1-gargaditya@linux.microsoft.com>
@@ -83,7 +83,7 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 9409F4738AC
+X-Rspamd-Queue-Id: CB2904738FD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.84 / 15.00];
@@ -93,7 +93,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -101,8 +101,8 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10389-lists,linux-hyperv=lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TAGGED_FROM(0.00)[bounces-10388-lists,linux-hyperv=lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[gargaditya@linux.microsoft.com,linux-hyperv@vger.kernel.org];
@@ -112,199 +112,73 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCPT_COUNT_TWELVE(0.00)[27];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:dkim,linux.microsoft.com:mid]
 
-Convert tx_qp from a single contiguous array allocation to per-queue
-individual allocations. Each mana_tx_qp struct is approximately 35KB.
-With many queues (e.g., 32/64), the flat array requires a single
-contiguous allocation that can fail under memory fragmentation.
+The RX path allocations for rxbufs_pre, das_pre, and rxq scale with
+queue count and queue depth. With high queue counts and depth, these can
+exceed what kmalloc can reliably provide from physically contiguous
+memory under fragmentation.
 
-Change mana_tx_qp *tx_qp to mana_tx_qp **tx_qp (array of pointers),
-allocating each queue's mana_tx_qp individually via kvzalloc. This
-reduces each allocation to ~35KB and provides vmalloc fallback,
-avoiding allocation failure due to fragmentation.
+Switch these from kmalloc to kvmalloc variants so the allocator
+transparently falls back to vmalloc when contiguous memory is scarce,
+and update the corresponding frees to kvfree.
 
 Signed-off-by: Aditya Garg <gargaditya@linux.microsoft.com>
 Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
 ---
- .../net/ethernet/microsoft/mana/mana_bpf.c    |  2 +-
- drivers/net/ethernet/microsoft/mana/mana_en.c | 49 ++++++++++++-------
- .../ethernet/microsoft/mana/mana_ethtool.c    |  2 +-
- include/net/mana/mana.h                       |  2 +-
- 4 files changed, 33 insertions(+), 22 deletions(-)
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_bpf.c b/drivers/net/ethernet/microsoft/mana/mana_bpf.c
-index 7697c9b52ed3..b5e9bb184a1d 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_bpf.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_bpf.c
-@@ -68,7 +68,7 @@ int mana_xdp_xmit(struct net_device *ndev, int n, struct xdp_frame **frames,
- 		count++;
- 	}
- 
--	tx_stats = &apc->tx_qp[q_idx].txq.stats;
-+	tx_stats = &apc->tx_qp[q_idx]->txq.stats;
- 
- 	u64_stats_update_begin(&tx_stats->syncp);
- 	tx_stats->xdp_xmit += count;
 diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index a654b3699c4c..8adf72b96145 100644
+index 8adf72b96145..e1d8ac3417e8 100644
 --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
 +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -355,9 +355,9 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	if (skb_cow_head(skb, MANA_HEADROOM))
- 		goto tx_drop_count;
- 
--	txq = &apc->tx_qp[txq_idx].txq;
-+	txq = &apc->tx_qp[txq_idx]->txq;
- 	gdma_sq = txq->gdma_sq;
--	cq = &apc->tx_qp[txq_idx].tx_cq;
-+	cq = &apc->tx_qp[txq_idx]->tx_cq;
- 	tx_stats = &txq->stats;
- 
- 	BUILD_BUG_ON(MAX_TX_WQE_SGL_ENTRIES != MANA_MAX_TX_WQE_SGL_ENTRIES);
-@@ -614,7 +614,7 @@ static void mana_get_stats64(struct net_device *ndev,
+@@ -685,11 +685,11 @@ void mana_pre_dealloc_rxbufs(struct mana_port_context *mpc)
+ 		put_page(virt_to_head_page(mpc->rxbufs_pre[i]));
  	}
  
- 	for (q = 0; q < num_queues; q++) {
--		tx_stats = &apc->tx_qp[q].txq.stats;
-+		tx_stats = &apc->tx_qp[q]->txq.stats;
+-	kfree(mpc->das_pre);
++	kvfree(mpc->das_pre);
+ 	mpc->das_pre = NULL;
  
- 		do {
- 			start = u64_stats_fetch_begin(&tx_stats->syncp);
-@@ -2321,21 +2321,26 @@ static void mana_destroy_txq(struct mana_port_context *apc)
- 		return;
+ out2:
+-	kfree(mpc->rxbufs_pre);
++	kvfree(mpc->rxbufs_pre);
+ 	mpc->rxbufs_pre = NULL;
  
- 	for (i = 0; i < apc->num_queues; i++) {
--		debugfs_remove_recursive(apc->tx_qp[i].mana_tx_debugfs);
--		apc->tx_qp[i].mana_tx_debugfs = NULL;
-+		if (!apc->tx_qp[i])
-+			continue;
-+
-+		debugfs_remove_recursive(apc->tx_qp[i]->mana_tx_debugfs);
-+		apc->tx_qp[i]->mana_tx_debugfs = NULL;
+ out1:
+@@ -806,11 +806,11 @@ int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu, int num_qu
+ 	num_rxb = num_queues * mpc->rx_queue_size;
  
--		napi = &apc->tx_qp[i].tx_cq.napi;
--		if (apc->tx_qp[i].txq.napi_initialized) {
-+		napi = &apc->tx_qp[i]->tx_cq.napi;
-+		if (apc->tx_qp[i]->txq.napi_initialized) {
- 			napi_synchronize(napi);
- 			napi_disable_locked(napi);
- 			netif_napi_del_locked(napi);
--			apc->tx_qp[i].txq.napi_initialized = false;
-+			apc->tx_qp[i]->txq.napi_initialized = false;
- 		}
--		mana_destroy_wq_obj(apc, GDMA_SQ, apc->tx_qp[i].tx_object);
-+		mana_destroy_wq_obj(apc, GDMA_SQ, apc->tx_qp[i]->tx_object);
+ 	WARN(mpc->rxbufs_pre, "mana rxbufs_pre exists\n");
+-	mpc->rxbufs_pre = kmalloc_array(num_rxb, sizeof(void *), GFP_KERNEL);
++	mpc->rxbufs_pre = kvmalloc_array(num_rxb, sizeof(void *), GFP_KERNEL);
+ 	if (!mpc->rxbufs_pre)
+ 		goto error;
  
--		mana_deinit_cq(apc, &apc->tx_qp[i].tx_cq);
-+		mana_deinit_cq(apc, &apc->tx_qp[i]->tx_cq);
+-	mpc->das_pre = kmalloc_objs(dma_addr_t, num_rxb);
++	mpc->das_pre = kvmalloc_objs(dma_addr_t, num_rxb);
+ 	if (!mpc->das_pre)
+ 		goto error;
  
--		mana_deinit_txq(apc, &apc->tx_qp[i].txq);
-+		mana_deinit_txq(apc, &apc->tx_qp[i]->txq);
-+
-+		kvfree(apc->tx_qp[i]);
- 	}
+@@ -2564,7 +2564,7 @@ static void mana_destroy_rxq(struct mana_port_context *apc,
+ 	if (rxq->gdma_rq)
+ 		mana_gd_destroy_queue(gc, rxq->gdma_rq);
  
- 	kfree(apc->tx_qp);
-@@ -2344,7 +2349,7 @@ static void mana_destroy_txq(struct mana_port_context *apc)
+-	kfree(rxq);
++	kvfree(rxq);
+ }
  
- static void mana_create_txq_debugfs(struct mana_port_context *apc, int idx)
- {
--	struct mana_tx_qp *tx_qp = &apc->tx_qp[idx];
-+	struct mana_tx_qp *tx_qp = apc->tx_qp[idx];
- 	char qnum[32];
+ static int mana_fill_rx_oob(struct mana_recv_buf_oob *rx_oob, u32 mem_key,
+@@ -2704,7 +2704,7 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
  
- 	sprintf(qnum, "TX-%d", idx);
-@@ -2383,7 +2388,7 @@ static int mana_create_txq(struct mana_port_context *apc,
- 	int err;
- 	int i;
- 
--	apc->tx_qp = kzalloc_objs(struct mana_tx_qp, apc->num_queues);
-+	apc->tx_qp = kzalloc_objs(struct mana_tx_qp *, apc->num_queues);
- 	if (!apc->tx_qp)
- 		return -ENOMEM;
- 
-@@ -2403,10 +2408,16 @@ static int mana_create_txq(struct mana_port_context *apc,
  	gc = gd->gdma_context;
  
- 	for (i = 0; i < apc->num_queues; i++) {
--		apc->tx_qp[i].tx_object = INVALID_MANA_HANDLE;
-+		apc->tx_qp[i] = kvzalloc_obj(*apc->tx_qp[i]);
-+		if (!apc->tx_qp[i]) {
-+			err = -ENOMEM;
-+			goto out;
-+		}
-+
-+		apc->tx_qp[i]->tx_object = INVALID_MANA_HANDLE;
+-	rxq = kzalloc_flex(*rxq, rx_oobs, apc->rx_queue_size);
++	rxq = kvzalloc_flex(*rxq, rx_oobs, apc->rx_queue_size);
+ 	if (!rxq)
+ 		return NULL;
  
- 		/* Create SQ */
--		txq = &apc->tx_qp[i].txq;
-+		txq = &apc->tx_qp[i]->txq;
- 
- 		u64_stats_init(&txq->stats.syncp);
- 		txq->ndev = net;
-@@ -2424,7 +2435,7 @@ static int mana_create_txq(struct mana_port_context *apc,
- 			goto out;
- 
- 		/* Create SQ's CQ */
--		cq = &apc->tx_qp[i].tx_cq;
-+		cq = &apc->tx_qp[i]->tx_cq;
- 		cq->type = MANA_CQ_TYPE_TX;
- 
- 		cq->txq = txq;
-@@ -2453,7 +2464,7 @@ static int mana_create_txq(struct mana_port_context *apc,
- 
- 		err = mana_create_wq_obj(apc, apc->port_handle, GDMA_SQ,
- 					 &wq_spec, &cq_spec,
--					 &apc->tx_qp[i].tx_object);
-+					 &apc->tx_qp[i]->tx_object);
- 
- 		if (err)
- 			goto out;
-@@ -3288,7 +3299,7 @@ static int mana_dealloc_queues(struct net_device *ndev)
- 	 */
- 
- 	for (i = 0; i < apc->num_queues; i++) {
--		txq = &apc->tx_qp[i].txq;
-+		txq = &apc->tx_qp[i]->txq;
- 		tsleep = 1000;
- 		while (atomic_read(&txq->pending_sends) > 0 &&
- 		       time_before(jiffies, timeout)) {
-@@ -3307,7 +3318,7 @@ static int mana_dealloc_queues(struct net_device *ndev)
- 	}
- 
- 	for (i = 0; i < apc->num_queues; i++) {
--		txq = &apc->tx_qp[i].txq;
-+		txq = &apc->tx_qp[i]->txq;
- 		while ((skb = skb_dequeue(&txq->pending_skbs))) {
- 			mana_unmap_skb(skb, apc);
- 			dev_kfree_skb_any(skb);
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-index 6a4b42fe0944..04350973e19e 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-@@ -260,7 +260,7 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
- 	}
- 
- 	for (q = 0; q < num_queues; q++) {
--		tx_stats = &apc->tx_qp[q].txq.stats;
-+		tx_stats = &apc->tx_qp[q]->txq.stats;
- 
- 		do {
- 			start = u64_stats_fetch_begin(&tx_stats->syncp);
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 8f721cd4e4a7..aa90a858c8e3 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -507,7 +507,7 @@ struct mana_port_context {
- 	bool tx_shortform_allowed;
- 	u16 tx_vp_offset;
- 
--	struct mana_tx_qp *tx_qp;
-+	struct mana_tx_qp **tx_qp;
- 
- 	/* Indirection Table for RX & TX. The values are queue indexes */
- 	u32 *indir_table;
 -- 
 2.43.0
 
