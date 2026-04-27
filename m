@@ -1,184 +1,185 @@
-Return-Path: <linux-hyperv+bounces-10388-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10390-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iPahDK9m72kIBAEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10388-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 15:37:51 +0200
+	id KOSCIOdp72l3BAEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10390-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 15:51:35 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB2904738FD
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 15:37:50 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75652473C13
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 15:51:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6568E300FEE0
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 13:35:28 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 3B0D530074DA
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 13:51:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C4FD3CBE61;
-	Mon, 27 Apr 2026 13:35:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2BB13CF690;
+	Mon, 27 Apr 2026 13:51:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OvoJEIid"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZXFFxoIA"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 240B93CA481;
-	Mon, 27 Apr 2026 13:35:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 568D73BA241;
+	Mon, 27 Apr 2026 13:51:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777296927; cv=none; b=cw5KGXvrDKlkQmtSmwmzlz7KD9hdBM5/Qvoj1RLoVQw2Y+VaHWSWCk/9br1Gy70mgNvO5v70I5aJARvGgx+DbAnJ2FvqA7g+FK+9CABnf+TsVKwl7Hx8VqRwEIIiz2g8PCkpZEb1ekPPLN5OZiHr8ULbklIoteQUW5mE0V4CfWE=
+	t=1777297863; cv=none; b=poTGdep3JDeYiHpm8LEAP9pxhyLVp2SMezosenH68LDg+s8vhPiPfsc7wW6ugFmggTfb+NU/aZGVLwvdZS87PfxCR5/fgjycrxYFhWbLFTUR5Wn69WnIcAb4yOLHaCdM7KrD3bFjWDceGOCydlTDHjTnrTslJ2RagZrlpIudUe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777296927; c=relaxed/simple;
-	bh=6UnbY4DrqGtksJ4MzzZtojHfq0UuwCW7gM2ovAeSmYg=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SpXJYuE1Kxp9By95LHSTAE5tcu4gyw4Ps8+RB3Okd+2fQF8cXllml0wInrsWd8SZoz2juGDVZ4PNoYTuIv4+Pg/GxN7O+UkGLEjy01sSYqJvJAN2jxN8XEWh6jjWTxNm7pybgiamd6hgUFuAvTD1bD3OeAbi0/I/Lqh2gHPQGMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OvoJEIid; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1777297863; c=relaxed/simple;
+	bh=+b/XARtL8TTdO5avBV72s4wEqPqZTYtiOCXUOIpscXQ=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=JBbCZYANgPtSguXMwZDSu5OQfx83kTOGtixBQZWI4E1xffcIDzYLi0ncSzBobmSzJMgWESU1/6ecznXOf5NDejb32thoh733ZkN9KabaUCQ6T7rGk17+bSnVXXMqI/8V2VuIxAC4nm5JA0o1aFrFhnDRDGzVm5LxSXPekg8Fsd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ZXFFxoIA; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1231)
-	id 460C420B716E; Mon, 27 Apr 2026 06:35:26 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 460C420B716E
+Received: by linux.microsoft.com (Postfix, from userid 1204)
+	id 83B4C20B716A; Mon, 27 Apr 2026 06:51:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 83B4C20B716A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1777296926;
-	bh=K/dQLWpvtfHpW7x2/2gVgixuqfIkLb/3dZkP2GDm5KU=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=OvoJEIidR5awQYT90mrlCmhY4HAlsh3WlvMkUWHSGMMurZxtSecu67XyqKVtIvA40
-	 KaRp1QMqSPHxxgeis+1TExCMq8PlFs0b+xv9zHoR8QzFfgUJOEU8lS6R9n+NFH28uV
-	 6yNOPRPBUWAqgPb0bGo/rMVIfJGf6iGY+FH8ynco=
-From: Aditya Garg <gargaditya@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	kotaranov@microsoft.com,
-	horms@kernel.org,
-	ssengar@linux.microsoft.com,
-	jacob.e.keller@intel.com,
-	dipayanroy@linux.microsoft.com,
-	ernis@linux.microsoft.com,
-	shirazsaleem@microsoft.com,
-	kees@kernel.org,
-	sbhatta@marvell.com,
-	leitao@debian.org,
-	netdev@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	bpf@vger.kernel.org,
-	gargaditya@microsoft.com,
-	gargaditya@linux.microsoft.com
-Subject: [PATCH net-next v2 2/2] net: mana: Use kvmalloc for large RX queue and buffer allocations
-Date: Mon, 27 Apr 2026 06:23:35 -0700
-Message-ID: <20260427132807.1642290-3-gargaditya@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <20260427132807.1642290-1-gargaditya@linux.microsoft.com>
-References: <20260427132807.1642290-1-gargaditya@linux.microsoft.com>
+	s=default; t=1777297862;
+	bh=JjVpccUnXnnI/i5ox4+KGA4Y9noeTr3ND10yN1jOoHY=;
+	h=Date:From:To:Subject:From;
+	b=ZXFFxoIAeUD8B7w1wMbldnxsJscValauGXIjdFCs+DaZDXhrsE3Ax5RnuuNodFPmg
+	 9tBYiB2KqkG5snNSJCaLs0//HqRqbwg0CoSNUBBDxv9N5a4hBPrgQbhHsIqPTdTX0A
+	 prAL8T6PMpP8Q9fba0txT8f1BtdkyYulV2QBxzkE=
+Date: Mon, 27 Apr 2026 06:51:02 -0700
+From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	leon@kernel.org, longli@microsoft.com, kotaranov@microsoft.com,
+	horms@kernel.org, shradhagupta@linux.microsoft.com,
+	ssengar@linux.microsoft.com, ernis@linux.microsoft.com,
+	shirazsaleem@microsoft.com, linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, stephen@networkplumber.org,
+	jacob.e.keller@intel.com, dipayanroy@microsoft.com,
+	leitao@debian.org, kees@kernel.org, john.fastabend@gmail.com,
+	hawk@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+	ast@kernel.org, sdf@fomichev.me, yury.norov@gmail.com
+Subject: [PATCH net-next] net: mana: Force single RX buffer per page for
+ CVM/encrypted guest memory
+Message-ID: <ae9pxvJfkAZYfKMf@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: CB2904738FD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Rspamd-Queue-Id: 75652473C13
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.84 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-10390-lists,linux-hyperv=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10388-lists,linux-hyperv=lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[gargaditya@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,vger.kernel.org,networkplumber.org,intel.com,debian.org,gmail.com,iogearbox.net,fomichev.me];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_NONE(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_TWELVE(0.00)[27];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:dkim,linux.microsoft.com:mid]
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	RCPT_COUNT_TWELVE(0.00)[33];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 
-The RX path allocations for rxbufs_pre, das_pre, and rxq scale with
-queue count and queue depth. With high queue counts and depth, these can
-exceed what kmalloc can reliably provide from physically contiguous
-memory under fragmentation.
+On Confidential VMs (CVMs) such as AMD SEV-SNP or Intel TDX, the guest
+operating system's memory is encrypted. And current hardwares lacks the
+support for TDISP (TEE Device Interface Security Protocol), meaning the
+NIC cannot directly access this encrypted VM memory. Consequently, all
+DMA operations must utilize SWIOTLB bounce buffers.
 
-Switch these from kmalloc to kvmalloc variants so the allocator
-transparently falls back to vmalloc when contiguous memory is scarce,
-and update the corresponding frees to kvfree.
+In the MANA driver currently, there are two distinct paths for DMA
+mapping:
 
-Signed-off-by: Aditya Garg <gargaditya@linux.microsoft.com>
+1. Without PP_FLAG_DMA_MAP: The driver manually maps full pages for each
+packet. This creates standalone, page-aligned mappings where the offset
+is always zero.
+
+2. With PP_FLAG_DMA_MAP: Optimizes memory by using page_pool with
+sub-page fragments (e.g., multiple RX buffers sharing a single page).
+When PP_FLAG_DMA_MAP is enabled, page_pool maps the entire page once.
+Subsequent RX buffer allocations use offsets into this pre-mapped area.
+
+When page_pool allocates sub-page RX buffer fragments, the bounce buffer
+granularity may not align with these smaller fragment sizes, leading to
+failure in mana driver rx path.
+
+Refactor the RX buffer decision into mana_use_single_rxbuf_per_page().
+When cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) is true, the driver is
+forced to use a single RX buffer per page. This ensures:
+- Each RX buffer is exactly one PAGE_SIZE.
+- The DMA offset is always 0.
+- SWIOTLB maps full, page-aligned blocks.
+
 Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
 ---
- drivers/net/ethernet/microsoft/mana/mana_en.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 21 +++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 8adf72b96145..e1d8ac3417e8 100644
+index a654b3699c4c..2d44eaf932a8 100644
 --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
 +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -685,11 +685,11 @@ void mana_pre_dealloc_rxbufs(struct mana_port_context *mpc)
- 		put_page(virt_to_head_page(mpc->rxbufs_pre[i]));
- 	}
+@@ -12,6 +12,7 @@
+ #include <linux/pci.h>
+ #include <linux/export.h>
+ #include <linux/skbuff.h>
++#include <linux/cc_platform.h>
  
--	kfree(mpc->das_pre);
-+	kvfree(mpc->das_pre);
- 	mpc->das_pre = NULL;
- 
- out2:
--	kfree(mpc->rxbufs_pre);
-+	kvfree(mpc->rxbufs_pre);
- 	mpc->rxbufs_pre = NULL;
- 
- out1:
-@@ -806,11 +806,11 @@ int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu, int num_qu
- 	num_rxb = num_queues * mpc->rx_queue_size;
- 
- 	WARN(mpc->rxbufs_pre, "mana rxbufs_pre exists\n");
--	mpc->rxbufs_pre = kmalloc_array(num_rxb, sizeof(void *), GFP_KERNEL);
-+	mpc->rxbufs_pre = kvmalloc_array(num_rxb, sizeof(void *), GFP_KERNEL);
- 	if (!mpc->rxbufs_pre)
- 		goto error;
- 
--	mpc->das_pre = kmalloc_objs(dma_addr_t, num_rxb);
-+	mpc->das_pre = kvmalloc_objs(dma_addr_t, num_rxb);
- 	if (!mpc->das_pre)
- 		goto error;
- 
-@@ -2564,7 +2564,7 @@ static void mana_destroy_rxq(struct mana_port_context *apc,
- 	if (rxq->gdma_rq)
- 		mana_gd_destroy_queue(gc, rxq->gdma_rq);
- 
--	kfree(rxq);
-+	kvfree(rxq);
+ #include <net/checksum.h>
+ #include <net/ip6_checksum.h>
+@@ -744,6 +745,23 @@ static void *mana_get_rxbuf_pre(struct mana_rxq *rxq, dma_addr_t *da)
+ 	return va;
  }
  
- static int mana_fill_rx_oob(struct mana_recv_buf_oob *rx_oob, u32 mem_key,
-@@ -2704,7 +2704,7 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
++static bool
++mana_use_single_rxbuf_per_page(struct mana_port_context *apc, u32 mtu)
++{
++	/* On confidential VMs with guest memory encryption, all DMA goes
++	 * through SWIOTLB bounce buffers. Sub-page RX fragments may not
++	 * be properly bounce-buffered, so use fullpage buffers.
++	 */
++	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
++		return true;
++
++	/* For xdp and jumbo frames make sure only one packet fits per page. */
++	if (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2 || mana_xdp_get(apc))
++		return true;
++
++	return false;
++}
++
+ /* Get RX buffer's data size, alloc size, XDP headroom based on MTU */
+ static void mana_get_rxbuf_cfg(struct mana_port_context *apc,
+ 			       int mtu, u32 *datasize, u32 *alloc_size,
+@@ -754,8 +772,7 @@ static void mana_get_rxbuf_cfg(struct mana_port_context *apc,
+ 	/* Calculate datasize first (consistent across all cases) */
+ 	*datasize = mtu + ETH_HLEN;
  
- 	gc = gd->gdma_context;
- 
--	rxq = kzalloc_flex(*rxq, rx_oobs, apc->rx_queue_size);
-+	rxq = kvzalloc_flex(*rxq, rx_oobs, apc->rx_queue_size);
- 	if (!rxq)
- 		return NULL;
- 
+-	/* For xdp and jumbo frames make sure only one packet fits per page */
+-	if (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2 || mana_xdp_get(apc)) {
++	if (mana_use_single_rxbuf_per_page(apc, mtu)) {
+ 		if (mana_xdp_get(apc)) {
+ 			*headroom = XDP_PACKET_HEADROOM;
+ 			*alloc_size = PAGE_SIZE;
 -- 
 2.43.0
 
