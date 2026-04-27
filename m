@@ -1,160 +1,175 @@
-Return-Path: <linux-hyperv+bounces-10386-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10387-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gKJwMBpP72kEAAEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10386-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 13:57:14 +0200
+	id ADAZOaxm72kIBAEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10387-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 15:37:48 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2AC7F472267
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 13:57:13 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40BA04738EF
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 15:37:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 015993051E94
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 11:51:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 38CD4300DE24
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 13:35:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 670FE39A04D;
-	Mon, 27 Apr 2026 11:51:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A5503CAE73;
+	Mon, 27 Apr 2026 13:35:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VnsXT5KP"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fpXs1g+j"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E2B9388E72;
-	Mon, 27 Apr 2026 11:51:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE3393C8716;
+	Mon, 27 Apr 2026 13:35:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777290696; cv=none; b=jgEPok+TJew+cbJdALG3oFrXUhXsgqJLOwahkYuDEPf8+IhTbPrZqOP2LUDlNSeR0Pk6xS445e5gujP7HkgibjEFiVfw4+gZdhHWXw68dYfz0QbttDpNF4ukrx2ZnEJ9rGEHPvDjM7do9ArgEC6oPoHX5eD5G9BgEAYgY+FdYWA=
+	t=1777296927; cv=none; b=rbxwF27hhPUQHkLZtQsa07RxuNMUS76h2MRTb+cihDRjlyQJRMd3DAQGbLbab/rPIz96DrfSIu4Blx25LLi8wJviU+GCIfAjBWPu/aa138fkjbcjyztX4ubkwF2kF/jJ8gtfi8aGD8PnnYS0pmhk+ULDUG3aBm/ykvSXVluoyVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777290696; c=relaxed/simple;
-	bh=55NqU6/Q4ArQrCtOYDO2EVlZcJ5uLmdn3BrT5kwTOPE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MOkI+prPi8dKQKcjpDQSnFWfhG7rtNTfXJjd4EVsezFdAA4zFbSKrtyPFLqBso13CnJAHC3kMhnop5tSgcv87TlL8GU2zmKx8RciTPVE5hmMkt+XmIIX1pE6W7dkOAD26kgGYFPC9aRekqEAZ7wj+8SsvuS3AKML79fHSUeQWLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=VnsXT5KP; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1777296927; c=relaxed/simple;
+	bh=Hrd3Ufbn0yIBkbjycfXpMJ9mBOrSVze4ikAYNtzpkMc=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=kvAKViOxXwYuZ9LmB1rnuljYumtC/+2Z0mgEnijxkia9d/v8b8pqKfDOb5n4EfypBC472tfv6X6OcUo0b9MjEHX7b7PMVjXIatAD5+aITLTXXCtA/2zek9bUweW6laFWLvMZDRNUGWG6+c+1y6/7fPwFyt08rMydqNlPoy+i3y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=fpXs1g+j; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1216)
-	id 8D55F20B7169; Mon, 27 Apr 2026 04:51:34 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8D55F20B7169
+Received: by linux.microsoft.com (Postfix, from userid 1231)
+	id 2A95820B716A; Mon, 27 Apr 2026 06:35:26 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2A95820B716A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1777290694;
-	bh=u4fxCSX6+lkya8NkULSrVpIHMRpwmUGWqwp1lb66MDE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VnsXT5KPDTqb3PGZqTBaTFbTzX+ByVQgClsT65WKGJG2JZC9V16fL6Y4yQ78sHfFD
-	 B2ElV/SkAyffzpDCAWB9kzh+7kGOpd1z5oLvqvzzJbHPPokS4jV8EoCZ/9g9tJELoN
-	 GiJkCIdmaFtrl4gV4aiOAtcpa0RDwdJb6K967djY=
-Date: Mon, 27 Apr 2026 04:51:34 -0700
-From: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
-To: Saurabh Singh Sengar <ssengar@microsoft.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	KY Srinivasan <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <DECUI@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Himadri Pandya <himadrispandya@gmail.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Deepak Rawat <drawat.floss@gmail.com>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"stable@kernel.vger.org" <stable@kernel.vger.org>
-Subject: Re: [PATCH 2/2] drm/hyperv: use VMBUS_RING_SIZE()
-Message-ID: <ae9NxmDBTkzPP3H6@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20260425181719.1538483-1-hamzamahfooz@linux.microsoft.com>
- <20260425181719.1538483-2-hamzamahfooz@linux.microsoft.com>
- <KUZP153MB14445757C6A5DA5DEDA9A09CBE292@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+	s=default; t=1777296926;
+	bh=WsS2t80x+GGz7CqR25akz3086Hpb7Gp6QxW+DhOqL00=;
+	h=From:To:Subject:Date:From;
+	b=fpXs1g+jp/xD8PeBW9r9WrxfznWah99eMaY6m7AZKmmZq2t8QAzLxIW1Jojo0UZDS
+	 JHUwY/rury8nDfx6NokHY8FQYlHIn1086VwqLMw1zvLSv8f6dABVi4j+dsaQGznQqS
+	 Pg0wTkfw1/zDOW/EaQYxfTwU4AtJPcY1zts0RGfI=
+From: Aditya Garg <gargaditya@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	longli@microsoft.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	kotaranov@microsoft.com,
+	horms@kernel.org,
+	ssengar@linux.microsoft.com,
+	jacob.e.keller@intel.com,
+	dipayanroy@linux.microsoft.com,
+	ernis@linux.microsoft.com,
+	shirazsaleem@microsoft.com,
+	kees@kernel.org,
+	sbhatta@marvell.com,
+	leitao@debian.org,
+	netdev@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	bpf@vger.kernel.org,
+	gargaditya@microsoft.com,
+	gargaditya@linux.microsoft.com
+Subject: [PATCH net-next v2 0/2] net: mana: Avoid queue struct allocation failure under memory fragmentation
+Date: Mon, 27 Apr 2026 06:23:33 -0700
+Message-ID: <20260427132807.1642290-1-gargaditya@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <KUZP153MB14445757C6A5DA5DEDA9A09CBE292@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
-X-Rspamd-Queue-Id: 2AC7F472267
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 40BA04738EF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10386-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,microsoft.com,kernel.org,redhat.com,davemloft.net,google.com,gmail.com,outlook.com,lists.linux.dev,linux.microsoft.com,linux.intel.com,suse.de,ffwll.ch,lists.freedesktop.org,kernel.vger.org];
-	RCPT_COUNT_TWELVE(0.00)[27];
+	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10387-lists,linux-hyperv=lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hamzamahfooz@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[gargaditya@linux.microsoft.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	TO_DN_NONE(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.org:email,linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid]
+	RCPT_COUNT_TWELVE(0.00)[27];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,linux.microsoft.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-On Sun, Apr 26, 2026 at 05:00:24AM +0000, Saurabh Singh Sengar wrote:
-> > Subject: [PATCH 2/2] drm/hyperv: use VMBUS_RING_SIZE()
-> > 
-> > VMBUS ring buffers must be page aligned. So, use VMBUS_RING_SIZE() to
-> > ensure they are always aligned and large enough to hold all of the relevant
-> > data.
-> > 
-> > Cc: stable@kernel.vger.org
-> > Fixes: 76c56a5affeb ("drm/hyperv: Add DRM driver for hyperv synthetic video
-> > device")
-> > Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
-> > ---
-> >  drivers/gpu/drm/hyperv/hyperv_drm_proto.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-> > b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-> > index 051ecc526832..753d97bff76f 100644
-> > --- a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-> > +++ b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-> > @@ -10,7 +10,7 @@
-> > 
-> >  #include "hyperv_drm.h"
-> > 
-> > -#define VMBUS_RING_BUFSIZE (256 * 1024)
-> > +#define VMBUS_RING_BUFSIZE VMBUS_RING_SIZE(256 * 1024)
-> >  #define VMBUS_VSP_TIMEOUT (10 * HZ)
-> > 
-> >  #define SYNTHVID_VERSION(major, minor) ((minor) << 16 | (major))
-> > --
-> > 2.54.0
-> 
-> Although this lgtm, but this may change the behaviour on ARM64 systems with page size > 4K ?
-> Have we tested it ?
+The MANA driver can fail to load on systems with high memory
+utilization because several allocations in the queue setup paths
+require large physically contiguous blocks via kmalloc. Under memory
+fragmentation these high-order allocations may fail, preventing the
+driver from creating queues at probe time or when reconfiguring
+channels, ring parameters or MTU at runtime.
 
-Yup, I tested it on an ARM64 windows machine with a 64K page size guest kernel.
+Allocation sizes that are problematic:
 
-> 
-> Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+  mana_create_txq -> tx_qp flat array (sizeof(mana_tx_qp) = 35528):
+    16 queues (default): 35528 * 16 =  ~555 KB contiguous
+    64 queues (max):     35528 * 64 = ~2220 KB contiguous
 
-Pushed to drm-misc.
+  mana_create_rxq -> rxq struct with flex array
+  (sizeof(mana_rxq) = 35712, rx_oobs=296 per entry):
+    depth 1024 (default): 35712 + 296 * 1024 =  ~331 KB per queue
+    depth 8192 (max):     35712 + 296 * 8192 = ~2403 KB per queue
 
-> 
+  mana_pre_alloc_rxbufs -> rxbufs_pre and das_pre arrays:
+    16 queues, depth 1024 (default): 16 * 1024 * 8 =  128 KB each
+    64 queues, depth 8192 (max):     64 * 8192 * 8 = 4096 KB each
+
+This series addresses the issue by:
+  1. Converting the tx_qp flat array into an array of pointers with
+     per-queue kvzalloc (~35 KB each), replacing a single contiguous
+     allocation that can reach ~2.2 MB at 64 queues.
+  2. Switching rxbufs_pre, das_pre, and rxq allocations to
+     kvmalloc/kvzalloc so the allocator can fall back to vmalloc
+     when contiguous memory is unavailable.
+
+Throughput testing confirms no regression. Since kvmalloc falls
+back to vmalloc under memory fragmentation, all kvmalloc calls
+were temporarily replaced with vmalloc to simulate the fallback
+path (iperf3, GBits/sec):
+
+                 Physically contiguous         vmalloc region
+  Connections      TX          RX              TX          RX
+  --------------------------------------------------------------
+  1                47.2        46.9            46.8        46.6
+  16               181         181             181         181
+  32               181         181             181         181
+  64               181         181             181         181
+
+---
+Changes in v2:
+  - Rebased onto v7.1-rc1 (was v7.0-rc7)
+
+Aditya Garg (2):
+  net: mana: Use per-queue allocation for tx_qp to reduce allocation
+    size
+  net: mana: Use kvmalloc for large RX queue and buffer allocations
+
+ .../net/ethernet/microsoft/mana/mana_bpf.c    |  2 +-
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 61 +++++++++++--------
+ .../ethernet/microsoft/mana/mana_ethtool.c    |  2 +-
+ include/net/mana/mana.h                       |  2 +-
+ 4 files changed, 39 insertions(+), 28 deletions(-)
+
+-- 
+2.43.0
+
 
