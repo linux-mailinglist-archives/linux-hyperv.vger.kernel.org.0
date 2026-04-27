@@ -1,62 +1,62 @@
-Return-Path: <linux-hyperv+bounces-10381-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10382-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AO05JED27mnT2AAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10381-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 07:38:08 +0200
+	id 4N3IAGL27mnT2AAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10382-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 07:38:42 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF76346D41D
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 07:38:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7350646D43B
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 07:38:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 56B563009534
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 05:38:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 30A013002A06
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2026 05:38:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F40E631AAAA;
-	Mon, 27 Apr 2026 05:38:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D16EB27AC4D;
+	Mon, 27 Apr 2026 05:38:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="f1+cKhCC"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Keo/XI+u"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazolkn19013064.outbound.protection.outlook.com [52.103.20.64])
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazolkn19010074.outbound.protection.outlook.com [52.103.2.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6531C34E75A;
-	Mon, 27 Apr 2026 05:38:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E34E40DFA5;
+	Mon, 27 Apr 2026 05:38:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.2.74
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777268285; cv=fail; b=mcJ57kLrklPFc2+6nJ6tVgaBP/zSw3EuJtdEbRrdPBEEkEE86l5hrpG0rWT2PoYH6W3gq5IOOLMS03lG9h5xUgiPk7xp9JWHMftqrx6vtmSZGCEb8Cj07tZ5ASAJXURlqQs8nuvW8huhtv/m6Uv3fgar8kGxvuSnqz7LebvZvVo=
+	t=1777268319; cv=fail; b=W6Z3x6DtqIfhNBxKG73ofr59DlZMYKhWWLA5r6MFNKnA+mWR5xijxB0LFNtc+1y9OkvHs9dRLKGnJ7JLx7Jnzk5qDEfESCN5wumKDKI/HphUJUB4BJ0JmWIjd3c3MH6xJgVAobIf1MTHSWp2JaM6OnSXr2IRBMIWX7mKUyt4AtA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777268285; c=relaxed/simple;
-	bh=23W1w1jfbpsm6oH+QwPMRRnLpNqdiPDi/RhUGJGk+4M=;
+	s=arc-20240116; t=1777268319; c=relaxed/simple;
+	bh=nsexESQFzzuQIUeMVEGsVW+ovf7eJs2NQMo2bY/PjYE=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=KKELsROvU35IsaGP2+q0F0d6JFB/EYSf98hXFYdouvFwPTIyDcaFffp/z0R5dcMOhShWEckeB85zvBal84PEyhOjTw+QFMB52Ho//IGQteP9thOFpOLHJw98iJjIXv8Q9D/YQInksUBQWsXOw+1tj9JvLLWGHaK1ur5a+an2obQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=f1+cKhCC; arc=fail smtp.client-ip=52.103.20.64
+	 Content-Type:MIME-Version; b=Vx3zr8q4zsV3+Dcx3jocMHEzxFuyEIlnHq5WMgQ9L5ykkAc0ZO2e713Bg2tRvGHFqsqieTOxbw6C+fA1OTuZVP+jjrYzjd18mJff+FKpQjiWJEZLC9lDpsilD39tnbWbjPFpulX5l59Tsx6gfd4O9i5lZp5t/ymvkKE1oJ076C4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Keo/XI+u; arc=fail smtp.client-ip=52.103.2.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pQEWil3AX6nO8pvkLeNTwsKoIH3/9weZ+Bw/VHJvY/A3lgdi06Sgss/DeCH7VRlukxktdvlsFlETGbsVxsn7HwcWkCD6KDQHw+iA8/VRzFT/LqtgnH7hfphsNzErKD6zmUsZCia1thoulBakrQuLM+m9JH1Jz+c/Ir8+x3VObeSx4kGXBxWnLCoS0aRYylyPzGRx0pDhkdwoOzYGbjRIz1NPRlR4HQeT9j2NMvLqFUGr2Fsa4I3kwc4dlyZmVV05p6PL1YafISWI8+tnVjy5TSWwrTjuYPvtYpEmZZBrqZ6FMftHr1phm9imj14hImqKI3UlAotGoshyLztPYPLTbw==
+ b=rI7c7BL/cql87GbK93AlsI2ALnjn85aZcFqWbtu/j65TzMJ4vAB/pT2TtlW9zua5eTaaYkHv7oKE/uR4sjRsd9gM8cO053/l7a8WjVPjuCXAXo3I+ukb/1PWMvN5SnuF+T1ollJ1DxiQ0ftViHe42Vhm41u8rdY+gRQIv08AG7aYC+TQov0PoDGZs91bn+YqOXl4j2x//9ShslWcJ8Uh2gIO1fqvvr2k9o5SFNMbbE1ghBJeD/T2DcqrB1bPg/edHayWkBv5q3HwC+Gdc52xyw4t4flxG8uH1OMMM/afnKs049d8gC98BRi/hc0ijkBurHKGpYOM6J2iok8n6VnZdw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QzNX49s8ma2LUbwHFAK21zBkXpHE3+eG9f2U6d1UHHE=;
- b=nuAVwbTnnjK+MxufumCu6wfMU89T8afwwTdy3SAlF/CKaJ1q4hDa/yMLI74Kuv/fhJmcvKg3FT/JKoYoVK4DV5a+t2eEe1aiJL6PuSrluIqpBMvVN2oS2fj7n5tXEayFZB82V2Gq/zra4o3guy17y0IhVlN9CclDs08sLBEj/wT1U0q8bpVMLchkOiB1E++If7/siySHGVTdYwINCVqO9ZIIn2Qlo/YDoh8nfRIWltPdxZ4lOUlbAWIDkYOJfZOqF4vD83syJJKe4CkII7SUhUY7H5kNUO6eIHLPRluW8TBRzqqUhdPCUyZzAsWTkVSheZHnmoNMgBB43KX0EiC71A==
+ bh=IyCkDfl2b4CE7cMiZKoCxrcBKGyTdycTXlQWTkCvXDU=;
+ b=K8mRYdZ7BL93PdjwaeSgP862qUuBPf/GNQkUFGrIsSRsHqCNI7Ss6RH8CeuDZwB9NhkTyXzb5VEyyyWGRytA+7vhlkbmZrcKIklpCue45/r+Wwo26TX06ahRj49B3MSxCsuOZltZ4DBsWRhRJbARXVW+BUCfOpZ37aWs+iFDu+WG1qvGjJtLr6wRZGUKyUUwxOk5KibQkLyM/OTsbBoStHwhd6ym3HKPt3IPOrLB3q/okzH9Q4vTkgf7v4ZYTRcdo+M8BsTXfk7aPg/RxhPcymArDe1TQMpjkqR5DljB3hIAqXpu086mWTmH5tlLoT1PDVEJCWl7+aw9Be4AgkSm1Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QzNX49s8ma2LUbwHFAK21zBkXpHE3+eG9f2U6d1UHHE=;
- b=f1+cKhCCxk6Wk5vZ71ErTGzeiBv+Ih3E02ACB9bZtHRo5OATpEnJlWnPhTsiRe3gsJW05qjb+Qi953l46DfvSol9uNrUoYgF1WRHu5f7OzQFplIBPDSL5SHw+zS517HVtVG93YQJZB1SH7JTlO+WnReRj6H5Zo2OxO/msLQ0bJqWILSOJ51K1vZeLPu285TUtudXOqriejB+C/9h6jWn0RrLJGLJZjq+ro8sLx5MNHmu3sze11a6GvpDbS9F7lxJWz2JBO3wzRfpvqpLcLitpsohxcNWsXDgoc670BTwTEJMqBg854vvelSmAT41zmJuAkOYpMPo0d2xDEcxCTqUlg==
+ bh=IyCkDfl2b4CE7cMiZKoCxrcBKGyTdycTXlQWTkCvXDU=;
+ b=Keo/XI+uJFFBX3nBEh77Uio3hC+1+lTEdRpZEvaF7iOeay4AWfTDTsBDmr1QkPKUf8FnBBaSOyS9nqKimePAIOku6vvt5PUF9O5gP/0OvzLbPvTR0dmJcM0nrPC68IgeSYySqlH2jjyO0IwcIk2mkJbVRAhnfQqmdZ9BuoWl0FZSiK6POwN7tnK+zHbADWcvu2LXn8Qc7Y5UXkkPY8OrDiVymJcxM3w/VhH+i7RVv2dlUjM8YrZauVljuZ7TaKvnil+sV5gEJjfacJzIaY5iECcpHDMpGxmksWwU62AT5UxLABjUTJGRPCabreeP8y9Slj0bjgR1bANJ+0CgHzGznA==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
  by CO6PR02MB7809.namprd02.prod.outlook.com (2603:10b6:303:a2::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.26; Mon, 27 Apr
- 2026 05:38:00 +0000
+ 2026 05:38:35 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::900:1ccf:2b1e:52b6%6]) with mapi id 15.20.9846.025; Mon, 27 Apr 2026
- 05:38:00 +0000
+ 05:38:35 +0000
 From: Michael Kelley <mhklinux@outlook.com>
 To: Naman Jain <namjain@linux.microsoft.com>, "K . Y . Srinivasan"
 	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
@@ -79,71 +79,74 @@ CC: Marc Zyngier <maz@kernel.org>, Timothy Hayes <timothy.hayes@arm.com>,
 	<linux-arch@vger.kernel.org>, "linux-riscv@lists.infradead.org"
 	<linux-riscv@lists.infradead.org>, "vdso@mailbox.org" <vdso@mailbox.org>,
 	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>
-Subject: RE: [PATCH v2 03/15] Drivers: hv: Move vmbus_handler to common code
-Thread-Topic: [PATCH v2 03/15] Drivers: hv: Move vmbus_handler to common code
-Thread-Index: AQHc0x6xowCVGOfZ/kaacmAUtH31s7XyacUQ
-Date: Mon, 27 Apr 2026 05:38:00 +0000
+Subject: RE: [PATCH v2 07/15] arm64: hyperv: Add support for
+ mshv_vtl_return_call
+Thread-Topic: [PATCH v2 07/15] arm64: hyperv: Add support for
+ mshv_vtl_return_call
+Thread-Index: AQHc0x7Gd+InXWMHLEisx/6viGrEn7Xyae9Q
+Date: Mon, 27 Apr 2026 05:38:35 +0000
 Message-ID:
- <SN6PR02MB4157E3B0A6F76E4686D8C3E4D4362@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB4157C147A1B915F9B45D3B74D4362@SN6PR02MB4157.namprd02.prod.outlook.com>
 References: <20260423124206.2410879-1-namjain@linux.microsoft.com>
- <20260423124206.2410879-4-namjain@linux.microsoft.com>
-In-Reply-To: <20260423124206.2410879-4-namjain@linux.microsoft.com>
+ <20260423124206.2410879-8-namjain@linux.microsoft.com>
+In-Reply-To: <20260423124206.2410879-8-namjain@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CO6PR02MB7809:EE_
-x-ms-office365-filtering-correlation-id: d917da57-ddd5-40d0-3aac-08dea41f250e
+x-ms-office365-filtering-correlation-id: 427b9deb-6a6d-4a75-928d-08dea41f39b6
 x-microsoft-antispam:
- BCL:0;ARA:14566002|51005399006|55001999006|37011999003|13091999003|19101099003|461199028|41001999006|31061999003|19110799012|15080799012|8062599012|8060799015|56899033|40105399003|440099028|3412199025|102099032|12091999003|1710799026;
+ BCL:0;ARA:14566002|12121999013|51005399006|55001999006|16051099003|37011999003|13091999003|19101099003|461199028|41001999006|31061999003|19110799012|15080799012|8062599012|8060799015|13041999003|40105399003|440099028|3412199025|102099032|1710799026;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?NaKZ/JifPSMsOIShsnHpoTf7nrM66O6E7SfdZ+P5wWvL/ki3sx7/FA4s1hNn?=
- =?us-ascii?Q?EQRvLqHcgvcFedvWyhUjivTN6T+0AyRTWyJIgT+w0BQw4j/HhbTHYtZ3BJZ2?=
- =?us-ascii?Q?pSKffrbmjjT8keZmYI2JiqfkLZauyw29KtxjhDvrUM81qKskCkbu5gbtnyAF?=
- =?us-ascii?Q?fw/ddvRWVhgq43ON6XewzHHBKPb7CKCLyStr4/r4rrqrauVRtsxC4K0rBiGm?=
- =?us-ascii?Q?UBr4STB9HXgTZJmYAfd+/kJqjPeHdcRImtw9GdN+10WB+k9n2BLQLUN2VeFD?=
- =?us-ascii?Q?Ry6/8A8A2gXKdO9gCpYJB00qG6hLJweUkTtAIiJHRQLWVH5PqKJEIyy3hB8v?=
- =?us-ascii?Q?vGQoKE8+seqqPKsWxL2QoatGoU5+BBIes1BIHWNQLRjvLSJZHhSYPA1/vYsW?=
- =?us-ascii?Q?2P18xqkcGL9T144wKv6iukiSjQPgdlME6D0jDbwsNGPbMG+o32Q+GOMNtokj?=
- =?us-ascii?Q?O5Hd2X+0Liu4wwzMzz0h6vzQhN7AlT5KKHe0pA7Ms/+hJ42Q2qdMn5k3ej6D?=
- =?us-ascii?Q?mKBn7utp9AvaZ2OYSZYLEvODl7RGY9uprEaSZot4ueCReD4r6KJCmmO536zT?=
- =?us-ascii?Q?w+UC9M7iqy75rQ8uPnDrAPx4SU6fi24VTqsLZE26e21RTWBSSxlyWFzBFtA/?=
- =?us-ascii?Q?9duXtsszm2hkCykgzWjtHWLhaJ75bfQBtBoPQpJVH+xawksyH8POqAHId2qe?=
- =?us-ascii?Q?aRSS0b4vSJDONGuUFBVuhFVwvRgrco4igQVAjrvGUFQf0XzO0/wNfsGtUIBr?=
- =?us-ascii?Q?zI92AEOYDcqSHfa7RBjhcTLrP3/6aV7bMJlpll+HFna5P5uyP0BQwbO6PAlM?=
- =?us-ascii?Q?zXzc1z65G/ESAoPLvc8jeJ8PgskTzQAFwtbAQ7IfrNM6W3OgQaK1IGNhAjmG?=
- =?us-ascii?Q?WjoZgad6mVEgqAgzTKtmsZ1qIqBj6VeZHw+kYPya1WDW7jRb0lR9eE8eOhq3?=
- =?us-ascii?Q?Aev5O/hWCiMQqb6D4TEdbZIngWijHiEggnxfHndpRFUfnI9uqgunQPhqa8xW?=
- =?us-ascii?Q?myG3zDaxbrciUKMpoVRnbNbG62ATo9BOM/Cl42ZvB7l19ZFSEPPPp49J5yMp?=
- =?us-ascii?Q?RmR4t0FVguGPS6qBVVsENPBBGD6vkeIlfER8f+FBKi51YNk4HGxSba5yDeg9?=
- =?us-ascii?Q?Pd/16UFH7t0Z?=
+ =?us-ascii?Q?HTaDs4IlpRGQ0gWQKq4/r/XpgVoShUGVwedrjshdgPo7N1kcH3WUAGXLnku+?=
+ =?us-ascii?Q?Ujz0S3Q6S7uFavBt6K/iVueK+CbSJAxhr/snxdTUYUFL4rew9FxQRnxi76k6?=
+ =?us-ascii?Q?W50w/0Mm2Za43GIVB0623npYAXFzRDN5aAe9NBVG3oVV2kyuPByPI7ZBAEKX?=
+ =?us-ascii?Q?3pqGr2LnUxs8KEJ/kZSYYKVxK7h/nQWdO24FmngX7XxMP6F+cWaEsjzuJ9yw?=
+ =?us-ascii?Q?3z7wzdxqQ38hqJt5x1sIPtq92te8ZC0Gb3gNlTKH7SlSWHFhLlZSUA5zln9+?=
+ =?us-ascii?Q?VJ541V08uaBsBSKZBIQG2zw2nddRBQSKPwT7jJQc/hDs3/jHOQzpyHRoQM4s?=
+ =?us-ascii?Q?A4MSJP9pS3wC5Lt9ef+COuXgzx+qqk5pOUz4S54uCPJM8mqVS8+A0qAraLd7?=
+ =?us-ascii?Q?6zuvECOdc31Vo3rPB7o37bijgmbM1sypuGSTFM+ivVjKLt94Mr/GtMpQI4O0?=
+ =?us-ascii?Q?aGraT+OQs7T8buvcDCeovMIaFiWxRYdyKrJEaN+BSdu7LPFiNItubgfdk+KU?=
+ =?us-ascii?Q?1aRUjCbMAhBXoSLY4fuu8YsNpGBN4PtdWb4m/N8dGQrf89FOo2YZkuFSzUEz?=
+ =?us-ascii?Q?6X6TaKwX7rs0LRjjVFccijbv5uwyRTKIQho3CQdiIJwoj1Kqm5CmIYpOUcB1?=
+ =?us-ascii?Q?Az7rCuYp1fwihuDLMGHuFx8sxO69LsZE+LttQb7vnMuPj6HLckaoLdyDuAnM?=
+ =?us-ascii?Q?swaptmLFUTgGCLm98CORUntjUnM+4R1RxgNoL8box5sFTUnRX8o7gae9x4GR?=
+ =?us-ascii?Q?vYdOp2vXdCvVnsEOVhXaVqJmOaHGO1S2mAoZqBiBNLOmHSNuBxfLSXTjgqFw?=
+ =?us-ascii?Q?05lgJ+HepU4fw8+OWU7NKazBasPiwq3NBrPqn+ORxtRgmR1623tDsEnALESW?=
+ =?us-ascii?Q?4i0TV54AcmkB+b7nDiy3aa46tBPDaHrjgi/hk4yju458+dDqlq3zFAfZZ9CD?=
+ =?us-ascii?Q?QNTGS4AsvgxhXxProSDcixuJ82aRO4vNgW/5sEt7nZt0UtTivWulKzIYD4W8?=
+ =?us-ascii?Q?PvjUO24G+L72Wj8NexU0Z51cNlcQsI4t/mEuDxhgau6BYoYycO2DafmfVYA7?=
+ =?us-ascii?Q?XxKsn/Nmaswo0M9FVKWec6V/f+o/F8Xe6+B4RiRx5I0CW5rR6Kx5BtTer7Ii?=
+ =?us-ascii?Q?AmlFy4Ox+7iMrVTOyMUeBMG3KrnGRkyg/5CPGZKMv+fdTLPhuelp8E9NIscB?=
+ =?us-ascii?Q?IpPFO2hMbwvWowtf?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?aPWp34m2VTQ9o9KLh/l80OnSBlsf6mYDFD5V28Z5VOmgd5VJVrJ9TXLcuR4l?=
- =?us-ascii?Q?kaZCrS4wHPX/iJ1CF6mt4zo9g3u17Qb9ZLaZoI1hMJ8vTW4wHrfJOZRhmClz?=
- =?us-ascii?Q?oZtZGH9u9t5/dLbmewuNNPabIIdaWY/K+A3GldHY2XfFqdS7m2CedgNji8Wj?=
- =?us-ascii?Q?NHHVwMsMlZp+mnwbYq4eey1FVLAKZcyCVu+wBLIzRQpRZm0RLYJMnNe2Yxkk?=
- =?us-ascii?Q?wWXXtk2nS9ERXjpk5xVGEnLoue44hkvXjAcmPWF4D3Jx3HzhCl0rXEJfHqFH?=
- =?us-ascii?Q?EZT84wWDle7HJkv32JU6lM9Dpx7kDzSyK/q5VmF28eyYQJL2JEMA0wmfU9j2?=
- =?us-ascii?Q?yWxF4mgnKyNU5v8r1yJL+XbV/cpxEFZ/MKWT+9IuRni8pMxLgG7c5ER/NSQo?=
- =?us-ascii?Q?OZ+NJb2sEJqXxGl8o4xxYsMcx08H34eaUXCCE4naV3+z3W/XZTgWmnePfMpN?=
- =?us-ascii?Q?A1eJOogrNFJEFLIXVKOjzsF33V2VMmcJu+OcVK6sg8jPglx7cl3uzI8GD7va?=
- =?us-ascii?Q?/gT9gVB8HDFYbJPCurRDTDVX6o7plSZzoep6EBHJeHcvFP3HWBBHHEy3A3D/?=
- =?us-ascii?Q?EFrrNmaw1hmjaiYqGRxP68eOb9E69Da0gY0/d1FpYwUasAs2qrFgXKzlDZZ5?=
- =?us-ascii?Q?N6yVBnEAUCvLv4EQgLT1z/na9lchN/SBBWqJ18OTL0a/KqljFSqk7m3CnmOa?=
- =?us-ascii?Q?JXALgpVkxJCvwyV05+DZwVHAoL4fvnHLzBIsZciP2IYpUS4KEAJzuFNon01w?=
- =?us-ascii?Q?cidghkLKu8AJAmjUhTeGDKHba94osPkBiwF4SaOWDEmwBHvt46ykUv4RPU9y?=
- =?us-ascii?Q?4sVVu/7HRt6Ir1QU478XPDmCfgpu7uFfnhoHcgNZtXPY4FLQltmXE9/OoynU?=
- =?us-ascii?Q?8NhN8r/LTarbrU+HZG8itseEFG0CQkgx/HpTkqeW9dHDZyfB9SkdDS1oMAr0?=
- =?us-ascii?Q?oNEEwDWCJNY9Un8yblqMDPDwOX+gKf5ddNNdOjD7hcHtPK2tD98UXmHX/KfA?=
- =?us-ascii?Q?J0GP1kkE0N/LmIWljH+eNtnd7T7ajSwvZKgicSOz9HuvZARvpsB/oNiv/dek?=
- =?us-ascii?Q?Kef/wffe58VjepD/2XU3xSyMCKNvixMLiJI2mpnwvh1QP+Cni6ycr4fRA2ru?=
- =?us-ascii?Q?AtM0JwTHqu8c88joRPV6B6bq8gjcie63UZn2dVDTZH2Y1O0ur+BZxC5epB9S?=
- =?us-ascii?Q?nLCJ88KFy75uhKBQZkPIp2VXQYblDSA3GEZYj2QHnq5ny85D4HyhaWQ6+5nJ?=
- =?us-ascii?Q?8dwjL+PAQZjKIbJkmEYLmfaXYZicCgfdx6h7XW8CbAQCgLpkznSOCRaPPBeP?=
- =?us-ascii?Q?quAR6hJV9FQ7gcqor9MPvzCdffVNtfu6WHnzWpuuVPQJD1Ctvu/hoaRdXTql?=
- =?us-ascii?Q?lWDtIuA=3D?=
+ =?us-ascii?Q?hmOzlxiJFtWUscWH1pAlqyP47v5k5qUZHtEqT6wpHCaX2Ru4J6qtVBSZivUu?=
+ =?us-ascii?Q?45lsA3mq8GJItzNgG2fO4rAUEG2DyHX0RPgC0zfcQaJ9+idv3yBoeuna3C2a?=
+ =?us-ascii?Q?2haoDfB4Z78ajH7rp5gkT1A8SUmevxG1F4T0qYMnCDsD6fc4GW2fycs4Yp1t?=
+ =?us-ascii?Q?VKziqPeI7Q+HzfC7+a4bM/dKckEQtnIdA87CZBueIrWHXOW+Oa1xDcmumsmj?=
+ =?us-ascii?Q?0tn9rD97vqvEgD/RprHVfNWDe07k6O+ful+eevN6duNzpKXgieWgBae9jz7M?=
+ =?us-ascii?Q?EKp00xFIEN60PmsPC/8cDpljJQwOllWrZlW6epFiyq2NlaCaS+t4z4249rff?=
+ =?us-ascii?Q?InuzWecz+pRcCfRaTYpPQGmSi9FItdD9MmpTgi+259//3J17PwnbcKqccy+r?=
+ =?us-ascii?Q?fzu4/MA/42aoQk4VlZfyrfhh8LtBaGpmusSarvsv4/Ip6KVz6sW59NnU2H1U?=
+ =?us-ascii?Q?PIXe6dh5Yis+P+mPOaKRxMte4gBm/q7tl9NbKfBe1MHjFjU96iW3DfyDaFeY?=
+ =?us-ascii?Q?3OARDpk+uNTSIhrhvm9jHdCgbK/MpA3WO8lwyQ6s4aOnceJropjGOLrwUBTB?=
+ =?us-ascii?Q?nHjgVqmDDFY/GoXuTGRdFxrp3KSFN45F8p/KuezBmApx0uHWle0qUjVQlX8s?=
+ =?us-ascii?Q?hA7yc65P8gpOtznYUQ5jmXOZV5Ylga2Ns/tkCltposdxnz/UO2Ogx8jsTx6n?=
+ =?us-ascii?Q?YMhJKG4KLPELE4bdqZ8/x8WnU9QUGzJUzXM+B23AXTi+K3xmIGtlc7z3NPRP?=
+ =?us-ascii?Q?YYnyBIJL82SLM7AgeVA4YXhLPX8GuK6yrzVaUisP8MkAkg1q+E6u1Ycvk5TQ?=
+ =?us-ascii?Q?yS7v9JwEuJRmpjDaNaX+2wBq2Yr93E3S49wMWSzb8s+bnTrAqnteRE3qJa21?=
+ =?us-ascii?Q?739se0AhQd6cC+bPWlchSWxINgVzQJ2yny4/9IatlrPWyR2ufv912/PMnTkB?=
+ =?us-ascii?Q?BStsA/2SfpVD/Vvl0gTiAXrva/sKF1SEWXuQuiSmdeZN9dRWTDvft2rbZxqp?=
+ =?us-ascii?Q?KnEwJXTHEBMPnCX+8X2gt4PL8V7sjhgn4VUICDyFNoSsJVXPkUpPpY487xZn?=
+ =?us-ascii?Q?Mf9E95Uga97QqLOSer4DfKAjyvpqSZZqKQHoekzdKgfsCuPd4rspBS+H4kIE?=
+ =?us-ascii?Q?MKchvzuhRVbNV3f4pzy548rBlDNEgg+wdlnIkt4mpeEcBezT6SlR+Xb9KtSi?=
+ =?us-ascii?Q?VRvhBx5VvRtsFaZ5wvo1VTihroNNoa+6M2ybzaIayLGB9tA08K0A6EXEa0go?=
+ =?us-ascii?Q?AD0U3zg7yD/8P8XuQSVv5M0rd1Wrh5pakZzSkFtRmUI18rYikw2g1K0dinhJ?=
+ =?us-ascii?Q?rSF7vu3TJZdINp2NgPPF96Gd6YHVqOw8bLxLahN9KgyGY6M+cu4Lz0WM4ubI?=
+ =?us-ascii?Q?oChAbr8=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -156,14 +159,14 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: d917da57-ddd5-40d0-3aac-08dea41f250e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2026 05:38:00.5299
+X-MS-Exchange-CrossTenant-Network-Message-Id: 427b9deb-6a6d-4a75-928d-08dea41f39b6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2026 05:38:35.1978
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR02MB7809
-X-Rspamd-Queue-Id: EF76346D41D
+X-Rspamd-Queue-Id: 7350646D43B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [1.34 / 15.00];
@@ -175,7 +178,7 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10381-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10382-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_TO(0.00)[linux.microsoft.com,microsoft.com,kernel.org,arm.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,dabbelt.com,eecs.berkeley.edu,ghiti.fr,outlook.com];
 	TO_DN_EQ_ADDR_SOME(0.00)[];
@@ -196,174 +199,135 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:dkim,mailbox.org:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
 From: Naman Jain <namjain@linux.microsoft.com> Sent: Thursday, April 23, 20=
 26 5:42 AM
 >=20
-> Move the vmbus_handler global variable and hv_setup_vmbus_handler()/
-> hv_remove_vmbus_handler() from arch/x86 to drivers/hv/hv_common.c.
+> Add the arm64 variant of mshv_vtl_return_call() to support the MSHV_VTL
+> driver on arm64. This function enables the transition between Virtual
+> Trust Levels (VTLs) in MSHV_VTL when the kernel acts as a paravisor.
 >=20
-> hv_setup_vmbus_handler() is called unconditionally in vmbus_bus_init()
-> and works for both x86 (sysvec handler) and arm64 (vmbus_percpu_isr).
->=20
-> This eliminates the need for separate percpu vmbus handler setup
-> functions and __weak stubs, that are needed for adding ARM64 support
-> in MSHV_VTL driver where we need to set a custom per-cpu vmbus handler.
->=20
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> Reviewed-by: Roman Kisel <vdso@mailbox.org>
 > Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
 > ---
->  arch/x86/kernel/cpu/mshyperv.c | 12 ------------
->  drivers/hv/hv_common.c         |  9 +++++++--
->  drivers/hv/vmbus_drv.c         | 17 +++++++++--------
->  include/asm-generic/mshyperv.h |  1 +
->  4 files changed, 17 insertions(+), 22 deletions(-)
->=20
-> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyper=
-v.c
-> index 89a2eb8a0722..68706ff5880e 100644
-> --- a/arch/x86/kernel/cpu/mshyperv.c
-> +++ b/arch/x86/kernel/cpu/mshyperv.c
-> @@ -145,7 +145,6 @@ void hv_set_msr(unsigned int reg, u64 value)
->  EXPORT_SYMBOL_GPL(hv_set_msr);
->=20
->  static void (*mshv_handler)(void);
-> -static void (*vmbus_handler)(void);
->  static void (*hv_stimer0_handler)(void);
->  static void (*hv_kexec_handler)(void);
->  static void (*hv_crash_handler)(struct pt_regs *regs);
-> @@ -172,17 +171,6 @@ void hv_setup_mshv_handler(void (*handler)(void))
->  	mshv_handler =3D handler;
->  }
->=20
-> -void hv_setup_vmbus_handler(void (*handler)(void))
-> -{
-> -	vmbus_handler =3D handler;
-> -}
-> -
-> -void hv_remove_vmbus_handler(void)
-> -{
-> -	/* We have no way to deallocate the interrupt gate */
-> -	vmbus_handler =3D NULL;
-> -}
-> -
+>  arch/arm64/hyperv/Makefile        |   1 +
+>  arch/arm64/hyperv/hv_vtl.c        | 158 ++++++++++++++++++++++++++++++
+>  arch/arm64/include/asm/mshyperv.h |  13 +++
+>  arch/x86/include/asm/mshyperv.h   |   2 -
+>  drivers/hv/mshv_vtl.h             |   3 +
+>  include/asm-generic/mshyperv.h    |   2 +
+>  6 files changed, 177 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/arm64/hyperv/hv_vtl.c
+>
+
+[snip]
+
+> diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/m=
+shyperv.h
+> index 585b23a26f1b..9eb0e5999f29 100644
+> --- a/arch/arm64/include/asm/mshyperv.h
+> +++ b/arch/arm64/include/asm/mshyperv.h
+> @@ -60,6 +60,18 @@ static inline u64 hv_get_non_nested_msr(unsigned int r=
+eg)
+>  				ARM_SMCCC_SMC_64,		\
+>  				ARM_SMCCC_OWNER_VENDOR_HYP,	\
+>  				HV_SMCCC_FUNC_NUMBER)
+> +
+> +struct mshv_vtl_cpu_context {
+> +/*
+> + * x18 is managed by the hypervisor. It won't be reloaded from this arra=
+y.
+> + * It is included here for convenience in array indexing.
+> + * 'rsvd' field serves as alignment padding so q[] starts at offset 32*8=
+=3D256.
+> + */
+> +	__u64 x[31];
+> +	__u64 rsvd;
+> +	__uint128_t q[32];
+> +};
+> +
+>  #ifdef CONFIG_HYPERV_VTL_MODE
 >  /*
->   * Routines to do per-architecture handling of stimer0
->   * interrupts when in Direct Mode
-> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> index e8633bc51d56..eb7b0028b45d 100644
-> --- a/drivers/hv/hv_common.c
-> +++ b/drivers/hv/hv_common.c
-> @@ -758,13 +758,18 @@ bool __weak hv_isolation_type_tdx(void)
+>   * Get/Set the register. If the function returns `1`, that must be done =
+via
+> @@ -69,6 +81,7 @@ static inline int hv_vtl_get_set_reg(struct hv_register=
+_assoc *regs,
+> bool set, b
+>  {
+>  	return 1;
 >  }
->  EXPORT_SYMBOL_GPL(hv_isolation_type_tdx);
->=20
-> -void __weak hv_setup_vmbus_handler(void (*handler)(void))
-> +void (*vmbus_handler)(void);
-> +EXPORT_SYMBOL_GPL(vmbus_handler);
 > +
-> +void hv_setup_vmbus_handler(void (*handler)(void))
->  {
-> +	vmbus_handler =3D handler;
->  }
->  EXPORT_SYMBOL_GPL(hv_setup_vmbus_handler);
->=20
-> -void __weak hv_remove_vmbus_handler(void)
-> +void hv_remove_vmbus_handler(void)
->  {
-> +	vmbus_handler =3D NULL;
->  }
->  EXPORT_SYMBOL_GPL(hv_remove_vmbus_handler);
 
-I'd suggest moving hv_setup_vmbus_handler() and
-hv_remove_vmbus_handler() above or below the group
-of __weak stubs in this source code file. There's a comment
-describing the purpose of these __weak functions, and
-intermixing these two functions that are no longer __weak
-produces something of a jumble.
+This appears to be a spurious blank line being added since there
+are no other changes in the vicinity.
 
+>  #endif
 >=20
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index bc4fc1951ae1..052ca8b11cee 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -1415,7 +1415,8 @@ EXPORT_SYMBOL_FOR_MODULES(vmbus_isr, "mshv_vtl");
+>  #include <asm-generic/mshyperv.h>
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyp=
+erv.h
+> index 08278547b84c..b4d80c9a673a 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -286,7 +286,6 @@ struct mshv_vtl_cpu_context {
+>  #ifdef CONFIG_HYPERV_VTL_MODE
+>  void __init hv_vtl_init_platform(void);
+>  int __init hv_vtl_early_init(void);
+> -void mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl0);
+>  void mshv_vtl_return_call_init(u64 vtl_return_offset);
+>  void mshv_vtl_return_hypercall(void);
+>  void __mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl0);
+> @@ -294,7 +293,6 @@ int hv_vtl_get_set_reg(struct hv_register_assoc *regs=
+, bool set,
+> bool shared);
+>  #else
+>  static inline void __init hv_vtl_init_platform(void) {}
+>  static inline int __init hv_vtl_early_init(void) { return 0; }
+> -static inline void mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl=
+0) {}
+>  static inline void mshv_vtl_return_call_init(u64 vtl_return_offset) {}
+>  static inline void mshv_vtl_return_hypercall(void) {}
+>  static inline void __mshv_vtl_return_call(struct mshv_vtl_cpu_context *v=
+tl0) {}
+> diff --git a/drivers/hv/mshv_vtl.h b/drivers/hv/mshv_vtl.h
+> index a6eea52f7aa2..103f07371f3f 100644
+> --- a/drivers/hv/mshv_vtl.h
+> +++ b/drivers/hv/mshv_vtl.h
+> @@ -22,4 +22,7 @@ struct mshv_vtl_run {
+>  	char vtl_ret_actions[MSHV_MAX_RUN_MSG_SIZE];
+>  };
 >=20
->  static irqreturn_t vmbus_percpu_isr(int irq, void *dev_id)
->  {
-> -	vmbus_isr();
-> +	if (vmbus_handler)
-> +		vmbus_handler();
-
-Is it necessary to test vmbus_handler first? From what I can
-see, it is always set before the per-cpu interrupt is setup.
-
->  	return IRQ_HANDLED;
->  }
->=20
-> @@ -1517,8 +1518,10 @@ static int vmbus_bus_init(void)
->  		vmbus_irq_initialized =3D true;
->  	}
->=20
-> +	hv_setup_vmbus_handler(vmbus_isr);
+> +static_assert(sizeof(struct mshv_vtl_cpu_context) <=3D 1024,
+> +	      "struct mshv_vtl_cpu_context exceeds reserved space in struct
+> mshv_vtl_run");
 > +
->  	if (vmbus_irq =3D=3D -1) {
-> -		hv_setup_vmbus_handler(vmbus_isr);
-> +		/* x86: sysvec handler uses vmbus_handler directly */
->  	} else {
->  		ret =3D request_percpu_irq(vmbus_irq, vmbus_percpu_isr,
->  				"Hyper-V VMbus", &vmbus_evt);
-> @@ -1553,9 +1556,8 @@ static int vmbus_bus_init(void)
->  	return 0;
->=20
->  err_connect:
-> -	if (vmbus_irq =3D=3D -1)
-> -		hv_remove_vmbus_handler();
-> -	else
-> +	hv_remove_vmbus_handler();
-> +	if (vmbus_irq !=3D -1)
->  		free_percpu_irq(vmbus_irq, &vmbus_evt);
-
-These operations should be reordered so they are the inverse
-of how they are setup.  I.e., free_percpu_irq() first, then remove
-the VMBus handler. That's just good standard practice unless
-there's a specific reason to do the cleanup ordering differently. In
-fact, hv_remove_vmbus_handler() needs to be moved down
-to the err_setup label so it's done if request_percpu_irq()
-fails.
-
->  err_setup:
->  	if (IS_ENABLED(CONFIG_PREEMPT_RT) && vmbus_irq_initialized) {
-> @@ -3026,9 +3028,8 @@ static void __exit vmbus_exit(void)
->  	vmbus_connection.conn_state =3D DISCONNECTED;
->  	hv_stimer_global_cleanup();
->  	vmbus_disconnect();
-> -	if (vmbus_irq =3D=3D -1)
-> -		hv_remove_vmbus_handler();
-> -	else
-> +	hv_remove_vmbus_handler();
-> +	if (vmbus_irq !=3D -1)
->  		free_percpu_irq(vmbus_irq, &vmbus_evt);
-
-Ordering should be changed here as well so it is the inverse
-of how things are set up.
-
->  	if (IS_ENABLED(CONFIG_PREEMPT_RT) && vmbus_irq_initialized) {
->  		smpboot_unregister_percpu_thread(&vmbus_irq_threads);
+>  #endif /* _MSHV_VTL_H */
 > diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyper=
 v.h
-> index 2810aa05dc73..db183c8cfb95 100644
+> index db183c8cfb95..8cdf2a9fbdfb 100644
 > --- a/include/asm-generic/mshyperv.h
 > +++ b/include/asm-generic/mshyperv.h
-> @@ -179,6 +179,7 @@ static inline u64 hv_generate_guest_id(u64 kernel_ver=
-sion)
+> @@ -396,8 +396,10 @@ static inline int hv_deposit_memory(u64 partition_id=
+, u64 status)
 >=20
->  int hv_get_hypervisor_version(union hv_hypervisor_version_info *info);
+>  #if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
+>  u8 __init get_vtl(void);
+> +void mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl0);
+>  #else
+>  static inline u8 get_vtl(void) { return 0; }
+> +static inline void mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl=
+0) {}
+
+Is this stub needed? Maybe I missed something, but it looks to me like none
+of the code that calls this gets built unless CONFIG_HYPERV_VTL_MODE is set=
+.
+See further comments about stubs in Patch 8 of this series.
+
+>  #endif
 >=20
-> +extern void (*vmbus_handler)(void);
->  void hv_setup_vmbus_handler(void (*handler)(void));
->  void hv_remove_vmbus_handler(void);
->  void hv_setup_stimer0_handler(void (*handler)(void));
+>  #endif
 > --
 > 2.43.0
 >=20
