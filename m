@@ -1,154 +1,148 @@
-Return-Path: <linux-hyperv+bounces-10444-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10445-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QCZDBrD88GnubgEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10444-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Apr 2026 20:30:08 +0200
+	id AGyBJpsh8WkhdwEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10445-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Apr 2026 23:07:39 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3371A48AA66
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Apr 2026 20:30:03 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF9BC48C375
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Apr 2026 23:07:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id AF7E4311F412
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Apr 2026 17:56:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 85C15301C591
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Apr 2026 21:05:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A584D453498;
-	Tue, 28 Apr 2026 17:55:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23C0C3115AF;
+	Tue, 28 Apr 2026 21:05:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Tpcgt/kh"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="PUWBq055"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11021081.outbound.protection.outlook.com [40.107.208.81])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11020126.outbound.protection.outlook.com [40.93.198.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1D14508F9;
-	Tue, 28 Apr 2026 17:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31A12DF701;
+	Tue, 28 Apr 2026 21:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.126
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777398932; cv=fail; b=Ng8Q0N2haBuQrwwVkpqHxY2eMWnIGXiJTbxHufrF0NuDdTgk3+mEB6zb4esJgdL7AwVxijZcMwBVPlwEQX3HKr9k7xNTbtShJc0jfRZn/nV4JT/Ay9j+h1o10gtv0KT794RhPth/1Py4yha/S2MNtMkecmMMb8JNDp60gu0RDGA=
+	t=1777410354; cv=fail; b=JU2TqP2QWjUardBzteLvoO/Won7Ti0kKVtpStqSolku91EV2dqmR/ZF+h16lNGnbE+xaIHJHYCMBTQLD4n95ojBE86mtTk6KFibRbXAwzlRuYcAdURDII7sXBIBAG6FS/p2pHovHb2E7olTe4FC/VGPxbrbUf4smwFe8JrOliVo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777398932; c=relaxed/simple;
-	bh=/6uugVYJQWYKYbuDqsdX7FUY3a6k1u0cv7UIIOSuA90=;
+	s=arc-20240116; t=1777410354; c=relaxed/simple;
+	bh=qFebeEiLlmls+mcA9zzR1j01vsjl1qN8MBoWiRUy/M0=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=lIjooWT8OMVb0AFEXSTWPXQLHcnElzTqW20MjVAL68SJd8C/CP0aMiu8dN4u0zUNu3lSAn7yzOt1Y7kNYmpEzkiFc619gd3jyFkDCBfsfjc2lnapI9NVqF9vETMeuKQkM+i4h4LLuYOclXuZ7QZH2lS2xeou69jruaTRnOdK5tE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=Tpcgt/kh; arc=fail smtp.client-ip=40.107.208.81
+	 Content-Type:MIME-Version; b=s8i2YweJW8O/22t+CSsjvmMevTLoo1PXSANVNZ9SVUnrHJFIZCBl6nbt3+bPL8CxKjFnNQlpNmkRN1y47HTkh+2zkU+enRmxX+XpZUWiS308OTjAbEexQF1M65jj7uKcwTjHhxNpg3cMVq3o47tgMrS/99FQ/jYkY7vbzArOLGI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=PUWBq055; arc=fail smtp.client-ip=40.93.198.126
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VwZfKsADkWbweueEgrDdjeEj7CzgaiqjPOJtFNVxVTjXEI0qkAxZZBDIThW2F2uCDiDcv2G5DBeTFiKVE26BOJX9/FhQ9ys/H+FMp50GgzBBiCIdyrKn+n9jTOcLZBp41gT4NE3NCC9mQYBExFxlDR+f02NQW2yjuaKLNGQ3G76FivsomVwKu42PGMQQrWz75qM/P3ckWqoRsPH0W705VqECHFI0l26aNJbVW4TuNte+SFsMKBgCkfvuD4v0/p0/5uvkdQ+wKMCdlp8BCTp/JLYaqR/jI2XRpR1LbOp5wg6DhsolnhJxhhMUUJG1+PpTzW+MWsm6Ks7Vu8uBFEBhhA==
+ b=gUZ1GCSgnfJXohScMxfpDqqex1u+GE6cuJ+vGqn/dWYYnk4Bv3jyWQbp2oduGMZ+OHf1GX8bBz96QhQ3t8dWT08aGpAW0x+m2FRQCuNfKJAm78uzUMaYrS4UiJ02CVIrdjqzDqVnQ276pZzoE6n85ZSdjTsXVd1TvT23dbAPQxa/wSBUtjxHi666t7yKL1pQJDIFYZZhRig7kLBG3jIvtjYmnbUS2BR+THBRhKZVY9ikJsA9Op6430CC6D3HTB1xxwFAHBaoPkEn1KmbCPIvUYG84ifA7yVEiDOJgLDfM2DC47gw0YkXbPx815lE8q7ms/xz7gRbol1G7+LRgu616Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=v6e8iCEpmylY7gZ7Uw7/99850Vb1dFQCJR2CgMW7IhA=;
- b=F9qfw/6pfthi9Do6Nrdba7MiapKIl8275JeP5RdEVq42Cz3pTavUb9s30JezMtIgPI/8XxJJATkw4xrWNbuXgedjEX/fHPQwvdu4OVcSKx0TIJNrgbfXAO10IuYGo8zQjrw0BAYvxFVhJPQ/9RCHtzUGbd5+I7k3VvN4jx40qpHefankw/z1K619MMo872xPo7vd02bunLv/4dJj3XY8sHbk7USToPXVZZdla6OzTRsw7RfoqFL3oTdoktTqFG6wi9jPydqXo6X2vwwDlkfegDpxEX8fyN4V4rwiVvrp2jNiJIDOLc/+AKjfwIUpin8z05VC6AmU8Zu+AimBHK2UXg==
+ bh=lVEt/gVh2ZQCFjl+WCZI3ScYTDfHdOHmjSki4Vocg7k=;
+ b=cc83NCrK9HddIlK5RzLVi+JSB4nL4X64frtLDtcuWb5S21IZND2oeK/ft+MmR7VziQNwtpMFpeF7vZFbc/bxqZ5gAJYaFsOkTnlEVJj8+hEcHJ2pZgmWJJa60MIyItZRORUg7iMgufahRtyrQjpMwn9isgT7l6yHakW9miKWbJ9bgCAH2QaGULGUv+XfF3wmJNxStZ4GCEGfCSMmKdgbyQPS7eePU2Ft2YMr9KmMMbXtT3H1EeJQkEjXdEmZQwHtlmcOINbG9Zm8Ri8GiXlxtIriWKxvqhdnCMQAqd1FYfLGHIu7zUjBotbB7wFgLq4Sz9Avs6jat5YmcI5sVRNOGw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v6e8iCEpmylY7gZ7Uw7/99850Vb1dFQCJR2CgMW7IhA=;
- b=Tpcgt/khIUpO+//bDg7mA3uu6lW93RlZMKgxuj7bN/6QwLBbnSIFA3Ak1Ea2+o0OdzO1WaxXfMvhJgmDzFy66jd3saxtDfrFoT+dlujt0Wf38xTTQqLwj4dSUPzcZADbOF4WoBHq3Uj6cZTfLq++d6KxZc8nL1RR/L5nehrkpiI=
-Received: from SA1PR21MB6683.namprd21.prod.outlook.com (2603:10b6:806:4a4::6)
- by SA1PR21MB6874.namprd21.prod.outlook.com (2603:10b6:806:4a4::17) with
+ bh=lVEt/gVh2ZQCFjl+WCZI3ScYTDfHdOHmjSki4Vocg7k=;
+ b=PUWBq055rUeV6JJv4hR2ud2+Lulot+sZKeOeQjtqMvRfcTbzvXT1u+ipuTURPcaH91mDWLYk+NpzDZndgT8eiNX883fr7M8dphiYZtuj8bRAgBmFwOuijzC2bDBTHihjCEZFvqucbNOThfXFT8/Ss9AjeqFCcA6ZhUbO9NWJ2pQ=
+Received: from SA1PR21MB6921.namprd21.prod.outlook.com (2603:10b6:806:4a7::11)
+ by SA1PR21MB6417.namprd21.prod.outlook.com (2603:10b6:806:4b0::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.3; Tue, 28 Apr
- 2026 17:55:25 +0000
-Received: from SA1PR21MB6683.namprd21.prod.outlook.com
- ([fe80::879f:eec1:ca0e:d219]) by SA1PR21MB6683.namprd21.prod.outlook.com
- ([fe80::879f:eec1:ca0e:d219%6]) with mapi id 15.20.9870.013; Tue, 28 Apr 2026
- 17:55:25 +0000
-From: Long Li <longli@microsoft.com>
-To: Jason Gunthorpe <jgg@nvidia.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>, Eric Dumazet <edumazet@google.com>,
-	Junxian Huang <huangjunxian6@hisilicon.com>, Konstantin Taranov
-	<kotaranov@microsoft.com>, Jakub Kicinski <kuba@kernel.org>, Leon Romanovsky
-	<leon@kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-rdma@vger.kernel.org"
-	<linux-rdma@vger.kernel.org>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, Paolo Abeni <pabeni@redhat.com>, Selvin Xavier
-	<selvin.xavier@broadcom.com>, Chengchang Tang <tangchengchang@huawei.com>,
-	Tariq Toukan <tariqt@nvidia.com>, Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Yishai Hadas <yishaih@nvidia.com>
-CC: Abhijit Gangurde <abhijit.gangurde@amd.com>, Adit Ranadive
-	<aditr@vmware.com>, Allen Hubbe <allen.hubbe@amd.com>, Andrew Boyer
-	<andrew.boyer@amd.com>, Aditya Sarwade <asarwade@vmware.com>, Brad Spengler
-	<brad.spengler@opensrcsec.com>, Bryan Tan <bryantan@vmware.com>, "David S.
- Miller" <davem@davemloft.net>, Dexuan Cui <DECUI@microsoft.com>, Doug Ledford
-	<dledford@redhat.com>, George Zhang <georgezhang@vmware.com>, Jorgen Hansen
-	<jhansen@vmware.com>, Jianbo Liu <jianbol@nvidia.com>, Kai Aizen
-	<kai.aizen.dev@gmail.com>, Leon Romanovsky <leonro@mellanox.com>, Leon
- Romanovsky <leonro@nvidia.com>, Yixian Liu <liuyixian@huawei.com>, Lijun Ou
-	<oulijun@huawei.com>, Parav Pandit <parav.pandit@emulex.com>,
-	"patches@lists.linux.dev" <patches@lists.linux.dev>, Roland Dreier
-	<roland@purestorage.com>, Roland Dreier <rolandd@cisco.com>, Sagi Grimberg
-	<sagi@grimberg.me>, Ajay Sharma <sharmaajay@microsoft.com>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, Tariq Toukan
-	<tariqt@mellanox.com>, "Wei Hu (Xavier)" <xavier.huwei@huawei.com>, Shaobo Xu
-	<xushaobo2@huawei.com>, Nenglong Zhao <zhaonenglong@hisilicon.com>
-Subject: RE: [EXTERNAL] [PATCH rc 06/15] RDMA/mana: Fix mana_destroy_wq_obj()
- cleanup in mana_ib_create_qp_rss()
-Thread-Topic: [EXTERNAL] [PATCH rc 06/15] RDMA/mana: Fix mana_destroy_wq_obj()
- cleanup in mana_ib_create_qp_rss()
-Thread-Index: AQHc1yqXt+tCE1mErUioma/r0y9rb7X0wfVw
-Date: Tue, 28 Apr 2026 17:55:25 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.2; Tue, 28 Apr
+ 2026 21:05:48 +0000
+Received: from SA1PR21MB6921.namprd21.prod.outlook.com
+ ([fe80::51cf:497c:e5df:f6d]) by SA1PR21MB6921.namprd21.prod.outlook.com
+ ([fe80::51cf:497c:e5df:f6d%2]) with mapi id 15.20.9870.013; Tue, 28 Apr 2026
+ 21:05:47 +0000
+From: Dexuan Cui <DECUI@microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>, Hamza Mahfooz
+	<hamzamahfooz@linux.microsoft.com>, Saurabh Singh Sengar
+	<ssengar@microsoft.com>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, KY
+ Srinivasan <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei
+ Liu <wei.liu@kernel.org>, Long Li <longli@microsoft.com>, Stefano Garzarella
+	<sgarzare@redhat.com>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Himadri Pandya
+	<himadrispandya@gmail.com>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "virtualization@lists.linux.dev"
+	<virtualization@lists.linux.dev>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Deepak Rawat
+	<drawat.floss@gmail.com>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>, "stable@kernel.vger.org"
+	<stable@kernel.vger.org>
+Subject: RE: [PATCH 2/2] drm/hyperv: use VMBUS_RING_SIZE()
+Thread-Topic: [PATCH 2/2] drm/hyperv: use VMBUS_RING_SIZE()
+Thread-Index: AQHc1jw02yJrERFkmkeSl7gccH8LxLXzPWxQgAAHyACAAa+UEA==
+Date: Tue, 28 Apr 2026 21:05:47 +0000
 Message-ID:
- <SA1PR21MB6683F8A67D926FDF24CE1969CE372@SA1PR21MB6683.namprd21.prod.outlook.com>
-References: <0-v1-41f3135e5565+9d2-rdma_ai_fixes1_jgg@nvidia.com>
- <6-v1-41f3135e5565+9d2-rdma_ai_fixes1_jgg@nvidia.com>
-In-Reply-To: <6-v1-41f3135e5565+9d2-rdma_ai_fixes1_jgg@nvidia.com>
+ <SA1PR21MB6921427C29C760AEB14D98F2BF372@SA1PR21MB6921.namprd21.prod.outlook.com>
+References: <20260425181719.1538483-1-hamzamahfooz@linux.microsoft.com>
+ <20260425181719.1538483-2-hamzamahfooz@linux.microsoft.com>
+ <KUZP153MB14445757C6A5DA5DEDA9A09CBE292@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+ <ae9NxmDBTkzPP3H6@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <SA1PR21MB6921B5A2441DB3E9A1312AC0BF362@SA1PR21MB6921.namprd21.prod.outlook.com>
+ <SN6PR02MB41571A5B77A5FDDFE17AEF19D4362@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To:
+ <SN6PR02MB41571A5B77A5FDDFE17AEF19D4362@SN6PR02MB4157.namprd02.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=fc4b9580-3ba7-4646-8b16-0b95fecd40ed;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-04-28T17:55:06Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=866de344-17d1-4da0-ae37-df720ba729ed;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-04-27T18:37:48Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
  3, 0, 1;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR21MB6683:EE_|SA1PR21MB6874:EE_
-x-ms-office365-filtering-correlation-id: e62f3930-4dee-4722-9f00-08dea54f5391
+x-ms-traffictypediagnostic: SA1PR21MB6921:EE_|SA1PR21MB6417:EE_
+x-ms-office365-filtering-correlation-id: 67b39463-7336-44cf-3b3c-08dea569ebcc
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|366016|1800799024|56012099003|18002099003|22082099003|38070700021|921020;
+ BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700021|22082099003|56012099003|18002099003;
 x-microsoft-antispam-message-info:
- 5I2Xl9d1eezSCUORAyAYxHNlqtlJftpffj7bcRyGydweb2KIx/bbdW0rCqKYoLE7dM/LOBH/tqTwqNVgB/djiZmSqzINHGOk0H4zCzlZXmcfQgU0xECmw3A/5cWjCbmOoZdvsm7DQ6CYrtG1BlxKDBJ4kZndgUjYlK06jU8v1iyLsY07Kx/mqPke1VWBvegz4SeiR3HSYRYQo7gCMPRk9X5uCRyJmXLJFGoV3OAfbJv7I95iXenmWgKW8mdRwp5Uh4gCOjQb3Rp8SshUh6JS/1wfjkUgyX2pfP5sAFnpN8kDkBSyEmlovrjGCHn6wdaQqWsNidrovd2KavH6WpNb5NHpVhz3x8jqbbWvlNsigD7cbYqdXCrXKn8ISv7aWZaGL4f142UQ/W6X49Z3ovpVTQBFb7F3o35S3/GnXK34MUhFvl/+1rVWVmAu52B2yHKX9T70rQA7GrW915j0El8rabrpA63rXVczCO4w1b7FzlT3lCgGw2yvHPAJXfTdN0wyfGIQaF6zLxsi+ZkA4KcVtXe/ZOZbpHAa0zpFwJff+Kj0qIYVDJ6+KqQLTjqMbwT+OTTFhxp4b3jpqwVwZw01noV3ehcVURVgC5I5NEJM8ei9Lq7SoDANvqFCzZCs6G2Yi//n3N5w+AFAvWbx/bWhHjNyaxuzAE/tSuq4Cwho878N8h83mBM8uT/HJJmij4XBb38H9Cdo7LGOWMOHxIn1teDhbZRMT7J5z8YL+sQb6xBxi93sx0auFD8cAn/fbAfl
+ jqHJRWR6XTaE+kgp9u8TOzPSP1u5MT3zZXWR9zHPq7z3bOd8ogBiQwNwZVQ4BQILBygIJ3/gchbymYvhga18+AwJND/di6hZEjDlqm17UfQAe0EnVBZOgMxkFiuWfgzWsCdXdtrXMYjgll1+urvkvFajr7w3BOMo52ecddmquSK1L6AvJlBaJTddLfINPPIYNLByoVpqGWY7MjsQtChJhkj+5ZOjb67q2prluiqHKq3GgrfMw+oHOYbsdBOifhMOElvkCdJSq8ueEVWbjJw9ebxrM+TFQDzYhV5fuqspdSn0Mhn01pUO1pL5jDXnnqZcresolIfKxMhKTHLlvCnGOS2u07v1QzGL1SS5K15d49w6ZabzLgdgVtL9dtpspRcMXqffD8fuOWT7U9/1jToLAJ+N50bk+Ao4QEAx7lv+UbwND5SLbcD3wOE64Xs4ziNNcEqYLS5VbPlmVFRoPOG7JjeUDXSVS8NaTNrgzOK2nWbRE0Sec6jNWPp9KhxgHjpk0G+nUdIovvP0eCPIrKEJUzlp7vsc0o4Fc+q1SmZ9Ia4iYtOIfyBW+j6Z0ZN//hW8+L0dVROgcfUkhJgXOr1ldgPGIxRbNddj+4/X+YByw5gFe9ImUooiFDV/zJSLAf+pP+5nAm2hhy2QrxlzdQlxGldrCfCLvYtfEaXV0BSETu3bViA3IJNr4/GV8/eR0QTd2hhb+3MggTaP88rm2x4yEGzvjMAV10DVt3K5GbSkGSioqAHsXlpYrsznmm/hK53PMOEeBBI9zjXF/R8tGYxTvfddZna3pR+F5JJLBMhpxsc=
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB6683.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(56012099003)(18002099003)(22082099003)(38070700021)(921020);DIR:OUT;SFP:1102;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB6921.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700021)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?8GpuCNgdcgxdbH7sOOTW+qGuCOUkSho1fMpExzVlT723BghseMODokJCTBNG?=
- =?us-ascii?Q?i88fl3eYKrPhzW+NKP67sb2nYhAp8hFEL39HCysSey5kr26PpPhUYIwKdZ3T?=
- =?us-ascii?Q?UGvOqkTWXZB311QriJ1EXS6rHOCN6YOjPShOEv646yOzGJcMpdvrT7xebbPN?=
- =?us-ascii?Q?kkjIt57TZG2z3iB3qRxygS08arOLMjC6S6wS40HFjf0z8MtBuj1VOTwgxlV6?=
- =?us-ascii?Q?IfE4d44T/SBRyMcsd3u0DlUTCnip/PleX+aKxbU9nSMg8g5tEXFhlKeKJ9s5?=
- =?us-ascii?Q?X/77OzxS8qTLt4RSVKjRDoMvqCatSgCAsYCaYrnogInQZPV2t1Qh0+VK/UoC?=
- =?us-ascii?Q?WsN93kqxwCDeoJ+5wN/tusZHp6mjeBIT+JW3TADhmiEJTcCRW+KARHkurm5C?=
- =?us-ascii?Q?SaAu5QPPso5miViz0p+/KhH3qlR6nmbChdxLXpC897G0ld8F63qDmP7xq+Du?=
- =?us-ascii?Q?Pwy0DcrtrrcoQcF3m3HCNCzbRsACPhyJykKAOLMYgtdD5L25tIg9mZr8UP/0?=
- =?us-ascii?Q?B5F3+XGxQ3Z/k+w7/gYPf9N4XzOxa9Jh75Nk9FCKAzZXunMV96per/hOL9I+?=
- =?us-ascii?Q?dAv3T8WRuk84d/YT/x/SffBjRWYuXH4x5SyBSTBuv0E04CScW9TPR7RhiPn0?=
- =?us-ascii?Q?lxJ9XukExIO5KukwrSNG58LfJmdkfvZzV1y7F7D78YHZwaIgC1rtFiUqUJrQ?=
- =?us-ascii?Q?3CDhAh6h5T6FdEzSIyiA3Q2K/n5FgWitNQCD8BhieLnkWCmtB4ftRQp43IOe?=
- =?us-ascii?Q?DOLtzRu8j5+jRb/ATMQVxb+L0CbUUgWD9jIlf4RvkJNFEh88Lsq4MPC836jt?=
- =?us-ascii?Q?EmC4XhKdhGOyLmDZSwAiknOYAa9LdcFasex1gdqmxDeu3QjfmM22vJMD5F8W?=
- =?us-ascii?Q?UfMwV/01gS0vj1B1MXJm/8Oq4p4jStu/7hvdOL5gcA3C1qU8ShqNxxQCcM6B?=
- =?us-ascii?Q?Zzs+IQf+9EkGbJt0/3T9m9E5jgQuo2Z0ZukyMQN5irMnIaDOKEw3kvj52cFm?=
- =?us-ascii?Q?zpZfjgSxG6yENpj4pbUfoUOFq9BbEVVKqrS0jd7iTnFK+OHqBRVW9LiA6Ria?=
- =?us-ascii?Q?p5jpptmSI3IsMjgLJrboCVX13i3Q9KMuuY+iIArX9WIwgJDbx6WT7gYQrqHa?=
- =?us-ascii?Q?YzGzdQFRmt/yhhkMhsW/sAC/TnnLv7ZxtglMYn2yv73f1mxussareFlnkgBS?=
- =?us-ascii?Q?Zru76zBCF7YcNRZHw0Z/fkdUzrS/14UeaDcchx9dO7r2dTSJTyOIeJY7APEz?=
- =?us-ascii?Q?jvcheQEzuFq3u0C4BqJ2gcqIahsbDiZU7gqcrHmRHl7Zj+cS39Q5z71sRiqw?=
- =?us-ascii?Q?9GIV8OuUnV8PGBcf5/eBrF8zusX4Pk4U6eb3JhSS2X91A8fbPp+A/gGL8ofz?=
- =?us-ascii?Q?A1tvugUNa+wMODzHUVxC/jF5uBk6nL5YADL5Qut6d3sBairywiq+digZgPNG?=
- =?us-ascii?Q?oyfhOLfj6aYwUGHmwijM2uNMWLRBiyg0Jw3OhwiF+qsvfk8uB8AwzoYkcz4d?=
- =?us-ascii?Q?vuQxLCKBQ7GbnsUxxdI1ZQWq43S5rdX36MU8uYSCyeCDrkCaAkZ4oXZANC/F?=
- =?us-ascii?Q?a4xZs/SJlGGUEL+g9BkusVQpCq64728s5+nUsHlbhD6+bDgaM3HJKVOo3FIV?=
- =?us-ascii?Q?/+eYaqq2PTXM5legDFxlH3sgw5IsWIkp4XKBuiHU/rULOTv6szXdn1P0vxLH?=
- =?us-ascii?Q?Pua37e3OS8pM5e3yOzZlNAtcsuNhxwgRxtnr65wdTfYbN3Nq?=
+ =?us-ascii?Q?GDSzZiX8geTn8USva/GENDdgXCSqGb++SUVjvLrDu4hZDmx6ZaWD/PVJyDXw?=
+ =?us-ascii?Q?lKmeIrcie97ui/gqbVfA4K9JnFL/Eu1zJofk1CoW+Uv3oBp56Lhsl0y9Yeyu?=
+ =?us-ascii?Q?jePcVfQaaSpXcdfCACnGq8qKOHgfkPXkTMT+dDgotoyqIol5Rdo40AIUbdNI?=
+ =?us-ascii?Q?qbppby2VDorEcCM7mCWcqXo++XPoSe20JKRtame98Y8pQj9GPoRetMa1Md5J?=
+ =?us-ascii?Q?gGp35T26KEsBFUIdOFTt1sIC+Bbj625Zav3/pkwD3mU3YjpQRmBWlAPa3cU9?=
+ =?us-ascii?Q?3T8l4++aD2ubw+Dm13gSL+lof1dRZ1qQtoxvenrDn2oATbU4fwDaMDXu0qcf?=
+ =?us-ascii?Q?xX2dN6zH5lCnC9izbgvdRSLfZ1ls38u2zpz1081xsHAF97qtyyV/xfCI9lz9?=
+ =?us-ascii?Q?iRV+Q5w43BGim+uyCRiGuD9dejTrCIXzbjlvAdC5p/yV5TDWxNcl4MRARI44?=
+ =?us-ascii?Q?miHagcMcJEV76pqWsCVfphb7Qp+n8tmTHYcbCMaGmHU6Hop0D2HeobFnGTFh?=
+ =?us-ascii?Q?OF3f5UM3a9OyxdGNvpX0mF5hqq/EdEpCz5TMRm9wgxl1cz6/0Fa8PS43qNxt?=
+ =?us-ascii?Q?+UJUOCZfOXcpuplgQqfIoG3JOgo30rmcf9pqn97nWkK0E1YeCONq1qDYBDcA?=
+ =?us-ascii?Q?Ycjp5xtsfquwp9XqxiajGecgbj6ZF2HpiYhtU9qKl/Tpe3UhxVQjvU7TCc7l?=
+ =?us-ascii?Q?aqCvZOXOPq3NrfEFrbaBOvahh96//tG4fObAepp8CqvmI4P9xkKUvrbrPTZQ?=
+ =?us-ascii?Q?jr/cvIhXEsKm8LQnwDNbDBTKIM0Sy4+6pxAfPjc8GnBj6bVjzJyQC7rf029g?=
+ =?us-ascii?Q?72qZY9OqXgPWqy4rTkwnXFlAexx1iTtsKgzYEL2L4YSmOG8DTuvDKjtugyF+?=
+ =?us-ascii?Q?HVF/HGuA3YgDlR0KcySwa4moQJcRVHZyLq0971DherYsCf8aJxlGaKhNhCK5?=
+ =?us-ascii?Q?gyrofLh8GclO/3KTSyVq8nMrlEydfoNGD1WeaH7JP8Zx0m0uWjbPyzSiuS0r?=
+ =?us-ascii?Q?bl4UZnlNNK7iMQjvRZiLaUa25WVUiPqD3um08/2AQZ4OIAD6N+8/L62xL84K?=
+ =?us-ascii?Q?MHySQ6Yq2/qxMZtf/Tpv2WnWEeRZs1diV0kMDfrrJqIs3KOxYssroHZTgDPM?=
+ =?us-ascii?Q?N32u3QvZxsrz1jBhzknPx553pUbjMxan9F+RoZDotHZfQgUSTW0BiuanvqkG?=
+ =?us-ascii?Q?Mz6Z17WRpWKxinrV+pERKjbCmPyy0UZv8Q4OMhHaY97WZIwzT9feGxy45xFT?=
+ =?us-ascii?Q?VbLdNTk2oGrX19wZmSjDgWWDlFVsm6jDkzVaMazeKBYjMEKkXLNTDDqHVdEg?=
+ =?us-ascii?Q?fxDqqd6SffJxfGX7Zdc6QPortKiWXLXvbrLs4wlVreI4HZMBFc8cd6BPYBkP?=
+ =?us-ascii?Q?3IFEAYxC3rrq77y+/zDQ+h7VRq+SzDEu2KZDmTDo1dOyxToudUac2NOL1H1f?=
+ =?us-ascii?Q?FU4bU2nrjWuWshVtUL7gbc7w5sZa54lL1X0hxzjuYL9FWe3qfRXW5ewLPa/f?=
+ =?us-ascii?Q?0GK/QM+4aegaBJU7MkPuQ5sbttAor5A0jcPOdtY7p+31ZwkwKJDISaiSg4XE?=
+ =?us-ascii?Q?Ae5vsVzlIoI6uQmeGKUe/dx+e0mTYLFYZeVZAuAAEvsF28zMusyoC+6duKLq?=
+ =?us-ascii?Q?7KNQWOQP4BNV2LnUt1Xb7Hdqzb+w+tuo7FNnYl2R8f9Q4aF1nPqpDVBnWew6?=
+ =?us-ascii?Q?UM5N3YZmL3yJ5/Kzbnlrm03RWbyDK6DU1ighn0LcVV/ru/Dt?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -159,116 +153,86 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB6683.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e62f3930-4dee-4722-9f00-08dea54f5391
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2026 17:55:25.6031
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB6921.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 67b39463-7336-44cf-3b3c-08dea569ebcc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2026 21:05:47.8902
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7gu2zaJtokpdiYsnsaTWfK8TLJ+cW08QzlnRZ2sKFYSaG0kgfiyadXFzYZPnVIMLkeBk1yUW5tfmQKaMUG7vRw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR21MB6874
-X-Rspamd-Queue-Id: 3371A48AA66
+X-MS-Exchange-CrossTenant-userprincipalname: 8W6tOQF8u35ggMMJf3sKDYM6n0Df1ECZhLGh4i1jdn9Vf/iy4k1663E8KyKjjJAEqwj2zbEd3C3zXGBvdIuJiA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR21MB6417
+X-Rspamd-Queue-Id: EF9BC48C375
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [1.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	DMARC_POLICY_ALLOW(-0.50)[microsoft.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[microsoft.com:s=selector2];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[47];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10445-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10444-lists,linux-hyperv=lfdr.de];
-	FREEMAIL_CC(0.00)[amd.com,vmware.com,opensrcsec.com,davemloft.net,microsoft.com,redhat.com,nvidia.com,gmail.com,mellanox.com,huawei.com,emulex.com,lists.linux.dev,purestorage.com,cisco.com,grimberg.me,vger.kernel.org,hisilicon.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[outlook.com,linux.microsoft.com,microsoft.com];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[27];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[vger.kernel.org,microsoft.com,kernel.org,redhat.com,davemloft.net,google.com,gmail.com,lists.linux.dev,linux.microsoft.com,linux.intel.com,suse.de,ffwll.ch,lists.freedesktop.org,kernel.vger.org];
 	DKIM_TRACE(0.00)[microsoft.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[DECUI@microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	TAGGED_RCPT(0.00)[linux-hyperv];
 	NEURAL_HAM(-0.00)[-1.000];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,SA1PR21MB6921.namprd21.prod.outlook.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
->
-> Sashiko points out there are two bugs here in the error unwind flow, both=
- related
-> to how the WQ table is unwound.
->
-> First there is a double i-- on the first failure path due to the while lo=
-op having a i--,
-> remove it.
->
-> Second if mana_ib_install_cq_cb() fails then mana_create_wq_obj() is not =
-undone
-> due to the above i--.
->
-> Cc: stable@vger.kernel.org
-> Fixes: c15d7802a424 ("RDMA/mana_ib: Add CQ interrupt support for RAW QP")
-> Link:
-> https://sashiko.d/
-> ev%2F%23%2Fpatchset%2F0-v2-1c49eeb88c48%252B91-
-> rdma_udata_rep_jgg%2540nvidia.com%3Fpart%3D1&data=3D05%7C02%7Clongli%
-> 40microsoft.com%7Cd4d57c89064d4cc1781e08dea541b72a%7C72f988bf86f141
-> af91ab2d7cd011db47%7C1%7C0%7C639129898849523924%7CUnknown%7CT
-> WFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4
-> zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3DhbczVL%2F
-> QTqw5zawJJPpSNkjtDrBOJNkV5Qn9vGGYbhE%3D&reserved=3D0
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> From: Michael Kelley <mhklinux@outlook.com>
+> Sent: Monday, April 27, 2026 12:06 PM
+> > IMO the Fixes tag is unnecessary because the existing
+> > VMBUS_RING_BUFSIZE
+> > is 256KB, which is already aligned to 4KB, 16KB and 64KB.
+> >
+> > VMBUS_RING_SIZE(256 * 1024) is still 256KB.
+>=20
+> Not always. If PAGE_SIZE is 64KiB, VMBUS_RING_SIZE(256 * 1024) is
+> 320KiB. If PAGE_SIZE is 16KiB or 4KiB, then VMBUS_RING_SIZE(256 * 1024)
+> is indeed 256 KiB. See the explanation in the comment for
+> VMBUS_RING_SIZE.
+>=20
+> Michael
 
-Reviewed-by: Long Li <longli@microsoft.com>
+Thanks for correcting me!
 
+I didn't realize that sizeof(struct hv_ring_buffer) is based on
+PAGE_SIZE, not on HV_HYP_PAGE_SIZE.
 
-> ---
->  drivers/infiniband/hw/mana/qp.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana=
-/qp.c
-> index f7bb0d1f0f8034..8e1f052d0ec976 100644
-> --- a/drivers/infiniband/hw/mana/qp.c
-> +++ b/drivers/infiniband/hw/mana/qp.c
-> @@ -176,11 +176,8 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp,
-> struct ib_pd *pd,
->
->               ret =3D mana_create_wq_obj(mpc, mpc->port_handle, GDMA_RQ,
->                                        &wq_spec, &cq_spec, &wq-
-> >rx_object);
-> -             if (ret) {
-> -                     /* Do cleanup starting with index i-1 */
-> -                     i--;
-> +             if (ret)
->                       goto fail;
-> -             }
->
->               /* The GDMA regions are now owned by the WQ object */
->               wq->queue.gdma_region =3D GDMA_INVALID_DMA_REGION; @@
-> -200,8 +197,10 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, st=
-ruct
-> ib_pd *pd,
->
->               /* Create CQ table entry */
->               ret =3D mana_ib_install_cq_cb(mdev, cq);
-> -             if (ret)
-> +             if (ret) {
-> +                     mana_destroy_wq_obj(mpc, GDMA_RQ, wq-
-> >rx_object);
->                       goto fail;
-> +             }
->       }
->       resp.num_entries =3D i;
->
-> --
-> 2.43.0
+However,  it looks like the Fixes tag is still not needed:
+
+without the patch, we always pass two arguments of 256KB to
+vmbus_open().
+
+with the patch, we still pass 256KB to vmbus_open() in the case of
+PAGE_SIZE=3D4KB or 16KB, and we pass 320KB in the case of
+PAGE_SIZE=3D64KB.
+
+Both 320K and 256KB are multiples of PAGE_SIZE, so
+vmbus_open() -> vmbus_alloc_ring() doesn't return -EINVAL.
+
+In the case of PAGE_SIZE=3D64KB, it's OK to pass 256KB to vmbus_open()
+here since the hyperv-drm driver doesn't really have to use a slightly
+bigger VMBus ringbuffer size.
+
+Thanks,
+Dexuan
 
 
