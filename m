@@ -1,153 +1,245 @@
-Return-Path: <linux-hyperv+bounces-10450-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10451-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mPdHIzw88Wn/ewEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10450-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 01:01:16 +0200
+	id cFY4Ke5A8Wl0fQEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10451-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 01:21:18 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9F0448CE15
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 01:01:15 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15BE448CF74
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 01:21:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C3E7B3024C9F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Apr 2026 23:00:45 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E6D9330358AB
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Apr 2026 23:21:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 827942701C4;
-	Tue, 28 Apr 2026 23:00:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7856388391;
+	Tue, 28 Apr 2026 23:21:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="L+SkPt+e"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="V2fF395h"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E61EE277C9D;
-	Tue, 28 Apr 2026 23:00:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E207382F32;
+	Tue, 28 Apr 2026 23:21:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777417245; cv=none; b=GNnr8pBPtVyBwWfCh4bR8E4fpr21ot/Bfg0ruVgjoe45xR4TvS5EFiaSUxc+TGNMcQhcEWx+rmlCUoejxUJsKcTZQOIeiECiCLj1HQnn5JPmGvPQsX8R4jOU8ks7pGJtoJ4J0EmgR/zIROqv85Ov4Bc6Yz5tDFE6Q9f/Cm9Qtbk=
+	t=1777418474; cv=none; b=j1ALLBq/AwFAvBlcRSG2Ib3c/Z9ynXWlVRP/waPkEK0pK/1S0mCfyp+UDjuRS/f4gIyf5ciXo2uX8RDzUdUXhwgiEgZUYfGy3O5QFHQGnTYkKj4GkkFYET7h1cl3NB5+SlhaoC3BDoDg159n03G0In0BIb2eBgBv6tRjfYOnVRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777417245; c=relaxed/simple;
-	bh=+qPotZrVmieK9fINHPN4p7gG0UURmWg0eK1ydRumQuc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T3FfRehnQgD9V+ziyu3zcko0Umuj7T/8wLKbIUwmOccnUwHI81CWJzAJkfUk1DAktm755ZNdsYhq9LV0EihaPdyty5Kn8TVc56oTthptu9lx8rAyGqLfxFQ0F/kdhqntrWXvbaKpu1cyBu4Fk8biubFTOqeyHYVC5vC3XvyT5BQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=L+SkPt+e; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1777418474; c=relaxed/simple;
+	bh=NQ6GloC2Fhcq1DTePp31FCbmdGI3SEJ9V+7VY/6THo8=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=dlGJo4/4aI/ssIKNbkUtWd4tKiYQf/PqM1VwvzKH9g0iXVuo2R8F0I9Z2OU+kZPgLKrIx1GDWpuMx19sdDeBCjjIzWK+vVPYfjraKeNHjHWFpQuOTBlr4NGkXNWh1wAEXP5/LO8bnF0PwvWEc20dyZYfWvHVkxlsaXdAavcgEUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=V2fF395h; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (unknown [20.236.10.163])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 702B720B716C;
-	Tue, 28 Apr 2026 16:00:42 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 702B720B716C
+Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8C98120B716C;
+	Tue, 28 Apr 2026 16:21:13 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8C98120B716C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1777417242;
-	bh=40WJ/69pm/f4cjBM8m0NlD31zgRcqfwxnoWppyYXRxU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L+SkPt+eYR4+IN/PEQmQKfYaniN6r6dUdri3jfE6DZni42eeK8h3RorQLmrjTi9oZ
-	 aA+PQhj57bmth72CqThmcBGS/zihWDTJGY/ux+xDcf0Qdm4ND0FzSLisELukxLieFX
-	 L/ypKqa/SiM0tFCy7r14ZNlYi9llmVcol1DDuO8U=
-Date: Tue, 28 Apr 2026 16:00:40 -0700
+	s=default; t=1777418473;
+	bh=2OecspBy3uZ2KETfX3E1pZuh4ad0Bit6nEz+AG2RbNY=;
+	h=Subject:From:To:Cc:Date:From;
+	b=V2fF395hFfbbfjD+7+zM4vjOUmNlZKO8ErMySmxt0ZBrFcaPCjWUrZh8N6TjS4uGg
+	 eQ/EBwlNQlsfw3DP1G309Y7ykzRg7Gg8CZA9rIrwZiyAPnCrJEtDjH/OZNwEtLgNfR
+	 GWnnJ2/FqtgyFNsNgy2CEZNMCRQ3kRr3uJVTcKa8=
+Subject: [PATCH] mshv: Simplify GPA map/unmap hypercall helpers
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"longli@microsoft.com" <longli@microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] mshv: Fix interrupt state corruption in
- hv_do_map_pfns error path
-Message-ID: <afE8GJr8hkB7QTyn@skinsburskii.localdomain>
-References: <177730104962.21733.4130809041576931551.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <SN6PR02MB41578863BCE23D41B6A521B8D4372@SN6PR02MB4157.namprd02.prod.outlook.com>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, longli@microsoft.com
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 28 Apr 2026 23:21:12 +0000
+Message-ID: 
+ <177741845948.632922.14128507833980339307.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR02MB41578863BCE23D41B6A521B8D4372@SN6PR02MB4157.namprd02.prod.outlook.com>
-X-Rspamd-Queue-Id: D9F0448CE15
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 15BE448CF74
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	TAGGED_FROM(0.00)[bounces-10450-lists,linux-hyperv=lfdr.de];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[outlook.com];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10451-lists,linux-hyperv=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_NONE(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:dkim,skinsburskii.localdomain:mid]
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.microsoft.com:dkim]
 
-On Tue, Apr 28, 2026 at 12:20:35AM +0000, Michael Kelley wrote:
-> From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Monday, April 27, 2026 7:44 AM
-> > 
-> > Restore interrupt state before breaking out of the loop on error.
-> > 
-> > The irq_flags are saved before entering the loop, but the early exit
-> > path on error fails to restore them. This leaves interrupts in an
-> > inconsistent state and can lead to lockdep warnings or other
-> > interrupt-related issues.
-> > 
-> > Fixes: 621191d709b14 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
-> > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> > ---
-> >  drivers/hv/mshv_root_hv_call.c |    4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
-> > index ab210a7fcb8c3..61291ec6f3468 100644
-> > --- a/drivers/hv/mshv_root_hv_call.c
-> > +++ b/drivers/hv/mshv_root_hv_call.c
-> > @@ -229,8 +229,10 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
-> >  			} else {
-> >  				pfnlist[i] = mmio_spa + done + i;
-> >  			}
-> > -		if (ret)
-> > +		if (ret) {
-> > +			local_irq_restore(irq_flags);
-> >  			break;
-> > +		}
-> > 
-> 
-> This looks good for fixing the immediate bug.
-> 
-> But I'd note that this error path occurs solely based on the
-> if (index >= page_struct_count) test in the preceding 'for' loop. That test is a
-> "can't happen" sanity test that never triggers if hv_do_map_gpa_hcall()
-> is coded correctly. At the beginning of the function there are validations of
-> the input arguments, which is reasonable. But this sanity test isn't based
-> on the input arguments, and it adds non-trivial complexity to the code
-> because of the nested loops and the need to figure out where the two
-> "break" statements go. I'd argue for dropping the sanity test entirely,
-> along with this test of 'ret' and the need to restore the interrupt state.
-> 
+Clean up hv_do_map_gpa_hcall() and hv_call_unmap_gpa_pages() after the
+preceding bug-fix patches:
 
-Fair enough. Let me rework this function (and it's unmap peer).
+Move "done += completed" before the status checks so that pages mapped
+by a partially-successful batch are included in the error cleanup unmap.
+Previously these mappings were leaked on failure.
 
-Thanks,
-Stanislav
+While here, improve type safety and readability:
+ - Change "int done" to "u64 done" to match the u64 page_count it is
+   compared against, avoiding signed/unsigned comparison hazards.
+ - Use u64 for loop iteration and batch size variables consistently.
+ - Add proper braces to the for-loop body in hv_do_map_gpa_hcall().
+ - Remove unnecessary "ret" variable from hv_call_unmap_gpa_pages().
+ - Simplify the error-path unmap to use "done << large_shift" directly
+   instead of mutating done in place.
 
-> Michael
+Fixes: 621191d709b14 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
+Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+---
+ drivers/hv/mshv_root_hv_call.c |   55 +++++++++++++++-------------------------
+ 1 file changed, 20 insertions(+), 35 deletions(-)
+
+diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
+index e5992c324904a..f5f205a397834 100644
+--- a/drivers/hv/mshv_root_hv_call.c
++++ b/drivers/hv/mshv_root_hv_call.c
+@@ -195,8 +195,8 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
+ 	struct hv_input_map_gpa_pages *input_page;
+ 	u64 status, *pfnlist;
+ 	unsigned long irq_flags, large_shift = 0;
+-	int ret = 0, done = 0;
+-	u64 page_count = page_struct_count;
++	u64 done = 0, page_count = page_struct_count;
++	int ret = 0;
+ 
+ 	if (page_count == 0 || (pages && mmio_spa))
+ 		return -EINVAL;
+@@ -213,8 +213,8 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
+ 	}
+ 
+ 	while (done < page_count) {
+-		ulong i, completed, remain = page_count - done;
+-		int rep_count = min(remain, HV_MAP_GPA_BATCH_SIZE);
++		u64 i, completed, remain = page_count - done;
++		u64 rep_count = min(remain, (u64)HV_MAP_GPA_BATCH_SIZE);
+ 
+ 		local_irq_save(irq_flags);
+ 		input_page = *this_cpu_ptr(hyperv_pcpu_input_arg);
+@@ -224,23 +224,13 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
+ 		input_page->map_flags = flags;
+ 		pfnlist = input_page->source_gpa_page_list;
+ 
+-		for (i = 0; i < rep_count; i++)
+-			if (flags & HV_MAP_GPA_NO_ACCESS) {
++		for (i = 0; i < rep_count; i++) {
++			if (flags & HV_MAP_GPA_NO_ACCESS)
+ 				pfnlist[i] = 0;
+-			} else if (pages) {
+-				u64 index = (done + i) << large_shift;
+-
+-				if (index >= page_struct_count) {
+-					ret = -EINVAL;
+-					break;
+-				}
+-				pfnlist[i] = page_to_pfn(pages[index]);
+-			} else {
++			else if (pages)
++				pfnlist[i] = page_to_pfn(pages[(done + i) << large_shift]);
++			else
+ 				pfnlist[i] = mmio_spa + done + i;
+-			}
+-		if (ret) {
+-			local_irq_restore(irq_flags);
+-			break;
+ 		}
+ 
+ 		status = hv_do_rep_hypercall(HVCALL_MAP_GPA_PAGES, rep_count, 0,
+@@ -248,29 +238,26 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
+ 		local_irq_restore(irq_flags);
+ 
+ 		completed = hv_repcomp(status);
++		done += completed;
+ 
+ 		if (hv_result_needs_memory(status)) {
+ 			ret = hv_call_deposit_pages(NUMA_NO_NODE, partition_id,
+ 						    HV_MAP_GPA_DEPOSIT_PAGES);
+ 			if (ret)
+ 				break;
+-
+ 		} else if (!hv_result_success(status)) {
+ 			ret = hv_result_to_errno(status);
+ 			break;
+ 		}
+-
+-		done += completed;
+ 	}
+ 
+ 	if (ret && done) {
+ 		u32 unmap_flags = 0;
+ 
+-		if (flags & HV_MAP_GPA_LARGE_PAGE) {
++		if (flags & HV_MAP_GPA_LARGE_PAGE)
+ 			unmap_flags |= HV_UNMAP_GPA_LARGE_PAGE;
+-			done <<= large_shift;
+-		}
+-		hv_call_unmap_gpa_pages(partition_id, gfn, done, unmap_flags);
++		hv_call_unmap_gpa_pages(partition_id, gfn,
++					done << large_shift, unmap_flags);
+ 	}
+ 
+ 	return ret;
+@@ -305,7 +292,7 @@ int hv_call_unmap_gpa_pages(u64 partition_id, u64 gfn, u64 page_count_4k,
+ 	struct hv_input_unmap_gpa_pages *input_page;
+ 	u64 status, page_count = page_count_4k;
+ 	unsigned long irq_flags, large_shift = 0;
+-	int ret = 0, done = 0;
++	u64 done = 0;
+ 
+ 	if (page_count == 0)
+ 		return -EINVAL;
+@@ -319,8 +306,8 @@ int hv_call_unmap_gpa_pages(u64 partition_id, u64 gfn, u64 page_count_4k,
+ 	}
+ 
+ 	while (done < page_count) {
+-		ulong completed, remain = page_count - done;
+-		int rep_count = min(remain, HV_UMAP_GPA_PAGES);
++		u64 completed, remain = page_count - done;
++		u64 rep_count = min(remain, (u64)HV_UMAP_GPA_PAGES);
+ 
+ 		local_irq_save(irq_flags);
+ 		input_page = *this_cpu_ptr(hyperv_pcpu_input_arg);
+@@ -333,15 +320,13 @@ int hv_call_unmap_gpa_pages(u64 partition_id, u64 gfn, u64 page_count_4k,
+ 		local_irq_restore(irq_flags);
+ 
+ 		completed = hv_repcomp(status);
+-		if (!hv_result_success(status)) {
+-			ret = hv_result_to_errno(status);
+-			break;
+-		}
+-
+ 		done += completed;
++
++		if (!hv_result_success(status))
++			return hv_result_to_errno(status);
+ 	}
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ int hv_call_get_gpa_access_states(u64 partition_id, u32 count, u64 gpa_base_pfn,
+
+
 
