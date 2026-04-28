@@ -1,169 +1,131 @@
-Return-Path: <linux-hyperv+bounces-10454-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10455-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YF0GNxZG8WkcfgEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10454-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 01:43:18 +0200
+	id KJWjNVhH8WmBfgEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10455-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 01:48:40 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C5C348D61E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 01:43:17 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7756748D7F9
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 01:48:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4ED7F326D5B0
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Apr 2026 23:36:20 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id C622630022C1
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Apr 2026 23:48:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 937E73AE199;
-	Tue, 28 Apr 2026 23:31:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CD2A381AE4;
+	Tue, 28 Apr 2026 23:48:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qvNu30D/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y5b3+glv"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D18C3A759A;
-	Tue, 28 Apr 2026 23:31:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF33149C7B;
+	Tue, 28 Apr 2026 23:48:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777419101; cv=none; b=NoW6iHxMAthf8wzYiomkb3nod4O78k6RoZoM4pZ8jkrK+uSj+X8aDkzPVdj7Uv8IkupKkvuwOVprb9pcUi5YPfQ9V/APMMZJnCLE5+AeP+W0zngcVNPHc+RFWWctsrRnfD7jWR3Y8F/oYBtGCSAsb42yiaxBLco7ylYzURSC1Io=
+	t=1777420117; cv=none; b=sK/9xyTujgjxo820Hmqvajk7f8hlivKBd3IwDO80zLEuSvKHJOVEaPSX1JHmLFAfXkXwKPR7HI8wa0L1NbvPOpVsSA8hWjlwVeaeD2EDvsCw4Wo08kPmEf112k+3sqEY6buB0PylXrS4WoSzzWWCx+YwbupRn2ZRj9qGo4JYjS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777419101; c=relaxed/simple;
-	bh=6BP6uIHZbTktrvlfNGRHL6Ggf9EcNniaAe8QV9HtMy4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sbwHl1fXoCvS690q22IEUzJ0yY2hbYzFOnyf9fph0OfdN0TTeS3oJLIEe4iWqxgRqhJtQczrrQKZOQW58p+RFnuOiG+fCtW1MWsfHdefdC9zAgQWqjwlfJ8AuJFah8i0qJVEgS+gI63JdkqUV4SC+xUL0m7nLGNGxN1xQ1MeQi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qvNu30D/; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (unknown [20.236.10.129])
-	by linux.microsoft.com (Postfix) with ESMTPSA id D30CE20B716C;
-	Tue, 28 Apr 2026 16:31:39 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D30CE20B716C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1777419100;
-	bh=uY+jSoZNJx6vlzhjnQTr140pzsiwTvKzXaqj8ES4Q5I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qvNu30D/24oJ6YWIbUar5clgkS03nY7DVHPrFlJM7DJKgilTw9nIReu6peuIunW+j
-	 Y1LaUqdYE+IGfQ4tJgrtihso11MC9aGAOpdhlwj/ce0oqVzi9N0lZ4t3TYogyADIqm
-	 ouzS0DztWxqHeboEde8NiMFAAvHStBJSuIeizKLs=
-Date: Tue, 28 Apr 2026 16:31:37 -0700
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Jork Loeser <jloeser@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, x86@kernel.org,
-	"K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>, Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Anirudh Rayabharam <anirudh@anirudhrb.com>,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] mshv: unmap debugfs stats pages on kexec
-Message-ID: <afFDWZSJ0lEH-7oU@skinsburskii.localdomain>
-References: <20260427213855.1675044-1-jloeser@linux.microsoft.com>
- <20260427213855.1675044-4-jloeser@linux.microsoft.com>
+	s=arc-20240116; t=1777420117; c=relaxed/simple;
+	bh=WKaEbQBSKMy7bS8qKyEcGakJ14grzPmcJjnKqt4AcDg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VKfnF0MbvhC2VKBgidgzuVwSphkVh9LAZfpg7QuoJG0EkPiGXVWHAMWosaKFych17KDu4hkxnwMPvU9tcK1xe5xR/BB1agQXdDeJzW6epz5R19auN622wye/tCvw17hGWhutMdzkzCuLLlqKZuX2V/glXiQs98DMUtbUoKa441I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y5b3+glv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B76A6C2BCAF;
+	Tue, 28 Apr 2026 23:48:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777420117;
+	bh=WKaEbQBSKMy7bS8qKyEcGakJ14grzPmcJjnKqt4AcDg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Y5b3+glvCs2C0EKnVY02M56x1Nm6YiYBLwqR5Gk/E8jImkdcHPSJFvVW6oWo0WLMu
+	 MS07sxBlYZ1dbRkvHCBQpt1pT4tjtgXq7olzJ2g5QCcicD/3mIDY8LiFBybaYhA4kp
+	 RHdMdokImpH1MrruMiRV1Y3Pu6DzU/WqKhn9xR7FM4kP6Yp0zyIm2WwmG2ODl5wF2c
+	 +fcCkHWcNWCIu92Lf0LRpzxlleRUidz81Czw6BLeq9nlx7g3J/RlqaLLxTuJyigSBv
+	 DxBH1NnZAyvkC9U3g5WckIUU5zCpwafcNHdgBpOO24glIDbPMGRtcw6DMS1wTdAxmI
+	 3tYRWfZryKv7Q==
+Date: Tue, 28 Apr 2026 16:48:35 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Dexuan Cui <DECUI@microsoft.com>
+Cc: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>, KY Srinivasan
+ <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
+ <wei.liu@kernel.org>, Long Li <longli@microsoft.com>, Stefano Garzarella
+ <sgarzare@redhat.com>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
+ Horman <horms@kernel.org>, Michael Kelley <mhklinux@outlook.com>, Himadri
+ Pandya <himadrispandya@gmail.com>, "linux-hyperv@vger.kernel.org"
+ <linux-hyperv@vger.kernel.org>, "virtualization@lists.linux.dev"
+ <virtualization@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] hv_sock: fix ARM64 support
+Message-ID: <20260428164835.4420df64@kernel.org>
+In-Reply-To: <SA1PR21MB69211500C7F60FC29F1BAA79BF372@SA1PR21MB6921.namprd21.prod.outlook.com>
+References: <20260428125339.13963-1-hamzamahfooz@linux.microsoft.com>
+	<SA1PR21MB69211500C7F60FC29F1BAA79BF372@SA1PR21MB6921.namprd21.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260427213855.1675044-4-jloeser@linux.microsoft.com>
-X-Rspamd-Queue-Id: 3C5C348D61E
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 7756748D7F9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-10455-lists,linux-hyperv=lfdr.de];
+	FREEMAIL_CC(0.00)[linux.microsoft.com,vger.kernel.org,microsoft.com,kernel.org,redhat.com,davemloft.net,google.com,outlook.com,gmail.com,lists.linux.dev];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10454-lists,linux-hyperv=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,microsoft.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,outlook.com,anirudhrb.com];
-	RCPT_COUNT_TWELVE(0.00)[18];
+	RCVD_COUNT_THREE(0.00)[4];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[17];
 	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[kuba@kernel.org,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,skinsburskii.localdomain:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 
-On Mon, Apr 27, 2026 at 02:38:54PM -0700, Jork Loeser wrote:
-> On L1VH, debugfs stats pages are overlay pages: the kernel allocates
-> them and registers the GPAs with the hypervisor via
-> HVCALL_MAP_STATS_PAGE2. These overlay mappings persist in the
-> hypervisor across kexec. If the kexec'd kernel reuses those physical
-> pages, the hypervisor's overlay semantics cause a machine check
-> exception.
+On Tue, 28 Apr 2026 21:24:59 +0000 Dexuan Cui wrote:
+> > Sent: Tuesday, April 28, 2026 5:54 AM
+> > Subject: [PATCH] hv_sock: fix ARM64 support  
 > 
-> Fix this by calling mshv_debugfs_exit() from the reboot notifier,
-> which issues HVCALL_UNMAP_STATS_PAGE for each mapped stats page before
-> kexec. This releases the overlay bindings so the physical pages can be
-> safely reused. Guard mshv_debugfs_exit() against being called when
-> init failed.
+> Typically, for a change to net/, you'd want to add a "net" or "net-next"
+> after the "PATCH", i.e.
 > 
-> Signed-off-by: Jork Loeser <jloeser@linux.microsoft.com>
+> [PATCH net] 
+> or 
+> [PATCH net v2]
+> 
+> See "Documentation/process/maintainer-netdev.rst"
 
-Reviewed-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Speaking of Documentation/process/maintainer-netdev.rst:
 
-> ---
->  drivers/hv/mshv_debugfs.c | 7 ++++++-
->  drivers/hv/mshv_synic.c   | 1 +
->  2 files changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hv/mshv_debugfs.c b/drivers/hv/mshv_debugfs.c
-> index 418b6dc8f3c2..3c3e02237ae9 100644
-> --- a/drivers/hv/mshv_debugfs.c
-> +++ b/drivers/hv/mshv_debugfs.c
-> @@ -674,8 +674,10 @@ int __init mshv_debugfs_init(void)
->  
->  	mshv_debugfs = debugfs_create_dir("mshv", NULL);
->  	if (IS_ERR(mshv_debugfs)) {
-> +		err = PTR_ERR(mshv_debugfs);
-> +		mshv_debugfs = NULL;
->  		pr_err("%s: failed to create debugfs directory\n", __func__);
-> -		return PTR_ERR(mshv_debugfs);
-> +		return err;
->  	}
->  
->  	if (hv_root_partition()) {
-> @@ -710,6 +712,9 @@ int __init mshv_debugfs_init(void)
->  
->  void mshv_debugfs_exit(void)
->  {
-> +	if (!mshv_debugfs)
-> +		return;
-> +
->  	mshv_debugfs_parent_partition_remove();
->  
->  	if (hv_root_partition()) {
-> diff --git a/drivers/hv/mshv_synic.c b/drivers/hv/mshv_synic.c
-> index 978a1cace341..88170ce6b83f 100644
-> --- a/drivers/hv/mshv_synic.c
-> +++ b/drivers/hv/mshv_synic.c
-> @@ -723,6 +723,7 @@ mshv_unregister_doorbell(u64 partition_id, int doorbell_portid)
->  static int mshv_synic_reboot_notify(struct notifier_block *nb,
->  			      unsigned long code, void *unused)
->  {
-> +	mshv_debugfs_exit();
->  	cpuhp_remove_state(synic_cpuhp_online);
->  	return 0;
->  }
-> -- 
-> 2.43.0
-> 
+  Reviewer guidance
+  -----------------
+  [...]
+  Reviewers are highly encouraged to do more in-depth review of submissions
+  and not focus exclusively on process issues, trivial or subjective
+  matters like code formatting, tags etc.
+  
+See: https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#reviewer-guidance
 
