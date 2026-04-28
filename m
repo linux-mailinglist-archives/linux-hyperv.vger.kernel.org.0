@@ -1,163 +1,159 @@
-Return-Path: <linux-hyperv+bounces-10438-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10439-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eHBsFG/s8GmBbAEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10438-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Apr 2026 19:20:47 +0200
+	id EJgGKZjs8GmBbAEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10439-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Apr 2026 19:21:28 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A11EE489CF1
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Apr 2026 19:20:46 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0899D489D14
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Apr 2026 19:21:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 788DB30AB706
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Apr 2026 17:14:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AD96F3050225
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Apr 2026 17:15:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76E4C37BE8E;
-	Tue, 28 Apr 2026 17:14:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0C8E3B38A6;
+	Tue, 28 Apr 2026 17:15:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jF31cphd"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Xkl1tbXy"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4DF33B6CB;
-	Tue, 28 Apr 2026 17:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61FA53A169D;
+	Tue, 28 Apr 2026 17:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777396493; cv=none; b=k4zGoMFvtN1ps6FsNa6D/+A0BG6Wm7dvmsqiiRBNKOXFN2Cbvem2JPXAWDUxbaxeVH3SnJ682xdj7jSriuLrkI2fBiFsFnnZgrzhDyNrF5+OIwEodd/nmEmdJ4cbfKuLSaxm6gBJ8AQEmUPjCktoLeP62OrZWDnTfOh7LKN5tXY=
+	t=1777396546; cv=none; b=XxknNG0KP728WsRnDYCAyan4AwXsbDJtDIFr/hinqWQ2KenaO6FRFRSCy1NS3CP3eDBTDe4Qw5ZXrNQgRRu9xSrTQSRJvA8K5VS0BgM6W++xRp52YcW/djswo2UE5bTJiG7q3WYhpFrePbTjoMSbgMCTQ0cI09s+ZlISWGWd83o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777396493; c=relaxed/simple;
-	bh=3uuX0XDhlhTuPyUxc/w5DZ1CSgQcFFHcMMffW6FQY0w=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=UrKziTqm7HLZoySuh95e1bJc9dAVP8LmI9HCla2MxNtHW+repp/++4fuN0gauKyl6OPxVWqGgzConjn5mq2v5v+e2G8iS8V5YzjtJPFyxfX6vo8iM+amWqNbQADgvXKsI4n5z97ANb87vadxwBNqmpwgkJ3ROPP1vIA4+tb0lq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jF31cphd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8A67C2BCB5;
-	Tue, 28 Apr 2026 17:14:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777396493;
-	bh=3uuX0XDhlhTuPyUxc/w5DZ1CSgQcFFHcMMffW6FQY0w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=jF31cphd6owD9TwXL5puFcPWiOAitqI7ubaQlC11OCNKQkTcKk+C2AddgMaiUrQg+
-	 yYWrQrrFagaBAbBqBpTSOSUQlankZuqmWWQYbLbQ9n8ESVPkbHX+yF22w9Z51lRP7b
-	 Cdm7QHYiWepIdk4IjyF4vx8CtNOcof2DPJGwOTR5RQnKVSMaLWbJCRxk/eUobDFPjI
-	 hvefyj5K1u6il85bKJrOCh7pJyo6q3U+PUgterMtOmRzrw5v+6N2zRmCY/+eKIx3L2
-	 KP0cmsY6/OIpd5f/18pq3ChFJAXfy0u+9I8GR1lAYTFXlN08pmXsQ/Umcsb18jlPCO
-	 7XKz9GLystIAg==
-Date: Tue, 28 Apr 2026 12:14:51 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mukesh R <mrathor@linux.microsoft.com>
-Cc: hpa@zytor.com, robin.murphy@arm.com, robh@kernel.org,
-	wei.liu@kernel.org, mhklinux@outlook.com, muislam@microsoft.com,
-	namjain@linux.microsoft.com, magnuskulke@linux.microsoft.com,
-	anbelski@linux.microsoft.com, linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, iommu@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
-	longli@microsoft.com, tglx@kernel.org, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	joro@8bytes.org, will@kernel.org, lpieralisi@kernel.org,
-	kwilczynski@kernel.org, bhelgaas@google.com, arnd@arndb.de
-Subject: Re: [PATCH V1 08/13] PCI: hv: rename hv_compose_msi_msg to
- hv_vmbus_compose_msi_msg
-Message-ID: <20260428171451.GA233136@bhelgaas>
+	s=arc-20240116; t=1777396546; c=relaxed/simple;
+	bh=vjgyp9tJ4/Wf+X9huTEytK73DtIFpIiWSMRlvtfQD+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HF3w/yQpV/Y9DHnJ8wwDmUARnolEc4o33BjFfXKLvbAmU6KORhfky7NgropMR4AuyCMkeS/ICRipk6Thv/4LA74s7dJIwc7UQK2zUn4BWAhaJXNpBlNkK2KMF3UPeSDwnZHG/dIjDSECvfbPzbjaGs6QM2GCPKbT1JStfrOi+z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Xkl1tbXy; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1216)
+	id 7EDB720B716C; Tue, 28 Apr 2026 10:15:43 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7EDB720B716C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1777396543;
+	bh=fxu5AHc/WELco1y9bFcic9XUbLEgfysFbf90mc8R8uk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xkl1tbXyHcnTOjE55XiNwGbSK5elXZdcXUqIrCCtj48iQZ+MB1JJjlpg0+9S4jN4K
+	 Tnk9qaoe5m5ASGkLrBkGqA+Bb9Jo+U3uwKILIt6O9lRJAxJqM2F/ta0Zz5Z8BUxL0q
+	 mfHr2oQzuzN0bVf2rojPuAdBvP/OuCBq/sIr+ipE=
+Date: Tue, 28 Apr 2026 13:15:43 -0400
+From: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: netdev@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Himadri Pandya <himadrispandya@gmail.com>,
+	linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hv_sock: fix ARM64 support
+Message-ID: <afDrPyWVw2IY6AuF@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20260428125339.13963-1-hamzamahfooz@linux.microsoft.com>
+ <afCxfHKA7hJilGM3@sgarzare-redhat>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <43f41598-ee90-eb2f-1877-da6d1687322e@linux.microsoft.com>
-X-Rspamd-Queue-Id: A11EE489CF1
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <afCxfHKA7hJilGM3@sgarzare-redhat>
+X-Rspamd-Queue-Id: 0899D489D14
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-10439-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10438-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[zytor.com,arm.com,kernel.org,outlook.com,microsoft.com,linux.microsoft.com,vger.kernel.org,lists.linux.dev,redhat.com,alien8.de,linux.intel.com,8bytes.org,google.com,arndb.de];
-	RCPT_COUNT_TWELVE(0.00)[30];
+	FREEMAIL_CC(0.00)[vger.kernel.org,microsoft.com,kernel.org,davemloft.net,google.com,redhat.com,outlook.com,gmail.com,lists.linux.dev];
+	RCPT_COUNT_TWELVE(0.00)[17];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[helgaas@kernel.org,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[hamzamahfooz@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-On Mon, Apr 27, 2026 at 07:22:12PM -0700, Mukesh R wrote:
-> On 4/27/26 09:31, Bjorn Helgaas wrote:
-> > On Tue, Apr 21, 2026 at 07:32:34PM -0700, Mukesh R wrote:
-> > > Main change here is to rename hv_compose_msi_msg to
-> > > hv_vmbus_compose_msi_msg as we introduce hv_compose_msi_msg in upcoming
-> > > patches that builds MSI messages for both VMBus and non-VMBus cases. VMBus
-> > > is not used on baremetal root partition for example. While at it, replace
-> > > spaces with tabs and fix some formatting involving excessive line wraps.
-> > 
-> > Would be better to do the whitespace changes in their own patch,
-> > although several of them should just be dropped (see below).
+On Tue, Apr 28, 2026 at 03:12:40PM +0200, Stefano Garzarella wrote:
+> No version number in the subject?
 
-> > > - * facilities.  For instance, the configuration space of a function exposed
-> > > + * facilities.	For instance, the configuration space of a function exposed
-> > 
-> > Oops, this hunk made it worse.  Definitely don't want a tab there.
+I generally on increment the version number if I make changes to the code
+itself I did try to change the subject prefix to "PATCH RESEND" but it
+appears something is off about my config that prevented from going
+through.
 
-> > > -		 * The vector we select here is a dummy value.  The correct
-> > > +		 * The vector we select here is a dummy value.	The correct
-> > 
-> > Another tab that should be a space.  Actually, you should just drop
-> > this hunk; the rest of the comment has two spaces after periods, so
-> > this should too.
 > 
-> well, most of our files does global replace 8 spaces with tabs, so
-> everywhere comments are well indented. Since, checkpatch doesn't complain
-> about tabs on comment lines, may I assue it is not a strict requirement
-> and more a nit or personal preference?
-
-I guess I didn't make it clear.  I'm not complaining about leading
-tabs; I'm pointing out that the comments should not have embedded tabs
-in the middle between a period and the first word of the next
-sentence.
-
-Here's what it looks like with "git show | cat -T":
-
-  - * facilities.  For instance, the configuration space of a function exposed
-  + * facilities.^IFor instance, the configuration space of a function exposed
-                 ^^
-
-  -^I^I * The vector we select here is a dummy value.  The correct
-  +^I^I * The vector we select here is a dummy value.^IThe correct
-                                                     ^^
-
-  -^I^I * freed while we dereference the ring buffer pointer.  Test
-  +^I^I * freed while we dereference the ring buffer pointer.^ITest
-                                                             ^^
-
-  -^I * to be overlapped by those children.  Set the flag on this claim
-  +^I * to be overlapped by those children.^ISet the flag on this claim
-                                           ^^
-
-None of these hunks should be here.  Maybe some automation gone wrong?
-
-In any case, every hunk of a patch that does "rename
-hv_compose_msi_msg to hv_vmbus_compose_msi_msg" should contain those
-names.  Any whitespace changes should be in their own patch so they
-don't make it hard to review the rename.
+> Please next time follow
+> https://docs.kernel.org/process/submitting-patches.html#subject-line
+> 
+>   Common tags might include a version descriptor if the multiple   versions
+> of the patch have been sent out in response to comments   (i.e., “v1, v2,
+> v3”), or “RFC” to indicate a request for comments.
+> 
+> On Tue, Apr 28, 2026 at 08:53:39AM -0400, Hamza Mahfooz wrote:
+> > VMBUS ring buffers must be page aligned. Therefore, the current value of
+> > 24K presents a challenge on ARM64 kernels (with 64K pages). So, use
+> > VMBUS_RING_SIZE() to ensure they are always aligned and large enough to
+> > hold all of the relevant data.
+> > 
+> > Cc: stable@vger.kernel.org
+> > Fixes: 77ffe33363c0 ("hv_sock: use HV_HYP_PAGE_SIZE for Hyper-V communication")
+> > Tested-by: Dexuan Cui <decui@microsoft.com>
+> > Reviewed-by: Dexuan Cui <decui@microsoft.com>
+> > Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+> > ---
+> > net/vmw_vsock/hyperv_transport.c | 4 ++--
+> > 1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> Acked-by: Stefano Garzarella <sgarzare@redhat.com>
+> 
+> > 
+> > diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
+> > index 069386a74557..40f09b23efa3 100644
+> > --- a/net/vmw_vsock/hyperv_transport.c
+> > +++ b/net/vmw_vsock/hyperv_transport.c
+> > @@ -375,10 +375,10 @@ static void hvs_open_connection(struct vmbus_channel *chan)
+> > 	} else {
+> > 		sndbuf = max_t(int, sk->sk_sndbuf, RINGBUFFER_HVS_SND_SIZE);
+> > 		sndbuf = min_t(int, sndbuf, RINGBUFFER_HVS_MAX_SIZE);
+> > -		sndbuf = ALIGN(sndbuf, HV_HYP_PAGE_SIZE);
+> > +		sndbuf = VMBUS_RING_SIZE(sndbuf);
+> > 		rcvbuf = max_t(int, sk->sk_rcvbuf, RINGBUFFER_HVS_RCV_SIZE);
+> > 		rcvbuf = min_t(int, rcvbuf, RINGBUFFER_HVS_MAX_SIZE);
+> > -		rcvbuf = ALIGN(rcvbuf, HV_HYP_PAGE_SIZE);
+> > +		rcvbuf = VMBUS_RING_SIZE(rcvbuf);
+> > 	}
+> > 
+> > 	chan->max_pkt_size = HVS_MAX_PKT_SIZE;
+> > -- 
+> > 2.54.0
+> > 
+> 
 
