@@ -1,56 +1,56 @@
-Return-Path: <linux-hyperv+bounces-10486-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10487-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EFb5LAlM8mnNpQEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10486-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 20:20:57 +0200
+	id uLtrDDFM8mnNpQEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10487-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 20:21:37 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 095BA498EC3
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 20:20:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 83435498ED3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 20:21:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4E0F33034DF2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 18:18:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3337F312A5C0
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 18:18:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72D1741C318;
-	Wed, 29 Apr 2026 18:18:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAD4F2F7AB0;
+	Wed, 29 Apr 2026 18:18:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="oKvzSHhz"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Yk7Leb/I"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 403563FFAD3;
-	Wed, 29 Apr 2026 18:18:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2A0A38C2C0;
+	Wed, 29 Apr 2026 18:18:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777486691; cv=none; b=nixGBIhaTA4wvlNdxnqhXW/t4BC6IzmwEF1sGcR+vxZtGbV9ceVLyF1fAR3aQ4EiVLyXImzQfUhp+vLEX6UMq9Fwa9o9ElzbBRO0UvqNPqkn/KK2GWNmpdHu7ZwyocHEWaxqjiHM2A1XqpCPudeBt0/NavMb6ZyW6irzk7Lo9Zs=
+	t=1777486700; cv=none; b=ipH55VqLUsMYSvlVgg1H2cfcZox/68Pla1Or93/FloBU6HgkHEnp4dray0fe/6FXq6Qt7jkqoeFZfWQJQjiwHdLJ546VeMh/l45fUyS2IfPPeb0FOJTrbqcztiwhtDYIxZ2v5pBtfRlyYLLOZkd4IXRyzt/CF3PHAPMKR/XdByc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777486691; c=relaxed/simple;
-	bh=UhbPtpOtF8adVWEcrhJCGaZfOpHmg4mma6YChpfSNsA=;
+	s=arc-20240116; t=1777486700; c=relaxed/simple;
+	bh=B5BcviSkWxMJxsB/yXxPztpPzSuD5TeqcGUMVbQdrGY=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZuGErYofvg5KY04D3UgvMsPRbE7hTxS101pEF47JDRXhY4zSamuxap/THL+fUxX5teoPAe9EJx/Q6jTWSAQUCayq3DnnaPSOFVx6wX7gcMcsXnEKOmOKo/qMLGEQUER8ma6pICxbiKJx6z0TtLJGcpZzw4r/Pr89pND5RW2rrZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=oKvzSHhz; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version:Content-Type; b=ACE3DVBbyk5rTdiHTDsUrW+7aLjo1NEZmFnvgRs/VZgmD67KDTJf5YyHT8ob8ioNrqnIszErkhTW3Vs8j/nU6LeRLQ6V3kRCGg6uDkDZUV6xRoov8zydrBStLNkJiJaFJXlaYHiJWNv7LOZkTLtTc9pO55OXTwj8cDqaznvVvS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Yk7Leb/I; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 4BB8220B716C;
-	Wed, 29 Apr 2026 11:18:10 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4BB8220B716C
+	by linux.microsoft.com (Postfix) with ESMTPSA id C728E20B716C;
+	Wed, 29 Apr 2026 11:18:15 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C728E20B716C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1777486690;
-	bh=41vMCnBFQ+h/hWyrAhm+rDmCa9KdDYvWtC741ydUrIQ=;
+	s=default; t=1777486695;
+	bh=sb9hrF+S0d+gt2J++FOGx9P56GAr3cUi3MdkyEEHB8Q=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=oKvzSHhzG6+a4d43IJxEH3UhTFLWTyT1vZRsMdL1yeSf01dUrDVl21FYKD6lVxyVI
-	 zmmTTPb7fERrQl9n1OBKVk8aUGE/TDkVHB3jAbquWYkOYELflgdm6/Dr/VDg1clkxN
-	 tCeMbOXF6r2Pd7SDhEe1lwHWgKAiig+FqWy+oiCU=
-Subject: [PATCH 06/10] mshv: Fix duplicate GSI detection for GSI 0
+	b=Yk7Leb/IXVGjXxDFlFBoUPoaJSWoUNrAbb2i/0Y4G984h8Cjn/yclWkldrhwFXWx9
+	 +39Qk2enILtVDXvKUn5/WUTrJwt3l/yZcHGcG4gS3iZ8MKpZKOEoSeSgv1ndDHc7Ra
+	 R+clFbeUSu+GiKvaz6FZrLTKByx45essh7S19hvI=
+Subject: [PATCH 07/10] mshv: Fix use-after-RCU in mshv_portid_lookup
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, longli@microsoft.com
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 29 Apr 2026 18:18:09 +0000
+Date: Wed, 29 Apr 2026 18:18:15 +0000
 Message-ID: 
- <177748668960.144491.4143074945343004379.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <177748669510.144491.4766566442031280249.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 In-Reply-To: 
  <177748522635.144491.1565666089881726479.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 References: 
@@ -64,19 +64,19 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 095BA498EC3
+X-Rspamd-Queue-Id: 83435498ED3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_FROM(0.00)[bounces-10486-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10487-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
@@ -93,39 +93,39 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[skinsburskii-cloud-desktop.internal.cloudapp.net:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:dkim]
 
-The duplicate routing entry check in mshv_update_routing_table() uses
-guest_irq_num != 0 to detect whether a GSI slot is already occupied.
-This fails for GSI 0 because its guest_irq_num is 0 both when the slot
-is unused (zero-initialized) and when legitimately assigned. As a
-result, duplicate entries for GSI 0 are silently accepted, with the
-second entry overwriting the first — corrupting the routing table
-without any error reported to userspace.
+mshv_portid_lookup() drops the RCU read lock before copying the
+port_table_info struct found by idr_find(). If mshv_portid_free() runs
+concurrently on another CPU, it can remove the entry and free it (via
+synchronize_rcu + kfree) before the copy at line *info = *_info
+completes — resulting in a use-after-free.
 
-While GSI 0 (legacy timer) is unlikely to appear in MSI-based routing
-in practice, the check is semantically wrong — it conflates
-"uninitialized" with "GSI number 0." Use girq_entry_valid instead,
-which is explicitly set to true when an entry is populated and remains
-zero for unused slots regardless of the GSI number.
+Move rcu_read_unlock() after the struct copy so the object remains
+protected for the entire duration of the read-side access.
 
 Fixes: 621191d709b14 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
 Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 ---
- drivers/hv/mshv_irq.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hv/mshv_portid_table.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/hv/mshv_irq.c b/drivers/hv/mshv_irq.c
-index b3142c84dcbc2..65a4ffc82d566 100644
---- a/drivers/hv/mshv_irq.c
-+++ b/drivers/hv/mshv_irq.c
-@@ -51,7 +51,7 @@ int mshv_update_routing_table(struct mshv_partition *partition,
- 		/*
- 		 * Allow only one to one mapping between GSI and MSI routing.
- 		 */
--		if (girq->guest_irq_num != 0) {
-+		if (girq->girq_entry_valid) {
- 			r = -EINVAL;
- 			goto out;
- 		}
+diff --git a/drivers/hv/mshv_portid_table.c b/drivers/hv/mshv_portid_table.c
+index c349af1f0aaac..f1aaef69eb9b7 100644
+--- a/drivers/hv/mshv_portid_table.c
++++ b/drivers/hv/mshv_portid_table.c
+@@ -72,12 +72,11 @@ mshv_portid_lookup(int port_id, struct port_table_info *info)
+ 
+ 	rcu_read_lock();
+ 	_info = idr_find(&port_table_idr, port_id);
+-	rcu_read_unlock();
+-
+ 	if (_info) {
+ 		*info = *_info;
+ 		ret = 0;
+ 	}
++	rcu_read_unlock();
+ 
+ 	return ret;
+ }
 
 
 
