@@ -1,110 +1,169 @@
-Return-Path: <linux-hyperv+bounces-10495-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10496-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8HuTHkOD8mnLsAEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10495-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 00:16:35 +0200
+	id yL+XF1qD8mnLsAEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10496-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 00:16:58 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE8B949AD3F
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 00:16:34 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C53BE49AD7C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 00:16:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 95E163029E7F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 22:15:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 401E5302E32C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 22:16:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6015042EEB0;
-	Wed, 29 Apr 2026 22:15:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mmbw5iUt"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F8483A7852;
+	Wed, 29 Apr 2026 22:16:29 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA333B4E9C;
-	Wed, 29 Apr 2026 22:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D258437757A;
+	Wed, 29 Apr 2026 22:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777500955; cv=none; b=YUJkdC+x9bV45tl8kK1UdopTnOW4AX/mHXQ6sBgSmEQPlJ+z7AzOSf2QXfSK2uJXugPG5l1SRVYQUk3332B7aJTBnBGFy9ap/MJIbEljesVVYapWptGr0oHTzHdpR8bJXd8T+ilb6u0Le9ttlRl0LzZzjwy8bcwGnPiTd/UnhQQ=
+	t=1777500989; cv=none; b=aUq0IdAK8XAM5W2l8oJHtqgOWgmnZNb1LQGWQej678FH4Ir4x8RiijktRKpa+dD0tLtg2D/Ew47A2IIieXHz7iRZ2hnNw7LcQUQwnYewMtmtXQVXtPoH66ocW0HMKGXSCu/expe3WHlJQ8y8DWpconRJfiXqfkYvnTm+q9tGjo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777500955; c=relaxed/simple;
-	bh=23SpWJVP6Hhf3lV5eWMyeLwhcPxcDI6P6InYG3r/Dmg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IzZyLno9xO3z3vP45p/2ddTceuJIijeUcNNKGvoDBb1eMGrg+hDSsi3x5qpMWYOkRYJG4Zs1+2g0h7ug/cNoPmtdd+l2+Uo3BEEdsoB3SVZM1L0N2w8Nz2uFAS8XP4R81JtlXmS+KL/sAFnqClfBQvFGc/ENu0HxqLgY2H5cj48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mmbw5iUt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1DA8C19425;
-	Wed, 29 Apr 2026 22:15:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777500954;
-	bh=23SpWJVP6Hhf3lV5eWMyeLwhcPxcDI6P6InYG3r/Dmg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Mmbw5iUtw69JM0muc7FUpK8hOWm9gsgVZgR3slmQTv/R+5dr9amF3NxjTshNvIFv8
-	 1SARvbjfk5LmW797539TqsPl0ciI1ZmtbxHQuPY2FUnPqD1oBYEjcDRzFywdtG/q9e
-	 K1LvZ7eVBZ+BGlJlbJZgB2SKOwuNHroHRgigeewKhUE7+w6SF85M+a0YJ5/M8Slhdq
-	 pmJ8IQy/8DUyARw+tDkonEOOeNbhEwVK6S3mM+qAq34ndVArPQIowubwxsZo5udLKX
-	 4qHEna0q428Sh+op+O4bJfQPd1Ju/AQCTTFNnhPyRa2ioWAUT3InYmbjdnRcSaYBtt
-	 yGlfvoV9wO/gg==
-Date: Wed, 29 Apr 2026 22:15:53 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
+	s=arc-20240116; t=1777500989; c=relaxed/simple;
+	bh=g2elQ2LNyV4dm3QMU4usylgpVfyTYrLxwAIIqZy16tg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tQ1jJa967dwJS7NxfEoJwHGV5w4s9hqvqNWQpabXAmCnCq1JpfTZ1yBEbZ4A8GlDmVIrJ7DapdEmqfGEDIIJKqPoOZi5TESHqIknTN89nYZ/x/G/JaXcmD3m4SUR8tG2TuBDduLcfureP6CZj0htZs9fxUKdg0ouzsn2uDn3zrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1202)
+	id 2FF1420B716C; Wed, 29 Apr 2026 15:16:28 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2FF1420B716C
+From: Long Li <longli@microsoft.com>
+To: Long Li <longli@microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>, linux-hyperv@vger.kernel.org,
+	"K . Y . Srinivasan" <kys@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>
+Cc: Simon Horman <horms@kernel.org>,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hv: utils: replace deprecated strcpy with strscpy in
- kvp_register
-Message-ID: <20260429221553.GB2584450@liuwe-devbox-debian-v2.local>
-References: <20260428171104.591947-2-thorsten.blum@linux.dev>
+Subject: [PATCH net-next v6 0/6] net: mana: Per-vPort EQ and MSI-X interrupt management
+Date: Wed, 29 Apr 2026 15:16:19 -0700
+Message-ID: <20260429221625.1841150-1-longli@microsoft.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260428171104.591947-2-thorsten.blum@linux.dev>
-X-Rspamd-Queue-Id: DE8B949AD3F
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: C53BE49AD7C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [3.54 / 15.00];
+	DMARC_POLICY_REJECT(2.00)[microsoft.com : SPF not aligned (relaxed), No valid DKIM,reject];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10495-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	TAGGED_FROM(0.00)[bounces-10496-lists,linux-hyperv=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	NEURAL_SPAM(0.00)[0.899];
+	FROM_NEQ_ENVFROM(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wei.liu@kernel.org,linux-hyperv@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,liuwe-devbox-debian-v2.local:mid]
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	R_DKIM_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-On Tue, Apr 28, 2026 at 07:11:05PM +0200, Thorsten Blum wrote:
-> strcpy() has been deprecated [1] because it performs no bounds checking
-> on the destination buffer, which can lead to buffer overflows. While the
-> current code works correctly, replace strcpy() with the safer strscpy()
-> to follow secure coding best practices. Use ->body.kvp_register.version
-> directly as the destination buffer and remove the local variable.
-> 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy
-> 
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+This series adds per-vPort Event Queue (EQ) allocation and MSI-X interrupt
+management for the MANA driver. Previously, all vPorts shared a single set
+of EQs. This change enables dedicated EQs per vPort with support for both
+dedicated and shared MSI-X vector allocation modes.
 
-Applied. Thanks.
+Patch 1 moves EQ ownership from mana_context to per-vPort mana_port_context
+and exports create/destroy functions for the RDMA driver. Also adds EQ
+create/destroy calls to mana_ib_cfg_vport/uncfg_vport so RDMA vPorts get
+their own EQs.
+
+Patch 2 adds device capability queries to determine whether MSI-X vectors
+should be dedicated per-vPort or shared. When the number of available MSI-X
+vectors is insufficient for dedicated allocation, the driver enables sharing
+mode with bitmap-based vector assignment.
+
+Patch 3 introduces the GIC (GDMA IRQ Context) abstraction with reference
+counting, allowing multiple EQs to safely share a single MSI-X vector.
+
+Patch 4 converts the global EQ allocation in probe/resume to use the new
+GIC functions.
+
+Patch 5 adds per-vPort GIC lifecycle management, calling get/put on each
+EQ creation and destruction during vPort open/close.
+
+Patch 6 extends the same GIC lifecycle management to the RDMA driver's EQ
+allocation path.
+
+Changes in v6:
+- Rebased on net-next/main (v7.1-rc1)
+
+Changes in v5:
+- Rebased on net-next/main
+
+Changes in v4:
+- Rebased on net-next/main 7.0-rc4
+- Patch 2: Use MANA_DEF_NUM_QUEUES instead of hardcoded 16 for
+  max_num_queues clamping
+- Patch 3: Track dyn_msix in GIC context instead of re-checking
+  pci_msix_can_alloc_dyn() on each call; improved remove_irqs iteration
+  to skip unallocated entries
+
+Changes in v3:
+- Rebased on net-next/main
+- Patch 1: Added NULL check for mpc->eqs in mana_ib_create_qp_rss() to
+  prevent NULL pointer dereference when RSS QP is created before a raw QP
+  has configured the vport and allocated EQs
+
+Changes in v2:
+- Rebased on net-next/main (adapted to kzalloc_objs/kzalloc_obj macros,
+  new GDMA_DRV_CAP_FLAG definitions)
+- Patch 2: Fixed misleading comment for max_num_queues vs
+  max_num_queues_vport in gdma.h
+- Patch 3: Fixed spelling typo in gdma_main.c ("difference" -> "different")
+
+Long Li (6):
+  net: mana: Create separate EQs for each vPort
+  net: mana: Query device capabilities and configure MSI-X sharing for
+    EQs
+  net: mana: Introduce GIC context with refcounting for interrupt
+    management
+  net: mana: Use GIC functions to allocate global EQs
+  net: mana: Allocate interrupt context for each EQ when creating vPort
+  RDMA/mana_ib: Allocate interrupt contexts on EQs
+
+ drivers/infiniband/hw/mana/main.c             |  47 ++-
+ drivers/infiniband/hw/mana/qp.c               |  16 +-
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 307 +++++++++++++-----
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 163 ++++++----
+ include/net/mana/gdma.h                       |  32 +-
+ include/net/mana/mana.h                       |   7 +-
+ 6 files changed, 416 insertions(+), 156 deletions(-)
+
+-- 
+2.43.0
 
