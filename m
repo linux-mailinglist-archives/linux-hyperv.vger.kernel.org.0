@@ -1,145 +1,126 @@
-Return-Path: <linux-hyperv+bounces-10504-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10505-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eGHnNCCN8mnKsQEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10504-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 00:58:40 +0200
+	id EX2UKiWR8mlhsgEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10505-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 01:15:49 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 413D349B2FE
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 00:58:39 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id A49E449B438
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 01:15:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2B5BB3020A4C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 22:57:41 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id AA1BA3009E0F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 23:15:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B100C37C924;
-	Wed, 29 Apr 2026 22:57:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C71B83242B8;
+	Wed, 29 Apr 2026 23:15:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fdGz6Ecu"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lgaKqoCJ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C97D37AA90;
-	Wed, 29 Apr 2026 22:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95A631A6806;
+	Wed, 29 Apr 2026 23:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777503460; cv=none; b=fv1ruenH1Ahr7pqRRzOBUdVR5mY5xlRFhh/LGe+0kwfAGeVYLfEBMcUOVXd26VulbJls4jO5d2yF5DOGpmf+po3mIRFGcoEEGI0GEl6yRfucL78y6GHU937Xieg4r5tgi5Km+jFhy5heSj1rN/AR9GNC1nTxOggv7Uu1Dggcw7Y=
+	t=1777504542; cv=none; b=UGOSa8useXu7MJDBnuLhqWvh0A20nij9UIVrjiybEZKibh1nqMtg63DNjfz4hNJc/Ulm1LZwfiE/lAaSxD4mURr9ovrl0y2YMzmw+tw4sL0RdwiZIM0mtejD+oWhEoXTYRLZCg5f341YdN42cFQzk/U5VACtEAKRaRwsVqdDNFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777503460; c=relaxed/simple;
-	bh=I+//j2q/h0XBW5QRBovEU4yDXrOR+VIyZTkGVCwIPiM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NH2RS8BowV835MD+aLhPKC0K8iONOlFg5esXXU+CO6Nx89hMwwe/V1Yw4dK62ob2oOYkD7mCVdSZCNTLubi61aLCHDNIrozOdF/UvDSYtMmHvgiKq5m9pjGm8AxmknNNmXwWQUH76DvkYAo8Z8CthB2paXPJHLm/CHIGDSlTctA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fdGz6Ecu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0F03C2BCB3;
-	Wed, 29 Apr 2026 22:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777503460;
-	bh=I+//j2q/h0XBW5QRBovEU4yDXrOR+VIyZTkGVCwIPiM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fdGz6Ecu5pkXdxy80SkH+oT00EAoa8E2tUR4kr+lu1t8VDXqWh5vCL2UPsouVvtLx
-	 iL7TO8BQRffd7hwhAT0Kiszd+MK8g2cgg1ZesX6xvmmBLy/KZjWkSnvIHoa4U8DDvq
-	 73kgHFitwTcKF0Y8SVdwPAL1IYKgUlSXwEewi44bpOpJFbBEYaRXCa57byIwrlO5YH
-	 GZdnbkXEY/KSSKk7YKKhym/HrPVkcNGkRLI7RBPjmfp1PYRSnq3w2mKPs40Zr3xTHS
-	 euOS9LaXGiYbIoho/3kxfh0hu2h8DeannDvH38j0Vbt4nLZf4uhhVQePkjQmRmM2hq
-	 A21UbA1Ehk6Xg==
-Date: Wed, 29 Apr 2026 22:57:38 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Jork Loeser <jloeser@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, x86@kernel.org,
-	"K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>, Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Anirudh Rayabharam <anirudh@anirudhrb.com>,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH v4 0/3] Hyper-V: kexec fixes for L1VH (mshv)
-Message-ID: <20260429225738.GC2584450@liuwe-devbox-debian-v2.local>
-References: <20260427213855.1675044-1-jloeser@linux.microsoft.com>
+	s=arc-20240116; t=1777504542; c=relaxed/simple;
+	bh=JWIHMcVVFylVAfBEENGPPBkZNDa3YL17yQ/ow/GLEUQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=XVyWWeUmg8ujmupUy/J8EWN3aQuFZWI5WJZIo65ZZ/27FmVnNRXOCupVbRbVacU5z3ScVjTIm3ZxqQMS7FPhsdkSQZbaZAjtD8QhAOb00ttRnagi5bLWrjPu5Fc7iyocl8UMPkyIr06JRU+HjcbTB8YfHFPHMh5rJpW+LTySft4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lgaKqoCJ; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from mrdev.corp.microsoft.com (unknown [13.88.17.9])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 2FD2E20B716C;
+	Wed, 29 Apr 2026 16:15:41 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2FD2E20B716C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1777504541;
+	bh=B2Zd5c7UVP5s1ibl2SuRUTzfdRiFQP+Fsa1z9SMFJ/M=;
+	h=From:To:Subject:Date:From;
+	b=lgaKqoCJFWKvGbR8P/brPD2egu/GQj7ipssgo0zl7LDwHKqMGrLIukWqqJhiEYhci
+	 vReZ1uB4C7i5C9oQUHLc9zlOQkWj7gyvbMOMu0zPyJS9wpw/ArtK+ejLBfEy4M6ysT
+	 lDNkWdwwVXO1vUJfi1I/gjpYqBf/zmd7jzyG54CQ=
+From: Mukesh R <mrathor@linux.microsoft.com>
+To: hpa@zytor.com,
+	robin.murphy@arm.com,
+	robh@kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org
+Subject: [PATCH v0 0/3] PCI passthru on Hyper-V (Part II)
+Date: Wed, 29 Apr 2026 16:15:16 -0700
+Message-ID: <20260429231519.2569088-1-mrathor@linux.microsoft.com>
+X-Mailer: git-send-email 2.51.2.vfs.0.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260427213855.1675044-1-jloeser@linux.microsoft.com>
-X-Rspamd-Queue-Id: 413D349B2FE
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: A49E449B438
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10504-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,microsoft.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,outlook.com,anirudhrb.com];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-10505-lists,linux-hyperv=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wei.liu@kernel.org,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	MIME_TRACE(0.00)[0:+];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mrathor@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	TO_DN_NONE(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	NEURAL_HAM(-0.00)[-0.999];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linux.microsoft.com:dkim,linux.microsoft.com:mid]
 
-On Mon, Apr 27, 2026 at 02:38:51PM -0700, Jork Loeser wrote:
-> This series fixes kexec support when Linux runs as an L1 Virtual Host
-> (L1VH) under Hyper-V, using the MSHV driver to manage child VMs.
-> 
-> 1-2. SynIC cleanup: the MSHV driver manages its own SynIC resources
->      separately from vmbus. Add proper teardown of MSHV-owned SINTs
->      and SIRBP on kexec, scoped to only the resources MSHV owns.
->      Use hv_vmbus_exists() to decide at runtime whether VMBus owns
->      SIMP/SIEFP/SCONTROL (so MSHV must not touch them) or whether
->      MSHV must manage them itself (bare root partition without VMBus).
->      Also fix SIEFP and SIRBP address calculations to use
->      HV_HYP_PAGE_SHIFT instead of PAGE_SHIFT, which produces wrong
->      addresses on ARM64 with 64K pages.
-> 
-> 3.   Debugfs stats pages: unmap the VP statistics overlay pages before
->      kexec to avoid machine check exceptions when the new kernel
->      reuses those physical pages.
-> 
-> Changes since v3:
-> - Dropped patches 1-3 (vmbus variable shadowing, stimer cleanup,
->   LP/VP skip), now merged via hyperv-next.
-> - Patch 1: fix SIEFP and SIRBP memremap()/virt_to_phys() to use
->   HV_HYP_PAGE_SHIFT/HV_HYP_PAGE_SIZE instead of PAGE_SHIFT/PAGE_SIZE.
-> 
-> Changes since v2:
-> - Rebased onto linux-next/master to adapt to the upstream SynIC
->   refactor (commit 5a674ef871fe, "mshv: refactor synic init and
->   cleanup").
-> 
-> Changes since v1:
-> - Patch 1: account for nested root partitions where VMBus is also
->   active (not just L1VH); use a vmbus_active local variable; allocate
->   SIRBP in L1VH allocation path for when the hypervisor doesn't
->   pre-provision the page.
-> 
-> Jork Loeser (3):
->   mshv: limit SynIC management to MSHV-owned resources
->   mshv: clean up SynIC state on kexec for L1VH
->   mshv: unmap debugfs stats pages on kexec
+This patch series implements interrupt remapping part of the PCI
+passthru feature on Hyper-V when Linux is running as a privileged VM.
+These patches complement the Part I of the feature at:
 
-Applied to hyperv-fixes. Thanks.
+https://lore.kernel.org/linux-hyperv/20260422023239.1171963-1-mrathor@linux.microsoft.com/T/#t
+
+Testing and other details are listed there.
+
+Thanks,
+-Mukesh
+
+Mukesh R (3):
+  mshv: Import declarations for irq remap and add irqbypass support
+  hyperv: Implement irq remap for passthru devices
+  mshv: Implement guest irq migration for passthru'd devices
+
+ arch/x86/hyperv/irqdomain.c         |  18 +-
+ drivers/hv/Kconfig                  |   1 +
+ drivers/hv/mshv_eventfd.c           | 500 +++++++++++++++++++++++++++-
+ drivers/hv/mshv_eventfd.h           |   3 +
+ drivers/iommu/hyperv-iommu-root.c   |  14 +
+ drivers/pci/controller/pci-hyperv.c |  10 +
+ include/asm-generic/mshyperv.h      |   4 +
+ include/hyperv/hvgdk_mini.h         |   3 +
+ include/hyperv/hvhdk.h              |  17 +
+ 9 files changed, 564 insertions(+), 6 deletions(-)
+
+-- 
+2.51.2.vfs.0.1
+
 
