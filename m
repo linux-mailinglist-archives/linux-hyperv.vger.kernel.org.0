@@ -1,218 +1,156 @@
-Return-Path: <linux-hyperv+bounces-10465-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10466-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GM9QE1HW8Wm3kgEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10465-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 11:58:41 +0200
+	id SBu1AEnX8Wm3kgEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10466-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 12:02:49 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7125492709
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 11:58:40 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66FAC49286F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 12:02:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3C174303FFC8
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 09:58:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9F52330B187C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 09:58:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD2C93C6A56;
-	Wed, 29 Apr 2026 09:58:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBF8F3C3BF7;
+	Wed, 29 Apr 2026 09:58:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DwwTmFw8"
+	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="JHxJCO1Q"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ACE83C555B;
-	Wed, 29 Apr 2026 09:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777456681; cv=none; b=oa88kzd9db1xN2Nm6ZsK18Cv4UdCJg/rLMSo0zfzstVQW3+BWEVuNK1Xt2E2mZKOwz3/hYXWIwYcMfz11B8uLrWTKZ6tAviA3sQBY/wzF+5RlYIqLhIzU2IUC2wD4j00s8rYBbNNNPxDNqz6mJheczaxPFDrGjRpZ6yPKXBePq8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777456681; c=relaxed/simple;
-	bh=SGFpjDx3Fh1/hVA49l0HXV517Okej9pbdw/Axq6b/Ss=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lZZxLQD4h5t2uSzL1Tibfzc7VW45+b5Ts9hEbJiftxFAhQ0hVq/uMniZJ9Nyulcoq/OuFP7Moh33vdD8kcJ3n/rs67V469+4mm69U2VV/OTVCr9Ld6v9syeaTKgqxyBNyPULUbKktiPJTmWa421/YGZ+sGLGqKyqlhIzNm8lTjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=DwwTmFw8; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.95.65.160] (unknown [167.220.238.0])
-	by linux.microsoft.com (Postfix) with ESMTPSA id AAA8120B716C;
-	Wed, 29 Apr 2026 02:57:53 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AAA8120B716C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1777456680;
-	bh=glqfSPnZSBsC5GJM5wPOsyYjmETqsJsgYXJ3trO0o1Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DwwTmFw8lT7PO8/kvWlFCX434M1go88YAYUFiOB7xJ1F+kocEhvrlQaUtuLbFgsgs
-	 qpczmKHfDoN6xdxyX2dSLL7A3qYuWuJopov32H33TocopnxktApYAXXhDjaAJcsMV+
-	 D/AJqX3CMxDfu3j87LG09egBB30+fv785wOjDaK0=
-Message-ID: <567cf73b-6a48-4fc3-b312-9be6d71e2f22@linux.microsoft.com>
-Date: Wed, 29 Apr 2026 15:27:49 +0530
+Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B52233B97A;
+	Wed, 29 Apr 2026 09:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777456720; cv=pass; b=tE45KAtOouU5jV6zg71L5ALzewoa4iuKTMxnoq3JgAXsMg4cWSoUStrNymMMOcG7J9D40KQtVl5hl7aQE83YszGiqXo6jGPeSeme7c4arokzG2xHH7QBOPCXmt+2FN3xpaWYTkB0VjXfKvcnQbX+Q5hwPLu8/q43YcJhkLI0k5s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777456720; c=relaxed/simple;
+	bh=6QU1C61dVfFVlOPKFdiGl4t3RT9nxVFUC3MlV3nJTps=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QKcqg+gdU/nkHJPkIkdfz5ydcGKJwtaeIVvx69ooQt0p47OUQHEqeF2sjIFeGy6jbsi/KstbdVEhqTuK7hkya5ZjSe770VM2gZWsaddp6KFYHj8fNspSWQiPGvTGOVPS322IcowBhrzMLQpfIOkp2GmLKksUo6GsqEV8oBUxn3k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=JHxJCO1Q; arc=pass smtp.client-ip=136.143.188.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
+ARC-Seal: i=1; a=rsa-sha256; t=1777456693; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=k8eYySm5rte5dOpghLzWz7U2Cl0+B/3NNCvUDDg8surn6nlwomre0RJ8HZI8qmpuCds8a4KEx8dW/YSIdm4Ovn9XAIAmAzGYYN34FWV3piTYrMfgkGK3/9wNKn+h+UFPliin6Ho88HtiusprHSB0dM3XRiRH/lqIv6KqoXv+gjo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1777456693; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ob/2PX7t4Nbz9UfHxyrsNw7aDi/Gmqo70zNjo5z65VY=; 
+	b=eNV+oqoNGUJMlm/71QrXgXyin31sJoJb8eJoFlWQhRhKIRc7ZJkFCcK8D89lLtkyY+x/318H0z/fLroK8/jITlXfj5eQeZv2SQx0ZKSMz9AYVqTYji3ZX4Ipm0nbO9a+micyq5A533RGdAwHrwIBnmJtO0H56sA4yjDkRKxIqSE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=anirudhrb.com;
+	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
+	dmarc=pass header.from=<anirudh@anirudhrb.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1777456693;
+	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=ob/2PX7t4Nbz9UfHxyrsNw7aDi/Gmqo70zNjo5z65VY=;
+	b=JHxJCO1QCxxNQfBAipXdLv5mP6i+ZhXRswJLf+D/AOidiw18DLlgrOzpJLVnRDsL
+	/2/Bg/Te69enWe42APU9+9mx0MyPmPfc0XMrkK6BOOYtqht7W89kdeQJvq9XxIrPOA5
+	sDigO1ZRAtnDOwoMart1PPlEKc8d9ZaNEZp60woA=
+Received: by mx.zohomail.com with SMTPS id 1777456690248423.87477393075324;
+	Wed, 29 Apr 2026 02:58:10 -0700 (PDT)
+Date: Wed, 29 Apr 2026 09:58:04 +0000
+From: Anirudh Rayabharam <anirudh@anirudhrb.com>
+To: Jork Loeser <jloeser@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, x86@kernel.org,
+	"K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+	Michael Kelley <mhklinux@outlook.com>, linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] mshv: limit SynIC management to MSHV-owned
+ resources
+Message-ID: <20260429-dancing-augmented-chicken-8711a6@anirudhrb>
+References: <20260427213855.1675044-1-jloeser@linux.microsoft.com>
+ <20260427213855.1675044-2-jloeser@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 09/15] Drivers: hv: mshv_vtl: Move
- hv_vtl_configure_reg_page() to x86
-To: Michael Kelley <mhklinux@outlook.com>,
- "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
- Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: Marc Zyngier <maz@kernel.org>, Timothy Hayes <timothy.hayes@arm.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Sascha Bischoff <sascha.bischoff@arm.com>,
- mrigendrachaubey <mrigendra.chaubey@gmail.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
- "vdso@mailbox.org" <vdso@mailbox.org>,
- "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>
-References: <20260423124206.2410879-1-namjain@linux.microsoft.com>
- <20260423124206.2410879-10-namjain@linux.microsoft.com>
- <SN6PR02MB4157467FDBC0203C67A67042D4362@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB4157467FDBC0203C67A67042D4362@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: C7125492709
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260427213855.1675044-2-jloeser@linux.microsoft.com>
+X-ZohoMailClient: External
+X-Rspamd-Queue-Id: 66FAC49286F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+X-Spamd-Result: default: False [-1.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[anirudhrb.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10465-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10466-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[outlook.com,microsoft.com,kernel.org,arm.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,dabbelt.com,eecs.berkeley.edu,ghiti.fr];
-	RCPT_COUNT_TWELVE(0.00)[31];
-	FREEMAIL_CC(0.00)[kernel.org,arm.com,gmail.com,vger.kernel.org,lists.infradead.org,mailbox.org,linux.microsoft.com];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,microsoft.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,outlook.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[namjain@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	NEURAL_HAM(-0.00)[-0.998];
+	FROM_NEQ_ENVFROM(0.00)[anirudh@anirudhrb.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[anirudhrb.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,linux.microsoft.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,anirudhrb.com:dkim,anirudhrb.com:email]
 
-
-
-On 4/27/2026 11:10 AM, Michael Kelley wrote:
-> From: Naman Jain <namjain@linux.microsoft.com> Sent: Thursday, April 23, 2026 5:42 AM
->>
->> Move hv_vtl_configure_reg_page() from drivers/hv/mshv_vtl_main.c to
->> arch/x86/hyperv/hv_vtl.c. The register page overlay is an x86-specific
->> feature that uses HV_X64_REGISTER_REG_PAGE, so its configuration belongs
->> in architecture-specific code.
->>
->> Move struct mshv_vtl_per_cpu and union hv_synic_overlay_page_msr to
->> include/asm-generic/mshyperv.h so they are visible to both arch and
->> driver code.
->>
->> Change the return type from void to bool so the caller can determine
->> whether the register page was successfully configured and set
->> mshv_has_reg_page accordingly.
->>
->> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
->> ---
->>   arch/x86/hyperv/hv_vtl.c       | 32 ++++++++++++++++++++++
->>   drivers/hv/mshv_vtl_main.c     | 49 +++-------------------------------
->>   include/asm-generic/mshyperv.h | 17 ++++++++++++
->>   3 files changed, 53 insertions(+), 45 deletions(-)
->>
-
-<snip>
-
->>   #if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
->> +/* SYNIC_OVERLAY_PAGE_MSR - internal, identical to hv_synic_simp */
+On Mon, Apr 27, 2026 at 02:38:52PM -0700, Jork Loeser wrote:
+> The SynIC is shared between VMBus and MSHV. VMBus owns the message
+> page (SIMP), event flags page (SIEFP), global enable (SCONTROL),
+> and SINT2. MSHV adds SINT0, SINT5, and the event ring page (SIRBP).
 > 
-> This comment pre-dates your patch, but I don't understand the point
-> it is trying to make. The comment is factually true, but I don't know
-> why calling that out is relevant. The REG_PAGE MSR seems to be
-> conceptually separate and distinct from the SIMP MSR, so the fact
-> that the layouts are the same is just a coincidence. Or is there some
-> relationship between the two MSRs that I'm not aware of, and the
-> comment is trying (and failing?) to point out?
-
-This was added as per suggestion from Nuno in my initial series for 
-MSHV_VTL. If the reference in "identical to" is misleading, I should 
-remove it.
-
-https://lore.kernel.org/all/68143eb0-e6a7-4579-bedb-4c2ec5aaef6b@linux.microsoft.com/
-
-Quoting:
-"""
-it is a generic structure that
-appears to be used for several overlay page MSRs (SIMP, SIEF, etc).
-
-But, the type doesn't appear in the hv*dk headers explicitly; it's just
-used internally by the hypervisor.
-
-I think it should be renamed with a hv_ prefix to indicate it's part of
-the hypervisor ABI, and a brief comment with the provenance:
-
-/* SYNIC_OVERLAY_PAGE_MSR - internal, identical to hv_synic_simp */
-union hv_synic_overlay_page_msr {
-	/* <snip> */
-};
-"""
-
+> Currently mshv_synic_cpu_init() redundantly enables SIMP, SIEFP, and
+> SCONTROL that VMBus already configured, and mshv_synic_cpu_exit()
+> disables all of them. This is wrong because MSHV can be torn down
+> while VMBus is still active. In particular, a kexec reboot notifier
+> tears down MSHV first. Disabling SCONTROL, SIMP, and SIEFP out
+> from under VMBus causes its later cleanup to write SynIC MSRs while
+> SynIC is disabled, which the hypervisor does not tolerate.
 > 
->> +union hv_synic_overlay_page_msr {
->> +	u64 as_uint64;
->> +	struct {
->> +		u64 enabled: 1;
->> +		u64 reserved: 11;
->> +		u64 pfn: 52;
->> +	} __packed;
->> +};
->> +
->>   u8 __init get_vtl(void);
->>   void mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl0);
->> +bool hv_vtl_configure_reg_page(struct mshv_vtl_per_cpu *per_cpu);
->>   #else
->>   static inline u8 get_vtl(void) { return 0; }
->>   static inline void mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl0) {}
->> +static inline bool hv_vtl_configure_reg_page(struct mshv_vtl_per_cpu *per_cpu) { return false; }
+> Restrict MSHV to managing only the resources it owns:
+> - SINT0, SINT5: mask on cleanup, unmask on init
+> - SIRBP: enable/disable as before
+> - SIMP, SIEFP, SCONTROL: leave to VMBus when it is active (L1VH
+>   and nested root partition); on a non-nested root partition VMBus
+>   does not run, so MSHV must enable/disable them
 > 
-> As with Patch 8, if CONFIG_HYPERV_VTL_MODE caused mshv_common.o
-> to be built, this stub wouldn't be needed.
+> While here, fix the SIEFP and SIRBP memremap() and virt_to_phys()
+> calls to use HV_HYP_PAGE_SHIFT/HV_HYP_PAGE_SIZE instead of
+> PAGE_SHIFT/PAGE_SIZE. The hypervisor always uses 4K pages for SynIC
+> register GPAs regardless of the kernel page size, so using PAGE_SHIFT
+> produces wrong addresses on ARM64 with 64K pages.
 > 
+> Note that initialization order matters - VMBUS first, MSHV second,
+> and the reverse on de-init. Ideally, we would want a dedicated SYNIC
+> driver that replaces the cross-dependencies with a clear API and
+> dynamic tracking. Such refactor should go into its own dedicated
+> series, outside of this kexec fix series.
+> 
+> Signed-off-by: Jork Loeser <jloeser@linux.microsoft.com>
+> ---
+>  drivers/hv/hv.c         |   3 +
+>  drivers/hv/mshv_synic.c | 150 ++++++++++++++++++++++++++--------------
+>  2 files changed, 103 insertions(+), 50 deletions(-)
 
-Acked.
+Reviewed-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
 
-
->>   #endif
->>
->>   #endif
->> --
->> 2.43.0
->>
-
-Regards,
-Naman
 
