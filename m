@@ -1,222 +1,175 @@
-Return-Path: <linux-hyperv+bounces-10471-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10472-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uP6pJsjl8WlZlAEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10471-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 13:04:40 +0200
+	id WEZfKgD68WmElwEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10472-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 14:30:56 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28E0C49351A
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 13:04:35 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DE484941A5
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 14:30:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B116930783BC
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 11:03:02 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 61F223006B58
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 12:30:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65ABD37B41E;
-	Wed, 29 Apr 2026 11:03:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C2B53EB7FB;
+	Wed, 29 Apr 2026 12:30:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="J3PA+4rA"
+	dkim=pass (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="hRKI9ibj";
+	dkim=permerror (0-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="CZAbca8/"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D615337CD2E;
-	Wed, 29 Apr 2026 11:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6352F299A87;
+	Wed, 29 Apr 2026 12:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.165
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777460582; cv=pass; b=lIuW27Xq/D0yAnqBfBQYjTVeK7sN5b3QrOmesE/hVRvWObUO0dy+dvFJDLPuyfVLLmNbqJjqxDsksA9U1CjcR+rFe9lOlQA6Gvxa5cRJlgtmSoqIFumdh6UkJJRYe+RDpKwzQwVBvrxbauZjzI0X8rv/lYFwCqF43LPyliMgumw=
+	t=1777465849; cv=pass; b=aynJvptGtz/8duVa0qgtr3iz51FUCXauvs6E9WoNgGvG33PrWQPoE4oKI+xpgz4goqAx/WexRFQzxD+aag//cncaBpJ6BLFnGEXXlUmJC908HQGKegX0FMNjZH6IBfo8mObTjJWQYaXqiWpqpmYQ2GqRyu6RFvexQutx3zzhy58=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777460582; c=relaxed/simple;
-	bh=XyJ4362LHKSQCZxXlFJl8LTIallOpoM/TDLGymxICCA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jrn7aNEb++yJFGo5/ldhFHtXEmnIitzZ6HLk1xFicbA1QJhcwbAoQc1nvFNN+mqTirGM8JmyRuuxyuyutSCX2EZJFD9WFKEJjf88bKUP3jsceSZUvx5kw+AmW3qobdhMaR75kbxoPCarqP0+/IMHgFojq2pn7gdD9My10lEKmR8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=J3PA+4rA; arc=pass smtp.client-ip=136.143.188.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1777460565; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=RJDzNlikOMAn/jLXORA0txc0HToyoKcMQbESyJUg2ORUmLOJedPOCwQt3A+YiGlJSxv6SmuAmYnLDfbPS83Rzq3V+hawbBWMgWlDQoaRvDNnNi4aI37NI3ov2sSZn8lWY53dEbsjcFSGRDEgtJw+LjRsKr9BYnSV51rGgxv6ugo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1777460565; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=qz5qqbIXLFw3xCU3JV5y7he+8XHJJ1HydFEu5/aOL4s=; 
-	b=Kf2OssHsTHrHykWFdNoAFkHz7+oDJEaCC9uLw3h9cIewZ5OncCBpXxG0cdFYSpp4kXlH/4BA/4uUhillhXTBCahRVQD0IVCcaJxNLg1T1NkDoRAJE85qWKOCxhzSBO8YhWititlViobE3/3D/rH2xXUQMUr4C1wsKqxORYcqzQs=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=anirudhrb.com;
-	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
-	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1777460565;
-	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=qz5qqbIXLFw3xCU3JV5y7he+8XHJJ1HydFEu5/aOL4s=;
-	b=J3PA+4rAkZl8TTMlVmjx4FIoUsqqNSqq20Q9jsOFrQsCSnaIeAHo23lPpcouyiaZ
-	yFxDzDX0OqvzYeFG1JDSYSdtrWx4s//bf6uI2U5Mo5UXd82HQ1MQr4GP6pUWibPdodN
-	q1C1qEw3ZPwJVR8mCH/t/Jck5gsimLH2SwYYy+sI=
-Received: by mx.zohomail.com with SMTPS id 1777460562216571.0145193690054;
-	Wed, 29 Apr 2026 04:02:42 -0700 (PDT)
-Date: Wed, 29 Apr 2026 11:02:37 +0000
-From: Anirudh Rayabharam <anirudh@anirudhrb.com>
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mshv: Simplify GPA map/unmap hypercall helpers
-Message-ID: <20260429-orca-of-legal-symmetry-3c72bc@anirudhrb>
-References: <177741845948.632922.14128507833980339307.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+	s=arc-20240116; t=1777465849; c=relaxed/simple;
+	bh=EJXR65qhDAKudP2+vZ3Pwhpj0KDsnzSTV2XCWNJ8kzI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pjvuXgnOMKFP1K0sX9n5bB6+OpVOfU9WwJHp9hQ18Llwp9lScyl2ar690nJCTyDI9KoqERJupmC9OeR0b1+wdMzhNOfe2JzJxkow0fK6nRIk4owvIYZKWYilRzdRQI11epKlR9ZxBB+MGQjaJmdz6ces069OWBUiTtYGglbZ9B8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aepfle.de; spf=pass smtp.mailfrom=aepfle.de; dkim=pass (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b=hRKI9ibj; dkim=permerror (0-bit key) header.d=aepfle.de header.i=@aepfle.de header.b=CZAbca8/; arc=pass smtp.client-ip=81.169.146.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aepfle.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aepfle.de
+ARC-Seal: i=1; a=rsa-sha256; t=1777465659; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=otcAGfCFsIXy9xVvQreHJr3WeYLGXKF42cCDDVx+6PJFjcE+YeE80+QY0Od84b1Gib
+    oWCclDWB7bAq3AhUGFyrTkaUgdC9h+EzCIRCWr2Lgb0TkRRH0XSLMBMK7twckyL1arZj
+    QuAre+nis34xjaetU0k9xCvKU/AqVIdWE4c5QEcpz2LbjheTjE1le+mK0hdhE+2rjTtm
+    Di5eGuX0g6XRph8DXEBMDjx7M+KNjWuJ8kAO1+W6b1A9DkjPc+IdhCsHmizQvc9TXO8q
+    5CaY9lDo7yf0MjQWIBgMhUYwHq+rGJ9+e/KvzJKzA4l0tsfKc3buLlP0ruhvDqrOv7MN
+    2lhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1777465659;
+    s=strato-dkim-0002; d=strato.com;
+    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=EJXR65qhDAKudP2+vZ3Pwhpj0KDsnzSTV2XCWNJ8kzI=;
+    b=I0b9GZgtYmrm95nrGhzHTcJ19n5TO67z/LRvseQoRMOu78wQYSH1uQeS3ObV+2ZSE6
+    VPk4apEOH4PmtxLww3isY1PwBpV8H9yUzwUp9ZR4zO97e05dF50AEGRaGxx6ZkxlDaIz
+    4gokdNg+eLqwXFqeNQtzCA46Kifh0pDjurSjmbH3Lu5xqXuqfqM3c1bl1XuuQ3npQpEB
+    TGq2vuERbJEkM1N+WyXjVhyWfvq+/TUetBrgR6Emdd21S/la0At1xxRsNqwOVvny+jM6
+    vvCqejT9shCP0ohICFMDIhO/taFEvEmzGwIm2OvqVMG8u40EJ0T+JdORYmst+eQqC5UF
+    M2rw==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1777465659;
+    s=strato-dkim-0002; d=aepfle.de;
+    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=EJXR65qhDAKudP2+vZ3Pwhpj0KDsnzSTV2XCWNJ8kzI=;
+    b=hRKI9ibjBCjMe74LzcDlXJ13vlNH5pTVjdpeSpp9XZZHqzUgzCoDQr0RIo3PZLH1Ee
+    gOEtXxfyT1WTwJsqt3Dfi44NYlYLC+DL9f2DtUAKyyyiPhr5PFyR1WWRjfToHF0ID2r8
+    SGp781A7Cl8GyomK869cV5BeZw8dnkmBhKF8wzZUiWmwovy3Y9ZinvEVDggYV5C+Drtb
+    Di5X3UvToXOQQUUAfpsknq9ui9XWWaetTee2wjMH6ywjGrTaSh1hIulOnD9MkpRg6E1v
+    VLzDW0h9N2DXbBCD1c624ekmTofuENsnz0MYE530i0WOMO6zOtTC219KbcJm/Gjacevh
+    sP3g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1777465659;
+    s=strato-dkim-0003; d=aepfle.de;
+    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=EJXR65qhDAKudP2+vZ3Pwhpj0KDsnzSTV2XCWNJ8kzI=;
+    b=CZAbca8/inEMT2kGe1DeS7LrIxTDz4d5NW0OYDKtg6PV7K601ee/IHFGwjW5OIgOfN
+    F8jafsk7DmALJRvT5UCw==
+X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QLpd5ylWvMDX3y/OmD4uXd0fm0SoJ7/xK6yGaFsaWnaJwse7ii63+wjqP+qP1K"
+Received: from sender
+    by smtp.strato.de (RZmta 55.0.1 AUTH)
+    with ESMTPSA id D7618223TCRc1m7
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Wed, 29 Apr 2026 14:27:38 +0200 (CEST)
+Date: Wed, 29 Apr 2026 14:27:24 +0200
+From: Olaf Hering <olaf@aepfle.de>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang
+ <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, Long Li <longli@microsoft.com>, Greg Kroah-Hartman
+ <gregkh@suse.de>, stable@vger.kernel.org, Ky Srinivasan
+ <ksrinivasan@novell.com>, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hv: utils: handle and propagate errors in kvp_register
+Message-ID: <20260429142724.4d74641a.olaf@aepfle.de>
+In-Reply-To: <20260414111008.307220-2-thorsten.blum@linux.dev>
+References: <20260414111008.307220-2-thorsten.blum@linux.dev>
+X-Mailer: Claws Mail (olh) 20240610T104514.591ffb65 hat ein Softwareproblem, kann man nichts machen.
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <177741845948.632922.14128507833980339307.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-X-ZohoMailClient: External
-X-Rspamd-Queue-Id: 28E0C49351A
+Content-Type: multipart/signed; boundary="Sig_/9QPQHzLuDWUzzMAsondCt0X";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 6DE484941A5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-3.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[anirudhrb.com,none];
-	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[aepfle.de,reject];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_DKIM_ALLOW(-0.20)[aepfle.de:s=strato-dkim-0002,aepfle.de:s=strato-dkim-0003];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10471-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10472-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[anirudhrb.com:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[anirudh@anirudhrb.com,linux-hyperv@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	DKIM_TRACE(0.00)[aepfle.de:+];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[olaf@aepfle.de,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,anirudhrb.com:dkim]
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,aepfle.de:dkim,aepfle.de:mid]
 
-On Tue, Apr 28, 2026 at 11:21:12PM +0000, Stanislav Kinsburskii wrote:
-> Clean up hv_do_map_gpa_hcall() and hv_call_unmap_gpa_pages() after the
-> preceding bug-fix patches:
-> 
-> Move "done += completed" before the status checks so that pages mapped
-> by a partially-successful batch are included in the error cleanup unmap.
-> Previously these mappings were leaked on failure.
-> 
-> While here, improve type safety and readability:
->  - Change "int done" to "u64 done" to match the u64 page_count it is
->    compared against, avoiding signed/unsigned comparison hazards.
->  - Use u64 for loop iteration and batch size variables consistently.
->  - Add proper braces to the for-loop body in hv_do_map_gpa_hcall().
->  - Remove unnecessary "ret" variable from hv_call_unmap_gpa_pages().
->  - Simplify the error-path unmap to use "done << large_shift" directly
->    instead of mutating done in place.
-> 
-> Fixes: 621191d709b14 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
-> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> ---
->  drivers/hv/mshv_root_hv_call.c |   55 +++++++++++++++-------------------------
->  1 file changed, 20 insertions(+), 35 deletions(-)
-> 
-> diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
-> index e5992c324904a..f5f205a397834 100644
-> --- a/drivers/hv/mshv_root_hv_call.c
-> +++ b/drivers/hv/mshv_root_hv_call.c
-> @@ -195,8 +195,8 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
->  	struct hv_input_map_gpa_pages *input_page;
->  	u64 status, *pfnlist;
->  	unsigned long irq_flags, large_shift = 0;
-> -	int ret = 0, done = 0;
-> -	u64 page_count = page_struct_count;
-> +	u64 done = 0, page_count = page_struct_count;
-> +	int ret = 0;
->  
->  	if (page_count == 0 || (pages && mmio_spa))
->  		return -EINVAL;
-> @@ -213,8 +213,8 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
->  	}
->  
->  	while (done < page_count) {
-> -		ulong i, completed, remain = page_count - done;
-> -		int rep_count = min(remain, HV_MAP_GPA_BATCH_SIZE);
-> +		u64 i, completed, remain = page_count - done;
-> +		u64 rep_count = min(remain, (u64)HV_MAP_GPA_BATCH_SIZE);
->  
->  		local_irq_save(irq_flags);
->  		input_page = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> @@ -224,23 +224,13 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
->  		input_page->map_flags = flags;
->  		pfnlist = input_page->source_gpa_page_list;
->  
-> -		for (i = 0; i < rep_count; i++)
-> -			if (flags & HV_MAP_GPA_NO_ACCESS) {
-> +		for (i = 0; i < rep_count; i++) {
-> +			if (flags & HV_MAP_GPA_NO_ACCESS)
->  				pfnlist[i] = 0;
-> -			} else if (pages) {
-> -				u64 index = (done + i) << large_shift;
-> -
-> -				if (index >= page_struct_count) {
-> -					ret = -EINVAL;
-> -					break;
-> -				}
-> -				pfnlist[i] = page_to_pfn(pages[index]);
-> -			} else {
-> +			else if (pages)
-> +				pfnlist[i] = page_to_pfn(pages[(done + i) << large_shift]);
-> +			else
->  				pfnlist[i] = mmio_spa + done + i;
-> -			}
-> -		if (ret) {
-> -			local_irq_restore(irq_flags);
-> -			break;
->  		}
->  
->  		status = hv_do_rep_hypercall(HVCALL_MAP_GPA_PAGES, rep_count, 0,
-> @@ -248,29 +238,26 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
->  		local_irq_restore(irq_flags);
->  
->  		completed = hv_repcomp(status);
-> +		done += completed;
->  
->  		if (hv_result_needs_memory(status)) {
->  			ret = hv_call_deposit_pages(NUMA_NO_NODE, partition_id,
->  						    HV_MAP_GPA_DEPOSIT_PAGES);
->  			if (ret)
->  				break;
-> -
->  		} else if (!hv_result_success(status)) {
->  			ret = hv_result_to_errno(status);
->  			break;
->  		}
-> -
-> -		done += completed;
->  	}
->  
->  	if (ret && done) {
->  		u32 unmap_flags = 0;
->  
-> -		if (flags & HV_MAP_GPA_LARGE_PAGE) {
-> +		if (flags & HV_MAP_GPA_LARGE_PAGE)
->  			unmap_flags |= HV_UNMAP_GPA_LARGE_PAGE;
-> -			done <<= large_shift;
-> -		}
-> -		hv_call_unmap_gpa_pages(partition_id, gfn, done, unmap_flags);
-> +		hv_call_unmap_gpa_pages(partition_id, gfn,
-> +					done << large_shift, unmap_flags);
+--Sig_/9QPQHzLuDWUzzMAsondCt0X
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-How does this work? Earlier we were doing "done << large_shift" only if
-HV_MAP_GPA_LARGE_PAGE is set but now we always do it.
+Tue, 14 Apr 2026 13:10:08 +0200 Thorsten Blum <thorsten.blum@linux.dev>:
 
-Thanks,
-Anirudh.
+> Fixes: 245ba56a52a3 ("Staging: hv: Implement key/value pair (KVP)")
 
+Please do not abuse the Fixes tag when it fact this change is "cosmetics".
+
+
+Olaf
+
+--Sig_/9QPQHzLuDWUzzMAsondCt0X
+Content-Type: application/pgp-signature
+Content-Description: Digitale Signatur von OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAmnx+SwACgkQ86SN7mm1
+DoDOqw//QGH7JipvvKfUGAD0ya2ffmoGZ29i2a2jTl1YKx1dflByNsHdzJ8rSMZR
+sDVp6r90A7Hp7T6wXqjr9LLfNktWlT2tWj3t4ElATm3B1LX0nqxpjeHepUm/qocP
+RFdJOEQdkS8AtOUK15UoZz+V/N5FzhY2/tsdwxP1QNJ7fy3TwlHiOHlIXSCgZzY/
+hiRJM+7lfOdZUBzTKYQsCzD0p5rf2jKQ71w+JuTohTKPrmwvXDOoDbZHP463ic8A
+09f2cCS6ZuJyXm4RE+CXDUI4cZB76SBaYUEbBR2ozqAJNgq78VRHZsxC3jjt4yDd
+VPQUIyFyBUtTe3+HMc/PGWuTxjd1GDQSdS/RwtwhICKhxPxD5mEWof4Z9MQmBIiu
+DrhlhcCIDMrOI99qu5GfACy2wr5RuorIWYtopdSb7Jr/eb5GNxA7GzdUfSwdzyQv
+KMX6gqcDOLPErjyYHQQbbYELhNX/WyHoCR2JJFoZ6GGh9QR+dSXJNPTMpvhaFQIX
+G8c5meN/PEGciXUPpG3/fG+Bwn5YOibW2UFMkdC90HSMyJOmLkyxE0kSmIXtQGwk
+EsQoc8mYBWP39fv+TtyCfE2WHYH10J3K2ToeaxSCJvMg2V0xLth2CMPaA65ovISB
+Ijr/q7YQpgTdj78DfXJ0R2MS496kj1otKgXgdI5pRuGp6iUGxRg=
+=cDGz
+-----END PGP SIGNATURE-----
+
+--Sig_/9QPQHzLuDWUzzMAsondCt0X--
 
