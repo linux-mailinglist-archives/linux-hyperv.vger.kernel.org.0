@@ -1,47 +1,48 @@
-Return-Path: <linux-hyperv+bounces-10505-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10506-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EX2UKiWR8mlhsgEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10505-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 01:15:49 +0200
+	id QNc4NyyR8mlhsgEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10506-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 01:15:56 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id A49E449B438
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 01:15:48 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96FCE49B450
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 01:15:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id AA1BA3009E0F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 23:15:45 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 43DB23020EA0
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 23:15:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C71B83242B8;
-	Wed, 29 Apr 2026 23:15:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CE98397689;
+	Wed, 29 Apr 2026 23:15:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lgaKqoCJ"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cBKhmmJl"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95A631A6806;
-	Wed, 29 Apr 2026 23:15:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55C1226F2B9;
+	Wed, 29 Apr 2026 23:15:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777504542; cv=none; b=UGOSa8useXu7MJDBnuLhqWvh0A20nij9UIVrjiybEZKibh1nqMtg63DNjfz4hNJc/Ulm1LZwfiE/lAaSxD4mURr9ovrl0y2YMzmw+tw4sL0RdwiZIM0mtejD+oWhEoXTYRLZCg5f341YdN42cFQzk/U5VACtEAKRaRwsVqdDNFs=
+	t=1777504543; cv=none; b=t5ZREFkmrlvCmh6bG3DMH194N6CGcAeXuVh1Q8KWmU9BSFSA3XKP1BoO4rYofWc80qoQ799IRrq9tbvLkjh8y/TWjx9gWoU69+1AlQXjS5ZK7Z+9AD3U4nxNYZ8r1kejmYiBFUD8QHzW2wJQ5pl6Ce0u7YNKeCGEGXDSX2Q46+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777504542; c=relaxed/simple;
-	bh=JWIHMcVVFylVAfBEENGPPBkZNDa3YL17yQ/ow/GLEUQ=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=XVyWWeUmg8ujmupUy/J8EWN3aQuFZWI5WJZIo65ZZ/27FmVnNRXOCupVbRbVacU5z3ScVjTIm3ZxqQMS7FPhsdkSQZbaZAjtD8QhAOb00ttRnagi5bLWrjPu5Fc7iyocl8UMPkyIr06JRU+HjcbTB8YfHFPHMh5rJpW+LTySft4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lgaKqoCJ; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1777504543; c=relaxed/simple;
+	bh=k1fyeqFvOWhWiwhuu03xoXEKXIOY/LlOjsI8Du2iXHI=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NhtgBAdX3D0PQe+YxO+dpLZx/pRoGezaIsKkWml5Dzg3T333iHBgyvo/gZQrXEHEgGRc7iS/nzCsHzpDpOO9z3wawRVt/JJyC2EMp6IHH87p+aPCc5a43btDisdN84Y4daiS1Yyj+AOmSazY368PQp5wmrUpIcatcfV7JOnGJ4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=cBKhmmJl; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from mrdev.corp.microsoft.com (unknown [13.88.17.9])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 2FD2E20B716C;
-	Wed, 29 Apr 2026 16:15:41 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2FD2E20B716C
+	by linux.microsoft.com (Postfix) with ESMTPSA id 14E9720B716D;
+	Wed, 29 Apr 2026 16:15:42 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 14E9720B716D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1777504541;
-	bh=B2Zd5c7UVP5s1ibl2SuRUTzfdRiFQP+Fsa1z9SMFJ/M=;
-	h=From:To:Subject:Date:From;
-	b=lgaKqoCJFWKvGbR8P/brPD2egu/GQj7ipssgo0zl7LDwHKqMGrLIukWqqJhiEYhci
-	 vReZ1uB4C7i5C9oQUHLc9zlOQkWj7gyvbMOMu0zPyJS9wpw/ArtK+ejLBfEy4M6ysT
-	 lDNkWdwwVXO1vUJfi1I/gjpYqBf/zmd7jzyG54CQ=
+	s=default; t=1777504542;
+	bh=NzAneEtzNkIbXybIamfJGsZ0CM2u/FE+l2+Du+bWYlc=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=cBKhmmJl/bxorseUXWyX6UQQ5whrKuTFX3z68t8rLWR7YCk6uFQgqkk6XzxMqfVx+
+	 gVnDf8O/rDQ70143Q8o0gG7qp+EqCzUKgYdblSfkovl3SUaFgFB22R81Tp8fWMWUl8
+	 GuNTvq++CJosiXKoYG4el5lleo3eiaj3jXL1TXz8=
 From: Mukesh R <mrathor@linux.microsoft.com>
 To: hpa@zytor.com,
 	robin.murphy@arm.com,
@@ -51,10 +52,12 @@ To: hpa@zytor.com,
 	iommu@lists.linux.dev,
 	linux-pci@vger.kernel.org,
 	linux-arch@vger.kernel.org
-Subject: [PATCH v0 0/3] PCI passthru on Hyper-V (Part II)
-Date: Wed, 29 Apr 2026 16:15:16 -0700
-Message-ID: <20260429231519.2569088-1-mrathor@linux.microsoft.com>
+Subject: [PATCH v0 1/3] mshv: Import declarations for irq remap and add irqbypass support
+Date: Wed, 29 Apr 2026 16:15:17 -0700
+Message-ID: <20260429231519.2569088-2-mrathor@linux.microsoft.com>
 X-Mailer: git-send-email 2.51.2.vfs.0.1
+In-Reply-To: <20260429231519.2569088-1-mrathor@linux.microsoft.com>
+References: <20260429231519.2569088-1-mrathor@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -62,7 +65,7 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: A49E449B438
+X-Rspamd-Queue-Id: 96FCE49B450
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -70,7 +73,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -78,7 +81,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-10505-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10506-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
@@ -86,40 +89,108 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[mrathor@linux.microsoft.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TO_DN_NONE(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[8];
-	NEURAL_HAM(-0.00)[-0.999];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linux.microsoft.com:dkim,linux.microsoft.com:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,linux.microsoft.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
-This patch series implements interrupt remapping part of the PCI
-passthru feature on Hyper-V when Linux is running as a privileged VM.
-These patches complement the Part I of the feature at:
+For the irq map/remap hypercalls, copy relevant data structures from
+hypervisor public headers into Linux equivalents. Also, update Kconfig and
+mshv_irqfd for irqbypass. Please note, irqbypass is required for doing
+passthru on MSHV. This because there is really no way of knowing the linux
+irq in the mshv_irqfd_assign and mshv_irqfd_update paths without it. The
+linux irq is setup upfront by VFIO before irqfd assign/update happens.
 
-https://lore.kernel.org/linux-hyperv/20260422023239.1171963-1-mrathor@linux.microsoft.com/T/#t
+Signed-off-by: Mukesh R <mrathor@linux.microsoft.com>
+---
+ drivers/hv/Kconfig          |  1 +
+ drivers/hv/mshv_eventfd.h   |  3 +++
+ include/hyperv/hvgdk_mini.h |  3 +++
+ include/hyperv/hvhdk.h      | 17 +++++++++++++++++
+ 4 files changed, 24 insertions(+)
 
-Testing and other details are listed there.
-
-Thanks,
--Mukesh
-
-Mukesh R (3):
-  mshv: Import declarations for irq remap and add irqbypass support
-  hyperv: Implement irq remap for passthru devices
-  mshv: Implement guest irq migration for passthru'd devices
-
- arch/x86/hyperv/irqdomain.c         |  18 +-
- drivers/hv/Kconfig                  |   1 +
- drivers/hv/mshv_eventfd.c           | 500 +++++++++++++++++++++++++++-
- drivers/hv/mshv_eventfd.h           |   3 +
- drivers/iommu/hyperv-iommu-root.c   |  14 +
- drivers/pci/controller/pci-hyperv.c |  10 +
- include/asm-generic/mshyperv.h      |   4 +
- include/hyperv/hvgdk_mini.h         |   3 +
- include/hyperv/hvhdk.h              |  17 +
- 9 files changed, 564 insertions(+), 6 deletions(-)
-
+diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+index 7937ac0cbd0f..c831fe25ca2b 100644
+--- a/drivers/hv/Kconfig
++++ b/drivers/hv/Kconfig
+@@ -75,6 +75,7 @@ config MSHV_ROOT
+ 	# no particular order, making it impossible to reassemble larger pages
+ 	depends on PAGE_SIZE_4KB
+ 	select EVENTFD
++	select IRQ_BYPASS_MANAGER
+ 	select VIRT_XFER_TO_GUEST_WORK
+ 	select HMM_MIRROR
+ 	select MMU_NOTIFIER
+diff --git a/drivers/hv/mshv_eventfd.h b/drivers/hv/mshv_eventfd.h
+index 464c6b81ab33..ff4dd24b8ad4 100644
+--- a/drivers/hv/mshv_eventfd.h
++++ b/drivers/hv/mshv_eventfd.h
+@@ -9,6 +9,7 @@
+ #define __LINUX_MSHV_EVENTFD_H
+ 
+ #include <linux/poll.h>
++#include <linux/irqbypass.h>
+ 
+ #include "mshv.h"
+ #include "mshv_root.h"
+@@ -37,6 +38,8 @@ struct mshv_irqfd {
+ 	struct mshv_irqfd_resampler	    *irqfd_resampler;
+ 	struct eventfd_ctx		    *irqfd_resamplefd;
+ 	struct hlist_node		     irqfd_resampler_hnode;
++	struct irq_bypass_consumer	     irqfd_bypass_cons;
++	struct irq_bypass_producer	    *irqfd_bypass_prod;
+ };
+ 
+ void mshv_eventfd_init(struct mshv_partition *partition);
+diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
+index da622fb06440..1ef480825705 100644
+--- a/include/hyperv/hvgdk_mini.h
++++ b/include/hyperv/hvgdk_mini.h
+@@ -59,6 +59,8 @@ struct hv_u128 {
+ #define HV_PARTITION_ID_INVALID		((u64)0)
+ #define HV_PARTITION_ID_SELF		((u64)-1)
+ 
++#define HV_MAX_VPS    256               /* HV_MAXIMUM_PROCESSORS */
++
+ /* Hyper-V specific model specific registers (MSRs) */
+ 
+ #if defined(CONFIG_X86)
+@@ -508,6 +510,7 @@ union hv_vp_assist_msr_contents {	 /* HV_REGISTER_VP_ASSIST_PAGE */
+ #define HVCALL_UNMAP_VP_STATE_PAGE			0x00e2
+ #define HVCALL_GET_VP_STATE				0x00e3
+ #define HVCALL_SET_VP_STATE				0x00e4
++#define HVCALL_GET_VPSET_FROM_MDA                       0x00e5
+ #define HVCALL_GET_VP_CPUID_VALUES			0x00f4
+ #define HVCALL_GET_PARTITION_PROPERTY_EX		0x0101
+ #define HVCALL_MMIO_READ				0x0106
+diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
+index 5e83d3714966..d0a892347ab1 100644
+--- a/include/hyperv/hvhdk.h
++++ b/include/hyperv/hvhdk.h
+@@ -952,4 +952,21 @@ struct hv_input_modify_sparse_spa_page_host_access {
+ #define HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE      0x4
+ #define HV_MODIFY_SPA_PAGE_HOST_ACCESS_HUGE_PAGE       0x8
+ 
++#ifdef CONFIG_X86
++
++struct hv_input_get_vp_set_from_mda {   /* HV_OUTPUT_GET_VP_SET_FROM_MDA */
++	u64 target_partid;
++	u64 dest_address;
++	u8  input_vtl;
++	u8  destmode_logical;         /* true => mode is logical */
++	u16 reserved0;                /* mbz */
++	u32 reserved1;                /* mbz */
++} __packed;
++
++union hv_output_get_vp_set_from_mda {  /* HV_OUTPUT_GET_VP_SET_FROM_MDA */
++	struct hv_vpset target_vpset;
++	u64 bitset_buffer[HV_GENERIC_SET_QWORD_COUNT(HV_MAX_VPS)];
++} __packed;
++
++#endif /* CONFIG_X86 */
+ #endif /* _HV_HVHDK_H */
 -- 
 2.51.2.vfs.0.1
 
