@@ -1,284 +1,156 @@
-Return-Path: <linux-hyperv+bounces-10468-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10469-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2MBhKNHZ8WmLkwEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10468-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 12:13:37 +0200
+	id IBUqBSfZ8WmLkwEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10469-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 12:10:47 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7C7C492B2B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 12:13:36 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B26A492A4C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 12:10:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 55931301A148
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 10:00:46 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 09D4B300539C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 10:10:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52588347518;
-	Wed, 29 Apr 2026 10:00:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 702FB3CA4B6;
+	Wed, 29 Apr 2026 10:10:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="pmZBcQL5"
+	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="OXBEE9Rf"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3AF330B529;
-	Wed, 29 Apr 2026 10:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777456844; cv=none; b=kSyeRZpBOw3f01b9ayov7PBbbQpoOMySeIG4e6lGX3Zfpf1wKg0OTHuGHFpmYDFjzHY6LDNq5MExmDpbHjHkFlNjP+yjjeZ3xuy64+l4eUiryjRq5ZpmxYlror7PDAkWUJAP628DuEOwt9xlCpfxwe6kzAwLOa6ergMzkfi/uug=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777456844; c=relaxed/simple;
-	bh=nKq21MWKpJ9JRF+8U25wGOhHT9RcuOxZrDC3uu6+8yI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DhRUCbZk0reMixHho2qNs4rNl2CVJ6KmdGix7GVL7qz6z1xuxgB71pFflWOXJHklnK06aSwzJ7igwtfU5D3WjxzSJa3J8lBmsTx++3fUPRdASqH+pEatEMFqNgMJ2GYR1kgw2xB7BCukFzeELxJQjhqeMqrQOf+cPlslpKbdqtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=pmZBcQL5; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.95.65.160] (unknown [167.220.238.0])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 78CBF20B716C;
-	Wed, 29 Apr 2026 03:00:35 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 78CBF20B716C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1777456842;
-	bh=BLsXGKx0T3J/8O/IzlEtJAB/hh15qSfJxIj3wYO8c+k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pmZBcQL55VntaOUwjnbe7yQ613XZmm0eAELWs4e8kqgjMJ/vAx5wINzKEINE6T6UF
-	 pC5sHNK0ET3Ppsu6Mk/rPZK3QdO80LceWGSGMUPMiwIGjuBfBDdVmyC9Xz/qG7ve0z
-	 56Quia5hZp6RFqg7rp2xfw51fkC4J20f80jRQnBA=
-Message-ID: <e47c0bbc-f46f-426d-bf3a-675df5b872d0@linux.microsoft.com>
-Date: Wed, 29 Apr 2026 15:30:31 +0530
+Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0668C395259;
+	Wed, 29 Apr 2026 10:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777457443; cv=pass; b=Nw8sWdZ4ZicOwGkrbfyzjUyFtkykw5YX54J6ebo+L5PDJlKAaB5m2p/t3aa1mjWnJUj2HQmwrjegCHBrUAoqGACWMQmY2QXWgTU921L5t/vsO7MgBS4lT/UdHa5sVa9LaNFU1C6nTSBhYuzjRwymDVNkNy4QDM23Ed6KKods2to=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777457443; c=relaxed/simple;
+	bh=lUjcB+iuaalN09wG72rTZUDelYzuJG9bOf/uGfkyGgs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nOwva1kUz3/X63surFdc1QUW/BtNdgFXHokDUaYOK5m0+GxrjirFf+AL6jnkd6tbo+G2UJ/jrhW7W1iV3m9QAD2QApRNzT0gVYd4gipoWmYD0xmlgwBedH2WbV+UAGow1eqs3LWnNUkXxEJr+CBN134bSeEu8uNA7FJLZPlpxH0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=OXBEE9Rf; arc=pass smtp.client-ip=136.143.188.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
+ARC-Seal: i=1; a=rsa-sha256; t=1777457412; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=mLXLA35hYoo5S8dEqxHmno7mxolKdl64mwISIQ13LC4wkiWXwS/tys3WAbs5+Cw2pVfKrtMqoicahhPlwFjhDqusnEqRjEXCp6GqzopY1Pg1/AN/bvmo0kOfdAzzbMUVNu0U8rVLMYwKnd9JWR//ao/6dq5JQp+iBhS2K2nnSq8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1777457412; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=J50RyZE4/s/NcIzQS4v6UG489kfgGr6Z+tintjb2Nmo=; 
+	b=cTdsM54z4aM9KSc2MylFiUdjGfxCldhmBPUl0eXXJyfPj+3iPR1NBfgoxKDind/sl4sW2sSvQWi+Kh2FRj1k/HiPqPMuwHCOgBO/gXr2Ojuxp9Zjuse7sS6zwH/C9MRF7rd29HnVnxLHeWTuLkBVeyrDSUc5Tk0ApoKFL9v+MKg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=anirudhrb.com;
+	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
+	dmarc=pass header.from=<anirudh@anirudhrb.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1777457412;
+	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=J50RyZE4/s/NcIzQS4v6UG489kfgGr6Z+tintjb2Nmo=;
+	b=OXBEE9RfHegC02ZfBlmdcxQt1XMhtW2f6Snb8z0cF7B31DR5qwAU7YH4kZQSnsQj
+	RcwRkeRCfwW85lOZLrHNdPUXhewwZ3IOBIMLzwyPQUL0R/3EgKOWLJ18/3Kl9oZU3FU
+	srKP6+pr19UN/tHN8B0cZmEolzsALeX3kRc9hOoc=
+Received: by mx.zohomail.com with SMTPS id 1777457407634465.4010038760358;
+	Wed, 29 Apr 2026 03:10:07 -0700 (PDT)
+Date: Wed, 29 Apr 2026 10:10:00 +0000
+From: Anirudh Rayabharam <anirudh@anirudhrb.com>
+To: Jork Loeser <jloeser@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, x86@kernel.org,
+	"K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+	Michael Kelley <mhklinux@outlook.com>, linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] mshv: unmap debugfs stats pages on kexec
+Message-ID: <20260429-attentive-gleeful-cow-65e0ca@anirudhrb>
+References: <20260427213855.1675044-1-jloeser@linux.microsoft.com>
+ <20260427213855.1675044-4-jloeser@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 12/15] mshv_vtl: Move VSM code page offset logic to x86
- files
-To: Michael Kelley <mhklinux@outlook.com>,
- "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
- Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: Marc Zyngier <maz@kernel.org>, Timothy Hayes <timothy.hayes@arm.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Sascha Bischoff <sascha.bischoff@arm.com>,
- mrigendrachaubey <mrigendra.chaubey@gmail.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
- "vdso@mailbox.org" <vdso@mailbox.org>,
- "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>
-References: <20260423124206.2410879-1-namjain@linux.microsoft.com>
- <20260423124206.2410879-13-namjain@linux.microsoft.com>
- <SN6PR02MB4157E0525DDDD153888F5AFBD4362@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB4157E0525DDDD153888F5AFBD4362@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: B7C7C492B2B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260427213855.1675044-4-jloeser@linux.microsoft.com>
+X-ZohoMailClient: External
+X-Rspamd-Queue-Id: 7B26A492A4C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+X-Spamd-Result: default: False [-1.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[anirudhrb.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10468-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10469-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[outlook.com,microsoft.com,kernel.org,arm.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,dabbelt.com,eecs.berkeley.edu,ghiti.fr];
-	RCPT_COUNT_TWELVE(0.00)[31];
-	FREEMAIL_CC(0.00)[kernel.org,arm.com,gmail.com,vger.kernel.org,lists.infradead.org,mailbox.org,linux.microsoft.com];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,microsoft.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,outlook.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[namjain@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	NEURAL_HAM(-0.00)[-0.999];
+	FROM_NEQ_ENVFROM(0.00)[anirudh@anirudhrb.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[anirudhrb.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,linux.microsoft.com:mid,vsm_pg_offset_reg.name:url,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[anirudhrb.com:dkim,anirudhrb.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
-
-
-On 4/27/2026 11:10 AM, Michael Kelley wrote:
-> From: Naman Jain <namjain@linux.microsoft.com> Sent: Thursday, April 23, 2026 5:42 AM
->>
->> The VSM code page offset register (HV_REGISTER_VSM_CODE_PAGE_OFFSETS)
->> is x86 specific, its value configures the static call used to return
->> to VTL0 via the hypercall page. Move the register read from the common
->> mshv_vtl_get_vsm_regs() into the x86 mshv_vtl_return_call_init(),
->> which is the sole consumer of the offset.
->>
->> Change mshv_vtl_return_call_init() from taking a u64 parameter
->> to taking no arguments, and rename mshv_vtl_get_vsm_regs() to
->> mshv_vtl_get_vsm_cap_reg() since it now only fetches
->> HV_REGISTER_VSM_CAPABILITIES.
->>
->> No functional change on x86. This prepares the common driver code for
->> ARM64 where VSM code page offsets do not apply.
->>
->> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
->> ---
->>   arch/x86/hyperv/hv_vtl.c        | 19 +++++++++++++++++--
->>   arch/x86/include/asm/mshyperv.h |  4 ++--
->>   drivers/hv/mshv_vtl_main.c      | 24 +++++++++++++-----------
->>   3 files changed, 32 insertions(+), 15 deletions(-)
->>
->> diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
->> index f3ffb6a7cb2d..7c10b34cf8a4 100644
->> --- a/arch/x86/hyperv/hv_vtl.c
->> +++ b/arch/x86/hyperv/hv_vtl.c
->> @@ -293,10 +293,25 @@ EXPORT_SYMBOL_GPL(hv_vtl_configure_reg_page);
->>
->>   DEFINE_STATIC_CALL_NULL(__mshv_vtl_return_hypercall, void (*)(void));
->>
->> -void mshv_vtl_return_call_init(u64 vtl_return_offset)
->> +int mshv_vtl_return_call_init(void)
->>   {
->> +	struct hv_register_assoc vsm_pg_offset_reg;
->> +	union hv_register_vsm_page_offsets offsets;
->> +	int ret;
->> +
->> +	vsm_pg_offset_reg.name = HV_REGISTER_VSM_CODE_PAGE_OFFSETS;
->> +
->> +	ret = hv_call_get_vp_registers(HV_VP_INDEX_SELF, HV_PARTITION_ID_SELF,
->> +				       1, input_vtl_zero, &vsm_pg_offset_reg);
->> +	if (ret)
->> +		return ret;
->> +
->> +	offsets.as_uint64 = vsm_pg_offset_reg.value.reg64;
->> +
->>   	static_call_update(__mshv_vtl_return_hypercall,
->> -			   (void *)((u8 *)hv_hypercall_pg + vtl_return_offset));
->> +			   (void *)((u8 *)hv_hypercall_pg + offsets.vtl_return_offset));
->> +
->> +	return 0;
->>   }
->>   EXPORT_SYMBOL(mshv_vtl_return_call_init);
->>
->> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
->> index b4d80c9a673a..b48f115c1292 100644
->> --- a/arch/x86/include/asm/mshyperv.h
->> +++ b/arch/x86/include/asm/mshyperv.h
->> @@ -286,14 +286,14 @@ struct mshv_vtl_cpu_context {
->>   #ifdef CONFIG_HYPERV_VTL_MODE
->>   void __init hv_vtl_init_platform(void);
->>   int __init hv_vtl_early_init(void);
->> -void mshv_vtl_return_call_init(u64 vtl_return_offset);
->> +int mshv_vtl_return_call_init(void);
->>   void mshv_vtl_return_hypercall(void);
->>   void __mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl0);
->>   int hv_vtl_get_set_reg(struct hv_register_assoc *regs, bool set, bool shared);
->>   #else
->>   static inline void __init hv_vtl_init_platform(void) {}
->>   static inline int __init hv_vtl_early_init(void) { return 0; }
->> -static inline void mshv_vtl_return_call_init(u64 vtl_return_offset) {}
->> +static inline int mshv_vtl_return_call_init(void) { return 0; }
->>   static inline void mshv_vtl_return_hypercall(void) {}
->>   static inline void __mshv_vtl_return_call(struct mshv_vtl_cpu_context *vtl0) {}
->>   #endif
->> diff --git a/drivers/hv/mshv_vtl_main.c b/drivers/hv/mshv_vtl_main.c
->> index 4c9ae65ad3e8..be498c9234fd 100644
->> --- a/drivers/hv/mshv_vtl_main.c
->> +++ b/drivers/hv/mshv_vtl_main.c
->> @@ -79,7 +79,6 @@ struct mshv_vtl {
->>   };
->>
->>   static struct mutex mshv_vtl_poll_file_lock;
->> -static union hv_register_vsm_page_offsets mshv_vsm_page_offsets;
->>   static union hv_register_vsm_capabilities mshv_vsm_capabilities;
->>
->>   static DEFINE_PER_CPU(struct mshv_vtl_poll_file, mshv_vtl_poll_file);
->> @@ -203,21 +202,19 @@ static void mshv_vtl_synic_enable_regs(unsigned int cpu)
->>   	/* VTL2 Host VSP SINT is (un)masked when the user mode requests that */
->>   }
->>
->> -static int mshv_vtl_get_vsm_regs(void)
->> +static int mshv_vtl_get_vsm_cap_reg(void)
->>   {
->> -	struct hv_register_assoc registers[2];
->> -	int ret, count = 2;
->> +	struct hv_register_assoc vsm_capability_reg;
->> +	int ret;
->>
->> -	registers[0].name = HV_REGISTER_VSM_CODE_PAGE_OFFSETS;
->> -	registers[1].name = HV_REGISTER_VSM_CAPABILITIES;
->> +	vsm_capability_reg.name = HV_REGISTER_VSM_CAPABILITIES;
->>
->>   	ret = hv_call_get_vp_registers(HV_VP_INDEX_SELF, HV_PARTITION_ID_SELF,
->> -				       count, input_vtl_zero, registers);
->> +				       1, input_vtl_zero, &vsm_capability_reg);
->>   	if (ret)
->>   		return ret;
->>
->> -	mshv_vsm_page_offsets.as_uint64 = registers[0].value.reg64;
->> -	mshv_vsm_capabilities.as_uint64 = registers[1].value.reg64;
->> +	mshv_vsm_capabilities.as_uint64 = vsm_capability_reg.value.reg64;
->>
->>   	return ret;
+On Mon, Apr 27, 2026 at 02:38:54PM -0700, Jork Loeser wrote:
+> On L1VH, debugfs stats pages are overlay pages: the kernel allocates
+> them and registers the GPAs with the hypervisor via
+> HVCALL_MAP_STATS_PAGE2. These overlay mappings persist in the
+> hypervisor across kexec. If the kexec'd kernel reuses those physical
+> pages, the hypervisor's overlay semantics cause a machine check
+> exception.
 > 
-> Nit: This could be just "return 0".
-
-Acked.
-
+> Fix this by calling mshv_debugfs_exit() from the reboot notifier,
+> which issues HVCALL_UNMAP_STATS_PAGE for each mapped stats page before
+> kexec. This releases the overlay bindings so the physical pages can be
+> safely reused. Guard mshv_debugfs_exit() against being called when
+> init failed.
 > 
->>   }
->> @@ -1139,13 +1136,18 @@ static int __init mshv_vtl_init(void)
->>   	tasklet_init(&msg_dpc, mshv_vtl_sint_on_msg_dpc, 0);
->>   	init_waitqueue_head(&fd_wait_queue);
->>
->> -	if (mshv_vtl_get_vsm_regs()) {
->> +	if (mshv_vtl_get_vsm_cap_reg()) {
->>   		dev_emerg(dev, "Unable to get VSM capabilities !!\n");
+> Signed-off-by: Jork Loeser <jloeser@linux.microsoft.com>
+> ---
+>  drivers/hv/mshv_debugfs.c | 7 ++++++-
+>  drivers/hv/mshv_synic.c   | 1 +
+>  2 files changed, 7 insertions(+), 1 deletion(-)
 > 
-> Why is this failure an emergency message, while the other failures
-> here in mshv_vtl_init() are just error messages? When there's lack
-> of consistency, I always wonder if there is a reason ..... :-)
+> diff --git a/drivers/hv/mshv_debugfs.c b/drivers/hv/mshv_debugfs.c
+> index 418b6dc8f3c2..3c3e02237ae9 100644
+> --- a/drivers/hv/mshv_debugfs.c
+> +++ b/drivers/hv/mshv_debugfs.c
+> @@ -674,8 +674,10 @@ int __init mshv_debugfs_init(void)
+>  
+>  	mshv_debugfs = debugfs_create_dir("mshv", NULL);
+>  	if (IS_ERR(mshv_debugfs)) {
+> +		err = PTR_ERR(mshv_debugfs);
+> +		mshv_debugfs = NULL;
+>  		pr_err("%s: failed to create debugfs directory\n", __func__);
 
-It might be because I didn’t pay enough attention to the old code :)
-dev_err() should work just fine, I'll change it.
+Might as well print err here.
 
+Nevertheless:
 
-> 
->>   		ret = -ENODEV;
->>   		goto free_dev;
->>   	}
->>
->> -	mshv_vtl_return_call_init(mshv_vsm_page_offsets.vtl_return_offset);
->> +	ret = mshv_vtl_return_call_init();
->> +	if (ret) {
->> +		dev_err(dev, "mshv_vtl_return_call_init failed: %d\n", ret);
->> +		goto free_dev;
->> +	}
->> +
->>   	ret = hv_vtl_setup_synic();
->>   	if (ret)
->>   		goto free_dev;
->> --
->> 2.43.0
->>
+Reviewed-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
 
-Regards,
-Naman
+Thanks,
+Anirudh.
+
 
