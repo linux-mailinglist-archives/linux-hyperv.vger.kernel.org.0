@@ -1,56 +1,57 @@
-Return-Path: <linux-hyperv+bounces-10488-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10489-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AI9WBk5M8mnNpQEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10488-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 20:22:06 +0200
+	id oENJI25M8mkFpgEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10489-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 20:22:38 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60C45498EEB
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 20:22:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DE947498F34
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 20:22:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C3FCF303FF0E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 18:18:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D93FA3145C8B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2026 18:18:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B7AB2F7AB0;
-	Wed, 29 Apr 2026 18:18:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B674538C2C0;
+	Wed, 29 Apr 2026 18:18:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nlPZuOV/"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bcAh/zJL"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 008FE2C029F;
-	Wed, 29 Apr 2026 18:18:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61BDC229B38;
+	Wed, 29 Apr 2026 18:18:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777486705; cv=none; b=J24/A7oxyPw0VU4dGxw3ws0UB8+kmw/Gp0hl0jLM0GniKanH/LyEqYJPoMGhPMybPtd0FXfjWgTEb+mzHCLQMR/cyOZN9Mq02hIxqioOM9niyjTHVq18YwCXsYFRu9ntvvf2Afp3IaphpH1rMYNLki/ojsDLGU3fBgIObEA8Lxg=
+	t=1777486707; cv=none; b=COmvNt1PAa2Vvf3XbnFB2pI7jIzF6BWlNKwWLzMBEHaWapNmerX6QaQaBWLMtZtrIRdgWS+Qm/z4JY7Rw8f00f7PBn40urfr1d2P4023kDWVEujuFKYHC6e/DMX6GOxTwD4j0AmdsKzCNmbqZ/Dv2VVRFXT4c3BafJBd2I5N6kM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777486705; c=relaxed/simple;
-	bh=1DM1Tf2buDMr6wYySKG5eOuzr5NfYNi7FbxG34uXry8=;
+	s=arc-20240116; t=1777486707; c=relaxed/simple;
+	bh=4CEmuNWfSqAId4qwaBWpq7UGwto9b5+jVHli6OgfbvI=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UqZfWXkIRhSApmp+J9An2k59MFY9pB29oadfzM4wQk43a5LrhGTSsZSdiLNibVmBIPpKAWmcrDpiH66yiNOWbaAbHOT1eB6AxJoGw6UPzTDzsNhuEmPSvtXxWke9SkFrvKaVH5kvTONaPbDyzBnlh35puTYbSjcSXju+lu3wdro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=nlPZuOV/; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version:Content-Type; b=lKdhtFOnyeU3u/bvOcWQaOplF1bq0ctqq993DLzYQLEjpDe/NGm9BnezGay3wiEJdInFGlnff6B7Na73uMwZZid5mbXYjvdWv3Lwrb38603Vqea7AdJrmfs82PxDi1yjub26JsQmDq0xgfWtidx9zlkMXj+HxnRF47479IQVN1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bcAh/zJL; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 2B48320B716D;
-	Wed, 29 Apr 2026 11:18:21 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2B48320B716D
+	by linux.microsoft.com (Postfix) with ESMTPSA id 807C820B716C;
+	Wed, 29 Apr 2026 11:18:26 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 807C820B716C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1777486701;
-	bh=XJUVeZTp67hhBno2mfGNJ0SJqjinfzZp8nP1MGjidKs=;
+	s=default; t=1777486706;
+	bh=g3EmDuejSmywJNXMETdUC704OXedhEAB60BbPKI2eMs=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=nlPZuOV/w6ubvUXmkF0M+zvJYrUY5XUZAtthYWPiT/1mNm9Lfjlc1n36P4nIk6uXK
-	 0o7dtXoDgv2VpSSfJAG6bthZBe1UzALqjB+nUnCBsLSFPqHHI9E46h3uS8+1XoanNZ
-	 GmMc3QrtrwrOwAsCrgGPj1svuKqpbY0RZCU/NpIw=
-Subject: [PATCH 08/10] mshv: Use kfree_rcu in mshv_portid_free
+	b=bcAh/zJL/85sPC/AdqxXZFzDLfbEZ1t5Jg5WHu6R1FBSun/65FR419ZBtChJbOq5d
+	 uNqgLD9/IfATr8PWa3u0reAP7thISn5fsbaZFsEpbykT8Ia2DwTTHtJwrQHK40KdOI
+	 fewfHRNOIMDVRyEGcm6x1debzs1vo0EPvJrIT6A8=
+Subject: [PATCH 09/10] mshv: Add missing vp_index bounds check in intercept
+ ISR
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, longli@microsoft.com
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 29 Apr 2026 18:18:20 +0000
+Date: Wed, 29 Apr 2026 18:18:25 +0000
 Message-ID: 
- <177748670045.144491.15550968752107833892.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <177748670580.144491.17502765337985039307.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 In-Reply-To: 
  <177748522635.144491.1565666089881726479.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 References: 
@@ -64,7 +65,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 60C45498EEB
+X-Rspamd-Queue-Id: DE947498F34
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
@@ -76,7 +77,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_FROM(0.00)[bounces-10488-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10489-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
@@ -91,35 +92,40 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[skinsburskii-cloud-desktop.internal.cloudapp.net:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:dkim,skinsburskii-cloud-desktop.internal.cloudapp.net:mid]
 
-mshv_portid_free() uses synchronize_rcu() followed by kfree() to
-reclaim port table entries. This blocks the caller until a full RCU
-grace period elapses, which is unnecessary since the same module already
-uses the non-blocking kfree_rcu() pattern in mshv_port_table_fini().
+mshv_intercept_isr() reads vp_index from the intercept message payload
+and uses it directly to index into partition->pt_vp_array without
+validating it against MSHV_MAX_VPS. A malformed or corrupted hypervisor
+message with a vp_index beyond the array bounds would cause an
+out-of-bounds memory access in interrupt context, likely crashing the
+host.
 
-Replace with kfree_rcu() to avoid the blocking wait and keep the
-reclamation strategy consistent across the file.
+Both handle_bitset_message() and handle_pair_message() already validate
+vp_index before use. Add the same check to mshv_intercept_isr() for
+consistency.
 
+Fixes: 621191d709b14 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
 Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 ---
- drivers/hv/mshv_portid_table.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/hv/mshv_synic.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/hv/mshv_portid_table.c b/drivers/hv/mshv_portid_table.c
-index f1aaef69eb9b7..7ffe7a1c1e518 100644
---- a/drivers/hv/mshv_portid_table.c
-+++ b/drivers/hv/mshv_portid_table.c
-@@ -60,8 +60,7 @@ mshv_portid_free(int port_id)
- 	WARN_ON(!info);
- 	idr_unlock(&port_table_idr);
- 
--	synchronize_rcu();
--	kfree(info);
-+	kfree_rcu(info, portbl_rcu);
- }
- 
- int
+diff --git a/drivers/hv/mshv_synic.c b/drivers/hv/mshv_synic.c
+index 43f1bcbbf2d34..5bceb81229817 100644
+--- a/drivers/hv/mshv_synic.c
++++ b/drivers/hv/mshv_synic.c
+@@ -384,6 +384,10 @@ mshv_intercept_isr(struct hv_message *msg)
+ 	 */
+ 	vp_index =
+ 	       ((struct hv_opaque_intercept_message *)msg->u.payload)->vp_index;
++	if (unlikely(vp_index >= MSHV_MAX_VPS)) {
++		pr_debug("VP index %u out of bounds\n", vp_index);
++		goto unlock_out;
++	}
+ 	vp = partition->pt_vp_array[vp_index];
+ 	if (unlikely(!vp)) {
+ 		pr_debug("failed to find VP %u\n", vp_index);
 
 
 
