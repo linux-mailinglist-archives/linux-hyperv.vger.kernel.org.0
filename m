@@ -1,248 +1,227 @@
-Return-Path: <linux-hyperv+bounces-10525-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10526-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YOYSC+Ns82lf2gEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10525-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 16:53:23 +0200
+	id ePX4NLeF82kY4wEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10526-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 18:39:19 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80DE34A446A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 16:53:22 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BE184A5D9D
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 18:39:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0E8B43022967
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 14:52:21 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B7570300B100
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 16:33:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D93DF428851;
-	Thu, 30 Apr 2026 14:52:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70813472780;
+	Thu, 30 Apr 2026 16:33:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rCDqmaMa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dz5o9OOH"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87F653AEF2F;
-	Thu, 30 Apr 2026 14:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D8646AF2B;
+	Thu, 30 Apr 2026 16:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777560739; cv=none; b=Nf0yqgCe8mhDHPc9FrUudXWm0PGm3hwFiIDqwaPzC7gNlZtswDtCZDJpEm5SVcxKOfgvvJ+PYSxOhY8SCwLlJy25ld/V2rmWfwbEu502nJ3ij4jsCSnm+PpXLTSf4D1kmHpeQbdrhzulf9U0O4mxTxTLt67aHrJsnd0HJFyZH7c=
+	t=1777566834; cv=none; b=GkE0t9AIvha+A8xgYeBSHasiqy8qy3nOEzo1YHj5d53y/xIcmJdkkWUDELbpNlB8meZwARrEtM6Y08aA77fJ5+Ylw+rK1AXslk9ukL8G2zRXSVnBzA9BxAObDkxkm244VftWW/VeEugRpQaUBH8na3tI2SrbbzYmqVbX9Qpbavc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777560739; c=relaxed/simple;
-	bh=KnvQTSgrnzpAkM9jgRgW4s7u9qf+LTmdG6ojxX7D7Sk=;
-	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=h1OFIXObu1zQ5em3b36NT8Cw6baD5A6bX1Ha9YNjNfaaZWntctWS3JJouvBt2XJxQozMD8zbQrJLdYATbJQYotMzLIl+O/rgmdu/GcXy5g2iypFlF8BLO+d+AsXLZaJWgyg7OPIFHH0jNNqqteE5Ya7H2EqyVI9NlcmX2pEPKWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rCDqmaMa; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 734F120B7175;
-	Thu, 30 Apr 2026 07:52:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 734F120B7175
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1777560738;
-	bh=tZJ70AYhkLd28Ss6J6io3f5kL9ADeSg5/qyYTiYkvGE=;
-	h=Subject:From:To:Cc:Date:From;
-	b=rCDqmaMafqr5YcZp04jnFbU3G+YajPjPw9SGbcUmnw7SnNrrhEJVwlbZWE8jkMm7U
-	 tswLW/IwxmRgD9pi06DYhcrjFrlfq6Dj0ANFhAToe1pzQ4Rur3mzI96dEt75tMn/rB
-	 l1Tl5nGHagoBGi/lRHvgTSQf60P/9ZP05ioyqqLk=
-Subject: [PATCH v3] mshv: Simplify GPA map/unmap hypercall helpers
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, longli@microsoft.com
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 30 Apr 2026 14:52:17 +0000
-Message-ID: 
- <177756065245.17889.140699174692055235.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-User-Agent: StGit/0.19
+	s=arc-20240116; t=1777566834; c=relaxed/simple;
+	bh=cfENCjc1fzzR6KbL+6+PAAkvtumH6My77uGSdh60sFg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CqusAnQKoLFsqRUgzwrxmy43R7Kn6fF8DH6P/5tKdZPHDN3Mz9ntCpNtn6hfSci10uzw6XQCXYl5ig9uRLOQwkYoUzEZrMzneoCoQd8YkCCVJI2JRoK0F90mg+5QqFxbKWfHCnJ25DkWOpvNjjBHHz/6uKwI8WCKMIXXK2vAQSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dz5o9OOH; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777566832; x=1809102832;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=cfENCjc1fzzR6KbL+6+PAAkvtumH6My77uGSdh60sFg=;
+  b=dz5o9OOHBRiOVjwahPWla7r/T4wsp3a7wa/1Y2Mcs+063ooj9/Q2Ol3x
+   hI1TnQ2Uzgc0BZj/FWredUq6WGboSgQG+IsCqYj3DLprE4jOgkfu1yH35
+   YsV604jwIyE2DQT6lKYZFk7GcLaHFX42kUtXfHKGHQh1pows9Q4C96YgZ
+   eetTINU0UHVyEwSiTHHqFV6jBglyh0+tOSJ+z9fEbWuG3F5gZUsZYRaVD
+   Io2pAqEJdQV65y5vZPZE5UcPnpQc4TJ86th/onrYTKwPAkmfIa7mLGqN/
+   eaSXBljGCthN9iqUXGVSCGaMTGJtxUBvC9r/7iww5bh6uFGmNaX1seY1K
+   Q==;
+X-CSE-ConnectionGUID: du4+MePWQEu5cx9OCmfPYw==
+X-CSE-MsgGUID: MChYPw37QhqohImxjdUOiQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11772"; a="78236273"
+X-IronPort-AV: E=Sophos;i="6.23,208,1770624000"; 
+   d="scan'208";a="78236273"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2026 09:33:52 -0700
+X-CSE-ConnectionGUID: eQNDi5mTSUy9Qg9nksZGIw==
+X-CSE-MsgGUID: gnxf2RtZQkewiLYuAZR9QA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,208,1770624000"; 
+   d="scan'208";a="230278698"
+Received: from lkp-server01.sh.intel.com (HELO aa799cca880d) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 30 Apr 2026 09:33:48 -0700
+Received: from kbuild by aa799cca880d with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wIUKf-00000000CeW-2GTG;
+	Thu, 30 Apr 2026 16:33:45 +0000
+Date: Fri, 1 May 2026 00:33:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dexuan Cui <decui@microsoft.com>, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, longli@microsoft.com,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mhklinux@outlook.com, matthew.ruffell@canonical.com,
+	johansen@templeofstupid.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] Drivers: hv: vmbus: Improve the logc of reserving
+ fb_mmio on Gen2 VMs
+Message-ID: <202605010002.dnnxVZFF-lkp@intel.com>
+References: <20260416183529.838321-1-decui@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 80DE34A446A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260416183529.838321-1-decui@microsoft.com>
+X-Rspamd-Queue-Id: 2BE184A5D9D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_FROM(0.00)[bounces-10525-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10526-lists,linux-hyperv=lfdr.de];
+	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,vger.kernel.org,outlook.com,canonical.com,templeofstupid.com];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_NONE(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:dkim,skinsburskii-cloud-desktop.internal.cloudapp.net:mid]
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,01.org:url,intel.com:email,intel.com:dkim,intel.com:mid,git-scm.com:url]
 
-Clean up hv_do_map_gpa_hcall() and hv_call_unmap_gpa_pages() after the
-preceding bug-fix patches:
+Hi Dexuan,
 
-Move "done += completed" before the status checks so that pages mapped
-by a partially-successful batch are included in the error cleanup unmap.
-Previously these mappings were leaked on failure.
+kernel test robot noticed the following build warnings:
 
-While here, improve type safety and readability:
- - Change "int done" to "u64 done" to match the u64 page_count it is
-   compared against, avoiding signed/unsigned comparison hazards.
- - Use u64 for loop iteration and batch size variables consistently.
- - Add proper braces to the for-loop body in hv_do_map_gpa_hcall().
- - Remove unnecessary "ret" variable from hv_call_unmap_gpa_pages().
- - Simplify the error-path unmap to use "done << large_shift" directly
-   instead of mutating done in place.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v7.1-rc1 next-20260429]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-v3: aligned changes by 80 colons
-v2: replaced min with min_t
+url:    https://github.com/intel-lab-lkp/linux/commits/Dexuan-Cui/Drivers-hv-vmbus-Improve-the-logc-of-reserving-fb_mmio-on-Gen2-VMs/20260424-033622
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20260416183529.838321-1-decui%40microsoft.com
+patch subject: [PATCH] Drivers: hv: vmbus: Improve the logc of reserving fb_mmio on Gen2 VMs
+config: i386-buildonly-randconfig-002-20260430 (https://download.01.org/0day-ci/archive/20260501/202605010002.dnnxVZFF-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260501/202605010002.dnnxVZFF-lkp@intel.com/reproduce)
 
-Fixes: 621191d709b14 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
-Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
----
- drivers/hv/mshv_root_hv_call.c |   56 +++++++++++++++-------------------------
- 1 file changed, 21 insertions(+), 35 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202605010002.dnnxVZFF-lkp@intel.com/
 
-diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
-index e5992c324904a..e1f9e28d5a19b 100644
---- a/drivers/hv/mshv_root_hv_call.c
-+++ b/drivers/hv/mshv_root_hv_call.c
-@@ -195,8 +195,8 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
- 	struct hv_input_map_gpa_pages *input_page;
- 	u64 status, *pfnlist;
- 	unsigned long irq_flags, large_shift = 0;
--	int ret = 0, done = 0;
--	u64 page_count = page_struct_count;
-+	u64 done = 0, page_count = page_struct_count;
-+	int ret = 0;
- 
- 	if (page_count == 0 || (pages && mmio_spa))
- 		return -EINVAL;
-@@ -213,8 +213,8 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
- 	}
- 
- 	while (done < page_count) {
--		ulong i, completed, remain = page_count - done;
--		int rep_count = min(remain, HV_MAP_GPA_BATCH_SIZE);
-+		u64 i, completed, remain = page_count - done;
-+		u64 rep_count = min_t(u64, remain, HV_MAP_GPA_BATCH_SIZE);
- 
- 		local_irq_save(irq_flags);
- 		input_page = *this_cpu_ptr(hyperv_pcpu_input_arg);
-@@ -224,23 +224,14 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
- 		input_page->map_flags = flags;
- 		pfnlist = input_page->source_gpa_page_list;
- 
--		for (i = 0; i < rep_count; i++)
--			if (flags & HV_MAP_GPA_NO_ACCESS) {
-+		for (i = 0; i < rep_count; i++) {
-+			if (flags & HV_MAP_GPA_NO_ACCESS)
- 				pfnlist[i] = 0;
--			} else if (pages) {
--				u64 index = (done + i) << large_shift;
--
--				if (index >= page_struct_count) {
--					ret = -EINVAL;
--					break;
--				}
--				pfnlist[i] = page_to_pfn(pages[index]);
--			} else {
-+			else if (pages)
-+				pfnlist[i] = page_to_pfn(pages[(done + i) <<
-+							 large_shift]);
-+			else
- 				pfnlist[i] = mmio_spa + done + i;
--			}
--		if (ret) {
--			local_irq_restore(irq_flags);
--			break;
- 		}
- 
- 		status = hv_do_rep_hypercall(HVCALL_MAP_GPA_PAGES, rep_count, 0,
-@@ -248,29 +239,26 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
- 		local_irq_restore(irq_flags);
- 
- 		completed = hv_repcomp(status);
-+		done += completed;
- 
- 		if (hv_result_needs_memory(status)) {
- 			ret = hv_call_deposit_pages(NUMA_NO_NODE, partition_id,
- 						    HV_MAP_GPA_DEPOSIT_PAGES);
- 			if (ret)
- 				break;
--
- 		} else if (!hv_result_success(status)) {
- 			ret = hv_result_to_errno(status);
- 			break;
- 		}
--
--		done += completed;
- 	}
- 
- 	if (ret && done) {
- 		u32 unmap_flags = 0;
- 
--		if (flags & HV_MAP_GPA_LARGE_PAGE) {
-+		if (flags & HV_MAP_GPA_LARGE_PAGE)
- 			unmap_flags |= HV_UNMAP_GPA_LARGE_PAGE;
--			done <<= large_shift;
--		}
--		hv_call_unmap_gpa_pages(partition_id, gfn, done, unmap_flags);
-+		hv_call_unmap_gpa_pages(partition_id, gfn,
-+					done << large_shift, unmap_flags);
- 	}
- 
- 	return ret;
-@@ -305,7 +293,7 @@ int hv_call_unmap_gpa_pages(u64 partition_id, u64 gfn, u64 page_count_4k,
- 	struct hv_input_unmap_gpa_pages *input_page;
- 	u64 status, page_count = page_count_4k;
- 	unsigned long irq_flags, large_shift = 0;
--	int ret = 0, done = 0;
-+	u64 done = 0;
- 
- 	if (page_count == 0)
- 		return -EINVAL;
-@@ -319,8 +307,8 @@ int hv_call_unmap_gpa_pages(u64 partition_id, u64 gfn, u64 page_count_4k,
- 	}
- 
- 	while (done < page_count) {
--		ulong completed, remain = page_count - done;
--		int rep_count = min(remain, HV_UMAP_GPA_PAGES);
-+		u64 completed, remain = page_count - done;
-+		u64 rep_count = min_t(u64, remain, HV_UMAP_GPA_PAGES);
- 
- 		local_irq_save(irq_flags);
- 		input_page = *this_cpu_ptr(hyperv_pcpu_input_arg);
-@@ -333,15 +321,13 @@ int hv_call_unmap_gpa_pages(u64 partition_id, u64 gfn, u64 page_count_4k,
- 		local_irq_restore(irq_flags);
- 
- 		completed = hv_repcomp(status);
--		if (!hv_result_success(status)) {
--			ret = hv_result_to_errno(status);
--			break;
--		}
--
- 		done += completed;
-+
-+		if (!hv_result_success(status))
-+			return hv_result_to_errno(status);
- 	}
- 
--	return ret;
-+	return 0;
- }
- 
- int hv_call_get_gpa_access_states(u64 partition_id, u32 count, u64 gpa_base_pfn,
+All warnings (new ones prefixed by >>):
+
+>> drivers/hv/vmbus_drv.c:2403:40: warning: result of comparison of constant 4294967296 with expression of type 'resource_size_t' (aka 'unsigned int') is always false [-Wtautological-constant-out-of-range-compare]
+    2403 |                         if (!low_mmio_base || low_mmio_base >= SZ_4G ||
+         |                                               ~~~~~~~~~~~~~ ^  ~~~~~
+   1 warning generated.
 
 
+vim +2403 drivers/hv/vmbus_drv.c
+
+  2385	
+  2386	static void __maybe_unused vmbus_reserve_fb(void)
+  2387	{
+  2388		resource_size_t start = 0, size;
+  2389		resource_size_t low_mmio_base;
+  2390		struct pci_dev *pdev;
+  2391	
+  2392		/* Hyper-V CoCo guests do not have a framebuffer device. */
+  2393		if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+  2394			return;
+  2395	
+  2396		if (efi_enabled(EFI_BOOT)) {
+  2397			/* Gen2 VM: get FB base from EFI framebuffer */
+  2398			if (IS_ENABLED(CONFIG_SYSFB)) {
+  2399				start = sysfb_primary_display.screen.lfb_base;
+  2400				size = max_t(__u32, sysfb_primary_display.screen.lfb_size, 0x800000);
+  2401	
+  2402				low_mmio_base = hyperv_mmio->start;
+> 2403				if (!low_mmio_base || low_mmio_base >= SZ_4G ||
+  2404				    (start && start < low_mmio_base)) {
+  2405					pr_warn("Unexpected low mmio base 0x%pa\n", &low_mmio_base);
+  2406				} else {
+  2407					/*
+  2408					 * If the kdump kernel's lfb_base is 0,
+  2409					 * fall back to the low mmio base.
+  2410					 */
+  2411					if (!start)
+  2412						start = low_mmio_base;
+  2413					/*
+  2414					 * Reserve half of the space below 4GB for high
+  2415					 * resolutions, but cap the reservation to 128MB.
+  2416					 */
+  2417					size = min((SZ_4G - start) / 2, SZ_128M);
+  2418				}
+  2419			}
+  2420		} else {
+  2421			/* Gen1 VM: get FB base from PCI */
+  2422			pdev = pci_get_device(PCI_VENDOR_ID_MICROSOFT,
+  2423					      PCI_DEVICE_ID_HYPERV_VIDEO, NULL);
+  2424			if (!pdev)
+  2425				return;
+  2426	
+  2427			if (pdev->resource[0].flags & IORESOURCE_MEM) {
+  2428				start = pci_resource_start(pdev, 0);
+  2429				size = pci_resource_len(pdev, 0);
+  2430			}
+  2431	
+  2432			/*
+  2433			 * Release the PCI device so hyperv_drm driver can grab it
+  2434			 * later.
+  2435			 */
+  2436			pci_dev_put(pdev);
+  2437		}
+  2438	
+  2439		if (!start)
+  2440			return;
+  2441	
+  2442		/*
+  2443		 * Make a claim for the frame buffer in the resource tree under the
+  2444		 * first node, which will be the one below 4GB.  The length seems to
+  2445		 * be underreported, particularly in a Generation 1 VM.  So start out
+  2446		 * reserving a larger area and make it smaller until it succeeds.
+  2447		 */
+  2448		for (; !fb_mmio && (size >= 0x100000); size >>= 1)
+  2449			fb_mmio = __request_region(hyperv_mmio, start, size, fb_mmio_name, 0);
+  2450	
+  2451		pr_info("hv_mmio=%pR,%pR fb=%pR\n", hyperv_mmio, hyperv_mmio->sibling, fb_mmio);
+  2452	}
+  2453	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
