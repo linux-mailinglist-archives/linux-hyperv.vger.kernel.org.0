@@ -1,133 +1,263 @@
-Return-Path: <linux-hyperv+bounces-10509-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10510-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MFoqGW2n8mlwtQEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10509-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 02:50:53 +0200
+	id mK7NJxu58mnxtgEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10510-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 04:06:19 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4A5549BD87
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 02:50:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A98049C35D
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 04:06:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CEA36301917C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 00:50:51 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 75FAC3017BC4
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 02:06:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9DDD1DB356;
-	Thu, 30 Apr 2026 00:50:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD393286415;
+	Thu, 30 Apr 2026 02:06:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gSohxNtT"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="n+DdwBXC"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40BB194A6C;
-	Thu, 30 Apr 2026 00:50:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77500261B9B;
+	Thu, 30 Apr 2026 02:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777510250; cv=none; b=XPilwKW8PpSK8LRKY/4NjXczeffAMTsLkHzw7jYB6UhgkPRfxKBncS6ZhkaWUH2QQs7t+aoUn0gvbXsJFguUJggsDLQTUjEg2xaZikNEIO8Ftapu8DJF35knPEdb4VIbn1KK9YjHwwHpte51hg8JqTisCIp1t3fp+lFdSDiR+Ro=
+	t=1777514771; cv=none; b=qebemUjs3eBvdEdsINfstb5Muyei5Y2ZkEGcetSExJqX/O6x8qoZ1ZEhdY2hOiX42f+nKwwvxOy6IqrFPHiGV6MsZvWCHXStkTHD++LUH2Solz+GSsE8df/ZwLoxDdXCjwoOvnhgdWi040GbuBvSDFy9A6FbpvogbAwh13PFwbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777510250; c=relaxed/simple;
-	bh=8hTjZVo/XxRC+sG5sC75NA15k8DMUXtA+PqswM5vy+w=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=K6zsl9b5iB/6Y2MAv1RW3i2sznr0wsgxp6INwp2KjbAWnzor5LumOPCKcenKTT2tTxeaJwFd6Wu4Iq4uhnDjXX0+pSVL7/i4lrlX2U0jMhwEXSrasy5RIBEt5y6cWAkVVRjwdtKiToHPS+mKdIUNnwAyyydFMovMgRw/zHtxDDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gSohxNtT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CBE7C19425;
-	Thu, 30 Apr 2026 00:50:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777510250;
-	bh=8hTjZVo/XxRC+sG5sC75NA15k8DMUXtA+PqswM5vy+w=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=gSohxNtTNK3/ENPdzslFmBoW9zlgVXTTWbzglFpCKe8Pa4Xte+oDZqHKDnX7YgN43
-	 jbWqss93l6+3pA7vs5oh4P4z69Ct+CXbNjRTSx8AB+A7LddmO5JLfkAY42e3NshICV
-	 Dsvxo9XI7Sp5o3+c0EVSUQqCiISCLtwN/cEnWCXGFbBxGgQ2J/xkEW+xD5NBeHIACn
-	 j5gcLLURkNslPHVNhyakvBXz/xP7ovEOUve53DahJgs5lLQsePyeUzNWi5HyNbwDhu
-	 UQD/E7IViCEc4dQgSvtUKrcVlnP1KvG718lKeWN0mW/1HXF0wQpVgcWNQQd+DY5GdG
-	 W2CBK3XqpZ37A==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B9FDC3809A33;
-	Thu, 30 Apr 2026 00:50:06 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1777514771; c=relaxed/simple;
+	bh=65lhpD6rP/YvSNozN+fqdK4CdsF7vKfZvJZHa0xJE48=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HXuafjLDhhqDlJ5+MLqkw5gXXaDTibuYhXKzqhzaIBSYz7+gXpZId4pl7IpsBeDgm3f49xcfHqkxDVA3fwcauy0jDCyjcLVY7c3oDxsqqb6AjCGtJI3CPbzL2jW02CKWoK0lOjOXEerC9fRh5L0IpFelNMv3EiexzG927mqe+Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=n+DdwBXC; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 17A9E20B716C;
+	Wed, 29 Apr 2026 19:06:10 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 17A9E20B716C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1777514770;
+	bh=6UCMWSX9Tq9LLa9FeKzKfc8c5i+ljfS37AZnjjcKSGM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=n+DdwBXCBo7vk3ys7RUnkkjMl82lXLlOwmho1Rz/0RCCEFa/A1zA+fw2N4i15L05J
+	 92t300jgY1hgsqpXGIdGQ9dnE+Dp1yZH6KwDnhp908oITEVz5Z+8vxut4GcQDhtius
+	 khOqNPOEP4aqFz/A4SjhMYi+dyzLCbepXdjikX5Y=
+Message-ID: <61e5d806-b5d5-ab2c-0e09-6def449d5582@linux.microsoft.com>
+Date: Wed, 29 Apr 2026 19:06:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] hv_sock: fix ARM64 support
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <177751020555.2241449.18420756857338539292.git-patchwork-notify@kernel.org>
-Date: Thu, 30 Apr 2026 00:50:05 +0000
-References: <20260428125339.13963-1-hamzamahfooz@linux.microsoft.com>
-In-Reply-To: <20260428125339.13963-1-hamzamahfooz@linux.microsoft.com>
-To: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
-Cc: netdev@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org, decui@microsoft.com, longli@microsoft.com,
- sgarzare@redhat.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, mhklinux@outlook.com,
- himadrispandya@gmail.com, linux-hyperv@vger.kernel.org,
- virtualization@lists.linux.dev, linux-kernel@vger.kernel.org
-X-Rspamd-Queue-Id: E4A5549BD87
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v2] mshv: Simplify GPA map/unmap hypercall helpers
+Content-Language: en-US
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+ kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, longli@microsoft.com
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <177748126383.33250.14844440376241852870.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+From: Mukesh R <mrathor@linux.microsoft.com>
+In-Reply-To: <177748126383.33250.14844440376241852870.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 1A98049C35D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,microsoft.com,kernel.org,redhat.com,davemloft.net,google.com,outlook.com,gmail.com,lists.linux.dev];
-	TAGGED_FROM(0.00)[bounces-10509-lists,linux-hyperv=lfdr.de,netdevbpf];
-	FROM_NEQ_ENVFROM(0.00)[patchwork-bot@kernel.org,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_TWELVE(0.00)[18];
+	TAGGED_FROM(0.00)[bounces-10510-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_NO_DN(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	FROM_NEQ_ENVFROM(0.00)[mrathor@linux.microsoft.com,linux-hyperv@vger.kernel.org];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
-Hello:
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Tue, 28 Apr 2026 08:53:39 -0400 you wrote:
-> VMBUS ring buffers must be page aligned. Therefore, the current value of
-> 24K presents a challenge on ARM64 kernels (with 64K pages). So, use
-> VMBUS_RING_SIZE() to ensure they are always aligned and large enough to
-> hold all of the relevant data.
+On 4/29/26 09:48, Stanislav Kinsburskii wrote:
+> Clean up hv_do_map_gpa_hcall() and hv_call_unmap_gpa_pages() after the
+> preceding bug-fix patches:
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: 77ffe33363c0 ("hv_sock: use HV_HYP_PAGE_SIZE for Hyper-V communication")
-> Tested-by: Dexuan Cui <decui@microsoft.com>
-> Reviewed-by: Dexuan Cui <decui@microsoft.com>
-> Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+> Move "done += completed" before the status checks so that pages mapped
+> by a partially-successful batch are included in the error cleanup unmap.
+> Previously these mappings were leaked on failure.
 > 
-> [...]
+> While here, improve type safety and readability:
+>   - Change "int done" to "u64 done" to match the u64 page_count it is
+>     compared against, avoiding signed/unsigned comparison hazards.
+>   - Use u64 for loop iteration and batch size variables consistently.
+>   - Add proper braces to the for-loop body in hv_do_map_gpa_hcall().
+>   - Remove unnecessary "ret" variable from hv_call_unmap_gpa_pages().
+>   - Simplify the error-path unmap to use "done << large_shift" directly
+>     instead of mutating done in place.
+> 
 
-Here is the summary with links:
-  - hv_sock: fix ARM64 support
-    https://git.kernel.org/netdev/net/c/b31681206e3f
+what changed in V2?
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+> Fixes: 621191d709b14 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
+> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+> ---
+>   drivers/hv/mshv_root_hv_call.c |   55 +++++++++++++++-------------------------
+>   1 file changed, 20 insertions(+), 35 deletions(-)
+> 
+> diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
+> index e5992c324904a..1f19a4ca824f0 100644
+> --- a/drivers/hv/mshv_root_hv_call.c
+> +++ b/drivers/hv/mshv_root_hv_call.c
+> @@ -195,8 +195,8 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
+>   	struct hv_input_map_gpa_pages *input_page;
+>   	u64 status, *pfnlist;
+>   	unsigned long irq_flags, large_shift = 0;
+> -	int ret = 0, done = 0;
+> -	u64 page_count = page_struct_count;
+> +	u64 done = 0, page_count = page_struct_count;
+> +	int ret = 0;
+>   
+>   	if (page_count == 0 || (pages && mmio_spa))
+>   		return -EINVAL;
+> @@ -213,8 +213,8 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
+>   	}
+>   
+>   	while (done < page_count) {
+> -		ulong i, completed, remain = page_count - done;
+> -		int rep_count = min(remain, HV_MAP_GPA_BATCH_SIZE);
+> +		u64 i, completed, remain = page_count - done;
+> +		u64 rep_count = min_t(u64, remain, HV_MAP_GPA_BATCH_SIZE);
+>   
+>   		local_irq_save(irq_flags);
+>   		input_page = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> @@ -224,23 +224,13 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
+>   		input_page->map_flags = flags;
+>   		pfnlist = input_page->source_gpa_page_list;
+>   
+> -		for (i = 0; i < rep_count; i++)
+> -			if (flags & HV_MAP_GPA_NO_ACCESS) {
+> +		for (i = 0; i < rep_count; i++) {
+> +			if (flags & HV_MAP_GPA_NO_ACCESS)
+>   				pfnlist[i] = 0;
+> -			} else if (pages) {
+> -				u64 index = (done + i) << large_shift;
+> -
+> -				if (index >= page_struct_count) {
+> -					ret = -EINVAL;
+> -					break;
+> -				}
+> -				pfnlist[i] = page_to_pfn(pages[index]);
+> -			} else {
+> +			else if (pages)
+> +				pfnlist[i] = page_to_pfn(pages[(done + i) << large_shift]);
 
+Entire file is 80 cols, please don't cause this one overflow.
+
+Thanks,
+-Mukesh
+
+
+> +			else
+>   				pfnlist[i] = mmio_spa + done + i;
+> -			}
+> -		if (ret) {
+> -			local_irq_restore(irq_flags);
+> -			break;
+>   		}
+>   
+>   		status = hv_do_rep_hypercall(HVCALL_MAP_GPA_PAGES, rep_count, 0,
+> @@ -248,29 +238,26 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
+>   		local_irq_restore(irq_flags);
+>   
+>   		completed = hv_repcomp(status);
+> +		done += completed;
+>   
+>   		if (hv_result_needs_memory(status)) {
+>   			ret = hv_call_deposit_pages(NUMA_NO_NODE, partition_id,
+>   						    HV_MAP_GPA_DEPOSIT_PAGES);
+>   			if (ret)
+>   				break;
+> -
+>   		} else if (!hv_result_success(status)) {
+>   			ret = hv_result_to_errno(status);
+>   			break;
+>   		}
+> -
+> -		done += completed;
+>   	}
+>   
+>   	if (ret && done) {
+>   		u32 unmap_flags = 0;
+>   
+> -		if (flags & HV_MAP_GPA_LARGE_PAGE) {
+> +		if (flags & HV_MAP_GPA_LARGE_PAGE)
+>   			unmap_flags |= HV_UNMAP_GPA_LARGE_PAGE;
+> -			done <<= large_shift;
+> -		}
+> -		hv_call_unmap_gpa_pages(partition_id, gfn, done, unmap_flags);
+> +		hv_call_unmap_gpa_pages(partition_id, gfn,
+> +					done << large_shift, unmap_flags);
+>   	}
+>   
+>   	return ret;
+> @@ -305,7 +292,7 @@ int hv_call_unmap_gpa_pages(u64 partition_id, u64 gfn, u64 page_count_4k,
+>   	struct hv_input_unmap_gpa_pages *input_page;
+>   	u64 status, page_count = page_count_4k;
+>   	unsigned long irq_flags, large_shift = 0;
+> -	int ret = 0, done = 0;
+> +	u64 done = 0;
+>   
+>   	if (page_count == 0)
+>   		return -EINVAL;
+> @@ -319,8 +306,8 @@ int hv_call_unmap_gpa_pages(u64 partition_id, u64 gfn, u64 page_count_4k,
+>   	}
+>   
+>   	while (done < page_count) {
+> -		ulong completed, remain = page_count - done;
+> -		int rep_count = min(remain, HV_UMAP_GPA_PAGES);
+> +		u64 completed, remain = page_count - done;
+> +		u64 rep_count = min_t(u64, remain, HV_UMAP_GPA_PAGES);
+>   
+>   		local_irq_save(irq_flags);
+>   		input_page = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> @@ -333,15 +320,13 @@ int hv_call_unmap_gpa_pages(u64 partition_id, u64 gfn, u64 page_count_4k,
+>   		local_irq_restore(irq_flags);
+>   
+>   		completed = hv_repcomp(status);
+> -		if (!hv_result_success(status)) {
+> -			ret = hv_result_to_errno(status);
+> -			break;
+> -		}
+> -
+>   		done += completed;
+> +
+> +		if (!hv_result_success(status))
+> +			return hv_result_to_errno(status);
+>   	}
+>   
+> -	return ret;
+> +	return 0;
+>   }
+>   
+>   int hv_call_get_gpa_access_states(u64 partition_id, u32 count, u64 gpa_base_pfn,
+> 
+> 
 
 
