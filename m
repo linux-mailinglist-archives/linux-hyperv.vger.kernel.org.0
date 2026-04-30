@@ -1,50 +1,50 @@
-Return-Path: <linux-hyperv+bounces-10510-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10511-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mK7NJxu58mnxtgEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10510-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 04:06:19 +0200
+	id rUWhFQu88mlbtwEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10511-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 04:18:51 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A98049C35D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 04:06:18 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFDBF49C416
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 04:18:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 75FAC3017BC4
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 02:06:15 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9ADA83017048
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2026 02:18:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD393286415;
-	Thu, 30 Apr 2026 02:06:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68B742367D3;
+	Thu, 30 Apr 2026 02:18:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="n+DdwBXC"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Q2N1Ojr8"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77500261B9B;
-	Thu, 30 Apr 2026 02:06:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3390A61FCE;
+	Thu, 30 Apr 2026 02:18:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777514771; cv=none; b=qebemUjs3eBvdEdsINfstb5Muyei5Y2ZkEGcetSExJqX/O6x8qoZ1ZEhdY2hOiX42f+nKwwvxOy6IqrFPHiGV6MsZvWCHXStkTHD++LUH2Solz+GSsE8df/ZwLoxDdXCjwoOvnhgdWi040GbuBvSDFy9A6FbpvogbAwh13PFwbs=
+	t=1777515527; cv=none; b=sRSkbVK+qviFx9vJfy4bKr0/mM27jjvNAFJCbNA2vAhzsMhA5VGNwksyY5TSrxkZybG04RZLOjsUv8JpTm20VQMafsrY/8ZxSM6z0lXFmUopjyB/Az4MeVEnk7Mi6iRYyVPTgn3Y142yJD+78/p1rO6C63I/J3IkcDART2QLvN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777514771; c=relaxed/simple;
-	bh=65lhpD6rP/YvSNozN+fqdK4CdsF7vKfZvJZHa0xJE48=;
+	s=arc-20240116; t=1777515527; c=relaxed/simple;
+	bh=nAMZwVbif3h/7h5hV18M1L1+jChh3dtxQFd6oKzy1lA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HXuafjLDhhqDlJ5+MLqkw5gXXaDTibuYhXKzqhzaIBSYz7+gXpZId4pl7IpsBeDgm3f49xcfHqkxDVA3fwcauy0jDCyjcLVY7c3oDxsqqb6AjCGtJI3CPbzL2jW02CKWoK0lOjOXEerC9fRh5L0IpFelNMv3EiexzG927mqe+Ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=n+DdwBXC; arc=none smtp.client-ip=13.77.154.182
+	 In-Reply-To:Content-Type; b=RGG3SjkkxN3RJHGJrJuU54qRgR7ODyxpht2/ESWAF/dqy2riq6TT7Favh2NI38nwRqR6HiT0A+4hschhmfiGxV/BG1zz82Cv9yUikBjjwMCYBA8s6rXysFGBcNS9usL4xZ0R7OwDn3OJ02cdvGfn9o2rPJO1Nb3BUYRXOSV2JYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Q2N1Ojr8; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 17A9E20B716C;
-	Wed, 29 Apr 2026 19:06:10 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 17A9E20B716C
+	by linux.microsoft.com (Postfix) with ESMTPSA id D609A20B716C;
+	Wed, 29 Apr 2026 19:18:45 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D609A20B716C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1777514770;
-	bh=6UCMWSX9Tq9LLa9FeKzKfc8c5i+ljfS37AZnjjcKSGM=;
+	s=default; t=1777515526;
+	bh=SKVLTMM1mY5cQsC2H1+CAVNUsmUbom6WytRbvQGa3zw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=n+DdwBXCBo7vk3ys7RUnkkjMl82lXLlOwmho1Rz/0RCCEFa/A1zA+fw2N4i15L05J
-	 92t300jgY1hgsqpXGIdGQ9dnE+Dp1yZH6KwDnhp908oITEVz5Z+8vxut4GcQDhtius
-	 khOqNPOEP4aqFz/A4SjhMYi+dyzLCbepXdjikX5Y=
-Message-ID: <61e5d806-b5d5-ab2c-0e09-6def449d5582@linux.microsoft.com>
-Date: Wed, 29 Apr 2026 19:06:08 -0700
+	b=Q2N1Ojr8O5DGDA2mNu11kxoKOBTzVdUzBo0EUlk/p5TPU3+rUGdU6VwyvpXzQ33sq
+	 C9Hl2joJoEMCAloL2HNCn/W9gsikVdNftqhXSRggTXU87uYydOz+sUYXnZjIbn+Ifw
+	 ea/XBPLdQJ5TOQeeFMaUe6mYZXHgocgsCgFfVQxQ=
+Message-ID: <daacfbcc-e725-65f2-4b20-b4501e45e651@linux.microsoft.com>
+Date: Wed, 29 Apr 2026 19:18:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -53,211 +53,101 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.13.1
-Subject: Re: [PATCH v2] mshv: Simplify GPA map/unmap hypercall helpers
+Subject: Re: [PATCH 00/10] mshv: Bug fixes across the mshv_root module
 Content-Language: en-US
 To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
  kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, longli@microsoft.com
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <177748126383.33250.14844440376241852870.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+References: <177748522635.144491.1565666089881726479.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 From: Mukesh R <mrathor@linux.microsoft.com>
-In-Reply-To: <177748126383.33250.14844440376241852870.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+In-Reply-To: <177748522635.144491.1565666089881726479.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 1A98049C35D
+X-Rspamd-Queue-Id: BFDBF49C416
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10510-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10511-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[mrathor@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	TO_DN_SOME(0.00)[]
 
-
-On 4/29/26 09:48, Stanislav Kinsburskii wrote:
-> Clean up hv_do_map_gpa_hcall() and hv_call_unmap_gpa_pages() after the
-> preceding bug-fix patches:
+On 4/29/26 11:17, Stanislav Kinsburskii wrote:
+>   This series addresses bugs found during a review of the mshv_root module
+>   introduced by commit 621191d709b14 ("Drivers: hv: Introduce mshv_root
+>   module to expose /dev/mshv to VMMs").
 > 
-> Move "done += completed" before the status checks so that pages mapped
-> by a partially-successful batch are included in the error cleanup unmap.
-> Previously these mappings were leaked on failure.
+>   The fixes range from data corruption and use-after-free to silent
+>   functional failures:
 > 
-> While here, improve type safety and readability:
->   - Change "int done" to "u64 done" to match the u64 page_count it is
->     compared against, avoiding signed/unsigned comparison hazards.
->   - Use u64 for loop iteration and batch size variables consistently.
->   - Add proper braces to the for-loop body in hv_do_map_gpa_hcall().
->   - Remove unnecessary "ret" variable from hv_call_unmap_gpa_pages().
->   - Simplify the error-path unmap to use "done << large_shift" directly
->     instead of mutating done in place.
-> 
+>    - IRQ state leak and type truncation in hypercall helpers
+>      (hv_call_modify_spa_host_access)
+>    - Integer overflow on userspace-controlled allocation size
+>      (mshv_region_create)
+>    - Missing locking, broken seqcount read protection, and a check on
+>      uninitialized data in the irqfd path ? the latter makes
+>      level-triggered interrupt resampling completely non-functional
+>    - Duplicate GSI 0 detection using the wrong predicate
+>    - Use-after-RCU in port ID lookup
+>    - Missing VP index bounds check in intercept ISR (OOB in interrupt
+>      context)
+>    - Missing error code on VP allocation failure (silent success to
+>      userspace)
 
-what changed in V2?
+Lot of changes here, curious, how were all these discovered
+suddenly? Stress testing, internal/external?  Or reported by
+copilot/sashiko/etc..
 
-> Fixes: 621191d709b14 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
-> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> ---
->   drivers/hv/mshv_root_hv_call.c |   55 +++++++++++++++-------------------------
->   1 file changed, 20 insertions(+), 35 deletions(-)
-> 
-> diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
-> index e5992c324904a..1f19a4ca824f0 100644
-> --- a/drivers/hv/mshv_root_hv_call.c
-> +++ b/drivers/hv/mshv_root_hv_call.c
-> @@ -195,8 +195,8 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
->   	struct hv_input_map_gpa_pages *input_page;
->   	u64 status, *pfnlist;
->   	unsigned long irq_flags, large_shift = 0;
-> -	int ret = 0, done = 0;
-> -	u64 page_count = page_struct_count;
-> +	u64 done = 0, page_count = page_struct_count;
-> +	int ret = 0;
->   
->   	if (page_count == 0 || (pages && mmio_spa))
->   		return -EINVAL;
-> @@ -213,8 +213,8 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
->   	}
->   
->   	while (done < page_count) {
-> -		ulong i, completed, remain = page_count - done;
-> -		int rep_count = min(remain, HV_MAP_GPA_BATCH_SIZE);
-> +		u64 i, completed, remain = page_count - done;
-> +		u64 rep_count = min_t(u64, remain, HV_MAP_GPA_BATCH_SIZE);
->   
->   		local_irq_save(irq_flags);
->   		input_page = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> @@ -224,23 +224,13 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
->   		input_page->map_flags = flags;
->   		pfnlist = input_page->source_gpa_page_list;
->   
-> -		for (i = 0; i < rep_count; i++)
-> -			if (flags & HV_MAP_GPA_NO_ACCESS) {
-> +		for (i = 0; i < rep_count; i++) {
-> +			if (flags & HV_MAP_GPA_NO_ACCESS)
->   				pfnlist[i] = 0;
-> -			} else if (pages) {
-> -				u64 index = (done + i) << large_shift;
-> -
-> -				if (index >= page_struct_count) {
-> -					ret = -EINVAL;
-> -					break;
-> -				}
-> -				pfnlist[i] = page_to_pfn(pages[index]);
-> -			} else {
-> +			else if (pages)
-> +				pfnlist[i] = page_to_pfn(pages[(done + i) << large_shift]);
-
-Entire file is 80 cols, please don't cause this one overflow.
+How were the fixes tested?
 
 Thanks,
 -Mukesh
 
 
-> +			else
->   				pfnlist[i] = mmio_spa + done + i;
-> -			}
-> -		if (ret) {
-> -			local_irq_restore(irq_flags);
-> -			break;
->   		}
->   
->   		status = hv_do_rep_hypercall(HVCALL_MAP_GPA_PAGES, rep_count, 0,
-> @@ -248,29 +238,26 @@ static int hv_do_map_gpa_hcall(u64 partition_id, u64 gfn, u64 page_struct_count,
->   		local_irq_restore(irq_flags);
->   
->   		completed = hv_repcomp(status);
-> +		done += completed;
->   
->   		if (hv_result_needs_memory(status)) {
->   			ret = hv_call_deposit_pages(NUMA_NO_NODE, partition_id,
->   						    HV_MAP_GPA_DEPOSIT_PAGES);
->   			if (ret)
->   				break;
-> -
->   		} else if (!hv_result_success(status)) {
->   			ret = hv_result_to_errno(status);
->   			break;
->   		}
-> -
-> -		done += completed;
->   	}
->   
->   	if (ret && done) {
->   		u32 unmap_flags = 0;
->   
-> -		if (flags & HV_MAP_GPA_LARGE_PAGE) {
-> +		if (flags & HV_MAP_GPA_LARGE_PAGE)
->   			unmap_flags |= HV_UNMAP_GPA_LARGE_PAGE;
-> -			done <<= large_shift;
-> -		}
-> -		hv_call_unmap_gpa_pages(partition_id, gfn, done, unmap_flags);
-> +		hv_call_unmap_gpa_pages(partition_id, gfn,
-> +					done << large_shift, unmap_flags);
->   	}
->   
->   	return ret;
-> @@ -305,7 +292,7 @@ int hv_call_unmap_gpa_pages(u64 partition_id, u64 gfn, u64 page_count_4k,
->   	struct hv_input_unmap_gpa_pages *input_page;
->   	u64 status, page_count = page_count_4k;
->   	unsigned long irq_flags, large_shift = 0;
-> -	int ret = 0, done = 0;
-> +	u64 done = 0;
->   
->   	if (page_count == 0)
->   		return -EINVAL;
-> @@ -319,8 +306,8 @@ int hv_call_unmap_gpa_pages(u64 partition_id, u64 gfn, u64 page_count_4k,
->   	}
->   
->   	while (done < page_count) {
-> -		ulong completed, remain = page_count - done;
-> -		int rep_count = min(remain, HV_UMAP_GPA_PAGES);
-> +		u64 completed, remain = page_count - done;
-> +		u64 rep_count = min_t(u64, remain, HV_UMAP_GPA_PAGES);
->   
->   		local_irq_save(irq_flags);
->   		input_page = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> @@ -333,15 +320,13 @@ int hv_call_unmap_gpa_pages(u64 partition_id, u64 gfn, u64 page_count_4k,
->   		local_irq_restore(irq_flags);
->   
->   		completed = hv_repcomp(status);
-> -		if (!hv_result_success(status)) {
-> -			ret = hv_result_to_errno(status);
-> -			break;
-> -		}
-> -
->   		done += completed;
-> +
-> +		if (!hv_result_success(status))
-> +			return hv_result_to_errno(status);
->   	}
->   
-> -	return ret;
-> +	return 0;
->   }
->   
->   int hv_call_get_gpa_access_states(u64 partition_id, u32 count, u64 gpa_base_pfn,
+> ---
 > 
+> Stanislav Kinsburskii (10):
+>        mshv: Fix IRQ leak and type hazards in hv_call_modify_spa_host_access
+>        mshv: Fix potential integer overflow in mshv_region_create
+>        mshv: Fix missing lock in mshv_irqfd_deassign
+>        mshv: Fix broken seqcount read protection
+>        mshv: Fix level-triggered check on uninitialized data
+>        mshv: Fix duplicate GSI detection for GSI 0
+>        mshv: Fix use-after-RCU in mshv_portid_lookup
+>        mshv: Use kfree_rcu in mshv_portid_free
+>        mshv: Add missing vp_index bounds check in intercept ISR
+>        mshv: Fix missing error code on VP allocation failure
+> 
+> 
+>   drivers/hv/mshv_eventfd.c      |   75 ++++++++++++++++++++++------------------
+>   drivers/hv/mshv_irq.c          |    2 +
+>   drivers/hv/mshv_portid_table.c |    6 +--
+>   drivers/hv/mshv_regions.c      |    2 +
+>   drivers/hv/mshv_root_hv_call.c |   18 +++-------
+>   drivers/hv/mshv_root_main.c    |    4 ++
+>   drivers/hv/mshv_synic.c        |    4 ++
+>   7 files changed, 59 insertions(+), 52 deletions(-)
 > 
 
 
