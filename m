@@ -1,355 +1,180 @@
-Return-Path: <linux-hyperv+bounces-10551-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10552-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id zj/AJxtZ9WlkKgIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10551-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 02 May 2026 03:53:31 +0200
+	id gi3OGid99WnZLgIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10552-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 02 May 2026 06:27:19 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CDE94B09AE
-	for <lists+linux-hyperv@lfdr.de>; Sat, 02 May 2026 03:53:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CC1AE4B0D2E
+	for <lists+linux-hyperv@lfdr.de>; Sat, 02 May 2026 06:27:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id BF3A7301683A
-	for <lists+linux-hyperv@lfdr.de>; Sat,  2 May 2026 01:53:29 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id DF32F3010243
+	for <lists+linux-hyperv@lfdr.de>; Sat,  2 May 2026 04:27:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23E982882B7;
-	Sat,  2 May 2026 01:53:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9919263C7F;
+	Sat,  2 May 2026 04:27:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cW0lRa2j"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EtR2CT5N"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F057B1B86C7;
-	Sat,  2 May 2026 01:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BBB71A9B24;
+	Sat,  2 May 2026 04:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777686807; cv=none; b=UO33xIPHgsfONYE9AsK2LAUIrIqd8kGa5b/tT4XJpEdLATi2lIJZL1f/WEhd7FJC8WxNW/BTh4iktfVy6Z2ucgABiskvuy40pU3JcdC9/wXJm/cCnnHPV/jteKaxaFZHV5JJFecVL6b0BVZA28aIlZY9C4NdlJZbaeSHiugAlO0=
+	t=1777696033; cv=none; b=fVloPR8sviuG2q0WIE//Dt0SyI9UOpcQlEA4z2QADUrLmGSeWLf8WrN7UcqZd//kO3ErfOXbb3U78eVoI6XZ4BS7sAdzRvefLGytKlFNTA80BnuH28v0DwHHu/BmTil5c31l3QBl42nEgcq7HffaLI9qpRRoy94Lo5DUzOWGjZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777686807; c=relaxed/simple;
-	bh=tP6odST16kHneBq163ppFX5qwhXGu2JISuBZ10PCSX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GKTazgrJbQUJYbu2WOTd2UJWCAc/pEvWQ6QaqzYZ5Gkk24M3nM3VWBsSS+DRr8AbTD1bFFXtBKxVp4/ZFVLtan1Vn+7fn8FsRScyhhzZCYna5s9+vY/XNMxIwE8lKQtH4KJhuNVAkeXgBBh7u3XOsyFF7Dz+TD33uoCV/svXEoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cW0lRa2j; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E072C2BCB4;
-	Sat,  2 May 2026 01:53:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777686806;
-	bh=tP6odST16kHneBq163ppFX5qwhXGu2JISuBZ10PCSX8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cW0lRa2jMjlnVHN52tqUju3bSkFBHSvoQxSTIiq48RY2XCejOiCBn7hFpoPyiLtcJ
-	 Y8XODEl5hfvUF0aE3TKjQa4tFcMBuTpAArhJ0ApsK5oejpcTKYy2R7rqPFlPKakT0c
-	 snjbhDVF071nDw6wt8q4iBKUjSgwwDVMEofqibJHXp5GemhO89JuZ9fccDw0fU0O+R
-	 nCqlzaTR72CJN0UEnr9FH22GWLlwXjMfIGEY21RiyqO4X9RDz1shF3lpY5LBH1PeG1
-	 wgN7nvrCpogeT/3ZXQBPz/45Z4+8dhhF0EyPCxh4hWHTXGRu2mYfP1ufo3ii/ZbN/W
-	 vCeLxdu4uh5vg==
-Date: Fri, 1 May 2026 18:53:24 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, pabeni@redhat.com, leon@kernel.org,
- longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
- shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
- ernis@linux.microsoft.com, shirazsaleem@microsoft.com,
- linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
- stephen@networkplumber.org, jacob.e.keller@intel.com,
- dipayanroy@microsoft.com, leitao@debian.org, kees@kernel.org,
- john.fastabend@gmail.com, hawk@kernel.org, bpf@vger.kernel.org,
- daniel@iogearbox.net, ast@kernel.org, sdf@fomichev.me, yury.norov@gmail.com
-Subject: Re: [PATCH net, v2] net: mana: Fix crash from unvalidated SHM
- offset read from BAR0 during FLR
-Message-ID: <20260501185324.0f02dc72@kernel.org>
-In-Reply-To: <afJUszROT+yKjth0@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <afJUszROT+yKjth0@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+	s=arc-20240116; t=1777696033; c=relaxed/simple;
+	bh=z6cRl3sdcH1Sh1i25dmuw8HxOJ/7EjzMbd1iTyLxo+E=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=mCCHf/5ZGAe4yYhlR4bHqd2sDGs05L+ArSsIPTYQz9RS0NqR67VGsGxjZWbCJXgPZOXXK9Agfc+oR7s1LHhLCJIuKauHv4NAVbi4IcIn6T85hbDkh8VQzaxvoKH39cQqYsrfYquQD13MxDWWb4nWD2skPmYK09YkQKFsWQljj90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=EtR2CT5N; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 57BBA20B7168;
+	Fri,  1 May 2026 21:27:11 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 57BBA20B7168
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1777696031;
+	bh=1Mv/b1DJagwBsTXp+GA+ANZ6mUFhByQ+l+zeO3/FZzY=;
+	h=Subject:From:To:Cc:Date:From;
+	b=EtR2CT5N6a5i5knXwC4xrIH73C5kICY37zJwqABfopmnbVvt7rectco+wwjR8MZSo
+	 lkWzSyJm61WiY7/1a04Qk6PNMbaJmJkgdzb+HZnwT5tp8XD+CgIVDGKUpAp7c2Njg3
+	 mmnK1F1t3NdJrysEc5mvidA5FoMa7AAyYKBgyI+E=
+Subject: [PATCH v2 00/18] mshv: Bug fixes across the mshv_root module
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, longli@microsoft.com
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Sat, 02 May 2026 04:27:11 +0000
+Message-ID: 
+ <177769588777.222166.3414280094142944420.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 0CDE94B09AE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: CC1AE4B0D2E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10551-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,vger.kernel.org,networkplumber.org,intel.com,debian.org,gmail.com,iogearbox.net,fomichev.me];
-	RCPT_COUNT_TWELVE(0.00)[33];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[kuba@kernel.org,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	PRECEDENCE_BULK(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10552-lists,linux-hyperv=lfdr.de];
+	TO_DN_NONE(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+]
 
-On Wed, 29 Apr 2026 11:57:55 -0700 Dipayaan Roy wrote:
-> During Function Level Reset recovery, the MANA driver reads
-> hardware BAR0 registers that may temporarily contain garbage values.
-> The SHM (Shared Memory) offset read from GDMA_REG_SHM_OFFSET is used
-> to compute gc->shm_base, which is later dereferenced via readl() in
-> mana_smc_poll_register(). If the hardware returns an unaligned or
-> out-of-range value, the driver must not blindly use it, as this would
-> propagate the hardware error into a kernel crash.
-> 
-> The following crash was observed on an arm64 Hyper-V guest running
-> kernel 6.17.0-3013-azure during VF reset recovery triggered by HWC
-> timeout.
-> 
-> [13291.785274] Unable to handle kernel paging request at virtual address ffff8000a200001b
-> [13291.785311] Mem abort info:
-> [13291.785332]   ESR = 0x0000000096000021
-> [13291.785343]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [13291.785355]   SET = 0, FnV = 0
-> [13291.785363]   EA = 0, S1PTW = 0
-> [13291.785372]   FSC = 0x21: alignment fault
-> [13291.785382] Data abort info:
-> [13291.785391]   ISV = 0, ISS = 0x00000021, ISS2 = 0x00000000
-> [13291.785404]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-> [13291.785412]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-> [13291.785421] swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000014df3a1000
-> [13291.785432] [ffff8000a200001b] pgd=1000000100438403, p4d=1000000100438403, pud=1000000100439403, pmd=0068000fc2000711
-> [13291.785703] Internal error: Oops: 0000000096000021 [#1]  SMP
-> [13291.830975] Modules linked in: tls qrtr mana_ib ib_uverbs ib_core xt_owner xt_tcpudp xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nft_compat nf_tables cfg80211 8021q garp mrp stp llc binfmt_misc joydev serio_raw nls_iso8859_1 hid_generic aes_ce_blk aes_ce_cipher polyval_ce ghash_ce sm4_ce_gcm sm4_ce_ccm sm4_ce sm4_ce_cipher hid_hyperv sm4 sm3_ce sha3_ce hv_netvsc hid vmgenid hyperv_keyboard hyperv_drm sch_fq_codel nvme_fabrics efi_pstore dm_multipath nfnetlink vsock_loopback vmw_vsock_virtio_transport_common hv_sock vmw_vsock_vmci_transport vmw_vmci vsock dmi_sysfs ip_tables x_tables autofs4
-> [13291.862630] CPU: 122 UID: 0 PID: 61796 Comm: kworker/122:2 Tainted: G        W           6.17.0-3013-azure #13-Ubuntu VOLUNTARY
-> [13291.869902] Tainted: [W]=WARN
-> [13291.871901] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.1 01/08/2026
-> [13291.878086] Workqueue: events mana_serv_func
-> [13291.880718] pstate: 62400005 (nZCv daif +PAN -UAO +TCO -DIT -SSBS BTYPE=--)
-> [13291.884835] pc : mana_smc_poll_register+0x48/0xb0
-> [13291.887902] lr : mana_smc_setup_hwc+0x70/0x1c0
-> [13291.890493] sp : ffff8000ab79bbb0
-> [13291.892364] x29: ffff8000ab79bbb0 x28: ffff00410c8b5900 x27: ffff00410d630680
-> [13291.896252] x26: ffff004171f9fd80 x25: 000000016ed55000 x24: 000000017f37e000
-> [13291.899990] x23: 0000000000000000 x22: 000000016ed55000 x21: 0000000000000000
-> [13291.904497] x20: ffff8000a200001b x19: 0000000000004e20 x18: ffff8000a6183050
-> [13291.908308] x17: 0000000000000000 x16: 0000000000000000 x15: 000000000000000a
-> [13291.912542] x14: 0000000000000004 x13: 0000000000000000 x12: 0000000000000000
-> [13291.916298] x11: 0000000000000000 x10: 0000000000000001 x9 : ffffc45006af1bd8
-> [13291.920945] x8 : ffff000151129000 x7 : 0000000000000000 x6 : 0000000000000000
-> [13291.925293] x5 : 000000015f214000 x4 : 000000017217a000 x3 : 000000016ed50000
-> [13291.930436] x2 : 000000016ed55000 x1 : 0000000000000000 x0 : ffff8000a1ffffff
-> [13291.934342] Call trace:
-> [13291.935736]  mana_smc_poll_register+0x48/0xb0 (P)
-> [13291.938611]  mana_smc_setup_hwc+0x70/0x1c0
-> [13291.941113]  mana_hwc_create_channel+0x1a0/0x3a0
-> [13291.944283]  mana_gd_setup+0x16c/0x398
-> [13291.946584]  mana_gd_resume+0x24/0x70
-> [13291.948917]  mana_do_service+0x13c/0x1d0
-> [13291.951583]  mana_serv_func+0x34/0x68
-> [13291.953732]  process_one_work+0x168/0x3d0
-> [13291.956745]  worker_thread+0x2ac/0x480
-> [13291.959104]  kthread+0xf8/0x110
-> [13291.961026]  ret_from_fork+0x10/0x20
-> [13291.963560] Code: d2807d00 9417c551 71000673 54000220 (b9400281)
-> [13291.967299] ---[ end trace 0000000000000000 ]---
-> 
-> Disassembly of mana_smc_poll_register() around the crash site:
-> 
-> Disassembly of section .text:
-> 
-> 00000000000047c8 <mana_smc_poll_register>:
->     47c8: d503201f        nop
->     47cc: d503201f        nop
->     47d0: d503233f        paciasp
->     47d4: f800865e        str     x30, [x18], #8
->     47d8: a9bd7bfd        stp     x29, x30, [sp, #-48]!
->     47dc: 910003fd        mov     x29, sp
->     47e0: a90153f3        stp     x19, x20, [sp, #16]
->     47e4: 91007014        add     x20, x0, #0x1c
->     47e8: 5289c413        mov     w19, #0x4e20
->     47ec: f90013f5        str     x21, [sp, #32]
->     47f0: 12001c35        and     w21, w1, #0xff
->     47f4: 14000008        b       4814 <mana_smc_poll_register+0x4c>
->     47f8: 36f801e1  tbz  w1, #31, 4834 <mana_smc_poll_register+0x6c>
->     47fc: 52800042        mov     w2, #0x2
->     4800: d280fa01        mov     x1, #0x7d0
->     4804: d2807d00        mov     x0, #0x3e8
->     4808: 94000000        bl      0 <usleep_range_state>
->     480c: 71000673        subs    w19, w19, #0x1
->     4810: 54000200        b.eq    4850 <mana_smc_poll_register+0x88>
->     4814: b9400281      ldr   w1, [x20] <-- **** CRASHED HERE *****
->     4818: d50331bf        dmb     oshld
->     481c: 2a0103e2        mov     w2, w1
->     ...
-> 
-> From the crash signature x20 = ffff8000a200001b, this address
-> ends in 0x1b which is not 4-byte aligned, so the 'ldr w1, [x20]'
-> instruction (readl) triggers the arm64 alignment fault (FSC = 0x21).
-> 
-> The root cause is in mana_gd_init_vf_regs(), which computes:
-> 
->   gc->shm_base = gc->bar0_va + mana_gd_r64(gc, GDMA_REG_SHM_OFFSET);
-> 
-> The offset is used without any validation.  The same problem exists
-> in mana_gd_init_pf_regs() for sriov_base_off and sriov_shm_off.
-> 
-> Fix this by validating all offsets before use:
-> 
-> - VF: check shm_off is within BAR0, properly aligned to 4 bytes
->   (readl requirement), and leaves room for the full 256-bit
->   (32-byte) SMC aperture.
-> 
-> - PF: check sriov_base_off is within BAR0, aligned to 8 bytes
->   (readq requirement), and leaves room to safely read the
->   sriov_shm_off register at sriov_base_off + GDMA_PF_REG_SHM_OFF.
->   Then check sriov_shm_off leaves room for the full SMC aperture.
->   All arithmetic uses subtraction rather than addition to avoid
->   integer overflow on garbage firmware values.
-> 
-> without validating the offset read from hardware. If the register
-> returns a garbage value that is neither within bar 0 bounds nor aligned
-> to the 4-byte granularity, thus causing the alignment fault.
-> 
-> Define SMC_APERTURE_SIZE (32 bytes, derived from the 256-bit aperture
-> width)
-> 
-> Return -EPROTO on invalid values.  The existing recovery path in
-> mana_serv_reset() already handles -EPROTO by falling through to PCI
-> device rescan, giving the hardware another chance to present valid
-> register values after reset.
-> 
-> Fixes: 9bf66036d686 ("net: mana: Handle hardware recovery events when probing the device")
-> Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-> 
-> ---
-> Changes in v2:
-> - Fix sriov_base_off alignment check: sizeof(u32) to sizeof(u64), since
->   mana_gd_r64() (readq) requires 8-byte alignment on arm64.
-> - Fix sriov_base_off bounds: also verify enough space remains in BAR0
->   to safely read sriov_shm_off at offset GDMA_PF_REG_SHM_OFF + 8 bytes.
-> - Fix integer overflow: rewrite bounds checks using subtraction
->   (remaining = bar0_size - base) instead of addition.
-> - Fix SMC aperture size: add gc->bar0_size - shm_off < SMC_APERTURE_SIZE
->   checks in both VF and PF paths; previously only the start address was
->   validated, but mana_smc_poll_register() accesses up to shm_base + 0x1c
->   (28 bytes from base, 32 bytes total).
-> - Export SMC_APERTURE_SIZE to shm_channel.h.
-> ---
->  .../net/ethernet/microsoft/mana/gdma_main.c   | 40 ++++++++++++++++---
->  include/net/mana/shm_channel.h                |  6 +++
->  2 files changed, 41 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> index 098fbda0d128..d8e816882f02 100644
-> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> @@ -43,8 +43,9 @@ static u64 mana_gd_r64(struct gdma_context *g, u64 offset)
->  static int mana_gd_init_pf_regs(struct pci_dev *pdev)
->  {
->  	struct gdma_context *gc = pci_get_drvdata(pdev);
-> -	void __iomem *sriov_base_va;
-> +	u64 remaining_barsize;
->  	u64 sriov_base_off;
-> +	u64 sriov_shm_off;
->  
->  	gc->db_page_size = mana_gd_r32(gc, GDMA_PF_REG_DB_PAGE_SIZE) & 0xFFFF;
->  
-> @@ -73,10 +74,28 @@ static int mana_gd_init_pf_regs(struct pci_dev *pdev)
->  	gc->phys_db_page_base = gc->bar0_pa + gc->db_page_off;
->  
->  	sriov_base_off = mana_gd_r64(gc, GDMA_SRIOV_REG_CFG_BASE_OFF);
-> +	if (sriov_base_off >= gc->bar0_size ||
-> +	    gc->bar0_size - sriov_base_off <
-> +		GDMA_PF_REG_SHM_OFF + sizeof(u64) ||
+This series addresses bugs found during a continued review of the
+mshv_root module introduced by commit 621191d709b14 ("Drivers: hv:
+Introduce mshv_root module to expose /dev/mshv to VMMs").
 
-nit: fits on a single line, I think?
+Changes since v1:
+- Added 8 new patches addressing issues found by Sashiko (automated
+  review) covering the irqfd, portid, scheduler message, and VP
+  lifecycle paths.
+- Consolidated the irqfd fast/slow injection paths to eliminate
+  duplicated seqcount reads and fix the GSI 0 validity bypass.
+- Added memory ordering for the lockless VP array.
 
-> +	    !IS_ALIGNED(sriov_base_off, sizeof(u64))) {
-> +		dev_err(gc->dev,
-> +			"SRIOV base offset 0x%llx out of range or unaligned (BAR0 size 0x%llx)\n",
-> +			sriov_base_off, (u64)gc->bar0_size);
-> +		return -EPROTO;
-> +	}
->  
-> -	sriov_base_va = gc->bar0_va + sriov_base_off;
-> -	gc->shm_base = sriov_base_va +
-> -			mana_gd_r64(gc, sriov_base_off + GDMA_PF_REG_SHM_OFF);
-> +	remaining_barsize = gc->bar0_size - sriov_base_off;
-> +	sriov_shm_off = mana_gd_r64(gc, sriov_base_off + GDMA_PF_REG_SHM_OFF);
-> +	if (sriov_shm_off >= remaining_barsize ||
-> +	    remaining_barsize - sriov_shm_off < SMC_APERTURE_SIZE ||
-> +	    !IS_ALIGNED(sriov_shm_off, sizeof(u32))) {
-> +		dev_err(gc->dev,
-> +			"SRIOV SHM offset 0x%llx out of range or unaligned (BAR0 size 0x%llx)\n",
-> +			sriov_shm_off, (u64)gc->bar0_size);
-> +		return -EPROTO;
-> +	}
-> +
-> +	gc->shm_base = gc->bar0_va + sriov_base_off + sriov_shm_off;
->  
->  	return 0;
->  }
-> @@ -84,6 +103,7 @@ static int mana_gd_init_pf_regs(struct pci_dev *pdev)
->  static int mana_gd_init_vf_regs(struct pci_dev *pdev)
->  {
->  	struct gdma_context *gc = pci_get_drvdata(pdev);
-> +	u64 shm_off;
->  
->  	gc->db_page_size = mana_gd_r32(gc, GDMA_REG_DB_PAGE_SIZE) & 0xFFFF;
->  
-> @@ -111,7 +131,17 @@ static int mana_gd_init_vf_regs(struct pci_dev *pdev)
->  	gc->db_page_base = gc->bar0_va + gc->db_page_off;
->  	gc->phys_db_page_base = gc->bar0_pa + gc->db_page_off;
->  
-> -	gc->shm_base = gc->bar0_va + mana_gd_r64(gc, GDMA_REG_SHM_OFFSET);
-> +	shm_off = mana_gd_r64(gc, GDMA_REG_SHM_OFFSET);
-> +	if (shm_off >= gc->bar0_size ||
-> +	    gc->bar0_size - shm_off < SMC_APERTURE_SIZE ||
-> +	    !IS_ALIGNED(shm_off, sizeof(u32))) {
-> +		dev_err(gc->dev,
-> +			"SHM offset 0x%llx out of range or unaligned (BAR0 size 0x%llx)\n",
-> +			shm_off, (u64)gc->bar0_size);
-> +		return -EPROTO;
-> +	}
-> +
-> +	gc->shm_base = gc->bar0_va + shm_off;
->  
->  	return 0;
->  }
-> diff --git a/include/net/mana/shm_channel.h b/include/net/mana/shm_channel.h
-> index 5199b41497ff..dbabcfb95daf 100644
-> --- a/include/net/mana/shm_channel.h
-> +++ b/include/net/mana/shm_channel.h
-> @@ -4,6 +4,12 @@
->  #ifndef _SHM_CHANNEL_H
->  #define _SHM_CHANNEL_H
->  
-> +#define SMC_APERTURE_BITS 256
-> +#define SMC_BASIC_UNIT (sizeof(u32))
-> +#define SMC_APERTURE_DWORDS (SMC_APERTURE_BITS / (SMC_BASIC_UNIT * 8))
-> +#define SMC_LAST_DWORD (SMC_APERTURE_DWORDS - 1)
-> +#define SMC_APERTURE_SIZE  (SMC_APERTURE_BITS / 8)
+The fixes range from data corruption and use-after-free to silent
+functional failures and sleeping-while-atomic:
 
-AI bots complain that we're redefining this.
-Since it's a fix I think it's better to remove the existing definition
-even if it lives in a driver that goes via a different tree.
+ Memory region management:
+  - Integer overflow on userspace-controlled allocation size
+    (mshv_region_create)
+  - Silent success on map failure for unencrypted partitions
+    (mshv_prepare_pinned_region)
+  - u64 overflow in region overlap check allowing overlapping mappings
 
->  struct shm_channel {
->  	struct device *dev;
->  	void __iomem *base;
--- 
-pw-bot: cr
+ IRQ/eventfd path:
+  - IRQ state leak and type truncation in hypercall helpers
+  - Missing locking and hlist_del vs hlist_del_init race in irqfd
+    deassign
+  - Defensive synchronize_srcu in irqfd shutdown (follows KVM pattern)
+  - NULL pointer dereference on spurious interrupt to non-existent VP
+    (mshv_try_assert_irq_fast)
+  - Broken seqcount read protection — torn reads of interrupt routing
+  - Duplicated and inconsistent validity checks between fast/slow
+    injection paths; fast path could inject vector 0 spuriously
+  - Level-triggered check on uninitialized data making interrupt
+    resampling completely non-functional
+  - Duplicate GSI 0 detection using the wrong predicate
+
+ Port ID table:
+  - Use-after-RCU in mshv_portid_lookup (dereference outside read-side
+    critical section)
+  - Sleeping under spinlock in mshv_portid_alloc (GFP_KERNEL inside
+    idr_lock)
+  - Use kfree_rcu for deferred free without blocking
+
+ SynIC / ISR paths:
+  - Missing VP index bounds check in intercept ISR (OOB in interrupt
+    context from untrusted hypervisor data)
+  - Missing store/load ordering for VP array publish — lockless ISR
+    readers could observe partially-initialized VP
+  - Missing bounds validation in scheduler messages
+    (handle_pair_message vp_count, handle_bitset_message bank_mask)
+
+ Miscellaneous:
+  - Missing error code on VP allocation failure (silent success to
+    userspace)
+
+Kudos to Claude and Sashiko for assisting with analysis and
+implementation.
+
+---
+
+Stanislav Kinsburskii (18):
+      mshv: Fix IRQ leak and type hazards in hv_call_modify_spa_host_access
+      mshv: Fix potential integer overflow in mshv_region_create
+      mshv: Fix mshv_prepare_pinned_region error path for unencrypted partitions
+      mshv: Fix potential u64 overflow in region overlap check
+      mshv: Fix race in mshv_irqfd_deassign
+      mshv: Add defensive synchronize_srcu in irqfd shutdown
+      mshv: Add NULL check for vp in mshv_try_assert_irq_fast
+      mshv: Fix broken seqcount read protection
+      mshv: Consolidate irqfd interrupt injection paths
+      mshv: Fix level-triggered check on uninitialized data
+      mshv: Fix duplicate GSI detection for GSI 0
+      mshv: Fix use-after-RCU in mshv_portid_lookup
+      mshv: Fix sleeping under spinlock in mshv_portid_alloc
+      mshv: Use kfree_rcu in mshv_portid_free
+      mshv: Add missing vp_index bounds check in intercept ISR
+      mshv: Add store/load ordering for VP array publish
+      mshv: Validate scheduler message bounds from hypervisor
+      mshv: Fix missing error code on VP allocation failure
+
+
+ drivers/hv/mshv_eventfd.c      |  104 +++++++++++++++++++++++++---------------
+ drivers/hv/mshv_irq.c          |    2 -
+ drivers/hv/mshv_portid_table.c |   12 ++---
+ drivers/hv/mshv_regions.c      |    2 -
+ drivers/hv/mshv_root_hv_call.c |   18 ++-----
+ drivers/hv/mshv_root_main.c    |   24 +++++++--
+ drivers/hv/mshv_synic.c        |   34 ++++++++++---
+ 7 files changed, 122 insertions(+), 74 deletions(-)
+
 
