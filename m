@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-10577-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10578-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id JzHpAm4T9mnMSAIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10577-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 02 May 2026 17:08:30 +0200
+	id oG7/ALoT9mnMSAIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10578-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 02 May 2026 17:09:46 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B1F74B290C
-	for <lists+linux-hyperv@lfdr.de>; Sat, 02 May 2026 17:08:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A22EB4B292B
+	for <lists+linux-hyperv@lfdr.de>; Sat, 02 May 2026 17:09:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C64F7300CE7A
-	for <lists+linux-hyperv@lfdr.de>; Sat,  2 May 2026 15:08:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D2A93300E39F
+	for <lists+linux-hyperv@lfdr.de>; Sat,  2 May 2026 15:08:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 564FE30B508;
-	Sat,  2 May 2026 15:08:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B7F036E477;
+	Sat,  2 May 2026 15:08:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lN4Qj2CV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fg9+d/4X"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC1524E4A1;
-	Sat,  2 May 2026 15:08:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219FB28488F;
+	Sat,  2 May 2026 15:08:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777734507; cv=none; b=tqg7zTmE/rFI2L/Q0Vobfidh7Gn5w32aacDp/qjbK/Jwh0syyzN9pB5nd1SYQi5DmKKLB2ljY/8o8tZt2F7EKoxrJAMh9KoAFUalcoAGxTAqxXTmiA3ZiMMQcSakA2/aXWcVRqzmlIaSZAXiHxgtKrvm8mdyvucCG4D7m6tfHNo=
+	t=1777734533; cv=none; b=r8pdo7bXMNkHPSwucM9jHNk00o3X0Ys6QXCPNV7gv+umIOz0m1fgyBUyLbnSL8t8r8b0UArNltauEIu3T/uAJX8RtK/kLai7br710bp/b7+GdGPBN5DepkVhrIMhE+nY+1pZkV+Pv9hHDKLEAks/JE85WWQpMuIhyiDDM4fRzpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777734507; c=relaxed/simple;
-	bh=3oSRAgR0djIWxvB1OYxe49Q01GZ1ncBAJxoU7/IszgE=;
+	s=arc-20240116; t=1777734533; c=relaxed/simple;
+	bh=e+xLXGdEYxLgZ323ptVAsu7s9bXYjwxYRgM/sQDjECo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LxXBtoRkdaE+JFRt4vlAmezvYHtGPIF3Yq7MQ0wm9tJLT0WZiIhAS8Vf9a16oBkpN7xhVaIW3H8zlZwU8WD5TT9fzP47RqFTyqDnm5O9kwaEGldn/+AQGouwCgZjMl9sg/0wsMUOJs6qmsqT4MmAskNNJXRNr6/DJ72mmd/x9ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lN4Qj2CV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 917D0C19425;
-	Sat,  2 May 2026 15:08:23 +0000 (UTC)
+	 MIME-Version; b=jA6JfkpFNZtp/L50JW7zMFpxW1ecQNqtnsf+Bli8aruaUk1vx2yGTxIr6rfKzfjjAOQGR4ACc4IpOO3oMyxb4m97NxmsoPtpqaDWnNPshsxnBS6NHD97G295biLHXVW26nYObomVIIdP8b2vaq1mPlyq5xdGBctr+upyAC3gLoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fg9+d/4X; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 800A5C19425;
+	Sat,  2 May 2026 15:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777734506;
-	bh=3oSRAgR0djIWxvB1OYxe49Q01GZ1ncBAJxoU7/IszgE=;
+	s=k20201202; t=1777734532;
+	bh=e+xLXGdEYxLgZ323ptVAsu7s9bXYjwxYRgM/sQDjECo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lN4Qj2CVYR8aeq7ziietEj2m0Z0rPaOgsRgdxYfrwAuGyRYrPkkg7ENSXG2+BSl7j
-	 cZIpbRLALbCHuGLxZ6xyAu+JlIHF+24cu8b5u5jnsReHXbtdg6w0sVyTUBULAfD1QC
-	 6BE8D8xJGV/G/OBPns3nJS27n7gUOP4xWorU2YiITE+YdZ67aUUq8It7f9T9lhkgdZ
-	 XeK2hLCAfjGokcx+ftAzRVwHjP7O+J3Z4EAkuzu3zqm78z6mQG3PAac8mOMUWqsNf/
-	 UtgkIiVW9MmgMsPhe2xEO6bvH3pHXTq/hIMdOtzh/JbSJ8itAS/wXKMj2StIdqAOZb
-	 5dXiFXVqiaRLw==
+	b=fg9+d/4XKgn65KJcALgx52hjbibflVP0oUjGuv13JKvvrSYRXT1nA67xqiIpEySnl
+	 n/2WJJ3/TTOXGejPzue/9waKnO3gDiLPIXoNM3gCxJtpugPnfB9jT3bJYhBBUpev/Q
+	 WVYRyAXtoAN6uIgrQ0pySakeKxbdYOCWZWa1MdbsqYoJe/OtvDPGY+7dgE2Poyy6cG
+	 pnHEsi0J5uEg/C0IC7jId3amRmYVMLKL4YOHBouvSHJS23eUZbAmIeASV7fXPG2jtz
+	 bpp2huuzeopVNuDAHffhaLzsej3iJDbiKFiDkwJSIHDf9mW57PgPzvdMcJDGF0iQE5
+	 KtOCKnlOsTpOw==
 From: Simon Horman <horms@kernel.org>
 To: longli@microsoft.com
 Cc: 'Simon Horman' <horms@kernel.org>,
@@ -63,12 +63,12 @@ Cc: 'Simon Horman' <horms@kernel.org>,
 	linux-rdma@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 1/6] net: mana: Create separate EQs for each vPort
-Date: Sat,  2 May 2026 16:07:16 +0100
-Message-ID: <20260502150717.281387-1-horms@kernel.org>
+Subject: Re: [PATCH net-next v6 2/6] net: mana: Query device capabilities and configure MSI-X sharing for EQs
+Date: Sat,  2 May 2026 16:08:35 +0100
+Message-ID: <20260502150835.281887-1-horms@kernel.org>
 X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260429221625.1841150-2-longli@microsoft.com>
-References: <20260429221625.1841150-2-longli@microsoft.com>
+In-Reply-To: <20260429221625.1841150-3-longli@microsoft.com>
+References: <20260429221625.1841150-3-longli@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -76,7 +76,7 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 3B1F74B290C
+X-Rspamd-Queue-Id: A22EB4B292B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.84 / 15.00];
@@ -85,13 +85,13 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[18];
-	TAGGED_FROM(0.00)[bounces-10577-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10578-lists,linux-hyperv=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -113,50 +113,95 @@ This is an AI-generated review of your patch. The human sending this
 email has considered the AI review valid, or at least plausible.
 Full review at: https://sashiko.dev
 ---
-net: mana: Create separate EQs for each vPort
+net: mana: Query device capabilities and configure MSI-X sharing for EQs
 
-This commit modifies the mana driver to prepare for assigning vPorts to
-dedicated MSI-X vectors by removing EQ sharing among vPorts. It moves the EQ
-definition from the mana_context to the mana_port_context and exports EQ
-lifecycle functions for use by the MANA RDMA driver.
+When querying the device, this adjusts the max number of queues to allow
+dedicated MSI-X vectors for each vPort, clamping to no less than
+MANA_DEF_NUM_QUEUES. MSI-X sharing among vPorts is disabled by default
+and enabled only when there are not enough vectors. It also renames
+mana_query_device_cfg() to mana_gd_query_device_cfg().
 
-> diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
-> index 645581359cee..6f1043383e8c 100644
-> --- a/drivers/infiniband/hw/mana/qp.c
-> +++ b/drivers/infiniband/hw/mana/qp.c
-> @@ -168,7 +168,15 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
->  		cq_spec.gdma_region = cq->queue.gdma_region;
->  		cq_spec.queue_size = cq->cqe * COMP_ENTRY_SIZE;
->  		cq_spec.modr_ctx_id = 0;
-> -		eq = &mpc->ac->eqs[cq->comp_vector];
-> +		/* EQs are created when a raw QP configures the vport.
-> +		 * A raw QP must be created before creating rwq_ind_tbl.
-> +		 */
-> +		if (!mpc->eqs) {
-> +			ret = -EINVAL;
-> +			i--;
-> +			goto fail;
-> +		}
-> +		eq = &mpc->eqs[cq->comp_vector % mpc->num_queues];
+> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
 
-Is it possible for the EQs to be destroyed while this RSS QP is still actively
-using them?
+[ ... ]
 
-If the EQs are created by the Ethernet interface being brought up, or by
-a RAW QP configuring the vport, this RSS QP will attach to them without
-incrementing pd->vport_use_count or taking any vport reference count.
+> +	/*
+> +	 * Adjust gc->max_num_queues returned from the SOC to allow dedicated
+> +	 * MSIx for each vPort. Clamp to no less than MANA_DEF_NUM_QUEUES.
+> +	 */
+> +	max_num_queues = (gc->num_msix_usable - 1) / num_ports;
+> +	max_num_queues = roundup_pow_of_two(max(max_num_queues, 1U));
 
-If the Ethernet interface is subsequently brought down, or the RAW QP is
-destroyed, mana_destroy_eq() will be called, freeing the mpc->eqs array and
-destroying the underlying DMA regions while this RSS QP remains active. This
-regression could allow the hardware to DMA completion events into freed
-EQ memory.
+Does rounding up here inflate max_num_queues and unnecessarily force MSI-X
+sharing?
 
-Additionally, since mpc->eqs is accessed here without holding pd->vport_mutex,
-could a concurrent teardown of the EQs lead to a use-after-free when reading
-eq->eq->id?
+For example, if there are 63 usable MSIs and 2 ports, the division yields 31.
+Rounding up gives 32. The subsequent check below:
 
->  		cq_spec.attached_eq = eq->eq->id;
+> +	/*
+> +	 * Use dedicated MSIx for EQs whenever possible, use MSIx sharing for
+> +	 * Ethernet EQs when (max_num_queues * num_ports > num_msix_usable - 1)
+> +	 */
+> +	max_num_queues = min(gc->max_num_queues, max_num_queues);
+> +	if (max_num_queues * num_ports > gc->num_msix_usable - 1)
+> +		gc->msi_sharing = true;
+
+would then evaluate to true (32 * 2 > 63) and force the driver into MSI-X
+shared mode. This seems to contradict the intent to use dedicated MSI-X
+whenever possible.
+
+Would it be better to use rounddown_pow_of_two() instead to ensure the
+calculated queues fit within the available dedicated vectors?
+
+[ ... ]
+
+> @@ -1968,20 +2008,30 @@ static int mana_gd_setup(struct pci_dev *pdev)
+>  	if (err)
+>  		goto destroy_hwc;
 >  
->  		ret = mana_create_wq_obj(mpc, mpc->port_handle, GDMA_RQ,
+> -	err = mana_gd_query_max_resources(pdev);
+> +	err = mana_gd_detect_devices(pdev);
+>  	if (err)
+>  		goto destroy_hwc;
+>  
+> -	err = mana_gd_setup_remaining_irqs(pdev);
+> -	if (err) {
+> -		dev_err(gc->dev, "Failed to setup remaining IRQs: %d", err);
+> -		goto destroy_hwc;
+> -	}
+> -
+> -	err = mana_gd_detect_devices(pdev);
+> +	err = mana_gd_query_max_resources(pdev);
+>  	if (err)
+>  		goto destroy_hwc;
+>  
+> +	if (!gc->msi_sharing) {
+> +		gc->msi_bitmap = bitmap_zalloc(gc->num_msix_usable, GFP_KERNEL);
+> +		if (!gc->msi_bitmap) {
+> +			err = -ENOMEM;
+> +			goto destroy_hwc;
+> +		}
+> +		/* Set bit for HWC */
+> +		set_bit(0, gc->msi_bitmap);
+> +	} else {
+> +		err = mana_gd_setup_remaining_irqs(pdev);
+> +		if (err) {
+> +			dev_err(gc->dev, "Failed to setup remaining IRQs: %d", err);
+> +			goto destroy_hwc;
+> +		}
+> +	}
+
+If msi_sharing is disabled, we allocate the msi_bitmap but skip calling
+mana_gd_setup_remaining_irqs(). 
+
+Since mana_gd_setup_hwc_irqs() only allocates a single vector for the hardware
+channel when dynamic allocation is supported, does this leave the device
+without interrupts for its Ethernet queues?
+
+If so, it seems this could lead to queue creation failures when the driver
+attempts to map uninitialized vectors. I notice this is fixed in a later patch
+in the series ("net: mana: Allocate interrupt context for each EQ when
+creating vPort"), but does leaving it out here break bisectability?
 
