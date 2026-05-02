@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-10579-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10581-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id Z+DfL7cX9mlQSQIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10579-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 02 May 2026 17:26:47 +0200
+	id KVJ6D/EY9mmPSQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10581-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 02 May 2026 17:32:01 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10A464B2980
-	for <lists+linux-hyperv@lfdr.de>; Sat, 02 May 2026 17:26:46 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 786964B29C0
+	for <lists+linux-hyperv@lfdr.de>; Sat, 02 May 2026 17:32:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 990923004C3F
-	for <lists+linux-hyperv@lfdr.de>; Sat,  2 May 2026 15:26:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 937AC300DE3B
+	for <lists+linux-hyperv@lfdr.de>; Sat,  2 May 2026 15:31:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3593336882;
-	Sat,  2 May 2026 15:26:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32F1B34E745;
+	Sat,  2 May 2026 15:31:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l7d9m0q5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q3s86cxH"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EAFF1A9F8D;
-	Sat,  2 May 2026 15:26:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EEEA27A907;
+	Sat,  2 May 2026 15:31:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777735602; cv=none; b=e+HSbHT95/TixqAR41DmU6JsoG0+5NWFPt08jjsm4KzNLg9YWrfyCbMOFN+WNmdkF8q9eFDL5mdMcwKnkAEqIGN4FlCTuaBrI//FSqZyvgHueGGYiBEY1Q+dN51HkqNL84AmmtwqFYGc0jq5ukbigM9SQ+aCNc0BUkghK9Fb1g4=
+	t=1777735918; cv=none; b=mTOkJwO0MLAtnVFvdH3Ix7J4mVbem3+/UTBfYm1H0+2h4OmT+aW4Hdhq1xjIZYQahMNi1Onq0RC05316exbPjxGeluTGBHmdWHnaca27Kfbw6YRDg2P0bSbfHZLor3AV7nQmVjwwgbBV7xBd0aK+0jFFFoDA8klAVJOZEfWC5Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777735602; c=relaxed/simple;
-	bh=SheQN8rmthb94Gq8c40zeewK7HYzbJWGeqJFZU+aUW8=;
+	s=arc-20240116; t=1777735918; c=relaxed/simple;
+	bh=cZ48aUpcm/LYH4Do1T34fSyLSVwHUO5JI4d3PeiSdI4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O6NwFgZDRHfZVYABqp5gWTOdrU5c1AnsMX80nugb3Ex3/eZ2SOYdHt0813gfQDtTvMH76BQLMLyI6+7hKTpyvXTcitj/2SkUJyZXdE45uCgkf9xSmRv//o3aoQqg15CWLCZQgTcncM2QczY4AE0RdQb7fKRZsxh/q9RFeP4EfJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l7d9m0q5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5BD3C19425;
-	Sat,  2 May 2026 15:26:38 +0000 (UTC)
+	 MIME-Version; b=frJrxziol1pq80HHC3p5TdSxp01yp3xOM/n4wjUTSjpHJtvwfza4ITk+hqaTgSlz8fddnAubrC8oXRR4kBiOwi2Z7ic9gDP+7000BgSekcjLRmr7e6LHuWoqrZvDm0+wu0ajxPvKRfxJ08JriTCp7qGtzDBBJT5lKuUP1SfOyDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q3s86cxH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41303C19425;
+	Sat,  2 May 2026 15:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777735602;
-	bh=SheQN8rmthb94Gq8c40zeewK7HYzbJWGeqJFZU+aUW8=;
+	s=k20201202; t=1777735917;
+	bh=cZ48aUpcm/LYH4Do1T34fSyLSVwHUO5JI4d3PeiSdI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=l7d9m0q5kI/2kINLnLXgpwvtlTRfOVrkIwcN90A5/hZKreGUEgawWm5GVNMIrRN1b
-	 H8Dj5+Cm40OImDwmmy+UW7Bzm4AT+U48SNZeZrzNbBawyYzGEH0HZ+RBou1HTLBmJv
-	 Ui/5lHCaHcRQhSSzqmnwSxw1Ju5Kw0MA+FNByGdfbXFM5+rulklaVAzSelksybc1nk
-	 6iit0CZ3OCQAtECSt1WyXXHSFjH/nGcAEEncY4GCzJoosEsky+ZjQ67bgLyclvFXrS
-	 TMwV95/z65gxgZ7cBW0Ky69ct9lDBsbeZC/1+ih39ouzepBtIqaSigm+Dn39lxA7Jj
-	 6HWuXyT+Lfgdw==
+	b=q3s86cxHaNHtLwEYL0JuhpnPUVmaD/Pl315gr7vHrw9HeN+LKdb8daxtBrAUK4F5e
+	 JqW5Eh0O7+/WTiUP+7LQLxPURxK7FJ9BIftnUVYqKbW3xUg0cur7mL3EM+NTQOwxEt
+	 t8GPJ0eRM+3VfaqLYLa/yerHy7vVgN2npQrHhf4yw1jtxZeUBG+gIA2RlhO3iqFux4
+	 Rf70zGLHiOtJB0SPflJmDljO687nxAxfaPtnaXzrKMfg6h5+o/uZx4yDBsi5//EyoX
+	 GpKBqu1QtQBgJ6EwhPJoZ0hY9JFdnoK1dlx39i2/SFdHlWU3xlo4VNPQ/r4WB73xtg
+	 N31Xs80O6cLXg==
 From: Simon Horman <horms@kernel.org>
 To: longli@microsoft.com
 Cc: 'Simon Horman' <horms@kernel.org>,
@@ -63,12 +63,12 @@ Cc: 'Simon Horman' <horms@kernel.org>,
 	linux-rdma@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 1/6] net: mana: Create separate EQs for each vPort
-Date: Sat,  2 May 2026 16:23:55 +0100
-Message-ID: <20260502152354.289044-2-horms@kernel.org>
+Subject: Re: [PATCH net-next v6 2/6] net: mana: Query device capabilities and configure MSI-X sharing for EQs
+Date: Sat,  2 May 2026 16:26:52 +0100
+Message-ID: <20260502152649.292433-5-horms@kernel.org>
 X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260429221625.1841150-2-longli@microsoft.com>
-References: <20260429221625.1841150-2-longli@microsoft.com>
+In-Reply-To: <20260429221625.1841150-3-longli@microsoft.com>
+References: <20260429221625.1841150-3-longli@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -76,7 +76,7 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 10A464B2980
+X-Rspamd-Queue-Id: 786964B29C0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.84 / 15.00];
@@ -86,12 +86,12 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[18];
-	TAGGED_FROM(0.00)[bounces-10579-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10581-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -105,237 +105,210 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sashiko.dev:url,linux.dev:url]
 
 From: 'Simon Horman' <horms@kernel.org>
 
 This is an AI-generated review of your patch. The human sending this
 email has considered the AI review valid, or at least plausible.
-Full review at: https://sashiko.dev
+Full review at: https://netdev-ai.bots.linux.dev/sashiko/
+
+I apologise for any overlap with this and the review of this
+patchset available at sashiko.dev. They both seem relevant and
+I'm unsure how to cleanly pass them both on.
+
+Both Sashiko instances also flagged concerns in the remaining
+patches of this patchset. But I am not forwarding them as they
+seem to be lower priority, and I think I've already created
+enough noise here.
+
 ---
-net: mana: Create separate EQs for each vPort
+net: mana: Query device capabilities and configure MSI-X sharing for EQs
 
-This change moves EQ ownership from struct mana_context to struct
-mana_port_context so each vPort can have dedicated EQs, and exports
-mana_create_eq()/mana_destroy_eq() for use by the MANA RDMA driver.
+This patch queries device capabilities early in GDMA probe and chooses
+between dedicated MSI-X per vPort or a shared-MSI-X mode based on the
+available vector count, introducing gc->max_num_queues_vport,
+gc->msi_sharing and gc->msi_bitmap, and renaming mana_query_device_cfg()
+to mana_gd_query_device_cfg() so it can be called from the GDMA layer.
 
-> diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
-> index ac5e75dd3494..60cc02e4ad10 100644
-> --- a/drivers/infiniband/hw/mana/main.c
-> +++ b/drivers/infiniband/hw/mana/main.c
-> @@ -20,8 +20,10 @@ void mana_ib_uncfg_vport(struct mana_ib_dev *dev, struct mana_ib_pd *pd,
->  	pd->vport_use_count--;
->  	WARN_ON(pd->vport_use_count < 0);
->  
-> -	if (!pd->vport_use_count)
-> +	if (!pd->vport_use_count) {
-> +		mana_destroy_eq(mpc);
->  		mana_uncfg_vport(mpc);
-> +	}
->  
->  	mutex_unlock(&pd->vport_mutex);
->  }
-> @@ -55,15 +57,21 @@ int mana_ib_cfg_vport(struct mana_ib_dev *dev, u32 port, struct mana_ib_pd *pd,
->  		return err;
->  	}
->  
-> -	mutex_unlock(&pd->vport_mutex);
->  
->  	pd->tx_shortform_allowed = mpc->tx_shortform_allowed;
->  	pd->tx_vp_offset = mpc->tx_vp_offset;
-> +	err = mana_create_eq(mpc);
-> +	if (err) {
-> +		mana_uncfg_vport(mpc);
-> +		pd->vport_use_count--;
-> +	}
-> +
-> +	mutex_unlock(&pd->vport_mutex);
->  
->  	ibdev_dbg(&dev->ib_dev, "vport handle %llx pdid %x doorbell_id %x\n",
->  		  mpc->port_handle, pd->pdn, doorbell_id);
-
-On the failure path, mana_uncfg_vport() is called and pd->vport_use_count
-is decremented, but execution falls through to the ibdev_dbg() line that
-prints the vport handle as if it were a success. Should this debug print
-be skipped on the error path so logs are not ambiguous?
-
-Also, pd->tx_shortform_allowed and pd->tx_vp_offset are assigned from mpc
-before the mana_create_eq() attempt and are not cleared when that call
-fails. Callers are expected to gate on pd->vport_use_count, but is it
-worth resetting these fields on failure so the state matches the
-pre-patch behavior?
-
-The mutex_unlock(&pd->vport_mutex) has moved from before the field
-assignments to after mana_create_eq(). That now holds pd->vport_mutex
-across GFP_KERNEL allocations, debugfs directory creation, and multiple
-mana_gd_create_mana_eq() firmware RPCs, and establishes the lock order
-pd->vport_mutex -> apc->vport_mutex via mana_uncfg_vport() on the error
-path. Is the extended critical section intentional?
-
->  
-> -	return 0;
-> +	return err;
->  }
->  
->  int mana_ib_alloc_pd(struct ib_pd *ibpd, struct ib_udata *udata)
-> diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
-> index 645581359cee..6f1043383e8c 100644
-> --- a/drivers/infiniband/hw/mana/qp.c
-> +++ b/drivers/infiniband/hw/mana/qp.c
-> @@ -168,7 +168,15 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
->  		cq_spec.gdma_region = cq->queue.gdma_region;
->  		cq_spec.queue_size = cq->cqe * COMP_ENTRY_SIZE;
->  		cq_spec.modr_ctx_id = 0;
-> -		eq = &mpc->ac->eqs[cq->comp_vector];
-> +		/* EQs are created when a raw QP configures the vport.
-> +		 * A raw QP must be created before creating rwq_ind_tbl.
-> +		 */
-> +		if (!mpc->eqs) {
-> +			ret = -EINVAL;
-> +			i--;
-> +			goto fail;
-> +		}
-> +		eq = &mpc->eqs[cq->comp_vector % mpc->num_queues];
-
-Can the mpc->eqs read race with a concurrent free? mana_ib_create_qp_rss()
-runs without pd->vport_mutex or RTNL, but mpc->eqs is freed by
-mana_destroy_eq() from two paths:
-
-  mana_ib_uncfg_vport()   (under pd->vport_mutex, on last raw-QP destroy)
-  mana_dealloc_queues()   (under RTNL, on netdev down)
-
-both of which do:
-
-  kfree(apc->eqs);
-  apc->eqs = NULL;
-
-with no RCU grace period or reader-visible synchronization. If CPU-A
-passes the !mpc->eqs check after CPU-B begins ip link set dev X down,
-does CPU-A then dereference freed memory via mpc->eqs[...].eq->id?
-
-Separately, what populates mpc->eqs for an RDMA-only RSS QP user on a
-probed-but-idle Ethernet port? Pre-patch mana_probe() called
-mana_create_eq(ac) unconditionally, so ac->eqs existed for the device
-lifetime. After this patch the only creators are mana_alloc_queues()
-(Ethernet up) and mana_ib_cfg_vport() (raw QP). An RDMA application that
-uses only RSS QPs and never creates a raw QP will now get -EINVAL here
-where it used to succeed. Is this intended, and should the commit log
-mention it?
-
-The adjacent comment:
-
-   /* EQs are created when a raw QP configures the vport.
-    * A raw QP must be created before creating rwq_ind_tbl.
-    */
-
-omits the Ethernet-up path that also populates mpc->eqs. Would it be
-clearer to describe both creators?
-
-There is also a behavior change in the index expression:
-
-   eq = &mpc->eqs[cq->comp_vector % mpc->num_queues];
-
-Pre-patch this was ac->eqs[cq->comp_vector] sized by gc->max_num_queues.
-Now comp_vector is folded modulo mpc->num_queues, which is tunable via
-ethtool -L. Userspace that used distinct comp_vector values to hit
-distinct EQs will silently alias when comp_vector >= num_queues. Should
-this be documented or rejected with -EINVAL rather than silently
-wrapped?
-
-Can mpc->num_queues be 0 at this point? mana_set_channels() does not
-reject new_count==0, and kzalloc_objs(struct mana_eq, 0) returns
-ZERO_SIZE_PTR, which passes the !mpc->eqs check. During the window
-between mana_create_eq() and the subsequent netif_set_real_num_tx_queues()
-failing, a concurrent RDMA QP create would compute
-cq->comp_vector % 0 here. Should mpc->num_queues be validated alongside
-mpc->eqs?
-
-The placement of the !mpc->eqs check is inside the per-iteration loop
-over ind_tbl_size, but mpc->eqs cannot change across iterations, so the
-check is only meaningful at i==0. It works today because i-- then makes
-i = -1 and the cleanup while (i-- > 0) skips. Would hoisting the check
-above the loop be clearer and less fragile against refactoring?
-
->  		cq_spec.attached_eq = eq->eq->id;
->  
->  		ret = mana_create_wq_obj(mpc, mpc->port_handle, GDMA_RQ,
-> @@ -317,7 +325,11 @@ static int mana_ib_create_qp_raw(struct ib_qp *ibqp, struct ib_pd *ibpd,
->  	cq_spec.queue_size = send_cq->cqe * COMP_ENTRY_SIZE;
->  	cq_spec.modr_ctx_id = 0;
->  	eq_vec = send_cq->comp_vector;
-> -	eq = &mpc->ac->eqs[eq_vec];
-> +	if (!mpc->eqs) {
-> +		err = -EINVAL;
-> +		goto err_destroy_queue;
-> +	}
-> +	eq = &mpc->eqs[eq_vec % mpc->num_queues];
-
-The same mpc->eqs TOCTOU concern applies here: the check and subsequent
-dereference occur without pd->vport_mutex or RTNL held, so a concurrent
-mana_dealloc_queues() on the Ethernet side can free mpc->eqs between the
-check and the index access. Is there synchronization that prevents this?
-
-The same comp_vector % num_queues aliasing and num_queues==0 divide
-concerns apply here as well.
-
->  	cq_spec.attached_eq = eq->eq->id;
->  
->  	err = mana_create_wq_obj(mpc, mpc->port_handle, GDMA_SQ, &wq_spec,
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index a654b3699c4c..6c709f8b875d 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-
-[ ... ]
-
-> -static int mana_create_eq(struct mana_context *ac)
-> +int mana_create_eq(struct mana_port_context *apc)
->  {
-> -	struct gdma_dev *gd = ac->gdma_dev;
-> +	struct gdma_dev *gd = apc->ac->gdma_dev;
->  	struct gdma_context *gc = gd->gdma_context;
->  	struct gdma_queue_spec spec = {};
+> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> index 098fbda0d128..b96859e0aec9 100644
+> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> @@ -149,6 +149,9 @@ static int mana_gd_query_max_resources(struct pci_dev *pdev)
+>  	struct gdma_context *gc = pci_get_drvdata(pdev);
+>  	struct gdma_query_max_resources_resp resp = {};
+>  	struct gdma_general_req req = {};
+> +	unsigned int max_num_queues;
+> +	u8 bm_hostmode;
+> +	u16 num_ports;
 >  	int err;
->  	int i;
 >  
-> -	ac->eqs = kzalloc_objs(struct mana_eq, gc->max_num_queues);
-> -	if (!ac->eqs)
-> +	WARN_ON(apc->eqs);
-> +	apc->eqs = kzalloc_objs(struct mana_eq, apc->num_queues);
-> +	if (!apc->eqs)
->  		return -ENOMEM;
-
-WARN_ON(apc->eqs) is used as a defensive assertion but execution
-proceeds to overwrite apc->eqs unconditionally. If the invariant is
-violated, the previous array and all HW EQs it referenced are leaked.
-Should this instead bail out with an error or call mana_destroy_eq()
-first to keep the function idempotent against future callers?
-
-[ ... ]
-
-> @@ -3326,6 +3349,9 @@ static int mana_dealloc_queues(struct net_device *ndev)
->  	mana_fence_rqs(apc);
+>  	mana_gd_init_req_hdr(&req.hdr, GDMA_QUERY_MAX_RESOURCES,
+> @@ -194,6 +197,40 @@ static int mana_gd_query_max_resources(struct pci_dev *pdev)
+>  	if (gc->max_num_queues > gc->num_msix_usable - 1)
+>  		gc->max_num_queues = gc->num_msix_usable - 1;
 >  
->  	/* Even in err case, still need to cleanup the vPort */
-> +	mana_destroy_rxqs(apc);
-> +	mana_destroy_txq(apc);
-> +	mana_destroy_eq(apc);
->  	mana_destroy_vport(apc);
+> +	err = mana_gd_query_device_cfg(gc, MANA_MAJOR_VERSION, MANA_MINOR_VERSION,
+> +				       MANA_MICRO_VERSION, &num_ports, &bm_hostmode);
+> +	if (err)
+> +		return err;
 
-What is the intended interaction with outstanding RDMA QPs here? An
-RDMA user that created an RSS QP while the Ethernet netdev was up sees
-mpc->eqs populated by mana_alloc_queues(). When the admin issues
-ip link set dev N down, mana_dealloc_queues() -> mana_destroy_eq()
-destroys those EQs and frees mpc->eqs while the RDMA QPs are still
-alive, leaving the QPs with dangling attached_eq IDs at the hardware
-level and stale kernel references.
+Is this the same MANA_QUERY_DEV_CONFIG that mana_probe() issues shortly
+after?  mana_probe() still contains:
 
-Pre-patch ac->eqs lived for the full mana_context lifetime and was torn
-down only in mana_remove(). Is unconditionally destroying the EQs on
-netdev-down the intended new behavior, and if so how are concurrent
-RDMA consumers expected to recover?
+	err = mana_gd_query_device_cfg(gc, MANA_MAJOR_VERSION, MANA_MINOR_VERSION,
+				       MANA_MICRO_VERSION, &num_ports, &bm_hostmode);
 
+so the same HWC round-trip runs twice on every probe with identical
+arguments, both populating gc->adapter_mtu.
+
+The commit message frames this rename as consolidation ("used at GDMA
+device probe time"), but the mana_probe() call-site is not removed.  Was
+one of the two call-sites meant to go away?
+
+The relocation of debugfs_create_u16("adapter-MTU", ...) from
+mana_gd_query_device_cfg() into mana_probe() only makes sense if the
+function is now invoked more than once, which hints at the same
+duplication.
+
+> +
+> +	if (!num_ports)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Adjust gc->max_num_queues returned from the SOC to allow dedicated
+> +	 * MSIx for each vPort. Clamp to no less than MANA_DEF_NUM_QUEUES.
+> +	 */
+> +	max_num_queues = (gc->num_msix_usable - 1) / num_ports;
+> +	max_num_queues = roundup_pow_of_two(max(max_num_queues, 1U));
+> +	if (max_num_queues < MANA_DEF_NUM_QUEUES)
+> +		max_num_queues = MANA_DEF_NUM_QUEUES;
+> +
+> +	/*
+> +	 * Use dedicated MSIx for EQs whenever possible, use MSIx sharing for
+> +	 * Ethernet EQs when (max_num_queues * num_ports > num_msix_usable - 1)
+> +	 */
+> +	max_num_queues = min(gc->max_num_queues, max_num_queues);
+> +	if (max_num_queues * num_ports > gc->num_msix_usable - 1)
+> +		gc->msi_sharing = true;
+
+Is gc->msi_sharing ever reset to false?  The only two writers are this
+line and mana_gd_setup_hwc_irqs() (the !pci_msix_can_alloc_dyn branch),
+and both only set it to true.  mana_gd_remove_irqs() frees msi_bitmap
+and zeros max_num_msix / num_msix_usable, but does not clear
+msi_sharing, and the gdma_context survives mana_gd_suspend() /
+mana_gd_resume().
+
+Once true is latched in any setup cycle, mana_gd_setup() will always
+take the sharing branch on resume even if the recomputed
+max_num_queues * num_ports fits within num_msix_usable - 1.  Is that
+consistent with the commit message saying sharing "is only enabled when
+there are not enough MSI-X vectors for dedicated allocation"?
+
+> +
+> +	/* If MSI is shared, use max allowed value */
+> +	if (gc->msi_sharing)
+> +		gc->max_num_queues_vport = min(gc->num_msix_usable - 1, gc->max_num_queues);
+> +	else
+> +		gc->max_num_queues_vport = max_num_queues;
+> +
+> +	dev_info(gc->dev, "MSI sharing mode %d max queues %d\n",
+> +		 gc->msi_sharing, gc->max_num_queues);
+
+Should this print gc->max_num_queues_vport rather than
+gc->max_num_queues?  The block immediately above computes
+gc->max_num_queues_vport and leaves gc->max_num_queues unchanged, and
+mana_probe_port() sizes alloc_etherdev_mq() and apc->max_queues from
+gc->max_num_queues_vport:
+
+	ndev = alloc_etherdev_mq(sizeof(struct mana_port_context),
+				 gc->max_num_queues_vport);
+	...
+	apc->max_queues = gc->max_num_queues_vport;
+	apc->num_queues = min(gc->max_num_queues_vport, MANA_DEF_NUM_QUEUES);
+
+so the logged value does not match the per-vPort queue count the driver
+actually exposes.
+
+> +
 >  	return 0;
 >  }
+>  
+> @@ -1856,6 +1893,7 @@ static int mana_gd_setup_hwc_irqs(struct pci_dev *pdev)
+
+[ ... ]
+
+> @@ -1968,20 +2008,30 @@ static int mana_gd_setup(struct pci_dev *pdev)
+>  	if (err)
+>  		goto destroy_hwc;
+>  
+> -	err = mana_gd_query_max_resources(pdev);
+> +	err = mana_gd_detect_devices(pdev);
+>  	if (err)
+>  		goto destroy_hwc;
+>  
+> -	err = mana_gd_setup_remaining_irqs(pdev);
+> -	if (err) {
+> -		dev_err(gc->dev, "Failed to setup remaining IRQs: %d", err);
+> -		goto destroy_hwc;
+> -	}
+> -
+> -	err = mana_gd_detect_devices(pdev);
+> +	err = mana_gd_query_max_resources(pdev);
+>  	if (err)
+>  		goto destroy_hwc;
+>  
+> +	if (!gc->msi_sharing) {
+> +		gc->msi_bitmap = bitmap_zalloc(gc->num_msix_usable, GFP_KERNEL);
+> +		if (!gc->msi_bitmap) {
+> +			err = -ENOMEM;
+> +			goto destroy_hwc;
+> +		}
+> +		/* Set bit for HWC */
+> +		set_bit(0, gc->msi_bitmap);
+> +	} else {
+> +		err = mana_gd_setup_remaining_irqs(pdev);
+> +		if (err) {
+> +			dev_err(gc->dev, "Failed to setup remaining IRQs: %d", err);
+> +			goto destroy_hwc;
+> +		}
+> +	}
+> +
+
+Can the driver bring up any vPort after this change when the !msi_sharing
+branch is taken?
+
+In the dedicated branch, only gc->msi_bitmap is allocated and bit 0 is
+set for HWC.  mana_gd_setup_remaining_irqs() is skipped, so no
+gdma_irq_context is inserted into gc->irq_contexts for indices 1..
+num_msix_usable-1.
+
+Later, mana_create_eq() still assigns
+
+	spec.eq.msix_index = (i + 1) % gc->num_msix_usable;
+
+and mana_gd_register_irq() does:
+
+	gic = xa_load(&gc->irq_contexts, msi_index);
+	if (WARN_ON(!gic))
+		return -EINVAL;
+
+On a typical cloud SKU with, for example, num_msix_usable=32,
+num_ports=1 and num_online_cpus=16, the new math keeps msi_sharing=false
+(16 * 1 <= 31), so every EQ-create goes down this path and hits the
+WARN_ON.  Doesn't that make every vPort open and every resume fail for
+the common dedicated-MSI-X case?
+
+The msi_bitmap allocated here is not consumed anywhere in this commit;
+the on-demand allocation via mana_gd_get_gic() appears in the later
+commit "net: mana: Allocate interrupt context for each EQ when creating
+vPort" (dbbdf40a8974).  Should the bitmap and the new branch be
+introduced in the same commit that actually uses them, so each commit in
+the series is independently bootable?
+
+>  	dev_dbg(&pdev->dev, "mana gdma setup successful\n");
+>  	return 0;
+>
 
