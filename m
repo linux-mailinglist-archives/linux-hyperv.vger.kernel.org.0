@@ -1,245 +1,365 @@
-Return-Path: <linux-hyperv+bounces-10584-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10585-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id XhRHFtdE9mmMTQIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10584-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 02 May 2026 20:39:19 +0200
+	id aZEKJie79mkNYAIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10585-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sun, 03 May 2026 05:04:07 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9ECA54B3353
-	for <lists+linux-hyperv@lfdr.de>; Sat, 02 May 2026 20:39:18 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32E664B434F
+	for <lists+linux-hyperv@lfdr.de>; Sun, 03 May 2026 05:04:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 18B1C300B47B
-	for <lists+linux-hyperv@lfdr.de>; Sat,  2 May 2026 18:39:17 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id D10E33001D7C
+	for <lists+linux-hyperv@lfdr.de>; Sun,  3 May 2026 03:04:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 930103093CB;
-	Sat,  2 May 2026 18:39:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73FE32D7812;
+	Sun,  3 May 2026 03:04:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Gk+U9/XJ"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="SbCOYlfT"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010014.outbound.protection.outlook.com [52.101.61.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351AC2417DE;
-	Sat,  2 May 2026 18:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777747156; cv=fail; b=rhh5GQg+4A2oqqXRqC+rry0LMXedl41zB27JVLrdBK4hAP/INckvxlhBRw6awFXSX1+KFbCKRKISgkolcRipveF4BXdGlDFeOXUd5JEWc8C82MxC0kubTRpPEH11b53eJ3f5aLYWLvw+sfX2s0PzG7MQTLWSpNoYqdrZXhCHZa0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777747156; c=relaxed/simple;
-	bh=aMeJZVKL2YHXTxwKAEW338vmMRuqIARdEG/aK0o8q6U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=efeR+Ml57MmxqL43okMmWJYhjHofZayMQHJ/t1welajyv7tjSa7agN9xsTA/q2Ip+bxyshTsS3jGlRq2mYXMvYi1YRMy2s75Fd6cWGPOPXE93g8Cuyp9nhD88A6dGXonaqxsgqYnK9DIZnBdhjORBthJVVWYV5ZcH/dUWElIg0Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Gk+U9/XJ; arc=fail smtp.client-ip=52.101.61.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gkZdScMllNWM1oSxjTzBCKH6MDx3q6ibbaiwEFmS6JpLHyuSt7zluVM+RzVtSkuFBsDAaG3nP36UlOYJ1kTJfgnvbxWNc2F0q6Y+YVsZ6i198hYNaUkm75UnqWFKkDMm2GYAun7N+hf99kqB3sJOLOVAJDBIgtISdk3CWNfleLpQuiIiktkXFoeOGoqh+3TfNQZU/2jJCpXwkdReCp9VMsKI9fqsLluKTOiKIgY2ItXQq6EGt2QOrQxPn8OGXRDmCVIiIKs+3JqyDhLEbjlAXuVzOwGpQPi65FfVxHNP5bUnTiBlTVu9S/myvD4ih9S28fvohp8o3fUxlM/NllcdYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/9hlFgfd2+1GK1A/t5tEqyBrTZVG8KPvCHZ03tgKyGg=;
- b=GgrrsX4Q5C39j/d224kuuPXOnkFthI5ejQbhRrdn1CVKpRi/uW1gemvR/BVbItKU3YQg+Xfg4FVat3Ou+hVccAdbanQQu4kyxIk7Em9RCzlPNSyYo8P0GVLeZZUd5mVmQ8Cctd+6BYBePhnazPL6O2m1DarDoqJA1gJQ9J6uEYH35L0eHvqr65F0j5UN5GMRo4RYQLWkK/D62QbPCluOijaigCcbOK1rGddeLhfXPVqthg7rq70YUbAyogv6amnl0kHn2wBEtM10aPtBPcuRx+pOkrkHiF6nSVp4l4tVevBzz/+/JWh6iY88+5onyD9a4OBdfRFrYAtXtJukKdZ5pg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/9hlFgfd2+1GK1A/t5tEqyBrTZVG8KPvCHZ03tgKyGg=;
- b=Gk+U9/XJdu0vdM6rPo7+/xs5sDYgTG2ASwsRgk90fM3daSbyTl4tCV/WhqVrXJkxi2nvQsu6VcVhKKA5lKmWQ3d7RuIQNO0xY8jv4Iqr9oJF4mMXLLXPdp8GN8zyfWo5ZUB3bBJ6edDzZoW+3KfLish0kAc4m6JSEP5eRtPfv7M0FYs0l4NE5d/W9Ivh4uST08fru8PbSvvhcDaY3km1e2YRJe/mY9B24Py7qoyeOGyxghXAu2JaniAw7D9X2O2f0gOY5YgEWWbqWVRtOUth5T7DY3gN1B9cuapBxGSeaX7DTYvqseO4Rn29Vs3QKIO3TPM+4w7WiZk4X9uKQsCd7Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY1PR12MB9601.namprd12.prod.outlook.com (2603:10b6:930:107::16)
- by SN7PR12MB6983.namprd12.prod.outlook.com (2603:10b6:806:261::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.23; Sat, 2 May
- 2026 18:39:10 +0000
-Received: from CY1PR12MB9601.namprd12.prod.outlook.com
- ([fe80::cd76:b497:475f:4de3]) by CY1PR12MB9601.namprd12.prod.outlook.com
- ([fe80::cd76:b497:475f:4de3%5]) with mapi id 15.20.9870.022; Sat, 2 May 2026
- 18:39:09 +0000
-Date: Sat, 2 May 2026 15:39:06 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Junxian Huang <huangjunxian6@hisilicon.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Jakub Kicinski <kuba@kernel.org>, Leon Romanovsky <leon@kernel.org>,
-	linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org,
-	netdev@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-	Selvin Xavier <selvin.xavier@broadcom.com>,
-	Chengchang Tang <tangchengchang@huawei.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Yishai Hadas <yishaih@nvidia.com>
-Cc: Abhijit Gangurde <abhijit.gangurde@amd.com>,
-	Adit Ranadive <aditr@vmware.com>, Allen Hubbe <allen.hubbe@amd.com>,
-	Andrew Boyer <andrew.boyer@amd.com>,
-	Aditya Sarwade <asarwade@vmware.com>,
-	Brad Spengler <brad.spengler@opensrcsec.com>,
-	Bryan Tan <bryantan@vmware.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dexuan Cui <decui@microsoft.com>,
-	Doug Ledford <dledford@redhat.com>,
-	George Zhang <georgezhang@vmware.com>,
-	Jorgen Hansen <jhansen@vmware.com>, Jianbo Liu <jianbol@nvidia.com>,
-	Kai Aizen <kai.aizen.dev@gmail.com>,
-	Leon Romanovsky <leonro@mellanox.com>,
-	Leon Romanovsky <leonro@nvidia.com>,
-	Yixian Liu <liuyixian@huawei.com>, Long Li <longli@microsoft.com>,
-	Lijun Ou <oulijun@huawei.com>,
-	Parav Pandit <parav.pandit@emulex.com>, patches@lists.linux.dev,
-	Roland Dreier <roland@purestorage.com>,
-	Roland Dreier <rolandd@cisco.com>, Sagi Grimberg <sagi@grimberg.me>,
-	Ajay Sharma <sharmaajay@microsoft.com>, stable@vger.kernel.org,
-	Tariq Toukan <tariqt@mellanox.com>,
-	"Wei Hu (Xavier)" <xavier.huwei@huawei.com>,
-	Shaobo Xu <xushaobo2@huawei.com>,
-	Nenglong Zhao <zhaonenglong@hisilicon.com>
-Subject: Re: [PATCH rc 00/15] Various bug fixes for RDMA drivers in the uapi
- functions
-Message-ID: <20260502183906.GA3247628@nvidia.com>
-References: <0-v1-41f3135e5565+9d2-rdma_ai_fixes1_jgg@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0-v1-41f3135e5565+9d2-rdma_ai_fixes1_jgg@nvidia.com>
-X-ClientProxiedBy: BY1P220CA0045.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:a03:59e::14) To CY1PR12MB9601.namprd12.prod.outlook.com
- (2603:10b6:930:107::16)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B989B7260F;
+	Sun,  3 May 2026 03:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777777442; cv=none; b=YnySJA/bMYqrjzrtllTb9ZXWPBKV3OjUGO8AbdyXmc10nhm74K74SEJq0ejAg6jdqIu8rGOuUWC8V5QvNXasL9FK456sF22ByLBwi4xVGEgn+N4dr48G+nc/H5reezZrrKP40Zb+E9KYSyMVLoIp4aCtsXXnY4bH0H5f1p+Sh+s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777777442; c=relaxed/simple;
+	bh=CgY+psp0dLx9HhS0yaoOHKPqLMuS2+JSly3x8anAxQA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ilGFJbmE+RNxCkU9huIOnuQ2FlOCG3+RX3oExg9nu2kkAoat3bHlA5+ZXOdaCTFi53NVUOfU3WxveYFsSJZzVYPuvr/v5DDZDmlrHDOMwadx2JZIHbUFhTfSp3JjPKQ5l//A6T86pOWNocIuO2OAoNmsckrysVCzqnfRSQIVxj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=SbCOYlfT; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1204)
+	id EC20520B7168; Sat,  2 May 2026 20:03:53 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EC20520B7168
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1777777433;
+	bh=5g2dPxzm+WYFxm/e5rxErakazVyF1c6GlM0fX6kWfe4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SbCOYlfTnXI3BmedqAfdH9ZHSyC7NCurc4jnAgtr1ZSMxeINVDBUPZBBPT+gRtpHF
+	 tj4Mjj7NR2RMKtCRDMdpmHqFGJ+OuySuun6JgTgIluDpiVqmB5I73x1DOGv1hYhykp
+	 dAwC/bHqZZ6yCJKvS820j5xr/qVfBKSRl3rbLaAg=
+Date: Sat, 2 May 2026 20:03:53 -0700
+From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, pabeni@redhat.com, leon@kernel.org,
+	longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
+	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
+	ernis@linux.microsoft.com, shirazsaleem@microsoft.com,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	stephen@networkplumber.org, jacob.e.keller@intel.com,
+	dipayanroy@microsoft.com, leitao@debian.org, kees@kernel.org,
+	john.fastabend@gmail.com, hawk@kernel.org, bpf@vger.kernel.org,
+	daniel@iogearbox.net, ast@kernel.org, sdf@fomichev.me,
+	yury.norov@gmail.com
+Subject: Re: [PATCH net, v2] net: mana: Fix crash from unvalidated SHM offset
+ read from BAR0 during FLR
+Message-ID: <afa7GQjEHGIK5VyO@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <afJUszROT+yKjth0@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20260501185324.0f02dc72@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY1PR12MB9601:EE_|SN7PR12MB6983:EE_
-X-MS-Office365-Filtering-Correlation-Id: 239f062c-23e6-4438-33f8-08dea87a185f
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|22082099003|18002099003|56012099003|921020;
-X-Microsoft-Antispam-Message-Info:
-	NCj+CReeSA3GCkycD5bI3SsMCBWfVp1SUvq/BuI5fF4H0DZuqLwFGOkHG42Bbt+5D8qB9rHQvFbQ5NRBft0+RndpufQYNqDY1GpfH0NvtGCAKtaSbQKJ4PW9oahUIk5QQMpaG5WM9AJDG/ckj8ztaD3OlhFQzuDT/P99WPwORpqScPkC6zbsgpu+IGu5uJyyz6pn/ji/ssn9tlnlSjWhMNoZcFAjIW1BUdsjT8CuYTZKlOPtux5vUS1M+UrS8LMeGRLzM4QAez97GFLxzmWm4pndUNNA0qBwF0Xyn+Z07fzlsqq/QuUOhudjzbTKfPtTO5b7MfM3hwe8J13Rc5cbIrhtLjJSIVMRseGqke+QQ3+432hnZRX2KQc9DgqnLV1OW70rjJ1kMGo592rhcS5fy4uykkVqEABPwLFv92AOJbQwN4lBuFt7pRUQiiFcu7gpXhdLLPUo//6SW4rgTUDFnnS/jnzGRro8V+mVIOjEBn3VSN8HW0OrVupJv+4dSysnUN++BOc+Dnsi2ganBnu/ChdVUn7RnD2j0uer7y6T/dewartnqo9Gjslf6l5GtSPcGYlb7IXSuM9GG+30IxB+LAVg4oCMJMWLjza0LGdzWxVQjYha23D1KX6tPPIlydtLgvCAAoZqgPKirdlg4k3PGCM1T34nKT9mYtUJQH33vorEATFN76YGUIPZAiTEcUhX6vILJDq62tMK0aWD1zFi7c3XsGUPGvR+XoFtoBtcBic=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY1PR12MB9601.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(22082099003)(18002099003)(56012099003)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?6TbJ14HENt1hp11Qs8e+45SXu7Zq4Jf0RfYcAWO+tbZQW97LtmZaeIgMh3sC?=
- =?us-ascii?Q?yDBTQh2dSh95am0wmnliZrrpwUNF86DQ9xnQdL1v3p915UMD7iHmodYS0+LM?=
- =?us-ascii?Q?3ePW0yrVrquB0r4FiACbTMZd2DJHTTfRBZ59/9iooo05EhImI+WbPWpShs4r?=
- =?us-ascii?Q?TpqNB7N7Z9KWoMoLSXEn4t6p4l/RCAsrsuknWehvdPHHnm6AEo77aAJsRFd2?=
- =?us-ascii?Q?9DZJp0z8xW4u6D1fuhDbxt7FPemNPb2HCblDDgGEioT2WTPso2XlPX3B5qjw?=
- =?us-ascii?Q?dzxrQekeh60qLVAPabaTet4FLfjRQoFs1jOi8jkVmrR5cmTjfGn53qRZYYnJ?=
- =?us-ascii?Q?NJSA1vSffOAdE3c+JgfOU50i4ilKYGW0kURRYcGs9IWaNRRnzaF9KQDMEM5j?=
- =?us-ascii?Q?xTDVvXFLboAMM8H4016GjX40kTnNkQLNrc4busLe5oOOUFgPWlp6+Jmh0muR?=
- =?us-ascii?Q?7FVgpVHHDm3MPZATL99iL+Iis8dsIekBt+2xkem8ZWKB3CC3v4unOn7QZCCE?=
- =?us-ascii?Q?8U9nGQ6mX8ocwcmdAapLymyfdJnYORebwuSiMP141inyCcqOXn45hYleIDVI?=
- =?us-ascii?Q?0dVEYxVlWPuezLKr+UG7TEKhwyZsdlcXflqFJE5kZB/MFW1SDi5QY8czQaPL?=
- =?us-ascii?Q?1TUgn1141TECOkU8wcP+DsmwE2oxaXN4rB28F2CWMmNqTRo31I9M5r7U2fWD?=
- =?us-ascii?Q?QT7rcqXKNJKLIWYqpO21+VNueeQ6aAqFigLZq4/xCesbq9BvPnRefqRAtQmZ?=
- =?us-ascii?Q?fnXVZY9sKPdf4/FZaJo/jvgpbXMhoRagUVYRfk7FrAr2XolzvOv+I/I1GlfA?=
- =?us-ascii?Q?biQenP8JH7c+f48ct+VA62zr+7Q8QI3QQyPWhfP46SfldqGJE8hiq4XSpgeC?=
- =?us-ascii?Q?aBZc3h6iQZNy3q9tn5J41GMsI2r1KgiDj6el0AldVLJKOAdZ+zhp+xs7Qg14?=
- =?us-ascii?Q?mGh6u604msDSqhjdi+2IghbKkZm6zUIzGHX5mJroYjOBZrCXHV/m7Yo2MTsW?=
- =?us-ascii?Q?M3XN1+QmgxlK0KM9FK1+mqqsLBDJbIBxg6tlDo10wDkqy1RRo5d1yRhDELWL?=
- =?us-ascii?Q?hBPYDFR1JTNZL2wqIEOLwtrt6AcYCgl9D5Wqd9CdAVb6pPHrHvxAjPLbXsOQ?=
- =?us-ascii?Q?xvIqjhmN8dsH30R2YhUaDeO+1zAVEAqYs/j0jqJKDI21cD/OTEcZGGUeJxMm?=
- =?us-ascii?Q?JPJFPVCOWCb0YP6NAeMY8jTpsaSwUAjprBQLE/FvQi+ZaHjnuMLSqjD1h90S?=
- =?us-ascii?Q?WbLUeQptJM7fwDDDWu5dpX0SKW9cwDdnls6PPzmDfV6PEIWNKH487g7zys+3?=
- =?us-ascii?Q?HEpxPTgYhsyZc5MUY5pMxGfnW4w04b/qFjduyOq/kchl1t3VhiEimg97lDuX?=
- =?us-ascii?Q?FjLAUr+/Mt/+at7iBXWQMYW4cU6HLy4xe58cccwgpv9sIaqYRXBUT7CipYOY?=
- =?us-ascii?Q?yr81MILdAc0JwiPW0nl9bKTw43tdK0EZGEMEyVz84hBN5W4lmueFxeg4M+tv?=
- =?us-ascii?Q?2gJvvg/1CyaLdbjGrvtvz+lKR7omduuyDWjBvCaZPmEcsKEkuUZhC9OzHQQZ?=
- =?us-ascii?Q?KSNc6m9GbqjgWGwWGke95oFuOnp3j396Mmb/+XlAGaCmvBng9rvZj0Ocf+oD?=
- =?us-ascii?Q?biBH1rZTpJjruK/B3mkHEJt5MV4UkUYuuRH9oDEDa/gGGrg2eYuDnLv3qBtG?=
- =?us-ascii?Q?EWhUovnlvyQz+dousrA38qvZGbcXMKb1jZYQmHFkVFmJ3VqM?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 239f062c-23e6-4438-33f8-08dea87a185f
-X-MS-Exchange-CrossTenant-AuthSource: CY1PR12MB9601.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2026 18:39:09.3800
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ap2Y4TCVUyx64geIZP79dmoG7tS0eGupPAJedBUgB/dOiMH1eqPifhg3+meekLRW
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6983
-X-Rspamd-Queue-Id: 9ECA54B3353
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260501185324.0f02dc72@kernel.org>
+X-Rspamd-Queue-Id: 32E664B434F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.34 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
-	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[47];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10584-lists,linux-hyperv=lfdr.de];
-	FREEMAIL_CC(0.00)[amd.com,vmware.com,opensrcsec.com,davemloft.net,microsoft.com,redhat.com,nvidia.com,gmail.com,mellanox.com,huawei.com,emulex.com,lists.linux.dev,purestorage.com,cisco.com,grimberg.me,vger.kernel.org,hisilicon.com];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10585-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[33];
+	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,vger.kernel.org,networkplumber.org,intel.com,debian.org,gmail.com,iogearbox.net,fomichev.me];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jgg@nvidia.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[Nvidia.com:+];
+	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	MID_RHS_MATCH_FROM(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nvidia.com:mid,Nvidia.com:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.microsoft.com:dkim,linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid]
 
-On Tue, Apr 28, 2026 at 01:17:33PM -0300, Jason Gunthorpe wrote:
-> All were found by Sashiko or Claude AI tools. They vary in severity, but
-> are all things that shouldn't be present.
+On Fri, May 01, 2026 at 06:53:24PM -0700, Jakub Kicinski wrote:
+> On Wed, 29 Apr 2026 11:57:55 -0700 Dipayaan Roy wrote:
+> > During Function Level Reset recovery, the MANA driver reads
+> > hardware BAR0 registers that may temporarily contain garbage values.
+> > The SHM (Shared Memory) offset read from GDMA_REG_SHM_OFFSET is used
+> > to compute gc->shm_base, which is later dereferenced via readl() in
+> > mana_smc_poll_register(). If the hardware returns an unaligned or
+> > out-of-range value, the driver must not blindly use it, as this would
+> > propagate the hardware error into a kernel crash.
+> > 
+> > The following crash was observed on an arm64 Hyper-V guest running
+> > kernel 6.17.0-3013-azure during VF reset recovery triggered by HWC
+> > timeout.
+> > 
+> > [13291.785274] Unable to handle kernel paging request at virtual address ffff8000a200001b
+> > [13291.785311] Mem abort info:
+> > [13291.785332]   ESR = 0x0000000096000021
+> > [13291.785343]   EC = 0x25: DABT (current EL), IL = 32 bits
+> > [13291.785355]   SET = 0, FnV = 0
+> > [13291.785363]   EA = 0, S1PTW = 0
+> > [13291.785372]   FSC = 0x21: alignment fault
+> > [13291.785382] Data abort info:
+> > [13291.785391]   ISV = 0, ISS = 0x00000021, ISS2 = 0x00000000
+> > [13291.785404]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> > [13291.785412]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> > [13291.785421] swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000014df3a1000
+> > [13291.785432] [ffff8000a200001b] pgd=1000000100438403, p4d=1000000100438403, pud=1000000100439403, pmd=0068000fc2000711
+> > [13291.785703] Internal error: Oops: 0000000096000021 [#1]  SMP
+> > [13291.830975] Modules linked in: tls qrtr mana_ib ib_uverbs ib_core xt_owner xt_tcpudp xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nft_compat nf_tables cfg80211 8021q garp mrp stp llc binfmt_misc joydev serio_raw nls_iso8859_1 hid_generic aes_ce_blk aes_ce_cipher polyval_ce ghash_ce sm4_ce_gcm sm4_ce_ccm sm4_ce sm4_ce_cipher hid_hyperv sm4 sm3_ce sha3_ce hv_netvsc hid vmgenid hyperv_keyboard hyperv_drm sch_fq_codel nvme_fabrics efi_pstore dm_multipath nfnetlink vsock_loopback vmw_vsock_virtio_transport_common hv_sock vmw_vsock_vmci_transport vmw_vmci vsock dmi_sysfs ip_tables x_tables autofs4
+> > [13291.862630] CPU: 122 UID: 0 PID: 61796 Comm: kworker/122:2 Tainted: G        W           6.17.0-3013-azure #13-Ubuntu VOLUNTARY
+> > [13291.869902] Tainted: [W]=WARN
+> > [13291.871901] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.1 01/08/2026
+> > [13291.878086] Workqueue: events mana_serv_func
+> > [13291.880718] pstate: 62400005 (nZCv daif +PAN -UAO +TCO -DIT -SSBS BTYPE=--)
+> > [13291.884835] pc : mana_smc_poll_register+0x48/0xb0
+> > [13291.887902] lr : mana_smc_setup_hwc+0x70/0x1c0
+> > [13291.890493] sp : ffff8000ab79bbb0
+> > [13291.892364] x29: ffff8000ab79bbb0 x28: ffff00410c8b5900 x27: ffff00410d630680
+> > [13291.896252] x26: ffff004171f9fd80 x25: 000000016ed55000 x24: 000000017f37e000
+> > [13291.899990] x23: 0000000000000000 x22: 000000016ed55000 x21: 0000000000000000
+> > [13291.904497] x20: ffff8000a200001b x19: 0000000000004e20 x18: ffff8000a6183050
+> > [13291.908308] x17: 0000000000000000 x16: 0000000000000000 x15: 000000000000000a
+> > [13291.912542] x14: 0000000000000004 x13: 0000000000000000 x12: 0000000000000000
+> > [13291.916298] x11: 0000000000000000 x10: 0000000000000001 x9 : ffffc45006af1bd8
+> > [13291.920945] x8 : ffff000151129000 x7 : 0000000000000000 x6 : 0000000000000000
+> > [13291.925293] x5 : 000000015f214000 x4 : 000000017217a000 x3 : 000000016ed50000
+> > [13291.930436] x2 : 000000016ed55000 x1 : 0000000000000000 x0 : ffff8000a1ffffff
+> > [13291.934342] Call trace:
+> > [13291.935736]  mana_smc_poll_register+0x48/0xb0 (P)
+> > [13291.938611]  mana_smc_setup_hwc+0x70/0x1c0
+> > [13291.941113]  mana_hwc_create_channel+0x1a0/0x3a0
+> > [13291.944283]  mana_gd_setup+0x16c/0x398
+> > [13291.946584]  mana_gd_resume+0x24/0x70
+> > [13291.948917]  mana_do_service+0x13c/0x1d0
+> > [13291.951583]  mana_serv_func+0x34/0x68
+> > [13291.953732]  process_one_work+0x168/0x3d0
+> > [13291.956745]  worker_thread+0x2ac/0x480
+> > [13291.959104]  kthread+0xf8/0x110
+> > [13291.961026]  ret_from_fork+0x10/0x20
+> > [13291.963560] Code: d2807d00 9417c551 71000673 54000220 (b9400281)
+> > [13291.967299] ---[ end trace 0000000000000000 ]---
+> > 
+> > Disassembly of mana_smc_poll_register() around the crash site:
+> > 
+> > Disassembly of section .text:
+> > 
+> > 00000000000047c8 <mana_smc_poll_register>:
+> >     47c8: d503201f        nop
+> >     47cc: d503201f        nop
+> >     47d0: d503233f        paciasp
+> >     47d4: f800865e        str     x30, [x18], #8
+> >     47d8: a9bd7bfd        stp     x29, x30, [sp, #-48]!
+> >     47dc: 910003fd        mov     x29, sp
+> >     47e0: a90153f3        stp     x19, x20, [sp, #16]
+> >     47e4: 91007014        add     x20, x0, #0x1c
+> >     47e8: 5289c413        mov     w19, #0x4e20
+> >     47ec: f90013f5        str     x21, [sp, #32]
+> >     47f0: 12001c35        and     w21, w1, #0xff
+> >     47f4: 14000008        b       4814 <mana_smc_poll_register+0x4c>
+> >     47f8: 36f801e1  tbz  w1, #31, 4834 <mana_smc_poll_register+0x6c>
+> >     47fc: 52800042        mov     w2, #0x2
+> >     4800: d280fa01        mov     x1, #0x7d0
+> >     4804: d2807d00        mov     x0, #0x3e8
+> >     4808: 94000000        bl      0 <usleep_range_state>
+> >     480c: 71000673        subs    w19, w19, #0x1
+> >     4810: 54000200        b.eq    4850 <mana_smc_poll_register+0x88>
+> >     4814: b9400281      ldr   w1, [x20] <-- **** CRASHED HERE *****
+> >     4818: d50331bf        dmb     oshld
+> >     481c: 2a0103e2        mov     w2, w1
+> >     ...
+> > 
+> > From the crash signature x20 = ffff8000a200001b, this address
+> > ends in 0x1b which is not 4-byte aligned, so the 'ldr w1, [x20]'
+> > instruction (readl) triggers the arm64 alignment fault (FSC = 0x21).
+> > 
+> > The root cause is in mana_gd_init_vf_regs(), which computes:
+> > 
+> >   gc->shm_base = gc->bar0_va + mana_gd_r64(gc, GDMA_REG_SHM_OFFSET);
+> > 
+> > The offset is used without any validation.  The same problem exists
+> > in mana_gd_init_pf_regs() for sriov_base_off and sriov_shm_off.
+> > 
+> > Fix this by validating all offsets before use:
+> > 
+> > - VF: check shm_off is within BAR0, properly aligned to 4 bytes
+> >   (readl requirement), and leaves room for the full 256-bit
+> >   (32-byte) SMC aperture.
+> > 
+> > - PF: check sriov_base_off is within BAR0, aligned to 8 bytes
+> >   (readq requirement), and leaves room to safely read the
+> >   sriov_shm_off register at sriov_base_off + GDMA_PF_REG_SHM_OFF.
+> >   Then check sriov_shm_off leaves room for the full SMC aperture.
+> >   All arithmetic uses subtraction rather than addition to avoid
+> >   integer overflow on garbage firmware values.
+> > 
+> > without validating the offset read from hardware. If the register
+> > returns a garbage value that is neither within bar 0 bounds nor aligned
+> > to the 4-byte granularity, thus causing the alignment fault.
+> > 
+> > Define SMC_APERTURE_SIZE (32 bytes, derived from the 256-bit aperture
+> > width)
+> > 
+> > Return -EPROTO on invalid values.  The existing recovery path in
+> > mana_serv_reset() already handles -EPROTO by falling through to PCI
+> > device rescan, giving the hardware another chance to present valid
+> > register values after reset.
+> > 
+> > Fixes: 9bf66036d686 ("net: mana: Handle hardware recovery events when probing the device")
+> > Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+> > 
+> > ---
+> > Changes in v2:
+> > - Fix sriov_base_off alignment check: sizeof(u32) to sizeof(u64), since
+> >   mana_gd_r64() (readq) requires 8-byte alignment on arm64.
+> > - Fix sriov_base_off bounds: also verify enough space remains in BAR0
+> >   to safely read sriov_shm_off at offset GDMA_PF_REG_SHM_OFF + 8 bytes.
+> > - Fix integer overflow: rewrite bounds checks using subtraction
+> >   (remaining = bar0_size - base) instead of addition.
+> > - Fix SMC aperture size: add gc->bar0_size - shm_off < SMC_APERTURE_SIZE
+> >   checks in both VF and PF paths; previously only the start address was
+> >   validated, but mana_smc_poll_register() accesses up to shm_base + 0x1c
+> >   (28 bytes from base, 32 bytes total).
+> > - Export SMC_APERTURE_SIZE to shm_channel.h.
+> > ---
+> >  .../net/ethernet/microsoft/mana/gdma_main.c   | 40 ++++++++++++++++---
+> >  include/net/mana/shm_channel.h                |  6 +++
+> >  2 files changed, 41 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > index 098fbda0d128..d8e816882f02 100644
+> > --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > @@ -43,8 +43,9 @@ static u64 mana_gd_r64(struct gdma_context *g, u64 offset)
+> >  static int mana_gd_init_pf_regs(struct pci_dev *pdev)
+> >  {
+> >  	struct gdma_context *gc = pci_get_drvdata(pdev);
+> > -	void __iomem *sriov_base_va;
+> > +	u64 remaining_barsize;
+> >  	u64 sriov_base_off;
+> > +	u64 sriov_shm_off;
+> >  
+> >  	gc->db_page_size = mana_gd_r32(gc, GDMA_PF_REG_DB_PAGE_SIZE) & 0xFFFF;
+> >  
+> > @@ -73,10 +74,28 @@ static int mana_gd_init_pf_regs(struct pci_dev *pdev)
+> >  	gc->phys_db_page_base = gc->bar0_pa + gc->db_page_off;
+> >  
+> >  	sriov_base_off = mana_gd_r64(gc, GDMA_SRIOV_REG_CFG_BASE_OFF);
+> > +	if (sriov_base_off >= gc->bar0_size ||
+> > +	    gc->bar0_size - sriov_base_off <
+> > +		GDMA_PF_REG_SHM_OFF + sizeof(u64) ||
 > 
-> Jason Gunthorpe (15):
->   RDMA/ionic: Fix typo in format string
->   RDMA/mlx5: Restore zero-init to mlx5_ib_modify_qp() ucmd
->   RDMA/mlx5: Add missing store/release for lock elision pattern
->   RDMA/mana: Validate rx_hash_key_len
->   RDMA/mana: Remove user triggerable WARN_ON() in
->     mana_ib_create_qp_rss()
->   RDMA/mana: Fix mana_destroy_wq_obj() cleanup in
->     mana_ib_create_qp_rss()
->   RDMA/mana: Fix error unwind in mana_ib_create_qp_rss()
->   RDMA/ocrdma: Clarify the mm_head searching
->   RDMA/ocrdma: Don't NULL deref uctx on errors in ocrdma_copy_pd_uresp()
->   RDMA/vmw_pvrdma: Fix double free on pvrdma_alloc_ucontext() error path
->   RDMA/mlx4: Fix resource leak on error in mlx4_ib_create_srq()
->   RDMA/mlx4: Fix mis-use of RCU in mlx4_srq_event()
->   RDMA/hns: Fix xarray race in hns_roce_create_srq()
->   RDMA/hns: Fix xarray race in hns_roce_create_qp_common()
->   RDMA/hns: Fix unlocked call to hns_roce_qp_remove()
+> nit: fits on a single line, I think?
+>
+It goes beyond the limit of 80, hence did it this way.
+ 
+> > +	    !IS_ALIGNED(sriov_base_off, sizeof(u64))) {
+> > +		dev_err(gc->dev,
+> > +			"SRIOV base offset 0x%llx out of range or unaligned (BAR0 size 0x%llx)\n",
+> > +			sriov_base_off, (u64)gc->bar0_size);
+> > +		return -EPROTO;
+> > +	}
+> >  
+> > -	sriov_base_va = gc->bar0_va + sriov_base_off;
+> > -	gc->shm_base = sriov_base_va +
+> > -			mana_gd_r64(gc, sriov_base_off + GDMA_PF_REG_SHM_OFF);
+> > +	remaining_barsize = gc->bar0_size - sriov_base_off;
+> > +	sriov_shm_off = mana_gd_r64(gc, sriov_base_off + GDMA_PF_REG_SHM_OFF);
+> > +	if (sriov_shm_off >= remaining_barsize ||
+> > +	    remaining_barsize - sriov_shm_off < SMC_APERTURE_SIZE ||
+> > +	    !IS_ALIGNED(sriov_shm_off, sizeof(u32))) {
+> > +		dev_err(gc->dev,
+> > +			"SRIOV SHM offset 0x%llx out of range or unaligned (BAR0 size 0x%llx)\n",
+> > +			sriov_shm_off, (u64)gc->bar0_size);
+> > +		return -EPROTO;
+> > +	}
+> > +
+> > +	gc->shm_base = gc->bar0_va + sriov_base_off + sriov_shm_off;
+> >  
+> >  	return 0;
+> >  }
+> > @@ -84,6 +103,7 @@ static int mana_gd_init_pf_regs(struct pci_dev *pdev)
+> >  static int mana_gd_init_vf_regs(struct pci_dev *pdev)
+> >  {
+> >  	struct gdma_context *gc = pci_get_drvdata(pdev);
+> > +	u64 shm_off;
+> >  
+> >  	gc->db_page_size = mana_gd_r32(gc, GDMA_REG_DB_PAGE_SIZE) & 0xFFFF;
+> >  
+> > @@ -111,7 +131,17 @@ static int mana_gd_init_vf_regs(struct pci_dev *pdev)
+> >  	gc->db_page_base = gc->bar0_va + gc->db_page_off;
+> >  	gc->phys_db_page_base = gc->bar0_pa + gc->db_page_off;
+> >  
+> > -	gc->shm_base = gc->bar0_va + mana_gd_r64(gc, GDMA_REG_SHM_OFFSET);
+> > +	shm_off = mana_gd_r64(gc, GDMA_REG_SHM_OFFSET);
+> > +	if (shm_off >= gc->bar0_size ||
+> > +	    gc->bar0_size - shm_off < SMC_APERTURE_SIZE ||
+> > +	    !IS_ALIGNED(shm_off, sizeof(u32))) {
+> > +		dev_err(gc->dev,
+> > +			"SHM offset 0x%llx out of range or unaligned (BAR0 size 0x%llx)\n",
+> > +			shm_off, (u64)gc->bar0_size);
+> > +		return -EPROTO;
+> > +	}
+> > +
+> > +	gc->shm_base = gc->bar0_va + shm_off;
+> >  
+> >  	return 0;
+> >  }
+> > diff --git a/include/net/mana/shm_channel.h b/include/net/mana/shm_channel.h
+> > index 5199b41497ff..dbabcfb95daf 100644
+> > --- a/include/net/mana/shm_channel.h
+> > +++ b/include/net/mana/shm_channel.h
+> > @@ -4,6 +4,12 @@
+> >  #ifndef _SHM_CHANNEL_H
+> >  #define _SHM_CHANNEL_H
+> >  
+> > +#define SMC_APERTURE_BITS 256
+> > +#define SMC_BASIC_UNIT (sizeof(u32))
+> > +#define SMC_APERTURE_DWORDS (SMC_APERTURE_BITS / (SMC_BASIC_UNIT * 8))
+> > +#define SMC_LAST_DWORD (SMC_APERTURE_DWORDS - 1)
+> > +#define SMC_APERTURE_SIZE  (SMC_APERTURE_BITS / 8)
 > 
->  drivers/infiniband/hw/hns/hns_roce_qp.c         | 13 ++++++++++---
->  drivers/infiniband/hw/hns/hns_roce_srq.c        | 12 ++++++------
->  drivers/infiniband/hw/ionic/ionic_ibdev.c       |  2 +-
->  drivers/infiniband/hw/mana/cq.c                 |  5 +++--
->  drivers/infiniband/hw/mana/qp.c                 | 16 ++++++++++------
->  drivers/infiniband/hw/mlx4/srq.c                |  4 +++-
->  drivers/infiniband/hw/mlx5/main.c               |  8 ++++----
->  drivers/infiniband/hw/mlx5/qp.c                 |  2 +-
->  drivers/infiniband/hw/mlx5/umr.c                |  4 ++--
->  drivers/infiniband/hw/ocrdma/ocrdma_verbs.c     |  8 ++++----
->  drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.c |  2 +-
->  drivers/net/ethernet/mellanox/mlx4/srq.c        | 13 +++++++------
->  12 files changed, 52 insertions(+), 37 deletions(-)
+> AI bots complain that we're redefining this.
+> Since it's a fix I think it's better to remove the existing definition
+> even if it lives in a driver that goes via a different tree.
+> 
+Ack, removed this in the next version.
+> >  struct shm_channel {
+> >  	struct device *dev;
+> >  	void __iomem *base;
+> -- 
+> pw-bot: cr
 
-Applied to for-rc
+Hi Jakub,
 
-Jason
+Thanks for the comments, I have shared v3 addressing it.
+
+Regards
+Dipayaan Roy
+
 
