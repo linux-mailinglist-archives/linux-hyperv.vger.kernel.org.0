@@ -1,57 +1,57 @@
-Return-Path: <linux-hyperv+bounces-10596-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10597-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KFe5OnXv+Gl93QIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10596-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 04 May 2026 21:11:49 +0200
+	id 2ISnHiLy+GnJ3QIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10597-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 04 May 2026 21:23:14 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69E904C305F
-	for <lists+linux-hyperv@lfdr.de>; Mon, 04 May 2026 21:11:49 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1E9C4C32DD
+	for <lists+linux-hyperv@lfdr.de>; Mon, 04 May 2026 21:23:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 415D430589AD
-	for <lists+linux-hyperv@lfdr.de>; Mon,  4 May 2026 19:09:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6820B3164219
+	for <lists+linux-hyperv@lfdr.de>; Mon,  4 May 2026 19:09:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DE6F3EF646;
-	Mon,  4 May 2026 19:09:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7900E3F075C;
+	Mon,  4 May 2026 19:09:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Ete1lqID"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cwcncfss"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD8103EFD1F;
-	Mon,  4 May 2026 19:08:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D69A3EFD14;
+	Mon,  4 May 2026 19:09:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777921741; cv=none; b=SikdTfFrwpBOmNX/z1y+NoMJPx8rnmegBsubIE+pSXkxZHA6Hv9jDbSxa2/tK9mg1luayBVNIVrUHxAl9y/sjOE8uo+c1oazBcfYnfwxNzeQ0tJe7G4MmHkAzuGDg8+QhU+DjyRQ6mes6xnk7taeaQFAztvIAjPNzKbuDr+wDQo=
+	t=1777921750; cv=none; b=NyrAtU14LR0ycpjRdiV087diy80Gy3ZphDy1xktgYnvzsNTkK26Dc1u04iutRXfFrHWe3eihVUpkWizmcZHJzCQ4mkwN+rbgmZLW+IVmNPf6dgypDoIMADOhLKXuK911oPuN8PgCsvcp9D+alg1C771/eoIkEjqaBgrRFMI2PR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777921741; c=relaxed/simple;
-	bh=yhEZldU2zYAARv6dKYHhii2B0GthR85Izt7+jGi5yJ8=;
+	s=arc-20240116; t=1777921750; c=relaxed/simple;
+	bh=pTT6Hswg7L3inYnv97QRqYWAPiZYEb3wMOjLKxxbICI=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E2M+wjf1LLMDUOLgRcNry/h/deUn1DJryOh63jOVauNbv5A441MVWfEs2Yh5jEuLIlbmmOowZMZglHADi3rvww9WHa3d+Tsz8s37sg/1GJZpEGtrshzu9tIinQp3t125fL1zxBnEskOXYwJ+SbusS73k+KBHcRJIlILuJuZl2qU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Ete1lqID; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version:Content-Type; b=WIeKBEk2VCCHmamDn6YlSOkS/3Mfp5Lu8nKDyE5cnOq3zQW2Y2FEq1Z/zpknsE1DvEQL9jxv/JFwrtGg1FW8Vg62hu4mvQcBn9K8LBwc2XnA+HArd/IjTRC79Tbkkjq3lqe/5ZOEsJ9T9WVJ62xBxh3h9e8EnunRdHux58d328o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=cwcncfss; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id DC08120B7169;
-	Mon,  4 May 2026 12:08:57 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DC08120B7169
+	by linux.microsoft.com (Postfix) with ESMTPSA id 43A0320B716A;
+	Mon,  4 May 2026 12:09:03 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 43A0320B716A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1777921737;
-	bh=FkRA9VCDqKl/X8ObG2fk9lDRmh+cWFXRwvVw0bw480Y=;
+	s=default; t=1777921743;
+	bh=Uk8wk6XlWEHWPtWm07hcZvv/blXW1ZRa96uVpenLlnQ=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Ete1lqIDuRFlQ2+ahDQ11xgtFVGH9bMFmNKNpfqJhWthQqtGXjREC9po+ItiZUZoj
-	 gykKGZ6q4TqiDNNMtIls57A7bmDkM0SkLhSpRRHn6LCTYV5/9AwDctjhAZ688ubDil
-	 bsDBpJMVrom6ABUK8JUkff7ZaZE+MdTuja5UP7tE=
-Subject: [PATCH v3 01/18] mshv: Fix IRQ leak and type hazards in
- hv_call_modify_spa_host_access
+	b=cwcncfssveAPAn+OHR4546INMYv378atmeZ+X2MC335tKAPFhKrMPVYFN2RQvEGdQ
+	 0qwt4jNo3NXcQrvWaiaWTviu4PuW7zYSnqT9DFyUIwNTVb721x9fMLflhIJNfawmdD
+	 /NlvfrRDgf3j80pJ6oDpqTJvNwiI7hnXY6ch9xqY=
+Subject: [PATCH v3 02/18] mshv: Fix potential integer overflow in
+ mshv_region_create
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, longli@microsoft.com
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 04 May 2026 19:08:59 +0000
+Date: Mon, 04 May 2026 19:09:04 +0000
 Message-ID: 
- <177792173931.90827.5102443533423832769.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <177792174469.90827.1223001767715615291.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 In-Reply-To: 
  <177792164525.90827.16672331609214066870.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 References: 
@@ -65,19 +65,19 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 69E904C305F
+X-Rspamd-Queue-Id: D1E9C4C32DD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_FROM(0.00)[bounces-10596-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10597-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
@@ -87,74 +87,43 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_NONE(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,skinsburskii-cloud-desktop.internal.cloudapp.net:mid,linux.microsoft.com:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,skinsburskii-cloud-desktop.internal.cloudapp.net:mid,linux.microsoft.com:dkim]
 
-The bounds check inside the PFN-filling loop can return -EINVAL while
-interrupts are disabled via local_irq_save(), leaking IRQ state.
+The allocation size is computed as:
 
-Remove the check — it is redundant because the loop invariant
-(done + i < page_count == page_struct_count >> large_shift) guarantees
-(done + i) << large_shift < page_struct_count always holds.
+  sizeof(*region) + sizeof(struct page *) * nr_pages
 
-While here, fix type mismatches: change 'int done' to 'u64 done' and
-use u64 for loop and batch-size variables so they match the u64
-page_count they are compared against.
+where nr_pages is a u64 originating from userspace. A sufficiently
+large nr_pages can overflow the multiplication, resulting in a small
+allocation followed by out-of-bounds writes when populating mreg_pages.
+
+Use struct_size() which returns SIZE_MAX on overflow, causing vzalloc
+to safely return NULL — caught by the existing error check.
 
 Fixes: 621191d709b14 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
 Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 ---
- drivers/hv/mshv_root_hv_call.c |   18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+ drivers/hv/mshv_regions.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
-index 129456bd72aba..cc580225e9e45 100644
---- a/drivers/hv/mshv_root_hv_call.c
-+++ b/drivers/hv/mshv_root_hv_call.c
-@@ -1042,7 +1042,7 @@ int hv_call_modify_spa_host_access(u64 partition_id, struct page **pages,
+diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
+index fdffd4f002f6f..1d04a97980b8b 100644
+--- a/drivers/hv/mshv_regions.c
++++ b/drivers/hv/mshv_regions.c
+@@ -177,7 +177,7 @@ struct mshv_mem_region *mshv_region_create(u64 guest_pfn, u64 nr_pages,
  {
- 	struct hv_input_modify_sparse_spa_page_host_access *input_page;
- 	u64 status;
--	int done = 0;
-+	u64 done = 0;
- 	unsigned long irq_flags, large_shift = 0;
- 	u64 page_count = page_struct_count;
- 	u16 code = acquire ? HVCALL_ACQUIRE_SPARSE_SPA_PAGE_HOST_ACCESS :
-@@ -1059,9 +1059,9 @@ int hv_call_modify_spa_host_access(u64 partition_id, struct page **pages,
- 	}
+ 	struct mshv_mem_region *region;
  
- 	while (done < page_count) {
--		ulong i, completed, remain = page_count - done;
--		int rep_count = min(remain,
--				    HV_MODIFY_SPARSE_SPA_PAGE_HOST_ACCESS_MAX_PAGE_COUNT);
-+		u64 i, completed, remain = page_count - done;
-+		u64 rep_count = min_t(u64, remain,
-+				      HV_MODIFY_SPARSE_SPA_PAGE_HOST_ACCESS_MAX_PAGE_COUNT);
+-	region = vzalloc(sizeof(*region) + sizeof(struct page *) * nr_pages);
++	region = vzalloc(struct_size(region, mreg_pages, nr_pages));
+ 	if (!region)
+ 		return ERR_PTR(-ENOMEM);
  
- 		local_irq_save(irq_flags);
- 		input_page = *this_cpu_ptr(hyperv_pcpu_input_arg);
-@@ -1075,15 +1075,9 @@ int hv_call_modify_spa_host_access(u64 partition_id, struct page **pages,
- 		input_page->flags = flags;
- 		input_page->host_access = host_access;
- 
--		for (i = 0; i < rep_count; i++) {
--			u64 index = (done + i) << large_shift;
--
--			if (index >= page_struct_count)
--				return -EINVAL;
--
-+		for (i = 0; i < rep_count; i++)
- 			input_page->spa_page_list[i] =
--						page_to_pfn(pages[index]);
--		}
-+				page_to_pfn(pages[(done + i) << large_shift]);
- 
- 		status = hv_do_rep_hypercall(code, rep_count, 0, input_page,
- 					     NULL);
 
 
 
