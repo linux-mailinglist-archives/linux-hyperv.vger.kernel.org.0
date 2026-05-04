@@ -1,54 +1,60 @@
-Return-Path: <linux-hyperv+bounces-10595-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10596-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cPJgHkTv+GmU3QIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10595-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 04 May 2026 21:11:00 +0200
+	id KFe5OnXv+Gl93QIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10596-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 04 May 2026 21:11:49 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4E6B4C301A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 04 May 2026 21:10:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 69E904C305F
+	for <lists+linux-hyperv@lfdr.de>; Mon, 04 May 2026 21:11:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id EDBE7304B2D4
-	for <lists+linux-hyperv@lfdr.de>; Mon,  4 May 2026 19:09:23 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 415D430589AD
+	for <lists+linux-hyperv@lfdr.de>; Mon,  4 May 2026 19:09:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E44A23F23AF;
-	Mon,  4 May 2026 19:08:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DE6F3EF646;
+	Mon,  4 May 2026 19:09:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="JqYKI63X"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Ete1lqID"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C13653EE1F2;
-	Mon,  4 May 2026 19:08:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD8103EFD1F;
+	Mon,  4 May 2026 19:08:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777921736; cv=none; b=crQS8XSLBAAvMtEDOF2dDCr0+DwZ5i1xTyJl6fAgIhnXkk/Bztsux+BiYLUaVm+G/8+pDyxKGXkzjrQwyhwAAzmC33rNrJkE8FsDQRyC11Lm2mMfVCdJr/UCU7KI7pcUJMHhaXDQsp7OiNABfGfFJ6pSiZXrWrx6iMR1OWaWU3A=
+	t=1777921741; cv=none; b=SikdTfFrwpBOmNX/z1y+NoMJPx8rnmegBsubIE+pSXkxZHA6Hv9jDbSxa2/tK9mg1luayBVNIVrUHxAl9y/sjOE8uo+c1oazBcfYnfwxNzeQ0tJe7G4MmHkAzuGDg8+QhU+DjyRQ6mes6xnk7taeaQFAztvIAjPNzKbuDr+wDQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777921736; c=relaxed/simple;
-	bh=izC4TGdXJI5ZEbvPPhop4XaxWgZHGjrlsiwLvK72mps=;
-	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=lbIOufbmvPbmMb/GJQuZ/X6Fq7k4zGJ3N3w41AU4xHv2yc3nL2EFGknyRazWz3N/eKwmWvmJ8UG5E6uItVgJev/RmjRFWBp/ISkMC09GcxCYDwMg8UdJrpIoh/7PyL6mljsNdQ38mvcn8KiQvygTOOyvxbQyMSSCKjRzsQ62/04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=JqYKI63X; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1777921741; c=relaxed/simple;
+	bh=yhEZldU2zYAARv6dKYHhii2B0GthR85Izt7+jGi5yJ8=;
+	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E2M+wjf1LLMDUOLgRcNry/h/deUn1DJryOh63jOVauNbv5A441MVWfEs2Yh5jEuLIlbmmOowZMZglHADi3rvww9WHa3d+Tsz8s37sg/1GJZpEGtrshzu9tIinQp3t125fL1zxBnEskOXYwJ+SbusS73k+KBHcRJIlILuJuZl2qU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Ete1lqID; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5E90920B7168;
-	Mon,  4 May 2026 12:08:52 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5E90920B7168
+	by linux.microsoft.com (Postfix) with ESMTPSA id DC08120B7169;
+	Mon,  4 May 2026 12:08:57 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DC08120B7169
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1777921732;
-	bh=uLkkbDI+phbUCCl2psaBg4kKjJq/BWJxoZm1zFgvL3s=;
-	h=Subject:From:To:Cc:Date:From;
-	b=JqYKI63Xhyo3CMARm08NcvWERdGdkQGyluEs8me0DHzhBhyoo5TxTBOvYgqqO/aaJ
-	 6uNrT3zxQyOx2I+cCACUyDZxvmTnzkkXDaD4xLj5BFnLETxuHmDLm44BLFgvMd+hQk
-	 aXJwojjv0MFXLJyXUkd3mb1Y2cSWt4oaky4ED0e4=
-Subject: [PATCH v3 00/18] mshv: Bug fixes across the mshv_root module
+	s=default; t=1777921737;
+	bh=FkRA9VCDqKl/X8ObG2fk9lDRmh+cWFXRwvVw0bw480Y=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Ete1lqIDuRFlQ2+ahDQ11xgtFVGH9bMFmNKNpfqJhWthQqtGXjREC9po+ItiZUZoj
+	 gykKGZ6q4TqiDNNMtIls57A7bmDkM0SkLhSpRRHn6LCTYV5/9AwDctjhAZ688ubDil
+	 bsDBpJMVrom6ABUK8JUkff7ZaZE+MdTuja5UP7tE=
+Subject: [PATCH v3 01/18] mshv: Fix IRQ leak and type hazards in
+ hv_call_modify_spa_host_access
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, longli@microsoft.com
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 04 May 2026 19:08:53 +0000
+Date: Mon, 04 May 2026 19:08:59 +0000
 Message-ID: 
+ <177792173931.90827.5102443533423832769.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+In-Reply-To: 
+ <177792164525.90827.16672331609214066870.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+References: 
  <177792164525.90827.16672331609214066870.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 User-Agent: StGit/0.19
 Precedence: bulk
@@ -59,7 +65,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: E4E6B4C301A
+X-Rspamd-Queue-Id: 69E904C305F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
@@ -71,7 +77,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_FROM(0.00)[bounces-10595-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10596-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
@@ -86,112 +92,69 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[skinsburskii-cloud-desktop.internal.cloudapp.net:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.microsoft.com:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,skinsburskii-cloud-desktop.internal.cloudapp.net:mid,linux.microsoft.com:dkim]
 
-This series addresses bugs found during a continued review of the
-mshv_root module mostly introduced by commit 621191d709b14 ("Drivers: hv:
-Introduce mshv_root module to expose /dev/mshv to VMMs").
+The bounds check inside the PFN-filling loop can return -EINVAL while
+interrupts are disabled via local_irq_save(), leaking IRQ state.
 
-Changes since v2:
-- "Fix mshv_prepare_pinned_region error path for unencrypted
-  partitions": removed inline mshv_region_invalidate() to prevent
-  zeroing mreg_pages before mshv_region_destroy() can unmap partial
-  SLAT mappings; for encrypted share-failure, memset the page array
-  without unpinning (pages are host-inaccessible).
-- "Consolidate irqfd interrupt injection paths": fixed data race in
-  mshv_irqfd_assign EPOLLIN path — girq_ent is now snapshotted inside
-  the seqcount loop (matching mshv_irqfd_wakeup) to prevent a
-  concurrent routing update from injecting vector 0 to VP 0.
-- "Add missing vp_index bounds check in intercept ISR": added
-  array_index_nospec() after the bounds check to prevent speculative
-  out-of-bounds array access.
-- "Add store/load ordering for VP array publish": added missing
-  smp_load_acquire in mshv_try_assert_irq_fast.
+Remove the check — it is redundant because the loop invariant
+(done + i < page_count == page_struct_count >> large_shift) guarantees
+(done + i) << large_shift < page_struct_count always holds.
 
-Changes since v1:
-- Added 8 new patches addressing issues found by Sashiko (automated
-  review) covering the irqfd, portid, scheduler message, and VP
-  lifecycle paths.
-- Consolidated the irqfd fast/slow injection paths to eliminate
-  duplicated seqcount reads and fix the GSI 0 validity bypass.
-- Added memory ordering for the lockless VP array.
+While here, fix type mismatches: change 'int done' to 'u64 done' and
+use u64 for loop and batch-size variables so they match the u64
+page_count they are compared against.
 
-The fixes range from data corruption and use-after-free to silent
-functional failures and sleeping-while-atomic:
-
- Memory region management:
-  - Integer overflow on userspace-controlled allocation size
-    (mshv_region_create)
-  - Silent success on map failure for unencrypted partitions
-    (mshv_prepare_pinned_region)
-  - u64 overflow in region overlap check allowing overlapping mappings
-
- IRQ/eventfd path:
-  - IRQ state leak and type truncation in hypercall helpers
-  - Missing locking and hlist_del vs hlist_del_init race in irqfd
-    deassign
-  - Defensive synchronize_srcu in irqfd shutdown (follows KVM pattern)
-  - NULL pointer dereference on spurious interrupt to non-existent VP
-    (mshv_try_assert_irq_fast)
-  - Broken seqcount read protection — torn reads of interrupt routing
-  - Duplicated and inconsistent validity checks between fast/slow
-    injection paths; fast path could inject vector 0 spuriously
-  - Level-triggered check on uninitialized data making interrupt
-    resampling completely non-functional
-  - Duplicate GSI 0 detection using the wrong predicate
-
- Port ID table:
-  - Use-after-RCU in mshv_portid_lookup (dereference outside read-side
-    critical section)
-  - Sleeping under spinlock in mshv_portid_alloc (GFP_KERNEL inside
-    idr_lock)
-  - Use kfree_rcu for deferred free without blocking
-
- SynIC / ISR paths:
-  - Missing VP index bounds check in intercept ISR (OOB in interrupt
-    context from untrusted hypervisor data)
-  - Missing store/load ordering for VP array publish — lockless ISR
-    readers could observe partially-initialized VP
-  - Missing bounds validation in scheduler messages
-    (handle_pair_message vp_count, handle_bitset_message bank_mask)
-
- Miscellaneous:
-  - Missing error code on VP allocation failure (silent success to
-    userspace)
-
-Kudos to Claude and Sashiko for assisting with analysis and
-implementation.
-
+Fixes: 621191d709b14 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
+Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 ---
+ drivers/hv/mshv_root_hv_call.c |   18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-Stanislav Kinsburskii (18):
-      mshv: Fix IRQ leak and type hazards in hv_call_modify_spa_host_access
-      mshv: Fix potential integer overflow in mshv_region_create
-      mshv: Fix mshv_prepare_pinned_region error path for unencrypted partitions
-      mshv: Fix potential u64 overflow in region overlap check
-      mshv: Fix race in mshv_irqfd_deassign
-      mshv: Add defensive synchronize_srcu in irqfd shutdown
-      mshv: Add NULL check for vp in mshv_try_assert_irq_fast
-      mshv: Fix broken seqcount read protection
-      mshv: Consolidate irqfd interrupt injection paths
-      mshv: Fix level-triggered check on uninitialized data
-      mshv: Fix duplicate GSI detection for GSI 0
-      mshv: Fix use-after-RCU in mshv_portid_lookup
-      mshv: Fix sleeping under spinlock in mshv_portid_alloc
-      mshv: Use kfree_rcu in mshv_portid_free
-      mshv: Add missing vp_index bounds check in intercept ISR
-      mshv: Add store/load ordering for VP array publish
-      mshv: Validate scheduler message bounds from hypervisor
-      mshv: Fix missing error code on VP allocation failure
+diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
+index 129456bd72aba..cc580225e9e45 100644
+--- a/drivers/hv/mshv_root_hv_call.c
++++ b/drivers/hv/mshv_root_hv_call.c
+@@ -1042,7 +1042,7 @@ int hv_call_modify_spa_host_access(u64 partition_id, struct page **pages,
+ {
+ 	struct hv_input_modify_sparse_spa_page_host_access *input_page;
+ 	u64 status;
+-	int done = 0;
++	u64 done = 0;
+ 	unsigned long irq_flags, large_shift = 0;
+ 	u64 page_count = page_struct_count;
+ 	u16 code = acquire ? HVCALL_ACQUIRE_SPARSE_SPA_PAGE_HOST_ACCESS :
+@@ -1059,9 +1059,9 @@ int hv_call_modify_spa_host_access(u64 partition_id, struct page **pages,
+ 	}
+ 
+ 	while (done < page_count) {
+-		ulong i, completed, remain = page_count - done;
+-		int rep_count = min(remain,
+-				    HV_MODIFY_SPARSE_SPA_PAGE_HOST_ACCESS_MAX_PAGE_COUNT);
++		u64 i, completed, remain = page_count - done;
++		u64 rep_count = min_t(u64, remain,
++				      HV_MODIFY_SPARSE_SPA_PAGE_HOST_ACCESS_MAX_PAGE_COUNT);
+ 
+ 		local_irq_save(irq_flags);
+ 		input_page = *this_cpu_ptr(hyperv_pcpu_input_arg);
+@@ -1075,15 +1075,9 @@ int hv_call_modify_spa_host_access(u64 partition_id, struct page **pages,
+ 		input_page->flags = flags;
+ 		input_page->host_access = host_access;
+ 
+-		for (i = 0; i < rep_count; i++) {
+-			u64 index = (done + i) << large_shift;
+-
+-			if (index >= page_struct_count)
+-				return -EINVAL;
+-
++		for (i = 0; i < rep_count; i++)
+ 			input_page->spa_page_list[i] =
+-						page_to_pfn(pages[index]);
+-		}
++				page_to_pfn(pages[(done + i) << large_shift]);
+ 
+ 		status = hv_do_rep_hypercall(code, rep_count, 0, input_page,
+ 					     NULL);
 
-
- drivers/hv/mshv_eventfd.c      |  108 +++++++++++++++++++++++++---------------
- drivers/hv/mshv_irq.c          |    2 -
- drivers/hv/mshv_portid_table.c |   12 ++--
- drivers/hv/mshv_regions.c      |    2 -
- drivers/hv/mshv_root_hv_call.c |   18 ++-----
- drivers/hv/mshv_root_main.c    |   39 ++++++++++----
- drivers/hv/mshv_synic.c        |   36 +++++++++++--
- 7 files changed, 136 insertions(+), 81 deletions(-)
 
 
