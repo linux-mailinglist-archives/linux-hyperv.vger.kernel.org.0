@@ -1,145 +1,138 @@
-Return-Path: <linux-hyperv+bounces-10614-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10615-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yJ5kFoMI+Wnx4QIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10614-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 04 May 2026 22:58:43 +0200
+	id wCbcCu0U+WkY5QIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10615-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 04 May 2026 23:51:41 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B08D24C3D26
-	for <lists+linux-hyperv@lfdr.de>; Mon, 04 May 2026 22:58:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 977424C43D5
+	for <lists+linux-hyperv@lfdr.de>; Mon, 04 May 2026 23:51:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C741C30393A0
-	for <lists+linux-hyperv@lfdr.de>; Mon,  4 May 2026 20:47:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 72D2A3011102
+	for <lists+linux-hyperv@lfdr.de>; Mon,  4 May 2026 21:51:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41A8931716C;
-	Mon,  4 May 2026 20:47:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BC4436C9CC;
+	Mon,  4 May 2026 21:51:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="acWmEwoF"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="gZx6xCHG"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azolkn19010029.outbound.protection.outlook.com [52.103.23.29])
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11020074.outbound.protection.outlook.com [52.101.61.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA919314A84;
-	Mon,  4 May 2026 20:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.23.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE925324718;
+	Mon,  4 May 2026 21:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.74
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777927675; cv=fail; b=cXNg3MRPlI1iPN2BZIyeyqSDJlV3wg964skJZYqoPiBY5vIzyV1Is5ZxEaNcKlnExDUdXiXB8zmrKTiKsP4GeDvw3VEWhIbyejoAMhi3UOmbyaJLwDRYEWhlUYOqge8YBKwzTRPGMIe+oiu+k6sXbBmejn2icJbyVW6KvVwAta4=
+	t=1777931497; cv=fail; b=up4b7gCODtcKLxojMqsMUBMy5iEm3yXeV7O9hEfo6YA5YC1+O6bE+avtDQ+PzJHYGqlLpcBPDxZeSsMZkp/eYnjtkszYF+F+0+rqaTg8onLJu2yZ/2aIALTekzxmfWb/frGU0TQNf5eX1RIoD1FVtSKITcmX0WGl75/cQfrXObI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777927675; c=relaxed/simple;
-	bh=jW+JcgqHcMQS+0is+kD2kMJmwgUcTqvR2ijJ40niHXc=;
+	s=arc-20240116; t=1777931497; c=relaxed/simple;
+	bh=knwixMAhgZcadGYNXjRNmR932NFhI4qxExgA2dXAsv4=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=fPi62m0WklmZqzEuwoih7F+BrM+U+Oy2A/6eLRV2og9n2YkbfMR1JHjRy+DYVFbn1jyDsUDR8wmfwzdQeoQvl9QXWmNhS17H/rcU2tOlD7OqFvCAEpqM2xFgUSD3BLrodoXpOse4lPhXW2Pi6tkP4MQgJ/Jc4ItfEkd9cMixq/s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=acWmEwoF; arc=fail smtp.client-ip=52.103.23.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	 Content-Type:MIME-Version; b=lNRAEXJDxKJrSAhzHrx14pCYDW8f2IwOEYAXubjL1h3eIWmr5it0QSItiiZTUZm1GECKROm+34IWO+5HC7GBafdGrK3oCkhy2kX66U4wZS5xhwJIuoTX7yi2uOgj8rcDpTnPnBGbfSEtqCddgq1SUlsnVsDNSfuamNGXwUCMNL4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=gZx6xCHG; arc=fail smtp.client-ip=52.101.61.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Mh+XHRdHv3dHhp6sqv2ulqYD3gMSKNAFRor2HfXPWs4qig4JVcOjCfkwlmkMGYo46rzt6VwyKqigVzsZiINzgm+zJGXeMGfqgSi+gB4c7m28mjzorXuCbNvlWoAnuKp5OXvqR94uc6v1Lh+PtVn41ffFTcHzgID0fEB+M6G7pQ1kl5U/b79Z8PT1Pp/VTl3tUXiESaXDLyWQjY3850R1MKT968EUXSB6NPgFKSSYe6BEqGAE9XzyJM79WwUeZWnmnwekekAumuj+qohuf79b4T2JfiZNoocq2f4uUrpknA6Qr5NoOj5xyf1XoZLSm+UJ4IBP/yLuxivphlUgc/8K2g==
+ b=Y4cSv3OMwC2td2ab8Kef3prLK2bQdAYcp9dCh47ZFWW7ngRd4kqwz2iHCYm1vYiIU+arqYGp7n2uyirX/W6WuWg6/5EPvlRRwGecHN3VuQx5NXBpRDxJPvdHwzkSAcmsQo6u9jydJ4H9OYcnYFQOAOA0eZ9BcmBJGdlwNwDKA5UDJVECKzhhwG6rS/pdwmdxHIbBVLPkFW0ZaOwTlZ3fNE6bISe9oLzvPnvmA7Mnj2MWtF+CE7pWgXy84GiR5nnPb74Lub8SYM8K7ExVL1rvSYQvJuerXfFfALaeEWrnSJo7TkHyISqlniosaoNFcJCz3GMoIqo8wwYAslOyenpKgQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0LP6SK+5/AuEhfqPrAdgnIj53zI/yHIsmpFrmORFqfk=;
- b=QAriIOQozb7+YJ+CsZCeo1FweWOTdgZIj/2YLTTI+PQ4dOeRhD3VSjJCjsutFQcsDNykq5wZhkoZ9E/gL7ozraJ7BTK4RMTqDHNUYPwXd9vODZmcSt/F/S7Agvw4cmIilSim2ksEzztPWHBuqXzWZ8S3Ba53RWlzsORwIz9yKcGxw2CtZ22/UKalkKPbPAjCEmg5zQcQjtrmv9HqpvgLwXCUoRWKV82en5ERI7dpaHDT3CADS7gaR2fmhKRJXc3+72ncco8/5IXAoRHu0ibmWkVDQHbU6PjVqpdD8vAq8JTqwCucPjRdkrZzNBzCFjdKHc2+tq59/ASpzgksfCAW9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
+ bh=LzpW8+nEZOhR68NlIZUdfoPcvFECazp3lgdIkdj1F10=;
+ b=I1/L8v9FrAMJHpGLTYAzknoAJx0BcowRECjyGSHLJgiam10wU/O8S0dVBVE9Rv8U4/A+R1AKePLgUvty+u0NagJ9Vlct+ZtCCjBp8EePW/Q49cZPxdMygPZoLHvIiWAdpUn6t57bbFLxegHI+CaMbU9IHsA9p8fzN+RF+Z+OjyjpZB3z6upapBkTDBX9PDcX8Vgnq1vzkP4JlCebi8/P962AoZgXHscUr+bUiYfONfe2X1SKlOGmcCii+e4PIPHstfGIJrrmwAYHlzGFnYmxburZNP25+8kO4jMAi9w9H/lLxxhm7WeiT1Bn/C97/XwXuUEKEHOJggifkXMpPYHd2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0LP6SK+5/AuEhfqPrAdgnIj53zI/yHIsmpFrmORFqfk=;
- b=acWmEwoFbZ0JOr4wWuYbKegbU3bKc1dBpk/BiDM/yzXAYMV7EqfJCDIU38uavpxUQxs8NwfodttstzzYz9/+v/RsTCrbv94orqIaHhAkZNcQUUDQ1pkwN5Sn4D9dkgpx1PUf3b7I6XPUlrus24k2VNH9lh/lrCM34YB5TXFJkOH8veJCp5C9gRRlKFR0m+wPkfEyRj7ASXSQ4FvR5H4KiFBYt6jjaQE1i/RV4v9vq3akFtL8WxwvBOoa21gT3MGbJodcb+jV7y86JlehH+EasR1QSL8KvrC8K0wluRk3IMZUrSoErPHhC5NKZurF+spulIDuuwrF6IjwCVJt6yN1MA==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by DS0PR02MB11087.namprd02.prod.outlook.com (2603:10b6:8:296::13) with
+ bh=LzpW8+nEZOhR68NlIZUdfoPcvFECazp3lgdIkdj1F10=;
+ b=gZx6xCHGiRBdHBxehwPw6Csts2bXmqkwFdXGaSBBpr9knH4sa6XPcrQGyb8YKuInaSG3Vhho2FY4Sj5RAXnMHJ7dm59ZJ7swUw66Tqd2wB9xXNTvkakxvsy5tPD+HVNN8ZiVX5CGKzNb2GJEbr/SVwK5sddu4C8wIWzRmdHJZbE=
+Received: from SA1PR21MB6683.namprd21.prod.outlook.com (2603:10b6:806:4a4::6)
+ by SA1PR21MB4327.namprd21.prod.outlook.com (2603:10b6:806:3df::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.25; Mon, 4 May
- 2026 20:47:51 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%6]) with mapi id 15.20.9870.023; Mon, 4 May 2026
- 20:47:50 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: "wei.liu@kernel.org" <wei.liu@kernel.org>, "tzimmermann@suse.de"
-	<tzimmermann@suse.de>, "longli@microsoft.com" <longli@microsoft.com>,
-	"jfalempe@redhat.com" <jfalempe@redhat.com>
-CC: "drawat.floss@gmail.com" <drawat.floss@gmail.com>,
-	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-	"mripard@kernel.org" <mripard@kernel.org>, "airlied@gmail.com"
-	<airlied@gmail.com>, "simona@ffwll.ch" <simona@ffwll.ch>, "kys@microsoft.com"
-	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"decui@microsoft.com" <decui@microsoft.com>, "ryasuoka@redhat.com"
-	<ryasuoka@redhat.com>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "stable@vger.kernel.org"
-	<stable@vger.kernel.org>
-Subject: RE: [PATCH v2 1/2] Drivers: hv: vmbus: Provide option to skip VMBus
- unload on panic
-Thread-Topic: [PATCH v2 1/2] Drivers: hv: vmbus: Provide option to skip VMBus
- unload on panic
-Thread-Index: AQHOTPk5OIur69i6iLB2lq0lHt5i57YbcNAg
-Date: Mon, 4 May 2026 20:47:50 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.5; Mon, 4 May
+ 2026 21:51:30 +0000
+Received: from SA1PR21MB6683.namprd21.prod.outlook.com
+ ([fe80::879f:eec1:ca0e:d219]) by SA1PR21MB6683.namprd21.prod.outlook.com
+ ([fe80::879f:eec1:ca0e:d219%6]) with mapi id 15.20.9891.008; Mon, 4 May 2026
+ 21:51:30 +0000
+From: Long Li <longli@microsoft.com>
+To: Simon Horman <horms@kernel.org>
+CC: Konstantin Taranov <kotaranov@microsoft.com>, "kuba@kernel.org"
+	<kuba@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, "edumazet@google.com"
+	<edumazet@google.com>, "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"jgg@ziepe.ca" <jgg@ziepe.ca>, "leon@kernel.org" <leon@kernel.org>, Haiyang
+ Zhang <haiyangz@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan Cui <DECUI@microsoft.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXTERNAL] Re: [PATCH net-next v6 1/6] net: mana: Create separate
+ EQs for each vPort
+Thread-Topic: [EXTERNAL] Re: [PATCH net-next v6 1/6] net: mana: Create
+ separate EQs for each vPort
+Thread-Index: AQHc2CXaUSKEUxi2tEiQPQU00CBaQrX62m4AgAOULSA=
+Date: Mon, 4 May 2026 21:51:30 +0000
 Message-ID:
- <SN6PR02MB415786A3C7D10C22FAB12E3ED4312@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20260217182335.265585-1-mhklkml@zohomail.com>
-In-Reply-To: <20260217182335.265585-1-mhklkml@zohomail.com>
+ <SA1PR21MB6683034821F55FBF65FB9CBACE312@SA1PR21MB6683.namprd21.prod.outlook.com>
+References: <20260429221625.1841150-2-longli@microsoft.com>
+ <20260502150717.281387-1-horms@kernel.org>
+In-Reply-To: <20260502150717.281387-1-horms@kernel.org>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d9caf4fc-e7c8-4278-b84f-17c84e7d285b;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-05-04T21:46:23Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|DS0PR02MB11087:EE_
-x-ms-office365-filtering-correlation-id: 031378a7-eaf9-41a0-0cac-08deaa1e6831
+x-ms-traffictypediagnostic: SA1PR21MB6683:EE_|SA1PR21MB4327:EE_
+x-ms-office365-filtering-correlation-id: d1488621-78da-4232-8fb5-08deaa274cf9
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
- BCL:0;ARA:14566002|37011999003|8060799015|19110799012|8062599012|41001999006|461199028|15080799012|13091999003|51005399006|55001999006|2604032031799003|19101099003|31061999003|10035399007|440099028|3412199025|4302099013|12091999003|56899033|102099032|1602099012|40105399003;
+ BCL:0;ARA:13230040|1800799024|7416014|376014|366016|38070700021|56012099003|22082099003|18002099003;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?n+XAsjKQsUmS6RCa2DFZxLDDsuw06BTdoeno3gRI0JBpURXBImScmuBrRKB2?=
- =?us-ascii?Q?L+uRGRuVytlY9KegyW4ngWhuKjsd2hzgZB4QQzh7Xz+ZTzzHj3wvdBID0/Bc?=
- =?us-ascii?Q?0dQMqIMeAIGyYThpozH3g+5GSMY53KH0H23Z5sVmdaMpHKrahJsg761TANhJ?=
- =?us-ascii?Q?s2Q8fnmqd/9EPUJfWAgU/MWEtOnqWm18cqQufiFv0ngWJobTPkZAeJs5bUiT?=
- =?us-ascii?Q?aDJyThzzCGDUa7mpWO2UUNS0u/2kPPMgcf7mpkFg/5twEk/sJL/JzYVJMdQH?=
- =?us-ascii?Q?pwrzLfX96NCEjfLX3aBcVjvAnAEFMOXXncKS+OQ61W4AN73sVcTDKt6HcvbN?=
- =?us-ascii?Q?C2exLNIT7RMSih9/A/XBmljYFj9rYKjQ7Mr230nJAR400UDVnQB+Z+8oUm8i?=
- =?us-ascii?Q?rfY9zlEe5zPSfd8mJ/mFaRhFZm/1GMONHnqe93G9ggFxkH2DS1PHph/fd5t7?=
- =?us-ascii?Q?3vT86HW3CEs1FFy2hczEcJzwAe69rd8YAPqfnesOa5ePr6eukne91sSFpAgT?=
- =?us-ascii?Q?0SficAHm4RirUeEgBo5zvm1nOezaxKsOIgz+14EsakTMbY++5I2wrWsA/25b?=
- =?us-ascii?Q?WYWlcWXFx1jZkGm2y4LnugFi1exteyc6oNe5STnMeIFX7w86vitlLzpkCuo5?=
- =?us-ascii?Q?ptojvDkTIJxehAiL9W3msvSi7/65J/qVUYv4ggiuMdZATTraw8qcP6ClMC1e?=
- =?us-ascii?Q?KtfkO7vlmCkGeQWdcSQboOsuBYzzejisVC9HG2K1+wRz+XMHTemqiPuAMQpE?=
- =?us-ascii?Q?MMBPXNmBVeP7WxVtgnz+Uos8vJbdDnwFO1nbG9IEKKZsXEk+xQSlbM8Pw1yz?=
- =?us-ascii?Q?Rxuz+Mx5+Vgir66zJ8Z/ziHmOCbe2E445u1YkX/HeSX3WH0xmStXWsihQFb4?=
- =?us-ascii?Q?O1N2fDlAlFT2SpZ1ZTPOAex4ONhZms+xnPe45a0fS6jcYv2lD9ACEszHFMqL?=
- =?us-ascii?Q?zQIwReMWuqmNoQlospxycKLuaW4uw/tgVgMcYuHJ0senMeVgMqwydyeUY0XK?=
- =?us-ascii?Q?gppF2rfk7b0jbon7/cS3mH77mV/oSEpRJhVXtgp4xNEtSecuPOvNYKlpx9wL?=
- =?us-ascii?Q?QV2e4+6bzeP0Lu09TvdjuoF+D9iNLuM/QQOfn/2p9c25YtTaguu/ExUHsmEM?=
- =?us-ascii?Q?4CNOCG0Aj+JVAg3pLpkap1+U0jgENbRPn7g5+7MXSw5sZ/quqyQuMxtbAXgq?=
- =?us-ascii?Q?fZQOzeL7cP1Eq55JbFHjrzHWl5F3cXRkObhAJ87l8Y5Ov2wLYV5dHdvWxPM?=
- =?us-ascii?Q?=3D?=
+ P5wF7zk6uHpQ3NVqCcBr6Zi8ZRm711srtwP4ljKgSK2ZFyq/ySOZecWVUqOpCTxO4bfalIvr3lDvPb6M14zv1O2NAL2d54ClFF42BTXbNlCiro47JXcd9C2CsafJwUpkdLTSAxo0QR/7lzn0OqKpYMhsKVg/WNDtlQ8uuErjFaPfmYKHIwHyYPxIaeo3+851DhzH5xMoBCs96OveBgGEJR4X0QXjl3S7iHLBl4HgIMGOIkyMBXduuS2gQq1ICe/lMAqn76CSa+mLUx7zVJS+OXfAdyxz93S1rJeKIPGDNtjfFX1XUCQDPQUzG2VSbutwTYNYGZb1RRQDI82ekG0CW6LNU1ftn06HlsRtBFw5QTTBq2ah1VC3O6ntCVrH54j/bv6DktCKtUkccmTvUdlGtzaZBWt2v2Fljs/80onQLiliqP6rA5lORZgJVor4Cfi1PJCQ3lKBfw54YIUV6yZukRdBBVgw0bMrNXFXtx+q2kbPNcr/NoMNIf5gMAG3OjdCM4XuTfVSiQTjGlHZteDErtkowAFiJd7Bdh7hFCQUMRcZpu+JE/uFBLMJAfkhDpQVlbgc6DyLUytWpRr8THFtJh0gg8sxVTSGjCgYwV3KT6khSlloNk7EdzueK1jDcT6/oZuQZ5/pXdkAWsgIasGZLVaseWeoJHFhOJsbyIeSL/2uQPD5V9DxtBI/8K6VHRbe
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB6683.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(38070700021)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?hZSzPDoPIAA5AzLSWoxPaldpwb7XL5awbuazSuS360gxwFlkcvsoewLL7l+8?=
- =?us-ascii?Q?Vz2upYtv99Kq5r3pX+Tv84bKKWJNs6jv13X1kxD0C+r0B4RJWfD1jyDWl0HH?=
- =?us-ascii?Q?djjBKqKa2bzHlZ5m2OZFOHUGPL4Q5er/GILp2k98N4/jPVXj8Bjcb7BhpaUS?=
- =?us-ascii?Q?g8mE3+KVEGIorDTr4fsrd2aWkv8EQWYnEISM15Y5+30TMipP7RukgUMlxivM?=
- =?us-ascii?Q?1DHlriXsdm6FHvhAlAOMr1yCfhhxf8xxtDqeB1QAacA36uSPEBdIHZq5WS6P?=
- =?us-ascii?Q?ddL0Y9QRt1sp/BVU4FHYIE1VIJYd//grWiO1b29jrH6ThulyfxkJwxliaQrt?=
- =?us-ascii?Q?1zgPcmn831jKPS0YcaJwh2TdJBWYvYRagLr2UaXZb28LLKpWRW0gx4ANcARG?=
- =?us-ascii?Q?0xvqoUSDxSulwF34unQnfrDQ7CLUmI63mSQqx45MPtIM9RhoNxcgcWRiQb0o?=
- =?us-ascii?Q?c5P3g9beBpd0p6EaLRT8QBLNDp+8lZ4R09X7z/eexwR1FMeIjJgv+B5TZ6Kq?=
- =?us-ascii?Q?3LmX//dTROabPvaN5b2Z95Sr/jWuAPE2Npw+lC25ANolcdWZyXR+n02L6Y9N?=
- =?us-ascii?Q?fX1MhgAJvf4DcLPjRiZzU1IC/XGL+HUMKXM5vKkWbe3rYzMFeEt88f0tDuXG?=
- =?us-ascii?Q?SXX3o/R9c9dt9qnMQEzMtlR7q1vdFUasJGsAbTelPn6Ov3At2YLYbGrVVHLA?=
- =?us-ascii?Q?79zEJftbGeeJjNn5UMmJy4oQditRIoAuprUGPBxPFZQzH0y6+LKr+nwD8Nan?=
- =?us-ascii?Q?8FIYGPJwoADogj52Z8hBUMgAnAeCyX1rNKQZWpcxw5N9L090MAnT3j1nfMoO?=
- =?us-ascii?Q?SOO7IDGYsiumyVv/Qv+X+Oh4cwjBugo/w33P29XdpM7+dMdalTfckSm+Sg86?=
- =?us-ascii?Q?BXlW7thrOeThNUgGK7KfF88YF7pVZFXYhxw4jpFiCDMpjOnrXCM0MmlYvk/y?=
- =?us-ascii?Q?+gpjKGocFAxsnYLatJLgi9uRkRz6jw3UzUiTwhd0aiiHwm/M99fFV/+QaIGo?=
- =?us-ascii?Q?oPRMKWmmgrV61aUxTDW/gbLszeQT6RBZY0miynLorf934TQSwPg8s9ZzrH4A?=
- =?us-ascii?Q?uTlcNHFB70ogElmsnYQfykXb0cc7Pwr450i/3yTrz5zebJYj4CVrYwMIBrLk?=
- =?us-ascii?Q?qJxSxGL3bf8A3RuWV4zHnKLGbiHhXHKpy5gzaXp9T1CdxODdOCnLIUdmzXRv?=
- =?us-ascii?Q?DrCRYiISoNLKrfRBN1ozdXwSn1P2Ruwh5KvqGKqsOT42dhJ5pfQU3uIONpkz?=
- =?us-ascii?Q?BuyNZnNWnFzXNDFOYC01Zjw3o8WCd0apwEFrlgu7HUn7YuF4DpD9sUvCt3Iz?=
- =?us-ascii?Q?ksyzBsulr2LC1ECacZyNMSPaT9vYn5QJpr6xq3t0W4pUzY+eOjf1yL8BdCdb?=
- =?us-ascii?Q?joDZ3hw=3D?=
+ =?us-ascii?Q?eYjnN+B/pXxzCKulCLkrOsY+MGYXhoVgoArURc1Xf9TDwj32U8rF+aWitUOn?=
+ =?us-ascii?Q?ymkKK+Qh+VKma2syAnUGh2iE1TCqq6dV5od0y+8x8SGVuwtuS3RfC0I8p96y?=
+ =?us-ascii?Q?XoUtV8xbCzJgCFx2U1XGSQ5tFygAf9xBJT0KqKVtP2xObIKvEUi9PO1mh0ur?=
+ =?us-ascii?Q?wwinfkDJDWzqbqkUQLMHxaKhrFYTZ5TFALadWrKqRCIolJ3iSAHrqmu047Z2?=
+ =?us-ascii?Q?DbV2CBKqU+KpFOj9PN3l/51kHNtHcZ0kVKnptUtKjGw2hgwEH1zl/3BowP2W?=
+ =?us-ascii?Q?+c0ItdhC0Knh2XsWv6gxpZZu1LQ4f6hheUTiYe9Ac3nBMmRhSUNwtH+BXjln?=
+ =?us-ascii?Q?tMvN8FHB+NyeMORGfeptMI43qyAi8JapSUOTrsg/ymv/71tQFiueMEZVh8uI?=
+ =?us-ascii?Q?aBVwzRNCQF+t8izRSmFrWSjMglS4kAB9nLZvWiXVD0TB1Ld0mXdKbEyWROLM?=
+ =?us-ascii?Q?EBs8awjqPgdbRY7U3VHj0FeawGvrgZwj38xEAOayOrmeFgX6+ggxJTAz02Z7?=
+ =?us-ascii?Q?MBp8u4QaiS8jdHWsIDJ6gGNyK6gD+bzVlJydnlZhmO4DNTajzUM4y6eaGdTC?=
+ =?us-ascii?Q?+2IrFNM8H3RxODkYp7Ft20hlyE337x9cZ/WjpAOKdt8EV9WVNOaz/pGyupi4?=
+ =?us-ascii?Q?ZLYt/YNo2soH7lGPWWBR+OxHqH4CdVm9JAb4oT44ZugNQsc3k1hKRzrhcTRH?=
+ =?us-ascii?Q?Bx+xo6Vq2kqWudg1iGEemSRyAJs4PPs6yvWSDrS8kSOGZrnLgM29BpBCYAsJ?=
+ =?us-ascii?Q?w4bx/qTW1Kc1cUFe33IGc/3xjSjRNdBWoet2RubTA54uXYuEZoCHfBUVWs0W?=
+ =?us-ascii?Q?lXsn6Wm0k8i/bx8dnSQUOKcaLHsH1VZ7pin7Pk1AQ2qroyW0Yg5L2fSHSyVL?=
+ =?us-ascii?Q?WAhT3LK5qvoXFUKho6MVzH1Nbcz1RWgosR9wGWcd67+bmv1ddZHlyDhzeU7z?=
+ =?us-ascii?Q?LOq9NUYQtYbzLfA3lTVCwQnGspemzET6I112maEURniuWdKLLwmjCsAjGAEU?=
+ =?us-ascii?Q?Zak1BB7hPKFoQoSKe0RHLP5E/FRtWX8CvC9SYEfu5or58WZ7CKz6lUQs8aGE?=
+ =?us-ascii?Q?yJpYkRGG4Y9r6cUgN2oy4av77tD2ERVHdy1YA+rizf1Nq+N3/hSmORTpuHPL?=
+ =?us-ascii?Q?npXWWzXPm1k2KL2oWdNDtXVjc34ot1ZDXIm8y6/5KsbPQVNXAzULc1tZTCQ9?=
+ =?us-ascii?Q?NPorVrE6vxbLES2oeX1bQ0K0FAT5cSo8cmMtNed4I+q/i8YZ/7GG3HwvMYXb?=
+ =?us-ascii?Q?Nxhl6oLkTx1ub/JpZPuYM8C/mghjeSlSK9zaHdj3YyMqQfaRgo/7AZqSSiWV?=
+ =?us-ascii?Q?q9uBt9AoXkUOMh5G19qy42wWbR8wRoReMATOmW4rZZ4qNjEQI7Dux3wjuHgg?=
+ =?us-ascii?Q?14eVse+PQtvL2YjtoBqC5/SU4c4Ulm6KnCpbOlfMwbwyNYKUmljrl4aaPqzA?=
+ =?us-ascii?Q?LC3PGAsAm/Kwj8BgEom/YI8pPUuErtG72OGaLjViEK4UHwYC1YmsEWqE/REN?=
+ =?us-ascii?Q?JZ6CFByWK18Re2fDmVTNjt8s6D28VA+W/rRdutIMTWCy7AyHWfof2pgJTUW5?=
+ =?us-ascii?Q?Pxb5LBnRXrBf33j4+oCnUuCJvmd0kWS5vML8GGBC2X/peOjfbBTTzWjGrmD1?=
+ =?us-ascii?Q?5kewUMaBJDFPAs/4780x8UKXzAnsyznuLRs3Hk3I9MPiroK0s+9ljfRH23jz?=
+ =?us-ascii?Q?RXF4C5qg4BSz8kVPwdhOfJDf3rv3CPIfHMJCpGkGO2nlr1Dc?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -148,203 +141,151 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
+X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 031378a7-eaf9-41a0-0cac-08deaa1e6831
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 May 2026 20:47:50.6462
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB6683.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1488621-78da-4232-8fb5-08deaa274cf9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 May 2026 21:51:30.4605
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR02MB11087
-X-Rspamd-Queue-Id: B08D24C3D26
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5xtjuzTnIG6bdXrKC097nSAi3EJLWeGYEnMts6YdYNghez7N/1OHSLhiYDn6ajUg427GNQkp4T2qWcIDXcGTnA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR21MB4327
+X-Rspamd-Queue-Id: 977424C43D5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [5.84 / 15.00];
-	SEM_URIBL(3.50)[zohomail.com:email];
+X-Spamd-Result: default: False [1.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[microsoft.com,reject];
+	R_DKIM_ALLOW(-0.20)[microsoft.com:s=selector2];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
-	BAD_REP_POLICIES(0.10)[];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10614-lists,linux-hyperv=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	GREYLIST(0.00)[pass,body];
-	FREEMAIL_CC(0.00)[gmail.com,linux.intel.com,kernel.org,ffwll.ch,microsoft.com,redhat.com,lists.freedesktop.org,vger.kernel.org];
-	FREEMAIL_FROM(0.00)[outlook.com];
-	R_DKIM_ALLOW(0.00)[outlook.com:s=selector1];
+	TAGGED_FROM(0.00)[bounces-10615-lists,linux-hyperv=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[17];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DMARC_POLICY_ALLOW(0.00)[outlook.com,none];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[outlook.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	R_SPF_ALLOW(0.00)[+ip4:172.234.253.10:c];
-	NEURAL_SPAM(0.00)[0.795];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	DKIM_TRACE(0.00)[microsoft.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	NEURAL_HAM(-0.00)[-1.000];
 	MISSING_XM_UA(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:dkim,outlook.com:email,SN6PR02MB4157.namprd02.prod.outlook.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,zohomail.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-From: Michael Kelley <mhklkml@zohomail.com> Sent: Tuesday, February 17, 202=
-6 10:24 AM
->=20
-
-Wei and Thomas --
-
-This small patch series has been neglected. Patch 2 of the series is here [=
-1].
-
-Long Li < longli@microsoft.com> has given a Reviewed-by on this patch,
-and Jocelyn Falempe <jfalempe@redhat.com> has given a Reviewed-by
-on Patch 2 of the series, modulo a comment which I have incorporated.
-See [2]. But I neglected to add her R-b when I spun v2 of the series.
-
-Any reason this can't be picked up as a bug fix for 7.1? I just checked,
-and it applies cleanly to a recent linux-next (20260423). I'd suggest
-going through the hyperv tree, as these two patches should be kept
-together in sequence.
-
-Michael
-
-[1] https://lore.kernel.org/linux-hyperv/20260217182335.265585-2-mhklkml@zo=
-homail.com/
-[2] https://lore.kernel.org/linux-hyperv/a5372b72-8dc0-4f2d-ad5c-086f3e75ee=
-81@redhat.com/
-
-> Currently, VMBus code initiates a VMBus unload in the panic path so
-> that if a kdump kernel is loaded, it can start fresh in setting up its
-> own VMBus connection. However, a driver for the VMBus virtual frame
-> buffer may need to flush dirty portions of the frame buffer back to
-> the Hyper-V host so that panic information is visible in the graphics
-> console. To support such flushing, provide exported functions for the
-> frame buffer driver to specify that the VMBus unload should not be
-> done by the VMBus driver, and to initiate the VMBus unload itself.
-> Together these allow a frame buffer driver to delay the VMBus unload
-> until after it has completed the flush.
->=20
-> Ideally, the VMBus driver could use its own panic-path callback to do
-> the unload after all frame buffer drivers have finished. But DRM frame
-> buffer drivers use the kmsg dump callback, and there are no callbacks
-> after that in the panic path. Hence this somewhat messy approach to
-> properly sequencing the frame buffer flush and the VMBus unload.
->=20
-> Fixes: 3671f3777758 ("drm/hyperv: Add support for drm_panic")
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> From: 'Simon Horman' <horms@kernel.org>
+>
+> This is an AI-generated review of your patch. The human sending this emai=
+l has
+> considered the AI review valid, or at least plausible.
+> Full review at:
+> https://sashiko.d/
+> ev%2F&data=3D05%7C02%7Clongli%40microsoft.com%7C3344dd1ec8e44fc6d4a50
+> 8dea85caa2a%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C63913331
+> 3118303655%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYi
+> OiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0
+> %7C%7C%7C&sdata=3DGJTF8DNw%2FzYNsPz0lC%2FDFZpcCwqjuCmfVu7smim81x
+> E%3D&reserved=3D0
 > ---
-> Changes in v2: None
->=20
->  drivers/hv/channel_mgmt.c |  1 +
->  drivers/hv/hyperv_vmbus.h |  1 -
->  drivers/hv/vmbus_drv.c    | 25 ++++++++++++++++++-------
->  include/linux/hyperv.h    |  3 +++
->  4 files changed, 22 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-> index 74fed2c073d4..5de83676dbad 100644
-> --- a/drivers/hv/channel_mgmt.c
-> +++ b/drivers/hv/channel_mgmt.c
-> @@ -944,6 +944,7 @@ void vmbus_initiate_unload(bool crash)
->  	else
->  		vmbus_wait_for_unload();
->  }
-> +EXPORT_SYMBOL_GPL(vmbus_initiate_unload);
->=20
->  static void vmbus_setup_channel_state(struct vmbus_channel *channel,
->  				      struct vmbus_channel_offer_channel *offer)
-> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-> index cdbc5f5c3215..5d3944fc93ae 100644
-> --- a/drivers/hv/hyperv_vmbus.h
-> +++ b/drivers/hv/hyperv_vmbus.h
-> @@ -440,7 +440,6 @@ void hv_vss_deinit(void);
->  int hv_vss_pre_suspend(void);
->  int hv_vss_pre_resume(void);
->  void hv_vss_onchannelcallback(void *context);
-> -void vmbus_initiate_unload(bool crash);
->=20
->  static inline void hv_poll_channel(struct vmbus_channel *channel,
->  				   void (*cb)(void *))
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 6785ad63a9cb..97dfa529d250 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -69,19 +69,29 @@ bool vmbus_is_confidential(void)
->  }
->  EXPORT_SYMBOL_GPL(vmbus_is_confidential);
->=20
-> +static bool skip_vmbus_unload;
-> +
-> +/*
-> + * Allow a VMBus framebuffer driver to specify that in the case of a pan=
-ic,
-> + * it will do the VMbus unload operation once it has flushed any dirty
-> + * portions of the framebuffer to the Hyper-V host.
-> + */
-> +void vmbus_set_skip_unload(bool skip)
-> +{
-> +	skip_vmbus_unload =3D skip;
-> +}
-> +EXPORT_SYMBOL_GPL(vmbus_set_skip_unload);
-> +
->  /*
->   * The panic notifier below is responsible solely for unloading the
->   * vmbus connection, which is necessary in a panic event.
-> - *
-> - * Notice an intrincate relation of this notifier with Hyper-V
-> - * framebuffer panic notifier exists - we need vmbus connection alive
-> - * there in order to succeed, so we need to order both with each other
-> - * [see hvfb_on_panic()] - this is done using notifiers' priorities.
->   */
->  static int hv_panic_vmbus_unload(struct notifier_block *nb, unsigned lon=
-g val,
->  			      void *args)
->  {
-> -	vmbus_initiate_unload(true);
-> +	if (!skip_vmbus_unload)
-> +		vmbus_initiate_unload(true);
-> +
->  	return NOTIFY_DONE;
->  }
->  static struct notifier_block hyperv_panic_vmbus_unload_block =3D {
-> @@ -2848,7 +2858,8 @@ static void hv_crash_handler(struct pt_regs *regs)
->  {
->  	int cpu;
->=20
-> -	vmbus_initiate_unload(true);
-> +	if (!skip_vmbus_unload)
-> +		vmbus_initiate_unload(true);
->  	/*
->  	 * In crash handler we can't schedule synic cleanup for all CPUs,
->  	 * doing the cleanup for current CPU only. This should be sufficient
-> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-> index dfc516c1c719..b0502a336eb3 100644
-> --- a/include/linux/hyperv.h
-> +++ b/include/linux/hyperv.h
-> @@ -1334,6 +1334,9 @@ int vmbus_allocate_mmio(struct resource **new, stru=
-ct
-> hv_device *device_obj,
->  			bool fb_overlap_ok);
->  void vmbus_free_mmio(resource_size_t start, resource_size_t size);
->=20
-> +void vmbus_initiate_unload(bool crash);
-> +void vmbus_set_skip_unload(bool skip);
-> +
->  /*
->   * GUID definitions of various offer types - services offered to the gue=
-st.
->   */
-> --
-> 2.25.1
->=20
+> net: mana: Create separate EQs for each vPort
+>
+> This commit modifies the mana driver to prepare for assigning vPorts to d=
+edicated
+> MSI-X vectors by removing EQ sharing among vPorts. It moves the EQ defini=
+tion
+> from the mana_context to the mana_port_context and exports EQ lifecycle
+> functions for use by the MANA RDMA driver.
+>
+> > diff --git a/drivers/infiniband/hw/mana/qp.c
+> > b/drivers/infiniband/hw/mana/qp.c index 645581359cee..6f1043383e8c
+> > 100644
+> > --- a/drivers/infiniband/hw/mana/qp.c
+> > +++ b/drivers/infiniband/hw/mana/qp.c
+> > @@ -168,7 +168,15 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibq=
+p,
+> struct ib_pd *pd,
+> >             cq_spec.gdma_region =3D cq->queue.gdma_region;
+> >             cq_spec.queue_size =3D cq->cqe * COMP_ENTRY_SIZE;
+> >             cq_spec.modr_ctx_id =3D 0;
+> > -           eq =3D &mpc->ac->eqs[cq->comp_vector];
+> > +           /* EQs are created when a raw QP configures the vport.
+> > +            * A raw QP must be created before creating rwq_ind_tbl.
+> > +            */
+> > +           if (!mpc->eqs) {
+> > +                   ret =3D -EINVAL;
+> > +                   i--;
+> > +                   goto fail;
+> > +           }
+> > +           eq =3D &mpc->eqs[cq->comp_vector % mpc->num_queues];
+>
+> Is it possible for the EQs to be destroyed while this RSS QP is still act=
+ively using
+> them?
+
+  No. The EQ id is consumed only at creation time - it is passed to firmwar=
+e as cq_spec.attached_eq during mana_create_wq_obj(). After that call the C=
+Q-to-EQ binding lives entirely in firmware.
+  The kernel never dereferences mpc->eqs again for that RSS QP's lifetime, =
+so there is no ongoing kernel-side access to the EQ struct from an active R=
+SS QP.
+
+>
+> If the EQs are created by the Ethernet interface being brought up, or by =
+a RAW
+> QP configuring the vport, this RSS QP will attach to them without increme=
+nting
+> pd->vport_use_count or taking any vport reference count.
+
+  This is by design. The RSS QP (RX side) does not take a vport reference, =
+and symmetrically mana_ib_destroy_qp_rss() does not release one either. Onl=
+y raw QPs (SQ side) take and release vport
+  references. The refcount is balanced: RSS QPs are pure consumers of an al=
+ready-configured vport.
+
+>
+> If the Ethernet interface is subsequently brought down, or the RAW QP is
+> destroyed, mana_destroy_eq() will be called, freeing the mpc->eqs array a=
+nd
+> destroying the underlying DMA regions while this RSS QP remains active. T=
+his
+> regression could allow the hardware to DMA completion events into freed E=
+Q
+> memory.
+
+  Destroying the raw QP also calls mana_uncfg_vport(), which deconfigures t=
+he vport entirely. After that, firmware will not route any traffic or gener=
+ate completions on this vport, so there are no
+  in-flight DMA writes to the EQ. This is the same pre-existing behavior: t=
+he raw QP has always been the vport lifecycle anchor, and destroying it whi=
+le an RSS QP is active would have broken the
+  vport regardless - this patch does not change that relationship. Before t=
+his patch the EQs simply outlived the vport (device lifetime vs vport lifet=
+ime), which masked the dependency but did not
+  make the out-of-order teardown any safer at the vport level.
+
+>
+> Additionally, since mpc->eqs is accessed here without holding pd->vport_m=
+utex,
+> could a concurrent teardown of the EQs lead to a use-after-free when read=
+ing
+> eq->eq->id?
+
+  The RDMA core serializes QP creation and destruction on the same device c=
+ontext. A concurrent teardown would require destroying the raw QP on the sa=
+me PD simultaneously with RSS QP creation,
+  which the IB core does not permit. The !mpc->eqs check is a defensive gua=
+rd against wrong call ordering (creating an RSS QP before any raw QP), not =
+a synchronization point for concurrent access.
 
 
