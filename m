@@ -1,48 +1,49 @@
-Return-Path: <linux-hyperv+bounces-10628-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10629-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6FD8ASnz+WmcFQMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10628-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 05 May 2026 15:39:53 +0200
+	id 8LWJJS/z+WmcFQMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10629-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 05 May 2026 15:39:59 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 725964CEA73
-	for <lists+linux-hyperv@lfdr.de>; Tue, 05 May 2026 15:39:52 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 767524CEA9B
+	for <lists+linux-hyperv@lfdr.de>; Tue, 05 May 2026 15:39:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 41EBE3044CF9
-	for <lists+linux-hyperv@lfdr.de>; Tue,  5 May 2026 13:39:51 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B5AE230028A3
+	for <lists+linux-hyperv@lfdr.de>; Tue,  5 May 2026 13:39:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3808647DD66;
-	Tue,  5 May 2026 13:39:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3106547DD77;
+	Tue,  5 May 2026 13:39:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L2m8SQPR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HX2jNred"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106293EF0D2;
-	Tue,  5 May 2026 13:39:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2CD47DD66;
+	Tue,  5 May 2026 13:39:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777988389; cv=none; b=Nc4537Q8QMvoe2lntRbPXsVRzMzseVoF4bc2rynMcqrFZut7TA4b9sN3Xbs1QAN2pUu51/dT81KQ205dLU1+T5Fdd6cGL/GaSnZyK6s9Pu1MoUHXZf+keNGwNAHiIFQ4qgbJRgASiqb7Erx2VA/efC8oT4Tc9JeHIaI0xVEiUWk=
+	t=1777988393; cv=none; b=dMe/TgZ8eUqBGs52yQVJkbHcaoTd1zyCRXqwN0ikdISLvsNagWTheF7M7K+uoWePd1rMqwpFsZ7LVRAOHLAzfzkkrbW1q2zo454qZKqDaqyvSQ3YOLXcV7uTOTP9fsc3GxU1hiJ5S4TERPuIau+QoSySbPw0aaLxMBnjRSKnr10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777988389; c=relaxed/simple;
-	bh=lDmxIrb2TXzASfiuCLeb0bitGj5KO4NOFTyIIw2rOK8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kHNcGx7CG7Xu0nd1/GObr+W2GnirYeWt7PDcQ5Qvf6ybvMZgt2bqO65C4IWhpiFkH4xNQXtHzIsWE/OivPbtMNP+dackZueVbR0RIfbo+qVDQo4WMyJWpJbeUWW4rdXqr3Urde9XEtCXY/O2YxeMMRlHR1J6DEzyhVf5LX31KhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L2m8SQPR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 362D9C2BCB4;
-	Tue,  5 May 2026 13:39:45 +0000 (UTC)
+	s=arc-20240116; t=1777988393; c=relaxed/simple;
+	bh=NcRSyq08XzhT27dPM3OyW2/65CqnGGNof3VyzjgXpkY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ldukjYD7i4diaP7QRWGcVQv7X7nDhkUohAvEKIwHRbPFFtAKRNQ9WncpzZCRivkgCOpxpmoL8sioeAsWqkzS80PjFThxwelhSsfRE6/RLwQ/l2Sp05NhytCX+gEnTtXZjGwwHVBYFU6K/2ZWyzFSU5fRHtIIbW2t5y6s+TNXOBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HX2jNred; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17C2CC2BCB9;
+	Tue,  5 May 2026 13:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777988388;
-	bh=lDmxIrb2TXzASfiuCLeb0bitGj5KO4NOFTyIIw2rOK8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=L2m8SQPRJ3APZQXbtipIvBXYMXRv6nK126TQs+FDyLprMbkAEfZzwid2Nr4bW2/gH
-	 Vm/n9UtyqcIHPQJZj1G27ywzVIT4NQI82fqvm9XqinNGi4aWgsKuM6tAYU6D00YHl6
-	 RYZ75swH44LjpA9OTUB1SEtOWaIRXI9L9WSYR+BSeq0a40LZ06KGwrN1PDtTDao0hT
-	 PG8FgQFTDCLg586NU3YF1wIUI+C42tvMmorH2WPWhUBEyO+ArGyl9wegHDN6LDssr/
-	 NLs5GaL8U+ybDCF6S2ehfV3EDwOmBnTgBsj2wq3y2ucUzn8BI75M9wj6QrSqs+IW7/
-	 fuSCZB5AEQ5Qg==
+	s=k20201202; t=1777988392;
+	bh=NcRSyq08XzhT27dPM3OyW2/65CqnGGNof3VyzjgXpkY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HX2jNredAUTkneqERbse6tir4Lsoj6nH/q8unuSBYEE703WCP62DLIp3B79XXeRKR
+	 3KBI+rvggdVDcdkGCtgjOqWoSm0z3fYkGNee0pAiAclDQ+eF7HKd4OoigFfhiPl96C
+	 YZVDloFrj7BoetPERTvbOC1EPkTwJHSwqHIEu6xisDCPFIqFwrF7r9RIOBSJYWuAwe
+	 KsOAFwpdDA6tQKmoLllVRR/IkI9ApElDiS2JJ9zuqo00f1EAjtuaFmVVEm24JvPLFQ
+	 dYnxTOb3lvgeeDIelDmdqfKekAxotWYTDvpj9QR2Zo56QDh2T/ARL1Zz7WVsAzOYiU
+	 GuAOscXPO+omQ==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -61,11 +62,14 @@ Cc: driver-core@lists.linux.dev,
 	linux-hyperv@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
 	linux-remoteproc@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v2 0/5] treewide: Convert buses to use generic driver_override
-Date: Tue,  5 May 2026 15:37:20 +0200
-Message-ID: <20260505133935.3772495-1-dakr@kernel.org>
+	Danilo Krummrich <dakr@kernel.org>,
+	Gui-Dong Han <hanguidong02@gmail.com>
+Subject: [PATCH v2 1/5] amba: use generic driver_override infrastructure
+Date: Tue,  5 May 2026 15:37:21 +0200
+Message-ID: <20260505133935.3772495-2-dakr@kernel.org>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260505133935.3772495-1-dakr@kernel.org>
+References: <20260505133935.3772495-1-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -73,7 +77,7 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 725964CEA73
+X-Rspamd-Queue-Id: 767524CEA9B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -81,79 +85,145 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10628-lists,linux-hyperv=lfdr.de];
+	FREEMAIL_CC(0.00)[lists.linux.dev,vger.kernel.org,kernel.org,gmail.com];
 	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[18];
+	TAGGED_FROM(0.00)[bounces-10629-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
 	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-1.000];
+	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,gitlab.com:url]
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 
-This is the follow-up of the driver_override generalization in [1], converting
-the remaining 4 busses and removing the now-unused driver_set_override() helper.
+When a driver is probed through __driver_attach(), the bus' match()
+callback is called without the device lock held, thus accessing the
+driver_override field without a lock, which can cause a UAF.
 
-All of them are prone to the potential UAF described in [2], caused by accessing
-the driver_override field from their corresponding match() callback.
+Fix this by using the driver-core driver_override infrastructure taking
+care of proper locking internally.
 
-In order to address this, the generalized driver_override field in struct device
-is protected with a spinlock. The driver-core provides accessors, such as
-device_match_driver_override(), device_has_driver_override() and
-device_set_driver_override(), which all ensure proper locking internally.
+Note that calling match() from __driver_attach() without the device lock
+held is intentional. [1]
 
-Additionally, the driver-core provides a driver_override flag in struct
-bus_type, which, once enabled, automatically registers generic sysfs callbacks,
-allowing userspace to modify the driver_override field.
+Link: https://lore.kernel.org/driver-core/DGRGTIRHA62X.3RY09D9SOK77P@kernel.org/ [1]
+Reported-by: Gui-Dong Han <hanguidong02@gmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220789
+Fixes: 3cf385713460 ("ARM: 8256/1: driver coamba: add device binding path 'driver_override'")
+Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+---
+ drivers/amba/bus.c       | 37 ++++++-------------------------------
+ include/linux/amba/bus.h |  5 -----
+ 2 files changed, 6 insertions(+), 36 deletions(-)
 
-This series is based on v7.1-rc1 with no additional dependencies, hence those
-patches can be picked up by subsystems individually.
-
-[1] https://lore.kernel.org/driver-core/20260303115720.48783-1-dakr@kernel.org/
-[2] https://bugzilla.kernel.org/show_bug.cgi?id=220789
-[3] https://gitlab.com/driverctl/driverctl/-/blob/0.121/driverctl?ref_type=tags#L99
-
-Changes in v2:
-  - Rebase on v7.1-rc1
-  - Drop already merged patches
-  - vmbus documentation changes as requested by Michael
-
-Danilo Krummrich (5):
-  amba: use generic driver_override infrastructure
-  cdx: use generic driver_override infrastructure
-  Drivers: hv: vmbus: use generic driver_override infrastructure
-  rpmsg: use generic driver_override infrastructure
-  driver core: remove driver_set_override()
-
- drivers/amba/bus.c                | 37 +++------------
- drivers/base/driver.c             | 75 -------------------------------
- drivers/cdx/cdx.c                 | 40 +++--------------
- drivers/hv/vmbus_drv.c            | 43 +++++-------------
- drivers/rpmsg/qcom_glink_native.c |  2 -
- drivers/rpmsg/rpmsg_core.c        | 43 +++---------------
- drivers/rpmsg/virtio_rpmsg_bus.c  |  1 -
- include/linux/amba/bus.h          |  5 ---
- include/linux/cdx/cdx_bus.h       |  4 --
- include/linux/device/driver.h     |  2 -
- include/linux/hyperv.h            |  5 ---
- include/linux/rpmsg.h             |  4 --
- 12 files changed, 28 insertions(+), 233 deletions(-)
-
-
-base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
+diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
+index 6d479caf89cb..d721d64a9858 100644
+--- a/drivers/amba/bus.c
++++ b/drivers/amba/bus.c
+@@ -82,33 +82,6 @@ static void amba_put_disable_pclk(struct amba_device *pcdev)
+ }
+ 
+ 
+-static ssize_t driver_override_show(struct device *_dev,
+-				    struct device_attribute *attr, char *buf)
+-{
+-	struct amba_device *dev = to_amba_device(_dev);
+-	ssize_t len;
+-
+-	device_lock(_dev);
+-	len = sprintf(buf, "%s\n", dev->driver_override);
+-	device_unlock(_dev);
+-	return len;
+-}
+-
+-static ssize_t driver_override_store(struct device *_dev,
+-				     struct device_attribute *attr,
+-				     const char *buf, size_t count)
+-{
+-	struct amba_device *dev = to_amba_device(_dev);
+-	int ret;
+-
+-	ret = driver_set_override(_dev, &dev->driver_override, buf, count);
+-	if (ret)
+-		return ret;
+-
+-	return count;
+-}
+-static DEVICE_ATTR_RW(driver_override);
+-
+ #define amba_attr_func(name,fmt,arg...)					\
+ static ssize_t name##_show(struct device *_dev,				\
+ 			   struct device_attribute *attr, char *buf)	\
+@@ -126,7 +99,6 @@ amba_attr_func(resource, "\t%016llx\t%016llx\t%016lx\n",
+ static struct attribute *amba_dev_attrs[] = {
+ 	&dev_attr_id.attr,
+ 	&dev_attr_resource.attr,
+-	&dev_attr_driver_override.attr,
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(amba_dev);
+@@ -209,10 +181,11 @@ static int amba_match(struct device *dev, const struct device_driver *drv)
+ {
+ 	struct amba_device *pcdev = to_amba_device(dev);
+ 	const struct amba_driver *pcdrv = to_amba_driver(drv);
++	int ret;
+ 
+ 	mutex_lock(&pcdev->periphid_lock);
+ 	if (!pcdev->periphid) {
+-		int ret = amba_read_periphid(pcdev);
++		ret = amba_read_periphid(pcdev);
+ 
+ 		/*
+ 		 * Returning any error other than -EPROBE_DEFER from bus match
+@@ -230,8 +203,9 @@ static int amba_match(struct device *dev, const struct device_driver *drv)
+ 	mutex_unlock(&pcdev->periphid_lock);
+ 
+ 	/* When driver_override is set, only bind to the matching driver */
+-	if (pcdev->driver_override)
+-		return !strcmp(pcdev->driver_override, drv->name);
++	ret = device_match_driver_override(dev, drv);
++	if (ret >= 0)
++		return ret;
+ 
+ 	return amba_lookup(pcdrv->id_table, pcdev) != NULL;
+ }
+@@ -436,6 +410,7 @@ static const struct dev_pm_ops amba_pm = {
+ const struct bus_type amba_bustype = {
+ 	.name		= "amba",
+ 	.dev_groups	= amba_dev_groups,
++	.driver_override = true,
+ 	.match		= amba_match,
+ 	.uevent		= amba_uevent,
+ 	.probe		= amba_probe,
+diff --git a/include/linux/amba/bus.h b/include/linux/amba/bus.h
+index 9946276aff73..6c54d5c0d21f 100644
+--- a/include/linux/amba/bus.h
++++ b/include/linux/amba/bus.h
+@@ -71,11 +71,6 @@ struct amba_device {
+ 	unsigned int		cid;
+ 	struct amba_cs_uci_id	uci;
+ 	unsigned int		irq[AMBA_NR_IRQS];
+-	/*
+-	 * Driver name to force a match.  Do not set directly, because core
+-	 * frees it.  Use driver_set_override() to set or clear it.
+-	 */
+-	const char		*driver_override;
+ };
+ 
+ struct amba_driver {
 -- 
 2.54.0
 
