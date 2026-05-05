@@ -1,230 +1,182 @@
-Return-Path: <linux-hyperv+bounces-10633-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10634-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gLR6GVnz+WmcFQMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10633-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 05 May 2026 15:40:41 +0200
+	id OCjVFSH0+WkOFgMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10634-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 05 May 2026 15:44:01 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0839D4CEAE3
-	for <lists+linux-hyperv@lfdr.de>; Tue, 05 May 2026 15:40:40 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA70B4CEBBC
+	for <lists+linux-hyperv@lfdr.de>; Tue, 05 May 2026 15:44:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 0CBE3301AF77
-	for <lists+linux-hyperv@lfdr.de>; Tue,  5 May 2026 13:40:33 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id BDD543063888
+	for <lists+linux-hyperv@lfdr.de>; Tue,  5 May 2026 13:43:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8383A47ECD8;
-	Tue,  5 May 2026 13:40:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AABC047DF83;
+	Tue,  5 May 2026 13:43:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hgTWVgBn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hpaqQUEu";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="XiYgCUaa"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5752047DFBF;
-	Tue,  5 May 2026 13:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A9547DD7C
+	for <linux-hyperv@vger.kernel.org>; Tue,  5 May 2026 13:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777988409; cv=none; b=BI/vJ7pFEyqmrqfsw3GdM/NuAweIRQL1SHOT3li7Scuj4dXyEJ7XjyscF4KRQLOXxmXj/lPKRA+diYoG7COe65rfcZnOxXypG1tXyt5hQVoijUx9d7D7IPjLlb+bQsokE/jaoMefZeYBrWzkPaY4kwkzB+8/obkuLhIzAmNbuPg=
+	t=1777988582; cv=none; b=Palcgk8Di8Jqq3/63jp+/sslKCl8LMuM3AYzjIKYn9nGMsTgVQGOabuYulTENEKNhwKnF/lD5pNuq1MEA2uYz0J9iJNe4HFK3C7TYu4gDe+TQBMbuxfDZvrdESxCFwYSZAgodu/gl6aMb3qKatw8TD9JPRY44jNv6fyIMJ5UsbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777988409; c=relaxed/simple;
-	bh=enQ/kAE46gHWFkx72vT1p5afv0nIyc37eTTmR0xPPp0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NHTuAHFqrBEK6LQEf4EusjOV3q/hx1eml7TPtMTNiOt9uMUE9Xpav1oTwDi1jRTOR45J/AkWsXcyTF6wMzFiGLAoWdfvhVeNM9wE8uD65i8NxZ7itfT3IF1cX+nchdeLdh56QGKg6Q6mWUy2kcM1sNhoavlhxdm80avCm6dqw1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hgTWVgBn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E726C2BCB4;
-	Tue,  5 May 2026 13:40:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777988408;
-	bh=enQ/kAE46gHWFkx72vT1p5afv0nIyc37eTTmR0xPPp0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hgTWVgBn2k2vD++6osj/Kv2LEBVXP4pPJ00tFXFMWSXzbfrkgludFr/5/BH6DB7ci
-	 9f7IkJPx12KmXwtpbVwftKqmXqMPjC6Selkp+WVf7O72fm9lrCVEUhpqqMToEywMZx
-	 whznVCgNNsmRenBLfdzUEXWBN3DcqVyrKxsjZ/I8nqfnmUPwnI4x2V88PqNFS2sNXA
-	 dl8a5obHr8hzsiaQikP/gD+wMuC5mPjl3Ag1pTSNaJezCguayYitHTn55riXn9GG22
-	 wHjBuF9gvFDs0pmR75xr9GMB20lcSFS3oK5uBRhGlPKQRjOvjMn9duO26CMuvNcSfe
-	 fgdroxm2KJXYQ==
-From: Danilo Krummrich <dakr@kernel.org>
-To: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	linux@armlinux.org.uk,
-	nipun.gupta@amd.com,
-	nikhil.agarwal@amd.com,
-	kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	andersson@kernel.org,
-	mathieu.poirier@linaro.org
-Cc: driver-core@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v2 5/5] driver core: remove driver_set_override()
-Date: Tue,  5 May 2026 15:37:25 +0200
-Message-ID: <20260505133935.3772495-6-dakr@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260505133935.3772495-1-dakr@kernel.org>
-References: <20260505133935.3772495-1-dakr@kernel.org>
+	s=arc-20240116; t=1777988582; c=relaxed/simple;
+	bh=KoGS6aWgQmyghW2+RcilZE/a4UalTY9FWST44iSCrmQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=AW8Fe3KObYIeOJ1zPNckU4D61BQ1Llddb0GnbSnOKTebSyYerw2Pdde+xeBHLRL1s5bSVCRuaPrMFHVUnOPQBtpsAX3PR6lfjsoswKptIHhX+FMqHBJ6aLW3rBG9/lt/kdsPhqp6x6iLFtg8Z26B+NpHpBnZ03b9/TmBKaJKiwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hpaqQUEu; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=XiYgCUaa; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1777988580;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+U+GpGXOrL0cMnQRbFcA7ylLjvJDYXi4Fcpm7XE5qos=;
+	b=hpaqQUEux0Ns4KxPqGS0iHkQ0VAuaB77NjA25sSxkIxl8+y6XTBrl/hOlL8GRKiZ4YoLny
+	ToEWQsPKNYat41j/W1bQ6fg+ULAiUkzCozFOkFeXkWm0g+hdHZspSl5fJBXp5apz14TIDO
+	vJtuAQOmpkwptSSMgDCNejjpu1YKAp0=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-320-0HtJTTnaM7ytYBFFLR9ISw-1; Tue, 05 May 2026 09:42:55 -0400
+X-MC-Unique: 0HtJTTnaM7ytYBFFLR9ISw-1
+X-Mimecast-MFC-AGG-ID: 0HtJTTnaM7ytYBFFLR9ISw_1777988573
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4837bfcfe0dso67180555e9.1
+        for <linux-hyperv@vger.kernel.org>; Tue, 05 May 2026 06:42:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1777988573; x=1778593373; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=+U+GpGXOrL0cMnQRbFcA7ylLjvJDYXi4Fcpm7XE5qos=;
+        b=XiYgCUaamZm6WTSI43K90aaOEBA5Nx5HVT+DagaNvt4YXFGrM8PC/hruoust7T0UOh
+         /JjptZ6ZEWwSE/YaFAa1nL2d++YeXMdcGUapz/E9Nj6ERAP4LeEBEb/BwxZlhLRMjPnM
+         RjSYKiQycZbwL/Sm4Aqbs7A8LZi+XRKYp4rKVh8Hqp0cWeiAbOyla7MiRj8r9A2U2ZEO
+         gUf4q4fcD0EEwWP++lGtlMPSDvksWAM77zE6Pf5pmJyQLfX6AX9uoMLg1tBSDninDQNc
+         JKr+HKgQaDzGm+rYUt3n73FIInQIqZbZMAcuckIrFPHYxUbV5SMqfPzbnf3YLzQcOCZd
+         Ol+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777988573; x=1778593373;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+U+GpGXOrL0cMnQRbFcA7ylLjvJDYXi4Fcpm7XE5qos=;
+        b=erxm8cGMx6gPlpZT1i77CbAYGnitVOq9Y/RPPkKweLTjEDxN9SOK1Flj8yvBeJOi3N
+         3Np/xa8BL79Rlhjpj0f8bPki/rR5upF0fegW+X4AafWSMmJN2yVFvwgDJwwoZ7t3ZnTA
+         xRfOM5v7sLR+VQxP4wgkdemZ1DRbAq+yenWS4mIa5zO/YsNWN/ZwLC+z3EVayyYadAP4
+         +BBCoF/Xx7c6fDdN4XqE1dZYT1p3HltBhGvWP7XW81nnLA5xOW57uwKJMkY6LQeXWdYN
+         UoKJM/uoR3R5oaFrPJSZUwraRYM5ZFxQr+lqqKrltQIQyMJw8vWg4GpNWRUd7zPpEvH/
+         PDxw==
+X-Forwarded-Encrypted: i=1; AFNElJ+gCxNAW9G2U0ks9yYAsczs5dfRxsMIYmK70Z/V9W9W5yx9QvIj6jFy8EF9cZMipmVKpRAtEai7cJgA+48=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0PSLcLl8X9ye5a9ACji+aoFaBo1xKATxYz+VShDhjhX9ogNI/
+	oJXssqeJtWe7FDS+tA5Gm/7JWEhWkClE/Jk3TiCzF5XQ9RNIe2vQJgGgCCKoA7pRsztTqMSBdgw
+	lEn5OKLZFYt+WLT818yPMz0ldnpHHdAlCJdattZWBf7lihcz6r8tQXqApb+dh1/RDiw==
+X-Gm-Gg: AeBDies9WLvZxXvvoAqOCBA60kLYQ+SYNEgpPysxJc91raUif13KHqBahaAvCqLiX8W
+	0lgfffd2poJ/Dt8vbR9FXVtJGxVXro8TQBPQYAil7OoZwNEjwPwlr0iDZF8XqiVRytEnG0DEVJ6
+	U8FNqFGQpzbuZWhxh1GgeiV9E4lF+VsvWdtmuBodlNIeKK3SS8XuOiGtH2Wo8jdCEihZUFY8U5s
+	F3CjH5Hihz3/sLPIELfhQ9gaspPuCnlcMmHnZ9BUixN2sdR4ybW8EKQfGBpO9ydsyLd1aNDkg5Y
+	dKwvmVMqHmsLjnCgsEOAdcEr4s+ZriBJLoGPC9I/HUmx6Vq8DHUOogQ4rialklmDNwCks4Njc4b
+	m8XWQzXmbFN8hkLnsljZCeKg2b3Ad834+ORUnBo9zMX+oN1T+bRkWbI71WGwBa/qH2gA=
+X-Received: by 2002:a05:600c:a30a:b0:485:30d4:6b9e with SMTP id 5b1f17b1804b1-48d18ce275fmr36490135e9.21.1777988573087;
+        Tue, 05 May 2026 06:42:53 -0700 (PDT)
+X-Received: by 2002:a05:600c:a30a:b0:485:30d4:6b9e with SMTP id 5b1f17b1804b1-48d18ce275fmr36489575e9.21.1777988572565;
+        Tue, 05 May 2026 06:42:52 -0700 (PDT)
+Received: from [192.168.88.32] ([212.105.155.47])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48d149d49acsm30503175e9.1.2026.05.05.06.42.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2026 06:42:52 -0700 (PDT)
+Message-ID: <30f588ad-cf80-432b-bde3-13b3c0d5a124@redhat.com>
+Date: Tue, 5 May 2026 15:42:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 0839D4CEAE3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net, v3] net: mana: Fix crash from unvalidated SHM offset
+ read from BAR0 during FLR
+To: Dipayaan Roy <dipayanroy@linux.microsoft.com>, kys@microsoft.com,
+ haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, leon@kernel.org, longli@microsoft.com,
+ kotaranov@microsoft.com, horms@kernel.org, shradhagupta@linux.microsoft.com,
+ ssengar@linux.microsoft.com, ernis@linux.microsoft.com,
+ shirazsaleem@microsoft.com, linux-hyperv@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, stephen@networkplumber.org,
+ jacob.e.keller@intel.com, dipayanroy@microsoft.com, leitao@debian.org,
+ kees@kernel.org, john.fastabend@gmail.com, hawk@kernel.org,
+ bpf@vger.kernel.org, daniel@iogearbox.net, ast@kernel.org, sdf@fomichev.me,
+ yury.norov@gmail.com
+References: <afQUMClyjmBVfD+u@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <afQUMClyjmBVfD+u@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: CA70B4CEBBC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10633-lists,linux-hyperv=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-hyperv@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-10634-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-0.999];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	FREEMAIL_TO(0.00)[linux.microsoft.com,microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,vger.kernel.org,networkplumber.org,intel.com,debian.org,gmail.com,iogearbox.net,fomichev.me];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[33];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linuxfoundation.org:email]
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[pabeni@redhat.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
-All buses have been converted from driver_set_override() to the generic
-driver_override infrastructure introduced in commit cb3d1049f4ea
-("driver core: generalize driver_override in struct device").
+On 5/1/26 4:47 AM, Dipayaan Roy wrote:
+> @@ -73,10 +74,28 @@ static int mana_gd_init_pf_regs(struct pci_dev *pdev)
+>  	gc->phys_db_page_base = gc->bar0_pa + gc->db_page_off;
+>  
+>  	sriov_base_off = mana_gd_r64(gc, GDMA_SRIOV_REG_CFG_BASE_OFF);
+> +	if (sriov_base_off >= gc->bar0_size ||
+> +	    gc->bar0_size - sriov_base_off <
+> +		GDMA_PF_REG_SHM_OFF + sizeof(u64) ||
+> +	    !IS_ALIGNED(sriov_base_off, sizeof(u64))) {
+> +		dev_err(gc->dev,
+> +			"SRIOV base offset 0x%llx out of range or unaligned (BAR0 size 0x%llx)\n",
+> +			sriov_base_off, (u64)gc->bar0_size);
+> +		return -EPROTO;
+> +	}
 
-Buses now either opt into the generic sysfs callbacks via the
-bus_type::driver_override flag, or use device_set_driver_override() /
-__device_set_driver_override() directly.
+I think that the additional fix suggested by sashiko is really worthy,
+but should go in a separate patch. @Dipayaan: please follow-up on that
+one, thanks!
 
-Thus, remove the now-unused driver_set_override() helper.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=220789
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
----
- drivers/base/driver.c         | 75 -----------------------------------
- include/linux/device/driver.h |  2 -
- 2 files changed, 77 deletions(-)
-
-diff --git a/drivers/base/driver.c b/drivers/base/driver.c
-index 8ab010ddf709..7ed834f7199c 100644
---- a/drivers/base/driver.c
-+++ b/drivers/base/driver.c
-@@ -30,81 +30,6 @@ static struct device *next_device(struct klist_iter *i)
- 	return dev;
- }
- 
--/**
-- * driver_set_override() - Helper to set or clear driver override.
-- * @dev: Device to change
-- * @override: Address of string to change (e.g. &device->driver_override);
-- *            The contents will be freed and hold newly allocated override.
-- * @s: NUL-terminated string, new driver name to force a match, pass empty
-- *     string to clear it ("" or "\n", where the latter is only for sysfs
-- *     interface).
-- * @len: length of @s
-- *
-- * Helper to set or clear driver override in a device, intended for the cases
-- * when the driver_override field is allocated by driver/bus code.
-- *
-- * Returns: 0 on success or a negative error code on failure.
-- */
--int driver_set_override(struct device *dev, const char **override,
--			const char *s, size_t len)
--{
--	const char *new, *old;
--	char *cp;
--
--	if (!override || !s)
--		return -EINVAL;
--
--	/*
--	 * The stored value will be used in sysfs show callback (sysfs_emit()),
--	 * which has a length limit of PAGE_SIZE and adds a trailing newline.
--	 * Thus we can store one character less to avoid truncation during sysfs
--	 * show.
--	 */
--	if (len >= (PAGE_SIZE - 1))
--		return -EINVAL;
--
--	/*
--	 * Compute the real length of the string in case userspace sends us a
--	 * bunch of \0 characters like python likes to do.
--	 */
--	len = strlen(s);
--
--	if (!len) {
--		/* Empty string passed - clear override */
--		device_lock(dev);
--		old = *override;
--		*override = NULL;
--		device_unlock(dev);
--		kfree(old);
--
--		return 0;
--	}
--
--	cp = strnchr(s, len, '\n');
--	if (cp)
--		len = cp - s;
--
--	new = kstrndup(s, len, GFP_KERNEL);
--	if (!new)
--		return -ENOMEM;
--
--	device_lock(dev);
--	old = *override;
--	if (cp != s) {
--		*override = new;
--	} else {
--		/* "\n" passed - clear override */
--		kfree(new);
--		*override = NULL;
--	}
--	device_unlock(dev);
--
--	kfree(old);
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(driver_set_override);
--
- /**
-  * driver_for_each_device - Iterator for devices bound to a driver.
-  * @drv: Driver we're iterating.
-diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
-index bbc67ec513ed..aa3465a369f0 100644
---- a/include/linux/device/driver.h
-+++ b/include/linux/device/driver.h
-@@ -160,8 +160,6 @@ int __must_check driver_create_file(const struct device_driver *driver,
- void driver_remove_file(const struct device_driver *driver,
- 			const struct driver_attribute *attr);
- 
--int driver_set_override(struct device *dev, const char **override,
--			const char *s, size_t len);
- int __must_check driver_for_each_device(struct device_driver *drv, struct device *start,
- 					void *data, device_iter_t fn);
- struct device *driver_find_device(const struct device_driver *drv,
--- 
-2.54.0
+Paolo
 
 
