@@ -1,282 +1,213 @@
-Return-Path: <linux-hyperv+bounces-10706-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10707-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qJ2zHzEE/WmIWgAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10706-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 23:29:21 +0200
+	id sBptO2sH/WlLWwAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10707-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 23:43:07 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7F0E4EF45C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 23:29:20 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5163F4EF6DA
+	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 23:43:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id ECC713017516
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 May 2026 21:29:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9A09D303429E
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 May 2026 21:43:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AC77345736;
-	Thu,  7 May 2026 21:29:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44608346A0C;
+	Thu,  7 May 2026 21:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="ButL1b/T"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E06F32DF6F4;
-	Thu,  7 May 2026 21:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778189358; cv=none; b=bkIz4QgVzpllPL/FxHYxc5ujOgVosmmQ6unf36Nfsyo1rlTb8W61Fjq6jjJSZ0avJxVXDD+A9cR4iNTFw+KUc4ceisu05LBNbpxzJ+RsCuVrkrw+INDYjgCfuR3DblZ2PshmJ8ECmE3ZkAre2uQyJ5I1zCXJlGHnjrk2FK9CUpg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778189358; c=relaxed/simple;
-	bh=3C/PBMFP4+dveG4Us5jGD12cNJJvy0fXewEZchMu2X0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zud+9WQMRmIun7ABrbHHtAJt32ihue6hsdb8+btBMtlw5ATlVJHiuwhuqg1fBEV3BlUrqaCYD1KUcTLRwuoqDGLQhyOfaVZ1acRqTRZZidtYxnpKVfCZ/0U7pjY/yuFUvh23tCrl/LdDnzlg33duMcdFtgG0UCQgVvRV9bBKtuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; arc=none smtp.client-ip=13.77.154.182
+Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11023088.outbound.protection.outlook.com [40.107.201.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3EFB3451B5;
+	Thu,  7 May 2026 21:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778190185; cv=fail; b=Yzj1wbmdQDvj2V0bUJs8rCInvTKm5ZL3vPa8GFhhUTiwW2Q17UVqOH6UwEHcEON1YGuro6G9FyClgo9ZosjAXYJHJ2dT2UR1PErOjdL1dQdGpuPJHjXt31rzqHf1Xkc7mQpLsY+67nZdqqXUtcdo24ukhVZcMKI3BePffo0amy8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778190185; c=relaxed/simple;
+	bh=3b2ngwKikYRVuOpJ4BoHCcDWIZ1ZP87frIMIUMU2DGw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=APsSnRmZMRK0FsUYtpa8Ysff3cJ/MgjAzQLyeKOQdV43ZvKksGqeHGqo11ELaq0d/O4/hxlcmwgcUcsyPbOik4goqyja7J6yUPh0c0IyUQBJhfc3Sgo4foN+mrS6+NxPlyi9I/hbR8VF7RSIhWTXiuaArH0lo062AsmicdnaVJI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=ButL1b/T; arc=fail smtp.client-ip=40.107.201.88
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1009)
-	id 5A27520B7165; Thu,  7 May 2026 14:29:13 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5A27520B7165
-From: Dexuan Cui <decui@microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mhklinux@outlook.com,
-	matthew.ruffell@canonical.com,
-	johansen@templeofstupid.com,
-	hargar@linux.microsoft.com
-Cc: stable@vger.kernel.org,
-	Krister Johansen <kjlx@templeofstupid.com>
-Subject: [PATCH v3] Drivers: hv: vmbus: Improve the logic of reserving fb_mmio on Gen2 VMs
-Date: Thu,  7 May 2026 14:28:38 -0700
-Message-ID: <20260507212838.448891-1-decui@microsoft.com>
-X-Mailer: git-send-email 2.43.7
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dYsr9bmHiGIF8ulqCd9pIOOoy50094C4Kbm5V/VAjHOkWYdCXD+2v8D99OVy6tzLbxkDGjh3/ycuSTQNdG+AdBPCqniU4BGCj7mPr0sVEk6nUw25mmE8vr3Y5p0SfrdLNdKLw6IswselDm6Olva4+VRFLkl/minqLoFWZpfyUpP4zYMqydxGx4tbJgWpUEVvJYNgLhvcrhQvQc82AFYdJl6srbgy/ymseFTwpAZx4GQs7Y1eFFnXX97OHA6TnOHwj4EPyAzjzzj3SWZYX6hh/hHVI/iLpEiqDUuJStTsDFMu2JV0mIKlXQa0cBAuuWSsg2lyzh98mABSdRvz8N37FQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OPQo9ZMnYm8favVEHgXNP4x1QHZQ3/P/OSv+w0+nyjY=;
+ b=hncq+yzrA4MyMj1ekpUIuuFTY1NrRtcBBddDwn2PhKlMbcL3ZnzGWMymtGaluvixwJ5/j1ras3oEVkKpTAC2+6T6Jg/t/Nbh1Eu0NFgM6HdVYJ5pz4n+xWvODVmiZPPSuC+OrECmA8QVxOg0sOrQguYIgc+6RLBJLOOEsH4GZ6sR+i/qCAjShpdZx1SHxeEcacbMgqAbAEDER4i3/94ByaHc6FtQB/B5OJbSDZTOwjHw5Kdq6V3urOh3MgmNb8MzjSl/3phTb8oV19oYusHe89zHcvMwoat0eCUCnVHDxVYtR+jo4P4QQnyeLGdHe7LPhu/yPK7+fqBsL9SZyaM2Hg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OPQo9ZMnYm8favVEHgXNP4x1QHZQ3/P/OSv+w0+nyjY=;
+ b=ButL1b/T0xbETTBIiipX+FBZDEnLR9y9HweJ56mOW6MTmAiNNiM3gIbxyuSjpkIlaiJ1hhET8qzwSXc7sHoggTvgxk3OFzDvAs6ZdTtzP/I1jwz9Olim5yR4V6OlFG3Yjp5KWQwekoOVRP2+an3XCRvBIpARXpk/LlVZS7UK9d8=
+Received: from SA1PR21MB6921.namprd21.prod.outlook.com (2603:10b6:806:4a7::11)
+ by SA3PR21MB5697.namprd21.prod.outlook.com (2603:10b6:806:498::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9913.3; Thu, 7 May
+ 2026 21:43:00 +0000
+Received: from SA1PR21MB6921.namprd21.prod.outlook.com
+ ([fe80::51cf:497c:e5df:f6d]) by SA1PR21MB6921.namprd21.prod.outlook.com
+ ([fe80::51cf:497c:e5df:f6d%7]) with mapi id 15.20.9913.002; Thu, 7 May 2026
+ 21:43:00 +0000
+From: Dexuan Cui <DECUI@microsoft.com>
+To: Matthew Ruffell <matthew.ruffell@canonical.com>
+CC: Michael Kelley <mhklinux@outlook.com>, KY Srinivasan <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>, "wei.liu@kernel.org"
+	<wei.liu@kernel.org>, Long Li <longli@microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"johansen@templeofstupid.com" <johansen@templeofstupid.com>,
+	"hargar@linux.microsoft.com" <hargar@linux.microsoft.com>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [EXTERNAL] Re: [PATCH v2] Drivers: hv: vmbus: Improve the logic
+ of reserving fb_mmio on Gen2 VMs
+Thread-Topic: [EXTERNAL] Re: [PATCH v2] Drivers: hv: vmbus: Improve the logic
+ of reserving fb_mmio on Gen2 VMs
+Thread-Index: AQHc3WroSYifASCvgUCkf4bDaRgCsrYBvvhwgAAxr4CAASZzsA==
+Date: Thu, 7 May 2026 21:43:00 +0000
+Message-ID:
+ <SA1PR21MB692159569CFAD9F59BCCEA2DBF3C2@SA1PR21MB6921.namprd21.prod.outlook.com>
+References: <20260505004846.193441-1-decui@microsoft.com>
+ <SN6PR02MB4157A5A68BDBC87995FCE85FD43F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SA1PR21MB69217F13193ADBD59430FB52BF3C2@SA1PR21MB6921.namprd21.prod.outlook.com>
+ <CAKAwkKtUo5XX_Qh4hSYcbxTWkZP=+i0hZQaPHX78G20MFdz2Lg@mail.gmail.com>
+In-Reply-To:
+ <CAKAwkKtUo5XX_Qh4hSYcbxTWkZP=+i0hZQaPHX78G20MFdz2Lg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2e999bfc-eb50-46f7-8b41-c4829cee2584;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-05-07T21:32:13Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR21MB6921:EE_|SA3PR21MB5697:EE_
+x-ms-office365-filtering-correlation-id: d7386729-9f1c-4834-b714-08deac819c36
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|1800799024|366016|38070700021|22082099003|56012099003|18002099003;
+x-microsoft-antispam-message-info:
+ Z9waJ9wb6GM1j7OJag937ovhtyvhauTM+5BmUzzsxKvDcQaOpi/3HZ5vUGsxWnLMdVtTgTx+4CqlUHQso2BIqgHYVK1yenSnEnGKPwHlAlratSqiZBbgwfw06DIzrrc6et8jdWxHJSP/U4Cv9beskU+es0d89sW2/0SQ2RXcmkmok4k4Sku9wPOVap4jCroVOYzI3KvoitF1YAc8oWuJM04em68klnmLaJt3WleTYXYF73G5IrHkDpnwbFYoT0thotstRFxjs87HcYQUCTc/5L4VKQwD2OeOu2D1PKt45wTt/NkWOr32iSy4JJKno26iQVAEttAYrZZbhVFCec4mElVxqCvlQ8+ZytijJh+bKEY3CkmDuRGhWKXsjqU7k1ueHd6XPo88sAF6HUT/8JtMa5p+moIkmU7kfW+wEMO2TtnPJLwBgVTlo7tpP5Ld6tWNcC+KDhZfcp0F4IkhSSTAYDZoq5k/CO4rP/pWW8jZ/uP1AFtEvOpZ/mSD+iCbD2dJtlZWKvCCMaim6k/nEiB06kcfCQtbXlB/PZy5pwP3a8ArPMm6PekTpu7nVawi8VWhBHtYCYIlPU5xWZT8KPx2LQhk7U+/9TrMYZqX96sgyc6msTDjoMtmkeovfgzNzHFYuhDTjevNAKq8VmJo4sXod1cnGxVgXOTT+FkHWTcSvQOc38TWHUX1aiLJqakaHdWfzrQDy3d6SYYeOMZ3kzVMfQ==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB6921.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700021)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?D4sH5MRKJxq9996HxOqZmwOsfyxND0IvJ/8GRrYo6V4rItTNbTTJJX+JmfD7?=
+ =?us-ascii?Q?CbSBvAhQGYIhqHB2FGBndYfxUNLZ28CuvMDiPZ8O6T9v6jm5MnhA/AtAZYgv?=
+ =?us-ascii?Q?0devdDUQ2M3z80msaGBQ9d1KJ00fXatywPotXfhg8RjuKdo+EsC75Dywy+9x?=
+ =?us-ascii?Q?EoADlDvSGPxe42JoKrmL8hCDOTSlmRskohWv7o9KD2/rEXtveRZmpAKWdlc7?=
+ =?us-ascii?Q?TkM0G5Fs/yCXx7MMh5NWY42KDjXnxE7S+BzX1aILKJr4j+6G5IfvzuWZSq65?=
+ =?us-ascii?Q?qoJUfejrhg7stya0JuhdilbKMenKbglo7107sls3TD5M+sksc5RuRvjzHKjG?=
+ =?us-ascii?Q?9ewOBZoLTo/KZ4TL4A5cIrGwIZJjNYM92zmDsxOmV43/yfLcrztVc6ZQBqSD?=
+ =?us-ascii?Q?HnUuiB9EcpMGhauvifdRcdNVD7UxOJoONjEodhobVQrHXEh65MUMxn3AGQHI?=
+ =?us-ascii?Q?60sXnubSIDtwCSqdRe9oCggjMay7WhN3xGt/XH9esPWWEMgibmOBO8dw3Jz/?=
+ =?us-ascii?Q?FrXXJmuhhIk3MnpvksU2bvvxJE3BW28OyuZLz1gCZ1v6DhiT37AqO2jsmCqa?=
+ =?us-ascii?Q?iFQE/xwVPGBRjodX6W0IZN/FKOVXmsG/tBVSb55I5hu0535oCbCTUDwGCE5K?=
+ =?us-ascii?Q?YkwQCS+yxvSp56I5P6xPiBc6aLJe9DlVFcwCuuZ8nRfO9S09NbkW7H+Pwjml?=
+ =?us-ascii?Q?Ie47B0evmkPfgrzuz0JUJ5Bl3l1iNUnCkEnWsjU3fKacBCqMviIcZR3qznO5?=
+ =?us-ascii?Q?JrsidcdFXCOhjBlA8UlnEgjV9dLmiUNx9DCY5A5RoD64XRf3wn7YGuqgNZ7I?=
+ =?us-ascii?Q?imWqn08mrU0tZAQT3Arhjr2UyK3aJ/77I7+bd1VPbozC8kLn3aIXBPZOG/Eq?=
+ =?us-ascii?Q?CY3Aul91RBl6PtdapfG9Z+ea7cOEtwZZmclPbyvTstf2MGmFCI7XLPT2Nnsx?=
+ =?us-ascii?Q?fjlY0ToAT2RTc1F7ipGepeREWSZU2UQPs+IXomQkm2V93MEU5lNtxGM3+Yje?=
+ =?us-ascii?Q?FOatJzZtB1NcLDSqDfce+0kVVFpHSHgYpKPK9OyUKHFNXkoAeNlE18K57udu?=
+ =?us-ascii?Q?r/yOfBnldFbiDn3Ol0MpzEor/Cx3VjoeqkIjS4ARlWdHjRnMBSYHfLbcn5Gb?=
+ =?us-ascii?Q?Vsz5bWa1bxUsMSZllapvXZLd7MUppSa/XDAKH5E/+pKLnsl9z51YiZDfZZV2?=
+ =?us-ascii?Q?nYGweQ5NiQ56ax5cASN5gwcUEavgrZ5fOt6RQZKtLgdlqUu75Ah19uQnHPXN?=
+ =?us-ascii?Q?+txeyaWnQPLuef1z9Lwd/QYkR9W9SwWQdbTKx/yqYKELDN5glCSzPV1GTIuG?=
+ =?us-ascii?Q?sop9YpLxPMej7fKszDRUPhHFAJ4D43puo32VCRmc3yUWLTPtWf9arP+U2JsH?=
+ =?us-ascii?Q?kwMMIKmcgtm+CZDpOizy+aOu8qvjxNbg3nV9T5ZC/kWgziyAt6CS7lQY+dW6?=
+ =?us-ascii?Q?vrolN/lZ9dlkEoTiWSmotbN8z/o9zkA0G9CeVmX08LSMqqfBcxZMi/8jmQ6Y?=
+ =?us-ascii?Q?G7nTcRfqWeeSoGJPwCOP+Biuebd2Vnv+q5dlrpdFjNXGDHJwjMM2cEGVaALG?=
+ =?us-ascii?Q?7W1oFRuMyJPb+9JHGgpkrXo/4Bb9fE6anCkhTKvWoKHUQCy1E0GwVmdVy6Pq?=
+ =?us-ascii?Q?LPEQRbIGT9sSpEwBBXZaG43IuS/RnMmHB+WeS/RhW6V1PlF+2mo0W3s0ggPE?=
+ =?us-ascii?Q?o8nKjLNIe2Kky8wdBZGib6ro/yppJGmWWR1dIiQ77DosKKXt?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: E7F0E4EF45C
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB6921.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7386729-9f1c-4834-b714-08deac819c36
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2026 21:43:00.4447
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cchWT/AzJ+p2rVRZa8fkqBu3xTsvbd0kzEuV+FUMxP0Q9sqiuZeLij8sMh+o0iazcrbyXxgL+xYGp1N9tdlQzQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR21MB5697
+X-Rspamd-Queue-Id: 5163F4EF6DA
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [2.04 / 15.00];
-	DMARC_POLICY_REJECT(2.00)[microsoft.com : SPF not aligned (relaxed), No valid DKIM,reject];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[microsoft.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[microsoft.com:s=selector2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,vger.kernel.org,outlook.com,canonical.com,templeofstupid.com,linux.microsoft.com];
-	RCVD_COUNT_THREE(0.00)[4];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	PRECEDENCE_BULK(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-10707-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	TAGGED_FROM(0.00)[bounces-10706-lists,linux-hyperv=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[decui@microsoft.com,linux-hyperv@vger.kernel.org];
-	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.930];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[outlook.com,microsoft.com,kernel.org,vger.kernel.org,templeofstupid.com,linux.microsoft.com];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,outlook.com:email,canonical.com:email]
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[DECUI@microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[microsoft.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,canonical.com:email]
 X-Rspamd-Action: no action
 
-If vmbus_reserve_fb() in the kdump/kexec kernel fails to properly reserve
-the framebuffer MMIO range (which is below 4GB) due to a Gen2 VM's
-screen.lfb_base being zero [1], there is an MMIO conflict between the
-drivers hyperv-drm and pci-hyperv: when the driver pci-hyperv's
-hv_allocate_config_window() calls vmbus_allocate_mmio() to get an
-MMIO range, typically it gets a 32-bit MMIO range that overlaps with the
-framebuffer MMIO range, and later hv_pci_enter_d0() fails with an
-error message "PCI Pass-through VSP failed D0 Entry with status" since
-the host thinks that PCI devices must not use MMIO space that the
-host has assigned to the framebuffer.
+> From: Matthew Ruffell <matthew.ruffell@canonical.com>
+> Sent: Wednesday, May 6, 2026 8:58 PM
+> To: Dexuan Cui <DECUI@microsoft.com>
+>  ...
+> Hi Dexuan,
+>=20
+> Thanks for making the amendments, and thank you Michael for all your
+> reviews.
 
-This is especially an issue if pci-hyperv is built-in and hyperv-drm is
-built as a module. Consequently, the kdump/kexec kernel fails to detect
-PCI devices via pci-hyperv, and may fail to mount the root file system,
-which may reside in a NVMe disk. The issue described here has existed
-for SR-IOV VF NICs since day one of the pci-hyperv driver, and has been
-worked around on x64 when possible. With the recent introduction of
-ARM64 VMs that boot from NVMe, there is no workaround, so we need a
-formal fix.
+Thank you Matthew and Krister for all your help with testing!
+Thank you Michael for all your valuable review comments, great analysis,  a=
+nd testing!
 
-On Gen2 VMs, if the screen.lfb_base is 0 in the kdump/kexec kernel [1],
-fall back to the low MMIO base, which should be equal to the framebuffer
-MMIO base [2] (the statement is true according to my testing on x64
-Windows Server 2016, and on x64 and ARM64 Windows Server 2025 and on
-Azure. I checked with the Hyper-V team and they said the statement should
-continue to be true for Gen2 VMs). In the first kernel, screen.lfb_base
-is not 0; if the user specifies a very high resolution, it's not enough
-to only reserve 8MB: let's always reserve half of the space below 4GB,
-but cap the reservation to 128MB, which is the required framebuffer size
-of the highest resolution 7680*4320 supported by Hyper-V.
+> Since you posted the diff to the V3, I went and tested the V3 patch.
 
-While at it, fix the comparison "end > VTPM_BASE_ADDRESS" by changing
-the > to >=. Here the 'end' is an inclusive end (typically, it's
-0xFFFF_FFFF for the low MMIO range).
+There is no real code change between v2 and v3 :-)
 
-Note: vmbus_reserve_fb() now also reserves an MMIO range at the beginning
-of the low MMIO range on CVMs, which have no framebuffers (the
-'screen.lfb_base' in vmbus_reserve_fb() is 0 for CVMs), just in case the
-host might treat the beginning of the low MMIO range specially [3]. BTW,
-the OpenHCL kernel is not affected by the change, because that kernel
-boots with DeviceTree rather than ACPI (so vmbus_reserve_fb() won't run
-there), and there is no framebuffer device for that kernel.
+>  ...
+> Tested-by: Matthew Ruffell <matthew.ruffell@canonical.com>
+>=20
+> Thanks,
+> Matthew
 
-Note: normally Gen1 VMs don't have the MMIO conflict issue because the
-framebuffer MMIO range (which is hardcoded to base=4GB-128MB and
-size=64MB for Gen1 VMs by the host) is always reported via the legacy PCI
-graphics device's BAR, so the kdump/kexec kernel can reserve the 64MB
-MMIO range; however, if the VM is configured to use a very high resolution
-and the required framebuffer size exceeds 64MB (AFAIK, in practice, this
-isn't a typical configuration by users), the hyperv-drm driver may need to
-allocate an MMIO range above 4GB and change the framebuffer MMIO location
-to the allocated MMIO range -- in this case, there can still be issues [4]
-which can't be easily fixed: any possible affected Gen1 users would have
-to use a resolution whose framebuffer size is <= 64MB, or switch to Gen2
-VMs.
-
-[1] https://lore.kernel.org/all/SA1PR21MB692176C1BC53BFC9EAE5CF8EBF51A@SA1PR21MB6921.namprd21.prod.outlook.com/
-[2] https://lore.kernel.org/all/SA1PR21MB69218F955B62DFF62E3E88D2BF222@SA1PR21MB6921.namprd21.prod.outlook.com/
-[3] https://lore.kernel.org/all/SN6PR02MB415726B17D5A6027CD1717E8D4342@SN6PR02MB4157.namprd02.prod.outlook.com/
-[4] https://lore.kernel.org/all/SA1PR21MB69213486F821CA5A2C793C81BF342@SA1PR21MB6921.namprd21.prod.outlook.com/
-
-Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
-CC: stable@vger.kernel.org
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-Tested-by: Krister Johansen <kjlx@templeofstupid.com>
-Tested-by: Matthew Ruffell <matthew.ruffell@canonical.com>
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
-
-Changes since v1 (https://lore.kernel.org/all/20260416183529.838321-1-decui@microsoft.com/):
-  Fixed a typo in the subject: s/logc/logic/.
-
-  In the commit message, better explained fb_mmio_base is equal to
-  low_mmio_base for Gen2 VMs.
-
-  Addressed Michael Kelley's comments:
-
-    In the commit message:
-         Changed the "kdump" to "kdump/kexec" since the described
-         issue is applicable to both kdump and kexec.
-
-         Provided more detail about the MMIO conflict.
-
-         Described an scenario where Gen1 VMs can also be affected.
-
-    Added a pr_warn() in vmbus_reserve_fb() in case the 'start' is 0.
-
-    Dropped the CVM check in vmbus_reserve(), meaning vmbus_reserve_fb()
-    also reserves MMIO for CVMs.
-
-  Changed "low_mmio_base >= SZ_4G" to "upper_32_bits(low_mmio_base)"
-  to avoid a compilation warning for the i386 build.
-
-  Changed "0x%pa" to "%pa", because %pa already adds a "0x" prefix.
-  
-
-Hi Krister, Matthew, sorry -- I'm not adding your Tested-by's since
-the code changed, though the change is small. If the v2 looks good
-to Michael, please test the patch again. 
-
-Hi Hardik, I'm not adding your Reviewed-by since the patch changed.
-Please review the v2. 
-
-
-Changes since v2 (https://lore.kernel.org/all/20260505004846.193441-1-decui@microsoft.com/):
-    Fixed the commit message:
-        hv_pci_allocate_bridge_windows() -> hv_allocate_config_window()
-
-    Changed the "kdump" in the comment to "kdump/kexec or CVM" [Michael Kelley]
-
-    Fixed the order of the "[3]" and "[4]" in the commit message.
-
-    Added Krister's Tested-by.
-    Added Matthew's Tested-by.
-    Added Michael's Reviewed-by.
-
- drivers/hv/vmbus_drv.c | 29 ++++++++++++++++++++++++++---
- 1 file changed, 26 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index f0d0803d1e16..d73ac5c8dd04 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -2327,8 +2327,8 @@ static acpi_status vmbus_walk_resources(struct acpi_resource *res, void *ctx)
- 		return AE_NO_MEMORY;
- 
- 	/* If this range overlaps the virtual TPM, truncate it. */
--	if (end > VTPM_BASE_ADDRESS && start < VTPM_BASE_ADDRESS)
--		end = VTPM_BASE_ADDRESS;
-+	if (end >= VTPM_BASE_ADDRESS && start < VTPM_BASE_ADDRESS)
-+		end = VTPM_BASE_ADDRESS - 1;
- 
- 	new_res->name = "hyperv mmio";
- 	new_res->flags = IORESOURCE_MEM;
-@@ -2395,6 +2395,7 @@ static void vmbus_mmio_remove(void)
- static void __maybe_unused vmbus_reserve_fb(void)
- {
- 	resource_size_t start = 0, size;
-+	resource_size_t low_mmio_base;
- 	struct pci_dev *pdev;
- 
- 	if (efi_enabled(EFI_BOOT)) {
-@@ -2402,6 +2403,24 @@ static void __maybe_unused vmbus_reserve_fb(void)
- 		if (IS_ENABLED(CONFIG_SYSFB)) {
- 			start = sysfb_primary_display.screen.lfb_base;
- 			size = max_t(__u32, sysfb_primary_display.screen.lfb_size, 0x800000);
-+
-+			low_mmio_base = hyperv_mmio->start;
-+			if (!low_mmio_base || upper_32_bits(low_mmio_base) ||
-+			    (start && start < low_mmio_base)) {
-+				pr_warn("Unexpected low mmio base %pa\n", &low_mmio_base);
-+			} else {
-+				/*
-+				 * If the kdump/kexec or CVM kernel's lfb_base
-+				 * is 0, fall back to the low mmio base.
-+				 */
-+				if (!start)
-+					start = low_mmio_base;
-+				/*
-+				 * Reserve half of the space below 4GB for high
-+				 * resolutions, but cap the reservation to 128MB.
-+				 */
-+				size = min((SZ_4G - start) / 2, SZ_128M);
-+			}
- 		}
- 	} else {
- 		/* Gen1 VM: get FB base from PCI */
-@@ -2422,8 +2441,10 @@ static void __maybe_unused vmbus_reserve_fb(void)
- 		pci_dev_put(pdev);
- 	}
- 
--	if (!start)
-+	if (!start) {
-+		pr_warn("Unexpected framebuffer mmio base of zero\n");
- 		return;
-+	}
- 
- 	/*
- 	 * Make a claim for the frame buffer in the resource tree under the
-@@ -2433,6 +2454,8 @@ static void __maybe_unused vmbus_reserve_fb(void)
- 	 */
- 	for (; !fb_mmio && (size >= 0x100000); size >>= 1)
- 		fb_mmio = __request_region(hyperv_mmio, start, size, fb_mmio_name, 0);
-+
-+	pr_info("hv_mmio=%pR,%pR fb=%pR\n", hyperv_mmio, hyperv_mmio->sibling, fb_mmio);
- }
- 
- /**
--- 
-2.34.1
-
+I just posted v3 here:
+https://lore.kernel.org/linux-hyperv/20260507212838.448891-1-decui@microsof=
+t.com/T/#u
 
