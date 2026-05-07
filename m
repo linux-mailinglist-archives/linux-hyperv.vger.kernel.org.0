@@ -1,56 +1,56 @@
-Return-Path: <linux-hyperv+bounces-10680-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10681-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0CLxIFe0/GmOSwAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10680-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 17:48:39 +0200
+	id 8I5LJkqz/GnlSgAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10681-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 17:44:10 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D34E74EB5A2
-	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 17:48:38 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A0CF4EB44E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 17:44:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 186D33002F8A
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 May 2026 15:43:35 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 695D930297B9
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 May 2026 15:43:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C299D428833;
-	Thu,  7 May 2026 15:43:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33EC3449EB0;
+	Thu,  7 May 2026 15:43:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BmfdmFuo"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bVyruTck"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 501FF402B8B;
-	Thu,  7 May 2026 15:43:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3B3544B666;
+	Thu,  7 May 2026 15:43:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778168614; cv=none; b=ldlvwmlnEeiZ79KCDzbeJEJE9nIbc1i2ZWd45wZ+E+W4jLU4fVdu4brIhCA80Alf0CkrOqa/nhXATTMxkqMsoZizGFvXdgDf6n5VRdjFGEigGrRaJyvR5qNMHU4JZWPYeWnOS1BeaiM/buPTZtyXPQBZQqv3u41aQwI3ef+lvX0=
+	t=1778168620; cv=none; b=A+OxotxeZu03AbN0xbHFtQ2v2z4WMak+rZnzA9u07dBOJmbP3YWPklEB6qu6dz7qt7AFiBhWSxmgCZaqEMD+x1sBZxY0FWYa8Idos6yuzLrhds46XjeCJQ6++z7n0Z48Cng2ZBMpdiZWT4SnNuPyVLZAHs9uyiiZPoFYbkU2nbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778168614; c=relaxed/simple;
-	bh=1Dyc96c1oV2QyycedTgNBnAsfaFMYjgNi/syLWaQgHE=;
+	s=arc-20240116; t=1778168620; c=relaxed/simple;
+	bh=6Lw9qugMS3TkYqERh5xEX7qsqCMePoSgIXYWBDPmq9w=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bQqIkEVH0epSwPlfiq+/dovoSG+SmK+EA1h4iosIzE66F/0ABlfS24zZR6ap43DK4sizhD+XblQUSm75qrGIE+1OXGfvZgUsm829rqUgeMo6FE5ORiYI63g9h8G/Pq707cd2+Ej1hFuQ5yq0QxBCfqTuofzwv8xxKExEf3a0mMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BmfdmFuo; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version:Content-Type; b=Ox5nobwf4Ek3dDh7ZadLpRewiQvEK4d0qV2Hj7NMQ1sdmQ1vtLS26ehq6npvFVcKUttDPrHSSivl8PedVBmiDInMrJRvMKiGtoVWD797d/F6dkHdd3X8gK7LFydAE3QhVFAhFVVHxmQOSZq5WSXXzOc84y6wNNwcETiMEBbhT8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bVyruTck; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 9FA5B20B7165;
-	Thu,  7 May 2026 08:43:29 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9FA5B20B7165
+	by linux.microsoft.com (Postfix) with ESMTPSA id 1FB1F20B7165;
+	Thu,  7 May 2026 08:43:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1FB1F20B7165
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1778168609;
-	bh=S7oDBWBs9uCP2A7KSLvbLrTi4RJNz/QyCKCRXdcmvS8=;
+	s=default; t=1778168615;
+	bh=gM0qXeNlYwKrosv6b9jJKZcoOJOVw2NF1v9wYM0yePc=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=BmfdmFuoSAvl4JIzbpX9ylwVY+BemZJ13MF5BPlmRD4VQL6u+u20lMigpWHJLiHLF
-	 M8M47j4sfn1e0MisJkABB292IdKVXauDwmQbETqTnrq11kLQc37RQMSP3Ul9rTmE53
-	 nw45h0NPArJEQhhOHQZvmjyo7cRcpUXktx3TBVpk=
-Subject: [PATCH v4 06/18] mshv: Fix broken seqcount read protection
+	b=bVyruTcku3AekcJZeoj8T26r05jW9HuZCBSdrBZIOkMy/H8dgQKq+xCu19UFfsA5u
+	 e37dzyfnAVK6M5lJ3s6jHJwqCaIGFO2MM67iukq7x9j0TWbbAj5YWc/fzha88BPTOA
+	 D4++tCbJf3p29rAOWdC4ptcS1w/sjVv20ingvuRk=
+Subject: [PATCH v4 07/18] mshv: Consolidate irqfd interrupt injection paths
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, longli@microsoft.com
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 07 May 2026 15:43:32 +0000
+Date: Thu, 07 May 2026 15:43:38 +0000
 Message-ID: 
- <177816861261.21765.13558267650972571126.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <177816861807.21765.8464554617675284788.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 In-Reply-To: 
  <177816592843.21765.4364464279247150355.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 References: 
@@ -63,19 +63,19 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: D34E74EB5A2
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 1A0CF4EB44E
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_FROM(0.00)[bounces-10680-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10681-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
@@ -85,143 +85,202 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TO_DN_NONE(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,skinsburskii-cloud-desktop.internal.cloudapp.net:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.microsoft.com:dkim,skinsburskii-cloud-desktop.internal.cloudapp.net:mid]
 X-Rspamd-Action: no action
 
-mshv_irqfd_update() writes both irqfd_girq_ent and irqfd_lapic_irq as a
-logical unit under seqcount write protection.  Readers must snapshot these
-fields inside the seqcount begin/retry loop to obtain a consistent
-point-in-time view; otherwise a concurrent update can produce a torn read
-where one field comes from the old state and the other from the new.
+irqfd interrupt injection had divergent seqcount snapshot scaffolding in
+three places, and inconsistent validity checks between the fast and slow
+assert paths:
 
-Both mshv_assert_irq_slow() and mshv_irqfd_wakeup() got this wrong: the
-seqcount loop bodies were empty (just spinning until a stable sequence was
-observed), and all reads of the protected fields happened after the loop
-with no protection from concurrent writes. If mshv_irqfd_update() races
-with interrupt assertion, the caller may use a stale or mixed
-vector/apic_id/control combination, delivering an interrupt to the wrong
-vCPU, with the wrong vector, or with the wrong trigger mode.  This can
-cause spurious or lost interrupts in the guest, or a stuck interrupt line
-in the level-triggered case.
+1. mshv_irqfd_wakeup() snapshotted irqfd_lapic_irq under seqcount, then on
+fast-path failure called mshv_assert_irq_slow(), which re-snapshotted both
+irqfd_girq_ent and irqfd_lapic_irq under seqcount again — wasteful and
+duplicative.
 
-Fix mshv_assert_irq_slow() by snapshotting both irqfd_girq_ent and
-irqfd_lapic_irq into local variables inside the seqcount loop, then using
-those locals for the validity check, the resampler WARN_ON() and the
-hypercall.  Reorder the function so the seqcount loop runs first and every
-subsequent read of the protected fields is satisfied from the snapshot.
+2. The girq_entry_valid check only existed in the slow path.  The fast path
+would happily accept a zero-initialised mshv_lapic_irq when routing was not
+yet configured for the GSI, potentially injecting vector 0 to VP 0.
 
-Fix mshv_irqfd_wakeup() by snapshotting irqfd_lapic_irq inside its seqcount
-loop and passing the snapshot to mshv_try_assert_irq_fast(), so the fast
-path operates on the consistent copy rather than reading the field directly
-outside seqcount protection.
+3. The slow path's validity predicate was 'guest_irq_num &&
+!girq_entry_valid', which short-circuits for GSI 0 (guest_irq_num == 0) and
+so bypasses the validity check entirely for that GSI.
+
+4. mshv_irqfd_resampler_ack() read irqfd_lapic_irq.lapic_control without
+seqcount protection, which could observe a stale or transient value while
+mshv_irqfd_update() was concurrently rewriting irqfd_lapic_irq via
+mshv_copy_girq_info()'s memset-and-fill sequence.
+
+Introduce mshv_irqfd_snapshot() that takes a consistent snapshot of both
+irqfd_girq_ent and irqfd_lapic_irq inside the seqcount loop; girq_ent is
+optional so the resampler ack path can snapshot only the LAPIC IRQ.
+
+Use the helper from mshv_irqfd_resampler_ack() (closes 4),
+mshv_irqfd_wakeup() and mshv_irqfd_assign()'s EPOLLIN replay path,
+replacing the three ad-hoc seqcount loops.
+
+Move the validity check into mshv_irqfd_wakeup() before either injection
+path runs, so the fast path no longer accepts an unrouted irqfd (closes
+2).  Use !girq_entry_valid as the condition (closes 3).  Change
+mshv_assert_irq_slow() to take a pre-snapshotted const struct
+mshv_lapic_irq pointer, eliminating its internal seqcount and SRCU
+scaffolding (closes 1).
 
 Fixes: 621191d709b14 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
 Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 ---
- drivers/hv/mshv_eventfd.c |   44 +++++++++++++++++++++++++-------------------
- 1 file changed, 25 insertions(+), 19 deletions(-)
+ drivers/hv/mshv_eventfd.c |   90 ++++++++++++++++++++++++++-------------------
+ 1 file changed, 52 insertions(+), 38 deletions(-)
 
 diff --git a/drivers/hv/mshv_eventfd.c b/drivers/hv/mshv_eventfd.c
-index b398e58411dd7..25bdc5e678849 100644
+index 25bdc5e678849..c24069dff9702 100644
 --- a/drivers/hv/mshv_eventfd.c
 +++ b/drivers/hv/mshv_eventfd.c
-@@ -151,10 +151,10 @@ static int mshv_vp_irq_set_vector(struct mshv_vp *vp, u32 vector)
-  * Try to raise irq for guest via shared vector array. hyp does the actual
-  * inject of the interrupt.
-  */
--static int mshv_try_assert_irq_fast(struct mshv_irqfd *irqfd)
-+static int mshv_try_assert_irq_fast(struct mshv_irqfd *irqfd,
-+				    const struct mshv_lapic_irq *irq)
- {
- 	struct mshv_partition *partition = irqfd->irqfd_partn;
--	struct mshv_lapic_irq *irq = &irqfd->irqfd_lapic_irq;
- 	struct mshv_vp *vp;
- 
- 	if (!(ms_hyperv.ext_features &
-@@ -191,7 +191,8 @@ static int mshv_try_assert_irq_fast(struct mshv_irqfd *irqfd)
- 	return 0;
+@@ -74,6 +74,27 @@ static inline bool hv_should_clear_interrupt(enum hv_interrupt_type type)
  }
- #else /* CONFIG_X86_64 */
--static int mshv_try_assert_irq_fast(struct mshv_irqfd *irqfd)
-+static int mshv_try_assert_irq_fast(struct mshv_irqfd *irqfd,
-+				    const struct mshv_lapic_irq *irq)
- {
- 	return -EOPNOTSUPP;
- }
-@@ -200,30 +201,33 @@ static int mshv_try_assert_irq_fast(struct mshv_irqfd *irqfd)
- static void mshv_assert_irq_slow(struct mshv_irqfd *irqfd)
- {
- 	struct mshv_partition *partition = irqfd->irqfd_partn;
--	struct mshv_lapic_irq *irq = &irqfd->irqfd_lapic_irq;
-+	struct mshv_guest_irq_ent girq_ent;
-+	struct mshv_lapic_irq irq;
- 	unsigned int seq;
- 	int idx;
+ #endif
  
-+	idx = srcu_read_lock(&partition->pt_irq_srcu);
++/*
++ * Snapshot per-irqfd routing state under seqcount protection so callers
++ * see a consistent point-in-time view of irqfd_girq_ent and
++ * irqfd_lapic_irq even if mshv_irqfd_update() runs concurrently.
++ *
++ * @girq_ent may be NULL when the caller only needs the LAPIC IRQ.
++ */
++static void mshv_irqfd_snapshot(struct mshv_irqfd *irqfd,
++				struct mshv_guest_irq_ent *girq_ent,
++				struct mshv_lapic_irq *irq)
++{
++	unsigned int seq;
 +
 +	do {
 +		seq = read_seqcount_begin(&irqfd->irqfd_irqe_sc);
-+		girq_ent = irqfd->irqfd_girq_ent;
-+		irq = irqfd->irqfd_lapic_irq;
++		if (girq_ent)
++			*girq_ent = irqfd->irqfd_girq_ent;
++		*irq = irqfd->irqfd_lapic_irq;
 +	} while (read_seqcount_retry(&irqfd->irqfd_irqe_sc, seq));
++}
 +
- #if IS_ENABLED(CONFIG_X86)
- 	WARN_ON(irqfd->irqfd_resampler &&
--		!irq->lapic_control.level_triggered);
-+		!irq.lapic_control.level_triggered);
+ static void mshv_irqfd_resampler_ack(struct mshv_irq_ack_notifier *mian)
+ {
+ 	struct mshv_irqfd_resampler *resampler;
+@@ -90,7 +111,11 @@ static void mshv_irqfd_resampler_ack(struct mshv_irq_ack_notifier *mian)
+ 	hlist_for_each_entry_srcu(irqfd, &resampler->rsmplr_irqfd_list,
+ 				 irqfd_resampler_hnode,
+ 				 srcu_read_lock_held(&partition->pt_irq_srcu)) {
+-		if (hv_should_clear_interrupt(irqfd->irqfd_lapic_irq.lapic_control.interrupt_type))
++		struct mshv_lapic_irq irq;
++
++		mshv_irqfd_snapshot(irqfd, NULL, &irq);
++
++		if (hv_should_clear_interrupt(irq.lapic_control.interrupt_type))
+ 			hv_call_clear_virtual_interrupt(partition->pt_id);
+ 
+ 		eventfd_signal(irqfd->irqfd_resamplefd);
+@@ -198,37 +223,14 @@ static int mshv_try_assert_irq_fast(struct mshv_irqfd *irqfd,
+ }
  #endif
  
--	idx = srcu_read_lock(&partition->pt_irq_srcu);
--	if (irqfd->irqfd_girq_ent.guest_irq_num) {
--		if (!irqfd->irqfd_girq_ent.girq_entry_valid) {
--			srcu_read_unlock(&partition->pt_irq_srcu, idx);
--			return;
--		}
+-static void mshv_assert_irq_slow(struct mshv_irqfd *irqfd)
++static void mshv_assert_irq_slow(struct mshv_irqfd *irqfd,
++				 const struct mshv_lapic_irq *irq)
+ {
+ 	struct mshv_partition *partition = irqfd->irqfd_partn;
+-	struct mshv_guest_irq_ent girq_ent;
+-	struct mshv_lapic_irq irq;
+-	unsigned int seq;
+-	int idx;
 -
--		do {
--			seq = read_seqcount_begin(&irqfd->irqfd_irqe_sc);
--		} while (read_seqcount_retry(&irqfd->irqfd_irqe_sc, seq));
-+	if (girq_ent.guest_irq_num && !girq_ent.girq_entry_valid) {
-+		srcu_read_unlock(&partition->pt_irq_srcu, idx);
-+		return;
- 	}
+-	idx = srcu_read_lock(&partition->pt_irq_srcu);
+-
+-	do {
+-		seq = read_seqcount_begin(&irqfd->irqfd_irqe_sc);
+-		girq_ent = irqfd->irqfd_girq_ent;
+-		irq = irqfd->irqfd_lapic_irq;
+-	} while (read_seqcount_retry(&irqfd->irqfd_irqe_sc, seq));
+-
+-#if IS_ENABLED(CONFIG_X86)
+-	WARN_ON(irqfd->irqfd_resampler &&
+-		!irq.lapic_control.level_triggered);
+-#endif
+-
+-	if (girq_ent.guest_irq_num && !girq_ent.girq_entry_valid) {
+-		srcu_read_unlock(&partition->pt_irq_srcu, idx);
+-		return;
+-	}
  
--	hv_call_assert_virtual_interrupt(irqfd->irqfd_partn->pt_id,
--					 irq->lapic_vector, irq->lapic_apic_id,
--					 irq->lapic_control);
-+	hv_call_assert_virtual_interrupt(partition->pt_id,
-+					 irq.lapic_vector, irq.lapic_apic_id,
-+					 irq.lapic_control);
-+
- 	srcu_read_unlock(&partition->pt_irq_srcu, idx);
+ 	hv_call_assert_virtual_interrupt(partition->pt_id,
+-					 irq.lapic_vector, irq.lapic_apic_id,
+-					 irq.lapic_control);
+-
+-	srcu_read_unlock(&partition->pt_irq_srcu, idx);
++					 irq->lapic_vector, irq->lapic_apic_id,
++					 irq->lapic_control);
  }
  
-@@ -309,16 +313,18 @@ static int mshv_irqfd_wakeup(wait_queue_entry_t *wait, unsigned int mode,
+ static void mshv_irqfd_resampler_shutdown(struct mshv_irqfd *irqfd)
+@@ -308,26 +310,31 @@ static int mshv_irqfd_wakeup(wait_queue_entry_t *wait, unsigned int mode,
+ 						irqfd_wait);
+ 	__poll_t flags = key_to_poll(key);
+ 	int idx;
+-	unsigned int seq;
+ 	struct mshv_partition *pt = irqfd->irqfd_partn;
  	int ret = 0;
  
  	if (flags & EPOLLIN) {
-+		struct mshv_lapic_irq irq;
++		struct mshv_guest_irq_ent girq_ent;
+ 		struct mshv_lapic_irq irq;
  		u64 cnt;
  
  		eventfd_ctx_do_read(irqfd->irqfd_eventfd_ctx, &cnt);
  		idx = srcu_read_lock(&pt->pt_irq_srcu);
- 		do {
- 			seq = read_seqcount_begin(&irqfd->irqfd_irqe_sc);
-+			irq = irqfd->irqfd_lapic_irq;
- 		} while (read_seqcount_retry(&irqfd->irqfd_irqe_sc, seq));
+-		do {
+-			seq = read_seqcount_begin(&irqfd->irqfd_irqe_sc);
+-			irq = irqfd->irqfd_lapic_irq;
+-		} while (read_seqcount_retry(&irqfd->irqfd_irqe_sc, seq));
++		mshv_irqfd_snapshot(irqfd, &girq_ent, &irq);
++
++		if (!girq_ent.girq_entry_valid)
++			goto out_unlock;
++
++#if IS_ENABLED(CONFIG_X86)
++		WARN_ON(irqfd->irqfd_resampler &&
++			!irq.lapic_control.level_triggered);
++#endif
  
  		/* An event has been signaled, raise an interrupt */
--		ret = mshv_try_assert_irq_fast(irqfd);
-+		ret = mshv_try_assert_irq_fast(irqfd, &irq);
- 		if (ret)
- 			mshv_assert_irq_slow(irqfd);
+-		ret = mshv_try_assert_irq_fast(irqfd, &irq);
+-		if (ret)
+-			mshv_assert_irq_slow(irqfd);
++		if (mshv_try_assert_irq_fast(irqfd, &irq))
++			mshv_assert_irq_slow(irqfd, &irq);
  
++out_unlock:
+ 		srcu_read_unlock(&pt->pt_irq_srcu, idx);
+ 
+ 		ret = 1;
+@@ -517,8 +524,15 @@ static int mshv_irqfd_assign(struct mshv_partition *pt,
+ 	 */
+ 	events = vfs_poll(fd_file(f), &irqfd->irqfd_polltbl);
+ 
+-	if (events & EPOLLIN)
+-		mshv_assert_irq_slow(irqfd);
++	if (events & EPOLLIN) {
++		struct mshv_guest_irq_ent girq_ent;
++		struct mshv_lapic_irq irq;
++
++		mshv_irqfd_snapshot(irqfd, &girq_ent, &irq);
++
++		if (girq_ent.girq_entry_valid)
++			mshv_assert_irq_slow(irqfd, &irq);
++	}
+ 
+ 	srcu_read_unlock(&pt->pt_irq_srcu, idx);
+ 	return 0;
 
 
 
