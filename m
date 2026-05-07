@@ -1,57 +1,56 @@
-Return-Path: <linux-hyperv+bounces-10682-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10683-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MJ/PBjiz/GnlSgAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10682-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 17:43:52 +0200
+	id KAMpAXS0/GmOSwAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10683-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 17:49:08 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7E594EB447
-	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 17:43:51 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 652D64EB5B0
+	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 17:49:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 100693012D7F
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 May 2026 15:43:46 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 06D5730465C2
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 May 2026 15:43:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABA73402B8B;
-	Thu,  7 May 2026 15:43:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8F2344A725;
+	Thu,  7 May 2026 15:43:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EsE1bN3t"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="d79bUDyn"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55AEF44A725;
-	Thu,  7 May 2026 15:43:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B0B841B344;
+	Thu,  7 May 2026 15:43:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778168625; cv=none; b=bQYGkqpiWhoI40jEHlCRbkhBtmo0ykqUrysDLlHb8fesLw3LoHk7/K3Btph3p0+w5r3mcyTn9woT4UpjFyQUs1RdXzatepsMdEDoAPbZ8wAos+oUQx5BWBDq/GnK6wBYQwuJZRCoK9FMmuBK4AK5S0uxCw7ELjkWWRdqa6hzu/E=
+	t=1778168630; cv=none; b=gC4zTcSzHb8ztlRq3K9sb7fnd+u/VA1mTAE30Ed0iq8w86ofHI5sLEBe45If6/Avsl+tQIw71U1mZc8Nh95L7izR5ewOA/xAizlN37oKGzZClOj7mZzkam12R78VNs51q1CJqkFqaZmzkH4QMFEwFGJPdUJCsnyIVGYLfjAwTlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778168625; c=relaxed/simple;
-	bh=+1qavQbYqAq8IbSG94bf/IYFx2OboRHWRF9djwzFPek=;
+	s=arc-20240116; t=1778168630; c=relaxed/simple;
+	bh=w8zGpvNdHCEwpQC41U+LGi4hcfJAIRGgdoJmOvavBko=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BzzdtVmSEkZXXGtkBICYAr52VjxrLWA23QDQgDbefhyry7ZNjkMCpcZdP6TSRqJm3zMNYNiyw1gjrE0t5LpkhRQN0br/xN+QZmUXacr7y93SQ7f162KRajUkTRyJP0ulQ/n1QTrJNziQrIDWXt30gltOepcAL+vpFyD6iOkkWbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=EsE1bN3t; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version:Content-Type; b=ijY0RFan6F6+6tvGnc6On3s1G6ma5Xlb2dwn5dMb5MrzFQoIZZDOzmVmq96WZX8E09VbaZBtXQ9ypC9S8a65sZpjMFeCiBO/+5M6pgJi9L2dOABrRCqpse0jtvatkWEGMxxuCudHpZmw3Nu0+nCnEktROXwaVjdsAkWP18i02u0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=d79bUDyn; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id B64A320B7169;
-	Thu,  7 May 2026 08:43:40 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B64A320B7169
+	by linux.microsoft.com (Postfix) with ESMTPSA id 2293120B7165;
+	Thu,  7 May 2026 08:43:46 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2293120B7165
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1778168620;
-	bh=J5WjrPsnwyiN6tNx2/51Z3Pk6whEXbKxQfLna/EqC/A=;
+	s=default; t=1778168626;
+	bh=BZS6/WrlIxsM0Va1aIBK75IzmygEjv6FxrlQhutfgXk=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=EsE1bN3t6KfmMj6n1cIxKJYyo94UFcvfBFFFHRWjdA2VinaZZ6tFz9QmJewxNXHFI
-	 rF+MD7L6aYEA9lKGBLzbCP46tgLyxQOyAqlIzbp3X8nvrM7jRsDvx4MqfPrF40vQXs
-	 1Ya1nD/XEDKUVlRoeexeA7PWyfDLOutbEKFHel8c=
-Subject: [PATCH v4 08/18] mshv: Fix level-triggered check on uninitialized
- data
+	b=d79bUDynNv9hmvDIz/YgfLI0BnfLNyj9egfmo9Ekw6AstHcMt9nEV0aYJsucumSa/
+	 rFOnMUxMquF8oK05vvRXwmHsRvP5uxPcBMyWIxIjahupufos8s5+Uina4ivEQPum/Z
+	 jPy/lf7bq2Hh95ZHcwQYyRKj/TBx4yd4uw4e499o=
+Subject: [PATCH v4 09/18] mshv: Fix duplicate GSI detection for GSI 0
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, longli@microsoft.com
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 07 May 2026 15:43:43 +0000
+Date: Thu, 07 May 2026 15:43:49 +0000
 Message-ID: 
- <177816862362.21765.11809618639989414561.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <177816862911.21765.306085307721937662.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 In-Reply-To: 
  <177816592843.21765.4364464279247150355.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 References: 
@@ -65,18 +64,18 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: C7E594EB447
+X-Rspamd-Queue-Id: 652D64EB5B0
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_FROM(0.00)[bounces-10682-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10683-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
@@ -86,80 +85,47 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_NONE(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,skinsburskii-cloud-desktop.internal.cloudapp.net:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,skinsburskii-cloud-desktop.internal.cloudapp.net:mid]
 X-Rspamd-Action: no action
 
-In mshv_irqfd_assign(), the level-triggered validation for resample
-irqfds checks irqfd_lapic_irq.lapic_control.level_triggered before
-mshv_irqfd_update() has populated the field. Since the irqfd struct is
-zero-allocated, level_triggered is always 0 at that point, causing the
-check to always reject resample irqfds with -EINVAL. This makes
-level-triggered interrupt resampling — used to avoid interrupt storms
-with assigned devices — completely non-functional.
+The duplicate routing entry check in mshv_update_routing_table() uses
+guest_irq_num != 0 to detect whether a GSI slot is already occupied.
+This fails for GSI 0 because its guest_irq_num is 0 both when the slot
+is unused (zero-initialized) and when legitimately assigned. As a
+result, duplicate entries for GSI 0 are silently accepted, with the
+second entry overwriting the first — corrupting the routing table
+without any error reported to userspace.
 
-Move the check after the mshv_irqfd_update() call, which resolves the
-IRQ routing entry and populates irqfd_lapic_irq with the actual trigger
-mode.
+While GSI 0 (legacy timer) is unlikely to appear in MSI-based routing
+in practice, the check is semantically wrong — it conflates
+"uninitialized" with "GSI number 0." Use girq_entry_valid instead,
+which is explicitly set to true when an entry is populated and remains
+zero for unused slots regardless of the GSI number.
 
 Fixes: 621191d709b14 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
 Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 ---
- drivers/hv/mshv_eventfd.c |   25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+ drivers/hv/mshv_irq.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hv/mshv_eventfd.c b/drivers/hv/mshv_eventfd.c
-index c24069dff9702..11a6006f80194 100644
---- a/drivers/hv/mshv_eventfd.c
-+++ b/drivers/hv/mshv_eventfd.c
-@@ -491,6 +491,19 @@ static int mshv_irqfd_assign(struct mshv_partition *pt,
- 	init_poll_funcptr(&irqfd->irqfd_polltbl, mshv_irqfd_queue_proc);
- 
- 	spin_lock_irq(&pt->pt_irqfds_lock);
-+	ret = 0;
-+	hlist_for_each_entry(tmp, &pt->pt_irqfds_list, irqfd_hnode) {
-+		if (irqfd->irqfd_eventfd_ctx != tmp->irqfd_eventfd_ctx)
-+			continue;
-+		/* This fd is used for another irq already. */
-+		ret = -EBUSY;
-+		spin_unlock_irq(&pt->pt_irqfds_lock);
-+		goto fail;
-+	}
-+
-+	idx = srcu_read_lock(&pt->pt_irq_srcu);
-+	mshv_irqfd_update(pt, irqfd);
-+
- #if IS_ENABLED(CONFIG_X86)
- 	if (args->flags & BIT(MSHV_IRQFD_BIT_RESAMPLE) &&
- 	    !irqfd->irqfd_lapic_irq.lapic_control.level_triggered) {
-@@ -499,22 +512,12 @@ static int mshv_irqfd_assign(struct mshv_partition *pt,
- 		 * Otherwise return with failure
+diff --git a/drivers/hv/mshv_irq.c b/drivers/hv/mshv_irq.c
+index 59584a132ca9f..db05512db5548 100644
+--- a/drivers/hv/mshv_irq.c
++++ b/drivers/hv/mshv_irq.c
+@@ -88,7 +88,7 @@ int mshv_update_routing_table(struct mshv_partition *partition,
+ 		/*
+ 		 * Allow only one to one mapping between GSI and MSI routing.
  		 */
- 		spin_unlock_irq(&pt->pt_irqfds_lock);
-+		srcu_read_unlock(&pt->pt_irq_srcu, idx);
- 		ret = -EINVAL;
- 		goto fail;
- 	}
- #endif
--	ret = 0;
--	hlist_for_each_entry(tmp, &pt->pt_irqfds_list, irqfd_hnode) {
--		if (irqfd->irqfd_eventfd_ctx != tmp->irqfd_eventfd_ctx)
--			continue;
--		/* This fd is used for another irq already. */
--		ret = -EBUSY;
--		spin_unlock_irq(&pt->pt_irqfds_lock);
--		goto fail;
--	}
- 
--	idx = srcu_read_lock(&pt->pt_irq_srcu);
--	mshv_irqfd_update(pt, irqfd);
- 	hlist_add_head(&irqfd->irqfd_hnode, &pt->pt_irqfds_list);
- 	spin_unlock_irq(&pt->pt_irqfds_lock);
- 
+-		if (girq->guest_irq_num != 0) {
++		if (girq->girq_entry_valid) {
+ 			r = -EINVAL;
+ 			goto out;
+ 		}
 
 
 
