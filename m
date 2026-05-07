@@ -1,57 +1,57 @@
-Return-Path: <linux-hyperv+bounces-10675-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10676-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2IrXAcWz/GmOSwAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10675-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 17:46:13 +0200
+	id 4AcaHMuz/GmOSwAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10676-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 17:46:19 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A09D4EB4F1
-	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 17:46:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DA3264EB4F8
+	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 17:46:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A7A9A3096F68
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 May 2026 15:43:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3797A309916A
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 May 2026 15:43:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6799E43E488;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C761B44B660;
 	Thu,  7 May 2026 15:43:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="tKTUbwCu"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KRep6Dyl"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3285141B344;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97F36402B8B;
 	Thu,  7 May 2026 15:43:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778168591; cv=none; b=RqRggJoUGaaTtGwqWNGgQEs2MdSWBm5lkvPe3nWsUfXKlBtCBLN0yk2EL6SMSRR0x+niurBzQnvErlnft6QVCSzbj9g3X6bNe19VYMRmMHG+93OlpCPAYQm6LmHQw52gh4ST4KYtcuAplioRc4XAE7et4yf4QIyICKTu1uelSiQ=
+	t=1778168591; cv=none; b=bPsc3PU3oL7mJb03p/TULDEw6EbZc2Sjsq9OHkl2VEBykM5gGN/Y2R/VFHWvW75I9UB585/qawvG3U5A8bxRSPcQvK2Jo+DjF7mmzZZRXyY2hZuiTIQ5JTQNRV8MMbnOL+2jjXGQ+VGAI+KBCdbBmn6I2hNajRI+YX5XLaXzykM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1778168591; c=relaxed/simple;
-	bh=yhEZldU2zYAARv6dKYHhii2B0GthR85Izt7+jGi5yJ8=;
+	bh=LKg6XQ9kOCE5ahDArI5b8L75v0fF2CWuwK8AM5CIeFQ=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YpCKuLI2tzV3Bx18uboRU/9Frk7NayKlj9Tb3FO/Vo3uXR/sfAd7h5T6NoOkqeqFkM+moRzCWyg8BVES9fc7ag1VJ7StUmTG94UEK3CzX6pIWXRdju963mtw9kM5YPBawuFjLYrTWb3CSvsHqBsJYXb5FSD58JeFWGmk+FYCC3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=tKTUbwCu; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version:Content-Type; b=k50+G/sj0VMIRUZLxM7dxLGgHYRbLfa9+Ly8lmlYoVPX3VjOANmDBOb6uA1eM2iG584QqI6kYiXUem67gyax2jNeNw6eOAi6PmSEbmIF9+At9YavSI0JJDfJPWm9LxsR3MeYSyJu3SjCCaDihb1Os0Ne5Vh+IiI97KMRFlM24MM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KRep6Dyl; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 6D58A20B7167;
-	Thu,  7 May 2026 08:43:01 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6D58A20B7167
+	by linux.microsoft.com (Postfix) with ESMTPSA id E856320B716C;
+	Thu,  7 May 2026 08:43:06 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E856320B716C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1778168581;
-	bh=FkRA9VCDqKl/X8ObG2fk9lDRmh+cWFXRwvVw0bw480Y=;
+	s=default; t=1778168587;
+	bh=qv/zUzZcJzd6kXDrJZiNYMHMZp1e9YT/bSHUEU6NMVo=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=tKTUbwCudh9rkzK8goAuaNxCtcCP6ADFtr0aEgW816ZyYhGjTMbLFx8CjIXUBAQ1M
-	 VA2gG+0k4DwmJAtjZ9Szy3FjkVTSnnE+4AoDL+YaYBJCHszS6P0GWaHjaoC4zNWgPr
-	 ktfsG4nlrafhENHeS3ZTFb1RpVxglOy637qUCsfg=
-Subject: [PATCH v4 01/18] mshv: Fix IRQ leak and type hazards in
- hv_call_modify_spa_host_access
+	b=KRep6Dyl1n09YzLFGKDcGcK91J+6TEywUEypBpd/dxp5AJRRZX1DBoj5vv3mm2UDo
+	 jlKkZWpiMqU0IoEY/f+dHgbygKfA4+zfKa8aTzJMbdQ/3JfoaGSnK27IAySxWrBqbc
+	 gBmWRTeTkRGhAmxv90KTSD5R9dr1l4v3FVauTQbg=
+Subject: [PATCH v4 02/18] mshv: Fix mshv_prepare_pinned_region error path for
+ unencrypted partitions
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, longli@microsoft.com
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 07 May 2026 15:43:04 +0000
+Date: Thu, 07 May 2026 15:43:09 +0000
 Message-ID: 
- <177816858406.21765.9718563917415905259.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <177816858991.21765.2088226987194959542.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 In-Reply-To: 
  <177816592843.21765.4364464279247150355.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 References: 
@@ -65,7 +65,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 5A09D4EB4F1
+X-Rspamd-Queue-Id: DA3264EB4F8
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -76,7 +76,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_FROM(0.00)[bounces-10675-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10676-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
@@ -94,67 +94,88 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:dkim,skinsburskii-cloud-desktop.internal.cloudapp.net:mid]
 X-Rspamd-Action: no action
 
-The bounds check inside the PFN-filling loop can return -EINVAL while
-interrupts are disabled via local_irq_save(), leaking IRQ state.
+mshv_prepare_pinned_region() returns 0 (success) when mshv_region_map()
+fails on an unencrypted partition. The condition on the error path:
 
-Remove the check — it is redundant because the loop invariant
-(done + i < page_count == page_struct_count >> large_shift) guarantees
-(done + i) << large_shift < page_struct_count always holds.
+    if (ret && mshv_partition_encrypted(partition))
 
-While here, fix type mismatches: change 'int done' to 'u64 done' and
-use u64 for loop and batch-size variables so they match the u64
-page_count they are compared against.
+only handles map failures for encrypted partitions — if the partition is
+not encrypted and the map fails, execution falls through to 'return 0',
+silently ignoring the error.
+
+Additionally, calling mshv_region_invalidate() inline on map failure
+zeroes the mreg_pages array before the caller's cleanup path
+(mshv_region_destroy) can call mshv_region_unmap(). Since unmap skips
+pages where mreg_pages[offset] is NULL, this can leave stale SLAT
+mappings for partially-mapped pages.
+
+Fix by returning immediately on success and falling through to error
+return on failure. For unencrypted partitions, the caller's
+mshv_region_destroy() handles unmap followed by invalidate in the
+correct order. For encrypted partitions where re-sharing fails, zero
+the page array without unpinning — the pages are inaccessible to the
+host and must not be unpinned, but zeroing prevents
+mshv_region_destroy() from attempting to unpin them.
 
 Fixes: 621191d709b14 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
 Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 ---
- drivers/hv/mshv_root_hv_call.c |   18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+ drivers/hv/mshv_root_main.c |   26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
-index 129456bd72aba..cc580225e9e45 100644
---- a/drivers/hv/mshv_root_hv_call.c
-+++ b/drivers/hv/mshv_root_hv_call.c
-@@ -1042,7 +1042,7 @@ int hv_call_modify_spa_host_access(u64 partition_id, struct page **pages,
- {
- 	struct hv_input_modify_sparse_spa_page_host_access *input_page;
- 	u64 status;
--	int done = 0;
-+	u64 done = 0;
- 	unsigned long irq_flags, large_shift = 0;
- 	u64 page_count = page_struct_count;
- 	u16 code = acquire ? HVCALL_ACQUIRE_SPARSE_SPA_PAGE_HOST_ACCESS :
-@@ -1059,9 +1059,9 @@ int hv_call_modify_spa_host_access(u64 partition_id, struct page **pages,
+diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+index 665d565899c15..7e4252b6bc65c 100644
+--- a/drivers/hv/mshv_root_main.c
++++ b/drivers/hv/mshv_root_main.c
+@@ -1360,32 +1360,38 @@ static int mshv_prepare_pinned_region(struct mshv_mem_region *region)
+ 			pt_err(partition,
+ 			       "Failed to unshare memory region (guest_pfn: %llu): %d\n",
+ 			       region->start_gfn, ret);
+-			goto invalidate_region;
++			goto err_out;
+ 		}
  	}
  
- 	while (done < page_count) {
--		ulong i, completed, remain = page_count - done;
--		int rep_count = min(remain,
--				    HV_MODIFY_SPARSE_SPA_PAGE_HOST_ACCESS_MAX_PAGE_COUNT);
-+		u64 i, completed, remain = page_count - done;
-+		u64 rep_count = min_t(u64, remain,
-+				      HV_MODIFY_SPARSE_SPA_PAGE_HOST_ACCESS_MAX_PAGE_COUNT);
+ 	ret = mshv_region_map(region);
+-	if (ret && mshv_partition_encrypted(partition)) {
++	if (ret)
++		goto share_region;
++
++	return 0;
++
++share_region:
++	if (mshv_partition_encrypted(partition)) {
+ 		int shrc;
  
- 		local_irq_save(irq_flags);
- 		input_page = *this_cpu_ptr(hyperv_pcpu_input_arg);
-@@ -1075,15 +1075,9 @@ int hv_call_modify_spa_host_access(u64 partition_id, struct page **pages,
- 		input_page->flags = flags;
- 		input_page->host_access = host_access;
+ 		shrc = mshv_region_share(region);
+ 		if (!shrc)
+-			goto invalidate_region;
++			goto err_out;
  
--		for (i = 0; i < rep_count; i++) {
--			u64 index = (done + i) << large_shift;
+ 		pt_err(partition,
+ 		       "Failed to share memory region (guest_pfn: %llu): %d\n",
+ 		       region->start_gfn, shrc);
+ 		/*
+-		 * Don't unpin if marking shared failed because pages are no
+-		 * longer mapped in the host, ie root, anymore.
++		 * Re-sharing failed — the pages remain inaccessible to the
++		 * host.  Zero the page array so that mshv_region_destroy()
++		 * won't attempt to unpin them (leaking the page references
++		 * is intentional; unpinning host-inaccessible pages would be
++		 * unsafe).
+ 		 */
++		memset(region->mreg_pages, 0,
++		       region->nr_pages * sizeof(region->mreg_pages[0]));
+ 		goto err_out;
+ 	}
 -
--			if (index >= page_struct_count)
--				return -EINVAL;
+-	return 0;
 -
-+		for (i = 0; i < rep_count; i++)
- 			input_page->spa_page_list[i] =
--						page_to_pfn(pages[index]);
--		}
-+				page_to_pfn(pages[(done + i) << large_shift]);
- 
- 		status = hv_do_rep_hypercall(code, rep_count, 0, input_page,
- 					     NULL);
+-invalidate_region:
+-	mshv_region_invalidate(region);
+ err_out:
+ 	return ret;
+ }
 
 
 
