@@ -1,56 +1,57 @@
-Return-Path: <linux-hyperv+bounces-10689-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10690-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kEq+KpCz/GnlSgAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10689-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 17:45:20 +0200
+	id OOqRFJmz/GmOSwAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10690-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 17:45:29 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 582C04EB496
-	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 17:45:20 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34F624EB4B3
+	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 17:45:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 35915301FF13
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 May 2026 15:44:43 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 715E83019D07
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 May 2026 15:44:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C45F44CF22;
-	Thu,  7 May 2026 15:44:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A63AB44BC94;
+	Thu,  7 May 2026 15:44:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="QuuQ2a1S"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ig0B4Y0F"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1087B44CAF7;
-	Thu,  7 May 2026 15:44:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B5F244D02B;
+	Thu,  7 May 2026 15:44:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778168663; cv=none; b=E4PjKs5plwqU8KDGt7eU9PFhoIBPN8wtKZCGzA+7zs9SHUty96y7PLHbdL5K1TQuu1ypmbP26FR+RbAwD51JqOgVMNovHwXSySeH5PLXThJhH+RVW6YGiMZbaJ/WeKYU7hx2pB60BK35QtDBmxIdXIzk2PNOUaDEv2oMJUwVC/M=
+	t=1778168668; cv=none; b=IQDjjfiNDT9nybUgwyqC6osLXOT7/2Xh39+tlQnUxuyGASFVmdpRuRNEeNCa1y36DsjB82W+QMGh0/M/HCw8naYm3JAWFCwLY+FUYdJciWVTbFNVis3ym79U7aqJxy8XBjSnJlP8X6CujevOIda+NV4fJUYfQaIemS1cBWgnL6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778168663; c=relaxed/simple;
-	bh=cc9fOzfM6FkSnbFE7ATn3kH3yP3bi5JA5X+BcOV42+U=;
+	s=arc-20240116; t=1778168668; c=relaxed/simple;
+	bh=489mJxtANo4CiHpDiLS5ZFCdsBixCGFzkgwfg7/oMqc=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tVN+3MRvrW/Ni+JcPSiqXmPddqvMMLqomPX3V0DZjZTdtEFTX5hMkLILu0s3SIBpE9LimzZ3/r7EwRvgSqaSNS9+CmF0u7jmWtvdrzKDqGLUn5rfMuMNG9pacLljEL11oF5HTie6DI3qd779V3zqjPR/mNO2jXA3PBJsxdiKVC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=QuuQ2a1S; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version:Content-Type; b=VDhYYaGBM84pHaUbJF3IfMVRHcSBbAAXyqwXycG8d4sNgWqoApBKsDTOHhJZ3v7+Q/rHlwaryeiH23UgDRhEPeysgvYoRj0j/QNmBF7N05/WP/cOB4ugc5gcKfhOjbndkgMHhJyeIWgoF9vr2zWFHSyPLh9AWCZRYnmnhdsYLEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ig0B4Y0F; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 8AE3420B7165;
-	Thu,  7 May 2026 08:44:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8AE3420B7165
+	by linux.microsoft.com (Postfix) with ESMTPSA id EB4FB20B7165;
+	Thu,  7 May 2026 08:44:23 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EB4FB20B7165
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1778168658;
-	bh=L2ymyV4ovIf/eCaF2+6/x1CckAl2okWrPirCBf8MqKg=;
+	s=default; t=1778168664;
+	bh=sAkXH2YUz2zIfABUn2fKnt6ktvXMZuH9fBZSbeKpt+k=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=QuuQ2a1SmytSWnKdaHvclZiZyPSGTE3yGW/bAjuGmebdVERtk+tiQloMcW3MPOSmL
-	 pKyXpIPgn9ZGy4DIt1PPyNA7IsWMCJe7aYJGqfubfN1v3I0+eI92oOIrRzEb0zqjYr
-	 qGtnfM98VPYsc0Q7EtOC0yyMgjzsZY3GCGUhXSbw=
-Subject: [PATCH v4 15/18] mshv: Defer mshv_vp free to an RCU grace period
+	b=ig0B4Y0FqV0FrDHg5ZiHCKJsiXqBsFZd2JsWmarlCs3E0udbpLmhXiCONSn1fv4zf
+	 /gEHFYBEsRCjFARfWRhvsDoqHfa3RC41P7B6aDWFC3Z/+e8dOFayUmtC2+lRcs8RZb
+	 MN7U2wYcYeAF2cfmRHGBFI+/EBgN7i4tVQ/jATGg=
+Subject: [PATCH v4 16/18] mshv: Validate scheduler message bounds from
+ hypervisor
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, longli@microsoft.com
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 07 May 2026 15:44:21 +0000
+Date: Thu, 07 May 2026 15:44:26 +0000
 Message-ID: 
- <177816866152.21765.16203922564983237274.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <177816866691.21765.15605640837157423543.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 In-Reply-To: 
  <177816592843.21765.4364464279247150355.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 References: 
@@ -64,18 +65,18 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 582C04EB496
+X-Rspamd-Queue-Id: 34F624EB4B3
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_FROM(0.00)[bounces-10689-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10690-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
@@ -85,7 +86,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	TO_DN_NONE(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	NEURAL_HAM(-0.00)[-1.000];
@@ -93,64 +94,82 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,skinsburskii-cloud-desktop.internal.cloudapp.net:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-destroy_partition() frees mshv_vp with plain kfree() while ISR readers
-walk pt_vp_array[] under rcu_read_lock().  On non-root schedulers,
-where drain_all_vps() does not run, an in-flight intercept ISR can
-observe a non-NULL pt_vp_array slot and dereference freed memory in
-kick_vp().  On the root scheduler the same race exists in a narrower
-form: drain_vp_signals() synchronises on kick_vp()'s kicked_by_hv flag
-but not on its wake_up() tail, so the wait-queue lock embedded in vp
-can still be held when destroy_partition() reaches kfree(vp).
+handle_pair_message() iterates up to msg->vp_count without verifying it
+against HV_MESSAGE_MAX_PARTITION_VP_PAIR_COUNT. Since vp_count is read
+from untrusted hypervisor data, a malformed message with a large value
+would cause out-of-bounds reads from the partition_ids and vp_indexes
+arrays.
 
-Add struct rcu_head vp_rcu to struct mshv_vp, clear the pt_vp_array
-slot before the free, and use kfree_rcu() so the actual kfree happens
-after a grace period.  drain_all_vps() is retained because it serves a
-separate purpose (telling the hypervisor to stop signalling and
-reconciling signal counts) that kfree_rcu() does not address.
+handle_bitset_message() iterates over set bits in valid_bank_mask (up to
+64) and advances bank_contents for each one. However, the payload buffer
+only has space for 16 bank entries. A valid_bank_mask with more than 16
+bits set causes bank_contents to read beyond the message buffer.
 
-Fixes: 621191d709b14 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
+Fix both by adding bounds validation:
+- Clamp vp_count to HV_MESSAGE_MAX_PARTITION_VP_PAIR_COUNT
+- Track banks consumed and stop before exceeding buffer capacity
+
+Fixes: 621191d709b1 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
 Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 ---
- drivers/hv/mshv_root.h      |    1 +
- drivers/hv/mshv_root_main.c |    5 +++--
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/hv/mshv_synic.c |   20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
-index b6961a6d9a98b..e19a84ea07905 100644
---- a/drivers/hv/mshv_root.h
-+++ b/drivers/hv/mshv_root.h
-@@ -35,6 +35,7 @@ static_assert(HV_HYP_PAGE_SIZE == MSHV_HV_PAGE_SIZE);
- #define MSHV_PIN_PAGES_BATCH_SIZE	(0x10000000ULL / HV_HYP_PAGE_SIZE)
+diff --git a/drivers/hv/mshv_synic.c b/drivers/hv/mshv_synic.c
+index 89207aad7cf1f..5d509299f14d7 100644
+--- a/drivers/hv/mshv_synic.c
++++ b/drivers/hv/mshv_synic.c
+@@ -190,7 +190,9 @@ static void kick_vp(struct mshv_vp *vp)
+ static void
+ handle_bitset_message(const struct hv_vp_signal_bitset_scheduler_message *msg)
+ {
+-	int bank_idx, vps_signaled = 0, bank_mask_size;
++	int bank_idx, vps_signaled = 0, bank_mask_size, banks_used = 0;
++	const int max_banks = sizeof(msg->vp_bitset.bitset_buffer) /
++			      sizeof(u64) - 2; /* subtract format + mask */
+ 	struct mshv_partition *partition;
+ 	const struct hv_vpset *vpset;
+ 	const u64 *bank_contents;
+@@ -230,6 +232,11 @@ handle_bitset_message(const struct hv_vp_signal_bitset_scheduler_message *msg)
+ 		if (bank_idx == bank_mask_size)
+ 			break;
  
- struct mshv_vp {
-+	struct rcu_head vp_rcu;
- 	u32 vp_index;
- 	struct mshv_partition *vp_partition;
- 	struct mutex vp_mutex;
-diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-index 381aa86c5b90e..e32f6e0f9f637 100644
---- a/drivers/hv/mshv_root_main.c
-+++ b/drivers/hv/mshv_root_main.c
-@@ -30,6 +30,7 @@
- #include <linux/panic_notifier.h>
- #include <linux/vmalloc.h>
- #include <linux/rseq.h>
-+#include <linux/rcupdate.h>
- 
- #include "mshv_eventfd.h"
- #include "mshv.h"
-@@ -1915,9 +1916,9 @@ static void destroy_partition(struct mshv_partition *partition)
- 				vp->vp_ghcb_page = NULL;
- 			}
- 
--			kfree(vp);
--
- 			partition->pt_vp_array[i] = NULL;
++		if (unlikely(banks_used >= max_banks)) {
++			pr_debug("valid_bank_mask exceeds buffer capacity\n");
++			goto unlock_out;
++		}
 +
-+			kfree_rcu(vp, vp_rcu);
+ 		while (true) {
+ 			struct mshv_vp *vp;
+ 
+@@ -258,6 +265,7 @@ handle_bitset_message(const struct hv_vp_signal_bitset_scheduler_message *msg)
  		}
  
- 		mshv_debugfs_partition_remove(partition);
+ 		bank_contents++;
++		banks_used++;
+ 	}
+ 
+ unlock_out:
+@@ -274,10 +282,18 @@ handle_pair_message(const struct hv_vp_signal_pair_scheduler_message *msg)
+ 	struct mshv_partition *partition = NULL;
+ 	struct mshv_vp *vp;
+ 	int idx;
++	u8 vp_count = msg->vp_count;
++
++	if (unlikely(vp_count > HV_MESSAGE_MAX_PARTITION_VP_PAIR_COUNT)) {
++		pr_debug("pair message vp_count %u exceeds max %lu\n",
++			 vp_count,
++			 (unsigned long)HV_MESSAGE_MAX_PARTITION_VP_PAIR_COUNT);
++		return;
++	}
+ 
+ 	rcu_read_lock();
+ 
+-	for (idx = 0; idx < msg->vp_count; idx++) {
++	for (idx = 0; idx < vp_count; idx++) {
+ 		u64 partition_id = msg->partition_ids[idx];
+ 		u32 vp_index = msg->vp_indexes[idx];
+ 
 
 
 
