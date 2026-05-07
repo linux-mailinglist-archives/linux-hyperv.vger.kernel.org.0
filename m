@@ -1,284 +1,310 @@
-Return-Path: <linux-hyperv+bounces-10659-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10660-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kAEEEIgK/GkAKQAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10659-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 05:44:08 +0200
+	id cszMDvYN/Gl4KgAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10660-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 05:58:46 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D3E94E2B56
-	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 05:44:07 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 972B14E2BCA
+	for <lists+linux-hyperv@lfdr.de>; Thu, 07 May 2026 05:58:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 74A7D30158A5
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 May 2026 03:43:39 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C9A41301DD91
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 May 2026 03:58:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 232B42E7F25;
-	Thu,  7 May 2026 03:43:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EABD30EF84;
+	Thu,  7 May 2026 03:58:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZNlBaGdB"
+	dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b="q/yeivUQ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0C2E1EB5F8;
-	Thu,  7 May 2026 03:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778125419; cv=none; b=CAUEIiEy5GD94TKu4BoFDMEKQwubAeqmrRny5Jo3Gc2Xbb9Lth4noYHRr0im/c+ViyJ+crn8A8I0/gwk52px/ku6AKYdin5Bx7Whz2RKatUEKq5IAzs9HgAQ3yGKAr0oZbVEwEsmZGsrYc4VxD3RbTMD2WSL9/f8Mci2pH+ZPDI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778125419; c=relaxed/simple;
-	bh=nTs/z2Wq8LCfWPMl6GiK8n/iSq19n7fi1bFLnQKW8Ns=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SFhARVrp0zACf5GZyrNj5aWVMKzLnOMstzx2oOaS6BmBB6BOA9wB97tenNkHkxfoL9h+uaMGGM4Qn+mJ97V+PQzgBSaPtceTT9OiuCmjb1I1ZrKMqsPVkFrVkWbHxH8XLtp8tQerVIzj2pXs77FmUs0ejJMj4i942Kwe8QMs9rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ZNlBaGdB; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.95.65.64] (unknown [167.220.238.64])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 33FE320B7165;
-	Wed,  6 May 2026 20:43:26 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 33FE320B7165
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1778125413;
-	bh=ZaiVA7FK64HzHiW79paCCu3hRwFlMBFKVgvgM3gbwUQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZNlBaGdBTGgWhXBzXBgqOVZm/b/shQdBDzoIUFvlVMUYDb35gRYc2aRNtfBtUwVde
-	 0yvNU7byjWVWhwL6ErC+tJLxcEwic9+viIQo4EvQsOVk3Ed9dZyD3pgRTvCuHQWwws
-	 ORdyFcW2lS6CP3jUPBUMPamNznpGn0N/JJmWavVk=
-Message-ID: <b9ab1860-ec82-4a82-abac-f099a3747ba8@linux.microsoft.com>
-Date: Thu, 7 May 2026 09:13:27 +0530
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D6B30AAA9
+	for <linux-hyperv@vger.kernel.org>; Thu,  7 May 2026 03:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.125.188.122
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778126321; cv=pass; b=O0Jtez/P/5N/xT+h4BlCuz5slZom2Afe9sCzusT6SgcrBvrFE/o8f8OesHyzmbwI8dukAjICj6DDHqWwmvqQTPhWHmGLdtkGO8FW+MdLOmB9t3UWRPq8FzMjVOJ4Nq00JX8ubzhnKIzc7bg/01Kc2C8cCc52n4QSxyqs2NdPTZc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778126321; c=relaxed/simple;
+	bh=PkqqHhTDU2kKSizigUNNuogrZzCsb4MyJcq4kMxGR5w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ikyprmfPp7lW5Fr7GVgHN8qq1OBcZBityrTVEY9vlu0cNWRsBfEslkESZ78N6smZvAHloQixX+HnTA9C7HAzYCKUWeslQ0S5NqD3IOe6O6YLZ9nLNCOg0wFxcFMP2j+lk9XWOPOOIG4Bi3io3WNSYMSH1/YKgrEDHKammHYOjHM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b=q/yeivUQ; arc=pass smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-yx1-f71.google.com (mail-yx1-f71.google.com [74.125.224.71])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 70D833FBF9
+	for <linux-hyperv@vger.kernel.org>; Thu,  7 May 2026 03:58:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20251003; t=1778126315;
+	bh=ZlR7nQSAJNYWzlQHXwtepHIUtax32vskaI3RhwhSkmk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=q/yeivUQVLdYHkh7sabBUd9LX3WwiNmNWLcEUCWFIXGpjqoyYL5zDLJLE4qFCwKDx
+	 ovd+oRt2rvJxea9qEFxtG5ABhKJVWQYPnS9BHjiNcBUJkwng0Ebrtw3uUyzLpRgOEZ
+	 LFzIdRpfKAdqkLqw5vlYLWcAT5xg4aR5VKaY4auusKSTjLiUUwKkBT5xjKg3BP8FUj
+	 OHL0XXCzHbWUPdXVf057zF37O8Xa06xvjinRzLbr4mF1soy0sRQO1Hr+C7jiNOwnTP
+	 rigqtWh98KIoarpRh8KB4rGB9Xc6l5DIQFlI0/xgWS3ICg/TrtJW0LhvRdN136qLGr
+	 GCfNSz96IJXwaxjLHKL1fa4DEAeFQNVTejCH53KJAG/JDmsB1uWb22rzyRVXPYbVeU
+	 UG1jzOXMbum80xEy50wf2xXPkAHHZgYkd+3ufmBwZVZmCC5+eaHJ5k9RCSMxksXSn/
+	 3zFrhJi033dsOg3Xqe25IPH16vGuXle4xb3RFL/FxS+GjTnPQKM0381xOrg4zHCnJC
+	 6wwBXqm6F3qtAOw4OX1B45sjvLy5BLAfoBhsKWeMpNjgwHYcNqAhTLxV+veL5qCNUz
+	 y5KXhh0sz6WFHc776Fts5NWweOksqYhqX4NX8jZFBOl1dU7jLb8yBhEktOHb+nk3iY
+	 5968S26c52Eob3XeVvoSLgh8=
+Received: by mail-yx1-f71.google.com with SMTP id 956f58d0204a3-65c53d7c36bso122820d50.0
+        for <linux-hyperv@vger.kernel.org>; Wed, 06 May 2026 20:58:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778126314; cv=none;
+        d=google.com; s=arc-20240605;
+        b=U/3REkX8Hm+jgh6AhSs9mB1QG1k58BUFhXKCeVG0dCZcvo7ILwu6gxHpq+8Jhv3Pve
+         dA0srfJlP84VKs9TC/BmC1/zFszN01joRGX0AMhy9cjoy378K5LP38Ga5ZAHT5Mp0W+2
+         cran/lguqsXmo4J+qA+floQEEkb0v7n3MydE2Sc0X6hPYkeIPMsV9MtTLuDhIu1JNoqv
+         L3OphM2V9B1HBGutOhRyczGEtzpinsoLxcPCdcqbk7qrRBFZRD9hprjZUGTB5IAsgJFY
+         s4Jr+/nCsDjQPOiszQpYNGddDpeEUE1tLgYdPqER6UdvM21pNRdiQiB4LrlQ4e6qLFSq
+         Dkdg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version;
+        bh=ZlR7nQSAJNYWzlQHXwtepHIUtax32vskaI3RhwhSkmk=;
+        fh=XAbFq4KH9koRunxXTl7XbIbv2Ul7uDzrY9lCX3Urb8A=;
+        b=K7psucspYkSEOm2NN5SSRPSgR4PrvhE0UKbd4gRwynabOXIYU6A4hoXevt5zPzXNov
+         4PQ7zGRzY7Za+J8/ss88a10xuZGorvbU/c0r33XAUp1QZY73aFfIiwMXErWcyXIS+Efv
+         sCapRC8aN4Quzo6px/IZEQ6NoniJQSnQaOJae3yw6gczCWn0a4Wg+E0k0BwGcRh9RyWa
+         uL/VUHLCOoD8G+Uo/qkxs6yOfSwWYbCjZmpO2SnOFzGeKDXcb8+SsEtihSz9d96x41Fc
+         Jpgua6iairvLuT2NAqwT/S6Jf1+pwhKxqgWIxfdxKG0/CdXZF9bBhsRTta/jMIMCLYmP
+         rpyQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778126314; x=1778731114;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZlR7nQSAJNYWzlQHXwtepHIUtax32vskaI3RhwhSkmk=;
+        b=DWgN1uPYUqnRyt9WOH/oMYvu+/nmnQGjoFUTEs/q6wJR5zys3p6u8hovsFlp9GEBwt
+         FIUYL6ptKIZI0XNPgpZgcOPlOTk90dYKw/hF5s0vsfofUX93FIfEDs2rjDz9uJVi+XUC
+         ksKylPzv8saCnccxi0+TkElggAmFEMTB2Ei1Y9sGs5fbLTKZnlewN62yojEgxegAKmlt
+         iBOcmjdQNRiQaelBpanCAwoBcf4hdLdLwPShCW6b4uK3sfdRa7KuxZxfteiRUHFp3/Us
+         Wk2g3OMnilgSngUan/NElni9BKhvTMZ9bYAj04zHY3GutATFF9px7R936+tDP245hT6i
+         He/Q==
+X-Forwarded-Encrypted: i=1; AFNElJ+tYFBkw65cWAsj+wqLmVh5MECbUYlly1KbjYoiEYLDSRM1PGV+CkL/7OiGpzHbJ3oJVfdvbFikMw+SP2Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4Eb/D8a09b37CtcdgLuNR+u2NpFWWc+/LuJTulDCU1LqsoBoj
+	jFCFspKOGv+GuQx8SMLJNl6AJcQ42u0Zy23q39a45X7dJ0212APLFtdhqP7H2BpvNKrUQi/1ZGS
+	VqA1HFbESWEHmjU6F9emIjdGEBvswd8cAYfgse+s7HI+eJRMW0ZDXQu29ii0FpAjjLjm6oqVrmH
+	cV0K5s7vhZt6XkvpI+LOUUYsWAWEhqcY22u3FSoyLFrR0+76qa7WgUgu5k
+X-Gm-Gg: AeBDies20cGZ3wjN2+BdbygcartOvsA/3YiMaiaDrpftBAOEZM0hPhnxHV4Iwxggf9n
+	oZW7HtHkP7u4k6EwhALFAvmcbj8C4Kl8AHLx9gjKwu/hsy6fVnZ2HqlSBgOvX9T2WjBdsWnZ8mV
+	8v30Cq7u3FzWh3IkhWQh6OEdaA6L4HI+Tl40+xTtcJ1ZtduHArxrizEEDPsIDOHLbwB6FLt6CMO
+	kUiycf8uU35JmnsgA==
+X-Received: by 2002:a05:690e:4295:20b0:651:bc3b:75c7 with SMTP id 956f58d0204a3-65c7988e8f1mr5453996d50.11.1778126314080;
+        Wed, 06 May 2026 20:58:34 -0700 (PDT)
+X-Received: by 2002:a05:690e:4295:20b0:651:bc3b:75c7 with SMTP id
+ 956f58d0204a3-65c7988e8f1mr5453975d50.11.1778126313609; Wed, 06 May 2026
+ 20:58:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 09/15] Drivers: hv: mshv_vtl: Move
- hv_vtl_configure_reg_page() to x86
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Marc Zyngier <maz@kernel.org>, Timothy Hayes <timothy.hayes@arm.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Sascha Bischoff <sascha.bischoff@arm.com>,
- mrigendrachaubey <mrigendra.chaubey@gmail.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
- "vdso@mailbox.org" <vdso@mailbox.org>,
- "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
- "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
- Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>
-References: <20260423124206.2410879-1-namjain@linux.microsoft.com>
- <20260423124206.2410879-10-namjain@linux.microsoft.com>
- <SN6PR02MB4157467FDBC0203C67A67042D4362@SN6PR02MB4157.namprd02.prod.outlook.com>
- <567cf73b-6a48-4fc3-b312-9be6d71e2f22@linux.microsoft.com>
- <SN6PR02MB4157AD364DE0755DE070D286D4312@SN6PR02MB4157.namprd02.prod.outlook.com>
- <024aed8c-cd97-45f0-a653-489fc334a2b9@linux.microsoft.com>
- <SN6PR02MB4157D109AF4B5C62EF7F0E2CD43F2@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB4157D109AF4B5C62EF7F0E2CD43F2@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 9D3E94E2B56
+References: <20260505004846.193441-1-decui@microsoft.com> <SN6PR02MB4157A5A68BDBC87995FCE85FD43F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SA1PR21MB69217F13193ADBD59430FB52BF3C2@SA1PR21MB6921.namprd21.prod.outlook.com>
+In-Reply-To: <SA1PR21MB69217F13193ADBD59430FB52BF3C2@SA1PR21MB6921.namprd21.prod.outlook.com>
+From: Matthew Ruffell <matthew.ruffell@canonical.com>
+Date: Thu, 7 May 2026 15:58:21 +1200
+X-Gm-Features: AVHnY4Lmno6AI9zMEcVbyQ9Bwv19XV5Ur5KJJsyVMwqC4jNwWBpl96SPBpb4Fy0
+Message-ID: <CAKAwkKtUo5XX_Qh4hSYcbxTWkZP=+i0hZQaPHX78G20MFdz2Lg@mail.gmail.com>
+Subject: Re: [PATCH v2] Drivers: hv: vmbus: Improve the logic of reserving
+ fb_mmio on Gen2 VMs
+To: Dexuan Cui <DECUI@microsoft.com>
+Cc: Michael Kelley <mhklinux@outlook.com>, KY Srinivasan <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>, 
+	Long Li <longli@microsoft.com>, 
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"johansen@templeofstupid.com" <johansen@templeofstupid.com>, 
+	"hargar@linux.microsoft.com" <hargar@linux.microsoft.com>, 
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Rspamd-Queue-Id: 972B14E2BCA
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[canonical.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[canonical.com:s=20251003];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10659-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[outlook.com];
-	RCPT_COUNT_TWELVE(0.00)[31];
-	FREEMAIL_CC(0.00)[kernel.org,arm.com,gmail.com,vger.kernel.org,lists.infradead.org,mailbox.org,linux.microsoft.com,microsoft.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,dabbelt.com,eecs.berkeley.edu,ghiti.fr];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[namjain@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FREEMAIL_CC(0.00)[outlook.com,microsoft.com,kernel.org,vger.kernel.org,templeofstupid.com,linux.microsoft.com];
+	TAGGED_FROM(0.00)[bounces-10660-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	NEURAL_HAM(-0.00)[-0.998];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[canonical.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[matthew.ruffell@canonical.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:mid,linux.microsoft.com:dkim]
+	RCPT_COUNT_SEVEN(0.00)[11];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,canonical.com:email,canonical.com:dkim,templeofstupid.com:email,outlook.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
+Hi Dexuan,
 
+Thanks for making the amendments, and thank you Michael for all your reviews.
 
-On 5/6/2026 8:06 PM, Michael Kelley wrote:
-> From: Naman Jain <namjain@linux.microsoft.com> Sent: Tuesday, May 5, 2026 10:50 PM
->>
->> On 5/4/2026 9:36 PM, Michael Kelley wrote:
->>> From: Naman Jain <namjain@linux.microsoft.com> Sent: Wednesday, April 29, 2026 2:58 AM
->>>>
->>>> On 4/27/2026 11:10 AM, Michael Kelley wrote:
->>>>> From: Naman Jain <namjain@linux.microsoft.com> Sent: Thursday, April 23, 2026 5:42 AM
->>>>>>
->>>>>> Move hv_vtl_configure_reg_page() from drivers/hv/mshv_vtl_main.c to
->>>>>> arch/x86/hyperv/hv_vtl.c. The register page overlay is an x86-specific
->>>>>> feature that uses HV_X64_REGISTER_REG_PAGE, so its configuration belongs
->>>>>> in architecture-specific code.
->>>>>>
->>>>>> Move struct mshv_vtl_per_cpu and union hv_synic_overlay_page_msr to
->>>>>> include/asm-generic/mshyperv.h so they are visible to both arch and
->>>>>> driver code.
->>>>>>
->>>>>> Change the return type from void to bool so the caller can determine
->>>>>> whether the register page was successfully configured and set
->>>>>> mshv_has_reg_page accordingly.
->>>>>>
->>>>>> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
->>>>>> ---
->>>>>>     arch/x86/hyperv/hv_vtl.c       | 32 ++++++++++++++++++++++
->>>>>>     drivers/hv/mshv_vtl_main.c     | 49 +++-------------------------------
->>>>>>     include/asm-generic/mshyperv.h | 17 ++++++++++++
->>>>>>     3 files changed, 53 insertions(+), 45 deletions(-)
->>>>>>
->>>>
->>>> <snip>
->>>>
->>>>>>     #if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
->>>>>> +/* SYNIC_OVERLAY_PAGE_MSR - internal, identical to hv_synic_simp */
->>>>>
->>>>> This comment pre-dates your patch, but I don't understand the point
->>>>> it is trying to make. The comment is factually true, but I don't know
->>>>> why calling that out is relevant. The REG_PAGE MSR seems to be
->>>>> conceptually separate and distinct from the SIMP MSR, so the fact
->>>>> that the layouts are the same is just a coincidence. Or is there some
->>>>> relationship between the two MSRs that I'm not aware of, and the
->>>>> comment is trying (and failing?) to point out?
->>>>
->>>> This was added as per suggestion from Nuno in my initial series for
->>>> MSHV_VTL. If the reference in "identical to" is misleading, I should
->>>> remove it.
->>>>
->>>> https://lore.kernel.org/all/68143eb0-e6a7-4579-bedb-4c2ec5aaef6b@linux.microsoft.com/
->>>>
->>>> Quoting:
->>>> """
->>>> it is a generic structure that
->>>> appears to be used for several overlay page MSRs (SIMP, SIEF, etc).
->>>>
->>>> But, the type doesn't appear in the hv*dk headers explicitly; it's just
->>>> used internally by the hypervisor.
->>>>
->>>> I think it should be renamed with a hv_ prefix to indicate it's part of
->>>> the hypervisor ABI, and a brief comment with the provenance:
->>>>
->>>> /* SYNIC_OVERLAY_PAGE_MSR - internal, identical to hv_synic_simp */
->>>> union hv_synic_overlay_page_msr {
->>>> 	/* <snip> */
->>>> };
->>>
->>> OK, so this union is not associated *only* with the REG_PAGE MSR
->>> (though that MSR is the only current user). Instead, it is intended to
->>> be a more generic description of MSRs that set up overlay pages. I
->>> don't think I had previously noticed Nuno's comment on the topic.
->>>
->>> Looking through hvgdk_mini.h and hvhdk.h, I see 6 definitions that
->>> are exactly the same:
->>>
->>> * union hv_reference_tsc_msr
->>> * union hv_x64_msr_hypercall_contents
->>> * union hv_vp_assist_msr_contents
->>> * union hv_synic_simp
->>> * union hv_synic_siefp
->>> * union hv_synic_sirbp
->>>
->>> There's an argument to be made for removing these 6 unique definitions
->>> and using union hv_synic_overlay_page_msr instead (though "synic"
->>> would need to be removed from the name).  I would not object to such
->>> an approach. It's a small extra layer of conceptual indirection, but saves
->>> some lines of code for duplicative definitions. The alternative is to drop
->>> the idea of a generic overlay page MSR layout, and replace union
->>> hv_synic_overlay_page_msr with a definition that is specific to the
->>> REG_PAGE MSR, like the other six above.
->>>
->>
->> Hi Michael,
->>
->> While having a generic definition looks good to have here, I can see two
->> reasons for not going ahead with generic overlay page definition:
->> 1. All of the above definitions are present in Hyper-V headers and
->> generalizing them would deviate from the strategy of keeping the kernel
->> headers in line with Hyper-V headers.
->> 2. For any of these definitions, if the use-case requires using some of
->> these reserved bits, then it would be a problem. I can actually see that
->> happening in "hv_x64_msr_hypercall_contents" in the corresponding
->> variant in the Hyper-V header.
-> 
-> Your points are certainly valid, and I'm good with not going the
-> generic route.
-> 
->>
->>> I could go either way. If we want to use a generic overlay page definition,
->>> then that approach should be applied everywhere. With the current
->>> state of your patch set, we're halfway in between -- the generic definition
->>> is used one place, but duplicative specific MSR definitions are used other
->>> places. That's probably the least desirable approach.
->>>
->>> Michael
->>
->>
->> Now, coming back to the hv_synic_overlay_page_msr definition. While
->> Nuno's comment hinted at it being "generic", the same is not documented
->> in the name of this structure or its comments. So it should be safe to
->> assume that it is specific to synic_overlay_page_msr usage. But since it
->> is not part of Hyper-V header as such, we needed that comment:
->> "/* SYNIC_OVERLAY_PAGE_MSR - internal, identical to hv_synic_simp */"
->>
-> 
-> An "overlay page" is a generic concept in the Hyper-V world, and it is used
-> in multiple places in the guest<->hypervisor interface. The old PDF version of
-> the Hyper-V TLFS describes overlay pages in the section 5.2.1 entitled "GPA
-> Overlay Pages". See [1]. Unfortunately, this material about overlay pages
-> doesn't seem to have been carried over to the web page version of the TLFS.
-> 
-> So in my thinking, the name "hv_synic_overlay_page_msr" is inherently
-> a generic definition that could be applied to multiple MSRs that are used to
-> specify overlay pages. Your patch is about a specific MSR,
-> HV_X64_REGISTER_REG_PAGE, which happens to be used to define an
-> overlay page. But if the decision is to *not* go the generic route, I
-> would expect to see something like "union hv_x64_reg_page_msr"
-> that is specific to the REG_PAGE MSR, and to have that type used in
-> hv_vtl_configure_reg_page(). The definition of hv_x64_reg_page_msr
-> would not have a comment referencing the SIMP or any other MSR
-> because it would be a standalone definition that is specific to
-> HV_X64_REGISTER_REG_PAGE. Then the pattern would be the same as
-> the other six cases that I listed above.
-> 
-> When not using the generic approach, hv_synic_overlay_page_msr
-> really has no purpose, and could go away.
-> 
-> Michael
-> 
-> [1] https://github.com/MicrosoftDocs/Virtualization-Documentation/raw/live/tlfs/Hypervisor%20Top%20Level%20Functional%20Specification%20v6.0b.pdf
+Since you posted the diff to the V3, I went and tested the V3 patch.
 
+I have tested this patch on Azure with:
+- Standard_D4ads_v5
+- Standard_D4ads_v6
 
-Thanks for suggesting this, I was not aware of it. I'll change it to 
-hv_x64_reg_page_msr and remove the comment.
+with the following images:
+"Ubuntu Server 22.04 LTS - x64 Gen2"
+"Ubuntu Server 24.04 LTS - x64 Gen2"
 
-Regards,
-Naman
+with the following kernels:
+- 7.1-rc2 at 5862221fddede6bb15566ab3c1f23a3c353da5e1
+- 7.1-rc2 at 5862221fddede6bb15566ab3c1f23a3c353da5e1 + the V3 patch
 
+Without this patch, I could reproduce the issue on 22.04 + v6 based instance
+types.
+
+I can confirm that with this patch, v6 instance types can correctly kdump and
+create a vmcore correctly and restart correctly without running into
+MMIO issues.
+
+I can confirm that with this patch, v5 instance types continue to operate the
+same as they did previously.
+
+Tested-by: Matthew Ruffell <matthew.ruffell@canonical.com>
+
+Thanks,
+Matthew
+
+On Thu, 7 May 2026 at 13:11, Dexuan Cui <DECUI@microsoft.com> wrote:
+>
+> > From: Michael Kelley <mhklinux@outlook.com>
+> > Sent: Wednesday, May 6, 2026 8:14 AM
+> > > ...
+> > > +                           /*
+> > > +                            * If the kdump kernel's lfb_base is 0,
+> >
+> > Nit:  The case of lfb_base is 0 applies to kexec and kdump kernels, and also to
+> > CVMs.
+>
+> Thanks for catching this! I'm going to post this v3 later today.
+>
+> --- v2-0001-Drivers-hv-vmbus-Improve-the-logic-of-reserving-fb_m.patch  2026-05-04 17:48:23.486911073 -0700
+> +++ v3-0001-Drivers-hv-vmbus-Improve-the-logic-of-reserving-fb_m.patch  2026-05-06 18:03:42.922469286 -0700
+> @@ -1,15 +1,15 @@
+>  From 5d817788d65febdc0451e8a88277778794fe87b2 Mon Sep 17 00:00:00 2001
+>  From: Dexuan Cui <decui@microsoft.com>
+>  Date: Thu, 16 Apr 2026 04:30:21 +0000
+> -Subject: [PATCH v2] Drivers: hv: vmbus: Improve the logic of reserving fb_mmio on
+> +Subject: [PATCH v3] Drivers: hv: vmbus: Improve the logic of reserving fb_mmio on
+>   Gen2 VMs
+>
+>  If vmbus_reserve_fb() in the kdump/kexec kernel fails to properly reserve
+>  the framebuffer MMIO range (which is below 4GB) due to a Gen2 VM's
+>  screen.lfb_base being zero [1], there is an MMIO conflict between the
+>  drivers hyperv-drm and pci-hyperv: when the driver pci-hyperv's
+> -hv_pci_allocate_bridge_windows() calls vmbus_allocate_mmio() to get a
+> -32-bit MMIO range, it may get an MMIO range that overlaps with the
+> +hv_allocate_config_window() calls vmbus_allocate_mmio() to get an
+> +MMIO range, typically it gets a 32-bit MMIO range that overlaps with the
+>  framebuffer MMIO range, and later hv_pci_enter_d0() fails with an
+>  error message "PCI Pass-through VSP failed D0 Entry with status" since
+>  the host thinks that PCI devices must not use MMIO space that the
+> @@ -31,7 +31,7 @@
+>  Azure. I checked with the Hyper-V team and they said the statement should
+>  continue to be true for Gen2 VMs). In the first kernel, screen.lfb_base
+>  is not 0; if the user specifies a very high resolution, it's not enough
+> -to only reserve 8MB: in this case, reserve half of the space below 4GB,
+> +to only reserve 8MB: let's always reserve half of the space below 4GB,
+>  but cap the reservation to 128MB, which is the required framebuffer size
+>  of the highest resolution 7680*4320 supported by Hyper-V.
+>
+> @@ -42,7 +42,7 @@
+>  Note: vmbus_reserve_fb() now also reserves an MMIO range at the beginning
+>  of the low MMIO range on CVMs, which have no framebuffers (the
+>  'screen.lfb_base' in vmbus_reserve_fb() is 0 for CVMs), just in case the
+> -host might treat the beginning of the low MMIO range specially [4]. BTW,
+> +host might treat the beginning of the low MMIO range specially [3]. BTW,
+>  the OpenHCL kernel is not affected by the change, because that kernel
+>  boots with DeviceTree rather than ACPI (so vmbus_reserve_fb() won't run
+>  there), and there is no framebuffer device for that kernel.
+> @@ -55,18 +55,20 @@
+>  and the required framebuffer size exceeds 64MB (AFAIK, in practice, this
+>  isn't a typical configuration by users), the hyperv-drm driver may need to
+>  allocate an MMIO range above 4GB and change the framebuffer MMIO location
+> -to the allocated MMIO range -- in this case, there can still be issues [3]
+> +to the allocated MMIO range -- in this case, there can still be issues [4]
+>  which can't be easily fixed: any possible affected Gen1 users would have
+>  to use a resolution whose framebuffer size is <= 64MB, or switch to Gen2
+>  VMs.
+>
+>  [1] https://lore.kernel.org/all/SA1PR21MB692176C1BC53BFC9EAE5CF8EBF51A@SA1PR21MB6921.namprd21.prod.outlook.com/
+>  [2] https://lore.kernel.org/all/SA1PR21MB69218F955B62DFF62E3E88D2BF222@SA1PR21MB6921.namprd21.prod.outlook.com/
+> -[3] https://lore.kernel.org/all/SA1PR21MB69213486F821CA5A2C793C81BF342@SA1PR21MB6921.namprd21.prod.outlook.com/
+> -[4] https://lore.kernel.org/all/SN6PR02MB415726B17D5A6027CD1717E8D4342@SN6PR02MB4157.namprd02.prod.outlook.com/
+> +[3] https://lore.kernel.org/all/SN6PR02MB415726B17D5A6027CD1717E8D4342@SN6PR02MB4157.namprd02.prod.outlook.com/
+> +[4] https://lore.kernel.org/all/SA1PR21MB69213486F821CA5A2C793C81BF342@SA1PR21MB6921.namprd21.prod.outlook.com/
+>
+>  Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
+>  CC: stable@vger.kernel.org
+> +Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+> +Tested-by: Krister Johansen <kjlx@templeofstupid.com>
+>  Signed-off-by: Dexuan Cui <decui@microsoft.com>
+>  ---
+>
+> @@ -104,6 +106,18 @@
+>  Hi Hardik, I'm not adding your Reviewed-by since the patch changed.
+>  Please review the v2.
+>
+> +
+> +Changes since v2:
+> +    Fixed the commit message:
+> +        hv_pci_allocate_bridge_windows() -> hv_allocate_config_window()
+> +
+> +    Changed the "kdump" in the comment to "kdump/kexec or CVM" [Michael Kelley]
+> +
+> +    Fixed the order of the "[3]" and "[4]" in the commit message.
+> +
+> +    Added Krister's Tested-by.
+> +    Added Michael's Reviewed-by.
+> +
+>   drivers/hv/vmbus_drv.c | 29 ++++++++++++++++++++++++++---
+>   1 file changed, 26 insertions(+), 3 deletions(-)
+>
+> @@ -141,8 +155,8 @@
+>  +                              pr_warn("Unexpected low mmio base %pa\n", &low_mmio_base);
+>  +                      } else {
+>  +                              /*
+> -+                               * If the kdump kernel's lfb_base is 0,
+> -+                               * fall back to the low mmio base.
+> ++                               * If the kdump/kexec or CVM kernel's lfb_base
+> ++                               * is 0, fall back to the low mmio base.
+>  +                               */
+>  +                              if (!start)
+>  +                                      start = low_mmio_base;
+>
+>
+> > Modulo my nit about the comment,
+> >
+> > Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+>
+> Thanks a lot!
 
