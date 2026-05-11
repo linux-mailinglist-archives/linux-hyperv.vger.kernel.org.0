@@ -1,48 +1,48 @@
-Return-Path: <linux-hyperv+bounces-10756-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10757-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aGySJcoEAmpEnQEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10756-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 11 May 2026 18:33:14 +0200
+	id uLesJBkKAmqknQEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10757-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 11 May 2026 18:55:53 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0159D512396
-	for <lists+linux-hyperv@lfdr.de>; Mon, 11 May 2026 18:33:13 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 190D7512C1A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 11 May 2026 18:55:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 81E1A32D95A6
-	for <lists+linux-hyperv@lfdr.de>; Mon, 11 May 2026 16:24:35 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9B3AF31FD287
+	for <lists+linux-hyperv@lfdr.de>; Mon, 11 May 2026 16:24:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86D8D42B746;
-	Mon, 11 May 2026 16:24:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7722429837;
+	Mon, 11 May 2026 16:24:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hAMB4NYF"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="LJsUasqJ"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A7DD427A1A;
-	Mon, 11 May 2026 16:24:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 731EF42885D;
+	Mon, 11 May 2026 16:24:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778516662; cv=none; b=G6huN+VzasWhN+BfXZ4dEf4iUNcGIlzSWbQZ1TK32iTcUVbm5qJ+DDJiLJkcKVZRgAsyAog3kSGwcFHnSbU6eEmsLVGboxhQ44UFZ6DMUyZG/tOp3nuvsx9f7x7wNvabClPJc9/78BPlM7OAgZuEfgIhgbLqZ76pXPHeT7p8QN4=
+	t=1778516667; cv=none; b=YDx1tlO8GLP8n2/FhXkQ1UOVDESKF1kLWPHU9TRHwntD8tWA5/dZSxdZLlEsNVos2MW2kQiHOQo4pfySBcg09HCS5Zb9NY+uJzNmBqQbjlWfmUasOffC/YPhf5HjxlbvBI934DI6IdsUyynkJVo8PUMD0UGawEahNTh4sJ4rcEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778516662; c=relaxed/simple;
-	bh=Icxp/2zTEWFWB1l9WBso0osK3O2lNGd3GjwhaVKfMv4=;
+	s=arc-20240116; t=1778516667; c=relaxed/simple;
+	bh=LjwhYiEpbnIXpcw0638g6kSn1hU+B3GVMXL1gMVrqdE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=br3H4upa2bOL1HlaF+mrdPudwPz2uMU1LAAoghtbTRWfAkvC02emYWmuZs2Qp8olKMZzpuhC8fv8mWF/PXhYIXX9Xwct7Q7F0vAylKw9Kb8pdQvG5LVBkv56z1HZvIOuKnuAplh8aX7WlEEAt8/rq7KpulIiG3fqKKThTDNFtWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hAMB4NYF; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=dwdfenDgdafQ8SX60lVoqtwHmVahC+XExhx83zapPybJp4L37HEVfMs1oKDOsiR91V3ynWbbiApTuyGIFOEWK40T90+C2EFBfCY3S6TBJMFN7OR9i0fwbDtAZS96SZIt40ET20LE1h9HHjGAi6Q39ooqOLOtQnjCs+RMmoI3CQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=LJsUasqJ; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from zhangyu-hyperv.mshome.net (unknown [167.220.233.27])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 2C73720B7167;
-	Mon, 11 May 2026 09:24:14 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2C73720B7167
+	by linux.microsoft.com (Postfix) with ESMTPSA id CBC2320B7166;
+	Mon, 11 May 2026 09:24:19 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CBC2320B7166
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1778516658;
-	bh=H4vi3789xKpCrKQcy0slwveGpMN79RMnjsW6wHx0pNk=;
+	s=default; t=1778516664;
+	bh=bTLICXj6cYISziPjeIvCwI3J1zKFh9dSe//fOaQ5bJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hAMB4NYFy3OHF0piP3bHAxdJlFqPDoOFNbfT0INQn53PyBWsFuDkre62NRj/dkKr4
-	 8YsdF0JRB3k2yuAl4dx876ivAlG/YE5StTllzuO5luM58+o/SznfuYTjQwFUrgqsTp
-	 FBqRVm0QDvFGCGCOXxmgXkQPQ9i5TC7ir8Btd++U=
+	b=LJsUasqJxzcQuzzKDhovOeThgIrHtNWi8eBlj6srbNmLoulnVoad66Z3jv413VHvZ
+	 RyKhkYiuotxUbKTMtHbJah+n5C11s38vjUcORk4t35HDsBvRNmCp7UJznlDBRp2Cm5
+	 PwyrXQYOjwVJOm5fPVL5Y+MBD/ymyZf59xbG/W40=
 From: Yu Zhang <zhangyu1@linux.microsoft.com>
 To: linux-kernel@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
@@ -68,9 +68,9 @@ Cc: wei.liu@kernel.org,
 	jacob.pan@linux.microsoft.com,
 	tgopinath@linux.microsoft.com,
 	easwar.hariharan@linux.microsoft.com
-Subject: [PATCH v1 1/4] iommu: Move Hyper-V IOMMU driver to its own subdirectory
-Date: Tue, 12 May 2026 00:24:05 +0800
-Message-ID: <20260511162408.1180069-2-zhangyu1@linux.microsoft.com>
+Subject: [PATCH v1 2/4] hyperv: Introduce new hypercall interfaces used by Hyper-V guest IOMMU
+Date: Tue, 12 May 2026 00:24:06 +0800
+Message-ID: <20260511162408.1180069-3-zhangyu1@linux.microsoft.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260511162408.1180069-1-zhangyu1@linux.microsoft.com>
 References: <20260511162408.1180069-1-zhangyu1@linux.microsoft.com>
@@ -81,7 +81,7 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 0159D512396
+X-Rspamd-Queue-Id: 190D7512C1A
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -89,18 +89,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_CC(0.00)[kernel.org,microsoft.com,8bytes.org,arm.com,google.com,arndb.de,ziepe.ca,outlook.com,linux.microsoft.com];
-	TAGGED_FROM(0.00)[bounces-10756-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10757-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCPT_COUNT_TWELVE(0.00)[24];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[zhangyu1@linux.microsoft.com,linux-hyperv@vger.kernel.org];
@@ -108,134 +108,205 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	NEURAL_HAM(-0.00)[-0.999];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:mid,linux.microsoft.com:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.microsoft.com:mid,linux.microsoft.com:dkim]
 X-Rspamd-Action: no action
 
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
+From: Wei Liu <wei.liu@kernel.org>
 
-The Hyper-V IOMMU driver currently only supports IRQ remapping.
-As it will be adding DMA remapping support, prepare a directory
-to contain all the different feature files.
+Hyper-V guest IOMMU is a para-virtualized IOMMU based on hypercalls.
+Introduce the hypercalls used by the child partition to interact with
+this facility.
 
-This is a simple rename commit and has no functional changes.
+These hypercalls fall into below categories:
+- Detection and capability: HVCALL_GET_IOMMU_CAPABILITIES is used to
+  detect the existence and capabilities of the guest IOMMU.
 
-Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+- Device management: HVCALL_GET_LOGICAL_DEVICE_PROPERTY is used to
+  check whether an endpoint device is managed by the guest IOMMU.
+
+- Domain management: A set of hypercalls is provided to handle the
+  creation, configuration, and deletion of guest domains, as well as
+  the attachment/detachment of endpoint devices to/from those domains.
+
+- IOTLB flushing: HVCALL_FLUSH_DEVICE_DOMAIN is used to ask Hyper-V
+  for a domain-selective IOTLB flush (which in its handler may flush
+  the device TLB as well).
+
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Co-developed-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+Signed-off-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+Co-developed-by: Yu Zhang <zhangyu1@linux.microsoft.com>
 Signed-off-by: Yu Zhang <zhangyu1@linux.microsoft.com>
 ---
- MAINTAINERS                                            |  2 +-
- drivers/iommu/Kconfig                                  | 10 +---------
- drivers/iommu/Makefile                                 |  2 +-
- drivers/iommu/hyperv/Kconfig                           | 10 ++++++++++
- drivers/iommu/hyperv/Makefile                          |  2 ++
- .../iommu/{hyperv-iommu.c => hyperv/irq_remapping.c}   |  2 +-
- 6 files changed, 16 insertions(+), 12 deletions(-)
- create mode 100644 drivers/iommu/hyperv/Kconfig
- create mode 100644 drivers/iommu/hyperv/Makefile
- rename drivers/iommu/{hyperv-iommu.c => hyperv/irq_remapping.c} (99%)
+ include/hyperv/hvgdk_mini.h |   8 +++
+ include/hyperv/hvhdk_mini.h | 124 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 132 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b2040011a386..1519de2a2a09 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11979,7 +11979,7 @@ F:	drivers/clocksource/hyperv_timer.c
- F:	drivers/hid/hid-hyperv.c
- F:	drivers/hv/
- F:	drivers/input/serio/hyperv-keyboard.c
--F:	drivers/iommu/hyperv-iommu.c
-+F:	drivers/iommu/hyperv/
- F:	drivers/net/ethernet/microsoft/
- F:	drivers/net/hyperv/
- F:	drivers/pci/controller/pci-hyperv-intf.c
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index f86262b11416..0bdf2ac3d782 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -195,6 +195,7 @@ config MSM_IOMMU
- source "drivers/iommu/amd/Kconfig"
- source "drivers/iommu/arm/Kconfig"
- source "drivers/iommu/intel/Kconfig"
-+source "drivers/iommu/hyperv/Kconfig"
- source "drivers/iommu/iommufd/Kconfig"
- source "drivers/iommu/riscv/Kconfig"
+diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
+index 6a4e8b9d570f..5bdbb44da112 100644
+--- a/include/hyperv/hvgdk_mini.h
++++ b/include/hyperv/hvgdk_mini.h
+@@ -486,10 +486,16 @@ union hv_vp_assist_msr_contents {	 /* HV_REGISTER_VP_ASSIST_PAGE */
+ #define HVCALL_GET_VP_INDEX_FROM_APIC_ID		0x009a
+ #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE	0x00af
+ #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST	0x00b0
++#define HVCALL_CREATE_DEVICE_DOMAIN			0x00b1
++#define HVCALL_ATTACH_DEVICE_DOMAIN			0x00b2
+ #define HVCALL_SIGNAL_EVENT_DIRECT			0x00c0
+ #define HVCALL_POST_MESSAGE_DIRECT			0x00c1
+ #define HVCALL_DISPATCH_VP				0x00c2
++#define HVCALL_DETACH_DEVICE_DOMAIN			0x00c4
++#define HVCALL_DELETE_DEVICE_DOMAIN			0x00c5
+ #define HVCALL_GET_GPA_PAGES_ACCESS_STATES		0x00c9
++#define HVCALL_CONFIGURE_DEVICE_DOMAIN			0x00ce
++#define HVCALL_FLUSH_DEVICE_DOMAIN			0x00d0
+ #define HVCALL_ACQUIRE_SPARSE_SPA_PAGE_HOST_ACCESS	0x00d7
+ #define HVCALL_RELEASE_SPARSE_SPA_PAGE_HOST_ACCESS	0x00d8
+ #define HVCALL_MODIFY_SPARSE_GPA_PAGE_HOST_VISIBILITY	0x00db
+@@ -502,6 +508,8 @@ union hv_vp_assist_msr_contents {	 /* HV_REGISTER_VP_ASSIST_PAGE */
+ #define HVCALL_MMIO_READ				0x0106
+ #define HVCALL_MMIO_WRITE				0x0107
+ #define HVCALL_DISABLE_HYP_EX                           0x010f
++#define HVCALL_GET_IOMMU_CAPABILITIES			0x0125
++#define HVCALL_GET_LOGICAL_DEVICE_PROPERTY		0x0127
+ #define HVCALL_MAP_STATS_PAGE2				0x0131
  
-@@ -351,15 +352,6 @@ config MTK_IOMMU_V1
+ /* HV_HYPERCALL_INPUT */
+diff --git a/include/hyperv/hvhdk_mini.h b/include/hyperv/hvhdk_mini.h
+index b4cb2fa26e9b..493608e791b4 100644
+--- a/include/hyperv/hvhdk_mini.h
++++ b/include/hyperv/hvhdk_mini.h
+@@ -547,4 +547,128 @@ union hv_device_id {		/* HV_DEVICE_ID */
+ 	} acpi;
+ } __packed;
  
- 	  if unsure, say N here.
- 
--config HYPERV_IOMMU
--	bool "Hyper-V IRQ Handling"
--	depends on HYPERV && X86
--	select IOMMU_API
--	default HYPERV
--	help
--	  Stub IOMMU driver to handle IRQs to support Hyper-V Linux
--	  guest and root partitions.
--
- config VIRTIO_IOMMU
- 	tristate "Virtio IOMMU driver"
- 	depends on VIRTIO
-diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-index 0275821f4ef9..32f3ca758556 100644
---- a/drivers/iommu/Makefile
-+++ b/drivers/iommu/Makefile
-@@ -4,6 +4,7 @@ obj-$(CONFIG_AMD_IOMMU) += amd/
- obj-$(CONFIG_INTEL_IOMMU) += intel/
- obj-$(CONFIG_RISCV_IOMMU) += riscv/
- obj-$(CONFIG_GENERIC_PT) += generic_pt/fmt/
-+obj-$(CONFIG_HYPERV_IOMMU) += hyperv/
- obj-$(CONFIG_IOMMU_API) += iommu.o
- obj-$(CONFIG_IOMMU_SUPPORT) += iommu-pages.o
- obj-$(CONFIG_IOMMU_API) += iommu-traces.o
-@@ -30,7 +31,6 @@ obj-$(CONFIG_TEGRA_IOMMU_SMMU) += tegra-smmu.o
- obj-$(CONFIG_EXYNOS_IOMMU) += exynos-iommu.o
- obj-$(CONFIG_FSL_PAMU) += fsl_pamu.o fsl_pamu_domain.o
- obj-$(CONFIG_S390_IOMMU) += s390-iommu.o
--obj-$(CONFIG_HYPERV_IOMMU) += hyperv-iommu.o
- obj-$(CONFIG_VIRTIO_IOMMU) += virtio-iommu.o
- obj-$(CONFIG_IOMMU_SVA) += iommu-sva.o
- obj-$(CONFIG_IOMMU_IOPF) += io-pgfault.o
-diff --git a/drivers/iommu/hyperv/Kconfig b/drivers/iommu/hyperv/Kconfig
-new file mode 100644
-index 000000000000..30f40d867036
---- /dev/null
-+++ b/drivers/iommu/hyperv/Kconfig
-@@ -0,0 +1,10 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+# HyperV paravirtualized IOMMU support
-+config HYPERV_IOMMU
-+	bool "Hyper-V IRQ Handling"
-+	depends on HYPERV && X86
-+	select IOMMU_API
-+	default HYPERV
-+	help
-+	  Stub IOMMU driver to handle IRQs to support Hyper-V Linux
-+	  guest and root partitions.
-diff --git a/drivers/iommu/hyperv/Makefile b/drivers/iommu/hyperv/Makefile
-new file mode 100644
-index 000000000000..9f557bad94ff
---- /dev/null
-+++ b/drivers/iommu/hyperv/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_HYPERV_IOMMU) += irq_remapping.o
-diff --git a/drivers/iommu/hyperv-iommu.c b/drivers/iommu/hyperv/irq_remapping.c
-similarity index 99%
-rename from drivers/iommu/hyperv-iommu.c
-rename to drivers/iommu/hyperv/irq_remapping.c
-index 479103261ae6..62a94a8c9e95 100644
---- a/drivers/iommu/hyperv-iommu.c
-+++ b/drivers/iommu/hyperv/irq_remapping.c
-@@ -22,7 +22,7 @@
- #include <asm/hypervisor.h>
- #include <asm/mshyperv.h>
- 
--#include "irq_remapping.h"
-+#include "../irq_remapping.h"
- 
- #ifdef CONFIG_IRQ_REMAP
- 
++/* Device domain types */
++#define HV_DEVICE_DOMAIN_TYPE_S1	1 /* Stage 1 domain */
++
++/* ID for default domain and NULL domain */
++#define HV_DEVICE_DOMAIN_ID_DEFAULT 0
++#define HV_DEVICE_DOMAIN_ID_NULL    0xFFFFFFFFULL
++
++union hv_device_domain_id {
++	u64 as_uint64;
++	struct {
++		u32 type: 4;
++		u32 reserved: 28;
++		u32 id;
++	} __packed;
++};
++
++struct hv_input_device_domain {
++	u64 partition_id;
++	union hv_input_vtl owner_vtl;
++	u8 padding[7];
++	union hv_device_domain_id domain_id;
++} __packed;
++
++union hv_create_device_domain_flags {
++	u32 as_uint32;
++	struct {
++		u32 forward_progress_required: 1;
++		u32 inherit_owning_vtl: 1;
++		u32 reserved: 30;
++	} __packed;
++};
++
++struct hv_input_create_device_domain {
++	struct hv_input_device_domain device_domain;
++	union hv_create_device_domain_flags create_device_domain_flags;
++} __packed;
++
++struct hv_input_delete_device_domain {
++	struct hv_input_device_domain device_domain;
++} __packed;
++
++struct hv_input_attach_device_domain {
++	struct hv_input_device_domain device_domain;
++	union hv_device_id device_id;
++} __packed;
++
++struct hv_input_detach_device_domain {
++	u64 partition_id;
++	union hv_device_id device_id;
++} __packed;
++
++struct hv_device_domain_settings {
++	struct {
++		/*
++		 * Enable translations. If not enabled, all transaction bypass
++		 * S1 translations.
++		 */
++		u64 translation_enabled: 1;
++		u64 blocked: 1;
++		/*
++		 * First stage address translation paging mode:
++		 * 0: 4-level paging (default)
++		 * 1: 5-level paging
++		 */
++		u64 first_stage_paging_mode: 1;
++		u64 reserved: 61;
++	} flags;
++
++	/* Address of translation table */
++	u64 page_table_root;
++} __packed;
++
++struct hv_input_configure_device_domain {
++	struct hv_input_device_domain device_domain;
++	struct hv_device_domain_settings settings;
++} __packed;
++
++struct hv_input_get_iommu_capabilities {
++	u64 partition_id;
++	u64 reserved;
++} __packed;
++
++struct hv_output_get_iommu_capabilities {
++	u32 size;
++	u16 reserved;
++	u8  max_iova_width;
++	u8  max_pasid_width;
++
++#define HV_IOMMU_CAP_PRESENT (1ULL << 0)
++#define HV_IOMMU_CAP_S2 (1ULL << 1)
++#define HV_IOMMU_CAP_S1 (1ULL << 2)
++#define HV_IOMMU_CAP_S1_5LVL (1ULL << 3)
++#define HV_IOMMU_CAP_PASID (1ULL << 4)
++#define HV_IOMMU_CAP_ATS (1ULL << 5)
++#define HV_IOMMU_CAP_PRI (1ULL << 6)
++
++	u64 iommu_cap;
++	u64 pgsize_bitmap;
++} __packed;
++
++enum hv_logical_device_property_code {
++	HV_LOGICAL_DEVICE_PROPERTY_PVIOMMU = 10,
++};
++
++struct hv_input_get_logical_device_property {
++	u64 partition_id;
++	u64 logical_device_id;
++	/* Takes values from enum hv_logical_device_property_code. */
++	u32 code;
++	u32 reserved;
++} __packed;
++
++struct hv_output_get_logical_device_property {
++#define HV_DEVICE_IOMMU_ENABLED (1ULL << 0)
++	u64 device_iommu;
++	u64 reserved;
++} __packed;
++
++struct hv_input_flush_device_domain {
++	struct hv_input_device_domain device_domain;
++	u32 flags;
++	u32 reserved;
++} __packed;
++
+ #endif /* _HV_HVHDK_MINI_H */
 -- 
 2.52.0
 
