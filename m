@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-10752-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10753-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UM6zD6L3AWqcmwEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10752-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 11 May 2026 17:37:06 +0200
+	id ULouA930AWoFmwEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10753-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 11 May 2026 17:25:17 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42F19511512
-	for <lists+linux-hyperv@lfdr.de>; Mon, 11 May 2026 17:37:05 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id A11975111D0
+	for <lists+linux-hyperv@lfdr.de>; Mon, 11 May 2026 17:25:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id BCDA130CE91B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 11 May 2026 15:07:24 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id CF6FB3092A5F
+	for <lists+linux-hyperv@lfdr.de>; Mon, 11 May 2026 15:15:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80C7A2DB794;
-	Mon, 11 May 2026 15:06:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 728B140244B;
+	Mon, 11 May 2026 15:12:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="LPHnISh8"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AV1rVHfm"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F8962D94BA;
-	Mon, 11 May 2026 15:06:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2436740243B;
+	Mon, 11 May 2026 15:12:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778512011; cv=none; b=kskj2cnlPLtMLkPLBBxgc5iScucOzeWLRoboT5cJBJgiScWQ4QPRCLJJPCoQmcNOQ/yza2Aaylllm/kPp4kaXgYeuUCHRc5bSpvkdbTK7UGtXOKIbPeyuqp+lcAoH+QCi3oRR/jCwPh6qphQR1sN/L/yYQyoICTCt/E59Ybgehg=
+	t=1778512373; cv=none; b=itNzC371aIkCmMnReKx6Jw6+njaO1wJcM63YZOJou+09TOOAHqUdQ2aByLBijmaH+ylkhEzjpv37RdsOngTK7yyOqubnmUfaZnQJfbbbrcREETj7mEsANmtMIyywzM0i7755WfRs06YTH42XQk85Nfpkdx1jSxYvIfCIY66G5cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778512011; c=relaxed/simple;
-	bh=PkEfSYlC4wjB7vxkV0ZeDDNoB0sNMa6LW7dZKgSbhN8=;
+	s=arc-20240116; t=1778512373; c=relaxed/simple;
+	bh=T4t4EiPEeAX+9ArpqKT/R4R/NZA163GIGVrf4gp91fk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ri9Ql38FQW66Fxeg0+ECl0ff2qJYwm37UKfGgOzM7uqzyg5YauqkHAP3y6sZz2K/3FgGzcPaJGgrZna2LjAf7Mtc3wimbVTgeDbO20Aed4si61vKV85n4MvDFw7XY8CXku7KgRm7ZNuAi8IVzHvAzoSO7k0jYGvXPZlHzKUPX84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=LPHnISh8; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=YhCvbR2DNwlmWETJHXOI5GqgcAEdboPO2LqvEISvHesoDcmho0kG48WvbL0pE6MAl5By+SVG9bBz4N9c5xg2LGbQ3oGrZShilvAICNEGujdoOL+tb6oMqEjGYqsLGlI1+PlubGhS5FLnOQW0DlKsvxBjZ0zG8dYZUf8h4AYV4vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=AV1rVHfm; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii.localdomain (c-98-225-44-182.hsd1.wa.comcast.net [98.225.44.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id BFACA20B7166;
-	Mon, 11 May 2026 08:06:44 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BFACA20B7166
+	by linux.microsoft.com (Postfix) with ESMTPSA id C9B2320B7166;
+	Mon, 11 May 2026 08:12:49 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C9B2320B7166
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1778512004;
-	bh=xoxen4et4CHou4F1ZrO6fuz/aWKw4gHF3gw83x0kPQc=;
+	s=default; t=1778512370;
+	bh=NsicUKKNfTPpbZ1cpGJvifAuNnk8DiphxlMCS1ywlnY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LPHnISh8C7QigJMW2ERQomkLAoSNsn5OveLsG+tZ2lQAMnDNh3ojtAF0egcF5lkVv
-	 5BD/UhAYrv3+80W03fylO5ISCUXJcP/Avz1NZlDa4p1hee6Q/ExLoszDirmg/IWPlM
-	 nlN9xcxdARtmBl94gZUwkYQ8KxEluuV6tGKbiM8k=
-Date: Mon, 11 May 2026 08:06:44 -0700
+	b=AV1rVHfmj7cLUTq2NjrcOaT6fQhuH2fv7N1tVVwjgNlWmHR8eTUF37WBgMvr47hZF
+	 iLgXw0JETBBjtKE6pJtim6MaXtFOBPDWgX+mtQKRwJvKTLt9HnMzE3j6c4wzqUmomd
+	 eewdlrTLCNyido5slwY0/N/Gxs4CLVwbFOkmIUXI=
+Date: Mon, 11 May 2026 08:12:49 -0700
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: Anirudh Rayabharam <anirudh@anirudhrb.com>
 Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
@@ -51,7 +51,7 @@ Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
 	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v4 02/18] mshv: Fix mshv_prepare_pinned_region error path
  for unencrypted partitions
-Message-ID: <agHwhJrqEL3IewHz@skinsburskii.localdomain>
+Message-ID: <agHx8f16I5qMOOHk@skinsburskii.localdomain>
 References: <177816592843.21765.4364464279247150355.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
  <177816858991.21765.2088226987194959542.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
  <20260511-ancient-naughty-bat-f58c2c@anirudhrb>
@@ -65,17 +65,17 @@ Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 In-Reply-To: <20260511-ancient-naughty-bat-f58c2c@anirudhrb>
-X-Rspamd-Queue-Id: 42F19511512
+X-Rspamd-Queue-Id: A11975111D0
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10752-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10753-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -83,7 +83,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
@@ -92,7 +92,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linux.microsoft.com:dkim,skinsburskii.localdomain:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
 On Mon, May 11, 2026 at 01:48:56PM +0000, Anirudh Rayabharam wrote:
@@ -135,6 +135,12 @@ On Mon, May 11, 2026 at 01:48:56PM +0000, Anirudh Rayabharam wrote:
 > 
 > It doesn't checked for zeroed pages before unpinning.
 > 
+
+unpin_user_pages skips NULL pages.
+
+Thanks,
+Stanislav
+
 > > 
 > > Fixes: 621191d709b14 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
 > > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
@@ -189,20 +195,6 @@ On Mon, May 11, 2026 at 01:48:56PM +0000, Anirudh Rayabharam wrote:
 > logic be added there too so as not to crash the host by unpinning pages
 > that weren't marked shared?
 > 
-
-Indeed.
-The issue with all this code is that we are leaking state in
-mshv_region_pin if we wimply return from it: we don't know if the pages
-are pinned or unshared (or mapped) in the destruction callback.
-We should either introduce a state variable to track this or just don't
-call the generic mshv_region_put on case of region creation error.
-The latter approch make mshv_map_user_memory idempotent and thus looks
-like a better way forward.
-What do you think?
-
-Thanks,
-Stanislav
-
 > >From mshv_region_destroy():
 > 
 > 	if (mshv_partition_encrypted(partition)) {
@@ -217,5 +209,4 @@ Stanislav
 > 
 > Thanks,
 > Anirudh.
-> 
 
