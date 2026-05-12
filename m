@@ -1,46 +1,46 @@
-Return-Path: <linux-hyperv+bounces-10808-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10809-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6GZtNLZqA2rF5gEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10808-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 20:00:22 +0200
+	id 8DViNgR0A2rl5wEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10809-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 20:40:04 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 903435267B3
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 20:00:22 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60EC7527F12
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 20:40:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id DC181305D7FB
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 17:58:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 99FE93261FE3
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 18:08:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1852B3955CB;
-	Tue, 12 May 2026 17:57:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FC44366548;
+	Tue, 12 May 2026 18:08:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tHllvqvf"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="KOhaaKYo"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E9A385D63;
-	Tue, 12 May 2026 17:57:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19618349AF5;
+	Tue, 12 May 2026 18:08:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778608678; cv=none; b=FVe8HEiID7bAkVTG+kDifKhW3o7BLij7FO/QwT9nPVcPoOhqW6wGwEOOWD4hLUeQ3WYOZckA6Iw5jWJDbSKbyJF9m4fYDhw5WPYS9Gpp2Jn56Ni70OgxB+pq2dBLMpDRwh4JGFwUVKZA0lNd1L409UdByVrfuc/gKXjtx281SAk=
+	t=1778609303; cv=none; b=i1XVWmBNH+G5SYSw2Jb+LgXTwWf3BkqjS5e2JvJuxwIfTrPncfKRIRXpxvH9nLMRlSOR0m0pW8deWR+b2BE0OFqnCU75ZtoxWVP8ds7rm7LUQxVsSXjgC03r+XxXbKhfvvcjHzrWxCLAMYC0acvJtxeE6k702jq2zJpxsDtTQfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778608678; c=relaxed/simple;
-	bh=5b2OaPpdkzg+DoOOzPWOXyDjl63IanI0G0DqcNs58yU=;
+	s=arc-20240116; t=1778609303; c=relaxed/simple;
+	bh=GDCs8izwjVjaIQgsAzOQC1PLBBb47MPU6AsrUhc0Fq4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rgvw097fbDpj+gJj468rghiRt2TMVNiNPJvGzWxxPKvhZfHV9colsJwU6/xQOESgtTuizweMGxFIOQYjOzHrEDs857ygRi8PRjzb0qWZN5/BOguPiTiTn4PkQ1c9TY3y9UNbbMbGuvvw4qipz2chfpugw/FYgWyl9sSQPCXsRQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tHllvqvf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F078C2BCB0;
-	Tue, 12 May 2026 17:57:57 +0000 (UTC)
+	 MIME-Version; b=nl6iA/n1uTsNX4K0SlV+AzSTcDEydbl1RqJzP09VidtSe/4+/E4NGqnPVmTZMxrHMvzZOZdi3QPfts3n+tgm1+CbG3sU+hHTCqQ8C2h+7TtngPvK2dLh1+hti9LJjy+3CLP63MFij0N7auguXBDUj8kh/ocu6b8WI4p9cNOqO/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=KOhaaKYo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3098C2BCB0;
+	Tue, 12 May 2026 18:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1778608677;
-	bh=5b2OaPpdkzg+DoOOzPWOXyDjl63IanI0G0DqcNs58yU=;
+	s=korg; t=1778609303;
+	bh=GDCs8izwjVjaIQgsAzOQC1PLBBb47MPU6AsrUhc0Fq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tHllvqvf+iQWDAhfwwmp2CR31uZSswmEWIhFTfrFDzAnesRtOt3E2SqthTpH4bNoO
-	 gRE8/1Sn1XbPD5+BR3me/8TfUDQfhIC0lJ/xH6FKqgZB4gArgbGwghkGeMmvF9Mp6j
-	 vuPK0yfKT95QcExqGLksyPFIBAN2j9b6qcK2hi0M=
+	b=KOhaaKYo+A3y81RaX8ng4lYE/uGc2cZmsYtEhzrwKsSDTZKWKvPMTlLjFiCe6CBT1
+	 LDrR3l4Sp0kUmr+o+Buv3OO6nnmKw+pYx5A/98P1CWoEixQVbsRQ1TQvc2lp0cKSg8
+	 F0roxIZtifj/Zep7P4pVziV9NDVSeNh5J3yT4Lbw=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -54,12 +54,12 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Dexuan Cui <decui@microsoft.com>,
 	Long Li <longli@microsoft.com>,
 	linux-hyperv@vger.kernel.org
-Subject: [PATCH 6.18 121/270] hv: Select CONFIG_SYSFB only for CONFIG_HYPERV_VMBUS
-Date: Tue, 12 May 2026 19:38:42 +0200
-Message-ID: <20260512173941.003572553@linuxfoundation.org>
+Subject: [PATCH 7.0 142/307] hv: Select CONFIG_SYSFB only for CONFIG_HYPERV_VMBUS
+Date: Tue, 12 May 2026 19:38:57 +0200
+Message-ID: <20260512173943.124738342@linuxfoundation.org>
 X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260512173938.452574370@linuxfoundation.org>
-References: <20260512173938.452574370@linuxfoundation.org>
+In-Reply-To: <20260512173940.117428952@linuxfoundation.org>
+References: <20260512173940.117428952@linuxfoundation.org>
 User-Agent: quilt/0.69
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -70,18 +70,18 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 903435267B3
+X-Rspamd-Queue-Id: 60EC7527F12
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linuxfoundation.org,none];
 	R_DKIM_ALLOW(-0.20)[linuxfoundation.org:s=korg];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10808-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10809-lists,linux-hyperv=lfdr.de];
 	FREEMAIL_CC(0.00)[linuxfoundation.org,lists.linux.dev,suse.de,outlook.com,linux.microsoft.com,kernel.org,microsoft.com,vger.kernel.org];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -89,7 +89,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	RCPT_COUNT_TWELVE(0.00)[12];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[linuxfoundation.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[gregkh@linuxfoundation.org,linux-hyperv@vger.kernel.org];
@@ -99,10 +99,10 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[msgid.link:url,suse.de:email,outlook.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linuxfoundation.org:email,linuxfoundation.org:mid,linuxfoundation.org:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,msgid.link:url,linuxfoundation.org:email,linuxfoundation.org:mid,linuxfoundation.org:dkim,outlook.com:email]
 X-Rspamd-Action: no action
 
-6.18-stable review patch.  If anyone has any objections, please let me know.
+7.0-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -142,7 +142,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  	select IRQ_MSI_LIB if X86
  	help
  	  Select this option to run Linux as a Hyper-V client operating
-@@ -61,6 +60,7 @@ config HYPERV_VMBUS
+@@ -62,6 +61,7 @@ config HYPERV_VMBUS
  	tristate "Microsoft Hyper-V VMBus driver"
  	depends on HYPERV
  	default HYPERV
