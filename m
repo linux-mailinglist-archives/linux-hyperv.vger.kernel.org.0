@@ -1,263 +1,195 @@
-Return-Path: <linux-hyperv+bounces-10796-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10797-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eMdJDbqOAmryuQEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10796-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 04:21:46 +0200
+	id OBh5CZ2zAmp2vwEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10797-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 06:59:09 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9901518E01
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 04:21:45 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 971B0519B42
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 06:59:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id A26E23018C2F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 02:21:44 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 256983025E52
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 04:59:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D0E3363081;
-	Tue, 12 May 2026 02:21:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E22E233122D;
+	Tue, 12 May 2026 04:59:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g+ZNzb8x"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CI1ArQZT"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BAC1A680C;
-	Tue, 12 May 2026 02:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FDFE31B838;
+	Tue, 12 May 2026 04:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778552497; cv=none; b=Wfj7qU2Y79Txb1w/MNqUhxqOz5RDXUZV2D2f7eaVJlZTM3wxA0d25/fpkq7AmsUtVTJz0TWnBKVVbzyPpdFBPSq9gbDIs/KWSxVMp12SwbxESg0imCFrzAk1Qe505sY+ugsieelFLc1rJvgIhUtUa6wHLRPRDP8vEGlI+h9IxM8=
+	t=1778561946; cv=none; b=WVwEhq3XEYnzj7vQ4TOa5tBEz4KFEVP/t8PqWg2b5U7eTnD9J5Cap9ZdqcQBVXjvn0cCO1V2wJWSSF8msHvqlDMewRKO4VSvGY+SYm1hIViSlvWcSeK/1jxJ9icTaTs2a+T30mE7qU+/+iDaax5C2Y2az1qGQnNAPctMTIwJO7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778552497; c=relaxed/simple;
-	bh=T+0Nef/1KS8+15UPaVvnoK25b9jw3Qq81QPRwdPZQYc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ON15t93W1RXTI2GQJ7bQVTOi6zudA5I4Rp5Roy83p+SIe1dUhZiQuRMhYwSwAfql47Wl9R8bZNaYTVa4DF6rZmfG2J/F/bLVlZyfIoC54Ihn07qRfcQGXHuGUB3sdRd0klYPkHAVx+0iuMjeX9ekSDTQu7F7CLeitkfh9U8IxZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g+ZNzb8x; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C70AC2BCF5;
-	Tue, 12 May 2026 02:21:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778552496;
-	bh=T+0Nef/1KS8+15UPaVvnoK25b9jw3Qq81QPRwdPZQYc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=g+ZNzb8xj6Rp4yY/07754ewJ407kQs9VG7mxAtf+AbcxcvXzPR2THpc+eUjyyCSeb
-	 DomBi0XfG321XOM8wlEnDXeIsxHrsImaGk0DDcHTBnY7cPTP3q41NcKEgz1Av4Ii6Y
-	 wwJKqPqgklKg+mzVcFUaDOFEnvSxnsz5jGZl4fIKSbUyDplNJh2xDlZ3TKCuPQ73lC
-	 onkzFmQXESTrVP9yO7ksHshCS6eKXxCbjKTKstTw0zThg3JhhSpWTPL3QKfgNI0aPe
-	 xVtO7UVsnDVMQHDOuTrbKSBO9jUzX7oMEs+essH8t4s2h4NAONpCLbIellTKr9Zzkd
-	 I5d5LIwXpZQGA==
-From: Jakub Kicinski <kuba@kernel.org>
-To: dipayanroy@linux.microsoft.com
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	leon@kernel.org,
-	longli@microsoft.com,
-	kotaranov@microsoft.com,
-	horms@kernel.org,
-	shradhagupta@linux.microsoft.com,
-	ssengar@linux.microsoft.com,
-	ernis@linux.microsoft.com,
-	shirazsaleem@microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	stephen@networkplumber.org,
-	jacob.e.keller@intel.com,
-	dipayanroy@microsoft.com,
-	leitao@debian.org,
-	kees@kernel.org,
-	john.fastabend@gmail.com,
-	hawk@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	ast@kernel.org,
-	sdf@fomichev.me,
-	yury.norov@gmail.com
-Subject: Re: [PATCH v8 2/2] net: mana: force full-page RX buffers via ethtool private flag
-Date: Mon, 11 May 2026 19:21:33 -0700
-Message-ID: <20260512022133.856196-1-kuba@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260508115100.488506-3-dipayanroy@linux.microsoft.com>
-References: <20260508115100.488506-3-dipayanroy@linux.microsoft.com>
+	s=arc-20240116; t=1778561946; c=relaxed/simple;
+	bh=TvQkbCpBAwWmu/+s0/683PQaLuNtS6G4/9C8St/egB4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EraGqvQVrJkJgZ0tnnxmEzl9wbK/TQ6DpRbn923qDgOFq1L0vmqz1DHgWkNCTjkqs1a1Dj7/iw5Mgtsj56SBwa+M25chOjKuHj4e4lMKaTZP5P7jIhoYfJ2/3PDcET5SNjDeohXQjqV4cFds/7qk8RphkueQUQY4294NKp5tUqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=CI1ArQZT; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1099)
+	id DEA0C20B7166; Mon, 11 May 2026 21:59:01 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DEA0C20B7166
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1778561941;
+	bh=Ct2zox4LNaFQs4SrzFzo0qnDAt+wwOMkCjNjaObBP1w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CI1ArQZT/OgZjHmn5SqzOI3XEf+nL8o+BsRStOnwZlz8wxDQD4IR5dy7KhF3EJ/07
+	 CvPNuDOYl3oTa6fNTLp8vxKJqlp5IycfbM3mCaopVnC0m9AZb+ZmGyLfgWW/9ulLps
+	 1kWRQAVeDL7y+MELf57k41+iMf4N6Ld0Lj8hdXvQ=
+Date: Mon, 11 May 2026 21:59:01 -0700
+From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+To: Mukesh R <mrathor@linux.microsoft.com>
+Cc: hpa@zytor.com, robin.murphy@arm.com, robh@kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev, linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org
+Subject: Re: [PATCH V1 1/3] mshv: Import declarations for irq remap and add
+ irqbypass support
+Message-ID: <agKzlfagq4Sh7ua3@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20260512021242.1679786-1-mrathor@linux.microsoft.com>
+ <20260512021242.1679786-2-mrathor@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: A9901518E01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260512021242.1679786-2-mrathor@linux.microsoft.com>
+X-Rspamd-Queue-Id: 971B0519B42
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-10797-lists,linux-hyperv=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[34];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10796-lists,linux-hyperv=lfdr.de];
-	FREEMAIL_CC(0.00)[kernel.org,microsoft.com,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,vger.kernel.org,networkplumber.org,intel.com,debian.org,gmail.com,iogearbox.net,fomichev.me];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[kuba@kernel.org,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[schakrabarti@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.998];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	FROM_HAS_DN(0.00)[]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.microsoft.com:dkim,linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid]
 X-Rspamd-Action: no action
 
-This is an AI-generated review of your patch. The human sending this
-email has considered the AI review valid, or at least plausible.
----
-net: mana: force full-page RX buffers via ethtool private flag
-
-This patch adds an ethtool private flag "full-page-rx" that forces one
-RX buffer per page, bypassing the page_pool fragment path, to address
-a 15-20% throughput regression seen on some 4K PAGE_SIZE ARM64
-platforms under high connection counts.  Toggling the flag triggers
-mana_detach() + mana_attach() to apply the new RX buffer layout.
-
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> index a28ca461c135..dfd222de11d0 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-
-[ ... ]
-
-> @@ -590,6 +609,88 @@ static int mana_get_link_ksettings(struct net_device *ndev,
->  	return 0;
->  }
+On Mon, May 11, 2026 at 07:12:40PM -0700, Mukesh R wrote:
+> For the irq map/remap hypercalls, copy relevant data structures from
+> hypervisor public headers into Linux equivalents. Also, update Kconfig and
+> mshv_irqfd for irqbypass. Please note, irqbypass is required for doing
+> passthru on MSHV. This because there is really no way of knowing the linux
+> irq in the mshv_irqfd_assign and mshv_irqfd_update paths without it. The
+> linux irq is setup upfront by VFIO before irqfd assign/update happens.
+> 
+Reviewed-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+> Signed-off-by: Mukesh R <mrathor@linux.microsoft.com>
+> ---
+>  drivers/hv/Kconfig          |  1 +
+>  drivers/hv/mshv_eventfd.h   |  3 +++
+>  include/hyperv/hvgdk_mini.h |  3 +++
+>  include/hyperv/hvhdk.h      | 17 +++++++++++++++++
+>  4 files changed, 24 insertions(+)
+> 
+> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> index 7937ac0cbd0f..c831fe25ca2b 100644
+> --- a/drivers/hv/Kconfig
+> +++ b/drivers/hv/Kconfig
+> @@ -75,6 +75,7 @@ config MSHV_ROOT
+>  	# no particular order, making it impossible to reassemble larger pages
+>  	depends on PAGE_SIZE_4KB
+>  	select EVENTFD
+> +	select IRQ_BYPASS_MANAGER
+>  	select VIRT_XFER_TO_GUEST_WORK
+>  	select HMM_MIRROR
+>  	select MMU_NOTIFIER
+> diff --git a/drivers/hv/mshv_eventfd.h b/drivers/hv/mshv_eventfd.h
+> index 464c6b81ab33..ff4dd24b8ad4 100644
+> --- a/drivers/hv/mshv_eventfd.h
+> +++ b/drivers/hv/mshv_eventfd.h
+> @@ -9,6 +9,7 @@
+>  #define __LINUX_MSHV_EVENTFD_H
 >  
-
-[ ... ]
-
-> +static int mana_set_priv_flags(struct net_device *ndev, u32 priv_flags)
-> +{
-> +	struct mana_port_context *apc = netdev_priv(ndev);
-> +	u32 changed = apc->priv_flags ^ priv_flags;
-> +	u32 old_priv_flags = apc->priv_flags;
-> +	bool schedule_port_reset = false;
-> +	int err = 0;
+>  #include <linux/poll.h>
+> +#include <linux/irqbypass.h>
+>  
+>  #include "mshv.h"
+>  #include "mshv_root.h"
+> @@ -37,6 +38,8 @@ struct mshv_irqfd {
+>  	struct mshv_irqfd_resampler	    *irqfd_resampler;
+>  	struct eventfd_ctx		    *irqfd_resamplefd;
+>  	struct hlist_node		     irqfd_resampler_hnode;
+> +	struct irq_bypass_consumer	     irqfd_bypass_cons;
+> +	struct irq_bypass_producer	    *irqfd_bypass_prod;
+>  };
+>  
+>  void mshv_eventfd_init(struct mshv_partition *partition);
+> diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
+> index da622fb06440..1ef480825705 100644
+> --- a/include/hyperv/hvgdk_mini.h
+> +++ b/include/hyperv/hvgdk_mini.h
+> @@ -59,6 +59,8 @@ struct hv_u128 {
+>  #define HV_PARTITION_ID_INVALID		((u64)0)
+>  #define HV_PARTITION_ID_SELF		((u64)-1)
+>  
+> +#define HV_MAX_VPS    256               /* HV_MAXIMUM_PROCESSORS */
 > +
-> +	if (!changed)
-> +		return 0;
+>  /* Hyper-V specific model specific registers (MSRs) */
+>  
+>  #if defined(CONFIG_X86)
+> @@ -508,6 +510,7 @@ union hv_vp_assist_msr_contents {	 /* HV_REGISTER_VP_ASSIST_PAGE */
+>  #define HVCALL_UNMAP_VP_STATE_PAGE			0x00e2
+>  #define HVCALL_GET_VP_STATE				0x00e3
+>  #define HVCALL_SET_VP_STATE				0x00e4
+> +#define HVCALL_GET_VPSET_FROM_MDA                       0x00e5
+>  #define HVCALL_GET_VP_CPUID_VALUES			0x00f4
+>  #define HVCALL_GET_PARTITION_PROPERTY_EX		0x0101
+>  #define HVCALL_MMIO_READ				0x0106
+> diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
+> index 5e83d3714966..d0a892347ab1 100644
+> --- a/include/hyperv/hvhdk.h
+> +++ b/include/hyperv/hvhdk.h
+> @@ -952,4 +952,21 @@ struct hv_input_modify_sparse_spa_page_host_access {
+>  #define HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE      0x4
+>  #define HV_MODIFY_SPA_PAGE_HOST_ACCESS_HUGE_PAGE       0x8
+>  
+> +#ifdef CONFIG_X86
 > +
-> +	/* Reject unknown bits */
-> +	if (priv_flags & ~GENMASK(MANA_PRIV_FLAG_MAX - 1, 0))
-> +		return -EINVAL;
+> +struct hv_input_get_vp_set_from_mda {   /* HV_OUTPUT_GET_VP_SET_FROM_MDA */
+> +	u64 target_partid;
+> +	u64 dest_address;
+> +	u8  input_vtl;
+> +	u8  destmode_logical;         /* true => mode is logical */
+> +	u16 reserved0;                /* mbz */
+> +	u32 reserved1;                /* mbz */
+> +} __packed;
 > +
-> +	if (changed & BIT(MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF)) {
-> +		apc->priv_flags = priv_flags;
+> +union hv_output_get_vp_set_from_mda {  /* HV_OUTPUT_GET_VP_SET_FROM_MDA */
+> +	struct hv_vpset target_vpset;
+> +	u64 bitset_buffer[HV_GENERIC_SET_QWORD_COUNT(HV_MAX_VPS)];
+> +} __packed;
 > +
-> +		if (!apc->port_is_up) {
-> +			/* Port is down, flag updated to apply on next up
-> +			 * so just return.
-> +			 */
-> +			return 0;
-> +		}
-> +
-> +		/* Pre-allocate buffers to prevent failure in mana_attach
-> +		 * later
-> +		 */
-> +		err = mana_pre_alloc_rxbufs(apc, ndev->mtu, apc->num_queues);
-> +		if (err) {
-> +			netdev_err(ndev,
-> +				   "Insufficient memory for new allocations\n");
-> +			apc->priv_flags = old_priv_flags;
-> +			return err;
-> +		}
-> +
-> +		err = mana_detach(ndev, false);
-> +		if (err) {
-> +			netdev_err(ndev, "mana_detach failed: %d\n", err);
-> +			apc->priv_flags = old_priv_flags;
-> +
-> +			/* Port is in an inconsistent state. Restore
-> +			 * 'port_is_up' so that queue reset work handler
-> +			 * can properly detach and re-attach.
-> +			 */
-> +			apc->port_is_up = true;
-> +			schedule_port_reset = true;
-> +			goto out;
-> +		}
-> +
-> +		err = mana_attach(ndev);
-> +		if (err) {
-> +			netdev_err(ndev, "mana_attach failed: %d\n", err);
-> +			apc->priv_flags = old_priv_flags;
-> +
-> +			/* Restore 'port_is_up' so the reset work handler
-> +			 * can properly detach/attach. Without this,
-> +			 * the handler sees port_is_up=false and skips
-> +			 * queue allocation, leaving the port dead.
-> +			 */
-> +			apc->port_is_up = true;
-> +			schedule_port_reset = true;
-> +		}
-> +	}
-> +
-> +out:
-> +	mana_pre_dealloc_rxbufs(apc);
-> +
-> +	if (schedule_port_reset)
-> +		queue_work(apc->ac->per_port_queue_reset_wq,
-> +			   &apc->queue_reset_work);
-> +
-> +	return err;
-> +}
-
-[High]
-Can this failure path oops inside the reset work handler?
-
-When mana_attach() fails after mana_detach() has already torn the vport
-down, apc->tx_qp has been set to NULL by mana_destroy_txq() and apc->rxqs
-has been cleared by mana_cleanup_port_context().  This code then forces
-apc->port_is_up back to true and queues apc->queue_reset_work:
-
-    apc->port_is_up = true;
-    schedule_port_reset = true;
-
-When mana_per_port_queue_reset_work_handler runs it calls
-mana_detach(ndev, false), which latches port_st_save = port_is_up = true
-and, because port_st_save is true, invokes mana_dealloc_queues().  The TX
-drain loop there does:
-
-    txq = &apc->tx_qp[i].txq;
-    atomic_read(&txq->pending_sends);
-
-with no NULL check on apc->tx_qp, and mana_destroy_vport further down
-iterates apc->rxqs[rxq_idx] while rxqs is NULL.  Would that produce a
-NULL pointer dereference in the workqueue worker whenever mana_attach()
-fails here (for example on an allocation failure in
-mana_init_port_context or mana_create_txq, or a transient HW command
-failure in mana_query_vport_cfg / mana_cfg_vport)?
-
-The mana_detach() failure path above (goto out) reaches
-mana_dealloc_queues() through the same chain and looks to have the same
-exposure.
-
-For comparison, mana_change_mtu() handles a mana_attach() failure by
-returning the error without scheduling a reset.  Would a similar
-treatment here avoid the asynchronous oops, or is there a reason the
-reset must be scheduled in this specific failure case?
--- 
-pw-bot: cr
+> +#endif /* CONFIG_X86 */
+>  #endif /* _HV_HVHDK_H */
+> -- 
+> 2.51.2.vfs.0.1
+> 
 
