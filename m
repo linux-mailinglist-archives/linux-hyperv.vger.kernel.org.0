@@ -1,63 +1,75 @@
-Return-Path: <linux-hyperv+bounces-10787-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10788-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IJKZMSeNAmrzuAEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10787-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 04:15:03 +0200
+	id 6CdBCWmNAmpouQEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10788-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 04:16:09 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6774C518C7D
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 04:15:03 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86236518CF6
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 04:16:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9BDC530607F2
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 02:12:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C93BB3002A17
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 02:14:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73FB7324B1F;
-	Tue, 12 May 2026 02:12:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E72031079B;
+	Tue, 12 May 2026 02:14:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XxPNjBtV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cIiNd2du"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7CF531986C;
-	Tue, 12 May 2026 02:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38EC92848BE;
+	Tue, 12 May 2026 02:14:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778551976; cv=none; b=lp05WH0MOcrEafMwPaj5AmbtGcoh5WKxXlvVK03jlFlng25XAcKr0kjxf4ySHjehH5tYPa0iA96AbsJ3W6SPweS19490lbBm3kTE8OYOwG9BN0fTWEZ0QPDb+yaU10645d1m/uUHHwzdBHt3lmudTeX8DUsbkhfmfkhIOumA060=
+	t=1778552043; cv=none; b=kgaUS5xlNBKccev8uNdby1eHnmo0Wf4UBrRGhdEDcDbK1E7Tky7VNFLxNYSCp9vlOwWDA18cndbtOI6x3+JJv8SgPNBeR8AEolZFcsI3fKOroreUYPwDqIATqi+BM74kXKaoq9ssh85UwHjm4jFOc2QmPkU47elMfLCFTtOF9Pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778551976; c=relaxed/simple;
-	bh=PIMOM+38WPisoeckzuWM0T2Ojwc3Get4Tkda0krDR+8=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jCFxOkoYfb0ljcfGtEhAdK6KJmwdqHnFn30Nf80JMotpS0Zyn7bP08vs95IJKuRttKrJB+XZ6BJRPseJY69VGk9CZgxXMSkV/H/g57yuJErwKkGhZ7dDUnHm6nJ7R+WUSvVI9NI9gKElzrNRa0A7PRd5kT3Fmt0u7Bg1ocJ5D2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XxPNjBtV; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from mrdev.corp.microsoft.com (unknown [40.118.131.60])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 56AFB20B7169;
-	Mon, 11 May 2026 19:12:52 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 56AFB20B7169
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1778551972;
-	bh=KS6l/b5Uv4heu85TppZODlG7u81WUffqR10quhteBFk=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=XxPNjBtV27aOt6CeSGnryK55XK8T2s7g2tD1ERx19lyhuoiTS7cvCXnoI2Z6mKFYT
-	 cCck0odpK+MNIWycV968leTigXYb/d4Sfmb8q+4XrdV8rtDkZIRNsqDiUWP6VBLmK/
-	 2QSfhd4+YyiqkUc9G2WiCwErPwZx3RHoE5u6iGbY=
-From: Mukesh R <mrathor@linux.microsoft.com>
-To: hpa@zytor.com,
-	robin.murphy@arm.com,
-	robh@kernel.org,
+	s=arc-20240116; t=1778552043; c=relaxed/simple;
+	bh=pFJslUGrwdc29w+hrlhHXY0JzawCF09OH5dfidJXFz4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=V56KmVTBtKlVh/S/Ndfk4lFz8qfqbLanj6/3KtQZvSrr4hZ4u+UUHnDFsLalrFFcse7PfD/mvT2H12y0h3KaNMBXfIfi6tXi5zwNOQ2QrcJrZmTv21YceDdMS3OVM04iAoJG9qDK1IUurJWJUM7pnxOGPabgb/Hl0PeDAHtwvIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cIiNd2du; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05170C2BCB0;
+	Tue, 12 May 2026 02:14:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778552042;
+	bh=pFJslUGrwdc29w+hrlhHXY0JzawCF09OH5dfidJXFz4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cIiNd2duTnK5XWa/MoxqcAz/G8CnKutLO5ybVitnantGa97QJSWngoTRH2z/Tg16r
+	 J8HSIw+HPsqmFAEh+/rH2x/BB6piEX2BgB6x2Yj+FzHufHmFQy7q/O+rIiwidVkH29
+	 JU04sZwU14qCfwC/TFRDmJh1gWOc4+GpQOpDlVrQhWDUJHIvIO+adT/ODtxcCQf/eU
+	 OuvgoSERX4lQf0ehCo969UZv/RUX3gb63kA9nDb0tR7xylZQCH48MCcGySU5I8P7cd
+	 N16gDMU96Dpv8gB3CFO7PThB62YQ6DeUPAgoCvCyr2jRwJFI9NZvnuA+vbsVgY+1QB
+	 ny/isVepohHng==
+From: Jakub Kicinski <kuba@kernel.org>
+To: longli@microsoft.com
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	kotaranov@microsoft.com,
+	davem@davemloft.net,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	andrew+netdev@lunn.ch,
+	jgg@ziepe.ca,
+	leon@kernel.org,
+	haiyangz@microsoft.com,
+	kys@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	shradhagupta@linux.microsoft.com,
+	horms@kernel.org,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org
-Subject: [PATCH V1 3/3] mshv: Implement guest irq migration for passthru devices
-Date: Mon, 11 May 2026 19:12:42 -0700
-Message-ID: <20260512021242.1679786-4-mrathor@linux.microsoft.com>
-X-Mailer: git-send-email 2.51.2.vfs.0.1
-In-Reply-To: <20260512021242.1679786-1-mrathor@linux.microsoft.com>
-References: <20260512021242.1679786-1-mrathor@linux.microsoft.com>
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v7 1/6] net: mana: Create separate EQs for each vPort
+Date: Mon, 11 May 2026 19:13:58 -0700
+Message-ID: <20260512021358.849780-1-kuba@kernel.org>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260507191237.438671-2-longli@microsoft.com>
+References: <20260507191237.438671-2-longli@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -65,143 +77,180 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 6774C518C7D
+X-Rspamd-Queue-Id: 86236518CF6
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-10787-lists,linux-hyperv=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	TAGGED_FROM(0.00)[bounces-10788-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mrathor@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[kuba@kernel.org,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_NONE(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	NEURAL_HAM(-0.00)[-0.999];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:mid,linux.microsoft.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-0.995];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-Ask the hypervisor to retarget interrupts to new guest cpu or vector
-upon guest irq migration. This happens in the irqfd update path.
-
-Signed-off-by: Mukesh R <mrathor@linux.microsoft.com>
+This is an AI-generated review of your patch. The human sending this
+email has considered the AI review valid, or at least plausible.
 ---
- drivers/hv/mshv_eventfd.c | 78 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 76 insertions(+), 2 deletions(-)
+net: mana: Create separate EQs for each vPort
 
-diff --git a/drivers/hv/mshv_eventfd.c b/drivers/hv/mshv_eventfd.c
-index 1f5c1e9ee9b7..c05201d857fd 100644
---- a/drivers/hv/mshv_eventfd.c
-+++ b/drivers/hv/mshv_eventfd.c
-@@ -192,6 +192,77 @@ static int mshv_map_device_interrupt(u64 ptid, union hv_device_id hv_devid,
- 
- }
- 
-+/* NOTE: caller does spin_lock_irq on pt_irqfds_lock, hence no disable here */
-+static void mshv_do_guest_irq_retarget(u64 partid, struct mshv_irqfd *irqfd)
-+{
-+	int rc, var_size;
-+	u64 status;
-+	union hv_device_id hv_devid;
-+	struct hv_input_get_vp_set_from_mda *mda_input;
-+	union hv_output_get_vp_set_from_mda *mda_output;
-+	struct hv_retarget_device_interrupt *remap_inp;
-+	struct pci_dev *pdev;
-+	struct irq_data *irqdata;
-+	struct mshv_lapic_irq *lapic_irq = &irqfd->irqfd_lapic_irq;
-+	struct hv_interrupt_entry *inte = NULL;
-+
-+	if (!irqfd->irqfd_girq_ent.girq_entry_valid ||
-+	    irqfd->irqfd_bypass_prod == NULL)
-+		return;
-+
-+	rc = mshv_parse_mshv_irqfd(irqfd, &pdev, &irqdata);
-+	if (rc)
-+		return;
-+
-+	inte = irqdata->chip_data;
-+	if (inte == NULL)
-+		return;
-+
-+	hv_devid.as_uint64 = hv_devid_from_pdev(pdev);
-+
-+
-+	mda_input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-+	mda_output = *this_cpu_ptr(hyperv_pcpu_output_arg);
-+
-+	rc = hv_vpset_from_hyp_disabled(mda_input, mda_output, lapic_irq,
-+					partid);
-+	if (rc)
-+		return;
-+
-+	remap_inp = *this_cpu_ptr(hyperv_pcpu_input_arg);
-+	memset(remap_inp, 0, sizeof(*remap_inp));
-+
-+	rc = hv_copy_vpset(&remap_inp->int_target.vp_set,
-+			   &mda_output->target_vpset);
-+	if (rc <= 0) {
-+		pr_err("Hyper-V: ptid %lld - vpset copy failed (%d)\n",
-+		       partid, rc);
-+		return;
-+	}
-+
-+	/*
-+	 * var-sized hcall: var-size starts after vp_mask (thus vp_set.format
-+	 * does not count, but vp_set.valid_bank_mask does).
-+	 */
-+	var_size = rc + 1;
-+
-+	remap_inp->partition_id = partid;
-+	remap_inp->device_id = hv_devid.as_uint64;
-+	remap_inp->int_target.vector = lapic_irq->lapic_vector;
-+	remap_inp->int_target.flags = HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET;
-+
-+	remap_inp->int_entry.source = inte->source;
-+	remap_inp->int_entry.msi_entry.as_uint64 = inte->msi_entry.as_uint64;
-+
-+	status = hv_do_rep_hypercall(HVCALL_RETARGET_INTERRUPT, 0, var_size,
-+				     remap_inp, NULL);
-+
-+	if (!hv_result_success(status))
-+		hv_status_err(status, "pt:%lld vec:%d lapic-id:%lld\n",
-+			      partid, lapic_irq->lapic_vector,
-+			      lapic_irq->lapic_apic_id);
-+}
-+
- static int mshv_unmap_device_interrupt(union hv_device_id hv_devid,
- 				       struct hv_interrupt_entry *irq_entry)
- {
-@@ -729,9 +800,12 @@ static void mshv_irqfd_update(struct mshv_partition *pt,
- 			      struct mshv_irqfd *irqfd)
- {
- 	write_seqcount_begin(&irqfd->irqfd_irqe_sc);
--	irqfd->irqfd_girq_ent = mshv_ret_girq_entry(pt,
--						    irqfd->irqfd_irqnum);
-+	irqfd->irqfd_girq_ent = mshv_ret_girq_entry(pt, irqfd->irqfd_irqnum);
- 	mshv_copy_girq_info(&irqfd->irqfd_girq_ent, &irqfd->irqfd_lapic_irq);
-+
-+#if IS_ENABLED(CONFIG_X86_64)
-+	mshv_do_guest_irq_retarget(pt->pt_id, irqfd);
-+#endif
- 	write_seqcount_end(&irqfd->irqfd_irqe_sc);
- }
- 
+This change removes EQ sharing across vPorts and moves EQ ownership
+from struct mana_context to struct mana_port_context. It exports
+mana_create_eq() and mana_destroy_eq() so the MANA RDMA driver can
+create EQs when a raw QP configures the vport, and also rearranges
+mana_alloc_queues()/mana_dealloc_queues() to own the netdev-side
+EQ lifecycle.
+
+A few questions on the resulting ownership model below.
+
+> diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
+> index ac5e75dd3494..8000ab6e8beb 100644
+> --- a/drivers/infiniband/hw/mana/main.c
+> +++ b/drivers/infiniband/hw/mana/main.c
+> @@ -20,8 +20,10 @@ void mana_ib_uncfg_vport(struct mana_ib_dev *dev, struct mana_ib_pd *pd,
+>  	pd->vport_use_count--;
+>  	WARN_ON(pd->vport_use_count < 0);
+>  
+> -	if (!pd->vport_use_count)
+> +	if (!pd->vport_use_count) {
+> +		mana_destroy_eq(mpc);
+>  		mana_uncfg_vport(mpc);
+> +	}
+>  
+>  	mutex_unlock(&pd->vport_mutex);
+>  }
+
+[High]
+After this change, mpc->eqs has two distinct owners: the RDMA path
+frees it here under pd->vport_mutex, and the netdev path frees it under
+rtnl_lock via mana_dealloc_queues() -> mana_destroy_eq(). Neither lock
+is held by the readers in qp.c. See the comment on the RSS QP path
+below.
+
+> diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
+> index 645581359cee..6f1043383e8c 100644
+> --- a/drivers/infiniband/hw/mana/qp.c
+> +++ b/drivers/infiniband/hw/mana/qp.c
+> @@ -168,7 +168,15 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
+>  		cq_spec.gdma_region = cq->queue.gdma_region;
+>  		cq_spec.queue_size = cq->cqe * COMP_ENTRY_SIZE;
+>  		cq_spec.modr_ctx_id = 0;
+> -		eq = &mpc->ac->eqs[cq->comp_vector];
+> +		/* EQs are created when a raw QP configures the vport.
+> +		 * A raw QP must be created before creating rwq_ind_tbl.
+> +		 */
+> +		if (!mpc->eqs) {
+> +			ret = -EINVAL;
+> +			i--;
+> +			goto fail;
+> +		}
+> +		eq = &mpc->eqs[cq->comp_vector % mpc->num_queues];
+>  		cq_spec.attached_eq = eq->eq->id;
+
+[High]
+Is the NULL check on mpc->eqs safe here without any synchronization?
+
+Before this patch, ac->eqs was allocated in mana_probe() and freed in
+mana_remove(), so its lifetime spanned the whole driver. With this
+patch, apc->eqs can be freed concurrently by either owner:
+
+    mana_ib_uncfg_vport()                 (pd->vport_mutex)
+      mana_destroy_eq(mpc)
+        kfree(apc->eqs);
+        apc->eqs = NULL;
+
+    mana_dealloc_queues()                 (rtnl_lock, ndo_close)
+      mana_destroy_eq(apc)
+        kfree(apc->eqs);
+        apc->eqs = NULL;
+
+This path holds neither lock. Can the 'if (!mpc->eqs)' observation
+survive through the subsequent '&mpc->eqs[...]' and 'eq->eq->id'
+dereference, or can a concurrent destroyer free apc->eqs between the
+check and the deref and turn this into a read of freed memory?
+
+There is also an initialization window in the writer:
+
+    apc->eqs = kzalloc_objs(struct mana_eq, apc->num_queues);
+    ...
+    for (i = 0; i < apc->num_queues; i++) {
+        ...
+        err = mana_gd_create_mana_eq(gd, &spec, &apc->eqs[i].eq);
+
+apc->eqs is published before apc->eqs[i].eq is filled in. Can a
+concurrent reader here see apc->eqs non-NULL but apc->eqs[i].eq still
+NULL, and fault on eq->eq->id?
+
+[Medium]
+mana_ib advertises ib_dev.num_comp_vectors as gc->max_num_queues in
+mana_ib_probe(), but this patch sizes the per-port pool as
+apc->num_queues, which defaults to min(gc->max_num_queues,
+MANA_DEF_NUM_QUEUES) and can be reduced further via ethtool -L.
+
+    eq = &mpc->eqs[cq->comp_vector % mpc->num_queues];
+
+When gc->max_num_queues > apc->num_queues, does this modulo silently
+collapse distinct advertised completion vectors onto shared EQs, so
+CQs created by userspace with different comp_vector values end up on
+the same notification stream? Would it be better to cap
+ib_dev.num_comp_vectors to apc->num_queues, or reject comp_vector >=
+apc->num_queues, instead of wrapping?
+
+[Medium]
+The added comment codifies a new ordering constraint:
+
+    /* EQs are created when a raw QP configures the vport.
+     * A raw QP must be created before creating rwq_ind_tbl.
+     */
+
+Before this patch, ac->eqs existed from mana_probe() onward, so
+mana_ib_create_qp_rss() succeeded whether or not the netdev was up and
+whether or not any raw QP had been created on the port. After this
+patch, if the netdev is administratively down and no raw QP has
+configured the vport, mpc->eqs is NULL and this path returns -EINVAL.
+
+Is that ABI-visible change to RSS QP creation intentional, and worth
+calling out in the commit message?
+
+The comment is also slightly incomplete: EQs are created on netdev open
+via mana_alloc_queues() -> mana_create_eq() as well, not only when a
+raw QP configures the vport. Could the wording be adjusted?
+
+>  
+>  		ret = mana_create_wq_obj(mpc, mpc->port_handle, GDMA_RQ,
+
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+[ ... ]
+> @@ -3343,6 +3367,9 @@ static int mana_dealloc_queues(struct net_device *ndev)
+>  	mana_fence_rqs(apc);
+>  
+>  	/* Even in err case, still need to cleanup the vPort */
+> +	mana_destroy_rxqs(apc);
+> +	mana_destroy_txq(apc);
+> +	mana_destroy_eq(apc);
+>  	mana_destroy_vport(apc);
+>  
+>  	return 0;
 -- 
-2.51.2.vfs.0.1
-
+pw-bot: cr
 
