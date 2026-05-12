@@ -1,536 +1,382 @@
-Return-Path: <linux-hyperv+bounces-10802-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10803-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uNW+NfEBA2pczgEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10802-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 12:33:21 +0200
+	id MIPTFHIQA2qX0AEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10803-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 13:35:14 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CCC751EA5A
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 12:33:20 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4616151F69F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 13:35:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 22CBA3008E1B
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 10:27:39 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 37D1A30069A0
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 11:35:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AA3F349CCB;
-	Tue, 12 May 2026 10:27:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97D634D2EF5;
+	Tue, 12 May 2026 11:34:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="pfYJ/i27"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KT/IiXg9"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50222349CCA;
-	Tue, 12 May 2026 10:27:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D4A3C3C00
+	for <linux-hyperv@vger.kernel.org>; Tue, 12 May 2026 11:34:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778581657; cv=none; b=bASQPTH5MuNVosUhnmxF0K0epXa+Bk7/cao6asRv8CMDGYeXe5Y9kieppllTzBmLezjysB2UmD5ZVIwxjj539MwyH8Mij7YHbnC4RtyOfpXj6VMt2UQVVT2UVC062yES8hcU/sCFXY8RsRTUx1hMMZ5x8mIoJ7pB7lwt4U/UDpY=
+	t=1778585699; cv=none; b=U5tp7YMOVIQ8C3xGJF1hE5UMf2DzvcNY8thdZSaWuqnIOwJxwyDjJogJtHXUbfEIwNP6w2rD2dYK6IXLkNcbyodcujA9vJgV3eER1Z4WrOIfhgzWOQM6DOCLsXvRLGusdCjo92HuKh4Gbb0yd/GSayoCf/4sSmb1rgGRAyIPkhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778581657; c=relaxed/simple;
-	bh=J5gD9wtyLmRvDM4IrUXehYOKCNt756esS04K+gbOq/c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gsrSn2TRsO1nyT3xVWNp4IGqZyQhvtntpV+sdG9LhALnRSYW1mkGyXcScQKYdq3wDiMvHwo92G3HYggNk3dipeh/bNvWbYA2ZD9wzgZyrzA11Vop+bewWAugqvYI1ocug1unxgdMZS7TbBHqT+Oa5g4Fgw6T1bP3hsl3NsirfDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=pfYJ/i27; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1099)
-	id EDD6620B7166; Tue, 12 May 2026 03:27:32 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EDD6620B7166
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1778581652;
-	bh=VTpkazokvCswLbrPdaZv7BY48d3mdyIXwaVdSf8IFjI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pfYJ/i27Ker4Ax6jV52NldTBUsNc4eVFu6TvQFJ1v+g86QVJ0E1iy2go/pz/yG815
-	 UB9a3GwE4TlGthI4XYVPB5nv7MrH4NGinOeq7Hr9t2jnuZIGoOK23oM7IQIz8pIVTM
-	 pYDT3elUNJTqf49eYbaJGw6oA79pbYerLukNZyak=
-Date: Tue, 12 May 2026 03:27:32 -0700
-From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-To: Mukesh R <mrathor@linux.microsoft.com>
-Cc: hpa@zytor.com, robin.murphy@arm.com, robh@kernel.org,
-	wei.liu@kernel.org, mhklinux@outlook.com, muislam@microsoft.com,
-	namjain@linux.microsoft.com, magnuskulke@linux.microsoft.com,
-	anbelski@linux.microsoft.com, linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, iommu@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
-	longli@microsoft.com, tglx@kernel.org, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	joro@8bytes.org, will@kernel.org, lpieralisi@kernel.org,
-	kwilczynski@kernel.org, bhelgaas@google.com, arnd@arndb.de,
-	jacob.pan@linux.microsoft.com
-Subject: Re: [PATCH V3 02/11] x86/hyperv: Cosmetic changes in irqdomain.c for
- readability
-Message-ID: <agMAlBVwFwN08Wf0@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20260512020259.1678627-1-mrathor@linux.microsoft.com>
- <20260512020259.1678627-3-mrathor@linux.microsoft.com>
+	s=arc-20240116; t=1778585699; c=relaxed/simple;
+	bh=1IpsV88xPvhWRZi6mj/I6mhERZcG0HdszvNzOvfLg+8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TR+CX5nQZjxBbTThhu0ej9h4WAJchrUtp1Do2Ue5Bo731uhnfUdZrY6GjKux52loUDzkFa5co3w6/1vfMjok/lZzQuVlalq8nXwG+0jZXS+MXFT8VdExkRwqiFj15gSFIJMAKrVJcQGgWIKcf5QMENd8JmDF6uVfr14nQfsFvJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KT/IiXg9; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1778585696;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2T1P80e2ayXiD4FLmzXcH0SJv4nUG0BB/kIni+nI35U=;
+	b=KT/IiXg9ASZ9jZTIqFffxEssnnSFaxFsjNHVpa6nk9JPeWVBlvrmwiue09/Z7iilEVvI0A
+	O1met9El9rvacTB5TjqalVsfT8a2ERjdT4AUobUSQM7/rGsFpWRwpFbJBsOwhXxrv5BycD
+	EPg0eRcojnCucCcDDq8T7q3UW8Z4AhE=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-684-r2p_ab2aMVy41g7ch2XGkg-1; Tue,
+ 12 May 2026 07:34:52 -0400
+X-MC-Unique: r2p_ab2aMVy41g7ch2XGkg-1
+X-Mimecast-MFC-AGG-ID: r2p_ab2aMVy41g7ch2XGkg_1778585690
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 17CA4195608B;
+	Tue, 12 May 2026 11:34:50 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.44.48.142])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A466C1800465;
+	Tue, 12 May 2026 11:34:44 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: longli@microsoft.com
+Cc: kotaranov@microsoft.com,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	andrew+netdev@lunn.ch,
+	jgg@ziepe.ca,
+	leon@kernel.org,
+	haiyangz@microsoft.com,
+	kys@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	shradhagupta@linux.microsoft.com,
+	horms@kernel.org,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v8 1/6] net: mana: Create separate EQs for each vPort
+Date: Tue, 12 May 2026 13:34:38 +0200
+Message-ID: <20260512113438.168454-1-pabeni@redhat.com>
+In-Reply-To: <20260508221202.15725-2-longli@microsoft.com>
+References: <20260508221202.15725-2-longli@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260512020259.1678627-3-mrathor@linux.microsoft.com>
-X-Rspamd-Queue-Id: 4CCC751EA5A
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Rspamd-Queue-Id: 4616151F69F
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10802-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[zytor.com,arm.com,kernel.org,outlook.com,microsoft.com,linux.microsoft.com,vger.kernel.org,lists.linux.dev,redhat.com,alien8.de,linux.intel.com,8bytes.org,google.com,arndb.de];
-	RCPT_COUNT_TWELVE(0.00)[31];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10803-lists,linux-hyperv=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[19];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[schakrabarti@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	FROM_NEQ_ENVFROM(0.00)[pabeni@redhat.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[anirudhrb.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid,linux.microsoft.com:dkim]
+	RCVD_COUNT_FIVE(0.00)[6];
+	NEURAL_HAM(-0.00)[-0.989];
+	TO_DN_NONE(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:url,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On Mon, May 11, 2026 at 07:02:50PM -0700, Mukesh R wrote:
-> Make cosmetic changes:
->  o Rename struct pci_dev *dev to *pdev since there are cases of
->    struct device *dev in the file and all over the kernel
->  o Rename hv_build_pci_dev_id to hv_build_devid_type_pci in anticipation
->    of building different types of device IDs
->  o Fix checkpatch.pl issues with return and extraneous printk
->  o Replace spaces with tabs
->  o Rename struct hv_devid *xxx to struct hv_devid *hv_devid given code
->    paths involve many types of device IDs
->  o Fix indentation in a large if block by using goto.
-> 
-> There are no functional changes.
-> 
-> Reviewed-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
-Reviewed-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-> Signed-off-by: Mukesh R <mrathor@linux.microsoft.com>
-> ---
->  arch/x86/hyperv/irqdomain.c | 198 +++++++++++++++++++-----------------
->  1 file changed, 104 insertions(+), 94 deletions(-)
-> 
-> diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
-> index 365e364268d9..b3ad50a874dc 100644
-> --- a/arch/x86/hyperv/irqdomain.c
-> +++ b/arch/x86/hyperv/irqdomain.c
-> @@ -1,5 +1,4 @@
->  // SPDX-License-Identifier: GPL-2.0
-> -
->  /*
->   * Irqdomain for Linux to run as the root partition on Microsoft Hypervisor.
->   *
-> @@ -14,8 +13,8 @@
->  #include <linux/irqchip/irq-msi-lib.h>
->  #include <asm/mshyperv.h>
+From: AI Reviewer <ai@example.com>
+
+This is an AI-generated review of your patch. The human sending this
+email has considered the AI review valid, or at least plausible.
+Full review at: https://netdev-ai.bots.linux.dev/sashiko/
+---
+Subject: net: mana: Create separate EQs for each vPort
+
+This patch moves EQ ownership from struct mana_context to
+struct mana_port_context, creates per-vPort EQs in mana_alloc_queues()
+and mana_ib_cfg_vport(), and exports mana_create_eq()/mana_destroy_eq()
+for use by the MANA RDMA driver.
+
+A few questions below about the new lifetime and ordering rules for
+mpc->eqs.
+
+> diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
+> index ac5e75dd3494..8000ab6e8beb 100644
+> --- a/drivers/infiniband/hw/mana/main.c
+> +++ b/drivers/infiniband/hw/mana/main.c
+> @@ -20,8 +20,10 @@ void mana_ib_uncfg_vport(struct mana_ib_dev *dev, struct mana_ib_pd *pd,
+>  	pd->vport_use_count--;
+>  	WARN_ON(pd->vport_use_count < 0);
 >  
-> -static int hv_map_interrupt(union hv_device_id device_id, bool level,
-> -		int cpu, int vector, struct hv_interrupt_entry *entry)
-> +static int hv_map_interrupt(union hv_device_id hv_devid, bool level,
-> +		int cpu, int vector, struct hv_interrupt_entry *ret_entry)
->  {
->  	struct hv_input_map_device_interrupt *input;
->  	struct hv_output_map_device_interrupt *output;
-> @@ -32,7 +31,7 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
->  	intr_desc = &input->interrupt_descriptor;
->  	memset(input, 0, sizeof(*input));
->  	input->partition_id = hv_current_partition_id;
-> -	input->device_id = device_id.as_uint64;
-> +	input->device_id = hv_devid.as_uint64;
->  	intr_desc->interrupt_type = HV_X64_INTERRUPT_TYPE_FIXED;
->  	intr_desc->vector_count = 1;
->  	intr_desc->target.vector = vector;
-> @@ -44,7 +43,7 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
+> -	if (!pd->vport_use_count)
+> +	if (!pd->vport_use_count) {
+> +		mana_destroy_eq(mpc);
+>  		mana_uncfg_vport(mpc);
+> +	}
 >  
->  	intr_desc->target.vp_set.valid_bank_mask = 0;
->  	intr_desc->target.vp_set.format = HV_GENERIC_SET_SPARSE_4K;
-> -	nr_bank = cpumask_to_vpset(&(intr_desc->target.vp_set), cpumask_of(cpu));
-> +	nr_bank = cpumask_to_vpset(&intr_desc->target.vp_set, cpumask_of(cpu));
->  	if (nr_bank < 0) {
->  		local_irq_restore(flags);
->  		pr_err("%s: unable to generate VP set\n", __func__);
-> @@ -61,7 +60,7 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
->  
->  	status = hv_do_rep_hypercall(HVCALL_MAP_DEVICE_INTERRUPT, 0, var_size,
->  			input, output);
-> -	*entry = output->interrupt_entry;
-> +	*ret_entry = output->interrupt_entry;
->  
->  	local_irq_restore(flags);
->  
-> @@ -71,21 +70,19 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
->  	return hv_result_to_errno(status);
+>  	mutex_unlock(&pd->vport_mutex);
 >  }
->  
-> -static int hv_unmap_interrupt(u64 id, struct hv_interrupt_entry *old_entry)
-> +static int hv_unmap_interrupt(u64 id, struct hv_interrupt_entry *irq_entry)
->  {
->  	unsigned long flags;
->  	struct hv_input_unmap_device_interrupt *input;
-> -	struct hv_interrupt_entry *intr_entry;
->  	u64 status;
->  
->  	local_irq_save(flags);
->  	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
->  
->  	memset(input, 0, sizeof(*input));
-> -	intr_entry = &input->interrupt_entry;
->  	input->partition_id = hv_current_partition_id;
->  	input->device_id = id;
-> -	*intr_entry = *old_entry;
-> +	input->interrupt_entry = *irq_entry;
->  
->  	status = hv_do_hypercall(HVCALL_UNMAP_DEVICE_INTERRUPT, input, NULL);
->  	local_irq_restore(flags);
-> @@ -115,67 +112,71 @@ static int get_rid_cb(struct pci_dev *pdev, u16 alias, void *data)
->  	return 0;
->  }
->  
-> -static union hv_device_id hv_build_pci_dev_id(struct pci_dev *dev)
-> +static union hv_device_id hv_build_devid_type_pci(struct pci_dev *pdev)
->  {
-> -	union hv_device_id dev_id;
-> +	int pos;
-> +	union hv_device_id hv_devid;
->  	struct rid_data data = {
->  		.bridge = NULL,
-> -		.rid = PCI_DEVID(dev->bus->number, dev->devfn)
-> +		.rid = PCI_DEVID(pdev->bus->number, pdev->devfn)
->  	};
->  
-> -	pci_for_each_dma_alias(dev, get_rid_cb, &data);
-> +	pci_for_each_dma_alias(pdev, get_rid_cb, &data);
->  
-> -	dev_id.as_uint64 = 0;
-> -	dev_id.device_type = HV_DEVICE_TYPE_PCI;
-> -	dev_id.pci.segment = pci_domain_nr(dev->bus);
-> +	hv_devid.as_uint64 = 0;
-> +	hv_devid.device_type = HV_DEVICE_TYPE_PCI;
-> +	hv_devid.pci.segment = pci_domain_nr(pdev->bus);
->  
-> -	dev_id.pci.bdf.bus = PCI_BUS_NUM(data.rid);
-> -	dev_id.pci.bdf.device = PCI_SLOT(data.rid);
-> -	dev_id.pci.bdf.function = PCI_FUNC(data.rid);
-> -	dev_id.pci.source_shadow = HV_SOURCE_SHADOW_NONE;
-> +	hv_devid.pci.bdf.bus = PCI_BUS_NUM(data.rid);
-> +	hv_devid.pci.bdf.device = PCI_SLOT(data.rid);
-> +	hv_devid.pci.bdf.function = PCI_FUNC(data.rid);
-> +	hv_devid.pci.source_shadow = HV_SOURCE_SHADOW_NONE;
->  
-> -	if (data.bridge) {
-> -		int pos;
-> +	if (data.bridge == NULL)
-> +		goto out;
->  
-> -		/*
-> -		 * Microsoft Hypervisor requires a bus range when the bridge is
-> -		 * running in PCI-X mode.
-> -		 *
-> -		 * To distinguish conventional vs PCI-X bridge, we can check
-> -		 * the bridge's PCI-X Secondary Status Register, Secondary Bus
-> -		 * Mode and Frequency bits. See PCI Express to PCI/PCI-X Bridge
-> -		 * Specification Revision 1.0 5.2.2.1.3.
-> -		 *
-> -		 * Value zero means it is in conventional mode, otherwise it is
-> -		 * in PCI-X mode.
-> -		 */
-> +	/*
-> +	 * Microsoft Hypervisor requires a bus range when the bridge is
-> +	 * running in PCI-X mode.
-> +	 *
-> +	 * To distinguish conventional vs PCI-X bridge, we can check
-> +	 * the bridge's PCI-X Secondary Status Register, Secondary Bus
-> +	 * Mode and Frequency bits. See PCI Express to PCI/PCI-X Bridge
-> +	 * Specification Revision 1.0 5.2.2.1.3.
-> +	 *
-> +	 * Value zero means it is in conventional mode, otherwise it is
-> +	 * in PCI-X mode.
-> +	 */
->  
-> -		pos = pci_find_capability(data.bridge, PCI_CAP_ID_PCIX);
-> -		if (pos) {
-> -			u16 status;
-> +	pos = pci_find_capability(data.bridge, PCI_CAP_ID_PCIX);
-> +	if (pos) {
-> +		u16 status;
->  
-> -			pci_read_config_word(data.bridge, pos +
-> -					PCI_X_BRIDGE_SSTATUS, &status);
-> +		pci_read_config_word(data.bridge, pos + PCI_X_BRIDGE_SSTATUS,
-> +				     &status);
->  
-> -			if (status & PCI_X_SSTATUS_FREQ) {
-> -				/* Non-zero, PCI-X mode */
-> -				u8 sec_bus, sub_bus;
-> +		if (status & PCI_X_SSTATUS_FREQ) {
-> +			/* Non-zero, PCI-X mode */
-> +			u8 sec_bus, sub_bus;
->  
-> -				dev_id.pci.source_shadow = HV_SOURCE_SHADOW_BRIDGE_BUS_RANGE;
-> +			hv_devid.pci.source_shadow =
-> +					     HV_SOURCE_SHADOW_BRIDGE_BUS_RANGE;
->  
-> -				pci_read_config_byte(data.bridge, PCI_SECONDARY_BUS, &sec_bus);
-> -				dev_id.pci.shadow_bus_range.secondary_bus = sec_bus;
-> -				pci_read_config_byte(data.bridge, PCI_SUBORDINATE_BUS, &sub_bus);
-> -				dev_id.pci.shadow_bus_range.subordinate_bus = sub_bus;
-> -			}
-> +			pci_read_config_byte(data.bridge, PCI_SECONDARY_BUS,
-> +					     &sec_bus);
-> +			hv_devid.pci.shadow_bus_range.secondary_bus = sec_bus;
-> +			pci_read_config_byte(data.bridge, PCI_SUBORDINATE_BUS,
-> +					     &sub_bus);
-> +			hv_devid.pci.shadow_bus_range.subordinate_bus = sub_bus;
->  		}
+
+[High]
+After this change, mpc->eqs lifetime is governed by pd->vport_use_count,
+and only raw QPs call mana_ib_cfg_vport()/mana_ib_uncfg_vport().  RSS
+QPs in mana_ib_create_qp_rss() read mpc->eqs and latch eq->eq->id into
+the HW CQ via cq_spec.attached_eq, but they do not bump
+pd->vport_use_count.
+
+So if a user creates a raw QP on a PD (use_count=1, mpc->eqs allocated),
+then creates an RSS QP on the same PD whose CQs now reference those EQ
+ids, and finally destroys the raw QP first, this path runs with
+use_count dropping to 0 and calls mana_destroy_eq(mpc) -> kfree(apc->eqs)
+and mana_gd_destroy_queue() for each EQ while the surviving RSS QP's HW
+CQs are still attached to those EQs.
+
+Is there an intended rule that enforces destruction ordering between raw
+and RSS QPs on the same PD, or should RSS QPs also participate in the
+refcount that guards mpc->eqs?
+
+> @@ -55,15 +57,22 @@ int mana_ib_cfg_vport(struct mana_ib_dev *dev, u32 port, struct mana_ib_pd *pd,
+>  		return err;
 >  	}
 >  
-> -	return dev_id;
-> +out:
-> +	return hv_devid;
->  }
+> -	mutex_unlock(&pd->vport_mutex);
 >  
-> -/**
-> - * hv_map_msi_interrupt() - "Map" the MSI IRQ in the hypervisor.
-> +/*
-> + * hv_map_msi_interrupt() - Map the MSI IRQ in the hypervisor.
->   * @data:      Describes the IRQ
->   * @out_entry: Hypervisor (MSI) interrupt entry (can be NULL)
->   *
-> @@ -188,22 +189,23 @@ int hv_map_msi_interrupt(struct irq_data *data,
->  {
->  	struct irq_cfg *cfg = irqd_cfg(data);
->  	struct hv_interrupt_entry dummy;
-> -	union hv_device_id device_id;
-> +	union hv_device_id hv_devid;
->  	struct msi_desc *msidesc;
-> -	struct pci_dev *dev;
-> +	struct pci_dev *pdev;
->  	int cpu;
+>  	pd->tx_shortform_allowed = mpc->tx_shortform_allowed;
+>  	pd->tx_vp_offset = mpc->tx_vp_offset;
+> +	err = mana_create_eq(mpc);
+> +	if (err) {
+> +		mana_uncfg_vport(mpc);
+> +		pd->vport_use_count--;
+> +	}
 >  
->  	msidesc = irq_data_get_msi_desc(data);
-> -	dev = msi_desc_to_pci_dev(msidesc);
-> -	device_id = hv_build_pci_dev_id(dev);
-> +	pdev = msi_desc_to_pci_dev(msidesc);
-> +	hv_devid = hv_build_devid_type_pci(pdev);
->  	cpu = cpumask_first(irq_data_get_effective_affinity_mask(data));
+> -	ibdev_dbg(&dev->ib_dev, "vport handle %llx pdid %x doorbell_id %x\n",
+> -		  mpc->port_handle, pd->pdn, doorbell_id);
+> +	mutex_unlock(&pd->vport_mutex);
 >  
-> -	return hv_map_interrupt(device_id, false, cpu, cfg->vector,
-> +	return hv_map_interrupt(hv_devid, false, cpu, cfg->vector,
->  				out_entry ? out_entry : &dummy);
->  }
->  EXPORT_SYMBOL_GPL(hv_map_msi_interrupt);
->  
-> -static inline void entry_to_msi_msg(struct hv_interrupt_entry *entry, struct msi_msg *msg)
-> +static void entry_to_msi_msg(struct hv_interrupt_entry *entry,
-> +			     struct msi_msg *msg)
->  {
->  	/* High address is always 0 */
->  	msg->address_hi = 0;
-> @@ -211,17 +213,19 @@ static inline void entry_to_msi_msg(struct hv_interrupt_entry *entry, struct msi
->  	msg->data = entry->msi_entry.data.as_uint32;
->  }
->  
-> -static int hv_unmap_msi_interrupt(struct pci_dev *dev, struct hv_interrupt_entry *old_entry);
-> +static int hv_unmap_msi_interrupt(struct pci_dev *pdev,
-> +				  struct hv_interrupt_entry *irq_entry);
+> -	return 0;
+> +	if (!err)
+> +		ibdev_dbg(&dev->ib_dev, "vport handle %llx pdid %x doorbell_id %x\n",
+> +			  mpc->port_handle, pd->pdn, doorbell_id);
 > +
->  static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+> +	return err;
+>  }
+
+[Low]
+pd->tx_shortform_allowed and pd->tx_vp_offset are written before
+mana_create_eq() is attempted.  On the mana_create_eq() failure branch,
+mana_uncfg_vport(mpc) is called and pd->vport_use_count is decremented
+back to 0, but pd->tx_shortform_allowed/pd->tx_vp_offset are left set to
+the values derived from a vport whose HW-side configuration has been
+reverted.  Should these fields only be committed to pd after
+mana_create_eq() succeeds?
+
+> diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
+> index 0fbcf449c134..6167742df9d2 100644
+> --- a/drivers/infiniband/hw/mana/qp.c
+> +++ b/drivers/infiniband/hw/mana/qp.c
+> @@ -171,7 +171,15 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
+>  		cq_spec.gdma_region = cq->queue.gdma_region;
+>  		cq_spec.queue_size = cq->cqe * COMP_ENTRY_SIZE;
+>  		cq_spec.modr_ctx_id = 0;
+> -		eq = &mpc->ac->eqs[cq->comp_vector];
+> +		/* EQs are created when a raw QP configures the vport.
+> +		 * A raw QP must be created before creating rwq_ind_tbl.
+> +		 */
+> +		if (!mpc->eqs) {
+> +			ret = -EINVAL;
+> +			i--;
+> +			goto fail;
+> +		}
+> +		eq = &mpc->eqs[cq->comp_vector % mpc->num_queues];
+>  		cq_spec.attached_eq = eq->eq->id;
+
+[Critical]
+mana_ib_create_qp_rss() does not acquire pd->vport_mutex and does not
+touch pd->vport_use_count.  The NULL check above reads mpc->eqs without
+synchronization; immediately after it, the same mpc->eqs is dereferenced
+and eq->eq->id is latched into cq_spec.attached_eq.
+
+Can the following sequence occur?
+
+  thread A (creating RSS QP on pd)        thread B (destroying last raw QP on pd)
+  mana_ib_create_qp_rss()
+    if (!mpc->eqs)  /* non-NULL */
+    ...                                   mana_ib_uncfg_vport()
+                                            mutex_lock(&pd->vport_mutex);
+                                            if (!--pd->vport_use_count)
+                                              mana_destroy_eq(mpc);
+                                                kfree(apc->eqs);
+    eq = &mpc->eqs[... % mpc->num_queues];
+    cq_spec.attached_eq = eq->eq->id;     /* reads freed memory */
+
+Is there something else serializing these paths that this reviewer is
+missing?
+
+[Medium]
+The off-by-one on the error path looks inconsistent with the other fail
+sites in this function.  Every other goto fail in this loop leaves i
+alone and relies on:
+
+  while (i-- > 0) {
+      ibwq = ind_tbl->ind_tbl[i];
+      ...
+      mana_ib_remove_cq_cb(mdev, cq);
+      mana_destroy_wq_obj(mpc, GDMA_RQ, wq->rx_object);
+  }
+
+Here the new branch does ret = -EINVAL; i--; goto fail, which drops one
+extra iteration of cleanup.  If this check ever fires at i > 0 (for
+example if the lifetime issue above is fixed by making mpc->eqs
+observable as NULL mid-loop), the WQ object and installed CQ callback
+created in the previous iteration are not torn down.  Should this match
+the other fail sites and omit the i--?
+
+[Medium]
+Before this patch ac->eqs was populated unconditionally in mana_probe()
+and existed for the lifetime of the device, so mana_ib_create_qp_rss()
+and mana_ib_create_qp_raw() always had EQs available regardless of
+whether any netdev was up or any raw QP had been created.
+
+After this patch, mpc->eqs is populated only by mana_alloc_queues()
+(netdev open) or by mana_ib_cfg_vport() (which is only invoked from
+mana_ib_create_qp_raw()).  An RDMA user who creates an RSS QP on a PD
+while the netdev is down and without a prior raw QP on the same PD will
+now see -EINVAL from this new check, where the same call succeeded
+before.
+
+The commit message describes this work as preparatory and does not
+mention this user-visible ordering requirement.  Should this semantic
+change be called out in the commit log, and should the implicit "a raw
+QP must be created first" rule be documented somewhere user-facing?
+
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> index b2faa7cf398f..131a997e1083 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> @@ -1615,78 +1615,83 @@ void mana_destroy_wq_obj(struct mana_port_context *apc, u32 wq_type,
+>  }
+>  EXPORT_SYMBOL_NS(mana_destroy_wq_obj, "NET_MANA");
+>  
+> -static void mana_destroy_eq(struct mana_context *ac)
+> +void mana_destroy_eq(struct mana_port_context *apc)
 >  {
->  	struct hv_interrupt_entry *stored_entry;
->  	struct irq_cfg *cfg = irqd_cfg(data);
->  	struct msi_desc *msidesc;
-> -	struct pci_dev *dev;
-> +	struct pci_dev *pdev;
->  	int ret;
+> +	struct mana_context *ac = apc->ac;
+>  	struct gdma_context *gc = ac->gdma_dev->gdma_context;
+>  	struct gdma_queue *eq;
+>  	int i;
 >  
->  	msidesc = irq_data_get_msi_desc(data);
-> -	dev = msi_desc_to_pci_dev(msidesc);
-> +	pdev = msi_desc_to_pci_dev(msidesc);
->  
->  	if (!cfg) {
->  		pr_debug("%s: cfg is NULL", __func__);
-> @@ -240,7 +244,7 @@ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
->  		stored_entry = data->chip_data;
->  		data->chip_data = NULL;
->  
-> -		ret = hv_unmap_msi_interrupt(dev, stored_entry);
-> +		ret = hv_unmap_msi_interrupt(pdev, stored_entry);
->  
->  		kfree(stored_entry);
->  
-> @@ -249,10 +253,8 @@ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
->  	}
->  
->  	stored_entry = kzalloc_obj(*stored_entry, GFP_ATOMIC);
-> -	if (!stored_entry) {
-> -		pr_debug("%s: failed to allocate chip data\n", __func__);
-> +	if (!stored_entry)
+> -	if (!ac->eqs)
+> +	if (!apc->eqs)
 >  		return;
-> -	}
 >  
->  	ret = hv_map_msi_interrupt(data, stored_entry);
->  	if (ret) {
-> @@ -262,18 +264,21 @@ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+> -	debugfs_remove_recursive(ac->mana_eqs_debugfs);
+> -	ac->mana_eqs_debugfs = NULL;
+> +	debugfs_remove_recursive(apc->mana_eqs_debugfs);
+> +	apc->mana_eqs_debugfs = NULL;
 >  
->  	data->chip_data = stored_entry;
->  	entry_to_msi_msg(data->chip_data, msg);
-> -
-> -	return;
->  }
+> -	for (i = 0; i < gc->max_num_queues; i++) {
+> -		eq = ac->eqs[i].eq;
+> +	for (i = 0; i < apc->num_queues; i++) {
+> +		eq = apc->eqs[i].eq;
+>  		if (!eq)
+>  			continue;
 >  
-> -static int hv_unmap_msi_interrupt(struct pci_dev *dev, struct hv_interrupt_entry *old_entry)
-> +static int hv_unmap_msi_interrupt(struct pci_dev *pdev,
-> +				  struct hv_interrupt_entry *irq_entry)
->  {
-> -	return hv_unmap_interrupt(hv_build_pci_dev_id(dev).as_uint64, old_entry);
-> +	union hv_device_id hv_devid;
-> +
-> +	hv_devid = hv_build_devid_type_pci(pdev);
-> +	return hv_unmap_interrupt(hv_devid.as_uint64, irq_entry);
->  }
->  
-> -static void hv_teardown_msi_irq(struct pci_dev *dev, struct irq_data *irqd)
-> +/* NB: during map, hv_interrupt_entry is saved via data->chip_data */
-> +static void hv_teardown_msi_irq(struct pci_dev *pdev, struct irq_data *irqd)
->  {
-> -	struct hv_interrupt_entry old_entry;
-> +	struct hv_interrupt_entry irq_entry;
->  	struct msi_msg msg;
->  
->  	if (!irqd->chip_data) {
-> @@ -281,13 +286,13 @@ static void hv_teardown_msi_irq(struct pci_dev *dev, struct irq_data *irqd)
->  		return;
+>  		mana_gd_destroy_queue(gc, eq);
 >  	}
->  
-> -	old_entry = *(struct hv_interrupt_entry *)irqd->chip_data;
-> -	entry_to_msi_msg(&old_entry, &msg);
-> +	irq_entry = *(struct hv_interrupt_entry *)irqd->chip_data;
-> +	entry_to_msi_msg(&irq_entry, &msg);
->  
->  	kfree(irqd->chip_data);
->  	irqd->chip_data = NULL;
->  
-> -	(void)hv_unmap_msi_interrupt(dev, &old_entry);
-> +	(void)hv_unmap_msi_interrupt(pdev, &irq_entry);
->  }
->  
->  /*
-> @@ -302,7 +307,8 @@ static struct irq_chip hv_pci_msi_controller = {
->  };
->  
->  static bool hv_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
-> -				 struct irq_domain *real_parent, struct msi_domain_info *info)
-> +				 struct irq_domain *real_parent,
-> +				 struct msi_domain_info *info)
+
+[High]
+The loop bound is now apc->num_queues rather than the immutable
+gc->max_num_queues.  mana_create_eq() allocates apc->eqs sized to
+apc->num_queues, and mana_destroy_eq() walks the same count.
+
+When RDMA has called mana_ib_cfg_vport() -> mana_create_eq() while the
+netdev is down, apc->num_queues can still be mutated underneath it.
+mana_detach(false) skips mana_dealloc_queues() when port_st_save is
+false, and then mana_set_channels() (ethtool -L) writes
+apc->num_queues = new_count while mpc->eqs is already held by the RDMA
+side.  mana_attach() then also skips mana_alloc_queues().
+
+When the RDMA user later destroys the last raw QP and this function
+runs, i iterates 0..new_count-1.  If new_count is larger than the count
+used at kzalloc_objs() time, apc->eqs is read out of bounds and
+potentially passed to mana_gd_destroy_queue().  If new_count is smaller,
+the tail EQs (real gdma_queue objects with MSI-X and DMA regions) are
+leaked.
+
+Before this patch both sides used gc->max_num_queues so no mismatch was
+possible.  Should apc->num_queues be snapshotted into apc at
+mana_create_eq() time (or should changing num_queues be forbidden while
+mpc->eqs is populated by the RDMA path)?
+
+> -static int mana_create_eq(struct mana_context *ac)
+> +int mana_create_eq(struct mana_port_context *apc)
 >  {
->  	struct irq_chip *chip = info->chip;
+> -	struct gdma_dev *gd = ac->gdma_dev;
+> +	struct gdma_dev *gd = apc->ac->gdma_dev;
+>  	struct gdma_context *gc = gd->gdma_context;
+>  	struct gdma_queue_spec spec = {};
+>  	int err;
+>  	int i;
 >  
-> @@ -317,7 +323,8 @@ static bool hv_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
->  }
->  
->  #define HV_MSI_FLAGS_SUPPORTED	(MSI_GENERIC_FLAGS_MASK | MSI_FLAG_PCI_MSIX)
-> -#define HV_MSI_FLAGS_REQUIRED	(MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS)
-> +#define HV_MSI_FLAGS_REQUIRED	(MSI_FLAG_USE_DEF_DOM_OPS |	\
-> +				 MSI_FLAG_USE_DEF_CHIP_OPS)
->  
->  static struct msi_parent_ops hv_msi_parent_ops = {
->  	.supported_flags	= HV_MSI_FLAGS_SUPPORTED,
-> @@ -329,14 +336,14 @@ static struct msi_parent_ops hv_msi_parent_ops = {
->  	.init_dev_msi_info	= hv_init_dev_msi_info,
->  };
->  
-> -static int hv_msi_domain_alloc(struct irq_domain *d, unsigned int virq, unsigned int nr_irqs,
-> -			       void *arg)
-> +/* Allocate nr_irqs IRQs for the given irq domain */
-> +static int hv_msi_domain_alloc(struct irq_domain *d, unsigned int virq,
-> +			       unsigned int nr_irqs, void *arg)
->  {
->  	/*
-> -	 * TODO: The allocation bits of hv_irq_compose_msi_msg(), i.e. everything except
-> -	 * entry_to_msi_msg() should be in here.
-> +	 * TODO: The allocation bits of hv_irq_compose_msi_msg(), i.e.
-> +	 *	 everything except entry_to_msi_msg() should be in here.
->  	 */
-> -
->  	int ret;
->  
->  	ret = irq_domain_alloc_irqs_parent(d, virq, nr_irqs, arg);
-> @@ -344,13 +351,15 @@ static int hv_msi_domain_alloc(struct irq_domain *d, unsigned int virq, unsigned
->  		return ret;
->  
->  	for (int i = 0; i < nr_irqs; ++i) {
-> -		irq_domain_set_info(d, virq + i, 0, &hv_pci_msi_controller, NULL,
-> -				    handle_edge_irq, NULL, "edge");
-> +		irq_domain_set_info(d, virq + i, 0, &hv_pci_msi_controller,
-> +				    NULL, handle_edge_irq, NULL, "edge");
->  	}
-> +
->  	return 0;
->  }
->  
-> -static void hv_msi_domain_free(struct irq_domain *d, unsigned int virq, unsigned int nr_irqs)
-> +static void hv_msi_domain_free(struct irq_domain *d, unsigned int virq,
-> +			       unsigned int nr_irqs)
->  {
->  	for (int i = 0; i < nr_irqs; ++i) {
->  		struct irq_data *irqd = irq_domain_get_irq_data(d, virq);
-> @@ -362,6 +371,7 @@ static void hv_msi_domain_free(struct irq_domain *d, unsigned int virq, unsigned
->  
->  		hv_teardown_msi_irq(to_pci_dev(desc->dev), irqd);
->  	}
-> +
->  	irq_domain_free_irqs_top(d, virq, nr_irqs);
->  }
->  
-> @@ -394,25 +404,25 @@ struct irq_domain * __init hv_create_pci_msi_domain(void)
->  
->  int hv_unmap_ioapic_interrupt(int ioapic_id, struct hv_interrupt_entry *entry)
->  {
-> -	union hv_device_id device_id;
-> +	union hv_device_id hv_devid;
->  
-> -	device_id.as_uint64 = 0;
-> -	device_id.device_type = HV_DEVICE_TYPE_IOAPIC;
-> -	device_id.ioapic.ioapic_id = (u8)ioapic_id;
-> +	hv_devid.as_uint64 = 0;
-> +	hv_devid.device_type = HV_DEVICE_TYPE_IOAPIC;
-> +	hv_devid.ioapic.ioapic_id = (u8)ioapic_id;
->  
-> -	return hv_unmap_interrupt(device_id.as_uint64, entry);
-> +	return hv_unmap_interrupt(hv_devid.as_uint64, entry);
->  }
->  EXPORT_SYMBOL_GPL(hv_unmap_ioapic_interrupt);
->  
->  int hv_map_ioapic_interrupt(int ioapic_id, bool level, int cpu, int vector,
->  		struct hv_interrupt_entry *entry)
->  {
-> -	union hv_device_id device_id;
-> +	union hv_device_id hv_devid;
->  
-> -	device_id.as_uint64 = 0;
-> -	device_id.device_type = HV_DEVICE_TYPE_IOAPIC;
-> -	device_id.ioapic.ioapic_id = (u8)ioapic_id;
-> +	hv_devid.as_uint64 = 0;
-> +	hv_devid.device_type = HV_DEVICE_TYPE_IOAPIC;
-> +	hv_devid.ioapic.ioapic_id = (u8)ioapic_id;
->  
-> -	return hv_map_interrupt(device_id, level, cpu, vector, entry);
-> +	return hv_map_interrupt(hv_devid, level, cpu, vector, entry);
->  }
->  EXPORT_SYMBOL_GPL(hv_map_ioapic_interrupt);
-> -- 
-> 2.51.2.vfs.0.1
-> 
+> -	ac->eqs = kzalloc_objs(struct mana_eq, gc->max_num_queues);
+> -	if (!ac->eqs)
+> +	WARN_ON(apc->eqs);
+> +	apc->eqs = kzalloc_objs(struct mana_eq, apc->num_queues);
+> +	if (!apc->eqs)
+>  		return -ENOMEM;
+
+[Low]
+WARN_ON(apc->eqs) here is advisory only; execution continues into
+apc->eqs = kzalloc_objs(...), which unconditionally overwrites any
+non-NULL pointer.  If the invariant is ever violated by a future caller
+or error path, the prior EQ array and its gdma_queue objects are
+orphaned (kernel memory and firmware EQ state leaked) with only a WARN
+splat as the signal.
+
+Would "if (WARN_ON(apc->eqs)) return -EEXIST;" express the intent more
+safely?
+-- 
+This is an AI-generated review.
+
 
