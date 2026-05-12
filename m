@@ -1,187 +1,155 @@
-Return-Path: <linux-hyperv+bounces-10806-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10808-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KDQGAjJUA2pq4gEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10806-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 18:24:18 +0200
+	id 6GZtNLZqA2rF5gEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10808-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 20:00:22 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 807545249CD
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 18:24:17 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 903435267B3
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 20:00:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2C47E3006501
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 16:18:54 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id DC181305D7FB
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 May 2026 17:58:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE4923CC7EC;
-	Tue, 12 May 2026 16:18:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1852B3955CB;
+	Tue, 12 May 2026 17:57:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KWQck597"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tHllvqvf"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FDDA39E9DE;
-	Tue, 12 May 2026 16:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E9A385D63;
+	Tue, 12 May 2026 17:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778602732; cv=none; b=F+do2Bkeac801SDznu8+zKRjzPhLRgfPZYBhSJhBHfFyu/t+5DlkMSSWG4uDvlUa3DQectQ0uSNcgUYkfcEuVL6lw1xsxm03jIe5s2l6RGlZc7CUvx1EwLIGFNE25nujytkKmatdcu6lJboT/BZaNivKdoyqdAjQ+BdjQRHRKVE=
+	t=1778608678; cv=none; b=FVe8HEiID7bAkVTG+kDifKhW3o7BLij7FO/QwT9nPVcPoOhqW6wGwEOOWD4hLUeQ3WYOZckA6Iw5jWJDbSKbyJF9m4fYDhw5WPYS9Gpp2Jn56Ni70OgxB+pq2dBLMpDRwh4JGFwUVKZA0lNd1L409UdByVrfuc/gKXjtx281SAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778602732; c=relaxed/simple;
-	bh=8XFd6GbcBLGGHzmX2zLvpVShwAmL65/U/v73rY5+HBM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ptc1pEDFGxC72C+Afi6PjuDG0rl8AwkaIi6E2NHFbGQqkkEwenA07xh4QcVx82n+zXO314EGAQ77OTC2mrNJefj4ecx8O4p1TDum6Do9LgOynKCoeKWfJKU+HfS9Rc4Z+ORnHpDvrbakF3OxIll7yBaZvS42Up98FTCt/O4DwPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KWQck597; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (c-98-225-44-182.hsd1.wa.comcast.net [98.225.44.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5B64120B7166;
-	Tue, 12 May 2026 09:18:42 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5B64120B7166
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1778602722;
-	bh=Uf3CnoeoD1JaJ9/DXoxz1jb7GBmNLqY9irHzO+pPh0g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KWQck597/eyja/NgCMAmkLC3+bWL5hWVU+Y66nu66N5UekfOjtVOB6GjKYNXVyVjD
-	 ufyi56nCuI23ffrZ1mDNNNacGzY8zvU7I+bAkw7ZuMQgMgaNmaUNxKHaeWaIr2+dyr
-	 J4TNJtiDGtT4mGb4Wzvblbe2M6QKyghCab8lT9Fk=
-Date: Tue, 12 May 2026 09:18:42 -0700
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: kys@microsoft.com, Liam.Howlett@oracle.com, akpm@linux-foundation.org,
-	decui@microsoft.com, haiyangz@microsoft.com, jgg@ziepe.ca,
-	corbet@lwn.net, leon@kernel.org, longli@microsoft.com,
-	ljs@kernel.org, mhocko@suse.com, rppt@kernel.org, shuah@kernel.org,
-	skhan@linuxfoundation.org, surenb@google.com, vbabka@kernel.org,
-	wei.liu@kernel.org, linux-doc@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 1/3] mm/hmm: Add hmm_range_fault_unlockable() for mmap
- lock-drop support
-Message-ID: <agNS4llNtAHBkMA2@skinsburskii.localdomain>
-References: <177759835313.221039.2807391868456411507.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <177759840859.221039.13065406062747296947.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <563bb216-c270-4711-adda-b91484af40dc@kernel.org>
+	s=arc-20240116; t=1778608678; c=relaxed/simple;
+	bh=5b2OaPpdkzg+DoOOzPWOXyDjl63IanI0G0DqcNs58yU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rgvw097fbDpj+gJj468rghiRt2TMVNiNPJvGzWxxPKvhZfHV9colsJwU6/xQOESgtTuizweMGxFIOQYjOzHrEDs857ygRi8PRjzb0qWZN5/BOguPiTiTn4PkQ1c9TY3y9UNbbMbGuvvw4qipz2chfpugw/FYgWyl9sSQPCXsRQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tHllvqvf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F078C2BCB0;
+	Tue, 12 May 2026 17:57:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1778608677;
+	bh=5b2OaPpdkzg+DoOOzPWOXyDjl63IanI0G0DqcNs58yU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=tHllvqvf+iQWDAhfwwmp2CR31uZSswmEWIhFTfrFDzAnesRtOt3E2SqthTpH4bNoO
+	 gRE8/1Sn1XbPD5+BR3me/8TfUDQfhIC0lJ/xH6FKqgZB4gArgbGwghkGeMmvF9Mp6j
+	 vuPK0yfKT95QcExqGLksyPFIBAN2j9b6qcK2hi0M=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	linux-hyperv@vger.kernel.org
+Subject: [PATCH 6.18 121/270] hv: Select CONFIG_SYSFB only for CONFIG_HYPERV_VMBUS
+Date: Tue, 12 May 2026 19:38:42 +0200
+Message-ID: <20260512173941.003572553@linuxfoundation.org>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260512173938.452574370@linuxfoundation.org>
+References: <20260512173938.452574370@linuxfoundation.org>
+User-Agent: quilt/0.69
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <563bb216-c270-4711-adda-b91484af40dc@kernel.org>
-X-Rspamd-Queue-Id: 807545249CD
+X-Rspamd-Queue-Id: 903435267B3
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[linuxfoundation.org,none];
+	R_DKIM_ALLOW(-0.20)[linuxfoundation.org:s=korg];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10806-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10808-lists,linux-hyperv=lfdr.de];
+	FREEMAIL_CC(0.00)[linuxfoundation.org,lists.linux.dev,suse.de,outlook.com,linux.microsoft.com,kernel.org,microsoft.com,vger.kernel.org];
 	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[linuxfoundation.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[gregkh@linuxfoundation.org,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.microsoft.com:dkim,skinsburskii.localdomain:mid]
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[msgid.link:url,suse.de:email,outlook.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linuxfoundation.org:email,linuxfoundation.org:mid,linuxfoundation.org:dkim]
 X-Rspamd-Action: no action
 
-On Tue, May 12, 2026 at 10:42:14AM +0200, David Hildenbrand (Arm) wrote:
-> 
-> > +	for (; addr < end; addr += PAGE_SIZE) {
-> > +		vm_fault_t ret;
-> > +
-> > +		ret = handle_mm_fault(vma, addr, fault_flags, NULL);
-> > +
-> > +		if (ret & (VM_FAULT_RETRY | VM_FAULT_COMPLETED)) {
-> > +			/*
-> > +			 * The mmap lock has been dropped by the fault handler.
-> > +			 * Record the failing address and signal lock-drop to
-> > +			 * the caller.
-> > +			 */
-> > +			*hmm_vma_walk->locked = 0;
-> > +			hmm_vma_walk->last = addr;
-> > +			return -EAGAIN;
-> 
-> 
-> Okay, so we'll return straight from hmm_vma_fault() to
-> hmm_vma_handle_pte()/hmm_vma_walk_pmd() -> walk_page_range() machinery.
-> 
-> Hopefully we don't refer to the MM/VMA on any path there? It would be nicer if
-> the hmm_vma_fault() could be called by the caller of walk_page_range(), but
-> that's tricky I guess, as hmm_vma_fault() consumes the walk structure and
-> requires the vma in there.
-> 
+6.18-stable review patch.  If anyone has any objections, please let me know.
 
-It looks like a caller can provide a post_vma callback in mm_walk_ops. I
-missed that case here. This callback cannot be supported by this change.
-I will update the patch.
+------------------
 
-> 
-> Note: am I wrong, or is hmm_vma_fault() really always called with
-> required_fault=true?
-> 
+From: Thomas Zimmermann <tzimmermann@suse.de>
 
-No, hmm_pte_need_fault can return false.
+commit d33db956c9618e7cb08c2520ce708437914214ec upstream.
 
-> > +		}
-> > +
-> > +		if (ret & VM_FAULT_ERROR)
-> >  			return -EFAULT;
-> > +	}
-> >  	return -EBUSY;
-> >  }
-> >  
-> > @@ -566,6 +585,17 @@ static int hmm_vma_walk_hugetlb_entry(pte_t *pte, unsigned long hmask,
-> >  	if (required_fault) {
-> >  		int ret;
-> >  
-> > +		/*
-> > +		 * Faulting hugetlb pages on the unlockable path is not
-> > +		 * supported. The walk framework holds hugetlb_vma_lock_read
-> > +		 * which must be dropped before handle_mm_fault, but if the
-> > +		 * mmap lock is also dropped (VM_FAULT_RETRY), the vma may
-> > +		 * be freed and the walk framework's unconditional unlock
-> > +		 * becomes a use-after-free.
-> > +		 */
-> > +		if (hmm_vma_walk->locked)
-> > +			return -EFAULT;
-> 
-> Just because it's unlockable doesn't mean that you must unlock. Can't this be
-> kept working as is, just simulating here as if it would not be unlockable?
-> 
+Hyperv's sysfb access only exists in the VMBUS support. Therefore
+only select CONFIG_SYSFB for CONFIG_HYPERV_VMBUS. Avoids sysfb code
+on systems that don't need it.
 
-I’m not sure how to implement this. The walk_page_range code expects the
-hugetlb VMA to still be read-locked when we return from
-hmm_vma_walk_hugetlb_entry. How can we guarantee that if the VMA might
-be gone?
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Fixes: 96959283a58d ("Drivers: hv: Always select CONFIG_SYSFB for Hyper-V guests")
+Cc: Michael Kelley <mhklinux@outlook.com>
+Cc: Saurabh Sengar <ssengar@linux.microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Dexuan Cui <decui@microsoft.com>
+Cc: Long Li <longli@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org
+Cc: <stable@vger.kernel.org> # v6.16+
+Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Link: https://patch.msgid.link/20260402092305.208728-2-tzimmermann@suse.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/hv/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I added a note in the docs. Whoever tackles this will likely need to
-either rework `walk_page_range` to handle the case where the VMA is
-gone, or use a different approach.
+--- a/drivers/hv/Kconfig
++++ b/drivers/hv/Kconfig
+@@ -9,7 +9,6 @@ config HYPERV
+ 	select PARAVIRT
+ 	select X86_HV_CALLBACK_VECTOR if X86
+ 	select OF_EARLY_FLATTREE if OF
+-	select SYSFB if EFI && !HYPERV_VTL_MODE
+ 	select IRQ_MSI_LIB if X86
+ 	help
+ 	  Select this option to run Linux as a Hyper-V client operating
+@@ -61,6 +60,7 @@ config HYPERV_VMBUS
+ 	tristate "Microsoft Hyper-V VMBus driver"
+ 	depends on HYPERV
+ 	default HYPERV
++	select SYSFB if EFI && !HYPERV_VTL_MODE
+ 	help
+ 	  Select this option to enable Hyper-V Vmbus driver.
+ 
 
-Do you have any other suggestions on how to implement it?
 
-Thanks,
-Stanislav
-
-> 
-> -- 
-> Cheers,
-> 
-> David
 
