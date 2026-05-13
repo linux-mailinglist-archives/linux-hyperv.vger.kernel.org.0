@@ -1,204 +1,215 @@
-Return-Path: <linux-hyperv+bounces-10818-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10819-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4LY1JP/0A2rKBAIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10818-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 05:50:23 +0200
+	id IAUsEx4DBGrLCAIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10819-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 06:50:38 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BD4352D003
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 05:50:22 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B2B552D44D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 06:50:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 3F6BF302C3B2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 03:47:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 680E9304F2E1
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 04:49:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CC0937BE91;
-	Wed, 13 May 2026 03:47:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87051346AD4;
+	Wed, 13 May 2026 04:49:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t6txehS0"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EsVf3TWh"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E2D13C9C4;
-	Wed, 13 May 2026 03:47:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55155299923;
+	Wed, 13 May 2026 04:49:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778644046; cv=none; b=lGEBOpN9SCLR9rXuVkfugDfvrThx5oCXiGNOh6Qn8zR571z6j0QsSv6VamjucK/wxwbQ1ws64zHb5nWWWACCU42W4DKyy96r/44RoVv8a9qXjK6m06eWfrk3OijAau1mbEURTo46fo4Y+wpP34lsh4fMruCFCqwTA7DWpAq1pr4=
+	t=1778647776; cv=none; b=FbdU50hqR0UqEHYNp0wGxSEbPmFqMpMft+2RvR+HcF/5frgcZMjL1U/V8Q7tK6PMXxhyWL6G9l/wjtduMAb/U8wb25Gvx4pNi/5dC4PuUCPp6aUqcTBKYNeWMXQMyWuyWfTagMkgUCIeHsmUJVgLzQCW2TaFA5S54azTTW/a134=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778644046; c=relaxed/simple;
-	bh=sB0XN6DaT6zUC4dJmgjwjt6U3vW+Dq1Rmj2P+21bPx0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=uxesw3VQMOZD4m8WNiz8n+lczeETqZuomgJ++SdZCV8k/rBXdHWvTjbnsNH2efFR5k9OWvkkAHedxk2eXfKAVvTZXzXVS/UvV57Y+KRoMLcT10DayuvS7upz7RswIvxGjYJaq9BwbTSS6FJOb/b1VF5BGbAxi5W9N+WtKPpdDY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t6txehS0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CBDCC2BCC7;
-	Wed, 13 May 2026 03:47:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778644045;
-	bh=sB0XN6DaT6zUC4dJmgjwjt6U3vW+Dq1Rmj2P+21bPx0=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=t6txehS0LF3Ls2h5BwbS72+A0ovtQC3qPZHZRd7PnkV6LjarYstJAxg14DdVrqkMg
-	 +jJYMnF4Tajj8PTwCSv531Rs48Z20G4t9dAZLt9Loi9/uWwDQSzXXhb3lIM4MMowy7
-	 u3PYOYgY/6mG/3YWh3dggydSNBsAx5mEcZtQ4BggwQhEDAY2uVp0AJq8Az9tSKQcRU
-	 TF3qw6zC3fgWDDoTxXMXcfH7wOfIDLjcdNAd56AdmmU8XDrDWYuABIAArIXSxa9vzo
-	 oe2u+pHtVJmmfD8iPvBJqJYFu9qWWfVyOCqCqrR5W7oLovl6XCPeImyVt3Jsi9m/dS
-	 AGs0dz8vrq97A==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V3 03/11] mshv: Provide a way to get partition ID if
- running in a VMM process
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Mukesh R" <mrathor@linux.microsoft.com>
-Cc: linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org
-In-Reply-To: <20260512020259.1678627-4-mrathor@linux.microsoft.com>
-References: <20260512020259.1678627-4-mrathor@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 13 May 2026 03:47:25 +0000
-Message-Id: <20260513034725.7CBDCC2BCC7@smtp.kernel.org>
+	s=arc-20240116; t=1778647776; c=relaxed/simple;
+	bh=dT77H9ORPste/t0zfSTlk15UTBP295wtZR/6wSlJ3A4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Js5k1N1SmkjNRvqMXxqNOx8SxsYmks8zLw/fbEiX5X8+xVgBPQHk7nzyjT26O3uWaRConUKlVjZevex6lWmqJg3gtkzCv9g2CPBegEvUGx+GHhfL9ILVPdjZG54J/O/a4g9/hmXfPsbsT2TeOgLXdemspw0tQDsx6U8GGrUJ480=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=EsVf3TWh; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 7EC0D20B7166; Tue, 12 May 2026 21:49:31 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7EC0D20B7166
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1778647771;
+	bh=Omuq11ywLwTC5q3IVHAFOC9whRswGzaRH2gtVx0YPH0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EsVf3TWhP3f3icGssZBLG13b1+ZhIUVGdz8weHlOEC0XuepUUsVQTT3inEn8BIRgM
+	 3OnM9nYc854GL6hcpJh2yhN+75lpV5KV3JplTvixMIKFV18Ni9QfxF60I6zdHnDbve
+	 c87pcYaFriR1kQvueonMyzS/0ZKapiU8t0xLIf+c=
+Date: Tue, 12 May 2026 21:49:31 -0700
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+	kotaranov@microsoft.com, horms@kernel.org,
+	shradhagupta@linux.microsoft.com, dipayanroy@linux.microsoft.com,
+	shirazsaleem@microsoft.com, yury.norov@gmail.com, kees@kernel.org,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH net-next v8] net: mana: Expose hardware diagnostic info
+ via debugfs
+Message-ID: <agQC2/HG6FsCgFZn@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20260506055128.291494-1-ernis@linux.microsoft.com>
+ <20260508220114.3342627-1-kuba@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-X-Rspamd-Queue-Id: 8BD4352D003
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260508220114.3342627-1-kuba@kernel.org>
+X-Rspamd-Queue-Id: 9B2B552D44D
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	MISSING_MIME_VERSION(2.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10818-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10819-lists,linux-hyperv=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,gmail.com,vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	FROM_NEQ_ENVFROM(0.00)[ernis@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,sashiko.dev:url,lists.linux.dev:replyto]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] Tying VM partition IDs to process TGIDs (`current->tgid`) is an ar=
-chitectural flaw causing isolation breakage and security risks.
-- [High] `mshv_current_partid()` returns a raw partition ID without taking =
-a reference, creating a TOCTOU vulnerability.
-- [High] Pre-existing Use-After-Free in `destroy_partition()` due to RCU-00=
-1 violation during VP teardown.
---
+On Fri, May 08, 2026 at 03:01:14PM -0700, Jakub Kicinski wrote:
+> This is an AI-generated review of your patch. The human sending this
+> email has considered the AI review valid, or at least plausible.
+> ---
+> net: mana: Expose hardware diagnostic info via debugfs
+> 
+> Add debugfs entries to expose hardware configuration and diagnostic
+> information that aids in debugging driver initialization and runtime
+> operations without adding noise to dmesg.
+> 
+> > diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> [ ... ]
+> > @@ -2231,13 +2239,18 @@ int mana_gd_resume(struct pci_dev *pdev)
+> >  
+> >  	err = mana_probe(&gc->mana, true);
+> >  	if (err)
+> > -		return err;
+> > +		goto cleanup_gd;
+> >  
+> >  	err = mana_rdma_probe(&gc->mana_ib);
+> >  	if (err)
+> > -		return err;
+> > +		goto cleanup_mana;
+> >  
+> >  	return 0;
+> > +cleanup_mana:
+> > +	mana_remove(&gc->mana, true);
+> > +cleanup_gd:
+> > +	mana_gd_cleanup_device(pdev);
+> > +	return err;
+> >  }
+> 
+> Since mana_remove() called with true for suspending skips
+> unregister_netdevice(), the network devices remain registered in the system.
+> 
+> If mana_gd_cleanup_device() is then called, which destroys the hardware
+> channel and clears gc->hwc.driver_data, could this lead to a NULL pointer
+> dereference if userspace later interacts with the still-registered devices?
 
-commit 528e38745b2ae16c0fd8ad4876d893d1b1fea027
-Author: Mukesh R <mrathor@linux.microsoft.com>
+Sorry for delayed response.
 
-mshv: Provide a way to get partition ID if running in a VMM process
+This is a valid concern. I will update it to mana_remove(&gc->mana, false) in
+the next version.
+> 
+> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> [ ... ]
+> > @@ -3161,6 +3169,23 @@ static int mana_init_port(struct net_device *ndev)
+> >  	eth_hw_addr_set(ndev, apc->mac_addr);
+> >  	sprintf(vport, "vport%d", port_idx);
+> >  	apc->mana_port_debugfs = debugfs_create_dir(vport, gc->mana_pci_debugfs);
+> > +
+> > +	debugfs_create_u64("port_handle", 0400, apc->mana_port_debugfs,
+> > +			   &apc->port_handle);
+> 
+> When the device suspends, mana_gd_suspend() calls mana_gd_cleanup_device(),
+> which recursively removes the entire debugfs directory tree.
+> 
+> During resume, the parent debugfs directory is recreated, but mana_probe()
+> skips calling mana_init_port() for existing ports.
+> 
+> Does this mean the per-vPort debugfs entries are permanently lost after a
+> suspend and resume cycle?
+> 
+This is false positive.
+The per-vPort debugfs entries are recreated during resume. The flow is:
 
-This commit introduces mshv_current_partid() to allow retrieving the
-partition id for the current vmm process. It adds a pt_vmm_tgid field
-to the mshv_partition struct and sets it during partition creation.
-The partition id is found by iterating the global hash table.
+Suspend: mana_gd_cleanup_device() removes the entire debugfs tree.
 
-> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-> index bd1359eb58dd4..02c107458be90 100644
-> --- a/drivers/hv/mshv_root_main.c
-> +++ b/drivers/hv/mshv_root_main.c
-> @@ -1908,6 +1908,27 @@ mshv_partition_release(struct inode *inode, struct=
- file *filp)
->  	return 0;
->  }
-> =20
-> +/* Given a process tgid, return partition id if it is a VMM process */
-> +u64 mshv_current_partid(void)
-> +{
-> +	struct mshv_partition *pt;
-> +	int i;
-> +	u64 ret_ptid =3D HV_PARTITION_ID_INVALID;
-> +
-> +	rcu_read_lock();
-> +
-> +	hash_for_each_rcu(mshv_root.pt_htable, i, pt, pt_hnode) {
-> +		if (pt->pt_vmm_tgid =3D=3D current->tgid) {
+Resume: mana_gd_setup() recreates the top-level mana_pci_debugfs
+directory. Then mana_probe(gd, true) takes the resuming=true path,
+which calls mana_attach() for each port. mana_attach() calls
+mana_init_port(), which recreates the vportN directory and all
+per-vPort debugfs files (port_handle, max_sq, max_rq, steer_*,
+current_speed).
 
-Is tying the partition id to the process tgid safe?
+So the per-vPort entries are not permanently lost, they survive the
+suspend/resume cycle.
+> [ ... ]
+> > @@ -3800,6 +3830,9 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+> >  
+> >  	mana_gd_deregister_device(gd);
+> >  
+> > +	debugfs_lookup_and_remove("bm_hostmode", gc->mana_pci_debugfs);
+> > +	debugfs_lookup_and_remove("num_vports", gc->mana_pci_debugfs);
+> > +
+> >  	if (suspending)
+> >  		return;
+> 
+> Earlier in mana_remove(), free_netdev() is called, which frees the port
+> context structure (apc) allocated via netdev_priv(ndev).
+> 
+> Since the per-vPort debugfs files created in mana_init_port() directly
+> reference memory within apc, and apc->mana_port_debugfs is not explicitly
+> removed here, does this leave the debugfs files accessible but pointing to
+> freed memory until the parent directory is finally removed in
+> mana_gd_cleanup_device()?
 
-Since a single vmm process can create multiple partitions, this loop returns
-the first partition matching the tgid. This could result in pci passthrough
-operations being misrouted to the wrong partition if a process manages
-multiple virtual machines.
+This is a false positive.
+The per-vPort debugfs files are removed before free_netdev() frees apc.
 
-Also, since the partition's lifecycle is tied to an anonymous file descript=
-or,
-passing the fd to another process and exiting would break
-mshv_current_partid() for the new process.
+In mana_remove(gd, false), the sequence for each port is:
 
-Additionally, if the operating system recycles the old tgid, an unrelated
-process might gain access to the partition id.
-
-Should explicit file descriptor tracking be used instead of global process
-ids?
-
-> +			ret_ptid =3D pt->pt_id;
-> +			break;
-> +		}
-> +	}
-> +
-> +	rcu_read_unlock();
-> +	return ret_ptid;
-
-Does returning a raw partition id without taking a reference create a race
-condition?
-
-After rcu_read_unlock() is called and the pt_id is returned, a concurrent
-thread in the vmm could close the partition's file descriptor, causing the
-partition to be deleted in the hypervisor.
-
-If the hypervisor recycles the pt_id for a newly created partition belonging
-to a completely different process, the pending iommu attachment or pci
-passthrough hypercall will use the stale pt_id.
-
-Can this allow the vmm to inadvertently attach its devices to an unrelated
-partition?
-
-> +}
-
-This isn't a regression in this patch, but looking at the partition lifecyc=
-le
-code, does destroy_partition() have a use-after-free?
-
-destroy_partition() frees the virtual processor structures (kfree(vp))
-before calling remove_partition(partition), which removes the partition
-from the rcu-protected global hash table (pt_htable) and calls
-synchronize_rcu().
-
-Because the partition remains visible to rcu readers during the teardown lo=
-op,
-can an interrupt handler (e.g., in mshv_synic.c) call mshv_partition_find(),
-successfully retrieve the partition, and read
-vp =3D partition->pt_vp_array[vp_index]?
-
-If this happens concurrently with or immediately after kfree(vp), the
-interrupt handler would access freed memory.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512020259.1678=
-627-1-mrathor@linux.microsoft.com?part=3D3
+mana_detach(ndev, false) -> mana_cleanup_port_context(apc)
+-> debugfs_remove(apc->mana_port_debugfs).
+This removes the entire vportN directory and all its child files, since
+debugfs_remove() is recursive (simple_recursive_removal()).
+free_netdev(ndev) which frees apc.
+Because step 1 removes all debugfs files referencing apc fields before
+step 2 frees the memory, there is no window where the files point to
+freed memory.
 
