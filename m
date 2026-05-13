@@ -1,362 +1,162 @@
-Return-Path: <linux-hyperv+bounces-10866-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10867-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4DWaNtrLBGrMPAIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10866-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 21:07:06 +0200
+	id WJ7CHm3LBGp2OwIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10867-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 21:05:17 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D761D539953
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 21:07:05 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 241E05398AE
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 21:05:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id CB258307CBF7
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 18:55:57 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id F033A300AB2A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 19:05:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86B1E3B4EA7;
-	Wed, 13 May 2026 18:55:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 970173AEF3D;
+	Wed, 13 May 2026 19:05:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Qj+OZLn7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qARi/5fN"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E4703AEB2D;
-	Wed, 13 May 2026 18:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E343ACA45;
+	Wed, 13 May 2026 19:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778698511; cv=none; b=Z7mtIx0Oy/hiUAivov8RtaaWUGjR57Hucgngcwxm3h9j0wf9TtZVOU06S/nHhUO0g/ErkdHo303lNeyhHZPa373JxzrhaNziQLIHFNOoz/FOpJf1xSzuXQWpPA07OFf4a0MW6oCa69Mse4btmcEipuDoJkQtIRORAUB01Vpk4A4=
+	t=1778699111; cv=none; b=DZwiXhkOyVzodL6pO4G9XUJQ29qeyTJn9Hq8mWjY4ikh0QH/B8GArKzwkECo7FyqtMDNymPXy+J8SQfGrJjuOm3yU7DTE6opfirIRnyk5f+3XtPKCHtRUrSN/WmAQqSn4IUuvTO0RGmore3fK3O4CCt3N/gpqQSTBjgAiWcyWV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778698511; c=relaxed/simple;
-	bh=6pte7KmgCrH2iOaG2CTCiWfcZdKewE+nR0allBerIaw=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RogpoucvKkO0RKlLu3zD2Ee7Ha92//hFEfyO+9iSSYxrggB7ePC/tluJd7q1O0nxUXmzwZ+Ty5C4pBK/E+Ea+PBNhK3Mjro7fJ3NSPQRRwfeFmFLKL5IvhYwJ1s4Z8DEwHLCj2uwfJspygdkkmCSBdbIT/Wu73h4uiwwzsc8PB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Qj+OZLn7; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id E60D820B7166;
-	Wed, 13 May 2026 11:55:05 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E60D820B7166
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1778698505;
-	bh=ub5RyE39AoYSdNY2B0DuEuBosvS0LlV4CMQwVjOaSi0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Qj+OZLn7gowIeKRdER9rjsWCgnD5jxGrYqvOVUPHaMIWs5LAwfN/BAkKhSA3RDvNA
-	 tZNbcvcWSoIvoHNn+jsuoFDsqDaHA3h3KUuKCswpbH7ncTkq9XotxcmXzzd4ESbKbc
-	 YX1jrkCcB1tBUgi6ip6/MuevY9FLoGKa1wevT8hA=
-Subject: [PATCH v4 6/6] mshv: Allocate pfns array only for pinned regions
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, longli@microsoft.com, skinsburskii@gmail.com
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 13 May 2026 18:55:08 +0000
-Message-ID: 
- <177869850857.19379.6952927255690476277.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-In-Reply-To: 
- <177869833161.19379.1357399549586915698.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-References: 
- <177869833161.19379.1357399549586915698.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-User-Agent: StGit/0.19
+	s=arc-20240116; t=1778699111; c=relaxed/simple;
+	bh=FzMe9/lOU06yXUx9x0/0CV2FJXck9l6xTP3s84RPoTc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Hlwhc9I3S2YNDL5lYGFzonqJi+wELePG12aefY45W2IlnG6nvXhzIRbTWNRnfheQWxIwUR4hojv9QvK9iiznCAoMASIaJIhA2DzsipfapydVHTgBE+gtLapfrXan3YHD9UuSvjBOnTx7OyMMF0toOosfGPcK3NoqdfRFVdTnesg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qARi/5fN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D47AC19425;
+	Wed, 13 May 2026 19:05:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778699111;
+	bh=FzMe9/lOU06yXUx9x0/0CV2FJXck9l6xTP3s84RPoTc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=qARi/5fN1L6IKtfUJ1SWvyceeDvBwX6LcgijkcA3RlroTAzbEsDgjBNb2cvgyrrIl
+	 ca3QRgGusBymhMEJJe5y3U0hOmjHjG/ZA0MH0oruOFOXkj4b0Qsveh9JXCHMKIlQM7
+	 5ybI+J8B+00rGNtcORVTUecoOaFVZ2h7aPBHEc2jyPf0lKUHUWlf9zfHuSYlHnkNZA
+	 12WifZMe3otmVjC0aSUGUpf9HmU43kg6JpDBAgMfb1dYRLPqXvZiB3iTO3tfhKPzYG
+	 lhsn9c+zJ9J18zE0r4Vq5So1mFVbJJEMgg9S572S2kDe3ke7RLy0cI3GB4/LgtE/St
+	 JBd0HJ+MoI6+g==
+Date: Wed, 13 May 2026 14:05:09 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>,
+	Haiyang Zhang <haiyangz@linux.microsoft.com>,
+	Paul Rosswurm <paulros@microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	KY Srinivasan <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <DECUI@microsoft.com>, Long Li <longli@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Simon Horman <horms@kernel.org>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Dipayaan Roy <dipayanroy@linux.microsoft.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [EXTERNAL] Re: [PATCH net-next] net: mana: Add handler for sriov
+ configure
+Message-ID: <20260513190509.GA328362@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: D761D539953
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260513184749.GI15586@unreal>
+X-Rspamd-Queue-Id: 241E05398AE
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,gmail.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10866-lists,linux-hyperv=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10867-lists,linux-hyperv=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_NONE(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[helgaas@kernel.org,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,skinsburskii-cloud-desktop.internal.cloudapp.net:mid]
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-The per-region pfns array is only used by pinned regions, where it records
-the host PFNs returned by pin_user_pages() so they can later be unpinned,
-shared, and unshared. Movable regions get their PFNs from HMM on every
-fault, and MMIO regions need only a single base PFN. Keeping a 2 MiB-per-1
-GiB flexible array around for region types that never read it is pure
-overhead.
+On Wed, May 13, 2026 at 09:47:49PM +0300, Leon Romanovsky wrote:
+> On Fri, May 08, 2026 at 06:10:29PM -0500, Bjorn Helgaas wrote:
+> > On Fri, May 08, 2026 at 10:47:14PM +0000, Haiyang Zhang wrote:
+> > > > On Fri, May 08, 2026 at 03:04:06PM -0700, Haiyang Zhang wrote:
+> > > > > From: Haiyang Zhang <haiyangz@microsoft.com>
+> > > > >
+> > > > > Add callback function for the pci_driver, sriov_configure.
+> > > > >
+> > > > > Also disable VF autoprobe when it runs as PF driver on bare metal,
+> > > > > since the hardware side may not have the VF ready immediately.
+> > > > >
+> > > > > Export pci_vf_drivers_autoprobe() so the driver can toggle the VF
+> > > > > autoprobe flag.
+> > > > 
+> > > > Technically pci_vf_drivers_autoprobe() doesn't *toggle* the autoprobe
+> > > > flag.  That would mean setting it to the opposite of its current
+> > > > value.
+> > > > 
+> > > > Here I would say "so the driver can prevent autoprobing of the VFs",
+> > > > which is the intent.
+> > > Thanks, I will change the wording.
+> > > 
+> > > > 
+> > > > Out of curiosity, how do the VFs eventually get probed?  I guess
+> > > > there's some other mechanism that tells you when they're ready, and
+> > > > you manually use sysfs 'sriov_drivers_autoprobe' to enable probing,
+> > > > then bind drivers to them via sysfs?
+> > > We have a user program talking to the Azure backplane to get that information.
+> > > @Paul Rosswurm, do you have more details?
+> > > 
+> > > 
+> > > > The prevention of autoprobing sounds like a critical part of this
+> > > > change; might be worth saying something in the subject, because "add
+> > > > sriov configure" doesn't include much information.
+> > > How about "Add handler for sriov configure with VF autoprobe off"?
+> > 
+> > OK by me :)
+> 
+> I believe it is the wrong decision to allow toggling a user‑visible knob  
+> without the user’s awareness. In this case, they can either disable  
+> autoprobe on the PF or rely on EPROBE_DEFER. In all cases, the same
+> functionality can be achieved without changing PCI autoprobe code.
 
-Convert mreg_pfns to a pointer and allocate it (via vmalloc_array, since it
-can be large) only for MSHV_REGION_TYPE_MEM_PINNED. Place it in a union
-with mreg_mmio_pfn so MMIO regions reuse the storage for the device base
-PFN. Movable regions leave the pointer NULL.
+OK, Haiyang, can you drop my ack please?  If Leon's solutions don't
+work for you, continue this conversation and we can explore
+alternatives.
 
-With the flexible array gone, the struct itself becomes fixed-size and the
-main allocation can move from vzalloc() to kzalloc().
-
-Gate every mreg_pfns access on mreg_type == MSHV_REGION_TYPE_MEM_PINNED:
-share/unshare/invalidate_pfns short-circuit for other types, and the
-destructor frees the array only for pinned regions. A NULL check would not
-be safe here because the union also stores MMIO regions' mmio_pfn, which is
-typically non-zero.
-
-The movable-region fault path no longer copies HMM-collected PFNs into
-mreg_pfns; instead it post-processes the temporary HMM array in place
-(stamping skipped slots with MSHV_INVALID_PFN) and hands it directly to the
-remap helper. Movable regions are now stateless from the kernel's point of
-view; the hypervisor's SLAT is the source of truth.
-
-Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
----
- drivers/hv/mshv_regions.c |   77 +++++++++++++++++++++++----------------------
- drivers/hv/mshv_root.h    |    7 ++--
- 2 files changed, 43 insertions(+), 41 deletions(-)
-
-diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
-index e20db61e9829f..a4bfec9279ede 100644
---- a/drivers/hv/mshv_regions.c
-+++ b/drivers/hv/mshv_regions.c
-@@ -42,8 +42,8 @@ static inline bool mshv_pfn_valid(unsigned long pfn)
- 	return pfn != MSHV_INVALID_PFN;
- }
- 
--static void mshv_region_init_pfns_range(struct mshv_region *region,
--					u64 pfn_offset, u64 pfn_count)
-+static void mshv_region_init_pfns(struct mshv_region *region,
-+				  u64 pfn_offset, u64 pfn_count)
- {
- 	u64 i;
- 
-@@ -51,11 +51,6 @@ static void mshv_region_init_pfns_range(struct mshv_region *region,
- 		region->mreg_pfns[i] = MSHV_INVALID_PFN;
- }
- 
--void mshv_region_init_pfns(struct mshv_region *region)
--{
--	mshv_region_init_pfns_range(region, 0, region->nr_pfns);
--}
--
- /**
-  * mshv_chunk_stride - Compute stride for mapping guest memory
-  * @pfn      : The PFN to check for huge page backing
-@@ -220,7 +215,7 @@ struct mshv_region *mshv_region_create(struct mshv_partition *partition,
- 	struct mshv_region *region;
- 	int ret = 0;
- 
--	region = vzalloc(struct_size(region, mreg_pfns, nr_pfns));
-+	region = kzalloc_obj(struct mshv_region);
- 	if (!region)
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -235,8 +230,6 @@ struct mshv_region *mshv_region_create(struct mshv_partition *partition,
- 	if (flags & BIT(MSHV_SET_MEM_BIT_EXECUTABLE))
- 		region->hv_map_flags |= HV_MAP_GPA_EXECUTABLE;
- 
--	mshv_region_init_pfns(region);
--
- 	mutex_init(&region->mreg_mutex);
- 	kref_init(&region->mreg_refcount);
- 
-@@ -248,6 +241,12 @@ struct mshv_region *mshv_region_create(struct mshv_partition *partition,
- 						   &mshv_region_mni_ops);
- 		break;
- 	case MSHV_REGION_TYPE_MEM_PINNED:
-+		region->mreg_pfns = vmalloc_array(nr_pfns, sizeof(unsigned long));
-+		if (!region->mreg_pfns) {
-+			ret = -ENOMEM;
-+			break;
-+		}
-+		mshv_region_init_pfns(region, 0, region->nr_pfns);
- 		break;
- 	case MSHV_REGION_TYPE_MMIO:
- 		region->mreg_mmio_pfn = mmio_pfn;
-@@ -262,7 +261,7 @@ struct mshv_region *mshv_region_create(struct mshv_partition *partition,
- 	return region;
- 
- free_region:
--	vfree(region);
-+	kfree(region);
- 	return ERR_PTR(ret);
- }
- 
-@@ -289,6 +288,9 @@ static int mshv_region_share(struct mshv_region *region)
- {
- 	u32 flags = HV_MODIFY_SPA_PAGE_HOST_ACCESS_MAKE_SHARED;
- 
-+	if (region->mreg_type != MSHV_REGION_TYPE_MEM_PINNED)
-+		return -EINVAL;
-+
- 	return mshv_region_process_range(region, flags,
- 					 0, region->nr_pfns,
- 					 region->mreg_pfns,
-@@ -317,6 +319,9 @@ static int mshv_region_unshare(struct mshv_region *region)
- {
- 	u32 flags = HV_MODIFY_SPA_PAGE_HOST_ACCESS_MAKE_EXCLUSIVE;
- 
-+	if (region->mreg_type != MSHV_REGION_TYPE_MEM_PINNED)
-+		return -EINVAL;
-+
- 	return mshv_region_process_range(region, flags,
- 					 0, region->nr_pfns,
- 					 region->mreg_pfns,
-@@ -357,29 +362,20 @@ static int mshv_region_remap_pfns(struct mshv_region *region,
- 					 mshv_region_chunk_remap);
- }
- 
--static int mshv_region_map(struct mshv_region *region)
--{
--	u32 map_flags = region->hv_map_flags;
--
--	return mshv_region_remap_pfns(region, map_flags,
--				      0, region->nr_pfns,
--				      region->mreg_pfns);
--}
--
- static void mshv_region_invalidate_pfns(struct mshv_region *region,
- 					u64 pfn_offset, u64 pfn_count)
- {
- 	u64 i;
- 
--	for (i = pfn_offset; i < pfn_offset + pfn_count; i++) {
--		if (!mshv_pfn_valid(region->mreg_pfns[i]))
--			continue;
-+	if (region->mreg_type != MSHV_REGION_TYPE_MEM_PINNED)
-+		return;
- 
--		if (region->mreg_type == MSHV_REGION_TYPE_MEM_PINNED)
-+	for (i = pfn_offset; i < pfn_offset + pfn_count; i++) {
-+		if (mshv_pfn_valid(region->mreg_pfns[i]))
- 			unpin_user_page(pfn_to_page(region->mreg_pfns[i]));
- 	}
- 
--	mshv_region_init_pfns_range(region, pfn_offset, pfn_count);
-+	mshv_region_init_pfns(region, pfn_offset, pfn_count);
- }
- 
- static void mshv_region_invalidate(struct mshv_region *region)
-@@ -516,7 +512,9 @@ static void mshv_region_destroy(struct kref *ref)
- 
- 	mshv_region_invalidate(region);
- 
--	vfree(region);
-+	if (region->mreg_type == MSHV_REGION_TYPE_MEM_PINNED)
-+		vfree(region->mreg_pfns);
-+	kfree(region);
- }
- 
- void mshv_region_put(struct mshv_region *region)
-@@ -634,10 +632,9 @@ static int mshv_region_hmm_fault_and_lock(struct mshv_region *region,
-  *   leaving missing pages as invalid PFN markers.
-  *   Used for initial region setup.
-  *
-- * Collected PFNs are stored in region->mreg_pfns[] with HMM bookkeeping
-- * flags cleared, then the range is mapped into the hypervisor. Present
-- * PFNs get mapped with region access permissions; missing PFNs (invalid
-- * entries) get mapped with no-access permissions.
-+ * HMM bookkeeping flags are stripped from collected PFNs before mapping.
-+ * Present PFNs get mapped with region access permissions; missing PFNs
-+ * (marked as MSHV_INVALID_PFN) get mapped with no-access permissions.
-  *
-  * Return: 0 on success, negative errno on failure.
-  */
-@@ -666,20 +663,24 @@ static int mshv_region_collect_and_map(struct mshv_region *region,
- 		goto out;
- 
- 	for (i = 0; i < pfn_count; i++) {
--		if (!(pfns[i] & HMM_PFN_VALID))
-+		if (!(pfns[i] & HMM_PFN_VALID)) {
-+			pfns[i] = MSHV_INVALID_PFN;
- 			continue;
-+		}
- 		/* Skip read-only pages to avoid bypassing COW */
- 		if (!do_fault &&
- 		    (region->hv_map_flags & HV_MAP_GPA_WRITABLE) &&
--		    !(pfns[i] & HMM_PFN_WRITE))
-+		    !(pfns[i] & HMM_PFN_WRITE)) {
-+			pfns[i] = MSHV_INVALID_PFN;
- 			continue;
-+		}
- 		/* Drop HMM_PFN_* flags to ensure PFNs are valid. */
--		region->mreg_pfns[pfn_offset + i] = pfns[i] & ~HMM_PFN_FLAGS;
-+		pfns[i] &= ~HMM_PFN_FLAGS;
- 	}
- 
- 	ret = mshv_region_remap_pfns(region, region->hv_map_flags,
- 				     pfn_offset, pfn_count,
--				     region->mreg_pfns + pfn_offset);
-+				     pfns);
- 
- 	mutex_unlock(&region->mreg_mutex);
- out:
-@@ -781,8 +782,6 @@ static bool mshv_region_interval_invalidate(struct mmu_interval_notifier *mni,
- 	if (ret)
- 		goto out_unlock;
- 
--	mshv_region_invalidate_pfns(region, pfn_offset, pfn_count);
--
- 	mutex_unlock(&region->mreg_mutex);
- 
- 	return true;
-@@ -845,7 +844,9 @@ static int mshv_map_pinned_region(struct mshv_region *region)
- 		}
- 	}
- 
--	ret = mshv_region_map(region);
-+	ret = mshv_region_remap_pfns(region, region->hv_map_flags,
-+				     0, region->nr_pfns,
-+				     region->mreg_pfns);
- 	if (ret)
- 		goto share_region;
- 
-@@ -869,7 +870,7 @@ static int mshv_map_pinned_region(struct mshv_region *region)
- 		 * is intentional; unpinning host-inaccessible pages would be
- 		 * unsafe).
- 		 */
--		mshv_region_init_pfns(region);
-+		mshv_region_init_pfns(region, 0, region->nr_pfns);
- 		goto err_out;
- 	}
- err_out:
-diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
-index e9bd18013b486..d79dfaac88af9 100644
---- a/drivers/hv/mshv_root.h
-+++ b/drivers/hv/mshv_root.h
-@@ -93,8 +93,10 @@ struct mshv_region {
- 	enum mshv_region_type mreg_type;
- 	struct mmu_interval_notifier mreg_mni;
- 	struct mutex mreg_mutex;	/* protects region PFNs remapping */
--	u64 mreg_mmio_pfn;
--	unsigned long mreg_pfns[];
-+	union {
-+		unsigned long *mreg_pfns;
-+		u64 mreg_mmio_pfn;
-+	};
- };
- 
- struct mshv_irq_ack_notifier {
-@@ -375,7 +377,6 @@ struct mshv_region *mshv_region_create(struct mshv_partition *partition,
- 				       u64 guest_pfn, u64 nr_pfns,
- 				       u64 uaddr, u32 flags,
- 				       unsigned long mmio_pfn);
--void mshv_region_init_pfns(struct mshv_region *region);
- void mshv_region_put(struct mshv_region *region);
- int mshv_region_get(struct mshv_region *region);
- bool mshv_region_handle_gfn_fault(struct mshv_region *region, u64 gfn);
-
-
+Bjorn
 
