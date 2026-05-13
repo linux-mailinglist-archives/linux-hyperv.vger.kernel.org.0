@@ -1,153 +1,162 @@
-Return-Path: <linux-hyperv+bounces-10822-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10823-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IOuyGf0MBGqLCwIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10822-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 07:32:45 +0200
+	id sEaQLa4dBGpyEAIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10823-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 08:43:58 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EB8852D8D1
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 07:32:43 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11F0452E32E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 08:43:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 5BB963034B20
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 05:32:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1A769306D873
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 06:43:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F175D3624D9;
-	Wed, 13 May 2026 05:32:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B15B3D47D4;
+	Wed, 13 May 2026 06:43:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="jFSUsUSg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cG15a3cO"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910F730FC27;
-	Wed, 13 May 2026 05:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778650351; cv=pass; b=RzqEe6i0nJ/8USTU/MlFHe6sDV1MpaB2qpC5IK6beWpz507PPkEY4/Wxmm1L9dye8tm+nokfcCNUcjV/gLbpnPk8+g8G0rSDEDqg/V7Yd9Zp5//gyfoz2ktmO1PZ/63xOagMqY5Gb5+TvtXgFhIDZFWxmtvGtHrUqNaN0xZmd6Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778650351; c=relaxed/simple;
-	bh=bido1uBskWMdXbiI/f5Y9yHbO7sRr9ZlWQHN0CvcdmM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UhxE8FxDW9gx0wMyOv9ZNbADKjn59SFdX06i0E0BOJgg/81cKnFEDgeIgfVbU8ASY7bsLuj31lcXzUrS44nxVYDsDOzMTeTg2sc/VwqoeJ39nUPkihk+2bpYbyEvSZBJjYb8Wg6uHo+BdbALJxDbhh4gEQVVqWcN+etl9aa/47s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=jFSUsUSg; arc=pass smtp.client-ip=136.143.188.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
-ARC-Seal: i=1; a=rsa-sha256; t=1778650340; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=X8bWh7MfvZcKmMYX/4tTeGiHXqM/YbA63Uvnf+5vnaXbREkdvi7o0qyJaaycQ9xDmvrAdStgjWztBzxkIV0IYq+FdY1oqRQDVuQdkIsEboGXDED7B8v3O8AFU6R/0suKf+d4XiczlLQs+Jq56sqoLhwHheZ3xUONWo275vQPnlo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1778650340; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=SdXRvmJihsoWwykWNl3djZ30Af7RtaFdeCAvIreg08U=; 
-	b=nJo+tV2k/Xs9GqkwBHztY1dca+l9bqLV4sp7ZXLOOg8pB0TmRhpUh7zNZzM8CAqWScor+gJmdAHOab/hF3qT2PwxpxChHL7iM7WKpkpr4NSw+nCAsAmENg0VJxMIFjALp5sDlUDOvPGydJcd+nC16/EYBu89lrl70o56YC/rJw0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=anirudhrb.com;
-	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
-	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1778650340;
-	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=SdXRvmJihsoWwykWNl3djZ30Af7RtaFdeCAvIreg08U=;
-	b=jFSUsUSgw29dp/tz6bhYq6kG40fidlyWXghOcyT1qnEyraoskuMbYB3Vx0pOoV6P
-	3ZUnPk/mpQwSvr7JmlG6plVhimT1q/4hD0AqUofSmMJOegIeq225jboIT095wnT/wML
-	JAcEZCt6/Ueecj1FWxVVHdNRERvtYO1PJgC4pXQ4=
-Received: by mx.zohomail.com with SMTPS id 1778650336566972.0119436504021;
-	Tue, 12 May 2026 22:32:16 -0700 (PDT)
-Date: Wed, 13 May 2026 05:32:06 +0000
-From: Anirudh Rayabharam <anirudh@anirudhrb.com>
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 13/18] mshv: Add missing vp_index bounds check in
- intercept ISR
-Message-ID: <20260513-gregarious-denim-cockatoo-c522cb@anirudhrb>
-References: <177816592843.21765.4364464279247150355.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <177816865065.21765.5112039734725197893.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1F13D47BF;
+	Wed, 13 May 2026 06:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778654610; cv=none; b=aOsBFclrwUiZeNLhvsv7b+weRDJ0bGwIN/qZIxnNr10fK7v0kBp3Knu4TtXzSfHLoQckkYaQM3Lyn43HWG7fl7Rp25bPJW59hLu2tdPL/Uqn7gtaIth9uXvnfkhHM9EEpXyv+Apg/ZrICgxtXWALtdKWWayAmNulI3z9tzeSpgo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778654610; c=relaxed/simple;
+	bh=yLvNrrxq9IsaYKABVJv7VnFq7IiQi5JhmwAKdQoEjKk=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=n87GdsZGdrQMo7lYx1KNncjmKfh396126Q4Y6o1J3nnH9b4qfHUr+zbxICWY261kDQ5fJPa0x4Lm1LpoiSlXTGJbHtZlpCtcn4kjHLWLHvhfxeuToJyKCu2HKaTBeSHnFBDuTVmwkXhvI59d5MQCrAvlkGyMef0YL6Hriq/b0go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cG15a3cO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48447C2BCB7;
+	Wed, 13 May 2026 06:43:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778654609;
+	bh=yLvNrrxq9IsaYKABVJv7VnFq7IiQi5JhmwAKdQoEjKk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=cG15a3cOTCvpg9P6rfhAXBdJU/UUJSj3MqFGCUijxeTcMXHikz9ZPQH4xUJCy3ZEb
+	 pDNuP7igsWftsi42YId+uTrEWdx/QQhm42J4vhgk+ZDFD5KxMb+lHq1+SOfR/nRy9Y
+	 6NsZqM9brDgd89H85Halx72Fp8G0T32LXttsfxF1dWtvjbQ80cHDZhcRt4oIrcq6nN
+	 JNS6vZjBc2hNqlKEeoKEp6dfz/IA7BwrI1INp1T90i9oVBv8i91qQKfskHNN7rrzQE
+	 TqZrShm/u2R2PM+BVe79EppljfqG18315os1KWsPxOsWkhL5olt6n4E587jdM27x6+
+	 Z8Yvuoz3Ihq9w==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH V3 08/11] PCI: hv: VMBus and PCI device IDs for PCI
+ passthru
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Mukesh R" <mrathor@linux.microsoft.com>
+Cc: linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org
+In-Reply-To: <20260512020259.1678627-9-mrathor@linux.microsoft.com>
+References: <20260512020259.1678627-9-mrathor@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 13 May 2026 06:43:28 +0000
+Message-Id: <20260513064329.48447C2BCB7@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <177816865065.21765.5112039734725197893.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-X-ZohoMailClient: External
-X-Rspamd-Queue-Id: 3EB8852D8D1
+X-Rspamd-Queue-Id: 11F0452E32E
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[anirudhrb.com,none];
-	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	MISSING_MIME_VERSION(2.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10823-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10822-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[anirudhrb.com:+];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[anirudh@anirudhrb.com,linux-hyperv@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NO_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On Thu, May 07, 2026 at 03:44:10PM +0000, Stanislav Kinsburskii wrote:
-> mshv_intercept_isr() reads vp_index from the SynIC intercept message
-> payload and uses it directly to index into partition->pt_vp_array without
-> validating that vp_index < MSHV_MAX_VPS.
-> 
-> Mshv treats the Microsoft Hypervisor as trusted, so a malformed vp_index is
-> not a security concern; the threat model does not include a malicious
-> hypervisor. A hypervisor bug that placed an out-of-range value here would,
-> however, cause an out-of-bounds read of pt_vp_array in hardirq context,
-> manifesting as random memory corruption or a host crash with no clear
-> signal pointing back to the hypervisor as the source.
-> 
-> handle_bitset_message() and handle_pair_message() already perform this
-> defensive check on hypervisor-supplied vp_index values, with an explicit
-> "This shouldn't happen, but just in case" comment  Add the same check to
-> mshv_intercept_isr() for consistency, turning a potential silent corruption
-> into a debuggable pr_debug message.
-> 
-> Fixes: 621191d709b14 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
-> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> ---
->  drivers/hv/mshv_synic.c |    5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/hv/mshv_synic.c b/drivers/hv/mshv_synic.c
-> index bac890cd2b468..89207aad7cf1f 100644
-> --- a/drivers/hv/mshv_synic.c
-> +++ b/drivers/hv/mshv_synic.c
-> @@ -387,6 +387,11 @@ mshv_intercept_isr(struct hv_message *msg)
->  	 */
->  	vp_index =
->  	       ((struct hv_opaque_intercept_message *)msg->u.payload)->vp_index;
-> +	/* This shouldn't happen, but just in case. */
-> +	if (unlikely(vp_index >= MSHV_MAX_VPS)) {
-> +		pr_debug("VP index %u out of bounds\n", vp_index);
-> +		goto unlock_out;
-> +	}
->  	vp = partition->pt_vp_array[vp_index];
->  	if (unlikely(!vp)) {
->  		pr_debug("failed to find VP %u\n", vp_index);
-> 
-> 
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] Conflicting declarations and missing `#ifdef` guards for `hv_build_=
+devid_type_pci()` cause build failures under certain Kconfig combinations.
+--
 
-Reviewed-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+commit 086da02227f217e959d3022c592e1b8698814d5b
+Author: Mukesh R <mrathor@linux.microsoft.com>
 
+PCI: hv: VMBus and PCI device IDs for PCI passthru
+
+This commit introduces functions to build and export VMBus and PCI device
+IDs for use with Hyper-V PCI passthru. It exposes hv_build_devid_type_pci()
+and adds hv_pci_vmbus_device_id() to generate the device IDs expected by
+the hypervisor.
+
+> diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
+> index b3ad50a874dca..8780573a43326 100644
+> --- a/arch/x86/hyperv/irqdomain.c
+> +++ b/arch/x86/hyperv/irqdomain.c
+> @@ -112,7 +112,7 @@ static int get_rid_cb(struct pci_dev *pdev, u16 alias=
+, void *data)
+>  	return 0;
+>  }
+> =20
+> -static union hv_device_id hv_build_devid_type_pci(struct pci_dev *pdev)
+> +u64 hv_build_devid_type_pci(struct pci_dev *pdev)
+>  {
+>  	int pos;
+[ ... ]
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyp=
+erv.h
+> index f64393e853ee3..2ef34001f8d31 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+[ ... ]
+> @@ -248,6 +248,12 @@ void hv_crash_asm_end(void);
+>  static inline void hv_root_crash_init(void) {}
+>  #endif  /* CONFIG_MSHV_ROOT && CONFIG_CRASH_DUMP */
+> =20
+> +#if IS_ENABLED(CONFIG_HYPERV_IOMMU)
+> +u64 hv_build_devid_type_pci(struct pci_dev *pdev);
+> +#else
+> +static inline u64 hv_build_devid_type_pci(struct pci_dev *pdev) { return=
+ 0; }
+> +#endif /* IS_ENABLED(CONFIG_HYPERV_IOMMU) */
+
+Will this cause build failures under certain Kconfig combinations?
+
+If CONFIG_PCI_MSI=3Dy and CONFIG_HYPERV_IOMMU=3Dn, arch/x86/hyperv/irqdomai=
+n.c
+provides a non-static definition of hv_build_devid_type_pci(), but this
+header provides a static inline definition, which leads to a redefinition
+error.
+
+Conversely, if CONFIG_PCI_MSI=3Dn and CONFIG_HYPERV_IOMMU=3Dy, this header
+declares the function, but it is never defined because irqdomain.c is not
+compiled, resulting in linker errors.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512020259.1678=
+627-1-mrathor@linux.microsoft.com?part=3D8
 
