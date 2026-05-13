@@ -1,56 +1,56 @@
-Return-Path: <linux-hyperv+bounces-10853-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10854-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cOZnMpjIBGodOgIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10853-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 20:53:12 +0200
+	id UPEILr7IBGqnOgIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10854-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 20:53:50 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F5AE539541
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 20:53:12 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30A645395A0
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 20:53:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B2ED53089840
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 18:50:53 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1113D309AD0C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 18:51:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6242D3AE6FD;
-	Wed, 13 May 2026 18:50:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DE9339281B;
+	Wed, 13 May 2026 18:50:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jXCh9hBc"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nToiu0K6"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F12F23A7F4A;
-	Wed, 13 May 2026 18:50:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F76D3ACF15;
+	Wed, 13 May 2026 18:50:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778698248; cv=none; b=qaLexLMq702Ld9hFi/ssVWvlN8vKggpbE6s3Uc56H/jg7e9hKY0s/oPxsmg2U7iILZ2Igoc/1v3X6jPCHi1Jza+LtbXp/e5FdYcguykqFhtvoO4RhvuJJ6L0YRqW1XSTaUxNfpkrAQhLB0dqY8rUtXQAVi/Pg8Wdx18dNoOgkSI=
+	t=1778698253; cv=none; b=mfxTgRvBGas39GTPG6PmY8NQRvflrOXbd4BLX0zzbtlavb6gsHkNdsIFP/tULBvFPa9433nmkY9Ge5tadXWb7dXksB0frGcVgfri6eiuvAC7m9Ayva+Oqsn7UdCuKWL5/7xDWlrEKeXlFSolOZ7CQB1ZSIjOcx+RRrd5p5O5cCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778698248; c=relaxed/simple;
-	bh=jxqsobnfJ/Z+LzXZVi6c2FEptlBkcaO3zo1J8r/3mj0=;
+	s=arc-20240116; t=1778698253; c=relaxed/simple;
+	bh=7G4l8D5sCjM+U0YP9SJUlkCscUAxiErxx/pAYy82FHY=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qCu1Tqvp5OaTSDU1wfrXiqAddYkhYB4eXn2I9IzNUjHx+r5982w7n+P+JBeCUOguNv9pYK5oTdAjjepCy2R8A3j7LcjziQPbD1N8njFWk2A2gGpDOCYGDKkecV869AXKPK7cCJcZyycQvoEnnCR4wRMutHIyKPvoMt8Oht45quc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jXCh9hBc; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version:Content-Type; b=afbD6vnRirjgq25dXOZVapPQboKyuwBAMS2Sqhpr3HzP6acuLxY/isdu4OXDDy9dPgrTD0rFoijLDb+sO+/SPmD2FNEEEx1vPfaCpRDX6lU/PKMIOwPu6MYndjP8u2VMA9t3pjALXVFEbri99P/gHEJ6Ps0hJbCt7SSqeUgtMqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=nToiu0K6; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 3B9CC20B7169;
-	Wed, 13 May 2026 11:50:43 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3B9CC20B7169
+	by linux.microsoft.com (Postfix) with ESMTPSA id 1930120B7166;
+	Wed, 13 May 2026 11:50:49 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1930120B7166
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1778698243;
-	bh=RGSqKJcgCEhtMssDaEv9TkVM9E+ZR+9zZADXzOtrRaE=;
+	s=default; t=1778698249;
+	bh=kxX5mxiHXu13jvA4ACQP4QOJ/g388j+0n9Av8rpN378=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=jXCh9hBcOvLVesWbDdDmabImn8PTUwI5yGcsTQkD9rZtUQtWqdHm3JjfvDJ/8UbH8
-	 esD5Z8HO4DOPWYx4iC9p1j1XwYirFdWbn89O5jVGOuYNCyIRPIW1FtTyfk7bdTwjFc
-	 z9Qd48d1t+PEaTmAxLWWocWu+PIgiEqpxccJe+KE=
-Subject: [PATCH v3 05/11] mshv: Support address range holes in remapping
+	b=nToiu0K6rLOn0ogcPhVqdLxyHwKQCylsPtlN0ZTIiaybuzQnIbVAuPRv0uNXLkhvw
+	 h66qT/SUEgFUu4yKEHZ/tChJp+SB7skUO3/Knlzmu72SLYnEGCPnHuXUcTS8Owu2l1
+	 I96hTR5wlYL7qDLMOKp7Cw0blDm3NIpM6zNGg88g=
+Subject: [PATCH v3 06/11] mshv: Iterate VMAs when faulting in region pages
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, longli@microsoft.com, skinsburskii@gmail.com
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 13 May 2026 18:50:45 +0000
+Date: Wed, 13 May 2026 18:50:51 +0000
 Message-ID: 
- <177869824588.18773.15557069054488920623.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <177869825173.18773.4607760400762394290.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 In-Reply-To: 
  <177869813422.18773.515308662914055136.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 References: 
@@ -63,20 +63,20 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 3F5AE539541
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 30A645395A0
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10853-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10854-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
@@ -86,150 +86,179 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TO_DN_NONE(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,skinsburskii-cloud-desktop.internal.cloudapp.net:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,skinsburskii-cloud-desktop.internal.cloudapp.net:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-Consolidate memory region processing to handle both valid and invalid PFNs
-uniformly. This eliminates code duplication across remap, unmap, share, and
-unshare operations by using a common range processing interface.
+mshv_region_hmm_fault_and_lock() called hmm_range_fault() once for the
+entire requested range. hmm_range_fault() can only handle a single VMA per
+call, so a region whose user address range spans multiple VMAs fails the
+fault even though each individual VMA is fault-able.
 
-Holes are now remapped with no-access permissions to enable
-hypervisor dirty page tracking for precopy live migration.
+Walk the requested range VMA by VMA under mmap_read_lock and call
+hmm_range_fault() for each [vma->vm_start, vma->vm_end) ∩ [start, end)
+segment. The mmu notifier sequence is captured once before the loop, so a
+writer racing with the multi-VMA fault is still detected at the closing
+mmu_interval_read_retry().
 
-This refactoring is a precursor to an upcoming change that will map
-present pages in movable regions upon region creation, requiring
-consistent handling of both mapped and unmapped ranges.
+Tighten the read-only gate added in 3f8e229cb787 ("mshv: Don't request HMM
+write fault for read-only regions") so HMM_PFN_REQ_WRITE is requested only
+when both the region (HV_MAP_GPA_WRITABLE) and the backing VMA (VM_WRITE)
+permit writes. Without the per-VMA check, a writable region whose
+underlying VMA is read-only would still trigger COW on the host's read-only
+pages.
+
+While here, restructure mshv_region_hmm_fault_and_lock() to take the range
+as (start, end, pfns) directly rather than a populated hmm_range; the
+struct is now constructed inside the function since its fields are
+recomputed per VMA.
 
 Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 ---
- drivers/hv/mshv_regions.c |   70 ++++++++++++++++++++++++++++-----------------
- 1 file changed, 43 insertions(+), 27 deletions(-)
+ drivers/hv/mshv_regions.c |   97 +++++++++++++++++++++++++++++----------------
+ 1 file changed, 62 insertions(+), 35 deletions(-)
 
 diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
-index 090c4052f0f4d..579a29f2924b8 100644
+index 579a29f2924b8..807fff43deb43 100644
 --- a/drivers/hv/mshv_regions.c
 +++ b/drivers/hv/mshv_regions.c
-@@ -81,30 +81,23 @@ static int mshv_chunk_stride(unsigned long pfn, u64 gfn, u64 pfn_count)
+@@ -447,37 +447,76 @@ int mshv_region_get(struct mshv_mem_region *region)
  }
  
  /**
-- * mshv_region_chunk_size - Length of the next same-stride PFN run.
-+ * mshv_region_chunk_size - Length of the next contiguous PFN run in a region.
-  * @region    : Memory region whose PFN array is being walked.
-- * @pfn_offset: Offset into region->mreg_pfns at which to start; the
-- *              PFN at this offset must be valid.
-- * @pfn_count : Upper bound on the run length (not necessarily the
-- *              region's total length; typically the residual passed
-- *              from mshv_region_process_range()).
-- * @huge_page : Out-parameter set to true if the run is backed by
-- *              PMD-order folios and may be dispatched as 2 MiB
-- *              chunks; false for 4 KiB-stride dispatch.
-+ * @pfn_offset: Offset into region->mreg_pfns at which to start.
-+ * @pfn_count : Upper bound on the run length.
-+ * @huge_page : Out-parameter set to true if the run may be dispatched
-+ *              as a 2 MiB chunk; false for 4 KiB-stride dispatch.
+- * mshv_region_hmm_fault_and_lock - Handle HMM faults and lock the memory region
++ * mshv_region_hmm_fault_and_lock - Fault in pages across VMAs and lock
++ *                                  the memory region
+  * @region: Pointer to the memory region structure
+- * @range: Pointer to the HMM range structure
++ * @start : Starting virtual address of the range to fault (inclusive)
++ * @end   : Ending virtual address of the range to fault (exclusive)
++ * @pfns  : Output array for page frame numbers with HMM flags
   *
-- * Walks the PFN array starting at @pfn_offset and returns the length
-- * of the longest contiguous run that shares the stride classification
-- * (4 KiB vs 2 MiB) of the first PFN.  An invalid PFN inside the run
-- * terminates it.  The run is bounded above by @pfn_count.
-- *
-- * The caller may then dispatch [pfn_offset, pfn_offset + return) to a
-- * handler with @huge_page indicating which stride applies.  After the
-- * dispatch the caller advances by the returned length and re-invokes
-- * this function for the next run.
-+ * Returns the length of the longest contiguous run starting at @pfn_offset
-+ * that shares the classification of the first PFN: either a same-stride run of
-+ * valid PFNs (4 KiB or 2 MiB) or a hole of invalid PFNs. A hole that is
-+ * huge-page aligned in @gfn space and at least PTRS_PER_PMD entries long is
-+ * reported as a 2 MiB chunk (huge_page = true) so the caller can dispatch it
-+ * as a single HV_MAP_GPA_NO_ACCESS huge mapping. The run is bounded above by
-+ * @pfn_count.
+- * This function performs the following steps:
+- * 1. Reads the notifier sequence for the HMM range.
+- * 2. Acquires a read lock on the memory map.
+- * 3. Handles HMM faults for the specified range.
+- * 4. Releases the read lock on the memory map.
+- * 5. If successful, locks the memory region mutex.
+- * 6. Verifies if the notifier sequence has changed during the operation.
+- *    If it has, releases the mutex and returns -EBUSY to match with
+- *    hmm_range_fault() return code for repeating.
++ * Iterates through VMAs covering [start, end), faulting in pages via
++ * hmm_range_fault() for each VMA segment.  Write faults are requested
++ * only when both the VMA and the hypervisor mapping permit writes, to
++ * avoid breaking copy-on-write semantics on read-only mappings.
   *
-  * Return: Length of the run in PFNs, or a negative errno from
-- *         mshv_chunk_stride() if the starting PFN is invalid or its
-- *         backing folio order is unsupported.
-+ *         mshv_chunk_stride() if the backing folio order is unsupported.
+- * Return: 0 on success, a negative error code otherwise.
++ * On success, returns with region->mreg_mutex held; the caller is
++ * responsible for releasing it.  Returns -EBUSY if the mmu notifier
++ * sequence changed during the operation, signalling the caller to retry.
++ *
++ * Return: 0 on success, negative error code on failure.
   */
- static long mshv_region_chunk_size(struct mshv_mem_region *region,
- 				   u64 pfn_offset, u64 pfn_count,
-@@ -114,6 +107,22 @@ static long mshv_region_chunk_size(struct mshv_mem_region *region,
- 	u64 gfn = region->start_gfn + pfn_offset;
- 	u64 count = 0, stride;
+ static int mshv_region_hmm_fault_and_lock(struct mshv_mem_region *region,
+-					  struct hmm_range *range)
++					  unsigned long start,
++					  unsigned long end,
++					  unsigned long *pfns)
+ {
++	struct hmm_range range = {
++		.notifier = &region->mreg_mni,
++	};
++	struct mm_struct *mm = region->mreg_mni.mm;
+ 	int ret;
  
-+	if (!mshv_pfn_valid(pfns[0])) {
-+		for (count = 1; count < pfn_count; count++) {
-+			if (mshv_pfn_valid(pfns[count]))
-+				break;
+-	range->notifier_seq = mmu_interval_read_begin(range->notifier);
+-	mmap_read_lock(region->mreg_mni.mm);
+-	ret = hmm_range_fault(range);
+-	mmap_read_unlock(region->mreg_mni.mm);
++	range.notifier_seq = mmu_interval_read_begin(range.notifier);
++	mmap_read_lock(mm);
++	while (start < end) {
++		struct vm_area_struct *vma;
++
++		vma = vma_lookup(mm, start);
++		if (!vma) {
++			ret = -EFAULT;
++			break;
 +		}
 +
-+		if (IS_ALIGNED(gfn, PTRS_PER_PMD) &&
-+		    count >= PTRS_PER_PMD) {
-+			*huge_page = true;
-+			return ALIGN_DOWN(count, PTRS_PER_PMD);
-+		}
++		range.hmm_pfns = pfns;
++		range.start = start;
++		range.end = min(vma->vm_end, end);
++		range.default_flags = HMM_PFN_REQ_FAULT;
++		/*
++		 * Only request writable pages from HMM when both the
++		 * VMA and the hypervisor mapping allow writes.  Without
++		 * this, hmm_range_fault() would trigger COW on read-only
++		 * mappings (e.g. shared zero pages, file-backed pages),
++		 * breaking copy-on-write semantics and potentially
++		 * granting the guest write access to shared host pages.
++		 */
++		if ((vma->vm_flags & VM_WRITE) &&
++		    (region->hv_map_flags & HV_MAP_GPA_WRITABLE))
++			range.default_flags |= HMM_PFN_REQ_WRITE;
 +
-+		*huge_page = false;
-+		return count;
++		ret = hmm_range_fault(&range);
++		if (ret)
++			break;
++
++		start = range.end;
++		pfns += (range.end - range.start) >> PAGE_SHIFT;
 +	}
-+
- 	stride = mshv_chunk_stride(pfns[0], gfn, pfn_count);
- 	if (stride < 0)
- 		return stride;
-@@ -170,13 +179,6 @@ static int mshv_region_process_range(struct mshv_mem_region *region,
- 		bool huge_page;
- 		long count;
++	mmap_read_unlock(mm);
+ 	if (ret)
+ 		return ret;
  
--		/* Skip non-present pages */
--		if (!mshv_pfn_valid(region->mreg_pfns[pfn_offset])) {
--			pfn_offset++;
--			pfn_count--;
--			continue;
--		}
+ 	mutex_lock(&region->mreg_mutex);
+ 
+-	if (mmu_interval_read_retry(range->notifier, range->notifier_seq)) {
++	if (mmu_interval_read_retry(range.notifier, range.notifier_seq)) {
+ 		mutex_unlock(&region->mreg_mutex);
+ 		cond_resched();
+ 		return -EBUSY;
+@@ -501,10 +540,7 @@ static int mshv_region_hmm_fault_and_lock(struct mshv_mem_region *region,
+ static int mshv_region_range_fault(struct mshv_mem_region *region,
+ 				   u64 pfn_offset, u64 pfn_count)
+ {
+-	struct hmm_range range = {
+-		.notifier = &region->mreg_mni,
+-		.default_flags = HMM_PFN_REQ_FAULT,
+-	};
++	unsigned long start, end;
+ 	unsigned long *pfns;
+ 	int ret;
+ 	u64 i;
+@@ -513,21 +549,12 @@ static int mshv_region_range_fault(struct mshv_mem_region *region,
+ 	if (!pfns)
+ 		return -ENOMEM;
+ 
+-	range.hmm_pfns = pfns;
+-	range.start = region->start_uaddr + pfn_offset * HV_HYP_PAGE_SIZE;
+-	range.end = range.start + pfn_count * HV_HYP_PAGE_SIZE;
 -
- 		count = mshv_region_chunk_size(region, pfn_offset, pfn_count,
- 					       &huge_page);
- 		if (count < 0)
-@@ -223,6 +225,9 @@ static int mshv_region_chunk_share(struct mshv_mem_region *region,
- 				   u64 pfn_offset, u64 pfn_count,
- 				   bool huge_page)
- {
-+	if (!mshv_pfn_valid(region->mreg_pfns[pfn_offset]))
-+		return -EINVAL;
-+
- 	if (huge_page)
- 		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
+-	/*
+-	 * Only request writable pages from HMM when the region itself
+-	 * permits writes.  Without this, hmm_range_fault() would
+-	 * trigger COW on read-only regions, breaking copy-on-write
+-	 * semantics on shared host pages.
+-	 */
+-	if (region->hv_map_flags & HV_MAP_GPA_WRITABLE)
+-		range.default_flags |= HMM_PFN_REQ_WRITE;
++	start = region->start_uaddr + pfn_offset * HV_HYP_PAGE_SIZE;
++	end = start + pfn_count * HV_HYP_PAGE_SIZE;
  
-@@ -248,6 +253,9 @@ static int mshv_region_chunk_unshare(struct mshv_mem_region *region,
- 				     u64 pfn_offset, u64 pfn_count,
- 				     bool huge_page)
- {
-+	if (!mshv_pfn_valid(region->mreg_pfns[pfn_offset]))
-+		return -EINVAL;
-+
- 	if (huge_page)
- 		flags |= HV_MODIFY_SPA_PAGE_HOST_ACCESS_LARGE_PAGE;
+ 	do {
+-		ret = mshv_region_hmm_fault_and_lock(region, &range);
++		ret = mshv_region_hmm_fault_and_lock(region, start, end,
++						     pfns);
+ 	} while (ret == -EBUSY);
  
-@@ -271,6 +279,14 @@ static int mshv_region_chunk_remap(struct mshv_mem_region *region,
- 				   u64 pfn_offset, u64 pfn_count,
- 				   bool huge_page)
- {
-+	/*
-+	 * Remap missing pages with no access to let the
-+	 * hypervisor track dirty pages, enabling precopy live
-+	 * migration.
-+	 */
-+	if (!mshv_pfn_valid(region->mreg_pfns[pfn_offset]))
-+		flags = HV_MAP_GPA_NO_ACCESS;
-+
- 	if (huge_page)
- 		flags |= HV_MAP_GPA_LARGE_PAGE;
- 
+ 	if (ret)
 
 
 
