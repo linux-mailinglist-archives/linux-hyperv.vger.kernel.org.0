@@ -1,253 +1,256 @@
-Return-Path: <linux-hyperv+bounces-10814-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10815-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UDVNBTflA2oRAAIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10814-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 04:43:03 +0200
+	id wPq9LCrsA2ruAgIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10815-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 05:12:42 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE11752C52B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 04:43:02 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B070B52CAA4
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 05:12:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 0E27D304297A
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 02:43:02 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id D3AEB300F2A3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 03:12:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BD4538E8B4;
-	Wed, 13 May 2026 02:43:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFC92391833;
+	Wed, 13 May 2026 03:12:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="UMFVeOs7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k+jTlNDf"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A919535DA55;
-	Wed, 13 May 2026 02:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCFEF3314D9
+	for <linux-hyperv@vger.kernel.org>; Wed, 13 May 2026 03:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778640180; cv=none; b=RYJsDYINwyapTZhyhJbSt0aJQB747HsNEtGKiaq0zbCF5Iq94RtamwpSFLpedplRWhW/o9tlnZPFWH4V6GnaqCv5rRcshfRI8GgYp6wOpJp9ejxC6GP986OlGr6jd1+d/IuGgamtoHm96xt+YKrTF9/XgtNTZuwNGs0z2OdhQVg=
+	t=1778641957; cv=none; b=SRc0sCS41gbW6n9BX9UZ/wWngZPEm7J/WEtqhdi2fsKglmZbG5FKWp12sna9mj+yEY7CMRKVrARuBHiPRNdPasLea2JEedW0kSygmCacvAnXOlCziZRD+DuIEF36F5BWgcPbf47t7KUJSE0usuLg60fdQYsH6Dp1nvPVsTrN2yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778640180; c=relaxed/simple;
-	bh=ed+O/pR5mC2MCbGf9lHYynglGGitK0qWZf14W3ovHvw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t9OKG4zIjo3H9s0RC/2s/V7+iLKR71HhTFjvsm3s3vUAKZX4Hy1lO6/OH4x/Zbm2/UO5Cxwo7C3laFEa84/A7lpBe1rL0BIhc7AgoNRHVr003Cq+fZXVLlRDUJijvu7+7DXzv9rsdP1I0uZcDCNL1YSD67h0aOE3h12VqHgLxqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=UMFVeOs7; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from skinsburskii.localdomain (unknown [52.148.140.42])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 0EBE420B7166;
-	Tue, 12 May 2026 19:42:56 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0EBE420B7166
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1778640176;
-	bh=HDotFo7yQkt3tGus6/l1hCvSHXQW8pdq+LRsiO9XGls=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UMFVeOs7jhHizUoZTF3rLV2fW2H7+kCxsG+j5RVqvZRaYJO8AXfta9wqL4aMgODOg
-	 J3qPV4D2PtHGW6IjCCwtKABwk4UA468vwFN9VGwCfbgXSjEomN1K9YREsOaurc60cL
-	 8SMTLGI1FKlt5aHKMDLY/c6dwmfueyb1aeDwXOKs=
-Date: Tue, 12 May 2026 19:42:57 -0700
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: kys@microsoft.com, Liam.Howlett@oracle.com, akpm@linux-foundation.org,
-	decui@microsoft.com, haiyangz@microsoft.com, jgg@ziepe.ca,
-	corbet@lwn.net, leon@kernel.org, longli@microsoft.com,
-	ljs@kernel.org, mhocko@suse.com, rppt@kernel.org, shuah@kernel.org,
-	skhan@linuxfoundation.org, surenb@google.com, vbabka@kernel.org,
-	wei.liu@kernel.org, linux-doc@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 1/3] mm/hmm: Add hmm_range_fault_unlockable() for mmap
- lock-drop support
-Message-ID: <agPlMYFCrdD2WKYZ@skinsburskii.localdomain>
-References: <177759835313.221039.2807391868456411507.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <177759840859.221039.13065406062747296947.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <563bb216-c270-4711-adda-b91484af40dc@kernel.org>
- <agNS4llNtAHBkMA2@skinsburskii.localdomain>
- <f073a8d7-5761-4f7b-a5e5-c6aeae5fdc72@kernel.org>
+	s=arc-20240116; t=1778641957; c=relaxed/simple;
+	bh=U/xsNA7hZRzARIiBox+NjSuM/YYCWZTsEtuGtaOQDNI=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=AzeXmBzrGt4X6Il1FB1I7hT+eFsVG1qAa/5exkK/ApYJ/H6inqVKwBNJVm983d1r46j2uGdArQArZbT5p6WTjs0ms93mvI2Rmg3m2G5bXGxu9w453nKDuw4kKdb28XgYGHIgWAQR8+TqITWpL8muuMrL+wxmuzWEJmC6IPaE23M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k+jTlNDf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4280DC2BCB0;
+	Wed, 13 May 2026 03:12:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778641957;
+	bh=U/xsNA7hZRzARIiBox+NjSuM/YYCWZTsEtuGtaOQDNI=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=k+jTlNDfULI2CrGfnSNjwufRJrDEUhkfg+xVF3Rfxn+FGNCShrCw1Avo08hIv5083
+	 X2eClDdd0hRRXD4RGtRLMSIjV2Rfeukjsp1iJGrOnB0E7qBOjuBx4NzXcRslqvv7JV
+	 Lg7iO/5Yj0JKi2lAmrpLK4PB1dhzSgHcljb4vZuLeIccPCqfgUhhVEkTFvPaTlkvNl
+	 SRPnobILJ7BWeoy6dU3HKkJNOjPjLUvGESNRJp+BS0BTM2TCxDQfrti1pYKmw19oeK
+	 Q3bat8yaazIwJW1yXFHJr6XkWcuF1iG/63ugB/E004X+LFrLjAu/vlv9H0reQ1ru43
+	 0Qx3fkOs5nGeg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 02/10] IB/rdmavt: Don't abuse udata and
+ ib_respond_udata()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Jason Gunthorpe" <jgg@nvidia.com>
+Cc: linux-hyperv@vger.kernel.org
+In-Reply-To: <2-v3-4effdebad75a+e1-rdma_udata_rep_jgg@nvidia.com>
+References: <2-v3-4effdebad75a+e1-rdma_udata_rep_jgg@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 13 May 2026 03:12:36 +0000
+Message-Id: <20260513031237.4280DC2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f073a8d7-5761-4f7b-a5e5-c6aeae5fdc72@kernel.org>
-X-Rspamd-Queue-Id: AE11752C52B
+X-Rspamd-Queue-Id: B070B52CAA4
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10815-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10814-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
+	RCPT_COUNT_TWO(0.00)[2];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.microsoft.com:dkim,skinsburskii.localdomain:mid]
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NO_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,lists.linux.dev:replyto,smtp.kernel.org:mid,ziepe.ca:email]
 X-Rspamd-Action: no action
 
-On Tue, May 12, 2026 at 09:18:11PM +0200, David Hildenbrand (Arm) wrote:
-> On 5/12/26 18:18, Stanislav Kinsburskii wrote:
-> > On Tue, May 12, 2026 at 10:42:14AM +0200, David Hildenbrand (Arm) wrote:
-> >>
-> >>> +	for (; addr < end; addr += PAGE_SIZE) {
-> >>> +		vm_fault_t ret;
-> >>> +
-> >>> +		ret = handle_mm_fault(vma, addr, fault_flags, NULL);
-> >>> +
-> >>> +		if (ret & (VM_FAULT_RETRY | VM_FAULT_COMPLETED)) {
-> >>> +			/*
-> >>> +			 * The mmap lock has been dropped by the fault handler.
-> >>> +			 * Record the failing address and signal lock-drop to
-> >>> +			 * the caller.
-> >>> +			 */
-> >>> +			*hmm_vma_walk->locked = 0;
-> >>> +			hmm_vma_walk->last = addr;
-> >>> +			return -EAGAIN;
-> >>
-> >>
-> >> Okay, so we'll return straight from hmm_vma_fault() to
-> >> hmm_vma_handle_pte()/hmm_vma_walk_pmd() -> walk_page_range() machinery.
-> >>
-> >> Hopefully we don't refer to the MM/VMA on any path there? It would be nicer if
-> >> the hmm_vma_fault() could be called by the caller of walk_page_range(), but
-> >> that's tricky I guess, as hmm_vma_fault() consumes the walk structure and
-> >> requires the vma in there.
-> >>
-> > 
-> > It looks like a caller can provide a post_vma callback in mm_walk_ops. I
-> > missed that case here. This callback cannot be supported by this change.
-> > I will update the patch.
-> > 
-> >>
-> >> Note: am I wrong, or is hmm_vma_fault() really always called with
-> >> required_fault=true?
-> >>
-> > 
-> > No, hmm_pte_need_fault can return false.
-> 
-> That's not what I mean. Looks like all paths leading to hmm_vma_fault() have
-> required_fault = true;
-> 
-> IOW, there is always a "if (required_fault)" before it one way or the other.
-> 
-> Ah, and there even is a "WARN_ON_ONCE(!required_fault)" in the function. What an
-> odd thing to do :)
-> 
-> > 
-> >>> +		}
-> >>> +
-> >>> +		if (ret & VM_FAULT_ERROR)
-> >>>  			return -EFAULT;
-> >>> +	}
-> >>>  	return -EBUSY;
-> >>>  }
-> >>>  
-> >>> @@ -566,6 +585,17 @@ static int hmm_vma_walk_hugetlb_entry(pte_t *pte, unsigned long hmask,
-> >>>  	if (required_fault) {
-> >>>  		int ret;
-> >>>  
-> >>> +		/*
-> >>> +		 * Faulting hugetlb pages on the unlockable path is not
-> >>> +		 * supported. The walk framework holds hugetlb_vma_lock_read
-> >>> +		 * which must be dropped before handle_mm_fault, but if the
-> >>> +		 * mmap lock is also dropped (VM_FAULT_RETRY), the vma may
-> >>> +		 * be freed and the walk framework's unconditional unlock
-> >>> +		 * becomes a use-after-free.
-> >>> +		 */
-> >>> +		if (hmm_vma_walk->locked)
-> >>> +			return -EFAULT;
-> >>
-> >> Just because it's unlockable doesn't mean that you must unlock. Can't this be
-> >> kept working as is, just simulating here as if it would not be unlockable?
-> >>
-> > 
-> > I’m not sure how to implement this. The walk_page_range code expects the
-> > hugetlb VMA to still be read-locked when we return from
-> > hmm_vma_walk_hugetlb_entry. How can we guarantee that if the VMA might
-> > be gone?
-> > 
-> > I added a note in the docs. Whoever tackles this will likely need to
-> > either rework `walk_page_range` to handle the case where the VMA is
-> > gone, or use a different approach.
-> > 
-> > Do you have any other suggestions on how to implement it?
-> 
-> You just want hmm_vma_fault() to not set
-> "FAULT_FLAG_ALLOW_RETRY·|·FAULT_FLAG_KILLABLE".
-> 
-> The hacky way could be:
-> 
-> diff --git a/mm/hmm.c b/mm/hmm.c
-> index 5955f2f0c83d..83dba990e10a 100644
-> --- a/mm/hmm.c
-> +++ b/mm/hmm.c
-> @@ -564,6 +564,7 @@ static int hmm_vma_walk_hugetlb_entry(pte_t *pte, unsigned
-> long hmask,
->         required_fault =
->                 hmm_pte_need_fault(hmm_vma_walk, pfn_req_flags, cpu_flags);
->         if (required_fault) {
-> +               int *saved_locked = hmm_vma_walk->locked;
->                 int ret;
-> 
->                 spin_unlock(ptl);
-> @@ -576,7 +577,9 @@ static int hmm_vma_walk_hugetlb_entry(pte_t *pte, unsigned
-> long hmask,
->                  * use here of either pte or ptl after dropping the vma
->                  * lock.
->                  */
-> +               hmm_vma_walk->locked = NULL;
->                 ret = hmm_vma_fault(addr, end, required_fault, walk);
-> +               hmm_vma_walk->locked = saved_locked;
->                 hugetlb_vma_lock_read(vma);
->                 return ret;
->         }
-> 
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+s) to consider:
+- [Critical] TOCTOU heap buffer overflow due to unvalidated `num_sge` from =
+user-shared memory.
+- [High] Memory leak of the kernel queue structure (`srq->rq.kwq`) on user-=
+backed SRQ modifications.
+- [High] Locking imbalance and freeing memory while locked.
+- [High] Inconsistent state and Use-After-Free on error path.
+- [Low] Uninitialized variable compiler warning for `offset_addr`.
+--
 
-I see. AFAIU the outcome would be the same.
+commit dac7699d9e58c179b3a8859ac64da79e5fd21f46
+Author: Jason Gunthorpe <jgg@ziepe.ca>
+Subject: IB/rdmavt: Don't abuse udata and ib_respond_udata()
 
-> But really, I think we should just try to get uffd support working properly, not
-> excluding hugetlb.
-> 
-> GUP achieves it properly by performing the fault handling outside of page table
-> walking context ... essentially what I described in my first comment above:
-> return the information to the caller and let it just trigger the fault.
-> 
-> The issue here is that we trigger a fault out of walk_hugetlb_range() where we
-> still hold locks, resulting in this questionable hugetlb_vma_unlock_read +
-> hugetlb_vma_lock_read pattern.
-> 
+This commit modifies rvt_modify_srq to use copy_to_user directly instead
+of ib_copy_to_udata for returning the offset address.
 
-Fair enough.
+> diff --git a/drivers/infiniband/sw/rdmavt/srq.c b/drivers/infiniband/sw/r=
+dmavt/srq.c
+> index fe125bf85b272..d022aa56c5bfd 100644
+> --- a/drivers/infiniband/sw/rdmavt/srq.c
+> +++ b/drivers/infiniband/sw/rdmavt/srq.c
+> @@ -128,6 +128,7 @@ int rvt_modify_srq(struct ib_srq *ibsrq, struct ib_sr=
+q_attr *attr,
+>  	struct rvt_srq *srq =3D ibsrq_to_rvtsrq(ibsrq);
+>  	struct rvt_dev_info *dev =3D ib_to_rvt(ibsrq->device);
+>  	struct rvt_rq tmp_rq =3D {};
+> +	__u64 offset_addr;
+>  	int ret =3D 0;
+> =20
+>  	if (attr_mask & IB_SRQ_MAX_WR) {
 
-> The fault should just be triggered from a place where we don't have to play with
-> hugetlb vma locks or be afraid that dropping the mmap lock causes other problems.
-> 
+Could hoisting offset_addr lead to a compiler warning for being potentially
+uninitialized?
 
-I reworked this part. Please take a look at v2.
+The compiler might assume udata->inlen could change concurrently across the
+spin_lock_irq() and spin_unlock_irq() calls. If the first check fails
+but the second one passes:
 
-Thanks,
-Stanislav
+if (udata && udata->inlen >=3D sizeof(__u64))
 
-> 
-> -- 
-> Cheers,
-> 
-> David
+Does this allow offset_addr to be used without initialization?
+
+[ ... ]
+
+> @@ -149,19 +150,17 @@ int rvt_modify_srq(struct ib_srq *ibsrq, struct ib_=
+srq_attr *attr,
+>  			return -ENOMEM;
+>  		/* Check that we can write the offset to mmap. */
+>  		if (udata && udata->inlen >=3D sizeof(__u64)) {
+> -			__u64 offset_addr;
+>  			__u64 offset =3D 0;
+> =20
+>  			ret =3D ib_copy_from_udata(&offset_addr, udata,
+>  						 sizeof(offset_addr));
+>  			if (ret)
+>  				goto bail_free;
+> -			udata->outbuf =3D (void __user *)
+> -					(unsigned long)offset_addr;
+> -			ret =3D ib_copy_to_udata(udata, &offset,
+> -					       sizeof(offset));
+> -			if (ret)
+> +			if (copy_to_user(u64_to_user_ptr(offset_addr), &offset,
+> +					 sizeof(offset))) {
+> +				ret =3D -EFAULT;
+>  				goto bail_free;
+> +			}
+>  		}
+> =20
+>  		spin_lock_irq(&srq->rq.kwq->c_lock);
+
+Can this code leak the kernel queue structure?
+
+When resizing a user-backed SRQ, the code fetches elements from the old
+user-mapped queue. In the udata path, okwq is left as NULL:
+
+if (udata) {
+        owq =3D srq->rq.wq;
+        head =3D RDMA_READ_UAPI_ATOMIC(owq->head);
+        tail =3D RDMA_READ_UAPI_ATOMIC(owq->tail);
+} else {
+        okwq =3D srq->rq.kwq;
+        ...
+
+When it later calls kvfree(okwq), it seems nothing is freed, which could
+permanently leak the old kwq structure.
+
+Is there a lock imbalance here when the queue is replaced?
+
+The original queue is locked with:
+
+spin_lock_irq(&srq->rq.kwq->c_lock);
+
+But then the queue pointer is replaced:
+
+srq->rq.kwq =3D tmp_rq.kwq;
+
+When the lock is released:
+
+spin_unlock_irq(&srq->rq.kwq->c_lock);
+
+Does this unlock the new queue instead of the old one, and then free the old
+queue via kvfree(okwq) while its lock is still held?
+
+Can the loop migrating WQEs overflow the destination buffer?
+
+The number of scatter-gather elements is read directly from user-shared
+memory:
+
+wqe =3D rvt_get_rwqe_ptr(&srq->rq, tail);
+p->wr_id =3D wqe->wr_id;
+p->num_sge =3D wqe->num_sge;
+for (i =3D 0; i < wqe->num_sge; i++)
+        p->sg_list[i] =3D wqe->sg_list[i];
+
+If a userspace program concurrently modifies num_sge to a large value, could
+this loop exceed the bounds of tmp_rq.kwq->curr_wq, since the destination
+size was calculated based on srq->rq.max_sge?
+
+[ ... ]
+
+> @@ -236,10 +235,10 @@ int rvt_modify_srq(struct ib_srq *ibsrq, struct ib_=
+srq_attr *attr,
+>  			 * See rvt_mmap() for details.
+>  			 */
+>  			if (udata && udata->inlen >=3D sizeof(__u64)) {
+> -				ret =3D ib_copy_to_udata(udata, &ip->offset,
+> -						       sizeof(ip->offset));
+> -				if (ret)
+> -					return ret;
+> +				if (copy_to_user(u64_to_user_ptr(offset_addr),
+> +						 &ip->offset,
+> +						 sizeof(ip->offset)))
+> +					return -EFAULT;
+>  			}
+> =20
+
+Does returning -EFAULT here leave the kernel and userspace in an inconsiste=
+nt
+state?
+
+At this point, the kernel has already applied the SRQ size change, replaced
+the queue, and permanently freed the old memory:
+
+vfree(owq);
+kvfree(okwq);
+
+If copy_to_user fails and returns -EFAULT, userspace might interpret this as
+a failed resize and continue using its existing memory mapping of the old
+queue. Could this lead to a use-after-free since the pages have already
+been freed?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/0-v3-4effdebad75a+e=
+1-rdma_udata_rep_jgg@nvidia.com?part=3D2
 
