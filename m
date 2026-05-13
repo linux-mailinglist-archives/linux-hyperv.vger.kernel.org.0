@@ -1,256 +1,153 @@
-Return-Path: <linux-hyperv+bounces-10821-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10822-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iDV7MMALBGoWCwIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10821-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 07:27:28 +0200
+	id IOuyGf0MBGqLCwIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10822-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 07:32:45 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27C9952D872
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 07:27:27 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EB8852D8D1
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 07:32:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6DD123007F49
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 05:27:26 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 5BB963034B20
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 05:32:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2481E3A48FA;
-	Wed, 13 May 2026 05:27:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F175D3624D9;
+	Wed, 13 May 2026 05:32:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QLf5BIL4"
+	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="jFSUsUSg"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 006AD3A48F0;
-	Wed, 13 May 2026 05:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778650046; cv=none; b=OehIx2ax9nyEW2U7eUZ/kFNleuNxRmpf1CV79b7rI/Am57LF2jkWKrzrj+I6hr4ZqEhp2tn7nII/BS1qDM6yHQ5Ul8J4AO0l5+2rtVZvRmtmhr81hwBJ6ypO9kP7AotBopIi134lZxsAB/Ii9pSX7ekj6IzEAr52gbdh1qJ8PAs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778650046; c=relaxed/simple;
-	bh=nsQC6XHxgt+JZ289WhMQPu99KpURpXRNwI2mFuZv1ac=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=cFgWKmxPAnVAK5vgYf+FqMtyVi2BDne9bGY0wGLNVEEHsWyBLaiw6H7JhB7Z1r3pTcbOlhVaa9TsaiBcqJQXqoLSSepgSqqo+cZ8FnfApiWXWh8J88EtWxGJFSQEHCrPKNRETWIPJhSmf1XexuD6sHFR65n+0M8wBA8xbIy1po0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QLf5BIL4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 803A7C2BCB7;
-	Wed, 13 May 2026 05:27:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778650045;
-	bh=nsQC6XHxgt+JZ289WhMQPu99KpURpXRNwI2mFuZv1ac=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=QLf5BIL4CMDugTdsQlQJHeIZsUZtZNteJ9lhyFrq+RQnNjil8fxgVJ2bO6fMHFfZd
-	 ki66yYXTz1JMJG8DR2wUrulyP1hMgxb5JTOBQtioG6GrlBti3PyVOMcztrWwp+57nb
-	 0qgt4mUkGFFSV777oN7t2zOhHmvByWHfKyXw9zRCz7TJrxIKXXCUt1Dj5q3YKFQC2H
-	 v0lwFTVUbRVQNT11l8AXAVUAp4X8rKZmNQ+fVX7aw9uv98f2WeAHqEOf8Lb8uMCeMo
-	 C4FEYyvoBqu2G/sfLvbMXOGgy/0GPY34xU/Vf33NuMjKWPopN5rrvQYdPjr/IvH/4Z
-	 SDrWv80NkCQPQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V3 06/11] mshv: Add ioctl support for MSHV-VFIO bridge
- device
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Mukesh R" <mrathor@linux.microsoft.com>
-Cc: linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org
-In-Reply-To: <20260512020259.1678627-7-mrathor@linux.microsoft.com>
-References: <20260512020259.1678627-7-mrathor@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 13 May 2026 05:27:24 +0000
-Message-Id: <20260513052725.803A7C2BCB7@smtp.kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910F730FC27;
+	Wed, 13 May 2026 05:32:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778650351; cv=pass; b=RzqEe6i0nJ/8USTU/MlFHe6sDV1MpaB2qpC5IK6beWpz507PPkEY4/Wxmm1L9dye8tm+nokfcCNUcjV/gLbpnPk8+g8G0rSDEDqg/V7Yd9Zp5//gyfoz2ktmO1PZ/63xOagMqY5Gb5+TvtXgFhIDZFWxmtvGtHrUqNaN0xZmd6Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778650351; c=relaxed/simple;
+	bh=bido1uBskWMdXbiI/f5Y9yHbO7sRr9ZlWQHN0CvcdmM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UhxE8FxDW9gx0wMyOv9ZNbADKjn59SFdX06i0E0BOJgg/81cKnFEDgeIgfVbU8ASY7bsLuj31lcXzUrS44nxVYDsDOzMTeTg2sc/VwqoeJ39nUPkihk+2bpYbyEvSZBJjYb8Wg6uHo+BdbALJxDbhh4gEQVVqWcN+etl9aa/47s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=jFSUsUSg; arc=pass smtp.client-ip=136.143.188.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
+ARC-Seal: i=1; a=rsa-sha256; t=1778650340; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=X8bWh7MfvZcKmMYX/4tTeGiHXqM/YbA63Uvnf+5vnaXbREkdvi7o0qyJaaycQ9xDmvrAdStgjWztBzxkIV0IYq+FdY1oqRQDVuQdkIsEboGXDED7B8v3O8AFU6R/0suKf+d4XiczlLQs+Jq56sqoLhwHheZ3xUONWo275vQPnlo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1778650340; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=SdXRvmJihsoWwykWNl3djZ30Af7RtaFdeCAvIreg08U=; 
+	b=nJo+tV2k/Xs9GqkwBHztY1dca+l9bqLV4sp7ZXLOOg8pB0TmRhpUh7zNZzM8CAqWScor+gJmdAHOab/hF3qT2PwxpxChHL7iM7WKpkpr4NSw+nCAsAmENg0VJxMIFjALp5sDlUDOvPGydJcd+nC16/EYBu89lrl70o56YC/rJw0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=anirudhrb.com;
+	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
+	dmarc=pass header.from=<anirudh@anirudhrb.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1778650340;
+	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=SdXRvmJihsoWwykWNl3djZ30Af7RtaFdeCAvIreg08U=;
+	b=jFSUsUSgw29dp/tz6bhYq6kG40fidlyWXghOcyT1qnEyraoskuMbYB3Vx0pOoV6P
+	3ZUnPk/mpQwSvr7JmlG6plVhimT1q/4hD0AqUofSmMJOegIeq225jboIT095wnT/wML
+	JAcEZCt6/Ueecj1FWxVVHdNRERvtYO1PJgC4pXQ4=
+Received: by mx.zohomail.com with SMTPS id 1778650336566972.0119436504021;
+	Tue, 12 May 2026 22:32:16 -0700 (PDT)
+Date: Wed, 13 May 2026 05:32:06 +0000
+From: Anirudh Rayabharam <anirudh@anirudhrb.com>
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 13/18] mshv: Add missing vp_index bounds check in
+ intercept ISR
+Message-ID: <20260513-gregarious-denim-cockatoo-c522cb@anirudhrb>
+References: <177816592843.21765.4364464279247150355.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <177816865065.21765.5112039734725197893.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-X-Rspamd-Queue-Id: 27C9952D872
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <177816865065.21765.5112039734725197893.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+X-ZohoMailClient: External
+X-Rspamd-Queue-Id: 3EB8852D8D1
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	MISSING_MIME_VERSION(2.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+X-Spamd-Result: default: False [-1.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[anirudhrb.com,none];
+	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10821-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10822-lists,linux-hyperv=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	DKIM_TRACE(0.00)[anirudhrb.com:+];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,smtp.kernel.org:mid,lists.linux.dev:replyto]
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[anirudh@anirudhrb.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] FD leak and potential deadlock on copy_to_user() failure after ano=
-n_inode_getfd().
-- [Medium] Asymmetric memory lifecycle and inconsistent device_release hand=
-ling.
-- [Medium] Missing validation of unknown flags in mshv_partition_ioctl_crea=
-te_device().
---
-
-commit a0a0db24ca9d194302f458a7afa8a424cc357990
-Author: Mukesh R <mrathor@linux.microsoft.com>
-
-mshv: Add ioctl support for MSHV-VFIO bridge device
-
-This commit adds an ioctl for creating MSHV devices for a partition.
-Currently only VFIO device types are supported, doing setup for the bridge
-code in mshv_vfio.c.
-
-> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
-> index 02c107458be90..6ceb5f608589f 100644
-> --- a/drivers/hv/mshv_root_main.c
-> +++ b/drivers/hv/mshv_root_main.c
-
-[ ... ]
-
-> @@ -1625,6 +1625,119 @@ mshv_partition_ioctl_initialize(struct mshv_parti=
-tion *partition)
-
-[ ... ]
-
-> +static int mshv_device_fop_release(struct inode *inode, struct file *fil=
-p)
-> +{
-> +	struct mshv_device *mshv_dev =3D filp->private_data;
-> +	struct mshv_partition *partition =3D mshv_dev->device_pt;
-> +
-> +	if (mshv_dev->device_ops->device_release) {
-> +		mutex_lock(&partition->pt_mutex);
-> +		hlist_del(&mshv_dev->device_ptnode);
-> +		mshv_dev->device_ops->device_release(mshv_dev);
-> +		mutex_unlock(&partition->pt_mutex);
+On Thu, May 07, 2026 at 03:44:10PM +0000, Stanislav Kinsburskii wrote:
+> mshv_intercept_isr() reads vp_index from the SynIC intercept message
+> payload and uses it directly to index into partition->pt_vp_array without
+> validating that vp_index < MSHV_MAX_VPS.
+> 
+> Mshv treats the Microsoft Hypervisor as trusted, so a malformed vp_index is
+> not a security concern; the threat model does not include a malicious
+> hypervisor. A hypervisor bug that placed an out-of-range value here would,
+> however, cause an out-of-bounds read of pt_vp_array in hardirq context,
+> manifesting as random memory corruption or a host crash with no clear
+> signal pointing back to the hypervisor as the source.
+> 
+> handle_bitset_message() and handle_pair_message() already perform this
+> defensive check on hypervisor-supplied vp_index values, with an explicit
+> "This shouldn't happen, but just in case" comment  Add the same check to
+> mshv_intercept_isr() for consistency, turning a potential silent corruption
+> into a debuggable pr_debug message.
+> 
+> Fixes: 621191d709b14 ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
+> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+> ---
+>  drivers/hv/mshv_synic.c |    5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/hv/mshv_synic.c b/drivers/hv/mshv_synic.c
+> index bac890cd2b468..89207aad7cf1f 100644
+> --- a/drivers/hv/mshv_synic.c
+> +++ b/drivers/hv/mshv_synic.c
+> @@ -387,6 +387,11 @@ mshv_intercept_isr(struct hv_message *msg)
+>  	 */
+>  	vp_index =
+>  	       ((struct hv_opaque_intercept_message *)msg->u.payload)->vp_index;
+> +	/* This shouldn't happen, but just in case. */
+> +	if (unlikely(vp_index >= MSHV_MAX_VPS)) {
+> +		pr_debug("VP index %u out of bounds\n", vp_index);
+> +		goto unlock_out;
 > +	}
+>  	vp = partition->pt_vp_array[vp_index];
+>  	if (unlikely(!vp)) {
+>  		pr_debug("failed to find VP %u\n", vp_index);
+> 
+> 
 
-What happens if a future device type does not implement the device_release
-callback? It looks like the device would remain indefinitely linked in=20
-partition->pt_devices while the file descriptor is closed, leading to
-list corruption and a memory leak.
+Reviewed-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
 
-Since the device structure is allocated by the core module via kzalloc(),
-would it be safer to handle the list removal and generic kfree()
-unconditionally in this function?
-
-> +
-> +	mshv_partition_put(partition);
-> +	return 0;
-> +}
-> +
-> +static const struct file_operations mshv_device_fops =3D {
-> +	.owner =3D THIS_MODULE,
-> +	.unlocked_ioctl =3D mshv_device_fop_ioctl,
-> +	.release =3D mshv_device_fop_release,
-> +};
-> +
-> +static long mshv_partition_ioctl_create_device(struct mshv_partition *pa=
-rtition,
-> +					       void __user *uarg)
-> +{
-> +	long rc;
-> +	struct mshv_create_device devargk;
-> +	struct mshv_device *mshv_dev;
-> +	const struct mshv_device_ops *vfio_ops;
-> +
-> +	if (copy_from_user(&devargk, uarg, sizeof(devargk)))
-> +		return -EFAULT;
-> +
-> +	/* At present, only VFIO is supported */
-> +	if (devargk.type !=3D MSHV_DEV_TYPE_VFIO)
-> +		return -ENODEV;
-> +
-> +	if (devargk.flags & MSHV_CREATE_DEVICE_TEST)
-> +		return 0;
-
-Should we explicitly validate that no undefined flags are set here?=20
-If a future kernel version introduces new flags for device creation, older=
-=20
-kernels will silently ignore them and return success instead of -EINVAL,=20
-breaking forward compatibility.
-
-> +
-> +	/* This is freed later by mshv_vfio_release_device() */
-> +	mshv_dev =3D kzalloc(sizeof(*mshv_dev), GFP_KERNEL_ACCOUNT);
-> +	if (mshv_dev =3D=3D NULL)
-> +		return -ENOMEM;
-> +
-> +	vfio_ops =3D &mshv_vfio_device_ops;
-> +	mshv_dev->device_ops =3D vfio_ops;
-> +	mshv_dev->device_pt =3D partition;
-> +
-> +	rc =3D vfio_ops->device_create(mshv_dev);
-> +	if (rc < 0) {
-> +		kfree(mshv_dev);
-> +		return rc;
-> +	}
-> +
-> +	hlist_add_head(&mshv_dev->device_ptnode, &partition->pt_devices);
-> +
-> +	mshv_partition_get(partition);
-> +	rc =3D anon_inode_getfd(vfio_ops->device_name, &mshv_device_fops,
-> +			      mshv_dev, O_RDWR | O_CLOEXEC);
-> +	if (rc < 0)
-> +		goto undo_out;
-> +
-> +	devargk.fd =3D rc;
-> +	if (copy_to_user(uarg, &devargk, sizeof(devargk)))
-> +		return -EFAULT;    /* cleanup in mshv_device_fop_release() */
-
-Does this sequence leak the file descriptor if copy_to_user() fails?
-
-The anon_inode_getfd() call installs the file descriptor into the process's=
-=20
-fd table. If the subsequent copy_to_user() fails, the function returns=20
--EFAULT, but the user space application never receives the fd number to=20
-explicitly close it, resulting in a leaked file descriptor.
-
-Additionally, can this trigger a deadlock?
-
-The ioctl is called with partition->pt_mutex held. If a malicious user=20
-provides a buffer backed by userfaultfd, the copy_to_user() call will=20
-block, holding the mutex. Concurrently, another thread could find the=20
-new fd in /proc/self/fd and call close(), which invokes=20
-mshv_device_fop_release(). That release function unconditionally attempts=20
-to acquire partition->pt_mutex, resulting in a deadlock.
-
-Would it be better to separate file allocation and installation by using=20
-get_unused_fd_flags(), anon_inode_getfile(), and only calling fd_install()=
-=20
-after copy_to_user() succeeds?
-
-> +
-> +	return 0;
-> +
-> +undo_out:
-> +	hlist_del(&mshv_dev->device_ptnode);
-> +	vfio_ops->device_release(mshv_dev);    /* will kfree(mshv_dev) */
-
-If a future device type does not implement the device_release callback,
-could this result in a NULL pointer dereference?
-
-> +	mshv_partition_put(partition);
-> +	return rc;
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512020259.1678=
-627-1-mrathor@linux.microsoft.com?part=3D6
 
