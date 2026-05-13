@@ -1,182 +1,219 @@
-Return-Path: <linux-hyperv+bounces-10834-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10835-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OI9EEiN7BGrMKgIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10834-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 15:22:43 +0200
+	id eI3bGeKMBGqvLQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10835-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 16:38:26 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08387533F78
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 15:22:42 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id B06F45353AE
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 16:38:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5282330C51EE
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 13:04:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5056334729BD
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 13:35:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0383275AFD;
-	Wed, 13 May 2026 13:04:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45A102BDC16;
+	Wed, 13 May 2026 13:26:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lGsDWVW2"
+	dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="Ik5vclci"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-of-o52.zoho.com (sender4-of-o52.zoho.com [136.143.188.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7669925B094;
-	Wed, 13 May 2026 13:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778677478; cv=none; b=ZnXhbKtPenqi8aJSpt0GetKmMoN+Jqu0CWMvOqEMj9CLei5MavoceTI/2WRizZWt7O48gUQ4UTDqP8+FUv0t6WjcxdNJr4StTxnGSC/ltgUJ+WgqBBulbRxoFEpxM35AlwfmNq5ZpJMBIRgCpx/rBMyiZAoe3BzjFTDI3euisjE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778677478; c=relaxed/simple;
-	bh=6LEu9DtzugsPgS9zY7ikDk3PNAySaXFJrErwGthAkfU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cDgAuUuuooH4DASttJopd8bADXLyLqxvHBVPZyLYTq2nrja9qkfhzuwy6fXnN6ps821Z+IAaER5vOCYTGmRy7SkIEdT1DlD/Qs5Fe7oetWSG9oD39/CE1OBDK3eTCKMmIigojT7zwfKeX0nb9oFBIGpgkiib9AfabTHsMdix9OA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lGsDWVW2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F9F9C2BCC7;
-	Wed, 13 May 2026 13:04:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778677478;
-	bh=6LEu9DtzugsPgS9zY7ikDk3PNAySaXFJrErwGthAkfU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lGsDWVW2oR08PACx9KcRC8YMpUuN6oYYOvoOWllZtScTRbHp7+islHrOswbDz0e1U
-	 Rd/2lD7xK6tofxdt3rjsHrXixgEE2cEIam/CmgAPO+rVJ0EqqFFymekAQgAVcROykG
-	 /N7UobOXD+QLpx6gmP6NTOmHQYOBi0pny/Bp5nb7yAfX2fzkn+nP5WBB8+35vCpLep
-	 jh4Y8TgC1kC/ozfdDPxCBHLqgSPMWYg5w/mYxRbWDqfzsPeOwoBvd1TnZH2MG/F2uI
-	 pbR8JRRzktjhwXI6yger0M0d/hUI8h3I7h6ajlUBWmNi8Qu54RVQUXSLuoGBn6Z7hf
-	 kXJB84AOZ4pfg==
-Date: Wed, 13 May 2026 15:04:35 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>, Guenter Roeck <linux@roeck-us.net>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun@kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang@linux.dev>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Chen Ridong <chenridong@huaweicloud.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, cgroups@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, rcu@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	Costa Shulyupin <cshulyup@redhat.com>,
-	Qiliang Yuan <realwujing@gmail.com>
-Subject: Re: [PATCH 04/23] tick/nohz: Allow runtime changes in full dynticks
- CPUs
-Message-ID: <agR241twxk9UdRrg@localhost.localdomain>
-References: <20260421030351.281436-1-longman@redhat.com>
- <20260421030351.281436-5-longman@redhat.com>
- <87340od7ev.ffs@tglx>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AE62BD58A;
+	Wed, 13 May 2026 13:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778678775; cv=pass; b=rioTTTsuqzqsuL8oLVXmS+V3e09c2dXYNNWDuN0Rj26pGugbPzA4Hmg+nSNSCBuE+jJoDWyz6QAIT2TycKM8Jt/uMcVcJyXKVstHhWUoydMYBP0dGrBs8OSPXhVSCB34iiqTZ2kgE1+iVZ/J9hmpybp3tfe7ffsZr9WWgQchH1Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778678775; c=relaxed/simple;
+	bh=dYbeadsAGJ+Zbhm0oJXGSDW4T6i4SeUFR4SovzEaHGY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=La7N8EriXSXxB+vCwlJQPYJSxTZI04i1caeyw1j9jUplr0WFVGqyhElcT56bRLL5JRt2x5omXkyLxYnZ1E9PLFfV8Iw1d68+UglGtPLKZ4IVnzm8L8CFXOF+d+ODl7aGoAc5vC7qI9bVYY0EvlaXTNG+AGJ2goaG56ULfr/0qcM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=pass (1024-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=Ik5vclci; arc=pass smtp.client-ip=136.143.188.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=anirudhrb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
+ARC-Seal: i=1; a=rsa-sha256; t=1778678765; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=QKLWC9V93kzTvP0x8kKwDigxBOH5tWAVDmX+dIjn21/iEx2e9GXAZgKLxypY7BG4yZgTzhp2Vg0g33PgrSElt/0fAKBgn6FAkLTKQRLQ4Rskt+cqaOj1lMHGU9kl7/Iv8rzWu1Q6bozl/GYWR3cbkgrUU5xkTvWPjE/uWPlgrn4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1778678765; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=SQBhBfoR+XlO9YE2a+cU1/6jM7FCJVPL1K4VCq+R744=; 
+	b=CYMFlr0nHS/oWU7XI5SFRGQQlQcgO5hBVXS0VfI7tluJkUaBI7PLTvT/gTe6VjVsG8SLHagri0PlaPqm1ZEdqGswSCUQNrbV5ty9QFifblgh2uj9n0+869tK998v6r8z5ylhodZ/39+X+XJC/RWjSpimDkPTyYEht9l8iav9Xbk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=anirudhrb.com;
+	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
+	dmarc=pass header.from=<anirudh@anirudhrb.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1778678765;
+	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Reply-To;
+	bh=SQBhBfoR+XlO9YE2a+cU1/6jM7FCJVPL1K4VCq+R744=;
+	b=Ik5vclci710rkV3OLBiqHc355L1xTbf+4k6P2TZJXIHoYLPtCCZZ7LJSw33gZTzL
+	40N/RIqypyPDwq3ESVVyZ08ZW6t+Q30LkElFqorqUg8LpxmocFik5MOK1lKv6r7djPA
+	p7Wz6/kJWHRctFg+O23Fd70ZKp/Jm09KTG+Ukrto=
+Received: by mx.zohomail.com with SMTPS id 1778678762389573.8445751188488;
+	Wed, 13 May 2026 06:26:02 -0700 (PDT)
+From: "Anirudh Rayabharam (Microsoft)" <anirudh@anirudhrb.com>
+Date: Wed, 13 May 2026 13:25:56 +0000
+Subject: [PATCH v4] mshv: support 1G hugepages by passing them as
+ 2M-aligned chunks
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87340od7ev.ffs@tglx>
-X-Rspamd-Queue-Id: 08387533F78
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260513-huge_1g-v4-1-33cda59e4a70@anirudhrb.com>
+X-B4-Tracking: v=1; b=H4sIAON7BGoC/23N3w6CIBiH4VtxHEfjn4gddR+tNYRP4SBtkKzmv
+ PfQE111+PvG8zKhCMFDRKdiQgGSj37o8xCHAhmn+w6wt3kjRpgkgkrsxg5utMMghJCU19yoFuX
+ XjwCtf62lyzVv5+NzCO81nOhy/W0kiikGImXFlbG2bc6692G0LjRHM9zR0klssyUpN8uybaSuK
+ WeVVsr+s3xvd//ybJkECsIIXoP4tvM8fwAX5r0GGgEAAA==
+X-Change-ID: 20260416-huge_1g-e44461393c8f
+To: "K. Y. Srinivasan" <kys@microsoft.com>, 
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Anirudh Rayabharam (Microsoft)" <anirudh@anirudhrb.com>, 
+ Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+X-Mailer: b4 0.14.3
+X-ZohoMailClient: External
+X-Rspamd-Queue-Id: B06F45353AE
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[anirudhrb.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[anirudhrb.com:s=zoho];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[redhat.com,kernel.org,cmpxchg.org,suse.com,lwn.net,linuxfoundation.org,arm.com,microsoft.com,roeck-us.net,nvidia.com,joshtriplett.org,gmail.com,goodmis.org,efficios.com,linux.dev,linutronix.de,huaweicloud.com,infradead.org,linaro.org,google.com,suse.de,amd.com,davemloft.net,vger.kernel.org,lists.infradead.org];
-	TAGGED_FROM(0.00)[bounces-10834-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-10835-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[52];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[frederic@kernel.org,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[anirudhrb.com:+];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,localhost.localdomain:mid]
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[anirudh@anirudhrb.com,linux-hyperv@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,anirudhrb.com:email,anirudhrb.com:mid,anirudhrb.com:dkim]
 X-Rspamd-Action: no action
 
-Le Tue, Apr 21, 2026 at 10:50:00AM +0200, Thomas Gleixner a écrit :
-> On Mon, Apr 20 2026 at 23:03, Waiman Long wrote:
-> > +	/*
-> > +	 * To properly enable/disable nohz_full dynticks for the affected CPUs,
-> > +	 * the new nohz_full CPUs have to be copied to tick_nohz_full_mask and
-> > +	 * ct_cpu_track_user/ct_cpu_untrack_user() will have to be called
-> > +	 * for those CPUs that have their states changed. Those CPUs should be
-> > +	 * in an offline state.
-> > +	 */
-> > +	for_each_cpu_andnot(cpu, cpumask, tick_nohz_full_mask) {
-> > +		WARN_ON_ONCE(cpu_online(cpu));
-> > +		ct_cpu_track_user(cpu);
-> > +		cpumask_set_cpu(cpu, tick_nohz_full_mask);
-> > +	}
-> > +
-> > +	for_each_cpu_andnot(cpu, tick_nohz_full_mask, cpumask) {
-> > +		WARN_ON_ONCE(cpu_online(cpu));
-> > +		ct_cpu_untrack_user(cpu);
-> > +		cpumask_clear_cpu(cpu, tick_nohz_full_mask);
-> > +	}
-> > +}
-> 
-> So this writes to tick_nohz_full_mask while other CPUs can access
-> it. That's just wrong and I'm not at all interested in the resulting
-> KCSAN warnings.
-> 
-> tick_nohz_full_mask needs to become a RCU protected pointer, which is
-> updated once the new mask is established in a separately allocated one.
+The hypervisor's map GPA hypercall coalesces contiguous 2M-aligned
+chunks into 1G mappings when alignment permits, so the driver can
+support 1G hugepages by feeding them in as 2M chunks. Note that this
+is the only way to make 1G mappings; there is no way to directly map
+a 1G hugepage using the hypercall.
 
-How about just dropping tick_nohz_full_mask that is just
- ~housekeeping_cpumask(HK_TYPE_KERNEL_NOISE) which itself is becoming RCU
-protected in this patchset?
+Always emit a 2M (PMD_ORDER) stride for the huge-page case. The
+hypercall has no 1G stride, so 1G folios are processed as a
+sequence of 2M chunks. Folios whose order is less than PMD_ORDER
+(e.g. mTHP) fall back to single-page stride; mapping them as 2M
+would fail in the hypervisor anyway.
 
-Thanks.
+Assisted-by: Copilot-CLI:claude-opus-4.7
+Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+Acked-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+---
+Changes in v4:
+- Changed the check to page_order < PMD_ORDER for using page stride of 1
+  - Also updated the commit message.
+- Pick up Acked-by:
+- Link to v3: https://lore.kernel.org/r/20260506-huge_1g-v3-1-26e1e4c439e4@anirudhrb.com
 
-> 
-> Thanks,
-> 
->         tglx
-> 
-> 
+Changes in v3:
+- Fixed various corner cases reported by Sashiko.
+- Link to v2: https://lore.kernel.org/r/20260505-huge_1g-v2-1-b6a91327a88d@anirudhrb.com
 
+Changes in v2:
+- Handled the case where we can have 2M aligned pages in the middle of a
+  1G page
+- Brought back the page order check but expanded it to include 1G
+- Clamp stride to requested page count in mshv_region_process_chunk
+- Link to v1: https://lore.kernel.org/r/20260416-huge_1g-v1-1-e066738cddfb@anirudhrb.com
+---
+ drivers/hv/mshv_regions.c | 29 +++++++++++++----------------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/hv/mshv_regions.c b/drivers/hv/mshv_regions.c
+index fdffd4f002f6..6d65e5b42152 100644
+--- a/drivers/hv/mshv_regions.c
++++ b/drivers/hv/mshv_regions.c
+@@ -29,29 +29,27 @@
+  * Uses huge page stride if the backing page is huge and the guest mapping
+  * is properly aligned; otherwise falls back to single page stride.
+  *
+- * Return: Stride in pages, or -EINVAL if page order is unsupported.
++ * Return: Stride in pages.
+  */
+-static int mshv_chunk_stride(struct page *page,
+-			     u64 gfn, u64 page_count)
++static unsigned int mshv_chunk_stride(struct page *page, u64 gfn,
++				      u64 page_count)
+ {
+-	unsigned int page_order;
++	unsigned int page_order = folio_order(page_folio(page));
+ 
+ 	/*
+ 	 * Use single page stride by default. For huge page stride, the
+-	 * page must be compound and point to the head of the compound
+-	 * page, and both gfn and page_count must be huge-page aligned.
++	 * folio order must be at least PMD_ORDER, the page's PFN must be
++	 * 2M-aligned (so that a 2M-aligned tail page of a larger folio is
++	 * acceptable), and both gfn and page_count must be 2M-aligned.
+ 	 */
+-	if (!PageCompound(page) || !PageHead(page) ||
++	if (page_order < PMD_ORDER ||
++	    !IS_ALIGNED(page_to_pfn(page), PTRS_PER_PMD) ||
+ 	    !IS_ALIGNED(gfn, PTRS_PER_PMD) ||
+ 	    !IS_ALIGNED(page_count, PTRS_PER_PMD))
+ 		return 1;
+ 
+-	page_order = folio_order(page_folio(page));
+-	/* The hypervisor only supports 2M huge page */
+-	if (page_order != PMD_ORDER)
+-		return -EINVAL;
+-
+-	return 1 << page_order;
++	/* Use 2M stride always i.e. process 1G folios as 2M chunks */
++	return 1 << PMD_ORDER;
+ }
+ 
+ /**
+@@ -86,15 +84,14 @@ static long mshv_region_process_chunk(struct mshv_mem_region *region,
+ 	u64 gfn = region->start_gfn + page_offset;
+ 	u64 count;
+ 	struct page *page;
+-	int stride, ret;
++	unsigned int stride;
++	int ret;
+ 
+ 	page = region->mreg_pages[page_offset];
+ 	if (!page)
+ 		return -EINVAL;
+ 
+ 	stride = mshv_chunk_stride(page, gfn, page_count);
+-	if (stride < 0)
+-		return stride;
+ 
+ 	/* Start at stride since the first stride is validated */
+ 	for (count = stride; count < page_count; count += stride) {
+
+---
+base-commit: cd9f2e7d6e5b1837ef40b96e300fa28b73ab5a77
+change-id: 20260416-huge_1g-e44461393c8f
+
+Best regards,
 -- 
-Frederic Weisbecker
-SUSE Labs
+Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+
 
