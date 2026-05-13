@@ -1,60 +1,55 @@
-Return-Path: <linux-hyperv+bounces-10859-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10860-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4GF2H+zKBGp2OwIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10859-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 21:03:08 +0200
+	id 2IqPDY3LBGp2OwIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10860-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 21:05:49 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7EBB539810
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 21:03:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E62C5398D5
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 21:05:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8A5F5311B049
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 18:51:39 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C8E24316ECBD
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2026 18:54:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39C083AE6FD;
-	Wed, 13 May 2026 18:51:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F9B03AE704;
+	Wed, 13 May 2026 18:54:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="JeKWe1BR"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TAU00s93"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB0293B1032;
-	Wed, 13 May 2026 18:51:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 634C73ACA45;
+	Wed, 13 May 2026 18:54:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778698281; cv=none; b=ilD9VVJAP1kRPhsuu729ChCfAl7hskrOv93anXZGbK1UK4oLj1QMILTeA5dBfUJRysmgV6Vzcwj7N1dC8lrEanp6AcnSwoXoyhbMUse/IfjNsDuOUuQ9q/z8v0oBXVvPk2yd4cRMTZP8b2EE31m7LttKzBI+4fDqR/2yk1auGOY=
+	t=1778698478; cv=none; b=DvKDlWUIfRW+Lh1nM7bRNh0QU8ncqNr421CT66/vO1RbeAgwNeRDPDT1TpXqlMWK/9+5m5mi6xfVUtG+cLoVB1SnndsNulCu3BbNZwNaANZKpaYXemboLAtJ/vQSHYPPICnKf0uvwtkn6SlKr1VENzIR52nio9Py4Ro9ZXS+/mU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778698281; c=relaxed/simple;
-	bh=9gaG6m3IJ3Zx6LaJ0kh50lVBZm8TZZ7pMp9GTsREOkg=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YRt+K6ro3kw0GeBvWLVzOgtmRPaNDAiSgsOMCazPZrdEPNoNZXZrT+qDARbtjbIwIAqdOHh2IawbLV8pLIof7wn6wTDk/6qutsTw9OlLSF9X7YFA85XKF/8AV2hT/LEaVWGNz4nzu3EuOsgiTbefbTumRf2lWeXtSbfJWWupxnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=JeKWe1BR; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1778698478; c=relaxed/simple;
+	bh=kjDlkcEbohcrqcC/SRu8GFQ7UwWfQvpOo7YDLKDMhqo=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=nTyWwTxLz+k7ElhjzUgUSsPWMKSkotwXjZSdysHJq564AqDtXMnIQ1E+/aWCk0VUgpN19w4yA+Y3+6efiUFHF5yysXeLxjdbp8ZHRQ2F5pBceb9K9NpBUVh1PF1FBInB1T38f500OslFDaONC3X9+U4XyDyQNDs1xQUkNQcij6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TAU00s93; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [4.155.116.186])
-	by linux.microsoft.com (Postfix) with ESMTPSA id B6CF920B7166;
-	Wed, 13 May 2026 11:51:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B6CF920B7166
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8313420B7166;
+	Wed, 13 May 2026 11:54:32 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8313420B7166
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1778698276;
-	bh=GD4pbVn2rJ6iAXjMrdJpfPayT9LJbZe7f+51aLpsZxk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=JeKWe1BR/Hz0ZwU/P/irAqdP7YvRvBbDLWg/QaOju07gepVGOsdxdy4YtDOyQFuxC
-	 Qvwg298Sg/O7UTmw5FZ/RjhuVgKIBfOixsmM5tkC5WpHwZsTY08fjKRZ8Hm6NmZ08H
-	 jAWmJNQoxfPI/8/N5q/S8AEmyE2CFID7ArEuSIhE=
-Subject: [PATCH v3 11/11] mshv: Add tracepoint for map GPA hypercall
+	s=default; t=1778698472;
+	bh=Hac8Ju7C9ehD53g/jIfHdPPDEyjle0a1BIa8DdYnNm0=;
+	h=Subject:From:To:Cc:Date:From;
+	b=TAU00s93gFL27AUdzubG6UoHyi3UU2KCxKHJrC0VKChX4KCSAwhdoYHUDwt8TMThk
+	 Vf8xquGoLaQDXKQGGvOqDsYEzwEW2IqnWi3Jh1M1Xr4MgCXGuzCTYHXA4eG6uVwJYB
+	 RmzCVM9HEJNrAo+RaSLO9hJnPGFTG/5JWjdM1d7s=
+Subject: [PATCH v4 0/6] mshv: Reduce memory consumption for unpinned regions
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
  decui@microsoft.com, longli@microsoft.com, skinsburskii@gmail.com
 Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 13 May 2026 18:51:19 +0000
+Date: Wed, 13 May 2026 18:54:35 +0000
 Message-ID: 
- <177869827938.18773.10391260955566776029.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-In-Reply-To: 
- <177869813422.18773.515308662914055136.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-References: 
- <177869813422.18773.515308662914055136.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <177869833161.19379.1357399549586915698.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -64,7 +59,7 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: C7EBB539810
+X-Rspamd-Queue-Id: 8E62C5398D5
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -76,7 +71,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10859-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10860-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
@@ -91,81 +86,44 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[skinsburskii-cloud-desktop.internal.cloudapp.net:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,skinsburskii-cloud-desktop.internal.cloudapp.net:mid]
 X-Rspamd-Action: no action
 
-Add tracing for GPA mapping hypercalls to aid in debugging memory
-management issues in child partitions. The tracepoint captures both
-successful and failed mapping attempts, including the number of pages
-successfully mapped before any failure occurred.
+This series reduces memory consumption for unpinned regions by avoiding
+PFN array allocation. A 1GB unpinned region currently wastes 2MB for an
+unused PFN array that HMM-managed regions don't need.
 
-Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+
+v4:
+ - Rebased on the latest state of the tree.
+ - Dropped "mshv: Improve code readability with handler function typedef"
+   as redundant.
+
+v3:
+- Fix missing unmap/remap of pages before the first huge page.
+
+v2:
+- Improved commit message
+- Fixed invalid vfree(region->mreg_pfns) call for MMIO-backed regions
+- Fixed unpinning of already-released pages in the error path during
+  pinned region creation
+- Removed redundant mshv_map_region helper in favor of the new
+  optimized mapping logic
+
 ---
- drivers/hv/mshv_root_hv_call.c |    3 +++
- drivers/hv/mshv_trace.h        |   36 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 39 insertions(+)
 
-diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
-index 00d37c39cbf26..ccf297fbfae3a 100644
---- a/drivers/hv/mshv_root_hv_call.c
-+++ b/drivers/hv/mshv_root_hv_call.c
-@@ -250,6 +250,9 @@ static int hv_do_map_pfns(u64 partition_id, u64 gfn, u64 pfns_count,
- 		}
- 	}
- 
-+	trace_mshv_map_pfns(partition_id, gfn, pfns_count, page_count,
-+			    flags, mmio_spa, done, ret);
-+
- 	if (ret && done) {
- 		u32 unmap_flags = 0;
- 
-diff --git a/drivers/hv/mshv_trace.h b/drivers/hv/mshv_trace.h
-index e7280c47e579a..619c4563d4211 100644
---- a/drivers/hv/mshv_trace.h
-+++ b/drivers/hv/mshv_trace.h
-@@ -538,6 +538,42 @@ TRACE_EVENT(mshv_handle_gpa_intercept,
- 	    )
- );
- 
-+TRACE_EVENT(mshv_map_pfns,
-+	    TP_PROTO(u64 partition_id, u64 gfn, u64 pfn_count, u64 page_count, u32 flags,
-+		     u64 mmio_spa, u64 done, int ret),
-+	    TP_ARGS(partition_id, gfn, pfn_count, page_count, flags, mmio_spa, done, ret),
-+	    TP_STRUCT__entry(
-+		    __field(u64, partition_id)
-+		    __field(u64, gfn)
-+		    __field(u64, pfn_count)
-+		    __field(u64, page_count)
-+		    __field(u32, flags)
-+		    __field(u64, mmio_spa)
-+		    __field(u64, done)
-+		    __field(int, ret)
-+	    ),
-+	    TP_fast_assign(
-+		    __entry->partition_id = partition_id;
-+		    __entry->gfn = gfn;
-+		    __entry->pfn_count = pfn_count;
-+		    __entry->page_count = page_count;
-+		    __entry->flags = flags;
-+		    __entry->mmio_spa = mmio_spa;
-+		    __entry->done = done;
-+		    __entry->ret = ret;
-+	    ),
-+	    TP_printk("partition_id=%llu gfn=0x%llx pfn_count=%llu page_count=%llu flags=0x%x mmio_spa=0x%llx done=%llu ret=%d",
-+		    __entry->partition_id,
-+		    __entry->gfn,
-+		    __entry->pfn_count,
-+		    __entry->page_count,
-+		    __entry->flags,
-+		    __entry->mmio_spa,
-+		    __entry->done,
-+		    __entry->ret
-+	    )
-+);
-+
- #endif /* _MSHV_TRACE_H_ */
- 
- /* This part must be outside protection */
+Stanislav Kinsburskii (6):
+      mshv: Consolidate region creation and mapping
+      mshv: Rename mshv_mem_region to mshv_region
+      mshv: Optimize region unmap and invalidation with large pages
+      mshv: Pass pfns array explicitly through processing chain
+      mshv: Simplify pfn array handling in region processing
+      mshv: Allocate pfns array only for pinned regions
 
+
+ drivers/hv/mshv_regions.c   |  346 +++++++++++++++++++++++++++----------------
+ drivers/hv/mshv_root.h      |   28 ++-
+ drivers/hv/mshv_root_main.c |   81 ++++------
+ 3 files changed, 265 insertions(+), 190 deletions(-)
 
 
