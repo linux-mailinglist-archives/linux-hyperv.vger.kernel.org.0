@@ -1,67 +1,67 @@
-Return-Path: <linux-hyperv+bounces-10892-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10893-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yBK9ElxIBmo3hwIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10892-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	id CATzLVxIBmo3hwIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10893-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
 	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 00:10:36 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97DB954759C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 00:10:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 62F9C5475A0
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 00:10:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3944430071CD
-	for <lists+linux-hyperv@lfdr.de>; Thu, 14 May 2026 22:10:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 27516300737C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 14 May 2026 22:10:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E01E238E10F;
-	Thu, 14 May 2026 22:10:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F18BA38D6A4;
+	Thu, 14 May 2026 22:10:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NpFEOA3l"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="svo89J1s"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC9834B183
-	for <linux-hyperv@vger.kernel.org>; Thu, 14 May 2026 22:10:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF10834B183
+	for <linux-hyperv@vger.kernel.org>; Thu, 14 May 2026 22:10:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778796633; cv=none; b=LNG3a6RZ9FOYrWUO8d+OV9/2GzCUuBu9j4+/vbgntY3bADX9aFymMqILeCu7/IcFdYO7A/fFQ4DmIfIOx6M43rZRst8s4ymf+XMCvCAQlGeSrqe8DsElusbJIIGw/lO+vayIy41+vDdj3e1At8EpaSpXDhkCxDsU9cLvxD7EW4k=
+	t=1778796634; cv=none; b=cUTDz+Oosur/FM71LMEqqsUV3dRE/KM5nG9/z0rhP7NtC4UlQcQP5selsvLIQ7msKLw/wdUCcMIWrMx/d1QZog6ofCj3+o+hBJfHB9P5m0IESf85d5uhQ8lBbtj0WM1Kw+2zPgBo++k27BxWu6la0Ez8xLxJafZVlp4TcGp4+8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778796633; c=relaxed/simple;
-	bh=RTa27qRMevcB0MZboTWX8LdlXU+2b1Z15KPDd70jmLI=;
+	s=arc-20240116; t=1778796634; c=relaxed/simple;
+	bh=gL0k1l3QCbsEl1nY3qDHIps+akXy3cLwkooDsMmXPqE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=tDYvdutG0aOIYXEJprRIc0R6SnlLabuLoevT/QlyhgdAcZb0/WMSyDm5tXm5Rs+D38yTjW+SXlqv7HRmzcS3hHo9ClmS4y7dJPgsvpO+CB3XA93YKlhhcpodCjToAjzw2L99bANHD2dNeu9vkx9AwHXLwtJ/LtCdfDA8aR0j0WY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NpFEOA3l; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B5C9C2BCB3;
-	Thu, 14 May 2026 22:10:33 +0000 (UTC)
+	 Message-Id; b=bP0oVoXabXjLs7rH1ZnWEJfgVKRQLvs5zU259yzOkKrbhHMhQTj/3AfsMYgch6/oH7aLGkswkK58GuYVTlSz/nb7o7gCKShH7bWNhPe+uFwvnyTqEKUzJhMgIhDp8T7QC89Mv4Wfg1+qd4AtgYzyPfPANPyVQRRC+SbNh9P4i7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=svo89J1s; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69EB1C2BCB3;
+	Thu, 14 May 2026 22:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778796633;
-	bh=RTa27qRMevcB0MZboTWX8LdlXU+2b1Z15KPDd70jmLI=;
+	s=k20201202; t=1778796634;
+	bh=gL0k1l3QCbsEl1nY3qDHIps+akXy3cLwkooDsMmXPqE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=NpFEOA3lJmoEy0n8efP9j0K/NQsr9SIJQvlAErZi/m0zAORPoUG4Ne6Fk5tzRaX5U
-	 TkS0EhrjIDfWP9qsPQtgPQyYgXQnJOQIMf76p117m6p7JP8Pe8UKbdR5UWmZAxUcaZ
-	 mK1Bx3aJN61nR9sImrFOsfqHulmraAialLoAr5NKr/xp9j6FSfaUpEDGcW0WnE4CQA
-	 b8rlOio42f5i2cFrWsCBdvWRC85KARBsVNy2DFeNG0g2Ii3W37jrFTyJTwmve7Gt9N
-	 HOt8wxUbWhtcKbvTNLoOkEdrXl5x7+xY2bdAQ7/jI4zOAVVj5pvYFz412l5Gp4Wh8z
-	 sDiW9gz9f/TTQ==
+	b=svo89J1spX8VdAbxqzOQ6Vajy4uLTReuis6QWPh6Zbg3cotEUI0SCoSRU+O0VIBZA
+	 AKyaY8GgIVY5nPCDTk5EhTQKuVHoL/6m0DwRfS3lWIwf2y/zqSPkY53pQLng/9AxMR
+	 qRQQt7nsFo7KCMzmaORGCtkg4vjl1XqRRxoXo57RpX2UtOKRjo/GZoc78RalOXhF2j
+	 vPdSnezP7VNZhoWEr/xiHeOEMIDbZtlW1o1nSG9kDIIWIz0ueNf2isNIuRsH7d9xlr
+	 DefT+uuKCX7hhl/u+6UILsp4+1Of1WcXiPi7E5CSiY5U2X8wYT3upUqdy+f06UFyVb
+	 pSPmuWtUlEHZw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH net-next v9 1/6] net: mana: Create separate EQs for each
- vPort
+Subject: Re: [PATCH net-next v9 2/6] net: mana: Query device capabilities
+ and configure MSI-X sharing for EQs
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Long Li" <longli@microsoft.com>
 Cc: linux-hyperv@vger.kernel.org
-In-Reply-To: <20260513220956.402058-2-longli@microsoft.com>
-References: <20260513220956.402058-2-longli@microsoft.com>
+In-Reply-To: <20260513220956.402058-3-longli@microsoft.com>
+References: <20260513220956.402058-3-longli@microsoft.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 14 May 2026 22:10:32 +0000
-Message-Id: <20260514221033.3B5C9C2BCB3@smtp.kernel.org>
+Date: Thu, 14 May 2026 22:10:34 +0000
+Message-Id: <20260514221034.69EB1C2BCB3@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-X-Rspamd-Queue-Id: 97DB954759C
+X-Rspamd-Queue-Id: 62F9C5475A0
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	MISSING_MIME_VERSION(2.00)[];
@@ -73,7 +73,7 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10892-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10893-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
 	RCPT_COUNT_TWO(0.00)[2];
@@ -97,141 +97,74 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sashiko.dev:url,smtp.kernel.org:mid,lists.linux.dev:replyto]
 X-Rspamd-Action: no action
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Critical] Race condition in `mana_set_channels()` allows an RDMA applica=
-tion to steal vport ownership during an Ethernet reconfiguration, leading t=
-o out-of-bounds memory accesses and interface breakage.
-- [Critical] Per-PD reference counting for per-port EQs causes a scope mism=
-atch, leading to NULL pointer dereferences and resource leaks when a Protec=
-tion Domain is shared across multiple ports.
+- [High] The explicit `msi_sharing =3D true` requirement for platforms with=
+out dynamic MSI-X support is unconditionally overwritten, leading to incorr=
+ect MSI-X configuration.
 --
 
-commit 31a11c151b6c97fb0cd32cd8787a2fa1cd92856b
+commit 113e4b9419d10774e0a86653bf123b1add7cbc2e
 Author: Long Li <longli@microsoft.com>
-Subject: net: mana: Create separate EQs for each vPort
 
-To prepare for assigning vPorts to dedicated MSI-X vectors, remove EQ
-sharing among the vPorts and create dedicated EQs for each vPort.
+net: mana: Query device capabilities and configure MSI-X sharing for EQs
 
-> diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/ma=
-na/main.c
-> index ac5e75dd3494d..6159bd03a0217 100644
-> --- a/drivers/infiniband/hw/mana/main.c
-> +++ b/drivers/infiniband/hw/mana/main.c
-[ ... ]
-> @@ -55,15 +57,23 @@ int mana_ib_cfg_vport(struct mana_ib_dev *dev, u32 po=
-rt, struct mana_ib_pd *pd,
->  		return err;
->  	}
-> =20
-> -	mutex_unlock(&pd->vport_mutex);
-> =20
-> -	pd->tx_shortform_allowed =3D mpc->tx_shortform_allowed;
-> -	pd->tx_vp_offset =3D mpc->tx_vp_offset;
-> +	err =3D mana_create_eq(mpc);
-> +	if (err) {
-> +		mana_uncfg_vport(mpc);
-> +		pd->vport_use_count--;
-> +	} else {
-> +		pd->tx_shortform_allowed =3D mpc->tx_shortform_allowed;
-> +		pd->tx_vp_offset =3D mpc->tx_vp_offset;
-> +	}
-> =20
-> -	ibdev_dbg(&dev->ib_dev, "vport handle %llx pdid %x doorbell_id %x\n",
-> -		  mpc->port_handle, pd->pdn, doorbell_id);
-> +	mutex_unlock(&pd->vport_mutex);
+This commit adjusts the max number of queues to allow dedicated MSI-X vecto=
+rs
+for each vPort and enables MSI-X sharing among vPorts when there are not
+enough vectors or the platform does not support dynamic MSI-X allocation.
 
-Could this lead to a NULL pointer dereference or resource leak if a Protect=
-ion
-Domain is shared across multiple ports?
-
-The vport_use_count is tracked per-PD (pd->vport_use_count), but Event Queu=
-es
-are now managed per-port (mpc->eqs).
-
-If a user creates a QP on Port 1, pd->vport_use_count becomes 1 and mpc1->e=
-qs
-are allocated. If the user then creates a QP on Port 2 using the same PD, t=
-he
-code in mana_ib_cfg_vport() will see pd->vport_use_count > 1 and bypass
-configuration for Port 2.
-
-This leaves mpc2->eqs as NULL if the Ethernet interface is down, leading to=
- a
-NULL dereference when EQs are accessed. When QPs are later destroyed, it
-will also destroy the context of whichever port the last QP belonged to,
-permanently leaking the hardware configuration and EQs of the port that was
-actually initialized.
-
-[ ... ]
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers=
-/net/ethernet/microsoft/mana/mana_ethtool.c
-> index 04350973e19e3..e121834d17f3a 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> @@ -454,18 +454,40 @@ static int mana_set_coalesce(struct net_device *nde=
-v,
->  	return err;
->  }
-> =20
-> +/* mana_set_channels - change the number of queues on a port
-> + *
-> + * Returns -EBUSY if the port is down and RDMA holds the vport with
-> + * EQs sized to the current num_queues.
-> + */
->  static int mana_set_channels(struct net_device *ndev,
->  			     struct ethtool_channels *channels)
->  {
->  	struct mana_port_context *apc =3D netdev_priv(ndev);
->  	unsigned int new_count =3D channels->combined_count;
->  	unsigned int old_count =3D apc->num_queues;
-> +	bool locked =3D false;
+> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/ne=
+t/ethernet/microsoft/mana/gdma_main.c
+> index 3bc3fff559991..bbd055849e363 100644
+> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> @@ -179,8 +179,18 @@ static int mana_gd_query_max_resources(struct pci_de=
+v *pdev)
+>  	struct gdma_context *gc =3D pci_get_drvdata(pdev);
+>  	struct gdma_query_max_resources_resp resp =3D {};
+>  	struct gdma_general_req req =3D {};
+> +	unsigned int max_num_queues;
+> +	u8 bm_hostmode;
+> +	u16 num_ports;
 >  	int err;
 > =20
-> +	/* When the port is down, hold vport_mutex for the entire
-> +	 * operation to serialize against RDMA's mana_cfg_vport().
-> +	 * This is safe because mana_detach()/mana_attach() skip
-> +	 * vport teardown/setup when port_st_save is false.
-> +	 * When the port is up, Ethernet owns the vport exclusively
-> +	 * so no locking against RDMA is needed.
+> +	/* Reset msi_sharing so it is recomputed from current hardware
+> +	 * state. On resume, num_online_cpus() or num_msix_usable may
+> +	 * have changed, making dedicated MSI-X feasible where it was
+> +	 * not before.
 > +	 */
-> +	if (!apc->port_is_up) {
-> +		mutex_lock(&apc->vport_mutex);
-> +		if (apc->vport_use_count) {
-> +			mutex_unlock(&apc->vport_mutex);
-> +			return -EBUSY;
-> +		}
-> +		locked =3D true;
-> +	}
-> =20
->  	err =3D mana_pre_alloc_rxbufs(apc, ndev->mtu, new_count);
->  	if (err) {
->  		netdev_err(ndev, "Insufficient memory for new allocations");
-> -		return err;
-> +		goto unlock;
+> +	gc->msi_sharing =3D false;
+> +
+
+Does this unconditional reset unintentionally overwrite the platform constr=
+aint
+for systems without dynamic MSI-X support?
+
+[ ... ]
+
+> @@ -1889,6 +1936,7 @@ static int mana_gd_setup_hwc_irqs(struct pci_dev *p=
+dev)
+>  		/* Need 1 interrupt for HWC */
+>  		max_irqs =3D min(num_online_cpus(), MANA_MAX_NUM_QUEUES) + 1;
+>  		min_irqs =3D 2;
+> +		gc->msi_sharing =3D true;
 >  	}
 > =20
->  	err =3D mana_detach(ndev, false);
+>  	nvec =3D pci_alloc_irq_vectors(pdev, min_irqs, max_irqs, PCI_IRQ_MSIX);
 
-Can this lead to a race condition with RDMA operations when the port is up?
+The commit message states that sharing is always used when the platform does
+not support dynamic MSI-X allocation. This is successfully set here in
+mana_gd_setup_hwc_irqs().
 
-If apc->port_is_up is true, the function does not acquire apc->vport_mutex.
-It proceeds to call mana_detach(), which calls mana_uncfg_vport() and lowers
-apc->vport_use_count to 0.
+However, looking at mana_gd_setup(), mana_gd_query_max_resources() is called
+after mana_gd_setup_hwc_irqs().
 
-Because no lock is held across the detach/attach window, a concurrent RDMA
-operation like mana_ib_create_qp_raw() could grab apc->vport_mutex, observe
-a use count of 0, and steal ownership of the vport.
-
-If the RDMA thread allocates apc->eqs based on old_count, and then
-mana_set_channels() updates apc->num_queues =3D new_count, subsequent RDMA
-queue indexing operations may read out of bounds. The Ethernet interface wi=
-ll
-also fail to reattach because RDMA now owns the vport, leaving the interface
-broken.
+Will this execution order cause the driver to ignore the limitation and
+attempt to use dedicated MSI-X vectors if there happen to be enough
+pre-allocated vectors to satisfy the per-vPort math later in the function?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260513220956.4020=
-58-1-longli@microsoft.com?part=3D1
+58-1-longli@microsoft.com?part=3D2
 
