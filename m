@@ -1,74 +1,74 @@
-Return-Path: <linux-hyperv+bounces-10926-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10927-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4CdzL0FyB2qZ3wIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10926-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 21:21:37 +0200
+	id 4CPVA2ByB2qU3wIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10927-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 21:22:08 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41739556AFF
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 21:21:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 78925556B1C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 21:22:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id EB8E73017380
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 19:20:32 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A5644304291C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 19:20:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D0C738398B;
-	Fri, 15 May 2026 19:20:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DC3C38C438;
+	Fri, 15 May 2026 19:20:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NzRMwtA4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kfgp8CQR"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5374A37F019
-	for <linux-hyperv@vger.kernel.org>; Fri, 15 May 2026 19:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 907D23803E3
+	for <linux-hyperv@vger.kernel.org>; Fri, 15 May 2026 19:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778872829; cv=none; b=Pg2wZAuy5bafQMdLqZPZ8bdkLJzrzTRRAJahZIYnHlYtSfkiS6Yi9K2RLWYWQ5d2WEM8NSQoqC7wh8bSdWwKdf/pz8yisaBwFojrtSTfseodeTnpNtLuCr5upvVUDlEW11F+KMhwoXXr3kr2Yem0bpOYcRzA0XezgzRsWdfPaQY=
+	t=1778872831; cv=none; b=Em6cCnOj6uIEK0WH+AmQ86bCY/6i1qHPlm9zgZwrkT0dxNLsgqt88XkHqL7hrK3iUvDE4FevdSIY2OeFtDkiK8t0OybRXbI1ACrGZplnCQVszOPLJ+7MdRZpT7PH8PQcBG0drx0HJbieB2qJ7+vBIklC3lPQEPAd9D2e7K+bIIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778872829; c=relaxed/simple;
-	bh=EM4Aa/jhLL0HBAZa7II73CeQqmh6W0AY88xO0q2PZyY=;
+	s=arc-20240116; t=1778872831; c=relaxed/simple;
+	bh=nvaTcMbyfjZXZc1w2lrIIDutznVhYZokau/9P9cewsQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WHo6hlEcH2YhoMBQNNe5YxHLYe0m64QigIgIP8to7H6prN6IqIvtl3p8U8HpnbLOdxw0IbaTWL0H6al9vSQyAYMBgYya56qhW1oMIrRef1Q5GZewJ8HjPY3IkHx58eoy10r1dMJc1gOog7Pw2JWvEWT4jtbCW1kMpxYtseHy18k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NzRMwtA4; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=WzHhmZHDoGSRDWmtNVvFLdksibRznJv9qbo8T6rTiICffCpFiSI52DPY0Yhfhp1PW9ptPAetNFSSvtkEHsWWsyPZDbKVZyboCcvFzsGbD0++GwemPzitoIis/rNoj9tv429qv7pK17XyHTddPNt5RN+yWhOoe4AHI/cL0ShVkCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kfgp8CQR; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-835444b6ce1so196695b3a.1
-        for <linux-hyperv@vger.kernel.org>; Fri, 15 May 2026 12:20:28 -0700 (PDT)
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-82fa1c94b37so1317712b3a.0
+        for <linux-hyperv@vger.kernel.org>; Fri, 15 May 2026 12:20:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778872828; x=1779477628; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1778872829; x=1779477629; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=f8J88NcF7oH9XUSV/4XAna5n7NY6XY4d9JdR9Rumg2w=;
-        b=NzRMwtA4Tniis8rxkcEs6qVkGAvzl9NWGVcXMRgCa0EcI3XiS38MhzkrGFXzbHy67Q
-         ik3Qje66pE8efCtE7WCN0fC2NINgptBuFd3z1A1ZnRHAtObQYjJa4W94RsdGVClkC+sf
-         txj3OTy4q5lLZyCsh63BlDTIORDRF69SLJB5CiuI0z3zmFKZmoYPXEKMENL65bzFN479
-         Zdud5VozFzXo3ZNXtIiTSnyL5TqeHA/GxB1euXSEKJhITweAGQhiXqMKEAzQK7Y0+2B7
-         tSZNJ/QkKTycOHD50xOW9+YmkNspCXASAOiPkszZbhPvyaZ+Y0aq9vMDvS1ADrZFtTM8
-         GQew==
+        bh=ikDY1x359wvY/+q3wacNdXpEm487YvEWh2udCoEd+NA=;
+        b=kfgp8CQR7JRLTbwDImSid2uKUCmOzBOWL7J4D4kHATIvk3dQwHMNomvqowes2SAAn3
+         huZsR7HXAnuRe/mGMxW/w8wExK4WOguceJSl5iiQ/PNhv2tcNp/28h+vjmYUQkKMQF7L
+         qAinNlaICcKNac7SyF3yrnodyGPavPfaCSs1gKzrozXsusb4E3wOjG3eVKacEfJOnVPT
+         FSxs1x0nOT896eSej2u4cmPwJ87Z5Op8O34sTspBjIDtg5zoo1IHXrZmu5NwSoaekZuE
+         JrF6yZyxRX9dAjvUP+PsbnmeGkvLWuxrTZHRgaRaJSCSirIb7PCgRsW9mq9f4UohS8OD
+         rXjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778872828; x=1779477628;
+        d=1e100.net; s=20251104; t=1778872829; x=1779477629;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=f8J88NcF7oH9XUSV/4XAna5n7NY6XY4d9JdR9Rumg2w=;
-        b=nyMp4yhBQfIy1IUtHLG6NWeygBBFocbEsEnztJkdAIQzBsn+Im61/dptxAt1xjqeqV
-         BCSEorGfK9w1+v6HwRNPgh6JlRbZ4DQ9WwfMpZQi6+fLBilIHgERkp24KmbWoQHpPQVG
-         B9n0VdNPmeRgnxyAMOH0Eo5eiIk3oibjMv3xHkQ9yPCfuU0Kr8NImMXqwcxDYren1uSm
-         BuutYfH3r+LkhL1/tEfo2aKYizvji2KxrEI8OKSnzMic6Sia0PDBGSIoKTSZpZi2BImd
-         XYT80J2jH6BtPLwUir1BvdBqqoSBfa8O/le6zgnsrChMt0sigankPg5hfGilQHm8cCKv
-         kDzA==
-X-Forwarded-Encrypted: i=1; AFNElJ/jVl3cv8eMKjI1nQ/9++V2A+i3iW2bOWaUvURn1Bmu8HQuz5ehQ3JwrmRfkTC1c6dCDkIp5Y1WJCCxk7I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkhIpu3lIplaWSDc0zSe/lliPak0uZ8srAPOBdmUNOi/sY7Jif
-	C12wiaviSOhEH59dm7WgFmcRE/0xrdBT+qR6ZQDhpRDvskV6F3kq0ulC28KnCY5u8xXOtxzwP64
-	Eiv1hfA==
-X-Received: from pfch22.prod.google.com ([2002:a05:6a00:1716:b0:82f:6a26:5f78])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:12e4:b0:835:405a:7e68
- with SMTP id d2e1a72fcca58-83f33d9dd83mr5936320b3a.32.1778872827310; Fri, 15
- May 2026 12:20:27 -0700 (PDT)
+        bh=ikDY1x359wvY/+q3wacNdXpEm487YvEWh2udCoEd+NA=;
+        b=VU5xhdXGDzeR0aVJYwo2F1EXnr0/OytbVFSMbMI4uzkm8dfChnhtAUnAghA4DvJ4sC
+         bjJeaT58c+RbRhQhYgzlmwR811qsCXV2GJttmDQGB1GRyEhGq042LwxaV2vymfk+7ydI
+         GHdMMVJzkhnyrQA2xMx0sIn22IhkPTo7V02f2B5M8Ts06bg5LobY1X/rkGU/zQNiwPg5
+         NqWLKJF4sZxU1gfoScFUKU+RzPJVeQPJ+oMGKtSfKdJOlpL93PMx089eZ2WoWc4Nt4xZ
+         k6j2aWXu/Xb8kvXYQiIFOLK0XE/UCkx0oV+0q9U53GOcadEXBwsfU7Jwj+kI5dhSrZFQ
+         7dlQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/rfbNLbcum3m6PVkEUe+CozfAlHsngZdZ9e1OQ63EZ/MMjfijEpGGAXcgD9jYG9/FIeH1OBQ/IwGCwgjc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaEjHn9ZoG6HzC7hidvkNjeh9jwaerNROPHYQEfzy6Tw36YafQ
+	zrsSf6Kx5Gw3VjfRbiUtrKteRTiJ5U9ZM72XN3IddZWfUyiW/heOj5uxixKl1ixEopZhD0Cnb83
+	twZmtVQ==
+X-Received: from pfbgg10.prod.google.com ([2002:a05:6a00:630a:b0:83a:d498:99fb])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:a907:b0:835:447b:a2ac
+ with SMTP id d2e1a72fcca58-83f18d5b8f5mr8777489b3a.5.1778872828431; Fri, 15
+ May 2026 12:20:28 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 15 May 2026 12:19:04 -0700
+Date: Fri, 15 May 2026 12:19:05 -0700
 In-Reply-To: <20260515191942.1892718-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -78,9 +78,8 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260515191942.1892718-1-seanjc@google.com>
 X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260515191942.1892718-4-seanjc@google.com>
-Subject: [PATCH v3 03/41] x86/sev: Mark TSC as reliable when configuring
- Secure TSC
+Message-ID: <20260515191942.1892718-5-seanjc@google.com>
+Subject: [PATCH v3 04/41] x86/sev: Move check for SNP Secure TSC support to tsc_early_init()
 From: Sean Christopherson <seanjc@google.com>
 To: Kiryl Shutsemau <kas@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Sean Christopherson <seanjc@google.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
@@ -100,7 +99,7 @@ Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>, Vitaly Kuznetsov <vkuznets@redh
 	Tom Lendacky <thomas.lendacky@amd.com>, Nikunj A Dadhania <nikunj@amd.com>, 
 	Thomas Gleixner <tglx@linutronix.de>, David Woodhouse <dwmw@amazon.co.uk>
 Content-Type: text/plain; charset="UTF-8"
-X-Rspamd-Queue-Id: 41739556AFF
+X-Rspamd-Queue-Id: 78925556B1C
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -113,7 +112,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10926-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10927-lists,linux-hyperv=lfdr.de];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,amd.com:email];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -133,49 +132,49 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	REPLYTO_EQ_FROM(0.00)[]
 X-Rspamd-Action: no action
 
-Move the code to mark the TSC as reliable from sme_early_init() to
-snp_secure_tsc_init().  The only reader of TSC_RELIABLE is the aptly
-named check_system_tsc_reliable(), which runs in tsc_init(), i.e.
-after snp_secure_tsc_init().
+Move the check on having a Secure TSC to the common tsc_early_init() so
+that it's obvious that having a Secure TSC is conditional, and to prepare
+for adding TDX to the mix (blindly initializing *both* SNP and TDX TSC
+logic looks especially weird).
 
-This will allow consolidating the handling of TSC_KNOWN_FREQ and
-TSC_RELIABLE when overriding the TSC calibration routine.
+No functional change intended.
 
 Cc: Tom Lendacky <thomas.lendacky@amd.com>
 Reviewed-by: Nikunj A Dadhania <nikunj@amd.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/coco/sev/core.c      | 2 ++
- arch/x86/mm/mem_encrypt_amd.c | 3 ---
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ arch/x86/coco/sev/core.c | 3 ---
+ arch/x86/kernel/tsc.c    | 3 ++-
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index d27cf8f8b025..14ced854cd83 100644
+index 14ced854cd83..39fb50697542 100644
 --- a/arch/x86/coco/sev/core.c
 +++ b/arch/x86/coco/sev/core.c
-@@ -2041,6 +2041,8 @@ void __init snp_secure_tsc_init(void)
- 	secrets = (__force struct snp_secrets_page *)mem;
+@@ -2029,9 +2029,6 @@ void __init snp_secure_tsc_init(void)
+ 	unsigned long tsc_freq_mhz;
+ 	void *mem;
  
- 	setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
-+	setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
-+
- 	rdmsrq(MSR_AMD64_GUEST_TSC_FREQ, tsc_freq_mhz);
- 
- 	/* Extract the GUEST TSC MHZ from BIT[17:0], rest is reserved space */
-diff --git a/arch/x86/mm/mem_encrypt_amd.c b/arch/x86/mm/mem_encrypt_amd.c
-index 2f8c32173972..6c3af974c7c2 100644
---- a/arch/x86/mm/mem_encrypt_amd.c
-+++ b/arch/x86/mm/mem_encrypt_amd.c
-@@ -535,9 +535,6 @@ void __init sme_early_init(void)
- 		 */
- 		x86_init.resources.dmi_setup = snp_dmi_setup;
- 	}
+-	if (!cc_platform_has(CC_ATTR_GUEST_SNP_SECURE_TSC))
+-		return;
 -
--	if (sev_status & MSR_AMD64_SNP_SECURE_TSC)
--		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
- }
+ 	mem = early_memremap_encrypted(sev_secrets_pa, PAGE_SIZE);
+ 	if (!mem) {
+ 		pr_err("Unable to get TSC_FACTOR: failed to map the SNP secrets page.\n");
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index 7e639c0a94a2..243999692aea 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -1559,7 +1559,8 @@ void __init tsc_early_init(void)
+ 	if (is_early_uv_system())
+ 		return;
  
- void __init mem_encrypt_free_decrypted_mem(void)
+-	snp_secure_tsc_init();
++	if (cc_platform_has(CC_ATTR_GUEST_SNP_SECURE_TSC))
++		snp_secure_tsc_init();
+ 
+ 	if (!determine_cpu_tsc_frequencies(true))
+ 		return;
 -- 
 2.54.0.563.g4f69b47b94-goog
 
