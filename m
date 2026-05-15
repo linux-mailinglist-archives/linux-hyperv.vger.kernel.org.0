@@ -1,79 +1,79 @@
-Return-Path: <linux-hyperv+bounces-10978-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10979-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8GgjC0Z/B2qQ5gIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10978-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 22:17:10 +0200
+	id QK+lH2yDB2p06gIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10979-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 22:34:52 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D06155758F
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 22:17:09 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04D5D55773A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 22:34:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9104A30329B2
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 20:16:29 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 6F3F2300D68C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 20:34:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 636CE282F1A;
-	Fri, 15 May 2026 20:16:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA0873E0C40;
+	Fri, 15 May 2026 20:34:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hk1GNJEE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vq9pqbKA"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F684386C25
-	for <linux-hyperv@vger.kernel.org>; Fri, 15 May 2026 20:16:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8723B3DF019
+	for <linux-hyperv@vger.kernel.org>; Fri, 15 May 2026 20:34:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778876189; cv=none; b=tHFqoPRD48yKmk9ogmnXHkvudIrgzAdggdOK5oN1MN+N8xIdDjfbD9ZRyWiKge4KQ06JysmE3QUEvpatzzknmFRjLHbQxyrAWDhTtCjFaLdOO30cYWVwCHS/zbCwftKjcJYeV3tOGYXhRCkaC4CDDXTu8kGC91q0uUl/q7zQSvg=
+	t=1778877288; cv=none; b=NGMaFKUqJmbND+AzPklykRlZfaL6IQSCgehhryNJvXJ27eprIqJnP4gT8jGfep6Ad+ia3xfIs8eTGv1howV/gl+UojWTAuKpxv50jdp7QPWVqJIyExQ3V+7WIUk9FrkD/2JZ9hlmarUSLPQMHF6fd8Jhi4rmLH9UqsqsQYZU8w4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778876189; c=relaxed/simple;
-	bh=+LE8ciODWJx0Uj/lVjPOmW9g9d68dIt4jurrnGfGR94=;
+	s=arc-20240116; t=1778877288; c=relaxed/simple;
+	bh=38etjCCr7KQ+mpZMtsFqWW5d5G+mG3j5y8I+1sdbWIU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Vz/jEXFS2ityRz5YAqBiGV7oCejzzYSnhKobBJgTpELS0tjptSYHaxiXN86VhBTfbGxWyRyTaAtWrMe0InVzJM5S92jn7pvVLCmcpo3O+JJ7tiIW7HF5i0Cea+1/fbpEZZHXy7uyV2lReUBSRA/86PNibT+d+/t9l0hdLAmJD8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hk1GNJEE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E3C5C2BCB3;
-	Fri, 15 May 2026 20:16:28 +0000 (UTC)
+	 Message-Id; b=L/2qpJkGODU8J1u5gIX6spGuQaaDfvawT5/MZoj7xUryq2nMqmfx02B5AzqoIfyUHdUjdpq9P+EqiYr2W4FRqzPneFwQ4RumqT+H7bcBPQsUDlFX7xQf/jhDqrA1kdN7McSjlgGZFWtf7N2JwV898pheFJ+GxL5eqeILwOwc4Z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vq9pqbKA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED0E7C2BCB0;
+	Fri, 15 May 2026 20:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778876188;
-	bh=+LE8ciODWJx0Uj/lVjPOmW9g9d68dIt4jurrnGfGR94=;
+	s=k20201202; t=1778877288;
+	bh=38etjCCr7KQ+mpZMtsFqWW5d5G+mG3j5y8I+1sdbWIU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=Hk1GNJEEPK/AKsOqt9iGZSt1utYUlOW5lxln4isl0E6ioW3MCXVUO8LVJzZSr/PxK
-	 I2UHGjtQIII/PWtimPHBLSD3RcWtEoUYtaRrXNjQUKhcJ11M1oET+xB4xxk1Y69oid
-	 Xq1ZHt1/zD71Wyfz7PlMpKdy6CVOntixDA7gAbdkGlc6YaaXLOnmczceqSJs18sSyb
-	 AX2aLVI3mAFdosYUig9+HUHhLOlCAXwSdEEXfErhefpMgE/a3EJf1qyVmdapsorNj0
-	 PrJOBLd+9HM71O0LY1MMc8nHbHQb6AA1D+DklGF6evN4rRF35Sa5t2y6PXO8506vWp
-	 lwdtAHuxoKIng==
+	b=Vq9pqbKAhMkegjQWGc3UqEfOsByOTWsWa1fIaMVXVfroUXoCxjh22aOT9PfKChzLD
+	 kbQEdCClcWA0YLO/kyyCoJKC+Iwd99gHdxHGDDZv5HcflKvnDf8xLDpmhW3k/6j4k1
+	 ySlHGYT7O7KRgjeT4yIz/KeSP4wWiY6w68e8VfXlFc904zlDrQO5sqsxPfF3BKcVIl
+	 zw5Jjs1cgnYDRXOs+Sd54VHXim2PoMs20YXswdTMIe+F/reSjv7v45/BwCsBIfaM7V
+	 V0oXJwHUVYBwaNpDSqyWKj5X1QWrJr7rwr8G5vA6VQiRptncd/VACjD93aPpBGMqvc
+	 bvkHlFW+vFT2A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 32/41] x86/tsc: Rejects attempts to override TSC
- calibration with lesser routine
+Subject: Re: [PATCH v3 11/41] x86/kvm: Don't disable kvmclock on BSP in
+ syscore_suspend()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Sean Christopherson" <seanjc@google.com>
 Cc: linux-hyperv@vger.kernel.org
-In-Reply-To: <20260515191942.1892718-33-seanjc@google.com>
-References: <20260515191942.1892718-33-seanjc@google.com>
+In-Reply-To: <20260515191942.1892718-12-seanjc@google.com>
+References: <20260515191942.1892718-12-seanjc@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 15 May 2026 20:16:28 +0000
-Message-Id: <20260515201628.9E3C5C2BCB3@smtp.kernel.org>
+Date: Fri, 15 May 2026 20:34:47 +0000
+Message-Id: <20260515203447.ED0E7C2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-X-Rspamd-Queue-Id: 7D06155758F
+X-Rspamd-Queue-Id: 04D5D55773A
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10978-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10979-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
 	RCPT_COUNT_TWO(0.00)[2];
@@ -91,70 +91,79 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_NO_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sashiko.dev:url,smtp.kernel.org:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,sashiko.dev:url,lists.linux.dev:replyto,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Spurious WARN_ON stack trace on every boot for CoCo (SEV-SNP/TDX=
-) guests under KVM.
+- [Critical] Moving kvmclock_disable() for the BSP to x86_platform.save_sch=
+ed_clock_state leaves kvmclock enabled across hibernation if the callback i=
+s overwritten by another clocksource (e.g., Hyper-V), leading to memory cor=
+ruption.
 --
 
-commit e57255e4d076143a67d0e6e44f914aec31aed8c7
+commit 1ada3230c82e463b5d5311eb45fc919a4e06098c
 Author: Sean Christopherson <seanjc@google.com>
 
-x86/tsc: Rejects attempts to override TSC calibration with lesser routine
+x86/kvm: Don't disable kvmclock on BSP in syscore_suspend()
 
-This commit adds a sanity check when registering a TSC frequency calibration
-routine to ensure the incoming routine is as robust as the outgoing one,
-rejecting it with a warning if it is not. This prevents replacing a trusted
-calibration source with a less trusted one.
+This commit changes the suspend logic to avoid disabling kvmclock on the BSP
+during syscore_suspend(). It defers the operation to the sched_clock restore
+callback and introduces a new action enum to handle different offline and
+suspend cases.
 
-> diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-> index 98bef1d06fa9d..7a261214fa3ef 100644
-> --- a/arch/x86/kernel/tsc.c
-> +++ b/arch/x86/kernel/tsc.c
-> @@ -1319,8 +1319,13 @@ void tsc_register_calibration_routines(unsigned lo=
-ng (*calibrate_tsc)(void),
+> diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
+> index df95516a9d899..006e3a13500b4 100644
+> --- a/arch/x86/kernel/kvmclock.c
+> +++ b/arch/x86/kernel/kvmclock.c
+[ ... ]
+> @@ -178,8 +178,22 @@ static void kvm_register_clock(char *txt)
+>  	pr_debug("kvm-clock: cpu %d, msr %llx, %s", smp_processor_id(), pa, txt=
+);
+>  }
 > =20
->  	if (properties & TSC_FREQUENCY_KNOWN)
->  		setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
-> +	else if (WARN_ON(boot_cpu_has(X86_FEATURE_TSC_KNOWN_FREQ)))
-> +		return;
+> +static void kvmclock_disable(void)
+> +{
+> +	if (msr_kvm_system_time)
+> +		native_write_msr(msr_kvm_system_time, 0);
+> +}
 > +
->  	if (properties & TSC_RELIABLE)
->  		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
-> +	else if (WARN_ON(boot_cpu_has(X86_FEATURE_TSC_RELIABLE)))
-> +		return;
+>  static void kvm_save_sched_clock_state(void)
+>  {
+> +	/*
+> +	 * Stop host writes to kvmclock immediately prior to suspend/hibernate.
+> +	 * If the system is hibernating, then kvmclock will likely reside at a
+> +	 * different physical address when the system awakens, and host writes
+> +	 * to the old address prior to reconfiguring kvmclock would clobber
+> +	 * random memory.
+> +	 */
+> +	kvmclock_disable();
+>  }
 
-Will this cause a spurious warning stack trace on every boot for CoCo
-(SEV-SNP/TDX) guests under KVM?
+Can this lead to memory corruption if another clocksource overwrites the
+x86_platform.save_sched_clock_state callback?
 
-For KVM CoCo guests, CoCo registers first via tsc_early_init(), setting both
-TSC_FREQUENCY_KNOWN and X86_FEATURE_TSC_RELIABLE.
+In environments where KVM emulates Hyper-V, both KVM and Hyper-V clocksourc=
+es
+might be initialized. If Hyper-V overwrites
+x86_platform.save_sched_clock_state with its own callback, and previous
+callbacks are not chained or invoked, kvm_save_sched_clock_state() will nev=
+er
+be called.
 
-KVM then registers second via kvmclock_init(). At this point in the patch
-series, KVM only passes TSC_FREQUENCY_KNOWN, so the properties & TSC_RELIAB=
-LE
-check is false, and it falls through to this WARN_ON. Since CoCo already set
-the capability, the condition evaluates to true.
+Because kvmclock clears its clocksource.suspend hook when registering as
+sched_clock, the clocksource framework cannot act as a fallback.
 
-I see this is fixed later in the series by the commit "x86/kvmclock: Mark T=
-SC
-as reliable when it's constant and nonstop", which modifies KVM to pass
-TSC_FREQ_KNOWN_AND_RELIABLE on modern hardware, preventing this warning.
-
-Could the patch ordering be adjusted to prevent this intermediate regressio=
-n?
-
-> =20
->  	x86_platform.calibrate_tsc =3D calibrate_tsc;
->  	if (calibrate_cpu)
+This would leave kvmclock enabled on the BSP across hibernation. As mention=
+ed
+in the comment, could this result in the hypervisor writing to the old phys=
+ical
+memory address after resume and clobbering random memory?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260515191942.1892=
-718-1-seanjc@google.com?part=3D32
+718-1-seanjc@google.com?part=3D11
 
