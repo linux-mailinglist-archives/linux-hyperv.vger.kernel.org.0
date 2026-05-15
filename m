@@ -1,79 +1,79 @@
-Return-Path: <linux-hyperv+bounces-10971-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10972-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +Dc0MkF5B2oJ5AIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10971-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 21:51:29 +0200
+	id kIKMFUl6B2pL4QIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10972-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 21:55:53 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F16855720B
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 21:51:29 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id AAC0155728C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 21:55:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 042F6301CFCE
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 19:51:21 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 64F4C3001CEC
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 19:55:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B99737C0FC;
-	Fri, 15 May 2026 19:51:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDA5B36F8F9;
+	Fri, 15 May 2026 19:55:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HtSh5Rlr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dqdyydw+"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB65350298
-	for <linux-hyperv@vger.kernel.org>; Fri, 15 May 2026 19:51:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3F135E1DD
+	for <linux-hyperv@vger.kernel.org>; Fri, 15 May 2026 19:55:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778874677; cv=none; b=WEm8NY4U+AgH5Sw02iAWZQxchxxKAz7l2y5hkH0q1INRvuXTiILETHHl8a4y7s0kSIZrxxLRsvk94gi0ySJbQc+rwws0TbB6AG3Nhi4420uyipL6woMw6KQPNCn7TZCAJ5c5ceZZm6LfPwEUNhX4F5caFNpojemBAbpx1NfIRyE=
+	t=1778874950; cv=none; b=lJowF/qdCowDRnuAUT9M6HWAGkawKJlVvDfBaENbWAlhcKGl2fXFgPAF6i28WbwwINm9eiYk/N0H5z6gfXE1V3PRWPME65XLNuv2lciJjmrIHDO9aHTWHkERtNWaT++GT0FqgPoY0kasqvEok8I09S+kJvhk08qZ5F0qlSFP8Sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778874677; c=relaxed/simple;
-	bh=xvfH/g6acp67trhKIRQHi4phSHBQRxOat9/g/r9uX3M=;
+	s=arc-20240116; t=1778874950; c=relaxed/simple;
+	bh=sBx9rMVz5IEWScB5CRoCk46xfqJcHRsvD0GfZd9K3xs=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Mq/lz1zSm7NetO8UbQDKVA5muzxHSMg1y+3EAIRTn9Pi/tGf3mWoeBBm6ERmPE7A5dsPY8raPj8rNyJhLwOvyydV2gABU6WlidjABYNf3heu5iQdibBV0js8xTEPPl5OQ+U0gdOaoH81WgyUxLPXSBAW8gAsU1zwrPrYfZOKgJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HtSh5Rlr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0AFBC2BCB3;
-	Fri, 15 May 2026 19:51:16 +0000 (UTC)
+	 Message-Id; b=SyKWr7nspiMj2vF+nBYF6BuXLPF0axB3PXdOS10Da0+uK+mYNq/bTPTXfKbiTBegg++gonfdjhxHXkd/B+l54nTJ8LMLXXVHkw94DFDLQx2KJrNqXyKryn5crBvH1KQdqxGhq7An+HQuxWMtu2GYbrHZs6dTtM4OcqNWtp/ysVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dqdyydw+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE29DC2BCB0;
+	Fri, 15 May 2026 19:55:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778874677;
-	bh=xvfH/g6acp67trhKIRQHi4phSHBQRxOat9/g/r9uX3M=;
+	s=k20201202; t=1778874950;
+	bh=sBx9rMVz5IEWScB5CRoCk46xfqJcHRsvD0GfZd9K3xs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=HtSh5RlrnDH4EGRZxGb6PoDf6FjaWacf+o+93o4+txBaH+ja3dCTQErWAixGV7bbw
-	 nTMO+GbVrXPE36b57xU81zcypNN5j3VLK5J/gMBngszbj9PaZqQUUFclBDLzHmc3+/
-	 KwRcDDHHUi3DtYuxejtngv3d5nEmQ/uDTYwBGQCPBceqTHI+kfE8ifU4Nwn01ZKuDO
-	 T1eWaO4wGwvvw8KhOmvEifwI6Ju0qCEfE5qolfg/aa9+zRXOm3aTxZq9a+phEKRb56
-	 e//ZF/0CoV7u2guW2+xzHre4+7cD/4yVAuONnUwyuZFZpytf9+Zcywmoqbr5HSyZ7g
-	 dyEQbFhL0DSZg==
+	b=Dqdyydw+hgQ6h/lOKJinh1JCm2sp3fViaOAKk2f9KjK3ertszsYDQGjZLQI67kz36
+	 2t+wKVRiLl35vo9G7uGedsoDZGc8j5AJ38VAyie3kDC+rs7iXtbsIMAq4dfQN8wmZj
+	 MI/L2xAEuIHqSA1GifjmVvyI3g18HBG+NGiiPZohgDemKw0RUAI1lIWHdHuMVUymru
+	 YJITYL7KGP78TnygAA73raYFCICTyBWvem12Jh5m2oNWKDUIGLArCcbMft7LuvJbqf
+	 7oovSD/GWH9c9r10s+asLf4qiMTYcaANM57YIeDp6OmuXyJ83mpwrgkS0XKdwYHiRA
+	 X4Lu5bNAZoqMA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 40/41] x86/tsc: Add standalone helper for getting CPU
- frequency from CPUID
+Subject: Re: [PATCH v3 17/41] x86/tsc: WARN if TSC sched_clock save/restore
+ used with PV sched_clock
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Sean Christopherson" <seanjc@google.com>
 Cc: linux-hyperv@vger.kernel.org
-In-Reply-To: <20260515191942.1892718-41-seanjc@google.com>
-References: <20260515191942.1892718-41-seanjc@google.com>
+In-Reply-To: <20260515191942.1892718-18-seanjc@google.com>
+References: <20260515191942.1892718-18-seanjc@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 15 May 2026 19:51:16 +0000
-Message-Id: <20260515195116.E0AFBC2BCB3@smtp.kernel.org>
+Date: Fri, 15 May 2026 19:55:49 +0000
+Message-Id: <20260515195549.EE29DC2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-X-Rspamd-Queue-Id: 3F16855720B
+X-Rspamd-Queue-Id: AAC0155728C
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10971-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10972-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
 	RCPT_COUNT_TWO(0.00)[2];
@@ -91,78 +91,55 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_NO_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,sashiko.dev:url,lists.linux.dev:replyto,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sashiko.dev:url,lists.linux.dev:replyto]
 X-Rspamd-Action: no action
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Unintended clobbering of the global `cpu_khz` variable in `native_=
-calibrate_tsc()` due to a missing local variable declaration.
+- [Critical] Setting `x86_platform.save_sched_clock_state` and `restore_sch=
+ed_clock_state` to NULL for PV clocksources causes a fatal kernel panic on =
+S3/S4 suspend and resume.
 --
 
-commit 36e45379d4c9f40ae24c5c323b4f0471c94c6bef
+commit 4d4877d2e739eb2258c919e41775916ae05af732
 Author: Sean Christopherson <seanjc@google.com>
 
-x86/tsc: Add standalone helper for getting CPU frequency from CPUID
+x86/tsc: WARN if TSC sched_clock save/restore used with PV sched_clock
 
-This commit extracts the logic for getting the CPU frequency via CPUID into
-a new standalone helper function. It also updates the TSC calibration code
-to use this new helper.
+This commit adds a warning to guard against regressions when the default
+TSC sched_clock save and restore hooks are called while using a PV
+sched_clock.
 
-> diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-> --- a/arch/x86/kernel/tsc.c
-> +++ b/arch/x86/kernel/tsc.c
+> Now that all PV clocksources override the sched_clock save/restore hooks
+> when overriding sched_clock, WARN if the "default" TSC hooks are invoked
+> when using a PV sched_clock, e.g. to guard against regressions.
 
-[ ... ]
+Earlier patches in this series appear to override these hooks by setting th=
+em
+to NULL, such as setting x86_platform.save_sched_clock_state =3D NULL. Could
+this lead to a panic during suspend and resume?
 
-> @@ -754,13 +772,8 @@ unsigned long native_calibrate_tsc(void)
->  	 * clock, but we can easily calculate it to a high degree of accuracy
->  	 * by considering the crystal ratio and the CPU speed.
->  	 */
-> -	if (!info.crystal_khz && boot_cpu_data.cpuid_level >=3D CPUID_LEAF_FREQ=
-) {
-> -		unsigned int eax_base_mhz, ebx, ecx, edx;
-> -
-> -		cpuid(CPUID_LEAF_FREQ, &eax_base_mhz, &ebx, &ecx, &edx);
-> -		info.crystal_khz =3D eax_base_mhz * 1000 *
-> -			info.denominator / info.numerator;
-> -	}
-> +	if (!info.crystal_khz && !cpuid_get_cpu_freq(&cpu_khz))
-> +		info.crystal_khz =3D cpu_khz * info.denominator / info.numerator;
+Looking at the callers in arch/x86/power/cpu.c, save_processor_state() and
+restore_processor_state() unconditionally invoke these function pointers
+without checking for NULL:
 
-Does this unintentionally clobber the global cpu_khz variable?
-
-Because cpu_khz is not declared locally in native_calibrate_tsc(), this
-appears to pass a pointer to the global cpu_khz variable to
-cpuid_get_cpu_freq().
-
-Looking at cpuid_get_cpu_freq(), it unconditionally zeroes the target
-pointer before checking if CPUID_LEAF_FREQ is supported:
-
-arch/x86/kernel/tsc.c:cpuid_get_cpu_freq() {
-        ...
-        *cpu_khz =3D 0;
-
-        if (boot_cpu_data.cpuid_level < CPUID_LEAF_FREQ)
-                return -ENOENT;
-        ...
+void save_processor_state(void)
+{
+        __save_processor_state(&saved_context);
+        x86_platform.save_sched_clock_state();
 }
 
-If the system exposes CPUID.0x15 with a 0 crystal clock but does not
-support CPUID.0x16, cpuid_get_cpu_freq() returns -ENOENT and leaves the
-global cpu_khz as 0.
+When VMware or Xen HVM guests attempt to suspend or hibernate, won't the
+kernel execute the NULL pointer and crash?
 
-Could this overwrite the previously calibrated CPU frequency and force the
-kernel to fall back to legacy PIT/HPET calibration? If so, this might
-cause boot regressions on systems where these legacy timers are disabled
-or unreliable. Even if CPUID.0x16 is supported, it seems this would silently
-overwrite the dynamically calibrated global value with the CPUID base
-frequency.
+Would it be better for PV clocksources to override the hooks to a safe no-op
+function like x86_init_noop rather than NULL, or for the callers in
+power/cpu.c to explicitly check for NULL before invocation?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260515191942.1892=
-718-1-seanjc@google.com?part=3D40
+718-1-seanjc@google.com?part=3D17
 
