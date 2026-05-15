@@ -1,74 +1,74 @@
-Return-Path: <linux-hyperv+bounces-10932-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10933-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KCKvENNyB2r03wIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10932-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 21:24:03 +0200
+	id GCBkGIVyB2pX3wIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10933-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 21:22:45 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F1E3556BA4
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 21:24:02 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19D78556B54
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 21:22:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id B4AB4302944C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 19:21:18 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 6AA77302550C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 19:21:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 486343D567A;
-	Fri, 15 May 2026 19:20:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7622C3DEAED;
+	Fri, 15 May 2026 19:20:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="od1d0dtK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W3gcTTs0"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DEC23C7DF1
-	for <linux-hyperv@vger.kernel.org>; Fri, 15 May 2026 19:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C0F3D2FE6
+	for <linux-hyperv@vger.kernel.org>; Fri, 15 May 2026 19:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778872837; cv=none; b=mVpLWLG65krdBAg/s2SDK9XOvVvBFRMsO5sDBWQ+30PRs4EH4viJkU9B/XeAxEAT7mh66W0NfFm0nYEA72z9mSO/pfcY7aV/7oRUuLZc+GzH9207D7Y+Qj7KfgTxkz67B3G0ot+JaJYnwPe3QHDjUYZsiJnWn9G31AacyQxN3Mw=
+	t=1778872838; cv=none; b=Jz34OMvcT6mjXBjRlaT39A2POFe4l6BJ3RhGIcRrsSBFJwfyFqA5PamPtLxFdhr2Yjzu9nXQVmVKdZZlJd7XK6BuAYVSlHr4UXlfDjVWJAmECzmnb0WJhG4qJzHXawG8U/kuYqx1kXPU3TIk8a4t4yDe+7LsxnfneHUSU09FUII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778872837; c=relaxed/simple;
-	bh=5ZroqPTAiGiCjkjdUwgIH01/p3JgUmk9yrzxGnD97ko=;
+	s=arc-20240116; t=1778872838; c=relaxed/simple;
+	bh=O7JO2spBMPL1ycg94DN7ybYVsLuLSpeqr0A1pVho4MY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ed+7beUsU8ageQs6Jy1/n2xrKVjw8/Bqlgv1QUAaBIElooLqODiY1MzR2arLdUQQrqOtax0ZpIHlK0NIu5TTBU3tVQU4AWkHY9FCrws2V2qyBPGylhXEG5/EL+Cet1X6LDGPYZf3vUX384DZhhhlGrlm4Pf5MEzGyggpYlI4I+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=od1d0dtK; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=rJjQVedK1A3WwE/NCv06MYkCe0YF7GmH7Qac7f9BmYxCvWrSC704eHRm2Y9P3D46hwFo8FjTnLFTd1dDr22wlilm0yS5ACUHaAAWHbW6X7A9mfkw6Rc0l0cA7Em/LUqwIR+ypwmKdQNWIMqPBle2ReKToTPmTcxxto43f+N61IU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W3gcTTs0; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-837d43e9ff3so95023b3a.2
-        for <linux-hyperv@vger.kernel.org>; Fri, 15 May 2026 12:20:35 -0700 (PDT)
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-c8292a9605aso157011a12.0
+        for <linux-hyperv@vger.kernel.org>; Fri, 15 May 2026 12:20:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778872834; x=1779477634; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1778872835; x=1779477635; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=2d2hriGBYHFIT1h3oi40HlX5TSRUyuLIgvVXFrgjGyA=;
-        b=od1d0dtKQea4g5h2wx1nLXnMZRIIhCn+9dNb2pRFkiEzqmNX8pA1TCKLwn+WcxDxTe
-         u6+XoPq1VctC901ntJUaGEw8uLAxQHSDwqXDp56kVMdeuGrPVa/2aF2nnI1asnX4w/I9
-         zN3owAP9c0X9zDr1Rdw+exaXB47aJlF/qJ+X5kN2N8Cnbpya018G6zCEVKb0s18bWyuL
-         m2ktBsj69fIdzywngTquGhNjdu8z1WuTwOEuqzGDDaGbtv/y1yoKZlx/7MOPGdyUIBrA
-         taCUGXi7iG5VWIyY1JGGHu4/kRiIUorDrhyyH62aMIveUQkRbkBBVp9zKzOY2ECSwknH
-         VEXQ==
+        bh=rYtqxRsyPTn9zcEDwit0IKYSbyTf6XV6vC/bmJj4kzY=;
+        b=W3gcTTs0xZ1pVOhZzekF5vSgiEXKKW0oAZRgTqtB2EUuOJ0AYaV8gAN6WqtVx7pLkK
+         2De53pTaLyqFe7CnUBGZADI4/iR5KHPpsDYf7qxdpkuW/HUcqTvtIKfYneL4Z+RCL9PY
+         PP7T+jW+tW2Usyt0C6cKfKn/fdW0JQV7sXpLva2LuEPmmrrgDycAOh1N8JLfYeMxq0lW
+         wmwhT12P0SYGQHk29nJhnlOQVD+ZEUq9vmb9zJRXzEb+VI38Hqe0By7Sq8kdQFj5sINB
+         hNVJnK2UmTI0a0IGfw0Nv/noA0r4nrOuctFnPhTEgVdbxqsaf6N+OEtW1KG9JvsYWTjh
+         CuiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778872834; x=1779477634;
+        d=1e100.net; s=20251104; t=1778872835; x=1779477635;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=2d2hriGBYHFIT1h3oi40HlX5TSRUyuLIgvVXFrgjGyA=;
-        b=oLGrigleJBV3DgrAWYxhJz1Sil6//szCnlHKQ3nJ6Dz0eZEOoEAFwljj7SO7EbWS8o
-         oddLgpiUSvg2KzniKSyOO5AtzUXQn4LKKPHU+30do1nQiWkCQhaQMDdHOAfQBVtlq+Sp
-         gAPvW6Sk968l7T3M0pQyNfe/VTgLgcWzJL7d3zFy9AO6zFCaevH+WuUvmPn0eIqbkJnZ
-         VrMc3rq4OpOjxSn9y3wE9MaMl773VsMl8CFEDTVEjt0v7h6bplqfDcnQmuB6FtPCrwc9
-         6sb45JYjRB7v8JqPROi9m9xk4Li9k7uIQvNwBdsYr8pkG8WCaUN8Fiw1/TOXANL/V6g8
-         rhzg==
-X-Forwarded-Encrypted: i=1; AFNElJ/4jdbu231ZKaa5aZKKV/8/r5R01t+aCYAa7BD3g31Z/P4zx7vNMaSRjbV/NpG7mN0OGSIPu2fMrLKmwOU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLm7W3kTX8AgCIoJ9n01kzVXxM1VncPzR2p5npsfSYa3vn1St3
-	S8PGGTcGOUeIEy0on6+sCC/tjV1rA35wGrsCQE+mZAxsZyyJbfVExCNFzXyDiz4ZBz6/LXM7J75
-	Xcmfhag==
-X-Received: from pfblg3.prod.google.com ([2002:a05:6a00:7083:b0:82f:bf29:61aa])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1ca4:b0:82c:6b1b:7ad4
- with SMTP id d2e1a72fcca58-83f33bc808emr5114483b3a.3.1778872834057; Fri, 15
- May 2026 12:20:34 -0700 (PDT)
+        bh=rYtqxRsyPTn9zcEDwit0IKYSbyTf6XV6vC/bmJj4kzY=;
+        b=oKwJcvShfcvOLb+8AnwaIl9xPfF94WZ2UAuXZ6iZKAH/ysV+P6G6XTpgXpSuFsBAc8
+         Q3y2CJCQzdNCuyuhxNcM8MSEjxaa+90eE1kCgx6M3YC0CElbgX9dSsW7ske8DbOfLedg
+         tg8yFRM894iDt3ypc85MJ25LOmTYvFs1W/kZOgi/WHmgiy3pb0WacRDlO2OmSrPWN49P
+         vbj4MQTTcZBFZ4e0gw4vNnrHHsHUZaWMcA/8S0vjp7H5tlggf+JHEd79/VXuJC/G09N+
+         261akJL82gYqlkFvQTIJk19DTMP6LxJfw5qImFOotPQvI6460GZehPgSjm/O91C8eCV0
+         UnUA==
+X-Forwarded-Encrypted: i=1; AFNElJ9m7p0CqWUSXY/fkgGIoFSLAZ9457KsMVP+myci76R3uK9KiZ92QX58eC9Nw9OMkny2UNAj0qlFb+bRgdY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJKtIfVr2TgcIhXqZ/div6Q1MFL3neIEzvDYHu8+DBJ8fakqcI
+	kPGYZXqD2GdGaiHzQJanHnVbFXGbpeJGE25TCiE+qh40Nw+g85v2QPEUMi4bBn0mIffFLl/2qXE
+	i3lEMOw==
+X-Received: from pgbgj3.prod.google.com ([2002:a05:6a02:4943:b0:c73:8741:7555])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:6a24:b0:39c:241:65a3
+ with SMTP id adf61e73a8af0-3b22e6668b2mr6600745637.1.1778872835218; Fri, 15
+ May 2026 12:20:35 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 15 May 2026 12:19:10 -0700
+Date: Fri, 15 May 2026 12:19:11 -0700
 In-Reply-To: <20260515191942.1892718-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -78,9 +78,8 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260515191942.1892718-1-seanjc@google.com>
 X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260515191942.1892718-10-seanjc@google.com>
-Subject: [PATCH v3 09/41] clocksource: hyper-v: Don't save/restore TSC offset
- when using HV sched_clock
+Message-ID: <20260515191942.1892718-11-seanjc@google.com>
+Subject: [PATCH v3 10/41] x86/kvmclock: Setup kvmclock for secondary CPUs iff CONFIG_SMP=y
 From: Sean Christopherson <seanjc@google.com>
 To: Kiryl Shutsemau <kas@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Sean Christopherson <seanjc@google.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
@@ -100,7 +99,7 @@ Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>, Vitaly Kuznetsov <vkuznets@redh
 	Tom Lendacky <thomas.lendacky@amd.com>, Nikunj A Dadhania <nikunj@amd.com>, 
 	Thomas Gleixner <tglx@linutronix.de>, David Woodhouse <dwmw@amazon.co.uk>
 Content-Type: text/plain; charset="UTF-8"
-X-Rspamd-Queue-Id: 3F1E3556BA4
+X-Rspamd-Queue-Id: 19D78556B54
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -108,13 +107,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MV_CASE(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
 	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10932-lists,linux-hyperv=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns];
+	TAGGED_FROM(0.00)[bounces-10933-lists,linux-hyperv=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -129,71 +128,43 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	REPLYTO_EQ_FROM(0.00)[]
 X-Rspamd-Action: no action
 
-Now that Hyper-V overrides the sched_clock save/restore hooks if and only
-sched_clock itself is set to the Hyper-V reference counter, drop the
-invocation of the "old" save/restore callbacks.  When the registration of
-the PV sched_clock was done separately from overriding the save/restore
-hooks, it was possible for Hyper-V to clobber the TSC save/restore
-callbacks without actually switching to the Hyper-V refcounter.
+Gate kvmclock's secondary CPU code on CONFIG_SMP, not CONFIG_X86_LOCAL_APIC.
+Originally, kvmclock piggybacked PV APIC ops to setup secondary CPUs.
+When that wart was fixed by commit df156f90a0f9 ("x86: Introduce
+x86_cpuinit.early_percpu_clock_init hook"), the dependency on a local APIC
+got carried forward unnecessarily.
 
-Enabling a PV sched_clock is a one-way street, i.e. the kernel will never
-revert to using TSC for sched_clock, and so there is no need to invoke the
-TSC save/restore hooks (and if there was, it belongs in common PV code).
-
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-Tested-by: Michael Kelley <mhklinux@outlook.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- drivers/clocksource/hyperv_timer.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ arch/x86/kernel/kvmclock.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index 69c1c7264e5d..ac1d9f9c381c 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -527,9 +527,6 @@ static __always_inline void hv_setup_sched_clock(void *sched_clock)
- #include <asm/timer.h>
+diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
+index e9e7394140dd..df95516a9d89 100644
+--- a/arch/x86/kernel/kvmclock.c
++++ b/arch/x86/kernel/kvmclock.c
+@@ -187,7 +187,7 @@ static void kvm_restore_sched_clock_state(void)
+ 	kvm_register_clock("primary cpu clock, resume");
+ }
  
- static u64 hv_ref_counter_at_suspend;
--static void (*old_save_sched_clock_state)(void);
--static void (*old_restore_sched_clock_state)(void);
--
- /*
-  * Hyper-V clock counter resets during hibernation. Save and restore clock
-  * offset during suspend/resume, while also considering the time passed
-@@ -539,8 +536,6 @@ static void (*old_restore_sched_clock_state)(void);
-  */
- static void hv_save_sched_clock_state(void)
+-#ifdef CONFIG_X86_LOCAL_APIC
++#ifdef CONFIG_SMP
+ static void kvm_setup_secondary_clock(void)
  {
--	old_save_sched_clock_state();
--
- 	hv_ref_counter_at_suspend = hv_read_reference_counter();
- }
+ 	kvm_register_clock("secondary cpu clock");
+@@ -325,7 +325,7 @@ void __init kvmclock_init(void)
  
-@@ -553,8 +548,6 @@ static void hv_restore_sched_clock_state(void)
- 	 *                - reference counter (time) now.
- 	 */
- 	hv_sched_clock_offset -= (hv_ref_counter_at_suspend - hv_read_reference_counter());
--
--	old_restore_sched_clock_state();
- }
- 
- static __always_inline void hv_setup_sched_clock(void *sched_clock)
-@@ -562,10 +555,7 @@ static __always_inline void hv_setup_sched_clock(void *sched_clock)
- 	/* We're on x86/x64 *and* using PV ops */
- 	paravirt_set_sched_clock(sched_clock);
- 
--	old_save_sched_clock_state = x86_platform.save_sched_clock_state;
- 	x86_platform.save_sched_clock_state = hv_save_sched_clock_state;
--
--	old_restore_sched_clock_state = x86_platform.restore_sched_clock_state;
- 	x86_platform.restore_sched_clock_state = hv_restore_sched_clock_state;
- }
- #else /* !CONFIG_GENERIC_SCHED_CLOCK && !CONFIG_PARAVIRT */
+ 	x86_platform.get_wallclock = kvm_get_wallclock;
+ 	x86_platform.set_wallclock = kvm_set_wallclock;
+-#ifdef CONFIG_X86_LOCAL_APIC
++#ifdef CONFIG_SMP
+ 	x86_cpuinit.early_percpu_clock_init = kvm_setup_secondary_clock;
+ #endif
+ 	x86_platform.save_sched_clock_state = kvm_save_sched_clock_state;
 -- 
 2.54.0.563.g4f69b47b94-goog
 
