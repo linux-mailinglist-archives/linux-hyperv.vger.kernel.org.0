@@ -1,64 +1,74 @@
-Return-Path: <linux-hyperv+bounces-10912-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10913-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WPcDKr0YB2rNrgIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10912-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 14:59:41 +0200
+	id qMs7D8woB2ppsQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10913-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 16:08:12 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D5985500FD
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 14:59:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A0285551032
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 16:08:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0ABB430A33C0
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 12:38:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 17D9C300CE57
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 13:58:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90EC044D01C;
-	Fri, 15 May 2026 12:38:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32297481FB4;
+	Fri, 15 May 2026 13:58:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WS/Zdg8A"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TyhRuKs2"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A60038F95A;
-	Fri, 15 May 2026 12:38:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E055436894F;
+	Fri, 15 May 2026 13:58:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778848713; cv=none; b=CqYKsJ+kr954R9yCe7tD2wNW4y8M30Uq+NVOQ+Rh3he5HxGUKwqhdb0vw63htS8A3x2cUhEBxt8sbD2eckfzmdc9m54ItUm8FhMVrjIVOrnxIGsijaZCiNjY6q7+iyf0Q4A+2dhO8RkP+JzTrmlVSYw7ksp0dxfjsiKVsVwrXOA=
+	t=1778853493; cv=none; b=kP6rQH169VU+GN1HkGOPO/LsbBadM9OcWzKLLwTQmFJqFxnwxRJFgj3f/iP9tdX1jATvpWeGZlpRpcBeNRMUlaBS8ovaYlrD2DFb+SVXVF2r09V0xAym2kuPrrNaSenWyYiMMp67oYCwBDYx65bSl9298Ab24WwEosmJSXOgd04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778848713; c=relaxed/simple;
-	bh=QkyGtymRwTBhyCo+ftYaceSh3xAwbb+WqGHKEO0jwkM=;
+	s=arc-20240116; t=1778853493; c=relaxed/simple;
+	bh=UJQG3VSzgoXmokXHk6pR6tDGZixiDw3OBDMxk+jt3Go=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nZxjpuSDs27GTEpvKau1D773GslNvqWCGgPI1aYTZMl06zl8KvJdDk3cb46xFfOwAZmPFafdiUrpEnss89300CvmEejNsatSzz2/mo9MyvvYCCF2nNtraxUbYva+yxLGtIw0bdPxzCfA9NxuKjztWC5lWeRfxcjU/WpGVS7eeFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=WS/Zdg8A; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=M6liXNxx5zZfQSIZcanJ9Y9GmJLoOAqrklEoZsNaUHBRYxvBbt6biV3Ea+P84dXqydHtsXBgMqYa3ikvl47scn7BJMt+Tpb1j0hL8PGH2cHtZ137dNbhs/R9H1B/1IoW+SZLdZD3ID19kN7mpD41/yUnOGO5TlRHkaU1LnMQhUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TyhRuKs2; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from localhost (unknown [167.220.233.27])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5F50920B7166;
-	Fri, 15 May 2026 05:38:27 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5F50920B7166
+	by linux.microsoft.com (Postfix) with ESMTPSA id 4BC4E20B7166;
+	Fri, 15 May 2026 06:58:06 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4BC4E20B7166
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1778848707;
-	bh=1OXr0xlN0CYrNFpGl0atHJ7aaaV0aDo3N3oIZvGVagY=;
+	s=default; t=1778853486;
+	bh=d1lGfXM5z8FUpJ6yBgaa5Pzq5ONXbZDPl9if6NBwHLE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WS/Zdg8AIi53513pxUnOp+s9InaN9MqXm8Ct+gGszuzww7WhyOeKAYEzmZFH5C4LC
-	 N4WtvrNmTKru+L4Wvy3/mrpRLUIzp7SXf695evqMQzpXzI0vKmUPA9CTnkBUTlDJm0
-	 b1d2IH7XXgyxFJYnqOG7QsvllXFywc14HtOV6AzY=
-Date: Fri, 15 May 2026 20:38:29 +0800
+	b=TyhRuKs23rya7RRQP5pT3RlKmAk8JcVGEHJM38meAmcZpOrdcO/odd51nDNZm7xPj
+	 AY2hbgxB//Ctudw4ebfc9FTV9Mol9AynhFT74ouFunsO5KMZ2BI+MnNG+j8Q2QKsg4
+	 GlcS1b19jhEdpq20CM6+si9kZvGS0W+G4MwxKGys=
+Date: Fri, 15 May 2026 21:58:08 +0800
 From: Yu Zhang <zhangyu1@linux.microsoft.com>
-To: Jacob Pan <jacob.pan@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-pci@vger.kernel.org, linux-arch@vger.kernel.org, 
-	wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com, 
-	longli@microsoft.com, joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, 
-	bhelgaas@google.com, kwilczynski@kernel.org, lpieralisi@kernel.org, mani@kernel.org, 
-	robh@kernel.org, arnd@arndb.de, jgg@ziepe.ca, mhklinux@outlook.com, 
-	tgopinath@linux.microsoft.com, easwar.hariharan@linux.microsoft.com
-Subject: Re: [PATCH v1 3/4] iommu/hyperv: Add para-virtualized IOMMU support
- for Hyper-V guest
-Message-ID: <af2mt3eqnadczs2u2psmsdevjhshsl3v6vamtnde2c44mjealc@3yon3hsi7idi>
-References: <20260511162408.1180069-1-zhangyu1@linux.microsoft.com>
- <20260511162408.1180069-4-zhangyu1@linux.microsoft.com>
- <20260513113952.00005b20@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Mukesh R <mrathor@linux.microsoft.com>, "hpa@zytor.com" <hpa@zytor.com>, 
+	"robin.murphy@arm.com" <robin.murphy@arm.com>, "robh@kernel.org" <robh@kernel.org>, 
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "muislam@microsoft.com" <muislam@microsoft.com>, 
+	"namjain@linux.microsoft.com" <namjain@linux.microsoft.com>, 
+	"magnuskulke@linux.microsoft.com" <magnuskulke@linux.microsoft.com>, "anbelski@linux.microsoft.com" <anbelski@linux.microsoft.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "kys@microsoft.com" <kys@microsoft.com>, 
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "decui@microsoft.com" <decui@microsoft.com>, 
+	"longli@microsoft.com" <longli@microsoft.com>, "tglx@kernel.org" <tglx@kernel.org>, 
+	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"joro@8bytes.org" <joro@8bytes.org>, "will@kernel.org" <will@kernel.org>, 
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>, 
+	"bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>
+Subject: Re: [PATCH V3 01/11] iommu/hyperv: Rename hyperv-iommu.c to
+ hyperv-irq.c
+Message-ID: <s4askzopk7hrst52m2pjaba677qwr6qgipgu57mjlaaqw7sn2n@44r43drjlmoz>
+References: <20260512020259.1678627-1-mrathor@linux.microsoft.com>
+ <20260512020259.1678627-2-mrathor@linux.microsoft.com>
+ <20260512164623.0000273f@linux.microsoft.com>
+ <SN6PR02MB4157371A1A3931F582F9A2E9D4062@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -68,179 +78,82 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260513113952.00005b20@linux.microsoft.com>
-X-Rspamd-Queue-Id: 0D5985500FD
+In-Reply-To: <SN6PR02MB4157371A1A3931F582F9A2E9D4062@SN6PR02MB4157.namprd02.prod.outlook.com>
+X-Rspamd-Queue-Id: A0285551032
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	MID_RHS_NOT_FQDN(0.50)[];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10912-lists,linux-hyperv=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.linux.dev,kernel.org,microsoft.com,8bytes.org,arm.com,google.com,arndb.de,ziepe.ca,outlook.com,linux.microsoft.com];
+	RCPT_COUNT_TWELVE(0.00)[31];
+	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-10913-lists,linux-hyperv=lfdr.de];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[outlook.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[zhangyu1@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
 	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:dkim]
 X-Rspamd-Action: no action
 
-[...]
-> > diff --git a/drivers/iommu/hyperv/Kconfig
-> > b/drivers/iommu/hyperv/Kconfig index 30f40d867036..9e658d5c9a77 100644
-> > --- a/drivers/iommu/hyperv/Kconfig
-> > +++ b/drivers/iommu/hyperv/Kconfig
-> > @@ -8,3 +8,20 @@ config HYPERV_IOMMU
-> >  	help
-> >  	  Stub IOMMU driver to handle IRQs to support Hyper-V Linux
-> >  	  guest and root partitions.
-> > +
-> > +if HYPERV_IOMMU
-> > +config HYPERV_PVIOMMU
-> > +	bool "Microsoft Hypervisor para-virtualized IOMMU support"
-> > +	depends on X86 && HYPERV
-> > +	select IOMMU_API
-> > +	select GENERIC_PT
-> > +	select IOMMU_PT
-> > +	select IOMMU_PT_X86_64
-> nit:
-> If HYPERV_PVIOMMU is enabled on a (hypothetical) platform with
-> GENERIC_ATOMIC64=y, the select would force-enable IOMMU_PT_X86_64 even
-> though its depends on is unsatisfied — leading to a build failure.
+On Wed, May 13, 2026 at 03:15:52AM +0000, Michael Kelley wrote:
+> From: Jacob Pan <jacob.pan@linux.microsoft.com> Sent: Tuesday, May 12, 2026 4:46 PM
+> > 
+> > Hi Mukesh,
+> > 
+> > On Mon, 11 May 2026 19:02:49 -0700
+> > Mukesh R <mrathor@linux.microsoft.com> wrote:
+> > 
+> > > This file actually implements irq remapping, so rename to more
+> > > appropriate hyperv-irq.c. A new file to implement hyperv iommu will
+> > > be introduced later.  Also, it should not be tied to HYPERV_IOMMU,
+> > > but to CONFIG_HYPERV and IRQ_REMAP. The file already has #ifdef
+> > > CONFIG_IRQ_REMAP.
+> > >
+> > > Reviewed-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> > > Signed-off-by: Mukesh R <mrathor@linux.microsoft.com>
+> > > ---
+> > >  MAINTAINERS                                    | 2 +-
+> > >  drivers/iommu/Makefile                         | 2 +-
+> > >  drivers/iommu/{hyperv-iommu.c => hyperv-irq.c} | 6 +++---
+> >
+> > Given that we have multiple Hyper-V IOMMU-related files — this renamed
+> > hyperv-irq.c, the existing hyperv-iommu code, iommu-root (this
+> > series) and the recently posted guest pvIOMMU driver — should we create
+> > a drivers/iommu/hyperv/ directory to consolidate them?
 > 
-> In practice this can't happen today because HYPERV_PVIOMMU already
-> depends on X86 && HYPERV, and x86 never sets GENERIC_ATOMIC64. But
-> adding the explicit guard is more defensive.
-> i.e.
->        depends on !GENERIC_ATOMIC64    # for cmpxchg64 in IOMMU_PT
+> Patch 1/4 in the guest pvIOMMU driver [1] that was recently posted by
+> Yu Zhang does as you suggest.
 > 
-
-Good point. Will add "depends on !GENERIC_ATOMIC64".
-
-[...]
-
-> > +
-> > +/*
-> > + * Look up the logical device ID for a vPCI device. Returns 0 on
-> > success
-> > + * with *logical_id filled in; -ENODEV if no entry registered for
-> > this
-> > + * device's vPCI bus.
-> > + */
-> > +static int hv_iommu_lookup_logical_dev_id(struct pci_dev *pdev, u64
-> > *logical_id) +{
-> > +	struct hv_pci_busdata *bus;
-> > +	int domain = pci_domain_nr(pdev->bus);
-> > +	int ret = -ENODEV;
-> > +
-> > +	spin_lock(&hv_iommu_pci_bus_lock);
-> this is called under local_irq_save, should use  raw_spinlock_t for RT
-> kernel?
+> Michael
+> 
+> [1] https://lore.kernel.org/linux-hyperv/20260511162408.1180069-1-zhangyu1@linux.microsoft.com/
 > 
 
-Yes, this is problematic on PREEMPT_RT. Michael also suggested hoisting
-the lookup before the local_irq_save() section instead of using a raw
-spinlock, which I think is a great idea - all 3 call sites (detach_dev,
-attach_dev, get_logical_device_property) will be changed.
+Maybe we can send a standalone patch and get it merged
+first (move it to drivers/iommu/hyperv/irq_remapping.c)?
 
-> > +	list_for_each_entry(bus, &hv_iommu_pci_bus_list, list) {
-> > +		if (bus->pci_domain_nr == domain) {
-> > +			*logical_id =
-> > (u64)bus->logical_dev_id_prefix |
-> > +				      PCI_FUNC(pdev->devfn);
-> > +			ret = 0;
-> > +			break;
-> > +		}
-> > +	}
-> > +	spin_unlock(&hv_iommu_pci_bus_lock);
-> > +	return ret;
-> > +}
-> > +
-
-[...]
-
-> > +static void hv_iommu_release_device(struct device *dev)
-> > +{
-> > +	struct hv_iommu_endpoint *vdev = dev_iommu_priv_get(dev);
-> > +	struct pci_dev *pdev = to_pci_dev(dev);
-> > +
-> > +	if (pdev->ats_enabled)
-> > +		pci_disable_ats(pdev);
-> > +
-> > +	dev_iommu_priv_set(dev, NULL);
-> > +	set_dma_ops(dev, NULL);
-> I don't think this is necessary.
-> 
-
-Oh, yes. Thanks!
-
-> > +
-> > +	kfree(vdev);
-> > +}
-> > +
-> > +static struct iommu_group *hv_iommu_device_group(struct device *dev)
-> > +{
-> > +	if (dev_is_pci(dev))
-> > +		return pci_device_group(dev);
-> > +	else
-> > +		return generic_device_group(dev);
-> non pci device already rejected during attach, maybe we should warn
-> here?
->         WARN_ON_ONCE(1);
->         return generic_device_group(dev);
-> 
-
-Good idea. Will add WARN_ON_ONCE(1).
-
-> > +}
-> > +
-> > +static int hv_configure_device_domain(struct hv_iommu_domain
-> > *hv_domain, u32 domain_type) +{
-> > +	u64 status;
-> > +	unsigned long flags;
-> > +	struct pt_iommu_x86_64_hw_info pt_info;
-> > +	struct hv_input_configure_device_domain *input;
-> > +
-> > +	local_irq_save(flags);
-> > +
-> > +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> > +	memset(input, 0, sizeof(*input));
-> > +	input->device_domain = hv_domain->device_domain;
-> > +	input->settings.flags.blocked = (domain_type ==
-> > IOMMU_DOMAIN_BLOCKED);
-> > +	input->settings.flags.translation_enabled = (domain_type !=
-> > IOMMU_DOMAIN_IDENTITY); +
-> Should this be:
-> input->settings.flags.translation_enabled =
->      (domain_type & __IOMMU_DOMAIN_PAGING);
-> Otherwise, blocked domain will have translation enabled. Maybe add some
-> explanation of what HV expects.
-> 
-I do agree this is not intuitive, but current hypervisor implementation
-requires "blocked == 1" to be paired with "translation_enabled = 1",
-otherwise it returns HV_STATUS_INVALID_PARAMETER. But I can add some
-comment at least.
-
-Thanks for the thorough review, Jacob!
+The rename itself is a meaningful cleanup regardless of
+either series, and in the future, both Mukesh and I can
+can then build on top of it without conflicts. :)
 
 B.R.
 Yu
-
-
 
