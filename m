@@ -1,79 +1,79 @@
-Return-Path: <linux-hyperv+bounces-10969-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10970-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0OQXOLN4B2pL4QIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10969-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 21:49:07 +0200
+	id 8FYmC7V4B2qL4wIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10970-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 21:49:09 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4656D5571A8
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 21:49:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CAF745571AF
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 21:49:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8A6C9302FAAC
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 19:48:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BBF2B303133F
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 19:48:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 095EE3859D3;
-	Fri, 15 May 2026 19:48:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91E1134251D;
+	Fri, 15 May 2026 19:48:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V8YVbpvx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lvtG0LVP"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072E830C618
-	for <linux-hyperv@vger.kernel.org>; Fri, 15 May 2026 19:48:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549BD33FE0A
+	for <linux-hyperv@vger.kernel.org>; Fri, 15 May 2026 19:48:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778874484; cv=none; b=liFnmAuogvlmY/cyg0UVySlcgOZ2AubdOpSm2XqZwvptTZdMx38P+ALP9fQcrvdxOCxzQjVHUrriudYroluU6l1XelBKE1r7TtU7IC4RYVfLcFMctSbhJM13NAUWcR+UCUfzUlhJZbxvSsUgb1+vNfVBqJSd/yK/vRDwyGu8gC0=
+	t=1778874486; cv=none; b=RNmh6L5/fQ4q5QVWatVd7FerGIdttqJ6oABL7+aTOFfgkJYTzeFOW0RCVqNzotfoU2vYJQuhvHqGAjgWP0XkMixZMDGLAI0vpsbbiVKxUonBDpWe/FEurOG5UIneHv1r0PZtGB8UGDZ8bzC+Hqh9I1c71DBvi+n3YOZCa9nliuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778874484; c=relaxed/simple;
-	bh=0QSUHS8m/mRg91U7jSuorHZ7kkONYCPuPv4941aXup0=;
+	s=arc-20240116; t=1778874486; c=relaxed/simple;
+	bh=m4KuxaRgH35yeK+fK2PB6dxW0Rl2mxcZnApC1n2PqaU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=HjyVVSBvgmxo2uqtTfcR/0V0erVTKVH0QMnRxtLLl8VqdDIbrAw0RbnVZFOp+AR+IVF412mu1d+kYpIUVGPOOIMTUnfN9DxNHF7l4pfYlziXHdKUoWUOThTZ4IA5rb/qi8ceRpbKj98zTzFd70dhIAbkgjK7Xx8Q/uo11mcqXwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V8YVbpvx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D898C2BCB0;
-	Fri, 15 May 2026 19:48:03 +0000 (UTC)
+	 Message-Id; b=aUibomEwcqGPR1dt6Bth5hXMathDuTmJMoZioOahABWzLqQp/b0iD2Q5D2pmrJK+vxFQxGzROsbgMuMCgNWUPMH/9TFjYPbiuX7roHu0EGrz0nsG5dUHRHzC30aitUg1guwfjAAt0d7V4ZzKMrs2QHcPJE7j4I7/SxZ1hpLMgYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lvtG0LVP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE30FC2BCB0;
+	Fri, 15 May 2026 19:48:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778874483;
-	bh=0QSUHS8m/mRg91U7jSuorHZ7kkONYCPuPv4941aXup0=;
+	s=k20201202; t=1778874484;
+	bh=m4KuxaRgH35yeK+fK2PB6dxW0Rl2mxcZnApC1n2PqaU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=V8YVbpvxWG6Ioj+LNW3sbzOni6ObrCLcmSiikFbSS3aNiG23G/SjK3GLjTnVfXm5+
-	 3Zqi0lOMBRSiAw5YQV+9C0D7XgqTtWYm04UQWU1dsA4LLpCEzBgGoxL3Vo9C2Yer7E
-	 EqthdLNZ3vBCztvKO2e7lvZu8uZaXdvrpI83FeH5l0l6+e6hQNulpdfol1kIcs9Nxt
-	 8ZLGBm0qQVlqrl5VbAnS8tFaKBCXEi9yd8yfvHYPr3b4iA5wgEwgenkU6AdxMNs2Q4
-	 CvJKgo2j4HXsnWq4HIKc7aruUPe+2KP6RnQvXzt2FFTkycZR+2TLsGFD/yMzZQdTyY
-	 1vP6TcMUWK7Dg==
+	b=lvtG0LVPoBInjVkhLbkDCVYm5sTTCtLmxA/1eHmkqe/m1Ql2YQHVqoO7xzN0NAxz2
+	 71gvEau5wg/dhFDVy6fCQE9O+xGSDKX+jPHUYKypEbtrbd1iy0stipZjzL6/Je1fd+
+	 PQfJsP9kOI21OjimD/Kaz5cbQn7iD9K+fonYfO4yH3RVFR5NKcx6Ypc/+mz32hiBFS
+	 Ke49BYu6JfZYeSw+uY2TT4n5VzKXNrVc7FuxFzHdaHdkvanm1CwDr3pk9Wd/kSrwwE
+	 WEb5hT+8O6yGuZRDd/rwp5Syzx1F04JivFrrkp6gVhsZEU8my8gYZK3QIIlC81Oe0I
+	 u18o/Zzd3dKPQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 15/41] x86/xen/time: Nullify x86_platform's
- sched_clock save/restore hooks
+Subject: Re: [PATCH v3 29/41] x86/paravirt: Plumb a return code into
+ __paravirt_set_sched_clock()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Sean Christopherson" <seanjc@google.com>
 Cc: linux-hyperv@vger.kernel.org
-In-Reply-To: <20260515191942.1892718-16-seanjc@google.com>
-References: <20260515191942.1892718-16-seanjc@google.com>
+In-Reply-To: <20260515191942.1892718-30-seanjc@google.com>
+References: <20260515191942.1892718-30-seanjc@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 15 May 2026 19:48:02 +0000
-Message-Id: <20260515194803.1D898C2BCB0@smtp.kernel.org>
+Date: Fri, 15 May 2026 19:48:04 +0000
+Message-Id: <20260515194804.AE30FC2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-X-Rspamd-Queue-Id: 4656D5571A8
+X-Rspamd-Queue-Id: CAF745571AF
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10969-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10970-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
 	RCPT_COUNT_TWO(0.00)[2];
@@ -99,65 +99,59 @@ X-Rspamd-Action: no action
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Setting `x86_platform.save_sched_clock_state` and `x86_platform.re=
-store_sched_clock_state` to NULL causes an unconditional NULL pointer deref=
-erence during suspend, hibernation, or kexec operations in Xen guests.
+- [High] kvm_sched_clock_read is registered as the system sched_clock befor=
+e its required offset (kvm_sched_clock_offset) is initialized.
 --
 
-commit 07d607146953d7a7f53a708d78545184418c340c
+commit b6e429e4990c00d845488d46e8dc4132f3a2fd8b
 Author: Sean Christopherson <seanjc@google.com>
-Subject: x86/xen/time: Nullify x86_platform's sched_clock save/restore hooks
+x86/paravirt: Plumb a return code into __paravirt_set_sched_clock()
 
-This commit nullifies the x86_platform sched_clock save/restore hooks when
-setting up Xen's PV clock. It aims to clarify that these common hooks are
-not used when running as a Xen guest.
+This commit adds a return code to __paravirt_set_sched_clock() to allow the
+kernel to reject attempts to use a PV sched_clock. It updates the caller
+in kvmclock to check the return value and abort initialization if needed.
 
-> diff --git a/arch/x86/xen/time.c b/arch/x86/xen/time.c
-> index 3d3165eef8214..21d366d01985e 100644
-> --- a/arch/x86/xen/time.c
-> +++ b/arch/x86/xen/time.c
-> @@ -568,6 +568,12 @@ static void __init xen_init_time_common(void)
->  	xen_sched_clock_offset =3D xen_clocksource_read();
->  	static_call_update(pv_steal_clock, xen_steal_clock);
->  	paravirt_set_sched_clock(xen_sched_clock);
-> +	/*
-> +	 * Xen has paravirtualized suspend/resume and so doesn't use the common
-> +	 * x86 sched_clock save/restore hooks.
-> +	 */
-> +	x86_platform.save_sched_clock_state =3D NULL;
-> +	x86_platform.restore_sched_clock_state =3D NULL;
-
-Does setting these hooks to NULL lead to an unconditional pointer dereferen=
-ce
-regression during suspend, hibernation, or kexec operations in Xen guests?
-
-Looking at save_processor_state() and __restore_processor_state() in
-arch/x86/power/cpu.c, the hooks are called directly without being checked
-for NULL first:
-
-arch/x86/power/cpu.c:save_processor_state() {
-	__save_processor_state(&saved_context);
-	x86_platform.save_sched_clock_state();
-}
-
-arch/x86/power/cpu.c:__restore_processor_state() {
-	...
-	do_fpu_end();
-	tsc_verify_tsc_adjust(true);
-	x86_platform.restore_sched_clock_state();
-	...
-}
-
-Will operations that trigger a generic CPU state save or restore on a Xen
-guest execute a call on these NULL pointers, causing a kernel panic
-regression? Should these instead be assigned to an empty stub function to
-safely bypass them?
-
+> diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
+> index d3bb281c0805d..9b3d1ed1a96dc 100644
+> --- a/arch/x86/kernel/kvmclock.c
+> +++ b/arch/x86/kernel/kvmclock.c
+[ ... ]
+> @@ -338,10 +338,12 @@ static int kvmclock_setup_percpu(unsigned int cpu)
 > =20
->  	tsc_register_calibration_routines(xen_tsc_khz, NULL);
->  	x86_platform.get_wallclock =3D xen_get_wallclock;
+>  static __init void kvm_sched_clock_init(bool stable)
+>  {
+> +	if (__paravirt_set_sched_clock(kvm_sched_clock_read, stable,
+> +				       kvm_save_sched_clock_state,
+> +				       kvm_restore_sched_clock_state))
+> +		return;
+> +
+>  	kvm_sched_clock_offset =3D kvm_clock_read();
+
+Could this cause a massive backward jump in system time if an NMI or early
+exception calls sched_clock() right after registration?
+
+__paravirt_set_sched_clock() uses static_call_update() to globally publish
+kvm_sched_clock_read() as the live system sched_clock. Since the
+initialization of kvm_sched_clock_offset is now delayed until after this
+registration completes, any early caller will execute kvm_sched_clock_read()
+with a zero offset, returning a huge absolute raw clock value.
+
+When the code resumes, it sets the offset to the current raw clock value.
+Subsequent sched_clock() calls will abruptly subtract this large offset,
+causing time to jump backwards and violating monotonic clock guarantees.
+
+Would it be safer to initialize kvm_sched_clock_offset before calling
+__paravirt_set_sched_clock(), since calculating the offset early has no
+side effects even if the registration is subsequently rejected?
+
+> -	__paravirt_set_sched_clock(kvm_sched_clock_read, stable,
+> -				   kvm_save_sched_clock_state,
+> -				   kvm_restore_sched_clock_state);
+>  	kvmclock_is_sched_clock =3D true;
+> =20
+>  	/*
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260515191942.1892=
-718-1-seanjc@google.com?part=3D15
+718-1-seanjc@google.com?part=3D29
 
