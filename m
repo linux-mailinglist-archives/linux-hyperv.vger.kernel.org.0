@@ -1,148 +1,246 @@
-Return-Path: <linux-hyperv+bounces-10909-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-10912-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QOneBrQbB2rnrgIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-10909-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 15:12:20 +0200
+	id WPcDKr0YB2rNrgIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-10912-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 14:59:41 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4234B550422
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 15:12:19 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D5985500FD
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 14:59:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id CDAED3051EEF
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 12:09:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0ABB430A33C0
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 May 2026 12:38:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 806413FE363;
-	Fri, 15 May 2026 12:09:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90EC044D01C;
+	Fri, 15 May 2026 12:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WS/Zdg8A"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33524477998
-	for <linux-hyperv@vger.kernel.org>; Fri, 15 May 2026 12:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A60038F95A;
+	Fri, 15 May 2026 12:38:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778846982; cv=none; b=WMj/MePjsFMGS8AER7fcW9iiGtCQe0zU9jZNn7fjlPgxW2YXTUT1vE9rZAQRKBSiFcOhUjrxQb+qs9FrvTadODCboL5HJtzihF5R1bVmN7wi4IVcN+TkWVciM2vhKIp5I/HcnWZmNfaquIMOiZvirpkhl2cH+6wsw7Cj+J8wqMM=
+	t=1778848713; cv=none; b=CqYKsJ+kr954R9yCe7tD2wNW4y8M30Uq+NVOQ+Rh3he5HxGUKwqhdb0vw63htS8A3x2cUhEBxt8sbD2eckfzmdc9m54ItUm8FhMVrjIVOrnxIGsijaZCiNjY6q7+iyf0Q4A+2dhO8RkP+JzTrmlVSYw7ksp0dxfjsiKVsVwrXOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778846982; c=relaxed/simple;
-	bh=kJ9KSuZ2jDdAiuT+D6uahLzHbzwO1HHxXQrB0F8zBDc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kDqJczmB7qlupbzIk4kYznAuuFpeGOYJPaeWdcj9hf0ukKCT+qGVByBuJivTznp8Qp5dwipvYBmlA+89JGhGivL1VejOZYSlVKW8lerCsBcU8qE/tjU/FzGSJ9IklvD2UUMarMEI0iq5tClLRHOT5XOm9w8GJ9UVT8VA0feGr30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id EE2B067094;
-	Fri, 15 May 2026 12:09:23 +0000 (UTC)
-Authentication-Results: smtp-out2.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 94970593A9;
-	Fri, 15 May 2026 12:09:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id EOEJI/MMB2rQFwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Fri, 15 May 2026 12:09:23 +0000
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: simona@ffwll.ch,
-	airlied@gmail.com,
-	mdaenzer@redhat.com,
-	pekka.paalanen@collabora.com,
-	jadahl@gmail.com,
-	contact@emersion.fr,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org
-Cc: amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-hyperv@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	spice-devel@lists.freedesktop.org,
-	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH 9/9] drm/vkms: Set DRM_VBLANK_FLAG_SIMULATED
-Date: Fri, 15 May 2026 13:55:14 +0200
-Message-ID: <20260515120916.333614-10-tzimmermann@suse.de>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260515120916.333614-1-tzimmermann@suse.de>
-References: <20260515120916.333614-1-tzimmermann@suse.de>
+	s=arc-20240116; t=1778848713; c=relaxed/simple;
+	bh=QkyGtymRwTBhyCo+ftYaceSh3xAwbb+WqGHKEO0jwkM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nZxjpuSDs27GTEpvKau1D773GslNvqWCGgPI1aYTZMl06zl8KvJdDk3cb46xFfOwAZmPFafdiUrpEnss89300CvmEejNsatSzz2/mo9MyvvYCCF2nNtraxUbYva+yxLGtIw0bdPxzCfA9NxuKjztWC5lWeRfxcjU/WpGVS7eeFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=WS/Zdg8A; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from localhost (unknown [167.220.233.27])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5F50920B7166;
+	Fri, 15 May 2026 05:38:27 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5F50920B7166
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1778848707;
+	bh=1OXr0xlN0CYrNFpGl0atHJ7aaaV0aDo3N3oIZvGVagY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WS/Zdg8AIi53513pxUnOp+s9InaN9MqXm8Ct+gGszuzww7WhyOeKAYEzmZFH5C4LC
+	 N4WtvrNmTKru+L4Wvy3/mrpRLUIzp7SXf695evqMQzpXzI0vKmUPA9CTnkBUTlDJm0
+	 b1d2IH7XXgyxFJYnqOG7QsvllXFywc14HtOV6AzY=
+Date: Fri, 15 May 2026 20:38:29 +0800
+From: Yu Zhang <zhangyu1@linux.microsoft.com>
+To: Jacob Pan <jacob.pan@linux.microsoft.com>
+Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-pci@vger.kernel.org, linux-arch@vger.kernel.org, 
+	wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com, 
+	longli@microsoft.com, joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, 
+	bhelgaas@google.com, kwilczynski@kernel.org, lpieralisi@kernel.org, mani@kernel.org, 
+	robh@kernel.org, arnd@arndb.de, jgg@ziepe.ca, mhklinux@outlook.com, 
+	tgopinath@linux.microsoft.com, easwar.hariharan@linux.microsoft.com
+Subject: Re: [PATCH v1 3/4] iommu/hyperv: Add para-virtualized IOMMU support
+ for Hyper-V guest
+Message-ID: <af2mt3eqnadczs2u2psmsdevjhshsl3v6vamtnde2c44mjealc@3yon3hsi7idi>
+References: <20260511162408.1180069-1-zhangyu1@linux.microsoft.com>
+ <20260511162408.1180069-4-zhangyu1@linux.microsoft.com>
+ <20260513113952.00005b20@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spam-Score: -4.00
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 4234B550422
+In-Reply-To: <20260513113952.00005b20@linux.microsoft.com>
+X-Rspamd-Queue-Id: 0D5985500FD
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.14 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[suse.de : SPF not aligned (relaxed), No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-10909-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10912-lists,linux-hyperv=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.linux.dev,kernel.org,microsoft.com,8bytes.org,arm.com,google.com,arndb.de,ziepe.ca,outlook.com,linux.microsoft.com];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[ffwll.ch,gmail.com,redhat.com,collabora.com,emersion.fr,linux.intel.com,kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[tzimmermann@suse.de,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCVD_COUNT_FIVE(0.00)[6];
-	R_DKIM_NA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[24];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[zhangyu1@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Action: no action
 
-Mark the vblank event on vkms as simulated, so that the WAIT_VBLANK
-ioctl fails with an error. The ioctl should not be supported because
-the output is not synchronized to a display refresh.
+[...]
+> > diff --git a/drivers/iommu/hyperv/Kconfig
+> > b/drivers/iommu/hyperv/Kconfig index 30f40d867036..9e658d5c9a77 100644
+> > --- a/drivers/iommu/hyperv/Kconfig
+> > +++ b/drivers/iommu/hyperv/Kconfig
+> > @@ -8,3 +8,20 @@ config HYPERV_IOMMU
+> >  	help
+> >  	  Stub IOMMU driver to handle IRQs to support Hyper-V Linux
+> >  	  guest and root partitions.
+> > +
+> > +if HYPERV_IOMMU
+> > +config HYPERV_PVIOMMU
+> > +	bool "Microsoft Hypervisor para-virtualized IOMMU support"
+> > +	depends on X86 && HYPERV
+> > +	select IOMMU_API
+> > +	select GENERIC_PT
+> > +	select IOMMU_PT
+> > +	select IOMMU_PT_X86_64
+> nit:
+> If HYPERV_PVIOMMU is enabled on a (hypothetical) platform with
+> GENERIC_ATOMIC64=y, the select would force-enable IOMMU_PT_X86_64 even
+> though its depends on is unsatisfied — leading to a build failure.
+> 
+> In practice this can't happen today because HYPERV_PVIOMMU already
+> depends on X86 && HYPERV, and x86 never sets GENERIC_ATOMIC64. But
+> adding the explicit guard is more defensive.
+> i.e.
+>        depends on !GENERIC_ATOMIC64    # for cmpxchg64 in IOMMU_PT
+> 
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
----
- drivers/gpu/drm/vkms/vkms_drv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Good point. Will add "depends on !GENERIC_ATOMIC64".
 
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-index 5a640b531d88..c4cfa1e5ab01 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.c
-+++ b/drivers/gpu/drm/vkms/vkms_drv.c
-@@ -192,8 +192,8 @@ int vkms_create(struct vkms_config *config)
- 		goto out_devres;
- 	}
- 
--	ret = drm_vblank_init(&vkms_device->drm,
--			      vkms_config_get_num_crtcs(config));
-+	ret = drmm_vblank_init(&vkms_device->drm, vkms_config_get_num_crtcs(config),
-+			       DRM_VBLANK_FLAG_SIMULATED);
- 	if (ret) {
- 		DRM_ERROR("Failed to vblank\n");
- 		goto out_devres;
--- 
-2.54.0
+[...]
+
+> > +
+> > +/*
+> > + * Look up the logical device ID for a vPCI device. Returns 0 on
+> > success
+> > + * with *logical_id filled in; -ENODEV if no entry registered for
+> > this
+> > + * device's vPCI bus.
+> > + */
+> > +static int hv_iommu_lookup_logical_dev_id(struct pci_dev *pdev, u64
+> > *logical_id) +{
+> > +	struct hv_pci_busdata *bus;
+> > +	int domain = pci_domain_nr(pdev->bus);
+> > +	int ret = -ENODEV;
+> > +
+> > +	spin_lock(&hv_iommu_pci_bus_lock);
+> this is called under local_irq_save, should use  raw_spinlock_t for RT
+> kernel?
+> 
+
+Yes, this is problematic on PREEMPT_RT. Michael also suggested hoisting
+the lookup before the local_irq_save() section instead of using a raw
+spinlock, which I think is a great idea - all 3 call sites (detach_dev,
+attach_dev, get_logical_device_property) will be changed.
+
+> > +	list_for_each_entry(bus, &hv_iommu_pci_bus_list, list) {
+> > +		if (bus->pci_domain_nr == domain) {
+> > +			*logical_id =
+> > (u64)bus->logical_dev_id_prefix |
+> > +				      PCI_FUNC(pdev->devfn);
+> > +			ret = 0;
+> > +			break;
+> > +		}
+> > +	}
+> > +	spin_unlock(&hv_iommu_pci_bus_lock);
+> > +	return ret;
+> > +}
+> > +
+
+[...]
+
+> > +static void hv_iommu_release_device(struct device *dev)
+> > +{
+> > +	struct hv_iommu_endpoint *vdev = dev_iommu_priv_get(dev);
+> > +	struct pci_dev *pdev = to_pci_dev(dev);
+> > +
+> > +	if (pdev->ats_enabled)
+> > +		pci_disable_ats(pdev);
+> > +
+> > +	dev_iommu_priv_set(dev, NULL);
+> > +	set_dma_ops(dev, NULL);
+> I don't think this is necessary.
+> 
+
+Oh, yes. Thanks!
+
+> > +
+> > +	kfree(vdev);
+> > +}
+> > +
+> > +static struct iommu_group *hv_iommu_device_group(struct device *dev)
+> > +{
+> > +	if (dev_is_pci(dev))
+> > +		return pci_device_group(dev);
+> > +	else
+> > +		return generic_device_group(dev);
+> non pci device already rejected during attach, maybe we should warn
+> here?
+>         WARN_ON_ONCE(1);
+>         return generic_device_group(dev);
+> 
+
+Good idea. Will add WARN_ON_ONCE(1).
+
+> > +}
+> > +
+> > +static int hv_configure_device_domain(struct hv_iommu_domain
+> > *hv_domain, u32 domain_type) +{
+> > +	u64 status;
+> > +	unsigned long flags;
+> > +	struct pt_iommu_x86_64_hw_info pt_info;
+> > +	struct hv_input_configure_device_domain *input;
+> > +
+> > +	local_irq_save(flags);
+> > +
+> > +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> > +	memset(input, 0, sizeof(*input));
+> > +	input->device_domain = hv_domain->device_domain;
+> > +	input->settings.flags.blocked = (domain_type ==
+> > IOMMU_DOMAIN_BLOCKED);
+> > +	input->settings.flags.translation_enabled = (domain_type !=
+> > IOMMU_DOMAIN_IDENTITY); +
+> Should this be:
+> input->settings.flags.translation_enabled =
+>      (domain_type & __IOMMU_DOMAIN_PAGING);
+> Otherwise, blocked domain will have translation enabled. Maybe add some
+> explanation of what HV expects.
+> 
+I do agree this is not intuitive, but current hypervisor implementation
+requires "blocked == 1" to be paired with "translation_enabled = 1",
+otherwise it returns HV_STATUS_INVALID_PARAMETER. But I can add some
+comment at least.
+
+Thanks for the thorough review, Jacob!
+
+B.R.
+Yu
+
 
 
