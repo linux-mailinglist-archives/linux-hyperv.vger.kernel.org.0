@@ -1,185 +1,209 @@
-Return-Path: <linux-hyperv+bounces-11016-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11017-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SIM8NCWQC2rhJQUAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11016-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 May 2026 00:18:13 +0200
+	id MHAPDxWbC2oDKAUAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11017-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 May 2026 01:04:53 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A392657460F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 May 2026 00:18:13 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93B16574DE3
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 May 2026 01:04:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 8A2C5301903B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 18 May 2026 22:18:12 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 45D9E300DDC9
+	for <lists+linux-hyperv@lfdr.de>; Mon, 18 May 2026 23:04:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E36E395DBE;
-	Mon, 18 May 2026 22:18:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C48BA405C5C;
+	Mon, 18 May 2026 23:04:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C/55yABW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eOK3HgD0"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DB038C421
-	for <linux-hyperv@vger.kernel.org>; Mon, 18 May 2026 22:18:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ACE119E819
+	for <linux-hyperv@vger.kernel.org>; Mon, 18 May 2026 23:04:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779142691; cv=none; b=JZOapqbBAfWZOA39DquI/MULveNorpoO0kcgPLy3GZuoZMX+FEafJHLrs/ULeo0t+Qh4cK8ca1f5E6NbTQGf7LytpOc1ldReIHSHvUGuniDwYslRFr6d1krrSTMjGql4nrNKu506mTDx2cB4yWvoh5ON2a+OCtDh0Y88fBPZHqM=
+	t=1779145490; cv=none; b=RT/gJRjS9OejJztadC8/WECIqr4HQ4ZiGB0eFQf4z6dLC4Z5sRgDJdTx3yfAYXnvkL3tfrBhNGymvKU4Kj01C1vmAMTQjOVbil43cTEPvPwwW1D1f9w6/AIXjq3M1wp6oYn6sxrlMbJjFNDEmIHgDHb+RLOzSjPGCFv5Nj/q2I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779142691; c=relaxed/simple;
-	bh=d38a//3QyE8FATQBxvy1992MNITy+ZsMH60ugHt1tIs=;
+	s=arc-20240116; t=1779145490; c=relaxed/simple;
+	bh=Hl8hT+E2KW+vDSL5bkB7oTZecn6JTP/4R7YfibREkfc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DXMXQ9qgXO88YXIb5tUJVcbjIkKXes3+HI2lwwIKpBgJBf1i/C9nO6YPPDVddmxZlkLo5hrlYTXfl48vsCHE2YrsP/3CQj9JptwzOQenEXv8iRMMzW0IjOsqvjl6hFvOUfIncFPm/UPxVjioDFYh6Gu7/6ov4ksp1gpxuUt3+DQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C/55yABW; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=Z8m3f+6cdmTKhqKYNzY8PP3gnelWpLVj/4zFUTEDxLzVqY90mC9qhzSuhy5Z+zPgKn4VXiVq+kJxFYxjOMN80QIj7Zs2Cz8QCr7P6L+MVzMRZbPDSFv9t66LqtDecyK0u2uiyKGOB/p8EO9x+PYwwFvLKsRxV+DaLRraXOpxZSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eOK3HgD0; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-8353df9bc7eso3909025b3a.2
-        for <linux-hyperv@vger.kernel.org>; Mon, 18 May 2026 15:18:10 -0700 (PDT)
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-836cfd84728so1362367b3a.0
+        for <linux-hyperv@vger.kernel.org>; Mon, 18 May 2026 16:04:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779142690; x=1779747490; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=r5JlOTR1piV9fHtSRwQQLLSwH+2VVdLHIVfygz0qDnE=;
-        b=C/55yABWeM8w72z9oWEclnTmcXKjXmBJD85yGYdMWMv0MAzD/mOG1TH/9vh65eqNyo
-         mZu0QMvOlVbNAy0SQHSFYxJ583jZ23sffNmJLzO7DARvIhHZOB5doBBZY4RczTx2oz6/
-         fYSldGxmLFTY88mypEja5P5oBE0h4AzhBbTs83AyV2cYi8HFV04chJbexGTxvqgXXB+D
-         8y4L5tDFovVJ89I4DEuTcfzotwYycSKtfkWe/OklqIUvz6Mz1Keo5yZRET2zBj/39yPI
-         knPa+0KjZUmy00fVS56IDW0da+Nj8/T3m42twSkNI7BB3qV7iNmWZhbxbK0VbAOGELHh
-         Aenw==
+        d=google.com; s=20251104; t=1779145487; x=1779750287; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w/S9c7rYAOiurLeGXWMtdOsnSNHXOh27sQ43Ph+EblY=;
+        b=eOK3HgD0f8+GTx3A2Kkdg57R8k5aDzmIrdJ+UOce9me/I2U71mCi6Q6X9odPAIV2bX
+         M/qHu3CT+vdXQsm40eGkwa34y582WNPEDH10HSWtw13CZCDEG/OqxILEKZ927B6+PjPG
+         QVfKiHiWhML0dhPezB4QC3Q6e9H4N4ic5c586aClCi1vX2Get6Y0by4inyPbOOSnIAsG
+         Orii7d2rwkCvOPQ6K4qbVobWWIynC/LSqcZP3+1KzvgixhVFdBBftGIlvfXQ7Imxctgd
+         B2a/wSGsTrqJNGakv6ZhT6f42jczBLpet5GBJIviKy3q4YjemygZBeHJcdxHuSalg+cq
+         4jLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779142690; x=1779747490;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=r5JlOTR1piV9fHtSRwQQLLSwH+2VVdLHIVfygz0qDnE=;
-        b=O36YQjgfmIkFnbOFC2VCeW5XcsRM2yabPkc61xA+7EBin5jHZOojR1po7XSmMhic8p
-         UjccfyFQHou5014mP0FpdBqlVXhpz6GTseEZiWWHDTSVLMAqLvoSN9zoplIi+Kv/Rokk
-         LBABzEaCFChbNYWIAQTUrvZWTW1wIsufXiFVmAjwhaijHryq0b8MElQTzbkAQ0JLmi4q
-         rjSZSGTxvG0nx1QEikF5zA58gfUy1hMZIetIEEHAdn7eP3iTc6YI1g+4zflUkGxCbz6Z
-         py1Lausv7PnnDIJuGtPigM7Mf6fBjL69UfLQHs4RAb0jG5Ygmmlv+dURCn4dS3/eLX29
-         OCNw==
-X-Gm-Message-State: AOJu0Yyv4oZOeDWsJ6qRhjQdPLIq4CgqwP3Xqp2PB8U6wpRSkHA1ZSvj
-	vpEGzy851tLYEAbUiJtzCjOsTPZkqNpe0IWtzWogOSFMHfYNNA4S/XSra2NikK4hjmiG7kmAuQm
-	Pb0TUTQ==
-X-Received: from pfob24.prod.google.com ([2002:aa7:8718:0:b0:83e:f637:eeed])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:244c:b0:83a:7516:5be0
- with SMTP id d2e1a72fcca58-83f33f3b5d3mr16454915b3a.50.1779142689463; Mon, 18
- May 2026 15:18:09 -0700 (PDT)
-Date: Mon, 18 May 2026 15:18:08 -0700
-In-Reply-To: <20260515194535.56B84C2BCB0@smtp.kernel.org>
+        d=1e100.net; s=20251104; t=1779145487; x=1779750287;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=w/S9c7rYAOiurLeGXWMtdOsnSNHXOh27sQ43Ph+EblY=;
+        b=RoEga8Cps4LAwQxaAeg5oXQiu4QIMpCC7f6dfZtyNgBkRsGhnCdKrBOn5jl/oHydmD
+         xLlEPP9PySwLdOCDw08bf5Beh5mnVp6iCQvi8FigL7dvYbV0FnVv0mzrvr2Fkygoo65a
+         ZIyDU9nRZfVdtrIyB/wqns79nzYiuysCx2g4vNSx5fh2sqq7hMf5HB1IfoQENOwwxnW8
+         xZbNxQnhVqH5TY5eapL99jzZJEV2FGPLcVIu9NQgbrfk0TgqKCYf5BNPGg5XCU91j+po
+         zEbPWwmtqCtqzO5tEJMLedQuep0Iu9i6FVQwOlXuYtNLZJ5RL5rYSAaq5rCmTxVJz7Um
+         ZtWw==
+X-Gm-Message-State: AOJu0Ywzdu8P5KpbvUaBc6xZ5J4ttQMLLmqpBVFwcvPnGtj6uEhdmUa0
+	Hfkr+T3cyq5QDHbVjmViiLZyEJZat+LfzAODIp6yeuKwiIh2MLJz/oxb0X3fEg95d4Pds0vfnhM
+	dpFxYUA==
+X-Received: from pfiy14.prod.google.com ([2002:a05:6a00:190e:b0:838:dc32:5349])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:a907:b0:835:447b:a2ac
+ with SMTP id d2e1a72fcca58-83f18d5b8f5mr18547579b3a.5.1779145487028; Mon, 18
+ May 2026 16:04:47 -0700 (PDT)
+Date: Mon, 18 May 2026 16:04:46 -0700
+In-Reply-To: <20260515194705.09AFDC2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260515191942.1892718-32-seanjc@google.com> <20260515194535.56B84C2BCB0@smtp.kernel.org>
-Message-ID: <aguQIJQYsarMScnl@google.com>
-Subject: Re: [PATCH v3 31/41] x86/tsc: Pass KNOWN_FREQ and RELIABLE as params
- to registration
+References: <20260515191942.1892718-28-seanjc@google.com> <20260515194705.09AFDC2BCB0@smtp.kernel.org>
+Message-ID: <agubDgwQGvoZ3SUx@google.com>
+Subject: Re: [PATCH v3 27/41] x86/kvmclock: Enable kvmclock on APs during
+ onlining if kvmclock isn't sched_clock
 From: Sean Christopherson <seanjc@google.com>
 To: sashiko-reviews@lists.linux.dev
-Cc: linux-hyperv@vger.kernel.org, Michael Kelley <mhklinux@outlook.com>
-Content-Type: text/plain; charset="us-ascii"
+Cc: linux-hyperv@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MV_CASE(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
 	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11016-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11017-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWO(0.00)[2];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,outlook.com];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[google.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[seanjc@google.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[google.com:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: A392657460F
+	MID_RHS_MATCH_FROM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,sashiko.dev:url]
+X-Rspamd-Queue-Id: 93B16574DE3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-+Michael (sashiko was quite stingy with its Cc list)
-
 On Fri, May 15, 2026, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] Hyper-V VMs with an invariant TSC but no frequency MSRs lose the X86_FEATURE_TSC_RELIABLE capability.
+> Thank you for your contribution! Sashiko AI review found 1 potential issu=
+e(s) to consider:
+> - [High] The logic to defer AP kvmclock registration to the CPUHP_AP_ONLI=
+NE_DYN state when it is not used as sched_clock is architecturally unsafe a=
+nd will break timekeeping.
 > --
-> 
-> commit 0c0fbc4f0451c30c0e87e0e3591ea4f487eff75c
+>=20
+> commit 88625772445f01c4397e3dfd4ee43222efd758cf
 > Author: Sean Christopherson <seanjc@google.com>
-> 
-> x86/tsc: Pass KNOWN_FREQ and RELIABLE as params to registration
-> 
-> This commit adds a tsc_properties parameter to the paravirtual TSC
-> calibration registration routine to consolidate feature flag tracking.
-> It updates various hypervisor initialization paths to pass combined flags
-> instead of manually setting the CPU capabilities.
-> 
-> > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-> > --- a/arch/x86/kernel/cpu/mshyperv.c
-> > +++ b/arch/x86/kernel/cpu/mshyperv.c
-> > @@ -516,8 +516,13 @@ static void __init ms_hyperv_init_platform(void)
-> >  
-> >  	if (ms_hyperv.features & HV_ACCESS_FREQUENCY_MSRS &&
-> >  	    ms_hyperv.misc_features & HV_FEATURE_FREQUENCY_MSRS_AVAILABLE) {
-> > -		tsc_register_calibration_routines(hv_get_tsc_khz, hv_get_tsc_khz);
-> > -		setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
-> > +		enum tsc_properties tsc_properties = TSC_FREQUENCY_KNOWN;
-> > +
-> > +		if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT)
-> > +			tsc_properties = TSC_FREQ_KNOWN_AND_RELIABLE;
-> > +
-> > +		tsc_register_calibration_routines(hv_get_tsc_khz, hv_get_tsc_khz,
-> > +						  tsc_properties);
-> >  	}
-> 
+>=20
+> x86/kvmclock: Enable kvmclock on APs during onlining if kvmclock isn't sc=
+hed_clock
+>=20
+> This commit prepares for making early_percpu_clock_init() a dedicated
+> sched_clock hook. It adds logic to enable kvmclock on APs during CPU onli=
+ne
+> if kvmclock is not used as sched_clock, and includes WARNs in the suspend
+> and resume paths.
+>=20
+> > diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
+> > index e7250d21c6721..d3bb281c0805d 100644
+> > --- a/arch/x86/kernel/kvmclock.c
+> > +++ b/arch/x86/kernel/kvmclock.c
 > [ ... ]
-> 
-> > @@ -629,7 +634,6 @@ static void __init ms_hyperv_init_platform(void)
-> >  		 * is called.
-> >  		 */
-> >  		wrmsrq(HV_X64_MSR_TSC_INVARIANT_CONTROL, HV_EXPOSE_INVARIANT_TSC);
-> > -		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
-> >  	}
-> 
-> If a Hyper-V VM exposes an invariant TSC but lacks the frequency MSRs,
-> does it bypass the tsc_register_calibration_routines() block entirely?
+> > @@ -141,25 +142,51 @@ static void kvm_restore_sched_clock_state(void)
+> [ ... ]
+> >  void kvmclock_cpu_action(enum kvm_guest_cpu_action action)
+> >  {
+> > -	/*
+> > -	 * Don't disable kvmclock on the BSP during suspend.  If kvmclock is
+> > -	 * being used for sched_clock, then it needs to be kept alive until t=
+he
+> > -	 * last minute, and restored as quickly as possible after resume.
+> > -	 */
+> > -	if (action !=3D KVM_GUEST_BSP_SUSPEND)
+> > +	switch (action) {
+> [ ... ]
+> > +	case KVM_GUEST_AP_ONLINE:
+> > +		/*
+> > +		 * Secondary CPUs use dedicated sched_clock hooks to enable
+> > +		 * kvmclock early during bringup, there's nothing to be done
+> > +		 * when during CPU online.
+> > +		 */
+> > +		if (kvmclock_is_sched_clock)
+> > +			break;
+> > +		kvm_register_clock("secondary cpu, online");
+> > +		break;
+>=20
+> Will deferring AP kvmclock registration to the CPU online phase break
+> timekeeping if kvmclock is still being used as the system clocksource?
+>=20
+> If the user boots with clocksource=3Dkvm-clock or if kvmclock is selected=
+ as a
+> fallback, it will be used as the clocksource despite not being sched_cloc=
+k.
+> The kvmclock clocksource read function accesses per-CPU memory that the
+> hypervisor only populates after the AP registers its clock.
+>=20
+> If early registration in start_secondary() is skipped, as anticipated her=
+e,
+> an AP will boot, enable local interrupts, and process timer ticks before
+> reaching the late CPUHP_AP_ONLINE_DYN hotplug state.
+>=20
+> Could a call to ktime_get() during this window read uninitialized per-CPU
+> memory and return 0? It seems this might cause the timekeeper to compute
+> massive forward time jumps, leading to immediate timer expirations and
+> watchdogs firing.
 
-Yes.
+Hrm, yes, that seems plausible.  Even if it's not actually possible in prac=
+tice,
+replacing x86_cpuinit.early_percpu_clock_init() with a dedicated
+paravirt_sched_clock_start_secondary() isn't obviously better, and so defin=
+itely
+isn't worth risking breakage, at least not in this series.
 
-> Without the standalone setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE) call
-> here, it looks like these VMs will lose the reliable flag.
-> 
-> Will this inadvertently enable the TSC watchdog, potentially causing a
-> performance regression if the system falsely marks the TSC as unstable due
-> to virtualization scheduling delays?
+I'll scrap most of this, but still plumb in AP_ONLINE and BSP_RESUME for
+documentation purposes.
 
-Hmm, I was going to say that the change was intentional and desriable, but looking
-at this yet again, I don't think that's true.  Enabling HV_EXPOSE_INVARIANT_TSC
-just means the kernel will (probably) set X86_FEATURE_CONSTANT_TSC and
-X86_FEATURE_NONSTOP_TSC during early_init_intel(), AFAICT it doesn't lead to
-X86_FEATURE_TSC_RELIABLE being set.  And I think in this case, marking the TSC
-as reliable makes sense; even if the kernel doesn't user Hyper-V's calibration
-info, the host is still clearly telling the guest that the TSC is reliable.
-
-Michael, does keeping the
-
-		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
-
-but also passing TSC_FREQ_KNOWN_AND_RELIABLE to the calibration routine make
-sense?
+> > +	case KVM_GUEST_AP_OFFLINE:
+> > +	case KVM_GUEST_SHUTDOWN:
+> >  		kvmclock_disable();
+> > +		break;
+> > +	default:
+> > +		WARN_ON_ONCE(1);
+> > +		break;
+> > +	}
+> >  }
+>=20
+> --=20
+> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260515191942.18=
+92718-1-seanjc@google.com?part=3D27
 
