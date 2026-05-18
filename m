@@ -1,47 +1,48 @@
-Return-Path: <linux-hyperv+bounces-11006-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11007-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mJqnIJNtC2rSHgUAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11006-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 18 May 2026 21:50:43 +0200
+	id +I/ANKhtC2rSHgUAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11007-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 18 May 2026 21:51:04 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D72C55731CC
-	for <lists+linux-hyperv@lfdr.de>; Mon, 18 May 2026 21:50:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F4375731E1
+	for <lists+linux-hyperv@lfdr.de>; Mon, 18 May 2026 21:51:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7C936304D5C9
-	for <lists+linux-hyperv@lfdr.de>; Mon, 18 May 2026 19:47:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F19353055D6A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 18 May 2026 19:47:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DD1F38D6B5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 479F6391828;
 	Mon, 18 May 2026 19:47:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CazOhGFW"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="C1wEeh2z"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA336346AC2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E44D3379979;
 	Mon, 18 May 2026 19:47:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779133641; cv=none; b=C3RlBUm4zScrsQDoVPZkKrYyS8E/zQ3gFtGnq+02gHCOLvsZ0BdvE7z/cVbviQfifaWLoajL5ld/YqKslxlLEMhshGjtUg6sx+aPdT6HVOjGta6Fi95/ETsP7JH1LLD9Usz2Z6LSzTxW6+KkxWvf1lnpwzQKMyBwdJI46zW48+g=
+	t=1779133642; cv=none; b=dUr2NFATKc+bUuJ3E87y/Si7KlltSvZyzX9mn9RQ4n+/s6io+/xrvAYG7hPPIVQuZIZ1Xrheav0Lz6L5XP+NUqhOC0b8cVct4N18wWtpKqfAz0We1BUo8kbSBp3RiiKh06L+dt9z6MQCKPSEExemIMR+9OOuYblZOm70NEs1oFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779133641; c=relaxed/simple;
-	bh=kxII/5G2NwPmXEG++FHPsH1/AEBqc9FKZzrBq4bibjc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=bdzeSFxRnCs81iwUQ8goUzEsX7eBa5qZ6DGlmBkqSpfC8zG1pE5ERfxLLYMd4aD20Kjb25+GJGk/YnDzJ0uG02SorsD8U/xrfMSMPkrULaeOqP9B8YWjL6+DdmVW6t8Iq+v2twqjOUnfRwpLWPTcdXp8lzA8NPrWH04stP6dJOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=CazOhGFW; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1779133642; c=relaxed/simple;
+	bh=3+uhNPAe90CZ/8i4LjeoXa8PXzSV6BEbybG8SQ2DHJA=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GLOloepadlV1Iam2iUqC+rXFecoN/S5zVVqfwr3t7pBr5s/IiB8KDcHaikS/Z0/JsQsd9UGaJUfPdG2oAP/DovbhVeC7ds0EysfRYKTcvJSLDFrHc3hhyDU/Rnm7SiR9OdZ3dBoTf+cXpEaO8qvFPG5NYS7qHrv6s6CuDqGlTRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=C1wEeh2z; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 7D3B220B7166;
+	by linux.microsoft.com (Postfix) with ESMTPSA id D3F3A20B7167;
 	Mon, 18 May 2026 12:47:14 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7D3B220B7166
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D3F3A20B7167
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1779133634;
-	bh=fyTfiydw4H8mIqzNYtreKgjRdnGF1qAhJXcvnEyTJws=;
-	h=From:To:Subject:Date:From;
-	b=CazOhGFWXaypq1pD5CFDrY/+iNmzm5o6PiJ7ox8jpZvJYqw84KJonnLZmSZeAVj7B
-	 OG+A/XbnmSewzH/pKJ4fyaobPtl3eFn+8C5IylCqk3sE2St7RMwOBjFDw/nhy3ECix
-	 KjWk/RWMBdg136Qmnfykz9wTjqd71RczCJH2lsJQ=
+	bh=VAImdNSenqd/MKvEKpeyBgJGXFRdv09o3V59MmstgwM=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=C1wEeh2z23wkcIbk2gpBZxhMpEqzUoGi4QXKAZDJoxIGwwJaHb9raxwChK8EOVcl6
+	 ZJ3VkssdrK5WCDVfw0Ix4BWwbdlHdlEmXfGoU955tdm846DI6KzkgPZxzmfHtvmG/H
+	 xz2Y5EThy4GiiIfJc+Wozd9emaNzW0dKIcqW8HMA=
 From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -76,10 +77,12 @@ To: kys@microsoft.com,
 	ast@kernel.org,
 	sdf@fomichev.me,
 	yury.norov@gmail.com
-Subject: [PATCH net 0/2] net: mana: Fix NULL dereferences during teardown after attach failure.
-Date: Mon, 18 May 2026 12:43:49 -0700
-Message-ID: <20260518194654.735580-1-dipayanroy@linux.microsoft.com>
+Subject: [PATCH net 1/2] net: mana: Add NULL guards in teardown path to prevent panic on attach failure
+Date: Mon, 18 May 2026 12:43:50 -0700
+Message-ID: <20260518194654.735580-2-dipayanroy@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.7
+In-Reply-To: <20260518194654.735580-1-dipayanroy@linux.microsoft.com>
+References: <20260518194654.735580-1-dipayanroy@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -101,7 +104,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,vger.kernel.org,networkplumber.org,intel.com,debian.org,gmail.com,iogearbox.net,fomichev.me];
-	TAGGED_FROM(0.00)[bounces-11006-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11007-lists,linux-hyperv=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -115,35 +118,142 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,linux.microsoft.com:mid,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: D72C55731CC
+X-Rspamd-Queue-Id: 2F4375731E1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-When mana_attach() fails (e.g. during queue allocation), the error
-cleanup frees apc->tx_qp and apc->rxqs and sets them to NULL. Multiple
-subsequent teardown paths can then dereference these NULL pointers,
-causing kernel panics.
+When queue allocation fails partway through, the error cleanup frees
+and NULLs apc->tx_qp and apc->rxqs. Multiple teardown paths such as
+mana_remove(), mana_change_mtu() recovery, and internal error handling
+in mana_alloc_queues() can subsequently call into functions that
+dereference these pointers without NULL checks:
 
-Patch 1 adds NULL guards in the low-level teardown functions
-(mana_fence_rqs, mana_destroy_vport, mana_dealloc_queues) so they are
-safe to call regardless of queue initialization state. This covers all
-callers: mana_remove(), mana_change_mtu() recovery, and internal error
-paths in mana_alloc_queues().
+- mana_chn_setxdp() dereferences apc->rxqs[0], causing a NULL pointer
+  dereference panic (CR2: 0000000000000000 at mana_chn_setxdp+0x26).
+- mana_destroy_vport() iterates apc->rxqs without a NULL check.
+- mana_fence_rqs() iterates apc->rxqs without a NULL check.
+- mana_dealloc_queues() iterates apc->tx_qp without a NULL check.
 
-Patch 2 addresses the queue reset work handler specifically, where an
-unconditional mana_detach() on an already-detached port caused
-redundant teardown. It checks netif_device_present() to skip the detach
-and directly retry mana_attach().
+Add NULL guards for apc->rxqs in mana_fence_rqs(),
+mana_destroy_vport(), and before the mana_chn_setxdp() call. Add a
+NULL guard for apc->tx_qp in mana_dealloc_queues() to skip TX queue
+draining when TX queues were never allocated or already freed.
 
-Dipayaan Roy (2):
-  net: mana: Add NULL guards in teardown path to prevent panic on attach
-    failure
-  net: mana: Skip redundant detach in queue reset handler if already
-    detached
+Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure Network Adapter (MANA)")
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+---
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 70 +++++++++++--------
+ 1 file changed, 41 insertions(+), 29 deletions(-)
 
- drivers/net/ethernet/microsoft/mana/mana_en.c | 77 ++++++++++++-------
- 1 file changed, 48 insertions(+), 29 deletions(-)
-
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 9afc786b297a..0582803907a8 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -1727,6 +1727,9 @@ static void mana_fence_rqs(struct mana_port_context *apc)
+ 	struct mana_rxq *rxq;
+ 	int err;
+ 
++	if (!apc->rxqs)
++		return;
++
+ 	for (rxq_idx = 0; rxq_idx < apc->num_queues; rxq_idx++) {
+ 		rxq = apc->rxqs[rxq_idx];
+ 		err = mana_fence_rq(apc, rxq);
+@@ -2858,13 +2861,16 @@ static void mana_destroy_vport(struct mana_port_context *apc)
+ 	struct mana_rxq *rxq;
+ 	u32 rxq_idx;
+ 
+-	for (rxq_idx = 0; rxq_idx < apc->num_queues; rxq_idx++) {
+-		rxq = apc->rxqs[rxq_idx];
+-		if (!rxq)
+-			continue;
++	if (apc->rxqs) {
+ 
+-		mana_destroy_rxq(apc, rxq, true);
+-		apc->rxqs[rxq_idx] = NULL;
++		for (rxq_idx = 0; rxq_idx < apc->num_queues; rxq_idx++) {
++			rxq = apc->rxqs[rxq_idx];
++			if (!rxq)
++				continue;
++
++			mana_destroy_rxq(apc, rxq, true);
++			apc->rxqs[rxq_idx] = NULL;
++		}
+ 	}
+ 
+ 	mana_destroy_txq(apc);
+@@ -3269,7 +3275,8 @@ static int mana_dealloc_queues(struct net_device *ndev)
+ 	if (apc->port_is_up)
+ 		return -EINVAL;
+ 
+-	mana_chn_setxdp(apc, NULL);
++	if (apc->rxqs)
++		mana_chn_setxdp(apc, NULL);
+ 
+ 	if (gd->gdma_context->is_pf && !apc->ac->bm_hostmode)
+ 		mana_pf_deregister_filter(apc);
+@@ -3287,33 +3294,38 @@ static int mana_dealloc_queues(struct net_device *ndev)
+ 	 * number of queues.
+ 	 */
+ 
+-	for (i = 0; i < apc->num_queues; i++) {
+-		txq = &apc->tx_qp[i].txq;
+-		tsleep = 1000;
+-		while (atomic_read(&txq->pending_sends) > 0 &&
+-		       time_before(jiffies, timeout)) {
+-			usleep_range(tsleep, tsleep + 1000);
+-			tsleep <<= 1;
+-		}
+-		if (atomic_read(&txq->pending_sends)) {
+-			err = pcie_flr(to_pci_dev(gd->gdma_context->dev));
+-			if (err) {
+-				netdev_err(ndev, "flr failed %d with %d pkts pending in txq %u\n",
+-					   err, atomic_read(&txq->pending_sends),
+-					   txq->gdma_txq_id);
++	if (apc->tx_qp) {
++		for (i = 0; i < apc->num_queues; i++) {
++			txq = &apc->tx_qp[i].txq;
++			tsleep = 1000;
++			while (atomic_read(&txq->pending_sends) > 0 &&
++			       time_before(jiffies, timeout)) {
++				usleep_range(tsleep, tsleep + 1000);
++				tsleep <<= 1;
++			}
++			if (atomic_read(&txq->pending_sends)) {
++				err =
++				    pcie_flr(to_pci_dev(gd->gdma_context->dev));
++				if (err) {
++					netdev_err(ndev, "flr failed %d with %d pkts pending in txq %u\n",
++						   err,
++					    atomic_read(&txq->pending_sends),
++					    txq->gdma_txq_id);
++				}
++				break;
+ 			}
+-			break;
+ 		}
+-	}
+ 
+-	for (i = 0; i < apc->num_queues; i++) {
+-		txq = &apc->tx_qp[i].txq;
+-		while ((skb = skb_dequeue(&txq->pending_skbs))) {
+-			mana_unmap_skb(skb, apc);
+-			dev_kfree_skb_any(skb);
++		for (i = 0; i < apc->num_queues; i++) {
++			txq = &apc->tx_qp[i].txq;
++			while ((skb = skb_dequeue(&txq->pending_skbs))) {
++				mana_unmap_skb(skb, apc);
++				dev_kfree_skb_any(skb);
++			}
++			atomic_set(&txq->pending_sends, 0);
+ 		}
+-		atomic_set(&txq->pending_sends, 0);
+ 	}
++
+ 	/* We're 100% sure the queues can no longer be woken up, because
+ 	 * we're sure now mana_poll_tx_cq() can't be running.
+ 	 */
 -- 
 2.43.0
 
