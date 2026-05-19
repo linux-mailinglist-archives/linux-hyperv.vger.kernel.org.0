@@ -1,308 +1,299 @@
-Return-Path: <linux-hyperv+bounces-11018-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11019-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IAZFNfyiC2ooKQUAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11018-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 May 2026 01:38:36 +0200
+	id MH/NIznVC2qaOgUAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11019-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 May 2026 05:12:57 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F363F575029
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 May 2026 01:38:35 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 110BC576B97
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 May 2026 05:12:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 297793011C74
-	for <lists+linux-hyperv@lfdr.de>; Mon, 18 May 2026 23:38:34 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 0CFA43030D2F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 May 2026 03:12:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B2CF330B01;
-	Mon, 18 May 2026 23:38:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ABCA30FF1D;
+	Tue, 19 May 2026 03:12:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dtdG+4Gd"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ov3M5S5I"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazolkn19012013.outbound.protection.outlook.com [52.103.14.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA8E1FECBA;
-	Mon, 18 May 2026 23:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779147513; cv=none; b=HOkOSkqXiytCL3WkcAxtEQ60LtNDxgr6+HxXqIZyimAxA1vjvFWvUFD/HLyIKqSIR/kUF5pOpc+s78An93xT0EZnMS4BBRHRZoVsXFuQ9V+ttACxO5iEDNklNr9e840hZ1ile5Aj8UWpYmsxlnq2LjHnHd1WPRBTAqoP6ddHTKw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779147513; c=relaxed/simple;
-	bh=oZTBIv6DjwNQxJeiHEryMa9RGCq8Gn3patE+N4RfHSM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Rg/Q8aMDKWdT//pO9T0woVppSLPXyERlV7VqCVsqlVJIXBbieWgInOZEPjzoTFDE7D6GSffRgsHj6orf2S9l8rRronZc51jj3wEu3KQ4h1VkxoC/jgqXstuPWbqSTkmqJ6nnD0WmtJYc75dt4vkOG5O1qIwVeRhmBbVz1J5ewOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dtdG+4Gd; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ybRa/FKcrPbhXiFoMzbhw3eRNrNHkp49lvJnD4jyFgA=; b=dtdG+4Gdeg84QaH+8VNriJYoBT
-	WyboTRG7NvCI0iX/6Bh8KJOFRRhm3RzTgBjF+Md6KFnV5ODJhXyUBICKCBGFZZbW+f5VOiOihaK4p
-	Dx48fZ9qPlQhHdU4VhwMXWSngojfty/OM4XQ31H/+/VLzJp4RPfaQB5G9e9xzqnJj8txjasWjfdBu
-	vqtGwP+FW1dxS+GwNI76wn9utdQyT8VMRMsIkA5+LOKG5EYz0lTId0nHb9QuQigjq1WzcPHfGLWg/
-	7iT5QG4j5VP7zfEZprEQRdrxpJd2Y4/MKHfxTYHCUbiPvEozcoXvsnsTgh9gDubohNxpI3LjyPeju
-	IroO6uTQ==;
-Received: from 54-240-197-225.amazon.com ([54.240.197.225] helo=u09cd745991455d.ant.amazon.com)
-	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wP7XL-00000005GUS-2sDo;
-	Mon, 18 May 2026 23:38:15 +0000
-Message-ID: <7260682b21c28d1299e58400b9a2f4b8d23bd434.camel@infradead.org>
-Subject: Re: [PATCH v3 00/41] x86: Try to wrangle PV clocks vs. TSC
-From: David Woodhouse <dwmw2@infradead.org>
-To: Sean Christopherson <seanjc@google.com>, Kiryl Shutsemau
- <kas@kernel.org>,  Paolo Bonzini <pbonzini@redhat.com>, "K. Y. Srinivasan"
- <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
- <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Long Li
- <longli@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, Alexey
- Makhalov <alexey.makhalov@broadcom.com>,  Jan Kiszka
- <jan.kiszka@siemens.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy
- Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Juergen Gross <jgross@suse.com>, Daniel Lezcano
- <daniel.lezcano@kernel.org>, Thomas Gleixner <tglx@kernel.org>, John Stultz
- <jstultz@google.com>
-Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>, Vitaly Kuznetsov
- <vkuznets@redhat.com>, Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Stephen Boyd <sboyd@kernel.org>,
- x86@kernel.org,  linux-coco@lists.linux.dev, kvm@vger.kernel.org,
- linux-hyperv@vger.kernel.org,  virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org,  xen-devel@lists.xenproject.org, Michael
- Kelley <mhklinux@outlook.com>, Tom Lendacky <thomas.lendacky@amd.com>,
- Nikunj A Dadhania <nikunj@amd.com>, Thomas Gleixner <tglx@linutronix.de>
-Date: Tue, 19 May 2026 00:38:13 +0100
-In-Reply-To: <20260515191942.1892718-1-seanjc@google.com>
-References: <20260515191942.1892718-1-seanjc@google.com>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-sVYMF3zPsR6TVbl8qGQi"
-User-Agent: Evolution 3.52.3-0ubuntu1.1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E267332EDE
+	for <linux-hyperv@vger.kernel.org>; Tue, 19 May 2026 03:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.14.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779160374; cv=fail; b=KsOMUnt1VdTCDd/BRrnZJKa0VPFxyDvP8A6vF/13EI1Mwddl3mVDIRRDChENJ9GwoLknB+Sagdg2MMubTanWJSR8Q08/XJPbauaFLOiOMnhqh4SW2/bRMg3sS2BveoOkMc2TDJDpnEDXPt/Yp+d+gY4jnu7db/foe7RD8ipvsqM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779160374; c=relaxed/simple;
+	bh=MetAT3isqrW0oMoMRao1TKRda5Ja7NSRB1e4e2ptCOE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Lg/cjlBNwviavNzJRwZEU1cqwkC4LlCuwJbhqbwp0wocI98zhaB1MFNBQB72/pidnSchNdjUOnBJ/bazFlyC0baQDf3fr+gMOh+wKohaO/5zRhMBXCYcJlT7uMq09khRjW07LCx77qNyoiV4GykjeTwW6JrA0XLur1SM8CGFkio=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ov3M5S5I; arc=fail smtp.client-ip=52.103.14.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=f2eLAiYMuB6NlmbO2j9hKqw+nJKOHZ0BQcocFhOo7tXdNX6Zs+QkJ6AaFdeDROuuFA8QCpzR8murXWNL46g18J2Dv0l7JkVq8cs3cRsp3aJh/a1DFZCiyiEUeIlESBikftd7HpRNsQ2+vIGUHgqu/i0rsOeuGyyRNbPV+wRRjFl2mfVeVWRzxeLI2Rczfes16JpvfxZw6Rgn9NS61isO9vABNtVQt1/tonsZbZ3tCZUxivODZ6qpVdHRYGTfN79s5rLHAwojgR6YdKPjhTtb7voL4fjV81loG7Tef/hSiFNOmOLaJYwpgOooS+aNru0r6QhNzlnATd+zfOGnm/Hdrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hjJfkWxvnJV7pvJVm56z2jMLgFj5ensFy5uZxM8pbi4=;
+ b=kaV6IfZ11XeASUFG10XbpMhYAnj9hBulQgRKZ7cw3slxDOeLaU9xx8bfwF3stSUZm56OIp9pFxKueuKYAhxftQjwrlMi/i1WQHJ4gCGCxA04U8t9AgCDPlxy+hWAlJq6y6SKFpMF2Aby5XpR8D7cOiSqX7zp6x/s7lQyOLisO1wKXnKkW6wnUOhjcIEfyXOMSceII3saaCsl/EoP9dcqWSW131wgVjsfOfPjjfj9d/fe4BsGdH4/B1NAFroBnSAJdd/cjsB6faEBVOouRvCxcumdn9/MUeERwow/KjREVDuBNJ704UMkG0HIGFeB2q7pvy4MPau69nJh6mEsXzfxVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hjJfkWxvnJV7pvJVm56z2jMLgFj5ensFy5uZxM8pbi4=;
+ b=ov3M5S5IOLZKAhMQvHHPfyYC79kEP9Ay/qg2nYKLJ+9drEQ7NMeGdhxmhPozsgQaTCOsFBL2xlqa4U5d87AdfaQ+OJw0ypuQBUJJsRpTRRYGHwl0XEX5hReCnwrdUAHqkrcnSVOKwa/fukP06TuyeM28arzj7GkDPteOE/Idnga91Gk0eES3EIe40pcRjBpVlzhBjKxXIdnoUf78pdwgS5+9qN8jAyMaNKcZhDzFD4CD36Tc6XjJdEorjhpmi9pYw55nCtEYnTSWXm2H/6xJJnDZu6Mry7O6EWOLjasvavP3cAp0Z+G/cCiWQH3UQeRVwJkHyjP1tk6V00orAkDcxA==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by DS0PR02MB9245.namprd02.prod.outlook.com (2603:10b6:8:131::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.17; Tue, 19 May
+ 2026 03:12:50 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6%5]) with mapi id 15.21.0025.022; Tue, 19 May 2026
+ 03:12:50 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Sean Christopherson <seanjc@google.com>, "sashiko-reviews@lists.linux.dev"
+	<sashiko-reviews@lists.linux.dev>
+CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: RE: [PATCH v3 31/41] x86/tsc: Pass KNOWN_FREQ and RELIABLE as params
+ to registration
+Thread-Topic: [PATCH v3 31/41] x86/tsc: Pass KNOWN_FREQ and RELIABLE as params
+ to registration
+Thread-Index: AQHc5J/+S6zzZLK3PkGQwXsR4aATVbYUXy+BgABF6OA=
+Date: Tue, 19 May 2026 03:12:50 +0000
+Message-ID:
+ <SN6PR02MB4157D50A944A2794475E32FED4002@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20260515191942.1892718-32-seanjc@google.com>
+ <20260515194535.56B84C2BCB0@smtp.kernel.org> <aguQIJQYsarMScnl@google.com>
+In-Reply-To: <aguQIJQYsarMScnl@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|DS0PR02MB9245:EE_
+x-ms-office365-filtering-correlation-id: 94419396-2637-4b4b-e87d-08deb554828c
+x-ms-exchange-slblob-mailprops:
+ ZILSnhm0P3nNOD8SPijBf0RiyXdupYBk9D/1og6rDnXE2hYTzymXoFwrpMavoO9zCkgFjsFD6XVSODi7GIgfX4b8N9EjDeLbji98Zkd/vCAZfc3H/s6skROIV6EKovGYZ2G7Q3VQzcH0Xe6/8uHBbSH1IdSrunLV6F5HX0Z59nd0icYz0xSbRofl/uoo7oZ6+sk75LHmz2tBTnketDvb+1TtAMxhI+OZbc8+dne00R1mM0NGifauA2NmJQmqGjtDmpAOr7YP4655xkdugsM6jDvhgCWURJDnjGUWheF+VoocACTErjgeBtimwzs6lG0ZtGZjPUm0WeZJyvPvCot2DeSSdVBMVp7hWAUebFQNLncp79PiJ0fa7rD6byr1NrJzQ2hIm7xQ7XwHL5Sdeat/fVtpVgVO8eOW5X1Vdkg+lG8nBzWA1DVxIb5C6vOxGCBLtoCmFPuzBtWBAf6LR0twVQiM/euCeqeVUUj55+Tw4vzd/kYqPGgJNCNtsukX2+5fih6WiN4qUEz53/WXHZ40WXQzbJhEQfpZiWF1KiiNGQm9v0ajUdDOf6sdccIM8NEaKLMFddUL7Fc0YRExPp+a2FFRKjQn9asaqqgq2skf/KQWMb267OsR9EoUVNfD5dlYklkg3GhWT+LUEbaoQtdVvGCPdommmdjuVl24sV7l3O/KhXEvTUWHXBx6W6nfo2JX35Yu4DL9J+k62PvncxNnsiCkOOd2v/0y4LDgJDItSVCNqdHMluUn1O1aDjmEliwlQbkSXmKB3zMozOSQZFRfRtHbkchm6BKX
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|55001999006|8062599012|31061999003|41001999006|37011999003|8060799015|13091999003|19110799012|15080799012|19101099003|19061999003|52005399003|40105399003|440099028|3412199025|102099032;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?eP6T4wOwdDbd6bM21UnnSU3nHFIWaEmy4biHnmI+Q+HoEi5Y0hxnbK9VfOlT?=
+ =?us-ascii?Q?ugxWwNN84VGwRxaF4B+Mhup8ThRz05hWHo/qJ8seGLzUN/Pdqu3iwEcbo6Nz?=
+ =?us-ascii?Q?00dQSSYVSqWnmZ+PTvsfMVDGJMX6OL8HZDuyQqWwjRhWX+tolWJEPkW3kmvp?=
+ =?us-ascii?Q?mhoBYOml0jD+CxsMNWxb27Wb0sKqzYMkVZzJrDt/ZXU2avzGWOzjNlPXU8OD?=
+ =?us-ascii?Q?89LXPbFlEPaLoppmJ+nlWxTfQEr4yMHSR92fIqZz9SUCwPmNCwymSIW86RUN?=
+ =?us-ascii?Q?+f5eIY/LOQCw5hZWZFv8UyNqQ5wZEAlfR+qLQy6wbRNmtRtwPL35axb26OrD?=
+ =?us-ascii?Q?wP4mZtuh6WuDgijHsgIYVyFdcGxXulOetuUud3A7j6MccSDQsVy7cI3JLWWV?=
+ =?us-ascii?Q?ID827UGpZqF5pofIrZES516UhRhac7kk9+D9EcIyNyT4r5nSyzh16NB+UgYL?=
+ =?us-ascii?Q?He5dlJyWIoPlFpXSyQqbj1TEPbioP2N38CxO78M9cAEEr0B1M4/vYtDLhtrP?=
+ =?us-ascii?Q?yZ9V5xaXXQq31XwJSBV3b5KubHAdN8ex5T9+bUj+7XEhYR5fa5m54qCKbuUO?=
+ =?us-ascii?Q?QPFx2NjOje/hgkbkRWELMKpv0OTTjoDoIz2WoB/MFeplL1hJboXo1dC+rQPs?=
+ =?us-ascii?Q?drDcLB9kEbCPMQ61RakGgN/gx3K3pK52GxJB+PoOad+EsLOffkDwXT5ugpWj?=
+ =?us-ascii?Q?rdEtricg5aBoI8yHghKqNst05pyLd3B7eaR25d7Twra6Jz8H+AEm8yxHT/ST?=
+ =?us-ascii?Q?iABVtTIbuciwilyaA/rSjPgB2FCIhBl41YuAyzXX0N+8M/cAisU7ble5++j4?=
+ =?us-ascii?Q?BX7qEyyaRNaGGG3adamLAsQcny8kWaX/IB6f+OJdCHd1DUKGryDqtSg7o0Gs?=
+ =?us-ascii?Q?eAq9bu915i2W+h9XmHXXag44awtAYJr4uCt88oV3kkVom5/D8iDzVJK9nDO2?=
+ =?us-ascii?Q?HD24sNICPFi+0MK+ThWFR8PDCJvGsyYAG6kx1i10aEkzTPCCqtngCBvNESWA?=
+ =?us-ascii?Q?64OTde/0Z2tz37hQlKS07frPwZDYHlPE2ZRB2w7YjBeCePiDck6q1cJxNoXg?=
+ =?us-ascii?Q?Vk3PsmI2y6JtuoXzrZzJlY73KV/RUmnOt149VKfBqgp5AR6FNrY=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?089zRRTqUwBw67hYGvH/7sIxtHr1d3zhRm9j0fM8oN7ZDwZDWL7bDBAWncCA?=
+ =?us-ascii?Q?r/GeV8XnysSdhzJZPJ72wEprq39zx2A+Ad4S5tHAFyF7zaP52Xm2QxfdZnWy?=
+ =?us-ascii?Q?ng1xYL6l05xTQSl5ffLtsQnRSVRUWrZksclm802BJwb/KbhtFX2HeCjvzoj5?=
+ =?us-ascii?Q?T9NEu863cht1p+GCzUb39lpgnFXy0up1Y8cDt8MiU6uyJzEg567+dHinPihe?=
+ =?us-ascii?Q?KhUXSM20XS6qs71srWo6lMVdV3QKHeBHIV9QNir0nWGJ+OqzG946R0tTub3I?=
+ =?us-ascii?Q?FkNFHNau6kyhU+Hc76AGuj8PVTmppkmN0xeLsXxJ7WFZi95FpnSkxpD5zXnH?=
+ =?us-ascii?Q?qJ3Ota6Q7tGhZbqqRuSFSQexPRyaUGZ1jzeQlTOKdtXsAOSDcO/etLsFYdVQ?=
+ =?us-ascii?Q?jZ7kN3w1cMBFrftdg5L6afZVn9UELxzDw7cHUcc4Sjp++I6idI90BdpFDMbZ?=
+ =?us-ascii?Q?apF5VPJAzZ8INWz+Gn17yK9JFJIvxEqDmq2WTc0PnW8AevdHe2mXxXHZk5of?=
+ =?us-ascii?Q?nfrf/z5Gqz8SkEYel3DMnUfSotvredV1n7jqh2KH/B5IhcFb0fxhJt5I2HM/?=
+ =?us-ascii?Q?PEmbkNlFpG3Qsw/t3DdOisStBMp6vNpYb+fsmd2bD+jGyVqKs71Ak/Qst4Ib?=
+ =?us-ascii?Q?9fTjozxOeWzJ+Z/NuosgPhNysPAbSUAaD1VSjcaeOx0wMNWU+T5JgzXImvDr?=
+ =?us-ascii?Q?ZebHZ00JD+jB4Kti74Qhhg7KQO5eRVg6tffaDjitL7TcEyBzifYs0pq4zetQ?=
+ =?us-ascii?Q?aIJmA5iZ2MTV2l5mx5UEIy0LRmMMR2pUrtwvaxPSprQDpg0ydIQ8p9a7zfn6?=
+ =?us-ascii?Q?xe5egMmMyczKfbHmfSyEoFvFBwZaDYAUTGRMryMWm3LuCDyhIjghwJ75C88M?=
+ =?us-ascii?Q?NkHDA5OA5M4DBUNIBcxlhtbDOVsczDA32DwHEXWBp2ItpKJxujLiOo7IA7ST?=
+ =?us-ascii?Q?BaepX0BpCLh4uI7zVbjG/boBMRqGVTbR2WeZyVYqMZtYqRODF2V8kFT3Tv0U?=
+ =?us-ascii?Q?Z9w9iknAzqatDlWskqHOjFHM2nd0KAnB3fqyYbeP1Ejm4sePEP8BlZnOaMe2?=
+ =?us-ascii?Q?fISvdhHVFPBD6mPoaTV5hOxDYWfmk/dheceDX8rpUU62Rs8isLw5GbLGByKK?=
+ =?us-ascii?Q?+2XsKo/kOCgHtsRWmWJ6Hk4RgdbOfgLhh4AsQKsY75TqVkEhotE/UWP+ELPZ?=
+ =?us-ascii?Q?7VOViiq2MF1k7FOyh93LKK84pGeloxBYNhLEuzrddlOLoQ4qB2uhJlfsYLM8?=
+ =?us-ascii?Q?CzfrD6vrZN27iYJC/yMv856qaM1YwG970GSA94LG9hnTIe+hD5S+BSPLGZc0?=
+ =?us-ascii?Q?RWNfRKtQBQ7SHpnFw4YnunyOjPKPlTEtuaAHo0E7d2bp8ilE7j6HWB4GPkXt?=
+ =?us-ascii?Q?nOfpyjw=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
-X-Spamd-Result: default: False [-4.26 / 15.00];
-	SIGNED_SMIME(-2.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
-	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 94419396-2637-4b4b-e87d-08deb554828c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 May 2026 03:12:50.4519
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR02MB9245
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	TAGGED_FROM(0.00)[bounces-11018-lists,linux-hyperv=lfdr.de];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[34];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[infradead.org:+];
-	HAS_ATTACHMENT(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dwmw2@infradead.org,linux-hyperv@vger.kernel.org];
-	FREEMAIL_CC(0.00)[intel.com,redhat.com,broadcom.com,oracle.com,kernel.org,lists.linux.dev,vger.kernel.org,lists.xenproject.org,outlook.com,amd.com,linutronix.de];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11019-lists,linux-hyperv=lfdr.de];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,infradead.org:mid,infradead.org:dkim]
-X-Rspamd-Queue-Id: F363F575029
+	FREEMAIL_FROM(0.00)[outlook.com];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[outlook.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,outlook.com:dkim,SN6PR02MB4157.namprd02.prod.outlook.com:mid]
+X-Rspamd-Queue-Id: 110BC576B97
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-
---=-sVYMF3zPsR6TVbl8qGQi
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, 2026-05-15 at 12:19 -0700, Sean Christopherson wrote:
-> Dave/Thomas/Peter/Boris, what's the going rate for bribes to take somethi=
-ng
-> like this through the tip tree?
+From: Sean Christopherson <seanjc@google.com> Sent: Monday, May 18, 2026 3:=
+18 PM
 >=20
-> The bulk of the changes are in kvmclock and TSC, but pretty much every
-> hypervisor's guest-side code gets touched at some point.=C2=A0 I am reaon=
-sably
-> confident in the correctness of the KVM changes.=C2=A0 Michael tested Hyp=
-er-V in
-> v2, and while there were conflicts when rebasing, they were largely
-> superficial (and I've just jinxed myself).=C2=A0 For all other hypervisor=
-s, assume
-> the code is compile-tested only, but those changes are all quite small an=
-d
-> straightforward.
+> +Michael (sashiko was quite stingy with its Cc list)
 >=20
-> The only changes that are questionable/contentious are the last two patch=
-es,
-> which have KVM-as-a-guest use CPUID 0x16 to get the CPU frequency, even o=
-n
-> AMD (that's the dubious part).=C2=A0 I very deliberately put them last, s=
-o that
-> they can be dropped at will (I don't care terribly if those patches land)=
-.
-> To merge them, I would want explicit Acks from Paolo and David W.
+> On Fri, May 15, 2026, sashiko-bot@kernel.org wrote:
+> > Thank you for your contribution! Sashiko AI review found 1 potential is=
+sue(s) to consider:
+> > - [High] Hyper-V VMs with an invariant TSC but no frequency MSRs lose t=
+he X86_FEATURE_TSC_RELIABLE capability.
+> > --
+> >
+> > commit 0c0fbc4f0451c30c0e87e0e3591ea4f487eff75c
+> > Author: Sean Christopherson <seanjc@google.com>
+> >
+> > x86/tsc: Pass KNOWN_FREQ and RELIABLE as params to registration
+> >
+> > This commit adds a tsc_properties parameter to the paravirtual TSC
+> > calibration registration routine to consolidate feature flag tracking.
+> > It updates various hypervisor initialization paths to pass combined fla=
+gs
+> > instead of manually setting the CPU capabilities.
+> >
+> > > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/msh=
+yperv.c
+> > > --- a/arch/x86/kernel/cpu/mshyperv.c
+> > > +++ b/arch/x86/kernel/cpu/mshyperv.c
+> > > @@ -516,8 +516,13 @@ static void __init ms_hyperv_init_platform(void)
+> > >
+> > >  	if (ms_hyperv.features & HV_ACCESS_FREQUENCY_MSRS &&
+> > >  	    ms_hyperv.misc_features & HV_FEATURE_FREQUENCY_MSRS_AVAILABLE) =
+{
+> > > -		tsc_register_calibration_routines(hv_get_tsc_khz, hv_get_tsc_khz);
+> > > -		setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
+> > > +		enum tsc_properties tsc_properties =3D TSC_FREQUENCY_KNOWN;
+> > > +
+> > > +		if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT)
+> > > +			tsc_properties =3D TSC_FREQ_KNOWN_AND_RELIABLE;
+> > > +
+> > > +		tsc_register_calibration_routines(hv_get_tsc_khz, hv_get_tsc_khz,
+> > > +						  tsc_properties);
+> > >  	}
+> >
+> > [ ... ]
+> >
+> > > @@ -629,7 +634,6 @@ static void __init ms_hyperv_init_platform(void)
+> > >  		 * is called.
+> > >  		 */
+> > >  		wrmsrq(HV_X64_MSR_TSC_INVARIANT_CONTROL, HV_EXPOSE_INVARIANT_TSC);
+> > > -		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
+> > >  	}
+> >
+> > If a Hyper-V VM exposes an invariant TSC but lacks the frequency MSRs,
+> > does it bypass the tsc_register_calibration_routines() block entirely?
 >=20
-> So, except for the last two patches, to get the stuff I really care about
-> landed, I think/hope it's just the TSC and guest-side CoCo changes that n=
-eed
-> reviews/acks?
+> Yes.
 >=20
-> The primary goal of this series is (or at least was, when I started) to
-> fix flaws with SNP and TDX guests where a PV clock provided by the untrus=
-ted
-> hypervisor is used instead of the secure/trusted TSC that is controlled b=
-y
-> trusted firmware.
+> > Without the standalone setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE) ca=
+ll
+> > here, it looks like these VMs will lose the reliable flag.
+> >
+> > Will this inadvertently enable the TSC watchdog, potentially causing a
+> > performance regression if the system falsely marks the TSC as unstable =
+due
+> > to virtualization scheduling delays?
 >=20
-> The secondary goal is to draft off of the SNP and TDX changes to slightly
-> modernize running under KVM.=C2=A0 Currently, KVM guests will use TSC for
-> clocksource, but not sched_clock.=C2=A0 And they ignore Intel's CPUID-bas=
-ed TSC
-> and CPU frequency enumeration, even when using the TSC instead of kvmcloc=
-k.
-> And if the host provides the core crystal frequency in CPUID.0x15, then K=
-VM
-> guests can use that for the APIC timer period instead of manually calibra=
-ting
-> the frequency.
+> Hmm, I was going to say that the change was intentional and desriable, bu=
+t looking
+> at this yet again, I don't think that's true.  Enabling HV_EXPOSE_INVARIA=
+NT_TSC
+> just means the kernel will (probably) set X86_FEATURE_CONSTANT_TSC and
+> X86_FEATURE_NONSTOP_TSC during early_init_intel(), AFAICT it doesn't lead=
+ to
+> X86_FEATURE_TSC_RELIABLE being set.  And I think in this case, marking th=
+e TSC
+> as reliable makes sense; even if the kernel doesn't user Hyper-V's calibr=
+ation
+> info, the host is still clearly telling the guest that the TSC is reliabl=
+e.
+
+Yes, I agree. But I'm doubtful that such a combination ever occurs in pract=
+ice.
+I've never seen an occurrence of a Hyper-V (even really old versions) guest
+where the frequency MSRs are not available or are not accessible. The
+Hyper-V spec allows for either condition, so we have the code to test the
+flags. I've thought of the flags as always set, though I suppose one never
+knows what the future holds.
+
 >=20
-> The tertiary goal is to clean up all of the PV clock code to deduplicate =
-logic
-> across hypervisors, and to hopefully make it all easier to maintain going
-> forward.
+> Michael, does keeping the
+>=20
+> 		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
+>=20
+> but also passing TSC_FREQ_KNOWN_AND_RELIABLE to the calibration routine m=
+ake
+> sense?
 
-I booted this in qemu with -cpu host,+invtsc,+vmware-cpuid-freq
+I don't see that it would break anything. But it seems a bit disjointed in
+that HV_ACCESS_TSC_INVARIANT is tested in two places in
+ms_hyperv_init_platform(). Does TSC_RELIABLE *need* to be passed to
+tsc_register_calibration_routines() if later code in ms_hyperv_init_platfor=
+m()
+does setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE)? In other words,
+I'm suggesting let tsc_register_calibration_routines() handle the=20
+TSC_FREQ_KNOWN case since that's what the calibration routines are
+all about. Leave the setting of X86_FEATURE_TSC_RELIABLE to the
+later code that tests HV_ACCESS_TSC_INVARIANT, instead of
+duplicating the setup_force_cpu_cap() operation.
 
-I was expecting to see it eschew the kvmclock and use *only* the TSC.
-Is there even any need for 'tsc-early' given that it's *told* the TSC
-frequency in CPUID? Shouldn't it have detected that the TSC is known
-before init_tsc_clocksource() runs?
+While combining FREQUENCY_KNOWN and RELIABLE into
+tsc_register_calibration_routines() is convenient, the two
+concepts turn out to be independent when looking strictly at
+the Hyper-V spec and code written to follow that spec.
+Combining them into the same function ends up being clumsy
+in this case.
 
-And then it even spent some time at boot actually using the kvmclock as
-clocksource... when ideally I don't think it would even have *enabled*
-it at all?
-
-[    0.000000] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles:=
- 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
-[    0.000000] tsc: Detected 2400.000 MHz processor
-[    0.008205] TSC deadline timer available
-[    0.008270] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0=
-xffffffff, max_idle_ns: 1910969940391419 ns
-[    0.159085] clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, =
-max_idle_ns: 19112604467 ns
-[    0.164074] clocksource: tsc-early: mask: 0xffffffffffffffff max_cycles:=
- 0x22983777dd9, max_idle_ns: 440795300422 ns
-[    0.229087] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xfffffff=
-f, max_idle_ns: 1911260446275000 ns
-[    0.337095] clocksource: Switched to clocksource kvm-clock
-[    0.345246] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, m=
-ax_idle_ns: 2085701024 ns
-[    0.356201] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x229=
-83777dd9, max_idle_ns: 440795300422 ns
-[    0.360560] clocksource: Switched to clocksource tsc
-
-
---=-sVYMF3zPsR6TVbl8qGQi
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
-ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
-AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
-BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
-MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
-a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
-jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
-GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
-aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
-nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
-8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
-HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
-IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
-KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
-BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
-QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
-QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
-ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
-/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
-uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
-xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
-W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
-c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
-VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
-NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
-DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
-sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
-w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
-i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
-kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
-0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
-ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
-blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
-hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
-VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
-HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
-ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
-AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
-cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
-cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
-AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
-aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
-hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
-iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
-8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
-JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
-xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
-EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
-B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
-MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
-KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
-Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
-nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
-WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
-W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
-nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
-g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
-9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
-9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
-sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
-a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
-ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
-AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
-dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
-MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
-YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
-4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
-6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
-QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
-nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
-MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
-VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
-ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDUxODIzMzgx
-M1owLwYJKoZIhvcNAQkEMSIEICdpbo3FRjD2AASiln/oatPqw6OBqIGwJ89vQ7u8KoDcMGQGCSsG
-AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
-cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
-VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
-cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAX3Y4/TDg29Zl
-OlYDg5rl4FNcTkhdLPPU4NOnexpsV0ImspXiP9DmV6XCtGHlUzwU2QVmWEAKJ5gcWJDG109BJ4iD
-MxCvKPxWGIQv6XhRTnNHXdRVR47Cmi0iBkwH1qYGkPLDbevrZBye+PMkGo0xfTStett2FKx3J5kZ
-XveIeeAsSHlgf9mzo04N/SXhFZ1diqosTRs0bKrQTR8Yq4+23+HQgdCWfqie4gzeHaS8ncTOSQD3
-f9Gg2ntNVonQT8aaPU/oRVMRFX5vwmVT5dq6V2lTibWpW8DEHsfm3CKkQLMqbUJaKXzNuzMbPjDA
-py895Q8WQZJt7hDj5JpDRW2Wt0RaZP1MoaLDgWPs7DfY8WczAExYq9ChG2KtIVCJB5Ulvv+NMkpL
-rGHKe6CciVeN4AIXq2O81rpIo/u2X25skg7WLWMgWg/w/0lfODLGUMPUca0JN5eT2Rhr7gUFR/J8
-JUCGPPKTRJ8bQTPUXuck3zhspeWr65nn2W5NkR97txju6m8/UDGCwGwAKt/IogxYX9q2msD8/XJ7
-lXJ3YVePKePxCJuryW7H6tm70i/Xz2vpt37ctLT0gWm8Hk2gC54DxPqWicyaoLKityRxYrxL4God
-6oWdil4yhCPpUix045UYkrFJwSxgRwc3b4bDLKPNjAY+tmYkzEJiyID4znkkJsYAAAAAAAA=
-
-
---=-sVYMF3zPsR6TVbl8qGQi--
+Michael
 
