@@ -1,398 +1,383 @@
-Return-Path: <linux-hyperv+bounces-11028-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11029-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gIhvI6mWDGp1jAUAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11028-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 May 2026 18:58:17 +0200
+	id oKFRJsuuDGoClAUAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11029-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 May 2026 20:41:15 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33EFE582BC2
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 May 2026 18:58:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 357FD583CC1
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 May 2026 20:41:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 600593058642
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 May 2026 16:57:38 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 18018304DFA5
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 May 2026 18:33:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2173F3546CA;
-	Tue, 19 May 2026 16:57:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37FDB345CAF;
+	Tue, 19 May 2026 18:33:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/ZdmZSn"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="LcLVJd94"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazolkn19012058.outbound.protection.outlook.com [52.103.2.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B961B40911F
-	for <linux-hyperv@vger.kernel.org>; Tue, 19 May 2026 16:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779209853; cv=none; b=n8wQG1xR8WkPzjV5OqNwbaext4Erb1V2aUyya9TG/qOulMPz2MYrAvorDeOJGrUOWMnqmDqJnNlcqNJJInHUbF3qXEQxAtbDIp2aH5Fs+npYwQ27Vhs0RxFLQnqq7iuKh/2qqtSVLRzRUNMnBO8qXgmGlc0b4Dm8HzQmxRJRmxU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779209853; c=relaxed/simple;
-	bh=/dxqY7vF83zqkB9TeiJY/hUNAh4ZjWZkHbYyxtAuPwA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hcoxXfADuSX0uA87rxC7aTyDD9nwqiCuSEsBNuj0XqDhO0RSmJtJ1vCXKG03A5A0Bp3AZP9IIxEPcdyOk8mfT/zcn9N5CYDHHYW+jqs6XAmfGB4tXZuPPV3U/SaAwSetBhW7ANBger+V60HzoNE51CN1/KI5M1KN88T26881FD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O/ZdmZSn; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-365deee00c3so304378a91.1
-        for <linux-hyperv@vger.kernel.org>; Tue, 19 May 2026 09:57:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779209846; x=1779814646; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TXSSb+QnSoLncqTyl5C1Wf9KSszK/YhT+NIcZleisWI=;
-        b=O/ZdmZSnxyCIZCAjLM7bxtrDB1QqLs+7cV6vMMKosq5UsUbTXgB9Rfoi+T9fwVXUCc
-         quWxqeqNaiz5XQcYHqOqLo+IXqVjPRxPZHvYC6e8PSy45Hjovd/6svCg36YSVvAX8+80
-         ZxBY1yuREZNpsp0adbai4ewHsJoC0uqnrEZ5uc2s2z6eX2d5yQUZBB87fPirmRQNG8Bn
-         MrXbhp0eLJH2IcdGexbQ6MWRs45e+b6yvtX7fyWvs/B3QGBmUGas4jYVv1IGqt0Qi7Ha
-         i0fysplSrsBs1VW7guG73hARhF1ioLdAODpA6K16LfJpaVkG1nkwo3Vx3uf4MkpmX72I
-         GY1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779209846; x=1779814646;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TXSSb+QnSoLncqTyl5C1Wf9KSszK/YhT+NIcZleisWI=;
-        b=K1AClbRN/B+0/imME52PNWIteYYwGxYxLOnoM1IBnuVAWNYlwM81JpkBMhtEMveKhT
-         vvG90uLcvvC9cTUDC98suU4cjNDrmVepTD+qiWoUKubdkUQPZNvToAr3/Htg4ALxW3R9
-         5AZHFfo9wxuuYZVrVpYyh61BavJI1rrHFmm9mo8DpnlTh9tLj9oaV66NgdDwJAkhOBI8
-         EOYzpmFgXFG1owPKJqngbInE1zd7M2aWgV3r133c1WIymxnUlkyifZrxcaToCew75sxW
-         vVQRR9q7YnKbWCJStE3an7Zb86p3M+4V4ecbOgi8tpx5YvyNtSGidQEYuP9fGCI9qhTN
-         JHDg==
-X-Forwarded-Encrypted: i=1; AFNElJ/MO2dlGDFAQ7NnPeFwg3a5IRvsmRvjucH3pgD+7/PkjpyiqxqT7yO9u76scC1aObG0hOwFZEbFKpm8hg0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdC2gsos55Ifzf2gx0dk1WB2P+3LOxHX3McxU9iB7n2MZvugZS
-	yJGgtVe5hanimxhSdwiqpoAtcvRSgszzd7v/HjkEGB0x/9bxmSF6wj+D
-X-Gm-Gg: Acq92OFi8lAFD6R+vS+UVRrZorIFsbB4lYPyOJGhWF8ompiFsjPunXYPGL37x0jvGQ6
-	aBs4+6imbEhforyyNz8cMMVuc114A2m+EF2L78deRv/XvsBCHCxqI4opsh2DoOvnMS5p0RY1Oys
-	eNd5n8dcmtE+AestJaG/v9xeUBBMPFnSID5Vb8Qo9vCKNftvz0xMevM9V7wDhfyvtfcckbEKWar
-	0mA95ls3P2TiS8LHZy1GbZUkTLmbriEOUG3MS88JthhlcxyYm3GYoXHrLUkYu8ZPNvHBWyndWGW
-	jGcwhcVOodSNb0way+J3i4EXTvWIuKfEDFKKAE4xKjSaqQYsHWzQUbiTbqXlRxI4r53URohpGt5
-	7aiHY7WWYgJygHeOy2E4lSqsnGU+vQRWdZgXJ78uM+4Asa0YtQfZ89QGWjb24CwWMGEszRnw8/I
-	5c45wnQBC4jVkXZ1j1GJGsVGYIXlSG+qupOnKFlK/AVmiC
-X-Received: by 2002:a17:903:2ec7:b0:2bd:9875:d457 with SMTP id d9443c01a7336-2bd9875d4fdmr109091215ad.8.1779209846248;
-        Tue, 19 May 2026 09:57:26 -0700 (PDT)
-Received: from gmail.com ([117.133.78.208])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bd5bd5fe67sm204597705ad.3.2026.05.19.09.57.17
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 19 May 2026 09:57:25 -0700 (PDT)
-From: Ziyu Zhang <ziyuzhang201@gmail.com>
-To: Stefano Garzarella <sgarzare@redhat.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Simon Horman <horms@kernel.org>,
-	Andy King <acking@vmware.com>,
-	George Zhang <georgezhang@vmware.com>,
-	Dmitry Torokhov <dtor@vmware.com>,
-	"K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	"Michael S . Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	bcm-kernel-feedback-list@broadcom.com,
-	virtualization@lists.linux.dev,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	kvm@vger.kernel.org,
-	baijiaju1990@gmail.com,
-	r33s3n6@gmail.com,
-	gality369@gmail.com,
-	zhenghaoran154@gmail.com,
-	hanguidong02@gmail.com,
-	zzzccc427@gmail.com,
-	Ziyu Zhang <ziyuzhang201@gmail.com>
-Subject: [PATCH net v2] vsock: keep poll shutdown state consistent
-Date: Wed, 20 May 2026 00:56:36 +0800
-Message-Id: <20260519165636.62542-1-ziyuzhang201@gmail.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8404D314D15;
+	Tue, 19 May 2026 18:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.2.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779215601; cv=fail; b=eI4PHSImIeaC94QzuxCd4VPllDll1umxOsf+FPOQYGj2AJIGOtnaDfl74Ooh8uZxA722li2Hz8t1fTA+9YcOPmFEZW9k0G29X4QvwMeJYX8Uu0+3FSxORApRNCG9aaGRikUW/TzNI8FK9jTFKYPo/jv9pPmf3qKlzxUx+aHNMRM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779215601; c=relaxed/simple;
+	bh=PynHmHGtSgcCOGtzNMBxPj58YfFFXXeuvYbVY+Ie4qA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=bUvaELZC4o4rQH1djfralQ5S2uA2h+5afcfmrs8hhi9Lq95SWm+Qtj32FXchRHHj0t/DV3elkitPyNI3NLEIUCcrujIipWlK+sUtXZO6iQ8VEzmEV/JjPGQSR4iqbn8FAA1bTckv6m1BxuokrcA8a6cTiwDZmHF79X2ysKeJHuI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=LcLVJd94; arc=fail smtp.client-ip=52.103.2.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=chEhtWcMQhAfBIQ4XGIl/pXCkJueP2iUM/GLi3Hogsbp1Oevpqm5y7vCAtWQ2Y3I3JRRlwAvbQ5BpNx+BT/Sjs4/ld52LdYfnyMXXrfBT1Ylym8kF4LWKxahswnp/RevY3rrwVcRwK5a4svb8qVGSFWp0fNEaEcNSYYm2dvbDe73Ve4TuV38qHkasdrnFKAxUA8U5K3F9GM4bYdiEYlJaWiaBgxmlbj0Vk7OyaeYfPEZIIeRUSsISZ22JGnQM3d1ySLy8JdUavjHfv2blQwKwyEDtsGagInieyBgmkhe6TbZOkzzfuxELDkm36zCFIbwnozIlUSOkRwSzxLk+n+5nA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IZXITpIZL2U7MVxRMiM4UBnBUVtQrNypxPrB+iiAYds=;
+ b=IFdWYrzmFaoseStYYM9UJvFF33BPlj/NT3mVEStwqV3yl3UEUIhMOPx/rjs7bzfexUAokjmAc2JeiBmuciCUDb9MMcDFF/eSbc503v/CMQ8gvkaRNqnwYyeeR8+IdEa7Tc9Cq7Po8QbnHrLMOEZYgt1EaeBc/idfaKQUQsARctISxUBj8frOr3+zl5HJp0zCrdgVcnR63pjxIcbZR9QobvLtkjvUIGHw6uY3ossgnQY8HokqImmGA4PdNOGBlN3K/5KphT60ln7CWtqsamGqhppY+QRv7B0QJ0TmAV+qg8iVFpNKQkBL+LTd4fepd6/L5fDIzmHMNAq2fFBvDxu7GA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IZXITpIZL2U7MVxRMiM4UBnBUVtQrNypxPrB+iiAYds=;
+ b=LcLVJd94948HToPrO+eYQyz3+jQ8ZrbfHqL4QGT3rul2VD6yCLUtUuwQXDNDrW+hmusIdNQcLxzmyFVu3U4wjCvIq/ghwt73zOUpUZxcDZp1KsIKty8CTCsD8CKpWUsIZVFQYwbkPEpPANZuf8POoq5pb83gHuO4y1bHS5qrkcjSVBfqDJbGAb4HM5ro5jhA0f/RVyxgI0RCbgdDY229zzpOLql+XR7J8b03k6GqWBnjkcZ+V2XsTgFixoWM7dXKjtiWIXcje+oDObOP5ozR9n7wmyo3Yjx9joijX0cC47tEHnM+awjLm3HGPF/TuYEFGl5TNFUMTKMrzCaaVm6AqA==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by SJ0PR02MB7358.namprd02.prod.outlook.com (2603:10b6:a03:2a1::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.14; Tue, 19 May
+ 2026 18:33:17 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6%5]) with mapi id 15.21.0025.022; Tue, 19 May 2026
+ 18:33:17 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Berkant Koc <me@berkoc.com>, Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>
+CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "K. Y.
+ Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei
+ Liu <wei.liu@kernel.org>, Michael Kelley <mhklinux@outlook.com>, Thomas
+ Zimmermann <tzimmermann@suse.de>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Deepak Rawat <drawat.floss@gmail.com>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>
+Subject: RE: [PATCH v2 1/2] drm/hyperv: validate resolution_count and harden
+ VSP request paths
+Thread-Topic: [PATCH v2 1/2] drm/hyperv: validate resolution_count and harden
+ VSP request paths
+Thread-Index: AQIUBwkfFERYES9mX2x90t/+K692oQKhdNWNAcc+V8YCFxepWgHIRczZtWTtIvA=
+Date: Tue, 19 May 2026 18:33:17 +0000
+Message-ID:
+ <SN6PR02MB4157D595B990A321BFA85B40D4002@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20260517-drm-hyperv-cover@berkoc.com>
+ <20260517-drm-hyperv-patch1@berkoc.com>
+ <20260517134926.B4179C2BCB0@smtp.kernel.org>
+ <20260517-drm-hyperv-cover-v2@berkoc.com>
+ <20260517-drm-hyperv-patch1-v2@berkoc.com>
+In-Reply-To: <20260517-drm-hyperv-patch1-v2@berkoc.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SJ0PR02MB7358:EE_
+x-ms-office365-filtering-correlation-id: 1ba2a0e4-7bf9-4e58-c1d7-08deb5d51839
+x-ms-exchange-slblob-mailprops:
+ AZnQBsB9XmprXCmKzjWdGU57vAD/nj2c6Sd3NQd1pBVcKon3Egb/IOTAiFnyPk1gR9zWBmwMnUKoxt6XrSOXP3ubj86o0Sth+7tGa8irCVzpg6Zuzkv3ld/DoR12eAiNTDJGndzbhVEqE7wA/L3xadtRJxHdR/72QPYcuhm67mNHiGcF3IFHfcCi9YEIg7aQgkzdJtu4D0m7bnIAoCyy82zsQ8HLGLkFdJdYjiureQhnL/jHl8l0nSUTN63yUYj3rugfa1JmcmJ/IShr7wrW1RXn+6DLJjFBwnlhMbuQvhBchsor7c2MDaOQ8nKY8k7CzEb8mOui7T9M5Twzwubb4T7D5WkZWUhe9sositZ4qzy6dOkXrjxGV1Ho/Oh7MJjemzJHo2ZEWcZnH3QqPaLcu/88dW7qIYeh3StB+v2X5Bs4vIp7/IVCl5QJGgO1MA5MqkURrGveTnS8P+O1IMJ89oHm+Mi4VnZe+uKpVRyPDWjPx5cwVTAyVu+qIVTkyA/6YZNpluUcQzjwwRDRfxuUQY/uuV1kj6JZ6yon3aqAT1/4ae509SCDSxNN+UnlWXnxvdIPPL79Vj8DAqCcecVdl2RhjeGl1pigo/4oD+BTsq9uUj41U9lkO8Bkf9P2myk3Uv9I8+/iRxii68k40zwBY8duaFOkXLOKncA7Tqn0JGLk5vvBlHyy8fxafGIsIAsWS+dzPXGBE2IGmSJG7wn1J2vB00nEECZ5LkycQp5lkDigw5lPWvZVn2pOwjS4mpZecY2NmyZSWkg=
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|31061999003|19101099003|55001999006|51005399006|37011999003|13091999003|12121999013|41001999006|8060799015|8062599012|19110799012|15080799012|40105399003|3412199025|440099028|102099032|1710799026;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?tpv3EzKt0lPOclZh/iaM6dC/qyy/07Wbvg1Yi9itrSoNsu+cINPkbnSNulzT?=
+ =?us-ascii?Q?jBY3WYOpihljQn57J0CfOdpu5GgE1nASqGlkvSkGC+YCP/30vo5OpMUSAgPy?=
+ =?us-ascii?Q?bRaFJSvQ+SRcVSuOQC0HqlzKVFTni9BN3IeqL2k2Y3QcJTzxi50a2hMPgP0b?=
+ =?us-ascii?Q?RWOTBur2cq/e8Lk2mZSyDyilqyQqrsaA975S0Io+6PBBXdsp/a/KrfOQxFna?=
+ =?us-ascii?Q?YYwnJOuRIePDoEXzxCz7y2taQpVtYZohxF3p87lsUSY/nAZ4v4lFpN1jXk9s?=
+ =?us-ascii?Q?anK+/OXZ21Euz5NRuJDQKUcc7AL+JsfRVZ1Rdxx7xx5WraURA2U5/OyQrjk8?=
+ =?us-ascii?Q?GMqcrQMCRbI7GnVh9kPbPRjHRNg09NX+4rYPw04OhZbCt1eAFJftOWak10eQ?=
+ =?us-ascii?Q?4uITjvpq4abBivMLJXO9olV6gwF0B9snpqNhsvZuxxw7vaEDckP8litj3P1A?=
+ =?us-ascii?Q?qeqeMkYMSddL+V8RWgfLHvohQ8XBDUbLJUMkZU0K8tgcK8LLvpZEQ4vWIqWg?=
+ =?us-ascii?Q?1GFKyp0SC2Px9p5L61xTY8HhXaO8YD3w1vmXTLgc5y0483E1O3qTQIwlTJ/9?=
+ =?us-ascii?Q?ZmfqWpCH7kskkImKp83mw90ld0w/vFksSMKy7W4seBvGbf954vXAQJYZjxVC?=
+ =?us-ascii?Q?P+5WP2kX7ISfZUYCjWAPF9BUmYxPSBYlgqsRWIole3JaXEzyl6Z7JfM6BER2?=
+ =?us-ascii?Q?ChAVi4mLtu6c5hmW4xK6ioSNokFSjkgD4Q3Vo+4+RUAgQ814ifV0030iuT1q?=
+ =?us-ascii?Q?h1WVtO+yKpHaVyvd1jw8x4xHkq7a7VZbgrsn5aIo8maRdHUtEW8DRt2q7Y+G?=
+ =?us-ascii?Q?GFfc/wVqFymBB0uOC+SNigSlH6b4lY6sJEH50datLX2Cbmgf4V1gqdhtIitE?=
+ =?us-ascii?Q?nUz3nop1nQcBaYH3F+dTU9lwzZCVuQKGSTFxOlz6HhDqD9di63iMAESj3nct?=
+ =?us-ascii?Q?5iYcyiAGoXLyJSoxab0W3qNqN0eBe8/dUbBZ4Y1RMrMBP2UxatwUW2h9Hp4Q?=
+ =?us-ascii?Q?bYcHjwoQWhD3u2yAcUGAOTjYev4erM39wsSyNppFzLAaMcN7hocFOW2O101j?=
+ =?us-ascii?Q?+FTIMgelLSWbCAsNVZfF51TsOuQp/VXQtL+8hZ1sCBVpdF/tRPLpWIqfSzaq?=
+ =?us-ascii?Q?Bqw7fT9LxYw2?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?pcZc9GlmAK/gOGIXT/SNET9fV1X2mga/ZYr34CarWsMqTRdGbNrAvhJfyR+a?=
+ =?us-ascii?Q?SRDgZ5j4f0AGJEY701TDiARc5Cr6FENKOYBj1wjsMraV5MjOle7YjhsTNxRh?=
+ =?us-ascii?Q?g5k+6Q0RuBx1mzsKkNmsat/q0gCl9BT0go2+3ySLftTNwOuo9IeDarnshSlp?=
+ =?us-ascii?Q?ml1LlqOfcA+9b3KK57azHEQckLJrESqj3kC//1JDjakMmIfDPBhPwQvE1ykW?=
+ =?us-ascii?Q?keiD6yvBoavFLegIxy2utnotj9W9tPgi9dvpdG6gIENKHfhy4eFuiBZq80ir?=
+ =?us-ascii?Q?r+tNtsaHBQJxKOpo5Z4mFlhC37SksCWR/jVWsEf0Z454Edvj0ENa0pikYZTd?=
+ =?us-ascii?Q?SXbMMzZF94dXAa9AgIVZ+RKX9tRG+cZqdI4KEaHdj+OvNgpsr9xnNRyLjjr9?=
+ =?us-ascii?Q?PitDCYA8QSQZFBTxjdV48oOCDNhC8mgvHnMJao/cnTyDaWR8Lx868qYAjFZE?=
+ =?us-ascii?Q?dDGISTxgG72qqdgxuADZblWMM/Y2mI1xmu7456B84cEcv20a2BfK6CgfEBGA?=
+ =?us-ascii?Q?+NfDtXtY5YGdq+vZzS42SttAi1ElmJszO0A7tIEe0ePogIGHA6TvNtKzsBXw?=
+ =?us-ascii?Q?k8Q1oPAycjzNMjLNHVCAQlzJUqFJ2wmT/dtnsBvtlm7kcZtPnqRywNuw2dl4?=
+ =?us-ascii?Q?KEaOqhRrwh8xN5syvSntl8gEqngbheShtBSOxMKjicNsFpb1mPJh2nF+lECC?=
+ =?us-ascii?Q?0lh5rs3TqHivtrHpclX8Avs3VK7KLPUEF/jieaYqFfKzfIs4pEj5/Xt0Fhki?=
+ =?us-ascii?Q?NK4TuaVDqay4y3KwsXo9aBU0sE6reo1JXZq5nEYt2DzqlcM6SH2U2zPmo+nk?=
+ =?us-ascii?Q?NonjNv5ME5RhmtbQT9XV3F5glhpMHlwfm6MTiRWui/nxQSvxNWqsGPfa4AxL?=
+ =?us-ascii?Q?96IcqwCKkSn/J3XOzrvNL94NvJ9T2MfJGsnO2ktlm65ty8Hw2zQcB+NtWCs8?=
+ =?us-ascii?Q?uwEK7EMgxRtzUBp4/yjCS85WySLGuJRy2ckli8Ymh8NhimCeX/raLMEf2kl2?=
+ =?us-ascii?Q?dFwbXYuxe9GJ4dVc8cUlgRbDCCPBZFNw7PyWmpO/lpCp9jNB6OUAsQ2EnF6+?=
+ =?us-ascii?Q?hEw4/DRiKwbskwn+Ck74WBrAMugCiuEiOWVDBnZNdH6a8DAMB8Fbf6d/QKZQ?=
+ =?us-ascii?Q?5QSr8dMLjW7iZcOR+gmAKPT8c4o7EMMrKZZBYebZ6oYDfRJt4rnwYZloGTcy?=
+ =?us-ascii?Q?63DY2YZFkPhDXeINCY4lqGaKdfxVddxUPb+cgnuCHCuy/zo9LvhPNl2Oo/t3?=
+ =?us-ascii?Q?LL/OWd+F1DY4zPLjzg2xpQbaK/7R40Pn2jTO+6yc1GPkNtUu95g3Xg7HU/J6?=
+ =?us-ascii?Q?bSTcJPpgw0YwhY2a7wE2aFr4ZlmYedUh7AXIaDv1WZazAD0FZIju7AHabsyR?=
+ =?us-ascii?Q?oAn0N0Y=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ba2a0e4-7bf9-4e58-c1d7-08deb5d51839
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 May 2026 18:33:17.1710
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR02MB7358
+X-Spamd-Result: default: False [5.34 / 15.00];
+	SEM_URIBL_FRESH15(3.00)[berkoc.com:email];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
 	MAILLIST(-0.15)[generic];
+	BAD_REP_POLICIES(0.10)[];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11028-lists,linux-hyperv=lfdr.de];
-	FREEMAIL_CC(0.00)[kernel.org,vmware.com,microsoft.com,redhat.com,linux.alibaba.com,broadcom.com,lists.linux.dev,vger.kernel.org,gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[34];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11029-lists,linux-hyperv=lfdr.de];
+	R_DKIM_ALLOW(0.00)[outlook.com:s=selector1];
+	GREYLIST(0.00)[pass,body];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_FROM(0.00)[outlook.com];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.freedesktop.org,microsoft.com,kernel.org,outlook.com,suse.de,linux.intel.com,gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	MIME_TRACE(0.00)[0:+];
+	DMARC_POLICY_ALLOW(0.00)[outlook.com,none];
+	DKIM_TRACE(0.00)[outlook.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ziyuzhang201@gmail.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
 	RCVD_COUNT_FIVE(0.00)[5];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 33EFE582BC2
+	R_SPF_ALLOW(0.00)[+ip4:172.232.135.74:c];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,outlook.com:dkim,berkoc.com:email,SN6PR02MB4157.namprd02.prod.outlook.com:mid]
+X-Rspamd-Queue-Id: 357FD583CC1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-vsock_poll() reads vsk->peer_shutdown before taking the socket lock
-to set EPOLLHUP and EPOLLRDHUP, then reads it again after taking
-the lock to report EOF readability. A shutdown packet can update
-peer_shutdown while poll is waiting for the lock, so one poll invocation
-can report EOF readability without the corresponding HUP/RDHUP bits.
+From: Berkant Koc <me@berkoc.com> Sent: Sunday, May 17, 2026 7:25 AM
+>=20
+> The synthetic video device parses a SYNTHVID_RESOLUTION_RESPONSE that
+> contains a u8 resolution_count and a u8 default_resolution_index. The
+> existing check rejects resolution_count =3D=3D 0 and an index greater or
+> equal to resolution_count, but does not bound resolution_count itself
+> against the fixed supported_resolution[SYNTHVID_MAX_RESOLUTION_COUNT]
+> array. A host that returns resolution_count > 64 together with an
+> in-range default_resolution_index causes the subsequent loop to read
+> past the array. Reject any resolution_count that exceeds the array
+> bound, folded into the existing zero-check so a single log entry
+> remains per failure.
 
-For connectible sockets, take one peer_shutdown snapshot after
-lock_sock() and use it for all peer-shutdown-derived poll bits. For
-datagram sockets, which do not take lock_sock() in poll(), take one
-lockless READ_ONCE() snapshot and pair it with WRITE_ONCE() on the
-writer side.
+I think this is a good fix, but let me provide some background. A core
+assumption has been that the Hyper-V host is not malicious, and data from
+the host can be trusted to be well-formed and valid. Linux code interacting
+with the host does *not* take a paranoid approach and does *not* validate
+every value received from the host. Existing validation is ad hoc and
+probably not comprehensive.
 
-This keeps the peer-shutdown-derived bits internally consistent for each
-poll pass.
+A few years ago with the introduction of Confidential Computing and
+"CoCo VMs" in in Linux, the assumption changed. (Hyper-V calls these
+"Confidential VMs", or sometimes "Isolated VMs" -- unfortunately, the
+terminology is a bit scattered.) The host is treated as potentially malicio=
+us
+and Linux code was hardened against bad values passed from the host. But
+not all drivers for Hyper-V synthetic devices were hardened because CoCo VM=
+s
+on Hyper-V don't allow all the possible synthetic devices. The Hyper-V synt=
+hetic
+frame buffer is one such disallowed device, so the Hyper-V DRM driver was n=
+ot
+hardened. The allowed devices can be seen in the vmbus_devs[] array
+where .allowed_in_isolation is "true".
 
-Fixes: d021c344051a ("VSOCK: Introduce VM Sockets")
-Signed-off-by: Ziyu Zhang <ziyuzhang201@gmail.com>
----
-Link: https://lore.kernel.org/netdev/20260516034745.260442-1-ziyuzhang201@gmail.com/
+All that said, I'm in favor of adding hardening, even if it is done pieceme=
+al.
+There won't likely be a comprehensive effort to harden the Hyper-V DRM
+driver unless the frame buffer device becomes available in a CoCo VM.
 
-v2:
-- Pair lockless READ_ONCE() users with WRITE_ONCE() on peer_shutdown writers.
-- Move datagram shutdown handling into the SOCK_DGRAM branch and add a comment.
-- Keep one connectible peer_shutdown snapshot after lock_sock() and
-  restore the previous shutdown-derived mask ordering.
+>=20
+> When that bounds check (or any later failure in
+> hyperv_get_supported_resolution()) returns an error, the caller in
+> hyperv_connect_vsp() previously logged a warning and continued without
+> populating hv->screen_width_max / hv->screen_height_max / preferred_*.
+> hyperv_mode_config_init() then set dev->mode_config.max_width and
+> max_height to 0, which makes drm_internal_framebuffer_create() reject
+> every userspace framebuffer with -EINVAL. Populate the fields with the
+> WIN8 defaults that the pre-WIN10 branch already uses so a failed
+> resolution probe degrades to a usable display instead of disabling it.
 
- net/vmw_vsock/af_vsock.c                | 49 ++++++++++++++++---------
- net/vmw_vsock/hyperv_transport.c        |  9 +++--
- net/vmw_vsock/virtio_transport_common.c | 14 ++++---
- net/vmw_vsock/vmci_transport.c          |  8 ++--
- 4 files changed, 52 insertions(+), 28 deletions(-)
+Yes, this also makes sense.
 
-diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-index adcba1b7b..789b00f6e 100644
---- a/net/vmw_vsock/af_vsock.c
-+++ b/net/vmw_vsock/af_vsock.c
-@@ -523,7 +523,7 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
- 		 */
- 		sock_reset_flag(sk, SOCK_DONE);
- 		sk->sk_state = TCP_CLOSE;
--		vsk->peer_shutdown = 0;
-+		WRITE_ONCE(vsk->peer_shutdown, 0);
- 	}
- 
- 	if (sk->sk_type == SOCK_SEQPACKET) {
-@@ -814,7 +814,7 @@ static struct sock *__vsock_create(struct net *net,
- 	vsk->rejected = false;
- 	vsk->sent_request = false;
- 	vsk->ignore_connecting_rst = false;
--	vsk->peer_shutdown = 0;
-+	WRITE_ONCE(vsk->peer_shutdown, 0);
- 	INIT_DELAYED_WORK(&vsk->connect_work, vsock_connect_timeout);
- 	INIT_DELAYED_WORK(&vsk->pending_work, vsock_pending_work);
- 
-@@ -1122,6 +1122,25 @@ static int vsock_shutdown(struct socket *sock, int mode)
- 	return err;
- }
- 
-+static __poll_t vsock_poll_shutdown(struct sock *sk, u32 peer_shutdown)
-+{
-+	__poll_t mask = 0;
-+
-+	/* INET sockets treat local write shutdown and peer write shutdown as a
-+	 * case of EPOLLHUP set.
-+	 */
-+	if (sk->sk_shutdown == SHUTDOWN_MASK ||
-+	    ((sk->sk_shutdown & SEND_SHUTDOWN) &&
-+	     (peer_shutdown & SEND_SHUTDOWN)))
-+		mask |= EPOLLHUP;
-+
-+	if (sk->sk_shutdown & RCV_SHUTDOWN ||
-+	    peer_shutdown & SEND_SHUTDOWN)
-+		mask |= EPOLLRDHUP;
-+
-+	return mask;
-+}
-+
- static __poll_t vsock_poll(struct file *file, struct socket *sock,
- 			       poll_table *wait)
- {
-@@ -1139,24 +1158,17 @@ static __poll_t vsock_poll(struct file *file, struct socket *sock,
- 		/* Signify that there has been an error on this socket. */
- 		mask |= EPOLLERR;
- 
--	/* INET sockets treat local write shutdown and peer write shutdown as a
--	 * case of EPOLLHUP set.
--	 */
--	if ((sk->sk_shutdown == SHUTDOWN_MASK) ||
--	    ((sk->sk_shutdown & SEND_SHUTDOWN) &&
--	     (vsk->peer_shutdown & SEND_SHUTDOWN))) {
--		mask |= EPOLLHUP;
--	}
--
--	if (sk->sk_shutdown & RCV_SHUTDOWN ||
--	    vsk->peer_shutdown & SEND_SHUTDOWN) {
--		mask |= EPOLLRDHUP;
--	}
--
- 	if (sk_is_readable(sk))
- 		mask |= EPOLLIN | EPOLLRDNORM;
- 
- 	if (sock->type == SOCK_DGRAM) {
-+		u32 peer_shutdown = READ_ONCE(vsk->peer_shutdown);
-+
-+		/* DGRAM sockets do not take lock_sock() in poll(), so use one
-+		 * lockless snapshot for all shutdown-derived mask bits.
-+		 */
-+		mask |= vsock_poll_shutdown(sk, peer_shutdown);
-+
- 		/* For datagram sockets we can read if there is something in
- 		 * the queue and write as long as the socket isn't shutdown for
- 		 * sending.
-@@ -1171,6 +1183,7 @@ static __poll_t vsock_poll(struct file *file, struct socket *sock,
- 
- 	} else if (sock_type_connectible(sk->sk_type)) {
- 		const struct vsock_transport *transport;
-+		u32 peer_shutdown;
- 
- 		lock_sock(sk);
- 
-@@ -1203,8 +1216,10 @@ static __poll_t vsock_poll(struct file *file, struct socket *sock,
- 		 * terminated should also be considered read, and we check the
- 		 * shutdown flag for that.
- 		 */
-+		peer_shutdown = READ_ONCE(vsk->peer_shutdown);
-+		mask |= vsock_poll_shutdown(sk, peer_shutdown);
- 		if (sk->sk_shutdown & RCV_SHUTDOWN ||
--		    vsk->peer_shutdown & SEND_SHUTDOWN) {
-+		    peer_shutdown & SEND_SHUTDOWN) {
- 			mask |= EPOLLIN | EPOLLRDNORM;
- 		}
- 
-diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
-index 432fcbbd1..16b981566 100644
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -264,7 +264,7 @@ static void hvs_do_close_lock_held(struct vsock_sock *vsk,
- 	struct sock *sk = sk_vsock(vsk);
- 
- 	sock_set_flag(sk, SOCK_DONE);
--	vsk->peer_shutdown = SHUTDOWN_MASK;
-+	WRITE_ONCE(vsk->peer_shutdown, SHUTDOWN_MASK);
- 	if (vsock_stream_has_data(vsk) <= 0)
- 		sk->sk_state = TCP_CLOSING;
- 	sk->sk_state_change(sk);
-@@ -593,7 +593,9 @@ static int hvs_update_recv_data(struct hvsock *hvs)
- 		return -EIO;
- 
- 	if (payload_len == 0)
--		hvs->vsk->peer_shutdown |= SEND_SHUTDOWN;
-+		WRITE_ONCE(hvs->vsk->peer_shutdown,
-+			   READ_ONCE(hvs->vsk->peer_shutdown) |
-+			   SEND_SHUTDOWN);
- 
- 	hvs->recv_data_len = payload_len;
- 	hvs->recv_data_off = 0;
-@@ -715,7 +717,8 @@ static s64 hvs_stream_has_data(struct vsock_sock *vsk)
- 			return ret;
- 		return hvs->recv_data_len;
- 	case 0:
--		vsk->peer_shutdown |= SEND_SHUTDOWN;
-+		WRITE_ONCE(vsk->peer_shutdown,
-+			   READ_ONCE(vsk->peer_shutdown) | SEND_SHUTDOWN);
- 		ret = 0;
- 		break;
- 	default: /* -1 */
-diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-index dcc8a1d58..71d8eac82 100644
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -1220,7 +1220,7 @@ static void virtio_transport_do_close(struct vsock_sock *vsk,
- 	struct sock *sk = sk_vsock(vsk);
- 
- 	sock_set_flag(sk, SOCK_DONE);
--	vsk->peer_shutdown = SHUTDOWN_MASK;
-+	WRITE_ONCE(vsk->peer_shutdown, SHUTDOWN_MASK);
- 	if (vsock_stream_has_data(vsk) <= 0)
- 		sk->sk_state = TCP_CLOSING;
- 	sk->sk_state_change(sk);
-@@ -1411,12 +1411,15 @@ virtio_transport_recv_connected(struct sock *sk,
- 	case VIRTIO_VSOCK_OP_CREDIT_UPDATE:
- 		sk->sk_write_space(sk);
- 		break;
--	case VIRTIO_VSOCK_OP_SHUTDOWN:
-+	case VIRTIO_VSOCK_OP_SHUTDOWN: {
-+		u32 peer_shutdown = READ_ONCE(vsk->peer_shutdown);
-+
- 		if (le32_to_cpu(hdr->flags) & VIRTIO_VSOCK_SHUTDOWN_RCV)
--			vsk->peer_shutdown |= RCV_SHUTDOWN;
-+			peer_shutdown |= RCV_SHUTDOWN;
- 		if (le32_to_cpu(hdr->flags) & VIRTIO_VSOCK_SHUTDOWN_SEND)
--			vsk->peer_shutdown |= SEND_SHUTDOWN;
--		if (vsk->peer_shutdown == SHUTDOWN_MASK) {
-+			peer_shutdown |= SEND_SHUTDOWN;
-+		WRITE_ONCE(vsk->peer_shutdown, peer_shutdown);
-+		if (peer_shutdown == SHUTDOWN_MASK) {
- 			if (vsock_stream_has_data(vsk) <= 0 && !sock_flag(sk, SOCK_DONE)) {
- 				(void)virtio_transport_reset(vsk, NULL);
- 				virtio_transport_do_close(vsk, true);
-@@ -1431,6 +1434,7 @@ virtio_transport_recv_connected(struct sock *sk,
- 		if (le32_to_cpu(virtio_vsock_hdr(skb)->flags))
- 			sk->sk_state_change(sk);
- 		break;
-+	}
- 	case VIRTIO_VSOCK_OP_RST:
- 		virtio_transport_do_close(vsk, true);
- 		break;
-diff --git a/net/vmw_vsock/vmci_transport.c b/net/vmw_vsock/vmci_transport.c
-index 7eccd6708..c2231c402 100644
---- a/net/vmw_vsock/vmci_transport.c
-+++ b/net/vmw_vsock/vmci_transport.c
-@@ -811,7 +811,7 @@ static void vmci_transport_handle_detach(struct sock *sk)
- 		/* On a detach the peer will not be sending or receiving
- 		 * anymore.
- 		 */
--		vsk->peer_shutdown = SHUTDOWN_MASK;
-+		WRITE_ONCE(vsk->peer_shutdown, SHUTDOWN_MASK);
- 
- 		/* We should not be sending anymore since the peer won't be
- 		 * there to receive, but we can still receive if there is data
-@@ -1534,7 +1534,9 @@ static int vmci_transport_recv_connected(struct sock *sk,
- 		if (pkt->u.mode) {
- 			vsk = vsock_sk(sk);
- 
--			vsk->peer_shutdown |= pkt->u.mode;
-+			WRITE_ONCE(vsk->peer_shutdown,
-+				   READ_ONCE(vsk->peer_shutdown) |
-+				   pkt->u.mode);
- 			sk->sk_state_change(sk);
- 		}
- 		break;
-@@ -1551,7 +1553,7 @@ static int vmci_transport_recv_connected(struct sock *sk,
- 		 * a clean shutdown.
- 		 */
- 		sock_set_flag(sk, SOCK_DONE);
--		vsk->peer_shutdown = SHUTDOWN_MASK;
-+		WRITE_ONCE(vsk->peer_shutdown, SHUTDOWN_MASK);
- 		if (vsock_stream_has_data(vsk) <= 0)
- 			sk->sk_state = TCP_CLOSING;
- 
--- 
-2.43.0
+>=20
+> The driver also issues three sequential VSP requests (negotiate
+> version, update VRAM location, get supported resolution) that share a
+> single hv->wait completion. None of the call sites call
+> reinit_completion() between requests. If wait_for_completion_timeout()
+> returns 0 but a delayed response later triggers complete(&hv->wait) in
+> the receive callback, the next request's wait can consume that stale
+> completion, return immediately, and parse stale data out of
+> hv->init_buf. Call reinit_completion() before each send so every
+> request waits for its own response.
 
+This change should probably be a separate patch, as it's not really
+related to the bounds checking issue. You could even argue that the
+bounds check and using the default size values in case of an error
+should be separate patches, but it's a judgment call and I could go
+either way. Combining the first two works for me, though someone
+else might disagree.
+
+All that notwithstanding, I don't think your fix is needed in its current
+form. If wait_for_completion_timeout() times out in "negotiate version"
+or "update VRAM location", the code returns -ETIMEDOUT. The caller
+then bails out and does not send the next message in the sequence.
+Eventually hyperv_vmbus_probe() fails and the struct hyperv_drm_device
+memory is freed. A similar thing could happen with hyperv_vmbus_resume().
+The memory isn't freed, but if the resume fails and is tried again later, i=
+t
+should be with a fresh copy of the saved memory image. In that case, the
+completion should be clean for the retry.
+
+The problem case is "get supported resolution", which would leave the
+completion in a pending state if it times out. This could later affect
+hyperv_vmbus_resume().  I could see reinit'ing the completion in
+hyperv_vmbus_resume() to handle this case.
+
+But double-check my thinking on all this. Maybe I'm missing something.
+
+One other comment:  In my view, your commit message is a bit too
+detailed. A commit message should focus on "why" the change, and
+less on the details of the implementation. Explaining the failure case
+is fine, but don't recapitulate code that is straightforward and obvious.
+
+>=20
+> Fixes: 76c56a5affeb ("drm/hyperv: Add DRM driver for hyperv synthetic vid=
+eo device")
+> Cc: stable@vger.kernel.org # 5.14+
+> Signed-off-by: Berkant Koc <me@berkoc.com>
+> ---
+>  drivers/gpu/drm/hyperv/hyperv_drm_proto.c | 17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+> b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+> index 051ecc526832..3b5065fe06e4 100644
+> --- a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+> @@ -223,6 +223,7 @@ static int hyperv_negotiate_version(struct hv_device =
+*hdev, u32 ver)
+>  	msg->vid_hdr.size =3D sizeof(struct synthvid_msg_hdr) +
+>  		sizeof(struct synthvid_version_req);
+>  	msg->ver_req.version =3D ver;
+> +	reinit_completion(&hv->wait);
+>  	hyperv_sendpacket(hdev, msg);
+>=20
+>  	t =3D wait_for_completion_timeout(&hv->wait, VMBUS_VSP_TIMEOUT);
+> @@ -257,6 +258,7 @@ int hyperv_update_vram_location(struct hv_device *hde=
+v, phys_addr_t vram_pp)
+>  	msg->vram.user_ctx =3D vram_pp;
+>  	msg->vram.vram_gpa =3D vram_pp;
+>  	msg->vram.is_vram_gpa_specified =3D 1;
+> +	reinit_completion(&hv->wait);
+>  	hyperv_sendpacket(hdev, msg);
+>=20
+>  	t =3D wait_for_completion_timeout(&hv->wait, VMBUS_VSP_TIMEOUT);
+> @@ -383,6 +385,7 @@ static int hyperv_get_supported_resolution(struct hv_=
+device *hdev)
+>  		sizeof(struct synthvid_supported_resolution_req);
+>  	msg->resolution_req.maximum_resolution_count =3D
+>  		SYNTHVID_MAX_RESOLUTION_COUNT;
+> +	reinit_completion(&hv->wait);
+>  	hyperv_sendpacket(hdev, msg);
+>=20
+>  	t =3D wait_for_completion_timeout(&hv->wait, VMBUS_VSP_TIMEOUT);
+> @@ -391,8 +394,11 @@ static int hyperv_get_supported_resolution(struct hv=
+_device *hdev)
+>  		return -ETIMEDOUT;
+>  	}
+>=20
+> -	if (msg->resolution_resp.resolution_count =3D=3D 0) {
+> -		drm_err(dev, "No supported resolutions\n");
+> +	if (msg->resolution_resp.resolution_count =3D=3D 0 ||
+> +	    msg->resolution_resp.resolution_count >
+> +	    SYNTHVID_MAX_RESOLUTION_COUNT) {
+> +		drm_err(dev, "Invalid resolution count: %d\n",
+> +			msg->resolution_resp.resolution_count);
+>  		return -ENODEV;
+>  	}
+>=20
+> @@ -506,8 +512,13 @@ int hyperv_connect_vsp(struct hv_device *hdev)
+>=20
+>  	if (hyperv_version_ge(hv->synthvid_version, SYNTHVID_VERSION_WIN10)) {
+>  		ret =3D hyperv_get_supported_resolution(hdev);
+> -		if (ret)
+> +		if (ret) {
+>  			drm_err(dev, "Failed to get supported resolution from host, use defau=
+lt\n");
+> +			hv->screen_width_max =3D SYNTHVID_WIDTH_WIN8;
+> +			hv->screen_height_max =3D SYNTHVID_HEIGHT_WIN8;
+> +			hv->preferred_width =3D SYNTHVID_WIDTH_WIN8;
+> +			hv->preferred_height =3D SYNTHVID_HEIGHT_WIN8;
+> +		}
+>  	} else {
+>  		hv->screen_width_max =3D SYNTHVID_WIDTH_WIN8;
+>  		hv->screen_height_max =3D SYNTHVID_HEIGHT_WIN8;
+
+Is there a separate problem here in that preferred_width and preferred_heig=
+ht
+are not set in the pre-WIN10 case? I'm not familiar enough with DRM driver =
+code
+to know how these preferred values are used. It looks inconsistent to have =
+the
+two fallback cases be different.
+
+Also, having to duplicate the fallback code is distasteful. Instead of havi=
+ng an
+"else" clause, maybe have a follow-up test for screen_width_max (or any of =
+the
+values) being zero as an indicator that they haven't been set, and apply th=
+e defaults in
+that case?
+
+Michael
 
