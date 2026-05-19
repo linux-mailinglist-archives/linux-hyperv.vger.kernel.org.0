@@ -1,249 +1,264 @@
-Return-Path: <linux-hyperv+bounces-11034-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11145-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WPRgJT3EDGo+lwUAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11034-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 May 2026 22:12:45 +0200
+	id YGd4AfJzD2r4MQYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11145-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 23:06:58 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02C085848A7
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 May 2026 22:12:44 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id C35D75AC050
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 23:06:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6C50E3009526
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 May 2026 20:08:35 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 15F1A302ACF4
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 20:56:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4E253B7777;
-	Tue, 19 May 2026 20:08:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E015400DEB;
+	Thu, 21 May 2026 20:56:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Mpj4kcB8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=berkoc.com header.i=@berkoc.com header.b="B1OLPmwh";
+	dkim=pass (2048-bit key) header.d=berkoc.com header.i=@berkoc.com header.b="d1hyWEgK"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azolkn19012015.outbound.protection.outlook.com [52.103.23.15])
+Received: from mail-01.1984.is (mail-01.1984.is [185.112.145.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9CD33A9E8;
-	Tue, 19 May 2026 20:08:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.23.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779221314; cv=fail; b=e9ZPIHYQdwk3t7gLWCe2yOnT+XtiMOdsgXUshUb8zauJR29yV9lTBSBsOcqeuSpV12rkHft4ggDIptLKza4z7TBFN/uDTAnBxUlwzbrtLvYFsjb+Dp1F/ctEMSDp/PJyvl39S+6pc3n41KebLu6e90us7zv6McaUXK3p9mFxXcM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779221314; c=relaxed/simple;
-	bh=RjaUowy5oCPAkK8exkpbp2/02lSFk3kNl2fxAW4R8DA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=pDtfrNBpsPmzf4SbVaAK9Rurym2iVX2iK0o80jE9Cwq9TJwy0HzSaQHrEmSVsnqgMXDxSXih5UzvMI1fKe2GPYZdXF1DyRGTb+gpGAbiVpwQ1dIasO98oyGK5kodkt+mE3lk6OSiDdTAiYl4wlp/n8LrW41sVVcpKw9nxvx1ysI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Mpj4kcB8; arc=fail smtp.client-ip=52.103.23.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=I3Z1ZfAeA6mHCLPNxueu3LETMqEiz7nMdGG43uUmJciyizcO2vReHYkSfdmnVDZIMXvC0Oh3If3rwsydaTSc01uQobUtLwo/IVyA9qW3ADtpVfayImjoeBdIVK15nfPhGszx0rk5mYhB0cwAeC6VfkydL0v5uoCXzT+39u+pIzxTelXk3ZAhdbvkaL+g3mjCtsukCbXOxp3GV9t5n7twvkKeWZlxEpnIFwKzERMl1nheEZiCLeu2I8szkQFzGBGKJrNV2M9MZxXLOk8Kswj8OclgBrW4y3hJtbvt0fLgxg1bD/uT4jphx2W4pbuudPEJpS90zP6srqHia7Hw3NZEfA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=n+7/Qv9HH3aj5jVgn41umedhyPSOwAp8PKbKYict2Bc=;
- b=grdlT2EIZcYiT/B44sn7NcMqZRVCb4Ty1m/JlHOQ/AdL9rEAkCp01w9s5QkStnN9jM6IP2d/ReRR4v+5omnnP4LwJV8C55EP0denjofpKBQJwZ7ytm+iNWDbu+DU9/i16IsSYpu1Z9IdIVSy82mUD6xFciqbWl9EiIHQLSVE2R5DsD9YmFVzMHpYQir367a9H+P6w15GS5XXYRrEN0+rC77YjOJ3PqZRdMngisrpRbZJiqQ4hnz566PNurtoblSwhHCjJLdk9uKIj4+/lbruhpFAKsCnp1PhGZeujiQFGKuZD3Wxoztrrn4pwkIw8iUw8vLcaaI8LMMhlgNFwAosgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n+7/Qv9HH3aj5jVgn41umedhyPSOwAp8PKbKYict2Bc=;
- b=Mpj4kcB8qC6sb9tbAZ9OFLoCRyjoDwuoHqsfrg1xia0/suFHtC2+728VsmE10cFOjMqxxqPWMtUiousfrKcN0cjkgcHHasUEaXx72bxdkmOybjIm59e7eAG6gDPOE5MAumPJQ2URPW4AyvZXhuPrBFTbO8febGOzxG/FcddgigL8NHI7r7/OLOSqbeKxrP9Hsn/Q2R7gKYxLBSobrlAtXnUeoMEm1RaFq3DZjABXf9liQmMLOT9kCyQkgtqBjXsy3SjR0avfHkW8ZmX5dvXNRTAoN8dvy3FY0Cefdun7jkbULcNV18KFFL05fVkDCrorkgggOYkZAUffIWZep/nmXw==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by CH2PR02MB6759.namprd02.prod.outlook.com (2603:10b6:610:7c::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.14; Tue, 19 May
- 2026 20:08:31 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%5]) with mapi id 15.21.0025.022; Tue, 19 May 2026
- 20:08:31 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	"kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>, "longli@microsoft.com"
-	<longli@microsoft.com>
-CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4 04/18] mshv: Add NULL check for vp in
- mshv_try_assert_irq_fast
-Thread-Topic: [PATCH v4 04/18] mshv: Add NULL check for vp in
- mshv_try_assert_irq_fast
-Thread-Index: AQKgEqxJw6vunjXZ4JfDTdDBDzr/OQH3WWB3tH+xv/A=
-Date: Tue, 19 May 2026 20:08:31 +0000
-Message-ID:
- <SN6PR02MB41572B5BB398F780274756DDD4002@SN6PR02MB4157.namprd02.prod.outlook.com>
-References:
- <177816592843.21765.4364464279247150355.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <177816860118.21765.7481864545928795603.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-In-Reply-To:
- <177816860118.21765.7481864545928795603.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CH2PR02MB6759:EE_
-x-ms-office365-filtering-correlation-id: ddce05d0-83c4-49ef-3c24-08deb5e2663c
-x-ms-exchange-slblob-mailprops:
- 02NmSoc12DekrR47MFWXRYzut/69urIxHYlN3kyQ0ZGuHkCg8j8bGerg4jpP4bBpeNgvKzrjoK19pzXwseqBqe2pfVpydPJjzAjYoFOgXPSAigs6608xYtWktAg8X0xVdoFhOJTRItJ2tZ9oEEvI09JqwByOqxZ/oVzRZa3i3txj8mNpvs7yt1y8CzargxPQPjBN73zR4t4ckQ2uymkgfVkhrOL2GvNXXdDpR3QiXzo2xAKDCRKWqgSkjBW7HSPZ4Jn6SJenStf0nr+SdinfbhgARH36qmCLx7MOLOVYpQIWzkia0O/zfpmV+KUVcp2FTWENZC+zidT7C9p+ZOABEwpPxp7T1Q8RlDwB9QPROARtkBfW2wFeAn6HefKP8N+MaaaFnRf7rTRTWDVohzHBBkwiwvxX+QCK4Vg6tmuQf5d35k/s5jqF4PC6NREzmO6SmeD5/iD4eVYPQXtpalvV/uxopB22l+tXL6YkBMekomkX7IZ+/aSU8bcGKSRU/26CcFGYtRwDNiGccY2FMOeMQSKVkIPAQK9w4QMQHl750N1k7mhDLroV8pLEa5ALFcgCsP2Jthg70KegiX/qjW+Ol28Rele0aMHlIRAKh9SZ37VjUZi9vcqM4bESwhsAmVkAIl8epPz+hogNdylEgxGQcd66V5T0lwqI7rxpfS6g4N8uhN0r8AJER23LzBVppQ6QL8dWWEwhzF+Zv7PzMl/SG3ZGam7k5Oupkmn3g4Ex0Do5U9ZUOJt/E3tsZ+Q8WXyw
-x-microsoft-antispam:
- BCL:0;ARA:14566002|8060799015|41001999006|12121999013|13091999003|15080799012|19110799012|8062599012|31061999003|51005399006|37011999003|55001999006|19101099003|440099028|3412199025|102099032|19061999003|40105399003;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?OyriDh7TNz031huRcZ0jiVscWfdqf22Js0Fmca5QgUjUa2CuBLXy3f/Jj5G/?=
- =?us-ascii?Q?9aMwqi1lPtObmILJkRQ3cDJ4MqqABPc5ZGSivPhWkLqvieo780l1pBtG/3e/?=
- =?us-ascii?Q?P5lHAmtm56jO5sKTrOEL4mDNuyOiT8MjWveuqVHLKo23/sLLQ3cryv2sAtBx?=
- =?us-ascii?Q?6VX7XbobQiDPLXcTR/CxF2Aq2MdHcCKfJm4ZHEgw4P2qav2JTHJES0ijj8tl?=
- =?us-ascii?Q?KcL6FBYWfAG/Kt6Me42DJhI1SkYX2qcf+TU4ByIO9lrMVrxe8wRFkZagl3uk?=
- =?us-ascii?Q?DK7UWHN1Xd9QmKr+WdGakiNjotC/ENHdtCFMPDyT9f/QbIyncRyYoOUNGKsB?=
- =?us-ascii?Q?X22gG+AHH6lH/lRh3+4ykEUuejK/v10PKzOp5I1Q50GW8VTS6dYznVMJ18xJ?=
- =?us-ascii?Q?AcGOiCNDy/x1GPdiTm9BDvtmcU+8b8Raa9qvOrl0N9TznLbM/7IvGZw626e2?=
- =?us-ascii?Q?qnEO30fg0kecRK6T19WCXhxiTm0hWscPv9exnu3QDJuASm8JGnBSfC9iOypC?=
- =?us-ascii?Q?vuJxL9fzz7Y/rqinimIjM4vZA5FuyfyxMR5RZiG5sAJDfa+DrOKQ/w8QOnTJ?=
- =?us-ascii?Q?hccI1NNvz5ktd8cHspzjOknO3jilkjNxwlUKOlBuX2TUWx2sC/M+hUEYIsZi?=
- =?us-ascii?Q?/XZRxVwQumK2IbrjthXy4pEjHYCRkGoBXiFZcOx6/f9b626nRL81lFuZed5j?=
- =?us-ascii?Q?a4u2+cVcQ0PzXIpFV5Duh92iJQEr5jKPPeti3Q4uWOoL72UgE9Fm5OafaUXr?=
- =?us-ascii?Q?eGkKudcDD9HNJ+miyjPjEC1UrvzrsKdJvLHrn9MqH0RfuR0KTkBCuleRj7Mk?=
- =?us-ascii?Q?Ou33IIWRN81jj8FkM9glGBv57tVgTCAf0fS3kyxv9lsIvZXrV6/f3yvFOxPB?=
- =?us-ascii?Q?GFKqqSQT7gIYHAhmAXmEMSO3JkNzn+RZdPEaL3sXbbLoBavU28BiS5keOmlj?=
- =?us-ascii?Q?yfzbzN40SwfpX4hlHqfHly/kGW2G4P9hMEscPMFbMyBus2eqwSs30vwPpw5g?=
- =?us-ascii?Q?JTgbPt+xclJc6bD/OZ0Zs0au7YNPTpbgS6g3XN0SY37gkz+9FDRkcG/72phh?=
- =?us-ascii?Q?gDQZdD/VTHbryqU2bRzylWt9aZ9bgMERZ6s8KjY9bUJmWtIfYC412kjf/heW?=
- =?us-ascii?Q?4pkfo9B9EJkv?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?7g4+TGdEIZFdIItdMYvobIkGBHS1yPw/X/49km5sn5Y5DMu/3Ljy9SkYvTj1?=
- =?us-ascii?Q?CeOZBCe42RWTeRQEY+KzeFA14Hw9evh9KWZzpmJpD2fXjfbhDHAA5WLS0PS9?=
- =?us-ascii?Q?riD32knkIdCi4j9g8/sTs7M06LwLi2z40pVgF1pi2OOzP4pbbInU7gI8dBCt?=
- =?us-ascii?Q?wABE93PxhzwLxoiQsemlT263HwHH2K8eFwLKZAmYrHMbmppWQr+jAntEzsoh?=
- =?us-ascii?Q?BJl6zA79D/fugDpalYVqCPk8k+6bZLpCnR7HGdgC5m0PhDSaqe005h8MF2AN?=
- =?us-ascii?Q?/AymmizbUbbPCLlzBm4L9rMY3T3GRi7fNFa6n+U28fV2fQ3PIcb+ps4xF1OO?=
- =?us-ascii?Q?8r2AulckcPM31T0B+fyY/fnGO9i4ckJi06GaeFHPW1wn+70yZs/WDZjELUnv?=
- =?us-ascii?Q?vz0sT2KVii7srCF94sAizoMN4dwukVB6UQ5UqdfpUyzoRG7SW9wN8UQPwHHI?=
- =?us-ascii?Q?Ymp5FYfR1Vo0+i77Eqpc4O1k7b6zV4twt3laAfO2Wsz+1l5kyMBBYA9Gnzi9?=
- =?us-ascii?Q?LoYgoCBTBL3Ol30+WcCnTOU8jIdW2UohnRDtxqCMrBp/eB5WI+aVlwNpVA1j?=
- =?us-ascii?Q?wPgoEfyF3MZPv7HEF32/NjZQeg9bXe/Byeswz1x15W0e5D56bkrJn9sLvMDK?=
- =?us-ascii?Q?KH32l3eKWmFQpOCOrQ/qpoOuvNEp+jCKlFWdVC/E0D9PYWsYgN7XRfp2h+63?=
- =?us-ascii?Q?z+FqO/J2N3jo1Ysc54zygjeALCGUVgGpmyEeJ6gtDX4tOwFNIjufodMFioGC?=
- =?us-ascii?Q?8hDxvQZBdGA+7aziyev1+BBriyEUQfmFUcdy7qX6Kn3xpB26iWB3EP+fGPUJ?=
- =?us-ascii?Q?WaZC4oIFAbZtv11gyVDBDkGafXUvhKKDwQY/RxwrZ8X+NwnRleSiUR/Jv1us?=
- =?us-ascii?Q?DEysYZliPwNouXzMesxhnIkdb+c1+GEDDsjdhVuWCRECetwoliDDT/uYc4LD?=
- =?us-ascii?Q?YhvWUsWcBgAooLY/5x6uleWxPH66N1ElbSxt96VWekHt40n7dXBGiSb5A/Bj?=
- =?us-ascii?Q?0mnSOV4f8DKZyKIW7d64Ri+mKZOd//sOvKwjl300YTLJlLqebxQvbFvnAFG0?=
- =?us-ascii?Q?+ckIv519YHxvds/ChoLPg5M6cmyOgxYphxGznaaX3kE/siNBMF63DFSM7Nb2?=
- =?us-ascii?Q?kKCi5M6GaPFWhXIRREh0gaa9mXGFzFVSQr/G+ghvNEbOBh8eEk1IZ6epefNC?=
- =?us-ascii?Q?i87vh5CryHmkSAwtC04TSsj6b00v8rncq13aO+SE3mZThrz0b/BTVA7UnUB8?=
- =?us-ascii?Q?Yw7E9+lm1NQn1Bn3OlD0SbuBZs1xd8ZF1OosACNAQ7sTF+iQKguOFkZ88GBs?=
- =?us-ascii?Q?gC1Wl1fIpxUlswj++NGz6FpLkSk5S+Xac8uLiU1vW75iNS9uxbnFbN4xuNee?=
- =?us-ascii?Q?zgNH57w=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC7636CDE0;
+	Thu, 21 May 2026 20:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.112.145.69
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779396997; cv=none; b=L7+ra3jy7G+xL1zsm9dXcg3DOGc6As8ioSDewCMv09JxigTpxRai6ciSDCRwFYp8sZD+4j8s+F8LhLXqRCVOcmFmOp7/y/NiKiFuIq2gPaW1G/1HRS2CxAowpvvRNnWKKFzTlCfIwnAHPFTBD/J/3ZcO0/yCxxI/pwn295GNjUs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779396997; c=relaxed/simple;
+	bh=P6NHnSBS7A5nCK7EBrwNsszRWgG5h0L9aT882bgvnGI=;
+	h=Message-ID:In-Reply-To:References:From:To:Cc:Date:Subject; b=PzStq6m3L50GHIknmywAV/cqP6Xwzo4SWHEkQMJbskk/9dFhpqT1X8rgYhLjeIkHxQgtzWdjm+eaDCisMHTCNK+KFuUU9yxDQeXEK/mQw9rr4orUd9ldo/cwwxKz8pKSnaDO7z77UiO/aeAXh4CBeo9vkudESpH+xeZcih1YLlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=berkoc.com; spf=pass smtp.mailfrom=berkoc.com; dkim=pass (2048-bit key) header.d=berkoc.com header.i=@berkoc.com header.b=B1OLPmwh; dkim=pass (2048-bit key) header.d=berkoc.com header.i=@berkoc.com header.b=d1hyWEgK; arc=none smtp.client-ip=185.112.145.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=berkoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=berkoc.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=berkoc.com;
+	s=1984; h=Subject:Date:Cc:To:From:References:In-Reply-To:Message-ID:Sender:
+	Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=IwxizOZe2KuLhYlTxGDJy2jH2w3o7dBZIW4lsDZsoTg=; b=B1OLPmwhXKjq85FtxUHJcdH6Vf
+	EW9dQqZkqhW1+QbS3DF5HdUEeNSKr6kyp+xTMRhD8/D125gA8SOy36A9x2i7Anfhi40dF7G9/x8gV
+	8pXITHzjRyb8kO3iY4xzV1SNykVYk4oO732p2B9EJNRc8sPxgXSY7Kr78NrdGD2577fFzmYl47FeH
+	LJ9nXOgTkdoaKu/lpatf4j8J3hI4+uoLBHrSkPKg2HEzUdnEXYjDKxgaX2q+xJABdBdswmtz4IQah
+	7mK877oq+N196m6Mu1hUgGb3ZY+dBaHFR5cD24KgrD0nd9qnOSfri2EzymWeDlKlOFGM01YCxCNiI
+	Ei3IBcvg==;
+Received: from localhost
+	by mail-01.1984.is with utf8esmtp (Exim 4.96)
+	(envelope-from <me@berkoc.com>)
+	id 1wQART-00DejJ-0h;
+	Thu, 21 May 2026 20:56:32 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=berkoc.com;
+ i=@berkoc.com; q=dns/txt; s=me; t=1779396980; h=message-id : date :
+ subject : cc : to : from : sender : reply-to;
+ bh=IwxizOZe2KuLhYlTxGDJy2jH2w3o7dBZIW4lsDZsoTg=;
+ b=d1hyWEgKkxROdKjkzMI4lbAsEGVG4crHSbzmk/coBsotlt5JWglMQ6viwp/71/S3IN/t0
+ H1Cv7l1jJPVVLxArwN0/Yi4Ov7oiTeralv8jYOf99I9H9XnivsycSabFq3Nd03lzaLk+AJ2
+ Z2HOwWu027Cj/yF/gRx8TxFkrtzEcwEDyx5ibAlYeQWkx4A0nfKHlcfbZVH0WHQnfKZ32Pl
+ 5I+PLnlWia7soGG2KnQuu19X+JlB/dYxxda4mZWSBFpkocPLWi21s3DzSrk/Y7TRuaaJDAH
+ gNOzraUKUK0c0+6qtEZ7p7k6W2BjJhP0OhsKaJePBg/HfY9Ew2FFJyhg+knA==
+Message-ID: <6e5d1d57a3afc4c5ea0d2a3d62be58c90741a869.1779396074.git.me@berkoc.com>
+In-Reply-To: <cover.1779396074.git.me@berkoc.com>
+References: <cover.1779396074.git.me@berkoc.com>
+From: Berkant Koc <me@berkoc.com>
+To: Saurabh Sengar <ssengar@linux.microsoft.com>, Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, K. Y. Srinivasan <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Michael Kelley <mhklinux@outlook.com>, Thomas Zimmermann <tzimmermann@suse.de>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Deepak Rawat <drawat.floss@gmail.com>
+Date: Tue, 19 May 2026 22:08:53 +0200
+Subject: [PATCH v4 2/2] drm/hyperv: validate VMBus packet size in receive
+ callback
+X-Spam-Score: -0.2 (/)
+X-Authenticated-User: me@berkoc.com
+X-Sender-Address: me@berkoc.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: ddce05d0-83c4-49ef-3c24-08deb5e2663c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 May 2026 20:08:31.5599
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6759
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
+X-Spamd-Result: default: False [6.64 / 15.00];
+	SEM_URIBL_FRESH15(3.00)[berkoc.com:email,berkoc.com:dkim];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	DATE_IN_PAST(1.00)[48];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[berkoc.com:s=me];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	BAD_REP_POLICIES(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11034-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	DKIM_MIXED(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.freedesktop.org,microsoft.com,kernel.org,outlook.com,suse.de,linux.intel.com,gmail.com];
+	GREYLIST(0.00)[pass,body];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	TAGGED_FROM(0.00)[bounces-11145-lists,linux-hyperv=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_FROM(0.00)[outlook.com];
-	DKIM_TRACE(0.00)[outlook.com:+];
-	MISSING_XM_UA(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[berkoc.com,quarantine];
+	R_DKIM_REJECT(0.00)[berkoc.com:s=1984];
+	ARC_ALLOW(0.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	R_SPF_ALLOW(0.00)[+ip4:172.105.105.114:c];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,SN6PR02MB4157.namprd02.prod.outlook.com:mid,outlook.com:dkim]
-X-Rspamd-Queue-Id: 02C085848A7
-X-Rspamd-Action: no action
+	FROM_NEQ_ENVFROM(0.00)[me@berkoc.com,linux-hyperv@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[berkoc.com:-,berkoc.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[berkoc.com:email,berkoc.com:mid,berkoc.com:dkim,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: C35D75AC050
+X-Rspamd-Action: add header
 X-Rspamd-Server: lfdr
+X-Spam: Yes
 
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Thursd=
-ay, May 7, 2026 8:43 AM
->=20
-> mshv_try_assert_irq_fast() dereferences the vp pointer obtained from
-> pt_vp_array[lapic_apic_id] without checking for NULL or validating that
-> lapic_apic_id is within bounds. A spurious interrupt from the hypervisor
-> targeting a non-existent VP (or one not yet created) causes a NULL
-> pointer dereference and crashes the host.
->=20
-> Add a bounds check on lapic_apic_id against MSHV_MAX_VPS and a NULL
-> check on the vp pointer before dereferencing.
->=20
-> Fixes: 621191d709b14 ("Drivers: hv: Introduce mshv_root module to expose =
-/dev/mshv to VMMs")
-> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> ---
->  drivers/hv/mshv_eventfd.c |    5 +++++
->  1 file changed, 5 insertions(+)
->=20
-> diff --git a/drivers/hv/mshv_eventfd.c b/drivers/hv/mshv_eventfd.c
-> index 5995a62aff8d8..b398e58411dd7 100644
-> --- a/drivers/hv/mshv_eventfd.c
-> +++ b/drivers/hv/mshv_eventfd.c
-> @@ -169,7 +169,12 @@ static int mshv_try_assert_irq_fast(struct mshv_irqf=
-d *irqfd)
->  		return -EOPNOTSUPP;
->  #endif
->=20
-> +	if (irq->lapic_apic_id >=3D MSHV_MAX_VPS)
-> +		return -EINVAL;
+hyperv_receive_sub() reads msg->vid_hdr.type and dispatches into one
+of four message-type branches without knowing how many bytes the host
+wrote into hv->recv_buf. The completion path then runs
+memcpy(hv->init_buf, msg, VMBUS_MAX_PACKET_SIZE), so the consumer that
+wakes on wait_for_completion_timeout() can read up to 16 KiB of
+residue from a prior message as if it were the response payload.
 
-APIC IDs are 8-bit values, and indeed lapic_apic_id is set in
-mshv_copy_girq_info() after masking the value with 0xFF. So
-this check doesn't do anything. (I guess MSHV_MAX_VPS
-could be changed to something smaller than 256, but that
-seems highly unlikely.) There is extended destination
-id functionality that provides for a 15-bit APIC ID, but I don't
-see any support for that in the MSHV code.
+Pass bytes_recvd into hyperv_receive_sub() and reject any packet that
+does not cover the pipe + synthvid header. For the three
+completion-driving types (SYNTHVID_VERSION_RESPONSE,
+SYNTHVID_RESOLUTION_RESPONSE, SYNTHVID_VRAM_LOCATION_ACK) require the
+type-specific payload before memcpy/complete, and apply the same rule
+to SYNTHVID_FEATURE_CHANGE before reading is_dirt_needed.
 
-> +
->  	vp =3D partition->pt_vp_array[irq->lapic_apic_id];
+SYNTHVID_RESOLUTION_RESPONSE is variable length: the host fills
+resolution_count entries, not the full SYNTHVID_MAX_RESOLUTION_COUNT
+array. Validate the fixed prefix first so resolution_count can be
+read, bound it against the array, then require only the count-sized
+array, so the shorter responses the host actually sends are accepted.
 
-The APIC ID does *not* equal the Linux CPU number or VP
-index in the general case, so this indexing is problematic. APIC
-IDs are not dense if the target partition has multiple NUMA
-nodes and the number of VPs in a NUMA node is not a power
-of 2. In such case, the APIC ID space has gaps. Azure has such
-VM sizes, and you can create such a configuration using
-the local Hyper-V Manager UI. So having APIC IDs that aren't
-dense is a real case.
+Only run the sub-handler when vmbus_recvpacket() returned success. The
+memcpy length is bytes_recvd, which is bounded by VMBUS_MAX_PACKET_SIZE
+only on a successful receive; on -ENOBUFS vmbus_recvpacket() instead
+reports the required length, which can exceed hv->recv_buf, so copying
+bytes_recvd would read and write past the 16 KiB buffers. Gating on the
+success return keeps the copy bounded.
 
-> +	if (!vp)
-> +		return -EINVAL;
->=20
->  	if (!vp->vp_register_page)
->  		return -EOPNOTSUPP;
->=20
->=20
+Rejected packets are reported via drm_err_ratelimited() rather than
+silently dropped, matching the CoCo-hardened pattern in
+hv_kvp_onchannelcallback().
+
+Fixes: 76c56a5affeb ("drm/hyperv: Add DRM driver for hyperv synthetic video device")
+Cc: stable@vger.kernel.org # 5.14+
+Signed-off-by: Berkant Koc <me@berkoc.com>
+Assisted-by: Claude:claude-opus-4-7 berkoc-pipeline
+---
+ drivers/gpu/drm/hyperv/hyperv_drm_proto.c | 63 +++++++++++++++++++++--
+ 1 file changed, 59 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+index c3d0ff229..48054b607 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
++++ b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+@@ -420,26 +420,81 @@ static int hyperv_get_supported_resolution(struct hv_device *hdev)
+ 	return 0;
+ }
+ 
+-static void hyperv_receive_sub(struct hv_device *hdev)
++static void hyperv_receive_sub(struct hv_device *hdev, u32 bytes_recvd)
+ {
+ 	struct hyperv_drm_device *hv = hv_get_drvdata(hdev);
+ 	struct synthvid_msg *msg;
++	size_t hdr_size;
+ 
+ 	if (!hv)
+ 		return;
+ 
++	hdr_size = sizeof(struct pipe_msg_hdr) +
++		   sizeof(struct synthvid_msg_hdr);
++	if (bytes_recvd < hdr_size) {
++		drm_err_ratelimited(&hv->dev,
++				    "synthvid packet too small for header: %u\n",
++				    bytes_recvd);
++		return;
++	}
++
+ 	msg = (struct synthvid_msg *)hv->recv_buf;
+ 
+ 	/* Complete the wait event */
+ 	if (msg->vid_hdr.type == SYNTHVID_VERSION_RESPONSE ||
+ 	    msg->vid_hdr.type == SYNTHVID_RESOLUTION_RESPONSE ||
+ 	    msg->vid_hdr.type == SYNTHVID_VRAM_LOCATION_ACK) {
+-		memcpy(hv->init_buf, msg, VMBUS_MAX_PACKET_SIZE);
++		size_t need = hdr_size;
++
++		switch (msg->vid_hdr.type) {
++		case SYNTHVID_VERSION_RESPONSE:
++			need += sizeof(struct synthvid_version_resp);
++			break;
++		case SYNTHVID_RESOLUTION_RESPONSE:
++			/*
++			 * The resolution response is variable length: the host
++			 * fills resolution_count entries, not the full
++			 * SYNTHVID_MAX_RESOLUTION_COUNT array. Require the fixed
++			 * prefix first so resolution_count can be read, then
++			 * demand exactly the count-sized array.
++			 */
++			need += offsetof(struct synthvid_supported_resolution_resp,
++					 supported_resolution);
++			if (bytes_recvd < need)
++				break;
++			if (msg->resolution_resp.resolution_count >
++			    SYNTHVID_MAX_RESOLUTION_COUNT) {
++				drm_err_ratelimited(&hv->dev,
++						    "synthvid resolution count too large: %u\n",
++						    msg->resolution_resp.resolution_count);
++				return;
++			}
++			need += msg->resolution_resp.resolution_count *
++				sizeof(struct hvd_screen_info);
++			break;
++		case SYNTHVID_VRAM_LOCATION_ACK:
++			need += sizeof(struct synthvid_vram_location_ack);
++			break;
++		}
++		if (bytes_recvd < need) {
++			drm_err_ratelimited(&hv->dev,
++					    "synthvid packet too small for type %u: %u < %zu\n",
++					    msg->vid_hdr.type, bytes_recvd, need);
++			return;
++		}
++		memcpy(hv->init_buf, msg, bytes_recvd);
+ 		complete(&hv->wait);
+ 		return;
+ 	}
+ 
+ 	if (msg->vid_hdr.type == SYNTHVID_FEATURE_CHANGE) {
++		if (bytes_recvd < hdr_size +
++		    sizeof(struct synthvid_feature_change)) {
++			drm_err_ratelimited(&hv->dev,
++					    "synthvid feature change packet too small: %u\n",
++					    bytes_recvd);
++			return;
++		}
+ 		hv->dirt_needed = msg->feature_chg.is_dirt_needed;
+ 		if (hv->dirt_needed)
+ 			hyperv_hide_hw_ptr(hv->hdev);
+@@ -464,9 +519,9 @@ static void hyperv_receive(void *ctx)
+ 		ret = vmbus_recvpacket(hdev->channel, recv_buf,
+ 				       VMBUS_MAX_PACKET_SIZE,
+ 				       &bytes_recvd, &req_id);
+-		if (bytes_recvd > 0 &&
++		if (!ret && bytes_recvd > 0 &&
+ 		    recv_buf->pipe_hdr.type == PIPE_MSG_DATA)
+-			hyperv_receive_sub(hdev);
++			hyperv_receive_sub(hdev, bytes_recvd);
+ 	} while (bytes_recvd > 0 && ret == 0);
+ }
+ 
+-- 
+2.47.3
 
 
