@@ -1,235 +1,255 @@
-Return-Path: <linux-hyperv+bounces-11067-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11068-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aPlzB1D4DWry4wUAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11067-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 20:07:12 +0200
+	id 8EJSIJ8GDmqy5gUAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11068-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 21:08:15 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBE82595561
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 20:07:11 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99550597D16
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 21:08:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 0A0313122548
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 18:00:06 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 29C6F323E5C7
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 18:11:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64C223F6619;
-	Wed, 20 May 2026 17:59:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7B4C3F9267;
+	Wed, 20 May 2026 18:11:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tF4Y7bnv"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="njSup9zs"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A5E4F5E0
-	for <linux-hyperv@vger.kernel.org>; Wed, 20 May 2026 17:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BE0F3A6B6D;
+	Wed, 20 May 2026 18:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779299998; cv=none; b=uF2a9yDN9sxzhGxp1qncLKrbCpXPYIy5uhJtLZSuwX+s+o+jRWz+qRhSNzCFfH7xiKty/InQe0hvIMI+pB6lbqlQV7kW8ZIopH1hVFVr/iH0q9AUVfCuVG85kw/zmOwsxhVNWuQDOWtAeEqoN2FvqAv5lgOx0lnxMn9G85OVyh8=
+	t=1779300701; cv=none; b=csz8FvVdASEmVy93vW6A2Oic/rlwds1k+Gk4bVHey1bRqklACM7K9BwtXYS+QQdgxSYd567PTmqleN0Q8Z5qgR4tYTGdZoAHayD/n+ZsuAOPZdervzKsJgyl5Vqd9UVfpX3xwNh42WQK3wbyjMY1W2ElE0wAuoiEzVARV+CzAus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779299998; c=relaxed/simple;
-	bh=dO19ZIhQCWsYMmrxTaUpUGG1PvauafKv/vB6jcGBVQM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cpCRRWL+duYyFQtHcqeIT/gZDIOUpq3D7YA4JUYlJ1XC+ANURFSDc9pTdkZVfJgAqIWVnJTr+kr27sw30rbZ3ZyyZzEi1Dqyr9N1XI9ogVdUJC0rczuf8aUaFfZB+7iKMStaFm5rBCXvZCunVTfToj4+BxYoesCZ/J1ra40uyn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tF4Y7bnv; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-83544d05c5aso2564720b3a.2
-        for <linux-hyperv@vger.kernel.org>; Wed, 20 May 2026 10:59:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779299996; x=1779904796; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CN4Zn2M2jJcMvhiuUJl3O5eQtI7RDh/+btUc2M7YWms=;
-        b=tF4Y7bnvmelvJ/9SA5mp9fpDR4nHjLtN1pq05uXBQ6E2xK7xhnND+XQATXdLIF/J/X
-         3vztRLP7+jOz+5cjIGMUqq8xMYTCqVhtlTUNbqwaYUvSyC+V3kSUKxB4A0vdCbs82iDf
-         0rtM0+vmeQmRJWZ4Zu4lAPXu206MmHYRBEICf1uKsPiUaOK84Cxliz2OVtMSKmaO2IOJ
-         4sNn936iu/6Y5IEcScaSzJQg8JtX88GpFKiRgefblzQYcX6b5f4WMiSBnPkpnshpWqx+
-         YJAHZxCFAPKJnCRQJO2A74bl6GVQBIgZohB1EkzSlTQyuJTuHSnjgFecx+PskIOeZqht
-         kyvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779299996; x=1779904796;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=CN4Zn2M2jJcMvhiuUJl3O5eQtI7RDh/+btUc2M7YWms=;
-        b=Ge3w5fL6HGU9z0XrzTVKy1Z4Ke79/4k0g1y7kCSfsTJu0f1Meyj7f+j1v9n5BoAQC8
-         d8A3GNyvprtRWAyL2LKtmkEtBnBKC1/xKGPMLmJ4r0TJp5N/3em+ZIsjCn7O8UWQpxci
-         aSABsj6Qb597jrIlyLAXlXNH162jWFW5WkvthUQnKwNMw5z6SOjquSpsj/jmhne+u/B+
-         5jIkHVMlUdjkeyoYkuaBSVhvPaKli5gUTySJoPA9GmB9+dXoFv4LPdBS4hjrcDjbScTe
-         7ODAtZo0dSx8S9xhv4uCcGLsfCY302VGQzP+ZWsPd4KHGNLYX5dBJanlf1RgebdRr4qc
-         XumA==
-X-Forwarded-Encrypted: i=1; AFNElJ+qyEZPzvZKwNmnMdKk9YHlgmflgSreVFa5noi7uxww3d7K8mU7HHPk7CQxTlcrXEdzH9eFIqjL05HGcuw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEvuKNb7ad/MGlE3HcuYRuCi5f09NiUKoPwcX+A32IYNe+jAX1
-	on1bUw9AV0z9R71mnLoV5/hqwdwxg/IXuxl/7r9W8FTNy9+A/BoDLUIycjh0vL0G6tPDU1omVuT
-	raZKgNw==
-X-Received: from pfblu4.prod.google.com ([2002:a05:6a00:7484:b0:83a:58c1:f5e2])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:2449:b0:835:405a:7e72
- with SMTP id d2e1a72fcca58-83f33c24d1cmr24352155b3a.11.1779299995865; Wed, 20
- May 2026 10:59:55 -0700 (PDT)
-Date: Wed, 20 May 2026 10:59:55 -0700
-In-Reply-To: <7260682b21c28d1299e58400b9a2f4b8d23bd434.camel@infradead.org>
+	s=arc-20240116; t=1779300701; c=relaxed/simple;
+	bh=ReI7Pe1k2azsgNrEH63iUCivw8znTCYb+QNRCjEgjIc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VllHL7sn2uofsk0A2JsI7ukOU9HXDOxDGQA0qheG2vdsRJciGRtj1Z+aqrjdrwjH6YCu/Zk+RRKdTadBo4UbnroO2KrefqwtNEsIq6Hrn2bOnDcUZPAdqgf/XdA6xq0wKkxvUcC/F18z64FwsTmRFV0VXE/mO8LCjbM+DHUN5Qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=njSup9zs; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1204)
+	id 59A3D20B7168; Wed, 20 May 2026 11:11:33 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 59A3D20B7168
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1779300693;
+	bh=XfQvxMfI6M+Oo70/NIQBu2bKqGiJTjH2WuohEgBfMOY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=njSup9zsmcuXswBqk9kKeBxXe8+Tef4n3n6ki/hOJVKKtlxuW10NC0MeqJya4TJPr
+	 PXP0GCmnluc4tjP9pMAg2v+gdgDWzxivbh/pyd3Zg0hOOet44+nyfT0cmvopslIjPn
+	 OZwNqkKxfitaA/lk+vZW3JVozEpeJy/1i1T7zOoY=
+Date: Wed, 20 May 2026 11:11:33 -0700
+From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, pabeni@redhat.com, leon@kernel.org,
+	longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
+	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
+	ernis@linux.microsoft.com, shirazsaleem@microsoft.com,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	stephen@networkplumber.org, jacob.e.keller@intel.com,
+	dipayanroy@microsoft.com, leitao@debian.org, kees@kernel.org,
+	john.fastabend@gmail.com, hawk@kernel.org, bpf@vger.kernel.org,
+	daniel@iogearbox.net, ast@kernel.org, sdf@fomichev.me,
+	yury.norov@gmail.com
+Subject: Re: [PATCH net 1/2] net: mana: Add NULL guards in teardown path to
+ prevent panic on attach failure
+Message-ID: <ag35VVYd0BOSYbrK@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20260518194654.735580-2-dipayanroy@linux.microsoft.com>
+ <20260519225556.3939204-1-kuba@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260515191942.1892718-1-seanjc@google.com> <7260682b21c28d1299e58400b9a2f4b8d23bd434.camel@infradead.org>
-Message-ID: <ag32mwLvHpWn2vCt@google.com>
-Subject: Re: [PATCH v3 00/41] x86: Try to wrangle PV clocks vs. TSC
-From: Sean Christopherson <seanjc@google.com>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Kiryl Shutsemau <kas@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
-	Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov <alexey.makhalov@broadcom.com>, 
-	Jan Kiszka <jan.kiszka@siemens.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Juergen Gross <jgross@suse.com>, 
-	Daniel Lezcano <daniel.lezcano@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	John Stultz <jstultz@google.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>, Stephen Boyd <sboyd@kernel.org>, x86@kernel.org, 
-	linux-coco@lists.linux.dev, kvm@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	xen-devel@lists.xenproject.org, Michael Kelley <mhklinux@outlook.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Nikunj A Dadhania <nikunj@amd.com>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-1.66 / 15.00];
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260519225556.3939204-1-kuba@kernel.org>
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MV_CASE(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-11068-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11067-lists,linux-hyperv=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,redhat.com,microsoft.com,broadcom.com,siemens.com,linux.intel.com,infradead.org,suse.com,google.com,intel.com,oracle.com,lists.linux.dev,vger.kernel.org,lists.xenproject.org,outlook.com,amd.com,linutronix.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[34];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[33];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[seanjc@google.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[google.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: BBE82595561
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,vger.kernel.org,networkplumber.org,intel.com,debian.org,gmail.com,iogearbox.net,fomichev.me];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 99550597D16
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, May 19, 2026, David Woodhouse wrote:
-> On Fri, 2026-05-15 at 12:19 -0700, Sean Christopherson wrote:
-> > Dave/Thomas/Peter/Boris, what's the going rate for bribes to take somet=
-hing
-> > like this through the tip tree?
-> >=20
-> > The bulk of the changes are in kvmclock and TSC, but pretty much every
-> > hypervisor's guest-side code gets touched at some point.=C2=A0 I am rea=
-onsably
-> > confident in the correctness of the KVM changes.=C2=A0 Michael tested H=
-yper-V in
-> > v2, and while there were conflicts when rebasing, they were largely
-> > superficial (and I've just jinxed myself).=C2=A0 For all other hypervis=
-ors, assume
-> > the code is compile-tested only, but those changes are all quite small =
-and
-> > straightforward.
-> >=20
-> > The only changes that are questionable/contentious are the last two pat=
-ches,
-> > which have KVM-as-a-guest use CPUID 0x16 to get the CPU frequency, even=
- on
-> > AMD (that's the dubious part).=C2=A0 I very deliberately put them last,=
- so that
-> > they can be dropped at will (I don't care terribly if those patches lan=
-d).
-> > To merge them, I would want explicit Acks from Paolo and David W.
-> >=20
-> > So, except for the last two patches, to get the stuff I really care abo=
-ut
-> > landed, I think/hope it's just the TSC and guest-side CoCo changes that=
- need
-> > reviews/acks?
-> >=20
-> > The primary goal of this series is (or at least was, when I started) to
-> > fix flaws with SNP and TDX guests where a PV clock provided by the untr=
-usted
-> > hypervisor is used instead of the secure/trusted TSC that is controlled=
- by
-> > trusted firmware.
-> >=20
-> > The secondary goal is to draft off of the SNP and TDX changes to slight=
-ly
-> > modernize running under KVM.=C2=A0 Currently, KVM guests will use TSC f=
-or
-> > clocksource, but not sched_clock.=C2=A0 And they ignore Intel's CPUID-b=
-ased TSC
-> > and CPU frequency enumeration, even when using the TSC instead of kvmcl=
-ock.
-> > And if the host provides the core crystal frequency in CPUID.0x15, then=
- KVM
-> > guests can use that for the APIC timer period instead of manually calib=
-rating
-> > the frequency.
-> >=20
-> > The tertiary goal is to clean up all of the PV clock code to deduplicat=
-e logic
-> > across hypervisors, and to hopefully make it all easier to maintain goi=
-ng
-> > forward.
->=20
-> I booted this in qemu with -cpu host,+invtsc,+vmware-cpuid-freq
->=20
-> I was expecting to see it eschew the kvmclock and use *only* the TSC.
-> Is there even any need for 'tsc-early' given that it's *told* the TSC
-> frequency in CPUID? Shouldn't it have detected that the TSC is known
-> before init_tsc_clocksource() runs?
+On Tue, May 19, 2026 at 03:55:56PM -0700, Jakub Kicinski wrote:
+> This is an AI-generated review of your patch. The human sending this
+> email has considered the AI review valid, or at least plausible.
+> ---
+> net: mana: Add NULL guards in teardown path to prevent panic on attach failure
+>     
+> When queue allocation fails partway through, the error cleanup frees
+> and NULLs apc->tx_qp and apc->rxqs. The patch adds NULL guards for these
+> pointers in teardown paths such as mana_destroy_vport(), mana_fence_rqs(),
+> and mana_dealloc_queues() to prevent NULL pointer dereferences.
+> 
+> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > index 9afc786b297a8..9e7e4bf526bf6 100644
+> > --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> [ ... ]
+> > @@ -2858,13 +2861,16 @@ static void mana_destroy_vport(struct mana_port_context *apc)
+> >  	struct mana_rxq *rxq;
+> >  	u32 rxq_idx;
+> >  
+> > -	for (rxq_idx = 0; rxq_idx < apc->num_queues; rxq_idx++) {
+> > -		rxq = apc->rxqs[rxq_idx];
+> > -		if (!rxq)
+> > -			continue;
+> > +	if (apc->rxqs) {
+> >  
+> > -		mana_destroy_rxq(apc, rxq, true);
+> > -		apc->rxqs[rxq_idx] = NULL;
+> > +		for (rxq_idx = 0; rxq_idx < apc->num_queues; rxq_idx++) {
+> > +			rxq = apc->rxqs[rxq_idx];
+> > +			if (!rxq)
+> > +				continue;
+> > +
+> > +			mana_destroy_rxq(apc, rxq, true);
+> > +			apc->rxqs[rxq_idx] = NULL;
+> > +		}
+> >  	}
+> 
+> If the teardown path frees apc->rxqs and sets it to NULL on attach failure,
+> how does the interface recover if the user subsequently brings it back up?
+> 
+> When mana_open() is invoked, it directly calls mana_alloc_queues(). Inside
+> mana_alloc_queues() -> mana_add_rx_queues(), the code does:
+> 
+>     apc->rxqs[i] = rxq;
+> 
+> If apc->rxqs was left as NULL during the teardown, will this cause a NULL
+> pointer dereference on the next interface bring-up?
+> 
+> [ ... ]
+Hi Jakub,
+
+The only path that recovers from this state is mana_attach(), which
+calls mana_init_port() -> mana_init_port_context() to re-allocate
+apc->rxqs before calling mana_alloc_queues().
+
+When mana_open is invoked prior to it the rxqs would be already setup by
+mana_probe_port -> mana_init_port -> mana_init_port_context.
+
+> > @@ -3287,33 +3294,38 @@ static int mana_dealloc_queues(struct net_device *ndev)
+> >  	 * number of queues.
+> >  	 */
+> >  
+> > -	for (i = 0; i < apc->num_queues; i++) {
+> > -		txq = &apc->tx_qp[i].txq;
+> > -		tsleep = 1000;
+> > -		while (atomic_read(&txq->pending_sends) > 0 &&
+> > -		       time_before(jiffies, timeout)) {
+> > -			usleep_range(tsleep, tsleep + 1000);
+> > -			tsleep <<= 1;
+> > -		}
+> > -		if (atomic_read(&txq->pending_sends)) {
+> > -			err = pcie_flr(to_pci_dev(gd->gdma_context->dev));
+> > -			if (err) {
+> > -				netdev_err(ndev, "flr failed %d with %d pkts pending in txq %u\n",
+> > -					   err, atomic_read(&txq->pending_sends),
+> > -					   txq->gdma_txq_id);
+> > +	if (apc->tx_qp) {
+> 
+> In the error path where queue creation fails partway through, will
+> mana_destroy_txq() be called?
+> 
+> If mana_destroy_txq() unconditionally iterates over all apc->num_queues:
+> 
+>     for (i = 0; i < apc->num_queues; i++) {
+>         ...
+>         mana_destroy_wq_obj(apc, GDMA_SQ, apc->tx_qp[i].tx_object);
+>         ...
+> 
+> Will it pass 0 or INVALID_MANA_HANDLE to mana_destroy_wq_obj() for queues
+> that were never fully initialized?
+> 
+> Does mana_destroy_wq_obj() send a MANA_DESTROY_WQ_OBJ command to the hardware
+> with these uninitialized handles, and could handle 0 corrupt the firmware
+> state?
 >
-> And then it even spent some time at boot actually using the kvmclock as
-> clocksource... when ideally I don't think it would even have *enabled*
-> it at all?
+This is a known  exisiting issue in the cleaup path for partial tx
+setups and was also mentioned in the a recent patch where the rx partial
+init clean-up path was fixed. My colleague Aditya is already working on a
+patch to fix this and all other issues in the tx cleanup path.
+ 
+> > +		for (i = 0; i < apc->num_queues; i++) {
+> > +			txq = &apc->tx_qp[i].txq;
+> > +			tsleep = 1000;
+> > +			while (atomic_read(&txq->pending_sends) > 0 &&
+> > +			       time_before(jiffies, timeout)) {
+> > +				usleep_range(tsleep, tsleep + 1000);
+> > +				tsleep <<= 1;
+> > +			}
+> > +			if (atomic_read(&txq->pending_sends)) {
+> > +				err =
+> > +				    pcie_flr(to_pci_dev(gd->gdma_context->dev));
+> 
+> If pcie_flr() is triggered here, the PCI Function Level Reset wipes the
+> internal GDMA state.
+> 
+> Further down in this function, mana_disable_vport_rx(), mana_fence_rqs(),
+> and mana_destroy_vport() are called. Will these functions attempt to send
+> commands to the now-destroyed GDMA admin queue via mana_send_request() and
+> wait for completions?
+> 
+> Could this lead to cascading timeouts since the hardware was just reset and
+> cannot process admin commands?
+> 
+This is pre-existing behavior/issue the pcie_flr() path and the
+subsequent calls to mana_disable_vport_rx()/mana_fence_rqs()/mana_destroy_vport()
+are unchanged by this patch. My patch only adds a NULL guard for
+apc->tx_qp to skip this entire TX drain block when tx_qp is already
+freed. But this point seems to be valid issue, I will investigate this
+further and I will send a different patch set for this as follow up work.
 
-Yeah, that's definitely the ideal state.  And I had all the same expectatio=
-ns and
-observations as you when digging in and testing this.  But unless this seri=
-es
-makes things worse, I want punt on achieving the ideal state for the moment=
-, as
-it's proving to be a big lift just to get to a not-awful state.
 
-> [    0.000000] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycle=
-s: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
-> [    0.000000] tsc: Detected 2400.000 MHz processor
-> [    0.008205] TSC deadline timer available
-> [    0.008270] clocksource: refined-jiffies: mask: 0xffffffff max_cycles:=
- 0xffffffff, max_idle_ns: 1910969940391419 ns
-> [    0.159085] clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff=
-, max_idle_ns: 19112604467 ns
-> [    0.164074] clocksource: tsc-early: mask: 0xffffffffffffffff max_cycle=
-s: 0x22983777dd9, max_idle_ns: 440795300422 ns
-> [    0.229087] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xfffff=
-fff, max_idle_ns: 1911260446275000 ns
-> [    0.337095] clocksource: Switched to clocksource kvm-clock
-> [    0.345246] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff,=
- max_idle_ns: 2085701024 ns
-> [    0.356201] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x2=
-2983777dd9, max_idle_ns: 440795300422 ns
-> [    0.360560] clocksource: Switched to clocksource tsc
->=20
+> > +				if (err) {
+> > +					netdev_err(ndev, "flr failed %d with %d pkts pending in txq %u\n",
+> > +						   err,
+> > +					    atomic_read(&txq->pending_sends),
+> > +					    txq->gdma_txq_id);
+> > +				}
+> > +				break;
+> >  			}
+> > -			break;
+> >  		}
+> -- 
+> pw-bot: cr
 
+Regards
+Dipayaan Roy
 
 
