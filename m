@@ -1,59 +1,59 @@
-Return-Path: <linux-hyperv+bounces-11072-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11073-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uMNMCjMwDmoK7wUAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11072-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 00:05:39 +0200
+	id 8NxtM30JDmrY5gUAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11073-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 21:20:29 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8024F59BB9C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 00:05:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 63A3C598292
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 21:20:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1FB792F5DB2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 18:56:01 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C6E0139E1016
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 18:57:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1A41451062;
-	Wed, 20 May 2026 18:50:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 467A2400E0A;
+	Wed, 20 May 2026 18:52:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LMM/1bfq"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lgUr7i8E"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1164508EB;
-	Wed, 20 May 2026 18:50:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AC8369D7E;
+	Wed, 20 May 2026 18:52:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779303023; cv=none; b=VEbTy4jehUWMzaPATPbOW5X+NWr3BPlRFAjK+62/ZB3tvly0mzD3lPVDTzW9F1WzCrcOPPkmJHJYtpp+bkoQEfZmKrgWPAHp8hPwJs6wX+rTA90jwyPD0lBSbDd02ZtW7iMw7IDPY81WN1pQ7gAJLr7g+zogQ4o2tRLURXm3TkU=
+	t=1779303143; cv=none; b=mo+BWdLkJisEX0K6wQieIcmz7c6yThtVWlS+BdBkuWghls0bxECq34f0Ir3ctsLoQcpkQYia4VeNeIIwSu3R4i8/kk7zPeaY3yIKMA8DO7+xH8D3kdKMfeylrA3lMXxP4Tj+80fn9qV5AUpwwiu++GwgPaeKkbYWXLp+CY2ppYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779303023; c=relaxed/simple;
-	bh=vfqQqe3/Q5FohBSCxOE8qHtO0nxO4XvM5LjLHZKXyao=;
+	s=arc-20240116; t=1779303143; c=relaxed/simple;
+	bh=QjAnceuew11RIwWs2DQFFNl23Bhtsg/GKQH/i+NDfAM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PfxHmsxBuEC7XqvvzaBN2oHq7FBJA1t5EVmDyuzLNAIZ4ky6Tg6wXcz211cZXE4vYloY4CAEO3wqiNjk3/AiS9C+FOMLY9s10WwxzkG9Il9MMeB5Xflcx/7PpC68Cqars7imoopmVLro5HwLIqHRsrUvpeOdysngrYdC7qNphb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LMM/1bfq; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:MIME-Version; b=NH802Dirjl/+lVhsmbe2NuvsAZE4bNk+k80Gs1QR9s3qbuqHl0Eiub/pNhesVCqZKImfyswyEgq8x+ihXkmijf1I65fSuCG+W0ULhmC7+UOzN8BnR9BEXK1VXrJZPVHKpzG1bVBNsQHeaWA0dTez3rLb2CiWMJ9Re6gSCrVwlJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lgUr7i8E; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=vfqQqe3/Q5FohBSCxOE8qHtO0nxO4XvM5LjLHZKXyao=; b=LMM/1bfq7BKcsb1h5JmlVGAaqW
-	vi8jmiUaEoy+tahKu2tgUaSO9O0xNvl+zkTWYReTeSdPjeJucgVK5iiSoGE8XdlPjbEflxMAovy0J
-	9Q4N+u9Y/VZ6oK8vkDXNkLffswvQhkZ01Bazh+3DdTFIGV670OJV4FhZ9CYmgnzNWEDZfbIoSKcRG
-	S1wnSn16JqIf9a8tBjsyYQZjy69Nj6zCvX5x2jroKuilGJOO/IjPGMmqVI4LzsRgCOBYYVLj3cZG8
-	SahANau1nYZOtWoYoQ+CykqDx66r4FqVPVBvoTcSECdEbqdw4oMj+3eQBlwVw4PMkiBPwJlrcxmOZ
-	V3TQPMqg==;
+	bh=eRikeJAaevbA4NP2g19rUNwI2NZyhVnTYBWtQ7dcaAU=; b=lgUr7i8EL2F8QaWtzohapoINjb
+	dAnsORiobdYMPtmsSDZ/QRiN7s1rJUCLo9RKbLoIg7hISvL/AVEQZV+KPYSUfrPlPLBx6WxW38sGS
+	StE/N1VLLOq2EXBHiHp5tpuj4XnsA94KqqySKjvCZH1818yr33rWd2lt3i8Z7+V5eDgAVvzdgankH
+	o6qQUd23ZxwUk68fsqyexc2ORewi6gkpiiPpEOsilLASL6yk5nr0Xj2C2toi+f9IuAfZLfUPegn0l
+	dMC3Fcyo7XJFJ3v8+0OXg/iwVZLcN5GdGUs4G5fr4w3PaILbl4vVz1q0UuQpfAUDYMnvOFqzrUtKR
+	sQuhKA1A==;
 Received: from 54-240-197-227.amazon.com ([54.240.197.227] helo=freeip.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPlzZ-00000007UI1-3OGD;
-	Wed, 20 May 2026 18:50:06 +0000
-Message-ID: <e892099dd6f459e5fe60ae7b9cb2183c2da2e1e6.camel@infradead.org>
-Subject: Re: [PATCH v3 40/41] x86/tsc: Add standalone helper for getting CPU
- frequency from CPUID
+	id 1wPm1d-00000007UNm-3bew;
+	Wed, 20 May 2026 18:52:14 +0000
+Message-ID: <0a3aa07a1d3c4bec2b89f8026093969155b73caa.camel@infradead.org>
+Subject: Re: [PATCH v3 41/41] x86/kvmclock: Get CPU base frequency from
+ CPUID when it's available
 From: David Woodhouse <dwmw2@infradead.org>
-To: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
- <seanjc@google.com>,  Kiryl Shutsemau <kas@kernel.org>, "K. Y. Srinivasan"
+To: Sean Christopherson <seanjc@google.com>, Kiryl Shutsemau
+ <kas@kernel.org>,  Paolo Bonzini <pbonzini@redhat.com>, "K. Y. Srinivasan"
  <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
  <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Long Li
  <longli@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, Alexey
@@ -72,13 +72,12 @@ Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>, Vitaly Kuznetsov
  linux-kernel@vger.kernel.org,  xen-devel@lists.xenproject.org, Michael
  Kelley <mhklinux@outlook.com>, Tom Lendacky <thomas.lendacky@amd.com>,
  Nikunj A Dadhania <nikunj@amd.com>, Thomas Gleixner <tglx@linutronix.de>
-Date: Wed, 20 May 2026 19:50:04 +0100
-In-Reply-To: <3cb683b4-973a-4b3e-a5d5-a8baa8a70eb0@redhat.com>
+Date: Wed, 20 May 2026 19:52:12 +0100
+In-Reply-To: <20260515191942.1892718-42-seanjc@google.com>
 References: <20260515191942.1892718-1-seanjc@google.com>
-	 <20260515191942.1892718-41-seanjc@google.com>
-	 <3cb683b4-973a-4b3e-a5d5-a8baa8a70eb0@redhat.com>
+	 <20260515191942.1892718-42-seanjc@google.com>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-JOgeb2pU8FOLtFZNxJ2T"
+	boundary="=-iph/FD/9Oere6U4F6y6S"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -101,7 +100,7 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11072-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11073-lists,linux-hyperv=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[34];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FROM_HAS_DN(0.00)[];
@@ -116,41 +115,57 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:mid,infradead.org:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,amazon.co.uk:email]
-X-Rspamd-Queue-Id: 8024F59BB9C
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,infradead.org:mid,infradead.org:dkim]
+X-Rspamd-Queue-Id: 63A3C598292
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---=-JOgeb2pU8FOLtFZNxJ2T
+--=-iph/FD/9Oere6U4F6y6S
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2026-05-16 at 09:42 +0200, Paolo Bonzini wrote:
-> On 5/15/26 21:19, Sean Christopherson wrote:
-> > Extract the guts of cpu_khz_from_cpuid() to a standalone helper that
-> > doesn't restrict the usage to Intel CPUs.=C2=A0 This will allow sharing=
- the
-> > core logic with kvmclock, as (a) CPUID.0x16 may be enumerated alongside
-> > kvmclock, and (b) KVM generally doesn't restrict CPUID based on vendor.
+On Fri, 2026-05-15 at 12:19 -0700, Sean Christopherson wrote:
+> If CPUID.0x16 is present and valid, use the CPU frequency provided by
+> CPUID instead of assuming that the virtual CPU runs at the same
+> frequency as TSC and/or kvmclock.=C2=A0 Back before constant TSCs were a
+> thing, treating the TSC and CPU frequencies as one and the same was
+> somewhat reasonable, but now it's nonsensical, especially if the
+> hypervisor explicitly enumerates the CPU frequency.
 >=20
-> Even for native there's no real reason to restrict to Intel, I think.
-> native_calibrate_tsc() only limits itself because historically (prior to=
-=20
-> commit 604dc9170f24, "x86/tsc: Use CPUID.0x16 to calculate missing=20
-> crystal frequency", 2019-05-09) it used a hardcoded table of crystal=20
-> frequencies.
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+> =C2=A0arch/x86/kernel/kvmclock.c | 16 +++++++++++++++-
+> =C2=A01 file changed, 15 insertions(+), 1 deletion(-)
 >=20
-> Of course paranoia applies, but for virtualization, if the leaf exists=
-=20
-> there is no reason not to trust it.
+> diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
+> index 62c8ea2e6769..7607920ae386 100644
+> --- a/arch/x86/kernel/kvmclock.c
+> +++ b/arch/x86/kernel/kvmclock.c
+> @@ -190,6 +190,20 @@ void kvmclock_cpu_action(enum kvm_guest_cpu_action a=
+ction)
+> =C2=A0	}
+> =C2=A0}
+> =C2=A0
+> +static unsigned long kvm_get_cpu_khz(void)
+> +{
+> +	unsigned int cpu_khz;
+> +
+> +	/*
+> +	 * Prefer CPUID over kvmclock when possible, as the base CPU frequency
+> +	 * isn't necessarily the same as the kvmlock "TSC" frequency.
+> +	 */
+> +	if (!cpuid_get_cpu_freq(&cpu_khz))
+> +		return cpu_khz;
+> +
+> +	return pvclock_tsc_khz(this_cpu_pvti());
 
-Agreed.
+I'm fine with this in principle but shouldn't the fallback be calling
+kvm_get_tsc_khz() instead of directly calling pvclock_tsc_khz()?
 
-Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
 
 
---=-JOgeb2pU8FOLtFZNxJ2T
+--=-iph/FD/9Oere6U4F6y6S
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -229,22 +244,22 @@ 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
-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
+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
-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
+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
 
 
---=-JOgeb2pU8FOLtFZNxJ2T--
+--=-iph/FD/9Oere6U4F6y6S--
 
