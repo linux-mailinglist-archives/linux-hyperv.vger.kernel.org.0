@@ -1,54 +1,54 @@
-Return-Path: <linux-hyperv+bounces-11109-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11110-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oGuPMl9CDmrV9QUAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11109-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 01:23:11 +0200
+	id yDVgJII+Dmqr9AUAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11110-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 01:06:42 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07BD759CB46
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 01:23:11 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3235959C8D1
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 01:06:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 33A0C3021B4D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 23:02:10 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 4991E3020FC5
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 23:06:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 012593BFE2B;
-	Wed, 20 May 2026 23:02:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2999322C67;
+	Wed, 20 May 2026 23:06:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DYgCKqJA"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k4QnWiSB"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99AEC39A7E7;
-	Wed, 20 May 2026 23:02:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8A7346ADC;
+	Wed, 20 May 2026 23:06:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779318126; cv=none; b=GFIt4Cjk/xNXmsknxvymPLyNVXVNmos8lEblwaPBr/TkG6ZdJRPI9y9gqULnUv3/Unw1COGXfrfnIoEyd4pZfVAYjsrVw9Y9AYTSJ0QFyxPoRV8zwHkfWEYa3+1z4KEEv7QF9Wc+jurz5tWB7aMeHOMWtO5l+Mcc22mvO6qos9A=
+	t=1779318395; cv=none; b=k3QEzCQferh55KMRfKzimFHbWbJnF/MV3KeRRua7+BTlCwbajuTzpUMXXtyC9+6hGAuj4TShaShFSg7K5IaDINIGJUSmSiGwvOjnC/QJJX7f/RgOCPi/zkJDQXcMlBkTb14TD5sEP7jM8oz4mFrVgiXEUhlqHKXYdYu/tbAOQ5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779318126; c=relaxed/simple;
-	bh=HkuY5zlrDncQKLllQWWZ8rfybB4YymoG1YSXmtRo0wk=;
+	s=arc-20240116; t=1779318395; c=relaxed/simple;
+	bh=4GQvxYPbI05Z1cj/1WHAcL42C7RPKsGJx4Urkvl1K7Q=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LqcdeZYct6rB8pGP9191idR3787rD9zutq3SXpWVqmJ2FpZB7PCLnNNYMIL0bWHD38PFSrO4Jgv5x2l5BQUA/bMhUrGglJD7HajhbS8BtTr5fb/1gho7zjTA+7u6qL2k/1e0CST6Wc1JrdPXHWXkbvU+nU156RF4pNw1aOho1z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DYgCKqJA; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:MIME-Version; b=KldAlduVZeZktJiQiUhhOQF1UZlmyiNIX8HuvHtWLinlXvha6eOjwQUohcqZJRyOZb0DfoS3RzilAiCobSYSdwxY0vY+x2ed1XljKQQyCMIe1ukeGTUoJNDp8M0TSLQsfiujXHE8+cECYQ5SpIlWFdueGTLIq5dGvPiCNAD5Uyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=k4QnWiSB; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=HkuY5zlrDncQKLllQWWZ8rfybB4YymoG1YSXmtRo0wk=; b=DYgCKqJAuV01wCeoijOeQHyFzp
-	eCVeH2ow0VIwOMPxuJ37OmNrkc6hTszDikp1AX4YN4iVsT7jZ+EaJZjzdL0Kol5g+Ci0PpHOsyYdk
-	25zjVPdkDqtlK0hzO+QaKBJlQv69RZohqGn1PhH3VF90viyzSXM1vu7r1fupR+JowX80QlWz4JazM
-	ljWoTb8ACPM+hp92r6OX216b7g2nQWsLgyLm9o8Q96CC1GxFw48PfdD+HZs2N25t3xsaz2gJRYh7v
-	ZcJPbjk8KranAwE4PKqk5J6hOXmuVAsMyyUHK4sPluJw7rm8q1uUWadjLgHpuEt6j6fSR534NLYr0
-	zGSmGDCQ==;
-Received: from 54-240-197-227.amazon.com ([54.240.197.227] helo=freeip.amazon.com)
+	bh=4GQvxYPbI05Z1cj/1WHAcL42C7RPKsGJx4Urkvl1K7Q=; b=k4QnWiSBnVT26KV/1hox8Bc2Zw
+	h1ug6i4QDDFzmM1Wh9T7JCcQfBsfGyrAfq6hqZpmaf+jbpJizEBTCL6RJISAN+3C4DxGza0zAwOvS
+	pnPO2w4zr+FMIHUZvDFIFMC8THsNlepjNwn9dDI9zBcVCmR9nbPX7YS/HHTjMJALFu5xiGau39JT3
+	g3pSSv8rCr8QSFozr5/dF72kXNI2qtwpxkQKvg9P5r6hCk5Mk89exS5Wjqj1q9fsQlmnnoPyG8gla
+	BGL+QTW3FsmGeV7rHl1L1F8CZBv7fe2334TuURMV6+GtWXlTdi7Ls8BdIWuFmWHAkQeQ3kT33sdmB
+	F4G6SkGA==;
+Received: from 54-240-197-235.amazon.com ([54.240.197.235] helo=freeip.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPpvH-00000007ikJ-3pxF;
-	Wed, 20 May 2026 23:01:56 +0000
-Message-ID: <6a621c6ef71670394b3bcbe34cda8c5ae635558e.camel@infradead.org>
+	id 1wPpzd-00000007iyd-3KJu;
+	Wed, 20 May 2026 23:06:25 +0000
+Message-ID: <0f85539ce23881f8a5c5a46c8cc633ef1ec3d162.camel@infradead.org>
 Subject: Re: [PATCH v3 25/41] x86/kvmclock: Hook clocksource.suspend/resume
  when kvmclock isn't sched_clock
 From: David Woodhouse <dwmw2@infradead.org>
@@ -72,12 +72,12 @@ Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>, Vitaly Kuznetsov
  linux-kernel@vger.kernel.org,  xen-devel@lists.xenproject.org, Michael
  Kelley <mhklinux@outlook.com>, Tom Lendacky <thomas.lendacky@amd.com>,
  Nikunj A Dadhania <nikunj@amd.com>, Thomas Gleixner <tglx@linutronix.de>
-Date: Thu, 21 May 2026 00:01:53 +0100
+Date: Thu, 21 May 2026 00:06:24 +0100
 In-Reply-To: <20260515191942.1892718-26-seanjc@google.com>
 References: <20260515191942.1892718-1-seanjc@google.com>
 	 <20260515191942.1892718-26-seanjc@google.com>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-xGIqWxFCaJJI32R6nuFc"
+	boundary="=-fsxfMtCF9Cp6c6pnaDKT"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -92,7 +92,7 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
 	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -100,7 +100,7 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11109-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11110-lists,linux-hyperv=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[34];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FROM_HAS_DN(0.00)[];
@@ -114,14 +114,14 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amazon.co.uk:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 07BD759CB46
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,infradead.org:mid,infradead.org:dkim,amazon.co.uk:email]
+X-Rspamd-Queue-Id: 3235959C8D1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---=-xGIqWxFCaJJI32R6nuFc
+--=-fsxfMtCF9Cp6c6pnaDKT
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -136,7 +136,7 @@ k.
 
 Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
 
---=-xGIqWxFCaJJI32R6nuFc
+--=-fsxfMtCF9Cp6c6pnaDKT
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -215,22 +215,22 @@ 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
-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
+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
-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
+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
 
 
---=-xGIqWxFCaJJI32R6nuFc--
+--=-fsxfMtCF9Cp6c6pnaDKT--
 
