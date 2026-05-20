@@ -1,56 +1,56 @@
-Return-Path: <linux-hyperv+bounces-11094-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11095-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8B2uKqA0Dmq58AUAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11094-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 00:24:32 +0200
+	id mHBaLl9EDmoM9gUAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11095-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 01:31:43 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B057559BF2D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 00:24:31 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A67B59CC7A
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 01:31:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 1F94030B68B4
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 21:51:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A3BEB33D9880
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 21:53:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8DBD38F23D;
-	Wed, 20 May 2026 21:51:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 183063A0B01;
+	Wed, 20 May 2026 21:53:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jDmVqRhZ"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C3KXodiW"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9187637BE87;
-	Wed, 20 May 2026 21:51:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DC037A496;
+	Wed, 20 May 2026 21:53:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779313916; cv=none; b=gut10zYZTMf6ANsp2iO/UXCu1Q6vtfHbO4IbckgQniCs71xsXtxJNeoVcVgtX53ilRXUD5drfxusfzyg5XB0tuJzigcQXUHHepHC7RpjTv2KqvM5+coWVhcEh9lIMVTU4NXaj/q+Lu9N2FXf1ZoKRzRZxrU3wjUF95Xq8M1xq2U=
+	t=1779314006; cv=none; b=KU5JyO5FzsTmdtHtVPBBG3nSxxaFbfn+5iW/vI3wRw12Rb9AqRZ5kNIxEe2BOI657NdKlO2/Xsgbf8sk9+NZlOsZyAOJK3pwyt61EQ/yNhsEYnA7PiUPZSdC+5QIo5ccWmcEqgKyfXmvRKZX60Xqsn9iTOo+aL0MGj6OwLtFw8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779313916; c=relaxed/simple;
-	bh=76gkSSjJ06e6pDzAypOKfXDG5VHWtkBMD5ifLWyI+5o=;
+	s=arc-20240116; t=1779314006; c=relaxed/simple;
+	bh=xSmotBumbh9nvUNe1AmY/zmLJ0tpoG/fPrPBvV+spqM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SDuQEedj/l3GVLn+ulPJGrq8TfHJX9lY/zcu/1EBc/7Gin5sixLdaSfI9niaPMafHPaGSM3+tkb/PkV1KRbeVPvJsr2TkKGrZCI09YCQgUqrREmwP3FOugRVnWOJVbp8P4e9sot5MU+j2fws4pa32kHeGtLyWuci15IqqAZslYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jDmVqRhZ; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:MIME-Version; b=uf/6xD2w3PXEHgirDq8KsPwZ8V3eoz6xeknJPpZct9uL31+aN1v0W6H6Y0MFEns1CL9Lc9NzpZeHBR1Rxulqu8q2757kJ1WNSGZfG5aeZbl2imFoaWVGBs5seACjtcsP1goAm+oLQ4nnBLtbi9rd0IAL2RIe7pDgHKPaZ+0QmjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=C3KXodiW; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=76gkSSjJ06e6pDzAypOKfXDG5VHWtkBMD5ifLWyI+5o=; b=jDmVqRhZHbXv3h5OJh4AYHQSn8
-	TcRtwUK1NdPokJBhfUkxNtROd3xAiaREqNuRLWVIiAXHP3UvgdDYC5Yf5BY4rY2TUaQPllysR1KXQ
-	dO3DkzxajHWJ5inYosuVwKRT3D1Rr4EnWLI7eDhQTR5KCsWJbTO7vE10xzs5bJTR8JwGwjEPARDuH
-	Wcfd1KxkS1iwkD1eI4tUV852ZYMaBI+Larn/10z+aIEdObmWVitRQmNZoTanmKg4em5hfIx+C+nrN
-	Cnt2ATvIMHLya1fQDhLPMBKr7eHbZ+6VLggLrfzNweB1BhFDqasyaNljdnwfvp/3r5yRvfXJeRphV
-	/KxhU1rQ==;
+	bh=xSmotBumbh9nvUNe1AmY/zmLJ0tpoG/fPrPBvV+spqM=; b=C3KXodiWWlgbcDiMbYKSpffnDe
+	2wy6vD24WI6C1ASVsOfhTce+ihf2Dqyd8eFfQDaSYovFMEhBW5AOUerUAgoxbwDXXzU9ZwM9og/Xr
+	5bv0RZOSJ+eSbKBsKc/SSqtqaRjHyLpz09cbwVaqvKPKwb8WAMQC76x+9LXAG6WObOE6rTG6nb71T
+	IWO5oPlGRzeP3SUbnQjxiq20sactLFbbEYLGhsc1jW3JJzkvgt2G9Sajga+enQxPWp/X+J0cIDhxr
+	eonRP9bLJO0+FNHlGndkblplvoAfPUYaHDXks6QiL5Suq2vZXuRu7+upJTYnEveFeyHljBzRSjpUk
+	t1GTRagQ==;
 Received: from 54-240-197-235.amazon.com ([54.240.197.235] helo=freeip.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPopP-00000007cNa-1TEk;
-	Wed, 20 May 2026 21:51:47 +0000
-Message-ID: <133628b2e275b00f0b0779b6b6507043f08c4a52.camel@infradead.org>
-Subject: Re: [PATCH v3 11/41] x86/kvm: Don't disable kvmclock on BSP in
- syscore_suspend()
+	id 1wPoqo-00000007cdF-2nQQ;
+	Wed, 20 May 2026 21:53:15 +0000
+Message-ID: <d9fbed593b0ecca90a71fc6882a0de9edddbcfe9.camel@infradead.org>
+Subject: Re: [PATCH v3 12/41] x86/paravirt: Remove unnecessary PARAVIRT=n
+ stub for paravirt_set_sched_clock()
 From: David Woodhouse <dwmw2@infradead.org>
 To: Sean Christopherson <seanjc@google.com>, Kiryl Shutsemau
  <kas@kernel.org>,  Paolo Bonzini <pbonzini@redhat.com>, "K. Y. Srinivasan"
@@ -72,12 +72,12 @@ Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>, Vitaly Kuznetsov
  linux-kernel@vger.kernel.org,  xen-devel@lists.xenproject.org, Michael
  Kelley <mhklinux@outlook.com>, Tom Lendacky <thomas.lendacky@amd.com>,
  Nikunj A Dadhania <nikunj@amd.com>, Thomas Gleixner <tglx@linutronix.de>
-Date: Wed, 20 May 2026 22:51:45 +0100
-In-Reply-To: <20260515191942.1892718-12-seanjc@google.com>
+Date: Wed, 20 May 2026 22:53:12 +0100
+In-Reply-To: <20260515191942.1892718-13-seanjc@google.com>
 References: <20260515191942.1892718-1-seanjc@google.com>
-	 <20260515191942.1892718-12-seanjc@google.com>
+	 <20260515191942.1892718-13-seanjc@google.com>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-kWcNeJmwuu+RfO0gpPl+"
+	boundary="=-LZSBgeOiINF7ylNXtgtB"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -92,68 +92,54 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
 	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	TAGGED_FROM(0.00)[bounces-11095-lists,linux-hyperv=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11094-lists,linux-hyperv=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[34];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[intel.com,redhat.com,broadcom.com,oracle.com,kernel.org,lists.linux.dev,vger.kernel.org,lists.xenproject.org,outlook.com,amd.com,linutronix.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	HAS_ATTACHMENT(0.00)[];
-	DKIM_TRACE(0.00)[infradead.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[dwmw2@infradead.org,linux-hyperv@vger.kernel.org];
-	FREEMAIL_CC(0.00)[intel.com,redhat.com,broadcom.com,oracle.com,kernel.org,lists.linux.dev,vger.kernel.org,lists.xenproject.org,outlook.com,amd.com,linutronix.de];
+	DKIM_TRACE(0.00)[infradead.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: B057559BF2D
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,amazon.co.uk:email,infradead.org:mid,infradead.org:dkim]
+X-Rspamd-Queue-Id: 2A67B59CC7A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---=-kWcNeJmwuu+RfO0gpPl+
+--=-LZSBgeOiINF7ylNXtgtB
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Fri, 2026-05-15 at 12:19 -0700, Sean Christopherson wrote:
-> Don't disable kvmclock on the BSP during syscore_suspend(), as the BSP's
-> clock is NOT restored during syscore_resume(), but is instead restored
-> earlier via the sched_clock restore callback.=C2=A0 If suspend is aborted=
-, e.g.
-> due to a late wakeup, the BSP will run without its clock enabled, which
-> "works" only because KVM-the-hypervisor is kind enough to not clobber the
-> shared memory when the clock is disabled.=C2=A0 But over time, the BSP's =
-view
-> of time will drift from APs.
-
-The work that Dongli and I have been doing elsewhere makes me want to
-phrase that last sentence far more judgmentally, as the kvmclock
-absolutely should *not* be randomly drifting over time without good
-reason, and what was written to it earlier really *ought* to still be
-valid.
-
-But OK :)
-
-> Plumb in an "action" to KVM-as-a-guest and kvmclock code in preparation
-> for additional cleanups to kvmclock's suspend/resume logic.
+> Remove the unnecessary paravirt_set_sched_clock() stub for PARAVIRT=3Dn, =
+as
+> all callers are gated by PARAVIRT=3Dy.=C2=A0 Eliminating the stub will av=
+oid a
+> pile of pointless churn as the "real" implementation evolves.
 >=20
-> Fixes: c02027b5742b ("x86/kvm: Disable kvmclock on all CPUs on shutdown")
-> Cc: stable@vger.kernel.org
+> No functional change intended.
+>=20
+> Fixes: 39965afb1151 ("x86/paravirt: Move paravirt_sched_clock() related c=
+ode into tsc.c")
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
 
 Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
 
---=-kWcNeJmwuu+RfO0gpPl+
+--=-LZSBgeOiINF7ylNXtgtB
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -232,22 +218,22 @@ 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
-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
+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
-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
+cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAGPOKfWEYNmL/
+c395LI9tfqZ9BP/jkeDBgiUpYumRI0DJH1gAaERjgaFe+bc6lYKUKAomMqI5UsyXVTqoq9eWI3Xz
+pojXqPjJxVDr48vxDPurApwjYj3YU0XYPggjO7Op2zd+4muoDBo6R2GrNg3bvTFCRDB4tkUDbyCm
+M69u4N5kkqd4AsDpPD1aTZPfnBTxbgcBZ0WEMIy8/nCfqj4th7Q8g9OQBHNye602ygt5Wv+Pcn4c
+omovUu+NCTodtZqor9NXl/udmvzhZNmjlwYy+FPvzSGJRMNlOTMthxvI6cBD/FI+bvKovB7NqHca
+4fHxT7c9cdonwmOGVYZlkCgKRPtg9ozCLlRd0dYBx9iuTz5gUPnGgmewVu+Av6uuqTW6wIp4PfeW
+4oPkW/FuVNAta/jO2+r5zrk78XlOOzyWB3vLa6GsuoG9sf3Q7CuWGr3wjMoZwW4+ELgWUwLdvUpU
+cVAa+QQEwhbU7idACTbZIEeeuKdaleg105inuEd3pcyySWzTju3wdFdOVOb5a+YzhMSe62yuqbzd
+N732Ld0ONbBt8LVC8nAqZxRzGQCajXVPQiXbnjSAERxPfXn6Avnn2Y68QKCHlYuUgZFjYX1uJj/3
+v0eVd1wck1pZx3JDm8TApXjreIGjgHDqcF9RB6PGGo9cWLoa2hAibZWbiv/Mfx8AAAAAAAA=
 
 
---=-kWcNeJmwuu+RfO0gpPl+--
+--=-LZSBgeOiINF7ylNXtgtB--
 
