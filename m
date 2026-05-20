@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-11057-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11059-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4Fw9OnnaDWoo4QUAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11057-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 17:59:53 +0200
+	id APPeMrriDWpF4gUAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11059-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 18:35:06 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 887F45915FE
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 17:59:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7342F5921A7
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 18:35:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id A7BC6300F5C6
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 15:50:57 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 79B0A305A765
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 16:29:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C54F335BBB;
-	Wed, 20 May 2026 15:50:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F88D3F1656;
+	Wed, 20 May 2026 16:27:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OGojhXHV"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NDcytCVR"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC0B22D738F;
-	Wed, 20 May 2026 15:50:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFFDF374178;
+	Wed, 20 May 2026 16:27:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779292256; cv=none; b=f/jsfuI0oOYSubNs12+og/CvBc+qIo4eYtXMMLZ3+Ca03QvFI+SbHWxAUHOqW5da4DpyhO82fsYgiNAv8GxxUMnQLmRFWGcw+9+mQ2dYjhKQ9LXOCM1sZit35ZA4RQEOwfd76K6eUraIenwHkEMF5KlBNFIUSwmXkZANZ+l0CkY=
+	t=1779294448; cv=none; b=a7TWgOd8LgacwTyv/C+wrqFNdk7/I5hev/iTWCtHYUDDzUN9PagbKHEk3FnqWbdQKz+wPmhQfljUR9tgGz8hOIqaDFB3HejsKsXDOYGwUAYi/z56ZotQxM5yZcx/XW+vofK1yv2Qdr5aEQM+41Bp5OdGkQXXq9lB+woQxYy6zGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779292256; c=relaxed/simple;
-	bh=RpaoUo25ECjWtwHsRvzBvqMTEK8AB1cJGeouPwGSCwM=;
+	s=arc-20240116; t=1779294448; c=relaxed/simple;
+	bh=kn3O33iWkMRzrr20zxMKLIqtqvAJ2DDO+NvdjtjMqs4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nQO99YW9fWU1QacLxI18f49gPdsjLf6NILAcXZC1FThB093r2smyOkshVHAstiSF0bWQI/vfZA9zbPb/YwZ5hKFsehfy0h+LWicojahuTN8f6vu4EzpKWulPNqxoFpRci1UPBklbW41Ac4blljY1XfXgr7SHImLijgRiHWaPq6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OGojhXHV; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=AvRzUlVTqXQBqqyUtlL6uzXTsGKKBJcp2LyxOvMp+j3CwGev6S08yEZ8HURIIiguoNifcmb77Ys79EaslFoICMnjqbTs3nqSH02Udraq9lFpnYJKFfmHn+0sjWaAOqaZz3qPfL1OLLJZtrDFjKpgkwnzfbPn67FjI8yEpk2u7pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=NDcytCVR; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: from localhost (unknown [167.220.233.27])
-	by linux.microsoft.com (Postfix) with ESMTPSA id DA57220B7168;
-	Wed, 20 May 2026 08:50:45 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DA57220B7168
+	by linux.microsoft.com (Postfix) with ESMTPSA id 7751F20B7167;
+	Wed, 20 May 2026 09:27:18 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7751F20B7167
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1779292246;
-	bh=l1D/wHEJEIsOiA8Sd48g6TEyzc1+Z3D0jNjjvbWptc8=;
+	s=default; t=1779294438;
+	bh=eFSEuj5heaGvT5YYlCZtFr/mwoAJcGEgrnYMPiZpO2U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OGojhXHVLWqkRhIFoYuzDbMc85gCV3hkBREx+q4jcJ8gIwe1tRrC4HFbA8ZUQ7jXm
-	 oYOH6TxjGbswbYwCca/6dzs6hIkUarwEZjrt/yLTvM/DWT4QyUpapwfMLyOV3nxx/T
-	 sZ7WDa0AhSMNvoLUeIaf6gjVUfOe9FeVBJiFbzwM=
-Date: Wed, 20 May 2026 23:50:50 +0800
+	b=NDcytCVR00bg66AVB3fasrb4xc5qJ3xzfPI3jmvJswTvEYEkJGazM/h4sOu4YTj0a
+	 KdGuCoYtIgqzcxkK8bTuGJrXa056BDTPEgoANUspQMnkeOQ0s5lZMqySnnd5IBY/lG
+	 R0KJomZUgXvcte1MldoOOFE5zTM7EJcOguTnGOAM=
+Date: Thu, 21 May 2026 00:27:23 +0800
 From: Yu Zhang <zhangyu1@linux.microsoft.com>
 To: Michael Kelley <mhklinux@outlook.com>
 Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
@@ -57,17 +57,16 @@ Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
 	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "mani@kernel.org" <mani@kernel.org>, 
 	"robh@kernel.org" <robh@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
 	"jacob.pan@linux.microsoft.com" <jacob.pan@linux.microsoft.com>, "tgopinath@linux.microsoft.com" <tgopinath@linux.microsoft.com>, 
-	"easwar.hariharan@linux.microsoft.com" <easwar.hariharan@linux.microsoft.com>, Mukesh R <mrathor@linux.microsoft.com>
-Subject: Re: [PATCH v1 3/4] iommu/hyperv: Add para-virtualized IOMMU support
- for Hyper-V guest
-Message-ID: <cecgndun5p7k53krzh2ffc7h3dl4o3br2s5dafc5qe7n7e7dbm@s5ovlevvle7s>
+	"easwar.hariharan@linux.microsoft.com" <easwar.hariharan@linux.microsoft.com>
+Subject: Re: [PATCH v1 4/4] iommu/hyperv: Add page-selective IOTLB flush
+ support
+Message-ID: <3rqbtwl57wdaqgp3my5iajhaq5xb7qpbhbrrsuq6lme7rt7rxp@mcxvqww4tjkf>
 References: <20260511162408.1180069-1-zhangyu1@linux.microsoft.com>
- <20260511162408.1180069-4-zhangyu1@linux.microsoft.com>
- <SN6PR02MB4157FB81CC9B6347DCCC8C56D4072@SN6PR02MB4157.namprd02.prod.outlook.com>
- <qeyycsdnejwrqle4zwrvkjvkvrpjifeanwxjaa7i7y2ab7rnt2@b6gvugqayarg>
- <SN6PR02MB415734108A86BDFB66AEE4CED4042@SN6PR02MB4157.namprd02.prod.outlook.com>
- <fw2pruvjgo7yigtcxssf3xv27soibsj6hmw2ls5wj4rylfhdha@e63f32cwu2x5>
- <SN6PR02MB4157A1B2D9B56062A0917BC5D4042@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20260511162408.1180069-5-zhangyu1@linux.microsoft.com>
+ <SN6PR02MB41577D5EEC884EAE8AF5E14ED4072@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <7wil6tzqp74gdvhyjvpv47zhfernncs42wnfoueznneluz5zrp@pzr63lhy7s5f>
+ <SN6PR02MB4157F7758A127AA1E8096B6CD4042@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <BN7PR02MB4148D820AEBBBB9A1268D640D4042@BN7PR02MB4148.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -76,24 +75,24 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SN6PR02MB4157A1B2D9B56062A0917BC5D4042@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <BN7PR02MB4148D820AEBBBB9A1268D640D4042@BN7PR02MB4148.namprd02.prod.outlook.com>
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	MID_RHS_NOT_FQDN(0.50)[];
 	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCVD_TLS_LAST(0.00)[];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FREEMAIL_TO(0.00)[outlook.com];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	TAGGED_FROM(0.00)[bounces-11057-lists,linux-hyperv=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[24];
+	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-11059-lists,linux-hyperv=lfdr.de];
 	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[outlook.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
@@ -106,88 +105,99 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	MISSING_XM_UA(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 887F45915FE
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,outlook.com:email,linux.microsoft.com:dkim]
+X-Rspamd-Queue-Id: 7342F5921A7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, May 15, 2026 at 05:36:40PM +0000, Michael Kelley wrote:
-> From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Friday, May 15, 2026 9:54 AM
+On Fri, May 15, 2026 at 11:33:21PM +0000, Michael Kelley wrote:
+> From: Michael Kelley <mhklinux@outlook.com> Sent: Friday, May 15, 2026 11:00 AM
 > > 
-> > On Fri, May 15, 2026 at 02:51:38PM +0000, Michael Kelley wrote:
-> > > From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Friday, May 15, 2026 7:00 AM
-> > > >
-> > > > On Thu, May 14, 2026 at 06:13:24PM +0000, Michael Kelley wrote:
-> > > > > From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Monday, May 11, 2026 9:24 AM
-> 
-> [....]
-> 
+> > From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Friday, May 15, 2026 9:24 AM
+> > >
+> > > On Thu, May 14, 2026 at 06:14:22PM +0000, Michael Kelley wrote:
+> > > > From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Monday, May 11, 2026 9:24 AM
 > > > > >
-> > > > > Previous versions of this function did hv_iommu_detach_dev(). With that call
-> > > > > removed from here, hv_iommu_detach_dev() is only called when attaching a
-> > > > > domain to a device that already has a domain attached. Is it the case that
-> > > > > Hyper-V doesn't require the detach as a cleanup step?
-> > > > >
+> > 
+> > [....]
+> > 
+> > > > > +	unsigned long nr_pages = end_pfn - start_pfn;
+> > > > > +	u16 count = 0;
+> > > > > +
+> > > > > +	while (nr_pages > 0) {
+> > > > > +		unsigned long flush_pages;
+> > > > > +		int order;
+> > > > > +		unsigned long pfn_align;
+> > > > > +		unsigned long size_align;
+> > > > > +
+> > > > > +		if (count >= HV_IOMMU_MAX_FLUSH_VA_COUNT) {
+> > > > > +			count = HV_IOMMU_FLUSH_VA_OVERFLOW;
+> > > > > +			break;
+> > > > > +		}
+> > > > > +
+> > > > > +		if (start_pfn)
+> > > > > +			pfn_align = __ffs(start_pfn);
 > > > >
-> > > > The IOMMU core attaches the device to release_domain (our blocking domain)
-> > > > before calling release_device(), so I believe the explicit detach in the RFC
-> > > > was redundant. I simply didn't realize that at the time.
+> > > > I don't understand why __ffs() is correct here. I would expect
+> > > > __fls() so it is consistent with the calculation of size_align. But I
+> > > > can only surmise how the hypercall works since there's no
+> > > > documentation, so maybe my understanding of the hypercall is
+> > > > wrong.   If __ffs really is correct, a comment explaining why
+> > > > would help. :-)
 > > > >
 > > >
-> > > Got it. But after the IOMMU core attaches the device to the blocking
-> > > domain, there's the possibility that the vPCI device is rescinded by
-> > > Hyper-V and it goes away entirely. Or the device might be subjected
-> > > to an "unbind/bind" cycle in Linux. Does the detach need to be done
-> > > on the blocking domain in such cases? In this version of the patches, the
-> > > Hyper-V "attach" and "detach" hypercalls still end up unbalanced. That
-> > > seems a bit untidy at best, and I wonder if there are scenarios where
-> > > Hyper-V will complain about the lack of balance.
+> > > The use of __ffs() is intentional. Each flush entry invalidates a
+> > > naturally aligned 2^N page block, and the hypervisor requires the
+> > > page_number to be aligned to 2^page_mask_shift.
 > > >
+> > > Here __ffs() and __fls() serve different purposes:
+> > > - __ffs(start_pfn) is about the alignment constraint, e.g.,  how
+> > > large a block can this address support?
+> > > - __fls(nr_pages) is about  the size constraint, e.g., how large
+> > > a block can the remaining range hold?
+> > >
+> > > Taking min() of both ensures each entry is both properly aligned
+> > > and within bounds.
+> > >
+> > > Thanks for raising this - it definitely deserves a comment. I had to
+> > > stare at it for a while myself to remember why. :)
 > > 
-> > Thank you, Michael. May I ask what "the vPCI device is rescinded by
-> > Hyper-V and it goes away entirely" mean?
+> > Hmmm. Something about this still nags at me. I'll run some
+> > experiments to either convince myself that you are right, or to
+> > come up with a counterexample.
+> 
+> I have resolved what was nagging at me. My understanding of how
+> _ffs() and __fls() work was wrong. :-(  Your code is correct.
+> 
 > > 
+> > A related thought occurred to me. If each flush entry that is passed
+> > to Hyper-V describes a naturally aligned 2^N page block, I don't
+> > think the HV_IOMMU_MAX_FLUSH_VA_COUNT can ever
+> > be reached. The number of entries is limited by the number of
+> > bits in a PFN and the pages count, both of which are 64. And with
+> > 52 bit physical addressing and 4KiB pages, the actual size of
+> > a PFN and pages count is even smaller than 64.
+> > HV_IOMMU_MAX_FLUSH_VA_COUNT is the number of 8 byte
+> > union hv_iommu_flush_va entries that fit in a 4KiB page, so
+> > it's ~500.
+> > 
+> > My statement applies to a single flush range. If multiple flush
+> > ranges were strung together in a single hypercall, a larger count
+> > could be reached, but hv_flush_device_domain_list() only does
+> > a single range. So I don't think the overflow case in
+> > hv_flush_device_domain_list() can ever happen. But let me
+> > do my experiments, and I will also look at this aspect to confirm
+> > if it's right.
 > 
-> See the documentation at Documentation/virt/hyperv/vpci.rst in a
-> kernel source code tree, and particularly the section entitled "PCI Device
-> Removal". Such removals can and do happen in running Azure guest
-> VMs. Start with that info and then I'll do my best to answer follow-up
-> questions you may have.
-> 
-> The unbind/bind case is separate, but has some of the same effects in
-> that Linux should be removing all setup of the PCI device. There's actually
-> two unbind steps -- one to unbind the device-specific driver (e.g., the
-> Mellanox MLX5 driver or the NMVe driver) driver from the device, and
-> potentially a second to unbind the VMBus vPCI driver from the device.
-> These unbind/bind sequences can be done in the Linux guest without
-> the Hyper-V host rescinding the device.
+> My experiments also convince me that the overflow case can't
+> happen as long as the hypercall is being populated with entries
+> derived from a single range.
 
-Thanks for pointing me to the vpci.rst doc, Michael!
+Gosh. You're right. I think I've been overthinking this :( 
 
-IIUC, for the vPCI rescind case and the VMBus vPCI driver unbind
-case, both will trigger iommu_deinit_device(), in which IOMMU core
-attaches the device to our blocking domain. And hypervisor will
-handle such attaching to the blocking domain by essentially disable
-the DMA translation and IOPF for the device. Since the device is
-already in a safe state after that, I don't think an additional
-detach is necessary.
-
-For the device-specific driver unbind (e.g., unbind nvme then
-bind back, or bind to vfio-pci), that is transparent to the IOMMU
-layer.
-
-Also, while looking at Jason's comments on the detach/attach
-semantics, I'm now thinking that making the attach hypercall
-atomic (having the hypervisor handle the domain switch
-internally) might be a cleaner approach. That also eliminates
-the attach/detach imbalance issue entirely. I need to do some
-verification on the hypervisor side first, but will keep you
-posted. Thanks!
+So we can simplify this to just do the list flush and fall back
+to HVCALL_FLUSH_DEVICE_DOMAIN only if the list flush fails.
 
 B.R.
 Yu
-
-> 
-> Michael
-> 
 
