@@ -1,216 +1,152 @@
-Return-Path: <linux-hyperv+bounces-11085-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11086-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SPUROJUhDmqI6QUAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11085-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 23:03:17 +0200
+	id cAR2GmoiDmru6QUAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11086-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 23:06:50 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 889F959A672
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 23:03:17 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0CAA59A740
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 23:06:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 3D94C3019894
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 21:02:34 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id BCB4E3014C6A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 21:06:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79E2A379EFE;
-	Wed, 20 May 2026 21:02:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB55A37AA8B;
+	Wed, 20 May 2026 21:06:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rYYAhFQy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cG2Z8MWj"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4194E379988
-	for <linux-hyperv@vger.kernel.org>; Wed, 20 May 2026 21:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8699D345CBD
+	for <linux-hyperv@vger.kernel.org>; Wed, 20 May 2026 21:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779310950; cv=none; b=aPc9O/ZW3L/aIKe1syceG6Mvirf2R9Jr/Z512mBG9b63oyy5HtYjlAvD2LiaedsQHedShE2FjLXXBYjKqTr4FuuJhA68YUFmijU2jNYYLDmpEmcMFGyaFFYk3Am+zdhZvut9FtTSVHt7w2StA9WzuL/U3f4gRhUnU1egC/QIPec=
+	t=1779311206; cv=none; b=WTXgtBCDeD7APvw0axgk23g/FDIBdkaKqzjviySVSLXZY/Nvx2T3+Py656h/7L4EqKwem2SCO5M5nuDs2EXQvcSvRCtrmmwIo0ng+ZO/pPlGgIrxl110Licy00od/4mu/f/ncQ2MgXY2jijWAmofBoKExltXwXS+IEg552f2SAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779310950; c=relaxed/simple;
-	bh=/SyQLtBraYhS5/8VMnaEdQSNY3tBbZxFagWmgPcJqrU=;
+	s=arc-20240116; t=1779311206; c=relaxed/simple;
+	bh=AkGtEPLI8YUYNvTXu8Kh0Ow1uRQIZlr5HS+MCfYPWaY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=R0yC7jOyYK65PeGNE/zlQNhtrLCGp5imv2DZe3kboqNcGfBhHfY7KKWOouGd59bhadLgjzJ95K0QuSdCct5Ukpgq7NswlbcEIhJk3NqtZhaOY5kcFkKbKrCrgOB6Z0zzmlUZotxCcx9kV8+fSE0dTdfCBBXx8A6/j7D5Xi73j1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rYYAhFQy; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=UeeevjgdBvSDC3OPC20shRNz7QhAspQ4ZM7LjlNmL6S3HVGsUW6xEqCFuh6uujIm7eofNRElLKmv0fBNATcwhvBNqnxJz0DTpisHc5Stypm6lD9YSXQoXd6VqmJorZMjDRdRSrl2Et+vZIjjBkNVrQC47X7w2C+yoETOA5iWa7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cG2Z8MWj; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3692f395339so5250193a91.1
-        for <linux-hyperv@vger.kernel.org>; Wed, 20 May 2026 14:02:28 -0700 (PDT)
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-c8276c91addso2920070a12.2
+        for <linux-hyperv@vger.kernel.org>; Wed, 20 May 2026 14:06:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779310947; x=1779915747; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IMxqN6rGG5Sakxt9VTCj2ZelG+Z0Re7U8JKIeB5aot8=;
-        b=rYYAhFQy9vD0gBQ3+G3dns6dwND0hNmtAFduiSdduwZVLMOvJ8uQW3Z3cWWZ0LhBV8
-         XZ6FJft/Z1Jxu40v9a89TnBiWWdzrWhfCh4uqNPugsAQB1prOpxZ+2/lnuD2HkAOlyCx
-         CWM6hfCXr7h+uFMy+ZMgs/1kyg5B4fl6OfUudPPcoZcLFHqk1TYksy1u4mNTni0gBvlj
-         Q47tEQQGybK+qGGh6ep1swxtIGoZRW1brRlnBZS++Sp2WzU9T0rKoQjaLt3Lik7enEaP
-         TjjN/GBixeoEpM2UnPvgQ7NGodPzOEkwLiWh0OcuXcmKlWTT1A8c7OMiCrXrv4mr/RLO
-         AsNQ==
+        d=google.com; s=20251104; t=1779311205; x=1779916005; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XzU733i4LRzT0VTX5lJXk+wXutwbub7NmvSDpQIkegg=;
+        b=cG2Z8MWjoAdoqozHXOwoaOhTY3Ozd/UfWu1tKULbuoSUP4RbkNoKPGzbHl0vCiAH1Z
+         nrtq+z/CgCtHbCwDtnoSdQCTwSfqHyJNsQqY+jv6GW4rLQ8x9WdZed35Biel+d5lzW55
+         0t/knrhPC5XYybepliabTwcSng9RQspSqTrYMn8qghr/1dxvQn8zbDYUCVMtKjdJIN/Y
+         4zEwgssUQUjjw57HOA5b9tjWAu7Cx7T09VdaFQTLCmI7hw+RxnuXvZD31MRaY/kHoQ3q
+         dhC8Q0T06LpW+Z6QtSsF4NBMUXd8cjSmHyeFw3r8vLOaWIFsK/jkYQkTyD9xHXj6LslM
+         yoNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779310947; x=1779915747;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=IMxqN6rGG5Sakxt9VTCj2ZelG+Z0Re7U8JKIeB5aot8=;
-        b=PUIwSZ23MYienvYLEuDsRv30HlOO3DXAjdeoptdwM/F22ldCeHwVHlKLpoz8FNHevu
-         XIiMW25vSVzL9Hsm06dRbqHse5pw7FwGnw7jADvQ14dTbQbPMNwPGjNVGCUDTqSs/ueG
-         yufQew8NzWo1LvWayoeGx2TzyO7lTEuvrqhQKMwMMaZqPX5ZddreilsJBcMmJW3RRXA2
-         nZ0NydPZxMKnK05CvAJL5Dev2D3iNOc32H9E8PD1ETDejYPV4ER+yZjssqECECMxxhWr
-         iYUHSLmLYNHd1mqAhh4V92ZChCmBJY3HWykgEhTOzC4tdSiYDAHwUA39G3F4Nt05tqLm
-         sqYQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/FA0Wlhyi37EaMUsdr0n59K28x1qHEtQNQNdvYrO5B/Lv+QeXcLlyBJWXJzD5FRN7NCTesQDRkoe6PHPA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDmrFMnjB1JNw3i0nwdU6R+SxkNWTGi2UaHgh9sl8BmcGLHZ9m
-	jvXJDsmu17bUNy0STjviJksfgWZZ1riFKwyo5IimNbVYDMmw8gMtYcquliyZMcwIK0PRlyOlgF5
-	DOmA4eg==
-X-Received: from pgnp19.prod.google.com ([2002:a63:7f53:0:b0:c82:7805:9e4d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6300:279a:10b0:39b:dea7:5626
- with SMTP id adf61e73a8af0-3b308856ca4mr1798637.35.1779310947183; Wed, 20 May
- 2026 14:02:27 -0700 (PDT)
-Date: Wed, 20 May 2026 14:02:26 -0700
-In-Reply-To: <c347d65f555ad1e10a0e87ee57c5879c7046d0e7.camel@infradead.org>
+        d=1e100.net; s=20251104; t=1779311205; x=1779916005;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XzU733i4LRzT0VTX5lJXk+wXutwbub7NmvSDpQIkegg=;
+        b=k6+y0UF6+h1PWD6O0PpOmkvG2vgc8uEtmOL1GIu/4Q07AgvQQxXS8nR53KykiwNRSM
+         H4jGOWXCMFrbZPm7Nwvy20KRSMdAZmMBhMdf5MYSayuiQeYHeCqbwGc6kjeZ1X4fqTeb
+         v+NV05DN3kF7IMKK/i3ch9iPttvMqrE691BB+S5xky5zBXopzAqnKmVf15YFJkWvhw3g
+         WMLeXfPofCBpAjWUA2SbCFSHrVUI4Q5HplrNlanS6SOk4GwhHuy0OlMoXNJDxh4qJLcb
+         xCxb7HxP7GI5HJXhiI8OMvJewU+Wt36BX9X40FNiL6bRLWbvrQjpB+9T8pZ4Rgoz2wAq
+         b93A==
+X-Gm-Message-State: AOJu0Yy84wqrJDZe0NioXGO7wHPjH6gNW0Ft94MfT4776HCPPM/14jkh
+	nqrtuHyuHeHd8xo3zb9+2ZrndOqUM+PEi+R1mq3zDf9CDjmlp6c29jsZb47XHViu1Mr4HjT1pff
+	GAdydIQ==
+X-Received: from pfbfc32.prod.google.com ([2002:a05:6a00:2e20:b0:82f:96ee:b9ab])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:bd8c:b0:837:6bb9:acb7
+ with SMTP id d2e1a72fcca58-8414ab08b90mr219137b3a.0.1779311204529; Wed, 20
+ May 2026 14:06:44 -0700 (PDT)
+Date: Wed, 20 May 2026 14:06:43 -0700
+In-Reply-To: <20260515195934.C790BC2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260515191942.1892718-1-seanjc@google.com> <20260515191942.1892718-7-seanjc@google.com>
- <c347d65f555ad1e10a0e87ee57c5879c7046d0e7.camel@infradead.org>
-Message-ID: <ag4hYu0O71QrLW2y@google.com>
-Subject: Re: [PATCH v3 06/41] x86/acrn: Mark TSC frequency as known when using
- ACRN for calibration
+References: <20260515191942.1892718-42-seanjc@google.com> <20260515195934.C790BC2BCB0@smtp.kernel.org>
+Message-ID: <ag4iYyTLtJEEyabl@google.com>
+Subject: Re: [PATCH v3 41/41] x86/kvmclock: Get CPU base frequency from CPUID
+ when it's available
 From: Sean Christopherson <seanjc@google.com>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Kiryl Shutsemau <kas@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
-	Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov <alexey.makhalov@broadcom.com>, 
-	Jan Kiszka <jan.kiszka@siemens.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Juergen Gross <jgross@suse.com>, 
-	Daniel Lezcano <daniel.lezcano@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	John Stultz <jstultz@google.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>, Stephen Boyd <sboyd@kernel.org>, x86@kernel.org, 
-	linux-coco@lists.linux.dev, kvm@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	xen-devel@lists.xenproject.org, Michael Kelley <mhklinux@outlook.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Nikunj A Dadhania <nikunj@amd.com>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-hyperv@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MV_CASE(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11085-lists,linux-hyperv=lfdr.de];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	FREEMAIL_CC(0.00)[kernel.org,redhat.com,microsoft.com,broadcom.com,siemens.com,linux.intel.com,infradead.org,suse.com,google.com,intel.com,oracle.com,lists.linux.dev,vger.kernel.org,lists.xenproject.org,outlook.com,amd.com,linutronix.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11086-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWO(0.00)[2];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	DKIM_TRACE(0.00)[google.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_NONE(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[seanjc@google.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[google.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_TWELVE(0.00)[34];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 889F959A672
+	NEURAL_HAM(-0.00)[-1.000];
+	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: E0CAA59A740
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, May 20, 2026, David Woodhouse wrote:
-> On Fri, 2026-05-15 at 12:19 -0700, Sean Christopherson wrote:
-> > Mark the TSC frequency as known when using ACRN's PV CPUID information.
-> > Per commit 81a71f51b89e ("x86/acrn: Set up timekeeping") and common sen=
-se,
-> > the TSC freq is explicitly provided by the hypervisor.
-> >=20
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > ---
-> > =C2=A0arch/x86/kernel/cpu/acrn.c | 1 +
-> > =C2=A01 file changed, 1 insertion(+)
-> >=20
-> > diff --git a/arch/x86/kernel/cpu/acrn.c b/arch/x86/kernel/cpu/acrn.c
-> > index c1506cb87d8c..2da3de4d470e 100644
-> > --- a/arch/x86/kernel/cpu/acrn.c
-> > +++ b/arch/x86/kernel/cpu/acrn.c
-> > @@ -29,6 +29,7 @@ static void __init acrn_init_platform(void)
-> > =C2=A0	/* Install system interrupt handler for ACRN hypervisor callback=
- */
-> > =C2=A0	sysvec_install(HYPERVISOR_CALLBACK_VECTOR, sysvec_acrn_hv_callba=
-ck);
-> > =C2=A0
-> > +	setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
-> > =C2=A0	tsc_register_calibration_routines(acrn_get_tsc_khz,
-> > =C2=A0					=C2=A0 acrn_get_tsc_khz);
->=20
-> I'd feel slightly happier doing that from within acrn_get_tsc_khz()
-> itself....
+On Fri, May 15, 2026, sashiko-bot@kernel.org wrote:
+> > diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
+> > index 62c8ea2e67691..7607920ae386e 100644
+> > --- a/arch/x86/kernel/kvmclock.c
+> > +++ b/arch/x86/kernel/kvmclock.c
+> > @@ -190,6 +190,20 @@ void kvmclock_cpu_action(enum kvm_guest_cpu_action action)
+> >  	}
+> >  }
+> >  
+> > +static unsigned long kvm_get_cpu_khz(void)
+> > +{
+> > +	unsigned int cpu_khz;
+> > +
+> > +	/*
+> > +	 * Prefer CPUID over kvmclock when possible, as the base CPU frequency
+> > +	 * isn't necessarily the same as the kvmlock "TSC" frequency.
+> > +	 */
+> > +	if (!cpuid_get_cpu_freq(&cpu_khz))
+> > +		return cpu_khz;
+> > +
+> > +	return pvclock_tsc_khz(this_cpu_pvti());
+> 
+> Before this patch, both calibrate_cpu and calibrate_tsc used
+> kvm_get_tsc_khz(), which checks kvm_para_tsc_khz() to get the exact TSC
+> frequency from KVM's PV CPUID timing leaf, and only falls back to
+> pvclock_tsc_khz() if it is unavailable.
+> 
+> Does the fallback path in kvm_get_cpu_khz() bypass kvm_para_tsc_khz()
+> entirely? For VMs that expose KVM's PV CPUID timing leaf but not
+> CPUID.0x16, it looks like cpu_khz will now be reverse-calculated from
+> pvclock multipliers instead of using the exact hypervisor-provided value.
+> 
+> Could this introduce a precision regression due to truncation loss, causing
+> cpu_khz and tsc_khz to needlessly diverge on the fallback path?
 
-Ya, though as you note below, this is really a comment on the overall serie=
-s.
-
-Waiting to set the cap until the calibration routine is actually run does p=
-revent
-the case where the something registers a calibration routine, but its routi=
-ne is
-never run.
-
-However, because the cap is sticky, it doesn't handle the scenario where it=
-s
-routine _does_ run, but the kernel ultimately throws away its calibration i=
-n favor
-of something else.
-
-Further complicating things is that ~half of the paravirt flows already for=
-ce set
-caps before their routines are invoked:
-
-  snp_secure_tsc_init(), jailhouse_init_platform(), ms_hyperv_init_platform=
-(),
-  vmware_set_capabilities()
-
-Rather than trying to convince everyone that waiting is better, despite tha=
-t
-approach still being flawed, I chose to handle this by ensuring that once t=
-he TSC
-is marked known and/or reliable, the kernel won't replace the calibration r=
-outine
-with a "lesser" source:
-
-  x86/tsc: Rejects attempts to override TSC calibration with lesser routine
-
-That doesn't completely prevent the kernel from being stupid, but it should=
- prevent
-both the case where X's routine is registered but never run, as well as the=
- case
-where it's run but ultimately ignored.
-
-> which I note is 'static inline'. I'm vaguely surprised that even builds
-> (although it does).
-
-Heh, KVM x86 (in the host) does stupid things like this too.  E.g. kvm_pdpt=
-r_read()
-is a static inline, but then wired up as a function pointer in three differ=
-ent
-places.
-
-> Probably nicer to move it explicitly out of line in acrn.c though.
->=20
-> Most of that should be a comment on patch  2 of the series, I guess?
+David pointed this out too, I'll fix in the next version.
 
