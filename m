@@ -1,56 +1,56 @@
-Return-Path: <linux-hyperv+bounces-11117-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11118-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eIDzBDtLDmrL9gUAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11117-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 02:00:59 +0200
+	id 0AvOI2xLDmrL9gUAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11118-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 02:01:48 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1369359D1A7
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 02:00:57 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0F4959D1D4
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 02:01:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 462FC304E1BB
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 23:50:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 42BC5317578B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 23:53:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEB0B3CFF4B;
-	Wed, 20 May 2026 23:50:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F064A3806C6;
+	Wed, 20 May 2026 23:51:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a5PC97TD"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GSaT4OmU"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DC22DC76C;
-	Wed, 20 May 2026 23:50:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2082D3CB2CC;
+	Wed, 20 May 2026 23:51:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779321052; cv=none; b=MhbwM3eLDzO1otC/0MGsUIATfZnSrqKVwOlkyXVP+uOE1xDXC7VckOd3UzWZngyYJgUhYRXt9MBH7E7+xl/7xeUhOPus3o3B1NTLwWgfexs5L6LjyLKXf9foUD7Xom5qkPXPmFtr3xszztS9crM+tlzsTSUqc2BD+zhlDlcD6XA=
+	t=1779321119; cv=none; b=PhOFxVcqQk2gY1350HYUzFf4CBI0VtDv3fbiaho+drL1QgCHyNFLKM+LPQBbb8zKMy++AUiMbATPh3FbV/ixePUqfnxnRV6lFBOm3MhGqnWgXMVeaejz5Zi3bG90oi7IGgOUD3NAZ/QbalOWELeQ3oMC/GFsolbVbKrpFka7iE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779321052; c=relaxed/simple;
-	bh=kjXkTST37i+1gmjQGjhQW588QxcAxvvLMWHi+QpQkZo=;
+	s=arc-20240116; t=1779321119; c=relaxed/simple;
+	bh=qR+Yt9w79nLl/vKvoVluqJPTCmCSxA09aP7VAr8rnyY=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SuA68lwWA52FWNHLWo9cMzWbSYbZ9t3w4XWg8apb6cbKpOcRuUZir1fltERtEZml/3eQKRN7h1mZMGeTprZuEBTqnrDiFwl1OFlCfTw+PXFsQnljSvrsFQXrVHkm/yu3erZZhNOKkUAideTJNzLbPkm23SBzbCCOSlLzS9oXnk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=a5PC97TD; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:MIME-Version; b=uw0pjDkFpqslz0eRdMw0wrbmw28JWg56P4q5Gf/shIvesIFM/v0dNj56jJkVJdKKyHMcBfzfU9nCPsol69NPafz0LFYH6LnuTR7/t24mM6lih25oIe/mKe2sJE9gYye0QLlV/Tkf/MKuvQRtFhCS/ToYwpAQGiceAijbJiXGeLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GSaT4OmU; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=kjXkTST37i+1gmjQGjhQW588QxcAxvvLMWHi+QpQkZo=; b=a5PC97TD9BKkPl+3e0F6kGlkZ9
-	zCbTS/Oo+FoXd4urkvEM1VR8kscN/rFTBlB5Z0VoUPn/tgTVyzLP3mx8Kqx/lgHAjvRXZ5fGmkApq
-	jHycwdxF4CqRMaL9mzfuhEvvxFdjD2nnfR9DrD7M3cNRzkUyVcKrDzywFPGi/JDGD933yYoqOAdBU
-	deLaoIWGnTDPJb9+jlSQbH9XgV4bfbQ4hfKlIgngYj5XFzOZEjja6vzFMmUl0jpACj4GQlvZ4GMG+
-	pNTKyQDM8Bxl7QRUXdZGXFvtIno1U6YAorOg7bqfzc1CJA4JWbFiBWIRS9XHfXE8x4tA/8O/7XQa+
-	2P8z9lXA==;
-Received: from 54-240-197-227.amazon.com ([54.240.197.227] helo=freeip.amazon.com)
+	bh=qR+Yt9w79nLl/vKvoVluqJPTCmCSxA09aP7VAr8rnyY=; b=GSaT4OmU8kCyicP8KRwwNSqhBH
+	HnEbIU6ancVWsUENun739xiy5/VgMvV8SNDhb07i09YdgCXfHtdTdk9SIahJGQvI8Hsg61a2AC2yc
+	8hUqMq8vnthSEqscSfZM4DWl/E7EGILkh8xa4N9TNag/3+ZwpyWB4DAMkwDEgQuLUr1S+wAeZ/K8S
+	zP7n+NVHOTr20imXsHeiPHoe0Ku2i5XPw7mDFikvIpxEfPI2juH468hLtYmMpaO4TLIe9EULc7fJD
+	dLWZdeafhT+iHYXU/yYaPJHM8XIabCVBx3yYRUPzqxD5smwws5FMXPwmdPmonOf9vEWEMvDrzxopq
+	f+Uw3GNw==;
+Received: from 54-240-197-235.amazon.com ([54.240.197.235] helo=freeip.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPqgS-00000007lNX-069X;
-	Wed, 20 May 2026 23:50:40 +0000
-Message-ID: <1e46bbafd280fa70137e530e6694e969f305ab11.camel@infradead.org>
-Subject: Re: [PATCH v3 32/41] x86/tsc: Rejects attempts to override TSC
- calibration with lesser routine
+	id 1wPqhX-00000007lRX-0Plz;
+	Wed, 20 May 2026 23:51:47 +0000
+Message-ID: <97e3657ea14fca4b1fffd8c845b71b7a2f71785b.camel@infradead.org>
+Subject: Re: [PATCH v3 33/41] x86/kvmclock: Mark TSC as reliable when it's
+ constant and nonstop
 From: David Woodhouse <dwmw2@infradead.org>
 To: Sean Christopherson <seanjc@google.com>, Kiryl Shutsemau
  <kas@kernel.org>,  Paolo Bonzini <pbonzini@redhat.com>, "K. Y. Srinivasan"
@@ -72,12 +72,12 @@ Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>, Vitaly Kuznetsov
  linux-kernel@vger.kernel.org,  xen-devel@lists.xenproject.org, Michael
  Kelley <mhklinux@outlook.com>, Tom Lendacky <thomas.lendacky@amd.com>,
  Nikunj A Dadhania <nikunj@amd.com>, Thomas Gleixner <tglx@linutronix.de>
-Date: Thu, 21 May 2026 00:50:38 +0100
-In-Reply-To: <20260515191942.1892718-33-seanjc@google.com>
+Date: Thu, 21 May 2026 00:51:45 +0100
+In-Reply-To: <20260515191942.1892718-34-seanjc@google.com>
 References: <20260515191942.1892718-1-seanjc@google.com>
-	 <20260515191942.1892718-33-seanjc@google.com>
+	 <20260515191942.1892718-34-seanjc@google.com>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-a1hInw8KTqMYkOpxFKcW"
+	boundary="=-edWqDmeYeCUKdM6/JTWj"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -92,11 +92,11 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
 	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11117-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11118-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
@@ -113,37 +113,40 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amazon.co.uk:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,infradead.org:mid,infradead.org:dkim]
-X-Rspamd-Queue-Id: 1369359D1A7
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[amazon.co.uk:email,infradead.org:mid,infradead.org:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: F0F4959D1D4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---=-a1hInw8KTqMYkOpxFKcW
+--=-edWqDmeYeCUKdM6/JTWj
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Fri, 2026-05-15 at 12:19 -0700, Sean Christopherson wrote:
-> When registering a TSC frequency calibration routine, sanity check that
-> the incoming routine is as robust as the outgoing routine, and reject the
-> incoming routine if the sanity check fails.
+> Mark the TSC as reliable if the hypervisor (KVM) has enumerated the TSC
+> as constant and nonstop, and the admin hasn't explicitly marked the TSC
+> as unstable.=C2=A0 Like most (all?) virtualization setups, any secondary
+> clocksource that's used as a watchdog is guaranteed to be less reliable
+> than a constant, nonstop TSC, as all clocksources the kernel uses as a
+> watchdog are all but guaranteed to be emulated when running as a KVM
+> guest.=C2=A0 I.e. any observed discrepancies between the TSC and watchdog=
+ will
+> be due to jitter in the watchdog.
 >=20
-> Because native calibration routines only mark the TSC frequency as known
-> and reliable when they actually run, the effective progression of
-> capabilities is: None (native) =3D> Known and maybe Reliable (PV) =3D>
-> Known and Reliable (CoCo).=C2=A0 Violating that progression for a PV over=
-ride
-> is relatively benign, but messing up the progression when CoCo is
-> involved is more problematic, as it likely means a trusted source of
-> information (hardware/firmware) is being discarded in favor of a less
-> trusted source (hypervisor).
+> This is especially true for KVM, as the watchdog clocksource is usually
+> emulated in host userspace, i.e. reading the clock incurs a roundtrip
+> cost of thousands of cycles.
+>=20
+> Marking the TSC reliable addresses a flaw where the TSC will occasionally
+> be marked unstable if the host is under moderate/heavy load.
 >=20
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
 
 Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
 
---=-a1hInw8KTqMYkOpxFKcW
+--=-edWqDmeYeCUKdM6/JTWj
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -222,22 +225,22 @@ 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
-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
+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
-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
+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
 
 
---=-a1hInw8KTqMYkOpxFKcW--
+--=-edWqDmeYeCUKdM6/JTWj--
 
