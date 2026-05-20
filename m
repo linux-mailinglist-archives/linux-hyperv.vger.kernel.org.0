@@ -1,56 +1,56 @@
-Return-Path: <linux-hyperv+bounces-11107-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11108-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QNYeKjU9Dmqr9AUAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11107-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 01:01:09 +0200
+	id GFPWDhpHDmpc9gUAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11108-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 01:43:22 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21AFC59C7D2
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 01:01:09 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6B6A59CDCF
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 01:43:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 013C930CB51E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 22:52:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C436730F8FC2
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 22:54:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 480F72ED15F;
-	Wed, 20 May 2026 22:52:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98BD53921DD;
+	Wed, 20 May 2026 22:54:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Br7jKn/t"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XYPO8Eiy"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E214735C1B0;
-	Wed, 20 May 2026 22:52:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1280B3C198A;
+	Wed, 20 May 2026 22:54:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779317577; cv=none; b=qZhY3YuzkBB2WOl3s8tN41Gj49FiGatnzA2jtrWKu8U99Q9EJJnOD9X+YP7/eJlNvQshzxK1+HIAIcKm79YU8j8JNmDIeyrrYMg5eBqVML4Iw8/o3kwjsjJMGyBxrmxBHa+1CqWWQE2IbgvRLjQ+kdeYqTcN6Tfgf9t+3PQQFMI=
+	t=1779317694; cv=none; b=OjVuUTckUxgCWzOSp7wMDJ2WcAtQLKhOeZ+pQOmYMQI5qC2QPaJYdlMkYyuKjPLdzHNpMaoBqq8nHVqFOkfTAoqLQ1/HTeRzUFJwJcp44t18uA6w4j5onoI1piLHet/Nn4GDh/EYOHiFXF/WFMAQERchQ0p/JHnIjl6C68bTHK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779317577; c=relaxed/simple;
-	bh=0xB2c+l1rITmxW/V+Z0/6dbvZG3N4bYoVGjcTR7obto=;
+	s=arc-20240116; t=1779317694; c=relaxed/simple;
+	bh=77F4lHfgu7jBi8u2j8zSCFkWK29SM1i5h/cHUI/8pgk=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VcA+T/i/ZXenBJcYGIYKa9SpUjvN0EdX9PPhFAgEafNLwphITwEMJK+NxdptYf4e/thdH5Mo1Psd7YVoc0uICsDFTkYx+0GZsAFkksOLTXov5rStUIcBrOudhKPzgEr2xsEduvEitYqqSukzKXBCyCXv+yqXmqokPNmucgXolOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Br7jKn/t; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:MIME-Version; b=DvLlxJ340+2Tw9FMXSnakKd5BWB8XH+2nru+EPamUiC/Lj1GV3UWLipjf/iX8REb857plIXT3QCGpuwlULsjeKfogaaDOVO7eaPfC8ks5Ql1Om16C2LoAA3iLbU0KAZF6gLkx7yt4yB4mB8sPF4ITqk+gi2rEKsY954nYQZgBm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XYPO8Eiy; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=0xB2c+l1rITmxW/V+Z0/6dbvZG3N4bYoVGjcTR7obto=; b=Br7jKn/triMy0YPuXhAeyCW48s
-	z1cDkBsZ34cSLTEhbDA4GTXYhadTihDaZpKOfUmatPUknqwLBN5ESFk2VY+aLucGiyrIJ7GqAl3Qv
-	70eisbeRHfc3TWejZtPNVmlEmR3V+2SPwvlpvHae55wYCzCWk5+KnjIIfASycnKNyJF2izudVYRuN
-	iodZaESZ3uDInwpIb9EGvqxfGCDFcgJJ91HTbmYjEoNmS2F+LQa7rh3PUfWcX5LarLnNAHcXv133q
-	4dBr2YH0sd0oxECYa8RcawLqthoPwDySFXaOh5tiT08iPIE3PaCYfDT+ha1zevhvKYCJiIhp1CuVN
-	b3fd/zew==;
+	bh=6FuTxCzG50tCcJ7JmDxJagIZRoKf3Vu9pBMmVtaV0rk=; b=XYPO8EiyAGWA8BerIq1h1Qkdmp
+	ixOBf1cP/KTVnPlQpdfOZ2AQQ4LFWx4MAHfZb8XLrqaA+0kcNuENbYE5M27rjY+n9qUQeJPB4P2lS
+	ec3nSK5ceiNzY0vIjdTilzffUpZt5PkxAlIVUDrV168xX+76oH45/Abd2q/duj58F4fxKwBHEX7MM
+	GrRA7Z4IV4F/SrSXM/Fy/kEciz57tZ1RiFP/HpS/XlMSj6mmTNfQJoETcajwxZ0Yt8Y3u6oujjhL/
+	jKD35RtkmOir3i489jpPeN8KZgStKrUZcMSgqTigLESbNWbe7bGdom+vHuO4u+lz11v0mab3xHPlW
+	zR5Cg4gQ==;
 Received: from 54-240-197-235.amazon.com ([54.240.197.235] helo=freeip.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPpmR-00000007iMt-17II;
-	Wed, 20 May 2026 22:52:47 +0000
-Message-ID: <5c3609eea079a7b5b521ac4f01849bb05386a4ad.camel@infradead.org>
-Subject: Re: [PATCH v3 24/41] timekeeping: Resume clocksources before
- reading persistent clock
+	id 1wPpoG-00000007iRi-36HA;
+	Wed, 20 May 2026 22:54:40 +0000
+Message-ID: <8515b91e076fc48ba76c5a9284cc35da8a104715.camel@infradead.org>
+Subject: Re: [PATCH v3 15/41] x86/xen/time: Nullify x86_platform's
+ sched_clock save/restore hooks
 From: David Woodhouse <dwmw2@infradead.org>
 To: Sean Christopherson <seanjc@google.com>, Kiryl Shutsemau
  <kas@kernel.org>,  Paolo Bonzini <pbonzini@redhat.com>, "K. Y. Srinivasan"
@@ -72,12 +72,13 @@ Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>, Vitaly Kuznetsov
  linux-kernel@vger.kernel.org,  xen-devel@lists.xenproject.org, Michael
  Kelley <mhklinux@outlook.com>, Tom Lendacky <thomas.lendacky@amd.com>,
  Nikunj A Dadhania <nikunj@amd.com>, Thomas Gleixner <tglx@linutronix.de>
-Date: Wed, 20 May 2026 23:52:45 +0100
-In-Reply-To: <20260515191942.1892718-25-seanjc@google.com>
+Date: Wed, 20 May 2026 23:54:39 +0100
+In-Reply-To: <93f8fad19e2c617ca17f544d11483c517024bfc4.camel@infradead.org>
 References: <20260515191942.1892718-1-seanjc@google.com>
-	 <20260515191942.1892718-25-seanjc@google.com>
+	 <20260515191942.1892718-16-seanjc@google.com>
+	 <93f8fad19e2c617ca17f544d11483c517024bfc4.camel@infradead.org>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-I8cK8q5LHpUuTl/PNs95"
+	boundary="=-/gqDT+SRkshP8r6BXHU7"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -92,7 +93,7 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
 	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -100,7 +101,7 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11107-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11108-lists,linux-hyperv=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[34];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FROM_HAS_DN(0.00)[];
@@ -114,38 +115,61 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linutronix.de:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,infradead.org:mid,infradead.org:dkim]
-X-Rspamd-Queue-Id: 21AFC59C7D2
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:mid,infradead.org:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,amazon.co.uk:email]
+X-Rspamd-Queue-Id: A6B6A59CDCF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---=-I8cK8q5LHpUuTl/PNs95
+--=-/gqDT+SRkshP8r6BXHU7
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2026-05-15 at 12:19 -0700, Sean Christopherson wrote:
-> When resuming timekeeping after suspend, restore clocksources prior to
-> reading the persistent clock.=C2=A0 Paravirt clocks, e.g. kvmclock, tie t=
-he
-> validity of a PV persistent clock to a clocksource, i.e. reading the PV
-> persistent clock will return garbage if the underlying PV clocksource
-> hasn't been enabled.=C2=A0 The flaw has gone unnoticed because kvmclock i=
-s a
-> mess and uses its own suspend/resume hooks instead of the clocksource
-> suspend/resume hooks, which happens to work by sheer dumb luck (the
-> kvmclock resume hook runs before timekeeping_resume()).
+On Wed, 2026-05-20 at 23:11 +0100, David Woodhouse wrote:
+> On Fri, 2026-05-15 at 12:19 -0700, Sean Christopherson wrote:
+> > Nullify the x86_platform sched_clock save/restore hooks when setting up
+> > Xen's PV clock to make it somewhat obvious the hooks aren't used when
+> > running as a Xen guest (Xen uses a paravirtualized suspend/resume flow)=
+.
+> >=20
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
 >=20
-> Note, there is no evidence that any clocksource supported by the kernel
-> depends on a persistent clock.
+> Hm. Xen HVM guests *do* use a standard ACPI S4 hibernation flow.
 >=20
-> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Does that need testing?
+
+Ah, this looks as sane as we can expect.
 
 Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
 
---=-I8cK8q5LHpUuTl/PNs95
+>=20
+> > ---
+> > =C2=A0arch/x86/xen/time.c | 6 ++++++
+> > =C2=A01 file changed, 6 insertions(+)
+> >=20
+> > diff --git a/arch/x86/xen/time.c b/arch/x86/xen/time.c
+> > index 3d3165eef821..21d366d01985 100644
+> > --- a/arch/x86/xen/time.c
+> > +++ b/arch/x86/xen/time.c
+> > @@ -568,6 +568,12 @@ static void __init xen_init_time_common(void)
+> > =C2=A0	xen_sched_clock_offset =3D xen_clocksource_read();
+> > =C2=A0	static_call_update(pv_steal_clock, xen_steal_clock);
+> > =C2=A0	paravirt_set_sched_clock(xen_sched_clock);
+> > +	/*
+> > +	 * Xen has paravirtualized suspend/resume and so doesn't use the comm=
+on
+> > +	 * x86 sched_clock save/restore hooks.
+> > +	 */
+> > +	x86_platform.save_sched_clock_state =3D NULL;
+> > +	x86_platform.restore_sched_clock_state =3D NULL;
+> > =C2=A0
+> > =C2=A0	tsc_register_calibration_routines(xen_tsc_khz, NULL);
+> > =C2=A0	x86_platform.get_wallclock =3D xen_get_wallclock;
+>=20
+
+
+--=-/gqDT+SRkshP8r6BXHU7
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -224,22 +248,22 @@ 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
-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
+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
-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
+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
 
 
---=-I8cK8q5LHpUuTl/PNs95--
+--=-/gqDT+SRkshP8r6BXHU7--
 
