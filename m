@@ -1,56 +1,56 @@
-Return-Path: <linux-hyperv+bounces-11105-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11106-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WKUGECg6Dmqu8wUAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11105-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 00:48:08 +0200
+	id 2EN6D8o7Dmqr9AUAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11106-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 00:55:06 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADDE159C49A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 00:48:07 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id D73CC59C65F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 00:55:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D295A310D780
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 22:44:48 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A896A30A83EC
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 22:50:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C74513C3C11;
-	Wed, 20 May 2026 22:44:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E33423C4562;
+	Wed, 20 May 2026 22:46:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fYoCh94N"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ES80omK3"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8D33C13F5;
-	Wed, 20 May 2026 22:44:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F293C13E9;
+	Wed, 20 May 2026 22:46:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779317078; cv=none; b=UiYtLpJBJbfzgIKFVNQRhhYbFUEDLin7IVuWbaB7e8f3xm2pJ51Vg5E051a9rkJfFAFyhbngmiIg8Rx43WVBTGusXpB4KHv+vVvIChTi3r/Teyow4p2eeRjsdaJex6PDNG4FaWY1uMQwG++pPxVgUXXjiCScj7LDSb0YamHSdk0=
+	t=1779317215; cv=none; b=lFMjUgO5cIsKJDl0XIZ4E2TFV6NR0ZQRyEtGADp1mZJJTXjEEzHZKiCMuBxEx7S7kzB52I93Ibl6QLWNhQFqAOlzTLT6iZ0qeObD9OTFgebndhf8/sfed9i2/Y2I2J4TUZAv+xaYNjhN091R4MQ7jZXNJsFt6nseSYRGKmLr77M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779317078; c=relaxed/simple;
-	bh=+DZstB+MHV1CL9v7iC4hC3EpbpRzleu52F3/Mziw8iM=;
+	s=arc-20240116; t=1779317215; c=relaxed/simple;
+	bh=eGf8zE8VSU/CYWvR8RwGK3Zkxx3u3NJdsOQ3RwMffU4=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Znh95Fc6r7XPSlxX0GFEwcVecY0J9jYWyypLEBirBDCZSiXVihrGYnJotffb+61/t4gFPpggmWOlggVdYVQNMrQjJWlf0DytFNOIKmbVNpoyMp+If0GV9jDT+SKdL/z9NgJjVi8go5DF7L8rS9gQKFmaZz1mqQRsvlI8ZBs+phE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fYoCh94N; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:MIME-Version; b=R27uOuuK8dqvLewMDuG1p7kdqNC7OLU3b/qIT2eQQpd4LGFfmqw6ybxPRpH9BNG3ExiKDKEW1RYu1eOacHHRc/P9wheCAyiOCEraLyYRVWOCKUT0M0Va6QzQaVy5rIkC3y+S7ZfgCagh5jHKcknRejuyz/TXbOZ2prdiJ8SFQpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ES80omK3; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=+DZstB+MHV1CL9v7iC4hC3EpbpRzleu52F3/Mziw8iM=; b=fYoCh94NRELg3JF+baJD0NwyKW
-	qxprqsvXJn2MLO6JnMX7rBBAYmPRxh9oA0VXaxq7IPID3cN1CXZ1FoPyXcDgP7YIZVUCN6LkrWLg+
-	euJPiQ4jxmCc5ul4K7Oz1xvORpLHrVNR4RZu9n8hXvWd+bJris5s+eYCrokeLoHFBIwwYU7hAk1I7
-	GZUeduno3qphHT8EMk5R8iL+8rzytL+Y0w+dqcZsY9iHIymEVxtU1VCt0jgXPKRQeUQhe4YqqsREg
-	X7+OioG2bJiktmDw51FG/9t02YZZgfal7nQRjAB8LbeAK2DDXVTQRje3/+ud1Aob0y3Z8qc5DoTOa
-	4/B+EDcA==;
+	bh=eGf8zE8VSU/CYWvR8RwGK3Zkxx3u3NJdsOQ3RwMffU4=; b=ES80omK3u8axorzR/jGS695miN
+	cvmxX5MMxSnJGpZensYsRW0qi/rn4sH6nj1g+6ltU0uUMgFD6ZAgdwVWyfk1cPWPMW7A90Ay4PH+T
+	NROgO2JN27vk2hi6ymoA42i6p7XPaKC6+sCveUhLQbzFMR/w94Ojd8UNzZFp92i4czyLvQryBgmzI
+	EcbCsN4RIxRXykjbYldnrz5Tdj5X+e2KzJ/tf/11fJN+3nkFHmgZOhJ7matEiNZO4fqEl2jRjR2jn
+	D0UaKI55Bhwsypops6zHGPGOlXFLlDmhWYOog0JH9WV43Eu7L33/tORS6rjqF/eyA0s5NtkPMx1/+
+	DHosMsDw==;
 Received: from 54-240-197-227.amazon.com ([54.240.197.227] helo=freeip.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPpeP-00000007hpg-3cKx;
-	Wed, 20 May 2026 22:44:30 +0000
-Message-ID: <3c319fe5f9d9e1ff005074320de9065af8a79f41.camel@infradead.org>
-Subject: Re: [PATCH v3 22/41] x86/pvclock: WARN if pvclock's valid_flags are
- overwritten
+	id 1wPpgd-00000007i1f-1xjN;
+	Wed, 20 May 2026 22:46:47 +0000
+Message-ID: <5979bd60fc7d8eebfacb71112db5d0a74a98de19.camel@infradead.org>
+Subject: Re: [PATCH v3 23/41] x86/kvmclock: Refactor handling of
+ PVCLOCK_TSC_STABLE_BIT during kvmclock_init()
 From: David Woodhouse <dwmw2@infradead.org>
 To: Sean Christopherson <seanjc@google.com>, Kiryl Shutsemau
  <kas@kernel.org>,  Paolo Bonzini <pbonzini@redhat.com>, "K. Y. Srinivasan"
@@ -72,12 +72,12 @@ Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>, Vitaly Kuznetsov
  linux-kernel@vger.kernel.org,  xen-devel@lists.xenproject.org, Michael
  Kelley <mhklinux@outlook.com>, Tom Lendacky <thomas.lendacky@amd.com>,
  Nikunj A Dadhania <nikunj@amd.com>, Thomas Gleixner <tglx@linutronix.de>
-Date: Wed, 20 May 2026 23:44:28 +0100
-In-Reply-To: <20260515191942.1892718-23-seanjc@google.com>
+Date: Wed, 20 May 2026 23:46:45 +0100
+In-Reply-To: <20260515191942.1892718-24-seanjc@google.com>
 References: <20260515191942.1892718-1-seanjc@google.com>
-	 <20260515191942.1892718-23-seanjc@google.com>
+	 <20260515191942.1892718-24-seanjc@google.com>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-NmFCdyiY4egYUvp+XVXA"
+	boundary="=-2WAgxEizV8hcN/lY6ryq"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -92,7 +92,7 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
 	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -100,7 +100,7 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11105-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11106-lists,linux-hyperv=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[34];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FROM_HAS_DN(0.00)[];
@@ -114,27 +114,35 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:mid,infradead.org:dkim,amazon.co.uk:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: ADDE159C49A
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,amazon.co.uk:email,infradead.org:mid,infradead.org:dkim]
+X-Rspamd-Queue-Id: D73CC59C65F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---=-NmFCdyiY4egYUvp+XVXA
+--=-2WAgxEizV8hcN/lY6ryq
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Fri, 2026-05-15 at 12:19 -0700, Sean Christopherson wrote:
-> WARN if the common PV clock valid_flags are overwritten; all PV clocks
-> expect that they are the one and only PV clock, i.e. don't guard against
-> another PV clock having modified the flags.
+> Clean up the setting of PVCLOCK_TSC_STABLE_BIT during kvmclock init to
+> make it somewhat obvious that pvclock_read_flags() must be called *after*
+> pvclock_set_flags().
 >=20
+> Note, in theory, a different PV clock could have set PVCLOCK_TSC_STABLE_B=
+IT
+> in the supported flags, i.e. reading flags only if
+> KVM_FEATURE_CLOCKSOURCE_STABLE_BIT is set could very, very theoretically
+> result in a change in behavior.=C2=A0 In practice, the kernel only suppor=
+ts a
+> single PV clock.
+
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
 
 Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
 
---=-NmFCdyiY4egYUvp+XVXA
+--=-2WAgxEizV8hcN/lY6ryq
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -213,22 +221,22 @@ QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
 nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
 MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
 VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
-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
+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
-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
+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
 
 
---=-NmFCdyiY4egYUvp+XVXA--
+--=-2WAgxEizV8hcN/lY6ryq--
 
