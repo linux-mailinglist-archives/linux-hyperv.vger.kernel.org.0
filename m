@@ -1,172 +1,143 @@
-Return-Path: <linux-hyperv+bounces-11062-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11063-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8AE8IuEVDmpT6AUAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11062-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 22:13:21 +0200
+	id yOsROqfyDWrA4wUAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11063-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 19:43:03 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28B285994BA
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 22:13:21 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87D8C59460F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 19:43:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A08F33237AD4
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 17:16:01 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 3D7FF30D6D5E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 17:16:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB46C3F1AA4;
-	Wed, 20 May 2026 17:15:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D55AB36F421;
+	Wed, 20 May 2026 17:16:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="s2WvwTHM"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bueYDKXe"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ADC7372B58;
-	Wed, 20 May 2026 17:15:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1C493F1ACA;
+	Wed, 20 May 2026 17:16:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779297328; cv=none; b=WzyMYGpEvgWtKwUnnXMXFJalU3h4eqnP1joi0Nd69dK8KC3ZKHSCSVb6+UMw4BBh/yWlud4WnJz6fq1VSWCjrhCzl4vZSzIJ9XEKFDHuhverXozoL8C3w+krVLlcIY06SHXlcHFdbb0WcoeGQ9PQQNGYOISYAAYfNatS9p9RxHY=
+	t=1779297367; cv=none; b=JrsBFLERYjQJVSHwJBhQsFFNbHXF2FlcZXsEmTY3VanjXGeH8YxJrf5zxBEi0J+orJGuRr2TWCkAq6c31OkS3l48IvIWcCobG6Qa47op8gJxGsyodEURxYDcJk7Z/bFnhZK07zzmdHK243YO4sUc2l6fO5/FID7UFLgxdePvnYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779297328; c=relaxed/simple;
-	bh=AN03m8Nb3GUj5nPHISwTrdR9EGmveB2qO0RFcT2taLM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qhEtYQpcuZUq3ZGFkvJ8yNxx5jiYwsje6/WMJhmOmwvEBcOVDE3iisU6bsX83x9mGaZ3GNHgwStb9D8QZu+kcjaFdN/BD4lRI3fKGOn3liX/GOaRxD5sbVIGodHbOMrHFleafH9ctA+MID5N3e4yKthj35gjH6/Mjnk1Jm+K6cU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=s2WvwTHM; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1779297367; c=relaxed/simple;
+	bh=PXvSbANKYjYvunX1Ew5+YjvUrSZfd8wtauvppfdD4KQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=dh9EmSIVhG7c1cy26QpNtJQ3B8ANGzcuswrxi9onqTvNlTZ6cC+WVBhmplLAnp/7HGqART6UaC/9q/gzWPdSKmY6CttSfG+gvDeUpmn8exBsrFpCvQfDCQd/gqxarrAiFwlwQ7Z+wQgK7kIpEcSsXI5tY+p8U7Ih0CGKq9xOm5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bueYDKXe; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from localhost (unknown [167.220.233.27])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 16A1620B7167;
-	Wed, 20 May 2026 10:15:20 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 16A1620B7167
+Received: by linux.microsoft.com (Postfix, from userid 1241)
+	id CF5A820B7168; Wed, 20 May 2026 10:15:59 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CF5A820B7168
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1779297320;
-	bh=hnmFeJDl4TBKVIsJUUCbBB+UTJEByCBlUvjrRaqcaEc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s2WvwTHMixOOPcCNq+vUZeU47P7Pk/66nkAb9jvNUZScmaAF0nFT6x1etrZIl2Khn
-	 kZcG3sUAcxdBFzfKDaYV7SSatZSOnO2Bu3fduUj7uXLPicd7ALhdbSw+7fj81brS/V
-	 Vhy5M0SktDcuZgkIKjrr7AueKDCvEgtSd99iTgi8=
-Date: Thu, 21 May 2026 01:15:24 +0800
-From: Yu Zhang <zhangyu1@linux.microsoft.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>, Michael Kelley <mhklinux@outlook.com>
-Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-pci@vger.kernel.org, linux-arch@vger.kernel.org, 
-	wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com, 
-	longli@microsoft.com, joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, 
-	bhelgaas@google.com, kwilczynski@kernel.org, lpieralisi@kernel.org, mani@kernel.org, 
-	robh@kernel.org, arnd@arndb.de, jacob.pan@linux.microsoft.com, 
-	tgopinath@linux.microsoft.com, easwar.hariharan@linux.microsoft.com
-Subject: Re: [PATCH v1 4/4] iommu/hyperv: Add page-selective IOTLB flush
- support
-Message-ID: <lxmfd2ml5dafkxquuf5i45uqgh6wxl44hlqphu77kvximqrnmi@b3htoyjc6d5z>
-References: <20260511162408.1180069-1-zhangyu1@linux.microsoft.com>
- <20260511162408.1180069-5-zhangyu1@linux.microsoft.com>
- <20260515223545.GL7702@ziepe.ca>
+	s=default; t=1779297359;
+	bh=R2ZZOAVumVjHe9058fhmUj1oT/TuUdahfEOP4265b1Y=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=bueYDKXekMFz2Ou8ngVl8eYDqJUMB6X/jWowWrU1NP/+hZY+WeYg5HK+Qoz95wNNn
+	 z2ivUyghIbqVs7Snss8qhP1i33ZAFzHEzJ5Wie0h1ns7S/u7RfHOW9csHQrHXQsnmM
+	 F6R9azOTwe7HmZRKSW8YmpJljNU3BFSHZ2AJ3idk=
+Received: from localhost (localhost [127.0.0.1])
+	by linux.microsoft.com (Postfix) with ESMTP id CD6A930705A4;
+	Wed, 20 May 2026 10:15:59 -0700 (PDT)
+Date: Wed, 20 May 2026 10:15:59 -0700 (PDT)
+From: Jork Loeser <jloeser@linux.microsoft.com>
+To: Arnd Bergmann <arnd@kernel.org>
+cc: "K. Y. Srinivasan" <kys@microsoft.com>, 
+    Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+    Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
+    "Anirudh Rayabharam (Microsoft)" <anirudh@anirudhrb.com>, 
+    Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, 
+    Arnd Bergmann <arnd@arndb.de>, linux-hyperv@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mshv: add vmbus dependency
+In-Reply-To: <20260520074044.923728-1-arnd@kernel.org>
+Message-ID: <52a29c5-715e-8ea-af1-dafebfca7a84@linux.microsoft.com>
+References: <20260520074044.923728-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260515223545.GL7702@ziepe.ca>
-X-Spamd-Result: default: False [-1.66 / 15.00];
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	FREEMAIL_TO(0.00)[ziepe.ca,outlook.com];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11063-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[zhangyu1@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-11062-lists,linux-hyperv=lfdr.de];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 28B285994BA
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jloeser@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,arndb.de:email,linux.microsoft.com:mid,linux.microsoft.com:dkim]
+X-Rspamd-Queue-Id: 87D8C59460F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, May 15, 2026 at 07:35:45PM -0300, Jason Gunthorpe wrote:
-> On Tue, May 12, 2026 at 12:24:08AM +0800, Yu Zhang wrote:
-> > +static inline u16 hv_iommu_fill_iova_list(union hv_iommu_flush_va *iova_list,
-> > +					  unsigned long start,
-> > +					  unsigned long end)
-> > +{
-> > +	unsigned long start_pfn = start >> PAGE_SHIFT;
-> > +	unsigned long end_pfn = PAGE_ALIGN(end) >> PAGE_SHIFT;
-> > +	unsigned long nr_pages = end_pfn - start_pfn;
-> > +	u16 count = 0;
-> > +
-> > +	while (nr_pages > 0) {
-> > +		unsigned long flush_pages;
-> > +		int order;
-> > +		unsigned long pfn_align;
-> > +		unsigned long size_align;
-> > +
-> > +		if (count >= HV_IOMMU_MAX_FLUSH_VA_COUNT) {
-> > +			count = HV_IOMMU_FLUSH_VA_OVERFLOW;
-> > +			break;
-> > +		}
-> > +
-> > +		if (start_pfn)
-> > +			pfn_align = __ffs(start_pfn);
-> > +		else
-> > +			pfn_align = BITS_PER_LONG - 1;
-> > +
-> > +		size_align = __fls(nr_pages);
-> > +		order = min(pfn_align, size_align);
-> > +		iova_list[count].page_mask_shift = order;
-> > +		iova_list[count].page_number = start_pfn;
-> > +
-> > +		flush_pages = 1UL << order;
-> > +		start_pfn += flush_pages;
-> > +		nr_pages -= flush_pages;
-> > +		count++;
-> > +	}
-> 
-> This seems like a really silly hypervisor interface. Why doesn't it
-> just accept a normal range? Splitting it into power of two aligned
-> ranges is very inefficient.
+On Wed, 20 May 2026, Arnd Bergmann wrote:
 
-Fair point. I'm not sure how much flexibility we have to change
-this hypercall interface at the moment - it predates the pvIOMMU
-work and may have other consumers beyond Linux guest. On the other
-hand, having the guest specify 2^N-aligned blocks does save the
-hypervisor from having to decompose ranges itself before issuing
-hardware invalidation commands - the guest-provided entries can be
-fed to the HW more or less directly.
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> When the vmbus driver is not part of the kernel, the mvhv_root
+> driver now fails to link:
+>
+> ERROR: modpost: "hv_vmbus_exists" [drivers/hv/mshv_root.ko] undefined!
+>
+> Avoid this by adding an explicit Kconfig dependency. Note that
+> stubbing out the hv_vmbus_exists() based on configuration would
+> also work for some cases, but not with MSHV_ROOT=y and HYPERV_VMBUS=m.
+>
+> Fixes: f1a9e67c1138 ("mshv: limit SynIC management to MSHV-owned resources")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> drivers/hv/Kconfig | 1 +
+> 1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> index 52af086fdeb2..21193b571a80 100644
+> --- a/drivers/hv/Kconfig
+> +++ b/drivers/hv/Kconfig
+> @@ -75,6 +75,7 @@ config MSHV_ROOT
+> 	# e.g. When withdrawing memory, the hypervisor gives back 4k pages in
+> 	# no particular order, making it impossible to reassemble larger pages
+> 	depends on PAGE_SIZE_4KB
+> +	depends on HYPERV_VMBUS
+> 	select EVENTFD
+> 	select VIRT_XFER_TO_GUEST_WORK
+> 	select HMM_MIRROR
+> -- 
+> 2.39.5
+>
 
-That said, the way I'm currently using this interface may be
-more precise than necessary. Maybe we have 2 options:
+Yes, this is the right short-term fix. We will need to solve the root case 
+(no VMBUS required) with a separate SYNIC driver abstraction.
 
-1) Current approach: decompose the range into multiple exact
-   2^N-aligned blocks with no over-flush, but at the cost of
-   more complex calculations and more entries.
+Reviewed-by: Jork Loeser <jloeser@linux.microsoft.com>
 
-2) Follow what Intel/AMD drivers do: find a single minimal
-   2^N-aligned block that covers the entire range, but may
-   over-flush.
+Thank you!
+Jork
 
-Any preference?
-
-@Michael, since you've also been reviewing this patch, I'd
-appreciate your thoughts on the above as well. :)
-
-Yu
 
