@@ -1,56 +1,56 @@
-Return-Path: <linux-hyperv+bounces-11114-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11115-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8DAsEupJDmoM9gUAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11114-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 01:55:22 +0200
+	id 2P4bK3hKDmoM9gUAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11115-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 01:57:44 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3C8359CFEA
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 01:55:21 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1060459D06E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 01:57:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 101F63029269
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 23:44:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 69AF4317593D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 23:46:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E66D3CEBBD;
-	Wed, 20 May 2026 23:44:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 573B13BCD25;
+	Wed, 20 May 2026 23:46:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h+XaFM8L"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KGuP+tGa"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C01A3CD8A7;
-	Wed, 20 May 2026 23:44:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5686D3CBE84;
+	Wed, 20 May 2026 23:45:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779320670; cv=none; b=Wfe397w0t83QTPo6syFr3C3ru2MJfotwVQpn+1BPIzStlVFR29a03CLKpP8kj2YqCM8AfZydO2hh7Qe9xEJxLoKFEXhI9HETKK94TSOslNguew9ra9HGNmrNuiB89TjZYrizoQT06zagSgTbjmXNEIBb61RkjcoP/Duah7juXNU=
+	t=1779320771; cv=none; b=vCqnIrz5hID0Ds3pE6u87scAeIcDeHJhz51lAUEAMrciXENIvSTLGxRcUOchC92+XcS/fOtpLATx9RQYRDkGuSaVttO+RqZoSX0HqW2BlmzSSZpKet99T80Xx/DNIRFOFWPEqb4ia79TMYrMxdtPJjVW/DnmB8EBeOh+T3TetxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779320670; c=relaxed/simple;
-	bh=X0zCw9VggqDwYjpyrxBUVYwfytHsLKivEOlU4sByJ9Y=;
+	s=arc-20240116; t=1779320771; c=relaxed/simple;
+	bh=LoEMAtKdxWD3Crtub/wIW3SO8OmgI6a6vILD3ZJS1Ks=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=V2BafkFZkD2/nP/vV7vUlfztLXmki7iuv8ykj+a/dN6+wZF0aDX4Spi9yxAiRgAN8kFM73MxEfxZsB3y7jyFVRyPeIKHoaxzJZkrSNXAgo9p66XL6agA5cvgiGtKhawF0fOKS3yKNnpX0TNpL2p1y+qJQEGx28UqDWCOEuz2Feo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=h+XaFM8L; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:MIME-Version; b=mANpQ2hpw6GfvxSN0l3U0XwYfDXUll+1x+hLQs6Hl+C1f8mdMiSoMO+QQoTe/aheB22a9zBUUz0+FcvP4IGj5/QvjU7kx7KztEEYm6xdhDtCjvRSDM3jlQmr1CeDgPMtahrzgPbr39MnLUmP3S6PgwBdXU/Z7YUx1pevepKC6nI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KGuP+tGa; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=X0zCw9VggqDwYjpyrxBUVYwfytHsLKivEOlU4sByJ9Y=; b=h+XaFM8LtWyTBwkkm146kzpDiU
-	1WqJWfaHfkn9U0mCSnCi2lUtr2wv3X+MNS5sFKYGHvH3nVkPO9OJJESVl+aTCFDebY6bnnJ8mEzq8
-	MvfRx9Qa2QDidPBjSWpqG8QUNwFF3Zh8W5xVTIdqpDivSWZk/PaPjCLf4kC+EK1D8qSGwfETNF++E
-	VkPsHBFXoaD0uraLCxA/UKvVxnAt74nYLgcR25Q1IM3i6hE4rihu3olRuEniFiM92XFFGFp7PQ4UY
-	5/YaP8JuMk3fZDfHZcAdAtZcIyEOLb1PGv3JV9f8k4JC7fW97sAiiTzjl+aCFdFNbdgQfkzNRwbPb
-	YmWXFTlw==;
-Received: from 54-240-197-235.amazon.com ([54.240.197.235] helo=freeip.amazon.com)
+	bh=CDIT4LHc/dZLVw4Pq3pXJSefk+zNidZiNfxkf50m7JQ=; b=KGuP+tGaNAD6aNbiaygC6YoxXR
+	QlzegaOK9ix16FZePm7GRz0VG746bKaw14zTeNO1nwOMuJlkrKFNEKsi294S4KrSGUTUIXtd4aTFk
+	RMTi5+xDgy9U+JRq6TwtDlwEhPve64oUIlR4FXsXOrO7lGM8z4MnU+UJsoZSJrwVDQgeQ+rrEuMaC
+	50l0uJhzmT/zKAt8U4uXCqbEp2G9h3EM8NtFFi8Q/2m7Uzk2GrOIAdxaMNZeHhto86LTwPPpWITI5
+	I9754fdkHFA+VhbBMlmZRu2Fdkm7ESX9B9Dq43z1xwtmNyPobNkDZXPtfnv26ThQuusQSnTiIaceU
+	XDfftm5A==;
+Received: from 54-240-197-227.amazon.com ([54.240.197.227] helo=freeip.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPqaK-00000007l48-0Tuf;
-	Wed, 20 May 2026 23:44:20 +0000
-Message-ID: <13d79ba1e0450068c9573ccd8deb3ec007aea8d6.camel@infradead.org>
-Subject: Re: [PATCH v3 29/41] x86/paravirt: Plumb a return code into
- __paravirt_set_sched_clock()
+	id 1wPqbn-00000007lAX-1Ssh;
+	Wed, 20 May 2026 23:45:51 +0000
+Message-ID: <5eb99994b054700d9924f529448730a7dfabe9ce.camel@infradead.org>
+Subject: Re: [PATCH v3 30/41] x86/paravirt: Don't use a PV sched_clock in
+ CoCo guests with trusted TSC
 From: David Woodhouse <dwmw2@infradead.org>
 To: Sean Christopherson <seanjc@google.com>, Kiryl Shutsemau
  <kas@kernel.org>,  Paolo Bonzini <pbonzini@redhat.com>, "K. Y. Srinivasan"
@@ -72,12 +72,12 @@ Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>, Vitaly Kuznetsov
  linux-kernel@vger.kernel.org,  xen-devel@lists.xenproject.org, Michael
  Kelley <mhklinux@outlook.com>, Tom Lendacky <thomas.lendacky@amd.com>,
  Nikunj A Dadhania <nikunj@amd.com>, Thomas Gleixner <tglx@linutronix.de>
-Date: Thu, 21 May 2026 00:44:18 +0100
-In-Reply-To: <20260515191942.1892718-30-seanjc@google.com>
+Date: Thu, 21 May 2026 00:45:48 +0100
+In-Reply-To: <20260515191942.1892718-31-seanjc@google.com>
 References: <20260515191942.1892718-1-seanjc@google.com>
-	 <20260515191942.1892718-30-seanjc@google.com>
+	 <20260515191942.1892718-31-seanjc@google.com>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-tHXnnzm+pwpZbACXpNw8"
+	boundary="=-wo/wRt0Fuqirl5QEKL9D"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -92,7 +92,7 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
 	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -100,7 +100,7 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11114-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11115-lists,linux-hyperv=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[34];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FROM_HAS_DN(0.00)[];
@@ -114,37 +114,66 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,amazon.co.uk:email,infradead.org:mid,infradead.org:dkim]
-X-Rspamd-Queue-Id: A3C8359CFEA
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,infradead.org:mid,infradead.org:dkim,amazon.co.uk:email]
+X-Rspamd-Queue-Id: 1060459D06E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---=-tHXnnzm+pwpZbACXpNw8
+--=-wo/wRt0Fuqirl5QEKL9D
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Fri, 2026-05-15 at 12:19 -0700, Sean Christopherson wrote:
-> Add a return code to __paravirt_set_sched_clock() so that the kernel can
-> reject attempts to use a PV sched_clock without breaking the caller.=C2=
-=A0 E.g.
-> when running as a CoCo VM with a secure TSC, using a PV clock is generall=
-y
-> undesirable.
->=20
-> Note, kvmclock is the only PV clock that does anything "extra" beyond
-> simply registering itself as sched_clock, i.e. is the only caller that
-> needs to check the new return value.
+> Silently ignore attempts to switch to a paravirt sched_clock when running
+> as a CoCo guest with trusted TSC.=C2=A0 In hand-wavy theory, a misbehavin=
+g
+> hypervisor could attack the guest by manipulating the PV clock to affect
+> guest scheduling in some weird and/or predictable way.=C2=A0 More importa=
+ntly,
+> reading TSC on such platforms is faster than any PV clock, and sched_cloc=
+k
+> is all about speed.
 >=20
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
 
-Oooh... can we use this to reject the kvmclock when we have a stable
-and reliable TSC even for non-CoCo guests?
+And kvmclock. And Xen.
+
+Are there *any* reasons we'd use a PV sched_clock when the TSC is
+usable?
 
 Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
 
---=-tHXnnzm+pwpZbACXpNw8
+> ---
+> =C2=A0arch/x86/kernel/tsc.c | 9 +++++++++
+> =C2=A01 file changed, 9 insertions(+)
+>=20
+> diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+> index 3c15fc10e501..ac4abfec1f05 100644
+> --- a/arch/x86/kernel/tsc.c
+> +++ b/arch/x86/kernel/tsc.c
+> @@ -283,6 +283,15 @@ bool using_native_sched_clock(void)
+> =C2=A0int __init __paravirt_set_sched_clock(u64 (*func)(void), bool stabl=
+e,
+> =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 void (*save)(void), void (*resto=
+re)(void))
+> =C2=A0{
+> +	/*
+> +	 * Don't replace TSC with a PV clock when running as a CoCo guest and
+> +	 * the TSC is secure/trusted; PV clocks are emulated by the hypervisor,
+> +	 * which isn't in the guest's TCB.
+> +	 */
+> +	if (cc_platform_has(CC_ATTR_GUEST_SNP_SECURE_TSC) ||
+> +	=C2=A0=C2=A0=C2=A0 boot_cpu_has(X86_FEATURE_TDX_GUEST))
+> +		return -EPERM;
+> +
+> =C2=A0	if (!stable)
+> =C2=A0		clear_sched_clock_stable();
+> =C2=A0
+
+
+--=-wo/wRt0Fuqirl5QEKL9D
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -223,22 +252,22 @@ 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
-ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDUyMDIzNDQx
-OFowLwYJKoZIhvcNAQkEMSIEICIxrlrIDGBau8EV2kTCO50zMitqmiB+NV5KBzqZe46gMGQGCSsG
+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
-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
+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
 
 
---=-tHXnnzm+pwpZbACXpNw8--
+--=-wo/wRt0Fuqirl5QEKL9D--
 
