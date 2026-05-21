@@ -1,56 +1,56 @@
-Return-Path: <linux-hyperv+bounces-11121-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11122-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AGjQEvRKDmrL9gUAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11121-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 01:59:48 +0200
+	id ICDGA/9NDmrL9gUAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11122-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 02:12:47 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E36A059D130
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 01:59:47 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6469B59D33A
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 02:12:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4A9E6300F772
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2026 23:59:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CAA8231CABD7
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 00:00:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 561D13BCD00;
-	Wed, 20 May 2026 23:59:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17FE42367B8;
+	Thu, 21 May 2026 00:00:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SbcgRP/W"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I274JKVR"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035D0373C12;
-	Wed, 20 May 2026 23:59:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07334D8CE;
+	Thu, 21 May 2026 00:00:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779321586; cv=none; b=uPgd64NF2vSr0LdKkt4NkoKqr8KSgEEOKXanlEOOZqqEfGUjG/1JOKeO9lUUn6731Jdwgl1w7w0S1Gix9fm/NXxvY1NNmowOTR42/KJWJ8oaUS0JqoRpmA8AUQ1vhYeVlpn+8XGqX8YFbdjnjhHyQiT7jH5/QEq8spcju1DTsrk=
+	t=1779321646; cv=none; b=dSmgh/5eY1w/AQfLkgtzQPmt5aQjpY18KDvAP/Kyloli9SNVou8uPg9dTIMPVb3UrCZf73rikQY/z5Vp0OvYlSrFuLdCr43MZxl0N+nw9u2mMYUQPBsBE2/TI/mFm0JTX4D/2PPjYkGsvBLbqpyxiGTqoja/GCrWk0b9fC+8Xmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779321586; c=relaxed/simple;
-	bh=4fumDqpfFh7qTUUSt85YEOGP4Jz6d/tV2ufryLf11Sw=;
+	s=arc-20240116; t=1779321646; c=relaxed/simple;
+	bh=NcLTLf1gFZKiWmIuS7GLhIukpMn7F7oeQMFwKhor2Fo=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DtKIsHHUaulGgBFrsVkpK1rAlW8W6dUXjjqD3JTJsnKXL76gAloAnD2EPwhaJ1fvaSpJAdFhuWWiCXkdlIi449AOLYiozg315M9xjBGUvZFs3Yso6m1iPc2pt9bWhdwGOU+mJxvoEZzaJ44YZhe0KsoLeKoww28CytxE5m/OI1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SbcgRP/W; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:MIME-Version; b=aXsXk/mTpxh6aSHSOyj5uITembB8JHoy3JUcydTnyXRB1Ho5x6raPzIlYsI2FkduP1XD/QJt/AgMEtNPSz0kci8MuNyzeuLVbO3Yxm+/MDmXjDNbmtl5EDMySG5RKLzjQvKImbzh90TOgf2n7cG5K1wNUY63ievOA8AK0ljIShc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=I274JKVR; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=4fumDqpfFh7qTUUSt85YEOGP4Jz6d/tV2ufryLf11Sw=; b=SbcgRP/WC+khq2voSt24X8TsZc
-	LgTJct21PsM/eYu33L8Rw4dCttnJxdFtOJIbT++GI/8Evz9oMMnyOIaVXE1ocnST7p2R+rYlJspqZ
-	FwI3NYgR/E9nczxvpWj+94v2Hp1noG4+kMkpkjSyq+ZtJq+vocxDLip7r6bEburTLmXjS7M3s8A1J
-	61mxQGpcIdA1zpYLe0I6vAPHlDYPY/crmL1Sf2UVF+xmn4MvjxExX5qdrTYwjWtTZFUIao2vK3iuJ
-	qVzTxJ0blfy4aDeYcd3/IwaY2elApHkQmedp4eHtqi9kN1I5cr6AL00uDkZzPcOaZANBHMWRWJkb9
-	r0sTUDFQ==;
+	bh=NcLTLf1gFZKiWmIuS7GLhIukpMn7F7oeQMFwKhor2Fo=; b=I274JKVRB2I/bX5KQZ/FAu7eqx
+	FLGKxaMejPeMzVDE/qSz0O7KMiR1POozKjF06k6O/jqCb8/SY49SKTXEUCLDshZD3ClU+TqRrBDRc
+	o+FrB7CtLXMyq949MVy7aHfg5/JfjRnZ19Bi4HB2kIKXZmOOMxCvrKsk0ovH4iD7YEgUcdhmRJobi
+	FzpG9v9OZNFvun6V54L7lv0mWd23T1lJwkQljap41WA/klem5AAOa+6WKisZrZ9+pOLoAxqHuS4fP
+	uNshhLpKWfre8yGZo6sKOTlwgbxu5EY/EDqKythb1g7ttYh5ZVSJplq/x9PBZ9z1VDWr1WywKyxc1
+	zipb6mVg==;
 Received: from 54-240-197-235.amazon.com ([54.240.197.235] helo=freeip.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPqp6-00000007lp0-0wIC;
-	Wed, 20 May 2026 23:59:36 +0000
-Message-ID: <ca2851959379cd0bd8fbae6e86c20c6765bbefca.camel@infradead.org>
-Subject: Re: [PATCH v3 38/41] x86/paravirt: kvmclock: Setup kvmclock early
- iff it's sched_clock
+	id 1wPqq4-00000007ltE-268x;
+	Thu, 21 May 2026 00:00:36 +0000
+Message-ID: <d5633d91efb5c43b3618bd2f6c43c6017086bcda.camel@infradead.org>
+Subject: Re: [PATCH v3 39/41] x86/paravirt: Move using_native_sched_clock()
+ stub into timer.h
 From: David Woodhouse <dwmw2@infradead.org>
 To: Sean Christopherson <seanjc@google.com>, Kiryl Shutsemau
  <kas@kernel.org>,  Paolo Bonzini <pbonzini@redhat.com>, "K. Y. Srinivasan"
@@ -72,12 +72,12 @@ Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>, Vitaly Kuznetsov
  linux-kernel@vger.kernel.org,  xen-devel@lists.xenproject.org, Michael
  Kelley <mhklinux@outlook.com>, Tom Lendacky <thomas.lendacky@amd.com>,
  Nikunj A Dadhania <nikunj@amd.com>, Thomas Gleixner <tglx@linutronix.de>
-Date: Thu, 21 May 2026 00:59:34 +0100
-In-Reply-To: <20260515191942.1892718-39-seanjc@google.com>
+Date: Thu, 21 May 2026 01:00:34 +0100
+In-Reply-To: <20260515191942.1892718-40-seanjc@google.com>
 References: <20260515191942.1892718-1-seanjc@google.com>
-	 <20260515191942.1892718-39-seanjc@google.com>
+	 <20260515191942.1892718-40-seanjc@google.com>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-2k1D7VS0lDh/MqkdLHDz"
+	boundary="=-BsKJxp2uQuWPK9KQHUFW"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -92,7 +92,7 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
 	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -100,7 +100,7 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11121-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11122-lists,linux-hyperv=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[34];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FROM_HAS_DN(0.00)[];
@@ -114,35 +114,30 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:mid,infradead.org:dkim,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,amazon.co.uk:email]
-X-Rspamd-Queue-Id: E36A059D130
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[amazon.co.uk:email,infradead.org:mid,infradead.org:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 6469B59D33A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---=-2k1D7VS0lDh/MqkdLHDz
+--=-BsKJxp2uQuWPK9KQHUFW
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Fri, 2026-05-15 at 12:19 -0700, Sean Christopherson wrote:
-> Rework the seemingly generic x86_cpuinit_ops.early_percpu_clock_init hook
-> into a dedicated PV sched_clock hook, as the only reason the hook exists
-> is to allow kvmclock to enable its PV clock on secondary CPUs before the
-> kernel tries to reference sched_clock, e.g. when grabbing a timestamp for
-> printk.
+> Now that timer.h ended up with CONFIG_PARAVIRT #ifdeffery anyways, move t=
+he
+> PARAVIRT=3Dn using_native_sched_clock() stub into timer.h as a "free"
+> optimization.
 >=20
-> Rearranging the hook doesn't exactly reduce complexity; arguably it does
-> the opposite.=C2=A0 But as-is, it's practically impossible to understand =
-*why*
-> kvmclock needs to do early configuration.
+> No functional change intended.
 >=20
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
 
 Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
 
-
---=-2k1D7VS0lDh/MqkdLHDz
+--=-BsKJxp2uQuWPK9KQHUFW
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -221,22 +216,22 @@ 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
-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
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDUyMTAwMDAz
+NFowLwYJKoZIhvcNAQkEMSIEIG/tb5oHS69DXoPShiAfo2aoOWoJE5oNgVwA+aqkZngOMGQGCSsG
 AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
 cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
 VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
-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
+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
 
 
---=-2k1D7VS0lDh/MqkdLHDz--
+--=-BsKJxp2uQuWPK9KQHUFW--
 
