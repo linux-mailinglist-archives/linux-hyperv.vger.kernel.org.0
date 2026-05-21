@@ -1,62 +1,62 @@
-Return-Path: <linux-hyperv+bounces-11136-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11137-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AN7OFndeD2pMJgYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11136-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 21:35:19 +0200
+	id 2NvWM0JPD2orJAYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11137-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 20:30:26 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 549855AB7CD
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 21:35:18 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3435D5AB0ED
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 20:30:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 90D663044A91
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 17:07:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4B6B23178C1B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 17:19:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EC203B893A;
-	Thu, 21 May 2026 17:07:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA0FE39BFF4;
+	Thu, 21 May 2026 17:19:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Vk5GKYqZ"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="HFhJN2Uw"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azolkn19010000.outbound.protection.outlook.com [52.103.12.0])
+Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazolkn19013067.outbound.protection.outlook.com [52.103.20.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62F6383999;
-	Thu, 21 May 2026 17:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.12.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3A8360ECA;
+	Thu, 21 May 2026 17:19:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.67
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779383272; cv=fail; b=FQQ6TebKzEoaPSo120kyLTZWGrY5gF7jUC2rRnG2siTlyRP6xisbks8tdX+VoCN4sxkB14C4D2SfHAQd5FdqO6WMETEpCQtFVSNoG35v2ZmfaC6pUuoCxpaFHkfBF5p1b9gpFknxwKESvMmWOqNhtsgYM+Xens7smv8yl5GGA5E=
+	t=1779383948; cv=fail; b=bBRq1HIZs5gU98B8sKLKyByfF7UJ0Fy07HtfXRsZii83uq38kqzND1jWq2ZzaldN28vzdAlx4oC5J20UnJ3CrT+7CACbfHrgGVV857G/O1+wHxjL+H3qf4/dYGSOwcdHR1XPLL/iYrL3KnT0c3aHVe1zZQc0sD+SnyJM5p7GreU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779383272; c=relaxed/simple;
-	bh=v2nFB/8d824GX4sPwnrZs9+rhAl4kZVjcxmipB9VH+Q=;
+	s=arc-20240116; t=1779383948; c=relaxed/simple;
+	bh=hYtzkNX1Z16+5sir2LGAQowoMvLlYGwTNGme6Cm/TXI=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=J2J9vN+rBTztCH3nODq/L1oBp64cp1V3YV3R761ldJZ2BRsKnSTJPATi0JIDagEO1XuXiwj291cZXFQHS0kXSZmnamk41G5RJtw0p1Krn14wGSYQ0h2Y7CaqYsKVBs5Xz+nqyq2OVeo5si1+XQ6At+Hjyq5NrQZsCAYDs7HrsvQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Vk5GKYqZ; arc=fail smtp.client-ip=52.103.12.0
+	 Content-Type:MIME-Version; b=EAJnFSpOazZpT2w2NUo5Ja48eAcuOJKhGoKQABEZ6JK2jOvkNdTWk1pafspRqiacY/GGaBRBf+/ChBiYgxVsFGs6GtbHpwgM28rz/DyUkNzk4ymNZWNnKjgYuqblM6AP8UdmYwW96DAd8waAq95fjV/wWD7KSWceevPo5A42fMY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=HFhJN2Uw; arc=fail smtp.client-ip=52.103.20.67
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FchaoitPyrXDddQZD/mYu38LlVu1hBm/U2HnwIuJWDtJVLpN7kjzXMds2QnsbaDSjXGXrznBePjrwTjzD7xBztr0ALFp3XrQkgXoDcz4T2CBwUWRqJIPJTTQh6dHGAG3YNOtUxbEU0s2hbFx0Xv3FiGCJ1911qBmwLTF7MIkZJAi8tuDCBDR/rYxRnMtvPhYeoSA6H+se8Fr119dtikUu4DvBLHLIyk3HfmvtE3ttJ5889WS1lW45iqxJgjU5nUkOljkjxt4D4kN5rpQO4Mov1uUVk9rR1abB7I3sQ/Qi85UhVsOJBepG0MmItIs69pssXcZd+Mcn9BjH7L9q6T9Ig==
+ b=b7wBJS6AKXKoPtVj7Y7UTBJUhjiy+ibH+Xn2EZvb2I5o9zlOBqRANUFlGS4iTwfNMJILBVMRS9n/NMSEvgsfmqtIqSoQHr7XjgJ4s1bdtw+iPCalOAHyoPjts0q4lkWmSj6UJGapsvhBOrs2a1vPzNVch8fnTuTeRqPZtqfbqi/zCnet9IVAK4PCc04CRWhWupK2YcU1Ew+i+7VRdolqGba8o1RVmr1hbYNrN/0HZe16zGIiZi/TxnkwR5md973ho2xvRn9XJPF/ev65InQhvbdc/GR/heaoU/8v7qNSFquXxkh5J6W69wWzyvtwRDWB9dudtJVlM3nw0Get3owFCQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=W8Gno2s9P3ElZw+cCA2dIJ7DDooH95gEGcvjTXAtCyc=;
- b=j/mlIqlMSB/GOXJSTF/5Cm/9AToBgm6gEcMraBvqrpf9gMlb4rqOpmXlmZFCCIlR/GYpxWMYg862aJPpo7/a8euq1IVJhk1Ffeh0yDlKHY7BVo1ScNEWYRp201EsLwF8QJ06lTF4QpU9zaaygPaO5QfLELsIGhwvLFPPftVRisY6wdncgZtfYlf+zRlYSneX0r9lJ5XJYZLmLL7CubwSLRDgYLfOvLPwNk3rrbCC9tOZkgTJQI9N+bwlvrQ3y5i4l5tgkpo60Dv3vE/YZT3lw+qAZQ67U0HbExAoQxjSwa5dU0R7ZLuVkC6rSoNC6TlHxUh9YsxCtrYTm90ZGzKzew==
+ bh=1ypENyYp7QHoZaRZpMdt2X/LsakFgKUb3XLbJKPohns=;
+ b=i3TOz9rhK5AGt82rBvHkI1o72eA+3LXnTRzEmjONkGDCpoqMxcl720m83SBCdRJn2q5irET+7WBzUIAxKHaOZE71ZiajE5QCm5I3ablayEmBYM7b7hQWr9xTStBcBHNkTRDqujc6duqRp1dQg3t4L8hQaOCQgaiMJxHSDcCy2pshBYRKU/c1FzdlC8SiMxbG7n1YF624qUFWCh6hNPVlNb2h0bK/RO0SZJn10yCMfeiUtVFZ7+CPqBLuD4eINDQxqVDdPxqfEkXnVexwRPA0oGrQusk5IPughF/azTwyp/wdpwne25jcW3Jb+YfGszFjshTVZFuT4mkb0Ok1YbNCmQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W8Gno2s9P3ElZw+cCA2dIJ7DDooH95gEGcvjTXAtCyc=;
- b=Vk5GKYqZoRr3TEDEBIca2nc9UOlTCmq0l10PNVm2yOcnfxmM9ycAhy0brlPZiyaOwhxINyFqvltIUjGGfMJwn+dfRnO2yAZo+it7bUgPQVuRpAL5hMS1Uv/gSyGBWrV81OnVCgkJbIs4KF0hOfV9x528RgOTW9pJqAaR0wqkJtEsawvqKYqOYirEiYgAcy6jItmfzOO/eCTEtQDGXkBATIFxvzOG1CLsMIwzXhyimkdfPnXaKvj1QS9oiZV2z5lda2OrNpULOY6hENPZz/n/JylzcCVVDgEUvmRtJ/8EAe+PyUfGibzL1wUqnKaHVCQM/U6nL0pc1p7QikeK26wqlQ==
+ bh=1ypENyYp7QHoZaRZpMdt2X/LsakFgKUb3XLbJKPohns=;
+ b=HFhJN2Uw56oBus+P4a5V/ssgMzFipiRRQP9jj9PgdJTx89flK+SL4HCshKunHeWeXPr/1EM3MGgWemYogCnONwNOgPBrlC9vVO4Zu1ceEWG++Qw9blKLRWq7K4vHBRzkBjG7LTsTUtBbqKaT4VdbYa7S2ne84DsgEQLtzhapRQ1kqwT5tsGLWxXnb9ccGW4w2igVl0knE6NqJbO2nRmZm1zMubLXuSUas3N2fQfal5OCez2mxLkd/nNjiY6aZ8bcg2OROh23phelQYPgA+l1WBhx+YtuxaGH4cwZznRS7m5EcCJR91o7iY3LFgRshBWuOcyPWND5Bnnrhr0vYr5EqQ==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by PH7PR02MB10106.namprd02.prod.outlook.com (2603:10b6:510:2ef::15) with
+ by MN2PR02MB6814.namprd02.prod.outlook.com (2603:10b6:208:199::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.18; Thu, 21 May
- 2026 17:07:47 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.14; Thu, 21 May
+ 2026 17:19:04 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::900:1ccf:2b1e:52b6%5]) with mapi id 15.21.0048.013; Thu, 21 May 2026
- 17:07:47 +0000
+ 17:19:04 +0000
 From: Michael Kelley <mhklinux@outlook.com>
 To: Berkant Koc <me@berkoc.com>, Saurabh Sengar <ssengar@linux.microsoft.com>,
 	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>
@@ -68,76 +68,74 @@ CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
  Zimmermann <tzimmermann@suse.de>, Maarten Lankhorst
 	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
 	Deepak Rawat <drawat.floss@gmail.com>
-Subject: RE: [PATCH v3 1/2] drm/hyperv: validate resolution_count and fix WIN8
- fallback
-Thread-Topic: [PATCH v3 1/2] drm/hyperv: validate resolution_count and fix
- WIN8 fallback
-Thread-Index: AQHc581tCSmX9PdhTUe+2Nbmy0E9aLYYuRWg
-Date: Thu, 21 May 2026 17:07:47 +0000
+Subject: RE: [PATCH v3 2/2] drm/hyperv: validate VMBus packet size in receive
+ callback
+Thread-Topic: [PATCH v3 2/2] drm/hyperv: validate VMBus packet size in receive
+ callback
+Thread-Index: AQHc5816N8UGGzrbNEC1JOxCe/0MVrYYvDsw
+Date: Thu, 21 May 2026 17:19:04 +0000
 Message-ID:
- <SN6PR02MB4157B761899BF5A8F77126FDD40E2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB4157BBE2E29FE5B21B51FF19D40E2@SN6PR02MB4157.namprd02.prod.outlook.com>
 References: <cover.1779221339.git.me@berkoc.com>
- <1b88bc7edeb2f0153475225b67f19aaca629eca8.1779221799.git.me@berkoc.com>
+ <e6e63276cca2901641ab39029e4fd3d621b1ee92.1779221799.git.me@berkoc.com>
 In-Reply-To:
- <1b88bc7edeb2f0153475225b67f19aaca629eca8.1779221799.git.me@berkoc.com>
+ <e6e63276cca2901641ab39029e4fd3d621b1ee92.1779221799.git.me@berkoc.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH7PR02MB10106:EE_
-x-ms-office365-filtering-correlation-id: a9cba4a5-2376-438b-222f-08deb75b7b93
-x-ms-exchange-slblob-mailprops:
- WaIXnCbdHrNUHEYKyaIg10gAWKced6rzsCe/BmiDHtXwX/LdJ7U7ZeMe1Ijk8FRKYPsR/fuKLA8h/Bc//O77zF1CfXrZC3S0ML436yh15kVFSt8KVMPl+e894htv7fFkxPJ9FqqJ4GBgJ6NHMUA4/lc4ZO6PEoc23/LrqwVxshCH6ccGoRdyXwPQ/+osrm/4jque7CF+DO5g4f2iCdH8Wixb6LCpUwGIKEtB2DnB+Uti6RHvGfqy/h8Dh0NUd50qK7Hv8FE2JBEC3/xlMauiOunZK0s533mDGoB70sBNr5owjrBg5WG7xAw2nCbg6PE5/bKTzPuIlrsigQcI2apGqcqClU8WJOyTM2pzQZYL1Q3I/ElIEqoI74wXVYrveyKv9mHoAltXIOoR/+yW4fYQEXBWC1JFox3/RMRdW3Ja45eC+4TXCa1ecHb/SEJFD2c31xRrQEH+/v//2yQjv3EsKDtvB+taIXV7BlGmiAJ01E+lCkST7nvulYBpJgcMpgRMWkBQS/HIdQ3XgkoKoACborFids+SuPi5eZcnHJc+b5epUptlrYCbKR11mkWtE/5XINrSXwPqPWza8VOQrvFqfTADrOFQv4HNlgz2SdeCLHGFr1t+jbSveklzQrRtDu8oNfNygyiXUrvB32whZDqAa6HfVRdptPUm+C13+P4FZT3oYpLoIt0lMc9wij/4xEMdT+/LbHSDUMP3Nf5acL2Ahn74JybkEiPKyDJXjOI4k9OqXcq5EUGdcSZ9kiw4YgeDMHg4bbbimRo=
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|MN2PR02MB6814:EE_
+x-ms-office365-filtering-correlation-id: cfd6db04-207f-4c77-2c03-08deb75d0ee4
 x-microsoft-antispam:
- BCL:0;ARA:14566002|19101099003|51005399006|41001999006|37011999003|19110799012|13091999003|12121999013|8062599012|8060799015|31061999003|15080799012|56899033|40105399003|3412199025|440099028|102099032|12091999003|1710799026;
+ BCL:0;ARA:14566002|8062599012|15080799012|8060799015|12121999013|13091999003|19110799012|31061999003|41001999006|51005399006|37011999003|19101099003|2604032031799003|440099028|3412199025|102099032|40105399003|1710799026;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?LCoJ8bp242nn14F+ZmbsQ1NsDAGiSKVea1IrkdFxVrynsItBOdv333MqGPi2?=
- =?us-ascii?Q?YbCxNJiGEsaQTRljTlWk6hL1vKQeosQp2CpFAB/rcQWoOyAb6BjNDrADg0lI?=
- =?us-ascii?Q?ojmKOnEY4upeaRCJH1DrZN7Y8t0m2Bub/OojfaAUugdA45/aV98unS0WXTXI?=
- =?us-ascii?Q?BtRqwnjZ2BA6GFLp7I3ew3fPGwJxfXLwOQkXZcui8F0ha/NibjpoH8KZToXA?=
- =?us-ascii?Q?oB6MOWRPK3wKDTK4JlQVRWvWeKtxuoD3wYrnvTjfHCaHyddzJlIHtlC3EtFk?=
- =?us-ascii?Q?O936OpZ0fN9Sb746BeZHxp0tZsfWtC1v42ab1bmCj9iqyhFA+wDU7NWzf1ES?=
- =?us-ascii?Q?KKdgbmzUyVIWHx5adC16eQJtOK09Os8s26sreDVTHJwSDbCP8HjgDdQrYQs4?=
- =?us-ascii?Q?KglIN2kCOtqRzb32uDMPVStEig8FGbuSMcs+/Xo3t2ixaYjPZ8YndrfkLPGN?=
- =?us-ascii?Q?M1vqr8CB+Y0bT6bnjCbt9Cujjl776Rs9RXUCfIKpDrmN1Q/KBTcLju9MEaCK?=
- =?us-ascii?Q?XDD2xZKEn5/7ZQGq3HCwgaKKQd4SNXlrQOZG10zkzng6RNlC4I3BWZvlHOgI?=
- =?us-ascii?Q?5E5P6ASxbPijwqirBnbcaAsKzD67fvtlLRXFAXTOZg19wqdgoOuTb2SHK8df?=
- =?us-ascii?Q?CvX+G406743G8JwaY32qQ+9TFZ2RJi4SmvVVl6gZ79wcF6+sRe85W7mTLUK+?=
- =?us-ascii?Q?kqwzGwQnU1wI1ZcZEWoGdnzrgGcbRTRX+0TyR0wbrV8OOx0vc8bqpCahL/b3?=
- =?us-ascii?Q?g9e5PdafV0E+7i4Yr25utOK7LNfydkHmnsoQZ2XsDXWEBqgzdfHfbex+vE7q?=
- =?us-ascii?Q?xR+Izu6iH7DqlGIX/gDMGy+a+Cz/yPwsI2ZhvA/B1+swz/vXpttJF3LrZw9e?=
- =?us-ascii?Q?cdkDASVDjRhal8aPxigHEp9E32k69QTf70dv/VL8F2g1cT5sttlcdPmQOoHh?=
- =?us-ascii?Q?qg32IFdffvtm/+ayq8tq3h/OX6DaHckXXbHWgTt2aXdv5g9n/40lqVGvQyhF?=
- =?us-ascii?Q?8J8vyfz8fqVNhG2QwSmhuay33XScUrR1TEm3vp2jmWlsgTEoMr3LwaYAYibb?=
- =?us-ascii?Q?lhiK9WQ+zE8pWVCCdfcGS3onDK12l8uHkUg+KuCaLICAB56U0Os4I/2mA60k?=
- =?us-ascii?Q?fZ3h5PCkHjzw?=
+ =?us-ascii?Q?/AsZQESDEeEVMZl0jZbWEZeVmiJnwTU8gZMUUgaQqdyG4jNju4sQBHUS0wfw?=
+ =?us-ascii?Q?wWk0VCDk7PZknve472Gtkrjq1QlSirR9FxD73MmoVx7AXooKYGnmtMt7V3zG?=
+ =?us-ascii?Q?sPEJg70s8IiwPnkZqYumLkOfaDnh1UY8F68NW+Vmnjf4Emdfi3PKIHeA6ySt?=
+ =?us-ascii?Q?d5JsBnlNydKEl0pjAV//LTnelnY+uunM6xptF5ouNthUACr+9S41zzTzR9wT?=
+ =?us-ascii?Q?qx31Biow4Cz/9M7Iq29NTBaOEwJHScgc2NzqtvVf27/sry8UX5dXZHpVoWsk?=
+ =?us-ascii?Q?paPUpKBMZ3qpxSUGHrVG1gnmt4OOJrWzVWGBmOJUG5Za5DBc8gPGfPRUGDX+?=
+ =?us-ascii?Q?jhHNYQ3kDh0kmkYN1tXM41vTstR60K4GJLHPdTSe4OZHwOu8KFUclsyhE3B4?=
+ =?us-ascii?Q?fNH0U6iJEaxWdkABxDb8TjPODzrcqwF68HW1pKMDdrA5djxeB6IgzKosVj0w?=
+ =?us-ascii?Q?cREIOalxDSJ3YvpvqkO5c7wrikB9IjxKgvk/p3wCvpJ3UaAQUgXZ7SDoCOhp?=
+ =?us-ascii?Q?NtdVbQL4uHJ/+wSog7f2i3E6Xrfvm6JB8iz0UdA+S04dCXHkNFwK9yVh94US?=
+ =?us-ascii?Q?ILn4ReqlTZfw0mOGzdRDjv7ljJzIU5w2VIjDR8rEk5yBU/Bel/4zQCAkC4j3?=
+ =?us-ascii?Q?521uSQm567e7GCEizR56699uKjOcveBjpdcMkJhGwCqAl9IztRXpQXsO3dOB?=
+ =?us-ascii?Q?IkOzhFjxE9CGVq/oQKc8kvbLi8AXF6uETd/18KPrCMoTjQojL6n61d+WPXOq?=
+ =?us-ascii?Q?spnvwMumKgdci7hYXyvgTrcauf/wqiTcSwe6tf2UrYEKduRGV3gdbFxL4L4+?=
+ =?us-ascii?Q?m1pfZMUFLCCJLNxKo/AG+qNCIjlKlBbhZ4UyvmWhU/jLK65E+hYEIk5ztMkr?=
+ =?us-ascii?Q?+OkuwHnGLMds+a+AA3FpD+iljvNxPdYEbKx87XvEsRPIsuk4TKtImaU4pZZQ?=
+ =?us-ascii?Q?cyw++niPCSCukcfPTUPpf/mOqEtfMzapk7jF/JUO2ASgPgfVzJpahxPlZXwh?=
+ =?us-ascii?Q?r4oiCnS1HqS9SHGEU8dWu/47/kVj3PNlNZOu7GsJBrH5YPKjsaoi52/k9gaf?=
+ =?us-ascii?Q?Quk8VtOfjbQve3bjvxeWNQLw7p4TDeGvt8Ls1w93fRV23GJyeIf6JcQxymTq?=
+ =?us-ascii?Q?3wyMs2hWq95/?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?KV5aGZZQSO8dbcBKAFH9gliSTrPiLvC3ZZ/jruO5StC0gznqUhc0IWSejOsZ?=
- =?us-ascii?Q?PBPiN8TvnmP1/20xge/s7YkbzPl6VTpP5/Wn+YFKJEJXZD2uT8MmPhw6hcDq?=
- =?us-ascii?Q?oLOXTbGMfURxfAzKxcVyYnixrS9ojWrV4fEHBmV+aGfgpt5wIzmDysTluQGq?=
- =?us-ascii?Q?CAAadL8pkJ7raMDYSlzdCFc+62z8JzQXL2EeptsCpjCEp9DyocqfCWW7xcMq?=
- =?us-ascii?Q?tr1utTO7P4Hw65JMhRDDsaBTYrdZqywID8zB0sr+wyZyzJHAArZIooq2F278?=
- =?us-ascii?Q?+EWlllbAWTOvEja69CE2Ovx6gmY8FeaTdXED6nhLA/eMjLdW5VxSjYrKEkq4?=
- =?us-ascii?Q?xungbwhfxhoYF84hyEZfdt4zzsmDwlcHwLEWn8PlAq3UDhxNdLhAgR7/UVbR?=
- =?us-ascii?Q?5uRxCB3p7OwzrQdJVEuaUnjxCMvvkNgvW/b2n6flkv0hLk91eNKJYWdUGmk8?=
- =?us-ascii?Q?5hxyzU5mcvNOAmceTRBoLIyeWXAiW2AFKrdmqvMt6L5y9vgAHGpQSpXli2zE?=
- =?us-ascii?Q?x3cgIN8YhjKOlPO2VTVO86bLNuL2YRrb1fgW8IH3HOHGIAilU4kKHv3CAZaE?=
- =?us-ascii?Q?4CVcrMsdO0C+U5L+WZK/ZlS6I0eSRsAehlcgftiLogipZa1Px4gnHLbmfmLz?=
- =?us-ascii?Q?YleyyM0qJ++Cga4T3UWiF6jOahiWNU15oo76ECDWLSgC+Gh6cZeYYjFwpoDR?=
- =?us-ascii?Q?sgH8cAb8FO/B7mDFYu+MjwptqhMRqatcCCGYZv9uaHjq/H8VJXwO39FrjhFg?=
- =?us-ascii?Q?J/zwtFHrSQaxYb8O4T0nDBIfYQH8VD0Km0r0t2hPKEa5azlxPPL7YLKdD4Ic?=
- =?us-ascii?Q?1qfi3M8W2Jlygg20dLqrF/DIK29gLj7dkams8ArFnxygLW4C3k4gL3iD41hn?=
- =?us-ascii?Q?s+glQLwUDhLrVbktlr7pjZcfc9TTN5H8flH1LxKViKlBwVTOPtrQHKuI4vkd?=
- =?us-ascii?Q?pGPwuuD0fqJBiCSYCV6V7ATZoM6JvanZzE2I08z/gofsprIH0EHo/4LEOM4V?=
- =?us-ascii?Q?hbbx5pTXktxSqUjRykVyGPBsQiSXUoOjgTeSiNlWX/ub8ZqRoD8/kRuZYP6C?=
- =?us-ascii?Q?7l0lB/CHJ3h+sod4lddSmIw4AUPu1/WSvXbFyPOf4rExKUMNtPjqevhUNZsJ?=
- =?us-ascii?Q?8aMbhGTEevafXsU6fGUIsfasSOrAGrrHc0TWrawiqZwGzW/1cnr6GYYS2dsi?=
- =?us-ascii?Q?Y6LFXrGc48nHMdkkXgDUfz20PnimRAKY7YwdBMo8jU90Z7NJdfl1Cxev+u61?=
- =?us-ascii?Q?Whcp0h0dVlrquGjrWRGn8MjS2wVDjBRCnjLnR3dEuCDzsn1OMcPPL1Gbrp8Y?=
- =?us-ascii?Q?HbXl9XoOZbiDXQ/e1Z4XK9TeS8OVz9GQi6J9SXsLhIl6fUlgNTL2mGc1lZq7?=
- =?us-ascii?Q?cGpe4aA=3D?=
+ =?us-ascii?Q?Hu7f8C5Lv+4g57sfH91b8PRNby5dJS3b1qJuBwRPqg80e5VboNmIUp2yWtJL?=
+ =?us-ascii?Q?0QL7Egi7BKultZ8aU4LsVsnS8zB4vKLBb5frcY+hf4nXTzzm6UbQGcoKX0fO?=
+ =?us-ascii?Q?p8/6ZjGgGTahhbtrUp624rSrGlIXleS4PU47lOi0+t+zhO2l+ALdVkthzfDS?=
+ =?us-ascii?Q?rOCP+DZ9ZWnRYzuSpOYsa7f9+eQPfuS72W+xF4uhkGhQMRz8j4sNOD9Uw5dg?=
+ =?us-ascii?Q?r0WNpLY5ljYhBq0wcB65wNNlD7twkZ7Ia+i6SwKQrKsYo0vaWK2+Y30/JOY8?=
+ =?us-ascii?Q?zsc9f9KHobAuMD9meiJ0Ia73b5Xi8W0/7/kkSo85rt6+O5NeVNb4CvVpeBSE?=
+ =?us-ascii?Q?OqqZf1R9B/yv/wo97IAmR91ihRUiVVT05BX+YGwJlHJIP318VZgcCfXKxEIv?=
+ =?us-ascii?Q?GpZ75D9HYFgNmuFzX2eLPTtlfPfvV1S+6+SwCiQ1+ocoTe0BiHMn/RYpC9sw?=
+ =?us-ascii?Q?SiT2RM9YNuatMTp7mA86OxcNIx6gM+9+xBofsrLuMEL/V6A6uVkKg5GYvq/m?=
+ =?us-ascii?Q?aB9y+pLpcywbsmrw81kSdsbQc5KeCusARSEiIZwCQXkq8T4/hiIcPlT6QUlE?=
+ =?us-ascii?Q?Xy5q7c7LV8YTxjNgy9GMiHkkl8zIYHILMKWtGihQVOIXZoTLVObX2Xv01l0U?=
+ =?us-ascii?Q?aoLM1t8uLD4VYRH1xuFIOgfUOgs5DnufzLmyM+BDBeJ5+kZRMlER36labCYx?=
+ =?us-ascii?Q?UY5AjACXveGpXKIq6BqsNRvK+n2fkvYycT/ZTFS4wSSoGWvyH/y2mdC/+4FR?=
+ =?us-ascii?Q?0eyoDCahY2jNfesdt93/gAgcgQAcfBJ8G5MMtA9eJ3k4hP9OFNc33JT0KvJZ?=
+ =?us-ascii?Q?Ww6lCnDRUiLlYmrJQ9Nb2Ap9PEImhtje4zWtiv1V/v5427+dfnmkFyqa1864?=
+ =?us-ascii?Q?xwzB/2ufdq8bxW0mikl3hAlou8DzQvWw867UXDRCi5CEN8estki0MQv7EnCl?=
+ =?us-ascii?Q?N9WD6yyixFSGu8mNyHA+f7u65FtOFNpmR949x8vDpZfPJDYwc8IkdqsQhxHq?=
+ =?us-ascii?Q?q9h+y6BcO2R8bfsmMp43ZQxdgo3XEf3ft0aUiH/EGKWHMNWylgSo8wLQpJWx?=
+ =?us-ascii?Q?7t2RSefHWebvxLyAKfseBIDHImLztN4QKUTWgPfP8Yb6QfWfgyZiDRncA6YP?=
+ =?us-ascii?Q?yYW8SbI9T0+YjGymepZJzehbHukeNaaoy+xXugInclKmLIWF+zesi9Tstoyc?=
+ =?us-ascii?Q?PVrfF/PgWVP0ZacXLuYPg69vT+Y/MBEH5A9Yji0V2m47hVGN6W+UfPGiQAs7?=
+ =?us-ascii?Q?DZbLn0zEHUfvW+kqGaRCE72KP/1t5loliwRbL8AQUPWcGbDSRSaOxJ71GSkD?=
+ =?us-ascii?Q?i3FPeGSdz5+ofPCVhysfz+Ei1eJr7AF5TvQMcSCV2YXhfhdJxvIYkFNaiDf8?=
+ =?us-ascii?Q?R4Mx7SA=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -150,13 +148,13 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9cba4a5-2376-438b-222f-08deb75b7b93
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2026 17:07:47.6005
+X-MS-Exchange-CrossTenant-Network-Message-Id: cfd6db04-207f-4c77-2c03-08deb75d0ee4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2026 17:19:04.2340
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR02MB10106
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6814
 X-Spamd-Result: default: False [5.34 / 15.00];
 	SEM_URIBL_FRESH15(3.00)[berkoc.com:email];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -166,7 +164,7 @@ X-Spamd-Result: default: False [5.34 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11136-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11137-lists,linux-hyperv=lfdr.de];
 	R_DKIM_ALLOW(0.00)[outlook.com:s=selector1];
 	GREYLIST(0.00)[pass,body];
 	TO_DN_EQ_ADDR_SOME(0.00)[];
@@ -187,80 +185,147 @@ X-Spamd-Result: default: False [5.34 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	R_SPF_ALLOW(0.00)[+ip4:104.64.211.4:c];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,outlook.com:email,outlook.com:dkim]
-X-Rspamd-Queue-Id: 549855AB7CD
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	R_SPF_ALLOW(0.00)[+ip6:2600:3c0a:e001:db::/64:c];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:dkim,berkoc.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 3435D5AB0ED
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Berkant Koc <me@berkoc.com> Sent: Tuesday, May 19, 2026 1:08 PM
+From: Berkant Koc <me@berkoc.com> Sent: Tuesday, May 19, 2026 1:09 PM
 >=20
-> A SYNTHVID_RESOLUTION_RESPONSE with resolution_count > 64 walks past
-> the supported_resolution[SYNTHVID_MAX_RESOLUTION_COUNT] array in the
-> parse loop. Bound resolution_count against the array size, folded
-> into the existing zero-check.
+> hyperv_receive_sub() reads msg->vid_hdr.type and dispatches into one
+> of four message-type branches without knowing how many bytes the host
+> wrote into hv->recv_buf. The completion path then runs
+> memcpy(hv->init_buf, msg, VMBUS_MAX_PACKET_SIZE), so the consumer
+> that wakes on wait_for_completion_timeout() can read up to 16 KiB of
+> residue from a prior message as if it were the response payload.
 >=20
-> When the WIN10 resolution probe fails, the caller in
-> hyperv_connect_vsp() left hv->screen_*_max / preferred_* unpopulated,
-> which sets mode_config.max_width / max_height to 0 and makes
-> drm_internal_framebuffer_create() reject every userspace framebuffer
-> with -EINVAL. The pre-WIN10 branch had the same gap for
-> preferred_width / preferred_height. Use a single post-probe fallback
-> guarded by screen_width_max =3D=3D 0 so both paths converge on the WIN8
-> defaults.
+> Pass bytes_recvd into hyperv_receive_sub() and reject any packet that
+> does not cover the pipe + synthvid header. For each of the three
+> completion-driving types (SYNTHVID_VERSION_RESPONSE,
+> SYNTHVID_RESOLUTION_RESPONSE, SYNTHVID_VRAM_LOCATION_ACK) also
+> require the type-specific payload before memcpy/complete, and apply
+> the same rule to SYNTHVID_FEATURE_CHANGE before reading is_dirt_needed.
+> The memcpy then uses bytes_recvd, which is bounded by
+> VMBUS_MAX_PACKET_SIZE through the call to vmbus_recvpacket().
 >=20
-> Signed-off-by: Berkant Koc <me@berkoc.com>
-> Assisted-by: Claude:claude-opus-4-7 berkoc-pipeline
+> Rejected packets are reported via drm_err_ratelimited() rather than
+> silently dropped, matching the CoCo-hardened pattern in
+> hv_kvp_onchannelcallback().
+
+We discussed several issues with this patch in the feedback
+from Sashiko. But see one more issue below.
+
+>=20
 > Fixes: 76c56a5affeb ("drm/hyperv: Add DRM driver for hyperv synthetic vid=
 eo device")
 > Cc: stable@vger.kernel.org # 5.14+
+> Signed-off-by: Berkant Koc <me@berkoc.com>
+> Assisted-by: Claude:claude-opus-4-7 berkoc-pipeline
 > ---
->  drivers/gpu/drm/hyperv/hyperv_drm_proto.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
+>  drivers/gpu/drm/hyperv/hyperv_drm_proto.c | 42 +++++++++++++++++++++--
+>  1 file changed, 39 insertions(+), 3 deletions(-)
 >=20
-> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-> b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-> index 051ecc526..c3d0ff229 100644
+> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c b/drivers/gpu/drm/=
+hyperv/hyperv_drm_proto.c
+> index c3d0ff229..12d3feb4f 100644
 > --- a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
 > +++ b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-> @@ -391,8 +391,11 @@ static int hyperv_get_supported_resolution(struct hv=
-_device
-> *hdev)
->  		return -ETIMEDOUT;
->  	}
+> @@ -420,26 +420,62 @@ static int hyperv_get_supported_resolution(struct h=
+v_device *hdev)
+>  	return 0;
+>  }
 >=20
-> -	if (msg->resolution_resp.resolution_count =3D=3D 0) {
-> -		drm_err(dev, "No supported resolutions\n");
-> +	if (msg->resolution_resp.resolution_count =3D=3D 0 ||
-> +	    msg->resolution_resp.resolution_count >
-> +	    SYNTHVID_MAX_RESOLUTION_COUNT) {
-> +		drm_err(dev, "Invalid resolution count: %d\n",
-> +			msg->resolution_resp.resolution_count);
->  		return -ENODEV;
->  	}
+> -static void hyperv_receive_sub(struct hv_device *hdev)
+> +static void hyperv_receive_sub(struct hv_device *hdev, u32 bytes_recvd)
+>  {
+>  	struct hyperv_drm_device *hv =3D hv_get_drvdata(hdev);
+>  	struct synthvid_msg *msg;
+> +	size_t hdr_size;
 >=20
-> @@ -508,9 +511,13 @@ int hyperv_connect_vsp(struct hv_device *hdev)
->  		ret =3D hyperv_get_supported_resolution(hdev);
->  		if (ret)
->  			drm_err(dev, "Failed to get supported resolution from host, use defau=
-lt\n");
-> -	} else {
+>  	if (!hv)
+>  		return;
+>=20
+> +	hdr_size =3D sizeof(struct pipe_msg_hdr) +
+> +		   sizeof(struct synthvid_msg_hdr);
+> +	if (bytes_recvd < hdr_size) {
+> +		drm_err_ratelimited(&hv->dev,
+> +				    "synthvid packet too small for header: %u\n",
+> +				    bytes_recvd);
+> +		return;
 > +	}
 > +
-> +	if (!hv->screen_width_max) {
->  		hv->screen_width_max =3D SYNTHVID_WIDTH_WIN8;
->  		hv->screen_height_max =3D SYNTHVID_HEIGHT_WIN8;
-> +		hv->preferred_width =3D SYNTHVID_WIDTH_WIN8;
-> +		hv->preferred_height =3D SYNTHVID_HEIGHT_WIN8;
+>  	msg =3D (struct synthvid_msg *)hv->recv_buf;
+>=20
+>  	/* Complete the wait event */
+>  	if (msg->vid_hdr.type =3D=3D SYNTHVID_VERSION_RESPONSE ||
+>  	    msg->vid_hdr.type =3D=3D SYNTHVID_RESOLUTION_RESPONSE ||
+>  	    msg->vid_hdr.type =3D=3D SYNTHVID_VRAM_LOCATION_ACK) {
+> -		memcpy(hv->init_buf, msg, VMBUS_MAX_PACKET_SIZE);
+> +		size_t need =3D hdr_size;
+> +
+> +		switch (msg->vid_hdr.type) {
+> +		case SYNTHVID_VERSION_RESPONSE:
+> +			need +=3D sizeof(struct synthvid_version_resp);
+> +			break;
+> +		case SYNTHVID_RESOLUTION_RESPONSE:
+> +			need +=3D sizeof(struct synthvid_supported_resolution_resp);
+
+I'm concerned that this might be too aggressive.  The last element
+of struct synthvid_supported_resolution_resp is an array, and there's
+a count in the message describing how many elements of the array
+are populated. But Hyper-V may not (and probably doesn't) include
+unpopulated elements in the response message.  So "need" is likely
+calculated as too large. Are you able to test this in a Hyper-V VM to
+confirm?
+
+I think you'll find it necessary to first check that enough bytes
+have arrived to read the "resolution_count" field, and then use
+that value to calculate "need".  There are several other places
+in hardened VMBus drivers that use that same two-level
+technique. It's a pain, but there's not really any alternative.
+
+Michael
+
+> +			break;
+> +		case SYNTHVID_VRAM_LOCATION_ACK:
+> +			need +=3D sizeof(struct synthvid_vram_location_ack);
+> +			break;
+> +		}
+> +		if (bytes_recvd < need) {
+> +			drm_err_ratelimited(&hv->dev,
+> +					    "synthvid packet too small for type %u: %u < %zu\n",
+> +					    msg->vid_hdr.type, bytes_recvd, need);
+> +			return;
+> +		}
+> +		memcpy(hv->init_buf, msg, bytes_recvd);
+>  		complete(&hv->wait);
+>  		return;
 >  	}
 >=20
->  	hv->mmio_megabytes =3D hdev->channel->offermsg.offer.mmio_megabytes;
+>  	if (msg->vid_hdr.type =3D=3D SYNTHVID_FEATURE_CHANGE) {
+> +		if (bytes_recvd < hdr_size +
+> +		    sizeof(struct synthvid_feature_change)) {
+> +			drm_err_ratelimited(&hv->dev,
+> +					    "synthvid feature change packet too small: %u\n",
+> +					    bytes_recvd);
+> +			return;
+> +		}
+>  		hv->dirt_needed =3D msg->feature_chg.is_dirt_needed;
+>  		if (hv->dirt_needed)
+>  			hyperv_hide_hw_ptr(hv->hdev);
+> @@ -466,7 +502,7 @@ static void hyperv_receive(void *ctx)
+>  				       &bytes_recvd, &req_id);
+>  		if (bytes_recvd > 0 &&
+>  		    recv_buf->pipe_hdr.type =3D=3D PIPE_MSG_DATA)
+> -			hyperv_receive_sub(hdev);
+> +			hyperv_receive_sub(hdev, bytes_recvd);
+>  	} while (bytes_recvd > 0 && ret =3D=3D 0);
+>  }
+>=20
 > --
 > 2.47.3
 >=20
 
-Looks good to me.
-
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 
