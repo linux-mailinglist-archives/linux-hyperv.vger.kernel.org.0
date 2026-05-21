@@ -1,337 +1,181 @@
-Return-Path: <linux-hyperv+bounces-11138-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11139-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aKBzBoVdD2oZJgYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11138-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 21:31:17 +0200
+	id EGx4M1toD2pKKgYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11139-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 22:17:31 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8A665AB77E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 21:31:16 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3589A5ABB19
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 22:17:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id DDE763008C3E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 19:24:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B1624301E20B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 20:15:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB6D7388E63;
-	Thu, 21 May 2026 19:24:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 629BE346FCA;
+	Thu, 21 May 2026 20:15:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=mhklkml@zohomail.com header.b="ZzWO/21n"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="rwAeBb/n";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="K+5DqTio"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7592727F3;
-	Thu, 21 May 2026 19:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779391464; cv=pass; b=hhf0Llt03PsHLpJN8v+dZqyonWS0brtIuYU8vtYewjA+/rc4W0yI7ahWEosjX0IwKT6T0OAWf1gPWS8lOf13lZYEePVxmsixRarymj3RTj1Xnguy+u40OcG8Yjsm8q348b5KO+iHAROL5X1XA3xdpxkecJnCdVRpXHty0HryLb0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779391464; c=relaxed/simple;
-	bh=QccdGtjCPTuQw17Liwk6hrrcpkp2bQ2AV1Om5vkh24g=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=tUk4/Li5zOlBfDQhvRdFQlNsjekdUmPyJT/SAfH9eZ8jy1ZmkHdsFTYTJabDX8Bg9lfg4mEIdS55JiYsbHFMuhkpPbSaOWtITQleJj41YFr8aBNuLosbkfRQGIn8597eyrX7tHnzecY4t35H/fxe9Nf9yCvLFfC2BwOoG6rBJvQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=mhklkml@zohomail.com header.b=ZzWO/21n; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-ARC-Seal: i=1; a=rsa-sha256; t=1779391429; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=AhjQSV7kBemP8mgCSWlmbktV6T8gfYV7999viurCqO0RKZA0Is8wOcc7Yp8RnK/vF5ZgKp4zQkijePvXTnOI2Z9gYSowjhmLBHMNUxcsOEMxeXOzx1IX7dafYojvn3o1p5NstACtHbLt8mePlNy5xkuWqrPCnBOdMhy4KEktFlE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1779391429; h=Content-Transfer-Encoding:Date:Date:From:From:MIME-Version:Message-ID:Reply-To:Reply-To:Subject:Subject:To:To:Message-Id:Cc; 
-	bh=DQPOht69acmZBj8X2gGPUutfXrAoyI/EZiFYXIeOvSE=; 
-	b=X+mGjXEZhZRVGFFqJonw9sZ7hBzOtFisynWkDocrSqCUbYp0Uv6t5rTwvUzMs6MujGCztrFrHZWvzxs2t7fURugqs6t+/5FjBQs0Fwvu1drwZWUABixunNIeTw2o+wBLyfzHGU4ErT4E5aSu4npf28kAs4i69JIQEx4hIH0w4X4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=mhklkml@zohomail.com;
-	dmarc=pass header.from=<mhklkml@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1779391429;
-	s=zm2022; d=zohomail.com; i=mhklkml@zohomail.com;
-	h=From:From:To:To:Subject:Subject:Date:Date:Message-Id:Message-Id:Reply-To:Reply-To:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Cc;
-	bh=DQPOht69acmZBj8X2gGPUutfXrAoyI/EZiFYXIeOvSE=;
-	b=ZzWO/21ny40pBYGH8TYoWeCChgbKsD5vDQnynILfslt++w1wvLDrs14ni/GQV/3x
-	Lmq3mt+ibewBUlXMTv/Dy4w0FrS8JnalHHvKFHTeolXWfKKq4U81Gfmf7juQ61DcngH
-	/dIAe1KSoyBKy7Z7jivYaR3IyleGzuCiwCevtr+M=
-Received: by mx.zohomail.com with SMTPS id 17793914281766.829777932622733;
-	Thu, 21 May 2026 12:23:48 -0700 (PDT)
-From: Michael Kelley <mhklkml@zohomail.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org
-Subject: [PATCH 1/1] x86/hyperv: Refactor hv_smp_prepare_cpus()
-Date: Thu, 21 May 2026 12:23:36 -0700
-Message-Id: <20260521192336.99623-1-mhklkml@zohomail.com>
-X-Mailer: git-send-email 2.25.1
-Reply-To: mhklinux@outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE1E36B04E;
+	Thu, 21 May 2026 20:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779394558; cv=none; b=RK3wEAEVwMHv0mcCVQV8antS2eypB72LI2/eHNL45rpcVf3eTT56Uf20YN3qsok9pw1wnEFU6COimKV3Ti8cfgyw5GlpWPiZ0G7NTpjc14s439T5elc4MdWwhK1WgWYAn5l8JgEEIpLioJH4u18uii2O+aV1LtGMr/OWPmmK7Vk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779394558; c=relaxed/simple;
+	bh=XV3LCNKsMMGdGizWeQn3CZsbbO8KKJNgpCkcknnZAOs=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=M/llDuMTNXfV8XDgBoQ/ivRs75IaakJ4AA1pGUkmqtWutzk0zC6V0rHIJpV0O6VRbMD29Z73fHpUeitj7+UwqO0Otxe28qAISqcfcSRpO18GHgYlG/aOo+LcYKwUCoOl9DjEhT2XfeUSllMJvHU3h2ZbcD00AkRZb/K/cbBInZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=rwAeBb/n; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=K+5DqTio; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 003F314000E4;
+	Thu, 21 May 2026 16:15:56 -0400 (EDT)
+Received: from phl-imap-05 ([10.202.2.95])
+  by phl-compute-04.internal (MEProxy); Thu, 21 May 2026 16:15:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1779394555;
+	 x=1779480955; bh=mDberM7Cc4ZWn9v0QJ8beiSXraUDPMufIqhWnRtAAyo=; b=
+	rwAeBb/nTKxJyf0UnDoQZIqOb5QsFXWo+8Hy6si/7j9ob40Puj/nJOd1SSIUoIL8
+	7SHyipD9ibuQVCks1w3AfP8uxf+anaowGRtXzLIEGnfb0vYKkoeBdZ7mIkAi8MkM
+	fcUb13N3Dbo+jAGGVKL3zRFVBepaIN1FDDLh3l9QQBw1XNsufvAXtVCZVsxjfj/Q
+	WbTuz+Bry+miLPxwsAoFUIUhth96ZeNdk9FgOToJkbyMtFE+D8Kick1I4LF89ghu
+	Z3A4ZXcVZIni741uufR+QbebEpzPk4DU1J7cwJpiNxutvk0VaUh16alIwRmm2FDO
+	ZNLbT8qMjIU/mYqBL0LBnw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1779394555; x=
+	1779480955; bh=mDberM7Cc4ZWn9v0QJ8beiSXraUDPMufIqhWnRtAAyo=; b=K
+	+5DqTio4LldGb+c5ffGkJLnkbx3VSS6sdi0uXfhMa5I7SkkPTAQvLdmf5VdNacdY
+	6hTWik6qpiMSnehmwjxLackC6ryza6JnWKHz/eKWk9OBHP236ifrYnJI39NdLFV1
+	fN7SNsV6LpYubnfH8yHNeTglUULW1sZv4KrwqFWI7eVoVkBITOykJeuHCVNknzoo
+	nxRwRXeBG8+dZ4YNG6r0btbDn0ootOOxQGcWLWqodUlgUS+eDOe1kVAqfzYHiH+u
+	+pDeqs0s4BJZGIykZoG+cgbXcQb/Sj0Nsqcqp4RqcE+lmFtdDwZpvOUlNqBmxy8k
+	tOaEys9U5W+aAZeZYmHjA==
+X-ME-Sender: <xms:-2cPasoCMvQEVdU7F7YZziVY5H_dQXL4dZoPYu6u7xC8TcOssO15LA>
+    <xme:-2cPatd_k4GpQQ7xfPr7xWYVARGG8CBxba-UicMr_6wXd5i7RMwU86UkopcYe7fW2
+    iRhpbhodwfIpCopz9L1jN6y4g031KXiw06Rs87DNU6Ziy0yDUYeMQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddugeekgeegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
+    hrnhepfefhheetffduvdfgieeghfejtedvkeetkeejfeekkeelffejteevvdeghffhiefh
+    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgt
+    phhtthhopedutddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepfigvihdrlhhiuh
+    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgrmhiirghmrghhfhhoohiisehlihhn
+    uhigrdhmihgtrhhoshhofhhtrdgtohhmpdhrtghpthhtohepjhhlohgvshgvrheslhhinh
+    hugidrmhhitghrohhsohhfthdrtghomhdprhgtphhtthhopeguvggtuhhisehmihgtrhho
+    shhofhhtrdgtohhmpdhrtghpthhtohephhgrihihrghnghiisehmihgtrhhoshhofhhtrd
+    gtohhmpdhrtghpthhtohepkhihshesmhhitghrohhsohhfthdrtghomhdprhgtphhtthho
+    pehlohhnghhlihesmhhitghrohhsohhfthdrtghomhdprhgtphhtthhopehmhhhklhhinh
+    hugiesohhuthhlohhokhdrtghomhdprhgtphhtthhopehlihhnuhigqdhhhihpvghrvhes
+    vhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:-2cPas0UCVt7DENYNaHwwSn7o1V8v4lWcumKt5b0_18MYSVYsmzXhg>
+    <xmx:-2cPalWPAkFbHsrINejb9ofE1LjfD_qJ6VryiP4xKoaP5QfEpt5gaQ>
+    <xmx:-2cPauOoh8oFPq2eskzJ2l1V8-FXYdWLgzbuRKW5Z01L7X7O0UfPxg>
+    <xmx:-2cPao2tp5-XyDP20tPbJ7EOJKN_jq5ENu5wA15gVounj1E2MfcfGg>
+    <xmx:-2cPaqb6hBNwhQeu5w8owS4ZQko9_vwtHhZLzSIEo3J01NdEWv_atVp4>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 4524A182007A; Thu, 21 May 2026 16:15:55 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Feedback-ID: zu0801122720f4ce7d35a1b8f8a99006110000021ae84133116c29292b9524c743b8259d9f7e7ff09b0f6d8d:ZohoMail
-X-Zoho-CM-AccountID: 0c88436b239415d28725328898ceccb9ce2ba3b61598c1c37bcb2109e0248174
-X-ZohoMailClient: External
-X-Spamd-Result: default: False [6.84 / 15.00];
-	SEM_URIBL(3.50)[zohomail.com:dkim];
-	FREEMAIL_REPLYTO_NEQ_FROM(2.00)[];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
+X-ThreadId: AHuF2nQGlf17
+Date: Thu, 21 May 2026 22:15:33 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Michael Kelley" <mhklinux@outlook.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ "Haiyang Zhang" <haiyangz@microsoft.com>, "Wei Liu" <wei.liu@kernel.org>,
+ "Dexuan Cui" <decui@microsoft.com>, longli@microsoft.com,
+ "Jork Loeser" <jloeser@linux.microsoft.com>, linux-hyperv@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, hamzamahfooz@linux.microsoft.com
+Message-Id: <b3c6144a-beb1-44ff-9a7d-bad61a1b3829@app.fastmail.com>
+In-Reply-To: <20260521164921.1995-1-mhklkml@zohomail.com>
+References: <20260521164921.1995-1-mhklkml@zohomail.com>
+Subject: Re: [PATCH 1/1] mshv: Add conditional VMBus dependency
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.15 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[arndb.de,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[arndb.de:s=fm2,messagingengine.com:s=fm3];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	BAD_REP_POLICIES(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11138-lists,linux-hyperv=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	XM_UA_NO_VERSION(0.01)[];
+	TAGGED_FROM(0.00)[bounces-11139-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_REPLYTO(0.00)[outlook.com];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	R_DKIM_ALLOW(0.00)[zohomail.com:s=zm2022];
-	DMARC_POLICY_ALLOW(0.00)[zohomail.com,reject];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	GREYLIST(0.00)[pass,body];
-	DKIM_TRACE(0.00)[zohomail.com:+];
-	HAS_REPLYTO(0.00)[mhklinux@outlook.com];
-	TO_DN_NONE(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	PRECEDENCE_BULK(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mhklkml@zohomail.com,linux-hyperv@vger.kernel.org];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	R_SPF_ALLOW(0.00)[+ip4:172.232.135.74:c];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	ARC_ALLOW(0.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[outlook.com,microsoft.com,kernel.org,linux.microsoft.com,vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[arndb.de:+,messagingengine.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[arnd@arndb.de,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_SPAM(0.00)[0.994];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,zohomail.com:mid,zohomail.com:dkim,outlook.com:replyto,outlook.com:email]
-X-Rspamd-Queue-Id: A8A665AB77E
-X-Rspamd-Action: add header
+	RCVD_COUNT_FIVE(0.00)[6];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,messagingengine.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,arndb.de:email,arndb.de:dkim,app.fastmail.com:mid]
+X-Rspamd-Queue-Id: 3589A5ABB19
+X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spam: Yes
 
-From: Michael Kelley <mhklinux@outlook.com>
+On Thu, May 21, 2026, at 18:49, Michael Kelley wrote:
+>
+> Existing code ensures that the VMBus driver loads first if it is
+> built-in. The VMBus driver uses subsys_initcall(), which is
+> initcall level 4. The MSHV root driver uses module_init(), which
+> becomes device_init() when built-in, and device_init() is
+> initcall level 6.
+>
+> Reported-by: Arnd Bergmann <arnd@arndb.de>
+> Closes: https://lore.kernel.org/all/20260520074044.923728-1-arnd@kernel.org/
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 
-hv_smp_prepare_cpus() current handles two disjoint cases: a fully
-enlightened SNP guest and running in the root partition. The root
-partition case has recently added more steps, and as a result the
-function is getting somewhat messy.
+Looks good to me, thanks for fixing it!
 
-Refactor the code by putting the SNP and root cases into separate
-functions. For the root case, move most of the code into hv_proc.c,
-which is built only when MSHV_ROOT is configured. The move reduces
-the surface area between the main code and the root partition
-extensions. Several stubs go away, with an overall modest reduction
-in lines of code.
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-No functional change.
+>  	/*
+>  	 * VMBus owns SIMP/SIEFP/SCONTROL when it is active.
+>  	 * See hv_hyp_synic_enable_regs() for that initialization.
+>  	 */
+> -	bool vmbus_active = hv_vmbus_exists();
+> +#if IS_ENABLED(CONFIG_HYPERV_VMBUS)
+> +	vmbus_active = hv_vmbus_exists();
+> +#endif
 
-Signed-off-by: Michael Kelley <mhklinux@outlook.com>
----
- arch/x86/kernel/cpu/mshyperv.c | 52 +++++++---------------------------
- drivers/hv/hv_proc.c           | 35 +++++++++++++++++++++--
- include/asm-generic/mshyperv.h | 17 ++---------
- 3 files changed, 45 insertions(+), 59 deletions(-)
+I would usually write this as 
 
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 640e6b223c2d..442156056cd2 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -32,7 +32,6 @@
- #include <asm/msr.h>
- #include <asm/nmi.h>
- #include <clocksource/hyperv_timer.h>
--#include <asm/numa.h>
- #include <asm/svm.h>
- 
- /* Is Linux running on nested Microsoft Hypervisor */
-@@ -413,46 +412,16 @@ static void __init hv_smp_prepare_boot_cpu(void)
- #endif
- }
- 
--static void __init hv_smp_prepare_cpus(unsigned int max_cpus)
-+static void __init hv_smp_prepare_cpus_for_snp(unsigned int max_cpus)
- {
--#ifdef CONFIG_X86_64
--	int i;
--	int ret;
--#endif
--
- 	native_smp_prepare_cpus(max_cpus);
-+	apic->wakeup_secondary_cpu_64 = hv_snp_boot_ap;
-+}
- 
--	/*
--	 *  Override wakeup_secondary_cpu_64 callback for SEV-SNP
--	 *  enlightened guest.
--	 */
--	if (!ms_hyperv.paravisor_present && hv_isolation_type_snp()) {
--		apic->wakeup_secondary_cpu_64 = hv_snp_boot_ap;
--		return;
--	}
--
--#ifdef CONFIG_X86_64
--	/* If AP LPs exist, we are in a kexec'd kernel and VPs already exist */
--	if (num_present_cpus() == 1 || hv_lp_exists(1))
--		return;
--
--	for_each_present_cpu(i) {
--		if (i == 0)
--			continue;
--		ret = hv_call_add_logical_proc(numa_cpu_node(i), i, cpu_physical_id(i));
--		BUG_ON(ret);
--	}
--
--	ret = hv_call_notify_all_processors_started();
--	WARN_ON(ret);
--
--	for_each_present_cpu(i) {
--		if (i == 0)
--			continue;
--		ret = hv_call_create_vp(numa_cpu_node(i), hv_current_partition_id, i, i);
--		BUG_ON(ret);
--	}
--#endif
-+static void __init hv_smp_prepare_cpus_for_root(unsigned int max_cpus)
-+{
-+	native_smp_prepare_cpus(max_cpus);
-+	hv_smp_prep_cpus();
- }
- #endif
- 
-@@ -722,9 +691,10 @@ static void __init ms_hyperv_init_platform(void)
- 
- # ifdef CONFIG_SMP
- 	smp_ops.smp_prepare_boot_cpu = hv_smp_prepare_boot_cpu;
--	if (hv_root_partition() ||
--	    (!ms_hyperv.paravisor_present && hv_isolation_type_snp()))
--		smp_ops.smp_prepare_cpus = hv_smp_prepare_cpus;
-+	if (!ms_hyperv.paravisor_present && hv_isolation_type_snp())
-+		smp_ops.smp_prepare_cpus = hv_smp_prepare_cpus_for_snp;
-+	else if (hv_root_partition())
-+		smp_ops.smp_prepare_cpus = hv_smp_prepare_cpus_for_root;
- # endif
- 
- 	/*
-diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
-index 57b2c64197cb..b8aa76a7b19b 100644
---- a/drivers/hv/hv_proc.c
-+++ b/drivers/hv/hv_proc.c
-@@ -8,6 +8,7 @@
- #include <linux/minmax.h>
- #include <linux/export.h>
- #include <asm/mshyperv.h>
-+#include <asm/numa.h>
- 
- /*
-  * See struct hv_deposit_memory. The first u64 is partition ID, the rest
-@@ -154,7 +155,7 @@ bool hv_result_needs_memory(u64 status)
- }
- EXPORT_SYMBOL_GPL(hv_result_needs_memory);
- 
--int hv_call_add_logical_proc(int node, u32 lp_index, u32 apic_id)
-+static int hv_call_add_logical_proc(int node, u32 lp_index, u32 apic_id)
- {
- 	struct hv_input_add_logical_processor *input;
- 	struct hv_output_add_logical_processor *output;
-@@ -240,7 +241,7 @@ int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags)
- }
- EXPORT_SYMBOL_GPL(hv_call_create_vp);
- 
--int hv_call_notify_all_processors_started(void)
-+static int hv_call_notify_all_processors_started(void)
- {
- 	struct hv_input_notify_partition_event *input;
- 	u64 status;
-@@ -262,7 +263,7 @@ int hv_call_notify_all_processors_started(void)
- 	return ret;
- }
- 
--bool hv_lp_exists(u32 lp_index)
-+static bool hv_lp_exists(u32 lp_index)
- {
- 	struct hv_input_get_logical_processor_run_time *input;
- 	struct hv_output_get_logical_processor_run_time *output;
-@@ -286,3 +287,31 @@ bool hv_lp_exists(u32 lp_index)
- 
- 	return hv_result_success(status);
- }
-+
-+void hv_smp_prep_cpus(void)
-+{
-+#ifdef CONFIG_X86_64
-+	int i, ret;
-+
-+	/* If AP LPs exist, we are in a kexec'd kernel and VPs already exist */
-+	if (num_present_cpus() == 1 || hv_lp_exists(1))
-+		return;
-+
-+	for_each_present_cpu(i) {
-+		if (i == 0)
-+			continue;
-+		ret = hv_call_add_logical_proc(numa_cpu_node(i), i, cpu_physical_id(i));
-+		BUG_ON(ret);
-+	}
-+
-+	ret = hv_call_notify_all_processors_started();
-+	WARN_ON(ret);
-+
-+	for_each_present_cpu(i) {
-+		if (i == 0)
-+			continue;
-+		ret = hv_call_create_vp(numa_cpu_node(i), hv_current_partition_id, i, i);
-+		BUG_ON(ret);
-+	}
-+#endif
-+}
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index bf601d67cecb..ea1c4acda1ec 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -346,9 +346,7 @@ static inline bool hv_parent_partition(void)
- bool hv_result_needs_memory(u64 status);
- int hv_deposit_memory_node(int node, u64 partition_id, u64 status);
- int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages);
--int hv_call_add_logical_proc(int node, u32 lp_index, u32 acpi_id);
--int hv_call_notify_all_processors_started(void);
--bool hv_lp_exists(u32 lp_index);
-+void hv_smp_prep_cpus(void);
- int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags);
- 
- #else /* CONFIG_MSHV_ROOT */
-@@ -364,18 +362,7 @@ static inline int hv_call_deposit_pages(int node, u64 partition_id, u32 num_page
- {
- 	return -EOPNOTSUPP;
- }
--static inline int hv_call_add_logical_proc(int node, u32 lp_index, u32 acpi_id)
--{
--	return -EOPNOTSUPP;
--}
--static inline int hv_call_notify_all_processors_started(void)
--{
--	return -EOPNOTSUPP;
--}
--static inline bool hv_lp_exists(u32 lp_index)
--{
--	return false;
--}
-+static inline void hv_smp_prep_cpus(void) {}
- static inline int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags)
- {
- 	return -EOPNOTSUPP;
--- 
-2.25.1
+        if (IS_ENABLED(CONFIG_HYPERV_VMBUS))
+                  vmbus_active = hv_vmbus_exists();
 
+for readability, since the hv_vmbus_exists() declarations is still
+visible and the IS_ENABLED() check avoids the link failure.
+
+      ARnd
 
