@@ -1,220 +1,222 @@
-Return-Path: <linux-hyperv+bounces-11153-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11154-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +A2KECV8D2rLMgYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11153-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 23:41:57 +0200
+	id qOW4MfeBD2pdMwYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11154-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 22 May 2026 00:06:47 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47FFA5AC273
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 23:41:56 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26F5B5AC471
+	for <lists+linux-hyperv@lfdr.de>; Fri, 22 May 2026 00:06:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 547B93002B7A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 21:41:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C7364301F9C4
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 May 2026 22:06:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4084383999;
-	Thu, 21 May 2026 21:41:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 473BC31F982;
+	Thu, 21 May 2026 22:06:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="mElEpqHG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M5mB+fdi"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azolkn19012012.outbound.protection.outlook.com [52.103.23.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DC136CDE3;
-	Thu, 21 May 2026 21:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.23.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779399710; cv=fail; b=X38+tty6jEiTMu2JbZwxdtQlGq30vJvTWCpBClmmb3jAsaMWYFJi7Ebt6UPuJrrP4S3Te6fD3GrevRWT71CPzAZd5jhzEwDsBvUnKwQ3DY8gBbjXQ6fSdEd8RIahOysuS1ZWefMBFwbrMSOYG3tyyd71z1GmRHX2EVlOx7XEz88=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779399710; c=relaxed/simple;
-	bh=P0K+gCYb9thCipOBGEu3AXCZdkYu1Bv1ErDFH4M6R9Y=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Jg2i/2f7E93CnE75q9qohQYAZnjLAfUz1I7oSKgY7yYSLfTsYLtZV0s3DzCegADgUfuUgnTrd3YnQLf7Wdbl/M46Qv/HlCT/JuE6QhSPfhVS3KOuQmpe31v7nb0sjBxdd0WuPbl7hfZ2E9rs1iZWGe0+hVLv3Gk4UF30camQC2s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=mElEpqHG; arc=fail smtp.client-ip=52.103.23.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QnUbq8uLeQ+7/p0s7167LjRjNSWhWQxFhE246k3t14rBR7nlQoNqLZmnWmWVpzdAcNBGg2+QVLFnCle99Rm/NyfstdfPWUMnzr8Ua1qgvE6yZQmRAyfD9qYAP7Ra24fd1SnIuL+vzEWdxvAOK8OsCt+V4v7RtR+uvCxzRgfFCxaWfVeLjz1KK5gdNhP04k+/iIRn5otV0wE2UWKHeNAGt4sD7ZC//QZyma3mT6Nf5BMoAa9XY2Q9/yqUE7Oo3JiL769rRSfCjKHiD9kvtfqCzfHAJQ/bReMMjfULThNydpRnmbyd9EQRxdwOpHV3ZZUEQ4Z7fVJrr/sMxsfEkCJ5KA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MO+NSvVRCv2CJ+Y8g9Q20qYpk7JFVJh4WCxAuyjvzgA=;
- b=VYGgAdcBHBLTLm5Qhgtknso+riQhFMuFRBkFYrtWy2so4HRtaVfj8ZKSdXkTzN81AD9RsJDIIgQC/MayPjaCHqOhtbtcEavSjGnn2cSiSzK4yHOdrbw/1DWPBsn8SVXBwSpt8VyFT58YEHTmePoTxx3VUhclEkCYcGUxMqe8WU9WjtNhKwnWnqM8vInYY2VzOVnZ8YlJLzB7BGNClI3jRcNABgHW/JwsfFPdiOSi2kvhxBw/PjVbGeW41NhwbK0wa6rC5Tn1z08Z1K2GLTzVqLrHxA6wPLMoOOdgnvMCBhAklKjWZDGKbnrubMUobKctNbCsaFBmdsYiexMIJMB4JQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MO+NSvVRCv2CJ+Y8g9Q20qYpk7JFVJh4WCxAuyjvzgA=;
- b=mElEpqHGTrYezXLZTo2GW93/cvYTYDZ1SgMznYKdX9OiWUlNViAA7CZSmguVhoyG8oc8bU5K2bIPTM3JgUSIKCW7jkvMVs7jwpBU9FNGZWlJSmPdZXv1lPsbfDmcXsdubdDcegTPgcch52Dnu1pwdx+rdlqZy8OW7XHBF2itXRuPxnJOB1QlVwXjlvE26eaKWOkYsRwFphyMGMED/nOvsto28tV1MWKUjLL4S46eG6c87S44cZpBwFaHciqtfmdaWrKWpI13wRK0g4vslbRtNgkIP6A8Dbd0LlkiPPcXc4izWhbC2WjfVLuLdp5FXwKH5Q0uTkF7evhFPHoitNnwAA==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by PH0PR02MB7125.namprd02.prod.outlook.com (2603:10b6:510:15::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.17; Thu, 21 May
- 2026 21:41:47 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%5]) with mapi id 15.21.0048.013; Thu, 21 May 2026
- 21:41:47 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Jork Loeser <jloeser@linux.microsoft.com>
-CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>, "longli@microsoft.com"
-	<longli@microsoft.com>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>,
-	"hamzamahfooz@linux.microsoft.com" <hamzamahfooz@linux.microsoft.com>
-Subject: RE: [PATCH 1/1] mshv: Add conditional VMBus dependency
-Thread-Topic: [PATCH 1/1] mshv: Add conditional VMBus dependency
-Thread-Index: AQG4jg1Jq/Gd2s2baPWUcHBZQDE2SrZhswaAgAAGHAA=
-Date: Thu, 21 May 2026 21:41:47 +0000
-Message-ID:
- <SN6PR02MB4157FDA8B5EED37A391EE635D40E2@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20260521164921.1995-1-mhklkml@zohomail.com>
- <79f77f98-f91-4cf-47ca-c986faed5055@linux.microsoft.com>
-In-Reply-To: <79f77f98-f91-4cf-47ca-c986faed5055@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH0PR02MB7125:EE_
-x-ms-office365-filtering-correlation-id: a7adcfb9-dae7-46d2-200c-08deb781c250
-x-microsoft-antispam:
- BCL:0;ARA:14566002|19110799012|15080799012|8060799015|8062599012|13091999003|31061999003|19101099003|2604032031799003|37011999003|51005399006|3412199025|440099028|102099032|40105399003;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?cx6NJ6wpvcW/Bqf5MQd6CH9ZbBBNU03EbEJs6ffHUT49/GaoS4VnSlzW+CSp?=
- =?us-ascii?Q?MRDRohlKZHkb2odlrj0D4YkvtIGPC+w5Xnr3imcYdZNZnKxhf9L7Uekgqm88?=
- =?us-ascii?Q?r6z3jYZzhEgASlcuYJMSOBwEGfc4MSiSwSGyxkP0mLmf2stYolG2ncooPe5Y?=
- =?us-ascii?Q?mxXQiBCVtWlQgBIzeb3vJQxt/kOyya2MXgKO0m8hghPMTxG9HyPmaG91KFAV?=
- =?us-ascii?Q?t3BTTs6+HV/0Xs5vSQcgLErvb3vb1WN2hHgsG5ntC9zB44jJrAAfird6WeWg?=
- =?us-ascii?Q?WrtZ5s5P2U0A2pi7zcagXSAIyDnXXUyj1ZQ7vgEznVFrlipSe7Af6+xcWGP9?=
- =?us-ascii?Q?93tqt/xpjdDO2uChUo7kNcg0Fhl4mtkLKfWEOrNVWGSyfyAskZUn5Q7GSK2u?=
- =?us-ascii?Q?5yRycJBVxK7iRAN+j7fQxU8rNAC+UTK++1SpjdIEobv9oPqc+AD8O4gSejAk?=
- =?us-ascii?Q?FYSYp3FyBCKAlx1InlSV5ne939uNvKoN2TMs8h8qOw+Kx5ARrCimM3ssrie/?=
- =?us-ascii?Q?U9YiFxfJeNhMYwbrdXv8uo3ujrCRpSvp46xVK9KU/O0gSUnLJvJAmM3PTj4L?=
- =?us-ascii?Q?XaI802KdQGpxQgeB7aXY/JUfickhxJ0BzPFpHfgq4zHSGZCbA0GWDgBiqeZy?=
- =?us-ascii?Q?iFXE1rI1lqK4x24Vjf4DWMDD0we+J/hex/d9lh9rYY3olRs2VzTIcBR2N/eY?=
- =?us-ascii?Q?+n3wLmfRIfcSMSC0ueM9XxQAWQIM6i6l3bvh2J+kbFl0x038Ay4p3lcnvYIb?=
- =?us-ascii?Q?weiyL0zkrqc87gyb2EFo/4O2HZO1x9YXFoxlFqb0P1LPQ5knF+eJ52n6wsgX?=
- =?us-ascii?Q?TpQzNvU3H6zFBkFVwG5NoGFajikqXtooWcXE/LutUGASu9bl8VdvlBQHap/z?=
- =?us-ascii?Q?9LLArm3zQ1HGGo8pg2+FIeXhRAKrs6jFhFi2Pgs8PVND194D0fFM6B+oAu0V?=
- =?us-ascii?Q?BoNxHWEvmg/HtYgTglff7vyn8ipEBlO2jngibNa6cO8egVOOzK63QyI644r9?=
- =?us-ascii?Q?1TufSGU/h8r7l+ibCcdjkrzTIm0L9X9XTGGR+rQKtRAVgDI=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?LMPfnoXLeFVxJCOKe/WPnqllZvVHzCcQvgRdC8/ZCgC8jtk16Rwi0hDhw+qY?=
- =?us-ascii?Q?cRH7/7EzFj1NkRhfyoDV0XP1fBauM7wdltY+zNfzkimCNvVMSD9LeosT1HtY?=
- =?us-ascii?Q?PMU+rPwVW9UaQ2c5WnzdmZ8yZJRw8b1IFz1bbnoCTj5h6nrBE408+klh9J5E?=
- =?us-ascii?Q?BzS5vhZFQZz1RscIzlbX1AmY0bmcz46ffEslyqgsI9jaM8QQ6xIhpfRtW0k4?=
- =?us-ascii?Q?0/iRd49/AMwq9d61EIez1ZtrKjvEYb7vZcHceivDZiAUehtsUoz63o8DXkOy?=
- =?us-ascii?Q?dKrCZrs/JTcuci444h1iXspKFCOdd+sJ3FlyvX5423ZjhUpFXLIrH3XTnfbN?=
- =?us-ascii?Q?tjtg8BoKQNZIhqMJRNDy6vRVIUiqDuYWrgpe4M+JjqTZPV/4TE4HqndtZ6Wv?=
- =?us-ascii?Q?9QIG5fngLfieD1P4nsAwnpIpB8saWavCVhVB2tYwdLrT4T+8sK0bVIx5SX+F?=
- =?us-ascii?Q?UzRZrICbALcdblawdpNpG1inqeVPGGPIBQqQxhNQKKRM9jMC528sliOeeJxD?=
- =?us-ascii?Q?iJqR+O+wC1l3G+OU2IJSRWjWGdTt6SPgm7q5xR8j4h7bTIEEDigm2BYZ3gvh?=
- =?us-ascii?Q?RaJ+vH7BeVbvDnp6YYYC26cPktuQJQKW1KQAXJSKniDpGZiIjATfWqXP8fdN?=
- =?us-ascii?Q?Tk4UPNZSUDobQNgaiGZxCIUwtc9BpJdxRm3vQvrO7v7Imj0Z6+7VUKBq0sJk?=
- =?us-ascii?Q?q7JMiCDQUZNIO2aS11ovwNYwDKcdqeSzQMpI1CfeS6YTRzCVT1504d5ZDd11?=
- =?us-ascii?Q?cqe0vzs/UviWoLPbt9E5HWjvShVTc28nGzHZ2a/5ovmRUyKJHfzCD2SX4jT1?=
- =?us-ascii?Q?C6cccmpyL2OkKeGw4FzAXA/xun/98SnSZYfm3tKC+ySXPA3hX817/PsRzfn9?=
- =?us-ascii?Q?94Z+TAne0I4fuNDH7ayhR3JiICKTxyBizBQAjdVokZCet9r4CkxxkmXLh5/e?=
- =?us-ascii?Q?9zQ0P5YWgehmFvC6dh9enxoGRcIhTdgXYeyWqYi83LKQdhpbI0JrWUeC3iy9?=
- =?us-ascii?Q?DL3YVuwTcbP0vLnJ2LWGIRi5Vc7xouCqHqatfuADsK4GjNIMzkwdDZsMq3ph?=
- =?us-ascii?Q?KGU0EEDkFTSRPq2gIhTmhwphONgt1Di/rG6Syp9fNRrti46LUhA2yX3WKa26?=
- =?us-ascii?Q?tAwUFSGeVf+28nya5mZgv7zZOtQ4ZZPzFyky1sHkqHTrZTvV3/lCWpzPU/G+?=
- =?us-ascii?Q?bXcDAcLnk3uCP8n/WlSyyBydta5+/k3fNPM/qR3wda0XSO4WX3UwxjY2OitY?=
- =?us-ascii?Q?N6BMNOVu9/McGgCuBoaeqoa6aqbqGtNDJoZquaRB+zpvmh6+GwP2Dcbncrb/?=
- =?us-ascii?Q?POix54hEf1FaEZJ5hj8ar2K6vgxLG8jxv+9O3YXJNuNLtSmgS2r5mYqh/UX4?=
- =?us-ascii?Q?nfZXpGE=3D?=
-Content-Type: text/plain; charset="us-ascii"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132A8332EBD
+	for <linux-hyperv@vger.kernel.org>; Thu, 21 May 2026 22:06:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779401205; cv=none; b=SUg+Bn5AIQcP/nLGmZl1YDEbAoYJPwQPtA4E+nT7hHKw14IvIieFq2HpDKru74G9i2zLXAjFq30ogPBHFci5HNT0YfZTViw1OjDnfn/UALvaE2oB9tooCEDT7dPvkuUtm2RsN0ctLAyE38rW6Y+rLmSB6PcXTP6nXQX01cSXFcI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779401205; c=relaxed/simple;
+	bh=XpRE0VC4sKgmbJMSIPotXcV33O1wTXitFPZFglQsWYE=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=FlSm8FgvbVJ/n9uJUSQmyE8EfwHETzUui943tDz1aEl70ZCezhS6B+7vRaB0R/x9XPh+W+u5+Q+bdfq2IVLVevjDc4PjXi/gujBpjskux/FmE8bI6Yi78eSCvV3KDpZXhWlps6UA1Fy5KpmzbzIri8KTR5b2i5L2rN1wRdCaqPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M5mB+fdi; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4E301F000E9;
+	Thu, 21 May 2026 22:06:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779401203;
+	bh=FsDflHE0BvAK673/DA79TmM4iffkAlZBAmieO3lFuOs=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=M5mB+fdiC6X5vvxUlpE8Ac+FzKEj+wT3mHmYYtbGMIDh18LLzLyv0TadciNs5SGEU
+	 KzZfFLrgqqq+ieGGx2SAleTob9KO675xG1Ldty60UsKZ6/ugNZigPbFPcTfYeWbBBl
+	 7j6cLGxLMv8coUqAxVOvdJ+KdCP/KUJnhSZPQRWkGIelYPyk/4l/TrA2nLdYKRVR3d
+	 Nt1jdsqmcf5gUHQ9qrcqsLalGtgQ9kzBcEbrEhMEkQ35yTZ85xkhBIijKa//tB7MVX
+	 yRQmX1tLUIPbVTYa6xb62TdQFg4GHV5UJZ7+ktNit2a1/1Mj6+FsHu95eoow+/HiME
+	 wmaPpRdoxSnkA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4 2/2] drm/hyperv: validate VMBus packet size in
+ receive callback
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Berkant Koc" <me@berkoc.com>
+Cc: linux-hyperv@vger.kernel.org
+In-Reply-To: <6e5d1d57a3afc4c5ea0d2a3d62be58c90741a869.1779396074.git.me@berkoc.com>
+References: <6e5d1d57a3afc4c5ea0d2a3d62be58c90741a869.1779396074.git.me@berkoc.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+Date: Thu, 21 May 2026 22:06:43 +0000
+Message-Id: <20260521220643.A4E301F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: a7adcfb9-dae7-46d2-200c-08deb781c250
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2026 21:41:47.1746
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB7125
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
+X-Spamd-Result: default: False [4.84 / 15.00];
+	SEM_URIBL_FRESH15(3.00)[berkoc.com:email];
+	MISSING_MIME_VERSION(2.00)[];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	BAD_REP_POLICIES(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11153-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11154-lists,linux-hyperv=lfdr.de];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
+	R_DKIM_ALLOW(0.00)[kernel.org:s=k20260515];
+	RCPT_COUNT_TWO(0.00)[2];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_FROM(0.00)[outlook.com];
-	DKIM_TRACE(0.00)[outlook.com:+];
-	MISSING_XM_UA(0.00)[];
+	GREYLIST(0.00)[pass,meta];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,outlook.com:dkim,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,SN6PR02MB4157.namprd02.prod.outlook.com:mid]
-X-Rspamd-Queue-Id: 47FFA5AC273
+	R_SPF_ALLOW(0.00)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	NEURAL_SPAM(0.00)[0.994];
+	ARC_ALLOW(0.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MISSING_XM_UA(0.00)[];
+	FROM_NO_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,sashiko.dev:url,smtp.kernel.org:mid,lists.linux.dev:replyto]
+X-Rspamd-Queue-Id: 26F5B5AC471
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Jork Loeser <jloeser@linux.microsoft.com> Sent: Thursday, May 21, 202=
-6 2:20 PM
->=20
-> On Thu, 21 May 2026, Michael Kelley wrote:
->=20
-> > From: Michael Kelley <mhklinux@outlook.com>
->=20
-> > * Add #ifdefs around MSHV SynIC calls to hv_vmbus_exists(). When
->=20
-> Could as well do an empty definition of hv_vmbus_exists() if VMBUS is not
-> configured, no?
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+s) to consider:
 
-Yes, indeed. I would have done that if there were more than 2 places
-where hv_vmbus_exists() is called. For me, having exactly 2 places was
-on the tipping point of testing CONFIG_HYPERV_VMBUS inline vs.
-adding the test in a .h file.
+Pre-existing issues:
+- [High] The completion `hv->wait` is not re-initialized before sending a n=
+ew request, leading to premature completions and use of stale data.
+- [High] The wait thread unconditionally trusts that the received message i=
+n `hv->init_buf` matches the expected response type without validating `vid=
+_hdr.type`.
+- [High] If the host sends a packet larger than VMBUS_MAX_PACKET_SIZE, the =
+channel becomes permanently wedged.
+- [High] Unprotected concurrent access to `hv->init_buf` causes outbound re=
+quest corruption.
+--
 
-Thinking about it more, I'll try the .h file route in a v2. That way
-mshv_synic.c doesn't have to be touched at all.
+commit 6ae2d5d611e1bfae5ccaf2facc0f88f11136806d
+Author: Berkant Koc <me@berkoc.com>
+Date:   Tue May 19 20:08:53 2026 +0000
 
-Michael
+drm/hyperv: validate VMBus packet size in receive callback
 
->=20
-> > diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-> > index 2d0b3fcb0ff8..aa11bcefddf2 100644
-> > --- a/drivers/hv/Kconfig
-> > +++ b/drivers/hv/Kconfig
-> > @@ -74,6 +74,7 @@ config MSHV_ROOT
-> > 	# e.g. When withdrawing memory, the hypervisor gives back 4k pages in
-> > 	# no particular order, making it impossible to reassemble larger pages
-> > 	depends on PAGE_SIZE_4KB
-> > +	depends on HYPERV_VMBUS if HYPERV_VMBUS
->=20
-> Nice, thanks!
->=20
-> Reviewed-by: Jork Loeser <jloeser@linux.microsoft.com>
+This commit validates the size of received VMBus packets to prevent
+reading past the end of the receive buffer. It requires specific
+payload sizes based on the message type. It also prevents copying
+when vmbus_recvpacket() returns an error.
 
+Cc: stable@vger.kernel.org # 5.14+
+
+> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c b/drivers/gpu/drm/=
+hyperv/hyperv_drm_proto.c
+> index c3d0ff229e3d0..48054b6078f54 100644
+> --- a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+> @@ -420,26 +420,81 @@ static int hyperv_get_supported_resolution(struct h=
+v_device *hdev)
+
+[ ... ]
+
+>  	/* Complete the wait event */
+>  	if (msg->vid_hdr.type =3D=3D SYNTHVID_VERSION_RESPONSE ||
+>  	    msg->vid_hdr.type =3D=3D SYNTHVID_RESOLUTION_RESPONSE ||
+>  	    msg->vid_hdr.type =3D=3D SYNTHVID_VRAM_LOCATION_ACK) {
+> -		memcpy(hv->init_buf, msg, VMBUS_MAX_PACKET_SIZE);
+> +		size_t need =3D hdr_size;
+> +
+
+[ ... ]
+
+> +		if (bytes_recvd < need) {
+> +			drm_err_ratelimited(&hv->dev,
+> +					    "synthvid packet too small for type %u: %u < %zu\n",
+> +					    msg->vid_hdr.type, bytes_recvd, need);
+> +			return;
+> +		}
+> +		memcpy(hv->init_buf, msg, bytes_recvd);
+
+[Severity: High]
+This isn't a bug introduced by this patch, but does the receive callback
+overwrite hv->init_buf concurrently while process-context functions are usi=
+ng
+it to construct outbound requests?
+
+For example, if hyperv_get_supported_resolution() is building a request in
+hv->init_buf, and a delayed response from a previous request arrives, this
+memcpy() will overwrite the buffer.
+
+[Severity: High]
+This is a pre-existing issue, but does the wait thread unconditionally trust
+that the message in hv->init_buf matches its expected response type?
+
+Since this callback completes the wait for multiple message types, an unexp=
+ected
+or delayed message could cause the waiting thread to awaken and parse overl=
+apping
+union fields incorrectly.
+
+>  		complete(&hv->wait);
+
+[Severity: High]
+This is a pre-existing issue, but is the completion hv->wait ever
+re-initialized before being reused?
+
+If a request times out and the host responds later, complete() will be call=
+ed,
+leaving the completion signaled. The next request calling
+wait_for_completion_timeout() will return immediately, leading to
+desynchronization. Should callers use reinit_completion() before sending a
+request?
+
+>  		return;
+>  	}
+
+[ ... ]
+
+> @@ -464,9 +519,9 @@ static void hyperv_receive(void *ctx)
+>  		ret =3D vmbus_recvpacket(hdev->channel, recv_buf,
+>  				       VMBUS_MAX_PACKET_SIZE,
+>  				       &bytes_recvd, &req_id);
+> -		if (bytes_recvd > 0 &&
+> +		if (!ret && bytes_recvd > 0 &&
+
+[Severity: High]
+This is a pre-existing issue, but if vmbus_recvpacket() returns -ENOBUFS
+because the host sends a packet larger than VMBUS_MAX_PACKET_SIZE, does the
+channel become permanently wedged?
+
+The loop condition will exit, and the oversized packet remains in the ring
+buffer. Subsequent interrupts will continue to fail with -ENOBUFS, resulting
+in a permanent channel stall.
+
+>  		    recv_buf->pipe_hdr.type =3D=3D PIPE_MSG_DATA)
+> -			hyperv_receive_sub(hdev);
+> +			hyperv_receive_sub(hdev, bytes_recvd);
+>  	} while (bytes_recvd > 0 && ret =3D=3D 0);
+>  }
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1779396074.gi=
+t.me@berkoc.com?part=3D2
 
