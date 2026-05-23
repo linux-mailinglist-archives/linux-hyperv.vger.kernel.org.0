@@ -1,38 +1,38 @@
-Return-Path: <linux-hyperv+bounces-11166-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11171-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +F+BKzgLEWohgwYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11166-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 23 May 2026 04:04:40 +0200
+	id UAXEMRcLEWoVgwYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11171-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 23 May 2026 04:04:07 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F7005BC73C
-	for <lists+linux-hyperv@lfdr.de>; Sat, 23 May 2026 04:04:40 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D68B25BC726
+	for <lists+linux-hyperv@lfdr.de>; Sat, 23 May 2026 04:04:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D4BC53018AEC
-	for <lists+linux-hyperv@lfdr.de>; Sat, 23 May 2026 02:03:17 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id EB8093011F62
+	for <lists+linux-hyperv@lfdr.de>; Sat, 23 May 2026 02:03:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C88E271443;
-	Sat, 23 May 2026 02:03:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B1C32EBB86;
+	Sat, 23 May 2026 02:03:19 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 010E3234964;
-	Sat, 23 May 2026 02:03:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5965727A47F;
+	Sat, 23 May 2026 02:03:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779501796; cv=none; b=cgyCP9KxAyiT4XyBaVSfcNUD25luAloztkmIKuyxyncJ+wzzdpUIxm3lpF1mK2uphCusQ4WHb05GfWeuGelQcME05In+dOQHz9MRjPvbFeoyI8yPu0G56G2kMs75ABZN9Z6Dn7xcwOHBB4FR8dTMn9BQeMVW4XgXOqeOLwL8alI=
+	t=1779501799; cv=none; b=Qwy5tHXg6oRR+zgwSYsA/JkrFTCRxgfFN+ew89PpEDfk20tMtyuRzEGKAGmiSShtkjKz0rW9Klfs7faIB9jBoXKmTLibfXlvUXI/RHczSDZPPQ6BzauoNa8TuACcg4SMpNHg6ES6EeQqnubqrwxaGTd9ArYw8C+D9xcVOU8ESyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779501796; c=relaxed/simple;
-	bh=xwRcfFRPfX46OLlNxY/cL1N4zWf0Xs2LLoMpF/+I/Qg=;
+	s=arc-20240116; t=1779501799; c=relaxed/simple;
+	bh=UCElUD480IjCnvdnwEUw59+Jfe3MIUvK0ppnG/1p0M4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IeNYqXPm2Njg2vwtwDhJjQUaSM56Q2mUYWe6jongYg2md9E4Kzz6Cv5NiZK+Q3hIXR/naV0RiDRBshkeDN02edCGjgfBzzK7zHXh/ZxuL/rZHddp/7U7k+Q4255Tkd+uhyQ9sqM3HgvGFuBRkZQWl/qKREJv8jT7QZvyhD4rTEA=
+	 MIME-Version; b=PsdDu3+lAc3EDwbufP7deQ5u6kA1p+PCkznWWBkF+wS8reeWnehFGgxRPy1H8dty8Q2P3AJzqs5eD+KRpzSw7sKJ61byRhQCssb/jhaeJ5jJf2YNF/3u0ucbuIm8KAnjXb8uVAGuauWt7dDpV1rWqDuu3B5MIdG66Usg7giuS/Y=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1202)
-	id C6F9320B716B; Fri, 22 May 2026 19:03:06 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C6F9320B716B
+	id D5E2F20B716C; Fri, 22 May 2026 19:03:06 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D5E2F20B716C
 From: Long Li <longli@microsoft.com>
 To: Long Li <longli@microsoft.com>,
 	Konstantin Taranov <kotaranov@microsoft.com>,
@@ -53,9 +53,9 @@ Cc: Simon Horman <horms@kernel.org>,
 	linux-rdma@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v11 4/6] net: mana: Use GIC functions to allocate global EQs
-Date: Fri, 22 May 2026 19:02:54 -0700
-Message-ID: <20260523020258.1107742-5-longli@microsoft.com>
+Subject: [PATCH net-next v11 5/6] net: mana: Allocate interrupt context for each EQ when creating vPort
+Date: Fri, 22 May 2026 19:02:55 -0700
+Message-ID: <20260523020258.1107742-6-longli@microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260523020258.1107742-1-longli@microsoft.com>
 References: <20260523020258.1107742-1-longli@microsoft.com>
@@ -72,214 +72,143 @@ X-Spamd-Result: default: False [3.54 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-11171-lists,linux-hyperv=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[19];
-	MIME_TRACE(0.00)[0:+];
-	R_DKIM_NA(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11166-lists,linux-hyperv=lfdr.de];
-	FROM_NEQ_ENVFROM(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
-	NEURAL_HAM(-0.00)[-0.533];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[]
-X-Rspamd-Queue-Id: 2F7005BC73C
+	R_DKIM_NA(0.00)[];
+	NEURAL_HAM(-0.00)[-0.534];
+	FROM_NEQ_ENVFROM(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: D68B25BC726
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Replace the GDMA global interrupt setup code with the new GIC allocation
-and release functions for managing interrupt contexts.
+Use GIC functions to create a dedicated interrupt context or acquire a
+shared interrupt context for each EQ when setting up a vPort.
 
-This changes the per-queue interrupt names in /proc/interrupts from
-mana_q0, mana_q1, ... to mana_msi1, mana_msi2, ... to reflect the
-MSI-X index rather than a zero-based queue number. The HWC interrupt
-name (mana_hwc) is unchanged.
+The caller now owns the GIC reference across the EQ create/destroy
+lifecycle: mana_create_eq() calls mana_gd_get_gic() before creating
+each EQ and mana_destroy_eq() calls mana_gd_put_gic() after destroying
+it. The msix_index invalidation is moved from mana_gd_deregister_irq()
+to the mana_gd_create_eq() error path so that mana_destroy_eq() can
+read the index before teardown.
 
 Signed-off-by: Long Li <longli@microsoft.com>
 ---
- .../net/ethernet/microsoft/mana/gdma_main.c   | 104 +++---------------
- 1 file changed, 17 insertions(+), 87 deletions(-)
+ .../net/ethernet/microsoft/mana/gdma_main.c    |  2 +-
+ drivers/net/ethernet/microsoft/mana/mana_en.c  | 18 +++++++++++++++++-
+ include/net/mana/gdma.h                        |  1 +
+ 3 files changed, 19 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 0541d914f27d..fc21c7f57e23 100644
+index fc21c7f57e23..10d394dd9653 100644
 --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
 +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -1942,7 +1942,7 @@ static int mana_gd_setup_dyn_irqs(struct pci_dev *pdev, int nvec)
- 	struct gdma_context *gc = pci_get_drvdata(pdev);
- 	struct gdma_irq_context *gic;
- 	bool skip_first_cpu = false;
--	int *irqs, irq, err, i;
-+	int *irqs, err, i;
- 
- 	irqs = kmalloc_objs(int, nvec);
- 	if (!irqs)
-@@ -1955,30 +1955,13 @@ static int mana_gd_setup_dyn_irqs(struct pci_dev *pdev, int nvec)
- 	 * further used in irq_setup()
- 	 */
- 	for (i = 1; i <= nvec; i++) {
--		gic = kzalloc_obj(*gic);
--		if (!gic) {
--			err = -ENOMEM;
-+		gic = mana_gd_get_gic(gc, false, &i);
-+		if (IS_ERR(gic)) {
-+			err = PTR_ERR(gic);
- 			goto free_irq;
- 		}
--		gic->handler = mana_gd_process_eq_events;
--		INIT_LIST_HEAD(&gic->eq_list);
--		spin_lock_init(&gic->lock);
--
--		snprintf(gic->name, MANA_IRQ_NAME_SZ, "mana_q%d@pci:%s",
--			 i - 1, pci_name(pdev));
--
--		/* one pci vector is already allocated for HWC */
--		irqs[i - 1] = pci_irq_vector(pdev, i);
--		if (irqs[i - 1] < 0) {
--			err = irqs[i - 1];
--			goto free_current_gic;
--		}
--
--		err = request_irq(irqs[i - 1], mana_gd_intr, 0, gic->name, gic);
--		if (err)
--			goto free_current_gic;
- 
--		xa_store(&gc->irq_contexts, i, gic, GFP_KERNEL);
-+		irqs[i - 1] = gic->irq;
+@@ -912,7 +912,6 @@ static void mana_gd_deregister_irq(struct gdma_queue *queue)
  	}
+ 	spin_unlock_irqrestore(&gic->lock, flags);
  
- 	/*
-@@ -2000,20 +1983,9 @@ static int mana_gd_setup_dyn_irqs(struct pci_dev *pdev, int nvec)
- 	kfree(irqs);
- 	return 0;
+-	queue->eq.msix_index = INVALID_PCI_MSIX_INDEX;
+ 	synchronize_rcu();
+ }
  
--free_current_gic:
--	kfree(gic);
- free_irq:
--	for (i -= 1; i > 0; i--) {
--		irq = pci_irq_vector(pdev, i);
--		gic = xa_load(&gc->irq_contexts, i);
--		if (WARN_ON(!gic))
--			continue;
--
--		irq_update_affinity_hint(irq, NULL);
--		free_irq(irq, gic);
--		xa_erase(&gc->irq_contexts, i);
--		kfree(gic);
--	}
-+	for (i -= 1; i > 0; i--)
-+		mana_gd_put_gic(gc, false, i);
- 	kfree(irqs);
+@@ -1027,6 +1026,7 @@ static int mana_gd_create_eq(struct gdma_dev *gd,
+ out:
+ 	dev_err(dev, "Failed to create EQ: %d\n", err);
+ 	mana_gd_destroy_eq(gc, false, queue);
++	queue->eq.msix_index = INVALID_PCI_MSIX_INDEX;
  	return err;
  }
-@@ -2022,7 +1994,7 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev, int nvec)
- {
- 	struct gdma_context *gc = pci_get_drvdata(pdev);
- 	struct gdma_irq_context *gic;
--	int *irqs, *start_irqs, irq;
-+	int *irqs, *start_irqs;
- 	unsigned int cpu;
- 	int err, i;
  
-@@ -2033,34 +2005,13 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev, int nvec)
- 	start_irqs = irqs;
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 571648007378..bca381f8bc7b 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -1634,6 +1634,7 @@ void mana_destroy_eq(struct mana_port_context *apc)
+ 	struct mana_context *ac = apc->ac;
+ 	struct gdma_context *gc = ac->gdma_dev->gdma_context;
+ 	struct gdma_queue *eq;
++	unsigned int msi;
+ 	int i;
  
- 	for (i = 0; i < nvec; i++) {
--		gic = kzalloc_obj(*gic);
--		if (!gic) {
--			err = -ENOMEM;
-+		gic = mana_gd_get_gic(gc, false, &i);
-+		if (IS_ERR(gic)) {
-+			err = PTR_ERR(gic);
- 			goto free_irq;
- 		}
- 
--		gic->handler = mana_gd_process_eq_events;
--		INIT_LIST_HEAD(&gic->eq_list);
--		spin_lock_init(&gic->lock);
--
--		if (!i)
--			snprintf(gic->name, MANA_IRQ_NAME_SZ, "mana_hwc@pci:%s",
--				 pci_name(pdev));
--		else
--			snprintf(gic->name, MANA_IRQ_NAME_SZ, "mana_q%d@pci:%s",
--				 i - 1, pci_name(pdev));
--
--		irqs[i] = pci_irq_vector(pdev, i);
--		if (irqs[i] < 0) {
--			err = irqs[i];
--			goto free_current_gic;
--		}
--
--		err = request_irq(irqs[i], mana_gd_intr, 0, gic->name, gic);
--		if (err)
--			goto free_current_gic;
--
--		xa_store(&gc->irq_contexts, i, gic, GFP_KERNEL);
-+		irqs[i] = gic->irq;
- 	}
- 
- 	/* If number of IRQ is one extra than number of online CPUs,
-@@ -2089,20 +2040,9 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev, int nvec)
- 	kfree(start_irqs);
- 	return 0;
- 
--free_current_gic:
--	kfree(gic);
- free_irq:
--	for (i -= 1; i >= 0; i--) {
--		irq = pci_irq_vector(pdev, i);
--		gic = xa_load(&gc->irq_contexts, i);
--		if (WARN_ON(!gic))
--			continue;
--
--		irq_update_affinity_hint(irq, NULL);
--		free_irq(irq, gic);
--		xa_erase(&gc->irq_contexts, i);
--		kfree(gic);
--	}
-+	for (i -= 1; i >= 0; i--)
-+		mana_gd_put_gic(gc, false, i);
- 
- 	kfree(start_irqs);
- 	return err;
-@@ -2176,26 +2116,16 @@ static int mana_gd_setup_remaining_irqs(struct pci_dev *pdev)
- static void mana_gd_remove_irqs(struct pci_dev *pdev)
- {
- 	struct gdma_context *gc = pci_get_drvdata(pdev);
--	struct gdma_irq_context *gic;
--	int irq, i;
-+	int i;
- 
- 	if (gc->max_num_msix < 1)
- 		return;
- 
- 	for (i = 0; i < gc->max_num_msix; i++) {
--		irq = pci_irq_vector(pdev, i);
--		if (irq < 0)
--			continue;
--
--		gic = xa_load(&gc->irq_contexts, i);
--		if (WARN_ON(!gic))
-+		if (!xa_load(&gc->irq_contexts, i))
+ 	if (!apc->eqs)
+@@ -1647,7 +1648,9 @@ void mana_destroy_eq(struct mana_port_context *apc)
+ 		if (!eq)
  			continue;
  
--		/* Need to clear the hint before free_irq */
--		irq_update_affinity_hint(irq, NULL);
--		free_irq(irq, gic);
--		xa_erase(&gc->irq_contexts, i);
--		kfree(gic);
-+		mana_gd_put_gic(gc, false, i);
++		msi = eq->eq.msix_index;
+ 		mana_gd_destroy_queue(gc, eq);
++		mana_gd_put_gic(gc, !gc->msi_sharing, msi);
  	}
  
- 	pci_free_irq_vectors(pdev);
+ 	kfree(apc->eqs);
+@@ -1664,6 +1667,7 @@ static void mana_create_eq_debugfs(struct mana_port_context *apc, int i)
+ 	eq.mana_eq_debugfs = debugfs_create_dir(eqnum, apc->mana_eqs_debugfs);
+ 	debugfs_create_u32("head", 0400, eq.mana_eq_debugfs, &eq.eq->head);
+ 	debugfs_create_u32("tail", 0400, eq.mana_eq_debugfs, &eq.eq->tail);
++	debugfs_create_u32("irq", 0400, eq.mana_eq_debugfs, &eq.eq->eq.irq);
+ 	debugfs_create_file("eq_dump", 0400, eq.mana_eq_debugfs, eq.eq, &mana_dbg_q_fops);
+ }
+ 
+@@ -1672,7 +1676,9 @@ int mana_create_eq(struct mana_port_context *apc)
+ 	struct gdma_dev *gd = apc->ac->gdma_dev;
+ 	struct gdma_context *gc = gd->gdma_context;
+ 	struct gdma_queue_spec spec = {};
++	struct gdma_irq_context *gic;
+ 	int err;
++	int msi;
+ 	int i;
+ 
+ 	if (WARN_ON(apc->eqs))
+@@ -1692,12 +1698,22 @@ int mana_create_eq(struct mana_port_context *apc)
+ 		debugfs_create_dir("EQs", apc->mana_port_debugfs);
+ 
+ 	for (i = 0; i < apc->num_queues; i++) {
+-		spec.eq.msix_index = (i + 1) % gc->num_msix_usable;
++		msi = (i + 1) % gc->num_msix_usable;
++
++		gic = mana_gd_get_gic(gc, !gc->msi_sharing, &msi);
++		if (IS_ERR(gic)) {
++			err = PTR_ERR(gic);
++			goto out;
++		}
++		spec.eq.msix_index = msi;
++
+ 		err = mana_gd_create_mana_eq(gd, &spec, &apc->eqs[i].eq);
+ 		if (err) {
+ 			dev_err(gc->dev, "Failed to create EQ %d : %d\n", i, err);
++			mana_gd_put_gic(gc, !gc->msi_sharing, msi);
+ 			goto out;
+ 		}
++		apc->eqs[i].eq->eq.irq = gic->irq;
+ 		mana_create_eq_debugfs(apc, i);
+ 	}
+ 
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index e3ee85c614ec..6a65fedae38f 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -342,6 +342,7 @@ struct gdma_queue {
+ 			void *context;
+ 
+ 			unsigned int msix_index;
++			unsigned int irq;
+ 
+ 			u32 log2_throttle_limit;
+ 		} eq;
 -- 
 2.43.0
 
