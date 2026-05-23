@@ -1,158 +1,298 @@
-Return-Path: <linux-hyperv+bounces-11172-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11175-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0DyaEgsdEWrIhQYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11172-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 23 May 2026 05:20:43 +0200
+	id IEU6AXy0EWpupAYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11175-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 23 May 2026 16:06:52 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABA905BCF38
-	for <lists+linux-hyperv@lfdr.de>; Sat, 23 May 2026 05:20:42 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AE715BF3C5
+	for <lists+linux-hyperv@lfdr.de>; Sat, 23 May 2026 16:06:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 809223054319
-	for <lists+linux-hyperv@lfdr.de>; Sat, 23 May 2026 03:15:52 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B7F253006804
+	for <lists+linux-hyperv@lfdr.de>; Sat, 23 May 2026 13:59:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1572E33D6FA;
-	Sat, 23 May 2026 03:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBEE133E35B;
+	Sat, 23 May 2026 13:59:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nEUmoQIj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=berkoc.com header.i=@berkoc.com header.b="mrk1vc7T";
+	dkim=pass (2048-bit key) header.d=berkoc.com header.i=@berkoc.com header.b="lWfbSflJ"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mail-01.1984.is (mail-01.1984.is [185.112.145.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611153314C5;
-	Sat, 23 May 2026 03:15:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5A538398A;
+	Sat, 23 May 2026 13:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.112.145.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779506138; cv=none; b=DqIGJjHLS1+T3xT4D3NEW4jUN6M6EFioirtEHdtvcH/DryJTJYrzbrxa/wRjgRtIDz6mdmW59/y6kQZKHdsih8xwaMLuwuMjjjA9ddEQ7u1Dn65yrr1sLja7As1KmhQeVXNyiiyk9JcSEJvgTVSIh8EZqi9S/KsHa6QuDjX48no=
+	t=1779544797; cv=none; b=rHq5LiJVUOF1Uq7eHmqBN951GNcWnkY9ujFVrnSOfn4lUI7MyYEDW123soUqGWfFzUtvOc5UiifmTNLYwX5mu8mI5HG4cR7QWsitIT5KmYSFY+q6mEGygALjL2eUW5wdmLGcrhxQFsr+ghHo4zfwh/h62rzsTLVTog0/xnFaCtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779506138; c=relaxed/simple;
-	bh=ulQEQQ0A/MpfmAshxlTVNUaOUKKA6FA7LV/2rVnQqF0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HXNkA06M7lxzDc63F8e3vujZsWuoTLvyzqX1NF36FTaO4dtHrArOGRt00c6y/FINxo0W/gRYMErVCaGb4nNOEoY3N99mAN82b/d0/+MEyU1lKaISf/jx7no2XpkVgulGfHcAWWZYoO/hWcdNjsy9h9pJpEAwkbRLnonlbqx/mk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=nEUmoQIj; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64MHW0VO2622946;
-	Sat, 23 May 2026 03:15:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=7wzS14WVDJQWU2EwGyZLqtbho9V99BJWNFtRuDUf3/E=; b=
-	nEUmoQIjH9nRrB8mznYLzx/nFAnifdrZWEasqo9Ufrh7RiapIxQycu/L3vyc1VeV
-	V3HeIPoC4wWx44VJnc4B7yKAoUk2bG6+doV+DBSPROPocBqrJI9yQv5GBTNs2bBA
-	HVu2xueN7775NKvgRmyVl7m6wwrKEZvmYrk8b/3Exl0TfCuaZ+zBsNS6DYxJKWXE
-	KgPVT/WZaVi9G5v8fXlcAQwkEA0iIqijTuMiHnhiy7vfg0tTOh7fdLiV+Ey1xTln
-	Wcbwd1L6qS5ZOtTXbRYkloGtfLdTX2WKozKDfN93oGaPo9p+MzPSSppqoBVpFLbd
-	GPCOHYPOX07mkGVf3K61iQ==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4e6h1t4e5c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 23 May 2026 03:15:28 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.7/8.18.1.7) with ESMTP id 64N3F5ak032306;
-	Sat, 23 May 2026 03:15:27 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4eb2p6hskn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 23 May 2026 03:15:27 +0000 (GMT)
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.1.12) with ESMTP id 64N3F9eO032824;
-	Sat, 23 May 2026 03:15:26 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 4eb2p6hs6k-16;
-	Sat, 23 May 2026 03:15:26 +0000 (GMT)
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-To: linux-scsi@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Md Shofiqul Islam <shofiqtest@gmail.com>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>, longli@microsoft.com,
-        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, mhklinux@outlook.com
-Subject: Re: [PATCH v2] scsi: storvsc: Replace symbolic permissions with octal
-Date: Fri, 22 May 2026 23:14:30 -0400
-Message-ID: <177913641771.1181900.14473313849587305075.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260506004948.2172-1-shofiqtest@gmail.com>
-References: <20260506004948.2172-1-shofiqtest@gmail.com>
+	s=arc-20240116; t=1779544797; c=relaxed/simple;
+	bh=13icOsQUx42+l1Kd3fjRTfYktzRT2SpNRElys5n1fVk=;
+	h=Message-ID:In-Reply-To:References:From:To:Cc:Date:Subject; b=tIcaId+jw5wU6Lb9CYfYDGuj8IPerkFgO2N2McoIMaqlzqfWKpFsHj289nsTgoYprE/MbFRHzLq7APrsGokQBRKAdV1hsiTblkriam/HFJVS/dqPXao2Lv8PwKBlhsCpBS6OTP55UIiFfwKqx5EVWQnmJHDjDjLnMWFKYIo/t98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=berkoc.com; spf=pass smtp.mailfrom=berkoc.com; dkim=pass (2048-bit key) header.d=berkoc.com header.i=@berkoc.com header.b=mrk1vc7T; dkim=pass (2048-bit key) header.d=berkoc.com header.i=@berkoc.com header.b=lWfbSflJ; arc=none smtp.client-ip=185.112.145.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=berkoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=berkoc.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=berkoc.com;
+	s=1984; h=Subject:Date:Cc:To:From:References:In-Reply-To:Message-ID:Sender:
+	Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=26k+rdY2gpZelGKCvHSPGK8DaUvnKiOQCsWI4Tqj72w=; b=mrk1vc7TQSz0skuNC4ao37E+pv
+	UFYfnvxQXn+A3oSBqYMRUwJQgqaKcNa4N9aDKuARWY68hf4T48Mr7WAmxNJhE8MJP6VP30/3Gz0fO
+	iq9cSDv+4WmVzMt77+IfVuFfmleQJlUNTt2BbqXzxHf0KlD3iIdGC6KDGE6FEn06TLysKYR1xDKD9
+	KWTIbcAJNF04XKCvxHJT+WyoPuGs3g7a5gr+JgoHW1PMD5yEIfqG11Y/Pq0q5CiEJmPKycT2FYMiO
+	WRZ1MAa1MWQT9b+wDn6Mzu5/FNotz+Dqa63Zvd7uVPmee9IVO1YChe6wSrC9elv4B9XakSxcfzysY
+	bV9ep0Nw==;
+Received: from localhost
+	by mail-01.1984.is with utf8esmtp (Exim 4.96)
+	(envelope-from <me@berkoc.com>)
+	id 1wQmtE-0024QH-2n;
+	Sat, 23 May 2026 13:59:45 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=berkoc.com;
+ i=@berkoc.com; q=dns/txt; s=me; t=1779544773; h=message-id : date :
+ subject : cc : to : from : sender : reply-to;
+ bh=26k+rdY2gpZelGKCvHSPGK8DaUvnKiOQCsWI4Tqj72w=;
+ b=lWfbSflJeCRuniQplYUDi4K/8RVxQSRZW2DTtvvAA373LCuRTms0yKi15Z//+QHWSYARV
+ NsK4NS3P9PhCuhtDHKBPUEWlEqaDCQBpnqiI39wIP2OUrPqL2TwkEnmBPIJf7WUTUgWFWsR
+ Qr4PMiz5iMXvXdID2IOcGjGB5vB9rBkflTMgZeI0wYebjLc40NS7PVYFu6D9ft5iWUw906o
+ nAQ/2rUvC7Fc9Bt0YKcjhbU5W+D4mK0zfhMq4HsU3FwU1W/+N6hM9wAe+Z57v5IhBxv0mnT
+ 3cvS9Ojjfw/LjYE5W4Q3/DgVZ7xW/WexpUTiMSbUzdOsJ0aDHx9jVIdK3N8g==
+Message-ID: <8200dbc199c7a9b75ac7e8af6c748d2189b5ebd5.1779542874.git.me@berkoc.com>
+In-Reply-To: <cover.1779542874.git.me@berkoc.com>
+References: <cover.1779542874.git.me@berkoc.com>
+From: Berkant Koc <me@berkoc.com>
+To: Saurabh Sengar <ssengar@linux.microsoft.com>, Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, K. Y. Srinivasan <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Michael Kelley <mhklinux@outlook.com>, Thomas Zimmermann <tzimmermann@suse.de>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Deepak Rawat <drawat.floss@gmail.com>
+Date: Sat, 23 May 2026 15:27:47 +0200
+Subject: [PATCH v5 2/2] drm/hyperv: validate VMBus packet size in receive
+ callback
+X-Spam-Score: -0.2 (/)
+X-Authenticated-User: me@berkoc.com
+X-Sender-Address: me@berkoc.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-23_01,2026-05-18_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0
- suspectscore=0 malwarescore=0 spamscore=0 phishscore=0 lowpriorityscore=0
- mlxlogscore=576 bulkscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2605130000 definitions=main-2605230029
-X-Proofpoint-GUID: zDgM3pwFtfh8LoySytLKY4cYOfAvJte6
-X-Authority-Analysis: v=2.4 cv=d9jFDxjE c=1 sm=1 tr=0 ts=6a111bd0 cx=c_pps
- a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=jiCTI4zE5U7BLdzWsZGv:22 a=BqU2WV_vvsyTyxaotp0D:22 a=VwQbUJbxAAAA:8
- a=UY0ZMbisSNrLhDL-TgMA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: zDgM3pwFtfh8LoySytLKY4cYOfAvJte6
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIzMDAyOSBTYWx0ZWRfX+vBmpXoouOOL
- QXQg04smDO3kpZMObMlAumwJAOZkz7FmVobzTbR6uI68FDWwKM9It1E/ayPlb7rg45Xo6bIKkTv
- LVXGmE9mxqaF+4pq9nzaSooxyCQF70T4h2bxWh+y25fzfGTpmusCtY8q5mBG6nQw3xux0r/Q3Xu
- kXOdM/yPDbeRVprUmk93qhNejDAc3DXigJCzLRoRTh5uWNcAE1A+SEonaMNnB4dZp+3aqIGvnIs
- dqa0o/tzJ76OIqCD37hh/5mO60nyn1SER1kAwYDtWOG57M4FT0OfsVrqfLjJ6NONhRvns1VO0Gm
- zxSzKeHxuCNtb4kyLnxX2vIIoB98z9BQLfC1uJNA97BudULmfoYLgTPfdqEYDmb3fqjNgU5xcuj
- seuYQHmFJKeC256Z5M/nMXITs6VI7n64TdtpG2Mz1Ewx35WwgZCBVn039+futdAu2lLsaEEiOH5
- g+TsV9XPrheOE5GVLvw==
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[oracle.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[oracle.com:s=corp-2025-04-25];
+X-Spamd-Result: default: False [5.64 / 15.00];
+	SEM_URIBL_FRESH15(3.00)[berkoc.com:email,berkoc.com:dkim];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[berkoc.com:s=me];
 	MAILLIST(-0.15)[generic];
+	BAD_REP_POLICIES(0.10)[];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	DKIM_MIXED(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11175-lists,linux-hyperv=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.freedesktop.org,microsoft.com,kernel.org,outlook.com,suse.de,linux.intel.com,gmail.com];
+	GREYLIST(0.00)[pass,body];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[oracle.com,microsoft.com,kernel.org,outlook.com];
-	TAGGED_FROM(0.00)[bounces-11172-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[vger.kernel.org,gmail.com];
-	DKIM_TRACE(0.00)[oracle.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,oracle.com:mid,oracle.com:dkim];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[martin.petersen@oracle.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	MID_RHS_MATCH_FROM(0.00)[];
+	R_DKIM_REJECT(0.00)[berkoc.com:s=1984];
+	DMARC_POLICY_ALLOW(0.00)[berkoc.com,quarantine];
+	DKIM_TRACE(0.00)[berkoc.com:-,berkoc.com:+];
+	NEURAL_HAM(-0.00)[-0.958];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCVD_COUNT_SEVEN(0.00)[9]
-X-Rspamd-Queue-Id: ABA905BCF38
+	FROM_NEQ_ENVFROM(0.00)[me@berkoc.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	TO_DN_SOME(0.00)[];
+	R_SPF_ALLOW(0.00)[+ip6:2600:3c09:e001:a7::/64:c];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ARC_ALLOW(0.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[berkoc.com:email,berkoc.com:mid,berkoc.com:dkim,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 9AE715BF3C5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, 06 May 2026 03:49:48 +0300, Md Shofiqul Islam wrote:
+hyperv_receive_sub() reads msg->vid_hdr.type and dispatches into one
+of four message-type branches without knowing how many bytes the host
+wrote into hv->recv_buf. The completion path then runs
+memcpy(hv->init_buf, msg, VMBUS_MAX_PACKET_SIZE), so the consumer that
+wakes on wait_for_completion_timeout() can read up to 16 KiB of
+residue from a prior message as if it were the response payload.
 
-> Symbolic permissions like S_IRUGO and S_IWUSR are not preferred by
-> checkpatch. Replace with their octal equivalents:
-> 
->   - S_IRUGO|S_IWUSR -> 0644
->   - S_IRUGO         -> 0444
-> 
-> 
-> [...]
+Pass bytes_recvd into hyperv_receive_sub() and reject any packet that
+does not cover the pipe + synthvid header. A single switch on
+msg->vid_hdr.type then computes the type-specific payload size: the
+three completion-driving types (SYNTHVID_VERSION_RESPONSE,
+SYNTHVID_RESOLUTION_RESPONSE, SYNTHVID_VRAM_LOCATION_ACK) fall through
+to a shared exit that requires that size before memcpy/complete, while
+SYNTHVID_FEATURE_CHANGE validates its own payload and returns before
+reading is_dirt_needed. Unknown types are dropped.
 
-Applied to 7.2/scsi-queue, thanks!
+SYNTHVID_RESOLUTION_RESPONSE is variable length: the host fills
+resolution_count entries, not the full SYNTHVID_MAX_RESOLUTION_COUNT
+array. Validate the fixed prefix first so resolution_count can be
+read, bound it against the array, then require only the count-sized
+array, so the shorter responses the host actually sends are accepted.
 
-[1/1] scsi: storvsc: Replace symbolic permissions with octal
-      https://git.kernel.org/mkp/scsi/c/73322071418e
+Only run the sub-handler when vmbus_recvpacket() returned success. The
+memcpy length is bytes_recvd, which is bounded by VMBUS_MAX_PACKET_SIZE
+only on a successful receive; on -ENOBUFS vmbus_recvpacket() instead
+reports the required length, which can exceed hv->recv_buf, so copying
+bytes_recvd would read and write past the 16 KiB buffers. Gating on the
+success return keeps the copy bounded. The nonzero-return path is itself
+a malformed-message case and is now logged rather than silently skipped;
+channel recovery is not attempted.
 
+Rejected packets are reported via drm_err_ratelimited() rather than
+silently dropped, matching the CoCo-hardened pattern in
+hv_kvp_onchannelcallback().
+
+Fixes: 76c56a5affeb ("drm/hyperv: Add DRM driver for hyperv synthetic video device")
+Cc: stable@vger.kernel.org # 5.14+
+Signed-off-by: Berkant Koc <me@berkoc.com>
+Assisted-by: Claude:claude-opus-4-7 berkoc-pipeline
+---
+ drivers/gpu/drm/hyperv/hyperv_drm_proto.c | 100 +++++++++++++++++++---
+ 1 file changed, 87 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+index c3d0ff229..4e6f703a1 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
++++ b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+@@ -420,30 +420,92 @@ static int hyperv_get_supported_resolution(struct hv_device *hdev)
+ 	return 0;
+ }
+ 
+-static void hyperv_receive_sub(struct hv_device *hdev)
++static void hyperv_receive_sub(struct hv_device *hdev, u32 bytes_recvd)
+ {
+ 	struct hyperv_drm_device *hv = hv_get_drvdata(hdev);
+ 	struct synthvid_msg *msg;
++	size_t hdr_size;
++	size_t need;
+ 
+ 	if (!hv)
+ 		return;
+ 
+-	msg = (struct synthvid_msg *)hv->recv_buf;
+-
+-	/* Complete the wait event */
+-	if (msg->vid_hdr.type == SYNTHVID_VERSION_RESPONSE ||
+-	    msg->vid_hdr.type == SYNTHVID_RESOLUTION_RESPONSE ||
+-	    msg->vid_hdr.type == SYNTHVID_VRAM_LOCATION_ACK) {
+-		memcpy(hv->init_buf, msg, VMBUS_MAX_PACKET_SIZE);
+-		complete(&hv->wait);
++	hdr_size = sizeof(struct pipe_msg_hdr) +
++		   sizeof(struct synthvid_msg_hdr);
++	if (bytes_recvd < hdr_size) {
++		drm_err_ratelimited(&hv->dev,
++				    "synthvid packet too small for header: %u\n",
++				    bytes_recvd);
+ 		return;
+ 	}
+ 
+-	if (msg->vid_hdr.type == SYNTHVID_FEATURE_CHANGE) {
++	msg = (struct synthvid_msg *)hv->recv_buf;
++	need = hdr_size;
++
++	switch (msg->vid_hdr.type) {
++	case SYNTHVID_VERSION_RESPONSE:
++		need += sizeof(struct synthvid_version_resp);
++		break;
++	case SYNTHVID_RESOLUTION_RESPONSE:
++		/*
++		 * The resolution response is variable length: the host
++		 * fills resolution_count entries, not the full
++		 * SYNTHVID_MAX_RESOLUTION_COUNT array. Require the fixed
++		 * prefix first so resolution_count can be read, then
++		 * demand exactly the count-sized array.
++		 */
++		need += offsetof(struct synthvid_supported_resolution_resp,
++				 supported_resolution);
++		if (bytes_recvd < need)
++			break;
++		if (msg->resolution_resp.resolution_count >
++		    SYNTHVID_MAX_RESOLUTION_COUNT) {
++			drm_err_ratelimited(&hv->dev,
++					    "synthvid resolution count too large: %u\n",
++					    msg->resolution_resp.resolution_count);
++			return;
++		}
++		need += msg->resolution_resp.resolution_count *
++			sizeof(struct hvd_screen_info);
++		break;
++	case SYNTHVID_VRAM_LOCATION_ACK:
++		need += sizeof(struct synthvid_vram_location_ack);
++		break;
++	case SYNTHVID_FEATURE_CHANGE:
++		/*
++		 * Not a completion-driving message: validate its own payload
++		 * and consume it here rather than falling through to the
++		 * memcpy/complete shared by the wait-event responses.
++		 */
++		if (bytes_recvd < need +
++		    sizeof(struct synthvid_feature_change)) {
++			drm_err_ratelimited(&hv->dev,
++					    "synthvid feature change packet too small: %u\n",
++					    bytes_recvd);
++			return;
++		}
+ 		hv->dirt_needed = msg->feature_chg.is_dirt_needed;
+ 		if (hv->dirt_needed)
+ 			hyperv_hide_hw_ptr(hv->hdev);
++		return;
++	default:
++		return;
++	}
++
++	/*
++	 * Shared completion path for the wait-event responses
++	 * (VERSION_RESPONSE, RESOLUTION_RESPONSE, VRAM_LOCATION_ACK):
++	 * require the type-specific payload before handing the buffer to
++	 * the waiter.
++	 */
++	if (bytes_recvd < need) {
++		drm_err_ratelimited(&hv->dev,
++				    "synthvid packet too small for type %u: %u < %zu\n",
++				    msg->vid_hdr.type, bytes_recvd, need);
++		return;
+ 	}
++	memcpy(hv->init_buf, msg, bytes_recvd);
++	complete(&hv->wait);
+ }
+ 
+ static void hyperv_receive(void *ctx)
+@@ -464,9 +526,21 @@ static void hyperv_receive(void *ctx)
+ 		ret = vmbus_recvpacket(hdev->channel, recv_buf,
+ 				       VMBUS_MAX_PACKET_SIZE,
+ 				       &bytes_recvd, &req_id);
+-		if (bytes_recvd > 0 &&
+-		    recv_buf->pipe_hdr.type == PIPE_MSG_DATA)
+-			hyperv_receive_sub(hdev);
++		if (ret) {
++			/*
++			 * A nonzero return (e.g. -ENOBUFS for an oversized
++			 * packet) is itself a malformed message: bytes_recvd
++			 * then reports the required length rather than a copied
++			 * payload, so it must not be forwarded to the
++			 * sub-handler. Channel recovery is not attempted.
++			 */
++			drm_err_ratelimited(&hv->dev,
++					    "vmbus_recvpacket failed: %d (need %u)\n",
++					    ret, bytes_recvd);
++		} else if (bytes_recvd > 0 &&
++			   recv_buf->pipe_hdr.type == PIPE_MSG_DATA) {
++			hyperv_receive_sub(hdev, bytes_recvd);
++		}
+ 	} while (bytes_recvd > 0 && ret == 0);
+ }
+ 
 -- 
-Martin K. Petersen
+2.47.3
+
 
