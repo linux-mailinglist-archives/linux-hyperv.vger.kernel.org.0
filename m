@@ -1,166 +1,216 @@
-Return-Path: <linux-hyperv+bounces-11182-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11185-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UIxxB4oEFGpSIwcAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11182-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2026 10:12:58 +0200
+	id AE0HFUM0FGpaKwcAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11185-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2026 13:36:35 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9107F5C7853
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2026 10:12:56 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E7015C9F9E
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2026 13:36:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 153733017BD1
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2026 08:12:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 65EF13007E24
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2026 11:36:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 961C33DEAE0;
-	Mon, 25 May 2026 08:12:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E14B937E2EB;
+	Mon, 25 May 2026 11:36:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hmK/apTH"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="l6Teo2dm"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E0093DC4D0;
-	Mon, 25 May 2026 08:12:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 777AE1E3DDE;
+	Mon, 25 May 2026 11:36:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779696746; cv=none; b=dc3jEqiWhY6Pz010+rl+X74ySb1p9KC6fiXWMaWTx96KX3lSMJVk27TME+mxTpiRx3uasbOypj7s3JTz98jmVbub04khMdHxnUeH6D9tm3lQfL90CVlHsKl6FiMR/IR/JEOtjKWXrf6D4QB50EB1ffzl/LjYXs5CWVNO3ONci3Q=
+	t=1779708992; cv=none; b=XT/0rx6+vsX/jDb9oeZVdilAsu7eYiZmfpj3TN0T8I/u7Gbsj37c/LDA7AHV/eobOuIhUn0IdKHfLk/R3gyfjf7tl0pSGOZXrjkpL96zhV40O053mPBSAWJOeQo/MsWHj3g07XSYgiyuiYUiWkTcyfKZoXa6nj5IWk2Z4rqEVPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779696746; c=relaxed/simple;
-	bh=6WkTC/HbSabZ+JULKTVHSv/7mEown2M+txjSQJP/g+4=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u6HHm0E4Vt5P/Y1eyLGjGcBi3QXuyh3QGBRPv1RxbxrrxoNDq0AZrTGv/jgOxUvP7dXmTFlC6JWZGkn/Qxv1GwPAsyid1QPnZD9jFrFczrIfGBv9oTuL2I3Vtuf0C3AkIq6v1OF/KVDPNXEo1Yv9hi/2NZKhgOiBd6YjcZEbUq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hmK/apTH; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1779708992; c=relaxed/simple;
+	bh=behRvOx40jYRwwf/YqgI63J6Dt1xAnRxj1V9OWEf8mU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lmaUEeIpndxFeFokocgYWEZsZVzBWZmSyQrzzBK1CNWf0sEN8V4E9cSVpO+3b3d1AvAv/TzuYwWCgCTuI4eeaSJu9C/ADfMXxB8wmheT9bPxv1dhYp0lMH1Pnk33gvDDntEmlDIBnYtEjH1sgDg0SdvKsXZ9TUefnMsv61xa+AI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=l6Teo2dm; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id B383C20B716A;
-	Mon, 25 May 2026 01:12:06 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B383C20B716A
+Received: by linux.microsoft.com (Postfix, from userid 1216)
+	id E6FD120B7166; Mon, 25 May 2026 04:36:21 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E6FD120B7166
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1779696726;
-	bh=yUPS4+X1jCtRIosSeKaXW0vT+grEGU2AMILBtNl9IpI=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=hmK/apTH1yvHX75Q8xyzDXBjsGpewpzVO5hns7qygOg6Apto41dcjcuyrZT9z5moz
-	 bKk0iSKuqoc7fbLGb0zyqHkNCXxTTIb2L90c7O5MyU/pLLBUXRE3d6qmoZSgivRlzw
-	 hWqB92wZVd5Q8ptA7ISAq2U/OApJ89wK+jJpfIb4=
-From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	leon@kernel.org,
-	longli@microsoft.com,
-	kotaranov@microsoft.com,
-	horms@kernel.org,
-	shradhagupta@linux.microsoft.com,
-	ssengar@linux.microsoft.com,
-	ernis@linux.microsoft.com,
-	shirazsaleem@microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
+	s=default; t=1779708981;
+	bh=zN4QWGWlr5StOwKAFlE8xNBGaQRFU1nlK14WTHcvb7o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l6Teo2dmgEEr1SAeRiyWbkSc2zFMtW1ZfDccj4f5GjjCETqNAvKu9fwh9DdFJ2P+r
+	 pi0XSHPCxP8u5V6rz+wyr3cu8YbHT89YE8ayfalFGm6nBmOXT5TcttXXs+Xe1uBAs8
+	 WztOD0oPDP0SyTrJ+XfZcoWuZl+Z2NyMhdOHQhls=
+Date: Mon, 25 May 2026 07:36:21 -0400
+From: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+To: Berkant Koc <me@berkoc.com>
+Cc: Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+	linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	stephen@networkplumber.org,
-	jacob.e.keller@intel.com,
-	dipayanroy@microsoft.com,
-	leitao@debian.org,
-	kees@kernel.org,
-	john.fastabend@gmail.com,
-	hawk@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	ast@kernel.org,
-	sdf@fomichev.me,
-	yury.norov@gmail.com,
-	pavan.chebbi@broadcom.com
-Subject: [PATCH net v3 2/2] net: mana: Skip redundant detach on already-detached port
-Date: Mon, 25 May 2026 01:08:25 -0700
-Message-ID: <20260525081129.1230035-3-dipayanroy@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <20260525081129.1230035-1-dipayanroy@linux.microsoft.com>
-References: <20260525081129.1230035-1-dipayanroy@linux.microsoft.com>
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Michael Kelley <mhklinux@outlook.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Deepak Rawat <drawat.floss@gmail.com>
+Subject: Re: [PATCH v5 0/2] drm/hyperv: harden host message parsing
+Message-ID: <ahQ0NS1jrfU8ms1U@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <cover.1779542874.git.me@berkoc.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [0.84 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1779542874.git.me@berkoc.com>
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11185-lists,linux-hyperv=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,vger.kernel.org,networkplumber.org,intel.com,debian.org,gmail.com,iogearbox.net,fomichev.me,broadcom.com];
-	TAGGED_FROM(0.00)[bounces-11182-lists,linux-hyperv=lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FREEMAIL_CC(0.00)[linux.microsoft.com,microsoft.com,vger.kernel.org,lists.freedesktop.org,kernel.org,outlook.com,suse.de,linux.intel.com,gmail.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hamzamahfooz@linux.microsoft.com,linux-hyperv@vger.kernel.org];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TO_DN_NONE(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	NEURAL_HAM(-0.00)[-0.984];
-	RCPT_COUNT_TWELVE(0.00)[34];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,linux.microsoft.com:mid,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: 9107F5C7853
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 9E7015C9F9E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-When mana_per_port_queue_reset_work_handler() runs after a previous
-detach succeeded but attach failed, the port is left in a detached
-state with apc->tx_qp and apc->rxqs already freed. Calling
-mana_detach() again unconditionally leads to NULL pointer dereferences
-during queue teardown.
+On Sat, May 23, 2026 at 03:27:54PM +0200, Berkant Koc wrote:
+> Two independent issues in the synthetic video driver that both stem
+> from trusting unvalidated host data.
+> 
+> 1/2 bounds resolution_count from SYNTHVID_RESOLUTION_RESPONSE against
+> the supported_resolution[] array, and populates WIN8 defaults for
+> hv->screen_*_max / hv->preferred_* in both the WIN10-probe-failure
+> path and the pre-WIN10 path, so a failed or pre-WIN10 probe yields a
+> usable display instead of having drm_internal_framebuffer_create()
+> reject every userspace framebuffer with -EINVAL.
+> 
+> 2/2 forwards bytes_recvd from vmbus_recvpacket() into the sub-handler,
+> rejects packets that do not cover the synthvid header, and requires
+> the type-specific payload size before memcpy/complete or before
+> reading the feature-change byte. Rejected packets are logged via
+> drm_err_ratelimited() instead of being silently dropped, matching the
+> CoCo-hardened pattern in hv_kvp_onchannelcallback().
+> 
+> 1/2 is unchanged from v3/v4 and carries Michael Kelley's Reviewed-by.
+> 
+> Changes since v4 (per review by Michael Kelley):
+> 
+>   2/2: collapsed the leading "if (type == ... ) { ... switch ... }"
+>        plus the separate "if (type == FEATURE_CHANGE)" into a single
+>        switch on msg->vid_hdr.type. The three completion-driving cases
+>        compute their per-type size and break to a shared exit that does
+>        the size check + memcpy(init_buf) + complete(); FEATURE_CHANGE is
+>        its own case that validates its payload and returns without
+>        falling through; unknown types hit default and return. No
+>        functional change, fewer lines.
+> 
+>   2/2: the vmbus_recvpacket() nonzero-return path (e.g. -ENOBUFS for a
+>        too-big packet) is itself a malformed-message case. It is now
+>        logged via drm_err_ratelimited(), consistent with the
+>        sub-handler's other reject paths, instead of being silently
+>        skipped. No channel recovery is attempted, as that is not worth
+>        the added code for this rare host-side condition.
+> 
+> Changes since v3 (per review by Michael Kelley):
+> 
+>   2/2: validate SYNTHVID_RESOLUTION_RESPONSE against its actual
+>        variable length. The response carries resolution_count entries,
+>        not the full SYNTHVID_MAX_RESOLUTION_COUNT array, so requiring
+>        sizeof(struct synthvid_supported_resolution_resp) rejected the
+>        shorter responses the host legitimately sends and broke
+>        resolution probing. Require the fixed prefix, read and bound
+>        resolution_count, then require only the count-sized array.
+> 
+>   2/2: only run hyperv_receive_sub() when vmbus_recvpacket() returned
+>        success. v3 dropped the bytes_recvd upper bound as redundant,
+>        which holds only on a successful receive: on -ENOBUFS
+>        vmbus_recvpacket() reports the required length in bytes_recvd,
+>        which can exceed the 16 KiB hv->recv_buf, and the subsequent
+>        memcpy(hv->init_buf, msg, bytes_recvd) would read and write
+>        past both buffers. Gating on the success return restores the
+>        invariant that made the bound redundant, so an oversized host
+>        packet is dropped rather than copied.
+> 
+> Changes since v2 (per review by Michael Kelley):
+> 
+>   1/2: dropped the reinit_completion() change; the stale completion can
+>        only outlive its request in hyperv_vmbus_resume() after a
+>        get_supported_resolution() timeout, which is a narrower fix that
+>        belongs in a separate patch against the resume path. Pre-WIN10
+>        branch now also populates hv->preferred_*. The else branch is
+>        gone; a single screen_width_max == 0 check covers both the
+>        pre-WIN10 case and a failed WIN10 probe.
+> 
+>   2/2: added a per-type switch for the three completion-driving message
+>        types so the wait-completion path validates payload size before
+>        memcpy/complete. Every reject path emits drm_err_ratelimited()
+>        rather than returning silently.
+> 
+> Changes since v1:
+> 
+>   1/2: bound resolution_count check folded into the existing zero check;
+>        populate WIN8 defaults when hyperv_get_supported_resolution()
+>        fails.
+>   2/2: forward bytes_recvd into hyperv_receive_sub(); enforce the pipe +
+>        synthvid header minimum; check synthvid_feature_change payload
+>        size before reading is_dirt_needed.
+> 
+> The shared init_buf reuse (a duplicate or late host response can
+> overwrite init_buf between successive request/response cycles) and the
+> related completion reinit are real but orthogonal to this size
+> validation. As discussed on v2, they are queued as a separate follow-up
+> against the resume/expected-type path once this series lands.
+> 
+> This series is verified by static analysis and code inspection against
+> the synthvid protocol structures and the vmbus_recvpacket() contract. I
+> do not currently have a Hyper-V test environment to exercise the receive
+> and resolution-probe paths at runtime, so confirmation from someone who
+> can run it in a Hyper-V VM would be welcome.
+> 
+> Both patches carry an Assisted-by: Claude:claude-opus-4-7 berkoc-pipeline
+> trailer per the kernel coding-assistants policy. Code, analysis and
+> review responses are mine; the model is used as a structured reviewer
+> under human verification.
+> 
+> Berkant Koc (2):
+>   drm/hyperv: validate resolution_count and fix WIN8 fallback
+>   drm/hyperv: validate VMBus packet size in receive callback
+> 
+>  drivers/gpu/drm/hyperv/hyperv_drm_proto.c | 113 +++++++++++++++++++---
+>  1 file changed, 97 insertions(+), 16 deletions(-)
+> 
+> 
 
-Add an early exit in mana_detach() when the port is already in
-detached state (!netif_device_present) for non-close callers, making
-it safe to call idempotently. This allows the queue reset handler and
-other recovery paths to simply retry mana_attach() without redundant
-teardown.
+Applied, thanks!
 
-Fixes: 3b194343c250 ("net: mana: Implement ndo_tx_timeout and serialize queue resets per port.")
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 0582803907a8..1e1ad2795c3c 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -3350,6 +3350,12 @@ int mana_detach(struct net_device *ndev, bool from_close)
- 
- 	ASSERT_RTNL();
- 
-+	/* If already detached (indicates detach succeeded but attach failed
-+	 * previously). Now skip mana detach and just retry mana_attach.
-+	 */
-+	if (!from_close && !netif_device_present(ndev))
-+		return 0;
-+
- 	apc->port_st_save = apc->port_is_up;
- 	apc->port_is_up = false;
- 
--- 
-2.43.0
-
+> base-commit: 4bf5d3da79c48e1df4bab82c9680c53adeff7820
+> -- 
+> 2.47.3
+> 
 
